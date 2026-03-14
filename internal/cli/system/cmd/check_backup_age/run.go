@@ -10,12 +10,15 @@ import (
 	"os"
 	"path/filepath"
 
-	"github.com/ActiveMemory/ctx/internal/config/file"
+	"github.com/ActiveMemory/ctx/internal/config/archive"
+	"github.com/ActiveMemory/ctx/internal/config/env"
+	"github.com/ActiveMemory/ctx/internal/config/hook"
+	"github.com/ActiveMemory/ctx/internal/config/token"
+	"github.com/ActiveMemory/ctx/internal/config/tpl"
 	"github.com/spf13/cobra"
 
 	"github.com/ActiveMemory/ctx/internal/assets"
 	"github.com/ActiveMemory/ctx/internal/cli/system/core"
-	"github.com/ActiveMemory/ctx/internal/config"
 	"github.com/ActiveMemory/ctx/internal/notify"
 )
 
@@ -38,7 +41,7 @@ func Run(cmd *cobra.Command, stdin *os.File) error {
 	}
 
 	tmpDir := core.StateDir()
-	throttleFile := filepath.Join(tmpDir, file.BackupThrottleID)
+	throttleFile := filepath.Join(tmpDir, archive.BackupThrottleID)
 
 	if core.IsDailyThrottled(throttleFile) {
 		return nil
@@ -52,12 +55,12 @@ func Run(cmd *cobra.Command, stdin *os.File) error {
 	var warnings []string
 
 	// Check 1: Is the SMB share mounted?
-	if smbURL := os.Getenv(file.EnvBackupSMBURL); smbURL != "" {
+	if smbURL := os.Getenv(env.BackupSMBURL); smbURL != "" {
 		warnings = core.CheckSMBMountWarnings(smbURL, warnings)
 	}
 
 	// Check 2: Is the backup stale?
-	markerPath := filepath.Join(home, file.BackupMarkerDir, file.BackupMarkerFile)
+	markerPath := filepath.Join(home, archive.BackupMarkerDir, archive.BackupMarkerFile)
 	warnings = core.CheckBackupMarker(markerPath, warnings)
 
 	if len(warnings) == 0 {
@@ -67,11 +70,11 @@ func Run(cmd *cobra.Command, stdin *os.File) error {
 	// Build pre-formatted warnings for the template variable
 	var warningText string
 	for _, w := range warnings {
-		warningText += w + config.NewlineLF
+		warningText += w + token.NewlineLF
 	}
 
-	vars := map[string]any{file.TplVarWarnings: warningText}
-	content := core.LoadMessage(file.HookCheckBackupAge, file.VariantWarning, vars, warningText)
+	vars := map[string]any{tpl.VarWarnings: warningText}
+	content := core.LoadMessage(hook.CheckBackupAge, hook.VariantWarning, vars, warningText)
 	if content == "" {
 		return nil
 	}
@@ -82,8 +85,8 @@ func Run(cmd *cobra.Command, stdin *os.File) error {
 		assets.TextDesc(assets.TextDescKeyBackupBoxTitle),
 		content))
 
-	ref := notify.NewTemplateRef(file.HookCheckBackupAge, file.VariantWarning, vars)
-	core.NudgeAndRelay(file.HookCheckBackupAge+": "+
+	ref := notify.NewTemplateRef(hook.CheckBackupAge, hook.VariantWarning, vars)
+	core.NudgeAndRelay(hook.CheckBackupAge+": "+
 		assets.TextDesc(assets.TextDescKeyBackupRelayMessage),
 		input.SessionID, ref,
 	)

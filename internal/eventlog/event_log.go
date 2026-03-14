@@ -18,7 +18,7 @@ import (
 	"time"
 
 	"github.com/ActiveMemory/ctx/internal/config/dir"
-	"github.com/ActiveMemory/ctx/internal/config/file"
+	"github.com/ActiveMemory/ctx/internal/config/event"
 	"github.com/ActiveMemory/ctx/internal/config/fs"
 	"github.com/ActiveMemory/ctx/internal/notify"
 	"github.com/ActiveMemory/ctx/internal/rc"
@@ -192,7 +192,7 @@ func rotate(logPath string) {
 	if statErr != nil {
 		return // file doesn't exist yet, nothing to rotate
 	}
-	if info.Size() < int64(file.EventLogMaxBytes) {
+	if info.Size() < int64(event.EventLogMaxBytes) {
 		return
 	}
 
@@ -203,10 +203,10 @@ func rotate(logPath string) {
 
 // logFilePath returns the path to the current event log.
 func logFilePath() string {
-	return filepath.Join(rc.ContextDir(), dir.State, file.FileEventLog)
+	return filepath.Join(rc.ContextDir(), dir.State, event.FileEventLog)
 }
 
 // prevLogFilePath returns the path to the rotated event log.
 func prevLogFilePath() string {
-	return filepath.Join(rc.ContextDir(), dir.State, file.FileEventLogPrev)
+	return filepath.Join(rc.ContextDir(), dir.State, event.FileEventLogPrev)
 }

@@ -222,7 +222,7 @@ throttle prevents repeated nudges.
 
 **Why**: Architecture documentation drifts silently as code evolves. This
 hook detects structural changes that the map hasn't caught up with and
-suggests running `/ctx-map` to refresh.
+suggests running `/ctx-architecture` to refresh.
 
 **Output**: VERBATIM relay when stale and modules changed, silent otherwise.
 
@@ -230,9 +230,9 @@ suggests running `/ctx-map` to refresh.
 ┌─ Architecture Map Stale ────────────────────────────
 │ ARCHITECTURE.md hasn't been refreshed since 2026-01-15
 │ and there are commits touching 12 modules.
-│ /ctx-map keeps architecture docs drift-free.
+│ /ctx-architecture keeps architecture docs drift-free.
 │
-│ Want me to run /ctx-map to refresh?
+│ Want me to run /ctx-architecture to refresh?
 └─────────────────────────────────────────────────────
 ```
 

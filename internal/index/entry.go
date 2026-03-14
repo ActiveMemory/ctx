@@ -9,7 +9,9 @@ package index
 import (
 	"strings"
 
-	"github.com/ActiveMemory/ctx/internal/config"
+	"github.com/ActiveMemory/ctx/internal/config/marker"
+	"github.com/ActiveMemory/ctx/internal/config/regex"
+	"github.com/ActiveMemory/ctx/internal/config/token"
 )
 
 // ParseEntryBlocks splits file content into discrete entry blocks.
@@ -27,7 +29,7 @@ func ParseEntryBlocks(content string) []EntryBlock {
 		return nil
 	}
 
-	lines := strings.Split(content, config.NewlineLF)
+	lines := strings.Split(content, token.NewlineLF)
 	var blocks []EntryBlock
 
 	// Find all entry header positions
@@ -38,12 +40,12 @@ func ParseEntryBlocks(content string) []EntryBlock {
 	var headers []headerPos
 
 	for i, line := range lines {
-		matches := config.RegExEntryHeader.FindStringSubmatch(line)
-		if len(matches) == config.RegExEntryHeaderGroups {
+		matches := regex.EntryHeader.FindStringSubmatch(line)
+		if len(matches) == regex.EntryHeaderGroups {
 			headers = append(headers, headerPos{
 				lineIdx: i,
 				entry: Entry{
-					Timestamp: matches[1] + config.Dash + matches[2],
+					Timestamp: matches[1] + token.Dash + matches[2],
 					Date:      matches[1],
 					Title:     matches[3],
 				},
@@ -89,7 +91,7 @@ func ParseEntryBlocks(content string) []EntryBlock {
 func (eb *EntryBlock) IsSuperseded() bool {
 	for _, line := range eb.Lines {
 		trimmed := strings.TrimSpace(line)
-		if strings.HasPrefix(trimmed, config.PrefixSuperseded) {
+		if strings.HasPrefix(trimmed, marker.PrefixSuperseded) {
 			return true
 		}
 	}
@@ -101,5 +103,5 @@ func (eb *EntryBlock) IsSuperseded() bool {
 // Returns:
 //   - string: The full entry content with lines joined by newlines
 func (eb *EntryBlock) BlockContent() string {
-	return strings.Join(eb.Lines, config.NewlineLF)
+	return strings.Join(eb.Lines, token.NewlineLF)
 }

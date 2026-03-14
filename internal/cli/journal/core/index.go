@@ -10,7 +10,8 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/ActiveMemory/ctx/internal/config"
+	"github.com/ActiveMemory/ctx/internal/assets"
+	"github.com/ActiveMemory/ctx/internal/config/token"
 )
 
 // BuildTopicIndex aggregates entries by topic and returns sorted topic data.
@@ -45,7 +46,7 @@ func BuildTopicIndex(entries []JournalEntry) []TopicData {
 //   - string: Markdown content for topics/index.md
 func GenerateTopicsIndex(topics []TopicData) string {
 	var sb strings.Builder
-	nl := config.NewlineLF
+	nl := token.NewlineLF
 
 	var popular, longtail []TopicData
 	for _, t := range topics {
@@ -56,18 +57,18 @@ func GenerateTopicsIndex(topics []TopicData) string {
 		}
 	}
 
-	sb.WriteString(config.JournalHeadingTopics + nl + nl)
+	sb.WriteString(assets.JournalHeadingTopics + nl + nl)
 	sb.WriteString(fmt.Sprintf(
-		config.TplJournalTopicStats+nl+nl,
+		assets.TplJournalTopicStats+nl+nl,
 		len(topics), CountUniqueSessions(topics), len(popular), len(longtail)))
 
 	WritePopularAndLongtail(&sb,
-		len(popular), config.JournalHeadingPopularTopics,
+		len(popular), assets.JournalHeadingPopularTopics,
 		func(i int) (string, string, int) {
 			return popular[i].Name, popular[i].Name, len(popular[i].Entries)
 		},
-		len(longtail), config.JournalHeadingLongtailTopics,
-		config.TplJournalLongtailEntry,
+		len(longtail), assets.JournalHeadingLongtailTopics,
+		assets.TplJournalLongtailEntry,
 		func(i int) (string, JournalEntry) {
 			return longtail[i].Name, longtail[i].Entries[0]
 		},
@@ -86,8 +87,8 @@ func GenerateTopicsIndex(topics []TopicData) string {
 //   - string: Markdown content for the topic page
 func GenerateTopicPage(topic TopicData) string {
 	return GenerateGroupedPage(
-		fmt.Sprintf(config.TplJournalPageHeading, topic.Name),
-		fmt.Sprintf(config.TplJournalTopicPageStats, len(topic.Entries)),
+		fmt.Sprintf(assets.TplJournalPageHeading, topic.Name),
+		fmt.Sprintf(assets.TplJournalTopicPageStats, len(topic.Entries)),
 		topic.Entries,
 	)
 }
@@ -125,7 +126,7 @@ func BuildKeyFileIndex(entries []JournalEntry) []KeyFileData {
 //   - string: Markdown content for files/index.md
 func GenerateKeyFilesIndex(keyFiles []KeyFileData) string {
 	var sb strings.Builder
-	nl := config.NewlineLF
+	nl := token.NewlineLF
 
 	var popular, longtail []KeyFileData
 	for _, kf := range keyFiles {
@@ -147,21 +148,21 @@ func GenerateKeyFilesIndex(keyFiles []KeyFileData) string {
 		}
 	}
 
-	sb.WriteString(config.JournalHeadingKeyFiles + nl + nl)
+	sb.WriteString(assets.JournalHeadingKeyFiles + nl + nl)
 	sb.WriteString(fmt.Sprintf(
-		config.TplJournalFileStats+nl+nl,
+		assets.TplJournalFileStats+nl+nl,
 		len(keyFiles), totalSessions, len(popular), len(longtail)),
 	)
 
 	WritePopularAndLongtail(&sb,
-		len(popular), config.JournalHeadingFrequentlyTouched,
+		len(popular), assets.JournalHeadingFrequentlyTouched,
 		func(i int) (string, string, int) {
 			return "`" + popular[i].Path + "`",
 				KeyFileSlug(popular[i].Path),
 				len(popular[i].Entries)
 		},
-		len(longtail), config.JournalHeadingSingleSession,
-		config.TplJournalLongtailCodeEntry,
+		len(longtail), assets.JournalHeadingSingleSession,
+		assets.TplJournalLongtailCodeEntry,
 		func(i int) (string, JournalEntry) {
 			return longtail[i].Path, longtail[i].Entries[0]
 		},
@@ -180,8 +181,8 @@ func GenerateKeyFilesIndex(keyFiles []KeyFileData) string {
 //   - string: Markdown content for the key file page
 func GenerateKeyFilePage(kf KeyFileData) string {
 	return GenerateGroupedPage(
-		fmt.Sprintf(config.TplJournalCodePageHeading, kf.Path),
-		fmt.Sprintf(config.TplJournalFilePageStats, len(kf.Entries)),
+		fmt.Sprintf(assets.TplJournalCodePageHeading, kf.Path),
+		fmt.Sprintf(assets.TplJournalFilePageStats, len(kf.Entries)),
 		kf.Entries,
 	)
 }
@@ -216,16 +217,16 @@ func BuildTypeIndex(entries []JournalEntry) []TypeData {
 //   - string: Markdown content for types/index.md
 func GenerateTypesIndex(sessionTypes []TypeData) string {
 	var sb strings.Builder
-	nl := config.NewlineLF
+	nl := token.NewlineLF
 
 	totalSessions := 0
 	for _, st := range sessionTypes {
 		totalSessions += len(st.Entries)
 	}
 
-	sb.WriteString(config.JournalHeadingSessionTypes + nl + nl)
+	sb.WriteString(assets.JournalHeadingSessionTypes + nl + nl)
 	sb.WriteString(fmt.Sprintf(
-		config.TplJournalTypeStats+nl+nl, len(sessionTypes), totalSessions),
+		assets.TplJournalTypeStats+nl+nl, len(sessionTypes), totalSessions),
 	)
 
 	for _, st := range sessionTypes {
@@ -246,8 +247,8 @@ func GenerateTypesIndex(sessionTypes []TypeData) string {
 //   - string: Markdown content for the session type page
 func GenerateTypePage(st TypeData) string {
 	return GenerateGroupedPage(
-		fmt.Sprintf(config.TplJournalPageHeading, st.Name),
-		fmt.Sprintf(config.TplJournalTypePageStats, len(st.Entries), st.Name),
+		fmt.Sprintf(assets.TplJournalPageHeading, st.Name),
+		fmt.Sprintf(assets.TplJournalTypePageStats, len(st.Entries), st.Name),
 		st.Entries,
 	)
 }

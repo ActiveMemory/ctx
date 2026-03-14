@@ -197,7 +197,7 @@ func TestNoLiteralNewline(t *testing.T) {
 	re := regexp.MustCompile(`"\\n"`)
 
 	for _, p := range nonTestGoFiles(t, root) {
-		if strings.HasSuffix(p, "token.go") {
+		if strings.HasSuffix(p, "token.go") || strings.HasSuffix(p, "whitespace.go") {
 			continue
 		}
 		rel, _ := filepath.Rel(root, p)
@@ -225,7 +225,8 @@ func TestNoLiteralMdExtension(t *testing.T) {
 	re := regexp.MustCompile(`"\.md"`)
 
 	for _, p := range nonTestGoFiles(t, root) {
-		if strings.HasSuffix(p, filepath.Join("config", "file.go")) {
+		if strings.HasSuffix(p, filepath.Join("config", "file.go")) ||
+			strings.HasSuffix(p, filepath.Join("file", "ext.go")) {
 			continue
 		}
 		rel, _ := filepath.Rel(root, p)
@@ -842,7 +843,7 @@ func TestProjectCompiles(t *testing.T) {
 // use the expected permission values.
 func TestPermissionConstants(t *testing.T) {
 	root := projectRoot(t)
-	filePath := filepath.Join(root, "internal", "config", "file.go")
+	filePath := filepath.Join(root, "internal", "config", "fs", "perm.go")
 
 	data, err := os.ReadFile(filepath.Clean(filePath)) //nolint:gosec // constructed from test constants
 	if err != nil {

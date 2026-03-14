@@ -41,7 +41,7 @@ ctx add learning "Mock functions must be hoisted in Jest" \
   --application "Place jest.mock() before imports"
 
 # Mark task complete
-ctx complete "user auth"
+ctx tasks complete "user auth"
 ```
 
 ## Leave a Reminder for Next Session
@@ -320,7 +320,7 @@ These have no CLI equivalent. They require the agent's reasoning.
 | `/ctx-journal-enrich-all` | Full journal pipeline: export if needed, then batch-enrich                               |
 | `/ctx-blog`               | Generate a blog post ([zensical](https://pypi.org/project/zensical/)-flavored Markdown) |
 | `/ctx-blog-changelog`     | Generate themed blog post from commits between releases                                 |
-| `/ctx-map`                | Build and maintain architecture maps (ARCHITECTURE.md, DETAILED_DESIGN.md)              |
+| `/ctx-architecture`                | Build and maintain architecture maps (ARCHITECTURE.md, DETAILED_DESIGN.md)              |
 
 ### CLI-Only Commands
 
@@ -330,7 +330,7 @@ These are infrastructure: used in scripts, CI, or one-time setup.
 |----------------------------|-------------------------------------------------|
 | `ctx init`                 | Initialize `.context/` directory                |
 | `ctx load`                 | Output assembled context for piping             |
-| `ctx complete`             | Mark a task done by substring match             |
+| `ctx tasks complete`             | Mark a task done by substring match             |
 | `ctx sync`                 | Reconcile context with codebase state           |
 | `ctx compact`              | Consolidate and clean up context files          |
 | `ctx hook`                 | Generate AI tool integration config             |

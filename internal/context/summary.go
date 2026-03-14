@@ -12,8 +12,9 @@ import (
 	"strings"
 
 	"github.com/ActiveMemory/ctx/internal/assets"
-	"github.com/ActiveMemory/ctx/internal/config"
-	"github.com/ActiveMemory/ctx/internal/config/file"
+	"github.com/ActiveMemory/ctx/internal/config/ctx"
+	"github.com/ActiveMemory/ctx/internal/config/marker"
+	"github.com/ActiveMemory/ctx/internal/config/regex"
 )
 
 // summarizeConstitution counts checkbox items (invariants) in CONSTITUTION.md.
@@ -26,10 +27,10 @@ import (
 func summarizeConstitution(content []byte) string {
 	// Count checkbox items (invariants)
 	count := bytes.Count(
-		content, []byte(config.PrefixTaskUndone),
+		content, []byte(marker.PrefixTaskUndone),
 	) +
 		bytes.Count(
-			content, []byte(config.PrefixTaskDone),
+			content, []byte(marker.PrefixTaskDone),
 		)
 	if count == 0 {
 		return assets.TextDesc(assets.TextDescKeySummaryLoaded)
@@ -46,8 +47,8 @@ func summarizeConstitution(content []byte) string {
 //   - string: Summary like "3 active, 2 completed" or "empty" if none
 func summarizeTasks(content []byte) string {
 	// Count active (unchecked) and completed (checked) tasks
-	active := bytes.Count(content, []byte(config.PrefixTaskUndone))
-	completed := bytes.Count(content, []byte(config.PrefixTaskDone))
+	active := bytes.Count(content, []byte(marker.PrefixTaskUndone))
+	completed := bytes.Count(content, []byte(marker.PrefixTaskDone))
 
 	if active == 0 && completed == 0 {
 		return assets.TextDesc(assets.TextDescKeySummaryEmpty)
@@ -72,7 +73,7 @@ func summarizeTasks(content []byte) string {
 //   - string: Summary like "3 decisions" or "empty" if none
 func summarizeDecisions(content []byte) string {
 	// Count decision headers (## [date] or ## Decision)
-	matches := config.RegExEntryHeading.FindAll(content, -1)
+	matches := regex.EntryHeading.FindAll(content, -1)
 	count := len(matches)
 
 	if count == 0 {
@@ -92,7 +93,7 @@ func summarizeDecisions(content []byte) string {
 // Returns:
 //   - string: Summary like "5 terms" or "empty" if none
 func summarizeGlossary(content []byte) string {
-	matches := config.RegExGlossary.FindAll(content, -1)
+	matches := regex.Glossary.FindAll(content, -1)
 	count := len(matches)
 
 	if count == 0 {
@@ -115,13 +116,13 @@ func summarizeGlossary(content []byte) string {
 //   - string: Summary string (e.g., "3 active, 2 completed" or "empty")
 func generateSummary(name string, content []byte) string {
 	switch name {
-	case file.FileConstitution:
+	case ctx.Constitution:
 		return summarizeConstitution(content)
-	case file.FileTask:
+	case ctx.Task:
 		return summarizeTasks(content)
-	case file.FileDecision:
+	case ctx.Decision:
 		return summarizeDecisions(content)
-	case file.FileGlossary:
+	case ctx.Glossary:
 		return summarizeGlossary(content)
 	default:
 		if len(content) == 0 || effectivelyEmpty(content) {

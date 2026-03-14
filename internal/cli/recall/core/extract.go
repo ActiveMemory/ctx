@@ -9,7 +9,7 @@ package core
 import (
 	"strings"
 
-	"github.com/ActiveMemory/ctx/internal/config"
+	"github.com/ActiveMemory/ctx/internal/config/token"
 )
 
 // ExtractFrontmatter returns the YAML frontmatter block from content,
@@ -21,9 +21,9 @@ import (
 // Returns:
 //   - string: The frontmatter block including delimiters, or "" if not found
 func ExtractFrontmatter(content string) string {
-	nl := config.NewlineLF
-	fmOpen := config.Separator + nl
-	fmClose := nl + config.Separator + nl
+	nl := token.NewlineLF
+	fmOpen := token.Separator + nl
+	fmClose := nl + token.Separator + nl
 
 	if !strings.HasPrefix(content, fmOpen) {
 		return ""
@@ -49,5 +49,5 @@ func StripFrontmatter(content string) string {
 	if fm == "" {
 		return content
 	}
-	return strings.TrimLeft(content[len(fm):], config.NewlineLF)
+	return strings.TrimLeft(content[len(fm):], token.NewlineLF)
 }

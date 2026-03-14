@@ -13,43 +13,30 @@ import (
 	"path/filepath"
 	"strings"
 
-	internalConfig "github.com/ActiveMemory/ctx/internal/config"
 	"github.com/ActiveMemory/ctx/internal/config/file"
 	"github.com/ActiveMemory/ctx/internal/config/fs"
 	ctxerr "github.com/ActiveMemory/ctx/internal/err"
+	"github.com/ActiveMemory/ctx/internal/rc"
 	"github.com/ActiveMemory/ctx/internal/validation"
 )
 
 // Profile file names and identifiers — aliased from internal/config.
 const (
-	FileCtxRC     = file.FileCtxRC
-	FileCtxRCBase = file.FileCtxRCBase
-	FileCtxRCDev  = file.FileCtxRCDev
+	FileCtxRC     = file.CtxRC
+	FileCtxRCBase = file.CtxRCBase
+	FileCtxRCDev  = file.CtxRCDev
 	ProfileDev    = file.ProfileDev
 	ProfileBase   = file.ProfileBase
 	ProfileProd   = file.ProfileProd
 )
 
-// DetectProfile reads .ctxrc and returns "dev" or "base" based on the
-// presence of an uncommented "notify:" line. Returns "" if the file is missing.
-//
-// Parameters:
-//   - root: Git repository root directory
+// DetectProfile returns the active profile name from the parsed .ctxrc.
+// Returns "" if .ctxrc is missing or has no profile field.
 //
 // Returns:
-//   - string: Profile name ("dev", "base", or "" if missing)
-func DetectProfile(root string) string {
-	data, readErr := validation.SafeReadFile(root, FileCtxRC)
-	if readErr != nil {
-		return ""
-	}
-
-	for _, line := range strings.Split(string(data), internalConfig.NewlineLF) {
-		if strings.HasPrefix(strings.TrimSpace(line), file.ProfileDetectKey) {
-			return ProfileDev
-		}
-	}
-	return ProfileBase
+//   - string: Profile name ("dev", "base", or "")
+func DetectProfile() string {
+	return rc.RC().Profile
 }
 
 // CopyProfile copies a source profile file to .ctxrc.
@@ -70,16 +57,6 @@ func CopyProfile(root, srcFile string) error {
 	return os.WriteFile(dst, data, fs.PermFile)
 }
 
-// GitRoot returns the git repository root directory.
-//
-// Returns an error if git is not installed or the current directory is
-// not inside a git repository. Features that depend on git should
-// degrade gracefully when this returns an error.
-//
-// Returns:
-//   - string: Absolute path to the git root
-//   - error: Non-nil when git is missing or not inside a repository
-//
 // SwitchTo copies the requested profile to .ctxrc and returns a status message.
 //
 // If the requested profile is already active, returns a no-op message.
@@ -93,7 +70,7 @@ func CopyProfile(root, srcFile string) error {
 //   - string: Status message for the user
 //   - error: Non-nil if the profile file copy fails
 func SwitchTo(root, profile string) (string, error) {
-	current := DetectProfile(root)
+	current := DetectProfile()
 	if current == profile {
 		return "already on " + profile + " profile", nil
 	}

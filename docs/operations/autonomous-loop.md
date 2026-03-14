@@ -258,7 +258,7 @@ During the loop, the AI should update context files:
 
 **Mark task complete:**
 ```bash
-ctx complete "implement user auth"
+ctx tasks complete "implement user auth"
 ```
 
 Or emit an update command (parsed by `ctx watch`):
@@ -379,7 +379,7 @@ End EVERY response with one of:
 **Fix**: Add explicit instructions to PROMPT.md:
 ```markdown
 After completing a task, you MUST:
-1. Run: ctx complete "<task>"
+1. Run: ctx tasks complete "<task>"
 2. Add learnings: ctx add learning "..."
 ```
 
@@ -392,7 +392,7 @@ After completing a task, you MUST:
 ```markdown
 Order of operations:
 1. Complete coding work
-2. Update context files (*`ctx complete`, `ctx add`*)
+2. Update context files (*`ctx tasks complete`, `ctx add`*)
 3. Commit **ALL** changes including `.context/`
 4. Then signal status
 ```

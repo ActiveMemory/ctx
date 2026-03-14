@@ -10,11 +10,11 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/ActiveMemory/ctx/internal/config/file"
+	"github.com/ActiveMemory/ctx/internal/config/journal"
 	"github.com/spf13/cobra"
 
 	"github.com/ActiveMemory/ctx/internal/assets"
-	"github.com/ActiveMemory/ctx/internal/cli/system/core"
+	ctxcontext "github.com/ActiveMemory/ctx/internal/context"
 	ctxerr "github.com/ActiveMemory/ctx/internal/err"
 	"github.com/ActiveMemory/ctx/internal/journal/state"
 )
@@ -32,7 +32,7 @@ import (
 // Returns:
 //   - error: Non-nil on state load/save failure or unknown stage
 func runMarkJournal(cmd *cobra.Command, filename, stage string) error {
-	journalDir := core.ResolvedJournalDir()
+	journalDir := ctxcontext.ResolvedJournalDir()
 
 	jstate, loadErr := state.Load(journalDir)
 	if loadErr != nil {
@@ -44,15 +44,15 @@ func runMarkJournal(cmd *cobra.Command, filename, stage string) error {
 		fs := jstate.Entries[filename]
 		var val string
 		switch stage {
-		case file.StageExported:
+		case journal.StageExported:
 			val = fs.Exported
-		case file.StageEnriched:
+		case journal.StageEnriched:
 			val = fs.Enriched
-		case file.StageNormalized:
+		case journal.StageNormalized:
 			val = fs.Normalized
-		case file.StageFencesVerified:
+		case journal.StageFencesVerified:
 			val = fs.FencesVerified
-		case file.StageLocked:
+		case journal.StageLocked:
 			val = fs.Locked
 		default:
 			return ctxerr.UnknownStage(stage, strings.Join(state.ValidStages, ", "))

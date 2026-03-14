@@ -12,9 +12,11 @@ import (
 	"path/filepath"
 	"strings"
 
-	"github.com/ActiveMemory/ctx/internal/config"
+	"github.com/ActiveMemory/ctx/internal/assets"
 	"github.com/ActiveMemory/ctx/internal/config/file"
 	"github.com/ActiveMemory/ctx/internal/config/fs"
+	"github.com/ActiveMemory/ctx/internal/config/journal"
+	"github.com/ActiveMemory/ctx/internal/config/token"
 	"github.com/ActiveMemory/ctx/internal/validation"
 )
 
@@ -84,8 +86,8 @@ func BuildSessionIndex(journalDir string) map[string]string {
 		}
 
 		// Extract the last 8 chars before .md as candidate short ID.
-		if len(baseName) >= config.RecallShortIDLen {
-			shortID := baseName[len(baseName)-config.RecallShortIDLen:]
+		if len(baseName) >= journal.ShortIDLen {
+			shortID := baseName[len(baseName)-journal.ShortIDLen:]
 			// Store with the short ID as key (caller matches against
 			// session.ID[:8]).
 			if _, exists := index[shortID]; !exists {
@@ -108,13 +110,13 @@ func BuildSessionIndex(journalDir string) map[string]string {
 // Returns:
 //   - string: The session ID, or "" if not found
 func ExtractSessionID(content string) string {
-	nl := config.NewlineLF
-	fmOpen := config.Separator + nl
+	nl := token.NewlineLF
+	fmOpen := token.Separator + nl
 
 	if !strings.HasPrefix(content, fmOpen) {
 		return ""
 	}
-	end := strings.Index(content[len(fmOpen):], nl+config.Separator+nl)
+	end := strings.Index(content[len(fmOpen):], nl+token.Separator+nl)
 	if end < 0 {
 		return ""
 	}
@@ -122,7 +124,7 @@ func ExtractSessionID(content string) string {
 
 	for _, line := range strings.Split(fmBlock, nl) {
 		line = strings.TrimSpace(line)
-		prefix := config.FmKeySessionID + config.Colon
+		prefix := assets.FmKeySessionID + token.Colon
 		if strings.HasPrefix(line, prefix) {
 			val := strings.TrimSpace(strings.TrimPrefix(line, prefix))
 			// Strip surrounding quotes.
@@ -149,8 +151,8 @@ func LookupSessionFile(index map[string]string, sessionID string) string {
 		return name
 	}
 	short := sessionID
-	if len(short) > config.RecallShortIDLen {
-		short = short[:config.RecallShortIDLen]
+	if len(short) > journal.ShortIDLen {
+		short = short[:journal.ShortIDLen]
 	}
 	if name, ok := index[short]; ok {
 		return name
@@ -167,19 +169,19 @@ func LookupSessionFile(index map[string]string, sessionID string) string {
 // Returns:
 //   - string: The field value (unquoted), or "" if not found
 func ExtractFrontmatterField(content, field string) string {
-	nl := config.NewlineLF
-	fmOpen := config.Separator + nl
+	nl := token.NewlineLF
+	fmOpen := token.Separator + nl
 
 	if !strings.HasPrefix(content, fmOpen) {
 		return ""
 	}
-	end := strings.Index(content[len(fmOpen):], nl+config.Separator+nl)
+	end := strings.Index(content[len(fmOpen):], nl+token.Separator+nl)
 	if end < 0 {
 		return ""
 	}
 	fmBlock := content[len(fmOpen) : len(fmOpen)+end]
 
-	prefix := field + config.Colon
+	prefix := field + token.Colon
 	for _, line := range strings.Split(fmBlock, nl) {
 		line = strings.TrimSpace(line)
 		if strings.HasPrefix(line, prefix) {
@@ -213,8 +215,8 @@ func RenameJournalFiles(journalDir, oldBase, newBase string, numParts int) {
 
 	// Rename multipart files and update nav links.
 	for p := 2; p <= numParts; p++ {
-		oldPart := filepath.Join(journalDir, fmt.Sprintf(config.TplRecallPartFilename, oldBase, p))
-		newPart := filepath.Join(journalDir, fmt.Sprintf(config.TplRecallPartFilename, newBase, p))
+		oldPart := filepath.Join(journalDir, fmt.Sprintf(assets.TplRecallPartFilename, oldBase, p))
+		newPart := filepath.Join(journalDir, fmt.Sprintf(assets.TplRecallPartFilename, newBase, p))
 		if _, statErr := os.Stat(oldPart); statErr == nil {
 			_ = os.Rename(oldPart, newPart)
 		}
@@ -240,7 +242,7 @@ func UpdateNavLinks(journalDir, newBase, oldBase string, numParts int) {
 	files := []string{filepath.Join(journalDir, newBase+file.ExtMarkdown)}
 	for p := 2; p <= numParts; p++ {
 		files = append(files, filepath.Join(journalDir,
-			fmt.Sprintf(config.TplRecallPartFilename, newBase, p)))
+			fmt.Sprintf(assets.TplRecallPartFilename, newBase, p)))
 	}
 
 	for _, f := range files {

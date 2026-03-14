@@ -15,10 +15,10 @@ import (
 	"time"
 
 	"github.com/ActiveMemory/ctx/internal/assets"
-	"github.com/ActiveMemory/ctx/internal/config"
 	"github.com/ActiveMemory/ctx/internal/config/dir"
-	"github.com/ActiveMemory/ctx/internal/config/file"
+	"github.com/ActiveMemory/ctx/internal/config/load_gate"
 	time2 "github.com/ActiveMemory/ctx/internal/config/time"
+	"github.com/ActiveMemory/ctx/internal/config/token"
 	"github.com/ActiveMemory/ctx/internal/rc"
 )
 
@@ -105,7 +105,7 @@ func DetectFromMarkers() (time.Time, bool) {
 
 	var markers []markerInfo
 	for _, e := range entries {
-		if !strings.HasPrefix(e.Name(), file.PrefixCtxLoaded) {
+		if !strings.HasPrefix(e.Name(), load_gate.PrefixCtxLoaded) {
 			continue
 		}
 		info, infoErr := e.Info()
@@ -141,11 +141,11 @@ func DetectFromEvents() (time.Time, bool) {
 		return time.Time{}, false
 	}
 
-	lines := strings.Split(strings.TrimSpace(string(data)), config.NewlineLF)
+	lines := strings.Split(strings.TrimSpace(string(data)), token.NewlineLF)
 	// Scan in reverse for last context-load-gate event.
 	for i := len(lines) - 1; i >= 0; i-- {
 		line := lines[i]
-		if !strings.Contains(line, file.EventContextLoadGate) {
+		if !strings.Contains(line, load_gate.EventContextLoadGate) {
 			continue
 		}
 		if t, ok := ExtractTimestamp(line); ok {
@@ -166,7 +166,7 @@ func DetectFromEvents() (time.Time, bool) {
 //   - time.Time: Parsed timestamp
 //   - bool: True if extraction succeeded
 func ExtractTimestamp(jsonLine string) (time.Time, bool) {
-	key := file.JSONKeyTimestamp
+	key := load_gate.JSONKeyTimestamp
 	idx := strings.Index(jsonLine, key)
 	if idx < 0 {
 		return time.Time{}, false

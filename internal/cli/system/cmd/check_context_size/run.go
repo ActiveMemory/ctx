@@ -13,7 +13,8 @@ import (
 	"time"
 
 	"github.com/ActiveMemory/ctx/internal/config/dir"
-	"github.com/ActiveMemory/ctx/internal/config/file"
+	"github.com/ActiveMemory/ctx/internal/config/event"
+	"github.com/ActiveMemory/ctx/internal/config/session"
 	"github.com/ActiveMemory/ctx/internal/config/stats"
 	"github.com/spf13/cobra"
 
@@ -36,13 +37,13 @@ import (
 // Returns:
 //   - error: Always nil (hook errors are non-fatal)
 func Run(cmd *cobra.Command, stdin *os.File) error {
-	if !core.IsInitialized() {
+	if !core.Initialized() {
 		return nil
 	}
 	input := core.ReadInput(stdin)
 	sessionID := input.SessionID
 	if sessionID == "" {
-		sessionID = file.SessionUnknown
+		sessionID = session.IDUnknown
 	}
 
 	// Pause check — this hook is the designated single emitter
@@ -89,7 +90,7 @@ func Run(cmd *cobra.Command, stdin *os.File) error {
 			Pct:        pct,
 			WindowSize: windowSize,
 			Model:      info.Model,
-			Event:      file.EventSuppressed,
+			Event:      event.EventSuppressed,
 		})
 		return nil
 	}
@@ -104,13 +105,13 @@ func Run(cmd *cobra.Command, stdin *os.File) error {
 
 	windowTrigger := pct >= stats.ContextWindowThresholdPct
 
-	event := file.EventSilent
+	evt := event.EventSilent
 	switch {
 	case counterTriggered:
-		event = file.EventCheckpoint
+		evt = event.EventCheckpoint
 		core.EmitCheckpoint(cmd, logFile, sessionID, count, tokens, pct, windowSize)
 	case windowTrigger:
-		event = file.EventWindowWarning
+		evt = event.EventWindowWarning
 		core.EmitWindowWarning(cmd, logFile, sessionID, count, tokens, pct)
 	default:
 		core.LogMessage(logFile, sessionID,
@@ -126,7 +127,7 @@ func Run(cmd *cobra.Command, stdin *os.File) error {
 		Pct:        pct,
 		WindowSize: windowSize,
 		Model:      info.Model,
-		Event:      event,
+		Event:      evt,
 	})
 
 	return nil

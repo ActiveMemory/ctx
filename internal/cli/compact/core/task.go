@@ -10,11 +10,12 @@ import (
 	"os"
 	"strings"
 
-	"github.com/ActiveMemory/ctx/internal/config/file"
-	"github.com/ActiveMemory/ctx/internal/config/fs"
+	"github.com/ActiveMemory/ctx/internal/config/token"
 	"github.com/spf13/cobra"
 
-	"github.com/ActiveMemory/ctx/internal/config"
+	"github.com/ActiveMemory/ctx/internal/assets"
+	ctxCfg "github.com/ActiveMemory/ctx/internal/config/ctx"
+	"github.com/ActiveMemory/ctx/internal/config/fs"
 	"github.com/ActiveMemory/ctx/internal/context"
 	"github.com/ActiveMemory/ctx/internal/rc"
 	"github.com/ActiveMemory/ctx/internal/write"
@@ -38,14 +39,14 @@ import (
 func CompactTasks(
 	cmd *cobra.Command, ctx *context.Context, archive bool,
 ) (int, error) {
-	tasksFile := ctx.File(file.FileTask)
+	tasksFile := ctx.File(ctxCfg.Task)
 
 	if tasksFile == nil {
 		return 0, nil
 	}
 
 	content := string(tasksFile.Content)
-	lines := strings.Split(content, config.NewlineLF)
+	lines := strings.Split(content, token.NewlineLF)
 
 	// Parse task blocks
 	blocks := ParseTaskBlocks(lines)
@@ -70,11 +71,11 @@ func CompactTasks(
 
 	// Add blocks to the Completed section
 	for i, line := range newLines {
-		if strings.HasPrefix(line, config.HeadingCompleted) {
+		if strings.HasPrefix(line, assets.HeadingCompleted) {
 			// Find the next line that's either empty or another section
 			insertIdx := i + 1
 			for insertIdx < len(newLines) && newLines[insertIdx] != "" &&
-				!strings.HasPrefix(newLines[insertIdx], config.HeadingLevelTwoStart) {
+				!strings.HasPrefix(newLines[insertIdx], token.HeadingLevelTwoStart) {
 				insertIdx++
 			}
 
@@ -104,19 +105,19 @@ func CompactTasks(
 		}
 
 		if len(blocksToArchive) > 0 {
-			nl := config.NewlineLF
+			nl := token.NewlineLF
 			var archiveContent string
 			for _, block := range blocksToArchive {
 				archiveContent += block.BlockContent() + nl + nl
 			}
-			if archiveFile, archiveErr := WriteArchive("tasks", config.HeadingArchivedTasks, archiveContent); archiveErr == nil {
+			if archiveFile, archiveErr := WriteArchive("tasks", assets.HeadingArchivedTasks, archiveContent); archiveErr == nil {
 				write.InfoArchivedTasks(cmd, len(blocksToArchive), archiveFile, archiveDays)
 			}
 		}
 	}
 
 	// Write back
-	newContent := strings.Join(newLines, config.NewlineLF)
+	newContent := strings.Join(newLines, token.NewlineLF)
 	if newContent != content {
 		if err := os.WriteFile(
 			tasksFile.Path, []byte(newContent), fs.PermFile,

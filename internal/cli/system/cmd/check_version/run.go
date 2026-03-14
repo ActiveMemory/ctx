@@ -11,12 +11,13 @@ import (
 	"os"
 	"path/filepath"
 
-	"github.com/ActiveMemory/ctx/internal/config/file"
+	"github.com/ActiveMemory/ctx/internal/config/hook"
+	"github.com/ActiveMemory/ctx/internal/config/tpl"
+	"github.com/ActiveMemory/ctx/internal/config/version"
 	"github.com/spf13/cobra"
 
 	"github.com/ActiveMemory/ctx/internal/assets"
 	"github.com/ActiveMemory/ctx/internal/cli/system/core"
-	"github.com/ActiveMemory/ctx/internal/config"
 	"github.com/ActiveMemory/ctx/internal/notify"
 )
 
@@ -33,7 +34,7 @@ import (
 // Returns:
 //   - error: Always nil (hook errors are non-fatal)
 func Run(cmd *cobra.Command, stdin *os.File) error {
-	if !core.IsInitialized() {
+	if !core.Initialized() {
 		return nil
 	}
 
@@ -43,16 +44,16 @@ func Run(cmd *cobra.Command, stdin *os.File) error {
 	}
 
 	tmpDir := core.StateDir()
-	markerFile := filepath.Join(tmpDir, file.VersionThrottleID)
+	markerFile := filepath.Join(tmpDir, version.ThrottleID)
 
 	if core.IsDailyThrottled(markerFile) {
 		return nil
 	}
 
-	binaryVer := config.BinaryVersion
+	binaryVer := cmd.Root().Version
 
 	// Skip check for dev builds
-	if binaryVer == file.VersionDevBuild {
+	if binaryVer == version.DevBuild {
 		core.TouchFile(markerFile)
 		return nil
 	}
@@ -79,10 +80,10 @@ func Run(cmd *cobra.Command, stdin *os.File) error {
 	fallback := fmt.Sprintf(assets.TextDesc(
 		assets.TextDescKeyCheckVersionFallback), binaryVer, pluginVer,
 	)
-	content := core.LoadMessage(file.HookCheckVersion, file.VariantMismatch,
+	content := core.LoadMessage(hook.CheckVersion, hook.VariantMismatch,
 		map[string]any{
-			file.TplVarBinaryVersion: binaryVer,
-			file.TplVarPluginVersion: pluginVer,
+			tpl.VarBinaryVersion: binaryVer,
+			tpl.VarPluginVersion: pluginVer,
 		}, fallback)
 	if content == "" {
 		core.TouchFile(markerFile)
@@ -94,12 +95,12 @@ func Run(cmd *cobra.Command, stdin *os.File) error {
 
 	cmd.Println(core.NudgeBox(relayPrefix, boxTitle, content))
 
-	ref := notify.NewTemplateRef(file.HookCheckVersion, file.VariantMismatch,
+	ref := notify.NewTemplateRef(hook.CheckVersion, hook.VariantMismatch,
 		map[string]any{
-			file.TplVarBinaryVersion: binaryVer,
-			file.TplVarPluginVersion: pluginVer,
+			tpl.VarBinaryVersion: binaryVer,
+			tpl.VarPluginVersion: pluginVer,
 		})
-	versionMsg := file.HookCheckVersion + ": " +
+	versionMsg := hook.CheckVersion + ": " +
 		fmt.Sprintf(
 			assets.TextDesc(
 				assets.TextDescKeyCheckVersionMismatchRelayFormat,

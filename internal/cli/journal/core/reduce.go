@@ -10,7 +10,10 @@ import (
 	"encoding/json"
 	"strings"
 
-	"github.com/ActiveMemory/ctx/internal/config"
+	"github.com/ActiveMemory/ctx/internal/assets"
+	"github.com/ActiveMemory/ctx/internal/config/marker"
+	"github.com/ActiveMemory/ctx/internal/config/regex"
+	"github.com/ActiveMemory/ctx/internal/config/token"
 )
 
 // StripFences removes all code fence markers from content, leaving the inner
@@ -33,34 +36,34 @@ func StripFences(content string, fencesVerified bool) string {
 		return content
 	}
 
-	lines := strings.Split(content, config.NewlineLF)
+	lines := strings.Split(content, token.NewlineLF)
 	var out []string
 	inFrontmatter := false
 
 	for i, line := range lines {
 		// Preserve frontmatter
-		if i == 0 && strings.TrimSpace(line) == config.Separator {
+		if i == 0 && strings.TrimSpace(line) == token.Separator {
 			inFrontmatter = true
 			out = append(out, line)
 			continue
 		}
 		if inFrontmatter {
 			out = append(out, line)
-			if strings.TrimSpace(line) == config.Separator {
+			if strings.TrimSpace(line) == token.Separator {
 				inFrontmatter = false
 			}
 			continue
 		}
 
 		// Remove fence markers
-		if config.RegExFenceLine.MatchString(line) {
+		if regex.CodeFenceLine.MatchString(line) {
 			continue
 		}
 
 		out = append(out, line)
 	}
 
-	return strings.Join(out, config.NewlineLF)
+	return strings.Join(out, token.NewlineLF)
 }
 
 // StripSystemReminders removes internal Claude Code blocks from journal content.
@@ -81,7 +84,7 @@ func StripFences(content string, fencesVerified bool) string {
 // Returns:
 //   - string: Content with all internal blocks removed
 func StripSystemReminders(content string) string {
-	lines := strings.Split(content, config.NewlineLF)
+	lines := strings.Split(content, token.NewlineLF)
 	var out []string
 	inTagReminder := false
 	inBoldReminder := false
@@ -92,19 +95,19 @@ func StripSystemReminders(content string) string {
 		trimmed := strings.TrimSpace(line)
 
 		// XML-style: <system-reminder>...</system-reminder>
-		if trimmed == config.TagSystemReminderOpen {
+		if trimmed == marker.TagSystemReminderOpen {
 			inTagReminder = true
 			continue
 		}
 		if inTagReminder {
-			if trimmed == config.TagSystemReminderClose {
+			if trimmed == marker.TagSystemReminderClose {
 				inTagReminder = false
 			}
 			continue
 		}
 
 		// Bold-style: **System Reminder**: ... (runs until blank line)
-		if strings.HasPrefix(trimmed, config.LabelBoldReminder) {
+		if strings.HasPrefix(trimmed, assets.BoldReminder) {
 			inBoldReminder = true
 			continue
 		}
@@ -118,12 +121,12 @@ func StripSystemReminders(content string) string {
 		// Context compaction: standalone <summary> on its own line.
 		// Single-line <summary>N lines</summary> (ours) won't match
 		// because trimmed != "<summary>" when there's inline content.
-		if trimmed == config.TagCompactionSummaryOpen {
+		if trimmed == marker.TagCompactionSummaryOpen {
 			inCompaction = true
 			continue
 		}
 		if inCompaction {
-			if trimmed == config.TagCompactionSummaryClose {
+			if trimmed == marker.TagCompactionSummaryClose {
 				inCompaction = false
 			}
 			continue
@@ -131,7 +134,7 @@ func StripSystemReminders(content string) string {
 
 		// Compaction boilerplate: "If you need specific details from
 		// before compaction..." paragraph (runs until blank line)
-		if strings.HasPrefix(trimmed, config.CompactionBoilerplatePrefix) {
+		if strings.HasPrefix(trimmed, marker.CompactionBoilerplatePrefix) {
 			inBoilerplate = true
 			continue
 		}
@@ -145,7 +148,7 @@ func StripSystemReminders(content string) string {
 		out = append(out, line)
 	}
 
-	return strings.Join(out, config.NewlineLF)
+	return strings.Join(out, token.NewlineLF)
 }
 
 // CleanToolOutputJSON extracts plain text from Tool Output turns whose body is
@@ -158,15 +161,15 @@ func StripSystemReminders(content string) string {
 // Returns:
 //   - string: Content with JSON tool output replaced by plain text
 func CleanToolOutputJSON(content string) string {
-	lines := strings.Split(content, config.NewlineLF)
+	lines := strings.Split(content, token.NewlineLF)
 	var out []string
 	i := 0
 
 	for i < len(lines) {
-		matches := config.RegExTurnHeader.FindStringSubmatch(
+		matches := regex.TurnHeader.FindStringSubmatch(
 			strings.TrimSpace(lines[i]),
 		)
-		if matches == nil || matches[2] != config.LabelToolOutput {
+		if matches == nil || matches[2] != assets.ToolOutput {
 			out = append(out, lines[i])
 			i++
 			continue
@@ -179,7 +182,7 @@ func CleanToolOutputJSON(content string) string {
 		// Collect body until next header
 		bodyStart := i
 		for i < len(lines) {
-			if config.RegExTurnHeader.MatchString(strings.TrimSpace(lines[i])) {
+			if regex.TurnHeader.MatchString(strings.TrimSpace(lines[i])) {
 				break
 			}
 			i++
@@ -216,5 +219,5 @@ func CleanToolOutputJSON(content string) string {
 		out = append(out, bodyLines...)
 	}
 
-	return strings.Join(out, config.NewlineLF)
+	return strings.Join(out, token.NewlineLF)
 }

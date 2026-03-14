@@ -9,7 +9,7 @@ package task
 import (
 	"testing"
 
-	"github.com/ActiveMemory/ctx/internal/config"
+	"github.com/ActiveMemory/ctx/internal/config/regex"
 )
 
 func TestCompleted(t *testing.T) {
@@ -47,7 +47,7 @@ func TestCompleted(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			match := config.RegExTask.FindStringSubmatch(tt.line)
+			match := regex.Task.FindStringSubmatch(tt.line)
 			if match == nil {
 				t.Fatalf("line did not match task pattern: %q", tt.line)
 			}
@@ -102,7 +102,7 @@ func TestIsPending(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			match := config.RegExTask.FindStringSubmatch(tt.line)
+			match := regex.Task.FindStringSubmatch(tt.line)
 			if match == nil {
 				t.Fatalf("line did not match task pattern: %q", tt.line)
 			}
@@ -153,7 +153,7 @@ func TestIndent(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			match := config.RegExTask.FindStringSubmatch(tt.line)
+			match := regex.Task.FindStringSubmatch(tt.line)
 			if match == nil {
 				t.Fatalf("line did not match task pattern: %q", tt.line)
 			}
@@ -204,7 +204,7 @@ func TestContent(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			match := config.RegExTask.FindStringSubmatch(tt.line)
+			match := regex.Task.FindStringSubmatch(tt.line)
 			if match == nil {
 				t.Fatalf("line did not match task pattern: %q", tt.line)
 			}
@@ -260,7 +260,7 @@ func TestIsSubTask(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			match := config.RegExTask.FindStringSubmatch(tt.line)
+			match := regex.Task.FindStringSubmatch(tt.line)
 			if match == nil {
 				t.Fatalf("line did not match task pattern: %q", tt.line)
 			}
@@ -275,7 +275,7 @@ func TestIsSubTask(t *testing.T) {
 func TestMatchConstants(t *testing.T) {
 	// Verify match indices work correctly
 	line := "  - [x] Task content here"
-	match := config.RegExTask.FindStringSubmatch(line)
+	match := regex.Task.FindStringSubmatch(line)
 	if match == nil {
 		t.Fatal("line did not match task pattern")
 	}

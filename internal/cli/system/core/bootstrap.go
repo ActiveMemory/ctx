@@ -14,8 +14,9 @@ import (
 
 	"github.com/ActiveMemory/ctx/internal/assets"
 	"github.com/ActiveMemory/ctx/internal/cli/initialize"
-	"github.com/ActiveMemory/ctx/internal/config"
+	"github.com/ActiveMemory/ctx/internal/config/bootstrap"
 	"github.com/ActiveMemory/ctx/internal/config/file"
+	"github.com/ActiveMemory/ctx/internal/config/token"
 )
 
 // PluginWarning returns a warning string if the ctx plugin is installed
@@ -98,7 +99,7 @@ func WrapFileList(files []string, maxWidth int, indent string) string {
 		}
 	}
 	lines = append(lines, current)
-	return strings.Join(lines, config.NewlineLF)
+	return strings.Join(lines, token.NewlineLF)
 }
 
 // ParseNumberedLines splits a numbered multiline string into individual
@@ -111,16 +112,16 @@ func WrapFileList(files []string, maxWidth int, indent string) string {
 // Returns:
 //   - []string: list of items with number prefixes removed
 func ParseNumberedLines(text string) []string {
-	lines := strings.Split(text, config.NewlineLF)
+	lines := strings.Split(text, token.NewlineLF)
 	items := make([]string, 0, len(lines))
 	for _, line := range lines {
 		line = strings.TrimSpace(line)
 		if line == "" {
 			continue
 		}
-		if idx := strings.Index(line, file.NumberedListSep); idx >= 0 &&
-			idx <= file.NumberedListMaxDigits {
-			line = line[idx+len(file.NumberedListSep):]
+		if idx := strings.Index(line, bootstrap.NumberedListSep); idx >= 0 &&
+			idx <= bootstrap.NumberedListMaxDigits {
+			line = line[idx+len(bootstrap.NumberedListSep):]
 		}
 		items = append(items, line)
 	}

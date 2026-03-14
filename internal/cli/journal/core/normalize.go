@@ -13,7 +13,10 @@ import (
 	"strings"
 	"unicode/utf8"
 
-	"github.com/ActiveMemory/ctx/internal/config"
+	"github.com/ActiveMemory/ctx/internal/assets"
+	"github.com/ActiveMemory/ctx/internal/config/journal"
+	"github.com/ActiveMemory/ctx/internal/config/regex"
+	"github.com/ActiveMemory/ctx/internal/config/token"
 )
 
 // HTML tag constants for pre-formatted blocks.
@@ -53,21 +56,21 @@ func NormalizeContent(content string, fencesVerified bool) string {
 	content = WrapToolOutputs(content)
 	content = WrapUserTurns(content)
 
-	lines := strings.Split(content, config.NewlineLF)
+	lines := strings.Split(content, token.NewlineLF)
 	var out []string
 	inFrontmatter := false
 	inPreBlock := false // inside <pre>...</pre> from WrapToolOutputs/WrapUserTurns
 
 	for i, line := range lines {
 		// Skip frontmatter
-		if i == 0 && strings.TrimSpace(line) == config.Separator {
+		if i == 0 && strings.TrimSpace(line) == token.Separator {
 			inFrontmatter = true
 			out = append(out, line)
 			continue
 		}
 		if inFrontmatter {
 			out = append(out, line)
-			if strings.TrimSpace(line) == config.Separator {
+			if strings.TrimSpace(line) == token.Separator {
 				inFrontmatter = false
 			}
 			continue
@@ -90,49 +93,49 @@ func NormalizeContent(content string, fencesVerified bool) string {
 		}
 
 		// Sanitize H1 headings: strip Claude tags, truncate to max title len
-		if strings.HasPrefix(line, config.HeadingLevelOneStart) {
-			heading := strings.TrimPrefix(line, config.HeadingLevelOneStart)
+		if strings.HasPrefix(line, token.HeadingLevelOneStart) {
+			heading := strings.TrimPrefix(line, token.HeadingLevelOneStart)
 			heading = strings.TrimSpace(
-				config.RegExClaudeTag.ReplaceAllString(heading, ""),
+				regex.SystemClaudeTag.ReplaceAllString(heading, ""),
 			)
-			if utf8.RuneCountInString(heading) > config.RecallMaxTitleLen {
+			if utf8.RuneCountInString(heading) > journal.MaxTitleLen {
 				runes := []rune(heading)
-				truncated := string(runes[:config.RecallMaxTitleLen])
+				truncated := string(runes[:journal.MaxTitleLen])
 				if idx := strings.LastIndex(truncated, " "); idx > 0 {
 					truncated = truncated[:idx]
 				}
 				heading = truncated
 			}
-			line = config.HeadingLevelOneStart + heading
+			line = token.HeadingLevelOneStart + heading
 		}
 
 		// Demote headings to bold: ## Foo → **Foo**
 		// Preserves turn headers (### N. Role (HH:MM:SS)) and the H1 title.
-		if hm := config.RegExMarkdownHeading.FindStringSubmatch(line); hm != nil {
-			if hm[1] != "#" && !config.RegExTurnHeader.MatchString(strings.TrimSpace(line)) {
+		if hm := regex.MarkdownHeading.FindStringSubmatch(line); hm != nil {
+			if hm[1] != "#" && !regex.TurnHeader.MatchString(strings.TrimSpace(line)) {
 				line = "**" + hm[2] + "**"
 			}
 		}
 
 		// Insert blank line before list items when previous line is non-empty.
 		// Python-Markdown requires a blank line before the first list item.
-		if config.RegExListStart.MatchString(line) &&
+		if regex.ListStart.MatchString(line) &&
 			len(out) > 0 && strings.TrimSpace(out[len(out)-1]) != "" {
 			out = append(out, "")
 		}
 
 		// Strip bold from tool-use lines
-		line = config.RegExToolBold.ReplaceAllString(line, `🔧 $1`)
+		line = regex.ToolBold.ReplaceAllString(line, `🔧 $1`)
 
 		// Escape glob stars
 		if !strings.HasPrefix(line, "    ") {
-			line = config.RegExGlobStar.ReplaceAllString(line, `\*$1`)
+			line = regex.GlobStar.ReplaceAllString(line, `\*$1`)
 		}
 
 		// Replace inline code spans containing angle brackets:
 		// `</com` → "&lt;/com" (quotes preserve visual signal,
 		// entities prevent broken HTML in rendered output).
-		line = config.RegExInlineCodeAngle.ReplaceAllStringFunc(line, func(m string) string {
+		line = regex.InlineCodeAngle.ReplaceAllStringFunc(line, func(m string) string {
 			inner := m[1 : len(m)-1] // strip backticks
 			inner = strings.ReplaceAll(inner, "<", "&lt;")
 			inner = strings.ReplaceAll(inner, ">", "&gt;")
@@ -142,7 +145,7 @@ func NormalizeContent(content string, fencesVerified bool) string {
 		out = append(out, line)
 	}
 
-	return strings.Join(out, config.NewlineLF)
+	return strings.Join(out, token.NewlineLF)
 }
 
 // WrapToolOutputs finds Tool Output sections and wraps their body in
@@ -164,7 +167,7 @@ func NormalizeContent(content string, fencesVerified bool) string {
 // another session's file) because the real next turn (### 42.) is always
 // the smallest number > N.
 func WrapToolOutputs(content string) string {
-	lines := strings.Split(content, config.NewlineLF)
+	lines := strings.Split(content, token.NewlineLF)
 	mask := PreBlockMask(lines)
 	turnSeq := CollectTurnNumbers(lines)
 	var out []string
@@ -177,10 +180,10 @@ func WrapToolOutputs(content string) string {
 			i++
 			continue
 		}
-		m := config.RegExTurnHeader.FindStringSubmatch(
+		m := regex.TurnHeader.FindStringSubmatch(
 			strings.TrimSpace(lines[i]),
 		)
-		if m == nil || m[2] != config.LabelToolOutput {
+		if m == nil || m[2] != assets.ToolOutput {
 			out = append(out, lines[i])
 			i++
 			continue
@@ -206,7 +209,7 @@ func WrapToolOutputs(content string) string {
 			if mask[j] {
 				continue
 			}
-			nm := config.RegExTurnHeader.FindStringSubmatch(
+			nm := regex.TurnHeader.FindStringSubmatch(
 				strings.TrimSpace(lines[j]),
 			)
 			if nm != nil {
@@ -265,7 +268,7 @@ func WrapToolOutputs(content string) string {
 		}
 	}
 
-	return strings.Join(out, config.NewlineLF)
+	return strings.Join(out, token.NewlineLF)
 }
 
 // WrapUserTurns finds User turn bodies and wraps them in <pre><code>
@@ -288,7 +291,7 @@ func WrapToolOutputs(content string) string {
 // Boundary detection reuses the same pre-scan + last-match-wins approach
 // as WrapToolOutputs.
 func WrapUserTurns(content string) string {
-	lines := strings.Split(content, config.NewlineLF)
+	lines := strings.Split(content, token.NewlineLF)
 	mask := PreBlockMask(lines)
 	turnSeq := CollectTurnNumbers(lines)
 	var out []string
@@ -301,10 +304,10 @@ func WrapUserTurns(content string) string {
 			i++
 			continue
 		}
-		m := config.RegExTurnHeader.FindStringSubmatch(
+		m := regex.TurnHeader.FindStringSubmatch(
 			strings.TrimSpace(lines[i]),
 		)
-		if m == nil || m[2] != config.LabelRoleUser {
+		if m == nil || m[2] != assets.RoleUser {
 			out = append(out, lines[i])
 			i++
 			continue
@@ -325,7 +328,7 @@ func WrapUserTurns(content string) string {
 			if mask[j] {
 				continue
 			}
-			nm := config.RegExTurnHeader.FindStringSubmatch(
+			nm := regex.TurnHeader.FindStringSubmatch(
 				strings.TrimSpace(lines[j]),
 			)
 			if nm != nil {
@@ -367,7 +370,7 @@ func WrapUserTurns(content string) string {
 		out = append(out, "")
 	}
 
-	return strings.Join(out, config.NewlineLF)
+	return strings.Join(out, token.NewlineLF)
 }
 
 // StripPreWrapper removes <details>, <summary>, <pre>, </pre>, </details>
@@ -485,7 +488,7 @@ func CollectTurnNumbers(lines []string) []int {
 		if mask[i] {
 			continue
 		}
-		if m := config.RegExTurnHeader.FindStringSubmatch(
+		if m := regex.TurnHeader.FindStringSubmatch(
 			strings.TrimSpace(line),
 		); m != nil {
 			num, _ := strconv.Atoi(m[1])
@@ -519,7 +522,7 @@ func SplitTrailingFooter(body []string) ([]string, []string) {
 	// Find the last "---" separator and check if a "**Part " line follows.
 	sepIdx := -1
 	for j := len(body) - 1; j >= 0; j-- {
-		if strings.TrimSpace(body[j]) == config.Separator {
+		if strings.TrimSpace(body[j]) == token.Separator {
 			sepIdx = j
 			break
 		}

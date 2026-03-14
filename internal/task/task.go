@@ -11,8 +11,8 @@
 package task
 
 import (
-	"github.com/ActiveMemory/ctx/internal/config"
-	"github.com/ActiveMemory/ctx/internal/config/file"
+	"github.com/ActiveMemory/ctx/internal/config/archive"
+	"github.com/ActiveMemory/ctx/internal/config/marker"
 )
 
 // Match indices for accessing capture groups.
@@ -43,7 +43,7 @@ func Completed(match []string) bool {
 	if len(match) <= MatchState {
 		return false
 	}
-	return match[MatchState] == config.MarkTaskComplete
+	return match[MatchState] == marker.MarkTaskComplete
 }
 
 // Pending reports whether a match represents a pending task.
@@ -57,7 +57,7 @@ func Pending(match []string) bool {
 	if len(match) <= MatchState {
 		return false
 	}
-	return match[MatchState] != config.MarkTaskComplete
+	return match[MatchState] != marker.MarkTaskComplete
 }
 
 // Indent returns the leading whitespace from a match.
@@ -96,5 +96,5 @@ func Content(match []string) string {
 // Returns:
 //   - bool: True if indent is 2+ spaces
 func SubTask(match []string) bool {
-	return len(Indent(match)) >= file.SubTaskMinIndent
+	return len(Indent(match)) >= archive.SubTaskMinIndent
 }

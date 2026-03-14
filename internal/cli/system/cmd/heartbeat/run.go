@@ -12,8 +12,10 @@ import (
 	"path/filepath"
 
 	"github.com/ActiveMemory/ctx/internal/config/dir"
-	"github.com/ActiveMemory/ctx/internal/config/file"
+	"github.com/ActiveMemory/ctx/internal/config/heartbeat"
+	"github.com/ActiveMemory/ctx/internal/config/hook"
 	"github.com/ActiveMemory/ctx/internal/config/stats"
+	"github.com/ActiveMemory/ctx/internal/config/tpl"
 	"github.com/spf13/cobra"
 
 	"github.com/ActiveMemory/ctx/internal/assets"
@@ -37,7 +39,7 @@ import (
 // Returns:
 //   - error: Always nil (hook errors are non-fatal)
 func Run(_ *cobra.Command, stdin *os.File) error {
-	if !core.IsInitialized() {
+	if !core.Initialized() {
 		return nil
 	}
 	_, sessionID, paused := core.HookPreamble(stdin)
@@ -46,10 +48,10 @@ func Run(_ *cobra.Command, stdin *os.File) error {
 	}
 
 	tmpDir := core.StateDir()
-	counterFile := filepath.Join(tmpDir, file.HeartbeatCounterPrefix+sessionID)
-	mtimeFile := filepath.Join(tmpDir, file.HeartbeatMtimePrefix+sessionID)
+	counterFile := filepath.Join(tmpDir, heartbeat.HeartbeatCounterPrefix+sessionID)
+	mtimeFile := filepath.Join(tmpDir, heartbeat.HeartbeatMtimePrefix+sessionID)
 	contextDir := rc.ContextDir()
-	logFile := filepath.Join(contextDir, dir.Logs, file.HeartbeatLogFile)
+	logFile := filepath.Join(contextDir, dir.Logs, heartbeat.HeartbeatLogFile)
 
 	// Increment prompt counter.
 	count := core.ReadCounter(counterFile) + 1
@@ -68,17 +70,17 @@ func Run(_ *cobra.Command, stdin *os.File) error {
 
 	// Build and send notification.
 	vars := map[string]any{
-		file.TplVarHeartbeatPromptCount:     count,
-		file.TplVarHeartbeatSessionID:       sessionID,
-		file.TplVarHeartbeatContextModified: contextModified,
+		tpl.VarHeartbeatPromptCount:     count,
+		tpl.VarHeartbeatSessionID:       sessionID,
+		tpl.VarHeartbeatContextModified: contextModified,
 	}
 	if tokens > 0 {
 		pct := tokens * stats.PercentMultiplier / window
-		vars[file.TplVarHeartbeatTokens] = tokens
-		vars[file.TplVarHeartbeatContextWindow] = window
-		vars[file.TplVarHeartbeatUsagePct] = pct
+		vars[tpl.VarHeartbeatTokens] = tokens
+		vars[tpl.VarHeartbeatContextWindow] = window
+		vars[tpl.VarHeartbeatUsagePct] = pct
 	}
-	ref := notify.NewTemplateRef(file.HookHeartbeat, file.VariantPulse, vars)
+	ref := notify.NewTemplateRef(hook.Heartbeat, hook.VariantPulse, vars)
 
 	var msg string
 	if tokens > 0 {
@@ -89,8 +91,8 @@ func Run(_ *cobra.Command, stdin *os.File) error {
 		msg = fmt.Sprintf(assets.TextDesc(assets.TextDescKeyHeartbeatNotifyPlain),
 			count, contextModified)
 	}
-	_ = notify.Send(file.NotifyChannelHeartbeat, msg, sessionID, ref)
-	eventlog.Append(file.NotifyChannelHeartbeat, msg, sessionID, ref)
+	_ = notify.Send(hook.NotifyChannelHeartbeat, msg, sessionID, ref)
+	eventlog.Append(hook.NotifyChannelHeartbeat, msg, sessionID, ref)
 
 	var logLine string
 	if tokens > 0 {

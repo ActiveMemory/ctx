@@ -11,7 +11,7 @@ import (
 	"fmt"
 
 	"github.com/ActiveMemory/ctx/internal/assets"
-	"github.com/ActiveMemory/ctx/internal/config/file"
+	"github.com/ActiveMemory/ctx/internal/config/doctor"
 	"github.com/spf13/cobra"
 )
 
@@ -47,14 +47,14 @@ func OutputHuman(cmd *cobra.Command, report *Report) error {
 
 	// Group by category.
 	categories := []string{
-		file.DoctorCategoryStructure,
-		file.DoctorCategoryQuality,
-		file.DoctorCategoryPlugin,
-		file.DoctorCategoryHooks,
-		file.DoctorCategoryState,
-		file.DoctorCategorySize,
-		file.DoctorCategoryResources,
-		file.DoctorCategoryEvents,
+		doctor.CategoryStructure,
+		doctor.CategoryQuality,
+		doctor.CategoryPlugin,
+		doctor.CategoryHooks,
+		doctor.CategoryState,
+		doctor.CategorySize,
+		doctor.CategoryResources,
+		doctor.CategoryEvents,
 	}
 	grouped := make(map[string][]Result)
 	for _, r := range report.Results {

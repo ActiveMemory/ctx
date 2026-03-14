@@ -399,6 +399,69 @@ ctx notify test
 
 ---
 
+### `ctx changes`
+
+Show what changed in context files and code since your last session.
+
+Automatically detects the previous session boundary from state markers
+or event log. Useful at session start to quickly see what moved while
+you were away.
+
+```bash
+ctx changes [flags]
+```
+
+**Flags**:
+
+| Flag      | Description                                           |
+|-----------|-------------------------------------------------------|
+| `--since` | Time reference: duration (`24h`) or date (`2026-03-01`) |
+
+**Reference time detection** (priority order):
+
+1. `--since` flag (duration, date, or RFC3339 timestamp)
+2. `ctx-loaded-*` marker files in `.context/state/` (second most recent)
+3. Last `context-load-gate` event from `.context/state/events.jsonl`
+4. Fallback: 24 hours ago
+
+**Example**:
+
+```bash
+# Auto-detect last session, show what changed
+ctx changes
+
+# Changes in the last 48 hours
+ctx changes --since 48h
+
+# Changes since a specific date
+ctx changes --since 2026-03-10
+```
+
+**Output**:
+
+```
+## Changes Since Last Session
+
+**Reference point**: 6 hours ago
+
+### Context File Changes
+- `TASKS.md` — modified 2026-03-12 14:30
+- `DECISIONS.md` — modified 2026-03-12 09:15
+
+### Code Changes
+- **12 commits** since reference point
+- **Latest**: Fix journal enrichment ordering
+- **Directories touched**: internal, docs, specs
+- **Authors**: jose, claude
+```
+
+Context file changes are detected by filesystem mtime (works without
+git). Code changes use `git log --since` (empty when not in a git repo).
+
+**See also**: [Reviewing Session Changes](../recipes/session-changes.md)
+
+---
+
 ### `ctx deps`
 
 Generate a dependency graph from source code.
@@ -684,6 +747,84 @@ ctx pad merge --dry-run pad-a.enc pad-b.md
 
 ---
 
+### `ctx prompt`
+
+Manage reusable prompt templates stored in `.context/prompts/`.
+
+Templates are Markdown files that can be applied via the `/ctx-prompt`
+skill or listed and shown from the CLI.
+
+```bash
+ctx prompt <subcommand>
+```
+
+#### `ctx prompt list`
+
+List all available prompt templates.
+
+```bash
+ctx prompt list
+```
+
+**Aliases**: `ls`
+
+#### `ctx prompt show`
+
+Print a prompt template to stdout.
+
+```bash
+ctx prompt show <name>
+```
+
+**Arguments**:
+
+- `name`: Template name (without `.md` extension)
+
+#### `ctx prompt add`
+
+Create a new prompt template. Reads from stdin when `--stdin` is set,
+otherwise creates from the embedded starter template.
+
+```bash
+ctx prompt add <name> [flags]
+```
+
+**Arguments**:
+
+- `name`: Template name (without `.md` extension)
+
+**Flags**:
+
+| Flag      | Description                         |
+|-----------|-------------------------------------|
+| `--stdin` | Read template content from stdin    |
+
+**Examples**:
+
+```bash
+# Create from starter template
+ctx prompt add code-review
+
+# Create from stdin
+echo "Review this PR for security issues" | ctx prompt add security-review --stdin
+```
+
+#### `ctx prompt rm`
+
+Delete a prompt template.
+
+```bash
+ctx prompt rm <name>
+```
+
+**Arguments**:
+
+- `name`: Template name (without `.md` extension)
+
+**See also**: [Prompt Templates](../recipes/prompts.md)
+
+---
+
 ### `ctx remind`
 
 Session-scoped reminders that surface at session start. Reminders are
@@ -923,6 +1064,38 @@ ctx site feed --base-url https://example.com # Custom base URL
 make site-feed                               # Makefile shortcut
 make site                                    # Builds site + feed
 ```
+
+---
+
+### `ctx guide`
+
+Quick-reference cheat sheet for common ctx commands and skills.
+
+```bash
+ctx guide [flags]
+```
+
+**Flags**:
+
+| Flag         | Description                  |
+|--------------|------------------------------|
+| `--skills`   | Show available skills        |
+| `--commands` | Show available CLI commands  |
+
+**Example**:
+
+```bash
+# Show the full cheat sheet
+ctx guide
+
+# Skills only
+ctx guide --skills
+
+# Commands only
+ctx guide --commands
+```
+
+Works without initialization (no `.context/` required).
 
 ---
 

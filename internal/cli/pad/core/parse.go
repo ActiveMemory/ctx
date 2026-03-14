@@ -9,7 +9,7 @@ package core
 import (
 	"strings"
 
-	"github.com/ActiveMemory/ctx/internal/config"
+	"github.com/ActiveMemory/ctx/internal/config/token"
 )
 
 // ParseEntries splits raw bytes into entry lines, filtering empty lines.
@@ -23,7 +23,7 @@ func ParseEntries(data []byte) []string {
 	if len(data) == 0 {
 		return nil
 	}
-	lines := strings.Split(string(data), config.NewlineLF)
+	lines := strings.Split(string(data), token.NewlineLF)
 	var entries []string
 	for _, line := range lines {
 		if line != "" {
@@ -44,5 +44,5 @@ func FormatEntries(entries []string) []byte {
 	if len(entries) == 0 {
 		return nil
 	}
-	return []byte(strings.Join(entries, config.NewlineLF) + config.NewlineLF)
+	return []byte(strings.Join(entries, token.NewlineLF) + token.NewlineLF)
 }

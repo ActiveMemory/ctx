@@ -14,10 +14,10 @@ import (
 	"sort"
 	"strings"
 
-	"github.com/ActiveMemory/ctx/internal/config"
 	"github.com/ActiveMemory/ctx/internal/config/claude"
 	"github.com/ActiveMemory/ctx/internal/config/file"
 	"github.com/ActiveMemory/ctx/internal/config/parser"
+	"github.com/ActiveMemory/ctx/internal/config/session"
 	ctxerr "github.com/ActiveMemory/ctx/internal/err"
 )
 
@@ -41,7 +41,7 @@ func NewClaudeCodeParser() *ClaudeCodeParser {
 // Returns:
 //   - string: The identifier "claude-code"
 func (p *ClaudeCodeParser) Tool() string {
-	return file.ToolClaudeCode
+	return session.ToolClaudeCode
 }
 
 // Matches returns true if the file appears to be a Claude Code session file.
@@ -116,8 +116,8 @@ func (p *ClaudeCodeParser) ParseFile(path string) ([]*Session, error) {
 
 	scanner := bufio.NewScanner(f)
 	// Increase buffer size for large lines
-	buf := make([]byte, 0, config.ParserBufInitSize)
-	scanner.Buffer(buf, config.ParserBufMaxSize)
+	buf := make([]byte, 0, parser.BufInitSize)
+	scanner.Buffer(buf, parser.BufMaxSize)
 
 	lineNum := 0
 	for scanner.Scan() {

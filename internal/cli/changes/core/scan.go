@@ -13,8 +13,8 @@ import (
 	"strings"
 	"time"
 
-	"github.com/ActiveMemory/ctx/internal/config"
 	"github.com/ActiveMemory/ctx/internal/config/file"
+	"github.com/ActiveMemory/ctx/internal/config/token"
 	ctxerr "github.com/ActiveMemory/ctx/internal/err"
 	"github.com/ActiveMemory/ctx/internal/rc"
 )
@@ -95,7 +95,7 @@ func SummarizeCodeChanges(refTime time.Time) (CodeSummary, error) {
 	if lines == "" {
 		return summary, nil
 	}
-	commitLines := strings.Split(lines, config.NewlineLF)
+	commitLines := strings.Split(lines, token.NewlineLF)
 	summary.CommitCount = len(commitLines)
 
 	// Latest commit message (first line of oneline output).
@@ -151,7 +151,7 @@ func GitLogSince(t time.Time, extraArgs ...string) ([]byte, error) {
 //   - []string: Sorted unique top-level directory names
 func UniqueTopDirs(output string) []string {
 	seen := make(map[string]bool)
-	for _, line := range strings.Split(strings.TrimSpace(output), config.NewlineLF) {
+	for _, line := range strings.Split(strings.TrimSpace(output), token.NewlineLF) {
 		line = strings.TrimSpace(line)
 		if line == "" {
 			continue
@@ -180,7 +180,7 @@ func UniqueTopDirs(output string) []string {
 //   - []string: Sorted unique non-empty lines
 func UniqueLines(output string) []string {
 	seen := make(map[string]bool)
-	for _, line := range strings.Split(strings.TrimSpace(output), config.NewlineLF) {
+	for _, line := range strings.Split(strings.TrimSpace(output), token.NewlineLF) {
 		line = strings.TrimSpace(line)
 		if line != "" {
 			seen[line] = true

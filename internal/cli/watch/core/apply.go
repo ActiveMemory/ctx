@@ -11,10 +11,11 @@ import (
 	"path/filepath"
 	"strings"
 
-	"github.com/ActiveMemory/ctx/internal/config"
+	"github.com/ActiveMemory/ctx/internal/config/ctx"
 	entry2 "github.com/ActiveMemory/ctx/internal/config/entry"
-	"github.com/ActiveMemory/ctx/internal/config/file"
 	"github.com/ActiveMemory/ctx/internal/config/fs"
+	"github.com/ActiveMemory/ctx/internal/config/regex"
+	"github.com/ActiveMemory/ctx/internal/config/token"
 	"github.com/ActiveMemory/ctx/internal/entry"
 	ctxerr "github.com/ActiveMemory/ctx/internal/err"
 	"github.com/ActiveMemory/ctx/internal/rc"
@@ -104,8 +105,8 @@ func RunCompleteSilent(args []string) error {
 	}
 
 	query := args[0]
-	filePath := filepath.Join(rc.ContextDir(), file.FileTask)
-	nl := config.NewlineLF
+	filePath := filepath.Join(rc.ContextDir(), ctx.Task)
+	nl := token.NewlineLF
 
 	content, err := os.ReadFile(filepath.Clean(filePath))
 	if err != nil {
@@ -116,7 +117,7 @@ func RunCompleteSilent(args []string) error {
 
 	matchedLine := -1
 	for i, line := range lines {
-		match := config.RegExTask.FindStringSubmatch(line)
+		match := regex.Task.FindStringSubmatch(line)
 		if match != nil && task.Pending(match) {
 			if strings.Contains(
 				strings.ToLower(task.Content(match)),
@@ -132,8 +133,8 @@ func RunCompleteSilent(args []string) error {
 		return ctxerr.NoTaskMatch(query)
 	}
 
-	lines[matchedLine] = config.RegExTask.ReplaceAllString(
-		lines[matchedLine], file.TaskCompleteReplace,
+	lines[matchedLine] = regex.Task.ReplaceAllString(
+		lines[matchedLine], regex.TaskCompleteReplace,
 	)
 	return os.WriteFile(filePath, []byte(strings.Join(lines, nl)), fs.PermFile)
 }

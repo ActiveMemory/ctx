@@ -11,8 +11,8 @@ import (
 	"path/filepath"
 	"testing"
 
-	"github.com/ActiveMemory/ctx/internal/config/file"
 	"github.com/ActiveMemory/ctx/internal/config/fs"
+	"github.com/ActiveMemory/ctx/internal/config/journal"
 )
 
 func TestLoad_MissingFile(t *testing.T) {
@@ -228,7 +228,7 @@ func TestMark(t *testing.T) {
 		Entries: make(map[string]FileState),
 	}
 
-	if ok := s.Mark("test.md", file.StageExported); !ok {
+	if ok := s.Mark("test.md", journal.StageExported); !ok {
 		t.Error("Mark exported should succeed")
 	}
 	if !s.Exported("test.md") {
@@ -271,7 +271,7 @@ func TestClear(t *testing.T) {
 		},
 	}
 
-	if ok := s.Clear("test.md", file.StageLocked); !ok {
+	if ok := s.Clear("test.md", journal.StageLocked); !ok {
 		t.Error("Clear locked should succeed")
 	}
 	if s.Locked("test.md") {
@@ -323,12 +323,12 @@ func TestLocked(t *testing.T) {
 		t.Error("should not be locked initially")
 	}
 
-	s.Mark("test.md", file.StageLocked)
+	s.Mark("test.md", journal.StageLocked)
 	if !s.Locked("test.md") {
 		t.Error("should be locked after Mark")
 	}
 
-	s.Clear("test.md", file.StageLocked)
+	s.Clear("test.md", journal.StageLocked)
 	if s.Locked("test.md") {
 		t.Error("should not be locked after Clear")
 	}

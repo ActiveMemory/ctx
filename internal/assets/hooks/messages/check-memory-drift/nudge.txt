@@ -1,0 +1,2 @@
+MEMORY.md has changed since last sync.
+Run: ctx memory sync

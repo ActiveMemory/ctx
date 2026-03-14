@@ -10,7 +10,10 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/ActiveMemory/ctx/internal/config"
+	"github.com/ActiveMemory/ctx/internal/assets"
+	"github.com/ActiveMemory/ctx/internal/config/journal"
+	"github.com/ActiveMemory/ctx/internal/config/regex"
+	"github.com/ActiveMemory/ctx/internal/config/token"
 )
 
 // CollapseToolOutputs wraps long Tool Output turn bodies in collapsible
@@ -23,13 +26,13 @@ import (
 // Returns:
 //   - string: Content with long tool outputs wrapped in <details> tags
 func CollapseToolOutputs(content string) string {
-	lines := strings.Split(content, config.NewlineLF)
+	lines := strings.Split(content, token.NewlineLF)
 	var out []string
 	i := 0
 
 	for i < len(lines) {
 		trimmed := strings.TrimSpace(lines[i])
-		matches := config.RegExTurnHeader.FindStringSubmatch(trimmed)
+		matches := regex.TurnHeader.FindStringSubmatch(trimmed)
 
 		// Non-header lines pass through unchanged
 		if matches == nil {
@@ -49,7 +52,7 @@ func CollapseToolOutputs(content string) string {
 		}
 		bodyEnd := bodyStart
 		for bodyEnd < len(lines) {
-			if config.RegExTurnHeader.MatchString(
+			if regex.TurnHeader.MatchString(
 				strings.TrimSpace(lines[bodyEnd]),
 			) {
 				break
@@ -58,7 +61,7 @@ func CollapseToolOutputs(content string) string {
 		}
 
 		// Non-tool-output turns pass through unchanged
-		if role != config.LabelToolOutput {
+		if role != assets.ToolOutput {
 			for k := i; k < bodyEnd; k++ {
 				out = append(out, lines[k])
 			}
@@ -75,23 +78,23 @@ func CollapseToolOutputs(content string) string {
 		}
 
 		body := strings.TrimSpace(
-			strings.Join(lines[bodyStart:bodyEnd], config.NewlineLF),
+			strings.Join(lines[bodyStart:bodyEnd], token.NewlineLF),
 		)
 		alreadyWrapped := strings.HasPrefix(body, "<details>")
 
-		if nonBlank > config.RecallDetailsThreshold && !alreadyWrapped {
+		if nonBlank > journal.DetailsThreshold && !alreadyWrapped {
 			summary := fmt.Sprintf(
-				config.TplRecallDetailsSummary, nonBlank,
+				assets.TplRecallDetailsSummary, nonBlank,
 			)
 			out = append(out, header, "")
 			out = append(out,
-				fmt.Sprintf(config.TplRecallDetailsOpen, summary),
+				fmt.Sprintf(assets.TplRecallDetailsOpen, summary),
 			)
 			out = append(out, "")
 			for k := bodyStart; k < bodyEnd; k++ {
 				out = append(out, lines[k])
 			}
-			out = append(out, config.TplRecallDetailsClose, "")
+			out = append(out, assets.TplRecallDetailsClose, "")
 		} else {
 			for k := i; k < bodyEnd; k++ {
 				out = append(out, lines[k])
@@ -101,5 +104,5 @@ func CollapseToolOutputs(content string) string {
 		i = bodyEnd
 	}
 
-	return strings.Join(out, config.NewlineLF)
+	return strings.Join(out, token.NewlineLF)
 }

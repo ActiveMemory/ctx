@@ -9,6 +9,8 @@ title: Invariants
 icon: lucide/anchor
 ---
 
+![ctx](../images/ctx-banner.png)
+
 # The System Explains Itself
 
 These are the properties that **must hold** for any valid `ctx` implementation.

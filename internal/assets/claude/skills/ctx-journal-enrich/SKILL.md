@@ -9,7 +9,7 @@ Enrich a session journal entry with structured metadata.
 
 1. **Check if locked**: a file is locked if `.state.json` has a
    `locked` date OR the frontmatter contains `locked: true`. Locked
-   files must not be modified — skip them silently. Check via:
+   files must not be modified: skip them silently. Check via:
    `ctx system mark-journal --check <filename> locked`
    or look for `locked: true` in the YAML frontmatter.
 2. **Check if already enriched**: check the state file via
@@ -74,9 +74,9 @@ Read the journal entry and extract:
 ---
 title: "Session title"
 date: 2026-01-27
-model: claude-opus-4-6        # auto-populated at export
-tokens_in: 234000             # auto-populated at export
-tokens_out: 89000             # auto-populated at export
+model: claude-opus-4-6  # auto-populated at export
+tokens_in: 234000       # auto-populated at export
+tokens_out: 89000       # auto-populated at export
 type: feature
 outcome: completed
 topics:

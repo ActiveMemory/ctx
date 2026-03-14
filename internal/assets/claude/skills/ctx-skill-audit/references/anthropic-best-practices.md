@@ -52,7 +52,7 @@ but the primary instruction should describe the desired behavior.
 <example>
 <poor>NEVER use ellipses.</poor>
 <good>Your response will be read aloud by a text-to-speech
-engine, so avoid ellipses — the engine cannot pronounce them.</good>
+engine, so avoid ellipses: the engine cannot pronounce them.</good>
 </example>
 
 ## Context and Motivation
@@ -103,7 +103,7 @@ Best practices:
 - Nest tags when content has natural hierarchy.
 - Tags are especially valuable when the skill injects external
   content (file contents, user input, tool output) alongside
-  instructions — the tags prevent the agent from confusing
+  instructions: the tags prevent the agent from confusing
   injected content with skill instructions.
 
 **When XML tags help most:** skills that template in variable
@@ -119,7 +119,7 @@ patterns:
 - Be explicit about which tool to use and when: "Use the Edit
   tool for modifications" beats "modify the file."
 - If a skill references tools, state expected behavior clearly:
-  "Read the file first, then edit" — not "look at the file."
+  "Read the file first, then edit": not "look at the file."
 
 **Overtriggering risk:** Claude 4.5/4.6 models are more
 responsive to system prompts than earlier models. Skills that
@@ -163,14 +163,14 @@ Claude 4.5/4.6 models are less verbose and more direct. Skills
 written for earlier models may have compensating instructions
 that are now counterproductive:
 
-- **Excessive emphasis**: CRITICAL, MUST, NEVER, ALWAYS in caps
-  — earlier models needed strong signals; current models may
+- **Excessive emphasis**: CRITICAL, MUST, NEVER, ALWAYS in caps:
+  earlier models needed strong signals; current models may
   overtrigger or treat these as higher priority than intended.
 - **Redundant capability reminders**: "You are an expert at X"
-  or "You have the ability to Y" — the model already knows its
+  or "You have the ability to Y": the model already knows its
   capabilities.
 - **Verbose output templates**: asking for detailed summaries
-  after every action — current models skip unnecessary summaries
+  after every action: current models skip unnecessary summaries
   by default, which is usually better.
 
 **Calibration test:** read the skill's instructions and ask:
@@ -185,7 +185,7 @@ adding unnecessary abstractions, or building in flexibility that
 wasn't requested.
 
 Skills should:
-- Scope actions to what's requested — a bug fix skill shouldn't
+- Scope actions to what's requested: a bug fix skill shouldn't
   also clean up surrounding code.
 - Avoid encouraging "while you're in there" improvements.
 - State the minimum viable outcome, not the maximum possible.

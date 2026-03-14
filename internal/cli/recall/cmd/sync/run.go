@@ -10,7 +10,7 @@ import (
 	"path/filepath"
 
 	"github.com/ActiveMemory/ctx/internal/config/dir"
-	"github.com/ActiveMemory/ctx/internal/config/file"
+	"github.com/ActiveMemory/ctx/internal/config/journal"
 	"github.com/spf13/cobra"
 
 	"github.com/ActiveMemory/ctx/internal/cli/recall/core"
@@ -54,11 +54,11 @@ func Run(cmd *cobra.Command) error {
 
 		switch {
 		case fmLocked && !stateLocked:
-			jstate.Mark(filename, file.StageLocked)
+			jstate.Mark(filename, journal.StageLocked)
 			write.JournalSyncLocked(cmd, filename)
 			locked++
 		case !fmLocked && stateLocked:
-			jstate.Clear(filename, file.StageLocked)
+			jstate.Clear(filename, journal.StageLocked)
 			write.JournalSyncUnlocked(cmd, filename)
 			unlocked++
 		}

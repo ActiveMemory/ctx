@@ -7,83 +7,14 @@
 package config
 
 import (
-	"os"
-	"path/filepath"
 	"testing"
 
+	"github.com/ActiveMemory/ctx/internal/config/ctx"
 	"github.com/ActiveMemory/ctx/internal/config/dir"
 	"github.com/ActiveMemory/ctx/internal/config/entry"
-	"github.com/ActiveMemory/ctx/internal/config/file"
+	"github.com/ActiveMemory/ctx/internal/config/marker"
+	"github.com/ActiveMemory/ctx/internal/config/regex"
 )
-
-func TestRegExFromAttrName(t *testing.T) {
-	tests := []struct {
-		name      string
-		attrName  string
-		input     string
-		wantMatch bool
-		wantValue string
-	}{
-		{
-			name:      "type attribute",
-			attrName:  "type",
-			input:     `type="task"`,
-			wantMatch: true,
-			wantValue: "task",
-		},
-		{
-			name:      "context attribute",
-			attrName:  "context",
-			input:     `context="some context here"`,
-			wantMatch: true,
-			wantValue: "some context here",
-		},
-		{
-			name:      "attribute in larger string",
-			attrName:  "id",
-			input:     `<tag id="123" class="foo">`,
-			wantMatch: true,
-			wantValue: "123",
-		},
-		{
-			name:      "no match",
-			attrName:  "missing",
-			input:     `type="task"`,
-			wantMatch: false,
-			wantValue: "",
-		},
-		{
-			name:      "empty value",
-			attrName:  "empty",
-			input:     `empty=""`,
-			wantMatch: true,
-			wantValue: "",
-		},
-	}
-
-	for _, tt := range tests {
-		t.Run(tt.name, func(t *testing.T) {
-			re := RegExFromAttrName(tt.attrName)
-			match := re.FindStringSubmatch(tt.input)
-
-			if tt.wantMatch {
-				if match == nil {
-					t.Errorf("expected match for %q in %q", tt.attrName, tt.input)
-					return
-				}
-				if len(match) < 2 {
-					t.Errorf("match has no capture group")
-					return
-				}
-				if match[1] != tt.wantValue {
-					t.Errorf("got value %q, want %q", match[1], tt.wantValue)
-				}
-			} else if match != nil {
-				t.Errorf("expected no match for %q in %q, got %v", tt.attrName, tt.input, match)
-			}
-		})
-	}
-}
 
 func TestRegExEntryHeader(t *testing.T) {
 	tests := []struct {
@@ -124,7 +55,7 @@ func TestRegExEntryHeader(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			match := RegExEntryHeader.FindStringSubmatch(tt.input)
+			match := regex.EntryHeader.FindStringSubmatch(tt.input)
 
 			if tt.wantMatch {
 				if match == nil {
@@ -210,7 +141,7 @@ func TestRegExTask(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			match := RegExTask.FindStringSubmatch(tt.input)
+			match := regex.Task.FindStringSubmatch(tt.input)
 
 			if tt.wantMatch {
 				if match == nil {
@@ -248,7 +179,7 @@ func TestRegExTaskMultiline(t *testing.T) {
 - [ ] Third task
 `
 
-	matches := RegExTaskMultiline.FindAllStringSubmatch(input, -1)
+	matches := regex.TaskMultiline.FindAllStringSubmatch(input, -1)
 
 	if len(matches) != 5 {
 		t.Errorf("expected 5 matches, got %d", len(matches))
@@ -280,9 +211,9 @@ func TestRegExPhase(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(tt.input, func(t *testing.T) {
-			matched := RegExPhase.MatchString(tt.input)
+			matched := regex.Phase.MatchString(tt.input)
 			if matched != tt.wantMatch {
-				t.Errorf("RegExPhase.MatchString(%q) = %v, want %v", tt.input, matched, tt.wantMatch)
+				t.Errorf("Phase.MatchString(%q) = %v, want %v", tt.input, matched, tt.wantMatch)
 			}
 		})
 	}
@@ -316,7 +247,7 @@ func TestRegExTaskDoneTimestamp(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			match := RegExTaskDoneTimestamp.FindStringSubmatch(tt.input)
+			match := regex.TaskDoneTimestamp.FindStringSubmatch(tt.input)
 
 			if tt.wantMatch {
 				if match == nil {
@@ -366,7 +297,7 @@ func TestRegExPath(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			match := RegExPath.FindStringSubmatch(tt.input)
+			match := regex.CodeFencePath.FindStringSubmatch(tt.input)
 
 			if tt.wantMatch {
 				if match == nil {
@@ -384,17 +315,17 @@ func TestRegExPath(t *testing.T) {
 }
 
 func TestFileTypeMap(t *testing.T) {
-	// Verify FileType map contains expected mappings
+	// Verify ToCtxFile map contains expected mappings
 	expected := map[string]string{
-		entry.Decision:   file.FileDecision,
-		entry.Task:       file.FileTask,
-		entry.Learning:   file.FileLearning,
-		entry.Convention: file.FileConvention,
+		entry.Decision:   ctx.Decision,
+		entry.Task:       ctx.Task,
+		entry.Learning:   ctx.Learning,
+		entry.Convention: ctx.Convention,
 	}
 
-	for entry, file := range expected {
-		if file.FileType[entry] != file {
-			t.Errorf("FileType[%q] = %q, want %q", entry, file.FileType[entry], file)
+	for ent, ctxFile := range expected {
+		if entry.ToCtxFile[ent] != ctxFile {
+			t.Errorf("ToCtxFile[%q] = %q, want %q", ent, entry.ToCtxFile[ent], ctxFile)
 		}
 	}
 }
@@ -402,12 +333,12 @@ func TestFileTypeMap(t *testing.T) {
 func TestRequiredFiles(t *testing.T) {
 	// Verify FilesRequired contains essential files
 	required := map[string]bool{
-		file.FileConstitution: false,
-		file.FileTask:         false,
-		file.FileDecision:     false,
+		ctx.Constitution: false,
+		ctx.Task:         false,
+		ctx.Decision:     false,
 	}
 
-	for _, f := range file.FilesRequired {
+	for _, f := range ctx.FilesRequired {
 		if _, ok := required[f]; ok {
 			required[f] = true
 		}
@@ -421,21 +352,21 @@ func TestRequiredFiles(t *testing.T) {
 }
 
 func TestFileReadOrder(t *testing.T) {
-	// Verify FileReadOrder has expected files in order
-	if len(file.FileReadOrder) == 0 {
-		t.Error("FileReadOrder is empty")
+	// Verify ReadOrder has expected files in order
+	if len(ctx.ReadOrder) == 0 {
+		t.Error("ReadOrder is empty")
 	}
 
 	// Constitution should be first (most important)
-	if file.FileReadOrder[0] != file.FileConstitution {
-		t.Errorf("FileReadOrder[0] = %q, want %q (constitution should be first)",
-			file.FileReadOrder[0], file.FileConstitution)
+	if ctx.ReadOrder[0] != ctx.Constitution {
+		t.Errorf("ReadOrder[0] = %q, want %q (constitution should be first)",
+			ctx.ReadOrder[0], ctx.Constitution)
 	}
 
 	// Tasks should be second (what to work on)
-	if file.FileReadOrder[1] != file.FileTask {
-		t.Errorf("FileReadOrder[1] = %q, want %q (tasks should be second)",
-			file.FileReadOrder[1], file.FileTask)
+	if ctx.ReadOrder[1] != ctx.Task {
+		t.Errorf("ReadOrder[1] = %q, want %q (tasks should be second)",
+			ctx.ReadOrder[1], ctx.Task)
 	}
 }
 
@@ -448,13 +379,13 @@ func TestConstants(t *testing.T) {
 	}{
 		{"Context", dir.Context, ".context"},
 		{"Claude", dir.Claude, ".claude"},
-		{"FileTask", file.FileTask, "TASKS.md"},
-		{"FileDecision", file.FileDecision, "DECISIONS.md"},
-		{"FileLearning", file.FileLearning, "LEARNINGS.md"},
-		{"PrefixTaskUndone", PrefixTaskUndone, "- [ ]"},
-		{"PrefixTaskDone", PrefixTaskDone, "- [x]"},
-		{"IndexStart", IndexStart, "<!-- INDEX:START -->"},
-		{"IndexEnd", IndexEnd, "<!-- INDEX:END -->"},
+		{"Task", ctx.Task, "TASKS.md"},
+		{"Decision", ctx.Decision, "DECISIONS.md"},
+		{"Learning", ctx.Learning, "LEARNINGS.md"},
+		{"PrefixTaskUndone", marker.PrefixTaskUndone, "- [ ]"},
+		{"PrefixTaskDone", marker.PrefixTaskDone, "- [x]"},
+		{"IndexStart", marker.IndexStart, "<!-- INDEX:START -->"},
+		{"IndexEnd", marker.IndexEnd, "<!-- INDEX:END -->"},
 	}
 
 	for _, tt := range tests {

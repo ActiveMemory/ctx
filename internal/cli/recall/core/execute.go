@@ -11,10 +11,11 @@ import (
 	"path/filepath"
 	"strings"
 
+	"github.com/ActiveMemory/ctx/internal/assets"
 	"github.com/ActiveMemory/ctx/internal/config/fs"
+	"github.com/ActiveMemory/ctx/internal/config/token"
 	"github.com/spf13/cobra"
 
-	"github.com/ActiveMemory/ctx/internal/config"
 	"github.com/ActiveMemory/ctx/internal/journal/state"
 	"github.com/ActiveMemory/ctx/internal/write"
 )
@@ -40,12 +41,12 @@ func ExecuteExport(
 	for _, fa := range plan.Actions {
 		if fa.Action == ActionLocked {
 			skipped++
-			write.SkipFile(cmd, fa.Filename, config.FrontmatterLocked)
+			write.SkipFile(cmd, fa.Filename, assets.FrontmatterLocked)
 			continue
 		}
 		if fa.Action == ActionSkip {
 			skipped++
-			write.SkipFile(cmd, fa.Filename, config.ReasonExists)
+			write.SkipFile(cmd, fa.Filename, assets.ReasonExists)
 			continue
 		}
 
@@ -55,7 +56,7 @@ func ExecuteExport(
 				fa.Session, fa.Messages[fa.StartIdx:fa.EndIdx],
 				fa.StartIdx, fa.Part, fa.TotalParts, fa.BaseName, fa.Title,
 			),
-			config.Ellipsis,
+			token.Ellipsis,
 		)
 
 		fileExists := fa.Action == ActionRegenerate
@@ -66,7 +67,7 @@ func ExecuteExport(
 			existing, readErr := os.ReadFile(filepath.Clean(fa.Path))
 			if readErr == nil {
 				if fm := ExtractFrontmatter(string(existing)); fm != "" {
-					content = fm + config.NewlineLF + StripFrontmatter(content)
+					content = fm + token.NewlineLF + StripFrontmatter(content)
 				}
 			}
 		}
@@ -90,7 +91,7 @@ func ExecuteExport(
 		jstate.MarkExported(fa.Filename)
 
 		if fileExists && !discard {
-			write.ExportedFile(cmd, fa.Filename, config.ReasonUpdated)
+			write.ExportedFile(cmd, fa.Filename, assets.ReasonUpdated)
 		} else {
 			write.ExportedFile(cmd, fa.Filename, "")
 		}

@@ -23,17 +23,17 @@ tracking, then there will be something to remember."
 
 ## When NOT to Use
 
-- Context was already loaded this session via `/ctx-agent` — don't
+- Context was already loaded this session via `/ctx-agent`: don't
   re-fetch what you already have
 - Mid-session when you are actively working on a task and context
-  is fresh — don't interrupt flow
+  is fresh: don't interrupt flow
 - When the user is asking about a *specific* past session by name
-  or ID — use `/ctx-recall` instead, which has list/show/export
+  or ID: use `/ctx-recall` instead, which has list/show/export
   subcommands
 
 ## Process
 
-Do all of this **silently** — narrating the steps makes the readback
+Do all of this **silently**: narrating the steps makes the readback
 feel like a file search rather than genuine recall:
 
 1. **Load context packet**:
@@ -56,7 +56,7 @@ Present your findings as a structured readback with these sections:
 most recent session from the session list.
 
 **Active work**: Pending and in-progress tasks from TASKS.md. Use
-a brief list — one line per task with its status.
+a brief list: one line per task with its status.
 
 **Recent context**: 1-2 recent decisions or learnings that are
 relevant. Pick the most recent or most impactful.
@@ -66,11 +66,11 @@ tasks, or ask the user for direction if priorities are unclear.
 
 ## Readback Rules
 
-- Open directly with the readback — instead of "I don't have memory",
+- Open directly with the readback: instead of "I don't have memory",
   present what you found
-- Skip preamble like "Let me check" — go straight to the structured
+- Skip preamble like "Let me check": go straight to the structured
   readback
-- Present findings as recall, not discovery — you are *remembering*,
+- Present findings as recall, not discovery: you are *remembering*,
   not *searching*
 - Be honest about the mechanism only if the user explicitly asks
   *how* you remember (e.g., "It's stored in context files managed

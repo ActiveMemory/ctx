@@ -11,11 +11,11 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/ActiveMemory/ctx/internal/config/file"
-	"github.com/ActiveMemory/ctx/internal/config/fs"
 	"github.com/spf13/cobra"
 
 	"github.com/ActiveMemory/ctx/internal/cli/compact/core"
+	ctxCfg "github.com/ActiveMemory/ctx/internal/config/ctx"
+	"github.com/ActiveMemory/ctx/internal/config/fs"
 	"github.com/ActiveMemory/ctx/internal/context"
 	"github.com/ActiveMemory/ctx/internal/rc"
 )
@@ -62,7 +62,7 @@ func Run(cmd *cobra.Command, archive bool) error {
 
 	// Process other files for empty sections
 	for _, f := range ctx.Files {
-		if f.Name == file.FileTask {
+		if f.Name == ctxCfg.Task {
 			continue
 		}
 		cleaned, count := core.RemoveEmptySections(string(f.Content))

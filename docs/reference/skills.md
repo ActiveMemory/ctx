@@ -72,7 +72,7 @@ opinionated behavior on top.
 | [`/ctx-implement`](#ctx-implement)                   | Execute a plan step-by-step with verification                   | user-invocable   |
 | [`/ctx-loop`](#ctx-loop)                             | Generate autonomous loop script                                 | user-invocable   |
 | [`/ctx-worktree`](#ctx-worktree)                     | Manage git worktrees for parallel agents                        | user-invocable   |
-| [`/ctx-map`](#ctx-map)                               | Build and maintain architecture maps                            | user-invocable   |
+| [`/ctx-architecture`](#ctx-architecture)                               | Build and maintain architecture maps                            | user-invocable   |
 | [`/ctx-remind`](#ctx-remind)                         | Manage session-scoped reminders                                 | user-invocable   |
 | [`/ctx-doctor`](#ctx-doctor)                         | Troubleshoot ctx behavior with health checks and event analysis | user-invocable   |
 | [`/ctx-skill-creator`](#ctx-skill-creator)           | Create, improve, and test skills                                | user-invocable   |
@@ -606,7 +606,7 @@ grouping, and tear down with merge.
 
 ---
 
-### `/ctx-map`
+### `/ctx-architecture`
 
 Build and maintain architecture maps incrementally. Creates or refreshes
 `ARCHITECTURE.md` (*succinct project map, loaded at session start*) and

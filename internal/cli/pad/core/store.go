@@ -14,9 +14,9 @@ import (
 	"strings"
 
 	"github.com/ActiveMemory/ctx/internal/assets"
-	"github.com/ActiveMemory/ctx/internal/config"
-	"github.com/ActiveMemory/ctx/internal/config/file"
 	"github.com/ActiveMemory/ctx/internal/config/fs"
+	"github.com/ActiveMemory/ctx/internal/config/pad"
+	"github.com/ActiveMemory/ctx/internal/config/token"
 	"github.com/ActiveMemory/ctx/internal/crypto"
 	ctxerr "github.com/ActiveMemory/ctx/internal/err"
 	"github.com/ActiveMemory/ctx/internal/rc"
@@ -29,9 +29,9 @@ import (
 //   - string: Encrypted or plaintext path based on rc.ScratchpadEncrypt()
 func ScratchpadPath() string {
 	if rc.ScratchpadEncrypt() {
-		return filepath.Join(rc.ContextDir(), file.FileScratchpadEnc)
+		return filepath.Join(rc.ContextDir(), pad.Enc)
 	}
-	return filepath.Join(rc.ContextDir(), file.FileScratchpadMd)
+	return filepath.Join(rc.ContextDir(), pad.Md)
 }
 
 // KeyPath returns the full path to the encryption key file.
@@ -42,7 +42,7 @@ func ScratchpadPath() string {
 // Returns:
 //   - string: Resolved key file path
 func KeyPath() string {
-	config.MigrateKeyFile(rc.ContextDir())
+	crypto.MigrateKeyFile(rc.ContextDir())
 	return rc.KeyPath()
 }
 
@@ -74,7 +74,7 @@ func EnsureKey() error {
 		return ctxerr.GenerateKey(genErr)
 	}
 
-	if mkErr := os.MkdirAll(filepath.Dir(kp), config.PermKeyDir); mkErr != nil {
+	if mkErr := os.MkdirAll(filepath.Dir(kp), fs.PermKeyDir); mkErr != nil {
 		return ctxerr.MkdirKeyDir(mkErr)
 	}
 
@@ -103,17 +103,17 @@ func EnsureGitignore(contextDir, filename string) error {
 		return err
 	}
 
-	for _, line := range strings.Split(string(content), config.NewlineLF) {
+	for _, line := range strings.Split(string(content), token.NewlineLF) {
 		if strings.TrimSpace(line) == entry {
 			return nil
 		}
 	}
 
 	sep := ""
-	if len(content) > 0 && !strings.HasSuffix(string(content), config.NewlineLF) {
-		sep = config.NewlineLF
+	if len(content) > 0 && !strings.HasSuffix(string(content), token.NewlineLF) {
+		sep = token.NewlineLF
 	}
-	return os.WriteFile(gitignorePath, []byte(string(content)+sep+entry+config.NewlineLF), fs.PermFile)
+	return os.WriteFile(gitignorePath, []byte(string(content)+sep+entry+token.NewlineLF), fs.PermFile)
 }
 
 // ReadEntries reads the scratchpad and returns its entries.

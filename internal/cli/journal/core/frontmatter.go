@@ -9,9 +9,9 @@ package core
 import (
 	"strings"
 
+	"github.com/ActiveMemory/ctx/internal/assets"
+	"github.com/ActiveMemory/ctx/internal/config/token"
 	"gopkg.in/yaml.v3"
-
-	"github.com/ActiveMemory/ctx/internal/config"
 )
 
 // TransformFrontmatter converts journal frontmatter to Obsidian format.
@@ -29,20 +29,20 @@ import (
 // Returns:
 //   - string: Content with transformed frontmatter
 func TransformFrontmatter(content, sourcePath string) string {
-	nl := config.NewlineLF
-	fmOpen := len(config.Separator + nl)
+	nl := token.NewlineLF
+	fmOpen := len(token.Separator + nl)
 
-	if !strings.HasPrefix(content, config.Separator+nl) {
+	if !strings.HasPrefix(content, token.Separator+nl) {
 		return content
 	}
 
-	endIdx := strings.Index(content[fmOpen:], nl+config.Separator+nl)
+	endIdx := strings.Index(content[fmOpen:], nl+token.Separator+nl)
 	if endIdx < 0 {
 		return content
 	}
 
 	fmRaw := content[fmOpen : fmOpen+endIdx]
-	afterFM := content[fmOpen+endIdx+len(nl+config.Separator+nl):]
+	afterFM := content[fmOpen+endIdx+len(nl+token.Separator+nl):]
 
 	// Parse the original frontmatter into a generic map to preserve
 	// unknown fields, then extract known fields for transformation.
@@ -54,24 +54,24 @@ func TransformFrontmatter(content, sourcePath string) string {
 	// Build the Obsidian frontmatter
 	ofm := ObsidianFrontmatter{}
 
-	if v, ok := raw[config.FrontmatterTitle].(string); ok {
+	if v, ok := raw[assets.FrontmatterTitle].(string); ok {
 		ofm.Title = v
 	}
-	if v, ok := raw[config.FrontmatterDate].(string); ok {
+	if v, ok := raw[assets.FrontmatterDate].(string); ok {
 		ofm.Date = v
 	}
-	if v, ok := raw[config.FrontmatterType].(string); ok {
+	if v, ok := raw[assets.FrontmatterType].(string); ok {
 		ofm.Type = v
 	}
-	if v, ok := raw[config.FrontmatterOutcome].(string); ok {
+	if v, ok := raw[assets.FrontmatterOutcome].(string); ok {
 		ofm.Outcome = v
 	}
 
 	// topics -> tags
-	ofm.Tags = ExtractStringSlice(raw, config.FrontmatterTopics)
+	ofm.Tags = ExtractStringSlice(raw, assets.FrontmatterTopics)
 
-	ofm.Technologies = ExtractStringSlice(raw, config.FrontmatterTechnologies)
-	ofm.KeyFiles = ExtractStringSlice(raw, config.FrontmatterKeyFiles)
+	ofm.Technologies = ExtractStringSlice(raw, assets.FrontmatterTechnologies)
+	ofm.KeyFiles = ExtractStringSlice(raw, assets.FrontmatterKeyFiles)
 
 	// Add aliases from the title
 	if ofm.Title != "" {
@@ -89,9 +89,9 @@ func TransformFrontmatter(content, sourcePath string) string {
 	}
 
 	var sb strings.Builder
-	sb.WriteString(config.Separator + nl)
+	sb.WriteString(token.Separator + nl)
 	sb.Write(out)
-	sb.WriteString(config.Separator + nl)
+	sb.WriteString(token.Separator + nl)
 	sb.WriteString(afterFM)
 
 	return sb.String()

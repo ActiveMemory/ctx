@@ -4,7 +4,7 @@ description: "Full journal pipeline: export unexported sessions, then batch-enri
 allowed-tools: Bash(ctx:*), Read, Glob, Grep, Edit, Write, Task
 ---
 
-Full journal pipeline — export if needed, then batch-enrich.
+Full journal pipeline: export if needed, then batch-enrich.
 
 ## When to Use
 
@@ -34,14 +34,14 @@ JOURNAL_DIR="$CTX_DIR/journal"
 md_count=$(ls "$JOURNAL_DIR"/*.md 2>/dev/null | wc -l)
 
 if [ "$md_count" -eq 0 ]; then
-  echo "No journal entries found — exporting all sessions."
+  echo "No journal entries found: exporting all sessions."
   ctx recall export --all --yes
 else
   # Compare newest .md mtime against .jsonl files
   newest_md=$(stat -c %Y $(ls -t "$JOURNAL_DIR"/*.md | head -1))
   unexported=$(find ~/.claude/projects -name "*.jsonl" -newermt @${newest_md} 2>/dev/null | wc -l)
   if [ "$unexported" -gt 0 ]; then
-    echo "$unexported unexported session(s) found — exporting first."
+    echo "$unexported unexported session(s) found: exporting first."
     ctx recall export --all --yes
   fi
 fi
@@ -71,22 +71,22 @@ entries without an `enriched` date set.
 If `mark-journal --check` is unavailable (no state file, command
 fails), fall back to frontmatter inspection. An entry is considered
 **already enriched** if its YAML frontmatter contains **both** `type`
-and `outcome` fields — these are set exclusively by enrichment, never
+and `outcome` fields: these are set exclusively by enrichment, never
 by export.
 
-Do NOT use `title` or `date` to detect enrichment — those are always
+Do NOT use `title` or `date` to detect enrichment: those are always
 present from export. The enrichment-only fields are:
 
-| Field          | Set by        |
-|----------------|---------------|
-| `title`        | Export        |
-| `date`         | Export        |
-| `time`         | Export        |
-| `model`        | Export        |
-| `tokens_in`    | Export        |
-| `tokens_out`   | Export        |
-| `session_id`   | Export        |
-| `project`      | Export        |
+| Field          | Set by         |
+|----------------|----------------|
+| `title`        | Export         |
+| `date`         | Export         |
+| `time`         | Export         |
+| `model`        | Export         |
+| `tokens_in`    | Export         |
+| `tokens_out`   | Export         |
+| `session_id`   | Export         |
+| `project`      | Export         |
 | `type`         | **Enrichment** |
 | `outcome`      | **Enrichment** |
 | `topics`       | **Enrichment** |
@@ -101,7 +101,7 @@ Skip entries that are not worth enriching:
 
 - **Locked entries**: a file is locked if `.state.json` has a
   `locked` date OR the frontmatter contains `locked: true`. Never
-  modify locked files — neither metadata nor body. Check via:
+  modify locked files: neither metadata nor body. Check via:
   `ctx system mark-journal --check <filename> locked`
   or look for `locked: true` in the YAML frontmatter.
 - **Suggestion sessions**: files under ~20 lines or containing
@@ -198,7 +198,7 @@ patterns, then inserts frontmatter and marks state automatically.
    ```
 
 2. Run the heuristic enrichment script. The script path is relative
-   to this skill's directory — copy it to /tmp or reference it via
+   to this skill's directory: copy it to /tmp or reference it via
    the full embedded path:
    ```bash
    python3 references/enrich-heuristic.py /tmp/enrich-list.txt
@@ -209,11 +209,11 @@ patterns, then inserts frontmatter and marks state automatically.
 
 ### When to use heuristic vs. per-file enrichment
 
-| Backlog size | Approach |
-|-------------|----------|
-| 1-5 entries | Read each file, enrich manually with full context |
-| 6-20 entries | Sequential processing in the main conversation |
-| 20+ entries | Use `enrich-heuristic.py` for bulk processing |
+| Backlog size | Approach                                          |
+|--------------|---------------------------------------------------|
+| 1-5 entries  | Read each file, enrich manually with full context |
+| 6-20 entries | Sequential processing in the main conversation    |
+| 20+ entries  | Use `enrich-heuristic.py` for bulk processing     |
 
 The heuristic script produces good-enough enrichment from titles
 and filenames. For higher quality, follow up with manual review

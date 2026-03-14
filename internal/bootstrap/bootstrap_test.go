@@ -12,7 +12,7 @@ import (
 	"testing"
 
 	"github.com/ActiveMemory/ctx/internal/config/cli"
-	"github.com/ActiveMemory/ctx/internal/config/file"
+	"github.com/ActiveMemory/ctx/internal/config/ctx"
 	"github.com/ActiveMemory/ctx/internal/config/flag"
 	"github.com/spf13/cobra"
 
@@ -65,7 +65,6 @@ func TestInitialize(t *testing.T) {
 		"status",
 		"load",
 		"add",
-		"complete",
 		"agent",
 		"drift",
 		"sync",
@@ -300,7 +299,7 @@ func TestInitGuard_AllowsInitializedCommand(t *testing.T) {
 	tmp := t.TempDir()
 
 	// Create required context files so Initialized() returns true.
-	for _, f := range file.FilesRequired {
+	for _, f := range ctx.FilesRequired {
 		path := filepath.Join(tmp, f)
 		if writeErr := os.WriteFile(path, []byte("# "+f+"\n"), 0o600); writeErr != nil {
 			t.Fatalf("setup: %v", writeErr)

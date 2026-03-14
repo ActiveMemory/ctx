@@ -12,9 +12,12 @@ import (
 	"path/filepath"
 	"strings"
 
-	"github.com/ActiveMemory/ctx/internal/config"
+	"github.com/ActiveMemory/ctx/internal/assets"
 	"github.com/ActiveMemory/ctx/internal/config/file"
 	"github.com/ActiveMemory/ctx/internal/config/fs"
+	"github.com/ActiveMemory/ctx/internal/config/journal"
+	"github.com/ActiveMemory/ctx/internal/config/regex"
+	"github.com/ActiveMemory/ctx/internal/config/token"
 	ctxerr "github.com/ActiveMemory/ctx/internal/err"
 )
 
@@ -63,20 +66,20 @@ func WriteMonthSections(
 	months map[string][]JournalEntry,
 	monthOrder []string, linkPrefix string,
 ) {
-	nl := config.NewlineLF
+	nl := token.NewlineLF
 	for _, month := range monthOrder {
-		_, _ = fmt.Fprintf(sb, config.TplJournalMonthHeading+nl+nl, month)
+		_, _ = fmt.Fprintf(sb, assets.TplJournalMonthHeading+nl+nl, month)
 		for _, e := range months[month] {
 			link := strings.TrimSuffix(e.Filename, file.ExtMarkdown)
 			timeStr := ""
-			if e.Time != "" && len(e.Time) >= config.JournalTimePrefixLen {
-				timeStr = e.Time[:config.JournalTimePrefixLen] + " "
+			if e.Time != "" && len(e.Time) >= journal.TimePrefixLen {
+				timeStr = e.Time[:journal.TimePrefixLen] + " "
 			}
 			_, _ = fmt.Fprintf(sb,
-				config.TplJournalSubpageEntry+nl,
+				assets.TplJournalSubpageEntry+nl,
 				timeStr, e.Title, linkPrefix, link)
 			if e.Summary != "" {
-				_, _ = fmt.Fprintf(sb, config.TplJournalIndexSummary+nl, e.Summary)
+				_, _ = fmt.Fprintf(sb, assets.TplJournalIndexSummary+nl, e.Summary)
 			}
 		}
 		sb.WriteString(nl)
@@ -95,13 +98,13 @@ func WriteMonthSections(
 //   - string: Complete Markdown page content
 func GenerateGroupedPage(heading, stats string, entries []JournalEntry) string {
 	var sb strings.Builder
-	nl := config.NewlineLF
+	nl := token.NewlineLF
 
 	sb.WriteString(heading + nl + nl)
 	sb.WriteString(stats + nl + nl)
 
 	months, monthOrder := GroupByMonth(entries)
-	WriteMonthSections(&sb, months, monthOrder, config.LinkPrefixParent)
+	WriteMonthSections(&sb, months, monthOrder, token.LinkPrefixParent)
 
 	return sb.String()
 }
@@ -126,7 +129,7 @@ func WritePopularAndLongtail(
 	ltCount int, ltHeading, ltTpl string,
 	ltItem func(int) (string, JournalEntry),
 ) {
-	nl := config.NewlineLF
+	nl := token.NewlineLF
 
 	if popCount > 0 {
 		sb.WriteString(popHeading + nl + nl)
@@ -157,5 +160,5 @@ func WritePopularAndLongtail(
 // Returns:
 //   - bool: True if the filename matches the multipart continuation pattern
 func ContinuesMultipart(filename string) bool {
-	return config.RegExMultiPart.MatchString(filename)
+	return regex.MultiPart.MatchString(filename)
 }

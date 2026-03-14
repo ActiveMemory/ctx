@@ -12,7 +12,7 @@ import (
 	"time"
 
 	"github.com/ActiveMemory/ctx/internal/config/dir"
-	"github.com/ActiveMemory/ctx/internal/config/file"
+	"github.com/ActiveMemory/ctx/internal/config/memory"
 	time2 "github.com/ActiveMemory/ctx/internal/config/time"
 	"github.com/spf13/cobra"
 
@@ -45,7 +45,7 @@ func Run(cmd *cobra.Command) error {
 
 	write.MemoryBridgeHeader(cmd)
 	write.MemorySource(cmd, sourcePath)
-	write.MemoryMirror(cmd, file.PathMemoryMirror)
+	write.MemoryMirror(cmd, memory.PathMemoryMirror)
 
 	// Last sync time
 	state, _ := mem.LoadState(contextDir)
@@ -71,7 +71,7 @@ func Run(cmd *cobra.Command) error {
 	// Mirror line count
 	memoryDir := filepath.Join(contextDir, dir.Memory)
 	if mirrorData, readErr := validation.SafeReadFile(
-		memoryDir, file.FileMemoryMirror,
+		memoryDir, memory.MemoryMirror,
 	); readErr == nil {
 		write.MemoryMirrorLines(cmd, core.CountFileLines(mirrorData))
 	} else {

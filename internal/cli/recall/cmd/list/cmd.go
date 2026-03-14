@@ -7,7 +7,7 @@
 package list
 
 import (
-	"github.com/ActiveMemory/ctx/internal/config/recall"
+	"github.com/ActiveMemory/ctx/internal/config/journal"
 	"github.com/spf13/cobra"
 
 	"github.com/ActiveMemory/ctx/internal/assets"
@@ -38,7 +38,7 @@ func Cmd() *cobra.Command {
 		},
 	}
 
-	cmd.Flags().IntVarP(&limit, "limit", "n", recall.DefaultRecallListLimit,
+	cmd.Flags().IntVarP(&limit, "limit", "n", journal.DefaultRecallListLimit,
 		assets.FlagDesc(assets.FlagDescKeyRecallListLimit),
 	)
 	cmd.Flags().StringVarP(&project, "project", "p", "",

@@ -10,12 +10,12 @@ import (
 	"encoding/json"
 	"os"
 
-	"github.com/ActiveMemory/ctx/internal/config/file"
+	"github.com/ActiveMemory/ctx/internal/config/hook"
+	"github.com/ActiveMemory/ctx/internal/config/regex"
 	"github.com/spf13/cobra"
 
 	"github.com/ActiveMemory/ctx/internal/assets"
 	"github.com/ActiveMemory/ctx/internal/cli/system/core"
-	"github.com/ActiveMemory/ctx/internal/config"
 	"github.com/ActiveMemory/ctx/internal/notify"
 )
 
@@ -41,42 +41,42 @@ func Run(cmd *cobra.Command, stdin *os.File) error {
 
 	var variant, fallback string
 
-	if config.RegExMidSudo.MatchString(command) {
-		variant = file.VariantMidSudo
+	if regex.MidSudo.MatchString(command) {
+		variant = hook.VariantMidSudo
 		fallback = assets.TextDesc(assets.TextDescKeyBlockMidSudo)
 	}
 
-	if variant == "" && config.RegExMidGitPush.MatchString(command) {
-		variant = file.VariantMidGitPush
+	if variant == "" && regex.MidGitPush.MatchString(command) {
+		variant = hook.VariantMidGitPush
 		fallback = assets.TextDesc(assets.TextDescKeyBlockMidGitPush)
 	}
 
-	if variant == "" && config.RegExCpMvToBin.MatchString(command) {
-		variant = file.VariantCpToBin
+	if variant == "" && regex.CpMvToBin.MatchString(command) {
+		variant = hook.VariantCpToBin
 		fallback = assets.TextDesc(assets.TextDescKeyBlockCpToBin)
 	}
 
-	if variant == "" && config.RegExInstallToLocalBin.MatchString(command) {
-		variant = file.VariantInstallToLocalBin
+	if variant == "" && regex.InstallToLocalBin.MatchString(command) {
+		variant = hook.VariantInstallToLocalBin
 		fallback = assets.TextDesc(assets.TextDescKeyBlockInstallToLocalBin)
 	}
 
 	var reason string
 	if variant != "" {
 		reason = core.LoadMessage(
-			file.HookBlockDangerousCommands, variant, nil, fallback,
+			hook.BlockDangerousCommands, variant, nil, fallback,
 		)
 	}
 
 	if reason != "" {
 		resp := core.BlockResponse{
-			Decision: file.HookDecisionBlock,
+			Decision: hook.HookDecisionBlock,
 			Reason:   reason,
 		}
 		data, _ := json.Marshal(resp)
 		cmd.Println(string(data))
-		ref := notify.NewTemplateRef(file.HookBlockDangerousCommands, variant, nil)
-		core.Relay(file.HookBlockDangerousCommands+": "+reason, input.SessionID, ref)
+		ref := notify.NewTemplateRef(hook.BlockDangerousCommands, variant, nil)
+		core.Relay(hook.BlockDangerousCommands+": "+reason, input.SessionID, ref)
 	}
 
 	return nil

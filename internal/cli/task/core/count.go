@@ -7,7 +7,7 @@
 package core
 
 import (
-	"github.com/ActiveMemory/ctx/internal/config"
+	"github.com/ActiveMemory/ctx/internal/config/regex"
 	"github.com/ActiveMemory/ctx/internal/task"
 )
 
@@ -21,7 +21,7 @@ import (
 func CountPendingTasks(lines []string) int {
 	count := 0
 	for _, line := range lines {
-		match := config.RegExTask.FindStringSubmatch(line)
+		match := regex.Task.FindStringSubmatch(line)
 		if match != nil && task.Pending(match) && !task.SubTask(match) {
 			count++
 		}

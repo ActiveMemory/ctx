@@ -107,7 +107,7 @@ preserved verbatim.
 
 **Status**: Accepted
 
-**Context**: Designing the /ctx-map skill output documents — needed to decide where DETAILED_DESIGN.md fits in the context loading pipeline
+**Context**: Designing the /ctx-architecture skill output documents — needed to decide where DETAILED_DESIGN.md fits in the context loading pipeline
 
 **Decision**: DETAILED_DESIGN.md lives outside FileReadOrder
 

@@ -12,7 +12,7 @@ import (
 	"os"
 	"time"
 
-	"github.com/ActiveMemory/ctx/internal/config/file"
+	"github.com/ActiveMemory/ctx/internal/config/session"
 	"github.com/spf13/cobra"
 )
 
@@ -43,13 +43,13 @@ func PrintHookContext(cmd *cobra.Command, event, context string) {
 //
 // Returns:
 //   - input: parsed hook input
-//   - sessionID: resolved session identifier (falls back to config.SessionUnknown)
+//   - sessionID: resolved session identifier (falls back to config.IDSessionUnknown)
 //   - paused: true if the session is currently paused
 func HookPreamble(stdin *os.File) (input HookInput, sessionID string, paused bool) {
 	input = ReadInput(stdin)
 	sessionID = input.SessionID
 	if sessionID == "" {
-		sessionID = file.SessionUnknown
+		sessionID = session.IDUnknown
 	}
 	paused = Paused(sessionID) > 0
 	return

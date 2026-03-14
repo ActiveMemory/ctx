@@ -91,6 +91,16 @@ Date-gate reminders to surface only after a specific date.
 
 ---
 
+### [Reviewing Session Changes](session-changes.md)
+
+See what moved since your last session: context file edits, code
+commits, directories touched. Auto-detects session boundaries from
+state markers.
+
+**Uses**: `ctx changes`, `ctx agent`, `ctx status`
+
+---
+
 ### [Pausing Context Hooks](session-pause.md)
 
 Silence all nudge hooks for a **quick task** that doesn't need ceremony
@@ -122,7 +132,7 @@ survive across sessions and team members.
 `TASKS.md` focused as your project evolves across dozens of
 sessions.
 
-**Uses**: `ctx add task`, `ctx complete`, `ctx tasks archive`,
+**Uses**: `ctx add task`, `ctx tasks complete`, `ctx tasks archive`,
 `ctx tasks snapshot`, `/ctx-add-task`, `/ctx-archive`, `/ctx-next`
 
 ---
@@ -178,6 +188,16 @@ ceremony nudges, or tailor post-commit instructions for your stack.
 
 **Uses**: `ctx system message list`, `ctx system message show`,
 `ctx system message edit`, `ctx system message reset`
+
+---
+
+### [Hook Sequence Diagrams](hook-sequence-diagrams.md)
+
+**Mermaid sequence diagrams** for every system hook: entry conditions,
+state reads, output, throttling, and exit points. Includes throttling
+summary table and state file reference.
+
+**Uses**: All `ctx system` hooks
 
 ---
 
@@ -343,6 +363,16 @@ file overlap, work in parallel, merge back.
 
 **Uses**: `/ctx-worktree`, `/ctx-next`, `git worktree`,
 `git merge`
+
+---
+
+### [Generating Dependency Graphs](dependency-graph.md)
+
+Map your project's internal and external **dependency structure**.
+Auto-detects Go, Node.js, Python, and Rust. Output as Mermaid,
+table, or JSON.
+
+**Uses**: `ctx deps`, `ctx drift`
 
 ---
 

@@ -10,7 +10,9 @@ import (
 	"strings"
 	"time"
 
-	"github.com/ActiveMemory/ctx/internal/config"
+	"github.com/ActiveMemory/ctx/internal/assets"
+	"github.com/ActiveMemory/ctx/internal/config/regex"
+	"github.com/ActiveMemory/ctx/internal/config/token"
 	"github.com/ActiveMemory/ctx/internal/task"
 )
 
@@ -44,17 +46,17 @@ func ParseTaskBlocks(lines []string) []TaskBlock {
 		line := lines[i]
 
 		// Track if we're in the Completed section
-		if strings.HasPrefix(line, config.HeadingCompleted) {
+		if strings.HasPrefix(line, assets.HeadingCompleted) {
 			inCompletedSection = true
 			i++
 			continue
 		}
-		if strings.HasPrefix(line, config.HeadingLevelTwoStart) && inCompletedSection {
+		if strings.HasPrefix(line, token.HeadingLevelTwoStart) && inCompletedSection {
 			inCompletedSection = false
 		}
 
 		// Skip if in the Completed section or not a checked task
-		match := config.RegExTask.FindStringSubmatch(line)
+		match := regex.Task.FindStringSubmatch(line)
 		if inCompletedSection || match == nil || !task.Completed(match) {
 			i++
 			continue
@@ -83,7 +85,7 @@ func ParseTaskBlocks(lines []string) []TaskBlock {
 // Returns:
 //   - string: All lines joined with newlines
 func (b *TaskBlock) BlockContent() string {
-	return strings.Join(b.Lines, config.NewlineLF)
+	return strings.Join(b.Lines, token.NewlineLF)
 }
 
 // ParentTaskText extracts just the task text from the parent line.
@@ -94,7 +96,7 @@ func (b *TaskBlock) ParentTaskText() string {
 	if len(b.Lines) == 0 {
 		return ""
 	}
-	match := config.RegExTask.FindStringSubmatch(b.Lines[0])
+	match := regex.Task.FindStringSubmatch(b.Lines[0])
 	if match != nil {
 		return task.Content(match)
 	}

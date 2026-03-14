@@ -7,7 +7,7 @@
 package backup
 
 import (
-	"github.com/ActiveMemory/ctx/internal/config/file"
+	"github.com/ActiveMemory/ctx/internal/config/archive"
 	"github.com/spf13/cobra"
 
 	"github.com/ActiveMemory/ctx/internal/assets"
@@ -29,7 +29,7 @@ func Cmd() *cobra.Command {
 		},
 	}
 
-	cmd.Flags().String("scope", file.BackupScopeAll,
+	cmd.Flags().String("scope", archive.BackupScopeAll,
 		assets.FlagDesc(assets.FlagDescKeySystemBackupScope),
 	)
 	cmd.Flags().Bool("json", false,

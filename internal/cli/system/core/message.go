@@ -13,9 +13,12 @@ import (
 	"text/template"
 
 	"github.com/ActiveMemory/ctx/internal/assets"
-	"github.com/ActiveMemory/ctx/internal/config"
+	"github.com/ActiveMemory/ctx/internal/config/box"
 	"github.com/ActiveMemory/ctx/internal/config/dir"
 	"github.com/ActiveMemory/ctx/internal/config/file"
+	"github.com/ActiveMemory/ctx/internal/config/session"
+	"github.com/ActiveMemory/ctx/internal/config/token"
+	ctxcontext "github.com/ActiveMemory/ctx/internal/context"
 	"github.com/ActiveMemory/ctx/internal/rc"
 	"github.com/ActiveMemory/ctx/internal/validation"
 )
@@ -66,7 +69,7 @@ func renderTemplate(tmpl string, vars map[string]any, fallback string) string {
 		return "" // intentional silence
 	}
 
-	t, parseErr := template.New(file.TemplateName).Parse(tmpl)
+	t, parseErr := template.New(session.TemplateName).Parse(tmpl)
 	if parseErr != nil {
 		return fallback
 	}
@@ -89,10 +92,10 @@ func renderTemplate(tmpl string, vars map[string]any, fallback string) string {
 //   - string: Box-wrapped content
 func BoxLines(content string) string {
 	var b strings.Builder
-	for _, line := range strings.Split(strings.TrimRight(content, config.NewlineLF), config.NewlineLF) {
-		b.WriteString(file.BoxLinePrefix)
+	for _, line := range strings.Split(strings.TrimRight(content, token.NewlineLF), token.NewlineLF) {
+		b.WriteString(box.LinePrefix)
 		b.WriteString(line)
-		b.WriteString(config.NewlineLF)
+		b.WriteString(token.NewlineLF)
 	}
 	return b.String()
 }
@@ -109,16 +112,16 @@ func BoxLines(content string) string {
 // Returns:
 //   - string: fully formatted nudge box
 func NudgeBox(relayPrefix, title, content string) string {
-	pad := file.NudgeBoxWidth - len(title)
+	pad := box.NudgeBoxWidth - len(title)
 	if pad < 0 {
 		pad = 0
 	}
-	msg := relayPrefix + config.NewlineLF + config.NewlineLF +
-		file.BoxTop + title + " " + strings.Repeat("─", pad) + config.NewlineLF
+	msg := relayPrefix + token.NewlineLF + token.NewlineLF +
+		box.Top + title + " " + strings.Repeat("─", pad) + token.NewlineLF
 	msg += BoxLines(content)
-	if line := ContextDirLine(); line != "" {
-		msg += file.BoxLinePrefix + line + config.NewlineLF
+	if line := ctxcontext.DirLine(); line != "" {
+		msg += box.LinePrefix + line + token.NewlineLF
 	}
-	msg += file.BoxBottom
+	msg += box.Bottom
 	return msg
 }

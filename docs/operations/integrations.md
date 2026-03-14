@@ -320,7 +320,7 @@ These are invoked in Claude Code with `/skill-name`.
 | `/ctx-implement`    | Execute a plan step-by-step with checks          |
 | `/ctx-import-plans` | Import Claude Code plan files into project specs |
 | `/ctx-worktree`     | Manage git worktrees for parallel agents         |
-| `/ctx-map`          | Build and maintain architecture maps             |
+| `/ctx-architecture`          | Build and maintain architecture maps             |
 
 #### Usage Examples
 

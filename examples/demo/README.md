@@ -17,7 +17,7 @@ ctx agent
 ctx add task "Implement feature X"
 
 # Mark a task complete
-ctx complete "feature X"
+ctx tasks complete "feature X"
 
 # Check for stale context
 ctx drift

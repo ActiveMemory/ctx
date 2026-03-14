@@ -11,11 +11,16 @@ import (
 	"os"
 	"path/filepath"
 
+	"github.com/ActiveMemory/ctx/internal/config/env"
 	"github.com/ActiveMemory/ctx/internal/config/file"
+	"github.com/ActiveMemory/ctx/internal/config/hook"
+	"github.com/ActiveMemory/ctx/internal/config/journal"
+	"github.com/ActiveMemory/ctx/internal/config/tpl"
 	"github.com/spf13/cobra"
 
 	"github.com/ActiveMemory/ctx/internal/assets"
 	"github.com/ActiveMemory/ctx/internal/cli/system/core"
+	ctxcontext "github.com/ActiveMemory/ctx/internal/context"
 	"github.com/ActiveMemory/ctx/internal/notify"
 )
 
@@ -32,7 +37,7 @@ import (
 // Returns:
 //   - error: Always nil (hook errors are non-fatal)
 func Run(cmd *cobra.Command, stdin *os.File) error {
-	if !core.IsInitialized() {
+	if !core.Initialized() {
 		return nil
 	}
 	input, _, paused := core.HookPreamble(stdin)
@@ -41,9 +46,9 @@ func Run(cmd *cobra.Command, stdin *os.File) error {
 	}
 
 	tmpDir := core.StateDir()
-	remindedFile := filepath.Join(tmpDir, file.CheckJournalThrottleID)
+	remindedFile := filepath.Join(tmpDir, journal.CheckJournalThrottleID)
 	claudeProjectsDir := filepath.Join(
-		os.Getenv(file.EnvHome), file.CheckJournalClaudeProjectsSubdir,
+		os.Getenv(env.Home), journal.CheckJournalClaudeProjectsSubdir,
 	)
 
 	// Only remind once per day
@@ -52,7 +57,7 @@ func Run(cmd *cobra.Command, stdin *os.File) error {
 	}
 
 	// Bail out if journal or Claude projects directories don't exist
-	jDir := core.ResolvedJournalDir()
+	jDir := ctxcontext.ResolvedJournalDir()
 	if _, statErr := os.Stat(jDir); os.IsNotExist(statErr) {
 		return nil
 	}
@@ -74,30 +79,30 @@ func Run(cmd *cobra.Command, stdin *os.File) error {
 	}
 
 	vars := map[string]any{
-		file.TplVarUnexportedCount: unexported,
-		file.TplVarUnenrichedCount: unenriched,
+		tpl.VarUnexportedCount: unexported,
+		tpl.VarUnenrichedCount: unenriched,
 	}
 
 	var variant, fallback string
 	switch {
 	case unexported > 0 && unenriched > 0:
-		variant = file.VariantBoth
+		variant = hook.VariantBoth
 		fallback = fmt.Sprintf(assets.TextDesc(
 			assets.TextDescKeyCheckJournalFallbackBoth), unexported, unenriched,
 		)
 	case unexported > 0:
-		variant = file.VariantUnexported
+		variant = hook.VariantUnexported
 		fallback = fmt.Sprintf(assets.TextDesc(
 			assets.TextDescKeyCheckJournalFallbackUnexported), unexported,
 		)
 	default:
-		variant = file.VariantUnenriched
+		variant = hook.VariantUnenriched
 		fallback = fmt.Sprintf(assets.TextDesc(
 			assets.TextDescKeyCheckJournalFallbackUnenriched), unenriched,
 		)
 	}
 
-	content := core.LoadMessage(file.HookCheckJournal, variant, vars, fallback)
+	content := core.LoadMessage(hook.CheckJournal, variant, vars, fallback)
 	if content == "" {
 		return nil
 	}
@@ -107,8 +112,8 @@ func Run(cmd *cobra.Command, stdin *os.File) error {
 
 	cmd.Println(core.NudgeBox(relayPrefix, boxTitle, content))
 
-	ref := notify.NewTemplateRef(file.HookCheckJournal, variant, vars)
-	journalMsg := file.HookCheckJournal + ": " + fmt.Sprintf(
+	ref := notify.NewTemplateRef(hook.CheckJournal, variant, vars)
+	journalMsg := hook.CheckJournal + ": " + fmt.Sprintf(
 		assets.TextDesc(assets.TextDescKeyCheckJournalRelayFormat),
 		unexported, unenriched,
 	)

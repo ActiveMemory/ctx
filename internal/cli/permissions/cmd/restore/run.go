@@ -11,7 +11,7 @@ import (
 	"encoding/json"
 	"os"
 
-	"github.com/ActiveMemory/ctx/internal/config/file"
+	claude2 "github.com/ActiveMemory/ctx/internal/config/claude"
 	"github.com/ActiveMemory/ctx/internal/config/fs"
 	"github.com/spf13/cobra"
 
@@ -29,26 +29,26 @@ import (
 // Returns:
 //   - error: Non-nil on read/write/parse failure or missing golden file
 func Run(cmd *cobra.Command) error {
-	goldenBytes, goldenReadErr := os.ReadFile(file.FileSettingsGolden)
+	goldenBytes, goldenReadErr := os.ReadFile(claude2.SettingsGolden)
 	if goldenReadErr != nil {
 		if os.IsNotExist(goldenReadErr) {
 			return ctxerr.GoldenNotFound()
 		}
-		return ctxerr.FileRead(file.FileSettingsGolden, goldenReadErr)
+		return ctxerr.FileRead(claude2.SettingsGolden, goldenReadErr)
 	}
 
-	localBytes, localReadErr := os.ReadFile(file.FileSettings)
+	localBytes, localReadErr := os.ReadFile(claude2.Settings)
 	if localReadErr != nil {
 		if os.IsNotExist(localReadErr) {
 			if writeErr := os.WriteFile(
-				file.FileSettings, goldenBytes, fs.PermFile,
+				claude2.Settings, goldenBytes, fs.PermFile,
 			); writeErr != nil {
-				return ctxerr.FileWrite(file.FileSettings, writeErr)
+				return ctxerr.FileWrite(claude2.Settings, writeErr)
 			}
 			write.RestoreNoLocal(cmd)
 			return nil
 		}
-		return ctxerr.FileRead(file.FileSettings, localReadErr)
+		return ctxerr.FileRead(claude2.Settings, localReadErr)
 	}
 
 	if bytes.Equal(goldenBytes, localBytes) {
@@ -58,10 +58,10 @@ func Run(cmd *cobra.Command) error {
 
 	var golden, local claude.Settings
 	if goldenParseErr := json.Unmarshal(goldenBytes, &golden); goldenParseErr != nil {
-		return ctxerr.ParseFile(file.FileSettingsGolden, goldenParseErr)
+		return ctxerr.ParseFile(claude2.SettingsGolden, goldenParseErr)
 	}
 	if localParseErr := json.Unmarshal(localBytes, &local); localParseErr != nil {
-		return ctxerr.ParseFile(file.FileSettings, localParseErr)
+		return ctxerr.ParseFile(claude2.Settings, localParseErr)
 	}
 
 	restored, dropped := core.DiffStringSlices(
@@ -74,9 +74,9 @@ func Run(cmd *cobra.Command) error {
 	write.RestoreDiff(cmd, dropped, restored, denyDropped, denyRestored)
 
 	if writeErr := os.WriteFile(
-		file.FileSettings, goldenBytes, fs.PermFile,
+		claude2.Settings, goldenBytes, fs.PermFile,
 	); writeErr != nil {
-		return ctxerr.FileWrite(file.FileSettings, writeErr)
+		return ctxerr.FileWrite(claude2.Settings, writeErr)
 	}
 
 	write.RestoreDone(cmd)

@@ -20,19 +20,19 @@ command.
 - For structured tasks with status tracking (use `ctx add task`)
 - For sensitive values or quick notes (use `ctx pad`)
 - For architectural decisions (use `ctx add decision`)
-- Create a reminder only when the user explicitly says "remind me" —
+- Create a reminder only when the user explicitly says "remind me":
   for everything else, let the conversation proceed without creating records
 
 ## Command Mapping
 
-| User intent | Command |
-|---|---|
-| "remind me to refactor swagger" | `ctx remind "refactor swagger"` |
-| "remind me tomorrow to check CI" | `ctx remind "check CI" --after YYYY-MM-DD` |
+| User intent                          | Command                                       |
+|--------------------------------------|-----------------------------------------------|
+| "remind me to refactor swagger"      | `ctx remind "refactor swagger"`               |
+| "remind me tomorrow to check CI"     | `ctx remind "check CI" --after YYYY-MM-DD`    |
 | "remind me next week to review auth" | `ctx remind "review auth" --after YYYY-MM-DD` |
-| "what reminders do I have?" | `ctx remind list` |
-| "dismiss reminder 3" | `ctx remind dismiss 3` |
-| "clear all reminders" | `ctx remind dismiss --all` |
+| "what reminders do I have?"          | `ctx remind list`                             |
+| "dismiss reminder 3"                 | `ctx remind dismiss 3`                        |
+| "clear all reminders"                | `ctx remind dismiss --all`                    |
 
 ## Execution
 
@@ -66,23 +66,23 @@ ctx remind dismiss --all
 The CLI only accepts `YYYY-MM-DD` for `--after`. You must convert
 natural language dates to this format.
 
-| User says | You run |
-|---|---|
-| "remind me next session" | `ctx remind "..."` (no `--after`) |
-| "remind me tomorrow" | `ctx remind "..." --after YYYY-MM-DD` (tomorrow's date) |
-| "remind me next week" | `ctx remind "..." --after YYYY-MM-DD` (7 days from now) |
-| "remind me about X" | `ctx remind "X"` (no `--after`, immediate) |
-| "remind me after Friday" | `ctx remind "..." --after YYYY-MM-DD` (next Saturday) |
+| User says                | You run                                                 |
+|--------------------------|---------------------------------------------------------|
+| "remind me next session" | `ctx remind "..."` (no `--after`)                       |
+| "remind me tomorrow"     | `ctx remind "..." --after YYYY-MM-DD` (tomorrow's date) |
+| "remind me next week"    | `ctx remind "..." --after YYYY-MM-DD` (7 days from now) |
+| "remind me about X"      | `ctx remind "X"` (no `--after`, immediate)              |
+| "remind me after Friday" | `ctx remind "..." --after YYYY-MM-DD` (next Saturday)   |
 
 If the date is ambiguous (e.g., "after the release"), ask the user
 for a specific date.
 
 ## Important Notes
 
-- Reminders fire **every session** until dismissed — no throttle
+- Reminders fire **every session** until dismissed: no throttle
 - The `--after` flag gates when a reminder starts appearing, not when
   it expires
-- IDs are never reused — after dismissing ID 3, the next gets ID 4+
+- IDs are never reused: after dismissing ID 3, the next gets ID 4+
 - Reminders are stored in `.context/reminders.json` (committed to git)
 - After creating or dismissing, show the command output so the user
   can confirm the action

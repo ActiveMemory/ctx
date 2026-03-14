@@ -11,7 +11,7 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/ActiveMemory/ctx/internal/config/file"
+	"github.com/ActiveMemory/ctx/internal/config/stats"
 	"github.com/spf13/cobra"
 
 	"github.com/ActiveMemory/ctx/internal/assets"
@@ -84,7 +84,7 @@ func StatusText(sev sysinfo.Severity) string {
 //   - string: formatted line with aligned status
 func FormatResourceLine(label, values, status string) string {
 	left := fmt.Sprintf("%-7s  %s", label, values)
-	pad := file.ResourcesStatusCol - len(left)
+	pad := stats.ResourcesStatusCol - len(left)
 	if pad < 1 {
 		pad = 1
 	}

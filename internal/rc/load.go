@@ -11,11 +11,12 @@ import (
 	"os"
 	"strconv"
 
+	"github.com/ActiveMemory/ctx/internal/config/env"
 	"github.com/ActiveMemory/ctx/internal/config/file"
+	"github.com/ActiveMemory/ctx/internal/config/token"
 	"gopkg.in/yaml.v3"
 
 	"github.com/ActiveMemory/ctx/internal/assets"
-	"github.com/ActiveMemory/ctx/internal/config"
 )
 
 // loadRC loads configuration from the .ctxrc file and applies env
@@ -27,19 +28,19 @@ func loadRC() *CtxRC {
 	cfg := Default()
 
 	// Try to load .ctxrc from the current directory
-	data, err := os.ReadFile(file.FileContextRC)
+	data, err := os.ReadFile(file.CtxRC)
 	if err == nil {
 		if yamlErr := yaml.Unmarshal(data, cfg); yamlErr != nil {
-			_, _ = fmt.Fprintf(os.Stderr, assets.TextDesc(assets.TextDescKeyRcParseWarning)+config.NewlineLF,
-				file.FileContextRC, yamlErr)
+			_, _ = fmt.Fprintf(os.Stderr, assets.TextDesc(assets.TextDescKeyRcParseWarning)+token.NewlineLF,
+				file.CtxRC, yamlErr)
 		}
 	}
 
 	// Apply environment variable overrides
-	if envDir := os.Getenv(file.EnvCtxDir); envDir != "" {
+	if envDir := os.Getenv(env.CtxDir); envDir != "" {
 		cfg.ContextDir = envDir
 	}
-	if envBudget := os.Getenv(file.EnvCtxTokenBudget); envBudget != "" {
+	if envBudget := os.Getenv(env.CtxTokenBudget); envBudget != "" {
 		if budget, err := strconv.Atoi(envBudget); err == nil && budget > 0 {
 			cfg.TokenBudget = budget
 		}

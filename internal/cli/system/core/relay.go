@@ -7,7 +7,7 @@
 package core
 
 import (
-	"github.com/ActiveMemory/ctx/internal/config/file"
+	"github.com/ActiveMemory/ctx/internal/config/hook"
 	"github.com/ActiveMemory/ctx/internal/eventlog"
 	"github.com/ActiveMemory/ctx/internal/notify"
 )
@@ -21,8 +21,8 @@ import (
 //   - sessionID: current session identifier
 //   - ref: template reference for filtering/aggregation (may be nil)
 func Relay(message, sessionID string, ref *notify.TemplateRef) {
-	_ = notify.Send(file.NotifyChannelRelay, message, sessionID, ref)
-	eventlog.Append(file.NotifyChannelRelay, message, sessionID, ref)
+	_ = notify.Send(hook.NotifyChannelRelay, message, sessionID, ref)
+	eventlog.Append(hook.NotifyChannelRelay, message, sessionID, ref)
 }
 
 // NudgeAndRelay sends both a nudge and a relay notification, then
@@ -34,6 +34,6 @@ func Relay(message, sessionID string, ref *notify.TemplateRef) {
 //   - sessionID: current session identifier
 //   - ref: template reference for filtering/aggregation (may be nil)
 func NudgeAndRelay(message, sessionID string, ref *notify.TemplateRef) {
-	_ = notify.Send(file.NotifyChannelNudge, message, sessionID, ref)
+	_ = notify.Send(hook.NotifyChannelNudge, message, sessionID, ref)
 	Relay(message, sessionID, ref)
 }

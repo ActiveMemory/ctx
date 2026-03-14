@@ -14,8 +14,10 @@ import (
 	"strings"
 
 	"github.com/ActiveMemory/ctx/internal/assets"
-	"github.com/ActiveMemory/ctx/internal/config"
 	"github.com/ActiveMemory/ctx/internal/config/fs"
+	"github.com/ActiveMemory/ctx/internal/config/marker"
+	"github.com/ActiveMemory/ctx/internal/config/regex"
+	"github.com/ActiveMemory/ctx/internal/config/token"
 	ctxerr "github.com/ActiveMemory/ctx/internal/err"
 )
 
@@ -32,14 +34,14 @@ import (
 func ParseHeaders(content string) []Entry {
 	var entries []Entry
 
-	matches := config.RegExEntryHeader.FindAllStringSubmatch(content, -1)
+	matches := regex.EntryHeader.FindAllStringSubmatch(content, -1)
 	for _, match := range matches {
-		if len(match) == config.RegExEntryHeaderGroups {
+		if len(match) == regex.EntryHeaderGroups {
 			date := match[1]
 			time := match[2]
 			title := match[3]
 			entries = append(entries, Entry{
-				Timestamp: date + config.Dash + time,
+				Timestamp: date + token.Dash + time,
 				Date:      date,
 				Title:     title,
 			})
@@ -65,7 +67,7 @@ func GenerateTable(entries []Entry, columnHeader string) string {
 		return ""
 	}
 
-	nl := config.NewlineLF
+	nl := token.NewlineLF
 	var sb strings.Builder
 	sb.WriteString("| Date | ")
 	sb.WriteString(columnHeader)
@@ -103,11 +105,11 @@ func GenerateTable(entries []Entry, columnHeader string) string {
 func Update(content, fileHeader, columnHeader string) string {
 	entries := ParseHeaders(content)
 	indexContent := GenerateTable(entries, columnHeader)
-	nl := config.NewlineLF
+	nl := token.NewlineLF
 
 	// Check if markers already exist
-	startIdx := strings.Index(content, config.IndexStart)
-	endIdx := strings.Index(content, config.IndexEnd)
+	startIdx := strings.Index(content, marker.IndexStart)
+	endIdx := strings.Index(content, marker.IndexEnd)
 
 	if startIdx != -1 && endIdx != -1 && endIdx > startIdx {
 		// Replace the existing index
@@ -115,7 +117,7 @@ func Update(content, fileHeader, columnHeader string) string {
 			// No entries - remove index entirely (including markers
 			// and surrounding whitespace)
 			before := strings.TrimRight(content[:startIdx], nl)
-			after := content[endIdx+len(config.IndexEnd):]
+			after := content[endIdx+len(marker.IndexEnd):]
 			after = strings.TrimLeft(after, nl)
 			if after != "" {
 				return before + nl + nl + after
@@ -123,7 +125,7 @@ func Update(content, fileHeader, columnHeader string) string {
 			return before + nl
 		}
 		// Replace content between markers
-		before := content[:startIdx+len(config.IndexStart)]
+		before := content[:startIdx+len(marker.IndexStart)]
 		after := content[endIdx:]
 		return before + nl + indexContent + after
 	}
@@ -145,8 +147,8 @@ func Update(content, fileHeader, columnHeader string) string {
 	if lineEnd == -1 {
 		// Header is at the end of the file
 		return content + nl + nl +
-			config.IndexStart + nl + indexContent +
-			config.IndexEnd + nl
+			marker.IndexStart + nl + indexContent +
+			marker.IndexEnd + nl
 	}
 
 	insertPoint := headerIdx + lineEnd + 1
@@ -155,10 +157,10 @@ func Update(content, fileHeader, columnHeader string) string {
 	var sb strings.Builder
 	sb.WriteString(content[:insertPoint])
 	sb.WriteString(nl)
-	sb.WriteString(config.IndexStart)
+	sb.WriteString(marker.IndexStart)
 	sb.WriteString(nl)
 	sb.WriteString(indexContent)
-	sb.WriteString(config.IndexEnd)
+	sb.WriteString(marker.IndexEnd)
 	sb.WriteString(nl)
 	sb.WriteString(content[insertPoint:])
 
@@ -173,7 +175,7 @@ func Update(content, fileHeader, columnHeader string) string {
 // Returns:
 //   - string: Updated content with regenerated index
 func UpdateDecisions(content string) string {
-	return Update(content, config.HeadingDecisions, config.ColumnDecision)
+	return Update(content, assets.HeadingDecisions, assets.ColumnDecision)
 }
 
 // UpdateLearnings regenerates the learning index in LEARNINGS.md content.
@@ -184,7 +186,7 @@ func UpdateDecisions(content string) string {
 // Returns:
 //   - string: Updated content with regenerated index
 func UpdateLearnings(content string) string {
-	return Update(content, config.HeadingLearnings, config.ColumnLearning)
+	return Update(content, assets.HeadingLearnings, assets.ColumnLearning)
 }
 
 // ReindexFile reads a context file, regenerates its index, and writes it back.
@@ -229,14 +231,14 @@ func ReindexFile(
 	entries := ParseHeaders(string(content))
 	if len(entries) == 0 {
 		_, err := fmt.Fprintf(
-			w, assets.TextDesc(assets.TextDescKeyDriftCleared)+config.NewlineLF, entryType)
+			w, assets.TextDesc(assets.TextDescKeyDriftCleared)+token.NewlineLF, entryType)
 		if err != nil {
 			return err
 		}
 	} else {
 		_, err := fmt.Fprintf(
 			w,
-			assets.TextDesc(assets.TextDescKeyDriftRegenerated)+config.NewlineLF, len(entries),
+			assets.TextDesc(assets.TextDescKeyDriftRegenerated)+token.NewlineLF, len(entries),
 		)
 		if err != nil {
 			return err

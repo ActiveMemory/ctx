@@ -9,7 +9,7 @@ package sync
 import (
 	"path/filepath"
 
-	"github.com/ActiveMemory/ctx/internal/config/file"
+	memory2 "github.com/ActiveMemory/ctx/internal/config/memory"
 	"github.com/spf13/cobra"
 
 	ctxerr "github.com/ActiveMemory/ctx/internal/err"
@@ -39,7 +39,7 @@ func Run(cmd *cobra.Command, dryRun bool) error {
 	}
 
 	if dryRun {
-		write.SyncDryRun(cmd, sourcePath, file.PathMemoryMirror,
+		write.SyncDryRun(cmd, sourcePath, memory2.PathMemoryMirror,
 			memory.HasDrift(contextDir, sourcePath))
 		return nil
 	}
@@ -50,7 +50,7 @@ func Run(cmd *cobra.Command, dryRun bool) error {
 	}
 
 	write.SyncResult(cmd,
-		file.FileMemorySource, file.PathMemoryMirror,
+		memory2.MemorySource, memory2.PathMemoryMirror,
 		result.SourcePath, filepath.Base(result.ArchivedTo),
 		result.SourceLines, result.MirrorLines,
 	)

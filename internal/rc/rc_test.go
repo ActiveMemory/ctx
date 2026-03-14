@@ -11,8 +11,9 @@ import (
 	"path/filepath"
 	"testing"
 
+	"github.com/ActiveMemory/ctx/internal/config/ctx"
 	"github.com/ActiveMemory/ctx/internal/config/dir"
-	"github.com/ActiveMemory/ctx/internal/config/file"
+	"github.com/ActiveMemory/ctx/internal/config/env"
 )
 
 func TestDefaultRC(t *testing.T) {
@@ -105,8 +106,8 @@ token_budget: 4000
 	_ = os.WriteFile(filepath.Join(tempDir, ".ctxrc"), []byte(rcContent), 0600)
 
 	// Set environment variables (t.Setenv auto-restores after test)
-	t.Setenv(file.EnvCtxDir, "env-context")
-	t.Setenv(file.EnvCtxTokenBudget, "2000")
+	t.Setenv(env.CtxDir, "env-context")
+	t.Setenv(env.CtxTokenBudget, "2000")
 
 	Reset()
 
@@ -132,7 +133,7 @@ func TestGetContextDir_CLIOverride(t *testing.T) {
 	_ = os.WriteFile(filepath.Join(tempDir, ".ctxrc"), []byte(rcContent), 0600)
 
 	// Set env override (t.Setenv auto-restores after test)
-	t.Setenv(file.EnvCtxDir, "env-context")
+	t.Setenv(env.CtxDir, "env-context")
 
 	Reset()
 
@@ -209,7 +210,7 @@ func TestGetRC_InvalidEnvBudget(t *testing.T) {
 	_ = os.Chdir(tempDir)
 	defer func() { _ = os.Chdir(origDir) }()
 
-	t.Setenv(file.EnvCtxTokenBudget, "not-a-number")
+	t.Setenv(env.CtxTokenBudget, "not-a-number")
 
 	Reset()
 
@@ -390,16 +391,16 @@ func TestFilePriority_DefaultOrder(t *testing.T) {
 
 	Reset()
 
-	// CONSTITUTION.md should be first in default FileReadOrder
-	p := FilePriority(file.FileConstitution)
+	// CONSTITUTION.md should be first in default ReadOrder
+	p := FilePriority(ctx.Constitution)
 	if p != 1 {
-		t.Errorf("FilePriority(%q) = %d, want 1", file.FileConstitution, p)
+		t.Errorf("FilePriority(%q) = %d, want 1", ctx.Constitution, p)
 	}
 
 	// TASKS.md should be second
-	p = FilePriority(file.FileTask)
+	p = FilePriority(ctx.Task)
 	if p != 2 {
-		t.Errorf("FilePriority(%q) = %d, want 2", file.FileTask, p)
+		t.Errorf("FilePriority(%q) = %d, want 2", ctx.Task, p)
 	}
 
 	// Unknown file gets 100
@@ -424,15 +425,15 @@ func TestFilePriority_CustomOrder(t *testing.T) {
 	Reset()
 
 	// DECISIONS.md should be first in custom order
-	p := FilePriority(file.FileDecision)
+	p := FilePriority(ctx.Decision)
 	if p != 1 {
-		t.Errorf("FilePriority(%q) = %d, want 1", file.FileDecision, p)
+		t.Errorf("FilePriority(%q) = %d, want 1", ctx.Decision, p)
 	}
 
 	// TASKS.md should be second
-	p = FilePriority(file.FileTask)
+	p = FilePriority(ctx.Task)
 	if p != 2 {
-		t.Errorf("FilePriority(%q) = %d, want 2", file.FileTask, p)
+		t.Errorf("FilePriority(%q) = %d, want 2", ctx.Task, p)
 	}
 
 	// File not in custom order gets 100
@@ -450,9 +451,9 @@ func TestContextDir_NoOverride(t *testing.T) {
 
 	Reset()
 
-	dir := ContextDir()
-	if dir != dir.DirContext {
-		t.Errorf("ContextDir() = %q, want %q", dir, dir.DirContext)
+	got := ContextDir()
+	if got != dir.Context {
+		t.Errorf("ContextDir() = %q, want %q", got, dir.Context)
 	}
 }
 
@@ -599,7 +600,7 @@ func TestGetRC_NegativeEnvBudget(t *testing.T) {
 	_ = os.Chdir(tempDir)
 	defer func() { _ = os.Chdir(origDir) }()
 
-	t.Setenv(file.EnvCtxTokenBudget, "-100")
+	t.Setenv(env.CtxTokenBudget, "-100")
 
 	Reset()
 

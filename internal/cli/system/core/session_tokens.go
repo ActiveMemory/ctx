@@ -15,12 +15,13 @@ import (
 	"path/filepath"
 	"strings"
 
-	"github.com/ActiveMemory/ctx/internal/config"
 	"github.com/ActiveMemory/ctx/internal/config/claude"
 	"github.com/ActiveMemory/ctx/internal/config/dir"
 	"github.com/ActiveMemory/ctx/internal/config/file"
 	"github.com/ActiveMemory/ctx/internal/config/fs"
+	"github.com/ActiveMemory/ctx/internal/config/session"
 	"github.com/ActiveMemory/ctx/internal/config/stats"
+	"github.com/ActiveMemory/ctx/internal/config/token"
 	"github.com/ActiveMemory/ctx/internal/rc"
 )
 
@@ -40,7 +41,7 @@ const MaxTailBytes = 32768
 //   - SessionTokenInfo: Token count and model from the last assistant message
 //   - error: Non-nil only on unexpected I/O errors
 func ReadSessionTokenInfo(sessionID string) (SessionTokenInfo, error) {
-	if sessionID == "" || sessionID == file.SessionUnknown {
+	if sessionID == "" || sessionID == session.IDUnknown {
 		return SessionTokenInfo{}, nil
 	}
 
@@ -134,7 +135,7 @@ func ParseLastUsageAndModel(path string) (SessionTokenInfo, error) {
 	}
 
 	// Scan lines in reverse for the last assistant message with usage
-	lines := bytes.Split(tail, []byte(config.NewlineLF))
+	lines := bytes.Split(tail, []byte(token.NewlineLF))
 	for i := len(lines) - 1; i >= 0; i-- {
 		line := bytes.TrimSpace(lines[i])
 		if len(line) == 0 {
@@ -236,7 +237,7 @@ func ClaudeSettingsHas1M() bool {
 	if homeErr != nil {
 		return false
 	}
-	data, readErr := os.ReadFile(filepath.Join(home, dir.Claude, file.FileGlobalSettings)) //nolint:gosec // user home config
+	data, readErr := os.ReadFile(filepath.Join(home, dir.Claude, claude.GlobalSettings)) //nolint:gosec // user home config
 	if readErr != nil {
 		return false
 	}

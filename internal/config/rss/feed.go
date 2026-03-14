@@ -6,6 +6,8 @@
 
 package rss
 
+import "github.com/ActiveMemory/ctx/internal/config/token"
+
 // Site feed defaults.
 const (
 	// DefaultFeedInputDir is the default blog source directory.
@@ -19,7 +21,7 @@ const (
 	// FeedTitle is the default feed title.
 	FeedTitle = "ctx blog"
 	// FeedDefaultAuthor is the default author for feed entries.
-	FeedDefaultAuthor = "Context contributors"
+	FeedDefaultAuthor = "Jose Alekhinne"
 	// FeedXMLHeader is the XML declaration prepended to feed output.
-	FeedXMLHeader = `<?xml version="1.0" encoding="utf-8"?>` + "\n"
+	FeedXMLHeader = `<?xml version="1.0" encoding="utf-8"?>` + token.NewlineLF
 )

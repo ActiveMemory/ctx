@@ -10,11 +10,12 @@ import (
 	"os"
 	"regexp"
 
-	"github.com/ActiveMemory/ctx/internal/config/file"
+	"github.com/ActiveMemory/ctx/internal/config/hook"
 	"github.com/spf13/cobra"
 
 	"github.com/ActiveMemory/ctx/internal/assets"
 	"github.com/ActiveMemory/ctx/internal/cli/system/core"
+	ctxcontext "github.com/ActiveMemory/ctx/internal/context"
 	"github.com/ActiveMemory/ctx/internal/notify"
 )
 
@@ -36,7 +37,7 @@ var (
 // Returns:
 //   - error: Always nil (hook errors are non-fatal)
 func Run(cmd *cobra.Command, stdin *os.File) error {
-	if !core.IsInitialized() {
+	if !core.Initialized() {
 		return nil
 	}
 	input, sessionID, paused := core.HookPreamble(stdin)
@@ -56,18 +57,18 @@ func Run(cmd *cobra.Command, stdin *os.File) error {
 		return nil
 	}
 
-	hook, variant := file.HookPostCommit, file.VariantNudge
+	hookName, variant := hook.PostCommit, hook.VariantNudge
 
 	fallback := assets.TextDesc(assets.TextDescKeyPostCommitFallback)
-	msg := core.LoadMessage(hook, variant, nil, fallback)
+	msg := core.LoadMessage(hookName, variant, nil, fallback)
 	if msg == "" {
 		return nil
 	}
-	msg = core.AppendContextDir(msg)
-	core.PrintHookContext(cmd, file.HookEventPostToolUse, msg)
+	msg = ctxcontext.AppendDir(msg)
+	core.PrintHookContext(cmd, hook.EventPostToolUse, msg)
 
-	ref := notify.NewTemplateRef(hook, variant, nil)
-	core.Relay(hook+": "+assets.TextDesc(assets.TextDescKeyPostCommitRelayMessage), input.SessionID, ref)
+	ref := notify.NewTemplateRef(hookName, variant, nil)
+	core.Relay(hookName+": "+assets.TextDesc(assets.TextDescKeyPostCommitRelayMessage), input.SessionID, ref)
 
 	core.CheckVersionDrift(cmd, sessionID)
 

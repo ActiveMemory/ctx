@@ -6,7 +6,7 @@
 
 package core
 
-import "github.com/ActiveMemory/ctx/internal/config"
+import "github.com/ActiveMemory/ctx/internal/assets"
 
 // AppendEntry inserts a formatted entry into existing file content.
 //
@@ -34,7 +34,7 @@ func AppendEntry(
 		return InsertTask(entry, existingStr, section)
 	// Decisions: insert before existing entries for reverse-chronological order
 	case FileTypeIsDecision(fileType):
-		return InsertDecision(existingStr, entry, config.HeadingDecisions)
+		return InsertDecision(existingStr, entry, assets.HeadingDecisions)
 	// Learnings: insert before existing entries for reverse-chronological order
 	case FileTypeIsLearning(fileType):
 		return InsertLearning(existingStr, entry)

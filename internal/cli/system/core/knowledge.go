@@ -11,11 +11,13 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/ActiveMemory/ctx/internal/config/file"
+	"github.com/ActiveMemory/ctx/internal/config/ctx"
+	"github.com/ActiveMemory/ctx/internal/config/hook"
+	"github.com/ActiveMemory/ctx/internal/config/token"
+	"github.com/ActiveMemory/ctx/internal/config/tpl"
 	"github.com/spf13/cobra"
 
 	"github.com/ActiveMemory/ctx/internal/assets"
-	"github.com/ActiveMemory/ctx/internal/config"
 	"github.com/ActiveMemory/ctx/internal/index"
 	"github.com/ActiveMemory/ctx/internal/notify"
 	"github.com/ActiveMemory/ctx/internal/rc"
@@ -39,33 +41,33 @@ func ScanKnowledgeFiles(
 	var findings []KnowledgeFinding
 
 	if decThreshold > 0 {
-		if data, readErr := validation.SafeReadFile(contextDir, file.FileDecision); readErr == nil {
+		if data, readErr := validation.SafeReadFile(contextDir, ctx.Decision); readErr == nil {
 			count := len(index.ParseEntryBlocks(string(data)))
 			if count > decThreshold {
 				findings = append(findings, KnowledgeFinding{
-					File: file.FileDecision, Count: count, Threshold: decThreshold, Unit: "entries",
+					File: ctx.Decision, Count: count, Threshold: decThreshold, Unit: "entries",
 				})
 			}
 		}
 	}
 
 	if lrnThreshold > 0 {
-		if data, readErr := validation.SafeReadFile(contextDir, file.FileLearning); readErr == nil {
+		if data, readErr := validation.SafeReadFile(contextDir, ctx.Learning); readErr == nil {
 			count := len(index.ParseEntryBlocks(string(data)))
 			if count > lrnThreshold {
 				findings = append(findings, KnowledgeFinding{
-					File: file.FileLearning, Count: count, Threshold: lrnThreshold, Unit: "entries",
+					File: ctx.Learning, Count: count, Threshold: lrnThreshold, Unit: "entries",
 				})
 			}
 		}
 	}
 
 	if convThreshold > 0 {
-		if data, readErr := validation.SafeReadFile(contextDir, file.FileConvention); readErr == nil {
-			lineCount := bytes.Count(data, []byte(config.NewlineLF))
+		if data, readErr := validation.SafeReadFile(contextDir, ctx.Convention); readErr == nil {
+			lineCount := bytes.Count(data, []byte(token.NewlineLF))
 			if lineCount > convThreshold {
 				findings = append(findings, KnowledgeFinding{
-					File: file.FileConvention, Count: lineCount, Threshold: convThreshold, Unit: "lines",
+					File: ctx.Convention, Count: lineCount, Threshold: convThreshold, Unit: "lines",
 				})
 			}
 		}
@@ -98,9 +100,9 @@ func FormatKnowledgeWarnings(findings []KnowledgeFinding) string {
 //   - sessionID: session identifier for notifications
 //   - fileWarnings: pre-formatted findings text
 func EmitKnowledgeWarning(cmd *cobra.Command, sessionID, fileWarnings string) {
-	fallback := fileWarnings + "\n" + assets.TextDesc(assets.TextDescKeyCheckKnowledgeFallback)
-	content := LoadMessage(file.HookCheckKnowledge, file.VariantWarning,
-		map[string]any{file.TplVarFileWarnings: fileWarnings}, fallback)
+	fallback := fileWarnings + token.NewlineLF + assets.TextDesc(assets.TextDescKeyCheckKnowledgeFallback)
+	content := LoadMessage(hook.CheckKnowledge, hook.VariantWarning,
+		map[string]any{tpl.VarFileWarnings: fileWarnings}, fallback)
 	if content == "" {
 		return
 	}
@@ -110,9 +112,9 @@ func EmitKnowledgeWarning(cmd *cobra.Command, sessionID, fileWarnings string) {
 		assets.TextDesc(assets.TextDescKeyCheckKnowledgeBoxTitle),
 		content))
 
-	ref := notify.NewTemplateRef(file.HookCheckKnowledge, file.VariantWarning,
-		map[string]any{file.TplVarFileWarnings: fileWarnings})
-	notifyMsg := file.HookCheckKnowledge + ": " + assets.TextDesc(assets.TextDescKeyCheckKnowledgeRelayMessage)
+	ref := notify.NewTemplateRef(hook.CheckKnowledge, hook.VariantWarning,
+		map[string]any{tpl.VarFileWarnings: fileWarnings})
+	notifyMsg := hook.CheckKnowledge + ": " + assets.TextDesc(assets.TextDescKeyCheckKnowledgeRelayMessage)
 	NudgeAndRelay(notifyMsg, sessionID, ref)
 }
 

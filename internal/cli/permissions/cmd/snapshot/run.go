@@ -9,7 +9,7 @@ package snapshot
 import (
 	"os"
 
-	"github.com/ActiveMemory/ctx/internal/config/file"
+	"github.com/ActiveMemory/ctx/internal/config/claude"
 	"github.com/ActiveMemory/ctx/internal/config/fs"
 	"github.com/spf13/cobra"
 
@@ -25,25 +25,25 @@ import (
 // Returns:
 //   - error: Non-nil on read/write failure or missing settings file
 func Run(cmd *cobra.Command) error {
-	content, readErr := os.ReadFile(file.FileSettings)
+	content, readErr := os.ReadFile(claude.Settings)
 	if readErr != nil {
 		if os.IsNotExist(readErr) {
 			return ctxerr.SettingsNotFound()
 		}
-		return ctxerr.FileRead(file.FileSettings, readErr)
+		return ctxerr.FileRead(claude.Settings, readErr)
 	}
 
 	updated := false
-	if _, statErr := os.Stat(file.FileSettingsGolden); statErr == nil {
+	if _, statErr := os.Stat(claude.SettingsGolden); statErr == nil {
 		updated = true
 	}
 
 	if writeErr := os.WriteFile(
-		file.FileSettingsGolden, content, fs.PermFile,
+		claude.SettingsGolden, content, fs.PermFile,
 	); writeErr != nil {
-		return ctxerr.FileWrite(file.FileSettingsGolden, writeErr)
+		return ctxerr.FileWrite(claude.SettingsGolden, writeErr)
 	}
 
-	write.SnapshotDone(cmd, updated, file.FileSettingsGolden)
+	write.SnapshotDone(cmd, updated, claude.SettingsGolden)
 	return nil
 }

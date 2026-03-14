@@ -13,6 +13,7 @@ import (
 	"strings"
 	"testing"
 
+	"github.com/ActiveMemory/ctx/internal/config/dir"
 	"github.com/ActiveMemory/ctx/internal/config/fs"
 	"github.com/spf13/cobra"
 
@@ -23,9 +24,9 @@ import (
 // dir override, and returns the temp dir path.
 func setup(t *testing.T) string {
 	t.Helper()
-	dir := t.TempDir()
+	tmpDir := t.TempDir()
 	origDir, _ := os.Getwd()
-	if err := os.Chdir(dir); err != nil {
+	if err := os.Chdir(tmpDir); err != nil {
 		t.Fatal(err)
 	}
 	t.Cleanup(func() {
@@ -34,14 +35,14 @@ func setup(t *testing.T) string {
 	})
 
 	rc.Reset()
-	rc.OverrideContextDir(dir.DirContext)
+	rc.OverrideContextDir(dir.Context)
 
-	ctxDir := filepath.Join(dir, dir.DirContext)
+	ctxDir := filepath.Join(tmpDir, dir.Context)
 	if err := os.MkdirAll(ctxDir, fs.PermExec); err != nil {
 		t.Fatal(err)
 	}
 
-	return dir
+	return tmpDir
 }
 
 // newPromptCmd builds a fresh command with the given args.
@@ -86,10 +87,10 @@ func TestList_NoDir(t *testing.T) {
 }
 
 func TestList_WithPrompts(t *testing.T) {
-	dir := setup(t)
+	tmpDir := setup(t)
 
 	// Create prompts directory with files
-	promptDir := filepath.Join(dir, dir.DirContext, dir.DirPrompts)
+	promptDir := filepath.Join(tmpDir, dir.Context, dir.Prompts)
 	if err := os.MkdirAll(promptDir, fs.PermExec); err != nil {
 		t.Fatal(err)
 	}
@@ -113,9 +114,9 @@ func TestList_WithPrompts(t *testing.T) {
 }
 
 func TestShow(t *testing.T) {
-	dir := setup(t)
+	tmpDir := setup(t)
 
-	promptDir := filepath.Join(dir, dir.DirContext, dir.DirPrompts)
+	promptDir := filepath.Join(tmpDir, dir.Context, dir.Prompts)
 	if err := os.MkdirAll(promptDir, fs.PermExec); err != nil {
 		t.Fatal(err)
 	}
@@ -146,10 +147,10 @@ func TestShow_Missing(t *testing.T) {
 }
 
 func TestAdd_FromTemplate(t *testing.T) {
-	dir := setup(t)
+	tmpDir := setup(t)
 
 	// Create prompts dir
-	promptDir := filepath.Join(dir, dir.DirContext, dir.DirPrompts)
+	promptDir := filepath.Join(tmpDir, dir.Context, dir.Prompts)
 	if err := os.MkdirAll(promptDir, fs.PermExec); err != nil {
 		t.Fatal(err)
 	}
@@ -173,9 +174,9 @@ func TestAdd_FromTemplate(t *testing.T) {
 }
 
 func TestAdd_FromStdin(t *testing.T) {
-	dir := setup(t)
+	tmpDir := setup(t)
 
-	promptDir := filepath.Join(dir, dir.DirContext, dir.DirPrompts)
+	promptDir := filepath.Join(tmpDir, dir.Context, dir.Prompts)
 	if err := os.MkdirAll(promptDir, fs.PermExec); err != nil {
 		t.Fatal(err)
 	}
@@ -201,9 +202,9 @@ func TestAdd_FromStdin(t *testing.T) {
 }
 
 func TestAdd_AlreadyExists(t *testing.T) {
-	dir := setup(t)
+	tmpDir := setup(t)
 
-	promptDir := filepath.Join(dir, dir.DirContext, dir.DirPrompts)
+	promptDir := filepath.Join(tmpDir, dir.Context, dir.Prompts)
 	if err := os.MkdirAll(promptDir, fs.PermExec); err != nil {
 		t.Fatal(err)
 	}
@@ -233,9 +234,9 @@ func TestAdd_NoTemplate(t *testing.T) {
 }
 
 func TestRm(t *testing.T) {
-	dir := setup(t)
+	tmpDir := setup(t)
 
-	promptDir := filepath.Join(dir, dir.DirContext, dir.DirPrompts)
+	promptDir := filepath.Join(tmpDir, dir.Context, dir.Prompts)
 	if err := os.MkdirAll(promptDir, fs.PermExec); err != nil {
 		t.Fatal(err)
 	}

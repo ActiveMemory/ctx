@@ -16,7 +16,7 @@ import (
 	"testing"
 
 	"github.com/ActiveMemory/ctx/internal/cli/notify/cmd/setup"
-	"github.com/ActiveMemory/ctx/internal/config/file"
+	"github.com/ActiveMemory/ctx/internal/config/ctx"
 	notifylib "github.com/ActiveMemory/ctx/internal/notify"
 	"github.com/ActiveMemory/ctx/internal/rc"
 )
@@ -28,7 +28,7 @@ func setupCLITest(t *testing.T) (string, func()) {
 	_ = os.Chdir(tempDir)
 	_ = os.MkdirAll(filepath.Join(tempDir, ".context"), 0o750)
 	// Create required files so isInitialized returns true
-	for _, f := range file.FilesRequired {
+	for _, f := range ctx.FilesRequired {
 		_ = os.WriteFile(filepath.Join(tempDir, ".context", f), []byte("# "+f+"\n"), 0o600)
 	}
 	rc.Reset()

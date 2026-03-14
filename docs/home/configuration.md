@@ -87,6 +87,7 @@ A commented `.ctxrc` showing all options and their defaults:
 # billing_token_warn: 0       # one-shot warning at this token count (0 = disabled)
 #
 # key_rotation_days: 90
+# task_nudge_interval: 5   # Edit/Write calls between task completion nudges
 #
 # notify:               # requires: ctx notify setup
 #   events:             # required: no events sent unless listed
@@ -123,6 +124,7 @@ A commented `.ctxrc` showing all options and their defaults:
 | `context_window`        | `int`      | `200000`       | Context window size in tokens. Auto-detected for Claude Code (200k/1M); override for other AI tools |
 | `billing_token_warn`    | `int`      | `0` *(off)*    | One-shot warning when session tokens exceed this threshold (0 = disabled). For plans where tokens beyond an included allowance cost extra |
 | `key_rotation_days`     | `int`      | `90`           | Days before encryption key rotation nudge               |
+| `task_nudge_interval`   | `int`      | `5`            | Edit/Write calls between task completion nudges         |
 | `notify.events`         | `[]string` | *(all)*        | Event filter for webhook notifications (empty = all)    |
 | `priority_order`        | `[]string` | *(see below)*  | Custom file loading priority for context assembly       |
 

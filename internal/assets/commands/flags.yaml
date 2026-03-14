@@ -1,0 +1,236 @@
+# Flag descriptions for ctx CLI.
+# Used by assets.FlagDesc() to populate cobra flag usage strings.
+# Keys use dot notation: scope.flag-name (e.g., add.file)
+
+add.application:
+  short: 'Application for learnings: how to apply this going forward (required for learnings)'
+add.consequences:
+  short: 'Consequences for decisions: what changes as a result (required for decisions)'
+add.context:
+  short: 'Context for decisions: what prompted this decision (required for decisions)'
+add.file:
+  short: Read content from file instead of argument
+add.lesson:
+  short: 'Lesson for learnings: the key insight (required for learnings)'
+add.priority:
+  short: Priority level for tasks (high, medium, low)
+add.rationale:
+  short: 'Rationale for decisions: why this choice over alternatives (required for decisions)'
+add.section:
+  short: Target section within file
+agent.budget:
+  short: Token budget for context packet
+agent.cooldown:
+  short: Suppress repeated output within this duration (0 to disable)
+agent.format:
+  short: 'Output format: md or json'
+agent.session:
+  short: Session identifier for cooldown isolation (e.g., $PPID)
+allow-outside-cwd:
+  short: Allow context directory outside current working directory
+changes.since:
+  short: 'Time reference: duration (24h) or date (2026-03-01)'
+compact.archive:
+  short: Create .context/archive/ for old content
+context-dir:
+  short: 'Override context directory path (default: .context)'
+deps.external:
+  short: Include external module dependencies
+deps.format:
+  short: 'Output format: mermaid, table, json'
+deps.type:
+  short: 'Force project type: go, node, python, rust'
+doctor.json:
+  short: Machine-readable JSON output
+drift.fix:
+  short: Auto-fix supported issues (staleness, missing files)
+drift.json:
+  short: Output as JSON
+guide.commands:
+  short: List all CLI commands
+guide.skills:
+  short: List all available skills
+hook.write:
+  short: Write the configuration file instead of printing
+initialize.force:
+  short: Overwrite existing context files
+initialize.merge:
+  short: Auto-merge ctx content into existing CLAUDE.md and PROMPT.md
+initialize.minimal:
+  short: Only create essential files (TASKS.md, DECISIONS.md, CONSTITUTION.md)
+initialize.no-plugin-enable:
+  short: Skip auto-enabling the ctx plugin in global Claude Code settings
+initialize.ralph:
+  short: Agent works autonomously without asking questions
+journal.obsidian.output:
+  short: Output directory for vault
+journal.site.build:
+  short: Run zensical build after generating
+journal.site.output:
+  short: Output directory for site
+journal.site.serve:
+  short: Run zensical serve after generating
+load.budget:
+  short: Token budget for assembly
+load.raw:
+  short: Output raw file contents without assembly
+loop.completion:
+  short: Completion signal to detect
+loop.max-iterations:
+  short: Maximum iterations (0 = unlimited)
+loop.output:
+  short: Output script filename
+loop.prompt:
+  short: Prompt file to use
+loop.tool:
+  short: 'AI tool: claude, aider, or generic'
+memory.budget:
+  short: Line budget for published content
+memory.dry-run:
+  short: Show classification plan without writing
+memory.import.dry-run:
+  short: Show classification plan without writing
+memory.publish.budget:
+  short: Line budget for published content
+memory.publish.dry-run:
+  short: Show what would be published without writing
+memory.sync.dry-run:
+  short: Show what would happen without writing
+no-color:
+  short: Disable colored output
+notify.event:
+  short: Event name (required)
+notify.hook:
+  short: Hook name for structured detail (optional)
+notify.session-id:
+  short: Session ID (optional)
+notify.variant:
+  short: Template variant for structured detail (optional)
+pad.add.file:
+  short: ingest a file as a blob entry
+pad.edit.append:
+  short: append text to the end of the entry
+pad.edit.file:
+  short: replace blob file content
+pad.edit.label:
+  short: replace blob label
+pad.edit.prepend:
+  short: prepend text to the beginning of the entry
+pad.export.dry-run:
+  short: print what would be exported without writing
+pad.export.force:
+  short: overwrite existing files instead of timestamping
+pad.imp.blobs:
+  short: import first-level files from a directory as blob entries
+pad.merge.dry-run:
+  short: print what would be merged without writing
+pad.merge.key:
+  short: path to key file for decrypting input files
+pad.show.out:
+  short: write blob content to a file
+pause.session-id:
+  short: Session ID (overrides stdin)
+prompt.add.stdin:
+  short: read prompt content from stdin
+recall.export.all:
+  short: Export all sessions from current project
+recall.export.all-projects:
+  short: Include sessions from all projects
+recall.export.dry-run:
+  short: Show what would be exported without writing files
+recall.export.keep-frontmatter:
+  short: Preserve enriched YAML frontmatter during regeneration
+recall.export.regenerate:
+  short: Re-export existing files (preserves YAML frontmatter by default)
+recall.export.skip-existing:
+  short: Skip files that already exist
+recall.export.yes:
+  short: Skip confirmation prompt
+recall.list.all-projects:
+  short: Include sessions from all projects
+recall.list.limit:
+  short: Maximum sessions to display
+recall.list.project:
+  short: Filter by project name
+recall.list.since:
+  short: Show sessions on or after this date (YYYY-MM-DD)
+recall.list.tool:
+  short: Filter by tool (e.g., claude-code)
+recall.list.until:
+  short: Show sessions on or before this date (YYYY-MM-DD)
+recall.lock.all:
+  short: Lock all journal entries
+recall.show.all-projects:
+  short: Search sessions from all projects
+recall.show.full:
+  short: Show full message content
+recall.show.latest:
+  short: Show the most recent session
+recall.unlock.all:
+  short: Unlock all journal entries
+remind.add.after:
+  short: Don't surface until this date (YYYY-MM-DD)
+remind.after:
+  short: Don't surface until this date (YYYY-MM-DD)
+remind.dismiss.all:
+  short: Dismiss all reminders
+resume.session-id:
+  short: Session ID (overrides stdin)
+site.feed.base-url:
+  short: Base URL for entry links
+site.feed.out:
+  short: Output path for the generated feed
+status.json:
+  short: Output as JSON
+status.verbose:
+  short: Include file content previews
+sync.dry-run:
+  short: Show what would change without modifying
+system.backup.json:
+  short: Output results as JSON
+system.backup.scope:
+  short: 'Backup scope: project, global, or all'
+system.bootstrap.json:
+  short: Output in JSON format
+system.bootstrap.quiet:
+  short: Output only the context directory path
+system.events.all:
+  short: Include rotated log file
+system.events.event:
+  short: Filter by event type
+system.events.hook:
+  short: Filter by hook name
+system.events.json:
+  short: Output raw JSONL
+system.events.last:
+  short: Show last N events
+system.events.session:
+  short: Filter by session ID
+system.markjournal.check:
+  short: Check if stage is set (exit 1 if not)
+system.message.json:
+  short: Output in JSON format
+system.pause.session-id:
+  short: Session ID (overrides stdin)
+system.prune.days:
+  short: Prune files older than this many days
+system.prune.dry-run:
+  short: Show what would be pruned without deleting
+system.resources.json:
+  short: Output in JSON format
+system.resume.session-id:
+  short: Session ID (overrides stdin)
+system.stats.follow:
+  short: Stream new entries as they arrive
+system.stats.json:
+  short: Output raw JSONL
+system.stats.last:
+  short: Show last N entries
+system.stats.session:
+  short: Filter by session ID (prefix match)
+task.archive.dry-run:
+  short: Preview changes without modifying files
+watch.dry-run:
+  short: Show updates without applying
+watch.log:
+  short: 'Log file to watch (default: stdin)'

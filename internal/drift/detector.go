@@ -15,8 +15,10 @@ import (
 	"time"
 
 	"github.com/ActiveMemory/ctx/internal/assets"
-	"github.com/ActiveMemory/ctx/internal/config"
-	"github.com/ActiveMemory/ctx/internal/config/file"
+	ctxCfg "github.com/ActiveMemory/ctx/internal/config/ctx"
+	"github.com/ActiveMemory/ctx/internal/config/marker"
+	"github.com/ActiveMemory/ctx/internal/config/regex"
+	"github.com/ActiveMemory/ctx/internal/config/token"
 	"github.com/ActiveMemory/ctx/internal/context"
 	"github.com/ActiveMemory/ctx/internal/index"
 	"github.com/ActiveMemory/ctx/internal/rc"
@@ -24,7 +26,7 @@ import (
 
 const staleAgeDays = 30
 
-var staleAgeExclude = []string{file.FileConstitution}
+var staleAgeExclude = []string{ctxCfg.Constitution}
 
 // Status returns the overall status of the report.
 //
@@ -94,13 +96,13 @@ func checkPathReferences(ctx *context.Context, report *Report) {
 	foundDeadPaths := false
 
 	for _, f := range ctx.Files {
-		if f.Name != file.FileArchitecture && f.Name != file.FileConvention {
+		if f.Name != ctxCfg.Architecture && f.Name != ctxCfg.Convention {
 			continue
 		}
 
-		lines := strings.Split(string(f.Content), config.NewlineLF)
+		lines := strings.Split(string(f.Content), token.NewlineLF)
 		for lineNum, line := range lines {
-			matches := config.RegExPath.FindAllStringSubmatch(line, -1)
+			matches := regex.CodeFencePath.FindAllStringSubmatch(line, -1)
 			for _, m := range matches {
 				path := m[1]
 				// Skip URLs and common non-file patterns
@@ -150,9 +152,9 @@ func checkPathReferences(ctx *context.Context, report *Report) {
 func checkStaleness(ctx *context.Context, report *Report) {
 	staleness := false
 
-	if f := ctx.File(file.FileTask); f != nil {
+	if f := ctx.File(ctxCfg.Task); f != nil {
 		// Count completed tasks
-		completedCount := strings.Count(string(f.Content), config.PrefixTaskDone)
+		completedCount := strings.Count(string(f.Content), marker.PrefixTaskDone)
 		if completedCount > 10 {
 			report.Warnings = append(report.Warnings, Issue{
 				File:    f.Name,
@@ -181,7 +183,7 @@ func checkConstitution(_ *context.Context, report *Report) {
 	// Basic heuristic checks for constitution violations
 	// Check for potential secrets in common config files
 
-	secretPatterns := config.SecretPatterns
+	secretPatterns := token.SecretPatterns
 
 	// Look for common secret file patterns in the working directory
 	entries, readErr := os.ReadDir(".")
@@ -237,7 +239,7 @@ func checkRequiredFiles(ctx *context.Context, report *Report) {
 		existingFiles[f.Name] = true
 	}
 
-	for _, name := range file.FilesRequired {
+	for _, name := range ctxCfg.FilesRequired {
 		if !existingFiles[name] {
 			report.Warnings = append(report.Warnings, Issue{
 				File:    name,
@@ -306,8 +308,8 @@ func checkEntryCount(ctx *context.Context, report *Report) {
 		file      string
 		threshold int
 	}{
-		{file.FileLearning, rc.EntryCountLearnings()},
-		{file.FileDecision, rc.EntryCountDecisions()},
+		{ctxCfg.Learning, rc.EntryCountLearnings()},
+		{ctxCfg.Decision, rc.EntryCountDecisions()},
 	}
 
 	found := false
@@ -352,7 +354,7 @@ var reInternalPkg = regexp.MustCompile("`(internal/[^`]+)`")
 //   - ctx: Loaded context containing files to scan
 //   - report: Report to append warnings to (modified in place)
 func checkMissingPackages(ctx *context.Context, report *Report) {
-	f := ctx.File(file.FileArchitecture)
+	f := ctx.File(ctxCfg.Architecture)
 	if f == nil {
 		return
 	}
@@ -417,7 +419,7 @@ func normalizeInternalPkg(path string) string {
 //   - bool: True if content contains template markers
 func isTemplateFile(content []byte) bool {
 	s := string(content)
-	templateMarkers := config.TemplateMarkers
+	templateMarkers := token.TemplateMarkers
 	for _, marker := range templateMarkers {
 		if strings.Contains(strings.ToUpper(s), marker) {
 			return true

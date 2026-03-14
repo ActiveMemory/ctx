@@ -9,11 +9,11 @@ package root
 import (
 	"strings"
 
+	"github.com/ActiveMemory/ctx/internal/config/token"
 	"github.com/spf13/cobra"
 	"gopkg.in/yaml.v3"
 
 	"github.com/ActiveMemory/ctx/internal/claude"
-	"github.com/ActiveMemory/ctx/internal/config"
 	"github.com/ActiveMemory/ctx/internal/write"
 )
 
@@ -27,13 +27,13 @@ import (
 //   - error: Non-nil if YAML parsing fails
 func parseSkillFrontmatter(content []byte) (skillMeta, error) {
 	text := string(content)
-	prefix := config.Separator + config.NewlineLF
+	prefix := token.Separator + token.NewlineLF
 	if !strings.HasPrefix(text, prefix) {
 		return skillMeta{}, nil
 	}
 
 	offset := len(prefix)
-	end := strings.Index(text[offset:], config.NewlineLF+config.Separator)
+	end := strings.Index(text[offset:], token.NewlineLF+token.Separator)
 	if end < 0 {
 		return skillMeta{}, nil
 	}
@@ -61,7 +61,7 @@ func truncateDescription(desc string, maxLen int) string {
 	if len(desc) <= maxLen {
 		return desc
 	}
-	return desc[:maxLen] + config.Ellipsis
+	return desc[:maxLen] + token.Ellipsis
 }
 
 // listSkills prints all available skills with their descriptions.

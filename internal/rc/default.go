@@ -6,17 +6,17 @@
 
 package rc
 
-import "github.com/ActiveMemory/ctx/internal/config"
+import "github.com/ActiveMemory/ctx/internal/config/runtime"
 
-// Aliases for backward compatibility with external references.
+// Aliases re-exported from config/runtime for use within rc.
 const (
-	DefaultTokenBudget         = config.DefaultRcTokenBudget
-	DefaultArchiveAfterDays    = config.DefaultRcArchiveAfterDays
-	DefaultEntryCountLearnings = config.DefaultRcEntryCountLearnings
-	DefaultEntryCountDecisions = config.DefaultRcEntryCountDecisions
-	DefaultConventionLineCount = config.DefaultRcConventionLineCount
-	DefaultInjectionTokenWarn  = config.DefaultRcInjectionTokenWarn
-	DefaultContextWindow       = config.DefaultRcContextWindow
-	DefaultTaskNudgeInterval   = config.DefaultRcTaskNudgeInterval
-	DefaultKeyRotationDays     = config.DefaultRcKeyRotationDays
+	DefaultTokenBudget         = runtime.DefaultTokenBudget
+	DefaultArchiveAfterDays    = runtime.DefaultArchiveAfterDays
+	DefaultEntryCountLearnings = runtime.DefaultEntryCountLearnings
+	DefaultEntryCountDecisions = runtime.DefaultEntryCountDecisions
+	DefaultConventionLineCount = runtime.DefaultConventionLineCount
+	DefaultInjectionTokenWarn  = runtime.DefaultInjectionTokenWarn
+	DefaultContextWindow       = runtime.DefaultContextWindow
+	DefaultTaskNudgeInterval   = runtime.DefaultTaskNudgeInterval
+	DefaultKeyRotationDays     = runtime.DefaultKeyRotationDays
 )

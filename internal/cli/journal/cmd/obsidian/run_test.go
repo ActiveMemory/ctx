@@ -15,9 +15,10 @@ import (
 	"github.com/ActiveMemory/ctx/internal/config/dir"
 	"github.com/ActiveMemory/ctx/internal/config/file"
 	"github.com/ActiveMemory/ctx/internal/config/fs"
+	"github.com/ActiveMemory/ctx/internal/config/obsidian"
 	"github.com/spf13/cobra"
 
-	"github.com/ActiveMemory/ctx/internal/config"
+	"github.com/ActiveMemory/ctx/internal/assets"
 )
 
 func TestRunJournalObsidianIntegration(t *testing.T) {
@@ -104,17 +105,17 @@ Just a plain session without enrichment.
 	}
 
 	// Verify vault structure
-	assertFileExists(t, filepath.Join(outputDir, config.ObsidianConfigDir, config.ObsidianAppConfigFile))
-	assertFileExists(t, filepath.Join(outputDir, config.ObsidianHomeMOC))
+	assertFileExists(t, filepath.Join(outputDir, obsidian.DirConfig, obsidian.AppConfigFile))
+	assertFileExists(t, filepath.Join(outputDir, obsidian.MOCHome))
 	assertFileExists(t, filepath.Join(outputDir, file.Readme))
 
 	// Verify entries were written
-	assertFileExists(t, filepath.Join(outputDir, config.ObsidianDirEntries, "2026-02-14-add-caching-abc12345.md"))
-	assertFileExists(t, filepath.Join(outputDir, config.ObsidianDirEntries, "2026-02-13-fix-cache-def67890.md"))
+	assertFileExists(t, filepath.Join(outputDir, obsidian.DirEntries, "2026-02-14-add-caching-abc12345.md"))
+	assertFileExists(t, filepath.Join(outputDir, obsidian.DirEntries, "2026-02-13-fix-cache-def67890.md"))
 
 	// Verify .obsidian/app.json content
 	appConfig, readErr := os.ReadFile(filepath.Join( //nolint:gosec // test file path
-		outputDir, config.ObsidianConfigDir, config.ObsidianAppConfigFile))
+		outputDir, obsidian.DirConfig, obsidian.AppConfigFile))
 	if readErr != nil {
 		t.Fatal(readErr)
 	}
@@ -123,7 +124,7 @@ Just a plain session without enrichment.
 	}
 
 	// Verify Home.md contains wikilinks
-	home, readErr := os.ReadFile(filepath.Join(outputDir, config.ObsidianHomeMOC)) //nolint:gosec // test file path
+	home, readErr := os.ReadFile(filepath.Join(outputDir, obsidian.MOCHome)) //nolint:gosec // test file path
 	if readErr != nil {
 		t.Fatal(readErr)
 	}
@@ -134,7 +135,7 @@ Just a plain session without enrichment.
 
 	// Verify entry has transformed frontmatter (topics -> tags)
 	entry1Out, readErr := os.ReadFile(filepath.Join( //nolint:gosec // test file path
-		outputDir, config.ObsidianDirEntries, "2026-02-14-add-caching-abc12345.md"))
+		outputDir, obsidian.DirEntries, "2026-02-14-add-caching-abc12345.md"))
 	if readErr != nil {
 		t.Fatal(readErr)
 	}
@@ -150,13 +151,13 @@ Just a plain session without enrichment.
 	}
 
 	// Verify entry has related footer
-	if !strings.Contains(entry1Str, config.ObsidianRelatedHeading) {
+	if !strings.Contains(entry1Str, assets.ObsidianRelatedHeading) {
 		t.Error("entry missing related sessions footer")
 	}
 
 	// Verify topic MOC was created (caching has 2 entries = popular)
-	assertFileExists(t, filepath.Join(outputDir, config.ObsidianTopicsMOC))
-	topicsMOC, readErr := os.ReadFile(filepath.Join(outputDir, config.ObsidianTopicsMOC)) //nolint:gosec // test file path
+	assertFileExists(t, filepath.Join(outputDir, obsidian.MOCTopics))
+	topicsMOC, readErr := os.ReadFile(filepath.Join(outputDir, obsidian.MOCTopics)) //nolint:gosec // test file path
 	if readErr != nil {
 		t.Fatal(readErr)
 	}

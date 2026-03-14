@@ -10,7 +10,7 @@ import (
 	"fmt"
 	"path/filepath"
 
-	"github.com/ActiveMemory/ctx/internal/config"
+	"github.com/ActiveMemory/ctx/internal/assets"
 )
 
 // GenerateLoopScript creates a bash script for running a Ralph loop.
@@ -46,11 +46,11 @@ func GenerateLoopScript(
 	maxIterCheck := ""
 	if maxIterations > 0 {
 		maxIterCheck = fmt.Sprintf(
-			config.TplLoopMaxIter, maxIterations, maxIterations, config.TplLoopNotify)
+			assets.TplLoopMaxIter, maxIterations, maxIterations, assets.TplLoopNotify)
 	}
 
-	script := fmt.Sprintf(config.TplLoopScript,
-		absPrompt, completionMsg, maxIterCheck, aiCommand, config.LoopComplete, config.TplLoopNotify)
+	script := fmt.Sprintf(assets.TplLoopScript,
+		absPrompt, completionMsg, maxIterCheck, aiCommand, assets.LoopComplete, assets.TplLoopNotify)
 
 	return script
 }

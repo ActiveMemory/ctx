@@ -9,11 +9,11 @@ package root
 import (
 	"time"
 
+	"github.com/ActiveMemory/ctx/internal/config/fmt"
 	"github.com/spf13/cobra"
 
 	"github.com/ActiveMemory/ctx/internal/assets"
 	"github.com/ActiveMemory/ctx/internal/cli/agent/core"
-	"github.com/ActiveMemory/ctx/internal/config"
 	"github.com/ActiveMemory/ctx/internal/rc"
 )
 
@@ -58,7 +58,7 @@ func Cmd() *cobra.Command {
 		"budget", rc.DefaultTokenBudget, assets.FlagDesc(assets.FlagDescKeyAgentBudget),
 	)
 	cmd.Flags().StringVar(
-		&format, "format", config.FormatMarkdown, assets.FlagDesc(assets.FlagDescKeyAgentFormat),
+		&format, "format", fmt.FormatMarkdown, assets.FlagDesc(assets.FlagDescKeyAgentFormat),
 	)
 	cmd.Flags().DurationVar(
 		&cooldown, "cooldown", core.DefaultCooldown,

@@ -10,8 +10,8 @@ import (
 	"strings"
 
 	"github.com/ActiveMemory/ctx/internal/assets"
-	"github.com/ActiveMemory/ctx/internal/config"
 	"github.com/ActiveMemory/ctx/internal/config/entry"
+	"github.com/ActiveMemory/ctx/internal/config/token"
 	ctxentry "github.com/ActiveMemory/ctx/internal/entry"
 )
 
@@ -50,16 +50,16 @@ func Promote(e Entry, classification Classification) error {
 // extractTitle returns the first meaningful line of an entry, cleaned of
 // Markdown heading markers and list item prefixes.
 func extractTitle(text string) string {
-	line := strings.SplitN(text, config.NewlineLF, 2)[0]
+	line := strings.SplitN(text, token.NewlineLF, 2)[0]
 	line = strings.TrimSpace(line)
 	// Strip heading markers
-	line = strings.TrimLeft(line, config.PrefixHeading)
+	line = strings.TrimLeft(line, token.PrefixHeading)
 	line = strings.TrimSpace(line)
 	// Strip list item markers
-	if strings.HasPrefix(line, config.PrefixListDash) {
-		line = line[len(config.PrefixListDash):]
-	} else if strings.HasPrefix(line, config.PrefixListStar) {
-		line = line[len(config.PrefixListStar):]
+	if strings.HasPrefix(line, token.PrefixListDash) {
+		line = line[len(token.PrefixListDash):]
+	} else if strings.HasPrefix(line, token.PrefixListStar) {
+		line = line[len(token.PrefixListStar):]
 	}
 	return strings.TrimSpace(line)
 }
@@ -67,7 +67,7 @@ func extractTitle(text string) string {
 // extractBody returns everything after the first line, or the first line
 // itself if there's only one line.
 func extractBody(text string) string {
-	parts := strings.SplitN(text, config.NewlineLF, 2)
+	parts := strings.SplitN(text, token.NewlineLF, 2)
 	if len(parts) < 2 || strings.TrimSpace(parts[1]) == "" {
 		return extractTitle(text)
 	}

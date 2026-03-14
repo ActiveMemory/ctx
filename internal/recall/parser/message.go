@@ -7,8 +7,8 @@
 package parser
 
 import (
-	"github.com/ActiveMemory/ctx/internal/config"
 	"github.com/ActiveMemory/ctx/internal/config/claude"
+	"github.com/ActiveMemory/ctx/internal/config/token"
 )
 
 // BelongsToUser returns true if this is a user message.
@@ -46,5 +46,5 @@ func (m *Message) Preview(maxLen int) string {
 	if len(m.Text) <= maxLen {
 		return m.Text
 	}
-	return m.Text[:maxLen] + config.Ellipsis
+	return m.Text[:maxLen] + token.Ellipsis
 }

@@ -12,8 +12,9 @@ import (
 	"strings"
 
 	"github.com/ActiveMemory/ctx/internal/assets"
-	"github.com/ActiveMemory/ctx/internal/config"
-	"github.com/ActiveMemory/ctx/internal/config/file"
+	ctxCfg "github.com/ActiveMemory/ctx/internal/config/ctx"
+	"github.com/ActiveMemory/ctx/internal/config/mcp"
+	"github.com/ActiveMemory/ctx/internal/config/token"
 	"github.com/ActiveMemory/ctx/internal/context"
 )
 
@@ -27,19 +28,19 @@ type resourceMapping struct {
 
 // resourceTable defines all individual context file resources.
 var resourceTable = []resourceMapping{
-	{file.FileConstitution, "constitution", assets.TextDesc(assets.TextDescKeyMCPResConstitution)},
-	{file.FileTask, "tasks", assets.TextDesc(assets.TextDescKeyMCPResTasks)},
-	{file.FileConvention, "conventions", assets.TextDesc(assets.TextDescKeyMCPResConventions)},
-	{file.FileArchitecture, "architecture", assets.TextDesc(assets.TextDescKeyMCPResArchitecture)},
-	{file.FileDecision, "decisions", assets.TextDesc(assets.TextDescKeyMCPResDecisions)},
-	{file.FileLearning, "learnings", assets.TextDesc(assets.TextDescKeyMCPResLearnings)},
-	{file.FileGlossary, "glossary", assets.TextDesc(assets.TextDescKeyMCPResGlossary)},
-	{file.FileAgentPlaybook, "playbook", assets.TextDesc(assets.TextDescKeyMCPResPlaybook)},
+	{ctxCfg.Constitution, "constitution", assets.TextDesc(assets.TextDescKeyMCPResConstitution)},
+	{ctxCfg.Task, "tasks", assets.TextDesc(assets.TextDescKeyMCPResTasks)},
+	{ctxCfg.Convention, "conventions", assets.TextDesc(assets.TextDescKeyMCPResConventions)},
+	{ctxCfg.Architecture, "architecture", assets.TextDesc(assets.TextDescKeyMCPResArchitecture)},
+	{ctxCfg.Decision, "decisions", assets.TextDesc(assets.TextDescKeyMCPResDecisions)},
+	{ctxCfg.Learning, "learnings", assets.TextDesc(assets.TextDescKeyMCPResLearnings)},
+	{ctxCfg.Glossary, "glossary", assets.TextDesc(assets.TextDescKeyMCPResGlossary)},
+	{ctxCfg.AgentPlaybook, "playbook", assets.TextDesc(assets.TextDescKeyMCPResPlaybook)},
 }
 
 // resourceURI builds a resource URI from a suffix.
 func resourceURI(name string) string {
-	return config.MCPResourceURIPrefix + name
+	return mcp.MCPResourceURIPrefix + name
 }
 
 // handleResourcesList returns all available MCP resources.
@@ -51,7 +52,7 @@ func (s *Server) handleResourcesList(req Request) *Response {
 		resources = append(resources, Resource{
 			URI:         resourceURI(rm.name),
 			Name:        rm.name,
-			MimeType:    config.MimeMarkdown,
+			MimeType:    mcp.MimeMarkdown,
 			Description: rm.desc,
 		})
 	}
@@ -60,7 +61,7 @@ func (s *Server) handleResourcesList(req Request) *Response {
 	resources = append(resources, Resource{
 		URI:         resourceURI("agent"),
 		Name:        "agent",
-		MimeType:    config.MimeMarkdown,
+		MimeType:    mcp.MimeMarkdown,
 		Description: assets.TextDesc(assets.TextDescKeyMCPResAgent),
 	})
 
@@ -109,7 +110,7 @@ func (s *Server) readContextFile(
 	return s.ok(id, ReadResourceResult{
 		Contents: []ResourceContent{{
 			URI:      uri,
-			MimeType: config.MimeMarkdown,
+			MimeType: mcp.MimeMarkdown,
 			Text:     string(f.Content),
 		}},
 	})
@@ -118,7 +119,7 @@ func (s *Server) readContextFile(
 // readAgentPacket assembles all context files in read order into a
 // single response, respecting the configured token budget.
 //
-// Files are added in priority order (FileReadOrder). When the token
+// Files are added in priority order (ReadOrder). When the token
 // budget would be exceeded, remaining files are listed as "Also noted"
 // summaries instead of included in full.
 func (s *Server) readAgentPacket(
@@ -132,7 +133,7 @@ func (s *Server) readAgentPacket(
 	budget := s.tokenBudget
 	var skipped []string
 
-	for _, fileName := range file.FileReadOrder {
+	for _, fileName := range ctxCfg.ReadOrder {
 		f := ctx.File(fileName)
 		if f == nil || f.IsEmpty {
 			continue
@@ -155,13 +156,13 @@ func (s *Server) readAgentPacket(
 		for _, name := range skipped {
 			fmt.Fprintf(&sb, assets.TextDesc(assets.TextDescKeyMCPOmittedFormat), name)
 		}
-		sb.WriteString(config.NewlineLF)
+		sb.WriteString(token.NewlineLF)
 	}
 
 	return s.ok(id, ReadResourceResult{
 		Contents: []ResourceContent{{
 			URI:      resourceURI("agent"),
-			MimeType: config.MimeMarkdown,
+			MimeType: mcp.MimeMarkdown,
 			Text:     sb.String(),
 		}},
 	})

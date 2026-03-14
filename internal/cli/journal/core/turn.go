@@ -9,7 +9,8 @@ package core
 import (
 	"strings"
 
-	"github.com/ActiveMemory/ctx/internal/config"
+	"github.com/ActiveMemory/ctx/internal/config/regex"
+	"github.com/ActiveMemory/ctx/internal/config/token"
 )
 
 // ExtractTurnBody extracts the body text from lines[start:] until the next
@@ -31,14 +32,14 @@ func ExtractTurnBody(lines []string, start int) (string, int) {
 	// Collect body until next turn header
 	bodyEnd := bodyStart
 	for bodyEnd < len(lines) {
-		if config.RegExTurnHeader.MatchString(strings.TrimSpace(lines[bodyEnd])) {
+		if regex.TurnHeader.MatchString(strings.TrimSpace(lines[bodyEnd])) {
 			break
 		}
 		bodyEnd++
 	}
 	// Trim trailing blank lines for comparison
 	body := strings.TrimSpace(
-		strings.Join(lines[bodyStart:bodyEnd], config.NewlineLF),
+		strings.Join(lines[bodyStart:bodyEnd], token.NewlineLF),
 	)
 	return body, bodyEnd
 }
@@ -54,13 +55,13 @@ func ExtractTurnBody(lines []string, start int) (string, int) {
 // Returns:
 //   - string: Content with consecutive same-role turns merged
 func MergeConsecutiveTurns(content string) string {
-	lines := strings.Split(content, config.NewlineLF)
+	lines := strings.Split(content, token.NewlineLF)
 	var out []string
 	i := 0
 
 	for i < len(lines) {
 		trimmed := strings.TrimSpace(lines[i])
-		matches := config.RegExTurnHeader.FindStringSubmatch(trimmed)
+		matches := regex.TurnHeader.FindStringSubmatch(trimmed)
 		if matches == nil {
 			out = append(out, lines[i])
 			i++
@@ -77,7 +78,7 @@ func MergeConsecutiveTurns(content string) string {
 		for {
 			// Collect body lines until the next header or EOF
 			for j < len(lines) {
-				if config.RegExTurnHeader.MatchString(strings.TrimSpace(lines[j])) {
+				if regex.TurnHeader.MatchString(strings.TrimSpace(lines[j])) {
 					break
 				}
 				body = append(body, lines[j])
@@ -87,7 +88,7 @@ func MergeConsecutiveTurns(content string) string {
 			if j >= len(lines) {
 				break
 			}
-			nextMatches := config.RegExTurnHeader.FindStringSubmatch(
+			nextMatches := regex.TurnHeader.FindStringSubmatch(
 				strings.TrimSpace(lines[j]),
 			)
 			if nextMatches == nil || nextMatches[2] != role {
@@ -102,5 +103,5 @@ func MergeConsecutiveTurns(content string) string {
 		i = j
 	}
 
-	return strings.Join(out, config.NewlineLF)
+	return strings.Join(out, token.NewlineLF)
 }

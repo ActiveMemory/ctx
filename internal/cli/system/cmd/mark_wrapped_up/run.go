@@ -10,8 +10,8 @@ import (
 	"os"
 	"path/filepath"
 
-	"github.com/ActiveMemory/ctx/internal/config/file"
 	"github.com/ActiveMemory/ctx/internal/config/fs"
+	"github.com/ActiveMemory/ctx/internal/config/wrap"
 	"github.com/spf13/cobra"
 
 	"github.com/ActiveMemory/ctx/internal/cli/system/core"
@@ -29,10 +29,10 @@ import (
 // Returns:
 //   - error: Non-nil if the marker file cannot be written
 func Run(cmd *cobra.Command) error {
-	markerPath := filepath.Join(core.StateDir(), file.WrappedUpMarker)
+	markerPath := filepath.Join(core.StateDir(), wrap.WrappedUpMarker)
 
 	if writeErr := os.WriteFile(
-		markerPath, []byte(file.WrappedUpContent), fs.PermSecret,
+		markerPath, []byte(wrap.WrappedUpContent), fs.PermSecret,
 	); writeErr != nil {
 		return writeErr
 	}

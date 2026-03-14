@@ -12,9 +12,11 @@ import (
 	"strings"
 
 	"github.com/ActiveMemory/ctx/internal/assets"
-	"github.com/ActiveMemory/ctx/internal/cli/complete"
-	"github.com/ActiveMemory/ctx/internal/config"
-	"github.com/ActiveMemory/ctx/internal/config/file"
+	taskcomplete "github.com/ActiveMemory/ctx/internal/cli/task/cmd/complete"
+	"github.com/ActiveMemory/ctx/internal/config/cli"
+	entry2 "github.com/ActiveMemory/ctx/internal/config/entry"
+	"github.com/ActiveMemory/ctx/internal/config/mcp"
+	"github.com/ActiveMemory/ctx/internal/config/token"
 	"github.com/ActiveMemory/ctx/internal/context"
 	"github.com/ActiveMemory/ctx/internal/drift"
 	"github.com/ActiveMemory/ctx/internal/entry"
@@ -23,64 +25,64 @@ import (
 // toolDefs defines all available MCP tools.
 var toolDefs = []Tool{
 	{
-		Name:        config.MCPToolStatus,
+		Name:        mcp.MCPToolStatus,
 		Description: assets.TextDesc(assets.TextDescKeyMCPToolStatusDesc),
-		InputSchema: InputSchema{Type: config.SchemaObject},
+		InputSchema: InputSchema{Type: mcp.MCPSchemaObject},
 		Annotations: &ToolAnnotations{ReadOnlyHint: true},
 	},
 	{
-		Name:        config.MCPToolAdd,
+		Name:        mcp.MCPToolAdd,
 		Description: assets.TextDesc(assets.TextDescKeyMCPToolAddDesc),
 		InputSchema: InputSchema{
-			Type: config.SchemaObject,
+			Type: mcp.MCPSchemaObject,
 			Properties: map[string]Property{
-				config.AttrType: {
-					Type:        config.SchemaString,
+				cli.AttrType: {
+					Type:        mcp.MCPSchemaString,
 					Description: assets.TextDesc(assets.TextDescKeyMCPToolPropType),
 					Enum:        []string{"task", "decision", "learning", "convention"},
 				},
 				"content": {
-					Type:        config.SchemaString,
+					Type:        mcp.MCPSchemaString,
 					Description: assets.TextDesc(assets.TextDescKeyMCPToolPropContent),
 				},
 				"priority": {
-					Type:        config.SchemaString,
+					Type:        mcp.MCPSchemaString,
 					Description: assets.TextDesc(assets.TextDescKeyMCPToolPropPriority),
 					Enum:        []string{"high", "medium", "low"},
 				},
-				config.AttrContext: {
-					Type:        config.SchemaString,
+				cli.AttrContext: {
+					Type:        mcp.MCPSchemaString,
 					Description: assets.TextDesc(assets.TextDescKeyMCPToolPropContext),
 				},
-				config.AttrRationale: {
-					Type:        config.SchemaString,
+				cli.AttrRationale: {
+					Type:        mcp.MCPSchemaString,
 					Description: assets.TextDesc(assets.TextDescKeyMCPToolPropRationale),
 				},
-				config.AttrConsequences: {
-					Type:        config.SchemaString,
+				cli.AttrConsequences: {
+					Type:        mcp.MCPSchemaString,
 					Description: assets.TextDesc(assets.TextDescKeyMCPToolPropConseq),
 				},
-				config.AttrLesson: {
-					Type:        config.SchemaString,
+				cli.AttrLesson: {
+					Type:        mcp.MCPSchemaString,
 					Description: assets.TextDesc(assets.TextDescKeyMCPToolPropLesson),
 				},
-				config.AttrApplication: {
-					Type:        config.SchemaString,
+				cli.AttrApplication: {
+					Type:        mcp.MCPSchemaString,
 					Description: assets.TextDesc(assets.TextDescKeyMCPToolPropApplication),
 				},
 			},
-			Required: []string{config.AttrType, "content"},
+			Required: []string{cli.AttrType, "content"},
 		},
 		Annotations: &ToolAnnotations{},
 	},
 	{
-		Name:        config.MCPToolComplete,
+		Name:        mcp.MCPToolComplete,
 		Description: assets.TextDesc(assets.TextDescKeyMCPToolCompleteDesc),
 		InputSchema: InputSchema{
-			Type: config.SchemaObject,
+			Type: mcp.MCPSchemaObject,
 			Properties: map[string]Property{
 				"query": {
-					Type:        config.SchemaString,
+					Type:        mcp.MCPSchemaString,
 					Description: assets.TextDesc(assets.TextDescKeyMCPToolPropQuery),
 				},
 			},
@@ -89,9 +91,9 @@ var toolDefs = []Tool{
 		Annotations: &ToolAnnotations{IdempotentHint: true},
 	},
 	{
-		Name:        config.MCPToolDrift,
+		Name:        mcp.MCPToolDrift,
 		Description: assets.TextDesc(assets.TextDescKeyMCPToolDriftDesc),
-		InputSchema: InputSchema{Type: config.SchemaObject},
+		InputSchema: InputSchema{Type: mcp.MCPSchemaObject},
 		Annotations: &ToolAnnotations{ReadOnlyHint: true},
 	},
 }
@@ -109,13 +111,13 @@ func (s *Server) handleToolsCall(req Request) *Response {
 	}
 
 	switch params.Name {
-	case config.MCPToolStatus:
+	case mcp.MCPToolStatus:
 		return s.toolStatus(req.ID)
-	case config.MCPToolAdd:
+	case mcp.MCPToolAdd:
 		return s.toolAdd(req.ID, params.Arguments)
-	case config.MCPToolComplete:
+	case mcp.MCPToolComplete:
 		return s.toolComplete(req.ID, params.Arguments)
-	case config.MCPToolDrift:
+	case mcp.MCPToolDrift:
 		return s.toolDrift(req.ID)
 	default:
 		return s.error(req.ID, errCodeNotFound,
@@ -151,7 +153,7 @@ func (s *Server) toolStatus(id json.RawMessage) *Response {
 func (s *Server) toolAdd(
 	id json.RawMessage, args map[string]interface{},
 ) *Response {
-	entryType, _ := args[config.AttrType].(string)
+	entryType, _ := args[cli.AttrType].(string)
 	content, _ := args["content"].(string)
 
 	if entryType == "" || content == "" {
@@ -193,7 +195,7 @@ func (s *Server) toolAdd(
 		return s.toolError(id, fmt.Sprintf(assets.TextDesc(assets.TextDescKeyMCPWriteFailed), wErr))
 	}
 
-	fileName := file.FileType[strings.ToLower(entryType)]
+	fileName := entry2.ToCtxFile[strings.ToLower(entryType)]
 	return s.toolOK(id, fmt.Sprintf(assets.TextDesc(assets.TextDescKeyMCPAddedFormat), entryType, fileName))
 }
 
@@ -206,7 +208,7 @@ func (s *Server) toolComplete(
 		return s.toolError(id, assets.TextDesc(assets.TextDescKeyMCPQueryRequired))
 	}
 
-	completedTask, err := complete.Task(query, s.contextDir)
+	completedTask, err := taskcomplete.CompleteTask(query, s.contextDir)
 	if err != nil {
 		return s.toolError(id, err.Error())
 	}
@@ -232,7 +234,7 @@ func (s *Server) toolDrift(id json.RawMessage) *Response {
 			_, _ = fmt.Fprintf(&sb, assets.TextDesc(assets.TextDescKeyMCPDriftIssueFormat),
 				v.Type, v.File, v.Message)
 		}
-		sb.WriteString(config.NewlineLF)
+		sb.WriteString(token.NewlineLF)
 	}
 
 	if len(report.Warnings) > 0 {
@@ -241,7 +243,7 @@ func (s *Server) toolDrift(id json.RawMessage) *Response {
 			_, _ = fmt.Fprintf(&sb, assets.TextDesc(assets.TextDescKeyMCPDriftIssueFormat),
 				w.Type, w.File, w.Message)
 		}
-		sb.WriteString(config.NewlineLF)
+		sb.WriteString(token.NewlineLF)
 	}
 
 	if len(report.Passed) > 0 {
@@ -257,14 +259,14 @@ func (s *Server) toolDrift(id json.RawMessage) *Response {
 // toolOK builds a successful tool result.
 func (s *Server) toolOK(id json.RawMessage, text string) *Response {
 	return s.ok(id, CallToolResult{
-		Content: []ToolContent{{Type: config.MCPContentTypeText, Text: text}},
+		Content: []ToolContent{{Type: mcp.MCPContentTypeText, Text: text}},
 	})
 }
 
 // toolError builds a tool error result.
 func (s *Server) toolError(id json.RawMessage, msg string) *Response {
 	return s.ok(id, CallToolResult{
-		Content: []ToolContent{{Type: config.MCPContentTypeText, Text: msg}},
+		Content: []ToolContent{{Type: mcp.MCPContentTypeText, Text: msg}},
 		IsError: true,
 	})
 }

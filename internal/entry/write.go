@@ -13,7 +13,6 @@ import (
 
 	"github.com/ActiveMemory/ctx/internal/cli/add/core"
 	"github.com/ActiveMemory/ctx/internal/config/entry"
-	"github.com/ActiveMemory/ctx/internal/config/file"
 	"github.com/ActiveMemory/ctx/internal/config/fs"
 	"github.com/ActiveMemory/ctx/internal/index"
 	"github.com/ActiveMemory/ctx/internal/rc"
@@ -33,7 +32,7 @@ import (
 func Write(params Params) error {
 	fType := strings.ToLower(params.Type)
 
-	fileName, ok := file.FileType[fType]
+	fileName, ok := entry.ToCtxFile[fType]
 	if !ok {
 		return add.ErrUnknownType(fType)
 	}

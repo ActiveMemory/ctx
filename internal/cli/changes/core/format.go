@@ -10,8 +10,8 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/ActiveMemory/ctx/internal/config"
 	"github.com/ActiveMemory/ctx/internal/config/time"
+	"github.com/ActiveMemory/ctx/internal/config/token"
 )
 
 // RenderChanges renders the full CLI output for `ctx changes`.
@@ -37,7 +37,7 @@ func RenderChanges(
 			b.WriteString(fmt.Sprintf("- `%s` — modified %s\n",
 				c.Name, c.ModTime.Format(time.DateTimeFormat)))
 		}
-		b.WriteString(config.NewlineLF)
+		b.WriteString(token.NewlineLF)
 	}
 
 	if code.CommitCount > 0 {
@@ -55,7 +55,7 @@ func RenderChanges(
 			b.WriteString(fmt.Sprintf("- **Authors**: %s\n",
 				strings.Join(code.Authors, ", ")))
 		}
-		b.WriteString(config.NewlineLF)
+		b.WriteString(token.NewlineLF)
 	}
 
 	if len(ctxChanges) == 0 && code.CommitCount == 0 {
@@ -98,5 +98,5 @@ func RenderChangesForHook(refLabel string, ctxChanges []ContextChange, code Code
 		return ""
 	}
 
-	return "Changes since last session: " + strings.Join(parts, ". ") + config.NewlineLF
+	return "Changes since last session: " + strings.Join(parts, ". ") + token.NewlineLF
 }

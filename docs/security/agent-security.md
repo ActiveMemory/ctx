@@ -14,7 +14,7 @@ unattended shell with unrestricted access to your machine**.
 
 This is not a theoretical concern. AI coding agents execute shell commands,
 write files, make network requests, and modify project configuration. When
-running autonomously (*overnight, in a loop, without a human watching*) the
+running autonomously (*overnight, in a loop, without a human watching*), the
 attack surface is the full capability set of the operating system user
 account.
 
@@ -36,9 +36,9 @@ inject content into any of these sources can redirect the agent's behavior.
 | **Prompt injection via fetched content** | The agent fetches a URL (documentation, API response, Stack Overflow answer) containing embedded instructions.                                                |
 | **Poisoned project files**               | A contributor adds adversarial instructions to `CLAUDE.md`, `.cursorrules`, or `.context/` files. The agent loads these at session start.                     |
 | **Self-modification between iterations** | In an autonomous loop, the agent modifies its own configuration files. The next iteration loads the modified config with no human review.                     |
-| **Tool output injection**                | A command's output (error messages, log lines, file contents) contains instructions the agent interprets and follows.                                         |
+| **Tool output injection**                | A command's output (*error messages, log lines, file contents*) contains instructions the agent interprets and follows.                                       |
 
-### What a Compromised Agent Can Do
+### What Can a Compromised Agent Do
 
 Depends entirely on what permissions and access the agent has:
 
@@ -76,40 +76,63 @@ can override soft instructions. Long context windows dilute attention on
 rules stated early. Edge cases where instructions are ambiguous.
 
 **Verdict**: Necessary but not sufficient. Good for the common case.
-Do not rely on it for security boundaries.
+**Do not** rely on it for security boundaries.
 
 ### Layer 2: Application Controls (*Deterministic at Runtime, Mutable Across Iterations*)
 
-AI tool runtimes (Claude Code, Cursor, etc.) provide permission systems:
+AI tool runtimes (*Claude Code, Cursor, etc.*) provide permission systems:
 tool allowlists, command restrictions, confirmation prompts.
 
-For Claude Code, an explicit allowlist in `.claude/settings.local.json`:
+For Claude Code, `ctx init` writes both an allowlist and an explicit deny
+list into `.claude/settings.local.json`. The golden images live in
+`internal/assets/permissions/`:
 
-```json
-{
-  "permissions": {
-    "allow": [
-      "Bash(make:*)",
-      "Bash(go:*)",
-      "Bash(git:*)",
-      "Bash(ctx:*)",
-      "Read",
-      "Write",
-      "Edit"
-    ]
-  }
-}
+**Allowlist** (`allow.txt`): only these tools run without confirmation:
+
+```text
+Bash(ctx:*)
+Skill(ctx-add-convention)
+Skill(ctx-add-decision)
+... # all bundled ctx-* skills
 ```
 
-**What it catches**: The agent cannot run commands outside the allowlist.
-If `rm`, `curl`, `sudo`, or `docker` are not listed, the agent cannot
-invoke them regardless of what any prompt says.
+**Deny list** (`deny.txt`): these are blocked even if the agent requests them:
+
+```text
+# Dangerous operations
+Bash(sudo *)
+Bash(git push *)
+Bash(git push)
+Bash(rm -rf /*)
+Bash(rm -rf ~*)
+Bash(curl *)
+Bash(wget *)
+Bash(chmod 777 *)
+
+# Sensitive file reads
+Read(**/.env)
+Read(**/.env.*)
+Read(**/*credentials*)
+Read(**/*secret*)
+Read(**/*.pem)
+Read(**/*.key)
+
+# Sensitive file edits
+Edit(**/.env)
+Edit(**/.env.*)
+```
+
+**What it catches**: The agent cannot run commands outside the allowlist,
+and the deny list blocks dangerous operations even if a future allowlist
+change were to widen access. If `rm`, `curl`, `sudo`, or `docker` are
+not allowed *and* `sudo`/`curl`/`wget` are explicitly denied, the agent
+cannot invoke them regardless of what any prompt says.
 
 **What it misses**: The agent can modify the allowlist itself. In an
-autonomous loop, the agent writes to `.claude/settings.local.json`, and
-the next iteration loads the modified config. The application enforces
-the rules, but the application reads the rules from files the agent can
-write.
+autonomous loop, if the agent writes to `.claude/settings.local.json`, and
+the next iteration loads the modified config, then the protection is
+effectively lost. The application enforces the rules, but the application 
+reads the rules from files the agent can write.
 
 **Verdict**: Strong first layer. Must be combined with self-modification
 prevention (Layer 3).
@@ -146,11 +169,11 @@ An agent that cannot reach the internet cannot exfiltrate data.
 It also cannot ingest new instructions mid-loop from external
 documents, API responses, or hostile content.
 
-| Scenario                          | Recommended control                                                                                          |
-|-----------------------------------|--------------------------------------------------------------------------------------------------------------|
-| Agent does not need the internet  | `--network=none` (container) or outbound firewall drop-all                                                   |
-| Agent needs to fetch dependencies | Allow specific registries (npmjs.com, proxy.golang.org, pypi.org) via firewall rules. Block everything else. |
-| Agent needs API access            | Allow specific API endpoints only. Use an HTTP proxy with allowlisting.                                      |
+| Scenario                          | Recommended control                                                                                            |
+|-----------------------------------|----------------------------------------------------------------------------------------------------------------|
+| Agent does not need the internet  | `--network=none` (*container*) or outbound firewall drop-all                                                   |
+| Agent needs to fetch dependencies | Allow specific registries (*npmjs.com, proxy.golang.org, pypi.org*) via firewall rules. Block everything else. |
+| Agent needs API access            | Allow specific API endpoints only. Use an HTTP proxy with allowlisting.                                        |
 
 **What it catches**: Data exfiltration, phone-home payloads, downloading
 additional tools, and instruction injection via fetched content.
@@ -210,7 +233,7 @@ A defense-in-depth setup for overnight autonomous runs:
 | Container             | `--cap-drop=ALL --network=none`, rootless, no socket mount                        | Host escape, network exfiltration                    |
 | Resource limits       | `--memory=4g --cpus=2`, disk quotas                                               | Resource exhaustion                                  |
 
-Each layer is simple. The strength is in the *combination*.
+Each layer is straightforward: The strength is in the *combination*.
 
 ## Common Mistakes
 
@@ -243,13 +266,13 @@ considerations extend beyond single-agent hardening.
 ### Code Review for Context Files
 
 Treat `.context/` changes like code changes. Context files influence
-agent behavior -- a modified CONSTITUTION.md or CONVENTIONS.md changes
-what every agent on the team will do next session. Review them in PRs
+agent behavior (*a modified `CONSTITUTION.md` or `CONVENTIONS.md` changes
+what every agent on the team will do next session*). Review them in PRs
 with the same scrutiny you apply to production code.
 
 Watch for:
 
-* Weakened constitutional rules (removed constraints, softened language)
+* Weakened constitutional rules (*removed constraints, softened language*)
 * New decisions that contradict existing ones without acknowledging it
 * Learnings that encode incorrect assumptions
 * Task additions that bypass the team's prioritization process
@@ -259,22 +282,22 @@ Watch for:
 `ctx init` configures `.gitignore` automatically, but verify these
 patterns are in place:
 
-* **Always gitignored**: `.context.key` (encryption key -- now at
-  `~/.ctx/.ctx.key`), `.context/logs/`, `.context/journal/`
-* **Team decision**: `scratchpad.enc` -- encrypted, safe to commit for
-  shared scratchpad state; gitignore if scratchpads are personal
-* **Never committed**: `.env`, credentials, API keys (enforced by
-  drift secret detection)
+* **Always gitignored**: `.ctx.key` (*encryption key*), 
+  `.context/logs/`, `.context/journal/`
+* **Team decision**: `scratchpad.enc` (*encrypted, safe to commit for
+  shared scratchpad state*); `.gitignore` if scratchpads are personal
+* **Never committed**: `.env`, credentials, API keys (*enforced by
+  drift secret detection*)
 
 ### Multi-Developer Context Sharing
 
-CONSTITUTION.md is the shared contract. All team members and their
+`CONSTITUTION.md` is the shared contract. All team members and their
 agents inherit it. Changes require team consensus, not unilateral edits.
 
 When multiple agents write to the same context files concurrently
-(e.g., two developers adding learnings simultaneously), git merge
+(*e.g., two developers adding learnings simultaneously*), git merge
 conflicts are expected. Resolution is typically additive: accept both
-additions. Destructive resolution (dropping one side) loses context.
+additions. Destructive resolution (*dropping one side*) loses context.
 
 ### Team Conventions for Context Management
 

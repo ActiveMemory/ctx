@@ -14,10 +14,11 @@ import (
 	"time"
 
 	"github.com/ActiveMemory/ctx/internal/assets"
-	"github.com/ActiveMemory/ctx/internal/config"
 	"github.com/ActiveMemory/ctx/internal/config/dir"
 	"github.com/ActiveMemory/ctx/internal/config/fs"
+	"github.com/ActiveMemory/ctx/internal/config/marker"
 	"github.com/ActiveMemory/ctx/internal/config/stats"
+	"github.com/ActiveMemory/ctx/internal/config/token"
 	"github.com/ActiveMemory/ctx/internal/rc"
 )
 
@@ -31,12 +32,12 @@ import (
 //   - string: trimmed index content, or empty string if markers are
 //     not found or improperly ordered
 func ExtractIndex(content string) string {
-	start := strings.Index(content, config.IndexStart)
-	end := strings.Index(content, config.IndexEnd)
+	start := strings.Index(content, marker.IndexStart)
+	end := strings.Index(content, marker.IndexEnd)
 	if start < 0 || end < 0 || end <= start {
 		return ""
 	}
-	startPos := start + len(config.IndexStart)
+	startPos := start + len(marker.IndexStart)
 	return strings.TrimSpace(content[startPos:end])
 }
 
@@ -61,7 +62,7 @@ func WriteOversizeFlag(
 
 	var flag strings.Builder
 	flag.WriteString(assets.TextDesc(assets.TextDescKeyContextLoadGateOversizeHeader))
-	flag.WriteString(strings.Repeat("=", stats.ContextSizeOversizeSepLen) + config.NewlineLF)
+	flag.WriteString(strings.Repeat("=", stats.ContextSizeOversizeSepLen) + token.NewlineLF)
 	flag.WriteString(fmt.Sprintf(
 		assets.TextDesc(assets.TextDescKeyContextLoadGateOversizeTimestamp),
 		time.Now().UTC().Format(time.RFC3339)))
@@ -74,7 +75,7 @@ func WriteOversizeFlag(
 			assets.TextDesc(assets.TextDescKeyContextLoadGateOversizeFileEntry),
 			entry.Name, entry.Tokens))
 	}
-	flag.WriteString(config.NewlineLF)
+	flag.WriteString(token.NewlineLF)
 	flag.WriteString(assets.TextDesc(assets.TextDescKeyContextLoadGateOversizeAction))
 
 	_ = os.WriteFile(

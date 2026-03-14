@@ -11,7 +11,7 @@ import (
 	"path/filepath"
 	"time"
 
-	"github.com/ActiveMemory/ctx/internal/config/file"
+	time2 "github.com/ActiveMemory/ctx/internal/config/time"
 	"github.com/spf13/cobra"
 
 	"github.com/ActiveMemory/ctx/internal/cli/system/core"
@@ -40,7 +40,7 @@ func Run(cmd *cobra.Command, days int, dryRun bool) error {
 		return ctxerr.ReadingStateDir(readErr)
 	}
 
-	cutoff := time.Now().Add(-time.Duration(days) * file.HoursPerDay * time.Hour)
+	cutoff := time.Now().Add(-time.Duration(days) * time2.HoursPerDay * time.Hour)
 	var pruned, skipped, preserved int
 
 	for _, entry := range entries {

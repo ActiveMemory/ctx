@@ -15,7 +15,7 @@ import (
 	"testing"
 
 	"github.com/ActiveMemory/ctx/internal/cli/recall/core"
-	"github.com/ActiveMemory/ctx/internal/config/file"
+	"github.com/ActiveMemory/ctx/internal/config/journal"
 	"github.com/ActiveMemory/ctx/internal/journal/state"
 )
 
@@ -891,7 +891,7 @@ func TestRunRecallExport_LockedSkippedByDefault(t *testing.T) {
 	if loadErr != nil {
 		t.Fatalf("load state: %v", loadErr)
 	}
-	jstate.Mark(mdFile, file.StageLocked)
+	jstate.Mark(mdFile, journal.StageLocked)
 	if saveErr := jstate.Save(journalDir); saveErr != nil {
 		t.Fatalf("save state: %v", saveErr)
 	}
@@ -941,7 +941,7 @@ func TestRunRecallExport_LockedSkippedByKeepFrontmatterFalse(t *testing.T) {
 	if loadErr != nil {
 		t.Fatalf("load state: %v", loadErr)
 	}
-	jstate.Mark(mdFile, file.StageLocked)
+	jstate.Mark(mdFile, journal.StageLocked)
 	if saveErr := jstate.Save(journalDir); saveErr != nil {
 		t.Fatalf("save state: %v", saveErr)
 	}
@@ -1103,7 +1103,7 @@ func TestRunRecallExport_DryRunShowsLocked(t *testing.T) {
 	if loadErr != nil {
 		t.Fatalf("load state: %v", loadErr)
 	}
-	jstate.Mark(mdFile, file.StageLocked)
+	jstate.Mark(mdFile, journal.StageLocked)
 	if saveErr := jstate.Save(journalDir); saveErr != nil {
 		t.Fatalf("save state: %v", saveErr)
 	}

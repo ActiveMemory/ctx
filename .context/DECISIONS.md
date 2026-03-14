@@ -3,6 +3,11 @@
 <!-- INDEX:START -->
 | Date | Decision |
 |------|--------|
+| 2026-03-13 | build target depends on sync-why to prevent embedded doc drift |
+| 2026-03-13 | Templates and user-facing text live in assets, structural constants stay in config |
+| 2026-03-12 | Recommend companion RAGs as peer MCP servers not bridge through ctx |
+| 2026-03-12 | Split commands.yaml into 4 domain files |
+| 2026-03-12 | Rename ctx-map skill to ctx-architecture |
 | 2026-03-07 | Use composite directory path constants for multi-segment paths |
 | 2026-03-06 | Drop fatih/color dependency — Unicode symbols are sufficient for terminal output, color was redundant |
 | 2026-03-06 | Externalize all command descriptions to embedded YAML for i18n readiness — commands.yaml holds Short/Long for 105 commands plus flag descriptions, loaded via assets.CommandDesc() and assets.FlagDesc() |
@@ -35,6 +40,76 @@
 | 2026-02-26 | Security and permissions (consolidated) |
 | 2026-02-27 | Webhook and notification design (consolidated) |
 <!-- INDEX:END -->
+
+## [2026-03-13-151955] build target depends on sync-why to prevent embedded doc drift
+
+**Status**: Accepted
+
+**Context**: assets/why/ files had silently drifted from their docs/ sources
+
+**Decision**: build target depends on sync-why to prevent embedded doc drift
+
+**Rationale**: Derived assets that are not in the build dependency chain will drift — the only reliable enforcement is making the build fail without sync
+
+**Consequences**: Every make build now copies docs into assets before compiling
+
+---
+
+## [2026-03-13-151954] Templates and user-facing text live in assets, structural constants stay in config
+
+**Status**: Accepted
+
+**Context**: Ongoing refactoring session moving Tpl* constants out of config/
+
+**Decision**: Templates and user-facing text live in assets, structural constants stay in config
+
+**Rationale**: config/ is for structural constants (paths, limits, regexes); assets/ is for templates, labels, and text that would need i18n. Clean separation of concerns
+
+**Consequences**: All tpl_entry.go, tpl_journal.go, tpl_loop.go, tpl_recall.go moved to assets/
+
+---
+
+## [2026-03-12-133007] Recommend companion RAGs as peer MCP servers not bridge through ctx
+
+**Status**: Accepted
+
+**Context**: Explored whether ctx should proxy RAG queries or integrate a RAG directly
+
+**Decision**: Recommend companion RAGs as peer MCP servers not bridge through ctx
+
+**Rationale**: MCP is the composition layer — agents already compose multiple servers. ctx is context, RAGs are intelligence. No bridging, no plugin system, no schema abstraction
+
+**Consequences**: Spec created at ideas/spec-companion-intelligence.md; future work is documentation and UX only
+
+---
+
+## [2026-03-12-133007] Split commands.yaml into 4 domain files
+
+**Status**: Accepted
+
+**Context**: Single 2373-line YAML mixed commands, flags, text, and examples with inconsistent quoting
+
+**Decision**: Split commands.yaml into 4 domain files
+
+**Rationale**: Context is for humans — localization files should be human-readable block scalars. Separate files eliminate the underscore prefix namespace hack
+
+**Consequences**: 4 files (commands.yaml, flags.yaml, text.yaml, examples.yaml) with dedicated loaders in embed.go
+
+---
+
+## [2026-03-12-133007] Rename ctx-map skill to ctx-architecture
+
+**Status**: Accepted
+
+**Context**: The name 'map' didn't convey the iterative, architectural nature of the ritual
+
+**Decision**: Rename ctx-map skill to ctx-architecture
+
+**Rationale**: 'architecture' better describes surveying and evolving project structure across sessions
+
+**Consequences**: All cross-references updated across skills, docs, .context files, and settings
+
+---
 
 ## [2026-03-07-221155] Use composite directory path constants for multi-segment paths
 
@@ -228,7 +303,7 @@
 
 **Rationale**: The output pipeline (map[string][]string to Mermaid/table/JSON) was already language-agnostic. Each ecosystem builder is ~40 lines — this is finishing what was started, not bloat. Static manifest parsing (no external tools for Node/Python) keeps dependencies minimal.
 
-**Consequences**: ctx deps now auto-detects Go, Node.js, Python, Rust. --type flag overrides detection. ctx-map skill works across ecosystems without changes.
+**Consequences**: ctx deps now auto-detects Go, Node.js, Python, Rust. --type flag overrides detection. ctx-architecture skill works across ecosystems without changes.
 
 ---
 

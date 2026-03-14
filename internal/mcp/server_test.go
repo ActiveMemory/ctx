@@ -14,7 +14,7 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/ActiveMemory/ctx/internal/config/file"
+	"github.com/ActiveMemory/ctx/internal/config/ctx"
 )
 
 func newTestServer(t *testing.T) (*Server, string) {
@@ -25,14 +25,14 @@ func newTestServer(t *testing.T) (*Server, string) {
 		t.Fatalf("mkdir: %v", err)
 	}
 	files := map[string]string{
-		file.FileConstitution:  "# Constitution\n\n- Rule 1: Never break things\n",
-		file.FileTask:          "# Tasks\n\n- [ ] Build MCP server\n- [ ] Write tests\n",
-		file.FileDecision:      "# Decisions\n",
-		file.FileConvention:    "# Conventions\n\n- Use Go idioms\n",
-		file.FileLearning:      "# Learnings\n",
-		file.FileArchitecture:  "# Architecture\n",
-		file.FileGlossary:      "# Glossary\n",
-		file.FileAgentPlaybook: "# Agent Playbook\n\nRead context files first.\n",
+		ctx.Constitution:  "# Constitution\n\n- Rule 1: Never break things\n",
+		ctx.Task:          "# Tasks\n\n- [ ] Build MCP server\n- [ ] Write tests\n",
+		ctx.Decision:      "# Decisions\n",
+		ctx.Convention:    "# Conventions\n\n- Use Go idioms\n",
+		ctx.Learning:      "# Learnings\n",
+		ctx.Architecture:  "# Architecture\n",
+		ctx.Glossary:      "# Glossary\n",
+		ctx.AgentPlaybook: "# Agent Playbook\n\nRead context files first.\n",
 	}
 	for name, content := range files {
 		p := filepath.Join(contextDir, name)
@@ -40,7 +40,7 @@ func newTestServer(t *testing.T) (*Server, string) {
 			t.Fatalf("write %s: %v", name, err)
 		}
 	}
-	srv := NewServer(contextDir)
+	srv := NewServer(contextDir, "test")
 	return srv, contextDir
 }
 
@@ -268,7 +268,7 @@ func TestToolComplete(t *testing.T) {
 	if !strings.Contains(result.Content[0].Text, "Build MCP server") {
 		t.Errorf("expected completed task name, got: %s", result.Content[0].Text)
 	}
-	content, err := os.ReadFile(filepath.Join(contextDir, file.FileTask))
+	content, err := os.ReadFile(filepath.Join(contextDir, ctx.Task))
 	if err != nil {
 		t.Fatalf("read tasks: %v", err)
 	}
@@ -309,13 +309,13 @@ func TestToolAdd(t *testing.T) {
 		{
 			name:         "add task",
 			args:         map[string]interface{}{"type": "task", "content": "Test task"},
-			wantFile:     file.FileTask,
+			wantFile:     ctx.Task,
 			wantContains: "Test task",
 		},
 		{
 			name:         "add convention",
 			args:         map[string]interface{}{"type": "convention", "content": "Use tabs"},
-			wantFile:     file.FileConvention,
+			wantFile:     ctx.Convention,
 			wantContains: "Use tabs",
 		},
 		{
@@ -327,7 +327,7 @@ func TestToolAdd(t *testing.T) {
 				"rationale":    "Fast and simple",
 				"consequences": "Ops must manage Redis",
 			},
-			wantFile:     file.FileDecision,
+			wantFile:     ctx.Decision,
 			wantContains: "Use Redis",
 		},
 		{
@@ -339,7 +339,7 @@ func TestToolAdd(t *testing.T) {
 				"lesson":      "Only same or child dirs",
 				"application": "Keep files in internal",
 			},
-			wantFile:     file.FileLearning,
+			wantFile:     ctx.Learning,
 			wantContains: "Go embed",
 		},
 		{

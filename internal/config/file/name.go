@@ -13,9 +13,3 @@ const (
 	// Index is the standard index filename for generated sites.
 	Index = "index.md"
 )
-
-const (
-	// DefaultSessionFilename is the fallback filename component when
-	// sanitization produces an empty string.
-	DefaultSessionFilename = "session"
-)

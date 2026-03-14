@@ -12,13 +12,15 @@ import (
 	"path/filepath"
 	"strings"
 
-	"github.com/ActiveMemory/ctx/internal/config/file"
+	"github.com/ActiveMemory/ctx/internal/config/ctx"
+	"github.com/ActiveMemory/ctx/internal/config/hook"
+	"github.com/ActiveMemory/ctx/internal/config/load_gate"
+	"github.com/ActiveMemory/ctx/internal/config/token"
 	"github.com/spf13/cobra"
 
 	"github.com/ActiveMemory/ctx/internal/assets"
 	changescore "github.com/ActiveMemory/ctx/internal/cli/changes/core"
 	"github.com/ActiveMemory/ctx/internal/cli/system/core"
-	"github.com/ActiveMemory/ctx/internal/config"
 	"github.com/ActiveMemory/ctx/internal/context"
 	"github.com/ActiveMemory/ctx/internal/rc"
 	"github.com/ActiveMemory/ctx/internal/validation"
@@ -39,7 +41,7 @@ import (
 // Returns:
 //   - error: Always nil (hook errors are non-fatal)
 func Run(cmd *cobra.Command, stdin *os.File) error {
-	if !core.IsInitialized() {
+	if !core.Initialized() {
 		return nil
 	}
 
@@ -53,7 +55,7 @@ func Run(cmd *cobra.Command, stdin *os.File) error {
 	}
 
 	tmpDir := core.StateDir()
-	marker := filepath.Join(tmpDir, file.PrefixCtxLoaded+input.SessionID)
+	marker := filepath.Join(tmpDir, load_gate.PrefixCtxLoaded+input.SessionID)
 
 	if _, statErr := os.Stat(marker); statErr == nil {
 		return nil // already fired this session
@@ -65,7 +67,7 @@ func Run(cmd *cobra.Command, stdin *os.File) error {
 
 	// Auto-prune stale session state files (best-effort, silent).
 	// Runs once per session at startup — fast directory scan.
-	core.AutoPrune(file.AutoPruneStaleDays)
+	core.AutoPrune(load_gate.AutoPruneStaleDays)
 
 	dir := rc.ContextDir()
 	var content strings.Builder
@@ -76,13 +78,13 @@ func Run(cmd *cobra.Command, stdin *os.File) error {
 	content.WriteString(
 		assets.TextDesc(assets.TextDescKeyContextLoadGateHeader) +
 			strings.Repeat(
-				file.ContextLoadSeparatorChar, file.ContextLoadSeparatorWidth,
+				load_gate.ContextLoadSeparatorChar, load_gate.ContextLoadSeparatorWidth,
 			) +
-			config.NewlineLF + config.NewlineLF,
+			token.NewlineLF + token.NewlineLF,
 	)
 
-	for _, f := range file.FileReadOrder {
-		if f == file.FileGlossary {
+	for _, f := range ctx.ReadOrder {
+		if f == ctx.Glossary {
 			continue
 		}
 
@@ -92,11 +94,11 @@ func Run(cmd *cobra.Command, stdin *os.File) error {
 		}
 
 		switch f {
-		case file.FileTask:
+		case ctx.Task:
 			// One-liner mention in footer, don't inject content
 			continue
 
-		case file.FileDecision, file.FileLearning:
+		case ctx.Decision, ctx.Learning:
 			idx := core.ExtractIndex(string(data))
 			if idx == "" {
 				idx = assets.TextDesc(assets.TextDescKeyContextLoadGateIndexFallback)
@@ -106,7 +108,7 @@ func Run(cmd *cobra.Command, stdin *os.File) error {
 			tokens := context.EstimateTokensString(idx)
 			totalTokens += tokens
 			perFile = append(perFile, core.FileTokenEntry{
-				Name:   f + file.ContextLoadIndexSuffix,
+				Name:   f + load_gate.ContextLoadIndexSuffix,
 				Tokens: tokens,
 			})
 			filesLoaded++
@@ -128,20 +130,20 @@ func Run(cmd *cobra.Command, stdin *os.File) error {
 		ctxChanges, _ := changescore.FindContextChanges(refTime)
 		codeChanges, _ := changescore.SummarizeCodeChanges(refTime)
 		if len(ctxChanges) > 0 || codeChanges.CommitCount > 0 {
-			content.WriteString(config.NewlineLF + changescore.RenderChangesForHook(
+			content.WriteString(token.NewlineLF + changescore.RenderChangesForHook(
 				refLabel, ctxChanges, codeChanges))
 		}
 	}
 
 	content.WriteString(
 		strings.Repeat(
-			file.ContextLoadSeparatorChar, file.ContextLoadSeparatorWidth,
-		) + config.NewlineLF)
+			load_gate.ContextLoadSeparatorChar, load_gate.ContextLoadSeparatorWidth,
+		) + token.NewlineLF)
 	content.WriteString(fmt.Sprintf(
 		assets.TextDesc(assets.TextDescKeyContextLoadGateFooter),
 		filesLoaded, totalTokens))
 
-	core.PrintHookContext(cmd, file.HookEventPreToolUse, content.String())
+	core.PrintHookContext(cmd, hook.EventPreToolUse, content.String())
 
 	// Webhook: metadata only — never send file content externally
 	webhookMsg := fmt.Sprintf(

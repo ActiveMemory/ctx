@@ -11,14 +11,15 @@ import (
 	"os"
 	"time"
 
-	"github.com/ActiveMemory/ctx/internal/config/file"
+	"github.com/ActiveMemory/ctx/internal/config/hook"
 	time2 "github.com/ActiveMemory/ctx/internal/config/time"
+	"github.com/ActiveMemory/ctx/internal/config/token"
+	"github.com/ActiveMemory/ctx/internal/config/tpl"
 	"github.com/spf13/cobra"
 
 	"github.com/ActiveMemory/ctx/internal/assets"
 	remindcore "github.com/ActiveMemory/ctx/internal/cli/remind/core"
 	"github.com/ActiveMemory/ctx/internal/cli/system/core"
-	"github.com/ActiveMemory/ctx/internal/config"
 	"github.com/ActiveMemory/ctx/internal/notify"
 )
 
@@ -35,7 +36,7 @@ import (
 // Returns:
 //   - error: Always nil (hook errors are non-fatal)
 func Run(cmd *cobra.Command, stdin *os.File) error {
-	if !core.IsInitialized() {
+	if !core.Initialized() {
 		return nil
 	}
 
@@ -64,14 +65,14 @@ func Run(cmd *cobra.Command, stdin *os.File) error {
 	// Build a pre-formatted reminder list for the template variable
 	var reminderList string
 	for _, r := range due {
-		reminderList += fmt.Sprintf(assets.TextDesc(assets.TextDescKeyCheckRemindersItemFormat)+config.NewlineLF, r.ID, r.Message)
+		reminderList += fmt.Sprintf(assets.TextDesc(assets.TextDescKeyCheckRemindersItemFormat)+token.NewlineLF, r.ID, r.Message)
 	}
 
 	fallback := reminderList +
-		config.NewlineLF + assets.TextDesc(assets.TextDescKeyCheckRemindersDismissHint) + config.NewlineLF +
+		token.NewlineLF + assets.TextDesc(assets.TextDescKeyCheckRemindersDismissHint) + token.NewlineLF +
 		assets.TextDesc(assets.TextDescKeyCheckRemindersDismissAllHint)
-	vars := map[string]any{file.TplVarReminderList: reminderList}
-	content := core.LoadMessage(file.HookCheckReminders, file.VariantReminders, vars, fallback)
+	vars := map[string]any{tpl.VarReminderList: reminderList}
+	content := core.LoadMessage(hook.CheckReminders, hook.VariantReminders, vars, fallback)
 	if content == "" {
 		return nil
 	}
@@ -81,8 +82,8 @@ func Run(cmd *cobra.Command, stdin *os.File) error {
 		assets.TextDesc(assets.TextDescKeyCheckRemindersBoxTitle),
 		content))
 
-	ref := notify.NewTemplateRef(file.HookCheckReminders, file.VariantReminders, vars)
-	nudgeMsg := file.HookCheckReminders + ": " + fmt.Sprintf(assets.TextDesc(assets.TextDescKeyCheckRemindersNudgeFormat), len(due))
+	ref := notify.NewTemplateRef(hook.CheckReminders, hook.VariantReminders, vars)
+	nudgeMsg := hook.CheckReminders + ": " + fmt.Sprintf(assets.TextDesc(assets.TextDescKeyCheckRemindersNudgeFormat), len(due))
 	core.NudgeAndRelay(nudgeMsg, input.SessionID, ref)
 
 	return nil

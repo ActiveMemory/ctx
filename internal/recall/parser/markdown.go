@@ -14,12 +14,13 @@ import (
 	"time"
 
 	"github.com/ActiveMemory/ctx/internal/assets"
-	"github.com/ActiveMemory/ctx/internal/config"
 	"github.com/ActiveMemory/ctx/internal/config/claude"
 	"github.com/ActiveMemory/ctx/internal/config/dir"
 	"github.com/ActiveMemory/ctx/internal/config/file"
 	"github.com/ActiveMemory/ctx/internal/config/parser"
+	"github.com/ActiveMemory/ctx/internal/config/session"
 	time2 "github.com/ActiveMemory/ctx/internal/config/time"
+	"github.com/ActiveMemory/ctx/internal/config/token"
 	ctxerr "github.com/ActiveMemory/ctx/internal/err"
 )
 
@@ -59,7 +60,7 @@ func NewMarkdownSessionParser() *MarkdownSessionParser {
 // Returns:
 //   - string: The identifier "markdown"
 func (p *MarkdownSessionParser) Tool() string {
-	return file.ToolMarkdown
+	return session.ToolMarkdown
 }
 
 // Matches returns true if the file appears to be a Markdown session file.
@@ -147,7 +148,7 @@ func (p *MarkdownSessionParser) ParseLine(_ []byte) (*Message, string, error) {
 func (p *MarkdownSessionParser) parseMarkdownSession(
 	content string, sourcePath string,
 ) *Session {
-	lines := strings.Split(content, config.NewlineLF)
+	lines := strings.Split(content, token.NewlineLF)
 
 	var headerLine string
 	for _, line := range lines {
@@ -190,7 +191,7 @@ func (p *MarkdownSessionParser) parseMarkdownSession(
 	var bodyParts []string
 	for _, sec := range sections {
 		if sec.body != "" {
-			bodyParts = append(bodyParts, config.HeadingLevelTwoStart+sec.heading+config.NewlineLF+sec.body)
+			bodyParts = append(bodyParts, token.HeadingLevelTwoStart+sec.heading+token.NewlineLF+sec.body)
 		}
 	}
 
@@ -199,7 +200,7 @@ func (p *MarkdownSessionParser) parseMarkdownSession(
 			ID:        sessionID + "-summary",
 			Timestamp: startTime,
 			Role:      claude.RoleAssistant,
-			Text:      strings.Join(bodyParts, config.NewlineLF+config.NewlineLF),
+			Text:      strings.Join(bodyParts, token.NewlineLF+token.NewlineLF),
 		})
 	}
 
@@ -230,7 +231,7 @@ func (p *MarkdownSessionParser) parseMarkdownSession(
 	return &Session{
 		ID:           sessionID,
 		Slug:         sessionID,
-		Tool:         file.ToolMarkdown,
+		Tool:         session.ToolMarkdown,
 		SourceFile:   sourcePath,
 		CWD:          cwd,
 		Project:      project,
@@ -257,15 +258,20 @@ func (p *MarkdownSessionParser) parseMarkdownSession(
 // Returns:
 //   - bool: True if the line matches a session header pattern
 func isSessionHeader(line string) bool {
-	if !strings.HasPrefix(line, config.HeadingLevelOneStart) {
+	if !strings.HasPrefix(line, token.HeadingLevelOneStart) {
 		return false
 	}
 
-	rest := line[len(config.HeadingLevelOneStart):]
+	rest := line[len(token.HeadingLevelOneStart):]
 
-	// Check for "Session:" prefix
-	if strings.HasPrefix(rest, assets.TextDesc(assets.TextDescKeyParserSessionPrefix)) {
-		return true
+	// Check for "Session:" or "Oturum:" prefix
+	for _, prefix := range []string{
+		assets.TextDesc(assets.TextDescKeyParserSessionPrefix),
+		assets.TextDesc(assets.TextDescKeyParserSessionPrefixAlt),
+	} {
+		if strings.HasPrefix(rest, prefix) {
+			return true
+		}
 	}
 
 	// Check for direct date pattern (YYYY-MM-DD)
@@ -286,12 +292,16 @@ func isSessionHeader(line string) bool {
 //   - string: The topic portion (e.g., "Fix API")
 func parseSessionHeader(line string) (string, string) {
 	// Remove "# " prefix
-	rest := strings.TrimPrefix(line, config.HeadingLevelOneStart)
+	rest := strings.TrimPrefix(line, token.HeadingLevelOneStart)
 
-	// Remove "Session: " or "Session:" prefix if present
-	prefix := assets.TextDesc(assets.TextDescKeyParserSessionPrefix)
-	rest = strings.TrimPrefix(rest, prefix+config.Space)
-	rest = strings.TrimPrefix(rest, prefix)
+	// Remove "Session: " / "Oturum: " prefix if present
+	for _, prefix := range []string{
+		assets.TextDesc(assets.TextDescKeyParserSessionPrefix),
+		assets.TextDesc(assets.TextDescKeyParserSessionPrefixAlt),
+	} {
+		rest = strings.TrimPrefix(rest, prefix+token.Space)
+		rest = strings.TrimPrefix(rest, prefix)
+	}
 
 	rest = strings.TrimSpace(rest)
 
@@ -345,17 +355,17 @@ func extractSections(lines []string) []section {
 
 	for _, line := range lines {
 		trimmed := strings.TrimSpace(line)
-		if strings.HasPrefix(trimmed, config.HeadingLevelTwoStart) {
+		if strings.HasPrefix(trimmed, token.HeadingLevelTwoStart) {
 			// Save previous section
 			if currentHeading != "" {
 				sections = append(sections, section{
 					heading: currentHeading,
 					body: strings.TrimSpace(
-						strings.Join(currentBody, config.NewlineLF),
+						strings.Join(currentBody, token.NewlineLF),
 					),
 				})
 			}
-			currentHeading = strings.TrimPrefix(trimmed, config.HeadingLevelTwoStart)
+			currentHeading = strings.TrimPrefix(trimmed, token.HeadingLevelTwoStart)
 			currentBody = nil
 			continue
 		}
@@ -370,7 +380,7 @@ func extractSections(lines []string) []section {
 		sections = append(sections, section{
 			heading: currentHeading,
 			body: strings.TrimSpace(
-				strings.Join(currentBody, config.NewlineLF),
+				strings.Join(currentBody, token.NewlineLF),
 			),
 		})
 	}

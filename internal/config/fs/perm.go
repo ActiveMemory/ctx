@@ -16,4 +16,6 @@ const (
 	PermRestrictedDir = 0750
 	// PermSecret is the permission for secret files (owner rw only).
 	PermSecret = 0600
+	// PermKeyDir is the permission for the user-level key directory (owner rwx only).
+	PermKeyDir = 0700
 )

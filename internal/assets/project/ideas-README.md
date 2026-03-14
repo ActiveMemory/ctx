@@ -21,4 +21,4 @@ When an idea reaches a reviewable state, promote it to `specs/`:
 2. Move to `specs/` (or write a fresh spec inspired by the idea)
 3. Add a Phase to TASKS.md referencing the spec
 
-Ideas that stay here indefinitely are fine — not everything needs to ship.
+Ideas that stay here indefinitely are fine: not everything needs to ship.

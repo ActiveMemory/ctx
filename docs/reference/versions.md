@@ -28,37 +28,37 @@ Tap the corresponding **view docs** to view the docs as they were at that releas
 | v0.1.1  | 2026-01-26   | [view docs](https://github.com/ActiveMemory/ctx/tree/v0.1.1/docs) |
 | v0.1.0  | 2026-01-25   | [view docs](https://github.com/ActiveMemory/ctx/tree/v0.1.0/docs) |
 
-### v0.6.0 -- The Integration Release
+### `v0.6.0`: The Integration Release
 
 Plugin architecture: hooks and skills converted from shell scripts to Go
 subcommands, shipped as a Claude Code marketplace plugin. Multi-tool hook
 generation for Cursor, Aider, Copilot, and Windsurf. Webhook notifications
 with encrypted URL storage.
 
-### v0.3.0 -- The Discipline Release
+### `v0.3.0`: The Discipline Release
 
 Journal static site generation via zensical. 49-skill audit and fix pass
 (positive framing, phantom reference removal, scope tightening).
 Context consolidation skill. golangci-lint v2 migration.
 
-### v0.2.0 -- The Archaeology Release
+### `v0.2.0`: The Archaeology Release
 
 Session journal system: `ctx recall export` converts Claude Code JSONL
 transcripts to browsable Markdown. Constants refactor with semantic
 prefixes (`Dir*`, `File*`, `Filename*`). CRLF handling for Windows
 compatibility.
 
-### v0.1.2
+### `v0.1.2`
 
 Default Claude Code permissions deployed on `ctx init`. Prompting guide
 published as a standalone documentation page.
 
-### v0.1.1
+### `v0.1.1`
 
 Bug fixes: hook schema key format corrected, JSON unicode escaping
 fixed in context file output.
 
-### v0.1.0 -- Initial Release
+### `v0.1.0`: Initial Release
 
 CLI with 15 subcommands, 6 context file types (CONSTITUTION, TASKS,
 CONVENTIONS, ARCHITECTURE, DECISIONS, LEARNINGS), Makefile build system,

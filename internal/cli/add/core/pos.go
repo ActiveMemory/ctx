@@ -6,7 +6,9 @@
 
 package core
 
-import "github.com/ActiveMemory/ctx/internal/config"
+import (
+	"github.com/ActiveMemory/ctx/internal/config/token"
+)
 
 // SkipNewline advances pos past a newline (CRLF or LF) if present.
 //
@@ -20,12 +22,12 @@ func SkipNewline(s string, pos int) int {
 	if pos >= len(s) {
 		return pos
 	}
-	if pos+len(config.NewlineCRLF) <= len(s) &&
-		s[pos] == config.NewlineCRLF[0] && s[pos+1] == config.NewlineCRLF[1] {
-		return pos + len(config.NewlineCRLF)
+	if pos+len(token.NewlineCRLF) <= len(s) &&
+		s[pos] == token.NewlineCRLF[0] && s[pos+1] == token.NewlineCRLF[1] {
+		return pos + len(token.NewlineCRLF)
 	}
-	if s[pos] == config.NewlineLF[0] {
-		return pos + len(config.NewlineLF)
+	if s[pos] == token.NewlineLF[0] {
+		return pos + len(token.NewlineLF)
 	}
 	return pos
 }
@@ -42,7 +44,7 @@ func SkipWhitespace(s string, pos int) int {
 	for pos < len(s) {
 		if n := SkipNewline(s, pos); n > pos {
 			pos = n
-		} else if s[pos] == config.Space[0] || s[pos] == config.Tab[0] {
+		} else if s[pos] == token.Space[0] || s[pos] == token.Tab[0] {
 			pos++
 		} else {
 			break
@@ -60,11 +62,11 @@ func SkipWhitespace(s string, pos int) int {
 //   - int: Index of the first newline (-1 if not found)
 func FindNewline(s string) int {
 	for i := 0; i < len(s); i++ {
-		if i+len(config.NewlineCRLF) <= len(s) &&
-			s[i] == config.NewlineCRLF[0] && s[i+1] == config.NewlineCRLF[1] {
+		if i+len(token.NewlineCRLF) <= len(s) &&
+			s[i] == token.NewlineCRLF[0] && s[i+1] == token.NewlineCRLF[1] {
 			return i
 		}
-		if s[i] == config.NewlineLF[0] {
+		if s[i] == token.NewlineLF[0] {
 			return i
 		}
 	}

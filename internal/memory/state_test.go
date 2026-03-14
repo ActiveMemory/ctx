@@ -12,7 +12,7 @@ import (
 	"testing"
 
 	"github.com/ActiveMemory/ctx/internal/config/dir"
-	"github.com/ActiveMemory/ctx/internal/config/file"
+	"github.com/ActiveMemory/ctx/internal/config/memory"
 )
 
 func TestStateRoundtrip(t *testing.T) {
@@ -112,7 +112,7 @@ func TestLoadState_CorruptJSON(t *testing.T) {
 		t.Fatal(mkErr)
 	}
 
-	path := filepath.Join(stateDir, file.FileMemoryState)
+	path := filepath.Join(stateDir, memory.MemoryState)
 	if writeErr := os.WriteFile(path, []byte("{corrupt"), 0o644); writeErr != nil {
 		t.Fatal(writeErr)
 	}

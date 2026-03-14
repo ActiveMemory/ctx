@@ -12,11 +12,13 @@ import (
 	"os/exec"
 	"strings"
 
-	"github.com/ActiveMemory/ctx/internal/config/file"
+	"github.com/ActiveMemory/ctx/internal/config/architecture"
+	"github.com/ActiveMemory/ctx/internal/config/hook"
+	"github.com/ActiveMemory/ctx/internal/config/token"
+	"github.com/ActiveMemory/ctx/internal/config/tpl"
 	"github.com/spf13/cobra"
 
 	"github.com/ActiveMemory/ctx/internal/assets"
-	"github.com/ActiveMemory/ctx/internal/config"
 	"github.com/ActiveMemory/ctx/internal/notify"
 	"github.com/ActiveMemory/ctx/internal/rc"
 	"github.com/ActiveMemory/ctx/internal/validation"
@@ -28,7 +30,7 @@ import (
 // Returns:
 //   - *MapTrackingInfo: parsed tracking info, or nil if not found or invalid
 func ReadMapTracking() *MapTrackingInfo {
-	data, readErr := validation.SafeReadFile(rc.ContextDir(), file.FileMapTracking)
+	data, readErr := validation.SafeReadFile(rc.ContextDir(), architecture.MapTracking)
 	if readErr != nil {
 		return nil
 	}
@@ -60,7 +62,7 @@ func CountModuleCommits(since string) int {
 	if lines == "" {
 		return 0
 	}
-	return len(strings.Split(lines, config.NewlineLF))
+	return len(strings.Split(lines, token.NewlineLF))
 }
 
 // EmitMapStalenessWarning builds and prints the architecture map staleness
@@ -73,10 +75,10 @@ func CountModuleCommits(since string) int {
 //   - moduleCommits: number of commits touching modules since last refresh
 func EmitMapStalenessWarning(cmd *cobra.Command, sessionID, dateStr string, moduleCommits int) {
 	fallback := fmt.Sprintf(assets.TextDesc(assets.TextDescKeyCheckMapStalenessFallback), dateStr, moduleCommits)
-	content := LoadMessage(file.HookCheckMapStaleness, file.VariantStale,
+	content := LoadMessage(hook.CheckMapStaleness, hook.VariantStale,
 		map[string]any{
-			file.TplVarLastRefreshDate: dateStr,
-			file.TplVarModuleCount:     moduleCommits,
+			tpl.VarLastRefreshDate: dateStr,
+			tpl.VarModuleCount:     moduleCommits,
 		}, fallback)
 	if content == "" {
 		return
@@ -87,8 +89,8 @@ func EmitMapStalenessWarning(cmd *cobra.Command, sessionID, dateStr string, modu
 		assets.TextDesc(assets.TextDescKeyCheckMapStalenessBoxTitle),
 		content))
 
-	ref := notify.NewTemplateRef(file.HookCheckMapStaleness, file.VariantStale,
-		map[string]any{file.TplVarLastRefreshDate: dateStr, file.TplVarModuleCount: moduleCommits})
-	notifyMsg := file.HookCheckMapStaleness + ": " + assets.TextDesc(assets.TextDescKeyCheckMapStalenessRelayMessage)
+	ref := notify.NewTemplateRef(hook.CheckMapStaleness, hook.VariantStale,
+		map[string]any{tpl.VarLastRefreshDate: dateStr, tpl.VarModuleCount: moduleCommits})
+	notifyMsg := hook.CheckMapStaleness + ": " + assets.TextDesc(assets.TextDescKeyCheckMapStalenessRelayMessage)
 	NudgeAndRelay(notifyMsg, sessionID, ref)
 }

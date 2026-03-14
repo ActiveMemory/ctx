@@ -15,11 +15,11 @@ import (
 	"path/filepath"
 	"time"
 
-	"github.com/ActiveMemory/ctx/internal/config"
 	"github.com/ActiveMemory/ctx/internal/config/dir"
-	"github.com/ActiveMemory/ctx/internal/config/file"
 	"github.com/ActiveMemory/ctx/internal/config/fs"
+	"github.com/ActiveMemory/ctx/internal/config/memory"
 	time2 "github.com/ActiveMemory/ctx/internal/config/time"
+	"github.com/ActiveMemory/ctx/internal/config/token"
 )
 
 // LoadState reads the sync state from .context/state/memory-import.json.
@@ -56,7 +56,7 @@ func SaveState(contextDir string, s State) error {
 	if marshalErr != nil {
 		return marshalErr
 	}
-	data = append(data, config.ByteNewline)
+	data = append(data, token.NewlineLF[0])
 	return os.WriteFile(path, data, fs.PermFile)
 }
 
@@ -76,7 +76,7 @@ func EntryHash(text string) string {
 // Imported reports whether an entry hash has already been imported.
 // Stored entries use format "hash:target:date"; matches on hash prefix.
 func (s *State) Imported(hash string) bool {
-	prefix := hash + config.Colon
+	prefix := hash + token.Colon
 	for _, h := range s.ImportedHashes {
 		if h == hash || len(h) > len(hash) && h[:len(prefix)] == prefix {
 			return true
@@ -99,5 +99,5 @@ func (s *State) MarkImportedDone() {
 }
 
 func statePath(contextDir string) string {
-	return filepath.Join(contextDir, dir.State, file.FileMemoryState)
+	return filepath.Join(contextDir, dir.State, memory.MemoryState)
 }

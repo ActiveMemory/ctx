@@ -12,9 +12,9 @@ import (
 	"strings"
 	"testing"
 
+	"github.com/ActiveMemory/ctx/internal/config/ctx"
 	"github.com/ActiveMemory/ctx/internal/config/dir"
 	"github.com/ActiveMemory/ctx/internal/config/entry"
-	"github.com/ActiveMemory/ctx/internal/config/file"
 	"github.com/ActiveMemory/ctx/internal/rc"
 )
 
@@ -33,8 +33,8 @@ func setupContextDir(t *testing.T) (string, func()) {
 
 	// Create required context files
 	for _, f := range []string{
-		file.FileConstitution, file.FileTask, file.FileDecision,
-		file.FileLearning, file.FileConvention,
+		ctx.Constitution, ctx.Task, ctx.Decision,
+		ctx.Learning, ctx.Convention,
 	} {
 		content := "# " + strings.TrimSuffix(f, ".md") + "\n\n"
 		if writeErr := os.WriteFile(filepath.Join(contextDir, f), []byte(content), 0o644); writeErr != nil {
@@ -49,14 +49,14 @@ func TestPromote_Convention(t *testing.T) {
 	contextDir, cleanup := setupContextDir(t)
 	defer cleanup()
 
-	entry := Entry{Text: "always use bun for this project", Kind: EntryList}
-	classification := Classification{Target: entry.EntryConvention, Keywords: []string{"always use"}}
+	e := Entry{Text: "always use bun for this project", Kind: EntryList}
+	classification := Classification{Target: entry.Convention, Keywords: []string{"always use"}}
 
-	if promoteErr := Promote(entry, classification); promoteErr != nil {
+	if promoteErr := Promote(e, classification); promoteErr != nil {
 		t.Fatalf("Promote: %v", promoteErr)
 	}
 
-	data, readErr := os.ReadFile(filepath.Join(contextDir, file.FileConvention))
+	data, readErr := os.ReadFile(filepath.Join(contextDir, ctx.Convention))
 	if readErr != nil {
 		t.Fatal(readErr)
 	}
@@ -69,14 +69,14 @@ func TestPromote_Learning(t *testing.T) {
 	contextDir, cleanup := setupContextDir(t)
 	defer cleanup()
 
-	entry := Entry{Text: "learned that nolint is ignored in v2", Kind: EntryParagraph}
-	classification := Classification{Target: entry.EntryLearning, Keywords: []string{"learned"}}
+	e := Entry{Text: "learned that nolint is ignored in v2", Kind: EntryParagraph}
+	classification := Classification{Target: entry.Learning, Keywords: []string{"learned"}}
 
-	if promoteErr := Promote(entry, classification); promoteErr != nil {
+	if promoteErr := Promote(e, classification); promoteErr != nil {
 		t.Fatalf("Promote: %v", promoteErr)
 	}
 
-	data, readErr := os.ReadFile(filepath.Join(contextDir, file.FileLearning))
+	data, readErr := os.ReadFile(filepath.Join(contextDir, ctx.Learning))
 	if readErr != nil {
 		t.Fatal(readErr)
 	}
@@ -89,14 +89,14 @@ func TestPromote_Decision(t *testing.T) {
 	contextDir, cleanup := setupContextDir(t)
 	defer cleanup()
 
-	entry := Entry{Text: "decided to use SQLite over Postgres", Kind: EntryParagraph}
-	classification := Classification{Target: entry.EntryDecision, Keywords: []string{"decided"}}
+	e := Entry{Text: "decided to use SQLite over Postgres", Kind: EntryParagraph}
+	classification := Classification{Target: entry.Decision, Keywords: []string{"decided"}}
 
-	if promoteErr := Promote(entry, classification); promoteErr != nil {
+	if promoteErr := Promote(e, classification); promoteErr != nil {
 		t.Fatalf("Promote: %v", promoteErr)
 	}
 
-	data, readErr := os.ReadFile(filepath.Join(contextDir, file.FileDecision))
+	data, readErr := os.ReadFile(filepath.Join(contextDir, ctx.Decision))
 	if readErr != nil {
 		t.Fatal(readErr)
 	}
@@ -109,14 +109,14 @@ func TestPromote_Task(t *testing.T) {
 	contextDir, cleanup := setupContextDir(t)
 	defer cleanup()
 
-	entry := Entry{Text: "need to add tests for import", Kind: EntryList}
-	classification := Classification{Target: entry.EntryTask, Keywords: []string{"need to"}}
+	e := Entry{Text: "need to add tests for import", Kind: EntryList}
+	classification := Classification{Target: entry.Task, Keywords: []string{"need to"}}
 
-	if promoteErr := Promote(entry, classification); promoteErr != nil {
+	if promoteErr := Promote(e, classification); promoteErr != nil {
 		t.Fatalf("Promote: %v", promoteErr)
 	}
 
-	data, readErr := os.ReadFile(filepath.Join(contextDir, file.FileTask))
+	data, readErr := os.ReadFile(filepath.Join(contextDir, ctx.Task))
 	if readErr != nil {
 		t.Fatal(readErr)
 	}

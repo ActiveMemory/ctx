@@ -11,7 +11,7 @@ import (
 	"time"
 
 	"github.com/ActiveMemory/ctx/internal/assets"
-	"github.com/ActiveMemory/ctx/internal/config/file"
+	"github.com/ActiveMemory/ctx/internal/config/agent"
 	time2 "github.com/ActiveMemory/ctx/internal/config/time"
 	"github.com/ActiveMemory/ctx/internal/context"
 	"github.com/ActiveMemory/ctx/internal/index"
@@ -50,14 +50,14 @@ func RecencyScore(eb *index.EntryBlock, now time.Time) float64 {
 	}
 	days := int(now.Sub(entryDate).Hours() / 24)
 	switch {
-	case days <= file.RecencyDaysWeek:
-		return file.RecencyScoreWeek
-	case days <= file.RecencyDaysMonth:
-		return file.RecencyScoreMonth
-	case days <= file.RecencyDaysQuarter:
-		return file.RecencyScoreQuarter
+	case days <= agent.RecencyDaysWeek:
+		return agent.RecencyScoreWeek
+	case days <= agent.RecencyDaysMonth:
+		return agent.RecencyScoreMonth
+	case days <= agent.RecencyDaysQuarter:
+		return agent.RecencyScoreQuarter
 	default:
-		return file.RecencyScoreOld
+		return agent.RecencyScoreOld
 	}
 }
 
@@ -83,10 +83,10 @@ func RelevanceScore(eb *index.EntryBlock, keywords []string) float64 {
 			matches++
 		}
 	}
-	if matches >= file.RelevanceMatchCap {
+	if matches >= agent.RelevanceMatchCap {
 		return 1.0
 	}
-	return float64(matches) / float64(file.RelevanceMatchCap)
+	return float64(matches) / float64(agent.RelevanceMatchCap)
 }
 
 // ScoreEntry computes the combined relevance score for an entry block.

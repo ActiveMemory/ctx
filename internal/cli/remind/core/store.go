@@ -12,8 +12,8 @@ import (
 	"os"
 	"path/filepath"
 
-	"github.com/ActiveMemory/ctx/internal/config/file"
 	"github.com/ActiveMemory/ctx/internal/config/fs"
+	"github.com/ActiveMemory/ctx/internal/config/reminder"
 	ctxerr "github.com/ActiveMemory/ctx/internal/err"
 	"github.com/ActiveMemory/ctx/internal/rc"
 	"github.com/ActiveMemory/ctx/internal/validation"
@@ -84,5 +84,5 @@ func NextID(reminders []Reminder) int {
 // Returns:
 //   - string: Absolute path to reminders.json
 func RemindersPath() string {
-	return filepath.Join(rc.ContextDir(), file.FileReminders)
+	return filepath.Join(rc.ContextDir(), reminder.Reminders)
 }

@@ -9,10 +9,10 @@ package obsidian
 import (
 	"path/filepath"
 
+	"github.com/ActiveMemory/ctx/internal/config/obsidian"
 	"github.com/spf13/cobra"
 
 	"github.com/ActiveMemory/ctx/internal/assets"
-	"github.com/ActiveMemory/ctx/internal/config"
 	"github.com/ActiveMemory/ctx/internal/rc"
 )
 
@@ -34,7 +34,7 @@ func Cmd() *cobra.Command {
 		},
 	}
 
-	defaultOutput := filepath.Join(rc.ContextDir(), config.ObsidianDirName)
+	defaultOutput := filepath.Join(rc.ContextDir(), obsidian.DirName)
 	cmd.Flags().StringVarP(
 		&output, "output", "o",
 		defaultOutput, assets.FlagDesc(assets.FlagDescKeyJournalObsidianOutput),

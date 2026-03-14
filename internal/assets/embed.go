@@ -15,8 +15,8 @@ import (
 	"strings"
 	"sync"
 
-	"github.com/ActiveMemory/ctx/internal/config"
 	"github.com/ActiveMemory/ctx/internal/config/file"
+	"github.com/ActiveMemory/ctx/internal/config/token"
 	"gopkg.in/yaml.v3"
 )
 
@@ -353,6 +353,7 @@ const (
 	TextDescKeyCheckMapStalenessRelayPrefix          = "check-map-staleness.relay-prefix"
 	TextDescKeyCheckMemoryDriftBoxTitle              = "check-memory-drift.box-title"
 	TextDescKeyCheckMemoryDriftContent               = "check-memory-drift.content"
+	TextDescKeyCheckMemoryDriftRelayMessage          = "check-memory-drift.relay-message"
 	TextDescKeyCheckMemoryDriftRelayPrefix           = "check-memory-drift.relay-prefix"
 	TextDescKeyCeremonyBoxBoth                       = "ceremony.box-both"
 	TextDescKeyCeremonyBoxRemember                   = "ceremony.box-remember"
@@ -457,6 +458,7 @@ const (
 	TextDescKeyPadKeyCreated            = "pad.key-created"
 	TextDescKeyParserGitNotFound        = "parser.git-not-found"
 	TextDescKeyParserSessionPrefix      = "parser.session_prefix"
+	TextDescKeyParserSessionPrefixAlt   = "parser.session_prefix_alt"
 	TextDescKeyPauseConfirmed           = "pause.confirmed"
 	TextDescKeyPostCommitFallback       = "post-commit.fallback"
 	TextDescKeyPostCommitRelayMessage   = "post-commit.relay-message"
@@ -1228,6 +1230,12 @@ func Schema() ([]byte, error) {
 var (
 	commandsOnce sync.Once
 	commandsMap  map[string]commandEntry
+	flagsOnce    sync.Once
+	flagsMap     map[string]commandEntry
+	textOnce     sync.Once
+	textMap      map[string]commandEntry
+	examplesOnce sync.Once
+	examplesMap  map[string]commandEntry
 )
 
 type commandEntry struct {
@@ -1235,21 +1243,33 @@ type commandEntry struct {
 	Long  string `yaml:"long"`
 }
 
-// loadCommands parses the embedded commands.yaml once.
+// loadYAML parses an embedded YAML file into a commandEntry map.
+func loadYAML(path string) map[string]commandEntry {
+	data, readErr := FS.ReadFile(path)
+	if readErr != nil {
+		return make(map[string]commandEntry)
+	}
+	m := make(map[string]commandEntry)
+	if parseErr := yaml.Unmarshal(data, &m); parseErr != nil {
+		return make(map[string]commandEntry)
+	}
+	return m
+}
+
 func loadCommands() {
-	commandsOnce.Do(func() {
-		data, readErr := FS.ReadFile("commands/commands.yaml")
-		if readErr != nil {
-			commandsMap = make(map[string]commandEntry)
-			return
-		}
-		m := make(map[string]commandEntry)
-		if parseErr := yaml.Unmarshal(data, &m); parseErr != nil {
-			commandsMap = make(map[string]commandEntry)
-			return
-		}
-		commandsMap = m
-	})
+	commandsOnce.Do(func() { commandsMap = loadYAML("commands/commands.yaml") })
+}
+
+func loadFlags() {
+	flagsOnce.Do(func() { flagsMap = loadYAML("commands/flags.yaml") })
+}
+
+func loadText() {
+	textOnce.Do(func() { textMap = loadYAML("commands/text.yaml") })
+}
+
+func loadExamples() {
+	examplesOnce.Do(func() { examplesMap = loadYAML("commands/examples.yaml") })
 }
 
 // CommandDesc returns the Short and Long descriptions for a command.
@@ -1272,19 +1292,19 @@ func CommandDesc(key string) (short, long string) {
 	return entry.Short, entry.Long
 }
 
-// FlagDesc returns the description for a global flag.
+// FlagDesc returns the description for a flag.
 //
-// Keys use the format "_flags.<flag-name>" (e.g., "_flags.context-dir").
+// Keys use dot notation: "add.file", "context-dir".
 // Returns an empty string if the key is not found.
 //
 // Parameters:
-//   - name: Flag name (without the _flags. prefix)
+//   - name: Flag key in dot notation
 //
 // Returns:
 //   - string: Flag description
 func FlagDesc(name string) string {
-	loadCommands()
-	entry, ok := commandsMap["_flags."+name]
+	loadFlags()
+	entry, ok := flagsMap[name]
 	if !ok {
 		return ""
 	}
@@ -1293,17 +1313,17 @@ func FlagDesc(name string) string {
 
 // ExampleDesc returns example usage text for a given key.
 //
-// Keys use the format "_examples.<type>" (e.g., "_examples.decision").
+// Keys match entry types: "decision", "learning", "task", "convention".
 // Returns an empty string if the key is not found.
 //
 // Parameters:
-//   - name: Example key (without the _examples. prefix)
+//   - name: Entry type key
 //
 // Returns:
 //   - string: Example text
 func ExampleDesc(name string) string {
-	loadCommands()
-	entry, ok := commandsMap["_examples."+name]
+	loadExamples()
+	entry, ok := examplesMap[name]
 	if !ok {
 		return ""
 	}
@@ -1312,17 +1332,17 @@ func ExampleDesc(name string) string {
 
 // TextDesc returns a user-facing text string by key.
 //
-// Keys use the format "_text.<scope>.<name>" (e.g., "_text.agent.instruction").
+// Keys use dot notation: "agent.instruction", "backup.run-hint".
 // Returns an empty string if the key is not found.
 //
 // Parameters:
-//   - name: Text key (without the _text. prefix)
+//   - name: Text key in dot notation
 //
 // Returns:
 //   - string: Text content
 func TextDesc(name string) string {
-	loadCommands()
-	entry, ok := commandsMap["_text."+name]
+	loadText()
+	entry, ok := textMap[name]
 	if !ok {
 		return ""
 	}
@@ -1336,7 +1356,7 @@ var (
 
 // StopWords returns the default set of stop words for keyword extraction.
 //
-// Loaded from the embedded commands.yaml asset under "_text.stopwords".
+// Loaded from the embedded text.yaml asset under "stopwords".
 // The result is cached after the first call.
 //
 // Returns:
@@ -1366,7 +1386,7 @@ var (
 // Lines are trimmed; empty lines and lines starting with '#' are skipped.
 func parsePermissions(data []byte) []string {
 	var result []string
-	for _, line := range strings.Split(string(data), config.NewlineLF) {
+	for _, line := range strings.Split(string(data), token.NewlineLF) {
 		line = strings.TrimSpace(line)
 		if line == "" || strings.HasPrefix(line, "#") {
 			continue

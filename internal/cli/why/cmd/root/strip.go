@@ -11,7 +11,9 @@ import (
 	"strings"
 
 	"github.com/ActiveMemory/ctx/internal/assets"
-	"github.com/ActiveMemory/ctx/internal/config"
+	"github.com/ActiveMemory/ctx/internal/config/regex"
+	"github.com/ActiveMemory/ctx/internal/config/token"
+	"github.com/ActiveMemory/ctx/internal/config/zensical"
 )
 
 // StripMkDocs removes MkDocs-specific syntax from Markdown content so it
@@ -30,13 +32,13 @@ import (
 // Returns:
 //   - string: Cleaned Markdown suitable for terminal display
 func StripMkDocs(content string) string {
-	lines := strings.Split(content, config.NewlineLF)
+	lines := strings.Split(content, token.NewlineLF)
 	var result []string
 
 	// Strip YAML frontmatter.
-	if len(lines) > 0 && strings.TrimSpace(lines[0]) == config.MkDocsFrontmatterDelim {
+	if len(lines) > 0 && strings.TrimSpace(lines[0]) == zensical.MkDocsFrontmatterDelim {
 		for i := 1; i < len(lines); i++ {
-			if strings.TrimSpace(lines[i]) == config.MkDocsFrontmatterDelim {
+			if strings.TrimSpace(lines[i]) == zensical.MkDocsFrontmatterDelim {
 				lines = lines[i+1:]
 				break
 			}
@@ -51,12 +53,12 @@ func StripMkDocs(content string) string {
 		line := lines[i]
 
 		// Skip image lines.
-		if config.RegExMdImage.MatchString(line) {
+		if regex.MarkdownImage.MatchString(line) {
 			continue
 		}
 
 		// Admonition start: !!! type "Title"
-		if strings.HasPrefix(strings.TrimSpace(line), config.MkDocsAdmonitionPrefix) {
+		if strings.HasPrefix(strings.TrimSpace(line), zensical.MkDocsAdmonitionPrefix) {
 			inAdmonition = true
 			title := ExtractAdmonitionTitle(line)
 			if title != "" {
@@ -68,8 +70,8 @@ func StripMkDocs(content string) string {
 
 		// Inside admonition: dedent 4-space body.
 		if inAdmonition {
-			if strings.HasPrefix(line, config.MkDocsIndent) {
-				result = append(result, blockquotePrefix+line[config.MkDocsIndentWidth:])
+			if strings.HasPrefix(line, zensical.MkDocsIndent) {
+				result = append(result, blockquotePrefix+line[zensical.MkDocsIndentWidth:])
 				continue
 			}
 			// End of admonition body.
@@ -77,7 +79,7 @@ func StripMkDocs(content string) string {
 		}
 
 		// Tab marker: === "Name"
-		if strings.HasPrefix(strings.TrimSpace(line), config.MkDocsTabPrefix) {
+		if strings.HasPrefix(strings.TrimSpace(line), zensical.MkDocsTabPrefix) {
 			inTab = true
 			title := ExtractTabTitle(line)
 			if title != "" {
@@ -89,8 +91,8 @@ func StripMkDocs(content string) string {
 
 		// Inside tab: dedent 4-space body.
 		if inTab {
-			if strings.HasPrefix(line, config.MkDocsIndent) {
-				result = append(result, line[config.MkDocsIndentWidth:])
+			if strings.HasPrefix(line, zensical.MkDocsIndent) {
+				result = append(result, line[zensical.MkDocsIndentWidth:])
 				continue
 			}
 			if strings.TrimSpace(line) == "" {
@@ -102,12 +104,12 @@ func StripMkDocs(content string) string {
 		}
 
 		// Strip relative .md links, keep display text.
-		line = config.RegExMdLink.ReplaceAllString(line, "$1")
+		line = regex.MarkdownLink.ReplaceAllString(line, "$1")
 
 		result = append(result, line)
 	}
 
-	return strings.Join(result, config.NewlineLF)
+	return strings.Join(result, token.NewlineLF)
 }
 
 // ExtractAdmonitionTitle pulls the quoted title from an admonition line.

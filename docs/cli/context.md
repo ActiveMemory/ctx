@@ -64,30 +64,6 @@ ctx add convention "Use kebab-case for filenames" --section "Naming"
 
 ---
 
-### `ctx complete`
-
-Mark a task as completed.
-
-```bash
-ctx complete <task-id-or-text>
-```
-
-**Arguments**:
-
-* `task-id-or-text`: Task number or partial text match
-
-**Examples**:
-
-```bash
-# By text (partial match)
-ctx complete "user auth"
-
-# By task number
-ctx complete 3
-```
-
----
-
 ### `ctx drift`
 
 Detect stale or invalid context.
@@ -110,7 +86,7 @@ ctx drift [flags]
 * Constitution rules aren't violated (*heuristic*)
 * Staleness indicators (*old files, many completed tasks*)
 * Missing packages: warns when `internal/` directories exist on disk but are
-  not referenced in `ARCHITECTURE.md` (*suggests running `/ctx-map`*)
+  not referenced in `ARCHITECTURE.md` (*suggests running `/ctx-architecture`*)
 * Entry count: warns when `LEARNINGS.md` or `DECISIONS.md` exceed configurable
   thresholds (*default: 30 learnings, 20 decisions*), or when `CONVENTIONS.md`
   exceeds a line count threshold (default: 200). Configure via `.ctxrc`:
@@ -196,10 +172,32 @@ ctx compact --archive
 
 ### `ctx tasks`
 
-Manage task archival and snapshots.
+Manage task completion, archival, and snapshots.
 
 ```bash
 ctx tasks <subcommand>
+```
+
+#### `ctx tasks complete`
+
+Mark a task as completed.
+
+```bash
+ctx tasks complete <task-id-or-text>
+```
+
+**Arguments**:
+
+* `task-id-or-text`: Task number or partial text match
+
+**Examples**:
+
+```bash
+# By text (partial match)
+ctx tasks complete "user auth"
+
+# By task number
+ctx tasks complete 3
 ```
 
 #### `ctx tasks archive`

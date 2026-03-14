@@ -45,4 +45,4 @@ Then confirm to the user:
 - **Resume before wrap-up**: if the session evolves into real work, resume
   hooks before wrapping up to capture learnings and decisions
 - **Initial context load is unaffected**: the ~8k token startup injection
-  happens before any command runs — pause only affects subsequent hooks
+  happens before any command runs: pause only affects subsequent hooks

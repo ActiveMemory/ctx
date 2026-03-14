@@ -12,7 +12,9 @@ import (
 	"sort"
 	"strings"
 
+	"github.com/ActiveMemory/ctx/internal/config/ceremony"
 	"github.com/ActiveMemory/ctx/internal/config/file"
+	"github.com/ActiveMemory/ctx/internal/config/hook"
 	"github.com/spf13/cobra"
 
 	"github.com/ActiveMemory/ctx/internal/assets"
@@ -71,10 +73,10 @@ func ScanJournalsForCeremonies(files []string) (remember, wrapup bool) {
 			continue
 		}
 		content := string(data)
-		if !remember && strings.Contains(content, file.CeremonyRememberCmd) {
+		if !remember && strings.Contains(content, ceremony.CeremonyRememberCmd) {
 			remember = true
 		}
-		if !wrapup && strings.Contains(content, file.CeremonyWrapUpCmd) {
+		if !wrapup && strings.Contains(content, ceremony.CeremonyWrapUpCmd) {
 			wrapup = true
 		}
 		if remember && wrapup {
@@ -100,15 +102,15 @@ func EmitCeremonyNudge(cmd *cobra.Command, remember, wrapup bool) (msg, variant 
 
 	switch {
 	case !remember && !wrapup:
-		variant = file.VariantBoth
+		variant = hook.VariantBoth
 		boxTitleKey = assets.TextDescKeyCeremonyBoxBoth
 		fallbackKey = assets.TextDescKeyCeremonyFallbackBoth
 	case !remember:
-		variant = file.VariantRemember
+		variant = hook.VariantRemember
 		boxTitleKey = assets.TextDescKeyCeremonyBoxRemember
 		fallbackKey = assets.TextDescKeyCeremonyFallbackRemember
 	case !wrapup:
-		variant = file.VariantWrapup
+		variant = hook.VariantWrapup
 		boxTitleKey = assets.TextDescKeyCeremonyBoxWrapup
 		fallbackKey = assets.TextDescKeyCeremonyFallbackWrapup
 	}
@@ -116,7 +118,7 @@ func EmitCeremonyNudge(cmd *cobra.Command, remember, wrapup bool) (msg, variant 
 	boxTitle := assets.TextDesc(boxTitleKey)
 	fallback := assets.TextDesc(fallbackKey)
 
-	content := LoadMessage(file.HookCheckCeremonies, variant, nil, fallback)
+	content := LoadMessage(hook.CheckCeremonies, variant, nil, fallback)
 	if content == "" {
 		return "", variant
 	}

@@ -11,8 +11,8 @@ import (
 	"path/filepath"
 	"testing"
 
+	"github.com/ActiveMemory/ctx/internal/config/ctx"
 	"github.com/ActiveMemory/ctx/internal/config/dir"
-	"github.com/ActiveMemory/ctx/internal/config/file"
 	"github.com/ActiveMemory/ctx/internal/rc"
 )
 
@@ -97,7 +97,7 @@ func TestRunReindex_WithFile(t *testing.T) {
 **Lesson:** Validate at boundaries
 **Application:** Add validation to all handlers
 `
-	_ = os.WriteFile(filepath.Join(ctxDir, file.FileLearning), []byte(content), 0600)
+	_ = os.WriteFile(filepath.Join(ctxDir, ctx.Learning), []byte(content), 0600)
 
 	cmd := Cmd()
 	cmd.SetArgs([]string{"reindex"})
@@ -108,7 +108,7 @@ func TestRunReindex_WithFile(t *testing.T) {
 	}
 
 	// Verify the file was updated
-	updated, err := os.ReadFile(filepath.Join(ctxDir, file.FileLearning)) //nolint:gosec // test temp path
+	updated, err := os.ReadFile(filepath.Join(ctxDir, ctx.Learning)) //nolint:gosec // test temp path
 	if err != nil {
 		t.Fatalf("failed to read updated file: %v", err)
 	}
@@ -129,7 +129,7 @@ func TestRunReindex_EmptyFile(t *testing.T) {
 	// Create the context directory and empty LEARNINGS.md
 	ctxDir := filepath.Join(tempDir, dir.Context)
 	_ = os.MkdirAll(ctxDir, 0750)
-	_ = os.WriteFile(filepath.Join(ctxDir, file.FileLearning), []byte("# Learnings\n"), 0600)
+	_ = os.WriteFile(filepath.Join(ctxDir, ctx.Learning), []byte("# Learnings\n"), 0600)
 
 	cmd := Cmd()
 	cmd.SetArgs([]string{"reindex"})

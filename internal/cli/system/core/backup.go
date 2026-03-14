@@ -16,8 +16,8 @@ import (
 	"path/filepath"
 	"time"
 
+	"github.com/ActiveMemory/ctx/internal/config/archive"
 	"github.com/ActiveMemory/ctx/internal/config/dir"
-	"github.com/ActiveMemory/ctx/internal/config/file"
 	fs2 "github.com/ActiveMemory/ctx/internal/config/fs"
 	"github.com/spf13/cobra"
 
@@ -44,27 +44,27 @@ func BackupProject(
 		return BackupResult{}, cwdErr
 	}
 
-	archiveName := fmt.Sprintf(file.BackupTplProjectArchive, timestamp)
+	archiveName := fmt.Sprintf(archive.BackupTplProjectArchive, timestamp)
 	archivePath := filepath.Join(os.TempDir(), archiveName)
 
 	entries := []ArchiveEntry{
 		{SourcePath: filepath.Join(cwd, dir.Context), Prefix: dir.Context, ExcludeDir: dir.JournalSite},
 		{SourcePath: filepath.Join(cwd, dir.Claude), Prefix: dir.Claude},
 		{SourcePath: filepath.Join(cwd, dir.Ideas), Prefix: dir.Ideas, Optional: true},
-		{SourcePath: filepath.Join(home, file.FileBashrc), Prefix: file.FileBashrc},
+		{SourcePath: filepath.Join(home, archive.Bashrc), Prefix: archive.Bashrc},
 	}
 
 	result, finalizeErr := finalizeArchive(
-		cmd, archivePath, archiveName, file.BackupScopeProject, entries, smb,
+		cmd, archivePath, archiveName, archive.BackupScopeProject, entries, smb,
 	)
 	if finalizeErr != nil {
 		return result, finalizeErr
 	}
 
 	// Touch marker file for check-backup-age hook.
-	markerDir := filepath.Join(home, file.BackupMarkerDir)
+	markerDir := filepath.Join(home, archive.BackupMarkerDir)
 	_ = os.MkdirAll(markerDir, fs2.PermExec)
-	markerPath := filepath.Join(markerDir, file.BackupMarkerFile)
+	markerPath := filepath.Join(markerDir, archive.BackupMarkerFile)
 	TouchFile(markerPath)
 
 	return result, nil
@@ -84,15 +84,15 @@ func BackupProject(
 func BackupGlobal(
 	cmd *cobra.Command, home, timestamp string, smb *SMBConfig,
 ) (BackupResult, error) {
-	archiveName := fmt.Sprintf(file.BackupTplGlobalArchive, timestamp)
+	archiveName := fmt.Sprintf(archive.BackupTplGlobalArchive, timestamp)
 	archivePath := filepath.Join(os.TempDir(), archiveName)
 
 	entries := []ArchiveEntry{
-		{SourcePath: filepath.Join(home, dir.Claude), Prefix: dir.Claude, ExcludeDir: file.BackupExcludeTodos},
+		{SourcePath: filepath.Join(home, dir.Claude), Prefix: dir.Claude, ExcludeDir: archive.BackupExcludeTodos},
 	}
 
 	return finalizeArchive(
-		cmd, archivePath, archiveName, file.BackupScopeGlobal, entries, smb,
+		cmd, archivePath, archiveName, archive.BackupScopeGlobal, entries, smb,
 	)
 }
 
@@ -289,7 +289,7 @@ func CheckBackupMarker(markerPath string, warnings []string) []string {
 	}
 
 	ageDays := int(time.Since(info.ModTime()).Hours() / 24)
-	if ageDays >= file.BackupMaxAgeDays {
+	if ageDays >= archive.BackupMaxAgeDays {
 		return append(warnings,
 			fmt.Sprintf(assets.TextDesc(assets.TextDescKeyBackupStale), ageDays),
 			assets.TextDesc(assets.TextDescKeyBackupRunHint),

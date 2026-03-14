@@ -9,7 +9,7 @@ package bootstrap
 import (
 	"os"
 
-	"github.com/ActiveMemory/ctx/internal/config/file"
+	bootstrap2 "github.com/ActiveMemory/ctx/internal/config/bootstrap"
 	"github.com/ActiveMemory/ctx/internal/write/bootstrap"
 	"github.com/spf13/cobra"
 
@@ -56,7 +56,7 @@ func Run(cmd *cobra.Command) error {
 	}
 
 	fileList := core.WrapFileList(
-		files, file.BootstrapFileListWidth, file.BootstrapFileListIndent,
+		files, bootstrap2.BootstrapFileListWidth, bootstrap2.BootstrapFileListIndent,
 	)
 	bootstrap.BootstrapText(cmd, dir, fileList, rules, nextSteps, warning)
 	return nil

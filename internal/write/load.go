@@ -10,9 +10,10 @@ import (
 	"fmt"
 	"strings"
 
+	"github.com/ActiveMemory/ctx/internal/config/token"
 	"github.com/spf13/cobra"
 
-	"github.com/ActiveMemory/ctx/internal/config"
+	"github.com/ActiveMemory/ctx/internal/assets"
 	"github.com/ActiveMemory/ctx/internal/context"
 )
 
@@ -59,11 +60,11 @@ func LoadAssembled(
 	titleFn func(string) string,
 ) error {
 	var sb strings.Builder
-	nl := config.NewlineLF
-	sep := config.Separator
+	nl := token.NewlineLF
+	sep := token.Separator
 
-	sb.WriteString(config.LoadHeadingContext + nl + nl)
-	_, _ = fmt.Fprintf(&sb, config.TplLoadBudget+nl+nl, budget, totalTokens)
+	sb.WriteString(assets.LoadHeadingContext + nl + nl)
+	_, _ = fmt.Fprintf(&sb, assets.TplLoadBudget+nl+nl, budget, totalTokens)
 	sb.WriteString(sep + nl + nl)
 
 	tokensUsed := context.EstimateTokensString(sb.String())
@@ -75,11 +76,11 @@ func LoadAssembled(
 
 		fileTokens := f.Tokens
 		if tokensUsed+fileTokens > budget {
-			_, _ = fmt.Fprintf(&sb, nl+sep+nl+nl+config.TplLoadTruncated+nl, f.Name)
+			_, _ = fmt.Fprintf(&sb, nl+sep+nl+nl+assets.TplLoadTruncated+nl, f.Name)
 			break
 		}
 
-		_, _ = fmt.Fprintf(&sb, config.TplLoadSectionHeading+nl+nl, titleFn(f.Name))
+		_, _ = fmt.Fprintf(&sb, assets.TplLoadSectionHeading+nl+nl, titleFn(f.Name))
 		sb.Write(f.Content)
 		if !strings.HasSuffix(string(f.Content), nl) {
 			sb.WriteString(nl)

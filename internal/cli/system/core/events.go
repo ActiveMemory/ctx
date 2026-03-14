@@ -12,7 +12,7 @@ import (
 	"strings"
 	"time"
 
-	"github.com/ActiveMemory/ctx/internal/config/file"
+	"github.com/ActiveMemory/ctx/internal/config/event"
 	time2 "github.com/ActiveMemory/ctx/internal/config/time"
 	"github.com/spf13/cobra"
 
@@ -53,7 +53,7 @@ func ExtractHookName(e notify.Payload) string {
 	if idx := strings.Index(e.Message, ":"); idx > 0 {
 		return e.Message[:idx]
 	}
-	return file.EventsHookFallback
+	return event.EventsHookFallback
 }
 
 // TruncateMessage limits message length for display, appending a
@@ -69,8 +69,8 @@ func TruncateMessage(msg string, maxLen int) string {
 	if len(msg) <= maxLen {
 		return msg
 	}
-	return msg[:maxLen-len(file.EventsTruncationSuffix)] +
-		file.EventsTruncationSuffix
+	return msg[:maxLen-len(event.EventsTruncationSuffix)] +
+		event.EventsTruncationSuffix
 }
 
 // OutputEventsJSON writes events as raw JSONL to the command output.
@@ -105,7 +105,7 @@ func OutputEventsHuman(cmd *cobra.Command, evts []notify.Payload) error {
 	for _, e := range evts {
 		ts := FormatEventTimestamp(e.Timestamp)
 		hookName := ExtractHookName(e)
-		msg := TruncateMessage(e.Message, file.EventsMessageMaxLen)
+		msg := TruncateMessage(e.Message, event.EventsMessageMaxLen)
 		cmd.Println(fmt.Sprintf(fmtStr, ts, e.Event, hookName, msg))
 	}
 	return nil

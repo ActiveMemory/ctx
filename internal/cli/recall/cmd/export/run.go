@@ -14,6 +14,7 @@ import (
 	"github.com/ActiveMemory/ctx/internal/config/dir"
 	"github.com/ActiveMemory/ctx/internal/config/file"
 	"github.com/ActiveMemory/ctx/internal/config/fs"
+	"github.com/ActiveMemory/ctx/internal/config/journal"
 	"github.com/spf13/cobra"
 
 	"github.com/ActiveMemory/ctx/internal/cli/recall/core"
@@ -133,7 +134,7 @@ func Run(cmd *cobra.Command, args []string, opts core.ExportOpts) error {
 
 	// 11. Persist journal state.
 	if saveErr := jstate.Save(journalDir); saveErr != nil {
-		write.WarnFileErr(cmd, file.FileJournalState, saveErr)
+		write.WarnFileErr(cmd, journal.FileState, saveErr)
 	}
 
 	// 12. Print final summary.

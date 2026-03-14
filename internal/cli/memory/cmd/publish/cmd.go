@@ -7,10 +7,10 @@
 package publish
 
 import (
+	"github.com/ActiveMemory/ctx/internal/config/memory"
 	"github.com/spf13/cobra"
 
 	"github.com/ActiveMemory/ctx/internal/assets"
-	"github.com/ActiveMemory/ctx/internal/config"
 )
 
 // Cmd returns the memory publish subcommand.
@@ -32,7 +32,7 @@ func Cmd() *cobra.Command {
 	}
 
 	cmd.Flags().IntVar(&budget,
-		"budget", config.DefaultPublishBudget,
+		"budget", memory.DefaultPublishBudget,
 		assets.FlagDesc(assets.FlagDescKeyMemoryPublishBudget),
 	)
 	cmd.Flags().BoolVar(&dryRun,

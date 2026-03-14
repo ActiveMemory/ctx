@@ -13,7 +13,8 @@ import (
 	"os"
 
 	"github.com/ActiveMemory/ctx/internal/assets"
-	"github.com/ActiveMemory/ctx/internal/config"
+	"github.com/ActiveMemory/ctx/internal/config/mcp"
+	"github.com/ActiveMemory/ctx/internal/config/token"
 	"github.com/ActiveMemory/ctx/internal/rc"
 )
 
@@ -21,13 +22,14 @@ import (
 //
 // Parameters:
 //   - contextDir: Path to the .context/ directory
+//   - version: Binary version string for the server info response
 //
 // Returns:
 //   - *Server: A configured MCP server ready to serve
-func NewServer(contextDir string) *Server {
+func NewServer(contextDir, version string) *Server {
 	return &Server{
 		contextDir:  contextDir,
-		version:     config.BinaryVersion,
+		version:     version,
 		tokenBudget: rc.TokenBudget(),
 		out:         os.Stdout,
 		in:          os.Stdin,
@@ -44,7 +46,7 @@ func NewServer(contextDir string) *Server {
 func (s *Server) Serve() error {
 	scanner := bufio.NewScanner(s.in)
 
-	scanner.Buffer(make([]byte, 0, config.MCPScanMaxSize), config.MCPScanMaxSize)
+	scanner.Buffer(make([]byte, 0, mcp.MCPScanMaxSize), mcp.MCPScanMaxSize)
 
 	for scanner.Scan() {
 		line := scanner.Bytes()
@@ -64,7 +66,7 @@ func (s *Server) Serve() error {
 			s.writeError(nil, errCodeInternal, assets.TextDesc(assets.TextDescKeyMCPFailedMarshal))
 			continue
 		}
-		if _, writeErr := s.out.Write(append(out, config.ByteNewline)); writeErr != nil {
+		if _, writeErr := s.out.Write(append(out, token.NewlineLF[0])); writeErr != nil {
 			return writeErr
 		}
 	}
@@ -77,7 +79,7 @@ func (s *Server) handleMessage(data []byte) *Response {
 	var req Request
 	if err := json.Unmarshal(data, &req); err != nil {
 		return &Response{
-			JSONRPC: config.JSONRPCVersion,
+			JSONRPC: mcp.MCPJSONRPCVersion,
 			Error:   &RPCError{Code: errCodeParse, Message: assets.TextDesc(assets.TextDescKeyMCPParseError)},
 		}
 	}
@@ -94,17 +96,17 @@ func (s *Server) handleMessage(data []byte) *Response {
 // dispatch routes a request to the correct handler based on method name.
 func (s *Server) dispatch(req Request) *Response {
 	switch req.Method {
-	case config.MCPMethodInitialize:
+	case mcp.MCPMethodInitialize:
 		return s.handleInitialize(req)
-	case config.MCPMethodPing:
+	case mcp.MCPMethodPing:
 		return s.ok(req.ID, struct{}{})
-	case config.MCPMethodResourcesList:
+	case mcp.MCPMethodResourcesList:
 		return s.handleResourcesList(req)
-	case config.MCPMethodResourcesRead:
+	case mcp.MCPMethodResourcesRead:
 		return s.handleResourcesRead(req)
-	case config.MCPMethodToolsList:
+	case mcp.MCPMethodToolsList:
 		return s.handleToolsList(req)
-	case config.MCPMethodToolsCall:
+	case mcp.MCPMethodToolsCall:
 		return s.handleToolsCall(req)
 	default:
 		return s.error(req.ID, errCodeNotFound,
@@ -129,7 +131,7 @@ func (s *Server) handleInitialize(req Request) *Response {
 			Tools:     &ToolsCap{},
 		},
 		ServerInfo: AppInfo{
-			Name:    config.MCPServerName,
+			Name:    mcp.MCPServerName,
 			Version: s.version,
 		},
 	}
@@ -139,7 +141,7 @@ func (s *Server) handleInitialize(req Request) *Response {
 // ok builds a successful JSON-RPC response.
 func (s *Server) ok(id json.RawMessage, result interface{}) *Response {
 	return &Response{
-		JSONRPC: config.JSONRPCVersion,
+		JSONRPC: mcp.MCPJSONRPCVersion,
 		ID:      id,
 		Result:  result,
 	}
@@ -148,7 +150,7 @@ func (s *Server) ok(id json.RawMessage, result interface{}) *Response {
 // error builds a JSON-RPC error response.
 func (s *Server) error(id json.RawMessage, code int, msg string) *Response {
 	return &Response{
-		JSONRPC: config.JSONRPCVersion,
+		JSONRPC: mcp.MCPJSONRPCVersion,
 		ID:      id,
 		Error:   &RPCError{Code: code, Message: msg},
 	}
@@ -161,6 +163,6 @@ func (s *Server) writeError(id json.RawMessage, code int, msg string) {
 	if out, err := json.Marshal(resp); err == nil {
 		// Best-effort: writeError is a last-resort fallback; nowhere
 		// to report a write failure from here.
-		_, _ = s.out.Write(append(out, config.ByteNewline))
+		_, _ = s.out.Write(append(out, token.NewlineLF[0]))
 	}
 }

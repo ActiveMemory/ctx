@@ -9,12 +9,13 @@ package check_resources
 import (
 	"os"
 
-	"github.com/ActiveMemory/ctx/internal/config/file"
+	"github.com/ActiveMemory/ctx/internal/config/hook"
+	"github.com/ActiveMemory/ctx/internal/config/token"
+	"github.com/ActiveMemory/ctx/internal/config/tpl"
 	"github.com/spf13/cobra"
 
 	"github.com/ActiveMemory/ctx/internal/assets"
 	"github.com/ActiveMemory/ctx/internal/cli/system/core"
-	"github.com/ActiveMemory/ctx/internal/config"
 	"github.com/ActiveMemory/ctx/internal/notify"
 	"github.com/ActiveMemory/ctx/internal/sysinfo"
 	"github.com/ActiveMemory/ctx/internal/write"
@@ -49,21 +50,21 @@ func Run(cmd *cobra.Command, stdin *os.File) error {
 	var alertMessages string
 	for _, a := range alerts {
 		if a.Severity == sysinfo.SeverityDanger {
-			alertMessages += file.CheckResourcesDangerMarker +
-				a.Message + config.NewlineLF
+			alertMessages += "✖ " +
+				a.Message + token.NewlineLF
 		}
 	}
 
 	fallback := alertMessages +
-		config.NewlineLF + assets.TextDesc(
-		assets.TextDescKeyCheckResourcesFallbackLow) + config.NewlineLF +
+		token.NewlineLF + assets.TextDesc(
+		assets.TextDescKeyCheckResourcesFallbackLow) + token.NewlineLF +
 		assets.TextDesc(
-			assets.TextDescKeyCheckResourcesFallbackPersist) + config.NewlineLF +
+			assets.TextDescKeyCheckResourcesFallbackPersist) + token.NewlineLF +
 		assets.TextDesc(
 			assets.TextDescKeyCheckResourcesFallbackEnd)
-	vars := map[string]any{file.TplVarAlertMessages: alertMessages}
+	vars := map[string]any{tpl.VarAlertMessages: alertMessages}
 	content := core.LoadMessage(
-		file.HookCheckResources, file.VariantAlert, vars, fallback,
+		hook.CheckResources, hook.VariantAlert, vars, fallback,
 	)
 	if content == "" {
 		return nil
@@ -75,9 +76,9 @@ func Run(cmd *cobra.Command, stdin *os.File) error {
 		content))
 
 	ref := notify.NewTemplateRef(
-		file.HookCheckResources, file.VariantAlert, vars,
+		hook.CheckResources, hook.VariantAlert, vars,
 	)
-	core.NudgeAndRelay(file.HookCheckResources+": "+
+	core.NudgeAndRelay(hook.CheckResources+": "+
 		assets.TextDesc(assets.TextDescKeyCheckResourcesRelayMessage),
 		input.SessionID, ref,
 	)

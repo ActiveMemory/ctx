@@ -3,6 +3,10 @@
 <!-- INDEX:START -->
 | Date | Learning |
 |------|--------|
+| 2026-03-13 | sync-why mechanism existed but was not wired to build |
+| 2026-03-13 | Linter reverts import-only edits when references still use old package |
+| 2026-03-12 | Project-root files vs context files are distinct categories |
+| 2026-03-12 | Constants belong in their domain package not in god objects |
 | 2026-03-07 | Always search for existing constants before adding new ones |
 | 2026-03-07 | SafeReadFile requires split base+filename paths |
 | 2026-03-06 | Spawned agents reliably create new files but consistently fail to delete old ones — always audit for stale files, duplicate function definitions, and orphaned imports after agent-driven refactoring |
@@ -59,6 +63,46 @@
 | 2026-02-19 | Feature can be code-complete but invisible to users |
 | 2026-01-28 | IDE is already the UI |
 <!-- INDEX:END -->
+
+---
+
+## [2026-03-13-151952] sync-why mechanism existed but was not wired to build
+
+**Context**: assets/why/ had drifted from docs/ — the sync targets existed in the Makefile but build did not depend on sync-why
+
+**Lesson**: Freshness checks that are not in the critical path will be forgotten. Wire them as build prerequisites, not optional audit steps
+
+**Application**: Any derived or copied asset should be a prerequisite of build, not just audit
+
+---
+
+## [2026-03-13-151951] Linter reverts import-only edits when references still use old package
+
+**Context**: Moving tpl_entry.go from config/entry to assets — linter kept reverting the import change
+
+**Lesson**: When moving constants between packages, change imports and all references in a single atomic write (use Write not incremental Edit), so the linter never sees an inconsistent state
+
+**Application**: For future package migrations, use full file rewrites when a linter is active
+
+---
+
+## [2026-03-12-133008] Project-root files vs context files are distinct categories
+
+**Context**: Tried moving ImplementationPlan constant to config/ctx assuming it was a context file
+
+**Lesson**: Files created by ctx init in the project root (Makefile, IMPLEMENTATION_PLAN.md) are scaffolding, not context files loaded via ReadOrder. They belong in config/file, not config/ctx
+
+**Application**: Before moving a file constant, check whether it is in ReadOrder (context) or created by init (project-root)
+
+---
+
+## [2026-03-12-133007] Constants belong in their domain package not in god objects
+
+**Context**: file.go held agent scoring constants, budget percentages, cooldown durations — none related to file config
+
+**Lesson**: When a constant is only used by one domain (e.g. agent scoring), it should live in that domain's config package
+
+**Application**: Check callers before placing constants; if all callers are in one domain, the constant belongs there
 
 ---
 
@@ -459,7 +503,7 @@
 - CLI reference docs can outpace implementation: ctx remind had no CLI, ctx recall sync had no Cobra wiring, key file naming diverged between docs and code. Always verify with `ctx <cmd> --help` before releasing docs.
 - Structural doc sections (project layouts, command tables, skill counts) drift silently. Add `<!-- drift-check: <shell command> -->` markers above any section that mirrors codebase structure.
 - Agent sweeps for style violations are unreliable (8 found vs 48+ actual). Always follow agent results with targeted grep and manual classification.
-- ARCHITECTURE.md missed 4 core packages and 4 CLI commands. The /ctx-drift skill catches stale paths but not missing entries — run /ctx-map after adding new packages or commands.
+- ARCHITECTURE.md missed 4 core packages and 4 CLI commands. The /ctx-drift skill catches stale paths but not missing entries — run /ctx-architecture after adding new packages or commands.
 - Documentation audits must compare against known-good examples and pattern-match for the COMPLETE standard, not just presence of any comment.
 - Dead link checking belongs in /consolidate's check list (check 12), not as a standalone concern. When a new audit concern emerges, check if it fits an existing audit skill first.
 

@@ -10,11 +10,12 @@ import (
 	"os"
 	"path/filepath"
 
-	"github.com/ActiveMemory/ctx/internal/config/file"
+	"github.com/ActiveMemory/ctx/internal/config/nudge"
 	"github.com/spf13/cobra"
 
 	"github.com/ActiveMemory/ctx/internal/assets"
 	"github.com/ActiveMemory/ctx/internal/cli/system/core"
+	"github.com/ActiveMemory/ctx/internal/config/hook"
 	"github.com/ActiveMemory/ctx/internal/notify"
 	"github.com/ActiveMemory/ctx/internal/rc"
 )
@@ -32,7 +33,7 @@ import (
 // Returns:
 //   - error: Always nil (hook errors are non-fatal)
 func Run(cmd *cobra.Command, stdin *os.File) error {
-	if !core.IsInitialized() {
+	if !core.Initialized() {
 		return nil
 	}
 	input, sessionID, paused := core.HookPreamble(stdin)
@@ -45,7 +46,7 @@ func Run(cmd *cobra.Command, stdin *os.File) error {
 		return nil
 	}
 
-	counterPath := filepath.Join(core.StateDir(), file.TaskNudgePrefix+sessionID)
+	counterPath := filepath.Join(core.StateDir(), nudge.PrefixTask+sessionID)
 	count := core.ReadCounter(counterPath)
 	count++
 
@@ -59,19 +60,19 @@ func Run(cmd *cobra.Command, stdin *os.File) error {
 
 	fallback := assets.TextDesc(assets.TextDescKeyCheckTaskCompletionFallback)
 	msg := core.LoadMessage(
-		file.HookCheckTaskCompletion, file.VariantNudge, nil, fallback,
+		hook.CheckTaskCompletion, hook.VariantNudge, nil, fallback,
 	)
 	if msg == "" {
 		return nil
 	}
-	core.PrintHookContext(cmd, file.HookEventPostToolUse, msg)
+	core.PrintHookContext(cmd, hook.EventPostToolUse, msg)
 
 	nudgeMsg := assets.TextDesc(assets.TextDescKeyCheckTaskCompletionNudgeMessage)
 	ref := notify.NewTemplateRef(
-		file.HookCheckTaskCompletion, file.VariantNudge, nil,
+		hook.CheckTaskCompletion, hook.VariantNudge, nil,
 	)
 	core.Relay(
-		file.HookCheckTaskCompletion+": "+nudgeMsg, input.SessionID, ref,
+		hook.CheckTaskCompletion+": "+nudgeMsg, input.SessionID, ref,
 	)
 
 	return nil
