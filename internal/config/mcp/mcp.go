@@ -52,4 +52,21 @@ const (
 	MCPToolComplete = "ctx_complete"
 	// MCPToolDrift is the MCP tool name for drift detection.
 	MCPToolDrift = "ctx_drift"
+	// MCPToolRecall is the MCP tool name for querying session history.
+	MCPToolRecall = "ctx_recall"
+	// MCPToolWatchUpdate is the MCP tool name for structured context updates.
+	MCPToolWatchUpdate = "ctx_watch_update"
+	// MCPToolCompact is the MCP tool name for compacting tasks.
+	MCPToolCompact = "ctx_compact"
+	// MCPToolNext is the MCP tool name for suggesting the next task.
+	MCPToolNext = "ctx_next"
+	// MCPToolCheckTaskCompletion is the MCP tool name for task completion nudge.
+	MCPToolCheckTaskCompletion = "ctx_check_task_completion"
+	// MCPToolSessionEvent is the MCP tool name for session lifecycle events.
+	MCPToolSessionEvent = "ctx_session_event"
+	// MCPToolRemind is the MCP tool name for listing reminders.
+	MCPToolRemind = "ctx_remind"
+
+	// MCPNotifyResourcesUpdated is the MCP notification for resource changes.
+	MCPNotifyResourcesUpdated = "notifications/resources/updated"
 )
