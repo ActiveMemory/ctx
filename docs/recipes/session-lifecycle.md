@@ -66,7 +66,6 @@ Read on for the full walkthrough with examples.
 | `/ctx-commit`          | Skill       | Commit code and prompt for context capture       |
 | `/ctx-reflect`         | Skill       | Structured reflection checkpoint                 |
 | `/ctx-recall`          | Skill       | Browse session history inside your AI assistant  |
-| `/ctx-context-monitor` | Skill       | Automatic context capacity monitoring            |
 
 ## The Workflow
 
@@ -178,11 +177,11 @@ Only change files in internal/cli/session/. Nothing else.
 this skill executes them one at a time with build/test verification between
 each step.
 
-**Context monitoring runs automatically**: the `/ctx-context-monitor` skill
-is triggered by a hook at adaptive intervals. Early in a session it stays
+**Context monitoring runs automatically**: the `check-context-size` hook
+monitors context capacity at adaptive intervals. Early in a session it stays
 silent. After 16+ prompts it starts monitoring, and past 30 prompts it checks
 frequently. If context capacity is running high, it will suggest saving
-unsaved work. You typically do not need to invoke this skill manually.
+unsaved work. No manual invocation is needed.
 
 ---
 

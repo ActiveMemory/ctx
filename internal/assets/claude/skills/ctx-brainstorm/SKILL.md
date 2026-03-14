@@ -139,14 +139,14 @@ before moving to detailed design.
 
 **Steel-man an alternative**:
 - Name the strongest argument for a different approach
-- Be specific — "Approach B avoids X risk" not "there are other options"
+- Be specific: "Approach B avoids X risk" not "there are other options"
 
 **Gate question**:
 > "These are the risks I see. Do they change your preference, or
 > should we proceed with the chosen approach?"
 
 Only move to detailed design after the user confirms. This is
-one gate, not a debate — if the user says "proceed," proceed.
+one gate, not a debate: if the user says "proceed," proceed.
 
 ### 7. Present the Design
 
@@ -230,7 +230,7 @@ If any criterion is unmet, continue refinement.
 
 ## Principles
 
-- **Think step-by-step** before proposing anything — reason
+- **Think step-by-step** before proposing anything: reason
   through the problem space before jumping to solutions
 - One question at a time
 - Assumptions must be explicit

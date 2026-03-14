@@ -327,6 +327,37 @@ sequenceDiagram
     Hook->>State: Update LastNudge = Count, write state
 ```
 
+### check-freshness
+
+Daily check for technology-dependent constants that may need review.
+
+```mermaid
+sequenceDiagram
+    participant CC as Claude Code
+    participant Hook as check-freshness
+    participant State as .context/state/
+    participant FS as Filesystem
+    participant Tpl as Message Template
+
+    CC->>Hook: stdin {session_id}
+    Hook->>Hook: Check initialized + HookPreamble
+    alt not initialized or paused
+        Hook-->>CC: (silent exit)
+    end
+    Hook->>State: Check daily throttle marker
+    alt throttled
+        Hook-->>CC: (silent exit)
+    end
+    Hook->>FS: Stat tracked files (5 source files)
+    alt all files modified within 6 months
+        Hook-->>CC: (silent exit)
+    end
+    Hook->>Tpl: LoadMessage(hook, stale, {StaleFiles})
+    Hook-->>CC: Nudge box (stale file list + review URL)
+    Hook->>Hook: NudgeAndRelay(message)
+    Hook->>State: Touch throttle marker
+```
+
 ### check-backup-age
 
 Daily check for SMB mount and backup freshness.
@@ -712,6 +743,7 @@ sequenceDiagram
 | check-task-completion | Configurable interval | Per session |
 | check-memory-drift | Session tombstone | Once per session |
 | check-reminders | None | Every prompt |
+| check-freshness | Daily marker | Once per day |
 | check-backup-age | Daily marker | Once per day |
 | check-ceremonies | Daily marker | Once per day |
 | check-journal | Daily marker | Once per day |
@@ -729,6 +761,7 @@ All state files live in `.context/state/`.
 | `ctx-loaded-{session}` | context-load-gate | One-shot injection marker |
 | `ctx-paused-{session}` | (all) | Session pause marker |
 | `ctx-wrapped-up` | check-context-size | Suppress nudges after wrap-up (2h expiry) |
+| `freshness-checked` | check-freshness | Daily throttle |
 | `backup-reminded` | check-backup-age | Daily throttle |
 | `ceremony-reminded` | check-ceremonies | Daily throttle |
 | `journal-reminded` | check-journal | Daily throttle |

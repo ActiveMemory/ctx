@@ -261,9 +261,6 @@ ctx doctor --json | jq '.results[] | select(.name == "context_size")'
 # Check if context is actually being loaded
 ctx system events --hook context-load-gate
 
-# Audit alignment between docs and instructions
-# (run inside agent session)
-/ctx-alignment-audit
 ```
 
 **Common causes**:
@@ -274,7 +271,7 @@ ctx system events --hook context-load-gate
 * **Context not loading**: if `context-load-gate` hasn't fired, the agent
   may not have received context. Verify the hook is registered.
 * **Conflicting instructions**: `CONVENTIONS.md` says one thing,
-  `AGENT_PLAYBOOK.md` says another. Run `/ctx-alignment-audit` to find gaps.
+  `AGENT_PLAYBOOK.md` says another. Review both files for consistency.
 * **Agent drift**: the agent's behavior diverges from instructions over long
   sessions. This is normal. Use `/ctx-reflect` to re-anchor, or start a new
   session.

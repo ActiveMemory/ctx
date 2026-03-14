@@ -98,6 +98,7 @@ what they asked: Stale backups, unexported sessions, resource warnings.
 * `ctx system check-journal`: Unexported sessions and unenriched entries
 * `ctx system check-context-size`: Context capacity warning
 * `ctx system check-resources`: Resource pressure (memory, swap, disk, load): `DANGER` only
+* `ctx system check-freshness`: Technology constant staleness warning
 * `check-backup-age.sh`: Stale backup warning (*project-local*)
 
 **Trade-off**: Noisy if overused. Every VERBATIM relay adds a preamble

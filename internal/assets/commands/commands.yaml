@@ -1041,6 +1041,21 @@ system.checkceremonies:
     Output: VERBATIM relay (when ceremonies missing), silent otherwise
     Silent when: both ceremonies found in recent sessions
   short: Session ceremony nudge hook
+system.checkfreshness:
+  long: |-
+    Checks whether source files containing technology-dependent constants
+    have been reviewed within the freshness window (6 months). Outputs a
+    VERBATIM relay warning listing stale files with last-modified dates
+    and a link to Anthropic's prompt engineering documentation.
+
+    Tracked files include token budgets, context window defaults, and
+    size heuristic tables that may need updating as model capabilities
+    evolve.
+
+    Hook event: UserPromptSubmit
+    Output: VERBATIM relay with warning box, silent otherwise
+    Silent when: all files fresh, already checked today, or not in ctx repo
+  short: Technology constant freshness check
 system.checkcontextsize:
   long: |-
     Counts prompts per session and emits VERBATIM relay reminders at

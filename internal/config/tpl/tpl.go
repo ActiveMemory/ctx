@@ -33,6 +33,8 @@ const (
 	VarPromptCount = "PromptCount"
 	// VarPromptsSinceNudge is the template variable for prompts since last nudge.
 	VarPromptsSinceNudge = "PromptsSinceNudge"
+	// VarStaleFiles is the template variable for freshness check stale file list.
+	VarStaleFiles = "StaleFiles"
 	// VarReminderList is the template variable for formatted reminder list.
 	VarReminderList = "ReminderList"
 	// VarThreshold is the template variable for a token threshold value.

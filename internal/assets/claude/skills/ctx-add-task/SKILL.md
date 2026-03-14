@@ -8,7 +8,7 @@ Add a task to TASKS.md.
 
 ## Before Recording
 
-Three questions — if any answer is "no", don't record:
+Three questions: if any answer is "no", don't record:
 
 1. **"Is this actionable?"** → If it's a vague wish, clarify first
 2. **"Would someone else know what to do?"** → If not, add more detail
@@ -46,17 +46,17 @@ ctx add task "Task description" [--priority high|medium|low] [--section "Phase N
 first unchecked task in TASKS.md. Use `--section` only when you need
 a specific section (e.g., `--section "Maintenance"`).
 
-**Example — specific and actionable:**
+**Example: specific and actionable:**
 ```bash
 ctx add task "Add --cooldown flag to ctx agent to suppress repeated output within a time window. Use tombstone file per session for isolation." --priority medium
 ```
 
-**Example — with context for why:**
+**Example: with context for why:**
 ```bash
 ctx add task "Investigate ctx init overwriting user-generated content in context files. Commit a9df9dd wiped 18 decisions from DECISIONS.md. Need guard to prevent reinit from destroying user data." --priority high
 ```
 
-**Example — scoped subtask:**
+**Example: scoped subtask:**
 ```bash
 ctx add task "Add topic-based navigation to blog when post count reaches 15+" --priority low
 ```

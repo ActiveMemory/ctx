@@ -3,11 +3,17 @@ name: ctx-blog
 description: "Generate blog post draft. Use when documenting project progress, sharing learnings, or writing about development experience."
 ---
 
+<!-- This skill assumes a ctx-style blog layout (docs/blog/, frontmatter,
+     index.md). It ships as a bundled skill because the workflow (gather
+     context, find a narrative arc, draft, revise) is universally useful.
+     Projects with a different blog structure should adapt the paths and
+     output format in the Process and Blog Post Structure sections. -->
+
 Generate a blog post draft from recent project activity.
 
 ## Before Writing
 
-Two questions — if any answer is "no", reconsider:
+Two questions: if any answer is "no", reconsider:
 
 1. **"Is there a narrative arc?"** → A blog post needs a story (problem →
    approach → outcome), not just a list of changes
@@ -115,7 +121,7 @@ topics:
 4. Write full draft
 5. Ask for revisions
 6. Save to `docs/blog/YYYY-MM-DD-slug.md`
-7. **Update `docs/blog/index.md`** — add entry at the top following the
+7. **Update `docs/blog/index.md`**: add entry at the top following the
    existing pattern:
 
 ```markdown

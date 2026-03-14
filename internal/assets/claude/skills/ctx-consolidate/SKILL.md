@@ -5,14 +5,14 @@ allowed-tools: Bash(ctx:*), Read, Edit, Write
 ---
 
 Analyze entries in LEARNINGS.md and/or DECISIONS.md, group overlapping
-entries by topic, and — with user approval — merge groups into denser
+entries by topic, and (with user approval) merge groups into denser
 consolidated entries. Originals are archived, not deleted.
 
 ## Key Distinction
 
 **Consolidation != archival.** Archival moves old entries to
 the archive directory. Consolidation *replaces* verbose entries with
-tighter ones — the file stays useful, just denser. The originals move
+tighter ones: the file stays useful, just denser. The originals move
 to archive as a paper trail.
 
 ## When to Use
@@ -28,7 +28,7 @@ to archive as a paper trail.
 
 - When there are fewer than 10 entries (nothing meaningful to group)
 - When the user wants to *delete* entries (offer archival instead)
-- Automatically — always require user approval before modifying files
+- Automatically: always require user approval before modifying files
 - Mid-task when the user is focused on shipping
 
 ## Execution
@@ -121,7 +121,7 @@ For each approved group, write a consolidated entry that:
   pre_tool_use
 - Agents develop repetition fatigue: vary hook output phrasing
   across invocations
-- After infrastructure migrations, audit security docs first —
+- After infrastructure migrations, audit security docs first:
   stale paths in security guidance give false confidence
 ```
 

@@ -3,6 +3,8 @@
 <!-- INDEX:START -->
 | Date | Learning |
 |------|--------|
+| 2026-03-13 | Skills without a trigger mechanism are dead code |
+| 2026-03-13 | Variable shadowing causes cascading test failures after package splits |
 | 2026-03-13 | sync-why mechanism existed but was not wired to build |
 | 2026-03-13 | Linter reverts import-only edits when references still use old package |
 | 2026-03-12 | Project-root files vs context files are distinct categories |
@@ -63,6 +65,26 @@
 | 2026-02-19 | Feature can be code-complete but invisible to users |
 | 2026-01-28 | IDE is already the UI |
 <!-- INDEX:END -->
+
+---
+
+## [2026-03-13-223110] Skills without a trigger mechanism are dead code
+
+**Context**: ctx-context-monitor was a skill documenting how to respond to hook output, but no hook or agent ever loaded it. The hook output already contained sufficient instructions.
+
+**Lesson**: A skill only enters the agent context when explicitly invoked via /skill-name. If the description says not user-invocable and no mechanism loads it automatically, it is unreachable.
+
+**Application**: Audit skills for reachability. If nothing triggers the skill, either add a trigger or delete it.
+
+---
+
+## [2026-03-13-223108] Variable shadowing causes cascading test failures after package splits
+
+**Context**: Large refactoring moved constants from monolithic config package to sub-packages (dir, entry, file). Test files had local variables named dir, entry, file that shadowed the new package imports.
+
+**Lesson**: When splitting a package, audit test files for local variable names that collide with new package names. dir, file, entry are especially common Go variable names.
+
+**Application**: Before committing a package split, run go test ./... and check for undefined errors caused by variable shadowing.
 
 ---
 

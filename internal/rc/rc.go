@@ -235,6 +235,16 @@ func TaskNudgeInterval() int {
 	return RC().TaskNudgeInterval
 }
 
+// FreshnessFiles returns the configured list of files to track for
+// freshness. Returns nil if no files are configured — the hook is
+// a no-op when the list is empty.
+//
+// Returns:
+//   - []FreshnessFile: Tracked files, or nil if unconfigured
+func FreshnessFiles() []FreshnessFile {
+	return RC().FreshnessFiles
+}
+
 // EventLog returns whether local hook event logging is enabled.
 //
 // Returns false (default) when the field is not set in .ctxrc.
