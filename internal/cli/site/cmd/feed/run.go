@@ -15,6 +15,7 @@ import (
 	"sort"
 	"strings"
 
+	"github.com/ActiveMemory/ctx/internal/config/file"
 	"github.com/ActiveMemory/ctx/internal/config/rss"
 	"github.com/ActiveMemory/ctx/internal/config/token"
 	"github.com/spf13/cobra"
@@ -343,7 +344,7 @@ func generateAtom(
 	}
 
 	for _, p := range posts {
-		slug := strings.TrimSuffix(p.filename, ".md")
+		slug := strings.TrimSuffix(p.filename, file.ExtMarkdown)
 		entryURL := blogURL + slug + "/"
 
 		entry := core.AtomEntry{
@@ -409,20 +410,20 @@ func generateAtom(
 func printReport(
 	cmd *cobra.Command, outPath string, report feedReport,
 ) {
-	cmd.Printf("\nGenerated %s (%d entries)\n",
-		outPath, report.included)
+	cmd.Println(fmt.Sprintf(
+		"\nGenerated %s (%d entries)", outPath, report.included))
 
 	if len(report.skipped) > 0 {
 		cmd.Println("\nSkipped:")
 		for _, msg := range report.skipped {
-			cmd.Printf("  %s\n", msg)
+			cmd.Println("  " + msg)
 		}
 	}
 
 	if len(report.warnings) > 0 {
 		cmd.Println("\nWarnings:")
 		for _, msg := range report.warnings {
-			cmd.Printf("  %s\n", msg)
+			cmd.Println("  " + msg)
 		}
 	}
 }

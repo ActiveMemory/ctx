@@ -13,7 +13,6 @@ import (
 	"strings"
 	"time"
 
-	"github.com/ActiveMemory/ctx/internal/assets"
 	"github.com/ActiveMemory/ctx/internal/config/claude"
 	"github.com/ActiveMemory/ctx/internal/config/dir"
 	"github.com/ActiveMemory/ctx/internal/config/file"
@@ -22,6 +21,7 @@ import (
 	time2 "github.com/ActiveMemory/ctx/internal/config/time"
 	"github.com/ActiveMemory/ctx/internal/config/token"
 	ctxerr "github.com/ActiveMemory/ctx/internal/err"
+	"github.com/ActiveMemory/ctx/internal/rc"
 )
 
 // MarkdownSessionParser parses Markdown session files written by AI agents.
@@ -264,11 +264,8 @@ func isSessionHeader(line string) bool {
 
 	rest := line[len(token.HeadingLevelOneStart):]
 
-	// Check for "Session:" or "Oturum:" prefix
-	for _, prefix := range []string{
-		assets.TextDesc(assets.TextDescKeyParserSessionPrefix),
-		assets.TextDesc(assets.TextDescKeyParserSessionPrefixAlt),
-	} {
+	// Check for configured session prefixes (e.g., "Session:")
+	for _, prefix := range rc.SessionPrefixes() {
 		if strings.HasPrefix(rest, prefix) {
 			return true
 		}
@@ -294,11 +291,8 @@ func parseSessionHeader(line string) (string, string) {
 	// Remove "# " prefix
 	rest := strings.TrimPrefix(line, token.HeadingLevelOneStart)
 
-	// Remove "Session: " / "Oturum: " prefix if present
-	for _, prefix := range []string{
-		assets.TextDesc(assets.TextDescKeyParserSessionPrefix),
-		assets.TextDesc(assets.TextDescKeyParserSessionPrefixAlt),
-	} {
+	// Remove session prefix if present (e.g., "Session: ")
+	for _, prefix := range rc.SessionPrefixes() {
 		rest = strings.TrimPrefix(rest, prefix+token.Space)
 		rest = strings.TrimPrefix(rest, prefix)
 	}

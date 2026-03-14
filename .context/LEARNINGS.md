@@ -3,6 +3,7 @@
 <!-- INDEX:START -->
 | Date | Learning |
 |------|--------|
+| 2026-03-14 | Subagents reorganize file structure without being asked |
 | 2026-03-14 | Internal skill rename requires updates across 6+ layers |
 | 2026-03-13 | Skills without a trigger mechanism are dead code |
 | 2026-03-13 | Variable shadowing causes cascading test failures after package splits |
@@ -66,6 +67,16 @@
 | 2026-02-19 | Feature can be code-complete but invisible to users |
 | 2026-01-28 | IDE is already the UI |
 <!-- INDEX:END -->
+
+---
+
+## [2026-03-14-110750] Subagents reorganize file structure without being asked
+
+**Context**: Asked subagent to replace os.ReadFile callsites with validation wrappers. It also moved functions to new files, renamed them (ReadUserFile to SafeReadUserFile), and created a new internal/io package.
+
+**Lesson**: Subagents optimize for clean results and will restructure beyond stated scope — moved, renamed, and split files without being asked.
+
+**Application**: After subagent-driven refactors, always verify file organization matches intent. Audit for moved, renamed, and split files, not just the requested callsite changes.
 
 ---
 

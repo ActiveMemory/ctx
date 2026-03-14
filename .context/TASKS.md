@@ -479,6 +479,44 @@ output package. All CLI commands should route printed output through this packag
 - [x] WC.1: Add godoc docstrings to all functions in `internal/write/`, add `doc.go` #added:2026-03-06 #done:2026-03-06
 - [x] Move add command example strings from core/example.go to assets — user-facing text for i18n #added:2026-03-06-191651
 
+### Phase SP: Configurable Session Prefixes
+
+Spec: `specs/session-prefixes.md`. Read the spec before starting any SP task.
+
+Replace hardcoded `session_prefix` / `session_prefix_alt` pair with a
+user-extensible `session_prefixes` list in `.ctxrc`. Parser vocabulary
+is not i18n text — it belongs in runtime config.
+
+**SP.1 — Config and defaults:**
+
+- [x] SP.1.1: Add `DefaultSessionPrefixes` to `internal/config/parser/` — `[]string{"Session:", "Oturum:"}` #priority:high #added:2026-03-14 #done:2026-03-14
+- [x] SP.1.2: Add `SessionPrefixes []string` field to `CtxRC` in `internal/rc/types.go` (`yaml:"session_prefixes"`) #priority:high #added:2026-03-14 #done:2026-03-14
+- [x] SP.1.3: Add `SessionPrefixes()` accessor to `internal/rc/rc.go` — returns rc list, falls back to `parser.DefaultSessionPrefixes` if empty/nil #priority:high #added:2026-03-14 #done:2026-03-14
+
+**SP.2 — Parser migration:**
+
+- [x] SP.2.1: Refactor `isSessionHeader()` and `parseSessionHeader()` in `markdown.go` to use `rc.SessionPrefixes()` instead of `assets.TextDesc()` #priority:high #added:2026-03-14 #done:2026-03-14
+- [x] SP.2.2: Remove `TextDescKeyParserSessionPrefix` and `TextDescKeyParserSessionPrefixAlt` from `internal/assets/embed.go` #priority:high #added:2026-03-14 #done:2026-03-14
+- [x] SP.2.3: Remove `parser.session_prefix` and `parser.session_prefix_alt` entries from `text.yaml` #priority:high #added:2026-03-14 #done:2026-03-14
+
+**SP.3 — Tests:**
+
+- [x] SP.3.1: Update `markdown_test.go` — keep Turkish cases, add custom-prefix test case (e.g., Japanese "セッション:") #priority:high #added:2026-03-14 #done:2026-03-14
+- [x] SP.3.2: Add `rc_test.go` test for `SessionPrefixes()` — default fallback and override behavior #priority:high #added:2026-03-14 #done:2026-03-14
+
+**SP.4 — Documentation:**
+
+- [x] SP.4.1: Add `session_prefixes` to `.ctxrc` reference in `docs/cli/index.md` #priority:medium #added:2026-03-14 #done:2026-03-14
+- [x] SP.4.2: Add multilingual session parsing section to `docs/recipes/multi-tool-setup.md` #priority:medium #added:2026-03-14 #done:2026-03-14
+- [x] SP.4.3: Update "Extensible Session Parsing" in ARCHITECTURE.md to mention configurable prefixes #priority:medium #added:2026-03-14 #done:2026-03-14
+- [x] SP.4.4: Verify `docs/home/contributing.md` mentions prefix extensibility in "Add a Session Parser" section #priority:low #added:2026-03-14 #done:2026-03-14
+
+**SP.5 — Validation:**
+
+- [x] SP.5.1: Run `make lint && make test` — all tests pass, no lint errors #priority:high #added:2026-03-14 #done:2026-03-14
+
+- [ ] Add freshness_files to .ctxrc defaults seeded by ctx init — currently the freshness config is only in the gitignored .ctxrc, so new clones don't get it. Consider a .ctxrc.defaults pattern or seeding via ctx init template. #priority:medium #added:2026-03-14-105143
+
 - [ ] SEC.1: Security-sensitive file change hook — PostToolUse on Edit/Write matching security-critical paths (.claude/settings.local.json, .claude/settings.json, CLAUDE.md, .claude/CLAUDE.md, .context/CONSTITUTION.md). Three actions: (1) nudge user in-session, (2) relay to webhook for out-of-band alerting (autonomous loops), (3) append to dedicated security log (.context/state/security-events.jsonl) for forensics. Separate from general event log. Spec needed. #priority:high #added:2026-03-13
 
 - [ ] O.5: Session timeline view — add --sessions flag to ctx system events. Per-session breakdown of eval/fired counts with hook list. See ideas/spec-hook-observability.md Phase 5 #added:2026-03-12-145401

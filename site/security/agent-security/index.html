@@ -25,7 +25,7 @@
       
       
       <link rel="icon" href="../../images/favicon-32.png">
-      <meta name="generator" content="zensical-0.0.24">
+      <meta name="generator" content="zensical-0.0.20">
     
     
       
@@ -36,7 +36,7 @@
       
         
       
-      <link rel="stylesheet" href="../../assets/stylesheets/modern/main.28978c9b.min.css">
+      <link rel="stylesheet" href="../../assets/stylesheets/modern/main.d4922b3c.min.css">
       
         
           
@@ -3365,7 +3365,7 @@
           <span class="md-nav__icon md-icon"></span>
         </label>
       
-      <a href="././" class="md-nav__link md-nav__link--active">
+      <a href="./" class="md-nav__link md-nav__link--active">
         
   
   
@@ -3435,10 +3435,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#what-a-compromised-agent-can-do" class="md-nav__link">
+  <a href="#what-can-a-compromised-agent-do" class="md-nav__link">
     <span class="md-ellipsis">
       
-        What a Compromised Agent Can Do
+        What Can a Compromised Agent Do
       
     </span>
   </a>
@@ -3735,10 +3735,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#what-a-compromised-agent-can-do" class="md-nav__link">
+  <a href="#what-can-a-compromised-agent-do" class="md-nav__link">
     <span class="md-ellipsis">
       
-        What a Compromised Agent Can Do
+        What Can a Compromised Agent Do
       
     </span>
   </a>
@@ -4000,7 +4000,7 @@
 unattended shell with unrestricted access to your machine</strong>.</p>
 <p>This is not a theoretical concern. AI coding agents execute shell commands,
 write files, make network requests, and modify project configuration. When
-running autonomously (<em>overnight, in a loop, without a human watching</em>) the
+running autonomously (<em>overnight, in a loop, without a human watching</em>), the
 attack surface is the full capability set of the operating system user
 account.</p>
 <p>The risk is not that the AI is malicious. The risk is that the AI is
@@ -4037,11 +4037,11 @@ inject content into any of these sources can redirect the agent's behavior.</p>
 </tr>
 <tr>
 <td><strong>Tool output injection</strong></td>
-<td>A command's output (error messages, log lines, file contents) contains instructions the agent interprets and follows.</td>
+<td>A command's output (<em>error messages, log lines, file contents</em>) contains instructions the agent interprets and follows.</td>
 </tr>
 </tbody>
 </table>
-<h3 id="what-a-compromised-agent-can-do">What a Compromised Agent Can Do<a class="headerlink" href="#what-a-compromised-agent-can-do" title="Permanent link">&para;</a></h3>
+<h3 id="what-can-a-compromised-agent-do">What Can a Compromised Agent Do<a class="headerlink" href="#what-can-a-compromised-agent-do" title="Permanent link">&para;</a></h3>
 <p>Depends entirely on what permissions and access the agent has:</p>
 <table>
 <thead>
@@ -4091,33 +4091,52 @@ agent what to do and what not to do. These are probabilistic: the agent
 can override soft instructions. Long context windows dilute attention on
 rules stated early. Edge cases where instructions are ambiguous.</p>
 <p><strong>Verdict</strong>: Necessary but not sufficient. Good for the common case.
-Do not rely on it for security boundaries.</p>
+<strong>Do not</strong> rely on it for security boundaries.</p>
 <h3 id="layer-2-application-controls-deterministic-at-runtime-mutable-across-iterations">Layer 2: Application Controls (<em>Deterministic at Runtime, Mutable Across Iterations</em>)<a class="headerlink" href="#layer-2-application-controls-deterministic-at-runtime-mutable-across-iterations" title="Permanent link">&para;</a></h3>
-<p>AI tool runtimes (Claude Code, Cursor, etc.) provide permission systems:
+<p>AI tool runtimes (<em>Claude Code, Cursor, etc.</em>) provide permission systems:
 tool allowlists, command restrictions, confirmation prompts.</p>
-<p>For Claude Code, an explicit allowlist in <code>.claude/settings.local.json</code>:</p>
-<div class="language-json highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="p">{</span>
-</span><span id="__span-1-2"><a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="w">  </span><span class="nt">&quot;permissions&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-</span><span id="__span-1-3"><a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="w">    </span><span class="nt">&quot;allow&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
-</span><span id="__span-1-4"><a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="w">      </span><span class="s2">&quot;Bash(make:*)&quot;</span><span class="p">,</span>
-</span><span id="__span-1-5"><a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="w">      </span><span class="s2">&quot;Bash(go:*)&quot;</span><span class="p">,</span>
-</span><span id="__span-1-6"><a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="w">      </span><span class="s2">&quot;Bash(git:*)&quot;</span><span class="p">,</span>
-</span><span id="__span-1-7"><a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="w">      </span><span class="s2">&quot;Bash(ctx:*)&quot;</span><span class="p">,</span>
-</span><span id="__span-1-8"><a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a><span class="w">      </span><span class="s2">&quot;Read&quot;</span><span class="p">,</span>
-</span><span id="__span-1-9"><a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a><span class="w">      </span><span class="s2">&quot;Write&quot;</span><span class="p">,</span>
-</span><span id="__span-1-10"><a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a><span class="w">      </span><span class="s2">&quot;Edit&quot;</span>
-</span><span id="__span-1-11"><a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a><span class="w">    </span><span class="p">]</span>
-</span><span id="__span-1-12"><a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a><span class="w">  </span><span class="p">}</span>
-</span><span id="__span-1-13"><a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a><span class="p">}</span>
+<p>For Claude Code, <code>ctx init</code> writes both an allowlist and an explicit deny
+list into <code>.claude/settings.local.json</code>. The golden images live in
+<code>internal/assets/permissions/</code>:</p>
+<p><strong>Allowlist</strong> (<code>allow.txt</code>): only these tools run without confirmation:</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>Bash(ctx:*)
+</span><span id="__span-1-2"><a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>Skill(ctx-add-convention)
+</span><span id="__span-1-3"><a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>Skill(ctx-add-decision)
+</span><span id="__span-1-4"><a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>... # all bundled ctx-* skills
 </span></code></pre></div>
-<p><strong>What it catches</strong>: The agent cannot run commands outside the allowlist.
-If <code>rm</code>, <code>curl</code>, <code>sudo</code>, or <code>docker</code> are not listed, the agent cannot
-invoke them regardless of what any prompt says.</p>
+<p><strong>Deny list</strong> (<code>deny.txt</code>): these are blocked even if the agent requests them:</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a># Dangerous operations
+</span><span id="__span-2-2"><a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>Bash(sudo *)
+</span><span id="__span-2-3"><a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>Bash(git push *)
+</span><span id="__span-2-4"><a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>Bash(git push)
+</span><span id="__span-2-5"><a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>Bash(rm -rf /*)
+</span><span id="__span-2-6"><a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>Bash(rm -rf ~*)
+</span><span id="__span-2-7"><a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>Bash(curl *)
+</span><span id="__span-2-8"><a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>Bash(wget *)
+</span><span id="__span-2-9"><a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>Bash(chmod 777 *)
+</span><span id="__span-2-10"><a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a>
+</span><span id="__span-2-11"><a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a># Sensitive file reads
+</span><span id="__span-2-12"><a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a>Read(**/.env)
+</span><span id="__span-2-13"><a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a>Read(**/.env.*)
+</span><span id="__span-2-14"><a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a>Read(**/*credentials*)
+</span><span id="__span-2-15"><a id="__codelineno-2-15" name="__codelineno-2-15" href="#__codelineno-2-15"></a>Read(**/*secret*)
+</span><span id="__span-2-16"><a id="__codelineno-2-16" name="__codelineno-2-16" href="#__codelineno-2-16"></a>Read(**/*.pem)
+</span><span id="__span-2-17"><a id="__codelineno-2-17" name="__codelineno-2-17" href="#__codelineno-2-17"></a>Read(**/*.key)
+</span><span id="__span-2-18"><a id="__codelineno-2-18" name="__codelineno-2-18" href="#__codelineno-2-18"></a>
+</span><span id="__span-2-19"><a id="__codelineno-2-19" name="__codelineno-2-19" href="#__codelineno-2-19"></a># Sensitive file edits
+</span><span id="__span-2-20"><a id="__codelineno-2-20" name="__codelineno-2-20" href="#__codelineno-2-20"></a>Edit(**/.env)
+</span><span id="__span-2-21"><a id="__codelineno-2-21" name="__codelineno-2-21" href="#__codelineno-2-21"></a>Edit(**/.env.*)
+</span></code></pre></div>
+<p><strong>What it catches</strong>: The agent cannot run commands outside the allowlist,
+and the deny list blocks dangerous operations even if a future allowlist
+change were to widen access. If <code>rm</code>, <code>curl</code>, <code>sudo</code>, or <code>docker</code> are
+not allowed <em>and</em> <code>sudo</code>/<code>curl</code>/<code>wget</code> are explicitly denied, the agent
+cannot invoke them regardless of what any prompt says.</p>
 <p><strong>What it misses</strong>: The agent can modify the allowlist itself. In an
-autonomous loop, the agent writes to <code>.claude/settings.local.json</code>, and
-the next iteration loads the modified config. The application enforces
-the rules, but the application reads the rules from files the agent can
-write.</p>
+autonomous loop, if the agent writes to <code>.claude/settings.local.json</code>, and
+the next iteration loads the modified config, then the protection is
+effectively lost. The application enforces the rules, but the application 
+reads the rules from files the agent can write.</p>
 <p><strong>Verdict</strong>: Strong first layer. Must be combined with self-modification
 prevention (Layer 3).</p>
 <h3 id="layer-3-os-level-isolation-deterministic-and-unbypassable">Layer 3: OS-Level Isolation (<em>Deterministic and Unbypassable</em>)<a class="headerlink" href="#layer-3-os-level-isolation-deterministic-and-unbypassable" title="Permanent link">&para;</a></h3>
@@ -4170,11 +4189,11 @@ documents, API responses, or hostile content.</p>
 <tbody>
 <tr>
 <td>Agent does not need the internet</td>
-<td><code>--network=none</code> (container) or outbound firewall drop-all</td>
+<td><code>--network=none</code> (<em>container</em>) or outbound firewall drop-all</td>
 </tr>
 <tr>
 <td>Agent needs to fetch dependencies</td>
-<td>Allow specific registries (npmjs.com, proxy.golang.org, pypi.org) via firewall rules. Block everything else.</td>
+<td>Allow specific registries (<em>npmjs.com, proxy.golang.org, pypi.org</em>) via firewall rules. Block everything else.</td>
 </tr>
 <tr>
 <td>Agent needs API access</td>
@@ -4193,15 +4212,15 @@ like one</em>).</p>
 <p>The moment you stop arguing about prompts and start arguing about
 kernels, you are finally doing security.</p>
 <p><strong>Containers</strong> (Docker, Podman):</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>docker<span class="w"> </span>run<span class="w"> </span>--rm<span class="w"> </span><span class="se">\</span>
-</span><span id="__span-2-2"><a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="w">  </span>--network<span class="o">=</span>none<span class="w"> </span><span class="se">\</span>
-</span><span id="__span-2-3"><a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="w">  </span>--cap-drop<span class="o">=</span>ALL<span class="w"> </span><span class="se">\</span>
-</span><span id="__span-2-4"><a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="w">  </span>--memory<span class="o">=</span>4g<span class="w"> </span><span class="se">\</span>
-</span><span id="__span-2-5"><a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="w">  </span>--cpus<span class="o">=</span><span class="m">2</span><span class="w"> </span><span class="se">\</span>
-</span><span id="__span-2-6"><a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="w">  </span>-v<span class="w"> </span>/path/to/project:/workspace<span class="w"> </span><span class="se">\</span>
-</span><span id="__span-2-7"><a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="w">  </span>-w<span class="w"> </span>/workspace<span class="w"> </span><span class="se">\</span>
-</span><span id="__span-2-8"><a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a><span class="w">  </span>your-dev-image<span class="w"> </span><span class="se">\</span>
-</span><span id="__span-2-9"><a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a><span class="w">  </span>./loop.sh
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>docker<span class="w"> </span>run<span class="w"> </span>--rm<span class="w"> </span><span class="se">\</span>
+</span><span id="__span-3-2"><a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="w">  </span>--network<span class="o">=</span>none<span class="w"> </span><span class="se">\</span>
+</span><span id="__span-3-3"><a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="w">  </span>--cap-drop<span class="o">=</span>ALL<span class="w"> </span><span class="se">\</span>
+</span><span id="__span-3-4"><a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="w">  </span>--memory<span class="o">=</span>4g<span class="w"> </span><span class="se">\</span>
+</span><span id="__span-3-5"><a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="w">  </span>--cpus<span class="o">=</span><span class="m">2</span><span class="w"> </span><span class="se">\</span>
+</span><span id="__span-3-6"><a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a><span class="w">  </span>-v<span class="w"> </span>/path/to/project:/workspace<span class="w"> </span><span class="se">\</span>
+</span><span id="__span-3-7"><a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="w">  </span>-w<span class="w"> </span>/workspace<span class="w"> </span><span class="se">\</span>
+</span><span id="__span-3-8"><a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a><span class="w">  </span>your-dev-image<span class="w"> </span><span class="se">\</span>
+</span><span id="__span-3-9"><a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a><span class="w">  </span>./loop.sh
 </span></code></pre></div>
 <div class="admonition danger">
 <p class="admonition-title">Docker Socket is sudo Access</p>
@@ -4259,7 +4278,7 @@ resource constraints.</p>
 </tr>
 </tbody>
 </table>
-<p>Each layer is simple. The strength is in the <em>combination</em>.</p>
+<p>Each layer is straightforward: The strength is in the <em>combination</em>.</p>
 <h2 id="common-mistakes">Common Mistakes<a class="headerlink" href="#common-mistakes" title="Permanent link">&para;</a></h2>
 <p><strong>"I'll just use <code>--dangerously-skip-permissions</code>"</strong>: This disables Layer 2
 entirely. Without Layers 3-5, you have no protection at all. Only use this
@@ -4282,12 +4301,12 @@ means isolating what is <em>in</em> the directory too.</p>
 considerations extend beyond single-agent hardening.</p>
 <h3 id="code-review-for-context-files">Code Review for Context Files<a class="headerlink" href="#code-review-for-context-files" title="Permanent link">&para;</a></h3>
 <p>Treat <code>.context/</code> changes like code changes. Context files influence
-agent behavior -- a modified CONSTITUTION.md or CONVENTIONS.md changes
-what every agent on the team will do next session. Review them in PRs
+agent behavior (<em>a modified <code>CONSTITUTION.md</code> or <code>CONVENTIONS.md</code> changes
+what every agent on the team will do next session</em>). Review them in PRs
 with the same scrutiny you apply to production code.</p>
 <p>Watch for:</p>
 <ul>
-<li>Weakened constitutional rules (removed constraints, softened language)</li>
+<li>Weakened constitutional rules (<em>removed constraints, softened language</em>)</li>
 <li>New decisions that contradict existing ones without acknowledging it</li>
 <li>Learnings that encode incorrect assumptions</li>
 <li>Task additions that bypass the team's prioritization process</li>
@@ -4296,20 +4315,20 @@ with the same scrutiny you apply to production code.</p>
 <p><code>ctx init</code> configures <code>.gitignore</code> automatically, but verify these
 patterns are in place:</p>
 <ul>
-<li><strong>Always gitignored</strong>: <code>.context.key</code> (encryption key -- now at
-  <code>~/.ctx/.ctx.key</code>), <code>.context/logs/</code>, <code>.context/journal/</code></li>
-<li><strong>Team decision</strong>: <code>scratchpad.enc</code> -- encrypted, safe to commit for
-  shared scratchpad state; gitignore if scratchpads are personal</li>
-<li><strong>Never committed</strong>: <code>.env</code>, credentials, API keys (enforced by
-  drift secret detection)</li>
+<li><strong>Always gitignored</strong>: <code>.ctx.key</code> (<em>encryption key</em>), 
+  <code>.context/logs/</code>, <code>.context/journal/</code></li>
+<li><strong>Team decision</strong>: <code>scratchpad.enc</code> (<em>encrypted, safe to commit for
+  shared scratchpad state</em>); <code>.gitignore</code> if scratchpads are personal</li>
+<li><strong>Never committed</strong>: <code>.env</code>, credentials, API keys (<em>enforced by
+  drift secret detection</em>)</li>
 </ul>
 <h3 id="multi-developer-context-sharing">Multi-Developer Context Sharing<a class="headerlink" href="#multi-developer-context-sharing" title="Permanent link">&para;</a></h3>
-<p>CONSTITUTION.md is the shared contract. All team members and their
+<p><code>CONSTITUTION.md</code> is the shared contract. All team members and their
 agents inherit it. Changes require team consensus, not unilateral edits.</p>
 <p>When multiple agents write to the same context files concurrently
-(e.g., two developers adding learnings simultaneously), git merge
+(<em>e.g., two developers adding learnings simultaneously</em>), git merge
 conflicts are expected. Resolution is typically additive: accept both
-additions. Destructive resolution (dropping one side) loses context.</p>
+additions. Destructive resolution (<em>dropping one side</em>) loses context.</p>
 <h3 id="team-conventions-for-context-management">Team Conventions for Context Management<a class="headerlink" href="#team-conventions-for-context-management" title="Permanent link">&para;</a></h3>
 <p>Establish and document:</p>
 <ul>
@@ -4493,7 +4512,7 @@ The documentation on this website is distributed under
       <script id="__config" type="application/json">{"annotate":null,"base":"../..","features":["announce.dismiss","content.code.annotate","content.code.copy","content.code.select","content.footnote.tooltips","content.tabs.link","content.tooltips","navigation.footer","navigation.indexes","navigation.instant","navigation.instant.prefetch","navigation.path","navigation.sections","navigation.tabs","navigation.tabs.sticky","navigation.top","navigation.tracking","search.highlight"],"search":"../../assets/javascripts/workers/search.e2d2d235.min.js","tags":null,"translations":{"clipboard.copied":"Copied to clipboard","clipboard.copy":"Copy to clipboard","search.result.more.one":"1 more on this page","search.result.more.other":"# more on this page","search.result.none":"No matching documents","search.result.one":"1 matching document","search.result.other":"# matching documents","search.result.placeholder":"Type to start searching","search.result.term.missing":"Missing","select.version":"Select version"},"version":null}</script>
     
     
-      <script src="../../assets/javascripts/bundle.16f8adc2.min.js"></script>
+      <script src="../../assets/javascripts/bundle.8ffeb9c9.min.js"></script>
       
     
   </body>

@@ -25,7 +25,7 @@
       
       
       <link rel="icon" href="../../images/favicon-32.png">
-      <meta name="generator" content="zensical-0.0.24">
+      <meta name="generator" content="zensical-0.0.20">
     
     
       
@@ -36,7 +36,7 @@
       
         
       
-      <link rel="stylesheet" href="../../assets/stylesheets/modern/main.28978c9b.min.css">
+      <link rel="stylesheet" href="../../assets/stylesheets/modern/main.d4922b3c.min.css">
       
         
           
@@ -2601,7 +2601,7 @@
           <span class="md-nav__icon md-icon"></span>
         </label>
       
-      <a href="././" class="md-nav__link md-nav__link--active">
+      <a href="./" class="md-nav__link md-nav__link--active">
         
   
   
@@ -2639,17 +2639,6 @@
     <span class="md-ellipsis">
       
         ctx add
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#ctx-complete" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        ctx complete
       
     </span>
   </a>
@@ -2700,6 +2689,17 @@
   
     <nav class="md-nav" aria-label="ctx tasks">
       <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#ctx-tasks-complete" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ctx tasks complete
+      
+    </span>
+  </a>
+  
+</li>
         
           <li class="md-nav__item">
   <a href="#ctx-tasks-archive" class="md-nav__link">
@@ -3679,17 +3679,6 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#ctx-complete" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        ctx complete
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
   <a href="#ctx-drift" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -3733,6 +3722,17 @@
   
     <nav class="md-nav" aria-label="ctx tasks">
       <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#ctx-tasks-complete" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ctx tasks complete
+      
+    </span>
+  </a>
+  
+</li>
         
           <li class="md-nav__item">
   <a href="#ctx-tasks-archive" class="md-nav__link">
@@ -4039,25 +4039,9 @@
 </span><span id="__span-1-18"><a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>ctx<span class="w"> </span>add<span class="w"> </span>convention<span class="w"> </span><span class="s2">&quot;Use kebab-case for filenames&quot;</span><span class="w"> </span>--section<span class="w"> </span><span class="s2">&quot;Naming&quot;</span>
 </span></code></pre></div>
 <hr />
-<h3 id="ctx-complete"><code>ctx complete</code><a class="headerlink" href="#ctx-complete" title="Permanent link">&para;</a></h3>
-<p>Mark a task as completed.</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>ctx<span class="w"> </span><span class="nb">complete</span><span class="w"> </span>&lt;task-id-or-text&gt;
-</span></code></pre></div>
-<p><strong>Arguments</strong>:</p>
-<ul>
-<li><code>task-id-or-text</code>: Task number or partial text match</li>
-</ul>
-<p><strong>Examples</strong>:</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># By text (partial match)</span>
-</span><span id="__span-3-2"><a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>ctx<span class="w"> </span><span class="nb">complete</span><span class="w"> </span><span class="s2">&quot;user auth&quot;</span>
-</span><span id="__span-3-3"><a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>
-</span><span id="__span-3-4"><a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="c1"># By task number</span>
-</span><span id="__span-3-5"><a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>ctx<span class="w"> </span><span class="nb">complete</span><span class="w"> </span><span class="m">3</span>
-</span></code></pre></div>
-<hr />
 <h3 id="ctx-drift"><code>ctx drift</code><a class="headerlink" href="#ctx-drift" title="Permanent link">&para;</a></h3>
 <p>Detect stale or invalid context.</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>ctx<span class="w"> </span>drift<span class="w"> </span><span class="o">[</span>flags<span class="o">]</span>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>ctx<span class="w"> </span>drift<span class="w"> </span><span class="o">[</span>flags<span class="o">]</span>
 </span></code></pre></div>
 <p><strong>Flags</strong>:</p>
 <table>
@@ -4085,19 +4069,19 @@
 <li>Constitution rules aren't violated (<em>heuristic</em>)</li>
 <li>Staleness indicators (<em>old files, many completed tasks</em>)</li>
 <li>Missing packages: warns when <code>internal/</code> directories exist on disk but are
-  not referenced in <code>ARCHITECTURE.md</code> (<em>suggests running <code>/ctx-map</code></em>)</li>
+  not referenced in <code>ARCHITECTURE.md</code> (<em>suggests running <code>/ctx-architecture</code></em>)</li>
 <li>Entry count: warns when <code>LEARNINGS.md</code> or <code>DECISIONS.md</code> exceed configurable
   thresholds (<em>default: 30 learnings, 20 decisions</em>), or when <code>CONVENTIONS.md</code>
   exceeds a line count threshold (default: 200). Configure via <code>.ctxrc</code>:
-  <div class="language-yaml highlight"><pre><span></span><code><span id="__span-5-1"><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="nt">entry_count_learnings</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">30</span><span class="w">      </span><span class="c1"># warn above this (0 = disable)</span>
-</span><span id="__span-5-2"><a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="nt">entry_count_decisions</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">20</span><span class="w">      </span><span class="c1"># warn above this (0 = disable)</span>
-</span><span id="__span-5-3"><a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="nt">convention_line_count</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">200</span><span class="w">     </span><span class="c1"># warn above this (0 = disable)</span>
+  <div class="language-yaml highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="nt">entry_count_learnings</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">30</span><span class="w">      </span><span class="c1"># warn above this (0 = disable)</span>
+</span><span id="__span-3-2"><a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="nt">entry_count_decisions</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">20</span><span class="w">      </span><span class="c1"># warn above this (0 = disable)</span>
+</span><span id="__span-3-3"><a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="nt">convention_line_count</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">200</span><span class="w">     </span><span class="c1"># warn above this (0 = disable)</span>
 </span></code></pre></div></li>
 </ul>
 <p><strong>Example</strong>:</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-6-1"><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>ctx<span class="w"> </span>drift
-</span><span id="__span-6-2"><a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>ctx<span class="w"> </span>drift<span class="w"> </span>--json
-</span><span id="__span-6-3"><a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>ctx<span class="w"> </span>drift<span class="w"> </span>--fix
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>ctx<span class="w"> </span>drift
+</span><span id="__span-4-2"><a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>ctx<span class="w"> </span>drift<span class="w"> </span>--json
+</span><span id="__span-4-3"><a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>ctx<span class="w"> </span>drift<span class="w"> </span>--fix
 </span></code></pre></div>
 <p><strong>Exit codes</strong>:</p>
 <table>
@@ -4125,7 +4109,7 @@
 <hr />
 <h3 id="ctx-sync"><code>ctx sync</code><a class="headerlink" href="#ctx-sync" title="Permanent link">&para;</a></h3>
 <p>Reconcile context with the current codebase state.</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-7-1"><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>ctx<span class="w"> </span>sync<span class="w"> </span><span class="o">[</span>flags<span class="o">]</span>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-5-1"><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>ctx<span class="w"> </span>sync<span class="w"> </span><span class="o">[</span>flags<span class="o">]</span>
 </span></code></pre></div>
 <p><strong>Flags</strong>:</p>
 <table>
@@ -4150,8 +4134,8 @@
 <li>Identifies stale or outdated context</li>
 </ul>
 <p><strong>Example</strong>:</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-8-1"><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>ctx<span class="w"> </span>sync
-</span><span id="__span-8-2"><a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>ctx<span class="w"> </span>sync<span class="w"> </span>--dry-run
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-6-1"><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>ctx<span class="w"> </span>sync
+</span><span id="__span-6-2"><a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>ctx<span class="w"> </span>sync<span class="w"> </span>--dry-run
 </span></code></pre></div>
 <hr />
 <h3 id="ctx-compact"><code>ctx compact</code><a class="headerlink" href="#ctx-compact" title="Permanent link">&para;</a></h3>
@@ -4160,7 +4144,7 @@
 <li>Moves completed tasks older than 7 days to the archive</li>
 <li>Removes empty sections</li>
 </ul>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-9-1"><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>ctx<span class="w"> </span>compact<span class="w"> </span><span class="o">[</span>flags<span class="o">]</span>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-7-1"><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>ctx<span class="w"> </span>compact<span class="w"> </span><span class="o">[</span>flags<span class="o">]</span>
 </span></code></pre></div>
 <p><strong>Flags</strong>:</p>
 <table>
@@ -4178,13 +4162,28 @@
 </tbody>
 </table>
 <p><strong>Example</strong>:</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-10-1"><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a>ctx<span class="w"> </span>compact
-</span><span id="__span-10-2"><a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>ctx<span class="w"> </span>compact<span class="w"> </span>--archive
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-8-1"><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>ctx<span class="w"> </span>compact
+</span><span id="__span-8-2"><a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>ctx<span class="w"> </span>compact<span class="w"> </span>--archive
 </span></code></pre></div>
 <hr />
 <h3 id="ctx-tasks"><code>ctx tasks</code><a class="headerlink" href="#ctx-tasks" title="Permanent link">&para;</a></h3>
-<p>Manage task archival and snapshots.</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-11-1"><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a>ctx<span class="w"> </span>tasks<span class="w"> </span>&lt;subcommand&gt;
+<p>Manage task completion, archival, and snapshots.</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-9-1"><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>ctx<span class="w"> </span>tasks<span class="w"> </span>&lt;subcommand&gt;
+</span></code></pre></div>
+<h4 id="ctx-tasks-complete"><code>ctx tasks complete</code><a class="headerlink" href="#ctx-tasks-complete" title="Permanent link">&para;</a></h4>
+<p>Mark a task as completed.</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-10-1"><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a>ctx<span class="w"> </span>tasks<span class="w"> </span><span class="nb">complete</span><span class="w"> </span>&lt;task-id-or-text&gt;
+</span></code></pre></div>
+<p><strong>Arguments</strong>:</p>
+<ul>
+<li><code>task-id-or-text</code>: Task number or partial text match</li>
+</ul>
+<p><strong>Examples</strong>:</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-11-1"><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a><span class="c1"># By text (partial match)</span>
+</span><span id="__span-11-2"><a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a>ctx<span class="w"> </span>tasks<span class="w"> </span><span class="nb">complete</span><span class="w"> </span><span class="s2">&quot;user auth&quot;</span>
+</span><span id="__span-11-3"><a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a>
+</span><span id="__span-11-4"><a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a><span class="c1"># By task number</span>
+</span><span id="__span-11-5"><a id="__codelineno-11-5" name="__codelineno-11-5" href="#__codelineno-11-5"></a>ctx<span class="w"> </span>tasks<span class="w"> </span><span class="nb">complete</span><span class="w"> </span><span class="m">3</span>
 </span></code></pre></div>
 <h4 id="ctx-tasks-archive"><code>ctx tasks archive</code><a class="headerlink" href="#ctx-tasks-archive" title="Permanent link">&para;</a></h4>
 <p>Move completed tasks from <code>TASKS.md</code> to a timestamped archive file.</p>
@@ -4455,7 +4454,7 @@ The documentation on this website is distributed under
       <script id="__config" type="application/json">{"annotate":null,"base":"../..","features":["announce.dismiss","content.code.annotate","content.code.copy","content.code.select","content.footnote.tooltips","content.tabs.link","content.tooltips","navigation.footer","navigation.indexes","navigation.instant","navigation.instant.prefetch","navigation.path","navigation.sections","navigation.tabs","navigation.tabs.sticky","navigation.top","navigation.tracking","search.highlight"],"search":"../../assets/javascripts/workers/search.e2d2d235.min.js","tags":null,"translations":{"clipboard.copied":"Copied to clipboard","clipboard.copy":"Copy to clipboard","search.result.more.one":"1 more on this page","search.result.more.other":"# more on this page","search.result.none":"No matching documents","search.result.one":"1 matching document","search.result.other":"# matching documents","search.result.placeholder":"Type to start searching","search.result.term.missing":"Missing","select.version":"Select version"},"version":null}</script>
     
     
-      <script src="../../assets/javascripts/bundle.16f8adc2.min.js"></script>
+      <script src="../../assets/javascripts/bundle.8ffeb9c9.min.js"></script>
       
     
   </body>

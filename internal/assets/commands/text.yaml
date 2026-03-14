@@ -780,10 +780,6 @@ pad.key-created:
   short: Scratchpad key created at %s
 parser.git-not-found:
   short: git not found in PATH; install git to enable remote URL enrichment
-parser.session_prefix:
-  short: 'Session:'
-parser.session_prefix_alt:
-  short: 'Oturum:'
 pause.confirmed:
   short: Context hooks paused for session %s
 post-commit.fallback:

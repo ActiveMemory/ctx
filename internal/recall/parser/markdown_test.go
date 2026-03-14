@@ -12,6 +12,7 @@ import (
 	"testing"
 
 	"github.com/ActiveMemory/ctx/internal/config/session"
+	"github.com/ActiveMemory/ctx/internal/rc"
 )
 
 func TestMarkdownSessionParser_Tool(t *testing.T) {
@@ -34,19 +35,13 @@ func TestMarkdownSessionParser_Matches(t *testing.T) {
 		{
 			name:    "valid session header",
 			file:    "2026-01-15-fix-api.md",
-			content: "# Session: 2026-01-15 — Fix API\n\n## What Was Done\n- Fixed endpoint\n",
+			content: "# Session: 2026-01-15 - Fix API\n\n## What Was Done\n- Fixed endpoint\n",
 			want:    true,
 		},
 		{
 			name:    "valid session header with hyphen separator",
 			file:    "2026-01-15-fix-api.md",
 			content: "# Session: 2026-01-15 - Fix API\n\n## What Was Done\n- Fixed endpoint\n",
-			want:    true,
-		},
-		{
-			name:    "valid Turkish header",
-			file:    "2026-01-15-duzeltme.md",
-			content: "# Oturum: 2026-01-15 — API Düzeltme\n\n## What Was Done\n- Fixed\n",
 			want:    true,
 		},
 		{
@@ -195,7 +190,7 @@ func TestIsSessionHeader(t *testing.T) {
 	}{
 		{"session with em dash", "# Session: 2026-01-15 — Fix API", true},
 		{"session with hyphen", "# Session: 2026-01-15 - Fix API", true},
-		{"turkish header", "# Oturum: 2026-01-15 — Düzeltme", true},
+		{"unconfigured prefix", "# Foo: 2026-01-15 — Bar", false},
 		{"date only with em dash", "# 2026-01-15 — Morning Work", true},
 		{"date only with hyphen", "# 2026-01-15 - Morning Work", true},
 		{"date only no topic", "# 2026-01-15", true},
@@ -203,6 +198,48 @@ func TestIsSessionHeader(t *testing.T) {
 		{"no hash", "Session: 2026-01-15 — Fix API", false},
 		{"random h1", "# Random Title", false},
 		{"empty", "", false},
+		{"japanese not in defaults", "# セッション: 2026-01-15 — テスト", false},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			if got := isSessionHeader(tt.line); got != tt.want {
+				t.Errorf("isSessionHeader(%q) = %v, want %v", tt.line, got, tt.want)
+			}
+		})
+	}
+}
+
+func TestIsSessionHeader_CustomPrefix(t *testing.T) {
+	// Write a .ctxrc with a custom Japanese prefix
+	home := t.TempDir()
+	t.Setenv("HOME", home)
+
+	ctxrcDir := t.TempDir()
+	ctxrcContent := "session_prefixes:\n  - \"Session:\"\n  - \"セッション:\"\n"
+	if err := os.WriteFile(filepath.Join(ctxrcDir, ".ctxrc"), []byte(ctxrcContent), 0600); err != nil {
+		t.Fatal(err)
+	}
+
+	origDir, dirErr := os.Getwd()
+	if dirErr != nil {
+		t.Fatal(dirErr)
+	}
+	if chErr := os.Chdir(ctxrcDir); chErr != nil {
+		t.Fatal(chErr)
+	}
+	t.Cleanup(func() { _ = os.Chdir(origDir) })
+
+	rc.Reset()
+	t.Cleanup(rc.Reset)
+
+	tests := []struct {
+		name string
+		line string
+		want bool
+	}{
+		{"japanese with custom prefix", "# セッション: 2026-01-15 — テスト", true},
+		{"english still works", "# Session: 2026-01-15 — Fix API", true},
+		{"unconfigured prefix excluded", "# Foo: 2026-01-15 — Bar", false},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
@@ -233,10 +270,10 @@ func TestParseSessionHeader(t *testing.T) {
 			wantTopic: "Fix API",
 		},
 		{
-			name:      "turkish header",
-			line:      "# Oturum: 2026-01-15 — Düzeltme",
-			wantDate:  "2026-01-15",
-			wantTopic: "Düzeltme",
+			name:      "unconfigured prefix passes through",
+			line:      "# Foo: 2026-01-15 — Bar",
+			wantDate:  "Foo: 2026-01-15",
+			wantTopic: "Bar",
 		},
 		{
 			name:      "date only with topic",

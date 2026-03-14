@@ -14,3 +14,10 @@ const (
 	// the parent sessionId and would cause duplicates if scanned.
 	DirSubagents = "subagents"
 )
+
+// DefaultSessionPrefixes are the built-in session header prefixes
+// recognized by the Markdown parser. Users can extend this list via
+// the session_prefixes key in .ctxrc.
+var DefaultSessionPrefixes = []string{
+	"Session:",
+}
