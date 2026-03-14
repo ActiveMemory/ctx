@@ -13,6 +13,10 @@ import "time"
 // Session state is keyed by contextDir on the Server struct. It tracks
 // tool call counts, entry additions, and pending context updates that
 // need human review before persisting.
+//
+// Thread-safety: sessionState is only accessed from the main request
+// loop (single goroutine). If future work introduces concurrent access,
+// a mutex should be added here.
 type sessionState struct {
 	contextDir       string
 	toolCalls        int

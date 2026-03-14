@@ -11,7 +11,9 @@ import (
 	"fmt"
 	"strings"
 
+	"github.com/ActiveMemory/ctx/internal/assets"
 	ctxCfg "github.com/ActiveMemory/ctx/internal/config/ctx"
+	"github.com/ActiveMemory/ctx/internal/config/mcp"
 	"github.com/ActiveMemory/ctx/internal/config/token"
 	"github.com/ActiveMemory/ctx/internal/context"
 )
@@ -19,36 +21,36 @@ import (
 // promptDefs defines all available MCP prompts.
 var promptDefs = []Prompt{
 	{
-		Name:        "ctx-session-start",
-		Description: "Initialize a new session: loads full context and provides orientation",
+		Name:        mcp.MCPPromptSessionStart,
+		Description: assets.TextDesc(assets.TextDescKeyMCPPromptSessionStartDesc),
 	},
 	{
-		Name:        "ctx-add-decision",
-		Description: "Record an architectural decision with context, rationale, and consequences",
+		Name:        mcp.MCPPromptAddDecision,
+		Description: assets.TextDesc(assets.TextDescKeyMCPPromptAddDecisionDesc),
 		Arguments: []PromptArgument{
-			{Name: "content", Description: "Decision title", Required: true},
-			{Name: "context", Description: "Background context for the decision", Required: true},
-			{Name: "rationale", Description: "Why this decision was made", Required: true},
-			{Name: "consequences", Description: "Impact of the decision", Required: true},
+			{Name: "content", Description: assets.TextDesc(assets.TextDescKeyMCPPromptArgDecisionTitle), Required: true},
+			{Name: "context", Description: assets.TextDesc(assets.TextDescKeyMCPPromptArgDecisionCtx), Required: true},
+			{Name: "rationale", Description: assets.TextDesc(assets.TextDescKeyMCPPromptArgDecisionRat), Required: true},
+			{Name: "consequences", Description: assets.TextDesc(assets.TextDescKeyMCPPromptArgDecisionConseq), Required: true},
 		},
 	},
 	{
-		Name:        "ctx-add-learning",
-		Description: "Record a lesson learned with context, lesson, and application",
+		Name:        mcp.MCPPromptAddLearning,
+		Description: assets.TextDesc(assets.TextDescKeyMCPPromptAddLearningDesc),
 		Arguments: []PromptArgument{
-			{Name: "content", Description: "Learning title", Required: true},
-			{Name: "context", Description: "Background context", Required: true},
-			{Name: "lesson", Description: "What was learned", Required: true},
-			{Name: "application", Description: "How to apply this lesson", Required: true},
+			{Name: "content", Description: assets.TextDesc(assets.TextDescKeyMCPPromptArgLearningTitle), Required: true},
+			{Name: "context", Description: assets.TextDesc(assets.TextDescKeyMCPPromptArgLearningCtx), Required: true},
+			{Name: "lesson", Description: assets.TextDesc(assets.TextDescKeyMCPPromptArgLearningLesson), Required: true},
+			{Name: "application", Description: assets.TextDesc(assets.TextDescKeyMCPPromptArgLearningApp), Required: true},
 		},
 	},
 	{
-		Name:        "ctx-reflect",
-		Description: "Review the current session and capture outstanding learnings and decisions",
+		Name:        mcp.MCPPromptReflect,
+		Description: assets.TextDesc(assets.TextDescKeyMCPPromptReflectDesc),
 	},
 	{
-		Name:        "ctx-checkpoint",
-		Description: "Summarize session progress and persist important context before ending",
+		Name:        mcp.MCPPromptCheckpoint,
+		Description: assets.TextDesc(assets.TextDescKeyMCPPromptCheckpointDesc),
 	},
 }
 
@@ -61,23 +63,23 @@ func (s *Server) handlePromptsList(req Request) *Response {
 func (s *Server) handlePromptsGet(req Request) *Response {
 	var params GetPromptParams
 	if err := json.Unmarshal(req.Params, &params); err != nil {
-		return s.error(req.ID, errCodeInvalidArg, "invalid params")
+		return s.error(req.ID, errCodeInvalidArg, assets.TextDesc(assets.TextDescKeyMCPInvalidParams))
 	}
 
 	switch params.Name {
-	case "ctx-session-start":
+	case mcp.MCPPromptSessionStart:
 		return s.promptSessionStart(req.ID)
-	case "ctx-add-decision":
+	case mcp.MCPPromptAddDecision:
 		return s.promptAddDecision(req.ID, params.Arguments)
-	case "ctx-add-learning":
+	case mcp.MCPPromptAddLearning:
 		return s.promptAddLearning(req.ID, params.Arguments)
-	case "ctx-reflect":
+	case mcp.MCPPromptReflect:
 		return s.promptReflect(req.ID)
-	case "ctx-checkpoint":
+	case mcp.MCPPromptCheckpoint:
 		return s.promptCheckpoint(req.ID)
 	default:
 		return s.error(req.ID, errCodeNotFound,
-			fmt.Sprintf("unknown prompt: %s", params.Name))
+			fmt.Sprintf(assets.TextDesc(assets.TextDescKeyMCPUnknownPrompt), params.Name))
 	}
 }
 
@@ -86,11 +88,11 @@ func (s *Server) promptSessionStart(id json.RawMessage) *Response {
 	ctx, err := context.Load(s.contextDir)
 	if err != nil {
 		return s.error(id, errCodeInternal,
-			fmt.Sprintf("failed to load context: %v", err))
+			fmt.Sprintf(assets.TextDesc(assets.TextDescKeyMCPLoadContext), err))
 	}
 
 	var sb strings.Builder
-	sb.WriteString("You are starting a new session. Read the following context files carefully.")
+	sb.WriteString(assets.TextDesc(assets.TextDescKeyMCPPromptSessionStartHeader))
 	sb.WriteString(token.NewlineLF)
 	sb.WriteString(token.NewlineLF)
 
@@ -99,22 +101,19 @@ func (s *Server) promptSessionStart(id json.RawMessage) *Response {
 		if f == nil || f.IsEmpty {
 			continue
 		}
-		fmt.Fprintf(&sb, "## %s%s%s%s%s",
-			fileName, token.NewlineLF, token.NewlineLF,
-			string(f.Content), token.NewlineLF)
+		fmt.Fprintf(&sb, assets.TextDesc(assets.TextDescKeyMCPPromptSectionFormat),
+			fileName, string(f.Content))
 	}
 
 	sb.WriteString(token.NewlineLF)
-	sb.WriteString("Remember this context throughout the session. ")
-	sb.WriteString("Use ctx_add to record decisions and learnings as you work. ")
-	sb.WriteString("At session end, use ctx-checkpoint to capture outstanding context.")
+	sb.WriteString(assets.TextDesc(assets.TextDescKeyMCPPromptSessionStartFooter))
 
 	return s.ok(id, GetPromptResult{
-		Description: "Session initialization with full context load",
+		Description: assets.TextDesc(assets.TextDescKeyMCPPromptSessionStartResultD),
 		Messages: []PromptMessage{
 			{
 				Role:    "user",
-				Content: ToolContent{Type: "text", Text: sb.String()},
+				Content: ToolContent{Type: mcp.MCPContentTypeText, Text: sb.String()},
 			},
 		},
 	})
@@ -129,23 +128,25 @@ func (s *Server) promptAddDecision(
 	rationale := args["rationale"]
 	consequences := args["consequences"]
 
+	fieldFmt := assets.TextDesc(assets.TextDescKeyMCPPromptAddDecisionFieldFmt)
+
 	var sb strings.Builder
-	sb.WriteString("Record this architectural decision using ctx_add:")
+	sb.WriteString(assets.TextDesc(assets.TextDescKeyMCPPromptAddDecisionHeader))
 	sb.WriteString(token.NewlineLF)
 	sb.WriteString(token.NewlineLF)
-	fmt.Fprintf(&sb, "- **Decision**: %s%s", content, token.NewlineLF)
-	fmt.Fprintf(&sb, "- **Context**: %s%s", ctx, token.NewlineLF)
-	fmt.Fprintf(&sb, "- **Rationale**: %s%s", rationale, token.NewlineLF)
-	fmt.Fprintf(&sb, "- **Consequences**: %s%s", consequences, token.NewlineLF)
+	fmt.Fprintf(&sb, fieldFmt+"%s", "Decision", content, token.NewlineLF)
+	fmt.Fprintf(&sb, fieldFmt+"%s", "Context", ctx, token.NewlineLF)
+	fmt.Fprintf(&sb, fieldFmt+"%s", "Rationale", rationale, token.NewlineLF)
+	fmt.Fprintf(&sb, fieldFmt+"%s", "Consequences", consequences, token.NewlineLF)
 	sb.WriteString(token.NewlineLF)
-	sb.WriteString("Call ctx_add with type=\"decision\" and all fields above.")
+	sb.WriteString(assets.TextDesc(assets.TextDescKeyMCPPromptAddDecisionFooter))
 
 	return s.ok(id, GetPromptResult{
-		Description: "Record an architectural decision",
+		Description: assets.TextDesc(assets.TextDescKeyMCPPromptAddDecisionResultD),
 		Messages: []PromptMessage{
 			{
 				Role:    "user",
-				Content: ToolContent{Type: "text", Text: sb.String()},
+				Content: ToolContent{Type: mcp.MCPContentTypeText, Text: sb.String()},
 			},
 		},
 	})
@@ -160,23 +161,25 @@ func (s *Server) promptAddLearning(
 	lesson := args["lesson"]
 	application := args["application"]
 
+	fieldFmt := assets.TextDesc(assets.TextDescKeyMCPPromptAddLearningFieldFmt)
+
 	var sb strings.Builder
-	sb.WriteString("Record this learning using ctx_add:")
+	sb.WriteString(assets.TextDesc(assets.TextDescKeyMCPPromptAddLearningHeader))
 	sb.WriteString(token.NewlineLF)
 	sb.WriteString(token.NewlineLF)
-	fmt.Fprintf(&sb, "- **Learning**: %s%s", content, token.NewlineLF)
-	fmt.Fprintf(&sb, "- **Context**: %s%s", ctx, token.NewlineLF)
-	fmt.Fprintf(&sb, "- **Lesson**: %s%s", lesson, token.NewlineLF)
-	fmt.Fprintf(&sb, "- **Application**: %s%s", application, token.NewlineLF)
+	fmt.Fprintf(&sb, fieldFmt+"%s", "Learning", content, token.NewlineLF)
+	fmt.Fprintf(&sb, fieldFmt+"%s", "Context", ctx, token.NewlineLF)
+	fmt.Fprintf(&sb, fieldFmt+"%s", "Lesson", lesson, token.NewlineLF)
+	fmt.Fprintf(&sb, fieldFmt+"%s", "Application", application, token.NewlineLF)
 	sb.WriteString(token.NewlineLF)
-	sb.WriteString("Call ctx_add with type=\"learning\" and all fields above.")
+	sb.WriteString(assets.TextDesc(assets.TextDescKeyMCPPromptAddLearningFooter))
 
 	return s.ok(id, GetPromptResult{
-		Description: "Record a lesson learned",
+		Description: assets.TextDesc(assets.TextDescKeyMCPPromptAddLearningResultD),
 		Messages: []PromptMessage{
 			{
 				Role:    "user",
-				Content: ToolContent{Type: "text", Text: sb.String()},
+				Content: ToolContent{Type: mcp.MCPContentTypeText, Text: sb.String()},
 			},
 		},
 	})
@@ -184,28 +187,12 @@ func (s *Server) promptAddLearning(
 
 // promptReflect reviews the current session for outstanding items.
 func (s *Server) promptReflect(id json.RawMessage) *Response {
-	var sb strings.Builder
-	sb.WriteString("Reflect on this session and identify:")
-	sb.WriteString(token.NewlineLF)
-	sb.WriteString(token.NewlineLF)
-	sb.WriteString("1. **Decisions made** — Record each with ctx_add type=\"decision\"")
-	sb.WriteString(token.NewlineLF)
-	sb.WriteString("2. **Lessons learned** — Record each with ctx_add type=\"learning\"")
-	sb.WriteString(token.NewlineLF)
-	sb.WriteString("3. **Tasks completed** — Mark done with ctx_complete")
-	sb.WriteString(token.NewlineLF)
-	sb.WriteString("4. **New tasks identified** — Add with ctx_add type=\"task\"")
-	sb.WriteString(token.NewlineLF)
-	sb.WriteString(token.NewlineLF)
-	sb.WriteString("Review what was discussed and changed. ")
-	sb.WriteString("Don't let important context slip away.")
-
 	return s.ok(id, GetPromptResult{
-		Description: "Review session for outstanding learnings and decisions",
+		Description: assets.TextDesc(assets.TextDescKeyMCPPromptReflectResultD),
 		Messages: []PromptMessage{
 			{
 				Role:    "user",
-				Content: ToolContent{Type: "text", Text: sb.String()},
+				Content: ToolContent{Type: mcp.MCPContentTypeText, Text: assets.TextDesc(assets.TextDescKeyMCPPromptReflectBody)},
 			},
 		},
 	})
@@ -217,31 +204,22 @@ func (s *Server) promptCheckpoint(id json.RawMessage) *Response {
 	adds := totalAdds(s.session.addsPerformed)
 
 	var sb strings.Builder
-	sb.WriteString("Session checkpoint. Before ending this session:")
+	sb.WriteString(assets.TextDesc(assets.TextDescKeyMCPPromptCheckpointHeader))
 	sb.WriteString(token.NewlineLF)
 	sb.WriteString(token.NewlineLF)
 
-	fmt.Fprintf(&sb, "- Tool calls this session: %d%s", s.session.toolCalls, token.NewlineLF)
-	fmt.Fprintf(&sb, "- Entries added: %d%s", adds, token.NewlineLF)
-	fmt.Fprintf(&sb, "- Pending updates: %d%s", pending, token.NewlineLF)
+	fmt.Fprintf(&sb, assets.TextDesc(assets.TextDescKeyMCPPromptCheckpointStatsFormat),
+		s.session.toolCalls, adds, pending)
 
 	sb.WriteString(token.NewlineLF)
-	sb.WriteString("1. Check ctx_status for current context state")
-	sb.WriteString(token.NewlineLF)
-	sb.WriteString("2. Record any remaining decisions or learnings")
-	sb.WriteString(token.NewlineLF)
-	sb.WriteString("3. Mark completed tasks with ctx_complete")
-	sb.WriteString(token.NewlineLF)
-	sb.WriteString("4. Run ctx_compact if needed")
-	sb.WriteString(token.NewlineLF)
-	sb.WriteString("5. Call ctx_session_event type=\"end\" when done")
+	sb.WriteString(assets.TextDesc(assets.TextDescKeyMCPPromptCheckpointSteps))
 
 	return s.ok(id, GetPromptResult{
-		Description: "Summarize session progress and persist context",
+		Description: assets.TextDesc(assets.TextDescKeyMCPPromptCheckpointResultD),
 		Messages: []PromptMessage{
 			{
 				Role:    "user",
-				Content: ToolContent{Type: "text", Text: sb.String()},
+				Content: ToolContent{Type: mcp.MCPContentTypeText, Text: sb.String()},
 			},
 		},
 	})

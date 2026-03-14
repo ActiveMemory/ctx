@@ -44,6 +44,10 @@ const (
 	MCPSchemaObject = "object"
 	// MCPSchemaString is the JSON Schema type for strings.
 	MCPSchemaString = "string"
+	// MCPSchemaNumber is the JSON Schema type for numbers.
+	MCPSchemaNumber = "number"
+	// MCPSchemaBoolean is the JSON Schema type for booleans.
+	MCPSchemaBoolean = "boolean"
 	// MCPToolStatus is the MCP tool name for context status.
 	MCPToolStatus = "ctx_status"
 	// MCPToolAdd is the MCP tool name for adding entries.
@@ -66,6 +70,17 @@ const (
 	MCPToolSessionEvent = "ctx_session_event"
 	// MCPToolRemind is the MCP tool name for listing reminders.
 	MCPToolRemind = "ctx_remind"
+
+	// MCPPromptSessionStart is the MCP prompt name for session initialization.
+	MCPPromptSessionStart = "ctx-session-start"
+	// MCPPromptAddDecision is the MCP prompt name for recording decisions.
+	MCPPromptAddDecision = "ctx-add-decision"
+	// MCPPromptAddLearning is the MCP prompt name for recording learnings.
+	MCPPromptAddLearning = "ctx-add-learning"
+	// MCPPromptReflect is the MCP prompt name for session reflection.
+	MCPPromptReflect = "ctx-reflect"
+	// MCPPromptCheckpoint is the MCP prompt name for session checkpoint.
+	MCPPromptCheckpoint = "ctx-checkpoint"
 
 	// MCPNotifyResourcesUpdated is the MCP notification for resource changes.
 	MCPNotifyResourcesUpdated = "notifications/resources/updated"
