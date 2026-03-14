@@ -8,11 +8,11 @@ package add
 
 import (
 	"github.com/ActiveMemory/ctx/internal/config/pad"
+	"github.com/ActiveMemory/ctx/internal/io"
 	"github.com/spf13/cobra"
 
 	"github.com/ActiveMemory/ctx/internal/cli/pad/core"
 	ctxerr "github.com/ActiveMemory/ctx/internal/err"
-	"github.com/ActiveMemory/ctx/internal/validation"
 	"github.com/ActiveMemory/ctx/internal/write"
 )
 
@@ -50,7 +50,7 @@ func runAdd(cmd *cobra.Command, text string) error {
 // Returns:
 //   - error: Non-nil on read/write failure or file too large
 func runAddBlob(cmd *cobra.Command, label, filePath string) error {
-	data, err := validation.ReadUserFile(filePath)
+	data, err := io.SafeReadUserFile(filePath)
 	if err != nil {
 		return ctxerr.ReadFile(err)
 	}

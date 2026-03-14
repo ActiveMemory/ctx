@@ -19,8 +19,8 @@ import (
 	"github.com/ActiveMemory/ctx/internal/config/session"
 	"github.com/ActiveMemory/ctx/internal/config/token"
 	ctxcontext "github.com/ActiveMemory/ctx/internal/context"
+	"github.com/ActiveMemory/ctx/internal/io"
 	"github.com/ActiveMemory/ctx/internal/rc"
-	"github.com/ActiveMemory/ctx/internal/validation"
 )
 
 // LoadMessage loads a hook message template by hook name and variant.
@@ -47,7 +47,7 @@ func LoadMessage(hook, variant string, vars map[string]any, fallback string) str
 
 	// 1. User override in .context/
 	overrideDir := filepath.Join(rc.ContextDir(), dir.HooksMessages, hook)
-	if data, readErr := validation.SafeReadFile(overrideDir, filename); readErr == nil {
+	if data, readErr := io.SafeReadFile(overrideDir, filename); readErr == nil {
 		return renderTemplate(string(data), vars, fallback)
 	}
 

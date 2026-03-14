@@ -22,6 +22,7 @@ import (
 	time2 "github.com/ActiveMemory/ctx/internal/config/time"
 	"github.com/ActiveMemory/ctx/internal/config/token"
 	ctxerr "github.com/ActiveMemory/ctx/internal/err"
+	"github.com/ActiveMemory/ctx/internal/io"
 )
 
 // Sync copies sourcePath to .context/memory/mirror.md, archiving the
@@ -30,7 +31,7 @@ func Sync(contextDir, sourcePath string) (SyncResult, error) {
 	mirrorDir := filepath.Join(contextDir, dir.Memory)
 	mirrorPath := filepath.Join(mirrorDir, memory.MemoryMirror)
 
-	sourceData, readErr := os.ReadFile(sourcePath) //nolint:gosec // caller-provided path
+	sourceData, readErr := io.SafeReadUserFile(sourcePath)
 	if readErr != nil {
 		return SyncResult{}, ctxerr.MemoryReadSource(readErr)
 	}
@@ -42,7 +43,7 @@ func Sync(contextDir, sourcePath string) (SyncResult, error) {
 	}
 
 	// Archive existing mirror before overwrite
-	if existingData, statErr := os.ReadFile(mirrorPath); statErr == nil { //nolint:gosec // project-local path
+	if existingData, statErr := io.SafeReadUserFile(mirrorPath); statErr == nil {
 		result.MirrorLines = countLines(existingData)
 		archivePath, archiveErr := Archive(contextDir)
 		if archiveErr != nil {
@@ -68,7 +69,7 @@ func Archive(contextDir string) (string, error) {
 	mirrorPath := filepath.Join(contextDir, dir.Memory, memory.MemoryMirror)
 	archiveDir := filepath.Join(contextDir, dir.MemoryArchive)
 
-	data, readErr := os.ReadFile(mirrorPath) //nolint:gosec // project-local path
+	data, readErr := io.SafeReadUserFile(mirrorPath)
 	if readErr != nil {
 		return "", ctxerr.MemoryReadMirrorArchive(readErr)
 	}
@@ -92,12 +93,12 @@ func Archive(contextDir string) (string, error) {
 func Diff(contextDir, sourcePath string) (string, error) {
 	mirrorPath := filepath.Join(contextDir, dir.Memory, memory.MemoryMirror)
 
-	mirrorData, mirrorErr := os.ReadFile(mirrorPath) //nolint:gosec // project-local path
+	mirrorData, mirrorErr := io.SafeReadUserFile(mirrorPath)
 	if mirrorErr != nil {
 		return "", ctxerr.MemoryReadMirror(mirrorErr)
 	}
 
-	sourceData, sourceErr := os.ReadFile(sourcePath) //nolint:gosec // caller-provided path
+	sourceData, sourceErr := io.SafeReadUserFile(sourcePath)
 	if sourceErr != nil {
 		return "", ctxerr.MemoryReadDiffSource(sourceErr)
 	}

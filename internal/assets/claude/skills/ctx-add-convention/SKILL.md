@@ -31,7 +31,7 @@ Conventions are simpler than decisions or learnings. You need:
 
 If the user provides only a description, infer the section from the
 topic. Check existing sections in CONVENTIONS.md first to place it
-correctly — don't create a new section if an existing one fits.
+correctly: don't create a new section if an existing one fits.
 
 If the convention overlaps with an existing one, mention it:
 *"There's already a naming convention for functions. Want me to add

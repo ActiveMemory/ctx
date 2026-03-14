@@ -17,7 +17,7 @@ import (
 	"github.com/ActiveMemory/ctx/internal/config/fs"
 	"github.com/ActiveMemory/ctx/internal/config/journal"
 	"github.com/ActiveMemory/ctx/internal/config/token"
-	"github.com/ActiveMemory/ctx/internal/validation"
+	"github.com/ActiveMemory/ctx/internal/io"
 )
 
 // BuildSessionIndex scans journal .md files in journalDir and returns a
@@ -252,7 +252,7 @@ func UpdateNavLinks(journalDir, newBase, oldBase string, numParts int) {
 		}
 		updated := strings.ReplaceAll(string(data), oldBase, newBase)
 		if updated != string(data) {
-			_ = validation.WriteFile(f, []byte(updated), fs.PermFile)
+			_ = io.SafeWriteFile(f, []byte(updated), fs.PermFile)
 		}
 	}
 }

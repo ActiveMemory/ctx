@@ -10,6 +10,7 @@ import (
 	"io"
 	"os"
 
+	io2 "github.com/ActiveMemory/ctx/internal/io"
 	"github.com/spf13/cobra"
 
 	"github.com/ActiveMemory/ctx/internal/cli/watch/core"
@@ -46,7 +47,7 @@ func Run(cmd *cobra.Command, logPath string, dryRun bool) error {
 
 	var reader io.Reader
 	if logPath != "" {
-		file, err := os.Open(logPath) //nolint:gosec // user-provided path via --log flag
+		file, err := io2.SafeOpenUserFile(logPath)
 		if err != nil {
 			return ctxerr.OpenLogFile(err)
 		}

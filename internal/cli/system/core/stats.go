@@ -20,6 +20,7 @@ import (
 	"github.com/ActiveMemory/ctx/internal/config/stats"
 	time2 "github.com/ActiveMemory/ctx/internal/config/time"
 	"github.com/ActiveMemory/ctx/internal/config/token"
+	"github.com/ActiveMemory/ctx/internal/io"
 	"github.com/spf13/cobra"
 
 	"github.com/ActiveMemory/ctx/internal/assets"
@@ -90,7 +91,7 @@ func ExtractStatsSessionID(basename string) string {
 //   - []StatsEntry: parsed entries
 //   - error: non-nil on read failure
 func ParseStatsFile(path, sid string) ([]StatsEntry, error) {
-	data, readErr := os.ReadFile(path) //nolint:gosec // project-local state path
+	data, readErr := io.SafeReadUserFile(path)
 	if readErr != nil {
 		return nil, readErr
 	}
@@ -219,7 +220,7 @@ func FormatStatsTimestamp(ts string) string {
 // Returns:
 //   - []StatsEntry: newly parsed entries
 func ReadNewLines(path string, offset int64, sid string) []StatsEntry {
-	f, openErr := os.Open(path) //nolint:gosec // project-local state path
+	f, openErr := io.SafeOpenUserFile(path)
 	if openErr != nil {
 		return nil
 	}

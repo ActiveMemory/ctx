@@ -14,13 +14,13 @@ import (
 	"github.com/ActiveMemory/ctx/internal/config/dir"
 	"github.com/ActiveMemory/ctx/internal/config/memory"
 	time2 "github.com/ActiveMemory/ctx/internal/config/time"
+	"github.com/ActiveMemory/ctx/internal/io"
 	"github.com/spf13/cobra"
 
 	"github.com/ActiveMemory/ctx/internal/cli/memory/core"
 	ctxerr "github.com/ActiveMemory/ctx/internal/err"
 	mem "github.com/ActiveMemory/ctx/internal/memory"
 	"github.com/ActiveMemory/ctx/internal/rc"
-	"github.com/ActiveMemory/ctx/internal/validation"
 	"github.com/ActiveMemory/ctx/internal/write"
 )
 
@@ -62,7 +62,7 @@ func Run(cmd *cobra.Command) error {
 
 	// Source line count
 	hasDrift := mem.HasDrift(contextDir, sourcePath)
-	if sourceData, readErr := validation.SafeReadFile(
+	if sourceData, readErr := io.SafeReadFile(
 		filepath.Dir(sourcePath), filepath.Base(sourcePath),
 	); readErr == nil {
 		write.MemorySourceLines(cmd, core.CountFileLines(sourceData), hasDrift)
@@ -70,7 +70,7 @@ func Run(cmd *cobra.Command) error {
 
 	// Mirror line count
 	memoryDir := filepath.Join(contextDir, dir.Memory)
-	if mirrorData, readErr := validation.SafeReadFile(
+	if mirrorData, readErr := io.SafeReadFile(
 		memoryDir, memory.MemoryMirror,
 	); readErr == nil {
 		write.MemoryMirrorLines(cmd, core.CountFileLines(mirrorData))

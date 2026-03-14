@@ -3,6 +3,7 @@
 <!-- INDEX:START -->
 | Date | Decision |
 |------|--------|
+| 2026-03-14 | Config-driven freshness check with per-file review URLs |
 | 2026-03-13 | Delete ctx-context-monitor skill — hook output is self-sufficient |
 | 2026-03-13 | build target depends on sync-why to prevent embedded doc drift |
 | 2026-03-13 | Templates and user-facing text live in assets, structural constants stay in config |
@@ -41,6 +42,20 @@
 | 2026-02-26 | Security and permissions (consolidated) |
 | 2026-02-27 | Webhook and notification design (consolidated) |
 <!-- INDEX:END -->
+
+## [2026-03-14-093748] Config-driven freshness check with per-file review URLs
+
+**Status**: Accepted
+
+**Context**: Building a hook to warn when technology-dependent constants go stale. Initially hardcoded the file list and Anthropic docs URL in the binary, but this only worked inside the ctx repo and assumed all projects care about Anthropic docs.
+
+**Decision**: Config-driven freshness check with per-file review URLs
+
+**Rationale**: Making the file list and review URLs configurable via .ctxrc freshness_files means any project can opt in. Per-file review_url avoids special-casing by project name — ctx sets Anthropic docs, other projects set their own vendor links or omit it entirely.
+
+**Consequences**: The hook is a no-op by default (opt-in). ctx's own .ctxrc carries the tracked files. All nudge text goes through assets/text.yaml for localization. No project detection logic needed.
+
+---
 
 ## [2026-03-13-223111] Delete ctx-context-monitor skill — hook output is self-sufficient
 

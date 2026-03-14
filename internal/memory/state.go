@@ -20,13 +20,14 @@ import (
 	"github.com/ActiveMemory/ctx/internal/config/memory"
 	time2 "github.com/ActiveMemory/ctx/internal/config/time"
 	"github.com/ActiveMemory/ctx/internal/config/token"
+	"github.com/ActiveMemory/ctx/internal/io"
 )
 
 // LoadState reads the sync state from .context/state/memory-import.json.
 // Returns a zero-value State if the file does not exist.
 func LoadState(contextDir string) (State, error) {
 	path := statePath(contextDir)
-	data, readErr := os.ReadFile(path) //nolint:gosec // project-local state path
+	data, readErr := io.SafeReadUserFile(path)
 	if readErr != nil {
 		if errors.Is(readErr, os.ErrNotExist) {
 			return State{ImportedHashes: []string{}}, nil

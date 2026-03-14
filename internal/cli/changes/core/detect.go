@@ -19,6 +19,7 @@ import (
 	"github.com/ActiveMemory/ctx/internal/config/load_gate"
 	time2 "github.com/ActiveMemory/ctx/internal/config/time"
 	"github.com/ActiveMemory/ctx/internal/config/token"
+	"github.com/ActiveMemory/ctx/internal/io"
 	"github.com/ActiveMemory/ctx/internal/rc"
 )
 
@@ -136,7 +137,7 @@ func DetectFromMarkers() (time.Time, bool) {
 //   - bool: True if a valid event was found
 func DetectFromEvents() (time.Time, bool) {
 	eventsPath := filepath.Join(rc.ContextDir(), dir.State, "events.jsonl")
-	data, err := os.ReadFile(eventsPath) //nolint:gosec // state dir path
+	data, err := io.SafeReadUserFile(eventsPath)
 	if err != nil {
 		return time.Time{}, false
 	}

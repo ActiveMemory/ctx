@@ -10,7 +10,7 @@ import (
 	"unicode/utf8"
 
 	"github.com/ActiveMemory/ctx/internal/crypto"
-	"github.com/ActiveMemory/ctx/internal/validation"
+	"github.com/ActiveMemory/ctx/internal/io"
 )
 
 // ReadFileEntries reads a scratchpad file, attempting decryption first.
@@ -23,7 +23,7 @@ import (
 //   - []string: parsed entries.
 //   - error: non-nil if the file cannot be read.
 func ReadFileEntries(path string, key []byte) ([]string, error) {
-	data, readErr := validation.ReadUserFile(path)
+	data, readErr := io.SafeReadUserFile(path)
 	if readErr != nil {
 		return nil, readErr
 	}

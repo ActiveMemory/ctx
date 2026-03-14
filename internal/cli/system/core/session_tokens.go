@@ -22,6 +22,7 @@ import (
 	"github.com/ActiveMemory/ctx/internal/config/session"
 	"github.com/ActiveMemory/ctx/internal/config/stats"
 	"github.com/ActiveMemory/ctx/internal/config/token"
+	io2 "github.com/ActiveMemory/ctx/internal/io"
 	"github.com/ActiveMemory/ctx/internal/rc"
 )
 
@@ -68,7 +69,7 @@ func ReadSessionTokenInfo(sessionID string) (SessionTokenInfo, error) {
 func FindJSONLPath(sessionID string) (string, error) {
 	// Check cache first
 	cacheFile := filepath.Join(StateDir(), stats.JsonlPathCachePrefix+sessionID)
-	if data, readErr := os.ReadFile(cacheFile); readErr == nil { //nolint:gosec // state dir path
+	if data, readErr := io2.SafeReadUserFile(cacheFile); readErr == nil {
 		cached := strings.TrimSpace(string(data))
 		if cached != "" {
 			if _, statErr := os.Stat(cached); statErr == nil {
@@ -107,7 +108,7 @@ func FindJSONLPath(sessionID string) (string, error) {
 //   - SessionTokenInfo: Token count and model, or zero value if not found
 //   - error: Non-nil only on I/O errors
 func ParseLastUsageAndModel(path string) (SessionTokenInfo, error) {
-	f, openErr := os.Open(path) //nolint:gosec // path from glob result
+	f, openErr := io2.SafeOpenUserFile(path)
 	if openErr != nil {
 		return SessionTokenInfo{}, openErr
 	}
@@ -237,7 +238,7 @@ func ClaudeSettingsHas1M() bool {
 	if homeErr != nil {
 		return false
 	}
-	data, readErr := os.ReadFile(filepath.Join(home, dir.Claude, claude.GlobalSettings)) //nolint:gosec // user home config
+	data, readErr := io2.SafeReadUserFile(filepath.Join(home, dir.Claude, claude.GlobalSettings))
 	if readErr != nil {
 		return false
 	}

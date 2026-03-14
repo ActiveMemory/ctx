@@ -3,6 +3,7 @@
 <!-- INDEX:START -->
 | Date | Learning |
 |------|--------|
+| 2026-03-14 | Internal skill rename requires updates across 6+ layers |
 | 2026-03-13 | Skills without a trigger mechanism are dead code |
 | 2026-03-13 | Variable shadowing causes cascading test failures after package splits |
 | 2026-03-13 | sync-why mechanism existed but was not wired to build |
@@ -65,6 +66,16 @@
 | 2026-02-19 | Feature can be code-complete but invisible to users |
 | 2026-01-28 | IDE is already the UI |
 <!-- INDEX:END -->
+
+---
+
+## [2026-03-14-093757] Internal skill rename requires updates across 6+ layers
+
+**Context**: Renamed ctx-alignment-audit to _ctx-alignment-audit. The allow list test in embed_test.go failed because it iterates all bundled skills and expects each in the allow list.
+
+**Lesson**: The allow list test needed a strings.HasPrefix(_) skip for internal skills. This was not obvious until tests ran.
+
+**Application**: When converting public to internal skills, audit: allow.txt, embed_test.go allow list test, reference/skills.md, all recipe docs referencing the skill, contributing.md dev-only skills table, and permissions docs.
 
 ---
 

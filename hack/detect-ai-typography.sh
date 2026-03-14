@@ -6,47 +6,71 @@
 #   \    Copyright 2026-present Context contributors.
 #                 SPDX-License-Identifier: Apache-2.0
 #
-# detect-ai-typography.sh — find docs likely AI-edited but not human-reviewed.
+# detect-ai-typography.sh — find files likely AI-edited but not human-reviewed.
 #
-# Scans markdown files for em-dashes, smart quotes, "--" (double hyphen
-# used as dash), and quad backticks (````). These are heuristic signals:
-# almost all LLM output uses typographic punctuation from its training
-# corpus, and AI frequently wraps code fences in quad backticks which
-# breaks zensical rendering.
+# Scans files for em-dashes, smart quotes, "--" (double hyphen used as dash),
+# and quad backticks (````). These are heuristic signals: almost all LLM output
+# uses typographic punctuation from its training corpus, and AI frequently wraps
+# code fences in quad backticks which breaks zensical rendering.
 #
 # False positives are possible (em-dash is valid typography). False negatives
 # are unlikely given current model behavior.
 #
 # Usage:
-#   ./hack/detect-ai-typography.sh [dir]   # default: docs/
-#   ./hack/detect-ai-typography.sh --stat  # summary only (no line detail)
+#   ./hack/detect-ai-typography.sh [dir]              # default: docs/, *.md
+#   ./hack/detect-ai-typography.sh internal --ext go   # scan .go files
+#   ./hack/detect-ai-typography.sh --ext "go,md,txt"   # multiple extensions
+#   ./hack/detect-ai-typography.sh --stat              # summary only (no line detail)
 
 set -euo pipefail
 
 STAT_ONLY=false
 DIR=""
+EXT=""
 
-for arg in "$@"; do
-  case "$arg" in
-    --stat) STAT_ONLY=true ;;
-    *) DIR="$arg" ;;
+while [[ $# -gt 0 ]]; do
+  case "$1" in
+    --stat) STAT_ONLY=true; shift ;;
+    --ext) EXT="$2"; shift 2 ;;
+    *) DIR="$1"; shift ;;
   esac
 done
 
 DIR="${DIR:-docs}"
+EXT="${EXT:-md}"
 
 if [[ ! -d "$DIR" ]]; then
   echo "Directory not found: $DIR" >&2
   exit 1
 fi
 
+# Build find -name arguments from comma-separated extensions.
+FIND_ARGS=()
+first=true
+IFS=',' read -ra EXTS <<< "$EXT"
+for ext in "${EXTS[@]}"; do
+  ext="${ext## }"  # trim leading space
+  ext="${ext%% }"  # trim trailing space
+  if [[ "$first" == true ]]; then
+    FIND_ARGS+=(-name "*.${ext}")
+    first=false
+  else
+    FIND_ARGS+=(-o -name "*.${ext}")
+  fi
+done
+
+# Wrap in parens when multiple extensions.
+if [[ ${#EXTS[@]} -gt 1 ]]; then
+  FIND_ARGS=("(" "${FIND_ARGS[@]}" ")")
+fi
+
 # Patterns (PCRE with Unicode escapes):
 #   \x{2014}  = em-dash (—)
 #   \x{2013}  = en-dash (–)
-#   \x{201C}  = left double quote (")
-#   \x{201D}  = right double quote (")
-#   \x{2018}  = left single quote (')
-#   \x{2019}  = right single quote (')
+#   \x{201C}  = left double quote (\u201c)
+#   \x{201D}  = right double quote (\u201d)
+#   \x{2018}  = left single quote (\u2018)
+#   \x{2019}  = right single quote (\u2019)
 #    --       = space-padded double hyphen (" -- ") used as dash.
 #               Bare -- without spaces is excluded (CLI flags, YAML
 #               frontmatter, table separators). AI almost always
@@ -92,7 +116,7 @@ while IFS= read -r -d '' file; do
       done
     fi
   fi
-done < <(find "$DIR" -name '*.md' -print0 | sort -z)
+done < <(find "$DIR" "${FIND_ARGS[@]}" -print0 | sort -z)
 
 echo ""
 if [[ "$file_count" -eq 0 ]]; then

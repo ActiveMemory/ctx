@@ -8,7 +8,7 @@ Record a learning in LEARNINGS.md.
 
 ## Before Recording
 
-Three questions — if any answer is "no", don't record:
+Three questions: if any answer is "no", don't record:
 
 1. **"Could someone Google this in 5 minutes?"** → If yes, skip it
 2. **"Is this specific to this codebase?"** → If no, skip it
@@ -42,7 +42,7 @@ If the user provides only a title, ask:
 ctx add learning "Title" --context "..." --lesson "..." --application "..."
 ```
 
-**Example — behavioral pattern:**
+**Example: behavioral pattern:**
 ```bash
 ctx add learning "Agent ignores repeated hook output (repetition fatigue)" \
   --context "PreToolUse hook ran ctx agent on every tool use, injecting the same context packet repeatedly. Agent tuned it out and didn't follow conventions." \
@@ -50,7 +50,7 @@ ctx add learning "Agent ignores repeated hook output (repetition fatigue)" \
   --application "Use --session \$PPID in hook commands to enable cooldown. Pair context injection with a readback instruction."
 ```
 
-**Example — technical gotcha:**
+**Example: technical gotcha:**
 ```bash
 ctx add learning "go:embed only works with files in same or child directories" \
   --context "Tried to embed files from parent directory, got compile error" \
@@ -58,7 +58,7 @@ ctx add learning "go:embed only works with files in same or child directories" \
   --application "Keep embedded files in internal/assets/ or child directories, not project root"
 ```
 
-**Example — workflow insight:**
+**Example: workflow insight:**
 ```bash
 ctx add learning "ctx init overwrites user content without guard" \
   --context "Commit a9df9dd wiped 18 decisions from DECISIONS.md, replacing with empty template" \

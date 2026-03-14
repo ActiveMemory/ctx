@@ -9,7 +9,7 @@ package core
 import (
 	"github.com/ActiveMemory/ctx/internal/crypto"
 	ctxerr "github.com/ActiveMemory/ctx/internal/err"
-	"github.com/ActiveMemory/ctx/internal/validation"
+	"github.com/ActiveMemory/ctx/internal/io"
 )
 
 // DecryptFile reads and decrypts a single file, returning its entries.
@@ -23,7 +23,7 @@ import (
 //   - []string: Decrypted entries
 //   - error: Non-nil on read or decryption failure
 func DecryptFile(key []byte, baseDir, filename string) ([]string, error) {
-	data, readErr := validation.SafeReadFile(baseDir, filename)
+	data, readErr := io.SafeReadFile(baseDir, filename)
 	if readErr != nil {
 		return nil, readErr
 	}

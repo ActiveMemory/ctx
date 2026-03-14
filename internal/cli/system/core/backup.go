@@ -19,6 +19,7 @@ import (
 	"github.com/ActiveMemory/ctx/internal/config/archive"
 	"github.com/ActiveMemory/ctx/internal/config/dir"
 	fs2 "github.com/ActiveMemory/ctx/internal/config/fs"
+	io2 "github.com/ActiveMemory/ctx/internal/io"
 	"github.com/spf13/cobra"
 
 	"github.com/ActiveMemory/ctx/internal/assets"
@@ -233,7 +234,7 @@ func addSingleFile(
 
 // copyFileToTar reads a file and writes its contents to the tar writer.
 func copyFileToTar(tw *tar.Writer, path string) error {
-	f, openErr := os.Open(path) //nolint:gosec // paths are from our own entries
+	f, openErr := io2.SafeOpenUserFile(path)
 	if openErr != nil {
 		return openErr
 	}

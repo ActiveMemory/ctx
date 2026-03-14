@@ -16,12 +16,12 @@ import (
 	"github.com/ActiveMemory/ctx/internal/config/hook"
 	"github.com/ActiveMemory/ctx/internal/config/token"
 	"github.com/ActiveMemory/ctx/internal/config/tpl"
+	"github.com/ActiveMemory/ctx/internal/io"
 	"github.com/spf13/cobra"
 
 	"github.com/ActiveMemory/ctx/internal/assets"
 	"github.com/ActiveMemory/ctx/internal/notify"
 	"github.com/ActiveMemory/ctx/internal/rc"
-	"github.com/ActiveMemory/ctx/internal/validation"
 )
 
 // ReadMapTracking reads and parses the map-tracking.json file from the
@@ -30,7 +30,7 @@ import (
 // Returns:
 //   - *MapTrackingInfo: parsed tracking info, or nil if not found or invalid
 func ReadMapTracking() *MapTrackingInfo {
-	data, readErr := validation.SafeReadFile(rc.ContextDir(), architecture.MapTracking)
+	data, readErr := io.SafeReadFile(rc.ContextDir(), architecture.MapTracking)
 	if readErr != nil {
 		return nil
 	}

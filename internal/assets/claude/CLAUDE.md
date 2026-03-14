@@ -6,14 +6,14 @@
 ## IMPORTANT: You Have Persistent Memory
 
 This project uses Context (`ctx`) for context persistence across sessions.
-**Your memory is NOT ephemeral** — it lives in the context directory.
+**Your memory is NOT ephemeral**: it lives in the context directory.
 
 ## On Session Start
 
-1. **Run `ctx system bootstrap`** — CRITICAL, not optional.
+1. **Run `ctx system bootstrap`**: CRITICAL, not optional.
    This tells you where the context directory is. If it fails or returns
    no context_dir, STOP and warn the user.
-2. **Read AGENT_PLAYBOOK.md** from the context directory — it explains
+2. **Read AGENT_PLAYBOOK.md** from the context directory: it explains
    how to use this system
 3. **Run `ctx agent --budget 4000`** for a content summary
 
@@ -49,13 +49,13 @@ ctx status
 
 ## Context Files
 
-| File | Purpose |
-|------|---------|
-| CONSTITUTION.md | Hard rules - NEVER violate |
-| TASKS.md | Current work items |
-| DECISIONS.md | Architectural decisions with rationale |
-| LEARNINGS.md | Gotchas, tips, lessons learned |
-| CONVENTIONS.md | Code patterns and standards |
+| File            | Purpose                                |
+|-----------------|----------------------------------------|
+| CONSTITUTION.md | Hard rules - NEVER violate             |
+| TASKS.md        | Current work items                     |
+| DECISIONS.md    | Architectural decisions with rationale |
+| LEARNINGS.md    | Gotchas, tips, lessons learned         |
+| CONVENTIONS.md  | Code patterns and standards            |
 
 All files live in the context directory reported by `ctx system bootstrap`.
 

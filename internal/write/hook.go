@@ -8,6 +8,7 @@ package write
 
 import (
 	"fmt"
+
 	"github.com/ActiveMemory/ctx/internal/write/config"
 	"github.com/spf13/cobra"
 )
@@ -30,7 +31,7 @@ func HookNudge(cmd *cobra.Command, nudgeBox string) {
 // InfoHookTool prints a tool integration section to stdout.
 //
 // The content is a pre-formatted multi-line text block loaded from
-// commands.yaml. A trailing newline is not added — the content is
+// commands.yaml. A trailing newline is not added: the content is
 // expected to include its own formatting.
 //
 // Parameters:

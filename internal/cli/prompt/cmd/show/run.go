@@ -10,11 +10,11 @@ import (
 	"os"
 
 	"github.com/ActiveMemory/ctx/internal/config/file"
+	"github.com/ActiveMemory/ctx/internal/io"
 	"github.com/spf13/cobra"
 
 	"github.com/ActiveMemory/ctx/internal/cli/prompt/core"
 	ctxerr "github.com/ActiveMemory/ctx/internal/err"
-	"github.com/ActiveMemory/ctx/internal/validation"
 )
 
 // Run reads and prints a prompt template by name.
@@ -26,7 +26,7 @@ import (
 // Returns:
 //   - error: Non-nil on read failure or missing template
 func Run(cmd *cobra.Command, name string) error {
-	content, readErr := validation.SafeReadFile(
+	content, readErr := io.SafeReadFile(
 		core.PromptsDir(), name+file.ExtMarkdown,
 	)
 	if readErr != nil {

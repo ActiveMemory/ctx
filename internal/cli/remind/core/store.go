@@ -15,8 +15,8 @@ import (
 	"github.com/ActiveMemory/ctx/internal/config/fs"
 	"github.com/ActiveMemory/ctx/internal/config/reminder"
 	ctxerr "github.com/ActiveMemory/ctx/internal/err"
+	"github.com/ActiveMemory/ctx/internal/io"
 	"github.com/ActiveMemory/ctx/internal/rc"
-	"github.com/ActiveMemory/ctx/internal/validation"
 )
 
 // Reminder represents a single session-scoped reminder.
@@ -33,7 +33,7 @@ type Reminder struct {
 //   - []Reminder: The parsed reminders (nil when file absent)
 //   - error: Non-nil on read or parse failure
 func ReadReminders() ([]Reminder, error) {
-	data, readErr := validation.ReadUserFile(RemindersPath())
+	data, readErr := io.SafeReadUserFile(RemindersPath())
 	if readErr != nil {
 		if errors.Is(readErr, os.ErrNotExist) {
 			return nil, nil
@@ -59,7 +59,7 @@ func WriteReminders(reminders []Reminder) error {
 	if marshalErr != nil {
 		return marshalErr
 	}
-	return validation.WriteFile(RemindersPath(), data, fs.PermFile)
+	return io.SafeWriteFile(RemindersPath(), data, fs.PermFile)
 }
 
 // NextID returns the next available reminder ID (max existing + 1).

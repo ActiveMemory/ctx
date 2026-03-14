@@ -15,13 +15,13 @@ import (
 	"github.com/ActiveMemory/ctx/internal/config/hook"
 	"github.com/ActiveMemory/ctx/internal/config/token"
 	"github.com/ActiveMemory/ctx/internal/config/tpl"
+	"github.com/ActiveMemory/ctx/internal/io"
 	"github.com/spf13/cobra"
 
 	"github.com/ActiveMemory/ctx/internal/assets"
 	"github.com/ActiveMemory/ctx/internal/index"
 	"github.com/ActiveMemory/ctx/internal/notify"
 	"github.com/ActiveMemory/ctx/internal/rc"
-	"github.com/ActiveMemory/ctx/internal/validation"
 )
 
 // ScanKnowledgeFiles checks knowledge files against their configured
@@ -41,7 +41,7 @@ func ScanKnowledgeFiles(
 	var findings []KnowledgeFinding
 
 	if decThreshold > 0 {
-		if data, readErr := validation.SafeReadFile(contextDir, ctx.Decision); readErr == nil {
+		if data, readErr := io.SafeReadFile(contextDir, ctx.Decision); readErr == nil {
 			count := len(index.ParseEntryBlocks(string(data)))
 			if count > decThreshold {
 				findings = append(findings, KnowledgeFinding{
@@ -52,7 +52,7 @@ func ScanKnowledgeFiles(
 	}
 
 	if lrnThreshold > 0 {
-		if data, readErr := validation.SafeReadFile(contextDir, ctx.Learning); readErr == nil {
+		if data, readErr := io.SafeReadFile(contextDir, ctx.Learning); readErr == nil {
 			count := len(index.ParseEntryBlocks(string(data)))
 			if count > lrnThreshold {
 				findings = append(findings, KnowledgeFinding{
@@ -63,7 +63,7 @@ func ScanKnowledgeFiles(
 	}
 
 	if convThreshold > 0 {
-		if data, readErr := validation.SafeReadFile(contextDir, ctx.Convention); readErr == nil {
+		if data, readErr := io.SafeReadFile(contextDir, ctx.Convention); readErr == nil {
 			lineCount := bytes.Count(data, []byte(token.NewlineLF))
 			if lineCount > convThreshold {
 				findings = append(findings, KnowledgeFinding{

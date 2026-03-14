@@ -26,6 +26,7 @@ import (
 	"github.com/ActiveMemory/ctx/internal/context"
 	"github.com/ActiveMemory/ctx/internal/drift"
 	"github.com/ActiveMemory/ctx/internal/eventlog"
+	"github.com/ActiveMemory/ctx/internal/io"
 	"github.com/ActiveMemory/ctx/internal/rc"
 	"github.com/ActiveMemory/ctx/internal/sysinfo"
 )
@@ -91,7 +92,7 @@ func CheckRequiredFiles(report *Report) {
 // Parameters:
 //   - report: Report to append the result to
 func CheckCtxrcValidation(report *Report) {
-	data, readErr := os.ReadFile(file.CtxRC) //nolint:gosec // project-local config file
+	data, readErr := io.SafeReadUserFile(file.CtxRC)
 	if readErr != nil {
 		// No .ctxrc is fine — defaults are used.
 		report.Results = append(report.Results, Result{
@@ -294,7 +295,7 @@ func CheckWebhook(report *Report) {
 func CheckReminders(report *Report) {
 	dir := rc.ContextDir()
 	remindersPath := filepath.Join(dir, reminder.Reminders)
-	data, readErr := os.ReadFile(remindersPath) //nolint:gosec // project-local path
+	data, readErr := io.SafeReadUserFile(remindersPath)
 	if readErr != nil {
 		report.Results = append(report.Results, Result{
 			Name:     doctor.CheckReminders,
@@ -341,7 +342,7 @@ func CheckReminders(report *Report) {
 func CheckTaskCompletion(report *Report) {
 	dir := rc.ContextDir()
 	tasksPath := filepath.Join(dir, ctx.Task)
-	data, readErr := os.ReadFile(tasksPath) //nolint:gosec // project-local path
+	data, readErr := io.SafeReadUserFile(tasksPath)
 	if readErr != nil {
 		return // no tasks file, skip
 	}

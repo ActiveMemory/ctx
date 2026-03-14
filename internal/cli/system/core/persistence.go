@@ -17,7 +17,7 @@ import (
 	"github.com/ActiveMemory/ctx/internal/config/fs"
 	"github.com/ActiveMemory/ctx/internal/config/nudge"
 	"github.com/ActiveMemory/ctx/internal/config/token"
-	"github.com/ActiveMemory/ctx/internal/validation"
+	"github.com/ActiveMemory/ctx/internal/io"
 )
 
 // ReadPersistenceState reads a persistence state file and returns the
@@ -31,7 +31,7 @@ import (
 //   - PersistenceState: parsed counter state
 //   - bool: true if the file was read successfully
 func ReadPersistenceState(path string) (PersistenceState, bool) {
-	data, readErr := validation.SafeReadFile(filepath.Dir(path), filepath.Base(path))
+	data, readErr := io.SafeReadFile(filepath.Dir(path), filepath.Base(path))
 	if readErr != nil {
 		return PersistenceState{}, false
 	}

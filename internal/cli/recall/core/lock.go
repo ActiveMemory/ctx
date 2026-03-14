@@ -17,12 +17,12 @@ import (
 	"github.com/ActiveMemory/ctx/internal/config/file"
 	"github.com/ActiveMemory/ctx/internal/config/fs"
 	"github.com/ActiveMemory/ctx/internal/config/token"
+	"github.com/ActiveMemory/ctx/internal/io"
 	"github.com/spf13/cobra"
 
 	ctxerr "github.com/ActiveMemory/ctx/internal/err"
 	"github.com/ActiveMemory/ctx/internal/journal/state"
 	"github.com/ActiveMemory/ctx/internal/rc"
-	"github.com/ActiveMemory/ctx/internal/validation"
 	"github.com/ActiveMemory/ctx/internal/write"
 )
 
@@ -161,7 +161,7 @@ func UpdateLockFrontmatter(path string, lock bool) {
 		// Insert before closing ---.
 		updated := content[:fmEnd] + nl + LockedFrontmatterLine +
 			content[fmEnd:]
-		_ = validation.WriteFile(path, []byte(updated), fs.PermFile)
+		_ = io.SafeWriteFile(path, []byte(updated), fs.PermFile)
 	} else {
 		// Remove the locked line.
 		lines := strings.Split(fmBlock, nl)
@@ -175,7 +175,7 @@ func UpdateLockFrontmatter(path string, lock bool) {
 		}
 		newFM := strings.Join(filtered, nl)
 		updated := content[:len(fmOpen)] + newFM + content[fmEnd:]
-		_ = validation.WriteFile(path, []byte(updated), fs.PermFile)
+		_ = io.SafeWriteFile(path, []byte(updated), fs.PermFile)
 	}
 }
 

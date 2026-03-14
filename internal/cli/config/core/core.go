@@ -16,8 +16,8 @@ import (
 	"github.com/ActiveMemory/ctx/internal/config/file"
 	"github.com/ActiveMemory/ctx/internal/config/fs"
 	ctxerr "github.com/ActiveMemory/ctx/internal/err"
+	"github.com/ActiveMemory/ctx/internal/io"
 	"github.com/ActiveMemory/ctx/internal/rc"
-	"github.com/ActiveMemory/ctx/internal/validation"
 )
 
 // Profile file names and identifiers — aliased from internal/config.
@@ -48,7 +48,7 @@ func DetectProfile() string {
 // Returns:
 //   - error: Non-nil on read or write failure
 func CopyProfile(root, srcFile string) error {
-	data, readErr := validation.SafeReadFile(root, srcFile)
+	data, readErr := io.SafeReadFile(root, srcFile)
 	if readErr != nil {
 		return ctxerr.ReadProfile(srcFile, readErr)
 	}

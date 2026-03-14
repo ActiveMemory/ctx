@@ -18,12 +18,12 @@ import (
 	"github.com/ActiveMemory/ctx/internal/config/stats"
 	"github.com/ActiveMemory/ctx/internal/config/token"
 	"github.com/ActiveMemory/ctx/internal/config/tpl"
+	"github.com/ActiveMemory/ctx/internal/io"
 	"github.com/spf13/cobra"
 
 	"github.com/ActiveMemory/ctx/internal/assets"
 	"github.com/ActiveMemory/ctx/internal/notify"
 	"github.com/ActiveMemory/ctx/internal/rc"
-	"github.com/ActiveMemory/ctx/internal/validation"
 )
 
 // TokenUsageLine formats a context window usage line for display.
@@ -55,7 +55,7 @@ func TokenUsageLine(tokens, pct, windowSize int) string {
 func OversizeNudgeContent() string {
 	baseDir := filepath.Join(rc.ContextDir(), dir.State)
 	flagPath := filepath.Join(baseDir, stats.ContextSizeInjectionOversizeFlag)
-	data, readErr := validation.SafeReadFile(baseDir, stats.ContextSizeInjectionOversizeFlag)
+	data, readErr := io.SafeReadFile(baseDir, stats.ContextSizeInjectionOversizeFlag)
 	if readErr != nil {
 		return ""
 	}

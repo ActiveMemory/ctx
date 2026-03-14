@@ -13,11 +13,11 @@ import (
 	"strings"
 
 	"github.com/ActiveMemory/ctx/internal/config/pad"
+	io2 "github.com/ActiveMemory/ctx/internal/io"
 	"github.com/spf13/cobra"
 
 	"github.com/ActiveMemory/ctx/internal/cli/pad/core"
 	ctxerr "github.com/ActiveMemory/ctx/internal/err"
-	"github.com/ActiveMemory/ctx/internal/validation"
 	"github.com/ActiveMemory/ctx/internal/write"
 )
 
@@ -34,7 +34,7 @@ func runImport(cmd *cobra.Command, file string) error {
 	if file == "-" {
 		r = os.Stdin
 	} else {
-		f, err := validation.OpenUserFile(file)
+		f, err := io2.SafeOpenUserFile(file)
 		if err != nil {
 			return ctxerr.OpenFile(file, err)
 		}
@@ -114,7 +114,7 @@ func runImportBlobs(cmd *cobra.Command, path string) error {
 
 		name := de.Name()
 
-		data, fileErr := validation.SafeReadFile(path, name)
+		data, fileErr := io2.SafeReadFile(path, name)
 		if fileErr != nil {
 			write.ErrPadImportBlobSkipped(cmd, name, fileErr)
 			skipped++

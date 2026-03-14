@@ -16,6 +16,7 @@ import (
 	"github.com/ActiveMemory/ctx/internal/config/hook"
 	"github.com/ActiveMemory/ctx/internal/config/load_gate"
 	"github.com/ActiveMemory/ctx/internal/config/token"
+	"github.com/ActiveMemory/ctx/internal/io"
 	"github.com/spf13/cobra"
 
 	"github.com/ActiveMemory/ctx/internal/assets"
@@ -23,7 +24,6 @@ import (
 	"github.com/ActiveMemory/ctx/internal/cli/system/core"
 	"github.com/ActiveMemory/ctx/internal/context"
 	"github.com/ActiveMemory/ctx/internal/rc"
-	"github.com/ActiveMemory/ctx/internal/validation"
 )
 
 // Run executes the context-load-gate hook logic.
@@ -88,7 +88,7 @@ func Run(cmd *cobra.Command, stdin *os.File) error {
 			continue
 		}
 
-		data, readErr := validation.SafeReadFile(dir, f)
+		data, readErr := io.SafeReadFile(dir, f)
 		if readErr != nil {
 			continue // file missing — skip gracefully
 		}

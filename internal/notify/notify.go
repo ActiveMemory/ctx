@@ -22,6 +22,7 @@ import (
 	crypto2 "github.com/ActiveMemory/ctx/internal/config/crypto"
 	"github.com/ActiveMemory/ctx/internal/config/fs"
 	"github.com/ActiveMemory/ctx/internal/crypto"
+	"github.com/ActiveMemory/ctx/internal/io"
 	"github.com/ActiveMemory/ctx/internal/rc"
 )
 
@@ -67,7 +68,7 @@ func LoadWebhook() (string, error) {
 		return "", nil
 	}
 
-	ciphertext, err := os.ReadFile(encPath) //nolint:gosec // project-local path
+	ciphertext, err := io.SafeReadUserFile(encPath)
 	if err != nil {
 		if os.IsNotExist(err) {
 			return "", nil

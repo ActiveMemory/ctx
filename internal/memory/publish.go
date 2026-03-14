@@ -21,6 +21,7 @@ import (
 	"github.com/ActiveMemory/ctx/internal/config/token"
 	ctxerr "github.com/ActiveMemory/ctx/internal/err"
 	"github.com/ActiveMemory/ctx/internal/index"
+	"github.com/ActiveMemory/ctx/internal/io"
 )
 
 // SelectContent reads .context/ files and selects content within the line budget.
@@ -32,25 +33,25 @@ func SelectContent(contextDir string, budget int) (PublishResult, error) {
 
 	// Pending tasks
 	taskPath := filepath.Join(contextDir, ctx.Task)
-	if data, readErr := os.ReadFile(taskPath); readErr == nil { //nolint:gosec // project-local path
+	if data, readErr := io.SafeReadUserFile(taskPath); readErr == nil {
 		result.Tasks = extractPendingTasks(string(data), memory.PublishMaxTasks)
 	}
 
 	// Recent decisions
 	decPath := filepath.Join(contextDir, ctx.Decision)
-	if data, readErr := os.ReadFile(decPath); readErr == nil { //nolint:gosec // project-local path
+	if data, readErr := io.SafeReadUserFile(decPath); readErr == nil {
 		result.Decisions = extractRecentEntries(string(data), memory.PublishMaxDecisions)
 	}
 
 	// Key conventions (first N lines that are list items)
 	convPath := filepath.Join(contextDir, ctx.Convention)
-	if data, readErr := os.ReadFile(convPath); readErr == nil { //nolint:gosec // project-local path
+	if data, readErr := io.SafeReadUserFile(convPath); readErr == nil {
 		result.Conventions = extractConventionItems(string(data), memory.PublishMaxConventions)
 	}
 
 	// Recent learnings
 	lrnPath := filepath.Join(contextDir, ctx.Learning)
-	if data, readErr := os.ReadFile(lrnPath); readErr == nil { //nolint:gosec // project-local path
+	if data, readErr := io.SafeReadUserFile(lrnPath); readErr == nil {
 		result.Learnings = extractRecentEntries(string(data), memory.PublishMaxLearnings)
 	}
 
@@ -237,7 +238,7 @@ func Publish(contextDir, memoryPath string, budget int) (PublishResult, error) {
 
 	formatted := result.Format()
 
-	existing, readErr := os.ReadFile(memoryPath) //nolint:gosec // caller-provided path
+	existing, readErr := io.SafeReadUserFile(memoryPath)
 	if readErr != nil {
 		// MEMORY.md might not exist yet — create with just the block
 		existing = []byte{}

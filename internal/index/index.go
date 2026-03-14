@@ -19,6 +19,7 @@ import (
 	"github.com/ActiveMemory/ctx/internal/config/regex"
 	"github.com/ActiveMemory/ctx/internal/config/token"
 	ctxerr "github.com/ActiveMemory/ctx/internal/err"
+	io2 "github.com/ActiveMemory/ctx/internal/io"
 )
 
 // ParseHeaders extracts all entries from file content.
@@ -217,7 +218,7 @@ func ReindexFile(
 		return ctxerr.ReindexFileNotFound(fileName)
 	}
 
-	content, err := os.ReadFile(filePath) //nolint:gosec // G304: filePath is constructed from known config paths
+	content, err := io2.SafeReadUserFile(filePath)
 	if err != nil {
 		return ctxerr.ReindexFileRead(filePath, err)
 	}

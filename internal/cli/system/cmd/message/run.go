@@ -15,6 +15,7 @@ import (
 
 	"github.com/ActiveMemory/ctx/internal/config/file"
 	"github.com/ActiveMemory/ctx/internal/config/msg"
+	"github.com/ActiveMemory/ctx/internal/io"
 	"github.com/spf13/cobra"
 
 	"github.com/ActiveMemory/ctx/internal/assets"
@@ -104,7 +105,7 @@ func RunMessageShow(cmd *cobra.Command, hook, variant string) error {
 
 	// Check user override first
 	oPath := core.OverridePath(hook, variant)
-	if data, readErr := os.ReadFile(oPath); readErr == nil { //nolint:gosec // project-local override path
+	if data, readErr := io.SafeReadUserFile(oPath); readErr == nil {
 		cmd.Println(fmt.Sprintf(assets.TextDesc(assets.TextDescKeyMessageSourceOverride), oPath))
 		core.PrintTemplateVars(cmd, info)
 		cmd.Println()

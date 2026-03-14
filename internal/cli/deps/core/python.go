@@ -13,6 +13,7 @@ import (
 	"strings"
 
 	"github.com/ActiveMemory/ctx/internal/config/token"
+	"github.com/ActiveMemory/ctx/internal/io"
 )
 
 // PythonEcosystem is the ecosystem label for Python projects.
@@ -81,7 +82,7 @@ func BuildRequirementsGraph() (map[string][]string, error) {
 //   - []string: Package names
 //   - error: Non-nil if file cannot be read
 func ParseRequirementsTxt(path string) ([]string, error) {
-	f, openErr := os.Open(path) //nolint:gosec // G304: path is a known manifest filename
+	f, openErr := io.SafeOpenUserFile(path)
 	if openErr != nil {
 		return nil, openErr
 	}

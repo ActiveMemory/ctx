@@ -20,6 +20,7 @@ import (
 	"github.com/ActiveMemory/ctx/internal/config/dir"
 	"github.com/ActiveMemory/ctx/internal/config/event"
 	"github.com/ActiveMemory/ctx/internal/config/fs"
+	"github.com/ActiveMemory/ctx/internal/io"
 	"github.com/ActiveMemory/ctx/internal/notify"
 	"github.com/ActiveMemory/ctx/internal/rc"
 )
@@ -147,7 +148,7 @@ func Query(opts QueryOpts) ([]notify.Payload, error) {
 // readLogFile reads and parses all events from a JSONL file.
 // Returns empty slice if the file does not exist.
 func readLogFile(path string) ([]notify.Payload, error) {
-	f, openErr := os.Open(path) //nolint:gosec // project-local state path
+	f, openErr := io.SafeOpenUserFile(path)
 	if openErr != nil {
 		if os.IsNotExist(openErr) {
 			return nil, nil

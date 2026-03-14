@@ -11,13 +11,13 @@ import (
 
 	"github.com/ActiveMemory/ctx/internal/config/entry"
 	memory2 "github.com/ActiveMemory/ctx/internal/config/memory"
+	"github.com/ActiveMemory/ctx/internal/io"
 	"github.com/spf13/cobra"
 
 	"github.com/ActiveMemory/ctx/internal/cli/memory/core"
 	ctxerr "github.com/ActiveMemory/ctx/internal/err"
 	"github.com/ActiveMemory/ctx/internal/memory"
 	"github.com/ActiveMemory/ctx/internal/rc"
-	"github.com/ActiveMemory/ctx/internal/validation"
 	"github.com/ActiveMemory/ctx/internal/write"
 )
 
@@ -41,7 +41,7 @@ func Run(cmd *cobra.Command, dryRun bool) error {
 		return ctxerr.MemoryNotFound()
 	}
 
-	sourceData, readErr := validation.SafeReadFile(
+	sourceData, readErr := io.SafeReadFile(
 		filepath.Dir(sourcePath), filepath.Base(sourcePath),
 	)
 	if readErr != nil {

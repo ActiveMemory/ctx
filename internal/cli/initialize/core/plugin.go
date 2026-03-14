@@ -14,6 +14,7 @@ import (
 
 	"github.com/ActiveMemory/ctx/internal/config/claude"
 	"github.com/ActiveMemory/ctx/internal/config/fs"
+	"github.com/ActiveMemory/ctx/internal/io"
 	"github.com/ActiveMemory/ctx/internal/write/add"
 	"github.com/spf13/cobra"
 
@@ -41,7 +42,7 @@ func EnablePluginGlobally(cmd *cobra.Command) error {
 	}
 	claudeDir := filepath.Join(homeDir, ".claude")
 	installedPath := filepath.Join(claudeDir, claude.InstalledPlugins)
-	installedData, readErr := os.ReadFile(installedPath) //nolint:gosec // G304: path from os.UserHomeDir
+	installedData, readErr := io.SafeReadUserFile(installedPath)
 	if readErr != nil {
 		write.InitPluginSkipped(cmd)
 		return nil
@@ -56,7 +57,7 @@ func EnablePluginGlobally(cmd *cobra.Command) error {
 	}
 	settingsPath := filepath.Join(claudeDir, claude.GlobalSettings)
 	var settings globalSettings
-	existingData, readErr := os.ReadFile(settingsPath) //nolint:gosec // G304: path from os.UserHomeDir
+	existingData, readErr := io.SafeReadUserFile(settingsPath)
 	if readErr != nil && !os.IsNotExist(readErr) {
 		return add.ErrFileRead(settingsPath, readErr)
 	}
@@ -112,7 +113,7 @@ func PluginInstalled() bool {
 		return false
 	}
 	installedPath := filepath.Join(homeDir, ".claude", claude.InstalledPlugins)
-	data, readErr := os.ReadFile(installedPath) //nolint:gosec // G304: path from os.UserHomeDir
+	data, readErr := io.SafeReadUserFile(installedPath)
 	if readErr != nil {
 		return false
 	}
@@ -132,7 +133,7 @@ func PluginEnabledGlobally() bool {
 		return false
 	}
 	settingsPath := filepath.Join(homeDir, ".claude", claude.GlobalSettings)
-	data, readErr := os.ReadFile(settingsPath) //nolint:gosec // G304: path from os.UserHomeDir
+	data, readErr := io.SafeReadUserFile(settingsPath)
 	if readErr != nil {
 		return false
 	}

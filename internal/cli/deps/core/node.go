@@ -11,6 +11,8 @@ import (
 	"os"
 	"path/filepath"
 	"sort"
+
+	"github.com/ActiveMemory/ctx/internal/io"
 )
 
 // NodeBuilder implements GraphBuilder for Node.js projects.
@@ -82,7 +84,7 @@ func (w *Workspaces) UnmarshalJSON(data []byte) error {
 //   - PackageJSON: Parsed package data
 //   - error: Non-nil if read or parse fails
 func ReadPackageJSON(path string) (PackageJSON, error) {
-	data, readErr := os.ReadFile(path) //nolint:gosec // G304: path is constructed from workspace glob matches
+	data, readErr := io.SafeReadUserFile(path)
 	if readErr != nil {
 		return PackageJSON{}, readErr
 	}

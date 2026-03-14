@@ -15,6 +15,7 @@ import (
 
 	"github.com/ActiveMemory/ctx/internal/config/archive"
 	"github.com/ActiveMemory/ctx/internal/config/fs"
+	"github.com/ActiveMemory/ctx/internal/io"
 )
 
 // SMBConfig holds parsed SMB share connection details.
@@ -102,7 +103,7 @@ func CopyToSMB(cfg *SMBConfig, localPath string) error {
 		return fmt.Errorf("create destination dir: %w", mkdirErr)
 	}
 
-	data, readErr := os.ReadFile(localPath) //nolint:gosec // path from our own archive
+	data, readErr := io.SafeReadUserFile(localPath)
 	if readErr != nil {
 		return fmt.Errorf("read archive: %w", readErr)
 	}

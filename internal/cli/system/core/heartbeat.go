@@ -10,6 +10,8 @@ import (
 	"os"
 	"strconv"
 	"strings"
+
+	"github.com/ActiveMemory/ctx/internal/io"
 )
 
 // ReadMtime reads a stored mtime value from a file. Returns 0 if the
@@ -21,7 +23,7 @@ import (
 // Returns:
 //   - int64: the stored mtime value, or 0 on error
 func ReadMtime(path string) int64 {
-	data, readErr := os.ReadFile(path) //nolint:gosec // temp file path
+	data, readErr := io.SafeReadUserFile(path)
 	if readErr != nil {
 		return 0
 	}

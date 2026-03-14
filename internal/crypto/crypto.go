@@ -21,6 +21,7 @@ import (
 	"github.com/ActiveMemory/ctx/internal/config/crypto"
 	"github.com/ActiveMemory/ctx/internal/config/fs"
 	ctxerr "github.com/ActiveMemory/ctx/internal/err"
+	io2 "github.com/ActiveMemory/ctx/internal/io"
 )
 
 // GenerateKey returns a new 256-bit random key.
@@ -114,7 +115,7 @@ func Decrypt(key, ciphertext []byte) ([]byte, error) {
 //   - []byte: The 32-byte key
 //   - error: Non-nil if the file cannot be read or is not exactly 32 bytes
 func LoadKey(path string) ([]byte, error) {
-	key, err := os.ReadFile(path) //nolint:gosec // path is controlled by the caller (config constants)
+	key, err := io2.SafeReadUserFile(path)
 	if err != nil {
 		return nil, ctxerr.CryptoReadKey(err)
 	}

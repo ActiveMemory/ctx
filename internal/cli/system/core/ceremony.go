@@ -15,6 +15,7 @@ import (
 	"github.com/ActiveMemory/ctx/internal/config/ceremony"
 	"github.com/ActiveMemory/ctx/internal/config/file"
 	"github.com/ActiveMemory/ctx/internal/config/hook"
+	"github.com/ActiveMemory/ctx/internal/io"
 	"github.com/spf13/cobra"
 
 	"github.com/ActiveMemory/ctx/internal/assets"
@@ -68,7 +69,7 @@ func RecentJournalFiles(dir string, n int) []string {
 //   - wrapup: true if any file contains "ctx-wrap-up"
 func ScanJournalsForCeremonies(files []string) (remember, wrapup bool) {
 	for _, path := range files {
-		data, readErr := os.ReadFile(path) //nolint:gosec // journal file path
+		data, readErr := io.SafeReadUserFile(path)
 		if readErr != nil {
 			continue
 		}

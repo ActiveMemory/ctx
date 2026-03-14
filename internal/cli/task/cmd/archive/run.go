@@ -13,6 +13,7 @@ import (
 	"github.com/ActiveMemory/ctx/internal/config/archive"
 	"github.com/ActiveMemory/ctx/internal/config/fs"
 	"github.com/ActiveMemory/ctx/internal/config/token"
+	"github.com/ActiveMemory/ctx/internal/io"
 	"github.com/spf13/cobra"
 
 	"github.com/ActiveMemory/ctx/internal/assets"
@@ -44,7 +45,7 @@ func runArchive(cmd *cobra.Command, dryRun bool) error {
 	}
 
 	// Read TASKS.md
-	content, readErr := os.ReadFile(tasksPath) //nolint:gosec // project-local context path
+	content, readErr := io.SafeReadUserFile(tasksPath)
 	if readErr != nil {
 		return ctxerr.TaskFileRead(readErr)
 	}

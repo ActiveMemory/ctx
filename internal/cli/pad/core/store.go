@@ -19,8 +19,8 @@ import (
 	"github.com/ActiveMemory/ctx/internal/config/token"
 	"github.com/ActiveMemory/ctx/internal/crypto"
 	ctxerr "github.com/ActiveMemory/ctx/internal/err"
+	"github.com/ActiveMemory/ctx/internal/io"
 	"github.com/ActiveMemory/ctx/internal/rc"
-	"github.com/ActiveMemory/ctx/internal/validation"
 )
 
 // ScratchpadPath returns the full path to the scratchpad file.
@@ -129,7 +129,7 @@ func ReadEntries() ([]string, error) {
 	dir := filepath.Dir(path)
 	name := filepath.Base(path)
 
-	data, err := validation.SafeReadFile(dir, name)
+	data, err := io.SafeReadFile(dir, name)
 	if err != nil {
 		if errors.Is(err, os.ErrNotExist) {
 			return nil, nil

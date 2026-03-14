@@ -19,6 +19,7 @@ import (
 	"github.com/ActiveMemory/ctx/internal/config/event"
 	"github.com/ActiveMemory/ctx/internal/config/session"
 	ctxcontext "github.com/ActiveMemory/ctx/internal/context"
+	"github.com/ActiveMemory/ctx/internal/io"
 	"github.com/ActiveMemory/ctx/internal/rc"
 )
 
@@ -43,7 +44,7 @@ func StateDir() string {
 // Returns:
 //   - int: Counter value, or 0 on error
 func ReadCounter(path string) int {
-	data, readErr := os.ReadFile(path) //nolint:gosec // state dir path
+	data, readErr := io.SafeReadUserFile(path)
 	if readErr != nil {
 		return 0
 	}
@@ -168,7 +169,7 @@ func PauseMarkerPath(sessionID string) string {
 //   - int: Turn count if paused, 0 if not paused
 func Paused(sessionID string) int {
 	path := PauseMarkerPath(sessionID)
-	data, readErr := os.ReadFile(path) //nolint:gosec // state dir path
+	data, readErr := io.SafeReadUserFile(path)
 	if readErr != nil {
 		return 0
 	}
