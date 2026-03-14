@@ -107,8 +107,8 @@ var toolDefs = []Tool{
 		Annotations: &ToolAnnotations{ReadOnlyHint: true},
 	},
 	{
-		Name:        "ctx_recall",
-		Description: "Query recent AI session history (summaries, decisions, topics)",
+		Name:        mcp.MCPToolRecall,
+		Description: assets.TextDesc(assets.TextDescKeyMCPToolRecallDesc),
 		InputSchema: InputSchema{
 			Type: "object",
 			Properties: map[string]Property{
@@ -125,10 +125,8 @@ var toolDefs = []Tool{
 		Annotations: &ToolAnnotations{ReadOnlyHint: true},
 	},
 	{
-		Name: "ctx_watch_update",
-		Description: "Apply a structured context-update to .context/ files " +
-			"(learning, decision, task, convention, complete). " +
-			"Human confirmation required before calling.",
+		Name:        mcp.MCPToolWatchUpdate,
+		Description: assets.TextDesc(assets.TextDescKeyMCPToolWatchUpdateDesc),
 		InputSchema: InputSchema{
 			Type: "object",
 			Properties: map[string]Property{
@@ -166,10 +164,8 @@ var toolDefs = []Tool{
 		Annotations: &ToolAnnotations{},
 	},
 	{
-		Name: "ctx_compact",
-		Description: "Move completed tasks to archive section. " +
-			"Removes empty sections from all context files. " +
-			"Human confirmation required — this reorganizes TASKS.md.",
+		Name:        mcp.MCPToolCompact,
+		Description: assets.TextDesc(assets.TextDescKeyMCPToolCompactDesc),
 		InputSchema: InputSchema{
 			Type: "object",
 			Properties: map[string]Property{
@@ -182,15 +178,14 @@ var toolDefs = []Tool{
 		Annotations: &ToolAnnotations{},
 	},
 	{
-		Name:        "ctx_next",
-		Description: "Suggest the next pending task based on priority and recency",
+		Name:        mcp.MCPToolNext,
+		Description: assets.TextDesc(assets.TextDescKeyMCPToolNextDesc),
 		InputSchema: InputSchema{Type: "object"},
 		Annotations: &ToolAnnotations{ReadOnlyHint: true},
 	},
 	{
-		Name: "ctx_check_task_completion",
-		Description: "Advisory check: after a write operation, detect if any " +
-			"pending tasks were silently completed. Returns nudge text if found.",
+		Name:        mcp.MCPToolCheckTaskCompletion,
+		Description: assets.TextDesc(assets.TextDescKeyMCPToolCheckTaskDesc),
 		InputSchema: InputSchema{
 			Type: "object",
 			Properties: map[string]Property{
@@ -203,10 +198,8 @@ var toolDefs = []Tool{
 		Annotations: &ToolAnnotations{ReadOnlyHint: true},
 	},
 	{
-		Name: "ctx_session_event",
-		Description: "Signal a session lifecycle event. " +
-			"Type 'end' triggers the session-end persistence ceremony — " +
-			"human confirmation required.",
+		Name:        mcp.MCPToolSessionEvent,
+		Description: assets.TextDesc(assets.TextDescKeyMCPToolSessionDesc),
 		InputSchema: InputSchema{
 			Type: "object",
 			Properties: map[string]Property{
@@ -224,8 +217,8 @@ var toolDefs = []Tool{
 		Annotations: &ToolAnnotations{},
 	},
 	{
-		Name:        "ctx_remind",
-		Description: "List pending session-scoped reminders",
+		Name:        mcp.MCPToolRemind,
+		Description: assets.TextDesc(assets.TextDescKeyMCPToolRemindDesc),
 		InputSchema: InputSchema{Type: "object"},
 		Annotations: &ToolAnnotations{ReadOnlyHint: true},
 	},
@@ -254,19 +247,19 @@ func (s *Server) handleToolsCall(req Request) *Response {
 		return s.toolComplete(req.ID, params.Arguments)
 	case mcp.MCPToolDrift:
 		return s.toolDrift(req.ID)
-	case "ctx_recall":
+	case mcp.MCPToolRecall:
 		return s.toolRecall(req.ID, params.Arguments)
-	case "ctx_watch_update":
+	case mcp.MCPToolWatchUpdate:
 		return s.toolWatchUpdate(req.ID, params.Arguments)
-	case "ctx_compact":
+	case mcp.MCPToolCompact:
 		return s.toolCompact(req.ID, params.Arguments)
-	case "ctx_next":
+	case mcp.MCPToolNext:
 		return s.toolNext(req.ID)
-	case "ctx_check_task_completion":
+	case mcp.MCPToolCheckTaskCompletion:
 		return s.toolCheckTaskCompletion(req.ID, params.Arguments)
-	case "ctx_session_event":
+	case mcp.MCPToolSessionEvent:
 		return s.toolSessionEvent(req.ID, params.Arguments)
-	case "ctx_remind":
+	case mcp.MCPToolRemind:
 		return s.toolRemind(req.ID)
 	default:
 		return s.error(req.ID, errCodeNotFound,

@@ -126,3 +126,201 @@ mcp.unknown-tool:
   short: 'unknown tool: %s'
 mcp.write-failed:
   short: 'write failed: %v'
+
+mcp.all-tasks-complete:
+  short: All tasks completed. No pending work.
+mcp.boundary-violation:
+  short: 'boundary violation: %v'
+mcp.check-task-format:
+  short: 'Did this complete task #%d: "%s"?'
+mcp.check-task-hint:
+  short: 'If yes, run: ctx complete %d'
+mcp.compact-clean:
+  short: Nothing to compact — context is already clean.
+mcp.compacted-format:
+  short: Compacted %d items. This reorganized TASKS.md.
+mcp.event-type-required:
+  short: type is required (start|end)
+mcp.find-sessions-failed:
+  short: 'failed to find sessions: %v'
+mcp.invalid-since-date:
+  short: 'invalid since date (use YYYY-MM-DD): %v'
+mcp.next-task-format:
+  short: 'Next task (#%d): %s'
+mcp.no-pending:
+  short: No pending updates.
+mcp.no-reminders:
+  short: No reminders.
+mcp.no-sessions:
+  short: No sessions found.
+mcp.no-tasks:
+  short: No TASKS.md found.
+mcp.pending-updates-format:
+  short: '%d pending updates queued.'
+mcp.prompt-add-decision-desc:
+  short: Record an architectural decision with context, rationale, and consequences
+mcp.prompt-add-decision-field-format:
+  short: '- **%s**: %s'
+mcp.prompt-add-decision-footer:
+  short: Call ctx_add with type="decision" and all fields above.
+mcp.prompt-add-decision-header:
+  short: 'Record this architectural decision using ctx_add:'
+mcp.prompt-add-decision-result-desc:
+  short: Record an architectural decision
+mcp.prompt-add-learning-desc:
+  short: Record a lesson learned with context, lesson, and application
+mcp.prompt-add-learning-field-format:
+  short: '- **%s**: %s'
+mcp.prompt-add-learning-footer:
+  short: Call ctx_add with type="learning" and all fields above.
+mcp.prompt-add-learning-header:
+  short: 'Record this learning using ctx_add:'
+mcp.prompt-add-learning-result-desc:
+  short: Record a lesson learned
+mcp.prompt-arg-decision-consequences:
+  short: Impact of the decision
+mcp.prompt-arg-decision-ctx:
+  short: Background context for the decision
+mcp.prompt-arg-decision-rationale:
+  short: Why this decision was made
+mcp.prompt-arg-decision-title:
+  short: Decision title
+mcp.prompt-arg-learning-app:
+  short: How to apply this lesson
+mcp.prompt-arg-learning-ctx:
+  short: Background context
+mcp.prompt-arg-learning-lesson:
+  short: What was learned
+mcp.prompt-arg-learning-title:
+  short: Learning title
+mcp.prompt-checkpoint-desc:
+  short: Summarize session progress and persist important context before ending
+mcp.prompt-checkpoint-header:
+  short: 'Session checkpoint. Before ending this session:'
+mcp.prompt-checkpoint-result-desc:
+  short: Summarize session progress and persist context
+mcp.prompt-checkpoint-stats-format:
+  short: '- Tool calls this session: %d
+
+    - Entries added: %d
+
+    - Pending updates: %d
+
+
+    '
+mcp.prompt-checkpoint-steps:
+  short: '1. Check ctx_status for current context state
+
+    2. Record any remaining decisions or learnings
+
+    3. Mark completed tasks with ctx_complete
+
+    4. Run ctx_compact if needed
+
+    5. Call ctx_session_event type="end" when done
+
+
+    '
+mcp.prompt-reflect-body:
+  short: 'Reflect on this session and identify:
+
+
+    1. **Decisions made** — Record each with ctx_add type="decision"
+
+    2. **Lessons learned** — Record each with ctx_add type="learning"
+
+    3. **Tasks completed** — Mark done with ctx_complete
+
+    4. **New tasks identified** — Add with ctx_add type="task"
+
+
+    Review what was discussed and changed. Don''t let important context slip away.
+
+
+    '
+mcp.prompt-reflect-desc:
+  short: Review the current session and capture outstanding learnings and decisions
+mcp.prompt-reflect-result-desc:
+  short: Review session for outstanding learnings and decisions
+mcp.prompt-section-format:
+  short: '## %s
+
+
+    %s
+
+
+    '
+mcp.prompt-session-start-desc:
+  short: 'Initialize a new session: loads full context and provides orientation'
+mcp.prompt-session-start-footer:
+  short: Remember this context throughout the session. Use ctx_add to record decisions
+    and learnings as you work. At session end, use ctx-checkpoint to capture outstanding
+    context.
+mcp.prompt-session-start-header:
+  short: You are starting a new session. Read the following context files carefully.
+mcp.prompt-session-start-result-desc:
+  short: Session initialization with full context load
+mcp.read-reminders-failed:
+  short: 'failed to read reminders: %v'
+mcp.reminders-format:
+  short: '%d reminder(s):'
+mcp.review-pending:
+  short: Review pending context updates before persisting.
+mcp.review-status:
+  short: 'Review with: ctx status'
+mcp.session-ending:
+  short: Session ending.
+mcp.session-started-caller-format:
+  short: 'Session started for %s. Context: %s'
+mcp.session-started-format:
+  short: 'Session started. Context: %s'
+mcp.session-stats-format:
+  short: 'Session stats: %d tool calls, %d entries added.'
+mcp.sessions-found-format:
+  short: 'Found %d session(s):'
+mcp.tool-check-task-desc:
+  short: 'Advisory check: after a write operation, detect if any pending tasks were
+    silently completed. Returns nudge text if found.'
+mcp.tool-compact-desc:
+  short: Move completed tasks to archive section. Removes empty sections from all
+    context files. Human confirmation required — this reorganizes TASKS.md.
+mcp.tool-next-desc:
+  short: Suggest the next pending task based on priority and recency
+mcp.tool-prop-archive:
+  short: Also write tasks to .context/archive/ (default false)
+mcp.tool-prop-caller:
+  short: Caller identifier (cursor|windsurf|vscode|claude-desktop)
+mcp.tool-prop-ctx-background:
+  short: Context background (required for decisions/learnings)
+mcp.tool-prop-entry-type:
+  short: 'Entry type: task|decision|learning|convention|complete'
+mcp.tool-prop-event-type:
+  short: 'Event type: start|end'
+mcp.tool-prop-limit:
+  short: Max sessions to return (default 5)
+mcp.tool-prop-main-content:
+  short: Main content
+mcp.tool-prop-recent-action:
+  short: Brief description of what was just done
+mcp.tool-prop-since:
+  short: 'ISO date filter: sessions after this date (YYYY-MM-DD)'
+mcp.tool-recall-desc:
+  short: Query recent AI session history (summaries, decisions, topics)
+mcp.tool-remind-desc:
+  short: List pending session-scoped reminders
+mcp.tool-session-desc:
+  short: Signal a session lifecycle event. Type 'end' triggers the session-end persistence
+    ceremony — human confirmation required.
+mcp.tool-watch-update-desc:
+  short: Apply a structured context-update to .context/ files (learning, decision,
+    task, convention, complete). Human confirmation required before calling.
+mcp.unknown-event-type:
+  short: 'unknown event type: %s (use start|end)'
+mcp.unknown-prompt:
+  short: 'unknown prompt: %s'
+mcp.uri-required:
+  short: uri is required
+mcp.watch-completed-format:
+  short: 'Completed: %s'
+mcp.wrote-format:
+  short: Wrote %s to .context/%s.

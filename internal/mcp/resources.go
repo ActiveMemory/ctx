@@ -292,8 +292,8 @@ func (p *resourcePoller) checkChanges() {
 			p.mtimes[fpath] = info.ModTime()
 			p.mu.Unlock()
 			p.notifyFunc(Notification{
-				JSONRPC: "2.0",
-				Method:  "notifications/resources/updated",
+				JSONRPC: mcp.MCPJSONRPCVersion,
+				Method:  mcp.MCPNotifyResourcesUpdated,
 				Params:  ResourceUpdatedParams{URI: uri},
 			})
 		} else {
