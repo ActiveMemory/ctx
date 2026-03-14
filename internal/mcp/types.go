@@ -6,7 +6,10 @@
 
 package mcp
 
-import "io"
+import (
+	"io"
+	"sync"
+)
 
 // Server is an MCP server that exposes ctx context over JSON-RPC 2.0.
 //
@@ -17,5 +20,8 @@ type Server struct {
 	version     string
 	tokenBudget int
 	out         io.Writer
+	outMu       sync.Mutex
 	in          io.Reader
+	session     *sessionState
+	poller      *resourcePoller
 }

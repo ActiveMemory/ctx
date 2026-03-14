@@ -61,10 +61,18 @@ func (s *Server) dispatch(req Request) *Response {
 		return s.handleResourcesList(req)
 	case mcp.MCPMethodResourcesRead:
 		return s.handleResourcesRead(req)
+	case mcp.MCPMethodResourcesSubscribe:
+		return s.handleResourcesSubscribe(req)
+	case mcp.MCPMethodResourcesUnsubscribe:
+		return s.handleResourcesUnsubscribe(req)
 	case mcp.MCPMethodToolsList:
 		return s.handleToolsList(req)
 	case mcp.MCPMethodToolsCall:
 		return s.handleToolsCall(req)
+	case mcp.MCPMethodPromptsList:
+		return s.handlePromptsList(req)
+	case mcp.MCPMethodPromptsGet:
+		return s.handlePromptsGet(req)
 	default:
 		return s.error(req.ID, errCodeNotFound,
 			fmt.Sprintf(
@@ -97,8 +105,9 @@ func (s *Server) handleInitialize(req Request) *Response {
 	result := InitializeResult{
 		ProtocolVersion: protocolVersion,
 		Capabilities: ServerCaps{
-			Resources: &ResourcesCap{},
+			Resources: &ResourcesCap{Subscribe: true},
 			Tools:     &ToolsCap{},
+			Prompts:   &PromptsCap{},
 		},
 		ServerInfo: AppInfo{
 			Name:    mcp.MCPServerName,
@@ -154,6 +163,8 @@ func (s *Server) error(id json.RawMessage, code int, msg string) *Response {
 func (s *Server) writeError(id json.RawMessage, code int, msg string) {
 	resp := s.error(id, code, msg)
 	if out, marshalErr := json.Marshal(resp); marshalErr == nil {
+		s.outMu.Lock()
 		_, _ = s.out.Write(append(out, token.NewlineLF[0]))
+		s.outMu.Unlock()
 	}
 }

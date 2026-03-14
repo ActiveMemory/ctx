@@ -26,13 +26,16 @@ import (
 // Returns:
 //   - *Server: a configured MCP server ready to serve
 func NewServer(contextDir, version string) *Server {
-	return &Server{
+	srv := &Server{
 		contextDir:  contextDir,
 		version:     version,
 		tokenBudget: rc.TokenBudget(),
 		out:         os.Stdout,
 		in:          os.Stdin,
+		session:     newSessionState(contextDir),
 	}
+	srv.poller = newResourcePoller(contextDir, srv.emitNotification)
+	return srv
 }
 
 // Serve starts the MCP server, reading from stdin and writing to stdout.
@@ -43,6 +46,8 @@ func NewServer(contextDir, version string) *Server {
 // Returns:
 //   - error: non-nil if an I/O error prevents continued operation
 func (s *Server) Serve() error {
+	defer s.poller.stop()
+
 	scanner := bufio.NewScanner(s.in)
 
 	scanner.Buffer(make([]byte, 0, mcp.MCPScanMaxSize), mcp.MCPScanMaxSize)
@@ -67,12 +72,25 @@ func (s *Server) Serve() error {
 			)
 			continue
 		}
-		if _, writeErr := s.out.Write(
-			append(out, token.NewlineLF[0]),
-		); writeErr != nil {
+		s.outMu.Lock()
+		_, writeErr := s.out.Write(append(out, token.NewlineLF[0]))
+		s.outMu.Unlock()
+		if writeErr != nil {
 			return writeErr
 		}
 	}
 
 	return scanner.Err()
+}
+
+// emitNotification writes a JSON-RPC notification to stdout.
+// Safe to call from any goroutine (e.g., the resource poller).
+func (s *Server) emitNotification(n Notification) {
+	out, err := json.Marshal(n)
+	if err != nil {
+		return
+	}
+	s.outMu.Lock()
+	_, _ = s.out.Write(append(out, token.NewlineLF[0]))
+	s.outMu.Unlock()
 }

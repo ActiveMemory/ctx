@@ -9,7 +9,11 @@ package mcp
 import (
 	"encoding/json"
 	"fmt"
+	"os"
+	"path/filepath"
 	"strings"
+	"sync"
+	"time"
 
 	"github.com/ActiveMemory/ctx/internal/assets"
 	ctxCfg "github.com/ActiveMemory/ctx/internal/config/ctx"
@@ -166,4 +170,163 @@ func (s *Server) readAgentPacket(
 			Text:     sb.String(),
 		}},
 	})
+}
+
+// defaultPollInterval is the default interval for resource change polling.
+const defaultPollInterval = 5 * time.Second
+
+// resourcePoller tracks subscribed resources and polls for file changes.
+type resourcePoller struct {
+	mu         sync.Mutex
+	subs       map[string]bool      // URI → subscribed
+	mtimes     map[string]time.Time // file path → last known mtime
+	contextDir string
+	pollStop   chan struct{}
+	notifyFunc func(Notification) // callback to emit notifications
+}
+
+// newResourcePoller creates a poller for the given context directory.
+func newResourcePoller(contextDir string, notify func(Notification)) *resourcePoller {
+	return &resourcePoller{
+		subs:       make(map[string]bool),
+		mtimes:     make(map[string]time.Time),
+		contextDir: contextDir,
+		notifyFunc: notify,
+	}
+}
+
+// subscribe adds a URI to the watch set and starts polling if needed.
+func (p *resourcePoller) subscribe(uri string) {
+	p.mu.Lock()
+	defer p.mu.Unlock()
+
+	p.subs[uri] = true
+
+	// Snapshot current mtime for the resource's file.
+	if fileName := p.uriToFile(uri); fileName != "" {
+		fpath := filepath.Join(p.contextDir, fileName)
+		if info, err := os.Stat(fpath); err == nil {
+			p.mtimes[fpath] = info.ModTime()
+		}
+	}
+
+	// Start poller if this is the first subscription.
+	if len(p.subs) == 1 && p.pollStop == nil {
+		p.pollStop = make(chan struct{})
+		go p.poll()
+	}
+}
+
+// unsubscribe removes a URI from the watch set and stops polling if empty.
+func (p *resourcePoller) unsubscribe(uri string) {
+	p.mu.Lock()
+	defer p.mu.Unlock()
+
+	delete(p.subs, uri)
+
+	if len(p.subs) == 0 && p.pollStop != nil {
+		close(p.pollStop)
+		p.pollStop = nil
+	}
+}
+
+// stop shuts down the poller goroutine.
+func (p *resourcePoller) stop() {
+	p.mu.Lock()
+	defer p.mu.Unlock()
+
+	if p.pollStop != nil {
+		close(p.pollStop)
+		p.pollStop = nil
+	}
+}
+
+// uriToFile maps a resource URI to its context file name.
+func (p *resourcePoller) uriToFile(uri string) string {
+	for _, rm := range resourceTable {
+		if uri == resourceURI(rm.name) {
+			return rm.file
+		}
+	}
+	return ""
+}
+
+// poll checks subscribed resources for mtime changes on a fixed interval.
+func (p *resourcePoller) poll() {
+	ticker := time.NewTicker(defaultPollInterval)
+	defer ticker.Stop()
+
+	for {
+		select {
+		case <-p.pollStop:
+			return
+		case <-ticker.C:
+			p.checkChanges()
+		}
+	}
+}
+
+// checkChanges compares current mtimes to snapshots and emits notifications.
+func (p *resourcePoller) checkChanges() {
+	p.mu.Lock()
+	uris := make([]string, 0, len(p.subs))
+	for uri := range p.subs {
+		uris = append(uris, uri)
+	}
+	p.mu.Unlock()
+
+	for _, uri := range uris {
+		fileName := p.uriToFile(uri)
+		if fileName == "" {
+			continue
+		}
+		fpath := filepath.Join(p.contextDir, fileName)
+		info, err := os.Stat(fpath)
+		if err != nil {
+			continue
+		}
+
+		p.mu.Lock()
+		prev, known := p.mtimes[fpath]
+		if known && info.ModTime().After(prev) {
+			p.mtimes[fpath] = info.ModTime()
+			p.mu.Unlock()
+			p.notifyFunc(Notification{
+				JSONRPC: "2.0",
+				Method:  "notifications/resources/updated",
+				Params:  ResourceUpdatedParams{URI: uri},
+			})
+		} else {
+			if !known {
+				p.mtimes[fpath] = info.ModTime()
+			}
+			p.mu.Unlock()
+		}
+	}
+}
+
+// handleResourcesSubscribe registers a resource for change notifications.
+func (s *Server) handleResourcesSubscribe(req Request) *Response {
+	var params SubscribeParams
+	if err := json.Unmarshal(req.Params, &params); err != nil {
+		return s.error(req.ID, errCodeInvalidArg, "invalid params")
+	}
+	if params.URI == "" {
+		return s.error(req.ID, errCodeInvalidArg, "uri is required")
+	}
+	s.poller.subscribe(params.URI)
+	return s.ok(req.ID, struct{}{})
+}
+
+// handleResourcesUnsubscribe removes a resource from change notifications.
+func (s *Server) handleResourcesUnsubscribe(req Request) *Response {
+	var params UnsubscribeParams
+	if err := json.Unmarshal(req.Params, &params); err != nil {
+		return s.error(req.ID, errCodeInvalidArg, "invalid params")
+	}
+	if params.URI == "" {
+		return s.error(req.ID, errCodeInvalidArg, "uri is required")
+	}
+	s.poller.unsubscribe(params.URI)
+	return s.ok(req.ID, struct{}{})
 }
