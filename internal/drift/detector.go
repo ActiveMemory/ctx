@@ -14,7 +14,11 @@ import (
 	"strings"
 	"time"
 
-	"github.com/ActiveMemory/ctx/internal/config"
+	"github.com/ActiveMemory/ctx/internal/assets"
+	ctxCfg "github.com/ActiveMemory/ctx/internal/config/ctx"
+	"github.com/ActiveMemory/ctx/internal/config/marker"
+	"github.com/ActiveMemory/ctx/internal/config/regex"
+	"github.com/ActiveMemory/ctx/internal/config/token"
 	"github.com/ActiveMemory/ctx/internal/context"
 	"github.com/ActiveMemory/ctx/internal/index"
 	"github.com/ActiveMemory/ctx/internal/rc"
@@ -22,7 +26,7 @@ import (
 
 const staleAgeDays = 30
 
-var staleAgeExclude = []string{config.FileConstitution}
+var staleAgeExclude = []string{ctxCfg.Constitution}
 
 // Status returns the overall status of the report.
 //
@@ -92,13 +96,13 @@ func checkPathReferences(ctx *context.Context, report *Report) {
 	foundDeadPaths := false
 
 	for _, f := range ctx.Files {
-		if f.Name != config.FileArchitecture && f.Name != config.FileConvention {
+		if f.Name != ctxCfg.Architecture && f.Name != ctxCfg.Convention {
 			continue
 		}
 
-		lines := strings.Split(string(f.Content), config.NewlineLF)
+		lines := strings.Split(string(f.Content), token.NewlineLF)
 		for lineNum, line := range lines {
-			matches := config.RegExPath.FindAllStringSubmatch(line, -1)
+			matches := regex.CodeFencePath.FindAllStringSubmatch(line, -1)
 			for _, m := range matches {
 				path := m[1]
 				// Skip URLs and common non-file patterns
@@ -123,7 +127,7 @@ func checkPathReferences(ctx *context.Context, report *Report) {
 						File:    f.Name,
 						Line:    lineNum + 1,
 						Type:    IssueDeadPath,
-						Message: "references path that does not exist",
+						Message: assets.TextDesc(assets.TextDescKeyDriftDeadPath),
 						Path:    path,
 					})
 					foundDeadPaths = true
@@ -148,14 +152,14 @@ func checkPathReferences(ctx *context.Context, report *Report) {
 func checkStaleness(ctx *context.Context, report *Report) {
 	staleness := false
 
-	if f := ctx.File(config.FileTask); f != nil {
+	if f := ctx.File(ctxCfg.Task); f != nil {
 		// Count completed tasks
-		completedCount := strings.Count(string(f.Content), "- [x]")
+		completedCount := strings.Count(string(f.Content), marker.PrefixTaskDone)
 		if completedCount > 10 {
 			report.Warnings = append(report.Warnings, Issue{
 				File:    f.Name,
 				Type:    IssueStaleness,
-				Message: "has many completed items (consider archiving)",
+				Message: assets.TextDesc(assets.TextDescKeyDriftStaleness),
 				Path:    "",
 			})
 			staleness = true
@@ -179,14 +183,7 @@ func checkConstitution(_ *context.Context, report *Report) {
 	// Basic heuristic checks for constitution violations
 	// Check for potential secrets in common config files
 
-	secretPatterns := []string{
-		".env",
-		"credentials",
-		"secret",
-		"api_key",
-		"apikey",
-		"password",
-	}
+	secretPatterns := token.SecretPatterns
 
 	// Look for common secret file patterns in the working directory
 	entries, readErr := os.ReadDir(".")
@@ -213,7 +210,7 @@ func checkConstitution(_ *context.Context, report *Report) {
 					report.Violations = append(report.Violations, Issue{
 						File:    entry.Name(),
 						Type:    IssueSecret,
-						Message: "may contain secrets (constitution violation)",
+						Message: assets.TextDesc(assets.TextDescKeyDriftSecret),
 						Rule:    "no_secrets",
 					})
 					foundViolation = true
@@ -242,12 +239,12 @@ func checkRequiredFiles(ctx *context.Context, report *Report) {
 		existingFiles[f.Name] = true
 	}
 
-	for _, name := range config.FilesRequired {
+	for _, name := range ctxCfg.FilesRequired {
 		if !existingFiles[name] {
 			report.Warnings = append(report.Warnings, Issue{
 				File:    name,
 				Type:    IssueMissing,
-				Message: "required context file is missing",
+				Message: assets.TextDesc(assets.TextDescKeyDriftMissingFile),
 			})
 			allPresent = false
 		}
@@ -287,7 +284,7 @@ func checkFileAge(ctx *context.Context, report *Report) {
 			report.Warnings = append(report.Warnings, Issue{
 				File:    f.Name,
 				Type:    IssueStaleAge,
-				Message: fmt.Sprintf("last modified %d days ago", days),
+				Message: fmt.Sprintf(assets.TextDesc(assets.TextDescKeyDriftStaleAge), days),
 			})
 			foundStale = true
 		}
@@ -311,8 +308,8 @@ func checkEntryCount(ctx *context.Context, report *Report) {
 		file      string
 		threshold int
 	}{
-		{config.FileLearning, rc.EntryCountLearnings()},
-		{config.FileDecision, rc.EntryCountDecisions()},
+		{ctxCfg.Learning, rc.EntryCountLearnings()},
+		{ctxCfg.Decision, rc.EntryCountDecisions()},
 	}
 
 	found := false
@@ -330,7 +327,7 @@ func checkEntryCount(ctx *context.Context, report *Report) {
 				File: f.Name,
 				Type: IssueEntryCount,
 				Message: fmt.Sprintf(
-					"has %d entries (recommended: ≤%d)",
+					assets.TextDesc(assets.TextDescKeyDriftEntryCount),
 					len(blocks), c.threshold,
 				),
 			})
@@ -357,7 +354,7 @@ var reInternalPkg = regexp.MustCompile("`(internal/[^`]+)`")
 //   - ctx: Loaded context containing files to scan
 //   - report: Report to append warnings to (modified in place)
 func checkMissingPackages(ctx *context.Context, report *Report) {
-	f := ctx.File(config.FileArchitecture)
+	f := ctx.File(ctxCfg.Architecture)
 	if f == nil {
 		return
 	}
@@ -386,7 +383,7 @@ func checkMissingPackages(ctx *context.Context, report *Report) {
 			report.Warnings = append(report.Warnings, Issue{
 				File:    f.Name,
 				Type:    IssueMissingPackage,
-				Message: fmt.Sprintf("package %s is not documented", pkg),
+				Message: fmt.Sprintf(assets.TextDesc(assets.TextDescKeyDriftMissingPackage), pkg),
 				Path:    pkg,
 			})
 			found = true
@@ -422,16 +419,7 @@ func normalizeInternalPkg(path string) string {
 //   - bool: True if content contains template markers
 func isTemplateFile(content []byte) bool {
 	s := string(content)
-	// Check for common template markers
-	templateMarkers := []string{
-		"YOUR_",
-		"<your",
-		"{{",
-		"REPLACE_",
-		"TODO",
-		"CHANGEME",
-		"FIXME",
-	}
+	templateMarkers := token.TemplateMarkers
 	for _, marker := range templateMarkers {
 		if strings.Contains(strings.ToUpper(s), marker) {
 			return true

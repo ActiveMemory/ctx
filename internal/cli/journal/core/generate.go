@@ -12,7 +12,12 @@ import (
 	"strings"
 	"unicode/utf8"
 
-	"github.com/ActiveMemory/ctx/internal/config"
+	"github.com/ActiveMemory/ctx/internal/assets"
+	"github.com/ActiveMemory/ctx/internal/config/dir"
+	"github.com/ActiveMemory/ctx/internal/config/file"
+	"github.com/ActiveMemory/ctx/internal/config/journal"
+	"github.com/ActiveMemory/ctx/internal/config/token"
+	"github.com/ActiveMemory/ctx/internal/config/zensical"
 )
 
 // GenerateSiteReadme creates a README for the journal-site directory.
@@ -23,7 +28,7 @@ import (
 // Returns:
 //   - string: Markdown README content with regeneration instructions
 func GenerateSiteReadme(journalDir string) string {
-	return fmt.Sprintf(config.TplJournalSiteReadme, journalDir)
+	return fmt.Sprintf(assets.TplJournalSiteReadme, journalDir)
 }
 
 // GenerateIndex creates the index.md content for the journal site.
@@ -35,7 +40,7 @@ func GenerateSiteReadme(journalDir string) string {
 //   - string: Markdown content for index.md
 func GenerateIndex(entries []JournalEntry) string {
 	var sb strings.Builder
-	nl := config.NewlineLF
+	nl := token.NewlineLF
 
 	// Separate regular sessions from suggestions and multi-part continuations
 	var regular, suggestions []JournalEntry
@@ -51,16 +56,16 @@ func GenerateIndex(entries []JournalEntry) string {
 		}
 	}
 
-	sb.WriteString(config.JournalHeadingSessionJournal + nl + nl)
-	sb.WriteString(config.TplJournalIndexIntro + nl + nl)
-	sb.WriteString(fmt.Sprintf(config.TplJournalIndexStats+
+	sb.WriteString(assets.JournalHeadingSessionJournal + nl + nl)
+	sb.WriteString(assets.TplJournalIndexIntro + nl + nl)
+	sb.WriteString(fmt.Sprintf(assets.TplJournalIndexStats+
 		nl+nl, len(regular), len(suggestions)))
 
 	// Group regular sessions by month
 	months, monthOrder := GroupByMonth(regular)
 
 	for _, month := range monthOrder {
-		sb.WriteString(fmt.Sprintf(config.TplJournalMonthHeading+nl+nl, month))
+		sb.WriteString(fmt.Sprintf(assets.TplJournalMonthHeading+nl+nl, month))
 
 		for _, e := range months[month] {
 			sb.WriteString(FormatIndexEntry(e, nl))
@@ -70,9 +75,9 @@ func GenerateIndex(entries []JournalEntry) string {
 
 	// Suggestions section
 	if len(suggestions) > 0 {
-		sb.WriteString(config.Separator + nl + nl)
-		sb.WriteString(config.JournalHeadingSuggestions + nl + nl)
-		sb.WriteString(config.TplJournalSuggestionsNote + nl + nl)
+		sb.WriteString(token.Separator + nl + nl)
+		sb.WriteString(assets.JournalHeadingSuggestions + nl + nl)
+		sb.WriteString(assets.TplJournalSuggestionsNote + nl + nl)
 
 		for _, e := range suggestions {
 			sb.WriteString(FormatIndexEntry(e, nl))
@@ -92,11 +97,11 @@ func GenerateIndex(entries []JournalEntry) string {
 // Returns:
 //   - string: Formatted line (e.g., "- 14:30 [title](link.md) (project) `1.2KB`")
 func FormatIndexEntry(e JournalEntry, nl string) string {
-	link := strings.TrimSuffix(e.Filename, config.ExtMarkdown)
+	link := strings.TrimSuffix(e.Filename, file.ExtMarkdown)
 
 	timeStr := ""
-	if e.Time != "" && len(e.Time) >= config.JournalTimePrefixLen {
-		timeStr = e.Time[:config.JournalTimePrefixLen] + " "
+	if e.Time != "" && len(e.Time) >= journal.TimePrefixLen {
+		timeStr = e.Time[:journal.TimePrefixLen] + " "
 	}
 
 	project := ""
@@ -107,10 +112,10 @@ func FormatIndexEntry(e JournalEntry, nl string) string {
 	size := FormatSize(e.Size)
 
 	line := fmt.Sprintf(
-		config.TplJournalIndexEntry+nl, timeStr, e.Title, link, project, size,
+		assets.TplJournalIndexEntry+nl, timeStr, e.Title, link, project, size,
 	)
 	if e.Summary != "" {
-		line += fmt.Sprintf(config.TplJournalIndexSummary+nl, e.Summary)
+		line += fmt.Sprintf(assets.TplJournalIndexSummary+nl, e.Summary)
 	}
 	return line
 }
@@ -125,17 +130,17 @@ func FormatIndexEntry(e JournalEntry, nl string) string {
 // Returns:
 //   - string: Content with the summary admonition injected
 func InjectSummary(content, summary string) string {
-	nl := config.NewlineLF
+	nl := token.NewlineLF
 	admonition := fmt.Sprintf(
-		config.TplJournalSummaryAdmonition+nl+nl, summary,
+		assets.TplJournalSummaryAdmonition+nl+nl, summary,
 	)
 
 	// Insert after frontmatter closing delimiter
-	fmOpen := len(config.Separator + nl)
-	fmClose := len(nl + config.Separator + nl)
-	if strings.HasPrefix(content, config.Separator+nl) {
+	fmOpen := len(token.Separator + nl)
+	fmClose := len(nl + token.Separator + nl)
+	if strings.HasPrefix(content, token.Separator+nl) {
 		if end := strings.Index(content[fmOpen:], nl+
-			config.Separator+nl); end >= 0 {
+			token.Separator+nl); end >= 0 {
 			insertAt := fmOpen + end + fmClose
 			// Skip past any existing blank lines + source link after frontmatter
 			rest := content[insertAt:]
@@ -158,22 +163,22 @@ func InjectSummary(content, summary string) string {
 // Returns:
 //   - string: Content with the source link injected
 func InjectSourceLink(content, sourcePath string) string {
-	nl := config.NewlineLF
+	nl := token.NewlineLF
 	absPath, pathErr := filepath.Abs(sourcePath)
 	if pathErr != nil {
 		absPath = sourcePath
 	}
 	relPath := filepath.Join(
-		config.DirContext, config.DirJournal, filepath.Base(absPath),
+		dir.Context, dir.Journal, filepath.Base(absPath),
 	)
-	link := fmt.Sprintf(config.TplJournalSourceLink+nl+nl,
+	link := fmt.Sprintf(assets.TplJournalSourceLink+nl+nl,
 		absPath, relPath, relPath)
 
-	fmOpen := len(config.Separator + nl)
-	fmClose := len(nl + config.Separator + nl)
-	if strings.HasPrefix(content, config.Separator+nl) {
+	fmOpen := len(token.Separator + nl)
+	fmClose := len(nl + token.Separator + nl)
+	if strings.HasPrefix(content, token.Separator+nl) {
 		if end := strings.Index(content[fmOpen:], nl+
-			config.Separator+nl); end >= 0 {
+			token.Separator+nl); end >= 0 {
 			insertAt := fmOpen + end + fmClose
 			return content[:insertAt] + nl + link + content[insertAt:]
 		}
@@ -198,30 +203,30 @@ func GenerateZensicalToml(
 	keyFiles []KeyFileData, sessionTypes []TypeData,
 ) string {
 	var sb strings.Builder
-	nl := config.NewlineLF
+	nl := token.NewlineLF
 
-	sb.WriteString(config.TplZensicalProject + nl)
+	sb.WriteString(assets.TplZensicalProject + nl)
 
 	// Build navigation
-	sb.WriteString(config.TomlNavOpen + nl)
-	sb.WriteString(fmt.Sprintf(config.TplJournalNavItem+nl,
-		config.JournalLabelHome, config.FilenameIndex))
+	sb.WriteString(zensical.TomlNavOpen + nl)
+	sb.WriteString(fmt.Sprintf(assets.TplJournalNavItem+nl,
+		assets.JournalLabelHome, file.Index))
 	if len(topics) > 0 {
-		sb.WriteString(fmt.Sprintf(config.TplJournalNavItem+nl,
-			config.JournalLabelTopics,
-			filepath.Join(config.JournalDirTopics, config.FilenameIndex)),
+		sb.WriteString(fmt.Sprintf(assets.TplJournalNavItem+nl,
+			assets.JournalLabelTopics,
+			filepath.Join(dir.JournTopics, file.Index)),
 		)
 	}
 	if len(keyFiles) > 0 {
-		sb.WriteString(fmt.Sprintf(config.TplJournalNavItem+nl,
-			config.JournalLabelFiles,
-			filepath.Join(config.JournalDirFiles, config.FilenameIndex)),
+		sb.WriteString(fmt.Sprintf(assets.TplJournalNavItem+nl,
+			assets.JournalLabelFiles,
+			filepath.Join(dir.JournalFiles, file.Index)),
 		)
 	}
 	if len(sessionTypes) > 0 {
-		sb.WriteString(fmt.Sprintf(config.TplJournalNavItem+nl,
-			config.JournalLabelTypes,
-			filepath.Join(config.JournalDirTypes, config.FilenameIndex)),
+		sb.WriteString(fmt.Sprintf(assets.TplJournalNavItem+nl,
+			assets.JournalLabelTypes,
+			filepath.Join(dir.JournalTypes, file.Index)),
 		)
 	}
 
@@ -239,30 +244,30 @@ func GenerateZensicalToml(
 
 	// Group recent entries (last N, excluding suggestions)
 	recent := regular
-	if len(recent) > config.JournalMaxRecentSessions {
-		recent = recent[:config.JournalMaxRecentSessions]
+	if len(recent) > journal.MaxRecentSessions {
+		recent = recent[:journal.MaxRecentSessions]
 	}
 
 	sb.WriteString(fmt.Sprintf(
-		config.TplJournalNavSection+nl, config.JournalHeadingRecentSessions),
+		assets.TplJournalNavSection+nl, assets.JournalHeadingRecentSessions),
 	)
 	for _, e := range recent {
 		title := e.Title
-		if utf8.RuneCountInString(title) > config.JournalMaxNavTitleLen {
+		if utf8.RuneCountInString(title) > journal.MaxNavTitleLen {
 			runes := []rune(title)
-			title = string(runes[:config.JournalMaxNavTitleLen]) + config.Ellipsis
+			title = string(runes[:journal.MaxNavTitleLen]) + token.Ellipsis
 		}
 		title = strings.ReplaceAll(title, `"`, `\"`)
 		sb.WriteString(fmt.Sprintf(
-			config.TplJournalNavSessionItem+nl, title, e.Filename),
+			assets.TplJournalNavSessionItem+nl, title, e.Filename),
 		)
 	}
-	sb.WriteString(config.TomlNavSectionClose + nl)
-	sb.WriteString(config.TomlNavClose + nl + nl)
+	sb.WriteString(zensical.TomlNavSectionClose + nl)
+	sb.WriteString(zensical.TomlNavClose + nl + nl)
 
-	sb.WriteString(config.TplZensicalExtraCSS + nl)
+	sb.WriteString(assets.TplZensicalExtraCSS + nl)
 
-	sb.WriteString(config.TplZensicalTheme)
+	sb.WriteString(assets.TplZensicalTheme)
 
 	return sb.String()
 }

@@ -15,6 +15,7 @@ import (
 	"testing"
 
 	"github.com/ActiveMemory/ctx/internal/cli/recall/core"
+	"github.com/ActiveMemory/ctx/internal/config/journal"
 	"github.com/ActiveMemory/ctx/internal/journal/state"
 )
 
@@ -400,7 +401,7 @@ func TestRunRecallExport_PreservesFrontmatter(t *testing.T) {
 	}
 }
 
-func TestRunRecallExport_ForceDiscardsFrontmatter(t *testing.T) {
+func TestRunRecallExport_KeepFrontmatterFalseDiscards(t *testing.T) {
 	tmpDir := t.TempDir()
 	t.Setenv("HOME", tmpDir)
 
@@ -436,8 +437,8 @@ func TestRunRecallExport_ForceDiscardsFrontmatter(t *testing.T) {
 		t.Fatal(writeErr)
 	}
 
-	// Re-export with --force — should discard enriched frontmatter
-	exportHelper(t, tmpDir, "--force", "--yes")
+	// Re-export with --keep-frontmatter=false — should discard enriched frontmatter
+	exportHelper(t, tmpDir, "--keep-frontmatter=false", "--yes")
 
 	data, err := os.ReadFile(filepath.Clean(path))
 	if err != nil {
@@ -446,10 +447,10 @@ func TestRunRecallExport_ForceDiscardsFrontmatter(t *testing.T) {
 	content := string(data)
 
 	if strings.Contains(content, "A curated summary") {
-		t.Error("--force should discard enriched frontmatter summary")
+		t.Error("--keep-frontmatter=false should discard enriched frontmatter summary")
 	}
 	if strings.Contains(content, "tags:") {
-		t.Error("--force should discard enriched frontmatter tags")
+		t.Error("--keep-frontmatter=false should discard enriched frontmatter tags")
 	}
 	// File should still have session content
 	if !strings.Contains(content, "session_id:") {
@@ -457,7 +458,7 @@ func TestRunRecallExport_ForceDiscardsFrontmatter(t *testing.T) {
 	}
 }
 
-func TestRunRecallExport_ForceResetsEnrichmentState(t *testing.T) {
+func TestRunRecallExport_KeepFrontmatterFalseResetsEnrichmentState(t *testing.T) {
 	tmpDir := t.TempDir()
 	t.Setenv("HOME", tmpDir)
 
@@ -490,24 +491,24 @@ func TestRunRecallExport_ForceResetsEnrichmentState(t *testing.T) {
 
 	// Verify it's marked enriched
 	jstate, _ = state.Load(journalDir)
-	if !jstate.IsEnriched(mdFile) {
-		t.Fatal("file should be marked enriched before --force re-export")
+	if !jstate.Enriched(mdFile) {
+		t.Fatal("file should be marked enriched before re-export")
 	}
 
-	// Re-export with --force
-	exportHelper(t, tmpDir, "--force", "--yes")
+	// Re-export with --keep-frontmatter=false
+	exportHelper(t, tmpDir, "--keep-frontmatter=false", "--yes")
 
 	// Load state again and verify enriched was cleared
 	jstate, err = state.Load(journalDir)
 	if err != nil {
-		t.Fatalf("load state after force: %v", err)
+		t.Fatalf("load state after re-export: %v", err)
 	}
-	if jstate.IsEnriched(mdFile) {
-		t.Error("--force re-export should clear enriched state")
+	if jstate.Enriched(mdFile) {
+		t.Error("re-export with --keep-frontmatter=false should clear enriched state")
 	}
 	// Exported state should still be set
-	if !jstate.IsExported(mdFile) {
-		t.Error("file should still be marked exported after --force re-export")
+	if !jstate.Exported(mdFile) {
+		t.Error("file should still be marked exported after re-export")
 	}
 }
 
@@ -890,7 +891,7 @@ func TestRunRecallExport_LockedSkippedByDefault(t *testing.T) {
 	if loadErr != nil {
 		t.Fatalf("load state: %v", loadErr)
 	}
-	jstate.Mark(mdFile, "locked")
+	jstate.Mark(mdFile, journal.StageLocked)
 	if saveErr := jstate.Save(journalDir); saveErr != nil {
 		t.Fatalf("save state: %v", saveErr)
 	}
@@ -913,7 +914,7 @@ func TestRunRecallExport_LockedSkippedByDefault(t *testing.T) {
 	}
 }
 
-func TestRunRecallExport_LockedSkippedByForce(t *testing.T) {
+func TestRunRecallExport_LockedSkippedByKeepFrontmatterFalse(t *testing.T) {
 	tmpDir := t.TempDir()
 	t.Setenv("HOME", tmpDir)
 
@@ -940,26 +941,26 @@ func TestRunRecallExport_LockedSkippedByForce(t *testing.T) {
 	if loadErr != nil {
 		t.Fatalf("load state: %v", loadErr)
 	}
-	jstate.Mark(mdFile, "locked")
+	jstate.Mark(mdFile, journal.StageLocked)
 	if saveErr := jstate.Save(journalDir); saveErr != nil {
 		t.Fatalf("save state: %v", saveErr)
 	}
 
 	// Overwrite.
-	custom := "locked content — force cannot override\n"
+	custom := "locked content — cannot override\n"
 	if writeErr := os.WriteFile(path, []byte(custom), 0600); writeErr != nil {
 		t.Fatal(writeErr)
 	}
 
-	// Even --force --yes should not overwrite a locked file.
-	exportHelper(t, tmpDir, "--force", "--yes")
+	// Even --keep-frontmatter=false --yes should not overwrite a locked file.
+	exportHelper(t, tmpDir, "--keep-frontmatter=false", "--yes")
 
 	data, readErr := os.ReadFile(filepath.Clean(path))
 	if readErr != nil {
 		t.Fatalf("read: %v", readErr)
 	}
 	if string(data) != custom {
-		t.Error("locked file should not be overwritten even with --force")
+		t.Error("locked file should not be overwritten even with --keep-frontmatter=false")
 	}
 }
 
@@ -1102,7 +1103,7 @@ func TestRunRecallExport_DryRunShowsLocked(t *testing.T) {
 	if loadErr != nil {
 		t.Fatalf("load state: %v", loadErr)
 	}
-	jstate.Mark(mdFile, "locked")
+	jstate.Mark(mdFile, journal.StageLocked)
 	if saveErr := jstate.Save(journalDir); saveErr != nil {
 		t.Fatalf("save state: %v", saveErr)
 	}
@@ -1141,16 +1142,6 @@ func TestDiscardFrontmatter(t *testing.T) {
 		{
 			name: "keep-frontmatter=false",
 			opts: core.ExportOpts{KeepFrontmatter: false},
-			want: true,
-		},
-		{
-			name: "force overrides keep-frontmatter",
-			opts: core.ExportOpts{KeepFrontmatter: true, Force: true},
-			want: true,
-		},
-		{
-			name: "both false and force",
-			opts: core.ExportOpts{KeepFrontmatter: false, Force: true},
 			want: true,
 		},
 	}

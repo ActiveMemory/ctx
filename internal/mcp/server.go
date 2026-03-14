@@ -10,36 +10,26 @@ import (
 	"bufio"
 	"encoding/json"
 	"fmt"
-	"io"
 	"os"
 
-	"github.com/ActiveMemory/ctx/internal/config"
+	"github.com/ActiveMemory/ctx/internal/assets"
+	"github.com/ActiveMemory/ctx/internal/config/mcp"
+	"github.com/ActiveMemory/ctx/internal/config/token"
 	"github.com/ActiveMemory/ctx/internal/rc"
 )
-
-// Server is an MCP server that exposes ctx context over JSON-RPC 2.0.
-//
-// It reads JSON-RPC requests from stdin and writes responses to stdout,
-// following the Model Context Protocol specification.
-type Server struct {
-	contextDir  string
-	version     string
-	tokenBudget int
-	out         io.Writer
-	in          io.Reader
-}
 
 // NewServer creates a new MCP server for the given context directory.
 //
 // Parameters:
 //   - contextDir: Path to the .context/ directory
+//   - version: Binary version string for the server info response
 //
 // Returns:
 //   - *Server: A configured MCP server ready to serve
-func NewServer(contextDir string) *Server {
+func NewServer(contextDir, version string) *Server {
 	return &Server{
 		contextDir:  contextDir,
-		version:     config.BinaryVersion,
+		version:     version,
 		tokenBudget: rc.TokenBudget(),
 		out:         os.Stdout,
 		in:          os.Stdin,
@@ -56,9 +46,7 @@ func NewServer(contextDir string) *Server {
 func (s *Server) Serve() error {
 	scanner := bufio.NewScanner(s.in)
 
-	// Increase scanner buffer for large messages (1MB).
-	const maxScanSize = 1 << 20
-	scanner.Buffer(make([]byte, 0, maxScanSize), maxScanSize)
+	scanner.Buffer(make([]byte, 0, mcp.MCPScanMaxSize), mcp.MCPScanMaxSize)
 
 	for scanner.Scan() {
 		line := scanner.Bytes()
@@ -75,10 +63,10 @@ func (s *Server) Serve() error {
 		out, err := json.Marshal(resp)
 		if err != nil {
 			// Marshal failure is an internal error; try to report it.
-			s.writeError(nil, errCodeInternal, "failed to marshal response")
+			s.writeError(nil, errCodeInternal, assets.TextDesc(assets.TextDescKeyMCPFailedMarshal))
 			continue
 		}
-		if _, writeErr := s.out.Write(append(out, '\n')); writeErr != nil {
+		if _, writeErr := s.out.Write(append(out, token.NewlineLF[0])); writeErr != nil {
 			return writeErr
 		}
 	}
@@ -91,8 +79,8 @@ func (s *Server) handleMessage(data []byte) *Response {
 	var req Request
 	if err := json.Unmarshal(data, &req); err != nil {
 		return &Response{
-			JSONRPC: "2.0",
-			Error:   &RPCError{Code: errCodeParse, Message: "parse error"},
+			JSONRPC: mcp.MCPJSONRPCVersion,
+			Error:   &RPCError{Code: errCodeParse, Message: assets.TextDesc(assets.TextDescKeyMCPParseError)},
 		}
 	}
 
@@ -108,21 +96,21 @@ func (s *Server) handleMessage(data []byte) *Response {
 // dispatch routes a request to the correct handler based on method name.
 func (s *Server) dispatch(req Request) *Response {
 	switch req.Method {
-	case "initialize":
+	case mcp.MCPMethodInitialize:
 		return s.handleInitialize(req)
-	case "ping":
+	case mcp.MCPMethodPing:
 		return s.ok(req.ID, struct{}{})
-	case "resources/list":
+	case mcp.MCPMethodResourcesList:
 		return s.handleResourcesList(req)
-	case "resources/read":
+	case mcp.MCPMethodResourcesRead:
 		return s.handleResourcesRead(req)
-	case "tools/list":
+	case mcp.MCPMethodToolsList:
 		return s.handleToolsList(req)
-	case "tools/call":
+	case mcp.MCPMethodToolsCall:
 		return s.handleToolsCall(req)
 	default:
 		return s.error(req.ID, errCodeNotFound,
-			fmt.Sprintf("method not found: %s", req.Method))
+			fmt.Sprintf(assets.TextDesc(assets.TextDescKeyMCPMethodNotFound), req.Method))
 	}
 }
 
@@ -143,7 +131,7 @@ func (s *Server) handleInitialize(req Request) *Response {
 			Tools:     &ToolsCap{},
 		},
 		ServerInfo: AppInfo{
-			Name:    "ctx",
+			Name:    mcp.MCPServerName,
 			Version: s.version,
 		},
 	}
@@ -153,7 +141,7 @@ func (s *Server) handleInitialize(req Request) *Response {
 // ok builds a successful JSON-RPC response.
 func (s *Server) ok(id json.RawMessage, result interface{}) *Response {
 	return &Response{
-		JSONRPC: "2.0",
+		JSONRPC: mcp.MCPJSONRPCVersion,
 		ID:      id,
 		Result:  result,
 	}
@@ -162,7 +150,7 @@ func (s *Server) ok(id json.RawMessage, result interface{}) *Response {
 // error builds a JSON-RPC error response.
 func (s *Server) error(id json.RawMessage, code int, msg string) *Response {
 	return &Response{
-		JSONRPC: "2.0",
+		JSONRPC: mcp.MCPJSONRPCVersion,
 		ID:      id,
 		Error:   &RPCError{Code: code, Message: msg},
 	}
@@ -175,6 +163,6 @@ func (s *Server) writeError(id json.RawMessage, code int, msg string) {
 	if out, err := json.Marshal(resp); err == nil {
 		// Best-effort: writeError is a last-resort fallback; nowhere
 		// to report a write failure from here.
-		_, _ = s.out.Write(append(out, '\n'))
+		_, _ = s.out.Write(append(out, token.NewlineLF[0]))
 	}
 }

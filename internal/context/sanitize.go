@@ -6,47 +6,51 @@
 
 package context
 
-import "github.com/ActiveMemory/ctx/internal/config"
+import (
+	"github.com/ActiveMemory/ctx/internal/config/content"
+	"github.com/ActiveMemory/ctx/internal/config/marker"
+	"github.com/ActiveMemory/ctx/internal/config/token"
+)
 
 // effectivelyEmpty checks if a file only contains headers and whitespace.
 //
 // Parameters:
-//   - content: File content to check
+//   - c: File content to check
 //
 // Returns:
 //   - bool: True if the file has no meaningful content (only headers,
 //     comments, whitespace)
-func effectivelyEmpty(content []byte) bool {
+func effectivelyEmpty(c []byte) bool {
 	// Simple heuristic: if content is shorter than the minimum
 	// meaningful length, treat as empty
-	if len(content) < config.MinContentLen {
+	if len(c) < content.MinLen {
 		return true
 	}
 
 	// Count non-header, non-whitespace content
 	lines := 0
 	contentLines := 0
-	openLen := len(config.CommentOpen)
-	closeLen := len(config.CommentClose)
-	for _, line := range splitLines(content) {
+	openLen := len(marker.CommentOpen)
+	closeLen := len(marker.CommentClose)
+	for _, line := range splitLines(c) {
 		lines++
 		trimmed := trimSpace(line)
 		if len(trimmed) == 0 {
 			continue
 		}
-		if trimmed[0] == '#' {
+		if trimmed[0] == token.PrefixHeading[0] {
 			continue
 		}
-		if len(trimmed) > 0 && trimmed[0] == '-' && len(trimmed) < 5 {
+		if len(trimmed) > 0 && trimmed[0] == token.Dash[0] && len(trimmed) < token.MaxSeparatorLen {
 			continue
 		}
 		// Check for HTML comment markers
 		if len(trimmed) >= openLen &&
-			string(trimmed[:openLen]) == config.CommentOpen {
+			string(trimmed[:openLen]) == marker.CommentOpen {
 			continue
 		}
 		if len(trimmed) >= closeLen &&
-			string(trimmed[len(trimmed)-closeLen:]) == config.CommentClose {
+			string(trimmed[len(trimmed)-closeLen:]) == marker.CommentClose {
 			continue
 		}
 		contentLines++

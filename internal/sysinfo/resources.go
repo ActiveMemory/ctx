@@ -80,11 +80,11 @@ func Collect(path string) Snapshot {
 // MaxSeverity returns the highest severity among the given alerts.
 // Returns SeverityOK when the slice is empty.
 func MaxSeverity(alerts []ResourceAlert) Severity {
-	max := SeverityOK
+	highest := SeverityOK
 	for _, a := range alerts {
-		if a.Severity > max {
-			max = a.Severity
+		if a.Severity > highest {
+			highest = a.Severity
 		}
 	}
-	return max
+	return highest
 }

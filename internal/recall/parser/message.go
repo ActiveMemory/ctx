@@ -6,48 +6,17 @@
 
 package parser
 
-import "time"
-
-// Message represents a single message in a session.
-//
-// This is tool-agnostic - all parsers normalize to this format.
-//
-// Fields:
-//
-// Identity:
-//   - ID: Unique message identifier
-//   - Timestamp: When the message was created
-//   - Role: Message role ("user" or "assistant")
-//
-// Content:
-//   - Text: Main text content
-//   - Thinking: Reasoning content (if available)
-//   - ToolUses: Tool invocations in this message
-//   - ToolResults: Results from tool invocations
-//
-// Token Usage:
-//   - TokensIn: Input tokens for this message (if available)
-//   - TokensOut: Output tokens for this message (if available)
-type Message struct {
-	ID        string    `json:"id"`
-	Timestamp time.Time `json:"timestamp"`
-	Role      string    `json:"role"`
-
-	Text        string       `json:"text,omitempty"`
-	Thinking    string       `json:"thinking,omitempty"`
-	ToolUses    []ToolUse    `json:"tool_uses,omitempty"`
-	ToolResults []ToolResult `json:"tool_results,omitempty"`
-
-	TokensIn  int `json:"tokens_in,omitempty"`
-	TokensOut int `json:"tokens_out,omitempty"`
-}
+import (
+	"github.com/ActiveMemory/ctx/internal/config/claude"
+	"github.com/ActiveMemory/ctx/internal/config/token"
+)
 
 // BelongsToUser returns true if this is a user message.
 //
 // Returns:
 //   - bool: True if Role is "user"
 func (m *Message) BelongsToUser() bool {
-	return m.Role == "user"
+	return m.Role == claude.RoleUser
 }
 
 // BelongsToAssistant returns true if this is an assistant message.
@@ -55,7 +24,7 @@ func (m *Message) BelongsToUser() bool {
 // Returns:
 //   - bool: True if Role is "assistant"
 func (m *Message) BelongsToAssistant() bool {
-	return m.Role == "assistant"
+	return m.Role == claude.RoleAssistant
 }
 
 // UsesTools returns true if this message contains tool invocations.
@@ -77,5 +46,5 @@ func (m *Message) Preview(maxLen int) string {
 	if len(m.Text) <= maxLen {
 		return m.Text
 	}
-	return m.Text[:maxLen] + "..."
+	return m.Text[:maxLen] + token.Ellipsis
 }

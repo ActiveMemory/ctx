@@ -12,14 +12,16 @@ import (
 	"strings"
 	"testing"
 
+	"github.com/ActiveMemory/ctx/internal/assets"
 	"github.com/ActiveMemory/ctx/internal/cli/add/cmd/root"
+	"github.com/ActiveMemory/ctx/internal/config/marker"
+	"github.com/ActiveMemory/ctx/internal/write/add"
 	"github.com/spf13/cobra"
 
 	"github.com/ActiveMemory/ctx/internal/cli/add/core"
 	"github.com/ActiveMemory/ctx/internal/cli/initialize"
-	"github.com/ActiveMemory/ctx/internal/config"
+	entrytype "github.com/ActiveMemory/ctx/internal/config/entry"
 	"github.com/ActiveMemory/ctx/internal/entry"
-	"github.com/ActiveMemory/ctx/internal/write"
 )
 
 // ---------------------------------------------------------------------------
@@ -27,16 +29,16 @@ import (
 // ---------------------------------------------------------------------------
 
 func TestErrNoContent(t *testing.T) {
-	err := write.ErrNoContent()
+	err := add.ErrNoContent()
 	if err == nil || err.Error() != "no content provided" {
 		t.Errorf("ErrNoContent() = %v, want 'no content provided'", err)
 	}
 }
 
 func TestErrNoContentProvided(t *testing.T) {
-	for _, fType := range []string{"decision", "task", "learning", "convention", "unknown"} {
+	for _, fType := range []string{entrytype.Decision, entrytype.Task, entrytype.Learning, entrytype.Convention, entrytype.Unknown} {
 		t.Run(fType, func(t *testing.T) {
-			err := write.ErrNoContentProvided(fType, core.ExamplesForType(fType))
+			err := add.ErrNoContentProvided(fType, core.ExamplesForType(fType))
 			if err == nil {
 				t.Fatal("expected non-nil error")
 			}
@@ -52,7 +54,7 @@ func TestErrNoContentProvided(t *testing.T) {
 }
 
 func TestErrFileRead(t *testing.T) {
-	err := write.ErrFileRead("/some/path", os.ErrNotExist)
+	err := add.ErrFileRead("/some/path", os.ErrNotExist)
 	if err == nil {
 		t.Fatal("expected non-nil error")
 	}
@@ -62,7 +64,7 @@ func TestErrFileRead(t *testing.T) {
 }
 
 func TestErrFileWrite(t *testing.T) {
-	err := write.ErrFileWriteAdd("/some/path", os.ErrPermission)
+	err := add.ErrFileWriteAdd("/some/path", os.ErrPermission)
 	if err == nil {
 		t.Fatal("expected non-nil error")
 	}
@@ -72,7 +74,7 @@ func TestErrFileWrite(t *testing.T) {
 }
 
 func TestErrStdinRead(t *testing.T) {
-	err := write.ErrStdinRead(os.ErrClosed)
+	err := add.ErrStdinRead(os.ErrClosed)
 	if err == nil {
 		t.Fatal("expected non-nil error")
 	}
@@ -82,7 +84,7 @@ func TestErrStdinRead(t *testing.T) {
 }
 
 func TestErrIndexUpdate(t *testing.T) {
-	err := write.ErrIndexUpdate("/some/file", os.ErrPermission)
+	err := add.ErrIndexUpdate("/some/file", os.ErrPermission)
 	if err == nil {
 		t.Fatal("expected non-nil error")
 	}
@@ -92,7 +94,7 @@ func TestErrIndexUpdate(t *testing.T) {
 }
 
 func TestErrUnknownType(t *testing.T) {
-	err := write.ErrUnknownType("foobar")
+	err := add.ErrUnknownType("foobar")
 	if err == nil {
 		t.Fatal("expected non-nil error")
 	}
@@ -106,7 +108,7 @@ func TestErrUnknownType(t *testing.T) {
 }
 
 func TestErrFileNotFound(t *testing.T) {
-	err := write.ErrFileNotFound("/missing/file")
+	err := add.ErrFileNotFound("/missing/file")
 	if err == nil {
 		t.Fatal("expected non-nil error")
 	}
@@ -120,7 +122,7 @@ func TestErrFileNotFound(t *testing.T) {
 }
 
 func TestErrMissingFields(t *testing.T) {
-	err := write.ErrMissingFields("decision", []string{"context", "rationale"})
+	err := add.ErrMissingFields("decision", []string{"context", "rationale"})
 	if err == nil {
 		t.Fatal("expected non-nil error")
 	}
@@ -142,11 +144,11 @@ func TestExamplesForType(t *testing.T) {
 		fType    string
 		contains string
 	}{
-		{"decision", "ctx add decision"},
-		{"task", "ctx add task"},
-		{"learning", "ctx add learning"},
-		{"convention", "ctx add convention"},
-		{"unknown", "ctx add <type>"},
+		{entrytype.Decision, "ctx add decision"},
+		{entrytype.Task, "ctx add task"},
+		{entrytype.Learning, "ctx add learning"},
+		{entrytype.Convention, "ctx add convention"},
+		{entrytype.Unknown, "ctx add <type>"},
 	}
 	for _, tt := range tests {
 		t.Run(tt.fType, func(t *testing.T) {
@@ -336,12 +338,12 @@ func TestInsertAfterHeader_HeaderAtEndOfFile(t *testing.T) {
 
 func TestInsertAfterHeader_WithCtxMarkers(t *testing.T) {
 	content := "# Learnings\n" +
-		config.CtxMarkerStart + "\nsome context\n" + config.CommentClose + "\n\n" +
+		marker.CtxMarkerStart + "\nsome context\n" + marker.CommentClose + "\n\n" +
 		"## [2026-01-01] Existing\n"
 	entry := "## [2026-01-02] New\n"
 
 	// The header "# Learnings" is found, then markers are skipped
-	result := core.InsertAfterHeader(content, entry, config.HeadingLearnings)
+	result := core.InsertAfterHeader(content, entry, assets.HeadingLearnings)
 	resultStr := string(result)
 
 	if !strings.Contains(resultStr, "New") {
@@ -351,10 +353,10 @@ func TestInsertAfterHeader_WithCtxMarkers(t *testing.T) {
 
 func TestInsertAfterHeader_CtxMarkerWithoutClose(t *testing.T) {
 	// ctx marker start present but no close marker
-	content := "# Learnings\n" + config.CtxMarkerStart + "\nunclosed marker content\nExisting\n"
+	content := "# Learnings\n" + marker.CtxMarkerStart + "\nunclosed marker content\nExisting\n"
 	entry := "## New entry\n"
 
-	result := core.InsertAfterHeader(content, entry, config.HeadingLearnings)
+	result := core.InsertAfterHeader(content, entry, assets.HeadingLearnings)
 	resultStr := string(result)
 
 	if !strings.Contains(resultStr, "New entry") {
@@ -809,10 +811,10 @@ func TestContainsNewLine(t *testing.T) {
 }
 
 func TestStartsWithCtxMarker(t *testing.T) {
-	if !core.StartsWithCtxMarker(config.CtxMarkerStart + " rest") {
+	if !core.StartsWithCtxMarker(marker.CtxMarkerStart + " rest") {
 		t.Error("should detect CtxMarkerStart")
 	}
-	if !core.StartsWithCtxMarker(config.CtxMarkerEnd + " rest") {
+	if !core.StartsWithCtxMarker(marker.CtxMarkerEnd + " rest") {
 		t.Error("should detect CtxMarkerEnd")
 	}
 	if core.StartsWithCtxMarker("no marker here") {

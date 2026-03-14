@@ -21,7 +21,7 @@ import (
 // Returns:
 //   - *cobra.Command: The learnings command with subcommands
 func Cmd() *cobra.Command {
-	short, long := assets.CommandDesc("learnings")
+	short, long := assets.CommandDesc(assets.CmdDescKeyLearnings)
 	cmd := &cobra.Command{
 		Use:   "learnings",
 		Short: short,

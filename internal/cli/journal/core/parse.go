@@ -12,9 +12,12 @@ import (
 	"sort"
 	"strings"
 
+	"github.com/ActiveMemory/ctx/internal/assets"
+	"github.com/ActiveMemory/ctx/internal/config/file"
+	"github.com/ActiveMemory/ctx/internal/config/journal"
+	"github.com/ActiveMemory/ctx/internal/config/regex"
+	"github.com/ActiveMemory/ctx/internal/config/token"
 	"gopkg.in/yaml.v3"
-
-	"github.com/ActiveMemory/ctx/internal/config"
 )
 
 // ScanJournalEntries reads all journal Markdown files and extracts metadata.
@@ -33,7 +36,7 @@ func ScanJournalEntries(journalDir string) ([]JournalEntry, error) {
 
 	var entries []JournalEntry
 	for _, f := range files {
-		if f.IsDir() || !strings.HasSuffix(f.Name(), config.ExtMarkdown) {
+		if f.IsDir() || !strings.HasSuffix(f.Name(), file.ExtMarkdown) {
 			continue
 		}
 
@@ -68,14 +71,14 @@ func ParseJournalEntry(path, filename string) JournalEntry {
 	}
 
 	// Extract date from the filename (YYYY-MM-DD-slug-id.md)
-	if len(filename) >= config.JournalDatePrefixLen {
-		entry.Date = filename[:config.JournalDatePrefixLen]
+	if len(filename) >= journal.DatePrefixLen {
+		entry.Date = filename[:journal.DatePrefixLen]
 	}
 
 	// Read the file to extract metadata
 	content, readErr := os.ReadFile(filepath.Clean(path))
 	if readErr != nil {
-		entry.Title = strings.TrimSuffix(filename, config.ExtMarkdown)
+		entry.Title = strings.TrimSuffix(filename, file.ExtMarkdown)
 		return entry
 	}
 
@@ -85,11 +88,11 @@ func ParseJournalEntry(path, filename string) JournalEntry {
 	contentStr := string(content)
 
 	// Parse YAML frontmatter if present
-	nl := config.NewlineLF
-	fmOpen := len(config.Separator + nl)
-	if strings.HasPrefix(contentStr, config.Separator+nl) {
+	nl := token.NewlineLF
+	fmOpen := len(token.Separator + nl)
+	if strings.HasPrefix(contentStr, token.Separator+nl) {
 		if end := strings.Index(
-			contentStr[fmOpen:], nl+config.Separator+nl,
+			contentStr[fmOpen:], nl+token.Separator+nl,
 		); end >= 0 {
 			fmRaw := contentStr[fmOpen : fmOpen+end]
 			var fm JournalFrontmatter
@@ -121,7 +124,7 @@ func ParseJournalEntry(path, filename string) JournalEntry {
 	}
 
 	// Check for suggestion mode sessions
-	if strings.Contains(contentStr, config.LabelSuggestionMode) {
+	if strings.Contains(contentStr, assets.LabelSuggestionMode) {
 		entry.Suggestive = true
 	}
 
@@ -132,22 +135,22 @@ func ParseJournalEntry(path, filename string) JournalEntry {
 
 		// Title from first H1 (only if frontmatter didn't set it)
 		if strings.HasPrefix(
-			line, config.HeadingLevelOneStart,
+			line, token.HeadingLevelOneStart,
 		) && entry.Title == "" {
-			entry.Title = strings.TrimPrefix(line, config.HeadingLevelOneStart)
+			entry.Title = strings.TrimPrefix(line, token.HeadingLevelOneStart)
 		}
 
 		// Time from metadata
-		if strings.HasPrefix(line, config.MetadataTime) {
+		if strings.HasPrefix(line, assets.MetadataTime) {
 			entry.Time = strings.TrimSpace(
-				strings.TrimPrefix(line, config.MetadataTime),
+				strings.TrimPrefix(line, assets.MetadataTime),
 			)
 		}
 
 		// Project from metadata
-		if strings.HasPrefix(line, config.MetadataProject) {
+		if strings.HasPrefix(line, assets.MetadataProject) {
 			entry.Project = strings.TrimSpace(
-				strings.TrimPrefix(line, config.MetadataProject),
+				strings.TrimPrefix(line, assets.MetadataProject),
 			)
 		}
 
@@ -158,13 +161,13 @@ func ParseJournalEntry(path, filename string) JournalEntry {
 	}
 
 	if entry.Title == "" {
-		entry.Title = strings.TrimSuffix(filename, config.ExtMarkdown)
+		entry.Title = strings.TrimSuffix(filename, file.ExtMarkdown)
 	}
 
 	// Strip Claude Code internal markup tags from titles
-	entry.Title = strings.TrimSpace(config.RegExClaudeTag.ReplaceAllString(entry.Title, ""))
+	entry.Title = strings.TrimSpace(regex.SystemClaudeTag.ReplaceAllString(entry.Title, ""))
 
-	// Sanitize characters that break markdown link text: angle brackets
+	// Sanitize characters that break Markdown link text: angle brackets
 	// become HTML entities; backticks and # are stripped (they add no
 	// meaning inside [...] link labels).
 	entry.Title = strings.NewReplacer(

@@ -5,3 +5,30 @@
 //                 SPDX-License-Identifier: Apache-2.0
 
 package root
+
+import (
+	"github.com/ActiveMemory/ctx/internal/config/cli"
+	"github.com/spf13/cobra"
+
+	"github.com/ActiveMemory/ctx/internal/assets"
+)
+
+// Cmd returns the "ctx why" cobra command.
+//
+// Returns:
+//   - *cobra.Command: Configured why command with document aliases
+func Cmd() *cobra.Command {
+	short, long := assets.CommandDesc(assets.CmdDescKeyWhy)
+
+	cmd := &cobra.Command{
+		Use:         "why [DOCUMENT]",
+		Short:       short,
+		Annotations: map[string]string{cli.AnnotationSkipInit: ""},
+		ValidArgs:   []string{"manifesto", "about", "invariants"},
+		Long:        long,
+		Args:        cobra.MaximumNArgs(1),
+		RunE:        Run,
+	}
+
+	return cmd
+}

@@ -1,0 +1,97 @@
+//   /    ctx:                         https://ctx.ist
+// ,'`./    do you remember?
+// `.,'\
+//   \    Copyright 2026-present Context contributors.
+//                 SPDX-License-Identifier: Apache-2.0
+
+package check_backup_age
+
+import (
+	"os"
+	"path/filepath"
+
+	"github.com/ActiveMemory/ctx/internal/config/archive"
+	"github.com/ActiveMemory/ctx/internal/config/env"
+	"github.com/ActiveMemory/ctx/internal/config/hook"
+	"github.com/ActiveMemory/ctx/internal/config/token"
+	"github.com/ActiveMemory/ctx/internal/config/tpl"
+	"github.com/spf13/cobra"
+
+	"github.com/ActiveMemory/ctx/internal/assets"
+	"github.com/ActiveMemory/ctx/internal/cli/system/core"
+	"github.com/ActiveMemory/ctx/internal/notify"
+)
+
+// Run executes the check-backup-age hook logic.
+//
+// Reads a hook input from stdin, checks whether the SMB share is mounted
+// and whether the backup marker file is fresh, then emits a relay warning
+// if any issue is detected. Throttled to once per day.
+//
+// Parameters:
+//   - cmd: Cobra command for output
+//   - stdin: standard input for hook JSON
+//
+// Returns:
+//   - error: Always nil (hook errors are non-fatal)
+func Run(cmd *cobra.Command, stdin *os.File) error {
+	input, _, paused := core.HookPreamble(stdin)
+	if paused {
+		return nil
+	}
+
+	tmpDir := core.StateDir()
+	throttleFile := filepath.Join(tmpDir, archive.BackupThrottleID)
+
+	if core.IsDailyThrottled(throttleFile) {
+		return nil
+	}
+
+	home, homeErr := os.UserHomeDir()
+	if homeErr != nil {
+		return nil
+	}
+
+	var warnings []string
+
+	// Check 1: Is the SMB share mounted?
+	if smbURL := os.Getenv(env.BackupSMBURL); smbURL != "" {
+		warnings = core.CheckSMBMountWarnings(smbURL, warnings)
+	}
+
+	// Check 2: Is the backup stale?
+	markerPath := filepath.Join(home, archive.BackupMarkerDir, archive.BackupMarkerFile)
+	warnings = core.CheckBackupMarker(markerPath, warnings)
+
+	if len(warnings) == 0 {
+		return nil
+	}
+
+	// Build pre-formatted warnings for the template variable
+	var warningText string
+	for _, w := range warnings {
+		warningText += w + token.NewlineLF
+	}
+
+	vars := map[string]any{tpl.VarWarnings: warningText}
+	content := core.LoadMessage(hook.CheckBackupAge, hook.VariantWarning, vars, warningText)
+	if content == "" {
+		return nil
+	}
+
+	// Emit VERBATIM relay
+	cmd.Println(core.NudgeBox(
+		assets.TextDesc(assets.TextDescKeyBackupRelayPrefix),
+		assets.TextDesc(assets.TextDescKeyBackupBoxTitle),
+		content))
+
+	ref := notify.NewTemplateRef(hook.CheckBackupAge, hook.VariantWarning, vars)
+	core.NudgeAndRelay(hook.CheckBackupAge+": "+
+		assets.TextDesc(assets.TextDescKeyBackupRelayMessage),
+		input.SessionID, ref,
+	)
+
+	core.TouchFile(throttleFile)
+
+	return nil
+}

@@ -9,39 +9,10 @@ package sync
 import (
 	"github.com/spf13/cobra"
 
-	"github.com/ActiveMemory/ctx/internal/assets"
 	syncroot "github.com/ActiveMemory/ctx/internal/cli/sync/cmd/root"
 )
 
 // Cmd returns the "ctx sync" command for reconciling context with codebase.
-//
-// The command scans the codebase for changes that should be reflected in
-// context files, such as new directories, package manager files, and
-// configuration files.
-//
-// Flags:
-//   - --dry-run: Show what would change without modifying files
-//
-// Returns:
-//   - *cobra.Command: Configured sync command with flags registered
 func Cmd() *cobra.Command {
-	var dryRun bool
-
-	short, long := assets.CommandDesc("sync")
-
-	cmd := &cobra.Command{
-		Use:   "sync",
-		Short: short,
-		Long:  long,
-		RunE: func(cmd *cobra.Command, _ []string) error {
-			return syncroot.Run(cmd, dryRun)
-		},
-	}
-
-	cmd.Flags().BoolVar(
-		&dryRun,
-		"dry-run", false, assets.FlagDesc("sync.dry-run"),
-	)
-
-	return cmd
+	return syncroot.Cmd()
 }

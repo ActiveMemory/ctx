@@ -13,7 +13,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/ActiveMemory/ctx/internal/config"
+	"github.com/ActiveMemory/ctx/internal/config/dir"
 	"github.com/ActiveMemory/ctx/internal/rc"
 )
 
@@ -186,24 +186,6 @@ func TestRenderChanges_NoChanges(t *testing.T) {
 	}
 }
 
-func TestItoa(t *testing.T) {
-	tests := []struct {
-		n    int
-		want string
-	}{
-		{0, "0"},
-		{1, "1"},
-		{42, "42"},
-		{-5, "-5"},
-		{100, "100"},
-	}
-	for _, tt := range tests {
-		if got := Itoa(tt.n); got != tt.want {
-			t.Errorf("Itoa(%d) = %q, want %q", tt.n, got, tt.want)
-		}
-	}
-}
-
 func TestDetectReferenceTime_SinceFlag(t *testing.T) {
 	_, label, detectErr := DetectReferenceTime("6h")
 	if detectErr != nil {
@@ -219,7 +201,7 @@ func TestDetectReferenceTime_Fallback(t *testing.T) {
 	t.Setenv("CTX_DIR", tmp)
 	rc.Reset()
 
-	stateDir := filepath.Join(tmp, config.DirState)
+	stateDir := filepath.Join(tmp, dir.State)
 	mkErr := os.MkdirAll(stateDir, 0o755)
 	if mkErr != nil {
 		t.Fatalf("MkdirAll: %v", mkErr)
@@ -239,7 +221,7 @@ func TestDetectReferenceTime_FromMarkers(t *testing.T) {
 	t.Setenv("CTX_DIR", tmp)
 	rc.Reset()
 
-	stateDir := filepath.Join(tmp, config.DirState)
+	stateDir := filepath.Join(tmp, dir.State)
 	mkErr := os.MkdirAll(stateDir, 0o755)
 	if mkErr != nil {
 		t.Fatalf("MkdirAll: %v", mkErr)

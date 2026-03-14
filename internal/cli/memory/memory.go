@@ -4,19 +4,23 @@
 //   \    Copyright 2026-present Context contributors.
 //                 SPDX-License-Identifier: Apache-2.0
 
-// Package memory implements the "ctx memory" CLI command group for
-// bridging Claude Code's auto memory into .context/.
 package memory
 
 import (
 	"github.com/spf13/cobra"
 
 	"github.com/ActiveMemory/ctx/internal/assets"
+	"github.com/ActiveMemory/ctx/internal/cli/memory/cmd/diff"
+	"github.com/ActiveMemory/ctx/internal/cli/memory/cmd/importer"
+	"github.com/ActiveMemory/ctx/internal/cli/memory/cmd/publish"
+	"github.com/ActiveMemory/ctx/internal/cli/memory/cmd/status"
+	"github.com/ActiveMemory/ctx/internal/cli/memory/cmd/sync"
+	"github.com/ActiveMemory/ctx/internal/cli/memory/cmd/unpublish"
 )
 
 // Cmd returns the "ctx memory" parent command.
 func Cmd() *cobra.Command {
-	short, long := assets.CommandDesc("memory")
+	short, long := assets.CommandDesc(assets.CmdDescKeyMemory)
 	cmd := &cobra.Command{
 		Use:   "memory",
 		Short: short,
@@ -24,12 +28,12 @@ func Cmd() *cobra.Command {
 	}
 
 	cmd.AddCommand(
-		syncCmd(),
-		statusCmd(),
-		diffCmd(),
-		importCmd(),
-		publishCmd(),
-		unpublishCmd(),
+		sync.Cmd(),
+		status.Cmd(),
+		diff.Cmd(),
+		importer.Cmd(),
+		publish.Cmd(),
+		unpublish.Cmd(),
 	)
 
 	return cmd

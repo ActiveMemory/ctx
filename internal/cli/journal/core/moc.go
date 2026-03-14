@@ -10,7 +10,10 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/ActiveMemory/ctx/internal/config"
+	"github.com/ActiveMemory/ctx/internal/assets"
+	"github.com/ActiveMemory/ctx/internal/config/file"
+	"github.com/ActiveMemory/ctx/internal/config/journal"
+	"github.com/ActiveMemory/ctx/internal/config/token"
 )
 
 // GenerateHomeMOC creates the root navigation hub for the Obsidian vault.
@@ -30,36 +33,39 @@ func GenerateHomeMOC(
 	hasTopics, hasFiles, hasTypes bool,
 ) string {
 	var sb strings.Builder
-	nl := config.NewlineLF
+	nl := token.NewlineLF
 
-	sb.WriteString("# Session Journal" + nl + nl)
-	sb.WriteString("Navigation hub for all journal entries." + nl + nl)
+	sb.WriteString(assets.JournalHeadingSessionJournal + nl + nl)
+	sb.WriteString(assets.TextDesc(assets.TextDescKeyJournalMocNavDescription) + nl + nl)
 
-	sb.WriteString("## Browse by" + nl + nl)
+	sb.WriteString(assets.TextDesc(assets.TextDescKeyJournalMocBrowseBy) + nl + nl)
 	if hasTopics {
 		sb.WriteString(fmt.Sprintf(
-			"- %s — sessions grouped by topic"+nl,
-			FormatWikilink("_Topics", "Topics")))
+			"- %s %s"+nl,
+			FormatWikilink("_Topics", "Topics"),
+			assets.TextDesc(assets.TextDescKeyJournalMocTopicsDesc)))
 	}
 	if hasFiles {
 		sb.WriteString(fmt.Sprintf(
-			"- %s — sessions grouped by file touched"+nl,
-			FormatWikilink("_Key Files", "Key Files")))
+			"- %s %s"+nl,
+			FormatWikilink("_Key Files", "Key Files"),
+			assets.TextDesc(assets.TextDescKeyJournalMocFilesDesc)))
 	}
 	if hasTypes {
 		sb.WriteString(fmt.Sprintf(
-			"- %s — sessions grouped by type"+nl,
-			FormatWikilink("_Session Types", "Session Types")))
+			"- %s %s"+nl,
+			FormatWikilink("_Session Types", "Session Types"),
+			assets.TextDesc(assets.TextDescKeyJournalMocTypesDesc)))
 	}
 	sb.WriteString(nl)
 
-	// Recent sessions (up to JournalMaxRecentSessions)
+	// Recent sessions (up to MaxRecentSessions)
 	recent := entries
-	if len(recent) > config.JournalMaxRecentSessions {
-		recent = recent[:config.JournalMaxRecentSessions]
+	if len(recent) > journal.MaxRecentSessions {
+		recent = recent[:journal.MaxRecentSessions]
 	}
 
-	sb.WriteString("## Recent Sessions" + nl + nl)
+	sb.WriteString(token.HeadingLevelTwoStart + assets.JournalHeadingRecentSessions + nl + nl)
 	for _, e := range recent {
 		sb.WriteString(FormatWikilinkEntry(e) + nl)
 	}
@@ -80,7 +86,7 @@ func GenerateHomeMOC(
 //   - string: Markdown content for _Topics.md
 func GenerateObsidianTopicsMOC(topics []TopicData) string {
 	var sb strings.Builder
-	nl := config.NewlineLF
+	nl := token.NewlineLF
 
 	var popular, longtail []TopicData
 	for _, t := range topics {
@@ -110,7 +116,7 @@ func GenerateObsidianTopicsMOC(topics []TopicData) string {
 		sb.WriteString("## Long-tail Topics" + nl + nl)
 		for _, t := range longtail {
 			e := t.Entries[0]
-			link := strings.TrimSuffix(e.Filename, config.ExtMarkdown)
+			link := strings.TrimSuffix(e.Filename, file.ExtMarkdown)
 			sb.WriteString(fmt.Sprintf("- **%s** — %s"+nl,
 				t.Name, FormatWikilink(link, e.Title)))
 		}
@@ -145,7 +151,7 @@ func GenerateObsidianTopicPage(topic TopicData) string {
 //   - string: Markdown content for _Key Files.md
 func GenerateObsidianFilesMOC(keyFiles []KeyFileData) string {
 	var sb strings.Builder
-	nl := config.NewlineLF
+	nl := token.NewlineLF
 
 	var popular, longtail []KeyFileData
 	for _, kf := range keyFiles {
@@ -187,7 +193,7 @@ func GenerateObsidianFilesMOC(keyFiles []KeyFileData) string {
 		sb.WriteString("## Single Session" + nl + nl)
 		for _, kf := range longtail {
 			e := kf.Entries[0]
-			link := strings.TrimSuffix(e.Filename, config.ExtMarkdown)
+			link := strings.TrimSuffix(e.Filename, file.ExtMarkdown)
 			sb.WriteString(fmt.Sprintf("- `%s` — %s"+nl,
 				kf.Path, FormatWikilink(link, e.Title)))
 		}
@@ -223,7 +229,7 @@ func GenerateObsidianFilePage(kf KeyFileData) string {
 //   - string: Markdown content for _Session Types.md
 func GenerateObsidianTypesMOC(sessionTypes []TypeData) string {
 	var sb strings.Builder
-	nl := config.NewlineLF
+	nl := token.NewlineLF
 
 	totalSessions := 0
 	for _, st := range sessionTypes {
@@ -274,7 +280,7 @@ func GenerateObsidianGroupedPage(
 	heading, stats string, entries []JournalEntry,
 ) string {
 	var sb strings.Builder
-	nl := config.NewlineLF
+	nl := token.NewlineLF
 
 	sb.WriteString(heading + nl + nl)
 	sb.WriteString(stats + nl + nl)
@@ -312,10 +318,10 @@ func GenerateRelatedFooter(
 	}
 
 	var sb strings.Builder
-	nl := config.NewlineLF
+	nl := token.NewlineLF
 
-	sb.WriteString(nl + config.Separator + nl + nl)
-	sb.WriteString(config.ObsidianRelatedHeading + nl + nl)
+	sb.WriteString(nl + token.Separator + nl + nl)
+	sb.WriteString(assets.ObsidianRelatedHeading + nl + nl)
 
 	// Topic links
 	if len(entry.Topics) > 0 {
@@ -324,7 +330,7 @@ func GenerateRelatedFooter(
 			FormatWikilink("_Topics", "Topics MOC"))
 		for _, t := range entry.Topics {
 			topicLinks = append(topicLinks,
-				fmt.Sprintf(config.ObsidianWikilinkPlain, t))
+				fmt.Sprintf(assets.ObsidianWikilinkPlain, t))
 		}
 		sb.WriteString("**Topics**: " + strings.Join(topicLinks, " · ") + nl + nl)
 	}
@@ -332,15 +338,15 @@ func GenerateRelatedFooter(
 	// Type link
 	if entry.Type != "" {
 		sb.WriteString(fmt.Sprintf("**Type**: %s"+nl+nl,
-			fmt.Sprintf(config.ObsidianWikilinkPlain, entry.Type)))
+			fmt.Sprintf(assets.ObsidianWikilinkPlain, entry.Type)))
 	}
 
 	// See also: other entries sharing topics
 	related := CollectRelated(entry, topicIndex, maxRelated)
 	if len(related) > 0 {
-		sb.WriteString(config.ObsidianSeeAlso + nl)
+		sb.WriteString(assets.ObsidianSeeAlso + nl)
 		for _, rel := range related {
-			link := strings.TrimSuffix(rel.Filename, config.ExtMarkdown)
+			link := strings.TrimSuffix(rel.Filename, file.ExtMarkdown)
 			sb.WriteString(fmt.Sprintf("- %s"+nl,
 				FormatWikilink(link, rel.Title)))
 		}

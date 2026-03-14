@@ -20,6 +20,7 @@ import (
 
 	"github.com/ActiveMemory/ctx/internal/assets"
 	"github.com/ActiveMemory/ctx/internal/cli/task/cmd/archive"
+	"github.com/ActiveMemory/ctx/internal/cli/task/cmd/complete"
 	"github.com/ActiveMemory/ctx/internal/cli/task/cmd/snapshot"
 )
 
@@ -32,7 +33,7 @@ import (
 // Returns:
 //   - *cobra.Command: Configured tasks command with subcommands
 func Cmd() *cobra.Command {
-	short, long := assets.CommandDesc("task")
+	short, long := assets.CommandDesc(assets.CmdDescKeyTask)
 
 	cmd := &cobra.Command{
 		Use:   "tasks",
@@ -41,6 +42,7 @@ func Cmd() *cobra.Command {
 	}
 
 	cmd.AddCommand(archive.Cmd())
+	cmd.AddCommand(complete.Cmd())
 	cmd.AddCommand(snapshot.Cmd())
 
 	return cmd

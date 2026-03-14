@@ -15,20 +15,19 @@ import (
 	"path/filepath"
 	"strings"
 
-	"github.com/ActiveMemory/ctx/internal/config"
+	"github.com/ActiveMemory/ctx/internal/config/claude"
+	"github.com/ActiveMemory/ctx/internal/config/dir"
+	"github.com/ActiveMemory/ctx/internal/config/file"
+	"github.com/ActiveMemory/ctx/internal/config/fs"
+	"github.com/ActiveMemory/ctx/internal/config/session"
+	"github.com/ActiveMemory/ctx/internal/config/stats"
+	"github.com/ActiveMemory/ctx/internal/config/token"
 	"github.com/ActiveMemory/ctx/internal/rc"
 )
 
 // MaxTailBytes is the maximum number of bytes to read from the end of a
 // JSONL file when scanning for the last usage block.
 const MaxTailBytes = 32768
-
-// SessionTokenInfo holds token usage and model information extracted from a
-// session's JSONL file.
-type SessionTokenInfo struct {
-	Tokens int    // Total input tokens (input + cache_creation + cache_read)
-	Model  string // Model ID from the last assistant message, or ""
-}
 
 // ReadSessionTokenInfo finds the current session's JSONL file and returns
 // the most recent total input token count and model ID from the last
@@ -42,7 +41,7 @@ type SessionTokenInfo struct {
 //   - SessionTokenInfo: Token count and model from the last assistant message
 //   - error: Non-nil only on unexpected I/O errors
 func ReadSessionTokenInfo(sessionID string) (SessionTokenInfo, error) {
-	if sessionID == "" || sessionID == SessionUnknown {
+	if sessionID == "" || sessionID == session.IDUnknown {
 		return SessionTokenInfo{}, nil
 	}
 
@@ -68,7 +67,7 @@ func ReadSessionTokenInfo(sessionID string) (SessionTokenInfo, error) {
 //   - error: Non-nil only on unexpected errors
 func FindJSONLPath(sessionID string) (string, error) {
 	// Check cache first
-	cacheFile := filepath.Join(StateDir(), "jsonl-path-"+sessionID)
+	cacheFile := filepath.Join(StateDir(), stats.JsonlPathCachePrefix+sessionID)
 	if data, readErr := os.ReadFile(cacheFile); readErr == nil { //nolint:gosec // state dir path
 		cached := strings.TrimSpace(string(data))
 		if cached != "" {
@@ -83,7 +82,7 @@ func FindJSONLPath(sessionID string) (string, error) {
 		return "", nil
 	}
 
-	pattern := filepath.Join(home, ".claude", "projects", "*", sessionID+".jsonl")
+	pattern := filepath.Join(home, dir.Claude, dir.Projects, "*", sessionID+file.ExtJSONL)
 	matches, globErr := filepath.Glob(pattern)
 	if globErr != nil {
 		return "", globErr
@@ -94,27 +93,8 @@ func FindJSONLPath(sessionID string) (string, error) {
 	}
 
 	// Cache the result for subsequent calls this session
-	_ = os.WriteFile(cacheFile, []byte(matches[0]), 0o600)
+	_ = os.WriteFile(cacheFile, []byte(matches[0]), fs.PermSecret)
 	return matches[0], nil
-}
-
-// usageData represents the minimal usage fields from a Claude Code JSONL
-// assistant message. Only the fields needed for token counting are included.
-type usageData struct {
-	InputTokens              int `json:"input_tokens"`
-	CacheCreationInputTokens int `json:"cache_creation_input_tokens"`
-	CacheReadInputTokens     int `json:"cache_read_input_tokens"`
-}
-
-// jsonlMessage represents the minimal structure of a Claude Code JSONL line
-// needed to extract usage and model data from assistant messages.
-type jsonlMessage struct {
-	Type    string `json:"type"`
-	Message struct {
-		Role  string    `json:"role"`
-		Model string    `json:"model"`
-		Usage usageData `json:"usage"`
-	} `json:"message"`
 }
 
 // ParseLastUsageAndModel reads the tail of a JSONL file and extracts the
@@ -155,7 +135,7 @@ func ParseLastUsageAndModel(path string) (SessionTokenInfo, error) {
 	}
 
 	// Scan lines in reverse for the last assistant message with usage
-	lines := bytes.Split(tail, []byte(config.NewlineLF))
+	lines := bytes.Split(tail, []byte(token.NewlineLF))
 	for i := len(lines) - 1; i >= 0; i-- {
 		line := bytes.TrimSpace(lines[i])
 		if len(line) == 0 {
@@ -175,7 +155,7 @@ func ParseLastUsageAndModel(path string) (SessionTokenInfo, error) {
 			continue
 		}
 
-		if msg.Message.Role != "assistant" {
+		if msg.Message.Role != claude.RoleAssistant {
 			continue
 		}
 
@@ -257,7 +237,7 @@ func ClaudeSettingsHas1M() bool {
 	if homeErr != nil {
 		return false
 	}
-	data, readErr := os.ReadFile(filepath.Join(home, ".claude", "settings.json")) //nolint:gosec // user home config
+	data, readErr := os.ReadFile(filepath.Join(home, dir.Claude, claude.GlobalSettings)) //nolint:gosec // user home config
 	if readErr != nil {
 		return false
 	}

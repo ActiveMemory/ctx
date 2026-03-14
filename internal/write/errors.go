@@ -7,6 +7,8 @@
 package write
 
 import (
+	"fmt"
+	"github.com/ActiveMemory/ctx/internal/write/config"
 	"github.com/spf13/cobra"
 )
 
@@ -19,7 +21,7 @@ func ErrWithError(cmd *cobra.Command, err error) {
 	if cmd == nil {
 		return
 	}
-	cmd.PrintErrln(prefixError, err)
+	cmd.PrintErrln(config.PrefixError, err)
 }
 
 // WarnFileErr prints a non-fatal file operation warning to stderr.
@@ -32,5 +34,5 @@ func WarnFileErr(cmd *cobra.Command, path string, err error) {
 	if cmd == nil {
 		return
 	}
-	sprintf(cmd, "  ! %s: %v", path, err)
+	cmd.Println(fmt.Sprintf("  ! %s: %v", path, err))
 }

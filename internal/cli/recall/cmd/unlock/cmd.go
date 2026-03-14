@@ -22,18 +22,20 @@ import (
 func Cmd() *cobra.Command {
 	var all bool
 
-	short, long := assets.CommandDesc("recall.unlock")
+	short, long := assets.CommandDesc(assets.CmdDescKeyRecallUnlock)
 
 	cmd := &cobra.Command{
 		Use:   "unlock <pattern>",
 		Short: short,
 		Long:  long,
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return runUnlock(cmd, args, all)
+			return Run(cmd, args, all)
 		},
 	}
 
-	cmd.Flags().BoolVar(&all, "all", false, assets.FlagDesc("recall.unlock.all"))
+	cmd.Flags().BoolVar(&all, "all", false,
+		assets.FlagDesc(assets.FlagDescKeyRecallUnlockAll),
+	)
 
 	return cmd
 }

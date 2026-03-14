@@ -13,10 +13,16 @@ import (
 	"strings"
 	"time"
 
+	"github.com/ActiveMemory/ctx/internal/config/claude"
+	"github.com/ActiveMemory/ctx/internal/config/cli"
+	"github.com/ActiveMemory/ctx/internal/config/fs"
+	"github.com/ActiveMemory/ctx/internal/config/marker"
+	"github.com/ActiveMemory/ctx/internal/config/token"
 	"github.com/spf13/cobra"
 
 	"github.com/ActiveMemory/ctx/internal/assets"
-	"github.com/ActiveMemory/ctx/internal/config"
+	ctxerr "github.com/ActiveMemory/ctx/internal/err"
+	"github.com/ActiveMemory/ctx/internal/write"
 )
 
 // HandleClaudeMd creates or merges CLAUDE.md with ctx content.
@@ -31,57 +37,57 @@ import (
 func HandleClaudeMd(cmd *cobra.Command, force, autoMerge bool) error {
 	templateContent, err := assets.ClaudeMd()
 	if err != nil {
-		return fmt.Errorf("failed to read CLAUDE.md template: %w", err)
+		return ctxerr.ReadInitTemplate("CLAUDE.md", err)
 	}
-	existingContent, err := os.ReadFile(config.FileClaudeMd)
+	existingContent, err := os.ReadFile(claude.Md)
 	fileExists := err == nil
 	if !fileExists {
-		if err := os.WriteFile(config.FileClaudeMd, templateContent, config.PermFile); err != nil {
-			return fmt.Errorf("failed to write %s: %w", config.FileClaudeMd, err)
+		if err := os.WriteFile(claude.Md, templateContent, fs.PermFile); err != nil {
+			return ctxerr.FileWrite(claude.Md, err)
 		}
-		cmd.Println(fmt.Sprintf("  ✓ %s", config.FileClaudeMd))
+		write.InitCreated(cmd, claude.Md)
 		return nil
 	}
 	existingStr := string(existingContent)
-	hasCtxMarkers := strings.Contains(existingStr, config.CtxMarkerStart)
+	hasCtxMarkers := strings.Contains(existingStr, marker.CtxMarkerStart)
 	if hasCtxMarkers {
 		if !force {
-			cmd.Println(fmt.Sprintf("  ○ %s (ctx content exists, skipped)\n", config.FileClaudeMd))
+			write.InitCtxContentExists(cmd, claude.Md)
 			return nil
 		}
 		return UpdateCtxSection(cmd, existingStr, templateContent)
 	}
 	if !autoMerge {
-		cmd.Println(fmt.Sprintf("\n%s exists but has no ctx content.\n", config.FileClaudeMd))
+		write.InitFileExistsNoCtx(cmd, claude.Md)
 		cmd.Println("Would you like to append ctx context management instructions?")
 		cmd.Print("[y/N] ")
 		reader := bufio.NewReader(os.Stdin)
 		response, err := reader.ReadString('\n')
 		if err != nil {
-			return fmt.Errorf("failed to read input: %w", err)
+			return ctxerr.ReadInput(err)
 		}
 		response = strings.TrimSpace(strings.ToLower(response))
-		if response != config.ConfirmShort && response != config.ConfirmLong {
-			cmd.Println(fmt.Sprintf("  ○ %s (skipped)", config.FileClaudeMd))
+		if response != cli.ConfirmShort && response != cli.ConfirmLong {
+			write.InitSkippedPlain(cmd, claude.Md)
 			return nil
 		}
 	}
 	timestamp := time.Now().Unix()
-	backupName := fmt.Sprintf("%s.%d.bak", config.FileClaudeMd, timestamp)
-	if err := os.WriteFile(backupName, existingContent, config.PermFile); err != nil {
-		return fmt.Errorf("failed to create backup %s: %w", backupName, err)
+	backupName := fmt.Sprintf("%s.%d.bak", claude.Md, timestamp)
+	if err := os.WriteFile(backupName, existingContent, fs.PermFile); err != nil {
+		return ctxerr.CreateBackup(backupName, err)
 	}
-	cmd.Println(fmt.Sprintf("  ✓ %s (backup)", backupName))
+	write.InitBackup(cmd, backupName)
 	insertPos := FindInsertionPoint(existingStr)
 	var mergedContent string
 	if insertPos == 0 {
-		mergedContent = string(templateContent) + config.NewlineLF + existingStr
+		mergedContent = string(templateContent) + token.NewlineLF + existingStr
 	} else {
-		mergedContent = existingStr[:insertPos] + config.NewlineLF + string(templateContent) + config.NewlineLF + existingStr[insertPos:]
+		mergedContent = existingStr[:insertPos] + token.NewlineLF + string(templateContent) + token.NewlineLF + existingStr[insertPos:]
 	}
-	if err := os.WriteFile(config.FileClaudeMd, []byte(mergedContent), config.PermFile); err != nil {
-		return fmt.Errorf("failed to write merged %s: %w", config.FileClaudeMd, err)
+	if err := os.WriteFile(claude.Md, []byte(mergedContent), fs.PermFile); err != nil {
+		return ctxerr.WriteMerged(claude.Md, err)
 	}
-	cmd.Println(fmt.Sprintf("  ✓ %s (merged)", config.FileClaudeMd))
+	write.InitMerged(cmd, claude.Md)
 	return nil
 }

@@ -10,7 +10,9 @@ import (
 	"strings"
 	"unicode/utf8"
 
-	"github.com/ActiveMemory/ctx/internal/config"
+	"github.com/ActiveMemory/ctx/internal/config/marker"
+	"github.com/ActiveMemory/ctx/internal/config/stats"
+	"github.com/ActiveMemory/ctx/internal/config/token"
 )
 
 // ContentPreview returns the first n non-empty, meaningful lines
@@ -26,7 +28,7 @@ import (
 // Returns:
 //   - []string: Up to n meaningful lines from the content
 func ContentPreview(content string, n int) []string {
-	lines := strings.Split(content, config.NewlineLF)
+	lines := strings.Split(content, token.NewlineLF)
 	var preview []string
 
 	inFrontmatter := false
@@ -39,7 +41,7 @@ func ContentPreview(content string, n int) []string {
 		}
 
 		// Skip YAML frontmatter
-		if trimmed == config.Separator {
+		if trimmed == token.Separator {
 			inFrontmatter = !inFrontmatter
 			continue
 		}
@@ -48,15 +50,17 @@ func ContentPreview(content string, n int) []string {
 		}
 
 		// Skip HTML comments
-		if strings.HasPrefix(trimmed, config.CommentOpen) {
+		if strings.HasPrefix(trimmed, marker.CommentOpen) {
 			continue
 		}
 
 		// Truncate long lines
-		if utf8.RuneCountInString(trimmed) > config.MaxPreviewLen {
+		if utf8.RuneCountInString(trimmed) > stats.MaxPreviewLen {
 			runes := []rune(trimmed)
-			truncateAt := config.MaxPreviewLen - utf8.RuneCountInString(config.Ellipsis)
-			trimmed = string(runes[:truncateAt]) + config.Ellipsis
+			truncateAt := stats.MaxPreviewLen - utf8.RuneCountInString(
+				token.Ellipsis,
+			)
+			trimmed = string(runes[:truncateAt]) + token.Ellipsis
 		}
 
 		preview = append(preview, trimmed)

@@ -12,7 +12,9 @@ import (
 	"path/filepath"
 	"strings"
 
-	"github.com/ActiveMemory/ctx/internal/config"
+	"github.com/ActiveMemory/ctx/internal/assets"
+	"github.com/ActiveMemory/ctx/internal/config/file"
+	"github.com/ActiveMemory/ctx/internal/config/journal"
 	"github.com/ActiveMemory/ctx/internal/journal/state"
 	"github.com/ActiveMemory/ctx/internal/recall/parser"
 )
@@ -49,7 +51,7 @@ func PlanExport(
 		}
 
 		totalMsgs := len(nonEmptyMsgs)
-		numParts := (totalMsgs + config.MaxMessagesPerPart - 1) / config.MaxMessagesPerPart
+		numParts := (totalMsgs + journal.MaxMessagesPerPart - 1) / journal.MaxMessagesPerPart
 		if numParts < 1 {
 			numParts = 1
 		}
@@ -60,18 +62,18 @@ func PlanExport(
 			oldPath := filepath.Join(journalDir, oldFile)
 			if data, readErr := os.ReadFile(filepath.Clean(oldPath)); readErr == nil {
 				existingTitle = ExtractFrontmatterField(
-					string(data), config.FrontmatterTitle,
+					string(data), assets.FrontmatterTitle,
 				)
 			}
 		}
 		slug, title := TitleSlug(s, existingTitle)
 
 		baseFilename := FormatJournalFilename(s, slug)
-		baseName := strings.TrimSuffix(baseFilename, config.ExtMarkdown)
+		baseName := strings.TrimSuffix(baseFilename, file.ExtMarkdown)
 
 		// Detect renames (dedup: old slug → new slug).
 		if oldFile := LookupSessionFile(sessionIndex, s.ID); oldFile != "" {
-			oldBase := strings.TrimSuffix(oldFile, config.ExtMarkdown)
+			oldBase := strings.TrimSuffix(oldFile, file.ExtMarkdown)
 			if oldBase != baseName {
 				plan.RenameOps = append(plan.RenameOps, RenameOp{
 					OldBase:  oldBase,
@@ -85,12 +87,12 @@ func PlanExport(
 		for part := 1; part <= numParts; part++ {
 			filename := baseFilename
 			if numParts > 1 && part > 1 {
-				filename = fmt.Sprintf(config.TplRecallPartFilename, baseName, part)
+				filename = fmt.Sprintf(assets.TplRecallPartFilename, baseName, part)
 			}
 			path := filepath.Join(journalDir, filename)
 
-			startIdx := (part - 1) * config.MaxMessagesPerPart
-			endIdx := startIdx + config.MaxMessagesPerPart
+			startIdx := (part - 1) * journal.MaxMessagesPerPart
+			endIdx := startIdx + journal.MaxMessagesPerPart
 			if endIdx > totalMsgs {
 				endIdx = totalMsgs
 			}
@@ -109,7 +111,7 @@ func PlanExport(
 			case FrontmatterHasLocked(path):
 				// Frontmatter says locked — promote to state so future
 				// operations skip the file without reparsing.
-				jstate.Mark(filename, config.FrontmatterLocked)
+				jstate.Mark(filename, assets.FrontmatterLocked)
 				action = ActionLocked
 				plan.LockedCount++
 			case singleSession || opts.Regenerate || opts.DiscardFrontmatter():

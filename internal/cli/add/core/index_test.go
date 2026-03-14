@@ -10,7 +10,7 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/ActiveMemory/ctx/internal/config"
+	"github.com/ActiveMemory/ctx/internal/config/marker"
 )
 
 // TestDelegation verifies that the wrapper functions correctly delegate
@@ -52,7 +52,7 @@ func TestDelegation(t *testing.T) {
 
 	// Test UpdateIndex delegation
 	updated := UpdateIndex(content)
-	if !strings.Contains(updated, config.IndexStart) {
+	if !strings.Contains(updated, marker.IndexStart) {
 		t.Error("UpdateIndex() missing INDEX:START marker")
 	}
 
@@ -68,7 +68,7 @@ func TestDelegation(t *testing.T) {
 **Application**: Test
 `
 	updatedLearning := UpdateLearningsIndex(learningContent)
-	if !strings.Contains(updatedLearning, config.IndexStart) {
+	if !strings.Contains(updatedLearning, marker.IndexStart) {
 		t.Error("UpdateLearningsIndex() missing INDEX:START marker")
 	}
 	if !strings.Contains(updatedLearning, "| Date | Learning |") {

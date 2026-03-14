@@ -9,10 +9,11 @@ package root
 import (
 	"strings"
 
+	entry2 "github.com/ActiveMemory/ctx/internal/config/entry"
+	"github.com/ActiveMemory/ctx/internal/write/add"
 	"github.com/spf13/cobra"
 
 	"github.com/ActiveMemory/ctx/internal/cli/add/core"
-	"github.com/ActiveMemory/ctx/internal/config"
 	"github.com/ActiveMemory/ctx/internal/entry"
 	"github.com/ActiveMemory/ctx/internal/write"
 )
@@ -38,7 +39,7 @@ func Run(cmd *cobra.Command, args []string, flags Config) error {
 
 	content, extractErr := core.ExtractContent(args, flags)
 	if extractErr != nil || content == "" {
-		return write.ErrNoContentProvided(fType, core.ExamplesForType(fType))
+		return add.ErrNoContentProvided(fType, core.ExamplesForType(fType))
 	}
 
 	params := entry.Params{
@@ -57,9 +58,9 @@ func Run(cmd *cobra.Command, args []string, flags Config) error {
 		return validateErr
 	}
 
-	fName, ok := config.FileType[fType]
+	fName, ok := entry2.ToCtxFile[fType]
 	if !ok {
-		return write.ErrUnknownType(fType)
+		return add.ErrUnknownType(fType)
 	}
 
 	if writeErr := entry.Write(params); writeErr != nil {

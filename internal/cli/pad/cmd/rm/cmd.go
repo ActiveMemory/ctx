@@ -19,7 +19,7 @@ import (
 // Returns:
 //   - *cobra.Command: Configured rm subcommand
 func Cmd() *cobra.Command {
-	short, _ := assets.CommandDesc("pad.rm")
+	short, _ := assets.CommandDesc(assets.CmdDescKeyPadRm)
 	return &cobra.Command{
 		Use:   "rm N",
 		Short: short,
@@ -29,7 +29,7 @@ func Cmd() *cobra.Command {
 			if err != nil {
 				return err
 			}
-			return runRm(cmd, n)
+			return Run(cmd, n)
 		},
 	}
 }

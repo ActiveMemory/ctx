@@ -8,12 +8,13 @@ package core
 
 import (
 	"encoding/json"
-	"fmt"
 	"time"
 
+	ctxtime "github.com/ActiveMemory/ctx/internal/config/time"
 	"github.com/spf13/cobra"
 
 	"github.com/ActiveMemory/ctx/internal/context"
+	"github.com/ActiveMemory/ctx/internal/write"
 )
 
 // OutputStatusJSON writes context status as JSON to the command output.
@@ -60,10 +61,6 @@ func OutputStatusJSON(
 
 // OutputStatusText writes context status as formatted text to the command output.
 //
-// Displays a summary including file count, token estimate, file list with
-// status indicators, and recent activity. When verbose is true, includes
-// token counts, file sizes, and content previews for each file.
-//
 // Parameters:
 //   - cmd: Cobra command for output stream
 //   - ctx: Loaded context to display
@@ -74,61 +71,41 @@ func OutputStatusJSON(
 func OutputStatusText(
 	cmd *cobra.Command, ctx *context.Context, verbose bool,
 ) error {
-	cmd.Println("Context Status")
-	cmd.Println("====================")
-	cmd.Println()
+	write.StatusHeader(cmd, ctx.Dir, len(ctx.Files), ctx.TotalTokens)
 
-	cmd.Println(fmt.Sprintf("Context Directory: %s", ctx.Dir))
-	cmd.Println(fmt.Sprintf("Total Files: %d", len(ctx.Files)))
-	cmd.Println(fmt.Sprintf(
-		"Token Estimate: %s tokens", FormatNumber(ctx.TotalTokens)),
-	)
-	cmd.Println()
-
-	cmd.Println("Files:")
-
-	// Sort files in a logical order
 	sortedFiles := make([]context.FileInfo, len(ctx.Files))
 	copy(sortedFiles, ctx.Files)
 	SortFilesByPriority(sortedFiles)
 
 	for _, f := range sortedFiles {
-		var status string
-		var indicator string
+		fi := write.StatusFileInfo{
+			Name:   f.Name,
+			Tokens: f.Tokens,
+			Size:   f.Size,
+		}
 		if f.IsEmpty {
-			indicator = "○"
-			status = "empty"
+			fi.Indicator = "\u25cb"
+			fi.Status = "empty"
 		} else {
-			indicator = "✓"
-			status = f.Summary
+			fi.Indicator = "\u2713"
+			fi.Status = f.Summary
 		}
-
-		if verbose {
-			// Verbose: show tokens and size
-			cmd.Println(fmt.Sprintf("  %s %s (%s) [%s tokens, %s]",
-				indicator, f.Name, status,
-				FormatNumber(f.Tokens), FormatBytes(f.Size)))
-
-			// Show content preview for non-empty files
-			if !f.IsEmpty {
-				preview := ContentPreview(string(f.Content), 3)
-				for _, line := range preview {
-					cmd.Println(fmt.Sprintf("      (%s)", line))
-				}
-			}
-		} else {
-			cmd.Println(fmt.Sprintf("  %s %s (%s)", indicator, f.Name, status))
+		if verbose && !f.IsEmpty {
+			fi.Preview = ContentPreview(string(f.Content), 3)
 		}
+		write.StatusFileItem(cmd, fi, verbose)
 	}
 
-	// Recent activity
-	cmd.Println()
-	cmd.Println("Recent Activity:")
 	recentFiles := GetRecentFiles(ctx.Files, 3)
-	for _, f := range recentFiles {
-		ago := FormatTimeAgo(f.ModTime)
-		cmd.Println(fmt.Sprintf("  - %s modified %s", f.Name, ago))
+	entries := make([]write.StatusActivityInfo, len(recentFiles))
+	for i, f := range recentFiles {
+		d := time.Since(f.ModTime)
+		entries[i] = write.StatusActivityInfo{
+			Name: f.Name,
+			Ago:  write.FormatTimeAgo(d.Hours(), int(d.Minutes()), f.ModTime.Format(ctxtime.OlderFormat)),
+		}
 	}
+	write.StatusActivity(cmd, entries)
 
 	return nil
 }

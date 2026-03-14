@@ -1,0 +1,47 @@
+//   /    ctx:                         https://ctx.ist
+// ,'`./    do you remember?
+// `.,'\
+//   \    Copyright 2026-present Context contributors.
+//                 SPDX-License-Identifier: Apache-2.0
+
+package mcp
+
+// MCP constants.
+const (
+	// MCPResourceURIPrefix is the URI scheme prefix for MCP context resources.
+	MCPResourceURIPrefix = "ctx://context/"
+	// MimeMarkdown is the MIME type for Markdown content.
+	MimeMarkdown = "text/markdown"
+	// MCPScanMaxSize is the maximum scanner buffer size for MCP messages (1 MB).
+	MCPScanMaxSize = 1 << 20
+	// MCPMethodInitialize is the MCP initialize handshake method.
+	MCPMethodInitialize = "initialize"
+	// MCPMethodPing is the MCP ping method.
+	MCPMethodPing = "ping"
+	// MCPMethodResourcesList is the MCP method for listing resources.
+	MCPMethodResourcesList = "resources/list"
+	// MCPMethodResourcesRead is the MCP method for reading a resource.
+	MCPMethodResourcesRead = "resources/read"
+	// MCPMethodToolsList is the MCP method for listing tools.
+	MCPMethodToolsList = "tools/list"
+	// MCPMethodToolsCall is the MCP method for calling a tool.
+	MCPMethodToolsCall = "tools/call"
+	// MCPJSONRPCVersion is the JSON-RPC protocol version string.
+	MCPJSONRPCVersion = "2.0"
+	// MCPServerName is the server name reported during initialization.
+	MCPServerName = "ctx"
+	// MCPContentTypeText is the content type for text tool output.
+	MCPContentTypeText = "text"
+	// MCPSchemaObject is the JSON Schema type for objects.
+	MCPSchemaObject = "object"
+	// MCPSchemaString is the JSON Schema type for strings.
+	MCPSchemaString = "string"
+	// MCPToolStatus is the MCP tool name for context status.
+	MCPToolStatus = "ctx_status"
+	// MCPToolAdd is the MCP tool name for adding entries.
+	MCPToolAdd = "ctx_add"
+	// MCPToolComplete is the MCP tool name for completing tasks.
+	MCPToolComplete = "ctx_complete"
+	// MCPToolDrift is the MCP tool name for drift detection.
+	MCPToolDrift = "ctx_drift"
+)

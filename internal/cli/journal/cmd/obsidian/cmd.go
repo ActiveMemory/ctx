@@ -9,10 +9,10 @@ package obsidian
 import (
 	"path/filepath"
 
+	"github.com/ActiveMemory/ctx/internal/config/obsidian"
 	"github.com/spf13/cobra"
 
 	"github.com/ActiveMemory/ctx/internal/assets"
-	"github.com/ActiveMemory/ctx/internal/config"
 	"github.com/ActiveMemory/ctx/internal/rc"
 )
 
@@ -24,19 +24,20 @@ import (
 func Cmd() *cobra.Command {
 	var output string
 
-	short, long := assets.CommandDesc("journal.obsidian")
+	short, long := assets.CommandDesc(assets.CmdDescKeyJournalObsidian)
 	cmd := &cobra.Command{
 		Use:   "obsidian",
 		Short: short,
 		Long:  long,
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return runJournalObsidian(cmd, output)
+			return Run(cmd, output)
 		},
 	}
 
-	defaultOutput := filepath.Join(rc.ContextDir(), config.ObsidianDirName)
+	defaultOutput := filepath.Join(rc.ContextDir(), obsidian.DirName)
 	cmd.Flags().StringVarP(
-		&output, "output", "o", defaultOutput, assets.FlagDesc("journal.obsidian.output"),
+		&output, "output", "o",
+		defaultOutput, assets.FlagDesc(assets.FlagDescKeyJournalObsidianOutput),
 	)
 
 	return cmd

@@ -14,7 +14,8 @@ import (
 	"testing"
 
 	"github.com/ActiveMemory/ctx/internal/cli/initialize"
-	"github.com/ActiveMemory/ctx/internal/config"
+	"github.com/ActiveMemory/ctx/internal/config/ctx"
+	"github.com/ActiveMemory/ctx/internal/config/entry"
 	"github.com/ActiveMemory/ctx/internal/rc"
 	"github.com/spf13/cobra"
 )
@@ -49,48 +50,48 @@ func TestApplyUpdate(t *testing.T) {
 	}{
 		{
 			name:      "task update",
-			update:    ContextUpdate{Type: config.EntryTask, Content: "Test task from watch"},
-			checkFile: config.FileTask,
+			update:    ContextUpdate{Type: entry.Task, Content: "Test task from watch"},
+			checkFile: ctx.Task,
 			checkFor:  "Test task from watch",
 		},
 		{
 			name: "decision update",
 			update: ContextUpdate{
-				Type:         config.EntryDecision,
+				Type:         entry.Decision,
 				Content:      "Test decision from watch",
 				Context:      "Testing watch functionality",
 				Rationale:    "Need to verify watch applies decisions",
 				Consequences: "Decision will appear in DECISIONS.md",
 			},
-			checkFile: config.FileDecision,
+			checkFile: ctx.Decision,
 			checkFor:  "Test decision from watch",
 		},
 		{
 			name: "learning update",
 			update: ContextUpdate{
-				Type:        config.EntryLearning,
+				Type:        entry.Learning,
 				Content:     "Test learning from watch",
 				Context:     "Testing watch functionality",
 				Lesson:      "Watch can add learnings",
 				Application: "Use structured attributes in context-update tags",
 			},
-			checkFile: config.FileLearning,
+			checkFile: ctx.Learning,
 			checkFor:  "Test learning from watch",
 		},
 		{
 			name:        "decision without required fields",
-			update:      ContextUpdate{Type: config.EntryDecision, Content: "Missing fields"},
+			update:      ContextUpdate{Type: entry.Decision, Content: "Missing fields"},
 			expectError: true,
 		},
 		{
 			name:        "learning without required fields",
-			update:      ContextUpdate{Type: config.EntryLearning, Content: "Missing fields"},
+			update:      ContextUpdate{Type: entry.Learning, Content: "Missing fields"},
 			expectError: true,
 		},
 		{
 			name:      "convention update",
-			update:    ContextUpdate{Type: config.EntryConvention, Content: "Test convention from watch"},
-			checkFile: config.FileConvention,
+			update:    ContextUpdate{Type: entry.Convention, Content: "Test convention from watch"},
+			checkFile: ctx.Convention,
 			checkFor:  "Test convention from watch",
 		},
 		{
@@ -150,7 +151,7 @@ func TestApplyCompleteUpdate(t *testing.T) {
 	}
 
 	// Add a task to complete
-	tasksPath := filepath.Join(rc.ContextDir(), config.FileTask)
+	tasksPath := filepath.Join(rc.ContextDir(), ctx.Task)
 	tasksContent := `# Tasks
 
 ## Next Up
@@ -163,7 +164,7 @@ func TestApplyCompleteUpdate(t *testing.T) {
 	}
 
 	// Complete the task
-	update := ContextUpdate{Type: config.EntryComplete, Content: "authentication"}
+	update := ContextUpdate{Type: entry.Complete, Content: "authentication"}
 	if err = ApplyUpdate(update); err != nil {
 		t.Fatalf("ApplyUpdate failed: %v", err)
 	}
@@ -218,7 +219,7 @@ More output
 	}
 
 	// Verify task was written
-	tasksPath := filepath.Join(rc.ContextDir(), config.FileTask)
+	tasksPath := filepath.Join(rc.ContextDir(), ctx.Task)
 	content, err := os.ReadFile(filepath.Clean(tasksPath))
 	if err != nil {
 		t.Fatalf("failed to read tasks: %v", err)
@@ -265,7 +266,7 @@ More output
 	}
 
 	// Verify learning was written with structured fields
-	learningsPath := filepath.Join(rc.ContextDir(), config.FileLearning)
+	learningsPath := filepath.Join(rc.ContextDir(), ctx.Learning)
 	content, err := os.ReadFile(filepath.Clean(learningsPath))
 	if err != nil {
 		t.Fatalf("failed to read learnings: %v", err)
@@ -499,7 +500,7 @@ func TestProcessStream_DecisionWithAttributes(t *testing.T) {
 	}
 
 	// Verify decision was written
-	decPath := filepath.Join(rc.ContextDir(), config.FileDecision)
+	decPath := filepath.Join(rc.ContextDir(), ctx.Decision)
 	content, err := os.ReadFile(filepath.Clean(decPath))
 	if err != nil {
 		t.Fatal(err)
@@ -603,7 +604,7 @@ func TestProcessStream_CompleteUpdate(t *testing.T) {
 	}
 
 	// Write a task to complete
-	tasksPath := filepath.Join(rc.ContextDir(), config.FileTask)
+	tasksPath := filepath.Join(rc.ContextDir(), ctx.Task)
 	tasksContent := "# Tasks\n\n- [ ] Implement login\n- [ ] Write tests\n"
 	if err := os.WriteFile(tasksPath, []byte(tasksContent), 0600); err != nil {
 		t.Fatal(err)

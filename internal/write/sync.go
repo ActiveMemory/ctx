@@ -7,120 +7,69 @@
 package write
 
 import (
+	"fmt"
+	"github.com/ActiveMemory/ctx/internal/write/config"
 	"github.com/spf13/cobra"
 )
 
-// DryRun prints the dry-run header to stdout.
+// SyncDryRun prints the full dry-run plan block: header, source path,
+// mirror path, and drift status.
 //
 // Parameters:
 //   - cmd: Cobra command for output. Nil is a no-op.
-func DryRun(cmd *cobra.Command) {
+//   - sourcePath: absolute path to MEMORY.md.
+//   - mirrorPath: relative mirror path.
+//   - hasDrift: whether the source has changed since last sync.
+func SyncDryRun(cmd *cobra.Command, sourcePath, mirrorPath string, hasDrift bool) {
 	if cmd == nil {
 		return
 	}
-	cmd.Println(tplDryRun)
+	cmd.Println(config.TplDryRun)
+	cmd.Println(fmt.Sprintf(config.TplSource, sourcePath))
+	cmd.Println(fmt.Sprintf(config.TplMirror, mirrorPath))
+	if hasDrift {
+		cmd.Println(config.TplStatusDrift)
+	} else {
+		cmd.Println(config.TplStatusNoDrift)
+	}
 }
 
-// Source prints an indented source path line to stdout.
+// SyncResult prints the full sync result block: optional archive notice,
+// synced confirmation, source path, line counts, and optional new content.
 //
 // Parameters:
 //   - cmd: Cobra command for output. Nil is a no-op.
-//   - path: the source file path to display.
-func Source(cmd *cobra.Command, path string) {
+//   - sourceLabel: source label (e.g. "MEMORY.md").
+//   - mirrorPath: relative mirror path.
+//   - sourcePath: absolute source path for display.
+//   - archivedTo: archive basename, or empty if no archive was created.
+//   - sourceLines: current source line count.
+//   - mirrorLines: previous mirror line count.
+func SyncResult(
+	cmd *cobra.Command,
+	sourceLabel, mirrorPath, sourcePath, archivedTo string,
+	sourceLines, mirrorLines int,
+) {
 	if cmd == nil {
 		return
 	}
-	sprintf(cmd, tplSource, path)
-}
+	if archivedTo != "" {
+		cmd.Println(fmt.Sprintf(config.TplArchived, archivedTo))
+	}
+	cmd.Println(fmt.Sprintf(config.TplSynced, sourceLabel, mirrorPath))
+	cmd.Println(fmt.Sprintf(config.TplSource, sourcePath))
 
-// Mirror prints an indented mirror path line to stdout.
-//
-// Parameters:
-//   - cmd: Cobra command for output. Nil is a no-op.
-//   - relativePath: the mirror path relative to the project root.
-func Mirror(cmd *cobra.Command, relativePath string) {
-	if cmd == nil {
-		return
+	line := config.TplLines
+	if mirrorLines > 0 {
+		line += config.TplLinesPrevious
+		cmd.Println(fmt.Sprintf(line, sourceLines, mirrorLines))
+	} else {
+		cmd.Println(fmt.Sprintf(line, sourceLines))
 	}
-	sprintf(cmd, tplMirror, relativePath)
-}
 
-// StatusDrift prints that drift was detected.
-//
-// Parameters:
-//   - cmd: Cobra command for output. Nil is a no-op.
-func StatusDrift(cmd *cobra.Command) {
-	if cmd == nil {
-		return
+	if sourceLines > mirrorLines {
+		cmd.Println(fmt.Sprintf(config.TplNewContent, sourceLines-mirrorLines))
 	}
-	cmd.Println(tplStatusDrift)
-}
-
-// StatusNoDrift prints that no drift was detected.
-//
-// Parameters:
-//   - cmd: Cobra command for output. Nil is a no-op.
-func StatusNoDrift(cmd *cobra.Command) {
-	if cmd == nil {
-		return
-	}
-	cmd.Println(tplStatusNoDrift)
-}
-
-// Archived prints that a previous file was archived.
-//
-// Parameters:
-//   - cmd: Cobra command for output. Nil is a no-op.
-//   - filename: the archive filename (basename, not full path).
-func Archived(cmd *cobra.Command, filename string) {
-	if cmd == nil {
-		return
-	}
-	sprintf(cmd, tplArchived, filename)
-}
-
-// Synced prints that a sync completed successfully.
-//
-// Parameters:
-//   - cmd: Cobra command for output. Nil is a no-op.
-//   - source: label for the source (e.g. "MEMORY.md").
-//   - destination: relative path to the destination.
-func Synced(cmd *cobra.Command, source, destination string) {
-	if cmd == nil {
-		return
-	}
-	sprintf(cmd, tplSynced, source, destination)
-}
-
-// Lines prints a line count, optionally including the previous count.
-//
-// Parameters:
-//   - cmd: Cobra command for output. Nil is a no-op.
-//   - count: current line count.
-//   - previous: previous line count. Zero omits the "(was N)" suffix.
-func Lines(cmd *cobra.Command, count, previous int) {
-	if cmd == nil {
-		return
-	}
-	line := tplLines
-	if previous > 0 {
-		line += tplLinesPrevious
-		sprintf(cmd, line, count, previous)
-		return
-	}
-	sprintf(cmd, line, count)
-}
-
-// NewContent prints how many new lines appeared since the last sync.
-//
-// Parameters:
-//   - cmd: Cobra command for output. Nil is a no-op.
-//   - count: number of new lines.
-func NewContent(cmd *cobra.Command, count int) {
-	if cmd == nil {
-		return
-	}
-	sprintf(cmd, tplNewContent, count)
 }
 
 // ErrAutoMemoryNotActive prints an informational stderr message when

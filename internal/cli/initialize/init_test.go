@@ -14,7 +14,9 @@ import (
 	"testing"
 
 	"github.com/ActiveMemory/ctx/internal/claude"
-	"github.com/ActiveMemory/ctx/internal/config"
+	claude2 "github.com/ActiveMemory/ctx/internal/config/claude"
+	"github.com/ActiveMemory/ctx/internal/config/ctx"
+	"github.com/ActiveMemory/ctx/internal/config/env"
 )
 
 // TestInitCommand tests the init command creates the .context directory.
@@ -347,7 +349,7 @@ func TestRunInit_Minimal(t *testing.T) {
 	}
 	defer func() { _ = os.Chdir(origDir) }()
 	t.Setenv("HOME", tmpDir)
-	t.Setenv(config.EnvSkipPathCheck, config.EnvTrue)
+	t.Setenv(env.SkipPathCheck, env.True)
 
 	cmd := Cmd()
 	cmd.SetArgs([]string{"--minimal"})
@@ -355,14 +357,14 @@ func TestRunInit_Minimal(t *testing.T) {
 		t.Fatalf("init --minimal failed: %v", err)
 	}
 
-	for _, name := range config.FilesRequired {
+	for _, name := range ctx.FilesRequired {
 		path := filepath.Join(".context", name)
 		if _, err := os.Stat(path); err != nil {
 			t.Errorf("required file %s missing with --minimal: %v", name, err)
 		}
 	}
 
-	glossaryPath := filepath.Join(".context", config.FileGlossary)
+	glossaryPath := filepath.Join(".context", ctx.Glossary)
 	if _, err := os.Stat(glossaryPath); err == nil {
 		t.Error("GLOSSARY.md should not exist with --minimal")
 	}
@@ -381,7 +383,7 @@ func TestRunInit_Force(t *testing.T) {
 	}
 	defer func() { _ = os.Chdir(origDir) }()
 	t.Setenv("HOME", tmpDir)
-	t.Setenv(config.EnvSkipPathCheck, config.EnvTrue)
+	t.Setenv(env.SkipPathCheck, env.True)
 
 	cmd := Cmd()
 	cmd.SetArgs([]string{})
@@ -395,7 +397,7 @@ func TestRunInit_Force(t *testing.T) {
 		t.Fatalf("init --force failed: %v", err)
 	}
 
-	if _, err := os.Stat(filepath.Join(".context", config.FileConstitution)); err != nil {
+	if _, err := os.Stat(filepath.Join(".context", ctx.Constitution)); err != nil {
 		t.Error("CONSTITUTION.md missing after force reinit")
 	}
 }
@@ -413,9 +415,9 @@ func TestRunInit_Merge(t *testing.T) {
 	}
 	defer func() { _ = os.Chdir(origDir) }()
 	t.Setenv("HOME", tmpDir)
-	t.Setenv(config.EnvSkipPathCheck, config.EnvTrue)
+	t.Setenv(env.SkipPathCheck, env.True)
 
-	if err = os.WriteFile(config.FileClaudeMd, []byte("# My Project\n\nExisting.\n"), 0600); err != nil {
+	if err = os.WriteFile(claude2.Md, []byte("# My Project\n\nExisting.\n"), 0600); err != nil {
 		t.Fatal(err)
 	}
 
@@ -425,7 +427,7 @@ func TestRunInit_Merge(t *testing.T) {
 		t.Fatalf("init --merge failed: %v", err)
 	}
 
-	content, _ := os.ReadFile(config.FileClaudeMd)
+	content, _ := os.ReadFile(claude2.Md)
 	if !strings.Contains(string(content), "My Project") {
 		t.Error("original content lost with --merge")
 	}

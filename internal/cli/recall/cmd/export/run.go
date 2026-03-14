@@ -11,10 +11,13 @@ import (
 	"path/filepath"
 	"strings"
 
+	"github.com/ActiveMemory/ctx/internal/config/dir"
+	"github.com/ActiveMemory/ctx/internal/config/file"
+	"github.com/ActiveMemory/ctx/internal/config/fs"
+	"github.com/ActiveMemory/ctx/internal/config/journal"
 	"github.com/spf13/cobra"
 
 	"github.com/ActiveMemory/ctx/internal/cli/recall/core"
-	"github.com/ActiveMemory/ctx/internal/config"
 	ctxerr "github.com/ActiveMemory/ctx/internal/err"
 	"github.com/ActiveMemory/ctx/internal/journal/state"
 	"github.com/ActiveMemory/ctx/internal/rc"
@@ -22,87 +25,7 @@ import (
 	"github.com/ActiveMemory/ctx/internal/write"
 )
 
-// executeExport writes files according to the plan.
-//
-// Parameters:
-//   - cmd: Cobra command for output.
-//   - plan: the export plan with file actions.
-//   - jstate: journal state to update as files are exported.
-//   - opts: export flag values.
-//
-// Returns:
-//   - exported: number of new files written.
-//   - updated: number of existing files updated (frontmatter preserved).
-//   - skipped: number of files skipped (existing or locked).
-func executeExport(
-	cmd *cobra.Command,
-	plan core.ExportPlan,
-	jstate *state.JournalState,
-	opts core.ExportOpts,
-) (exported, updated, skipped int) {
-	for _, fa := range plan.Actions {
-		if fa.Action == core.ActionLocked {
-			skipped++
-			write.SkipFile(cmd, fa.Filename, config.FrontmatterLocked)
-			continue
-		}
-		if fa.Action == core.ActionSkip {
-			skipped++
-			write.SkipFile(cmd, fa.Filename, config.ReasonExists)
-			continue
-		}
-
-		// Generate content, sanitizing any invalid UTF-8.
-		content := strings.ToValidUTF8(
-			core.FormatJournalEntryPart(
-				fa.Session, fa.Messages[fa.StartIdx:fa.EndIdx],
-				fa.StartIdx, fa.Part, fa.TotalParts, fa.BaseName, fa.Title,
-			),
-			config.Ellipsis,
-		)
-
-		fileExists := fa.Action == core.ActionRegenerate
-
-		// Preserve enriched YAML frontmatter from the existing file.
-		discard := opts.DiscardFrontmatter()
-		if fileExists && !discard {
-			existing, readErr := os.ReadFile(filepath.Clean(fa.Path))
-			if readErr == nil {
-				if fm := core.ExtractFrontmatter(string(existing)); fm != "" {
-					content = fm + config.NewlineLF + core.StripFrontmatter(content)
-				}
-			}
-		}
-		if fileExists && discard {
-			jstate.ClearEnriched(fa.Filename)
-		}
-		if fileExists && !discard {
-			updated++
-		} else {
-			exported++
-		}
-
-		// Write file.
-		if writeErr := os.WriteFile(
-			fa.Path, []byte(content), config.PermFile,
-		); writeErr != nil {
-			write.WarnFileErr(cmd, fa.Filename, writeErr)
-			continue
-		}
-
-		jstate.MarkExported(fa.Filename)
-
-		if fileExists && !discard {
-			write.ExportedFile(cmd, fa.Filename, config.ReasonUpdated)
-		} else {
-			write.ExportedFile(cmd, fa.Filename, "")
-		}
-	}
-
-	return exported, updated, skipped
-}
-
-// runExport handles the recall export command.
+// Run handles the recall export command.
 //
 // Parameters:
 //   - cmd: Cobra command for output.
@@ -111,7 +34,7 @@ func executeExport(
 //
 // Returns:
 //   - error: non-nil on validation, scan, or write failures.
-func runExport(cmd *cobra.Command, args []string, opts core.ExportOpts) error {
+func Run(cmd *cobra.Command, args []string, opts core.ExportOpts) error {
 	// --keep-frontmatter=false implies --regenerate
 	// (can't discard without regenerating).
 	if !opts.KeepFrontmatter {
@@ -163,9 +86,9 @@ func runExport(cmd *cobra.Command, args []string, opts core.ExportOpts) error {
 	}
 
 	// 4. Ensure journal directory exists.
-	journalDir := filepath.Join(rc.ContextDir(), config.DirJournal)
-	if mkErr := os.MkdirAll(journalDir, config.PermExec); mkErr != nil {
-		return ctxerr.Mkdir(config.DirJournal, mkErr)
+	journalDir := filepath.Join(rc.ContextDir(), dir.Journal)
+	if mkErr := os.MkdirAll(journalDir, fs.PermExec); mkErr != nil {
+		return ctxerr.Mkdir(dir.Journal, mkErr)
 	}
 
 	// 5. Load state + build index.
@@ -183,14 +106,14 @@ func runExport(cmd *cobra.Command, args []string, opts core.ExportOpts) error {
 	for _, rop := range plan.RenameOps {
 		core.RenameJournalFiles(journalDir, rop.OldBase, rop.NewBase, rop.NumParts)
 		jstate.Rename(
-			rop.OldBase+config.ExtMarkdown, rop.NewBase+config.ExtMarkdown,
+			rop.OldBase+file.ExtMarkdown, rop.NewBase+file.ExtMarkdown,
 		)
 		renamed++
 	}
 
 	// 8. Dry-run → print summary and return.
 	if opts.DryRun {
-		write.ExportSummary(cmd, core.PlanCounts(plan), true)
+		write.ExportSummary(cmd, plan.NewCount, plan.RegenCount, plan.SkipCount, plan.LockedCount, true)
 		return nil
 	}
 
@@ -207,11 +130,11 @@ func runExport(cmd *cobra.Command, args []string, opts core.ExportOpts) error {
 	}
 
 	// 10. Execute the export.
-	exported, updated, skipped := executeExport(cmd, plan, jstate, opts)
+	exported, updated, skipped := core.ExecuteExport(cmd, plan, jstate, opts)
 
 	// 11. Persist journal state.
 	if saveErr := jstate.Save(journalDir); saveErr != nil {
-		write.WarnFileErr(cmd, config.FileJournalState, saveErr)
+		write.WarnFileErr(cmd, journal.FileState, saveErr)
 	}
 
 	// 12. Print final summary.

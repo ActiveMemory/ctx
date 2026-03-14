@@ -9,12 +9,21 @@
 package sysinfo
 
 import (
-	"github.com/ActiveMemory/ctx/internal/config"
+	"github.com/ActiveMemory/ctx/internal/config/token"
+
 	"os/exec"
 	"strconv"
 	"strings"
 )
 
+// collectMemory queries physical and swap memory usage on macOS.
+//
+// Uses `sysctl -n hw.memsize` for total RAM, `vm_stat` for page-level
+// usage, and `sysctl -n vm.swapusage` for swap statistics. Returns a
+// MemInfo with Supported=false if the total memory cannot be determined.
+//
+// Returns:
+//   - MemInfo: Physical and swap memory statistics
 func collectMemory() MemInfo {
 	// Total physical memory
 	out, err := exec.Command("sysctl", "-n", "hw.memsize").Output()
@@ -50,12 +59,22 @@ func collectMemory() MemInfo {
 }
 
 // parseVMStat extracts used memory from vm_stat output.
-// Used = Total - (free + inactive) * pageSize.
+//
+// Computes used bytes as Total - (free + inactive) * pageSize.
+// Defaults to 16384-byte pages (Apple Silicon) if page size is not
+// found in the output.
+//
+// Parameters:
+//   - output: Raw output from the vm_stat command
+//   - totalBytes: Total physical memory in bytes
+//
+// Returns:
+//   - uint64: Estimated used memory in bytes
 func parseVMStat(output string, totalBytes uint64) uint64 {
 	var pageSize uint64 = 16384 // default on Apple Silicon
 	pages := make(map[string]uint64)
 
-	for _, line := range strings.Split(output, config.NewlineLF) {
+	for _, line := range strings.Split(output, token.NewlineLF) {
 		if strings.Contains(line, "page size of") {
 			for _, word := range strings.Fields(line) {
 				if n, err := strconv.ParseUint(word, 10, 64); err == nil && n > 0 {
@@ -84,7 +103,16 @@ func parseVMStat(output string, totalBytes uint64) uint64 {
 }
 
 // parseSwapUsage parses sysctl vm.swapusage output.
-// Format: "total = 2048.00M  used = 123.45M  free = 1924.55M  (encrypted)"
+//
+// Expected format: "total = 2048.00M  used = 123.45M  free = 1924.55M  (encrypted)"
+// Values are parsed as megabytes and converted to bytes.
+//
+// Parameters:
+//   - output: Raw output from `sysctl -n vm.swapusage`
+//
+// Returns:
+//   - total: Total swap space in bytes
+//   - used: Used swap space in bytes
 func parseSwapUsage(output string) (total, used uint64) {
 	parseMB := func(s string) uint64 {
 		s = strings.TrimSuffix(strings.TrimSpace(s), "M")

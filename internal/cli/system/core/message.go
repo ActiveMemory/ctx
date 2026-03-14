@@ -8,14 +8,19 @@ package core
 
 import (
 	"bytes"
-	"os"
 	"path/filepath"
 	"strings"
 	"text/template"
 
 	"github.com/ActiveMemory/ctx/internal/assets"
-	"github.com/ActiveMemory/ctx/internal/config"
+	"github.com/ActiveMemory/ctx/internal/config/box"
+	"github.com/ActiveMemory/ctx/internal/config/dir"
+	"github.com/ActiveMemory/ctx/internal/config/file"
+	"github.com/ActiveMemory/ctx/internal/config/session"
+	"github.com/ActiveMemory/ctx/internal/config/token"
+	ctxcontext "github.com/ActiveMemory/ctx/internal/context"
 	"github.com/ActiveMemory/ctx/internal/rc"
+	"github.com/ActiveMemory/ctx/internal/validation"
 )
 
 // LoadMessage loads a hook message template by hook name and variant.
@@ -38,11 +43,11 @@ import (
 // Returns:
 //   - string: Rendered message or empty string for intentional silence
 func LoadMessage(hook, variant string, vars map[string]any, fallback string) string {
-	filename := variant + ".txt"
+	filename := variant + file.ExtTxt
 
 	// 1. User override in .context/
-	userPath := filepath.Join(rc.ContextDir(), "hooks", "messages", hook, filename)
-	if data, readErr := os.ReadFile(userPath); readErr == nil { //nolint:gosec // project-local override path
+	overrideDir := filepath.Join(rc.ContextDir(), dir.HooksMessages, hook)
+	if data, readErr := validation.SafeReadFile(overrideDir, filename); readErr == nil {
 		return renderTemplate(string(data), vars, fallback)
 	}
 
@@ -64,7 +69,7 @@ func renderTemplate(tmpl string, vars map[string]any, fallback string) string {
 		return "" // intentional silence
 	}
 
-	t, parseErr := template.New("msg").Parse(tmpl)
+	t, parseErr := template.New(session.TemplateName).Parse(tmpl)
 	if parseErr != nil {
 		return fallback
 	}
@@ -75,16 +80,6 @@ func renderTemplate(tmpl string, vars map[string]any, fallback string) string {
 	}
 	return buf.String()
 }
-
-// BoxBottom is the standard bottom border for hook message boxes.
-const BoxBottom = "└──────────────────────────────────────────────────"
-
-// VariantBoth is the template variant name used when both ceremony
-// conditions are unmet (e.g. neither remember nor wrapup done).
-const VariantBoth = "both"
-
-// SessionUnknown is the fallback session ID used when input lacks one.
-const SessionUnknown = "unknown"
 
 // BoxLines wraps each line of content with the │ box-drawing prefix.
 // Trailing newlines on content are trimmed before splitting to avoid
@@ -97,10 +92,36 @@ const SessionUnknown = "unknown"
 //   - string: Box-wrapped content
 func BoxLines(content string) string {
 	var b strings.Builder
-	for _, line := range strings.Split(strings.TrimRight(content, config.NewlineLF), config.NewlineLF) {
-		b.WriteString("│ ")
+	for _, line := range strings.Split(strings.TrimRight(content, token.NewlineLF), token.NewlineLF) {
+		b.WriteString(box.LinePrefix)
 		b.WriteString(line)
-		b.WriteString(config.NewlineLF)
+		b.WriteString(token.NewlineLF)
 	}
 	return b.String()
+}
+
+// NudgeBox builds a complete nudge box with relay prefix, titled top
+// border, box-wrapped content, optional context directory footer, and
+// bottom border.
+//
+// Parameters:
+//   - relayPrefix: VERBATIM relay instruction line
+//   - title: box title (e.g., "Backup Warning")
+//   - content: multi-line body text
+//
+// Returns:
+//   - string: fully formatted nudge box
+func NudgeBox(relayPrefix, title, content string) string {
+	pad := box.NudgeBoxWidth - len(title)
+	if pad < 0 {
+		pad = 0
+	}
+	msg := relayPrefix + token.NewlineLF + token.NewlineLF +
+		box.Top + title + " " + strings.Repeat("─", pad) + token.NewlineLF
+	msg += BoxLines(content)
+	if line := ctxcontext.DirLine(); line != "" {
+		msg += box.LinePrefix + line + token.NewlineLF
+	}
+	msg += box.Bottom
+	return msg
 }

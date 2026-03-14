@@ -7,12 +7,13 @@
 package edit
 
 import (
-	"fmt"
-	"os"
-
+	"github.com/ActiveMemory/ctx/internal/config/pad"
 	"github.com/spf13/cobra"
 
 	"github.com/ActiveMemory/ctx/internal/cli/pad/core"
+	ctxerr "github.com/ActiveMemory/ctx/internal/err"
+	"github.com/ActiveMemory/ctx/internal/validation"
+	"github.com/ActiveMemory/ctx/internal/write"
 )
 
 // runEdit replaces entry at 1-based position n with new text.
@@ -40,7 +41,7 @@ func runEdit(cmd *cobra.Command, n int, text string) error {
 		return writeErr
 	}
 
-	cmd.Println(fmt.Sprintf("Updated entry %d.", n))
+	write.PadEntryUpdated(cmd, n)
 	return nil
 }
 
@@ -64,7 +65,7 @@ func runEditAppend(cmd *cobra.Command, n int, text string) error {
 	}
 
 	if core.IsBlob(entries[n-1]) {
-		return fmt.Errorf("cannot append to a blob entry")
+		return ctxerr.BlobAppendNotAllowed()
 	}
 
 	entries[n-1] = entries[n-1] + " " + text
@@ -73,7 +74,7 @@ func runEditAppend(cmd *cobra.Command, n int, text string) error {
 		return writeErr
 	}
 
-	cmd.Println(fmt.Sprintf("Updated entry %d.", n))
+	write.PadEntryUpdated(cmd, n)
 	return nil
 }
 
@@ -97,7 +98,7 @@ func runEditPrepend(cmd *cobra.Command, n int, text string) error {
 	}
 
 	if core.IsBlob(entries[n-1]) {
-		return fmt.Errorf("cannot prepend to a blob entry")
+		return ctxerr.BlobPrependNotAllowed()
 	}
 
 	entries[n-1] = text + " " + entries[n-1]
@@ -106,7 +107,7 @@ func runEditPrepend(cmd *cobra.Command, n int, text string) error {
 		return writeErr
 	}
 
-	cmd.Println(fmt.Sprintf("Updated entry %d.", n))
+	write.PadEntryUpdated(cmd, n)
 	return nil
 }
 
@@ -132,7 +133,7 @@ func runEditBlob(cmd *cobra.Command, n int, filePath, labelText string) error {
 
 	oldLabel, oldData, ok := core.SplitBlob(entries[n-1])
 	if !ok {
-		return fmt.Errorf("entry %d is not a blob entry", n)
+		return ctxerr.NotBlobEntry(n)
 	}
 
 	newLabel := oldLabel
@@ -143,12 +144,12 @@ func runEditBlob(cmd *cobra.Command, n int, filePath, labelText string) error {
 	}
 
 	if filePath != "" {
-		data, readErr := os.ReadFile(filePath) //nolint:gosec // user-provided path is intentional
+		data, readErr := validation.ReadUserFile(filePath)
 		if readErr != nil {
-			return fmt.Errorf("read file: %w", readErr)
+			return ctxerr.ReadFile(readErr)
 		}
-		if len(data) > core.MaxBlobSize {
-			return fmt.Errorf("file too large: %d bytes (max %d)", len(data), core.MaxBlobSize)
+		if len(data) > pad.MaxBlobSize {
+			return ctxerr.FileTooLarge(len(data), pad.MaxBlobSize)
 		}
 		newData = data
 	}
@@ -159,6 +160,6 @@ func runEditBlob(cmd *cobra.Command, n int, filePath, labelText string) error {
 		return writeErr
 	}
 
-	cmd.Println(fmt.Sprintf("Updated entry %d.", n))
+	write.PadEntryUpdated(cmd, n)
 	return nil
 }

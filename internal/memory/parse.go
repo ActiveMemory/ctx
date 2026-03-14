@@ -9,27 +9,8 @@ package memory
 import (
 	"strings"
 
-	"github.com/ActiveMemory/ctx/internal/config"
+	"github.com/ActiveMemory/ctx/internal/config/token"
 )
-
-// EntryKind identifies how an entry was delimited in MEMORY.md.
-type EntryKind int
-
-const (
-	// EntryHeader is a Markdown heading (## or ###).
-	EntryHeader EntryKind = iota
-	// EntryParagraph is a blank-line-separated paragraph.
-	EntryParagraph
-	// EntryList is one or more consecutive list items.
-	EntryList
-)
-
-// Entry is a discrete block parsed from MEMORY.md.
-type Entry struct {
-	Text      string    // Raw text of the entry (trimmed)
-	StartLine int       // 1-based line number where the entry begins
-	Kind      EntryKind // How the entry was delimited
-}
 
 // ParseEntries splits MEMORY.md content into discrete entries.
 //
@@ -44,7 +25,7 @@ func ParseEntries(content string) []Entry {
 		return nil
 	}
 
-	lines := strings.Split(content, config.NewlineLF)
+	lines := strings.Split(content, token.NewlineLF)
 	var entries []Entry
 	var current []string
 	var currentKind EntryKind
@@ -52,7 +33,7 @@ func ParseEntries(content string) []Entry {
 	inEntry := false
 
 	flush := func() {
-		text := strings.TrimSpace(strings.Join(current, config.NewlineLF))
+		text := strings.TrimSpace(strings.Join(current, token.NewlineLF))
 		if text != "" {
 			entries = append(entries, Entry{
 				Text:      text,
@@ -69,7 +50,7 @@ func ParseEntries(content string) []Entry {
 		trimmed := strings.TrimSpace(line)
 
 		// Skip top-level heading
-		if strings.HasPrefix(trimmed, "# ") && !strings.HasPrefix(trimmed, "## ") {
+		if strings.HasPrefix(trimmed, token.HeadingLevelOneStart) && !strings.HasPrefix(trimmed, token.HeadingLevelTwoStart) {
 			if inEntry {
 				flush()
 			}
@@ -77,7 +58,7 @@ func ParseEntries(content string) []Entry {
 		}
 
 		// Section header (## or ###) starts a new entry
-		if strings.HasPrefix(trimmed, "## ") || strings.HasPrefix(trimmed, "### ") {
+		if strings.HasPrefix(trimmed, token.HeadingLevelTwoStart) || strings.HasPrefix(trimmed, token.HeadingLevelThreeStart) {
 			if inEntry {
 				flush()
 			}
@@ -97,7 +78,7 @@ func ParseEntries(content string) []Entry {
 		}
 
 		// List item — each top-level item is a separate entry for classification
-		if strings.HasPrefix(trimmed, "- ") || strings.HasPrefix(trimmed, "* ") {
+		if strings.HasPrefix(trimmed, token.PrefixListDash) || strings.HasPrefix(trimmed, token.PrefixListStar) {
 			if inEntry {
 				flush()
 			}

@@ -9,7 +9,8 @@ package core
 import (
 	"path/filepath"
 
-	"github.com/ActiveMemory/ctx/internal/config"
+	"github.com/ActiveMemory/ctx/internal/config/ctx"
+	"github.com/ActiveMemory/ctx/internal/config/dir"
 	"github.com/ActiveMemory/ctx/internal/rc"
 )
 
@@ -18,7 +19,7 @@ import (
 // Returns:
 //   - string: Full path to .context/TASKS.md
 func TasksFilePath() string {
-	return filepath.Join(rc.ContextDir(), config.FileTask)
+	return filepath.Join(rc.ContextDir(), ctx.Task)
 }
 
 // ArchiveDirPath returns the path to the archive directory.
@@ -26,5 +27,5 @@ func TasksFilePath() string {
 // Returns:
 //   - string: Full path to .context/archive/
 func ArchiveDirPath() string {
-	return filepath.Join(rc.ContextDir(), config.DirArchive)
+	return filepath.Join(rc.ContextDir(), dir.Archive)
 }

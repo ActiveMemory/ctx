@@ -7,16 +7,17 @@
 package show
 
 import (
-	"fmt"
 	"os"
 
+	"github.com/ActiveMemory/ctx/internal/config/fs"
 	"github.com/spf13/cobra"
 
 	"github.com/ActiveMemory/ctx/internal/cli/pad/core"
 	ctxerr "github.com/ActiveMemory/ctx/internal/err"
+	"github.com/ActiveMemory/ctx/internal/write"
 )
 
-// runShow prints the raw text of entry at 1-based position n.
+// Run prints the raw text of entry at 1-based position n.
 //
 // Parameters:
 //   - cmd: Cobra command for output
@@ -25,7 +26,7 @@ import (
 //
 // Returns:
 //   - error: Non-nil on invalid index, read failure, or write failure
-func runShow(cmd *cobra.Command, n int, outPath string) error {
+func Run(cmd *cobra.Command, n int, outPath string) error {
 	entries, err := core.ReadEntries()
 	if err != nil {
 		return err
@@ -35,28 +36,28 @@ func runShow(cmd *cobra.Command, n int, outPath string) error {
 		return ctxerr.EntryRange(n, 0)
 	}
 
-	if err := core.ValidateIndex(n, entries); err != nil {
-		return err
+	if validErr := core.ValidateIndex(n, entries); validErr != nil {
+		return validErr
 	}
 
 	entry := entries[n-1]
 
-	if label, data, ok := core.SplitBlob(entry); ok {
-		_ = label
+	if _, data, ok := core.SplitBlob(entry); ok {
 		if outPath != "" {
-			if writeErr := os.WriteFile(outPath, data, 0600); writeErr != nil {
-				return fmt.Errorf("write file: %w", writeErr)
+			if writeErr := os.WriteFile(
+				outPath, data, fs.PermSecret,
+			); writeErr != nil {
+				return ctxerr.WriteFileFailed(writeErr)
 			}
-			cmd.Println(fmt.Sprintf("Wrote %d bytes to %s", len(data), outPath))
+			write.PadBlobWritten(cmd, len(data), outPath)
 			return nil
 		}
 		cmd.Print(string(data))
 		return nil
 	}
 
-	// Non-blob entry.
 	if outPath != "" {
-		return fmt.Errorf("--out can only be used with blob entries")
+		return ctxerr.OutFlagRequiresBlob()
 	}
 
 	cmd.Println(entry)

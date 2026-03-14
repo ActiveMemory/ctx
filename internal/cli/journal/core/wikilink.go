@@ -12,11 +12,13 @@ import (
 	"regexp"
 	"strings"
 
-	"github.com/ActiveMemory/ctx/internal/config"
+	"github.com/ActiveMemory/ctx/internal/assets"
+	"github.com/ActiveMemory/ctx/internal/config/file"
+	"github.com/ActiveMemory/ctx/internal/config/token"
 )
 
 // RegexMarkdownLink matches Markdown links: [display](target)
-var RegexMarkdownLink = regexp.MustCompile(`\[([^\]]+)\]\(([^)]+)\)`)
+var RegexMarkdownLink = regexp.MustCompile(`\[([^]]+)]\(([^)]+)\)`)
 
 // ConvertMarkdownLinks replaces internal Markdown links with Obsidian
 // wikilinks. External links (http/https) are left unchanged.
@@ -45,7 +47,7 @@ func ConvertMarkdownLinks(content string) string {
 
 		// Strip path prefix (e.g., "../topics/", "../") and .md extension
 		target = filepath.Base(target)
-		target = strings.TrimSuffix(target, config.ExtMarkdown)
+		target = strings.TrimSuffix(target, file.ExtMarkdown)
 
 		return FormatWikilink(target, display)
 	})
@@ -64,9 +66,9 @@ func ConvertMarkdownLinks(content string) string {
 //   - string: Formatted wikilink
 func FormatWikilink(target, display string) string {
 	if target == display {
-		return fmt.Sprintf(config.ObsidianWikilinkPlain, target)
+		return fmt.Sprintf(assets.ObsidianWikilinkPlain, target)
 	}
-	return fmt.Sprintf(config.ObsidianWikilinkFmt, target, display)
+	return fmt.Sprintf(assets.ObsidianWikilinkFmt, target, display)
 }
 
 // FormatWikilinkEntry formats a journal entry as a wikilink list item.
@@ -79,14 +81,14 @@ func FormatWikilink(target, display string) string {
 // Returns:
 //   - string: Formatted list item with wikilink
 func FormatWikilinkEntry(e JournalEntry) string {
-	link := strings.TrimSuffix(e.Filename, config.ExtMarkdown)
+	link := strings.TrimSuffix(e.Filename, file.ExtMarkdown)
 
 	var meta []string
 	if e.Type != "" {
-		meta = append(meta, config.Backtick+e.Type+config.Backtick)
+		meta = append(meta, token.Backtick+e.Type+token.Backtick)
 	}
 	if e.Outcome != "" {
-		meta = append(meta, config.Backtick+e.Outcome+config.Backtick)
+		meta = append(meta, token.Backtick+e.Outcome+token.Backtick)
 	}
 
 	suffix := ""

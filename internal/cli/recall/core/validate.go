@@ -33,7 +33,7 @@ func EmptyMessage(msg parser.Message) bool {
 //   - error: non-nil if flags conflict.
 func ValidateExportFlags(args []string, opts ExportOpts) error {
 	if len(args) > 0 && opts.All {
-		return ctxerr.AllWithArgument("a session ID")
+		return ctxerr.AllWithSessionID()
 	}
 	if opts.Regenerate && !opts.All {
 		return ctxerr.RegenerateRequiresAll()

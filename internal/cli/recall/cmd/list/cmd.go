@@ -7,6 +7,7 @@
 package list
 
 import (
+	"github.com/ActiveMemory/ctx/internal/config/journal"
 	"github.com/spf13/cobra"
 
 	"github.com/ActiveMemory/ctx/internal/assets"
@@ -26,23 +27,35 @@ func Cmd() *cobra.Command {
 		allProjects bool
 	)
 
-	short, long := assets.CommandDesc("recall.list")
+	short, long := assets.CommandDesc(assets.CmdDescKeyRecallList)
 
 	cmd := &cobra.Command{
 		Use:   "list",
 		Short: short,
 		Long:  long,
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return runList(cmd, limit, project, tool, since, until, allProjects)
+			return Run(cmd, limit, project, tool, since, until, allProjects)
 		},
 	}
 
-	cmd.Flags().IntVarP(&limit, "limit", "n", 20, assets.FlagDesc("recall.list.limit"))
-	cmd.Flags().StringVarP(&project, "project", "p", "", assets.FlagDesc("recall.list.project"))
-	cmd.Flags().StringVarP(&tool, "tool", "t", "", assets.FlagDesc("recall.list.tool"))
-	cmd.Flags().StringVar(&since, "since", "", assets.FlagDesc("recall.list.since"))
-	cmd.Flags().StringVar(&until, "until", "", assets.FlagDesc("recall.list.until"))
-	cmd.Flags().BoolVar(&allProjects, "all-projects", false, assets.FlagDesc("recall.list.all-projects"))
+	cmd.Flags().IntVarP(&limit, "limit", "n", journal.DefaultRecallListLimit,
+		assets.FlagDesc(assets.FlagDescKeyRecallListLimit),
+	)
+	cmd.Flags().StringVarP(&project, "project", "p", "",
+		assets.FlagDesc(assets.FlagDescKeyRecallListProject),
+	)
+	cmd.Flags().StringVarP(&tool, "tool", "t", "",
+		assets.FlagDesc(assets.FlagDescKeyRecallListTool),
+	)
+	cmd.Flags().StringVar(&since, "since", "",
+		assets.FlagDesc(assets.FlagDescKeyRecallListSince),
+	)
+	cmd.Flags().StringVar(&until, "until", "",
+		assets.FlagDesc(assets.FlagDescKeyRecallListUntil),
+	)
+	cmd.Flags().BoolVar(&allProjects, "all-projects", false,
+		assets.FlagDesc(assets.FlagDescKeyRecallListAllProjects),
+	)
 
 	return cmd
 }

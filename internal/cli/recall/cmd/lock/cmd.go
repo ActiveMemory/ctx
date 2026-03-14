@@ -22,7 +22,7 @@ import (
 func Cmd() *cobra.Command {
 	var all bool
 
-	short, long := assets.CommandDesc("recall.lock")
+	short, long := assets.CommandDesc(assets.CmdDescKeyRecallLock)
 
 	cmd := &cobra.Command{
 		Use:   "lock <pattern>",
@@ -33,7 +33,9 @@ func Cmd() *cobra.Command {
 		},
 	}
 
-	cmd.Flags().BoolVar(&all, "all", false, assets.FlagDesc("recall.lock.all"))
+	cmd.Flags().BoolVar(&all, "all", false,
+		assets.FlagDesc(assets.FlagDescKeyRecallLockAll),
+	)
 
 	return cmd
 }

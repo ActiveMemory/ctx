@@ -9,13 +9,9 @@ package core
 import (
 	"encoding/base64"
 	"strings"
+
+	"github.com/ActiveMemory/ctx/internal/config/pad"
 )
-
-// BlobSep separates the label from the base64-encoded file content.
-const BlobSep = ":::"
-
-// MaxBlobSize is the maximum file size (pre-encoding) allowed for blob entries.
-const MaxBlobSize = 64 * 1024
 
 // IsBlob returns true if the entry contains the blob separator.
 //
@@ -25,7 +21,7 @@ const MaxBlobSize = 64 * 1024
 // Returns:
 //   - bool: True if entry is a blob
 func IsBlob(entry string) bool {
-	return strings.Contains(entry, BlobSep)
+	return strings.Contains(entry, pad.BlobSep)
 }
 
 // SplitBlob parses a blob entry into its label and decoded data.
@@ -38,13 +34,13 @@ func IsBlob(entry string) bool {
 //   - data: Decoded file content
 //   - ok: False for non-blob entries or malformed base64
 func SplitBlob(entry string) (label string, data []byte, ok bool) {
-	idx := strings.Index(entry, BlobSep)
+	idx := strings.Index(entry, pad.BlobSep)
 	if idx < 0 {
 		return "", nil, false
 	}
 
 	label = entry[:idx]
-	encoded := entry[idx+len(BlobSep):]
+	encoded := entry[idx+len(pad.BlobSep):]
 
 	data, err := base64.StdEncoding.DecodeString(encoded)
 	if err != nil {
@@ -63,7 +59,7 @@ func SplitBlob(entry string) (label string, data []byte, ok bool) {
 // Returns:
 //   - string: Formatted blob entry
 func MakeBlob(label string, data []byte) string {
-	return label + BlobSep + base64.StdEncoding.EncodeToString(data)
+	return label + pad.BlobSep + base64.StdEncoding.EncodeToString(data)
 }
 
 // DisplayEntry returns a display-friendly version of an entry.
@@ -77,7 +73,7 @@ func MakeBlob(label string, data []byte) string {
 //   - string: Human-readable entry representation
 func DisplayEntry(entry string) string {
 	if label, _, ok := SplitBlob(entry); ok {
-		return label + " [BLOB]"
+		return label + pad.BlobTag
 	}
 	return entry
 }

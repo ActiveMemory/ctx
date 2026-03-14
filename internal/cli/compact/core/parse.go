@@ -10,7 +10,9 @@ import (
 	"strings"
 	"time"
 
-	"github.com/ActiveMemory/ctx/internal/config"
+	"github.com/ActiveMemory/ctx/internal/config/regex"
+	time2 "github.com/ActiveMemory/ctx/internal/config/time"
+	"github.com/ActiveMemory/ctx/internal/config/token"
 	"github.com/ActiveMemory/ctx/internal/task"
 )
 
@@ -22,7 +24,7 @@ import (
 // Returns:
 //   - int: Number of leading whitespace characters (spaces and tabs)
 func indentLevel(line string) int {
-	return len(line) - len(strings.TrimLeft(line, config.Whitespace))
+	return len(line) - len(strings.TrimLeft(line, token.Whitespace))
 }
 
 // parseBlockAt parses a task block starting at the given index.
@@ -85,7 +87,7 @@ func parseBlockAt(lines []string, startIdx int) TaskBlock {
 		block.EndIndex = i + 1
 
 		// Check if this is an unchecked task
-		nestedMatch := config.RegExTask.FindStringSubmatch(line)
+		nestedMatch := regex.Task.FindStringSubmatch(line)
 		if nestedMatch != nil && task.Pending(nestedMatch) {
 			block.IsArchivable = false
 		}
@@ -102,13 +104,13 @@ func parseBlockAt(lines []string, startIdx int) TaskBlock {
 // Returns:
 //   - *time.Time: Parsed time, or nil if no valid timestamp is found
 func parseDoneTimestamp(line string) *time.Time {
-	match := config.RegExTaskDoneTimestamp.FindStringSubmatch(line)
+	match := regex.TaskDoneTimestamp.FindStringSubmatch(line)
 	if len(match) < 2 {
 		return nil
 	}
 
 	// Parse YYYY-MM-DD-HHMMSS format
-	t, err := time.Parse(config.TimestampCompact, match[1])
+	t, err := time.Parse(time2.TimestampCompact, match[1])
 	if err != nil {
 		return nil
 	}

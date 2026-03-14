@@ -11,8 +11,12 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/ActiveMemory/ctx/internal/cli/complete"
-	"github.com/ActiveMemory/ctx/internal/config"
+	"github.com/ActiveMemory/ctx/internal/assets"
+	taskcomplete "github.com/ActiveMemory/ctx/internal/cli/task/cmd/complete"
+	"github.com/ActiveMemory/ctx/internal/config/cli"
+	entry2 "github.com/ActiveMemory/ctx/internal/config/entry"
+	"github.com/ActiveMemory/ctx/internal/config/mcp"
+	"github.com/ActiveMemory/ctx/internal/config/token"
 	"github.com/ActiveMemory/ctx/internal/context"
 	"github.com/ActiveMemory/ctx/internal/drift"
 	"github.com/ActiveMemory/ctx/internal/entry"
@@ -21,65 +25,65 @@ import (
 // toolDefs defines all available MCP tools.
 var toolDefs = []Tool{
 	{
-		Name:        "ctx_status",
-		Description: "Show context health: file count, token estimate, and file summaries",
-		InputSchema: InputSchema{Type: "object"},
+		Name:        mcp.MCPToolStatus,
+		Description: assets.TextDesc(assets.TextDescKeyMCPToolStatusDesc),
+		InputSchema: InputSchema{Type: mcp.MCPSchemaObject},
 		Annotations: &ToolAnnotations{ReadOnlyHint: true},
 	},
 	{
-		Name:        "ctx_add",
-		Description: "Add a task, decision, learning, or convention to the context",
+		Name:        mcp.MCPToolAdd,
+		Description: assets.TextDesc(assets.TextDescKeyMCPToolAddDesc),
 		InputSchema: InputSchema{
-			Type: "object",
+			Type: mcp.MCPSchemaObject,
 			Properties: map[string]Property{
-				"type": {
-					Type:        "string",
-					Description: "Entry type to add",
+				cli.AttrType: {
+					Type:        mcp.MCPSchemaString,
+					Description: assets.TextDesc(assets.TextDescKeyMCPToolPropType),
 					Enum:        []string{"task", "decision", "learning", "convention"},
 				},
 				"content": {
-					Type:        "string",
-					Description: "Title or main content of the entry",
+					Type:        mcp.MCPSchemaString,
+					Description: assets.TextDesc(assets.TextDescKeyMCPToolPropContent),
 				},
 				"priority": {
-					Type:        "string",
-					Description: "Priority level (for tasks only)",
+					Type:        mcp.MCPSchemaString,
+					Description: assets.TextDesc(assets.TextDescKeyMCPToolPropPriority),
 					Enum:        []string{"high", "medium", "low"},
 				},
-				"context": {
-					Type:        "string",
-					Description: "Context field (required for decisions and learnings)",
+				cli.AttrContext: {
+					Type:        mcp.MCPSchemaString,
+					Description: assets.TextDesc(assets.TextDescKeyMCPToolPropContext),
 				},
-				"rationale": {
-					Type:        "string",
-					Description: "Rationale (required for decisions)",
+				cli.AttrRationale: {
+					Type:        mcp.MCPSchemaString,
+					Description: assets.TextDesc(assets.TextDescKeyMCPToolPropRationale),
 				},
-				"consequences": {
-					Type:        "string",
-					Description: "Consequences (required for decisions)",
+				cli.AttrConsequences: {
+					Type:        mcp.MCPSchemaString,
+					Description: assets.TextDesc(assets.TextDescKeyMCPToolPropConseq),
 				},
-				"lesson": {
-					Type:        "string",
-					Description: "Lesson learned (required for learnings)",
+				cli.AttrLesson: {
+					Type:        mcp.MCPSchemaString,
+					Description: assets.TextDesc(assets.TextDescKeyMCPToolPropLesson),
 				},
-				"application": {
-					Type:        "string",
-					Description: "How to apply this lesson (required for learnings)",
+				cli.AttrApplication: {
+					Type:        mcp.MCPSchemaString,
+					Description: assets.TextDesc(assets.TextDescKeyMCPToolPropApplication),
 				},
 			},
-			Required: []string{"type", "content"},
+			Required: []string{cli.AttrType, "content"},
 		},
 		Annotations: &ToolAnnotations{},
 	},
 	{
-		Name:        "ctx_complete",
-		Description: "Mark a task as done by number or text match",
+		Name:        mcp.MCPToolComplete,
+		Description: assets.TextDesc(assets.TextDescKeyMCPToolCompleteDesc),
 		InputSchema: InputSchema{
-			Type: "object",
+			Type: mcp.MCPSchemaObject,
 			Properties: map[string]Property{
 				"query": {
-					Type:        "string",
-					Description: "Task number (e.g. '1') or search text to match",
+					Type:        mcp.MCPSchemaString,
+					Description: assets.TextDesc(assets.TextDescKeyMCPToolPropQuery),
 				},
 			},
 			Required: []string{"query"},
@@ -87,9 +91,9 @@ var toolDefs = []Tool{
 		Annotations: &ToolAnnotations{IdempotentHint: true},
 	},
 	{
-		Name:        "ctx_drift",
-		Description: "Detect stale or invalid context: dead paths, missing files, staleness",
-		InputSchema: InputSchema{Type: "object"},
+		Name:        mcp.MCPToolDrift,
+		Description: assets.TextDesc(assets.TextDescKeyMCPToolDriftDesc),
+		InputSchema: InputSchema{Type: mcp.MCPSchemaObject},
 		Annotations: &ToolAnnotations{ReadOnlyHint: true},
 	},
 }
@@ -103,21 +107,21 @@ func (s *Server) handleToolsList(req Request) *Response {
 func (s *Server) handleToolsCall(req Request) *Response {
 	var params CallToolParams
 	if err := json.Unmarshal(req.Params, &params); err != nil {
-		return s.error(req.ID, errCodeInvalidArg, "invalid params")
+		return s.error(req.ID, errCodeInvalidArg, assets.TextDesc(assets.TextDescKeyMCPInvalidParams))
 	}
 
 	switch params.Name {
-	case "ctx_status":
+	case mcp.MCPToolStatus:
 		return s.toolStatus(req.ID)
-	case "ctx_add":
+	case mcp.MCPToolAdd:
 		return s.toolAdd(req.ID, params.Arguments)
-	case "ctx_complete":
+	case mcp.MCPToolComplete:
 		return s.toolComplete(req.ID, params.Arguments)
-	case "ctx_drift":
+	case mcp.MCPToolDrift:
 		return s.toolDrift(req.ID)
 	default:
 		return s.error(req.ID, errCodeNotFound,
-			fmt.Sprintf("unknown tool: %s", params.Name))
+			fmt.Sprintf(assets.TextDesc(assets.TextDescKeyMCPUnknownTool), params.Name))
 	}
 }
 
@@ -125,20 +129,20 @@ func (s *Server) handleToolsCall(req Request) *Response {
 func (s *Server) toolStatus(id json.RawMessage) *Response {
 	ctx, err := context.Load(s.contextDir)
 	if err != nil {
-		return s.toolError(id, fmt.Sprintf("failed to load context: %v", err))
+		return s.toolError(id, fmt.Sprintf(assets.TextDesc(assets.TextDescKeyMCPLoadContext), err))
 	}
 
 	var sb strings.Builder
-	fmt.Fprintf(&sb, "Context: %s\n", ctx.Dir)
-	fmt.Fprintf(&sb, "Files: %d\n", len(ctx.Files))
-	fmt.Fprintf(&sb, "Tokens: ~%d\n\n", ctx.TotalTokens)
+	_, _ = fmt.Fprintf(&sb, assets.TextDesc(assets.TextDescKeyMCPStatusContextFormat), ctx.Dir)
+	_, _ = fmt.Fprintf(&sb, assets.TextDesc(assets.TextDescKeyMCPStatusFilesFormat), len(ctx.Files))
+	_, _ = fmt.Fprintf(&sb, assets.TextDesc(assets.TextDescKeyMCPStatusTokensFormat), ctx.TotalTokens)
 
 	for _, f := range ctx.Files {
-		status := "OK"
+		status := assets.TextDesc(assets.TextDescKeyMCPStatusOK)
 		if f.IsEmpty {
-			status = "EMPTY"
+			status = assets.TextDesc(assets.TextDescKeyMCPStatusEmpty)
 		}
-		fmt.Fprintf(&sb, "  %-22s %6d tokens  [%s]\n",
+		_, _ = fmt.Fprintf(&sb, assets.TextDesc(assets.TextDescKeyMCPStatusFileFormat),
 			f.Name, f.Tokens, status)
 	}
 
@@ -149,11 +153,11 @@ func (s *Server) toolStatus(id json.RawMessage) *Response {
 func (s *Server) toolAdd(
 	id json.RawMessage, args map[string]interface{},
 ) *Response {
-	entryType, _ := args["type"].(string)
+	entryType, _ := args[cli.AttrType].(string)
 	content, _ := args["content"].(string)
 
 	if entryType == "" || content == "" {
-		return s.toolError(id, "type and content are required")
+		return s.toolError(id, assets.TextDesc(assets.TextDescKeyMCPTypeContentRequired))
 	}
 
 	params := entry.Params{
@@ -188,11 +192,11 @@ func (s *Server) toolAdd(
 	}
 
 	if wErr := entry.Write(params); wErr != nil {
-		return s.toolError(id, fmt.Sprintf("write failed: %v", wErr))
+		return s.toolError(id, fmt.Sprintf(assets.TextDesc(assets.TextDescKeyMCPWriteFailed), wErr))
 	}
 
-	fileName := config.FileType[strings.ToLower(entryType)]
-	return s.toolOK(id, fmt.Sprintf("Added %s to %s", entryType, fileName))
+	fileName := entry2.ToCtxFile[strings.ToLower(entryType)]
+	return s.toolOK(id, fmt.Sprintf(assets.TextDesc(assets.TextDescKeyMCPAddedFormat), entryType, fileName))
 }
 
 // toolComplete marks a task as done by number or text match.
@@ -201,51 +205,51 @@ func (s *Server) toolComplete(
 ) *Response {
 	query, _ := args["query"].(string)
 	if query == "" {
-		return s.toolError(id, "query is required")
+		return s.toolError(id, assets.TextDesc(assets.TextDescKeyMCPQueryRequired))
 	}
 
-	completedTask, err := complete.CompleteTask(query, s.contextDir)
+	completedTask, err := taskcomplete.CompleteTask(query, s.contextDir)
 	if err != nil {
 		return s.toolError(id, err.Error())
 	}
 
-	return s.toolOK(id, fmt.Sprintf("Completed: %s", completedTask))
+	return s.toolOK(id, fmt.Sprintf(assets.TextDesc(assets.TextDescKeyMCPCompletedFormat), completedTask))
 }
 
 // toolDrift runs drift detection and returns the report.
 func (s *Server) toolDrift(id json.RawMessage) *Response {
 	ctx, err := context.Load(s.contextDir)
 	if err != nil {
-		return s.toolError(id, fmt.Sprintf("failed to load context: %v", err))
+		return s.toolError(id, fmt.Sprintf(assets.TextDesc(assets.TextDescKeyMCPLoadContext), err))
 	}
 
 	report := drift.Detect(ctx)
 
 	var sb strings.Builder
-	fmt.Fprintf(&sb, "Status: %s\n\n", report.Status())
+	_, _ = fmt.Fprintf(&sb, assets.TextDesc(assets.TextDescKeyMCPDriftStatusFormat), report.Status())
 
 	if len(report.Violations) > 0 {
-		sb.WriteString("Violations:\n")
+		sb.WriteString(assets.TextDesc(assets.TextDescKeyMCPDriftViolations))
 		for _, v := range report.Violations {
-			fmt.Fprintf(&sb, "  - [%s] %s: %s\n",
+			_, _ = fmt.Fprintf(&sb, assets.TextDesc(assets.TextDescKeyMCPDriftIssueFormat),
 				v.Type, v.File, v.Message)
 		}
-		sb.WriteString(config.NewlineLF)
+		sb.WriteString(token.NewlineLF)
 	}
 
 	if len(report.Warnings) > 0 {
-		sb.WriteString("Warnings:\n")
+		sb.WriteString(assets.TextDesc(assets.TextDescKeyMCPDriftWarnings))
 		for _, w := range report.Warnings {
-			fmt.Fprintf(&sb, "  - [%s] %s: %s\n",
+			_, _ = fmt.Fprintf(&sb, assets.TextDesc(assets.TextDescKeyMCPDriftIssueFormat),
 				w.Type, w.File, w.Message)
 		}
-		sb.WriteString(config.NewlineLF)
+		sb.WriteString(token.NewlineLF)
 	}
 
 	if len(report.Passed) > 0 {
-		sb.WriteString("Passed:\n")
+		sb.WriteString(assets.TextDesc(assets.TextDescKeyMCPDriftPassed))
 		for _, p := range report.Passed {
-			fmt.Fprintf(&sb, "  - %s\n", p)
+			_, _ = fmt.Fprintf(&sb, assets.TextDesc(assets.TextDescKeyMCPDriftPassedFormat), p)
 		}
 	}
 
@@ -255,14 +259,14 @@ func (s *Server) toolDrift(id json.RawMessage) *Response {
 // toolOK builds a successful tool result.
 func (s *Server) toolOK(id json.RawMessage, text string) *Response {
 	return s.ok(id, CallToolResult{
-		Content: []ToolContent{{Type: "text", Text: text}},
+		Content: []ToolContent{{Type: mcp.MCPContentTypeText, Text: text}},
 	})
 }
 
 // toolError builds a tool error result.
 func (s *Server) toolError(id json.RawMessage, msg string) *Response {
 	return s.ok(id, CallToolResult{
-		Content: []ToolContent{{Type: "text", Text: msg}},
+		Content: []ToolContent{{Type: mcp.MCPContentTypeText, Text: msg}},
 		IsError: true,
 	})
 }

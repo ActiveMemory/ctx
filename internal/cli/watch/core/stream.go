@@ -8,13 +8,17 @@ package core
 
 import (
 	"bufio"
-	"fmt"
 	"io"
+	"regexp"
 	"strings"
 
+	"github.com/ActiveMemory/ctx/internal/config/cli"
+	"github.com/ActiveMemory/ctx/internal/config/regex"
+	"github.com/ActiveMemory/ctx/internal/config/watch"
 	"github.com/spf13/cobra"
 
-	"github.com/ActiveMemory/ctx/internal/config"
+	ctxerr "github.com/ActiveMemory/ctx/internal/err"
+	"github.com/ActiveMemory/ctx/internal/write"
 )
 
 // ExtractAttribute extracts a named attribute from an XML tag string.
@@ -26,7 +30,7 @@ import (
 // Returns:
 //   - string: Attribute value, or empty string if not found
 func ExtractAttribute(tag, attrName string) string {
-	pattern := config.RegExFromAttrName(attrName)
+	pattern := regexp.MustCompile(attrName + `="([^"]*)"`)
 	match := pattern.FindStringSubmatch(tag)
 	if len(match) >= 2 {
 		return match[1]
@@ -50,8 +54,8 @@ func ExtractAttribute(tag, attrName string) string {
 func ProcessStream(cmd *cobra.Command, reader io.Reader, dryRun bool) error {
 	scanner := bufio.NewScanner(reader)
 	// Use a larger buffer for long lines
-	buf := make([]byte, 0, 64*1024)
-	scanner.Buffer(buf, 1024*1024)
+	buf := make([]byte, 0, watch.StreamScannerInitCap)
+	scanner.Buffer(buf, watch.StreamScannerMaxSize)
 
 	updateCount := 0
 
@@ -59,36 +63,28 @@ func ProcessStream(cmd *cobra.Command, reader io.Reader, dryRun bool) error {
 		line := scanner.Text()
 
 		// Check for context-update commands
-		matches := config.RegExContextUpdate.FindAllStringSubmatch(line, -1)
+		matches := regex.SystemContextUpdate.FindAllStringSubmatch(line, -1)
 		for _, match := range matches {
 			if len(match) >= 3 {
 				openingTag := match[1]
 				update := ContextUpdate{
-					Type:         strings.ToLower(ExtractAttribute(openingTag, "type")),
+					Type:         strings.ToLower(ExtractAttribute(openingTag, cli.AttrType)),
 					Content:      strings.TrimSpace(match[2]),
-					Context:      ExtractAttribute(openingTag, "context"),
-					Lesson:       ExtractAttribute(openingTag, "lesson"),
-					Application:  ExtractAttribute(openingTag, "application"),
-					Rationale:    ExtractAttribute(openingTag, "rationale"),
-					Consequences: ExtractAttribute(openingTag, "consequences"),
+					Context:      ExtractAttribute(openingTag, cli.AttrContext),
+					Lesson:       ExtractAttribute(openingTag, cli.AttrLesson),
+					Application:  ExtractAttribute(openingTag, cli.AttrApplication),
+					Rationale:    ExtractAttribute(openingTag, cli.AttrRationale),
+					Consequences: ExtractAttribute(openingTag, cli.AttrConsequences),
 				}
 
 				if dryRun {
-					cmd.Println(fmt.Sprintf(
-						"○ Would apply: [%s] %s\n",
-						update.Type, update.Content,
-					))
+					write.WatchDryRunPreview(cmd, update.Type, update.Content)
 				} else {
 					err := ApplyUpdate(update)
 					if err != nil {
-						cmd.Println(fmt.Sprintf(
-							"✗ Failed to apply [%s]: %v\n",
-							update.Type, err,
-						))
+						write.WatchApplyFailed(cmd, update.Type, err)
 					} else {
-						cmd.Println(fmt.Sprintf(
-							"✓ Applied: [%s] %s\n", update.Type, update.Content,
-						))
+						write.WatchApplySuccess(cmd, update.Type, update.Content)
 						updateCount++
 					}
 				}
@@ -97,7 +93,7 @@ func ProcessStream(cmd *cobra.Command, reader io.Reader, dryRun bool) error {
 	}
 
 	if err := scanner.Err(); err != nil {
-		return fmt.Errorf("error reading input: %w", err)
+		return ctxerr.ReadInputStream(err)
 	}
 
 	return nil

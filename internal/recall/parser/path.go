@@ -12,7 +12,16 @@ import (
 )
 
 // getPathRelativeToHome returns the path relative to the user's home directory.
-// Returns an empty string if the path is not under a home directory.
+//
+// Handles both Linux (/home/username/...) and macOS (/Users/username/...)
+// home directory patterns. Returns an empty string if the path is empty
+// or not under a recognized home directory root.
+//
+// Parameters:
+//   - path: Absolute file path to make relative
+//
+// Returns:
+//   - string: Path relative to the home directory, or empty string
 func getPathRelativeToHome(path string) string {
 	if path == "" {
 		return ""

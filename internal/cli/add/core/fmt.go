@@ -10,7 +10,8 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/ActiveMemory/ctx/internal/config"
+	"github.com/ActiveMemory/ctx/internal/assets"
+	time2 "github.com/ActiveMemory/ctx/internal/config/time"
 )
 
 // FormatTask formats a task entry as a Markdown checkbox item.
@@ -26,12 +27,12 @@ import (
 //   - string: Formatted task line with trailing newline
 func FormatTask(content string, priority string) string {
 	// Use YYYY-MM-DD-HHMMSS timestamp for session correlation
-	timestamp := time.Now().Format(config.TimestampCompact)
+	timestamp := time.Now().Format(time2.TimestampCompact)
 	var priorityTag string
 	if priority != "" {
-		priorityTag = fmt.Sprintf(config.TplTaskPriority, priority)
+		priorityTag = fmt.Sprintf(assets.TplTaskPriority, priority)
 	}
-	return fmt.Sprintf(config.TplTask, content, priorityTag, timestamp)
+	return fmt.Sprintf(assets.TplTask, content, priorityTag, timestamp)
 }
 
 // FormatLearning formats a learning entry as a structured Markdown section.
@@ -48,9 +49,9 @@ func FormatTask(content string, priority string) string {
 // Returns:
 //   - string: Formatted learning section with all fields
 func FormatLearning(title, context, lesson, application string) string {
-	timestamp := time.Now().Format(config.TimestampCompact)
+	timestamp := time.Now().Format(time2.TimestampCompact)
 	return fmt.Sprintf(
-		config.TplLearning, timestamp, title, context, lesson, application,
+		assets.TplLearning, timestamp, title, context, lesson, application,
 	)
 }
 
@@ -64,7 +65,7 @@ func FormatLearning(title, context, lesson, application string) string {
 // Returns:
 //   - string: Formatted convention line with trailing newline
 func FormatConvention(content string) string {
-	return fmt.Sprintf(config.TplConvention, content)
+	return fmt.Sprintf(assets.TplConvention, content)
 }
 
 // FormatDecision formats a decision entry as a structured Markdown section.
@@ -81,9 +82,9 @@ func FormatConvention(content string) string {
 // Returns:
 //   - string: Formatted decision section with all ADR fields
 func FormatDecision(title, context, rationale, consequences string) string {
-	timestamp := time.Now().Format(config.TimestampCompact)
+	timestamp := time.Now().Format(time2.TimestampCompact)
 	return fmt.Sprintf(
-		config.TplDecision,
+		assets.TplDecision,
 		timestamp, title, context, title, rationale, consequences,
 	)
 }

@@ -9,14 +9,8 @@ package memory
 import (
 	"strings"
 
-	"github.com/ActiveMemory/ctx/internal/config"
+	"github.com/ActiveMemory/ctx/internal/config/entry"
 )
-
-// Classification is the result of heuristic entry classification.
-type Classification struct {
-	Target   string   // config.Entry* constant or "skip"
-	Keywords []string // Keywords that triggered the match
-}
 
 // TargetSkip indicates an entry that doesn't match any classification rule.
 const TargetSkip = "skip"
@@ -30,19 +24,19 @@ type classRule struct {
 // rules are evaluated in priority order: conventions > decisions > learnings > tasks.
 var rules = []classRule{
 	{
-		target:   config.EntryConvention,
+		target:   entry.Convention,
 		keywords: []string{"always use", "prefer", "convention", "never use", "standard", "always "},
 	},
 	{
-		target:   config.EntryDecision,
+		target:   entry.Decision,
 		keywords: []string{"decided", "chose", "trade-off", "approach", "over", "instead of"},
 	},
 	{
-		target:   config.EntryLearning,
+		target:   entry.Learning,
 		keywords: []string{"gotcha", "learned", "watch out", "bug", "caveat", "careful", "turns out"},
 	},
 	{
-		target:   config.EntryTask,
+		target:   entry.Task,
 		keywords: []string{"todo", "need to", "follow up", "should", "task"},
 	},
 }

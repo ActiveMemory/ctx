@@ -7,16 +7,19 @@
 package archive
 
 import (
-	"fmt"
 	"os"
-	"path/filepath"
 	"strings"
 
+	"github.com/ActiveMemory/ctx/internal/config/archive"
+	"github.com/ActiveMemory/ctx/internal/config/fs"
+	"github.com/ActiveMemory/ctx/internal/config/token"
 	"github.com/spf13/cobra"
 
-	"github.com/ActiveMemory/ctx/internal/cli/compact"
+	"github.com/ActiveMemory/ctx/internal/assets"
+	compactcore "github.com/ActiveMemory/ctx/internal/cli/compact/core"
 	"github.com/ActiveMemory/ctx/internal/cli/task/core"
-	"github.com/ActiveMemory/ctx/internal/config"
+	ctxerr "github.com/ActiveMemory/ctx/internal/err"
+	"github.com/ActiveMemory/ctx/internal/write"
 )
 
 // runArchive executes the archive subcommand logic.
@@ -33,36 +36,33 @@ import (
 //   - error: Non-nil if TASKS.md doesn't exist or file operations fail
 func runArchive(cmd *cobra.Command, dryRun bool) error {
 	tasksPath := core.TasksFilePath()
-	nl := config.NewlineLF
+	nl := token.NewlineLF
 
 	// Check if TASKS.md exists
 	if _, statErr := os.Stat(tasksPath); os.IsNotExist(statErr) {
-		return fmt.Errorf("no TASKS.md found")
+		return ctxerr.TaskFileNotFound()
 	}
 
 	// Read TASKS.md
-	content, readErr := os.ReadFile(filepath.Clean(tasksPath))
+	content, readErr := os.ReadFile(tasksPath) //nolint:gosec // project-local context path
 	if readErr != nil {
-		return fmt.Errorf("failed to read TASKS.md: %w", readErr)
+		return ctxerr.TaskFileRead(readErr)
 	}
 
 	lines := strings.Split(string(content), nl)
 
 	// Parse task blocks using block-based parsing
-	blocks := compact.ParseTaskBlocks(lines)
+	blocks := compactcore.ParseTaskBlocks(lines)
 
 	// Filter to only archivable blocks (completed with no incomplete children)
-	var archivableBlocks []compact.TaskBlock
+	var archivableBlocks []compactcore.TaskBlock
 	var skippedCount int
 	for _, block := range blocks {
 		if block.IsArchivable {
 			archivableBlocks = append(archivableBlocks, block)
 		} else {
 			skippedCount++
-			cmd.Println(fmt.Sprintf(
-				"! Skipping (has incomplete children): %s",
-				block.ParentTaskText(),
-			))
+			write.ArchiveSkipping(cmd, block.ParentTaskText())
 		}
 	}
 
@@ -71,12 +71,9 @@ func runArchive(cmd *cobra.Command, dryRun bool) error {
 
 	if len(archivableBlocks) == 0 {
 		if skippedCount > 0 {
-			cmd.Println(fmt.Sprintf(
-				"No tasks to archive (%d skipped due to incomplete children).",
-				skippedCount,
-			))
+			write.ArchiveSkipIncomplete(cmd, skippedCount)
 		} else {
-			cmd.Println("No completed tasks to archive.")
+			write.ArchiveNoCompleted(cmd)
 		}
 		return nil
 	}
@@ -89,42 +86,28 @@ func runArchive(cmd *cobra.Command, dryRun bool) error {
 	}
 
 	if dryRun {
-		cmd.Println("Dry run - no files modified")
-		cmd.Println()
-		cmd.Println(fmt.Sprintf(
-			"Would archive %d completed tasks (keeping %d pending)",
-			len(archivableBlocks), pendingCount,
-		))
-		cmd.Println()
-		cmd.Println("Archived content preview:")
-		cmd.Println(config.Separator)
-		cmd.Print(archivedContent.String())
-		cmd.Println(config.Separator)
+		write.ArchiveDryRun(cmd, len(archivableBlocks), pendingCount,
+			archivedContent.String(), token.Separator)
 		return nil
 	}
 
 	// Write to archive
-	archiveFilePath, writeErr := compact.WriteArchive("tasks", config.HeadingArchivedTasks, archivedContent.String())
+	archiveFilePath, writeErr := compactcore.WriteArchive(archive.ArchiveScopeTasks, assets.HeadingArchivedTasks, archivedContent.String())
 	if writeErr != nil {
 		return writeErr
 	}
 
 	// Remove archived blocks from lines and write back
-	newLines := compact.RemoveBlocksFromLines(lines, archivableBlocks)
+	newLines := compactcore.RemoveBlocksFromLines(lines, archivableBlocks)
 	newContent := strings.Join(newLines, nl)
 
 	if updateErr := os.WriteFile(
-		tasksPath, []byte(newContent), config.PermFile,
+		tasksPath, []byte(newContent), fs.PermFile,
 	); updateErr != nil {
-		return fmt.Errorf("failed to update TASKS.md: %w", updateErr)
+		return ctxerr.TaskFileWrite(updateErr)
 	}
 
-	cmd.Println(fmt.Sprintf(
-		"✓ Archived %d completed tasks to %s",
-		len(archivableBlocks),
-		archiveFilePath,
-	))
-	cmd.Println(fmt.Sprintf("  %d pending tasks remain in TASKS.md", pendingCount))
+	write.ArchiveSuccess(cmd, len(archivableBlocks), archiveFilePath, pendingCount)
 
 	return nil
 }

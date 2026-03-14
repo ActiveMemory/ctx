@@ -23,14 +23,14 @@ import (
 // Returns:
 //   - *cobra.Command: Configured prompt command with subcommands
 func Cmd() *cobra.Command {
-	short, long := assets.CommandDesc("prompt")
+	short, long := assets.CommandDesc(assets.CmdDescKeyPrompt)
 
 	cmd := &cobra.Command{
 		Use:   "prompt",
 		Short: short,
 		Long:  long,
 		RunE: func(cmd *cobra.Command, _ []string) error {
-			return list.RunList(cmd)
+			return list.Run(cmd)
 		},
 	}
 

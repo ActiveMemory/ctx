@@ -7,42 +7,38 @@
 package root
 
 import (
-	"bytes"
-	"fmt"
 	"strings"
 
+	"github.com/ActiveMemory/ctx/internal/config/token"
 	"github.com/spf13/cobra"
 	"gopkg.in/yaml.v3"
 
 	"github.com/ActiveMemory/ctx/internal/claude"
-	"github.com/ActiveMemory/ctx/internal/config"
+	"github.com/ActiveMemory/ctx/internal/write"
 )
 
-// skillMeta holds the frontmatter fields we care about.
-type skillMeta struct {
-	Name        string `yaml:"name"`
-	Description string `yaml:"description"`
-}
-
 // parseSkillFrontmatter extracts YAML frontmatter from a SKILL.md file.
+//
+// Parameters:
+//   - content: Raw SKILL.md content
 //
 // Returns:
 //   - skillMeta: Parsed name and description (zero value if no frontmatter)
 //   - error: Non-nil if YAML parsing fails
 func parseSkillFrontmatter(content []byte) (skillMeta, error) {
-	const sep = "---"
-
 	text := string(content)
-	if !strings.HasPrefix(text, sep+config.NewlineLF) {
+	prefix := token.Separator + token.NewlineLF
+	if !strings.HasPrefix(text, prefix) {
 		return skillMeta{}, nil
 	}
 
-	end := strings.Index(text[4:], config.NewlineLF+sep)
+	offset := len(prefix)
+	end := strings.Index(text[offset:], token.NewlineLF+token.Separator)
 	if end < 0 {
 		return skillMeta{}, nil
 	}
 
-	block := []byte(text[4 : 4+end])
+	block := []byte(text[offset : offset+end])
 	var meta skillMeta
 	if yamlErr := yaml.Unmarshal(block, &meta); yamlErr != nil {
 		return skillMeta{}, yamlErr
@@ -51,28 +47,38 @@ func parseSkillFrontmatter(content []byte) (skillMeta, error) {
 }
 
 // truncateDescription returns the first sentence or up to maxLen characters.
+//
+// Parameters:
+//   - desc: Full description text
+//   - maxLen: Maximum character length
+//
+// Returns:
+//   - string: Truncated description
 func truncateDescription(desc string, maxLen int) string {
-	// Try sentence boundary first.
 	if idx := strings.Index(desc, ". "); idx >= 0 && idx < maxLen {
 		return desc[:idx+1]
 	}
 	if len(desc) <= maxLen {
 		return desc
 	}
-	return desc[:maxLen] + "..."
+	return desc[:maxLen] + token.Ellipsis
 }
 
 // listSkills prints all available skills with their descriptions.
+//
+// Parameters:
+//   - cmd: Cobra command for output
+//
+// Returns:
+//   - error: Non-nil if skill listing fails
 func listSkills(cmd *cobra.Command) error {
 	names, skillsErr := claude.Skills()
 	if skillsErr != nil {
 		return skillsErr
 	}
 
-	cmd.Println("Available Skills:")
-	cmd.Println()
+	write.InfoSkillsHeader(cmd)
 
-	var buf bytes.Buffer
 	for _, name := range names {
 		content, readErr := claude.SkillContent(name)
 		if readErr != nil {
@@ -85,9 +91,7 @@ func listSkills(cmd *cobra.Command) error {
 		}
 
 		desc := truncateDescription(meta.Description, 70)
-		buf.Reset()
-		fmt.Fprintf(&buf, "  /%-22s %s", name, desc)
-		cmd.Println(buf.String())
+		write.InfoSkillLine(cmd, name, desc)
 	}
 	return nil
 }

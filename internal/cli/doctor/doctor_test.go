@@ -15,7 +15,9 @@ import (
 	"testing"
 
 	"github.com/ActiveMemory/ctx/internal/cli/doctor/core"
-	"github.com/ActiveMemory/ctx/internal/config"
+	"github.com/ActiveMemory/ctx/internal/config/claude"
+	"github.com/ActiveMemory/ctx/internal/config/ctx"
+	"github.com/ActiveMemory/ctx/internal/config/doctor"
 	"github.com/ActiveMemory/ctx/internal/rc"
 	"github.com/ActiveMemory/ctx/internal/sysinfo"
 )
@@ -27,7 +29,7 @@ func setupContextDir(t *testing.T) string {
 	rc.Reset()
 
 	// Create required files.
-	for _, f := range config.FilesRequired {
+	for _, f := range ctx.FilesRequired {
 		path := filepath.Join(dir, f)
 		if writeErr := os.WriteFile(path, []byte("# "+f+"\n"), 0o600); writeErr != nil {
 			t.Fatal(writeErr)
@@ -126,7 +128,7 @@ func TestDoctor_HighCompletion(t *testing.T) {
 		tasks += "- [x] Completed task\n"
 	}
 	tasks += "- [ ] Pending task\n"
-	tasksPath := filepath.Join(dir, config.FileTask)
+	tasksPath := filepath.Join(dir, ctx.Task)
 	if writeErr := os.WriteFile(tasksPath, []byte(tasks), 0o600); writeErr != nil {
 		t.Fatal(writeErr)
 	}
@@ -151,7 +153,7 @@ func TestDoctor_ContextSizeBreakdown(t *testing.T) {
 	if writeErr := os.WriteFile(archPath, []byte(strings.Repeat("word ", 500)), 0o600); writeErr != nil {
 		t.Fatal(writeErr)
 	}
-	tasksPath := filepath.Join(dir, config.FileTask)
+	tasksPath := filepath.Join(dir, ctx.Task)
 	if writeErr := os.WriteFile(tasksPath, []byte(strings.Repeat("task ", 200)), 0o600); writeErr != nil {
 		t.Fatal(writeErr)
 	}
@@ -247,7 +249,7 @@ func TestDoctor_PluginInstalledNotEnabled(t *testing.T) {
 	pluginsData := map[string]any{
 		"version": 2,
 		"plugins": map[string]any{
-			config.PluginID: []map[string]string{
+			claude.PluginID: []map[string]string{
 				{"scope": "user", "version": "0.7.2"},
 			},
 		},
@@ -328,7 +330,7 @@ func TestAddResourceResults_AllHealthy(t *testing.T) {
 		if r.Status != core.StatusOK {
 			t.Errorf("result %s: expected ok, got %s", r.Name, r.Status)
 		}
-		if r.Category != "Resources" {
+		if r.Category != doctor.CategoryResources {
 			t.Errorf("result %s: expected Resources category, got %s", r.Name, r.Category)
 		}
 	}

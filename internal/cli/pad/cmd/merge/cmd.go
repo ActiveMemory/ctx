@@ -20,21 +20,21 @@ func Cmd() *cobra.Command {
 	var keyFile string
 	var dryRun bool
 
-	short, long := assets.CommandDesc("pad.merge")
+	short, long := assets.CommandDesc(assets.CmdDescKeyPadMerge)
 	cmd := &cobra.Command{
 		Use:   "merge FILE...",
 		Short: short,
 		Long:  long,
 		Args:  cobra.MinimumNArgs(1),
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return runMerge(cmd, args, keyFile, dryRun)
+			return Run(cmd, args, keyFile, dryRun)
 		},
 	}
 
 	cmd.Flags().StringVarP(&keyFile, "key", "k", "",
-		assets.FlagDesc("pad.merge.key"))
+		assets.FlagDesc(assets.FlagDescKeyPadMergeKey))
 	cmd.Flags().BoolVar(&dryRun, "dry-run", false,
-		assets.FlagDesc("pad.merge.dry-run"))
+		assets.FlagDesc(assets.FlagDescKeyPadMergeDryRun))
 
 	return cmd
 }

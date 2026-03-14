@@ -7,47 +7,48 @@
 package list
 
 import (
-	"fmt"
 	"os"
 	"strings"
 
+	"github.com/ActiveMemory/ctx/internal/config/file"
 	"github.com/spf13/cobra"
 
 	"github.com/ActiveMemory/ctx/internal/cli/prompt/core"
-	"github.com/ActiveMemory/ctx/internal/config"
+	ctxerr "github.com/ActiveMemory/ctx/internal/err"
+	"github.com/ActiveMemory/ctx/internal/write"
 )
 
-// RunList prints all available prompt template names.
+// Run prints all available prompt template names.
 //
 // Parameters:
 //   - cmd: Cobra command for output
 //
 // Returns:
 //   - error: Non-nil on read failure
-func RunList(cmd *cobra.Command) error {
+func Run(cmd *cobra.Command) error {
 	dir := core.PromptsDir()
 
 	entries, readErr := os.ReadDir(dir)
 	if readErr != nil {
 		if os.IsNotExist(readErr) {
-			cmd.Println("No prompts found. Run 'ctx init' or 'ctx prompt add' to create prompts.")
+			write.PromptNone(cmd)
 			return nil
 		}
-		return fmt.Errorf("read prompts directory: %w", readErr)
+		return ctxerr.ReadDirectory(dir, readErr)
 	}
 
 	var found bool
 	for _, entry := range entries {
 		name := entry.Name()
-		if entry.IsDir() || !strings.HasSuffix(name, config.ExtMarkdown) {
+		if entry.IsDir() || !strings.HasSuffix(name, file.ExtMarkdown) {
 			continue
 		}
-		cmd.Println(fmt.Sprintf("  %s", strings.TrimSuffix(name, config.ExtMarkdown)))
+		write.PromptItem(cmd, strings.TrimSuffix(name, file.ExtMarkdown))
 		found = true
 	}
 
 	if !found {
-		cmd.Println("No prompts found. Run 'ctx init' or 'ctx prompt add' to create prompts.")
+		write.PromptNone(cmd)
 	}
 
 	return nil

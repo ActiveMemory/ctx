@@ -17,32 +17,18 @@ import (
 	"path/filepath"
 	"time"
 
-	"github.com/ActiveMemory/ctx/internal/config"
+	"github.com/ActiveMemory/ctx/internal/config/file"
+	"github.com/ActiveMemory/ctx/internal/config/fs"
+	"github.com/ActiveMemory/ctx/internal/config/journal"
 )
 
 // CurrentVersion is the schema version for the state file.
 const CurrentVersion = 1
 
-// JournalState is the top-level state file structure.
-type JournalState struct {
-	Version int                  `json:"version"`
-	Entries map[string]FileState `json:"entries"`
-}
-
-// FileState tracks processing stages for a single journal entry.
-// Values are date strings (YYYY-MM-DD) indicating when the stage completed.
-type FileState struct {
-	Exported       string `json:"exported,omitempty"`
-	Enriched       string `json:"enriched,omitempty"`
-	Normalized     string `json:"normalized,omitempty"`
-	FencesVerified string `json:"fences_verified,omitempty"`
-	Locked         string `json:"locked,omitempty"`
-}
-
 // Load reads the state file from the journal directory. If the file does
 // not exist, an empty state is returned (not an error).
 func Load(journalDir string) (*JournalState, error) {
-	path := filepath.Join(journalDir, config.FileJournalState)
+	path := filepath.Join(journalDir, journal.FileState)
 
 	data, err := os.ReadFile(filepath.Clean(path))
 	if os.IsNotExist(err) {
@@ -74,10 +60,10 @@ func (s *JournalState) Save(journalDir string) error {
 	}
 	data = append(data, '\n')
 
-	path := filepath.Join(journalDir, config.FileJournalState)
+	path := filepath.Join(journalDir, journal.FileState)
 	tmp := path + ".tmp"
 
-	if err := os.WriteFile(tmp, data, config.PermFile); err != nil {
+	if err := os.WriteFile(tmp, data, fs.PermFile); err != nil {
 		return err
 	}
 	return os.Rename(tmp, path)
@@ -128,15 +114,15 @@ func (s *JournalState) MarkFencesVerified(filename string) {
 func (s *JournalState) Mark(filename, stage string) bool {
 	fs := s.Entries[filename]
 	switch stage {
-	case "exported":
+	case journal.StageExported:
 		fs.Exported = today()
-	case "enriched":
+	case journal.StageEnriched:
 		fs.Enriched = today()
-	case "normalized":
+	case journal.StageNormalized:
 		fs.Normalized = today()
-	case "fences_verified":
+	case journal.StageFencesVerified:
 		fs.FencesVerified = today()
-	case "locked":
+	case journal.StageLocked:
 		fs.Locked = today()
 	default:
 		return false
@@ -156,15 +142,15 @@ func (s *JournalState) Mark(filename, stage string) bool {
 func (s *JournalState) Clear(filename, stage string) bool {
 	fs := s.Entries[filename]
 	switch stage {
-	case "exported":
+	case journal.StageExported:
 		fs.Exported = ""
-	case "enriched":
+	case journal.StageEnriched:
 		fs.Enriched = ""
-	case "normalized":
+	case journal.StageNormalized:
 		fs.Normalized = ""
-	case "fences_verified":
+	case journal.StageFencesVerified:
 		fs.FencesVerified = ""
-	case "locked":
+	case journal.StageLocked:
 		fs.Locked = ""
 	default:
 		return false
@@ -203,23 +189,23 @@ func (s *JournalState) ClearEnriched(filename string) {
 	s.Entries[filename] = fs
 }
 
-// IsEnriched reports whether the file has been enriched.
-func (s *JournalState) IsEnriched(filename string) bool {
+// Enriched reports whether the file has been enriched.
+func (s *JournalState) Enriched(filename string) bool {
 	return s.Entries[filename].Enriched != ""
 }
 
-// IsNormalized reports whether the file has been normalized.
-func (s *JournalState) IsNormalized(filename string) bool {
+// Normalized reports whether the file has been normalized.
+func (s *JournalState) Normalized(filename string) bool {
 	return s.Entries[filename].Normalized != ""
 }
 
-// IsFencesVerified reports whether the file's fences have been verified.
-func (s *JournalState) IsFencesVerified(filename string) bool {
+// FencesVerified reports whether the file's fences have been verified.
+func (s *JournalState) FencesVerified(filename string) bool {
 	return s.Entries[filename].FencesVerified != ""
 }
 
-// IsExported reports whether the file has been exported.
-func (s *JournalState) IsExported(filename string) bool {
+// Exported reports whether the file has been exported.
+func (s *JournalState) Exported(filename string) bool {
 	return s.Entries[filename].Exported != ""
 }
 
@@ -233,10 +219,10 @@ func (s *JournalState) CountUnenriched(journalDir string) int {
 
 	count := 0
 	for _, entry := range entries {
-		if entry.IsDir() || filepath.Ext(entry.Name()) != config.ExtMarkdown {
+		if entry.IsDir() || filepath.Ext(entry.Name()) != file.ExtMarkdown {
 			continue
 		}
-		if !s.IsEnriched(entry.Name()) {
+		if !s.Enriched(entry.Name()) {
 			count++
 		}
 	}
@@ -245,5 +231,5 @@ func (s *JournalState) CountUnenriched(journalDir string) int {
 
 // ValidStages lists the recognized stage names for Mark() and Clear().
 var ValidStages = []string{
-	"exported", "enriched", "normalized", "fences_verified", "locked",
+	journal.StageExported, journal.StageEnriched, journal.StageNormalized, journal.StageFencesVerified, journal.StageLocked,
 }

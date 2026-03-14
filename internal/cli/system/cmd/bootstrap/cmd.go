@@ -17,14 +17,23 @@ import (
 // Returns:
 //   - *cobra.Command: Configured bootstrap subcommand
 func Cmd() *cobra.Command {
+	short, long := assets.CommandDesc(assets.CmdDescKeySystemBootstrap)
+
 	cmd := &cobra.Command{
 		Use:   "bootstrap",
-		Short: "Print context location for AI agents",
+		Short: short,
+		Long:  long,
 		RunE: func(cmd *cobra.Command, _ []string) error {
-			return runBootstrap(cmd)
+			return Run(cmd)
 		},
 	}
-	cmd.Flags().Bool("json", false, assets.FlagDesc("system.bootstrap.json"))
-	cmd.Flags().BoolP("quiet", "q", false, assets.FlagDesc("system.bootstrap.quiet"))
+
+	cmd.Flags().Bool("json", false,
+		assets.FlagDesc(assets.FlagDescKeySystemBootstrapJson),
+	)
+	cmd.Flags().BoolP("quiet", "q", false,
+		assets.FlagDesc(assets.FlagDescKeySystemBootstrapQuiet),
+	)
+
 	return cmd
 }

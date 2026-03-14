@@ -11,7 +11,10 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/ActiveMemory/ctx/internal/config"
+	"github.com/ActiveMemory/ctx/internal/assets"
+	ctxCfg "github.com/ActiveMemory/ctx/internal/config/ctx"
+	"github.com/ActiveMemory/ctx/internal/config/mcp"
+	"github.com/ActiveMemory/ctx/internal/config/token"
 	"github.com/ActiveMemory/ctx/internal/context"
 )
 
@@ -25,19 +28,19 @@ type resourceMapping struct {
 
 // resourceTable defines all individual context file resources.
 var resourceTable = []resourceMapping{
-	{config.FileConstitution, "constitution", "Hard rules that must never be violated"},
-	{config.FileTask, "tasks", "Current work items and their status"},
-	{config.FileConvention, "conventions", "Code patterns and standards"},
-	{config.FileArchitecture, "architecture", "System architecture documentation"},
-	{config.FileDecision, "decisions", "Architectural decisions with rationale"},
-	{config.FileLearning, "learnings", "Gotchas, tips, and lessons learned"},
-	{config.FileGlossary, "glossary", "Project-specific terminology"},
-	{config.FileAgentPlaybook, "playbook", "How agents should use this system"},
+	{ctxCfg.Constitution, "constitution", assets.TextDesc(assets.TextDescKeyMCPResConstitution)},
+	{ctxCfg.Task, "tasks", assets.TextDesc(assets.TextDescKeyMCPResTasks)},
+	{ctxCfg.Convention, "conventions", assets.TextDesc(assets.TextDescKeyMCPResConventions)},
+	{ctxCfg.Architecture, "architecture", assets.TextDesc(assets.TextDescKeyMCPResArchitecture)},
+	{ctxCfg.Decision, "decisions", assets.TextDesc(assets.TextDescKeyMCPResDecisions)},
+	{ctxCfg.Learning, "learnings", assets.TextDesc(assets.TextDescKeyMCPResLearnings)},
+	{ctxCfg.Glossary, "glossary", assets.TextDesc(assets.TextDescKeyMCPResGlossary)},
+	{ctxCfg.AgentPlaybook, "playbook", assets.TextDesc(assets.TextDescKeyMCPResPlaybook)},
 }
 
 // resourceURI builds a resource URI from a suffix.
 func resourceURI(name string) string {
-	return "ctx://context/" + name
+	return mcp.MCPResourceURIPrefix + name
 }
 
 // handleResourcesList returns all available MCP resources.
@@ -49,7 +52,7 @@ func (s *Server) handleResourcesList(req Request) *Response {
 		resources = append(resources, Resource{
 			URI:         resourceURI(rm.name),
 			Name:        rm.name,
-			MimeType:    "text/markdown",
+			MimeType:    mcp.MimeMarkdown,
 			Description: rm.desc,
 		})
 	}
@@ -58,8 +61,8 @@ func (s *Server) handleResourcesList(req Request) *Response {
 	resources = append(resources, Resource{
 		URI:         resourceURI("agent"),
 		Name:        "agent",
-		MimeType:    "text/markdown",
-		Description: "All context files assembled in priority read order",
+		MimeType:    mcp.MimeMarkdown,
+		Description: assets.TextDesc(assets.TextDescKeyMCPResAgent),
 	})
 
 	return s.ok(req.ID, ResourceListResult{Resources: resources})
@@ -69,13 +72,13 @@ func (s *Server) handleResourcesList(req Request) *Response {
 func (s *Server) handleResourcesRead(req Request) *Response {
 	var params ReadResourceParams
 	if err := json.Unmarshal(req.Params, &params); err != nil {
-		return s.error(req.ID, errCodeInvalidArg, "invalid params")
+		return s.error(req.ID, errCodeInvalidArg, assets.TextDesc(assets.TextDescKeyMCPInvalidParams))
 	}
 
 	ctx, err := context.Load(s.contextDir)
 	if err != nil {
 		return s.error(req.ID, errCodeInternal,
-			fmt.Sprintf("failed to load context: %v", err))
+			fmt.Sprintf(assets.TextDesc(assets.TextDescKeyMCPLoadContext), err))
 	}
 
 	// Check for individual file resources.
@@ -91,7 +94,7 @@ func (s *Server) handleResourcesRead(req Request) *Response {
 	}
 
 	return s.error(req.ID, errCodeInvalidArg,
-		fmt.Sprintf("unknown resource: %s", params.URI))
+		fmt.Sprintf(assets.TextDesc(assets.TextDescKeyMCPUnknownResource), params.URI))
 }
 
 // readContextFile returns the content of a single context file.
@@ -101,13 +104,13 @@ func (s *Server) readContextFile(
 	f := ctx.File(fileName)
 	if f == nil {
 		return s.error(id, errCodeInvalidArg,
-			fmt.Sprintf("file not found: %s", fileName))
+			fmt.Sprintf(assets.TextDesc(assets.TextDescKeyMCPFileNotFound), fileName))
 	}
 
 	return s.ok(id, ReadResourceResult{
 		Contents: []ResourceContent{{
 			URI:      uri,
-			MimeType: "text/markdown",
+			MimeType: mcp.MimeMarkdown,
 			Text:     string(f.Content),
 		}},
 	})
@@ -116,26 +119,27 @@ func (s *Server) readContextFile(
 // readAgentPacket assembles all context files in read order into a
 // single response, respecting the configured token budget.
 //
-// Files are added in priority order (FileReadOrder). When the token
+// Files are added in priority order (ReadOrder). When the token
 // budget would be exceeded, remaining files are listed as "Also noted"
 // summaries instead of included in full.
 func (s *Server) readAgentPacket(
 	id json.RawMessage, ctx *context.Context,
 ) *Response {
 	var sb strings.Builder
-	sb.WriteString("# Context Packet\n\n")
+	header := assets.TextDesc(assets.TextDescKeyMCPPacketHeader)
+	sb.WriteString(header)
 
-	tokensUsed := context.EstimateTokensString("# Context Packet\n\n")
+	tokensUsed := context.EstimateTokensString(header)
 	budget := s.tokenBudget
 	var skipped []string
 
-	for _, fileName := range config.FileReadOrder {
+	for _, fileName := range ctxCfg.ReadOrder {
 		f := ctx.File(fileName)
 		if f == nil || f.IsEmpty {
 			continue
 		}
 
-		section := fmt.Sprintf("---\n## %s\n\n%s\n\n", fileName, string(f.Content))
+		section := fmt.Sprintf(assets.TextDesc(assets.TextDescKeyMCPSectionFormat), fileName, string(f.Content))
 		sectionTokens := context.EstimateTokensString(section)
 
 		if budget > 0 && tokensUsed+sectionTokens > budget {
@@ -148,17 +152,17 @@ func (s *Server) readAgentPacket(
 	}
 
 	if len(skipped) > 0 {
-		sb.WriteString("---\n## Also Noted\n\n")
+		sb.WriteString(assets.TextDesc(assets.TextDescKeyMCPAlsoNoted))
 		for _, name := range skipped {
-			fmt.Fprintf(&sb, "- %s (omitted for budget)\n", name)
+			fmt.Fprintf(&sb, assets.TextDesc(assets.TextDescKeyMCPOmittedFormat), name)
 		}
-		sb.WriteString(config.NewlineLF)
+		sb.WriteString(token.NewlineLF)
 	}
 
 	return s.ok(id, ReadResourceResult{
 		Contents: []ResourceContent{{
 			URI:      resourceURI("agent"),
-			MimeType: "text/markdown",
+			MimeType: mcp.MimeMarkdown,
 			Text:     sb.String(),
 		}},
 	})

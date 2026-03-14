@@ -19,18 +19,20 @@ import (
 func Cmd() *cobra.Command {
 	var afterFlag string
 
-	short, _ := assets.CommandDesc("remind.add")
+	short, _ := assets.CommandDesc(assets.CmdDescKeyRemindAdd)
 
 	cmd := &cobra.Command{
 		Use:   "add TEXT",
 		Short: short,
 		Args:  cobra.ExactArgs(1),
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return RunAdd(cmd, args[0], afterFlag)
+			return Run(cmd, args[0], afterFlag)
 		},
 	}
 
-	cmd.Flags().StringVarP(&afterFlag, "after", "a", "", assets.FlagDesc("remind.add.after"))
+	cmd.Flags().StringVarP(&afterFlag, "after", "a", "",
+		assets.FlagDesc(assets.FlagDescKeyRemindAddAfter),
+	)
 
 	return cmd
 }

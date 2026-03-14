@@ -11,10 +11,14 @@ import (
 	"os"
 	"path/filepath"
 
+	"github.com/ActiveMemory/ctx/internal/config/dir"
+	"github.com/ActiveMemory/ctx/internal/config/file"
+	"github.com/ActiveMemory/ctx/internal/config/fs"
+	"github.com/ActiveMemory/ctx/internal/config/obsidian"
 	"github.com/spf13/cobra"
 
+	"github.com/ActiveMemory/ctx/internal/assets"
 	"github.com/ActiveMemory/ctx/internal/cli/journal/core"
-	"github.com/ActiveMemory/ctx/internal/config"
 	ctxerr "github.com/ActiveMemory/ctx/internal/err"
 	"github.com/ActiveMemory/ctx/internal/rc"
 	"github.com/ActiveMemory/ctx/internal/write"
@@ -24,7 +28,7 @@ import (
 // related sessions footer.
 const ObsidianMaxRelated = 5
 
-// runJournalObsidian generates an Obsidian vault from journal entries.
+// Run generates an Obsidian vault from journal entries.
 //
 // Pipeline:
 //  1. Scan entries (reuse core.ScanJournalEntries)
@@ -42,8 +46,8 @@ const ObsidianMaxRelated = 5
 //
 // Returns:
 //   - error: Non-nil if generation fails
-func runJournalObsidian(cmd *cobra.Command, output string) error {
-	return BuildObsidianVault(cmd, filepath.Join(rc.ContextDir(), config.DirJournal), output)
+func Run(cmd *cobra.Command, output string) error {
+	return BuildObsidianVault(cmd, filepath.Join(rc.ContextDir(), dir.Journal), output)
 }
 
 // BuildObsidianVault generates an Obsidian vault from journal entries in
@@ -73,34 +77,34 @@ func BuildObsidianVault(cmd *cobra.Command, journalDir, output string) error {
 	// Create output directory structure
 	dirs := []string{
 		output,
-		filepath.Join(output, config.ObsidianDirEntries),
-		filepath.Join(output, config.ObsidianConfigDir),
-		filepath.Join(output, config.JournalDirTopics),
-		filepath.Join(output, config.JournalDirFiles),
-		filepath.Join(output, config.JournalDirTypes),
+		filepath.Join(output, obsidian.DirEntries),
+		filepath.Join(output, obsidian.DirConfig),
+		filepath.Join(output, dir.JournTopics),
+		filepath.Join(output, dir.JournalFiles),
+		filepath.Join(output, dir.JournalTypes),
 	}
 	for _, dir := range dirs {
-		if mkErr := os.MkdirAll(dir, config.PermExec); mkErr != nil {
+		if mkErr := os.MkdirAll(dir, fs.PermExec); mkErr != nil {
 			return ctxerr.Mkdir(dir, mkErr)
 		}
 	}
 
 	// Write .obsidian/app.json
 	appConfigPath := filepath.Join(
-		output, config.ObsidianConfigDir, config.ObsidianAppConfigFile,
+		output, obsidian.DirConfig, obsidian.AppConfigFile,
 	)
 	if writeErr := os.WriteFile(
-		appConfigPath, []byte(config.ObsidianAppConfig), config.PermFile,
+		appConfigPath, []byte(assets.ObsidianAppConfig), fs.PermFile,
 	); writeErr != nil {
 		return ctxerr.FileWrite(appConfigPath, writeErr)
 	}
 
 	// Write README
-	readmePath := filepath.Join(output, config.FilenameReadme)
+	readmePath := filepath.Join(output, file.Readme)
 	if writeErr := os.WriteFile(
 		readmePath,
-		[]byte(fmt.Sprintf(config.ObsidianReadme, journalDir)),
-		config.PermFile,
+		[]byte(fmt.Sprintf(assets.ObsidianReadme, journalDir)),
+		fs.PermFile,
 	); writeErr != nil {
 		return ctxerr.FileWrite(readmePath, writeErr)
 	}
@@ -123,7 +127,7 @@ func BuildObsidianVault(cmd *cobra.Command, journalDir, output string) error {
 	// Transform and write entries
 	for _, entry := range entries {
 		src := entry.Path
-		dst := filepath.Join(output, config.ObsidianDirEntries, entry.Filename)
+		dst := filepath.Join(output, obsidian.DirEntries, entry.Filename)
 
 		content, readErr := os.ReadFile(filepath.Clean(src))
 		if readErr != nil {
@@ -144,14 +148,14 @@ func BuildObsidianVault(cmd *cobra.Command, journalDir, output string) error {
 
 		// Transform for Obsidian
 		sourcePath := filepath.Join(
-			config.DirContext, config.DirJournal, entry.Filename,
+			dir.Context, dir.Journal, entry.Filename,
 		)
 		transformed := core.TransformFrontmatter(normalized, sourcePath)
 		transformed = core.ConvertMarkdownLinks(transformed)
 		transformed += core.GenerateRelatedFooter(entry, topicIndex, ObsidianMaxRelated)
 
 		if writeErr := os.WriteFile(
-			dst, []byte(transformed), config.PermFile,
+			dst, []byte(transformed), fs.PermFile,
 		); writeErr != nil {
 			write.WarnFileErr(cmd, entry.Filename, writeErr)
 			continue
@@ -160,11 +164,11 @@ func BuildObsidianVault(cmd *cobra.Command, journalDir, output string) error {
 
 	// Write topic MOC and pages
 	if len(topics) > 0 {
-		topicsDir := filepath.Join(output, config.JournalDirTopics)
-		mocPath := filepath.Join(output, config.ObsidianTopicsMOC)
+		topicsDir := filepath.Join(output, dir.JournTopics)
+		mocPath := filepath.Join(output, obsidian.MOCTopics)
 		if writeErr := os.WriteFile(
 			mocPath, []byte(core.GenerateObsidianTopicsMOC(topics)),
-			config.PermFile,
+			fs.PermFile,
 		); writeErr != nil {
 			return ctxerr.FileWrite(mocPath, writeErr)
 		}
@@ -173,10 +177,10 @@ func BuildObsidianVault(cmd *cobra.Command, journalDir, output string) error {
 			if !t.Popular {
 				continue
 			}
-			pagePath := filepath.Join(topicsDir, t.Name+config.ExtMarkdown)
+			pagePath := filepath.Join(topicsDir, t.Name+file.ExtMarkdown)
 			if writeErr := os.WriteFile(
 				pagePath, []byte(core.GenerateObsidianTopicPage(t)),
-				config.PermFile,
+				fs.PermFile,
 			); writeErr != nil {
 				write.WarnFileErr(cmd, pagePath, writeErr)
 			}
@@ -185,11 +189,11 @@ func BuildObsidianVault(cmd *cobra.Command, journalDir, output string) error {
 
 	// Write key files MOC and pages
 	if len(keyFiles) > 0 {
-		filesDir := filepath.Join(output, config.JournalDirFiles)
-		mocPath := filepath.Join(output, config.ObsidianFilesMOC)
+		filesDir := filepath.Join(output, dir.JournalFiles)
+		mocPath := filepath.Join(output, obsidian.MOCFiles)
 		if writeErr := os.WriteFile(
 			mocPath, []byte(core.GenerateObsidianFilesMOC(keyFiles)),
-			config.PermFile,
+			fs.PermFile,
 		); writeErr != nil {
 			return ctxerr.FileWrite(mocPath, writeErr)
 		}
@@ -199,10 +203,10 @@ func BuildObsidianVault(cmd *cobra.Command, journalDir, output string) error {
 				continue
 			}
 			slug := core.KeyFileSlug(kf.Path)
-			pagePath := filepath.Join(filesDir, slug+config.ExtMarkdown)
+			pagePath := filepath.Join(filesDir, slug+file.ExtMarkdown)
 			if writeErr := os.WriteFile(
 				pagePath, []byte(core.GenerateObsidianFilePage(kf)),
-				config.PermFile,
+				fs.PermFile,
 			); writeErr != nil {
 				write.WarnFileErr(cmd, pagePath, writeErr)
 			}
@@ -211,20 +215,20 @@ func BuildObsidianVault(cmd *cobra.Command, journalDir, output string) error {
 
 	// Write types MOC and pages
 	if len(sessionTypes) > 0 {
-		typesDir := filepath.Join(output, config.JournalDirTypes)
-		mocPath := filepath.Join(output, config.ObsidianTypesMOC)
+		typesDir := filepath.Join(output, dir.JournalTypes)
+		mocPath := filepath.Join(output, obsidian.MOCTypes)
 		if writeErr := os.WriteFile(
 			mocPath, []byte(core.GenerateObsidianTypesMOC(sessionTypes)),
-			config.PermFile,
+			fs.PermFile,
 		); writeErr != nil {
 			return ctxerr.FileWrite(mocPath, writeErr)
 		}
 
 		for _, st := range sessionTypes {
-			pagePath := filepath.Join(typesDir, st.Name+config.ExtMarkdown)
+			pagePath := filepath.Join(typesDir, st.Name+file.ExtMarkdown)
 			if writeErr := os.WriteFile(
 				pagePath,
-				[]byte(core.GenerateObsidianTypePage(st)), config.PermFile,
+				[]byte(core.GenerateObsidianTypePage(st)), fs.PermFile,
 			); writeErr != nil {
 				write.WarnFileErr(cmd, pagePath, writeErr)
 			}
@@ -232,25 +236,19 @@ func BuildObsidianVault(cmd *cobra.Command, journalDir, output string) error {
 	}
 
 	// Write Home.md
-	homePath := filepath.Join(output, config.ObsidianHomeMOC)
+	homePath := filepath.Join(output, obsidian.MOCHome)
 	if writeErr := os.WriteFile(
 		homePath,
 		[]byte(core.GenerateHomeMOC(
 			regularEntries,
 			len(topics) > 0, len(keyFiles) > 0, len(sessionTypes) > 0,
 		)),
-		config.PermFile,
+		fs.PermFile,
 	); writeErr != nil {
 		return ctxerr.FileWrite(homePath, writeErr)
 	}
 
-	cmd.Println(fmt.Sprintf(
-		"\u2713 Generated Obsidian vault with %d entries in %s",
-		len(entries), output,
-	))
-	cmd.Println()
-	cmd.Println("Next steps:")
-	cmd.Println("  Open Obsidian \u2192 Open folder as vault \u2192 Select " + output)
+	write.InfoObsidianGenerated(cmd, len(entries), output)
 
 	return nil
 }

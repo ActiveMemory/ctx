@@ -24,14 +24,14 @@ import (
 // Returns:
 //   - *cobra.Command: Configured snapshot subcommand
 func Cmd() *cobra.Command {
-	short, long := assets.CommandDesc("task.snapshot")
+	short, long := assets.CommandDesc(assets.CmdDescKeyTaskSnapshot)
 
 	cmd := &cobra.Command{
 		Use:   "snapshot [name]",
 		Short: short,
 		Long:  long,
 		Args:  cobra.MaximumNArgs(1),
-		RunE:  runSnapshot,
+		RunE:  Run,
 	}
 
 	return cmd

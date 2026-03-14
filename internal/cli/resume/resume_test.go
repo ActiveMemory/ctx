@@ -14,19 +14,19 @@ import (
 	"testing"
 
 	"github.com/ActiveMemory/ctx/internal/cli/system/core"
-	"github.com/ActiveMemory/ctx/internal/config"
+	"github.com/ActiveMemory/ctx/internal/config/dir"
 	"github.com/ActiveMemory/ctx/internal/rc"
 )
 
 func setupStateDir(t *testing.T) string {
 	t.Helper()
-	dir := t.TempDir()
-	t.Setenv("CTX_DIR", dir)
+	tmpDir := t.TempDir()
+	t.Setenv("CTX_DIR", tmpDir)
 	rc.Reset()
-	if mkErr := os.MkdirAll(filepath.Join(dir, config.DirState), 0o750); mkErr != nil {
+	if mkErr := os.MkdirAll(filepath.Join(tmpDir, dir.State), 0o750); mkErr != nil {
 		t.Fatal(mkErr)
 	}
-	return dir
+	return tmpDir
 }
 
 func TestCmd_WithSessionIDFlag(t *testing.T) {
@@ -49,13 +49,13 @@ func TestCmd_WithSessionIDFlag(t *testing.T) {
 }
 
 func TestCmd_PauseResume_Roundtrip(t *testing.T) {
-	dir := setupStateDir(t)
+	tmpDir := setupStateDir(t)
 	sessionID := "test-roundtrip"
 
 	// Pause first — creates the marker file.
 	core.Pause(sessionID)
 
-	markerPath := filepath.Join(dir, config.DirState, "ctx-paused-"+sessionID)
+	markerPath := filepath.Join(tmpDir, dir.State, "ctx-paused-"+sessionID)
 	if _, statErr := os.Stat(markerPath); statErr != nil {
 		t.Fatalf("pause marker should exist after Pause(): %v", statErr)
 	}

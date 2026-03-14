@@ -9,14 +9,14 @@ package reindex
 import (
 	"path/filepath"
 
+	"github.com/ActiveMemory/ctx/internal/config/ctx"
 	"github.com/spf13/cobra"
 
-	"github.com/ActiveMemory/ctx/internal/config"
 	"github.com/ActiveMemory/ctx/internal/index"
 	"github.com/ActiveMemory/ctx/internal/rc"
 )
 
-// run regenerates the LEARNINGS.md index.
+// Run regenerates the LEARNINGS.md index.
 //
 // Parameters:
 //   - cmd: Cobra command for output messages
@@ -24,13 +24,13 @@ import (
 //
 // Returns:
 //   - error: Non-nil if file read/write fails
-func run(cmd *cobra.Command, _ []string) error {
-	filePath := filepath.Join(rc.ContextDir(), config.FileLearning)
+func Run(cmd *cobra.Command, _ []string) error {
+	filePath := filepath.Join(rc.ContextDir(), ctx.Learning)
 	return index.ReindexFile(
 		cmd.OutOrStdout(),
 		filePath,
-		config.FileLearning,
+		ctx.Learning,
 		index.UpdateLearnings,
-		config.EntryPlural[config.EntryLearning],
+		"learnings",
 	)
 }

@@ -11,7 +11,9 @@ import (
 	"path/filepath"
 	"sort"
 
-	"github.com/ActiveMemory/ctx/internal/config"
+	"github.com/ActiveMemory/ctx/internal/config/claude"
+	"github.com/ActiveMemory/ctx/internal/config/session"
+	"github.com/ActiveMemory/ctx/internal/config/token"
 )
 
 // buildSession constructs a Session from raw Claude Code messages.
@@ -41,7 +43,7 @@ func (p *ClaudeCodeParser) buildSession(
 	session := &Session{
 		ID:         id,
 		Slug:       first.Slug,
-		Tool:       config.ToolClaudeCode,
+		Tool:       session.ToolClaudeCode,
 		SourceFile: sourcePath,
 		CWD:        first.CWD,
 		Project:    filepath.Base(first.CWD),
@@ -62,7 +64,7 @@ func (p *ClaudeCodeParser) buildSession(
 				// Truncate preview
 				preview := msg.Text
 				if len(preview) > 100 {
-					preview = preview[:100] + "..."
+					preview = preview[:100] + token.Ellipsis
 				}
 				session.FirstUserMsg = preview
 			}
@@ -115,19 +117,19 @@ func (p *ClaudeCodeParser) convertMessage(raw claudeRawMessage) Message {
 	// Extract content from blocks
 	for _, block := range blocks {
 		switch block.Type {
-		case config.ClaudeBlockText:
+		case claude.BlockText:
 			if msg.Text != "" {
-				msg.Text += config.NewlineLF
+				msg.Text += token.NewlineLF
 			}
 			msg.Text += block.Text
 
-		case config.ClaudeBlockThinking:
+		case claude.BlockThinking:
 			if msg.Thinking != "" {
-				msg.Thinking += config.NewlineLF
+				msg.Thinking += token.NewlineLF
 			}
 			msg.Thinking += block.Thinking
 
-		case config.ClaudeBlockToolUse:
+		case claude.BlockToolUse:
 			inputStr := ""
 			if block.Input != nil {
 				inputStr = string(block.Input)
@@ -138,7 +140,7 @@ func (p *ClaudeCodeParser) convertMessage(raw claudeRawMessage) Message {
 				Input: inputStr,
 			})
 
-		case config.ClaudeBlockToolResult:
+		case claude.BlockToolResult:
 			contentStr := ""
 			if block.Content != nil {
 				// Try to unmarshal as JSON string first (handles escaping)
@@ -185,7 +187,7 @@ func (p *ClaudeCodeParser) parseContentBlocks(
 	// Try parsing as a simple string
 	var text string
 	if err := json.Unmarshal(content, &text); err == nil && text != "" {
-		return []claudeRawBlock{{Type: config.ClaudeBlockText, Text: text}}
+		return []claudeRawBlock{{Type: claude.BlockText, Text: text}}
 	}
 
 	return nil

@@ -13,7 +13,8 @@ import (
 	"os/exec"
 	"path/filepath"
 
-	"github.com/ActiveMemory/ctx/internal/config"
+	"github.com/ActiveMemory/ctx/internal/config/archive"
+	"github.com/ActiveMemory/ctx/internal/config/fs"
 )
 
 // SMBConfig holds parsed SMB share connection details.
@@ -51,7 +52,7 @@ func ParseSMBConfig(smbURL, subdir string) (*SMBConfig, error) {
 	}
 
 	if subdir == "" {
-		subdir = config.BackupDefaultSubdir
+		subdir = archive.BackupDefaultSubdir
 	}
 
 	gvfsPath := fmt.Sprintf("/run/user/%d/gvfs/smb-share:server=%s,share=%s",
@@ -97,7 +98,7 @@ func EnsureSMBMount(cfg *SMBConfig) error {
 //   - error: Non-nil on copy failure
 func CopyToSMB(cfg *SMBConfig, localPath string) error {
 	dest := filepath.Join(cfg.GVFSPath, cfg.Subdir)
-	if mkdirErr := os.MkdirAll(dest, config.PermExec); mkdirErr != nil {
+	if mkdirErr := os.MkdirAll(dest, fs.PermExec); mkdirErr != nil {
 		return fmt.Errorf("create destination dir: %w", mkdirErr)
 	}
 
@@ -107,7 +108,7 @@ func CopyToSMB(cfg *SMBConfig, localPath string) error {
 	}
 
 	destFile := filepath.Join(dest, filepath.Base(localPath))
-	if writeErr := os.WriteFile(destFile, data, config.PermFile); writeErr != nil {
+	if writeErr := os.WriteFile(destFile, data, fs.PermFile); writeErr != nil {
 		return fmt.Errorf("write to SMB: %w", writeErr)
 	}
 

@@ -10,7 +10,9 @@ import (
 	"strings"
 	"unicode/utf8"
 
-	"github.com/ActiveMemory/ctx/internal/config"
+	"github.com/ActiveMemory/ctx/internal/config/journal"
+	"github.com/ActiveMemory/ctx/internal/config/regex"
+	"github.com/ActiveMemory/ctx/internal/config/token"
 	"github.com/ActiveMemory/ctx/internal/recall/parser"
 )
 
@@ -30,7 +32,7 @@ const SlugMaxLen = 50
 //   - string: Slugified string (may be empty if input is empty or all punctuation)
 func SlugifyTitle(title string) string {
 	// Strip the "..." truncation suffix from FirstUserMsg if present.
-	title = strings.TrimSuffix(title, "...")
+	title = strings.TrimSuffix(title, token.Ellipsis)
 
 	var sb strings.Builder
 	prevHyphen := false
@@ -75,12 +77,12 @@ func SlugifyTitle(title string) string {
 // Returns:
 //   - string: Cleaned title string
 func CleanTitle(s string) string {
-	s = strings.TrimSuffix(s, "...")
-	s = config.RegExClaudeTag.ReplaceAllString(s, "")
+	s = strings.TrimSuffix(s, token.Ellipsis)
+	s = regex.SystemClaudeTag.ReplaceAllString(s, "")
 	var sb strings.Builder
 	prevSpace := false
 	for _, r := range s {
-		if r == '\n' || r == '\r' || r == '\t' {
+		if r == rune(token.NewlineLF[0]) || r == rune(token.NewlineCRLF[0]) || r == rune(token.Tab[0]) {
 			r = ' '
 		}
 		if r == ' ' {
@@ -95,10 +97,10 @@ func CleanTitle(s string) string {
 	}
 	out := strings.TrimSpace(sb.String())
 
-	// Truncate to RecallMaxTitleLen on a word boundary.
-	if utf8.RuneCountInString(out) > config.RecallMaxTitleLen {
+	// Truncate to MaxTitleLen on a word boundary.
+	if utf8.RuneCountInString(out) > journal.MaxTitleLen {
 		runes := []rune(out)
-		truncated := string(runes[:config.RecallMaxTitleLen])
+		truncated := string(runes[:journal.MaxTitleLen])
 		if idx := strings.LastIndex(truncated, " "); idx > 0 {
 			truncated = truncated[:idx]
 		}
@@ -149,8 +151,8 @@ func TitleSlug(s *parser.Session, existingTitle string) (slug, title string) {
 	}
 
 	short := s.ID
-	if len(short) > config.RecallShortIDLen {
-		short = short[:config.RecallShortIDLen]
+	if len(short) > journal.ShortIDLen {
+		short = short[:journal.ShortIDLen]
 	}
 	return short, ""
 }

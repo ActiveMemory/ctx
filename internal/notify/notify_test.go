@@ -14,7 +14,7 @@ import (
 	"path/filepath"
 	"testing"
 
-	"github.com/ActiveMemory/ctx/internal/config"
+	"github.com/ActiveMemory/ctx/internal/config/crypto"
 	"github.com/ActiveMemory/ctx/internal/rc"
 )
 
@@ -52,7 +52,7 @@ func TestLoadWebhook_NoFile(t *testing.T) {
 	defer cleanup()
 
 	// Create key but no encrypted file
-	keyPath := filepath.Join(tempDir, ".context", config.FileContextKey)
+	keyPath := filepath.Join(tempDir, ".context", crypto.ContextKey)
 	_ = os.WriteFile(keyPath, make([]byte, 32), 0o600)
 
 	url, err := LoadWebhook()
@@ -297,7 +297,7 @@ func TestLoadWebhook_CorruptedFile(t *testing.T) {
 	}
 
 	// Corrupt the encrypted file with garbage bytes.
-	encPath := filepath.Join(tempDir, ".context", config.FileNotifyEnc)
+	encPath := filepath.Join(tempDir, ".context", crypto.NotifyEnc)
 	if writeErr := os.WriteFile(encPath, []byte("corrupted-garbage-data"), 0o600); writeErr != nil {
 		t.Fatalf("WriteFile() error = %v", writeErr)
 	}

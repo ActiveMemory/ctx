@@ -11,7 +11,8 @@ import (
 	"path/filepath"
 	"testing"
 
-	"github.com/ActiveMemory/ctx/internal/config"
+	"github.com/ActiveMemory/ctx/internal/config/ctx"
+	"github.com/ActiveMemory/ctx/internal/config/dir"
 	"github.com/ActiveMemory/ctx/internal/rc"
 )
 
@@ -65,7 +66,7 @@ func TestRunReindex_BothFiles(t *testing.T) {
 	rc.Reset()
 	defer rc.Reset()
 
-	ctxDir := filepath.Join(tempDir, config.DirContext)
+	ctxDir := filepath.Join(tempDir, dir.Context)
 	_ = os.MkdirAll(ctxDir, 0750)
 
 	decisions := `# Decisions
@@ -77,7 +78,7 @@ func TestRunReindex_BothFiles(t *testing.T) {
 **Consequences:** Added yaml dependency
 `
 	_ = os.WriteFile(
-		filepath.Join(ctxDir, config.FileDecision),
+		filepath.Join(ctxDir, ctx.Decision),
 		[]byte(decisions), 0600,
 	)
 
@@ -90,7 +91,7 @@ func TestRunReindex_BothFiles(t *testing.T) {
 **Application:** Add validation to all handlers
 `
 	_ = os.WriteFile(
-		filepath.Join(ctxDir, config.FileLearning),
+		filepath.Join(ctxDir, ctx.Learning),
 		[]byte(learnings), 0600,
 	)
 
@@ -102,7 +103,7 @@ func TestRunReindex_BothFiles(t *testing.T) {
 	}
 
 	// Verify both files were updated
-	updatedDecisions, readErr := os.ReadFile(filepath.Join(ctxDir, config.FileDecision)) //nolint:gosec // test temp path
+	updatedDecisions, readErr := os.ReadFile(filepath.Join(ctxDir, ctx.Decision)) //nolint:gosec // test temp path
 	if readErr != nil {
 		t.Fatalf("failed to read updated DECISIONS.md: %v", readErr)
 	}
@@ -110,7 +111,7 @@ func TestRunReindex_BothFiles(t *testing.T) {
 		t.Error("updated DECISIONS.md is empty")
 	}
 
-	updatedLearnings, readErr := os.ReadFile(filepath.Join(ctxDir, config.FileLearning)) //nolint:gosec // test temp path
+	updatedLearnings, readErr := os.ReadFile(filepath.Join(ctxDir, ctx.Learning)) //nolint:gosec // test temp path
 	if readErr != nil {
 		t.Fatalf("failed to read updated LEARNINGS.md: %v", readErr)
 	}
@@ -128,12 +129,12 @@ func TestRunReindex_DecisionsMissingLearningsPresent(t *testing.T) {
 	rc.Reset()
 	defer rc.Reset()
 
-	ctxDir := filepath.Join(tempDir, config.DirContext)
+	ctxDir := filepath.Join(tempDir, dir.Context)
 	_ = os.MkdirAll(ctxDir, 0750)
 
 	// Only create LEARNINGS.md, not DECISIONS.md
 	_ = os.WriteFile(
-		filepath.Join(ctxDir, config.FileLearning),
+		filepath.Join(ctxDir, ctx.Learning),
 		[]byte("# Learnings\n"), 0600,
 	)
 
@@ -154,15 +155,15 @@ func TestRunReindex_EmptyFiles(t *testing.T) {
 	rc.Reset()
 	defer rc.Reset()
 
-	ctxDir := filepath.Join(tempDir, config.DirContext)
+	ctxDir := filepath.Join(tempDir, dir.Context)
 	_ = os.MkdirAll(ctxDir, 0750)
 
 	_ = os.WriteFile(
-		filepath.Join(ctxDir, config.FileDecision),
+		filepath.Join(ctxDir, ctx.Decision),
 		[]byte("# Decisions\n"), 0600,
 	)
 	_ = os.WriteFile(
-		filepath.Join(ctxDir, config.FileLearning),
+		filepath.Join(ctxDir, ctx.Learning),
 		[]byte("# Learnings\n"), 0600,
 	)
 

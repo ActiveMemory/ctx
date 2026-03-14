@@ -17,13 +17,18 @@ import (
 // Returns:
 //   - *cobra.Command: Configured resources subcommand
 func Cmd() *cobra.Command {
+	short, long := assets.CommandDesc(assets.CmdDescKeySystemResources)
+
 	cmd := &cobra.Command{
 		Use:   "resources",
-		Short: "Show system resource usage (memory, swap, disk, load)",
+		Short: short,
+		Long:  long,
 		RunE: func(cmd *cobra.Command, _ []string) error {
 			return runResources(cmd)
 		},
 	}
-	cmd.Flags().Bool("json", false, assets.FlagDesc("system.resources.json"))
+	cmd.Flags().Bool("json", false,
+		assets.FlagDesc(assets.FlagDescKeySystemResourcesJson),
+	)
 	return cmd
 }

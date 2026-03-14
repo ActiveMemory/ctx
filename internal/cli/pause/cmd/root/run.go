@@ -7,12 +7,12 @@
 package root
 
 import (
-	"fmt"
 	"os"
 
 	"github.com/spf13/cobra"
 
 	"github.com/ActiveMemory/ctx/internal/cli/system/core"
+	"github.com/ActiveMemory/ctx/internal/write"
 )
 
 // Run executes the pause command.
@@ -28,6 +28,6 @@ func Run(cmd *cobra.Command, sessionID string) error {
 		sessionID = core.ReadSessionID(os.Stdin)
 	}
 	core.Pause(sessionID)
-	cmd.Println(fmt.Sprintf("Context hooks paused for session %s", sessionID))
+	write.SessionPaused(cmd, sessionID)
 	return nil
 }

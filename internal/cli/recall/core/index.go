@@ -12,7 +12,12 @@ import (
 	"path/filepath"
 	"strings"
 
-	"github.com/ActiveMemory/ctx/internal/config"
+	"github.com/ActiveMemory/ctx/internal/assets"
+	"github.com/ActiveMemory/ctx/internal/config/file"
+	"github.com/ActiveMemory/ctx/internal/config/fs"
+	"github.com/ActiveMemory/ctx/internal/config/journal"
+	"github.com/ActiveMemory/ctx/internal/config/token"
+	"github.com/ActiveMemory/ctx/internal/validation"
 )
 
 // BuildSessionIndex scans journal .md files in journalDir and returns a
@@ -38,7 +43,7 @@ func BuildSessionIndex(journalDir string) map[string]string {
 	}
 
 	for _, e := range entries {
-		if e.IsDir() || !strings.HasSuffix(e.Name(), config.ExtMarkdown) {
+		if e.IsDir() || !strings.HasSuffix(e.Name(), file.ExtMarkdown) {
 			continue
 		}
 
@@ -63,7 +68,7 @@ func BuildSessionIndex(journalDir string) map[string]string {
 		// Filename format: YYYY-MM-DD-slug-SHORTID.md or ...-pN.md
 		name := e.Name()
 		// Strip multipart suffix (e.g., "-p2.md" → config.ExtMarkdown).
-		baseName := strings.TrimSuffix(name, config.ExtMarkdown)
+		baseName := strings.TrimSuffix(name, file.ExtMarkdown)
 		if idx := strings.LastIndex(baseName, "-p"); idx > 0 {
 			suffix := baseName[idx+2:]
 			allDigits := true
@@ -81,8 +86,8 @@ func BuildSessionIndex(journalDir string) map[string]string {
 		}
 
 		// Extract the last 8 chars before .md as candidate short ID.
-		if len(baseName) >= config.RecallShortIDLen {
-			shortID := baseName[len(baseName)-config.RecallShortIDLen:]
+		if len(baseName) >= journal.ShortIDLen {
+			shortID := baseName[len(baseName)-journal.ShortIDLen:]
 			// Store with the short ID as key (caller matches against
 			// session.ID[:8]).
 			if _, exists := index[shortID]; !exists {
@@ -105,13 +110,13 @@ func BuildSessionIndex(journalDir string) map[string]string {
 // Returns:
 //   - string: The session ID, or "" if not found
 func ExtractSessionID(content string) string {
-	nl := config.NewlineLF
-	fmOpen := config.Separator + nl
+	nl := token.NewlineLF
+	fmOpen := token.Separator + nl
 
 	if !strings.HasPrefix(content, fmOpen) {
 		return ""
 	}
-	end := strings.Index(content[len(fmOpen):], nl+config.Separator+nl)
+	end := strings.Index(content[len(fmOpen):], nl+token.Separator+nl)
 	if end < 0 {
 		return ""
 	}
@@ -119,8 +124,9 @@ func ExtractSessionID(content string) string {
 
 	for _, line := range strings.Split(fmBlock, nl) {
 		line = strings.TrimSpace(line)
-		if strings.HasPrefix(line, "session_id:") {
-			val := strings.TrimSpace(strings.TrimPrefix(line, "session_id:"))
+		prefix := assets.FmKeySessionID + token.Colon
+		if strings.HasPrefix(line, prefix) {
+			val := strings.TrimSpace(strings.TrimPrefix(line, prefix))
 			// Strip surrounding quotes.
 			val = strings.Trim(val, `"'`)
 			return val
@@ -145,8 +151,8 @@ func LookupSessionFile(index map[string]string, sessionID string) string {
 		return name
 	}
 	short := sessionID
-	if len(short) > config.RecallShortIDLen {
-		short = short[:config.RecallShortIDLen]
+	if len(short) > journal.ShortIDLen {
+		short = short[:journal.ShortIDLen]
 	}
 	if name, ok := index[short]; ok {
 		return name
@@ -163,19 +169,19 @@ func LookupSessionFile(index map[string]string, sessionID string) string {
 // Returns:
 //   - string: The field value (unquoted), or "" if not found
 func ExtractFrontmatterField(content, field string) string {
-	nl := config.NewlineLF
-	fmOpen := config.Separator + nl
+	nl := token.NewlineLF
+	fmOpen := token.Separator + nl
 
 	if !strings.HasPrefix(content, fmOpen) {
 		return ""
 	}
-	end := strings.Index(content[len(fmOpen):], nl+config.Separator+nl)
+	end := strings.Index(content[len(fmOpen):], nl+token.Separator+nl)
 	if end < 0 {
 		return ""
 	}
 	fmBlock := content[len(fmOpen) : len(fmOpen)+end]
 
-	prefix := field + ":"
+	prefix := field + token.Colon
 	for _, line := range strings.Split(fmBlock, nl) {
 		line = strings.TrimSpace(line)
 		if strings.HasPrefix(line, prefix) {
@@ -201,16 +207,16 @@ func ExtractFrontmatterField(content, field string) string {
 //   - numParts: Expected number of parts (used for nav link updates)
 func RenameJournalFiles(journalDir, oldBase, newBase string, numParts int) {
 	// Rename base file.
-	oldPath := filepath.Join(journalDir, oldBase+config.ExtMarkdown)
-	newPath := filepath.Join(journalDir, newBase+config.ExtMarkdown)
+	oldPath := filepath.Join(journalDir, oldBase+file.ExtMarkdown)
+	newPath := filepath.Join(journalDir, newBase+file.ExtMarkdown)
 	if _, statErr := os.Stat(oldPath); statErr == nil {
 		_ = os.Rename(oldPath, newPath)
 	}
 
 	// Rename multipart files and update nav links.
 	for p := 2; p <= numParts; p++ {
-		oldPart := filepath.Join(journalDir, fmt.Sprintf("%s-p%d%s", oldBase, p, config.ExtMarkdown))
-		newPart := filepath.Join(journalDir, fmt.Sprintf("%s-p%d%s", newBase, p, config.ExtMarkdown))
+		oldPart := filepath.Join(journalDir, fmt.Sprintf(assets.TplRecallPartFilename, oldBase, p))
+		newPart := filepath.Join(journalDir, fmt.Sprintf(assets.TplRecallPartFilename, newBase, p))
 		if _, statErr := os.Stat(oldPart); statErr == nil {
 			_ = os.Rename(oldPart, newPart)
 		}
@@ -233,10 +239,10 @@ func UpdateNavLinks(journalDir, newBase, oldBase string, numParts int) {
 		return
 	}
 
-	files := []string{filepath.Join(journalDir, newBase+config.ExtMarkdown)}
+	files := []string{filepath.Join(journalDir, newBase+file.ExtMarkdown)}
 	for p := 2; p <= numParts; p++ {
 		files = append(files, filepath.Join(journalDir,
-			fmt.Sprintf("%s-p%d%s", newBase, p, config.ExtMarkdown)))
+			fmt.Sprintf(assets.TplRecallPartFilename, newBase, p)))
 	}
 
 	for _, f := range files {
@@ -246,7 +252,7 @@ func UpdateNavLinks(journalDir, newBase, oldBase string, numParts int) {
 		}
 		updated := strings.ReplaceAll(string(data), oldBase, newBase)
 		if updated != string(data) {
-			_ = os.WriteFile(f, []byte(updated), config.PermFile) //nolint:gosec // same permissions
+			_ = validation.WriteFile(f, []byte(updated), fs.PermFile)
 		}
 	}
 }

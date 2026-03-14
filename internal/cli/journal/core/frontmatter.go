@@ -9,24 +9,10 @@ package core
 import (
 	"strings"
 
+	"github.com/ActiveMemory/ctx/internal/assets"
+	"github.com/ActiveMemory/ctx/internal/config/token"
 	"gopkg.in/yaml.v3"
-
-	"github.com/ActiveMemory/ctx/internal/config"
 )
-
-// ObsidianFrontmatter represents the YAML frontmatter for Obsidian vault
-// entries. Extends JournalFrontmatter with Obsidian-specific fields.
-type ObsidianFrontmatter struct {
-	Title        string   `yaml:"title"`
-	Date         string   `yaml:"date"`
-	Type         string   `yaml:"type,omitempty"`
-	Outcome      string   `yaml:"outcome,omitempty"`
-	Tags         []string `yaml:"tags,omitempty"`
-	Technologies []string `yaml:"technologies,omitempty"`
-	KeyFiles     []string `yaml:"key_files,omitempty"`
-	Aliases      []string `yaml:"aliases,omitempty"`
-	SourceFile   string   `yaml:"source_file,omitempty"`
-}
 
 // TransformFrontmatter converts journal frontmatter to Obsidian format.
 //
@@ -43,20 +29,20 @@ type ObsidianFrontmatter struct {
 // Returns:
 //   - string: Content with transformed frontmatter
 func TransformFrontmatter(content, sourcePath string) string {
-	nl := config.NewlineLF
-	fmOpen := len(config.Separator + nl)
+	nl := token.NewlineLF
+	fmOpen := len(token.Separator + nl)
 
-	if !strings.HasPrefix(content, config.Separator+nl) {
+	if !strings.HasPrefix(content, token.Separator+nl) {
 		return content
 	}
 
-	endIdx := strings.Index(content[fmOpen:], nl+config.Separator+nl)
+	endIdx := strings.Index(content[fmOpen:], nl+token.Separator+nl)
 	if endIdx < 0 {
 		return content
 	}
 
 	fmRaw := content[fmOpen : fmOpen+endIdx]
-	afterFM := content[fmOpen+endIdx+len(nl+config.Separator+nl):]
+	afterFM := content[fmOpen+endIdx+len(nl+token.Separator+nl):]
 
 	// Parse the original frontmatter into a generic map to preserve
 	// unknown fields, then extract known fields for transformation.
@@ -68,26 +54,26 @@ func TransformFrontmatter(content, sourcePath string) string {
 	// Build the Obsidian frontmatter
 	ofm := ObsidianFrontmatter{}
 
-	if v, ok := raw["title"].(string); ok {
+	if v, ok := raw[assets.FrontmatterTitle].(string); ok {
 		ofm.Title = v
 	}
-	if v, ok := raw["date"].(string); ok {
+	if v, ok := raw[assets.FrontmatterDate].(string); ok {
 		ofm.Date = v
 	}
-	if v, ok := raw["type"].(string); ok {
+	if v, ok := raw[assets.FrontmatterType].(string); ok {
 		ofm.Type = v
 	}
-	if v, ok := raw["outcome"].(string); ok {
+	if v, ok := raw[assets.FrontmatterOutcome].(string); ok {
 		ofm.Outcome = v
 	}
 
 	// topics -> tags
-	ofm.Tags = ExtractStringSlice(raw, "topics")
+	ofm.Tags = ExtractStringSlice(raw, assets.FrontmatterTopics)
 
-	ofm.Technologies = ExtractStringSlice(raw, "technologies")
-	ofm.KeyFiles = ExtractStringSlice(raw, "key_files")
+	ofm.Technologies = ExtractStringSlice(raw, assets.FrontmatterTechnologies)
+	ofm.KeyFiles = ExtractStringSlice(raw, assets.FrontmatterKeyFiles)
 
-	// Add aliases from title
+	// Add aliases from the title
 	if ofm.Title != "" {
 		ofm.Aliases = []string{ofm.Title}
 	}
@@ -103,9 +89,9 @@ func TransformFrontmatter(content, sourcePath string) string {
 	}
 
 	var sb strings.Builder
-	sb.WriteString(config.Separator + nl)
+	sb.WriteString(token.Separator + nl)
 	sb.Write(out)
-	sb.WriteString(config.Separator + nl)
+	sb.WriteString(token.Separator + nl)
 	sb.WriteString(afterFM)
 
 	return sb.String()

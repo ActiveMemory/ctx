@@ -11,14 +11,16 @@ import (
 	"path/filepath"
 	"testing"
 
-	"github.com/ActiveMemory/ctx/internal/config"
+	"github.com/ActiveMemory/ctx/internal/config/ctx"
+	"github.com/ActiveMemory/ctx/internal/config/dir"
+	"github.com/ActiveMemory/ctx/internal/config/env"
 )
 
 func TestDefaultRC(t *testing.T) {
 	rc := Default()
 
-	if rc.ContextDir != config.DirContext {
-		t.Errorf("ContextDir = %q, want %q", rc.ContextDir, config.DirContext)
+	if rc.ContextDir != dir.Context {
+		t.Errorf("ContextDir = %q, want %q", rc.ContextDir, dir.Context)
 	}
 	if rc.TokenBudget != DefaultTokenBudget {
 		t.Errorf("TokenBudget = %d, want %d", rc.TokenBudget, DefaultTokenBudget)
@@ -45,8 +47,8 @@ func TestGetRC_NoFile(t *testing.T) {
 
 	rc := RC()
 
-	if rc.ContextDir != config.DirContext {
-		t.Errorf("ContextDir = %q, want %q", rc.ContextDir, config.DirContext)
+	if rc.ContextDir != dir.Context {
+		t.Errorf("ContextDir = %q, want %q", rc.ContextDir, dir.Context)
 	}
 	if rc.TokenBudget != DefaultTokenBudget {
 		t.Errorf("TokenBudget = %d, want %d", rc.TokenBudget, DefaultTokenBudget)
@@ -104,8 +106,8 @@ token_budget: 4000
 	_ = os.WriteFile(filepath.Join(tempDir, ".ctxrc"), []byte(rcContent), 0600)
 
 	// Set environment variables (t.Setenv auto-restores after test)
-	t.Setenv(config.EnvCtxDir, "env-context")
-	t.Setenv(config.EnvCtxTokenBudget, "2000")
+	t.Setenv(env.CtxDir, "env-context")
+	t.Setenv(env.CtxTokenBudget, "2000")
 
 	Reset()
 
@@ -131,7 +133,7 @@ func TestGetContextDir_CLIOverride(t *testing.T) {
 	_ = os.WriteFile(filepath.Join(tempDir, ".ctxrc"), []byte(rcContent), 0600)
 
 	// Set env override (t.Setenv auto-restores after test)
-	t.Setenv(config.EnvCtxDir, "env-context")
+	t.Setenv(env.CtxDir, "env-context")
 
 	Reset()
 
@@ -197,8 +199,8 @@ func TestGetRC_PartialConfig(t *testing.T) {
 		t.Errorf("TokenBudget = %d, want %d", rc.TokenBudget, 5000)
 	}
 	// Unspecified values should use defaults
-	if rc.ContextDir != config.DirContext {
-		t.Errorf("ContextDir = %q, want %q (default)", rc.ContextDir, config.DirContext)
+	if rc.ContextDir != dir.Context {
+		t.Errorf("ContextDir = %q, want %q (default)", rc.ContextDir, dir.Context)
 	}
 }
 
@@ -208,7 +210,7 @@ func TestGetRC_InvalidEnvBudget(t *testing.T) {
 	_ = os.Chdir(tempDir)
 	defer func() { _ = os.Chdir(origDir) }()
 
-	t.Setenv(config.EnvCtxTokenBudget, "not-a-number")
+	t.Setenv(env.CtxTokenBudget, "not-a-number")
 
 	Reset()
 
@@ -389,16 +391,16 @@ func TestFilePriority_DefaultOrder(t *testing.T) {
 
 	Reset()
 
-	// CONSTITUTION.md should be first in default FileReadOrder
-	p := FilePriority(config.FileConstitution)
+	// CONSTITUTION.md should be first in default ReadOrder
+	p := FilePriority(ctx.Constitution)
 	if p != 1 {
-		t.Errorf("FilePriority(%q) = %d, want 1", config.FileConstitution, p)
+		t.Errorf("FilePriority(%q) = %d, want 1", ctx.Constitution, p)
 	}
 
 	// TASKS.md should be second
-	p = FilePriority(config.FileTask)
+	p = FilePriority(ctx.Task)
 	if p != 2 {
-		t.Errorf("FilePriority(%q) = %d, want 2", config.FileTask, p)
+		t.Errorf("FilePriority(%q) = %d, want 2", ctx.Task, p)
 	}
 
 	// Unknown file gets 100
@@ -423,15 +425,15 @@ func TestFilePriority_CustomOrder(t *testing.T) {
 	Reset()
 
 	// DECISIONS.md should be first in custom order
-	p := FilePriority(config.FileDecision)
+	p := FilePriority(ctx.Decision)
 	if p != 1 {
-		t.Errorf("FilePriority(%q) = %d, want 1", config.FileDecision, p)
+		t.Errorf("FilePriority(%q) = %d, want 1", ctx.Decision, p)
 	}
 
 	// TASKS.md should be second
-	p = FilePriority(config.FileTask)
+	p = FilePriority(ctx.Task)
 	if p != 2 {
-		t.Errorf("FilePriority(%q) = %d, want 2", config.FileTask, p)
+		t.Errorf("FilePriority(%q) = %d, want 2", ctx.Task, p)
 	}
 
 	// File not in custom order gets 100
@@ -449,9 +451,9 @@ func TestContextDir_NoOverride(t *testing.T) {
 
 	Reset()
 
-	dir := ContextDir()
-	if dir != config.DirContext {
-		t.Errorf("ContextDir() = %q, want %q", dir, config.DirContext)
+	got := ContextDir()
+	if got != dir.Context {
+		t.Errorf("ContextDir() = %q, want %q", got, dir.Context)
 	}
 }
 
@@ -598,7 +600,7 @@ func TestGetRC_NegativeEnvBudget(t *testing.T) {
 	_ = os.Chdir(tempDir)
 	defer func() { _ = os.Chdir(origDir) }()
 
-	t.Setenv(config.EnvCtxTokenBudget, "-100")
+	t.Setenv(env.CtxTokenBudget, "-100")
 
 	Reset()
 

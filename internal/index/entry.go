@@ -9,23 +9,10 @@ package index
 import (
 	"strings"
 
-	"github.com/ActiveMemory/ctx/internal/config"
+	"github.com/ActiveMemory/ctx/internal/config/marker"
+	"github.com/ActiveMemory/ctx/internal/config/regex"
+	"github.com/ActiveMemory/ctx/internal/config/token"
 )
-
-// EntryBlock represents a parsed entry block from a knowledge file
-// (DECISIONS.md or LEARNINGS.md).
-//
-// Fields:
-//   - Entry: The parsed header metadata (timestamp, date, title)
-//   - Lines: All lines belonging to this entry (header + body)
-//   - StartIndex: Zero-based line index where this entry starts
-//   - EndIndex: Zero-based line index where this entry ends (exclusive)
-type EntryBlock struct {
-	Entry      Entry
-	Lines      []string
-	StartIndex int
-	EndIndex   int
-}
 
 // ParseEntryBlocks splits file content into discrete entry blocks.
 //
@@ -42,7 +29,7 @@ func ParseEntryBlocks(content string) []EntryBlock {
 		return nil
 	}
 
-	lines := strings.Split(content, config.NewlineLF)
+	lines := strings.Split(content, token.NewlineLF)
 	var blocks []EntryBlock
 
 	// Find all entry header positions
@@ -53,12 +40,12 @@ func ParseEntryBlocks(content string) []EntryBlock {
 	var headers []headerPos
 
 	for i, line := range lines {
-		matches := config.RegExEntryHeader.FindStringSubmatch(line)
-		if len(matches) == 4 {
+		matches := regex.EntryHeader.FindStringSubmatch(line)
+		if len(matches) == regex.EntryHeaderGroups {
 			headers = append(headers, headerPos{
 				lineIdx: i,
 				entry: Entry{
-					Timestamp: matches[1] + "-" + matches[2],
+					Timestamp: matches[1] + token.Dash + matches[2],
 					Date:      matches[1],
 					Title:     matches[3],
 				},
@@ -104,7 +91,7 @@ func ParseEntryBlocks(content string) []EntryBlock {
 func (eb *EntryBlock) IsSuperseded() bool {
 	for _, line := range eb.Lines {
 		trimmed := strings.TrimSpace(line)
-		if strings.HasPrefix(trimmed, "~~Superseded") {
+		if strings.HasPrefix(trimmed, marker.PrefixSuperseded) {
 			return true
 		}
 	}
@@ -116,5 +103,5 @@ func (eb *EntryBlock) IsSuperseded() bool {
 // Returns:
 //   - string: The full entry content with lines joined by newlines
 func (eb *EntryBlock) BlockContent() string {
-	return strings.Join(eb.Lines, config.NewlineLF)
+	return strings.Join(eb.Lines, token.NewlineLF)
 }

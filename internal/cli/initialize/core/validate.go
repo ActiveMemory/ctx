@@ -10,9 +10,9 @@ import (
 	"os"
 	"os/exec"
 
+	"github.com/ActiveMemory/ctx/internal/config/env"
 	"github.com/spf13/cobra"
 
-	"github.com/ActiveMemory/ctx/internal/config"
 	ctxerr "github.com/ActiveMemory/ctx/internal/err"
 	"github.com/ActiveMemory/ctx/internal/write"
 )
@@ -25,7 +25,7 @@ import (
 // Returns:
 //   - error: Non-nil if ctx is not found in PATH
 func CheckCtxInPath(cmd *cobra.Command) error {
-	if os.Getenv(config.EnvSkipPathCheck) == config.EnvTrue {
+	if os.Getenv(env.SkipPathCheck) == env.True {
 		return nil
 	}
 	_, err := exec.LookPath("ctx")

@@ -43,7 +43,7 @@ func Cmd() *cobra.Command {
 		application  string
 	)
 
-	short, long := assets.CommandDesc("add")
+	short, long := assets.CommandDesc(assets.CmdDescKeyAdd)
 
 	cmd := &cobra.Command{
 		Use:       "add <type> [content]",
@@ -68,7 +68,7 @@ func Cmd() *cobra.Command {
 	cmd.Flags().StringVarP(
 		&priority,
 		"priority", "p", "",
-		assets.FlagDesc("add.priority"),
+		assets.FlagDesc(assets.FlagDescKeyAddPriority),
 	)
 	_ = cmd.RegisterFlagCompletionFunc(
 		"priority", func(_ *cobra.Command, _ []string, _ string) (
@@ -79,37 +79,37 @@ func Cmd() *cobra.Command {
 	cmd.Flags().StringVarP(
 		&section,
 		"section", "s", "",
-		assets.FlagDesc("add.section"),
+		assets.FlagDesc(assets.FlagDescKeyAddSection),
 	)
 	cmd.Flags().StringVarP(
 		&fromFile,
 		"file", "f", "",
-		assets.FlagDesc("add.file"),
+		assets.FlagDesc(assets.FlagDescKeyAddFile),
 	)
 	cmd.Flags().StringVarP(
 		&context,
 		"context", "c", "",
-		assets.FlagDesc("add.context"),
+		assets.FlagDesc(assets.FlagDescKeyAddContext),
 	)
 	cmd.Flags().StringVarP(
 		&rationale,
 		"rationale", "r", "",
-		assets.FlagDesc("add.rationale"),
+		assets.FlagDesc(assets.FlagDescKeyAddRationale),
 	)
 	cmd.Flags().StringVar(
 		&consequences,
 		"consequences", "",
-		assets.FlagDesc("add.consequences"),
+		assets.FlagDesc(assets.FlagDescKeyAddConsequences),
 	)
 	cmd.Flags().StringVarP(
 		&lesson,
 		"lesson", "l", "",
-		assets.FlagDesc("add.lesson"),
+		assets.FlagDesc(assets.FlagDescKeyAddLesson),
 	)
 	cmd.Flags().StringVarP(
 		&application,
 		"application", "a", "",
-		assets.FlagDesc("add.application"),
+		assets.FlagDesc(assets.FlagDescKeyAddApplication),
 	)
 
 	return cmd

@@ -55,19 +55,19 @@ Work through each section **one at a time**. For each section:
 
 **Section order and prompts:**
 
-| Section | Prompt |
-|---------|--------|
-| **Problem** | "What user-visible problem does this solve? Why now?" |
-| **Approach** | "High-level: how does this work? Where does it fit?" |
-| **Happy Path** | "Walk me through what happens when everything goes right." |
-| **Edge Cases** | "What could go wrong? Think: empty input, partial failure, duplicates, concurrency, missing deps." |
-| **Validation Rules** | "What input constraints are enforced? Where?" |
-| **Error Handling** | "For each error condition: what message does the user see? How do they recover?" |
-| **Interface** | "CLI command? Skill? Both? What flags?" |
-| **Implementation** | "Which files change? Key functions? Existing helpers to reuse?" |
-| **Configuration** | "Any .ctxrc keys, env vars, or settings?" |
-| **Testing** | "Unit, integration, edge case tests?" |
-| **Non-Goals** | "What does this intentionally NOT do?" |
+| Section              | Prompt                                                                                             |
+|----------------------|----------------------------------------------------------------------------------------------------|
+| **Problem**          | "What user-visible problem does this solve? Why now?"                                              |
+| **Approach**         | "High-level: how does this work? Where does it fit?"                                               |
+| **Happy Path**       | "Walk me through what happens when everything goes right."                                         |
+| **Edge Cases**       | "What could go wrong? Think: empty input, partial failure, duplicates, concurrency, missing deps." |
+| **Validation Rules** | "What input constraints are enforced? Where?"                                                      |
+| **Error Handling**   | "For each error condition: what message does the user see? How do they recover?"                   |
+| **Interface**        | "CLI command? Skill? Both? What flags?"                                                            |
+| **Implementation**   | "Which files change? Key functions? Existing helpers to reuse?"                                    |
+| **Configuration**    | "Any .ctxrc keys, env vars, or settings?"                                                          |
+| **Testing**          | "Unit, integration, edge case tests?"                                                              |
+| **Non-Goals**        | "What does this intentionally NOT do?"                                                             |
 
 **Spend extra time on Edge Cases and Error Handling.** These are
 where specs earn their value. Push for at least 3 edge cases and
@@ -94,7 +94,7 @@ Write the completed spec to `specs/{feature-name}.md`.
 
 Not every spec needs every section. If a section clearly does not
 apply (e.g., no CLI for an internal refactor), the user can say
-"skip" and the section is omitted entirely — not left with
+"skip" and the section is omitted entirely: not left with
 placeholder text.
 
 ## Quality Checklist

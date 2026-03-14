@@ -10,6 +10,9 @@ import (
 	"strings"
 	"time"
 
+	"github.com/ActiveMemory/ctx/internal/assets"
+	"github.com/ActiveMemory/ctx/internal/config/agent"
+	time2 "github.com/ActiveMemory/ctx/internal/config/time"
 	"github.com/ActiveMemory/ctx/internal/context"
 	"github.com/ActiveMemory/ctx/internal/index"
 )
@@ -41,20 +44,20 @@ type ScoredEntry struct {
 // Returns:
 //   - float64: Recency score between 0.2 and 1.0
 func RecencyScore(eb *index.EntryBlock, now time.Time) float64 {
-	entryDate, err := time.ParseInLocation("2006-01-02", eb.Entry.Date, time.Local)
+	entryDate, err := time.ParseInLocation(time2.DateFormat, eb.Entry.Date, time.Local)
 	if err != nil {
 		return 0.2
 	}
 	days := int(now.Sub(entryDate).Hours() / 24)
 	switch {
-	case days <= 7:
-		return 1.0
-	case days <= 30:
-		return 0.7
-	case days <= 90:
-		return 0.4
+	case days <= agent.RecencyDaysWeek:
+		return agent.RecencyScoreWeek
+	case days <= agent.RecencyDaysMonth:
+		return agent.RecencyScoreMonth
+	case days <= agent.RecencyDaysQuarter:
+		return agent.RecencyScoreQuarter
 	default:
-		return 0.2
+		return agent.RecencyScoreOld
 	}
 }
 
@@ -80,10 +83,10 @@ func RelevanceScore(eb *index.EntryBlock, keywords []string) float64 {
 			matches++
 		}
 	}
-	if matches >= 3 {
+	if matches >= agent.RelevanceMatchCap {
 		return 1.0
 	}
-	return float64(matches) / 3.0
+	return float64(matches) / float64(agent.RelevanceMatchCap)
 }
 
 // ScoreEntry computes the combined relevance score for an entry block.
@@ -105,21 +108,9 @@ func ScoreEntry(eb *index.EntryBlock, keywords []string, now time.Time) float64 
 	return RecencyScore(eb, now) + RelevanceScore(eb, keywords)
 }
 
-// StopWords is a set of common English words to exclude from keyword extraction.
-var StopWords = map[string]bool{
-	"the": true, "and": true, "for": true, "that": true, "this": true,
-	"with": true, "from": true, "are": true, "was": true, "were": true,
-	"been": true, "have": true, "has": true, "had": true, "but": true,
-	"not": true, "you": true, "all": true, "can": true, "her": true,
-	"his": true, "she": true, "its": true, "our": true, "they": true,
-	"will": true, "each": true, "make": true, "like": true, "use": true,
-	"way": true, "may": true, "any": true, "into": true, "when": true,
-	"which": true, "their": true, "about": true, "would": true,
-	"there": true, "what": true, "also": true, "should": true,
-	"after": true, "before": true, "than": true, "then": true,
-	"them": true, "could": true, "more": true, "some": true,
-	"other": true, "only": true, "just": true, "see": true,
-	"add": true, "new": true, "update": true, "how": true,
+// stopWords returns the set of stop words from assets.
+func stopWords() map[string]bool {
+	return assets.StopWords()
 }
 
 // ExtractTaskKeywords extracts meaningful keywords from task text.
@@ -142,7 +133,7 @@ func ExtractTaskKeywords(tasks []string) []string {
 			return !isAlnum && r != '-' && r != '_'
 		})
 		for _, w := range words {
-			if len(w) < 3 || StopWords[w] || seen[w] {
+			if len(w) < 3 || stopWords()[w] || seen[w] {
 				continue
 			}
 			seen[w] = true

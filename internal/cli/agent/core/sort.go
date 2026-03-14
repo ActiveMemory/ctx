@@ -9,13 +9,13 @@ package core
 import (
 	"path/filepath"
 
-	"github.com/ActiveMemory/ctx/internal/config"
+	ctxCfg "github.com/ActiveMemory/ctx/internal/config/ctx"
 	"github.com/ActiveMemory/ctx/internal/context"
 )
 
 // GetReadOrder returns context file paths in the recommended reading order.
 //
-// Files are ordered according to [config.FileReadOrder] and filtered to
+// Files are ordered according to [config.ReadOrder] and filtered to
 // exclude empty files. Paths are returned as full paths relative to the
 // context directory.
 //
@@ -26,7 +26,7 @@ import (
 //   - []string: File paths in reading order (e.g., ".context/CONSTITUTION.md")
 func GetReadOrder(ctx *context.Context) []string {
 	var order []string
-	for _, name := range config.FileReadOrder {
+	for _, name := range ctxCfg.ReadOrder {
 		if f := ctx.File(name); f != nil && !f.IsEmpty {
 			order = append(order, filepath.Join(ctx.Dir, f.Name))
 		}

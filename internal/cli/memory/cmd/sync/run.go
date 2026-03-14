@@ -9,16 +9,16 @@ package sync
 import (
 	"path/filepath"
 
+	memory2 "github.com/ActiveMemory/ctx/internal/config/memory"
 	"github.com/spf13/cobra"
 
-	"github.com/ActiveMemory/ctx/internal/config"
 	ctxerr "github.com/ActiveMemory/ctx/internal/err"
 	"github.com/ActiveMemory/ctx/internal/memory"
 	"github.com/ActiveMemory/ctx/internal/rc"
 	"github.com/ActiveMemory/ctx/internal/write"
 )
 
-// runSync discovers MEMORY.md, mirrors it into .context/memory/, and
+// Run discovers MEMORY.md, mirrors it into .context/memory/, and
 // updates the sync state. In dry-run mode it reports what would happen
 // without writing any files.
 //
@@ -28,7 +28,7 @@ import (
 //
 // Returns:
 //   - error: on discovery failure, sync failure, or state persistence failure.
-func runSync(cmd *cobra.Command, dryRun bool) error {
+func Run(cmd *cobra.Command, dryRun bool) error {
 	contextDir := rc.ContextDir()
 	projectRoot := filepath.Dir(contextDir)
 
@@ -39,14 +39,8 @@ func runSync(cmd *cobra.Command, dryRun bool) error {
 	}
 
 	if dryRun {
-		write.DryRun(cmd)
-		write.Source(cmd, sourcePath)
-		write.Mirror(cmd, config.PathMemoryMirror)
-		if memory.HasDrift(contextDir, sourcePath) {
-			write.StatusDrift(cmd)
-		} else {
-			write.StatusNoDrift(cmd)
-		}
+		write.SyncDryRun(cmd, sourcePath, memory2.PathMemoryMirror,
+			memory.HasDrift(contextDir, sourcePath))
 		return nil
 	}
 
@@ -55,17 +49,11 @@ func runSync(cmd *cobra.Command, dryRun bool) error {
 		return ctxerr.SyncFailed(syncErr)
 	}
 
-	if result.ArchivedTo != "" {
-		write.Archived(cmd, filepath.Base(result.ArchivedTo))
-	}
-
-	write.Synced(cmd, config.FileMemorySource, config.PathMemoryMirror)
-	write.Source(cmd, result.SourcePath)
-	write.Lines(cmd, result.SourceLines, result.MirrorLines)
-
-	if result.SourceLines > result.MirrorLines {
-		write.NewContent(cmd, result.SourceLines-result.MirrorLines)
-	}
+	write.SyncResult(cmd,
+		memory2.MemorySource, memory2.PathMemoryMirror,
+		result.SourcePath, filepath.Base(result.ArchivedTo),
+		result.SourceLines, result.MirrorLines,
+	)
 
 	// Update sync state
 	state, loadErr := memory.LoadState(contextDir)

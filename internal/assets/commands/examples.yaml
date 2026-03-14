@@ -1,0 +1,24 @@
+# Example usage text for ctx CLI.
+# Used by assets.ExampleDesc() for cobra Example fields.
+# Keys match entry types: decision, learning, task, convention
+
+convention:
+  short: |2-
+      ctx add convention "Use camelCase for function names"
+      ctx add convention "All API responses use JSON"
+decision:
+  short: |2-
+      ctx add decision "Use PostgreSQL for primary database"
+      ctx add decision "Adopt Go 1.22 for range-over-func support"
+default:
+  short: '  ctx add <type> "your content here"'
+learning:
+  short: |2-
+      ctx add learning "Go embed requires files in same package" \
+        --context "Tried to embed files from parent directory" \
+        --lesson "go:embed only works with files in same or child directories" \
+        --application "Keep embedded files in internal/templates/"
+task:
+  short: |2-
+      ctx add task "Implement user authentication"
+      ctx add task "Fix login bug" --priority high

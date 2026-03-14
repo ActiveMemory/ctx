@@ -7,15 +7,18 @@
 package core
 
 import (
-	"fmt"
 	"os"
 	"strings"
 
+	"github.com/ActiveMemory/ctx/internal/config/token"
 	"github.com/spf13/cobra"
 
-	"github.com/ActiveMemory/ctx/internal/config"
+	"github.com/ActiveMemory/ctx/internal/assets"
+	ctxCfg "github.com/ActiveMemory/ctx/internal/config/ctx"
+	"github.com/ActiveMemory/ctx/internal/config/fs"
 	"github.com/ActiveMemory/ctx/internal/context"
 	"github.com/ActiveMemory/ctx/internal/rc"
+	"github.com/ActiveMemory/ctx/internal/write"
 )
 
 // CompactTasks moves completed tasks to the "Completed" section in TASKS.md.
@@ -36,14 +39,14 @@ import (
 func CompactTasks(
 	cmd *cobra.Command, ctx *context.Context, archive bool,
 ) (int, error) {
-	tasksFile := ctx.File(config.FileTask)
+	tasksFile := ctx.File(ctxCfg.Task)
 
 	if tasksFile == nil {
 		return 0, nil
 	}
 
 	content := string(tasksFile.Content)
-	lines := strings.Split(content, config.NewlineLF)
+	lines := strings.Split(content, token.NewlineLF)
 
 	// Parse task blocks
 	blocks := ParseTaskBlocks(lines)
@@ -53,15 +56,9 @@ func CompactTasks(
 	for _, block := range blocks {
 		if block.IsArchivable {
 			archivableBlocks = append(archivableBlocks, block)
-			cmd.Println(fmt.Sprintf(
-				"✓ Moving completed task: %s",
-				TruncateString(block.ParentTaskText(), 50),
-			))
+			write.InfoMovingTask(cmd, TruncateString(block.ParentTaskText(), 50))
 		} else {
-			cmd.Println(fmt.Sprintf(
-				"! Skipping (has incomplete children): %s",
-				TruncateString(block.ParentTaskText(), 50),
-			))
+			write.InfoSkippingTask(cmd, TruncateString(block.ParentTaskText(), 50))
 		}
 	}
 
@@ -74,11 +71,11 @@ func CompactTasks(
 
 	// Add blocks to the Completed section
 	for i, line := range newLines {
-		if strings.HasPrefix(line, config.HeadingCompleted) {
+		if strings.HasPrefix(line, assets.HeadingCompleted) {
 			// Find the next line that's either empty or another section
 			insertIdx := i + 1
 			for insertIdx < len(newLines) && newLines[insertIdx] != "" &&
-				!strings.HasPrefix(newLines[insertIdx], config.HeadingLevelTwoStart) {
+				!strings.HasPrefix(newLines[insertIdx], token.HeadingLevelTwoStart) {
 				insertIdx++
 			}
 
@@ -108,25 +105,22 @@ func CompactTasks(
 		}
 
 		if len(blocksToArchive) > 0 {
-			nl := config.NewlineLF
+			nl := token.NewlineLF
 			var archiveContent string
 			for _, block := range blocksToArchive {
 				archiveContent += block.BlockContent() + nl + nl
 			}
-			if archiveFile, err := WriteArchive("tasks", config.HeadingArchivedTasks, archiveContent); err == nil {
-				cmd.Println(fmt.Sprintf(
-					"✓ Archived %d tasks to %s (older than %d days)",
-					len(blocksToArchive), archiveFile, archiveDays,
-				))
+			if archiveFile, archiveErr := WriteArchive("tasks", assets.HeadingArchivedTasks, archiveContent); archiveErr == nil {
+				write.InfoArchivedTasks(cmd, len(blocksToArchive), archiveFile, archiveDays)
 			}
 		}
 	}
 
 	// Write back
-	newContent := strings.Join(newLines, config.NewlineLF)
+	newContent := strings.Join(newLines, token.NewlineLF)
 	if newContent != content {
 		if err := os.WriteFile(
-			tasksFile.Path, []byte(newContent), config.PermFile,
+			tasksFile.Path, []byte(newContent), fs.PermFile,
 		); err != nil {
 			return 0, err
 		}

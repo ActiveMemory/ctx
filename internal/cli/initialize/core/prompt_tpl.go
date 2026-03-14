@@ -7,14 +7,16 @@
 package core
 
 import (
-	"fmt"
 	"os"
 	"path/filepath"
 
+	"github.com/ActiveMemory/ctx/internal/config/dir"
+	"github.com/ActiveMemory/ctx/internal/config/fs"
 	"github.com/spf13/cobra"
 
 	"github.com/ActiveMemory/ctx/internal/assets"
-	"github.com/ActiveMemory/ctx/internal/config"
+	ctxerr "github.com/ActiveMemory/ctx/internal/err"
+	"github.com/ActiveMemory/ctx/internal/write"
 )
 
 // CreatePromptTemplates creates prompt template files in .context/prompts/.
@@ -27,28 +29,28 @@ import (
 // Returns:
 //   - error: Non-nil if directory creation or file write fails
 func CreatePromptTemplates(cmd *cobra.Command, contextDir string, force bool) error {
-	promptDir := filepath.Join(contextDir, config.DirPrompts)
-	if err := os.MkdirAll(promptDir, config.PermExec); err != nil {
-		return fmt.Errorf("failed to create %s: %w", promptDir, err)
+	promptDir := filepath.Join(contextDir, dir.Prompts)
+	if err := os.MkdirAll(promptDir, fs.PermExec); err != nil {
+		return ctxerr.Mkdir(promptDir, err)
 	}
 	promptTemplates, err := assets.ListPromptTemplates()
 	if err != nil {
-		return fmt.Errorf("failed to list prompt templates: %w", err)
+		return ctxerr.ListPromptTemplates(err)
 	}
 	for _, name := range promptTemplates {
 		targetPath := filepath.Join(promptDir, name)
 		if _, err := os.Stat(targetPath); err == nil && !force {
-			cmd.Println(fmt.Sprintf("  ○ prompts/%s (exists, skipped)", name))
+			write.InitSkipped(cmd, "prompts/"+name)
 			continue
 		}
 		content, err := assets.PromptTemplate(name)
 		if err != nil {
-			return fmt.Errorf("failed to read prompt template %s: %w", name, err)
+			return ctxerr.ReadPromptTemplate(name, err)
 		}
-		if err := os.WriteFile(targetPath, content, config.PermFile); err != nil {
-			return fmt.Errorf("failed to write %s: %w", targetPath, err)
+		if err := os.WriteFile(targetPath, content, fs.PermFile); err != nil {
+			return ctxerr.FileWrite(targetPath, err)
 		}
-		cmd.Println(fmt.Sprintf("  ✓ prompts/%s", name))
+		write.InitCreated(cmd, "prompts/"+name)
 	}
 	return nil
 }

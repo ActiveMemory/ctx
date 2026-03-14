@@ -13,8 +13,16 @@ import (
 	"path/filepath"
 	"strings"
 
+	"github.com/ActiveMemory/ctx/internal/assets"
 	"github.com/ActiveMemory/ctx/internal/cli/initialize"
-	"github.com/ActiveMemory/ctx/internal/config"
+	"github.com/ActiveMemory/ctx/internal/config/claude"
+	"github.com/ActiveMemory/ctx/internal/config/crypto"
+	"github.com/ActiveMemory/ctx/internal/config/ctx"
+	"github.com/ActiveMemory/ctx/internal/config/doctor"
+	"github.com/ActiveMemory/ctx/internal/config/file"
+	"github.com/ActiveMemory/ctx/internal/config/marker"
+	"github.com/ActiveMemory/ctx/internal/config/regex"
+	"github.com/ActiveMemory/ctx/internal/config/reminder"
 	"github.com/ActiveMemory/ctx/internal/context"
 	"github.com/ActiveMemory/ctx/internal/drift"
 	"github.com/ActiveMemory/ctx/internal/eventlog"
@@ -29,17 +37,17 @@ import (
 func CheckContextInitialized(report *Report) {
 	if context.Exists("") {
 		report.Results = append(report.Results, Result{
-			Name:     "context_initialized",
-			Category: "Structure",
+			Name:     doctor.CheckContextInit,
+			Category: doctor.CategoryStructure,
 			Status:   StatusOK,
-			Message:  "Context initialized (.context/)",
+			Message:  assets.TextDesc(assets.TextDescKeyDoctorContextInitializedOk),
 		})
 	} else {
 		report.Results = append(report.Results, Result{
-			Name:     "context_initialized",
-			Category: "Structure",
+			Name:     doctor.CheckContextInit,
+			Category: doctor.CategoryStructure,
 			Status:   StatusError,
-			Message:  "Context not initialized — run ctx init",
+			Message:  assets.TextDesc(assets.TextDescKeyDoctorContextInitializedError),
 		})
 	}
 }
@@ -51,29 +59,29 @@ func CheckContextInitialized(report *Report) {
 func CheckRequiredFiles(report *Report) {
 	dir := rc.ContextDir()
 	var missing []string
-	for _, f := range config.FilesRequired {
+	for _, f := range ctx.FilesRequired {
 		path := filepath.Join(dir, f)
 		if _, statErr := os.Stat(path); os.IsNotExist(statErr) {
 			missing = append(missing, f)
 		}
 	}
 
-	total := len(config.FilesRequired)
+	total := len(ctx.FilesRequired)
 	present := total - len(missing)
 
 	if len(missing) == 0 {
 		report.Results = append(report.Results, Result{
-			Name:     "required_files",
-			Category: "Structure",
+			Name:     doctor.CheckRequiredFiles,
+			Category: doctor.CategoryStructure,
 			Status:   StatusOK,
-			Message:  fmt.Sprintf("Required files present (%d/%d)", present, total),
+			Message:  fmt.Sprintf(assets.TextDesc(assets.TextDescKeyDoctorRequiredFilesOk), present, total),
 		})
 	} else {
 		report.Results = append(report.Results, Result{
-			Name:     "required_files",
-			Category: "Structure",
+			Name:     doctor.CheckRequiredFiles,
+			Category: doctor.CategoryStructure,
 			Status:   StatusError,
-			Message:  fmt.Sprintf("Missing required files (%d/%d): %s", present, total, strings.Join(missing, ", ")),
+			Message:  fmt.Sprintf(assets.TextDesc(assets.TextDescKeyDoctorRequiredFilesError), present, total, strings.Join(missing, ", ")),
 		})
 	}
 }
@@ -83,14 +91,14 @@ func CheckRequiredFiles(report *Report) {
 // Parameters:
 //   - report: Report to append the result to
 func CheckCtxrcValidation(report *Report) {
-	data, readErr := os.ReadFile(config.FileContextRC) //nolint:gosec // project-local config file
+	data, readErr := os.ReadFile(file.CtxRC) //nolint:gosec // project-local config file
 	if readErr != nil {
 		// No .ctxrc is fine — defaults are used.
 		report.Results = append(report.Results, Result{
-			Name:     "ctxrc_validation",
-			Category: "Structure",
+			Name:     doctor.CheckCtxrcValidation,
+			Category: doctor.CategoryStructure,
 			Status:   StatusOK,
-			Message:  "No .ctxrc file (using defaults)",
+			Message:  assets.TextDesc(assets.TextDescKeyDoctorCtxrcValidationOkNoFile),
 		})
 		return
 	}
@@ -98,29 +106,29 @@ func CheckCtxrcValidation(report *Report) {
 	warnings, validateErr := rc.Validate(data)
 	if validateErr != nil {
 		report.Results = append(report.Results, Result{
-			Name:     "ctxrc_validation",
-			Category: "Structure",
+			Name:     doctor.CheckCtxrcValidation,
+			Category: doctor.CategoryStructure,
 			Status:   StatusError,
-			Message:  fmt.Sprintf(".ctxrc parse error: %v", validateErr),
+			Message:  fmt.Sprintf(assets.TextDesc(assets.TextDescKeyDoctorCtxrcValidationError), validateErr),
 		})
 		return
 	}
 
 	if len(warnings) > 0 {
 		report.Results = append(report.Results, Result{
-			Name:     "ctxrc_validation",
-			Category: "Structure",
+			Name:     doctor.CheckCtxrcValidation,
+			Category: doctor.CategoryStructure,
 			Status:   StatusWarning,
-			Message:  fmt.Sprintf(".ctxrc has unknown fields: %s", strings.Join(warnings, "; ")),
+			Message:  fmt.Sprintf(assets.TextDesc(assets.TextDescKeyDoctorCtxrcValidationWarning), strings.Join(warnings, "; ")),
 		})
 		return
 	}
 
 	report.Results = append(report.Results, Result{
-		Name:     "ctxrc_validation",
-		Category: "Structure",
+		Name:     doctor.CheckCtxrcValidation,
+		Category: doctor.CategoryStructure,
 		Status:   StatusOK,
-		Message:  ".ctxrc valid",
+		Message:  assets.TextDesc(assets.TextDescKeyDoctorCtxrcValidationOk),
 	})
 }
 
@@ -136,10 +144,10 @@ func CheckDrift(report *Report) {
 	ctx, loadErr := context.Load("")
 	if loadErr != nil {
 		report.Results = append(report.Results, Result{
-			Name:     "drift",
-			Category: "Quality",
+			Name:     doctor.CheckDrift,
+			Category: doctor.CategoryQuality,
 			Status:   StatusWarning,
-			Message:  fmt.Sprintf("Could not load context for drift check: %v", loadErr),
+			Message:  fmt.Sprintf(assets.TextDesc(assets.TextDescKeyDoctorDriftWarningLoad), loadErr),
 		})
 		return
 	}
@@ -150,20 +158,20 @@ func CheckDrift(report *Report) {
 
 	if warnCount == 0 && violCount == 0 {
 		report.Results = append(report.Results, Result{
-			Name:     "drift",
-			Category: "Quality",
+			Name:     doctor.CheckDrift,
+			Category: doctor.CategoryQuality,
 			Status:   StatusOK,
-			Message:  "No drift detected",
+			Message:  assets.TextDesc(assets.TextDescKeyDoctorDriftOk),
 		})
 		return
 	}
 
 	var parts []string
 	if violCount > 0 {
-		parts = append(parts, fmt.Sprintf("%d violations", violCount))
+		parts = append(parts, fmt.Sprintf(assets.TextDesc(assets.TextDescKeyDoctorDriftViolations), violCount))
 	}
 	if warnCount > 0 {
-		parts = append(parts, fmt.Sprintf("%d warnings", warnCount))
+		parts = append(parts, fmt.Sprintf(assets.TextDesc(assets.TextDescKeyDoctorDriftWarnings), warnCount))
 	}
 
 	status := StatusWarning
@@ -172,10 +180,10 @@ func CheckDrift(report *Report) {
 	}
 
 	report.Results = append(report.Results, Result{
-		Name:     "drift",
-		Category: "Quality",
+		Name:     doctor.CheckDrift,
+		Category: doctor.CategoryQuality,
 		Status:   status,
-		Message:  fmt.Sprintf("Drift: %s — run ctx drift for details", strings.Join(parts, ", ")),
+		Message:  fmt.Sprintf(assets.TextDesc(assets.TextDescKeyDoctorDriftDetected), strings.Join(parts, ", ")),
 	})
 }
 
@@ -187,19 +195,19 @@ func CheckPluginEnablement(report *Report) {
 	installed := initialize.PluginInstalled()
 	if !installed {
 		report.Results = append(report.Results, Result{
-			Name:     "plugin_installed",
-			Category: "Plugin",
+			Name:     doctor.CheckPluginInstalled,
+			Category: doctor.CategoryPlugin,
 			Status:   StatusInfo,
-			Message:  "ctx plugin not installed",
+			Message:  assets.TextDesc(assets.TextDescKeyDoctorPluginInstalledInfo),
 		})
 		return
 	}
 
 	report.Results = append(report.Results, Result{
-		Name:     "plugin_installed",
-		Category: "Plugin",
+		Name:     doctor.CheckPluginInstalled,
+		Category: doctor.CategoryPlugin,
 		Status:   StatusOK,
-		Message:  "ctx plugin installed",
+		Message:  assets.TextDesc(assets.TextDescKeyDoctorPluginInstalledOk),
 	})
 
 	globalEnabled := initialize.PluginEnabledGlobally()
@@ -207,30 +215,28 @@ func CheckPluginEnablement(report *Report) {
 
 	if globalEnabled {
 		report.Results = append(report.Results, Result{
-			Name:     "plugin_enabled_global",
-			Category: "Plugin",
+			Name:     doctor.CheckPluginEnabledGlobal,
+			Category: doctor.CategoryPlugin,
 			Status:   StatusOK,
-			Message:  "Plugin enabled globally (~/.claude/settings.json)",
+			Message:  assets.TextDesc(assets.TextDescKeyDoctorPluginEnabledGlobalOk),
 		})
 	}
 
 	if localEnabled {
 		report.Results = append(report.Results, Result{
-			Name:     "plugin_enabled_local",
-			Category: "Plugin",
+			Name:     doctor.CheckPluginEnabledLocal,
+			Category: doctor.CategoryPlugin,
 			Status:   StatusOK,
-			Message:  "Plugin enabled locally (.claude/settings.local.json)",
+			Message:  assets.TextDesc(assets.TextDescKeyDoctorPluginEnabledLocalOk),
 		})
 	}
 
 	if !globalEnabled && !localEnabled {
 		report.Results = append(report.Results, Result{
-			Name:     "plugin_enabled",
-			Category: "Plugin",
+			Name:     doctor.CheckPluginEnabled,
+			Category: doctor.CategoryPlugin,
 			Status:   StatusWarning,
-			Message: "Plugin installed but not enabled — run 'ctx init' to auto-enable, " +
-				"or add {\"enabledPlugins\": {\"" + config.PluginID +
-				"\": true}} to ~/.claude/settings.json",
+			Message:  fmt.Sprintf(assets.TextDesc(assets.TextDescKeyDoctorPluginEnabledWarning), claude.PluginID),
 		})
 	}
 }
@@ -242,17 +248,17 @@ func CheckPluginEnablement(report *Report) {
 func CheckEventLogging(report *Report) {
 	if rc.EventLog() {
 		report.Results = append(report.Results, Result{
-			Name:     "event_logging",
-			Category: "Hooks",
+			Name:     doctor.CheckEventLogging,
+			Category: doctor.CategoryHooks,
 			Status:   StatusOK,
-			Message:  "Event logging enabled",
+			Message:  assets.TextDesc(assets.TextDescKeyDoctorEventLoggingOk),
 		})
 	} else {
 		report.Results = append(report.Results, Result{
-			Name:     "event_logging",
-			Category: "Hooks",
+			Name:     doctor.CheckEventLogging,
+			Category: doctor.CategoryHooks,
 			Status:   StatusInfo,
-			Message:  "Event logging disabled (enable with event_log: true in .ctxrc)",
+			Message:  assets.TextDesc(assets.TextDescKeyDoctorEventLoggingInfo),
 		})
 	}
 }
@@ -263,20 +269,20 @@ func CheckEventLogging(report *Report) {
 //   - report: Report to append the result to
 func CheckWebhook(report *Report) {
 	dir := rc.ContextDir()
-	encPath := filepath.Join(dir, ".notify.enc")
+	encPath := filepath.Join(dir, crypto.NotifyEnc)
 	if _, statErr := os.Stat(encPath); statErr == nil {
 		report.Results = append(report.Results, Result{
-			Name:     "webhook",
-			Category: "Hooks",
+			Name:     doctor.CheckWebhook,
+			Category: doctor.CategoryHooks,
 			Status:   StatusOK,
-			Message:  "Webhook configured",
+			Message:  assets.TextDesc(assets.TextDescKeyDoctorWebhookOk),
 		})
 	} else {
 		report.Results = append(report.Results, Result{
-			Name:     "webhook",
-			Category: "Hooks",
+			Name:     doctor.CheckWebhook,
+			Category: doctor.CategoryHooks,
 			Status:   StatusInfo,
-			Message:  "No webhook configured (optional — use ctx notify setup)",
+			Message:  assets.TextDesc(assets.TextDescKeyDoctorWebhookInfo),
 		})
 	}
 }
@@ -287,14 +293,14 @@ func CheckWebhook(report *Report) {
 //   - report: Report to append the result to
 func CheckReminders(report *Report) {
 	dir := rc.ContextDir()
-	remindersPath := filepath.Join(dir, "reminders.json")
+	remindersPath := filepath.Join(dir, reminder.Reminders)
 	data, readErr := os.ReadFile(remindersPath) //nolint:gosec // project-local path
 	if readErr != nil {
 		report.Results = append(report.Results, Result{
-			Name:     "reminders",
-			Category: "State",
+			Name:     doctor.CheckReminders,
+			Category: doctor.CategoryState,
 			Status:   StatusOK,
-			Message:  "No pending reminders",
+			Message:  assets.TextDesc(assets.TextDescKeyDoctorRemindersOk),
 		})
 		return
 	}
@@ -302,10 +308,10 @@ func CheckReminders(report *Report) {
 	var reminders []any
 	if unmarshalErr := json.Unmarshal(data, &reminders); unmarshalErr != nil {
 		report.Results = append(report.Results, Result{
-			Name:     "reminders",
-			Category: "State",
+			Name:     doctor.CheckReminders,
+			Category: doctor.CategoryState,
 			Status:   StatusOK,
-			Message:  "No pending reminders",
+			Message:  assets.TextDesc(assets.TextDescKeyDoctorRemindersOk),
 		})
 		return
 	}
@@ -313,17 +319,17 @@ func CheckReminders(report *Report) {
 	count := len(reminders)
 	if count == 0 {
 		report.Results = append(report.Results, Result{
-			Name:     "reminders",
-			Category: "State",
+			Name:     doctor.CheckReminders,
+			Category: doctor.CategoryState,
 			Status:   StatusOK,
-			Message:  "No pending reminders",
+			Message:  assets.TextDesc(assets.TextDescKeyDoctorRemindersOk),
 		})
 	} else {
 		report.Results = append(report.Results, Result{
-			Name:     "reminders",
-			Category: "State",
+			Name:     doctor.CheckReminders,
+			Category: doctor.CategoryState,
 			Status:   StatusInfo,
-			Message:  fmt.Sprintf("%d pending reminders", count),
+			Message:  fmt.Sprintf(assets.TextDesc(assets.TextDescKeyDoctorRemindersInfo), count),
 		})
 	}
 }
@@ -334,16 +340,16 @@ func CheckReminders(report *Report) {
 //   - report: Report to append the result to
 func CheckTaskCompletion(report *Report) {
 	dir := rc.ContextDir()
-	tasksPath := filepath.Join(dir, config.FileTask)
+	tasksPath := filepath.Join(dir, ctx.Task)
 	data, readErr := os.ReadFile(tasksPath) //nolint:gosec // project-local path
 	if readErr != nil {
 		return // no tasks file, skip
 	}
 
-	matches := config.RegExTaskMultiline.FindAllStringSubmatch(string(data), -1)
+	matches := regex.TaskMultiline.FindAllStringSubmatch(string(data), -1)
 	var completed, pending int
 	for _, m := range matches {
-		if len(m) > 2 && m[2] == config.MarkTaskComplete {
+		if len(m) > 2 && m[2] == marker.MarkTaskComplete {
 			completed++
 		} else {
 			pending++
@@ -356,19 +362,19 @@ func CheckTaskCompletion(report *Report) {
 	}
 
 	ratio := completed * 100 / total
-	msg := fmt.Sprintf("Tasks: %d/%d completed (%d%%)", completed, total, ratio)
+	msg := fmt.Sprintf(assets.TextDesc(assets.TextDescKeyDoctorTaskCompletionFormat), completed, total, ratio)
 
 	if ratio >= 80 && completed > 5 {
 		report.Results = append(report.Results, Result{
-			Name:     "task_completion",
-			Category: "State",
+			Name:     doctor.CheckTaskCompletion,
+			Category: doctor.CategoryState,
 			Status:   StatusWarning,
-			Message:  msg + " — consider archiving with ctx tasks archive",
+			Message:  msg + assets.TextDesc(assets.TextDescKeyDoctorTaskCompletionWarningSuffix),
 		})
 	} else {
 		report.Results = append(report.Results, Result{
-			Name:     "task_completion",
-			Category: "State",
+			Name:     doctor.CheckTaskCompletion,
+			Category: doctor.CategoryState,
 			Status:   StatusOK,
 			Message:  msg,
 		})
@@ -380,11 +386,11 @@ func CheckTaskCompletion(report *Report) {
 // Parameters:
 //   - report: Report to append the result to
 func CheckContextTokenSize(report *Report) {
-	// Only count files in FileReadOrder — these are the files actually
+	// Only count files in ReadOrder — these are the files actually
 	// loaded into agent context. Other .md files (DETAILED_DESIGN.md,
 	// map-tracking, etc.) exist on disk but aren't injected.
-	indexed := make(map[string]bool, len(config.FileReadOrder))
-	for _, f := range config.FileReadOrder {
+	indexed := make(map[string]bool, len(ctx.ReadOrder))
+	for _, f := range ctx.ReadOrder {
 		indexed[f] = true
 	}
 
@@ -410,20 +416,20 @@ func CheckContextTokenSize(report *Report) {
 	}
 
 	window := rc.ContextWindow()
-	msg := fmt.Sprintf("Context size: ~%d tokens (window: %d)", totalTokens, window)
+	msg := fmt.Sprintf(assets.TextDesc(assets.TextDescKeyDoctorContextSizeFormat), totalTokens, window)
 
 	warnThreshold := window / 5 // 20% of context window
 	if totalTokens > warnThreshold {
 		report.Results = append(report.Results, Result{
-			Name:     "context_size",
-			Category: "Size",
+			Name:     doctor.CheckContextSize,
+			Category: doctor.CategorySize,
 			Status:   StatusWarning,
-			Message:  msg + " — consider ctx compact",
+			Message:  msg + assets.TextDesc(assets.TextDescKeyDoctorContextSizeWarningSuffix),
 		})
 	} else {
 		report.Results = append(report.Results, Result{
-			Name:     "context_size",
-			Category: "Size",
+			Name:     doctor.CheckContextSize,
+			Category: doctor.CategorySize,
 			Status:   StatusOK,
 			Message:  msg,
 		})
@@ -432,10 +438,10 @@ func CheckContextTokenSize(report *Report) {
 	// Add per-file breakdown as info results.
 	for _, ft := range breakdown {
 		report.Results = append(report.Results, Result{
-			Name:     "context_file_" + ft.name,
-			Category: "Size",
+			Name:     doctor.CheckContextFilePrefix + ft.name,
+			Category: doctor.CategorySize,
 			Status:   StatusInfo,
-			Message:  fmt.Sprintf("%-22s ~%d tokens", ft.name, ft.tokens),
+			Message:  fmt.Sprintf(assets.TextDesc(assets.TextDescKeyDoctorContextFileFormat), ft.name, ft.tokens),
 		})
 	}
 }
@@ -452,19 +458,19 @@ func CheckRecentEventActivity(report *Report) {
 	events, queryErr := eventlog.Query(eventlog.QueryOpts{Last: 1})
 	if queryErr != nil || len(events) == 0 {
 		report.Results = append(report.Results, Result{
-			Name:     "recent_events",
-			Category: "Events",
+			Name:     doctor.CheckRecentEvents,
+			Category: doctor.CategoryEvents,
 			Status:   StatusInfo,
-			Message:  "No events in log",
+			Message:  assets.TextDesc(assets.TextDescKeyDoctorRecentEventsInfo),
 		})
 		return
 	}
 
 	report.Results = append(report.Results, Result{
-		Name:     "recent_events",
-		Category: "Events",
+		Name:     doctor.CheckRecentEvents,
+		Category: doctor.CategoryEvents,
 		Status:   StatusOK,
-		Message:  fmt.Sprintf("Last event: %s", events[len(events)-1].Timestamp),
+		Message:  fmt.Sprintf(assets.TextDesc(assets.TextDescKeyDoctorRecentEventsOk), events[len(events)-1].Timestamp),
 	})
 }
 
@@ -495,13 +501,13 @@ func AddResourceResults(report *Report, snap sysinfo.Snapshot) {
 	// Memory.
 	if snap.Memory.Supported && snap.Memory.TotalBytes > 0 {
 		pct := ResourcePct(snap.Memory.UsedBytes, snap.Memory.TotalBytes)
-		msg := fmt.Sprintf("Memory %d%% (%s / %s GB)",
+		msg := fmt.Sprintf(assets.TextDesc(assets.TextDescKeyDoctorResourceMemoryFormat),
 			pct,
 			sysinfo.FormatGiB(snap.Memory.UsedBytes),
 			sysinfo.FormatGiB(snap.Memory.TotalBytes))
 		report.Results = append(report.Results, Result{
-			Name:     "resource_memory",
-			Category: "Resources",
+			Name:     doctor.CheckResourceMemory,
+			Category: doctor.CategoryResources,
 			Status:   SeverityToStatus(sevMap["memory"]),
 			Message:  msg,
 		})
@@ -510,13 +516,13 @@ func AddResourceResults(report *Report, snap sysinfo.Snapshot) {
 	// Swap (only when swap is configured).
 	if snap.Memory.Supported && snap.Memory.SwapTotalBytes > 0 {
 		pct := ResourcePct(snap.Memory.SwapUsedBytes, snap.Memory.SwapTotalBytes)
-		msg := fmt.Sprintf("Swap %d%% (%s / %s GB)",
+		msg := fmt.Sprintf(assets.TextDesc(assets.TextDescKeyDoctorResourceSwapFormat),
 			pct,
 			sysinfo.FormatGiB(snap.Memory.SwapUsedBytes),
 			sysinfo.FormatGiB(snap.Memory.SwapTotalBytes))
 		report.Results = append(report.Results, Result{
-			Name:     "resource_swap",
-			Category: "Resources",
+			Name:     doctor.CheckResourceSwap,
+			Category: doctor.CategoryResources,
 			Status:   SeverityToStatus(sevMap["swap"]),
 			Message:  msg,
 		})
@@ -525,13 +531,13 @@ func AddResourceResults(report *Report, snap sysinfo.Snapshot) {
 	// Disk.
 	if snap.Disk.Supported && snap.Disk.TotalBytes > 0 {
 		pct := ResourcePct(snap.Disk.UsedBytes, snap.Disk.TotalBytes)
-		msg := fmt.Sprintf("Disk %d%% (%s / %s GB)",
+		msg := fmt.Sprintf(assets.TextDesc(assets.TextDescKeyDoctorResourceDiskFormat),
 			pct,
 			sysinfo.FormatGiB(snap.Disk.UsedBytes),
 			sysinfo.FormatGiB(snap.Disk.TotalBytes))
 		report.Results = append(report.Results, Result{
-			Name:     "resource_disk",
-			Category: "Resources",
+			Name:     doctor.CheckResourceDisk,
+			Category: doctor.CategoryResources,
 			Status:   SeverityToStatus(sevMap["disk"]),
 			Message:  msg,
 		})
@@ -540,11 +546,11 @@ func AddResourceResults(report *Report, snap sysinfo.Snapshot) {
 	// Load (1-minute average relative to CPU count).
 	if snap.Load.Supported && snap.Load.NumCPU > 0 {
 		ratio := snap.Load.Load1 / float64(snap.Load.NumCPU)
-		msg := fmt.Sprintf("Load %.2fx (%.1f / %d CPUs)",
+		msg := fmt.Sprintf(assets.TextDesc(assets.TextDescKeyDoctorResourceLoadFormat),
 			ratio, snap.Load.Load1, snap.Load.NumCPU)
 		report.Results = append(report.Results, Result{
-			Name:     "resource_load",
-			Category: "Resources",
+			Name:     doctor.CheckResourceLoad,
+			Category: doctor.CategoryResources,
 			Status:   SeverityToStatus(sevMap["load"]),
 			Message:  msg,
 		})

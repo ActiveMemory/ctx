@@ -9,11 +9,11 @@ package core
 import (
 	"sort"
 
-	"github.com/ActiveMemory/ctx/internal/config"
+	"github.com/ActiveMemory/ctx/internal/config/ctx"
 	"github.com/ActiveMemory/ctx/internal/context"
 )
 
-// SortByReadOrder sorts context files according to [config.FileReadOrder].
+// SortByReadOrder sorts context files according to [config.ReadOrder].
 //
 // Files not in the read-order list are assigned a low priority (100) and
 // will appear at the end. The original slice is not modified; a new sorted
@@ -27,7 +27,7 @@ import (
 func SortByReadOrder(files []context.FileInfo) []context.FileInfo {
 	// Create a map for a quick priority lookup
 	priority := make(map[string]int)
-	for i, name := range config.FileReadOrder {
+	for i, name := range ctx.ReadOrder {
 		priority[name] = i
 	}
 

@@ -11,12 +11,13 @@ import (
 	"path/filepath"
 	"testing"
 
-	"github.com/ActiveMemory/ctx/internal/config"
+	"github.com/ActiveMemory/ctx/internal/config/dir"
+	"github.com/ActiveMemory/ctx/internal/config/memory"
 )
 
 func TestStateRoundtrip(t *testing.T) {
 	contextDir := t.TempDir()
-	stateDir := filepath.Join(contextDir, config.DirState)
+	stateDir := filepath.Join(contextDir, dir.State)
 	if mkErr := os.MkdirAll(stateDir, 0o755); mkErr != nil {
 		t.Fatal(mkErr)
 	}
@@ -106,12 +107,12 @@ func TestDedup_MarkImportedFormat(t *testing.T) {
 
 func TestLoadState_CorruptJSON(t *testing.T) {
 	contextDir := t.TempDir()
-	stateDir := filepath.Join(contextDir, config.DirState)
+	stateDir := filepath.Join(contextDir, dir.State)
 	if mkErr := os.MkdirAll(stateDir, 0o755); mkErr != nil {
 		t.Fatal(mkErr)
 	}
 
-	path := filepath.Join(stateDir, config.FileMemoryState)
+	path := filepath.Join(stateDir, memory.MemoryState)
 	if writeErr := os.WriteFile(path, []byte("{corrupt"), 0o644); writeErr != nil {
 		t.Fatal(writeErr)
 	}

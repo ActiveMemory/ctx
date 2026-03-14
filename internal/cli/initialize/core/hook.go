@@ -9,15 +9,18 @@ package core
 import (
 	"bytes"
 	"encoding/json"
-	"fmt"
 	"os"
 	"strings"
 
+	claude2 "github.com/ActiveMemory/ctx/internal/config/claude"
+	"github.com/ActiveMemory/ctx/internal/config/dir"
+	"github.com/ActiveMemory/ctx/internal/config/fs"
 	"github.com/spf13/cobra"
 
 	"github.com/ActiveMemory/ctx/internal/assets"
 	"github.com/ActiveMemory/ctx/internal/claude"
-	"github.com/ActiveMemory/ctx/internal/config"
+	ctxerr "github.com/ActiveMemory/ctx/internal/err"
+	"github.com/ActiveMemory/ctx/internal/write"
 )
 
 // MergeSettingsPermissions merges ctx permissions into settings.local.json.
@@ -29,11 +32,11 @@ import (
 //   - error: Non-nil if file operations fail
 func MergeSettingsPermissions(cmd *cobra.Command) error {
 	var settings claude.Settings
-	existingContent, err := os.ReadFile(config.FileSettings)
+	existingContent, err := os.ReadFile(claude2.Settings)
 	fileExists := err == nil
 	if fileExists {
 		if err := json.Unmarshal(existingContent, &settings); err != nil {
-			return fmt.Errorf("failed to parse existing %s: %w", config.FileSettings, err)
+			return ctxerr.ParseFile(claude2.Settings, err)
 		}
 	}
 	allowModified := MergePermissions(&settings.Permissions.Allow, assets.DefaultAllowPermissions())
@@ -41,39 +44,39 @@ func MergeSettingsPermissions(cmd *cobra.Command) error {
 	allowDeduped := DeduplicatePermissions(&settings.Permissions.Allow)
 	denyDeduped := DeduplicatePermissions(&settings.Permissions.Deny)
 	if !allowModified && !denyModified && !allowDeduped && !denyDeduped {
-		cmd.Println(fmt.Sprintf("  ○ %s (no changes needed)\n", config.FileSettings))
+		write.InitNoChanges(cmd, claude2.Settings)
 		return nil
 	}
-	if err := os.MkdirAll(config.DirClaude, config.PermExec); err != nil {
-		return fmt.Errorf("failed to create %s: %w", config.DirClaude, err)
+	if err := os.MkdirAll(dir.Claude, fs.PermExec); err != nil {
+		return ctxerr.Mkdir(dir.Claude, err)
 	}
 	var buf bytes.Buffer
 	encoder := json.NewEncoder(&buf)
 	encoder.SetEscapeHTML(false)
 	encoder.SetIndent("", "  ")
 	if err := encoder.Encode(settings); err != nil {
-		return fmt.Errorf("failed to marshal settings: %w", err)
+		return ctxerr.MarshalSettings(err)
 	}
-	if err := os.WriteFile(config.FileSettings, buf.Bytes(), config.PermFile); err != nil {
-		return fmt.Errorf("failed to write %s: %w", config.FileSettings, err)
+	if err := os.WriteFile(claude2.Settings, buf.Bytes(), fs.PermFile); err != nil {
+		return ctxerr.FileWrite(claude2.Settings, err)
 	}
 	if fileExists {
 		deduped := allowDeduped || denyDeduped
 		merged := allowModified || denyModified
 		switch {
 		case merged && deduped:
-			cmd.Println(fmt.Sprintf("  ✓ %s (added ctx permissions, removed duplicates)", config.FileSettings))
+			write.InitPermsMergedDeduped(cmd, claude2.Settings)
 		case deduped:
-			cmd.Println(fmt.Sprintf("  ✓ %s (removed duplicate permissions)", config.FileSettings))
+			write.InitPermsDeduped(cmd, claude2.Settings)
 		case allowModified && denyModified:
-			cmd.Println(fmt.Sprintf("  ✓ %s (added ctx allow + deny permissions)", config.FileSettings))
+			write.InitPermsAllowDeny(cmd, claude2.Settings)
 		case denyModified:
-			cmd.Println(fmt.Sprintf("  ✓ %s (added ctx deny permissions)", config.FileSettings))
+			write.InitPermsDeny(cmd, claude2.Settings)
 		default:
-			cmd.Println(fmt.Sprintf("  ✓ %s (added ctx permissions)", config.FileSettings))
+			write.InitPermsAllow(cmd, claude2.Settings)
 		}
 	} else {
-		cmd.Println(fmt.Sprintf("  ✓ %s", config.FileSettings))
+		write.InitCreated(cmd, claude2.Settings)
 	}
 	return nil
 }

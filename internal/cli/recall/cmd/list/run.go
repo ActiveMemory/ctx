@@ -10,17 +10,19 @@ import (
 	"fmt"
 	"strings"
 
+	"github.com/ActiveMemory/ctx/internal/assets"
+	"github.com/ActiveMemory/ctx/internal/config/journal"
+	"github.com/ActiveMemory/ctx/internal/config/time"
 	"github.com/spf13/cobra"
 
 	"github.com/ActiveMemory/ctx/internal/cli/recall/core"
-	"github.com/ActiveMemory/ctx/internal/config"
 	ctxerr "github.com/ActiveMemory/ctx/internal/err"
 	"github.com/ActiveMemory/ctx/internal/parse"
 	"github.com/ActiveMemory/ctx/internal/recall/parser"
 	"github.com/ActiveMemory/ctx/internal/write"
 )
 
-// runList handles the recall list command.
+// Run handles the recall list command.
 //
 // Finds all sessions, applies optional filters, and displays them in a
 // formatted list with project, time, turn count, and preview.
@@ -36,7 +38,7 @@ import (
 //
 // Returns:
 //   - error: non-nil if date parsing or session scanning fails
-func runList(
+func Run(
 	cmd *cobra.Command, limit int, project, tool,
 	since, until string,
 	allProjects bool,
@@ -44,15 +46,15 @@ func runList(
 	// Parse date filters
 	sinceTime, sinceErr := parse.Date(since)
 	if since != "" && sinceErr != nil {
-		return ctxerr.InvalidDate(config.FlagSince, since, sinceErr)
+		return ctxerr.InvalidDate(assets.FlagSince, since, sinceErr)
 	}
 	untilTime, untilErr := parse.Date(until)
 	if until != "" && untilErr != nil {
-		return ctxerr.InvalidDate(config.FlagUntil, until, untilErr)
+		return ctxerr.InvalidDate(assets.FlagUntil, until, untilErr)
 	}
 	// --until is inclusive: advance to the end of the day
 	if until != "" {
-		untilTime = untilTime.Add(config.InclusiveUntilOffset)
+		untilTime = untilTime.Add(time.InclusiveUntilOffset)
 	}
 
 	sessions, scanErr := core.FindSessions(allProjects)
@@ -102,9 +104,9 @@ func runList(
 	write.SessionListHeader(cmd, len(sessions), shown)
 
 	// Compute dynamic column widths from data.
-	slugW, projW := len(config.ColSlug), len(config.ColProject)
+	slugW, projW := len(assets.ColSlug), len(assets.ColProject)
 	for _, s := range filtered {
-		slug := core.Truncate(s.Slug, config.SlugMaxLen)
+		slug := core.Truncate(s.Slug, journal.SlugMaxLen)
 		if len(slug) > slugW {
 			slugW = len(slug)
 		}
@@ -114,15 +116,15 @@ func runList(
 	}
 
 	// Print column header.
-	rowFmt := fmt.Sprintf(config.TplRecallListRow, slugW, projW)
+	rowFmt := fmt.Sprintf(assets.TplRecallListRow, slugW, projW)
 	write.SessionListRow(cmd, rowFmt,
-		config.ColSlug, config.ColProject, config.ColDate,
-		config.ColDuration, config.ColTurns, config.ColTokens)
+		assets.ColSlug, assets.ColProject, assets.ColDate,
+		assets.ColDuration, assets.ColTurns, assets.ColTokens)
 
 	// Print sessions.
 	for _, s := range filtered {
-		slug := core.Truncate(s.Slug, config.SlugMaxLen)
-		dateStr := s.StartTime.Local().Format(config.DateTimeFormat)
+		slug := core.Truncate(s.Slug, journal.SlugMaxLen)
+		dateStr := s.StartTime.Local().Format(time.DateTimeFormat)
 		dur := core.FormatDuration(s.Duration)
 		turns := fmt.Sprintf("%d", s.TurnCount)
 		tokens := ""

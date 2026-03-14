@@ -455,11 +455,11 @@ similarity and merges them with user approval. Originals archived, not deleted.
 Spec: `specs/context-consolidation.md`
 Ref: https://github.com/ActiveMemory/ctx/issues/19 (Phase 3)
 
-### Phase 10: Architecture Mapping Skill (`/ctx-map`)
+### Phase 10: Architecture Mapping Skill (`/ctx-architecture`)
 
 **Context**: Skill that incrementally builds and maintains ARCHITECTURE.md
 and DETAILED_DESIGN.md. Coverage tracked in map-tracking.json.
-Spec: `specs/ctx-map.md`
+Spec: `specs/ctx-architecture.md`
 
 ### Docs: Knowledge Health
 
@@ -478,6 +478,82 @@ output package. All CLI commands should route printed output through this packag
 
 - [x] WC.1: Add godoc docstrings to all functions in `internal/write/`, add `doc.go` #added:2026-03-06 #done:2026-03-06
 - [x] Move add command example strings from core/example.go to assets — user-facing text for i18n #added:2026-03-06-191651
+
+- [ ] SEC.1: Security-sensitive file change hook — PostToolUse on Edit/Write matching security-critical paths (.claude/settings.local.json, .claude/settings.json, CLAUDE.md, .claude/CLAUDE.md, .context/CONSTITUTION.md). Three actions: (1) nudge user in-session, (2) relay to webhook for out-of-band alerting (autonomous loops), (3) append to dedicated security log (.context/state/security-events.jsonl) for forensics. Separate from general event log. Spec needed. #priority:high #added:2026-03-13
+
+- [ ] O.5: Session timeline view — add --sessions flag to ctx system events. Per-session breakdown of eval/fired counts with hook list. See ideas/spec-hook-observability.md Phase 5 #added:2026-03-12-145401
+
+- [ ] O.4: Doctor hook health check — surface hook activity in ctx doctor output (active/evaluated-never-fired/never-evaluated). See ideas/spec-hook-observability.md Phase 4 #added:2026-03-12-145401
+
+- [ ] O.3: Skip reason logging — add eventlog.Skip() with standard reason constants (paused, throttled, condition-not-met). Instrument 19 hook early-exit paths. See ideas/spec-hook-observability.md Phase 3 #added:2026-03-12-145401
+
+- [ ] O.2: Event summary view — add --summary flag to ctx system events. Aggregates eval/fired counts per hook, shows last-eval/last-fired timestamps, lists never-evaluated hooks. See ideas/spec-hook-observability.md Phase 2 #added:2026-03-12-145401
+
+- [ ] O.1: Hook eval logging — wrap hook cobra commands to log 'eval' events on every invocation. Refactor Run() signatures from os.Stdin to io.Reader (peek+replay pattern). Adds eventlog.Eval(), EventTypeEval constant. See ideas/spec-hook-observability.md Phase 1 #added:2026-03-12-145401
+
+- [ ] Companion intelligence recommendation: implement spec from ideas/spec-companion-intelligence.md — ctx doctor companion detection, ctx init recommendation tip, ctx agent awareness in packets #added:2026-03-12-133008
+
+- [ ] Add configurable assets layer: allow users to plug their own YAML files for localization (language selection, custom text overrides). Currently all user-facing text is hardcoded in commands.yaml; need a mechanism to load user-provided YAML that overlays or replaces built-in text. This enables i18n without forking. #priority:low #added:2026-03-07-233756
+
+- [ ] Cleanup internal/cli/system/core/persistence.go: move 10 (base for ParseInt) to config constant #priority:low #added:2026-03-07-220825
+
+- [ ] Cleanup internal/cli/system/core/session_tokens.go: move SessionStats from state.go to types.go #priority:low #added:2026-03-07-220825
+
+- [ ] Cleanup internal/cli/system/core/wrapup.go: line 18 constant should go to config; make WrappedUpExpiry configurable via ctxrc #priority:low #added:2026-03-07-220825
+
+- [ ] Cleanup internal/cli/system/core/version.go: line 81 newline should come from config #priority:low #added:2026-03-07-220819
+
+- [ ] Add taxonomy to internal/cli/system/core/ — currently an unstructured bag of files; group by domain (backup, hooks, session, knowledge, etc.) #priority:medium #added:2026-03-07-220819
+
+- [ ] Cleanup internal/cli/system/core/version_drift.go: line 53 string formatting should use assets #priority:medium #added:2026-03-07-220819
+
+- [ ] Cleanup internal/cli/system/core/state.go: magic permissions (0o750), magic strings ('Context: ' prefix, etc.) #priority:medium #added:2026-03-07-220819
+
+- [ ] Cleanup internal/cli/system/core/smb.go: errors should come from internal/err; lines 101, 116, 111 need assets text #priority:medium #added:2026-03-07-220819
+
+- [ ] Make AutoPruneStaleDays configurable via ctxrc. Currently hardcoded to 7 days in config.AutoPruneStaleDays; add a ctxrc key (e.g., auto_prune_days) and fallback to the default. #priority:low #added:2026-03-07-220512
+
+- [ ] Refactor check_backup_age/run.go: move consts (lines 23-24) to config, magic directories (line 59) to config, symbolic constants for strings (line 72), messages to assets (lines 79, 90-91), extract non-Run functions to system/core, fix docstrings #priority:medium #added:2026-03-07-180020
+
+- [ ] Add ctxrc support for recall.list.limit to make the default --limit for recall list configurable. Currently hardcoded as config.DefaultRecallListLimit (20). #priority:low #added:2026-03-07-164342
+
+- [ ] Extract journal/core into a standalone journal parser package — functionally isolated enough for its own package rather than remaining as core/ #added:2026-03-07-093815
+
+- [ ] Move PluginInstalled/PluginEnabledGlobally/PluginEnabledLocally from initialize to internal/claude — these are Claude Code plugin detection functions, not init-specific #added:2026-03-07-091656
+
+- [ ] Move guide/cmd/root/run.go text to assets, listCommands to separate file + internal/write #added:2026-03-07-090322
+
+- [ ] Move drift/core/sanitize.go strings to assets #added:2026-03-07-090322
+
+- [ ] Move drift/core/out.go output functions to internal/write per convention #added:2026-03-07-090322
+
+- [ ] Move drift/core/fix.go fmt.Sprintf strings to assets — user-facing output text for i18n #added:2026-03-07-090322
+
+- [ ] Move drift/cmd/root/run.go cmd.Print* output strings to internal/write per convention #added:2026-03-07-084152
+
+- [ ] Extract doctor/core/checks.go strings — 105 inline Name/Category/Message values to assets (i18n) and config (Name/Category constants) #added:2026-03-07-083428
+
+- [ ] Split deps/core builders into per-ecosystem packages — go.go, node.go, python.go, rust.go are specific enough for their own packages under deps/core/ or deps/builders/ #added:2026-03-07-082827
+
+- [ ] Audit git graceful degradation — verify all exec.Command(git) call sites degrade gracefully when git is absent, per project guide recommendation #added:2026-03-07-081625
+
+- [ ] Fix 19 doc.go quality issues: system (13 missing subcmds), agent (phantom refs), load/loop (header typo), claude (stale migration note), 13 minimal descriptions (pause, resume, task, notify, decision, learnings, remind, context, eventlog, index, rc, recall/parser, task/core) #added:2026-03-07-075741
+
+- [ ] Move cmd.Print* output strings in compact/cmd/root/run.go to internal/write per convention #added:2026-03-07-074737
+
+- [ ] Extract changes format.go rendering templates to assets — headings, labels, and format strings are user-facing text for i18n #added:2026-03-07-074719
+
+- [ ] Lift HumanAgo and Pluralize to a common package — reusable time formatting, used by changes and potentially status/recall #added:2026-03-07-074649
+
+- [ ] Extract isAlnum predicate for localization — currently ASCII-only in agent keyword extraction (score.go:141) #added:2026-03-07-073900
+
+- [ ] Make stopwords configurable via .ctxrc — currently embedded in assets, domain users need custom terms #added:2026-03-07-073900
+
+- [ ] Make recency scoring thresholds and relevance match cap configurable via .ctxrc — currently hardcoded in config (7/30/90 days, cap 3) #added:2026-03-07-073900
+
+- [ ] Make DefaultAgentCooldown configurable via .ctxrc — currently hardcoded at 10 minutes in config #added:2026-03-07-073106
+
+- [ ] Make TaskBudgetPct and ConventionBudgetPct configurable via .ctxrc — currently hardcoded at 0.40 and 0.20 in config #added:2026-03-07-072714
 
 - [ ] Localization inventory: audit config constants, write package templates, and assets YAML for i18n mapping — low priority, most users are English-first developers #added:2026-03-06-192419
 

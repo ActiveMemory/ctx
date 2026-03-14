@@ -17,14 +17,14 @@ import (
 // Returns:
 //   - *cobra.Command: Configured show subcommand
 func Cmd() *cobra.Command {
-	short, _ := assets.CommandDesc("prompt.show")
+	short, _ := assets.CommandDesc(assets.CmdDescKeyPromptShow)
 
 	return &cobra.Command{
 		Use:   "show NAME",
 		Short: short,
 		Args:  cobra.ExactArgs(1),
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return runShow(cmd, args[0])
+			return Run(cmd, args[0])
 		},
 	}
 }

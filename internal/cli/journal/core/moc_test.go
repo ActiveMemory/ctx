@@ -10,7 +10,7 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/ActiveMemory/ctx/internal/config"
+	"github.com/ActiveMemory/ctx/internal/assets"
 )
 
 func TestGenerateHomeMOC(t *testing.T) {
@@ -113,7 +113,7 @@ func TestGenerateRelatedFooter(t *testing.T) {
 
 	got := GenerateRelatedFooter(entry, topicIndex, 5)
 
-	if !strings.Contains(got, config.ObsidianRelatedHeading) {
+	if !strings.Contains(got, assets.ObsidianRelatedHeading) {
 		t.Error("missing related heading")
 	}
 	if !strings.Contains(got, "[[_Topics|Topics MOC]]") {

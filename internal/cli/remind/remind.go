@@ -25,7 +25,7 @@ import (
 func Cmd() *cobra.Command {
 	var afterFlag string
 
-	short, long := assets.CommandDesc("remind")
+	short, long := assets.CommandDesc(assets.CmdDescKeyRemind)
 
 	cmd := &cobra.Command{
 		Use:   "remind [TEXT]",
@@ -34,13 +34,15 @@ func Cmd() *cobra.Command {
 		Args:  cobra.ArbitraryArgs,
 		RunE: func(cmd *cobra.Command, args []string) error {
 			if len(args) > 0 {
-				return add.RunAdd(cmd, args[0], afterFlag)
+				return add.Run(cmd, args[0], afterFlag)
 			}
-			return list.RunList(cmd)
+			return list.Run(cmd)
 		},
 	}
 
-	cmd.Flags().StringVarP(&afterFlag, "after", "a", "", assets.FlagDesc("remind.after"))
+	cmd.Flags().StringVarP(&afterFlag, "after", "a", "",
+		assets.FlagDesc(assets.FlagDescKeyRemindAfter),
+	)
 
 	cmd.AddCommand(add.Cmd())
 	cmd.AddCommand(list.Cmd())

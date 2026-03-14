@@ -7,28 +7,26 @@
 package resolve
 
 import (
-	"errors"
-	"fmt"
-
+	"github.com/ActiveMemory/ctx/internal/config/pad"
 	"github.com/spf13/cobra"
 
 	"github.com/ActiveMemory/ctx/internal/cli/pad/core"
-	"github.com/ActiveMemory/ctx/internal/config"
 	"github.com/ActiveMemory/ctx/internal/crypto"
 	ctxerr "github.com/ActiveMemory/ctx/internal/err"
 	"github.com/ActiveMemory/ctx/internal/rc"
+	"github.com/ActiveMemory/ctx/internal/write"
 )
 
-// runResolve reads and prints both sides of a merge conflict.
+// Run reads and prints both sides of a merge conflict.
 //
 // Parameters:
 //   - cmd: Cobra command for output
 //
 // Returns:
 //   - error: Non-nil if no conflict files found or decryption fails
-func runResolve(cmd *cobra.Command) error {
+func Run(cmd *cobra.Command) error {
 	if !rc.ScratchpadEncrypt() {
-		return errors.New("resolve is only needed for encrypted scratchpads")
+		return ctxerr.ResolveNotEncrypted()
 	}
 
 	kp := core.KeyPath()
@@ -39,27 +37,29 @@ func runResolve(cmd *cobra.Command) error {
 
 	dir := rc.ContextDir()
 
-	ours, errOurs := core.DecryptFile(key, dir, config.FileScratchpadEnc+".ours")
-	theirs, errTheirs := core.DecryptFile(key, dir, config.FileScratchpadEnc+".theirs")
+	ours, errOurs := core.DecryptFile(key, dir, pad.Enc+".ours")
+	theirs, errTheirs := core.DecryptFile(key, dir, pad.Enc+".theirs")
 
 	if errOurs != nil && errTheirs != nil {
-		return fmt.Errorf("no conflict files found (%s.ours / %s.theirs)",
-			config.FileScratchpadEnc, config.FileScratchpadEnc)
+		return ctxerr.NoConflictFiles(pad.Enc)
 	}
 
 	if errOurs == nil {
-		cmd.Println("=== OURS ===")
-		for i, entry := range ours {
-			cmd.Println(fmt.Sprintf("  %d. %s", i+1, core.DisplayEntry(entry)))
-		}
+		write.PadResolveSide(cmd, "OURS", displayAll(ours))
 	}
 
 	if errTheirs == nil {
-		cmd.Println("=== THEIRS ===")
-		for i, entry := range theirs {
-			cmd.Println(fmt.Sprintf("  %d. %s", i+1, core.DisplayEntry(entry)))
-		}
+		write.PadResolveSide(cmd, "THEIRS", displayAll(theirs))
 	}
 
 	return nil
+}
+
+// displayAll converts entries to their display form.
+func displayAll(entries []string) []string {
+	out := make([]string, len(entries))
+	for i, e := range entries {
+		out[i] = core.DisplayEntry(e)
+	}
+	return out
 }

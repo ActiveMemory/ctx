@@ -12,7 +12,7 @@ import (
 	"sort"
 	"strings"
 
-	"github.com/ActiveMemory/ctx/internal/config"
+	"github.com/ActiveMemory/ctx/internal/config/token"
 )
 
 // PythonEcosystem is the ecosystem label for Python projects.
@@ -192,7 +192,7 @@ func BuildPyprojectGraph(includeDevDeps bool) (map[string][]string, error) {
 // Returns:
 //   - []string: Extracted dependency names
 func ParsePyprojectDeps(content string, sectionSuffix string) []string {
-	lines := strings.Split(content, config.NewlineLF)
+	lines := strings.Split(content, token.NewlineLF)
 	var deps []string
 	inSection := false
 	inArray := false

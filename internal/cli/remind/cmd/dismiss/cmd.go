@@ -7,11 +7,10 @@
 package dismiss
 
 import (
-	"fmt"
-
 	"github.com/spf13/cobra"
 
 	"github.com/ActiveMemory/ctx/internal/assets"
+	ctxerr "github.com/ActiveMemory/ctx/internal/err"
 )
 
 // Cmd returns the remind dismiss subcommand.
@@ -21,7 +20,7 @@ import (
 func Cmd() *cobra.Command {
 	var allFlag bool
 
-	short, _ := assets.CommandDesc("remind.dismiss")
+	short, _ := assets.CommandDesc(assets.CmdDescKeyRemindDismiss)
 
 	cmd := &cobra.Command{
 		Use:     "dismiss [ID]",
@@ -29,16 +28,18 @@ func Cmd() *cobra.Command {
 		Short:   short,
 		RunE: func(cmd *cobra.Command, args []string) error {
 			if allFlag {
-				return runDismissAll(cmd)
+				return RunDismissAll(cmd)
 			}
 			if len(args) == 0 {
-				return fmt.Errorf("provide a reminder ID or use --all")
+				return ctxerr.ReminderIDRequired()
 			}
-			return runDismiss(cmd, args[0])
+			return RunDismiss(cmd, args[0])
 		},
 	}
 
-	cmd.Flags().BoolVar(&allFlag, "all", false, assets.FlagDesc("remind.dismiss.all"))
+	cmd.Flags().BoolVar(&allFlag, "all", false,
+		assets.FlagDesc(assets.FlagDescKeyRemindDismissAll),
+	)
 
 	return cmd
 }

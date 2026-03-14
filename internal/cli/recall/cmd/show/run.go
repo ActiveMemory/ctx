@@ -9,16 +9,19 @@ package show
 import (
 	"strings"
 
+	"github.com/ActiveMemory/ctx/internal/assets"
+	"github.com/ActiveMemory/ctx/internal/config/journal"
+	"github.com/ActiveMemory/ctx/internal/config/time"
+	"github.com/ActiveMemory/ctx/internal/config/token"
 	"github.com/spf13/cobra"
 
 	"github.com/ActiveMemory/ctx/internal/cli/recall/core"
-	"github.com/ActiveMemory/ctx/internal/config"
 	ctxerr "github.com/ActiveMemory/ctx/internal/err"
 	"github.com/ActiveMemory/ctx/internal/recall/parser"
 	"github.com/ActiveMemory/ctx/internal/write"
 )
 
-// runShow handles the recall show command.
+// Run handles the recall show command.
 //
 // Displays detailed information about a session including metadata, token
 // usage, tool usage summary, and optionally the full conversation.
@@ -32,7 +35,7 @@ import (
 //
 // Returns:
 //   - error: non-nil if session not found or scanning fails
-func runShow(
+func Run(
 	cmd *cobra.Command, args []string, latest, full, allProjects bool,
 ) error {
 	sessions, scanErr := core.FindSessions(allProjects)
@@ -44,7 +47,7 @@ func runShow(
 		if allProjects {
 			return ctxerr.NoSessionsFound("")
 		}
-		return ctxerr.NoSessionsFound(config.HintUseAllProjects)
+		return ctxerr.NoSessionsFound(assets.HintUseAllProjects)
 	}
 
 	var session *parser.Session
@@ -69,48 +72,29 @@ func runShow(
 		if len(matches) > 1 {
 			lines := core.FormatSessionMatchLines(matches)
 			write.AmbiguousSessionMatchWithHint(
-				cmd, args[0], lines, matches[0].ID[:config.SessionIDHintLen],
+				cmd, args[0], lines, matches[0].ID[:journal.SessionIDHintLen],
 			)
 			return ctxerr.AmbiguousQuery()
 		}
 		session = matches[0]
 	}
 
-	// Print session details
-	write.SectionHeader(cmd, 1, session.Slug)
-
-	write.SessionDetail(cmd, config.MetadataID, session.ID)
-	write.SessionDetail(cmd, config.MetadataTool, session.Tool)
-	write.SessionDetail(cmd, config.MetadataProject, session.Project)
-	if session.GitBranch != "" {
-		write.SessionDetail(cmd, config.MetadataBranch, session.GitBranch)
-	}
-	if session.Model != "" {
-		write.SessionDetail(cmd, config.MetadataModel, session.Model)
-	}
-	write.BlankLine(cmd)
-
-	write.SessionDetail(
-		cmd, config.MetadataStarted,
-		session.StartTime.Format(config.DateTimePreciseFormat),
-	)
-	write.SessionDetail(
-		cmd, config.MetadataDuration, core.FormatDuration(session.Duration),
-	)
-	write.SessionDetailInt(cmd, config.MetadataTurns, session.TurnCount)
-	write.SessionDetailInt(cmd, config.MetadataMessages, len(session.Messages))
-	write.BlankLine(cmd)
-
-	write.SessionDetail(
-		cmd, config.MetadataInputUsage, core.FormatTokens(session.TotalTokensIn),
-	)
-	write.SessionDetail(
-		cmd, config.MetadataOutputUsage, core.FormatTokens(session.TotalTokensOut),
-	)
-	write.SessionDetail(
-		cmd, config.MetadataTotal, core.FormatTokens(session.TotalTokens),
-	)
-	write.BlankLine(cmd)
+	// Print session details.
+	write.SessionMetadata(cmd, write.SessionInfo{
+		Slug:      session.Slug,
+		ID:        session.ID,
+		Tool:      session.Tool,
+		Project:   session.Project,
+		Branch:    session.GitBranch,
+		Model:     session.Model,
+		Started:   session.StartTime.Format(time.DateTimePreciseFormat),
+		Duration:  core.FormatDuration(session.Duration),
+		Turns:     session.TurnCount,
+		Messages:  len(session.Messages),
+		TokensIn:  core.FormatTokens(session.TotalTokensIn),
+		TokensOut: core.FormatTokens(session.TotalTokensOut),
+		TokensAll: core.FormatTokens(session.TotalTokens),
+	})
 
 	// Tool usage summary
 	tools := session.AllToolUses()
@@ -120,7 +104,7 @@ func runShow(
 			toolCounts[t.Name]++
 		}
 
-		write.SectionHeader(cmd, 2, config.SectionToolUsage)
+		write.SectionHeader(cmd, 2, assets.SectionToolUsage)
 		for name, count := range toolCounts {
 			write.ListItem(cmd, "%s: %d", name, count)
 		}
@@ -129,18 +113,18 @@ func runShow(
 
 	// Messages
 	if full {
-		write.SectionHeader(cmd, 2, config.SectionConversation)
+		write.SectionHeader(cmd, 2, assets.SectionConversation)
 
 		for i, msg := range session.Messages {
-			role := config.LabelRoleUser
+			role := assets.RoleUser
 			if msg.BelongsToAssistant() {
-				role = config.LabelRoleAssistant
+				role = assets.LabelRoleAssistant
 			} else if len(msg.ToolResults) > 0 && msg.Text == "" {
-				role = config.LabelToolOutput
+				role = assets.ToolOutput
 			}
 
 			write.ConversationTurn(
-				cmd, i+1, role, msg.Timestamp.Format(config.TimeFormat),
+				cmd, i+1, role, msg.Timestamp.Format(time.Format),
 			)
 
 			if msg.Text != "" {
@@ -149,12 +133,12 @@ func runShow(
 
 			for _, t := range msg.ToolUses {
 				toolInfo := core.FormatToolUse(t)
-				write.SessionDetail(cmd, config.LabelTool, toolInfo)
+				write.SessionDetail(cmd, assets.LabelTool, toolInfo)
 			}
 
 			for _, tr := range msg.ToolResults {
 				if tr.IsError {
-					write.Hint(cmd, config.LabelError)
+					write.Hint(cmd, assets.LabelError)
 				}
 				if tr.Content != "" {
 					content := core.StripLineNumbers(tr.Content)
@@ -167,25 +151,25 @@ func runShow(
 			}
 		}
 	} else {
-		write.SectionHeader(cmd, 2, config.SectionConversationPreview)
+		write.SectionHeader(cmd, 2, assets.SectionConversationPreview)
 
 		count := 0
 		for _, msg := range session.Messages {
 			if msg.BelongsToUser() && msg.Text != "" {
 				count++
-				if count > config.PreviewMaxTurns {
-					write.MoreTurns(cmd, session.TurnCount-config.PreviewMaxTurns)
+				if count > journal.PreviewMaxTurns {
+					write.MoreTurns(cmd, session.TurnCount-journal.PreviewMaxTurns)
 					break
 				}
 				text := msg.Text
-				if len(text) > config.PreviewMaxTextLen {
-					text = text[:config.PreviewMaxTextLen] + config.Ellipsis
+				if len(text) > journal.PreviewMaxTextLen {
+					text = text[:journal.PreviewMaxTextLen] + token.Ellipsis
 				}
 				write.NumberedItem(cmd, count, text)
 			}
 		}
 		write.BlankLine(cmd)
-		write.Hint(cmd, config.HintUseFullFlag)
+		write.Hint(cmd, assets.HintUseFullFlag)
 	}
 
 	return nil

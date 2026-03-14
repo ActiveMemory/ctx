@@ -12,9 +12,11 @@ import (
 	"path/filepath"
 	"time"
 
+	"github.com/ActiveMemory/ctx/internal/config/fs"
 	"github.com/spf13/cobra"
 
 	"github.com/ActiveMemory/ctx/internal/cli/pad/core"
+	ctxerr "github.com/ActiveMemory/ctx/internal/err"
 	"github.com/ActiveMemory/ctx/internal/write"
 )
 
@@ -35,8 +37,8 @@ func runExport(cmd *cobra.Command, dir string, force, dryRun bool) error {
 	}
 
 	if !dryRun {
-		if mkErr := os.MkdirAll(dir, 0o750); mkErr != nil {
-			return fmt.Errorf("mkdir %s: %w", dir, mkErr)
+		if mkErr := os.MkdirAll(dir, fs.PermExec); mkErr != nil {
+			return ctxerr.Mkdir(dir, mkErr)
 		}
 	}
 
@@ -64,29 +66,20 @@ func runExport(cmd *cobra.Command, dir string, force, dryRun bool) error {
 		}
 
 		if dryRun {
-			cmd.Println(fmt.Sprintf("  %s → %s", label, outPath))
+			write.PadExportPlan(cmd, label, outPath)
 			count++
 			continue
 		}
 
-		if writeErr := os.WriteFile(outPath, data, 0o600); writeErr != nil {
-			cmd.PrintErrln(fmt.Sprintf("  ! failed to write %s: %v", label, writeErr))
+		if writeErr := os.WriteFile(outPath, data, fs.PermSecret); writeErr != nil {
+			write.ErrPadExportWrite(cmd, label, writeErr)
 			continue
 		}
 
-		cmd.Println(fmt.Sprintf("  + %s", label))
+		write.PadExportDone(cmd, label)
 		count++
 	}
 
-	if count == 0 {
-		cmd.Println("No blob entries to export.")
-		return nil
-	}
-
-	verb := "Exported"
-	if dryRun {
-		verb = "Would export"
-	}
-	cmd.Println(fmt.Sprintf("%s %d blobs.", verb, count))
+	write.PadExportSummary(cmd, count, dryRun)
 	return nil
 }

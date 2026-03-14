@@ -7,17 +7,18 @@
 package rm
 
 import (
-	"fmt"
 	"os"
 	"path/filepath"
 
+	"github.com/ActiveMemory/ctx/internal/config/file"
 	"github.com/spf13/cobra"
 
 	"github.com/ActiveMemory/ctx/internal/cli/prompt/core"
-	"github.com/ActiveMemory/ctx/internal/config"
+	ctxerr "github.com/ActiveMemory/ctx/internal/err"
+	"github.com/ActiveMemory/ctx/internal/write"
 )
 
-// runRm deletes a prompt template by name.
+// Run deletes a prompt template by name.
 //
 // Parameters:
 //   - cmd: Cobra command for output
@@ -25,17 +26,17 @@ import (
 //
 // Returns:
 //   - error: Non-nil on missing template or remove failure
-func runRm(cmd *cobra.Command, name string) error {
-	path := filepath.Join(core.PromptsDir(), name+config.ExtMarkdown)
+func Run(cmd *cobra.Command, name string) error {
+	path := filepath.Join(core.PromptsDir(), name+file.ExtMarkdown)
 
 	if _, statErr := os.Stat(path); os.IsNotExist(statErr) {
-		return fmt.Errorf("prompt %q not found", name)
+		return ctxerr.PromptNotFound(name)
 	}
 
 	if removeErr := os.Remove(path); removeErr != nil {
-		return fmt.Errorf("remove prompt: %w", removeErr)
+		return ctxerr.RemovePrompt(removeErr)
 	}
 
-	cmd.Println(fmt.Sprintf("Removed prompt %q.", name))
+	write.PromptRemoved(cmd, name)
 	return nil
 }

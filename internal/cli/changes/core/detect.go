@@ -10,10 +10,15 @@ import (
 	"os"
 	"path/filepath"
 	"sort"
+	"strconv"
 	"strings"
 	"time"
 
-	"github.com/ActiveMemory/ctx/internal/config"
+	"github.com/ActiveMemory/ctx/internal/assets"
+	"github.com/ActiveMemory/ctx/internal/config/dir"
+	"github.com/ActiveMemory/ctx/internal/config/load_gate"
+	time2 "github.com/ActiveMemory/ctx/internal/config/time"
+	"github.com/ActiveMemory/ctx/internal/config/token"
 	"github.com/ActiveMemory/ctx/internal/rc"
 )
 
@@ -49,7 +54,7 @@ func DetectReferenceTime(since string) (time.Time, string, error) {
 
 	// Fallback: 24h ago.
 	t := time.Now().Add(-24 * time.Hour)
-	return t, "24 hour(s) ago (default)", nil
+	return t, assets.TextDesc(assets.TextDescKeyChangesFallbackLabel), nil
 }
 
 // ParseSinceFlag parses a duration (like "24h") or date (like "2026-03-01").
@@ -69,8 +74,8 @@ func ParseSinceFlag(since string) (time.Time, string, error) {
 	}
 
 	// Try date.
-	if t, err := time.Parse("2006-01-02", since); err == nil {
-		return t, "since " + since, nil
+	if t, err := time.Parse(time2.DateFormat, since); err == nil {
+		return t, assets.TextDesc(assets.TextDescKeyChangesSincePrefix) + since, nil
 	}
 
 	// Try RFC3339.
@@ -88,7 +93,7 @@ func ParseSinceFlag(since string) (time.Time, string, error) {
 //   - time.Time: Marker file modification time
 //   - bool: True if a valid marker was found
 func DetectFromMarkers() (time.Time, bool) {
-	stateDir := filepath.Join(rc.ContextDir(), config.DirState)
+	stateDir := filepath.Join(rc.ContextDir(), dir.State)
 	entries, err := os.ReadDir(stateDir)
 	if err != nil {
 		return time.Time{}, false
@@ -100,7 +105,7 @@ func DetectFromMarkers() (time.Time, bool) {
 
 	var markers []markerInfo
 	for _, e := range entries {
-		if !strings.HasPrefix(e.Name(), "ctx-loaded-") {
+		if !strings.HasPrefix(e.Name(), load_gate.PrefixCtxLoaded) {
 			continue
 		}
 		info, infoErr := e.Info()
@@ -130,17 +135,17 @@ func DetectFromMarkers() (time.Time, bool) {
 //   - time.Time: Event timestamp
 //   - bool: True if a valid event was found
 func DetectFromEvents() (time.Time, bool) {
-	eventsPath := filepath.Join(rc.ContextDir(), config.DirState, "events.jsonl")
+	eventsPath := filepath.Join(rc.ContextDir(), dir.State, "events.jsonl")
 	data, err := os.ReadFile(eventsPath) //nolint:gosec // state dir path
 	if err != nil {
 		return time.Time{}, false
 	}
 
-	lines := strings.Split(strings.TrimSpace(string(data)), config.NewlineLF)
+	lines := strings.Split(strings.TrimSpace(string(data)), token.NewlineLF)
 	// Scan in reverse for last context-load-gate event.
 	for i := len(lines) - 1; i >= 0; i-- {
 		line := lines[i]
-		if !strings.Contains(line, "context-load-gate") {
+		if !strings.Contains(line, load_gate.EventContextLoadGate) {
 			continue
 		}
 		if t, ok := ExtractTimestamp(line); ok {
@@ -161,7 +166,7 @@ func DetectFromEvents() (time.Time, bool) {
 //   - time.Time: Parsed timestamp
 //   - bool: True if extraction succeeded
 func ExtractTimestamp(jsonLine string) (time.Time, bool) {
-	const key = `"timestamp":"`
+	key := load_gate.JSONKeyTimestamp
 	idx := strings.Index(jsonLine, key)
 	if idx < 0 {
 		return time.Time{}, false
@@ -186,18 +191,19 @@ func ExtractTimestamp(jsonLine string) (time.Time, bool) {
 // Returns:
 //   - string: Human-readable time description
 func HumanAgo(d time.Duration) string {
+	ago := assets.TextDesc(assets.TextDescKeyTimeAgo)
 	switch {
 	case d < time.Minute:
-		return "just now"
+		return assets.TextDesc(assets.TextDescKeyTimeJustNow)
 	case d < time.Hour:
 		m := int(d.Minutes())
-		return Pluralize(m, "minute") + " ago"
+		return Pluralize(m, assets.TextDesc(assets.TextDescKeyTimeMinute)) + ago
 	case d < 24*time.Hour:
 		h := int(d.Hours())
-		return Pluralize(h, "hour") + " ago"
+		return Pluralize(h, assets.TextDesc(assets.TextDescKeyTimeHour)) + ago
 	default:
 		days := int(d.Hours() / 24)
-		return Pluralize(days, "day") + " ago"
+		return Pluralize(days, assets.TextDesc(assets.TextDescKeyTimeDay)) + ago
 	}
 }
 
@@ -213,27 +219,5 @@ func Pluralize(n int, unit string) string {
 	if n == 1 {
 		return "1 " + unit
 	}
-	return Itoa(n) + " " + unit + "s"
-}
-
-// Itoa is a minimal int-to-string without importing strconv.
-//
-// Parameters:
-//   - n: Integer to convert
-//
-// Returns:
-//   - string: String representation
-func Itoa(n int) string {
-	if n == 0 {
-		return "0"
-	}
-	if n < 0 {
-		return "-" + Itoa(-n)
-	}
-	var digits []byte
-	for n > 0 {
-		digits = append([]byte{byte('0' + n%10)}, digits...)
-		n /= 10
-	}
-	return string(digits)
+	return strconv.Itoa(n) + " " + unit + "s"
 }

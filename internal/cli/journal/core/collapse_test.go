@@ -11,7 +11,9 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/ActiveMemory/ctx/internal/config"
+	"github.com/ActiveMemory/ctx/internal/assets"
+	"github.com/ActiveMemory/ctx/internal/config/journal"
+	"github.com/ActiveMemory/ctx/internal/config/token"
 )
 
 // helper: build a turn header line.
@@ -25,11 +27,11 @@ func bodyLines(n int) string {
 	for i := 1; i <= n; i++ {
 		lines = append(lines, fmt.Sprintf("line %d", i))
 	}
-	return strings.Join(lines, config.NewlineLF)
+	return strings.Join(lines, token.NewlineLF)
 }
 
 func TestCollapseToolOutputs_LongOutputWrapped(t *testing.T) {
-	header := turnHeader(1, config.LabelToolOutput, "10:00:00")
+	header := turnHeader(1, assets.ToolOutput, "10:00:00")
 	body := bodyLines(12)
 	input := header + "\n\n" + body + "\n"
 
@@ -53,7 +55,7 @@ func TestCollapseToolOutputs_LongOutputWrapped(t *testing.T) {
 }
 
 func TestCollapseToolOutputs_ShortOutputUnchanged(t *testing.T) {
-	header := turnHeader(1, config.LabelToolOutput, "10:00:00")
+	header := turnHeader(1, assets.ToolOutput, "10:00:00")
 	body := bodyLines(5)
 	input := header + "\n\n" + body + "\n"
 
@@ -68,8 +70,8 @@ func TestCollapseToolOutputs_ShortOutputUnchanged(t *testing.T) {
 }
 
 func TestCollapseToolOutputs_ExactThresholdUnchanged(t *testing.T) {
-	header := turnHeader(1, config.LabelToolOutput, "10:00:00")
-	body := bodyLines(config.RecallDetailsThreshold)
+	header := turnHeader(1, assets.ToolOutput, "10:00:00")
+	body := bodyLines(journal.DetailsThreshold)
 	input := header + "\n\n" + body + "\n"
 
 	got := CollapseToolOutputs(input)
@@ -80,7 +82,7 @@ func TestCollapseToolOutputs_ExactThresholdUnchanged(t *testing.T) {
 }
 
 func TestCollapseToolOutputs_AlreadyWrappedNotDoubled(t *testing.T) {
-	header := turnHeader(1, config.LabelToolOutput, "10:00:00")
+	header := turnHeader(1, assets.ToolOutput, "10:00:00")
 	body := "<details>\n<summary>15 lines</summary>\n\n" +
 		bodyLines(15) + "\n</details>"
 	input := header + "\n\n" + body + "\n"
@@ -107,9 +109,9 @@ func TestCollapseToolOutputs_NonToolTurnsUntouched(t *testing.T) {
 }
 
 func TestCollapseToolOutputs_MixedTurns(t *testing.T) {
-	short := turnHeader(1, config.LabelToolOutput, "10:00:00") +
+	short := turnHeader(1, assets.ToolOutput, "10:00:00") +
 		"\n\n" + bodyLines(3) + "\n"
-	long := turnHeader(2, config.LabelToolOutput, "10:01:00") +
+	long := turnHeader(2, assets.ToolOutput, "10:01:00") +
 		"\n\n" + bodyLines(15) + "\n"
 	user := turnHeader(3, "User", "10:02:00") +
 		"\n\n" + bodyLines(20) + "\n"

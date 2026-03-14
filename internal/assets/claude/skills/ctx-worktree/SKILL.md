@@ -31,7 +31,7 @@ Create a new worktree as a sibling directory with a `work/` branch.
 
 **Process:**
 
-1. **Check count** — refuse if 4 worktrees already exist:
+1. **Check count**: refuse if 4 worktrees already exist:
    ```bash
    git worktree list
    ```
@@ -85,7 +85,7 @@ Merge a completed worktree back and clean up.
    git merge "work/<name>"
    ```
    If there are conflicts, stop and help the user resolve them.
-   TASKS.md conflicts are common — see guidance below.
+   TASKS.md conflicts are common: see guidance below.
 
 3. **Remove the worktree**:
    ```bash
@@ -105,17 +105,17 @@ Merge a completed worktree back and clean up.
 
 ## Guardrails
 
-- **Max 4 worktrees** — more than 4 parallel tracks makes merge
+- **Max 4 worktrees**: more than 4 parallel tracks makes merge
   complexity outweigh productivity gains
-- **Sibling directories only** — worktrees go in `../<project>-<name>`,
+- **Sibling directories only**: worktrees go in `../<project>-<name>`,
   never inside the project tree
-- **`work/` branch prefix** — all worktree branches use `work/<name>`
+- **`work/` branch prefix**: all worktree branches use `work/<name>`
   for easy identification and cleanup
-- **No `ctx init` in worktrees** — the context directory is tracked
+- **No `ctx init` in worktrees**: the context directory is tracked
   in git; running init would overwrite shared context files
-- **Manage from main checkout only** — create and teardown worktrees
+- **Manage from main checkout only**: create and teardown worktrees
   from the main working tree, not from inside a worktree
-- **TASKS.md conflict resolution** — when merging, TASKS.md will
+- **TASKS.md conflict resolution**: when merging, TASKS.md will
   often conflict because multiple agents marked different tasks as
   complete. Resolution: accept all `[x]` completions from both sides.
   No task should go from `[x]` back to `[ ]`.
@@ -128,10 +128,10 @@ the project). All worktrees on the same machine share this path, so
 
 One thing to watch:
 
-- **Journal enrichment** — `ctx recall export` and `ctx journal enrich`
+- **Journal enrichment**: `ctx recall export` and `ctx journal enrich`
   resolve paths relative to the current working directory. Files
   created in a worktree stay in that worktree and are discarded on
-  teardown. Enrich journals on the main branch after merging — the
+  teardown. Enrich journals on the main branch after merging: the
   JSONL session logs are intact regardless.
 
 ## Task Grouping Guidance
@@ -140,20 +140,20 @@ Before creating worktrees, analyze the backlog to group tasks into
 non-overlapping tracks:
 
 1. **Read TASKS.md** and identify all pending tasks
-2. **Estimate blast radius** — which files/directories does each
+2. **Estimate blast radius**: which files/directories does each
    task touch?
-3. **Group by non-overlapping directories** — tasks that touch the
+3. **Group by non-overlapping directories**: tasks that touch the
    same package or file must go in the same track
 4. **Present the grouping** to the user before creating worktrees:
 
 ```text
 Proposed worktree groups:
 
-  work/docs     — recipe updates, blog post, getting started guide
+  work/docs     : recipe updates, blog post, getting started guide
                   (touches: docs/)
-  work/crypto   — P3.1-P3.3 encrypted scratchpad infra
+  work/crypto   : P3.1-P3.3 encrypted scratchpad infra
                   (touches: internal/crypto/, internal/config/)
-  work/pad-cli  — P3.4-P3.9 pad CLI commands
+  work/pad-cli  : P3.4-P3.9 pad CLI commands
                   (touches: internal/cli/pad/)
 ```
 

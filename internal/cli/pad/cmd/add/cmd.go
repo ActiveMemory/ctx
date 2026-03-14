@@ -19,7 +19,7 @@ import (
 func Cmd() *cobra.Command {
 	var filePath string
 
-	short, _ := assets.CommandDesc("pad.add")
+	short, _ := assets.CommandDesc(assets.CmdDescKeyPadAdd)
 	cmd := &cobra.Command{
 		Use:   "add TEXT",
 		Short: short,
@@ -32,7 +32,10 @@ func Cmd() *cobra.Command {
 		},
 	}
 
-	cmd.Flags().StringVarP(&filePath, "file", "f", "", assets.FlagDesc("pad.add.file"))
+	cmd.Flags().StringVarP(&filePath,
+		"file", "f", "",
+		assets.FlagDesc(assets.FlagDescKeyPadAddFile),
+	)
 
 	return cmd
 }

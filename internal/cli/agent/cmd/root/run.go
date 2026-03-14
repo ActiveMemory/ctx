@@ -8,18 +8,15 @@ package root
 
 import (
 	"errors"
-	"fmt"
 	"time"
 
+	"github.com/ActiveMemory/ctx/internal/config/fmt"
 	"github.com/spf13/cobra"
 
 	"github.com/ActiveMemory/ctx/internal/cli/agent/core"
-	"github.com/ActiveMemory/ctx/internal/config"
 	"github.com/ActiveMemory/ctx/internal/context"
+	ctxerr "github.com/ActiveMemory/ctx/internal/err"
 )
-
-// DefaultCooldown is re-exported from core for backward compatibility.
-const DefaultCooldown = core.DefaultCooldown
 
 // Run executes the agent command logic.
 //
@@ -54,15 +51,13 @@ func Run(
 	if err != nil {
 		var notFoundError *context.NotFoundError
 		if errors.As(err, &notFoundError) {
-			return fmt.Errorf(
-				"no .context/ directory found. Run 'ctx init' first",
-			)
+			return ctxerr.NotInitialized()
 		}
 		return err
 	}
 
 	var outputErr error
-	if format == config.FormatJSON {
+	if format == fmt.FormatJSON {
 		outputErr = core.OutputAgentJSON(cmd, ctx, budget)
 	} else {
 		outputErr = core.OutputAgentMarkdown(cmd, ctx, budget)

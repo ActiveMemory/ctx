@@ -9,7 +9,8 @@ package core
 import (
 	"strings"
 
-	"github.com/ActiveMemory/ctx/internal/config"
+	"github.com/ActiveMemory/ctx/internal/assets"
+	"github.com/ActiveMemory/ctx/internal/config/token"
 )
 
 // insertBeforeFirstEntry scans for the first "## [" marker not inside an
@@ -27,7 +28,7 @@ func insertBeforeFirstEntry(content, entry, header string) []byte {
 	search := content
 	offset := 0
 	for {
-		rel := strings.Index(search, config.HeadingLearningStart)
+		rel := strings.Index(search, assets.HeadingLearningStart)
 		if rel == -1 {
 			break
 		}
@@ -35,12 +36,12 @@ func insertBeforeFirstEntry(content, entry, header string) []byte {
 		if !IsInsideHTMLComment(content, entryIdx) {
 			return []byte(
 				content[:entryIdx] + entry +
-					config.NewlineLF + config.Separator +
-					config.NewlineLF + config.NewlineLF +
+					token.NewlineLF + token.Separator +
+					token.NewlineLF + token.NewlineLF +
 					content[entryIdx:],
 			)
 		}
-		offset = entryIdx + len(config.HeadingLearningStart)
+		offset = entryIdx + len(assets.HeadingLearningStart)
 		search = content[offset:]
 	}
 

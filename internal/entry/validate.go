@@ -7,8 +7,9 @@
 package entry
 
 import (
-	"github.com/ActiveMemory/ctx/internal/config"
-	"github.com/ActiveMemory/ctx/internal/write"
+	"github.com/ActiveMemory/ctx/internal/config/entry"
+	"github.com/ActiveMemory/ctx/internal/config/flag"
+	"github.com/ActiveMemory/ctx/internal/write/add"
 )
 
 // Validate checks that required fields are present for the given entry type.
@@ -26,26 +27,26 @@ func Validate(params Params, examplesFn func(string) string) error {
 		if examplesFn != nil {
 			examples = examplesFn(params.Type)
 		}
-		return write.ErrNoContentProvided(params.Type, examples)
+		return add.ErrNoContentProvided(params.Type, examples)
 	}
 
-	switch config.UserInputToEntry(params.Type) {
-	case config.EntryDecision:
+	switch params.Type {
+	case entry.Decision:
 		if m := checkRequired([][2]string{
-			{config.FlagPrefixLong + config.FlagContext, params.Context},
-			{config.FlagPrefixLong + config.FlagRationale, params.Rationale},
-			{config.FlagPrefixLong + config.FlagConsequences, params.Consequences},
+			{flag.PrefixLong + flag.Context, params.Context},
+			{flag.PrefixLong + flag.Rationale, params.Rationale},
+			{flag.PrefixLong + flag.Consequences, params.Consequences},
 		}); len(m) > 0 {
-			return write.ErrMissingFields(config.EntryDecision, m)
+			return add.ErrMissingFields(entry.Decision, m)
 		}
 
-	case config.EntryLearning:
+	case entry.Learning:
 		if m := checkRequired([][2]string{
-			{config.FlagPrefixLong + config.FlagContext, params.Context},
-			{config.FlagPrefixLong + config.FlagLesson, params.Lesson},
-			{config.FlagPrefixLong + config.FlagApplication, params.Application},
+			{flag.PrefixLong + flag.Context, params.Context},
+			{flag.PrefixLong + flag.Lesson, params.Lesson},
+			{flag.PrefixLong + flag.Application, params.Application},
 		}); len(m) > 0 {
-			return write.ErrMissingFields(config.EntryLearning, m)
+			return add.ErrMissingFields(entry.Learning, m)
 		}
 	}
 

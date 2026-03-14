@@ -19,13 +19,13 @@ import (
 // Returns:
 //   - *cobra.Command: Configured setup subcommand
 func Cmd() *cobra.Command {
-	short, long := assets.CommandDesc("notify.setup")
+	short, long := assets.CommandDesc(assets.CmdDescKeyNotifySetup)
 	return &cobra.Command{
 		Use:   "setup",
 		Short: short,
 		Long:  long,
 		RunE: func(cmd *cobra.Command, _ []string) error {
-			return RunSetup(cmd, os.Stdin)
+			return Run(cmd, os.Stdin)
 		},
 	}
 }

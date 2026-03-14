@@ -7,12 +7,12 @@
 package edit
 
 import (
-	"fmt"
 	"strconv"
 
 	"github.com/spf13/cobra"
 
 	"github.com/ActiveMemory/ctx/internal/assets"
+	ctxerr "github.com/ActiveMemory/ctx/internal/err"
 )
 
 // Cmd returns the pad edit subcommand.
@@ -36,7 +36,7 @@ func Cmd() *cobra.Command {
 	var filePath string
 	var labelText string
 
-	short, long := assets.CommandDesc("pad.edit")
+	short, long := assets.CommandDesc(assets.CmdDescKeyPadEdit)
 	cmd := &cobra.Command{
 		Use:   "edit N [TEXT]",
 		Short: short,
@@ -45,7 +45,7 @@ func Cmd() *cobra.Command {
 		RunE: func(cmd *cobra.Command, args []string) error {
 			n, err := strconv.Atoi(args[0])
 			if err != nil {
-				return fmt.Errorf("invalid index: %s", args[0])
+				return ctxerr.InvalidIndex(args[0])
 			}
 
 			hasPositional := len(args) == 2
@@ -56,7 +56,7 @@ func Cmd() *cobra.Command {
 
 			// --file/--label conflict with positional/--append/--prepend.
 			if (hasFile || hasLabel) && (hasPositional || hasAppend || hasPrepend) {
-				return fmt.Errorf("--file/--label and positional text/--append/--prepend are mutually exclusive")
+				return ctxerr.EditBlobTextConflict()
 			}
 
 			// Blob edit mode.
@@ -77,10 +77,10 @@ func Cmd() *cobra.Command {
 			}
 
 			if flagCount == 0 {
-				return fmt.Errorf("provide replacement text, --append, or --prepend")
+				return ctxerr.EditNoMode()
 			}
 			if flagCount > 1 {
-				return fmt.Errorf("--append, --prepend, and positional text are mutually exclusive")
+				return ctxerr.EditTextConflict()
 			}
 
 			switch {
@@ -94,10 +94,18 @@ func Cmd() *cobra.Command {
 		},
 	}
 
-	cmd.Flags().StringVar(&appendText, "append", "", assets.FlagDesc("pad.edit.append"))
-	cmd.Flags().StringVar(&prependText, "prepend", "", assets.FlagDesc("pad.edit.prepend"))
-	cmd.Flags().StringVarP(&filePath, "file", "f", "", assets.FlagDesc("pad.edit.file"))
-	cmd.Flags().StringVar(&labelText, "label", "", assets.FlagDesc("pad.edit.label"))
+	cmd.Flags().StringVar(&appendText,
+		"append", "", assets.FlagDesc(assets.FlagDescKeyPadEditAppend),
+	)
+	cmd.Flags().StringVar(&prependText,
+		"prepend", "", assets.FlagDesc(assets.FlagDescKeyPadEditPrepend),
+	)
+	cmd.Flags().StringVarP(&filePath,
+		"file", "f", "", assets.FlagDesc(assets.FlagDescKeyPadEditFile),
+	)
+	cmd.Flags().StringVar(&labelText,
+		"label", "", assets.FlagDesc(assets.FlagDescKeyPadEditLabel),
+	)
 
 	return cmd
 }

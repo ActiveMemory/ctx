@@ -47,7 +47,7 @@ Or just ask your agent: *"Is our context clean?"*
 | `ctx compact`          | Command | Archive completed tasks, clean up empty sections |
 | `ctx status`           | Command | Quick health overview                          |
 | `/ctx-drift`           | Skill   | Structural plus semantic drift detection       |
-| `/ctx-map`             | Skill   | Refresh `ARCHITECTURE.md` from actual codebase |
+| `/ctx-architecture`             | Skill   | Refresh `ARCHITECTURE.md` from actual codebase |
 | `/ctx-alignment-audit` | Skill   | Audit doc claims against agent instructions    |
 | `/ctx-status`          | Skill   | In-session context summary                     |
 | `/ctx-prompt-audit`    | Skill   | Audit prompt quality and token efficiency      |

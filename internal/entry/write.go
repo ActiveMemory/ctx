@@ -12,10 +12,11 @@ import (
 	"strings"
 
 	"github.com/ActiveMemory/ctx/internal/cli/add/core"
-	"github.com/ActiveMemory/ctx/internal/config"
+	"github.com/ActiveMemory/ctx/internal/config/entry"
+	"github.com/ActiveMemory/ctx/internal/config/fs"
 	"github.com/ActiveMemory/ctx/internal/index"
 	"github.com/ActiveMemory/ctx/internal/rc"
-	"github.com/ActiveMemory/ctx/internal/write"
+	"github.com/ActiveMemory/ctx/internal/write/add"
 )
 
 // Write formats and writes an entry to the appropriate context file.
@@ -31,9 +32,9 @@ import (
 func Write(params Params) error {
 	fType := strings.ToLower(params.Type)
 
-	fileName, ok := config.FileType[fType]
+	fileName, ok := entry.ToCtxFile[fType]
 	if !ok {
-		return write.ErrUnknownType(fType)
+		return add.ErrUnknownType(fType)
 	}
 
 	contextDir := params.ContextDir
@@ -43,54 +44,56 @@ func Write(params Params) error {
 	filePath := filepath.Join(contextDir, fileName)
 
 	if _, statErr := os.Stat(filePath); os.IsNotExist(statErr) {
-		return write.ErrFileNotFound(filePath)
+		return add.ErrFileNotFound(filePath)
 	}
 
 	existing, readErr := os.ReadFile(filepath.Clean(filePath))
 	if readErr != nil {
-		return write.ErrFileRead(filePath, readErr)
+		return add.ErrFileRead(filePath, readErr)
 	}
 
 	var formatted string
-	switch config.UserInputToEntry(fType) {
-	case config.EntryDecision:
+	switch fType {
+	case entry.Decision:
 		formatted = core.FormatDecision(
 			params.Content, params.Context, params.Rationale, params.Consequences,
 		)
-	case config.EntryTask:
+	case entry.Task:
 		formatted = core.FormatTask(params.Content, params.Priority)
-	case config.EntryLearning:
+	case entry.Learning:
 		formatted = core.FormatLearning(
 			params.Content, params.Context, params.Lesson, params.Application,
 		)
-	case config.EntryConvention:
+	case entry.Convention:
 		formatted = core.FormatConvention(params.Content)
 	default:
-		return write.ErrUnknownType(fType)
+		return add.ErrUnknownType(fType)
 	}
 
 	newContent := core.AppendEntry(existing, formatted, fType, params.Section)
 
 	if writeErr := os.WriteFile(
-		filePath, newContent, config.PermFile,
+		filePath, newContent, fs.PermFile,
 	); writeErr != nil {
-		return write.ErrFileWriteAdd(filePath, writeErr)
+		return add.ErrFileWriteAdd(filePath, writeErr)
 	}
 
-	switch config.UserInputToEntry(fType) {
-	case config.EntryDecision:
+	switch fType {
+	case entry.Decision:
 		indexed := index.UpdateDecisions(string(newContent))
 		if indexErr := os.WriteFile(
-			filePath, []byte(indexed), config.PermFile,
+			filePath, []byte(indexed), fs.PermFile,
 		); indexErr != nil {
-			return write.ErrIndexUpdate(filePath, indexErr)
+			return add.ErrIndexUpdate(filePath, indexErr)
 		}
-	case config.EntryLearning:
+	case entry.Learning:
 		indexed := index.UpdateLearnings(string(newContent))
-		if indexErr := os.WriteFile(filePath, []byte(indexed), config.PermFile); indexErr != nil {
-			return write.ErrIndexUpdate(filePath, indexErr)
+		if indexErr := os.WriteFile(
+			filePath, []byte(indexed), fs.PermFile,
+		); indexErr != nil {
+			return add.ErrIndexUpdate(filePath, indexErr)
 		}
-	case config.EntryTask, config.EntryConvention:
+	case entry.Task, entry.Convention:
 		// No index to update for these types
 	}
 

@@ -7,11 +7,10 @@
 package root
 
 import (
-	"fmt"
-
 	"github.com/spf13/cobra"
 
 	"github.com/ActiveMemory/ctx/internal/cli/changes/core"
+	ctxerr "github.com/ActiveMemory/ctx/internal/err"
 )
 
 // Run executes the changes command logic.
@@ -28,7 +27,7 @@ import (
 func Run(cmd *cobra.Command, since string) error {
 	refTime, refLabel, err := core.DetectReferenceTime(since)
 	if err != nil {
-		return fmt.Errorf("detecting reference time: %w", err)
+		return ctxerr.DetectReferenceTime(err)
 	}
 
 	ctxChanges, _ := core.FindContextChanges(refTime)

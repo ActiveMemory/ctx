@@ -13,7 +13,8 @@ import (
 	"testing"
 
 	serveroot "github.com/ActiveMemory/ctx/internal/cli/serve/cmd/root"
-	"github.com/ActiveMemory/ctx/internal/config"
+	"github.com/ActiveMemory/ctx/internal/config/zensical"
+	ctxerr "github.com/ActiveMemory/ctx/internal/err"
 )
 
 func TestCmd(t *testing.T) {
@@ -108,7 +109,7 @@ func TestRunServe_ZensicalNotFound(t *testing.T) {
 	defer func() { _ = os.RemoveAll(tmpDir) }()
 
 	// Create a zensical.toml so we pass the config check
-	tomlPath := filepath.Join(tmpDir, config.FileZensicalToml)
+	tomlPath := filepath.Join(tmpDir, zensical.Toml)
 	if err := os.WriteFile(tomlPath, []byte("[site]\n"), 0600); err != nil {
 		t.Fatalf("failed to create zensical.toml: %v", err)
 	}
@@ -140,7 +141,7 @@ func TestRunServe_DefaultDir(t *testing.T) {
 }
 
 func TestErrDirNotFound(t *testing.T) {
-	err := serveroot.ErrDirNotFound("/some/path")
+	err := ctxerr.DirNotFound("/some/path")
 	if err == nil {
 		t.Fatal("expected non-nil error")
 	}
@@ -153,7 +154,7 @@ func TestErrDirNotFound(t *testing.T) {
 }
 
 func TestErrNotDir(t *testing.T) {
-	err := serveroot.ErrNotDir("/some/file")
+	err := ctxerr.NotDirectory("/some/file")
 	if err == nil {
 		t.Fatal("expected non-nil error")
 	}
@@ -166,7 +167,7 @@ func TestErrNotDir(t *testing.T) {
 }
 
 func TestErrNoSiteConfig(t *testing.T) {
-	err := serveroot.ErrNoSiteConfig("/some/dir")
+	err := ctxerr.NoSiteConfig("/some/dir")
 	if err == nil {
 		t.Fatal("expected non-nil error")
 	}
@@ -186,7 +187,7 @@ func TestRunServe_WithMockZensical(t *testing.T) {
 	}
 	defer func() { _ = os.RemoveAll(tmpDir) }()
 
-	tomlPath := filepath.Join(tmpDir, config.FileZensicalToml)
+	tomlPath := filepath.Join(tmpDir, zensical.Toml)
 	if err := os.WriteFile(tomlPath, []byte("[site]\n"), 0600); err != nil {
 		t.Fatalf("failed to create zensical.toml: %v", err)
 	}
@@ -232,7 +233,7 @@ func TestCmd_RunE(t *testing.T) {
 }
 
 func TestErrZensicalNotFound(t *testing.T) {
-	err := serveroot.ErrZensicalNotFound()
+	err := ctxerr.ZensicalNotFound()
 	if err == nil {
 		t.Fatal("expected non-nil error")
 	}

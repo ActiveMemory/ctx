@@ -10,7 +10,8 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/ActiveMemory/ctx/internal/config"
+	"github.com/ActiveMemory/ctx/internal/config/regex"
+	"github.com/ActiveMemory/ctx/internal/config/token"
 )
 
 // ConsolidateToolRuns collapses consecutive turns with identical body content
@@ -23,13 +24,13 @@ import (
 // Returns:
 //   - string: Content with consecutive identical turns collapsed
 func ConsolidateToolRuns(content string) string {
-	lines := strings.Split(content, config.NewlineLF)
+	lines := strings.Split(content, token.NewlineLF)
 	var out []string
 	i := 0
 
 	for i < len(lines) {
 		// Check if this line is a turn header
-		if !config.RegExTurnHeader.MatchString(strings.TrimSpace(lines[i])) {
+		if !regex.TurnHeader.MatchString(strings.TrimSpace(lines[i])) {
 			out = append(out, lines[i])
 			i++
 			continue
@@ -43,7 +44,7 @@ func ConsolidateToolRuns(content string) string {
 		count := 1
 		j := bodyEnd
 		for j < len(lines) {
-			if !config.RegExTurnHeader.MatchString(strings.TrimSpace(lines[j])) {
+			if !regex.TurnHeader.MatchString(strings.TrimSpace(lines[j])) {
 				break
 			}
 			nextBody, nextBodyEnd := ExtractTurnBody(lines, j+1)
@@ -57,7 +58,7 @@ func ConsolidateToolRuns(content string) string {
 
 		if count > 1 {
 			out = append(out, header, "", body, "",
-				fmt.Sprintf("(\u00d7%d)", count), "",
+				fmt.Sprintf("(×%d)", count), "",
 			)
 		} else {
 			// Keep original lines (preserves blank lines as-is)
@@ -68,5 +69,5 @@ func ConsolidateToolRuns(content string) string {
 		i = j
 	}
 
-	return strings.Join(out, config.NewlineLF)
+	return strings.Join(out, token.NewlineLF)
 }

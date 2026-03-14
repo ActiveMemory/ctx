@@ -9,7 +9,8 @@ package core
 import (
 	"strings"
 
-	"github.com/ActiveMemory/ctx/internal/config"
+	"github.com/ActiveMemory/ctx/internal/config/marker"
+	"github.com/ActiveMemory/ctx/internal/config/token"
 )
 
 // EndsWithNewline reports whether s ends with a newline (CRLF or LF).
@@ -20,8 +21,8 @@ import (
 // Returns:
 //   - bool: True if s ends with a newline
 func EndsWithNewline(s string) bool {
-	return strings.HasSuffix(s, config.NewlineCRLF) ||
-		strings.HasSuffix(s, config.NewlineLF)
+	return strings.HasSuffix(s, token.NewlineCRLF) ||
+		strings.HasSuffix(s, token.NewlineLF)
 }
 
 // Contains reports whether content contains the header and returns its index.
@@ -61,7 +62,7 @@ func ContainsNewLine(content string) (bool, int) {
 //   - bool: True if comment close marker is found
 //   - int: Index of marker (-1 if not found)
 func ContainsEndComment(content string) (bool, int) {
-	commentEnd := strings.Index(content, config.CommentClose)
+	commentEnd := strings.Index(content, marker.CommentClose)
 	return commentEnd != -1, commentEnd
 }
 
@@ -73,6 +74,6 @@ func ContainsEndComment(content string) (bool, int) {
 // Returns:
 //   - bool: True if s starts with CtxMarkerStart or CtxMarkerEnd
 func StartsWithCtxMarker(s string) bool {
-	return strings.HasPrefix(s, config.CtxMarkerStart) ||
-		strings.HasPrefix(s, config.CtxMarkerEnd)
+	return strings.HasPrefix(s, marker.CtxMarkerStart) ||
+		strings.HasPrefix(s, marker.CtxMarkerEnd)
 }

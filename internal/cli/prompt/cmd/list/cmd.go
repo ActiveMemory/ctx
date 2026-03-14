@@ -17,14 +17,14 @@ import (
 // Returns:
 //   - *cobra.Command: Configured list subcommand
 func Cmd() *cobra.Command {
-	short, _ := assets.CommandDesc("prompt.list")
+	short, _ := assets.CommandDesc(assets.CmdDescKeyPromptList)
 
 	return &cobra.Command{
 		Use:   "list",
 		Short: short,
 		Args:  cobra.NoArgs,
 		RunE: func(cmd *cobra.Command, _ []string) error {
-			return RunList(cmd)
+			return Run(cmd)
 		},
 	}
 }

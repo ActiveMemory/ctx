@@ -22,6 +22,7 @@ import (
 	"github.com/ActiveMemory/ctx/internal/cli/pad/cmd/rm"
 	"github.com/ActiveMemory/ctx/internal/cli/pad/cmd/show"
 	"github.com/ActiveMemory/ctx/internal/cli/pad/core"
+	"github.com/ActiveMemory/ctx/internal/write"
 )
 
 // Cmd returns the pad command with subcommands.
@@ -31,7 +32,7 @@ import (
 // Returns:
 //   - *cobra.Command: Configured pad command with subcommands
 func Cmd() *cobra.Command {
-	short, long := assets.CommandDesc("pad")
+	short, long := assets.CommandDesc(assets.CmdDescKeyPad)
 	cmd := &cobra.Command{
 		Use:   "pad",
 		Short: short,
@@ -69,7 +70,7 @@ func runList(cmd *cobra.Command) error {
 	}
 
 	if len(entries) == 0 {
-		cmd.Println(core.MsgEmpty)
+		write.PadEmpty(cmd)
 		return nil
 	}
 

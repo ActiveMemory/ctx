@@ -13,7 +13,9 @@ import (
 	"strings"
 	"time"
 
-	"github.com/ActiveMemory/ctx/internal/config"
+	"github.com/ActiveMemory/ctx/internal/config/file"
+	"github.com/ActiveMemory/ctx/internal/config/token"
+	ctxerr "github.com/ActiveMemory/ctx/internal/err"
 	"github.com/ActiveMemory/ctx/internal/rc"
 )
 
@@ -48,7 +50,7 @@ func FindContextChanges(refTime time.Time) ([]ContextChange, error) {
 
 	var changes []ContextChange
 	for _, e := range entries {
-		if e.IsDir() || !strings.HasSuffix(e.Name(), config.ExtMarkdown) {
+		if e.IsDir() || !strings.HasSuffix(e.Name(), file.ExtMarkdown) {
 			continue
 		}
 		info, infoErr := e.Info()
@@ -93,7 +95,7 @@ func SummarizeCodeChanges(refTime time.Time) (CodeSummary, error) {
 	if lines == "" {
 		return summary, nil
 	}
-	commitLines := strings.Split(lines, config.NewlineLF)
+	commitLines := strings.Split(lines, token.NewlineLF)
 	summary.CommitCount = len(commitLines)
 
 	// Latest commit message (first line of oneline output).
@@ -132,6 +134,9 @@ func SummarizeCodeChanges(refTime time.Time) (CodeSummary, error) {
 //   - []byte: Raw git output
 //   - error: Non-nil if git fails
 func GitLogSince(t time.Time, extraArgs ...string) ([]byte, error) {
+	if _, lookErr := exec.LookPath("git"); lookErr != nil {
+		return nil, ctxerr.GitNotFound()
+	}
 	args := []string{"log", "--since", t.Format(time.RFC3339)}
 	args = append(args, extraArgs...)
 	return exec.Command("git", args...).Output() //nolint:gosec // args are literal flags + time.Format output
@@ -146,7 +151,7 @@ func GitLogSince(t time.Time, extraArgs ...string) ([]byte, error) {
 //   - []string: Sorted unique top-level directory names
 func UniqueTopDirs(output string) []string {
 	seen := make(map[string]bool)
-	for _, line := range strings.Split(strings.TrimSpace(output), config.NewlineLF) {
+	for _, line := range strings.Split(strings.TrimSpace(output), token.NewlineLF) {
 		line = strings.TrimSpace(line)
 		if line == "" {
 			continue
@@ -175,7 +180,7 @@ func UniqueTopDirs(output string) []string {
 //   - []string: Sorted unique non-empty lines
 func UniqueLines(output string) []string {
 	seen := make(map[string]bool)
-	for _, line := range strings.Split(strings.TrimSpace(output), config.NewlineLF) {
+	for _, line := range strings.Split(strings.TrimSpace(output), token.NewlineLF) {
 		line = strings.TrimSpace(line)
 		if line != "" {
 			seen[line] = true

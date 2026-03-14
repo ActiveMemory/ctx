@@ -6,36 +6,17 @@
 
 package rc
 
-// DefaultTokenBudget is the default token budget when not configured.
-const DefaultTokenBudget = 8000
+import "github.com/ActiveMemory/ctx/internal/config/runtime"
 
-// DefaultArchiveAfterDays is the default days before archiving.
-const DefaultArchiveAfterDays = 7
-
-// DefaultEntryCountLearnings is the entry count threshold for LEARNINGS.md.
-// Learnings are situational; many become stale. Warn above this count.
-const DefaultEntryCountLearnings = 30
-
-// DefaultEntryCountDecisions is the entry count threshold for DECISIONS.md.
-// Decisions are more durable but still compound. Warn above this count.
-const DefaultEntryCountDecisions = 20
-
-// DefaultConventionLineCount is the line count threshold for CONVENTIONS.md.
-// Conventions lack dated entry headers, so line count is used instead.
-const DefaultConventionLineCount = 200
-
-// DefaultInjectionTokenWarn is the token threshold for oversize injection warning.
-// When auto-injected context exceeds this count, a flag file is written for
-// check-context-size to pick up. 0 disables the check.
-const DefaultInjectionTokenWarn = 15000
-
-// DefaultContextWindow is the default context window size in tokens.
-// Matches Claude Opus/Sonnet (200k). Override via `context_window` in .ctxrc.
-const DefaultContextWindow = 200000
-
-// DefaultTaskNudgeInterval is the number of Edit/Write calls between task
-// completion nudges. Set to 0 in .ctxrc to disable.
-const DefaultTaskNudgeInterval = 5
-
-// DefaultKeyRotationDays is the number of days before a key rotation nudge.
-const DefaultKeyRotationDays = 90
+// Aliases re-exported from config/runtime for use within rc.
+const (
+	DefaultTokenBudget         = runtime.DefaultTokenBudget
+	DefaultArchiveAfterDays    = runtime.DefaultArchiveAfterDays
+	DefaultEntryCountLearnings = runtime.DefaultEntryCountLearnings
+	DefaultEntryCountDecisions = runtime.DefaultEntryCountDecisions
+	DefaultConventionLineCount = runtime.DefaultConventionLineCount
+	DefaultInjectionTokenWarn  = runtime.DefaultInjectionTokenWarn
+	DefaultContextWindow       = runtime.DefaultContextWindow
+	DefaultTaskNudgeInterval   = runtime.DefaultTaskNudgeInterval
+	DefaultKeyRotationDays     = runtime.DefaultKeyRotationDays
+)

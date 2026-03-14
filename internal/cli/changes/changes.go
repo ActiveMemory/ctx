@@ -9,29 +9,10 @@ package changes
 import (
 	"github.com/spf13/cobra"
 
-	"github.com/ActiveMemory/ctx/internal/assets"
 	changesroot "github.com/ActiveMemory/ctx/internal/cli/changes/cmd/root"
 )
 
 // Cmd returns the changes command.
-//
-// Returns:
-//   - *cobra.Command: Configured changes command with flags registered
 func Cmd() *cobra.Command {
-	var since string
-
-	short, long := assets.CommandDesc("changes")
-
-	cmd := &cobra.Command{
-		Use:   "changes",
-		Short: short,
-		Long:  long,
-		RunE: func(cmd *cobra.Command, _ []string) error {
-			return changesroot.Run(cmd, since)
-		},
-	}
-
-	cmd.Flags().StringVar(&since, "since", "", assets.FlagDesc("changes.since"))
-
-	return cmd
+	return changesroot.Cmd()
 }

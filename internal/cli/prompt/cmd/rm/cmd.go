@@ -17,14 +17,14 @@ import (
 // Returns:
 //   - *cobra.Command: Configured rm subcommand
 func Cmd() *cobra.Command {
-	short, _ := assets.CommandDesc("prompt.rm")
+	short, _ := assets.CommandDesc(assets.CmdDescKeyPromptRm)
 
 	return &cobra.Command{
 		Use:   "rm NAME",
 		Short: short,
 		Args:  cobra.ExactArgs(1),
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return runRm(cmd, args[0])
+			return Run(cmd, args[0])
 		},
 	}
 }

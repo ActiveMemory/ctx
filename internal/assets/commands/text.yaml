@@ -1,0 +1,1426 @@
+# User-facing text strings for ctx CLI.
+# Used by assets.TextDesc() for UI messages, prompts, and labels.
+# Keys use dot notation: scope.name (e.g., agent.instruction)
+
+agent.instruction:
+  short: 'Before starting work, confirm to the user: "I have read the required context files and I''m following project conventions."'
+backup.box-title:
+  short: Backup Warning
+backup.no-marker:
+  short: No backup marker found — backup may have never run.
+backup.relay-message:
+  short: Backup warning
+backup.relay-prefix:
+  short: 'IMPORTANT: Relay this backup warning to the user VERBATIM before answering their question.'
+backup.run-hint:
+  short: 'Run: ctx system backup'
+backup.smb-not-mounted:
+  short: SMB share (%s) is not mounted.
+backup.smb-unavailable:
+  short: Backups cannot run until it's available.
+backup.stale:
+  short: Last .context backup is %d days old.
+block.absolute-path:
+  short: 'Use ''ctx'' from PATH, not absolute paths. Ask the user to run: make build && sudo make install'
+block.constitution-suffix:
+  short: 'See CONSTITUTION.md: ctx Invocation Invariants'
+block.cp-to-bin:
+  short: Agent must not copy binaries to bin directories. Ask the user to run 'sudo make install' instead.
+block.dot-slash:
+  short: 'Use ''ctx'' from PATH, not ''./ctx'' or ''./dist/ctx''. Ask the user to run: make build && sudo make install'
+block.go-run:
+  short: 'Use ''ctx'' from PATH, not ''go run ./cmd/ctx''. Ask the user to run: make build && sudo make install'
+block.install-to-local-bin:
+  short: Do not copy binaries to ~/.local/bin — this overrides the system ctx in /usr/local/bin. Use 'ctx' from PATH.
+block.mid-git-push:
+  short: git push requires explicit user approval.
+block.mid-sudo:
+  short: Cannot use sudo (no password access). Use 'make build && sudo make install' manually if needed.
+block.non-path-relay-message:
+  short: Blocked non-PATH ctx invocation
+bootstrap.next-steps:
+  short: |-
+    1. Read AGENT_PLAYBOOK.md from the context directory
+    2. Run `ctx agent --budget 4000` for a content summary
+bootstrap.none:
+  short: (none)
+bootstrap.plugin-warning:
+  short: 'ctx plugin is installed but not enabled. Run ''ctx init'' to auto-enable, or add {"enabledPlugins": {"ctx@activememory-ctx": true}} to ~/.claude/settings.json'
+bootstrap.rules:
+  short: |-
+    1. Use context_dir above for ALL file reads/writes
+    2. Never say "I don't have memory" — context IS your memory
+    3. Read files silently, present as recall (not search)
+    4. Persist learnings/decisions before session ends
+    5. Run `ctx agent` for content summaries
+    6. Run `ctx status` for context health
+ceremony.box-both:
+  short: Session Ceremonies
+ceremony.box-remember:
+  short: Session Start
+ceremony.box-wrapup:
+  short: Session End
+ceremony.fallback-both:
+  short: |-
+    Your last 3 sessions didn't use /ctx-remember or
+    /ctx-wrap-up.
+
+    Start sessions with:  /ctx-remember
+      → Loads context, shows active tasks, picks up
+        where you left off. No re-explaining needed.
+
+    End sessions with:    /ctx-wrap-up
+      → Captures learnings and decisions so the next
+        session starts informed, not from scratch.
+
+    These take seconds and save minutes.
+ceremony.fallback-remember:
+  short: |-
+    Try starting this session with /ctx-remember
+
+    It loads your context, shows active tasks, and
+    picks up where you left off — no re-explaining.
+ceremony.fallback-wrapup:
+  short: |-
+    Your last 3 sessions didn't end with /ctx-wrap-up
+
+    It captures learnings and decisions so the next
+    session starts informed, not from scratch.
+ceremony.relay-message:
+  short: Session ceremony nudge
+ceremony.relay-prefix:
+  short: 'IMPORTANT: Relay this session tip to the user VERBATIM before answering their question.'
+changes.fallback-label:
+  short: 24 hour(s) ago (default)
+changes.since-prefix:
+  short: 'since '
+check-context-size.billing-box-title:
+  short: Billing Threshold
+check-context-size.billing-fallback:
+  short: |-
+    ⚠ Token usage (~%s) has exceeded your
+    billing_token_warn threshold (%s).
+    Additional tokens may incur extra cost.
+check-context-size.billing-log-format:
+  short: prompt#%d BILLING-WARNING tokens=%d threshold=%d
+check-context-size.billing-relay-format:
+  short: Billing threshold exceeded (%s tokens > %s)
+check-context-size.billing-relay-prefix:
+  short: 'IMPORTANT: Relay this billing warning to the user VERBATIM before answering their question.'
+check-context-size.checkpoint-box-title:
+  short: 'Context Checkpoint (prompt #%d)'
+check-context-size.checkpoint-fallback:
+  short: |-
+    This session is getting deep. Consider wrapping up
+    soon. If there are unsaved learnings, decisions, or
+    conventions, now is a good time to persist them.
+check-context-size.checkpoint-log-format:
+  short: prompt#%d CHECKPOINT tokens=%d pct=%d%%
+check-context-size.checkpoint-relay-format:
+  short: 'Context Checkpoint at prompt #%d'
+check-context-size.oversize-fallback:
+  short: |-
+    ⚠ Context injection is large (~%d tokens).
+    Run /ctx-consolidate to distill your context files.
+check-context-size.relay-prefix:
+  short: 'IMPORTANT: Relay this context checkpoint to the user VERBATIM before answering their question.'
+check-context-size.running-low-suffix:
+  short: ' — running low'
+check-context-size.silenced-billing-log:
+  short: prompt#%d billing-silenced tokens=%d threshold=%d
+check-context-size.silenced-checkpoint-log:
+  short: prompt#%d silenced-by-template
+check-context-size.silenced-window-log:
+  short: prompt#%d window-silenced pct=%d%%
+check-context-size.silent-log-format:
+  short: prompt#%d silent
+check-context-size.suppressed-log-format:
+  short: prompt#%d suppressed (wrapped up)
+check-context-size.token-low:
+  short: ⚠
+check-context-size.token-normal:
+  short: ⏱
+check-context-size.token-usage:
+  short: '%s Context window: ~%s tokens (~%d%% of %s)%s'
+check-context-size.window-box-title:
+  short: Context Window Warning
+check-context-size.window-fallback:
+  short: |-
+    ⚠ Context window is %d%% full (~%s tokens).
+    The session will lose older context soon. Consider wrapping up
+    or starting a fresh session with /ctx-wrap-up.
+check-context-size.window-log-format:
+  short: prompt#%d WINDOW-WARNING tokens=%d pct=%d%%
+check-context-size.window-relay-format:
+  short: Context window at %d%%
+check-journal.box-title:
+  short: Journal Reminder
+check-journal.fallback-both:
+  short: |-
+    You have %d new session(s) not yet exported.
+    %d existing entries need enrichment.
+
+    Process journal (exports and enriches):
+      /ctx-journal-enrich-all
+check-journal.fallback-unenriched:
+  short: |-
+    %d journal entries need enrichment.
+
+    Enrich:
+      /ctx-journal-enrich-all
+check-journal.fallback-unexported:
+  short: |-
+    You have %d new session(s) not yet exported.
+
+    Process journal (exports and enriches):
+      /ctx-journal-enrich-all
+check-journal.relay-format:
+  short: '%d unexported, %d unenriched'
+check-journal.relay-prefix:
+  short: 'IMPORTANT: Relay this journal reminder to the user VERBATIM before answering their question.'
+check-knowledge.box-title:
+  short: Knowledge File Growth
+check-knowledge.fallback:
+  short: |-
+    Large knowledge files dilute agent context. Consider:
+     • Review and remove outdated entries
+     • Use /ctx-consolidate to merge overlapping entries
+     • Use /ctx-drift for semantic drift (stale patterns)
+     • Move stale entries to .context/archive/ manually
+check-knowledge.finding-format:
+  short: |
+    %s has %d %s (recommended: ≤%d).
+check-knowledge.relay-message:
+  short: Knowledge file growth detected
+check-knowledge.relay-prefix:
+  short: 'IMPORTANT: Relay this knowledge health notice to the user VERBATIM before answering their question.'
+check-map-staleness.box-title:
+  short: Architecture Map Stale
+check-map-staleness.fallback:
+  short: |-
+    ARCHITECTURE.md hasn't been refreshed since %s
+    and there are commits touching %d modules.
+    /ctx-architecture keeps architecture docs drift-free.
+
+    Want me to run /ctx-architecture to refresh?
+check-map-staleness.relay-message:
+  short: Architecture map stale
+check-map-staleness.relay-prefix:
+  short: 'IMPORTANT: Relay this architecture map notice to the user VERBATIM before answering their question.'
+check-memory-drift.box-title:
+  short: Memory Drift
+check-memory-drift.content:
+  short: 'MEMORY.md has changed since last sync.%sRun: ctx memory sync'
+check-memory-drift.relay-message:
+  short: 'MEMORY.md has changed since last sync — run ctx memory sync'
+check-memory-drift.relay-prefix:
+  short: 'IMPORTANT: Relay this memory drift notice to the user VERBATIM before answering their question.'
+check-persistence.box-title:
+  short: Persistence Checkpoint
+check-persistence.box-title-format:
+  short: '%s (prompt #%d)'
+check-persistence.checkpoint-format:
+  short: 'Persistence Checkpoint at prompt #%d'
+check-persistence.fallback:
+  short: |-
+    No context files updated in %d+ prompts.
+    Have you discovered learnings, made decisions,
+    established conventions, or completed tasks
+    worth persisting?
+
+    Run /ctx-wrap-up to capture session context.
+check-persistence.init-log-format:
+  short: init count=1 mtime=%d
+check-persistence.modified-log-format:
+  short: prompt#%d context-modified, reset nudge counter
+check-persistence.relay-format:
+  short: No context updated in %d+ prompts
+check-persistence.relay-prefix:
+  short: 'IMPORTANT: Relay this persistence checkpoint to the user VERBATIM before answering their question.'
+check-persistence.silenced-log-format:
+  short: prompt#%d silenced-by-template
+check-persistence.silent-log-format:
+  short: prompt#%d silent since_nudge=%d
+check-persistence.state-format:
+  short: |
+    count=%d
+    last_nudge=%d
+    last_mtime=%d
+check-reminders.box-title:
+  short: Reminders
+check-reminders.dismiss-all-hint:
+  short: 'Dismiss all: ctx remind dismiss --all'
+check-reminders.dismiss-hint:
+  short: 'Dismiss: ctx remind dismiss <id>'
+check-reminders.item-format:
+  short: ' [%d] %s'
+check-reminders.nudge-format:
+  short: You have %d pending reminders
+check-reminders.relay-prefix:
+  short: 'IMPORTANT: Relay these reminders to the user VERBATIM before answering their question.'
+check-resources.box-title:
+  short: Resource Alert
+check-resources.fallback-end:
+  short: and consider ending this session.
+check-resources.fallback-low:
+  short: System resources are critically low.
+check-resources.fallback-persist:
+  short: Persist unsaved context NOW with /ctx-wrap-up
+check-resources.relay-message:
+  short: System resources critically low
+check-resources.relay-prefix:
+  short: 'IMPORTANT: Relay this resource warning to the user VERBATIM.'
+check-task-completion.fallback:
+  short: If you completed a task, mark it [x] in TASKS.md.
+check-task-completion.nudge-message:
+  short: task completion nudge
+check-version.box-title:
+  short: Version Mismatch
+check-version.fallback:
+  short: |-
+    Your ctx binary is v%s but the plugin expects v%s.
+
+    Reinstall the binary to get the best out of ctx:
+      go install github.com/ActiveMemory/ctx/cmd/ctx@latest
+check-version.key-box-title:
+  short: Key Rotation
+check-version.key-fallback:
+  short: |-
+    Your encryption key is %d days old.
+    Consider rotating: ctx pad rotate-key
+check-version.key-relay-format:
+  short: Encryption key is %d days old
+check-version.key-relay-prefix:
+  short: 'IMPORTANT: Relay this security reminder to the user VERBATIM.'
+check-version.mismatch-relay-format:
+  short: Binary v%s vs plugin v%s
+check-version.relay-prefix:
+  short: 'IMPORTANT: Relay this version warning to the user VERBATIM before answering their question.'
+confirm.proceed:
+  short: 'Proceed? [y/N] '
+context-load-gate.file-header:
+  short: |+
+    --- %s ---
+    %s
+
+context-load-gate.footer:
+  short: |
+    Context: %d files loaded (~%d tokens). Order follows config.FileReadOrder.
+
+    TASKS.md contains the project's prioritized work items. Read it when discussing priorities, picking up work, or when the user asks about tasks.
+
+    For full decision or learning details, read the entry in DECISIONS.md or LEARNINGS.md by timestamp.
+context-load-gate.header:
+  short: |
+    PROJECT CONTEXT (auto-loaded by system hook — already in your context window)
+context-load-gate.index-fallback:
+  short: (no index entries)
+context-load-gate.index-header:
+  short: |+
+    --- %s (index — read full entries by date when relevant) ---
+    %s
+
+context-load-gate.oversize-action:
+  short: |
+    Action: Run /ctx-consolidate to distill context files.
+    Files with the most growth are the best candidates.
+context-load-gate.oversize-breakdown:
+  short: |
+    Per-file breakdown:
+context-load-gate.oversize-file-entry:
+  short: |2
+      %-22s %5d tokens
+context-load-gate.oversize-header:
+  short: |
+    Context injection oversize warning
+context-load-gate.oversize-injected:
+  short: |+
+    Injected:  %d tokens (threshold: %d)
+
+context-load-gate.oversize-timestamp:
+  short: |
+    Timestamp: %s
+context-load-gate.webhook:
+  short: 'context-load-gate: injected %d files (~%d tokens)'
+doctor.context-file.format:
+  short: '%-22s ~%d tokens'
+doctor.context-initialized.error:
+  short: Context not initialized — run ctx init
+doctor.context-initialized.ok:
+  short: Context initialized (.context/)
+doctor.context-size.format:
+  short: 'Context size: ~%d tokens (window: %d)'
+doctor.context-size.warning-suffix:
+  short: ' — consider ctx compact'
+doctor.ctxrc-validation.error:
+  short: '.ctxrc parse error: %v'
+doctor.ctxrc-validation.ok:
+  short: .ctxrc valid
+doctor.ctxrc-validation.ok-no-file:
+  short: No .ctxrc file (using defaults)
+doctor.ctxrc-validation.warning:
+  short: '.ctxrc has unknown fields: %s'
+doctor.drift.detected:
+  short: 'Drift: %s — run ctx drift for details'
+doctor.drift.ok:
+  short: No drift detected
+doctor.drift.violations:
+  short: '%d violations'
+doctor.drift.warning-load:
+  short: 'Could not load context for drift check: %v'
+doctor.drift.warnings:
+  short: '%d warnings'
+doctor.event-logging.info:
+  short: 'Event logging disabled (enable with event_log: true in .ctxrc)'
+doctor.event-logging.ok:
+  short: Event logging enabled
+doctor.output.header:
+  short: ctx doctor
+doctor.output.result-line:
+  short: '  %s %s'
+doctor.output.separator:
+  short: ==========
+doctor.output.summary:
+  short: 'Summary: %d warnings, %d errors'
+doctor.plugin-enabled-global.ok:
+  short: Plugin enabled globally (~/.claude/settings.json)
+doctor.plugin-enabled-local.ok:
+  short: Plugin enabled locally (.claude/settings.local.json)
+doctor.plugin-enabled.warning:
+  short: 'Plugin installed but not enabled — run ''ctx init'' to auto-enable, or add {"enabledPlugins": {"%s": true}} to ~/.claude/settings.json'
+doctor.plugin-installed.info:
+  short: ctx plugin not installed
+doctor.plugin-installed.ok:
+  short: ctx plugin installed
+doctor.recent-events.info:
+  short: No events in log
+doctor.recent-events.ok:
+  short: 'Last event: %s'
+doctor.reminders.info:
+  short: '%d pending reminders'
+doctor.reminders.ok:
+  short: No pending reminders
+doctor.required-files.error:
+  short: 'Missing required files (%d/%d): %s'
+doctor.required-files.ok:
+  short: Required files present (%d/%d)
+doctor.resource-disk.format:
+  short: Disk %d%% (%s / %s GB)
+doctor.resource-load.format:
+  short: Load %.2fx (%.1f / %d CPUs)
+doctor.resource-memory.format:
+  short: Memory %d%% (%s / %s GB)
+doctor.resource-swap.format:
+  short: Swap %d%% (%s / %s GB)
+doctor.task-completion.format:
+  short: 'Tasks: %d/%d completed (%d%%)'
+doctor.task-completion.warning-suffix:
+  short: ' — consider archiving with ctx tasks archive'
+doctor.webhook.info:
+  short: No webhook configured (optional — use ctx notify setup)
+doctor.webhook.ok:
+  short: Webhook configured
+drift.cleared:
+  short: ✓ Index cleared (no %s found)
+drift.dead-path:
+  short: references path that does not exist
+drift.entry-count:
+  short: 'has %d entries (recommended: ≤%d)'
+drift.missing-file:
+  short: required context file is missing
+drift.missing-package:
+  short: package %s is not documented
+drift.regenerated:
+  short: ✓ Index regenerated with %d entries
+drift.secret:
+  short: may contain secrets (constitution violation)
+drift.stale-age:
+  short: last modified %d days ago
+drift.staleness:
+  short: has many completed items (consider archiving)
+events.empty:
+  short: No events logged.
+events.human-format:
+  short: '%-19s  %-5s  %-24s  %s'
+heartbeat.log-plain:
+  short: prompt#%d context_modified=%t
+heartbeat.log-tokens:
+  short: prompt#%d context_modified=%t tokens=%s pct=%d%%
+heartbeat.notify-plain:
+  short: 'heartbeat: prompt #%d (context_modified=%t)'
+heartbeat.notify-tokens:
+  short: 'heartbeat: prompt #%d (context_modified=%t tokens=%s pct=%d%%)'
+hook.aider:
+  short: |
+    Aider Integration
+    =================
+
+    Add to your .aider.conf.yml:
+
+    ```yaml
+    read:
+      - .context/CONSTITUTION.md
+      - .context/TASKS.md
+      - .context/CONVENTIONS.md
+      - .context/ARCHITECTURE.md
+      - .context/DECISIONS.md
+    ```
+
+    Or pass context via command line:
+
+    ```bash
+    ctx agent | aider --message "$(cat -)"
+    ```
+hook.claude:
+  short: |
+    Claude Code Integration
+    =======================
+
+    Claude Code integration is now provided via the ctx plugin.
+
+    Install the plugin:
+      /plugin marketplace add ActiveMemory/ctx
+      /plugin install ctx@activememory-ctx
+
+    The plugin provides hooks (context monitoring, persistence
+    nudges, post-commit capture) and 25 skills automatically.
+hook.copilot:
+  short: |
+    GitHub Copilot Integration
+    ==========================
+
+    Add the following to .github/copilot-instructions.md,
+    or run with --write to generate the file directly:
+
+      ctx hook copilot --write
+hook.cursor:
+  short: |
+    Cursor IDE Integration
+    ======================
+
+    Add to your .cursorrules file:
+
+    ```markdown
+    # Project Context
+
+    Always read these files before making changes:
+    - .context/CONSTITUTION.md (NEVER violate these rules)
+    - .context/TASKS.md (current work)
+    - .context/CONVENTIONS.md (how we write code)
+    - .context/ARCHITECTURE.md (system structure)
+
+    Run 'ctx agent' for a context summary.
+    Run 'ctx drift' to check for stale context.
+    ```
+hook.supported-tools:
+  short: |
+    Supported tools:
+      claude-code  - Anthropic's Claude Code CLI (use plugin instead)
+      cursor       - Cursor IDE
+      aider        - Aider AI coding assistant
+      copilot      - GitHub Copilot
+      windsurf     - Windsurf IDE
+hook.windsurf:
+  short: |
+    Windsurf Integration
+    ====================
+
+    Add to your .windsurfrules file:
+
+    ```markdown
+    # Context
+
+    Read order for context:
+    1. .context/CONSTITUTION.md
+    2. .context/TASKS.md
+    3. .context/CONVENTIONS.md
+    4. .context/ARCHITECTURE.md
+    5. .context/DECISIONS.md
+
+    Run 'ctx agent' for AI-ready context packet.
+    ```
+import.count-convention:
+  short: '%d convention'
+import.count-decision:
+  short: '%d decision'
+import.count-learning:
+  short: '%d learning'
+import.count-task:
+  short: '%d task'
+journal.moc.browse-by:
+  short: '## Browse by'
+journal.moc.file-page-stats:
+  short: '**%d sessions** touching this file.'
+journal.moc.file-stats:
+  short: '**%d files** across **%d sessions** — **%d popular**, **%d long-tail**'
+journal.moc.files-description:
+  short: — sessions grouped by file touched
+journal.moc.nav-description:
+  short: Navigation hub for all journal entries.
+journal.moc.see-also:
+  short: '**See also**:'
+journal.moc.session-link:
+  short: '- [%s](%s%s) (%d sessions)%s'
+journal.moc.topic-page-stats:
+  short: '**%d sessions** with this topic.'
+journal.moc.topic-stats:
+  short: '**%d topics** across **%d sessions** — **%d popular**, **%d long-tail**'
+journal.moc.topics-description:
+  short: — sessions grouped by topic
+journal.moc.topics-label:
+  short: '**Topics**: '
+journal.moc.type-label:
+  short: '**Type**: '
+journal.moc.type-page-stats:
+  short: '**%d sessions** of type *%s*.'
+journal.moc.type-stats:
+  short: '**%d types** across **%d sessions**'
+journal.moc.types-description:
+  short: — sessions grouped by type
+mark-journal.checked:
+  short: '%s: %s = %s'
+mark-journal.marked:
+  short: '%s: marked %s'
+mark-wrapped-up.confirmed:
+  short: marked wrapped-up
+mcp.added-format:
+  short: Added %s to %s
+mcp.also-noted:
+  short: |+
+    ---
+    ## Also Noted
+
+mcp.completed-format:
+  short: 'Completed: %s'
+mcp.drift-issue-format:
+  short: |2
+      - [%s] %s: %s
+mcp.drift-passed:
+  short: |
+    Passed:
+mcp.drift-passed-format:
+  short: |2
+      - %s
+mcp.drift-status-format:
+  short: |+
+    Status: %s
+
+mcp.drift-violations:
+  short: |
+    Violations:
+mcp.drift-warnings:
+  short: |
+    Warnings:
+mcp.failed-marshal:
+  short: failed to marshal response
+mcp.file-not-found:
+  short: 'file not found: %s'
+mcp.invalid-params:
+  short: invalid params
+mcp.load-context:
+  short: 'failed to load context: %v'
+mcp.method-not-found:
+  short: 'method not found: %s'
+mcp.omitted-format:
+  short: |
+    - %s (omitted for budget)
+mcp.packet-header:
+  short: |+
+    # Context Packet
+
+mcp.parse-error:
+  short: parse error
+mcp.query-required:
+  short: query is required
+mcp.res-agent:
+  short: All context files assembled in priority read order
+mcp.res-architecture:
+  short: System architecture documentation
+mcp.res-constitution:
+  short: Hard rules that must never be violated
+mcp.res-conventions:
+  short: Code patterns and standards
+mcp.res-decisions:
+  short: Architectural decisions with rationale
+mcp.res-glossary:
+  short: Project-specific terminology
+mcp.res-learnings:
+  short: Gotchas, tips, and lessons learned
+mcp.res-playbook:
+  short: How agents should use this system
+mcp.res-tasks:
+  short: Current work items and their status
+mcp.section-format:
+  short: |+
+    ---
+    ## %s
+
+    %s
+
+mcp.status-context-format:
+  short: |
+    Context: %s
+mcp.status-empty:
+  short: EMPTY
+mcp.status-file-format:
+  short: |2
+      %-22s %6d tokens  [%s]
+mcp.status-files-format:
+  short: |
+    Files: %d
+mcp.status-ok:
+  short: OK
+mcp.status-tokens-format:
+  short: |+
+    Tokens: ~%d
+
+mcp.tool-add-desc:
+  short: Add a task, decision, learning, or convention to the context
+mcp.tool-complete-desc:
+  short: Mark a task as done by number or text match
+mcp.tool-drift-desc:
+  short: 'Detect stale or invalid context: dead paths, missing files, staleness'
+mcp.tool-prop-application:
+  short: How to apply this lesson (required for learnings)
+mcp.tool-prop-consequences:
+  short: Consequences (required for decisions)
+mcp.tool-prop-content:
+  short: Title or main content of the entry
+mcp.tool-prop-context:
+  short: Context field (required for decisions and learnings)
+mcp.tool-prop-lesson:
+  short: Lesson learned (required for learnings)
+mcp.tool-prop-priority:
+  short: Priority level (for tasks only)
+mcp.tool-prop-query:
+  short: Task number (e.g. '1') or search text to match
+mcp.tool-prop-rationale:
+  short: Rationale (required for decisions)
+mcp.tool-prop-type:
+  short: Entry type to add
+mcp.tool-status-desc:
+  short: 'Show context health: file count, token estimate, and file summaries'
+mcp.type-content-required:
+  short: type and content are required
+mcp.unknown-resource:
+  short: 'unknown resource: %s'
+mcp.unknown-tool:
+  short: 'unknown tool: %s'
+mcp.write-failed:
+  short: 'write failed: %v'
+memory.diff-new-format:
+  short: |
+    +++ %s (source)
+memory.diff-old-format:
+  short: |
+    --- %s (mirror)
+memory.import-review:
+  short: Imported from MEMORY.md — review and update as needed
+memory.import-source:
+  short: auto-memory import
+memory.publish-conventions:
+  short: '## Key Conventions'
+memory.publish-decisions:
+  short: '## Recent Decisions'
+memory.publish-learnings:
+  short: '## Recent Learnings'
+memory.publish-tasks:
+  short: '## Pending Tasks'
+memory.publish-title:
+  short: |+
+    # Project Context (managed by ctx)
+
+memory.select-content:
+  short: 'selecting content: %v'
+memory.write-memory:
+  short: 'writing MEMORY.md: %v'
+message.ctx-specific-warning:
+  short: |-
+    Warning: this message is ctx-specific (intended for ctx development).
+    Customizing it may produce unexpected results.
+message.edit-hint:
+  short: Edit this file to customize the message.
+message.list-header-category:
+  short: Category
+message.list-header-hook:
+  short: Hook
+message.list-header-override:
+  short: Override
+message.list-header-variant:
+  short: Variant
+message.no-override:
+  short: No override found for %s/%s. Already using embedded default.
+message.override-created:
+  short: Override created at %s
+message.override-label:
+  short: override
+message.override-removed:
+  short: Override removed for %s/%s. Using embedded default.
+message.source-default:
+  short: 'Source: embedded default'
+message.source-override:
+  short: 'Source: user override (%s)'
+message.template-vars-label:
+  short: 'Template variables: %s'
+message.template-vars-none:
+  short: 'Template variables: (none)'
+pad.key-created:
+  short: Scratchpad key created at %s
+parser.git-not-found:
+  short: git not found in PATH; install git to enable remote URL enrichment
+parser.session_prefix:
+  short: 'Session:'
+parser.session_prefix_alt:
+  short: 'Oturum:'
+pause.confirmed:
+  short: Context hooks paused for session %s
+post-commit.fallback:
+  short: 'Commit succeeded. 1. Offer context capture to the user: Decision (design choice?), Learning (gotcha?), or Neither. 2. Ask the user: "Want me to run lints and tests before you push?" Do NOT push. The user pushes manually.'
+post-commit.relay-message:
+  short: Commit succeeded, context capture offered
+prune.dry-run-line:
+  short: '  would prune: %s (age: %s)'
+prune.dry-run-summary:
+  short: Dry run — would prune %d files (skip %d recent, preserve %d global)
+prune.error-line:
+  short: '  error removing %s: %v'
+prune.summary:
+  short: Pruned %d files (skipped %d recent, preserved %d global)
+qa-reminder.fallback:
+  short: 'HARD GATE — DO NOT COMMIT without completing ALL of these steps first: (1) lint the ENTIRE project, (2) test the ENTIRE project, (3) verify a clean working tree (no modified or untracked files left behind). Not just the files you changed — the whole branch. If unrelated modified files remain, offer to commit them separately, stash them, or get explicit confirmation to leave them. Do NOT say ''I''ll do that at the end'' or ''I''ll handle that after committing.'' Run lint and tests BEFORE every git commit, every time, no exceptions.'
+qa-reminder.relay-message:
+  short: QA gate reminder emitted
+rc.parse_warning:
+  short: 'ctx: warning: failed to parse %s: %v (using defaults)'
+resources.alert-danger:
+  short: '  ✖ %s'
+resources.alert-disk:
+  short: Disk %.0f%% used (%s / %s GB)
+resources.alert-load:
+  short: Load %.2fx CPU count
+resources.alert-memory:
+  short: Memory %.0f%% used (%s / %s GB)
+resources.alert-swap:
+  short: Swap %.0f%% used (%s / %s GB)
+resources.alert-warning:
+  short: '  ⚠ %s'
+resources.alerts:
+  short: 'Alerts:'
+resources.all-clear:
+  short: All clear — no resource warnings.
+resources.header:
+  short: System Resources
+resources.separator:
+  short: ====================
+resources.status-danger:
+  short: ✖ DANGER
+resources.status-ok:
+  short: ✓ ok
+resources.status-warn:
+  short: ⚠ WARNING
+resume.confirmed:
+  short: Context hooks resumed for session %s
+specs-nudge.fallback:
+  short: Save your plan to specs/ — these documents track what was designed for the current release. Use specs/feature-name.md naming. If this is a quick fix that doesn't need a spec, proceed without one.
+specs-nudge.nudge-message:
+  short: plan-to-specs nudge emitted
+stats.empty:
+  short: No stats recorded yet.
+stats.header-format:
+  short: '%-19s  %-8s  %6s  %8s  %4s  %-12s'
+stats.line-format:
+  short: '%-19s  %-8s  %6d  %7s  %3d%%  %-12s'
+stopwords:
+  short: the and for that this with from are was were been have has had but not you all can her his she its our they will each make like use way may any into when which their about would there what also should after before than then them could more some other only just see add new update how
+summary.active:
+  short: '%d active'
+summary.completed:
+  short: '%d completed'
+summary.decision:
+  short: 1 decision
+summary.decisions:
+  short: '%d decisions'
+summary.empty:
+  short: empty
+summary.invariants:
+  short: '%d invariants'
+summary.loaded:
+  short: loaded
+summary.term:
+  short: 1 term
+summary.terms:
+  short: '%d terms'
+sync.config.description:
+  short: Found %s but %s not documented
+sync.config.suggestion:
+  short: Document %s in %s
+sync.deps.description:
+  short: Found %s (%s) but no dependency documentation
+sync.deps.suggestion:
+  short: Consider documenting key dependencies in %s or create %s
+sync.dir.description:
+  short: Directory '%s/' exists but not documented
+sync.dir.suggestion:
+  short: Add '%s/' to %s with description
+task-archive.content-preview:
+  short: 'Archived content preview:'
+task-archive.dry-run-header:
+  short: Dry run - no files modified
+task-archive.dry-run-summary:
+  short: Would archive %d completed tasks (keeping %d pending)
+task-archive.no-completed:
+  short: No completed tasks to archive.
+task-archive.pending-remain:
+  short: '  %d pending tasks remain in TASKS.md'
+task-archive.skip-incomplete:
+  short: No tasks to archive (%d skipped due to incomplete children).
+task-archive.skipping:
+  short: '! Skipping (has incomplete children): %s'
+task-archive.success:
+  short: ✓ Archived %d completed tasks to %s
+task-archive.success-with-age:
+  short: ✓ Archived %d tasks to %s (older than %d days)
+task-snapshot.created-format:
+  short: 'Created: %s'
+task-snapshot.header-format:
+  short: '# TASKS.md Snapshot — %s'
+task-snapshot.saved:
+  short: ✓ Snapshot saved to %s
+time.ago:
+  short: ' ago'
+time.day:
+  short: day
+time.hour:
+  short: hour
+time.just-now:
+  short: just now
+time.minute:
+  short: minute
+version-drift.relay-message:
+  short: versions out of sync
+watch.apply-failed:
+  short: |
+    ✗ Failed to apply [%s]: %v
+watch.apply-success:
+  short: |
+    ✓ Applied: [%s] %s
+watch.close-log-error:
+  short: 'failed to close log file: %v'
+watch.dry-run:
+  short: DRY RUN — No changes will be made
+watch.dry-run-preview:
+  short: |
+    ○ Would apply: [%s] %s
+watch.stop-hint:
+  short: Press Ctrl+C to stop
+watch.watching:
+  short: Watching for context updates...
+why.admonition-format:
+  short: '> **%s**'
+why.banner:
+  short: |2-
+
+       /    ctx:                         https://ctx.ist
+     ,'`./    do you remember?
+     `.,'\
+       \
+          {}  -> what
+          ctx -> why
+why.blockquote-prefix:
+  short: '> '
+why.bold-format:
+  short: '**%s**'
+why.menu-item-format:
+  short: '  [%d] %s'
+why.menu-prompt:
+  short: "\nSelect a document (1-3): "
+write.added-to:
+  short: ✓ Added to %s
+write.archived:
+  short: Archived previous mirror to %s
+write.backup-result:
+  short: '%s: %s (%s)'
+write.backup-smb-dest:
+  short: ' → %s'
+write.bootstrap-dir:
+  short: 'context_dir: %s'
+write.bootstrap-files:
+  short: 'Files:'
+write.bootstrap-next-steps:
+  short: 'Next steps:'
+write.bootstrap-numbered:
+  short: '  %d. %s'
+write.bootstrap-rules:
+  short: 'Rules:'
+write.bootstrap-sep:
+  short: =============
+write.bootstrap-title:
+  short: ctx bootstrap
+write.bootstrap-warning:
+  short: 'Warning: %s'
+write.completed-task:
+  short: '✓ Completed: %s'
+write.config-profile-base:
+  short: 'active: base (defaults)'
+write.config-profile-dev:
+  short: 'active: dev (verbose logging enabled)'
+write.config-profile-none:
+  short: 'active: none (%s does not exist)'
+write.deps-looking-for:
+  short: 'Looking for: go.mod, package.json, requirements.txt, pyproject.toml, Cargo.toml'
+write.deps-no-deps:
+  short: No dependencies found.
+write.deps-no-project:
+  short: No supported project detected.
+write.deps-use-type:
+  short: 'Use --type to force: %s'
+write.dry-run:
+  short: Dry run — no files will be written.
+write.exists-writing-as-alternative:
+  short: '  ! %s exists, writing as %s'
+write.hook-copilot-created:
+  short: '  ✓ %s'
+write.hook-copilot-force-hint:
+  short: '  Use --force to overwrite (not yet implemented).'
+write.hook-copilot-merged:
+  short: '  ✓ %s (merged)'
+write.hook-copilot-sessions-dir:
+  short: '  ✓ %s/'
+write.hook-copilot-skipped:
+  short: '  ○ %s (ctx content exists, skipped)'
+write.hook-copilot-summary:
+  short: |-
+    Copilot Chat (agent mode) will now:
+      1. Read .context/ files at session start
+      2. Save session summaries to .context/sessions/
+      3. Proactively update context during work
+write.hook-unknown-tool:
+  short: |
+    Unknown tool: %s
+write.import-added:
+  short: '     Added to %s'
+write.import-classified:
+  short: '     Classified: %s (keywords: %s)'
+write.import-classified-skip:
+  short: '     Classified: skip'
+write.import-duplicates:
+  short: 'Duplicates: %d entries (already imported)'
+write.import-entry:
+  short: '  -> %q'
+write.import-found:
+  short: '  Found %d entries'
+write.import-no-entries:
+  short: No entries found in %s.
+write.import-scanning:
+  short: Scanning %s for new entries...
+write.import-skipped:
+  short: 'Skipped: %d entries (session notes/unclassified)'
+write.import-summary:
+  short: 'Imported: %d entries'
+write.import-summary-dry-run:
+  short: 'Dry run — would import: %d entries'
+write.init-aborted:
+  short: Aborted.
+write.init-backup:
+  short: '  ✓ %s (backup)'
+write.init-created-dir:
+  short: '  ✓ %s/'
+write.init-created-with:
+  short: '  ✓ %s%s'
+write.init-creating-root-files:
+  short: Creating project root files...
+write.init-ctx-content-exists:
+  short: '  ○ %s (ctx content exists, skipped)'
+write.init-exists-skipped:
+  short: '  ○ %s (exists, skipped)'
+write.init-file-created:
+  short: '  ✓ %s'
+write.init-file-exists-no-ctx:
+  short: '%s exists but has no ctx content.'
+write.init-gitignore-review:
+  short: '  Review with: cat .gitignore'
+write.init-gitignore-updated:
+  short: '  ✓ .gitignore updated (%d entries added)'
+write.init-makefile-appended:
+  short: '  ✓ Makefile (appended %s include)'
+write.init-makefile-created:
+  short: '  ✓ Makefile (created with ctx include)'
+write.init-makefile-includes:
+  short: '  ○ Makefile (already includes %s)'
+write.init-merged:
+  short: '  ✓ %s (merged)'
+write.init-next-steps:
+  short: |-
+    Next steps:
+      1. Edit .context/TASKS.md to add your current tasks
+      2. Run 'ctx status' to see context summary
+      3. Run 'ctx agent' to get AI-ready context packet
+write.init-no-changes:
+  short: '  ○ %s (no changes needed)'
+write.init-overwrite-prompt:
+  short: '%s already exists. Overwrite? [y/N] '
+write.init-perms-allow:
+  short: '  ✓ %s (added ctx permissions)'
+write.init-perms-allow-deny:
+  short: '  ✓ %s (added ctx allow + deny permissions)'
+write.init-perms-deduped:
+  short: '  ✓ %s (removed duplicate permissions)'
+write.init-perms-deny:
+  short: '  ✓ %s (added ctx deny permissions)'
+write.init-perms-merged-deduped:
+  short: '  ✓ %s (added ctx permissions, removed duplicates)'
+write.init-plugin-already-enabled:
+  short: '  ○ Plugin already enabled globally'
+write.init-plugin-enabled:
+  short: '  ✓ Plugin enabled globally in %s'
+write.init-plugin-info:
+  short: |-
+    Claude Code users: install the ctx plugin for hooks & skills:
+      /plugin marketplace add ActiveMemory/ctx
+      /plugin install ctx@activememory-ctx
+write.init-plugin-note:
+  short: |-
+    Note: local plugin installs are not auto-enabled globally.
+    Run 'ctx init' again after installing the plugin to enable it,
+    or manually add to ~/.claude/settings.json:
+      {"enabledPlugins": {"ctx@activememory-ctx": true}}
+write.init-plugin-skipped:
+  short: '  ○ Plugin enablement skipped (plugin not installed)'
+write.init-scratchpad-key-created:
+  short: '  ✓ Scratchpad key created at %s'
+write.init-scratchpad-no-key:
+  short: '  ⚠ Encrypted scratchpad found but no key at %s'
+write.init-scratchpad-plaintext:
+  short: '  ✓ %s (plaintext scratchpad)'
+write.init-setting-up-permissions:
+  short: Setting up Claude Code permissions...
+write.init-skipped-dir:
+  short: '  ○ %s/ (exists, skipped)'
+write.init-skipped-plain:
+  short: '  ○ %s (skipped)'
+write.init-updated-ctx-section:
+  short: '  ✓ %s (updated ctx section)'
+write.init-updated-plan-section:
+  short: '  ✓ %s (updated plan section)'
+write.init-updated-prompt-section:
+  short: '  ✓ %s (updated prompt section)'
+write.init-warn-non-fatal:
+  short: '  ⚠ %s: %v'
+write.initialized:
+  short: Context initialized in %s/
+write.journal-orphan-removed:
+  short: '  removed orphan: %s'
+write.journal-site-alt:
+  short: '  ctx journal site --serve'
+write.journal-site-building:
+  short: Building site...
+write.journal-site-generated:
+  short: ✓ Generated site with %d entries in %s
+write.journal-site-next-steps:
+  short: '  cd %s && %s serve'
+write.journal-site-starting:
+  short: Starting local server...
+write.journal-sync-locked:
+  short: '  ✓ %s (locked)'
+write.journal-sync-locked-count:
+  short: |2-
+
+    Locked %d entry(s).
+write.journal-sync-match:
+  short: No changes — state already matches frontmatter.
+write.journal-sync-none:
+  short: No journal entries found.
+write.journal-sync-unlocked:
+  short: '  ✓ %s (unlocked)'
+write.journal-sync-unlocked-count:
+  short: |2-
+
+    Unlocked %d entry(s).
+write.lines:
+  short: '  Lines: %d'
+write.lines-previous:
+  short: ' (was %d)'
+write.lock-unlock-entry:
+  short: '  ok %s (%s)'
+write.lock-unlock-no-changes:
+  short: No changes — all matched entries already %s.
+write.lock-unlock-summary:
+  short: |2-
+
+    %s %d entry(s).
+write.loop-completion:
+  short: 'Completion signal: %s'
+write.loop-generated:
+  short: ✓ Generated %s
+write.loop-max-iterations:
+  short: 'Max iterations: %d'
+write.loop-prompt:
+  short: 'Prompt: %s'
+write.loop-run-cmd:
+  short: '  ./%s'
+write.loop-tool:
+  short: 'Tool: %s'
+write.loop-unlimited:
+  short: 'Max iterations: unlimited'
+write.memory-archives:
+  short: '  Archives:   %d snapshots in .context/%s/'
+write.memory-bridge-header:
+  short: Memory Bridge Status
+write.memory-drift-detected:
+  short: '  Drift:      detected (source is newer)'
+write.memory-drift-none:
+  short: '  Drift:      none'
+write.memory-last-sync:
+  short: '  Last sync:   %s (%s ago)'
+write.memory-last-sync-never:
+  short: '  Last sync:   never'
+write.memory-mirror:
+  short: '  Mirror:      %s'
+write.memory-mirror-lines:
+  short: '  Mirror:     %d lines'
+write.memory-mirror-not-synced:
+  short: '  Mirror:     not yet synced'
+write.memory-no-changes:
+  short: No changes since last sync.
+write.memory-source:
+  short: '  Source:      %s'
+write.memory-source-lines:
+  short: '  MEMORY.md:  %d lines'
+write.memory-source-lines-drift:
+  short: '  MEMORY.md:  %d lines (modified since last sync)'
+write.memory-source-not-active:
+  short: '  Source: auto memory not active (MEMORY.md not found)'
+write.mirror:
+  short: '  Mirror: %s'
+write.moving-task:
+  short: '✓ Moving completed task: %s'
+write.new-content:
+  short: '  New content: %d lines since last sync'
+write.obsidian-generated:
+  short: ✓ Generated Obsidian vault with %d entries in %s
+write.obsidian-next-steps:
+  short: '  Open Obsidian → Open folder as vault → Select %s'
+write.pad-blob-written:
+  short: Wrote %d bytes to %s
+write.pad-empty:
+  short: Scratchpad is empty.
+write.pad-entry-added:
+  short: Added entry %d.
+write.pad-entry-moved:
+  short: Moved entry %d to %d.
+write.pad-entry-removed:
+  short: Removed entry %d.
+write.pad-entry-updated:
+  short: Updated entry %d.
+write.pad-export-done:
+  short: '  + %s'
+write.pad-export-none:
+  short: No blob entries to export.
+write.pad-export-plan:
+  short: '  %s → %s'
+write.pad-export-summary:
+  short: '%s %d blobs.'
+write.pad-export-verb-done:
+  short: Exported
+write.pad-export-verb-dry-run:
+  short: Would export
+write.pad-export-write-failed:
+  short: '  ! failed to write %s: %v'
+write.pad-import-blob-added:
+  short: '  + %s'
+write.pad-import-blob-none:
+  short: No files to import.
+write.pad-import-blob-skipped:
+  short: '  ! skipped: %s (%v)'
+write.pad-import-blob-summary:
+  short: Done. Added %d, skipped %d.
+write.pad-import-blob-too-large:
+  short: '  ! skipped: %s (exceeds %d byte limit)'
+write.pad-import-close-warning:
+  short: 'warning: close %s: %v'
+write.pad-import-done:
+  short: Imported %d entries.
+write.pad-import-none:
+  short: No entries to import.
+write.pad-key-created:
+  short: Scratchpad key created at %s
+write.pad-merge-added:
+  short: '  + %-40s (from %s)'
+write.pad-merge-binary-warning:
+  short: '  ! %s appears to contain binary data; it may be encrypted (use --key)'
+write.pad-merge-blob-conflict:
+  short: '  ! blob %q has different content across sources; both kept'
+write.pad-merge-done:
+  short: Merged %d new %s (%d %s skipped).
+write.pad-merge-dry-run:
+  short: Would merge %d new %s (%d %s skipped).
+write.pad-merge-dupe:
+  short: '  = %-40s (duplicate, skipped)'
+write.pad-merge-none:
+  short: No entries to merge.
+write.pad-merge-none-new:
+  short: No new entries to merge (%d %s skipped).
+write.pad-resolve-entry:
+  short: '  %d. %s'
+write.pad-resolve-header:
+  short: === %s ===
+write.path-exists:
+  short: '  %s -> %s (exists)'
+write.paused:
+  short: Context hooks paused for session %s
+write.prefix-error:
+  short: 'Error: '
+write.prompt-created:
+  short: Created prompt %q.
+write.prompt-item:
+  short: '  %s'
+write.prompt-none:
+  short: No prompts found. Run 'ctx init' or 'ctx prompt add' to create prompts.
+write.prompt-removed:
+  short: Removed prompt %q.
+write.publish-block:
+  short: '  Published block:'
+write.publish-budget:
+  short: '  Budget: %d lines'
+write.publish-conventions:
+  short: '    %d key conventions (from CONVENTIONS.md)'
+write.publish-decisions:
+  short: '    %d recent decisions (from DECISIONS.md)'
+write.publish-done:
+  short: 'Published to MEMORY.md (markers: <!-- ctx:published --> ... <!-- ctx:end -->)'
+write.publish-dry-run:
+  short: Dry run — no files written.
+write.publish-header:
+  short: Publishing .context/ -> MEMORY.md...
+write.publish-learnings:
+  short: '    %d recent learnings (from LEARNINGS.md)'
+write.publish-source-files:
+  short: '  Source files: TASKS.md, DECISIONS.md, CONVENTIONS.md, LEARNINGS.md'
+write.publish-tasks:
+  short: '    %d pending tasks (from TASKS.md)'
+write.publish-total:
+  short: '  Total: %d lines (within %d-line budget)'
+write.reminder-added:
+  short: '  + [%d] %s%s'
+write.reminder-after-suffix:
+  short: '  (after %s)'
+write.reminder-dismissed:
+  short: '  - [%d] %s'
+write.reminder-dismissed-all:
+  short: Dismissed %d reminders.
+write.reminder-item:
+  short: '  [%d] %s%s'
+write.reminder-none:
+  short: No reminders.
+write.reminder-not-due:
+  short: '  (after %s, not yet due)'
+write.restore-added:
+  short: '  + %s'
+write.restore-deny-dropped-header:
+  short: 'Dropped %d session deny rule(s):'
+write.restore-deny-restored-header:
+  short: 'Restored %d deny rule(s):'
+write.restore-done:
+  short: Restored from golden image.
+write.restore-dropped-header:
+  short: 'Dropped %d session allow permission(s):'
+write.restore-match:
+  short: Settings already match golden image.
+write.restore-no-local:
+  short: Restored golden image (no local settings existed).
+write.restore-perm-match:
+  short: Permission lists match; other settings differ.
+write.restore-removed:
+  short: '  - %s'
+write.restore-restored-header:
+  short: 'Restored %d allow permission(s):'
+write.resumed:
+  short: Context hooks resumed for session %s
+write.setup-done:
+  short: |-
+    Webhook configured: %s
+    Encrypted at: %s
+write.setup-prompt:
+  short: 'Enter webhook URL: '
+write.skill-line:
+  short: '  /%-22s %s'
+write.skills-header:
+  short: 'Available Skills:'
+write.snapshot-saved:
+  short: 'Saved golden image: %s'
+write.snapshot-updated:
+  short: 'Updated golden image: %s'
+write.source:
+  short: '  Source: %s'
+write.status-activity-header:
+  short: 'Recent Activity:'
+write.status-activity-item:
+  short: '  - %s modified %s'
+write.status-dir:
+  short: 'Context Directory: %s'
+write.status-drift:
+  short: '  Status: drift detected (source is newer)'
+write.status-file-compact:
+  short: '  %s %s (%s)'
+write.status-file-verbose:
+  short: '  %s %s (%s) [%s tokens, %s]'
+write.status-files:
+  short: 'Total Files: %d'
+write.status-files-header:
+  short: 'Files:'
+write.status-no-drift:
+  short: '  Status: no drift'
+write.status-preview-line:
+  short: '      (%s)'
+write.status-separator:
+  short: ====================
+write.status-title:
+  short: Context Status
+write.status-tokens:
+  short: 'Token Estimate: %s tokens'
+write.sync-action:
+  short: '%d. [%s] %s'
+write.sync-dry-run:
+  short: DRY RUN — No changes will be made
+write.sync-dry-run-summary:
+  short: Found %d items to sync. Run without --dry-run to apply suggestions.
+write.sync-header:
+  short: Sync Analysis
+write.sync-in-sync:
+  short: ✓ Context is in sync with codebase
+write.sync-separator:
+  short: =============
+write.sync-suggestion:
+  short: '   Suggestion: %s'
+write.sync-summary:
+  short: Found %d items. Review and update context files manually.
+write.synced:
+  short: Synced %s -> %s
+write.test-filtered:
+  short: |-
+    Note: event "test" is filtered by your .ctxrc notify.events config.
+    Sending anyway for testing purposes.
+write.test-no-webhook:
+  short: 'No webhook configured. Run: ctx notify setup'
+write.test-result:
+  short: 'Webhook responded: HTTP %d %s'
+write.test-working:
+  short: Webhook is working %s
+write.time-day-ago:
+  short: 1 day ago
+write.time-days-ago:
+  short: '%d days ago'
+write.time-hour-ago:
+  short: 1 hour ago
+write.time-hours-ago:
+  short: '%d hours ago'
+write.time-just-now:
+  short: just now
+write.time-minute-ago:
+  short: 1 minute ago
+write.time-minutes-ago:
+  short: '%d minutes ago'
+write.unpublish-done:
+  short: Removed published block from %s.
+write.unpublish-not-found:
+  short: No published block found in %s.

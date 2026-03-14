@@ -8,7 +8,7 @@ Guide end-of-session context persistence. Gather signal from the
 session, propose candidates worth persisting, and persist approved
 items via `ctx add`.
 
-This is a **ceremony skill** — invoke it explicitly as `/ctx-wrap-up`
+This is a **ceremony skill**: invoke it explicitly as `/ctx-wrap-up`
 at session end, not conversationally. It pairs with `/ctx-remember`
 at session start.
 
@@ -29,14 +29,14 @@ tracking, then there will be something to wrap up."
 
 - Nothing meaningful happened (only read files, quick lookup)
 - The user already persisted everything manually with `ctx add`
-- Mid-session when the user is still in flow — use `/ctx-reflect`
+- Mid-session when the user is still in flow: use `/ctx-reflect`
   instead for mid-session checkpoints
 
 ## Process
 
 ### Phase 1: Gather signal
 
-Do this **silently** — do not narrate the steps:
+Do this **silently**: do not narrate the steps:
 
 1. Check what changed in the working tree:
    ```bash
@@ -64,7 +64,7 @@ potential candidate, ask yourself:
 - Is this substantial enough to record, or is it trivial?
 
 Present candidates in a structured list, grouped by type.
-Skip categories with no candidates — do not show empty sections.
+Skip categories with no candidates: do not show empty sections.
 
 ```
 ## Session Wrap-Up
@@ -93,20 +93,20 @@ Persist all? Or select which to keep?
 ### Phase 3: Persist approved candidates
 
 Wait for the user to approve, select, or modify candidates.
-Wait for the user to approve each item before persisting —
+Wait for the user to approve each item before persisting:
 candidates proposed by the agent may be incomplete or
 mischaracterized, and the user is the final authority on what
 belongs in their context.
 
 For each approved candidate, run the appropriate command:
 
-| Type       | Command                                                                               |
-|------------|---------------------------------------------------------------------------------------|
-| Learning   | `ctx add learning "Title" --context "..." --lesson "..." --application "..."`         |
-| Decision   | `ctx add decision "Title" --context "..." --rationale "..." --consequences "..."`     |
-| Convention | `ctx add convention "Description"`                                                    |
-| Task (new) | `ctx add task "Description"`                                                          |
-| Task (done)| Edit TASKS.md to mark complete                                                        |
+| Type        | Command                                                                           |
+|-------------|-----------------------------------------------------------------------------------|
+| Learning    | `ctx add learning "Title" --context "..." --lesson "..." --application "..."`     |
+| Decision    | `ctx add decision "Title" --context "..." --rationale "..." --consequences "..."` |
+| Convention  | `ctx add convention "Description"`                                                |
+| Task (new)  | `ctx add task "Description"`                                                      |
+| Task (done) | Edit TASKS.md to mark complete                                                    |
 
 Report the result of each command. If any fail, report the error
 and continue with the remaining items.
@@ -140,27 +140,27 @@ Do not auto-commit. The user decides.
 ### Good candidates
 
 - "PyMdownx `details` extension wraps content in `<details>`
-  tags, breaking `<pre><code>` rendering in MkDocs" — specific
+  tags, breaking `<pre><code>` rendering in MkDocs": specific
   gotcha, actionable for future sessions
 - "Decision: use file-based cooldown tokens instead of env vars
-  because hooks run in subprocesses" — real trade-off with
+  because hooks run in subprocesses": real trade-off with
   rationale
-- "Convention: all skill descriptions use imperative mood" —
+- "Convention: all skill descriptions use imperative mood":
   codifies a pattern for consistency
 
 ### Weak candidates (do not propose)
 
-- "Go has good error handling" — general knowledge, not
+- "Go has good error handling": general knowledge, not
   project-specific
-- "We edited main.go" — obvious from the diff, not an insight
-- "Tests should pass before committing" — too generic to be
+- "We edited main.go": obvious from the diff, not an insight
+- "Tests should pass before committing": too generic to be
   useful
 - Anything already present in LEARNINGS.md or DECISIONS.md
 
 ## Relationship to /ctx-reflect
 
 `/ctx-reflect` is for mid-session checkpoints at natural
-breakpoints. `/ctx-wrap-up` is for end-of-session — it's more
+breakpoints. `/ctx-wrap-up` is for end-of-session: it's more
 thorough, covers the full session arc, and includes the commit
 offer. If the user already ran `/ctx-reflect` recently, avoid
 proposing the same candidates again.

@@ -15,19 +15,12 @@ import (
 	"strings"
 	"time"
 
-	"github.com/ActiveMemory/ctx/internal/config"
+	"github.com/ActiveMemory/ctx/internal/config/dir"
+	"github.com/ActiveMemory/ctx/internal/config/event"
+	"github.com/ActiveMemory/ctx/internal/config/session"
+	ctxcontext "github.com/ActiveMemory/ctx/internal/context"
 	"github.com/ActiveMemory/ctx/internal/rc"
 )
-
-// ResolvedJournalDir returns the path to the journal directory within the
-// configured context directory. Uses rc.ContextDir() so it respects .ctxrc
-// and CLI overrides.
-//
-// Returns:
-//   - string: Absolute path to the journal directory
-func ResolvedJournalDir() string {
-	return filepath.Join(rc.ContextDir(), config.DirJournal)
-}
 
 // StateDir returns the project-scoped runtime state directory
 // (.context/state/). Ensures the directory exists on each call — MkdirAll
@@ -36,9 +29,9 @@ func ResolvedJournalDir() string {
 // Returns:
 //   - string: Absolute path to the state directory
 func StateDir() string {
-	dir := filepath.Join(rc.ContextDir(), config.DirState)
-	_ = os.MkdirAll(dir, 0o750)
-	return dir
+	d := filepath.Join(rc.ContextDir(), dir.State)
+	_ = os.MkdirAll(d, 0o750)
+	return d
 }
 
 // ReadCounter reads an integer counter from a file. Returns 0 if the file
@@ -71,7 +64,7 @@ func WriteCounter(path string, n int) {
 }
 
 // LogMessage appends a timestamped log line to the given file.
-// Rotates the log when it exceeds config.LogMaxBytes, keeping one
+// Rotates the log when it exceeds config.HookLogMaxBytes, keeping one
 // previous generation (.1 suffix) — same pattern as eventlog.
 //
 // Parameters:
@@ -101,7 +94,7 @@ func LogMessage(logFile, sessionID, msg string) {
 }
 
 // RotateLog checks the log file size and rotates if it exceeds
-// config.LogMaxBytes. The previous generation is replaced.
+// config.HookLogMaxBytes. The previous generation is replaced.
 //
 // Parameters:
 //   - logFile: Absolute path to the log file
@@ -110,7 +103,7 @@ func RotateLog(logFile string) {
 	if statErr != nil {
 		return
 	}
-	if info.Size() < int64(config.LogMaxBytes) {
+	if info.Size() < int64(event.HookLogMaxBytes) {
 		return
 	}
 	prev := logFile + ".1"
@@ -144,14 +137,14 @@ func TouchFile(path string) {
 	_ = os.WriteFile(path, nil, 0o600)
 }
 
-// IsInitialized reports whether the context directory has been properly set up
+// Initialized reports whether the context directory has been properly set up
 // via "ctx init". Hooks should no-op when this returns false to avoid
 // creating partial state (e.g. logs/) before initialization.
 //
 // Returns:
 //   - bool: True if context directory is initialized
-func IsInitialized() bool {
-	return config.Initialized(rc.ContextDir())
+func Initialized() bool {
+	return ctxcontext.Initialized(rc.ContextDir())
 }
 
 // PauseMarkerPath returns the path to the session pause marker file.
@@ -262,24 +255,11 @@ func WriteSessionStats(sessionID string, stats SessionStats) {
 //   - stdin: File to read input from
 //
 // Returns:
-//   - string: Session ID or SessionUnknown
+//   - string: Session ID or config.IDSessionUnknown
 func ReadSessionID(stdin *os.File) string {
 	input := ReadInput(stdin)
 	if input.SessionID == "" {
-		return SessionUnknown
+		return session.IDUnknown
 	}
 	return input.SessionID
-}
-
-// ContextDirLine returns a one-line context directory identifier.
-// Returns empty string if directory cannot be resolved (callers omit footer).
-//
-// Returns:
-//   - string: "Context: <dir>" or empty string
-func ContextDirLine() string {
-	dir := rc.ContextDir()
-	if dir == "" {
-		return ""
-	}
-	return "Context: " + dir
 }

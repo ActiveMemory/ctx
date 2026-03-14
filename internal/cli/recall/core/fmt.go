@@ -9,7 +9,9 @@ package core
 import (
 	"fmt"
 
-	"github.com/ActiveMemory/ctx/internal/config"
+	"github.com/ActiveMemory/ctx/internal/assets"
+	"github.com/ActiveMemory/ctx/internal/config/journal"
+	"github.com/ActiveMemory/ctx/internal/config/time"
 	"github.com/ActiveMemory/ctx/internal/recall/parser"
 )
 
@@ -24,10 +26,10 @@ func FormatSessionMatchLines(matches []*parser.Session) []string {
 	lines := make([]string, 0, len(matches))
 	for _, m := range matches {
 		lines = append(lines, fmt.Sprintf(
-			config.TplSessionMatch,
+			assets.TplSessionMatch,
 			m.Slug,
-			m.ID[:config.SessionIDShortLen],
-			m.StartTime.Format(config.DateTimeFormat)),
+			m.ID[:journal.SessionIDShortLen],
+			m.StartTime.Format(time.DateTimeFormat)),
 		)
 	}
 	return lines

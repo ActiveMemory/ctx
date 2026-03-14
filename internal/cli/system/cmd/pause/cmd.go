@@ -7,13 +7,11 @@
 package pause
 
 import (
-	"fmt"
 	"os"
 
 	"github.com/spf13/cobra"
 
 	"github.com/ActiveMemory/ctx/internal/assets"
-	"github.com/ActiveMemory/ctx/internal/cli/system/core"
 )
 
 // Cmd returns the "ctx system pause" plumbing command.
@@ -21,34 +19,19 @@ import (
 // Returns:
 //   - *cobra.Command: Configured pause subcommand
 func Cmd() *cobra.Command {
-	cmd := &cobra.Command{
-		Use:   "pause",
-		Short: "Pause context hooks for this session",
-		Long: `Creates a session-scoped pause marker. While paused, all nudge
-and reminder hooks no-op. Security and housekeeping hooks still fire.
+	short, long := assets.CommandDesc(assets.CmdDescKeySystemPause)
 
-The session ID is read from stdin JSON (same as hooks) or --session-id flag.`,
+	cmd := &cobra.Command{
+		Use:    "pause",
+		Short:  short,
+		Long:   long,
 		Hidden: true,
 		RunE: func(cmd *cobra.Command, _ []string) error {
-			return runPause(cmd, os.Stdin)
+			return Run(cmd, os.Stdin)
 		},
 	}
-	cmd.Flags().String("session-id", "", assets.FlagDesc("system.pause.session-id"))
+	cmd.Flags().String("session-id", "",
+		assets.FlagDesc(assets.FlagDescKeySystemPauseSessionId),
+	)
 	return cmd
-}
-
-func runPause(cmd *cobra.Command, stdin *os.File) error {
-	sessionID, _ := cmd.Flags().GetString("session-id")
-	if sessionID == "" {
-		input := core.ReadInput(stdin)
-		sessionID = input.SessionID
-	}
-	if sessionID == "" {
-		sessionID = core.SessionUnknown
-	}
-
-	path := core.PauseMarkerPath(sessionID)
-	core.WriteCounter(path, 0)
-	cmd.Println(fmt.Sprintf("Context hooks paused for session %s", sessionID))
-	return nil
 }

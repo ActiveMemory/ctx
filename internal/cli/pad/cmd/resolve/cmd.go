@@ -17,13 +17,13 @@ import (
 // Returns:
 //   - *cobra.Command: Configured resolve subcommand
 func Cmd() *cobra.Command {
-	short, long := assets.CommandDesc("pad.resolve")
+	short, long := assets.CommandDesc(assets.CmdDescKeyPadResolve)
 	return &cobra.Command{
 		Use:   "resolve",
 		Short: short,
 		Long:  long,
 		RunE: func(cmd *cobra.Command, _ []string) error {
-			return runResolve(cmd)
+			return Run(cmd)
 		},
 	}
 }

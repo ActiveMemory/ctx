@@ -26,7 +26,7 @@ func Cmd() *cobra.Command {
 		build  bool
 	)
 
-	short, long := assets.CommandDesc("journal.site")
+	short, long := assets.CommandDesc(assets.CmdDescKeyJournalSite)
 	cmd := &cobra.Command{
 		Use:   "site",
 		Short: short,
@@ -38,13 +38,13 @@ func Cmd() *cobra.Command {
 
 	defaultOutput := filepath.Join(rc.ContextDir(), "journal-site")
 	cmd.Flags().StringVarP(
-		&output, "output", "o", defaultOutput, assets.FlagDesc("journal.site.output"),
+		&output, "output", "o", defaultOutput, assets.FlagDesc(assets.FlagDescKeyJournalSiteOutput),
 	)
 	cmd.Flags().BoolVar(
-		&build, "build", false, assets.FlagDesc("journal.site.build"),
+		&build, "build", false, assets.FlagDesc(assets.FlagDescKeyJournalSiteBuild),
 	)
 	cmd.Flags().BoolVar(
-		&serve, "serve", false, assets.FlagDesc("journal.site.serve"),
+		&serve, "serve", false, assets.FlagDesc(assets.FlagDescKeyJournalSiteServe),
 	)
 
 	return cmd

@@ -7,11 +7,10 @@
 package switchcmd
 
 import (
+	internalConfig "github.com/ActiveMemory/ctx/internal/config/cli"
 	"github.com/spf13/cobra"
 
 	"github.com/ActiveMemory/ctx/internal/assets"
-	internalConfig "github.com/ActiveMemory/ctx/internal/config"
-
 	"github.com/ActiveMemory/ctx/internal/cli/config/core"
 )
 
@@ -20,7 +19,7 @@ import (
 // Returns:
 //   - *cobra.Command: Configured switch subcommand
 func Cmd() *cobra.Command {
-	short, long := assets.CommandDesc("config.switch")
+	short, long := assets.CommandDesc(assets.CmdDescKeyConfigSwitch)
 
 	return &cobra.Command{
 		Use:         "switch [dev|base]",
@@ -33,7 +32,7 @@ func Cmd() *cobra.Command {
 			if rootErr != nil {
 				return rootErr
 			}
-			return RunSwitch(cmd, root, args)
+			return Run(cmd, root, args)
 		},
 	}
 }

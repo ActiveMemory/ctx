@@ -13,17 +13,14 @@ import (
 	"path/filepath"
 	"strings"
 
-	"github.com/ActiveMemory/ctx/internal/config"
+	"github.com/ActiveMemory/ctx/internal/assets"
+	"github.com/ActiveMemory/ctx/internal/config/fs"
+	"github.com/ActiveMemory/ctx/internal/config/pad"
+	"github.com/ActiveMemory/ctx/internal/config/token"
 	"github.com/ActiveMemory/ctx/internal/crypto"
 	ctxerr "github.com/ActiveMemory/ctx/internal/err"
 	"github.com/ActiveMemory/ctx/internal/rc"
 	"github.com/ActiveMemory/ctx/internal/validation"
-)
-
-// Output messages matching the spec.
-const (
-	MsgEmpty      = "Scratchpad is empty."
-	MsgKeyCreated = "Scratchpad key created at %s\n"
 )
 
 // ScratchpadPath returns the full path to the scratchpad file.
@@ -32,9 +29,9 @@ const (
 //   - string: Encrypted or plaintext path based on rc.ScratchpadEncrypt()
 func ScratchpadPath() string {
 	if rc.ScratchpadEncrypt() {
-		return filepath.Join(rc.ContextDir(), config.FileScratchpadEnc)
+		return filepath.Join(rc.ContextDir(), pad.Enc)
 	}
-	return filepath.Join(rc.ContextDir(), config.FileScratchpadMd)
+	return filepath.Join(rc.ContextDir(), pad.Md)
 }
 
 // KeyPath returns the full path to the encryption key file.
@@ -45,7 +42,7 @@ func ScratchpadPath() string {
 // Returns:
 //   - string: Resolved key file path
 func KeyPath() string {
-	config.MigrateKeyFile(rc.ContextDir())
+	crypto.MigrateKeyFile(rc.ContextDir())
 	return rc.KeyPath()
 }
 
@@ -74,19 +71,18 @@ func EnsureKey() error {
 	// First use: generate key.
 	key, genErr := crypto.GenerateKey()
 	if genErr != nil {
-		return fmt.Errorf("generate scratchpad key: %w", genErr)
+		return ctxerr.GenerateKey(genErr)
 	}
 
-	// Ensure parent directory exists (user-level or project-local).
-	if mkErr := os.MkdirAll(filepath.Dir(kp), config.PermKeyDir); mkErr != nil {
-		return fmt.Errorf("create key dir: %w", mkErr)
+	if mkErr := os.MkdirAll(filepath.Dir(kp), fs.PermKeyDir); mkErr != nil {
+		return ctxerr.MkdirKeyDir(mkErr)
 	}
 
 	if saveErr := crypto.SaveKey(kp, key); saveErr != nil {
-		return fmt.Errorf("save scratchpad key: %w", saveErr)
+		return ctxerr.SaveKey(saveErr)
 	}
 
-	fmt.Fprintf(os.Stderr, MsgKeyCreated, kp)
+	fmt.Fprintln(os.Stderr, fmt.Sprintf(assets.TextDesc(assets.TextDescKeyPadKeyCreated), kp)) //nolint:errcheck // best-effort notice
 	return nil
 }
 
@@ -107,17 +103,17 @@ func EnsureGitignore(contextDir, filename string) error {
 		return err
 	}
 
-	for _, line := range strings.Split(string(content), config.NewlineLF) {
+	for _, line := range strings.Split(string(content), token.NewlineLF) {
 		if strings.TrimSpace(line) == entry {
 			return nil
 		}
 	}
 
 	sep := ""
-	if len(content) > 0 && !strings.HasSuffix(string(content), config.NewlineLF) {
-		sep = config.NewlineLF
+	if len(content) > 0 && !strings.HasSuffix(string(content), token.NewlineLF) {
+		sep = token.NewlineLF
 	}
-	return os.WriteFile(gitignorePath, []byte(string(content)+sep+entry+config.NewlineLF), config.PermFile)
+	return os.WriteFile(gitignorePath, []byte(string(content)+sep+entry+token.NewlineLF), fs.PermFile)
 }
 
 // ReadEntries reads the scratchpad and returns its entries.
@@ -138,14 +134,13 @@ func ReadEntries() ([]string, error) {
 		if errors.Is(err, os.ErrNotExist) {
 			return nil, nil
 		}
-		return nil, fmt.Errorf("read scratchpad: %w", err)
+		return nil, ctxerr.ReadScratchpad(err)
 	}
 
 	if !rc.ScratchpadEncrypt() {
 		return ParseEntries(data), nil
 	}
 
-	// Encrypted mode: load key and decrypt
 	kp := KeyPath()
 	key, loadErr := crypto.LoadKey(kp)
 	if loadErr != nil {
@@ -175,10 +170,9 @@ func WriteEntries(entries []string) error {
 	plaintext := FormatEntries(entries)
 
 	if !rc.ScratchpadEncrypt() {
-		return os.WriteFile(path, plaintext, config.PermFile)
+		return os.WriteFile(path, plaintext, fs.PermFile)
 	}
 
-	// Encrypted mode: ensure key exists (auto-generate on first use).
 	if err := EnsureKey(); err != nil {
 		return err
 	}
@@ -194,5 +188,5 @@ func WriteEntries(entries []string) error {
 		return ctxerr.EncryptFailed(encErr)
 	}
 
-	return os.WriteFile(path, ciphertext, config.PermFile)
+	return os.WriteFile(path, ciphertext, fs.PermFile)
 }

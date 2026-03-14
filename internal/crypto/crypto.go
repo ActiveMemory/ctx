@@ -15,17 +15,13 @@ import (
 	"crypto/aes"
 	"crypto/cipher"
 	"crypto/rand"
-	"errors"
-	"fmt"
 	"io"
 	"os"
+
+	"github.com/ActiveMemory/ctx/internal/config/crypto"
+	"github.com/ActiveMemory/ctx/internal/config/fs"
+	ctxerr "github.com/ActiveMemory/ctx/internal/err"
 )
-
-// KeySize is the required key length in bytes (256 bits).
-const KeySize = 32
-
-// NonceSize is the GCM nonce length in bytes.
-const NonceSize = 12
 
 // GenerateKey returns a new 256-bit random key.
 //
@@ -33,9 +29,9 @@ const NonceSize = 12
 //   - []byte: A 32-byte random key
 //   - error: Non-nil if the system random source fails
 func GenerateKey() ([]byte, error) {
-	key := make([]byte, KeySize)
+	key := make([]byte, crypto.KeySize)
 	if _, err := io.ReadFull(rand.Reader, key); err != nil {
-		return nil, fmt.Errorf("generate key: %w", err)
+		return nil, ctxerr.CryptoGenerateKey(err)
 	}
 	return key, nil
 }
@@ -56,17 +52,17 @@ func GenerateKey() ([]byte, error) {
 func Encrypt(key, plaintext []byte) ([]byte, error) {
 	block, err := aes.NewCipher(key)
 	if err != nil {
-		return nil, fmt.Errorf("create cipher: %w", err)
+		return nil, ctxerr.CryptoCreateCipher(err)
 	}
 
 	gcm, err := cipher.NewGCM(block)
 	if err != nil {
-		return nil, fmt.Errorf("create GCM: %w", err)
+		return nil, ctxerr.CryptoCreateGCM(err)
 	}
 
-	nonce := make([]byte, NonceSize)
+	nonce := make([]byte, crypto.NonceSize)
 	if _, err := io.ReadFull(rand.Reader, nonce); err != nil {
-		return nil, fmt.Errorf("generate nonce: %w", err)
+		return nil, ctxerr.CryptoGenerateNonce(err)
 	}
 
 	ciphertext := gcm.Seal(nonce, nonce, plaintext, nil)
@@ -84,26 +80,26 @@ func Encrypt(key, plaintext []byte) ([]byte, error) {
 //   - error: Non-nil if key is wrong, ciphertext is too short, or
 //     authentication fails
 func Decrypt(key, ciphertext []byte) ([]byte, error) {
-	if len(ciphertext) < NonceSize {
-		return nil, errors.New("ciphertext too short")
+	if len(ciphertext) < crypto.NonceSize {
+		return nil, ctxerr.CryptoCiphertextTooShort()
 	}
 
 	block, err := aes.NewCipher(key)
 	if err != nil {
-		return nil, fmt.Errorf("create cipher: %w", err)
+		return nil, ctxerr.CryptoCreateCipher(err)
 	}
 
 	gcm, err := cipher.NewGCM(block)
 	if err != nil {
-		return nil, fmt.Errorf("create GCM: %w", err)
+		return nil, ctxerr.CryptoCreateGCM(err)
 	}
 
-	nonce := ciphertext[:NonceSize]
-	data := ciphertext[NonceSize:]
+	nonce := ciphertext[:crypto.NonceSize]
+	data := ciphertext[crypto.NonceSize:]
 
 	plaintext, err := gcm.Open(nil, nonce, data, nil)
 	if err != nil {
-		return nil, fmt.Errorf("decrypt: %w", err)
+		return nil, ctxerr.CryptoDecrypt(err)
 	}
 
 	return plaintext, nil
@@ -120,10 +116,10 @@ func Decrypt(key, ciphertext []byte) ([]byte, error) {
 func LoadKey(path string) ([]byte, error) {
 	key, err := os.ReadFile(path) //nolint:gosec // path is controlled by the caller (config constants)
 	if err != nil {
-		return nil, fmt.Errorf("read key: %w", err)
+		return nil, ctxerr.CryptoReadKey(err)
 	}
-	if len(key) != KeySize {
-		return nil, fmt.Errorf("invalid key size: got %d bytes, want %d", len(key), KeySize)
+	if len(key) != crypto.KeySize {
+		return nil, ctxerr.CryptoInvalidKeySize(len(key), crypto.KeySize)
 	}
 	return key, nil
 }
@@ -137,8 +133,8 @@ func LoadKey(path string) ([]byte, error) {
 // Returns:
 //   - error: Non-nil if the file cannot be written
 func SaveKey(path string, key []byte) error {
-	if err := os.WriteFile(path, key, 0600); err != nil {
-		return fmt.Errorf("write key: %w", err)
+	if err := os.WriteFile(path, key, fs.PermSecret); err != nil {
+		return ctxerr.CryptoWriteKey(err)
 	}
 	return nil
 }

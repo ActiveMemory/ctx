@@ -7,15 +7,17 @@
 package add
 
 import (
-	"fmt"
 	"time"
 
+	time2 "github.com/ActiveMemory/ctx/internal/config/time"
 	"github.com/spf13/cobra"
 
 	"github.com/ActiveMemory/ctx/internal/cli/remind/core"
+	ctxerr "github.com/ActiveMemory/ctx/internal/err"
+	"github.com/ActiveMemory/ctx/internal/write"
 )
 
-// RunAdd creates a new reminder and prints confirmation.
+// Run creates a new reminder and prints confirmation.
 //
 // Exported for reuse by the parent command's default action.
 //
@@ -26,7 +28,7 @@ import (
 //
 // Returns:
 //   - error: Non-nil on read/write failure or invalid date
-func RunAdd(cmd *cobra.Command, message, after string) error {
+func Run(cmd *cobra.Command, message, after string) error {
 	reminders, readErr := core.ReadReminders()
 	if readErr != nil {
 		return readErr
@@ -38,8 +40,8 @@ func RunAdd(cmd *cobra.Command, message, after string) error {
 		Created: time.Now().UTC().Format(time.RFC3339),
 	}
 	if after != "" {
-		if _, parseErr := time.Parse("2006-01-02", after); parseErr != nil {
-			return fmt.Errorf("invalid date %q (expected YYYY-MM-DD)", after)
+		if _, parseErr := time.Parse(time2.DateFormat, after); parseErr != nil {
+			return ctxerr.InvalidDateValue(after)
 		}
 		r.After = &after
 	}
@@ -49,10 +51,6 @@ func RunAdd(cmd *cobra.Command, message, after string) error {
 		return writeErr
 	}
 
-	suffix := ""
-	if r.After != nil {
-		suffix = fmt.Sprintf("  (after %s)", *r.After)
-	}
-	cmd.Println(fmt.Sprintf("  + [%d] %s%s", r.ID, r.Message, suffix))
+	write.ReminderAdded(cmd, r.ID, r.Message, r.After)
 	return nil
 }

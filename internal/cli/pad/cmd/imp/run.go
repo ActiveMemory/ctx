@@ -8,15 +8,17 @@ package imp
 
 import (
 	"bufio"
-	"fmt"
 	"io"
 	"os"
-	"path/filepath"
 	"strings"
 
+	"github.com/ActiveMemory/ctx/internal/config/pad"
 	"github.com/spf13/cobra"
 
 	"github.com/ActiveMemory/ctx/internal/cli/pad/core"
+	ctxerr "github.com/ActiveMemory/ctx/internal/err"
+	"github.com/ActiveMemory/ctx/internal/validation"
+	"github.com/ActiveMemory/ctx/internal/write"
 )
 
 // runImport reads lines from a file (or stdin) and appends them as entries.
@@ -32,13 +34,13 @@ func runImport(cmd *cobra.Command, file string) error {
 	if file == "-" {
 		r = os.Stdin
 	} else {
-		f, err := os.Open(file) //nolint:gosec // user-provided path is intentional
+		f, err := validation.OpenUserFile(file)
 		if err != nil {
-			return fmt.Errorf("open %s: %w", file, err)
+			return ctxerr.OpenFile(file, err)
 		}
 		defer func() {
 			if cerr := f.Close(); cerr != nil {
-				fmt.Fprintf(os.Stderr, "warning: close %s: %v\n", file, cerr)
+				write.ErrPadImportCloseWarning(cmd, file, cerr)
 			}
 		}()
 		r = f
@@ -60,11 +62,11 @@ func runImport(cmd *cobra.Command, file string) error {
 		count++
 	}
 	if scanErr := scanner.Err(); scanErr != nil {
-		return fmt.Errorf("read input: %w", scanErr)
+		return ctxerr.ReadInput(scanErr)
 	}
 
 	if count == 0 {
-		cmd.Println("No entries to import.")
+		write.PadImportNone(cmd)
 		return nil
 	}
 
@@ -72,7 +74,7 @@ func runImport(cmd *cobra.Command, file string) error {
 		return writeErr
 	}
 
-	cmd.Println(fmt.Sprintf("Imported %d entries.", count))
+	write.PadImportDone(cmd, count)
 	return nil
 }
 
@@ -88,15 +90,15 @@ func runImport(cmd *cobra.Command, file string) error {
 func runImportBlobs(cmd *cobra.Command, path string) error {
 	info, statErr := os.Stat(path)
 	if statErr != nil {
-		return fmt.Errorf("stat %s: %w", path, statErr)
+		return ctxerr.StatPath(path, statErr)
 	}
 	if !info.IsDir() {
-		return fmt.Errorf("%s is not a directory", path)
+		return ctxerr.NotDirectory(path)
 	}
 
 	dirEntries, readErr := os.ReadDir(path)
 	if readErr != nil {
-		return fmt.Errorf("read directory %s: %w", path, readErr)
+		return ctxerr.ReadDirectory(path, readErr)
 	}
 
 	entries, loadErr := core.ReadEntries()
@@ -111,30 +113,23 @@ func runImportBlobs(cmd *cobra.Command, path string) error {
 		}
 
 		name := de.Name()
-		filePath := filepath.Join(path, name)
 
-		data, fileErr := os.ReadFile(filePath) //nolint:gosec // user-provided path is intentional
+		data, fileErr := validation.SafeReadFile(path, name)
 		if fileErr != nil {
-			cmd.PrintErrln(fmt.Sprintf("  ! skipped: %s (%v)", name, fileErr))
+			write.ErrPadImportBlobSkipped(cmd, name, fileErr)
 			skipped++
 			continue
 		}
 
-		if len(data) > core.MaxBlobSize {
-			cmd.PrintErrln(fmt.Sprintf("  ! skipped: %s (exceeds %d byte limit)",
-				name, core.MaxBlobSize))
+		if len(data) > pad.MaxBlobSize {
+			write.ErrPadImportBlobTooLarge(cmd, name, pad.MaxBlobSize)
 			skipped++
 			continue
 		}
 
 		entries = append(entries, core.MakeBlob(name, data))
-		cmd.Println(fmt.Sprintf("  + %s", name))
+		write.PadImportBlobAdded(cmd, name)
 		added++
-	}
-
-	if added == 0 && skipped == 0 {
-		cmd.Println("No files to import.")
-		return nil
 	}
 
 	if added > 0 {
@@ -143,6 +138,6 @@ func runImportBlobs(cmd *cobra.Command, path string) error {
 		}
 	}
 
-	cmd.Println(fmt.Sprintf("Done. Added %d, skipped %d.", added, skipped))
+	write.PadImportBlobSummary(cmd, added, skipped)
 	return nil
 }

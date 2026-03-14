@@ -13,22 +13,21 @@ import (
 	"github.com/spf13/cobra"
 )
 
-// ExportCounts holds aggregate counters for export summary output.
-type ExportCounts struct {
-	New    int
-	Regen  int
-	Skip   int
-	Locked int
-}
-
 // ExportSummary prints what an export will (or would) do based on
 // aggregate counters.
 //
 // Parameters:
 //   - cmd: Cobra command for output. Nil is a no-op.
-//   - counts: aggregate export counters.
+//   - newCount: number of new files to export.
+//   - regenCount: number of existing files to regenerate.
+//   - skipCount: number of existing files to skip.
+//   - lockedCount: number of locked files to skip.
 //   - dryRun: when true, uses "Would" instead of "Will".
-func ExportSummary(cmd *cobra.Command, counts ExportCounts, dryRun bool) {
+func ExportSummary(
+	cmd *cobra.Command,
+	newCount, regenCount, skipCount, lockedCount int,
+	dryRun bool,
+) {
 	if cmd == nil {
 		return
 	}
@@ -38,21 +37,21 @@ func ExportSummary(cmd *cobra.Command, counts ExportCounts, dryRun bool) {
 		verb = "Would"
 	}
 	var parts []string
-	if counts.New > 0 {
-		parts = append(parts, fmt.Sprintf("export %d new", counts.New))
+	if newCount > 0 {
+		parts = append(parts, fmt.Sprintf("export %d new", newCount))
 	}
-	if counts.Regen > 0 {
-		parts = append(parts, fmt.Sprintf("regenerate %d existing", counts.Regen))
+	if regenCount > 0 {
+		parts = append(parts, fmt.Sprintf("regenerate %d existing", regenCount))
 	}
-	if counts.Skip > 0 {
-		parts = append(parts, fmt.Sprintf("skip %d existing", counts.Skip))
+	if skipCount > 0 {
+		parts = append(parts, fmt.Sprintf("skip %d existing", skipCount))
 	}
-	if counts.Locked > 0 {
-		parts = append(parts, fmt.Sprintf("skip %d locked", counts.Locked))
+	if lockedCount > 0 {
+		parts = append(parts, fmt.Sprintf("skip %d locked", lockedCount))
 	}
 	if len(parts) == 0 {
 		cmd.Println("Nothing to export.")
 		return
 	}
-	sprintf(cmd, "%s %s.", verb, strings.Join(parts, ", "))
+	cmd.Println(fmt.Sprintf("%s %s.", verb, strings.Join(parts, ", ")))
 }

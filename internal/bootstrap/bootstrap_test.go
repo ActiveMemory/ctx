@@ -11,9 +11,11 @@ import (
 	"path/filepath"
 	"testing"
 
+	"github.com/ActiveMemory/ctx/internal/config/cli"
+	"github.com/ActiveMemory/ctx/internal/config/ctx"
+	"github.com/ActiveMemory/ctx/internal/config/flag"
 	"github.com/spf13/cobra"
 
-	"github.com/ActiveMemory/ctx/internal/config"
 	"github.com/ActiveMemory/ctx/internal/rc"
 )
 
@@ -42,7 +44,7 @@ func TestRootCmd(t *testing.T) {
 	}
 
 	// Check global flags exist
-	contextDirFlag := cmd.PersistentFlags().Lookup(config.FlagContextDir)
+	contextDirFlag := cmd.PersistentFlags().Lookup(flag.ContextDir)
 	if contextDirFlag == nil {
 		t.Error("--context-dir flag not found")
 	}
@@ -63,7 +65,6 @@ func TestInitialize(t *testing.T) {
 		"status",
 		"load",
 		"add",
-		"complete",
 		"agent",
 		"drift",
 		"sync",
@@ -109,7 +110,7 @@ func TestRootCmdVersion(t *testing.T) {
 func TestRootCmdAllowOutsideCwdFlag(t *testing.T) {
 	cmd := RootCmd()
 
-	flag := cmd.PersistentFlags().Lookup(config.FlagAllowOutsideCwd)
+	flag := cmd.PersistentFlags().Lookup(flag.AllowOutsideCwd)
 	if flag == nil {
 		t.Fatal("--allow-outside-cwd flag not found")
 	}
@@ -123,7 +124,7 @@ func TestRootCmdPersistentPreRun_ContextDir(t *testing.T) {
 
 	dummy := &cobra.Command{
 		Use:         "dummy",
-		Annotations: map[string]string{config.AnnotationSkipInit: "true"},
+		Annotations: map[string]string{cli.AnnotationSkipInit: "true"},
 		Run:         func(cmd *cobra.Command, args []string) {},
 	}
 	cmd.AddCommand(dummy)
@@ -147,7 +148,7 @@ func TestRootCmdPersistentPreRun_DefaultFlags(t *testing.T) {
 
 	dummy := &cobra.Command{
 		Use:         "dummy",
-		Annotations: map[string]string{config.AnnotationSkipInit: "true"},
+		Annotations: map[string]string{cli.AnnotationSkipInit: "true"},
 		Run:         func(cmd *cobra.Command, args []string) {},
 	}
 	cmd.AddCommand(dummy)
@@ -185,7 +186,7 @@ func TestRootCmdPersistentPreRun_BoundaryViolation(t *testing.T) {
 	cmd := RootCmd()
 	dummy := &cobra.Command{
 		Use:         "dummy",
-		Annotations: map[string]string{config.AnnotationSkipInit: "true"},
+		Annotations: map[string]string{cli.AnnotationSkipInit: "true"},
 		Run:         func(cmd *cobra.Command, args []string) {},
 	}
 	cmd.AddCommand(dummy)
@@ -223,7 +224,7 @@ func TestInitGuard_AllowsAnnotatedCommand(t *testing.T) {
 	cmd := RootCmd()
 	dummy := &cobra.Command{
 		Use:         "dummy",
-		Annotations: map[string]string{config.AnnotationSkipInit: "true"},
+		Annotations: map[string]string{cli.AnnotationSkipInit: "true"},
 		Run:         func(cmd *cobra.Command, args []string) {},
 	}
 	cmd.AddCommand(dummy)
@@ -298,7 +299,7 @@ func TestInitGuard_AllowsInitializedCommand(t *testing.T) {
 	tmp := t.TempDir()
 
 	// Create required context files so Initialized() returns true.
-	for _, f := range config.FilesRequired {
+	for _, f := range ctx.FilesRequired {
 		path := filepath.Join(tmp, f)
 		if writeErr := os.WriteFile(path, []byte("# "+f+"\n"), 0o600); writeErr != nil {
 			t.Fatalf("setup: %v", writeErr)

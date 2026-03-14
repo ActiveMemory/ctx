@@ -16,56 +16,10 @@ import (
 	"github.com/ActiveMemory/ctx/internal/cli/add"
 	"github.com/ActiveMemory/ctx/internal/cli/initialize"
 	"github.com/ActiveMemory/ctx/internal/cli/task/core"
-	"github.com/ActiveMemory/ctx/internal/config"
+	"github.com/ActiveMemory/ctx/internal/config/ctx"
+	"github.com/ActiveMemory/ctx/internal/config/dir"
 	"github.com/ActiveMemory/ctx/internal/rc"
 )
-
-// TestSeparateTasks tests the separateTasks helper function.
-func TestSeparateTasks(t *testing.T) {
-	tests := []struct {
-		name              string
-		input             string
-		expectedCompleted int
-		expectedPending   int
-	}{
-		{
-			name:              "mixed tasks",
-			input:             "# Tasks\n\n### Phase 1\n- [x] Done task\n- [ ] Pending task\n",
-			expectedCompleted: 1,
-			expectedPending:   1,
-		},
-		{
-			name:              "all completed",
-			input:             "# Tasks\n\n- [x] Task 1\n- [x] Task 2\n",
-			expectedCompleted: 2,
-			expectedPending:   0,
-		},
-		{
-			name:              "all pending",
-			input:             "# Tasks\n\n- [ ] Task 1\n- [ ] Task 2\n",
-			expectedCompleted: 0,
-			expectedPending:   2,
-		},
-		{
-			name:              "no tasks",
-			input:             "# Tasks\n\nNo tasks here.\n",
-			expectedCompleted: 0,
-			expectedPending:   0,
-		},
-	}
-
-	for _, tt := range tests {
-		t.Run(tt.name, func(t *testing.T) {
-			_, _, stats := core.SeparateTasks(tt.input)
-			if stats.Completed != tt.expectedCompleted {
-				t.Errorf("SeparateTasks() completed = %d, want %d", stats.Completed, tt.expectedCompleted)
-			}
-			if stats.Pending != tt.expectedPending {
-				t.Errorf("SeparateTasks() pending = %d, want %d", stats.Pending, tt.expectedPending)
-			}
-		})
-	}
-}
 
 // TestTasksCommands tests the tasks subcommands.
 func TestTasksCommands(t *testing.T) {
@@ -162,126 +116,6 @@ func runTaskCmd(args ...string) (string, error) {
 	return buf.String(), err
 }
 
-func TestSeparateTasks_WithSubtasks(t *testing.T) {
-	content := `# Tasks
-
-### Phase 1
-- [x] Completed parent
-  - [ ] Subtask of completed (should be archived)
-  - [x] Done subtask
-- [ ] Pending parent
-  - [ ] Subtask of pending (should remain)
-`
-
-	remaining, archived, stats := core.SeparateTasks(content)
-
-	if stats.Completed != 1 {
-		t.Errorf("completed = %d, want 1", stats.Completed)
-	}
-	if stats.Pending != 1 {
-		t.Errorf("pending = %d, want 1", stats.Pending)
-	}
-
-	// Archived should contain the completed parent and its subtasks
-	if !strings.Contains(archived, "Completed parent") {
-		t.Error("archived should contain completed parent")
-	}
-	if !strings.Contains(archived, "Subtask of completed") {
-		t.Error("archived should contain subtask of completed parent")
-	}
-
-	// Remaining should contain the pending parent and its subtask
-	if !strings.Contains(remaining, "Pending parent") {
-		t.Error("remaining should contain pending parent")
-	}
-	if !strings.Contains(remaining, "Subtask of pending") {
-		t.Error("remaining should contain subtask of pending parent")
-	}
-}
-
-func TestSeparateTasks_MultiplePhases(t *testing.T) {
-	content := `# Tasks
-
-### Phase 1
-- [x] Phase 1 done
-- [ ] Phase 1 pending
-
-### Phase 2
-- [x] Phase 2 done
-- [ ] Phase 2 pending
-`
-
-	remaining, archived, stats := core.SeparateTasks(content)
-
-	if stats.Completed != 2 {
-		t.Errorf("completed = %d, want 2", stats.Completed)
-	}
-	if stats.Pending != 2 {
-		t.Errorf("pending = %d, want 2", stats.Pending)
-	}
-
-	// Each phase header should appear in archived since both have completed tasks
-	if !strings.Contains(archived, "Phase 1") {
-		t.Error("archived should contain Phase 1 header")
-	}
-	if !strings.Contains(archived, "Phase 2") {
-		t.Error("archived should contain Phase 2 header")
-	}
-
-	// Remaining should still have phase headers and pending tasks
-	if !strings.Contains(remaining, "Phase 1 pending") {
-		t.Error("remaining should contain Phase 1 pending task")
-	}
-	if !strings.Contains(remaining, "Phase 2 pending") {
-		t.Error("remaining should contain Phase 2 pending task")
-	}
-}
-
-func TestSeparateTasks_PhaseWithNoCompletedTasks(t *testing.T) {
-	content := `# Tasks
-
-### Phase 1
-- [ ] Only pending
-
-### Phase 2
-- [x] Only completed
-`
-
-	_, archived, _ := core.SeparateTasks(content)
-
-	// Phase 1 should NOT appear in archived (no completed tasks)
-	lines := strings.Split(archived, "\n")
-	for _, line := range lines {
-		if strings.Contains(line, "Phase 1") {
-			t.Error("Phase 1 should not be in archived (no completed tasks)")
-		}
-	}
-	if !strings.Contains(archived, "Phase 2") {
-		t.Error("Phase 2 should be in archived")
-	}
-}
-
-func TestSeparateTasks_NonTaskLines(t *testing.T) {
-	content := `# Tasks
-
-Some description text.
-
-- [x] Done
-- [ ] Pending
-
-More notes.
-`
-
-	remaining, _, _ := core.SeparateTasks(content)
-
-	if !strings.Contains(remaining, "Some description text.") {
-		t.Error("non-task lines should remain")
-	}
-	if !strings.Contains(remaining, "More notes.") {
-		t.Error("trailing non-task lines should remain")
-	}
-}
-
 func TestCountPendingTasks(t *testing.T) {
 	tests := []struct {
 		name     string
@@ -329,8 +163,8 @@ func TestTasksFilePath(t *testing.T) {
 	setupTaskDir(t)
 
 	path := core.TasksFilePath()
-	if !strings.Contains(path, config.FileTask) {
-		t.Errorf("TasksFilePath() = %q, want to contain %q", path, config.FileTask)
+	if !strings.Contains(path, ctx.Task) {
+		t.Errorf("TasksFilePath() = %q, want to contain %q", path, ctx.Task)
 	}
 }
 
@@ -338,8 +172,8 @@ func TestArchiveDirPath(t *testing.T) {
 	setupTaskDir(t)
 
 	path := core.ArchiveDirPath()
-	if !strings.Contains(path, config.DirArchive) {
-		t.Errorf("ArchiveDirPath() = %q, want to contain %q", path, config.DirArchive)
+	if !strings.Contains(path, dir.Archive) {
+		t.Errorf("ArchiveDirPath() = %q, want to contain %q", path, dir.Archive)
 	}
 }
 
@@ -356,8 +190,8 @@ func TestSnapshotCommand_NoTasks(t *testing.T) {
 
 	// Create .context but no TASKS.md
 	rc.Reset()
-	rc.OverrideContextDir(config.DirContext)
-	if err := os.MkdirAll(config.DirContext, 0750); err != nil {
+	rc.OverrideContextDir(dir.Context)
+	if err := os.MkdirAll(dir.Context, 0750); err != nil {
 		t.Fatal(err)
 	}
 
@@ -365,8 +199,8 @@ func TestSnapshotCommand_NoTasks(t *testing.T) {
 	if err == nil {
 		t.Fatal("expected error when TASKS.md doesn't exist")
 	}
-	if !strings.Contains(err.Error(), "no TASKS.md") {
-		t.Errorf("error = %q, want 'no TASKS.md'", err.Error())
+	if !strings.Contains(err.Error(), "TASKS.md not found") {
+		t.Errorf("error = %q, want 'TASKS.md not found'", err.Error())
 	}
 }
 
@@ -389,7 +223,7 @@ func TestSnapshotCommand_DefaultName(t *testing.T) {
 	}
 
 	// Verify file was created with default name
-	entries, err := os.ReadDir(filepath.Join(config.DirContext, config.DirArchive))
+	entries, err := os.ReadDir(filepath.Join(dir.Context, dir.Archive))
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -416,8 +250,8 @@ func TestArchiveCommand_NoTasks(t *testing.T) {
 	})
 
 	rc.Reset()
-	rc.OverrideContextDir(config.DirContext)
-	if err := os.MkdirAll(config.DirContext, 0750); err != nil {
+	rc.OverrideContextDir(dir.Context)
+	if err := os.MkdirAll(dir.Context, 0750); err != nil {
 		t.Fatal(err)
 	}
 
@@ -457,7 +291,7 @@ func TestArchiveCommand_WithCompletedTasks(t *testing.T) {
 - [ ] Pending task 1
 - [x] Completed task 2
 `
-	tasksPath := filepath.Join(config.DirContext, config.FileTask)
+	tasksPath := filepath.Join(dir.Context, ctx.Task)
 	if err := os.WriteFile(tasksPath, []byte(tasksContent), 0600); err != nil {
 		t.Fatal(err)
 	}
@@ -494,7 +328,7 @@ func TestArchiveCommand_DryRunWithCompleted(t *testing.T) {
 - [x] Done task
 - [ ] Not done task
 `
-	tasksPath := filepath.Join(config.DirContext, config.FileTask)
+	tasksPath := filepath.Join(dir.Context, ctx.Task)
 	if err := os.WriteFile(tasksPath, []byte(tasksContent), 0600); err != nil {
 		t.Fatal(err)
 	}
@@ -550,20 +384,11 @@ func TestArchiveCommand_DryRunFlag(t *testing.T) {
 	}
 }
 
-func TestSeparateTasks_EmptyContent(t *testing.T) {
-	remaining, archived, stats := core.SeparateTasks("")
-	if stats.Completed != 0 || stats.Pending != 0 {
-		t.Errorf("stats = %+v, want zero for empty content", stats)
-	}
-	_ = remaining
-	_ = archived
-}
-
 func TestSnapshotCommand_SnapshotContentFormat(t *testing.T) {
 	setupTaskDir(t)
 
 	tasksContent := "# Tasks\n\n- [ ] My task\n"
-	tasksPath := filepath.Join(config.DirContext, config.FileTask)
+	tasksPath := filepath.Join(dir.Context, ctx.Task)
 	if err := os.WriteFile(tasksPath, []byte(tasksContent), 0600); err != nil {
 		t.Fatal(err)
 	}
@@ -574,13 +399,13 @@ func TestSnapshotCommand_SnapshotContentFormat(t *testing.T) {
 	}
 
 	// Find the snapshot file and verify content
-	entries, err := os.ReadDir(filepath.Join(config.DirContext, config.DirArchive))
+	entries, err := os.ReadDir(filepath.Join(dir.Context, dir.Archive))
 	if err != nil {
 		t.Fatal(err)
 	}
 	for _, e := range entries {
 		if strings.Contains(e.Name(), "my-snap") {
-			data, err := os.ReadFile(filepath.Join(config.DirContext, config.DirArchive, e.Name()))
+			data, err := os.ReadFile(filepath.Join(dir.Context, dir.Archive, e.Name()))
 			if err != nil {
 				t.Fatal(err)
 			}

@@ -10,6 +10,8 @@ import (
 	"encoding/json"
 	"fmt"
 
+	"github.com/ActiveMemory/ctx/internal/assets"
+	"github.com/ActiveMemory/ctx/internal/config/doctor"
 	"github.com/spf13/cobra"
 )
 
@@ -39,12 +41,21 @@ func OutputJSON(cmd *cobra.Command, report *Report) error {
 // Returns:
 //   - error: Always nil (satisfies interface)
 func OutputHuman(cmd *cobra.Command, report *Report) error {
-	cmd.Println("ctx doctor")
-	cmd.Println("==========")
+	cmd.Println(assets.TextDesc(assets.TextDescKeyDoctorOutputHeader))
+	cmd.Println(assets.TextDesc(assets.TextDescKeyDoctorOutputSeparator))
 	cmd.Println()
 
 	// Group by category.
-	categories := []string{"Structure", "Quality", "Plugin", "Hooks", "State", "Size", "Resources", "Events"}
+	categories := []string{
+		doctor.CategoryStructure,
+		doctor.CategoryQuality,
+		doctor.CategoryPlugin,
+		doctor.CategoryHooks,
+		doctor.CategoryState,
+		doctor.CategorySize,
+		doctor.CategoryResources,
+		doctor.CategoryEvents,
+	}
 	grouped := make(map[string][]Result)
 	for _, r := range report.Results {
 		grouped[r.Category] = append(grouped[r.Category], r)
@@ -58,26 +69,32 @@ func OutputHuman(cmd *cobra.Command, report *Report) error {
 		cmd.Println(cat)
 		for _, r := range results {
 			icon := statusIcon(r.Status)
-			cmd.Println(fmt.Sprintf("  %s %s", icon, r.Message))
+			cmd.Println(fmt.Sprintf(assets.TextDesc(assets.TextDescKeyDoctorOutputResultLine), icon, r.Message))
 		}
 		cmd.Println()
 	}
 
-	cmd.Println(fmt.Sprintf("Summary: %d warnings, %d errors", report.Warnings, report.Errors))
+	cmd.Println(fmt.Sprintf(assets.TextDesc(assets.TextDescKeyDoctorOutputSummary), report.Warnings, report.Errors))
 	return nil
 }
 
 // statusIcon returns a unicode icon for the given status string.
+//
+// Parameters:
+//   - status: One of StatusOK, StatusWarning, StatusError, or StatusInfo
+//
+// Returns:
+//   - string: A single unicode character representing the status
 func statusIcon(status string) string {
 	switch status {
 	case StatusOK:
-		return "\u2713" // check mark
+		return "✓"
 	case StatusWarning:
-		return "\u26a0" // warning sign
+		return "⚠"
 	case StatusError:
-		return "\u2717" // ballot x
+		return "✗"
 	case StatusInfo:
-		return "\u25cb" // white circle
+		return "○"
 	default:
 		return "?"
 	}

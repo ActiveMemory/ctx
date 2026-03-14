@@ -7,17 +7,17 @@
 package show
 
 import (
-	"fmt"
 	"os"
-	"path/filepath"
 
+	"github.com/ActiveMemory/ctx/internal/config/file"
 	"github.com/spf13/cobra"
 
 	"github.com/ActiveMemory/ctx/internal/cli/prompt/core"
-	"github.com/ActiveMemory/ctx/internal/config"
+	ctxerr "github.com/ActiveMemory/ctx/internal/err"
+	"github.com/ActiveMemory/ctx/internal/validation"
 )
 
-// runShow reads and prints a prompt template by name.
+// Run reads and prints a prompt template by name.
 //
 // Parameters:
 //   - cmd: Cobra command for output
@@ -25,15 +25,15 @@ import (
 //
 // Returns:
 //   - error: Non-nil on read failure or missing template
-func runShow(cmd *cobra.Command, name string) error {
-	path := filepath.Join(core.PromptsDir(), name+config.ExtMarkdown)
-
-	content, readErr := os.ReadFile(path) //nolint:gosec // user-provided name is intentional
+func Run(cmd *cobra.Command, name string) error {
+	content, readErr := validation.SafeReadFile(
+		core.PromptsDir(), name+file.ExtMarkdown,
+	)
 	if readErr != nil {
 		if os.IsNotExist(readErr) {
-			return fmt.Errorf("prompt %q not found", name)
+			return ctxerr.PromptNotFound(name)
 		}
-		return fmt.Errorf("read prompt: %w", readErr)
+		return ctxerr.ReadFile(readErr)
 	}
 
 	cmd.Print(string(content))

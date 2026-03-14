@@ -13,46 +13,38 @@ import (
 	"path/filepath"
 	"strings"
 
+	"github.com/ActiveMemory/ctx/internal/config/file"
+	"github.com/ActiveMemory/ctx/internal/config/msg"
+	"github.com/spf13/cobra"
+
 	"github.com/ActiveMemory/ctx/internal/assets"
 	"github.com/ActiveMemory/ctx/internal/assets/hooks/messages"
-	"github.com/ActiveMemory/ctx/internal/rc"
-	"github.com/spf13/cobra"
+	"github.com/ActiveMemory/ctx/internal/cli/system/core"
+	ctxerr "github.com/ActiveMemory/ctx/internal/err"
 )
 
-// messageListCmd returns the "ctx system message list" subcommand.
-func messageListCmd() *cobra.Command {
-	cmd := &cobra.Command{
-		Use:   "list",
-		Short: "Show all hook messages with category and override status",
-		RunE: func(cmd *cobra.Command, _ []string) error {
-			return runMessageList(cmd)
-		},
-	}
-	cmd.Flags().Bool("json", false, assets.FlagDesc("system.message.json"))
-	return cmd
-}
-
-type messageListEntry struct {
-	Hook         string   `json:"hook"`
-	Variant      string   `json:"variant"`
-	Category     string   `json:"category"`
-	Description  string   `json:"description"`
-	TemplateVars []string `json:"template_vars"`
-	HasOverride  bool     `json:"has_override"`
-}
-
-func runMessageList(cmd *cobra.Command) error {
+// RunMessageList executes the message list logic.
+//
+// Collects all registered hook messages from the registry and outputs
+// them as either a JSON array or a formatted table.
+//
+// Parameters:
+//   - cmd: Cobra command for output and flag access
+//
+// Returns:
+//   - error: Non-nil on JSON encoding failure
+func RunMessageList(cmd *cobra.Command) error {
 	registry := messages.Registry()
-	entries := make([]messageListEntry, 0, len(registry))
+	entries := make([]core.MessageListEntry, 0, len(registry))
 
 	for _, info := range registry {
-		entry := messageListEntry{
+		entry := core.MessageListEntry{
 			Hook:         info.Hook,
 			Variant:      info.Variant,
 			Category:     info.Category,
 			Description:  info.Description,
 			TemplateVars: info.TemplateVars,
-			HasOverride:  hasOverride(info.Hook, info.Variant),
+			HasOverride:  core.HasOverride(info.Hook, info.Variant),
 		}
 		if entry.TemplateVars == nil {
 			entry.TemplateVars = []string{}
@@ -68,47 +60,53 @@ func runMessageList(cmd *cobra.Command) error {
 	}
 
 	// Table output
-	cmd.Println(fmt.Sprintf("%-24s %-20s %-16s %s", "Hook", "Variant", "Category", "Override"))
-	cmd.Println(fmt.Sprintf("%-24s %-20s %-16s %s",
-		strings.Repeat("\u2500", 22),
-		strings.Repeat("\u2500", 18),
-		strings.Repeat("\u2500", 14),
-		strings.Repeat("\u2500", 8)))
+	headerFmt := fmt.Sprintf("%%-%ds %%-%ds %%-%ds %%s",
+		msg.MessageColHook, msg.MessageColVariant, msg.MessageColCategory)
+	cmd.Println(fmt.Sprintf(headerFmt,
+		assets.TextDesc(assets.TextDescKeyMessageListHeaderHook),
+		assets.TextDesc(assets.TextDescKeyMessageListHeaderVariant),
+		assets.TextDesc(assets.TextDescKeyMessageListHeaderCategory),
+		assets.TextDesc(assets.TextDescKeyMessageListHeaderOverride)))
+	cmd.Println(fmt.Sprintf(headerFmt,
+		strings.Repeat("\u2500", msg.MessageSepHook),
+		strings.Repeat("\u2500", msg.MessageSepVariant),
+		strings.Repeat("\u2500", msg.MessageSepCategory),
+		strings.Repeat("\u2500", msg.MessageSepOverride)))
 
 	for _, e := range entries {
 		override := ""
 		if e.HasOverride {
-			override = "override"
+			override = assets.TextDesc(assets.TextDescKeyMessageOverrideLabel)
 		}
-		cmd.Println(fmt.Sprintf("%-24s %-20s %-16s %s", e.Hook, e.Variant, e.Category, override))
+		cmd.Println(fmt.Sprintf(headerFmt, e.Hook, e.Variant, e.Category, override))
 	}
 
 	return nil
 }
 
-// messageShowCmd returns the "ctx system message show" subcommand.
-func messageShowCmd() *cobra.Command {
-	return &cobra.Command{
-		Use:   "show <hook> <variant>",
-		Short: "Print the effective message template for a hook/variant",
-		Args:  cobra.ExactArgs(2),
-		RunE: func(cmd *cobra.Command, args []string) error {
-			return runMessageShow(cmd, args[0], args[1])
-		},
-	}
-}
-
-func runMessageShow(cmd *cobra.Command, hook, variant string) error {
+// RunMessageShow executes the message show logic.
+//
+// Displays the content of a hook message template, checking for a user
+// override first and falling back to the embedded default.
+//
+// Parameters:
+//   - cmd: Cobra command for output
+//   - hook: hook name
+//   - variant: template variant name
+//
+// Returns:
+//   - error: Non-nil if the hook/variant is unknown or template is missing
+func RunMessageShow(cmd *cobra.Command, hook, variant string) error {
 	info := messages.Lookup(hook, variant)
 	if info == nil {
-		return validationError(hook, variant)
+		return core.ValidationError(hook, variant)
 	}
 
 	// Check user override first
-	oPath := overridePath(hook, variant)
+	oPath := core.OverridePath(hook, variant)
 	if data, readErr := os.ReadFile(oPath); readErr == nil { //nolint:gosec // project-local override path
-		cmd.Println(fmt.Sprintf("Source: user override (%s)", oPath))
-		printTemplateVars(cmd, info)
+		cmd.Println(fmt.Sprintf(assets.TextDesc(assets.TextDescKeyMessageSourceOverride), oPath))
+		core.PrintTemplateVars(cmd, info)
 		cmd.Println()
 		cmd.Print(string(data))
 		if len(data) > 0 && data[len(data)-1] != '\n' {
@@ -118,13 +116,13 @@ func runMessageShow(cmd *cobra.Command, hook, variant string) error {
 	}
 
 	// Embedded default
-	data, readErr := assets.HookMessage(hook, variant+".txt")
+	data, readErr := assets.HookMessage(hook, variant+file.ExtTxt)
 	if readErr != nil {
-		return fmt.Errorf("embedded template not found for %s/%s", hook, variant)
+		return ctxerr.EmbeddedTemplateNotFound(hook, variant)
 	}
 
-	cmd.Println("Source: embedded default")
-	printTemplateVars(cmd, info)
+	cmd.Println(assets.TextDesc(assets.TextDescKeyMessageSourceDefault))
+	core.PrintTemplateVars(cmd, info)
 	cmd.Println()
 	cmd.Print(string(data))
 	if len(data) > 0 && data[len(data)-1] != '\n' {
@@ -133,89 +131,88 @@ func runMessageShow(cmd *cobra.Command, hook, variant string) error {
 	return nil
 }
 
-// messageEditCmd returns the "ctx system message edit" subcommand.
-func messageEditCmd() *cobra.Command {
-	return &cobra.Command{
-		Use:   "edit <hook> <variant>",
-		Short: "Copy the embedded default to .context/ for editing",
-		Args:  cobra.ExactArgs(2),
-		RunE: func(cmd *cobra.Command, args []string) error {
-			return runMessageEdit(cmd, args[0], args[1])
-		},
-	}
-}
-
-func runMessageEdit(cmd *cobra.Command, hook, variant string) error {
+// RunMessageEdit executes the message edit logic.
+//
+// Creates a user override file by copying the embedded default template
+// to the project's .context/hooks/messages/ directory.
+//
+// Parameters:
+//   - cmd: Cobra command for output
+//   - hook: hook name
+//   - variant: template variant name
+//
+// Returns:
+//   - error: Non-nil if the hook/variant is unknown, override exists,
+//     or file operations fail
+func RunMessageEdit(cmd *cobra.Command, hook, variant string) error {
 	info := messages.Lookup(hook, variant)
 	if info == nil {
-		return validationError(hook, variant)
+		return core.ValidationError(hook, variant)
 	}
 
-	oPath := overridePath(hook, variant)
+	oPath := core.OverridePath(hook, variant)
 
 	// Refuse if override already exists
 	if _, statErr := os.Stat(oPath); statErr == nil {
-		return fmt.Errorf("override already exists at %s\nEdit it directly or use `ctx system message reset %s %s` first",
-			oPath, hook, variant)
+		return ctxerr.OverrideExists(oPath, hook, variant)
 	}
 
 	// Warn for ctx-specific messages
 	if info.Category == messages.CategoryCtxSpecific {
-		cmd.Println("Warning: this message is ctx-specific (intended for ctx development).")
-		cmd.Println("Customizing it may produce unexpected results.")
+		cmd.Println(assets.TextDesc(assets.TextDescKeyMessageCtxSpecificWarning))
 		cmd.Println()
 	}
 
 	// Read embedded default
-	data, readErr := assets.HookMessage(hook, variant+".txt")
+	data, readErr := assets.HookMessage(hook, variant+file.ExtTxt)
 	if readErr != nil {
-		return fmt.Errorf("embedded template not found for %s/%s", hook, variant)
+		return ctxerr.EmbeddedTemplateNotFound(hook, variant)
 	}
 
 	// Create directories
 	dir := filepath.Dir(oPath)
 	if mkdirErr := os.MkdirAll(dir, 0o750); mkdirErr != nil {
-		return fmt.Errorf("failed to create directory %s: %w", dir, mkdirErr)
+		return ctxerr.CreateDir(dir, mkdirErr)
 	}
 
 	// Write override file
 	if writeErr := os.WriteFile(oPath, data, 0o600); writeErr != nil {
-		return fmt.Errorf("failed to write override %s: %w", oPath, writeErr)
+		return ctxerr.WriteOverride(oPath, writeErr)
 	}
 
-	cmd.Println(fmt.Sprintf("Override created at %s", oPath))
-	cmd.Println("Edit this file to customize the message.")
-	printTemplateVars(cmd, info)
+	cmd.Println(fmt.Sprintf(assets.TextDesc(assets.TextDescKeyMessageOverrideCreated), oPath))
+	cmd.Println(assets.TextDesc(assets.TextDescKeyMessageEditHint))
+	core.PrintTemplateVars(cmd, info)
 
 	return nil
 }
 
-// messageResetCmd returns the "ctx system message reset" subcommand.
-func messageResetCmd() *cobra.Command {
-	return &cobra.Command{
-		Use:   "reset <hook> <variant>",
-		Short: "Delete a user override and revert to embedded default",
-		Args:  cobra.ExactArgs(2),
-		RunE: func(cmd *cobra.Command, args []string) error {
-			return runMessageReset(cmd, args[0], args[1])
-		},
-	}
-}
-
-func runMessageReset(cmd *cobra.Command, hook, variant string) error {
+// RunMessageReset executes the message reset logic.
+//
+// Removes a user override file, reverting to the embedded default.
+// Cleans up empty parent directories after removal.
+//
+// Parameters:
+//   - cmd: Cobra command for output
+//   - hook: hook name
+//   - variant: template variant name
+//
+// Returns:
+//   - error: Non-nil if the hook/variant is unknown or removal fails
+func RunMessageReset(cmd *cobra.Command, hook, variant string) error {
 	info := messages.Lookup(hook, variant)
 	if info == nil {
-		return validationError(hook, variant)
+		return core.ValidationError(hook, variant)
 	}
 
-	oPath := overridePath(hook, variant)
+	oPath := core.OverridePath(hook, variant)
 
 	if removeErr := os.Remove(oPath); removeErr != nil {
 		if os.IsNotExist(removeErr) {
-			cmd.Println(fmt.Sprintf("No override found for %s/%s. Already using embedded default.", hook, variant))
+			cmd.Println(fmt.Sprintf(assets.TextDesc(assets.TextDescKeyMessageNoOverride), hook, variant))
 			return nil
 		}
-		return fmt.Errorf("failed to remove override %s: %w", oPath, removeErr)
+		return ctxerr.RemoveOverride(oPath, removeErr)
 	}
 
 	// Clean up empty parent directories
@@ -224,39 +221,6 @@ func runMessageReset(cmd *cobra.Command, hook, variant string) error {
 	messagesDir := filepath.Dir(hookDir)
 	_ = os.Remove(messagesDir) // only succeeds if empty
 
-	cmd.Println(fmt.Sprintf("Override removed for %s/%s. Using embedded default.", hook, variant))
+	cmd.Println(fmt.Sprintf(assets.TextDesc(assets.TextDescKeyMessageOverrideRemoved), hook, variant))
 	return nil
-}
-
-// overridePath returns the user override file path for a hook/variant.
-func overridePath(hook, variant string) string {
-	return filepath.Join(rc.ContextDir(), "hooks", "messages", hook, variant+".txt")
-}
-
-// hasOverride checks whether a user override file exists.
-func hasOverride(hook, variant string) bool {
-	_, statErr := os.Stat(overridePath(hook, variant))
-	return statErr == nil
-}
-
-// validationError returns an error for an unknown hook/variant.
-func validationError(hook, variant string) error {
-	// Check if the hook exists at all
-	if messages.Variants(hook) == nil {
-		return fmt.Errorf("unknown hook: %s\nRun `ctx system message list` to see available hooks", hook)
-	}
-	return fmt.Errorf("unknown variant %q for hook %q\nRun `ctx system message list` to see available variants", variant, hook)
-}
-
-// printTemplateVars prints available template variables if any exist.
-func printTemplateVars(cmd *cobra.Command, info *messages.HookMessageInfo) {
-	if len(info.TemplateVars) == 0 {
-		cmd.Println("Template variables: (none)")
-		return
-	}
-	formatted := make([]string, len(info.TemplateVars))
-	for i, v := range info.TemplateVars {
-		formatted[i] = "{{." + v + "}}"
-	}
-	cmd.Println(fmt.Sprintf("Template variables: %s", strings.Join(formatted, ", ")))
 }

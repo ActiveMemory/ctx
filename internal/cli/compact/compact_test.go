@@ -11,8 +11,8 @@ import (
 	"testing"
 
 	"github.com/ActiveMemory/ctx/internal/cli/add"
-	"github.com/ActiveMemory/ctx/internal/cli/complete"
 	"github.com/ActiveMemory/ctx/internal/cli/initialize"
+	taskcomplete "github.com/ActiveMemory/ctx/internal/cli/task/cmd/complete"
 )
 
 // TestCompactCommand tests the compact command.
@@ -72,7 +72,7 @@ func TestCompactWithTasks(t *testing.T) {
 		t.Fatalf("add task failed: %v", err)
 	}
 
-	completeCmd := complete.Cmd()
+	completeCmd := taskcomplete.Cmd()
 	completeCmd.SetArgs([]string{"Task to complete"})
 	if err := completeCmd.Execute(); err != nil {
 		t.Fatalf("complete task failed: %v", err)

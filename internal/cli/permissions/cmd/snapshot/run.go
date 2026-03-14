@@ -7,41 +7,43 @@
 package snapshot
 
 import (
-	"fmt"
 	"os"
 
+	"github.com/ActiveMemory/ctx/internal/config/claude"
+	"github.com/ActiveMemory/ctx/internal/config/fs"
 	"github.com/spf13/cobra"
 
-	"github.com/ActiveMemory/ctx/internal/cli/permissions/core"
-	"github.com/ActiveMemory/ctx/internal/config"
+	ctxerr "github.com/ActiveMemory/ctx/internal/err"
+	"github.com/ActiveMemory/ctx/internal/write"
 )
 
-// RunSnapshot saves settings.local.json as the golden image.
+// Run saves settings.local.json as the golden image.
 //
 // Parameters:
 //   - cmd: Cobra command for output
 //
 // Returns:
 //   - error: Non-nil on read/write failure or missing settings file
-func RunSnapshot(cmd *cobra.Command) error {
-	content, readErr := os.ReadFile(config.FileSettings)
+func Run(cmd *cobra.Command) error {
+	content, readErr := os.ReadFile(claude.Settings)
 	if readErr != nil {
 		if os.IsNotExist(readErr) {
-			return core.ErrSettingsNotFound()
+			return ctxerr.SettingsNotFound()
 		}
-		return core.ErrReadFile(config.FileSettings, readErr)
+		return ctxerr.FileRead(claude.Settings, readErr)
 	}
 
-	// Determine message based on whether golden already exists.
-	verb := "Saved"
-	if _, statErr := os.Stat(config.FileSettingsGolden); statErr == nil {
-		verb = "Updated"
+	updated := false
+	if _, statErr := os.Stat(claude.SettingsGolden); statErr == nil {
+		updated = true
 	}
 
-	if writeErr := os.WriteFile(config.FileSettingsGolden, content, config.PermFile); writeErr != nil {
-		return core.ErrWriteFile(config.FileSettingsGolden, writeErr)
+	if writeErr := os.WriteFile(
+		claude.SettingsGolden, content, fs.PermFile,
+	); writeErr != nil {
+		return ctxerr.FileWrite(claude.SettingsGolden, writeErr)
 	}
 
-	cmd.Println(fmt.Sprintf("%s golden image: %s", verb, config.FileSettingsGolden))
+	write.SnapshotDone(cmd, updated, claude.SettingsGolden)
 	return nil
 }

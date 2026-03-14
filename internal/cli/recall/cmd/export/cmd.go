@@ -20,55 +20,49 @@ import (
 func Cmd() *cobra.Command {
 	var opts core.ExportOpts
 
-	short, long := assets.CommandDesc("recall.export")
+	short, long := assets.CommandDesc(assets.CmdDescKeyRecallExport)
 
 	cmd := &cobra.Command{
 		Use:   "export [session-id]",
 		Short: short,
 		Long:  long,
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return runExport(cmd, args, opts)
+			return Run(cmd, args, opts)
 		},
 	}
 
 	cmd.Flags().BoolVar(
-		&opts.All, "all", false, assets.FlagDesc("recall.export.all"),
+		&opts.All, "all", false, assets.FlagDesc(assets.FlagDescKeyRecallExportAll),
 	)
 	cmd.Flags().BoolVar(
-		&opts.AllProjects, "all-projects", false, assets.FlagDesc("recall.export.all-projects"),
+		&opts.AllProjects, "all-projects", false,
+		assets.FlagDesc(assets.FlagDescKeyRecallExportAllProjects),
 	)
 	cmd.Flags().BoolVar(
 		&opts.Regenerate,
 		"regenerate", false,
-		assets.FlagDesc("recall.export.regenerate"),
+		assets.FlagDesc(assets.FlagDescKeyRecallExportRegenerate),
 	)
 	cmd.Flags().BoolVar(
 		&opts.KeepFrontmatter,
 		"keep-frontmatter", true,
-		assets.FlagDesc("recall.export.keep-frontmatter"),
+		assets.FlagDesc(assets.FlagDescKeyRecallExportKeepFrontmatter),
 	)
 
-	// Deprecated: --force is replaced by --keep-frontmatter=false.
-	cmd.Flags().BoolVar(
-		&opts.Force,
-		"force", false,
-		assets.FlagDesc("recall.export.force"),
-	)
-	_ = cmd.Flags().MarkDeprecated("force", "use --keep-frontmatter=false instead")
 	cmd.Flags().BoolVarP(
 		&opts.Yes,
 		"yes", "y", false,
-		assets.FlagDesc("recall.export.yes"),
+		assets.FlagDesc(assets.FlagDescKeyRecallExportYes),
 	)
 	cmd.Flags().BoolVar(
 		&opts.DryRun,
 		"dry-run", false,
-		assets.FlagDesc("recall.export.dry-run"),
+		assets.FlagDesc(assets.FlagDescKeyRecallExportDryRun),
 	)
 
 	// Deprecated: --skip-existing is now the default behavior for --all.
 	var skipExisting bool
-	cmd.Flags().BoolVar(&skipExisting, "skip-existing", false, assets.FlagDesc("recall.export.skip-existing"))
+	cmd.Flags().BoolVar(&skipExisting, "skip-existing", false, assets.FlagDesc(assets.FlagDescKeyRecallExportSkipExisting))
 	_ = cmd.Flags().MarkDeprecated("skip-existing", "this is now the default behavior for --all")
 
 	return cmd

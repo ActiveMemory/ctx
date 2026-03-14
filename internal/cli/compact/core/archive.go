@@ -12,14 +12,19 @@ import (
 	"path/filepath"
 	"time"
 
-	"github.com/ActiveMemory/ctx/internal/config"
+	"github.com/ActiveMemory/ctx/internal/config/archive"
+	"github.com/ActiveMemory/ctx/internal/config/dir"
+	"github.com/ActiveMemory/ctx/internal/config/fs"
+	time2 "github.com/ActiveMemory/ctx/internal/config/time"
+	"github.com/ActiveMemory/ctx/internal/config/token"
+	ctxerr "github.com/ActiveMemory/ctx/internal/err"
 	"github.com/ActiveMemory/ctx/internal/rc"
 )
 
 // WriteArchive writes content to a dated archive file in .context/archive/.
 //
 // Creates the archive directory if needed. If a file for today already exists,
-// the new content is appended. Otherwise a new file is created with a header.
+// the new content is appended. Otherwise, a new file is created with a header.
 //
 // Parameters:
 //   - prefix: File name prefix (e.g., "tasks", "decisions", "learnings")
@@ -28,28 +33,29 @@ import (
 //
 // Returns the path to the written archive file.
 func WriteArchive(prefix, heading, content string) (string, error) {
-	archiveDir := filepath.Join(rc.ContextDir(), config.DirArchive)
-	if err := os.MkdirAll(archiveDir, config.PermExec); err != nil {
-		return "", fmt.Errorf("failed to create archive directory: %w", err)
+	archiveDir := filepath.Join(rc.ContextDir(), dir.Archive)
+	if mkErr := os.MkdirAll(archiveDir, fs.PermExec); mkErr != nil {
+		return "", ctxerr.CreateArchiveDir(mkErr)
 	}
 
 	now := time.Now()
+	dateStr := now.Format(time2.DateFormat)
 	archiveFile := filepath.Join(
 		archiveDir,
-		fmt.Sprintf("%s-%s.md", prefix, now.Format("2006-01-02")),
+		fmt.Sprintf(archive.TplArchiveFilename, prefix, dateStr),
 	)
 
-	nl := config.NewlineLF
+	nl := token.NewlineLF
 	var finalContent string
-	if existing, err := os.ReadFile(filepath.Clean(archiveFile)); err == nil {
+	if existing, readErr := os.ReadFile(filepath.Clean(archiveFile)); readErr == nil {
 		finalContent = string(existing) + nl + content
 	} else {
-		finalContent = heading + " - " +
-			now.Format("2006-01-02") + nl + nl + content
+		finalContent = heading + archive.ArchiveDateSep +
+			dateStr + nl + nl + content
 	}
 
-	if err := os.WriteFile(archiveFile, []byte(finalContent), config.PermFile); err != nil {
-		return "", fmt.Errorf("failed to write archive: %w", err)
+	if writeErr := os.WriteFile(archiveFile, []byte(finalContent), fs.PermFile); writeErr != nil {
+		return "", ctxerr.WriteArchive(writeErr)
 	}
 
 	return archiveFile, nil

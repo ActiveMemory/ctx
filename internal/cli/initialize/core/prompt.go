@@ -13,10 +13,16 @@ import (
 	"strings"
 	"time"
 
+	"github.com/ActiveMemory/ctx/internal/config/cli"
+	"github.com/ActiveMemory/ctx/internal/config/fs"
+	"github.com/ActiveMemory/ctx/internal/config/loop"
+	"github.com/ActiveMemory/ctx/internal/config/marker"
+	"github.com/ActiveMemory/ctx/internal/config/token"
 	"github.com/spf13/cobra"
 
 	"github.com/ActiveMemory/ctx/internal/assets"
-	"github.com/ActiveMemory/ctx/internal/config"
+	ctxerr "github.com/ActiveMemory/ctx/internal/err"
+	"github.com/ActiveMemory/ctx/internal/write"
 )
 
 // HandlePromptMd creates or merges PROMPT.md with ctx content.
@@ -33,70 +39,70 @@ func HandlePromptMd(cmd *cobra.Command, force, autoMerge, ralph bool) error {
 	var templateContent []byte
 	var err error
 	if ralph {
-		templateContent, err = assets.RalphTemplate(config.FilePromptMd)
+		templateContent, err = assets.RalphTemplate(loop.PromptMd)
 		if err != nil {
-			return fmt.Errorf("failed to read ralph PROMPT.md template: %w", err)
+			return ctxerr.ReadInitTemplate("ralph PROMPT.md", err)
 		}
 	} else {
-		templateContent, err = assets.Template(config.FilePromptMd)
+		templateContent, err = assets.Template(loop.PromptMd)
 		if err != nil {
-			return fmt.Errorf("failed to read PROMPT.md template: %w", err)
+			return ctxerr.ReadInitTemplate("PROMPT.md", err)
 		}
 	}
-	existingContent, err := os.ReadFile(config.FilePromptMd)
+	existingContent, err := os.ReadFile(loop.PromptMd)
 	fileExists := err == nil
 	if !fileExists {
-		if err := os.WriteFile(config.FilePromptMd, templateContent, config.PermFile); err != nil {
-			return fmt.Errorf("failed to write %s: %w", config.FilePromptMd, err)
+		if err := os.WriteFile(loop.PromptMd, templateContent, fs.PermFile); err != nil {
+			return ctxerr.FileWrite(loop.PromptMd, err)
 		}
 		mode := ""
 		if ralph {
 			mode = " (ralph mode)"
 		}
-		cmd.Println(fmt.Sprintf("  ✓ %s%s", config.FilePromptMd, mode))
+		write.InitCreatedWith(cmd, loop.PromptMd, mode)
 		return nil
 	}
 	existingStr := string(existingContent)
-	hasCtxMarkers := strings.Contains(existingStr, config.PromptMarkerStart)
+	hasCtxMarkers := strings.Contains(existingStr, marker.PromptMarkerStart)
 	if hasCtxMarkers {
 		if !force {
-			cmd.Println(fmt.Sprintf("  ○ %s (ctx content exists, skipped)\n", config.FilePromptMd))
+			write.InitCtxContentExists(cmd, loop.PromptMd)
 			return nil
 		}
 		return UpdatePromptSection(cmd, existingStr, templateContent)
 	}
 	if !autoMerge {
-		cmd.Println(fmt.Sprintf("\n%s exists but has no ctx content.\n", config.FilePromptMd))
+		write.InitFileExistsNoCtx(cmd, loop.PromptMd)
 		cmd.Println("Would you like to merge ctx prompt instructions?")
 		cmd.Print("[y/N] ")
 		reader := bufio.NewReader(os.Stdin)
 		response, err := reader.ReadString('\n')
 		if err != nil {
-			return fmt.Errorf("failed to read input: %w", err)
+			return ctxerr.ReadInput(err)
 		}
 		response = strings.TrimSpace(strings.ToLower(response))
-		if response != config.ConfirmShort && response != config.ConfirmLong {
-			cmd.Println(fmt.Sprintf("  ○ %s (skipped)", config.FilePromptMd))
+		if response != cli.ConfirmShort && response != cli.ConfirmLong {
+			write.InitSkippedPlain(cmd, loop.PromptMd)
 			return nil
 		}
 	}
 	timestamp := time.Now().Unix()
-	backupName := fmt.Sprintf("%s.%d.bak", config.FilePromptMd, timestamp)
-	if err := os.WriteFile(backupName, existingContent, config.PermFile); err != nil {
-		return fmt.Errorf("failed to create backup %s: %w", backupName, err)
+	backupName := fmt.Sprintf("%s.%d.bak", loop.PromptMd, timestamp)
+	if err := os.WriteFile(backupName, existingContent, fs.PermFile); err != nil {
+		return ctxerr.CreateBackup(backupName, err)
 	}
-	cmd.Println(fmt.Sprintf("  ✓ %s (backup)", backupName))
+	write.InitBackup(cmd, backupName)
 	insertPos := FindInsertionPoint(existingStr)
 	var mergedContent string
 	if insertPos == 0 {
-		mergedContent = string(templateContent) + config.NewlineLF + existingStr
+		mergedContent = string(templateContent) + token.NewlineLF + existingStr
 	} else {
-		mergedContent = existingStr[:insertPos] + config.NewlineLF + string(templateContent) + config.NewlineLF + existingStr[insertPos:]
+		mergedContent = existingStr[:insertPos] + token.NewlineLF + string(templateContent) + token.NewlineLF + existingStr[insertPos:]
 	}
-	if err := os.WriteFile(config.FilePromptMd, []byte(mergedContent), config.PermFile); err != nil {
-		return fmt.Errorf("failed to write merged %s: %w", config.FilePromptMd, err)
+	if err := os.WriteFile(loop.PromptMd, []byte(mergedContent), fs.PermFile); err != nil {
+		return ctxerr.WriteMerged(loop.PromptMd, err)
 	}
-	cmd.Println(fmt.Sprintf("  ✓ %s (merged)", config.FilePromptMd))
+	write.InitMerged(cmd, loop.PromptMd)
 	return nil
 }
 
@@ -111,33 +117,33 @@ func HandlePromptMd(cmd *cobra.Command, force, autoMerge, ralph bool) error {
 // Returns:
 //   - error: Non-nil if markers are missing or file operations fail
 func UpdatePromptSection(cmd *cobra.Command, existing string, newTemplate []byte) error {
-	startIdx := strings.Index(existing, config.PromptMarkerStart)
+	startIdx := strings.Index(existing, marker.PromptMarkerStart)
 	if startIdx == -1 {
-		return fmt.Errorf("prompt start marker not found")
+		return ctxerr.MarkerNotFound("prompt")
 	}
-	endIdx := strings.Index(existing, config.PromptMarkerEnd)
+	endIdx := strings.Index(existing, marker.PromptMarkerEnd)
 	if endIdx == -1 {
 		endIdx = len(existing)
 	} else {
-		endIdx += len(config.PromptMarkerEnd)
+		endIdx += len(marker.PromptMarkerEnd)
 	}
 	templateStr := string(newTemplate)
-	templateStart := strings.Index(templateStr, config.PromptMarkerStart)
-	templateEnd := strings.Index(templateStr, config.PromptMarkerEnd)
+	templateStart := strings.Index(templateStr, marker.PromptMarkerStart)
+	templateEnd := strings.Index(templateStr, marker.PromptMarkerEnd)
 	if templateStart == -1 || templateEnd == -1 {
-		return fmt.Errorf("template missing prompt markers")
+		return ctxerr.TemplateMissingMarkers("prompt")
 	}
-	promptContent := templateStr[templateStart : templateEnd+len(config.PromptMarkerEnd)]
+	promptContent := templateStr[templateStart : templateEnd+len(marker.PromptMarkerEnd)]
 	newContent := existing[:startIdx] + promptContent + existing[endIdx:]
 	timestamp := time.Now().Unix()
-	backupName := fmt.Sprintf("%s.%d.bak", config.FilePromptMd, timestamp)
-	if err := os.WriteFile(backupName, []byte(existing), config.PermFile); err != nil {
-		return fmt.Errorf("failed to create backup: %w", err)
+	backupName := fmt.Sprintf("%s.%d.bak", loop.PromptMd, timestamp)
+	if err := os.WriteFile(backupName, []byte(existing), fs.PermFile); err != nil {
+		return ctxerr.CreateBackupGeneric(err)
 	}
-	cmd.Println(fmt.Sprintf("  ✓ %s (backup)", backupName))
-	if err := os.WriteFile(config.FilePromptMd, []byte(newContent), config.PermFile); err != nil {
-		return fmt.Errorf("failed to update %s: %w", config.FilePromptMd, err)
+	write.InitBackup(cmd, backupName)
+	if err := os.WriteFile(loop.PromptMd, []byte(newContent), fs.PermFile); err != nil {
+		return ctxerr.FileUpdate(loop.PromptMd, err)
 	}
-	cmd.Println(fmt.Sprintf("  ✓ %s (updated prompt section)\n", config.FilePromptMd))
+	write.InitUpdatedPromptSection(cmd, loop.PromptMd)
 	return nil
 }

@@ -12,7 +12,7 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/ActiveMemory/ctx/internal/config"
+	"github.com/ActiveMemory/ctx/internal/config/ctx"
 )
 
 const fixtureMemory = `# Auto Memory
@@ -70,22 +70,22 @@ func TestIntegration_ParseClassifyPromote(t *testing.T) {
 	}
 
 	// Verify entries landed in correct files
-	convData, _ := os.ReadFile(filepath.Join(contextDir, config.FileConvention))
+	convData, _ := os.ReadFile(filepath.Join(contextDir, ctx.Convention))
 	if !strings.Contains(string(convData), "ctx from PATH") {
 		t.Error("expected convention 'always use ctx from PATH' in CONVENTIONS.md")
 	}
 
-	decData, _ := os.ReadFile(filepath.Join(contextDir, config.FileDecision))
+	decData, _ := os.ReadFile(filepath.Join(contextDir, ctx.Decision))
 	if !strings.Contains(string(decData), "heuristic classification") {
 		t.Error("expected decision about classification in DECISIONS.md")
 	}
 
-	lrnData, _ := os.ReadFile(filepath.Join(contextDir, config.FileLearning))
+	lrnData, _ := os.ReadFile(filepath.Join(contextDir, ctx.Learning))
 	if !strings.Contains(string(lrnData), "symlinks") {
 		t.Error("expected learning about symlinks in LEARNINGS.md")
 	}
 
-	taskData, _ := os.ReadFile(filepath.Join(contextDir, config.FileTask))
+	taskData, _ := os.ReadFile(filepath.Join(contextDir, ctx.Task))
 	if !strings.Contains(string(taskData), "integration tests") {
 		t.Error("expected task about integration tests in TASKS.md")
 	}

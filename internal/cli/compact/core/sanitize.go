@@ -10,7 +10,7 @@ import (
 	"strings"
 	"unicode/utf8"
 
-	"github.com/ActiveMemory/ctx/internal/config"
+	"github.com/ActiveMemory/ctx/internal/config/token"
 )
 
 // RemoveEmptySections removes Markdown sections that contain no content.
@@ -25,7 +25,7 @@ import (
 //   - string: Content with empty sections removed
 //   - int: Number of sections removed
 func RemoveEmptySections(content string) (string, int) {
-	lines := strings.Split(content, config.NewlineLF)
+	lines := strings.Split(content, token.NewlineLF)
 	var result []string
 	removed := 0
 
@@ -34,7 +34,7 @@ func RemoveEmptySections(content string) (string, int) {
 		line := lines[i]
 
 		// Check if this is a section header
-		if strings.HasPrefix(line, config.HeadingLevelTwoStart) {
+		if strings.HasPrefix(line, token.HeadingLevelTwoStart) {
 			// Look ahead to see if the section is empty
 			sectionStart := i
 			i++
@@ -46,8 +46,8 @@ func RemoveEmptySections(content string) (string, int) {
 
 			// Check if we hit another section or end of the file
 			if i >= len(lines) ||
-				strings.HasPrefix(lines[i], config.HeadingLevelTwoStart) ||
-				strings.HasPrefix(lines[i], config.HeadingLevelOneStart) {
+				strings.HasPrefix(lines[i], token.HeadingLevelTwoStart) ||
+				strings.HasPrefix(lines[i], token.HeadingLevelOneStart) {
 				// Section is empty, skip it
 				removed++
 				continue
@@ -62,7 +62,7 @@ func RemoveEmptySections(content string) (string, int) {
 		i++
 	}
 
-	return strings.Join(result, config.NewlineLF), removed
+	return strings.Join(result, token.NewlineLF), removed
 }
 
 // TruncateString shortens a string to maxLen, adding "..." if truncated.
@@ -78,5 +78,5 @@ func TruncateString(s string, maxLen int) string {
 		return s
 	}
 	runes := []rune(s)
-	return string(runes[:maxLen-3]) + config.Ellipsis
+	return string(runes[:maxLen-3]) + token.Ellipsis
 }

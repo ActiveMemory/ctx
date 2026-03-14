@@ -29,7 +29,7 @@ Analyze current tasks and recent session activity, then suggest
 
 ## Process
 
-Do all of this **silently** — do not narrate the steps:
+Do all of this **silently**: do not narrate the steps:
 
 1. **Read TASKS.md** to get the full task list with statuses,
    priorities, and phases
@@ -81,7 +81,7 @@ Present your recommendations like this:
 **2. [Task title or summary]** `#priority:X`
 > [1-2 sentence rationale]
 
-**3. [Task title or summary]** *(optional — only if genuinely
+**3. [Task title or summary]** *(optional: only if genuinely
 useful)*
 > [1-2 sentence rationale]
 
@@ -92,11 +92,11 @@ useful)*
 
 ### Rules for recommendations:
 
-- **1-3 items only** — more than 3 defeats the purpose
-- **Be specific** — "Fix `block-non-path-ctx` hook" not
+- **1-3 items only**: more than 3 defeats the purpose
+- **Be specific**: "Fix `block-non-path-ctx` hook" not
   "work on hooks"
 - **Include the priority tag** so the user sees the weight
-- **Rationale must reference context** — why *this* task, not
+- **Rationale must reference context**: why *this* task, not
   just what it is. Connect to recent work, priority, or
   dependencies
 - If an in-progress task exists, it should almost always be
@@ -110,12 +110,12 @@ useful)*
 >
 > **1. Fix `block-non-path-ctx` hook** `#priority:high`
 > > Still open from yesterday's session. The hook is too
-> > aggressive — it blocks `git -C path` commands that don't
+> > aggressive: it blocks `git -C path` commands that don't
 > > invoke ctx. Quick fix, clears a blocker.
 >
 > **2. Add `Context.File(name)` method** `#priority:high`
 > > Eliminates 10+ linear scan boilerplate instances across
-> > 5 packages. High impact, low effort — good consolidation
+> > 5 packages. High impact, low effort: good consolidation
 > > target.
 >
 > **3. Topics system (T1.1)** `#priority:medium`

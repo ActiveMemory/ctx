@@ -10,7 +10,9 @@ package rc
 import (
 	"sync"
 
-	"github.com/ActiveMemory/ctx/internal/config"
+	"github.com/ActiveMemory/ctx/internal/config/ctx"
+	"github.com/ActiveMemory/ctx/internal/config/dir"
+	"github.com/ActiveMemory/ctx/internal/crypto"
 )
 
 // Default returns a new CtxRC with hardcoded default values.
@@ -20,9 +22,9 @@ import (
 //     (8000 token budget, 7-day archive, etc.)
 func Default() *CtxRC {
 	return &CtxRC{
-		ContextDir:          config.DirContext,
+		ContextDir:          dir.Context,
 		TokenBudget:         DefaultTokenBudget,
-		PriorityOrder:       nil, // nil means use config.FileReadOrder
+		PriorityOrder:       nil, // nil means use config.ReadOrder
 		AutoArchive:         true,
 		ArchiveAfterDays:    DefaultArchiveAfterDays,
 		EntryCountLearnings: DefaultEntryCountLearnings,
@@ -77,7 +79,7 @@ func TokenBudget() int {
 //
 // Returns:
 //   - []string: File names in priority order, or nil if not configured
-//     (callers should fall back to config.FileReadOrder)
+//     (callers should fall back to config.ReadOrder)
 func PriorityOrder() []string {
 	return RC().PriorityOrder
 }
@@ -201,7 +203,7 @@ func NotifyEvents() []string {
 // Returns:
 //   - string: Resolved path to the encryption key file
 func KeyPath() string {
-	return config.ResolveKeyPath(ContextDir(), RC().KeyPathOverride)
+	return crypto.ResolveKeyPath(ContextDir(), RC().KeyPathOverride)
 }
 
 // KeyRotationDays returns the configured key rotation threshold in days.
@@ -278,7 +280,7 @@ func Reset() {
 // FilePriority returns the priority of a context file.
 //
 // If a priority_order is configured in .ctxrc, that order is used.
-// Otherwise, the default config.FileReadOrder is used.
+// Otherwise, the default config.ReadOrder is used.
 //
 // Lower numbers indicate higher priority (1 = highest).
 // Unknown files return 100.
@@ -300,8 +302,8 @@ func FilePriority(name string) int {
 		return 100
 	}
 
-	// Use the default priority from config.FileReadOrder
-	for i, fName := range config.FileReadOrder {
+	// Use the default priority from config.ReadOrder
+	for i, fName := range ctx.ReadOrder {
 		if fName == name {
 			return i + 1
 		}

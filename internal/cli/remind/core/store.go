@@ -9,12 +9,14 @@ package core
 import (
 	"encoding/json"
 	"errors"
-	"fmt"
 	"os"
 	"path/filepath"
 
-	"github.com/ActiveMemory/ctx/internal/config"
+	"github.com/ActiveMemory/ctx/internal/config/fs"
+	"github.com/ActiveMemory/ctx/internal/config/reminder"
+	ctxerr "github.com/ActiveMemory/ctx/internal/err"
 	"github.com/ActiveMemory/ctx/internal/rc"
+	"github.com/ActiveMemory/ctx/internal/validation"
 )
 
 // Reminder represents a single session-scoped reminder.
@@ -31,17 +33,16 @@ type Reminder struct {
 //   - []Reminder: The parsed reminders (nil when file absent)
 //   - error: Non-nil on read or parse failure
 func ReadReminders() ([]Reminder, error) {
-	path := RemindersPath()
-	data, readErr := os.ReadFile(path) //nolint:gosec // project-local path
+	data, readErr := validation.ReadUserFile(RemindersPath())
 	if readErr != nil {
 		if errors.Is(readErr, os.ErrNotExist) {
 			return nil, nil
 		}
-		return nil, fmt.Errorf("read reminders: %w", readErr)
+		return nil, ctxerr.ReadReminders(readErr)
 	}
 	var reminders []Reminder
 	if parseErr := json.Unmarshal(data, &reminders); parseErr != nil {
-		return nil, fmt.Errorf("parse reminders: %w", parseErr)
+		return nil, ctxerr.ParseReminders(parseErr)
 	}
 	return reminders, nil
 }
@@ -58,7 +59,7 @@ func WriteReminders(reminders []Reminder) error {
 	if marshalErr != nil {
 		return marshalErr
 	}
-	return os.WriteFile(RemindersPath(), data, config.PermFile)
+	return validation.WriteFile(RemindersPath(), data, fs.PermFile)
 }
 
 // NextID returns the next available reminder ID (max existing + 1).
@@ -83,5 +84,5 @@ func NextID(reminders []Reminder) int {
 // Returns:
 //   - string: Absolute path to reminders.json
 func RemindersPath() string {
-	return filepath.Join(rc.ContextDir(), config.FileReminders)
+	return filepath.Join(rc.ContextDir(), reminder.Reminders)
 }

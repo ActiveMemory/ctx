@@ -20,18 +20,18 @@ import (
 func Cmd() *cobra.Command {
 	var dryRun bool
 
-	short, long := assets.CommandDesc("memory.sync")
+	short, long := assets.CommandDesc(assets.CmdDescKeyMemorySync)
 	cmd := &cobra.Command{
 		Use:   "sync",
 		Short: short,
 		Long:  long,
 		RunE: func(cmd *cobra.Command, _ []string) error {
-			return runSync(cmd, dryRun)
+			return Run(cmd, dryRun)
 		},
 	}
 
 	cmd.Flags().BoolVar(
-		&dryRun, "dry-run", false, assets.FlagDesc("memory.sync.dry-run"),
+		&dryRun, "dry-run", false, assets.FlagDesc(assets.FlagDescKeyMemorySyncDryRun),
 	)
 
 	return cmd

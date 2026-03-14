@@ -10,10 +10,9 @@ import (
 	"os"
 	"path/filepath"
 	"time"
-)
 
-// WrappedUpMarker is the filename for the wrap-up suppression marker.
-const WrappedUpMarker = "ctx-wrapped-up"
+	"github.com/ActiveMemory/ctx/internal/config/wrap"
+)
 
 // WrappedUpExpiry is how long the marker suppresses nudges.
 const WrappedUpExpiry = 2 * time.Hour
@@ -26,7 +25,7 @@ const WrappedUpExpiry = 2 * time.Hour
 // Returns:
 //   - bool: True if wrap-up marker is fresh
 func WrappedUpRecently() bool {
-	markerPath := filepath.Join(StateDir(), WrappedUpMarker)
+	markerPath := filepath.Join(StateDir(), wrap.WrappedUpMarker)
 
 	info, statErr := os.Stat(markerPath)
 	if statErr != nil {

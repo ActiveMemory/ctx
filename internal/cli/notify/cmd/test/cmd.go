@@ -17,7 +17,7 @@ import (
 // Returns:
 //   - *cobra.Command: Configured test subcommand
 func Cmd() *cobra.Command {
-	short, long := assets.CommandDesc("notify.test")
+	short, long := assets.CommandDesc(assets.CmdDescKeyNotifyTest)
 	return &cobra.Command{
 		Use:   "test",
 		Short: short,

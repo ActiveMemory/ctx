@@ -9,7 +9,10 @@ package validation
 import (
 	"strings"
 
-	"github.com/ActiveMemory/ctx/internal/config"
+	"github.com/ActiveMemory/ctx/internal/config/file"
+	"github.com/ActiveMemory/ctx/internal/config/regex"
+	"github.com/ActiveMemory/ctx/internal/config/session"
+	"github.com/ActiveMemory/ctx/internal/config/token"
 )
 
 // SanitizeFilename converts a topic string to a safe filename component.
@@ -24,17 +27,17 @@ import (
 //   - string: Safe filename component (lowercase, hyphenated, max 50 chars)
 func SanitizeFilename(s string) string {
 	// Replace spaces and special chars with hyphens
-	s = config.RegExNonFileNameChar.ReplaceAllString(s, "-")
+	s = regex.FileNameChar.ReplaceAllString(s, "-")
 	// Remove leading/trailing hyphens
-	s = strings.Trim(s, "-")
+	s = strings.Trim(s, token.Dash)
 	// Convert to lowercase
 	s = strings.ToLower(s)
 	// Limit length
-	if len(s) > 50 {
-		s = s[:50]
+	if len(s) > file.MaxNameLen {
+		s = s[:file.MaxNameLen]
 	}
 	if s == "" {
-		s = config.DefaultSessionFilename
+		s = session.DefaultSessionFilename
 	}
 	return s
 }

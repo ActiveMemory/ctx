@@ -6,81 +6,89 @@
 
 package sysinfo
 
-import "fmt"
+import (
+	"fmt"
+
+	"github.com/ActiveMemory/ctx/internal/assets"
+	"github.com/ActiveMemory/ctx/internal/config/stats"
+)
 
 // Evaluate checks a snapshot against resource thresholds and returns any
 // alerts. Unsupported or zero-total resources are silently skipped.
+//
+// Thresholds:
+//   - Memory: WARNING >= 80%, DANGER >= 90%
+//   - Swap:   WARNING >= 50%, DANGER >= 75%
+//   - Disk:   WARNING >= 85%, DANGER >= 95%
+//   - Load:   WARNING >= 0.8x CPUs, DANGER >= 1.5x CPUs
+//
+// Parameters:
+//   - snap: System resource snapshot to evaluate
+//
+// Returns:
+//   - []ResourceAlert: Alerts for any resources exceeding thresholds
 func Evaluate(snap Snapshot) []ResourceAlert {
 	var alerts []ResourceAlert
 
-	// Memory: WARNING >= 80%, DANGER >= 90%
+	// Memory
 	if snap.Memory.Supported && snap.Memory.TotalBytes > 0 {
 		pct := percent(snap.Memory.UsedBytes, snap.Memory.TotalBytes)
-		if pct >= 90 {
+		msg := fmt.Sprintf(assets.TextDesc(assets.TextDescKeyResourcesAlertMemory),
+			pct, FormatGiB(snap.Memory.UsedBytes), FormatGiB(snap.Memory.TotalBytes))
+		if pct >= stats.ThresholdMemoryDangerPct {
 			alerts = append(alerts, ResourceAlert{
-				Severity: SeverityDanger,
-				Resource: "memory",
-				Message:  fmt.Sprintf("Memory %.0f%% used (%s / %s GB)", pct, FormatGiB(snap.Memory.UsedBytes), FormatGiB(snap.Memory.TotalBytes)),
+				Severity: SeverityDanger, Resource: "memory", Message: msg,
 			})
-		} else if pct >= 80 {
+		} else if pct >= stats.ThresholdMemoryWarnPct {
 			alerts = append(alerts, ResourceAlert{
-				Severity: SeverityWarning,
-				Resource: "memory",
-				Message:  fmt.Sprintf("Memory %.0f%% used (%s / %s GB)", pct, FormatGiB(snap.Memory.UsedBytes), FormatGiB(snap.Memory.TotalBytes)),
+				Severity: SeverityWarning, Resource: "memory", Message: msg,
 			})
 		}
 	}
 
-	// Swap: WARNING >= 50%, DANGER >= 75%
+	// Swap
 	if snap.Memory.Supported && snap.Memory.SwapTotalBytes > 0 {
 		pct := percent(snap.Memory.SwapUsedBytes, snap.Memory.SwapTotalBytes)
-		if pct >= 75 {
+		msg := fmt.Sprintf(assets.TextDesc(assets.TextDescKeyResourcesAlertSwap),
+			pct, FormatGiB(snap.Memory.SwapUsedBytes), FormatGiB(snap.Memory.SwapTotalBytes))
+		if pct >= stats.ThresholdSwapDangerPct {
 			alerts = append(alerts, ResourceAlert{
-				Severity: SeverityDanger,
-				Resource: "swap",
-				Message:  fmt.Sprintf("Swap %.0f%% used (%s / %s GB)", pct, FormatGiB(snap.Memory.SwapUsedBytes), FormatGiB(snap.Memory.SwapTotalBytes)),
+				Severity: SeverityDanger, Resource: "swap", Message: msg,
 			})
-		} else if pct >= 50 {
+		} else if pct >= stats.ThresholdSwapWarnPct {
 			alerts = append(alerts, ResourceAlert{
-				Severity: SeverityWarning,
-				Resource: "swap",
-				Message:  fmt.Sprintf("Swap %.0f%% used (%s / %s GB)", pct, FormatGiB(snap.Memory.SwapUsedBytes), FormatGiB(snap.Memory.SwapTotalBytes)),
+				Severity: SeverityWarning, Resource: "swap", Message: msg,
 			})
 		}
 	}
 
-	// Disk: WARNING >= 85%, DANGER >= 95%
+	// Disk
 	if snap.Disk.Supported && snap.Disk.TotalBytes > 0 {
 		pct := percent(snap.Disk.UsedBytes, snap.Disk.TotalBytes)
-		if pct >= 95 {
+		msg := fmt.Sprintf(assets.TextDesc(assets.TextDescKeyResourcesAlertDisk),
+			pct, FormatGiB(snap.Disk.UsedBytes), FormatGiB(snap.Disk.TotalBytes))
+		if pct >= stats.ThresholdDiskDangerPct {
 			alerts = append(alerts, ResourceAlert{
-				Severity: SeverityDanger,
-				Resource: "disk",
-				Message:  fmt.Sprintf("Disk %.0f%% used (%s / %s GB)", pct, FormatGiB(snap.Disk.UsedBytes), FormatGiB(snap.Disk.TotalBytes)),
+				Severity: SeverityDanger, Resource: "disk", Message: msg,
 			})
-		} else if pct >= 85 {
+		} else if pct >= stats.ThresholdDiskWarnPct {
 			alerts = append(alerts, ResourceAlert{
-				Severity: SeverityWarning,
-				Resource: "disk",
-				Message:  fmt.Sprintf("Disk %.0f%% used (%s / %s GB)", pct, FormatGiB(snap.Disk.UsedBytes), FormatGiB(snap.Disk.TotalBytes)),
+				Severity: SeverityWarning, Resource: "disk", Message: msg,
 			})
 		}
 	}
 
-	// Load (1m): WARNING >= 0.8x CPUs, DANGER >= 1.5x CPUs
+	// Load (1m)
 	if snap.Load.Supported && snap.Load.NumCPU > 0 {
 		ratio := snap.Load.Load1 / float64(snap.Load.NumCPU)
-		if ratio >= 1.5 {
+		msg := fmt.Sprintf(assets.TextDesc(assets.TextDescKeyResourcesAlertLoad), ratio)
+		if ratio >= stats.ThresholdLoadDangerRatio {
 			alerts = append(alerts, ResourceAlert{
-				Severity: SeverityDanger,
-				Resource: "load",
-				Message:  fmt.Sprintf("Load %.2fx CPU count", ratio),
+				Severity: SeverityDanger, Resource: "load", Message: msg,
 			})
-		} else if ratio >= 0.8 {
+		} else if ratio >= stats.ThresholdLoadWarnRatio {
 			alerts = append(alerts, ResourceAlert{
-				Severity: SeverityWarning,
-				Resource: "load",
-				Message:  fmt.Sprintf("Load %.2fx CPU count", ratio),
+				Severity: SeverityWarning, Resource: "load", Message: msg,
 			})
 		}
 	}
@@ -89,14 +97,30 @@ func Evaluate(snap Snapshot) []ResourceAlert {
 }
 
 // FormatGiB formats bytes as a GiB value with one decimal place (e.g. "14.7").
+//
+// Parameters:
+//   - bytes: Value in bytes to format
+//
+// Returns:
+//   - string: Formatted GiB string (e.g. "14.7")
 func FormatGiB(bytes uint64) string {
-	gib := float64(bytes) / (1 << 30)
+	gib := float64(bytes) / stats.ThresholdBytesPerGiB
 	return fmt.Sprintf("%.1f", gib)
 }
 
+// percent computes the percentage of used relative to total.
+//
+// Returns 0 when total is zero to avoid division by zero.
+//
+// Parameters:
+//   - used: Numerator value
+//   - total: Denominator value
+//
+// Returns:
+//   - float64: Percentage (0-100)
 func percent(used, total uint64) float64 {
 	if total == 0 {
 		return 0
 	}
-	return float64(used) / float64(total) * 100
+	return float64(used) / float64(total) * stats.PercentMultiplier
 }

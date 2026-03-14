@@ -11,13 +11,13 @@ import (
 	"path/filepath"
 	"testing"
 
-	"github.com/ActiveMemory/ctx/internal/config"
+	"github.com/ActiveMemory/ctx/internal/config/session"
 )
 
 func TestMarkdownSessionParser_Tool(t *testing.T) {
 	p := NewMarkdownSessionParser()
-	if got := p.Tool(); got != config.ToolMarkdown {
-		t.Errorf("Tool() = %q, want %q", got, config.ToolMarkdown)
+	if got := p.Tool(); got != session.ToolMarkdown {
+		t.Errorf("Tool() = %q, want %q", got, session.ToolMarkdown)
 	}
 }
 
@@ -138,8 +138,8 @@ func TestMarkdownSessionParser_ParseFile(t *testing.T) {
 	if s.ID != "2026-01-15-fix-api" {
 		t.Errorf("ID = %q, want %q", s.ID, "2026-01-15-fix-api")
 	}
-	if s.Tool != config.ToolMarkdown {
-		t.Errorf("Tool = %q, want %q", s.Tool, config.ToolMarkdown)
+	if s.Tool != session.ToolMarkdown {
+		t.Errorf("Tool = %q, want %q", s.Tool, session.ToolMarkdown)
 	}
 	if s.FirstUserMsg != "Fix API Rate Limiting" {
 		t.Errorf("FirstUserMsg = %q, want %q", s.FirstUserMsg, "Fix API Rate Limiting")
@@ -355,10 +355,10 @@ func TestScanDirectory_WithMarkdown(t *testing.T) {
 	for _, s := range sessions {
 		tools[s.Tool] = true
 	}
-	if !tools[config.ToolMarkdown] {
+	if !tools[session.ToolMarkdown] {
 		t.Error("expected markdown session in results")
 	}
-	if !tools[config.ToolClaudeCode] {
+	if !tools[session.ToolClaudeCode] {
 		t.Error("expected claude-code session in results")
 	}
 }
@@ -367,22 +367,22 @@ func TestRegisteredTools_IncludesMarkdown(t *testing.T) {
 	tools := RegisteredTools()
 	found := false
 	for _, tool := range tools {
-		if tool == config.ToolMarkdown {
+		if tool == session.ToolMarkdown {
 			found = true
 			break
 		}
 	}
 	if !found {
-		t.Errorf("expected %q in registered tools", config.ToolMarkdown)
+		t.Errorf("expected %q in registered tools", session.ToolMarkdown)
 	}
 }
 
 func TestGetParser_Markdown(t *testing.T) {
-	p := Parser(config.ToolMarkdown)
+	p := Parser(session.ToolMarkdown)
 	if p == nil {
-		t.Fatalf("expected parser for %q", config.ToolMarkdown)
+		t.Fatalf("expected parser for %q", session.ToolMarkdown)
 	}
-	if p.Tool() != config.ToolMarkdown {
-		t.Errorf("Tool() = %q, want %q", p.Tool(), config.ToolMarkdown)
+	if p.Tool() != session.ToolMarkdown {
+		t.Errorf("Tool() = %q, want %q", p.Tool(), session.ToolMarkdown)
 	}
 }

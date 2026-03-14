@@ -7,11 +7,13 @@
 package parser
 
 import (
-	"fmt"
 	"os"
 	"path/filepath"
 	"sort"
 	"strings"
+
+	"github.com/ActiveMemory/ctx/internal/config/parser"
+	ctxerr "github.com/ActiveMemory/ctx/internal/err"
 )
 
 // registeredParsers holds all available session parsers.
@@ -37,7 +39,7 @@ func ParseFile(path string) ([]*Session, error) {
 			return parser.ParseFile(path)
 		}
 	}
-	return nil, fmt.Errorf("no parser found for file: %s", path)
+	return nil, ctxerr.ParserNoMatch(path)
 }
 
 // ScanDirectory recursively scans a directory for session files.
@@ -84,14 +86,14 @@ func ScanDirectoryWithErrors(dir string) ([]*Session, []error, error) {
 		if info.IsDir() {
 			// Skip subagents directories - they contain sidechain sessions
 			// that share the parent sessionId and would cause duplicates
-			if info.Name() == "subagents" {
+			if info.Name() == parser.DirSubagents {
 				return filepath.SkipDir
 			}
 			return nil
 		}
 
 		// Skip files in paths containing /subagents/ (defensive check)
-		if strings.Contains(path, string(filepath.Separator)+"subagents"+string(filepath.Separator)) {
+		if strings.Contains(path, string(filepath.Separator)+parser.DirSubagents+string(filepath.Separator)) {
 			return nil
 		}
 
@@ -100,7 +102,7 @@ func ScanDirectoryWithErrors(dir string) ([]*Session, []error, error) {
 			if parser.Matches(path) {
 				sessions, err := parser.ParseFile(path)
 				if err != nil {
-					parseErrors = append(parseErrors, fmt.Errorf("%s: %w", path, err))
+					parseErrors = append(parseErrors, ctxerr.ParserFileError(path, err))
 					break
 				}
 				allSessions = append(allSessions, sessions...)
@@ -112,7 +114,7 @@ func ScanDirectoryWithErrors(dir string) ([]*Session, []error, error) {
 	})
 
 	if err != nil {
-		return nil, nil, fmt.Errorf("walk directory: %w", err)
+		return nil, nil, ctxerr.ParserWalkDir(err)
 	}
 
 	// Sort by start time (newest first)

@@ -17,14 +17,14 @@ import (
 // Returns:
 //   - *cobra.Command: Configured snapshot subcommand
 func Cmd() *cobra.Command {
-	short, long := assets.CommandDesc("permissions.snapshot")
+	short, long := assets.CommandDesc(assets.CmdDescKeyPermissionsSnapshot)
 
 	return &cobra.Command{
 		Use:   "snapshot",
 		Short: short,
 		Long:  long,
 		RunE: func(cmd *cobra.Command, _ []string) error {
-			return RunSnapshot(cmd)
+			return Run(cmd)
 		},
 	}
 }

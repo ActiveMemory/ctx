@@ -7,12 +7,13 @@
 package add
 
 import (
-	"fmt"
-	"os"
-
+	"github.com/ActiveMemory/ctx/internal/config/pad"
 	"github.com/spf13/cobra"
 
 	"github.com/ActiveMemory/ctx/internal/cli/pad/core"
+	ctxerr "github.com/ActiveMemory/ctx/internal/err"
+	"github.com/ActiveMemory/ctx/internal/validation"
+	"github.com/ActiveMemory/ctx/internal/write"
 )
 
 // runAdd appends a new entry and prints confirmation.
@@ -35,7 +36,7 @@ func runAdd(cmd *cobra.Command, text string) error {
 		return writeErr
 	}
 
-	cmd.Println(fmt.Sprintf("Added entry %d.", len(entries)))
+	write.PadEntryAdded(cmd, len(entries))
 	return nil
 }
 
@@ -49,13 +50,13 @@ func runAdd(cmd *cobra.Command, text string) error {
 // Returns:
 //   - error: Non-nil on read/write failure or file too large
 func runAddBlob(cmd *cobra.Command, label, filePath string) error {
-	data, err := os.ReadFile(filePath) //nolint:gosec // user-provided path is intentional
+	data, err := validation.ReadUserFile(filePath)
 	if err != nil {
-		return fmt.Errorf("read file: %w", err)
+		return ctxerr.ReadFile(err)
 	}
 
-	if len(data) > core.MaxBlobSize {
-		return fmt.Errorf("file too large: %d bytes (max %d)", len(data), core.MaxBlobSize)
+	if len(data) > pad.MaxBlobSize {
+		return ctxerr.FileTooLarge(len(data), pad.MaxBlobSize)
 	}
 
 	entries, readErr := core.ReadEntries()
@@ -69,6 +70,6 @@ func runAddBlob(cmd *cobra.Command, label, filePath string) error {
 		return writeErr
 	}
 
-	cmd.Println(fmt.Sprintf("Added entry %d.", len(entries)))
+	write.PadEntryAdded(cmd, len(entries))
 	return nil
 }

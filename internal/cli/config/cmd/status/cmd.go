@@ -7,11 +7,10 @@
 package status
 
 import (
+	internalConfig "github.com/ActiveMemory/ctx/internal/config/cli"
 	"github.com/spf13/cobra"
 
 	"github.com/ActiveMemory/ctx/internal/assets"
-	internalConfig "github.com/ActiveMemory/ctx/internal/config"
-
 	"github.com/ActiveMemory/ctx/internal/cli/config/core"
 )
 
@@ -20,7 +19,7 @@ import (
 // Returns:
 //   - *cobra.Command: Configured status subcommand
 func Cmd() *cobra.Command {
-	short, _ := assets.CommandDesc("config.status")
+	short, _ := assets.CommandDesc(assets.CmdDescKeyConfigStatus)
 
 	return &cobra.Command{
 		Use:         "status",
@@ -32,7 +31,7 @@ func Cmd() *cobra.Command {
 			if rootErr != nil {
 				return rootErr
 			}
-			return RunStatus(cmd, root)
+			return Run(cmd, root)
 		},
 	}
 }

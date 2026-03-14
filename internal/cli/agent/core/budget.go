@@ -11,16 +11,15 @@ import (
 	"strings"
 	"time"
 
-	"github.com/ActiveMemory/ctx/internal/config"
+	"github.com/ActiveMemory/ctx/internal/assets"
+	"github.com/ActiveMemory/ctx/internal/config/agent"
+	ctxCfg "github.com/ActiveMemory/ctx/internal/config/ctx"
+	"github.com/ActiveMemory/ctx/internal/config/token"
 	"github.com/ActiveMemory/ctx/internal/context"
 	"github.com/ActiveMemory/ctx/internal/index"
 )
 
-// Budget tier allocation percentages.
-const (
-	TaskBudgetPct       = 0.40
-	ConventionBudgetPct = 0.20
-)
+// Budget tier allocation percentages are defined in config.
 
 // AssembledPacket holds the budget-aware output sections ready for rendering.
 //
@@ -54,7 +53,7 @@ type AssembledPacket struct {
 //   - Tier 1 (always): constitution, read order, instruction
 //   - Tier 2 (40%): active tasks
 //   - Tier 3 (20%): conventions
-//   - Tier 4+5 (remaining): decisions + learnings, scored by relevance
+//   - Tier 4+5 (remaining): decisions and learnings, scored by relevance
 //
 // Parameters:
 //   - ctx: Loaded context containing the files
@@ -65,10 +64,8 @@ type AssembledPacket struct {
 func AssembleBudgetPacket(ctx *context.Context, budget int) *AssembledPacket {
 	now := time.Now()
 	pkt := &AssembledPacket{
-		Budget: budget,
-		Instruction: "Before starting work, confirm to the user: " +
-			"\"I have read the required context files and " +
-			"I'm following project conventions.\"",
+		Budget:      budget,
+		Instruction: assets.TextDesc(assets.TextDescKeyAgentInstruction),
 	}
 
 	remaining := budget
@@ -87,8 +84,8 @@ func AssembleBudgetPacket(ctx *context.Context, budget int) *AssembledPacket {
 		return pkt
 	}
 
-	// Tier 2: Tasks (up to 40% of original budget)
-	taskCap := int(float64(budget) * TaskBudgetPct)
+	// Tier 2: Tasks (up to 40% of the original budget)
+	taskCap := int(float64(budget) * agent.TaskBudgetPct)
 	allTasks := ExtractActiveTasks(ctx)
 	pkt.Tasks = FitItemsInBudget(allTasks, taskCap)
 	taskTokens := EstimateSliceTokens(pkt.Tasks)
@@ -99,8 +96,8 @@ func AssembleBudgetPacket(ctx *context.Context, budget int) *AssembledPacket {
 		return pkt
 	}
 
-	// Tier 3: Conventions (up to 20% of original budget)
-	convCap := int(float64(budget) * ConventionBudgetPct)
+	// Tier 3: Conventions (up to 20% of the original budget)
+	convCap := int(float64(budget) * agent.ConventionBudgetPct)
 	allConventions := ExtractAllConventions(ctx)
 	pkt.Conventions = FitItemsInBudget(allConventions, convCap)
 	convTokens := EstimateSliceTokens(pkt.Conventions)
@@ -115,13 +112,13 @@ func AssembleBudgetPacket(ctx *context.Context, budget int) *AssembledPacket {
 	keywords := ExtractTaskKeywords(pkt.Tasks)
 
 	// Tier 4+5: Decisions + Learnings (share remaining budget)
-	decisionBlocks := ParseEntryBlocks(ctx, config.FileDecision)
-	learningBlocks := ParseEntryBlocks(ctx, config.FileLearning)
+	decisionBlocks := ParseEntryBlocks(ctx, ctxCfg.Decision)
+	learningBlocks := ParseEntryBlocks(ctx, ctxCfg.Learning)
 
 	scoredDecisions := ScoreEntries(decisionBlocks, keywords, now)
 	scoredLearnings := ScoreEntries(learningBlocks, keywords, now)
 
-	// Split remaining budget: proportional to content size, minimum 30% each
+	// Split the remaining budget: proportional to content size, minimum 30% each
 	decTokens, learnTokens := SplitBudget(
 		remaining, scoredDecisions, scoredLearnings,
 	)
@@ -149,7 +146,7 @@ func AssembleBudgetPacket(ctx *context.Context, budget int) *AssembledPacket {
 // Returns:
 //   - []string: All convention bullet items; nil if the file is not found
 func ExtractAllConventions(ctx *context.Context) []string {
-	if f := ctx.File(config.FileConvention); f != nil {
+	if f := ctx.File(ctxCfg.Convention); f != nil {
 		return ExtractBulletItems(string(f.Content), 1000)
 	}
 	return nil
@@ -159,10 +156,10 @@ func ExtractAllConventions(ctx *context.Context) []string {
 //
 // Parameters:
 //   - ctx: Loaded context
-//   - fileName: Name of the file to parse (e.g., config.FileDecision)
+//   - fileName: Name of the file to parse (e.g., config.Decision)
 //
 // Returns:
-//   - []index.EntryBlock: Parsed entry blocks; nil if file not found
+//   - []index.EntryBlock: Parsed entry blocks; nil if the file is not found
 func ParseEntryBlocks(ctx *context.Context, fileName string) []index.EntryBlock {
 	if f := ctx.File(fileName); f != nil {
 		return index.ParseEntryBlocks(string(f.Content))
@@ -220,7 +217,7 @@ func SplitBudget(total int, a, b []ScoredEntry) (int, int) {
 
 // FillSection selects scored entries to fill a budget, with graceful degradation.
 //
-// Includes full entries by score order until ~80% of budget is consumed.
+// Includes full entries by score order until ~80% of the budget is consumed.
 // Remaining entries get title-only summaries.
 //
 // Parameters:
@@ -329,7 +326,7 @@ func TotalEntryTokens(entries []ScoredEntry) int {
 //   - string: Formatted Markdown output
 func RenderMarkdownPacket(pkt *AssembledPacket) string {
 	var sb strings.Builder
-	nl := config.NewlineLF
+	nl := token.NewlineLF
 
 	sb.WriteString("# Context Packet" + nl)
 	sb.WriteString(

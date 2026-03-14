@@ -10,7 +10,9 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/ActiveMemory/ctx/internal/config"
+	"github.com/ActiveMemory/ctx/internal/assets"
+	"github.com/ActiveMemory/ctx/internal/config/file"
+	"github.com/ActiveMemory/ctx/internal/config/token"
 )
 
 // FormatSize formats a file size in human-readable form.
@@ -59,6 +61,6 @@ func KeyFileSlug(path string) string {
 // Returns:
 //   - string: Formatted line (e.g., "- [topic](topic.md) (3 sessions)\n")
 func FormatSessionLink(label, slug string, count int) string {
-	return fmt.Sprintf("- [%s](%s%s) (%d sessions)%s",
-		label, slug, config.ExtMarkdown, count, config.NewlineLF)
+	return fmt.Sprintf(assets.TextDesc(assets.TextDescKeyJournalMocSessionLink),
+		label, slug, file.ExtMarkdown, count, token.NewlineLF)
 }

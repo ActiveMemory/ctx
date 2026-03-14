@@ -15,18 +15,12 @@ import (
 	"sort"
 	"strings"
 
+	"github.com/ActiveMemory/ctx/internal/config/rss"
+	"github.com/ActiveMemory/ctx/internal/config/token"
 	"github.com/spf13/cobra"
 	"gopkg.in/yaml.v3"
 
 	"github.com/ActiveMemory/ctx/internal/cli/site/core"
-	"github.com/ActiveMemory/ctx/internal/config"
-)
-
-const (
-	atomNS        = "http://www.w3.org/2005/Atom"
-	feedTitle     = "ctx blog"
-	defaultAuthor = "Context contributors"
-	xmlHeader     = `<?xml version="1.0" encoding="utf-8"?>` + "\n"
 )
 
 // blogDatePattern matches filenames like 2026-02-25-slug.md.
@@ -195,8 +189,8 @@ func parsePost(path, filename string) (blogPost, postStatus) {
 	}
 
 	content := string(data)
-	nl := config.NewlineLF
-	sep := config.Separator
+	nl := token.NewlineLF
+	sep := token.Separator
 
 	if !strings.HasPrefix(content, sep+nl) {
 		return blogPost{
@@ -286,13 +280,13 @@ func parsePost(path, filename string) (blogPost, postStatus) {
 // Returns:
 //   - string: First paragraph text, or empty if none found
 func extractSummary(body string) string {
-	lines := strings.Split(body, config.NewlineLF)
+	lines := strings.Split(body, token.NewlineLF)
 	foundHeading := false
 
 	for _, line := range lines {
 		trimmed := strings.TrimSpace(line)
 
-		if strings.HasPrefix(trimmed, config.PrefixHeading) {
+		if strings.HasPrefix(trimmed, token.PrefixHeading) {
 			foundHeading = true
 			continue
 		}
@@ -305,7 +299,7 @@ func extractSummary(body string) string {
 		if trimmed == "" ||
 			strings.HasPrefix(trimmed, "!") ||
 			strings.HasPrefix(trimmed, "*") ||
-			strings.HasPrefix(trimmed, config.PrefixHeading) {
+			strings.HasPrefix(trimmed, token.PrefixHeading) {
 			continue
 		}
 
@@ -338,8 +332,8 @@ func generateAtom(
 	}
 
 	feed := core.AtomFeed{
-		NS:    atomNS,
-		Title: feedTitle,
+		NS:    rss.FeedAtomNS,
+		Title: rss.FeedTitle,
 		Links: []core.AtomLink{
 			{Href: blogURL},
 			{Href: feedURL, Rel: "self"},
@@ -369,7 +363,7 @@ func generateAtom(
 
 		author := p.author
 		if author == "" {
-			author = defaultAuthor
+			author = rss.FeedDefaultAuthor
 		}
 		entry.Author = &core.AtomAuthor{Name: author}
 
@@ -393,7 +387,7 @@ func generateAtom(
 		return fmt.Errorf("cannot marshal feed: %w", marshalErr)
 	}
 
-	output := []byte(xmlHeader)
+	output := []byte(rss.FeedXMLHeader)
 	output = append(output, xmlData...)
 	output = append(output, '\n')
 

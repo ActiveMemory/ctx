@@ -7,8 +7,10 @@
 package core
 
 import (
-	"fmt"
 	"time"
+
+	ctxtime "github.com/ActiveMemory/ctx/internal/config/time"
+	"github.com/ActiveMemory/ctx/internal/write"
 )
 
 // FormatTimeAgo returns a human-readable relative time string.
@@ -23,36 +25,12 @@ import (
 //   - string: Human-readable relative time
 func FormatTimeAgo(t time.Time) string {
 	d := time.Since(t)
-
-	switch {
-	case d < time.Minute:
-		return "just now"
-	case d < time.Hour:
-		mins := int(d.Minutes())
-		if mins == 1 {
-			return "1 minute ago"
-		}
-		return fmt.Sprintf("%d minutes ago", mins)
-	case d < 24*time.Hour:
-		hours := int(d.Hours())
-		if hours == 1 {
-			return "1 hour ago"
-		}
-		return fmt.Sprintf("%d hours ago", hours)
-	case d < 7*24*time.Hour:
-		days := int(d.Hours() / 24)
-		if days == 1 {
-			return "1 day ago"
-		}
-		return fmt.Sprintf("%d days ago", days)
-	default:
-		return t.Format("Jan 2, 2006")
-	}
+	return write.FormatTimeAgo(
+		d.Hours(), int(d.Minutes()), t.Format(ctxtime.OlderFormat),
+	)
 }
 
 // FormatNumber returns a number with thousand separators.
-//
-// Examples: 500 -> "500", 1500 -> "1,500", 12345 -> "12,345"
 //
 // Parameters:
 //   - n: The number to format
@@ -60,17 +38,10 @@ func FormatTimeAgo(t time.Time) string {
 // Returns:
 //   - string: Formatted number with commas
 func FormatNumber(n int) string {
-	if n < 1000 {
-		return fmt.Sprintf("%d", n)
-	}
-	return fmt.Sprintf("%d,%03d", n/1000, n%1000)
+	return write.FormatNumber(n)
 }
 
 // FormatBytes returns a human-readable byte-size string.
-//
-// Uses binary units (1024-based): B, KB, MB, GB, etc.
-//
-// Examples: 500 -> "500 B", 1536 -> "1.5 KB", 1048576 -> "1.0 MB"
 //
 // Parameters:
 //   - b: The byte count to format
@@ -78,14 +49,5 @@ func FormatNumber(n int) string {
 // Returns:
 //   - string: Human-readable size with unit
 func FormatBytes(b int64) string {
-	const unit = 1024
-	if b < unit {
-		return fmt.Sprintf("%d B", b)
-	}
-	div, exp := int64(unit), 0
-	for n := b / unit; n >= unit; n /= unit {
-		div *= unit
-		exp++
-	}
-	return fmt.Sprintf("%.1f %cB", float64(b)/float64(div), "KMGTPE"[exp])
+	return write.FormatBytes(b)
 }

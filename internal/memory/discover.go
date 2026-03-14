@@ -7,10 +7,13 @@
 package memory
 
 import (
-	"fmt"
 	"os"
 	"path/filepath"
 	"strings"
+
+	"github.com/ActiveMemory/ctx/internal/config/dir"
+	"github.com/ActiveMemory/ctx/internal/config/memory"
+	ctxerr "github.com/ActiveMemory/ctx/internal/err"
 )
 
 // DiscoverMemoryPath locates Claude Code's auto memory file for the
@@ -23,19 +26,19 @@ import (
 func DiscoverMemoryPath(projectRoot string) (string, error) {
 	abs, absErr := filepath.Abs(projectRoot)
 	if absErr != nil {
-		return "", fmt.Errorf("resolving project root: %w", absErr)
+		return "", ctxerr.DiscoverResolveRoot(absErr)
 	}
 
 	home, homeErr := os.UserHomeDir()
 	if homeErr != nil {
-		return "", fmt.Errorf("resolving home directory: %w", homeErr)
+		return "", ctxerr.DiscoverResolveHome(homeErr)
 	}
 
 	slug := ProjectSlug(abs)
-	memPath := filepath.Join(home, ".claude", "projects", slug, "memory", "MEMORY.md")
+	memPath := filepath.Join(home, dir.Claude, dir.Projects, slug, dir.Memory, memory.MemorySource)
 
 	if _, statErr := os.Stat(memPath); statErr != nil {
-		return "", fmt.Errorf("no auto memory found at %s", memPath)
+		return "", ctxerr.DiscoverNoMemory(memPath)
 	}
 	return memPath, nil
 }

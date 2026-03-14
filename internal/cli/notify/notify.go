@@ -7,7 +7,6 @@
 package notify
 
 import (
-	"fmt"
 	"strings"
 
 	"github.com/spf13/cobra"
@@ -15,6 +14,7 @@ import (
 	"github.com/ActiveMemory/ctx/internal/assets"
 	"github.com/ActiveMemory/ctx/internal/cli/notify/cmd/setup"
 	"github.com/ActiveMemory/ctx/internal/cli/notify/cmd/test"
+	ctxerr "github.com/ActiveMemory/ctx/internal/err"
 	notifylib "github.com/ActiveMemory/ctx/internal/notify"
 )
 
@@ -28,7 +28,7 @@ func Cmd() *cobra.Command {
 	var hook string
 	var variant string
 
-	short, long := assets.CommandDesc("notify")
+	short, long := assets.CommandDesc(assets.CmdDescKeyNotify)
 	cmd := &cobra.Command{
 		Use:   "notify [message]",
 		Short: short,
@@ -36,10 +36,10 @@ func Cmd() *cobra.Command {
 		Args:  cobra.MinimumNArgs(0),
 		RunE: func(cmd *cobra.Command, args []string) error {
 			if event == "" {
-				return fmt.Errorf("required flag \"event\" not set")
+				return ctxerr.FlagRequired("event")
 			}
 			if len(args) == 0 {
-				return fmt.Errorf("message argument is required")
+				return ctxerr.ArgRequired("message")
 			}
 			message := strings.Join(args, " ")
 			var ref *notifylib.TemplateRef
@@ -50,10 +50,19 @@ func Cmd() *cobra.Command {
 		},
 	}
 
-	cmd.Flags().StringVarP(&event, "event", "e", "", assets.FlagDesc("notify.event"))
-	cmd.Flags().StringVarP(&sessionID, "session-id", "s", "", assets.FlagDesc("notify.session-id"))
-	cmd.Flags().StringVar(&hook, "hook", "", assets.FlagDesc("notify.hook"))
-	cmd.Flags().StringVar(&variant, "variant", "", assets.FlagDesc("notify.variant"))
+	cmd.Flags().StringVarP(&event,
+		"event", "e", "",
+		assets.FlagDesc(assets.FlagDescKeyNotifyEvent),
+	)
+	cmd.Flags().StringVarP(&sessionID,
+		"session-id", "s", "", assets.FlagDesc(assets.FlagDescKeyNotifySessionId),
+	)
+	cmd.Flags().StringVar(&hook,
+		"hook", "", assets.FlagDesc(assets.FlagDescKeyNotifyHook),
+	)
+	cmd.Flags().StringVar(&variant,
+		"variant", "", assets.FlagDesc(assets.FlagDescKeyNotifyVariant),
+	)
 
 	cmd.AddCommand(setup.Cmd())
 	cmd.AddCommand(test.Cmd())

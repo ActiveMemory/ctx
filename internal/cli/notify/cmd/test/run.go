@@ -7,19 +7,18 @@
 package test
 
 import (
-	"bytes"
 	"encoding/json"
-	"fmt"
-	"net/http"
 	"os"
 	"path/filepath"
 	"time"
 
+	"github.com/ActiveMemory/ctx/internal/config/crypto"
 	"github.com/spf13/cobra"
 
-	"github.com/ActiveMemory/ctx/internal/config"
+	ctxerr "github.com/ActiveMemory/ctx/internal/err"
 	"github.com/ActiveMemory/ctx/internal/notify"
 	"github.com/ActiveMemory/ctx/internal/rc"
+	"github.com/ActiveMemory/ctx/internal/write"
 )
 
 // runTest sends a test notification to the configured webhook.
@@ -30,12 +29,12 @@ import (
 // Returns:
 //   - error: Non-nil on webhook load or HTTP failure
 func runTest(cmd *cobra.Command) error {
-	url, err := notify.LoadWebhook()
-	if err != nil {
-		return fmt.Errorf("load webhook: %w", err)
+	url, loadErr := notify.LoadWebhook()
+	if loadErr != nil {
+		return ctxerr.LoadWebhook(loadErr)
 	}
 	if url == "" {
-		cmd.Println("No webhook configured. Run: ctx notify setup")
+		write.TestNoWebhook(cmd)
 		return nil
 	}
 
@@ -53,26 +52,20 @@ func runTest(cmd *cobra.Command) error {
 
 	body, marshalErr := json.Marshal(payload)
 	if marshalErr != nil {
-		return fmt.Errorf("marshal payload: %w", marshalErr)
+		return ctxerr.MarshalPayload(marshalErr)
 	}
 
-	// Check event filter — but for test we bypass and send directly
 	if !notify.EventAllowed("test", rc.NotifyEvents()) {
-		cmd.Println("Note: event \"test\" is filtered by your .ctxrc notify.events config.")
-		cmd.Println("Sending anyway for testing purposes.")
+		write.TestFiltered(cmd)
 	}
 
-	client := &http.Client{Timeout: 5 * time.Second}
-	resp, postErr := client.Post(url, "application/json", bytes.NewReader(body)) //nolint:gosec // URL is user-configured via encrypted storage
+	resp, postErr := notify.PostJSON(url, body)
 	if postErr != nil {
-		return fmt.Errorf("send test notification: %w", postErr)
+		return ctxerr.SendNotification(postErr)
 	}
 	defer func() { _ = resp.Body.Close() }()
 
-	cmd.Println(fmt.Sprintf("Webhook responded: HTTP %d %s", resp.StatusCode, http.StatusText(resp.StatusCode)))
-	if resp.StatusCode >= 200 && resp.StatusCode < 300 {
-		cmd.Println("Webhook is working " + config.FileNotifyEnc)
-	}
+	write.TestResult(cmd, resp.StatusCode, crypto.NotifyEnc)
 
 	return nil
 }

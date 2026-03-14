@@ -7,12 +7,12 @@
 package show
 
 import (
-	"fmt"
 	"strconv"
 
 	"github.com/spf13/cobra"
 
 	"github.com/ActiveMemory/ctx/internal/assets"
+	ctxerr "github.com/ActiveMemory/ctx/internal/err"
 )
 
 // Cmd returns the pad show subcommand.
@@ -27,7 +27,7 @@ import (
 func Cmd() *cobra.Command {
 	var outPath string
 
-	short, long := assets.CommandDesc("pad.show")
+	short, long := assets.CommandDesc(assets.CmdDescKeyPadShow)
 	cmd := &cobra.Command{
 		Use:   "show N",
 		Short: short,
@@ -36,13 +36,15 @@ func Cmd() *cobra.Command {
 		RunE: func(cmd *cobra.Command, args []string) error {
 			n, err := strconv.Atoi(args[0])
 			if err != nil {
-				return fmt.Errorf("invalid index: %s", args[0])
+				return ctxerr.InvalidIndex(args[0])
 			}
-			return runShow(cmd, n, outPath)
+			return Run(cmd, n, outPath)
 		},
 	}
 
-	cmd.Flags().StringVar(&outPath, "out", "", assets.FlagDesc("pad.show.out"))
+	cmd.Flags().StringVar(&outPath,
+		"out", "", assets.FlagDesc(assets.FlagDescKeyPadShowOut),
+	)
 
 	return cmd
 }

@@ -11,10 +11,11 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/ActiveMemory/ctx/internal/config"
+	"github.com/ActiveMemory/ctx/internal/assets"
+	"github.com/ActiveMemory/ctx/internal/config/ctx"
+	"github.com/ActiveMemory/ctx/internal/config/marker"
+	"github.com/ActiveMemory/ctx/internal/config/regex"
 )
-
-const summaryEmpty = "empty"
 
 // summarizeConstitution counts checkbox items (invariants) in CONSTITUTION.md.
 //
@@ -26,15 +27,15 @@ const summaryEmpty = "empty"
 func summarizeConstitution(content []byte) string {
 	// Count checkbox items (invariants)
 	count := bytes.Count(
-		content, []byte(config.PrefixTaskUndone),
+		content, []byte(marker.PrefixTaskUndone),
 	) +
 		bytes.Count(
-			content, []byte(config.PrefixTaskDone),
+			content, []byte(marker.PrefixTaskDone),
 		)
 	if count == 0 {
-		return "loaded"
+		return assets.TextDesc(assets.TextDescKeySummaryLoaded)
 	}
-	return fmt.Sprintf("%d invariants", count)
+	return fmt.Sprintf(assets.TextDesc(assets.TextDescKeySummaryInvariants), count)
 }
 
 // summarizeTasks counts active and completed tasks in TASKS.md.
@@ -46,19 +47,19 @@ func summarizeConstitution(content []byte) string {
 //   - string: Summary like "3 active, 2 completed" or "empty" if none
 func summarizeTasks(content []byte) string {
 	// Count active (unchecked) and completed (checked) tasks
-	active := bytes.Count(content, []byte(config.PrefixTaskUndone))
-	completed := bytes.Count(content, []byte(config.PrefixTaskDone))
+	active := bytes.Count(content, []byte(marker.PrefixTaskUndone))
+	completed := bytes.Count(content, []byte(marker.PrefixTaskDone))
 
 	if active == 0 && completed == 0 {
-		return summaryEmpty
+		return assets.TextDesc(assets.TextDescKeySummaryEmpty)
 	}
 
 	var parts []string
 	if active > 0 {
-		parts = append(parts, fmt.Sprintf("%d active", active))
+		parts = append(parts, fmt.Sprintf(assets.TextDesc(assets.TextDescKeySummaryActive), active))
 	}
 	if completed > 0 {
-		parts = append(parts, fmt.Sprintf("%d completed", completed))
+		parts = append(parts, fmt.Sprintf(assets.TextDesc(assets.TextDescKeySummaryCompleted), completed))
 	}
 	return strings.Join(parts, ", ")
 }
@@ -72,16 +73,16 @@ func summarizeTasks(content []byte) string {
 //   - string: Summary like "3 decisions" or "empty" if none
 func summarizeDecisions(content []byte) string {
 	// Count decision headers (## [date] or ## Decision)
-	matches := config.RegExEntryHeading.FindAll(content, -1)
+	matches := regex.EntryHeading.FindAll(content, -1)
 	count := len(matches)
 
 	if count == 0 {
-		return summaryEmpty
+		return assets.TextDesc(assets.TextDescKeySummaryEmpty)
 	}
 	if count == 1 {
-		return "1 decision"
+		return assets.TextDesc(assets.TextDescKeySummaryDecision)
 	}
-	return fmt.Sprintf("%d decisions", count)
+	return fmt.Sprintf(assets.TextDesc(assets.TextDescKeySummaryDecisions), count)
 }
 
 // summarizeGlossary counts term definitions (**term**) in GLOSSARY.md.
@@ -92,16 +93,16 @@ func summarizeDecisions(content []byte) string {
 // Returns:
 //   - string: Summary like "5 terms" or "empty" if none
 func summarizeGlossary(content []byte) string {
-	matches := config.RegExGlossary.FindAll(content, -1)
+	matches := regex.Glossary.FindAll(content, -1)
 	count := len(matches)
 
 	if count == 0 {
-		return summaryEmpty
+		return assets.TextDesc(assets.TextDescKeySummaryEmpty)
 	}
 	if count == 1 {
-		return "1 term"
+		return assets.TextDesc(assets.TextDescKeySummaryTerm)
 	}
-	return fmt.Sprintf("%d terms", count)
+	return fmt.Sprintf(assets.TextDesc(assets.TextDescKeySummaryTerms), count)
 }
 
 // generateSummary creates a brief summary for a context file based on its
@@ -115,18 +116,18 @@ func summarizeGlossary(content []byte) string {
 //   - string: Summary string (e.g., "3 active, 2 completed" or "empty")
 func generateSummary(name string, content []byte) string {
 	switch name {
-	case config.FileConstitution:
+	case ctx.Constitution:
 		return summarizeConstitution(content)
-	case config.FileTask:
+	case ctx.Task:
 		return summarizeTasks(content)
-	case config.FileDecision:
+	case ctx.Decision:
 		return summarizeDecisions(content)
-	case config.FileGlossary:
+	case ctx.Glossary:
 		return summarizeGlossary(content)
 	default:
 		if len(content) == 0 || effectivelyEmpty(content) {
-			return summaryEmpty
+			return assets.TextDesc(assets.TextDescKeySummaryEmpty)
 		}
-		return "loaded"
+		return assets.TextDesc(assets.TextDescKeySummaryLoaded)
 	}
 }

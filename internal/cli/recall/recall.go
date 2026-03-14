@@ -26,7 +26,7 @@ import (
 // Returns:
 //   - *cobra.Command: The recall command with list, show, and serve subcommands
 func Cmd() *cobra.Command {
-	short, long := assets.CommandDesc("recall")
+	short, long := assets.CommandDesc(assets.CmdDescKeyRecall)
 
 	cmd := &cobra.Command{
 		Use:   "recall",

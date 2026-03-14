@@ -23,7 +23,7 @@ How do you manage work items that span multiple sessions without losing context?
 ```bash
 ctx add task "Fix race condition" --priority high  # add
 ctx add task "Write tests" --section "Phase 2"     # add to phase
-ctx complete "race condition"                      # mark done
+ctx tasks complete "race condition"                      # mark done
 ctx tasks snapshot "before-refactor"               # backup
 ctx tasks archive                                  # clean up
 ```
@@ -41,7 +41,7 @@ Read on for the full workflow and conversational patterns.
 | Tool                 | Type    | Purpose                                     |
 |----------------------|---------|---------------------------------------------|
 | `ctx add task`       | Command | Add a new task to `TASKS.md`                |
-| `ctx complete`       | Command | Mark a task as done by number or text       |
+| `ctx tasks complete`       | Command | Mark a task as done by number or text       |
 | `ctx tasks snapshot` | Command | Create a point-in-time backup of `TASKS.md` |
 | `ctx tasks archive`  | Command | Move completed tasks to archive file        |
 | `/ctx-add-task`      | Skill   | AI-assisted task creation with validation   |
@@ -96,7 +96,7 @@ status is tracked via checkboxes and inline tags.
 ## Phase 1: Core CLI
 
 - [x] Implement ctx add command `#done:2026-02-01-143022`
-- [x] Implement ctx complete command `#done:2026-02-03-091544`
+- [x] Implement ctx tasks complete command `#done:2026-02-03-091544`
 - [ ] Add --section flag to ctx add task `#priority:medium`
 
 ## Phase 2: AI Integration
@@ -166,10 +166,10 @@ When a task is done, mark it complete by number or partial text match:
 
 ```bash
 # By task number (as shown in TASKS.md)
-ctx complete 3
+ctx tasks complete 3
 
 # By partial text match
-ctx complete "agent cooldown"
+ctx tasks complete "agent cooldown"
 ```
 
 The task's checkbox changes from `[ ]` to `[x]` and a `#done` timestamp is
@@ -177,7 +177,7 @@ added. Tasks are never deleted: they stay in their phase section so history is
 preserved.
 
 !!! tip "Be Conversational"
-    You rarely need to run `ctx complete` yourself during an interactive session.
+    You rarely need to run `ctx tasks complete` yourself during an interactive session.
 
     When you say something like "*the rate limiter is done*" or "*we finished that*,"
     the agent marks the task complete and moves on to suggesting what is next.
@@ -250,7 +250,7 @@ These conversational prompts replace explicit commands during interactive sessio
 |----------------------------------------|----------------------------------------------------|
 | `ctx add task "Write tests for X"`     | "We should add tests for this: track that?"        |
 | `/ctx-next`                            | "What should we work on?"                          |
-| `ctx complete "rate limiting"`         | "The rate limiter is done, what's next?"           |
+| `ctx tasks complete "rate limiting"`         | "The rate limiter is done, what's next?"           |
 | `ctx tasks archive`                    | "`TASKS.md` is getting long, can you clean it up?" |
 | `ctx add task ... && ctx add task ...` | "Add follow-ups for what we just built."           |
 
@@ -417,10 +417,10 @@ ctx add task "Write integration tests for rate limiter" --section "Phase 2"
 # (from AI assistant) /ctx-next
 
 # Mark done by text
-ctx complete "rate limiting"
+ctx tasks complete "rate limiting"
 
 # Mark done by number
-ctx complete 5
+ctx tasks complete 5
 
 # Snapshot before a risky refactor
 ctx tasks snapshot "before-middleware-rewrite"
@@ -470,6 +470,6 @@ Store short-lived sensitive notes in an encrypted scratchpad.
 * [Detecting and Fixing Drift](context-health.md):
   keeping `TASKS.md` accurate over time
 * [CLI Reference](../cli/context.md):
-  full documentation for `ctx add`, `ctx complete`, `ctx tasks`
+  full documentation for `ctx add`, `ctx tasks complete`, `ctx tasks`
 * [Context Files: `TASKS.md`](../home/context-files.md#tasksmd): 
   format and conventions for `TASKS.md`
