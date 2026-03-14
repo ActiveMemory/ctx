@@ -464,8 +464,6 @@ const (
 	TextDescKeyBlockAbsolutePath        = "block.absolute-path"
 	TextDescKeyPadKeyCreated            = "pad.key-created"
 	TextDescKeyParserGitNotFound        = "parser.git-not-found"
-	TextDescKeyParserSessionPrefix      = "parser.session_prefix"
-	TextDescKeyParserSessionPrefixAlt   = "parser.session_prefix_alt"
 	TextDescKeyPauseConfirmed           = "pause.confirmed"
 	TextDescKeyPostCommitFallback       = "post-commit.fallback"
 	TextDescKeyPostCommitRelayMessage   = "post-commit.relay-message"

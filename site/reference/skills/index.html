@@ -25,7 +25,7 @@
       
       
       <link rel="icon" href="../../images/favicon-32.png">
-      <meta name="generator" content="zensical-0.0.24">
+      <meta name="generator" content="zensical-0.0.20">
     
     
       
@@ -36,7 +36,7 @@
       
         
       
-      <link rel="stylesheet" href="../../assets/stylesheets/modern/main.28978c9b.min.css">
+      <link rel="stylesheet" href="../../assets/stylesheets/modern/main.d4922b3c.min.css">
       
         
           
@@ -2929,7 +2929,7 @@
           <span class="md-nav__icon md-icon"></span>
         </label>
       
-      <a href="././" class="md-nav__link md-nav__link--active">
+      <a href="./" class="md-nav__link md-nav__link--active">
         
   
   
@@ -3313,17 +3313,6 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#ctx-alignment-audit" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        /ctx-alignment-audit
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
   <a href="#ctx-prompt-audit" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -3372,17 +3361,6 @@
     <span class="md-ellipsis">
       
         /ctx-verify
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#ctx-context-monitor" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        /ctx-context-monitor
       
     </span>
   </a>
@@ -3473,10 +3451,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#ctx-map" class="md-nav__link">
+  <a href="#ctx-architecture" class="md-nav__link">
     <span class="md-ellipsis">
       
-        /ctx-map
+        /ctx-architecture
       
     </span>
   </a>
@@ -4433,17 +4411,6 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#ctx-alignment-audit" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        /ctx-alignment-audit
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
   <a href="#ctx-prompt-audit" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -4492,17 +4459,6 @@
     <span class="md-ellipsis">
       
         /ctx-verify
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#ctx-context-monitor" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        /ctx-context-monitor
       
     </span>
   </a>
@@ -4593,10 +4549,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#ctx-map" class="md-nav__link">
+  <a href="#ctx-architecture" class="md-nav__link">
     <span class="md-ellipsis">
       
-        /ctx-map
+        /ctx-architecture
       
     </span>
   </a>
@@ -4902,11 +4858,6 @@ to invoke the relevant skills directly.</p>
 <td>user-invocable</td>
 </tr>
 <tr>
-<td><a href="#ctx-alignment-audit"><code>/ctx-alignment-audit</code></a></td>
-<td>Audit docs claims against agent instructions</td>
-<td>user-invocable</td>
-</tr>
-<tr>
 <td><a href="#ctx-prompt-audit"><code>/ctx-prompt-audit</code></a></td>
 <td>Analyze prompting patterns for improvement</td>
 <td>user-invocable</td>
@@ -4925,11 +4876,6 @@ to invoke the relevant skills directly.</p>
 <td><a href="#ctx-verify"><code>/ctx-verify</code></a></td>
 <td>Verify claims before reporting completion</td>
 <td>user-invocable</td>
-</tr>
-<tr>
-<td><a href="#ctx-context-monitor"><code>/ctx-context-monitor</code></a></td>
-<td>Respond to context checkpoint signals</td>
-<td>automatic</td>
 </tr>
 <tr>
 <td><a href="#ctx-brainstorm"><code>/ctx-brainstorm</code></a></td>
@@ -4962,7 +4908,7 @@ to invoke the relevant skills directly.</p>
 <td>user-invocable</td>
 </tr>
 <tr>
-<td><a href="#ctx-map"><code>/ctx-map</code></a></td>
+<td><a href="#ctx-architecture"><code>/ctx-architecture</code></a></td>
 <td>Build and maintain architecture maps</td>
 <td>user-invocable</td>
 </tr>
@@ -5181,15 +5127,6 @@ templates.</p>
 <p><strong>See also</strong>:
 <a href="../../recipes/context-health/">Detecting and Fixing Drift</a></p>
 <hr />
-<h3 id="ctx-alignment-audit"><code>/ctx-alignment-audit</code><a class="headerlink" href="#ctx-alignment-audit" title="Permanent link">&para;</a></h3>
-<p>Audit behavioral claims in docs and recipes against actual agent
-instructions. Traces each claim to its backing instruction and reports
-coverage as Covered, Partial, or Gap.</p>
-<p><strong>Wraps</strong>: reads AGENT_PLAYBOOK.md, plugin skill definitions, CLAUDE.md,
-and docs/recipes</p>
-<p><strong>See also</strong>:
-<a href="../../recipes/context-health/">Detecting and Fixing Drift</a></p>
-<hr />
 <h3 id="ctx-prompt-audit"><code>/ctx-prompt-audit</code><a class="headerlink" href="#ctx-prompt-audit" title="Permanent link">&para;</a></h3>
 <p>Analyze recent prompting patterns to identify vague or ineffective
 prompts. Reviews 3-5 journal entries and suggests rewrites with
@@ -5249,16 +5186,6 @@ gaps before reporting done.</p>
 "is it done?"</p>
 <p><strong>See also</strong>:
 <a href="../../recipes/context-health/">Detecting and Fixing Drift</a></p>
-<hr />
-<h3 id="ctx-context-monitor"><code>/ctx-context-monitor</code><a class="headerlink" href="#ctx-context-monitor" title="Permanent link">&para;</a></h3>
-<p>Respond to context checkpoint signals when usage hits high thresholds.
-Fires at adaptive intervals and offers context persistence before
-the session ends.</p>
-<p><strong>Type</strong>: Automatic: Triggered by the <code>check-context-size</code> hook,
-not user-invocable</p>
-<p><strong>Wraps</strong>: hook-driven; suggests <code>/ctx-reflect</code></p>
-<p><strong>See also</strong>:
-<a href="../../recipes/autonomous-loops/">Running an Unattended AI Agent</a></p>
 <hr />
 <h2 id="planning-execution">Planning &amp; Execution<a class="headerlink" href="#planning-execution" title="Permanent link">&para;</a></h2>
 <p>Skills for structured design, implementation, and parallel agent
@@ -5329,7 +5256,7 @@ grouping, and tear down with merge.</p>
 <p><strong>See also</strong>:
 <a href="../../recipes/parallel-worktrees/">Parallel Agent Development with Git Worktrees</a></p>
 <hr />
-<h3 id="ctx-map"><code>/ctx-map</code><a class="headerlink" href="#ctx-map" title="Permanent link">&para;</a></h3>
+<h3 id="ctx-architecture"><code>/ctx-architecture</code><a class="headerlink" href="#ctx-architecture" title="Permanent link">&para;</a></h3>
 <p>Build and maintain architecture maps incrementally. Creates or refreshes
 <code>ARCHITECTURE.md</code> (<em>succinct project map, loaded at session start</em>) and
 <code>DETAILED_DESIGN.md</code> (<em>deep per-module reference, consulted on-demand</em>).
@@ -5540,7 +5467,7 @@ The documentation on this website is distributed under
       <script id="__config" type="application/json">{"annotate":null,"base":"../..","features":["announce.dismiss","content.code.annotate","content.code.copy","content.code.select","content.footnote.tooltips","content.tabs.link","content.tooltips","navigation.footer","navigation.indexes","navigation.instant","navigation.instant.prefetch","navigation.path","navigation.sections","navigation.tabs","navigation.tabs.sticky","navigation.top","navigation.tracking","search.highlight"],"search":"../../assets/javascripts/workers/search.e2d2d235.min.js","tags":null,"translations":{"clipboard.copied":"Copied to clipboard","clipboard.copy":"Copy to clipboard","search.result.more.one":"1 more on this page","search.result.more.other":"# more on this page","search.result.none":"No matching documents","search.result.one":"1 matching document","search.result.other":"# matching documents","search.result.placeholder":"Type to start searching","search.result.term.missing":"Missing","select.version":"Select version"},"version":null}</script>
     
     
-      <script src="../../assets/javascripts/bundle.16f8adc2.min.js"></script>
+      <script src="../../assets/javascripts/bundle.8ffeb9c9.min.js"></script>
       
     
   </body>

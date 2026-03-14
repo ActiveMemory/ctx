@@ -25,7 +25,7 @@
       
       
       <link rel="icon" href="../../images/favicon-32.png">
-      <meta name="generator" content="zensical-0.0.24">
+      <meta name="generator" content="zensical-0.0.20">
     
     
       
@@ -36,7 +36,7 @@
       
         
       
-      <link rel="stylesheet" href="../../assets/stylesheets/modern/main.28978c9b.min.css">
+      <link rel="stylesheet" href="../../assets/stylesheets/modern/main.d4922b3c.min.css">
       
         
           
@@ -2118,7 +2118,7 @@
           <span class="md-nav__icon md-icon"></span>
         </label>
       
-      <a href="././" class="md-nav__link md-nav__link--active">
+      <a href="./" class="md-nav__link md-nav__link--active">
         
   
   
@@ -2251,17 +2251,6 @@
   
 </li>
         
-          <li class="md-nav__item">
-  <a href="#step-5-alignment-audits" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Step 5: Alignment Audits
-      
-    </span>
-  </a>
-  
-</li>
-        
       </ul>
     </nav>
   
@@ -2346,10 +2335,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#ctx-alignment-audit-and-ctx-prompt-audit" class="md-nav__link">
+  <a href="#ctx-prompt-audit" class="md-nav__link">
     <span class="md-ellipsis">
       
-        /ctx-alignment-audit and /ctx-prompt-audit
+        /ctx-prompt-audit
       
     </span>
   </a>
@@ -3843,17 +3832,6 @@
   
 </li>
         
-          <li class="md-nav__item">
-  <a href="#step-5-alignment-audits" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Step 5: Alignment Audits
-      
-    </span>
-  </a>
-  
-</li>
-        
       </ul>
     </nav>
   
@@ -3938,10 +3916,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#ctx-alignment-audit-and-ctx-prompt-audit" class="md-nav__link">
+  <a href="#ctx-prompt-audit" class="md-nav__link">
     <span class="md-ellipsis">
       
-        /ctx-alignment-audit and /ctx-prompt-audit
+        /ctx-prompt-audit
       
     </span>
   </a>
@@ -4066,7 +4044,7 @@
     
     
       <li class="md-path__item">
-        <a href="././" class="md-path__link">
+        <a href="./" class="md-path__link">
           
   <span class="md-ellipsis">
     Maintenance
@@ -4150,14 +4128,9 @@ directory lean and accurate.</p>
 <td>Structural plus semantic drift detection</td>
 </tr>
 <tr>
-<td><code>/ctx-map</code></td>
+<td><code>/ctx-architecture</code></td>
 <td>Skill</td>
 <td>Refresh <code>ARCHITECTURE.md</code> from actual codebase</td>
-</tr>
-<tr>
-<td><code>/ctx-alignment-audit</code></td>
-<td>Skill</td>
-<td>Audit doc claims against agent instructions</td>
 </tr>
 <tr>
 <td><code>/ctx-status</code></td>
@@ -4284,21 +4257,6 @@ detect accumulation, review candidates, merge with approval, archive
 originals.</p>
 <p>See also: <a href="../knowledge-capture/">Knowledge Capture</a> for the recording
 workflow that feeds into this maintenance cycle.</p>
-<h3 id="step-5-alignment-audits">Step 5: Alignment Audits<a class="headerlink" href="#step-5-alignment-audits" title="Permanent link">&para;</a></h3>
-<p>A related problem is <strong>alignment drift</strong>: Documentation that makes claims about
-agent behavior not backed by actual playbook or skill instructions. </p>
-<p>Over time, docs accumulate aspirational statements that no instruction teaches 
-the agent to do.</p>
-<p>Use <code>/ctx-alignment-audit</code> to trace behavioral claims in documentation against
-the playbook and skill files. The skill identifies gaps, proposes fixes, and
-checks instruction file health (<em>token budgets, bloat signals</em>).</p>
-<p>To avoid confusion with <code>/ctx-prompt-audit</code>:</p>
-<ul>
-<li><code>/ctx-alignment-audit</code> checks whether documentation claims are supported by
-  actual instructions (<em>playbook, skills, <code>CLAUDE.md</code></em>).</li>
-<li><code>/ctx-prompt-audit</code> checks whether your context files are clear, compact, and
-  token-efficient for the model.</li>
-</ul>
 <hr />
 <h2 id="ctx-doctor-the-superset-check"><code>ctx doctor</code>: The Superset Check<a class="headerlink" href="#ctx-doctor-the-superset-check" title="Permanent link">&para;</a></h2>
 <p><code>ctx doctor</code> combines drift detection with hook auditing, configuration checks,
@@ -4404,16 +4362,10 @@ to code that no longer exists.</p>
 </span></code></pre></div>
 <p>Shows file counts, token estimates, modification times, and drift warnings in a
 single glance.</p>
-<h3 id="ctx-alignment-audit-and-ctx-prompt-audit"><code>/ctx-alignment-audit</code> and <code>/ctx-prompt-audit</code><a class="headerlink" href="#ctx-alignment-audit-and-ctx-prompt-audit" title="Permanent link">&para;</a></h3>
-<p>These are both audits, but they answer different questions:</p>
-<ul>
-<li><code>/ctx-alignment-audit</code>: are our behavioral claims backed by actual
-  instructions?</li>
-<li><code>/ctx-prompt-audit</code>: are our context files readable, compact, and efficient?</li>
-</ul>
-<p>Run them inside your AI assistant:</p>
-<div class="language-text highlight"><pre><span></span><code><span id="__span-15-1"><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a>/ctx-alignment-audit
-</span><span id="__span-15-2"><a id="__codelineno-15-2" name="__codelineno-15-2" href="#__codelineno-15-2"></a>/ctx-prompt-audit
+<h3 id="ctx-prompt-audit"><code>/ctx-prompt-audit</code><a class="headerlink" href="#ctx-prompt-audit" title="Permanent link">&para;</a></h3>
+<p>Checks whether your context files are readable, compact, and
+token-efficient for the model.</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-15-1"><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a>/ctx-prompt-audit
 </span></code></pre></div>
 <h2 id="putting-it-all-together">Putting It All Together<a class="headerlink" href="#putting-it-all-together" title="Permanent link">&para;</a></h2>
 <p>Conversational approach (recommended):</p>
@@ -4613,7 +4565,7 @@ The documentation on this website is distributed under
       <script id="__config" type="application/json">{"annotate":null,"base":"../..","features":["announce.dismiss","content.code.annotate","content.code.copy","content.code.select","content.footnote.tooltips","content.tabs.link","content.tooltips","navigation.footer","navigation.indexes","navigation.instant","navigation.instant.prefetch","navigation.path","navigation.sections","navigation.tabs","navigation.tabs.sticky","navigation.top","navigation.tracking","search.highlight"],"search":"../../assets/javascripts/workers/search.e2d2d235.min.js","tags":null,"translations":{"clipboard.copied":"Copied to clipboard","clipboard.copy":"Copy to clipboard","search.result.more.one":"1 more on this page","search.result.more.other":"# more on this page","search.result.none":"No matching documents","search.result.one":"1 matching document","search.result.other":"# matching documents","search.result.placeholder":"Type to start searching","search.result.term.missing":"Missing","select.version":"Select version"},"version":null}</script>
     
     
-      <script src="../../assets/javascripts/bundle.16f8adc2.min.js"></script>
+      <script src="../../assets/javascripts/bundle.8ffeb9c9.min.js"></script>
       
     
   </body>

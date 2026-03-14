@@ -3,6 +3,7 @@
 <!-- INDEX:START -->
 | Date | Decision |
 |------|--------|
+| 2026-03-14 | System path deny-list as safety net, not security boundary |
 | 2026-03-14 | Config-driven freshness check with per-file review URLs |
 | 2026-03-13 | Delete ctx-context-monitor skill — hook output is self-sufficient |
 | 2026-03-13 | build target depends on sync-why to prevent embedded doc drift |
@@ -42,6 +43,20 @@
 | 2026-02-26 | Security and permissions (consolidated) |
 | 2026-02-27 | Webhook and notification design (consolidated) |
 <!-- INDEX:END -->
+
+## [2026-03-14-110748] System path deny-list as safety net, not security boundary
+
+**Status**: Accepted
+
+**Context**: Replacing nolint:gosec directives with centralized I/O wrappers in internal/io
+
+**Decision**: System path deny-list as safety net, not security boundary
+
+**Rationale**: ctx paths are internally constructed from config constants. The deny-list catches agent hallucinations (writing to /etc), not adversarial input. Public security docs would imply a threat model that does not exist.
+
+**Consequences**: internal/io/doc.go documents limitations honestly for contributors. No user-facing security docs. The deny-list is a modicum of protection, not a promise.
+
+---
 
 ## [2026-03-14-093748] Config-driven freshness check with per-file review URLs
 

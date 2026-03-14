@@ -12,6 +12,7 @@ import (
 
 	"github.com/ActiveMemory/ctx/internal/config/ctx"
 	"github.com/ActiveMemory/ctx/internal/config/dir"
+	"github.com/ActiveMemory/ctx/internal/config/parser"
 	"github.com/ActiveMemory/ctx/internal/crypto"
 )
 
@@ -233,6 +234,20 @@ func KeyRotationDays() int {
 //   - int: Interval between nudges, or 0 if disabled
 func TaskNudgeInterval() int {
 	return RC().TaskNudgeInterval
+}
+
+// SessionPrefixes returns the list of recognized session header prefixes
+// for the Markdown parser. Falls back to parser.DefaultSessionPrefixes
+// when unconfigured or empty in .ctxrc.
+//
+// Returns:
+//   - []string: Recognized prefixes (e.g., ["Session:"])
+func SessionPrefixes() []string {
+	prefixes := RC().SessionPrefixes
+	if len(prefixes) == 0 {
+		return parser.DefaultSessionPrefixes
+	}
+	return prefixes
 }
 
 // FreshnessFiles returns the configured list of files to track for

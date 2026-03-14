@@ -25,7 +25,7 @@
       
       
       <link rel="icon" href="../../images/favicon-32.png">
-      <meta name="generator" content="zensical-0.0.24">
+      <meta name="generator" content="zensical-0.0.20">
     
     
       
@@ -36,7 +36,7 @@
       
         
       
-      <link rel="stylesheet" href="../../assets/stylesheets/modern/main.28978c9b.min.css">
+      <link rel="stylesheet" href="../../assets/stylesheets/modern/main.d4922b3c.min.css">
       
         
           
@@ -3253,7 +3253,7 @@
           <span class="md-nav__icon md-icon"></span>
         </label>
       
-      <a href="././" class="md-nav__link md-nav__link--active">
+      <a href="./" class="md-nav__link md-nav__link--active">
         
   
   
@@ -4303,7 +4303,7 @@ independence matters, use the shell while loop instead.</p>
 <h3 id="automatic-context-updates">Automatic Context Updates<a class="headerlink" href="#automatic-context-updates" title="Permanent link">&para;</a></h3>
 <p>During the loop, the AI should update context files:</p>
 <p><strong>Mark task complete:</strong>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-6-1"><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>ctx<span class="w"> </span><span class="nb">complete</span><span class="w"> </span><span class="s2">&quot;implement user auth&quot;</span>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-6-1"><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>ctx<span class="w"> </span>tasks<span class="w"> </span><span class="nb">complete</span><span class="w"> </span><span class="s2">&quot;implement user auth&quot;</span>
 </span></code></pre></div></p>
 <p>Or emit an update command (parsed by <code>ctx watch</code>):
 <div class="language-xml highlight"><pre><span></span><code><span id="__span-7-1"><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="nt">&lt;context-update</span><span class="w"> </span><span class="na">type=</span><span class="s">&quot;complete&quot;</span><span class="nt">&gt;</span>user<span class="w"> </span>auth<span class="nt">&lt;/context-update&gt;</span>
@@ -4390,7 +4390,7 @@ are unclear: Better for collaborative human-agent sessions.</p>
 <p><strong>Cause</strong>: AI not updating context files</p>
 <p><strong>Fix</strong>: Add explicit instructions to PROMPT.md:
 <div class="language-markdown highlight"><pre><span></span><code><span id="__span-16-1"><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a>After completing a task, you MUST:
-</span><span id="__span-16-2"><a id="__codelineno-16-2" name="__codelineno-16-2" href="#__codelineno-16-2"></a><span class="k">1.</span> Run: ctx complete &quot;&lt;task&gt;&quot;
+</span><span id="__span-16-2"><a id="__codelineno-16-2" name="__codelineno-16-2" href="#__codelineno-16-2"></a><span class="k">1.</span> Run: ctx tasks complete &quot;&lt;task&gt;&quot;
 </span><span id="__span-16-3"><a id="__codelineno-16-3" name="__codelineno-16-3" href="#__codelineno-16-3"></a><span class="k">2.</span> Add learnings: ctx add learning &quot;...&quot;
 </span></code></pre></div></p>
 <h3 id="tasks-getting-repeated">Tasks Getting Repeated<a class="headerlink" href="#tasks-getting-repeated" title="Permanent link">&para;</a></h3>
@@ -4398,7 +4398,7 @@ are unclear: Better for collaborative human-agent sessions.</p>
 <p><strong>Fix</strong>: Ensure commit happens after context update:</p>
 <div class="language-markdown highlight"><pre><span></span><code><span id="__span-17-1"><a id="__codelineno-17-1" name="__codelineno-17-1" href="#__codelineno-17-1"></a>Order of operations:
 </span><span id="__span-17-2"><a id="__codelineno-17-2" name="__codelineno-17-2" href="#__codelineno-17-2"></a><span class="k">1.</span> Complete coding work
-</span><span id="__span-17-3"><a id="__codelineno-17-3" name="__codelineno-17-3" href="#__codelineno-17-3"></a><span class="k">2.</span> Update context files (<span class="ge">*`ctx complete`, `ctx add`*</span>)
+</span><span id="__span-17-3"><a id="__codelineno-17-3" name="__codelineno-17-3" href="#__codelineno-17-3"></a><span class="k">2.</span> Update context files (<span class="ge">*`ctx tasks complete`, `ctx add`*</span>)
 </span><span id="__span-17-4"><a id="__codelineno-17-4" name="__codelineno-17-4" href="#__codelineno-17-4"></a><span class="k">3.</span> Commit <span class="gs">**ALL**</span> changes including <span class="sb">`.context/`</span>
 </span><span id="__span-17-5"><a id="__codelineno-17-5" name="__codelineno-17-5" href="#__codelineno-17-5"></a><span class="k">4.</span> Then signal status
 </span></code></pre></div>
@@ -4569,7 +4569,7 @@ The documentation on this website is distributed under
       <script id="__config" type="application/json">{"annotate":null,"base":"../..","features":["announce.dismiss","content.code.annotate","content.code.copy","content.code.select","content.footnote.tooltips","content.tabs.link","content.tooltips","navigation.footer","navigation.indexes","navigation.instant","navigation.instant.prefetch","navigation.path","navigation.sections","navigation.tabs","navigation.tabs.sticky","navigation.top","navigation.tracking","search.highlight"],"search":"../../assets/javascripts/workers/search.e2d2d235.min.js","tags":null,"translations":{"clipboard.copied":"Copied to clipboard","clipboard.copy":"Copy to clipboard","search.result.more.one":"1 more on this page","search.result.more.other":"# more on this page","search.result.none":"No matching documents","search.result.one":"1 matching document","search.result.other":"# matching documents","search.result.placeholder":"Type to start searching","search.result.term.missing":"Missing","select.version":"Select version"},"version":null}</script>
     
     
-      <script src="../../assets/javascripts/bundle.16f8adc2.min.js"></script>
+      <script src="../../assets/javascripts/bundle.8ffeb9c9.min.js"></script>
       
     
   </body>

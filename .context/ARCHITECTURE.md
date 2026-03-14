@@ -257,9 +257,12 @@ Managed by `internal/rc` with sync.Once singleton caching.
 
 `internal/recall/parser` defines a `SessionParser` interface. Each
 AI tool (Claude Code, potentially Aider, Cursor) registers its own
-parser. Currently only Claude Code JSONL is implemented.
+parser. Currently Claude Code JSONL and Markdown are implemented.
 Session matching uses git remote URLs, relative paths, and exact
-CWD matching.
+CWD matching. The Markdown parser recognizes session headers by
+configurable prefixes (`session_prefixes` in `.ctxrc`, defaults to
+`["Session:"]`). Users extend this list to parse sessions written in
+other languages without code changes.
 
 <!-- drift-check: ls internal/assets/claude/skills/ | wc -l -->
 ### Template and Live Skill Dual-Deployment

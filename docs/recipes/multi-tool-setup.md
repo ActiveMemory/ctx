@@ -353,5 +353,6 @@ setups.
 ## See Also
 
 * [The Complete Session](session-lifecycle.md): full session lifecycle recipe
+* [Multilingual Session Parsing](multilingual-sessions.md): configure session header prefixes for other languages
 * [CLI Reference](../cli/index.md): all commands and flags
 * [Integrations](../operations/integrations.md): detailed per-tool integration docs

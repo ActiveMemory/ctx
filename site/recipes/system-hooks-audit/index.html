@@ -25,7 +25,7 @@
       
       
       <link rel="icon" href="../../images/favicon-32.png">
-      <meta name="generator" content="zensical-0.0.24">
+      <meta name="generator" content="zensical-0.0.20">
     
     
       
@@ -36,7 +36,7 @@
       
         
       
-      <link rel="stylesheet" href="../../assets/stylesheets/modern/main.28978c9b.min.css">
+      <link rel="stylesheet" href="../../assets/stylesheets/modern/main.d4922b3c.min.css">
       
         
           
@@ -2013,7 +2013,7 @@
           <span class="md-nav__icon md-icon"></span>
         </label>
       
-      <a href="././" class="md-nav__link md-nav__link--active">
+      <a href="./" class="md-nav__link md-nav__link--active">
         
   
   
@@ -2196,6 +2196,17 @@
     <span class="md-ellipsis">
       
         check-reminders: Pending Reminder Relay
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#check-freshness-technology-constant-staleness" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        check-freshness: Technology Constant Staleness
       
     </span>
   </a>
@@ -4078,6 +4089,17 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#check-freshness-technology-constant-staleness" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        check-freshness: Technology Constant Staleness
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#check-map-staleness-architecture-map-drift" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -4525,7 +4547,7 @@ automatically at specific events during your AI session:</p>
 <tr>
 <td><code>UserPromptSubmit</code></td>
 <td>Before the agent sees your prompt</td>
-<td>9 check hooks + heartbeat</td>
+<td>10 check hooks + heartbeat</td>
 </tr>
 <tr>
 <td><code>PreToolUse</code></td>
@@ -4646,21 +4668,49 @@ dismisses them.</p>
 </span><span id="__span-5-6"><a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>└──────────────────────────────────────────────────
 </span></code></pre></div>
 <hr />
+<h4 id="check-freshness-technology-constant-staleness"><code>check-freshness</code>: Technology Constant Staleness<a class="headerlink" href="#check-freshness-technology-constant-staleness" title="Permanent link">&para;</a></h4>
+<p><strong>What</strong>: Stats files listed in <code>.ctxrc</code> <code>freshness_files</code> and warns if
+any haven't been modified in over 6 months. Daily throttle. Silent when
+no files are configured (opt-in via <code>.ctxrc</code>).</p>
+<p><strong>Why</strong>: Model capabilities evolve — token budgets, attention limits,
+and context window sizes that were accurate 6 months ago may no longer
+reflect best practices. This hook reminds you to review and touch the
+file to confirm values are still current.</p>
+<p><strong>Config</strong> (<code>.ctxrc</code>):</p>
+<div class="language-yaml highlight"><pre><span></span><code><span id="__span-6-1"><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="nt">freshness_files</span><span class="p">:</span>
+</span><span id="__span-6-2"><a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">path</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">config/thresholds.yaml</span>
+</span><span id="__span-6-3"><a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="w">    </span><span class="nt">desc</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Model token limits and batch sizes</span>
+</span><span id="__span-6-4"><a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="w">    </span><span class="nt">review_url</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">https://docs.example.com/limits</span><span class="w">  </span><span class="c1"># optional</span>
+</span></code></pre></div>
+<p>Each entry has a <code>path</code> (relative to project root), <code>desc</code> (what
+constants live there), and optional <code>review_url</code> (where to check
+current values). When <code>review_url</code> is set, the nudge includes
+"Review against: {url}". When absent, just "Touch the file to mark
+it as reviewed."</p>
+<p><strong>Output</strong>: VERBATIM relay listing stale files, silent otherwise.</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-7-1"><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>┌─ Technology Constants Stale ──────────────────────
+</span><span id="__span-7-2"><a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>│   config/thresholds.yaml (210 days ago)
+</span><span id="__span-7-3"><a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>│     — Model token limits and batch sizes
+</span><span id="__span-7-4"><a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a>│   Review against: https://docs.example.com/limits
+</span><span id="__span-7-5"><a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a>│ Touch each file to mark it as reviewed.
+</span><span id="__span-7-6"><a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a>└───────────────────────────────────────────────────
+</span></code></pre></div>
+<hr />
 <h4 id="check-map-staleness-architecture-map-drift"><code>check-map-staleness</code>: Architecture Map Drift<a class="headerlink" href="#check-map-staleness-architecture-map-drift" title="Permanent link">&para;</a></h4>
 <p><strong>What</strong>: Checks whether <code>map-tracking.json</code> is older than 30 days and
 there are commits touching <code>internal/</code> since the last map refresh. Daily
 throttle prevents repeated nudges.</p>
 <p><strong>Why</strong>: Architecture documentation drifts silently as code evolves. This
 hook detects structural changes that the map hasn't caught up with and
-suggests running <code>/ctx-map</code> to refresh.</p>
+suggests running <code>/ctx-architecture</code> to refresh.</p>
 <p><strong>Output</strong>: VERBATIM relay when stale and modules changed, silent otherwise.</p>
-<div class="language-text highlight"><pre><span></span><code><span id="__span-6-1"><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>┌─ Architecture Map Stale ────────────────────────────
-</span><span id="__span-6-2"><a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>│ ARCHITECTURE.md hasn&#39;t been refreshed since 2026-01-15
-</span><span id="__span-6-3"><a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>│ and there are commits touching 12 modules.
-</span><span id="__span-6-4"><a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a>│ /ctx-map keeps architecture docs drift-free.
-</span><span id="__span-6-5"><a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a>│
-</span><span id="__span-6-6"><a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a>│ Want me to run /ctx-map to refresh?
-</span><span id="__span-6-7"><a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a>└─────────────────────────────────────────────────────
+<div class="language-text highlight"><pre><span></span><code><span id="__span-8-1"><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>┌─ Architecture Map Stale ────────────────────────────
+</span><span id="__span-8-2"><a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>│ ARCHITECTURE.md hasn&#39;t been refreshed since 2026-01-15
+</span><span id="__span-8-3"><a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>│ and there are commits touching 12 modules.
+</span><span id="__span-8-4"><a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a>│ /ctx-architecture keeps architecture docs drift-free.
+</span><span id="__span-8-5"><a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a>│
+</span><span id="__span-8-6"><a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a>│ Want me to run /ctx-architecture to refresh?
+</span><span id="__span-8-7"><a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a>└─────────────────────────────────────────────────────
 </span></code></pre></div>
 <hr />
 <h4 id="heartbeat-session-heartbeat-webhook"><code>heartbeat</code>: Session Heartbeat Webhook<a class="headerlink" href="#heartbeat-session-heartbeat-webhook" title="Permanent link">&para;</a></h4>
@@ -4673,22 +4723,22 @@ provides a continuous session-alive signal with token consumption data
 for observability dashboards or liveness monitoring.</p>
 <p><strong>Output</strong>: None (<em>webhook + event log only</em>).</p>
 <p><strong>Payload</strong>:</p>
-<div class="language-json highlight"><pre><span></span><code><span id="__span-7-1"><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="p">{</span>
-</span><span id="__span-7-2"><a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a><span class="w">  </span><span class="nt">&quot;event&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;heartbeat&quot;</span><span class="p">,</span>
-</span><span id="__span-7-3"><a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a><span class="w">  </span><span class="nt">&quot;message&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;heartbeat: prompt #7 (context_modified=false tokens=158k pct=79%)&quot;</span><span class="p">,</span>
-</span><span id="__span-7-4"><a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a><span class="w">  </span><span class="nt">&quot;detail&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-</span><span id="__span-7-5"><a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a><span class="w">    </span><span class="nt">&quot;hook&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;heartbeat&quot;</span><span class="p">,</span>
-</span><span id="__span-7-6"><a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a><span class="w">    </span><span class="nt">&quot;variant&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;pulse&quot;</span><span class="p">,</span>
-</span><span id="__span-7-7"><a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a><span class="w">    </span><span class="nt">&quot;variables&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-</span><span id="__span-7-8"><a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a><span class="w">      </span><span class="nt">&quot;prompt_count&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">7</span><span class="p">,</span>
-</span><span id="__span-7-9"><a id="__codelineno-7-9" name="__codelineno-7-9" href="#__codelineno-7-9"></a><span class="w">      </span><span class="nt">&quot;session_id&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;abc...&quot;</span><span class="p">,</span>
-</span><span id="__span-7-10"><a id="__codelineno-7-10" name="__codelineno-7-10" href="#__codelineno-7-10"></a><span class="w">      </span><span class="nt">&quot;context_modified&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span>
-</span><span id="__span-7-11"><a id="__codelineno-7-11" name="__codelineno-7-11" href="#__codelineno-7-11"></a><span class="w">      </span><span class="nt">&quot;tokens&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">158000</span><span class="p">,</span>
-</span><span id="__span-7-12"><a id="__codelineno-7-12" name="__codelineno-7-12" href="#__codelineno-7-12"></a><span class="w">      </span><span class="nt">&quot;context_window&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">200000</span><span class="p">,</span>
-</span><span id="__span-7-13"><a id="__codelineno-7-13" name="__codelineno-7-13" href="#__codelineno-7-13"></a><span class="w">      </span><span class="nt">&quot;usage_pct&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">79</span>
-</span><span id="__span-7-14"><a id="__codelineno-7-14" name="__codelineno-7-14" href="#__codelineno-7-14"></a><span class="w">    </span><span class="p">}</span>
-</span><span id="__span-7-15"><a id="__codelineno-7-15" name="__codelineno-7-15" href="#__codelineno-7-15"></a><span class="w">  </span><span class="p">}</span>
-</span><span id="__span-7-16"><a id="__codelineno-7-16" name="__codelineno-7-16" href="#__codelineno-7-16"></a><span class="p">}</span>
+<div class="language-json highlight"><pre><span></span><code><span id="__span-9-1"><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="p">{</span>
+</span><span id="__span-9-2"><a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a><span class="w">  </span><span class="nt">&quot;event&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;heartbeat&quot;</span><span class="p">,</span>
+</span><span id="__span-9-3"><a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a><span class="w">  </span><span class="nt">&quot;message&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;heartbeat: prompt #7 (context_modified=false tokens=158k pct=79%)&quot;</span><span class="p">,</span>
+</span><span id="__span-9-4"><a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a><span class="w">  </span><span class="nt">&quot;detail&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-9-5"><a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a><span class="w">    </span><span class="nt">&quot;hook&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;heartbeat&quot;</span><span class="p">,</span>
+</span><span id="__span-9-6"><a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a><span class="w">    </span><span class="nt">&quot;variant&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;pulse&quot;</span><span class="p">,</span>
+</span><span id="__span-9-7"><a id="__codelineno-9-7" name="__codelineno-9-7" href="#__codelineno-9-7"></a><span class="w">    </span><span class="nt">&quot;variables&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-9-8"><a id="__codelineno-9-8" name="__codelineno-9-8" href="#__codelineno-9-8"></a><span class="w">      </span><span class="nt">&quot;prompt_count&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">7</span><span class="p">,</span>
+</span><span id="__span-9-9"><a id="__codelineno-9-9" name="__codelineno-9-9" href="#__codelineno-9-9"></a><span class="w">      </span><span class="nt">&quot;session_id&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;abc...&quot;</span><span class="p">,</span>
+</span><span id="__span-9-10"><a id="__codelineno-9-10" name="__codelineno-9-10" href="#__codelineno-9-10"></a><span class="w">      </span><span class="nt">&quot;context_modified&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span>
+</span><span id="__span-9-11"><a id="__codelineno-9-11" name="__codelineno-9-11" href="#__codelineno-9-11"></a><span class="w">      </span><span class="nt">&quot;tokens&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">158000</span><span class="p">,</span>
+</span><span id="__span-9-12"><a id="__codelineno-9-12" name="__codelineno-9-12" href="#__codelineno-9-12"></a><span class="w">      </span><span class="nt">&quot;context_window&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">200000</span><span class="p">,</span>
+</span><span id="__span-9-13"><a id="__codelineno-9-13" name="__codelineno-9-13" href="#__codelineno-9-13"></a><span class="w">      </span><span class="nt">&quot;usage_pct&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">79</span>
+</span><span id="__span-9-14"><a id="__codelineno-9-14" name="__codelineno-9-14" href="#__codelineno-9-14"></a><span class="w">    </span><span class="p">}</span>
+</span><span id="__span-9-15"><a id="__codelineno-9-15" name="__codelineno-9-15" href="#__codelineno-9-15"></a><span class="w">  </span><span class="p">}</span>
+</span><span id="__span-9-16"><a id="__codelineno-9-16" name="__codelineno-9-16" href="#__codelineno-9-16"></a><span class="p">}</span>
 </span></code></pre></div>
 <p>Token fields (<code>tokens</code>, <code>context_window</code>, <code>usage_pct</code>) are included when
 usage data is available from the session JSONL file.</p>
@@ -4702,7 +4752,7 @@ are allowed.</p>
 dev-built binary in production context causes version confusion and
 silent behavior drift.</p>
 <p><strong>Output</strong>: Block response (<em>prevents the tool call</em>):</p>
-<div class="language-json highlight"><pre><span></span><code><span id="__span-8-1"><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="p">{</span><span class="nt">&quot;decision&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;block&quot;</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;reason&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Use &#39;ctx&#39; from PATH, not &#39;./ctx&#39;...&quot;</span><span class="p">}</span>
+<div class="language-json highlight"><pre><span></span><code><span id="__span-10-1"><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="p">{</span><span class="nt">&quot;decision&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;block&quot;</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;reason&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Use &#39;ctx&#39; from PATH, not &#39;./ctx&#39;...&quot;</span><span class="p">}</span>
 </span></code></pre></div>
 <hr />
 <h4 id="qa-reminder-pre-commit-qa-gate"><code>qa-reminder</code>: Pre-Commit QA Gate<a class="headerlink" href="#qa-reminder-pre-commit-qa-gate" title="Permanent link">&para;</a></h4>
@@ -4723,15 +4773,15 @@ mechanical git operations into context-capturing opportunities.</p>
 <h2 id="auditing-hooks-via-the-local-event-log">Auditing Hooks via the Local Event Log<a class="headerlink" href="#auditing-hooks-via-the-local-event-log" title="Permanent link">&para;</a></h2>
 <p>If you don't need an external audit trail, enable the <strong>local event log</strong> for
 a self-contained record of hook activity:</p>
-<div class="language-yaml highlight"><pre><span></span><code><span id="__span-9-1"><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="c1"># .ctxrc</span>
-</span><span id="__span-9-2"><a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a><span class="nt">event_log</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
+<div class="language-yaml highlight"><pre><span></span><code><span id="__span-11-1"><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a><span class="c1"># .ctxrc</span>
+</span><span id="__span-11-2"><a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a><span class="nt">event_log</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
 </span></code></pre></div>
 <p>Once enabled, every hook that fires writes an entry to
 <code>.context/state/events.jsonl</code>. Query it with <code>ctx system events</code>:</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-10-1"><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a>ctx<span class="w"> </span>system<span class="w"> </span>events<span class="w">                    </span><span class="c1"># last 50 events</span>
-</span><span id="__span-10-2"><a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>ctx<span class="w"> </span>system<span class="w"> </span>events<span class="w"> </span>--hook<span class="w"> </span>qa-reminder<span class="w"> </span><span class="c1"># filter by hook</span>
-</span><span id="__span-10-3"><a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a>ctx<span class="w"> </span>system<span class="w"> </span>events<span class="w"> </span>--session<span class="w"> </span>&lt;id&gt;<span class="w">     </span><span class="c1"># filter by session</span>
-</span><span id="__span-10-4"><a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a>ctx<span class="w"> </span>system<span class="w"> </span>events<span class="w"> </span>--json<span class="w"> </span><span class="p">|</span><span class="w"> </span>jq<span class="w"> </span><span class="s1">&#39;.&#39;</span><span class="w">    </span><span class="c1"># raw JSONL for processing</span>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-12-1"><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a>ctx<span class="w"> </span>system<span class="w"> </span>events<span class="w">                    </span><span class="c1"># last 50 events</span>
+</span><span id="__span-12-2"><a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a>ctx<span class="w"> </span>system<span class="w"> </span>events<span class="w"> </span>--hook<span class="w"> </span>qa-reminder<span class="w"> </span><span class="c1"># filter by hook</span>
+</span><span id="__span-12-3"><a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a>ctx<span class="w"> </span>system<span class="w"> </span>events<span class="w"> </span>--session<span class="w"> </span>&lt;id&gt;<span class="w">     </span><span class="c1"># filter by session</span>
+</span><span id="__span-12-4"><a id="__codelineno-12-4" name="__codelineno-12-4" href="#__codelineno-12-4"></a>ctx<span class="w"> </span>system<span class="w"> </span>events<span class="w"> </span>--json<span class="w"> </span><span class="p">|</span><span class="w"> </span>jq<span class="w"> </span><span class="s1">&#39;.&#39;</span><span class="w">    </span><span class="c1"># raw JSONL for processing</span>
 </span></code></pre></div>
 <p>The event log is local, queryable, and doesn't require any external service.
 For a full diagnostic workflow combining event logs with structural health
@@ -4741,17 +4791,17 @@ checks, see <a href="../troubleshooting/">Troubleshooting</a>.</p>
 <p>The most powerful audit setup pipes <strong>all</strong> hook output to a webhook,
 giving you a real-time external record of what your agent is being told.</p>
 <h3 id="step-1-set-up-the-webhook">Step 1: Set Up the Webhook<a class="headerlink" href="#step-1-set-up-the-webhook" title="Permanent link">&para;</a></h3>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-11-1"><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a>ctx<span class="w"> </span>notify<span class="w"> </span>setup
-</span><span id="__span-11-2"><a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a><span class="c1"># Enter your webhook URL (Slack, Discord, ntfy.sh, IFTTT, etc.)</span>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-13-1"><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a>ctx<span class="w"> </span>notify<span class="w"> </span>setup
+</span><span id="__span-13-2"><a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a><span class="c1"># Enter your webhook URL (Slack, Discord, ntfy.sh, IFTTT, etc.)</span>
 </span></code></pre></div>
 <p>See <a href="../webhook-notifications/">Webhook Notifications</a> for service-specific
 setup.</p>
 <h3 id="step-2-subscribe-to-relay-events">Step 2: Subscribe to <code>relay</code> Events<a class="headerlink" href="#step-2-subscribe-to-relay-events" title="Permanent link">&para;</a></h3>
-<div class="language-yaml highlight"><pre><span></span><code><span id="__span-12-1"><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a><span class="c1"># .ctxrc</span>
-</span><span id="__span-12-2"><a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a><span class="nt">notify</span><span class="p">:</span>
-</span><span id="__span-12-3"><a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a><span class="w">  </span><span class="nt">events</span><span class="p">:</span>
-</span><span id="__span-12-4"><a id="__codelineno-12-4" name="__codelineno-12-4" href="#__codelineno-12-4"></a><span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">relay</span><span class="w">   </span><span class="c1"># all hook output: VERBATIM relays, directives, blocks</span>
-</span><span id="__span-12-5"><a id="__codelineno-12-5" name="__codelineno-12-5" href="#__codelineno-12-5"></a><span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">nudge</span><span class="w">   </span><span class="c1"># just the user-facing VERBATIM relays</span>
+<div class="language-yaml highlight"><pre><span></span><code><span id="__span-14-1"><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a><span class="c1"># .ctxrc</span>
+</span><span id="__span-14-2"><a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a><span class="nt">notify</span><span class="p">:</span>
+</span><span id="__span-14-3"><a id="__codelineno-14-3" name="__codelineno-14-3" href="#__codelineno-14-3"></a><span class="w">  </span><span class="nt">events</span><span class="p">:</span>
+</span><span id="__span-14-4"><a id="__codelineno-14-4" name="__codelineno-14-4" href="#__codelineno-14-4"></a><span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">relay</span><span class="w">   </span><span class="c1"># all hook output: VERBATIM relays, directives, blocks</span>
+</span><span id="__span-14-5"><a id="__codelineno-14-5" name="__codelineno-14-5" href="#__codelineno-14-5"></a><span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">nudge</span><span class="w">   </span><span class="c1"># just the user-facing VERBATIM relays</span>
 </span></code></pre></div>
 <p>The <code>relay</code> event fires for <strong>every</strong> hook that produces output. This
 includes:</p>
@@ -4796,6 +4846,10 @@ includes:</p>
 <td><code>relay</code> + <code>nudge</code></td>
 </tr>
 <tr>
+<td><code>check-freshness</code></td>
+<td><code>relay</code> + <code>nudge</code></td>
+</tr>
+<tr>
 <td><code>check-map-staleness</code></td>
 <td><code>relay</code> + <code>nudge</code></td>
 </tr>
@@ -4820,13 +4874,13 @@ includes:</p>
 <h3 id="step-3-cross-reference">Step 3: Cross-Reference<a class="headerlink" href="#step-3-cross-reference" title="Permanent link">&para;</a></h3>
 <p>With <code>relay</code> enabled, your webhook receives a JSON payload every time a
 hook fires:</p>
-<div class="language-json highlight"><pre><span></span><code><span id="__span-13-1"><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a><span class="p">{</span>
-</span><span id="__span-13-2"><a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a><span class="w">  </span><span class="nt">&quot;event&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;relay&quot;</span><span class="p">,</span>
-</span><span id="__span-13-3"><a id="__codelineno-13-3" name="__codelineno-13-3" href="#__codelineno-13-3"></a><span class="w">  </span><span class="nt">&quot;message&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;check-persistence: No context updated in 20+ prompts&quot;</span><span class="p">,</span>
-</span><span id="__span-13-4"><a id="__codelineno-13-4" name="__codelineno-13-4" href="#__codelineno-13-4"></a><span class="w">  </span><span class="nt">&quot;session_id&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;b854bd9c&quot;</span><span class="p">,</span>
-</span><span id="__span-13-5"><a id="__codelineno-13-5" name="__codelineno-13-5" href="#__codelineno-13-5"></a><span class="w">  </span><span class="nt">&quot;timestamp&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;2026-02-22T14:30:00Z&quot;</span><span class="p">,</span>
-</span><span id="__span-13-6"><a id="__codelineno-13-6" name="__codelineno-13-6" href="#__codelineno-13-6"></a><span class="w">  </span><span class="nt">&quot;project&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;my-project&quot;</span>
-</span><span id="__span-13-7"><a id="__codelineno-13-7" name="__codelineno-13-7" href="#__codelineno-13-7"></a><span class="p">}</span>
+<div class="language-json highlight"><pre><span></span><code><span id="__span-15-1"><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a><span class="p">{</span>
+</span><span id="__span-15-2"><a id="__codelineno-15-2" name="__codelineno-15-2" href="#__codelineno-15-2"></a><span class="w">  </span><span class="nt">&quot;event&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;relay&quot;</span><span class="p">,</span>
+</span><span id="__span-15-3"><a id="__codelineno-15-3" name="__codelineno-15-3" href="#__codelineno-15-3"></a><span class="w">  </span><span class="nt">&quot;message&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;check-persistence: No context updated in 20+ prompts&quot;</span><span class="p">,</span>
+</span><span id="__span-15-4"><a id="__codelineno-15-4" name="__codelineno-15-4" href="#__codelineno-15-4"></a><span class="w">  </span><span class="nt">&quot;session_id&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;b854bd9c&quot;</span><span class="p">,</span>
+</span><span id="__span-15-5"><a id="__codelineno-15-5" name="__codelineno-15-5" href="#__codelineno-15-5"></a><span class="w">  </span><span class="nt">&quot;timestamp&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;2026-02-22T14:30:00Z&quot;</span><span class="p">,</span>
+</span><span id="__span-15-6"><a id="__codelineno-15-6" name="__codelineno-15-6" href="#__codelineno-15-6"></a><span class="w">  </span><span class="nt">&quot;project&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;my-project&quot;</span>
+</span><span id="__span-15-7"><a id="__codelineno-15-7" name="__codelineno-15-7" href="#__codelineno-15-7"></a><span class="p">}</span>
 </span></code></pre></div>
 <p>This creates an <strong>external audit trail</strong> independent of the agent. You
 can now cross-verify: did the agent actually relay the checkpoint the
@@ -4838,8 +4892,8 @@ from an invisible thing that never existed. Three verification methods,
 from simplest to most robust:</p>
 <h3 id="method-1-ask-the-agent">Method 1: Ask the Agent<a class="headerlink" href="#method-1-ask-the-agent" title="Permanent link">&para;</a></h3>
 <p>The simplest check. After a few prompts into a session:</p>
-<div class="language-text highlight"><pre><span></span><code><span id="__span-14-1"><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a>&quot;Did you receive any hook output this session? Print the last
-</span><span id="__span-14-2"><a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a>context checkpoint or persistence nudge you saw.&quot;
+<div class="language-text highlight"><pre><span></span><code><span id="__span-16-1"><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a>&quot;Did you receive any hook output this session? Print the last
+</span><span id="__span-16-2"><a id="__codelineno-16-2" name="__codelineno-16-2" href="#__codelineno-16-2"></a>context checkpoint or persistence nudge you saw.&quot;
 </span></code></pre></div>
 <p>The agent should be able to recall recent hook output from its context
 window. If it says "<em>I haven't received any hook output</em>", either:</p>
@@ -4863,20 +4917,20 @@ relayed. Discrepancies mean the agent is absorbing nudges instead of
 surfacing them.</p>
 <h3 id="method-3-read-the-local-logs">Method 3: Read the Local Logs<a class="headerlink" href="#method-3-read-the-local-logs" title="Permanent link">&para;</a></h3>
 <p>Hooks that support logging write to <code>.context/logs/</code>:</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-15-1"><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a><span class="c1"># Check context-size hook activity</span>
-</span><span id="__span-15-2"><a id="__codelineno-15-2" name="__codelineno-15-2" href="#__codelineno-15-2"></a>cat<span class="w"> </span>.context/logs/check-context-size.log
-</span><span id="__span-15-3"><a id="__codelineno-15-3" name="__codelineno-15-3" href="#__codelineno-15-3"></a>
-</span><span id="__span-15-4"><a id="__codelineno-15-4" name="__codelineno-15-4" href="#__codelineno-15-4"></a><span class="c1"># Sample output:</span>
-</span><span id="__span-15-5"><a id="__codelineno-15-5" name="__codelineno-15-5" href="#__codelineno-15-5"></a><span class="c1"># [2026-02-22 09:15:00] [session:b854bd9c] prompt#1 silent</span>
-</span><span id="__span-15-6"><a id="__codelineno-15-6" name="__codelineno-15-6" href="#__codelineno-15-6"></a><span class="c1"># [2026-02-22 09:17:33] [session:b854bd9c] prompt#16 CHECKPOINT</span>
-</span><span id="__span-15-7"><a id="__codelineno-15-7" name="__codelineno-15-7" href="#__codelineno-15-7"></a><span class="c1"># [2026-02-22 09:20:01] [session:b854bd9c] prompt#20 CHECKPOINT</span>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-17-1"><a id="__codelineno-17-1" name="__codelineno-17-1" href="#__codelineno-17-1"></a><span class="c1"># Check context-size hook activity</span>
+</span><span id="__span-17-2"><a id="__codelineno-17-2" name="__codelineno-17-2" href="#__codelineno-17-2"></a>cat<span class="w"> </span>.context/logs/check-context-size.log
+</span><span id="__span-17-3"><a id="__codelineno-17-3" name="__codelineno-17-3" href="#__codelineno-17-3"></a>
+</span><span id="__span-17-4"><a id="__codelineno-17-4" name="__codelineno-17-4" href="#__codelineno-17-4"></a><span class="c1"># Sample output:</span>
+</span><span id="__span-17-5"><a id="__codelineno-17-5" name="__codelineno-17-5" href="#__codelineno-17-5"></a><span class="c1"># [2026-02-22 09:15:00] [session:b854bd9c] prompt#1 silent</span>
+</span><span id="__span-17-6"><a id="__codelineno-17-6" name="__codelineno-17-6" href="#__codelineno-17-6"></a><span class="c1"># [2026-02-22 09:17:33] [session:b854bd9c] prompt#16 CHECKPOINT</span>
+</span><span id="__span-17-7"><a id="__codelineno-17-7" name="__codelineno-17-7" href="#__codelineno-17-7"></a><span class="c1"># [2026-02-22 09:20:01] [session:b854bd9c] prompt#20 CHECKPOINT</span>
 </span></code></pre></div>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-16-1"><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a><span class="c1"># Check persistence nudge activity</span>
-</span><span id="__span-16-2"><a id="__codelineno-16-2" name="__codelineno-16-2" href="#__codelineno-16-2"></a>cat<span class="w"> </span>.context/logs/check-persistence.log
-</span><span id="__span-16-3"><a id="__codelineno-16-3" name="__codelineno-16-3" href="#__codelineno-16-3"></a>
-</span><span id="__span-16-4"><a id="__codelineno-16-4" name="__codelineno-16-4" href="#__codelineno-16-4"></a><span class="c1"># Sample output:</span>
-</span><span id="__span-16-5"><a id="__codelineno-16-5" name="__codelineno-16-5" href="#__codelineno-16-5"></a><span class="c1"># [2026-02-22 09:15:00] [session:b854bd9c] init count=1 mtime=1770646611</span>
-</span><span id="__span-16-6"><a id="__codelineno-16-6" name="__codelineno-16-6" href="#__codelineno-16-6"></a><span class="c1"># [2026-02-22 09:20:01] [session:b854bd9c] prompt#20 NUDGE since_nudge=20</span>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-18-1"><a id="__codelineno-18-1" name="__codelineno-18-1" href="#__codelineno-18-1"></a><span class="c1"># Check persistence nudge activity</span>
+</span><span id="__span-18-2"><a id="__codelineno-18-2" name="__codelineno-18-2" href="#__codelineno-18-2"></a>cat<span class="w"> </span>.context/logs/check-persistence.log
+</span><span id="__span-18-3"><a id="__codelineno-18-3" name="__codelineno-18-3" href="#__codelineno-18-3"></a>
+</span><span id="__span-18-4"><a id="__codelineno-18-4" name="__codelineno-18-4" href="#__codelineno-18-4"></a><span class="c1"># Sample output:</span>
+</span><span id="__span-18-5"><a id="__codelineno-18-5" name="__codelineno-18-5" href="#__codelineno-18-5"></a><span class="c1"># [2026-02-22 09:15:00] [session:b854bd9c] init count=1 mtime=1770646611</span>
+</span><span id="__span-18-6"><a id="__codelineno-18-6" name="__codelineno-18-6" href="#__codelineno-18-6"></a><span class="c1"># [2026-02-22 09:20:01] [session:b854bd9c] prompt#20 NUDGE since_nudge=20</span>
 </span></code></pre></div>
 <p>Logs are append-only and written by the <code>ctx</code> binary, not the agent.</p>
 <hr />
@@ -4900,18 +4954,18 @@ you simply haven't used <code>ctx</code>. The correct check needs two inputs:</p
 problem. If neither sessions nor hooks are happening, that's a vacation.</p>
 <h3 id="what-to-check">What to Check<a class="headerlink" href="#what-to-check" title="Permanent link">&para;</a></h3>
 <p>When you suspect hooks aren't firing:</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-17-1"><a id="__codelineno-17-1" name="__codelineno-17-1" href="#__codelineno-17-1"></a><span class="c1"># 1. Verify the plugin is installed</span>
-</span><span id="__span-17-2"><a id="__codelineno-17-2" name="__codelineno-17-2" href="#__codelineno-17-2"></a>ls<span class="w"> </span>~/.claude/plugins/
-</span><span id="__span-17-3"><a id="__codelineno-17-3" name="__codelineno-17-3" href="#__codelineno-17-3"></a>
-</span><span id="__span-17-4"><a id="__codelineno-17-4" name="__codelineno-17-4" href="#__codelineno-17-4"></a><span class="c1"># 2. Check hook registration</span>
-</span><span id="__span-17-5"><a id="__codelineno-17-5" name="__codelineno-17-5" href="#__codelineno-17-5"></a>cat<span class="w"> </span>~/.claude/plugins/ctx/hooks.json<span class="w"> </span><span class="p">|</span><span class="w"> </span>head<span class="w"> </span>-20
-</span><span id="__span-17-6"><a id="__codelineno-17-6" name="__codelineno-17-6" href="#__codelineno-17-6"></a>
-</span><span id="__span-17-7"><a id="__codelineno-17-7" name="__codelineno-17-7" href="#__codelineno-17-7"></a><span class="c1"># 3. Run a hook manually to see if it errors</span>
-</span><span id="__span-17-8"><a id="__codelineno-17-8" name="__codelineno-17-8" href="#__codelineno-17-8"></a><span class="nb">echo</span><span class="w"> </span><span class="s1">&#39;{&quot;session_id&quot;:&quot;test&quot;}&#39;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>ctx<span class="w"> </span>system<span class="w"> </span>check-context-size
-</span><span id="__span-17-9"><a id="__codelineno-17-9" name="__codelineno-17-9" href="#__codelineno-17-9"></a>
-</span><span id="__span-17-10"><a id="__codelineno-17-10" name="__codelineno-17-10" href="#__codelineno-17-10"></a><span class="c1"># 4. Check for PATH issues</span>
-</span><span id="__span-17-11"><a id="__codelineno-17-11" name="__codelineno-17-11" href="#__codelineno-17-11"></a>which<span class="w"> </span>ctx
-</span><span id="__span-17-12"><a id="__codelineno-17-12" name="__codelineno-17-12" href="#__codelineno-17-12"></a>ctx<span class="w"> </span>--version
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-19-1"><a id="__codelineno-19-1" name="__codelineno-19-1" href="#__codelineno-19-1"></a><span class="c1"># 1. Verify the plugin is installed</span>
+</span><span id="__span-19-2"><a id="__codelineno-19-2" name="__codelineno-19-2" href="#__codelineno-19-2"></a>ls<span class="w"> </span>~/.claude/plugins/
+</span><span id="__span-19-3"><a id="__codelineno-19-3" name="__codelineno-19-3" href="#__codelineno-19-3"></a>
+</span><span id="__span-19-4"><a id="__codelineno-19-4" name="__codelineno-19-4" href="#__codelineno-19-4"></a><span class="c1"># 2. Check hook registration</span>
+</span><span id="__span-19-5"><a id="__codelineno-19-5" name="__codelineno-19-5" href="#__codelineno-19-5"></a>cat<span class="w"> </span>~/.claude/plugins/ctx/hooks.json<span class="w"> </span><span class="p">|</span><span class="w"> </span>head<span class="w"> </span>-20
+</span><span id="__span-19-6"><a id="__codelineno-19-6" name="__codelineno-19-6" href="#__codelineno-19-6"></a>
+</span><span id="__span-19-7"><a id="__codelineno-19-7" name="__codelineno-19-7" href="#__codelineno-19-7"></a><span class="c1"># 3. Run a hook manually to see if it errors</span>
+</span><span id="__span-19-8"><a id="__codelineno-19-8" name="__codelineno-19-8" href="#__codelineno-19-8"></a><span class="nb">echo</span><span class="w"> </span><span class="s1">&#39;{&quot;session_id&quot;:&quot;test&quot;}&#39;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>ctx<span class="w"> </span>system<span class="w"> </span>check-context-size
+</span><span id="__span-19-9"><a id="__codelineno-19-9" name="__codelineno-19-9" href="#__codelineno-19-9"></a>
+</span><span id="__span-19-10"><a id="__codelineno-19-10" name="__codelineno-19-10" href="#__codelineno-19-10"></a><span class="c1"># 4. Check for PATH issues</span>
+</span><span id="__span-19-11"><a id="__codelineno-19-11" name="__codelineno-19-11" href="#__codelineno-19-11"></a>which<span class="w"> </span>ctx
+</span><span id="__span-19-12"><a id="__codelineno-19-12" name="__codelineno-19-12" href="#__codelineno-19-12"></a>ctx<span class="w"> </span>--version
 </span></code></pre></div>
 <hr />
 <h2 id="tips">Tips<a class="headerlink" href="#tips" title="Permanent link">&para;</a></h2>
@@ -5104,7 +5158,7 @@ The documentation on this website is distributed under
       <script id="__config" type="application/json">{"annotate":null,"base":"../..","features":["announce.dismiss","content.code.annotate","content.code.copy","content.code.select","content.footnote.tooltips","content.tabs.link","content.tooltips","navigation.footer","navigation.indexes","navigation.instant","navigation.instant.prefetch","navigation.path","navigation.sections","navigation.tabs","navigation.tabs.sticky","navigation.top","navigation.tracking","search.highlight"],"search":"../../assets/javascripts/workers/search.e2d2d235.min.js","tags":null,"translations":{"clipboard.copied":"Copied to clipboard","clipboard.copy":"Copy to clipboard","search.result.more.one":"1 more on this page","search.result.more.other":"# more on this page","search.result.none":"No matching documents","search.result.one":"1 matching document","search.result.other":"# matching documents","search.result.placeholder":"Type to start searching","search.result.term.missing":"Missing","select.version":"Select version"},"version":null}</script>
     
     
-      <script src="../../assets/javascripts/bundle.16f8adc2.min.js"></script>
+      <script src="../../assets/javascripts/bundle.8ffeb9c9.min.js"></script>
       
     
   </body>

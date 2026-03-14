@@ -594,6 +594,63 @@ notify:
 	}
 }
 
+func TestSessionPrefixes_Default(t *testing.T) {
+	tempDir := t.TempDir()
+	origDir, _ := os.Getwd()
+	_ = os.Chdir(tempDir)
+	defer func() { _ = os.Chdir(origDir) }()
+
+	Reset()
+
+	prefixes := SessionPrefixes()
+	if len(prefixes) != 1 || prefixes[0] != "Session:" {
+		t.Errorf("SessionPrefixes() = %v, want [Session:]", prefixes)
+	}
+}
+
+func TestSessionPrefixes_Custom(t *testing.T) {
+	tempDir := t.TempDir()
+	origDir, _ := os.Getwd()
+	_ = os.Chdir(tempDir)
+	defer func() { _ = os.Chdir(origDir) }()
+
+	rcContent := "session_prefixes:\n  - \"Session:\"\n  - \"セッション:\"\n  - \"Sesión:\"\n"
+	_ = os.WriteFile(filepath.Join(tempDir, ".ctxrc"), []byte(rcContent), 0600)
+
+	Reset()
+
+	prefixes := SessionPrefixes()
+	if len(prefixes) != 3 {
+		t.Fatalf("SessionPrefixes() len = %d, want 3", len(prefixes))
+	}
+	if prefixes[0] != "Session:" {
+		t.Errorf("SessionPrefixes()[0] = %q, want %q", prefixes[0], "Session:")
+	}
+	if prefixes[1] != "セッション:" {
+		t.Errorf("SessionPrefixes()[1] = %q, want %q", prefixes[1], "セッション:")
+	}
+	if prefixes[2] != "Sesión:" {
+		t.Errorf("SessionPrefixes()[2] = %q, want %q", prefixes[2], "Sesión:")
+	}
+}
+
+func TestSessionPrefixes_EmptyFallsBackToDefault(t *testing.T) {
+	tempDir := t.TempDir()
+	origDir, _ := os.Getwd()
+	_ = os.Chdir(tempDir)
+	defer func() { _ = os.Chdir(origDir) }()
+
+	rcContent := "session_prefixes: []\n"
+	_ = os.WriteFile(filepath.Join(tempDir, ".ctxrc"), []byte(rcContent), 0600)
+
+	Reset()
+
+	prefixes := SessionPrefixes()
+	if len(prefixes) != 1 || prefixes[0] != "Session:" {
+		t.Errorf("SessionPrefixes() with empty config = %v, want defaults [Session:]", prefixes)
+	}
+}
+
 func TestGetRC_NegativeEnvBudget(t *testing.T) {
 	tempDir := t.TempDir()
 	origDir, _ := os.Getwd()
