@@ -20,7 +20,9 @@ import (
 // Returns:
 //   - error: "reading state directory: <cause>"
 func ReadingStateDir(cause error) error {
-	return fmt.Errorf(assets.TextDesc(assets.TextDescKeyErrStateReadingStateDir), cause)
+	return fmt.Errorf(
+		assets.TextDesc(assets.TextDescKeyErrStateReadingStateDir), cause,
+	)
 }
 
 // LoadState wraps a state-loading failure.

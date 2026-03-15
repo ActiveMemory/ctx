@@ -119,7 +119,9 @@ func GoldenNotFound() error {
 // Returns:
 //   - error: "read embedded schema: <cause>"
 func ReadEmbeddedSchema(cause error) error {
-	return fmt.Errorf(assets.TextDesc(assets.TextDescKeyErrConfigReadEmbeddedSchema), cause)
+	return fmt.Errorf(
+		assets.TextDesc(assets.TextDescKeyErrConfigReadEmbeddedSchema), cause,
+	)
 }
 
 // MarshalSettings wraps a failure to marshal settings JSON.
@@ -130,7 +132,9 @@ func ReadEmbeddedSchema(cause error) error {
 // Returns:
 //   - error: "failed to marshal settings: <cause>"
 func MarshalSettings(cause error) error {
-	return fmt.Errorf(assets.TextDesc(assets.TextDescKeyErrConfigMarshalSettings), cause)
+	return fmt.Errorf(
+		assets.TextDesc(assets.TextDescKeyErrConfigMarshalSettings), cause,
+	)
 }
 
 // MarshalPlugins wraps a failure to marshal enabledPlugins JSON.
@@ -141,5 +145,7 @@ func MarshalSettings(cause error) error {
 // Returns:
 //   - error: "failed to marshal enabledPlugins: <cause>"
 func MarshalPlugins(cause error) error {
-	return fmt.Errorf(assets.TextDesc(assets.TextDescKeyErrConfigMarshalPlugins), cause)
+	return fmt.Errorf(
+		assets.TextDesc(assets.TextDescKeyErrConfigMarshalPlugins), cause,
+	)
 }

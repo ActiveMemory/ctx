@@ -32,5 +32,7 @@ func SkillList(cause error) error {
 // Returns:
 //   - error: "failed to read skill <name>: <cause>"
 func SkillRead(name string, cause error) error {
-	return fmt.Errorf(assets.TextDesc(assets.TextDescKeyErrSkillRead), name, cause)
+	return fmt.Errorf(
+		assets.TextDesc(assets.TextDescKeyErrSkillRead), name, cause,
+	)
 }

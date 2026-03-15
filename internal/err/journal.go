@@ -144,7 +144,9 @@ func UnknownStage(stage, valid string) error {
 // Returns:
 //   - error: "<filename>: <stage> not set"
 func StageNotSet(filename, stage string) error {
-	return fmt.Errorf(assets.TextDesc(assets.TextDescKeyErrJournalStageNotSet), filename, stage)
+	return fmt.Errorf(
+		assets.TextDesc(assets.TextDescKeyErrJournalStageNotSet), filename, stage,
+	)
 }
 
 // RegenerateRequiresAll returns a validation error when --regenerate
@@ -153,5 +155,7 @@ func StageNotSet(filename, stage string) error {
 // Returns:
 //   - error: explains the flag dependency
 func RegenerateRequiresAll() error {
-	return errors.New(assets.TextDesc(assets.TextDescKeyErrJournalRegenerateRequiresAll))
+	return errors.New(
+		assets.TextDesc(assets.TextDescKeyErrJournalRegenerateRequiresAll),
+	)
 }

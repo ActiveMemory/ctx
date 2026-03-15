@@ -22,7 +22,9 @@ import (
 // Returns:
 //   - error: "entry <n> does not exist, scratchpad has <total> entries"
 func EntryRange(n, total int) error {
-	return fmt.Errorf(assets.TextDesc(assets.TextDescKeyErrPadEntryRange), n, total)
+	return fmt.Errorf(
+		assets.TextDesc(assets.TextDescKeyErrPadEntryRange), n, total,
+	)
 }
 
 // EditBlobTextConflict returns an error when --file/--label and text
@@ -31,7 +33,9 @@ func EntryRange(n, total int) error {
 // Returns:
 //   - error: describing the mutual exclusivity
 func EditBlobTextConflict() error {
-	return errors.New(assets.TextDesc(assets.TextDescKeyErrPadEditBlobTextConflict))
+	return errors.New(
+		assets.TextDesc(assets.TextDescKeyErrPadEditBlobTextConflict),
+	)
 }
 
 // EditTextConflict returns an error when multiple text editing modes
@@ -40,7 +44,9 @@ func EditBlobTextConflict() error {
 // Returns:
 //   - error: describing the mutual exclusivity
 func EditTextConflict() error {
-	return errors.New(assets.TextDesc(assets.TextDescKeyErrPadEditTextConflict))
+	return errors.New(
+		assets.TextDesc(assets.TextDescKeyErrPadEditTextConflict),
+	)
 }
 
 // EditNoMode returns an error when no editing mode was specified.
@@ -48,7 +54,9 @@ func EditTextConflict() error {
 // Returns:
 //   - error: prompting for a mode
 func EditNoMode() error {
-	return errors.New(assets.TextDesc(assets.TextDescKeyErrPadEditNoMode))
+	return errors.New(
+		assets.TextDesc(assets.TextDescKeyErrPadEditNoMode),
+	)
 }
 
 // BlobAppendNotAllowed returns an error for appending to a blob entry.
@@ -56,7 +64,9 @@ func EditNoMode() error {
 // Returns:
 //   - error: "cannot append to a blob entry"
 func BlobAppendNotAllowed() error {
-	return errors.New(assets.TextDesc(assets.TextDescKeyErrPadBlobAppendNotAllowed))
+	return errors.New(
+		assets.TextDesc(assets.TextDescKeyErrPadBlobAppendNotAllowed),
+	)
 }
 
 // BlobPrependNotAllowed returns an error for prepending to a blob entry.
@@ -64,7 +74,9 @@ func BlobAppendNotAllowed() error {
 // Returns:
 //   - error: "cannot prepend to a blob entry"
 func BlobPrependNotAllowed() error {
-	return errors.New(assets.TextDesc(assets.TextDescKeyErrPadBlobPrependNotAllowed))
+	return errors.New(
+		assets.TextDesc(assets.TextDescKeyErrPadBlobPrependNotAllowed),
+	)
 }
 
 // NotBlobEntry returns an error when a blob operation targets a non-blob.
@@ -75,7 +87,9 @@ func BlobPrependNotAllowed() error {
 // Returns:
 //   - error: "entry <n> is not a blob entry"
 func NotBlobEntry(n int) error {
-	return fmt.Errorf(assets.TextDesc(assets.TextDescKeyErrPadNotBlobEntry), n)
+	return fmt.Errorf(
+		assets.TextDesc(assets.TextDescKeyErrPadNotBlobEntry), n,
+	)
 }
 
 // ResolveNotEncrypted returns an error when resolve is used on an
@@ -84,7 +98,9 @@ func NotBlobEntry(n int) error {
 // Returns:
 //   - error: "resolve is only needed for encrypted scratchpads"
 func ResolveNotEncrypted() error {
-	return errors.New(assets.TextDesc(assets.TextDescKeyErrPadResolveNotEncrypted))
+	return errors.New(
+		assets.TextDesc(assets.TextDescKeyErrPadResolveNotEncrypted),
+	)
 }
 
 // NoConflictFiles returns an error when no merge conflict files are found.
@@ -95,7 +111,10 @@ func ResolveNotEncrypted() error {
 // Returns:
 //   - error: "no conflict files found (<filename>.ours / <filename>.theirs)"
 func NoConflictFiles(filename string) error {
-	return fmt.Errorf(assets.TextDesc(assets.TextDescKeyErrPadNoConflictFiles), filename, filename)
+	return fmt.Errorf(
+		assets.TextDesc(assets.TextDescKeyErrPadNoConflictFiles),
+		filename, filename,
+	)
 }
 
 // OutFlagRequiresBlob returns an error when --out is used on a non-blob entry.
@@ -103,7 +122,9 @@ func NoConflictFiles(filename string) error {
 // Returns:
 //   - error: "--out can only be used with blob entries"
 func OutFlagRequiresBlob() error {
-	return errors.New(assets.TextDesc(assets.TextDescKeyErrPadOutFlagRequiresBlob))
+	return errors.New(
+		assets.TextDesc(assets.TextDescKeyErrPadOutFlagRequiresBlob),
+	)
 }
 
 // ReadScratchpad wraps a scratchpad read failure.
@@ -114,7 +135,9 @@ func OutFlagRequiresBlob() error {
 // Returns:
 //   - error: "read scratchpad: <cause>"
 func ReadScratchpad(cause error) error {
-	return fmt.Errorf(assets.TextDesc(assets.TextDescKeyErrPadReadScratchpad), cause)
+	return fmt.Errorf(
+		assets.TextDesc(assets.TextDescKeyErrPadReadScratchpad), cause,
+	)
 }
 
 // InvalidIndex returns an error for a non-numeric entry index.
@@ -125,7 +148,9 @@ func ReadScratchpad(cause error) error {
 // Returns:
 //   - error: "invalid index: <value>"
 func InvalidIndex(value string) error {
-	return fmt.Errorf(assets.TextDesc(assets.TextDescKeyErrPadInvalidIndex), value)
+	return fmt.Errorf(
+		assets.TextDesc(assets.TextDescKeyErrPadInvalidIndex), value,
+	)
 }
 
 // FileTooLarge returns an error for a file exceeding the size limit.
@@ -137,5 +162,7 @@ func InvalidIndex(value string) error {
 // Returns:
 //   - error: "file too large: <size> bytes (max <max>)"
 func FileTooLarge(size, max int) error {
-	return fmt.Errorf(assets.TextDesc(assets.TextDescKeyErrPadFileTooLarge), size, max)
+	return fmt.Errorf(
+		assets.TextDesc(assets.TextDescKeyErrPadFileTooLarge), size, max,
+	)
 }

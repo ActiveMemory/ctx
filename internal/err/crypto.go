@@ -29,7 +29,9 @@ func LoadKey(cause error, keyPath string) error {
 	if errors.Is(cause, os.ErrNotExist) {
 		return NoKeyAt(keyPath)
 	}
-	return fmt.Errorf(assets.TextDesc(assets.TextDescKeyErrCryptoLoadKey), cause)
+	return fmt.Errorf(
+		assets.TextDesc(assets.TextDescKeyErrCryptoLoadKey), cause,
+	)
 }
 
 // EncryptFailed wraps an encryption failure.
@@ -40,7 +42,9 @@ func LoadKey(cause error, keyPath string) error {
 // Returns:
 //   - error: "encrypt: <cause>"
 func EncryptFailed(cause error) error {
-	return fmt.Errorf(assets.TextDesc(assets.TextDescKeyErrCryptoEncryptFailed), cause)
+	return fmt.Errorf(
+		assets.TextDesc(assets.TextDescKeyErrCryptoEncryptFailed), cause,
+	)
 }
 
 // DecryptFailed returns an error indicating decryption failure.
@@ -59,7 +63,9 @@ func DecryptFailed() error {
 // Returns:
 //   - error: "encrypted scratchpad found but no key at <path>"
 func NoKeyAt(path string) error {
-	return fmt.Errorf(assets.TextDesc(assets.TextDescKeyErrCryptoNoKeyAt), path)
+	return fmt.Errorf(
+		assets.TextDesc(assets.TextDescKeyErrCryptoNoKeyAt), path,
+	)
 }
 
 // GenerateKey wraps a failure to generate an encryption key.
@@ -70,7 +76,9 @@ func NoKeyAt(path string) error {
 // Returns:
 //   - error: "failed to generate scratchpad key: <cause>"
 func GenerateKey(cause error) error {
-	return fmt.Errorf(assets.TextDesc(assets.TextDescKeyErrCryptoGenerateScratchpadKey), cause)
+	return fmt.Errorf(
+		assets.TextDesc(assets.TextDescKeyErrCryptoGenerateScratchpadKey), cause,
+	)
 }
 
 // SaveKey wraps a failure to save an encryption key.
@@ -81,7 +89,8 @@ func GenerateKey(cause error) error {
 // Returns:
 //   - error: "failed to save scratchpad key: <cause>"
 func SaveKey(cause error) error {
-	return fmt.Errorf(assets.TextDesc(assets.TextDescKeyErrCryptoSaveKey), cause)
+	return fmt.Errorf(
+		assets.TextDesc(assets.TextDescKeyErrCryptoSaveKey), cause)
 }
 
 // MkdirKeyDir wraps a failure to create the key directory.
@@ -92,7 +101,9 @@ func SaveKey(cause error) error {
 // Returns:
 //   - error: "failed to create key dir: <cause>"
 func MkdirKeyDir(cause error) error {
-	return fmt.Errorf(assets.TextDesc(assets.TextDescKeyErrCryptoMkdirKeyDir), cause)
+	return fmt.Errorf(
+		assets.TextDesc(assets.TextDescKeyErrCryptoMkdirKeyDir), cause,
+	)
 }
 
 // CryptoCreateCipher wraps a failure to create an AES cipher.
@@ -103,7 +114,9 @@ func MkdirKeyDir(cause error) error {
 // Returns:
 //   - error: "create cipher: <cause>"
 func CryptoCreateCipher(cause error) error {
-	return fmt.Errorf(assets.TextDesc(assets.TextDescKeyErrCryptoCreateCipher), cause)
+	return fmt.Errorf(
+		assets.TextDesc(assets.TextDescKeyErrCryptoCreateCipher), cause,
+	)
 }
 
 // CryptoCreateGCM wraps a failure to create a GCM instance.
@@ -114,7 +127,9 @@ func CryptoCreateCipher(cause error) error {
 // Returns:
 //   - error: "create GCM: <cause>"
 func CryptoCreateGCM(cause error) error {
-	return fmt.Errorf(assets.TextDesc(assets.TextDescKeyErrCryptoCreateGCM), cause)
+	return fmt.Errorf(
+		assets.TextDesc(assets.TextDescKeyErrCryptoCreateGCM), cause,
+	)
 }
 
 // CryptoGenerateNonce wraps a failure to generate a random nonce.
@@ -125,7 +140,9 @@ func CryptoCreateGCM(cause error) error {
 // Returns:
 //   - error: "generate nonce: <cause>"
 func CryptoGenerateNonce(cause error) error {
-	return fmt.Errorf(assets.TextDesc(assets.TextDescKeyErrCryptoGenerateNonce), cause)
+	return fmt.Errorf(
+		assets.TextDesc(assets.TextDescKeyErrCryptoGenerateNonce), cause,
+	)
 }
 
 // CryptoGenerateKey wraps a failure to generate a random key.
@@ -136,7 +153,9 @@ func CryptoGenerateNonce(cause error) error {
 // Returns:
 //   - error: "generate key: <cause>"
 func CryptoGenerateKey(cause error) error {
-	return fmt.Errorf(assets.TextDesc(assets.TextDescKeyErrCryptoGenerateKey), cause)
+	return fmt.Errorf(
+		assets.TextDesc(assets.TextDescKeyErrCryptoGenerateKey), cause,
+	)
 }
 
 // CryptoCiphertextTooShort returns an error when ciphertext is shorter
@@ -145,7 +164,9 @@ func CryptoGenerateKey(cause error) error {
 // Returns:
 //   - error: "ciphertext too short"
 func CryptoCiphertextTooShort() error {
-	return errors.New(assets.TextDesc(assets.TextDescKeyErrCryptoCiphertextTooShort))
+	return errors.New(
+		assets.TextDesc(assets.TextDescKeyErrCryptoCiphertextTooShort),
+	)
 }
 
 // CryptoDecrypt wraps a decryption failure with cause.
@@ -156,7 +177,9 @@ func CryptoCiphertextTooShort() error {
 // Returns:
 //   - error: "decrypt: <cause>"
 func CryptoDecrypt(cause error) error {
-	return fmt.Errorf(assets.TextDesc(assets.TextDescKeyErrCryptoDecrypt), cause)
+	return fmt.Errorf(
+		assets.TextDesc(assets.TextDescKeyErrCryptoDecrypt), cause,
+	)
 }
 
 // CryptoReadKey wraps a failure to read a key file.
@@ -179,7 +202,9 @@ func CryptoReadKey(cause error) error {
 // Returns:
 //   - error: "invalid key size: got N bytes, want M"
 func CryptoInvalidKeySize(got, want int) error {
-	return fmt.Errorf(assets.TextDesc(assets.TextDescKeyErrCryptoInvalidKeySize), got, want)
+	return fmt.Errorf(
+		assets.TextDesc(assets.TextDescKeyErrCryptoInvalidKeySize), got, want,
+	)
 }
 
 // CryptoWriteKey wraps a failure to write a key file.
@@ -190,5 +215,7 @@ func CryptoInvalidKeySize(got, want int) error {
 // Returns:
 //   - error: "write key: <cause>"
 func CryptoWriteKey(cause error) error {
-	return fmt.Errorf(assets.TextDesc(assets.TextDescKeyErrCryptoWriteKey), cause)
+	return fmt.Errorf(
+		assets.TextDesc(assets.TextDescKeyErrCryptoWriteKey), cause,
+	)
 }

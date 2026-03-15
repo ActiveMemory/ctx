@@ -29,7 +29,9 @@ func WebhookEmpty() error {
 // Returns:
 //   - error: "save webhook: <cause>"
 func SaveWebhook(cause error) error {
-	return fmt.Errorf(assets.TextDesc(assets.TextDescKeyErrNotifySaveWebhook), cause)
+	return fmt.Errorf(
+		assets.TextDesc(assets.TextDescKeyErrNotifySaveWebhook), cause,
+	)
 }
 
 // LoadWebhook wraps a webhook load failure.
@@ -40,7 +42,9 @@ func SaveWebhook(cause error) error {
 // Returns:
 //   - error: "load webhook: <cause>"
 func LoadWebhook(cause error) error {
-	return fmt.Errorf(assets.TextDesc(assets.TextDescKeyErrNotifyLoadWebhook), cause)
+	return fmt.Errorf(
+		assets.TextDesc(assets.TextDescKeyErrNotifyLoadWebhook), cause,
+	)
 }
 
 // MarshalPayload wraps a JSON marshal failure.
@@ -51,7 +55,9 @@ func LoadWebhook(cause error) error {
 // Returns:
 //   - error: "marshal payload: <cause>"
 func MarshalPayload(cause error) error {
-	return fmt.Errorf(assets.TextDesc(assets.TextDescKeyErrNotifyMarshalPayload), cause)
+	return fmt.Errorf(
+		assets.TextDesc(assets.TextDescKeyErrNotifyMarshalPayload), cause,
+	)
 }
 
 // SendNotification wraps a notification send failure.
@@ -62,5 +68,7 @@ func MarshalPayload(cause error) error {
 // Returns:
 //   - error: "send test notification: <cause>"
 func SendNotification(cause error) error {
-	return fmt.Errorf(assets.TextDesc(assets.TextDescKeyErrNotifySendNotification), cause)
+	return fmt.Errorf(
+		assets.TextDesc(assets.TextDescKeyErrNotifySendNotification), cause,
+	)
 }

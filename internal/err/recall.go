@@ -20,7 +20,9 @@ import (
 // Returns:
 //   - error: "reading event log: <cause>"
 func EventLogRead(cause error) error {
-	return fmt.Errorf(assets.TextDesc(assets.TextDescKeyErrRecallEventLogRead), cause)
+	return fmt.Errorf(
+		assets.TextDesc(assets.TextDescKeyErrRecallEventLogRead), cause,
+	)
 }
 
 // StatsGlob wraps a failure to glob stats files.
@@ -31,7 +33,9 @@ func EventLogRead(cause error) error {
 // Returns:
 //   - error: "globbing stats files: <cause>"
 func StatsGlob(cause error) error {
-	return fmt.Errorf(assets.TextDesc(assets.TextDescKeyErrRecallStatsGlob), cause)
+	return fmt.Errorf(
+		assets.TextDesc(assets.TextDescKeyErrRecallStatsGlob), cause,
+	)
 }
 
 // ReindexFileNotFound returns an error when the file to reindex does not exist.
@@ -42,7 +46,9 @@ func StatsGlob(cause error) error {
 // Returns:
 //   - error: "<fileName> not found. Run 'ctx init' first"
 func ReindexFileNotFound(fileName string) error {
-	return fmt.Errorf(assets.TextDesc(assets.TextDescKeyErrRecallReindexFileNotFound), fileName)
+	return fmt.Errorf(
+		assets.TextDesc(assets.TextDescKeyErrRecallReindexFileNotFound), fileName,
+	)
 }
 
 // ReindexFileRead wraps a read failure during reindexing.
@@ -54,7 +60,10 @@ func ReindexFileNotFound(fileName string) error {
 // Returns:
 //   - error: "failed to read <filePath>: <cause>"
 func ReindexFileRead(filePath string, cause error) error {
-	return fmt.Errorf(assets.TextDesc(assets.TextDescKeyErrRecallReindexFileRead), filePath, cause)
+	return fmt.Errorf(
+		assets.TextDesc(assets.TextDescKeyErrRecallReindexFileRead),
+		filePath, cause,
+	)
 }
 
 // ReindexFileWrite wraps a write failure during reindexing.
@@ -66,7 +75,10 @@ func ReindexFileRead(filePath string, cause error) error {
 // Returns:
 //   - error: "failed to write <filePath>: <cause>"
 func ReindexFileWrite(filePath string, cause error) error {
-	return fmt.Errorf(assets.TextDesc(assets.TextDescKeyErrRecallReindexFileWrite), filePath, cause)
+	return fmt.Errorf(
+		assets.TextDesc(assets.TextDescKeyErrRecallReindexFileWrite),
+		filePath, cause,
+	)
 }
 
 // OpenLogFile wraps a failure to open a log file.
@@ -77,5 +89,7 @@ func ReindexFileWrite(filePath string, cause error) error {
 // Returns:
 //   - error: "failed to open log file: <cause>"
 func OpenLogFile(cause error) error {
-	return fmt.Errorf(assets.TextDesc(assets.TextDescKeyErrRecallOpenLogFile), cause)
+	return fmt.Errorf(
+		assets.TextDesc(assets.TextDescKeyErrRecallOpenLogFile), cause,
+	)
 }

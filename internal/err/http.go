@@ -22,7 +22,9 @@ import (
 // Returns:
 //   - error: "unsafe URL scheme: <scheme>: only http and https are allowed"
 func UnsafeURLScheme(scheme string) error {
-	return fmt.Errorf(assets.TextDesc(assets.TextDescKeyErrHttpUnsafeURLScheme), scheme)
+	return fmt.Errorf(
+		assets.TextDesc(assets.TextDescKeyErrHttpUnsafeURLScheme), scheme,
+	)
 }
 
 // TooManyRedirects returns an error when an HTTP response exceeds the
@@ -31,5 +33,7 @@ func UnsafeURLScheme(scheme string) error {
 // Returns:
 //   - error: "too many redirects: limit exceeded"
 func TooManyRedirects() error {
-	return errors.New(assets.TextDesc(assets.TextDescKeyErrHttpTooManyRedirects))
+	return errors.New(
+		assets.TextDesc(assets.TextDescKeyErrHttpTooManyRedirects),
+	)
 }

@@ -21,7 +21,9 @@ import (
 // Returns:
 //   - error: "failed to find sessions: <cause>"
 func FindSessions(cause error) error {
-	return fmt.Errorf(assets.TextDesc(assets.TextDescKeyErrSessionFindSessions), cause)
+	return fmt.Errorf(
+		assets.TextDesc(assets.TextDescKeyErrSessionFindSessions), cause,
+	)
 }
 
 // SessionNotFound returns an error for an unresolved session query.
@@ -32,7 +34,9 @@ func FindSessions(cause error) error {
 // Returns:
 //   - error: "session not found: <query>"
 func SessionNotFound(query string) error {
-	return fmt.Errorf(assets.TextDesc(assets.TextDescKeyErrSessionNotFound), query)
+	return fmt.Errorf(
+		assets.TextDesc(assets.TextDescKeyErrSessionNotFound), query,
+	)
 }
 
 // AmbiguousQuery returns an error when a session query matches
@@ -54,9 +58,13 @@ func AmbiguousQuery() error {
 //   - error: "no sessions found" with optional hint
 func NoSessionsFound(hint string) error {
 	if hint != "" {
-		return fmt.Errorf(assets.TextDesc(assets.TextDescKeyErrSessionNoSessionsFoundHint), hint)
+		return fmt.Errorf(
+			assets.TextDesc(assets.TextDescKeyErrSessionNoSessionsFoundHint), hint,
+		)
 	}
-	return errors.New(assets.TextDesc(assets.TextDescKeyErrSessionNoSessionsFound))
+	return errors.New(
+		assets.TextDesc(assets.TextDescKeyErrSessionNoSessionsFound),
+	)
 }
 
 // SessionIDRequired returns an error when no session ID was provided.
@@ -72,7 +80,9 @@ func SessionIDRequired() error {
 // Returns:
 //   - error: "cannot use --all with a session ID; use one or the other"
 func AllWithSessionID() error {
-	return errors.New(assets.TextDesc(assets.TextDescKeyErrSessionAllWithSessionID))
+	return errors.New(
+		assets.TextDesc(assets.TextDescKeyErrSessionAllWithSessionID),
+	)
 }
 
 // AllWithPattern returns a validation error when --all is used with a pattern.
@@ -80,5 +90,7 @@ func AllWithSessionID() error {
 // Returns:
 //   - error: "cannot use --all with a pattern; use one or the other"
 func AllWithPattern() error {
-	return errors.New(assets.TextDesc(assets.TextDescKeyErrSessionAllWithPattern))
+	return errors.New(
+		assets.TextDesc(assets.TextDescKeyErrSessionAllWithPattern),
+	)
 }

@@ -22,7 +22,10 @@ import (
 // Returns:
 //   - error: "embedded template not found for <hook>/<variant>"
 func EmbeddedTemplateNotFound(hook, variant string) error {
-	return fmt.Errorf(assets.TextDesc(assets.TextDescKeyErrHookEmbeddedTemplateNotFound), hook, variant)
+	return fmt.Errorf(
+		assets.TextDesc(assets.TextDescKeyErrHookEmbeddedTemplateNotFound),
+		hook, variant,
+	)
 }
 
 // OverrideExists returns an error when a message override already
@@ -49,7 +52,9 @@ func OverrideExists(path, hook, variant string) error {
 // Returns:
 //   - error: "failed to write override <path>: <cause>"
 func WriteOverride(path string, cause error) error {
-	return fmt.Errorf(assets.TextDesc(assets.TextDescKeyErrHookWriteOverride), path, cause)
+	return fmt.Errorf(
+		assets.TextDesc(assets.TextDescKeyErrHookWriteOverride), path, cause,
+	)
 }
 
 // RemoveOverride wraps a message override removal failure.
@@ -61,7 +66,9 @@ func WriteOverride(path string, cause error) error {
 // Returns:
 //   - error: "failed to remove override <path>: <cause>"
 func RemoveOverride(path string, cause error) error {
-	return fmt.Errorf(assets.TextDesc(assets.TextDescKeyErrHookRemoveOverride), path, cause)
+	return fmt.Errorf(
+		assets.TextDesc(assets.TextDescKeyErrHookRemoveOverride), path, cause,
+	)
 }
 
 // UnknownHook returns an error for an unrecognized hook name.
@@ -72,7 +79,9 @@ func RemoveOverride(path string, cause error) error {
 // Returns:
 //   - error: "unknown hook: <hook>..."
 func UnknownHook(hook string) error {
-	return fmt.Errorf(assets.TextDesc(assets.TextDescKeyErrHookUnknownHook), hook)
+	return fmt.Errorf(
+		assets.TextDesc(assets.TextDescKeyErrHookUnknownHook), hook,
+	)
 }
 
 // UnknownVariant returns an error for an unrecognized variant within
@@ -85,5 +94,7 @@ func UnknownHook(hook string) error {
 // Returns:
 //   - error: "unknown variant <variant> for hook <hook>..."
 func UnknownVariant(variant, hook string) error {
-	return fmt.Errorf(assets.TextDesc(assets.TextDescKeyErrHookUnknownVariant), variant, hook)
+	return fmt.Errorf(
+		assets.TextDesc(assets.TextDescKeyErrHookUnknownVariant), variant, hook,
+	)
 }

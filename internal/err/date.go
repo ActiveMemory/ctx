@@ -20,7 +20,9 @@ import (
 // Returns:
 //   - error: "invalid date <value> (expected YYYY-MM-DD)"
 func InvalidDateValue(value string) error {
-	return fmt.Errorf(assets.TextDesc(assets.TextDescKeyErrDateInvalidDateValue), value)
+	return fmt.Errorf(
+		assets.TextDesc(assets.TextDescKeyErrDateInvalidDateValue), value,
+	)
 }
 
 // InvalidDate returns an error for an invalid date flag value.

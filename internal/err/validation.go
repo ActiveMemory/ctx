@@ -18,7 +18,9 @@ import (
 // Returns:
 //   - error: "ctx not found in PATH"
 func CtxNotInPath() error {
-	return errors.New(assets.TextDesc(assets.TextDescKeyErrValidationCtxNotInPath))
+	return errors.New(
+		assets.TextDesc(assets.TextDescKeyErrValidationCtxNotInPath),
+	)
 }
 
 // WorkingDirectory wraps a failure to determine the working directory.
@@ -29,7 +31,9 @@ func CtxNotInPath() error {
 // Returns:
 //   - error: "failed to get working directory: <cause>"
 func WorkingDirectory(cause error) error {
-	return fmt.Errorf(assets.TextDesc(assets.TextDescKeyErrValidationWorkingDirectory), cause)
+	return fmt.Errorf(
+		assets.TextDesc(assets.TextDescKeyErrValidationWorkingDirectory), cause,
+	)
 }
 
 // DriftViolations returns an error when drift detection found violations.
@@ -37,7 +41,9 @@ func WorkingDirectory(cause error) error {
 // Returns:
 //   - error: "drift detection found violations"
 func DriftViolations() error {
-	return errors.New(assets.TextDesc(assets.TextDescKeyErrValidationDriftViolations))
+	return errors.New(
+		assets.TextDesc(assets.TextDescKeyErrValidationDriftViolations),
+	)
 }
 
 // FlagRequired returns an error for a missing required flag.
@@ -48,7 +54,9 @@ func DriftViolations() error {
 // Returns:
 //   - error: "required flag \"<name>\" not set"
 func FlagRequired(name string) error {
-	return fmt.Errorf(assets.TextDesc(assets.TextDescKeyErrValidationFlagRequired), name)
+	return fmt.Errorf(
+		assets.TextDesc(assets.TextDescKeyErrValidationFlagRequired), name,
+	)
 }
 
 // ArgRequired returns an error for a missing required argument.
@@ -59,7 +67,9 @@ func FlagRequired(name string) error {
 // Returns:
 //   - error: "<name> argument is required"
 func ArgRequired(name string) error {
-	return fmt.Errorf(assets.TextDesc(assets.TextDescKeyErrValidationArgRequired), name)
+	return fmt.Errorf(
+		assets.TextDesc(assets.TextDescKeyErrValidationArgRequired), name,
+	)
 }
 
 // ParseFile wraps a failure to parse a file.
@@ -71,5 +81,7 @@ func ArgRequired(name string) error {
 // Returns:
 //   - error: "failed to parse %s: <cause>"
 func ParseFile(path string, cause error) error {
-	return fmt.Errorf(assets.TextDesc(assets.TextDescKeyErrValidationParseFile), path, cause)
+	return fmt.Errorf(
+		assets.TextDesc(assets.TextDescKeyErrValidationParseFile), path, cause,
+	)
 }

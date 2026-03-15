@@ -20,6 +20,7 @@ TASK STATUS LABELS:
   package and other helper functions need to go to a different adjacent package.
 * Human: internal/notify/notify.go requires refactoring (all functions bagged in
   one file; types need to go to types.go per convention etc etc)
+* Human: split err package into sub packages.
 
 ### Phase -1: Quality Verification
 

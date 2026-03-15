@@ -51,7 +51,9 @@ func TaskFileWrite(cause error) error {
 // Returns:
 //   - error: "multiple tasks match <query>; be more specific or use task number"
 func TaskMultipleMatches(query string) error {
-	return fmt.Errorf(assets.TextDesc(assets.TextDescKeyErrTaskMultipleMatches), query)
+	return fmt.Errorf(
+		assets.TextDesc(assets.TextDescKeyErrTaskMultipleMatches), query,
+	)
 }
 
 // TaskNotFound returns an error when no task matches the query.
@@ -89,7 +91,9 @@ func NoTaskSpecified() error {
 // Returns:
 //   - error: "no task matching \"<query>\" found"
 func NoTaskMatch(query string) error {
-	return fmt.Errorf(assets.TextDesc(assets.TextDescKeyErrTaskNoTaskMatch), query)
+	return fmt.Errorf(
+		assets.TextDesc(assets.TextDescKeyErrTaskNoTaskMatch), query,
+	)
 }
 
 // SnapshotWrite wraps a failure to write a task snapshot file.
@@ -100,5 +104,7 @@ func NoTaskMatch(query string) error {
 // Returns:
 //   - error: "failed to write snapshot: <cause>"
 func SnapshotWrite(cause error) error {
-	return fmt.Errorf(assets.TextDesc(assets.TextDescKeyErrTaskSnapshotWrite), cause)
+	return fmt.Errorf(
+		assets.TextDesc(assets.TextDescKeyErrTaskSnapshotWrite), cause,
+	)
 }
