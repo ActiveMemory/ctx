@@ -531,6 +531,8 @@ Many call sites use `_ =` or `_, _ =` to discard errors without
 any feedback. Some are legitimate (best-effort cleanup), most are
 lazy escapes that hide failures.
 
+- [ ] MCP tools.go cleanup pass: magic strings, duplicated fragments, nested templates. Lines: 461:481 + 186:196 duplicated code; 335 magic number; 382:385 nested TextDescs → single template; 390+851 magic time literal; 443+499+800 magic words; 557+892+902 magic numbers; 590+638 nested TextDesc templating; 820 prefixed %s; 854 suffix %s #priority:high #added:2026-03-15-110429
+
 - [ ] EH.0: Create central warning sink — `internal/log/warn.go` with
       `var Sink io.Writer = os.Stderr` and `func Warn(format string, args ...any)`.
       All stderr warnings (`fmt.Fprintf(os.Stderr, ...)`) route through this
