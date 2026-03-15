@@ -17,6 +17,7 @@ import (
 	"github.com/ActiveMemory/ctx/internal/cli/compact/core"
 	remindcore "github.com/ActiveMemory/ctx/internal/cli/remind/core"
 	taskcomplete "github.com/ActiveMemory/ctx/internal/cli/task/cmd/complete"
+	archiveCfg "github.com/ActiveMemory/ctx/internal/config/archive"
 	"github.com/ActiveMemory/ctx/internal/config/cli"
 	ctxCfg "github.com/ActiveMemory/ctx/internal/config/ctx"
 	entryCfg "github.com/ActiveMemory/ctx/internal/config/entry"
@@ -448,7 +449,7 @@ func (s *Server) toolWatchUpdate(
 	}
 
 	// Handle "complete" type as a special case — delegate to ctx_complete.
-	if entryType == mcp.MCPEntryComplete {
+	if entryType == entryCfg.Complete {
 		completedTask, err := taskcomplete.CompleteTask(content, s.contextDir)
 		if err != nil {
 			return s.toolError(id, err.Error())
@@ -597,7 +598,7 @@ func (s *Server) toolCompact(
 					token.NewlineLF + token.NewlineLF
 			}
 			if _, archiveErr := core.WriteArchive(
-				mcp.MCPArchivePrefixTasks, assets.HeadingArchivedTasks, archiveContent,
+				archiveCfg.ArchiveScopeTasks, assets.HeadingArchivedTasks, archiveContent,
 			); archiveErr != nil {
 				_, _ = fmt.Fprintf(
 					&sb, assets.TextDesc(

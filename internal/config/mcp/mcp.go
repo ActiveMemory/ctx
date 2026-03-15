@@ -93,13 +93,8 @@ const (
 	MCPTruncateContentLen = 60
 
 	// MCP event type values.
-	MCPEventStart    = "start"
-	MCPEventEnd      = "end"
-	MCPEntryComplete = "complete"
-
-	// MCPArchivePrefixTasks is the file prefix for archived tasks.
-	MCPArchivePrefixTasks = "tasks"
-
+	MCPEventStart = "start"
+	MCPEventEnd   = "end"
 	// MCP PendingUpdate attribute keys.
 	MCPAttrFile = "file"
 
