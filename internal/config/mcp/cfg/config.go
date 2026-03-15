@@ -10,11 +10,14 @@ const (
 	// ScanMaxSize is the maximum scanner buffer size for MCP messages (1 MB).
 	ScanMaxSize = 1 << 20
 
-	// MCP default values.
-
+	// DefaultRecallLimit is the max sessions returned by ctx_recall.
 	DefaultRecallLimit = 5
-	MinWordLen         = 4
-	MinWordOverlap     = 2
-	TruncateLen        = 50
+	// MinWordLen is the shortest word considered for overlap matching.
+	MinWordLen = 4
+	// MinWordOverlap is the minimum word matches to signal task completion.
+	MinWordOverlap = 2
+	// TruncateLen is the max display length for task text in compact output.
+	TruncateLen = 50
+	// TruncateContentLen is the max display length for pending update content.
 	TruncateContentLen = 60
 )
