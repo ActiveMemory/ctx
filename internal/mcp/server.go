@@ -12,7 +12,7 @@ import (
 	"os"
 
 	"github.com/ActiveMemory/ctx/internal/assets"
-	"github.com/ActiveMemory/ctx/internal/config/mcp"
+	"github.com/ActiveMemory/ctx/internal/config/mcp/cfg"
 	"github.com/ActiveMemory/ctx/internal/config/token"
 	"github.com/ActiveMemory/ctx/internal/rc"
 )
@@ -50,7 +50,7 @@ func (s *Server) Serve() error {
 
 	scanner := bufio.NewScanner(s.in)
 
-	scanner.Buffer(make([]byte, 0, mcp.MCPScanMaxSize), mcp.MCPScanMaxSize)
+	scanner.Buffer(make([]byte, 0, cfg.ScanMaxSize), cfg.ScanMaxSize)
 
 	for scanner.Scan() {
 		line := scanner.Bytes()

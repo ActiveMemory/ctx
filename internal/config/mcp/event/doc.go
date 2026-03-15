@@ -4,5 +4,6 @@
 //   \    Copyright 2026-present Context contributors.
 //                 SPDX-License-Identifier: Apache-2.0
 
-// Package event defines session lifecycle event type values ("start", "end") used by the ctx_session_event tool.
+// Package event defines session lifecycle event type values
+// ("start", "end") used by the ctx_session_event tool.
 package event

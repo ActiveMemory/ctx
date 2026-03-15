@@ -11,7 +11,8 @@ import (
 	"fmt"
 
 	"github.com/ActiveMemory/ctx/internal/assets"
-	"github.com/ActiveMemory/ctx/internal/config/mcp"
+	"github.com/ActiveMemory/ctx/internal/config/mcp/method"
+	"github.com/ActiveMemory/ctx/internal/config/mcp/server"
 	"github.com/ActiveMemory/ctx/internal/config/token"
 )
 
@@ -27,7 +28,7 @@ func (s *Server) handleMessage(data []byte) *Response {
 	var req Request
 	if err := json.Unmarshal(data, &req); err != nil {
 		return &Response{
-			JSONRPC: mcp.MCPJSONRPCVersion,
+			JSONRPC: server.JSONRPCVersion,
 			Error: &RPCError{
 				Code:    errCodeParse,
 				Message: assets.TextDesc(assets.TextDescKeyMCPParseError),
@@ -53,25 +54,25 @@ func (s *Server) handleMessage(data []byte) *Response {
 //   - *Response: result or error response
 func (s *Server) dispatch(req Request) *Response {
 	switch req.Method {
-	case mcp.MCPMethodInitialize:
+	case method.Initialize:
 		return s.handleInitialize(req)
-	case mcp.MCPMethodPing:
+	case method.Ping:
 		return s.ok(req.ID, struct{}{})
-	case mcp.MCPMethodResourcesList:
+	case method.ResourcesList:
 		return s.handleResourcesList(req)
-	case mcp.MCPMethodResourcesRead:
+	case method.ResourcesRead:
 		return s.handleResourcesRead(req)
-	case mcp.MCPMethodResourcesSubscribe:
+	case method.ResourcesSubscribe:
 		return s.handleResourcesSubscribe(req)
-	case mcp.MCPMethodResourcesUnsubscribe:
+	case method.ResourcesUnsubscribe:
 		return s.handleResourcesUnsubscribe(req)
-	case mcp.MCPMethodToolsList:
+	case method.ToolsList:
 		return s.handleToolsList(req)
-	case mcp.MCPMethodToolsCall:
+	case method.ToolsCall:
 		return s.handleToolsCall(req)
-	case mcp.MCPMethodPromptsList:
+	case method.PromptsList:
 		return s.handlePromptsList(req)
-	case mcp.MCPMethodPromptsGet:
+	case method.PromptsGet:
 		return s.handlePromptsGet(req)
 	default:
 		return s.error(req.ID, errCodeNotFound,
@@ -110,7 +111,7 @@ func (s *Server) handleInitialize(req Request) *Response {
 			Prompts:   &PromptsCap{},
 		},
 		ServerInfo: AppInfo{
-			Name:    mcp.MCPServerName,
+			Name:    server.Name,
 			Version: s.version,
 		},
 	}
@@ -127,7 +128,7 @@ func (s *Server) handleInitialize(req Request) *Response {
 //   - *Response: success response
 func (s *Server) ok(id json.RawMessage, result interface{}) *Response {
 	return &Response{
-		JSONRPC: mcp.MCPJSONRPCVersion,
+		JSONRPC: server.JSONRPCVersion,
 		ID:      id,
 		Result:  result,
 	}
@@ -144,7 +145,7 @@ func (s *Server) ok(id json.RawMessage, result interface{}) *Response {
 //   - *Response: error response
 func (s *Server) error(id json.RawMessage, code int, msg string) *Response {
 	return &Response{
-		JSONRPC: mcp.MCPJSONRPCVersion,
+		JSONRPC: server.JSONRPCVersion,
 		ID:      id,
 		Error:   &RPCError{Code: code, Message: msg},
 	}
