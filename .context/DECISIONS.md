@@ -3,6 +3,7 @@
 <!-- INDEX:START -->
 | Date | Decision |
 |------|--------|
+| 2026-03-15 | TextDescKey exhaustive test verifies all 879 constants resolve to non-empty YAML values |
 | 2026-03-15 | Split text.yaml into 6 domain files loaded via loadYAMLDir |
 | 2026-03-14 | Error package taxonomy: 22 domain files replace monolithic errors.go |
 | 2026-03-14 | Session prefixes are parser vocabulary, not i18n text |
@@ -46,6 +47,20 @@
 | 2026-02-26 | Security and permissions (consolidated) |
 | 2026-02-27 | Webhook and notification design (consolidated) |
 <!-- INDEX:END -->
+
+## [2026-03-15-101336] TextDescKey exhaustive test verifies all 879 constants resolve to non-empty YAML values
+
+**Status**: Accepted
+
+**Context**: PR #42 merged with ~80 new MCP text keys but no test coverage for key-to-YAML mapping
+
+**Decision**: TextDescKey exhaustive test verifies all 879 constants resolve to non-empty YAML values
+
+**Rationale**: A single table-driven test parsing embed.go source catches typos and missing YAML entries at test time — no manual key list to maintain
+
+**Consequences**: New TextDescKey constants are automatically covered; orphaned keys fail CI
+
+---
 
 ## [2026-03-15-040638] Split text.yaml into 6 domain files loaded via loadYAMLDir
 

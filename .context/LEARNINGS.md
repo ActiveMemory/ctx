@@ -3,6 +3,8 @@
 <!-- INDEX:START -->
 | Date | Learning |
 |------|--------|
+| 2026-03-15 | Delete legacy code instead of maintaining it — MigrateKeyFile had 5 callers and test coverage but zero users |
+| 2026-03-15 | Contributor PRs need post-merge follow-up commits for convention alignment |
 | 2026-03-15 | Grep for callers must cover entire working tree before deleting functions |
 | 2026-03-14 | Stderr error messages are user-facing text that belongs in assets |
 | 2026-03-14 | Subagents rename packages and modify unrelated files without being asked |
@@ -71,6 +73,26 @@
 | 2026-02-19 | Feature can be code-complete but invisible to users |
 | 2026-01-28 | IDE is already the UI |
 <!-- INDEX:END -->
+
+---
+
+## [2026-03-15-101346] Delete legacy code instead of maintaining it — MigrateKeyFile had 5 callers and test coverage but zero users
+
+**Context**: Started by adding constants for legacy key names, then realized nobody uses legacy keys
+
+**Lesson**: When touching legacy compat code, first ask whether the legacy path has real users. If not, delete it entirely rather than improving it
+
+**Application**: Apply to any backward-compat shim: check actual usage before investing in maintenance
+
+---
+
+## [2026-03-15-101342] Contributor PRs need post-merge follow-up commits for convention alignment
+
+**Context**: PR #42 (MCP v0.2) addressed bulk of review feedback but left ~12 inline strings, no embed_test coverage, and substring matching in containsOverlap
+
+**Lesson**: Merging with known gaps is fine when the gaps are mechanical, but the follow-up must be immediate — track in ideas/done/ with a review status doc
+
+**Application**: For future contributor PRs: create ideas/pr{N}-review-status.md during review, merge when architecture is sound, fix convention gaps in a same-day follow-up commit
 
 ---
 
