@@ -33,11 +33,23 @@ import (
 )
 
 // handleToolsList returns all available MCP tools.
+//
+// Parameters:
+//   - req: the MCP request
+//
+// Returns:
+//   - *Response: tool list result
 func (s *Server) handleToolsList(req Request) *Response {
 	return s.ok(req.ID, ToolListResult{Tools: toolDefs})
 }
 
 // handleToolsCall dispatches a tool call to the appropriate handler.
+//
+// Parameters:
+//   - req: the MCP request containing tool name and arguments
+//
+// Returns:
+//   - *Response: tool result or error
 func (s *Server) handleToolsCall(req Request) *Response {
 	var params CallToolParams
 	if err := json.Unmarshal(req.Params, &params); err != nil {
@@ -76,6 +88,12 @@ func (s *Server) handleToolsCall(req Request) *Response {
 }
 
 // toolStatus loads context and returns a status summary.
+//
+// Parameters:
+//   - id: JSON-RPC request ID
+//
+// Returns:
+//   - *Response: context status with file list and token counts
 func (s *Server) toolStatus(id json.RawMessage) *Response {
 	ctx, err := context.Load(s.contextDir)
 	if err != nil {
@@ -100,6 +118,13 @@ func (s *Server) toolStatus(id json.RawMessage) *Response {
 }
 
 // toolAdd adds an entry to a context file.
+//
+// Parameters:
+//   - id: JSON-RPC request ID
+//   - args: tool arguments (type, content, optional fields)
+//
+// Returns:
+//   - *Response: confirmation or validation error
 func (s *Server) toolAdd(
 	id json.RawMessage, args map[string]interface{},
 ) *Response {
@@ -154,6 +179,13 @@ func (s *Server) toolAdd(
 }
 
 // toolComplete marks a task as done by number or text match.
+//
+// Parameters:
+//   - id: JSON-RPC request ID
+//   - args: tool arguments (query)
+//
+// Returns:
+//   - *Response: completed task name or error
 func (s *Server) toolComplete(
 	id json.RawMessage, args map[string]interface{},
 ) *Response {
@@ -175,6 +207,12 @@ func (s *Server) toolComplete(
 }
 
 // toolDrift runs drift detection and returns the report.
+//
+// Parameters:
+//   - id: JSON-RPC request ID
+//
+// Returns:
+//   - *Response: drift report with violations and warnings
 func (s *Server) toolDrift(id json.RawMessage) *Response {
 	ctx, err := context.Load(s.contextDir)
 	if err != nil {
@@ -215,6 +253,13 @@ func (s *Server) toolDrift(id json.RawMessage) *Response {
 }
 
 // toolOK builds a successful tool result.
+//
+// Parameters:
+//   - id: JSON-RPC request ID
+//   - text: result text content
+//
+// Returns:
+//   - *Response: success response with text content
 func (s *Server) toolOK(id json.RawMessage, text string) *Response {
 	return s.ok(id, CallToolResult{
 		Content: []ToolContent{{Type: mcp.MCPContentTypeText, Text: text}},
@@ -222,6 +267,13 @@ func (s *Server) toolOK(id json.RawMessage, text string) *Response {
 }
 
 // toolError builds a tool error result.
+//
+// Parameters:
+//   - id: JSON-RPC request ID
+//   - msg: error message
+//
+// Returns:
+//   - *Response: error response with IsError flag
 func (s *Server) toolError(id json.RawMessage, msg string) *Response {
 	return s.ok(id, CallToolResult{
 		Content: []ToolContent{{Type: mcp.MCPContentTypeText, Text: msg}},
@@ -230,6 +282,13 @@ func (s *Server) toolError(id json.RawMessage, msg string) *Response {
 }
 
 // toolRecall queries recent session history.
+//
+// Parameters:
+//   - id: JSON-RPC request ID
+//   - args: tool arguments (limit, since)
+//
+// Returns:
+//   - *Response: formatted session list or empty result
 func (s *Server) toolRecall(
 	id json.RawMessage, args map[string]interface{},
 ) *Response {
@@ -295,6 +354,13 @@ func (s *Server) toolRecall(
 }
 
 // toolWatchUpdate applies a structured context-update to .context/ files.
+//
+// Parameters:
+//   - id: JSON-RPC request ID
+//   - args: tool arguments (type, content, optional fields)
+//
+// Returns:
+//   - *Response: confirmation with file name or error
 func (s *Server) toolWatchUpdate(
 	id json.RawMessage, args map[string]interface{},
 ) *Response {
@@ -372,6 +438,13 @@ func (s *Server) toolWatchUpdate(
 }
 
 // toolCompact moves completed tasks to the archive section.
+//
+// Parameters:
+//   - id: JSON-RPC request ID
+//   - args: tool arguments (archive)
+//
+// Returns:
+//   - *Response: summary of compacted items or clean status
 func (s *Server) toolCompact(
 	id json.RawMessage, args map[string]interface{},
 ) *Response {
@@ -480,6 +553,12 @@ func (s *Server) toolCompact(
 }
 
 // toolNext suggests the next pending task.
+//
+// Parameters:
+//   - id: JSON-RPC request ID
+//
+// Returns:
+//   - *Response: next task or all-complete message
 func (s *Server) toolNext(id json.RawMessage) *Response {
 	ctx, err := context.Load(s.contextDir)
 	if err != nil {
@@ -528,7 +607,15 @@ func (s *Server) toolNext(id json.RawMessage) *Response {
 	return s.toolOK(id, assets.TextDesc(assets.TextDescKeyMCPAllTasksComplete))
 }
 
-// toolCheckTaskCompletion checks if a recent action completed any pending tasks.
+// toolCheckTaskCompletion checks if a recent action completed
+// any pending tasks.
+//
+// Parameters:
+//   - id: JSON-RPC request ID
+//   - args: tool arguments (recent_action)
+//
+// Returns:
+//   - *Response: nudge text if match found, empty otherwise
 func (s *Server) toolCheckTaskCompletion(
 	id json.RawMessage, args map[string]interface{},
 ) *Response {
@@ -585,6 +672,13 @@ func (s *Server) toolCheckTaskCompletion(
 }
 
 // toolSessionEvent handles session lifecycle events.
+//
+// Parameters:
+//   - id: JSON-RPC request ID
+//   - args: tool arguments (type, caller)
+//
+// Returns:
+//   - *Response: session status with stats on end
 func (s *Server) toolSessionEvent(
 	id json.RawMessage, args map[string]interface{},
 ) *Response {
@@ -633,6 +727,12 @@ func (s *Server) toolSessionEvent(
 }
 
 // toolRemind lists pending session-scoped reminders.
+//
+// Parameters:
+//   - id: JSON-RPC request ID
+//
+// Returns:
+//   - *Response: formatted reminder list or empty message
 func (s *Server) toolRemind(id json.RawMessage) *Response {
 	reminders, readErr := remindcore.ReadReminders()
 	if readErr != nil {
@@ -701,6 +801,12 @@ func toWordSet(text string) map[string]bool {
 }
 
 // totalAdds sums all entry add counts.
+//
+// Parameters:
+//   - m: map of entry type to add count
+//
+// Returns:
+//   - int: total adds across all types
 func totalAdds(m map[string]int) int {
 	total := 0
 	for _, v := range m {
@@ -709,7 +815,15 @@ func totalAdds(m map[string]int) int {
 	return total
 }
 
-// writeContextFile writes content to a context file with standard permissions.
+// writeContextFile writes content to a context file with standard
+// permissions.
+//
+// Parameters:
+//   - path: absolute file path
+//   - data: content bytes
+//
+// Returns:
+//   - error: non-nil if the write fails
 func writeContextFile(path string, data []byte) error {
 	return os.WriteFile(path, data, fs.PermFile)
 }
