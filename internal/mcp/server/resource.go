@@ -4,7 +4,7 @@
 //   \    Copyright 2026-present Context contributors.
 //                 SPDX-License-Identifier: Apache-2.0
 
-package mcp
+package server
 
 import (
 	"encoding/json"
@@ -22,6 +22,7 @@ import (
 	"github.com/ActiveMemory/ctx/internal/config/mcp/server"
 	"github.com/ActiveMemory/ctx/internal/config/token"
 	"github.com/ActiveMemory/ctx/internal/context"
+	"github.com/ActiveMemory/ctx/internal/mcp/proto"
 )
 
 // resourceMapping maps a context file name to its MCP resource URI suffix
@@ -50,12 +51,12 @@ func resourceURI(name string) string {
 }
 
 // handleResourcesList returns all available MCP resources.
-func (s *Server) handleResourcesList(req Request) *Response {
-	resources := make([]Resource, 0, len(resourceTable)+1)
+func (s *Server) handleResourcesList(req proto.Request) *proto.Response {
+	resources := make([]proto.Resource, 0, len(resourceTable)+1)
 
 	// Individual context files.
 	for _, rm := range resourceTable {
-		resources = append(resources, Resource{
+		resources = append(resources, proto.Resource{
 			URI:         resourceURI(rm.name),
 			Name:        rm.name,
 			MimeType:    mime.Markdown,
@@ -64,26 +65,26 @@ func (s *Server) handleResourcesList(req Request) *Response {
 	}
 
 	// Assembled context packet (all files in read order).
-	resources = append(resources, Resource{
+	resources = append(resources, proto.Resource{
 		URI:         resourceURI("agent"),
 		Name:        "agent",
 		MimeType:    mime.Markdown,
 		Description: assets.TextDesc(assets.TextDescKeyMCPResAgent),
 	})
 
-	return s.ok(req.ID, ResourceListResult{Resources: resources})
+	return s.ok(req.ID, proto.ResourceListResult{Resources: resources})
 }
 
 // handleResourcesRead returns the content of a requested resource.
-func (s *Server) handleResourcesRead(req Request) *Response {
-	var params ReadResourceParams
+func (s *Server) handleResourcesRead(req proto.Request) *proto.Response {
+	var params proto.ReadResourceParams
 	if err := json.Unmarshal(req.Params, &params); err != nil {
-		return s.error(req.ID, errCodeInvalidArg, assets.TextDesc(assets.TextDescKeyMCPInvalidParams))
+		return s.error(req.ID, proto.ErrCodeInvalidArg, assets.TextDesc(assets.TextDescKeyMCPInvalidParams))
 	}
 
 	ctx, err := context.Load(s.contextDir)
 	if err != nil {
-		return s.error(req.ID, errCodeInternal,
+		return s.error(req.ID, proto.ErrCodeInternal,
 			fmt.Sprintf(assets.TextDesc(assets.TextDescKeyMCPLoadContext), err))
 	}
 
@@ -99,22 +100,22 @@ func (s *Server) handleResourcesRead(req Request) *Response {
 		return s.readAgentPacket(req.ID, ctx)
 	}
 
-	return s.error(req.ID, errCodeInvalidArg,
+	return s.error(req.ID, proto.ErrCodeInvalidArg,
 		fmt.Sprintf(assets.TextDesc(assets.TextDescKeyMCPUnknownResource), params.URI))
 }
 
 // readContextFile returns the content of a single context file.
 func (s *Server) readContextFile(
 	id json.RawMessage, ctx *context.Context, fileName, uri string,
-) *Response {
+) *proto.Response {
 	f := ctx.File(fileName)
 	if f == nil {
-		return s.error(id, errCodeInvalidArg,
+		return s.error(id, proto.ErrCodeInvalidArg,
 			fmt.Sprintf(assets.TextDesc(assets.TextDescKeyMCPFileNotFound), fileName))
 	}
 
-	return s.ok(id, ReadResourceResult{
-		Contents: []ResourceContent{{
+	return s.ok(id, proto.ReadResourceResult{
+		Contents: []proto.ResourceContent{{
 			URI:      uri,
 			MimeType: mime.Markdown,
 			Text:     string(f.Content),
@@ -130,7 +131,7 @@ func (s *Server) readContextFile(
 // summaries instead of included in full.
 func (s *Server) readAgentPacket(
 	id json.RawMessage, ctx *context.Context,
-) *Response {
+) *proto.Response {
 	var sb strings.Builder
 	header := assets.TextDesc(assets.TextDescKeyMCPPacketHeader)
 	sb.WriteString(header)
@@ -165,8 +166,8 @@ func (s *Server) readAgentPacket(
 		sb.WriteString(token.NewlineLF)
 	}
 
-	return s.ok(id, ReadResourceResult{
-		Contents: []ResourceContent{{
+	return s.ok(id, proto.ReadResourceResult{
+		Contents: []proto.ResourceContent{{
 			URI:      resourceURI("agent"),
 			MimeType: mime.Markdown,
 			Text:     sb.String(),
@@ -177,19 +178,19 @@ func (s *Server) readAgentPacket(
 // defaultPollInterval is the default interval for resource change polling.
 const defaultPollInterval = 5 * time.Second
 
-// resourcePoller tracks subscribed resources and polls for file changes.
-type resourcePoller struct {
+// ResourcePoller tracks subscribed resources and polls for file changes.
+type ResourcePoller struct {
 	mu         sync.Mutex
 	subs       map[string]bool      // URI → subscribed
 	mtimes     map[string]time.Time // file path → last known mtime
 	contextDir string
 	pollStop   chan struct{}
-	notifyFunc func(Notification) // callback to emit notifications
+	notifyFunc func(proto.Notification) // callback to emit notifications
 }
 
-// newResourcePoller creates a poller for the given context directory.
-func newResourcePoller(contextDir string, notify func(Notification)) *resourcePoller {
-	return &resourcePoller{
+// NewResourcePoller creates a poller for the given context directory.
+func NewResourcePoller(contextDir string, notify func(proto.Notification)) *ResourcePoller {
+	return &ResourcePoller{
 		subs:       make(map[string]bool),
 		mtimes:     make(map[string]time.Time),
 		contextDir: contextDir,
@@ -202,7 +203,7 @@ func newResourcePoller(contextDir string, notify func(Notification)) *resourcePo
 // Goroutine lifecycle: the poller goroutine is started on the first
 // subscription and stopped when the last subscription is removed or
 // when Server.Serve returns (via poller.stop in the deferred cleanup).
-func (p *resourcePoller) subscribe(uri string) {
+func (p *ResourcePoller) subscribe(uri string) {
 	p.mu.Lock()
 	defer p.mu.Unlock()
 
@@ -224,7 +225,7 @@ func (p *resourcePoller) subscribe(uri string) {
 }
 
 // unsubscribe removes a URI from the watch set and stops polling if empty.
-func (p *resourcePoller) unsubscribe(uri string) {
+func (p *ResourcePoller) unsubscribe(uri string) {
 	p.mu.Lock()
 	defer p.mu.Unlock()
 
@@ -236,8 +237,8 @@ func (p *resourcePoller) unsubscribe(uri string) {
 	}
 }
 
-// stop shuts down the poller goroutine.
-func (p *resourcePoller) stop() {
+// Stop shuts down the poller goroutine.
+func (p *ResourcePoller) Stop() {
 	p.mu.Lock()
 	defer p.mu.Unlock()
 
@@ -248,7 +249,7 @@ func (p *resourcePoller) stop() {
 }
 
 // uriToFile maps a resource URI to its context file name.
-func (p *resourcePoller) uriToFile(uri string) string {
+func (p *ResourcePoller) uriToFile(uri string) string {
 	for _, rm := range resourceTable {
 		if uri == resourceURI(rm.name) {
 			return rm.file
@@ -258,7 +259,7 @@ func (p *resourcePoller) uriToFile(uri string) string {
 }
 
 // poll checks subscribed resources for mtime changes on a fixed interval.
-func (p *resourcePoller) poll() {
+func (p *ResourcePoller) poll() {
 	ticker := time.NewTicker(defaultPollInterval)
 	defer ticker.Stop()
 
@@ -273,7 +274,7 @@ func (p *resourcePoller) poll() {
 }
 
 // checkChanges compares current mtimes to snapshots and emits notifications.
-func (p *resourcePoller) checkChanges() {
+func (p *ResourcePoller) checkChanges() {
 	p.mu.Lock()
 	uris := make([]string, 0, len(p.subs))
 	for uri := range p.subs {
@@ -297,10 +298,10 @@ func (p *resourcePoller) checkChanges() {
 		if known && info.ModTime().After(prev) {
 			p.mtimes[fpath] = info.ModTime()
 			p.mu.Unlock()
-			p.notifyFunc(Notification{
+			p.notifyFunc(proto.Notification{
 				JSONRPC: server.JSONRPCVersion,
 				Method:  notify.ResourcesUpdated,
-				Params:  ResourceUpdatedParams{URI: uri},
+				Params:  proto.ResourceUpdatedParams{URI: uri},
 			})
 		} else {
 			if !known {
@@ -312,26 +313,26 @@ func (p *resourcePoller) checkChanges() {
 }
 
 // handleResourcesSubscribe registers a resource for change notifications.
-func (s *Server) handleResourcesSubscribe(req Request) *Response {
-	var params SubscribeParams
+func (s *Server) handleResourcesSubscribe(req proto.Request) *proto.Response {
+	var params proto.SubscribeParams
 	if err := json.Unmarshal(req.Params, &params); err != nil {
-		return s.error(req.ID, errCodeInvalidArg, assets.TextDesc(assets.TextDescKeyMCPInvalidParams))
+		return s.error(req.ID, proto.ErrCodeInvalidArg, assets.TextDesc(assets.TextDescKeyMCPInvalidParams))
 	}
 	if params.URI == "" {
-		return s.error(req.ID, errCodeInvalidArg, assets.TextDesc(assets.TextDescKeyMCPURIRequired))
+		return s.error(req.ID, proto.ErrCodeInvalidArg, assets.TextDesc(assets.TextDescKeyMCPURIRequired))
 	}
 	s.poller.subscribe(params.URI)
 	return s.ok(req.ID, struct{}{})
 }
 
 // handleResourcesUnsubscribe removes a resource from change notifications.
-func (s *Server) handleResourcesUnsubscribe(req Request) *Response {
-	var params UnsubscribeParams
+func (s *Server) handleResourcesUnsubscribe(req proto.Request) *proto.Response {
+	var params proto.UnsubscribeParams
 	if err := json.Unmarshal(req.Params, &params); err != nil {
-		return s.error(req.ID, errCodeInvalidArg, assets.TextDesc(assets.TextDescKeyMCPInvalidParams))
+		return s.error(req.ID, proto.ErrCodeInvalidArg, assets.TextDesc(assets.TextDescKeyMCPInvalidParams))
 	}
 	if params.URI == "" {
-		return s.error(req.ID, errCodeInvalidArg, assets.TextDesc(assets.TextDescKeyMCPURIRequired))
+		return s.error(req.ID, proto.ErrCodeInvalidArg, assets.TextDesc(assets.TextDescKeyMCPURIRequired))
 	}
 	s.poller.unsubscribe(params.URI)
 	return s.ok(req.ID, struct{}{})

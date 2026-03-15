@@ -4,7 +4,7 @@
 //   \    Copyright 2026-present Context contributors.
 //                 SPDX-License-Identifier: Apache-2.0
 
-package mcp
+package proto
 
 import (
 	"github.com/ActiveMemory/ctx/internal/assets"
@@ -14,8 +14,8 @@ import (
 	"github.com/ActiveMemory/ctx/internal/config/mcp/tool"
 )
 
-// toolDefs defines all available MCP tools.
-var toolDefs = []Tool{
+// ToolDefs defines all available MCP tools.
+var ToolDefs = []Tool{
 	{
 		Name: tool.Status,
 		Description: assets.TextDesc(

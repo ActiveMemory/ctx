@@ -4,7 +4,7 @@
 //   \    Copyright 2026-present Context contributors.
 //                 SPDX-License-Identifier: Apache-2.0
 
-package mcp
+package server
 
 import (
 	"bytes"
@@ -17,6 +17,7 @@ import (
 	"time"
 
 	"github.com/ActiveMemory/ctx/internal/config/ctx"
+	"github.com/ActiveMemory/ctx/internal/mcp/proto"
 )
 
 func newTestServer(t *testing.T) (*Server, string) {
@@ -57,7 +58,7 @@ func newTestServer(t *testing.T) (*Server, string) {
 	return srv, contextDir
 }
 
-func request(t *testing.T, srv *Server, method string, params interface{}) *Response {
+func request(t *testing.T, srv *Server, method string, params interface{}) *proto.Response {
 	t.Helper()
 	var rawParams json.RawMessage
 	if params != nil {
@@ -68,7 +69,7 @@ func request(t *testing.T, srv *Server, method string, params interface{}) *Resp
 		rawParams = b
 	}
 	idBytes, _ := json.Marshal(1)
-	req := Request{
+	req := proto.Request{
 		JSONRPC: "2.0",
 		ID:      idBytes,
 		Method:  method,
@@ -84,7 +85,7 @@ func request(t *testing.T, srv *Server, method string, params interface{}) *Resp
 	if serveErr := srv.Serve(); serveErr != nil {
 		t.Fatalf("serve: %v", serveErr)
 	}
-	var resp Response
+	var resp proto.Response
 	if err := json.Unmarshal(out.Bytes(), &resp); err != nil {
 		t.Fatalf("unmarshal response: %v (raw: %s)", err, out.String())
 	}
@@ -93,20 +94,20 @@ func request(t *testing.T, srv *Server, method string, params interface{}) *Resp
 
 func TestInitialize(t *testing.T) {
 	srv, _ := newTestServer(t)
-	resp := request(t, srv, "initialize", InitializeParams{
-		ProtocolVersion: protocolVersion,
-		ClientInfo:      AppInfo{Name: "test", Version: "1.0"},
+	resp := request(t, srv, "initialize", proto.InitializeParams{
+		ProtocolVersion: proto.protocolVersion,
+		ClientInfo:      proto.AppInfo{Name: "test", Version: "1.0"},
 	})
 	if resp.Error != nil {
 		t.Fatalf("unexpected error: %v", resp.Error.Message)
 	}
 	raw, _ := json.Marshal(resp.Result)
-	var result InitializeResult
+	var result proto.InitializeResult
 	if err := json.Unmarshal(raw, &result); err != nil {
 		t.Fatalf("unmarshal result: %v", err)
 	}
-	if result.ProtocolVersion != protocolVersion {
-		t.Errorf("protocol version = %q, want %q", result.ProtocolVersion, protocolVersion)
+	if result.ProtocolVersion != proto.protocolVersion {
+		t.Errorf("protocol version = %q, want %q", result.ProtocolVersion, proto.protocolVersion)
 	}
 	if result.ServerInfo.Name != "ctx" {
 		t.Errorf("server name = %q, want %q", result.ServerInfo.Name, "ctx")
@@ -139,8 +140,8 @@ func TestMethodNotFound(t *testing.T) {
 	if resp.Error == nil {
 		t.Fatal("expected error for unknown method")
 	}
-	if resp.Error.Code != errCodeNotFound {
-		t.Errorf("error code = %d, want %d", resp.Error.Code, errCodeNotFound)
+	if resp.Error.Code != proto.errCodeNotFound {
+		t.Errorf("error code = %d, want %d", resp.Error.Code, proto.errCodeNotFound)
 	}
 }
 
@@ -151,7 +152,7 @@ func TestResourcesList(t *testing.T) {
 		t.Fatalf("unexpected error: %v", resp.Error.Message)
 	}
 	raw, _ := json.Marshal(resp.Result)
-	var result ResourceListResult
+	var result proto.ResourceListResult
 	if err := json.Unmarshal(raw, &result); err != nil {
 		t.Fatalf("unmarshal: %v", err)
 	}
@@ -172,14 +173,14 @@ func TestResourcesList(t *testing.T) {
 
 func TestResourcesRead(t *testing.T) {
 	srv, _ := newTestServer(t)
-	resp := request(t, srv, "resources/read", ReadResourceParams{
+	resp := request(t, srv, "resources/read", proto.ReadResourceParams{
 		URI: "ctx://context/tasks",
 	})
 	if resp.Error != nil {
 		t.Fatalf("unexpected error: %v", resp.Error.Message)
 	}
 	raw, _ := json.Marshal(resp.Result)
-	var result ReadResourceResult
+	var result proto.ReadResourceResult
 	if err := json.Unmarshal(raw, &result); err != nil {
 		t.Fatalf("unmarshal: %v", err)
 	}
@@ -193,14 +194,14 @@ func TestResourcesRead(t *testing.T) {
 
 func TestResourcesReadAgent(t *testing.T) {
 	srv, _ := newTestServer(t)
-	resp := request(t, srv, "resources/read", ReadResourceParams{
+	resp := request(t, srv, "resources/read", proto.ReadResourceParams{
 		URI: "ctx://context/agent",
 	})
 	if resp.Error != nil {
 		t.Fatalf("unexpected error: %v", resp.Error.Message)
 	}
 	raw, _ := json.Marshal(resp.Result)
-	var result ReadResourceResult
+	var result proto.ReadResourceResult
 	if err := json.Unmarshal(raw, &result); err != nil {
 		t.Fatalf("unmarshal: %v", err)
 	}
@@ -212,7 +213,7 @@ func TestResourcesReadAgent(t *testing.T) {
 
 func TestResourcesReadUnknown(t *testing.T) {
 	srv, _ := newTestServer(t)
-	resp := request(t, srv, "resources/read", ReadResourceParams{
+	resp := request(t, srv, "resources/read", proto.ReadResourceParams{
 		URI: "ctx://context/nonexistent",
 	})
 	if resp.Error == nil {
@@ -227,7 +228,7 @@ func TestToolsList(t *testing.T) {
 		t.Fatalf("unexpected error: %v", resp.Error.Message)
 	}
 	raw, _ := json.Marshal(resp.Result)
-	var result ToolListResult
+	var result proto.ToolListResult
 	if err := json.Unmarshal(raw, &result); err != nil {
 		t.Fatalf("unmarshal: %v", err)
 	}
@@ -252,14 +253,14 @@ func TestToolsList(t *testing.T) {
 
 func TestToolStatus(t *testing.T) {
 	srv, _ := newTestServer(t)
-	resp := request(t, srv, "tools/call", CallToolParams{
+	resp := request(t, srv, "tools/call", proto.CallToolParams{
 		Name: "ctx_status",
 	})
 	if resp.Error != nil {
 		t.Fatalf("unexpected error: %v", resp.Error.Message)
 	}
 	raw, _ := json.Marshal(resp.Result)
-	var result CallToolResult
+	var result proto.CallToolResult
 	if err := json.Unmarshal(raw, &result); err != nil {
 		t.Fatalf("unmarshal: %v", err)
 	}
@@ -274,7 +275,7 @@ func TestToolStatus(t *testing.T) {
 
 func TestToolComplete(t *testing.T) {
 	srv, contextDir := newTestServer(t)
-	resp := request(t, srv, "tools/call", CallToolParams{
+	resp := request(t, srv, "tools/call", proto.CallToolParams{
 		Name:      "ctx_complete",
 		Arguments: map[string]interface{}{"query": "1"},
 	})
@@ -282,7 +283,7 @@ func TestToolComplete(t *testing.T) {
 		t.Fatalf("unexpected error: %v", resp.Error.Message)
 	}
 	raw, _ := json.Marshal(resp.Result)
-	var result CallToolResult
+	var result proto.CallToolResult
 	if err := json.Unmarshal(raw, &result); err != nil {
 		t.Fatalf("unmarshal: %v", err)
 	}
@@ -303,14 +304,14 @@ func TestToolComplete(t *testing.T) {
 
 func TestToolDrift(t *testing.T) {
 	srv, _ := newTestServer(t)
-	resp := request(t, srv, "tools/call", CallToolParams{
+	resp := request(t, srv, "tools/call", proto.CallToolParams{
 		Name: "ctx_drift",
 	})
 	if resp.Error != nil {
 		t.Fatalf("unexpected error: %v", resp.Error.Message)
 	}
 	raw, _ := json.Marshal(resp.Result)
-	var result CallToolResult
+	var result proto.CallToolResult
 	if err := json.Unmarshal(raw, &result); err != nil {
 		t.Fatalf("unmarshal: %v", err)
 	}
@@ -386,7 +387,7 @@ func TestToolAdd(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			srv, contextDir := newTestServer(t)
-			resp := request(t, srv, "tools/call", CallToolParams{
+			resp := request(t, srv, "tools/call", proto.CallToolParams{
 				Name:      "ctx_add",
 				Arguments: tt.args,
 			})
@@ -394,7 +395,7 @@ func TestToolAdd(t *testing.T) {
 				t.Fatalf("unexpected error: %v", resp.Error.Message)
 			}
 			raw, _ := json.Marshal(resp.Result)
-			var result CallToolResult
+			var result proto.CallToolResult
 			if err := json.Unmarshal(raw, &result); err != nil {
 				t.Fatalf("unmarshal: %v", err)
 			}
@@ -423,7 +424,7 @@ func TestToolAdd(t *testing.T) {
 
 func TestToolUnknown(t *testing.T) {
 	srv, _ := newTestServer(t)
-	resp := request(t, srv, "tools/call", CallToolParams{
+	resp := request(t, srv, "tools/call", proto.CallToolParams{
 		Name: "nonexistent_tool",
 	})
 	if resp.Error == nil {
@@ -433,7 +434,7 @@ func TestToolUnknown(t *testing.T) {
 
 func TestNotification(t *testing.T) {
 	srv, _ := newTestServer(t)
-	req := Request{
+	req := proto.Request{
 		JSONRPC: "2.0",
 		Method:  "notifications/initialized",
 	}
@@ -457,11 +458,11 @@ func TestParseError(t *testing.T) {
 	if err := srv.Serve(); err != nil {
 		t.Fatalf("serve: %v", err)
 	}
-	var resp Response
+	var resp proto.Response
 	if err := json.Unmarshal(out.Bytes(), &resp); err != nil {
 		t.Fatalf("unmarshal: %v", err)
 	}
-	if resp.Error == nil || resp.Error.Code != errCodeParse {
+	if resp.Error == nil || resp.Error.Code != proto.errCodeParse {
 		t.Errorf("expected parse error, got: %+v", resp.Error)
 	}
 }
@@ -470,7 +471,7 @@ func TestParseError(t *testing.T) {
 
 func TestToolRecall(t *testing.T) {
 	srv, _ := newTestServer(t)
-	resp := request(t, srv, "tools/call", CallToolParams{
+	resp := request(t, srv, "tools/call", proto.CallToolParams{
 		Name:      "ctx_recall",
 		Arguments: map[string]interface{}{"limit": float64(3)},
 	})
@@ -478,7 +479,7 @@ func TestToolRecall(t *testing.T) {
 		t.Fatalf("unexpected error: %v", resp.Error.Message)
 	}
 	raw, _ := json.Marshal(resp.Result)
-	var result CallToolResult
+	var result proto.CallToolResult
 	if err := json.Unmarshal(raw, &result); err != nil {
 		t.Fatalf("unmarshal: %v", err)
 	}
@@ -493,7 +494,7 @@ func TestToolRecall(t *testing.T) {
 
 func TestToolRecallInvalidDate(t *testing.T) {
 	srv, _ := newTestServer(t)
-	resp := request(t, srv, "tools/call", CallToolParams{
+	resp := request(t, srv, "tools/call", proto.CallToolParams{
 		Name:      "ctx_recall",
 		Arguments: map[string]interface{}{"since": "not-a-date"},
 	})
@@ -501,7 +502,7 @@ func TestToolRecallInvalidDate(t *testing.T) {
 		t.Fatalf("unexpected error: %v", resp.Error.Message)
 	}
 	raw, _ := json.Marshal(resp.Result)
-	var result CallToolResult
+	var result proto.CallToolResult
 	if err := json.Unmarshal(raw, &result); err != nil {
 		t.Fatalf("unmarshal: %v", err)
 	}
@@ -512,7 +513,7 @@ func TestToolRecallInvalidDate(t *testing.T) {
 
 func TestToolWatchUpdate(t *testing.T) {
 	srv, contextDir := newTestServer(t)
-	resp := request(t, srv, "tools/call", CallToolParams{
+	resp := request(t, srv, "tools/call", proto.CallToolParams{
 		Name: "ctx_watch_update",
 		Arguments: map[string]interface{}{
 			"type":    "task",
@@ -523,7 +524,7 @@ func TestToolWatchUpdate(t *testing.T) {
 		t.Fatalf("unexpected error: %v", resp.Error.Message)
 	}
 	raw, _ := json.Marshal(resp.Result)
-	var result CallToolResult
+	var result proto.CallToolResult
 	if err := json.Unmarshal(raw, &result); err != nil {
 		t.Fatalf("unmarshal: %v", err)
 	}
@@ -547,7 +548,7 @@ func TestToolWatchUpdate(t *testing.T) {
 
 func TestToolWatchUpdateDecision(t *testing.T) {
 	srv, contextDir := newTestServer(t)
-	resp := request(t, srv, "tools/call", CallToolParams{
+	resp := request(t, srv, "tools/call", proto.CallToolParams{
 		Name: "ctx_watch_update",
 		Arguments: map[string]interface{}{
 			"type":         "decision",
@@ -561,7 +562,7 @@ func TestToolWatchUpdateDecision(t *testing.T) {
 		t.Fatalf("unexpected error: %v", resp.Error.Message)
 	}
 	raw, _ := json.Marshal(resp.Result)
-	var result CallToolResult
+	var result proto.CallToolResult
 	if err := json.Unmarshal(raw, &result); err != nil {
 		t.Fatalf("unmarshal: %v", err)
 	}
@@ -580,7 +581,7 @@ func TestToolWatchUpdateDecision(t *testing.T) {
 
 func TestToolWatchUpdateValidationError(t *testing.T) {
 	srv, _ := newTestServer(t)
-	resp := request(t, srv, "tools/call", CallToolParams{
+	resp := request(t, srv, "tools/call", proto.CallToolParams{
 		Name: "ctx_watch_update",
 		Arguments: map[string]interface{}{
 			"type":    "decision",
@@ -592,7 +593,7 @@ func TestToolWatchUpdateValidationError(t *testing.T) {
 		t.Fatalf("unexpected error: %v", resp.Error.Message)
 	}
 	raw, _ := json.Marshal(resp.Result)
-	var result CallToolResult
+	var result proto.CallToolResult
 	if err := json.Unmarshal(raw, &result); err != nil {
 		t.Fatalf("unmarshal: %v", err)
 	}
@@ -603,7 +604,7 @@ func TestToolWatchUpdateValidationError(t *testing.T) {
 
 func TestToolWatchUpdateComplete(t *testing.T) {
 	srv, contextDir := newTestServer(t)
-	resp := request(t, srv, "tools/call", CallToolParams{
+	resp := request(t, srv, "tools/call", proto.CallToolParams{
 		Name: "ctx_watch_update",
 		Arguments: map[string]interface{}{
 			"type":    "complete",
@@ -614,7 +615,7 @@ func TestToolWatchUpdateComplete(t *testing.T) {
 		t.Fatalf("unexpected error: %v", resp.Error.Message)
 	}
 	raw, _ := json.Marshal(resp.Result)
-	var result CallToolResult
+	var result proto.CallToolResult
 	if err := json.Unmarshal(raw, &result); err != nil {
 		t.Fatalf("unmarshal: %v", err)
 	}
@@ -646,7 +647,7 @@ func TestToolCompact(t *testing.T) {
 		t.Fatalf("write tasks: %v", err)
 	}
 
-	resp := request(t, srv, "tools/call", CallToolParams{
+	resp := request(t, srv, "tools/call", proto.CallToolParams{
 		Name:      "ctx_compact",
 		Arguments: map[string]interface{}{},
 	})
@@ -654,7 +655,7 @@ func TestToolCompact(t *testing.T) {
 		t.Fatalf("unexpected error: %v", resp.Error.Message)
 	}
 	raw, _ := json.Marshal(resp.Result)
-	var result CallToolResult
+	var result proto.CallToolResult
 	if err := json.Unmarshal(raw, &result); err != nil {
 		t.Fatalf("unmarshal: %v", err)
 	}
@@ -678,7 +679,7 @@ func TestToolCompact(t *testing.T) {
 
 func TestToolCompactClean(t *testing.T) {
 	srv, _ := newTestServer(t)
-	resp := request(t, srv, "tools/call", CallToolParams{
+	resp := request(t, srv, "tools/call", proto.CallToolParams{
 		Name:      "ctx_compact",
 		Arguments: map[string]interface{}{},
 	})
@@ -686,7 +687,7 @@ func TestToolCompactClean(t *testing.T) {
 		t.Fatalf("unexpected error: %v", resp.Error.Message)
 	}
 	raw, _ := json.Marshal(resp.Result)
-	var result CallToolResult
+	var result proto.CallToolResult
 	if err := json.Unmarshal(raw, &result); err != nil {
 		t.Fatalf("unmarshal: %v", err)
 	}
@@ -702,14 +703,14 @@ func TestToolCompactClean(t *testing.T) {
 
 func TestToolNext(t *testing.T) {
 	srv, _ := newTestServer(t)
-	resp := request(t, srv, "tools/call", CallToolParams{
+	resp := request(t, srv, "tools/call", proto.CallToolParams{
 		Name: "ctx_next",
 	})
 	if resp.Error != nil {
 		t.Fatalf("unexpected error: %v", resp.Error.Message)
 	}
 	raw, _ := json.Marshal(resp.Result)
-	var result CallToolResult
+	var result proto.CallToolResult
 	if err := json.Unmarshal(raw, &result); err != nil {
 		t.Fatalf("unmarshal: %v", err)
 	}
@@ -733,14 +734,14 @@ func TestToolNextAllComplete(t *testing.T) {
 		t.Fatalf("write tasks: %v", err)
 	}
 
-	resp := request(t, srv, "tools/call", CallToolParams{
+	resp := request(t, srv, "tools/call", proto.CallToolParams{
 		Name: "ctx_next",
 	})
 	if resp.Error != nil {
 		t.Fatalf("unexpected error: %v", resp.Error.Message)
 	}
 	raw, _ := json.Marshal(resp.Result)
-	var result CallToolResult
+	var result proto.CallToolResult
 	if err := json.Unmarshal(raw, &result); err != nil {
 		t.Fatalf("unmarshal: %v", err)
 	}
@@ -751,7 +752,7 @@ func TestToolNextAllComplete(t *testing.T) {
 
 func TestToolCheckTaskCompletion(t *testing.T) {
 	srv, _ := newTestServer(t)
-	resp := request(t, srv, "tools/call", CallToolParams{
+	resp := request(t, srv, "tools/call", proto.CallToolParams{
 		Name: "ctx_check_task_completion",
 		Arguments: map[string]interface{}{
 			"recent_action": "Finished build of the MCP server",
@@ -761,7 +762,7 @@ func TestToolCheckTaskCompletion(t *testing.T) {
 		t.Fatalf("unexpected error: %v", resp.Error.Message)
 	}
 	raw, _ := json.Marshal(resp.Result)
-	var result CallToolResult
+	var result proto.CallToolResult
 	if err := json.Unmarshal(raw, &result); err != nil {
 		t.Fatalf("unmarshal: %v", err)
 	}
@@ -774,7 +775,7 @@ func TestToolCheckTaskCompletion(t *testing.T) {
 
 func TestToolCheckTaskCompletionNoMatch(t *testing.T) {
 	srv, _ := newTestServer(t)
-	resp := request(t, srv, "tools/call", CallToolParams{
+	resp := request(t, srv, "tools/call", proto.CallToolParams{
 		Name: "ctx_check_task_completion",
 		Arguments: map[string]interface{}{
 			"recent_action": "Updated CSS styles",
@@ -784,7 +785,7 @@ func TestToolCheckTaskCompletionNoMatch(t *testing.T) {
 		t.Fatalf("unexpected error: %v", resp.Error.Message)
 	}
 	raw, _ := json.Marshal(resp.Result)
-	var result CallToolResult
+	var result proto.CallToolResult
 	if err := json.Unmarshal(raw, &result); err != nil {
 		t.Fatalf("unmarshal: %v", err)
 	}
@@ -796,7 +797,7 @@ func TestToolCheckTaskCompletionNoMatch(t *testing.T) {
 
 func TestToolSessionEventStart(t *testing.T) {
 	srv, _ := newTestServer(t)
-	resp := request(t, srv, "tools/call", CallToolParams{
+	resp := request(t, srv, "tools/call", proto.CallToolParams{
 		Name: "ctx_session_event",
 		Arguments: map[string]interface{}{
 			"type":   "start",
@@ -807,7 +808,7 @@ func TestToolSessionEventStart(t *testing.T) {
 		t.Fatalf("unexpected error: %v", resp.Error.Message)
 	}
 	raw, _ := json.Marshal(resp.Result)
-	var result CallToolResult
+	var result proto.CallToolResult
 	if err := json.Unmarshal(raw, &result); err != nil {
 		t.Fatalf("unmarshal: %v", err)
 	}
@@ -825,7 +826,7 @@ func TestToolSessionEventStart(t *testing.T) {
 
 func TestToolSessionEventEnd(t *testing.T) {
 	srv, _ := newTestServer(t)
-	resp := request(t, srv, "tools/call", CallToolParams{
+	resp := request(t, srv, "tools/call", proto.CallToolParams{
 		Name:      "ctx_session_event",
 		Arguments: map[string]interface{}{"type": "end"},
 	})
@@ -833,7 +834,7 @@ func TestToolSessionEventEnd(t *testing.T) {
 		t.Fatalf("unexpected error: %v", resp.Error.Message)
 	}
 	raw, _ := json.Marshal(resp.Result)
-	var result CallToolResult
+	var result proto.CallToolResult
 	if err := json.Unmarshal(raw, &result); err != nil {
 		t.Fatalf("unmarshal: %v", err)
 	}
@@ -848,7 +849,7 @@ func TestToolSessionEventEnd(t *testing.T) {
 
 func TestToolSessionEventInvalid(t *testing.T) {
 	srv, _ := newTestServer(t)
-	resp := request(t, srv, "tools/call", CallToolParams{
+	resp := request(t, srv, "tools/call", proto.CallToolParams{
 		Name:      "ctx_session_event",
 		Arguments: map[string]interface{}{"type": "pause"},
 	})
@@ -856,7 +857,7 @@ func TestToolSessionEventInvalid(t *testing.T) {
 		t.Fatalf("unexpected error: %v", resp.Error.Message)
 	}
 	raw, _ := json.Marshal(resp.Result)
-	var result CallToolResult
+	var result proto.CallToolResult
 	if err := json.Unmarshal(raw, &result); err != nil {
 		t.Fatalf("unmarshal: %v", err)
 	}
@@ -867,14 +868,14 @@ func TestToolSessionEventInvalid(t *testing.T) {
 
 func TestToolRemind(t *testing.T) {
 	srv, _ := newTestServer(t)
-	resp := request(t, srv, "tools/call", CallToolParams{
+	resp := request(t, srv, "tools/call", proto.CallToolParams{
 		Name: "ctx_remind",
 	})
 	if resp.Error != nil {
 		t.Fatalf("unexpected error: %v", resp.Error.Message)
 	}
 	raw, _ := json.Marshal(resp.Result)
-	var result CallToolResult
+	var result proto.CallToolResult
 	if err := json.Unmarshal(raw, &result); err != nil {
 		t.Fatalf("unmarshal: %v", err)
 	}
@@ -896,7 +897,7 @@ func TestPromptsList(t *testing.T) {
 		t.Fatalf("unexpected error: %v", resp.Error.Message)
 	}
 	raw, _ := json.Marshal(resp.Result)
-	var result PromptListResult
+	var result proto.PromptListResult
 	if err := json.Unmarshal(raw, &result); err != nil {
 		t.Fatalf("unmarshal: %v", err)
 	}
@@ -919,14 +920,14 @@ func TestPromptsList(t *testing.T) {
 
 func TestPromptSessionStart(t *testing.T) {
 	srv, _ := newTestServer(t)
-	resp := request(t, srv, "prompts/get", GetPromptParams{
+	resp := request(t, srv, "prompts/get", proto.GetPromptParams{
 		Name: "ctx-session-start",
 	})
 	if resp.Error != nil {
 		t.Fatalf("unexpected error: %v", resp.Error.Message)
 	}
 	raw, _ := json.Marshal(resp.Result)
-	var result GetPromptResult
+	var result proto.GetPromptResult
 	if err := json.Unmarshal(raw, &result); err != nil {
 		t.Fatalf("unmarshal: %v", err)
 	}
@@ -941,7 +942,7 @@ func TestPromptSessionStart(t *testing.T) {
 
 func TestPromptAddDecision(t *testing.T) {
 	srv, _ := newTestServer(t)
-	resp := request(t, srv, "prompts/get", GetPromptParams{
+	resp := request(t, srv, "prompts/get", proto.GetPromptParams{
 		Name: "ctx-add-decision",
 		Arguments: map[string]string{
 			"content":      "Use Go",
@@ -954,7 +955,7 @@ func TestPromptAddDecision(t *testing.T) {
 		t.Fatalf("unexpected error: %v", resp.Error.Message)
 	}
 	raw, _ := json.Marshal(resp.Result)
-	var result GetPromptResult
+	var result proto.GetPromptResult
 	if err := json.Unmarshal(raw, &result); err != nil {
 		t.Fatalf("unmarshal: %v", err)
 	}
@@ -969,14 +970,14 @@ func TestPromptAddDecision(t *testing.T) {
 
 func TestPromptReflect(t *testing.T) {
 	srv, _ := newTestServer(t)
-	resp := request(t, srv, "prompts/get", GetPromptParams{
+	resp := request(t, srv, "prompts/get", proto.GetPromptParams{
 		Name: "ctx-reflect",
 	})
 	if resp.Error != nil {
 		t.Fatalf("unexpected error: %v", resp.Error.Message)
 	}
 	raw, _ := json.Marshal(resp.Result)
-	var result GetPromptResult
+	var result proto.GetPromptResult
 	if err := json.Unmarshal(raw, &result); err != nil {
 		t.Fatalf("unmarshal: %v", err)
 	}
@@ -991,14 +992,14 @@ func TestPromptReflect(t *testing.T) {
 
 func TestPromptCheckpoint(t *testing.T) {
 	srv, _ := newTestServer(t)
-	resp := request(t, srv, "prompts/get", GetPromptParams{
+	resp := request(t, srv, "prompts/get", proto.GetPromptParams{
 		Name: "ctx-checkpoint",
 	})
 	if resp.Error != nil {
 		t.Fatalf("unexpected error: %v", resp.Error.Message)
 	}
 	raw, _ := json.Marshal(resp.Result)
-	var result GetPromptResult
+	var result proto.GetPromptResult
 	if err := json.Unmarshal(raw, &result); err != nil {
 		t.Fatalf("unmarshal: %v", err)
 	}
@@ -1013,7 +1014,7 @@ func TestPromptCheckpoint(t *testing.T) {
 
 func TestPromptUnknown(t *testing.T) {
 	srv, _ := newTestServer(t)
-	resp := request(t, srv, "prompts/get", GetPromptParams{
+	resp := request(t, srv, "prompts/get", proto.GetPromptParams{
 		Name: "nonexistent",
 	})
 	if resp.Error == nil {
@@ -1027,22 +1028,22 @@ func TestSessionStateTracking(t *testing.T) {
 	srv, _ := newTestServer(t)
 
 	// Start session.
-	request(t, srv, "tools/call", CallToolParams{
+	request(t, srv, "tools/call", proto.CallToolParams{
 		Name:      "ctx_session_event",
 		Arguments: map[string]interface{}{"type": "start"},
 	})
 
 	// Call a few tools.
-	request(t, srv, "tools/call", CallToolParams{Name: "ctx_status"})
-	request(t, srv, "tools/call", CallToolParams{Name: "ctx_next"})
+	request(t, srv, "tools/call", proto.CallToolParams{Name: "ctx_status"})
+	request(t, srv, "tools/call", proto.CallToolParams{Name: "ctx_next"})
 
 	// End session — should report tool call count.
-	resp := request(t, srv, "tools/call", CallToolParams{
+	resp := request(t, srv, "tools/call", proto.CallToolParams{
 		Name:      "ctx_session_event",
 		Arguments: map[string]interface{}{"type": "end"},
 	})
 	raw, _ := json.Marshal(resp.Result)
-	var result CallToolResult
+	var result proto.CallToolResult
 	if err := json.Unmarshal(raw, &result); err != nil {
 		t.Fatalf("unmarshal: %v", err)
 	}
@@ -1055,7 +1056,7 @@ func TestSessionStateTracking(t *testing.T) {
 
 func TestResourcesSubscribe(t *testing.T) {
 	srv, _ := newTestServer(t)
-	resp := request(t, srv, "resources/subscribe", SubscribeParams{
+	resp := request(t, srv, "resources/subscribe", proto.SubscribeParams{
 		URI: "ctx://context/tasks",
 	})
 	if resp.Error != nil {
@@ -1068,11 +1069,11 @@ func TestResourcesSubscribe(t *testing.T) {
 func TestResourcesUnsubscribe(t *testing.T) {
 	srv, _ := newTestServer(t)
 	// Subscribe first.
-	request(t, srv, "resources/subscribe", SubscribeParams{
+	request(t, srv, "resources/subscribe", proto.SubscribeParams{
 		URI: "ctx://context/tasks",
 	})
 	// Then unsubscribe.
-	resp := request(t, srv, "resources/unsubscribe", UnsubscribeParams{
+	resp := request(t, srv, "resources/unsubscribe", proto.UnsubscribeParams{
 		URI: "ctx://context/tasks",
 	})
 	if resp.Error != nil {
@@ -1085,15 +1086,15 @@ func TestResourcePollerNotification(t *testing.T) {
 	srv, contextDir := newTestServer(t)
 
 	var mu sync.Mutex
-	var notifications []Notification
-	srv.poller.notifyFunc = func(n Notification) {
+	var notifications []proto.Notification
+	srv.poller.notifyFunc = func(n proto.Notification) {
 		mu.Lock()
 		notifications = append(notifications, n)
 		mu.Unlock()
 	}
 
 	// Subscribe to tasks.
-	request(t, srv, "resources/subscribe", SubscribeParams{
+	request(t, srv, "resources/subscribe", proto.SubscribeParams{
 		URI: "ctx://context/tasks",
 	})
 
@@ -1115,7 +1116,7 @@ func TestResourcePollerNotification(t *testing.T) {
 		t.Fatalf("notification count = %d, want 1", count)
 	}
 
-	params, ok := notifications[0].Params.(ResourceUpdatedParams)
+	params, ok := notifications[0].Params.(proto.ResourceUpdatedParams)
 	if !ok {
 		t.Fatalf("unexpected params type: %T", notifications[0].Params)
 	}

@@ -7,7 +7,7 @@
 package root
 
 import (
-	internalmcp "github.com/ActiveMemory/ctx/internal/mcp"
+	internalmcp "github.com/ActiveMemory/ctx/internal/mcp/server"
 	"github.com/ActiveMemory/ctx/internal/rc"
 	"github.com/spf13/cobra"
 )

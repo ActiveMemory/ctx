@@ -4,7 +4,7 @@
 //   \    Copyright 2026-present Context contributors.
 //                 SPDX-License-Identifier: Apache-2.0
 
-package mcp
+package server
 
 import (
 	"encoding/json"
@@ -33,6 +33,8 @@ import (
 	"github.com/ActiveMemory/ctx/internal/context"
 	"github.com/ActiveMemory/ctx/internal/drift"
 	"github.com/ActiveMemory/ctx/internal/entry"
+	"github.com/ActiveMemory/ctx/internal/mcp/proto"
+	"github.com/ActiveMemory/ctx/internal/mcp/session"
 	"github.com/ActiveMemory/ctx/internal/recall/parser"
 	"github.com/ActiveMemory/ctx/internal/task"
 	"github.com/ActiveMemory/ctx/internal/validation"
@@ -71,8 +73,8 @@ func applyOptionalFields(
 //
 // Returns:
 //   - *Response: tool list result
-func (s *Server) handleToolsList(req Request) *Response {
-	return s.ok(req.ID, ToolListResult{Tools: toolDefs})
+func (s *Server) handleToolsList(req proto.Request) *proto.Response {
+	return s.ok(req.ID, proto.ToolListResult{Tools: proto.ToolDefs})
 }
 
 // handleToolsCall dispatches a tool call to the appropriate handler.
@@ -82,13 +84,13 @@ func (s *Server) handleToolsList(req Request) *Response {
 //
 // Returns:
 //   - *Response: tool result or error
-func (s *Server) handleToolsCall(req Request) *Response {
-	var params CallToolParams
+func (s *Server) handleToolsCall(req proto.Request) *proto.Response {
+	var params proto.CallToolParams
 	if err := json.Unmarshal(req.Params, &params); err != nil {
-		return s.error(req.ID, errCodeInvalidArg, assets.TextDesc(assets.TextDescKeyMCPInvalidParams))
+		return s.error(req.ID, proto.ErrCodeInvalidArg, assets.TextDesc(assets.TextDescKeyMCPInvalidParams))
 	}
 
-	s.session.recordToolCall()
+	s.session.RecordToolCall()
 
 	switch params.Name {
 	case tool.Status:
@@ -114,7 +116,7 @@ func (s *Server) handleToolsCall(req Request) *Response {
 	case tool.Remind:
 		return s.toolRemind(req.ID)
 	default:
-		return s.error(req.ID, errCodeNotFound,
+		return s.error(req.ID, proto.ErrCodeNotFound,
 			fmt.Sprintf(assets.TextDesc(assets.TextDescKeyMCPUnknownTool),
 				params.Name),
 		)
@@ -128,7 +130,7 @@ func (s *Server) handleToolsCall(req Request) *Response {
 //
 // Returns:
 //   - *Response: context status with file list and token counts
-func (s *Server) toolStatus(id json.RawMessage) *Response {
+func (s *Server) toolStatus(id json.RawMessage) *proto.Response {
 	ctx, err := context.Load(s.contextDir)
 	if err != nil {
 		return s.toolError(
@@ -171,7 +173,7 @@ func (s *Server) toolStatus(id json.RawMessage) *Response {
 //   - *Response: confirmation or validation error
 func (s *Server) toolAdd(
 	id json.RawMessage, args map[string]interface{},
-) *Response {
+) *proto.Response {
 	if err := validation.ValidateBoundary(s.contextDir); err != nil {
 		return s.toolError(
 			id, fmt.Sprintf(
@@ -224,7 +226,7 @@ func (s *Server) toolAdd(
 //   - *Response: completed task name or error
 func (s *Server) toolComplete(
 	id json.RawMessage, args map[string]interface{},
-) *Response {
+) *proto.Response {
 	if err := validation.ValidateBoundary(s.contextDir); err != nil {
 		return s.toolError(
 			id, fmt.Sprintf(
@@ -255,7 +257,7 @@ func (s *Server) toolComplete(
 //
 // Returns:
 //   - *Response: drift report with violations and warnings
-func (s *Server) toolDrift(id json.RawMessage) *Response {
+func (s *Server) toolDrift(id json.RawMessage) *proto.Response {
 	ctx, err := context.Load(s.contextDir)
 	if err != nil {
 		return s.toolError(
@@ -314,9 +316,9 @@ func (s *Server) toolDrift(id json.RawMessage) *Response {
 //
 // Returns:
 //   - *Response: success response with text content
-func (s *Server) toolOK(id json.RawMessage, text string) *Response {
-	return s.ok(id, CallToolResult{
-		Content: []ToolContent{{Type: mime.ContentTypeText, Text: text}},
+func (s *Server) toolOK(id json.RawMessage, text string) *proto.Response {
+	return s.ok(id, proto.CallToolResult{
+		Content: []proto.ToolContent{{Type: mime.ContentTypeText, Text: text}},
 	})
 }
 
@@ -328,9 +330,9 @@ func (s *Server) toolOK(id json.RawMessage, text string) *Response {
 //
 // Returns:
 //   - *Response: error response with IsError flag
-func (s *Server) toolError(id json.RawMessage, msg string) *Response {
-	return s.ok(id, CallToolResult{
-		Content: []ToolContent{{Type: mime.ContentTypeText, Text: msg}},
+func (s *Server) toolError(id json.RawMessage, msg string) *proto.Response {
+	return s.ok(id, proto.CallToolResult{
+		Content: []proto.ToolContent{{Type: mime.ContentTypeText, Text: msg}},
 		IsError: true,
 	})
 }
@@ -345,7 +347,7 @@ func (s *Server) toolError(id json.RawMessage, msg string) *Response {
 //   - *Response: formatted session list or empty result
 func (s *Server) toolRecall(
 	id json.RawMessage, args map[string]interface{},
-) *Response {
+) *proto.Response {
 	limit := cfg.DefaultRecallLimit
 	if v, ok := args[field.Limit].(float64); ok && v > 0 {
 		limit = int(v)
@@ -435,7 +437,7 @@ func (s *Server) toolRecall(
 //   - *Response: confirmation with file name or error
 func (s *Server) toolWatchUpdate(
 	id json.RawMessage, args map[string]interface{},
-) *Response {
+) *proto.Response {
 	if err := validation.ValidateBoundary(s.contextDir); err != nil {
 		return s.toolError(
 			id, fmt.Sprintf(
@@ -458,7 +460,7 @@ func (s *Server) toolWatchUpdate(
 		if err != nil {
 			return s.toolError(id, err.Error())
 		}
-		s.session.queuePendingUpdate(PendingUpdate{
+		s.session.QueuePendingUpdate(session.PendingUpdate{
 			Type:     entryType,
 			Content:  content,
 			QueuedAt: time.Now(),
@@ -490,8 +492,8 @@ func (s *Server) toolWatchUpdate(
 	}
 
 	fileName := entryCfg.ToCtxFile[strings.ToLower(entryType)]
-	s.session.recordAdd(entryType)
-	s.session.queuePendingUpdate(PendingUpdate{
+	s.session.RecordAdd(entryType)
+	s.session.QueuePendingUpdate(session.PendingUpdate{
 		Type:    entryType,
 		Content: content,
 		Attrs: map[string]string{
@@ -516,7 +518,7 @@ func (s *Server) toolWatchUpdate(
 //   - *Response: summary of compacted items or clean status
 func (s *Server) toolCompact(
 	id json.RawMessage, args map[string]interface{},
-) *Response {
+) *proto.Response {
 	if err := validation.ValidateBoundary(s.contextDir); err != nil {
 		return s.toolError(id,
 			fmt.Sprintf(assets.TextDesc(assets.TextDescKeyMCPBoundaryViolation), err),
@@ -652,7 +654,7 @@ func (s *Server) toolCompact(
 //
 // Returns:
 //   - *Response: next task or all-complete message
-func (s *Server) toolNext(id json.RawMessage) *Response {
+func (s *Server) toolNext(id json.RawMessage) *proto.Response {
 	ctx, err := context.Load(s.contextDir)
 	if err != nil {
 		return s.toolError(id, fmt.Sprintf(
@@ -716,7 +718,7 @@ func (s *Server) toolNext(id json.RawMessage) *Response {
 //   - *Response: nudge text if match found, empty otherwise
 func (s *Server) toolCheckTaskCompletion(
 	id json.RawMessage, args map[string]interface{},
-) *Response {
+) *proto.Response {
 	recentAction, _ := args[field.RecentAction].(string)
 
 	ctx, err := context.Load(s.contextDir)
@@ -785,7 +787,7 @@ func (s *Server) toolCheckTaskCompletion(
 //   - *Response: session status with stats on end
 func (s *Server) toolSessionEvent(
 	id json.RawMessage, args map[string]interface{},
-) *Response {
+) *proto.Response {
 	eventType, _ := args[cli.AttrType].(string)
 	if eventType == "" {
 		return s.toolError(id, assets.TextDesc(
@@ -795,7 +797,7 @@ func (s *Server) toolSessionEvent(
 
 	switch eventType {
 	case event.Start:
-		s.session = newSessionState(s.contextDir)
+		s.session = session.NewState(s.contextDir)
 		if caller, ok := args[field.Caller].(string); ok && caller != "" {
 			return s.toolOK(id, fmt.Sprintf(
 				assets.TextDesc(
@@ -809,7 +811,7 @@ func (s *Server) toolSessionEvent(
 			), s.contextDir))
 
 	case event.End:
-		pending := s.session.pendingCount()
+		pending := s.session.PendingCount()
 		var sb strings.Builder
 		sb.WriteString(assets.TextDesc(assets.TextDescKeyMCPSessionEnding))
 		sb.WriteString(token.NewlineLF)
@@ -818,7 +820,7 @@ func (s *Server) toolSessionEvent(
 			_, _ = fmt.Fprintf(&sb,
 				assets.TextDesc(assets.TextDescKeyMCPPendingUpdatesFormat),
 				pending)
-			for i, pu := range s.session.pendingFlush {
+			for i, pu := range s.session.PendingFlush {
 				_, _ = fmt.Fprintf(&sb,
 					assets.TextDesc(
 						assets.TextDescKeyMCPPendingItemFormat,
@@ -834,7 +836,7 @@ func (s *Server) toolSessionEvent(
 
 		_, _ = fmt.Fprintf(&sb,
 			assets.TextDesc(assets.TextDescKeyMCPSessionStatsFormat),
-			s.session.toolCalls, totalAdds(s.session.addsPerformed))
+			s.session.ToolCalls, totalAdds(s.session.AddsPerformed))
 
 		return s.toolOK(id, sb.String())
 
@@ -853,7 +855,7 @@ func (s *Server) toolSessionEvent(
 //
 // Returns:
 //   - *Response: formatted reminder list or empty message
-func (s *Server) toolRemind(id json.RawMessage) *Response {
+func (s *Server) toolRemind(id json.RawMessage) *proto.Response {
 	reminders, readErr := remindcore.ReadReminders()
 	if readErr != nil {
 		return s.toolError(id,

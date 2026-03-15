@@ -4,7 +4,7 @@
 //   \    Copyright 2026-present Context contributors.
 //                 SPDX-License-Identifier: Apache-2.0
 
-package mcp
+package proto
 
 import "encoding/json"
 
@@ -44,15 +44,15 @@ type RPCError struct {
 
 // Standard JSON-RPC error codes.
 const (
-	errCodeParse      = -32700
+	ErrCodeParse      = -32700
 	errCodeInvalidReq = -32600
-	errCodeNotFound   = -32601
-	errCodeInvalidArg = -32602
-	errCodeInternal   = -32603
+	ErrCodeNotFound   = -32601
+	ErrCodeInvalidArg = -32602
+	ErrCodeInternal   = -32603
 )
 
 // MCP protocol version.
-const protocolVersion = "2024-11-05"
+const ProtocolVersion = "2024-11-05"
 
 // --- Initialization types ---
 

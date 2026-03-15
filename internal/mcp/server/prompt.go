@@ -4,7 +4,7 @@
 //   \    Copyright 2026-present Context contributors.
 //                 SPDX-License-Identifier: Apache-2.0
 
-package mcp
+package server
 
 import (
 	"encoding/json"
@@ -19,10 +19,11 @@ import (
 	"github.com/ActiveMemory/ctx/internal/config/mcp/prompt"
 	"github.com/ActiveMemory/ctx/internal/config/token"
 	"github.com/ActiveMemory/ctx/internal/context"
+	"github.com/ActiveMemory/ctx/internal/mcp/proto"
 )
 
 // promptDefs defines all available MCP prompts.
-var promptDefs = []Prompt{
+var promptDefs = []proto.Prompt{
 	{
 		Name: prompt.SessionStart,
 		Description: assets.TextDesc(
@@ -32,7 +33,7 @@ var promptDefs = []Prompt{
 		Name: prompt.AddDecision,
 		Description: assets.TextDesc(
 			assets.TextDescKeyMCPPromptAddDecisionDesc),
-		Arguments: []PromptArgument{
+		Arguments: []proto.PromptArgument{
 			{
 				Name:        field.Content,
 				Description: assets.TextDesc(assets.TextDescKeyMCPPromptArgDecisionTitle),
@@ -59,7 +60,7 @@ var promptDefs = []Prompt{
 		Name: prompt.AddLearning,
 		Description: assets.TextDesc(
 			assets.TextDescKeyMCPPromptAddLearningDesc),
-		Arguments: []PromptArgument{
+		Arguments: []proto.PromptArgument{
 			{
 				Name:        field.Content,
 				Description: assets.TextDesc(assets.TextDescKeyMCPPromptArgLearningTitle),
@@ -101,8 +102,8 @@ var promptDefs = []Prompt{
 //
 // Returns:
 //   - *Response: prompt list result
-func (s *Server) handlePromptsList(req Request) *Response {
-	return s.ok(req.ID, PromptListResult{Prompts: promptDefs})
+func (s *Server) handlePromptsList(req proto.Request) *proto.Response {
+	return s.ok(req.ID, proto.PromptListResult{Prompts: promptDefs})
 }
 
 // handlePromptsGet returns the content of a requested prompt.
@@ -112,10 +113,10 @@ func (s *Server) handlePromptsList(req Request) *Response {
 //
 // Returns:
 //   - *Response: rendered prompt or error
-func (s *Server) handlePromptsGet(req Request) *Response {
-	var params GetPromptParams
+func (s *Server) handlePromptsGet(req proto.Request) *proto.Response {
+	var params proto.GetPromptParams
 	if err := json.Unmarshal(req.Params, &params); err != nil {
-		return s.error(req.ID, errCodeInvalidArg,
+		return s.error(req.ID, proto.ErrCodeInvalidArg,
 			assets.TextDesc(assets.TextDescKeyMCPInvalidParams))
 	}
 
@@ -131,7 +132,7 @@ func (s *Server) handlePromptsGet(req Request) *Response {
 	case prompt.Checkpoint:
 		return s.promptCheckpoint(req.ID)
 	default:
-		return s.error(req.ID, errCodeNotFound,
+		return s.error(req.ID, proto.ErrCodeNotFound,
 			fmt.Sprintf(
 				assets.TextDesc(assets.TextDescKeyMCPUnknownPrompt),
 				params.Name))
@@ -147,10 +148,10 @@ func (s *Server) handlePromptsGet(req Request) *Response {
 //   - *Response: rendered session start prompt with context files
 func (s *Server) promptSessionStart(
 	id json.RawMessage,
-) *Response {
+) *proto.Response {
 	ctx, err := context.Load(s.contextDir)
 	if err != nil {
-		return s.error(id, errCodeInternal,
+		return s.error(id, proto.ErrCodeInternal,
 			fmt.Sprintf(
 				assets.TextDesc(assets.TextDescKeyMCPLoadContext), err))
 	}
@@ -175,13 +176,13 @@ func (s *Server) promptSessionStart(
 	sb.WriteString(assets.TextDesc(
 		assets.TextDescKeyMCPPromptSessionStartFooter))
 
-	return s.ok(id, GetPromptResult{
+	return s.ok(id, proto.GetPromptResult{
 		Description: assets.TextDesc(
 			assets.TextDescKeyMCPPromptSessionStartResultD),
-		Messages: []PromptMessage{
+		Messages: []proto.PromptMessage{
 			{
 				Role: prompt.RoleUser,
-				Content: ToolContent{
+				Content: proto.ToolContent{
 					Type: mime.ContentTypeText,
 					Text: sb.String(),
 				},
@@ -201,7 +202,7 @@ func (s *Server) promptSessionStart(
 //   - *Response: formatted decision prompt
 func (s *Server) promptAddDecision(
 	id json.RawMessage, args map[string]string,
-) *Response {
+) *proto.Response {
 	content := args[field.Content]
 	ctx := args[cli.AttrContext]
 	rationale := args[cli.AttrRationale]
@@ -232,13 +233,13 @@ func (s *Server) promptAddDecision(
 	sb.WriteString(assets.TextDesc(
 		assets.TextDescKeyMCPPromptAddDecisionFooter))
 
-	return s.ok(id, GetPromptResult{
+	return s.ok(id, proto.GetPromptResult{
 		Description: assets.TextDesc(
 			assets.TextDescKeyMCPPromptAddDecisionResultD),
-		Messages: []PromptMessage{
+		Messages: []proto.PromptMessage{
 			{
 				Role: prompt.RoleUser,
-				Content: ToolContent{
+				Content: proto.ToolContent{
 					Type: mime.ContentTypeText,
 					Text: sb.String(),
 				},
@@ -258,7 +259,7 @@ func (s *Server) promptAddDecision(
 //   - *Response: formatted learning prompt
 func (s *Server) promptAddLearning(
 	id json.RawMessage, args map[string]string,
-) *Response {
+) *proto.Response {
 	content := args[field.Content]
 	ctx := args[cli.AttrContext]
 	lesson := args[cli.AttrLesson]
@@ -289,13 +290,13 @@ func (s *Server) promptAddLearning(
 	sb.WriteString(assets.TextDesc(
 		assets.TextDescKeyMCPPromptAddLearningFooter))
 
-	return s.ok(id, GetPromptResult{
+	return s.ok(id, proto.GetPromptResult{
 		Description: assets.TextDesc(
 			assets.TextDescKeyMCPPromptAddLearningResultD),
-		Messages: []PromptMessage{
+		Messages: []proto.PromptMessage{
 			{
 				Role: prompt.RoleUser,
-				Content: ToolContent{
+				Content: proto.ToolContent{
 					Type: mime.ContentTypeText,
 					Text: sb.String(),
 				},
@@ -311,14 +312,14 @@ func (s *Server) promptAddLearning(
 //
 // Returns:
 //   - *Response: reflection prompt text
-func (s *Server) promptReflect(id json.RawMessage) *Response {
-	return s.ok(id, GetPromptResult{
+func (s *Server) promptReflect(id json.RawMessage) *proto.Response {
+	return s.ok(id, proto.GetPromptResult{
 		Description: assets.TextDesc(
 			assets.TextDescKeyMCPPromptReflectResultD),
-		Messages: []PromptMessage{
+		Messages: []proto.PromptMessage{
 			{
 				Role: prompt.RoleUser,
-				Content: ToolContent{
+				Content: proto.ToolContent{
 					Type: mime.ContentTypeText,
 					Text: assets.TextDesc(
 						assets.TextDescKeyMCPPromptReflectBody),
@@ -338,9 +339,9 @@ func (s *Server) promptReflect(id json.RawMessage) *Response {
 //   - *Response: checkpoint prompt with session stats
 func (s *Server) promptCheckpoint(
 	id json.RawMessage,
-) *Response {
-	pending := s.session.pendingCount()
-	adds := totalAdds(s.session.addsPerformed)
+) *proto.Response {
+	pending := s.session.PendingCount()
+	adds := totalAdds(s.session.AddsPerformed)
 
 	var sb strings.Builder
 	sb.WriteString(assets.TextDesc(
@@ -351,19 +352,19 @@ func (s *Server) promptCheckpoint(
 	_, _ = fmt.Fprintf(&sb,
 		assets.TextDesc(
 			assets.TextDescKeyMCPPromptCheckpointStatsFormat),
-		s.session.toolCalls, adds, pending)
+		s.session.ToolCalls, adds, pending)
 
 	sb.WriteString(token.NewlineLF)
 	sb.WriteString(assets.TextDesc(
 		assets.TextDescKeyMCPPromptCheckpointSteps))
 
-	return s.ok(id, GetPromptResult{
+	return s.ok(id, proto.GetPromptResult{
 		Description: assets.TextDesc(
 			assets.TextDescKeyMCPPromptCheckpointResultD),
-		Messages: []PromptMessage{
+		Messages: []proto.PromptMessage{
 			{
 				Role: prompt.RoleUser,
-				Content: ToolContent{
+				Content: proto.ToolContent{
 					Type: mime.ContentTypeText,
 					Text: sb.String(),
 				},
