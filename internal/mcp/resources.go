@@ -58,7 +58,7 @@ func (s *Server) handleResourcesList(req Request) *Response {
 		resources = append(resources, Resource{
 			URI:         resourceURI(rm.name),
 			Name:        rm.name,
-			MimeType:    mime.MimeMarkdown,
+			MimeType:    mime.Markdown,
 			Description: rm.desc,
 		})
 	}
@@ -67,7 +67,7 @@ func (s *Server) handleResourcesList(req Request) *Response {
 	resources = append(resources, Resource{
 		URI:         resourceURI("agent"),
 		Name:        "agent",
-		MimeType:    mime.MimeMarkdown,
+		MimeType:    mime.Markdown,
 		Description: assets.TextDesc(assets.TextDescKeyMCPResAgent),
 	})
 
@@ -116,7 +116,7 @@ func (s *Server) readContextFile(
 	return s.ok(id, ReadResourceResult{
 		Contents: []ResourceContent{{
 			URI:      uri,
-			MimeType: mime.MimeMarkdown,
+			MimeType: mime.Markdown,
 			Text:     string(f.Content),
 		}},
 	})
@@ -168,7 +168,7 @@ func (s *Server) readAgentPacket(
 	return s.ok(id, ReadResourceResult{
 		Contents: []ResourceContent{{
 			URI:      resourceURI("agent"),
-			MimeType: mime.MimeMarkdown,
+			MimeType: mime.Markdown,
 			Text:     sb.String(),
 		}},
 	})

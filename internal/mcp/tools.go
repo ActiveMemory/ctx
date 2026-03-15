@@ -495,7 +495,7 @@ func (s *Server) toolWatchUpdate(
 		Type:    entryType,
 		Content: content,
 		Attrs: map[string]string{
-			mime.AttrFile: fileName,
+			field.AttrFile: fileName,
 		},
 		QueuedAt: time.Now(),
 	})

@@ -24,4 +24,7 @@ const (
 	Limit = "limit"
 	// Since is an ISO date filter for session recall.
 	Since = "since"
+	// AttrFile is the metadata key on PendingUpdate recording which
+	// context file was written to (e.g., "DECISIONS.md").
+	AttrFile = "file"
 )
