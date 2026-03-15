@@ -469,15 +469,16 @@ func (s *Server) toolRecall(
 
 	for i, sess := range sessions {
 		duration := sess.Duration.Round(time.Second)
-		fmt.Fprintf(&sb, "%d. %s", i+1, sess.StartTime.Format("2006-01-02 15:04"))
+		fmt.Fprintf(&sb, assets.TextDesc(assets.TextDescKeyMCPRecallItemFormat),
+			i+1, sess.StartTime.Format("2006-01-02 15:04"))
 		if sess.Project != "" {
-			fmt.Fprintf(&sb, " [%s]", sess.Project)
+			fmt.Fprintf(&sb, assets.TextDesc(assets.TextDescKeyMCPRecallProjectFormat), sess.Project)
 		}
-		fmt.Fprintf(&sb, " (%s, %d turns)", duration, sess.TurnCount)
+		fmt.Fprintf(&sb, assets.TextDesc(assets.TextDescKeyMCPRecallDurationFormat), duration, sess.TurnCount)
 		sb.WriteString(token.NewlineLF)
 
 		if sess.FirstUserMsg != "" {
-			fmt.Fprintf(&sb, "   %s", sess.FirstUserMsg)
+			fmt.Fprintf(&sb, assets.TextDesc(assets.TextDescKeyMCPRecallFirstMsgFormat), sess.FirstUserMsg)
 			sb.WriteString(token.NewlineLF)
 		}
 	}
@@ -595,8 +596,8 @@ func (s *Server) toolCompact(
 		for _, block := range blocks {
 			if block.IsArchivable {
 				archivableBlocks = append(archivableBlocks, block)
-				fmt.Fprintf(&sb, "Moved: %s%s",
-					core.TruncateString(block.ParentTaskText(), 50), token.NewlineLF)
+				fmt.Fprintf(&sb, assets.TextDesc(assets.TextDescKeyMCPCompactMovedFormat)+token.NewlineLF,
+					core.TruncateString(block.ParentTaskText(), 50))
 			}
 		}
 
@@ -639,7 +640,7 @@ func (s *Server) toolCompact(
 				archiveContent += block.BlockContent() + token.NewlineLF + token.NewlineLF
 			}
 			if _, archiveErr := core.WriteArchive("tasks", assets.HeadingArchivedTasks, archiveContent); archiveErr != nil {
-				fmt.Fprintf(&sb, "Archive warning: %v%s", archiveErr, token.NewlineLF)
+				fmt.Fprintf(&sb, assets.TextDesc(assets.TextDescKeyMCPCompactArchiveWarning)+token.NewlineLF, archiveErr)
 			}
 		}
 	}
@@ -652,8 +653,8 @@ func (s *Server) toolCompact(
 		cleaned, count := core.RemoveEmptySections(string(f.Content))
 		if count > 0 {
 			if writeErr := writeContextFile(f.Path, []byte(cleaned)); writeErr == nil {
-				fmt.Fprintf(&sb, "Removed %d empty sections from %s%s",
-					count, f.Name, token.NewlineLF)
+				fmt.Fprintf(&sb, assets.TextDesc(assets.TextDescKeyMCPCompactRemovedSectFmt)+token.NewlineLF,
+					count, f.Name)
 				changes += count
 			}
 		}
@@ -804,8 +805,8 @@ func (s *Server) toolSessionEvent(
 			fmt.Fprintf(&sb, assets.TextDesc(assets.TextDescKeyMCPPendingUpdatesFormat)+"%s",
 				pending, token.NewlineLF)
 			for i, pu := range s.session.pendingFlush {
-				fmt.Fprintf(&sb, "  %d. [%s] %s%s",
-					i+1, pu.Type, core.TruncateString(pu.Content, 60), token.NewlineLF)
+				fmt.Fprintf(&sb, assets.TextDesc(assets.TextDescKeyMCPPendingItemFormat)+token.NewlineLF,
+					i+1, pu.Type, core.TruncateString(pu.Content, 60))
 			}
 			sb.WriteString(assets.TextDesc(assets.TextDescKeyMCPReviewPending))
 		} else {
@@ -842,34 +843,53 @@ func (s *Server) toolRemind(id json.RawMessage) *Response {
 		annotation := ""
 		if r.After != nil {
 			if *r.After > today {
-				annotation = fmt.Sprintf(" (after %s, not yet due)", *r.After)
+				annotation = fmt.Sprintf(assets.TextDesc(assets.TextDescKeyMCPReminderNotDueFormat), *r.After)
 			}
 		}
-		fmt.Fprintf(&sb, "  [%d] %s%s%s", r.ID, r.Message, annotation, token.NewlineLF)
+		fmt.Fprintf(&sb, assets.TextDesc(assets.TextDescKeyMCPReminderItemFormat)+token.NewlineLF,
+			r.ID, r.Message, annotation)
 	}
 
 	return s.toolOK(id, sb.String())
 }
 
 // containsOverlap checks if two strings share meaningful words.
+//
+// Uses word-set intersection rather than substring matching to avoid
+// false positives (e.g., "test" matching inside "contestant").
+//
+// Parameters:
+//   - action: the recent action description
+//   - taskText: the task text to compare against
+//
+// Returns:
+//   - bool: true if at least 2 significant words overlap
 func containsOverlap(action, taskText string) bool {
-	actionLower := strings.ToLower(action)
-	taskLower := strings.ToLower(taskText)
+	actionWords := toWordSet(strings.ToLower(action))
+	taskWords := strings.Fields(strings.ToLower(taskText))
 
-	// Split task text into words, check if any appear in the action.
-	words := strings.Fields(taskLower)
 	matchCount := 0
-	for _, w := range words {
+	for _, w := range taskWords {
 		if len(w) < 4 {
 			continue // Skip short common words.
 		}
-		if strings.Contains(actionLower, w) {
+		if actionWords[w] {
 			matchCount++
 		}
 	}
 
 	// Require at least 2 word matches for a reasonable signal.
 	return matchCount >= 2
+}
+
+// toWordSet splits text into a set of unique words for O(1) lookup.
+func toWordSet(text string) map[string]bool {
+	fields := strings.Fields(text)
+	set := make(map[string]bool, len(fields))
+	for _, w := range fields {
+		set[w] = true
+	}
+	return set
 }
 
 // totalAdds sums all entry add counts.
