@@ -18,3 +18,7 @@ const (
 	// Ellipsis is a Markdown ellipsis.
 	Ellipsis = "..."
 )
+
+// TopicSeparators are the delimiters between a date and topic in session
+// headers (e.g., "2026-01-15 — Fix API" or "2026-01-15 - Fix API").
+var TopicSeparators = []string{" — ", " - "}

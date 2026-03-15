@@ -8,12 +8,19 @@ package parser
 
 import (
 	"encoding/json"
+	"os"
 	"path/filepath"
 	"sort"
+	"strings"
+	"time"
 
 	"github.com/ActiveMemory/ctx/internal/config/claude"
+	"github.com/ActiveMemory/ctx/internal/config/dir"
+	"github.com/ActiveMemory/ctx/internal/config/file"
 	"github.com/ActiveMemory/ctx/internal/config/session"
+	cfgTime "github.com/ActiveMemory/ctx/internal/config/time"
 	"github.com/ActiveMemory/ctx/internal/config/token"
+	"github.com/ActiveMemory/ctx/internal/rc"
 )
 
 // buildSession constructs a Session from raw Claude Code messages.
@@ -40,7 +47,7 @@ func (p *ClaudeCodeParser) buildSession(
 	first := rawMsgs[0]
 	last := rawMsgs[len(rawMsgs)-1]
 
-	session := &Session{
+	s := &Session{
 		ID:         id,
 		Slug:       first.Slug,
 		Tool:       session.ToolClaudeCode,
@@ -56,39 +63,39 @@ func (p *ClaudeCodeParser) buildSession(
 	// Convert messages and accumulate stats
 	for _, raw := range rawMsgs {
 		msg := p.convertMessage(raw)
-		session.Messages = append(session.Messages, msg)
+		s.Messages = append(s.Messages, msg)
 
 		if msg.BelongsToUser() {
-			session.TurnCount++
-			if session.FirstUserMsg == "" && msg.Text != "" {
+			s.TurnCount++
+			if s.FirstUserMsg == "" && msg.Text != "" {
 				// Truncate preview
 				preview := msg.Text
 				if len(preview) > 100 {
 					preview = preview[:100] + token.Ellipsis
 				}
-				session.FirstUserMsg = preview
+				s.FirstUserMsg = preview
 			}
 		}
 
-		session.TotalTokensIn += msg.TokensIn
-		session.TotalTokensOut += msg.TokensOut
+		s.TotalTokensIn += msg.TokensIn
+		s.TotalTokensOut += msg.TokensOut
 
 		// Check for errors in tool results
 		for _, tr := range msg.ToolResults {
 			if tr.IsError {
-				session.HasErrors = true
+				s.HasErrors = true
 			}
 		}
 
 		// Track model
-		if raw.Message.Model != "" && session.Model == "" {
-			session.Model = raw.Message.Model
+		if raw.Message.Model != "" && s.Model == "" {
+			s.Model = raw.Message.Model
 		}
 	}
 
-	session.TotalTokens = session.TotalTokensIn + session.TotalTokensOut
+	s.TotalTokens = s.TotalTokensIn + s.TotalTokensOut
 
-	return session
+	return s
 }
 
 // convertMessage converts a Claude Code raw message to the common Message type.
@@ -191,4 +198,213 @@ func (p *ClaudeCodeParser) parseContentBlocks(
 	}
 
 	return nil
+}
+
+// parseMarkdownSession extracts a Session from Markdown content.
+//
+// Parameters:
+//   - content: Raw Markdown content
+//   - sourcePath: Path to the source file
+//
+// Returns:
+//   - *Session: The parsed session, or nil if no session header found
+func (p *MarkdownSessionParser) parseMarkdownSession(
+	content string, sourcePath string,
+) *Session {
+	lines := strings.Split(content, token.NewlineLF)
+
+	var headerLine string
+	for _, line := range lines {
+		trimmed := strings.TrimSpace(line)
+		if sessionHeader(trimmed) {
+			headerLine = trimmed
+			break
+		}
+	}
+
+	if headerLine == "" {
+		return nil
+	}
+
+	date, topic := parseSessionHeader(headerLine)
+
+	// Derive a session ID from the filename (stable, OS-agnostic)
+	base := filepath.Base(sourcePath)
+	sessionID := strings.TrimSuffix(base, file.ExtMarkdown)
+
+	// Parse date from header or fall back to file modification time
+	startTime := parseSessionDate(date)
+	if startTime.IsZero() {
+		info, err := os.Stat(sourcePath)
+		if err == nil {
+			startTime = info.ModTime()
+		} else {
+			startTime = time.Now()
+		}
+	}
+
+	// Extract sections
+	sections := extractSections(lines)
+
+	// Build messages from sections
+	var messages []Message
+	turnCount := 0
+
+	// The session summary itself is treated as an assistant message
+	var bodyParts []string
+	for _, sec := range sections {
+		if sec.body != "" {
+			bodyParts = append(bodyParts, token.HeadingLevelTwoStart+
+				sec.heading+token.NewlineLF+sec.body,
+			)
+		}
+	}
+
+	if len(bodyParts) > 0 {
+		messages = append(messages, Message{
+			ID:        sessionID + "-summary",
+			Timestamp: startTime,
+			Role:      claude.RoleAssistant,
+			Text:      strings.Join(bodyParts, token.NewlineLF+token.NewlineLF),
+		})
+	}
+
+	// The topic acts as the initial user message
+	if topic != "" {
+		turnCount = 1
+		messages = append([]Message{{
+			ID:        sessionID + "-topic",
+			Timestamp: startTime,
+			Role:      claude.RoleUser,
+			Text:      topic,
+		}}, messages...)
+	}
+
+	cwd := ""
+	project := ""
+	// Try to infer the project from the path
+	// (look for .context/sessions/ pattern)
+	d := filepath.Dir(sourcePath)
+	if filepath.Base(d) == dir.Sessions {
+		contextDir := filepath.Dir(d)
+		if filepath.Base(contextDir) == dir.Context {
+			projectDir := filepath.Dir(contextDir)
+			project = filepath.Base(projectDir)
+			cwd = projectDir
+		}
+	}
+
+	return &Session{
+		ID:           sessionID,
+		Slug:         sessionID,
+		Tool:         session.ToolMarkdown,
+		SourceFile:   sourcePath,
+		CWD:          cwd,
+		Project:      project,
+		StartTime:    startTime,
+		EndTime:      startTime,
+		Duration:     0,
+		Messages:     messages,
+		TurnCount:    turnCount,
+		FirstUserMsg: topic,
+	}
+}
+
+// parseSessionHeader extracts the date and topic from a session header line.
+//
+// Parameters:
+//   - line: The full header line (e.g., "# Session: 2026-01-15 - Fix API")
+//
+// Returns:
+//   - string: The date portion (e.g., "2026-01-15")
+//   - string: The topic portion (e.g., "Fix API")
+func parseSessionHeader(line string) (string, string) {
+	// Remove "# " prefix
+	rest := strings.TrimPrefix(line, token.HeadingLevelOneStart)
+
+	// Remove session prefix if present (e.g., "Session: ")
+	for _, prefix := range rc.SessionPrefixes() {
+		rest = strings.TrimPrefix(rest, prefix+token.Space)
+		rest = strings.TrimPrefix(rest, prefix)
+	}
+
+	rest = strings.TrimSpace(rest)
+
+	// Split on em dash or hyphen topic separator
+	for _, sep := range token.TopicSeparators {
+		if idx := strings.Index(rest, sep); idx >= 0 {
+			return strings.TrimSpace(
+					rest[:idx]),
+				strings.TrimSpace(rest[idx+len(sep):])
+		}
+	}
+
+	// No separator found: treat the entire rest as a topic
+	return "", rest
+}
+
+// parseSessionDate parses a date string into a time.Time.
+//
+// Supports YYYY-MM-DD format.
+//
+// Parameters:
+//   - dateStr: Date string to parse
+//
+// Returns:
+//   - time.Time: Parsed time, or zero value on failure
+func parseSessionDate(dateStr string) time.Time {
+	t, err := time.Parse(cfgTime.DateFormat, dateStr)
+	if err != nil {
+		return time.Time{}
+	}
+	return t
+}
+
+// extractSections extracts H2 sections from Markdown lines.
+//
+// Sections are returned in document order to ensure deterministic output.
+//
+// Parameters:
+//   - lines: All lines of the Markdown file
+//
+// Returns:
+//   - []section: Sections in document order
+func extractSections(lines []string) []section {
+	var sections []section
+	var currentHeading string
+	var currentBody []string
+
+	for _, line := range lines {
+		trimmed := strings.TrimSpace(line)
+		if strings.HasPrefix(trimmed, token.HeadingLevelTwoStart) {
+			// Save previous section
+			if currentHeading != "" {
+				sections = append(sections, section{
+					heading: currentHeading,
+					body: strings.TrimSpace(
+						strings.Join(currentBody, token.NewlineLF),
+					),
+				})
+			}
+			currentHeading = strings.TrimPrefix(trimmed, token.HeadingLevelTwoStart)
+			currentBody = nil
+			continue
+		}
+
+		if currentHeading != "" {
+			currentBody = append(currentBody, line)
+		}
+	}
+
+	// Save the last section
+	if currentHeading != "" {
+		sections = append(sections, section{
+			heading: currentHeading,
+			body: strings.TrimSpace(
+				strings.Join(currentBody, token.NewlineLF),
+			),
+		})
+	}
+
+	return sections
 }

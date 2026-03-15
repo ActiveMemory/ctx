@@ -295,6 +295,8 @@ const (
 
 	TextDescKeyEventsEmpty       = "events.empty"
 	TextDescKeyEventsHumanFormat = "events.human-format"
+	TextDescKeyEventsCloseError  = "events.close-error"
+	TextDescKeyEventsWriteError  = "events.write-error"
 
 	TextDescKeyStatsEmpty        = "stats.empty"
 	TextDescKeyStatsHeaderFormat = "stats.header-format"

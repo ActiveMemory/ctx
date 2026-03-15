@@ -454,6 +454,10 @@ events.empty:
   short: No events logged.
 events.human-format:
   short: '%-19s  %-5s  %-24s  %s'
+events.close-error:
+  short: 'ctx: event log close: %v'
+events.write-error:
+  short: 'ctx: event log write: %v'
 heartbeat.log-plain:
   short: prompt#%d context_modified=%t
 heartbeat.log-tokens:

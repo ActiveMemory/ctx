@@ -18,7 +18,7 @@ import (
 // Returns an empty string if the directory does not exist, is not a git
 // repository, or has no remote named "origin".
 //
-// Errors are intentionally swallowed — this is a best-effort enrichment
+// Errors are intentionally swallowed: this is a best-effort enrichment
 // helper. Callers treat "" as "unknown" and proceed without a remote URL.
 //
 // Parameters:

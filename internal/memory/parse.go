@@ -49,16 +49,9 @@ func ParseEntries(content string) []Entry {
 		lineNum := i + 1 // 1-based
 		trimmed := strings.TrimSpace(line)
 
-		// Skip top-level heading
-		if strings.HasPrefix(trimmed, token.HeadingLevelOneStart) && !strings.HasPrefix(trimmed, token.HeadingLevelTwoStart) {
-			if inEntry {
-				flush()
-			}
-			continue
-		}
-
-		// Section header (## or ###) starts a new entry
-		if strings.HasPrefix(trimmed, token.HeadingLevelTwoStart) || strings.HasPrefix(trimmed, token.HeadingLevelThreeStart) {
+		// Section header (H2+) starts a new entry
+		if strings.HasPrefix(trimmed, token.HeadingLevelTwoStart) ||
+			strings.HasPrefix(trimmed, token.HeadingLevelThreeStart) {
 			if inEntry {
 				flush()
 			}
@@ -66,6 +59,14 @@ func ParseEntries(content string) []Entry {
 			currentKind = EntryHeader
 			current = []string{line}
 			inEntry = true
+			continue
+		}
+
+		// Skip top-level heading (H2+ already handled above)
+		if strings.HasPrefix(trimmed, token.HeadingLevelOneStart) {
+			if inEntry {
+				flush()
+			}
 			continue
 		}
 
@@ -77,8 +78,9 @@ func ParseEntries(content string) []Entry {
 			continue
 		}
 
-		// List item — each top-level item is a separate entry for classification
-		if strings.HasPrefix(trimmed, token.PrefixListDash) || strings.HasPrefix(trimmed, token.PrefixListStar) {
+		// List item: each top-level item is a separate entry for classification
+		if strings.HasPrefix(trimmed, token.PrefixListDash) ||
+			strings.HasPrefix(trimmed, token.PrefixListStar) {
 			if inEntry {
 				flush()
 			}
@@ -89,7 +91,7 @@ func ParseEntries(content string) []Entry {
 			continue
 		}
 
-		// Regular text — part of a paragraph or continuation of a header block
+		// Regular text: part of a paragraph or continuation of a header block
 		if inEntry && (currentKind == EntryHeader || currentKind == EntryParagraph) {
 			current = append(current, line)
 			continue

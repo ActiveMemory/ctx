@@ -3,6 +3,7 @@
 <!-- INDEX:START -->
 | Date | Decision |
 |------|--------|
+| 2026-03-14 | Session prefixes are parser vocabulary, not i18n text |
 | 2026-03-14 | System path deny-list as safety net, not security boundary |
 | 2026-03-14 | Config-driven freshness check with per-file review URLs |
 | 2026-03-13 | Delete ctx-context-monitor skill — hook output is self-sufficient |
@@ -43,6 +44,20 @@
 | 2026-02-26 | Security and permissions (consolidated) |
 | 2026-02-27 | Webhook and notification design (consolidated) |
 <!-- INDEX:END -->
+
+## [2026-03-14-131152] Session prefixes are parser vocabulary, not i18n text
+
+**Status**: Accepted
+
+**Context**: Markdown session parser had hardcoded Session:/Oturum: pair in text.yaml as session_prefix/session_prefix_alt — didn't scale beyond two languages
+
+**Decision**: Session prefixes are parser vocabulary, not i18n text
+
+**Rationale**: Session header prefixes are recognition patterns for parsing, not user-facing interface strings. Separating content recognition from interface language lets users parse multilingual session files without code changes. Single-language default (Session:) avoids implicit favoritism.
+
+**Consequences**: Prefixes moved to .ctxrc session_prefixes list. text.yaml entries and embed.go constants removed. Parser reads from rc.SessionPrefixes() with fallback to config/parser.DefaultSessionPrefixes. Users extend via .ctxrc.
+
+---
 
 ## [2026-03-14-110748] System path deny-list as safety net, not security boundary
 

@@ -176,3 +176,9 @@ type ToolResult struct {
 	Content   string `json:"content"`
 	IsError   bool   `json:"is_error,omitempty"`
 }
+
+// section holds a heading and its body content in document order.
+type section struct {
+	heading string
+	body    string
+}

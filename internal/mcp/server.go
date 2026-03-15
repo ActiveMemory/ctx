@@ -9,7 +9,6 @@ package mcp
 import (
 	"bufio"
 	"encoding/json"
-	"fmt"
 	"os"
 
 	"github.com/ActiveMemory/ctx/internal/assets"
@@ -21,11 +20,11 @@ import (
 // NewServer creates a new MCP server for the given context directory.
 //
 // Parameters:
-//   - contextDir: Path to the .context/ directory
-//   - version: Binary version string for the server info response
+//   - contextDir: path to the .context/ directory
+//   - version: binary version string for the server info response
 //
 // Returns:
-//   - *Server: A configured MCP server ready to serve
+//   - *Server: a configured MCP server ready to serve
 func NewServer(contextDir, version string) *Server {
 	return &Server{
 		contextDir:  contextDir,
@@ -42,7 +41,7 @@ func NewServer(contextDir, version string) *Server {
 // Each line from stdin is expected to be a JSON-RPC 2.0 request.
 //
 // Returns:
-//   - error: Non-nil if an I/O error prevents continued operation
+//   - error: non-nil if an I/O error prevents continued operation
 func (s *Server) Serve() error {
 	scanner := bufio.NewScanner(s.in)
 
@@ -56,113 +55,24 @@ func (s *Server) Serve() error {
 
 		resp := s.handleMessage(line)
 		if resp == nil {
-			// Notification — no response required.
+			// Notification: no response required.
 			continue
 		}
 
 		out, err := json.Marshal(resp)
 		if err != nil {
 			// Marshal failure is an internal error; try to report it.
-			s.writeError(nil, errCodeInternal, assets.TextDesc(assets.TextDescKeyMCPFailedMarshal))
+			s.writeError(nil, errCodeInternal, assets.TextDesc(
+				assets.TextDescKeyMCPFailedMarshal),
+			)
 			continue
 		}
-		if _, writeErr := s.out.Write(append(out, token.NewlineLF[0])); writeErr != nil {
+		if _, writeErr := s.out.Write(
+			append(out, token.NewlineLF[0]),
+		); writeErr != nil {
 			return writeErr
 		}
 	}
 
 	return scanner.Err()
-}
-
-// handleMessage dispatches a raw JSON-RPC message to the appropriate handler.
-func (s *Server) handleMessage(data []byte) *Response {
-	var req Request
-	if err := json.Unmarshal(data, &req); err != nil {
-		return &Response{
-			JSONRPC: mcp.MCPJSONRPCVersion,
-			Error:   &RPCError{Code: errCodeParse, Message: assets.TextDesc(assets.TextDescKeyMCPParseError)},
-		}
-	}
-
-	// Notifications have no ID and expect no response.
-	if req.ID == nil {
-		s.handleNotification(req)
-		return nil
-	}
-
-	return s.dispatch(req)
-}
-
-// dispatch routes a request to the correct handler based on method name.
-func (s *Server) dispatch(req Request) *Response {
-	switch req.Method {
-	case mcp.MCPMethodInitialize:
-		return s.handleInitialize(req)
-	case mcp.MCPMethodPing:
-		return s.ok(req.ID, struct{}{})
-	case mcp.MCPMethodResourcesList:
-		return s.handleResourcesList(req)
-	case mcp.MCPMethodResourcesRead:
-		return s.handleResourcesRead(req)
-	case mcp.MCPMethodToolsList:
-		return s.handleToolsList(req)
-	case mcp.MCPMethodToolsCall:
-		return s.handleToolsCall(req)
-	default:
-		return s.error(req.ID, errCodeNotFound,
-			fmt.Sprintf(assets.TextDesc(assets.TextDescKeyMCPMethodNotFound), req.Method))
-	}
-}
-
-// handleNotification processes notifications (no response needed).
-func (s *Server) handleNotification(req Request) {
-	// MCP notifications we handle:
-	// - notifications/initialized: client confirms init complete
-	// - notifications/cancelled: client cancels a request
-	// All are no-ops for our stateless server.
-}
-
-// handleInitialize responds to the MCP initialize handshake.
-func (s *Server) handleInitialize(req Request) *Response {
-	result := InitializeResult{
-		ProtocolVersion: protocolVersion,
-		Capabilities: ServerCaps{
-			Resources: &ResourcesCap{},
-			Tools:     &ToolsCap{},
-		},
-		ServerInfo: AppInfo{
-			Name:    mcp.MCPServerName,
-			Version: s.version,
-		},
-	}
-	return s.ok(req.ID, result)
-}
-
-// ok builds a successful JSON-RPC response.
-func (s *Server) ok(id json.RawMessage, result interface{}) *Response {
-	return &Response{
-		JSONRPC: mcp.MCPJSONRPCVersion,
-		ID:      id,
-		Result:  result,
-	}
-}
-
-// error builds a JSON-RPC error response.
-func (s *Server) error(id json.RawMessage, code int, msg string) *Response {
-	return &Response{
-		JSONRPC: mcp.MCPJSONRPCVersion,
-		ID:      id,
-		Error:   &RPCError{Code: code, Message: msg},
-	}
-}
-
-// writeError writes an error response directly to stdout. Used when the
-// normal response flow cannot be used (e.g., marshal failure).
-func (s *Server) writeError(id json.RawMessage, code int, msg string) {
-	resp := s.error(id, code, msg)
-	if out, err := json.Marshal(resp); err == nil {
-		// Best-effort: writeError is a last-resort fallback; nowhere
-		// to report a write failure from here.
-		_, _ = s.out.Write(append(out, token.NewlineLF[0]))
-	}
 }

@@ -13,6 +13,14 @@ TASK STATUS LABELS:
 - `#in-progress` — currently being worked on (add inline, don't move task)
 -->
 
+### Phase -2: Further Cleanup
+
+* Human: internal/recall/parser requires a serious refactoring; for example
+  the parser object and its private and public methods need to go to its own
+  package and other helper functions need to go to a different adjacent package.
+* Human: internal/notify/notify.go requires refactoring (all functions bagged in
+  one file; types need to go to types.go per convention etc etc)
+
 ### Phase -1: Quality Verification
 
 
@@ -514,6 +522,106 @@ is not i18n text — it belongs in runtime config.
 **SP.5 — Validation:**
 
 - [x] SP.5.1: Run `make lint && make test` — all tests pass, no lint errors #priority:high #added:2026-03-14 #done:2026-03-14
+
+### Phase EH: Error Handling Audit
+
+Systematic audit of silently discarded errors across the codebase.
+Many call sites use `_ =` or `_, _ =` to discard errors without
+any feedback. Some are legitimate (best-effort cleanup), most are
+lazy escapes that hide failures.
+
+- [ ] EH.1: Catalogue all silent error discards — recursive walk of `internal/`
+      for patterns: `_ = `, `_, _ = `, `//nolint:errcheck`, bare `return` after
+      error-producing calls. Group by category:
+      (a) file close in defer — often legitimate but should log on failure
+      (b) file write/read — data loss risk, must surface
+      (c) os.Remove/Rename — state corruption risk
+      (d) fmt.Fprint to stderr — truly best-effort, acceptable
+      Commands: `grep -rn '_ =' internal/`, `grep -rn 'nolint:errcheck' internal/`
+      Output: spreadsheet in `.context/` with file, line, expression, category,
+      and recommended action (log-stderr, return-error, acceptable-as-is).
+      DoD: every `_ =` in the codebase is categorised and has a recommended action
+      #priority:high #added:2026-03-14
+
+- [ ] EH.2: Address category (b) — file write/read discards. These risk silent
+      data loss. Fix: return the error, or at minimum emit to stderr with
+      `fmt.Fprintf(os.Stderr, "ctx: ...: %v\n", err)` following the pattern
+      established in `internal/log/event.go`.
+      DoD: no write/read error is silently discarded
+      #priority:high #added:2026-03-14
+
+- [ ] EH.3: Address category (a) — file close in defer. Most are `defer func()
+      { _ = f.Close() }()`. For read-only files, close errors are rare but
+      should still surface. For write/append files, close can fail if the
+      final flush fails — these are data loss. Fix: `if err := f.Close();
+      err != nil { fmt.Fprintf(os.Stderr, "ctx: close %s: %v\n", path, err) }`.
+      DoD: all defer-close sites log failures to stderr
+      #priority:medium #added:2026-03-14
+
+- [ ] EH.4: Address category (c) — os.Remove/Rename discards. These are state
+      operations (rotation, pruning, temp file cleanup). Silent failure leaves
+      stale state. Fix: stderr warning at minimum; for rotation/rename, consider
+      returning the error.
+      DoD: no Remove/Rename error is silently discarded
+      #priority:medium #added:2026-03-14
+
+- [ ] EH.5: Validate — `grep -rn '_ =' internal/` returns only category (d)
+      entries (fmt.Fprint to stderr) and entries explicitly annotated as
+      acceptable. Run `make lint && make test` to confirm no regressions.
+      DoD: grep output is clean or fully annotated; CI green
+      #priority:high #added:2026-03-14
+
+### Phase ET: Error Package Taxonomy (`internal/err/`)
+
+`errors.go` is 1995 lines with 188 functions in a single file. Split into
+domain-grouped files. No API changes — same package, same function signatures,
+just file reorganization.
+
+Taxonomy (from prefix analysis):
+
+| File             | Prefixes / Domain                                     | ~Count |
+|------------------|-------------------------------------------------------|--------|
+| `memory.go`      | Memory*, Discover*                                    | 17     |
+| `parser.go`      | Parser*                                               | 7      |
+| `crypto.go`      | Crypto*, Encrypt*, Decrypt*, GenerateKey, SaveKey, LoadKey, NoKeyAt | 14     |
+| `task.go`        | Task*, NoTaskSpecified, NoTaskMatch, NoCompletedTasks | 8      |
+| `journal.go`     | LoadJournalState*, SaveJournalState*, ReadJournalDir, NoJournalDir, NoJournalEntries, ScanJournal, UnknownStage, StageNotSet | 10 |
+| `session.go`     | Session*, FindSessions, NoSessionsFound, All*, Ambiguous* | 8 |
+| `pad.go`         | Edit*, Blob*, ReadScratchpad, OutFlagRequiresBlob, NoConflict*, Resolve* | 10 |
+| `recall.go`      | Reindex*, Stats*, EventLog*                           | 6      |
+| `fs.go`          | Read*, Write*, Open*, Stat*, File*, Mkdir*, CreateDir, DirNotFound, NotDirectory, Boundary* | 30 |
+| `backup.go`      | Backup*, CreateBackup*, CreateArchive*                | 6      |
+| `prompt.go`      | Prompt*, NoPromptTemplate, ListTemplates, ReadTemplate, NoTemplate | 7 |
+| `hook.go`        | Embedded*, Override*, UnknownHook, UnknownVariant, MarkerNotFound | 6 |
+| `skill.go`       | Skill*                                                | 2      |
+| `config.go`      | UnknownProfile, ReadProfile, UnknownFormat, UnknownProjectType, InvalidTool, UnsupportedTool, NotInitialized, ContextNotInitialized, ContextDirNotFound, FlagRequires* | 12 |
+| `errors.go`      | Remaining general-purpose: WorkingDirectory, CtxNotInPath, ReadInput, InvalidDate*, Reminder*, Drift*, Git*, Webhook*, etc. | ~25 |
+
+- [x] ET.1: Create the 14 domain files with copyright headers, move functions #done:2026-03-14
+      verify no function is duplicated or lost. Leave `errors.go` with only
+      the uncategorised remainder (~25 functions).
+      Validation: `grep -c '^func ' internal/err/*.go | awk -F: '{s+=$2} END {print s}'` equals 188.
+      DoD: `go build ./...` and `make test` pass; function count preserved
+      #priority:medium #added:2026-03-14
+
+- [x] ET.2: Verify all callers compile #done:2026-03-14
+
+- [x] ET.3: Split remaining errors.go (~31 functions) into final domain files: #done:2026-03-14
+      state.go (ReadingStateDir, LoadState, SaveState),
+      reminder.go (ReadReminders, ParseReminders, InvalidID, ReminderNotFound, ReminderIDRequired),
+      date.go (InvalidDateValue, InvalidDate),
+      init.go (NotInitialized, ContextNotInitialized, HomeDir, ReadProjectReadme, ReadInitTemplate, CreateMakefile, DetectReferenceTime),
+      git.go (GitNotFound, NotInGitRepo),
+      notify.go (WebhookEmpty, SaveWebhook, LoadWebhook, SendNotification — move MarshalPayload from config.go here),
+      validation.go (FlagRequired, ArgRequired, DriftViolations, NoInput, ReadInput, ReadInputStream),
+      site.go (NoSiteConfig, ZensicalNotFound).
+      After split, errors.go should be empty and deleted.
+      DoD: `grep -c '^func ' internal/err/*.go` sums to 188; no errors.go remains; `make lint && make test` green
+      #priority:high #added:2026-03-14 — `go build ./...` with no changes
+      outside `internal/err/`. Since it's the same package, no import changes
+      needed. Run `make test` to confirm.
+      DoD: CI green
+      #priority:medium #added:2026-03-14
 
 - [ ] Add freshness_files to .ctxrc defaults seeded by ctx init — currently the freshness config is only in the gitignored .ctxrc, so new clones don't get it. Consider a .ctxrc.defaults pattern or seeding via ctx init template. #priority:medium #added:2026-03-14-105143
 

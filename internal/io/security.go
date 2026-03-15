@@ -81,6 +81,26 @@ func SafeReadUserFile(path string) ([]byte, error) {
 	return os.ReadFile(clean) //nolint:gosec // validated by cleanAndValidate
 }
 
+// SafeAppendFile opens a file for appending after cleaning the path
+// and rejecting system directory prefixes. Creates the file if it does
+// not exist.
+//
+// Parameters:
+//   - path: file path to open
+//   - perm: file permission bits used when creating the file
+//
+// Returns:
+//   - *os.File: open file handle in append mode (caller must close)
+//   - error: non-nil on validation or open failure
+func SafeAppendFile(path string, perm os.FileMode) (*os.File, error) {
+	clean, validateErr := cleanAndValidate(path)
+	if validateErr != nil {
+		return nil, validateErr
+	}
+	//nolint:gosec // validated by cleanAndValidate
+	return os.OpenFile(clean, os.O_APPEND|os.O_CREATE|os.O_WRONLY, perm)
+}
+
 // SafeWriteFile writes data to a file after cleaning the path and
 // rejecting system directory prefixes.
 //

@@ -3,6 +3,7 @@
 <!-- INDEX:START -->
 | Date | Learning |
 |------|--------|
+| 2026-03-14 | Hardcoded _alt suffixes create implicit language favoritism |
 | 2026-03-14 | Subagents reorganize file structure without being asked |
 | 2026-03-14 | Internal skill rename requires updates across 6+ layers |
 | 2026-03-13 | Skills without a trigger mechanism are dead code |
@@ -67,6 +68,16 @@
 | 2026-02-19 | Feature can be code-complete but invisible to users |
 | 2026-01-28 | IDE is already the UI |
 <!-- INDEX:END -->
+
+---
+
+## [2026-03-14-131202] Hardcoded _alt suffixes create implicit language favoritism
+
+**Context**: Session parser had session_prefix_alt hardcoding Turkish as a special case alongside English default
+
+**Lesson**: Naming a constant _alt and hardcoding one non-English language as a built-in default discriminates by giving that language special status. The pattern doesn't scale (alt_2? alt_3?) and signals that adding languages requires code changes.
+
+**Application**: When a feature needs multi-value support, use configurable lists from the start — not hardcoded pairs with _alt suffixes. Default to a single canonical value; all extensions are user-configured equally.
 
 ---
 

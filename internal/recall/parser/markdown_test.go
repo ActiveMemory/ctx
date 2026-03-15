@@ -47,19 +47,19 @@ func TestMarkdownSessionParser_Matches(t *testing.T) {
 		{
 			name:    "valid date-only header",
 			file:    "2026-01-15-work.md",
-			content: "# 2026-01-15 — Morning Work\n\n## What Was Done\n",
+			content: "# 2026-01-15 - Morning Work\n\n## What Was Done\n",
 			want:    true,
 		},
 		{
 			name:    "non-markdown file",
 			file:    "session.txt",
-			content: "# Session: 2026-01-15 — Fix API\n",
+			content: "# Session: 2026-01-15 - Fix API\n",
 			want:    false,
 		},
 		{
 			name:    "README.md",
 			file:    "README.md",
-			content: "# Session: 2026-01-15 — Readme\n",
+			content: "# Session: 2026-01-15 - Readme\n",
 			want:    false,
 		},
 		{
@@ -98,7 +98,7 @@ func TestMarkdownSessionParser_ParseFile(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	content := `# Session: 2026-01-15 — Fix API Rate Limiting
+	content := `# Session: 2026-01-15 - Fix API Rate Limiting
 
 ## What Was Done
 - Added rate limiter middleware
@@ -188,22 +188,22 @@ func TestIsSessionHeader(t *testing.T) {
 		line string
 		want bool
 	}{
-		{"session with em dash", "# Session: 2026-01-15 — Fix API", true},
+		{"session with em dash", "# Session: 2026-01-15 - Fix API", true},
 		{"session with hyphen", "# Session: 2026-01-15 - Fix API", true},
-		{"unconfigured prefix", "# Foo: 2026-01-15 — Bar", false},
-		{"date only with em dash", "# 2026-01-15 — Morning Work", true},
+		{"unconfigured prefix", "# Foo: 2026-01-15 - Bar", false},
+		{"date only with em dash", "# 2026-01-15 - Morning Work", true},
 		{"date only with hyphen", "# 2026-01-15 - Morning Work", true},
 		{"date only no topic", "# 2026-01-15", true},
-		{"not a header", "## Session: 2026-01-15 — Fix API", false},
-		{"no hash", "Session: 2026-01-15 — Fix API", false},
+		{"not a header", "## Session: 2026-01-15 - Fix API", false},
+		{"no hash", "Session: 2026-01-15 - Fix API", false},
 		{"random h1", "# Random Title", false},
 		{"empty", "", false},
-		{"japanese not in defaults", "# セッション: 2026-01-15 — テスト", false},
+		{"japanese not in defaults", "# セッション: 2026-01-15 - テスト", false},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			if got := isSessionHeader(tt.line); got != tt.want {
-				t.Errorf("isSessionHeader(%q) = %v, want %v", tt.line, got, tt.want)
+			if got := sessionHeader(tt.line); got != tt.want {
+				t.Errorf("sessionHeader(%q) = %v, want %v", tt.line, got, tt.want)
 			}
 		})
 	}
@@ -237,14 +237,14 @@ func TestIsSessionHeader_CustomPrefix(t *testing.T) {
 		line string
 		want bool
 	}{
-		{"japanese with custom prefix", "# セッション: 2026-01-15 — テスト", true},
-		{"english still works", "# Session: 2026-01-15 — Fix API", true},
-		{"unconfigured prefix excluded", "# Foo: 2026-01-15 — Bar", false},
+		{"japanese with custom prefix", "# セッション: 2026-01-15 - テスト", true},
+		{"english still works", "# Session: 2026-01-15 - Fix API", true},
+		{"unconfigured prefix excluded", "# Foo: 2026-01-15 - Bar", false},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			if got := isSessionHeader(tt.line); got != tt.want {
-				t.Errorf("isSessionHeader(%q) = %v, want %v", tt.line, got, tt.want)
+			if got := sessionHeader(tt.line); got != tt.want {
+				t.Errorf("sessionHeader(%q) = %v, want %v", tt.line, got, tt.want)
 			}
 		})
 	}
@@ -259,7 +259,7 @@ func TestParseSessionHeader(t *testing.T) {
 	}{
 		{
 			name:      "session with em dash",
-			line:      "# Session: 2026-01-15 — Fix API Rate Limiting",
+			line:      "# Session: 2026-01-15 - Fix API Rate Limiting",
 			wantDate:  "2026-01-15",
 			wantTopic: "Fix API Rate Limiting",
 		},
@@ -271,13 +271,13 @@ func TestParseSessionHeader(t *testing.T) {
 		},
 		{
 			name:      "unconfigured prefix passes through",
-			line:      "# Foo: 2026-01-15 — Bar",
+			line:      "# Foo: 2026-01-15 - Bar",
 			wantDate:  "Foo: 2026-01-15",
 			wantTopic: "Bar",
 		},
 		{
 			name:      "date only with topic",
-			line:      "# 2026-01-15 — Morning Work",
+			line:      "# 2026-01-15 - Morning Work",
 			wantDate:  "2026-01-15",
 			wantTopic: "Morning Work",
 		},
@@ -326,7 +326,7 @@ func TestParseSessionDate(t *testing.T) {
 
 func TestExtractSections(t *testing.T) {
 	lines := []string{
-		"# Session: 2026-01-15 — Test",
+		"# Session: 2026-01-15 - Test",
 		"",
 		"## What Was Done",
 		"- Item 1",
@@ -358,7 +358,7 @@ func TestScanDirectory_WithMarkdown(t *testing.T) {
 	dir := t.TempDir()
 
 	// Create a valid markdown session file
-	mdContent := `# Session: 2026-02-10 — Debug Parser
+	mdContent := `# Session: 2026-02-10 - Debug Parser
 
 ## What Was Done
 - Fixed parser edge case

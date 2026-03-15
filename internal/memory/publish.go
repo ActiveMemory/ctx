@@ -8,52 +8,46 @@ package memory
 
 import (
 	"os"
-	"path/filepath"
 	"strings"
-	"time"
 
 	"github.com/ActiveMemory/ctx/internal/assets"
 	"github.com/ActiveMemory/ctx/internal/config/ctx"
 	"github.com/ActiveMemory/ctx/internal/config/fs"
 	"github.com/ActiveMemory/ctx/internal/config/marker"
 	"github.com/ActiveMemory/ctx/internal/config/memory"
-	time2 "github.com/ActiveMemory/ctx/internal/config/time"
 	"github.com/ActiveMemory/ctx/internal/config/token"
 	ctxerr "github.com/ActiveMemory/ctx/internal/err"
-	"github.com/ActiveMemory/ctx/internal/index"
 	"github.com/ActiveMemory/ctx/internal/io"
 )
 
-// SelectContent reads .context/ files and selects content within the line budget.
+// SelectContent reads .context/ files and selects content within the
+// line budget.
 //
 // Priority order: tasks > decisions > conventions > learnings.
-// If over budget, trims from bottom (learnings → conventions → decisions).
+// If over budget, trims from bottom (learnings, conventions, decisions).
+//
+// Parameters:
+//   - contextDir: path to the .context/ directory
+//   - budget: maximum number of lines in the published block
+//
+// Returns:
+//   - PublishResult: selected content with per-section slices
+//   - error: non-nil if content selection fails
 func SelectContent(contextDir string, budget int) (PublishResult, error) {
 	var result PublishResult
 
-	// Pending tasks
-	taskPath := filepath.Join(contextDir, ctx.Task)
-	if data, readErr := io.SafeReadUserFile(taskPath); readErr == nil {
-		result.Tasks = extractPendingTasks(string(data), memory.PublishMaxTasks)
-	}
-
-	// Recent decisions
-	decPath := filepath.Join(contextDir, ctx.Decision)
-	if data, readErr := io.SafeReadUserFile(decPath); readErr == nil {
-		result.Decisions = extractRecentEntries(string(data), memory.PublishMaxDecisions)
-	}
-
-	// Key conventions (first N lines that are list items)
-	convPath := filepath.Join(contextDir, ctx.Convention)
-	if data, readErr := io.SafeReadUserFile(convPath); readErr == nil {
-		result.Conventions = extractConventionItems(string(data), memory.PublishMaxConventions)
-	}
-
-	// Recent learnings
-	lrnPath := filepath.Join(contextDir, ctx.Learning)
-	if data, readErr := io.SafeReadUserFile(lrnPath); readErr == nil {
-		result.Learnings = extractRecentEntries(string(data), memory.PublishMaxLearnings)
-	}
+	result.Tasks = extractPendingTasks(
+		readContextFile(contextDir, ctx.Task), memory.PublishMaxTasks,
+	)
+	result.Decisions = extractRecentEntries(
+		readContextFile(contextDir, ctx.Decision), memory.PublishMaxDecisions,
+	)
+	result.Conventions = extractConventionItems(
+		readContextFile(contextDir, ctx.Convention), memory.PublishMaxConventions,
+	)
+	result.Learnings = extractRecentEntries(
+		readContextFile(contextDir, ctx.Learning), memory.PublishMaxLearnings,
+	)
 
 	// Trim to budget (tasks always fit, trim from bottom)
 	result.trimToBudget(budget)
@@ -63,57 +57,47 @@ func SelectContent(contextDir string, budget int) (PublishResult, error) {
 }
 
 // Format renders the publish result as a Markdown block (without markers).
-func (r PublishResult) Format() string {
+//
+// Returns:
+//   - string: formatted Markdown with section headings and items
+func (r *PublishResult) Format() string {
 	var buf strings.Builder
 	buf.WriteString(assets.TextDesc(assets.TextDescKeyMemoryPublishTitle))
 
-	if len(r.Tasks) > 0 {
-		buf.WriteString(assets.TextDesc(assets.TextDescKeyMemoryPublishTasks) + token.NewlineLF)
-		for _, t := range r.Tasks {
-			buf.WriteString(t + token.NewlineLF)
-		}
-		buf.WriteString(token.NewlineLF)
-	}
-
-	if len(r.Decisions) > 0 {
-		buf.WriteString(assets.TextDesc(assets.TextDescKeyMemoryPublishDec) + token.NewlineLF)
-		for _, d := range r.Decisions {
-			buf.WriteString(token.PrefixListDash + d + token.NewlineLF)
-		}
-		buf.WriteString(token.NewlineLF)
-	}
-
-	if len(r.Conventions) > 0 {
-		buf.WriteString(assets.TextDesc(assets.TextDescKeyMemoryPublishConv) + token.NewlineLF)
-		for _, c := range r.Conventions {
-			buf.WriteString(c + token.NewlineLF)
-		}
-		buf.WriteString(token.NewlineLF)
-	}
-
-	if len(r.Learnings) > 0 {
-		buf.WriteString(assets.TextDesc(assets.TextDescKeyMemoryPublishLrn) + token.NewlineLF)
-		for _, l := range r.Learnings {
-			buf.WriteString(token.PrefixListDash + l + token.NewlineLF)
-		}
-		buf.WriteString(token.NewlineLF)
-	}
+	writeSection(&buf, assets.TextDescKeyMemoryPublishTasks, r.Tasks, "")
+	writeSection(&buf, assets.TextDescKeyMemoryPublishDec,
+		r.Decisions, token.PrefixListDash,
+	)
+	writeSection(&buf, assets.TextDescKeyMemoryPublishConv, r.Conventions, "")
+	writeSection(&buf, assets.TextDescKeyMemoryPublishLrn,
+		r.Learnings, token.PrefixListDash,
+	)
 
 	return strings.TrimRight(buf.String(), token.NewlineLF) + token.NewlineLF
 }
 
-// MergePublished inserts or replaces the marker block in existing MEMORY.md content.
+// MergePublished inserts or replaces the marker block in existing
+// MEMORY.md content.
 //
-// If markers exist, replaces everything between them. If markers are missing,
-// appends the block at the end (recovery). Returns (merged content, markers were missing).
+// If markers exist, replaces everything between them. If markers are
+// missing, appends the block at the end (recovery).
+//
+// Parameters:
+//   - existing: current MEMORY.md content
+//   - published: formatted publish block to insert
+//
+// Returns:
+//   - string: merged content
+//   - bool: true if markers were missing (appended instead of replaced)
 func MergePublished(existing, published string) (string, bool) {
-	block := marker.PublishMarkerStart + token.NewlineLF + published + marker.PublishMarkerEnd + token.NewlineLF
+	block := marker.PublishMarkerStart + token.NewlineLF +
+		published + marker.PublishMarkerEnd + token.NewlineLF
 
 	startIdx := strings.Index(existing, marker.PublishMarkerStart)
 	endIdx := strings.Index(existing, marker.PublishMarkerEnd)
 
 	if startIdx >= 0 && endIdx > startIdx {
-		// Replace existing block
+		// Replace the existing block
 		before := existing[:startIdx]
 		after := existing[endIdx+len(marker.PublishMarkerEnd):]
 		// Trim trailing newline from after to avoid double blank lines
@@ -121,7 +105,7 @@ func MergePublished(existing, published string) (string, bool) {
 		return before + block + after, false
 	}
 
-	// Markers missing — append
+	// Markers missing: append
 	sep := token.NewlineLF
 	if !strings.HasSuffix(existing, token.NewlineLF) {
 		sep = token.NewlineLF + token.NewlineLF
@@ -130,7 +114,13 @@ func MergePublished(existing, published string) (string, bool) {
 }
 
 // RemovePublished strips the marker block from MEMORY.md content.
-// Returns (cleaned content, true if markers were found and removed).
+//
+// Parameters:
+//   - content: current MEMORY.md content
+//
+// Returns:
+//   - string: content with the publish block removed
+//   - bool: true if markers were found and removed
 func RemovePublished(content string) (string, bool) {
 	startIdx := strings.Index(content, marker.PublishMarkerStart)
 	endIdx := strings.Index(content, marker.PublishMarkerEnd)
@@ -153,83 +143,16 @@ func RemovePublished(content string) (string, bool) {
 	return result, true
 }
 
-func (r *PublishResult) lineCount() int {
-	count := 1 // Title line
-	if len(r.Tasks) > 0 {
-		count += 2 + len(r.Tasks) // header + items + blank
-	}
-	if len(r.Decisions) > 0 {
-		count += 2 + len(r.Decisions)
-	}
-	if len(r.Conventions) > 0 {
-		count += 2 + len(r.Conventions)
-	}
-	if len(r.Learnings) > 0 {
-		count += 2 + len(r.Learnings)
-	}
-	return count
-}
-
-func (r *PublishResult) trimToBudget(budget int) {
-	for r.lineCount() > budget && len(r.Learnings) > 0 {
-		r.Learnings = r.Learnings[:len(r.Learnings)-1]
-	}
-	for r.lineCount() > budget && len(r.Conventions) > 0 {
-		r.Conventions = r.Conventions[:len(r.Conventions)-1]
-	}
-	for r.lineCount() > budget && len(r.Decisions) > 0 {
-		r.Decisions = r.Decisions[:len(r.Decisions)-1]
-	}
-}
-
-// extractPendingTasks finds unchecked task items from TASKS.md.
-func extractPendingTasks(content string, max int) []string {
-	var tasks []string
-	for _, line := range strings.Split(content, token.NewlineLF) {
-		trimmed := strings.TrimSpace(line)
-		if strings.HasPrefix(trimmed, marker.PrefixTaskUndone+token.Space) {
-			tasks = append(tasks, trimmed)
-			if len(tasks) >= max {
-				break
-			}
-		}
-	}
-	return tasks
-}
-
-// extractRecentEntries returns titles of entries from the last N days.
-func extractRecentEntries(content string, max int) []string {
-	blocks := index.ParseEntryBlocks(content)
-	cutoff := time.Now().AddDate(0, 0, -memory.PublishRecentDays).Format(time2.DateFormat)
-
-	var titles []string
-	for _, b := range blocks {
-		if b.Entry.Date >= cutoff {
-			titles = append(titles, b.Entry.Title)
-			if len(titles) >= max {
-				break
-			}
-		}
-	}
-	return titles
-}
-
-// extractConventionItems returns the first N list items from CONVENTIONS.md.
-func extractConventionItems(content string, max int) []string {
-	var items []string
-	for _, line := range strings.Split(content, token.NewlineLF) {
-		trimmed := strings.TrimSpace(line)
-		if strings.HasPrefix(trimmed, token.PrefixListDash) || strings.HasPrefix(trimmed, token.PrefixListStar) {
-			items = append(items, trimmed)
-			if len(items) >= max {
-				break
-			}
-		}
-	}
-	return items
-}
-
 // Publish writes selected content to MEMORY.md with marker-based merge.
+//
+// Parameters:
+//   - contextDir: path to the .context/ directory
+//   - memoryPath: path to the MEMORY.md file
+//   - budget: maximum number of lines in the published block
+//
+// Returns:
+//   - PublishResult: the content that was published
+//   - error: non-nil if selection or file write fails
 func Publish(contextDir, memoryPath string, budget int) (PublishResult, error) {
 	result, selectErr := SelectContent(contextDir, budget)
 	if selectErr != nil {
@@ -240,13 +163,15 @@ func Publish(contextDir, memoryPath string, budget int) (PublishResult, error) {
 
 	existing, readErr := io.SafeReadUserFile(memoryPath)
 	if readErr != nil {
-		// MEMORY.md might not exist yet — create with just the block
+		// MEMORY.md might not exist yet: create with just the block
 		existing = []byte{}
 	}
 
 	merged, _ := MergePublished(string(existing), formatted)
 
-	if writeErr := os.WriteFile(memoryPath, []byte(merged), fs.PermFile); writeErr != nil {
+	if writeErr := os.WriteFile(
+		memoryPath, []byte(merged), fs.PermFile,
+	); writeErr != nil {
 		return PublishResult{}, ctxerr.MemoryWriteMemory(writeErr)
 	}
 

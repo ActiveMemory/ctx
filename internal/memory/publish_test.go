@@ -121,7 +121,7 @@ func TestPublishResult_TrimToBudget(t *testing.T) {
 		Learnings:   []string{"l1", "l2", "l3"},
 	}
 
-	// Very tight budget — should trim learnings and conventions first
+	// Very tight budget: should trim learnings and conventions first
 	r.trimToBudget(10)
 
 	if len(r.Learnings) != 0 {
