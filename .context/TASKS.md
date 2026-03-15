@@ -531,6 +531,8 @@ Many call sites use `_ =` or `_, _ =` to discard errors without
 any feedback. Some are legitimate (best-effort cleanup), most are
 lazy escapes that hide failures.
 
+- [ ] Add drift check: MCP tool coverage vs CLI commands — programmatic check that compares registered MCP tool names (config/mcp/tool) against ctx CLI subcommands to detect newly added CLI commands without MCP equivalents. Could be a drift detector check or a compliance test. @CoderMungan #priority:medium #added:2026-03-15-120116
+
 - [ ] MCP v0.3: expose additional CLI commands as MCP tools — candidates: ctx_load (full context packet), ctx_agent (token-budgeted packet), ctx_reindex (rebuild indices), ctx_sync (reconcile docs/code), ctx_doctor (health check). Evaluate which provide value over the protocol vs requiring terminal interaction. @CoderMungan #priority:medium #added:2026-03-15-120025
 
 - [ ] Make MCP defaults configurable via .ctxrc — add mcp_recall_limit, mcp_truncate_len, mcp_truncate_content_len, mcp_min_word_len, mcp_min_word_overlap fields to .ctxrc schema; expose via rc.MCP*() with fallback to config/mcp/cfg defaults; update tools.go to read from rc instead of cfg constants. @CoderMungan #priority:medium #added:2026-03-15-114700
