@@ -71,8 +71,6 @@ err.crypto.generate-key:
   short: 'generate key: %w'
 err.crypto.generate-nonce:
   short: 'generate nonce: %w'
-err.crypto.generate-scratchpad-key:
-  short: 'failed to generate scratchpad key: %w'
 err.crypto.invalid-key-size:
   short: 'invalid key size: got %d bytes, want %d'
 err.crypto.load-key:

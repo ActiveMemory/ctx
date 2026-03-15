@@ -366,9 +366,14 @@ func TestPayload_JSONMarshal(t *testing.T) {
 		t.Fatal("Detail is nil after roundtrip")
 	}
 	if restored.Detail.Hook != original.Detail.Hook {
-		t.Errorf("Detail.Hook = %q, want %q", restored.Detail.Hook, original.Detail.Hook)
+		t.Errorf(
+			"Detail.Hook = %q, want %q", restored.Detail.Hook, original.Detail.Hook,
+		)
 	}
 	if restored.Detail.Variant != original.Detail.Variant {
-		t.Errorf("Detail.Variant = %q, want %q", restored.Detail.Variant, original.Detail.Variant)
+		t.Errorf(
+			"Detail.Variant = %q, want %q",
+			restored.Detail.Variant, original.Detail.Variant,
+		)
 	}
 }

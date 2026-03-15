@@ -329,7 +329,6 @@ const (
 	TextDescKeyErrCryptoEncryptFailed          = "err.crypto.encrypt-failed"
 	TextDescKeyErrCryptoGenerateKey            = "err.crypto.generate-key"
 	TextDescKeyErrCryptoGenerateNonce          = "err.crypto.generate-nonce"
-	TextDescKeyErrCryptoGenerateScratchpadKey  = "err.crypto.generate-scratchpad-key"
 	TextDescKeyErrCryptoInvalidKeySize         = "err.crypto.invalid-key-size"
 	TextDescKeyErrCryptoLoadKey                = "err.crypto.load-key"
 	TextDescKeyErrCryptoMkdirKeyDir            = "err.crypto.mkdir-key-dir"

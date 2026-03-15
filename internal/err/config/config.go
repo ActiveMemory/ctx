@@ -21,7 +21,9 @@ import (
 // Returns:
 //   - error: "unknown profile <name>: must be dev, base, or prod"
 func UnknownProfile(name string) error {
-	return fmt.Errorf(assets.TextDesc(assets.TextDescKeyErrConfigUnknownProfile), name)
+	return fmt.Errorf(
+		assets.TextDesc(assets.TextDescKeyErrConfigUnknownProfile), name,
+	)
 }
 
 // ReadProfile wraps a failure to read a profile file.
@@ -33,7 +35,9 @@ func UnknownProfile(name string) error {
 // Returns:
 //   - error: "read <name>: <cause>"
 func ReadProfile(name string, cause error) error {
-	return fmt.Errorf(assets.TextDesc(assets.TextDescKeyErrConfigReadProfile), name, cause)
+	return fmt.Errorf(
+		assets.TextDesc(assets.TextDescKeyErrConfigReadProfile), name, cause,
+	)
 }
 
 // UnknownFormat returns an error for an unsupported output format.
@@ -45,7 +49,10 @@ func ReadProfile(name string, cause error) error {
 // Returns:
 //   - error: "unknown format <format> (supported: <list>)"
 func UnknownFormat(format, supported string) error {
-	return fmt.Errorf(assets.TextDesc(assets.TextDescKeyErrConfigUnknownFormat), format, supported)
+	return fmt.Errorf(
+		assets.TextDesc(assets.TextDescKeyErrConfigUnknownFormat),
+		format, supported,
+	)
 }
 
 // UnknownProjectType returns an error for an unsupported project type.
@@ -57,7 +64,10 @@ func UnknownFormat(format, supported string) error {
 // Returns:
 //   - error: "unknown project type <type> (supported: <list>)"
 func UnknownProjectType(projType, supported string) error {
-	return fmt.Errorf(assets.TextDesc(assets.TextDescKeyErrConfigUnknownProjectType), projType, supported)
+	return fmt.Errorf(
+		assets.TextDesc(assets.TextDescKeyErrConfigUnknownProjectType),
+		projType, supported,
+	)
 }
 
 // InvalidTool returns an error for an unsupported AI tool name.
@@ -68,7 +78,9 @@ func UnknownProjectType(projType, supported string) error {
 // Returns:
 //   - error: "invalid tool <tool>: must be claude, aider, or generic"
 func InvalidTool(tool string) error {
-	return fmt.Errorf(assets.TextDesc(assets.TextDescKeyErrConfigInvalidTool), tool)
+	return fmt.Errorf(
+		assets.TextDesc(assets.TextDescKeyErrConfigInvalidTool), tool,
+	)
 }
 
 // UnsupportedTool returns an error for an unrecognized AI tool name.
@@ -79,7 +91,9 @@ func InvalidTool(tool string) error {
 // Returns:
 //   - error: "unsupported tool: <tool>"
 func UnsupportedTool(tool string) error {
-	return fmt.Errorf(assets.TextDesc(assets.TextDescKeyErrConfigUnsupportedTool), tool)
+	return fmt.Errorf(
+		assets.TextDesc(assets.TextDescKeyErrConfigUnsupportedTool), tool,
+	)
 }
 
 // UnknownUpdateType returns an error for an unrecognized context update type.
@@ -90,7 +104,9 @@ func UnsupportedTool(tool string) error {
 // Returns:
 //   - error: "unknown update type: <typeName>"
 func UnknownUpdateType(typeName string) error {
-	return fmt.Errorf(assets.TextDesc(assets.TextDescKeyErrConfigUnknownUpdateType), typeName)
+	return fmt.Errorf(assets.TextDesc(
+		assets.TextDescKeyErrConfigUnknownUpdateType), typeName,
+	)
 }
 
 // SettingsNotFound returns an error when settings.local.json is missing.
@@ -98,7 +114,9 @@ func UnknownUpdateType(typeName string) error {
 // Returns:
 //   - error: "no .claude/settings.local.json found"
 func SettingsNotFound() error {
-	return errors.New(assets.TextDesc(assets.TextDescKeyErrConfigSettingsNotFound))
+	return errors.New(
+		assets.TextDesc(assets.TextDescKeyErrConfigSettingsNotFound),
+	)
 }
 
 // GoldenNotFound returns an error when settings.golden.json is missing.

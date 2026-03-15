@@ -3,6 +3,7 @@
 <!-- INDEX:START -->
 | Date | Learning |
 |------|--------|
+| 2026-03-15 | Grep for callers must cover entire working tree before deleting functions |
 | 2026-03-14 | Stderr error messages are user-facing text that belongs in assets |
 | 2026-03-14 | Subagents rename packages and modify unrelated files without being asked |
 | 2026-03-14 | Hardcoded _alt suffixes create implicit language favoritism |
@@ -70,6 +71,16 @@
 | 2026-02-19 | Feature can be code-complete but invisible to users |
 | 2026-01-28 | IDE is already the UI |
 <!-- INDEX:END -->
+
+---
+
+## [2026-03-15-040642] Grep for callers must cover entire working tree before deleting functions
+
+**Context**: Deleted 7 err/prompt functions as dead code, but callers existed in unstaged refactoring files — caused build failures
+
+**Lesson**: When the working tree has unstaged changes from a prior session, grep hits only committed+staged code; must grep the full tree or build-test before declaring functions dead
+
+**Application**: Always run make build after deleting functions, even if grep shows zero callers
 
 ---
 

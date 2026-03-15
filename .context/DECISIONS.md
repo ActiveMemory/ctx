@@ -3,6 +3,7 @@
 <!-- INDEX:START -->
 | Date | Decision |
 |------|--------|
+| 2026-03-15 | Split text.yaml into 6 domain files loaded via loadYAMLDir |
 | 2026-03-14 | Error package taxonomy: 22 domain files replace monolithic errors.go |
 | 2026-03-14 | Session prefixes are parser vocabulary, not i18n text |
 | 2026-03-14 | System path deny-list as safety net, not security boundary |
@@ -45,6 +46,20 @@
 | 2026-02-26 | Security and permissions (consolidated) |
 | 2026-02-27 | Webhook and notification design (consolidated) |
 <!-- INDEX:END -->
+
+## [2026-03-15-040638] Split text.yaml into 6 domain files loaded via loadYAMLDir
+
+**Status**: Accepted
+
+**Context**: text.yaml grew to 1812 lines covering write, errors, mcp, doctor, hooks, and ui domains
+
+**Decision**: Split text.yaml into 6 domain files loaded via loadYAMLDir
+
+**Rationale**: Matches existing split pattern (commands.yaml, flags.yaml, examples.yaml); loadYAMLDir merges all files in commands/text/ transparently so TextDesc() API stays unchanged
+
+**Consequences**: New domain files must go into commands/text/; loadYAMLDir reads all .yaml in the directory at init time
+
+---
 
 ## [2026-03-14-180905] Error package taxonomy: 22 domain files replace monolithic errors.go
 
