@@ -22,7 +22,11 @@ import (
 	ctxCfg "github.com/ActiveMemory/ctx/internal/config/ctx"
 	entryCfg "github.com/ActiveMemory/ctx/internal/config/entry"
 	"github.com/ActiveMemory/ctx/internal/config/fs"
-	"github.com/ActiveMemory/ctx/internal/config/mcp"
+	"github.com/ActiveMemory/ctx/internal/config/mcp/cfg"
+	"github.com/ActiveMemory/ctx/internal/config/mcp/event"
+	"github.com/ActiveMemory/ctx/internal/config/mcp/field"
+	"github.com/ActiveMemory/ctx/internal/config/mcp/mime"
+	"github.com/ActiveMemory/ctx/internal/config/mcp/tool"
 	"github.com/ActiveMemory/ctx/internal/config/regex"
 	timeCfg "github.com/ActiveMemory/ctx/internal/config/time"
 	"github.com/ActiveMemory/ctx/internal/config/token"
@@ -40,7 +44,7 @@ func applyOptionalFields(
 	params *entry.Params,
 	args map[string]interface{},
 ) {
-	if v, ok := args[mcp.MCPFieldPriority].(string); ok {
+	if v, ok := args[field.Priority].(string); ok {
 		params.Priority = v
 	}
 	if v, ok := args[cli.AttrContext].(string); ok {
@@ -87,27 +91,27 @@ func (s *Server) handleToolsCall(req Request) *Response {
 	s.session.recordToolCall()
 
 	switch params.Name {
-	case mcp.MCPToolStatus:
+	case tool.Status:
 		return s.toolStatus(req.ID)
-	case mcp.MCPToolAdd:
+	case tool.Add:
 		return s.toolAdd(req.ID, params.Arguments)
-	case mcp.MCPToolComplete:
+	case tool.Complete:
 		return s.toolComplete(req.ID, params.Arguments)
-	case mcp.MCPToolDrift:
+	case tool.Drift:
 		return s.toolDrift(req.ID)
-	case mcp.MCPToolRecall:
+	case tool.Recall:
 		return s.toolRecall(req.ID, params.Arguments)
-	case mcp.MCPToolWatchUpdate:
+	case tool.WatchUpdate:
 		return s.toolWatchUpdate(req.ID, params.Arguments)
-	case mcp.MCPToolCompact:
+	case tool.Compact:
 		return s.toolCompact(req.ID, params.Arguments)
-	case mcp.MCPToolNext:
+	case tool.Next:
 		return s.toolNext(req.ID)
-	case mcp.MCPToolCheckTaskCompletion:
+	case tool.CheckTaskCompletion:
 		return s.toolCheckTaskCompletion(req.ID, params.Arguments)
-	case mcp.MCPToolSessionEvent:
+	case tool.SessionEvent:
 		return s.toolSessionEvent(req.ID, params.Arguments)
-	case mcp.MCPToolRemind:
+	case tool.Remind:
 		return s.toolRemind(req.ID)
 	default:
 		return s.error(req.ID, errCodeNotFound,
@@ -176,7 +180,7 @@ func (s *Server) toolAdd(
 	}
 
 	entryType, _ := args[cli.AttrType].(string)
-	content, _ := args[mcp.MCPFieldContent].(string)
+	content, _ := args[field.Content].(string)
 
 	if entryType == "" || content == "" {
 		return s.toolError(
@@ -228,7 +232,7 @@ func (s *Server) toolComplete(
 		)
 	}
 
-	query, _ := args[mcp.MCPFieldQuery].(string)
+	query, _ := args[field.Query].(string)
 	if query == "" {
 		return s.toolError(id, assets.TextDesc(assets.TextDescKeyMCPQueryRequired))
 	}
@@ -312,7 +316,7 @@ func (s *Server) toolDrift(id json.RawMessage) *Response {
 //   - *Response: success response with text content
 func (s *Server) toolOK(id json.RawMessage, text string) *Response {
 	return s.ok(id, CallToolResult{
-		Content: []ToolContent{{Type: mcp.MCPContentTypeText, Text: text}},
+		Content: []ToolContent{{Type: mime.ContentTypeText, Text: text}},
 	})
 }
 
@@ -326,7 +330,7 @@ func (s *Server) toolOK(id json.RawMessage, text string) *Response {
 //   - *Response: error response with IsError flag
 func (s *Server) toolError(id json.RawMessage, msg string) *Response {
 	return s.ok(id, CallToolResult{
-		Content: []ToolContent{{Type: mcp.MCPContentTypeText, Text: msg}},
+		Content: []ToolContent{{Type: mime.ContentTypeText, Text: msg}},
 		IsError: true,
 	})
 }
@@ -342,13 +346,13 @@ func (s *Server) toolError(id json.RawMessage, msg string) *Response {
 func (s *Server) toolRecall(
 	id json.RawMessage, args map[string]interface{},
 ) *Response {
-	limit := mcp.MCPDefaultRecallLimit
-	if v, ok := args[mcp.MCPFieldLimit].(float64); ok && v > 0 {
+	limit := cfg.DefaultRecallLimit
+	if v, ok := args[field.Limit].(float64); ok && v > 0 {
 		limit = int(v)
 	}
 
 	var sinceFilter time.Time
-	if v, ok := args[mcp.MCPFieldSince].(string); ok && v != "" {
+	if v, ok := args[field.Since].(string); ok && v != "" {
 		parsed, parseErr := time.Parse(timeCfg.DateFormat, v)
 		if parseErr != nil {
 			return s.toolError(
@@ -440,7 +444,7 @@ func (s *Server) toolWatchUpdate(
 	}
 
 	entryType, _ := args[cli.AttrType].(string)
-	content, _ := args[mcp.MCPFieldContent].(string)
+	content, _ := args[field.Content].(string)
 
 	if entryType == "" || content == "" {
 		return s.toolError(
@@ -491,7 +495,7 @@ func (s *Server) toolWatchUpdate(
 		Type:    entryType,
 		Content: content,
 		Attrs: map[string]string{
-			mcp.MCPAttrFile: fileName,
+			mime.AttrFile: fileName,
 		},
 		QueuedAt: time.Now(),
 	})
@@ -520,7 +524,7 @@ func (s *Server) toolCompact(
 	}
 
 	archive := false
-	if v, ok := args[mcp.MCPFieldArchive].(bool); ok {
+	if v, ok := args[field.Archive].(bool); ok {
 		archive = v
 	}
 
@@ -549,7 +553,7 @@ func (s *Server) toolCompact(
 				_, _ = fmt.Fprintf(&sb,
 					assets.TextDesc(
 						assets.TextDescKeyMCPCompactMovedFormat)+token.NewlineLF,
-					core.TruncateString(block.ParentTaskText(), mcp.MCPTruncateLen),
+					core.TruncateString(block.ParentTaskText(), cfg.TruncateLen),
 				)
 			}
 		}
@@ -713,7 +717,7 @@ func (s *Server) toolNext(id json.RawMessage) *Response {
 func (s *Server) toolCheckTaskCompletion(
 	id json.RawMessage, args map[string]interface{},
 ) *Response {
-	recentAction, _ := args[mcp.MCPFieldRecentAction].(string)
+	recentAction, _ := args[field.RecentAction].(string)
 
 	ctx, err := context.Load(s.contextDir)
 	if err != nil {
@@ -790,9 +794,9 @@ func (s *Server) toolSessionEvent(
 	}
 
 	switch eventType {
-	case mcp.MCPEventStart:
+	case event.Start:
 		s.session = newSessionState(s.contextDir)
-		if caller, ok := args[mcp.MCPFieldCaller].(string); ok && caller != "" {
+		if caller, ok := args[field.Caller].(string); ok && caller != "" {
 			return s.toolOK(id, fmt.Sprintf(
 				assets.TextDesc(
 					assets.TextDescKeyMCPSessionStartedCallerFormat,
@@ -804,7 +808,7 @@ func (s *Server) toolSessionEvent(
 				assets.TextDescKeyMCPSessionStartedFormat,
 			), s.contextDir))
 
-	case mcp.MCPEventEnd:
+	case event.End:
 		pending := s.session.pendingCount()
 		var sb strings.Builder
 		sb.WriteString(assets.TextDesc(assets.TextDescKeyMCPSessionEnding))
@@ -820,7 +824,7 @@ func (s *Server) toolSessionEvent(
 						assets.TextDescKeyMCPPendingItemFormat,
 					)+token.NewlineLF,
 					i+1, pu.Type, core.TruncateString(
-						pu.Content, mcp.MCPTruncateContentLen),
+						pu.Content, cfg.TruncateContentLen),
 				)
 			}
 			sb.WriteString(assets.TextDesc(assets.TextDescKeyMCPReviewPending))
@@ -903,7 +907,7 @@ func containsOverlap(action, taskText string) bool {
 
 	matchCount := 0
 	for _, w := range taskWords {
-		if len(w) < mcp.MCPMinWordLen {
+		if len(w) < cfg.MinWordLen {
 			continue // Skip short common words.
 		}
 		if actionWords[w] {
@@ -911,7 +915,7 @@ func containsOverlap(action, taskText string) bool {
 		}
 	}
 
-	return matchCount >= mcp.MCPMinWordOverlap
+	return matchCount >= cfg.MinWordOverlap
 }
 
 // toWordSet splits text into a set of unique words for O(1) lookup.

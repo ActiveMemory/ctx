@@ -17,7 +17,9 @@ import (
 
 	"github.com/ActiveMemory/ctx/internal/assets"
 	ctxCfg "github.com/ActiveMemory/ctx/internal/config/ctx"
-	"github.com/ActiveMemory/ctx/internal/config/mcp"
+	"github.com/ActiveMemory/ctx/internal/config/mcp/mime"
+	"github.com/ActiveMemory/ctx/internal/config/mcp/notify"
+	"github.com/ActiveMemory/ctx/internal/config/mcp/server"
 	"github.com/ActiveMemory/ctx/internal/config/token"
 	"github.com/ActiveMemory/ctx/internal/context"
 )
@@ -44,7 +46,7 @@ var resourceTable = []resourceMapping{
 
 // resourceURI builds a resource URI from a suffix.
 func resourceURI(name string) string {
-	return mcp.MCPResourceURIPrefix + name
+	return server.ResourceURIPrefix + name
 }
 
 // handleResourcesList returns all available MCP resources.
@@ -56,7 +58,7 @@ func (s *Server) handleResourcesList(req Request) *Response {
 		resources = append(resources, Resource{
 			URI:         resourceURI(rm.name),
 			Name:        rm.name,
-			MimeType:    mcp.MimeMarkdown,
+			MimeType:    mime.MimeMarkdown,
 			Description: rm.desc,
 		})
 	}
@@ -65,7 +67,7 @@ func (s *Server) handleResourcesList(req Request) *Response {
 	resources = append(resources, Resource{
 		URI:         resourceURI("agent"),
 		Name:        "agent",
-		MimeType:    mcp.MimeMarkdown,
+		MimeType:    mime.MimeMarkdown,
 		Description: assets.TextDesc(assets.TextDescKeyMCPResAgent),
 	})
 
@@ -114,7 +116,7 @@ func (s *Server) readContextFile(
 	return s.ok(id, ReadResourceResult{
 		Contents: []ResourceContent{{
 			URI:      uri,
-			MimeType: mcp.MimeMarkdown,
+			MimeType: mime.MimeMarkdown,
 			Text:     string(f.Content),
 		}},
 	})
@@ -166,7 +168,7 @@ func (s *Server) readAgentPacket(
 	return s.ok(id, ReadResourceResult{
 		Contents: []ResourceContent{{
 			URI:      resourceURI("agent"),
-			MimeType: mcp.MimeMarkdown,
+			MimeType: mime.MimeMarkdown,
 			Text:     sb.String(),
 		}},
 	})
@@ -296,8 +298,8 @@ func (p *resourcePoller) checkChanges() {
 			p.mtimes[fpath] = info.ModTime()
 			p.mu.Unlock()
 			p.notifyFunc(Notification{
-				JSONRPC: mcp.MCPJSONRPCVersion,
-				Method:  mcp.MCPNotifyResourcesUpdated,
+				JSONRPC: server.JSONRPCVersion,
+				Method:  notify.ResourcesUpdated,
 				Params:  ResourceUpdatedParams{URI: uri},
 			})
 		} else {
