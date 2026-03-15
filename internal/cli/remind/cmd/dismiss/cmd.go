@@ -7,10 +7,10 @@
 package dismiss
 
 import (
+	ctxerr "github.com/ActiveMemory/ctx/internal/err/reminder"
 	"github.com/spf13/cobra"
 
 	"github.com/ActiveMemory/ctx/internal/assets"
-	ctxerr "github.com/ActiveMemory/ctx/internal/err"
 )
 
 // Cmd returns the remind dismiss subcommand.
@@ -31,7 +31,7 @@ func Cmd() *cobra.Command {
 				return RunDismissAll(cmd)
 			}
 			if len(args) == 0 {
-				return ctxerr.ReminderIDRequired()
+				return ctxerr.IDRequired()
 			}
 			return RunDismiss(cmd, args[0])
 		},

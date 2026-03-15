@@ -7,11 +7,11 @@
 package events
 
 import (
+	ctxerr "github.com/ActiveMemory/ctx/internal/err/recall"
 	"github.com/spf13/cobra"
 
 	"github.com/ActiveMemory/ctx/internal/assets"
 	"github.com/ActiveMemory/ctx/internal/cli/system/core"
-	ctxerr "github.com/ActiveMemory/ctx/internal/err"
 	"github.com/ActiveMemory/ctx/internal/log"
 )
 

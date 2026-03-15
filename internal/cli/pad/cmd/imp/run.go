@@ -13,11 +13,11 @@ import (
 	"strings"
 
 	"github.com/ActiveMemory/ctx/internal/config/pad"
+	ctxerr "github.com/ActiveMemory/ctx/internal/err/fs"
 	io2 "github.com/ActiveMemory/ctx/internal/io"
 	"github.com/spf13/cobra"
 
 	"github.com/ActiveMemory/ctx/internal/cli/pad/core"
-	ctxerr "github.com/ActiveMemory/ctx/internal/err"
 	"github.com/ActiveMemory/ctx/internal/write"
 )
 

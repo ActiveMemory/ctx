@@ -14,11 +14,14 @@ import (
 
 	"github.com/ActiveMemory/ctx/internal/config/claude"
 	"github.com/ActiveMemory/ctx/internal/config/fs"
+	"github.com/ActiveMemory/ctx/internal/err/config"
+	fs2 "github.com/ActiveMemory/ctx/internal/err/fs"
+	"github.com/ActiveMemory/ctx/internal/err/initialize"
+	ctxerr "github.com/ActiveMemory/ctx/internal/err/validate"
 	"github.com/ActiveMemory/ctx/internal/io"
 	"github.com/ActiveMemory/ctx/internal/write/add"
 	"github.com/spf13/cobra"
 
-	ctxerr "github.com/ActiveMemory/ctx/internal/err"
 	"github.com/ActiveMemory/ctx/internal/write"
 )
 
@@ -38,7 +41,7 @@ type globalSettings map[string]json.RawMessage
 func EnablePluginGlobally(cmd *cobra.Command) error {
 	homeDir, homeErr := os.UserHomeDir()
 	if homeErr != nil {
-		return ctxerr.HomeDir(homeErr)
+		return initialize.HomeDir(homeErr)
 	}
 	claudeDir := filepath.Join(homeDir, ".claude")
 	installedPath := filepath.Join(claudeDir, claude.InstalledPlugins)
@@ -88,7 +91,7 @@ func EnablePluginGlobally(cmd *cobra.Command) error {
 	enabled[claude.PluginID] = true
 	enabledJSON, marshalErr := json.Marshal(enabled)
 	if marshalErr != nil {
-		return ctxerr.MarshalPlugins(marshalErr)
+		return config.MarshalPlugins(marshalErr)
 	}
 	settings["enabledPlugins"] = enabledJSON
 	var buf bytes.Buffer
@@ -96,10 +99,10 @@ func EnablePluginGlobally(cmd *cobra.Command) error {
 	encoder.SetEscapeHTML(false)
 	encoder.SetIndent("", "  ")
 	if encodeErr := encoder.Encode(settings); encodeErr != nil {
-		return ctxerr.MarshalSettings(encodeErr)
+		return config.MarshalSettings(encodeErr)
 	}
 	if writeErr := os.WriteFile(settingsPath, buf.Bytes(), fs.PermFile); writeErr != nil {
-		return ctxerr.FileWrite(settingsPath, writeErr)
+		return fs2.FileWrite(settingsPath, writeErr)
 	}
 	write.InitPluginEnabled(cmd, settingsPath)
 	return nil

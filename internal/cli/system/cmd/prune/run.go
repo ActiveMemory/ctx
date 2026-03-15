@@ -12,10 +12,10 @@ import (
 	"time"
 
 	time2 "github.com/ActiveMemory/ctx/internal/config/time"
+	ctxerr "github.com/ActiveMemory/ctx/internal/err/state"
 	"github.com/spf13/cobra"
 
 	"github.com/ActiveMemory/ctx/internal/cli/system/core"
-	ctxerr "github.com/ActiveMemory/ctx/internal/err"
 	"github.com/ActiveMemory/ctx/internal/write"
 )
 
@@ -37,7 +37,7 @@ func Run(cmd *cobra.Command, days int, dryRun bool) error {
 
 	entries, readErr := os.ReadDir(dir)
 	if readErr != nil {
-		return ctxerr.ReadingStateDir(readErr)
+		return ctxerr.ReadingDir(readErr)
 	}
 
 	cutoff := time.Now().Add(-time.Duration(days) * time2.HoursPerDay * time.Hour)

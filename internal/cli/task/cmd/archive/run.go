@@ -13,13 +13,13 @@ import (
 	"github.com/ActiveMemory/ctx/internal/config/archive"
 	"github.com/ActiveMemory/ctx/internal/config/fs"
 	"github.com/ActiveMemory/ctx/internal/config/token"
+	ctxerr "github.com/ActiveMemory/ctx/internal/err/task"
 	"github.com/ActiveMemory/ctx/internal/io"
 	"github.com/spf13/cobra"
 
 	"github.com/ActiveMemory/ctx/internal/assets"
 	compactcore "github.com/ActiveMemory/ctx/internal/cli/compact/core"
 	"github.com/ActiveMemory/ctx/internal/cli/task/core"
-	ctxerr "github.com/ActiveMemory/ctx/internal/err"
 	"github.com/ActiveMemory/ctx/internal/write"
 )
 
@@ -41,13 +41,13 @@ func runArchive(cmd *cobra.Command, dryRun bool) error {
 
 	// Check if TASKS.md exists
 	if _, statErr := os.Stat(tasksPath); os.IsNotExist(statErr) {
-		return ctxerr.TaskFileNotFound()
+		return ctxerr.FileNotFound()
 	}
 
 	// Read TASKS.md
 	content, readErr := io.SafeReadUserFile(tasksPath)
 	if readErr != nil {
-		return ctxerr.TaskFileRead(readErr)
+		return ctxerr.FileRead(readErr)
 	}
 
 	lines := strings.Split(string(content), nl)
@@ -105,7 +105,7 @@ func runArchive(cmd *cobra.Command, dryRun bool) error {
 	if updateErr := os.WriteFile(
 		tasksPath, []byte(newContent), fs.PermFile,
 	); updateErr != nil {
-		return ctxerr.TaskFileWrite(updateErr)
+		return ctxerr.FileWrite(updateErr)
 	}
 
 	write.ArchiveSuccess(cmd, len(archivableBlocks), archiveFilePath, pendingCount)

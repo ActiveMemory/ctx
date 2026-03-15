@@ -14,11 +14,11 @@ import (
 
 	"github.com/ActiveMemory/ctx/internal/config/dir"
 	"github.com/ActiveMemory/ctx/internal/config/file"
+	ctxerr "github.com/ActiveMemory/ctx/internal/err/hook"
 	"github.com/spf13/cobra"
 
 	"github.com/ActiveMemory/ctx/internal/assets"
 	"github.com/ActiveMemory/ctx/internal/assets/hooks/messages"
-	ctxerr "github.com/ActiveMemory/ctx/internal/err"
 	"github.com/ActiveMemory/ctx/internal/rc"
 )
 
@@ -34,7 +34,7 @@ import (
 //   - error: descriptive error with guidance to list available options
 func ValidationError(hook, variant string) error {
 	if messages.Variants(hook) == nil {
-		return ctxerr.UnknownHook(hook)
+		return ctxerr.Unknown(hook)
 	}
 	return ctxerr.UnknownVariant(variant, hook)
 }

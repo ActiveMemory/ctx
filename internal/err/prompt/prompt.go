@@ -1,0 +1,182 @@
+//   /    ctx:                         https://ctx.ist
+// ,'`./    do you remember?
+// `.,'\
+//   \    Copyright 2026-present Context contributors.
+//                 SPDX-License-Identifier: Apache-2.0
+
+package prompt
+
+import (
+	"fmt"
+
+	"github.com/ActiveMemory/ctx/internal/assets"
+)
+
+// Exists returns an error when a prompt template already exists.
+//
+// Parameters:
+//   - name: the prompt name that already exists.
+//
+// Returns:
+//   - error: "prompt <name> already exists"
+func Exists(name string) error {
+	return fmt.Errorf(assets.TextDesc(assets.TextDescKeyErrPromptExists), name)
+}
+
+// NotFound returns an error when a prompt template does not exist.
+//
+// Parameters:
+//   - name: the prompt name that was not found.
+//
+// Returns:
+//   - error: "prompt <name> not found"
+func NotFound(name string) error {
+	return fmt.Errorf(assets.TextDesc(assets.TextDescKeyErrPromptNotFound), name)
+}
+
+// Remove wraps a failure to remove a prompt template.
+//
+// Parameters:
+//   - cause: the underlying OS error.
+//
+// Returns:
+//   - error: "remove prompt: <cause>"
+func Remove(cause error) error {
+	return fmt.Errorf(
+		assets.TextDesc(assets.TextDescKeyErrPromptRemovePrompt), cause,
+	)
+}
+
+// NoPromptTemplate returns an error when no embedded template exists.
+//
+// Parameters:
+//   - name: the template name that was not found.
+//
+// Returns:
+//   - error: advises the user to use --stdin
+func NoPromptTemplate(name string) error {
+	return fmt.Errorf(
+		assets.TextDesc(assets.TextDescKeyErrPromptNoPromptTemplate), name,
+	)
+}
+
+// NoTemplate wraps a failure to find an embedded template.
+//
+// Parameters:
+//   - filename: Name of the file without a template
+//   - cause: the underlying read error
+//
+// Returns:
+//   - error: "no template available for <filename>: <cause>"
+func NoTemplate(filename string, cause error) error {
+	return fmt.Errorf(
+		assets.TextDesc(assets.TextDescKeyErrPromptNoTemplate), filename, cause,
+	)
+}
+
+// ListPromptTemplates wraps a failure to list prompt templates.
+//
+// Parameters:
+//   - cause: the underlying error
+//
+// Returns:
+//   - error: "failed to list prompt templates: <cause>"
+func ListPromptTemplates(cause error) error {
+	return fmt.Errorf(
+		assets.TextDesc(assets.TextDescKeyErrPromptListPromptTemplates), cause,
+	)
+}
+
+// ListTemplates wraps a failure to list embedded templates.
+//
+// Parameters:
+//   - cause: the underlying error from the list operation
+//
+// Returns:
+//   - error: "failed to list templates: <cause>"
+func ListTemplates(cause error) error {
+	return fmt.Errorf(
+		assets.TextDesc(assets.TextDescKeyErrPromptListTemplates), cause,
+	)
+}
+
+// ReadPromptTemplate wraps a failure to read a prompt template.
+//
+// Parameters:
+//   - name: template name that failed to read
+//   - cause: the underlying error
+//
+// Returns:
+//   - error: "failed to read prompt template <name>: <cause>"
+func ReadPromptTemplate(name string, cause error) error {
+	return fmt.Errorf(
+		assets.TextDesc(assets.TextDescKeyErrPromptReadPromptTemplate), name, cause,
+	)
+}
+
+// ListEntryTemplates wraps a failure to list entry templates.
+//
+// Parameters:
+//   - cause: the underlying error
+//
+// Returns:
+//   - error: "failed to list entry templates: <cause>"
+func ListEntryTemplates(cause error) error {
+	return fmt.Errorf(
+		assets.TextDesc(assets.TextDescKeyErrPromptListEntryTemplates), cause,
+	)
+}
+
+// ReadEntryTemplate wraps a failure to read an entry template.
+//
+// Parameters:
+//   - name: template name that failed to read
+//   - cause: the underlying error
+//
+// Returns:
+//   - error: "failed to read entry template <name>: <cause>"
+func ReadEntryTemplate(name string, cause error) error {
+	return fmt.Errorf(
+		assets.TextDesc(assets.TextDescKeyErrPromptReadEntryTemplate), name, cause,
+	)
+}
+
+// ReadTemplate wraps a failure to read an embedded template.
+//
+// Parameters:
+//   - name: template name that failed to read
+//   - cause: the underlying error from the read operation
+//
+// Returns:
+//   - error: "failed to read template <name>: <cause>"
+func ReadTemplate(name string, cause error) error {
+	return fmt.Errorf(
+		assets.TextDesc(assets.TextDescKeyErrPromptReadTemplate), name, cause,
+	)
+}
+
+// TemplateMissingMarkers returns an error when a template lacks markers.
+//
+// Parameters:
+//   - kind: marker kind (e.g. "ctx", "plan", "prompt")
+//
+// Returns:
+//   - error: "template missing <kind> markers"
+func TemplateMissingMarkers(kind string) error {
+	return fmt.Errorf(
+		assets.TextDesc(assets.TextDescKeyErrPromptTemplateMissingMarkers), kind,
+	)
+}
+
+// MarkerNotFound returns an error when a section marker is missing.
+//
+// Parameters:
+//   - kind: marker kind (e.g. "ctx", "plan", "prompt")
+//
+// Returns:
+//   - error: "<kind> start marker not found"
+func MarkerNotFound(kind string) error {
+	return fmt.Errorf(
+		assets.TextDesc(assets.TextDescKeyErrPromptMarkerNotFound), kind,
+	)
+}

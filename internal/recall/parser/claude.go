@@ -18,7 +18,7 @@ import (
 	"github.com/ActiveMemory/ctx/internal/config/file"
 	"github.com/ActiveMemory/ctx/internal/config/parser"
 	"github.com/ActiveMemory/ctx/internal/config/session"
-	ctxerr "github.com/ActiveMemory/ctx/internal/err"
+	ctxerr "github.com/ActiveMemory/ctx/internal/err/parser"
 )
 
 // ClaudeCodeParser parses Claude Code JSONL session files.
@@ -107,7 +107,7 @@ func (p *ClaudeCodeParser) Matches(path string) bool {
 func (p *ClaudeCodeParser) ParseFile(path string) ([]*Session, error) {
 	f, openErr := os.Open(filepath.Clean(path))
 	if openErr != nil {
-		return nil, ctxerr.ParserOpenFile(openErr)
+		return nil, ctxerr.OpenFile(openErr)
 	}
 	defer func() { _ = f.Close() }()
 
@@ -146,7 +146,7 @@ func (p *ClaudeCodeParser) ParseFile(path string) ([]*Session, error) {
 	}
 
 	if scanErr := scanner.Err(); scanErr != nil {
-		return nil, ctxerr.ParserScanFile(scanErr)
+		return nil, ctxerr.ScanFile(scanErr)
 	}
 
 	// Convert to sessions
@@ -186,7 +186,7 @@ func (p *ClaudeCodeParser) ParseLine(line []byte) (*Message, string, error) {
 
 	var raw claudeRawMessage
 	if unmarshalErr := json.Unmarshal(line, &raw); unmarshalErr != nil {
-		return nil, "", ctxerr.ParserUnmarshal(unmarshalErr)
+		return nil, "", ctxerr.Unmarshal(unmarshalErr)
 	}
 
 	// Skip non-message lines

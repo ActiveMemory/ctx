@@ -13,9 +13,9 @@ import (
 	"time"
 
 	"github.com/ActiveMemory/ctx/internal/config/crypto"
+	ctxerr "github.com/ActiveMemory/ctx/internal/err/notify"
 	"github.com/spf13/cobra"
 
-	ctxerr "github.com/ActiveMemory/ctx/internal/err"
 	"github.com/ActiveMemory/ctx/internal/notify"
 	"github.com/ActiveMemory/ctx/internal/rc"
 	"github.com/ActiveMemory/ctx/internal/write"

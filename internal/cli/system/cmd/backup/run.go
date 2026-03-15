@@ -13,11 +13,12 @@ import (
 
 	"github.com/ActiveMemory/ctx/internal/config/archive"
 	"github.com/ActiveMemory/ctx/internal/config/env"
+	backup2 "github.com/ActiveMemory/ctx/internal/err/backup"
+	ctxerr "github.com/ActiveMemory/ctx/internal/err/initialize"
 	"github.com/ActiveMemory/ctx/internal/write/backup"
 	"github.com/spf13/cobra"
 
 	"github.com/ActiveMemory/ctx/internal/cli/system/core"
-	ctxerr "github.com/ActiveMemory/ctx/internal/err"
 )
 
 // Run executes the backup command logic.
@@ -38,7 +39,7 @@ func Run(cmd *cobra.Command) error {
 	switch scope {
 	case archive.BackupScopeProject, archive.BackupScopeGlobal, archive.BackupScopeAll:
 	default:
-		return ctxerr.InvalidBackupScope(scope)
+		return backup2.InvalidBackupScope(scope)
 	}
 
 	home, homeErr := os.UserHomeDir()
@@ -53,7 +54,7 @@ func Run(cmd *cobra.Command) error {
 		var smbErr error
 		smb, smbErr = core.ParseSMBConfig(smbURL, smbSubdir)
 		if smbErr != nil {
-			return ctxerr.BackupSMBConfig(smbErr)
+			return backup2.SMBConfig(smbErr)
 		}
 	}
 
@@ -63,7 +64,7 @@ func Run(cmd *cobra.Command) error {
 	if scope == archive.BackupScopeProject || scope == archive.BackupScopeAll {
 		result, projErr := core.BackupProject(cmd, home, timestamp, smb)
 		if projErr != nil {
-			return ctxerr.BackupProject(projErr)
+			return backup2.Project(projErr)
 		}
 		results = append(results, result)
 	}
@@ -71,7 +72,7 @@ func Run(cmd *cobra.Command) error {
 	if scope == archive.BackupScopeGlobal || scope == archive.BackupScopeAll {
 		result, globalErr := core.BackupGlobal(cmd, home, timestamp, smb)
 		if globalErr != nil {
-			return ctxerr.BackupGlobal(globalErr)
+			return backup2.Global(globalErr)
 		}
 		results = append(results, result)
 	}

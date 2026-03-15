@@ -9,12 +9,12 @@ package notify
 import (
 	"strings"
 
+	ctxerr "github.com/ActiveMemory/ctx/internal/err/validate"
 	"github.com/spf13/cobra"
 
 	"github.com/ActiveMemory/ctx/internal/assets"
 	"github.com/ActiveMemory/ctx/internal/cli/notify/cmd/setup"
 	"github.com/ActiveMemory/ctx/internal/cli/notify/cmd/test"
-	ctxerr "github.com/ActiveMemory/ctx/internal/err"
 	notifylib "github.com/ActiveMemory/ctx/internal/notify"
 )
 

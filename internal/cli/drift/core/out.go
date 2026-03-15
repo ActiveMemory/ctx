@@ -11,10 +11,10 @@ import (
 	"fmt"
 	"time"
 
+	ctxerr "github.com/ActiveMemory/ctx/internal/err/validate"
 	"github.com/spf13/cobra"
 
 	"github.com/ActiveMemory/ctx/internal/drift"
-	ctxerr "github.com/ActiveMemory/ctx/internal/err"
 )
 
 // OutputDriftText writes the drift report as formatted text with colors.

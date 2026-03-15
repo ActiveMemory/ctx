@@ -12,10 +12,10 @@ import (
 
 	"github.com/ActiveMemory/ctx/internal/config/fs"
 	memory2 "github.com/ActiveMemory/ctx/internal/config/memory"
+	ctxerr "github.com/ActiveMemory/ctx/internal/err/memory"
 	"github.com/ActiveMemory/ctx/internal/io"
 	"github.com/spf13/cobra"
 
-	ctxerr "github.com/ActiveMemory/ctx/internal/err"
 	"github.com/ActiveMemory/ctx/internal/memory"
 	"github.com/ActiveMemory/ctx/internal/rc"
 	"github.com/ActiveMemory/ctx/internal/write"
@@ -43,7 +43,7 @@ func Run(cmd *cobra.Command) error {
 		filepath.Dir(memoryPath), filepath.Base(memoryPath),
 	)
 	if readErr != nil {
-		return ctxerr.ReadMemory(readErr)
+		return ctxerr.Read(readErr)
 	}
 
 	cleaned, found := memory.RemovePublished(string(data))
@@ -55,7 +55,7 @@ func Run(cmd *cobra.Command) error {
 	if writeErr := os.WriteFile(
 		memoryPath, []byte(cleaned), fs.PermFile,
 	); writeErr != nil {
-		return ctxerr.WriteMemory(writeErr)
+		return ctxerr.Write(writeErr)
 	}
 
 	write.UnpublishDone(cmd, memory2.MemorySource)

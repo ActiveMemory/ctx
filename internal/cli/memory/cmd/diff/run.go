@@ -9,9 +9,9 @@ package diff
 import (
 	"path/filepath"
 
+	ctxerr "github.com/ActiveMemory/ctx/internal/err/memory"
 	"github.com/spf13/cobra"
 
-	ctxerr "github.com/ActiveMemory/ctx/internal/err"
 	mem "github.com/ActiveMemory/ctx/internal/memory"
 	"github.com/ActiveMemory/ctx/internal/rc"
 	"github.com/ActiveMemory/ctx/internal/write"
@@ -31,12 +31,12 @@ func Run(cmd *cobra.Command) error {
 
 	sourcePath, discoverErr := mem.DiscoverMemoryPath(projectRoot)
 	if discoverErr != nil {
-		return ctxerr.MemoryDiscoverFailed(discoverErr)
+		return ctxerr.DiscoverFailed(discoverErr)
 	}
 
 	diff, diffErr := mem.Diff(contextDir, sourcePath)
 	if diffErr != nil {
-		return ctxerr.MemoryDiffFailed(diffErr)
+		return ctxerr.DiffFailed(diffErr)
 	}
 
 	if diff == "" {

@@ -15,11 +15,13 @@ import (
 	"github.com/ActiveMemory/ctx/internal/config/file"
 	"github.com/ActiveMemory/ctx/internal/config/fs"
 	"github.com/ActiveMemory/ctx/internal/config/zensical"
+	fs2 "github.com/ActiveMemory/ctx/internal/err/fs"
+	"github.com/ActiveMemory/ctx/internal/err/journal"
+	ctxerr "github.com/ActiveMemory/ctx/internal/err/site"
 	"github.com/spf13/cobra"
 
 	"github.com/ActiveMemory/ctx/internal/assets"
 	"github.com/ActiveMemory/ctx/internal/cli/journal/core"
-	ctxerr "github.com/ActiveMemory/ctx/internal/err"
 	"github.com/ActiveMemory/ctx/internal/journal/state"
 	"github.com/ActiveMemory/ctx/internal/rc"
 	"github.com/ActiveMemory/ctx/internal/write"
@@ -64,41 +66,41 @@ func runZensical(dir, command string) error {
 // Returns:
 //   - error: Non-nil if generation fails
 func runJournalSite(
-	cmd *cobra.Command, output string, build, serve bool,
+		cmd *cobra.Command, output string, build, serve bool,
 ) error {
 	journalDir := filepath.Join(rc.ContextDir(), dir.Journal)
 
 	// Check if the journal directory exists
 	if _, statErr := os.Stat(journalDir); os.IsNotExist(statErr) {
-		return ctxerr.NoJournalDir(journalDir)
+		return journal.NoDir(journalDir)
 	}
 
 	// Load journal state for per-file processing flags
 	jstate, loadErr := state.Load(journalDir)
 	if loadErr != nil {
-		return ctxerr.LoadJournalStateErr(loadErr)
+		return journal.LoadStateErr(loadErr)
 	}
 
 	// Scan journal files
 	entries, scanErr := core.ScanJournalEntries(journalDir)
 	if scanErr != nil {
-		return ctxerr.ScanJournal(scanErr)
+		return journal.Scan(scanErr)
 	}
 
 	if len(entries) == 0 {
-		return ctxerr.NoJournalEntries(journalDir)
+		return journal.NoEntries(journalDir)
 	}
 
 	// Create output directory structure
 	docsDir := filepath.Join(output, dir.JournalDocs)
 	if mkErr := os.MkdirAll(docsDir, fs.PermExec); mkErr != nil {
-		return ctxerr.Mkdir(docsDir, mkErr)
+		return fs2.Mkdir(docsDir, mkErr)
 	}
 
 	// Write the stylesheet for <pre> overflow control
 	stylesDir := filepath.Join(docsDir, zensical.Stylesheets)
 	if mkErr := os.MkdirAll(stylesDir, fs.PermExec); mkErr != nil {
-		return ctxerr.Mkdir(stylesDir, mkErr)
+		return fs2.Mkdir(stylesDir, mkErr)
 	}
 	cssPath := filepath.Join(stylesDir, zensical.ExtraCSS)
 	cssData, cssReadErr := assets.JournalExtraCSS()
@@ -108,7 +110,7 @@ func runJournalSite(
 	if writeErr := os.WriteFile(
 		cssPath, cssData, fs.PermFile,
 	); writeErr != nil {
-		return ctxerr.FileWrite(cssPath, writeErr)
+		return fs2.FileWrite(cssPath, writeErr)
 	}
 
 	// Write README
@@ -117,7 +119,7 @@ func runJournalSite(
 		readmePath,
 		[]byte(core.GenerateSiteReadme(journalDir)), fs.PermFile,
 	); writeErr != nil {
-		return ctxerr.FileWrite(readmePath, writeErr)
+		return fs2.FileWrite(readmePath, writeErr)
 	}
 
 	// Soft-wrap source journal files in-place, then copy to docs/
@@ -190,7 +192,7 @@ func runJournalSite(
 	if writeErr := os.WriteFile(
 		indexPath, []byte(indexContent), fs.PermFile,
 	); writeErr != nil {
-		return ctxerr.FileWrite(indexPath, writeErr)
+		return fs2.FileWrite(indexPath, writeErr)
 	}
 
 	// Generate topic pages
@@ -250,7 +252,7 @@ func runJournalSite(
 					pagePath := filepath.Join(dir, slug+file.ExtMarkdown)
 					if pageErr := os.WriteFile(
 						pagePath, []byte(
-							core.GenerateKeyFilePage(kf)),
+								core.GenerateKeyFilePage(kf)),
 						fs.PermFile,
 					); pageErr != nil {
 						write.WarnFileErr(cmd, pagePath, pageErr)
@@ -301,7 +303,7 @@ func runJournalSite(
 		tomlPath,
 		[]byte(tomlContent), fs.PermFile,
 	); writeErr != nil {
-		return ctxerr.FileWrite(tomlPath, writeErr)
+		return fs2.FileWrite(tomlPath, writeErr)
 	}
 
 	if serve {

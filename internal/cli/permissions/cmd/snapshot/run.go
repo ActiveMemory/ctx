@@ -11,9 +11,10 @@ import (
 
 	"github.com/ActiveMemory/ctx/internal/config/claude"
 	"github.com/ActiveMemory/ctx/internal/config/fs"
+	"github.com/ActiveMemory/ctx/internal/err/config"
+	ctxerr "github.com/ActiveMemory/ctx/internal/err/fs"
 	"github.com/spf13/cobra"
 
-	ctxerr "github.com/ActiveMemory/ctx/internal/err"
 	"github.com/ActiveMemory/ctx/internal/write"
 )
 
@@ -28,7 +29,7 @@ func Run(cmd *cobra.Command) error {
 	content, readErr := os.ReadFile(claude.Settings)
 	if readErr != nil {
 		if os.IsNotExist(readErr) {
-			return ctxerr.SettingsNotFound()
+			return config.SettingsNotFound()
 		}
 		return ctxerr.FileRead(claude.Settings, readErr)
 	}

@@ -11,9 +11,10 @@ import (
 
 	"github.com/ActiveMemory/ctx/internal/assets"
 	"github.com/ActiveMemory/ctx/internal/config/fs"
+	"github.com/ActiveMemory/ctx/internal/err/config"
+	ctxerr "github.com/ActiveMemory/ctx/internal/err/fs"
 	"github.com/spf13/cobra"
 
-	ctxerr "github.com/ActiveMemory/ctx/internal/err"
 	"github.com/ActiveMemory/ctx/internal/write"
 )
 
@@ -40,7 +41,7 @@ func Run(
 ) error {
 	validTools := map[string]bool{"claude": true, "aider": true, "generic": true}
 	if !validTools[tool] {
-		return ctxerr.InvalidTool(tool)
+		return config.InvalidTool(tool)
 	}
 
 	script := GenerateLoopScript(promptFile, tool, maxIterations, completionMsg)

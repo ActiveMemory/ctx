@@ -7,7 +7,7 @@
 package core
 
 import (
-	ctxerr "github.com/ActiveMemory/ctx/internal/err"
+	ctxerr "github.com/ActiveMemory/ctx/internal/err/pad"
 )
 
 // ValidateIndex checks that n is a valid 1-based index into entries.

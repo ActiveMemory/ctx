@@ -13,10 +13,10 @@ import (
 	"time"
 
 	"github.com/ActiveMemory/ctx/internal/config/fs"
+	ctxerr "github.com/ActiveMemory/ctx/internal/err/fs"
 	"github.com/spf13/cobra"
 
 	"github.com/ActiveMemory/ctx/internal/cli/pad/core"
-	ctxerr "github.com/ActiveMemory/ctx/internal/err"
 	"github.com/ActiveMemory/ctx/internal/write"
 )
 

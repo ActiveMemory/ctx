@@ -7,10 +7,10 @@
 package switchcmd
 
 import (
+	ctxerr "github.com/ActiveMemory/ctx/internal/err/config"
 	"github.com/spf13/cobra"
 
 	"github.com/ActiveMemory/ctx/internal/cli/config/core"
-	ctxerr "github.com/ActiveMemory/ctx/internal/err"
 )
 
 // Run executes the profile switch logic.

@@ -13,11 +13,12 @@ import (
 
 	"github.com/ActiveMemory/ctx/internal/config/file"
 	"github.com/ActiveMemory/ctx/internal/config/fs"
+	fs2 "github.com/ActiveMemory/ctx/internal/err/fs"
+	ctxerr "github.com/ActiveMemory/ctx/internal/err/prompt"
 	"github.com/spf13/cobra"
 
 	"github.com/ActiveMemory/ctx/internal/assets"
 	"github.com/ActiveMemory/ctx/internal/cli/prompt/core"
-	ctxerr "github.com/ActiveMemory/ctx/internal/err"
 	"github.com/ActiveMemory/ctx/internal/write"
 )
 
@@ -33,14 +34,14 @@ import (
 func runAdd(cmd *cobra.Command, name string, fromStdin bool) error {
 	dir := core.PromptsDir()
 	if mkdirErr := os.MkdirAll(dir, fs.PermExec); mkdirErr != nil {
-		return ctxerr.Mkdir("prompts directory", mkdirErr)
+		return fs2.Mkdir("prompts directory", mkdirErr)
 	}
 
 	path := filepath.Join(dir, name+file.ExtMarkdown)
 
 	// Check if file already exists.
 	if _, statErr := os.Stat(path); statErr == nil {
-		return ctxerr.PromptExists(name)
+		return ctxerr.Exists(name)
 	}
 
 	var content []byte
@@ -49,7 +50,7 @@ func runAdd(cmd *cobra.Command, name string, fromStdin bool) error {
 		var readErr error
 		content, readErr = io.ReadAll(cmd.InOrStdin())
 		if readErr != nil {
-			return ctxerr.ReadInput(readErr)
+			return fs2.ReadInput(readErr)
 		}
 	} else {
 		// Try to load from embedded starter templates.
@@ -61,7 +62,7 @@ func runAdd(cmd *cobra.Command, name string, fromStdin bool) error {
 	}
 
 	if writeErr := os.WriteFile(path, content, fs.PermFile); writeErr != nil {
-		return ctxerr.WriteFileFailed(writeErr)
+		return fs2.WriteFileFailed(writeErr)
 	}
 
 	write.PromptCreated(cmd, name)

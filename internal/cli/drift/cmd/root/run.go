@@ -10,12 +10,12 @@ import (
 	"errors"
 	"fmt"
 
+	ctxerr "github.com/ActiveMemory/ctx/internal/err/initialize"
 	"github.com/spf13/cobra"
 
 	"github.com/ActiveMemory/ctx/internal/cli/drift/core"
 	"github.com/ActiveMemory/ctx/internal/context"
 	"github.com/ActiveMemory/ctx/internal/drift"
-	ctxerr "github.com/ActiveMemory/ctx/internal/err"
 )
 
 // Run executes the drift command logic.

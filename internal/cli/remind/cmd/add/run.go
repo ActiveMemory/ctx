@@ -10,10 +10,10 @@ import (
 	"time"
 
 	time2 "github.com/ActiveMemory/ctx/internal/config/time"
+	ctxerr "github.com/ActiveMemory/ctx/internal/err/date"
 	"github.com/spf13/cobra"
 
 	"github.com/ActiveMemory/ctx/internal/cli/remind/core"
-	ctxerr "github.com/ActiveMemory/ctx/internal/err"
 	"github.com/ActiveMemory/ctx/internal/write"
 )
 

@@ -9,9 +9,9 @@ package publish
 import (
 	"path/filepath"
 
+	ctxerr "github.com/ActiveMemory/ctx/internal/err/memory"
 	"github.com/spf13/cobra"
 
-	ctxerr "github.com/ActiveMemory/ctx/internal/err"
 	mem "github.com/ActiveMemory/ctx/internal/memory"
 	"github.com/ActiveMemory/ctx/internal/rc"
 	"github.com/ActiveMemory/ctx/internal/write"

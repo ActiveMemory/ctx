@@ -10,10 +10,11 @@ import (
 	"os"
 
 	"github.com/ActiveMemory/ctx/internal/config/fs"
+	fs2 "github.com/ActiveMemory/ctx/internal/err/fs"
+	ctxerr "github.com/ActiveMemory/ctx/internal/err/pad"
 	"github.com/spf13/cobra"
 
 	"github.com/ActiveMemory/ctx/internal/cli/pad/core"
-	ctxerr "github.com/ActiveMemory/ctx/internal/err"
 	"github.com/ActiveMemory/ctx/internal/write"
 )
 
@@ -47,7 +48,7 @@ func Run(cmd *cobra.Command, n int, outPath string) error {
 			if writeErr := os.WriteFile(
 				outPath, data, fs.PermSecret,
 			); writeErr != nil {
-				return ctxerr.WriteFileFailed(writeErr)
+				return fs2.WriteFileFailed(writeErr)
 			}
 			write.PadBlobWritten(cmd, len(data), outPath)
 			return nil

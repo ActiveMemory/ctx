@@ -11,9 +11,9 @@ import (
 	"os/exec"
 
 	"github.com/ActiveMemory/ctx/internal/config/env"
+	ctxerr "github.com/ActiveMemory/ctx/internal/err/validate"
 	"github.com/spf13/cobra"
 
-	ctxerr "github.com/ActiveMemory/ctx/internal/err"
 	"github.com/ActiveMemory/ctx/internal/write"
 )
 

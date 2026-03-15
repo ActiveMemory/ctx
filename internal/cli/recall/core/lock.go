@@ -17,10 +17,11 @@ import (
 	"github.com/ActiveMemory/ctx/internal/config/file"
 	"github.com/ActiveMemory/ctx/internal/config/fs"
 	"github.com/ActiveMemory/ctx/internal/config/token"
+	"github.com/ActiveMemory/ctx/internal/err/journal"
+	ctxerr "github.com/ActiveMemory/ctx/internal/err/session"
 	"github.com/ActiveMemory/ctx/internal/io"
 	"github.com/spf13/cobra"
 
-	ctxerr "github.com/ActiveMemory/ctx/internal/err"
 	"github.com/ActiveMemory/ctx/internal/journal/state"
 	"github.com/ActiveMemory/ctx/internal/rc"
 	"github.com/ActiveMemory/ctx/internal/write"
@@ -53,7 +54,7 @@ func MatchJournalFiles(
 		if os.IsNotExist(readErr) {
 			return nil, nil
 		}
-		return nil, ctxerr.ReadJournalDir(readErr)
+		return nil, journal.ReadDir(readErr)
 	}
 
 	// Collect all .md filenames.
@@ -250,7 +251,7 @@ func RunLockUnlock(
 
 	jstate, loadErr := state.Load(journalDir)
 	if loadErr != nil {
-		return ctxerr.LoadJournalState(loadErr)
+		return journal.LoadState(loadErr)
 	}
 
 	// Collect matching .md files.
@@ -262,7 +263,7 @@ func RunLockUnlock(
 		if all {
 			write.LockUnlockNone(cmd)
 		} else {
-			return ctxerr.NoEntriesMatch(strings.Join(args, ", "))
+			return journal.NoEntriesMatch(strings.Join(args, ", "))
 		}
 		return nil
 	}
@@ -298,7 +299,7 @@ func RunLockUnlock(
 	}
 
 	if saveErr := jstate.Save(journalDir); saveErr != nil {
-		return ctxerr.SaveJournalState(saveErr)
+		return journal.SaveState(saveErr)
 	}
 
 	write.LockUnlockSummary(cmd, verb, count)

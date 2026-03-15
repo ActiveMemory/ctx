@@ -13,11 +13,13 @@ import (
 
 	claude2 "github.com/ActiveMemory/ctx/internal/config/claude"
 	"github.com/ActiveMemory/ctx/internal/config/fs"
+	"github.com/ActiveMemory/ctx/internal/err/config"
+	fs2 "github.com/ActiveMemory/ctx/internal/err/fs"
+	ctxerr "github.com/ActiveMemory/ctx/internal/err/validate"
 	"github.com/spf13/cobra"
 
 	"github.com/ActiveMemory/ctx/internal/claude"
 	"github.com/ActiveMemory/ctx/internal/cli/permissions/core"
-	ctxerr "github.com/ActiveMemory/ctx/internal/err"
 	"github.com/ActiveMemory/ctx/internal/write"
 )
 
@@ -32,9 +34,9 @@ func Run(cmd *cobra.Command) error {
 	goldenBytes, goldenReadErr := os.ReadFile(claude2.SettingsGolden)
 	if goldenReadErr != nil {
 		if os.IsNotExist(goldenReadErr) {
-			return ctxerr.GoldenNotFound()
+			return config.GoldenNotFound()
 		}
-		return ctxerr.FileRead(claude2.SettingsGolden, goldenReadErr)
+		return fs2.FileRead(claude2.SettingsGolden, goldenReadErr)
 	}
 
 	localBytes, localReadErr := os.ReadFile(claude2.Settings)
@@ -43,12 +45,12 @@ func Run(cmd *cobra.Command) error {
 			if writeErr := os.WriteFile(
 				claude2.Settings, goldenBytes, fs.PermFile,
 			); writeErr != nil {
-				return ctxerr.FileWrite(claude2.Settings, writeErr)
+				return fs2.FileWrite(claude2.Settings, writeErr)
 			}
 			write.RestoreNoLocal(cmd)
 			return nil
 		}
-		return ctxerr.FileRead(claude2.Settings, localReadErr)
+		return fs2.FileRead(claude2.Settings, localReadErr)
 	}
 
 	if bytes.Equal(goldenBytes, localBytes) {
@@ -76,7 +78,7 @@ func Run(cmd *cobra.Command) error {
 	if writeErr := os.WriteFile(
 		claude2.Settings, goldenBytes, fs.PermFile,
 	); writeErr != nil {
-		return ctxerr.FileWrite(claude2.Settings, writeErr)
+		return fs2.FileWrite(claude2.Settings, writeErr)
 	}
 
 	write.RestoreDone(cmd)

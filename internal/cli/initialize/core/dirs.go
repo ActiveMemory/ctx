@@ -13,10 +13,11 @@ import (
 	"github.com/ActiveMemory/ctx/internal/config/dir"
 	"github.com/ActiveMemory/ctx/internal/config/file"
 	"github.com/ActiveMemory/ctx/internal/config/fs"
+	fs2 "github.com/ActiveMemory/ctx/internal/err/fs"
+	ctxerr "github.com/ActiveMemory/ctx/internal/err/initialize"
 	"github.com/spf13/cobra"
 
 	"github.com/ActiveMemory/ctx/internal/assets"
-	ctxerr "github.com/ActiveMemory/ctx/internal/err"
 	"github.com/ActiveMemory/ctx/internal/write"
 )
 
@@ -44,7 +45,7 @@ func CreateProjectDirs(cmd *cobra.Command) error {
 		}
 
 		if mkdirErr := os.MkdirAll(dir, fs.PermExec); mkdirErr != nil {
-			return ctxerr.Mkdir(dir+"/", mkdirErr)
+			return fs2.Mkdir(dir+"/", mkdirErr)
 		}
 
 		readme, readErr := assets.ProjectReadme(dir)
@@ -54,7 +55,7 @@ func CreateProjectDirs(cmd *cobra.Command) error {
 
 		readmePath := filepath.Join(dir, file.Readme)
 		if writeErr := os.WriteFile(readmePath, readme, fs.PermFile); writeErr != nil {
-			return ctxerr.FileWrite(readmePath, writeErr)
+			return fs2.FileWrite(readmePath, writeErr)
 		}
 
 		write.InitCreatedDir(cmd, dir)

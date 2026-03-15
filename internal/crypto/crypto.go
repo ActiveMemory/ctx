@@ -20,7 +20,7 @@ import (
 
 	"github.com/ActiveMemory/ctx/internal/config/crypto"
 	"github.com/ActiveMemory/ctx/internal/config/fs"
-	ctxerr "github.com/ActiveMemory/ctx/internal/err"
+	ctxerr "github.com/ActiveMemory/ctx/internal/err/crypto"
 	io2 "github.com/ActiveMemory/ctx/internal/io"
 )
 

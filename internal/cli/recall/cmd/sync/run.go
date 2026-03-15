@@ -11,10 +11,10 @@ import (
 
 	"github.com/ActiveMemory/ctx/internal/config/dir"
 	"github.com/ActiveMemory/ctx/internal/config/journal"
+	ctxerr "github.com/ActiveMemory/ctx/internal/err/journal"
 	"github.com/spf13/cobra"
 
 	"github.com/ActiveMemory/ctx/internal/cli/recall/core"
-	ctxerr "github.com/ActiveMemory/ctx/internal/err"
 	"github.com/ActiveMemory/ctx/internal/journal/state"
 	"github.com/ActiveMemory/ctx/internal/rc"
 	"github.com/ActiveMemory/ctx/internal/write"
@@ -33,7 +33,7 @@ func Run(cmd *cobra.Command) error {
 
 	jstate, loadErr := state.Load(journalDir)
 	if loadErr != nil {
-		return ctxerr.LoadJournalState(loadErr)
+		return ctxerr.LoadState(loadErr)
 	}
 
 	files, matchErr := core.MatchJournalFiles(journalDir, nil, true)
@@ -65,7 +65,7 @@ func Run(cmd *cobra.Command) error {
 	}
 
 	if saveErr := jstate.Save(journalDir); saveErr != nil {
-		return ctxerr.SaveJournalState(saveErr)
+		return ctxerr.SaveState(saveErr)
 	}
 
 	write.JournalSyncSummary(cmd, locked, unlocked)

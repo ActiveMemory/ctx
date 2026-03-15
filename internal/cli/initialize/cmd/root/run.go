@@ -18,12 +18,14 @@ import (
 	"github.com/ActiveMemory/ctx/internal/config/fs"
 	"github.com/ActiveMemory/ctx/internal/config/pad"
 	"github.com/ActiveMemory/ctx/internal/config/token"
+	crypto2 "github.com/ActiveMemory/ctx/internal/err/crypto"
+	fs2 "github.com/ActiveMemory/ctx/internal/err/fs"
+	ctxerr "github.com/ActiveMemory/ctx/internal/err/prompt"
 	"github.com/spf13/cobra"
 
 	"github.com/ActiveMemory/ctx/internal/assets"
 	"github.com/ActiveMemory/ctx/internal/cli/initialize/core"
 	"github.com/ActiveMemory/ctx/internal/crypto"
-	ctxerr "github.com/ActiveMemory/ctx/internal/err"
 	"github.com/ActiveMemory/ctx/internal/rc"
 	"github.com/ActiveMemory/ctx/internal/write"
 )
@@ -64,7 +66,7 @@ func Run(cmd *cobra.Command, force, minimal, merge, ralph, noPluginEnable bool) 
 			reader := bufio.NewReader(os.Stdin)
 			response, err := reader.ReadString('\n')
 			if err != nil {
-				return ctxerr.ReadInput(err)
+				return fs2.ReadInput(err)
 			}
 			response = strings.TrimSpace(strings.ToLower(response))
 			if response != cli.ConfirmShort && response != cli.ConfirmLong {
@@ -76,7 +78,7 @@ func Run(cmd *cobra.Command, force, minimal, merge, ralph, noPluginEnable bool) 
 
 	// Create .context/ directory
 	if err := os.MkdirAll(contextDir, fs.PermExec); err != nil {
-		return ctxerr.Mkdir(contextDir, err)
+		return fs2.Mkdir(contextDir, err)
 	}
 
 	// Get the list of templates to create
@@ -107,7 +109,7 @@ func Run(cmd *cobra.Command, force, minimal, merge, ralph, noPluginEnable bool) 
 		}
 
 		if err := os.WriteFile(targetPath, content, fs.PermFile); err != nil {
-			return ctxerr.FileWrite(targetPath, err)
+			return fs2.FileWrite(targetPath, err)
 		}
 
 		write.InfoInitFileCreated(cmd, name)
@@ -215,7 +217,7 @@ func initScratchpad(cmd *cobra.Command, contextDir string) error {
 		mdPath := filepath.Join(contextDir, pad.Md)
 		if _, err := os.Stat(mdPath); err != nil {
 			if err := os.WriteFile(mdPath, nil, fs.PermFile); err != nil {
-				return ctxerr.Mkdir(mdPath, err)
+				return fs2.Mkdir(mdPath, err)
 			}
 			write.InfoInitScratchpadPlaintext(cmd, mdPath)
 		} else {
@@ -242,17 +244,17 @@ func initScratchpad(cmd *cobra.Command, contextDir string) error {
 
 	// Ensure key directory exists.
 	if mkdirErr := os.MkdirAll(filepath.Dir(kPath), fs.PermKeyDir); mkdirErr != nil {
-		return ctxerr.MkdirKeyDir(mkdirErr)
+		return crypto2.MkdirKeyDir(mkdirErr)
 	}
 
 	// Generate key
 	key, err := crypto.GenerateKey()
 	if err != nil {
-		return ctxerr.GenerateKey(err)
+		return crypto2.GenerateKey(err)
 	}
 
 	if err := crypto.SaveKey(kPath, key); err != nil {
-		return ctxerr.SaveKey(err)
+		return crypto2.SaveKey(err)
 	}
 	write.InfoInitScratchpadKeyCreated(cmd, kPath)
 

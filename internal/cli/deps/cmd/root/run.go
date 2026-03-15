@@ -10,10 +10,10 @@ import (
 	"strings"
 
 	"github.com/ActiveMemory/ctx/internal/config/fmt"
+	ctxerr "github.com/ActiveMemory/ctx/internal/err/config"
 	"github.com/spf13/cobra"
 
 	"github.com/ActiveMemory/ctx/internal/cli/deps/core"
-	ctxerr "github.com/ActiveMemory/ctx/internal/err"
 	"github.com/ActiveMemory/ctx/internal/write"
 )
 

@@ -18,10 +18,13 @@ import (
 	"github.com/ActiveMemory/ctx/internal/config/marker"
 	"github.com/ActiveMemory/ctx/internal/config/project"
 	"github.com/ActiveMemory/ctx/internal/config/token"
+	"github.com/ActiveMemory/ctx/internal/err/backup"
+	fs2 "github.com/ActiveMemory/ctx/internal/err/fs"
+	"github.com/ActiveMemory/ctx/internal/err/initialize"
+	ctxerr "github.com/ActiveMemory/ctx/internal/err/prompt"
 	"github.com/spf13/cobra"
 
 	"github.com/ActiveMemory/ctx/internal/assets"
-	ctxerr "github.com/ActiveMemory/ctx/internal/err"
 	"github.com/ActiveMemory/ctx/internal/write"
 )
 
@@ -37,13 +40,13 @@ import (
 func HandleImplementationPlan(cmd *cobra.Command, force, autoMerge bool) error {
 	templateContent, err := assets.ProjectFile(project.ImplementationPlan)
 	if err != nil {
-		return ctxerr.ReadInitTemplate("IMPLEMENTATION_PLAN.md", err)
+		return initialize.ReadTemplate("IMPLEMENTATION_PLAN.md", err)
 	}
 	existingContent, err := os.ReadFile(project.ImplementationPlan)
 	fileExists := err == nil
 	if !fileExists {
 		if err := os.WriteFile(project.ImplementationPlan, templateContent, fs.PermFile); err != nil {
-			return ctxerr.FileWrite(project.ImplementationPlan, err)
+			return fs2.FileWrite(project.ImplementationPlan, err)
 		}
 		write.InitCreated(cmd, project.ImplementationPlan)
 		return nil
@@ -64,7 +67,7 @@ func HandleImplementationPlan(cmd *cobra.Command, force, autoMerge bool) error {
 		reader := bufio.NewReader(os.Stdin)
 		response, err := reader.ReadString('\n')
 		if err != nil {
-			return ctxerr.ReadInput(err)
+			return fs2.ReadInput(err)
 		}
 		response = strings.TrimSpace(strings.ToLower(response))
 		if response != cli.ConfirmShort && response != cli.ConfirmLong {
@@ -75,7 +78,7 @@ func HandleImplementationPlan(cmd *cobra.Command, force, autoMerge bool) error {
 	timestamp := time.Now().Unix()
 	backupName := fmt.Sprintf("%s.%d.bak", project.ImplementationPlan, timestamp)
 	if err := os.WriteFile(backupName, existingContent, fs.PermFile); err != nil {
-		return ctxerr.CreateBackup(backupName, err)
+		return backup.Create(backupName, err)
 	}
 	write.InitBackup(cmd, backupName)
 	insertPos := FindInsertionPoint(existingStr)
@@ -86,7 +89,7 @@ func HandleImplementationPlan(cmd *cobra.Command, force, autoMerge bool) error {
 		mergedContent = existingStr[:insertPos] + token.NewlineLF + string(templateContent) + token.NewlineLF + existingStr[insertPos:]
 	}
 	if err := os.WriteFile(project.ImplementationPlan, []byte(mergedContent), fs.PermFile); err != nil {
-		return ctxerr.WriteMerged(project.ImplementationPlan, err)
+		return fs2.WriteMerged(project.ImplementationPlan, err)
 	}
 	write.InitMerged(cmd, project.ImplementationPlan)
 	return nil
@@ -124,11 +127,11 @@ func UpdatePlanSection(cmd *cobra.Command, existing string, newTemplate []byte) 
 	timestamp := time.Now().Unix()
 	backupName := fmt.Sprintf("%s.%d.bak", project.ImplementationPlan, timestamp)
 	if err := os.WriteFile(backupName, []byte(existing), fs.PermFile); err != nil {
-		return ctxerr.CreateBackupGeneric(err)
+		return backup.CreateGeneric(err)
 	}
 	write.InitBackup(cmd, backupName)
 	if err := os.WriteFile(project.ImplementationPlan, []byte(newContent), fs.PermFile); err != nil {
-		return ctxerr.FileUpdate(project.ImplementationPlan, err)
+		return fs2.FileUpdate(project.ImplementationPlan, err)
 	}
 	write.InitUpdatedPlanSection(cmd, project.ImplementationPlan)
 	return nil

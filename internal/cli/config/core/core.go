@@ -15,7 +15,8 @@ import (
 
 	"github.com/ActiveMemory/ctx/internal/config/file"
 	"github.com/ActiveMemory/ctx/internal/config/fs"
-	ctxerr "github.com/ActiveMemory/ctx/internal/err"
+	"github.com/ActiveMemory/ctx/internal/err/config"
+	ctxerr "github.com/ActiveMemory/ctx/internal/err/git"
 	"github.com/ActiveMemory/ctx/internal/io"
 	"github.com/ActiveMemory/ctx/internal/rc"
 )
@@ -50,7 +51,7 @@ func DetectProfile() string {
 func CopyProfile(root, srcFile string) error {
 	data, readErr := io.SafeReadFile(root, srcFile)
 	if readErr != nil {
-		return ctxerr.ReadProfile(srcFile, readErr)
+		return config.ReadProfile(srcFile, readErr)
 	}
 
 	dst := filepath.Join(root, FileCtxRC)
@@ -97,12 +98,12 @@ func SwitchTo(root, profile string) (string, error) {
 // degrade gracefully when this returns an error.
 func GitRoot() (string, error) {
 	if _, lookErr := exec.LookPath("git"); lookErr != nil {
-		return "", ctxerr.GitNotFound()
+		return "", ctxerr.NotFound()
 	}
 
 	out, execErr := exec.Command("git", "rev-parse", "--show-toplevel").Output()
 	if execErr != nil {
-		return "", ctxerr.NotInGitRepo(execErr)
+		return "", ctxerr.NotInRepo(execErr)
 	}
 	return strings.TrimSpace(string(out)), nil
 }

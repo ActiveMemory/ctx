@@ -8,11 +8,12 @@ package add
 
 import (
 	"github.com/ActiveMemory/ctx/internal/config/pad"
+	"github.com/ActiveMemory/ctx/internal/err/fs"
+	ctxerr "github.com/ActiveMemory/ctx/internal/err/pad"
 	"github.com/ActiveMemory/ctx/internal/io"
 	"github.com/spf13/cobra"
 
 	"github.com/ActiveMemory/ctx/internal/cli/pad/core"
-	ctxerr "github.com/ActiveMemory/ctx/internal/err"
 	"github.com/ActiveMemory/ctx/internal/write"
 )
 
@@ -52,7 +53,7 @@ func runAdd(cmd *cobra.Command, text string) error {
 func runAddBlob(cmd *cobra.Command, label, filePath string) error {
 	data, err := io.SafeReadUserFile(filePath)
 	if err != nil {
-		return ctxerr.ReadFile(err)
+		return fs.ReadFile(err)
 	}
 
 	if len(data) > pad.MaxBlobSize {

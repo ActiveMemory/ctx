@@ -13,10 +13,10 @@ import (
 	"github.com/ActiveMemory/ctx/internal/config/journal"
 	"github.com/ActiveMemory/ctx/internal/config/time"
 	"github.com/ActiveMemory/ctx/internal/config/token"
+	ctxerr "github.com/ActiveMemory/ctx/internal/err/session"
 	"github.com/spf13/cobra"
 
 	"github.com/ActiveMemory/ctx/internal/cli/recall/core"
-	ctxerr "github.com/ActiveMemory/ctx/internal/err"
 	"github.com/ActiveMemory/ctx/internal/recall/parser"
 	"github.com/ActiveMemory/ctx/internal/write"
 )
@@ -40,14 +40,14 @@ func Run(
 ) error {
 	sessions, scanErr := core.FindSessions(allProjects)
 	if scanErr != nil {
-		return ctxerr.FindSessions(scanErr)
+		return ctxerr.Find(scanErr)
 	}
 
 	if len(sessions) == 0 {
 		if allProjects {
-			return ctxerr.NoSessionsFound("")
+			return ctxerr.NoneFound("")
 		}
-		return ctxerr.NoSessionsFound(assets.HintUseAllProjects)
+		return ctxerr.NoneFound(assets.HintUseAllProjects)
 	}
 
 	var session *parser.Session
@@ -56,7 +56,7 @@ func Run(
 	case latest:
 		session = sessions[0]
 	case len(args) == 0:
-		return ctxerr.SessionIDRequired()
+		return ctxerr.IDRequired()
 	default:
 		query := strings.ToLower(args[0])
 		var matches []*parser.Session
@@ -67,7 +67,7 @@ func Run(
 			}
 		}
 		if len(matches) == 0 {
-			return ctxerr.SessionNotFound(args[0])
+			return ctxerr.NotFound(args[0])
 		}
 		if len(matches) > 1 {
 			lines := core.FormatSessionMatchLines(matches)

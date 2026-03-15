@@ -13,7 +13,7 @@ import (
 
 	"github.com/ActiveMemory/ctx/internal/config/dir"
 	"github.com/ActiveMemory/ctx/internal/config/memory"
-	ctxerr "github.com/ActiveMemory/ctx/internal/err"
+	ctxerr "github.com/ActiveMemory/ctx/internal/err/memory"
 )
 
 // DiscoverMemoryPath locates Claude Code's auto memory file for the

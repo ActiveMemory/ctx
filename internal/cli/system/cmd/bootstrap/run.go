@@ -10,12 +10,12 @@ import (
 	"os"
 
 	bootstrap2 "github.com/ActiveMemory/ctx/internal/config/bootstrap"
+	ctxerr "github.com/ActiveMemory/ctx/internal/err/backup"
 	"github.com/ActiveMemory/ctx/internal/write/bootstrap"
 	"github.com/spf13/cobra"
 
 	"github.com/ActiveMemory/ctx/internal/assets"
 	"github.com/ActiveMemory/ctx/internal/cli/system/core"
-	ctxerr "github.com/ActiveMemory/ctx/internal/err"
 	"github.com/ActiveMemory/ctx/internal/rc"
 )
 

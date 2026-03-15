@@ -15,6 +15,9 @@ import (
 	"github.com/ActiveMemory/ctx/internal/config/marker"
 	"github.com/ActiveMemory/ctx/internal/config/regex"
 	"github.com/ActiveMemory/ctx/internal/config/token"
+	fs2 "github.com/ActiveMemory/ctx/internal/err/fs"
+	"github.com/ActiveMemory/ctx/internal/err/prompt"
+	ctxErr "github.com/ActiveMemory/ctx/internal/err/task"
 	"github.com/spf13/cobra"
 
 	"github.com/ActiveMemory/ctx/internal/assets"
@@ -23,7 +26,6 @@ import (
 	"github.com/ActiveMemory/ctx/internal/config/fs"
 	"github.com/ActiveMemory/ctx/internal/context"
 	"github.com/ActiveMemory/ctx/internal/drift"
-	ctxErr "github.com/ActiveMemory/ctx/internal/err"
 	"github.com/ActiveMemory/ctx/internal/rc"
 	"github.com/ActiveMemory/ctx/internal/task"
 )
@@ -112,7 +114,7 @@ func FixStaleness(cmd *cobra.Command, ctx *context.Context) error {
 	tasksFile := ctx.File(ctxCfg.Task)
 
 	if tasksFile == nil {
-		return ctxErr.TaskFileNotFound()
+		return ctxErr.FileNotFound()
 	}
 
 	nl := token.NewlineLF
@@ -148,7 +150,7 @@ func FixStaleness(cmd *cobra.Command, ctx *context.Context) error {
 	}
 
 	if len(completedTasks) == 0 {
-		return ctxErr.NoCompletedTasks()
+		return ctxErr.NoneCompleted()
 	}
 
 	// Build archive content
@@ -167,7 +169,7 @@ func FixStaleness(cmd *cobra.Command, ctx *context.Context) error {
 	if writeErr := os.WriteFile(
 		tasksFile.Path, []byte(newContent), fs.PermFile,
 	); writeErr != nil {
-		return ctxErr.TaskFileWrite(writeErr)
+		return ctxErr.FileWrite(writeErr)
 	}
 
 	cmd.Println(fmt.Sprintf("  Archived %d completed tasks to %s",
@@ -186,20 +188,20 @@ func FixStaleness(cmd *cobra.Command, ctx *context.Context) error {
 func FixMissingFile(filename string) error {
 	content, err := assets.Template(filename)
 	if err != nil {
-		return ctxErr.NoTemplate(filename, err)
+		return prompt.NoTemplate(filename, err)
 	}
 
 	targetPath := filepath.Join(rc.ContextDir(), filename)
 
 	// Ensure .context/ directory exists
 	if mkErr := os.MkdirAll(rc.ContextDir(), fs.PermExec); mkErr != nil {
-		return ctxErr.Mkdir(rc.ContextDir(), mkErr)
+		return fs2.Mkdir(rc.ContextDir(), mkErr)
 	}
 
 	if writeErr := os.WriteFile(
 		targetPath, content, fs.PermFile,
 	); writeErr != nil {
-		return ctxErr.FileWrite(targetPath, writeErr)
+		return fs2.FileWrite(targetPath, writeErr)
 	}
 
 	return nil

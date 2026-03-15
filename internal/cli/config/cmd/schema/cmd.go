@@ -7,10 +7,10 @@
 package schema
 
 import (
+	ctxerr "github.com/ActiveMemory/ctx/internal/err/config"
 	"github.com/spf13/cobra"
 
 	"github.com/ActiveMemory/ctx/internal/assets"
-	ctxerr "github.com/ActiveMemory/ctx/internal/err"
 )
 
 // Cmd returns the "ctx config schema" subcommand.

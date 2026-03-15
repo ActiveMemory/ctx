@@ -16,7 +16,7 @@ import (
 	"strings"
 	"time"
 
-	ctxerr "github.com/ActiveMemory/ctx/internal/err"
+	ctxerr "github.com/ActiveMemory/ctx/internal/err/http"
 )
 
 // SafeReadFile resolves filename within baseDir, verifies the result

@@ -18,10 +18,13 @@ import (
 	"github.com/ActiveMemory/ctx/internal/config/loop"
 	"github.com/ActiveMemory/ctx/internal/config/marker"
 	"github.com/ActiveMemory/ctx/internal/config/token"
+	"github.com/ActiveMemory/ctx/internal/err/backup"
+	fs2 "github.com/ActiveMemory/ctx/internal/err/fs"
+	"github.com/ActiveMemory/ctx/internal/err/initialize"
+	ctxerr "github.com/ActiveMemory/ctx/internal/err/prompt"
 	"github.com/spf13/cobra"
 
 	"github.com/ActiveMemory/ctx/internal/assets"
-	ctxerr "github.com/ActiveMemory/ctx/internal/err"
 	"github.com/ActiveMemory/ctx/internal/write"
 )
 
@@ -41,19 +44,19 @@ func HandlePromptMd(cmd *cobra.Command, force, autoMerge, ralph bool) error {
 	if ralph {
 		templateContent, err = assets.RalphTemplate(loop.PromptMd)
 		if err != nil {
-			return ctxerr.ReadInitTemplate("ralph PROMPT.md", err)
+			return initialize.ReadTemplate("ralph PROMPT.md", err)
 		}
 	} else {
 		templateContent, err = assets.Template(loop.PromptMd)
 		if err != nil {
-			return ctxerr.ReadInitTemplate("PROMPT.md", err)
+			return initialize.ReadTemplate("PROMPT.md", err)
 		}
 	}
 	existingContent, err := os.ReadFile(loop.PromptMd)
 	fileExists := err == nil
 	if !fileExists {
 		if err := os.WriteFile(loop.PromptMd, templateContent, fs.PermFile); err != nil {
-			return ctxerr.FileWrite(loop.PromptMd, err)
+			return fs2.FileWrite(loop.PromptMd, err)
 		}
 		mode := ""
 		if ralph {
@@ -78,7 +81,7 @@ func HandlePromptMd(cmd *cobra.Command, force, autoMerge, ralph bool) error {
 		reader := bufio.NewReader(os.Stdin)
 		response, err := reader.ReadString('\n')
 		if err != nil {
-			return ctxerr.ReadInput(err)
+			return fs2.ReadInput(err)
 		}
 		response = strings.TrimSpace(strings.ToLower(response))
 		if response != cli.ConfirmShort && response != cli.ConfirmLong {
@@ -89,7 +92,7 @@ func HandlePromptMd(cmd *cobra.Command, force, autoMerge, ralph bool) error {
 	timestamp := time.Now().Unix()
 	backupName := fmt.Sprintf("%s.%d.bak", loop.PromptMd, timestamp)
 	if err := os.WriteFile(backupName, existingContent, fs.PermFile); err != nil {
-		return ctxerr.CreateBackup(backupName, err)
+		return backup.Create(backupName, err)
 	}
 	write.InitBackup(cmd, backupName)
 	insertPos := FindInsertionPoint(existingStr)
@@ -100,7 +103,7 @@ func HandlePromptMd(cmd *cobra.Command, force, autoMerge, ralph bool) error {
 		mergedContent = existingStr[:insertPos] + token.NewlineLF + string(templateContent) + token.NewlineLF + existingStr[insertPos:]
 	}
 	if err := os.WriteFile(loop.PromptMd, []byte(mergedContent), fs.PermFile); err != nil {
-		return ctxerr.WriteMerged(loop.PromptMd, err)
+		return fs2.WriteMerged(loop.PromptMd, err)
 	}
 	write.InitMerged(cmd, loop.PromptMd)
 	return nil
@@ -138,11 +141,11 @@ func UpdatePromptSection(cmd *cobra.Command, existing string, newTemplate []byte
 	timestamp := time.Now().Unix()
 	backupName := fmt.Sprintf("%s.%d.bak", loop.PromptMd, timestamp)
 	if err := os.WriteFile(backupName, []byte(existing), fs.PermFile); err != nil {
-		return ctxerr.CreateBackupGeneric(err)
+		return backup.CreateGeneric(err)
 	}
 	write.InitBackup(cmd, backupName)
 	if err := os.WriteFile(loop.PromptMd, []byte(newContent), fs.PermFile); err != nil {
-		return ctxerr.FileUpdate(loop.PromptMd, err)
+		return fs2.FileUpdate(loop.PromptMd, err)
 	}
 	write.InitUpdatedPromptSection(cmd, loop.PromptMd)
 	return nil

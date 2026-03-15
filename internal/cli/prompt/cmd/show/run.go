@@ -10,11 +10,12 @@ import (
 	"os"
 
 	"github.com/ActiveMemory/ctx/internal/config/file"
+	"github.com/ActiveMemory/ctx/internal/err/fs"
+	ctxerr "github.com/ActiveMemory/ctx/internal/err/prompt"
 	"github.com/ActiveMemory/ctx/internal/io"
 	"github.com/spf13/cobra"
 
 	"github.com/ActiveMemory/ctx/internal/cli/prompt/core"
-	ctxerr "github.com/ActiveMemory/ctx/internal/err"
 )
 
 // Run reads and prints a prompt template by name.
@@ -31,9 +32,9 @@ func Run(cmd *cobra.Command, name string) error {
 	)
 	if readErr != nil {
 		if os.IsNotExist(readErr) {
-			return ctxerr.PromptNotFound(name)
+			return ctxerr.NotFound(name)
 		}
-		return ctxerr.ReadFile(readErr)
+		return fs.ReadFile(readErr)
 	}
 
 	cmd.Print(string(content))
