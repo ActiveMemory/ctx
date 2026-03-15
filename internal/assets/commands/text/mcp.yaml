@@ -314,6 +314,26 @@ mcp.tool-session-desc:
 mcp.tool-watch-update-desc:
   short: Apply a structured context-update to .context/ files (learning, decision,
     task, convention, complete). Human confirmation required before calling.
+mcp.recall-item-format:
+  short: '%d. %s'
+mcp.recall-project-format:
+  short: ' [%s]'
+mcp.recall-duration-format:
+  short: ' (%s, %d turns)'
+mcp.recall-first-msg-format:
+  short: '   %s'
+mcp.compact-moved-format:
+  short: 'Moved: %s'
+mcp.compact-archive-warning:
+  short: 'Archive warning: %v'
+mcp.compact-removed-sections-format:
+  short: 'Removed %d empty sections from %s'
+mcp.pending-item-format:
+  short: '  %d. [%s] %s'
+mcp.reminder-item-format:
+  short: '  [%d] %s%s'
+mcp.reminder-not-due-format:
+  short: ' (after %s, not yet due)'
 mcp.unknown-event-type:
   short: 'unknown event type: %s (use start|end)'
 mcp.unknown-prompt:
