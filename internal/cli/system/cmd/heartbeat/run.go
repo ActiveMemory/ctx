@@ -20,7 +20,7 @@ import (
 
 	"github.com/ActiveMemory/ctx/internal/assets"
 	"github.com/ActiveMemory/ctx/internal/cli/system/core"
-	"github.com/ActiveMemory/ctx/internal/eventlog"
+	"github.com/ActiveMemory/ctx/internal/log"
 	"github.com/ActiveMemory/ctx/internal/notify"
 	"github.com/ActiveMemory/ctx/internal/rc"
 )
@@ -92,7 +92,7 @@ func Run(_ *cobra.Command, stdin *os.File) error {
 			count, contextModified)
 	}
 	_ = notify.Send(hook.NotifyChannelHeartbeat, msg, sessionID, ref)
-	eventlog.Append(hook.NotifyChannelHeartbeat, msg, sessionID, ref)
+	log.AppendEvent(hook.NotifyChannelHeartbeat, msg, sessionID, ref)
 
 	var logLine string
 	if tokens > 0 {

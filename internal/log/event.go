@@ -4,32 +4,25 @@
 //   \    Copyright 2026-present Context contributors.
 //                 SPDX-License-Identifier: Apache-2.0
 
-// Package eventlog provides append-only JSONL event logging for hook
-// diagnostics. Events are written to .context/state/events.jsonl when
-// enabled via event_log: true in .ctxrc. The log format is identical
-// to webhook payloads (notify.Payload) — one struct, two sinks.
-package eventlog
+package log
 
 import (
-	"bufio"
 	"encoding/json"
 	"os"
 	"path/filepath"
 	"time"
 
-	"github.com/ActiveMemory/ctx/internal/config/dir"
-	"github.com/ActiveMemory/ctx/internal/config/event"
 	"github.com/ActiveMemory/ctx/internal/config/fs"
 	"github.com/ActiveMemory/ctx/internal/io"
 	"github.com/ActiveMemory/ctx/internal/notify"
 	"github.com/ActiveMemory/ctx/internal/rc"
 )
 
-// Append writes a single event to the log file.
+// AppendEvent writes a single event to the log file.
 //
 // Noop when event logging is disabled in .ctxrc. Creates the state
 // directory if it does not exist. Rotates the log when it exceeds
-// EventLogMaxBytes. All errors are silently ignored — event logging
+// EventLogMaxBytes. All errors are silently ignored: event logging
 // must never break hook execution.
 //
 // Parameters:
@@ -37,7 +30,7 @@ import (
 //   - message: Human-readable description
 //   - sessionID: Claude session ID (may be empty)
 //   - detail: Optional template reference (may be nil)
-func Append(event, message, sessionID string, detail *notify.TemplateRef) {
+func AppendEvent(event, message, sessionID string, detail *notify.TemplateRef) {
 	if !rc.EventLog() {
 		return
 	}
@@ -73,23 +66,13 @@ func Append(event, message, sessionID string, detail *notify.TemplateRef) {
 	}
 	line = append(line, '\n')
 
-	//nolint:gosec // project-local state path
-	f, openErr := os.OpenFile(logPath, os.O_APPEND|os.O_CREATE|os.O_WRONLY, fs.PermFile)
+	f, openErr := io.SafeAppendFile(logPath, fs.PermFile)
 	if openErr != nil {
 		return
 	}
 	defer func() { _ = f.Close() }()
 
 	_, _ = f.Write(line)
-}
-
-// QueryOpts controls event filtering and pagination.
-type QueryOpts struct {
-	Hook           string // filter by hook name (from detail)
-	Session        string // filter by session ID
-	Event          string // filter by event type
-	Last           int    // return last N events (0 = all)
-	IncludeRotated bool   // also read events.1.jsonl
 }
 
 // Query reads events from the log, applying filters.
@@ -143,71 +126,4 @@ func Query(opts QueryOpts) ([]notify.Payload, error) {
 	}
 
 	return filtered, nil
-}
-
-// readLogFile reads and parses all events from a JSONL file.
-// Returns empty slice if the file does not exist.
-func readLogFile(path string) ([]notify.Payload, error) {
-	f, openErr := io.SafeOpenUserFile(path)
-	if openErr != nil {
-		if os.IsNotExist(openErr) {
-			return nil, nil
-		}
-		return nil, openErr
-	}
-	defer func() { _ = f.Close() }()
-
-	var events []notify.Payload
-	scanner := bufio.NewScanner(f)
-	for scanner.Scan() {
-		var p notify.Payload
-		if unmarshalErr := json.Unmarshal(scanner.Bytes(), &p); unmarshalErr != nil {
-			continue // skip malformed lines
-		}
-		events = append(events, p)
-	}
-
-	return events, nil
-}
-
-// matchesFilter reports whether an event matches the query filters.
-func matchesFilter(e notify.Payload, opts QueryOpts) bool {
-	if opts.Event != "" && e.Event != opts.Event {
-		return false
-	}
-	if opts.Session != "" && e.SessionID != opts.Session {
-		return false
-	}
-	if opts.Hook != "" {
-		if e.Detail == nil || e.Detail.Hook != opts.Hook {
-			return false
-		}
-	}
-	return true
-}
-
-// rotate checks the current log file size and rotates if needed.
-// Best-effort: errors are silently ignored.
-func rotate(logPath string) {
-	info, statErr := os.Stat(logPath)
-	if statErr != nil {
-		return // file doesn't exist yet, nothing to rotate
-	}
-	if info.Size() < int64(event.EventLogMaxBytes) {
-		return
-	}
-
-	prevPath := prevLogFilePath()
-	_ = os.Remove(prevPath)
-	_ = os.Rename(logPath, prevPath)
-}
-
-// logFilePath returns the path to the current event log.
-func logFilePath() string {
-	return filepath.Join(rc.ContextDir(), dir.State, event.FileEventLog)
-}
-
-// prevLogFilePath returns the path to the rotated event log.
-func prevLogFilePath() string {
-	return filepath.Join(rc.ContextDir(), dir.State, event.FileEventLogPrev)
 }

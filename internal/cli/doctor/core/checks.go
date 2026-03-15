@@ -25,8 +25,8 @@ import (
 	"github.com/ActiveMemory/ctx/internal/config/reminder"
 	"github.com/ActiveMemory/ctx/internal/context"
 	"github.com/ActiveMemory/ctx/internal/drift"
-	"github.com/ActiveMemory/ctx/internal/eventlog"
 	"github.com/ActiveMemory/ctx/internal/io"
+	"github.com/ActiveMemory/ctx/internal/log"
 	"github.com/ActiveMemory/ctx/internal/rc"
 	"github.com/ActiveMemory/ctx/internal/sysinfo"
 )
@@ -456,7 +456,7 @@ func CheckRecentEventActivity(report *Report) {
 		return // skip if logging disabled
 	}
 
-	events, queryErr := eventlog.Query(eventlog.QueryOpts{Last: 1})
+	events, queryErr := log.Query(log.QueryOpts{Last: 1})
 	if queryErr != nil || len(events) == 0 {
 		report.Results = append(report.Results, Result{
 			Name:     doctor.CheckRecentEvents,

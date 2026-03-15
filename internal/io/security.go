@@ -146,7 +146,7 @@ const maxRedirects = 3
 //
 // Threats explicitly not mitigated (and why that is acceptable):
 //   - SSRF to private IPs: the URL is a static, user-configured
-//     endpoint — not attacker-controlled input. Blocking RFC 1918
+//     endpoint (not attacker-controlled input). Blocking RFC 1918
 //     ranges would break legitimate local webhook receivers.
 //   - Response body size: callers are fire-and-forget (close body
 //     immediately), so unbounded reads are not a concern.
@@ -162,7 +162,9 @@ const maxRedirects = 3
 // Returns:
 //   - *http.Response: the HTTP response (caller must close Body)
 //   - error: on scheme validation failure, redirect cap, or HTTP error
-func SafePost(rawURL, contentType string, body []byte, timeout time.Duration) (*http.Response, error) {
+func SafePost(
+	rawURL, contentType string, body []byte, timeout time.Duration,
+) (*http.Response, error) {
 	if schemeErr := validateHTTPScheme(rawURL); schemeErr != nil {
 		return nil, schemeErr
 	}
