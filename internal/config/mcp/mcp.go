@@ -85,6 +85,21 @@ const (
 	// MCPNotifyResourcesUpdated is the MCP notification for resource changes.
 	MCPNotifyResourcesUpdated = "notifications/resources/updated"
 
+	// MCP default values.
+	MCPDefaultRecallLimit = 5
+	MCPMinWordLen         = 4
+	MCPMinWordOverlap     = 2
+	MCPTruncateLen        = 50
+	MCPTruncateContentLen = 60
+
+	// MCP event type values.
+	MCPEventStart    = "start"
+	MCPEventEnd      = "end"
+	MCPEntryComplete = "complete"
+
+	// MCP PendingUpdate attribute keys.
+	MCPAttrFile = "file"
+
 	// MCP tool input field names (JSON property keys).
 	MCPFieldContent      = "content"
 	MCPFieldPriority     = "priority"
