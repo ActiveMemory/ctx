@@ -4,7 +4,7 @@
 //   \    Copyright 2026-present Context contributors.
 //                 SPDX-License-Identifier: Apache-2.0
 
-package eventlog
+package log
 
 import (
 	"encoding/json"
@@ -60,10 +60,10 @@ func TestAppend_Disabled(t *testing.T) {
 	tmpDir := setupTestDir(t, false)
 	logPath := filepath.Join(tmpDir, dir.Context, dir.State, event.FileEventLog)
 
-	Append("relay", "test message", "session-1", nil)
+	AppendEvent("relay", "test message", "session-1", nil)
 
 	if _, statErr := os.Stat(logPath); !os.IsNotExist(statErr) {
-		t.Error("Append() created log file when event_log is disabled")
+		t.Error("AppendEvent() created log file when event_log is disabled")
 	}
 }
 
@@ -72,7 +72,7 @@ func TestAppend_Basic(t *testing.T) {
 	logPath := filepath.Join(tmpDir, dir.Context, dir.State, event.FileEventLog)
 
 	detail := notify.NewTemplateRef("qa-reminder", "gate", nil)
-	Append("relay", "QA gate reminder", "session-1", detail)
+	AppendEvent("relay", "QA gate reminder", "session-1", detail)
 
 	data, readErr := os.ReadFile(logPath) //nolint:gosec // test file
 	if readErr != nil {
@@ -107,13 +107,13 @@ func TestAppend_CreatesStateDir(t *testing.T) {
 
 	// Verify state dir doesn't exist yet.
 	if _, statErr := os.Stat(stateDir); !os.IsNotExist(statErr) {
-		t.Fatal("state dir should not exist before Append")
+		t.Fatal("state dir should not exist before AppendEvent")
 	}
 
-	Append("nudge", "test", "", nil)
+	AppendEvent("nudge", "test", "", nil)
 
 	if _, statErr := os.Stat(stateDir); os.IsNotExist(statErr) {
-		t.Error("Append() did not create state directory")
+		t.Error("AppendEvent() did not create state directory")
 	}
 }
 
@@ -133,8 +133,8 @@ func TestAppend_Rotation(t *testing.T) {
 		t.Fatalf("failed to write big log: %v", writeErr)
 	}
 
-	// Append should trigger rotation.
-	Append("relay", "after rotation", "", nil)
+	// AppendEvent should trigger rotation.
+	AppendEvent("relay", "after rotation", "", nil)
 
 	// Previous file should exist with the big content.
 	if _, statErr := os.Stat(prevPath); os.IsNotExist(statErr) {
@@ -172,7 +172,7 @@ func TestAppend_RotationOverwrite(t *testing.T) {
 		t.Fatalf("failed to write big log: %v", writeErr)
 	}
 
-	Append("relay", "new event", "", nil)
+	AppendEvent("relay", "new event", "", nil)
 
 	// The .1 file should now contain the rotated content, not "old rotated content".
 	data, readErr := os.ReadFile(prevPath) //nolint:gosec // test file
@@ -199,9 +199,9 @@ func TestQuery_NoFile(t *testing.T) {
 func TestQuery_FilterHook(t *testing.T) {
 	setupTestDir(t, true)
 
-	Append("relay", "qa gate", "s1", notify.NewTemplateRef("qa-reminder", "gate", nil))
-	Append("relay", "context load", "s1", notify.NewTemplateRef("context-load-gate", "inject", nil))
-	Append("nudge", "ceremonies", "s1", notify.NewTemplateRef("check-ceremonies", "both", nil))
+	AppendEvent("relay", "qa gate", "s1", notify.NewTemplateRef("qa-reminder", "gate", nil))
+	AppendEvent("relay", "context load", "s1", notify.NewTemplateRef("context-load-gate", "inject", nil))
+	AppendEvent("nudge", "ceremonies", "s1", notify.NewTemplateRef("check-ceremonies", "both", nil))
 
 	events, queryErr := Query(QueryOpts{Hook: "qa-reminder"})
 	if queryErr != nil {
@@ -218,9 +218,9 @@ func TestQuery_FilterHook(t *testing.T) {
 func TestQuery_FilterSession(t *testing.T) {
 	setupTestDir(t, true)
 
-	Append("relay", "session one", "s1", nil)
-	Append("relay", "session two", "s2", nil)
-	Append("relay", "session one again", "s1", nil)
+	AppendEvent("relay", "session one", "s1", nil)
+	AppendEvent("relay", "session two", "s2", nil)
+	AppendEvent("relay", "session one again", "s1", nil)
 
 	events, queryErr := Query(QueryOpts{Session: "s1"})
 	if queryErr != nil {
@@ -235,7 +235,7 @@ func TestQuery_Last(t *testing.T) {
 	setupTestDir(t, true)
 
 	for i := 0; i < 20; i++ {
-		Append("relay", "event", "", nil)
+		AppendEvent("relay", "event", "", nil)
 	}
 
 	events, queryErr := Query(QueryOpts{Last: 5})
@@ -262,7 +262,7 @@ func TestQuery_IncludeRotated(t *testing.T) {
 	}
 
 	// Write event to current file.
-	Append("relay", "new event", "", nil)
+	AppendEvent("relay", "new event", "", nil)
 
 	// Without --all, only current events.
 	events, _ := Query(QueryOpts{})

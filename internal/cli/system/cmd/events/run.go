@@ -12,7 +12,7 @@ import (
 	"github.com/ActiveMemory/ctx/internal/assets"
 	"github.com/ActiveMemory/ctx/internal/cli/system/core"
 	ctxerr "github.com/ActiveMemory/ctx/internal/err"
-	"github.com/ActiveMemory/ctx/internal/eventlog"
+	"github.com/ActiveMemory/ctx/internal/log"
 )
 
 // Run executes the events subcommand, querying and displaying event log
@@ -31,7 +31,7 @@ func Run(cmd *cobra.Command) error {
 	jsonOut, _ := cmd.Flags().GetBool("json")
 	includeAll, _ := cmd.Flags().GetBool("all")
 
-	opts := eventlog.QueryOpts{
+	opts := log.QueryOpts{
 		Hook:           hook,
 		Session:        session,
 		Event:          event,
@@ -39,7 +39,7 @@ func Run(cmd *cobra.Command) error {
 		IncludeRotated: includeAll,
 	}
 
-	evts, queryErr := eventlog.Query(opts)
+	evts, queryErr := log.Query(opts)
 	if queryErr != nil {
 		return ctxerr.EventLogRead(queryErr)
 	}
