@@ -16,7 +16,7 @@ import (
 // NotInitialized returns an error indicating ctx has not been initialized.
 //
 // Returns:
-//   - error: "ctx: not initialized — run \"ctx init\" first"
+//   - error: "ctx: not initialized: run \"ctx init\" first"
 func NotInitialized() error {
 	return errors.New(assets.TextDesc(assets.TextDescKeyErrInitNotInitialized))
 }

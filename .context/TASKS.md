@@ -531,6 +531,15 @@ Many call sites use `_ =` or `_, _ =` to discard errors without
 any feedback. Some are legitimate (best-effort cleanup), most are
 lazy escapes that hide failures.
 
+- [ ] EH.0: Create central warning sink — `internal/log/warn.go` with
+      `var Sink io.Writer = os.Stderr` and `func Warn(format string, args ...any)`.
+      All stderr warnings (`fmt.Fprintf(os.Stderr, ...)`) route through this
+      function. The `fmt.Fprintf` return error is handled once, centrally.
+      The sink is swappable (tests use `io.Discard`, future: syslog, file).
+      EH.2–EH.4 should use `log.Warn()` instead of raw `fmt.Fprintf`.
+      DoD: `grep -rn 'fmt.Fprintf(os.Stderr' internal/` returns zero hits
+      #priority:high #added:2026-03-15
+
 - [ ] EH.1: Catalogue all silent error discards — recursive walk of `internal/`
       for patterns: `_ = `, `_, _ = `, `//nolint:errcheck`, bare `return` after
       error-producing calls. Group by category:

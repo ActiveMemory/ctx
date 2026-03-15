@@ -6,7 +6,7 @@
 
 package tpl
 
-// Template variable key constants — used as map keys in template.Execute
+// Template variable key constants: used as map keys in template.Execute
 // data maps to avoid magic strings in hook and display code.
 const (
 	// VarAlertMessages is the template variable for resource alert messages.

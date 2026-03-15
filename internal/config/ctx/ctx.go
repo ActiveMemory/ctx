@@ -33,26 +33,26 @@ const (
 //
 // The order follows a logical progression for AI agents:
 //
-//  1. CONSTITUTION — Inviolable rules. Must be loaded first so the agent
+//  1. CONSTITUTION: Inviolable rules. Must be loaded first so the agent
 //     knows what it cannot do before attempting anything.
 //
-//  2. TASKS — Current work items. What the agent should focus on.
+//  2. TASKS: Current work items. What the agent should focus on.
 //
-//  3. CONVENTIONS — How to write code. Patterns and standards to follow.
+//  3. CONVENTIONS: How to write code. Patterns and standards to follow.
 //
-//  4. ARCHITECTURE — System structure. Understanding of components and
+//  4. ARCHITECTURE: System structure. Understanding of components and
 //     boundaries before making changes.
 //
-//  5. DECISIONS — Historical context. Why things are the way they are,
+//  5. DECISIONS: Historical context. Why things are the way they are,
 //     to avoid re-debating settled decisions.
 //
-//  6. LEARNINGS — Gotchas and tips. Lessons from past work that inform
+//  6. LEARNINGS: Gotchas and tips. Lessons from past work that inform
 //     current implementation.
 //
-//  7. GLOSSARY — Reference material. Domain terms and abbreviations for
+//  7. GLOSSARY: Reference material. Domain terms and abbreviations for
 //     lookup as needed.
 //
-//  8. AGENT_PLAYBOOK — Meta instructions. How to use this context system.
+//  8. AGENT_PLAYBOOK: Meta instructions. How to use this context system.
 //     Loaded last because it's about the system itself, not the work.
 //     The agent should understand the content before the operating manual.
 var ReadOrder = []string{

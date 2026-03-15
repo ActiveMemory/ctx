@@ -114,7 +114,8 @@ func EmitKnowledgeWarning(cmd *cobra.Command, sessionID, fileWarnings string) {
 
 	ref := notify.NewTemplateRef(hook.CheckKnowledge, hook.VariantWarning,
 		map[string]any{tpl.VarFileWarnings: fileWarnings})
-	notifyMsg := hook.CheckKnowledge + ": " + assets.TextDesc(assets.TextDescKeyCheckKnowledgeRelayMessage)
+	notifyMsg := fmt.Sprintf(assets.TextDesc(assets.TextDescKeyRelayPrefixFormat),
+		hook.CheckKnowledge, assets.TextDesc(assets.TextDescKeyCheckKnowledgeRelayMessage))
 	NudgeAndRelay(notifyMsg, sessionID, ref)
 }
 

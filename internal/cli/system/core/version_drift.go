@@ -8,6 +8,7 @@ package core
 
 import (
 	"encoding/json"
+	"fmt"
 	"os"
 	"path/filepath"
 	"strings"
@@ -59,7 +60,8 @@ func CheckVersionDrift(cmd *cobra.Command, sessionID string) {
 	PrintHookContext(cmd, hook.EventPostToolUse, msg)
 
 	ref := notify.NewTemplateRef(hook.VersionDrift, hook.VariantNudge, vars)
-	Relay(hook.VersionDrift+": "+assets.TextDesc(assets.TextDescKeyVersionDriftRelayMessage), sessionID, ref)
+	Relay(fmt.Sprintf(assets.TextDesc(assets.TextDescKeyRelayPrefixFormat),
+		hook.VersionDrift, assets.TextDesc(assets.TextDescKeyVersionDriftRelayMessage)), sessionID, ref)
 }
 
 // ReadVersionFile reads and trims the VERSION file from the project root.

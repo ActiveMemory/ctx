@@ -20,11 +20,11 @@ import (
 // reads cleanly in the terminal.
 //
 // Handles:
-//   - YAML frontmatter (--- blocks) -- removed
-//   - Image refs (![alt](path)) -- line removed
-//   - Admonitions (!!! type "Title") -- converted to blockquote with bold title
-//   - Tab markers (=== "Name") -- converted to bold name; body dedented
-//   - Relative .md links ([text](file.md)) -- kept as text only
+//   - YAML frontmatter (--- blocks): removed
+//   - Image refs (![alt](path)): line removed
+//   - Admonitions (!!! type "Title"): converted to blockquote with bold title
+//   - Tab markers (=== "Name"): converted to bold name; body dedented
+//   - Relative .md links ([text](file.md)): kept as text only
 //
 // Parameters:
 //   - content: Raw Markdown with MkDocs syntax
@@ -36,7 +36,8 @@ func StripMkDocs(content string) string {
 	var result []string
 
 	// Strip YAML frontmatter.
-	if len(lines) > 0 && strings.TrimSpace(lines[0]) == zensical.MkDocsFrontmatterDelim {
+	if len(lines) > 0 && strings.TrimSpace(lines[0]) ==
+		zensical.MkDocsFrontmatterDelim {
 		for i := 1; i < len(lines); i++ {
 			if strings.TrimSpace(lines[i]) == zensical.MkDocsFrontmatterDelim {
 				lines = lines[i+1:]

@@ -513,7 +513,7 @@ func TestCheckMissingPackages(t *testing.T) {
 			wantPassed:   true,
 		},
 		{
-			name:         "no ARCHITECTURE.md — skip silently",
+			name:         "no ARCHITECTURE.md: skip silently",
 			archContent:  "",
 			wantWarnings: 0,
 			wantPassed:   false, // not passed because check was skipped

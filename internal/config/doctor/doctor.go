@@ -6,7 +6,7 @@
 
 package doctor
 
-// Doctor check name constants — used as Result.Name values.
+// Doctor check name constants: used as Result.Name values.
 const (
 	// CheckContextInit identifies the context initialization check.
 	CheckContextInit = "context_initialized"
@@ -48,7 +48,7 @@ const (
 	CheckResourceLoad = "resource_load"
 )
 
-// Doctor category constants — used as Result.Category values.
+// Doctor category constants: used as Result.Category values.
 const (
 	// CategoryStructure groups context directory and file checks.
 	CategoryStructure = "Structure"

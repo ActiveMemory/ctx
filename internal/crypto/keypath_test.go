@@ -95,7 +95,7 @@ func TestResolveKeyPath_FallbackToGlobal(t *testing.T) {
 	dir := t.TempDir()
 	t.Setenv("HOME", dir)
 
-	// Create global key only — no project-local.
+	// Create global key only: no project-local.
 	globalDir := filepath.Join(dir, ".ctx")
 	if err := os.MkdirAll(globalDir, fs.PermKeyDir); err != nil {
 		t.Fatal(err)
@@ -118,7 +118,7 @@ func TestResolveKeyPath_DefaultsToGlobal(t *testing.T) {
 
 	contextDir := filepath.Join(dir, "project", ".context")
 
-	// Neither key exists — should default to global path.
+	// Neither key exists: should default to global path.
 	got := ResolveKeyPath(contextDir, "")
 	want := GlobalKeyPath()
 	if got != want {

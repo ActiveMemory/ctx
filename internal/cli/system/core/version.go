@@ -18,7 +18,6 @@ import (
 	"github.com/spf13/cobra"
 
 	"github.com/ActiveMemory/ctx/internal/assets"
-	"github.com/ActiveMemory/ctx/internal/crypto"
 	"github.com/ActiveMemory/ctx/internal/notify"
 	"github.com/ActiveMemory/ctx/internal/rc"
 )
@@ -55,11 +54,10 @@ func ParseMajorMinor(ver string) (major, minor int, ok bool) {
 //   - cmd: Cobra command for output
 //   - sessionID: current session identifier
 func CheckKeyAge(cmd *cobra.Command, sessionID string) {
-	crypto.MigrateKeyFile(rc.ContextDir())
 	kp := rc.KeyPath()
 	info, statErr := os.Stat(kp)
 	if statErr != nil {
-		return // no key — nothing to check
+		return // no key: nothing to check
 	}
 
 	ageDays := int(time.Since(info.ModTime()).Hours() / 24)
@@ -85,6 +83,9 @@ func CheckKeyAge(cmd *cobra.Command, sessionID string) {
 
 	keyRef := notify.NewTemplateRef(hook.CheckVersion, hook.VariantKeyRotation,
 		map[string]any{tpl.VarKeyAgeDays: ageDays})
-	keyNotifyMsg := hook.CheckVersion + ": " + fmt.Sprintf(assets.TextDesc(assets.TextDescKeyCheckVersionKeyRelayFormat), ageDays)
+	keyNotifyMsg := fmt.Sprintf(assets.TextDesc(assets.TextDescKeyRelayPrefixFormat),
+		hook.CheckVersion,
+		fmt.Sprintf(assets.TextDesc(assets.TextDescKeyCheckVersionKeyRelayFormat), ageDays),
+	)
 	NudgeAndRelay(keyNotifyMsg, sessionID, keyRef)
 }

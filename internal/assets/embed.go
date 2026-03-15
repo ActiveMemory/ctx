@@ -596,6 +596,7 @@ const (
 	TextDescKeyCheckTaskCompletionFallback     = "check-task-completion.fallback"
 	TextDescKeyCheckTaskCompletionNudgeMessage = "check-task-completion.nudge-message"
 
+	TextDescKeyRelayPrefixFormat        = "relay.prefix-format"
 	TextDescKeyVersionDriftRelayMessage = "version-drift.relay-message"
 
 	TextDescKeyChangesFallbackLabel              = "changes.fallback-label"

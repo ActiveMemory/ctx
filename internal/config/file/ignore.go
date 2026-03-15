@@ -19,8 +19,6 @@ var Gitignore = []string{
 	path.Join(dir.Context, dir.JournalObsidian, "/"),
 	path.Join(dir.Context, dir.Logs, "/"),
 	".context/.ctx.key",
-	".context/.context.key",
-	".context/.scratchpad.key",
 	".context/state/",
 	".claude/settings.local.json",
 }

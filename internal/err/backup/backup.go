@@ -207,7 +207,7 @@ func WriteSMB(cause error) error {
 //   - dir: the missing context directory path.
 //
 // Returns:
-//   - error: "context directory not found: <dir> — run 'ctx init'"
+//   - error: "context directory not found: <dir>: run 'ctx init'"
 func ContextDirNotFound(dir string) error {
 	return fmt.Errorf(
 		assets.TextDesc(assets.TextDescKeyErrBackupContextDirNotFound), dir,

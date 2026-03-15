@@ -6,7 +6,7 @@
 
 package hook
 
-// Hook name constants — used for LoadMessage, NewTemplateRef, notify.Send,
+// Hook name constants: used for LoadMessage, NewTemplateRef, notify.Send,
 // and log.Append to avoid magic strings.
 const (
 	// BlockDangerousCommands is the hook name for blocking dangerous commands.

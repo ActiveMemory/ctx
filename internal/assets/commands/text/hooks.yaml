@@ -96,6 +96,8 @@ check-context-size.billing-fallback:
     Additional tokens may incur extra cost.
 check-context-size.billing-log-format:
   short: prompt#%d BILLING-WARNING tokens=%d threshold=%d
+relay.prefix-format:
+  short: '%s: %s'
 check-context-size.billing-relay-format:
   short: Billing threshold exceeded (%s tokens > %s)
 check-context-size.billing-relay-prefix:

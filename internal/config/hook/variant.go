@@ -6,7 +6,7 @@
 
 package hook
 
-// Hook variant constants — template selectors passed to LoadMessage and
+// Hook variant constants: template selectors passed to LoadMessage and
 // NewTemplateRef to choose the appropriate message for each trigger type.
 const (
 	// VariantMidSudo selects the mid-command sudo block message.

@@ -17,7 +17,7 @@ var SystemContextUpdate = regexp.MustCompile(`<context-update(\s+[^>]+)>([^<]+)<
 
 // SystemClaudeTag matches Claude Code internal markup tags that leak into
 // session titles via the first user message. This MUST remain an allowlist
-// of known Claude Code tags — do NOT replace with a blanket regex.
+// of known Claude Code tags: do NOT replace with a blanket regex.
 var SystemClaudeTag = regexp.MustCompile(`</?(?:command-message|command-name|local-command-caveat)>`)
 
 // SystemReminder matches <system-reminder>...</system-reminder> blocks.

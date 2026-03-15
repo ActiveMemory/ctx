@@ -123,7 +123,9 @@ func EmitCheckpoint(cmd *cobra.Command, logFile, sessionID string, count, tokens
 	cmd.Println()
 	LogMessage(logFile, sessionID, fmt.Sprintf(assets.TextDesc(assets.TextDescKeyCheckContextSizeCheckpointLogFormat), count, tokens, pct))
 	ref := notify.NewTemplateRef(hook.CheckContextSize, hook.VariantCheckpoint, nil)
-	checkpointMsg := hook.CheckContextSize + ": " + fmt.Sprintf(assets.TextDesc(assets.TextDescKeyCheckContextSizeCheckpointRelayFormat), count)
+	checkpointMsg := fmt.Sprintf(assets.TextDesc(assets.TextDescKeyRelayPrefixFormat),
+		hook.CheckContextSize,
+		fmt.Sprintf(assets.TextDesc(assets.TextDescKeyCheckContextSizeCheckpointRelayFormat), count))
 	NudgeAndRelay(checkpointMsg, sessionID, ref)
 }
 
@@ -152,7 +154,9 @@ func EmitWindowWarning(cmd *cobra.Command, logFile, sessionID string, count, tok
 	LogMessage(logFile, sessionID, fmt.Sprintf(assets.TextDesc(assets.TextDescKeyCheckContextSizeWindowLogFormat), count, tokens, pct))
 	ref := notify.NewTemplateRef(hook.CheckContextSize, hook.VariantWindow,
 		map[string]any{tpl.VarPercentage: pct, tpl.VarTokenCount: FormatTokenCount(tokens)})
-	windowMsg := hook.CheckContextSize + ": " + fmt.Sprintf(assets.TextDesc(assets.TextDescKeyCheckContextSizeWindowRelayFormat), pct)
+	windowMsg := fmt.Sprintf(assets.TextDesc(assets.TextDescKeyRelayPrefixFormat),
+		hook.CheckContextSize,
+		fmt.Sprintf(assets.TextDesc(assets.TextDescKeyCheckContextSizeWindowRelayFormat), pct))
 	NudgeAndRelay(windowMsg, sessionID, ref)
 }
 
@@ -193,7 +197,9 @@ func EmitBillingWarning(cmd *cobra.Command, logFile, sessionID string, count, to
 	LogMessage(logFile, sessionID, fmt.Sprintf(assets.TextDesc(assets.TextDescKeyCheckContextSizeBillingLogFormat), count, tokens, threshold))
 	ref := notify.NewTemplateRef(hook.CheckContextSize, hook.VariantBilling,
 		map[string]any{tpl.VarTokenCount: FormatTokenCount(tokens), tpl.VarThreshold: FormatTokenCount(threshold)})
-	billingMsg := hook.CheckContextSize + ": " + fmt.Sprintf(assets.TextDesc(assets.TextDescKeyCheckContextSizeBillingRelayFormat),
-		FormatTokenCount(tokens), FormatTokenCount(threshold))
+	billingMsg := fmt.Sprintf(assets.TextDesc(assets.TextDescKeyRelayPrefixFormat),
+		hook.CheckContextSize,
+		fmt.Sprintf(assets.TextDesc(assets.TextDescKeyCheckContextSizeBillingRelayFormat),
+			FormatTokenCount(tokens), FormatTokenCount(threshold)))
 	NudgeAndRelay(billingMsg, sessionID, ref)
 }

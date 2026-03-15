@@ -34,10 +34,8 @@ import (
 //   - string: the decrypted webhook URL, or "" if not configured
 //   - error: non-nil only if decryption fails (missing files are silent)
 func LoadWebhook() (string, error) {
-	contextDir := rc.ContextDir()
-	crypto.MigrateKeyFile(contextDir)
 	kp := rc.KeyPath()
-	encPath := filepath.Join(contextDir, cryptoCfg.NotifyEnc)
+	encPath := filepath.Join(rc.ContextDir(), cryptoCfg.NotifyEnc)
 
 	key, err := crypto.LoadKey(kp)
 	if err != nil {
@@ -73,10 +71,8 @@ func LoadWebhook() (string, error) {
 // Returns:
 //   - error: non-nil if key generation, encryption, or file write fails
 func SaveWebhook(url string) error {
-	contextDir := rc.ContextDir()
-	crypto.MigrateKeyFile(contextDir)
 	kp := rc.KeyPath()
-	encPath := filepath.Join(contextDir, cryptoCfg.NotifyEnc)
+	encPath := filepath.Join(rc.ContextDir(), cryptoCfg.NotifyEnc)
 
 	key, err := crypto.LoadKey(kp)
 	if err != nil {

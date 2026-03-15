@@ -6,6 +6,9 @@
 
 package token
 
+const emDash = "—"
+const enDash = "-"
+
 const (
 	// Colon is the colon character used as a key-value separator.
 	Colon = ":"
@@ -20,5 +23,5 @@ const (
 )
 
 // TopicSeparators are the delimiters between a date and topic in session
-// headers (e.g., "2026-01-15 — Fix API" or "2026-01-15 - Fix API").
-var TopicSeparators = []string{" — ", " - "}
+// headers (e.g., "2026-01-15 - Fix API").
+var TopicSeparators = []string{" " + emDash + " ", " " + enDash + " "}

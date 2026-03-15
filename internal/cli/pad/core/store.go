@@ -43,7 +43,6 @@ func ScratchpadPath() string {
 // Returns:
 //   - string: Resolved key file path
 func KeyPath() string {
-	crypto.MigrateKeyFile(rc.ContextDir())
 	return rc.KeyPath()
 }
 

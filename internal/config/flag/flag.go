@@ -13,19 +13,13 @@ const (
 )
 
 // CLI flag prefixes for display formatting.
-const (
-	PrefixShort = "-"
-	PrefixLong  = "--"
-)
+const PrefixLong = "--"
 
-// Add command flag names — used for both flag registration and error display.
+// Add command flag names: used for both flag registration and error display.
 const (
 	Context      = "context"
 	Rationale    = "rationale"
 	Consequences = "consequences"
 	Lesson       = "lesson"
 	Application  = "application"
-	Priority     = "priority"
-	Section      = "section"
-	File         = "file"
 )

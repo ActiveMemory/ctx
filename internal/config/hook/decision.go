@@ -6,7 +6,7 @@
 
 package hook
 
-// Hook decision constants — JSON values returned by PreToolUse hooks.
+// Hook decision constants: JSON values returned by PreToolUse hooks.
 const (
 	// HookDecisionBlock is the decision value that prevents tool execution.
 	HookDecisionBlock = "block"

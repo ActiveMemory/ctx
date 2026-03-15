@@ -129,9 +129,6 @@ func Run(cmd *cobra.Command, force, minimal, merge, ralph, noPluginEnable bool) 
 		write.InfoInitWarnNonFatal(cmd, "Prompt templates", err)
 	}
 
-	// Migrate legacy key files and promote to global path.
-	crypto.MigrateKeyFile(contextDir)
-
 	// Set up scratchpad
 	if err := initScratchpad(cmd, contextDir); err != nil {
 		// Non-fatal: warn but continue

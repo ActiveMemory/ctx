@@ -91,6 +91,7 @@ func EmitMapStalenessWarning(cmd *cobra.Command, sessionID, dateStr string, modu
 
 	ref := notify.NewTemplateRef(hook.CheckMapStaleness, hook.VariantStale,
 		map[string]any{tpl.VarLastRefreshDate: dateStr, tpl.VarModuleCount: moduleCommits})
-	notifyMsg := hook.CheckMapStaleness + ": " + assets.TextDesc(assets.TextDescKeyCheckMapStalenessRelayMessage)
+	notifyMsg := fmt.Sprintf(assets.TextDesc(assets.TextDescKeyRelayPrefixFormat),
+		hook.CheckMapStaleness, assets.TextDesc(assets.TextDescKeyCheckMapStalenessRelayMessage))
 	NudgeAndRelay(notifyMsg, sessionID, ref)
 }

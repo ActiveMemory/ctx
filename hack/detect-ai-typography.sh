@@ -97,10 +97,11 @@ while IFS= read -r -d '' file; do
   done
   if [[ "$skip" == true ]]; then continue; fi
 
-  # Skip files inside code fences — match only outside fences.
-  # Simple approach: grep the whole file; code-fence false positives
-  # are acceptable for a heuristic tool.
-  matches=$(grep -cP "$PATTERN" "$file" 2>/dev/null || true)
+  # Skip lines that define typographic constants (e.g., const emDash = "—").
+  # These are legitimate uses, not AI-generated prose.
+  CONST_FILTER='^\s*const\s+\w+\s*=\s*"[^"]*"$'
+
+  matches=$(grep -P "$PATTERN" "$file" 2>/dev/null | grep -cvP "$CONST_FILTER" 2>/dev/null || true)
   if [[ "$matches" -gt 0 ]]; then
     file_count=$((file_count + 1))
     hit_count=$((hit_count + matches))
@@ -111,7 +112,7 @@ while IFS= read -r -d '' file; do
     else
       echo ""
       echo "--- $rel ($matches matches) ---"
-      grep -nP "$PATTERN" "$file" 2>/dev/null | while IFS= read -r line; do
+      grep -nP "$PATTERN" "$file" 2>/dev/null | grep -vP "$CONST_FILTER" | while IFS= read -r line; do
         echo "  $line"
       done
     fi
