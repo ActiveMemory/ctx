@@ -266,3 +266,65 @@ func NoInput() error {
 		assets.TextDesc(assets.TextDescKeyErrFsNoInput),
 	)
 }
+
+// ResolveBase wraps a failure to resolve a base directory path.
+//
+// Parameters:
+//   - cause: the underlying resolution error
+//
+// Returns:
+//   - error: "resolve base: <cause>"
+func ResolveBase(cause error) error {
+	return fmt.Errorf(
+		assets.TextDesc(assets.TextDescKeyErrFsResolveBase), cause,
+	)
+}
+
+// PathEscapesBase returns an error when a path escapes its base directory.
+//
+// Parameters:
+//   - filename: the offending filename
+//
+// Returns:
+//   - error: "path escapes base directory: <filename>"
+func PathEscapesBase(filename string) error {
+	return fmt.Errorf(
+		assets.TextDesc(assets.TextDescKeyErrFsPathEscapesBase), filename,
+	)
+}
+
+// ResolvePath wraps a failure to resolve a file path.
+//
+// Parameters:
+//   - cause: the underlying resolution error
+//
+// Returns:
+//   - error: "resolve path: <cause>"
+func ResolvePath(cause error) error {
+	return fmt.Errorf(
+		assets.TextDesc(assets.TextDescKeyErrFsResolvePath), cause,
+	)
+}
+
+// RefuseSystemPathRoot returns an error when access to "/" is refused.
+//
+// Returns:
+//   - error: "refusing to access system path: /"
+func RefuseSystemPathRoot() error {
+	return errors.New(
+		assets.TextDesc(assets.TextDescKeyErrFsRefuseSystemPathRoot),
+	)
+}
+
+// RefuseSystemPath returns an error when access to a system path is refused.
+//
+// Parameters:
+//   - path: the system path being refused
+//
+// Returns:
+//   - error: "refusing to access system path: <path>"
+func RefuseSystemPath(path string) error {
+	return fmt.Errorf(
+		assets.TextDesc(assets.TextDescKeyErrFsRefuseSystemPath), path,
+	)
+}

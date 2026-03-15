@@ -72,6 +72,73 @@ func ArgRequired(name string) error {
 	)
 }
 
+// ContextOutsideRoot returns an error when .context/ resolves outside the project root.
+//
+// Parameters:
+//   - dir: the context directory path
+//   - root: the project root path
+//
+// Returns:
+//   - error: "context directory <dir> resolves outside project root <root>"
+func ContextOutsideRoot(dir, root string) error {
+	return fmt.Errorf(
+		assets.TextDesc(assets.TextDescKeyErrValidateContextOutsideRoot), dir, root,
+	)
+}
+
+// ContextDirSymlink returns an error when .context/ is a symlink.
+//
+// Parameters:
+//   - dir: the context directory path
+//
+// Returns:
+//   - error: "context directory <dir> is a symlink"
+func ContextDirSymlink(dir string) error {
+	return fmt.Errorf(
+		assets.TextDesc(assets.TextDescKeyErrValidateContextDirSymlink), dir,
+	)
+}
+
+// ContextFileSymlink returns an error when a file inside .context/ is a symlink.
+//
+// Parameters:
+//   - file: the symlinked file path
+//
+// Returns:
+//   - error: "context file <file> is a symlink"
+func ContextFileSymlink(file string) error {
+	return fmt.Errorf(
+		assets.TextDesc(assets.TextDescKeyErrValidateContextFileSymlink), file,
+	)
+}
+
+// InvalidSelection returns an error for an invalid interactive selection.
+//
+// Parameters:
+//   - input: the user's input
+//   - max: the maximum valid selection number
+//
+// Returns:
+//   - error: "invalid selection: <input> (expected 1-<max>)"
+func InvalidSelection(input string, max int) error {
+	return fmt.Errorf(
+		assets.TextDesc(assets.TextDescKeyErrValidateInvalidSelection), input, max,
+	)
+}
+
+// UnknownDocument returns an error for an unrecognized document alias.
+//
+// Parameters:
+//   - alias: the unrecognized alias
+//
+// Returns:
+//   - error: "unknown document <alias> (available: manifesto, about, invariants)"
+func UnknownDocument(alias string) error {
+	return fmt.Errorf(
+		assets.TextDesc(assets.TextDescKeyErrValidateUnknownDocument), alias,
+	)
+}
+
 // ParseFile wraps a failure to parse a file.
 //
 // Parameters:

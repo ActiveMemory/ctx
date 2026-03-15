@@ -13,6 +13,7 @@ import (
 	"time"
 
 	"github.com/ActiveMemory/ctx/internal/config/fs"
+	"github.com/ActiveMemory/ctx/internal/config/token"
 	"github.com/ActiveMemory/ctx/internal/io"
 	"github.com/ActiveMemory/ctx/internal/notify"
 	"github.com/ActiveMemory/ctx/internal/rc"
@@ -64,7 +65,8 @@ func AppendEvent(event, message, sessionID string, detail *notify.TemplateRef) {
 	if marshalErr != nil {
 		return
 	}
-	line = append(line, '\n')
+	newline := token.NewlineLF[0]
+	line = append(line, newline)
 
 	f, openErr := io.SafeAppendFile(logPath, fs.PermFile)
 	if openErr != nil {
@@ -89,7 +91,7 @@ func AppendEvent(event, message, sessionID string, detail *notify.TemplateRef) {
 func Query(opts QueryOpts) ([]notify.Payload, error) {
 	var allEvents []notify.Payload
 
-	// Read rotated file first (older events) if requested.
+	// Read the rotated file first (older events) if requested.
 	if opts.IncludeRotated {
 		prev := prevLogFilePath()
 		events, readErr := readLogFile(prev)

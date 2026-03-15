@@ -46,7 +46,7 @@ func NotFound(query string) error {
 //     Empty string omits the hint.
 //
 // Returns:
-//   - error: "no sessions found" with optional hint
+//   - error: "no sessions found" with an optional hint
 func NoneFound(hint string) error {
 	if hint != "" {
 		return fmt.Errorf(

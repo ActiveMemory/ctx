@@ -7,6 +7,7 @@
 package git
 
 import (
+	"errors"
 	"fmt"
 
 	"github.com/ActiveMemory/ctx/internal/assets"
@@ -16,9 +17,9 @@ import (
 // The message is loaded from assets and includes guidance for the user.
 //
 // Returns:
-//   - error: message from assets key parser.git-not-found
+//   - error: message from the assets key parser.git-not-found
 func NotFound() error {
-	return fmt.Errorf("%s", assets.TextDesc(assets.TextDescKeyParserGitNotFound))
+	return errors.New(assets.TextDesc(assets.TextDescKeyParserGitNotFound))
 }
 
 // NotInRepo wraps a failure from git rev-parse.
@@ -29,5 +30,7 @@ func NotFound() error {
 // Returns:
 //   - error: "not in a git repository: <cause>"
 func NotInRepo(cause error) error {
-	return fmt.Errorf(assets.TextDesc(assets.TextDescKeyErrGitNotInGitRepo), cause)
+	return fmt.Errorf(
+		assets.TextDesc(assets.TextDescKeyErrGitNotInGitRepo), cause,
+	)
 }

@@ -18,6 +18,8 @@ import (
 	"github.com/ActiveMemory/ctx/internal/config/file"
 	"github.com/ActiveMemory/ctx/internal/config/rss"
 	"github.com/ActiveMemory/ctx/internal/config/token"
+	ctxerr "github.com/ActiveMemory/ctx/internal/err/fs"
+	siteerr "github.com/ActiveMemory/ctx/internal/err/site"
 	"github.com/spf13/cobra"
 	"gopkg.in/yaml.v3"
 
@@ -101,16 +103,12 @@ func scanBlogPosts(
 
 	info, statErr := os.Stat(blogDir)
 	if statErr != nil || !info.IsDir() {
-		return nil, report, fmt.Errorf(
-			"no blog directory found at %s", blogDir,
-		)
+		return nil, report, ctxerr.DirNotFound(blogDir)
 	}
 
 	entries, readErr := os.ReadDir(blogDir)
 	if readErr != nil {
-		return nil, report, fmt.Errorf(
-			"cannot read blog directory: %w", readErr,
-		)
+		return nil, report, ctxerr.ReadDir("blog directory", readErr)
 	}
 
 	var posts []blogPost
@@ -380,12 +378,12 @@ func generateAtom(
 
 	outDir := filepath.Dir(outPath)
 	if mkErr := os.MkdirAll(outDir, 0o755); mkErr != nil {
-		return fmt.Errorf("cannot create output directory: %w", mkErr)
+		return ctxerr.Mkdir("output directory", mkErr)
 	}
 
 	xmlData, marshalErr := xml.MarshalIndent(feed, "", "  ")
 	if marshalErr != nil {
-		return fmt.Errorf("cannot marshal feed: %w", marshalErr)
+		return siteerr.MarshalFeed(marshalErr)
 	}
 
 	output := []byte(rss.FeedXMLHeader)
@@ -395,7 +393,7 @@ func generateAtom(
 	if writeErr := os.WriteFile(
 		outPath, output, 0o644,
 	); writeErr != nil {
-		return fmt.Errorf("cannot write feed: %w", writeErr)
+		return ctxerr.FileWrite(outPath, writeErr)
 	}
 
 	return nil

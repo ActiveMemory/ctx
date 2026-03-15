@@ -12,10 +12,11 @@
 package messages
 
 import (
-	"fmt"
 	"sync"
 
 	"github.com/ActiveMemory/ctx/internal/assets"
+	fserr "github.com/ActiveMemory/ctx/internal/err/fs"
+	ctxerr "github.com/ActiveMemory/ctx/internal/err/validate"
 	"gopkg.in/yaml.v3"
 )
 
@@ -58,12 +59,12 @@ func Registry() []HookMessageInfo {
 	registryOnce.Do(func() {
 		raw, readErr := assets.HookMessageRegistry()
 		if readErr != nil {
-			registryErr = fmt.Errorf("read registry.yaml: %w", readErr)
+			registryErr = fserr.FileRead("registry.yaml", readErr)
 			return
 		}
 		var entries []HookMessageInfo
 		if unmarshalErr := yaml.Unmarshal(raw, &entries); unmarshalErr != nil {
-			registryErr = fmt.Errorf("parse registry.yaml: %w", unmarshalErr)
+			registryErr = ctxerr.ParseFile("registry.yaml", unmarshalErr)
 			return
 		}
 		registryData = entries

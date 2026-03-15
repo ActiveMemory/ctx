@@ -8,10 +8,11 @@ package core
 
 import (
 	"encoding/json"
-	"fmt"
 	"os"
 	"os/exec"
 	"sort"
+
+	ctxerr "github.com/ActiveMemory/ctx/internal/err/deps"
 )
 
 // RustEcosystem is the ecosystem label for Rust projects.
@@ -91,17 +92,17 @@ type CargoNode struct {
 func RunCargoMetadata() (*CargoMetadata, error) {
 	_, lookErr := exec.LookPath("cargo")
 	if lookErr != nil {
-		return nil, fmt.Errorf("cargo not found in PATH: install Rust toolchain to analyze Cargo projects")
+		return nil, ctxerr.CargoNotFound()
 	}
 
 	out, cmdErr := exec.Command("cargo", "metadata", "--format-version", "1", "--no-deps").Output() //nolint:gosec // fixed args
 	if cmdErr != nil {
-		return nil, fmt.Errorf("cargo metadata failed: %w", cmdErr)
+		return nil, ctxerr.CargoMetadataFailed(cmdErr)
 	}
 
 	var meta CargoMetadata
 	if unmarshalErr := json.Unmarshal(out, &meta); unmarshalErr != nil {
-		return nil, fmt.Errorf("parsing cargo metadata: %w", unmarshalErr)
+		return nil, ctxerr.ParseCargoMetadata(unmarshalErr)
 	}
 	return &meta, nil
 }
@@ -114,17 +115,17 @@ func RunCargoMetadata() (*CargoMetadata, error) {
 func RunCargoMetadataFull() (*CargoMetadata, error) {
 	_, lookErr := exec.LookPath("cargo")
 	if lookErr != nil {
-		return nil, fmt.Errorf("cargo not found in PATH: install Rust toolchain to analyze Cargo projects")
+		return nil, ctxerr.CargoNotFound()
 	}
 
 	out, cmdErr := exec.Command("cargo", "metadata", "--format-version", "1").Output() //nolint:gosec // fixed args
 	if cmdErr != nil {
-		return nil, fmt.Errorf("cargo metadata failed: %w", cmdErr)
+		return nil, ctxerr.CargoMetadataFailed(cmdErr)
 	}
 
 	var meta CargoMetadata
 	if unmarshalErr := json.Unmarshal(out, &meta); unmarshalErr != nil {
-		return nil, fmt.Errorf("parsing cargo metadata: %w", unmarshalErr)
+		return nil, ctxerr.ParseCargoMetadata(unmarshalErr)
 	}
 	return &meta, nil
 }

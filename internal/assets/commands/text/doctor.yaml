@@ -1,0 +1,81 @@
+# Doctor diagnostic text strings for ctx CLI.
+# Used by assets.TextDesc() for health check output.
+
+doctor.context-file.format:
+  short: '%-22s ~%d tokens'
+doctor.context-initialized.error:
+  short: Context not initialized — run ctx init
+doctor.context-initialized.ok:
+  short: Context initialized (.context/)
+doctor.context-size.format:
+  short: 'Context size: ~%d tokens (window: %d)'
+doctor.context-size.warning-suffix:
+  short: ' — consider ctx compact'
+doctor.ctxrc-validation.error:
+  short: '.ctxrc parse error: %v'
+doctor.ctxrc-validation.ok:
+  short: .ctxrc valid
+doctor.ctxrc-validation.ok-no-file:
+  short: No .ctxrc file (using defaults)
+doctor.ctxrc-validation.warning:
+  short: '.ctxrc has unknown fields: %s'
+doctor.drift.detected:
+  short: 'Drift: %s — run ctx drift for details'
+doctor.drift.ok:
+  short: No drift detected
+doctor.drift.violations:
+  short: '%d violations'
+doctor.drift.warning-load:
+  short: 'Could not load context for drift check: %v'
+doctor.drift.warnings:
+  short: '%d warnings'
+doctor.event-logging.info:
+  short: 'Event logging disabled (enable with event_log: true in .ctxrc)'
+doctor.event-logging.ok:
+  short: Event logging enabled
+doctor.output.header:
+  short: ctx doctor
+doctor.output.result-line:
+  short: '  %s %s'
+doctor.output.separator:
+  short: ==========
+doctor.output.summary:
+  short: 'Summary: %d warnings, %d errors'
+doctor.plugin-enabled-global.ok:
+  short: Plugin enabled globally (~/.claude/settings.json)
+doctor.plugin-enabled-local.ok:
+  short: Plugin enabled locally (.claude/settings.local.json)
+doctor.plugin-enabled.warning:
+  short: 'Plugin installed but not enabled — run ''ctx init'' to auto-enable, or add {"enabledPlugins": {"%s": true}} to ~/.claude/settings.json'
+doctor.plugin-installed.info:
+  short: ctx plugin not installed
+doctor.plugin-installed.ok:
+  short: ctx plugin installed
+doctor.recent-events.info:
+  short: No events in log
+doctor.recent-events.ok:
+  short: 'Last event: %s'
+doctor.reminders.info:
+  short: '%d pending reminders'
+doctor.reminders.ok:
+  short: No pending reminders
+doctor.required-files.error:
+  short: 'Missing required files (%d/%d): %s'
+doctor.required-files.ok:
+  short: Required files present (%d/%d)
+doctor.resource-disk.format:
+  short: Disk %d%% (%s / %s GB)
+doctor.resource-load.format:
+  short: Load %.2fx (%.1f / %d CPUs)
+doctor.resource-memory.format:
+  short: Memory %d%% (%s / %s GB)
+doctor.resource-swap.format:
+  short: Swap %d%% (%s / %s GB)
+doctor.task-completion.format:
+  short: 'Tasks: %d/%d completed (%d%%)'
+doctor.task-completion.warning-suffix:
+  short: ' — consider archiving with ctx tasks archive'
+doctor.webhook.info:
+  short: No webhook configured (optional — use ctx notify setup)
+doctor.webhook.ok:
+  short: Webhook configured

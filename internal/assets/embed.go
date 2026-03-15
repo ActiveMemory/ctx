@@ -12,6 +12,7 @@ package assets
 import (
 	"embed"
 	"encoding/json"
+	"io/fs"
 	"strings"
 	"sync"
 
@@ -20,7 +21,7 @@ import (
 	"gopkg.in/yaml.v3"
 )
 
-//go:embed claude/.claude-plugin/plugin.json claude/CLAUDE.md claude/skills/*/references/*.md claude/skills/*/SKILL.md context/*.md project/* entry-templates/*.md hooks/*.md hooks/messages/*/*.txt hooks/messages/registry.yaml prompt-templates/*.md ralph/*.md schema/*.json why/*.md permissions/*.txt commands/*.yaml journal/*.css
+//go:embed claude/.claude-plugin/plugin.json claude/CLAUDE.md claude/skills/*/references/*.md claude/skills/*/SKILL.md context/*.md project/* entry-templates/*.md hooks/*.md hooks/messages/*/*.txt hooks/messages/registry.yaml prompt-templates/*.md ralph/*.md schema/*.json why/*.md permissions/*.txt commands/*.yaml commands/text/*.yaml journal/*.css
 var FS embed.FS
 
 const (
@@ -302,8 +303,12 @@ const (
 	TextDescKeyErrBackupCreateBackup           = "err.backup.create-backup"
 	TextDescKeyErrBackupCreateBackupGeneric    = "err.backup.create-backup-generic"
 	TextDescKeyErrBackupInvalidBackupScope     = "err.backup.invalid-backup-scope"
+	TextDescKeyErrBackupInvalidSMBURL          = "err.backup.invalid-smb-url"
+	TextDescKeyErrBackupMountFailed            = "err.backup.mount-failed"
+	TextDescKeyErrBackupSMBMissingShare        = "err.backup.smb-missing-share"
 	TextDescKeyErrBackupSourceNotFound         = "err.backup.source-not-found"
 	TextDescKeyErrBackupWriteArchive           = "err.backup.write-archive"
+	TextDescKeyErrBackupWriteSMB               = "err.backup.write-smb"
 	TextDescKeyErrConfigGoldenNotFound         = "err.config.golden-not-found"
 	TextDescKeyErrConfigInvalidTool            = "err.config.invalid-tool"
 	TextDescKeyErrConfigMarshalPlugins         = "err.config.marshal-plugins"
@@ -334,6 +339,9 @@ const (
 	TextDescKeyErrCryptoWriteKey               = "err.crypto.write-key"
 	TextDescKeyErrDateInvalidDate              = "err.date.invalid-date"
 	TextDescKeyErrDateInvalidDateValue         = "err.date.invalid-date-value"
+	TextDescKeyErrDepsCargoMetadataFailed      = "err.deps.cargo-metadata-failed"
+	TextDescKeyErrDepsCargoNotFound            = "err.deps.cargo-not-found"
+	TextDescKeyErrDepsParseCargoMetadata       = "err.deps.parse-cargo-metadata"
 	TextDescKeyErrFsBoundaryViolation          = "err.fs.boundary-violation"
 	TextDescKeyErrFsCreateDir                  = "err.fs.create-dir"
 	TextDescKeyErrFsDirNotFound                = "err.fs.dir-not-found"
@@ -345,11 +353,16 @@ const (
 	TextDescKeyErrFsNoInput                    = "err.fs.no-input"
 	TextDescKeyErrFsNotDirectory               = "err.fs.not-directory"
 	TextDescKeyErrFsOpenFile                   = "err.fs.open-file"
+	TextDescKeyErrFsPathEscapesBase            = "err.fs.path-escapes-base"
 	TextDescKeyErrFsReadDir                    = "err.fs.read-dir"
 	TextDescKeyErrFsReadDirectory              = "err.fs.read-directory"
 	TextDescKeyErrFsReadFile                   = "err.fs.read-file"
 	TextDescKeyErrFsReadInput                  = "err.fs.read-input"
 	TextDescKeyErrFsReadInputStream            = "err.fs.read-input-stream"
+	TextDescKeyErrFsRefuseSystemPath           = "err.fs.refuse-system-path"
+	TextDescKeyErrFsRefuseSystemPathRoot       = "err.fs.refuse-system-path-root"
+	TextDescKeyErrFsResolveBase                = "err.fs.resolve-base"
+	TextDescKeyErrFsResolvePath                = "err.fs.resolve-path"
 	TextDescKeyErrFsStatPath                   = "err.fs.stat-path"
 	TextDescKeyErrFsWriteFileFailed            = "err.fs.write-file-failed"
 	TextDescKeyErrFsWriteMerged                = "err.fs.write-merged"
@@ -360,6 +373,7 @@ const (
 	TextDescKeyErrHookUnknownHook              = "err.hook.unknown-hook"
 	TextDescKeyErrHookUnknownVariant           = "err.hook.unknown-variant"
 	TextDescKeyErrHookWriteOverride            = "err.hook.write-override"
+	TextDescKeyErrHttpParseURL                 = "err.http.parse-url"
 	TextDescKeyErrHttpTooManyRedirects         = "err.http.too-many-redirects"
 	TextDescKeyErrHttpUnsafeURLScheme          = "err.http.unsafe-url-scheme"
 	TextDescKeyErrInitContextNotInitialized    = "err.init.context-not-initialized"
@@ -458,6 +472,7 @@ const (
 	TextDescKeyErrSessionNoSessionsFoundHint   = "err.session.no-sessions-found-hint"
 	TextDescKeyErrSessionIDRequired            = "err.session.session-id-required"
 	TextDescKeyErrSessionNotFound              = "err.session.session-not-found"
+	TextDescKeyErrSiteMarshalFeed              = "err.site.marshal-feed"
 	TextDescKeyErrSiteNoSiteConfig             = "err.site.no-site-config"
 	TextDescKeyErrSiteZensicalNotFound         = "err.site.zensical-not-found"
 	TextDescKeyErrSkillList                    = "err.skill.skill-list"
@@ -474,6 +489,11 @@ const (
 	TextDescKeyErrTaskFileWrite                = "err.task.task-file-write"
 	TextDescKeyErrTaskMultipleMatches          = "err.task.task-multiple-matches"
 	TextDescKeyErrTaskNotFound                 = "err.task.task-not-found"
+	TextDescKeyErrValidateContextDirSymlink    = "err.validate.context-dir-symlink"
+	TextDescKeyErrValidateContextFileSymlink   = "err.validate.context-file-symlink"
+	TextDescKeyErrValidateContextOutsideRoot   = "err.validate.context-outside-root"
+	TextDescKeyErrValidateInvalidSelection     = "err.validate.invalid-selection"
+	TextDescKeyErrValidateUnknownDocument      = "err.validate.unknown-document"
 	TextDescKeyErrValidationArgRequired        = "err.validation.arg-required"
 	TextDescKeyErrValidationCtxNotInPath       = "err.validation.ctx-not-in-path"
 	TextDescKeyErrValidationDriftViolations    = "err.validation.drift-violations"
@@ -1460,7 +1480,32 @@ func loadFlags() {
 }
 
 func loadText() {
-	textOnce.Do(func() { textMap = loadYAML("commands/text.yaml") })
+	textOnce.Do(func() { textMap = loadYAMLDir("commands/text") })
+}
+
+// loadYAMLDir reads all YAML files in an embedded directory and merges
+// them into a single commandEntry map.
+//
+// Parameters:
+//   - dir: embedded directory path to scan
+//
+// Returns:
+//   - map[string]commandEntry: merged entries from all files
+func loadYAMLDir(dir string) map[string]commandEntry {
+	merged := make(map[string]commandEntry)
+	entries, readErr := fs.ReadDir(FS, dir)
+	if readErr != nil {
+		return merged
+	}
+	for _, entry := range entries {
+		if entry.IsDir() || !strings.HasSuffix(entry.Name(), ".yaml") {
+			continue
+		}
+		for k, v := range loadYAML(dir + "/" + entry.Name()) {
+			merged[k] = v
+		}
+	}
+	return merged
 }
 
 func loadExamples() {

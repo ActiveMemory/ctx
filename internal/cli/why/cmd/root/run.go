@@ -8,7 +8,6 @@ package root
 
 import (
 	"bufio"
-	"fmt"
 	"os"
 	"strconv"
 	"strings"
@@ -16,6 +15,8 @@ import (
 	"github.com/spf13/cobra"
 
 	"github.com/ActiveMemory/ctx/internal/assets"
+	fserr "github.com/ActiveMemory/ctx/internal/err/fs"
+	ctxerr "github.com/ActiveMemory/ctx/internal/err/validate"
 	"github.com/ActiveMemory/ctx/internal/write"
 )
 
@@ -46,13 +47,13 @@ func showMenu(cmd *cobra.Command) error {
 	reader := bufio.NewReader(os.Stdin)
 	input, readErr := reader.ReadString('\n')
 	if readErr != nil {
-		return fmt.Errorf("reading selection: %w", readErr)
+		return fserr.ReadInput(readErr)
 	}
 
 	input = strings.TrimSpace(input)
 	choice, parseErr := strconv.Atoi(input)
 	if parseErr != nil || choice < 1 || choice > len(DocOrder) {
-		return fmt.Errorf("invalid selection: %q (expected 1-%d)", input, len(DocOrder))
+		return ctxerr.InvalidSelection(input, len(DocOrder))
 	}
 
 	cmd.Println()
@@ -70,12 +71,12 @@ func showMenu(cmd *cobra.Command) error {
 func ShowDoc(cmd *cobra.Command, alias string) error {
 	name, ok := DocAliases[alias]
 	if !ok {
-		return fmt.Errorf("unknown document %q (available: manifesto, about, invariants)", alias)
+		return ctxerr.UnknownDocument(alias)
 	}
 
 	content, loadErr := assets.WhyDoc(name)
 	if loadErr != nil {
-		return fmt.Errorf("loading document %q: %w", name, loadErr)
+		return fserr.FileRead(name, loadErr)
 	}
 
 	cleaned := StripMkDocs(string(content))

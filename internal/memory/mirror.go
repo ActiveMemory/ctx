@@ -47,17 +47,17 @@ func Sync(contextDir, sourcePath string) (SyncResult, error) {
 		result.MirrorLines = countLines(existingData)
 		archivePath, archiveErr := Archive(contextDir)
 		if archiveErr != nil {
-			return SyncResult{}, ctxerr.MemoryArchivePrevious(archiveErr)
+			return SyncResult{}, ctxerr.ArchivePrevious(archiveErr)
 		}
 		result.ArchivedTo = archivePath
 	}
 
 	if mkErr := os.MkdirAll(mirrorDir, fs.PermExec); mkErr != nil {
-		return SyncResult{}, ctxerr.MemoryCreateDir(mkErr)
+		return SyncResult{}, ctxerr.CreateDir(mkErr)
 	}
 
 	if writeErr := os.WriteFile(mirrorPath, sourceData, fs.PermFile); writeErr != nil {
-		return SyncResult{}, ctxerr.MemoryWriteMirror(writeErr)
+		return SyncResult{}, ctxerr.WriteMirror(writeErr)
 	}
 
 	return result, nil

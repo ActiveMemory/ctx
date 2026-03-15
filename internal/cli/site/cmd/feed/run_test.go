@@ -125,8 +125,8 @@ func TestRunFeed_NoBlogDir(t *testing.T) {
 	if runErr == nil {
 		t.Fatal("expected error for nonexistent blog directory")
 	}
-	if !strings.Contains(runErr.Error(), "no blog directory") {
-		t.Errorf("expected 'no blog directory' error, got: %v", runErr)
+	if !strings.Contains(runErr.Error(), "directory not found") {
+		t.Errorf("expected 'directory not found' error, got: %v", runErr)
 	}
 }
 

@@ -14,14 +14,18 @@ import (
 	"github.com/ActiveMemory/ctx/internal/rc"
 )
 
-// logFilePath returns the absolute path to the current event log
-// under the active context directory.
+// logFilePath returns the absolute path to the current event log.
+//
+// Returns:
+//   - string: path under the active context directory
 func logFilePath() string {
 	return filepath.Join(rc.ContextDir(), dir.State, event.FileEventLog)
 }
 
-// prevLogFilePath returns the absolute path to the rotated (previous
-// generation) event log under the active context directory.
+// prevLogFilePath returns the absolute path to the rotated event log.
+//
+// Returns:
+//   - string: path under the active context directory
 func prevLogFilePath() string {
 	return filepath.Join(rc.ContextDir(), dir.State, event.FileEventLogPrev)
 }
