@@ -18,46 +18,26 @@ import (
 	"path/filepath"
 	"time"
 
-	crypto2 "github.com/ActiveMemory/ctx/internal/config/crypto"
+	cryptoCfg "github.com/ActiveMemory/ctx/internal/config/crypto"
 	"github.com/ActiveMemory/ctx/internal/config/fs"
 	"github.com/ActiveMemory/ctx/internal/crypto"
 	"github.com/ActiveMemory/ctx/internal/io"
 	"github.com/ActiveMemory/ctx/internal/rc"
 )
 
-// TemplateRef identifies the hook template and variables that produced a
-// notification, allowing receivers to filter, re-render, or aggregate
-// without parsing opaque rendered text.
-type TemplateRef struct {
-	Hook      string         `json:"hook"`
-	Variant   string         `json:"variant"`
-	Variables map[string]any `json:"variables,omitempty"`
-}
-
-// NewTemplateRef constructs a TemplateRef. Nil variables are omitted from JSON.
-func NewTemplateRef(hook, variant string, vars map[string]any) *TemplateRef {
-	return &TemplateRef{Hook: hook, Variant: variant, Variables: vars}
-}
-
-// Payload is the JSON body sent to the webhook endpoint.
-type Payload struct {
-	Event     string       `json:"event"`
-	Message   string       `json:"message"`
-	Detail    *TemplateRef `json:"detail,omitempty"`
-	SessionID string       `json:"session_id,omitempty"`
-	Timestamp string       `json:"timestamp"`
-	Project   string       `json:"project"`
-}
-
 // LoadWebhook reads and decrypts the webhook URL from .context/.notify.enc.
 //
 // Returns ("", nil) if either the key file or encrypted file is missing
 // (silent noop: webhook not configured).
+//
+// Returns:
+//   - string: the decrypted webhook URL, or "" if not configured
+//   - error: non-nil only if decryption fails (missing files are silent)
 func LoadWebhook() (string, error) {
 	contextDir := rc.ContextDir()
 	crypto.MigrateKeyFile(contextDir)
 	kp := rc.KeyPath()
-	encPath := filepath.Join(contextDir, crypto2.NotifyEnc)
+	encPath := filepath.Join(contextDir, cryptoCfg.NotifyEnc)
 
 	key, err := crypto.LoadKey(kp)
 	if err != nil {
@@ -86,11 +66,17 @@ func LoadWebhook() (string, error) {
 // SaveWebhook encrypts and writes the webhook URL to .context/.notify.enc.
 //
 // If the scratchpad key does not exist, it is generated and saved first.
+//
+// Parameters:
+//   - url: the webhook endpoint to store
+//
+// Returns:
+//   - error: non-nil if key generation, encryption, or file write fails
 func SaveWebhook(url string) error {
 	contextDir := rc.ContextDir()
 	crypto.MigrateKeyFile(contextDir)
 	kp := rc.KeyPath()
-	encPath := filepath.Join(contextDir, crypto2.NotifyEnc)
+	encPath := filepath.Join(contextDir, cryptoCfg.NotifyEnc)
 
 	key, err := crypto.LoadKey(kp)
 	if err != nil {
@@ -120,6 +106,13 @@ func SaveWebhook(url string) error {
 // EventAllowed reports whether the given event passes the filter.
 //
 // A nil or empty allowed list means no events pass (opt-in only).
+//
+// Parameters:
+//   - event: the event name to check
+//   - allowed: list of permitted event names
+//
+// Returns:
+//   - bool: true if event appears in the allowed list
 func EventAllowed(event string, allowed []string) bool {
 	if len(allowed) == 0 {
 		return false

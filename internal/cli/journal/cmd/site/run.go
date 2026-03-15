@@ -66,7 +66,7 @@ func runZensical(dir, command string) error {
 // Returns:
 //   - error: Non-nil if generation fails
 func runJournalSite(
-		cmd *cobra.Command, output string, build, serve bool,
+	cmd *cobra.Command, output string, build, serve bool,
 ) error {
 	journalDir := filepath.Join(rc.ContextDir(), dir.Journal)
 
@@ -252,7 +252,7 @@ func runJournalSite(
 					pagePath := filepath.Join(dir, slug+file.ExtMarkdown)
 					if pageErr := os.WriteFile(
 						pagePath, []byte(
-								core.GenerateKeyFilePage(kf)),
+							core.GenerateKeyFilePage(kf)),
 						fs.PermFile,
 					); pageErr != nil {
 						write.WarnFileErr(cmd, pagePath, pageErr)
