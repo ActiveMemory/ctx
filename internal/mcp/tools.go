@@ -23,6 +23,7 @@ import (
 	"github.com/ActiveMemory/ctx/internal/config/fs"
 	"github.com/ActiveMemory/ctx/internal/config/mcp"
 	"github.com/ActiveMemory/ctx/internal/config/regex"
+	timeCfg "github.com/ActiveMemory/ctx/internal/config/time"
 	"github.com/ActiveMemory/ctx/internal/config/token"
 	"github.com/ActiveMemory/ctx/internal/context"
 	"github.com/ActiveMemory/ctx/internal/drift"
@@ -31,6 +32,32 @@ import (
 	"github.com/ActiveMemory/ctx/internal/task"
 	"github.com/ActiveMemory/ctx/internal/validation"
 )
+
+// applyOptionalFields copies optional entry fields from MCP args
+// to the params struct.
+func applyOptionalFields(
+	params *entry.Params,
+	args map[string]interface{},
+) {
+	if v, ok := args[mcp.MCPFieldPriority].(string); ok {
+		params.Priority = v
+	}
+	if v, ok := args[cli.AttrContext].(string); ok {
+		params.Context = v
+	}
+	if v, ok := args[cli.AttrRationale].(string); ok {
+		params.Rationale = v
+	}
+	if v, ok := args[cli.AttrConsequences].(string); ok {
+		params.Consequences = v
+	}
+	if v, ok := args[cli.AttrLesson].(string); ok {
+		params.Lesson = v
+	}
+	if v, ok := args[cli.AttrApplication].(string); ok {
+		params.Application = v
+	}
+}
 
 // handleToolsList returns all available MCP tools.
 //
@@ -83,7 +110,9 @@ func (s *Server) handleToolsCall(req Request) *Response {
 		return s.toolRemind(req.ID)
 	default:
 		return s.error(req.ID, errCodeNotFound,
-			fmt.Sprintf(assets.TextDesc(assets.TextDescKeyMCPUnknownTool), params.Name))
+			fmt.Sprintf(assets.TextDesc(assets.TextDescKeyMCPUnknownTool),
+				params.Name),
+		)
 	}
 }
 
@@ -97,21 +126,31 @@ func (s *Server) handleToolsCall(req Request) *Response {
 func (s *Server) toolStatus(id json.RawMessage) *Response {
 	ctx, err := context.Load(s.contextDir)
 	if err != nil {
-		return s.toolError(id, fmt.Sprintf(assets.TextDesc(assets.TextDescKeyMCPLoadContext), err))
+		return s.toolError(
+			id, fmt.Sprintf(assets.TextDesc(assets.TextDescKeyMCPLoadContext), err),
+		)
 	}
 
 	var sb strings.Builder
-	_, _ = fmt.Fprintf(&sb, assets.TextDesc(assets.TextDescKeyMCPStatusContextFormat), ctx.Dir)
-	_, _ = fmt.Fprintf(&sb, assets.TextDesc(assets.TextDescKeyMCPStatusFilesFormat), len(ctx.Files))
-	_, _ = fmt.Fprintf(&sb, assets.TextDesc(assets.TextDescKeyMCPStatusTokensFormat), ctx.TotalTokens)
+	_, _ = fmt.Fprintf(
+		&sb, assets.TextDesc(assets.TextDescKeyMCPStatusContextFormat), ctx.Dir,
+	)
+	_, _ = fmt.Fprintf(
+		&sb, assets.TextDesc(assets.TextDescKeyMCPStatusFilesFormat), len(ctx.Files),
+	)
+	_, _ = fmt.Fprintf(
+		&sb, assets.TextDesc(assets.TextDescKeyMCPStatusTokensFormat), ctx.TotalTokens,
+	)
 
 	for _, f := range ctx.Files {
 		status := assets.TextDesc(assets.TextDescKeyMCPStatusOK)
 		if f.IsEmpty {
 			status = assets.TextDesc(assets.TextDescKeyMCPStatusEmpty)
 		}
-		_, _ = fmt.Fprintf(&sb, assets.TextDesc(assets.TextDescKeyMCPStatusFileFormat),
-			f.Name, f.Tokens, status)
+		_, _ = fmt.Fprintf(
+			&sb, assets.TextDesc(assets.TextDescKeyMCPStatusFileFormat),
+			f.Name, f.Tokens, status,
+		)
 	}
 
 	return s.toolOK(id, sb.String())
@@ -129,14 +168,19 @@ func (s *Server) toolAdd(
 	id json.RawMessage, args map[string]interface{},
 ) *Response {
 	if err := validation.ValidateBoundary(s.contextDir); err != nil {
-		return s.toolError(id, fmt.Sprintf(assets.TextDesc(assets.TextDescKeyMCPBoundaryViolation), err))
+		return s.toolError(
+			id, fmt.Sprintf(
+				assets.TextDesc(assets.TextDescKeyMCPBoundaryViolation), err),
+		)
 	}
 
 	entryType, _ := args[cli.AttrType].(string)
 	content, _ := args[mcp.MCPFieldContent].(string)
 
 	if entryType == "" || content == "" {
-		return s.toolError(id, assets.TextDesc(assets.TextDescKeyMCPTypeContentRequired))
+		return s.toolError(
+			id, assets.TextDesc(assets.TextDescKeyMCPTypeContentRequired),
+		)
 	}
 
 	params := entry.Params{
@@ -145,25 +189,7 @@ func (s *Server) toolAdd(
 		ContextDir: s.contextDir,
 	}
 
-	// Optional fields.
-	if v, ok := args[mcp.MCPFieldPriority].(string); ok {
-		params.Priority = v
-	}
-	if v, ok := args[cli.AttrContext].(string); ok {
-		params.Context = v
-	}
-	if v, ok := args[cli.AttrRationale].(string); ok {
-		params.Rationale = v
-	}
-	if v, ok := args[cli.AttrConsequences].(string); ok {
-		params.Consequences = v
-	}
-	if v, ok := args[cli.AttrLesson].(string); ok {
-		params.Lesson = v
-	}
-	if v, ok := args[cli.AttrApplication].(string); ok {
-		params.Application = v
-	}
+	applyOptionalFields(&params, args)
 
 	// Validate required fields.
 	if vErr := entry.Validate(params, nil); vErr != nil {
@@ -171,11 +197,16 @@ func (s *Server) toolAdd(
 	}
 
 	if wErr := entry.Write(params); wErr != nil {
-		return s.toolError(id, fmt.Sprintf(assets.TextDesc(assets.TextDescKeyMCPWriteFailed), wErr))
+		return s.toolError(
+			id, fmt.Sprintf(assets.TextDesc(assets.TextDescKeyMCPWriteFailed), wErr),
+		)
 	}
 
 	fileName := entryCfg.ToCtxFile[strings.ToLower(entryType)]
-	return s.toolOK(id, fmt.Sprintf(assets.TextDesc(assets.TextDescKeyMCPAddedFormat), entryType, fileName))
+	return s.toolOK(
+		id, fmt.Sprintf(
+			assets.TextDesc(assets.TextDescKeyMCPAddedFormat), entryType, fileName),
+	)
 }
 
 // toolComplete marks a task as done by number or text match.
@@ -190,7 +221,10 @@ func (s *Server) toolComplete(
 	id json.RawMessage, args map[string]interface{},
 ) *Response {
 	if err := validation.ValidateBoundary(s.contextDir); err != nil {
-		return s.toolError(id, fmt.Sprintf(assets.TextDesc(assets.TextDescKeyMCPBoundaryViolation), err))
+		return s.toolError(
+			id, fmt.Sprintf(
+				assets.TextDesc(assets.TextDescKeyMCPBoundaryViolation), err),
+		)
 	}
 
 	query, _ := args[mcp.MCPFieldQuery].(string)
@@ -203,7 +237,10 @@ func (s *Server) toolComplete(
 		return s.toolError(id, err.Error())
 	}
 
-	return s.toolOK(id, fmt.Sprintf(assets.TextDesc(assets.TextDescKeyMCPCompletedFormat), completedTask))
+	return s.toolOK(
+		id, fmt.Sprintf(
+			assets.TextDesc(assets.TextDescKeyMCPCompletedFormat), completedTask),
+	)
 }
 
 // toolDrift runs drift detection and returns the report.
@@ -216,19 +253,27 @@ func (s *Server) toolComplete(
 func (s *Server) toolDrift(id json.RawMessage) *Response {
 	ctx, err := context.Load(s.contextDir)
 	if err != nil {
-		return s.toolError(id, fmt.Sprintf(assets.TextDesc(assets.TextDescKeyMCPLoadContext), err))
+		return s.toolError(
+			id, fmt.Sprintf(assets.TextDesc(assets.TextDescKeyMCPLoadContext), err),
+		)
 	}
 
 	report := drift.Detect(ctx)
 
 	var sb strings.Builder
-	_, _ = fmt.Fprintf(&sb, assets.TextDesc(assets.TextDescKeyMCPDriftStatusFormat), report.Status())
+	_, _ = fmt.Fprintf(
+		&sb,
+		assets.TextDesc(assets.TextDescKeyMCPDriftStatusFormat),
+		report.Status(),
+	)
 
 	if len(report.Violations) > 0 {
 		sb.WriteString(assets.TextDesc(assets.TextDescKeyMCPDriftViolations))
 		for _, v := range report.Violations {
-			_, _ = fmt.Fprintf(&sb, assets.TextDesc(assets.TextDescKeyMCPDriftIssueFormat),
-				v.Type, v.File, v.Message)
+			_, _ = fmt.Fprintf(
+				&sb, assets.TextDesc(assets.TextDescKeyMCPDriftIssueFormat),
+				v.Type, v.File, v.Message,
+			)
 		}
 		sb.WriteString(token.NewlineLF)
 	}
@@ -236,8 +281,10 @@ func (s *Server) toolDrift(id json.RawMessage) *Response {
 	if len(report.Warnings) > 0 {
 		sb.WriteString(assets.TextDesc(assets.TextDescKeyMCPDriftWarnings))
 		for _, w := range report.Warnings {
-			_, _ = fmt.Fprintf(&sb, assets.TextDesc(assets.TextDescKeyMCPDriftIssueFormat),
-				w.Type, w.File, w.Message)
+			_, _ = fmt.Fprintf(
+				&sb, assets.TextDesc(assets.TextDescKeyMCPDriftIssueFormat),
+				w.Type, w.File, w.Message,
+			)
 		}
 		sb.WriteString(token.NewlineLF)
 	}
@@ -245,7 +292,9 @@ func (s *Server) toolDrift(id json.RawMessage) *Response {
 	if len(report.Passed) > 0 {
 		sb.WriteString(assets.TextDesc(assets.TextDescKeyMCPDriftPassed))
 		for _, p := range report.Passed {
-			_, _ = fmt.Fprintf(&sb, assets.TextDesc(assets.TextDescKeyMCPDriftPassedFormat), p)
+			_, _ = fmt.Fprintf(
+				&sb, assets.TextDesc(assets.TextDescKeyMCPDriftPassedFormat), p,
+			)
 		}
 	}
 
@@ -292,23 +341,29 @@ func (s *Server) toolError(id json.RawMessage, msg string) *Response {
 func (s *Server) toolRecall(
 	id json.RawMessage, args map[string]interface{},
 ) *Response {
-	limit := 5
+	limit := mcp.MCPDefaultRecallLimit
 	if v, ok := args[mcp.MCPFieldLimit].(float64); ok && v > 0 {
 		limit = int(v)
 	}
 
 	var sinceFilter time.Time
 	if v, ok := args[mcp.MCPFieldSince].(string); ok && v != "" {
-		parsed, parseErr := time.Parse("2006-01-02", v)
+		parsed, parseErr := time.Parse(timeCfg.DateFormat, v)
 		if parseErr != nil {
-			return s.toolError(id, fmt.Sprintf(assets.TextDesc(assets.TextDescKeyMCPInvalidSinceDate), parseErr))
+			return s.toolError(
+				id, fmt.Sprintf(
+					assets.TextDesc(assets.TextDescKeyMCPInvalidSinceDate), parseErr),
+			)
 		}
 		sinceFilter = parsed
 	}
 
 	sessions, err := parser.FindSessions()
 	if err != nil {
-		return s.toolError(id, fmt.Sprintf(assets.TextDesc(assets.TextDescKeyMCPFindSessionsFailed), err))
+		return s.toolError(
+			id, fmt.Sprintf(
+				assets.TextDesc(assets.TextDescKeyMCPFindSessionsFailed), err),
+		)
 	}
 
 	// Apply since filter.
@@ -332,20 +387,32 @@ func (s *Server) toolRecall(
 	}
 
 	var sb strings.Builder
-	_, _ = fmt.Fprintf(&sb, assets.TextDesc(assets.TextDescKeyMCPSessionsFoundFormat)+"%s%s", len(sessions), token.NewlineLF, token.NewlineLF)
+	_, _ = fmt.Fprintf(&sb,
+		assets.TextDesc(assets.TextDescKeyMCPSessionsFoundFormat),
+		len(sessions),
+	)
 
 	for i, sess := range sessions {
 		duration := sess.Duration.Round(time.Second)
 		_, _ = fmt.Fprintf(&sb, assets.TextDesc(assets.TextDescKeyMCPRecallItemFormat),
-			i+1, sess.StartTime.Format("2006-01-02 15:04"))
+			i+1, sess.StartTime.Format(timeCfg.DateTimeFormat))
 		if sess.Project != "" {
-			_, _ = fmt.Fprintf(&sb, assets.TextDesc(assets.TextDescKeyMCPRecallProjectFormat), sess.Project)
+			_, _ = fmt.Fprintf(
+				&sb, assets.TextDesc(assets.TextDescKeyMCPRecallProjectFormat),
+				sess.Project,
+			)
 		}
-		_, _ = fmt.Fprintf(&sb, assets.TextDesc(assets.TextDescKeyMCPRecallDurationFormat), duration, sess.TurnCount)
+		_, _ = fmt.Fprintf(
+			&sb, assets.TextDesc(assets.TextDescKeyMCPRecallDurationFormat),
+			duration, sess.TurnCount,
+		)
 		sb.WriteString(token.NewlineLF)
 
 		if sess.FirstUserMsg != "" {
-			_, _ = fmt.Fprintf(&sb, assets.TextDesc(assets.TextDescKeyMCPRecallFirstMsgFormat), sess.FirstUserMsg)
+			_, _ = fmt.Fprintf(
+				&sb, assets.TextDesc(assets.TextDescKeyMCPRecallFirstMsgFormat),
+				sess.FirstUserMsg,
+			)
 			sb.WriteString(token.NewlineLF)
 		}
 	}
@@ -365,18 +432,23 @@ func (s *Server) toolWatchUpdate(
 	id json.RawMessage, args map[string]interface{},
 ) *Response {
 	if err := validation.ValidateBoundary(s.contextDir); err != nil {
-		return s.toolError(id, fmt.Sprintf(assets.TextDesc(assets.TextDescKeyMCPBoundaryViolation), err))
+		return s.toolError(
+			id, fmt.Sprintf(
+				assets.TextDesc(assets.TextDescKeyMCPBoundaryViolation), err),
+		)
 	}
 
 	entryType, _ := args[cli.AttrType].(string)
 	content, _ := args[mcp.MCPFieldContent].(string)
 
 	if entryType == "" || content == "" {
-		return s.toolError(id, assets.TextDesc(assets.TextDescKeyMCPTypeContentRequired))
+		return s.toolError(
+			id, assets.TextDesc(assets.TextDescKeyMCPTypeContentRequired),
+		)
 	}
 
 	// Handle "complete" type as a special case — delegate to ctx_complete.
-	if entryType == "complete" {
+	if entryType == mcp.MCPEntryComplete {
 		completedTask, err := taskcomplete.CompleteTask(content, s.contextDir)
 		if err != nil {
 			return s.toolError(id, err.Error())
@@ -387,8 +459,11 @@ func (s *Server) toolWatchUpdate(
 			QueuedAt: time.Now(),
 		})
 		return s.toolOK(id,
-			fmt.Sprintf(assets.TextDesc(assets.TextDescKeyMCPWatchCompletedFormat), completedTask)+token.NewlineLF+
-				assets.TextDesc(assets.TextDescKeyMCPReviewStatus))
+			fmt.Sprintf(
+				assets.TextDesc(assets.TextDescKeyMCPWatchCompletedFormat),
+				completedTask)+token.NewlineLF+
+				assets.TextDesc(assets.TextDescKeyMCPReviewStatus),
+		)
 	}
 
 	params := entry.Params{
@@ -397,28 +472,16 @@ func (s *Server) toolWatchUpdate(
 		ContextDir: s.contextDir,
 	}
 
-	if v, ok := args[cli.AttrContext].(string); ok {
-		params.Context = v
-	}
-	if v, ok := args[cli.AttrRationale].(string); ok {
-		params.Rationale = v
-	}
-	if v, ok := args[cli.AttrConsequences].(string); ok {
-		params.Consequences = v
-	}
-	if v, ok := args[cli.AttrLesson].(string); ok {
-		params.Lesson = v
-	}
-	if v, ok := args[cli.AttrApplication].(string); ok {
-		params.Application = v
-	}
+	applyOptionalFields(&params, args)
 
 	if vErr := entry.Validate(params, nil); vErr != nil {
 		return s.toolError(id, vErr.Error())
 	}
 
 	if wErr := entry.Write(params); wErr != nil {
-		return s.toolError(id, fmt.Sprintf(assets.TextDesc(assets.TextDescKeyMCPWriteFailed), wErr))
+		return s.toolError(id, fmt.Sprintf(
+			assets.TextDesc(assets.TextDescKeyMCPWriteFailed), wErr),
+		)
 	}
 
 	fileName := entryCfg.ToCtxFile[strings.ToLower(entryType)]
@@ -427,13 +490,14 @@ func (s *Server) toolWatchUpdate(
 		Type:    entryType,
 		Content: content,
 		Attrs: map[string]string{
-			"file": fileName,
+			mcp.MCPAttrFile: fileName,
 		},
 		QueuedAt: time.Now(),
 	})
 
 	return s.toolOK(id,
-		fmt.Sprintf(assets.TextDesc(assets.TextDescKeyMCPWroteFormat), entryType, fileName)+token.NewlineLF+
+		fmt.Sprintf(assets.TextDesc(
+			assets.TextDescKeyMCPWroteFormat), entryType, fileName)+token.NewlineLF+
 			assets.TextDesc(assets.TextDescKeyMCPReviewStatus))
 }
 
@@ -449,7 +513,9 @@ func (s *Server) toolCompact(
 	id json.RawMessage, args map[string]interface{},
 ) *Response {
 	if err := validation.ValidateBoundary(s.contextDir); err != nil {
-		return s.toolError(id, fmt.Sprintf(assets.TextDesc(assets.TextDescKeyMCPBoundaryViolation), err))
+		return s.toolError(id,
+			fmt.Sprintf(assets.TextDesc(assets.TextDescKeyMCPBoundaryViolation), err),
+		)
 	}
 
 	archive := false
@@ -459,7 +525,9 @@ func (s *Server) toolCompact(
 
 	ctx, err := context.Load(s.contextDir)
 	if err != nil {
-		return s.toolError(id, fmt.Sprintf(assets.TextDesc(assets.TextDescKeyMCPLoadContext), err))
+		return s.toolError(id,
+			fmt.Sprintf(assets.TextDesc(assets.TextDescKeyMCPLoadContext), err),
+		)
 	}
 
 	var sb strings.Builder
@@ -477,8 +545,11 @@ func (s *Server) toolCompact(
 		for _, block := range blocks {
 			if block.IsArchivable {
 				archivableBlocks = append(archivableBlocks, block)
-				_, _ = fmt.Fprintf(&sb, assets.TextDesc(assets.TextDescKeyMCPCompactMovedFormat)+token.NewlineLF,
-					core.TruncateString(block.ParentTaskText(), 50))
+				_, _ = fmt.Fprintf(&sb,
+					assets.TextDesc(
+						assets.TextDescKeyMCPCompactMovedFormat)+token.NewlineLF,
+					core.TruncateString(block.ParentTaskText(), mcp.MCPTruncateLen),
+				)
 			}
 		}
 
@@ -507,8 +578,12 @@ func (s *Server) toolCompact(
 
 			newContent := strings.Join(newLines, token.NewlineLF)
 			if newContent != content {
-				if writeErr := writeContextFile(tasksFile.Path, []byte(newContent)); writeErr != nil {
-					return s.toolError(id, fmt.Sprintf(assets.TextDesc(assets.TextDescKeyMCPWriteFailed), writeErr))
+				if writeErr := writeContextFile(
+					tasksFile.Path, []byte(newContent)); writeErr != nil {
+					return s.toolError(id,
+						fmt.Sprintf(assets.TextDesc(assets.TextDescKeyMCPWriteFailed),
+							writeErr),
+					)
 				}
 			}
 			changes += len(archivableBlocks)
@@ -520,8 +595,14 @@ func (s *Server) toolCompact(
 			for _, block := range archivableBlocks {
 				archiveContent += block.BlockContent() + token.NewlineLF + token.NewlineLF
 			}
-			if _, archiveErr := core.WriteArchive("tasks", assets.HeadingArchivedTasks, archiveContent); archiveErr != nil {
-				_, _ = fmt.Fprintf(&sb, assets.TextDesc(assets.TextDescKeyMCPCompactArchiveWarning)+token.NewlineLF, archiveErr)
+			if _, archiveErr := core.WriteArchive(
+				"tasks", assets.HeadingArchivedTasks, archiveContent,
+			); archiveErr != nil {
+				_, _ = fmt.Fprintf(
+					&sb, assets.TextDesc(
+						assets.TextDescKeyMCPCompactArchiveWarning)+token.NewlineLF,
+					archiveErr,
+				)
 			}
 		}
 	}
@@ -534,7 +615,9 @@ func (s *Server) toolCompact(
 		cleaned, count := core.RemoveEmptySections(string(f.Content))
 		if count > 0 {
 			if writeErr := writeContextFile(f.Path, []byte(cleaned)); writeErr == nil {
-				_, _ = fmt.Fprintf(&sb, assets.TextDesc(assets.TextDescKeyMCPCompactRemovedSectFmt)+token.NewlineLF,
+				_, _ = fmt.Fprintf(
+					&sb, assets.TextDesc(
+						assets.TextDescKeyMCPCompactRemovedSectFmt)+token.NewlineLF,
 					count, f.Name)
 				changes += count
 			}
@@ -545,8 +628,10 @@ func (s *Server) toolCompact(
 		return s.toolOK(id, assets.TextDesc(assets.TextDescKeyMCPCompactClean))
 	}
 
-	_, _ = fmt.Fprintf(&sb, "%s"+assets.TextDesc(assets.TextDescKeyMCPCompactedFormat)+"%s",
-		token.NewlineLF, changes, token.NewlineLF)
+	_, _ = fmt.Fprintf(&sb,
+		assets.TextDesc(assets.TextDescKeyMCPCompactedFormat),
+		changes,
+	)
 	sb.WriteString(assets.TextDesc(assets.TextDescKeyMCPReviewStatus))
 
 	return s.toolOK(id, sb.String())
@@ -562,7 +647,8 @@ func (s *Server) toolCompact(
 func (s *Server) toolNext(id json.RawMessage) *Response {
 	ctx, err := context.Load(s.contextDir)
 	if err != nil {
-		return s.toolError(id, fmt.Sprintf(assets.TextDesc(assets.TextDescKeyMCPLoadContext), err))
+		return s.toolError(id, fmt.Sprintf(
+			assets.TextDesc(assets.TextDescKeyMCPLoadContext), err))
 	}
 
 	tasksFile := ctx.File(ctxCfg.Task)
@@ -601,7 +687,9 @@ func (s *Server) toolNext(id json.RawMessage) *Response {
 
 		pendingIdx++
 		return s.toolOK(id, fmt.Sprintf(
-			assets.TextDesc(assets.TextDescKeyMCPNextTaskFormat), pendingIdx, task.Content(match)))
+			assets.TextDesc(
+				assets.TextDescKeyMCPNextTaskFormat), pendingIdx, task.Content(match)),
+		)
 	}
 
 	return s.toolOK(id, assets.TextDesc(assets.TextDescKeyMCPAllTasksComplete))
@@ -623,7 +711,9 @@ func (s *Server) toolCheckTaskCompletion(
 
 	ctx, err := context.Load(s.contextDir)
 	if err != nil {
-		return s.toolError(id, fmt.Sprintf(assets.TextDesc(assets.TextDescKeyMCPLoadContext), err))
+		return s.toolError(
+			id, fmt.Sprintf(assets.TextDesc(assets.TextDescKeyMCPLoadContext), err),
+		)
 	}
 
 	tasksFile := ctx.File(ctxCfg.Task)
@@ -664,7 +754,9 @@ func (s *Server) toolCheckTaskCompletion(
 		if recentAction != "" && containsOverlap(recentAction, taskText) {
 			return s.toolOK(id, fmt.Sprintf(
 				assets.TextDesc(assets.TextDescKeyMCPCheckTaskFormat)+token.NewlineLF+
-					assets.TextDesc(assets.TextDescKeyMCPCheckTaskHint), taskNum, taskText, taskNum))
+					assets.TextDesc(
+						assets.TextDescKeyMCPCheckTaskHint), taskNum, taskText, taskNum),
+			)
 		}
 	}
 
@@ -688,35 +780,40 @@ func (s *Server) toolSessionEvent(
 	}
 
 	switch eventType {
-	case "start":
+	case mcp.MCPEventStart:
 		s.session = newSessionState(s.contextDir)
 		if caller, ok := args[mcp.MCPFieldCaller].(string); ok && caller != "" {
 			return s.toolOK(id, fmt.Sprintf(
-				assets.TextDesc(assets.TextDescKeyMCPSessionStartedCallerFormat), caller, s.contextDir))
+				assets.TextDesc(
+					assets.TextDescKeyMCPSessionStartedCallerFormat), caller, s.contextDir),
+			)
 		}
 		return s.toolOK(id, fmt.Sprintf(
 			assets.TextDesc(assets.TextDescKeyMCPSessionStartedFormat), s.contextDir))
 
-	case "end":
+	case mcp.MCPEventEnd:
 		pending := s.session.pendingCount()
 		var sb strings.Builder
 		sb.WriteString(assets.TextDesc(assets.TextDescKeyMCPSessionEnding))
 		sb.WriteString(token.NewlineLF)
 
 		if pending > 0 {
-			_, _ = fmt.Fprintf(&sb, assets.TextDesc(assets.TextDescKeyMCPPendingUpdatesFormat)+"%s",
-				pending, token.NewlineLF)
+			_, _ = fmt.Fprintf(&sb,
+				assets.TextDesc(assets.TextDescKeyMCPPendingUpdatesFormat),
+				pending)
 			for i, pu := range s.session.pendingFlush {
-				_, _ = fmt.Fprintf(&sb, assets.TextDesc(assets.TextDescKeyMCPPendingItemFormat)+token.NewlineLF,
-					i+1, pu.Type, core.TruncateString(pu.Content, 60))
+				_, _ = fmt.Fprintf(&sb,
+					assets.TextDesc(assets.TextDescKeyMCPPendingItemFormat)+token.NewlineLF,
+					i+1, pu.Type, core.TruncateString(pu.Content, mcp.MCPTruncateContentLen))
 			}
 			sb.WriteString(assets.TextDesc(assets.TextDescKeyMCPReviewPending))
 		} else {
 			sb.WriteString(assets.TextDesc(assets.TextDescKeyMCPNoPending))
 		}
 
-		_, _ = fmt.Fprintf(&sb, "%s"+assets.TextDesc(assets.TextDescKeyMCPSessionStatsFormat),
-			token.NewlineLF, s.session.toolCalls, totalAdds(s.session.addsPerformed))
+		_, _ = fmt.Fprintf(&sb,
+			assets.TextDesc(assets.TextDescKeyMCPSessionStatsFormat),
+			s.session.toolCalls, totalAdds(s.session.addsPerformed))
 
 		return s.toolOK(id, sb.String())
 
@@ -736,25 +833,34 @@ func (s *Server) toolSessionEvent(
 func (s *Server) toolRemind(id json.RawMessage) *Response {
 	reminders, readErr := remindcore.ReadReminders()
 	if readErr != nil {
-		return s.toolError(id, fmt.Sprintf(assets.TextDesc(assets.TextDescKeyMCPReadRemindersFailed), readErr))
+		return s.toolError(id,
+			fmt.Sprintf(assets.TextDesc(
+				assets.TextDescKeyMCPReadRemindersFailed), readErr),
+		)
 	}
 
 	if len(reminders) == 0 {
 		return s.toolOK(id, assets.TextDesc(assets.TextDescKeyMCPNoReminders))
 	}
 
-	today := time.Now().Format("2006-01-02")
+	today := time.Now().Format(timeCfg.DateFormat)
 	var sb strings.Builder
-	_, _ = fmt.Fprintf(&sb, assets.TextDesc(assets.TextDescKeyMCPRemindersFormat)+"%s", len(reminders), token.NewlineLF)
+	_, _ = fmt.Fprintf(&sb,
+		assets.TextDesc(assets.TextDescKeyMCPRemindersFormat),
+		len(reminders),
+	)
 
 	for _, r := range reminders {
 		annotation := ""
 		if r.After != nil {
 			if *r.After > today {
-				annotation = fmt.Sprintf(assets.TextDesc(assets.TextDescKeyMCPReminderNotDueFormat), *r.After)
+				annotation = fmt.Sprintf(
+					assets.TextDesc(assets.TextDescKeyMCPReminderNotDueFormat), *r.After,
+				)
 			}
 		}
-		_, _ = fmt.Fprintf(&sb, assets.TextDesc(assets.TextDescKeyMCPReminderItemFormat)+token.NewlineLF,
+		_, _ = fmt.Fprintf(&sb, assets.TextDesc(
+			assets.TextDescKeyMCPReminderItemFormat)+token.NewlineLF,
 			r.ID, r.Message, annotation)
 	}
 
@@ -778,7 +884,7 @@ func containsOverlap(action, taskText string) bool {
 
 	matchCount := 0
 	for _, w := range taskWords {
-		if len(w) < 4 {
+		if len(w) < mcp.MCPMinWordLen {
 			continue // Skip short common words.
 		}
 		if actionWords[w] {
@@ -786,8 +892,7 @@ func containsOverlap(action, taskText string) bool {
 		}
 	}
 
-	// Require at least 2 word matches for a reasonable signal.
-	return matchCount >= 2
+	return matchCount >= mcp.MCPMinWordOverlap
 }
 
 // toWordSet splits text into a set of unique words for O(1) lookup.
