@@ -14,11 +14,11 @@ import (
 	"github.com/ActiveMemory/ctx/internal/config/dir"
 	"github.com/ActiveMemory/ctx/internal/config/memory"
 	time2 "github.com/ActiveMemory/ctx/internal/config/time"
+	ctxerr "github.com/ActiveMemory/ctx/internal/err/memory"
 	"github.com/ActiveMemory/ctx/internal/io"
 	"github.com/spf13/cobra"
 
 	"github.com/ActiveMemory/ctx/internal/cli/memory/core"
-	ctxerr "github.com/ActiveMemory/ctx/internal/err"
 	mem "github.com/ActiveMemory/ctx/internal/memory"
 	"github.com/ActiveMemory/ctx/internal/rc"
 	"github.com/ActiveMemory/ctx/internal/write"

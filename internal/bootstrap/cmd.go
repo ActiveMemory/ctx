@@ -11,13 +11,14 @@ package bootstrap
 import (
 	"os"
 
+	"github.com/ActiveMemory/ctx/internal/err/fs"
+	ctxerr "github.com/ActiveMemory/ctx/internal/err/initialize"
 	"github.com/spf13/cobra"
 
 	"github.com/ActiveMemory/ctx/internal/assets"
 	"github.com/ActiveMemory/ctx/internal/config/cli"
 	"github.com/ActiveMemory/ctx/internal/config/flag"
 	ctxcontext "github.com/ActiveMemory/ctx/internal/context"
-	ctxerr "github.com/ActiveMemory/ctx/internal/err"
 	"github.com/ActiveMemory/ctx/internal/rc"
 	"github.com/ActiveMemory/ctx/internal/validation"
 )
@@ -62,7 +63,7 @@ func RootCmd() *cobra.Command {
 				if validateErr := validation.ValidateBoundary(
 					rc.ContextDir(),
 				); validateErr != nil {
-					return ctxerr.BoundaryViolation(validateErr)
+					return fs.BoundaryViolation(validateErr)
 				}
 			}
 

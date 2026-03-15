@@ -19,11 +19,11 @@ import (
 	"github.com/ActiveMemory/ctx/internal/config/archive"
 	"github.com/ActiveMemory/ctx/internal/config/dir"
 	fs2 "github.com/ActiveMemory/ctx/internal/config/fs"
+	ctxerr "github.com/ActiveMemory/ctx/internal/err/backup"
 	io2 "github.com/ActiveMemory/ctx/internal/io"
 	"github.com/spf13/cobra"
 
 	"github.com/ActiveMemory/ctx/internal/assets"
-	ctxerr "github.com/ActiveMemory/ctx/internal/err"
 )
 
 // BackupProject creates a project-scoped backup archive.

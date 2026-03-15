@@ -15,13 +15,14 @@ import (
 
 	"github.com/ActiveMemory/ctx/internal/config/file"
 	"github.com/ActiveMemory/ctx/internal/config/msg"
+	"github.com/ActiveMemory/ctx/internal/err/fs"
+	ctxerr "github.com/ActiveMemory/ctx/internal/err/hook"
 	"github.com/ActiveMemory/ctx/internal/io"
 	"github.com/spf13/cobra"
 
 	"github.com/ActiveMemory/ctx/internal/assets"
 	"github.com/ActiveMemory/ctx/internal/assets/hooks/messages"
 	"github.com/ActiveMemory/ctx/internal/cli/system/core"
-	ctxerr "github.com/ActiveMemory/ctx/internal/err"
 )
 
 // RunMessageList executes the message list logic.
@@ -173,7 +174,7 @@ func RunMessageEdit(cmd *cobra.Command, hook, variant string) error {
 	// Create directories
 	dir := filepath.Dir(oPath)
 	if mkdirErr := os.MkdirAll(dir, 0o750); mkdirErr != nil {
-		return ctxerr.CreateDir(dir, mkdirErr)
+		return fs.CreateDir(dir, mkdirErr)
 	}
 
 	// Write override file

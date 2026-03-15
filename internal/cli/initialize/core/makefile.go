@@ -13,10 +13,11 @@ import (
 	"github.com/ActiveMemory/ctx/internal/config/fs"
 	"github.com/ActiveMemory/ctx/internal/config/project"
 	"github.com/ActiveMemory/ctx/internal/config/token"
+	fs2 "github.com/ActiveMemory/ctx/internal/err/fs"
+	ctxerr "github.com/ActiveMemory/ctx/internal/err/initialize"
 	"github.com/spf13/cobra"
 
 	"github.com/ActiveMemory/ctx/internal/assets"
-	ctxerr "github.com/ActiveMemory/ctx/internal/err"
 	"github.com/ActiveMemory/ctx/internal/write"
 )
 
@@ -34,10 +35,10 @@ const IncludeDirective = "-include Makefile.ctx"
 func HandleMakefileCtx(cmd *cobra.Command) error {
 	content, err := assets.MakefileCtx()
 	if err != nil {
-		return ctxerr.ReadInitTemplate("Makefile.ctx", err)
+		return ctxerr.ReadTemplate("Makefile.ctx", err)
 	}
 	if err = os.WriteFile(project.MakefileCtx, content, fs.PermFile); err != nil {
-		return ctxerr.FileWrite(project.MakefileCtx, err)
+		return fs2.FileWrite(project.MakefileCtx, err)
 	}
 	write.InitCreated(cmd, project.MakefileCtx)
 	existing, err := os.ReadFile("Makefile")
@@ -59,7 +60,7 @@ func HandleMakefileCtx(cmd *cobra.Command) error {
 	}
 	amended += token.NewlineLF + IncludeDirective + token.NewlineLF
 	if err := os.WriteFile("Makefile", []byte(amended), fs.PermFile); err != nil {
-		return ctxerr.FileAmend("Makefile", err)
+		return fs2.FileAmend("Makefile", err)
 	}
 	write.InitMakefileAppended(cmd, project.MakefileCtx)
 	return nil

@@ -11,11 +11,12 @@ import (
 
 	"github.com/ActiveMemory/ctx/internal/config/entry"
 	memory2 "github.com/ActiveMemory/ctx/internal/config/memory"
+	memory3 "github.com/ActiveMemory/ctx/internal/err/memory"
+	ctxerr "github.com/ActiveMemory/ctx/internal/err/state"
 	"github.com/ActiveMemory/ctx/internal/io"
 	"github.com/spf13/cobra"
 
 	"github.com/ActiveMemory/ctx/internal/cli/memory/core"
-	ctxerr "github.com/ActiveMemory/ctx/internal/err"
 	"github.com/ActiveMemory/ctx/internal/memory"
 	"github.com/ActiveMemory/ctx/internal/rc"
 	"github.com/ActiveMemory/ctx/internal/write"
@@ -38,14 +39,14 @@ func Run(cmd *cobra.Command, dryRun bool) error {
 	sourcePath, discoverErr := memory.DiscoverMemoryPath(projectRoot)
 	if discoverErr != nil {
 		write.ErrAutoMemoryNotActive(cmd, discoverErr)
-		return ctxerr.MemoryNotFound()
+		return memory3.MemoryNotFound()
 	}
 
 	sourceData, readErr := io.SafeReadFile(
 		filepath.Dir(sourcePath), filepath.Base(sourcePath),
 	)
 	if readErr != nil {
-		return ctxerr.ReadMemory(readErr)
+		return memory3.Read(readErr)
 	}
 
 	entries := memory.ParseEntries(string(sourceData))
@@ -56,7 +57,7 @@ func Run(cmd *cobra.Command, dryRun bool) error {
 
 	state, loadErr := memory.LoadState(contextDir)
 	if loadErr != nil {
-		return ctxerr.LoadState(loadErr)
+		return ctxerr.Load(loadErr)
 	}
 
 	write.ImportScanHeader(cmd, memory2.MemorySource, len(entries))
@@ -119,7 +120,7 @@ func Run(cmd *cobra.Command, dryRun bool) error {
 	if !dryRun && result.Total() > 0 {
 		state.MarkImportedDone()
 		if saveErr := memory.SaveState(contextDir, state); saveErr != nil {
-			return ctxerr.SaveState(saveErr)
+			return ctxerr.Save(saveErr)
 		}
 	}
 

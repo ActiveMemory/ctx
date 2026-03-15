@@ -9,10 +9,10 @@ package show
 import (
 	"strconv"
 
+	ctxerr "github.com/ActiveMemory/ctx/internal/err/pad"
 	"github.com/spf13/cobra"
 
 	"github.com/ActiveMemory/ctx/internal/assets"
-	ctxerr "github.com/ActiveMemory/ctx/internal/err"
 )
 
 // Cmd returns the pad show subcommand.

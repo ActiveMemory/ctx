@@ -9,11 +9,11 @@ package root
 import (
 	"errors"
 
+	ctxerr "github.com/ActiveMemory/ctx/internal/err/initialize"
 	"github.com/spf13/cobra"
 
 	"github.com/ActiveMemory/ctx/internal/cli/load/core"
 	"github.com/ActiveMemory/ctx/internal/context"
-	ctxerr "github.com/ActiveMemory/ctx/internal/err"
 	"github.com/ActiveMemory/ctx/internal/write"
 )
 

@@ -7,7 +7,8 @@
 package core
 
 import (
-	ctxerr "github.com/ActiveMemory/ctx/internal/err"
+	"github.com/ActiveMemory/ctx/internal/err/journal"
+	ctxerr "github.com/ActiveMemory/ctx/internal/err/session"
 	"github.com/ActiveMemory/ctx/internal/recall/parser"
 )
 
@@ -33,10 +34,10 @@ func EmptyMessage(msg parser.Message) bool {
 //   - error: non-nil if flags conflict.
 func ValidateExportFlags(args []string, opts ExportOpts) error {
 	if len(args) > 0 && opts.All {
-		return ctxerr.AllWithSessionID()
+		return ctxerr.AllWithID()
 	}
 	if opts.Regenerate && !opts.All {
-		return ctxerr.RegenerateRequiresAll()
+		return journal.RegenerateRequiresAll()
 	}
 	return nil
 }

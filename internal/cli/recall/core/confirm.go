@@ -13,10 +13,10 @@ import (
 
 	"github.com/ActiveMemory/ctx/internal/config/cli"
 	"github.com/ActiveMemory/ctx/internal/config/token"
+	ctxerr "github.com/ActiveMemory/ctx/internal/err/fs"
 	"github.com/spf13/cobra"
 
 	"github.com/ActiveMemory/ctx/internal/assets"
-	ctxerr "github.com/ActiveMemory/ctx/internal/err"
 	"github.com/ActiveMemory/ctx/internal/write"
 )
 

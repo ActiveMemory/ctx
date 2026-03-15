@@ -20,11 +20,11 @@ import (
 	"github.com/ActiveMemory/ctx/internal/config/stats"
 	time2 "github.com/ActiveMemory/ctx/internal/config/time"
 	"github.com/ActiveMemory/ctx/internal/config/token"
+	ctxerr "github.com/ActiveMemory/ctx/internal/err/recall"
 	"github.com/ActiveMemory/ctx/internal/io"
 	"github.com/spf13/cobra"
 
 	"github.com/ActiveMemory/ctx/internal/assets"
-	ctxerr "github.com/ActiveMemory/ctx/internal/err"
 )
 
 // ReadStatsDir reads all stats JSONL files, optionally filtered by session prefix.

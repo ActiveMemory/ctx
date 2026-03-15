@@ -8,11 +8,12 @@ package resolve
 
 import (
 	"github.com/ActiveMemory/ctx/internal/config/pad"
+	crypto2 "github.com/ActiveMemory/ctx/internal/err/crypto"
+	ctxerr "github.com/ActiveMemory/ctx/internal/err/pad"
 	"github.com/spf13/cobra"
 
 	"github.com/ActiveMemory/ctx/internal/cli/pad/core"
 	"github.com/ActiveMemory/ctx/internal/crypto"
-	ctxerr "github.com/ActiveMemory/ctx/internal/err"
 	"github.com/ActiveMemory/ctx/internal/rc"
 	"github.com/ActiveMemory/ctx/internal/write"
 )
@@ -32,7 +33,7 @@ func Run(cmd *cobra.Command) error {
 	kp := core.KeyPath()
 	key, loadErr := crypto.LoadKey(kp)
 	if loadErr != nil {
-		return ctxerr.LoadKey(loadErr, kp)
+		return crypto2.LoadKey(loadErr, kp)
 	}
 
 	dir := rc.ContextDir()

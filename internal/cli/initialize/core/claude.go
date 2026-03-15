@@ -18,10 +18,12 @@ import (
 	"github.com/ActiveMemory/ctx/internal/config/fs"
 	"github.com/ActiveMemory/ctx/internal/config/marker"
 	"github.com/ActiveMemory/ctx/internal/config/token"
+	"github.com/ActiveMemory/ctx/internal/err/backup"
+	fs2 "github.com/ActiveMemory/ctx/internal/err/fs"
+	ctxerr "github.com/ActiveMemory/ctx/internal/err/initialize"
 	"github.com/spf13/cobra"
 
 	"github.com/ActiveMemory/ctx/internal/assets"
-	ctxerr "github.com/ActiveMemory/ctx/internal/err"
 	"github.com/ActiveMemory/ctx/internal/write"
 )
 
@@ -37,13 +39,13 @@ import (
 func HandleClaudeMd(cmd *cobra.Command, force, autoMerge bool) error {
 	templateContent, err := assets.ClaudeMd()
 	if err != nil {
-		return ctxerr.ReadInitTemplate("CLAUDE.md", err)
+		return ctxerr.ReadTemplate("CLAUDE.md", err)
 	}
 	existingContent, err := os.ReadFile(claude.Md)
 	fileExists := err == nil
 	if !fileExists {
 		if err := os.WriteFile(claude.Md, templateContent, fs.PermFile); err != nil {
-			return ctxerr.FileWrite(claude.Md, err)
+			return fs2.FileWrite(claude.Md, err)
 		}
 		write.InitCreated(cmd, claude.Md)
 		return nil
@@ -64,7 +66,7 @@ func HandleClaudeMd(cmd *cobra.Command, force, autoMerge bool) error {
 		reader := bufio.NewReader(os.Stdin)
 		response, err := reader.ReadString('\n')
 		if err != nil {
-			return ctxerr.ReadInput(err)
+			return fs2.ReadInput(err)
 		}
 		response = strings.TrimSpace(strings.ToLower(response))
 		if response != cli.ConfirmShort && response != cli.ConfirmLong {
@@ -75,7 +77,7 @@ func HandleClaudeMd(cmd *cobra.Command, force, autoMerge bool) error {
 	timestamp := time.Now().Unix()
 	backupName := fmt.Sprintf("%s.%d.bak", claude.Md, timestamp)
 	if err := os.WriteFile(backupName, existingContent, fs.PermFile); err != nil {
-		return ctxerr.CreateBackup(backupName, err)
+		return backup.Create(backupName, err)
 	}
 	write.InitBackup(cmd, backupName)
 	insertPos := FindInsertionPoint(existingStr)
@@ -86,7 +88,7 @@ func HandleClaudeMd(cmd *cobra.Command, force, autoMerge bool) error {
 		mergedContent = existingStr[:insertPos] + token.NewlineLF + string(templateContent) + token.NewlineLF + existingStr[insertPos:]
 	}
 	if err := os.WriteFile(claude.Md, []byte(mergedContent), fs.PermFile); err != nil {
-		return ctxerr.WriteMerged(claude.Md, err)
+		return fs2.WriteMerged(claude.Md, err)
 	}
 	write.InitMerged(cmd, claude.Md)
 	return nil

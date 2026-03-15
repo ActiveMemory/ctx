@@ -12,9 +12,10 @@ import (
 	"strings"
 
 	"github.com/ActiveMemory/ctx/internal/config/crypto"
+	"github.com/ActiveMemory/ctx/internal/err/fs"
+	ctxerr "github.com/ActiveMemory/ctx/internal/err/notify"
 	"github.com/spf13/cobra"
 
-	ctxerr "github.com/ActiveMemory/ctx/internal/err"
 	notifylib "github.com/ActiveMemory/ctx/internal/notify"
 	"github.com/ActiveMemory/ctx/internal/write"
 )
@@ -34,7 +35,7 @@ func Run(cmd *cobra.Command, stdin *os.File) error {
 
 	scanner := bufio.NewScanner(stdin)
 	if !scanner.Scan() {
-		return ctxerr.NoInput()
+		return fs.NoInput()
 	}
 	url := strings.TrimSpace(scanner.Text())
 	if url == "" {

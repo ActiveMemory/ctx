@@ -11,11 +11,11 @@ import (
 	"strings"
 
 	"github.com/ActiveMemory/ctx/internal/config/journal"
+	ctxerr "github.com/ActiveMemory/ctx/internal/err/journal"
 	"github.com/spf13/cobra"
 
 	"github.com/ActiveMemory/ctx/internal/assets"
 	ctxcontext "github.com/ActiveMemory/ctx/internal/context"
-	ctxerr "github.com/ActiveMemory/ctx/internal/err"
 	"github.com/ActiveMemory/ctx/internal/journal/state"
 )
 
@@ -36,7 +36,7 @@ func runMarkJournal(cmd *cobra.Command, filename, stage string) error {
 
 	jstate, loadErr := state.Load(journalDir)
 	if loadErr != nil {
-		return ctxerr.LoadJournalStateFailed(loadErr)
+		return ctxerr.LoadStateFailed(loadErr)
 	}
 
 	check, _ := cmd.Flags().GetBool("check")
@@ -69,7 +69,7 @@ func runMarkJournal(cmd *cobra.Command, filename, stage string) error {
 	}
 
 	if saveErr := jstate.Save(journalDir); saveErr != nil {
-		return ctxerr.SaveJournalStateFailed(saveErr)
+		return ctxerr.SaveStateFailed(saveErr)
 	}
 
 	cmd.Println(fmt.Sprintf(assets.TextDesc(assets.TextDescKeyMarkJournalMarked), filename, stage))

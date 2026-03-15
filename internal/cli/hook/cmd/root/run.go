@@ -15,10 +15,11 @@ import (
 	"github.com/ActiveMemory/ctx/internal/config/fs"
 	"github.com/ActiveMemory/ctx/internal/config/marker"
 	"github.com/ActiveMemory/ctx/internal/config/token"
+	"github.com/ActiveMemory/ctx/internal/err/config"
+	ctxerr "github.com/ActiveMemory/ctx/internal/err/fs"
 	"github.com/spf13/cobra"
 
 	"github.com/ActiveMemory/ctx/internal/assets"
-	ctxerr "github.com/ActiveMemory/ctx/internal/err"
 	"github.com/ActiveMemory/ctx/internal/write"
 )
 
@@ -66,7 +67,7 @@ func Run(cmd *cobra.Command, args []string, writeFile bool) error {
 	default:
 		write.InfoHookUnknownTool(cmd, tool)
 		write.InfoHookTool(cmd, assets.TextDesc(assets.TextDescKeyHookSupportedTools))
-		return ctxerr.UnsupportedTool(tool)
+		return config.UnsupportedTool(tool)
 	}
 
 	return nil

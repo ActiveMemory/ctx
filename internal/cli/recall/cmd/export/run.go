@@ -15,10 +15,12 @@ import (
 	"github.com/ActiveMemory/ctx/internal/config/file"
 	"github.com/ActiveMemory/ctx/internal/config/fs"
 	"github.com/ActiveMemory/ctx/internal/config/journal"
+	fs2 "github.com/ActiveMemory/ctx/internal/err/fs"
+	journal2 "github.com/ActiveMemory/ctx/internal/err/journal"
+	ctxerr "github.com/ActiveMemory/ctx/internal/err/session"
 	"github.com/spf13/cobra"
 
 	"github.com/ActiveMemory/ctx/internal/cli/recall/core"
-	ctxerr "github.com/ActiveMemory/ctx/internal/err"
 	"github.com/ActiveMemory/ctx/internal/journal/state"
 	"github.com/ActiveMemory/ctx/internal/rc"
 	"github.com/ActiveMemory/ctx/internal/recall/parser"
@@ -54,7 +56,7 @@ func Run(cmd *cobra.Command, args []string, opts core.ExportOpts) error {
 	// 3. Resolve sessions.
 	sessions, scanErr := core.FindSessions(opts.AllProjects)
 	if scanErr != nil {
-		return ctxerr.FindSessions(scanErr)
+		return ctxerr.Find(scanErr)
 	}
 
 	if len(sessions) == 0 {
@@ -75,7 +77,7 @@ func Run(cmd *cobra.Command, args []string, opts core.ExportOpts) error {
 			}
 		}
 		if len(toExport) == 0 {
-			return ctxerr.SessionNotFound(args[0])
+			return ctxerr.NotFound(args[0])
 		}
 		if len(toExport) > 1 {
 			lines := core.FormatSessionMatchLines(toExport)
@@ -88,13 +90,13 @@ func Run(cmd *cobra.Command, args []string, opts core.ExportOpts) error {
 	// 4. Ensure journal directory exists.
 	journalDir := filepath.Join(rc.ContextDir(), dir.Journal)
 	if mkErr := os.MkdirAll(journalDir, fs.PermExec); mkErr != nil {
-		return ctxerr.Mkdir(dir.Journal, mkErr)
+		return fs2.Mkdir(dir.Journal, mkErr)
 	}
 
 	// 5. Load state + build index.
 	jstate, loadErr := state.Load(journalDir)
 	if loadErr != nil {
-		return ctxerr.LoadJournalState(loadErr)
+		return journal2.LoadState(loadErr)
 	}
 	sessionIndex := core.BuildSessionIndex(journalDir)
 

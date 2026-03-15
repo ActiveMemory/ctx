@@ -8,7 +8,7 @@ package claude
 
 import (
 	"github.com/ActiveMemory/ctx/internal/assets"
-	ctxerr "github.com/ActiveMemory/ctx/internal/err"
+	ctxerr "github.com/ActiveMemory/ctx/internal/err/skill"
 )
 
 // Skills returns the list of embedded skill directory names.
@@ -25,7 +25,7 @@ import (
 func Skills() ([]string, error) {
 	names, err := assets.ListSkills()
 	if err != nil {
-		return nil, ctxerr.SkillList(err)
+		return nil, ctxerr.List(err)
 	}
 	return names, nil
 }
@@ -41,7 +41,7 @@ func Skills() ([]string, error) {
 func SkillContent(name string) ([]byte, error) {
 	content, err := assets.SkillContent(name)
 	if err != nil {
-		return nil, ctxerr.SkillRead(name, err)
+		return nil, ctxerr.Read(name, err)
 	}
 	return content, nil
 }

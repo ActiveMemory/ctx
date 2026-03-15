@@ -11,10 +11,11 @@ import (
 	"path/filepath"
 
 	"github.com/ActiveMemory/ctx/internal/config/fs"
+	fs2 "github.com/ActiveMemory/ctx/internal/err/fs"
+	ctxerr "github.com/ActiveMemory/ctx/internal/err/prompt"
 	"github.com/spf13/cobra"
 
 	"github.com/ActiveMemory/ctx/internal/assets"
-	ctxerr "github.com/ActiveMemory/ctx/internal/err"
 	"github.com/ActiveMemory/ctx/internal/write"
 )
 
@@ -30,7 +31,7 @@ import (
 func CreateEntryTemplates(cmd *cobra.Command, contextDir string, force bool) error {
 	templatesDir := filepath.Join(contextDir, "templates")
 	if err := os.MkdirAll(templatesDir, fs.PermExec); err != nil {
-		return ctxerr.Mkdir(templatesDir, err)
+		return fs2.Mkdir(templatesDir, err)
 	}
 	entryTemplates, err := assets.ListEntry()
 	if err != nil {
@@ -47,7 +48,7 @@ func CreateEntryTemplates(cmd *cobra.Command, contextDir string, force bool) err
 			return ctxerr.ReadEntryTemplate(name, err)
 		}
 		if err := os.WriteFile(targetPath, content, fs.PermFile); err != nil {
-			return ctxerr.FileWrite(targetPath, err)
+			return fs2.FileWrite(targetPath, err)
 		}
 		write.InitCreated(cmd, "templates/"+name)
 	}

@@ -18,7 +18,8 @@ import (
 	"github.com/ActiveMemory/ctx/internal/config/pad"
 	"github.com/ActiveMemory/ctx/internal/config/token"
 	"github.com/ActiveMemory/ctx/internal/crypto"
-	ctxerr "github.com/ActiveMemory/ctx/internal/err"
+	crypto2 "github.com/ActiveMemory/ctx/internal/err/crypto"
+	ctxerr "github.com/ActiveMemory/ctx/internal/err/pad"
 	"github.com/ActiveMemory/ctx/internal/io"
 	"github.com/ActiveMemory/ctx/internal/rc"
 )
@@ -65,21 +66,21 @@ func EnsureKey() error {
 	// Encrypted file already exists without a key — we can't generate a new
 	// one because it wouldn't decrypt the existing data.
 	if _, err := os.Stat(ScratchpadPath()); err == nil {
-		return ctxerr.NoKeyAt(kp)
+		return crypto2.NoKeyAt(kp)
 	}
 
 	// First use: generate key.
 	key, genErr := crypto.GenerateKey()
 	if genErr != nil {
-		return ctxerr.GenerateKey(genErr)
+		return crypto2.GenerateKey(genErr)
 	}
 
 	if mkErr := os.MkdirAll(filepath.Dir(kp), fs.PermKeyDir); mkErr != nil {
-		return ctxerr.MkdirKeyDir(mkErr)
+		return crypto2.MkdirKeyDir(mkErr)
 	}
 
 	if saveErr := crypto.SaveKey(kp, key); saveErr != nil {
-		return ctxerr.SaveKey(saveErr)
+		return crypto2.SaveKey(saveErr)
 	}
 
 	fmt.Fprintln(os.Stderr, fmt.Sprintf(assets.TextDesc(assets.TextDescKeyPadKeyCreated), kp)) //nolint:errcheck // best-effort notice
@@ -144,12 +145,12 @@ func ReadEntries() ([]string, error) {
 	kp := KeyPath()
 	key, loadErr := crypto.LoadKey(kp)
 	if loadErr != nil {
-		return nil, ctxerr.LoadKey(loadErr, kp)
+		return nil, crypto2.LoadKey(loadErr, kp)
 	}
 
 	plaintext, decErr := crypto.Decrypt(key, data)
 	if decErr != nil {
-		return nil, ctxerr.DecryptFailed()
+		return nil, crypto2.DecryptFailed()
 	}
 
 	return ParseEntries(plaintext), nil
@@ -180,12 +181,12 @@ func WriteEntries(entries []string) error {
 	kp := KeyPath()
 	key, loadErr := crypto.LoadKey(kp)
 	if loadErr != nil {
-		return ctxerr.LoadKey(loadErr, kp)
+		return crypto2.LoadKey(loadErr, kp)
 	}
 
 	ciphertext, encErr := crypto.Encrypt(key, plaintext)
 	if encErr != nil {
-		return ctxerr.EncryptFailed(encErr)
+		return crypto2.EncryptFailed(encErr)
 	}
 
 	return os.WriteFile(path, ciphertext, fs.PermFile)

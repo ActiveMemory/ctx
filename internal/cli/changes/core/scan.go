@@ -15,7 +15,7 @@ import (
 
 	"github.com/ActiveMemory/ctx/internal/config/file"
 	"github.com/ActiveMemory/ctx/internal/config/token"
-	ctxerr "github.com/ActiveMemory/ctx/internal/err"
+	ctxerr "github.com/ActiveMemory/ctx/internal/err/git"
 	"github.com/ActiveMemory/ctx/internal/rc"
 )
 
@@ -135,7 +135,7 @@ func SummarizeCodeChanges(refTime time.Time) (CodeSummary, error) {
 //   - error: Non-nil if git fails
 func GitLogSince(t time.Time, extraArgs ...string) ([]byte, error) {
 	if _, lookErr := exec.LookPath("git"); lookErr != nil {
-		return nil, ctxerr.GitNotFound()
+		return nil, ctxerr.NotFound()
 	}
 	args := []string{"log", "--since", t.Format(time.RFC3339)}
 	args = append(args, extraArgs...)

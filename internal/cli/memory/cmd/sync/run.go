@@ -10,9 +10,10 @@ import (
 	"path/filepath"
 
 	memory2 "github.com/ActiveMemory/ctx/internal/config/memory"
+	memory3 "github.com/ActiveMemory/ctx/internal/err/memory"
+	ctxerr "github.com/ActiveMemory/ctx/internal/err/state"
 	"github.com/spf13/cobra"
 
-	ctxerr "github.com/ActiveMemory/ctx/internal/err"
 	"github.com/ActiveMemory/ctx/internal/memory"
 	"github.com/ActiveMemory/ctx/internal/rc"
 	"github.com/ActiveMemory/ctx/internal/write"
@@ -35,7 +36,7 @@ func Run(cmd *cobra.Command, dryRun bool) error {
 	sourcePath, discoverErr := memory.DiscoverMemoryPath(projectRoot)
 	if discoverErr != nil {
 		write.ErrAutoMemoryNotActive(cmd, discoverErr)
-		return ctxerr.MemoryNotFound()
+		return memory3.MemoryNotFound()
 	}
 
 	if dryRun {
@@ -46,7 +47,7 @@ func Run(cmd *cobra.Command, dryRun bool) error {
 
 	result, syncErr := memory.Sync(contextDir, sourcePath)
 	if syncErr != nil {
-		return ctxerr.SyncFailed(syncErr)
+		return memory3.Sync(syncErr)
 	}
 
 	write.SyncResult(cmd,
@@ -58,11 +59,11 @@ func Run(cmd *cobra.Command, dryRun bool) error {
 	// Update sync state
 	state, loadErr := memory.LoadState(contextDir)
 	if loadErr != nil {
-		return ctxerr.LoadState(loadErr)
+		return ctxerr.Load(loadErr)
 	}
 	state.MarkSynced()
 	if saveErr := memory.SaveState(contextDir, state); saveErr != nil {
-		return ctxerr.SaveState(saveErr)
+		return ctxerr.Save(saveErr)
 	}
 
 	return nil

@@ -9,7 +9,7 @@ package core
 import (
 	"os"
 
-	ctxerr "github.com/ActiveMemory/ctx/internal/err"
+	ctxerr "github.com/ActiveMemory/ctx/internal/err/validate"
 	"github.com/ActiveMemory/ctx/internal/recall/parser"
 )
 

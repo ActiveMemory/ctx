@@ -12,10 +12,11 @@ import (
 
 	"github.com/ActiveMemory/ctx/internal/config/dir"
 	"github.com/ActiveMemory/ctx/internal/config/fs"
+	fs2 "github.com/ActiveMemory/ctx/internal/err/fs"
+	ctxerr "github.com/ActiveMemory/ctx/internal/err/prompt"
 	"github.com/spf13/cobra"
 
 	"github.com/ActiveMemory/ctx/internal/assets"
-	ctxerr "github.com/ActiveMemory/ctx/internal/err"
 	"github.com/ActiveMemory/ctx/internal/write"
 )
 
@@ -31,7 +32,7 @@ import (
 func CreatePromptTemplates(cmd *cobra.Command, contextDir string, force bool) error {
 	promptDir := filepath.Join(contextDir, dir.Prompts)
 	if err := os.MkdirAll(promptDir, fs.PermExec); err != nil {
-		return ctxerr.Mkdir(promptDir, err)
+		return fs2.Mkdir(promptDir, err)
 	}
 	promptTemplates, err := assets.ListPromptTemplates()
 	if err != nil {
@@ -48,7 +49,7 @@ func CreatePromptTemplates(cmd *cobra.Command, contextDir string, force bool) er
 			return ctxerr.ReadPromptTemplate(name, err)
 		}
 		if err := os.WriteFile(targetPath, content, fs.PermFile); err != nil {
-			return ctxerr.FileWrite(targetPath, err)
+			return fs2.FileWrite(targetPath, err)
 		}
 		write.InitCreated(cmd, "prompts/"+name)
 	}

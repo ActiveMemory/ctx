@@ -8,7 +8,7 @@ package core
 
 import (
 	"github.com/ActiveMemory/ctx/internal/crypto"
-	ctxerr "github.com/ActiveMemory/ctx/internal/err"
+	ctxerr "github.com/ActiveMemory/ctx/internal/err/crypto"
 	"github.com/ActiveMemory/ctx/internal/io"
 )
 

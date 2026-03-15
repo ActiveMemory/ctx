@@ -18,7 +18,7 @@ import (
 	"github.com/ActiveMemory/ctx/internal/config/journal"
 	"github.com/ActiveMemory/ctx/internal/config/regex"
 	"github.com/ActiveMemory/ctx/internal/config/token"
-	ctxerr "github.com/ActiveMemory/ctx/internal/err"
+	ctxerr "github.com/ActiveMemory/ctx/internal/err/fs"
 )
 
 // WriteSection creates a subdirectory, writes its index page, and calls

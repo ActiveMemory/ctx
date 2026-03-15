@@ -15,11 +15,13 @@ import (
 	claude2 "github.com/ActiveMemory/ctx/internal/config/claude"
 	"github.com/ActiveMemory/ctx/internal/config/dir"
 	"github.com/ActiveMemory/ctx/internal/config/fs"
+	"github.com/ActiveMemory/ctx/internal/err/config"
+	fs2 "github.com/ActiveMemory/ctx/internal/err/fs"
+	ctxerr "github.com/ActiveMemory/ctx/internal/err/validate"
 	"github.com/spf13/cobra"
 
 	"github.com/ActiveMemory/ctx/internal/assets"
 	"github.com/ActiveMemory/ctx/internal/claude"
-	ctxerr "github.com/ActiveMemory/ctx/internal/err"
 	"github.com/ActiveMemory/ctx/internal/write"
 )
 
@@ -48,17 +50,17 @@ func MergeSettingsPermissions(cmd *cobra.Command) error {
 		return nil
 	}
 	if err := os.MkdirAll(dir.Claude, fs.PermExec); err != nil {
-		return ctxerr.Mkdir(dir.Claude, err)
+		return fs2.Mkdir(dir.Claude, err)
 	}
 	var buf bytes.Buffer
 	encoder := json.NewEncoder(&buf)
 	encoder.SetEscapeHTML(false)
 	encoder.SetIndent("", "  ")
 	if err := encoder.Encode(settings); err != nil {
-		return ctxerr.MarshalSettings(err)
+		return config.MarshalSettings(err)
 	}
 	if err := os.WriteFile(claude2.Settings, buf.Bytes(), fs.PermFile); err != nil {
-		return ctxerr.FileWrite(claude2.Settings, err)
+		return fs2.FileWrite(claude2.Settings, err)
 	}
 	if fileExists {
 		deduped := allowDeduped || denyDeduped

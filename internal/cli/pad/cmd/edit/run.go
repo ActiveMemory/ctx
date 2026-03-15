@@ -8,11 +8,12 @@ package edit
 
 import (
 	"github.com/ActiveMemory/ctx/internal/config/pad"
+	"github.com/ActiveMemory/ctx/internal/err/fs"
+	ctxerr "github.com/ActiveMemory/ctx/internal/err/pad"
 	"github.com/ActiveMemory/ctx/internal/io"
 	"github.com/spf13/cobra"
 
 	"github.com/ActiveMemory/ctx/internal/cli/pad/core"
-	ctxerr "github.com/ActiveMemory/ctx/internal/err"
 	"github.com/ActiveMemory/ctx/internal/write"
 )
 
@@ -146,7 +147,7 @@ func runEditBlob(cmd *cobra.Command, n int, filePath, labelText string) error {
 	if filePath != "" {
 		data, readErr := io.SafeReadUserFile(filePath)
 		if readErr != nil {
-			return ctxerr.ReadFile(readErr)
+			return fs.ReadFile(readErr)
 		}
 		if len(data) > pad.MaxBlobSize {
 			return ctxerr.FileTooLarge(len(data), pad.MaxBlobSize)

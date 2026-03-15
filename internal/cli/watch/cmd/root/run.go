@@ -10,12 +10,13 @@ import (
 	"io"
 	"os"
 
+	"github.com/ActiveMemory/ctx/internal/err/initialize"
+	ctxerr "github.com/ActiveMemory/ctx/internal/err/recall"
 	io2 "github.com/ActiveMemory/ctx/internal/io"
 	"github.com/spf13/cobra"
 
 	"github.com/ActiveMemory/ctx/internal/cli/watch/core"
 	"github.com/ActiveMemory/ctx/internal/context"
-	ctxerr "github.com/ActiveMemory/ctx/internal/err"
 	"github.com/ActiveMemory/ctx/internal/write"
 )
 
@@ -35,7 +36,7 @@ import (
 //     be opened, or stream processing fails
 func Run(cmd *cobra.Command, logPath string, dryRun bool) error {
 	if !context.Exists("") {
-		return ctxerr.ContextNotInitialized()
+		return initialize.ContextNotInitialized()
 	}
 
 	write.WatchWatching(cmd)

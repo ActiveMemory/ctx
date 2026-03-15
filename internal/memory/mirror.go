@@ -21,7 +21,7 @@ import (
 	"github.com/ActiveMemory/ctx/internal/config/memory"
 	time2 "github.com/ActiveMemory/ctx/internal/config/time"
 	"github.com/ActiveMemory/ctx/internal/config/token"
-	ctxerr "github.com/ActiveMemory/ctx/internal/err"
+	ctxerr "github.com/ActiveMemory/ctx/internal/err/memory"
 	"github.com/ActiveMemory/ctx/internal/io"
 )
 
@@ -33,7 +33,7 @@ func Sync(contextDir, sourcePath string) (SyncResult, error) {
 
 	sourceData, readErr := io.SafeReadUserFile(sourcePath)
 	if readErr != nil {
-		return SyncResult{}, ctxerr.MemoryReadSource(readErr)
+		return SyncResult{}, ctxerr.ReadSource(readErr)
 	}
 
 	result := SyncResult{
@@ -71,18 +71,18 @@ func Archive(contextDir string) (string, error) {
 
 	data, readErr := io.SafeReadUserFile(mirrorPath)
 	if readErr != nil {
-		return "", ctxerr.MemoryReadMirrorArchive(readErr)
+		return "", ctxerr.ReadMirrorArchive(readErr)
 	}
 
 	if mkErr := os.MkdirAll(archiveDir, fs.PermExec); mkErr != nil {
-		return "", ctxerr.MemoryCreateArchiveDir(mkErr)
+		return "", ctxerr.CreateArchiveDir(mkErr)
 	}
 
 	ts := time.Now().Format(time2.TimestampCompact)
 	archivePath := filepath.Join(archiveDir, memory.PrefixMirror+ts+file.ExtMarkdown)
 
 	if writeErr := os.WriteFile(archivePath, data, fs.PermFile); writeErr != nil {
-		return "", ctxerr.MemoryWriteArchive(writeErr)
+		return "", ctxerr.WriteArchive(writeErr)
 	}
 
 	return archivePath, nil
@@ -95,12 +95,12 @@ func Diff(contextDir, sourcePath string) (string, error) {
 
 	mirrorData, mirrorErr := io.SafeReadUserFile(mirrorPath)
 	if mirrorErr != nil {
-		return "", ctxerr.MemoryReadMirror(mirrorErr)
+		return "", ctxerr.ReadMirror(mirrorErr)
 	}
 
 	sourceData, sourceErr := io.SafeReadUserFile(sourcePath)
 	if sourceErr != nil {
-		return "", ctxerr.MemoryReadDiffSource(sourceErr)
+		return "", ctxerr.ReadDiffSource(sourceErr)
 	}
 
 	if bytes.Equal(mirrorData, sourceData) {

@@ -17,7 +17,8 @@ import (
 	"github.com/ActiveMemory/ctx/internal/config/regex"
 	"github.com/ActiveMemory/ctx/internal/config/token"
 	"github.com/ActiveMemory/ctx/internal/entry"
-	ctxerr "github.com/ActiveMemory/ctx/internal/err"
+	"github.com/ActiveMemory/ctx/internal/err/config"
+	ctxerr "github.com/ActiveMemory/ctx/internal/err/task"
 	"github.com/ActiveMemory/ctx/internal/rc"
 	"github.com/ActiveMemory/ctx/internal/task"
 )
@@ -47,7 +48,7 @@ func ApplyUpdate(update ContextUpdate) error {
 	case entry2.Complete:
 		return RunCompleteSilent([]string{update.Content})
 	default:
-		return ctxerr.UnknownUpdateType(update.Type)
+		return config.UnknownUpdateType(update.Type)
 	}
 }
 
@@ -101,7 +102,7 @@ func RunAddSilent(update ContextUpdate) error {
 //     or file operations fail
 func RunCompleteSilent(args []string) error {
 	if len(args) < 1 {
-		return ctxerr.NoTaskSpecified()
+		return ctxerr.NoneSpecified()
 	}
 
 	query := args[0]
@@ -130,7 +131,7 @@ func RunCompleteSilent(args []string) error {
 	}
 
 	if matchedLine == -1 {
-		return ctxerr.NoTaskMatch(query)
+		return ctxerr.NoMatch(query)
 	}
 
 	lines[matchedLine] = regex.Task.ReplaceAllString(

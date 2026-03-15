@@ -11,11 +11,11 @@ import (
 	"time"
 
 	"github.com/ActiveMemory/ctx/internal/config/fmt"
+	ctxerr "github.com/ActiveMemory/ctx/internal/err/initialize"
 	"github.com/spf13/cobra"
 
 	"github.com/ActiveMemory/ctx/internal/cli/agent/core"
 	"github.com/ActiveMemory/ctx/internal/context"
-	ctxerr "github.com/ActiveMemory/ctx/internal/err"
 )
 
 // Run executes the agent command logic.

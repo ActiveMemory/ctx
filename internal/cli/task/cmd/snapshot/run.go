@@ -15,10 +15,11 @@ import (
 	"github.com/ActiveMemory/ctx/internal/config/archive"
 	"github.com/ActiveMemory/ctx/internal/config/fs"
 	"github.com/ActiveMemory/ctx/internal/config/token"
+	"github.com/ActiveMemory/ctx/internal/err/backup"
+	ctxerr "github.com/ActiveMemory/ctx/internal/err/task"
 	"github.com/spf13/cobra"
 
 	"github.com/ActiveMemory/ctx/internal/cli/task/core"
-	ctxerr "github.com/ActiveMemory/ctx/internal/err"
 	"github.com/ActiveMemory/ctx/internal/validation"
 	"github.com/ActiveMemory/ctx/internal/write"
 )
@@ -40,18 +41,18 @@ func Run(cmd *cobra.Command, args []string) error {
 
 	// Check if TASKS.md exists
 	if _, statErr := os.Stat(tasksPath); os.IsNotExist(statErr) {
-		return ctxerr.TaskFileNotFound()
+		return ctxerr.FileNotFound()
 	}
 
 	// Read TASKS.md
 	content, readErr := os.ReadFile(filepath.Clean(tasksPath))
 	if readErr != nil {
-		return ctxerr.TaskFileRead(readErr)
+		return ctxerr.FileRead(readErr)
 	}
 
 	// Ensure the archive directory exists
 	if mkdirErr := os.MkdirAll(archivePath, fs.PermExec); mkdirErr != nil {
-		return ctxerr.CreateArchiveDir(mkdirErr)
+		return backup.CreateArchiveDir(mkdirErr)
 	}
 
 	// Generate snapshot filename

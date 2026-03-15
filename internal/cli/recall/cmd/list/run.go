@@ -13,10 +13,11 @@ import (
 	"github.com/ActiveMemory/ctx/internal/assets"
 	"github.com/ActiveMemory/ctx/internal/config/journal"
 	"github.com/ActiveMemory/ctx/internal/config/time"
+	"github.com/ActiveMemory/ctx/internal/err/date"
+	ctxerr "github.com/ActiveMemory/ctx/internal/err/session"
 	"github.com/spf13/cobra"
 
 	"github.com/ActiveMemory/ctx/internal/cli/recall/core"
-	ctxerr "github.com/ActiveMemory/ctx/internal/err"
 	"github.com/ActiveMemory/ctx/internal/parse"
 	"github.com/ActiveMemory/ctx/internal/recall/parser"
 	"github.com/ActiveMemory/ctx/internal/write"
@@ -46,11 +47,11 @@ func Run(
 	// Parse date filters
 	sinceTime, sinceErr := parse.Date(since)
 	if since != "" && sinceErr != nil {
-		return ctxerr.InvalidDate(assets.FlagSince, since, sinceErr)
+		return date.InvalidDate(assets.FlagSince, since, sinceErr)
 	}
 	untilTime, untilErr := parse.Date(until)
 	if until != "" && untilErr != nil {
-		return ctxerr.InvalidDate(assets.FlagUntil, until, untilErr)
+		return date.InvalidDate(assets.FlagUntil, until, untilErr)
 	}
 	// --until is inclusive: advance to the end of the day
 	if until != "" {
@@ -59,7 +60,7 @@ func Run(
 
 	sessions, scanErr := core.FindSessions(allProjects)
 	if scanErr != nil {
-		return ctxerr.FindSessions(scanErr)
+		return ctxerr.Find(scanErr)
 	}
 
 	if len(sessions) == 0 {

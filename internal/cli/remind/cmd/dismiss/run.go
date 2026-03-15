@@ -9,10 +9,10 @@ package dismiss
 import (
 	"strconv"
 
+	ctxerr "github.com/ActiveMemory/ctx/internal/err/reminder"
 	"github.com/spf13/cobra"
 
 	"github.com/ActiveMemory/ctx/internal/cli/remind/core"
-	ctxerr "github.com/ActiveMemory/ctx/internal/err"
 	"github.com/ActiveMemory/ctx/internal/write"
 )
 
@@ -44,7 +44,7 @@ func RunDismiss(cmd *cobra.Command, idStr string) error {
 	}
 
 	if found < 0 {
-		return ctxerr.ReminderNotFound(id)
+		return ctxerr.NotFound(id)
 	}
 
 	write.ReminderDismissed(cmd, reminders[found].ID, reminders[found].Message)

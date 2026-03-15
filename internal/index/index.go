@@ -18,7 +18,7 @@ import (
 	"github.com/ActiveMemory/ctx/internal/config/marker"
 	"github.com/ActiveMemory/ctx/internal/config/regex"
 	"github.com/ActiveMemory/ctx/internal/config/token"
-	ctxerr "github.com/ActiveMemory/ctx/internal/err"
+	ctxerr "github.com/ActiveMemory/ctx/internal/err/recall"
 	io2 "github.com/ActiveMemory/ctx/internal/io"
 )
 

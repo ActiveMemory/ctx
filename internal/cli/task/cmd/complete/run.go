@@ -16,9 +16,9 @@ import (
 	"github.com/ActiveMemory/ctx/internal/config/fs"
 	"github.com/ActiveMemory/ctx/internal/config/regex"
 	"github.com/ActiveMemory/ctx/internal/config/token"
+	ctxerr "github.com/ActiveMemory/ctx/internal/err/task"
 	"github.com/spf13/cobra"
 
-	ctxerr "github.com/ActiveMemory/ctx/internal/err"
 	"github.com/ActiveMemory/ctx/internal/rc"
 	"github.com/ActiveMemory/ctx/internal/task"
 	"github.com/ActiveMemory/ctx/internal/write"
@@ -44,13 +44,13 @@ func CompleteTask(query, contextDir string) (string, error) {
 
 	// Check if the file exists
 	if _, statErr := os.Stat(filePath); os.IsNotExist(statErr) {
-		return "", ctxerr.TaskFileNotFound()
+		return "", ctxerr.FileNotFound()
 	}
 
 	// Read existing content
 	content, readErr := os.ReadFile(filepath.Clean(filePath))
 	if readErr != nil {
-		return "", ctxerr.TaskFileRead(readErr)
+		return "", ctxerr.FileRead(readErr)
 	}
 
 	// Parse tasks and find matching one
@@ -85,7 +85,7 @@ func CompleteTask(query, contextDir string) (string, error) {
 				strings.ToLower(taskText), strings.ToLower(query),
 			) {
 				if matchedLine != -1 {
-					return "", ctxerr.TaskMultipleMatches(query)
+					return "", ctxerr.MultipleMatches(query)
 				}
 				matchedLine = i
 				matchedTask = taskText
@@ -94,7 +94,7 @@ func CompleteTask(query, contextDir string) (string, error) {
 	}
 
 	if matchedLine == -1 {
-		return "", ctxerr.TaskNotFound(query)
+		return "", ctxerr.NotFound(query)
 	}
 
 	// Mark the task as complete
@@ -105,7 +105,7 @@ func CompleteTask(query, contextDir string) (string, error) {
 	// Write back
 	newContent := strings.Join(lines, token.NewlineLF)
 	if writeErr := os.WriteFile(filePath, []byte(newContent), fs.PermFile); writeErr != nil {
-		return "", ctxerr.TaskFileWrite(writeErr)
+		return "", ctxerr.FileWrite(writeErr)
 	}
 
 	return matchedTask, nil

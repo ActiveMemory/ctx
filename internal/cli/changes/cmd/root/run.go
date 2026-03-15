@@ -7,10 +7,10 @@
 package root
 
 import (
+	ctxerr "github.com/ActiveMemory/ctx/internal/err/initialize"
 	"github.com/spf13/cobra"
 
 	"github.com/ActiveMemory/ctx/internal/cli/changes/core"
-	ctxerr "github.com/ActiveMemory/ctx/internal/err"
 )
 
 // Run executes the changes command logic.

@@ -17,7 +17,7 @@ import (
 	"github.com/ActiveMemory/ctx/internal/config/fs"
 	time2 "github.com/ActiveMemory/ctx/internal/config/time"
 	"github.com/ActiveMemory/ctx/internal/config/token"
-	ctxerr "github.com/ActiveMemory/ctx/internal/err"
+	ctxerr "github.com/ActiveMemory/ctx/internal/err/backup"
 	"github.com/ActiveMemory/ctx/internal/rc"
 )
 
