@@ -37,10 +37,27 @@
 //
 // Tools expose ctx commands as callable operations:
 //
-//	ctx_status    → Context health summary
-//	ctx_add       → Add a task, decision, learning, or convention
-//	ctx_complete  → Mark a task as done
-//	ctx_drift     → Detect stale or invalid context
+//	ctx_status                → Context health summary
+//	ctx_add                   → Add a task, decision, learning, or convention
+//	ctx_complete              → Mark a task as done
+//	ctx_drift                 → Detect stale or invalid context
+//	ctx_recall                → Query past session history
+//	ctx_watch_update          → Apply structured context updates to files
+//	ctx_compact               → Move completed tasks to archive
+//	ctx_next                  → Get the next pending task
+//	ctx_check_task_completion → Nudge when a recent action may complete a task
+//	ctx_session_event         → Signal session start/end lifecycle
+//	ctx_remind                → List active reminders
+//
+// # Prompts
+//
+// Prompts provide pre-built templates for common workflows:
+//
+//	ctx-session-start  → Load full context at session start
+//	ctx-add-decision   → Format an architectural decision entry
+//	ctx-add-learning   → Format a learning entry
+//	ctx-reflect        → Guide end-of-session reflection
+//	ctx-checkpoint     → Report session statistics
 //
 // # Usage
 //
