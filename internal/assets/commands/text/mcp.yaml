@@ -160,7 +160,21 @@ mcp.pending-updates-format:
 mcp.prompt-add-decision-desc:
   short: Record an architectural decision with context, rationale, and consequences
 mcp.prompt-add-decision-field-format:
-  short: '- **%s**: %s'
+  short: "- **%s**: %s\n"
+mcp.prompt-label-decision:
+  short: Decision
+mcp.prompt-label-context:
+  short: Context
+mcp.prompt-label-rationale:
+  short: Rationale
+mcp.prompt-label-consequences:
+  short: Consequences
+mcp.prompt-label-learning:
+  short: Learning
+mcp.prompt-label-lesson:
+  short: Lesson
+mcp.prompt-label-application:
+  short: Application
 mcp.prompt-add-decision-footer:
   short: Call ctx_add with type="decision" and all fields above.
 mcp.prompt-add-decision-header:
@@ -170,7 +184,7 @@ mcp.prompt-add-decision-result-desc:
 mcp.prompt-add-learning-desc:
   short: Record a lesson learned with context, lesson, and application
 mcp.prompt-add-learning-field-format:
-  short: '- **%s**: %s'
+  short: "- **%s**: %s\n"
 mcp.prompt-add-learning-footer:
   short: Call ctx_add with type="learning" and all fields above.
 mcp.prompt-add-learning-header:
