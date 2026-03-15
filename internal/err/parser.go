@@ -6,7 +6,11 @@
 
 package err
 
-import "fmt"
+import (
+	"fmt"
+
+	"github.com/ActiveMemory/ctx/internal/assets"
+)
 
 // ParserReadFile wraps a session file read failure.
 //
@@ -16,7 +20,7 @@ import "fmt"
 // Returns:
 //   - error: "read file: <cause>"
 func ParserReadFile(cause error) error {
-	return fmt.Errorf("read file: %w", cause)
+	return fmt.Errorf(assets.TextDesc(assets.TextDescKeyErrParserReadFile), cause)
 }
 
 // ParserOpenFile wraps a session file open failure.
@@ -27,7 +31,7 @@ func ParserReadFile(cause error) error {
 // Returns:
 //   - error: "open file: <cause>"
 func ParserOpenFile(cause error) error {
-	return fmt.Errorf("open file: %w", cause)
+	return fmt.Errorf(assets.TextDesc(assets.TextDescKeyErrParserOpenFile), cause)
 }
 
 // ParserNoMatch returns an error when no parser can handle a file.
@@ -38,7 +42,7 @@ func ParserOpenFile(cause error) error {
 // Returns:
 //   - error: "no parser found for file: <path>"
 func ParserNoMatch(path string) error {
-	return fmt.Errorf("no parser found for file: %s", path)
+	return fmt.Errorf(assets.TextDesc(assets.TextDescKeyErrParserNoMatch), path)
 }
 
 // ParserWalkDir wraps a directory walk failure during session scanning.
@@ -49,7 +53,7 @@ func ParserNoMatch(path string) error {
 // Returns:
 //   - error: "walk directory: <cause>"
 func ParserWalkDir(cause error) error {
-	return fmt.Errorf("walk directory: %w", cause)
+	return fmt.Errorf(assets.TextDesc(assets.TextDescKeyErrParserWalkDir), cause)
 }
 
 // ParserFileError wraps a per-file parse failure with the file path.
@@ -61,7 +65,7 @@ func ParserWalkDir(cause error) error {
 // Returns:
 //   - error: "<path>: <cause>"
 func ParserFileError(path string, cause error) error {
-	return fmt.Errorf("%s: %w", path, cause)
+	return fmt.Errorf(assets.TextDesc(assets.TextDescKeyErrParserFileError), path, cause)
 }
 
 // ParserScanFile wraps a session file scan failure.
@@ -72,7 +76,7 @@ func ParserFileError(path string, cause error) error {
 // Returns:
 //   - error: "scan file: <cause>"
 func ParserScanFile(cause error) error {
-	return fmt.Errorf("scan file: %w", cause)
+	return fmt.Errorf(assets.TextDesc(assets.TextDescKeyErrParserScanFile), cause)
 }
 
 // ParserUnmarshal wraps a JSON unmarshal failure during session parsing.
@@ -83,5 +87,5 @@ func ParserScanFile(cause error) error {
 // Returns:
 //   - error: "unmarshal: <cause>"
 func ParserUnmarshal(cause error) error {
-	return fmt.Errorf("unmarshal: %w", cause)
+	return fmt.Errorf(assets.TextDesc(assets.TextDescKeyErrParserUnmarshal), cause)
 }

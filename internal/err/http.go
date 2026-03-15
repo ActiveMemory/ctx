@@ -6,7 +6,12 @@
 
 package err
 
-import "fmt"
+import (
+	"errors"
+	"fmt"
+
+	"github.com/ActiveMemory/ctx/internal/assets"
+)
 
 // UnsafeURLScheme returns an error when a URL uses a scheme other than
 // http or https.
@@ -17,7 +22,7 @@ import "fmt"
 // Returns:
 //   - error: "unsafe URL scheme: <scheme>: only http and https are allowed"
 func UnsafeURLScheme(scheme string) error {
-	return fmt.Errorf("unsafe URL scheme: %s: only http and https are allowed", scheme)
+	return fmt.Errorf(assets.TextDesc(assets.TextDescKeyErrHttpUnsafeURLScheme), scheme)
 }
 
 // TooManyRedirects returns an error when an HTTP response exceeds the
@@ -26,5 +31,5 @@ func UnsafeURLScheme(scheme string) error {
 // Returns:
 //   - error: "too many redirects: limit exceeded"
 func TooManyRedirects() error {
-	return fmt.Errorf("too many redirects: limit exceeded")
+	return errors.New(assets.TextDesc(assets.TextDescKeyErrHttpTooManyRedirects))
 }

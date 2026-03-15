@@ -6,7 +6,11 @@
 
 package err
 
-import "fmt"
+import (
+	"fmt"
+
+	"github.com/ActiveMemory/ctx/internal/assets"
+)
 
 // SkillList wraps a failure to list embedded skill directories.
 //
@@ -16,7 +20,7 @@ import "fmt"
 // Returns:
 //   - error: "failed to list skills: <cause>"
 func SkillList(cause error) error {
-	return fmt.Errorf("failed to list skills: %w", cause)
+	return fmt.Errorf(assets.TextDesc(assets.TextDescKeyErrSkillList), cause)
 }
 
 // SkillRead wraps a failure to read a skill's content.
@@ -28,5 +32,5 @@ func SkillList(cause error) error {
 // Returns:
 //   - error: "failed to read skill <name>: <cause>"
 func SkillRead(name string, cause error) error {
-	return fmt.Errorf("failed to read skill %s: %w", name, cause)
+	return fmt.Errorf(assets.TextDesc(assets.TextDescKeyErrSkillRead), name, cause)
 }

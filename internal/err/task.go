@@ -9,6 +9,8 @@ package err
 import (
 	"errors"
 	"fmt"
+
+	"github.com/ActiveMemory/ctx/internal/assets"
 )
 
 // TaskFileNotFound returns an error when TASKS.md does not exist.
@@ -16,7 +18,7 @@ import (
 // Returns:
 //   - error: "TASKS.md not found"
 func TaskFileNotFound() error {
-	return fmt.Errorf("TASKS.md not found")
+	return errors.New(assets.TextDesc(assets.TextDescKeyErrTaskFileNotFound))
 }
 
 // TaskFileRead wraps a failure to read TASKS.md.
@@ -27,7 +29,7 @@ func TaskFileNotFound() error {
 // Returns:
 //   - error: "failed to read TASKS.md: <cause>"
 func TaskFileRead(cause error) error {
-	return fmt.Errorf("failed to read TASKS.md: %w", cause)
+	return fmt.Errorf(assets.TextDesc(assets.TextDescKeyErrTaskFileRead), cause)
 }
 
 // TaskFileWrite wraps a failure to write TASKS.md.
@@ -38,7 +40,7 @@ func TaskFileRead(cause error) error {
 // Returns:
 //   - error: "failed to write TASKS.md: <cause>"
 func TaskFileWrite(cause error) error {
-	return fmt.Errorf("failed to write TASKS.md: %w", cause)
+	return fmt.Errorf(assets.TextDesc(assets.TextDescKeyErrTaskFileWrite), cause)
 }
 
 // TaskMultipleMatches returns an error when a query matches more than one task.
@@ -49,10 +51,7 @@ func TaskFileWrite(cause error) error {
 // Returns:
 //   - error: "multiple tasks match <query>; be more specific or use task number"
 func TaskMultipleMatches(query string) error {
-	return fmt.Errorf(
-		"multiple tasks match %q; be more specific or use task number",
-		query,
-	)
+	return fmt.Errorf(assets.TextDesc(assets.TextDescKeyErrTaskMultipleMatches), query)
 }
 
 // TaskNotFound returns an error when no task matches the query.
@@ -63,7 +62,7 @@ func TaskMultipleMatches(query string) error {
 // Returns:
 //   - error: "no task matching <query> found"
 func TaskNotFound(query string) error {
-	return fmt.Errorf("no task matching %q found", query)
+	return fmt.Errorf(assets.TextDesc(assets.TextDescKeyErrTaskNotFound), query)
 }
 
 // NoCompletedTasks returns an error when there are no completed tasks to archive.
@@ -71,7 +70,7 @@ func TaskNotFound(query string) error {
 // Returns:
 //   - error: "no completed tasks to archive"
 func NoCompletedTasks() error {
-	return fmt.Errorf("no completed tasks to archive")
+	return errors.New(assets.TextDesc(assets.TextDescKeyErrTaskNoCompletedTasks))
 }
 
 // NoTaskSpecified returns an error when no task query was provided.
@@ -79,7 +78,7 @@ func NoCompletedTasks() error {
 // Returns:
 //   - error: "no task specified"
 func NoTaskSpecified() error {
-	return errors.New("no task specified")
+	return errors.New(assets.TextDesc(assets.TextDescKeyErrTaskNoTaskSpecified))
 }
 
 // NoTaskMatch returns an error when no task matches the search query.
@@ -90,7 +89,7 @@ func NoTaskSpecified() error {
 // Returns:
 //   - error: "no task matching \"<query>\" found"
 func NoTaskMatch(query string) error {
-	return fmt.Errorf("no task matching %q found", query)
+	return fmt.Errorf(assets.TextDesc(assets.TextDescKeyErrTaskNoTaskMatch), query)
 }
 
 // SnapshotWrite wraps a failure to write a task snapshot file.
@@ -101,5 +100,5 @@ func NoTaskMatch(query string) error {
 // Returns:
 //   - error: "failed to write snapshot: <cause>"
 func SnapshotWrite(cause error) error {
-	return fmt.Errorf("failed to write snapshot: %w", cause)
+	return fmt.Errorf(assets.TextDesc(assets.TextDescKeyErrTaskSnapshotWrite), cause)
 }

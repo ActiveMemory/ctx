@@ -6,7 +6,12 @@
 
 package err
 
-import "fmt"
+import (
+	"errors"
+	"fmt"
+
+	"github.com/ActiveMemory/ctx/internal/assets"
+)
 
 // LoadJournalState wraps a journal state loading failure.
 //
@@ -16,7 +21,7 @@ import "fmt"
 // Returns:
 //   - error: "load journal state: <cause>"
 func LoadJournalState(cause error) error {
-	return fmt.Errorf("load journal state: %w", cause)
+	return fmt.Errorf(assets.TextDesc(assets.TextDescKeyErrJournalLoadJournalState), cause)
 }
 
 // SaveJournalState wraps a journal state saving failure.
@@ -27,7 +32,7 @@ func LoadJournalState(cause error) error {
 // Returns:
 //   - error: "save journal state: <cause>"
 func SaveJournalState(cause error) error {
-	return fmt.Errorf("save journal state: %w", cause)
+	return fmt.Errorf(assets.TextDesc(assets.TextDescKeyErrJournalSaveJournalState), cause)
 }
 
 // LoadJournalStateErr wraps a failure to load journal processing state.
@@ -38,7 +43,7 @@ func SaveJournalState(cause error) error {
 // Returns:
 //   - error: "load journal state: <cause>"
 func LoadJournalStateErr(cause error) error {
-	return fmt.Errorf("load journal state: %w", cause)
+	return fmt.Errorf(assets.TextDesc(assets.TextDescKeyErrJournalLoadJournalState), cause)
 }
 
 // LoadJournalStateFailed wraps a journal state loading failure.
@@ -49,7 +54,7 @@ func LoadJournalStateErr(cause error) error {
 // Returns:
 //   - error: "load journal state: <cause>"
 func LoadJournalStateFailed(cause error) error {
-	return fmt.Errorf("load journal state: %w", cause)
+	return fmt.Errorf(assets.TextDesc(assets.TextDescKeyErrJournalLoadJournalState), cause)
 }
 
 // SaveJournalStateFailed wraps a journal state save failure.
@@ -60,7 +65,7 @@ func LoadJournalStateFailed(cause error) error {
 // Returns:
 //   - error: "save journal state: <cause>"
 func SaveJournalStateFailed(cause error) error {
-	return fmt.Errorf("save journal state: %w", cause)
+	return fmt.Errorf(assets.TextDesc(assets.TextDescKeyErrJournalSaveJournalState), cause)
 }
 
 // NoJournalDir returns an error when the journal directory does not exist.
@@ -71,10 +76,7 @@ func SaveJournalStateFailed(cause error) error {
 // Returns:
 //   - error: includes a hint to run 'ctx recall export --all'
 func NoJournalDir(path string) error {
-	return fmt.Errorf(
-		"no journal directory found at %s\nRun 'ctx recall export --all' first",
-		path,
-	)
+	return fmt.Errorf(assets.TextDesc(assets.TextDescKeyErrJournalNoJournalDir), path)
 }
 
 // ScanJournal wraps a journal scanning failure.
@@ -85,7 +87,7 @@ func NoJournalDir(path string) error {
 // Returns:
 //   - error: "failed to scan journal: <cause>"
 func ScanJournal(cause error) error {
-	return fmt.Errorf("failed to scan journal: %w", cause)
+	return fmt.Errorf(assets.TextDesc(assets.TextDescKeyErrJournalScanJournal), cause)
 }
 
 // NoJournalEntries returns an error when the journal directory has no entries.
@@ -96,10 +98,7 @@ func ScanJournal(cause error) error {
 // Returns:
 //   - error: includes a hint to run 'ctx recall export --all'
 func NoJournalEntries(path string) error {
-	return fmt.Errorf(
-		"no journal entries found in %s\nRun 'ctx recall export --all' first",
-		path,
-	)
+	return fmt.Errorf(assets.TextDesc(assets.TextDescKeyErrJournalNoJournalEntries), path)
 }
 
 // NoEntriesMatch returns an error when a pattern matches nothing.
@@ -110,7 +109,7 @@ func NoJournalEntries(path string) error {
 // Returns:
 //   - error: "no journal entries match: <patterns>"
 func NoEntriesMatch(patterns string) error {
-	return fmt.Errorf("no journal entries match: %s", patterns)
+	return fmt.Errorf(assets.TextDesc(assets.TextDescKeyErrJournalNoEntriesMatch), patterns)
 }
 
 // ReadJournalDir wraps a failure to read the journal directory.
@@ -121,7 +120,7 @@ func NoEntriesMatch(patterns string) error {
 // Returns:
 //   - error: "read journal directory: <cause>"
 func ReadJournalDir(cause error) error {
-	return fmt.Errorf("read journal directory: %w", cause)
+	return fmt.Errorf(assets.TextDesc(assets.TextDescKeyErrJournalReadJournalDir), cause)
 }
 
 // UnknownStage returns an error for an unrecognized journal stage.
@@ -133,7 +132,7 @@ func ReadJournalDir(cause error) error {
 // Returns:
 //   - error: "unknown stage <stage>; valid: <valid>"
 func UnknownStage(stage, valid string) error {
-	return fmt.Errorf("unknown stage %q; valid: %s", stage, valid)
+	return fmt.Errorf(assets.TextDesc(assets.TextDescKeyErrJournalUnknownStage), stage, valid)
 }
 
 // StageNotSet returns an error when a journal stage has not been set.
@@ -145,7 +144,7 @@ func UnknownStage(stage, valid string) error {
 // Returns:
 //   - error: "<filename>: <stage> not set"
 func StageNotSet(filename, stage string) error {
-	return fmt.Errorf("%s: %s not set", filename, stage)
+	return fmt.Errorf(assets.TextDesc(assets.TextDescKeyErrJournalStageNotSet), filename, stage)
 }
 
 // RegenerateRequiresAll returns a validation error when --regenerate
@@ -154,7 +153,5 @@ func StageNotSet(filename, stage string) error {
 // Returns:
 //   - error: explains the flag dependency
 func RegenerateRequiresAll() error {
-	return fmt.Errorf(
-		"--regenerate requires --all (single-session export always writes)",
-	)
+	return errors.New(assets.TextDesc(assets.TextDescKeyErrJournalRegenerateRequiresAll))
 }

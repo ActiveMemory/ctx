@@ -6,7 +6,11 @@
 
 package err
 
-import "fmt"
+import (
+	"fmt"
+
+	"github.com/ActiveMemory/ctx/internal/assets"
+)
 
 // ReadingStateDir wraps a state directory read failure.
 //
@@ -16,7 +20,7 @@ import "fmt"
 // Returns:
 //   - error: "reading state directory: <cause>"
 func ReadingStateDir(cause error) error {
-	return fmt.Errorf("reading state directory: %w", cause)
+	return fmt.Errorf(assets.TextDesc(assets.TextDescKeyErrStateReadingStateDir), cause)
 }
 
 // LoadState wraps a state-loading failure.
@@ -27,7 +31,7 @@ func ReadingStateDir(cause error) error {
 // Returns:
 //   - error: "loading state: <cause>"
 func LoadState(cause error) error {
-	return fmt.Errorf("loading state: %w", cause)
+	return fmt.Errorf(assets.TextDesc(assets.TextDescKeyErrStateLoadState), cause)
 }
 
 // SaveState wraps a state-saving failure.
@@ -38,5 +42,5 @@ func LoadState(cause error) error {
 // Returns:
 //   - error: "saving state: <cause>"
 func SaveState(cause error) error {
-	return fmt.Errorf("saving state: %w", cause)
+	return fmt.Errorf(assets.TextDesc(assets.TextDescKeyErrStateSaveState), cause)
 }

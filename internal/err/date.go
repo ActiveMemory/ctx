@@ -6,7 +6,11 @@
 
 package err
 
-import "fmt"
+import (
+	"fmt"
+
+	"github.com/ActiveMemory/ctx/internal/assets"
+)
 
 // InvalidDateValue returns an error for an invalid date string.
 //
@@ -16,7 +20,7 @@ import "fmt"
 // Returns:
 //   - error: "invalid date <value> (expected YYYY-MM-DD)"
 func InvalidDateValue(value string) error {
-	return fmt.Errorf("invalid date %q (expected YYYY-MM-DD)", value)
+	return fmt.Errorf(assets.TextDesc(assets.TextDescKeyErrDateInvalidDateValue), value)
 }
 
 // InvalidDate returns an error for an invalid date flag value.
@@ -30,6 +34,6 @@ func InvalidDateValue(value string) error {
 //   - error: "invalid <flag> date <value> (expected YYYY-MM-DD): <cause>"
 func InvalidDate(flag, value string, cause error) error {
 	return fmt.Errorf(
-		"invalid %s date %q (expected YYYY-MM-DD): %w", flag, value, cause,
+		assets.TextDesc(assets.TextDescKeyErrDateInvalidDate), flag, value, cause,
 	)
 }

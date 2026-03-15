@@ -9,6 +9,8 @@ package err
 import (
 	"errors"
 	"fmt"
+
+	"github.com/ActiveMemory/ctx/internal/assets"
 )
 
 // ReadReminders wraps a failure to read the reminders file.
@@ -19,7 +21,7 @@ import (
 // Returns:
 //   - error: "read reminders: <cause>"
 func ReadReminders(cause error) error {
-	return fmt.Errorf("read reminders: %w", cause)
+	return fmt.Errorf(assets.TextDesc(assets.TextDescKeyErrReminderReadReminders), cause)
 }
 
 // ParseReminders wraps a failure to parse the reminders file.
@@ -30,7 +32,7 @@ func ReadReminders(cause error) error {
 // Returns:
 //   - error: "parse reminders: <cause>"
 func ParseReminders(cause error) error {
-	return fmt.Errorf("parse reminders: %w", cause)
+	return fmt.Errorf(assets.TextDesc(assets.TextDescKeyErrReminderParseReminders), cause)
 }
 
 // InvalidID returns an error for an unparseable ID string.
@@ -41,7 +43,7 @@ func ParseReminders(cause error) error {
 // Returns:
 //   - error: "invalid ID <value>"
 func InvalidID(value string) error {
-	return fmt.Errorf("invalid ID %q", value)
+	return fmt.Errorf(assets.TextDesc(assets.TextDescKeyErrReminderInvalidID), value)
 }
 
 // ReminderNotFound returns an error when no reminder matches the given ID.
@@ -52,7 +54,7 @@ func InvalidID(value string) error {
 // Returns:
 //   - error: "no reminder with ID <id>"
 func ReminderNotFound(id int) error {
-	return fmt.Errorf("no reminder with ID %d", id)
+	return fmt.Errorf(assets.TextDesc(assets.TextDescKeyErrReminderNotFound), id)
 }
 
 // ReminderIDRequired returns an error when no reminder ID is provided.
@@ -60,5 +62,5 @@ func ReminderNotFound(id int) error {
 // Returns:
 //   - error: "provide a reminder ID or use --all"
 func ReminderIDRequired() error {
-	return errors.New("provide a reminder ID or use --all")
+	return errors.New(assets.TextDesc(assets.TextDescKeyErrReminderIDRequired))
 }

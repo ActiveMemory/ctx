@@ -6,7 +6,11 @@
 
 package err
 
-import "fmt"
+import (
+	"fmt"
+
+	"github.com/ActiveMemory/ctx/internal/assets"
+)
 
 // EmbeddedTemplateNotFound returns an error when an embedded hook
 // message template cannot be located.
@@ -18,7 +22,7 @@ import "fmt"
 // Returns:
 //   - error: "embedded template not found for <hook>/<variant>"
 func EmbeddedTemplateNotFound(hook, variant string) error {
-	return fmt.Errorf("embedded template not found for %s/%s", hook, variant)
+	return fmt.Errorf(assets.TextDesc(assets.TextDescKeyErrHookEmbeddedTemplateNotFound), hook, variant)
 }
 
 // OverrideExists returns an error when a message override already
@@ -32,7 +36,7 @@ func EmbeddedTemplateNotFound(hook, variant string) error {
 // Returns:
 //   - error: "override already exists at <path>..."
 func OverrideExists(path, hook, variant string) error {
-	return fmt.Errorf("override already exists at %s\nEdit it directly or use `ctx system message reset %s %s` first",
+	return fmt.Errorf(assets.TextDesc(assets.TextDescKeyErrHookOverrideExists),
 		path, hook, variant)
 }
 
@@ -45,7 +49,7 @@ func OverrideExists(path, hook, variant string) error {
 // Returns:
 //   - error: "failed to write override <path>: <cause>"
 func WriteOverride(path string, cause error) error {
-	return fmt.Errorf("failed to write override %s: %w", path, cause)
+	return fmt.Errorf(assets.TextDesc(assets.TextDescKeyErrHookWriteOverride), path, cause)
 }
 
 // RemoveOverride wraps a message override removal failure.
@@ -57,7 +61,7 @@ func WriteOverride(path string, cause error) error {
 // Returns:
 //   - error: "failed to remove override <path>: <cause>"
 func RemoveOverride(path string, cause error) error {
-	return fmt.Errorf("failed to remove override %s: %w", path, cause)
+	return fmt.Errorf(assets.TextDesc(assets.TextDescKeyErrHookRemoveOverride), path, cause)
 }
 
 // UnknownHook returns an error for an unrecognized hook name.
@@ -68,7 +72,7 @@ func RemoveOverride(path string, cause error) error {
 // Returns:
 //   - error: "unknown hook: <hook>..."
 func UnknownHook(hook string) error {
-	return fmt.Errorf("unknown hook: %s\nRun `ctx system message list` to see available hooks", hook)
+	return fmt.Errorf(assets.TextDesc(assets.TextDescKeyErrHookUnknownHook), hook)
 }
 
 // UnknownVariant returns an error for an unrecognized variant within
@@ -81,5 +85,5 @@ func UnknownHook(hook string) error {
 // Returns:
 //   - error: "unknown variant <variant> for hook <hook>..."
 func UnknownVariant(variant, hook string) error {
-	return fmt.Errorf("unknown variant %q for hook %q\nRun `ctx system message list` to see available variants", variant, hook)
+	return fmt.Errorf(assets.TextDesc(assets.TextDescKeyErrHookUnknownVariant), variant, hook)
 }

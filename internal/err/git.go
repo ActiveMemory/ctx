@@ -29,5 +29,5 @@ func GitNotFound() error {
 // Returns:
 //   - error: "not in a git repository: <cause>"
 func NotInGitRepo(cause error) error {
-	return fmt.Errorf("not in a git repository: %w", cause)
+	return fmt.Errorf(assets.TextDesc(assets.TextDescKeyErrGitNotInGitRepo), cause)
 }

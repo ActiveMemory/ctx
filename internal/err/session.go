@@ -9,6 +9,8 @@ package err
 import (
 	"errors"
 	"fmt"
+
+	"github.com/ActiveMemory/ctx/internal/assets"
 )
 
 // FindSessions wraps a session-scanning failure.
@@ -19,7 +21,7 @@ import (
 // Returns:
 //   - error: "failed to find sessions: <cause>"
 func FindSessions(cause error) error {
-	return fmt.Errorf("failed to find sessions: %w", cause)
+	return fmt.Errorf(assets.TextDesc(assets.TextDescKeyErrSessionFindSessions), cause)
 }
 
 // SessionNotFound returns an error for an unresolved session query.
@@ -30,7 +32,7 @@ func FindSessions(cause error) error {
 // Returns:
 //   - error: "session not found: <query>"
 func SessionNotFound(query string) error {
-	return fmt.Errorf("session not found: %s", query)
+	return fmt.Errorf(assets.TextDesc(assets.TextDescKeyErrSessionNotFound), query)
 }
 
 // AmbiguousQuery returns an error when a session query matches
@@ -39,7 +41,7 @@ func SessionNotFound(query string) error {
 // Returns:
 //   - error: "ambiguous query, use a more specific ID"
 func AmbiguousQuery() error {
-	return fmt.Errorf("ambiguous query, use a more specific ID")
+	return errors.New(assets.TextDesc(assets.TextDescKeyErrSessionAmbiguousQuery))
 }
 
 // NoSessionsFound returns an error when no sessions exist.
@@ -52,9 +54,9 @@ func AmbiguousQuery() error {
 //   - error: "no sessions found" with optional hint
 func NoSessionsFound(hint string) error {
 	if hint != "" {
-		return fmt.Errorf("no sessions found; %s", hint)
+		return fmt.Errorf(assets.TextDesc(assets.TextDescKeyErrSessionNoSessionsFoundHint), hint)
 	}
-	return fmt.Errorf("no sessions found")
+	return errors.New(assets.TextDesc(assets.TextDescKeyErrSessionNoSessionsFound))
 }
 
 // SessionIDRequired returns an error when no session ID was provided.
@@ -62,7 +64,7 @@ func NoSessionsFound(hint string) error {
 // Returns:
 //   - error: "please provide a session ID or use --latest"
 func SessionIDRequired() error {
-	return fmt.Errorf("please provide a session ID or use --latest")
+	return errors.New(assets.TextDesc(assets.TextDescKeyErrSessionIDRequired))
 }
 
 // AllWithSessionID returns a validation error when --all is used with a session ID.
@@ -70,7 +72,7 @@ func SessionIDRequired() error {
 // Returns:
 //   - error: "cannot use --all with a session ID; use one or the other"
 func AllWithSessionID() error {
-	return errors.New("cannot use --all with a session ID; use one or the other")
+	return errors.New(assets.TextDesc(assets.TextDescKeyErrSessionAllWithSessionID))
 }
 
 // AllWithPattern returns a validation error when --all is used with a pattern.
@@ -78,5 +80,5 @@ func AllWithSessionID() error {
 // Returns:
 //   - error: "cannot use --all with a pattern; use one or the other"
 func AllWithPattern() error {
-	return errors.New("cannot use --all with a pattern; use one or the other")
+	return errors.New(assets.TextDesc(assets.TextDescKeyErrSessionAllWithPattern))
 }

@@ -458,6 +458,380 @@ events.close-error:
   short: 'ctx: event log close: %v'
 events.write-error:
   short: 'ctx: event log write: %v'
+err.backup.backup-global:
+  short: 'global backup: %w'
+err.backup.backup-project:
+  short: 'project backup: %w'
+err.backup.backup-smb-config:
+  short: 'parse SMB config: %w'
+err.backup.context-dir-not-found:
+  short: "context directory not found: %s — run 'ctx init'"
+err.backup.create-archive:
+  short: 'create archive file: %w'
+err.backup.create-archive-dir:
+  short: 'failed to create archive directory: %w'
+err.backup.create-backup:
+  short: 'failed to create backup %s: %w'
+err.backup.create-backup-generic:
+  short: 'failed to create backup: %w'
+err.backup.invalid-backup-scope:
+  short: 'invalid scope %q: must be project, global, or all'
+err.backup.source-not-found:
+  short: 'source not found: %s'
+err.backup.write-archive:
+  short: 'failed to write archive: %w'
+err.config.golden-not-found:
+  short: "no .claude/settings.golden.json found — run 'ctx permissions snapshot' first"
+err.config.invalid-tool:
+  short: 'invalid tool %q: must be claude, aider, or generic'
+err.config.marshal-plugins:
+  short: 'failed to marshal enabledPlugins: %w'
+err.config.marshal-settings:
+  short: 'failed to marshal settings: %w'
+err.config.read-embedded-schema:
+  short: 'read embedded schema: %w'
+err.config.read-profile:
+  short: 'read %s: %w'
+err.config.settings-not-found:
+  short: no .claude/settings.local.json found
+err.config.unknown-format:
+  short: 'unknown format %q (supported: %s)'
+err.config.unknown-profile:
+  short: 'unknown profile %q: must be dev, base, or prod'
+err.config.unknown-project-type:
+  short: 'unknown project type %q (supported: %s)'
+err.config.unknown-update-type:
+  short: 'unknown update type: %s'
+err.config.unsupported-tool:
+  short: 'unsupported tool: %s'
+err.crypto.ciphertext-too-short:
+  short: ciphertext too short
+err.crypto.create-cipher:
+  short: 'create cipher: %w'
+err.crypto.create-gcm:
+  short: 'create GCM: %w'
+err.crypto.decrypt:
+  short: 'decrypt: %w'
+err.crypto.decrypt-failed:
+  short: 'decryption failed: wrong key?'
+err.crypto.encrypt-failed:
+  short: 'encrypt: %w'
+err.crypto.generate-key:
+  short: 'generate key: %w'
+err.crypto.generate-nonce:
+  short: 'generate nonce: %w'
+err.crypto.generate-scratchpad-key:
+  short: 'failed to generate scratchpad key: %w'
+err.crypto.invalid-key-size:
+  short: 'invalid key size: got %d bytes, want %d'
+err.crypto.load-key:
+  short: 'load key: %w'
+err.crypto.mkdir-key-dir:
+  short: 'failed to create key dir: %w'
+err.crypto.no-key-at:
+  short: encrypted scratchpad found but no key at %s
+err.crypto.read-key:
+  short: 'read key: %w'
+err.crypto.save-key:
+  short: 'failed to save scratchpad key: %w'
+err.crypto.write-key:
+  short: 'write key: %w'
+err.date.invalid-date:
+  short: 'invalid %s date %q (expected YYYY-MM-DD): %w'
+err.date.invalid-date-value:
+  short: invalid date %q (expected YYYY-MM-DD)
+err.fs.boundary-violation:
+  short: "%w\nUse --allow-outside-cwd to override this check"
+err.fs.create-dir:
+  short: 'failed to create directory %s: %w'
+err.fs.dir-not-found:
+  short: 'directory not found: %s'
+err.fs.file-amend:
+  short: 'failed to amend %s: %w'
+err.fs.file-read:
+  short: 'failed to read %s: %w'
+err.fs.file-update:
+  short: 'failed to update %s: %w'
+err.fs.file-write:
+  short: 'failed to write %s: %w'
+err.fs.mkdir:
+  short: 'failed to create %s: %w'
+err.fs.no-input:
+  short: no input received
+err.fs.not-directory:
+  short: '%s is not a directory'
+err.fs.open-file:
+  short: 'open %s: %w'
+err.fs.read-dir:
+  short: 'read %s: %w'
+err.fs.read-directory:
+  short: 'read directory %s: %w'
+err.fs.read-file:
+  short: 'read file: %w'
+err.fs.read-input:
+  short: 'failed to read input: %w'
+err.fs.read-input-stream:
+  short: 'error reading input: %w'
+err.fs.stat-path:
+  short: 'stat %s: %w'
+err.fs.write-file-failed:
+  short: 'write file: %w'
+err.fs.write-merged:
+  short: 'failed to write merged %s: %w'
+err.git.not-in-git-repo:
+  short: 'not in a git repository: %w'
+err.hook.embedded-template-not-found:
+  short: embedded template not found for %s/%s
+err.hook.override-exists:
+  short: "override already exists at %s\nEdit it directly or use `ctx system message reset %s %s` first"
+err.hook.remove-override:
+  short: 'failed to remove override %s: %w'
+err.hook.unknown-hook:
+  short: "unknown hook: %s\nRun `ctx system message list` to see available hooks"
+err.hook.unknown-variant:
+  short: "unknown variant %q for hook %q\nRun `ctx system message list` to see available variants"
+err.hook.write-override:
+  short: 'failed to write override %s: %w'
+err.http.too-many-redirects:
+  short: 'too many redirects: limit exceeded'
+err.http.unsafe-url-scheme:
+  short: 'unsafe URL scheme: %s: only http and https are allowed'
+err.init.context-not-initialized:
+  short: "no .context/ directory found. Run 'ctx init' first"
+err.init.create-makefile:
+  short: 'failed to create Makefile: %w'
+err.init.detect-reference-time:
+  short: 'detecting reference time: %w'
+err.init.home-dir:
+  short: 'cannot determine home directory: %w'
+err.init.not-initialized:
+  short: "ctx: not initialized — run \"ctx init\" first"
+err.init.read-init-template:
+  short: 'failed to read %s template: %w'
+err.init.read-project-readme:
+  short: 'failed to read %s README template: %w'
+err.journal.load-journal-state:
+  short: 'load journal state: %w'
+err.journal.no-entries-match:
+  short: 'no journal entries match: %s'
+err.journal.no-journal-dir:
+  short: "no journal directory found at %s\nRun 'ctx recall export --all' first"
+err.journal.no-journal-entries:
+  short: "no journal entries found in %s\nRun 'ctx recall export --all' first"
+err.journal.read-journal-dir:
+  short: 'read journal directory: %w'
+err.journal.regenerate-requires-all:
+  short: --regenerate requires --all (single-session export always writes)
+err.journal.save-journal-state:
+  short: 'save journal state: %w'
+err.journal.scan-journal:
+  short: 'failed to scan journal: %w'
+err.journal.stage-not-set:
+  short: '%s: %s not set'
+err.journal.unknown-stage:
+  short: 'unknown stage %q; valid: %s'
+err.memory.discover-no-memory:
+  short: no auto memory found at %s
+err.memory.discover-resolve-home:
+  short: 'resolving home directory: %w'
+err.memory.discover-resolve-root:
+  short: 'resolving project root: %w'
+err.memory.memory-archive-previous:
+  short: 'archiving previous mirror: %w'
+err.memory.memory-create-archive-dir:
+  short: 'creating archive directory: %w'
+err.memory.memory-create-dir:
+  short: 'creating memory directory: %w'
+err.memory.memory-diff-failed:
+  short: 'computing diff: %w'
+err.memory.memory-discover-failed:
+  short: 'MEMORY.md not found: %w'
+err.memory.memory-not-found:
+  short: MEMORY.md not found
+err.memory.memory-read-diff-source:
+  short: 'reading source: %w'
+err.memory.memory-read-mirror:
+  short: 'reading mirror: %w'
+err.memory.memory-read-mirror-archive:
+  short: 'reading mirror for archive: %w'
+err.memory.memory-read-source:
+  short: 'reading source: %w'
+err.memory.memory-select-content:
+  short: 'selecting content: %w'
+err.memory.memory-write-archive:
+  short: 'writing archive: %w'
+err.memory.memory-write-memory:
+  short: 'writing MEMORY.md: %w'
+err.memory.memory-write-mirror:
+  short: 'writing mirror: %w'
+err.memory.publish-failed:
+  short: 'publishing: %w'
+err.memory.read-memory:
+  short: 'reading MEMORY.md: %w'
+err.memory.select-content-failed:
+  short: 'selecting content: %w'
+err.memory.sync-failed:
+  short: 'sync failed: %w'
+err.memory.write-memory:
+  short: 'writing MEMORY.md: %w'
+err.notify.load-webhook:
+  short: 'load webhook: %w'
+err.notify.marshal-payload:
+  short: 'marshal payload: %w'
+err.notify.save-webhook:
+  short: 'save webhook: %w'
+err.notify.send-notification:
+  short: 'send test notification: %w'
+err.notify.webhook-empty:
+  short: webhook URL cannot be empty
+err.pad.blob-append-not-allowed:
+  short: cannot append to a blob entry
+err.pad.blob-prepend-not-allowed:
+  short: cannot prepend to a blob entry
+err.pad.edit-blob-text-conflict:
+  short: --file/--label and positional text/--append/--prepend are mutually exclusive
+err.pad.edit-no-mode:
+  short: provide replacement text, --append, or --prepend
+err.pad.edit-text-conflict:
+  short: --append, --prepend, and positional text are mutually exclusive
+err.pad.entry-range:
+  short: entry %d does not exist, scratchpad has %d entries
+err.pad.file-too-large:
+  short: 'file too large: %d bytes (max %d)'
+err.pad.invalid-index:
+  short: 'invalid index: %s'
+err.pad.no-conflict-files:
+  short: no conflict files found (%s.ours / %s.theirs)
+err.pad.not-blob-entry:
+  short: entry %d is not a blob entry
+err.pad.out-flag-requires-blob:
+  short: --out can only be used with blob entries
+err.pad.read-scratchpad:
+  short: 'read scratchpad: %w'
+err.pad.resolve-not-encrypted:
+  short: resolve is only needed for encrypted scratchpads
+err.parser.file-error:
+  short: '%s: %w'
+err.parser.no-match:
+  short: 'no parser found for file: %s'
+err.parser.open-file:
+  short: 'open file: %w'
+err.parser.read-file:
+  short: 'read file: %w'
+err.parser.scan-file:
+  short: 'scan file: %w'
+err.parser.unmarshal:
+  short: 'unmarshal: %w'
+err.parser.walk-dir:
+  short: 'walk directory: %w'
+err.prompt.exists:
+  short: prompt %q already exists
+err.prompt.list-entry-templates:
+  short: 'failed to list entry templates: %w'
+err.prompt.list-prompt-templates:
+  short: 'failed to list prompt templates: %w'
+err.prompt.list-templates:
+  short: 'failed to list templates: %w'
+err.prompt.marker-not-found:
+  short: '%s start marker not found'
+err.prompt.no-prompt-template:
+  short: "no embedded template %q — use --stdin to provide content"
+err.prompt.no-template:
+  short: 'no template available for %s: %w'
+err.prompt.not-found:
+  short: prompt %q not found
+err.prompt.read-entry-template:
+  short: 'failed to read entry template %s: %w'
+err.prompt.read-prompt-template:
+  short: 'failed to read prompt template %s: %w'
+err.prompt.read-template:
+  short: 'failed to read template %s: %w'
+err.prompt.remove-prompt:
+  short: 'remove prompt: %w'
+err.prompt.template-missing-markers:
+  short: template missing %s markers
+err.recall.event-log-read:
+  short: 'reading event log: %w'
+err.recall.open-log-file:
+  short: 'failed to open log file: %w'
+err.recall.reindex-file-not-found:
+  short: "%s not found. Run 'ctx init' first"
+err.recall.reindex-file-read:
+  short: 'failed to read %s: %w'
+err.recall.reindex-file-write:
+  short: 'failed to write %s: %w'
+err.recall.stats-glob:
+  short: 'globbing stats files: %w'
+err.reminder.invalid-id:
+  short: invalid ID %q
+err.reminder.parse-reminders:
+  short: 'parse reminders: %w'
+err.reminder.read-reminders:
+  short: 'read reminders: %w'
+err.reminder.reminder-id-required:
+  short: provide a reminder ID or use --all
+err.reminder.reminder-not-found:
+  short: no reminder with ID %d
+err.session.all-with-pattern:
+  short: cannot use --all with a pattern; use one or the other
+err.session.all-with-session-id:
+  short: cannot use --all with a session ID; use one or the other
+err.session.ambiguous-query:
+  short: ambiguous query, use a more specific ID
+err.session.find-sessions:
+  short: 'failed to find sessions: %w'
+err.session.no-sessions-found:
+  short: no sessions found
+err.session.no-sessions-found-hint:
+  short: 'no sessions found; %s'
+err.session.session-id-required:
+  short: please provide a session ID or use --latest
+err.session.session-not-found:
+  short: 'session not found: %s'
+err.site.no-site-config:
+  short: no zensical.toml found in %s
+err.site.zensical-not-found:
+  short: 'zensical not found. Install with: pipx install zensical (requires Python >= 3.10)'
+err.skill.skill-list:
+  short: 'failed to list skills: %w'
+err.skill.skill-read:
+  short: 'failed to read skill %s: %w'
+err.state.load-state:
+  short: 'loading state: %w'
+err.state.reading-state-dir:
+  short: 'reading state directory: %w'
+err.state.save-state:
+  short: 'saving state: %w'
+err.task.no-completed-tasks:
+  short: no completed tasks to archive
+err.task.no-task-match:
+  short: no task matching %q found
+err.task.no-task-specified:
+  short: no task specified
+err.task.snapshot-write:
+  short: 'failed to write snapshot: %w'
+err.task.task-file-not-found:
+  short: TASKS.md not found
+err.task.task-file-read:
+  short: 'failed to read TASKS.md: %w'
+err.task.task-file-write:
+  short: 'failed to write TASKS.md: %w'
+err.task.task-multiple-matches:
+  short: multiple tasks match %q; be more specific or use task number
+err.task.task-not-found:
+  short: no task matching %q found
+err.validation.arg-required:
+  short: '%s argument is required'
+err.validation.ctx-not-in-path:
+  short: ctx not found in PATH
+err.validation.drift-violations:
+  short: drift detection found violations
+err.validation.flag-required:
+  short: required flag %q not set
+err.validation.parse-file:
+  short: 'failed to parse %s: %w'
+err.validation.working-directory:
+  short: 'failed to get working directory: %w'
 heartbeat.log-plain:
   short: prompt#%d context_modified=%t
 heartbeat.log-tokens:

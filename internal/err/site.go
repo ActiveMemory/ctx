@@ -6,7 +6,12 @@
 
 package err
 
-import "fmt"
+import (
+	"errors"
+	"fmt"
+
+	"github.com/ActiveMemory/ctx/internal/assets"
+)
 
 // NoSiteConfig returns an error when the zensical config file is missing.
 //
@@ -16,7 +21,7 @@ import "fmt"
 // Returns:
 //   - error: "no zensical.toml found in <dir>"
 func NoSiteConfig(dir string) error {
-	return fmt.Errorf("no zensical.toml found in %s", dir)
+	return fmt.Errorf(assets.TextDesc(assets.TextDescKeyErrSiteNoSiteConfig), dir)
 }
 
 // ZensicalNotFound returns an error when zensical is not installed.
@@ -24,7 +29,5 @@ func NoSiteConfig(dir string) error {
 // Returns:
 //   - error: includes installation instructions
 func ZensicalNotFound() error {
-	return fmt.Errorf(
-		"zensical not found. Install with: pipx install zensical (requires Python >= 3.10)",
-	)
+	return errors.New(assets.TextDesc(assets.TextDescKeyErrSiteZensicalNotFound))
 }

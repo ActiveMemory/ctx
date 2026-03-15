@@ -9,6 +9,8 @@ package err
 import (
 	"errors"
 	"fmt"
+
+	"github.com/ActiveMemory/ctx/internal/assets"
 )
 
 // Mkdir wraps a directory creation failure.
@@ -20,7 +22,7 @@ import (
 // Returns:
 //   - error: "failed to create <desc>: <cause>"
 func Mkdir(desc string, cause error) error {
-	return fmt.Errorf("failed to create %s: %w", desc, cause)
+	return fmt.Errorf(assets.TextDesc(assets.TextDescKeyErrFsMkdir), desc, cause)
 }
 
 // ReadDir wraps a directory read failure.
@@ -32,7 +34,7 @@ func Mkdir(desc string, cause error) error {
 // Returns:
 //   - error: "read <desc>: <cause>"
 func ReadDir(desc string, cause error) error {
-	return fmt.Errorf("read %s: %w", desc, cause)
+	return fmt.Errorf(assets.TextDesc(assets.TextDescKeyErrFsReadDir), desc, cause)
 }
 
 // DirNotFound returns an error when a directory does not exist.
@@ -43,7 +45,7 @@ func ReadDir(desc string, cause error) error {
 // Returns:
 //   - error: "directory not found: <dir>"
 func DirNotFound(dir string) error {
-	return fmt.Errorf("directory not found: %s", dir)
+	return fmt.Errorf(assets.TextDesc(assets.TextDescKeyErrFsDirNotFound), dir)
 }
 
 // FileWrite wraps a file write failure.
@@ -55,7 +57,7 @@ func DirNotFound(dir string) error {
 // Returns:
 //   - error: "failed to write <path>: <cause>"
 func FileWrite(path string, cause error) error {
-	return fmt.Errorf("failed to write %s: %w", path, cause)
+	return fmt.Errorf(assets.TextDesc(assets.TextDescKeyErrFsFileWrite), path, cause)
 }
 
 // FileRead wraps a file read failure with path context.
@@ -67,7 +69,7 @@ func FileWrite(path string, cause error) error {
 // Returns:
 //   - error: "failed to read <path>: <cause>"
 func FileRead(path string, cause error) error {
-	return fmt.Errorf("failed to read %s: %w", path, cause)
+	return fmt.Errorf(assets.TextDesc(assets.TextDescKeyErrFsFileRead), path, cause)
 }
 
 // FileAmend wraps a failure to amend an existing file.
@@ -79,7 +81,7 @@ func FileRead(path string, cause error) error {
 // Returns:
 //   - error: "failed to amend <path>: <cause>"
 func FileAmend(path string, cause error) error {
-	return fmt.Errorf("failed to amend %s: %w", path, cause)
+	return fmt.Errorf(assets.TextDesc(assets.TextDescKeyErrFsFileAmend), path, cause)
 }
 
 // FileUpdate wraps a failure to update a file.
@@ -91,7 +93,7 @@ func FileAmend(path string, cause error) error {
 // Returns:
 //   - error: "failed to update <path>: <cause>"
 func FileUpdate(path string, cause error) error {
-	return fmt.Errorf("failed to update %s: %w", path, cause)
+	return fmt.Errorf(assets.TextDesc(assets.TextDescKeyErrFsFileUpdate), path, cause)
 }
 
 // WriteFileFailed wraps a file write failure.
@@ -102,7 +104,7 @@ func FileUpdate(path string, cause error) error {
 // Returns:
 //   - error: "write file: <cause>"
 func WriteFileFailed(cause error) error {
-	return fmt.Errorf("write file: %w", cause)
+	return fmt.Errorf(assets.TextDesc(assets.TextDescKeyErrFsWriteFileFailed), cause)
 }
 
 // WriteMerged wraps a failure to write a merged file.
@@ -114,7 +116,7 @@ func WriteFileFailed(cause error) error {
 // Returns:
 //   - error: "failed to write merged <path>: <cause>"
 func WriteMerged(path string, cause error) error {
-	return fmt.Errorf("failed to write merged %s: %w", path, cause)
+	return fmt.Errorf(assets.TextDesc(assets.TextDescKeyErrFsWriteMerged), path, cause)
 }
 
 // OpenFile wraps a file open failure.
@@ -126,7 +128,7 @@ func WriteMerged(path string, cause error) error {
 // Returns:
 //   - error: "open <path>: <cause>"
 func OpenFile(path string, cause error) error {
-	return fmt.Errorf("open %s: %w", path, cause)
+	return fmt.Errorf(assets.TextDesc(assets.TextDescKeyErrFsOpenFile), path, cause)
 }
 
 // StatPath wraps a stat failure.
@@ -138,7 +140,7 @@ func OpenFile(path string, cause error) error {
 // Returns:
 //   - error: "stat <path>: <cause>"
 func StatPath(path string, cause error) error {
-	return fmt.Errorf("stat %s: %w", path, cause)
+	return fmt.Errorf(assets.TextDesc(assets.TextDescKeyErrFsStatPath), path, cause)
 }
 
 // NotDirectory returns an error when a path is not a directory.
@@ -149,7 +151,7 @@ func StatPath(path string, cause error) error {
 // Returns:
 //   - error: "<path> is not a directory"
 func NotDirectory(path string) error {
-	return fmt.Errorf("%s is not a directory", path)
+	return fmt.Errorf(assets.TextDesc(assets.TextDescKeyErrFsNotDirectory), path)
 }
 
 // ReadDirectory wraps a directory read failure.
@@ -161,7 +163,7 @@ func NotDirectory(path string) error {
 // Returns:
 //   - error: "read directory <path>: <cause>"
 func ReadDirectory(path string, cause error) error {
-	return fmt.Errorf("read directory %s: %w", path, cause)
+	return fmt.Errorf(assets.TextDesc(assets.TextDescKeyErrFsReadDirectory), path, cause)
 }
 
 // CreateDir wraps a directory creation failure.
@@ -173,7 +175,7 @@ func ReadDirectory(path string, cause error) error {
 // Returns:
 //   - error: "failed to create directory <dir>: <cause>"
 func CreateDir(dir string, cause error) error {
-	return fmt.Errorf("failed to create directory %s: %w", dir, cause)
+	return fmt.Errorf(assets.TextDesc(assets.TextDescKeyErrFsCreateDir), dir, cause)
 }
 
 // BoundaryViolation wraps a boundary validation error with a hint
@@ -185,7 +187,7 @@ func CreateDir(dir string, cause error) error {
 // Returns:
 //   - error: "<cause>\nUse --allow-outside-cwd to override this check"
 func BoundaryViolation(cause error) error {
-	return fmt.Errorf("%w\nUse --allow-outside-cwd to override this check", cause)
+	return fmt.Errorf(assets.TextDesc(assets.TextDescKeyErrFsBoundaryViolation), cause)
 }
 
 // ReadFile wraps a file read failure.
@@ -196,7 +198,7 @@ func BoundaryViolation(cause error) error {
 // Returns:
 //   - error: "read file: <cause>"
 func ReadFile(cause error) error {
-	return fmt.Errorf("read file: %w", cause)
+	return fmt.Errorf(assets.TextDesc(assets.TextDescKeyErrFsReadFile), cause)
 }
 
 // ReadInput wraps a failure to read user input.
@@ -207,7 +209,7 @@ func ReadFile(cause error) error {
 // Returns:
 //   - error: "failed to read input: <cause>"
 func ReadInput(cause error) error {
-	return fmt.Errorf("failed to read input: %w", cause)
+	return fmt.Errorf(assets.TextDesc(assets.TextDescKeyErrFsReadInput), cause)
 }
 
 // ReadInputStream wraps a failure to read from the input stream.
@@ -218,7 +220,7 @@ func ReadInput(cause error) error {
 // Returns:
 //   - error: "error reading input: <cause>"
 func ReadInputStream(cause error) error {
-	return fmt.Errorf("error reading input: %w", cause)
+	return fmt.Errorf(assets.TextDesc(assets.TextDescKeyErrFsReadInputStream), cause)
 }
 
 // NoInput returns an error for missing stdin input.
@@ -226,5 +228,5 @@ func ReadInputStream(cause error) error {
 // Returns:
 //   - error: "no input received"
 func NoInput() error {
-	return errors.New("no input received")
+	return errors.New(assets.TextDesc(assets.TextDescKeyErrFsNoInput))
 }

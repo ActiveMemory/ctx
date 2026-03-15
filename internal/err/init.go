@@ -9,6 +9,8 @@ package err
 import (
 	"errors"
 	"fmt"
+
+	"github.com/ActiveMemory/ctx/internal/assets"
 )
 
 // NotInitialized returns an error indicating ctx has not been initialized.
@@ -16,7 +18,7 @@ import (
 // Returns:
 //   - error: "ctx: not initialized — run \"ctx init\" first"
 func NotInitialized() error {
-	return fmt.Errorf("ctx: not initialized — run \"ctx init\" first")
+	return errors.New(assets.TextDesc(assets.TextDescKeyErrInitNotInitialized))
 }
 
 // ContextNotInitialized returns an error when no .context/ directory is found.
@@ -24,7 +26,7 @@ func NotInitialized() error {
 // Returns:
 //   - error: "no .context/ directory found. Run 'ctx init' first"
 func ContextNotInitialized() error {
-	return errors.New("no .context/ directory found. Run 'ctx init' first")
+	return errors.New(assets.TextDesc(assets.TextDescKeyErrInitContextNotInitialized))
 }
 
 // DetectReferenceTime wraps a failure to detect the reference time for changes.
@@ -35,7 +37,7 @@ func ContextNotInitialized() error {
 // Returns:
 //   - error: "detecting reference time: <cause>"
 func DetectReferenceTime(cause error) error {
-	return fmt.Errorf("detecting reference time: %w", cause)
+	return fmt.Errorf(assets.TextDesc(assets.TextDescKeyErrInitDetectReferenceTime), cause)
 }
 
 // HomeDir wraps a failure to determine the home directory.
@@ -46,7 +48,7 @@ func DetectReferenceTime(cause error) error {
 // Returns:
 //   - error: "cannot determine home directory: <cause>"
 func HomeDir(cause error) error {
-	return fmt.Errorf("cannot determine home directory: %w", cause)
+	return fmt.Errorf(assets.TextDesc(assets.TextDescKeyErrInitHomeDir), cause)
 }
 
 // ReadProjectReadme wraps a failure to read a project README template.
@@ -58,7 +60,7 @@ func HomeDir(cause error) error {
 // Returns:
 //   - error: "failed to read <dir> README template: <cause>"
 func ReadProjectReadme(dir string, cause error) error {
-	return fmt.Errorf("failed to read %s README template: %w", dir, cause)
+	return fmt.Errorf(assets.TextDesc(assets.TextDescKeyErrInitReadProjectReadme), dir, cause)
 }
 
 // ReadInitTemplate wraps a failure to read an init template file.
@@ -70,7 +72,7 @@ func ReadProjectReadme(dir string, cause error) error {
 // Returns:
 //   - error: "failed to read <name> template: <cause>"
 func ReadInitTemplate(name string, cause error) error {
-	return fmt.Errorf("failed to read %s template: %w", name, cause)
+	return fmt.Errorf(assets.TextDesc(assets.TextDescKeyErrInitReadInitTemplate), name, cause)
 }
 
 // CreateMakefile wraps a failure to create a new Makefile.
@@ -81,5 +83,5 @@ func ReadInitTemplate(name string, cause error) error {
 // Returns:
 //   - error: "failed to create Makefile: <cause>"
 func CreateMakefile(cause error) error {
-	return fmt.Errorf("failed to create Makefile: %w", cause)
+	return fmt.Errorf(assets.TextDesc(assets.TextDescKeyErrInitCreateMakefile), cause)
 }

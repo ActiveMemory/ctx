@@ -6,7 +6,11 @@
 
 package err
 
-import "fmt"
+import (
+	"fmt"
+
+	"github.com/ActiveMemory/ctx/internal/assets"
+)
 
 // CreateBackup wraps a failure to create a backup file.
 //
@@ -17,7 +21,7 @@ import "fmt"
 // Returns:
 //   - error: "failed to create backup <name>: <cause>"
 func CreateBackup(name string, cause error) error {
-	return fmt.Errorf("failed to create backup %s: %w", name, cause)
+	return fmt.Errorf(assets.TextDesc(assets.TextDescKeyErrBackupCreateBackup), name, cause)
 }
 
 // CreateBackupGeneric wraps a generic backup creation failure.
@@ -28,7 +32,7 @@ func CreateBackup(name string, cause error) error {
 // Returns:
 //   - error: "failed to create backup: <cause>"
 func CreateBackupGeneric(cause error) error {
-	return fmt.Errorf("failed to create backup: %w", cause)
+	return fmt.Errorf(assets.TextDesc(assets.TextDescKeyErrBackupCreateBackupGeneric), cause)
 }
 
 // CreateArchive wraps an archive creation failure.
@@ -39,7 +43,7 @@ func CreateBackupGeneric(cause error) error {
 // Returns:
 //   - error: "create archive file: <cause>"
 func CreateArchive(cause error) error {
-	return fmt.Errorf("create archive file: %w", cause)
+	return fmt.Errorf(assets.TextDesc(assets.TextDescKeyErrBackupCreateArchive), cause)
 }
 
 // CreateArchiveDir wraps a failure to create the archive directory.
@@ -50,7 +54,7 @@ func CreateArchive(cause error) error {
 // Returns:
 //   - error: "failed to create archive directory: <cause>"
 func CreateArchiveDir(cause error) error {
-	return fmt.Errorf("failed to create archive directory: %w", cause)
+	return fmt.Errorf(assets.TextDesc(assets.TextDescKeyErrBackupCreateArchiveDir), cause)
 }
 
 // WriteArchive wraps a failure to write an archive file.
@@ -61,7 +65,7 @@ func CreateArchiveDir(cause error) error {
 // Returns:
 //   - error: "failed to write archive: <cause>"
 func WriteArchive(cause error) error {
-	return fmt.Errorf("failed to write archive: %w", cause)
+	return fmt.Errorf(assets.TextDesc(assets.TextDescKeyErrBackupWriteArchive), cause)
 }
 
 // BackupSMBConfig wraps an SMB configuration parse failure.
@@ -72,7 +76,7 @@ func WriteArchive(cause error) error {
 // Returns:
 //   - error: "parse SMB config: <cause>"
 func BackupSMBConfig(cause error) error {
-	return fmt.Errorf("parse SMB config: %w", cause)
+	return fmt.Errorf(assets.TextDesc(assets.TextDescKeyErrBackupBackupSMBConfig), cause)
 }
 
 // BackupProject wraps a project backup failure.
@@ -83,7 +87,7 @@ func BackupSMBConfig(cause error) error {
 // Returns:
 //   - error: "project backup: <cause>"
 func BackupProject(cause error) error {
-	return fmt.Errorf("project backup: %w", cause)
+	return fmt.Errorf(assets.TextDesc(assets.TextDescKeyErrBackupBackupProject), cause)
 }
 
 // BackupGlobal wraps a global backup failure.
@@ -94,7 +98,7 @@ func BackupProject(cause error) error {
 // Returns:
 //   - error: "global backup: <cause>"
 func BackupGlobal(cause error) error {
-	return fmt.Errorf("global backup: %w", cause)
+	return fmt.Errorf(assets.TextDesc(assets.TextDescKeyErrBackupBackupGlobal), cause)
 }
 
 // InvalidBackupScope returns an error for an unrecognized backup scope value.
@@ -105,7 +109,7 @@ func BackupGlobal(cause error) error {
 // Returns:
 //   - error: "invalid scope '<scope>': must be project, global, or all"
 func InvalidBackupScope(scope string) error {
-	return fmt.Errorf("invalid scope %q: must be project, global, or all", scope)
+	return fmt.Errorf(assets.TextDesc(assets.TextDescKeyErrBackupInvalidBackupScope), scope)
 }
 
 // SourceNotFound returns an error when a backup source path is missing.
@@ -116,7 +120,7 @@ func InvalidBackupScope(scope string) error {
 // Returns:
 //   - error: "source not found: <path>"
 func SourceNotFound(path string) error {
-	return fmt.Errorf("source not found: %s", path)
+	return fmt.Errorf(assets.TextDesc(assets.TextDescKeyErrBackupSourceNotFound), path)
 }
 
 // ContextDirNotFound returns an error when the context directory does not exist.
@@ -127,5 +131,5 @@ func SourceNotFound(path string) error {
 // Returns:
 //   - error: "context directory not found: <dir> — run 'ctx init'"
 func ContextDirNotFound(dir string) error {
-	return fmt.Errorf("context directory not found: %s — run 'ctx init'", dir)
+	return fmt.Errorf(assets.TextDesc(assets.TextDescKeyErrBackupContextDirNotFound), dir)
 }
