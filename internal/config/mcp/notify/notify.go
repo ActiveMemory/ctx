@@ -4,9 +4,9 @@
 //   \    Copyright 2026-present Context contributors.
 //                 SPDX-License-Identifier: Apache-2.0
 
-package mcp
+package notify
 
 const (
-	// NotifyResourcesUpdated is the MCP notification for resource changes.
-	NotifyResourcesUpdated = "notifications/resources/updated"
+	// ResourcesUpdated is the MCP notification for resource changes.
+	ResourcesUpdated = "notifications/resources/updated"
 )

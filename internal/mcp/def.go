@@ -9,27 +9,29 @@ package mcp
 import (
 	"github.com/ActiveMemory/ctx/internal/assets"
 	"github.com/ActiveMemory/ctx/internal/config/cli"
-	"github.com/ActiveMemory/ctx/internal/config/mcp"
+	"github.com/ActiveMemory/ctx/internal/config/mcp/field"
+	"github.com/ActiveMemory/ctx/internal/config/mcp/schema"
+	"github.com/ActiveMemory/ctx/internal/config/mcp/tool"
 )
 
 // toolDefs defines all available MCP tools.
 var toolDefs = []Tool{
 	{
-		Name: mcp.MCPToolStatus,
+		Name: tool.Status,
 		Description: assets.TextDesc(
 			assets.TextDescKeyMCPToolStatusDesc),
-		InputSchema: InputSchema{Type: mcp.MCPSchemaObject},
+		InputSchema: InputSchema{Type: schema.Object},
 		Annotations: &ToolAnnotations{ReadOnlyHint: true},
 	},
 	{
-		Name: mcp.MCPToolAdd,
+		Name: tool.Add,
 		Description: assets.TextDesc(
 			assets.TextDescKeyMCPToolAddDesc),
 		InputSchema: InputSchema{
-			Type: mcp.MCPSchemaObject,
+			Type: schema.Object,
 			Properties: map[string]Property{
 				cli.AttrType: {
-					Type: mcp.MCPSchemaString,
+					Type: schema.String,
 					Description: assets.TextDesc(
 						assets.TextDescKeyMCPToolPropType),
 					Enum: []string{
@@ -37,85 +39,85 @@ var toolDefs = []Tool{
 						"learning", "convention",
 					},
 				},
-				mcp.MCPFieldContent: {
-					Type: mcp.MCPSchemaString,
+				field.Content: {
+					Type: schema.String,
 					Description: assets.TextDesc(
 						assets.TextDescKeyMCPToolPropContent),
 				},
-				mcp.MCPFieldPriority: {
-					Type: mcp.MCPSchemaString,
+				field.Priority: {
+					Type: schema.String,
 					Description: assets.TextDesc(
 						assets.TextDescKeyMCPToolPropPriority),
 					Enum: []string{"high", "medium", "low"},
 				},
 				cli.AttrContext: {
-					Type: mcp.MCPSchemaString,
+					Type: schema.String,
 					Description: assets.TextDesc(
 						assets.TextDescKeyMCPToolPropContext),
 				},
 				cli.AttrRationale: {
-					Type: mcp.MCPSchemaString,
+					Type: schema.String,
 					Description: assets.TextDesc(
 						assets.TextDescKeyMCPToolPropRationale),
 				},
 				cli.AttrConsequences: {
-					Type: mcp.MCPSchemaString,
+					Type: schema.String,
 					Description: assets.TextDesc(
 						assets.TextDescKeyMCPToolPropConseq),
 				},
 				cli.AttrLesson: {
-					Type: mcp.MCPSchemaString,
+					Type: schema.String,
 					Description: assets.TextDesc(
 						assets.TextDescKeyMCPToolPropLesson),
 				},
 				cli.AttrApplication: {
-					Type: mcp.MCPSchemaString,
+					Type: schema.String,
 					Description: assets.TextDesc(
 						assets.TextDescKeyMCPToolPropApplication),
 				},
 			},
-			Required: []string{cli.AttrType, mcp.MCPFieldContent},
+			Required: []string{cli.AttrType, field.Content},
 		},
 		Annotations: &ToolAnnotations{},
 	},
 	{
-		Name: mcp.MCPToolComplete,
+		Name: tool.Complete,
 		Description: assets.TextDesc(
 			assets.TextDescKeyMCPToolCompleteDesc),
 		InputSchema: InputSchema{
-			Type: mcp.MCPSchemaObject,
+			Type: schema.Object,
 			Properties: map[string]Property{
-				mcp.MCPFieldQuery: {
-					Type: mcp.MCPSchemaString,
+				field.Query: {
+					Type: schema.String,
 					Description: assets.TextDesc(
 						assets.TextDescKeyMCPToolPropQuery),
 				},
 			},
-			Required: []string{mcp.MCPFieldQuery},
+			Required: []string{field.Query},
 		},
 		Annotations: &ToolAnnotations{IdempotentHint: true},
 	},
 	{
-		Name: mcp.MCPToolDrift,
+		Name: tool.Drift,
 		Description: assets.TextDesc(
 			assets.TextDescKeyMCPToolDriftDesc),
-		InputSchema: InputSchema{Type: mcp.MCPSchemaObject},
+		InputSchema: InputSchema{Type: schema.Object},
 		Annotations: &ToolAnnotations{ReadOnlyHint: true},
 	},
 	{
-		Name: mcp.MCPToolRecall,
+		Name: tool.Recall,
 		Description: assets.TextDesc(
 			assets.TextDescKeyMCPToolRecallDesc),
 		InputSchema: InputSchema{
-			Type: mcp.MCPSchemaObject,
+			Type: schema.Object,
 			Properties: map[string]Property{
-				mcp.MCPFieldLimit: {
-					Type: mcp.MCPSchemaNumber,
+				field.Limit: {
+					Type: schema.Number,
 					Description: assets.TextDesc(
 						assets.TextDescKeyMCPToolPropLimit),
 				},
-				mcp.MCPFieldSince: {
-					Type: mcp.MCPSchemaString,
+				field.Since: {
+					Type: schema.String,
 					Description: assets.TextDesc(
 						assets.TextDescKeyMCPToolPropSince),
 				},
@@ -124,61 +126,61 @@ var toolDefs = []Tool{
 		Annotations: &ToolAnnotations{ReadOnlyHint: true},
 	},
 	{
-		Name: mcp.MCPToolWatchUpdate,
+		Name: tool.WatchUpdate,
 		Description: assets.TextDesc(
 			assets.TextDescKeyMCPToolWatchUpdateDesc),
 		InputSchema: InputSchema{
-			Type: mcp.MCPSchemaObject,
+			Type: schema.Object,
 			Properties: map[string]Property{
 				cli.AttrType: {
-					Type: mcp.MCPSchemaString,
+					Type: schema.String,
 					Description: assets.TextDesc(
 						assets.TextDescKeyMCPToolPropEntryType),
 				},
-				mcp.MCPFieldContent: {
-					Type: mcp.MCPSchemaString,
+				field.Content: {
+					Type: schema.String,
 					Description: assets.TextDesc(
 						assets.TextDescKeyMCPToolPropMainContent),
 				},
 				cli.AttrContext: {
-					Type: mcp.MCPSchemaString,
+					Type: schema.String,
 					Description: assets.TextDesc(
 						assets.TextDescKeyMCPToolPropCtxBg),
 				},
 				cli.AttrRationale: {
-					Type: mcp.MCPSchemaString,
+					Type: schema.String,
 					Description: assets.TextDesc(
 						assets.TextDescKeyMCPToolPropRationale),
 				},
 				cli.AttrConsequences: {
-					Type: mcp.MCPSchemaString,
+					Type: schema.String,
 					Description: assets.TextDesc(
 						assets.TextDescKeyMCPToolPropConseq),
 				},
 				cli.AttrLesson: {
-					Type: mcp.MCPSchemaString,
+					Type: schema.String,
 					Description: assets.TextDesc(
 						assets.TextDescKeyMCPToolPropLesson),
 				},
 				cli.AttrApplication: {
-					Type: mcp.MCPSchemaString,
+					Type: schema.String,
 					Description: assets.TextDesc(
 						assets.TextDescKeyMCPToolPropApplication),
 				},
 			},
-			Required: []string{cli.AttrType, mcp.MCPFieldContent},
+			Required: []string{cli.AttrType, field.Content},
 		},
 		Annotations: &ToolAnnotations{},
 	},
 	{
-		Name: mcp.MCPToolCompact,
+		Name: tool.Compact,
 		Description: assets.TextDesc(
 			assets.TextDescKeyMCPToolCompactDesc),
 		InputSchema: InputSchema{
-			Type: mcp.MCPSchemaObject,
+			Type: schema.Object,
 			Properties: map[string]Property{
-				mcp.MCPFieldArchive: {
-					Type: mcp.MCPSchemaBoolean,
+				field.Archive: {
+					Type: schema.Boolean,
 					Description: assets.TextDesc(
 						assets.TextDescKeyMCPToolPropArchive),
 				},
@@ -187,21 +189,21 @@ var toolDefs = []Tool{
 		Annotations: &ToolAnnotations{},
 	},
 	{
-		Name: mcp.MCPToolNext,
+		Name: tool.Next,
 		Description: assets.TextDesc(
 			assets.TextDescKeyMCPToolNextDesc),
-		InputSchema: InputSchema{Type: mcp.MCPSchemaObject},
+		InputSchema: InputSchema{Type: schema.Object},
 		Annotations: &ToolAnnotations{ReadOnlyHint: true},
 	},
 	{
-		Name: mcp.MCPToolCheckTaskCompletion,
+		Name: tool.CheckTaskCompletion,
 		Description: assets.TextDesc(
 			assets.TextDescKeyMCPToolCheckTaskDesc),
 		InputSchema: InputSchema{
-			Type: mcp.MCPSchemaObject,
+			Type: schema.Object,
 			Properties: map[string]Property{
-				mcp.MCPFieldRecentAction: {
-					Type: mcp.MCPSchemaString,
+				field.RecentAction: {
+					Type: schema.String,
 					Description: assets.TextDesc(
 						assets.TextDescKeyMCPToolPropRecentAct),
 				},
@@ -210,19 +212,19 @@ var toolDefs = []Tool{
 		Annotations: &ToolAnnotations{ReadOnlyHint: true},
 	},
 	{
-		Name: mcp.MCPToolSessionEvent,
+		Name: tool.SessionEvent,
 		Description: assets.TextDesc(
 			assets.TextDescKeyMCPToolSessionDesc),
 		InputSchema: InputSchema{
-			Type: mcp.MCPSchemaObject,
+			Type: schema.Object,
 			Properties: map[string]Property{
 				cli.AttrType: {
-					Type: mcp.MCPSchemaString,
+					Type: schema.String,
 					Description: assets.TextDesc(
 						assets.TextDescKeyMCPToolPropEventType),
 				},
-				mcp.MCPFieldCaller: {
-					Type: mcp.MCPSchemaString,
+				field.Caller: {
+					Type: schema.String,
 					Description: assets.TextDesc(
 						assets.TextDescKeyMCPToolPropCaller),
 				},
@@ -232,10 +234,10 @@ var toolDefs = []Tool{
 		Annotations: &ToolAnnotations{},
 	},
 	{
-		Name: mcp.MCPToolRemind,
+		Name: tool.Remind,
 		Description: assets.TextDesc(
 			assets.TextDescKeyMCPToolRemindDesc),
-		InputSchema: InputSchema{Type: mcp.MCPSchemaObject},
+		InputSchema: InputSchema{Type: schema.Object},
 		Annotations: &ToolAnnotations{ReadOnlyHint: true},
 	},
 }
