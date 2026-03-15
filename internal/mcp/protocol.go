@@ -86,6 +86,7 @@ type InitializeResult struct {
 type ServerCaps struct {
 	Resources *ResourcesCap `json:"resources,omitempty"`
 	Tools     *ToolsCap     `json:"tools,omitempty"`
+	Prompts   *PromptsCap   `json:"prompts,omitempty"`
 }
 
 // ResourcesCap indicates the server supports resources.
@@ -129,6 +130,21 @@ type ResourceContent struct {
 // ReadResourceResult is returned by resources/read.
 type ReadResourceResult struct {
 	Contents []ResourceContent `json:"contents"`
+}
+
+// SubscribeParams is sent with resources/subscribe.
+type SubscribeParams struct {
+	URI string `json:"uri"`
+}
+
+// UnsubscribeParams is sent with resources/unsubscribe.
+type UnsubscribeParams struct {
+	URI string `json:"uri"`
+}
+
+// ResourceUpdatedParams is sent with notifications/resources/updated.
+type ResourceUpdatedParams struct {
+	URI string `json:"uri"`
 }
 
 // --- Tool types ---
@@ -183,4 +199,48 @@ type ToolContent struct {
 type CallToolResult struct {
 	Content []ToolContent `json:"content"`
 	IsError bool          `json:"isError,omitempty"`
+}
+
+// --- Prompt types ---
+
+// PromptsCap indicates the server supports prompts.
+type PromptsCap struct {
+	ListChanged bool `json:"listChanged,omitempty"`
+}
+
+// Prompt describes a single MCP prompt template.
+type Prompt struct {
+	Name        string           `json:"name"`
+	Description string           `json:"description,omitempty"`
+	Arguments   []PromptArgument `json:"arguments,omitempty"`
+}
+
+// PromptArgument describes a single argument for a prompt.
+type PromptArgument struct {
+	Name        string `json:"name"`
+	Description string `json:"description,omitempty"`
+	Required    bool   `json:"required,omitempty"`
+}
+
+// PromptListResult is returned by prompts/list.
+type PromptListResult struct {
+	Prompts []Prompt `json:"prompts"`
+}
+
+// GetPromptParams is sent with prompts/get.
+type GetPromptParams struct {
+	Name      string            `json:"name"`
+	Arguments map[string]string `json:"arguments,omitempty"`
+}
+
+// PromptMessage represents a message in a prompt response.
+type PromptMessage struct {
+	Role    string      `json:"role"`
+	Content ToolContent `json:"content"`
+}
+
+// GetPromptResult is returned by prompts/get.
+type GetPromptResult struct {
+	Description string          `json:"description,omitempty"`
+	Messages    []PromptMessage `json:"messages"`
 }
