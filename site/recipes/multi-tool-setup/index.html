@@ -18,7 +18,7 @@
         <link rel="prev" href="../guide-your-agent/">
       
       
-        <link rel="next" href="../external-context/">
+        <link rel="next" href="../multilingual-sessions/">
       
       
         
@@ -1164,6 +1164,8 @@
       
         
       
+        
+      
     
     
     
@@ -1487,17 +1489,6 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#multilingual-session-parsing" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Multilingual Session Parsing
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
   <a href="#next-up" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -1523,6 +1514,36 @@
   
 </nav>
       
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../multilingual-sessions/" class="md-nav__link">
+        
+  
+  
+    <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-languages" viewBox="0 0 24 24"><path d="m5 8 6 6M4 14l6-6 2-3M2 5h12M7 2h1M22 22l-5-10-5 10M14 18h6"/></svg>
+  
+  <span class="md-ellipsis">
+    
+  
+    Multilingual Session Parsing
+  
+
+    
+  </span>
+  
+  
+
+      </a>
     </li>
   
 
@@ -3877,17 +3898,6 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#multilingual-session-parsing" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Multilingual Session Parsing
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
   <a href="#next-up" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -4297,25 +4307,6 @@ them automatically:</p>
   works best when you reinforce the habit: a quick "<em>anything worth saving?</em>"
   after a debugging session goes a long way.</li>
 </ul>
-<h2 id="multilingual-session-parsing">Multilingual Session Parsing<a class="headerlink" href="#multilingual-session-parsing" title="Permanent link">&para;</a></h2>
-<p>The Markdown session parser recognizes session headers by their prefix
-(e.g., <code># Session: 2026-01-15 — Fix API</code>). By default, ctx recognizes
-<code>Session:</code> only.</p>
-<p>If your team writes session notes in other languages, extend the
-recognized prefixes in <code>.ctxrc</code>:</p>
-<div class="language-yaml highlight"><pre><span></span><code><span id="__span-20-1"><a id="__codelineno-20-1" name="__codelineno-20-1" href="#__codelineno-20-1"></a><span class="nt">session_prefixes</span><span class="p">:</span>
-</span><span id="__span-20-2"><a id="__codelineno-20-2" name="__codelineno-20-2" href="#__codelineno-20-2"></a><span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;Session:&quot;</span><span class="w">      </span><span class="c1"># English (keep if you still want it)</span>
-</span><span id="__span-20-3"><a id="__codelineno-20-3" name="__codelineno-20-3" href="#__codelineno-20-3"></a><span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;Oturum:&quot;</span><span class="w">       </span><span class="c1"># Turkish</span>
-</span><span id="__span-20-4"><a id="__codelineno-20-4" name="__codelineno-20-4" href="#__codelineno-20-4"></a><span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;セッション:&quot;</span><span class="w">     </span><span class="c1"># Japanese</span>
-</span><span id="__span-20-5"><a id="__codelineno-20-5" name="__codelineno-20-5" href="#__codelineno-20-5"></a><span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;Sesión:&quot;</span><span class="w">       </span><span class="c1"># Spanish</span>
-</span></code></pre></div>
-<p>When you override this list, <strong>include <code>Session:</code></strong> if you still want
-English headers recognized. An empty list falls back to the built-in
-default (<code>["Session:"]</code>).</p>
-<p>This setting controls <strong>content recognition</strong> (what ctx can parse), not
-the interface language. A user working in English can parse session files
-written in any configured language — useful for multilingual teams or
-when AI tools generate session summaries in the user's locale.</p>
 <h2 id="next-up">Next Up<a class="headerlink" href="#next-up" title="Permanent link">&para;</a></h2>
 <p><strong><a href="../external-context/">Keeping Context in a Separate Repo →</a></strong>: Store
 context files outside the project tree for multi-repo or open source
@@ -4323,6 +4314,7 @@ setups.</p>
 <h2 id="see-also">See Also<a class="headerlink" href="#see-also" title="Permanent link">&para;</a></h2>
 <ul>
 <li><a href="../session-lifecycle/">The Complete Session</a>: full session lifecycle recipe</li>
+<li><a href="../multilingual-sessions/">Multilingual Session Parsing</a>: configure session header prefixes for other languages</li>
 <li><a href="../../cli/">CLI Reference</a>: all commands and flags</li>
 <li><a href="../../operations/integrations/">Integrations</a>: detailed per-tool integration docs</li>
 </ul>
@@ -4385,13 +4377,13 @@ setups.</p>
         
         
           
-          <a href="../external-context/" class="md-footer__link md-footer__link--next" aria-label="Next: Keeping Context in a Separate Repo">
+          <a href="../multilingual-sessions/" class="md-footer__link md-footer__link--next" aria-label="Next: Multilingual Session Parsing">
             <div class="md-footer__title">
               <span class="md-footer__direction">
                 Next
               </span>
               <div class="md-ellipsis">
-                Keeping Context in a Separate Repo
+                Multilingual Session Parsing
               </div>
             </div>
             <div class="md-footer__button md-icon">

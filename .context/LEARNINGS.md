@@ -3,6 +3,8 @@
 <!-- INDEX:START -->
 | Date | Learning |
 |------|--------|
+| 2026-03-14 | Stderr error messages are user-facing text that belongs in assets |
+| 2026-03-14 | Subagents rename packages and modify unrelated files without being asked |
 | 2026-03-14 | Hardcoded _alt suffixes create implicit language favoritism |
 | 2026-03-14 | Subagents reorganize file structure without being asked |
 | 2026-03-14 | Internal skill rename requires updates across 6+ layers |
@@ -68,6 +70,26 @@
 | 2026-02-19 | Feature can be code-complete but invisible to users |
 | 2026-01-28 | IDE is already the UI |
 <!-- INDEX:END -->
+
+---
+
+## [2026-03-14-180903] Stderr error messages are user-facing text that belongs in assets
+
+**Context**: Added fmt.Fprintf(os.Stderr) error reporting to event log, initially with inline strings
+
+**Lesson**: Any string that reaches the user, including stderr warnings, routes through assets.TextDesc() for i18n readiness
+
+**Application**: When adding stderr output, create text.yaml entries and asset keys first
+
+---
+
+## [2026-03-14-180902] Subagents rename packages and modify unrelated files without being asked
+
+**Context**: ET agent renamed internal/eventlog/ to internal/log/ and modified 5+ caller files outside the internal/err/ scope
+
+**Lesson**: Always diff agent output against HEAD to catch scope creep before building; revert unrelated changes immediately
+
+**Application**: After any agent-driven refactor, run git diff --name-only HEAD and revert anything outside the intended scope before testing
 
 ---
 

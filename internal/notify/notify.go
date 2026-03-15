@@ -12,7 +12,6 @@
 package notify
 
 import (
-	"bytes"
 	"encoding/json"
 	"net/http"
 	"os"
@@ -53,7 +52,7 @@ type Payload struct {
 // LoadWebhook reads and decrypts the webhook URL from .context/.notify.enc.
 //
 // Returns ("", nil) if either the key file or encrypted file is missing
-// (silent noop — webhook not configured).
+// (silent noop: webhook not configured).
 func LoadWebhook() (string, error) {
 	contextDir := rc.ContextDir()
 	crypto.MigrateKeyFile(contextDir)
@@ -95,12 +94,14 @@ func SaveWebhook(url string) error {
 
 	key, err := crypto.LoadKey(kp)
 	if err != nil {
-		// Key doesn't exist — generate one.
+		// Key doesn't exist: generate one.
 		key, err = crypto.GenerateKey()
 		if err != nil {
 			return err
 		}
-		if mkdirErr := os.MkdirAll(filepath.Dir(kp), fs.PermKeyDir); mkdirErr != nil {
+		if mkdirErr := os.MkdirAll(
+			filepath.Dir(kp), fs.PermKeyDir,
+		); mkdirErr != nil {
 			return mkdirErr
 		}
 		if saveErr := crypto.SaveKey(kp, key); saveErr != nil {
@@ -190,8 +191,7 @@ func Send(event, message, sessionID string, detail *TemplateRef) error {
 //   - *http.Response: the HTTP response (caller must close Body).
 //   - error: on HTTP failure.
 func PostJSON(url string, body []byte) (*http.Response, error) {
-	client := &http.Client{Timeout: 5 * time.Second}
-	return client.Post(url, "application/json", bytes.NewReader(body)) //nolint:gosec // URL is user-configured via encrypted storage
+	return io.SafePost(url, "application/json", body, 5*time.Second)
 }
 
 // MaskURL shows the scheme + host and masks everything after the path start.

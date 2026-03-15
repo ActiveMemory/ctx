@@ -3,6 +3,7 @@
 <!-- INDEX:START -->
 | Date | Decision |
 |------|--------|
+| 2026-03-14 | Error package taxonomy: 22 domain files replace monolithic errors.go |
 | 2026-03-14 | Session prefixes are parser vocabulary, not i18n text |
 | 2026-03-14 | System path deny-list as safety net, not security boundary |
 | 2026-03-14 | Config-driven freshness check with per-file review URLs |
@@ -44,6 +45,20 @@
 | 2026-02-26 | Security and permissions (consolidated) |
 | 2026-02-27 | Webhook and notification design (consolidated) |
 <!-- INDEX:END -->
+
+## [2026-03-14-180905] Error package taxonomy: 22 domain files replace monolithic errors.go
+
+**Status**: Accepted
+
+**Context**: internal/err/errors.go was 1995 lines with 188 functions in one file
+
+**Decision**: Error package taxonomy: 22 domain files replace monolithic errors.go
+
+**Rationale**: Convention requires files named by responsibility, not junk drawers; domain grouping makes it possible to find error constructors by domain
+
+**Consequences**: 22 files (backup, config, crypto, date, fs, git, hook, init, journal, memory, notify, pad, parser, prompt, recall, reminder, session, site, skill, state, task, validation); errors.go deleted
+
+---
 
 ## [2026-03-14-131152] Session prefixes are parser vocabulary, not i18n text
 

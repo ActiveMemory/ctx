@@ -111,7 +111,7 @@ func TestSend_NoWebhook(t *testing.T) {
 	_, cleanup := setupTestDir(t)
 	defer cleanup()
 
-	// No webhook configured — should noop without error
+	// No webhook configured: should noop without error
 	err := Send("test", "hello", "session-1", nil)
 	if err != nil {
 		t.Fatalf("Send() error = %v", err)

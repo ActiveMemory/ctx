@@ -7,10 +7,16 @@
 package io
 
 import (
+	"bytes"
 	"fmt"
+	"net/http"
+	"net/url"
 	"os"
 	"path/filepath"
 	"strings"
+	"time"
+
+	ctxerr "github.com/ActiveMemory/ctx/internal/err"
 )
 
 // SafeReadFile resolves filename within baseDir, verifies the result
@@ -117,4 +123,74 @@ func SafeWriteFile(path string, data []byte, perm os.FileMode) error {
 		return validateErr
 	}
 	return os.WriteFile(clean, data, perm) //nolint:gosec // validated by cleanAndValidate
+}
+
+// maxRedirects caps the number of HTTP redirects the client will follow.
+const maxRedirects = 3
+
+// SafePost sends an HTTP POST with the given content type and body.
+//
+// Designed for static endpoint URLs that originate from trusted,
+// user-configured sources (e.g. webhook URLs stored in AES-256-GCM
+// encrypted storage). Centralizes gosec suppression so callers don't
+// each need their own nolint pragma.
+//
+// Protections applied:
+//   - Scheme validation: rejects everything except http and https,
+//     preventing file://, gopher://, and other protocol smuggling.
+//   - Redirect cap: follows at most 3 redirects (Go default is 10).
+//     Limits open-redirect abuse where a trusted URL bounces to an
+//     unintended destination.
+//   - Caller-specified timeout: bounds total request duration
+//     including redirects.
+//
+// Threats explicitly not mitigated (and why that is acceptable):
+//   - SSRF to private IPs: the URL is a static, user-configured
+//     endpoint — not attacker-controlled input. Blocking RFC 1918
+//     ranges would break legitimate local webhook receivers.
+//   - Response body size: callers are fire-and-forget (close body
+//     immediately), so unbounded reads are not a concern.
+//   - TLS certificate pinning: the endpoint is user-chosen; standard
+//     system CA validation is appropriate.
+//
+// Parameters:
+//   - rawURL: destination endpoint (trusted, user-configured origin)
+//   - contentType: MIME type for the Content-Type header
+//   - body: request payload
+//   - timeout: per-request timeout (includes redirect hops)
+//
+// Returns:
+//   - *http.Response: the HTTP response (caller must close Body)
+//   - error: on scheme validation failure, redirect cap, or HTTP error
+func SafePost(rawURL, contentType string, body []byte, timeout time.Duration) (*http.Response, error) {
+	if schemeErr := validateHTTPScheme(rawURL); schemeErr != nil {
+		return nil, schemeErr
+	}
+
+	client := &http.Client{
+		Timeout: timeout,
+		CheckRedirect: func(_ *http.Request, via []*http.Request) error {
+			if len(via) >= maxRedirects {
+				return ctxerr.TooManyRedirects()
+			}
+			return nil
+		},
+	}
+
+	//nolint:gosec // URL originates from trusted, encrypted storage; scheme validated above
+	return client.Post(rawURL, contentType, bytes.NewReader(body))
+}
+
+// validateHTTPScheme parses the URL and rejects any scheme other than
+// http or https.
+func validateHTTPScheme(rawURL string) error {
+	parsed, parseErr := url.Parse(rawURL)
+	if parseErr != nil {
+		return fmt.Errorf("parse URL: %w", parseErr)
+	}
+	scheme := strings.ToLower(parsed.Scheme)
+	if scheme != "http" && scheme != "https" {
+		return ctxerr.UnsafeURLScheme(parsed.Scheme)
+	}
+	return nil
 }

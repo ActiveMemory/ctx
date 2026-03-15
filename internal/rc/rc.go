@@ -185,7 +185,7 @@ func ContextWindow() int {
 
 // NotifyEvents returns the configured event filter list for notifications.
 //
-// Returns nil if Notify is nil (no filtering — all events pass).
+// Returns nil if Notify is nil (no filtering: all events pass).
 //
 // Returns:
 //   - []string: Event names to allow, or nil for all
@@ -199,7 +199,9 @@ func NotifyEvents() []string {
 
 // KeyPath returns the resolved encryption key file path.
 //
-// Priority: key_path in .ctxrc (explicit) > project-local (.context/.ctx.key) > global (~/.ctx/.ctx.key).
+// Priority: key_path in .ctxrc (explicit) > project-local
+//
+//	(.context/.ctx.key) > global (~/.ctx/.ctx.key).
 //
 // Returns:
 //   - string: Resolved path to the encryption key file
@@ -212,7 +214,9 @@ func KeyPath() string {
 // The encryption key is shared by both ctx pad and ctx notify, so the
 // rotation threshold is a project-wide setting.
 //
-// Priority: top-level key_rotation_days > notify.key_rotation_days (legacy) > default (90).
+// Priority: top-level key_rotation_days >
+//
+//	notify.key_rotation_days (legacy) > default (90).
 //
 // Returns:
 //   - int: Number of days before a key rotation nudge
@@ -251,7 +255,7 @@ func SessionPrefixes() []string {
 }
 
 // FreshnessFiles returns the configured list of files to track for
-// freshness. Returns nil if no files are configured — the hook is
+// freshness. Returns nil if no files are configured: the hook is
 // a no-op when the list is empty.
 //
 // Returns:
@@ -316,6 +320,8 @@ func Reset() {
 // Returns:
 //   - int: Priority value (1-9 for known files, 100 for unknown)
 func FilePriority(name string) int {
+	const lowestPriority = 100
+
 	// Check for .ctxrc override first
 	if order := PriorityOrder(); order != nil {
 		for i, fName := range order {
@@ -324,7 +330,7 @@ func FilePriority(name string) int {
 			}
 		}
 		// File not in custom order gets the lowest priority
-		return 100
+		return lowestPriority
 	}
 
 	// Use the default priority from config.ReadOrder
@@ -333,5 +339,5 @@ func FilePriority(name string) int {
 			return i + 1
 		}
 	}
-	return 100
+	return lowestPriority
 }

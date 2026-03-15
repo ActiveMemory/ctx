@@ -31,7 +31,7 @@ func Validate(data []byte) (warnings []string, err error) {
 
 	var cfg CtxRC
 	if decErr := dec.Decode(&cfg); decErr != nil {
-		// Empty document — not an error.
+		// Empty document: not an error.
 		if decErr == io.EOF {
 			return nil, nil
 		}
