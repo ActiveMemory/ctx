@@ -34,7 +34,9 @@ func LoadState(cause error) error {
 // Returns:
 //   - error: "save journal state: <cause>"
 func SaveState(cause error) error {
-	return fmt.Errorf(assets.TextDesc(assets.TextDescKeyErrJournalSaveJournalState), cause)
+	return fmt.Errorf(
+		assets.TextDesc(assets.TextDescKeyErrJournalSaveJournalState), cause,
+	)
 }
 
 // LoadStateErr wraps a failure to load journal processing state.

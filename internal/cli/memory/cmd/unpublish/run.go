@@ -36,7 +36,7 @@ func Run(cmd *cobra.Command) error {
 	memoryPath, discoverErr := memory.DiscoverMemoryPath(projectRoot)
 	if discoverErr != nil {
 		write.ErrAutoMemoryNotActive(cmd, discoverErr)
-		return ctxerr.MemoryNotFound()
+		return ctxerr.NotFound()
 	}
 
 	data, readErr := io.SafeReadFile(

@@ -1,0 +1,493 @@
+# Output formatting strings for ctx CLI.
+# Used by assets.TextDesc() via the write package.
+
+write.added-to:
+  short: ✓ Added to %s
+write.archived:
+  short: Archived previous mirror to %s
+write.backup-result:
+  short: '%s: %s (%s)'
+write.backup-smb-dest:
+  short: ' → %s'
+write.bootstrap-dir:
+  short: 'context_dir: %s'
+write.bootstrap-files:
+  short: 'Files:'
+write.bootstrap-next-steps:
+  short: 'Next steps:'
+write.bootstrap-numbered:
+  short: '  %d. %s'
+write.bootstrap-rules:
+  short: 'Rules:'
+write.bootstrap-sep:
+  short: =============
+write.bootstrap-title:
+  short: ctx bootstrap
+write.bootstrap-warning:
+  short: 'Warning: %s'
+write.completed-task:
+  short: '✓ Completed: %s'
+write.config-profile-base:
+  short: 'active: base (defaults)'
+write.config-profile-dev:
+  short: 'active: dev (verbose logging enabled)'
+write.config-profile-none:
+  short: 'active: none (%s does not exist)'
+write.deps-looking-for:
+  short: 'Looking for: go.mod, package.json, requirements.txt, pyproject.toml, Cargo.toml'
+write.deps-no-deps:
+  short: No dependencies found.
+write.deps-no-project:
+  short: No supported project detected.
+write.deps-use-type:
+  short: 'Use --type to force: %s'
+write.dry-run:
+  short: Dry run — no files will be written.
+write.exists-writing-as-alternative:
+  short: '  ! %s exists, writing as %s'
+write.hook-copilot-created:
+  short: '  ✓ %s'
+write.hook-copilot-force-hint:
+  short: '  Use --force to overwrite (not yet implemented).'
+write.hook-copilot-merged:
+  short: '  ✓ %s (merged)'
+write.hook-copilot-sessions-dir:
+  short: '  ✓ %s/'
+write.hook-copilot-skipped:
+  short: '  ○ %s (ctx content exists, skipped)'
+write.hook-copilot-summary:
+  short: |-
+    Copilot Chat (agent mode) will now:
+      1. Read .context/ files at session start
+      2. Save session summaries to .context/sessions/
+      3. Proactively update context during work
+write.hook-unknown-tool:
+  short: |
+    Unknown tool: %s
+write.import-added:
+  short: '     Added to %s'
+write.import-classified:
+  short: '     Classified: %s (keywords: %s)'
+write.import-classified-skip:
+  short: '     Classified: skip'
+write.import-duplicates:
+  short: 'Duplicates: %d entries (already imported)'
+write.import-entry:
+  short: '  -> %q'
+write.import-found:
+  short: '  Found %d entries'
+write.import-no-entries:
+  short: No entries found in %s.
+write.import-scanning:
+  short: Scanning %s for new entries...
+write.import-skipped:
+  short: 'Skipped: %d entries (session notes/unclassified)'
+write.import-summary:
+  short: 'Imported: %d entries'
+write.import-summary-dry-run:
+  short: 'Dry run — would import: %d entries'
+write.init-aborted:
+  short: Aborted.
+write.init-backup:
+  short: '  ✓ %s (backup)'
+write.init-created-dir:
+  short: '  ✓ %s/'
+write.init-created-with:
+  short: '  ✓ %s%s'
+write.init-creating-root-files:
+  short: Creating project root files...
+write.init-ctx-content-exists:
+  short: '  ○ %s (ctx content exists, skipped)'
+write.init-exists-skipped:
+  short: '  ○ %s (exists, skipped)'
+write.init-file-created:
+  short: '  ✓ %s'
+write.init-file-exists-no-ctx:
+  short: '%s exists but has no ctx content.'
+write.init-gitignore-review:
+  short: '  Review with: cat .gitignore'
+write.init-gitignore-updated:
+  short: '  ✓ .gitignore updated (%d entries added)'
+write.init-makefile-appended:
+  short: '  ✓ Makefile (appended %s include)'
+write.init-makefile-created:
+  short: '  ✓ Makefile (created with ctx include)'
+write.init-makefile-includes:
+  short: '  ○ Makefile (already includes %s)'
+write.init-merged:
+  short: '  ✓ %s (merged)'
+write.init-next-steps:
+  short: |-
+    Next steps:
+      1. Edit .context/TASKS.md to add your current tasks
+      2. Run 'ctx status' to see context summary
+      3. Run 'ctx agent' to get AI-ready context packet
+write.init-no-changes:
+  short: '  ○ %s (no changes needed)'
+write.init-overwrite-prompt:
+  short: '%s already exists. Overwrite? [y/N] '
+write.init-perms-allow:
+  short: '  ✓ %s (added ctx permissions)'
+write.init-perms-allow-deny:
+  short: '  ✓ %s (added ctx allow + deny permissions)'
+write.init-perms-deduped:
+  short: '  ✓ %s (removed duplicate permissions)'
+write.init-perms-deny:
+  short: '  ✓ %s (added ctx deny permissions)'
+write.init-perms-merged-deduped:
+  short: '  ✓ %s (added ctx permissions, removed duplicates)'
+write.init-plugin-already-enabled:
+  short: '  ○ Plugin already enabled globally'
+write.init-plugin-enabled:
+  short: '  ✓ Plugin enabled globally in %s'
+write.init-plugin-info:
+  short: |-
+    Claude Code users: install the ctx plugin for hooks & skills:
+      /plugin marketplace add ActiveMemory/ctx
+      /plugin install ctx@activememory-ctx
+write.init-plugin-note:
+  short: |-
+    Note: local plugin installs are not auto-enabled globally.
+    Run 'ctx init' again after installing the plugin to enable it,
+    or manually add to ~/.claude/settings.json:
+      {"enabledPlugins": {"ctx@activememory-ctx": true}}
+write.init-plugin-skipped:
+  short: '  ○ Plugin enablement skipped (plugin not installed)'
+write.init-scratchpad-key-created:
+  short: '  ✓ Scratchpad key created at %s'
+write.init-scratchpad-no-key:
+  short: '  ⚠ Encrypted scratchpad found but no key at %s'
+write.init-scratchpad-plaintext:
+  short: '  ✓ %s (plaintext scratchpad)'
+write.init-setting-up-permissions:
+  short: Setting up Claude Code permissions...
+write.init-skipped-dir:
+  short: '  ○ %s/ (exists, skipped)'
+write.init-skipped-plain:
+  short: '  ○ %s (skipped)'
+write.init-updated-ctx-section:
+  short: '  ✓ %s (updated ctx section)'
+write.init-updated-plan-section:
+  short: '  ✓ %s (updated plan section)'
+write.init-updated-prompt-section:
+  short: '  ✓ %s (updated prompt section)'
+write.init-warn-non-fatal:
+  short: '  ⚠ %s: %v'
+write.initialized:
+  short: Context initialized in %s/
+write.journal-orphan-removed:
+  short: '  removed orphan: %s'
+write.journal-site-alt:
+  short: '  ctx journal site --serve'
+write.journal-site-building:
+  short: Building site...
+write.journal-site-generated:
+  short: ✓ Generated site with %d entries in %s
+write.journal-site-next-steps:
+  short: '  cd %s && %s serve'
+write.journal-site-starting:
+  short: Starting local server...
+write.journal-sync-locked:
+  short: '  ✓ %s (locked)'
+write.journal-sync-locked-count:
+  short: |2-
+
+    Locked %d entry(s).
+write.journal-sync-match:
+  short: No changes — state already matches frontmatter.
+write.journal-sync-none:
+  short: No journal entries found.
+write.journal-sync-unlocked:
+  short: '  ✓ %s (unlocked)'
+write.journal-sync-unlocked-count:
+  short: |2-
+
+    Unlocked %d entry(s).
+write.lines:
+  short: '  Lines: %d'
+write.lines-previous:
+  short: ' (was %d)'
+write.lock-unlock-entry:
+  short: '  ok %s (%s)'
+write.lock-unlock-no-changes:
+  short: No changes — all matched entries already %s.
+write.lock-unlock-summary:
+  short: |2-
+
+    %s %d entry(s).
+write.loop-completion:
+  short: 'Completion signal: %s'
+write.loop-generated:
+  short: ✓ Generated %s
+write.loop-max-iterations:
+  short: 'Max iterations: %d'
+write.loop-prompt:
+  short: 'Prompt: %s'
+write.loop-run-cmd:
+  short: '  ./%s'
+write.loop-tool:
+  short: 'Tool: %s'
+write.loop-unlimited:
+  short: 'Max iterations: unlimited'
+write.memory-archives:
+  short: '  Archives:   %d snapshots in .context/%s/'
+write.memory-bridge-header:
+  short: Memory Bridge Status
+write.memory-drift-detected:
+  short: '  Drift:      detected (source is newer)'
+write.memory-drift-none:
+  short: '  Drift:      none'
+write.memory-last-sync:
+  short: '  Last sync:   %s (%s ago)'
+write.memory-last-sync-never:
+  short: '  Last sync:   never'
+write.memory-mirror:
+  short: '  Mirror:      %s'
+write.memory-mirror-lines:
+  short: '  Mirror:     %d lines'
+write.memory-mirror-not-synced:
+  short: '  Mirror:     not yet synced'
+write.memory-no-changes:
+  short: No changes since last sync.
+write.memory-source:
+  short: '  Source:      %s'
+write.memory-source-lines:
+  short: '  MEMORY.md:  %d lines'
+write.memory-source-lines-drift:
+  short: '  MEMORY.md:  %d lines (modified since last sync)'
+write.memory-source-not-active:
+  short: '  Source: auto memory not active (MEMORY.md not found)'
+write.mirror:
+  short: '  Mirror: %s'
+write.moving-task:
+  short: '✓ Moving completed task: %s'
+write.new-content:
+  short: '  New content: %d lines since last sync'
+write.obsidian-generated:
+  short: ✓ Generated Obsidian vault with %d entries in %s
+write.obsidian-next-steps:
+  short: '  Open Obsidian → Open folder as vault → Select %s'
+write.pad-blob-written:
+  short: Wrote %d bytes to %s
+write.pad-empty:
+  short: Scratchpad is empty.
+write.pad-entry-added:
+  short: Added entry %d.
+write.pad-entry-moved:
+  short: Moved entry %d to %d.
+write.pad-entry-removed:
+  short: Removed entry %d.
+write.pad-entry-updated:
+  short: Updated entry %d.
+write.pad-export-done:
+  short: '  + %s'
+write.pad-export-none:
+  short: No blob entries to export.
+write.pad-export-plan:
+  short: '  %s → %s'
+write.pad-export-summary:
+  short: '%s %d blobs.'
+write.pad-export-verb-done:
+  short: Exported
+write.pad-export-verb-dry-run:
+  short: Would export
+write.pad-export-write-failed:
+  short: '  ! failed to write %s: %v'
+write.pad-import-blob-added:
+  short: '  + %s'
+write.pad-import-blob-none:
+  short: No files to import.
+write.pad-import-blob-skipped:
+  short: '  ! skipped: %s (%v)'
+write.pad-import-blob-summary:
+  short: Done. Added %d, skipped %d.
+write.pad-import-blob-too-large:
+  short: '  ! skipped: %s (exceeds %d byte limit)'
+write.pad-import-close-warning:
+  short: 'warning: close %s: %v'
+write.pad-import-done:
+  short: Imported %d entries.
+write.pad-import-none:
+  short: No entries to import.
+write.pad-key-created:
+  short: Scratchpad key created at %s
+write.pad-merge-added:
+  short: '  + %-40s (from %s)'
+write.pad-merge-binary-warning:
+  short: '  ! %s appears to contain binary data; it may be encrypted (use --key)'
+write.pad-merge-blob-conflict:
+  short: '  ! blob %q has different content across sources; both kept'
+write.pad-merge-done:
+  short: Merged %d new %s (%d %s skipped).
+write.pad-merge-dry-run:
+  short: Would merge %d new %s (%d %s skipped).
+write.pad-merge-dupe:
+  short: '  = %-40s (duplicate, skipped)'
+write.pad-merge-none:
+  short: No entries to merge.
+write.pad-merge-none-new:
+  short: No new entries to merge (%d %s skipped).
+write.pad-resolve-entry:
+  short: '  %d. %s'
+write.pad-resolve-header:
+  short: === %s ===
+write.path-exists:
+  short: '  %s -> %s (exists)'
+write.paused:
+  short: Context hooks paused for session %s
+write.prefix-error:
+  short: 'Error: '
+write.prompt-created:
+  short: Created prompt %q.
+write.prompt-item:
+  short: '  %s'
+write.prompt-none:
+  short: No prompts found. Run 'ctx init' or 'ctx prompt add' to create prompts.
+write.prompt-removed:
+  short: Removed prompt %q.
+write.publish-block:
+  short: '  Published block:'
+write.publish-budget:
+  short: '  Budget: %d lines'
+write.publish-conventions:
+  short: '    %d key conventions (from CONVENTIONS.md)'
+write.publish-decisions:
+  short: '    %d recent decisions (from DECISIONS.md)'
+write.publish-done:
+  short: 'Published to MEMORY.md (markers: <!-- ctx:published --> ... <!-- ctx:end -->)'
+write.publish-dry-run:
+  short: Dry run — no files written.
+write.publish-header:
+  short: Publishing .context/ -> MEMORY.md...
+write.publish-learnings:
+  short: '    %d recent learnings (from LEARNINGS.md)'
+write.publish-source-files:
+  short: '  Source files: TASKS.md, DECISIONS.md, CONVENTIONS.md, LEARNINGS.md'
+write.publish-tasks:
+  short: '    %d pending tasks (from TASKS.md)'
+write.publish-total:
+  short: '  Total: %d lines (within %d-line budget)'
+write.reminder-added:
+  short: '  + [%d] %s%s'
+write.reminder-after-suffix:
+  short: '  (after %s)'
+write.reminder-dismissed:
+  short: '  - [%d] %s'
+write.reminder-dismissed-all:
+  short: Dismissed %d reminders.
+write.reminder-item:
+  short: '  [%d] %s%s'
+write.reminder-none:
+  short: No reminders.
+write.reminder-not-due:
+  short: '  (after %s, not yet due)'
+write.restore-added:
+  short: '  + %s'
+write.restore-deny-dropped-header:
+  short: 'Dropped %d session deny rule(s):'
+write.restore-deny-restored-header:
+  short: 'Restored %d deny rule(s):'
+write.restore-done:
+  short: Restored from golden image.
+write.restore-dropped-header:
+  short: 'Dropped %d session allow permission(s):'
+write.restore-match:
+  short: Settings already match golden image.
+write.restore-no-local:
+  short: Restored golden image (no local settings existed).
+write.restore-perm-match:
+  short: Permission lists match; other settings differ.
+write.restore-removed:
+  short: '  - %s'
+write.restore-restored-header:
+  short: 'Restored %d allow permission(s):'
+write.resumed:
+  short: Context hooks resumed for session %s
+write.setup-done:
+  short: |-
+    Webhook configured: %s
+    Encrypted at: %s
+write.setup-prompt:
+  short: 'Enter webhook URL: '
+write.skill-line:
+  short: '  /%-22s %s'
+write.skills-header:
+  short: 'Available Skills:'
+write.snapshot-saved:
+  short: 'Saved golden image: %s'
+write.snapshot-updated:
+  short: 'Updated golden image: %s'
+write.source:
+  short: '  Source: %s'
+write.status-activity-header:
+  short: 'Recent Activity:'
+write.status-activity-item:
+  short: '  - %s modified %s'
+write.status-dir:
+  short: 'Context Directory: %s'
+write.status-drift:
+  short: '  Status: drift detected (source is newer)'
+write.status-file-compact:
+  short: '  %s %s (%s)'
+write.status-file-verbose:
+  short: '  %s %s (%s) [%s tokens, %s]'
+write.status-files:
+  short: 'Total Files: %d'
+write.status-files-header:
+  short: 'Files:'
+write.status-no-drift:
+  short: '  Status: no drift'
+write.status-preview-line:
+  short: '      (%s)'
+write.status-separator:
+  short: ====================
+write.status-title:
+  short: Context Status
+write.status-tokens:
+  short: 'Token Estimate: %s tokens'
+write.sync-action:
+  short: '%d. [%s] %s'
+write.sync-dry-run:
+  short: DRY RUN — No changes will be made
+write.sync-dry-run-summary:
+  short: Found %d items to sync. Run without --dry-run to apply suggestions.
+write.sync-header:
+  short: Sync Analysis
+write.sync-in-sync:
+  short: ✓ Context is in sync with codebase
+write.sync-separator:
+  short: =============
+write.sync-suggestion:
+  short: '   Suggestion: %s'
+write.sync-summary:
+  short: Found %d items. Review and update context files manually.
+write.synced:
+  short: Synced %s -> %s
+write.test-filtered:
+  short: |-
+    Note: event "test" is filtered by your .ctxrc notify.events config.
+    Sending anyway for testing purposes.
+write.test-no-webhook:
+  short: 'No webhook configured. Run: ctx notify setup'
+write.test-result:
+  short: 'Webhook responded: HTTP %d %s'
+write.test-working:
+  short: Webhook is working %s
+write.time-day-ago:
+  short: 1 day ago
+write.time-days-ago:
+  short: '%d days ago'
+write.time-hour-ago:
+  short: 1 hour ago
+write.time-hours-ago:
+  short: '%d hours ago'
+write.time-just-now:
+  short: just now
+write.time-minute-ago:
+  short: 1 minute ago
+write.time-minutes-ago:
+  short: '%d minutes ago'
+write.unpublish-done:
+  short: Removed published block from %s.
+write.unpublish-not-found:
+  short: No published block found in %s.

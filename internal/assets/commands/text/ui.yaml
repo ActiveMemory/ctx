@@ -1,0 +1,312 @@
+# General UI text strings for ctx CLI.
+# Used by assets.TextDesc() for prompts, labels, and status output.
+
+agent.instruction:
+  short: 'Before starting work, confirm to the user: "I have read the required context files and I''m following project conventions."'
+changes.fallback-label:
+  short: 24 hour(s) ago (default)
+changes.since-prefix:
+  short: 'since '
+confirm.proceed:
+  short: 'Proceed? [y/N] '
+drift.cleared:
+  short: ✓ Index cleared (no %s found)
+drift.dead-path:
+  short: references path that does not exist
+drift.entry-count:
+  short: 'has %d entries (recommended: ≤%d)'
+drift.missing-file:
+  short: required context file is missing
+drift.missing-package:
+  short: package %s is not documented
+drift.regenerated:
+  short: ✓ Index regenerated with %d entries
+drift.secret:
+  short: may contain secrets (constitution violation)
+drift.stale-age:
+  short: last modified %d days ago
+drift.staleness:
+  short: has many completed items (consider archiving)
+events.empty:
+  short: No events logged.
+events.human-format:
+  short: '%-19s  %-5s  %-24s  %s'
+events.close-error:
+  short: 'ctx: event log close: %v'
+events.write-error:
+  short: 'ctx: event log write: %v'
+hook.aider:
+  short: |
+    Aider Integration
+    =================
+
+    Add to your .aider.conf.yml:
+
+    ```yaml
+    read:
+      - .context/CONSTITUTION.md
+      - .context/TASKS.md
+      - .context/CONVENTIONS.md
+      - .context/ARCHITECTURE.md
+      - .context/DECISIONS.md
+    ```
+
+    Or pass context via command line:
+
+    ```bash
+    ctx agent | aider --message "$(cat -)"
+    ```
+hook.claude:
+  short: |
+    Claude Code Integration
+    =======================
+
+    Claude Code integration is now provided via the ctx plugin.
+
+    Install the plugin:
+      /plugin marketplace add ActiveMemory/ctx
+      /plugin install ctx@activememory-ctx
+
+    The plugin provides hooks (context monitoring, persistence
+    nudges, post-commit capture) and 25 skills automatically.
+hook.copilot:
+  short: |
+    GitHub Copilot Integration
+    ==========================
+
+    Add the following to .github/copilot-instructions.md,
+    or run with --write to generate the file directly:
+
+      ctx hook copilot --write
+hook.cursor:
+  short: |
+    Cursor IDE Integration
+    ======================
+
+    Add to your .cursorrules file:
+
+    ```markdown
+    # Project Context
+
+    Always read these files before making changes:
+    - .context/CONSTITUTION.md (NEVER violate these rules)
+    - .context/TASKS.md (current work)
+    - .context/CONVENTIONS.md (how we write code)
+    - .context/ARCHITECTURE.md (system structure)
+
+    Run 'ctx agent' for a context summary.
+    Run 'ctx drift' to check for stale context.
+    ```
+hook.supported-tools:
+  short: |
+    Supported tools:
+      claude-code  - Anthropic's Claude Code CLI (use plugin instead)
+      cursor       - Cursor IDE
+      aider        - Aider AI coding assistant
+      copilot      - GitHub Copilot
+      windsurf     - Windsurf IDE
+hook.windsurf:
+  short: |
+    Windsurf Integration
+    ====================
+
+    Add to your .windsurfrules file:
+
+    ```markdown
+    # Context
+
+    Read order for context:
+    1. .context/CONSTITUTION.md
+    2. .context/TASKS.md
+    3. .context/CONVENTIONS.md
+    4. .context/ARCHITECTURE.md
+    5. .context/DECISIONS.md
+
+    Run 'ctx agent' for AI-ready context packet.
+    ```
+import.count-convention:
+  short: '%d convention'
+import.count-decision:
+  short: '%d decision'
+import.count-learning:
+  short: '%d learning'
+import.count-task:
+  short: '%d task'
+journal.moc.browse-by:
+  short: '## Browse by'
+journal.moc.file-page-stats:
+  short: '**%d sessions** touching this file.'
+journal.moc.file-stats:
+  short: '**%d files** across **%d sessions** — **%d popular**, **%d long-tail**'
+journal.moc.files-description:
+  short: — sessions grouped by file touched
+journal.moc.nav-description:
+  short: Navigation hub for all journal entries.
+journal.moc.see-also:
+  short: '**See also**:'
+journal.moc.session-link:
+  short: '- [%s](%s%s) (%d sessions)%s'
+journal.moc.topic-page-stats:
+  short: '**%d sessions** with this topic.'
+journal.moc.topic-stats:
+  short: '**%d topics** across **%d sessions** — **%d popular**, **%d long-tail**'
+journal.moc.topics-description:
+  short: — sessions grouped by topic
+journal.moc.topics-label:
+  short: '**Topics**: '
+journal.moc.type-label:
+  short: '**Type**: '
+journal.moc.type-page-stats:
+  short: '**%d sessions** of type *%s*.'
+journal.moc.type-stats:
+  short: '**%d types** across **%d sessions**'
+journal.moc.types-description:
+  short: — sessions grouped by type
+memory.diff-new-format:
+  short: |
+    +++ %s (source)
+memory.diff-old-format:
+  short: |
+    --- %s (mirror)
+memory.import-review:
+  short: Imported from MEMORY.md — review and update as needed
+memory.import-source:
+  short: auto-memory import
+memory.publish-conventions:
+  short: '## Key Conventions'
+memory.publish-decisions:
+  short: '## Recent Decisions'
+memory.publish-learnings:
+  short: '## Recent Learnings'
+memory.publish-tasks:
+  short: '## Pending Tasks'
+memory.publish-title:
+  short: |+
+    # Project Context (managed by ctx)
+
+memory.select-content:
+  short: 'selecting content: %v'
+memory.write-memory:
+  short: 'writing MEMORY.md: %v'
+pad.key-created:
+  short: Scratchpad key created at %s
+parser.git-not-found:
+  short: git not found in PATH; install git to enable remote URL enrichment
+prune.dry-run-line:
+  short: '  would prune: %s (age: %s)'
+prune.dry-run-summary:
+  short: Dry run — would prune %d files (skip %d recent, preserve %d global)
+prune.error-line:
+  short: '  error removing %s: %v'
+prune.summary:
+  short: Pruned %d files (skipped %d recent, preserved %d global)
+rc.parse_warning:
+  short: 'ctx: warning: failed to parse %s: %v (using defaults)'
+stats.empty:
+  short: No stats recorded yet.
+stats.header-format:
+  short: '%-19s  %-8s  %6s  %8s  %4s  %-12s'
+stats.line-format:
+  short: '%-19s  %-8s  %6d  %7s  %3d%%  %-12s'
+stopwords:
+  short: the and for that this with from are was were been have has had but not you all can her his she its our they will each make like use way may any into when which their about would there what also should after before than then them could more some other only just see add new update how
+summary.active:
+  short: '%d active'
+summary.completed:
+  short: '%d completed'
+summary.decision:
+  short: 1 decision
+summary.decisions:
+  short: '%d decisions'
+summary.empty:
+  short: empty
+summary.invariants:
+  short: '%d invariants'
+summary.loaded:
+  short: loaded
+summary.term:
+  short: 1 term
+summary.terms:
+  short: '%d terms'
+sync.config.description:
+  short: Found %s but %s not documented
+sync.config.suggestion:
+  short: Document %s in %s
+sync.deps.description:
+  short: Found %s (%s) but no dependency documentation
+sync.deps.suggestion:
+  short: Consider documenting key dependencies in %s or create %s
+sync.dir.description:
+  short: Directory '%s/' exists but not documented
+sync.dir.suggestion:
+  short: Add '%s/' to %s with description
+task-archive.content-preview:
+  short: 'Archived content preview:'
+task-archive.dry-run-header:
+  short: Dry run - no files modified
+task-archive.dry-run-summary:
+  short: Would archive %d completed tasks (keeping %d pending)
+task-archive.no-completed:
+  short: No completed tasks to archive.
+task-archive.pending-remain:
+  short: '  %d pending tasks remain in TASKS.md'
+task-archive.skip-incomplete:
+  short: No tasks to archive (%d skipped due to incomplete children).
+task-archive.skipping:
+  short: '! Skipping (has incomplete children): %s'
+task-archive.success:
+  short: ✓ Archived %d completed tasks to %s
+task-archive.success-with-age:
+  short: ✓ Archived %d tasks to %s (older than %d days)
+task-snapshot.created-format:
+  short: 'Created: %s'
+task-snapshot.header-format:
+  short: '# TASKS.md Snapshot — %s'
+task-snapshot.saved:
+  short: ✓ Snapshot saved to %s
+time.ago:
+  short: ' ago'
+time.day:
+  short: day
+time.hour:
+  short: hour
+time.just-now:
+  short: just now
+time.minute:
+  short: minute
+watch.apply-failed:
+  short: |
+    ✗ Failed to apply [%s]: %v
+watch.apply-success:
+  short: |
+    ✓ Applied: [%s] %s
+watch.close-log-error:
+  short: 'failed to close log file: %v'
+watch.dry-run:
+  short: DRY RUN — No changes will be made
+watch.dry-run-preview:
+  short: |
+    ○ Would apply: [%s] %s
+watch.stop-hint:
+  short: Press Ctrl+C to stop
+watch.watching:
+  short: Watching for context updates...
+why.admonition-format:
+  short: '> **%s**'
+why.banner:
+  short: |2-
+
+       /    ctx:                         https://ctx.ist
+     ,'`./    do you remember?
+     `.,'\
+       \
+          {}  -> what
+          ctx -> why
+why.blockquote-prefix:
+  short: '> '
+why.bold-format:
+  short: '**%s**'
+why.menu-item-format:
+  short: '  [%d] %s'
+why.menu-prompt:
+  short: "\nSelect a document (1-3): "

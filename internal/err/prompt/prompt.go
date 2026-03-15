@@ -47,19 +47,6 @@ func Remove(cause error) error {
 	)
 }
 
-// NoPromptTemplate returns an error when no embedded template exists.
-//
-// Parameters:
-//   - name: the template name that was not found.
-//
-// Returns:
-//   - error: advises the user to use --stdin
-func NoPromptTemplate(name string) error {
-	return fmt.Errorf(
-		assets.TextDesc(assets.TextDescKeyErrPromptNoPromptTemplate), name,
-	)
-}
-
 // NoTemplate wraps a failure to find an embedded template.
 //
 // Parameters:
@@ -74,6 +61,19 @@ func NoTemplate(filename string, cause error) error {
 	)
 }
 
+// NoPromptTemplate returns an error when no embedded template exists.
+//
+// Parameters:
+//   - name: the template name that was not found
+//
+// Returns:
+//   - error: advises the user to use --stdin
+func NoPromptTemplate(name string) error {
+	return fmt.Errorf(
+		assets.TextDesc(assets.TextDescKeyErrPromptNoPromptTemplate), name,
+	)
+}
+
 // ListPromptTemplates wraps a failure to list prompt templates.
 //
 // Parameters:
@@ -84,19 +84,6 @@ func NoTemplate(filename string, cause error) error {
 func ListPromptTemplates(cause error) error {
 	return fmt.Errorf(
 		assets.TextDesc(assets.TextDescKeyErrPromptListPromptTemplates), cause,
-	)
-}
-
-// ListTemplates wraps a failure to list embedded templates.
-//
-// Parameters:
-//   - cause: the underlying error from the list operation
-//
-// Returns:
-//   - error: "failed to list templates: <cause>"
-func ListTemplates(cause error) error {
-	return fmt.Errorf(
-		assets.TextDesc(assets.TextDescKeyErrPromptListTemplates), cause,
 	)
 }
 
@@ -141,11 +128,24 @@ func ReadEntryTemplate(name string, cause error) error {
 	)
 }
 
+// ListTemplates wraps a failure to list embedded templates.
+//
+// Parameters:
+//   - cause: the underlying error
+//
+// Returns:
+//   - error: "failed to list templates: <cause>"
+func ListTemplates(cause error) error {
+	return fmt.Errorf(
+		assets.TextDesc(assets.TextDescKeyErrPromptListTemplates), cause,
+	)
+}
+
 // ReadTemplate wraps a failure to read an embedded template.
 //
 // Parameters:
 //   - name: template name that failed to read
-//   - cause: the underlying error from the read operation
+//   - cause: the underlying error
 //
 // Returns:
 //   - error: "failed to read template <name>: <cause>"

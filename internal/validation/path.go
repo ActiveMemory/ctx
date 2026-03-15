@@ -7,10 +7,12 @@
 package validation
 
 import (
-	"fmt"
 	"os"
 	"path/filepath"
 	"strings"
+
+	fserr "github.com/ActiveMemory/ctx/internal/err/fs"
+	ctxerr "github.com/ActiveMemory/ctx/internal/err/validate"
 )
 
 // ValidateBoundary checks that dir resolves to a path within the current
@@ -19,19 +21,19 @@ import (
 func ValidateBoundary(dir string) error {
 	cwd, err := os.Getwd()
 	if err != nil {
-		return fmt.Errorf("validate boundary: %w", err)
+		return fserr.BoundaryViolation(err)
 	}
 
 	absDir, err := filepath.Abs(dir)
 	if err != nil {
-		return fmt.Errorf("validate boundary: %w", err)
+		return fserr.BoundaryViolation(err)
 	}
 
 	// Resolve symlinks in both paths so traversal via symlinked parents
 	// is caught.
 	resolvedCwd, err := filepath.EvalSymlinks(cwd)
 	if err != nil {
-		return fmt.Errorf("validate boundary: %w", err)
+		return fserr.BoundaryViolation(err)
 	}
 
 	resolvedDir, err := filepath.EvalSymlinks(absDir)
@@ -45,7 +47,7 @@ func ValidateBoundary(dir string) error {
 	// Append os.PathSeparator to avoid "/foo/bar" matching "/foo/b".
 	root := resolvedCwd + string(os.PathSeparator)
 	if resolvedDir != resolvedCwd && !strings.HasPrefix(resolvedDir, root) {
-		return fmt.Errorf("context directory %q resolves outside project root %q", dir, resolvedCwd)
+		return ctxerr.ContextOutsideRoot(dir, resolvedCwd)
 	}
 
 	return nil
@@ -61,7 +63,7 @@ func CheckSymlinks(dir string) error {
 		return nil
 	}
 	if info.Mode()&os.ModeSymlink != 0 {
-		return fmt.Errorf("context directory %q is a symlink", dir)
+		return ctxerr.ContextDirSymlink(dir)
 	}
 
 	// Check immediate children.
@@ -77,7 +79,7 @@ func CheckSymlinks(dir string) error {
 			continue
 		}
 		if ci.Mode()&os.ModeSymlink != 0 {
-			return fmt.Errorf("context file %q is a symlink", child)
+			return ctxerr.ContextFileSymlink(child)
 		}
 	}
 

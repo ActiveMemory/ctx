@@ -40,7 +40,7 @@ func Run(cmd *cobra.Command) error {
 	if discoverErr != nil {
 		write.MemoryBridgeHeader(cmd)
 		write.MemorySourceNotActive(cmd)
-		return ctxerr.MemoryNotFound()
+		return ctxerr.NotFound()
 	}
 
 	write.MemoryBridgeHeader(cmd)

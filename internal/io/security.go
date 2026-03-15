@@ -8,7 +8,6 @@ package io
 
 import (
 	"bytes"
-	"fmt"
 	"net/http"
 	"net/url"
 	"os"
@@ -16,6 +15,7 @@ import (
 	"strings"
 	"time"
 
+	fserr "github.com/ActiveMemory/ctx/internal/err/fs"
 	ctxerr "github.com/ActiveMemory/ctx/internal/err/http"
 )
 
@@ -36,16 +36,17 @@ import (
 func SafeReadFile(baseDir, filename string) ([]byte, error) {
 	absBase, absErr := filepath.Abs(baseDir)
 	if absErr != nil {
-		return nil, fmt.Errorf("resolve base: %w", absErr)
+		return nil, fserr.ResolveBase(absErr)
 	}
 
 	safe := filepath.Join(absBase, filepath.Base(filename))
 
 	if !strings.HasPrefix(safe, absBase+string(os.PathSeparator)) {
-		return nil, fmt.Errorf("path escapes base directory: %s", filename)
+		return nil, fserr.PathEscapesBase(filename)
 	}
 
-	data, readErr := os.ReadFile(safe) //nolint:gosec // validated by boundary check above
+	data, readErr := os.ReadFile(safe) //nolint:gosec
+	// validated by the boundary check above
 	if readErr != nil {
 		return nil, readErr
 	}
@@ -131,7 +132,7 @@ const maxRedirects = 3
 // SafePost sends an HTTP POST with the given content type and body.
 //
 // Designed for static endpoint URLs that originate from trusted,
-// user-configured sources (e.g. webhook URLs stored in AES-256-GCM
+// user-configured sources (e.g., webhook URLs stored in AES-256-GCM
 // encrypted storage). Centralizes gosec suppression so callers don't
 // each need their own nolint pragma.
 //
@@ -179,7 +180,8 @@ func SafePost(
 		},
 	}
 
-	//nolint:gosec // URL originates from trusted, encrypted storage; scheme validated above
+	//nolint:gosec // URL originates from trusted, encrypted storage;
+	// scheme validated above
 	return client.Post(rawURL, contentType, bytes.NewReader(body))
 }
 
@@ -188,7 +190,7 @@ func SafePost(
 func validateHTTPScheme(rawURL string) error {
 	parsed, parseErr := url.Parse(rawURL)
 	if parseErr != nil {
-		return fmt.Errorf("parse URL: %w", parseErr)
+		return ctxerr.ParseURL(parseErr)
 	}
 	scheme := strings.ToLower(parsed.Scheme)
 	if scheme != "http" && scheme != "https" {

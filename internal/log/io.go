@@ -39,7 +39,9 @@ func readLogFile(path string) ([]notify.Payload, error) {
 	scanner := bufio.NewScanner(f)
 	for scanner.Scan() {
 		var p notify.Payload
-		if unmarshalErr := json.Unmarshal(scanner.Bytes(), &p); unmarshalErr != nil {
+		if unmarshalErr := json.Unmarshal(
+			scanner.Bytes(), &p,
+		); unmarshalErr != nil {
 			continue // skip malformed lines
 		}
 		events = append(events, p)

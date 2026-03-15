@@ -148,6 +148,59 @@ func SourceNotFound(path string) error {
 	)
 }
 
+// InvalidSMBURL returns an error for a malformed SMB URL.
+//
+// Parameters:
+//   - url: the invalid SMB URL
+//
+// Returns:
+//   - error: "invalid SMB URL: <url>"
+func InvalidSMBURL(url string) error {
+	return fmt.Errorf(
+		assets.TextDesc(assets.TextDescKeyErrBackupInvalidSMBURL), url,
+	)
+}
+
+// SMBMissingShare returns an error when an SMB URL has no share name.
+//
+// Parameters:
+//   - url: the SMB URL missing a share name
+//
+// Returns:
+//   - error: "SMB URL missing share name: <url>"
+func SMBMissingShare(url string) error {
+	return fmt.Errorf(
+		assets.TextDesc(assets.TextDescKeyErrBackupSMBMissingShare), url,
+	)
+}
+
+// MountFailed wraps a failure to mount an SMB share.
+//
+// Parameters:
+//   - source: the SMB source URL
+//   - cause: the underlying mount error
+//
+// Returns:
+//   - error: "failed to mount <source>: <cause>"
+func MountFailed(source string, cause error) error {
+	return fmt.Errorf(
+		assets.TextDesc(assets.TextDescKeyErrBackupMountFailed), source, cause,
+	)
+}
+
+// WriteSMB wraps a failure to write to an SMB share.
+//
+// Parameters:
+//   - cause: the underlying write error
+//
+// Returns:
+//   - error: "write to SMB: <cause>"
+func WriteSMB(cause error) error {
+	return fmt.Errorf(
+		assets.TextDesc(assets.TextDescKeyErrBackupWriteSMB), cause,
+	)
+}
+
 // ContextDirNotFound returns an error when the context directory does not exist.
 //
 // Parameters:

@@ -27,6 +27,19 @@ func UnsafeURLScheme(scheme string) error {
 	)
 }
 
+// ParseURL wraps a failure to parse a URL.
+//
+// Parameters:
+//   - cause: the underlying parse error
+//
+// Returns:
+//   - error: "parse URL: <cause>"
+func ParseURL(cause error) error {
+	return fmt.Errorf(
+		assets.TextDesc(assets.TextDescKeyErrHttpParseURL), cause,
+	)
+}
+
 // TooManyRedirects returns an error when an HTTP response exceeds the
 // redirect limit.
 //

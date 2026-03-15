@@ -12,6 +12,13 @@ import (
 
 // matchesFilter reports whether an event passes all non-empty query
 // filters. Empty filter fields are treated as wildcards.
+//
+// Parameters:
+//   - e: the event payload to test
+//   - opts: query filters to match against
+//
+// Returns:
+//   - bool: true if the event matches all non-empty filters
 func matchesFilter(e notify.Payload, opts QueryOpts) bool {
 	if opts.Event != "" && e.Event != opts.Event {
 		return false

@@ -34,7 +34,7 @@ func Run(cmd *cobra.Command, budget int, dryRun bool) error {
 	memoryPath, discoverErr := mem.DiscoverMemoryPath(projectRoot)
 	if discoverErr != nil {
 		write.ErrAutoMemoryNotActive(cmd, discoverErr)
-		return ctxerr.MemoryNotFound()
+		return ctxerr.NotFound()
 	}
 
 	result, selectErr := mem.SelectContent(contextDir, budget)

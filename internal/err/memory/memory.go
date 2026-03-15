@@ -13,12 +13,12 @@ import (
 	"github.com/ActiveMemory/ctx/internal/assets"
 )
 
-// MemoryNotFound returns an error indicating that MEMORY.md was not
+// NotFound returns an error indicating that MEMORY.md was not
 // discovered. Used by all memory subcommands (sync, status, diff).
 //
 // Returns:
 //   - error: "MEMORY.md not found"
-func MemoryNotFound() error {
+func NotFound() error {
 	return errors.New(
 		assets.TextDesc(assets.TextDescKeyErrMemoryNotFound),
 	)
@@ -116,6 +116,12 @@ func Sync(cause error) error {
 }
 
 // DiscoverResolveRoot wraps a project root resolution failure.
+//
+// Parameters:
+//   - cause: the underlying resolution error
+//
+// Returns:
+//   - error: "resolving project root: <cause>"
 func DiscoverResolveRoot(cause error) error {
 	return fmt.Errorf(
 		assets.TextDesc(assets.TextDescKeyErrMemoryDiscoverResolveRoot), cause,
@@ -123,6 +129,12 @@ func DiscoverResolveRoot(cause error) error {
 }
 
 // DiscoverResolveHome wraps a home directory resolution failure.
+//
+// Parameters:
+//   - cause: the underlying resolution error
+//
+// Returns:
+//   - error: "resolving home directory: <cause>"
 func DiscoverResolveHome(cause error) error {
 	return fmt.Errorf(
 		assets.TextDesc(assets.TextDescKeyErrMemoryDiscoverResolveHome), cause,
@@ -130,6 +142,12 @@ func DiscoverResolveHome(cause error) error {
 }
 
 // DiscoverNoMemory returns an error when no auto memory file exists.
+//
+// Parameters:
+//   - path: the path that was checked
+//
+// Returns:
+//   - error: "no auto memory at <path>"
 func DiscoverNoMemory(path string) error {
 	return fmt.Errorf(
 		assets.TextDesc(assets.TextDescKeyErrMemoryDiscoverNoMemory), path,
@@ -137,34 +155,64 @@ func DiscoverNoMemory(path string) error {
 }
 
 // ReadSource wraps a source file read failure during sync.
+//
+// Parameters:
+//   - cause: the underlying read error
+//
+// Returns:
+//   - error: "reading source: <cause>"
 func ReadSource(cause error) error {
 	return fmt.Errorf(
 		assets.TextDesc(assets.TextDescKeyErrMemoryReadSource), cause,
 	)
 }
 
-// MemoryArchivePrevious wraps a failure to archive the previous mirror.
-func MemoryArchivePrevious(cause error) error {
+// ArchivePrevious wraps a failure to archive the previous mirror.
+//
+// Parameters:
+//   - cause: the underlying archive error
+//
+// Returns:
+//   - error: "archiving previous mirror: <cause>"
+func ArchivePrevious(cause error) error {
 	return fmt.Errorf(
 		assets.TextDesc(assets.TextDescKeyErrMemoryArchivePrevious), cause,
 	)
 }
 
-// MemoryCreateDir wraps a failure to create the memory directory.
-func MemoryCreateDir(cause error) error {
+// CreateDir wraps a failure to create the memory directory.
+//
+// Parameters:
+//   - cause: the underlying OS error
+//
+// Returns:
+//   - error: "creating memory directory: <cause>"
+func CreateDir(cause error) error {
 	return fmt.Errorf(
 		assets.TextDesc(assets.TextDescKeyErrMemoryCreateDir), cause,
 	)
 }
 
-// MemoryWriteMirror wraps a failure to write the mirror file.
-func MemoryWriteMirror(cause error) error {
+// WriteMirror wraps a failure to write the mirror file.
+//
+// Parameters:
+//   - cause: the underlying write error
+//
+// Returns:
+//   - error: "writing mirror: <cause>"
+func WriteMirror(cause error) error {
 	return fmt.Errorf(
 		assets.TextDesc(assets.TextDescKeyErrMemoryWriteMirror), cause,
 	)
 }
 
 // ReadMirrorArchive wraps a failure to read the mirror for archiving.
+//
+// Parameters:
+//   - cause: the underlying read error
+//
+// Returns:
+//   - error: "reading mirror for archive: <cause>"
 func ReadMirrorArchive(cause error) error {
 	return fmt.Errorf(
 		assets.TextDesc(assets.TextDescKeyErrMemoryReadMirrorArchive), cause,
@@ -172,6 +220,12 @@ func ReadMirrorArchive(cause error) error {
 }
 
 // CreateArchiveDir wraps a failure to create the archive directory.
+//
+// Parameters:
+//   - cause: the underlying OS error
+//
+// Returns:
+//   - error: "creating archive directory: <cause>"
 func CreateArchiveDir(cause error) error {
 	return fmt.Errorf(
 		assets.TextDesc(assets.TextDescKeyErrMemoryCreateArchiveDir), cause,
@@ -179,6 +233,12 @@ func CreateArchiveDir(cause error) error {
 }
 
 // WriteArchive wraps a failure to write an archive file.
+//
+// Parameters:
+//   - cause: the underlying write error
+//
+// Returns:
+//   - error: "writing archive: <cause>"
 func WriteArchive(cause error) error {
 	return fmt.Errorf(
 		assets.TextDesc(assets.TextDescKeyErrMemoryWriteArchive), cause,
@@ -186,6 +246,12 @@ func WriteArchive(cause error) error {
 }
 
 // ReadMirror wraps a failure to read the mirror file.
+//
+// Parameters:
+//   - cause: the underlying read error
+//
+// Returns:
+//   - error: "reading mirror: <cause>"
 func ReadMirror(cause error) error {
 	return fmt.Errorf(
 		assets.TextDesc(assets.TextDescKeyErrMemoryReadMirror), cause,
@@ -193,6 +259,12 @@ func ReadMirror(cause error) error {
 }
 
 // ReadDiffSource wraps a failure to read the source for diff.
+//
+// Parameters:
+//   - cause: the underlying read error
+//
+// Returns:
+//   - error: "reading diff source: <cause>"
 func ReadDiffSource(cause error) error {
 	return fmt.Errorf(
 		assets.TextDesc(assets.TextDescKeyErrMemoryReadDiffSource), cause,
@@ -200,6 +272,12 @@ func ReadDiffSource(cause error) error {
 }
 
 // SelectContent wraps a failure to select publish content.
+//
+// Parameters:
+//   - cause: the underlying selection error
+//
+// Returns:
+//   - error: "selecting content: <cause>"
 func SelectContent(cause error) error {
 	return fmt.Errorf(
 		assets.TextDesc(assets.TextDescKeyErrMemorySelectContent), cause,
@@ -207,6 +285,12 @@ func SelectContent(cause error) error {
 }
 
 // WriteMemory wraps a failure to write MEMORY.md.
+//
+// Parameters:
+//   - cause: the underlying write error
+//
+// Returns:
+//   - error: "writing MEMORY.md: <cause>"
 func WriteMemory(cause error) error {
 	return fmt.Errorf(
 		assets.TextDesc(assets.TextDescKeyErrMemoryWriteMemory), cause,

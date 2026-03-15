@@ -24,6 +24,19 @@ func NoConfig(dir string) error {
 	return fmt.Errorf(assets.TextDesc(assets.TextDescKeyErrSiteNoSiteConfig), dir)
 }
 
+// MarshalFeed wraps a failure to marshal an Atom feed.
+//
+// Parameters:
+//   - cause: the underlying marshal error
+//
+// Returns:
+//   - error: "cannot marshal feed: <cause>"
+func MarshalFeed(cause error) error {
+	return fmt.Errorf(
+		assets.TextDesc(assets.TextDescKeyErrSiteMarshalFeed), cause,
+	)
+}
+
 // ZensicalNotFound returns an error when zensical is not installed.
 //
 // Returns:

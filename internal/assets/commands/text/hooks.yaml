@@ -1,0 +1,435 @@
+# Hook output text strings for ctx CLI.
+# Used by assets.TextDesc() for hook messages and checks.
+
+backup.box-title:
+  short: Backup Warning
+backup.no-marker:
+  short: No backup marker found — backup may have never run.
+backup.relay-message:
+  short: Backup warning
+backup.relay-prefix:
+  short: 'IMPORTANT: Relay this backup warning to the user VERBATIM before answering their question.'
+backup.run-hint:
+  short: 'Run: ctx system backup'
+backup.smb-not-mounted:
+  short: SMB share (%s) is not mounted.
+backup.smb-unavailable:
+  short: Backups cannot run until it's available.
+backup.stale:
+  short: Last .context backup is %d days old.
+block.absolute-path:
+  short: 'Use ''ctx'' from PATH, not absolute paths. Ask the user to run: make build && sudo make install'
+block.constitution-suffix:
+  short: 'See CONSTITUTION.md: ctx Invocation Invariants'
+block.cp-to-bin:
+  short: Agent must not copy binaries to bin directories. Ask the user to run 'sudo make install' instead.
+block.dot-slash:
+  short: 'Use ''ctx'' from PATH, not ''./ctx'' or ''./dist/ctx''. Ask the user to run: make build && sudo make install'
+block.go-run:
+  short: 'Use ''ctx'' from PATH, not ''go run ./cmd/ctx''. Ask the user to run: make build && sudo make install'
+block.install-to-local-bin:
+  short: Do not copy binaries to ~/.local/bin — this overrides the system ctx in /usr/local/bin. Use 'ctx' from PATH.
+block.mid-git-push:
+  short: git push requires explicit user approval.
+block.mid-sudo:
+  short: Cannot use sudo (no password access). Use 'make build && sudo make install' manually if needed.
+block.non-path-relay-message:
+  short: Blocked non-PATH ctx invocation
+bootstrap.next-steps:
+  short: |-
+    1. Read AGENT_PLAYBOOK.md from the context directory
+    2. Run `ctx agent --budget 4000` for a content summary
+bootstrap.none:
+  short: (none)
+bootstrap.plugin-warning:
+  short: 'ctx plugin is installed but not enabled. Run ''ctx init'' to auto-enable, or add {"enabledPlugins": {"ctx@activememory-ctx": true}} to ~/.claude/settings.json'
+bootstrap.rules:
+  short: |-
+    1. Use context_dir above for ALL file reads/writes
+    2. Never say "I don't have memory" — context IS your memory
+    3. Read files silently, present as recall (not search)
+    4. Persist learnings/decisions before session ends
+    5. Run `ctx agent` for content summaries
+    6. Run `ctx status` for context health
+ceremony.box-both:
+  short: Session Ceremonies
+ceremony.box-remember:
+  short: Session Start
+ceremony.box-wrapup:
+  short: Session End
+ceremony.fallback-both:
+  short: |-
+    Your last 3 sessions didn't use /ctx-remember or
+    /ctx-wrap-up.
+
+    Start sessions with:  /ctx-remember
+      → Loads context, shows active tasks, picks up
+        where you left off. No re-explaining needed.
+
+    End sessions with:    /ctx-wrap-up
+      → Captures learnings and decisions so the next
+        session starts informed, not from scratch.
+
+    These take seconds and save minutes.
+ceremony.fallback-remember:
+  short: |-
+    Try starting this session with /ctx-remember
+
+    It loads your context, shows active tasks, and
+    picks up where you left off — no re-explaining.
+ceremony.fallback-wrapup:
+  short: |-
+    Your last 3 sessions didn't end with /ctx-wrap-up
+
+    It captures learnings and decisions so the next
+    session starts informed, not from scratch.
+ceremony.relay-message:
+  short: Session ceremony nudge
+ceremony.relay-prefix:
+  short: 'IMPORTANT: Relay this session tip to the user VERBATIM before answering their question.'
+check-context-size.billing-box-title:
+  short: Billing Threshold
+check-context-size.billing-fallback:
+  short: |-
+    ⚠ Token usage (~%s) has exceeded your
+    billing_token_warn threshold (%s).
+    Additional tokens may incur extra cost.
+check-context-size.billing-log-format:
+  short: prompt#%d BILLING-WARNING tokens=%d threshold=%d
+check-context-size.billing-relay-format:
+  short: Billing threshold exceeded (%s tokens > %s)
+check-context-size.billing-relay-prefix:
+  short: 'IMPORTANT: Relay this billing warning to the user VERBATIM before answering their question.'
+check-context-size.checkpoint-box-title:
+  short: 'Context Checkpoint (prompt #%d)'
+check-context-size.checkpoint-fallback:
+  short: |-
+    This session is getting deep. Consider wrapping up
+    soon. If there are unsaved learnings, decisions, or
+    conventions, now is a good time to persist them.
+check-context-size.checkpoint-log-format:
+  short: prompt#%d CHECKPOINT tokens=%d pct=%d%%
+check-context-size.checkpoint-relay-format:
+  short: 'Context Checkpoint at prompt #%d'
+check-context-size.oversize-fallback:
+  short: |-
+    ⚠ Context injection is large (~%d tokens).
+    Run /ctx-consolidate to distill your context files.
+check-context-size.relay-prefix:
+  short: 'IMPORTANT: Relay this context checkpoint to the user VERBATIM before answering their question.'
+check-context-size.running-low-suffix:
+  short: ' — running low'
+check-context-size.silenced-billing-log:
+  short: prompt#%d billing-silenced tokens=%d threshold=%d
+check-context-size.silenced-checkpoint-log:
+  short: prompt#%d silenced-by-template
+check-context-size.silenced-window-log:
+  short: prompt#%d window-silenced pct=%d%%
+check-context-size.silent-log-format:
+  short: prompt#%d silent
+check-context-size.suppressed-log-format:
+  short: prompt#%d suppressed (wrapped up)
+check-context-size.token-low:
+  short: ⚠
+check-context-size.token-normal:
+  short: ⏱
+check-context-size.token-usage:
+  short: '%s Context window: ~%s tokens (~%d%% of %s)%s'
+check-context-size.window-box-title:
+  short: Context Window Warning
+check-context-size.window-fallback:
+  short: |-
+    ⚠ Context window is %d%% full (~%s tokens).
+    The session will lose older context soon. Consider wrapping up
+    or starting a fresh session with /ctx-wrap-up.
+check-context-size.window-log-format:
+  short: prompt#%d WINDOW-WARNING tokens=%d pct=%d%%
+check-context-size.window-relay-format:
+  short: Context window at %d%%
+check-journal.box-title:
+  short: Journal Reminder
+check-journal.fallback-both:
+  short: |-
+    You have %d new session(s) not yet exported.
+    %d existing entries need enrichment.
+
+    Process journal (exports and enriches):
+      /ctx-journal-enrich-all
+check-journal.fallback-unenriched:
+  short: |-
+    %d journal entries need enrichment.
+
+    Enrich:
+      /ctx-journal-enrich-all
+check-journal.fallback-unexported:
+  short: |-
+    You have %d new session(s) not yet exported.
+
+    Process journal (exports and enriches):
+      /ctx-journal-enrich-all
+check-journal.relay-format:
+  short: '%d unexported, %d unenriched'
+check-journal.relay-prefix:
+  short: 'IMPORTANT: Relay this journal reminder to the user VERBATIM before answering their question.'
+check-knowledge.box-title:
+  short: Knowledge File Growth
+check-knowledge.fallback:
+  short: |-
+    Large knowledge files dilute agent context. Consider:
+     • Review and remove outdated entries
+     • Use /ctx-consolidate to merge overlapping entries
+     • Use /ctx-drift for semantic drift (stale patterns)
+     • Move stale entries to .context/archive/ manually
+check-knowledge.finding-format:
+  short: |
+    %s has %d %s (recommended: ≤%d).
+check-knowledge.relay-message:
+  short: Knowledge file growth detected
+check-knowledge.relay-prefix:
+  short: 'IMPORTANT: Relay this knowledge health notice to the user VERBATIM before answering their question.'
+check-map-staleness.box-title:
+  short: Architecture Map Stale
+check-map-staleness.fallback:
+  short: |-
+    ARCHITECTURE.md hasn't been refreshed since %s
+    and there are commits touching %d modules.
+    /ctx-architecture keeps architecture docs drift-free.
+
+    Want me to run /ctx-architecture to refresh?
+check-map-staleness.relay-message:
+  short: Architecture map stale
+check-map-staleness.relay-prefix:
+  short: 'IMPORTANT: Relay this architecture map notice to the user VERBATIM before answering their question.'
+check-memory-drift.box-title:
+  short: Memory Drift
+check-memory-drift.content:
+  short: 'MEMORY.md has changed since last sync.%sRun: ctx memory sync'
+check-memory-drift.relay-message:
+  short: 'MEMORY.md has changed since last sync — run ctx memory sync'
+check-memory-drift.relay-prefix:
+  short: 'IMPORTANT: Relay this memory drift notice to the user VERBATIM before answering their question.'
+check-persistence.box-title:
+  short: Persistence Checkpoint
+check-persistence.box-title-format:
+  short: '%s (prompt #%d)'
+check-persistence.checkpoint-format:
+  short: 'Persistence Checkpoint at prompt #%d'
+check-persistence.fallback:
+  short: |-
+    No context files updated in %d+ prompts.
+    Have you discovered learnings, made decisions,
+    established conventions, or completed tasks
+    worth persisting?
+
+    Run /ctx-wrap-up to capture session context.
+check-persistence.init-log-format:
+  short: init count=1 mtime=%d
+check-persistence.modified-log-format:
+  short: prompt#%d context-modified, reset nudge counter
+check-persistence.relay-format:
+  short: No context updated in %d+ prompts
+check-persistence.relay-prefix:
+  short: 'IMPORTANT: Relay this persistence checkpoint to the user VERBATIM before answering their question.'
+check-persistence.silenced-log-format:
+  short: prompt#%d silenced-by-template
+check-persistence.silent-log-format:
+  short: prompt#%d silent since_nudge=%d
+check-persistence.state-format:
+  short: |
+    count=%d
+    last_nudge=%d
+    last_mtime=%d
+check-reminders.box-title:
+  short: Reminders
+check-reminders.dismiss-all-hint:
+  short: 'Dismiss all: ctx remind dismiss --all'
+check-reminders.dismiss-hint:
+  short: 'Dismiss: ctx remind dismiss <id>'
+check-reminders.item-format:
+  short: ' [%d] %s'
+check-reminders.nudge-format:
+  short: You have %d pending reminders
+check-reminders.relay-prefix:
+  short: 'IMPORTANT: Relay these reminders to the user VERBATIM before answering their question.'
+check-resources.box-title:
+  short: Resource Alert
+check-resources.fallback-end:
+  short: and consider ending this session.
+check-resources.fallback-low:
+  short: System resources are critically low.
+check-resources.fallback-persist:
+  short: Persist unsaved context NOW with /ctx-wrap-up
+check-resources.relay-message:
+  short: System resources critically low
+check-resources.relay-prefix:
+  short: 'IMPORTANT: Relay this resource warning to the user VERBATIM.'
+check-task-completion.fallback:
+  short: If you completed a task, mark it [x] in TASKS.md.
+check-task-completion.nudge-message:
+  short: task completion nudge
+check-version.box-title:
+  short: Version Mismatch
+check-version.fallback:
+  short: |-
+    Your ctx binary is v%s but the plugin expects v%s.
+
+    Reinstall the binary to get the best out of ctx:
+      go install github.com/ActiveMemory/ctx/cmd/ctx@latest
+check-version.key-box-title:
+  short: Key Rotation
+check-version.key-fallback:
+  short: |-
+    Your encryption key is %d days old.
+    Consider rotating: ctx pad rotate-key
+check-version.key-relay-format:
+  short: Encryption key is %d days old
+check-version.key-relay-prefix:
+  short: 'IMPORTANT: Relay this security reminder to the user VERBATIM.'
+check-version.mismatch-relay-format:
+  short: Binary v%s vs plugin v%s
+check-version.relay-prefix:
+  short: 'IMPORTANT: Relay this version warning to the user VERBATIM before answering their question.'
+context-load-gate.file-header:
+  short: |+
+    --- %s ---
+    %s
+
+context-load-gate.footer:
+  short: |
+    Context: %d files loaded (~%d tokens). Order follows config.FileReadOrder.
+
+    TASKS.md contains the project's prioritized work items. Read it when discussing priorities, picking up work, or when the user asks about tasks.
+
+    For full decision or learning details, read the entry in DECISIONS.md or LEARNINGS.md by timestamp.
+context-load-gate.header:
+  short: |
+    PROJECT CONTEXT (auto-loaded by system hook — already in your context window)
+context-load-gate.index-fallback:
+  short: (no index entries)
+context-load-gate.index-header:
+  short: |+
+    --- %s (index — read full entries by date when relevant) ---
+    %s
+
+context-load-gate.oversize-action:
+  short: |
+    Action: Run /ctx-consolidate to distill context files.
+    Files with the most growth are the best candidates.
+context-load-gate.oversize-breakdown:
+  short: |
+    Per-file breakdown:
+context-load-gate.oversize-file-entry:
+  short: |2
+      %-22s %5d tokens
+context-load-gate.oversize-header:
+  short: |
+    Context injection oversize warning
+context-load-gate.oversize-injected:
+  short: |+
+    Injected:  %d tokens (threshold: %d)
+
+context-load-gate.oversize-timestamp:
+  short: |
+    Timestamp: %s
+context-load-gate.webhook:
+  short: 'context-load-gate: injected %d files (~%d tokens)'
+freshness.box-title:
+  short: Technology Constants Stale
+freshness.file-entry:
+  short: '  %s (%d days ago) — %s'
+freshness.relay-message:
+  short: Technology constant freshness check triggered
+freshness.relay-prefix:
+  short: 'IMPORTANT: Relay this freshness notice to the user VERBATIM before answering their question.'
+freshness.review-url:
+  short: '  Review against: %s'
+freshness.touch-hint:
+  short: Touch each file to mark it as reviewed.
+heartbeat.log-plain:
+  short: prompt#%d context_modified=%t
+heartbeat.log-tokens:
+  short: prompt#%d context_modified=%t tokens=%s pct=%d%%
+heartbeat.notify-plain:
+  short: 'heartbeat: prompt #%d (context_modified=%t)'
+heartbeat.notify-tokens:
+  short: 'heartbeat: prompt #%d (context_modified=%t tokens=%s pct=%d%%)'
+mark-journal.checked:
+  short: '%s: %s = %s'
+mark-journal.marked:
+  short: '%s: marked %s'
+mark-wrapped-up.confirmed:
+  short: marked wrapped-up
+message.ctx-specific-warning:
+  short: |-
+    Warning: this message is ctx-specific (intended for ctx development).
+    Customizing it may produce unexpected results.
+message.edit-hint:
+  short: Edit this file to customize the message.
+message.list-header-category:
+  short: Category
+message.list-header-hook:
+  short: Hook
+message.list-header-override:
+  short: Override
+message.list-header-variant:
+  short: Variant
+message.no-override:
+  short: No override found for %s/%s. Already using embedded default.
+message.override-created:
+  short: Override created at %s
+message.override-label:
+  short: override
+message.override-removed:
+  short: Override removed for %s/%s. Using embedded default.
+message.source-default:
+  short: 'Source: embedded default'
+message.source-override:
+  short: 'Source: user override (%s)'
+message.template-vars-label:
+  short: 'Template variables: %s'
+message.template-vars-none:
+  short: 'Template variables: (none)'
+pause.confirmed:
+  short: Context hooks paused for session %s
+post-commit.fallback:
+  short: 'Commit succeeded. 1. Offer context capture to the user: Decision (design choice?), Learning (gotcha?), or Neither. 2. Ask the user: "Want me to run lints and tests before you push?" Do NOT push. The user pushes manually.'
+post-commit.relay-message:
+  short: Commit succeeded, context capture offered
+qa-reminder.fallback:
+  short: 'HARD GATE — DO NOT COMMIT without completing ALL of these steps first: (1) lint the ENTIRE project, (2) test the ENTIRE project, (3) verify a clean working tree (no modified or untracked files left behind). Not just the files you changed — the whole branch. If unrelated modified files remain, offer to commit them separately, stash them, or get explicit confirmation to leave them. Do NOT say ''I''ll do that at the end'' or ''I''ll handle that after committing.'' Run lint and tests BEFORE every git commit, every time, no exceptions.'
+qa-reminder.relay-message:
+  short: QA gate reminder emitted
+resources.alert-danger:
+  short: '  ✖ %s'
+resources.alert-disk:
+  short: Disk %.0f%% used (%s / %s GB)
+resources.alert-load:
+  short: Load %.2fx CPU count
+resources.alert-memory:
+  short: Memory %.0f%% used (%s / %s GB)
+resources.alert-swap:
+  short: Swap %.0f%% used (%s / %s GB)
+resources.alert-warning:
+  short: '  ⚠ %s'
+resources.alerts:
+  short: 'Alerts:'
+resources.all-clear:
+  short: All clear — no resource warnings.
+resources.header:
+  short: System Resources
+resources.separator:
+  short: ====================
+resources.status-danger:
+  short: ✖ DANGER
+resources.status-ok:
+  short: ✓ ok
+resources.status-warn:
+  short: ⚠ WARNING
+resume.confirmed:
+  short: Context hooks resumed for session %s
+specs-nudge.fallback:
+  short: Save your plan to specs/ — these documents track what was designed for the current release. Use specs/feature-name.md naming. If this is a quick fix that doesn't need a spec, proceed without one.
+specs-nudge.nudge-message:
+  short: plan-to-specs nudge emitted
+version-drift.relay-message:
+  short: versions out of sync

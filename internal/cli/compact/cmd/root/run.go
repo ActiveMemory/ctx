@@ -17,6 +17,7 @@ import (
 	ctxCfg "github.com/ActiveMemory/ctx/internal/config/ctx"
 	"github.com/ActiveMemory/ctx/internal/config/fs"
 	"github.com/ActiveMemory/ctx/internal/context"
+	ctxerr "github.com/ActiveMemory/ctx/internal/err/initialize"
 	"github.com/ActiveMemory/ctx/internal/rc"
 )
 
@@ -36,7 +37,7 @@ func Run(cmd *cobra.Command, archive bool) error {
 	if err != nil {
 		var notFoundError *context.NotFoundError
 		if errors.As(err, &notFoundError) {
-			return fmt.Errorf("no .context/ directory found. Run 'ctx init' first")
+			return ctxerr.ContextNotInitialized()
 		}
 		return err
 	}

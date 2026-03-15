@@ -1,0 +1,128 @@
+# MCP server text strings for ctx CLI.
+# Used by assets.TextDesc() for MCP JSON-RPC responses.
+
+mcp.added-format:
+  short: Added %s to %s
+mcp.also-noted:
+  short: |+
+    ---
+    ## Also Noted
+
+mcp.completed-format:
+  short: 'Completed: %s'
+mcp.drift-issue-format:
+  short: |2
+      - [%s] %s: %s
+mcp.drift-passed:
+  short: |
+    Passed:
+mcp.drift-passed-format:
+  short: |2
+      - %s
+mcp.drift-status-format:
+  short: |+
+    Status: %s
+
+mcp.drift-violations:
+  short: |
+    Violations:
+mcp.drift-warnings:
+  short: |
+    Warnings:
+mcp.failed-marshal:
+  short: failed to marshal response
+mcp.file-not-found:
+  short: 'file not found: %s'
+mcp.invalid-params:
+  short: invalid params
+mcp.load-context:
+  short: 'failed to load context: %v'
+mcp.method-not-found:
+  short: 'method not found: %s'
+mcp.omitted-format:
+  short: |
+    - %s (omitted for budget)
+mcp.packet-header:
+  short: |+
+    # Context Packet
+
+mcp.parse-error:
+  short: parse error
+mcp.query-required:
+  short: query is required
+mcp.res-agent:
+  short: All context files assembled in priority read order
+mcp.res-architecture:
+  short: System architecture documentation
+mcp.res-constitution:
+  short: Hard rules that must never be violated
+mcp.res-conventions:
+  short: Code patterns and standards
+mcp.res-decisions:
+  short: Architectural decisions with rationale
+mcp.res-glossary:
+  short: Project-specific terminology
+mcp.res-learnings:
+  short: Gotchas, tips, and lessons learned
+mcp.res-playbook:
+  short: How agents should use this system
+mcp.res-tasks:
+  short: Current work items and their status
+mcp.section-format:
+  short: |+
+    ---
+    ## %s
+
+    %s
+
+mcp.status-context-format:
+  short: |
+    Context: %s
+mcp.status-empty:
+  short: EMPTY
+mcp.status-file-format:
+  short: |2
+      %-22s %6d tokens  [%s]
+mcp.status-files-format:
+  short: |
+    Files: %d
+mcp.status-ok:
+  short: OK
+mcp.status-tokens-format:
+  short: |+
+    Tokens: ~%d
+
+mcp.tool-add-desc:
+  short: Add a task, decision, learning, or convention to the context
+mcp.tool-complete-desc:
+  short: Mark a task as done by number or text match
+mcp.tool-drift-desc:
+  short: 'Detect stale or invalid context: dead paths, missing files, staleness'
+mcp.tool-prop-application:
+  short: How to apply this lesson (required for learnings)
+mcp.tool-prop-consequences:
+  short: Consequences (required for decisions)
+mcp.tool-prop-content:
+  short: Title or main content of the entry
+mcp.tool-prop-context:
+  short: Context field (required for decisions and learnings)
+mcp.tool-prop-lesson:
+  short: Lesson learned (required for learnings)
+mcp.tool-prop-priority:
+  short: Priority level (for tasks only)
+mcp.tool-prop-query:
+  short: Task number (e.g. '1') or search text to match
+mcp.tool-prop-rationale:
+  short: Rationale (required for decisions)
+mcp.tool-prop-type:
+  short: Entry type to add
+mcp.tool-status-desc:
+  short: 'Show context health: file count, token estimate, and file summaries'
+mcp.type-content-required:
+  short: type and content are required
+mcp.unknown-resource:
+  short: 'unknown resource: %s'
+mcp.unknown-tool:
+  short: 'unknown tool: %s'
+mcp.write-failed:
+  short: 'write failed: %v'
