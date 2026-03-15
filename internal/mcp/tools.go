@@ -19,7 +19,7 @@ import (
 	taskcomplete "github.com/ActiveMemory/ctx/internal/cli/task/cmd/complete"
 	"github.com/ActiveMemory/ctx/internal/config/cli"
 	ctxCfg "github.com/ActiveMemory/ctx/internal/config/ctx"
-	entry2 "github.com/ActiveMemory/ctx/internal/config/entry"
+	entryCfg "github.com/ActiveMemory/ctx/internal/config/entry"
 	"github.com/ActiveMemory/ctx/internal/config/fs"
 	"github.com/ActiveMemory/ctx/internal/config/mcp"
 	"github.com/ActiveMemory/ctx/internal/config/regex"
@@ -31,198 +31,6 @@ import (
 	"github.com/ActiveMemory/ctx/internal/task"
 	"github.com/ActiveMemory/ctx/internal/validation"
 )
-
-// toolDefs defines all available MCP tools.
-var toolDefs = []Tool{
-	{
-		Name:        mcp.MCPToolStatus,
-		Description: assets.TextDesc(assets.TextDescKeyMCPToolStatusDesc),
-		InputSchema: InputSchema{Type: mcp.MCPSchemaObject},
-		Annotations: &ToolAnnotations{ReadOnlyHint: true},
-	},
-	{
-		Name:        mcp.MCPToolAdd,
-		Description: assets.TextDesc(assets.TextDescKeyMCPToolAddDesc),
-		InputSchema: InputSchema{
-			Type: mcp.MCPSchemaObject,
-			Properties: map[string]Property{
-				cli.AttrType: {
-					Type:        mcp.MCPSchemaString,
-					Description: assets.TextDesc(assets.TextDescKeyMCPToolPropType),
-					Enum:        []string{"task", "decision", "learning", "convention"},
-				},
-				"content": {
-					Type:        mcp.MCPSchemaString,
-					Description: assets.TextDesc(assets.TextDescKeyMCPToolPropContent),
-				},
-				"priority": {
-					Type:        mcp.MCPSchemaString,
-					Description: assets.TextDesc(assets.TextDescKeyMCPToolPropPriority),
-					Enum:        []string{"high", "medium", "low"},
-				},
-				cli.AttrContext: {
-					Type:        mcp.MCPSchemaString,
-					Description: assets.TextDesc(assets.TextDescKeyMCPToolPropContext),
-				},
-				cli.AttrRationale: {
-					Type:        mcp.MCPSchemaString,
-					Description: assets.TextDesc(assets.TextDescKeyMCPToolPropRationale),
-				},
-				cli.AttrConsequences: {
-					Type:        mcp.MCPSchemaString,
-					Description: assets.TextDesc(assets.TextDescKeyMCPToolPropConseq),
-				},
-				cli.AttrLesson: {
-					Type:        mcp.MCPSchemaString,
-					Description: assets.TextDesc(assets.TextDescKeyMCPToolPropLesson),
-				},
-				cli.AttrApplication: {
-					Type:        mcp.MCPSchemaString,
-					Description: assets.TextDesc(assets.TextDescKeyMCPToolPropApplication),
-				},
-			},
-			Required: []string{cli.AttrType, "content"},
-		},
-		Annotations: &ToolAnnotations{},
-	},
-	{
-		Name:        mcp.MCPToolComplete,
-		Description: assets.TextDesc(assets.TextDescKeyMCPToolCompleteDesc),
-		InputSchema: InputSchema{
-			Type: mcp.MCPSchemaObject,
-			Properties: map[string]Property{
-				"query": {
-					Type:        mcp.MCPSchemaString,
-					Description: assets.TextDesc(assets.TextDescKeyMCPToolPropQuery),
-				},
-			},
-			Required: []string{"query"},
-		},
-		Annotations: &ToolAnnotations{IdempotentHint: true},
-	},
-	{
-		Name:        mcp.MCPToolDrift,
-		Description: assets.TextDesc(assets.TextDescKeyMCPToolDriftDesc),
-		InputSchema: InputSchema{Type: mcp.MCPSchemaObject},
-		Annotations: &ToolAnnotations{ReadOnlyHint: true},
-	},
-	{
-		Name:        mcp.MCPToolRecall,
-		Description: assets.TextDesc(assets.TextDescKeyMCPToolRecallDesc),
-		InputSchema: InputSchema{
-			Type: mcp.MCPSchemaObject,
-			Properties: map[string]Property{
-				"limit": {
-					Type:        mcp.MCPSchemaNumber,
-					Description: assets.TextDesc(assets.TextDescKeyMCPToolPropLimit),
-				},
-				"since": {
-					Type:        mcp.MCPSchemaString,
-					Description: assets.TextDesc(assets.TextDescKeyMCPToolPropSince),
-				},
-			},
-		},
-		Annotations: &ToolAnnotations{ReadOnlyHint: true},
-	},
-	{
-		Name:        mcp.MCPToolWatchUpdate,
-		Description: assets.TextDesc(assets.TextDescKeyMCPToolWatchUpdateDesc),
-		InputSchema: InputSchema{
-			Type: mcp.MCPSchemaObject,
-			Properties: map[string]Property{
-				"type": {
-					Type:        mcp.MCPSchemaString,
-					Description: assets.TextDesc(assets.TextDescKeyMCPToolPropEntryType),
-				},
-				"content": {
-					Type:        mcp.MCPSchemaString,
-					Description: assets.TextDesc(assets.TextDescKeyMCPToolPropMainContent),
-				},
-				"context": {
-					Type:        mcp.MCPSchemaString,
-					Description: assets.TextDesc(assets.TextDescKeyMCPToolPropCtxBg),
-				},
-				"rationale": {
-					Type:        mcp.MCPSchemaString,
-					Description: assets.TextDesc(assets.TextDescKeyMCPToolPropRationale),
-				},
-				"consequences": {
-					Type:        mcp.MCPSchemaString,
-					Description: assets.TextDesc(assets.TextDescKeyMCPToolPropConseq),
-				},
-				"lesson": {
-					Type:        mcp.MCPSchemaString,
-					Description: assets.TextDesc(assets.TextDescKeyMCPToolPropLesson),
-				},
-				"application": {
-					Type:        mcp.MCPSchemaString,
-					Description: assets.TextDesc(assets.TextDescKeyMCPToolPropApplication),
-				},
-			},
-			Required: []string{"type", "content"},
-		},
-		Annotations: &ToolAnnotations{},
-	},
-	{
-		Name:        mcp.MCPToolCompact,
-		Description: assets.TextDesc(assets.TextDescKeyMCPToolCompactDesc),
-		InputSchema: InputSchema{
-			Type: mcp.MCPSchemaObject,
-			Properties: map[string]Property{
-				"archive": {
-					Type:        mcp.MCPSchemaBoolean,
-					Description: assets.TextDesc(assets.TextDescKeyMCPToolPropArchive),
-				},
-			},
-		},
-		Annotations: &ToolAnnotations{},
-	},
-	{
-		Name:        mcp.MCPToolNext,
-		Description: assets.TextDesc(assets.TextDescKeyMCPToolNextDesc),
-		InputSchema: InputSchema{Type: mcp.MCPSchemaObject},
-		Annotations: &ToolAnnotations{ReadOnlyHint: true},
-	},
-	{
-		Name:        mcp.MCPToolCheckTaskCompletion,
-		Description: assets.TextDesc(assets.TextDescKeyMCPToolCheckTaskDesc),
-		InputSchema: InputSchema{
-			Type: mcp.MCPSchemaObject,
-			Properties: map[string]Property{
-				"recent_action": {
-					Type:        mcp.MCPSchemaString,
-					Description: assets.TextDesc(assets.TextDescKeyMCPToolPropRecentAct),
-				},
-			},
-		},
-		Annotations: &ToolAnnotations{ReadOnlyHint: true},
-	},
-	{
-		Name:        mcp.MCPToolSessionEvent,
-		Description: assets.TextDesc(assets.TextDescKeyMCPToolSessionDesc),
-		InputSchema: InputSchema{
-			Type: mcp.MCPSchemaObject,
-			Properties: map[string]Property{
-				"type": {
-					Type:        mcp.MCPSchemaString,
-					Description: assets.TextDesc(assets.TextDescKeyMCPToolPropEventType),
-				},
-				"caller": {
-					Type:        mcp.MCPSchemaString,
-					Description: assets.TextDesc(assets.TextDescKeyMCPToolPropCaller),
-				},
-			},
-			Required: []string{"type"},
-		},
-		Annotations: &ToolAnnotations{},
-	},
-	{
-		Name:        mcp.MCPToolRemind,
-		Description: assets.TextDesc(assets.TextDescKeyMCPToolRemindDesc),
-		InputSchema: InputSchema{Type: mcp.MCPSchemaObject},
-		Annotations: &ToolAnnotations{ReadOnlyHint: true},
-	},
-}
 
 // handleToolsList returns all available MCP tools.
 func (s *Server) handleToolsList(req Request) *Response {
@@ -300,7 +108,7 @@ func (s *Server) toolAdd(
 	}
 
 	entryType, _ := args[cli.AttrType].(string)
-	content, _ := args["content"].(string)
+	content, _ := args[mcp.MCPFieldContent].(string)
 
 	if entryType == "" || content == "" {
 		return s.toolError(id, assets.TextDesc(assets.TextDescKeyMCPTypeContentRequired))
@@ -313,22 +121,22 @@ func (s *Server) toolAdd(
 	}
 
 	// Optional fields.
-	if v, ok := args["priority"].(string); ok {
+	if v, ok := args[mcp.MCPFieldPriority].(string); ok {
 		params.Priority = v
 	}
-	if v, ok := args["context"].(string); ok {
+	if v, ok := args[cli.AttrContext].(string); ok {
 		params.Context = v
 	}
-	if v, ok := args["rationale"].(string); ok {
+	if v, ok := args[cli.AttrRationale].(string); ok {
 		params.Rationale = v
 	}
-	if v, ok := args["consequences"].(string); ok {
+	if v, ok := args[cli.AttrConsequences].(string); ok {
 		params.Consequences = v
 	}
-	if v, ok := args["lesson"].(string); ok {
+	if v, ok := args[cli.AttrLesson].(string); ok {
 		params.Lesson = v
 	}
-	if v, ok := args["application"].(string); ok {
+	if v, ok := args[cli.AttrApplication].(string); ok {
 		params.Application = v
 	}
 
@@ -341,7 +149,7 @@ func (s *Server) toolAdd(
 		return s.toolError(id, fmt.Sprintf(assets.TextDesc(assets.TextDescKeyMCPWriteFailed), wErr))
 	}
 
-	fileName := entry2.ToCtxFile[strings.ToLower(entryType)]
+	fileName := entryCfg.ToCtxFile[strings.ToLower(entryType)]
 	return s.toolOK(id, fmt.Sprintf(assets.TextDesc(assets.TextDescKeyMCPAddedFormat), entryType, fileName))
 }
 
@@ -353,7 +161,7 @@ func (s *Server) toolComplete(
 		return s.toolError(id, fmt.Sprintf(assets.TextDesc(assets.TextDescKeyMCPBoundaryViolation), err))
 	}
 
-	query, _ := args["query"].(string)
+	query, _ := args[mcp.MCPFieldQuery].(string)
 	if query == "" {
 		return s.toolError(id, assets.TextDesc(assets.TextDescKeyMCPQueryRequired))
 	}
@@ -426,12 +234,12 @@ func (s *Server) toolRecall(
 	id json.RawMessage, args map[string]interface{},
 ) *Response {
 	limit := 5
-	if v, ok := args["limit"].(float64); ok && v > 0 {
+	if v, ok := args[mcp.MCPFieldLimit].(float64); ok && v > 0 {
 		limit = int(v)
 	}
 
 	var sinceFilter time.Time
-	if v, ok := args["since"].(string); ok && v != "" {
+	if v, ok := args[mcp.MCPFieldSince].(string); ok && v != "" {
 		parsed, parseErr := time.Parse("2006-01-02", v)
 		if parseErr != nil {
 			return s.toolError(id, fmt.Sprintf(assets.TextDesc(assets.TextDescKeyMCPInvalidSinceDate), parseErr))
@@ -465,20 +273,20 @@ func (s *Server) toolRecall(
 	}
 
 	var sb strings.Builder
-	fmt.Fprintf(&sb, assets.TextDesc(assets.TextDescKeyMCPSessionsFoundFormat)+"%s%s", len(sessions), token.NewlineLF, token.NewlineLF)
+	_, _ = fmt.Fprintf(&sb, assets.TextDesc(assets.TextDescKeyMCPSessionsFoundFormat)+"%s%s", len(sessions), token.NewlineLF, token.NewlineLF)
 
 	for i, sess := range sessions {
 		duration := sess.Duration.Round(time.Second)
-		fmt.Fprintf(&sb, assets.TextDesc(assets.TextDescKeyMCPRecallItemFormat),
+		_, _ = fmt.Fprintf(&sb, assets.TextDesc(assets.TextDescKeyMCPRecallItemFormat),
 			i+1, sess.StartTime.Format("2006-01-02 15:04"))
 		if sess.Project != "" {
-			fmt.Fprintf(&sb, assets.TextDesc(assets.TextDescKeyMCPRecallProjectFormat), sess.Project)
+			_, _ = fmt.Fprintf(&sb, assets.TextDesc(assets.TextDescKeyMCPRecallProjectFormat), sess.Project)
 		}
-		fmt.Fprintf(&sb, assets.TextDesc(assets.TextDescKeyMCPRecallDurationFormat), duration, sess.TurnCount)
+		_, _ = fmt.Fprintf(&sb, assets.TextDesc(assets.TextDescKeyMCPRecallDurationFormat), duration, sess.TurnCount)
 		sb.WriteString(token.NewlineLF)
 
 		if sess.FirstUserMsg != "" {
-			fmt.Fprintf(&sb, assets.TextDesc(assets.TextDescKeyMCPRecallFirstMsgFormat), sess.FirstUserMsg)
+			_, _ = fmt.Fprintf(&sb, assets.TextDesc(assets.TextDescKeyMCPRecallFirstMsgFormat), sess.FirstUserMsg)
 			sb.WriteString(token.NewlineLF)
 		}
 	}
@@ -494,8 +302,8 @@ func (s *Server) toolWatchUpdate(
 		return s.toolError(id, fmt.Sprintf(assets.TextDesc(assets.TextDescKeyMCPBoundaryViolation), err))
 	}
 
-	entryType, _ := args["type"].(string)
-	content, _ := args["content"].(string)
+	entryType, _ := args[cli.AttrType].(string)
+	content, _ := args[mcp.MCPFieldContent].(string)
 
 	if entryType == "" || content == "" {
 		return s.toolError(id, assets.TextDesc(assets.TextDescKeyMCPTypeContentRequired))
@@ -523,19 +331,19 @@ func (s *Server) toolWatchUpdate(
 		ContextDir: s.contextDir,
 	}
 
-	if v, ok := args["context"].(string); ok {
+	if v, ok := args[cli.AttrContext].(string); ok {
 		params.Context = v
 	}
-	if v, ok := args["rationale"].(string); ok {
+	if v, ok := args[cli.AttrRationale].(string); ok {
 		params.Rationale = v
 	}
-	if v, ok := args["consequences"].(string); ok {
+	if v, ok := args[cli.AttrConsequences].(string); ok {
 		params.Consequences = v
 	}
-	if v, ok := args["lesson"].(string); ok {
+	if v, ok := args[cli.AttrLesson].(string); ok {
 		params.Lesson = v
 	}
-	if v, ok := args["application"].(string); ok {
+	if v, ok := args[cli.AttrApplication].(string); ok {
 		params.Application = v
 	}
 
@@ -547,7 +355,7 @@ func (s *Server) toolWatchUpdate(
 		return s.toolError(id, fmt.Sprintf(assets.TextDesc(assets.TextDescKeyMCPWriteFailed), wErr))
 	}
 
-	fileName := entry2.ToCtxFile[strings.ToLower(entryType)]
+	fileName := entryCfg.ToCtxFile[strings.ToLower(entryType)]
 	s.session.recordAdd(entryType)
 	s.session.queuePendingUpdate(PendingUpdate{
 		Type:    entryType,
@@ -572,7 +380,7 @@ func (s *Server) toolCompact(
 	}
 
 	archive := false
-	if v, ok := args["archive"].(bool); ok {
+	if v, ok := args[mcp.MCPFieldArchive].(bool); ok {
 		archive = v
 	}
 
@@ -596,7 +404,7 @@ func (s *Server) toolCompact(
 		for _, block := range blocks {
 			if block.IsArchivable {
 				archivableBlocks = append(archivableBlocks, block)
-				fmt.Fprintf(&sb, assets.TextDesc(assets.TextDescKeyMCPCompactMovedFormat)+token.NewlineLF,
+				_, _ = fmt.Fprintf(&sb, assets.TextDesc(assets.TextDescKeyMCPCompactMovedFormat)+token.NewlineLF,
 					core.TruncateString(block.ParentTaskText(), 50))
 			}
 		}
@@ -640,7 +448,7 @@ func (s *Server) toolCompact(
 				archiveContent += block.BlockContent() + token.NewlineLF + token.NewlineLF
 			}
 			if _, archiveErr := core.WriteArchive("tasks", assets.HeadingArchivedTasks, archiveContent); archiveErr != nil {
-				fmt.Fprintf(&sb, assets.TextDesc(assets.TextDescKeyMCPCompactArchiveWarning)+token.NewlineLF, archiveErr)
+				_, _ = fmt.Fprintf(&sb, assets.TextDesc(assets.TextDescKeyMCPCompactArchiveWarning)+token.NewlineLF, archiveErr)
 			}
 		}
 	}
@@ -653,7 +461,7 @@ func (s *Server) toolCompact(
 		cleaned, count := core.RemoveEmptySections(string(f.Content))
 		if count > 0 {
 			if writeErr := writeContextFile(f.Path, []byte(cleaned)); writeErr == nil {
-				fmt.Fprintf(&sb, assets.TextDesc(assets.TextDescKeyMCPCompactRemovedSectFmt)+token.NewlineLF,
+				_, _ = fmt.Fprintf(&sb, assets.TextDesc(assets.TextDescKeyMCPCompactRemovedSectFmt)+token.NewlineLF,
 					count, f.Name)
 				changes += count
 			}
@@ -664,7 +472,7 @@ func (s *Server) toolCompact(
 		return s.toolOK(id, assets.TextDesc(assets.TextDescKeyMCPCompactClean))
 	}
 
-	fmt.Fprintf(&sb, "%s"+assets.TextDesc(assets.TextDescKeyMCPCompactedFormat)+"%s",
+	_, _ = fmt.Fprintf(&sb, "%s"+assets.TextDesc(assets.TextDescKeyMCPCompactedFormat)+"%s",
 		token.NewlineLF, changes, token.NewlineLF)
 	sb.WriteString(assets.TextDesc(assets.TextDescKeyMCPReviewStatus))
 
@@ -724,7 +532,7 @@ func (s *Server) toolNext(id json.RawMessage) *Response {
 func (s *Server) toolCheckTaskCompletion(
 	id json.RawMessage, args map[string]interface{},
 ) *Response {
-	recentAction, _ := args["recent_action"].(string)
+	recentAction, _ := args[mcp.MCPFieldRecentAction].(string)
 
 	ctx, err := context.Load(s.contextDir)
 	if err != nil {
@@ -780,7 +588,7 @@ func (s *Server) toolCheckTaskCompletion(
 func (s *Server) toolSessionEvent(
 	id json.RawMessage, args map[string]interface{},
 ) *Response {
-	eventType, _ := args["type"].(string)
+	eventType, _ := args[cli.AttrType].(string)
 	if eventType == "" {
 		return s.toolError(id, assets.TextDesc(assets.TextDescKeyMCPEventTypeRequired))
 	}
@@ -788,7 +596,7 @@ func (s *Server) toolSessionEvent(
 	switch eventType {
 	case "start":
 		s.session = newSessionState(s.contextDir)
-		if caller, ok := args["caller"].(string); ok && caller != "" {
+		if caller, ok := args[mcp.MCPFieldCaller].(string); ok && caller != "" {
 			return s.toolOK(id, fmt.Sprintf(
 				assets.TextDesc(assets.TextDescKeyMCPSessionStartedCallerFormat), caller, s.contextDir))
 		}
@@ -802,10 +610,10 @@ func (s *Server) toolSessionEvent(
 		sb.WriteString(token.NewlineLF)
 
 		if pending > 0 {
-			fmt.Fprintf(&sb, assets.TextDesc(assets.TextDescKeyMCPPendingUpdatesFormat)+"%s",
+			_, _ = fmt.Fprintf(&sb, assets.TextDesc(assets.TextDescKeyMCPPendingUpdatesFormat)+"%s",
 				pending, token.NewlineLF)
 			for i, pu := range s.session.pendingFlush {
-				fmt.Fprintf(&sb, assets.TextDesc(assets.TextDescKeyMCPPendingItemFormat)+token.NewlineLF,
+				_, _ = fmt.Fprintf(&sb, assets.TextDesc(assets.TextDescKeyMCPPendingItemFormat)+token.NewlineLF,
 					i+1, pu.Type, core.TruncateString(pu.Content, 60))
 			}
 			sb.WriteString(assets.TextDesc(assets.TextDescKeyMCPReviewPending))
@@ -813,7 +621,7 @@ func (s *Server) toolSessionEvent(
 			sb.WriteString(assets.TextDesc(assets.TextDescKeyMCPNoPending))
 		}
 
-		fmt.Fprintf(&sb, "%s"+assets.TextDesc(assets.TextDescKeyMCPSessionStatsFormat),
+		_, _ = fmt.Fprintf(&sb, "%s"+assets.TextDesc(assets.TextDescKeyMCPSessionStatsFormat),
 			token.NewlineLF, s.session.toolCalls, totalAdds(s.session.addsPerformed))
 
 		return s.toolOK(id, sb.String())
@@ -837,7 +645,7 @@ func (s *Server) toolRemind(id json.RawMessage) *Response {
 
 	today := time.Now().Format("2006-01-02")
 	var sb strings.Builder
-	fmt.Fprintf(&sb, assets.TextDesc(assets.TextDescKeyMCPRemindersFormat)+"%s", len(reminders), token.NewlineLF)
+	_, _ = fmt.Fprintf(&sb, assets.TextDesc(assets.TextDescKeyMCPRemindersFormat)+"%s", len(reminders), token.NewlineLF)
 
 	for _, r := range reminders {
 		annotation := ""
@@ -846,7 +654,7 @@ func (s *Server) toolRemind(id json.RawMessage) *Response {
 				annotation = fmt.Sprintf(assets.TextDesc(assets.TextDescKeyMCPReminderNotDueFormat), *r.After)
 			}
 		}
-		fmt.Fprintf(&sb, assets.TextDesc(assets.TextDescKeyMCPReminderItemFormat)+token.NewlineLF,
+		_, _ = fmt.Fprintf(&sb, assets.TextDesc(assets.TextDescKeyMCPReminderItemFormat)+token.NewlineLF,
 			r.ID, r.Message, annotation)
 	}
 

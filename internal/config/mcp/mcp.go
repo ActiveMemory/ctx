@@ -84,4 +84,14 @@ const (
 
 	// MCPNotifyResourcesUpdated is the MCP notification for resource changes.
 	MCPNotifyResourcesUpdated = "notifications/resources/updated"
+
+	// MCP tool input field names (JSON property keys).
+	MCPFieldContent      = "content"
+	MCPFieldPriority     = "priority"
+	MCPFieldQuery        = "query"
+	MCPFieldArchive      = "archive"
+	MCPFieldRecentAction = "recent_action"
+	MCPFieldCaller       = "caller"
+	MCPFieldLimit        = "limit"
+	MCPFieldSince        = "since"
 )
