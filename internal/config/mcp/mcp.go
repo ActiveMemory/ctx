@@ -97,6 +97,9 @@ const (
 	MCPEventEnd      = "end"
 	MCPEntryComplete = "complete"
 
+	// MCPArchivePrefixTasks is the file prefix for archived tasks.
+	MCPArchivePrefixTasks = "tasks"
+
 	// MCP PendingUpdate attribute keys.
 	MCPAttrFile = "file"
 

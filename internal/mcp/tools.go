@@ -593,10 +593,11 @@ func (s *Server) toolCompact(
 		if archive && len(archivableBlocks) > 0 {
 			var archiveContent string
 			for _, block := range archivableBlocks {
-				archiveContent += block.BlockContent() + token.NewlineLF + token.NewlineLF
+				archiveContent += block.BlockContent() +
+					token.NewlineLF + token.NewlineLF
 			}
 			if _, archiveErr := core.WriteArchive(
-				"tasks", assets.HeadingArchivedTasks, archiveContent,
+				mcp.MCPArchivePrefixTasks, assets.HeadingArchivedTasks, archiveContent,
 			); archiveErr != nil {
 				_, _ = fmt.Fprintf(
 					&sb, assets.TextDesc(
@@ -614,7 +615,9 @@ func (s *Server) toolCompact(
 		}
 		cleaned, count := core.RemoveEmptySections(string(f.Content))
 		if count > 0 {
-			if writeErr := writeContextFile(f.Path, []byte(cleaned)); writeErr == nil {
+			if writeErr := writeContextFile(
+				f.Path, []byte(cleaned),
+			); writeErr == nil {
 				_, _ = fmt.Fprintf(
 					&sb, assets.TextDesc(
 						assets.TextDescKeyMCPCompactRemovedSectFmt)+token.NewlineLF,
@@ -668,7 +671,9 @@ func (s *Server) toolNext(id json.RawMessage) *Response {
 			inCompletedSection = true
 			continue
 		}
-		if strings.HasPrefix(line, token.HeadingLevelTwoStart) && inCompletedSection {
+		if strings.HasPrefix(
+			line, token.HeadingLevelTwoStart,
+		) && inCompletedSection {
 			inCompletedSection = false
 		}
 		if inCompletedSection {
@@ -732,7 +737,9 @@ func (s *Server) toolCheckTaskCompletion(
 			inCompletedSection = true
 			continue
 		}
-		if strings.HasPrefix(line, token.HeadingLevelTwoStart) && inCompletedSection {
+		if strings.HasPrefix(
+			line, token.HeadingLevelTwoStart,
+		) && inCompletedSection {
 			inCompletedSection = false
 		}
 		if inCompletedSection {
@@ -776,7 +783,9 @@ func (s *Server) toolSessionEvent(
 ) *Response {
 	eventType, _ := args[cli.AttrType].(string)
 	if eventType == "" {
-		return s.toolError(id, assets.TextDesc(assets.TextDescKeyMCPEventTypeRequired))
+		return s.toolError(id, assets.TextDesc(
+			assets.TextDescKeyMCPEventTypeRequired),
+		)
 	}
 
 	switch eventType {
@@ -785,11 +794,14 @@ func (s *Server) toolSessionEvent(
 		if caller, ok := args[mcp.MCPFieldCaller].(string); ok && caller != "" {
 			return s.toolOK(id, fmt.Sprintf(
 				assets.TextDesc(
-					assets.TextDescKeyMCPSessionStartedCallerFormat), caller, s.contextDir),
+					assets.TextDescKeyMCPSessionStartedCallerFormat,
+				), caller, s.contextDir),
 			)
 		}
 		return s.toolOK(id, fmt.Sprintf(
-			assets.TextDesc(assets.TextDescKeyMCPSessionStartedFormat), s.contextDir))
+			assets.TextDesc(
+				assets.TextDescKeyMCPSessionStartedFormat,
+			), s.contextDir))
 
 	case mcp.MCPEventEnd:
 		pending := s.session.pendingCount()
@@ -803,8 +815,12 @@ func (s *Server) toolSessionEvent(
 				pending)
 			for i, pu := range s.session.pendingFlush {
 				_, _ = fmt.Fprintf(&sb,
-					assets.TextDesc(assets.TextDescKeyMCPPendingItemFormat)+token.NewlineLF,
-					i+1, pu.Type, core.TruncateString(pu.Content, mcp.MCPTruncateContentLen))
+					assets.TextDesc(
+						assets.TextDescKeyMCPPendingItemFormat,
+					)+token.NewlineLF,
+					i+1, pu.Type, core.TruncateString(
+						pu.Content, mcp.MCPTruncateContentLen),
+				)
 			}
 			sb.WriteString(assets.TextDesc(assets.TextDescKeyMCPReviewPending))
 		} else {
@@ -819,7 +835,9 @@ func (s *Server) toolSessionEvent(
 
 	default:
 		return s.toolError(id,
-			fmt.Sprintf(assets.TextDesc(assets.TextDescKeyMCPUnknownEventType), eventType))
+			fmt.Sprintf(
+				assets.TextDesc(assets.TextDescKeyMCPUnknownEventType), eventType),
+		)
 	}
 }
 
