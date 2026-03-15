@@ -531,6 +531,10 @@ Many call sites use `_ =` or `_, _ =` to discard errors without
 any feedback. Some are legitimate (best-effort cleanup), most are
 lazy escapes that hide failures.
 
+- [ ] Add drift check: MCP prompt coverage vs bundled skills — programmatic check comparing config/mcp/prompt constants against assets.ListSkills() to detect skills without MCP prompt equivalents. Pair with the tool coverage drift check. @CoderMungan #priority:medium #added:2026-03-15-120519
+
+- [ ] MCP v0.3: expand MCP prompts to cover more skills — current 5 prompts (session-start, add-decision, add-learning, reflect, checkpoint) are a subset of ~30 bundled skills. Evaluate which skills benefit from protocol-native MCP prompt equivalents. Decision 2026-03-06 established 'Skills stay CLI-based; MCP Prompts are the protocol equivalent.' @CoderMungan #priority:medium #added:2026-03-15-120519
+
 - [ ] Add drift check: MCP tool coverage vs CLI commands — programmatic check that compares registered MCP tool names (config/mcp/tool) against ctx CLI subcommands to detect newly added CLI commands without MCP equivalents. Could be a drift detector check or a compliance test. @CoderMungan #priority:medium #added:2026-03-15-120116
 
 - [ ] MCP v0.3: expose additional CLI commands as MCP tools — candidates: ctx_load (full context packet), ctx_agent (token-budgeted packet), ctx_reindex (rebuild indices), ctx_sync (reconcile docs/code), ctx_doctor (health check). Evaluate which provide value over the protocol vs requiring terminal interaction. @CoderMungan #priority:medium #added:2026-03-15-120025
