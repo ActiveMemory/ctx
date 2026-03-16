@@ -3,6 +3,7 @@
 <!-- INDEX:START -->
 | Date | Learning |
 |------|--------|
+| 2026-03-16 | Convention enforcement needs mechanical verification, not behavioral repetition |
 | 2026-03-16 | One-liner method wrappers hide dependencies without adding value |
 | 2026-03-16 | Agents reliably introduce gofmt issues during bulk renames |
 | 2026-03-15 | replace_all on short tokens like core. mangles aliased imports |
@@ -76,6 +77,16 @@
 | 2026-02-19 | Feature can be code-complete but invisible to users |
 | 2026-01-28 | IDE is already the UI |
 <!-- INDEX:END -->
+
+---
+
+## [2026-03-16-104146] Convention enforcement needs mechanical verification, not behavioral repetition
+
+**Context**: Godoc Parameters/Returns sections were missed repeatedly across sessions despite memory entries and feedback
+
+**Lesson**: System-level brevity instructions outcompete context-injected conventions. Memory shifts probability (~40% to ~70%) but doesn't create invariants. The competing pressures are architectural, not a recall problem.
+
+**Application**: Invest in linter rules or PreToolUse gates for mechanically-checkable conventions. Reserve behavioral nudges for judgment calls that can't be linted. See ideas/spec-convention-enforcement.md for the three-tier strategy.
 
 ---
 

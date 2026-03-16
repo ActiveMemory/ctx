@@ -21,6 +21,7 @@ import (
 	"github.com/ActiveMemory/ctx/internal/config/token"
 	"github.com/ActiveMemory/ctx/internal/mcp/handler"
 	"github.com/ActiveMemory/ctx/internal/mcp/proto"
+	res "github.com/ActiveMemory/ctx/internal/mcp/server/resource"
 	"github.com/ActiveMemory/ctx/internal/rc"
 )
 
@@ -33,12 +34,13 @@ import (
 // goroutine). The main loop itself is single-threaded, so request
 // dispatch and session mutations need no additional locking.
 type Server struct {
-	handler *handler.Handler
-	version string
-	out     io.Writer
-	outMu   sync.Mutex // guards all writes to out
-	in      io.Reader
-	poller  *ResourcePoller
+	handler      *handler.Handler
+	version      string
+	out          io.Writer
+	outMu        sync.Mutex // guards all writes to out
+	in           io.Reader
+	poller       *ResourcePoller
+	resourceList proto.ResourceListResult // pre-built, immutable after init
 }
 
 // NewServer creates a new MCP server for the given context directory.
@@ -50,11 +52,13 @@ type Server struct {
 // Returns:
 //   - *Server: a configured MCP server ready to serve
 func NewServer(contextDir, version string) *Server {
+	res.Init()
 	srv := &Server{
-		handler: handler.New(contextDir, rc.TokenBudget()),
-		version: version,
-		out:     os.Stdout,
-		in:      os.Stdin,
+		handler:      handler.New(contextDir, rc.TokenBudget()),
+		version:      version,
+		out:          os.Stdout,
+		in:           os.Stdin,
+		resourceList: res.ToList(),
 	}
 	srv.poller = NewResourcePoller(contextDir, srv.emitNotification)
 	return srv

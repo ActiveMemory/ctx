@@ -23,91 +23,27 @@ import (
 	"github.com/ActiveMemory/ctx/internal/config/token"
 	"github.com/ActiveMemory/ctx/internal/context"
 	"github.com/ActiveMemory/ctx/internal/mcp/proto"
+	res "github.com/ActiveMemory/ctx/internal/mcp/server/resource"
 )
 
-// resourceMapping maps a context file name to its MCP resource URI suffix
-// and human-readable description.
-type resourceMapping struct {
-	file string
-	name string
-	desc string
-}
-
-// resources defines all individual context file resources.
-var resources = []resourceMapping{
-	{
-		ctxCfg.Constitution,
-		"constitution",
-		assets.TextDesc(assets.TextDescKeyMCPResConstitution),
-	},
-	{
-		ctxCfg.Task,
-		"tasks",
-		assets.TextDesc(assets.TextDescKeyMCPResTasks),
-	},
-	{
-		ctxCfg.Convention,
-		"conventions",
-		assets.TextDesc(assets.TextDescKeyMCPResConventions),
-	},
-	{
-		ctxCfg.Architecture,
-		"architecture",
-		assets.TextDesc(assets.TextDescKeyMCPResArchitecture),
-	},
-	{
-		ctxCfg.Decision,
-		"decisions",
-		assets.TextDesc(assets.TextDescKeyMCPResDecisions),
-	},
-	{
-		ctxCfg.Learning,
-		"learnings",
-		assets.TextDesc(assets.TextDescKeyMCPResLearnings),
-	},
-	{
-		ctxCfg.Glossary,
-		"glossary",
-		assets.TextDesc(assets.TextDescKeyMCPResGlossary),
-	},
-	{
-		ctxCfg.AgentPlaybook,
-		"playbook",
-		assets.TextDesc(assets.TextDescKeyMCPResPlaybook),
-	},
-}
-
-// resourceURI builds a resource URI from a suffix.
-func resourceURI(name string) string {
-	return server.ResourceURIPrefix + name
-}
-
 // handleResourcesList returns all available MCP resources.
+//
+// Parameters:
+//   - req: the MCP request
+//
+// Returns:
+//   - *proto.Response: resource list result
 func (s *Server) handleResourcesList(req proto.Request) *proto.Response {
-	rr := make([]proto.Resource, 0, len(resources)+1)
-
-	// Individual context files.
-	for _, rm := range resources {
-		rr = append(rr, proto.Resource{
-			URI:         resourceURI(rm.name),
-			Name:        rm.name,
-			MimeType:    mime.Markdown,
-			Description: rm.desc,
-		})
-	}
-
-	// Assembled context packet (all files in read order).
-	rr = append(rr, proto.Resource{
-		URI:         resourceURI("agent"),
-		Name:        "agent",
-		MimeType:    mime.Markdown,
-		Description: assets.TextDesc(assets.TextDescKeyMCPResAgent),
-	})
-
-	return s.ok(req.ID, proto.ResourceListResult{Resources: rr})
+	return s.ok(req.ID, s.resourceList)
 }
 
 // handleResourcesRead returns the content of a requested resource.
+//
+// Parameters:
+//   - req: the MCP request containing the resource URI
+//
+// Returns:
+//   - *proto.Response: resource content or error
 func (s *Server) handleResourcesRead(req proto.Request) *proto.Response {
 	var params proto.ReadResourceParams
 	if err := json.Unmarshal(req.Params, &params); err != nil {
@@ -120,15 +56,13 @@ func (s *Server) handleResourcesRead(req proto.Request) *proto.Response {
 			fmt.Sprintf(assets.TextDesc(assets.TextDescKeyMCPLoadContext), err))
 	}
 
-	// Check for individual file resources.
-	for _, rm := range resources {
-		if params.URI == resourceURI(rm.name) {
-			return s.readContextFile(req.ID, ctx, rm.file, params.URI)
-		}
+	// Individual file resource.
+	if fileName := res.FileForURI(params.URI); fileName != "" {
+		return s.readContextFile(req.ID, ctx, fileName, params.URI)
 	}
 
 	// Assembled agent packet.
-	if params.URI == resourceURI("agent") {
+	if params.URI == res.AgentURI() {
 		return s.readAgentPacket(req.ID, ctx)
 	}
 
@@ -137,6 +71,15 @@ func (s *Server) handleResourcesRead(req proto.Request) *proto.Response {
 }
 
 // readContextFile returns the content of a single context file.
+//
+// Parameters:
+//   - id: JSON-RPC request ID
+//   - ctx: loaded context
+//   - fileName: context file name to read
+//   - uri: resource URI for the response
+//
+// Returns:
+//   - *proto.Response: resource content or not-found error
 func (s *Server) readContextFile(
 	id json.RawMessage, ctx *context.Context, fileName, uri string,
 ) *proto.Response {
@@ -161,6 +104,13 @@ func (s *Server) readContextFile(
 // Files are added in priority order (ReadOrder). When the token
 // budget would be exceeded, remaining files are listed as "Also noted"
 // summaries instead of included in full.
+//
+// Parameters:
+//   - id: JSON-RPC request ID
+//   - ctx: loaded context
+//
+// Returns:
+//   - *proto.Response: assembled context packet
 func (s *Server) readAgentPacket(
 	id json.RawMessage, ctx *context.Context,
 ) *proto.Response {
@@ -200,7 +150,7 @@ func (s *Server) readAgentPacket(
 
 	return s.ok(id, proto.ReadResourceResult{
 		Contents: []proto.ResourceContent{{
-			URI:      resourceURI("agent"),
+			URI:      res.AgentURI(),
 			MimeType: mime.Markdown,
 			Text:     sb.String(),
 		}},
@@ -221,6 +171,13 @@ type ResourcePoller struct {
 }
 
 // NewResourcePoller creates a poller for the given context directory.
+//
+// Parameters:
+//   - contextDir: path to the .context/ directory
+//   - notify: callback to emit resource change notifications
+//
+// Returns:
+//   - *ResourcePoller: initialized poller (not yet polling)
 func NewResourcePoller(contextDir string, notify func(proto.Notification)) *ResourcePoller {
 	return &ResourcePoller{
 		subs:       make(map[string]bool),
@@ -242,9 +199,9 @@ func (p *ResourcePoller) subscribe(uri string) {
 	p.subs[uri] = true
 
 	// Snapshot current mtime for the resource's file.
-	if fileName := p.uriToFile(uri); fileName != "" {
+	if fileName := res.FileForURI(uri); fileName != "" {
 		fpath := filepath.Join(p.contextDir, fileName)
-		if info, err := os.Stat(fpath); err == nil {
+		if info, statErr := os.Stat(fpath); statErr == nil {
 			p.mtimes[fpath] = info.ModTime()
 		}
 	}
@@ -280,16 +237,6 @@ func (p *ResourcePoller) Stop() {
 	}
 }
 
-// uriToFile maps a resource URI to its context file name.
-func (p *ResourcePoller) uriToFile(uri string) string {
-	for _, rm := range resources {
-		if uri == resourceURI(rm.name) {
-			return rm.file
-		}
-	}
-	return ""
-}
-
 // poll checks subscribed resources for mtime changes on a fixed interval.
 func (p *ResourcePoller) poll() {
 	ticker := time.NewTicker(defaultPollInterval)
@@ -315,13 +262,13 @@ func (p *ResourcePoller) checkChanges() {
 	p.mu.Unlock()
 
 	for _, uri := range uris {
-		fileName := p.uriToFile(uri)
+		fileName := res.FileForURI(uri)
 		if fileName == "" {
 			continue
 		}
 		fpath := filepath.Join(p.contextDir, fileName)
-		info, err := os.Stat(fpath)
-		if err != nil {
+		info, statErr := os.Stat(fpath)
+		if statErr != nil {
 			continue
 		}
 
@@ -345,17 +292,36 @@ func (p *ResourcePoller) checkChanges() {
 }
 
 // handleResourcesSubscribe registers a resource for change notifications.
+//
+// Parameters:
+//   - req: the MCP request containing the resource URI
+//
+// Returns:
+//   - *proto.Response: empty success or validation error
 func (s *Server) handleResourcesSubscribe(req proto.Request) *proto.Response {
 	return s.subscriptionAction(req, s.poller.subscribe)
 }
 
 // handleResourcesUnsubscribe removes a resource from change notifications.
+//
+// Parameters:
+//   - req: the MCP request containing the resource URI
+//
+// Returns:
+//   - *proto.Response: empty success or validation error
 func (s *Server) handleResourcesUnsubscribe(req proto.Request) *proto.Response {
 	return s.subscriptionAction(req, s.poller.unsubscribe)
 }
 
 // subscriptionAction unmarshals a URI param and applies the given
 // subscription function (subscribe or unsubscribe).
+//
+// Parameters:
+//   - req: the MCP request containing the resource URI
+//   - fn: subscription action to apply (subscribe or unsubscribe)
+//
+// Returns:
+//   - *proto.Response: empty success or validation error
 func (s *Server) subscriptionAction(
 	req proto.Request, fn func(string),
 ) *proto.Response {

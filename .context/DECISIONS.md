@@ -3,6 +3,8 @@
 <!-- INDEX:START -->
 | Date | Decision |
 |------|--------|
+| 2026-03-16 | Explicit Init over package-level init() for resource lookup |
+| 2026-03-16 | Resource name constants in config/mcp/resource, mapping in server/resource |
 | 2026-03-16 | Rename --consequences flag to --consequence for singular consistency |
 | 2026-03-15 | Pure-logic CompactContext with no I/O — callers own file writes and reporting |
 | 2026-03-15 | TextDescKey exhaustive test verifies all 879 constants resolve to non-empty YAML values |
@@ -49,6 +51,34 @@
 | 2026-02-26 | Security and permissions (consolidated) |
 | 2026-02-27 | Webhook and notification design (consolidated) |
 <!-- INDEX:END -->
+
+## [2026-03-16-104143] Explicit Init over package-level init() for resource lookup
+
+**Status**: Accepted
+
+**Context**: server/resource package used init() to silently build the URI lookup map
+
+**Decision**: Explicit Init over package-level init() for resource lookup
+
+**Rationale**: Implicit init hides startup dependencies, makes ordering unclear, and is harder to test. Explicit Init called from NewServer makes the dependency visible.
+
+**Consequence**: res.Init() called explicitly from NewServer before ToList(); no package-level side effects
+
+---
+
+## [2026-03-16-104142] Resource name constants in config/mcp/resource, mapping in server/resource
+
+**Status**: Accepted
+
+**Context**: MCP resource handler had string literals scattered through handle_resource.go and rebuilt the resource list on every call
+
+**Decision**: Resource name constants in config/mcp/resource, mapping in server/resource
+
+**Rationale**: Constants follow the same pattern as config/mcp/tool. Mapping stays in server/resource because it bridges config constants with assets text (too many cross-cutting deps for a config package). Resource list and URI lookup are pre-built once at server init.
+
+**Consequence**: URI-to-file lookup is O(1) via pre-built map; resource list built once in NewServer, not per request; no string literals in handler code
+
+---
 
 ## [2026-03-16-022635] Rename --consequences flag to --consequence for singular consistency
 
