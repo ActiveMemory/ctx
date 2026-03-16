@@ -23,6 +23,7 @@ import (
 	"github.com/ActiveMemory/ctx/internal/config/token"
 	"github.com/ActiveMemory/ctx/internal/context"
 	"github.com/ActiveMemory/ctx/internal/mcp/proto"
+	"github.com/ActiveMemory/ctx/internal/mcp/server/out"
 	res "github.com/ActiveMemory/ctx/internal/mcp/server/resource"
 )
 
@@ -34,7 +35,7 @@ import (
 // Returns:
 //   - *proto.Response: resource list result
 func (s *Server) handleResourcesList(req proto.Request) *proto.Response {
-	return s.ok(req.ID, s.resourceList)
+	return out.OkResponse(req.ID, s.resourceList)
 }
 
 // handleResourcesRead returns the content of a requested resource.
@@ -47,12 +48,12 @@ func (s *Server) handleResourcesList(req proto.Request) *proto.Response {
 func (s *Server) handleResourcesRead(req proto.Request) *proto.Response {
 	var params proto.ReadResourceParams
 	if err := json.Unmarshal(req.Params, &params); err != nil {
-		return s.error(req.ID, proto.ErrCodeInvalidArg, assets.TextDesc(assets.TextDescKeyMCPInvalidParams))
+		return out.ErrResponse(req.ID, proto.ErrCodeInvalidArg, assets.TextDesc(assets.TextDescKeyMCPInvalidParams))
 	}
 
 	ctx, err := context.Load(s.handler.ContextDir)
 	if err != nil {
-		return s.error(req.ID, proto.ErrCodeInternal,
+		return out.ErrResponse(req.ID, proto.ErrCodeInternal,
 			fmt.Sprintf(assets.TextDesc(assets.TextDescKeyMCPLoadContext), err))
 	}
 
@@ -66,7 +67,7 @@ func (s *Server) handleResourcesRead(req proto.Request) *proto.Response {
 		return s.readAgentPacket(req.ID, ctx)
 	}
 
-	return s.error(req.ID, proto.ErrCodeInvalidArg,
+	return out.ErrResponse(req.ID, proto.ErrCodeInvalidArg,
 		fmt.Sprintf(assets.TextDesc(assets.TextDescKeyMCPUnknownResource), params.URI))
 }
 
@@ -85,11 +86,11 @@ func (s *Server) readContextFile(
 ) *proto.Response {
 	f := ctx.File(fileName)
 	if f == nil {
-		return s.error(id, proto.ErrCodeInvalidArg,
+		return out.ErrResponse(id, proto.ErrCodeInvalidArg,
 			fmt.Sprintf(assets.TextDesc(assets.TextDescKeyMCPFileNotFound), fileName))
 	}
 
-	return s.ok(id, proto.ReadResourceResult{
+	return out.OkResponse(id, proto.ReadResourceResult{
 		Contents: []proto.ResourceContent{{
 			URI:      uri,
 			MimeType: mime.Markdown,
@@ -148,7 +149,7 @@ func (s *Server) readAgentPacket(
 		sb.WriteString(token.NewlineLF)
 	}
 
-	return s.ok(id, proto.ReadResourceResult{
+	return out.OkResponse(id, proto.ReadResourceResult{
 		Contents: []proto.ResourceContent{{
 			URI:      res.AgentURI(),
 			MimeType: mime.Markdown,
@@ -192,6 +193,9 @@ func NewResourcePoller(contextDir string, notify func(proto.Notification)) *Reso
 // Goroutine lifecycle: the poller goroutine is started on the first
 // subscription and stopped when the last subscription is removed or
 // when Server.Serve returns (via poller.stop in the deferred cleanup).
+//
+// Parameters:
+//   - uri: resource URI to watch for changes
 func (p *ResourcePoller) subscribe(uri string) {
 	p.mu.Lock()
 	defer p.mu.Unlock()
@@ -214,6 +218,9 @@ func (p *ResourcePoller) subscribe(uri string) {
 }
 
 // unsubscribe removes a URI from the watch set and stops polling if empty.
+//
+// Parameters:
+//   - uri: resource URI to stop watching
 func (p *ResourcePoller) unsubscribe(uri string) {
 	p.mu.Lock()
 	defer p.mu.Unlock()
@@ -327,11 +334,17 @@ func (s *Server) subscriptionAction(
 ) *proto.Response {
 	var params proto.SubscribeParams
 	if err := json.Unmarshal(req.Params, &params); err != nil {
-		return s.error(req.ID, proto.ErrCodeInvalidArg, assets.TextDesc(assets.TextDescKeyMCPInvalidParams))
+		return out.ErrResponse(
+			req.ID, proto.ErrCodeInvalidArg,
+			assets.TextDesc(assets.TextDescKeyMCPInvalidParams),
+		)
 	}
 	if params.URI == "" {
-		return s.error(req.ID, proto.ErrCodeInvalidArg, assets.TextDesc(assets.TextDescKeyMCPURIRequired))
+		return out.ErrResponse(
+			req.ID, proto.ErrCodeInvalidArg,
+			assets.TextDesc(assets.TextDescKeyMCPURIRequired),
+		)
 	}
 	fn(params.URI)
-	return s.ok(req.ID, struct{}{})
+	return out.OkResponse(req.ID, struct{}{})
 }

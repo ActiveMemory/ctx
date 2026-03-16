@@ -18,9 +18,9 @@ import (
 	"github.com/ActiveMemory/ctx/internal/config/mcp/cfg"
 	"github.com/ActiveMemory/ctx/internal/config/mcp/method"
 	"github.com/ActiveMemory/ctx/internal/config/mcp/server"
-	"github.com/ActiveMemory/ctx/internal/config/token"
 	"github.com/ActiveMemory/ctx/internal/mcp/handler"
 	"github.com/ActiveMemory/ctx/internal/mcp/proto"
+	"github.com/ActiveMemory/ctx/internal/mcp/server/out"
 	res "github.com/ActiveMemory/ctx/internal/mcp/server/resource"
 	"github.com/ActiveMemory/ctx/internal/rc"
 )
@@ -30,7 +30,7 @@ import (
 // It reads JSON-RPC requests from stdin and writes responses to stdout,
 // following the Model Context Protocol specification.
 //
-// Thread-safety: outMu serialises all writes to out (main loop + poller
+// Thread-safety: outMu serialises all writes to out (main loop and poller
 // goroutine). The main loop itself is single-threaded, so request
 // dispatch and session mutations need no additional locking.
 type Server struct {
@@ -90,19 +90,14 @@ func (s *Server) Serve() error {
 			continue
 		}
 
-		out, err := json.Marshal(resp)
-		if err != nil {
-			// Marshal failure is an internal error; try to report it.
-			s.writeError(nil, proto.ErrCodeInternal, assets.TextDesc(
-				assets.TextDescKeyMCPFailedMarshal),
-			)
+		if writeErr := s.writeJSON(resp); writeErr != nil {
+			// Marshal failure: try to report it as an error response.
+			fallback := out.ErrResponse(nil, proto.ErrCodeInternal,
+				assets.TextDesc(assets.TextDescKeyMCPFailedMarshal))
+			if fbErr := s.writeJSON(fallback); fbErr != nil {
+				return fbErr
+			}
 			continue
-		}
-		s.outMu.Lock()
-		_, writeErr := s.out.Write(append(out, token.NewlineLF[0]))
-		s.outMu.Unlock()
-		if writeErr != nil {
-			return writeErr
 		}
 	}
 
@@ -110,15 +105,14 @@ func (s *Server) Serve() error {
 }
 
 // emitNotification writes a JSON-RPC notification to stdout.
+//
 // Safe to call from any goroutine (e.g., the resource poller).
+// Write failures are silently ignored — notifications are best-effort.
+//
+// Parameters:
+//   - n: notification to marshal and write
 func (s *Server) emitNotification(n proto.Notification) {
-	out, err := json.Marshal(n)
-	if err != nil {
-		return
-	}
-	s.outMu.Lock()
-	_, _ = s.out.Write(append(out, token.NewlineLF[0]))
-	s.outMu.Unlock()
+	_ = s.writeJSON(n)
 }
 
 // handleMessage dispatches a raw JSON-RPC message to the appropriate
@@ -150,7 +144,7 @@ func (s *Server) handleMessage(data []byte) *proto.Response {
 	return s.dispatch(req)
 }
 
-// dispatch routes a request to the correct handler based on method name.
+// dispatch routes a request to the correct handler based on the method name.
 //
 // Parameters:
 //   - req: parsed JSON-RPC request
@@ -162,7 +156,7 @@ func (s *Server) dispatch(req proto.Request) *proto.Response {
 	case method.Initialize:
 		return s.handleInitialize(req)
 	case method.Ping:
-		return s.ok(req.ID, struct{}{})
+		return out.OkResponse(req.ID, struct{}{})
 	case method.ResourcesList:
 		return s.handleResourcesList(req)
 	case method.ResourcesRead:
@@ -180,7 +174,7 @@ func (s *Server) dispatch(req proto.Request) *proto.Response {
 	case method.PromptsGet:
 		return s.handlePromptsGet(req)
 	default:
-		return s.error(req.ID, proto.ErrCodeNotFound,
+		return out.ErrResponse(req.ID, proto.ErrCodeNotFound,
 			fmt.Sprintf(
 				assets.TextDesc(assets.TextDescKeyMCPMethodNotFound), req.Method),
 		)
@@ -190,87 +184,12 @@ func (s *Server) dispatch(req proto.Request) *proto.Response {
 // handleNotification processes notifications (no response needed).
 //
 // MCP notifications handled:
-//   - notifications/initialized: client confirms init complete
-//   - notifications/cancelled: client cancels a request
+//   - notifications/initialized: the client confirms init complete
+//   - notifications/canceled: the client cancels a request
 //
 // All are no-ops for our stateless server.
 //
 // Parameters:
-//   - req: parsed JSON-RPC notification
-func (s *Server) handleNotification(req proto.Request) {
-}
-
-// handleInitialize responds to the MCP initialize handshake.
-//
-// Parameters:
-//   - req: parsed JSON-RPC request
-//
-// Returns:
-//   - *Response: server capabilities and protocol version
-func (s *Server) handleInitialize(req proto.Request) *proto.Response {
-	result := proto.InitializeResult{
-		ProtocolVersion: proto.ProtocolVersion,
-		Capabilities: proto.ServerCaps{
-			Resources: &proto.ResourcesCap{Subscribe: true},
-			Tools:     &proto.ToolsCap{},
-			Prompts:   &proto.PromptsCap{},
-		},
-		ServerInfo: proto.AppInfo{
-			Name:    server.Name,
-			Version: s.version,
-		},
-	}
-	return s.ok(req.ID, result)
-}
-
-// ok builds a successful JSON-RPC response.
-//
-// Parameters:
-//   - id: request ID to echo back
-//   - result: response payload
-//
-// Returns:
-//   - *Response: success response
-func (s *Server) ok(id json.RawMessage, result interface{}) *proto.Response {
-	return &proto.Response{
-		JSONRPC: server.JSONRPCVersion,
-		ID:      id,
-		Result:  result,
-	}
-}
-
-// error builds a JSON-RPC error response.
-//
-// Parameters:
-//   - id: request ID to echo back
-//   - code: JSON-RPC error code
-//   - msg: human-readable error message
-//
-// Returns:
-//   - *Response: error response
-func (s *Server) error(id json.RawMessage, code int, msg string) *proto.Response {
-	return &proto.Response{
-		JSONRPC: server.JSONRPCVersion,
-		ID:      id,
-		Error:   &proto.RPCError{Code: code, Message: msg},
-	}
-}
-
-// writeError writes an error response directly to stdout.
-//
-// Used when the normal response flow cannot be used (e.g., marshal
-// failure). This is a last-resort fallback; write failures are
-// silently ignored.
-//
-// Parameters:
-//   - id: request ID to echo back (may be nil)
-//   - code: JSON-RPC error code
-//   - msg: human-readable error message
-func (s *Server) writeError(id json.RawMessage, code int, msg string) {
-	resp := s.error(id, code, msg)
-	if out, marshalErr := json.Marshal(resp); marshalErr == nil {
-		s.outMu.Lock()
-		_, _ = s.out.Write(append(out, token.NewlineLF[0]))
-		s.outMu.Unlock()
-	}
+//   - _: parsed JSON-RPC notification
+func (s *Server) handleNotification(_ proto.Request) {
 }
