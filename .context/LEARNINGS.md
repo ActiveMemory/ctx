@@ -3,6 +3,8 @@
 <!-- INDEX:START -->
 | Date | Learning |
 |------|--------|
+| 2026-03-16 | One-liner method wrappers hide dependencies without adding value |
+| 2026-03-16 | Agents reliably introduce gofmt issues during bulk renames |
 | 2026-03-15 | replace_all on short tokens like core. mangles aliased imports |
 | 2026-03-15 | Delete legacy code instead of maintaining it — MigrateKeyFile had 5 callers and test coverage but zero users |
 | 2026-03-15 | Contributor PRs need post-merge follow-up commits for convention alignment |
@@ -74,6 +76,26 @@
 | 2026-02-19 | Feature can be code-complete but invisible to users |
 | 2026-01-28 | IDE is already the UI |
 <!-- INDEX:END -->
+
+---
+
+## [2026-03-16-022650] One-liner method wrappers hide dependencies without adding value
+
+**Context**: checkBoundary() and loadContext() were methods on Handler that just called validation.ValidateBoundary and context.Load with h.ContextDir
+
+**Lesson**: If a method only passes a struct field to a stdlib function, inline it — the wrapper obscures the real dependency
+
+**Application**: Before extracting a helper method, check if it just forwards a field to another function. If so, call the function directly.
+
+---
+
+## [2026-03-16-022642] Agents reliably introduce gofmt issues during bulk renames
+
+**Context**: Subagents renamed consequences->consequence across 75+ files but left formatting errors in 12 Go files
+
+**Lesson**: Always run gofmt -l after agent-driven refactors before trusting the build
+
+**Application**: Add gofmt -w pass as a standard step after any agent-driven bulk edit
 
 ---
 

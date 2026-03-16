@@ -21,7 +21,7 @@ import (
 
 // Write formats and writes an entry to the appropriate context file.
 //
-// Handles the complete write cycle: read existing content, format the entry,
+// Handles the complete the write cycle: read existing content, format the entry,
 // append it, write back, and update the index if needed.
 //
 // Parameters:
