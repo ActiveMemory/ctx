@@ -10,6 +10,8 @@ package session
 const (
 	// ToolClaudeCode is the tool identifier for Claude Code sessions.
 	ToolClaudeCode = "claude-code"
+	// ToolCopilot is the tool identifier for VS Code Copilot Chat sessions.
+	ToolCopilot = "copilot"
 	// ToolMarkdown is the tool identifier for Markdown session files.
 	ToolMarkdown = "markdown"
 )
