@@ -38,6 +38,48 @@ import (
 	"github.com/ActiveMemory/ctx/internal/validation"
 )
 
+// checkBoundary validates the context directory boundary and returns
+// an error response if the check fails; nil otherwise.
+//
+// Parameters:
+//   - id: JSON-RPC request ID
+//
+// Returns:
+//   - *proto.Response: non-nil error response if boundary is invalid
+func (s *Server) checkBoundary(id json.RawMessage) *proto.Response {
+	if bErr := validation.ValidateBoundary(s.contextDir); bErr != nil {
+		return s.toolError(
+			id,
+			fmt.Sprintf(
+				assets.TextDesc(assets.TextDescKeyMCPBoundaryViolation), bErr),
+		)
+	}
+	return nil
+}
+
+// loadContext loads the context directory and returns an error
+// response if loading fails; nil otherwise.
+//
+// Parameters:
+//   - id: JSON-RPC request ID
+//
+// Returns:
+//   - *context.Context: loaded context (nil on error)
+//   - *proto.Response: non-nil error response if load fails
+func (s *Server) loadContext(
+	id json.RawMessage,
+) (*context.Context, *proto.Response) {
+	ctx, loadErr := context.Load(s.contextDir)
+	if loadErr != nil {
+		return nil, s.toolError(
+			id,
+			fmt.Sprintf(
+				assets.TextDesc(assets.TextDescKeyMCPLoadContext), loadErr),
+		)
+	}
+	return ctx, nil
+}
+
 // extractEntryArgs validates the context directory boundary and
 // extracts the required type/content pair from MCP tool arguments.
 //
@@ -53,11 +95,8 @@ import (
 func (s *Server) extractEntryArgs(
 	id json.RawMessage, args map[string]interface{},
 ) (entryType, content string, errResp *proto.Response) {
-	if bErr := validation.ValidateBoundary(s.contextDir); bErr != nil {
-		return "", "", s.toolError(
-			id, fmt.Sprintf(
-				assets.TextDesc(assets.TextDescKeyMCPBoundaryViolation), bErr),
-		)
+	if errResp = s.checkBoundary(id); errResp != nil {
+		return "", "", errResp
 	}
 
 	entryType, _ = args[cli.AttrType].(string)
@@ -170,12 +209,9 @@ func (s *Server) handleToolsCall(req proto.Request) *proto.Response {
 // Returns:
 //   - *Response: context status with file list and token counts
 func (s *Server) toolStatus(id json.RawMessage) *proto.Response {
-	ctx, err := context.Load(s.contextDir)
-	if err != nil {
-		return s.toolError(
-			id,
-			fmt.Sprintf(assets.TextDesc(assets.TextDescKeyMCPLoadContext), err),
-		)
+	ctx, errResp := s.loadContext(id)
+	if errResp != nil {
+		return errResp
 	}
 
 	var sb strings.Builder
@@ -255,12 +291,8 @@ func (s *Server) toolAdd(
 func (s *Server) toolComplete(
 	id json.RawMessage, args map[string]interface{},
 ) *proto.Response {
-	if err := validation.ValidateBoundary(s.contextDir); err != nil {
-		return s.toolError(
-			id, fmt.Sprintf(
-				assets.TextDesc(assets.TextDescKeyMCPBoundaryViolation), err,
-			),
-		)
+	if errResp := s.checkBoundary(id); errResp != nil {
+		return errResp
 	}
 
 	query, _ := args[field.Query].(string)
@@ -287,11 +319,9 @@ func (s *Server) toolComplete(
 // Returns:
 //   - *Response: drift report with violations and warnings
 func (s *Server) toolDrift(id json.RawMessage) *proto.Response {
-	ctx, err := context.Load(s.contextDir)
-	if err != nil {
-		return s.toolError(
-			id, fmt.Sprintf(assets.TextDesc(assets.TextDescKeyMCPLoadContext), err),
-		)
+	ctx, errResp := s.loadContext(id)
+	if errResp != nil {
+		return errResp
 	}
 
 	report := drift.Detect(ctx)
@@ -545,11 +575,8 @@ func (s *Server) toolWatchUpdate(
 func (s *Server) toolCompact(
 	id json.RawMessage, args map[string]interface{},
 ) *proto.Response {
-	if err := validation.ValidateBoundary(s.contextDir); err != nil {
-		return s.toolError(
-			id,
-			fmt.Sprintf(assets.TextDesc(assets.TextDescKeyMCPBoundaryViolation), err),
-		)
+	if errResp := s.checkBoundary(id); errResp != nil {
+		return errResp
 	}
 
 	archive := false
@@ -557,12 +584,9 @@ func (s *Server) toolCompact(
 		archive = v
 	}
 
-	ctx, err := context.Load(s.contextDir)
-	if err != nil {
-		return s.toolError(
-			id,
-			fmt.Sprintf(assets.TextDesc(assets.TextDescKeyMCPLoadContext), err),
-		)
+	ctx, errResp := s.loadContext(id)
+	if errResp != nil {
+		return errResp
 	}
 
 	result := tidy.CompactContext(ctx)
@@ -585,7 +609,16 @@ func (s *Server) toolCompact(
 
 	// Write section-cleaned files.
 	for _, fu := range result.SectionFileUpdates {
-		_ = os.WriteFile(fu.Path, fu.Content, configfs.PermFile)
+		if writeErr := os.WriteFile(
+			fu.Path, fu.Content, configfs.PermFile,
+		); writeErr != nil {
+			return s.toolError(
+				id,
+				fmt.Sprintf(
+					assets.TextDesc(assets.TextDescKeyMCPWriteFailed), writeErr,
+				),
+			)
+		}
 	}
 
 	// Archive old tasks if requested.
@@ -649,12 +682,9 @@ func (s *Server) toolCompact(
 // Returns:
 //   - *Response: next task or all-complete message
 func (s *Server) toolNext(id json.RawMessage) *proto.Response {
-	ctx, err := context.Load(s.contextDir)
-	if err != nil {
-		return s.toolError(
-			id,
-			fmt.Sprintf(assets.TextDesc(assets.TextDescKeyMCPLoadContext), err),
-		)
+	ctx, errResp := s.loadContext(id)
+	if errResp != nil {
+		return errResp
 	}
 
 	tasksFile := ctx.File(ctxCfg.Task)
@@ -697,11 +727,9 @@ func (s *Server) toolCheckTaskCompletion(
 ) *proto.Response {
 	recentAction, _ := args[field.RecentAction].(string)
 
-	ctx, err := context.Load(s.contextDir)
-	if err != nil {
-		return s.toolError(
-			id, fmt.Sprintf(assets.TextDesc(assets.TextDescKeyMCPLoadContext), err),
-		)
+	ctx, errResp := s.loadContext(id)
+	if errResp != nil {
+		return errResp
 	}
 
 	tasksFile := ctx.File(ctxCfg.Task)
