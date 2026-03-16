@@ -3,6 +3,7 @@
 <!-- INDEX:START -->
 | Date | Decision |
 |------|--------|
+| 2026-03-16 | Server methods only handle dispatch and I/O, not struct construction |
 | 2026-03-16 | Explicit Init over package-level init() for resource lookup |
 | 2026-03-16 | Resource name constants in config/mcp/resource, mapping in server/resource |
 | 2026-03-16 | Rename --consequences flag to --consequence for singular consistency |
@@ -51,6 +52,20 @@
 | 2026-02-26 | Security and permissions (consolidated) |
 | 2026-02-27 | Webhook and notification design (consolidated) |
 <!-- INDEX:END -->
+
+## [2026-03-16-122033] Server methods only handle dispatch and I/O, not struct construction
+
+**Status**: Accepted
+
+**Context**: MCP server had ok/error/writeError as methods plus prompt builders that didn't use Server state — they just constructed response structs
+
+**Decision**: Server methods only handle dispatch and I/O, not struct construction
+
+**Rationale**: Methods that don't access receiver state hide their true dependencies and inflate the Server interface. Free functions make the dependency graph explicit and are independently testable.
+
+**Consequence**: New response helpers go in server/out, prompt builders in server/prompt. Server methods are limited to dispatch (handlePromptsGet) and I/O (writeJSON, emitNotification). Same principle applies to future tool/resource builders.
+
+---
 
 ## [2026-03-16-104143] Explicit Init over package-level init() for resource lookup
 

@@ -4,5 +4,5 @@
 //   \    Copyright 2026-present Context contributors.
 //                 SPDX-License-Identifier: Apache-2.0
 
-// Package resource handles MCP resource requests including list, read, subscribe, and unsubscribe.
-package resource
+// Package out builds JSON-RPC response structs for success, error, and tool result payloads.
+package out

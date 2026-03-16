@@ -7,76 +7,115 @@
 package resource
 
 import (
+	"encoding/json"
+	"fmt"
+	"strings"
+
 	"github.com/ActiveMemory/ctx/internal/assets"
+	ctxCfg "github.com/ActiveMemory/ctx/internal/config/ctx"
 	"github.com/ActiveMemory/ctx/internal/config/mcp/mime"
-	"github.com/ActiveMemory/ctx/internal/config/mcp/resource"
-	"github.com/ActiveMemory/ctx/internal/config/mcp/server"
+	"github.com/ActiveMemory/ctx/internal/config/token"
+	"github.com/ActiveMemory/ctx/internal/context"
 	"github.com/ActiveMemory/ctx/internal/mcp/proto"
+	"github.com/ActiveMemory/ctx/internal/mcp/server/catalog"
+	"github.com/ActiveMemory/ctx/internal/mcp/server/out"
 )
 
-// Init builds the URI-to-file lookup map. Must be called once before
-// FileForURI is used (called from NewServer during bootstrap).
-func Init() {
-	uriLookup = make(map[string]string, len(table))
-	for _, m := range table {
-		uriLookup[URI(m.name)] = m.file
-	}
-}
-
-// URI builds a resource URI from a name suffix.
+// readContextFile returns the content of a single context file.
 //
 // Parameters:
-//   - name: resource name suffix (e.g., "tasks", "agent")
+//   - id: JSON-RPC request ID
+//   - ctx: loaded context
+//   - fileName: context file name to read
+//   - uri: resource URI for the response
 //
 // Returns:
-//   - string: full URI (e.g., "ctx://context/tasks")
-func URI(name string) string {
-	return server.ResourceURIPrefix + name
-}
-
-// AgentURI returns the full URI for the assembled agent packet.
-//
-// Returns:
-//   - string: agent resource URI
-func AgentURI() string {
-	return URI(resource.Agent)
-}
-
-// FileForURI returns the context file name for a resource URI or
-// empty string if the URI is not a known file resource.
-//
-// Parameters:
-//   - uri: full resource URI to look up
-//
-// Returns:
-//   - string: context file name, or "" if unknown
-func FileForURI(uri string) string {
-	return uriLookup[uri]
-}
-
-// ToList constructs the immutable resource list. Called once from
-// NewServer.
-//
-// Returns:
-//   - proto.ResourceListResult: all resources including the agent packet
-func ToList() proto.ResourceListResult {
-	rr := make([]proto.Resource, 0, len(table)+1)
-
-	for _, m := range table {
-		rr = append(rr, proto.Resource{
-			URI:         URI(m.name),
-			Name:        m.name,
-			MimeType:    mime.Markdown,
-			Description: m.desc,
-		})
+//   - *proto.Response: resource content or not-found error
+func readContextFile(
+	id json.RawMessage, ctx *context.Context, fileName, uri string,
+) *proto.Response {
+	f := ctx.File(fileName)
+	if f == nil {
+		return out.ErrResponse(id, proto.ErrCodeInvalidArg,
+			fmt.Sprintf(
+				assets.TextDesc(assets.TextDescKeyMCPFileNotFound),
+				fileName,
+			))
 	}
 
-	rr = append(rr, proto.Resource{
-		URI:         AgentURI(),
-		Name:        resource.Agent,
-		MimeType:    mime.Markdown,
-		Description: assets.TextDesc(assets.TextDescKeyMCPResAgent),
+	return out.OkResponse(id, proto.ReadResourceResult{
+		Contents: []proto.ResourceContent{{
+			URI:      uri,
+			MimeType: mime.Markdown,
+			Text:     string(f.Content),
+		}},
 	})
+}
 
-	return proto.ResourceListResult{Resources: rr}
+// readAgentPacket assembles all context files in read order into a
+// single response, respecting the configured token budget.
+//
+// Files are added in priority order (ReadOrder). When the token
+// budget would be exceeded, remaining files are listed as "Also
+// noted" summaries instead of included in full.
+//
+// Parameters:
+//   - id: JSON-RPC request ID
+//   - ctx: loaded context
+//   - budget: token budget for assembly
+//
+// Returns:
+//   - *proto.Response: assembled context packet
+func readAgentPacket(
+	id json.RawMessage, ctx *context.Context, budget int,
+) *proto.Response {
+	var sb strings.Builder
+	header := assets.TextDesc(assets.TextDescKeyMCPPacketHeader)
+	sb.WriteString(header)
+
+	tokensUsed := context.EstimateTokensString(header)
+	var skipped []string
+
+	for _, fileName := range ctxCfg.ReadOrder {
+		f := ctx.File(fileName)
+		if f == nil || f.IsEmpty {
+			continue
+		}
+
+		section := fmt.Sprintf(
+			assets.TextDesc(assets.TextDescKeyMCPSectionFormat),
+			fileName, string(f.Content),
+		)
+		sectionTokens := context.EstimateTokensString(section)
+
+		if budget > 0 && tokensUsed+sectionTokens > budget {
+			skipped = append(skipped, fileName)
+			continue
+		}
+
+		sb.WriteString(section)
+		tokensUsed += sectionTokens
+	}
+
+	if len(skipped) > 0 {
+		sb.WriteString(
+			assets.TextDesc(assets.TextDescKeyMCPAlsoNoted),
+		)
+		for _, name := range skipped {
+			fmt.Fprintf(
+				&sb,
+				assets.TextDesc(assets.TextDescKeyMCPOmittedFormat),
+				name,
+			)
+		}
+		sb.WriteString(token.NewlineLF)
+	}
+
+	return out.OkResponse(id, proto.ReadResourceResult{
+		Contents: []proto.ResourceContent{{
+			URI:      catalog.AgentURI(),
+			MimeType: mime.Markdown,
+			Text:     sb.String(),
+		}},
+	})
 }

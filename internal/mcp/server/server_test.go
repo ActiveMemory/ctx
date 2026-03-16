@@ -1087,11 +1087,11 @@ func TestResourcePollerNotification(t *testing.T) {
 
 	var mu sync.Mutex
 	var notifications []proto.Notification
-	srv.poller.notifyFunc = func(n proto.Notification) {
+	srv.poller.SetNotifyFunc(func(n proto.Notification) {
 		mu.Lock()
 		notifications = append(notifications, n)
 		mu.Unlock()
-	}
+	})
 
 	// Subscribe to tasks.
 	request(t, srv, "resources/subscribe", proto.SubscribeParams{
@@ -1106,7 +1106,7 @@ func TestResourcePollerNotification(t *testing.T) {
 	}
 
 	// Manually trigger a poll check instead of waiting for the timer.
-	srv.poller.checkChanges()
+	srv.poller.CheckChanges()
 
 	mu.Lock()
 	count := len(notifications)

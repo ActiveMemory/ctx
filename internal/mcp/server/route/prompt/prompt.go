@@ -20,12 +20,12 @@ import (
 	"github.com/ActiveMemory/ctx/internal/config/token"
 	"github.com/ActiveMemory/ctx/internal/context"
 	"github.com/ActiveMemory/ctx/internal/mcp/proto"
-	"github.com/ActiveMemory/ctx/internal/mcp/server/entity"
+	promptdef "github.com/ActiveMemory/ctx/internal/mcp/server/def/prompt"
 	"github.com/ActiveMemory/ctx/internal/mcp/server/out"
 	"github.com/ActiveMemory/ctx/internal/mcp/server/stat"
 )
 
-// SessionStart loads context and provides session orientation.
+// sessionStart loads context and provides session orientation.
 //
 // Parameters:
 //   - id: JSON-RPC request ID
@@ -33,7 +33,7 @@ import (
 //
 // Returns:
 //   - *proto.Response: rendered session start prompt with context files
-func SessionStart(
+func sessionStart(
 	id json.RawMessage, contextDir string,
 ) *proto.Response {
 	ctx, loadErr := context.Load(contextDir)
@@ -83,7 +83,7 @@ func SessionStart(
 	})
 }
 
-// Checkpoint summarizes progress and prepares for session end.
+// checkpoint summarizes progress and prepares for session end.
 //
 // Parameters:
 //   - id: JSON-RPC request ID
@@ -93,7 +93,7 @@ func SessionStart(
 //
 // Returns:
 //   - *proto.Response: checkpoint prompt with session stats
-func Checkpoint(
+func checkpoint(
 	id json.RawMessage, toolCalls int,
 	addsPerformed map[string]int, pending int,
 ) *proto.Response {
@@ -133,7 +133,7 @@ func Checkpoint(
 	})
 }
 
-// AddDecision formats a decision for recording.
+// addDecision formats a decision for recording.
 //
 // Parameters:
 //   - id: JSON-RPC request ID
@@ -142,15 +142,15 @@ func Checkpoint(
 //
 // Returns:
 //   - *proto.Response: formatted decision prompt
-func AddDecision(
+func addDecision(
 	id json.RawMessage, args map[string]string,
 ) *proto.Response {
-	return buildEntryPrompt(id, entity.EntryPromptSpec{
+	return buildEntry(id, promptdef.EntryPromptSpec{
 		HeaderKey:  assets.TextDescKeyMCPPromptAddDecisionHeader,
 		FooterKey:  assets.TextDescKeyMCPPromptAddDecisionFooter,
 		FieldFmtK:  assets.TextDescKeyMCPPromptAddDecisionFieldFmt,
 		ResultDKey: assets.TextDescKeyMCPPromptAddDecisionResultD,
-		Fields: []entity.EntryField{
+		Fields: []promptdef.EntryField{
 			{LabelKey: assets.TextDescKeyMCPPromptLabelDecision,
 				Value: args[field.Content]},
 			{LabelKey: assets.TextDescKeyMCPPromptLabelContext,
@@ -163,7 +163,7 @@ func AddDecision(
 	})
 }
 
-// AddLearning formats a learning for recording.
+// addLearning formats a learning for recording.
 //
 // Parameters:
 //   - id: JSON-RPC request ID
@@ -172,15 +172,15 @@ func AddDecision(
 //
 // Returns:
 //   - *proto.Response: formatted learning prompt
-func AddLearning(
+func addLearning(
 	id json.RawMessage, args map[string]string,
 ) *proto.Response {
-	return buildEntryPrompt(id, entity.EntryPromptSpec{
+	return buildEntry(id, promptdef.EntryPromptSpec{
 		HeaderKey:  assets.TextDescKeyMCPPromptAddLearningHeader,
 		FooterKey:  assets.TextDescKeyMCPPromptAddLearningFooter,
 		FieldFmtK:  assets.TextDescKeyMCPPromptAddLearningFieldFmt,
 		ResultDKey: assets.TextDescKeyMCPPromptAddLearningResultD,
-		Fields: []entity.EntryField{
+		Fields: []promptdef.EntryField{
 			{LabelKey: assets.TextDescKeyMCPPromptLabelLearning,
 				Value: args[field.Content]},
 			{LabelKey: assets.TextDescKeyMCPPromptLabelContext,
@@ -193,14 +193,14 @@ func AddLearning(
 	})
 }
 
-// Reflect reviews the current session for outstanding items.
+// reflect reviews the current session for outstanding items.
 //
 // Parameters:
 //   - id: JSON-RPC request ID
 //
 // Returns:
 //   - *proto.Response: reflection prompt text
-func Reflect(id json.RawMessage) *proto.Response {
+func reflect(id json.RawMessage) *proto.Response {
 	return out.OkResponse(id, proto.GetPromptResult{
 		Description: assets.TextDesc(
 			assets.TextDescKeyMCPPromptReflectResultD),
@@ -218,7 +218,7 @@ func Reflect(id json.RawMessage) *proto.Response {
 	})
 }
 
-// buildEntryPrompt renders a structured entry prompt (decision or
+// buildEntry renders a structured entry prompt (decision or
 // learning) from the given spec and returns the formatted response.
 //
 // Parameters:
@@ -227,8 +227,8 @@ func Reflect(id json.RawMessage) *proto.Response {
 //
 // Returns:
 //   - *proto.Response: formatted entry prompt
-func buildEntryPrompt(
-	id json.RawMessage, spec entity.EntryPromptSpec,
+func buildEntry(
+	id json.RawMessage, spec promptdef.EntryPromptSpec,
 ) *proto.Response {
 	fieldFmt := assets.TextDesc(spec.FieldFmtK)
 

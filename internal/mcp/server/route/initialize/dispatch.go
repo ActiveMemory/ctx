@@ -4,7 +4,7 @@
 //   \    Copyright 2026-present Context contributors.
 //                 SPDX-License-Identifier: Apache-2.0
 
-package server
+package initialize
 
 import (
 	"github.com/ActiveMemory/ctx/internal/config/mcp/server"
@@ -12,15 +12,16 @@ import (
 	"github.com/ActiveMemory/ctx/internal/mcp/server/out"
 )
 
-// handleInitialize responds to the MCP initialize handshake.
+// Dispatch responds to the MCP initialize handshake.
 //
 // Parameters:
+//   - version: server version string
 //   - req: parsed JSON-RPC request
 //
 // Returns:
-//   - *Response: server capabilities and protocol version
-func (s *Server) handleInitialize(req proto.Request) *proto.Response {
-	result := proto.InitializeResult{
+//   - *proto.Response: server capabilities and protocol version
+func Dispatch(version string, req proto.Request) *proto.Response {
+	return out.OkResponse(req.ID, proto.InitializeResult{
 		ProtocolVersion: proto.ProtocolVersion,
 		Capabilities: proto.ServerCaps{
 			Resources: &proto.ResourcesCap{Subscribe: true},
@@ -29,8 +30,7 @@ func (s *Server) handleInitialize(req proto.Request) *proto.Response {
 		},
 		ServerInfo: proto.AppInfo{
 			Name:    server.Name,
-			Version: s.version,
+			Version: version,
 		},
-	}
-	return out.OkResponse(req.ID, result)
+	})
 }

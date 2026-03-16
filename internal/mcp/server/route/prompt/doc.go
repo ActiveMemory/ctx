@@ -4,5 +4,5 @@
 //   \    Copyright 2026-present Context contributors.
 //                 SPDX-License-Identifier: Apache-2.0
 
-// Package resource handles MCP resource requests including list, read, subscribe, and unsubscribe.
-package resource
+// Package prompt dispatches MCP prompt list and get requests to the appropriate builders.
+package prompt

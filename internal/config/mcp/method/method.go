@@ -11,21 +11,21 @@ const (
 	Initialize = "initialize"
 	// Ping is the MCP ping method.
 	Ping = "ping"
-	// ResourcesList is the MCP method for listing resources.
-	ResourcesList = "resources/list"
-	// ResourcesRead is the MCP method for reading a resource.
-	ResourcesRead = "resources/read"
-	// ResourcesSubscribe is the MCP method for subscribing to resource changes.
-	ResourcesSubscribe = "resources/subscribe"
-	// ResourcesUnsubscribe is the MCP method for unsubscribing from resource
+	// ResourceList is the MCP method for listing resources.
+	ResourceList = "resources/list"
+	// ResourceRead is the MCP method for reading a resource.
+	ResourceRead = "resources/read"
+	// ResourceSubscribe is the MCP method for subscribing to resource changes.
+	ResourceSubscribe = "resources/subscribe"
+	// ResourceUnsubscribe is the MCP method for unsubscribing from resource
 	// changes.
-	ResourcesUnsubscribe = "resources/unsubscribe"
-	// ToolsList is the MCP method for listing tools.
-	ToolsList = "tools/list"
-	// ToolsCall is the MCP method for calling a tool.
-	ToolsCall = "tools/call"
-	// PromptsList is the MCP method for listing prompts.
-	PromptsList = "prompts/list"
-	// PromptsGet is the MCP method for getting a prompt.
-	PromptsGet = "prompts/get"
+	ResourceUnsubscribe = "resources/unsubscribe"
+	// ToolList is the MCP method for listing tools.
+	ToolList = "tools/list"
+	// ToolCall is the MCP method for calling a tool.
+	ToolCall = "tools/call"
+	// PromptList is the MCP method for listing prompts.
+	PromptList = "prompts/list"
+	// PromptGet is the MCP method for getting a prompt.
+	PromptGet = "prompts/get"
 )

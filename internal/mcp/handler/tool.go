@@ -27,7 +27,7 @@ import (
 	"github.com/ActiveMemory/ctx/internal/context"
 	"github.com/ActiveMemory/ctx/internal/drift"
 	"github.com/ActiveMemory/ctx/internal/entry"
-	mcperr "github.com/ActiveMemory/ctx/internal/err/mcp"
+	mcpErr "github.com/ActiveMemory/ctx/internal/err/mcp"
 	"github.com/ActiveMemory/ctx/internal/mcp/handler/task"
 	"github.com/ActiveMemory/ctx/internal/mcp/server/stat"
 	"github.com/ActiveMemory/ctx/internal/mcp/session"
@@ -571,7 +571,7 @@ func (h *Handler) SessionEvent(
 		return sb.String(), nil
 
 	default:
-		return "", mcperr.UnknownEventType(eventType)
+		return "", mcpErr.UnknownEventType(eventType)
 	}
 }
 

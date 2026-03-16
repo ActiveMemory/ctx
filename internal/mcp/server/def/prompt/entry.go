@@ -4,7 +4,7 @@
 //   \    Copyright 2026-present Context contributors.
 //                 SPDX-License-Identifier: Apache-2.0
 
-package entity
+package prompt
 
 // EntryField pairs a label TextDescKey with a Value from prompt
 // arguments.

@@ -1,0 +1,193 @@
+//   /    ctx:                         https://ctx.ist
+// ,'`./    do you remember?
+// `.,'\
+//   \    Copyright 2026-present Context contributors.
+//                 SPDX-License-Identifier: Apache-2.0
+
+package tool
+
+import (
+	"encoding/json"
+	"fmt"
+	"time"
+
+	"github.com/ActiveMemory/ctx/internal/assets"
+	"github.com/ActiveMemory/ctx/internal/config/cli"
+	"github.com/ActiveMemory/ctx/internal/config/mcp/cfg"
+	"github.com/ActiveMemory/ctx/internal/config/mcp/field"
+	timeCfg "github.com/ActiveMemory/ctx/internal/config/time"
+	"github.com/ActiveMemory/ctx/internal/mcp/handler"
+	"github.com/ActiveMemory/ctx/internal/mcp/proto"
+	"github.com/ActiveMemory/ctx/internal/mcp/server/extract"
+	"github.com/ActiveMemory/ctx/internal/mcp/server/out"
+)
+
+// add extracts MCP args and delegates to handler.Add.
+//
+// Parameters:
+//   - h: handler for domain logic
+//   - id: JSON-RPC request ID
+//   - args: MCP tool arguments (type, content, optional fields)
+//
+// Returns:
+//   - *proto.Response: add confirmation or validation error
+func add(
+	h *handler.Handler, id json.RawMessage,
+	args map[string]interface{},
+) *proto.Response {
+	entryType, content, extractErr := extract.EntryArgs(args)
+	if extractErr != nil {
+		return out.ToolError(id, extractErr.Error())
+	}
+	text, err := h.Add(entryType, content, extract.Opts(args))
+	return out.ToolResult(id, text, err)
+}
+
+// complete extracts the query and delegates to handler.Complete.
+//
+// Parameters:
+//   - h: handler for domain logic
+//   - id: JSON-RPC request ID
+//   - args: MCP tool arguments (query)
+//
+// Returns:
+//   - *proto.Response: completion confirmation or error
+func complete(
+	h *handler.Handler, id json.RawMessage,
+	args map[string]interface{},
+) *proto.Response {
+	query, _ := args[field.Query].(string)
+	if query == "" {
+		return out.ToolError(
+			id, assets.TextDesc(assets.TextDescKeyMCPQueryRequired),
+		)
+	}
+	text, err := h.Complete(query)
+	return out.ToolResult(id, text, err)
+}
+
+// recall extracts limit/since and calls the recall function.
+//
+// Parameters:
+//   - id: JSON-RPC request ID
+//   - args: MCP tool arguments (limit, since)
+//   - fn: recall function accepting limit and since
+//
+// Returns:
+//   - *proto.Response: session list or parse error
+func recall(
+	id json.RawMessage, args map[string]interface{},
+	fn func(int, time.Time) (string, error),
+) *proto.Response {
+	limit := cfg.DefaultRecallLimit
+	if v, ok := args[field.Limit].(float64); ok && v > 0 {
+		limit = int(v)
+	}
+
+	var since time.Time
+	if sinceStr, _ := args[field.Since].(string); sinceStr != "" {
+		var parseErr error
+		since, parseErr = time.Parse(timeCfg.DateFormat, sinceStr)
+		if parseErr != nil {
+			return out.ToolError(
+				id, fmt.Sprintf(
+					assets.TextDesc(assets.TextDescKeyMCPInvalidSinceDate),
+					parseErr,
+				),
+			)
+		}
+	}
+
+	text, err := fn(limit, since)
+	return out.ToolResult(id, text, err)
+}
+
+// watchUpdate extracts MCP args and delegates to
+// handler.WatchUpdate.
+//
+// Parameters:
+//   - h: handler for domain logic
+//   - id: JSON-RPC request ID
+//   - args: MCP tool arguments (type, content, optional fields)
+//
+// Returns:
+//   - *proto.Response: write confirmation or validation error
+func watchUpdate(
+	h *handler.Handler, id json.RawMessage,
+	args map[string]interface{},
+) *proto.Response {
+	entryType, content, extractErr := extract.EntryArgs(args)
+	if extractErr != nil {
+		return out.ToolError(id, extractErr.Error())
+	}
+	text, err := h.WatchUpdate(
+		entryType, content, extract.Opts(args),
+	)
+	return out.ToolResult(id, text, err)
+}
+
+// compact extracts the archive flag and calls the compact
+// function.
+//
+// Parameters:
+//   - id: JSON-RPC request ID
+//   - args: MCP tool arguments (archive)
+//   - fn: compact function accepting archive flag
+//
+// Returns:
+//   - *proto.Response: compact summary or error
+func compact(
+	id json.RawMessage, args map[string]interface{},
+	fn func(bool) (string, error),
+) *proto.Response {
+	archive := false
+	if v, ok := args[field.Archive].(bool); ok {
+		archive = v
+	}
+	text, err := fn(archive)
+	return out.ToolResult(id, text, err)
+}
+
+// checkTaskCompletion extracts recent_action and calls the
+// check function.
+//
+// Parameters:
+//   - id: JSON-RPC request ID
+//   - args: MCP tool arguments (recent_action)
+//   - fn: check function accepting action description
+//
+// Returns:
+//   - *proto.Response: matching task prompt or empty result
+func checkTaskCompletion(
+	id json.RawMessage, args map[string]interface{},
+	fn func(string) (string, error),
+) *proto.Response {
+	recentAction, _ := args[field.RecentAction].(string)
+	text, err := fn(recentAction)
+	return out.ToolResult(id, text, err)
+}
+
+// sessionEvent extracts the event type/caller and calls the
+// session event function.
+//
+// Parameters:
+//   - id: JSON-RPC request ID
+//   - args: MCP tool arguments (type, caller)
+//   - fn: session event function accepting type and caller
+//
+// Returns:
+//   - *proto.Response: session event confirmation or error
+func sessionEvent(
+	id json.RawMessage, args map[string]interface{},
+	fn func(string, string) (string, error),
+) *proto.Response {
+	eventType, _ := args[cli.AttrType].(string)
+	if eventType == "" {
+		return out.ToolError(id, assets.TextDesc(
+			assets.TextDescKeyMCPEventTypeRequired),
+		)
+	}
+	caller, _ := args[field.Caller].(string)
+	text, err := fn(eventType, caller)
+	return out.ToolResult(id, text, err)
+}
