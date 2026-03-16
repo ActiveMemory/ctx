@@ -30,7 +30,8 @@ func WriteJSON(w io.Writer, mu *sync.Mutex, v any) error {
 		return marshalErr
 	}
 	mu.Lock()
-	_, writeErr := w.Write(append(data, token.NewlineLF[0]))
+	nl := token.NewlineLF[0]
+	_, writeErr := w.Write(append(data, nl))
 	mu.Unlock()
 	return writeErr
 }
