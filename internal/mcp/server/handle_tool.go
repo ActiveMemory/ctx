@@ -18,6 +18,7 @@ import (
 	"github.com/ActiveMemory/ctx/internal/config/mcp/mime"
 	"github.com/ActiveMemory/ctx/internal/config/mcp/tool"
 	timeCfg "github.com/ActiveMemory/ctx/internal/config/time"
+	"github.com/ActiveMemory/ctx/internal/mcp/entity"
 	"github.com/ActiveMemory/ctx/internal/mcp/proto"
 	"github.com/ActiveMemory/ctx/internal/mcp/server/extract"
 )
@@ -30,7 +31,7 @@ import (
 // Returns:
 //   - *proto.Response: tool list result
 func (s *Server) handleToolsList(req proto.Request) *proto.Response {
-	return s.ok(req.ID, proto.ToolListResult{Tools: proto.ToolDefs})
+	return s.ok(req.ID, proto.ToolListResult{Tools: entity.ToolDefs})
 }
 
 // handleToolsCall dispatches a tool call to the appropriate handler.
@@ -96,7 +97,7 @@ func (s *Server) handleToolsCall(req proto.Request) *proto.Response {
 // Returns:
 //   - *proto.Response: tool OK or tool error response
 func (s *Server) toolResult(
-	id json.RawMessage, text string, err error,
+		id json.RawMessage, text string, err error,
 ) *proto.Response {
 	if err != nil {
 		return s.toolError(id, err.Error())
@@ -113,7 +114,7 @@ func (s *Server) toolResult(
 // Returns:
 //   - *proto.Response: wrapped handler result
 func (s *Server) call(
-	id json.RawMessage, fn func() (string, error),
+		id json.RawMessage, fn func() (string, error),
 ) *proto.Response {
 	text, err := fn()
 	return s.toolResult(id, text, err)
@@ -128,7 +129,7 @@ func (s *Server) call(
 // Returns:
 //   - *proto.Response: add confirmation or validation error
 func (s *Server) toolAdd(
-	id json.RawMessage, args map[string]interface{},
+		id json.RawMessage, args map[string]interface{},
 ) *proto.Response {
 	entryType, content, extractErr := extract.EntryArgs(args)
 	if extractErr != nil {
@@ -147,7 +148,7 @@ func (s *Server) toolAdd(
 // Returns:
 //   - *proto.Response: completion confirmation or error
 func (s *Server) toolComplete(
-	id json.RawMessage, args map[string]interface{},
+		id json.RawMessage, args map[string]interface{},
 ) *proto.Response {
 	query, _ := args[field.Query].(string)
 	if query == "" {
@@ -168,7 +169,7 @@ func (s *Server) toolComplete(
 // Returns:
 //   - *proto.Response: session list or parse error
 func (s *Server) toolRecall(
-	id json.RawMessage, args map[string]interface{},
+		id json.RawMessage, args map[string]interface{},
 ) *proto.Response {
 	limit := cfg.DefaultRecallLimit
 	if v, ok := args[field.Limit].(float64); ok && v > 0 {
@@ -203,7 +204,7 @@ func (s *Server) toolRecall(
 // Returns:
 //   - *proto.Response: write confirmation or validation error
 func (s *Server) toolWatchUpdate(
-	id json.RawMessage, args map[string]interface{},
+		id json.RawMessage, args map[string]interface{},
 ) *proto.Response {
 	entryType, content, extractErr := extract.EntryArgs(args)
 	if extractErr != nil {
@@ -225,7 +226,7 @@ func (s *Server) toolWatchUpdate(
 // Returns:
 //   - *proto.Response: compact summary or error
 func (s *Server) toolCompact(
-	id json.RawMessage, args map[string]interface{},
+		id json.RawMessage, args map[string]interface{},
 ) *proto.Response {
 	archive := false
 	if v, ok := args[field.Archive].(bool); ok {
@@ -245,7 +246,7 @@ func (s *Server) toolCompact(
 // Returns:
 //   - *proto.Response: matching task prompt or empty result
 func (s *Server) toolCheckTaskCompletion(
-	id json.RawMessage, args map[string]interface{},
+		id json.RawMessage, args map[string]interface{},
 ) *proto.Response {
 	recentAction, _ := args[field.RecentAction].(string)
 	text, err := s.handler.CheckTaskCompletion(recentAction)
@@ -262,7 +263,7 @@ func (s *Server) toolCheckTaskCompletion(
 // Returns:
 //   - *proto.Response: session event confirmation or error
 func (s *Server) toolSessionEvent(
-	id json.RawMessage, args map[string]interface{},
+		id json.RawMessage, args map[string]interface{},
 ) *proto.Response {
 	eventType, _ := args[cli.AttrType].(string)
 	if eventType == "" {
