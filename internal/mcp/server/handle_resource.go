@@ -82,7 +82,7 @@ func (s *Server) handleResourcesRead(req proto.Request) *proto.Response {
 		return s.error(req.ID, proto.ErrCodeInvalidArg, assets.TextDesc(assets.TextDescKeyMCPInvalidParams))
 	}
 
-	ctx, err := context.Load(s.contextDir)
+	ctx, err := context.Load(s.handler.ContextDir)
 	if err != nil {
 		return s.error(req.ID, proto.ErrCodeInternal,
 			fmt.Sprintf(assets.TextDesc(assets.TextDescKeyMCPLoadContext), err))
@@ -137,7 +137,7 @@ func (s *Server) readAgentPacket(
 	sb.WriteString(header)
 
 	tokensUsed := context.EstimateTokensString(header)
-	budget := s.tokenBudget
+	budget := s.handler.TokenBudget
 	var skipped []string
 
 	for _, fileName := range ctxCfg.ReadOrder {
