@@ -47,7 +47,7 @@ const (
 //     to avoid re-debating settled decisions.
 //
 //  6. LEARNINGS: Gotchas and tips. Lessons from past work that inform
-//     current implementation.
+//     the current implementation.
 //
 //  7. GLOSSARY: Reference material. Domain terms and abbreviations for
 //     lookup as needed.

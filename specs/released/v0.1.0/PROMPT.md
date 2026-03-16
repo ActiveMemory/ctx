@@ -201,7 +201,7 @@ the task is wrong.
 
 **Rationale**: Why was this the right choice?
 
-**Consequences**: What are the implications?
+**Consequence**: What are the implications?
 -->
 ```
 

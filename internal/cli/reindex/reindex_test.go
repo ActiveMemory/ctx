@@ -75,7 +75,7 @@ func TestRunReindex_BothFiles(t *testing.T) {
 
 **Context:** Need a config format
 **Rationale:** YAML is human-readable
-**Consequences:** Added yaml dependency
+**Consequence:** Added yaml dependency
 `
 	_ = os.WriteFile(
 		filepath.Join(ctxDir, ctx.Decision),

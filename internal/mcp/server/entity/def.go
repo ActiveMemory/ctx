@@ -42,7 +42,7 @@ var PromptDefs = []proto.Prompt{
 				Required:    true,
 			},
 			{
-				Name:        cli.AttrConsequences,
+				Name:        cli.AttrConsequence,
 				Description: assets.TextDesc(assets.TextDescKeyMCPPromptArgDecisionConseq),
 				Required:    true,
 			},

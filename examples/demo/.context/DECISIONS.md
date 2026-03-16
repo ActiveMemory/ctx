@@ -17,7 +17,7 @@ PostgreSQL, MySQL, and MongoDB.
 - Team has existing PostgreSQL expertise
 - Rich ecosystem of tools and extensions
 
-**Consequences**:
+**Consequence**:
 - Need to manage schema migrations explicitly
 - Requires more upfront schema design than document stores
 - Horizontal scaling requires additional tooling (Citus, read replicas)
@@ -37,7 +37,7 @@ Options were session cookies, JWT tokens, and API keys.
 - Can embed user claims to reduce database lookups
 - Industry standard with good library support
 
-**Consequences**:
+**Consequence**:
 - Cannot immediately revoke tokens (must wait for expiry)
 - Need secure storage for refresh tokens
 - Must implement token refresh flow in all clients
@@ -58,7 +58,7 @@ Node.js, and Python.
 - Simple deployment with single binary
 - Great concurrency primitives for handling many connections
 
-**Consequences**:
+**Consequence**:
 - Smaller talent pool than JavaScript/Python
 - Some team members need Go training
 - Compile step required (vs interpreted languages)
@@ -78,7 +78,7 @@ decide between monorepo and multi-repo structure.
 - Single CI/CD pipeline to maintain
 - Better visibility into cross-service changes
 
-**Consequences**:
+**Consequence**:
 - Need tooling to handle partial builds (only changed services)
 - Repository will grow large over time
 - All developers need access to entire codebase

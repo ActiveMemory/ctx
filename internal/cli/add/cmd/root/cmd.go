@@ -25,7 +25,7 @@ import (
 //   - --file, -f: Read content from a file instead of argument
 //   - --context, -c: Context for decisions/learnings (required)
 //   - --rationale, -r: Rationale for decisions (required for decisions)
-//   - --consequences: Consequences for decisions (required for decisions)
+//   - --consequence: Consequence for decisions (required for decisions)
 //   - --lesson, -l: Lesson for learnings (required for learnings)
 //   - --application, -a: Application for learnings (required for learnings)
 //
@@ -33,14 +33,14 @@ import (
 //   - *cobra.Command: Configured add command with flags registered
 func Cmd() *cobra.Command {
 	var (
-		priority     string
-		section      string
-		fromFile     string
-		context      string
-		rationale    string
-		consequences string
-		lesson       string
-		application  string
+		priority    string
+		section     string
+		fromFile    string
+		context     string
+		rationale   string
+		consequence string
+		lesson      string
+		application string
 	)
 
 	short, long := assets.CommandDesc(assets.CmdDescKeyAdd)
@@ -53,14 +53,14 @@ func Cmd() *cobra.Command {
 		ValidArgs: []string{"task", "decision", "learning", "convention"},
 		RunE: func(cmd *cobra.Command, args []string) error {
 			return Run(cmd, args, core.Config{
-				Priority:     priority,
-				Section:      section,
-				FromFile:     fromFile,
-				Context:      context,
-				Rationale:    rationale,
-				Consequences: consequences,
-				Lesson:       lesson,
-				Application:  application,
+				Priority:    priority,
+				Section:     section,
+				FromFile:    fromFile,
+				Context:     context,
+				Rationale:   rationale,
+				Consequence: consequence,
+				Lesson:      lesson,
+				Application: application,
 			})
 		},
 	}
@@ -97,9 +97,9 @@ func Cmd() *cobra.Command {
 		assets.FlagDesc(assets.FlagDescKeyAddRationale),
 	)
 	cmd.Flags().StringVar(
-		&consequences,
-		"consequences", "",
-		assets.FlagDesc(assets.FlagDescKeyAddConsequences),
+		&consequence,
+		"consequence", "",
+		assets.FlagDesc(assets.FlagDescKeyAddConsequence),
 	)
 	cmd.Flags().StringVarP(
 		&lesson,

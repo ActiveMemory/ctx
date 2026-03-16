@@ -4,8 +4,8 @@
 
 add.application:
   short: 'Application for learnings: how to apply this going forward (required for learnings)'
-add.consequences:
-  short: 'Consequences for decisions: what changes as a result (required for decisions)'
+add.consequence:
+  short: 'Consequence for decisions: what changes as a result (required for decisions)'
 add.context:
   short: 'Context for decisions: what prompted this decision (required for decisions)'
 add.file:

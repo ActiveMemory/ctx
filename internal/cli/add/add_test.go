@@ -83,7 +83,7 @@ func TestAddDecisionAndLearning(t *testing.T) {
 			"decision", "Use PostgreSQL for database",
 			"--context", "Need a reliable database",
 			"--rationale", "PostgreSQL is well-supported",
-			"--consequences", "Team needs training",
+			"--consequence", "Team needs training",
 		})
 		if err := addCmd.Execute(); err != nil {
 			t.Fatalf("add decision failed: %v", err)
@@ -212,7 +212,7 @@ func TestPrependOrder(t *testing.T) {
 			"decision", "First decision",
 			"--context", "First context",
 			"--rationale", "First rationale",
-			"--consequences", "First consequences",
+			"--consequence", "First consequences",
 		})
 		if err := addCmd.Execute(); err != nil {
 			t.Fatalf("add first decision failed: %v", err)
@@ -224,7 +224,7 @@ func TestPrependOrder(t *testing.T) {
 			"decision", "Second decision",
 			"--context", "Second context",
 			"--rationale", "Second rationale",
-			"--consequences", "Second consequences",
+			"--consequence", "Second consequences",
 		})
 		if err := addCmd.Execute(); err != nil {
 			t.Fatalf("add second decision failed: %v", err)

@@ -524,11 +524,11 @@ func TestValidateEntry(t *testing.T) {
 
 	t.Run("decision valid", func(t *testing.T) {
 		err := entry.Validate(entry.Params{
-			Type:         "decision",
-			Content:      "Use Go",
-			Context:      "Need a language",
-			Rationale:    "Go is fast",
-			Consequences: "Need training",
+			Type:        "decision",
+			Content:     "Use Go",
+			Context:     "Need a language",
+			Rationale:   "Go is fast",
+			Consequence: "Need training",
 		}, nil)
 		if err != nil {
 			t.Errorf("unexpected error: %v", err)

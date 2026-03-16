@@ -531,7 +531,7 @@ effort, and user attention. The recall pipeline already proved that
 reading directly from raw transcripts is sufficient. Context snapshots
 are redundant with git history.
 
-**Consequences**: Deleted internal/cli/session/ (15 files), removed
+**Consequence**: Deleted internal/cli/session/ (15 files), removed
 auto-save hook, removed --auto-save from watch, removed pre-compact
 auto-save, removed /ctx-save skill, updated ~45 documentation files.
 Four earlier decisions superseded.

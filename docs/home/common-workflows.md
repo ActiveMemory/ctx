@@ -32,7 +32,7 @@ ctx add task "Implement user authentication"
 ctx add decision "Use PostgreSQL for primary database" \
   --context "Need a reliable database for production" \
   --rationale "PostgreSQL offers ACID compliance and JSON support" \
-  --consequences "Team needs PostgreSQL training"
+  --consequence "Team needs PostgreSQL training"
 
 # Note a learning
 ctx add learning "Mock functions must be hoisted in Jest" \

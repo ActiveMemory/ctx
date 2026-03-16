@@ -34,7 +34,7 @@ ctx add <type> <content> [flags]
 | `--section <name>`        | `-s`  | Target section within file                                  |
 | `--context`               | `-c`  | Context (required for decisions and learnings)              |
 | `--rationale`             | `-r`  | Rationale for decisions (required for decisions)            |
-| `--consequences`          |       | Consequences for decisions (required for decisions)         |
+| `--consequence`           |       | Consequence for decisions (required for decisions)          |
 | `--lesson`                | `-l`  | Key insight (required for learnings)                        |
 | `--application`           | `-a`  | How to apply going forward (required for learnings)         |
 | `--file`                  | `-f`  | Read content from file instead of argument                  |
@@ -50,7 +50,7 @@ ctx add task "Fix login bug" --priority high
 ctx add decision "Use PostgreSQL for primary database" \
   --context "Need a reliable database for production" \
   --rationale "PostgreSQL offers ACID compliance and JSON support" \
-  --consequences "Team needs PostgreSQL training"
+  --consequence "Team needs PostgreSQL training"
 
 # Note a learning (requires context, lesson, and application)
 ctx add learning "Vitest mocks must be hoisted" \

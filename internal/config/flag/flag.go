@@ -12,14 +12,14 @@ const (
 	AllowOutsideCwd = "allow-outside-cwd"
 )
 
-// CLI flag prefixes for display formatting.
+// PrefixLong is a CLI flag prefix for display formatting.
 const PrefixLong = "--"
 
 // Add command flag names: used for both flag registration and error display.
 const (
-	Context      = "context"
-	Rationale    = "rationale"
-	Consequences = "consequences"
-	Lesson       = "lesson"
-	Application  = "application"
+	Context     = "context"
+	Rationale   = "rationale"
+	Consequence = "consequence"
+	Lesson      = "lesson"
+	Application = "application"
 )

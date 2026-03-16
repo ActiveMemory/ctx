@@ -35,7 +35,7 @@ func Validate(params Params, examplesFn func(string) string) error {
 		if m := checkRequired([][2]string{
 			{flag.PrefixLong + flag.Context, params.Context},
 			{flag.PrefixLong + flag.Rationale, params.Rationale},
-			{flag.PrefixLong + flag.Consequences, params.Consequences},
+			{flag.PrefixLong + flag.Consequence, params.Consequence},
 		}); len(m) > 0 {
 			return add.ErrMissingFields(entry.Decision, m)
 		}

@@ -43,15 +43,15 @@ func Run(cmd *cobra.Command, args []string, flags Config) error {
 	}
 
 	params := entry.Params{
-		Type:         fType,
-		Content:      content,
-		Section:      flags.Section,
-		Priority:     flags.Priority,
-		Context:      flags.Context,
-		Rationale:    flags.Rationale,
-		Consequences: flags.Consequences,
-		Lesson:       flags.Lesson,
-		Application:  flags.Application,
+		Type:        fType,
+		Content:     content,
+		Section:     flags.Section,
+		Priority:    flags.Priority,
+		Context:     flags.Context,
+		Rationale:   flags.Rationale,
+		Consequence: flags.Consequence,
+		Lesson:      flags.Lesson,
+		Application: flags.Application,
 	}
 
 	if validateErr := entry.Validate(params, core.ExamplesForType); validateErr != nil {

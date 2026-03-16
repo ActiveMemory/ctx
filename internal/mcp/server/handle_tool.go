@@ -9,6 +9,7 @@ package server
 import (
 	"encoding/json"
 	"fmt"
+	"time"
 
 	"github.com/ActiveMemory/ctx/internal/assets"
 	"github.com/ActiveMemory/ctx/internal/config/cli"
@@ -16,16 +17,29 @@ import (
 	"github.com/ActiveMemory/ctx/internal/config/mcp/field"
 	"github.com/ActiveMemory/ctx/internal/config/mcp/mime"
 	"github.com/ActiveMemory/ctx/internal/config/mcp/tool"
-	"github.com/ActiveMemory/ctx/internal/mcp/handler"
+	timeCfg "github.com/ActiveMemory/ctx/internal/config/time"
 	"github.com/ActiveMemory/ctx/internal/mcp/proto"
+	"github.com/ActiveMemory/ctx/internal/mcp/server/extract"
 )
 
 // handleToolsList returns all available MCP tools.
+//
+// Parameters:
+//   - req: the MCP request
+//
+// Returns:
+//   - *proto.Response: tool list result
 func (s *Server) handleToolsList(req proto.Request) *proto.Response {
 	return s.ok(req.ID, proto.ToolListResult{Tools: proto.ToolDefs})
 }
 
 // handleToolsCall dispatches a tool call to the appropriate handler.
+//
+// Parameters:
+//   - req: the MCP request containing tool name and arguments
+//
+// Returns:
+//   - *proto.Response: tool result or error
 func (s *Server) handleToolsCall(req proto.Request) *proto.Response {
 	var params proto.CallToolParams
 	if err := json.Unmarshal(req.Params, &params); err != nil {
@@ -73,6 +87,14 @@ func (s *Server) handleToolsCall(req proto.Request) *proto.Response {
 
 // toolResult wraps a handler (string, error) return into a
 // proto.Response.
+//
+// Parameters:
+//   - id: JSON-RPC request ID
+//   - text: success text from the handler
+//   - err: handler error, nil on success
+//
+// Returns:
+//   - *proto.Response: tool OK or tool error response
 func (s *Server) toolResult(
 	id json.RawMessage, text string, err error,
 ) *proto.Response {
@@ -83,6 +105,13 @@ func (s *Server) toolResult(
 }
 
 // call invokes a no-arg handler and wraps the result.
+//
+// Parameters:
+//   - id: JSON-RPC request ID
+//   - fn: handler function returning (string, error)
+//
+// Returns:
+//   - *proto.Response: wrapped handler result
 func (s *Server) call(
 	id json.RawMessage, fn func() (string, error),
 ) *proto.Response {
@@ -91,18 +120,32 @@ func (s *Server) call(
 }
 
 // toolAdd extracts MCP args and delegates to handler.Add.
+//
+// Parameters:
+//   - id: JSON-RPC request ID
+//   - args: MCP tool arguments (type, content, optional fields)
+//
+// Returns:
+//   - *proto.Response: add confirmation or validation error
 func (s *Server) toolAdd(
 	id json.RawMessage, args map[string]interface{},
 ) *proto.Response {
-	entryType, content, errResp := s.extractEntryArgs(id, args)
-	if errResp != nil {
-		return errResp
+	entryType, content, extractErr := extract.EntryArgs(args)
+	if extractErr != nil {
+		return s.toolError(id, extractErr.Error())
 	}
-	text, err := s.handler.Add(entryType, content, extractOpts(args))
+	text, err := s.handler.Add(entryType, content, extract.Opts(args))
 	return s.toolResult(id, text, err)
 }
 
 // toolComplete extracts the query and delegates to handler.Complete.
+//
+// Parameters:
+//   - id: JSON-RPC request ID
+//   - args: MCP tool arguments (query)
+//
+// Returns:
+//   - *proto.Response: completion confirmation or error
 func (s *Server) toolComplete(
 	id json.RawMessage, args map[string]interface{},
 ) *proto.Response {
@@ -117,6 +160,13 @@ func (s *Server) toolComplete(
 }
 
 // toolRecall extracts limit/since and delegates to handler.Recall.
+//
+// Parameters:
+//   - id: JSON-RPC request ID
+//   - args: MCP tool arguments (limit, since)
+//
+// Returns:
+//   - *proto.Response: session list or parse error
 func (s *Server) toolRecall(
 	id json.RawMessage, args map[string]interface{},
 ) *proto.Response {
@@ -125,15 +175,18 @@ func (s *Server) toolRecall(
 		limit = int(v)
 	}
 
-	sinceStr, _ := args[field.Since].(string)
-	since, parseErr := handler.ParseRecallSince(sinceStr)
-	if parseErr != nil {
-		return s.toolError(
-			id, fmt.Sprintf(
-				assets.TextDesc(assets.TextDescKeyMCPInvalidSinceDate),
-				parseErr,
-			),
-		)
+	var since time.Time
+	if sinceStr, _ := args[field.Since].(string); sinceStr != "" {
+		var parseErr error
+		since, parseErr = time.Parse(timeCfg.DateFormat, sinceStr)
+		if parseErr != nil {
+			return s.toolError(
+				id, fmt.Sprintf(
+					assets.TextDesc(assets.TextDescKeyMCPInvalidSinceDate),
+					parseErr,
+				),
+			)
+		}
 	}
 
 	text, err := s.handler.Recall(limit, since)
@@ -142,21 +195,35 @@ func (s *Server) toolRecall(
 
 // toolWatchUpdate extracts MCP args and delegates to
 // handler.WatchUpdate.
+//
+// Parameters:
+//   - id: JSON-RPC request ID
+//   - args: MCP tool arguments (type, content, optional fields)
+//
+// Returns:
+//   - *proto.Response: write confirmation or validation error
 func (s *Server) toolWatchUpdate(
 	id json.RawMessage, args map[string]interface{},
 ) *proto.Response {
-	entryType, content, errResp := s.extractEntryArgs(id, args)
-	if errResp != nil {
-		return errResp
+	entryType, content, extractErr := extract.EntryArgs(args)
+	if extractErr != nil {
+		return s.toolError(id, extractErr.Error())
 	}
 	text, err := s.handler.WatchUpdate(
-		entryType, content, extractOpts(args),
+		entryType, content, extract.Opts(args),
 	)
 	return s.toolResult(id, text, err)
 }
 
 // toolCompact extracts the archive flag and delegates to
 // handler.Compact.
+//
+// Parameters:
+//   - id: JSON-RPC request ID
+//   - args: MCP tool arguments (archive)
+//
+// Returns:
+//   - *proto.Response: compact summary or error
 func (s *Server) toolCompact(
 	id json.RawMessage, args map[string]interface{},
 ) *proto.Response {
@@ -170,6 +237,13 @@ func (s *Server) toolCompact(
 
 // toolCheckTaskCompletion extracts recent_action and delegates to
 // handler.CheckTaskCompletion.
+//
+// Parameters:
+//   - id: JSON-RPC request ID
+//   - args: MCP tool arguments (recent_action)
+//
+// Returns:
+//   - *proto.Response: matching task prompt or empty result
 func (s *Server) toolCheckTaskCompletion(
 	id json.RawMessage, args map[string]interface{},
 ) *proto.Response {
@@ -178,8 +252,15 @@ func (s *Server) toolCheckTaskCompletion(
 	return s.toolResult(id, text, err)
 }
 
-// toolSessionEvent extracts event type/caller and delegates to
+// toolSessionEvent extracts the event type/caller and delegates to
 // handler.SessionEvent.
+//
+// Parameters:
+//   - id: JSON-RPC request ID
+//   - args: MCP tool arguments (type, caller)
+//
+// Returns:
+//   - *proto.Response: session event confirmation or error
 func (s *Server) toolSessionEvent(
 	id json.RawMessage, args map[string]interface{},
 ) *proto.Response {
@@ -194,47 +275,14 @@ func (s *Server) toolSessionEvent(
 	return s.toolResult(id, text, err)
 }
 
-// extractEntryArgs validates required type/content from MCP args.
-func (s *Server) extractEntryArgs(
-	id json.RawMessage, args map[string]interface{},
-) (entryType, content string, errResp *proto.Response) {
-	entryType, _ = args[cli.AttrType].(string)
-	content, _ = args[field.Content].(string)
-
-	if entryType == "" || content == "" {
-		return "", "", s.toolError(
-			id, assets.TextDesc(assets.TextDescKeyMCPTypeContentRequired),
-		)
-	}
-
-	return entryType, content, nil
-}
-
-// extractOpts builds EntryOpts from MCP tool arguments.
-func extractOpts(args map[string]interface{}) handler.EntryOpts {
-	opts := handler.EntryOpts{}
-	if v, ok := args[field.Priority].(string); ok {
-		opts.Priority = v
-	}
-	if v, ok := args[cli.AttrContext].(string); ok {
-		opts.Context = v
-	}
-	if v, ok := args[cli.AttrRationale].(string); ok {
-		opts.Rationale = v
-	}
-	if v, ok := args[cli.AttrConsequences].(string); ok {
-		opts.Consequences = v
-	}
-	if v, ok := args[cli.AttrLesson].(string); ok {
-		opts.Lesson = v
-	}
-	if v, ok := args[cli.AttrApplication].(string); ok {
-		opts.Application = v
-	}
-	return opts
-}
-
 // toolOK builds a successful tool result.
+//
+// Parameters:
+//   - id: JSON-RPC request ID
+//   - text: success text to include in the result
+//
+// Returns:
+//   - *proto.Response: tool result with text content
 func (s *Server) toolOK(id json.RawMessage, text string) *proto.Response {
 	return s.ok(
 		id,
@@ -246,6 +294,13 @@ func (s *Server) toolOK(id json.RawMessage, text string) *proto.Response {
 }
 
 // toolError builds a tool error result.
+//
+// Parameters:
+//   - id: JSON-RPC request ID
+//   - msg: error message text
+//
+// Returns:
+//   - *proto.Response: tool result with IsError set
 func (s *Server) toolError(id json.RawMessage, msg string) *proto.Response {
 	return s.ok(id, proto.CallToolResult{
 		Content: []proto.ToolContent{{Type: mime.ContentTypeText, Text: msg}},

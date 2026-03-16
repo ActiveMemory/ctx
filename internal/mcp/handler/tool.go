@@ -24,17 +24,25 @@ import (
 	"github.com/ActiveMemory/ctx/internal/config/mcp/field"
 	timeCfg "github.com/ActiveMemory/ctx/internal/config/time"
 	"github.com/ActiveMemory/ctx/internal/config/token"
+	"github.com/ActiveMemory/ctx/internal/context"
 	"github.com/ActiveMemory/ctx/internal/drift"
 	"github.com/ActiveMemory/ctx/internal/entry"
+	mcperr "github.com/ActiveMemory/ctx/internal/err/mcp"
+	"github.com/ActiveMemory/ctx/internal/mcp/handler/task"
 	"github.com/ActiveMemory/ctx/internal/mcp/server/stat"
 	"github.com/ActiveMemory/ctx/internal/mcp/session"
 	"github.com/ActiveMemory/ctx/internal/recall/parser"
 	"github.com/ActiveMemory/ctx/internal/tidy"
+	"github.com/ActiveMemory/ctx/internal/validation"
 )
 
 // Status loads context and returns a status summary.
+//
+// Returns:
+//   - string: formatted status text with file list and token counts
+//   - error: context load error
 func (h *Handler) Status() (string, error) {
-	ctx, loadErr := h.loadContext()
+	ctx, loadErr := context.Load(h.ContextDir)
 	if loadErr != nil {
 		return "", loadErr
 	}
@@ -73,34 +81,34 @@ func (h *Handler) Status() (string, error) {
 //   - entryType: the type of entry (task, decision, learning, convention)
 //   - content: the entry content
 //   - opts: optional fields for the entry
+//
+// Returns:
+//   - string: confirmation message with entry type and target file
+//   - error: boundary, validation, or write error
 func (h *Handler) Add(
 	entryType, content string, opts EntryOpts,
 ) (string, error) {
-	if boundaryErr := h.checkBoundary(); boundaryErr != nil {
+	if boundaryErr := validation.ValidateBoundary(
+		h.ContextDir,
+	); boundaryErr != nil {
 		return "", boundaryErr
 	}
 
-	params := entry.Params{
-		Type:         entryType,
-		Content:      content,
-		ContextDir:   h.ContextDir,
-		Priority:     opts.Priority,
-		Context:      opts.Context,
-		Rationale:    opts.Rationale,
-		Consequences: opts.Consequences,
-		Lesson:       opts.Lesson,
-		Application:  opts.Application,
+	fileName, writeErr := entry.ValidateAndWrite(entry.Params{
+		Type:        entryType,
+		Content:     content,
+		ContextDir:  h.ContextDir,
+		Priority:    opts.Priority,
+		Context:     opts.Context,
+		Rationale:   opts.Rationale,
+		Consequence: opts.Consequence,
+		Lesson:      opts.Lesson,
+		Application: opts.Application,
+	})
+	if writeErr != nil {
+		return "", writeErr
 	}
 
-	if vErr := entry.Validate(params, nil); vErr != nil {
-		return "", vErr
-	}
-
-	if wErr := entry.Write(params); wErr != nil {
-		return "", wErr
-	}
-
-	fileName := entryCfg.ToCtxFile[strings.ToLower(params.Type)]
 	return fmt.Sprintf(
 		assets.TextDesc(assets.TextDescKeyMCPAddedFormat),
 		entryType, fileName,
@@ -108,8 +116,17 @@ func (h *Handler) Add(
 }
 
 // Complete marks a task as done by number or text match.
+//
+// Parameters:
+//   - query: task number or text fragment to match
+//
+// Returns:
+//   - string: confirmation message with completed task text
+//   - error: boundary or completion error
 func (h *Handler) Complete(query string) (string, error) {
-	if boundaryErr := h.checkBoundary(); boundaryErr != nil {
+	if boundaryErr := validation.ValidateBoundary(
+		h.ContextDir,
+	); boundaryErr != nil {
 		return "", boundaryErr
 	}
 
@@ -127,8 +144,12 @@ func (h *Handler) Complete(query string) (string, error) {
 }
 
 // Drift runs drift detection and returns the report.
+//
+// Returns:
+//   - string: formatted drift report with violations, warnings, passed
+//   - error: context load error
 func (h *Handler) Drift() (string, error) {
-	ctx, loadErr := h.loadContext()
+	ctx, loadErr := context.Load(h.ContextDir)
 	if loadErr != nil {
 		return "", loadErr
 	}
@@ -181,6 +202,10 @@ func (h *Handler) Drift() (string, error) {
 // Parameters:
 //   - limit: max sessions to return
 //   - since: only return sessions after this time (zero value = no filter)
+//
+// Returns:
+//   - string: formatted session list with dates, projects, durations
+//   - error: session discovery error
 func (h *Handler) Recall(limit int, since time.Time) (string, error) {
 	sessions, findErr := parser.FindSessions()
 	if findErr != nil {
@@ -251,10 +276,14 @@ func (h *Handler) Recall(limit int, since time.Time) (string, error) {
 //   - entryType: the type of entry
 //   - content: the entry content
 //   - opts: optional fields for the entry
+//
+// Returns:
+//   - string: confirmation with file name and review status
+//   - error: boundary, validation, or write error
 func (h *Handler) WatchUpdate(
 	entryType, content string, opts EntryOpts,
 ) (string, error) {
-	if boundaryErr := h.checkBoundary(); boundaryErr != nil {
+	if boundaryErr := validation.ValidateBoundary(h.ContextDir); boundaryErr != nil {
 		return "", boundaryErr
 	}
 
@@ -277,27 +306,20 @@ func (h *Handler) WatchUpdate(
 			assets.TextDesc(assets.TextDescKeyMCPReviewStatus), nil
 	}
 
-	params := entry.Params{
-		Type:         entryType,
-		Content:      content,
-		ContextDir:   h.ContextDir,
-		Priority:     opts.Priority,
-		Context:      opts.Context,
-		Rationale:    opts.Rationale,
-		Consequences: opts.Consequences,
-		Lesson:       opts.Lesson,
-		Application:  opts.Application,
+	fileName, writeErr := entry.ValidateAndWrite(entry.Params{
+		Type:        entryType,
+		Content:     content,
+		ContextDir:  h.ContextDir,
+		Priority:    opts.Priority,
+		Context:     opts.Context,
+		Rationale:   opts.Rationale,
+		Consequence: opts.Consequence,
+		Lesson:      opts.Lesson,
+		Application: opts.Application,
+	})
+	if writeErr != nil {
+		return "", writeErr
 	}
-
-	if vErr := entry.Validate(params, nil); vErr != nil {
-		return "", vErr
-	}
-
-	if wErr := entry.Write(params); wErr != nil {
-		return "", wErr
-	}
-
-	fileName := entryCfg.ToCtxFile[strings.ToLower(params.Type)]
 
 	h.Session.RecordAdd(entryType)
 	h.Session.QueuePendingUpdate(session.PendingUpdate{
@@ -317,12 +339,21 @@ func (h *Handler) WatchUpdate(
 }
 
 // Compact moves completed tasks to the archive section.
+//
+// Parameters:
+//   - archive: whether to write archivable blocks to the archive file
+//
+// Returns:
+//   - string: summary of moved tasks and cleaned sections
+//   - error: boundary, context load, or write error
 func (h *Handler) Compact(archive bool) (string, error) {
-	if boundaryErr := h.checkBoundary(); boundaryErr != nil {
+	if boundaryErr := validation.ValidateBoundary(
+		h.ContextDir,
+	); boundaryErr != nil {
 		return "", boundaryErr
 	}
 
-	ctx, loadErr := h.loadContext()
+	ctx, loadErr := context.Load(h.ContextDir)
 	if loadErr != nil {
 		return "", loadErr
 	}
@@ -403,8 +434,12 @@ func (h *Handler) Compact(archive bool) (string, error) {
 }
 
 // Next suggests the next pending task.
+//
+// Returns:
+//   - string: next pending task or all-complete message
+//   - error: context load error
 func (h *Handler) Next() (string, error) {
-	ctx, loadErr := h.loadContext()
+	ctx, loadErr := context.Load(h.ContextDir)
 	if loadErr != nil {
 		return "", loadErr
 	}
@@ -417,7 +452,7 @@ func (h *Handler) Next() (string, error) {
 	lines := strings.Split(string(tasksFile.Content), token.NewlineLF)
 
 	var result string
-	eachPendingTask(lines, func(pt pendingTask) bool {
+	task.ForEachPending(lines, func(pt task.Pending) bool {
 		result = fmt.Sprintf(
 			assets.TextDesc(assets.TextDescKeyMCPNextTaskFormat),
 			pt.Index, pt.Content,
@@ -434,8 +469,15 @@ func (h *Handler) Next() (string, error) {
 
 // CheckTaskCompletion checks if a recent action completed any pending
 // tasks.
+//
+// Parameters:
+//   - recentAction: description of the action to match against tasks
+//
+// Returns:
+//   - string: matching task prompt with the completion hint, or empty
+//   - error: context load error
 func (h *Handler) CheckTaskCompletion(recentAction string) (string, error) {
-	ctx, loadErr := h.loadContext()
+	ctx, loadErr := context.Load(h.ContextDir)
 	if loadErr != nil {
 		return "", loadErr
 	}
@@ -448,8 +490,8 @@ func (h *Handler) CheckTaskCompletion(recentAction string) (string, error) {
 	lines := strings.Split(string(tasksFile.Content), token.NewlineLF)
 
 	var result string
-	eachPendingTask(lines, func(pt pendingTask) bool {
-		if recentAction != "" && containsOverlap(recentAction, pt.Content) {
+	task.ForEachPending(lines, func(pt task.Pending) bool {
+		if recentAction != "" && task.ContainsOverlap(recentAction, pt.Content) {
 			result = fmt.Sprintf(
 				assets.TextDesc(assets.TextDescKeyMCPCheckTaskFormat)+
 					token.NewlineLF+
@@ -465,6 +507,14 @@ func (h *Handler) CheckTaskCompletion(recentAction string) (string, error) {
 }
 
 // SessionEvent handles session lifecycle events (start/end).
+//
+// Parameters:
+//   - eventType: the event type (start or end)
+//   - caller: optional caller identifier for start events
+//
+// Returns:
+//   - string: session confirmation or end-of-session summary
+//   - error: unknown event type error
 func (h *Handler) SessionEvent(
 	eventType, caller string,
 ) (string, error) {
@@ -521,14 +571,15 @@ func (h *Handler) SessionEvent(
 		return sb.String(), nil
 
 	default:
-		return "", fmt.Errorf(
-			assets.TextDesc(assets.TextDescKeyMCPUnknownEventType),
-			eventType,
-		)
+		return "", mcperr.UnknownEventType(eventType)
 	}
 }
 
 // Remind lists pending session-scoped reminders.
+//
+// Returns:
+//   - string: formatted reminder list or no-reminders message
+//   - error: reminder read error
 func (h *Handler) Remind() (string, error) {
 	reminders, readErr := remindcore.ReadReminders()
 	if readErr != nil {
@@ -564,13 +615,4 @@ func (h *Handler) Remind() (string, error) {
 	}
 
 	return sb.String(), nil
-}
-
-// ParseRecallSince parses a since date string into a time.Time.
-// Returns zero time if the string is empty.
-func ParseRecallSince(since string) (time.Time, error) {
-	if since == "" {
-		return time.Time{}, nil
-	}
-	return time.Parse(timeCfg.DateFormat, since)
 }

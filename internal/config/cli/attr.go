@@ -18,6 +18,6 @@ const (
 	AttrApplication = "application"
 	// AttrRationale is the "rationale" attribute on a context-update tag.
 	AttrRationale = "rationale"
-	// AttrConsequences is the "consequences" attribute on a context-update tag.
-	AttrConsequences = "consequences"
+	// AttrConsequence is the "consequence" attribute on a context-update tag.
+	AttrConsequence = "consequence"
 )

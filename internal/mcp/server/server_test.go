@@ -346,11 +346,11 @@ func TestToolAdd(t *testing.T) {
 		{
 			name: "add decision",
 			args: map[string]interface{}{
-				"type":         "decision",
-				"content":      "Use Redis",
-				"context":      "Need caching",
-				"rationale":    "Fast and simple",
-				"consequences": "Ops must manage Redis",
+				"type":        "decision",
+				"content":     "Use Redis",
+				"context":     "Need caching",
+				"rationale":   "Fast and simple",
+				"consequence": "Ops must manage Redis",
 			},
 			wantFile:     ctx.Decision,
 			wantContains: "Use Redis",
@@ -551,11 +551,11 @@ func TestToolWatchUpdateDecision(t *testing.T) {
 	resp := request(t, srv, "tools/call", proto.CallToolParams{
 		Name: "ctx_watch_update",
 		Arguments: map[string]interface{}{
-			"type":         "decision",
-			"content":      "Use MCP protocol",
-			"context":      "Need AI tool integration",
-			"rationale":    "Standard protocol",
-			"consequences": "Must maintain compatibility",
+			"type":        "decision",
+			"content":     "Use MCP protocol",
+			"context":     "Need AI tool integration",
+			"rationale":   "Standard protocol",
+			"consequence": "Must maintain compatibility",
 		},
 	})
 	if resp.Error != nil {
@@ -945,10 +945,10 @@ func TestPromptAddDecision(t *testing.T) {
 	resp := request(t, srv, "prompts/get", proto.GetPromptParams{
 		Name: "ctx-add-decision",
 		Arguments: map[string]string{
-			"content":      "Use Go",
-			"context":      "Need compiled language",
-			"rationale":    "Fast",
-			"consequences": "Team needs Go skills",
+			"content":     "Use Go",
+			"context":     "Need compiled language",
+			"rationale":   "Fast",
+			"consequence": "Team needs Go skills",
 		},
 	})
 	if resp.Error != nil {

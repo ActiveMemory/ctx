@@ -57,11 +57,11 @@ func TestApplyUpdate(t *testing.T) {
 		{
 			name: "decision update",
 			update: ContextUpdate{
-				Type:         entry.Decision,
-				Content:      "Test decision from watch",
-				Context:      "Testing watch functionality",
-				Rationale:    "Need to verify watch applies decisions",
-				Consequences: "Decision will appear in DECISIONS.md",
+				Type:        entry.Decision,
+				Content:     "Test decision from watch",
+				Context:     "Testing watch functionality",
+				Rationale:   "Need to verify watch applies decisions",
+				Consequence: "Decision will appear in DECISIONS.md",
 			},
 			checkFile: ctx.Decision,
 			checkFor:  "Test decision from watch",
@@ -486,7 +486,7 @@ func TestProcessStream_DecisionWithAttributes(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	input := `<context-update type="decision" context="Need a DB" rationale="PostgreSQL is mature" consequences="Team needs PG training">Use PostgreSQL</context-update>
+	input := `<context-update type="decision" context="Need a DB" rationale="PostgreSQL is mature" consequence="Team needs PG training">Use PostgreSQL</context-update>
 `
 	reader := strings.NewReader(input)
 
@@ -552,13 +552,13 @@ Another line of normal output.
 
 func TestContextUpdate_Fields(t *testing.T) {
 	u := ContextUpdate{
-		Type:         "learning",
-		Content:      "Title",
-		Context:      "ctx",
-		Lesson:       "lesson",
-		Application:  "app",
-		Rationale:    "rat",
-		Consequences: "cons",
+		Type:        "learning",
+		Content:     "Title",
+		Context:     "ctx",
+		Lesson:      "lesson",
+		Application: "app",
+		Rationale:   "rat",
+		Consequence: "cons",
 	}
 	if u.Type != "learning" || u.Content != "Title" {
 		t.Error("ContextUpdate fields should be set correctly")
@@ -566,16 +566,16 @@ func TestContextUpdate_Fields(t *testing.T) {
 	if u.Context != "ctx" || u.Lesson != "lesson" || u.Application != "app" {
 		t.Error("learning fields should be set correctly")
 	}
-	if u.Rationale != "rat" || u.Consequences != "cons" {
+	if u.Rationale != "rat" || u.Consequence != "cons" {
 		t.Error("decision fields should be set correctly")
 	}
 }
 
-func TestExtractAttribute_Consequences(t *testing.T) {
-	tag := `<context-update type="decision" consequences="something changes">`
-	result := ExtractAttribute(tag, "consequences")
+func TestExtractAttribute_Consequence(t *testing.T) {
+	tag := `<context-update type="decision" consequence="something changes">`
+	result := ExtractAttribute(tag, "consequence")
 	if result != "something changes" {
-		t.Errorf("ExtractAttribute(consequences) = %q, want 'something changes'", result)
+		t.Errorf("ExtractAttribute(consequence) = %q, want 'something changes'", result)
 	}
 }
 

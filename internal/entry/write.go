@@ -56,7 +56,7 @@ func Write(params Params) error {
 	switch fType {
 	case entry.Decision:
 		formatted = core.FormatDecision(
-			params.Content, params.Context, params.Rationale, params.Consequences,
+			params.Content, params.Context, params.Rationale, params.Consequence,
 		)
 	case entry.Task:
 		formatted = core.FormatTask(params.Content, params.Priority)
@@ -98,4 +98,25 @@ func Write(params Params) error {
 	}
 
 	return nil
+}
+
+// ValidateAndWrite validates the entry params, writes the entry, and
+// returns the target context file name.
+//
+// Parameters:
+//   - params: entry parameters with type, content, and optional fields
+//
+// Returns:
+//   - string: the context file name the entry was written to
+//   - error: validation or write error
+func ValidateAndWrite(params Params) (string, error) {
+	if vErr := Validate(params, nil); vErr != nil {
+		return "", vErr
+	}
+
+	if wErr := Write(params); wErr != nil {
+		return "", wErr
+	}
+
+	return entry.ToCtxFile[strings.ToLower(params.Type)], nil
 }

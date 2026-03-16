@@ -35,7 +35,7 @@ const (
 	TplConvention = "- %s\n"
 
 	// TplDecision formats a decision section with all ADR fields.
-	// Args: timestamp, title, context, title (repeated), rationale, consequences.
+	// Args: timestamp, title, context, title (repeated), rationale, consequence.
 	TplDecision = `## [%s] %s
 
 **Status**: Accepted
@@ -46,6 +46,6 @@ const (
 
 **Rationale**: %s
 
-**Consequences**: %s
+**Consequence**: %s
 `
 )

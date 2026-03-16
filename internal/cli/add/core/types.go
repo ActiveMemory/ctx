@@ -8,16 +8,16 @@ package core
 
 // EntryParams contains all parameters needed to add an entry to a context file.
 type EntryParams struct {
-	Type         string
-	Content      string
-	Section      string
-	Priority     string
-	Context      string
-	Rationale    string
-	Consequences string
-	Lesson       string
-	Application  string
-	ContextDir   string
+	Type        string
+	Content     string
+	Section     string
+	Priority    string
+	Context     string
+	Rationale   string
+	Consequence string
+	Lesson      string
+	Application string
+	ContextDir  string
 }
 
 // Config holds all flags for the add command.
@@ -28,16 +28,16 @@ type EntryParams struct {
 //   - FromFile: Read content from a file instead of argument
 //   - Context: Context field for decisions/learnings
 //   - Rationale: Rationale field for decisions
-//   - Consequences: Consequences field for decisions
+//   - Consequence: Consequence field for decisions
 //   - Lesson: Lesson field for learnings
 //   - Application: Application field for learnings
 type Config struct {
-	Priority     string
-	Section      string
-	FromFile     string
-	Context      string
-	Rationale    string
-	Consequences string
-	Lesson       string
-	Application  string
+	Priority    string
+	Section     string
+	FromFile    string
+	Context     string
+	Rationale   string
+	Consequence string
+	Lesson      string
+	Application string
 }

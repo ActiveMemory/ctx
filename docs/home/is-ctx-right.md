@@ -116,7 +116,7 @@ ctx init
 ctx add decision "Your actual architectural choice" \
   --context "What prompted this decision" \
   --rationale "Why you chose this approach" \
-  --consequences "What changes as a result"
+  --consequence "What changes as a result"
 
 # 3. Check what the AI will see
 ctx status

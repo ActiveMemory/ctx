@@ -139,7 +139,7 @@ Add a task, decision, learning, or convention to the context.
 | `priority`     | string | No       | Priority level (tasks only): high, medium, low |
 | `context`      | string | Conditional | Context field (decisions and learnings) |
 | `rationale`    | string | Conditional | Rationale (decisions only)             |
-| `consequences` | string | Conditional | Consequences (decisions only)          |
+| `consequence`  | string | Conditional | Consequence (decisions only)           |
 | `lesson`       | string | Conditional | Lesson learned (learnings only)        |
 | `application`  | string | Conditional | How to apply (learnings only)          |
 
@@ -181,7 +181,7 @@ Human confirmation required before calling.
 | `content`      | string | Yes      | Main content                             |
 | `context`      | string | Conditional | Context background (decisions/learnings) |
 | `rationale`    | string | Conditional | Rationale (decisions only)             |
-| `consequences` | string | Conditional | Consequences (decisions only)          |
+| `consequence`  | string | Conditional | Consequence (decisions only)           |
 | `lesson`       | string | Conditional | Lesson learned (learnings only)        |
 | `application`  | string | Conditional | How to apply (learnings only)          |
 
@@ -250,7 +250,7 @@ Format an architectural decision entry with all required fields.
 | `content`      | string | Yes      | Decision title                 |
 | `context`      | string | Yes      | Background context             |
 | `rationale`    | string | Yes      | Why this decision was made     |
-| `consequences` | string | Yes      | Expected consequences          |
+| `consequence`  | string | Yes      | Expected consequence           |
 
 ### `ctx-add-learning`
 

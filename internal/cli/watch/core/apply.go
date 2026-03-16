@@ -27,7 +27,7 @@ import (
 //
 // Dispatches based on update type to add entries to context files
 // or mark tasks complete. For learnings and decisions, uses structured
-// fields (context, lesson, application, rationale, consequences) if
+// fields (context, lesson, application, rationale, consequence) if
 // provided in the XML attributes.
 //
 // Parameters:
@@ -61,20 +61,20 @@ func ApplyUpdate(update ContextUpdate) error {
 // Parameters:
 //   - update: The parsed ContextUpdate with type, content, and required
 //     structured fields (context, lesson, application for learnings;
-//     context, rationale, consequences for decisions)
+//     context, rationale, consequence for decisions)
 //
 // Returns:
 //   - error: Non-nil if validation fails, type is unknown,
 //     or file operations fail
 func RunAddSilent(update ContextUpdate) error {
 	params := entry.Params{
-		Type:         update.Type,
-		Content:      update.Content,
-		Context:      update.Context,
-		Rationale:    update.Rationale,
-		Consequences: update.Consequences,
-		Lesson:       update.Lesson,
-		Application:  update.Application,
+		Type:        update.Type,
+		Content:     update.Content,
+		Context:     update.Context,
+		Rationale:   update.Rationale,
+		Consequence: update.Consequence,
+		Lesson:      update.Lesson,
+		Application: update.Application,
 	}
 
 	// Validate required fields (same as ctx add)

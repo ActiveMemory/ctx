@@ -7,9 +7,7 @@
 package handler
 
 import (
-	"github.com/ActiveMemory/ctx/internal/context"
 	"github.com/ActiveMemory/ctx/internal/mcp/session"
-	"github.com/ActiveMemory/ctx/internal/validation"
 )
 
 // Handler contains domain logic for MCP operations.
@@ -24,20 +22,17 @@ type Handler struct {
 }
 
 // New creates a Handler for the given context directory.
+//
+// Parameters:
+//   - contextDir: path to the .context/ directory
+//   - tokenBudget: maximum token budget for context assembly
+//
+// Returns:
+//   - *Handler: initialized handler with fresh session state
 func New(contextDir string, tokenBudget int) *Handler {
 	return &Handler{
 		ContextDir:  contextDir,
 		TokenBudget: tokenBudget,
 		Session:     session.NewState(contextDir),
 	}
-}
-
-// checkBoundary validates the context directory boundary.
-func (h *Handler) checkBoundary() error {
-	return validation.ValidateBoundary(h.ContextDir)
-}
-
-// loadContext loads the context directory.
-func (h *Handler) loadContext() (*context.Context, error) {
-	return context.Load(h.ContextDir)
 }

@@ -4,7 +4,7 @@
 //   \    Copyright 2026-present Context contributors.
 //                 SPDX-License-Identifier: Apache-2.0
 
-package handler
+package task
 
 import (
 	"strings"
@@ -17,20 +17,14 @@ import (
 	"github.com/ActiveMemory/ctx/internal/task"
 )
 
-// pendingTask holds the index and content of a pending top-level task.
-type pendingTask struct {
-	Index   int
-	Content string
-}
-
-// eachPendingTask iterates pending top-level tasks in TASKS.md,
+// ForEachPending iterates pending top-level tasks in TASKS.md,
 // skipping the Completed section and subtasks. It calls fn for each
 // match; if fn returns true, iteration stops early.
 //
 // Parameters:
 //   - lines: TASKS.md split by newline
 //   - fn: visitor called with each pending task; return true to stop
-func eachPendingTask(lines []string, fn func(pendingTask) bool) {
+func ForEachPending(lines []string, fn func(Pending) bool) {
 	inCompletedSection := false
 	idx := 0
 
@@ -57,13 +51,13 @@ func eachPendingTask(lines []string, fn func(pendingTask) bool) {
 		}
 
 		idx++
-		if fn(pendingTask{Index: idx, Content: task.Content(match)}) {
+		if fn(Pending{Index: idx, Content: task.Content(match)}) {
 			return
 		}
 	}
 }
 
-// containsOverlap checks if two strings share meaningful words.
+// ContainsOverlap checks if two strings share meaningful words.
 //
 // Uses word-set intersection rather than substring matching to avoid
 // false positives (e.g., "test" matching inside "contestant").
@@ -74,7 +68,7 @@ func eachPendingTask(lines []string, fn func(pendingTask) bool) {
 //
 // Returns:
 //   - bool: true if at least 2 significant words overlap
-func containsOverlap(action, taskText string) bool {
+func ContainsOverlap(action, taskText string) bool {
 	actionWords := parse.WordSet(strings.ToLower(action))
 	taskWords := strings.Fields(strings.ToLower(taskText))
 

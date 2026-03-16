@@ -79,7 +79,7 @@ Skip categories with no candidates: do not show empty sections.
 1. **Title of decision**
    - Context: What prompted this
    - Rationale: Why this choice
-   - Consequences: What changes as a result
+   - Consequence: What changes as a result
 
 ### Conventions (N candidates)
 1. **Convention description**
@@ -103,7 +103,7 @@ For each approved candidate, run the appropriate command:
 | Type        | Command                                                                           |
 |-------------|-----------------------------------------------------------------------------------|
 | Learning    | `ctx add learning "Title" --context "..." --lesson "..." --application "..."`     |
-| Decision    | `ctx add decision "Title" --context "..." --rationale "..." --consequences "..."` |
+| Decision    | `ctx add decision "Title" --context "..." --rationale "..." --consequence "..."` |
 | Convention  | `ctx add convention "Description"`                                                |
 | Task (new)  | `ctx add task "Description"`                                                      |
 | Task (done) | Edit TASKS.md to mark complete                                                    |

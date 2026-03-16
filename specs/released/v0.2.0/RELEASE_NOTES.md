@@ -19,7 +19,7 @@ This release brings significant improvements to session recall, code quality, an
 - Add global flags: `--context-dir` to override context directory, `--no-color` to disable colored output
 - Add `.contextrc` configuration file support for project-level settings
 - Add structured attributes to `<context-update>` XML format for richer metadata
-- Require `--context`, `--rationale`, `--consequences` flags for `ctx add decision`
+- Require `--context`, `--rationale`, `--consequence` flags for `ctx add decision`
 - Require `--context`, `--lesson`, `--application` flags for `ctx add learning`
 - Add shell completion support via `ctx completion` (bash, zsh, fish, powershell)
 

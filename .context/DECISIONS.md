@@ -59,7 +59,7 @@
 
 **Rationale**: Separating pure logic from I/O lets both MCP (JSON-RPC responses) and CLI (cobra cmd.Println) callers control output and file writes. Eliminates duplication and the unnecessary mcp/server/fs package
 
-**Consequences**: tidy.CompactContext returns a CompactResult struct; callers iterate FileUpdates and write them. Archive logic stays in callers since MCP and CLI have different archive policies
+**Consequence**: tidy.CompactContext returns a CompactResult struct; callers iterate FileUpdates and write them. Archive logic stays in callers since MCP and CLI have different archive policies
 
 ---
 
@@ -73,7 +73,7 @@
 
 **Rationale**: A single table-driven test parsing embed.go source catches typos and missing YAML entries at test time — no manual key list to maintain
 
-**Consequences**: New TextDescKey constants are automatically covered; orphaned keys fail CI
+**Consequence**: New TextDescKey constants are automatically covered; orphaned keys fail CI
 
 ---
 
@@ -87,7 +87,7 @@
 
 **Rationale**: Matches existing split pattern (commands.yaml, flags.yaml, examples.yaml); loadYAMLDir merges all files in commands/text/ transparently so TextDesc() API stays unchanged
 
-**Consequences**: New domain files must go into commands/text/; loadYAMLDir reads all .yaml in the directory at init time
+**Consequence**: New domain files must go into commands/text/; loadYAMLDir reads all .yaml in the directory at init time
 
 ---
 
@@ -101,7 +101,7 @@
 
 **Rationale**: Convention requires files named by responsibility, not junk drawers; domain grouping makes it possible to find error constructors by domain
 
-**Consequences**: 22 files (backup, config, crypto, date, fs, git, hook, init, journal, memory, notify, pad, parser, prompt, recall, reminder, session, site, skill, state, task, validation); errors.go deleted
+**Consequence**: 22 files (backup, config, crypto, date, fs, git, hook, init, journal, memory, notify, pad, parser, prompt, recall, reminder, session, site, skill, state, task, validation); errors.go deleted
 
 ---
 
@@ -115,7 +115,7 @@
 
 **Rationale**: Session header prefixes are recognition patterns for parsing, not user-facing interface strings. Separating content recognition from interface language lets users parse multilingual session files without code changes. Single-language default (Session:) avoids implicit favoritism.
 
-**Consequences**: Prefixes moved to .ctxrc session_prefixes list. text.yaml entries and embed.go constants removed. Parser reads from rc.SessionPrefixes() with fallback to config/parser.DefaultSessionPrefixes. Users extend via .ctxrc.
+**Consequence**: Prefixes moved to .ctxrc session_prefixes list. text.yaml entries and embed.go constants removed. Parser reads from rc.SessionPrefixes() with fallback to config/parser.DefaultSessionPrefixes. Users extend via .ctxrc.
 
 ---
 
@@ -129,7 +129,7 @@
 
 **Rationale**: ctx paths are internally constructed from config constants. The deny-list catches agent hallucinations (writing to /etc), not adversarial input. Public security docs would imply a threat model that does not exist.
 
-**Consequences**: internal/io/doc.go documents limitations honestly for contributors. No user-facing security docs. The deny-list is a modicum of protection, not a promise.
+**Consequence**: internal/io/doc.go documents limitations honestly for contributors. No user-facing security docs. The deny-list is a modicum of protection, not a promise.
 
 ---
 
@@ -143,7 +143,7 @@
 
 **Rationale**: Making the file list and review URLs configurable via .ctxrc freshness_files means any project can opt in. Per-file review_url avoids special-casing by project name — ctx sets Anthropic docs, other projects set their own vendor links or omit it entirely.
 
-**Consequences**: The hook is a no-op by default (opt-in). ctx's own .ctxrc carries the tracked files. All nudge text goes through assets/text.yaml for localization. No project detection logic needed.
+**Consequence**: The hook is a no-op by default (opt-in). ctx's own .ctxrc carries the tracked files. All nudge text goes through assets/text.yaml for localization. No project detection logic needed.
 
 ---
 
@@ -157,7 +157,7 @@
 
 **Rationale**: No mechanism exists for hooks to trigger skills. The skill was never loaded during sessions. Adding enforcement elsewhere would either be too far back in context (playbook) or dilute the already-crisp hook message.
 
-**Consequences**: One fewer skill to maintain. No behavioral change — agents continue relaying warnings as before.
+**Consequence**: One fewer skill to maintain. No behavioral change — agents continue relaying warnings as before.
 
 ---
 
@@ -171,7 +171,7 @@
 
 **Rationale**: Derived assets that are not in the build dependency chain will drift — the only reliable enforcement is making the build fail without sync
 
-**Consequences**: Every make build now copies docs into assets before compiling
+**Consequence**: Every make build now copies docs into assets before compiling
 
 ---
 
@@ -185,7 +185,7 @@
 
 **Rationale**: config/ is for structural constants (paths, limits, regexes); assets/ is for templates, labels, and text that would need i18n. Clean separation of concerns
 
-**Consequences**: All tpl_entry.go, tpl_journal.go, tpl_loop.go, tpl_recall.go moved to assets/
+**Consequence**: All tpl_entry.go, tpl_journal.go, tpl_loop.go, tpl_recall.go moved to assets/
 
 ---
 
@@ -199,7 +199,7 @@
 
 **Rationale**: MCP is the composition layer — agents already compose multiple servers. ctx is context, RAGs are intelligence. No bridging, no plugin system, no schema abstraction
 
-**Consequences**: Spec created at ideas/spec-companion-intelligence.md; future work is documentation and UX only
+**Consequence**: Spec created at ideas/spec-companion-intelligence.md; future work is documentation and UX only
 
 ---
 
@@ -213,7 +213,7 @@
 
 **Rationale**: Context is for humans — localization files should be human-readable block scalars. Separate files eliminate the underscore prefix namespace hack
 
-**Consequences**: 4 files (commands.yaml, flags.yaml, text.yaml, examples.yaml) with dedicated loaders in embed.go
+**Consequence**: 4 files (commands.yaml, flags.yaml, text.yaml, examples.yaml) with dedicated loaders in embed.go
 
 ---
 
@@ -227,7 +227,7 @@
 
 **Rationale**: 'architecture' better describes surveying and evolving project structure across sessions
 
-**Consequences**: All cross-references updated across skills, docs, .context files, and settings
+**Consequence**: All cross-references updated across skills, docs, .context files, and settings
 
 ---
 
@@ -241,7 +241,7 @@
 
 **Rationale**: Matches existing pattern of DirClaudeHooks = '.claude/hooks' — keeps filepath.Join calls cleaner and avoids scattering path segments
 
-**Consequences**: New multi-segment directory paths should be single constants (e.g. DirHooksMessages, DirMemoryArchive) rather than joined from individual segment constants
+**Consequence**: New multi-segment directory paths should be single constants (e.g. DirHooksMessages, DirMemoryArchive) rather than joined from individual segment constants
 
 ---
 
@@ -255,7 +255,7 @@
 
 **Rationale**: Every colored output already had a semantic symbol (✓, ⚠, ○) that conveyed the same meaning; color added visual noise in non-terminal contexts (logs, pipes)
 
-**Consequences**: Removed --no-color flag (only existed for color.NoColor); one fewer external dependency; FlagNoColor retained in config for CLI compatibility
+**Consequence**: Removed --no-color flag (only existed for color.NoColor); one fewer external dependency; FlagNoColor retained in config for CLI compatibility
 
 ---
 
@@ -269,7 +269,7 @@
 
 **Rationale**: Centralizing user-facing text in a single translatable file prepares for i18n without runtime cost (embedded at compile time)
 
-**Consequences**: System's 30 hidden hook subcommands excluded (not user-facing); flag descriptions use _flags.scope.name convention
+**Consequence**: System's 30 hidden hook subcommands excluded (not user-facing); flag descriptions use _flags.scope.name convention
 
 ---
 
@@ -283,7 +283,7 @@
 
 **Rationale**: Taxonomical symmetry: every package has the same predictable shape, making navigation instant and agent-friendly
 
-**Consequences**: cmd/ contains only cmd.go + run.go; helpers go to core/; 474 files changed in initial restructuring
+**Consequence**: cmd/ contains only cmd.go + run.go; helpers go to core/; 474 files changed in initial restructuring
 
 ---
 
@@ -297,7 +297,7 @@
 
 **Rationale**: Domain types in CLI packages force consumers to depend on CLI internals; internal/entry provides a clean boundary
 
-**Consequences**: entry aliases Params from add/core to avoid import cycle (entry imports add/core for insert logic); future work may move insert logic to entry to eliminate the cycle
+**Consequence**: entry aliases Params from add/core to avoid import cycle (entry imports add/core for insert logic); future work may move insert logic to entry to eliminate the cycle
 
 ---
 
@@ -311,7 +311,7 @@
 
 **Rationale**: All spec requirements met; CI failures are trivial and low-risk; keeping PR open risks merge conflicts during active refactoring
 
-**Consequences**: Merge and fix compliance issues in follow-up commit on main
+**Consequence**: Merge and fix compliance issues in follow-up commit on main
 
 ---
 
@@ -325,7 +325,7 @@
 
 **Rationale**: CLI is always available (PATH prerequisite); MCP requires optional configuration. Hooks will always be CLI (shell commands). Two access patterns in the same tool is gratuitous complexity.
 
-**Consequences**: Skills call CLI. MCP Prompts call MCP Tools. Hooks call CLI. Clean layer separation; no replacement, only parallel access paths.
+**Consequence**: Skills call CLI. MCP Prompts call MCP Tools. Hooks call CLI. Clean layer separation; no replacement, only parallel access paths.
 
 ---
 
@@ -339,7 +339,7 @@
 
 **Rationale**: Peer model (side-by-side MCP servers, each queried independently by the agent) respects ctx's markdown-on-filesystem invariant and avoids coupling. ctx provides behavioral scaffolding; external tools provide their specialties.
 
-**Consequences**: ctx MCP Prompts can reference external tools by convention without tight coupling. No plugin registry needed.
+**Consequence**: ctx MCP Prompts can reference external tools by convention without tight coupling. No plugin registry needed.
 
 ---
 
@@ -353,7 +353,7 @@
 
 **Rationale**: internal/parse scopes to convert text to typed values without becoming a junk drawer. Name invites sibling functions (duration, identifier parsing) naturally.
 
-**Consequences**: parse.Date() is the first function; config.DateFormat holds the layout constant. Other time.Parse callers can migrate incrementally.
+**Consequence**: parse.Date() is the first function; config.DateFormat holds the layout constant. Other time.Parse callers can migrate incrementally.
 
 ---
 
@@ -367,7 +367,7 @@
 
 **Rationale**: Single location makes duplicates visible, enables future sentinel errors, and prevents broken-window accumulation
 
-**Consequences**: All CLI err.go files migrated and deleted. New errors go to internal/err/errors.go exclusively.
+**Consequence**: All CLI err.go files migrated and deleted. New errors go to internal/err/errors.go exclusively.
 
 ---
 
@@ -381,7 +381,7 @@
 
 **Rationale**: Strategic content should not be in git history. Docs updated to say 'often git-tracked' for the general recommendation — this project is the exception.
 
-**Consequences**: Mirror and archives are local-only for this project. Other projects can still track them. Sync and drift detection work the same way regardless.
+**Consequence**: Mirror and archives are local-only for this project. Other projects can still track them. Sync and drift detection work the same way regardless.
 
 ---
 
@@ -395,7 +395,7 @@
 
 **Rationale**: Hook nudge + on-demand gives user choice and freedom. Wrap-up is the publish trigger, never commit (footgun). Heuristic classification for v1, no LLM. Marker-based merge for bidirectional conflict. Mirror is git-tracked + timestamped archives. Foundation spec delivers sync/status/diff/hook; import and publish are future phases.
 
-**Consequences**: Foundation spec in specs/memory-bridge.md, import/publish specs deferred to ideas/. Tasked out as S-0.1.1 through S-0.1.10 in ideas/TASKS.md.
+**Consequence**: Foundation spec in specs/memory-bridge.md, import/publish specs deferred to ideas/. Tasked out as S-0.1.1 through S-0.1.10 in ideas/TASKS.md.
 
 ---
 
@@ -409,7 +409,7 @@
 
 **Rationale**: 200-line cap is fragile differentiator (demoted); org-scoped memory is the real threat (elevated to HIGH); model agnosticism is premature (parked with trigger condition); bidirectional sync is the most underweighted insight (promoted); narrative shapes categories before implementation does (blog first)
 
-**Consequences**: Execution order is now S-3 (blog) -> S-0 -> S-1 -> S-2. Strategic doc restructured from 9 to 10 sections. Blog post shipped as first deliverable.
+**Consequence**: Execution order is now S-3 (blog) -> S-0 -> S-1 -> S-2. Strategic doc restructured from 9 to 10 sections. Blog post shipped as first deliverable.
 
 ---
 
@@ -423,7 +423,7 @@
 
 **Rationale**: The output pipeline (map[string][]string to Mermaid/table/JSON) was already language-agnostic. Each ecosystem builder is ~40 lines — this is finishing what was started, not bloat. Static manifest parsing (no external tools for Node/Python) keeps dependencies minimal.
 
-**Consequences**: ctx deps now auto-detects Go, Node.js, Python, Rust. --type flag overrides detection. ctx-architecture skill works across ecosystems without changes.
+**Consequence**: ctx deps now auto-detects Go, Node.js, Python, Rust. --type flag overrides detection. ctx-architecture skill works across ecosystems without changes.
 
 ---
 
@@ -437,7 +437,7 @@
 
 **Rationale**: check-context-size already reads tokens, has VERBATIM relay working, and runs every prompt. Adding a third independent trigger there is minimal code and follows established patterns.
 
-**Consequences**: New .ctxrc field billing_token_warn (default 0 = disabled). One-shot per session via billing-warned-{sessionID} state file. Template-overridable via check-context-size/billing.txt.
+**Consequence**: New .ctxrc field billing_token_warn (default 0 = disabled). One-shot per session via billing-warned-{sessionID} state file. Template-overridable via check-context-size/billing.txt.
 
 ---
 
@@ -451,7 +451,7 @@
 
 **Rationale**: Warn-only is simpler, avoids silent file operations, and puts the user in control. Migration instructions in docs are sufficient for the small userbase.
 
-**Consequences**: MigrateKeyFile() now only warns on stderr. promoteToGlobal() helper deleted. Tests verify keys are not moved.
+**Consequence**: MigrateKeyFile() now only warns on stderr. promoteToGlobal() helper deleted. Tests verify keys are not moved.
 
 ---
 
@@ -465,7 +465,7 @@
 
 **Rationale**: Single location simplifies mental model, eliminates duplicated secureTempDir() in two packages, removes the cleanup-tmp SessionEnd hook entirely. .context/state/ is already gitignored and project-scoped.
 
-**Consequences**: All 18 callers updated. Tests switch from XDG_RUNTIME_DIR mocking to CTX_DIR + rc.Reset(). Hook lifecycle drops from 4 events to 3 (SessionEnd removed).
+**Consequence**: All 18 callers updated. Tests switch from XDG_RUNTIME_DIR mocking to CTX_DIR + rc.Reset(). Hook lifecycle drops from 4 events to 3 (SessionEnd removed).
 
 ---
 
@@ -479,7 +479,7 @@
 
 **Rationale**: Single PersistentPreRunE on root command gives one clear error. Three-level exemption (hidden commands, annotated commands, grouping commands) covers all edge cases without per-command boilerplate
 
-**Consequences**: Boundary violation now returns an error instead of os.Exit(1), making it testable. The subprocess-based boundary test was simplified to a direct error assertion
+**Consequence**: Boundary violation now returns an error instead of os.Exit(1), making it testable. The subprocess-based boundary test was simplified to a direct error assertion
 
 ---
 
@@ -493,7 +493,7 @@
 
 **Rationale**: One key per machine covers 99% of users. Per-project slug filenames and three-tier resolution added complexity without clear benefit. ~/.ctx/ is the natural home (matches ~/.claude/ convention). Tilde expansion in .ctxrc key_path fixes a standalone bug.
 
-**Consequences**: Auto-migration promotes legacy keys (project-local, ~/.local/ctx/keys/) to ~/.ctx/.ctx.key. Deleted KeyDir(), ProjectKeySlug(), ProjectKeyPath(). ResolveKeyPath simplified to two params. 15+ doc files updated.
+**Consequence**: Auto-migration promotes legacy keys (project-local, ~/.local/ctx/keys/) to ~/.ctx/.ctx.key. Deleted KeyDir(), ProjectKeySlug(), ProjectKeyPath(). ResolveKeyPath simplified to two params. 15+ doc files updated.
 
 ---
 
@@ -507,7 +507,7 @@
 
 **Rationale**: Token fields are only included in the template ref when tokens > 0. This avoids misleading pct=0% on the first heartbeat and keeps payloads clean for receivers that filter on field presence.
 
-**Consequences**: Webhook consumers must handle heartbeats both with and without token fields. The message string also varies (with/without tokens=N pct=N% suffix).
+**Consequence**: Webhook consumers must handle heartbeats both with and without token fields. The message string also varies (with/without tokens=N pct=N% suffix).
 
 ---
 
@@ -521,7 +521,7 @@
 
 **Rationale**: Architectural symmetry with eventlog, O(1) size check vs O(n) line counting, diagnostic logs don't need deep history (webhooks cover serious setups)
 
-**Consequences**: Each log file caps at ~2MB (current + .1). config.LogMaxBytes = 1MB, same as EventLogMaxBytes
+**Consequence**: Each log file caps at ~2MB (current + .1). config.LogMaxBytes = 1MB, same as EventLogMaxBytes
 
 ---
 
@@ -535,7 +535,7 @@
 
 **Rationale**: Promote if the skill benefits any ctx-powered project without project-specific hardcoding. Keep private if it references this repo's Go internals, personal infra, or language-specific tooling. Promote list: _ctx-spec (generic scaffolding), _ctx-brainstorm (design facilitation), _ctx-verify (claim verification), _ctx-skill-creator (skill authoring), _ctx-check-links (doc link audit), _ctx-sanitize-permissions (Claude Code permissions audit). Keep list: _ctx-audit (Go/ctx checks), _ctx-qa (Go Makefile), _ctx-backup (SMB infra), _ctx-release/_ctx-release-notes (ctx release workflow), _ctx-update-docs (ctx package mapping), _ctx-absorb (borderline, revisit later).
 
-**Consequences**: Six skills move from .claude/skills/ to internal/assets/claude/skills/ and become available to all ctx users via ctx init. Cross-references between skills need updating (e.g., /_ctx-brainstorm becomes /ctx-brainstorm). The seven remaining private skills stay project-local.
+**Consequence**: Six skills move from .claude/skills/ to internal/assets/claude/skills/ and become available to all ctx users via ctx init. Cross-references between skills need updating (e.g., /_ctx-brainstorm becomes /ctx-brainstorm). The seven remaining private skills stay project-local.
 
 ---
 
@@ -549,7 +549,7 @@
 
 **Rationale**: effective_window = detect_from_jsonl(model) ?? ctxrc.context_window ?? 200_000. JSONL is ground truth (reflects actual model in use); ctxrc is fallback for first-hook-of-session or unknown models; 200k is safe last resort. Having ctxrc override JSONL would artificially restrict the check when a user forgets to update their config after switching models.
 
-**Consequences**: Most users get correct window automatically. ctxrc context_window becomes a fallback, not an override. Task exists for implementation.
+**Consequence**: Most users get correct window automatically. ctxrc context_window becomes a fallback, not an override. Task exists for implementation.
 
 ---
 
@@ -662,7 +662,7 @@ See: `specs/injection-oversize-nudge.md`.
 
 **Rationale**: Dead-end write sinks waste code surface, maintenance effort, and user attention. The recall pipeline already proved that reading directly from `~/.claude/projects/` is sufficient. Context snapshots are redundant with git history. Removing the middle layer simplifies the architecture from three stores to two, eliminates an entire CLI command tree (`ctx session`), and removes a shell hook that fired on every session end.
 
-**Consequences**: Deleted `internal/cli/session/` (15 files), removed auto-save hook, removed `--auto-save` from watch, removed pre-compact auto-save from compact, removed `/ctx-save` skill, updated ~45 documentation files. Four earlier decisions superseded (SessionEnd hook, Auto-Save Before Compact, Session Filename Format, Two-Tier Persistence Model). Users who want session history use `ctx recall list/export` instead.
+**Consequence**: Deleted `internal/cli/session/` (15 files), removed auto-save hook, removed `--auto-save` from watch, removed pre-compact auto-save from compact, removed `/ctx-save` skill, updated ~45 documentation files. Four earlier decisions superseded (SessionEnd hook, Auto-Save Before Compact, Session Filename Format, Two-Tier Persistence Model). Users who want session history use `ctx recall list/export` instead.
 
 ---
 

@@ -59,12 +59,18 @@ func StripMkDocs(content string) string {
 		}
 
 		// Admonition start: !!! type "Title"
-		if strings.HasPrefix(strings.TrimSpace(line), zensical.MkDocsAdmonitionPrefix) {
+		if strings.HasPrefix(
+			strings.TrimSpace(line), zensical.MkDocsAdmonitionPrefix,
+		) {
 			inAdmonition = true
 			title := ExtractAdmonitionTitle(line)
 			if title != "" {
-				result = append(result,
-					fmt.Sprintf(assets.TextDesc(assets.TextDescKeyWhyAdmonitionFormat), title))
+				result = append(
+					result,
+					fmt.Sprintf(
+						assets.TextDesc(assets.TextDescKeyWhyAdmonitionFormat), title,
+					),
+				)
 			}
 			continue
 		}
@@ -72,7 +78,9 @@ func StripMkDocs(content string) string {
 		// Inside admonition: dedent 4-space body.
 		if inAdmonition {
 			if strings.HasPrefix(line, zensical.MkDocsIndent) {
-				result = append(result, blockquotePrefix+line[zensical.MkDocsIndentWidth:])
+				result = append(
+					result, blockquotePrefix+line[zensical.MkDocsIndentWidth:],
+				)
 				continue
 			}
 			// End of admonition body.
@@ -122,11 +130,11 @@ func StripMkDocs(content string) string {
 // Returns:
 //   - string: The extracted title, or empty string if no valid title found
 func ExtractAdmonitionTitle(line string) string {
-	idx := strings.Index(line, `"`)
+	idx := strings.Index(line, token.DoubleQuote)
 	if idx < 0 {
 		return ""
 	}
-	end := strings.LastIndex(line, `"`)
+	end := strings.LastIndex(line, token.DoubleQuote)
 	if end <= idx {
 		return ""
 	}

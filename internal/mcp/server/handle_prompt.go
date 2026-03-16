@@ -30,7 +30,7 @@ import (
 //   - req: the MCP request
 //
 // Returns:
-//   - *Response: prompt list result
+//   - *proto.Response: prompt list result
 func (s *Server) handlePromptsList(req proto.Request) *proto.Response {
 	return s.ok(req.ID, proto.PromptListResult{Prompts: entity.PromptDefs})
 }
@@ -41,7 +41,7 @@ func (s *Server) handlePromptsList(req proto.Request) *proto.Response {
 //   - req: the MCP request containing prompt name and arguments
 //
 // Returns:
-//   - *Response: rendered prompt or error
+//   - *proto.Response: rendered prompt or error
 func (s *Server) handlePromptsGet(req proto.Request) *proto.Response {
 	var params proto.GetPromptParams
 	if err := json.Unmarshal(req.Params, &params); err != nil {
@@ -77,7 +77,7 @@ func (s *Server) handlePromptsGet(req proto.Request) *proto.Response {
 //   - id: JSON-RPC request ID
 //
 // Returns:
-//   - *Response: rendered session start prompt with context files
+//   - *proto.Response: rendered session start prompt with context files
 func (s *Server) promptSessionStart(
 	id json.RawMessage,
 ) *proto.Response {
@@ -174,10 +174,10 @@ func (s *Server) buildEntryPrompt(
 // Parameters:
 //   - id: JSON-RPC request ID
 //   - args: prompt arguments (content, context, rationale,
-//     consequences)
+//     consequence)
 //
 // Returns:
-//   - *Response: formatted decision prompt
+//   - *proto.Response: formatted decision prompt
 func (s *Server) promptAddDecision(
 	id json.RawMessage, args map[string]string,
 ) *proto.Response {
@@ -193,8 +193,8 @@ func (s *Server) promptAddDecision(
 				Value: args[cli.AttrContext]},
 			{LabelKey: assets.TextDescKeyMCPPromptLabelRationale,
 				Value: args[cli.AttrRationale]},
-			{LabelKey: assets.TextDescKeyMCPPromptLabelConsequences,
-				Value: args[cli.AttrConsequences]},
+			{LabelKey: assets.TextDescKeyMCPPromptLabelConsequence,
+				Value: args[cli.AttrConsequence]},
 		},
 	})
 }
@@ -207,7 +207,7 @@ func (s *Server) promptAddDecision(
 //     application)
 //
 // Returns:
-//   - *Response: formatted learning prompt
+//   - *proto.Response: formatted learning prompt
 func (s *Server) promptAddLearning(
 	id json.RawMessage, args map[string]string,
 ) *proto.Response {
@@ -235,7 +235,7 @@ func (s *Server) promptAddLearning(
 //   - id: JSON-RPC request ID
 //
 // Returns:
-//   - *Response: reflection prompt text
+//   - *proto.Response: reflection prompt text
 func (s *Server) promptReflect(id json.RawMessage) *proto.Response {
 	return s.ok(id, proto.GetPromptResult{
 		Description: assets.TextDesc(
@@ -261,7 +261,7 @@ func (s *Server) promptReflect(id json.RawMessage) *proto.Response {
 //   - id: JSON-RPC request ID
 //
 // Returns:
-//   - *Response: checkpoint prompt with session stats
+//   - *proto.Response: checkpoint prompt with session stats
 func (s *Server) promptCheckpoint(
 	id json.RawMessage,
 ) *proto.Response {

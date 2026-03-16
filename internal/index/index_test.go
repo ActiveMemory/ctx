@@ -278,7 +278,7 @@ func TestUpdateDecisions_PreservesContent(t *testing.T) {
 
 **Rationale**: Why we did it.
 
-**Consequences**: What happens next.
+**Consequence**: What happens next.
 
 ---
 
@@ -292,7 +292,7 @@ func TestUpdateDecisions_PreservesContent(t *testing.T) {
 
 **Rationale**: Another rationale.
 
-**Consequences**: More consequences.
+**Consequence**: More consequences.
 `
 
 	got := UpdateDecisions(content)

@@ -68,13 +68,13 @@ func ProcessStream(cmd *cobra.Command, reader io.Reader, dryRun bool) error {
 			if len(match) >= 3 {
 				openingTag := match[1]
 				update := ContextUpdate{
-					Type:         strings.ToLower(ExtractAttribute(openingTag, cli.AttrType)),
-					Content:      strings.TrimSpace(match[2]),
-					Context:      ExtractAttribute(openingTag, cli.AttrContext),
-					Lesson:       ExtractAttribute(openingTag, cli.AttrLesson),
-					Application:  ExtractAttribute(openingTag, cli.AttrApplication),
-					Rationale:    ExtractAttribute(openingTag, cli.AttrRationale),
-					Consequences: ExtractAttribute(openingTag, cli.AttrConsequences),
+					Type:        strings.ToLower(ExtractAttribute(openingTag, cli.AttrType)),
+					Content:     strings.TrimSpace(match[2]),
+					Context:     ExtractAttribute(openingTag, cli.AttrContext),
+					Lesson:      ExtractAttribute(openingTag, cli.AttrLesson),
+					Application: ExtractAttribute(openingTag, cli.AttrApplication),
+					Rationale:   ExtractAttribute(openingTag, cli.AttrRationale),
+					Consequence: ExtractAttribute(openingTag, cli.AttrConsequence),
 				}
 
 				if dryRun {

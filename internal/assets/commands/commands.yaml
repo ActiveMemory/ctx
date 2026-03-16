@@ -8,7 +8,7 @@ add:
     to the appropriate context file.
 
     Types:
-      decision    Add to DECISIONS.md (requires --context, --rationale, --consequences)
+      decision    Add to DECISIONS.md (requires --context, --rationale, --consequence)
       learning    Add to LEARNINGS.md (requires --context, --lesson, --application)
       task        Add to TASKS.md
       convention  Add to CONVENTIONS.md
@@ -22,7 +22,7 @@ add:
       ctx add decision "Use PostgreSQL" \
         --context "Need a reliable database for production" \
         --rationale "PostgreSQL offers ACID compliance and JSON support" \
-        --consequences "Team needs PostgreSQL training"
+        --consequence "Team needs PostgreSQL training"
       ctx add learning "Go embed requires files in same package" \
         --context "Tried to embed files from parent directory" \
         --lesson "go:embed only works with files in same or child directories" \
@@ -1373,10 +1373,10 @@ watch:
 
         <context-update type="decision" context="Need caching"
           rationale="Redis is fast and well-supported"
-          consequences="Team needs Redis training">Use Redis</context-update>
+          consequence="Team needs Redis training">Use Redis</context-update>
 
     Learnings require: context, lesson, application attributes.
-    Decisions require: context, rationale, consequences attributes.
+    Decisions require: context, rationale, consequence attributes.
     Updates missing required attributes will be rejected with an error.
 
     Use --log to watch a specific file instead of stdin.

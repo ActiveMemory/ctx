@@ -89,7 +89,7 @@ ctx add learning "Title" \
 ctx add decision "Title" \
   --context "What prompted this" \
   --rationale "Why this choice" \
-  --consequences "What changes"
+  --consequence "What changes"
 
 # Add a task
 ctx add task "Implement feature X"

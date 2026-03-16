@@ -113,7 +113,7 @@ func TestInsertDecisionNotInsideComment(t *testing.T) {
 		"**Status**: Accepted\n\n" +
 		"**Context**: What prompted it\n\n" +
 		"**Rationale**: Why this choice\n\n" +
-		"**Consequences**: What changes\n"
+		"**Consequence**: What changes\n"
 
 	result := AppendEntry([]byte(freshDecisions), entry, "decision", "")
 	resultStr := string(result)

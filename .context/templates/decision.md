@@ -12,7 +12,7 @@
 
 **Rationale**: [Why this choice over the alternatives? What trade-offs were made?]
 
-**Consequences**:
+**Consequence**:
 - *Positive*: [Benefits gained]
 - *Negative*: [Trade-offs accepted]
 

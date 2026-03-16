@@ -147,7 +147,7 @@ Presents a structured list grouped by type:
 1. **File-based cooldown tokens over env vars**
    - Context: Need session-scoped cooldown for ctx agent auto-loading
    - Rationale: File tokens survive across processes, simpler than IPC
-   - Consequences: Tombstone files accumulate in /tmp; need TTL cleanup
+   - Consequence: Tombstone files accumulate in /tmp; need TTL cleanup
 
 Persist all? Or select which to keep?
 ```

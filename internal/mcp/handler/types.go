@@ -8,10 +8,10 @@ package handler
 
 // EntryOpts holds optional fields for entry creation.
 type EntryOpts struct {
-	Priority     string
-	Context      string
-	Rationale    string
-	Consequences string
-	Lesson       string
-	Application  string
+	Priority    string
+	Context     string
+	Rationale   string
+	Consequence string
+	Lesson      string
+	Application string
 }

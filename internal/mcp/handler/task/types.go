@@ -4,10 +4,10 @@
 //   \    Copyright 2026-present Context contributors.
 //                 SPDX-License-Identifier: Apache-2.0
 
-package hook
+package task
 
-// Hook decision constants: JSON values returned by PreToolUse hooks.
-const (
-	// DecisionBlock is the decision value that prevents tool execution.
-	DecisionBlock = "block"
-)
+// Pending holds the index and content of a Pending top-level task.
+type Pending struct {
+	Index   int
+	Content string
+}

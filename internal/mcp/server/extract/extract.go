@@ -1,0 +1,66 @@
+//   /    ctx:                         https://ctx.ist
+// ,'`./    do you remember?
+// `.,'\
+//   \    Copyright 2026-present Context contributors.
+//                 SPDX-License-Identifier: Apache-2.0
+
+package extract
+
+import (
+	"github.com/ActiveMemory/ctx/internal/config/cli"
+	"github.com/ActiveMemory/ctx/internal/config/mcp/field"
+	mcperr "github.com/ActiveMemory/ctx/internal/err/mcp"
+	"github.com/ActiveMemory/ctx/internal/mcp/handler"
+)
+
+// EntryArgs extracts required type/content from MCP args.
+//
+// Parameters:
+//   - args: MCP tool arguments
+//
+// Returns:
+//   - string: extracted entry type
+//   - string: extracted content string
+//   - error: non-nil if type or content is missing
+func EntryArgs(
+	args map[string]interface{},
+) (string, string, error) {
+	entryType, _ := args[cli.AttrType].(string)
+	content, _ := args[field.Content].(string)
+
+	if entryType == "" || content == "" {
+		return "", "", mcperr.TypeContentRequired()
+	}
+
+	return entryType, content, nil
+}
+
+// Opts builds EntryOpts from MCP tool arguments.
+//
+// Parameters:
+//   - args: MCP tool arguments with optional entry fields
+//
+// Returns:
+//   - handler.EntryOpts: populated options struct
+func Opts(args map[string]interface{}) handler.EntryOpts {
+	opts := handler.EntryOpts{}
+	if v, ok := args[field.Priority].(string); ok {
+		opts.Priority = v
+	}
+	if v, ok := args[cli.AttrContext].(string); ok {
+		opts.Context = v
+	}
+	if v, ok := args[cli.AttrRationale].(string); ok {
+		opts.Rationale = v
+	}
+	if v, ok := args[cli.AttrConsequence].(string); ok {
+		opts.Consequence = v
+	}
+	if v, ok := args[cli.AttrLesson].(string); ok {
+		opts.Lesson = v
+	}
+	if v, ok := args[cli.AttrApplication].(string); ok {
+		opts.Application = v
+	}
+	return opts
+}

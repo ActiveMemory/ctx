@@ -703,7 +703,7 @@
 
 **Consolidated from**: 4 entries (2026-01-27 to 2026-02-14)
 
-- `ctx add learning` requires `--context`, `--lesson`, `--application` flags. `ctx add decision` requires `--context`, `--rationale`, `--consequences`. A bare string only sets the title and the command will fail without required flags.
+- `ctx add learning` requires `--context`, `--lesson`, `--application` flags. `ctx add decision` requires `--context`, `--rationale`, `--consequence`. A bare string only sets the title and the command will fail without required flags.
 - Structured entries with Context/Lesson/Application are more useful than one-liners. Agents are guided via AGENT_PLAYBOOK.md.
 - Always complete decision record sections — placeholder text like "[Add context here]" is a code smell. Decisions without rationale lose their value over time.
 - Slash commands using `!` bash syntax require matching permissions in settings.local.json. When adding new /ctx-* commands, ensure ctx init pre-seeds the required `Bash(ctx <subcommand>:*)` permissions.

@@ -23,7 +23,7 @@ rejected.
 
 ```text
 /ctx-reflect               # surface items worth persisting
-/ctx-add-decision "Title"  # record with context/rationale/consequences
+/ctx-add-decision "Title"  # record with context/rationale/consequence
 /ctx-add-learning "Title"  # record with context/lesson/application
 ```
 
@@ -88,7 +88,7 @@ Agent: "Recorded in DECISIONS.md:
   - Context: Hook subprocesses cannot persist env vars to parent shell
   - Rationale: File tokens survive across processes. Simpler than
     IPC. Cleanup is automatic via TTL.
-  - Consequences: Tombstone files accumulate in /tmp. Cannot share
+  - Consequence: Tombstone files accumulate in /tmp. Cannot share
     state across machines."
 ```
 
@@ -113,7 +113,7 @@ and against [alternatives], to achieve [benefit], accepting that [trade-off].*"
     ctx add decision "Use file-based cooldown tokens instead of env vars" \
       --context "Hook subprocesses cannot persist env vars to parent shell" \
       --rationale "File tokens survive across processes. Simpler than IPC. Cleanup is automatic via TTL." \
-      --consequences "Tombstone files accumulate in /tmp. Cannot share state across machines."
+      --consequence "Tombstone files accumulate in /tmp. Cannot share state across machines."
     ```
 
 ### Step 3: Record Learnings
@@ -235,7 +235,7 @@ I'd suggest persisting:
 - **Learning**: Hook subprocesses cannot propagate env vars
   `ctx add learning "..." --context "..." --lesson "..." --application "..."`
 - **Decision**: File-based cooldown tokens over env vars
-  `ctx add decision "..." --context "..." --rationale "..." --consequences "..."`
+  `ctx add decision "..." --context "..." --rationale "..." --consequence "..."`
 
 Want me to persist any of these?
 ```
@@ -308,7 +308,7 @@ rather than waiting for explicit instructions.
 ctx add decision "Use PostgreSQL over SQLite" \
   --context "Need concurrent multi-user access" \
   --rationale "SQLite locks on writes; Postgres handles concurrency" \
-  --consequences "Requires a database server; team needs Postgres training"
+  --consequence "Requires a database server; team needs Postgres training"
 
 # Learning: record the gotcha
 ctx add learning "SQL migrations must be idempotent" \
@@ -336,7 +336,7 @@ Agent: "Recorded. Added to DECISIONS.md:
   - Decision: Use PostgreSQL over SQLite
   - Context: Need concurrent multi-user access
   - Rationale: SQLite locks on writes; Postgres handles concurrency
-  - Consequences: Requires a database server; team needs Postgres
+  - Consequence: Requires a database server; team needs Postgres
     training"
 
 You: "Also that migration thing. The deploy blew up when the

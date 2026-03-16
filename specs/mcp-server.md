@@ -581,7 +581,7 @@ The `/ctx-skill-audit` skill also checks for this.
 | Prompt               | Arguments           | Returns                                                                      |
 |----------------------|---------------------|------------------------------------------------------------------------------|
 | `ctx-session-start`  | `budget` (optional) | Context packet + playbook summary + current tasks + "what to work on next"   |
-| `ctx-add-decision`   | `title`             | Structured template: context, rationale, consequences: with instructions     |
+| `ctx-add-decision`   | `title`             | Structured template: context, rationale, consequence: with instructions      |
 | `ctx-add-learning`   | `title`             | Structured template: context, lesson, application: with instructions         |
 | `ctx-reflect`        | none                | "What did you learn? What decisions were made? What's left?": guides capture |
 | `ctx-checkpoint`     | none                | "Summarize progress, persist to TASKS.md, note blockers"                     |
@@ -904,7 +904,7 @@ even Layer 0 alone prevents garbage writes.
 
 **Structural (Layer 0, always enforced):**
 
-* `ctx_add(decision)` requires: content, context, rationale, consequences
+* `ctx_add(decision)` requires: content, context, rationale, consequence
 * `ctx_add(learning)` requires: content, context, lesson, application
 * `ctx_add(task)` requires: content
 * `ctx_add(convention)` requires: content

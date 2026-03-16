@@ -196,7 +196,7 @@ get re-debated.
 
 **Rationale**: Why was this the right choice?
 
-**Consequences**: What are the implications?
+**Consequence**: What are the implications?
 
 **Alternatives Considered**:
 * Alternative A: Why rejected
@@ -217,7 +217,7 @@ get re-debated.
 **Rationale**: Catches more bugs at compile time. Team has experience
 with strict mode. Upfront cost pays off in reduced runtime errors.
 
-**Consequences**: More verbose type annotations required. Some
+**Consequence**: More verbose type annotations required. Some
 third-party libraries need type assertions.
 
 **Alternatives Considered**:
@@ -436,7 +436,7 @@ and update context.
 <context-update type="decision"
   context="Need a caching layer"
   rationale="Redis is fast and team has experience"
-  consequences="Must provision Redis infrastructure"
+  consequence="Must provision Redis infrastructure"
 >Use Redis for caching</context-update>
 ```
 

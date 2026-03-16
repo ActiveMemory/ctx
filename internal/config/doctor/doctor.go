@@ -22,7 +22,8 @@ const (
 	CheckPluginEnabledGlobal = "plugin_enabled_global"
 	// CheckPluginEnabledLocal identifies the local plugin enablement check.
 	CheckPluginEnabledLocal = "plugin_enabled_local"
-	// CheckPluginEnabled identifies the plugin enablement check (when neither scope is active).
+	// CheckPluginEnabled identifies the plugin enablement check
+	// (when neither scope is active).
 	CheckPluginEnabled = "plugin_enabled"
 	// CheckEventLogging identifies the event logging check.
 	CheckEventLogging = "event_logging"

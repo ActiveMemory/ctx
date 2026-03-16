@@ -55,7 +55,7 @@ preserved verbatim.
 
 **Rationale**: Fenced code blocks were tried first (survive blank lines, prevent markdown interpretation) but inner content conflicts remained. Switching to pre/code with HTML escaping ("defencify") eliminated all conflicts. pymdownx.highlight required `use_pygments=false`. CSS `max-height + overflow-y: auto` replaced `<details>` (which is a Type 6 HTML block incompatible with fenced code). AI normalization found zero issues across 290 files — code pipeline handles everything at build time.
 
-**Consequences**: Journal site ships `docs/stylesheets/extra.css`. normalize.go is dramatically simpler. Title truncation at 75 chars (`RecallMaxTitleLen` in `config/limit.go`) applied in three places. AI normalization reserved for specific files only.
+**Consequence**: Journal site ships `docs/stylesheets/extra.css`. normalize.go is dramatically simpler. Title truncation at 75 chars (`RecallMaxTitleLen` in `config/limit.go`) applied in three places. AI normalization reserved for specific files only.
 
 ---
 
@@ -71,7 +71,7 @@ preserved verbatim.
 
 **Rationale**: Go subcommands eliminate jq dependency and enable `go test`. Single source prevents duplicate skill entries. Symlinks break on Windows without Developer Mode. Permission doc mismatches confuse users when `ctx init` seeds more than docs recommend.
 
-**Consequences**: `ctx init` no longer creates `.claude/hooks/` or `.claude/skills/`. Existing projects need plugin installation. `.claude/skills/` holds only dev-only skills. Future skill additions must update both `config/file.go` and the recipe.
+**Consequence**: `ctx init` no longer creates `.claude/hooks/` or `.claude/skills/`. Existing projects need plugin installation. `.claude/skills/` holds only dev-only skills. Future skill additions must update both `config/file.go` and the recipe.
 
 ---
 
@@ -85,7 +85,7 @@ preserved verbatim.
 
 **Rationale**: All three add complexity for edge cases that workflow naturally avoids. Pad is key-gated already. Journal enrichment belongs on main after merge. Only notify is a real gap, and it deserves its own targeted fix.
 
-**Consequences**: Worktree limitations documented in skill doc, parallel-worktrees recipe, scratchpad reference, and webhook-notifications recipe. Separate task filed for enabling notify in worktrees.
+**Consequence**: Worktree limitations documented in skill doc, parallel-worktrees recipe, scratchpad reference, and webhook-notifications recipe. Separate task filed for enabling notify in worktrees.
 
 ---
 
@@ -99,7 +99,7 @@ preserved verbatim.
 
 **Rationale**: RSS serves as a replication protocol, zero-auth public API, and automation glue — targeting power users and future machine consumers, not casual readers
 
-**Consequences**: Will implement as static Atom 1.0 feed generated at build time; spec captured at specs/rss-feed.md
+**Consequence**: Will implement as static Atom 1.0 feed generated at build time; spec captured at specs/rss-feed.md
 
 ---
 
@@ -113,7 +113,7 @@ preserved verbatim.
 
 **Rationale**: DETAILED_DESIGN.md is a deep per-module reference that can grow large. Loading it at session start would waste token budget. Agents consult specific sections on-demand when working on a module.
 
-**Consequences**: ARCHITECTURE.md remains the session-start overview (~4000 tokens). DETAILED_DESIGN.md is never auto-loaded — agents must explicitly Read relevant sections. Two-tier documentation: succinct map vs. deep reference.
+**Consequence**: ARCHITECTURE.md remains the session-start overview (~4000 tokens). DETAILED_DESIGN.md is never auto-loaded — agents must explicitly Read relevant sections. Two-tier documentation: succinct map vs. deep reference.
 
 ---
 
@@ -127,7 +127,7 @@ preserved verbatim.
 
 **Rationale**: ccusage and cmonitor already solve the dashboard problem; ctx's core value is persistent context, not usage analytics. Token metadata in journal entries serves session archaeology without scope creep.
 
-**Consequences**: Token/model fields are auto-populated at export time; enrichment skill is documented not to overwrite them. Users wanting dashboards are pointed to ccusage.
+**Consequence**: Token/model fields are auto-populated at export time; enrichment skill is documented not to overwrite them. Users wanting dashboards are pointed to ccusage.
 
 ---
 
@@ -143,7 +143,7 @@ preserved verbatim.
 
 **Rationale**: Claude Code is primary audience; parser updates follow its releases. Tool-agnostic `SessionParser` interface enables future parsers. Default export already preserved frontmatter — the real fix was `--force` behavior. `specs/recall-export-safety.md` replaced 4 narrow tasks with 7 comprehensive spec-aligned tasks.
 
-**Consequences**: Features assume Claude Code conventions. Parser registry auto-detects format. Export has safe defaults with `--regenerate` opt-in. Aider/Cursor parsers are community-contributed, best-effort.
+**Consequence**: Features assume Claude Code conventions. Parser registry auto-detects format. Export has safe defaults with `--regenerate` opt-in. Aider/Cursor parsers are community-contributed, best-effort.
 
 ---
 
@@ -157,7 +157,7 @@ preserved verbatim.
 
 **Rationale**: Removed dev_addr from committed config (zensical defaults to localhost:8000). Added make site-serve-lan and make journal-serve-lan targets that pass -a 0.0.0.0:8000 via CLI flag. Avoids modifying config files at runtime and keeps the opt-in explicit
 
-**Consequences**: make site-serve and make journal-serve are safe by default. LAN access requires deliberate make *-lan invocation. journal-serve-lan calls zensical directly (bypasses ctx journal site --serve) because the Go code does not pass through extra flags
+**Consequence**: make site-serve and make journal-serve are safe by default. LAN access requires deliberate make *-lan invocation. journal-serve-lan calls zensical directly (bypasses ctx journal site --serve) because the Go code does not pass through extra flags
 
 ---
 
@@ -171,7 +171,7 @@ preserved verbatim.
 
 **Rationale**: Phase 1 (smart retrieval) has the highest impact with no file format changes. Scoring entries by recency and task relevance, with tier-based budget allocation, solves the scaling problem at the presentation layer
 
-**Consequences**: ctx agent output becomes richer (learnings, decision bodies) and budget-aware. Packet struct gains new fields (additive, backward compatible). New files: score.go, budget.go in internal/cli/agent/
+**Consequence**: ctx agent output becomes richer (learnings, decision bodies) and budget-aware. Packet struct gains new fields (additive, backward compatible). New files: score.go, budget.go in internal/cli/agent/
 
 ---
 
@@ -185,7 +185,7 @@ preserved verbatim.
 
 **Rationale**: AES-256-GCM is self-authenticating — wrong key always fails cleanly. This makes try-decrypt a reliable discriminator with zero ambiguity. Fall back to plaintext on failure, with a UTF-8 validity warning to catch encrypted files mistakenly parsed as text.
 
-**Consequences**: No --format flag needed. Users can mix encrypted and plaintext files in a single merge call. Foreign encrypted files with wrong key fall back gracefully instead of aborting.
+**Consequence**: No --format flag needed. Users can mix encrypted and plaintext files in a single merge call. Foreign encrypted files with wrong key fall back gracefully instead of aborting.
 
 ---
 
@@ -199,7 +199,7 @@ preserved verbatim.
 
 **Rationale**: If a user already declared context_dir pointing outside the project, requiring --allow-outside-cwd on every command is redundant ceremony. .contextrc is configure-once-forget-about-it — the boundary flag should live there too.
 
-**Consequences**: New allow_outside_cwd bool field in CtxRC. PersistentPreRun checks both the CLI flag and .contextrc. Shell aliases (Option C) become optional rather than necessary.
+**Consequence**: New allow_outside_cwd bool field in CtxRC. PersistentPreRun checks both the CLI flag and .contextrc. Shell aliases (Option C) become optional rather than necessary.
 
 ---
 
@@ -213,7 +213,7 @@ preserved verbatim.
 
 **Rationale**: The recipe documents hook patterns for anyone writing hooks — it is not scoped to ctx-only patterns. Removing them would lose legitimate reference material. But framing them as 'not yet implemented' violated the ctx manifesto: not written means nonexistent, and there were no backing tasks. The patterns stay as equal entries in the catalog without implementation promises.
 
-**Consequences**: Patterns 6-8 are presented as first-class patterns alongside 1-5, without a 'not yet implemented' section. No tasks created. If a concrete need arises for any of these patterns in ctx hooks, a task gets created at that point — not before.
+**Consequence**: Patterns 6-8 are presented as first-class patterns alongside 1-5, without a 'not yet implemented' section. No tasks created. If a concrete need arises for any of these patterns in ctx hooks, a task gets created at that point — not before.
 
 ---
 
@@ -238,7 +238,7 @@ preserved verbatim.
 
 **Rationale**: Implementation sessions work from TASKS.md. If the spec isn't referenced there, the session builds from task summaries alone — incomplete context leads to design drift. Redundant references catch agents that skip ahead.
 
-**Consequences**: All non-trivial features now follow: write specs/feature.md -> task out in TASKS.md with Phase header referencing the spec -> first task includes bold read-the-spec instruction. AGENT_PLAYBOOK.md updated with 'Planning Non-Trivial Work' section.
+**Consequence**: All non-trivial features now follow: write specs/feature.md -> task out in TASKS.md with Phase header referencing the spec -> first task includes bold read-the-spec instruction. AGENT_PLAYBOOK.md updated with 'Planning Non-Trivial Work' section.
 
 ---
 
@@ -252,6 +252,6 @@ preserved verbatim.
 
 **Rationale**: Dead-end write sinks waste code surface, maintenance effort, and user attention. The recall pipeline already proved that reading directly from `~/.claude/projects/` is sufficient. Context snapshots are redundant with git history. Removing the middle layer simplifies the architecture from three stores to two, eliminates an entire CLI command tree (`ctx session`), and removes a shell hook that fired on every session end.
 
-**Consequences**: Deleted `internal/cli/session/` (15 files), removed auto-save hook, removed `--auto-save` from watch, removed pre-compact auto-save from compact, removed `/ctx-save` skill, updated ~45 documentation files. Four earlier decisions superseded (SessionEnd hook, Auto-Save Before Compact, Session Filename Format, Two-Tier Persistence Model). Users who want session history use `ctx recall list/export` instead.
+**Consequence**: Deleted `internal/cli/session/` (15 files), removed auto-save hook, removed `--auto-save` from watch, removed pre-compact auto-save from compact, removed `/ctx-save` skill, updated ~45 documentation files. Four earlier decisions superseded (SessionEnd hook, Auto-Save Before Compact, Session Filename Format, Two-Tier Persistence Model). Users who want session history use `ctx recall list/export` instead.
 
 ---

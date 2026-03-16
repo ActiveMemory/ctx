@@ -35,7 +35,7 @@ func entryAttrProps(contextKey string) map[string]Property {
 			Description: assets.TextDesc(
 				assets.TextDescKeyMCPToolPropRationale),
 		},
-		cli.AttrConsequences: {
+		cli.AttrConsequence: {
 			Type: schema.String,
 			Description: assets.TextDesc(
 				assets.TextDescKeyMCPToolPropConseq),

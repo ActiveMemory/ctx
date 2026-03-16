@@ -173,7 +173,7 @@ func ExtractTimestamp(jsonLine string) (time.Time, bool) {
 		return time.Time{}, false
 	}
 	start := idx + len(key)
-	end := strings.Index(jsonLine[start:], `"`)
+	end := strings.Index(jsonLine[start:], token.DoubleQuote)
 	if end < 0 {
 		return time.Time{}, false
 	}

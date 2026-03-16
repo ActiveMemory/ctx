@@ -200,10 +200,10 @@ Add an actionable task with optional priority and phase section.
 ### `/ctx-add-decision`
 
 Record an architectural decision with context, rationale, and
-consequences. Supports Y-statement (lightweight) and full ADR formats.
+consequence. Supports Y-statement (lightweight) and full ADR formats.
 
 **Wraps**: `ctx add decision "title" --context "..." --rationale "..."
---consequences "..."`
+--consequence "..."`
 
 **See also**:
 [Persisting Decisions, Learnings, and Conventions](../recipes/knowledge-capture.md)

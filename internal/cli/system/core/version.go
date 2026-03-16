@@ -83,9 +83,12 @@ func CheckKeyAge(cmd *cobra.Command, sessionID string) {
 
 	keyRef := notify.NewTemplateRef(hook.CheckVersion, hook.VariantKeyRotation,
 		map[string]any{tpl.VarKeyAgeDays: ageDays})
-	keyNotifyMsg := fmt.Sprintf(assets.TextDesc(assets.TextDescKeyRelayPrefixFormat),
+	keyNotifyMsg := fmt.Sprintf(
+		assets.TextDesc(assets.TextDescKeyRelayPrefixFormat),
 		hook.CheckVersion,
-		fmt.Sprintf(assets.TextDesc(assets.TextDescKeyCheckVersionKeyRelayFormat), ageDays),
+		fmt.Sprintf(
+			assets.TextDesc(assets.TextDescKeyCheckVersionKeyRelayFormat), ageDays,
+		),
 	)
 	NudgeAndRelay(keyNotifyMsg, sessionID, keyRef)
 }

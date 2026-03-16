@@ -27,7 +27,7 @@ get re-debated.
 
 **Rationale**: Why was this the right choice?
 
-**Consequences**: What are the implications?
+**Consequence**: What are the implications?
 
 **Alternatives Considered**:
 - Alternative A: Why rejected
@@ -47,7 +47,7 @@ get re-debated.
 **Rationale**: Catches more bugs at compile time. Team has experience with 
 strict mode. Upfront cost pays off in reduced runtime errors.
 
-**Consequences**: More verbose type annotations required. Some third-party 
+**Consequence**: More verbose type annotations required. Some third-party 
 libraries need type assertions.
 
 **Alternatives Considered**:
@@ -382,7 +382,7 @@ Load context files in this order (most critical first):
 
 1. Check DECISIONS.md for existing related decisions
 2. If new decision needed, add with format:
-   - Date, Status, Context, Decision, Rationale, Consequences
+   - Date, Status, Context, Decision, Rationale, Consequence
 3. Reference the decision in commit message
 
 ## How to Avoid Hallucinating Memory

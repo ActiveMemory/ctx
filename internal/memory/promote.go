@@ -36,7 +36,7 @@ func Promote(e Entry, classification Classification) error {
 	case entry.Decision:
 		params.Context = assets.TextDesc(assets.TextDescKeyMemoryImportSource)
 		params.Rationale = extractBody(e.Text)
-		params.Consequences = assets.TextDesc(assets.TextDescKeyMemoryImportReview)
+		params.Consequence = assets.TextDesc(assets.TextDescKeyMemoryImportReview)
 
 	case entry.Learning:
 		params.Context = assets.TextDesc(assets.TextDescKeyMemoryImportSource)

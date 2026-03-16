@@ -269,7 +269,7 @@ These are invoked in Claude Code with `/skill-name`.
 |-----------------------|----------------------------------------------------|
 | `/ctx-add-task`       | Add a task to TASKS.md                             |
 | `/ctx-add-learning`   | Add a learning to LEARNINGS.md                     |
-| `/ctx-add-decision`   | Add a decision with context/rationale/consequences |
+| `/ctx-add-decision`   | Add a decision with context/rationale/consequence  |
 | `/ctx-add-convention` | Add a coding convention to CONVENTIONS.md          |
 | `/ctx-archive`        | Archive completed tasks                            |
 
@@ -665,7 +665,7 @@ The `ctx watch` command parses update commands from AI output. Use this format:
 | Type         | Target File    | Required Attributes                           |
 |--------------|----------------|-----------------------------------------------|
 | `task`       | TASKS.md       | None                                          |
-| `decision`   | DECISIONS.md   | `context`, `rationale`, `consequences`        |
+| `decision`   | DECISIONS.md   | `context`, `rationale`, `consequence`         |
 | `learning`   | LEARNINGS.md   | `context`, `lesson`, `application`            |
 | `convention` | CONVENTIONS.md | None                                          |
 | `complete`   | TASKS.md       | None                                          |
@@ -698,12 +698,12 @@ Learnings and decisions support structured attributes for better documentation:
 <context-update type="decision"
   context="Need a caching layer for API responses"
   rationale="Redis is fast, well-supported, and team has experience"
-  consequences="Must provision Redis infrastructure; team training on Redis patterns"
+  consequence="Must provision Redis infrastructure; team training on Redis patterns"
 >Use Redis for caching</context-update>
 ```
 
 Learnings require: `context`, `lesson`, `application` attributes.
-Decisions require: `context`, `rationale`, `consequences` attributes.
+Decisions require: `context`, `rationale`, `consequence` attributes.
 Updates missing required attributes are rejected with an error.
 
 ## Further Reading

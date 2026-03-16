@@ -43,7 +43,7 @@ For significant decisions, gather:
 2. **Alternatives**: What options were considered? (At least 2)
 3. **Decision**: What was chosen?
 4. **Rationale**: Why this choice over the alternatives?
-5. **Consequences**: What changes as a result? (Both positive and negative)
+5. **Consequence**: What changes as a result? (Both positive and negative)
 
 ## Gathering Information
 
@@ -52,7 +52,7 @@ If the user provides only a title, ask:
 1. "What prompted this decision?" → Context
 2. "What alternatives did you consider?" → Options
 3. "Why this choice over the alternatives?" → Rationale
-4. "What are the consequences (good and bad)?" → Consequences
+4. "What are the consequences (good and bad)?" → Consequence
 
 For quick decisions, offer the Y-statement format instead.
 
@@ -73,7 +73,7 @@ When decisions are **related**:
 ctx add decision "Use Cobra for CLI framework" \
   --context "Need CLI framework for Go project" \
   --rationale "Better subcommand support than urfave/cli, team familiarity" \
-  --consequences "More boilerplate, but clearer command structure"
+  --consequence "More boilerplate, but clearer command structure"
 ```
 
 **Full format with alternatives:**
@@ -81,7 +81,7 @@ ctx add decision "Use Cobra for CLI framework" \
 ctx add decision "Use PostgreSQL for primary database" \
   --context "Need ACID-compliant database for e-commerce transactions" \
   --rationale "PostgreSQL offers JSONB, full-text search, and team has experience. Chose over MySQL (weaker JSON) and MongoDB (no multi-doc ACID)." \
-  --consequences "Single database handles transactions and search. Team needs PostgreSQL-specific training."
+  --consequence "Single database handles transactions and search. Team needs PostgreSQL-specific training."
 ```
 
 ## Quality Checklist
@@ -90,4 +90,4 @@ Before recording, verify:
 - [ ] Context explains the problem clearly
 - [ ] At least one alternative was considered
 - [ ] Rationale addresses why alternatives were rejected
-- [ ] Consequences include both benefits and trade-offs
+- [ ] Consequence includes both benefits and trade-offs

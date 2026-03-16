@@ -30,7 +30,7 @@ For significant decisions:
 
 **Rationale**: Why this choice over the alternatives?
 
-**Consequences**: What are the implications? (Include both positive and negative)
+**Consequence**: What are the implications? (Include both positive and negative)
 
 **Related**: See also [other decision] | Supersedes [old decision]
 

@@ -69,7 +69,7 @@ func Run(cmd *cobra.Command, stdin *os.File) error {
 
 	if reason != "" {
 		resp := core.BlockResponse{
-			Decision: hook.HookDecisionBlock,
+			Decision: hook.DecisionBlock,
 			Reason: reason + token.NewlineLF + token.NewlineLF +
 				assets.TextDesc(assets.TextDescKeyBlockConstitutionSuffix),
 		}

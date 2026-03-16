@@ -236,7 +236,7 @@ ctx add decision "Use PostgreSQL"
 ctx add decision "Use PostgreSQL" \
   --context "Need a reliable database for user data" \
   --rationale "ACID compliance, team familiarity" \
-  --consequences "Need connection pooling, team training"
+  --consequence "Need connection pooling, team training"
 ```
 
 The difference is **not** cosmetic:

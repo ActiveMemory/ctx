@@ -408,7 +408,7 @@ Consult specific sections when working on a module.
 
 **Purpose**: Append entries (decisions, tasks, learnings, conventions) to context files.
 
-**Key types**: `EntryParams` (type, content, Context, Rationale, Consequences, Lesson, Application)
+**Key types**: `EntryParams` (type, content, Context, Rationale, Consequence, Lesson, Application)
 
 **Exported API**:
 - `Cmd() *cobra.Command` — returns "ctx add" command

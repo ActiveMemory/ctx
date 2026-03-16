@@ -70,7 +70,7 @@ func Run(cmd *cobra.Command, stdin *os.File) error {
 
 	if reason != "" {
 		resp := core.BlockResponse{
-			Decision: hook.HookDecisionBlock,
+			Decision: hook.DecisionBlock,
 			Reason:   reason,
 		}
 		data, _ := json.Marshal(resp)

@@ -20,6 +20,8 @@ const (
 	Separator = "---"
 	// Ellipsis is a Markdown ellipsis.
 	Ellipsis = "..."
+	// DoubleQuote is the ASCII double-quote character.
+	DoubleQuote = `"`
 )
 
 // TopicSeparators are the delimiters between a date and topic in session

@@ -100,8 +100,8 @@ mcp.tool-drift-desc:
   short: 'Detect stale or invalid context: dead paths, missing files, staleness'
 mcp.tool-prop-application:
   short: How to apply this lesson (required for learnings)
-mcp.tool-prop-consequences:
-  short: Consequences (required for decisions)
+mcp.tool-prop-consequence:
+  short: Consequence (required for decisions)
 mcp.tool-prop-content:
   short: Title or main content of the entry
 mcp.tool-prop-context:
@@ -158,7 +158,7 @@ mcp.no-tasks:
 mcp.pending-updates-format:
   short: "%d pending updates queued.\n"
 mcp.prompt-add-decision-desc:
-  short: Record an architectural decision with context, rationale, and consequences
+  short: Record an architectural decision with context, rationale, and consequence
 mcp.prompt-add-decision-field-format:
   short: "- **%s**: %s\n"
 mcp.prompt-label-decision:
@@ -167,8 +167,8 @@ mcp.prompt-label-context:
   short: Context
 mcp.prompt-label-rationale:
   short: Rationale
-mcp.prompt-label-consequences:
-  short: Consequences
+mcp.prompt-label-consequence:
+  short: Consequence
 mcp.prompt-label-learning:
   short: Learning
 mcp.prompt-label-lesson:
@@ -191,7 +191,7 @@ mcp.prompt-add-learning-header:
   short: 'Record this learning using ctx_add:'
 mcp.prompt-add-learning-result-desc:
   short: Record a lesson learned
-mcp.prompt-arg-decision-consequences:
+mcp.prompt-arg-decision-consequence:
   short: Impact of the decision
 mcp.prompt-arg-decision-ctx:
   short: Background context for the decision
