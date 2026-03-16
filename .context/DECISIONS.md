@@ -3,6 +3,7 @@
 <!-- INDEX:START -->
 | Date | Decision |
 |------|--------|
+| 2026-03-15 | Pure-logic CompactContext with no I/O — callers own file writes and reporting |
 | 2026-03-15 | TextDescKey exhaustive test verifies all 879 constants resolve to non-empty YAML values |
 | 2026-03-15 | Split text.yaml into 6 domain files loaded via loadYAMLDir |
 | 2026-03-14 | Error package taxonomy: 22 domain files replace monolithic errors.go |
@@ -47,6 +48,20 @@
 | 2026-02-26 | Security and permissions (consolidated) |
 | 2026-02-27 | Webhook and notification design (consolidated) |
 <!-- INDEX:END -->
+
+## [2026-03-15-230640] Pure-logic CompactContext with no I/O — callers own file writes and reporting
+
+**Status**: Accepted
+
+**Context**: MCP server and CLI compact command both implemented task compaction independently, with the MCP handler using a local WriteContextFile wrapper
+
+**Decision**: Pure-logic CompactContext with no I/O — callers own file writes and reporting
+
+**Rationale**: Separating pure logic from I/O lets both MCP (JSON-RPC responses) and CLI (cobra cmd.Println) callers control output and file writes. Eliminates duplication and the unnecessary mcp/server/fs package
+
+**Consequences**: tidy.CompactContext returns a CompactResult struct; callers iterate FileUpdates and write them. Archive logic stays in callers since MCP and CLI have different archive policies
+
+---
 
 ## [2026-03-15-101336] TextDescKey exhaustive test verifies all 879 constants resolve to non-empty YAML values
 

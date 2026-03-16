@@ -3,6 +3,7 @@
 <!-- INDEX:START -->
 | Date | Learning |
 |------|--------|
+| 2026-03-15 | replace_all on short tokens like core. mangles aliased imports |
 | 2026-03-15 | Delete legacy code instead of maintaining it — MigrateKeyFile had 5 callers and test coverage but zero users |
 | 2026-03-15 | Contributor PRs need post-merge follow-up commits for convention alignment |
 | 2026-03-15 | Grep for callers must cover entire working tree before deleting functions |
@@ -73,6 +74,16 @@
 | 2026-02-19 | Feature can be code-complete but invisible to users |
 | 2026-01-28 | IDE is already the UI |
 <!-- INDEX:END -->
+
+---
+
+## [2026-03-15-230643] replace_all on short tokens like core. mangles aliased imports
+
+**Context**: Used Edit tool replace_all to change core. to tidy. across handle_tool.go
+
+**Lesson**: Short replacement tokens match inside longer identifiers — remindcore. became remindtidy. silently
+
+**Application**: When doing bulk renames, prefer targeted replacements or grep for collateral damage immediately after. Avoid replace_all on tokens shorter than the full identifier
 
 ---
 
