@@ -51,7 +51,7 @@ const (
 	ErrCodeInternal   = -32603
 )
 
-// MCP protocol version.
+// ProtocolVersion is the MCP protocol version.
 const ProtocolVersion = "2024-11-05"
 
 // --- Initialization types ---

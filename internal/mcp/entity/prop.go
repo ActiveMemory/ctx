@@ -4,28 +4,43 @@
 //   \    Copyright 2026-present Context contributors.
 //                 SPDX-License-Identifier: Apache-2.0
 
-package proto
+package entity
 
 import (
 	"github.com/ActiveMemory/ctx/internal/assets"
 	"github.com/ActiveMemory/ctx/internal/config/cli"
 	"github.com/ActiveMemory/ctx/internal/config/mcp/schema"
+	"github.com/ActiveMemory/ctx/internal/mcp/proto"
 )
 
-// mergeProps copies all entries from src into dst, returning dst.
-func mergeProps(dst, src map[string]Property) map[string]Property {
+// MergeProps copies all entries from src into dst, returning dst.
+//
+// Parameters:
+//   - dst: target property map
+//   - src: source property map to merge from
+//
+// Returns:
+//   - map[string]proto.Property: the dst map with src entries added
+func MergeProps(dst, src map[string]proto.Property) map[string]proto.Property {
 	for k, v := range src {
 		dst[k] = v
 	}
 	return dst
 }
 
-// entryAttrProps returns the five entry-attribute properties shared by
+// EntryAttrProps returns the five entry-attribute properties shared by
 // tools that accept structured context entries (add, watch-update).
 // contextKey selects the TextDescKey for the "context" field since
 // each tool describes it differently.
-func entryAttrProps(contextKey string) map[string]Property {
-	return map[string]Property{
+//
+// Parameters:
+//   - contextKey: TextDescKey selecting the description for the context field
+//
+// Returns:
+//   - map[string]proto.Property: property map with context, rationale,
+//     consequence, lesson, and application fields
+func EntryAttrProps(contextKey string) map[string]proto.Property {
+	return map[string]proto.Property{
 		cli.AttrContext: {
 			Type:        schema.String,
 			Description: assets.TextDesc(contextKey),

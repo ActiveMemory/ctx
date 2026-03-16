@@ -4,7 +4,7 @@
 //   \    Copyright 2026-present Context contributors.
 //                 SPDX-License-Identifier: Apache-2.0
 
-package proto
+package entity
 
 import (
 	"github.com/ActiveMemory/ctx/internal/assets"
@@ -12,24 +12,25 @@ import (
 	"github.com/ActiveMemory/ctx/internal/config/mcp/field"
 	"github.com/ActiveMemory/ctx/internal/config/mcp/schema"
 	"github.com/ActiveMemory/ctx/internal/config/mcp/tool"
+	"github.com/ActiveMemory/ctx/internal/mcp/proto"
 )
 
 // ToolDefs defines all available MCP tools.
-var ToolDefs = []Tool{
+var ToolDefs = []proto.Tool{
 	{
 		Name: tool.Status,
 		Description: assets.TextDesc(
 			assets.TextDescKeyMCPToolStatusDesc),
-		InputSchema: InputSchema{Type: schema.Object},
-		Annotations: &ToolAnnotations{ReadOnlyHint: true},
+		InputSchema: proto.InputSchema{Type: schema.Object},
+		Annotations: &proto.ToolAnnotations{ReadOnlyHint: true},
 	},
 	{
 		Name: tool.Add,
 		Description: assets.TextDesc(
 			assets.TextDescKeyMCPToolAddDesc),
-		InputSchema: InputSchema{
+		InputSchema: proto.InputSchema{
 			Type: schema.Object,
-			Properties: mergeProps(map[string]Property{
+			Properties: MergeProps(map[string]proto.Property{
 				cli.AttrType: {
 					Type: schema.String,
 					Description: assets.TextDesc(
@@ -50,19 +51,19 @@ var ToolDefs = []Tool{
 						assets.TextDescKeyMCPToolPropPriority),
 					Enum: []string{"high", "medium", "low"},
 				},
-			}, entryAttrProps(
+			}, EntryAttrProps(
 				assets.TextDescKeyMCPToolPropContext)),
 			Required: []string{cli.AttrType, field.Content},
 		},
-		Annotations: &ToolAnnotations{},
+		Annotations: &proto.ToolAnnotations{},
 	},
 	{
 		Name: tool.Complete,
 		Description: assets.TextDesc(
 			assets.TextDescKeyMCPToolCompleteDesc),
-		InputSchema: InputSchema{
+		InputSchema: proto.InputSchema{
 			Type: schema.Object,
-			Properties: map[string]Property{
+			Properties: map[string]proto.Property{
 				field.Query: {
 					Type: schema.String,
 					Description: assets.TextDesc(
@@ -71,22 +72,22 @@ var ToolDefs = []Tool{
 			},
 			Required: []string{field.Query},
 		},
-		Annotations: &ToolAnnotations{IdempotentHint: true},
+		Annotations: &proto.ToolAnnotations{IdempotentHint: true},
 	},
 	{
 		Name: tool.Drift,
 		Description: assets.TextDesc(
 			assets.TextDescKeyMCPToolDriftDesc),
-		InputSchema: InputSchema{Type: schema.Object},
-		Annotations: &ToolAnnotations{ReadOnlyHint: true},
+		InputSchema: proto.InputSchema{Type: schema.Object},
+		Annotations: &proto.ToolAnnotations{ReadOnlyHint: true},
 	},
 	{
 		Name: tool.Recall,
 		Description: assets.TextDesc(
 			assets.TextDescKeyMCPToolRecallDesc),
-		InputSchema: InputSchema{
+		InputSchema: proto.InputSchema{
 			Type: schema.Object,
-			Properties: map[string]Property{
+			Properties: map[string]proto.Property{
 				field.Limit: {
 					Type: schema.Number,
 					Description: assets.TextDesc(
@@ -99,15 +100,15 @@ var ToolDefs = []Tool{
 				},
 			},
 		},
-		Annotations: &ToolAnnotations{ReadOnlyHint: true},
+		Annotations: &proto.ToolAnnotations{ReadOnlyHint: true},
 	},
 	{
 		Name: tool.WatchUpdate,
 		Description: assets.TextDesc(
 			assets.TextDescKeyMCPToolWatchUpdateDesc),
-		InputSchema: InputSchema{
+		InputSchema: proto.InputSchema{
 			Type: schema.Object,
-			Properties: mergeProps(map[string]Property{
+			Properties: MergeProps(map[string]proto.Property{
 				cli.AttrType: {
 					Type: schema.String,
 					Description: assets.TextDesc(
@@ -118,19 +119,19 @@ var ToolDefs = []Tool{
 					Description: assets.TextDesc(
 						assets.TextDescKeyMCPToolPropMainContent),
 				},
-			}, entryAttrProps(
+			}, EntryAttrProps(
 				assets.TextDescKeyMCPToolPropCtxBg)),
 			Required: []string{cli.AttrType, field.Content},
 		},
-		Annotations: &ToolAnnotations{},
+		Annotations: &proto.ToolAnnotations{},
 	},
 	{
 		Name: tool.Compact,
 		Description: assets.TextDesc(
 			assets.TextDescKeyMCPToolCompactDesc),
-		InputSchema: InputSchema{
+		InputSchema: proto.InputSchema{
 			Type: schema.Object,
-			Properties: map[string]Property{
+			Properties: map[string]proto.Property{
 				field.Archive: {
 					Type: schema.Boolean,
 					Description: assets.TextDesc(
@@ -138,22 +139,22 @@ var ToolDefs = []Tool{
 				},
 			},
 		},
-		Annotations: &ToolAnnotations{},
+		Annotations: &proto.ToolAnnotations{},
 	},
 	{
 		Name: tool.Next,
 		Description: assets.TextDesc(
 			assets.TextDescKeyMCPToolNextDesc),
-		InputSchema: InputSchema{Type: schema.Object},
-		Annotations: &ToolAnnotations{ReadOnlyHint: true},
+		InputSchema: proto.InputSchema{Type: schema.Object},
+		Annotations: &proto.ToolAnnotations{ReadOnlyHint: true},
 	},
 	{
 		Name: tool.CheckTaskCompletion,
 		Description: assets.TextDesc(
 			assets.TextDescKeyMCPToolCheckTaskDesc),
-		InputSchema: InputSchema{
+		InputSchema: proto.InputSchema{
 			Type: schema.Object,
-			Properties: map[string]Property{
+			Properties: map[string]proto.Property{
 				field.RecentAction: {
 					Type: schema.String,
 					Description: assets.TextDesc(
@@ -161,15 +162,15 @@ var ToolDefs = []Tool{
 				},
 			},
 		},
-		Annotations: &ToolAnnotations{ReadOnlyHint: true},
+		Annotations: &proto.ToolAnnotations{ReadOnlyHint: true},
 	},
 	{
 		Name: tool.SessionEvent,
 		Description: assets.TextDesc(
 			assets.TextDescKeyMCPToolSessionDesc),
-		InputSchema: InputSchema{
+		InputSchema: proto.InputSchema{
 			Type: schema.Object,
-			Properties: map[string]Property{
+			Properties: map[string]proto.Property{
 				cli.AttrType: {
 					Type: schema.String,
 					Description: assets.TextDesc(
@@ -183,13 +184,13 @@ var ToolDefs = []Tool{
 			},
 			Required: []string{cli.AttrType},
 		},
-		Annotations: &ToolAnnotations{},
+		Annotations: &proto.ToolAnnotations{},
 	},
 	{
 		Name: tool.Remind,
 		Description: assets.TextDesc(
 			assets.TextDescKeyMCPToolRemindDesc),
-		InputSchema: InputSchema{Type: schema.Object},
-		Annotations: &ToolAnnotations{ReadOnlyHint: true},
+		InputSchema: proto.InputSchema{Type: schema.Object},
+		Annotations: &proto.ToolAnnotations{ReadOnlyHint: true},
 	},
 }
