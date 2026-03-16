@@ -8,14 +8,12 @@ package core
 
 import (
 	"os"
-	"strings"
 
-	"github.com/ActiveMemory/ctx/internal/config/token"
 	"github.com/spf13/cobra"
 
 	"github.com/ActiveMemory/ctx/internal/assets"
-	ctxCfg "github.com/ActiveMemory/ctx/internal/config/ctx"
 	"github.com/ActiveMemory/ctx/internal/config/fs"
+	"github.com/ActiveMemory/ctx/internal/config/token"
 	"github.com/ActiveMemory/ctx/internal/context"
 	"github.com/ActiveMemory/ctx/internal/rc"
 	"github.com/ActiveMemory/ctx/internal/tidy"
@@ -40,66 +38,36 @@ import (
 func CompactTasks(
 	cmd *cobra.Command, ctx *context.Context, archive bool,
 ) (int, error) {
-	tasksFile := ctx.File(ctxCfg.Task)
+	result := tidy.CompactContext(ctx)
 
-	if tasksFile == nil {
+	// Report what happened.
+	for _, taskText := range result.TasksMoved {
+		write.InfoMovingTask(cmd, tidy.TruncateString(taskText, 50))
+	}
+	for _, taskText := range result.TasksSkipped {
+		write.InfoSkippingTask(cmd, tidy.TruncateString(taskText, 50))
+	}
+
+	if len(result.TasksMoved) == 0 {
 		return 0, nil
 	}
 
-	content := string(tasksFile.Content)
-	lines := strings.Split(content, token.NewlineLF)
-
-	// Parse task blocks
-	blocks := tidy.ParseTaskBlocks(lines)
-
-	// Filter to only archivable blocks
-	var archivableBlocks []tidy.TaskBlock
-	for _, block := range blocks {
-		if block.IsArchivable {
-			archivableBlocks = append(archivableBlocks, block)
-			write.InfoMovingTask(cmd, tidy.TruncateString(block.ParentTaskText(), 50))
-		} else {
-			write.InfoSkippingTask(cmd, tidy.TruncateString(block.ParentTaskText(), 50))
+	// Write TASKS.md.
+	if result.TasksFileUpdate != nil {
+		if writeErr := os.WriteFile(
+			result.TasksFileUpdate.Path,
+			result.TasksFileUpdate.Content,
+			fs.PermFile,
+		); writeErr != nil {
+			return 0, writeErr
 		}
 	}
 
-	if len(archivableBlocks) == 0 {
-		return 0, nil
-	}
-
-	// Remove archivable blocks from lines
-	newLines := tidy.RemoveBlocksFromLines(lines, archivableBlocks)
-
-	// Add blocks to the Completed section
-	for i, line := range newLines {
-		if strings.HasPrefix(line, assets.HeadingCompleted) {
-			// Find the next line that's either empty or another section
-			insertIdx := i + 1
-			for insertIdx < len(newLines) && newLines[insertIdx] != "" &&
-				!strings.HasPrefix(newLines[insertIdx], token.HeadingLevelTwoStart) {
-				insertIdx++
-			}
-
-			// Build content to insert (full blocks, not just task text)
-			var blocksToInsert []string
-			for _, block := range archivableBlocks {
-				blocksToInsert = append(blocksToInsert, block.Lines...)
-			}
-
-			// Insert at the right position
-			newLines = append(newLines[:insertIdx],
-				append(blocksToInsert, newLines[insertIdx:]...)...,
-			)
-			break
-		}
-	}
-
-	// Archive if requested
-	if archive && len(archivableBlocks) > 0 {
-		// Filter to only tasks old enough to archive
+	// Archive if requested.
+	if archive && len(result.ArchivableBlocks) > 0 {
 		archiveDays := rc.ArchiveAfterDays()
 		var blocksToArchive []tidy.TaskBlock
-		for _, block := range archivableBlocks {
+		for _, block := range result.ArchivableBlocks {
 			if block.OlderThan(archiveDays) {
 				blocksToArchive = append(blocksToArchive, block)
 			}
@@ -111,21 +79,14 @@ func CompactTasks(
 			for _, block := range blocksToArchive {
 				archiveContent += block.BlockContent() + nl + nl
 			}
-			if archiveFile, archiveErr := tidy.WriteArchive("tasks", assets.HeadingArchivedTasks, archiveContent); archiveErr == nil {
-				write.InfoArchivedTasks(cmd, len(blocksToArchive), archiveFile, archiveDays)
+			if archiveFile, archiveErr := tidy.WriteArchive(
+				"tasks", assets.HeadingArchivedTasks, archiveContent,
+			); archiveErr == nil {
+				write.InfoArchivedTasks(
+					cmd, len(blocksToArchive), archiveFile, archiveDays)
 			}
 		}
 	}
 
-	// Write back
-	newContent := strings.Join(newLines, token.NewlineLF)
-	if newContent != content {
-		if err := os.WriteFile(
-			tasksFile.Path, []byte(newContent), fs.PermFile,
-		); err != nil {
-			return 0, err
-		}
-	}
-
-	return len(archivableBlocks), nil
+	return len(result.TasksMoved), nil
 }
