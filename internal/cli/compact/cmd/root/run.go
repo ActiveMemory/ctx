@@ -14,7 +14,6 @@ import (
 	"github.com/spf13/cobra"
 
 	"github.com/ActiveMemory/ctx/internal/cli/compact/core"
-	ctxCfg "github.com/ActiveMemory/ctx/internal/config/ctx"
 	"github.com/ActiveMemory/ctx/internal/config/fs"
 	"github.com/ActiveMemory/ctx/internal/context"
 	ctxerr "github.com/ActiveMemory/ctx/internal/err/initialize"
@@ -55,25 +54,28 @@ func Run(cmd *cobra.Command, archive bool) error {
 	changes := 0
 
 	// Process TASKS.md
-	tasksChanges, err := core.CompactTasks(cmd, ctx, archive)
-	if err != nil {
-		cmd.Println(fmt.Sprintf("⚠ Error processing TASKS.md: %v", err))
+	tasksChanges, compactErr := core.CompactTasks(cmd, ctx, archive)
+	if compactErr != nil {
+		cmd.Println(fmt.Sprintf("⚠ Error processing TASKS.md: %v", compactErr))
 	} else {
 		changes += tasksChanges
 	}
 
-	// Process other files for empty sections
-	for _, f := range ctx.Files {
-		if f.Name == ctxCfg.Task {
-			continue
-		}
-		cleaned, count := tidy.RemoveEmptySections(string(f.Content))
-		if count > 0 {
-			if err := os.WriteFile(f.Path, []byte(cleaned), fs.PermFile); err == nil {
+	// Reload context to pick up TASKS.md changes, then clean sections.
+	ctx, err = context.Load("")
+	if err == nil {
+		result := tidy.CompactContext(ctx)
+		for i, sc := range result.SectionsCleaned {
+			if writeErr := os.WriteFile(
+				result.SectionFileUpdates[i].Path,
+				result.SectionFileUpdates[i].Content,
+				fs.PermFile,
+			); writeErr == nil {
 				cmd.Println(
-					fmt.Sprintf("✓ Removed %d empty sections from %s", count, f.Name),
+					fmt.Sprintf("✓ Removed %d empty sections from %s",
+						sc.Removed, sc.FileName),
 				)
-				changes += count
+				changes += sc.Removed
 			}
 		}
 	}

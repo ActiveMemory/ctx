@@ -10,7 +10,6 @@ import (
 	"encoding/json"
 	"fmt"
 	"os"
-	"slices"
 	"strings"
 	"time"
 
@@ -21,13 +20,12 @@ import (
 	"github.com/ActiveMemory/ctx/internal/config/cli"
 	ctxCfg "github.com/ActiveMemory/ctx/internal/config/ctx"
 	entryCfg "github.com/ActiveMemory/ctx/internal/config/entry"
-	"github.com/ActiveMemory/ctx/internal/config/fs"
+	configfs "github.com/ActiveMemory/ctx/internal/config/fs"
 	"github.com/ActiveMemory/ctx/internal/config/mcp/cfg"
 	"github.com/ActiveMemory/ctx/internal/config/mcp/event"
 	"github.com/ActiveMemory/ctx/internal/config/mcp/field"
 	"github.com/ActiveMemory/ctx/internal/config/mcp/mime"
 	"github.com/ActiveMemory/ctx/internal/config/mcp/tool"
-	"github.com/ActiveMemory/ctx/internal/config/regex"
 	timeCfg "github.com/ActiveMemory/ctx/internal/config/time"
 	"github.com/ActiveMemory/ctx/internal/config/token"
 	"github.com/ActiveMemory/ctx/internal/context"
@@ -36,7 +34,6 @@ import (
 	"github.com/ActiveMemory/ctx/internal/mcp/proto"
 	"github.com/ActiveMemory/ctx/internal/mcp/session"
 	"github.com/ActiveMemory/ctx/internal/recall/parser"
-	"github.com/ActiveMemory/ctx/internal/task"
 	"github.com/ActiveMemory/ctx/internal/tidy"
 	"github.com/ActiveMemory/ctx/internal/validation"
 )
@@ -568,117 +565,76 @@ func (s *Server) toolCompact(
 		)
 	}
 
+	result := tidy.CompactContext(ctx)
+
+	// Write TASKS.md changes.
+	if result.TasksFileUpdate != nil {
+		if writeErr := os.WriteFile(
+			result.TasksFileUpdate.Path,
+			result.TasksFileUpdate.Content,
+			configfs.PermFile,
+		); writeErr != nil {
+			return s.toolError(
+				id,
+				fmt.Sprintf(
+					assets.TextDesc(assets.TextDescKeyMCPWriteFailed), writeErr,
+				),
+			)
+		}
+	}
+
+	// Write section-cleaned files.
+	for _, fu := range result.SectionFileUpdates {
+		_ = os.WriteFile(fu.Path, fu.Content, configfs.PermFile)
+	}
+
+	// Archive old tasks if requested.
 	var sb strings.Builder
-	changes := 0
-
-	// Process TASKS.md.
-	tasksFile := ctx.File(ctxCfg.Task)
-	if tasksFile != nil {
-		content := string(tasksFile.Content)
-		lines := strings.Split(content, token.NewlineLF)
-
-		blocks := tidy.ParseTaskBlocks(lines)
-
-		var archivableBlocks []tidy.TaskBlock
-		for _, block := range blocks {
-			if block.IsArchivable {
-				archivableBlocks = append(archivableBlocks, block)
-				_, _ = fmt.Fprintf(&sb,
-					assets.TextDesc(
-						assets.TextDescKeyMCPCompactMovedFormat)+token.NewlineLF,
-					tidy.TruncateString(block.ParentTaskText(), cfg.TruncateLen),
-				)
-			}
+	if archive && len(result.ArchivableBlocks) > 0 {
+		var archiveContent string
+		for _, block := range result.ArchivableBlocks {
+			archiveContent += block.BlockContent() +
+				token.NewlineLF + token.NewlineLF
 		}
-
-		if len(archivableBlocks) > 0 {
-			newLines := tidy.RemoveBlocksFromLines(lines, archivableBlocks)
-
-			// Add blocks to the Completed section.
-			for i, line := range newLines {
-				if strings.HasPrefix(line, assets.HeadingCompleted) {
-					insertIdx := i + 1
-					for insertIdx < len(newLines) && newLines[insertIdx] != "" &&
-						!strings.HasPrefix(newLines[insertIdx], token.HeadingLevelTwoStart) {
-						insertIdx++
-					}
-
-					var blocksToInsert []string
-					for _, block := range archivableBlocks {
-						blocksToInsert = append(blocksToInsert, block.Lines...)
-					}
-
-					newLines = slices.Insert(newLines, insertIdx, blocksToInsert...)
-					break
-				}
-			}
-
-			newContent := strings.Join(newLines, token.NewlineLF)
-			if newContent != content {
-				if writeErr := writeContextFile(
-					tasksFile.Path, []byte(newContent)); writeErr != nil {
-					return s.toolError(
-						id,
-						fmt.Sprintf(
-							assets.TextDesc(assets.TextDescKeyMCPWriteFailed), writeErr,
-						),
-					)
-				}
-			}
-			changes += len(archivableBlocks)
-		}
-
-		// Archive old tasks if requested.
-		if archive && len(archivableBlocks) > 0 {
-			var archiveContent string
-			for _, block := range archivableBlocks {
-				archiveContent += block.BlockContent() +
-					token.NewlineLF + token.NewlineLF
-			}
-			if _, archiveErr := tidy.WriteArchive(
-				archiveCfg.ArchiveScopeTasks,
-				assets.HeadingArchivedTasks,
-				archiveContent,
-			); archiveErr != nil {
-				_, _ = fmt.Fprintf(
-					&sb,
-					assets.TextDesc(assets.TextDescKeyMCPCompactArchiveWarning)+
-						token.NewlineLF,
-					archiveErr,
-				)
-			}
+		if _, archiveErr := tidy.WriteArchive(
+			archiveCfg.ArchiveScopeTasks,
+			assets.HeadingArchivedTasks,
+			archiveContent,
+		); archiveErr != nil {
+			_, _ = fmt.Fprintf(
+				&sb,
+				assets.TextDesc(assets.TextDescKeyMCPCompactArchiveWarning)+
+					token.NewlineLF,
+				archiveErr,
+			)
 		}
 	}
 
-	// Process other files for empty sections.
-	for _, f := range ctx.Files {
-		if f.Name == ctxCfg.Task {
-			continue
-		}
-		cleaned, count := tidy.RemoveEmptySections(string(f.Content))
-		if count > 0 {
-			if writeErr := writeContextFile(
-				f.Path, []byte(cleaned),
-			); writeErr == nil {
-				_, _ = fmt.Fprintf(
-					&sb,
-					assets.TextDesc(assets.TextDescKeyMCPCompactRemovedSectFmt)+
-						token.NewlineLF,
-					count, f.Name,
-				)
-				changes += count
-			}
-		}
+	// Build response text.
+	for _, taskText := range result.TasksMoved {
+		_, _ = fmt.Fprintf(&sb,
+			assets.TextDesc(
+				assets.TextDescKeyMCPCompactMovedFormat)+token.NewlineLF,
+			tidy.TruncateString(taskText, cfg.TruncateLen),
+		)
+	}
+	for _, sc := range result.SectionsCleaned {
+		_, _ = fmt.Fprintf(
+			&sb,
+			assets.TextDesc(assets.TextDescKeyMCPCompactRemovedSectFmt)+
+				token.NewlineLF,
+			sc.Removed, sc.FileName,
+		)
 	}
 
-	if changes == 0 {
+	if result.TotalChanges() == 0 {
 		return s.toolOK(id, assets.TextDesc(assets.TextDescKeyMCPCompactClean))
 	}
 
 	_, _ = fmt.Fprintf(
 		&sb,
 		assets.TextDesc(assets.TextDescKeyMCPCompactedFormat),
-		changes,
+		result.TotalChanges(),
 	)
 	sb.WriteString(assets.TextDesc(assets.TextDescKeyMCPReviewStatus))
 
@@ -899,116 +855,4 @@ func (s *Server) toolRemind(id json.RawMessage) *proto.Response {
 	}
 
 	return s.toolOK(id, sb.String())
-}
-
-// pendingTask holds the index and content of a pending top-level task.
-type pendingTask struct {
-	Index   int
-	Content string
-}
-
-// eachPendingTask iterates pending top-level tasks in TASKS.md,
-// skipping the Completed section and subtasks. It calls fn for each
-// match; if fn returns true, iteration stops early.
-//
-// Parameters:
-//   - lines: TASKS.md split by newline
-//   - fn: visitor called with each pending task; return true to stop
-func eachPendingTask(lines []string, fn func(pendingTask) bool) {
-	inCompletedSection := false
-	idx := 0
-
-	for _, line := range lines {
-		if strings.HasPrefix(line, assets.HeadingCompleted) {
-			inCompletedSection = true
-			continue
-		}
-		if strings.HasPrefix(
-			line, token.HeadingLevelTwoStart,
-		) && inCompletedSection {
-			inCompletedSection = false
-		}
-		if inCompletedSection {
-			continue
-		}
-
-		match := regex.Task.FindStringSubmatch(line)
-		if match == nil || !task.Pending(match) {
-			continue
-		}
-		if task.SubTask(match) {
-			continue
-		}
-
-		idx++
-		if fn(pendingTask{Index: idx, Content: task.Content(match)}) {
-			return
-		}
-	}
-}
-
-// containsOverlap checks if two strings share meaningful words.
-//
-// Uses word-set intersection rather than substring matching to avoid
-// false positives (e.g., "test" matching inside "contestant").
-//
-// Parameters:
-//   - action: the recent action description
-//   - taskText: the task text to compare against
-//
-// Returns:
-//   - bool: true if at least 2 significant words overlap
-func containsOverlap(action, taskText string) bool {
-	actionWords := toWordSet(strings.ToLower(action))
-	taskWords := strings.Fields(strings.ToLower(taskText))
-
-	matchCount := 0
-	for _, w := range taskWords {
-		if len(w) < cfg.MinWordLen {
-			continue // Skip short common words.
-		}
-		if actionWords[w] {
-			matchCount++
-		}
-	}
-
-	return matchCount >= cfg.MinWordOverlap
-}
-
-// toWordSet splits text into a set of unique words for O(1) lookup.
-func toWordSet(text string) map[string]bool {
-	fields := strings.Fields(text)
-	set := make(map[string]bool, len(fields))
-	for _, w := range fields {
-		set[w] = true
-	}
-	return set
-}
-
-// totalAdds sums all entry add counts.
-//
-// Parameters:
-//   - m: map of entry type to add count
-//
-// Returns:
-//   - int: total adds across all types
-func totalAdds(m map[string]int) int {
-	total := 0
-	for _, v := range m {
-		total += v
-	}
-	return total
-}
-
-// writeContextFile writes content to a context file with standard
-// permissions.
-//
-// Parameters:
-//   - path: absolute file path
-//   - data: content bytes
-//
-// Returns:
-//   - error: non-nil if the write fails
-func writeContextFile(path string, data []byte) error {
-	return os.WriteFile(path, data, fs.PermFile)
 }
