@@ -33,16 +33,48 @@ type resourceMapping struct {
 	desc string
 }
 
-// resourceTable defines all individual context file resources.
-var resourceTable = []resourceMapping{
-	{ctxCfg.Constitution, "constitution", assets.TextDesc(assets.TextDescKeyMCPResConstitution)},
-	{ctxCfg.Task, "tasks", assets.TextDesc(assets.TextDescKeyMCPResTasks)},
-	{ctxCfg.Convention, "conventions", assets.TextDesc(assets.TextDescKeyMCPResConventions)},
-	{ctxCfg.Architecture, "architecture", assets.TextDesc(assets.TextDescKeyMCPResArchitecture)},
-	{ctxCfg.Decision, "decisions", assets.TextDesc(assets.TextDescKeyMCPResDecisions)},
-	{ctxCfg.Learning, "learnings", assets.TextDesc(assets.TextDescKeyMCPResLearnings)},
-	{ctxCfg.Glossary, "glossary", assets.TextDesc(assets.TextDescKeyMCPResGlossary)},
-	{ctxCfg.AgentPlaybook, "playbook", assets.TextDesc(assets.TextDescKeyMCPResPlaybook)},
+// resources defines all individual context file resources.
+var resources = []resourceMapping{
+	{
+		ctxCfg.Constitution,
+		"constitution",
+		assets.TextDesc(assets.TextDescKeyMCPResConstitution),
+	},
+	{
+		ctxCfg.Task,
+		"tasks",
+		assets.TextDesc(assets.TextDescKeyMCPResTasks),
+	},
+	{
+		ctxCfg.Convention,
+		"conventions",
+		assets.TextDesc(assets.TextDescKeyMCPResConventions),
+	},
+	{
+		ctxCfg.Architecture,
+		"architecture",
+		assets.TextDesc(assets.TextDescKeyMCPResArchitecture),
+	},
+	{
+		ctxCfg.Decision,
+		"decisions",
+		assets.TextDesc(assets.TextDescKeyMCPResDecisions),
+	},
+	{
+		ctxCfg.Learning,
+		"learnings",
+		assets.TextDesc(assets.TextDescKeyMCPResLearnings),
+	},
+	{
+		ctxCfg.Glossary,
+		"glossary",
+		assets.TextDesc(assets.TextDescKeyMCPResGlossary),
+	},
+	{
+		ctxCfg.AgentPlaybook,
+		"playbook",
+		assets.TextDesc(assets.TextDescKeyMCPResPlaybook),
+	},
 }
 
 // resourceURI builds a resource URI from a suffix.
@@ -52,11 +84,11 @@ func resourceURI(name string) string {
 
 // handleResourcesList returns all available MCP resources.
 func (s *Server) handleResourcesList(req proto.Request) *proto.Response {
-	resources := make([]proto.Resource, 0, len(resourceTable)+1)
+	rr := make([]proto.Resource, 0, len(resources)+1)
 
 	// Individual context files.
-	for _, rm := range resourceTable {
-		resources = append(resources, proto.Resource{
+	for _, rm := range resources {
+		rr = append(rr, proto.Resource{
 			URI:         resourceURI(rm.name),
 			Name:        rm.name,
 			MimeType:    mime.Markdown,
@@ -65,14 +97,14 @@ func (s *Server) handleResourcesList(req proto.Request) *proto.Response {
 	}
 
 	// Assembled context packet (all files in read order).
-	resources = append(resources, proto.Resource{
+	rr = append(rr, proto.Resource{
 		URI:         resourceURI("agent"),
 		Name:        "agent",
 		MimeType:    mime.Markdown,
 		Description: assets.TextDesc(assets.TextDescKeyMCPResAgent),
 	})
 
-	return s.ok(req.ID, proto.ResourceListResult{Resources: resources})
+	return s.ok(req.ID, proto.ResourceListResult{Resources: rr})
 }
 
 // handleResourcesRead returns the content of a requested resource.
@@ -89,7 +121,7 @@ func (s *Server) handleResourcesRead(req proto.Request) *proto.Response {
 	}
 
 	// Check for individual file resources.
-	for _, rm := range resourceTable {
+	for _, rm := range resources {
 		if params.URI == resourceURI(rm.name) {
 			return s.readContextFile(req.ID, ctx, rm.file, params.URI)
 		}
@@ -250,7 +282,7 @@ func (p *ResourcePoller) Stop() {
 
 // uriToFile maps a resource URI to its context file name.
 func (p *ResourcePoller) uriToFile(uri string) string {
-	for _, rm := range resourceTable {
+	for _, rm := range resources {
 		if uri == resourceURI(rm.name) {
 			return rm.file
 		}
@@ -314,6 +346,19 @@ func (p *ResourcePoller) checkChanges() {
 
 // handleResourcesSubscribe registers a resource for change notifications.
 func (s *Server) handleResourcesSubscribe(req proto.Request) *proto.Response {
+	return s.subscriptionAction(req, s.poller.subscribe)
+}
+
+// handleResourcesUnsubscribe removes a resource from change notifications.
+func (s *Server) handleResourcesUnsubscribe(req proto.Request) *proto.Response {
+	return s.subscriptionAction(req, s.poller.unsubscribe)
+}
+
+// subscriptionAction unmarshals a URI param and applies the given
+// subscription function (subscribe or unsubscribe).
+func (s *Server) subscriptionAction(
+	req proto.Request, fn func(string),
+) *proto.Response {
 	var params proto.SubscribeParams
 	if err := json.Unmarshal(req.Params, &params); err != nil {
 		return s.error(req.ID, proto.ErrCodeInvalidArg, assets.TextDesc(assets.TextDescKeyMCPInvalidParams))
@@ -321,19 +366,6 @@ func (s *Server) handleResourcesSubscribe(req proto.Request) *proto.Response {
 	if params.URI == "" {
 		return s.error(req.ID, proto.ErrCodeInvalidArg, assets.TextDesc(assets.TextDescKeyMCPURIRequired))
 	}
-	s.poller.subscribe(params.URI)
-	return s.ok(req.ID, struct{}{})
-}
-
-// handleResourcesUnsubscribe removes a resource from change notifications.
-func (s *Server) handleResourcesUnsubscribe(req proto.Request) *proto.Response {
-	var params proto.UnsubscribeParams
-	if err := json.Unmarshal(req.Params, &params); err != nil {
-		return s.error(req.ID, proto.ErrCodeInvalidArg, assets.TextDesc(assets.TextDescKeyMCPInvalidParams))
-	}
-	if params.URI == "" {
-		return s.error(req.ID, proto.ErrCodeInvalidArg, assets.TextDesc(assets.TextDescKeyMCPURIRequired))
-	}
-	s.poller.unsubscribe(params.URI)
+	fn(params.URI)
 	return s.ok(req.ID, struct{}{})
 }
