@@ -4,7 +4,7 @@
 //   \    Copyright 2026-present Context contributors.
 //                 SPDX-License-Identifier: Apache-2.0
 
-// Package core provides the compact command's CLI-specific orchestration.
-// Shared helpers for task block parsing, archival, and text cleanup live
-// in internal/tidy.
-package core
+// Package server implements the MCP server that exposes ctx context
+// files as resources, tools, and prompts over JSON-RPC 2.0 on
+// stdin/stdout.
+package server

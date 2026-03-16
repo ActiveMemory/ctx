@@ -4,7 +4,7 @@
 //   \    Copyright 2026-present Context contributors.
 //                 SPDX-License-Identifier: Apache-2.0
 
-// Package core provides the compact command's CLI-specific orchestration.
-// Shared helpers for task block parsing, archival, and text cleanup live
-// in internal/tidy.
-package core
+// Package tidy provides shared helpers for context file maintenance:
+// task block parsing, empty section removal, string truncation, and
+// archive writing.
+package tidy

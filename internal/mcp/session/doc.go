@@ -4,7 +4,6 @@
 //   \    Copyright 2026-present Context contributors.
 //                 SPDX-License-Identifier: Apache-2.0
 
-// Package core provides the compact command's CLI-specific orchestration.
-// Shared helpers for task block parsing, archival, and text cleanup live
-// in internal/tidy.
-package core
+// Package session tracks advisory state for an MCP server session,
+// including tool call counts, entry adds, and pending updates.
+package session

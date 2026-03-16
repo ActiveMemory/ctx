@@ -19,6 +19,7 @@ import (
 	"github.com/ActiveMemory/ctx/internal/context"
 	ctxerr "github.com/ActiveMemory/ctx/internal/err/initialize"
 	"github.com/ActiveMemory/ctx/internal/rc"
+	"github.com/ActiveMemory/ctx/internal/tidy"
 )
 
 // Run executes the compact command logic.
@@ -66,7 +67,7 @@ func Run(cmd *cobra.Command, archive bool) error {
 		if f.Name == ctxCfg.Task {
 			continue
 		}
-		cleaned, count := core.RemoveEmptySections(string(f.Content))
+		cleaned, count := tidy.RemoveEmptySections(string(f.Content))
 		if count > 0 {
 			if err := os.WriteFile(f.Path, []byte(cleaned), fs.PermFile); err == nil {
 				cmd.Println(

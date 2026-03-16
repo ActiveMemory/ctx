@@ -29,7 +29,7 @@ var ToolDefs = []Tool{
 			assets.TextDescKeyMCPToolAddDesc),
 		InputSchema: InputSchema{
 			Type: schema.Object,
-			Properties: map[string]Property{
+			Properties: mergeProps(map[string]Property{
 				cli.AttrType: {
 					Type: schema.String,
 					Description: assets.TextDesc(
@@ -50,32 +50,8 @@ var ToolDefs = []Tool{
 						assets.TextDescKeyMCPToolPropPriority),
 					Enum: []string{"high", "medium", "low"},
 				},
-				cli.AttrContext: {
-					Type: schema.String,
-					Description: assets.TextDesc(
-						assets.TextDescKeyMCPToolPropContext),
-				},
-				cli.AttrRationale: {
-					Type: schema.String,
-					Description: assets.TextDesc(
-						assets.TextDescKeyMCPToolPropRationale),
-				},
-				cli.AttrConsequences: {
-					Type: schema.String,
-					Description: assets.TextDesc(
-						assets.TextDescKeyMCPToolPropConseq),
-				},
-				cli.AttrLesson: {
-					Type: schema.String,
-					Description: assets.TextDesc(
-						assets.TextDescKeyMCPToolPropLesson),
-				},
-				cli.AttrApplication: {
-					Type: schema.String,
-					Description: assets.TextDesc(
-						assets.TextDescKeyMCPToolPropApplication),
-				},
-			},
+			}, entryAttrProps(
+				assets.TextDescKeyMCPToolPropContext)),
 			Required: []string{cli.AttrType, field.Content},
 		},
 		Annotations: &ToolAnnotations{},
@@ -131,7 +107,7 @@ var ToolDefs = []Tool{
 			assets.TextDescKeyMCPToolWatchUpdateDesc),
 		InputSchema: InputSchema{
 			Type: schema.Object,
-			Properties: map[string]Property{
+			Properties: mergeProps(map[string]Property{
 				cli.AttrType: {
 					Type: schema.String,
 					Description: assets.TextDesc(
@@ -142,32 +118,8 @@ var ToolDefs = []Tool{
 					Description: assets.TextDesc(
 						assets.TextDescKeyMCPToolPropMainContent),
 				},
-				cli.AttrContext: {
-					Type: schema.String,
-					Description: assets.TextDesc(
-						assets.TextDescKeyMCPToolPropCtxBg),
-				},
-				cli.AttrRationale: {
-					Type: schema.String,
-					Description: assets.TextDesc(
-						assets.TextDescKeyMCPToolPropRationale),
-				},
-				cli.AttrConsequences: {
-					Type: schema.String,
-					Description: assets.TextDesc(
-						assets.TextDescKeyMCPToolPropConseq),
-				},
-				cli.AttrLesson: {
-					Type: schema.String,
-					Description: assets.TextDesc(
-						assets.TextDescKeyMCPToolPropLesson),
-				},
-				cli.AttrApplication: {
-					Type: schema.String,
-					Description: assets.TextDesc(
-						assets.TextDescKeyMCPToolPropApplication),
-				},
-			},
+			}, entryAttrProps(
+				assets.TextDescKeyMCPToolPropCtxBg)),
 			Required: []string{cli.AttrType, field.Content},
 		},
 		Annotations: &ToolAnnotations{},

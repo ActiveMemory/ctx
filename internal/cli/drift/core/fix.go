@@ -21,13 +21,13 @@ import (
 	"github.com/spf13/cobra"
 
 	"github.com/ActiveMemory/ctx/internal/assets"
-	compactCore "github.com/ActiveMemory/ctx/internal/cli/compact/core"
 	ctxCfg "github.com/ActiveMemory/ctx/internal/config/ctx"
 	"github.com/ActiveMemory/ctx/internal/config/fs"
 	"github.com/ActiveMemory/ctx/internal/context"
 	"github.com/ActiveMemory/ctx/internal/drift"
 	"github.com/ActiveMemory/ctx/internal/rc"
 	"github.com/ActiveMemory/ctx/internal/task"
+	"github.com/ActiveMemory/ctx/internal/tidy"
 )
 
 // ApplyFixes attempts to auto-fix issues in the drift report.
@@ -159,7 +159,7 @@ func FixStaleness(cmd *cobra.Command, ctx *context.Context) error {
 		archiveContent += marker.PrefixTaskDone + " " + t + nl
 	}
 
-	archiveFile, writeErr := compactCore.WriteArchive("tasks", assets.HeadingArchivedTasks, archiveContent)
+	archiveFile, writeErr := tidy.WriteArchive("tasks", assets.HeadingArchivedTasks, archiveContent)
 	if writeErr != nil {
 		return writeErr
 	}

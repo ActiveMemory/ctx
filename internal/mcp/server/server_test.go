@@ -95,7 +95,7 @@ func request(t *testing.T, srv *Server, method string, params interface{}) *prot
 func TestInitialize(t *testing.T) {
 	srv, _ := newTestServer(t)
 	resp := request(t, srv, "initialize", proto.InitializeParams{
-		ProtocolVersion: proto.protocolVersion,
+		ProtocolVersion: proto.ProtocolVersion,
 		ClientInfo:      proto.AppInfo{Name: "test", Version: "1.0"},
 	})
 	if resp.Error != nil {
@@ -106,8 +106,8 @@ func TestInitialize(t *testing.T) {
 	if err := json.Unmarshal(raw, &result); err != nil {
 		t.Fatalf("unmarshal result: %v", err)
 	}
-	if result.ProtocolVersion != proto.protocolVersion {
-		t.Errorf("protocol version = %q, want %q", result.ProtocolVersion, proto.protocolVersion)
+	if result.ProtocolVersion != proto.ProtocolVersion {
+		t.Errorf("protocol version = %q, want %q", result.ProtocolVersion, proto.ProtocolVersion)
 	}
 	if result.ServerInfo.Name != "ctx" {
 		t.Errorf("server name = %q, want %q", result.ServerInfo.Name, "ctx")
@@ -140,8 +140,8 @@ func TestMethodNotFound(t *testing.T) {
 	if resp.Error == nil {
 		t.Fatal("expected error for unknown method")
 	}
-	if resp.Error.Code != proto.errCodeNotFound {
-		t.Errorf("error code = %d, want %d", resp.Error.Code, proto.errCodeNotFound)
+	if resp.Error.Code != proto.ErrCodeNotFound {
+		t.Errorf("error code = %d, want %d", resp.Error.Code, proto.ErrCodeNotFound)
 	}
 }
 
@@ -462,7 +462,7 @@ func TestParseError(t *testing.T) {
 	if err := json.Unmarshal(out.Bytes(), &resp); err != nil {
 		t.Fatalf("unmarshal: %v", err)
 	}
-	if resp.Error == nil || resp.Error.Code != proto.errCodeParse {
+	if resp.Error == nil || resp.Error.Code != proto.ErrCodeParse {
 		t.Errorf("expected parse error, got: %+v", resp.Error)
 	}
 }
@@ -1063,7 +1063,7 @@ func TestResourcesSubscribe(t *testing.T) {
 		t.Fatalf("unexpected error: %v", resp.Error.Message)
 	}
 	// Cleanup: stop poller.
-	srv.poller.stop()
+	srv.poller.Stop()
 }
 
 func TestResourcesUnsubscribe(t *testing.T) {
@@ -1079,7 +1079,7 @@ func TestResourcesUnsubscribe(t *testing.T) {
 	if resp.Error != nil {
 		t.Fatalf("unexpected error: %v", resp.Error.Message)
 	}
-	srv.poller.stop()
+	srv.poller.Stop()
 }
 
 func TestResourcePollerNotification(t *testing.T) {
@@ -1124,5 +1124,5 @@ func TestResourcePollerNotification(t *testing.T) {
 		t.Errorf("notification URI = %q, want %q", params.URI, "ctx://context/tasks")
 	}
 
-	srv.poller.stop()
+	srv.poller.Stop()
 }

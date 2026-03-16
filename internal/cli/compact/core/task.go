@@ -18,6 +18,7 @@ import (
 	"github.com/ActiveMemory/ctx/internal/config/fs"
 	"github.com/ActiveMemory/ctx/internal/context"
 	"github.com/ActiveMemory/ctx/internal/rc"
+	"github.com/ActiveMemory/ctx/internal/tidy"
 	"github.com/ActiveMemory/ctx/internal/write"
 )
 
@@ -49,16 +50,16 @@ func CompactTasks(
 	lines := strings.Split(content, token.NewlineLF)
 
 	// Parse task blocks
-	blocks := ParseTaskBlocks(lines)
+	blocks := tidy.ParseTaskBlocks(lines)
 
 	// Filter to only archivable blocks
-	var archivableBlocks []TaskBlock
+	var archivableBlocks []tidy.TaskBlock
 	for _, block := range blocks {
 		if block.IsArchivable {
 			archivableBlocks = append(archivableBlocks, block)
-			write.InfoMovingTask(cmd, TruncateString(block.ParentTaskText(), 50))
+			write.InfoMovingTask(cmd, tidy.TruncateString(block.ParentTaskText(), 50))
 		} else {
-			write.InfoSkippingTask(cmd, TruncateString(block.ParentTaskText(), 50))
+			write.InfoSkippingTask(cmd, tidy.TruncateString(block.ParentTaskText(), 50))
 		}
 	}
 
@@ -67,7 +68,7 @@ func CompactTasks(
 	}
 
 	// Remove archivable blocks from lines
-	newLines := RemoveBlocksFromLines(lines, archivableBlocks)
+	newLines := tidy.RemoveBlocksFromLines(lines, archivableBlocks)
 
 	// Add blocks to the Completed section
 	for i, line := range newLines {
@@ -97,7 +98,7 @@ func CompactTasks(
 	if archive && len(archivableBlocks) > 0 {
 		// Filter to only tasks old enough to archive
 		archiveDays := rc.ArchiveAfterDays()
-		var blocksToArchive []TaskBlock
+		var blocksToArchive []tidy.TaskBlock
 		for _, block := range archivableBlocks {
 			if block.OlderThan(archiveDays) {
 				blocksToArchive = append(blocksToArchive, block)
@@ -110,7 +111,7 @@ func CompactTasks(
 			for _, block := range blocksToArchive {
 				archiveContent += block.BlockContent() + nl + nl
 			}
-			if archiveFile, archiveErr := WriteArchive("tasks", assets.HeadingArchivedTasks, archiveContent); archiveErr == nil {
+			if archiveFile, archiveErr := tidy.WriteArchive("tasks", assets.HeadingArchivedTasks, archiveContent); archiveErr == nil {
 				write.InfoArchivedTasks(cmd, len(blocksToArchive), archiveFile, archiveDays)
 			}
 		}

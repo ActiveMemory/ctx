@@ -13,6 +13,119 @@ TASK STATUS LABELS:
 - `#in-progress` — currently being worked on (add inline, don't move task)
 -->
 
+### Phase MCP-SAN: MCP Server Input Sanitization
+
+Assignee: @CoderMungan
+
+The MCP server handlers (`internal/mcp/server/handle_*.go`) accept
+client-supplied input over JSON-RPC and use it with minimal validation.
+The `validation` package has `SanitizeFilename` and `ValidateBoundary`
+but nothing for content or argument sanitization. `entry.Validate` only
+checks field presence, not content safety.
+
+- [ ] MCP-SAN.1: Add input length limits to all string arguments #priority:high #added:2026-03-15
+  - Define max lengths in `internal/config/mcp/cfg/` (e.g., `MaxContentLen`,
+    `MaxNameLen`, `MaxQueryLen`, `MaxCallerLen`)
+  - Apply length checks early in `handleToolsCall`, `handlePromptsGet`,
+    `handleResourcesRead`, `handleResourcesSubscribe`
+  - Cap `toolRecall` limit to a reasonable upper bound (e.g., 100)
+  - Return `ErrCodeInvalidArg` with a clear message when exceeded
+- [ ] MCP-SAN.2: Validate `entryType` against allowlist before use #priority:high #added:2026-03-15
+  - In `toolAdd` and `toolWatchUpdate`, check `entryType` exists in
+    `entryCfg.ToCtxFile` map before proceeding — return error if not
+  - This prevents writing entries with undefined type mappings
+- [ ] MCP-SAN.3: Sanitize content written to `.context/` files #priority:high #added:2026-03-15
+  - Content fields (`content`, `context`, `rationale`, `consequences`,
+    `lesson`, `application`) are written directly to Markdown files
+  - Strip or escape Markdown structure characters that could corrupt
+    parsing: entry headers (`## [YYYY-`), task checkboxes (`- [ ]`,
+    `- [x]`), constitution rule format (`- [ ] **Never`)
+  - Add a `SanitizeEntryContent` function in `internal/validation`
+  - Apply in `toolAdd`, `toolWatchUpdate`, and `buildEntryPrompt`
+- [ ] MCP-SAN.4: Sanitize reflected input in error/success messages #added:2026-03-15
+  - `params.Name` reflected in unknown-prompt/unknown-tool errors
+    (`handle_prompt.go:66`, `handle_tool.go:120`)
+  - `params.URI` reflected in unknown-resource error
+    (`handle_resource.go:104`)
+  - `caller` reflected in session-started message
+    (`handle_tool.go:804`)
+  - Truncate or strip control characters before including in responses
+- [ ] MCP-SAN.5: Add tests for all sanitization paths #added:2026-03-15
+  - Test that oversized inputs are rejected
+  - Test that invalid `entryType` values are rejected
+  - Test that Markdown injection in content fields is neutralized
+  - Test that reflected strings are truncated/safe
+  - Test that `toolRecall` limit is capped
+
+### Phase MCP-COV: MCP Test Coverage
+
+Assignee: @CoderMungan
+
+Current coverage: `mcp/server` 78.8%, `mcp/proto` 0%, `mcp/session` 0%,
+`mcp/server/entity` 0%. Goal: all packages above 80%.
+
+**mcp/session (0% → 80%+)**
+
+- [ ] MCP-COV.1: Test `session.NewState` and state mutation methods #added:2026-03-15
+  - `NewState` returns initialized state with zero counters
+  - `RecordToolCall` increments `ToolCalls`
+  - `RecordAdd` increments per-type counter in `AddsPerformed`
+  - `QueuePendingUpdate` appends to `PendingFlush`
+  - `PendingCount` returns correct length
+  - Verify multiple calls accumulate correctly
+
+**mcp/proto (0% → 80%+)**
+
+- [ ] MCP-COV.2: Test JSON marshaling/unmarshaling round-trips for proto types #added:2026-03-15
+  - `Request`, `Response`, `Notification`, `RPCError`
+  - `InitializeParams` / `InitializeResult`
+  - `CallToolParams` / `CallToolResult`
+  - `GetPromptParams` / `GetPromptResult`
+  - `ReadResourceParams` / `ReadResourceResult`
+  - `SubscribeParams` / `UnsubscribeParams`
+  - Verify field names match JSON tags, omitempty behaves correctly
+- [ ] MCP-COV.3: Test `ToolDefs` completeness and schema validity #added:2026-03-15
+  - Every tool in `ToolDefs` has non-empty Name, Description, InputSchema
+  - InputSchema.Type is "object" for all tools
+  - Required fields listed in schema are present in Properties
+  - No duplicate tool names
+
+**mcp/server/entity (0% → 80%+)**
+
+- [ ] MCP-COV.4: Test `PromptDefs` completeness #added:2026-03-15
+  - Every prompt has non-empty Name and Description
+  - Required arguments have non-empty Name and Description
+  - No duplicate prompt names
+  - Argument names match expected field constants
+
+**mcp/server gaps (78.8% → 85%+)**
+
+- [ ] MCP-COV.5: Test `promptAddLearning` (0% coverage) #added:2026-03-15
+  - Mirror the existing `promptAddDecision` test with learning-specific
+    arguments (`content`, `context`, `lesson`, `application`)
+- [ ] MCP-COV.6: Test `toolRemind` (26.7% coverage) #added:2026-03-15
+  - Test with no reminders → returns no-reminders message
+  - Test with active reminders → returns formatted list
+  - Test with future-dated reminder → shows "not due" annotation
+- [ ] MCP-COV.7: Test `toolDrift` (57.1% coverage) #added:2026-03-15
+  - Test with clean context → status OK, no violations
+  - Test with missing required files → violations reported
+  - Test with context load failure → error response
+- [ ] MCP-COV.8: Test `toolComplete` error paths (66.7% coverage) #added:2026-03-15
+  - Empty query → error
+  - Boundary violation → error
+  - Non-matching query → error from `CompleteTask`
+- [ ] MCP-COV.9: Test `emitNotification` and `handleNotification` (both 0%) #added:2026-03-15
+  - `emitNotification` writes valid JSON-RPC notification to stdout
+  - `handleNotification` for `notifications/initialized` returns nil
+  - Unknown notification method returns nil (no-op)
+- [ ] MCP-COV.10: Test `writeError` (0% coverage) #added:2026-03-15
+  - Triggers on malformed JSON input (non-JSON-RPC)
+  - Writes a valid JSON-RPC error response to stdout
+- [ ] MCP-COV.11: Test error paths for subscribe/unsubscribe (71.4%) #added:2026-03-15
+  - Invalid JSON params → `ErrCodeInvalidArg`
+  - Empty URI → `ErrCodeInvalidArg`
+
 ### Phase -2: Further Cleanup
 
 * Human: internal/recall/parser requires a serious refactoring; for example

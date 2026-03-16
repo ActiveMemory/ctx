@@ -18,8 +18,8 @@ import (
 	"github.com/spf13/cobra"
 
 	"github.com/ActiveMemory/ctx/internal/assets"
-	compactcore "github.com/ActiveMemory/ctx/internal/cli/compact/core"
 	"github.com/ActiveMemory/ctx/internal/cli/task/core"
+	"github.com/ActiveMemory/ctx/internal/tidy"
 	"github.com/ActiveMemory/ctx/internal/write"
 )
 
@@ -53,10 +53,10 @@ func runArchive(cmd *cobra.Command, dryRun bool) error {
 	lines := strings.Split(string(content), nl)
 
 	// Parse task blocks using block-based parsing
-	blocks := compactcore.ParseTaskBlocks(lines)
+	blocks := tidy.ParseTaskBlocks(lines)
 
 	// Filter to only archivable blocks (completed with no incomplete children)
-	var archivableBlocks []compactcore.TaskBlock
+	var archivableBlocks []tidy.TaskBlock
 	var skippedCount int
 	for _, block := range blocks {
 		if block.IsArchivable {
@@ -93,13 +93,13 @@ func runArchive(cmd *cobra.Command, dryRun bool) error {
 	}
 
 	// Write to archive
-	archiveFilePath, writeErr := compactcore.WriteArchive(archive.ArchiveScopeTasks, assets.HeadingArchivedTasks, archivedContent.String())
+	archiveFilePath, writeErr := tidy.WriteArchive(archive.ArchiveScopeTasks, assets.HeadingArchivedTasks, archivedContent.String())
 	if writeErr != nil {
 		return writeErr
 	}
 
 	// Remove archived blocks from lines and write back
-	newLines := compactcore.RemoveBlocksFromLines(lines, archivableBlocks)
+	newLines := tidy.RemoveBlocksFromLines(lines, archivableBlocks)
 	newContent := strings.Join(newLines, nl)
 
 	if updateErr := os.WriteFile(
