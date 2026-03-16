@@ -3,6 +3,7 @@
 <!-- INDEX:START -->
 | Date | Learning |
 |------|--------|
+| 2026-03-16 | Docstring tasks require reading CONVENTIONS.md Documentation section first |
 | 2026-03-16 | Convention enforcement needs mechanical verification, not behavioral repetition |
 | 2026-03-16 | One-liner method wrappers hide dependencies without adding value |
 | 2026-03-16 | Agents reliably introduce gofmt issues during bulk renames |
@@ -77,6 +78,16 @@
 | 2026-02-19 | Feature can be code-complete but invisible to users |
 | 2026-01-28 | IDE is already the UI |
 <!-- INDEX:END -->
+
+---
+
+## [2026-03-16-114227] Docstring tasks require reading CONVENTIONS.md Documentation section first
+
+**Context**: Agent was asked to review docstrings in server.go but skipped convention loading, missed incomplete Parameter/Returns sections, and needed three hints to recall the known issue
+
+**Lesson**: Any task involving docstrings, comments, or documentation formatting is a convention-sensitive task — read CONVENTIONS.md (Documentation section) and LEARNINGS.md (for known gaps) before reviewing or writing
+
+**Application**: On any docstring/comment task: (1) load CONVENTIONS.md Documentation section, (2) check LEARNINGS.md for related entries, (3) audit all functions in scope against the convention template, not just the ones in the diff
 
 ---
 

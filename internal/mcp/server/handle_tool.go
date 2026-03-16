@@ -21,6 +21,7 @@ import (
 	"github.com/ActiveMemory/ctx/internal/mcp/entity"
 	"github.com/ActiveMemory/ctx/internal/mcp/proto"
 	"github.com/ActiveMemory/ctx/internal/mcp/server/extract"
+	"github.com/ActiveMemory/ctx/internal/mcp/server/out"
 )
 
 // handleToolsList returns all available MCP tools.
@@ -31,7 +32,7 @@ import (
 // Returns:
 //   - *proto.Response: tool list result
 func (s *Server) handleToolsList(req proto.Request) *proto.Response {
-	return s.ok(req.ID, proto.ToolListResult{Tools: entity.ToolDefs})
+	return out.OkResponse(req.ID, proto.ToolListResult{Tools: entity.ToolDefs})
 }
 
 // handleToolsCall dispatches a tool call to the appropriate handler.
@@ -44,7 +45,7 @@ func (s *Server) handleToolsList(req proto.Request) *proto.Response {
 func (s *Server) handleToolsCall(req proto.Request) *proto.Response {
 	var params proto.CallToolParams
 	if err := json.Unmarshal(req.Params, &params); err != nil {
-		return s.error(
+		return out.ErrResponse(
 			req.ID, proto.ErrCodeInvalidArg,
 			assets.TextDesc(assets.TextDescKeyMCPInvalidParams),
 		)
@@ -76,7 +77,7 @@ func (s *Server) handleToolsCall(req proto.Request) *proto.Response {
 	case tool.Remind:
 		return s.call(req.ID, s.handler.Remind)
 	default:
-		return s.error(
+		return out.ErrResponse(
 			req.ID, proto.ErrCodeNotFound,
 			fmt.Sprintf(
 				assets.TextDesc(assets.TextDescKeyMCPUnknownTool),
@@ -285,7 +286,7 @@ func (s *Server) toolSessionEvent(
 // Returns:
 //   - *proto.Response: tool result with text content
 func (s *Server) toolOK(id json.RawMessage, text string) *proto.Response {
-	return s.ok(
+	return out.OkResponse(
 		id,
 		proto.CallToolResult{
 			Content: []proto.ToolContent{
@@ -303,7 +304,7 @@ func (s *Server) toolOK(id json.RawMessage, text string) *proto.Response {
 // Returns:
 //   - *proto.Response: tool result with IsError set
 func (s *Server) toolError(id json.RawMessage, msg string) *proto.Response {
-	return s.ok(id, proto.CallToolResult{
+	return out.OkResponse(id, proto.CallToolResult{
 		Content: []proto.ToolContent{{Type: mime.ContentTypeText, Text: msg}},
 		IsError: true,
 	})
