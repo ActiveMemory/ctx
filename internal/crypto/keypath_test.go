@@ -18,6 +18,7 @@ import (
 func TestGlobalKeyPath(t *testing.T) {
 	dir := t.TempDir()
 	t.Setenv("HOME", dir)
+	t.Setenv("USERPROFILE", dir)
 
 	got := GlobalKeyPath()
 	want := filepath.Join(dir, ".ctx", cryptocfg.ContextKey)
@@ -29,6 +30,7 @@ func TestGlobalKeyPath(t *testing.T) {
 func TestExpandHome_Tilde(t *testing.T) {
 	dir := t.TempDir()
 	t.Setenv("HOME", dir)
+	t.Setenv("USERPROFILE", dir)
 
 	got := ExpandHome("~/foo")
 	want := filepath.Join(dir, "foo")
@@ -54,6 +56,7 @@ func TestExpandHome_TildeOnly(t *testing.T) {
 func TestResolveKeyPath_OverrideTakesPrecedence(t *testing.T) {
 	dir := t.TempDir()
 	t.Setenv("HOME", dir)
+	t.Setenv("USERPROFILE", dir)
 
 	got := ResolveKeyPath(".context", "~/custom/my.key")
 	want := filepath.Join(dir, "custom", "my.key")
@@ -65,6 +68,7 @@ func TestResolveKeyPath_OverrideTakesPrecedence(t *testing.T) {
 func TestResolveKeyPath_ProjectLocalBeforeGlobal(t *testing.T) {
 	dir := t.TempDir()
 	t.Setenv("HOME", dir)
+	t.Setenv("USERPROFILE", dir)
 
 	// Create both project-local and global keys.
 	contextDir := filepath.Join(dir, "project", ".context")
@@ -94,6 +98,7 @@ func TestResolveKeyPath_ProjectLocalBeforeGlobal(t *testing.T) {
 func TestResolveKeyPath_FallbackToGlobal(t *testing.T) {
 	dir := t.TempDir()
 	t.Setenv("HOME", dir)
+	t.Setenv("USERPROFILE", dir)
 
 	// Create global key only: no project-local.
 	globalDir := filepath.Join(dir, ".ctx")
@@ -115,6 +120,7 @@ func TestResolveKeyPath_FallbackToGlobal(t *testing.T) {
 func TestResolveKeyPath_DefaultsToGlobal(t *testing.T) {
 	dir := t.TempDir()
 	t.Setenv("HOME", dir)
+	t.Setenv("USERPROFILE", dir)
 
 	contextDir := filepath.Join(dir, "project", ".context")
 
