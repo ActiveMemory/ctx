@@ -3,6 +3,7 @@
 <!-- INDEX:START -->
 | Date | Decision |
 |------|--------|
+| 2026-03-16 | Rename --consequences flag to --consequence for singular consistency |
 | 2026-03-15 | Pure-logic CompactContext with no I/O — callers own file writes and reporting |
 | 2026-03-15 | TextDescKey exhaustive test verifies all 879 constants resolve to non-empty YAML values |
 | 2026-03-15 | Split text.yaml into 6 domain files loaded via loadYAMLDir |
@@ -48,6 +49,20 @@
 | 2026-02-26 | Security and permissions (consolidated) |
 | 2026-02-27 | Webhook and notification design (consolidated) |
 <!-- INDEX:END -->
+
+## [2026-03-16-022635] Rename --consequences flag to --consequence for singular consistency
+
+**Status**: Accepted
+
+**Context**: All other CLI flags (context, rationale, lesson, application) are singular nouns. consequences was the only plural.
+
+**Decision**: Rename --consequences flag to --consequence for singular consistency
+
+**Rationale**: Singular form matches the pattern. Consistency wins over natural language preference.
+
+**Consequence**: 75+ files updated. Breaking change for --consequences users.
+
+---
 
 ## [2026-03-15-230640] Pure-logic CompactContext with no I/O — callers own file writes and reporting
 
