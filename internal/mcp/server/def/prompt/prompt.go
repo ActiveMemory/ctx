@@ -4,25 +4,25 @@
 //   \    Copyright 2026-present Context contributors.
 //                 SPDX-License-Identifier: Apache-2.0
 
-package entity
+package prompt
 
 import (
 	"github.com/ActiveMemory/ctx/internal/assets"
 	"github.com/ActiveMemory/ctx/internal/config/cli"
 	"github.com/ActiveMemory/ctx/internal/config/mcp/field"
-	"github.com/ActiveMemory/ctx/internal/config/mcp/prompt"
+	promptCfg "github.com/ActiveMemory/ctx/internal/config/mcp/prompt"
 	"github.com/ActiveMemory/ctx/internal/mcp/proto"
 )
 
-// PromptDefs defines all available MCP prompts.
-var PromptDefs = []proto.Prompt{
+// Defs defines all available MCP prompts.
+var Defs = []proto.Prompt{
 	{
-		Name: prompt.SessionStart,
+		Name: promptCfg.SessionStart,
 		Description: assets.TextDesc(
 			assets.TextDescKeyMCPPromptSessionStartDesc),
 	},
 	{
-		Name: prompt.AddDecision,
+		Name: promptCfg.AddDecision,
 		Description: assets.TextDesc(
 			assets.TextDescKeyMCPPromptAddDecisionDesc),
 		Arguments: []proto.PromptArgument{
@@ -49,7 +49,7 @@ var PromptDefs = []proto.Prompt{
 		},
 	},
 	{
-		Name: prompt.AddLearning,
+		Name: promptCfg.AddLearning,
 		Description: assets.TextDesc(
 			assets.TextDescKeyMCPPromptAddLearningDesc),
 		Arguments: []proto.PromptArgument{
@@ -76,12 +76,12 @@ var PromptDefs = []proto.Prompt{
 		},
 	},
 	{
-		Name: prompt.Reflect,
+		Name: promptCfg.Reflect,
 		Description: assets.TextDesc(
 			assets.TextDescKeyMCPPromptReflectDesc),
 	},
 	{
-		Name: prompt.Checkpoint,
+		Name: promptCfg.Checkpoint,
 		Description: assets.TextDesc(
 			assets.TextDescKeyMCPPromptCheckpointDesc),
 	},

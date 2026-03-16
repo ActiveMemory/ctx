@@ -4,28 +4,28 @@
 //   \    Copyright 2026-present Context contributors.
 //                 SPDX-License-Identifier: Apache-2.0
 
-package entity
+package tool
 
 import (
 	"github.com/ActiveMemory/ctx/internal/assets"
 	"github.com/ActiveMemory/ctx/internal/config/cli"
 	"github.com/ActiveMemory/ctx/internal/config/mcp/field"
 	"github.com/ActiveMemory/ctx/internal/config/mcp/schema"
-	"github.com/ActiveMemory/ctx/internal/config/mcp/tool"
+	toolCfg "github.com/ActiveMemory/ctx/internal/config/mcp/tool"
 	"github.com/ActiveMemory/ctx/internal/mcp/proto"
 )
 
-// ToolDefs defines all available MCP tools.
-var ToolDefs = []proto.Tool{
+// Defs defines all available MCP tools.
+var Defs = []proto.Tool{
 	{
-		Name: tool.Status,
+		Name: toolCfg.Status,
 		Description: assets.TextDesc(
 			assets.TextDescKeyMCPToolStatusDesc),
 		InputSchema: proto.InputSchema{Type: schema.Object},
 		Annotations: &proto.ToolAnnotations{ReadOnlyHint: true},
 	},
 	{
-		Name: tool.Add,
+		Name: toolCfg.Add,
 		Description: assets.TextDesc(
 			assets.TextDescKeyMCPToolAddDesc),
 		InputSchema: proto.InputSchema{
@@ -58,7 +58,7 @@ var ToolDefs = []proto.Tool{
 		Annotations: &proto.ToolAnnotations{},
 	},
 	{
-		Name: tool.Complete,
+		Name: toolCfg.Complete,
 		Description: assets.TextDesc(
 			assets.TextDescKeyMCPToolCompleteDesc),
 		InputSchema: proto.InputSchema{
@@ -75,14 +75,14 @@ var ToolDefs = []proto.Tool{
 		Annotations: &proto.ToolAnnotations{IdempotentHint: true},
 	},
 	{
-		Name: tool.Drift,
+		Name: toolCfg.Drift,
 		Description: assets.TextDesc(
 			assets.TextDescKeyMCPToolDriftDesc),
 		InputSchema: proto.InputSchema{Type: schema.Object},
 		Annotations: &proto.ToolAnnotations{ReadOnlyHint: true},
 	},
 	{
-		Name: tool.Recall,
+		Name: toolCfg.Recall,
 		Description: assets.TextDesc(
 			assets.TextDescKeyMCPToolRecallDesc),
 		InputSchema: proto.InputSchema{
@@ -103,7 +103,7 @@ var ToolDefs = []proto.Tool{
 		Annotations: &proto.ToolAnnotations{ReadOnlyHint: true},
 	},
 	{
-		Name: tool.WatchUpdate,
+		Name: toolCfg.WatchUpdate,
 		Description: assets.TextDesc(
 			assets.TextDescKeyMCPToolWatchUpdateDesc),
 		InputSchema: proto.InputSchema{
@@ -126,7 +126,7 @@ var ToolDefs = []proto.Tool{
 		Annotations: &proto.ToolAnnotations{},
 	},
 	{
-		Name: tool.Compact,
+		Name: toolCfg.Compact,
 		Description: assets.TextDesc(
 			assets.TextDescKeyMCPToolCompactDesc),
 		InputSchema: proto.InputSchema{
@@ -142,14 +142,14 @@ var ToolDefs = []proto.Tool{
 		Annotations: &proto.ToolAnnotations{},
 	},
 	{
-		Name: tool.Next,
+		Name: toolCfg.Next,
 		Description: assets.TextDesc(
 			assets.TextDescKeyMCPToolNextDesc),
 		InputSchema: proto.InputSchema{Type: schema.Object},
 		Annotations: &proto.ToolAnnotations{ReadOnlyHint: true},
 	},
 	{
-		Name: tool.CheckTaskCompletion,
+		Name: toolCfg.CheckTaskCompletion,
 		Description: assets.TextDesc(
 			assets.TextDescKeyMCPToolCheckTaskDesc),
 		InputSchema: proto.InputSchema{
@@ -165,7 +165,7 @@ var ToolDefs = []proto.Tool{
 		Annotations: &proto.ToolAnnotations{ReadOnlyHint: true},
 	},
 	{
-		Name: tool.SessionEvent,
+		Name: toolCfg.SessionEvent,
 		Description: assets.TextDesc(
 			assets.TextDescKeyMCPToolSessionDesc),
 		InputSchema: proto.InputSchema{
@@ -187,7 +187,7 @@ var ToolDefs = []proto.Tool{
 		Annotations: &proto.ToolAnnotations{},
 	},
 	{
-		Name: tool.Remind,
+		Name: toolCfg.Remind,
 		Description: assets.TextDesc(
 			assets.TextDescKeyMCPToolRemindDesc),
 		InputSchema: proto.InputSchema{Type: schema.Object},
