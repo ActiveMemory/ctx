@@ -21,6 +21,7 @@ import (
 	"github.com/ActiveMemory/ctx/internal/context"
 	"github.com/ActiveMemory/ctx/internal/mcp/proto"
 	"github.com/ActiveMemory/ctx/internal/mcp/server/entity"
+	"github.com/ActiveMemory/ctx/internal/mcp/server/stat"
 )
 
 // handlePromptsList returns all available MCP prompts.
@@ -80,7 +81,7 @@ func (s *Server) handlePromptsGet(req proto.Request) *proto.Response {
 func (s *Server) promptSessionStart(
 	id json.RawMessage,
 ) *proto.Response {
-	ctx, err := context.Load(s.contextDir)
+	ctx, err := context.Load(s.handler.ContextDir)
 	if err != nil {
 		return s.error(id, proto.ErrCodeInternal,
 			fmt.Sprintf(
@@ -264,8 +265,8 @@ func (s *Server) promptReflect(id json.RawMessage) *proto.Response {
 func (s *Server) promptCheckpoint(
 	id json.RawMessage,
 ) *proto.Response {
-	pending := s.session.PendingCount()
-	adds := totalAdds(s.session.AddsPerformed)
+	pending := s.handler.Session.PendingCount()
+	adds := stat.TotalAdds(s.handler.Session.AddsPerformed)
 
 	var sb strings.Builder
 	sb.WriteString(
@@ -277,7 +278,7 @@ func (s *Server) promptCheckpoint(
 	_, _ = fmt.Fprintf(
 		&sb,
 		assets.TextDesc(assets.TextDescKeyMCPPromptCheckpointStatsFormat),
-		s.session.ToolCalls, adds, pending,
+		s.handler.Session.ToolCalls, adds, pending,
 	)
 
 	sb.WriteString(token.NewlineLF)

@@ -4,7 +4,7 @@
 //   \    Copyright 2026-present Context contributors.
 //                 SPDX-License-Identifier: Apache-2.0
 
-package server
+package handler
 
 import (
 	"strings"
@@ -13,6 +13,7 @@ import (
 	"github.com/ActiveMemory/ctx/internal/config/mcp/cfg"
 	"github.com/ActiveMemory/ctx/internal/config/regex"
 	"github.com/ActiveMemory/ctx/internal/config/token"
+	"github.com/ActiveMemory/ctx/internal/parse"
 	"github.com/ActiveMemory/ctx/internal/task"
 )
 
@@ -74,7 +75,7 @@ func eachPendingTask(lines []string, fn func(pendingTask) bool) {
 // Returns:
 //   - bool: true if at least 2 significant words overlap
 func containsOverlap(action, taskText string) bool {
-	actionWords := toWordSet(strings.ToLower(action))
+	actionWords := parse.WordSet(strings.ToLower(action))
 	taskWords := strings.Fields(strings.ToLower(taskText))
 
 	matchCount := 0
