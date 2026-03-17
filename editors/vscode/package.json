@@ -164,6 +164,10 @@
           {
             "name": "reindex",
             "description": "Rebuild context file indices"
+          },
+          {
+            "name": "diag",
+            "description": "Diagnose extension issues — times each step to find hangs"
           }
         ],
         "disambiguation": [

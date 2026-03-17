@@ -40,6 +40,7 @@ import (
 	"github.com/ActiveMemory/ctx/internal/cli/system/cmd/qa_reminder"
 	"github.com/ActiveMemory/ctx/internal/cli/system/cmd/resources"
 	"github.com/ActiveMemory/ctx/internal/cli/system/cmd/resume"
+	"github.com/ActiveMemory/ctx/internal/cli/system/cmd/sessionevent"
 	"github.com/ActiveMemory/ctx/internal/cli/system/cmd/specs_nudge"
 	"github.com/ActiveMemory/ctx/internal/cli/system/cmd/stats"
 )
@@ -98,6 +99,7 @@ func Cmd() *cobra.Command {
 		qa_reminder.Cmd(),
 		resources.Cmd(),
 		resume.Cmd(),
+		sessionevent.Cmd(),
 		specs_nudge.Cmd(),
 		stats.Cmd(),
 	)
