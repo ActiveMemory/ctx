@@ -103,4 +103,78 @@ ctx drift         # Check for stale context
 ctx recall list   # Recent session history
 ```
 
+## MCP Tools (Preferred)
+
+When an MCP server named `ctx` is available, **always prefer MCP tools
+over terminal commands** for context operations. MCP tools provide
+validation, session tracking, and boundary checks automatically.
+
+| MCP Tool                    | Purpose                              |
+|-----------------------------|--------------------------------------|
+| `ctx_status`                | Context summary and health check     |
+| `ctx_add`                   | Add task, decision, learning, or convention |
+| `ctx_complete`              | Mark a task as done                  |
+| `ctx_drift`                 | Check for stale or drifted context   |
+| `ctx_recall`                | Query session history                |
+| `ctx_next`                  | Get the next task to work on         |
+| `ctx_compact`               | Archive completed tasks              |
+| `ctx_watch_update`          | Write entry and queue for review     |
+| `ctx_check_task_completion` | Match recent work to open tasks      |
+| `ctx_session_event`         | Signal session start or end          |
+| `ctx_remind`                | List pending reminders               |
+
+**Rule**: Do NOT run `ctx` in the terminal when the equivalent MCP tool
+exists. MCP tools enforce boundary validation and track session state.
+Terminal fallback is only for commands without an MCP equivalent (e.g.,
+`ctx agent`, `ctx recall list`).
+
+## Governance: When to Call Tools
+
+The MCP server tracks session state and appends warnings to tool
+responses when governance actions are overdue. Follow this protocol:
+
+### Session Lifecycle
+
+1. **BEFORE any work**: call `ctx_session_event(type="start")`, then
+   `ctx_status()` to load context.
+2. **Before ending**: call `ctx_session_event(type="end")` to flush
+   pending state.
+
+### During Work
+
+- **After making a decision or discovering a gotcha**: call `ctx_add()`
+  to persist it immediately — not at session end.
+- **After completing a task**: call `ctx_complete()` or
+  `ctx_check_task_completion()`.
+- **Every 10–15 tool calls or 15 minutes**: call `ctx_drift()` to
+  check for stale context.
+- **Before git commit**: call `ctx_status()` to verify context health.
+
+### Responding to Warnings
+
+When a tool response contains a `⚠` warning, act on it in your next
+action. Do not ignore governance warnings — they indicate context
+hygiene actions that are overdue.
+
+When a tool response contains a `🚨 CRITICAL` warning, **stop current
+work immediately** and address the violation. These indicate dangerous
+commands, sensitive file access, or policy violations detected by the
+VS Code extension. Review the action, revert if unintended, and explain
+what happened before continuing.
+
+### Detection Ring
+
+The VS Code extension monitors terminal commands and file access in
+real time. The following actions are flagged as violations:
+
+- **Dangerous commands**: `sudo`, `rm -rf /`, `git push`, `git reset
+  --hard`, `curl`, `wget`, `chmod 777`
+- **hack/ scripts**: Direct execution of `hack/*.sh` — use `make`
+  targets instead
+- **Sensitive files**: Editing `.env`, `.pem`, `.key`, or files
+  matching `credentials` or `secret`
+
+Violations are recorded and surfaced as CRITICAL warnings in your next
+MCP tool response. The user also sees a VS Code notification.
+
 <!-- ctx:copilot:end -->
