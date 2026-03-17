@@ -78,6 +78,12 @@ func Run(
 	// treated as uninitialized - no overwrite prompt needed.
 	if _, err := os.Stat(contextDir); err == nil {
 		if !force && hasEssentialFiles(contextDir) {
+			// When called from an editor (--caller), stdin is unavailable.
+			// Skip the interactive prompt to prevent hanging.
+			if caller != "" {
+				initialize.InfoAborted(cmd)
+				return nil
+			}
 			// Prompt for confirmation
 			initialize.InfoOverwritePrompt(cmd, contextDir)
 			reader := bufio.NewReader(os.Stdin)
@@ -161,13 +167,15 @@ func Run(
 	}
 
 	// Create PROMPT.md (uses ralph template if --ralph flag set)
-	if err := prompt.HandlePromptMd(cmd, force, merge, ralph); err != nil {
+	// When called from an editor (--caller), auto-merge to avoid stdin prompt.
+	autoMerge := merge || caller != ""
+	if err := prompt.HandlePromptMd(cmd, force, autoMerge, ralph); err != nil {
 		// Non-fatal: warn but continue
 		initialize.InfoWarnNonFatal(cmd, loop.PromptMd, err)
 	}
 
 	// Create IMPLEMENTATION_PLAN.md
-	if err := plan.HandleImplementationPlan(cmd, force, merge); err != nil {
+	if err := plan.HandleImplementationPlan(cmd, force, autoMerge); err != nil {
 		// Non-fatal: warn but continue
 		initialize.InfoWarnNonFatal(cmd, project.ImplementationPlan, err)
 	}
@@ -191,7 +199,7 @@ func Run(
 	}
 
 	// Handle CLAUDE.md creation/merge
-	if err := coreClaude.HandleClaudeMd(cmd, force, merge); err != nil {
+	if err := coreClaude.HandleClaudeMd(cmd, force, autoMerge); err != nil {
 		// Non-fatal: warn but continue
 		initialize.InfoWarnNonFatal(cmd, claude.Md, err)
 	}

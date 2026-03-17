@@ -71,3 +71,9 @@ ideas
 .context/.ctx.key
 .context/.scratchpad.key
 .DS_Store
+
+# ctx managed entries
+.context/journal
+.context/journal-site
+.context/journal-obsidian
+.context/logs

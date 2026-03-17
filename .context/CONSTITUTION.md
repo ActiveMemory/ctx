@@ -1,5 +1,17 @@
 # Constitution
 
+<!--
+UPDATE WHEN:
+- Security requirements change or new vulnerabilities discovered
+- New invariants emerge from production incidents
+- Team agrees on new inviolable rules
+- Existing rules prove too restrictive or too loose
+
+DO NOT UPDATE FOR:
+- Preferences or suggestions (use CONVENTIONS.md)
+- Temporary constraints (use TASKS.md blockers)
+-->
+
 These rules are INVIOLABLE. If a task requires violating these, the task is wrong.
 
 ## Security Invariants
@@ -11,12 +23,11 @@ These rules are INVIOLABLE. If a task requires violating these, the task is wron
 
 - [ ] All code must pass tests before commit
 - [ ] No TODO comments in main branch (move to TASKS.md)
-- [ ] Path construction uses stdlib — no string concatenation (security: prevents path traversal)
+- [ ] Path construction uses language-standard path joining — no string concatenation (security: prevents path traversal)
 
 ## Process Invariants
 
 - [ ] All architectural changes require a decision record
-- [ ] Context loading is not a detour from your task. It IS the first step of every session. A 30-second read delay is always cheaper than a decision made without context.
 
 ## TASKS.md Structure Invariants
 
