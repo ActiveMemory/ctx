@@ -56,15 +56,19 @@ import (
 //   - merge: If true, auto-merge ctx content into existing files
 //   - ralph: If true, use autonomous loop templates (no questions, signals)
 //   - noPluginEnable: If true, skip auto-enabling the plugin globally
+//   - caller: Identifies the calling tool (e.g. "vscode") for template overrides
 //
 // Returns:
 //   - error: Non-nil if directory creation or file operations fail
 func Run(
-	cmd *cobra.Command, force, minimal, merge, ralph, noPluginEnable bool,
+	cmd *cobra.Command, force, minimal, merge, ralph, noPluginEnable bool, caller string,
 ) error {
-	// Check if ctx is in PATH (required for hooks to work)
-	if err := validate.CheckCtxInPath(cmd); err != nil {
-		return err
+	// Check if ctx is in PATH (required for hooks to work).
+	// Skip when a caller is set — the caller manages its own binary path.
+	if caller == "" {
+		if err := validate.CheckCtxInPath(cmd); err != nil {
+			return err
+		}
 	}
 
 	contextDir := rc.ContextDir()
@@ -168,18 +172,21 @@ func Run(
 		initialize.InfoWarnNonFatal(cmd, project.ImplementationPlan, err)
 	}
 
-	// Merge permissions into settings.local.json (no hook scaffolding)
-	initialize.InfoSettingUpPermissions(cmd)
-	if err := coreMerge.SettingsPermissions(cmd); err != nil {
-		// Non-fatal: warn but continue
-		initialize.InfoWarnNonFatal(cmd, desc.Text(text.DescKeyInitLabelPermissions), err)
-	}
-
-	// Auto-enable plugin globally unless suppressed
-	if !noPluginEnable {
-		if pluginErr := plugin.EnablePluginGlobally(cmd); pluginErr != nil {
+	// Claude Code specific artifacts — skip when called from another editor.
+	if caller == "" {
+		// Merge permissions into settings.local.json (no hook scaffolding)
+		initialize.InfoSettingUpPermissions(cmd)
+		if err := coreMerge.SettingsPermissions(cmd); err != nil {
 			// Non-fatal: warn but continue
-			initialize.InfoWarnNonFatal(cmd, desc.Text(text.DescKeyInitLabelPluginEnable), pluginErr)
+			initialize.InfoWarnNonFatal(cmd, desc.Text(text.DescKeyInitLabelPermissions), err)
+		}
+
+		// Auto-enable plugin globally unless suppressed
+		if !noPluginEnable {
+			if pluginErr := plugin.EnablePluginGlobally(cmd); pluginErr != nil {
+				// Non-fatal: warn but continue
+				initialize.InfoWarnNonFatal(cmd, desc.Text(text.DescKeyInitLabelPluginEnable), pluginErr)
+			}
 		}
 	}
 
@@ -189,10 +196,12 @@ func Run(
 		initialize.InfoWarnNonFatal(cmd, claude.Md, err)
 	}
 
-	// Deploy Makefile.ctx and amend user Makefile
-	if err := coreProject.HandleMakefileCtx(cmd); err != nil {
-		// Non-fatal: warn but continue
-		initialize.InfoWarnNonFatal(cmd, sync.PatternMakefile, err)
+	// Deploy Makefile.ctx and amend user Makefile (Claude Code only)
+	if caller == "" {
+		if err := coreProject.HandleMakefileCtx(cmd); err != nil {
+			// Non-fatal: warn but continue
+			initialize.InfoWarnNonFatal(cmd, sync.PatternMakefile, err)
+		}
 	}
 
 	// Update .gitignore with recommended entries
