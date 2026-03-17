@@ -23,6 +23,9 @@ let extensionCtx: vscode.ExtensionContext | undefined;
 // Status bar item for context reminders
 let reminderStatusBar: vscode.StatusBarItem | undefined;
 
+// Output channel for diagnostic logging (visible in Output panel)
+let outputLog: vscode.OutputChannel;
+
 // --- Detection ring: deny patterns for governance ---
 const DENY_COMMAND_PATTERNS: RegExp[] = [
   /\bsudo\s/,
@@ -141,13 +144,15 @@ function getPlatformInfo(): { goos: string; goarch: string; ext: string } {
  */
 function fetchJSON(url: string): Promise<unknown> {
   return new Promise((resolve, reject) => {
+    const timer = setTimeout(() => reject(new Error(`fetchJSON timeout after 10s: ${url}`)), 10000);
     const get = (reqUrl: string, redirectCount: number) => {
       if (redirectCount > 5) {
+        clearTimeout(timer);
         reject(new Error("Too many redirects"));
         return;
       }
       https
-        .get(reqUrl, { headers: { "User-Agent": "ctx-vscode" } }, (res) => {
+        .get(reqUrl, { headers: { "User-Agent": "ctx-vscode" }, timeout: 10000 }, (res) => {
           if (
             res.statusCode &&
             res.statusCode >= 300 &&
@@ -164,15 +169,16 @@ function fetchJSON(url: string): Promise<unknown> {
           const chunks: Buffer[] = [];
           res.on("data", (chunk: Buffer) => chunks.push(chunk));
           res.on("end", () => {
+            clearTimeout(timer);
             try {
               resolve(JSON.parse(Buffer.concat(chunks).toString()));
             } catch (e) {
               reject(e);
             }
           });
-          res.on("error", reject);
+          res.on("error", (err) => { clearTimeout(timer); reject(err); });
         })
-        .on("error", reject);
+        .on("error", (err) => { clearTimeout(timer); reject(err); });
     };
     get(url, 0);
   });
@@ -183,13 +189,15 @@ function fetchJSON(url: string): Promise<unknown> {
  */
 function downloadFile(url: string, destPath: string): Promise<void> {
   return new Promise((resolve, reject) => {
+    const timer = setTimeout(() => reject(new Error(`downloadFile timeout after 30s: ${url}`)), 30000);
     const get = (reqUrl: string, redirectCount: number) => {
       if (redirectCount > 5) {
+        clearTimeout(timer);
         reject(new Error("Too many redirects"));
         return;
       }
       https
-        .get(reqUrl, { headers: { "User-Agent": "ctx-vscode" } }, (res) => {
+        .get(reqUrl, { headers: { "User-Agent": "ctx-vscode" }, timeout: 30000 }, (res) => {
           if (
             res.statusCode &&
             res.statusCode >= 300 &&
@@ -206,15 +214,18 @@ function downloadFile(url: string, destPath: string): Promise<void> {
           const file = fs.createWriteStream(destPath);
           res.pipe(file);
           file.on("finish", () => {
+            clearTimeout(timer);
             file.close();
             resolve();
           });
           file.on("error", (err) => {
+            clearTimeout(timer);
             fs.unlink(destPath, () => {});
             reject(err);
           });
         })
         .on("error", (err) => {
+          clearTimeout(timer);
           fs.unlink(destPath, () => {});
           reject(err);
         });
@@ -403,7 +414,9 @@ async function handleInit(
 ): Promise<CtxResult> {
   stream.progress("Initializing .context/ directory...");
   try {
-    const { stdout, stderr } = await runCtx(["init", "--caller", "vscode"], cwd, token);
+    // Always pass --force: without it, ctx init prompts for y/N confirmation
+    // when .context/ already exists, which hangs in non-interactive execFile.
+    const { stdout, stderr } = await runCtx(["init", "--force", "--caller", "vscode"], cwd, token);
     const output = mergeOutput(stdout, stderr);
     if (output) {
       stream.markdown("```\n" + output + "\n```");
@@ -2276,6 +2289,101 @@ async function handleWhy(
   return { metadata: { command: "why" } };
 }
 
+async function handleDiag(
+  stream: vscode.ChatResponseStream,
+  cwd: string,
+  token: vscode.CancellationToken
+): Promise<CtxResult> {
+  const say = (msg: string) => {
+    stream.markdown(msg + "\n");
+  };
+
+  const timed = async <T>(label: string, fn: () => Promise<T>, timeoutMs = 8000): Promise<T | undefined> => {
+    say(`\n**${label}**`);
+    const start = Date.now();
+    try {
+      const result = await Promise.race([
+        fn(),
+        new Promise<never>((_, reject) =>
+          setTimeout(() => reject(new Error(`TIMEOUT after ${timeoutMs}ms`)), timeoutMs)
+        ),
+      ]);
+      say(`  ✓ ${Date.now() - start}ms`);
+      return result;
+    } catch (err: unknown) {
+      say(`  ✗ ${Date.now() - start}ms — ${err instanceof Error ? err.message : String(err)}`);
+      return undefined;
+    }
+  };
+
+  say("## ctx Extension Diagnostics\n");
+  say(`- **VS Code version:** ${vscode.version}`);
+  say(`- **Platform:** ${os.platform()} ${os.arch()}`);
+  say(`- **Workspace:** ${cwd}`);
+  say(`- **resolvedCtxPath:** ${resolvedCtxPath || "(not set)"}`);
+  say(`- **bootstrapDone:** ${bootstrapDone}`);
+  say(`- **getCtxPath():** ${getCtxPath()}`);
+  say(`- **.context/ exists:** ${fs.existsSync(path.join(cwd, ".context"))}`);
+
+  // Step 1: Can we find ctx at all? (no shell)
+  const ctxPath = getCtxPath();
+  await timed("Step 1: execFile ctx --version (no shell)", () =>
+    new Promise<string>((resolve, reject) => {
+      execFile(ctxPath, ["--version"], { timeout: 5000 }, (err, stdout) => {
+        if (err) reject(err); else resolve(stdout.trim());
+      });
+    }).then((v) => { say(`  version: ${v}`); return v; })
+  );
+
+  // Step 2: with shell (Windows PATH resolution)
+  await timed("Step 2: execFile ctx --version (shell: true)", () =>
+    new Promise<string>((resolve, reject) => {
+      execFile(ctxPath, ["--version"], { timeout: 5000, shell: true }, (err, stdout) => {
+        if (err) reject(err); else resolve(stdout.trim());
+      });
+    }).then((v) => { say(`  version: ${v}`); return v; })
+  );
+
+  // Step 3: Bootstrap (includes GitHub API call if binary not found)
+  await timed("Step 3: bootstrap()", async () => {
+    bootstrapDone = false;
+    bootstrapPromise = undefined;
+    await bootstrap();
+    say(`  resolvedCtxPath after: ${resolvedCtxPath}`);
+  }, 15000);
+
+  // Step 4: runCtx status
+  await timed("Step 4: runCtx(['status'])", async () => {
+    const { stdout } = await runCtx(["status"], cwd, token);
+    say(`  output: ${stdout.substring(0, 100)}...`);
+  });
+
+  // Step 5: runCtx init --force
+  await timed("Step 5: runCtx(['init', '--force', '--caller', 'vscode'])", async () => {
+    const { stdout, stderr } = await runCtx(
+      ["init", "--force", "--caller", "vscode"],
+      cwd,
+      token
+    );
+    const output = mergeOutput(stdout, stderr);
+    say(`  output: ${output.substring(0, 200)}...`);
+  });
+
+  // Step 6: hook copilot
+  await timed("Step 6: runCtx(['hook', 'copilot', '--write'])", async () => {
+    const { stdout, stderr } = await runCtx(
+      ["hook", "copilot", "--write"],
+      cwd,
+      token
+    );
+    const output = mergeOutput(stdout, stderr);
+    say(`  output: ${output.substring(0, 200)}...`);
+  });
+
+  say("\n**✅ Diagnostics complete.**");
+  return { metadata: { command: "diag" } };
+}
+
 async function handleFreeform(
   request: vscode.ChatRequest,
   stream: vscode.ChatResponseStream,
@@ -2479,12 +2587,19 @@ const handler: vscode.ChatRequestHandler = async (
   stream: vscode.ChatResponseStream,
   token: vscode.CancellationToken
 ): Promise<CtxResult> => {
+  try {
+  outputLog.appendLine(`[${new Date().toISOString()}] Handler: command=${request.command || '(none)'}`);
   const cwd = getWorkspaceRoot();
   if (!cwd) {
     stream.markdown(
       "**Error:** No workspace folder is open. Open a project folder first."
     );
     return { metadata: { command: request.command || "none" } };
+  }
+
+  // /diag bypasses all guards — it IS the diagnostic tool
+  if (request.command === "diag") {
+    return handleDiag(stream, cwd, token);
   }
 
   // Auto-bootstrap: ensure ctx binary is available before any command
@@ -2601,18 +2716,32 @@ const handler: vscode.ChatRequestHandler = async (
       return handleReindex(stream, cwd, token);
     case "why":
       return handleWhy(stream, request.prompt, cwd, token);
+    case "diag":
+      return handleDiag(stream, cwd, token);
     default:
       return handleFreeform(request, stream, cwd, token);
+  }
+  } catch (err: unknown) {
+    const msg = err instanceof Error ? err.stack || err.message : String(err);
+    console.error(`[ctx] Handler CRASHED: ${msg}`);
+    stream.markdown(`**Error:** ${msg}`);
+    return { metadata: { command: request.command || "error" } };
   }
 };
 
 export function activate(extensionContext: vscode.ExtensionContext) {
+  // Output channel for diagnostics (visible in Output panel > "ctx")
+  outputLog = vscode.window.createOutputChannel("ctx");
+  outputLog.appendLine(`[${new Date().toISOString()}] ctx activating — VS Code ${vscode.version}, ${os.platform()} ${os.arch()}`);
+
   // Store extension context for auto-bootstrap binary downloads
   extensionCtx = extensionContext;
 
   // Kick off background bootstrap — don't block activation
-  bootstrap().catch(() => {
-    // Errors will surface when user invokes a command
+  bootstrap().then(() => {
+    outputLog.appendLine(`[${new Date().toISOString()}] Bootstrap complete: ${resolvedCtxPath}`);
+  }).catch((err) => {
+    outputLog.appendLine(`[${new Date().toISOString()}] Bootstrap FAILED: ${err instanceof Error ? err.message : String(err)}`);
   });
 
   const participant = vscode.chat.createChatParticipant(
@@ -2879,6 +3008,7 @@ export function activate(extensionContext: vscode.ExtensionContext) {
     ["ctx.guide", "/guide"],
     ["ctx.reindex", "/reindex"],
     ["ctx.why", "/why"],
+    ["ctx.diag", "/diag"],
   ];
   for (const [cmdId, slash] of paletteCommands) {
     extensionContext.subscriptions.push(

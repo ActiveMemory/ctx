@@ -65,6 +65,12 @@ func Run(cmd *cobra.Command, force, minimal, merge, ralph, noPluginEnable bool, 
 	// treated as uninitialized — no overwrite prompt needed.
 	if _, err := os.Stat(contextDir); err == nil {
 		if !force && hasEssentialFiles(contextDir) {
+			// When called from an editor (--caller), stdin is unavailable.
+			// Skip the interactive prompt to prevent hanging.
+			if caller != "" {
+				initialize.InfoAborted(cmd)
+				return nil
+			}
 			// Prompt for confirmation
 			initialize.InfoOverwritePrompt(cmd, contextDir)
 			reader := bufio.NewReader(os.Stdin)
@@ -148,13 +154,16 @@ func Run(cmd *cobra.Command, force, minimal, merge, ralph, noPluginEnable bool, 
 	}
 
 	// Create PROMPT.md (uses ralph template if --ralph flag set)
-	if err := core.HandlePromptMd(cmd, force, merge, ralph); err != nil {
+	// When called from an editor (--caller), auto-merge to avoid stdin prompt.
+	autoMerge := merge || caller != ""
+	if err := core.HandlePromptMd(cmd, force, autoMerge, ralph); err != nil {
 		// Non-fatal: warn but continue
 		initialize.InfoWarnNonFatal(cmd, "PROMPT.md", err)
 	}
 
 	// Create IMPLEMENTATION_PLAN.md
-	if err := core.HandleImplementationPlan(cmd, force, merge); err != nil {
+	// When called from an editor (--caller), auto-merge to avoid stdin prompt.
+	if err := core.HandleImplementationPlan(cmd, force, autoMerge); err != nil {
 		// Non-fatal: warn but continue
 		initialize.InfoWarnNonFatal(cmd, "IMPLEMENTATION_PLAN.md", err)
 	}
@@ -180,7 +189,8 @@ func Run(cmd *cobra.Command, force, minimal, merge, ralph, noPluginEnable bool, 
 	}
 
 	// Handle CLAUDE.md creation/merge (uses caller-specific override when available)
-	if err := core.HandleClaudeMd(cmd, force, merge, caller); err != nil {
+	// When called from an editor (--caller), auto-merge to avoid stdin prompt.
+	if err := core.HandleClaudeMd(cmd, force, autoMerge, caller); err != nil {
 		// Non-fatal: warn but continue
 		initialize.InfoWarnNonFatal(cmd, "CLAUDE.md", err)
 	}

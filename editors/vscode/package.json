@@ -34,7 +34,9 @@
     "copilot",
     "chat"
   ],
-  "activationEvents": [],
+  "activationEvents": [
+    "onStartupFinished"
+  ],
   "main": "./dist/extension.js",
   "contributes": {
     "chatParticipants": [
@@ -224,6 +226,10 @@
           {
             "name": "why",
             "description": "Read the philosophy behind ctx (manifesto, about, invariants)"
+          },
+          {
+            "name": "diag",
+            "description": "Diagnose extension issues — times each step to find hangs"
           }
         ],
         "disambiguation": [
@@ -288,7 +294,8 @@
       { "command": "ctx.deps", "title": "Deps", "category": "ctx" },
       { "command": "ctx.guide", "title": "Guide", "category": "ctx" },
       { "command": "ctx.reindex", "title": "Reindex", "category": "ctx" },
-      { "command": "ctx.why", "title": "Why", "category": "ctx" }
+      { "command": "ctx.why", "title": "Why", "category": "ctx" },
+      { "command": "ctx.diag", "title": "Diagnose", "category": "ctx" }
     ],
     "configuration": {
       "title": "ctx",

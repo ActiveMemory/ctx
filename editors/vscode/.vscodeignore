@@ -4,6 +4,7 @@ src/
 tsconfig.json
 vitest.config.ts
 package-lock.json
+test-insiders-sim.js
 **/*.map
 **/*.ts
 !dist/**
