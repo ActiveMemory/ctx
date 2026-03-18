@@ -7,10 +7,10 @@
 package rm
 
 import (
+	"github.com/ActiveMemory/ctx/internal/write/pad"
 	"github.com/spf13/cobra"
 
 	"github.com/ActiveMemory/ctx/internal/cli/pad/core"
-	"github.com/ActiveMemory/ctx/internal/write"
 )
 
 // Run removes entry at 1-based position n.
@@ -37,6 +37,6 @@ func Run(cmd *cobra.Command, n int) error {
 		return writeErr
 	}
 
-	write.PadEntryRemoved(cmd, n)
+	pad.PadEntryRemoved(cmd, n)
 	return nil
 }

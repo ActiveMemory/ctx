@@ -11,10 +11,11 @@ import (
 	"time"
 
 	ctxtime "github.com/ActiveMemory/ctx/internal/config/time"
+	"github.com/ActiveMemory/ctx/internal/write/status"
 	"github.com/spf13/cobra"
 
-	"github.com/ActiveMemory/ctx/internal/context"
-	"github.com/ActiveMemory/ctx/internal/write"
+	"github.com/ActiveMemory/ctx/internal/entity"
+	"github.com/ActiveMemory/ctx/internal/format"
 )
 
 // OutputStatusJSON writes context status as JSON to the command output.
@@ -29,7 +30,7 @@ import (
 // Returns:
 //   - error: Non-nil if JSON encoding fails
 func OutputStatusJSON(
-	cmd *cobra.Command, ctx *context.Context, verbose bool,
+	cmd *cobra.Command, ctx *entity.Context, verbose bool,
 ) error {
 	output := Output{
 		ContextDir:  ctx.Dir,
@@ -69,16 +70,16 @@ func OutputStatusJSON(
 // Returns:
 //   - error: Always nil (included for interface consistency)
 func OutputStatusText(
-	cmd *cobra.Command, ctx *context.Context, verbose bool,
+	cmd *cobra.Command, ctx *entity.Context, verbose bool,
 ) error {
-	write.StatusHeader(cmd, ctx.Dir, len(ctx.Files), ctx.TotalTokens)
+	status.StatusHeader(cmd, ctx.Dir, len(ctx.Files), ctx.TotalTokens)
 
-	sortedFiles := make([]context.FileInfo, len(ctx.Files))
+	sortedFiles := make([]entity.FileInfo, len(ctx.Files))
 	copy(sortedFiles, ctx.Files)
 	SortFilesByPriority(sortedFiles)
 
 	for _, f := range sortedFiles {
-		fi := write.StatusFileInfo{
+		fi := status.StatusFileInfo{
 			Name:   f.Name,
 			Tokens: f.Tokens,
 			Size:   f.Size,
@@ -93,19 +94,19 @@ func OutputStatusText(
 		if verbose && !f.IsEmpty {
 			fi.Preview = ContentPreview(string(f.Content), 3)
 		}
-		write.StatusFileItem(cmd, fi, verbose)
+		status.StatusFileItem(cmd, fi, verbose)
 	}
 
-	recentFiles := GetRecentFiles(ctx.Files, 3)
-	entries := make([]write.StatusActivityInfo, len(recentFiles))
+	recentFiles := RecentFilesSorted(ctx.Files, 3)
+	entries := make([]status.StatusActivityInfo, len(recentFiles))
 	for i, f := range recentFiles {
 		d := time.Since(f.ModTime)
-		entries[i] = write.StatusActivityInfo{
+		entries[i] = status.StatusActivityInfo{
 			Name: f.Name,
-			Ago:  write.FormatTimeAgo(d.Hours(), int(d.Minutes()), f.ModTime.Format(ctxtime.OlderFormat)),
+			Ago:  format.TimeAgo(d.Hours(), int(d.Minutes()), f.ModTime.Format(ctxtime.OlderFormat)),
 		}
 	}
-	write.StatusActivity(cmd, entries)
+	status.StatusActivity(cmd, entries)
 
 	return nil
 }

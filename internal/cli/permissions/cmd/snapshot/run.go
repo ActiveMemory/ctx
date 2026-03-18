@@ -13,9 +13,8 @@ import (
 	"github.com/ActiveMemory/ctx/internal/config/fs"
 	"github.com/ActiveMemory/ctx/internal/err/config"
 	ctxerr "github.com/ActiveMemory/ctx/internal/err/fs"
+	"github.com/ActiveMemory/ctx/internal/write/restore"
 	"github.com/spf13/cobra"
-
-	"github.com/ActiveMemory/ctx/internal/write"
 )
 
 // Run saves settings.local.json as the golden image.
@@ -45,6 +44,6 @@ func Run(cmd *cobra.Command) error {
 		return ctxerr.FileWrite(claude.SettingsGolden, writeErr)
 	}
 
-	write.SnapshotDone(cmd, updated, claude.SettingsGolden)
+	restore.SnapshotDone(cmd, updated, claude.SettingsGolden)
 	return nil
 }

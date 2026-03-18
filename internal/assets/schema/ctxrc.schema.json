@@ -86,6 +86,12 @@
       "default": 90,
       "minimum": 0
     },
+    "stale_age_days": {
+      "type": "integer",
+      "description": "Days before a context file is flagged as stale by drift detection. 0 disables.",
+      "default": 30,
+      "minimum": 0
+    },
     "key_path": {
       "type": "string",
       "description": "Explicit encryption key file path."

@@ -11,11 +11,11 @@ import (
 	"strings"
 
 	"github.com/ActiveMemory/ctx/internal/config/journal"
+	ctxcontext "github.com/ActiveMemory/ctx/internal/context/resolve"
 	ctxerr "github.com/ActiveMemory/ctx/internal/err/journal"
 	"github.com/spf13/cobra"
 
 	"github.com/ActiveMemory/ctx/internal/assets"
-	ctxcontext "github.com/ActiveMemory/ctx/internal/context"
 	"github.com/ActiveMemory/ctx/internal/journal/state"
 )
 

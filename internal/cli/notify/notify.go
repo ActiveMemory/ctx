@@ -9,7 +9,7 @@ package notify
 import (
 	"strings"
 
-	ctxerr "github.com/ActiveMemory/ctx/internal/err/validate"
+	errcli "github.com/ActiveMemory/ctx/internal/err/cli"
 	"github.com/spf13/cobra"
 
 	"github.com/ActiveMemory/ctx/internal/assets"
@@ -36,10 +36,10 @@ func Cmd() *cobra.Command {
 		Args:  cobra.MinimumNArgs(0),
 		RunE: func(cmd *cobra.Command, args []string) error {
 			if event == "" {
-				return ctxerr.FlagRequired("event")
+				return errcli.FlagRequired("event")
 			}
 			if len(args) == 0 {
-				return ctxerr.ArgRequired("message")
+				return errcli.ArgRequired("message")
 			}
 			message := strings.Join(args, " ")
 			var ref *notifylib.TemplateRef

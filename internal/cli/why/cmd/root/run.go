@@ -12,12 +12,12 @@ import (
 	"strconv"
 	"strings"
 
+	"github.com/ActiveMemory/ctx/internal/write/why"
 	"github.com/spf13/cobra"
 
 	"github.com/ActiveMemory/ctx/internal/assets"
+	errcli "github.com/ActiveMemory/ctx/internal/err/cli"
 	fserr "github.com/ActiveMemory/ctx/internal/err/fs"
-	ctxerr "github.com/ActiveMemory/ctx/internal/err/validate"
-	"github.com/ActiveMemory/ctx/internal/write"
 )
 
 // Run dispatches to the interactive menu or direct document display.
@@ -37,12 +37,12 @@ func Run(cmd *cobra.Command, args []string) error {
 
 // showMenu presents a numbered menu and reads user selection from stdin.
 func showMenu(cmd *cobra.Command) error {
-	write.WhyBanner(cmd)
+	why.Banner(cmd)
 	cmd.Println()
 	for i, doc := range DocOrder {
-		write.WhyMenuItem(cmd, i+1, doc.Label)
+		why.MenuItem(cmd, i+1, doc.Label)
 	}
-	write.WhyMenuPrompt(cmd)
+	why.MenuPrompt(cmd)
 
 	reader := bufio.NewReader(os.Stdin)
 	input, readErr := reader.ReadString('\n')
@@ -53,7 +53,7 @@ func showMenu(cmd *cobra.Command) error {
 	input = strings.TrimSpace(input)
 	choice, parseErr := strconv.Atoi(input)
 	if parseErr != nil || choice < 1 || choice > len(DocOrder) {
-		return ctxerr.InvalidSelection(input, len(DocOrder))
+		return errcli.InvalidSelection(input, len(DocOrder))
 	}
 
 	cmd.Println()
@@ -71,7 +71,7 @@ func showMenu(cmd *cobra.Command) error {
 func ShowDoc(cmd *cobra.Command, alias string) error {
 	name, ok := DocAliases[alias]
 	if !ok {
-		return ctxerr.UnknownDocument(alias)
+		return errcli.UnknownDocument(alias)
 	}
 
 	content, loadErr := assets.WhyDoc(name)

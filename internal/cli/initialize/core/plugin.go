@@ -12,17 +12,17 @@ import (
 	"os"
 	"path/filepath"
 
+	"github.com/spf13/cobra"
+
 	"github.com/ActiveMemory/ctx/internal/config/claude"
 	"github.com/ActiveMemory/ctx/internal/config/fs"
 	"github.com/ActiveMemory/ctx/internal/err/config"
-	fs2 "github.com/ActiveMemory/ctx/internal/err/fs"
-	"github.com/ActiveMemory/ctx/internal/err/initialize"
-	ctxerr "github.com/ActiveMemory/ctx/internal/err/validate"
+	errFs "github.com/ActiveMemory/ctx/internal/err/fs"
+	errInit "github.com/ActiveMemory/ctx/internal/err/initialize"
+	errParser "github.com/ActiveMemory/ctx/internal/err/parser"
 	"github.com/ActiveMemory/ctx/internal/io"
 	"github.com/ActiveMemory/ctx/internal/write/add"
-	"github.com/spf13/cobra"
-
-	"github.com/ActiveMemory/ctx/internal/write"
+	"github.com/ActiveMemory/ctx/internal/write/initialize"
 )
 
 type installedPlugins struct {
@@ -41,21 +41,21 @@ type globalSettings map[string]json.RawMessage
 func EnablePluginGlobally(cmd *cobra.Command) error {
 	homeDir, homeErr := os.UserHomeDir()
 	if homeErr != nil {
-		return initialize.HomeDir(homeErr)
+		return errInit.HomeDir(homeErr)
 	}
 	claudeDir := filepath.Join(homeDir, ".claude")
 	installedPath := filepath.Join(claudeDir, claude.InstalledPlugins)
 	installedData, readErr := io.SafeReadUserFile(installedPath)
 	if readErr != nil {
-		write.InitPluginSkipped(cmd)
+		initialize.PluginSkipped(cmd)
 		return nil
 	}
 	var installed installedPlugins
 	if parseErr := json.Unmarshal(installedData, &installed); parseErr != nil {
-		return ctxerr.ParseFile(installedPath, parseErr)
+		return errParser.ParseFile(installedPath, parseErr)
 	}
 	if _, found := installed.Plugins[claude.PluginID]; !found {
-		write.InitPluginSkipped(cmd)
+		initialize.PluginSkipped(cmd)
 		return nil
 	}
 	settingsPath := filepath.Join(claudeDir, claude.GlobalSettings)
@@ -66,7 +66,7 @@ func EnablePluginGlobally(cmd *cobra.Command) error {
 	}
 	if readErr == nil {
 		if parseErr := json.Unmarshal(existingData, &settings); parseErr != nil {
-			return ctxerr.ParseFile(settingsPath, parseErr)
+			return errParser.ParseFile(settingsPath, parseErr)
 		}
 	} else {
 		settings = make(globalSettings)
@@ -75,7 +75,7 @@ func EnablePluginGlobally(cmd *cobra.Command) error {
 		var enabled map[string]bool
 		if parseErr := json.Unmarshal(raw, &enabled); parseErr == nil {
 			if enabled[claude.PluginID] {
-				write.InitPluginAlreadyEnabled(cmd)
+				initialize.PluginAlreadyEnabled(cmd)
 				return nil
 			}
 		}
@@ -102,9 +102,9 @@ func EnablePluginGlobally(cmd *cobra.Command) error {
 		return config.MarshalSettings(encodeErr)
 	}
 	if writeErr := os.WriteFile(settingsPath, buf.Bytes(), fs.PermFile); writeErr != nil {
-		return fs2.FileWrite(settingsPath, writeErr)
+		return errFs.FileWrite(settingsPath, writeErr)
 	}
-	write.InitPluginEnabled(cmd, settingsPath)
+	initialize.PluginEnabled(cmd, settingsPath)
 	return nil
 }
 

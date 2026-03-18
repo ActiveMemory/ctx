@@ -9,10 +9,10 @@ package root
 import (
 	"os"
 
+	"github.com/ActiveMemory/ctx/internal/write/session"
 	"github.com/spf13/cobra"
 
 	"github.com/ActiveMemory/ctx/internal/cli/system/core"
-	"github.com/ActiveMemory/ctx/internal/write"
 )
 
 // Run executes the resume command.
@@ -28,6 +28,6 @@ func Run(cmd *cobra.Command, sessionID string) error {
 		sessionID = core.ReadSessionID(os.Stdin)
 	}
 	core.Resume(sessionID)
-	write.SessionResumed(cmd, sessionID)
+	session.SessionResumed(cmd, sessionID)
 	return nil
 }

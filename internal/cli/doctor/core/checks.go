@@ -23,7 +23,9 @@ import (
 	"github.com/ActiveMemory/ctx/internal/config/marker"
 	"github.com/ActiveMemory/ctx/internal/config/regex"
 	"github.com/ActiveMemory/ctx/internal/config/reminder"
-	"github.com/ActiveMemory/ctx/internal/context"
+	"github.com/ActiveMemory/ctx/internal/context/load"
+	"github.com/ActiveMemory/ctx/internal/context/token"
+	"github.com/ActiveMemory/ctx/internal/context/validate"
 	"github.com/ActiveMemory/ctx/internal/drift"
 	"github.com/ActiveMemory/ctx/internal/io"
 	"github.com/ActiveMemory/ctx/internal/log"
@@ -36,7 +38,7 @@ import (
 // Parameters:
 //   - report: Report to append the result to
 func CheckContextInitialized(report *Report) {
-	if context.Exists("") {
+	if validate.Exists("") {
 		report.Results = append(report.Results, Result{
 			Name:     doctor.CheckContextInit,
 			Category: doctor.CategoryStructure,
@@ -138,11 +140,11 @@ func CheckCtxrcValidation(report *Report) {
 // Parameters:
 //   - report: Report to append the result to
 func CheckDrift(report *Report) {
-	if !context.Exists("") {
+	if !validate.Exists("") {
 		return // skip drift check if not initialized
 	}
 
-	ctx, loadErr := context.Load("")
+	ctx, loadErr := load.Do("")
 	if loadErr != nil {
 		report.Results = append(report.Results, Result{
 			Name:     doctor.CheckDrift,
@@ -396,7 +398,7 @@ func CheckContextTokenSize(report *Report) {
 	}
 
 	var totalTokens int
-	ctx, loadErr := context.Load("")
+	ctx, loadErr := load.Do("")
 	if loadErr != nil {
 		return
 	}
@@ -410,7 +412,7 @@ func CheckContextTokenSize(report *Report) {
 
 	for _, f := range ctx.Files {
 		if indexed[f.Name] {
-			tokens := context.EstimateTokens(f.Content)
+			tokens := token.EstimateTokens(f.Content)
 			totalTokens += tokens
 			breakdown = append(breakdown, fileTokens{name: f.Name, tokens: tokens})
 		}
@@ -544,7 +546,7 @@ func AddResourceResults(report *Report, snap sysinfo.Snapshot) {
 		})
 	}
 
-	// Load (1-minute average relative to CPU count).
+	// Do (1-minute average relative to CPU count).
 	if snap.Load.Supported && snap.Load.NumCPU > 0 {
 		ratio := snap.Load.Load1 / float64(snap.Load.NumCPU)
 		msg := fmt.Sprintf(assets.TextDesc(assets.TextDescKeyDoctorResourceLoadFormat),

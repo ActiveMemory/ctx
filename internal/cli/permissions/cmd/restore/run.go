@@ -15,12 +15,12 @@ import (
 	"github.com/ActiveMemory/ctx/internal/config/fs"
 	"github.com/ActiveMemory/ctx/internal/err/config"
 	fs2 "github.com/ActiveMemory/ctx/internal/err/fs"
-	ctxerr "github.com/ActiveMemory/ctx/internal/err/validate"
+	errparser "github.com/ActiveMemory/ctx/internal/err/parser"
+	"github.com/ActiveMemory/ctx/internal/write/restore"
 	"github.com/spf13/cobra"
 
 	"github.com/ActiveMemory/ctx/internal/claude"
 	"github.com/ActiveMemory/ctx/internal/cli/permissions/core"
-	"github.com/ActiveMemory/ctx/internal/write"
 )
 
 // Run resets settings.local.json from the golden image.
@@ -47,23 +47,23 @@ func Run(cmd *cobra.Command) error {
 			); writeErr != nil {
 				return fs2.FileWrite(claude2.Settings, writeErr)
 			}
-			write.RestoreNoLocal(cmd)
+			restore.RestoreNoLocal(cmd)
 			return nil
 		}
 		return fs2.FileRead(claude2.Settings, localReadErr)
 	}
 
 	if bytes.Equal(goldenBytes, localBytes) {
-		write.RestoreMatch(cmd)
+		restore.RestoreMatch(cmd)
 		return nil
 	}
 
 	var golden, local claude.Settings
 	if goldenParseErr := json.Unmarshal(goldenBytes, &golden); goldenParseErr != nil {
-		return ctxerr.ParseFile(claude2.SettingsGolden, goldenParseErr)
+		return errparser.ParseFile(claude2.SettingsGolden, goldenParseErr)
 	}
 	if localParseErr := json.Unmarshal(localBytes, &local); localParseErr != nil {
-		return ctxerr.ParseFile(claude2.Settings, localParseErr)
+		return errparser.ParseFile(claude2.Settings, localParseErr)
 	}
 
 	restored, dropped := core.DiffStringSlices(
@@ -73,7 +73,7 @@ func Run(cmd *cobra.Command) error {
 		golden.Permissions.Deny, local.Permissions.Deny,
 	)
 
-	write.RestoreDiff(cmd, dropped, restored, denyDropped, denyRestored)
+	restore.RestoreDiff(cmd, dropped, restored, denyDropped, denyRestored)
 
 	if writeErr := os.WriteFile(
 		claude2.Settings, goldenBytes, fs.PermFile,
@@ -81,6 +81,6 @@ func Run(cmd *cobra.Command) error {
 		return fs2.FileWrite(claude2.Settings, writeErr)
 	}
 
-	write.RestoreDone(cmd)
+	restore.RestoreDone(cmd)
 	return nil
 }

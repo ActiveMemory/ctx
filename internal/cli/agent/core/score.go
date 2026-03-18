@@ -13,7 +13,7 @@ import (
 	"github.com/ActiveMemory/ctx/internal/assets"
 	"github.com/ActiveMemory/ctx/internal/config/agent"
 	time2 "github.com/ActiveMemory/ctx/internal/config/time"
-	"github.com/ActiveMemory/ctx/internal/context"
+	"github.com/ActiveMemory/ctx/internal/context/token"
 	"github.com/ActiveMemory/ctx/internal/index"
 )
 
@@ -156,7 +156,7 @@ func ScoreEntries(blocks []index.EntryBlock, keywords []string, now time.Time) [
 	scored := make([]ScoredEntry, 0, len(blocks))
 	for i := range blocks {
 		s := ScoreEntry(&blocks[i], keywords, now)
-		tokens := context.EstimateTokensString(blocks[i].BlockContent())
+		tokens := token.EstimateTokensString(blocks[i].BlockContent())
 		scored = append(scored, ScoredEntry{
 			EntryBlock: blocks[i],
 			Score:      s,

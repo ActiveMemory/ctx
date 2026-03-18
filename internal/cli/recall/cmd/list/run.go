@@ -15,12 +15,12 @@ import (
 	"github.com/ActiveMemory/ctx/internal/config/time"
 	"github.com/ActiveMemory/ctx/internal/err/date"
 	ctxerr "github.com/ActiveMemory/ctx/internal/err/session"
+	"github.com/ActiveMemory/ctx/internal/write/recall"
 	"github.com/spf13/cobra"
 
 	"github.com/ActiveMemory/ctx/internal/cli/recall/core"
 	"github.com/ActiveMemory/ctx/internal/parse"
 	"github.com/ActiveMemory/ctx/internal/recall/parser"
-	"github.com/ActiveMemory/ctx/internal/write"
 )
 
 // Run handles the recall list command.
@@ -64,7 +64,7 @@ func Run(
 	}
 
 	if len(sessions) == 0 {
-		write.NoSessionsWithHint(cmd, allProjects)
+		recall.NoSessionsWithHint(cmd, allProjects)
 		return nil
 	}
 
@@ -89,7 +89,7 @@ func Run(
 	}
 
 	if len(filtered) == 0 {
-		write.NoFiltersMatch(cmd)
+		recall.NoFiltersMatch(cmd)
 		return nil
 	}
 
@@ -102,7 +102,7 @@ func Run(
 	if project != "" || tool != "" {
 		shown = len(filtered)
 	}
-	write.SessionListHeader(cmd, len(sessions), shown)
+	recall.SessionListHeader(cmd, len(sessions), shown)
 
 	// Compute dynamic column widths from data.
 	slugW, projW := len(assets.ColSlug), len(assets.ColProject)
@@ -118,7 +118,7 @@ func Run(
 
 	// Print column header.
 	rowFmt := fmt.Sprintf(assets.TplRecallListRow, slugW, projW)
-	write.SessionListRow(cmd, rowFmt,
+	recall.SessionListRow(cmd, rowFmt,
 		assets.ColSlug, assets.ColProject, assets.ColDate,
 		assets.ColDuration, assets.ColTurns, assets.ColTokens)
 
@@ -132,11 +132,11 @@ func Run(
 		if s.TotalTokens > 0 {
 			tokens = core.FormatTokens(s.TotalTokens)
 		}
-		write.SessionListRow(cmd, rowFmt,
+		recall.SessionListRow(cmd, rowFmt,
 			slug, s.Project, dateStr, dur, turns, tokens)
 	}
 
-	write.SessionListFooter(cmd, len(sessions) > len(filtered))
+	recall.SessionListFooter(cmd, len(sessions) > len(filtered))
 
 	return nil
 }

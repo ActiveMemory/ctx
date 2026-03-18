@@ -15,6 +15,7 @@ import (
 	"github.com/ActiveMemory/ctx/internal/config/zensical"
 	"github.com/ActiveMemory/ctx/internal/err/fs"
 	ctxerr "github.com/ActiveMemory/ctx/internal/err/site"
+	zensicalBin "github.com/ActiveMemory/ctx/internal/exec/zensical"
 	"github.com/ActiveMemory/ctx/internal/rc"
 )
 
@@ -56,22 +57,5 @@ func Run(args []string) error {
 		return ctxerr.ZensicalNotFound()
 	}
 
-	return runZensical(d)
-}
-
-// runZensical launches zensical serve in the given directory.
-//
-// Parameters:
-//   - dir: Working directory for the zensical process
-//
-// Returns:
-//   - error: Non-nil if the process fails
-func runZensical(dir string) error {
-	z := exec.Command(zensical.Bin, "serve") //nolint:gosec // G204: args are constants
-	z.Dir = dir
-	z.Stdout = os.Stdout
-	z.Stderr = os.Stderr
-	z.Stdin = os.Stdin
-
-	return z.Run()
+	return zensicalBin.Run(d)
 }

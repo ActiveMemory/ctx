@@ -15,7 +15,7 @@ import (
 	"github.com/ActiveMemory/ctx/internal/cli/initialize"
 	"github.com/ActiveMemory/ctx/internal/config/ctx"
 	"github.com/ActiveMemory/ctx/internal/config/dir"
-	"github.com/ActiveMemory/ctx/internal/context"
+	"github.com/ActiveMemory/ctx/internal/context/load"
 )
 
 // setupSyncDir creates a temp dir, initializes context, and returns cleanup.
@@ -39,7 +39,7 @@ func setupSyncDir(t *testing.T) string {
 func TestDetectSyncActions_NoActions(t *testing.T) {
 	tmpDir := setupSyncDir(t)
 
-	ctx, err := context.Load("")
+	ctx, err := load.Do("")
 	if err != nil {
 		t.Fatalf("failed to load context: %v", err)
 	}
@@ -53,7 +53,7 @@ func TestDetectSyncActions_NoActions(t *testing.T) {
 func TestCheckNewDirectories_ImportantDirs(t *testing.T) {
 	tmpDir := setupSyncDir(t)
 
-	ctx, err := context.Load("")
+	ctx, err := load.Do("")
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -79,7 +79,7 @@ func TestCheckNewDirectories_ImportantDirs(t *testing.T) {
 func TestCheckNewDirectories_SkipsHiddenAndVendor(t *testing.T) {
 	tmpDir := setupSyncDir(t)
 
-	ctx, err := context.Load("")
+	ctx, err := load.Do("")
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -110,7 +110,7 @@ func TestCheckNewDirectories_DocumentedDirsIgnored(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	ctx, err := context.Load("")
+	ctx, err := load.Do("")
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -130,7 +130,7 @@ func TestCheckNewDirectories_DocumentedDirsIgnored(t *testing.T) {
 func TestCheckPackageFiles_NoPackages(t *testing.T) {
 	setupSyncDir(t)
 
-	ctx, err := context.Load("")
+	ctx, err := load.Do("")
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -155,7 +155,7 @@ func TestCheckPackageFiles_WithPackageFile(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	ctx, err := context.Load("")
+	ctx, err := load.Do("")
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -185,7 +185,7 @@ func TestCheckPackageFiles_WithDepsDoc(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	ctx, err := context.Load("")
+	ctx, err := load.Do("")
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -205,7 +205,7 @@ func TestCheckConfigFiles_NoConfigs(t *testing.T) {
 	_ = os.Remove(filepath.Join(tmpDir, "Makefile"))
 	_ = os.Remove(filepath.Join(tmpDir, "Makefile.ctx"))
 
-	ctx, err := context.Load("")
+	ctx, err := load.Do("")
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -225,7 +225,7 @@ func TestCheckConfigFiles_WithConfigFile(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	ctx, err := context.Load("")
+	ctx, err := load.Do("")
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -257,7 +257,7 @@ func TestCheckConfigFiles_DocumentedInConventions(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	ctx, err := context.Load("")
+	ctx, err := load.Do("")
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -284,7 +284,7 @@ func TestCheckPackageFiles_ArchContainsDependencies(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	ctx, err := context.Load("")
+	ctx, err := load.Do("")
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -317,7 +317,7 @@ func TestRunSync_ActionWithEmptySuggestion(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	ctx, err := context.Load("")
+	ctx, err := load.Do("")
 	if err != nil {
 		t.Fatal(err)
 	}

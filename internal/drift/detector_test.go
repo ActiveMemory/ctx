@@ -13,7 +13,8 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/ActiveMemory/ctx/internal/context"
+	"github.com/ActiveMemory/ctx/internal/context/load"
+	"github.com/ActiveMemory/ctx/internal/entity"
 	"github.com/ActiveMemory/ctx/internal/rc"
 )
 
@@ -117,8 +118,8 @@ func TestDetect(t *testing.T) {
 		t.Fatalf("failed to write main.go: %v", writeErr)
 	}
 
-	// Load the context
-	ctx, err := context.Load(ctxDir)
+	// Do the context
+	ctx, err := load.Do(ctxDir)
 	if err != nil {
 		t.Fatalf("failed to load context: %v", err)
 	}
@@ -172,9 +173,9 @@ func TestCheckPathReferences(t *testing.T) {
 	}
 
 	// Create a test context with a dead path reference
-	ctx := &context.Context{
+	ctx := &entity.Context{
 		Dir: ".context",
-		Files: []context.FileInfo{
+		Files: []entity.FileInfo{
 			{
 				Name:    "ARCHITECTURE.md",
 				Content: []byte("# Architecture\n\nSee `internal/nonexistent.go` for details.\n"),
@@ -223,9 +224,9 @@ func TestCheckStaleness(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			ctx := &context.Context{
+			ctx := &entity.Context{
 				Dir: ".context",
-				Files: []context.FileInfo{
+				Files: []entity.FileInfo{
 					{
 						Name:    "TASKS.md",
 						Content: []byte(tt.tasksContent),
@@ -273,12 +274,12 @@ func TestCheckRequiredFiles(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			var fileInfos []context.FileInfo
+			var fileInfos []entity.FileInfo
 			for _, name := range tt.files {
-				fileInfos = append(fileInfos, context.FileInfo{Name: name})
+				fileInfos = append(fileInfos, entity.FileInfo{Name: name})
 			}
 
-			ctx := &context.Context{
+			ctx := &entity.Context{
 				Dir:   ".context",
 				Files: fileInfos,
 			}
@@ -311,7 +312,7 @@ func TestCheckEntryCount(t *testing.T) {
 
 	tests := []struct {
 		name         string
-		files        []context.FileInfo
+		files        []entity.FileInfo
 		wantWarnings int
 		wantPassed   bool
 	}{
@@ -323,7 +324,7 @@ func TestCheckEntryCount(t *testing.T) {
 		},
 		{
 			name: "zero entries",
-			files: []context.FileInfo{
+			files: []entity.FileInfo{
 				{Name: "LEARNINGS.md", Content: []byte("# Learnings\n")},
 			},
 			wantWarnings: 0,
@@ -331,7 +332,7 @@ func TestCheckEntryCount(t *testing.T) {
 		},
 		{
 			name: "at threshold (30 learnings)",
-			files: []context.FileInfo{
+			files: []entity.FileInfo{
 				{Name: "LEARNINGS.md", Content: []byte(buildEntries(30))},
 			},
 			wantWarnings: 0,
@@ -339,7 +340,7 @@ func TestCheckEntryCount(t *testing.T) {
 		},
 		{
 			name: "above threshold (31 learnings)",
-			files: []context.FileInfo{
+			files: []entity.FileInfo{
 				{Name: "LEARNINGS.md", Content: []byte(buildEntries(31))},
 			},
 			wantWarnings: 1,
@@ -347,7 +348,7 @@ func TestCheckEntryCount(t *testing.T) {
 		},
 		{
 			name: "decisions above threshold (21)",
-			files: []context.FileInfo{
+			files: []entity.FileInfo{
 				{Name: "DECISIONS.md", Content: []byte(buildEntries(21))},
 			},
 			wantWarnings: 1,
@@ -355,7 +356,7 @@ func TestCheckEntryCount(t *testing.T) {
 		},
 		{
 			name: "both files above threshold",
-			files: []context.FileInfo{
+			files: []entity.FileInfo{
 				{Name: "LEARNINGS.md", Content: []byte(buildEntries(31))},
 				{Name: "DECISIONS.md", Content: []byte(buildEntries(21))},
 			},
@@ -364,7 +365,7 @@ func TestCheckEntryCount(t *testing.T) {
 		},
 		{
 			name: "warning message format",
-			files: []context.FileInfo{
+			files: []entity.FileInfo{
 				{Name: "LEARNINGS.md", Content: []byte(buildEntries(35))},
 			},
 			wantWarnings: 1,
@@ -374,7 +375,7 @@ func TestCheckEntryCount(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			ctx := &context.Context{
+			ctx := &entity.Context{
 				Dir:   ".context",
 				Files: tt.files,
 			}
@@ -430,9 +431,9 @@ func TestCheckEntryCountDisabled(t *testing.T) {
 	rc.Reset()
 	defer rc.Reset()
 
-	ctx := &context.Context{
+	ctx := &entity.Context{
 		Dir: ".context",
-		Files: []context.FileInfo{
+		Files: []entity.FileInfo{
 			{Name: "LEARNINGS.md", Content: []byte(buildEntries(100))},
 			{Name: "DECISIONS.md", Content: []byte(buildEntries(100))},
 		},
@@ -522,15 +523,15 @@ func TestCheckMissingPackages(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			var files []context.FileInfo
+			var files []entity.FileInfo
 			if tt.archContent != "" {
-				files = append(files, context.FileInfo{
+				files = append(files, entity.FileInfo{
 					Name:    "ARCHITECTURE.md",
 					Content: []byte(tt.archContent),
 				})
 			}
 
-			ctx := &context.Context{Dir: ".context", Files: files}
+			ctx := &entity.Context{Dir: ".context", Files: files}
 			report := &Report{
 				Warnings:   []Issue{},
 				Violations: []Issue{},
@@ -640,9 +641,9 @@ func TestIsTemplateFile(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			result := isTemplateFile(tt.content)
+			result := templateFile(tt.content)
 			if result != tt.expected {
-				t.Errorf("isTemplateFile() = %v, want %v", result, tt.expected)
+				t.Errorf("templateFile() = %v, want %v", result, tt.expected)
 			}
 		})
 	}

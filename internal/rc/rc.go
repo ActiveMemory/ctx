@@ -34,6 +34,7 @@ func Default() *CtxRC {
 		InjectionTokenWarn:  DefaultInjectionTokenWarn,
 		ContextWindow:       DefaultContextWindow,
 		TaskNudgeInterval:   DefaultTaskNudgeInterval,
+		StaleAgeDays:        DefaultStaleAgeDays,
 	}
 }
 
@@ -238,6 +239,15 @@ func KeyRotationDays() int {
 //   - int: Interval between nudges, or 0 if disabled
 func TaskNudgeInterval() int {
 	return RC().TaskNudgeInterval
+}
+
+// StaleAgeDays returns the number of days before a context file is
+// flagged as stale by drift detection. Returns 0 if disabled.
+//
+// Returns:
+//   - int: Days threshold, or 0 to disable the check
+func StaleAgeDays() int {
+	return RC().StaleAgeDays
 }
 
 // SessionPrefixes returns the list of recognized session header prefixes

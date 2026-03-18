@@ -11,8 +11,8 @@ import (
 	"path/filepath"
 	"strings"
 
+	errctx "github.com/ActiveMemory/ctx/internal/err/context"
 	fserr "github.com/ActiveMemory/ctx/internal/err/fs"
-	ctxerr "github.com/ActiveMemory/ctx/internal/err/validate"
 )
 
 // ValidateBoundary checks that dir resolves to a path within the current
@@ -47,7 +47,7 @@ func ValidateBoundary(dir string) error {
 	// Append os.PathSeparator to avoid "/foo/bar" matching "/foo/b".
 	root := resolvedCwd + string(os.PathSeparator)
 	if resolvedDir != resolvedCwd && !strings.HasPrefix(resolvedDir, root) {
-		return ctxerr.ContextOutsideRoot(dir, resolvedCwd)
+		return errctx.OutsideRoot(dir, resolvedCwd)
 	}
 
 	return nil
@@ -63,7 +63,7 @@ func CheckSymlinks(dir string) error {
 		return nil
 	}
 	if info.Mode()&os.ModeSymlink != 0 {
-		return ctxerr.ContextDirSymlink(dir)
+		return errctx.DirSymlink(dir)
 	}
 
 	// Check immediate children.
@@ -79,7 +79,7 @@ func CheckSymlinks(dir string) error {
 			continue
 		}
 		if ci.Mode()&os.ModeSymlink != 0 {
-			return ctxerr.ContextFileSymlink(child)
+			return errctx.FileSymlink(child)
 		}
 	}
 

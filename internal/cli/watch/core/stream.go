@@ -16,9 +16,8 @@ import (
 	"github.com/ActiveMemory/ctx/internal/config/regex"
 	"github.com/ActiveMemory/ctx/internal/config/watch"
 	ctxerr "github.com/ActiveMemory/ctx/internal/err/fs"
+	watch2 "github.com/ActiveMemory/ctx/internal/write/watch"
 	"github.com/spf13/cobra"
-
-	"github.com/ActiveMemory/ctx/internal/write"
 )
 
 // ExtractAttribute extracts a named attribute from an XML tag string.
@@ -78,13 +77,13 @@ func ProcessStream(cmd *cobra.Command, reader io.Reader, dryRun bool) error {
 				}
 
 				if dryRun {
-					write.WatchDryRunPreview(cmd, update.Type, update.Content)
+					watch2.DryRunPreview(cmd, update.Type, update.Content)
 				} else {
 					err := ApplyUpdate(update)
 					if err != nil {
-						write.WatchApplyFailed(cmd, update.Type, err)
+						watch2.ApplyFailed(cmd, update.Type, err)
 					} else {
-						write.WatchApplySuccess(cmd, update.Type, update.Content)
+						watch2.ApplySuccess(cmd, update.Type, update.Content)
 						updateCount++
 					}
 				}

@@ -10,7 +10,7 @@ import (
 	"path/filepath"
 
 	ctxCfg "github.com/ActiveMemory/ctx/internal/config/ctx"
-	"github.com/ActiveMemory/ctx/internal/context"
+	"github.com/ActiveMemory/ctx/internal/entity"
 )
 
 // GetReadOrder returns context file paths in the recommended reading order.
@@ -24,7 +24,7 @@ import (
 //
 // Returns:
 //   - []string: File paths in reading order (e.g., ".context/CONSTITUTION.md")
-func GetReadOrder(ctx *context.Context) []string {
+func GetReadOrder(ctx *entity.Context) []string {
 	var order []string
 	for _, name := range ctxCfg.ReadOrder {
 		if f := ctx.File(name); f != nil && !f.IsEmpty {

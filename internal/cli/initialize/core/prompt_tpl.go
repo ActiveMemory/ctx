@@ -14,10 +14,10 @@ import (
 	"github.com/ActiveMemory/ctx/internal/config/fs"
 	fs2 "github.com/ActiveMemory/ctx/internal/err/fs"
 	ctxerr "github.com/ActiveMemory/ctx/internal/err/prompt"
+	"github.com/ActiveMemory/ctx/internal/write/initialize"
 	"github.com/spf13/cobra"
 
 	"github.com/ActiveMemory/ctx/internal/assets"
-	"github.com/ActiveMemory/ctx/internal/write"
 )
 
 // CreatePromptTemplates creates prompt template files in .context/prompts/.
@@ -41,7 +41,7 @@ func CreatePromptTemplates(cmd *cobra.Command, contextDir string, force bool) er
 	for _, name := range promptTemplates {
 		targetPath := filepath.Join(promptDir, name)
 		if _, err := os.Stat(targetPath); err == nil && !force {
-			write.InitSkipped(cmd, "prompts/"+name)
+			initialize.Skipped(cmd, "prompts/"+name)
 			continue
 		}
 		content, err := assets.PromptTemplate(name)
@@ -51,7 +51,7 @@ func CreatePromptTemplates(cmd *cobra.Command, contextDir string, force bool) er
 		if err := os.WriteFile(targetPath, content, fs.PermFile); err != nil {
 			return fs2.FileWrite(targetPath, err)
 		}
-		write.InitCreated(cmd, "prompts/"+name)
+		initialize.Created(cmd, "prompts/"+name)
 	}
 	return nil
 }

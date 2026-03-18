@@ -9,7 +9,7 @@ package core
 import (
 	"sort"
 
-	"github.com/ActiveMemory/ctx/internal/context"
+	"github.com/ActiveMemory/ctx/internal/entity"
 	"github.com/ActiveMemory/ctx/internal/rc"
 )
 
@@ -20,7 +20,7 @@ import (
 //
 // Parameters:
 //   - files: Slice of files to sort (modified in place)
-func SortFilesByPriority(files []context.FileInfo) {
+func SortFilesByPriority(files []entity.FileInfo) {
 	sort.Slice(files, func(i, j int) bool {
 		return rc.FilePriority(
 			files[i].Name,
@@ -28,17 +28,17 @@ func SortFilesByPriority(files []context.FileInfo) {
 	})
 }
 
-// GetRecentFiles returns the n most recently modified files.
+// RecentFilesSorted returns the n most recently modified files.
 //
 // Parameters:
 //   - files: Source files to select from
 //   - n: Maximum number of files to return
 //
 // Returns:
-//   - []context.FileInfo: Up to n files sorted by modification time
+//   - []entity.FileInfo: Up to n files sorted by modification time
 //     (newest first)
-func GetRecentFiles(files []context.FileInfo, n int) []context.FileInfo {
-	sorted := make([]context.FileInfo, len(files))
+func RecentFilesSorted(files []entity.FileInfo, n int) []entity.FileInfo {
+	sorted := make([]entity.FileInfo, len(files))
 	copy(sorted, files)
 	sort.Slice(sorted, func(i, j int) bool {
 		return sorted[i].ModTime.After(sorted[j].ModTime)

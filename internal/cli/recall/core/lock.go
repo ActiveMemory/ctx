@@ -20,11 +20,11 @@ import (
 	"github.com/ActiveMemory/ctx/internal/err/journal"
 	ctxerr "github.com/ActiveMemory/ctx/internal/err/session"
 	"github.com/ActiveMemory/ctx/internal/io"
+	"github.com/ActiveMemory/ctx/internal/write/recall"
 	"github.com/spf13/cobra"
 
 	"github.com/ActiveMemory/ctx/internal/journal/state"
 	"github.com/ActiveMemory/ctx/internal/rc"
-	"github.com/ActiveMemory/ctx/internal/write"
 )
 
 // LockedFrontmatterLine is the YAML line inserted into frontmatter when
@@ -261,7 +261,7 @@ func RunLockUnlock(
 	}
 	if len(files) == 0 {
 		if all {
-			write.LockUnlockNone(cmd)
+			recall.LockUnlockNone(cmd)
 		} else {
 			return journal.NoEntriesMatch(strings.Join(args, ", "))
 		}
@@ -294,7 +294,7 @@ func RunLockUnlock(
 		path := filepath.Join(journalDir, filename)
 		UpdateLockFrontmatter(path, lock)
 
-		write.LockUnlockEntry(cmd, filename, verb)
+		recall.LockUnlockEntry(cmd, filename, verb)
 		count++
 	}
 
@@ -302,7 +302,7 @@ func RunLockUnlock(
 		return journal.SaveState(saveErr)
 	}
 
-	write.LockUnlockSummary(cmd, verb, count)
+	recall.LockUnlockSummary(cmd, verb, count)
 
 	return nil
 }

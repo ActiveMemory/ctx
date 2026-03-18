@@ -23,8 +23,8 @@ import (
 	"github.com/ActiveMemory/ctx/internal/assets"
 	ctxCfg "github.com/ActiveMemory/ctx/internal/config/ctx"
 	"github.com/ActiveMemory/ctx/internal/config/fs"
-	"github.com/ActiveMemory/ctx/internal/context"
 	"github.com/ActiveMemory/ctx/internal/drift"
+	"github.com/ActiveMemory/ctx/internal/entity"
 	"github.com/ActiveMemory/ctx/internal/rc"
 	"github.com/ActiveMemory/ctx/internal/task"
 	"github.com/ActiveMemory/ctx/internal/tidy"
@@ -44,7 +44,7 @@ import (
 // Returns:
 //   - *FixResult: Summary of fixes applied
 func ApplyFixes(
-	cmd *cobra.Command, ctx *context.Context, report *drift.Report,
+	cmd *cobra.Command, ctx *entity.Context, report *drift.Report,
 ) *FixResult {
 	result := &FixResult{}
 
@@ -110,7 +110,7 @@ func ApplyFixes(
 //
 // Returns:
 //   - error: Non-nil if file operations fail
-func FixStaleness(cmd *cobra.Command, ctx *context.Context) error {
+func FixStaleness(cmd *cobra.Command, ctx *entity.Context) error {
 	tasksFile := ctx.File(ctxCfg.Task)
 
 	if tasksFile == nil {

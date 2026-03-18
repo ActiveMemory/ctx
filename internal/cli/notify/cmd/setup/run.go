@@ -14,10 +14,10 @@ import (
 	"github.com/ActiveMemory/ctx/internal/config/crypto"
 	"github.com/ActiveMemory/ctx/internal/err/fs"
 	ctxerr "github.com/ActiveMemory/ctx/internal/err/notify"
+	"github.com/ActiveMemory/ctx/internal/write/notify"
 	"github.com/spf13/cobra"
 
 	notifylib "github.com/ActiveMemory/ctx/internal/notify"
-	"github.com/ActiveMemory/ctx/internal/write"
 )
 
 // Run prompts for a webhook URL and saves it encrypted.
@@ -31,7 +31,7 @@ import (
 // Returns:
 //   - error: Non-nil on empty input or save failure
 func Run(cmd *cobra.Command, stdin *os.File) error {
-	write.SetupPrompt(cmd)
+	notify.SetupPrompt(cmd)
 
 	scanner := bufio.NewScanner(stdin)
 	if !scanner.Scan() {
@@ -46,7 +46,7 @@ func Run(cmd *cobra.Command, stdin *os.File) error {
 		return ctxerr.SaveWebhook(saveErr)
 	}
 
-	write.SetupDone(cmd, notifylib.MaskURL(url), crypto.NotifyEnc)
+	notify.SetupDone(cmd, notifylib.MaskURL(url), crypto.NotifyEnc)
 
 	return nil
 }

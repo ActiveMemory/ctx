@@ -16,13 +16,13 @@ import (
 	"github.com/ActiveMemory/ctx/internal/config/hook"
 	"github.com/ActiveMemory/ctx/internal/config/load_gate"
 	"github.com/ActiveMemory/ctx/internal/config/token"
+	token2 "github.com/ActiveMemory/ctx/internal/context/token"
 	"github.com/ActiveMemory/ctx/internal/io"
 	"github.com/spf13/cobra"
 
 	"github.com/ActiveMemory/ctx/internal/assets"
 	changescore "github.com/ActiveMemory/ctx/internal/cli/changes/core"
 	"github.com/ActiveMemory/ctx/internal/cli/system/core"
-	"github.com/ActiveMemory/ctx/internal/context"
 	"github.com/ActiveMemory/ctx/internal/rc"
 )
 
@@ -105,7 +105,7 @@ func Run(cmd *cobra.Command, stdin *os.File) error {
 			}
 			content.WriteString(fmt.Sprintf(
 				assets.TextDesc(assets.TextDescKeyContextLoadGateIndexHeader), f, idx))
-			tokens := context.EstimateTokensString(idx)
+			tokens := token2.EstimateTokensString(idx)
 			totalTokens += tokens
 			perFile = append(perFile, core.FileTokenEntry{
 				Name:   f + load_gate.ContextLoadIndexSuffix,
@@ -118,7 +118,7 @@ func Run(cmd *cobra.Command, stdin *os.File) error {
 				assets.TextDesc(
 					assets.TextDescKeyContextLoadGateFileHeader,
 				), f, string(data)))
-			tokens := context.EstimateTokens(data)
+			tokens := token2.EstimateTokens(data)
 			totalTokens += tokens
 			perFile = append(perFile, core.FileTokenEntry{Name: f, Tokens: tokens})
 			filesLoaded++

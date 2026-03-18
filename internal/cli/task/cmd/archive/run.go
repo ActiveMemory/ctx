@@ -15,12 +15,12 @@ import (
 	"github.com/ActiveMemory/ctx/internal/config/token"
 	ctxerr "github.com/ActiveMemory/ctx/internal/err/task"
 	"github.com/ActiveMemory/ctx/internal/io"
+	archive2 "github.com/ActiveMemory/ctx/internal/write/archive"
 	"github.com/spf13/cobra"
 
 	"github.com/ActiveMemory/ctx/internal/assets"
 	"github.com/ActiveMemory/ctx/internal/cli/task/core"
 	"github.com/ActiveMemory/ctx/internal/tidy"
-	"github.com/ActiveMemory/ctx/internal/write"
 )
 
 // runArchive executes the archive subcommand logic.
@@ -63,7 +63,7 @@ func runArchive(cmd *cobra.Command, dryRun bool) error {
 			archivableBlocks = append(archivableBlocks, block)
 		} else {
 			skippedCount++
-			write.ArchiveSkipping(cmd, block.ParentTaskText())
+			archive2.ArchiveSkipping(cmd, block.ParentTaskText())
 		}
 	}
 
@@ -72,9 +72,9 @@ func runArchive(cmd *cobra.Command, dryRun bool) error {
 
 	if len(archivableBlocks) == 0 {
 		if skippedCount > 0 {
-			write.ArchiveSkipIncomplete(cmd, skippedCount)
+			archive2.ArchiveSkipIncomplete(cmd, skippedCount)
 		} else {
-			write.ArchiveNoCompleted(cmd)
+			archive2.ArchiveNoCompleted(cmd)
 		}
 		return nil
 	}
@@ -87,7 +87,7 @@ func runArchive(cmd *cobra.Command, dryRun bool) error {
 	}
 
 	if dryRun {
-		write.ArchiveDryRun(cmd, len(archivableBlocks), pendingCount,
+		archive2.ArchiveDryRun(cmd, len(archivableBlocks), pendingCount,
 			archivedContent.String(), token.Separator)
 		return nil
 	}
@@ -108,7 +108,7 @@ func runArchive(cmd *cobra.Command, dryRun bool) error {
 		return ctxerr.FileWrite(updateErr)
 	}
 
-	write.ArchiveSuccess(cmd, len(archivableBlocks), archiveFilePath, pendingCount)
+	archive2.ArchiveSuccess(cmd, len(archivableBlocks), archiveFilePath, pendingCount)
 
 	return nil
 }

@@ -14,10 +14,11 @@ import (
 	"github.com/ActiveMemory/ctx/internal/assets"
 	"github.com/ActiveMemory/ctx/internal/config/fs"
 	"github.com/ActiveMemory/ctx/internal/config/token"
+	"github.com/ActiveMemory/ctx/internal/write/err"
+	"github.com/ActiveMemory/ctx/internal/write/recall"
 	"github.com/spf13/cobra"
 
 	"github.com/ActiveMemory/ctx/internal/journal/state"
-	"github.com/ActiveMemory/ctx/internal/write"
 )
 
 // ExecuteExport writes files according to the plan.
@@ -41,12 +42,12 @@ func ExecuteExport(
 	for _, fa := range plan.Actions {
 		if fa.Action == ActionLocked {
 			skipped++
-			write.SkipFile(cmd, fa.Filename, assets.FrontmatterLocked)
+			recall.SkipFile(cmd, fa.Filename, assets.FrontmatterLocked)
 			continue
 		}
 		if fa.Action == ActionSkip {
 			skipped++
-			write.SkipFile(cmd, fa.Filename, assets.ReasonExists)
+			recall.SkipFile(cmd, fa.Filename, assets.ReasonExists)
 			continue
 		}
 
@@ -84,16 +85,16 @@ func ExecuteExport(
 		if writeErr := os.WriteFile(
 			fa.Path, []byte(content), fs.PermFile,
 		); writeErr != nil {
-			write.WarnFileErr(cmd, fa.Filename, writeErr)
+			err.WarnFile(cmd, fa.Filename, writeErr)
 			continue
 		}
 
 		jstate.MarkExported(fa.Filename)
 
 		if fileExists && !discard {
-			write.ExportedFile(cmd, fa.Filename, assets.ReasonUpdated)
+			recall.ExportedFile(cmd, fa.Filename, assets.ReasonUpdated)
 		} else {
-			write.ExportedFile(cmd, fa.Filename, "")
+			recall.ExportedFile(cmd, fa.Filename, "")
 		}
 	}
 

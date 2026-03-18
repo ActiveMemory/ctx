@@ -10,11 +10,11 @@ import (
 	"path/filepath"
 
 	ctxerr "github.com/ActiveMemory/ctx/internal/err/memory"
+	"github.com/ActiveMemory/ctx/internal/write/memory"
 	"github.com/spf13/cobra"
 
 	mem "github.com/ActiveMemory/ctx/internal/memory"
 	"github.com/ActiveMemory/ctx/internal/rc"
-	"github.com/ActiveMemory/ctx/internal/write"
 )
 
 // Run computes and prints a line-based diff between the mirror and
@@ -40,7 +40,7 @@ func Run(cmd *cobra.Command) error {
 	}
 
 	if diff == "" {
-		write.MemoryNoChanges(cmd)
+		memory.NoChanges(cmd)
 		return nil
 	}
 

@@ -15,8 +15,10 @@ profile: dev
 # entry_count_learnings: 30
 # entry_count_decisions: 20
 # convention_line_count: 200
-# billing_token_warn: 0  # Absolute token threshold for billing nudge (0 = disabled)
-                          # Set to e.g. 180000 if tokens beyond 200k cost extra
+# context_window: 200000  # Auto-detected for Claude Code; override for other tools
+# billing_token_warn: 0   # Absolute token threshold for billing nudge (0 = disabled)
+                           # Set to e.g. 180000 if tokens beyond 200k cost extra
+# stale_age_days: 30       # Days before drift flags a context file as stale (0 = disabled)
 # priority_order:
 #   - CONSTITUTION.md
 #   - TASKS.md

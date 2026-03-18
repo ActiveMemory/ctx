@@ -10,10 +10,10 @@ import (
 	"strconv"
 
 	ctxerr "github.com/ActiveMemory/ctx/internal/err/reminder"
+	"github.com/ActiveMemory/ctx/internal/write/remind"
 	"github.com/spf13/cobra"
 
 	"github.com/ActiveMemory/ctx/internal/cli/remind/core"
-	"github.com/ActiveMemory/ctx/internal/write"
 )
 
 // RunDismiss removes a single reminder by ID and prints confirmation.
@@ -47,7 +47,7 @@ func RunDismiss(cmd *cobra.Command, idStr string) error {
 		return ctxerr.NotFound(id)
 	}
 
-	write.ReminderDismissed(cmd, reminders[found].ID, reminders[found].Message)
+	remind.ReminderDismissed(cmd, reminders[found].ID, reminders[found].Message)
 	reminders = append(reminders[:found], reminders[found+1:]...)
 	return core.WriteReminders(reminders)
 }
@@ -66,14 +66,14 @@ func RunDismissAll(cmd *cobra.Command) error {
 	}
 
 	if len(reminders) == 0 {
-		write.ReminderNone(cmd)
+		remind.ReminderNone(cmd)
 		return nil
 	}
 
 	for _, r := range reminders {
-		write.ReminderDismissed(cmd, r.ID, r.Message)
+		remind.ReminderDismissed(cmd, r.ID, r.Message)
 	}
-	write.ReminderDismissedAll(cmd, len(reminders))
+	remind.ReminderDismissedAll(cmd, len(reminders))
 
 	return core.WriteReminders([]core.Reminder{})
 }

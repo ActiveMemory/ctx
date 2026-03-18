@@ -11,11 +11,12 @@ import (
 	"time"
 
 	"github.com/ActiveMemory/ctx/internal/config/fmt"
+	"github.com/ActiveMemory/ctx/internal/context/load"
 	ctxerr "github.com/ActiveMemory/ctx/internal/err/initialize"
 	"github.com/spf13/cobra"
 
 	"github.com/ActiveMemory/ctx/internal/cli/agent/core"
-	"github.com/ActiveMemory/ctx/internal/context"
+	errctx "github.com/ActiveMemory/ctx/internal/err/context"
 )
 
 // Run executes the agent command logic.
@@ -47,9 +48,9 @@ func Run(
 		return nil
 	}
 
-	ctx, err := context.Load("")
+	ctx, err := load.Do("")
 	if err != nil {
-		var notFoundError *context.NotFoundError
+		var notFoundError *errctx.NotFoundError
 		if errors.As(err, &notFoundError) {
 			return ctxerr.NotInitialized()
 		}

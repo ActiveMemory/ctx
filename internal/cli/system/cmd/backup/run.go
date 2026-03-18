@@ -84,7 +84,7 @@ func Run(cmd *cobra.Command) error {
 	}
 
 	for _, r := range results {
-		backup.BackupResultLine(cmd, r.Scope, r.Archive, r.Size, r.SMBDest)
+		backup.ResultLine(cmd, r.Scope, r.Archive, r.Size, r.SMBDest)
 	}
 	return nil
 }

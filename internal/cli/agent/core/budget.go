@@ -15,7 +15,8 @@ import (
 	"github.com/ActiveMemory/ctx/internal/config/agent"
 	ctxCfg "github.com/ActiveMemory/ctx/internal/config/ctx"
 	"github.com/ActiveMemory/ctx/internal/config/token"
-	"github.com/ActiveMemory/ctx/internal/context"
+	token2 "github.com/ActiveMemory/ctx/internal/context/token"
+	"github.com/ActiveMemory/ctx/internal/entity"
 	"github.com/ActiveMemory/ctx/internal/index"
 )
 
@@ -61,7 +62,7 @@ type AssembledPacket struct {
 //
 // Returns:
 //   - *AssembledPacket: Assembled packet within budget
-func AssembleBudgetPacket(ctx *context.Context, budget int) *AssembledPacket {
+func AssembleBudgetPacket(ctx *entity.Context, budget int) *AssembledPacket {
 	now := time.Now()
 	pkt := &AssembledPacket{
 		Budget:      budget,
@@ -76,7 +77,7 @@ func AssembleBudgetPacket(ctx *context.Context, budget int) *AssembledPacket {
 
 	tier1Tokens := EstimateSliceTokens(pkt.ReadOrder) +
 		EstimateSliceTokens(pkt.Constitution) +
-		context.EstimateTokensString(pkt.Instruction)
+		token2.EstimateTokensString(pkt.Instruction)
 	remaining -= tier1Tokens
 
 	if remaining <= 0 {
@@ -145,7 +146,7 @@ func AssembleBudgetPacket(ctx *context.Context, budget int) *AssembledPacket {
 //
 // Returns:
 //   - []string: All convention bullet items; nil if the file is not found
-func ExtractAllConventions(ctx *context.Context) []string {
+func ExtractAllConventions(ctx *entity.Context) []string {
 	if f := ctx.File(ctxCfg.Convention); f != nil {
 		return ExtractBulletItems(string(f.Content), 1000)
 	}
@@ -160,7 +161,7 @@ func ExtractAllConventions(ctx *context.Context) []string {
 //
 // Returns:
 //   - []index.EntryBlock: Parsed entry blocks; nil if the file is not found
-func ParseEntryBlocks(ctx *context.Context, fileName string) []index.EntryBlock {
+func ParseEntryBlocks(ctx *entity.Context, fileName string) []index.EntryBlock {
 	if f := ctx.File(fileName); f != nil {
 		return index.ParseEntryBlocks(string(f.Content))
 	}
@@ -273,7 +274,7 @@ func FitItemsInBudget(items []string, budget int) []string {
 	used := 0
 	var result []string
 	for _, item := range items {
-		tokens := context.EstimateTokensString(item)
+		tokens := token2.EstimateTokensString(item)
 		if used+tokens > budget {
 			break
 		}
@@ -297,7 +298,7 @@ func FitItemsInBudget(items []string, budget int) []string {
 func EstimateSliceTokens(items []string) int {
 	total := 0
 	for _, item := range items {
-		total += context.EstimateTokensString(item)
+		total += token2.EstimateTokensString(item)
 	}
 	return total
 }

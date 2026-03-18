@@ -11,10 +11,9 @@ import (
 	"os/exec"
 
 	"github.com/ActiveMemory/ctx/internal/config/env"
-	ctxerr "github.com/ActiveMemory/ctx/internal/err/validate"
+	"github.com/ActiveMemory/ctx/internal/err/initialize"
+	initialize2 "github.com/ActiveMemory/ctx/internal/write/initialize"
 	"github.com/spf13/cobra"
-
-	"github.com/ActiveMemory/ctx/internal/write"
 )
 
 // CheckCtxInPath verifies that the ctx binary is in PATH.
@@ -30,8 +29,8 @@ func CheckCtxInPath(cmd *cobra.Command) error {
 	}
 	_, err := exec.LookPath("ctx")
 	if err != nil {
-		write.ErrCtxNotInPath(cmd)
-		return ctxerr.CtxNotInPath()
+		initialize2.ErrCtxNotInPath(cmd)
+		return initialize.CtxNotInPath()
 	}
 	return nil
 }

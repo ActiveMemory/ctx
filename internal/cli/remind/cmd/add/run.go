@@ -11,10 +11,10 @@ import (
 
 	time2 "github.com/ActiveMemory/ctx/internal/config/time"
 	ctxerr "github.com/ActiveMemory/ctx/internal/err/date"
+	"github.com/ActiveMemory/ctx/internal/write/remind"
 	"github.com/spf13/cobra"
 
 	"github.com/ActiveMemory/ctx/internal/cli/remind/core"
-	"github.com/ActiveMemory/ctx/internal/write"
 )
 
 // Run creates a new reminder and prints confirmation.
@@ -51,6 +51,6 @@ func Run(cmd *cobra.Command, message, after string) error {
 		return writeErr
 	}
 
-	write.ReminderAdded(cmd, r.ID, r.Message, r.After)
+	remind.ReminderAdded(cmd, r.ID, r.Message, r.After)
 	return nil
 }

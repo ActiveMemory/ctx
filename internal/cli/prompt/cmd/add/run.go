@@ -15,11 +15,11 @@ import (
 	"github.com/ActiveMemory/ctx/internal/config/fs"
 	fs2 "github.com/ActiveMemory/ctx/internal/err/fs"
 	ctxerr "github.com/ActiveMemory/ctx/internal/err/prompt"
+	"github.com/ActiveMemory/ctx/internal/write/prompt"
 	"github.com/spf13/cobra"
 
 	"github.com/ActiveMemory/ctx/internal/assets"
 	"github.com/ActiveMemory/ctx/internal/cli/prompt/core"
-	"github.com/ActiveMemory/ctx/internal/write"
 )
 
 // runAdd creates a new prompt template file.
@@ -65,6 +65,6 @@ func runAdd(cmd *cobra.Command, name string, fromStdin bool) error {
 		return fs2.WriteFileFailed(writeErr)
 	}
 
-	write.PromptCreated(cmd, name)
+	prompt.PromptCreated(cmd, name)
 	return nil
 }

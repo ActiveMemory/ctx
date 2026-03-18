@@ -17,12 +17,13 @@ import (
 	"github.com/ActiveMemory/ctx/internal/config/obsidian"
 	fs2 "github.com/ActiveMemory/ctx/internal/err/fs"
 	ctxerr "github.com/ActiveMemory/ctx/internal/err/journal"
+	"github.com/ActiveMemory/ctx/internal/write/err"
+	obsidian2 "github.com/ActiveMemory/ctx/internal/write/obsidian"
 	"github.com/spf13/cobra"
 
 	"github.com/ActiveMemory/ctx/internal/assets"
 	"github.com/ActiveMemory/ctx/internal/cli/journal/core"
 	"github.com/ActiveMemory/ctx/internal/rc"
-	"github.com/ActiveMemory/ctx/internal/write"
 )
 
 // ObsidianMaxRelated is the maximum number of "see also" entries in the
@@ -132,7 +133,7 @@ func BuildObsidianVault(cmd *cobra.Command, journalDir, output string) error {
 
 		content, readErr := os.ReadFile(filepath.Clean(src))
 		if readErr != nil {
-			write.WarnFileErr(cmd, entry.Filename, readErr)
+			err.WarnFile(cmd, entry.Filename, readErr)
 			continue
 		}
 
@@ -158,7 +159,7 @@ func BuildObsidianVault(cmd *cobra.Command, journalDir, output string) error {
 		if writeErr := os.WriteFile(
 			dst, []byte(transformed), fs.PermFile,
 		); writeErr != nil {
-			write.WarnFileErr(cmd, entry.Filename, writeErr)
+			err.WarnFile(cmd, entry.Filename, writeErr)
 			continue
 		}
 	}
@@ -183,7 +184,7 @@ func BuildObsidianVault(cmd *cobra.Command, journalDir, output string) error {
 				pagePath, []byte(core.GenerateObsidianTopicPage(t)),
 				fs.PermFile,
 			); writeErr != nil {
-				write.WarnFileErr(cmd, pagePath, writeErr)
+				err.WarnFile(cmd, pagePath, writeErr)
 			}
 		}
 	}
@@ -209,7 +210,7 @@ func BuildObsidianVault(cmd *cobra.Command, journalDir, output string) error {
 				pagePath, []byte(core.GenerateObsidianFilePage(kf)),
 				fs.PermFile,
 			); writeErr != nil {
-				write.WarnFileErr(cmd, pagePath, writeErr)
+				err.WarnFile(cmd, pagePath, writeErr)
 			}
 		}
 	}
@@ -231,7 +232,7 @@ func BuildObsidianVault(cmd *cobra.Command, journalDir, output string) error {
 				pagePath,
 				[]byte(core.GenerateObsidianTypePage(st)), fs.PermFile,
 			); writeErr != nil {
-				write.WarnFileErr(cmd, pagePath, writeErr)
+				err.WarnFile(cmd, pagePath, writeErr)
 			}
 		}
 	}
@@ -249,7 +250,7 @@ func BuildObsidianVault(cmd *cobra.Command, journalDir, output string) error {
 		return fs2.FileWrite(homePath, writeErr)
 	}
 
-	write.InfoObsidianGenerated(cmd, len(entries), output)
+	obsidian2.InfoGenerated(cmd, len(entries), output)
 
 	return nil
 }

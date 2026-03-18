@@ -3,6 +3,7 @@
 <!-- INDEX:START -->
 | Date | Decision |
 |------|--------|
+| 2026-03-17 | Pre-compute-then-print for write package output blocks |
 | 2026-03-16 | Server methods only handle dispatch and I/O, not struct construction |
 | 2026-03-16 | Explicit Init over package-level init() for resource lookup |
 | 2026-03-16 | Resource name constants in config/mcp/resource, mapping in server/resource |
@@ -52,6 +53,20 @@
 | 2026-02-26 | Security and permissions (consolidated) |
 | 2026-02-27 | Webhook and notification design (consolidated) |
 <!-- INDEX:END -->
+
+## [2026-03-17-105627] Pre-compute-then-print for write package output blocks
+
+**Status**: Accepted
+
+**Context**: Audit of internal/write/ found 337 Println calls across 160 functions. Asked whether text/template or single format strings would clean up multi-Println functions like InfoLoopGenerated.
+
+**Decision**: Pre-compute-then-print for write package output blocks
+
+**Rationale**: text/template trades compile-time safety for runtime errors and only 38 of 160 functions benefit from consolidation. fmt.Sprintf with pre-computed conditional args handles all cases without new dependencies. Loop-based functions stay imperative.
+
+**Consequence**: Functions with 4+ Printlns pre-compute conditionals into strings, then emit one cmd.Println with a multiline block template. Per-line Tpl* constants replaced with TplXxxBlock. Trivial (1-3 line) and loop-based functions excluded.
+
+---
 
 ## [2026-03-16-122033] Server methods only handle dispatch and I/O, not struct construction
 

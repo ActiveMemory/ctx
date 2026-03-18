@@ -11,7 +11,7 @@ import (
 	"fmt"
 	"time"
 
-	ctxerr "github.com/ActiveMemory/ctx/internal/err/validate"
+	errdrift "github.com/ActiveMemory/ctx/internal/err/drift"
 	"github.com/spf13/cobra"
 
 	"github.com/ActiveMemory/ctx/internal/drift"
@@ -117,7 +117,7 @@ func OutputDriftText(cmd *cobra.Command, report *drift.Report) error {
 	case drift.StatusViolation:
 		cmd.Println()
 		cmd.Println("Status: VIOLATION — Constitution violations detected")
-		return ctxerr.DriftViolations()
+		return errdrift.Violations()
 	case drift.StatusWarning:
 		cmd.Println()
 		cmd.Println("Status: WARNING — Issues detected that should be addressed")

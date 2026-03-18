@@ -10,12 +10,12 @@ import (
 	"github.com/ActiveMemory/ctx/internal/config/pad"
 	crypto2 "github.com/ActiveMemory/ctx/internal/err/crypto"
 	ctxerr "github.com/ActiveMemory/ctx/internal/err/pad"
+	pad2 "github.com/ActiveMemory/ctx/internal/write/pad"
 	"github.com/spf13/cobra"
 
 	"github.com/ActiveMemory/ctx/internal/cli/pad/core"
 	"github.com/ActiveMemory/ctx/internal/crypto"
 	"github.com/ActiveMemory/ctx/internal/rc"
-	"github.com/ActiveMemory/ctx/internal/write"
 )
 
 // Run reads and prints both sides of a merge conflict.
@@ -46,11 +46,11 @@ func Run(cmd *cobra.Command) error {
 	}
 
 	if errOurs == nil {
-		write.PadResolveSide(cmd, "OURS", displayAll(ours))
+		pad2.PadResolveSide(cmd, "OURS", displayAll(ours))
 	}
 
 	if errTheirs == nil {
-		write.PadResolveSide(cmd, "THEIRS", displayAll(theirs))
+		pad2.PadResolveSide(cmd, "THEIRS", displayAll(theirs))
 	}
 
 	return nil

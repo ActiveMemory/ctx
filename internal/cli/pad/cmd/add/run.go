@@ -11,10 +11,10 @@ import (
 	"github.com/ActiveMemory/ctx/internal/err/fs"
 	ctxerr "github.com/ActiveMemory/ctx/internal/err/pad"
 	"github.com/ActiveMemory/ctx/internal/io"
+	pad2 "github.com/ActiveMemory/ctx/internal/write/pad"
 	"github.com/spf13/cobra"
 
 	"github.com/ActiveMemory/ctx/internal/cli/pad/core"
-	"github.com/ActiveMemory/ctx/internal/write"
 )
 
 // runAdd appends a new entry and prints confirmation.
@@ -37,7 +37,7 @@ func runAdd(cmd *cobra.Command, text string) error {
 		return writeErr
 	}
 
-	write.PadEntryAdded(cmd, len(entries))
+	pad2.PadEntryAdded(cmd, len(entries))
 	return nil
 }
 
@@ -71,6 +71,6 @@ func runAddBlob(cmd *cobra.Command, label, filePath string) error {
 		return writeErr
 	}
 
-	write.PadEntryAdded(cmd, len(entries))
+	pad2.PadEntryAdded(cmd, len(entries))
 	return nil
 }

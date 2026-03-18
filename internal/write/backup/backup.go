@@ -9,12 +9,12 @@ package backup
 import (
 	"fmt"
 
-	"github.com/ActiveMemory/ctx/internal/write"
-	"github.com/ActiveMemory/ctx/internal/write/config"
+	"github.com/ActiveMemory/ctx/internal/assets"
+	"github.com/ActiveMemory/ctx/internal/format"
 	"github.com/spf13/cobra"
 )
 
-// BackupResultLine prints a single backup result with optional SMB destination.
+// ResultLine prints a single backup result with optional SMB destination.
 //
 // Parameters:
 //   - cmd: Cobra command for output. Nil is a no-op.
@@ -22,13 +22,13 @@ import (
 //   - archive: archive file path.
 //   - size: archive size in bytes.
 //   - smbDest: optional SMB destination (empty string skips).
-func BackupResultLine(cmd *cobra.Command, scope, archive string, size int64, smbDest string) {
+func ResultLine(cmd *cobra.Command, scope, archive string, size int64, smbDest string) {
 	if cmd == nil {
 		return
 	}
-	line := fmt.Sprintf(config.TplBackupResult, scope, archive, write.FormatBytes(size))
+	line := fmt.Sprintf(assets.TextDesc(assets.TextDescKeyWriteBackupResult), scope, archive, format.Bytes(size))
 	if smbDest != "" {
-		line += fmt.Sprintf(config.TplBackupSMBDest, smbDest)
+		line += fmt.Sprintf(assets.TextDesc(assets.TextDescKeyWriteBackupSMBDest), smbDest)
 	}
 	cmd.Println(line)
 }

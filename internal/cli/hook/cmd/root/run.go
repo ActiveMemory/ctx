@@ -17,10 +17,11 @@ import (
 	"github.com/ActiveMemory/ctx/internal/config/token"
 	"github.com/ActiveMemory/ctx/internal/err/config"
 	ctxerr "github.com/ActiveMemory/ctx/internal/err/fs"
+	writeErr "github.com/ActiveMemory/ctx/internal/write/err"
+	"github.com/ActiveMemory/ctx/internal/write/hook"
 	"github.com/spf13/cobra"
 
 	"github.com/ActiveMemory/ctx/internal/assets"
-	"github.com/ActiveMemory/ctx/internal/write"
 )
 
 // Run executes the hook command logic.
@@ -41,19 +42,19 @@ func Run(cmd *cobra.Command, args []string, writeFile bool) error {
 
 	switch tool {
 	case "claude-code", "claude":
-		write.InfoHookTool(cmd, assets.TextDesc(assets.TextDescKeyHookClaude))
+		hook.InfoTool(cmd, assets.TextDesc(assets.TextDescKeyHookClaude))
 
 	case "cursor":
-		write.InfoHookTool(cmd, assets.TextDesc(assets.TextDescKeyHookCursor))
+		hook.InfoTool(cmd, assets.TextDesc(assets.TextDescKeyHookCursor))
 
 	case "aider":
-		write.InfoHookTool(cmd, assets.TextDesc(assets.TextDescKeyHookAider))
+		hook.InfoTool(cmd, assets.TextDesc(assets.TextDescKeyHookAider))
 
 	case "copilot":
 		if writeFile {
 			return WriteCopilotInstructions(cmd)
 		}
-		write.InfoHookTool(cmd, assets.TextDesc(assets.TextDescKeyHookCopilot))
+		hook.InfoTool(cmd, assets.TextDesc(assets.TextDescKeyHookCopilot))
 		cmd.Println()
 		content, readErr := assets.CopilotInstructions()
 		if readErr != nil {
@@ -62,11 +63,11 @@ func Run(cmd *cobra.Command, args []string, writeFile bool) error {
 		cmd.Print(string(content))
 
 	case "windsurf":
-		write.InfoHookTool(cmd, assets.TextDesc(assets.TextDescKeyHookWindsurf))
+		hook.InfoTool(cmd, assets.TextDesc(assets.TextDescKeyHookWindsurf))
 
 	default:
-		write.InfoHookUnknownTool(cmd, tool)
-		write.InfoHookTool(cmd, assets.TextDesc(assets.TextDescKeyHookSupportedTools))
+		hook.InfoUnknownTool(cmd, tool)
+		hook.InfoTool(cmd, assets.TextDesc(assets.TextDescKeyHookSupportedTools))
 		return config.UnsupportedTool(tool)
 	}
 
@@ -106,7 +107,7 @@ func WriteCopilotInstructions(cmd *cobra.Command) error {
 	if fileExists {
 		existingStr := string(existingContent)
 		if strings.Contains(existingStr, marker.CopilotMarkerStart) {
-			write.InfoHookCopilotSkipped(cmd, targetFile)
+			hook.InfoCopilotSkipped(cmd, targetFile)
 			return nil
 		}
 
@@ -115,7 +116,7 @@ func WriteCopilotInstructions(cmd *cobra.Command) error {
 		if writeErr := os.WriteFile(targetFile, []byte(merged), fs.PermFile); writeErr != nil {
 			return ctxerr.FileWrite(targetFile, writeErr)
 		}
-		write.InfoHookCopilotMerged(cmd, targetFile)
+		hook.InfoCopilotMerged(cmd, targetFile)
 		return nil
 	}
 
@@ -125,17 +126,17 @@ func WriteCopilotInstructions(cmd *cobra.Command) error {
 	); writeErr != nil {
 		return ctxerr.FileWrite(targetFile, writeErr)
 	}
-	write.InfoHookCopilotCreated(cmd, targetFile)
+	hook.InfoCopilotCreated(cmd, targetFile)
 
 	// Also create .context/sessions/ if it doesn't exist
 	sessionsDir := filepath.Join(dir.Context, dir.Sessions)
 	if mkErr := os.MkdirAll(sessionsDir, fs.PermExec); mkErr != nil {
-		write.WarnFileErr(cmd, sessionsDir, mkErr)
+		writeErr.WarnFile(cmd, sessionsDir, mkErr)
 	} else {
-		write.InfoHookCopilotSessionsDir(cmd, sessionsDir)
+		hook.InfoCopilotSessionsDir(cmd, sessionsDir)
 	}
 
-	write.InfoHookCopilotSummary(cmd)
+	hook.InfoCopilotSummary(cmd)
 
 	return nil
 }

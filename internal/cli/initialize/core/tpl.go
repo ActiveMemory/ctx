@@ -13,10 +13,10 @@ import (
 	"github.com/ActiveMemory/ctx/internal/config/fs"
 	fs2 "github.com/ActiveMemory/ctx/internal/err/fs"
 	ctxerr "github.com/ActiveMemory/ctx/internal/err/prompt"
+	"github.com/ActiveMemory/ctx/internal/write/initialize"
 	"github.com/spf13/cobra"
 
 	"github.com/ActiveMemory/ctx/internal/assets"
-	"github.com/ActiveMemory/ctx/internal/write"
 )
 
 // CreateEntryTemplates creates entry template files in .context/templates/.
@@ -40,7 +40,7 @@ func CreateEntryTemplates(cmd *cobra.Command, contextDir string, force bool) err
 	for _, name := range entryTemplates {
 		targetPath := filepath.Join(templatesDir, name)
 		if _, err := os.Stat(targetPath); err == nil && !force {
-			write.InitSkipped(cmd, "templates/"+name)
+			initialize.Skipped(cmd, "templates/"+name)
 			continue
 		}
 		content, err := assets.Entry(name)
@@ -50,7 +50,7 @@ func CreateEntryTemplates(cmd *cobra.Command, contextDir string, force bool) err
 		if err := os.WriteFile(targetPath, content, fs.PermFile); err != nil {
 			return fs2.FileWrite(targetPath, err)
 		}
-		write.InitCreated(cmd, "templates/"+name)
+		initialize.Created(cmd, "templates/"+name)
 	}
 	return nil
 }

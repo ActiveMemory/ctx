@@ -31,6 +31,8 @@ err.backup.write-archive:
   short: 'failed to write archive: %w'
 err.backup.write-smb:
   short: 'write to SMB: %w'
+err.context.dir-not-found:
+  short: 'context directory not found: '
 err.config.golden-not-found:
   short: "no .claude/settings.golden.json found — run 'ctx permissions snapshot' first"
 err.config.invalid-tool:

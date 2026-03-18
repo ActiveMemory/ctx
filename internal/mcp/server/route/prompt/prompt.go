@@ -18,7 +18,7 @@ import (
 	"github.com/ActiveMemory/ctx/internal/config/mcp/mime"
 	"github.com/ActiveMemory/ctx/internal/config/mcp/prompt"
 	"github.com/ActiveMemory/ctx/internal/config/token"
-	"github.com/ActiveMemory/ctx/internal/context"
+	"github.com/ActiveMemory/ctx/internal/context/load"
 	"github.com/ActiveMemory/ctx/internal/mcp/proto"
 	promptdef "github.com/ActiveMemory/ctx/internal/mcp/server/def/prompt"
 	"github.com/ActiveMemory/ctx/internal/mcp/server/out"
@@ -36,7 +36,7 @@ import (
 func sessionStart(
 	id json.RawMessage, contextDir string,
 ) *proto.Response {
-	ctx, loadErr := context.Load(contextDir)
+	ctx, loadErr := load.Do(contextDir)
 	if loadErr != nil {
 		return out.ErrResponse(id, proto.ErrCodeInternal,
 			fmt.Sprintf(
@@ -146,18 +146,18 @@ func addDecision(
 	id json.RawMessage, args map[string]string,
 ) *proto.Response {
 	return buildEntry(id, promptdef.EntryPromptSpec{
-		HeaderKey:  assets.TextDescKeyMCPPromptAddDecisionHeader,
-		FooterKey:  assets.TextDescKeyMCPPromptAddDecisionFooter,
+		KeyHeader:  assets.TextDescKeyMCPPromptAddDecisionHeader,
+		KeyFooter:  assets.TextDescKeyMCPPromptAddDecisionFooter,
 		FieldFmtK:  assets.TextDescKeyMCPPromptAddDecisionFieldFmt,
-		ResultDKey: assets.TextDescKeyMCPPromptAddDecisionResultD,
+		KeyResultD: assets.TextDescKeyMCPPromptAddDecisionResultD,
 		Fields: []promptdef.EntryField{
-			{LabelKey: assets.TextDescKeyMCPPromptLabelDecision,
+			{KeyLabel: assets.TextDescKeyMCPPromptLabelDecision,
 				Value: args[field.Content]},
-			{LabelKey: assets.TextDescKeyMCPPromptLabelContext,
+			{KeyLabel: assets.TextDescKeyMCPPromptLabelContext,
 				Value: args[cli.AttrContext]},
-			{LabelKey: assets.TextDescKeyMCPPromptLabelRationale,
+			{KeyLabel: assets.TextDescKeyMCPPromptLabelRationale,
 				Value: args[cli.AttrRationale]},
-			{LabelKey: assets.TextDescKeyMCPPromptLabelConsequence,
+			{KeyLabel: assets.TextDescKeyMCPPromptLabelConsequence,
 				Value: args[cli.AttrConsequence]},
 		},
 	})
@@ -176,18 +176,18 @@ func addLearning(
 	id json.RawMessage, args map[string]string,
 ) *proto.Response {
 	return buildEntry(id, promptdef.EntryPromptSpec{
-		HeaderKey:  assets.TextDescKeyMCPPromptAddLearningHeader,
-		FooterKey:  assets.TextDescKeyMCPPromptAddLearningFooter,
+		KeyHeader:  assets.TextDescKeyMCPPromptAddLearningHeader,
+		KeyFooter:  assets.TextDescKeyMCPPromptAddLearningFooter,
 		FieldFmtK:  assets.TextDescKeyMCPPromptAddLearningFieldFmt,
-		ResultDKey: assets.TextDescKeyMCPPromptAddLearningResultD,
+		KeyResultD: assets.TextDescKeyMCPPromptAddLearningResultD,
 		Fields: []promptdef.EntryField{
-			{LabelKey: assets.TextDescKeyMCPPromptLabelLearning,
+			{KeyLabel: assets.TextDescKeyMCPPromptLabelLearning,
 				Value: args[field.Content]},
-			{LabelKey: assets.TextDescKeyMCPPromptLabelContext,
+			{KeyLabel: assets.TextDescKeyMCPPromptLabelContext,
 				Value: args[cli.AttrContext]},
-			{LabelKey: assets.TextDescKeyMCPPromptLabelLesson,
+			{KeyLabel: assets.TextDescKeyMCPPromptLabelLesson,
 				Value: args[cli.AttrLesson]},
-			{LabelKey: assets.TextDescKeyMCPPromptLabelApplication,
+			{KeyLabel: assets.TextDescKeyMCPPromptLabelApplication,
 				Value: args[cli.AttrApplication]},
 		},
 	})
@@ -212,47 +212,6 @@ func reflect(id json.RawMessage) *proto.Response {
 					Text: assets.TextDesc(
 						assets.TextDescKeyMCPPromptReflectBody,
 					),
-				},
-			},
-		},
-	})
-}
-
-// buildEntry renders a structured entry prompt (decision or
-// learning) from the given spec and returns the formatted response.
-//
-// Parameters:
-//   - id: JSON-RPC request ID
-//   - spec: entry prompt specification (header, footer, fields)
-//
-// Returns:
-//   - *proto.Response: formatted entry prompt
-func buildEntry(
-	id json.RawMessage, spec promptdef.EntryPromptSpec,
-) *proto.Response {
-	fieldFmt := assets.TextDesc(spec.FieldFmtK)
-
-	var sb strings.Builder
-	sb.WriteString(assets.TextDesc(spec.HeaderKey))
-	sb.WriteString(token.NewlineLF)
-	sb.WriteString(token.NewlineLF)
-	for _, f := range spec.Fields {
-		_, _ = fmt.Fprintf(
-			&sb,
-			fieldFmt, assets.TextDesc(f.LabelKey), f.Value,
-		)
-	}
-	sb.WriteString(token.NewlineLF)
-	sb.WriteString(assets.TextDesc(spec.FooterKey))
-
-	return out.OkResponse(id, proto.GetPromptResult{
-		Description: assets.TextDesc(spec.ResultDKey),
-		Messages: []proto.PromptMessage{
-			{
-				Role: prompt.RoleUser,
-				Content: proto.ToolContent{
-					Type: mime.ContentTypeText,
-					Text: sb.String(),
 				},
 			},
 		},

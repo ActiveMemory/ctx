@@ -12,11 +12,11 @@ import (
 	memory2 "github.com/ActiveMemory/ctx/internal/config/memory"
 	memory3 "github.com/ActiveMemory/ctx/internal/err/memory"
 	ctxerr "github.com/ActiveMemory/ctx/internal/err/state"
+	"github.com/ActiveMemory/ctx/internal/write/sync"
 	"github.com/spf13/cobra"
 
 	"github.com/ActiveMemory/ctx/internal/memory"
 	"github.com/ActiveMemory/ctx/internal/rc"
-	"github.com/ActiveMemory/ctx/internal/write"
 )
 
 // Run discovers MEMORY.md, mirrors it into .context/memory/, and
@@ -35,12 +35,12 @@ func Run(cmd *cobra.Command, dryRun bool) error {
 
 	sourcePath, discoverErr := memory.DiscoverMemoryPath(projectRoot)
 	if discoverErr != nil {
-		write.ErrAutoMemoryNotActive(cmd, discoverErr)
+		sync.ErrAutoMemoryNotActive(cmd, discoverErr)
 		return memory3.NotFound()
 	}
 
 	if dryRun {
-		write.SyncDryRun(cmd, sourcePath, memory2.PathMemoryMirror,
+		sync.SyncDryRun(cmd, sourcePath, memory2.PathMemoryMirror,
 			memory.HasDrift(contextDir, sourcePath))
 		return nil
 	}
@@ -50,7 +50,7 @@ func Run(cmd *cobra.Command, dryRun bool) error {
 		return memory3.Sync(syncErr)
 	}
 
-	write.SyncResult(cmd,
+	sync.SyncResult(cmd,
 		memory2.MemorySource, memory2.PathMemoryMirror,
 		result.SourcePath, filepath.Base(result.ArchivedTo),
 		result.SourceLines, result.MirrorLines,

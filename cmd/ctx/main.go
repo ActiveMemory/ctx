@@ -11,7 +11,7 @@ import (
 	"os"
 
 	"github.com/ActiveMemory/ctx/internal/bootstrap"
-	"github.com/ActiveMemory/ctx/internal/write"
+	writeErr "github.com/ActiveMemory/ctx/internal/write/err"
 )
 
 // main is the entry point of the application.
@@ -19,7 +19,7 @@ func main() {
 	cmd := bootstrap.Initialize(bootstrap.RootCmd())
 
 	if err := cmd.Execute(); err != nil {
-		write.ErrWithError(cmd, err)
+		writeErr.WithError(cmd, err)
 		os.Exit(1)
 	}
 }

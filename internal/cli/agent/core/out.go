@@ -12,7 +12,7 @@ import (
 
 	"github.com/spf13/cobra"
 
-	"github.com/ActiveMemory/ctx/internal/context"
+	"github.com/ActiveMemory/ctx/internal/entity"
 )
 
 // OutputAgentJSON writes the context packet as pretty-printed JSON.
@@ -27,7 +27,7 @@ import (
 // Returns:
 //   - error: Non-nil if JSON encoding fails
 func OutputAgentJSON(
-	cmd *cobra.Command, ctx *context.Context, budget int,
+	cmd *cobra.Command, ctx *entity.Context, budget int,
 ) error {
 	pkt := AssembleBudgetPacket(ctx, budget)
 
@@ -64,7 +64,7 @@ func OutputAgentJSON(
 // Returns:
 //   - error: Always nil (included for interface consistency)
 func OutputAgentMarkdown(
-	cmd *cobra.Command, ctx *context.Context, budget int,
+	cmd *cobra.Command, ctx *entity.Context, budget int,
 ) error {
 	pkt := AssembleBudgetPacket(ctx, budget)
 	cmd.Print(RenderMarkdownPacket(pkt))

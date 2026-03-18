@@ -31,7 +31,7 @@ func DispatchList(req proto.Request) *proto.Response {
 	)
 }
 
-// DispatchPromptGet unmarshals prompt params and dispatches to the
+// DispatchGet unmarshals prompt params and dispatches to the
 // appropriate prompt builder.
 //
 // Parameters:
@@ -40,7 +40,7 @@ func DispatchList(req proto.Request) *proto.Response {
 //
 // Returns:
 //   - *proto.Response: rendered prompt or error
-func DispatchPromptGet(
+func DispatchGet(
 	h *handler.Handler, req proto.Request,
 ) *proto.Response {
 	var params proto.GetPromptParams

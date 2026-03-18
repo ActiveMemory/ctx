@@ -29,7 +29,7 @@ func DispatchList(req proto.Request) *proto.Response {
 	return out.OkResponse(req.ID, proto.ToolListResult{Tools: tooldef.Defs})
 }
 
-// DispatchToolCall unmarshals tool call params and dispatches to the
+// DispatchCall unmarshals tool call params and dispatches to the
 // appropriate handler function.
 //
 // Parameters:
@@ -38,7 +38,7 @@ func DispatchList(req proto.Request) *proto.Response {
 //
 // Returns:
 //   - *proto.Response: tool result or error
-func DispatchToolCall(
+func DispatchCall(
 	h *handler.Handler, req proto.Request,
 ) *proto.Response {
 	var params proto.CallToolParams

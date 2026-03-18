@@ -12,10 +12,10 @@ import (
 	"github.com/ActiveMemory/ctx/internal/config/fs"
 	fs2 "github.com/ActiveMemory/ctx/internal/err/fs"
 	ctxerr "github.com/ActiveMemory/ctx/internal/err/pad"
+	"github.com/ActiveMemory/ctx/internal/write/pad"
 	"github.com/spf13/cobra"
 
 	"github.com/ActiveMemory/ctx/internal/cli/pad/core"
-	"github.com/ActiveMemory/ctx/internal/write"
 )
 
 // Run prints the raw text of entry at 1-based position n.
@@ -50,7 +50,7 @@ func Run(cmd *cobra.Command, n int, outPath string) error {
 			); writeErr != nil {
 				return fs2.WriteFileFailed(writeErr)
 			}
-			write.PadBlobWritten(cmd, len(data), outPath)
+			pad.PadBlobWritten(cmd, len(data), outPath)
 			return nil
 		}
 		cmd.Print(string(data))

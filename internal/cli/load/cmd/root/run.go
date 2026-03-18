@@ -9,12 +9,13 @@ package root
 import (
 	"errors"
 
+	"github.com/ActiveMemory/ctx/internal/context/load"
 	ctxerr "github.com/ActiveMemory/ctx/internal/err/initialize"
+	load2 "github.com/ActiveMemory/ctx/internal/write/load"
 	"github.com/spf13/cobra"
 
 	"github.com/ActiveMemory/ctx/internal/cli/load/core"
-	"github.com/ActiveMemory/ctx/internal/context"
-	"github.com/ActiveMemory/ctx/internal/write"
+	errctx "github.com/ActiveMemory/ctx/internal/err/context"
 )
 
 // Run executes the load command logic.
@@ -30,9 +31,9 @@ import (
 // Returns:
 //   - error: Non-nil if context loading fails or .context/ is not found
 func Run(cmd *cobra.Command, budget int, raw bool) error {
-	ctx, err := context.Load("")
+	ctx, err := load.Do("")
 	if err != nil {
-		var notFoundError *context.NotFoundError
+		var notFoundError *errctx.NotFoundError
 		if errors.As(err, &notFoundError) {
 			return ctxerr.NotInitialized()
 		}
@@ -42,10 +43,10 @@ func Run(cmd *cobra.Command, budget int, raw bool) error {
 	files := core.SortByReadOrder(ctx.Files)
 
 	if raw {
-		return write.LoadRaw(cmd, files)
+		return load2.Raw(cmd, files)
 	}
 
-	return write.LoadAssembled(
+	return load2.Assembled(
 		cmd, files, budget, ctx.TotalTokens, core.FileNameToTitle,
 	)
 }

@@ -15,7 +15,7 @@ import (
 	"github.com/ActiveMemory/ctx/internal/assets"
 	ctxCfg "github.com/ActiveMemory/ctx/internal/config/ctx"
 	"github.com/ActiveMemory/ctx/internal/config/dep"
-	"github.com/ActiveMemory/ctx/internal/context"
+	"github.com/ActiveMemory/ctx/internal/entity"
 )
 
 // CheckPackageFiles detects package manager files without dependency
@@ -30,7 +30,7 @@ import (
 //
 // Returns:
 //   - []Action: Suggested actions for undocumented dependencies
-func CheckPackageFiles(ctx *context.Context) []Action {
+func CheckPackageFiles(ctx *entity.Context) []Action {
 	var actions []Action
 
 	for f, desc := range dep.Packages {
@@ -81,7 +81,7 @@ func CheckPackageFiles(ctx *context.Context) []Action {
 //
 // Returns:
 //   - []Action: Suggested actions for undocumented configurations
-func CheckConfigFiles(ctx *context.Context) []Action {
+func CheckConfigFiles(ctx *entity.Context) []Action {
 	var actions []Action
 
 	for _, cfg := range assets.Patterns {
@@ -127,7 +127,7 @@ func CheckConfigFiles(ctx *context.Context) []Action {
 //
 // Returns:
 //   - []Action: Suggested actions for undocumented directories
-func CheckNewDirectories(ctx *context.Context) []Action {
+func CheckNewDirectories(ctx *entity.Context) []Action {
 	var actions []Action
 
 	// Get ARCHITECTURE.md content

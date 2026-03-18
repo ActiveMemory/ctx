@@ -9,11 +9,12 @@ package root
 import (
 	"errors"
 
+	"github.com/ActiveMemory/ctx/internal/context/load"
 	ctxerr "github.com/ActiveMemory/ctx/internal/err/initialize"
 	"github.com/spf13/cobra"
 
 	"github.com/ActiveMemory/ctx/internal/cli/status/core"
-	"github.com/ActiveMemory/ctx/internal/context"
+	errctx "github.com/ActiveMemory/ctx/internal/err/context"
 )
 
 // Run executes the status command logic.
@@ -26,9 +27,9 @@ import (
 // Returns:
 //   - error: Non-nil if context loading fails
 func Run(cmd *cobra.Command, jsonOutput, verbose bool) error {
-	ctx, err := context.Load("")
+	ctx, err := load.Do("")
 	if err != nil {
-		var notFoundError *context.NotFoundError
+		var notFoundError *errctx.NotFoundError
 		if errors.As(err, &notFoundError) {
 			return ctxerr.ContextNotInitialized()
 		}

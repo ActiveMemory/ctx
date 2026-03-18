@@ -26,4 +26,6 @@ const (
 	DefaultTaskNudgeInterval = 5
 	// DefaultKeyRotationDays is the days before encryption key rotation nudge.
 	DefaultKeyRotationDays = 90
+	// DefaultStaleAgeDays is the days before a context file is flagged as stale by drift detection.
+	DefaultStaleAgeDays = 30
 )

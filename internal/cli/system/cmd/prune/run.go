@@ -13,10 +13,10 @@ import (
 
 	time2 "github.com/ActiveMemory/ctx/internal/config/time"
 	ctxerr "github.com/ActiveMemory/ctx/internal/err/state"
+	"github.com/ActiveMemory/ctx/internal/write/prune"
 	"github.com/spf13/cobra"
 
 	"github.com/ActiveMemory/ctx/internal/cli/system/core"
-	"github.com/ActiveMemory/ctx/internal/write"
 )
 
 // Run executes the prune logic.
@@ -67,20 +67,20 @@ func Run(cmd *cobra.Command, days int, dryRun bool) error {
 		}
 
 		if dryRun {
-			write.PruneDryRunLine(cmd, name, core.FormatAge(info.ModTime()))
+			prune.PruneDryRunLine(cmd, name, core.FormatAge(info.ModTime()))
 			pruned++
 			continue
 		}
 
 		path := filepath.Join(dir, name)
 		if rmErr := os.Remove(path); rmErr != nil {
-			write.PruneErrorLine(cmd, name, rmErr)
+			prune.PruneErrorLine(cmd, name, rmErr)
 			continue
 		}
 		pruned++
 	}
 
-	write.PruneSummary(cmd, dryRun, pruned, skipped, preserved)
+	prune.PruneSummary(cmd, dryRun, pruned, skipped, preserved)
 
 	return nil
 }

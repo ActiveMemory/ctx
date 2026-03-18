@@ -97,3 +97,14 @@ func CreateMakefile(cause error) error {
 		assets.TextDesc(assets.TextDescKeyErrInitCreateMakefile), cause,
 	)
 }
+
+// CtxNotInPath returns an error indicating that ctx was not found in
+// PATH.
+//
+// Returns:
+//   - error: "ctx not found in PATH"
+func CtxNotInPath() error {
+	return errors.New(
+		assets.TextDesc(assets.TextDescKeyErrValidationCtxNotInPath),
+	)
+}

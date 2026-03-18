@@ -12,12 +12,12 @@ import (
 	"github.com/ActiveMemory/ctx/internal/config/dir"
 	"github.com/ActiveMemory/ctx/internal/config/journal"
 	ctxerr "github.com/ActiveMemory/ctx/internal/err/journal"
+	"github.com/ActiveMemory/ctx/internal/write/recall"
 	"github.com/spf13/cobra"
 
 	"github.com/ActiveMemory/ctx/internal/cli/recall/core"
 	"github.com/ActiveMemory/ctx/internal/journal/state"
 	"github.com/ActiveMemory/ctx/internal/rc"
-	"github.com/ActiveMemory/ctx/internal/write"
 )
 
 // Run scans all journal markdowns and syncs frontmatter lock state
@@ -41,7 +41,7 @@ func Run(cmd *cobra.Command) error {
 		return matchErr
 	}
 	if len(files) == 0 {
-		write.JournalSyncNone(cmd)
+		recall.JournalSyncNone(cmd)
 		return nil
 	}
 
@@ -55,11 +55,11 @@ func Run(cmd *cobra.Command) error {
 		switch {
 		case fmLocked && !stateLocked:
 			jstate.Mark(filename, journal.StageLocked)
-			write.JournalSyncLocked(cmd, filename)
+			recall.JournalSyncLocked(cmd, filename)
 			locked++
 		case !fmLocked && stateLocked:
 			jstate.Clear(filename, journal.StageLocked)
-			write.JournalSyncUnlocked(cmd, filename)
+			recall.JournalSyncUnlocked(cmd, filename)
 			unlocked++
 		}
 	}
@@ -68,7 +68,7 @@ func Run(cmd *cobra.Command) error {
 		return ctxerr.SaveState(saveErr)
 	}
 
-	write.JournalSyncSummary(cmd, locked, unlocked)
+	recall.JournalSyncSummary(cmd, locked, unlocked)
 
 	return nil
 }

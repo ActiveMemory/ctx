@@ -29,6 +29,7 @@ package rc
 //   - TaskNudgeInterval: Edit/Write calls between task completion nudges (default 5, 0 = disabled)
 //   - KeyPathOverride: Explicit encryption key file path (default: auto-resolved)
 //   - SessionPrefixes: Recognized session header prefixes for Markdown parser (default: Session:)
+//   - StaleAgeDays: Days before a context file is flagged as stale by drift detection (default 30, 0 = disabled)
 //   - FreshnessFiles: Files to track for technology-dependent constant staleness (opt-in)
 type CtxRC struct {
 	Profile             string          `yaml:"profile"`
@@ -49,6 +50,7 @@ type CtxRC struct {
 	KeyRotationDays     int             `yaml:"key_rotation_days"`
 	TaskNudgeInterval   int             `yaml:"task_nudge_interval"`
 	KeyPathOverride     string          `yaml:"key_path"`
+	StaleAgeDays        int             `yaml:"stale_age_days"`
 	SessionPrefixes     []string        `yaml:"session_prefixes"`
 	FreshnessFiles      []FreshnessFile `yaml:"freshness_files"`
 	Notify              *NotifyConfig   `yaml:"notify"`

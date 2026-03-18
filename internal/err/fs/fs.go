@@ -328,3 +328,16 @@ func RefuseSystemPath(path string) error {
 		assets.TextDesc(assets.TextDescKeyErrFsRefuseSystemPath), path,
 	)
 }
+
+// WorkingDirectory wraps a failure to determine the working directory.
+//
+// Parameters:
+//   - cause: the underlying error from os.Getwd
+//
+// Returns:
+//   - error: "failed to get working directory: <cause>"
+func WorkingDirectory(cause error) error {
+	return fmt.Errorf(
+		assets.TextDesc(assets.TextDescKeyErrValidationWorkingDirectory), cause,
+	)
+}

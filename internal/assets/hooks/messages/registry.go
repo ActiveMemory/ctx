@@ -16,7 +16,7 @@ import (
 
 	"github.com/ActiveMemory/ctx/internal/assets"
 	fserr "github.com/ActiveMemory/ctx/internal/err/fs"
-	ctxerr "github.com/ActiveMemory/ctx/internal/err/validate"
+	errparser "github.com/ActiveMemory/ctx/internal/err/parser"
 	"gopkg.in/yaml.v3"
 )
 
@@ -64,7 +64,7 @@ func Registry() []HookMessageInfo {
 		}
 		var entries []HookMessageInfo
 		if unmarshalErr := yaml.Unmarshal(raw, &entries); unmarshalErr != nil {
-			registryErr = ctxerr.ParseFile("registry.yaml", unmarshalErr)
+			registryErr = errparser.ParseFile("registry.yaml", unmarshalErr)
 			return
 		}
 		registryData = entries

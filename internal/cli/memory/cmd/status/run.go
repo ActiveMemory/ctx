@@ -16,12 +16,12 @@ import (
 	time2 "github.com/ActiveMemory/ctx/internal/config/time"
 	ctxerr "github.com/ActiveMemory/ctx/internal/err/memory"
 	"github.com/ActiveMemory/ctx/internal/io"
+	memory2 "github.com/ActiveMemory/ctx/internal/write/memory"
 	"github.com/spf13/cobra"
 
 	"github.com/ActiveMemory/ctx/internal/cli/memory/core"
 	mem "github.com/ActiveMemory/ctx/internal/memory"
 	"github.com/ActiveMemory/ctx/internal/rc"
-	"github.com/ActiveMemory/ctx/internal/write"
 )
 
 // Run prints memory bridge status including source location,
@@ -38,24 +38,24 @@ func Run(cmd *cobra.Command) error {
 
 	sourcePath, discoverErr := mem.DiscoverMemoryPath(projectRoot)
 	if discoverErr != nil {
-		write.MemoryBridgeHeader(cmd)
-		write.MemorySourceNotActive(cmd)
+		memory2.BridgeHeader(cmd)
+		memory2.SourceNotActive(cmd)
 		return ctxerr.NotFound()
 	}
 
-	write.MemoryBridgeHeader(cmd)
-	write.MemorySource(cmd, sourcePath)
-	write.MemoryMirror(cmd, memory.PathMemoryMirror)
+	memory2.BridgeHeader(cmd)
+	memory2.Source(cmd, sourcePath)
+	memory2.Mirror(cmd, memory.PathMemoryMirror)
 
 	// Last sync time
 	state, _ := mem.LoadState(contextDir)
 	if state.LastSync != nil {
 		ago := time.Since(*state.LastSync).Truncate(time.Minute)
-		write.MemoryLastSync(cmd,
+		memory2.LastSync(cmd,
 			state.LastSync.Local().Format(time2.DateTimeFormat),
 			core.FormatDuration(ago))
 	} else {
-		write.MemoryLastSyncNever(cmd)
+		memory2.LastSyncNever(cmd)
 	}
 
 	cmd.Println()
@@ -65,7 +65,7 @@ func Run(cmd *cobra.Command) error {
 	if sourceData, readErr := io.SafeReadFile(
 		filepath.Dir(sourcePath), filepath.Base(sourcePath),
 	); readErr == nil {
-		write.MemorySourceLines(cmd, core.CountFileLines(sourceData), hasDrift)
+		memory2.SourceLines(cmd, core.CountFileLines(sourceData), hasDrift)
 	}
 
 	// Mirror line count
@@ -73,21 +73,21 @@ func Run(cmd *cobra.Command) error {
 	if mirrorData, readErr := io.SafeReadFile(
 		memoryDir, memory.MemoryMirror,
 	); readErr == nil {
-		write.MemoryMirrorLines(cmd, core.CountFileLines(mirrorData))
+		memory2.MirrorLines(cmd, core.CountFileLines(mirrorData))
 	} else {
-		write.MemoryMirrorNotSynced(cmd)
+		memory2.MirrorNotSynced(cmd)
 	}
 
 	// Drift
 	if hasDrift {
-		write.MemoryDriftDetected(cmd)
+		memory2.DriftDetected(cmd)
 	} else {
-		write.MemoryDriftNone(cmd)
+		memory2.DriftNone(cmd)
 	}
 
 	// Archives
 	count := mem.ArchiveCount(contextDir)
-	write.MemoryArchives(cmd, count, dir.MemoryArchive)
+	memory2.Archives(cmd, count, dir.MemoryArchive)
 
 	if hasDrift {
 		// Exit code 2 for drift

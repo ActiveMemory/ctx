@@ -3,6 +3,7 @@
 <!-- INDEX:START -->
 | Date | Learning |
 |------|--------|
+| 2026-03-17 | Write package output census: 69 trivial/simple, 38 consolidation candidates, 18 complex |
 | 2026-03-16 | Docstring tasks require reading CONVENTIONS.md Documentation section first |
 | 2026-03-16 | Convention enforcement needs mechanical verification, not behavioral repetition |
 | 2026-03-16 | One-liner method wrappers hide dependencies without adding value |
@@ -78,6 +79,16 @@
 | 2026-02-19 | Feature can be code-complete but invisible to users |
 | 2026-01-28 | IDE is already the UI |
 <!-- INDEX:END -->
+
+---
+
+## [2026-03-17-105637] Write package output census: 69 trivial/simple, 38 consolidation candidates, 18 complex
+
+**Context**: Full audit of internal/write/ (26 files, 160 functions, 337 Println calls) to evaluate whether block template consolidation is worth a systematic refactor.
+
+**Lesson**: Only 30% of write functions benefit from output consolidation. The sweet spot is multi-line (16) and conditional (22) functions.
+
+**Application**: Check function category before consolidating. Trivial/simple stay as-is. Conditional functions need pre-computation before block templates. Loop-based complex functions stay imperative. Don't bulk-refactor.
 
 ---
 

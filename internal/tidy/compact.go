@@ -13,7 +13,7 @@ import (
 	"github.com/ActiveMemory/ctx/internal/assets"
 	ctxCfg "github.com/ActiveMemory/ctx/internal/config/ctx"
 	"github.com/ActiveMemory/ctx/internal/config/token"
-	"github.com/ActiveMemory/ctx/internal/context"
+	"github.com/ActiveMemory/ctx/internal/entity"
 )
 
 // FileUpdate holds the new content for a context file that changed
@@ -69,7 +69,7 @@ func (r *CompactResult) TotalChanges() int {
 //
 // Returns:
 //   - *CompactResult: what changed and what to write
-func CompactContext(ctx *context.Context) *CompactResult {
+func CompactContext(ctx *entity.Context) *CompactResult {
 	result := &CompactResult{}
 
 	// Process TASKS.md.

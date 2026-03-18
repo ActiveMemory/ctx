@@ -52,12 +52,13 @@ func Run(cmd *cobra.Command) error {
 
 	jsonFlag, _ := cmd.Flags().GetBool("json")
 	if jsonFlag {
-		return bootstrap.BootstrapJSON(cmd, dir, files, rules, nextSteps, warning)
+		bootstrap.JSON(cmd, dir, files, rules, nextSteps, warning)
+		return nil
 	}
 
 	fileList := core.WrapFileList(
 		files, bootstrap2.BootstrapFileListWidth, bootstrap2.BootstrapFileListIndent,
 	)
-	bootstrap.BootstrapText(cmd, dir, fileList, rules, nextSteps, warning)
+	bootstrap.Text(cmd, dir, fileList, rules, nextSteps, warning)
 	return nil
 }

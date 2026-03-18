@@ -10,12 +10,12 @@ import (
 	"testing"
 	"time"
 
-	"github.com/ActiveMemory/ctx/internal/context"
+	"github.com/ActiveMemory/ctx/internal/entity"
 )
 
 func TestGetRecentFiles(t *testing.T) {
 	now := time.Now()
-	files := []context.FileInfo{
+	files := []entity.FileInfo{
 		{Name: "old.md", ModTime: now.Add(-3 * time.Hour)},
 		{Name: "newest.md", ModTime: now},
 		{Name: "mid.md", ModTime: now.Add(-1 * time.Hour)},
@@ -34,9 +34,9 @@ func TestGetRecentFiles(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			got := GetRecentFiles(files, tt.n)
+			got := RecentFilesSorted(files, tt.n)
 			if len(got) != tt.want {
-				t.Errorf("GetRecentFiles(n=%d) returned %d files, want %d", tt.n, len(got), tt.want)
+				t.Errorf("RecentFilesSorted(n=%d) returned %d files, want %d", tt.n, len(got), tt.want)
 			}
 			if tt.first != "" && len(got) > 0 && got[0].Name != tt.first {
 				t.Errorf("first file = %q, want %q", got[0].Name, tt.first)
@@ -45,15 +45,15 @@ func TestGetRecentFiles(t *testing.T) {
 	}
 
 	t.Run("empty input", func(t *testing.T) {
-		got := GetRecentFiles(nil, 5)
+		got := RecentFilesSorted(nil, 5)
 		if len(got) != 0 {
-			t.Errorf("GetRecentFiles(nil) returned %d files, want 0", len(got))
+			t.Errorf("RecentFilesSorted(nil) returned %d files, want 0", len(got))
 		}
 	})
 }
 
 func TestSortFilesByPriority(t *testing.T) {
-	files := []context.FileInfo{
+	files := []entity.FileInfo{
 		{Name: "TASKS.md"},
 		{Name: "CONVENTIONS.md"},
 		{Name: "CONSTITUTION.md"},

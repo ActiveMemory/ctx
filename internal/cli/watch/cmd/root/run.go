@@ -10,14 +10,14 @@ import (
 	"io"
 	"os"
 
+	"github.com/ActiveMemory/ctx/internal/context/validate"
 	"github.com/ActiveMemory/ctx/internal/err/initialize"
 	ctxerr "github.com/ActiveMemory/ctx/internal/err/recall"
 	io2 "github.com/ActiveMemory/ctx/internal/io"
+	"github.com/ActiveMemory/ctx/internal/write/watch"
 	"github.com/spf13/cobra"
 
 	"github.com/ActiveMemory/ctx/internal/cli/watch/core"
-	"github.com/ActiveMemory/ctx/internal/context"
-	"github.com/ActiveMemory/ctx/internal/write"
 )
 
 // Run executes the watch command logic.
@@ -35,15 +35,15 @@ import (
 //   - error: Non-nil if the context directory is missing, the log file cannot
 //     be opened, or stream processing fails
 func Run(cmd *cobra.Command, logPath string, dryRun bool) error {
-	if !context.Exists("") {
+	if !validate.Exists("") {
 		return initialize.ContextNotInitialized()
 	}
 
-	write.WatchWatching(cmd)
+	watch.Watching(cmd)
 	if dryRun {
-		write.WatchDryRun(cmd)
+		watch.DryRun(cmd)
 	}
-	write.WatchStopHint(cmd)
+	watch.StopHint(cmd)
 	cmd.Println()
 
 	var reader io.Reader
@@ -54,7 +54,7 @@ func Run(cmd *cobra.Command, logPath string, dryRun bool) error {
 		}
 		defer func(file *os.File) {
 			if closeErr := file.Close(); closeErr != nil {
-				write.WatchCloseLogError(cmd, closeErr)
+				watch.CloseLogError(cmd, closeErr)
 			}
 		}(file)
 		reader = file

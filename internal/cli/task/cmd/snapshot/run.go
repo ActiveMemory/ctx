@@ -17,11 +17,11 @@ import (
 	"github.com/ActiveMemory/ctx/internal/config/token"
 	"github.com/ActiveMemory/ctx/internal/err/backup"
 	ctxerr "github.com/ActiveMemory/ctx/internal/err/task"
+	archive2 "github.com/ActiveMemory/ctx/internal/write/archive"
 	"github.com/spf13/cobra"
 
 	"github.com/ActiveMemory/ctx/internal/cli/task/core"
 	"github.com/ActiveMemory/ctx/internal/validation"
-	"github.com/ActiveMemory/ctx/internal/write"
 )
 
 // Run executes the snapshot subcommand logic.
@@ -68,7 +68,7 @@ func Run(cmd *cobra.Command, args []string) error {
 
 	// Build snapshot content
 	nl := token.NewlineLF
-	snapshotContent := write.SnapshotContent(
+	snapshotContent := archive2.SnapshotContent(
 		name, now.Format(time.RFC3339), token.Separator, nl, string(content),
 	)
 
@@ -79,7 +79,7 @@ func Run(cmd *cobra.Command, args []string) error {
 		return ctxerr.SnapshotWrite(writeErr)
 	}
 
-	write.SnapshotSaved(cmd, snapshotPath)
+	archive2.SnapshotSaved(cmd, snapshotPath)
 
 	return nil
 }

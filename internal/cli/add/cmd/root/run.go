@@ -15,7 +15,6 @@ import (
 
 	"github.com/ActiveMemory/ctx/internal/cli/add/core"
 	"github.com/ActiveMemory/ctx/internal/entry"
-	"github.com/ActiveMemory/ctx/internal/write"
 )
 
 // Config is an alias for core.Config.
@@ -67,7 +66,7 @@ func Run(cmd *cobra.Command, args []string, flags Config) error {
 		return writeErr
 	}
 
-	write.InfoAddedTo(cmd, fName)
+	add.InfoAddedTo(cmd, fName)
 
 	return nil
 }

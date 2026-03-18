@@ -14,11 +14,11 @@ import (
 	"github.com/ActiveMemory/ctx/internal/config/time"
 	"github.com/ActiveMemory/ctx/internal/config/token"
 	ctxerr "github.com/ActiveMemory/ctx/internal/err/session"
+	"github.com/ActiveMemory/ctx/internal/write/recall"
 	"github.com/spf13/cobra"
 
 	"github.com/ActiveMemory/ctx/internal/cli/recall/core"
 	"github.com/ActiveMemory/ctx/internal/recall/parser"
-	"github.com/ActiveMemory/ctx/internal/write"
 )
 
 // Run handles the recall show command.
@@ -71,7 +71,7 @@ func Run(
 		}
 		if len(matches) > 1 {
 			lines := core.FormatSessionMatchLines(matches)
-			write.AmbiguousSessionMatchWithHint(
+			recall.AmbiguousSessionMatchWithHint(
 				cmd, args[0], lines, matches[0].ID[:journal.SessionIDHintLen],
 			)
 			return ctxerr.AmbiguousQuery()
@@ -80,7 +80,7 @@ func Run(
 	}
 
 	// Print session details.
-	write.SessionMetadata(cmd, write.SessionInfo{
+	recall.SessionMetadata(cmd, recall.SessionInfo{
 		Slug:      session.Slug,
 		ID:        session.ID,
 		Tool:      session.Tool,
@@ -104,16 +104,16 @@ func Run(
 			toolCounts[t.Name]++
 		}
 
-		write.SectionHeader(cmd, 2, assets.SectionToolUsage)
+		recall.SectionHeader(cmd, 2, assets.SectionToolUsage)
 		for name, count := range toolCounts {
-			write.ListItem(cmd, "%s: %d", name, count)
+			recall.ListItem(cmd, "%s: %d", name, count)
 		}
-		write.BlankLine(cmd)
+		recall.BlankLine(cmd)
 	}
 
 	// Messages
 	if full {
-		write.SectionHeader(cmd, 2, assets.SectionConversation)
+		recall.SectionHeader(cmd, 2, assets.SectionConversation)
 
 		for i, msg := range session.Messages {
 			role := assets.RoleUser
@@ -123,53 +123,53 @@ func Run(
 				role = assets.ToolOutput
 			}
 
-			write.ConversationTurn(
+			recall.ConversationTurn(
 				cmd, i+1, role, msg.Timestamp.Format(time.Format),
 			)
 
 			if msg.Text != "" {
-				write.TextBlock(cmd, msg.Text)
+				recall.TextBlock(cmd, msg.Text)
 			}
 
 			for _, t := range msg.ToolUses {
 				toolInfo := core.FormatToolUse(t)
-				write.SessionDetail(cmd, assets.LabelTool, toolInfo)
+				recall.SessionDetail(cmd, assets.LabelTool, toolInfo)
 			}
 
 			for _, tr := range msg.ToolResults {
 				if tr.IsError {
-					write.Hint(cmd, assets.LabelError)
+					recall.Hint(cmd, assets.LabelError)
 				}
 				if tr.Content != "" {
 					content := core.StripLineNumbers(tr.Content)
-					write.CodeBlock(cmd, content)
+					recall.CodeBlock(cmd, content)
 				}
 			}
 
 			if len(msg.ToolUses) > 0 || len(msg.ToolResults) > 0 {
-				write.BlankLine(cmd)
+				recall.BlankLine(cmd)
 			}
 		}
 	} else {
-		write.SectionHeader(cmd, 2, assets.SectionConversationPreview)
+		recall.SectionHeader(cmd, 2, assets.SectionConversationPreview)
 
 		count := 0
 		for _, msg := range session.Messages {
 			if msg.BelongsToUser() && msg.Text != "" {
 				count++
 				if count > journal.PreviewMaxTurns {
-					write.MoreTurns(cmd, session.TurnCount-journal.PreviewMaxTurns)
+					recall.MoreTurns(cmd, session.TurnCount-journal.PreviewMaxTurns)
 					break
 				}
 				text := msg.Text
 				if len(text) > journal.PreviewMaxTextLen {
 					text = text[:journal.PreviewMaxTextLen] + token.Ellipsis
 				}
-				write.NumberedItem(cmd, count, text)
+				recall.NumberedItem(cmd, count, text)
 			}
 		}
-		write.BlankLine(cmd)
-		write.Hint(cmd, assets.HintUseFullFlag)
+		recall.BlankLine(cmd)
+		recall.Hint(cmd, assets.HintUseFullFlag)
 	}
 
 	return nil

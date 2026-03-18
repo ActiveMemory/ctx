@@ -14,10 +14,10 @@ import (
 	"github.com/ActiveMemory/ctx/internal/config/cli"
 	"github.com/ActiveMemory/ctx/internal/config/token"
 	ctxerr "github.com/ActiveMemory/ctx/internal/err/fs"
+	"github.com/ActiveMemory/ctx/internal/write/export"
 	"github.com/spf13/cobra"
 
 	"github.com/ActiveMemory/ctx/internal/assets"
-	"github.com/ActiveMemory/ctx/internal/write"
 )
 
 // ConfirmExport prints the plan summary and prompts for confirmation.
@@ -30,7 +30,7 @@ import (
 //   - bool: true if the user confirms.
 //   - error: non-nil if reading input fails.
 func ConfirmExport(cmd *cobra.Command, plan ExportPlan) (bool, error) {
-	write.ExportSummary(cmd, plan.NewCount, plan.RegenCount, plan.SkipCount, plan.LockedCount, false)
+	export.Summary(cmd, plan.NewCount, plan.RegenCount, plan.SkipCount, plan.LockedCount, false)
 	cmd.Print(assets.TextDesc(assets.TextDescKeyConfirmProceed))
 	reader := bufio.NewReader(os.Stdin)
 	response, readErr := reader.ReadString(token.NewlineLF[0])

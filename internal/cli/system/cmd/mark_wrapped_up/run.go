@@ -12,10 +12,10 @@ import (
 
 	"github.com/ActiveMemory/ctx/internal/config/fs"
 	"github.com/ActiveMemory/ctx/internal/config/wrap"
+	"github.com/ActiveMemory/ctx/internal/write/session"
 	"github.com/spf13/cobra"
 
 	"github.com/ActiveMemory/ctx/internal/cli/system/core"
-	"github.com/ActiveMemory/ctx/internal/write"
 )
 
 // Run creates or updates the wrap-up marker file.
@@ -37,6 +37,6 @@ func Run(cmd *cobra.Command) error {
 		return writeErr
 	}
 
-	write.SessionWrappedUp(cmd)
+	session.SessionWrappedUp(cmd)
 	return nil
 }

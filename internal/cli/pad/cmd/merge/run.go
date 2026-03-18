@@ -8,10 +8,10 @@ package merge
 
 import (
 	ctxerr "github.com/ActiveMemory/ctx/internal/err/fs"
+	"github.com/ActiveMemory/ctx/internal/write/pad"
 	"github.com/spf13/cobra"
 
 	"github.com/ActiveMemory/ctx/internal/cli/pad/core"
-	"github.com/ActiveMemory/ctx/internal/write"
 )
 
 // Run reads entries from input files, deduplicates against the current
@@ -55,34 +55,34 @@ func Run(
 		}
 
 		if core.HasBinaryEntries(entries) {
-			write.PadMergeBinaryWarning(cmd, file)
+			pad.PadMergeBinaryWarning(cmd, file)
 		}
 
 		for _, entry := range entries {
 			if seen[entry] {
 				dupes++
-				write.PadMergeDupe(cmd, core.DisplayEntry(entry))
+				pad.PadMergeDupe(cmd, core.DisplayEntry(entry))
 				continue
 			}
 			seen[entry] = true
 
 			if conflict, label := core.HasBlobConflict(entry, blobLabels); conflict {
-				write.PadMergeBlobConflict(cmd, label)
+				pad.PadMergeBlobConflict(cmd, label)
 			}
 
 			newEntries = append(newEntries, entry)
 			added++
-			write.PadMergeAdded(cmd, core.DisplayEntry(entry), file)
+			pad.PadMergeAdded(cmd, core.DisplayEntry(entry), file)
 		}
 	}
 
 	if added == 0 {
-		write.PadMergeSummary(cmd, added, dupes, dryRun)
+		pad.PadMergeSummary(cmd, added, dupes, dryRun)
 		return nil
 	}
 
 	if dryRun {
-		write.PadMergeSummary(cmd, added, dupes, dryRun)
+		pad.PadMergeSummary(cmd, added, dupes, dryRun)
 		return nil
 	}
 
@@ -93,6 +93,6 @@ func Run(
 		return writeErr
 	}
 
-	write.PadMergeSummary(cmd, added, dupes, false)
+	pad.PadMergeSummary(cmd, added, dupes, false)
 	return nil
 }

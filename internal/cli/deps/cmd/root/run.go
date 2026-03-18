@@ -11,10 +11,10 @@ import (
 
 	"github.com/ActiveMemory/ctx/internal/config/fmt"
 	ctxerr "github.com/ActiveMemory/ctx/internal/err/config"
+	"github.com/ActiveMemory/ctx/internal/write/deps"
 	"github.com/spf13/cobra"
 
 	"github.com/ActiveMemory/ctx/internal/cli/deps/core"
-	"github.com/ActiveMemory/ctx/internal/write"
 )
 
 // Run executes the deps command logic.
@@ -48,7 +48,7 @@ func Run(cmd *cobra.Command, format string, external bool, projType string) erro
 	} else {
 		builder = core.DetectBuilder()
 		if builder == nil {
-			write.InfoDepsNoProject(cmd, strings.Join(core.BuilderNames(), ", "))
+			deps.InfoNoProject(cmd, strings.Join(core.BuilderNames(), ", "))
 			return nil
 		}
 	}
@@ -59,7 +59,7 @@ func Run(cmd *cobra.Command, format string, external bool, projType string) erro
 	}
 
 	if len(graph) == 0 {
-		write.InfoDepsNoDeps(cmd)
+		deps.InfoNoDeps(cmd)
 		return nil
 	}
 

@@ -9,7 +9,7 @@ package sync
 import (
 	"fmt"
 
-	"github.com/ActiveMemory/ctx/internal/write/config"
+	"github.com/ActiveMemory/ctx/internal/assets"
 	"github.com/spf13/cobra"
 )
 
@@ -21,7 +21,7 @@ func CtxSyncInSync(cmd *cobra.Command) {
 	if cmd == nil {
 		return
 	}
-	cmd.Println(config.TplSyncInSync)
+	cmd.Println(assets.TextDesc(assets.TextDescKeyWriteSyncInSync))
 }
 
 // CtxSyncHeader prints the sync analysis heading and optional dry-run notice.
@@ -33,11 +33,11 @@ func CtxSyncHeader(cmd *cobra.Command, dryRun bool) {
 	if cmd == nil {
 		return
 	}
-	cmd.Println(config.TplSyncHeader)
-	cmd.Println(config.TplSyncSeparator)
+	cmd.Println(assets.TextDesc(assets.TextDescKeyWriteSyncHeader))
+	cmd.Println(assets.TextDesc(assets.TextDescKeyWriteSyncSeparator))
 	cmd.Println()
 	if dryRun {
-		cmd.Println(config.TplSyncDryRun)
+		cmd.Println(assets.TextDesc(assets.TextDescKeyWriteSyncDryRun))
 		cmd.Println()
 	}
 }
@@ -54,9 +54,9 @@ func CtxSyncAction(cmd *cobra.Command, index int, actionType, description, sugge
 	if cmd == nil {
 		return
 	}
-	cmd.Println(fmt.Sprintf(config.TplSyncAction, index, actionType, description))
+	cmd.Println(fmt.Sprintf(assets.TextDesc(assets.TextDescKeyWriteSyncAction), index, actionType, description))
 	if suggestion != "" {
-		cmd.Println(fmt.Sprintf(config.TplSyncSuggestion, suggestion))
+		cmd.Println(fmt.Sprintf(assets.TextDesc(assets.TextDescKeyWriteSyncSuggestion), suggestion))
 	}
 	cmd.Println()
 }
@@ -72,8 +72,8 @@ func CtxSyncSummary(cmd *cobra.Command, count int, dryRun bool) {
 		return
 	}
 	if dryRun {
-		cmd.Println(fmt.Sprintf(config.TplSyncDryRunSummary, count))
+		cmd.Println(fmt.Sprintf(assets.TextDesc(assets.TextDescKeyWriteSyncDryRunSummary), count))
 	} else {
-		cmd.Println(fmt.Sprintf(config.TplSyncSummary, count))
+		cmd.Println(fmt.Sprintf(assets.TextDesc(assets.TextDescKeyWriteSyncSummary), count))
 	}
 }

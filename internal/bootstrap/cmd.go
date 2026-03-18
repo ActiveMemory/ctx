@@ -11,6 +11,7 @@ package bootstrap
 import (
 	"os"
 
+	ctxcontext "github.com/ActiveMemory/ctx/internal/context/validate"
 	"github.com/ActiveMemory/ctx/internal/err/fs"
 	ctxerr "github.com/ActiveMemory/ctx/internal/err/initialize"
 	"github.com/spf13/cobra"
@@ -18,7 +19,6 @@ import (
 	"github.com/ActiveMemory/ctx/internal/assets"
 	"github.com/ActiveMemory/ctx/internal/config/cli"
 	"github.com/ActiveMemory/ctx/internal/config/flag"
-	ctxcontext "github.com/ActiveMemory/ctx/internal/context"
 	"github.com/ActiveMemory/ctx/internal/rc"
 	"github.com/ActiveMemory/ctx/internal/validation"
 )

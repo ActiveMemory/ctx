@@ -14,11 +14,12 @@ import (
 	memory2 "github.com/ActiveMemory/ctx/internal/config/memory"
 	ctxerr "github.com/ActiveMemory/ctx/internal/err/memory"
 	"github.com/ActiveMemory/ctx/internal/io"
+	"github.com/ActiveMemory/ctx/internal/write/publish"
+	"github.com/ActiveMemory/ctx/internal/write/sync"
 	"github.com/spf13/cobra"
 
 	"github.com/ActiveMemory/ctx/internal/memory"
 	"github.com/ActiveMemory/ctx/internal/rc"
-	"github.com/ActiveMemory/ctx/internal/write"
 )
 
 // Run removes the ctx-managed marker block from MEMORY.md,
@@ -35,7 +36,7 @@ func Run(cmd *cobra.Command) error {
 
 	memoryPath, discoverErr := memory.DiscoverMemoryPath(projectRoot)
 	if discoverErr != nil {
-		write.ErrAutoMemoryNotActive(cmd, discoverErr)
+		sync.ErrAutoMemoryNotActive(cmd, discoverErr)
 		return ctxerr.NotFound()
 	}
 
@@ -48,7 +49,7 @@ func Run(cmd *cobra.Command) error {
 
 	cleaned, found := memory.RemovePublished(string(data))
 	if !found {
-		write.UnpublishNotFound(cmd, memory2.MemorySource)
+		publish.UnpublishNotFound(cmd, memory2.MemorySource)
 		return nil
 	}
 
@@ -58,6 +59,6 @@ func Run(cmd *cobra.Command) error {
 		return ctxerr.Write(writeErr)
 	}
 
-	write.UnpublishDone(cmd, memory2.MemorySource)
+	publish.UnpublishDone(cmd, memory2.MemorySource)
 	return nil
 }

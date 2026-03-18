@@ -19,4 +19,5 @@ const (
 	DefaultContextWindow       = runtime.DefaultContextWindow
 	DefaultTaskNudgeInterval   = runtime.DefaultTaskNudgeInterval
 	DefaultKeyRotationDays     = runtime.DefaultKeyRotationDays
+	DefaultStaleAgeDays        = runtime.DefaultStaleAgeDays
 )

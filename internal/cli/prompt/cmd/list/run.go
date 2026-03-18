@@ -12,10 +12,10 @@ import (
 
 	"github.com/ActiveMemory/ctx/internal/config/file"
 	ctxerr "github.com/ActiveMemory/ctx/internal/err/fs"
+	"github.com/ActiveMemory/ctx/internal/write/prompt"
 	"github.com/spf13/cobra"
 
 	"github.com/ActiveMemory/ctx/internal/cli/prompt/core"
-	"github.com/ActiveMemory/ctx/internal/write"
 )
 
 // Run prints all available prompt template names.
@@ -31,7 +31,7 @@ func Run(cmd *cobra.Command) error {
 	entries, readErr := os.ReadDir(dir)
 	if readErr != nil {
 		if os.IsNotExist(readErr) {
-			write.PromptNone(cmd)
+			prompt.PromptNone(cmd)
 			return nil
 		}
 		return ctxerr.ReadDirectory(dir, readErr)
@@ -43,12 +43,12 @@ func Run(cmd *cobra.Command) error {
 		if entry.IsDir() || !strings.HasSuffix(name, file.ExtMarkdown) {
 			continue
 		}
-		write.PromptItem(cmd, strings.TrimSuffix(name, file.ExtMarkdown))
+		prompt.PromptItem(cmd, strings.TrimSuffix(name, file.ExtMarkdown))
 		found = true
 	}
 
 	if !found {
-		write.PromptNone(cmd)
+		prompt.PromptNone(cmd)
 	}
 
 	return nil

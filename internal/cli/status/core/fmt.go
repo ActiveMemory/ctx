@@ -10,22 +10,19 @@ import (
 	"time"
 
 	ctxtime "github.com/ActiveMemory/ctx/internal/config/time"
-	"github.com/ActiveMemory/ctx/internal/write"
+	"github.com/ActiveMemory/ctx/internal/format"
 )
 
 // FormatTimeAgo returns a human-readable relative time string.
 //
-// Examples: "just now", "5 minutes ago", "2 hours ago", "3 days ago",
-// or a formatted date for times older than a week.
-//
 // Parameters:
-//   - t: The time to format relative to now
+//   - t: the time to format relative to now
 //
 // Returns:
-//   - string: Human-readable relative time
+//   - string: human-readable relative time
 func FormatTimeAgo(t time.Time) string {
 	d := time.Since(t)
-	return write.FormatTimeAgo(
+	return format.TimeAgo(
 		d.Hours(), int(d.Minutes()), t.Format(ctxtime.OlderFormat),
 	)
 }
@@ -33,21 +30,21 @@ func FormatTimeAgo(t time.Time) string {
 // FormatNumber returns a number with thousand separators.
 //
 // Parameters:
-//   - n: The number to format
+//   - n: the number to format
 //
 // Returns:
-//   - string: Formatted number with commas
+//   - string: formatted number with commas
 func FormatNumber(n int) string {
-	return write.FormatNumber(n)
+	return format.Number(n)
 }
 
 // FormatBytes returns a human-readable byte-size string.
 //
 // Parameters:
-//   - b: The byte count to format
+//   - b: the byte count to format
 //
 // Returns:
-//   - string: Human-readable size with unit
+//   - string: human-readable size with unit
 func FormatBytes(b int64) string {
-	return write.FormatBytes(b)
+	return format.Bytes(b)
 }

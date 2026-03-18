@@ -9,15 +9,15 @@ package core
 import (
 	"os"
 
+	"github.com/ActiveMemory/ctx/internal/write/compact"
 	"github.com/spf13/cobra"
 
 	"github.com/ActiveMemory/ctx/internal/assets"
 	"github.com/ActiveMemory/ctx/internal/config/fs"
 	"github.com/ActiveMemory/ctx/internal/config/token"
-	"github.com/ActiveMemory/ctx/internal/context"
+	"github.com/ActiveMemory/ctx/internal/entity"
 	"github.com/ActiveMemory/ctx/internal/rc"
 	"github.com/ActiveMemory/ctx/internal/tidy"
-	"github.com/ActiveMemory/ctx/internal/write"
 )
 
 // CompactTasks moves completed tasks to the "Completed" section in TASKS.md.
@@ -36,16 +36,16 @@ import (
 //   - int: Number of tasks moved
 //   - error: Non-nil if file write fails
 func CompactTasks(
-	cmd *cobra.Command, ctx *context.Context, archive bool,
+	cmd *cobra.Command, ctx *entity.Context, archive bool,
 ) (int, error) {
 	result := tidy.CompactContext(ctx)
 
 	// Report what happened.
 	for _, taskText := range result.TasksMoved {
-		write.InfoMovingTask(cmd, tidy.TruncateString(taskText, 50))
+		compact.InfoMovingTask(cmd, tidy.TruncateString(taskText, 50))
 	}
 	for _, taskText := range result.TasksSkipped {
-		write.InfoSkippingTask(cmd, tidy.TruncateString(taskText, 50))
+		compact.InfoSkippingTask(cmd, tidy.TruncateString(taskText, 50))
 	}
 
 	if len(result.TasksMoved) == 0 {
@@ -82,7 +82,7 @@ func CompactTasks(
 			if archiveFile, archiveErr := tidy.WriteArchive(
 				"tasks", assets.HeadingArchivedTasks, archiveContent,
 			); archiveErr == nil {
-				write.InfoArchivedTasks(
+				compact.InfoArchivedTasks(
 					cmd, len(blocksToArchive), archiveFile, archiveDays)
 			}
 		}

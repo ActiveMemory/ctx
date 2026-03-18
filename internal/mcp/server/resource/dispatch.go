@@ -11,7 +11,7 @@ import (
 	"fmt"
 
 	"github.com/ActiveMemory/ctx/internal/assets"
-	"github.com/ActiveMemory/ctx/internal/context"
+	"github.com/ActiveMemory/ctx/internal/context/load"
 	"github.com/ActiveMemory/ctx/internal/mcp/proto"
 	"github.com/ActiveMemory/ctx/internal/mcp/server/catalog"
 	"github.com/ActiveMemory/ctx/internal/mcp/server/out"
@@ -54,7 +54,7 @@ func DispatchRead(
 		)
 	}
 
-	ctx, loadErr := context.Load(contextDir)
+	ctx, loadErr := load.Do(contextDir)
 	if loadErr != nil {
 		return out.ErrResponse(req.ID, proto.ErrCodeInternal,
 			fmt.Sprintf(

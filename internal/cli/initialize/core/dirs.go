@@ -15,10 +15,10 @@ import (
 	"github.com/ActiveMemory/ctx/internal/config/fs"
 	fs2 "github.com/ActiveMemory/ctx/internal/err/fs"
 	ctxerr "github.com/ActiveMemory/ctx/internal/err/initialize"
+	"github.com/ActiveMemory/ctx/internal/write/initialize"
 	"github.com/spf13/cobra"
 
 	"github.com/ActiveMemory/ctx/internal/assets"
-	"github.com/ActiveMemory/ctx/internal/write"
 )
 
 // ProjectDirs lists the project-root directories created by ctx init,
@@ -40,7 +40,7 @@ var ProjectDirs = []string{
 func CreateProjectDirs(cmd *cobra.Command) error {
 	for _, dir := range ProjectDirs {
 		if _, statErr := os.Stat(dir); statErr == nil {
-			write.InitSkippedDir(cmd, dir)
+			initialize.SkippedDir(cmd, dir)
 			continue
 		}
 
@@ -58,7 +58,7 @@ func CreateProjectDirs(cmd *cobra.Command) error {
 			return fs2.FileWrite(readmePath, writeErr)
 		}
 
-		write.InitCreatedDir(cmd, dir)
+		initialize.CreatedDir(cmd, dir)
 	}
 
 	return nil

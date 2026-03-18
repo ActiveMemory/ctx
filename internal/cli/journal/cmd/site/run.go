@@ -18,13 +18,14 @@ import (
 	fs2 "github.com/ActiveMemory/ctx/internal/err/fs"
 	"github.com/ActiveMemory/ctx/internal/err/journal"
 	ctxerr "github.com/ActiveMemory/ctx/internal/err/site"
+	"github.com/ActiveMemory/ctx/internal/write/err"
+	journal2 "github.com/ActiveMemory/ctx/internal/write/journal"
 	"github.com/spf13/cobra"
 
 	"github.com/ActiveMemory/ctx/internal/assets"
 	"github.com/ActiveMemory/ctx/internal/cli/journal/core"
 	"github.com/ActiveMemory/ctx/internal/journal/state"
 	"github.com/ActiveMemory/ctx/internal/rc"
-	"github.com/ActiveMemory/ctx/internal/write"
 )
 
 // runZensical executes zensical build or serve in the output directory.
@@ -129,7 +130,7 @@ func runJournalSite(
 
 		content, readErr := os.ReadFile(filepath.Clean(src))
 		if readErr != nil {
-			write.WarnFileErr(cmd, entry.Filename, readErr)
+			err.WarnFile(cmd, entry.Filename, readErr)
 			continue
 		}
 
@@ -149,7 +150,7 @@ func runJournalSite(
 			if writeErr := os.WriteFile(
 				src, []byte(normalized), fs.PermFile,
 			); writeErr != nil {
-				write.WarnFileErr(cmd, entry.Filename, writeErr)
+				err.WarnFile(cmd, entry.Filename, writeErr)
 			}
 		}
 
@@ -163,7 +164,7 @@ func runJournalSite(
 		if writeErr := os.WriteFile(
 			dst, []byte(siteContent), fs.PermFile,
 		); writeErr != nil {
-			write.WarnFileErr(cmd, entry.Filename, writeErr)
+			err.WarnFile(cmd, entry.Filename, writeErr)
 			continue
 		}
 	}
@@ -181,7 +182,7 @@ func runJournalSite(
 			}
 			orphanPath := filepath.Join(docsDir, f.Name())
 			if rmErr := os.Remove(orphanPath); rmErr == nil {
-				write.InfoJournalOrphanRemoved(cmd, f.Name())
+				journal2.InfoOrphanRemoved(cmd, f.Name())
 			}
 		}
 	}
@@ -220,7 +221,7 @@ func runJournalSite(
 						pagePath, []byte(core.GenerateTopicPage(t)),
 						fs.PermFile,
 					); pageErr != nil {
-						write.WarnFileErr(cmd, pagePath, pageErr)
+						err.WarnFile(cmd, pagePath, pageErr)
 					}
 				}
 			}); writeErr != nil {
@@ -255,7 +256,7 @@ func runJournalSite(
 							core.GenerateKeyFilePage(kf)),
 						fs.PermFile,
 					); pageErr != nil {
-						write.WarnFileErr(cmd, pagePath, pageErr)
+						err.WarnFile(cmd, pagePath, pageErr)
 					}
 				}
 			}); writeErr != nil {
@@ -286,7 +287,7 @@ func runJournalSite(
 						pagePath,
 						[]byte(core.GenerateTypePage(st)), fs.PermFile,
 					); pageErr != nil {
-						write.WarnFileErr(cmd, pagePath, pageErr)
+						err.WarnFile(cmd, pagePath, pageErr)
 					}
 				}
 			}); writeErr != nil {
@@ -307,14 +308,14 @@ func runJournalSite(
 	}
 
 	if serve {
-		write.InfoJournalSiteStarting(cmd)
+		journal2.InfoSiteStarting(cmd)
 		return runZensical(output, "serve")
 	} else if build {
-		write.InfoJournalSiteBuilding(cmd)
+		journal2.InfoSiteBuilding(cmd)
 		return runZensical(output, "build")
 	}
 
-	write.InfoJournalSiteGenerated(cmd, len(entries), output, zensical.Bin)
+	journal2.InfoSiteGenerated(cmd, len(entries), output, zensical.Bin)
 
 	return nil
 }

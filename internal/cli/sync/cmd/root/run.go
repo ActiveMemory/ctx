@@ -9,12 +9,13 @@ package root
 import (
 	"errors"
 
+	"github.com/ActiveMemory/ctx/internal/context/load"
 	ctxerr "github.com/ActiveMemory/ctx/internal/err/initialize"
 	"github.com/ActiveMemory/ctx/internal/write/sync"
 	"github.com/spf13/cobra"
 
 	"github.com/ActiveMemory/ctx/internal/cli/sync/core"
-	"github.com/ActiveMemory/ctx/internal/context"
+	errctx "github.com/ActiveMemory/ctx/internal/err/context"
 )
 
 // Run executes the sync command logic.
@@ -30,9 +31,9 @@ import (
 // Returns:
 //   - error: Non-nil if context loading fails or .context/ is not found
 func Run(cmd *cobra.Command, dryRun bool) error {
-	ctx, err := context.Load("")
+	ctx, err := load.Do("")
 	if err != nil {
-		var notFoundError *context.NotFoundError
+		var notFoundError *errctx.NotFoundError
 		if errors.As(err, &notFoundError) {
 			return ctxerr.ContextNotInitialized()
 		}

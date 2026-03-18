@@ -13,19 +13,20 @@ import (
 	"strings"
 	"time"
 
+	"github.com/spf13/cobra"
+
 	"github.com/ActiveMemory/ctx/internal/config/cli"
 	"github.com/ActiveMemory/ctx/internal/config/fs"
 	"github.com/ActiveMemory/ctx/internal/config/loop"
 	"github.com/ActiveMemory/ctx/internal/config/marker"
 	"github.com/ActiveMemory/ctx/internal/config/token"
 	"github.com/ActiveMemory/ctx/internal/err/backup"
-	fs2 "github.com/ActiveMemory/ctx/internal/err/fs"
-	"github.com/ActiveMemory/ctx/internal/err/initialize"
-	ctxerr "github.com/ActiveMemory/ctx/internal/err/prompt"
-	"github.com/spf13/cobra"
+	fsErr "github.com/ActiveMemory/ctx/internal/err/fs"
+	initErr "github.com/ActiveMemory/ctx/internal/err/initialize"
+	promptErr "github.com/ActiveMemory/ctx/internal/err/prompt"
+	"github.com/ActiveMemory/ctx/internal/write/initialize"
 
 	"github.com/ActiveMemory/ctx/internal/assets"
-	"github.com/ActiveMemory/ctx/internal/write"
 )
 
 // HandlePromptMd creates or merges PROMPT.md with ctx content.
@@ -44,48 +45,48 @@ func HandlePromptMd(cmd *cobra.Command, force, autoMerge, ralph bool) error {
 	if ralph {
 		templateContent, err = assets.RalphTemplate(loop.PromptMd)
 		if err != nil {
-			return initialize.ReadTemplate("ralph PROMPT.md", err)
+			return initErr.ReadTemplate("ralph PROMPT.md", err)
 		}
 	} else {
 		templateContent, err = assets.Template(loop.PromptMd)
 		if err != nil {
-			return initialize.ReadTemplate("PROMPT.md", err)
+			return initErr.ReadTemplate("PROMPT.md", err)
 		}
 	}
 	existingContent, err := os.ReadFile(loop.PromptMd)
 	fileExists := err == nil
 	if !fileExists {
 		if err := os.WriteFile(loop.PromptMd, templateContent, fs.PermFile); err != nil {
-			return fs2.FileWrite(loop.PromptMd, err)
+			return fsErr.FileWrite(loop.PromptMd, err)
 		}
 		mode := ""
 		if ralph {
 			mode = " (ralph mode)"
 		}
-		write.InitCreatedWith(cmd, loop.PromptMd, mode)
+		initialize.CreatedWith(cmd, loop.PromptMd, mode)
 		return nil
 	}
 	existingStr := string(existingContent)
 	hasCtxMarkers := strings.Contains(existingStr, marker.PromptMarkerStart)
 	if hasCtxMarkers {
 		if !force {
-			write.InitCtxContentExists(cmd, loop.PromptMd)
+			initialize.CtxContentExists(cmd, loop.PromptMd)
 			return nil
 		}
 		return UpdatePromptSection(cmd, existingStr, templateContent)
 	}
 	if !autoMerge {
-		write.InitFileExistsNoCtx(cmd, loop.PromptMd)
+		initialize.FileExistsNoCtx(cmd, loop.PromptMd)
 		cmd.Println("Would you like to merge ctx prompt instructions?")
 		cmd.Print("[y/N] ")
 		reader := bufio.NewReader(os.Stdin)
 		response, err := reader.ReadString('\n')
 		if err != nil {
-			return fs2.ReadInput(err)
+			return fsErr.ReadInput(err)
 		}
 		response = strings.TrimSpace(strings.ToLower(response))
 		if response != cli.ConfirmShort && response != cli.ConfirmLong {
-			write.InitSkippedPlain(cmd, loop.PromptMd)
+			initialize.SkippedPlain(cmd, loop.PromptMd)
 			return nil
 		}
 	}
@@ -94,7 +95,7 @@ func HandlePromptMd(cmd *cobra.Command, force, autoMerge, ralph bool) error {
 	if err := os.WriteFile(backupName, existingContent, fs.PermFile); err != nil {
 		return backup.Create(backupName, err)
 	}
-	write.InitBackup(cmd, backupName)
+	initialize.Backup(cmd, backupName)
 	insertPos := FindInsertionPoint(existingStr)
 	var mergedContent string
 	if insertPos == 0 {
@@ -103,9 +104,9 @@ func HandlePromptMd(cmd *cobra.Command, force, autoMerge, ralph bool) error {
 		mergedContent = existingStr[:insertPos] + token.NewlineLF + string(templateContent) + token.NewlineLF + existingStr[insertPos:]
 	}
 	if err := os.WriteFile(loop.PromptMd, []byte(mergedContent), fs.PermFile); err != nil {
-		return fs2.WriteMerged(loop.PromptMd, err)
+		return fsErr.WriteMerged(loop.PromptMd, err)
 	}
-	write.InitMerged(cmd, loop.PromptMd)
+	initialize.Merged(cmd, loop.PromptMd)
 	return nil
 }
 
@@ -122,7 +123,7 @@ func HandlePromptMd(cmd *cobra.Command, force, autoMerge, ralph bool) error {
 func UpdatePromptSection(cmd *cobra.Command, existing string, newTemplate []byte) error {
 	startIdx := strings.Index(existing, marker.PromptMarkerStart)
 	if startIdx == -1 {
-		return ctxerr.MarkerNotFound("prompt")
+		return promptErr.MarkerNotFound("prompt")
 	}
 	endIdx := strings.Index(existing, marker.PromptMarkerEnd)
 	if endIdx == -1 {
@@ -134,7 +135,7 @@ func UpdatePromptSection(cmd *cobra.Command, existing string, newTemplate []byte
 	templateStart := strings.Index(templateStr, marker.PromptMarkerStart)
 	templateEnd := strings.Index(templateStr, marker.PromptMarkerEnd)
 	if templateStart == -1 || templateEnd == -1 {
-		return ctxerr.TemplateMissingMarkers("prompt")
+		return promptErr.TemplateMissingMarkers("prompt")
 	}
 	promptContent := templateStr[templateStart : templateEnd+len(marker.PromptMarkerEnd)]
 	newContent := existing[:startIdx] + promptContent + existing[endIdx:]
@@ -143,10 +144,10 @@ func UpdatePromptSection(cmd *cobra.Command, existing string, newTemplate []byte
 	if err := os.WriteFile(backupName, []byte(existing), fs.PermFile); err != nil {
 		return backup.CreateGeneric(err)
 	}
-	write.InitBackup(cmd, backupName)
+	initialize.Backup(cmd, backupName)
 	if err := os.WriteFile(loop.PromptMd, []byte(newContent), fs.PermFile); err != nil {
-		return fs2.FileUpdate(loop.PromptMd, err)
+		return fsErr.FileUpdate(loop.PromptMd, err)
 	}
-	write.InitUpdatedPromptSection(cmd, loop.PromptMd)
+	initialize.UpdatedPromptSection(cmd, loop.PromptMd)
 	return nil
 }

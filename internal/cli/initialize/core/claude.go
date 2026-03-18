@@ -21,10 +21,10 @@ import (
 	"github.com/ActiveMemory/ctx/internal/err/backup"
 	fs2 "github.com/ActiveMemory/ctx/internal/err/fs"
 	ctxerr "github.com/ActiveMemory/ctx/internal/err/initialize"
+	"github.com/ActiveMemory/ctx/internal/write/initialize"
 	"github.com/spf13/cobra"
 
 	"github.com/ActiveMemory/ctx/internal/assets"
-	"github.com/ActiveMemory/ctx/internal/write"
 )
 
 // HandleClaudeMd creates or merges CLAUDE.md with ctx content.
@@ -47,20 +47,20 @@ func HandleClaudeMd(cmd *cobra.Command, force, autoMerge bool) error {
 		if err := os.WriteFile(claude.Md, templateContent, fs.PermFile); err != nil {
 			return fs2.FileWrite(claude.Md, err)
 		}
-		write.InitCreated(cmd, claude.Md)
+		initialize.Created(cmd, claude.Md)
 		return nil
 	}
 	existingStr := string(existingContent)
 	hasCtxMarkers := strings.Contains(existingStr, marker.CtxMarkerStart)
 	if hasCtxMarkers {
 		if !force {
-			write.InitCtxContentExists(cmd, claude.Md)
+			initialize.CtxContentExists(cmd, claude.Md)
 			return nil
 		}
 		return UpdateCtxSection(cmd, existingStr, templateContent)
 	}
 	if !autoMerge {
-		write.InitFileExistsNoCtx(cmd, claude.Md)
+		initialize.FileExistsNoCtx(cmd, claude.Md)
 		cmd.Println("Would you like to append ctx context management instructions?")
 		cmd.Print("[y/N] ")
 		reader := bufio.NewReader(os.Stdin)
@@ -70,7 +70,7 @@ func HandleClaudeMd(cmd *cobra.Command, force, autoMerge bool) error {
 		}
 		response = strings.TrimSpace(strings.ToLower(response))
 		if response != cli.ConfirmShort && response != cli.ConfirmLong {
-			write.InitSkippedPlain(cmd, claude.Md)
+			initialize.SkippedPlain(cmd, claude.Md)
 			return nil
 		}
 	}
@@ -79,7 +79,7 @@ func HandleClaudeMd(cmd *cobra.Command, force, autoMerge bool) error {
 	if err := os.WriteFile(backupName, existingContent, fs.PermFile); err != nil {
 		return backup.Create(backupName, err)
 	}
-	write.InitBackup(cmd, backupName)
+	initialize.Backup(cmd, backupName)
 	insertPos := FindInsertionPoint(existingStr)
 	var mergedContent string
 	if insertPos == 0 {
@@ -90,6 +90,6 @@ func HandleClaudeMd(cmd *cobra.Command, force, autoMerge bool) error {
 	if err := os.WriteFile(claude.Md, []byte(mergedContent), fs.PermFile); err != nil {
 		return fs2.WriteMerged(claude.Md, err)
 	}
-	write.InitMerged(cmd, claude.Md)
+	initialize.Merged(cmd, claude.Md)
 	return nil
 }

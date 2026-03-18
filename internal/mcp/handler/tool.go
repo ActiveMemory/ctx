@@ -24,7 +24,7 @@ import (
 	"github.com/ActiveMemory/ctx/internal/config/mcp/field"
 	timeCfg "github.com/ActiveMemory/ctx/internal/config/time"
 	"github.com/ActiveMemory/ctx/internal/config/token"
-	"github.com/ActiveMemory/ctx/internal/context"
+	"github.com/ActiveMemory/ctx/internal/context/load"
 	"github.com/ActiveMemory/ctx/internal/drift"
 	"github.com/ActiveMemory/ctx/internal/entry"
 	mcpErr "github.com/ActiveMemory/ctx/internal/err/mcp"
@@ -42,7 +42,7 @@ import (
 //   - string: formatted status text with file list and token counts
 //   - error: context load error
 func (h *Handler) Status() (string, error) {
-	ctx, loadErr := context.Load(h.ContextDir)
+	ctx, loadErr := load.Do(h.ContextDir)
 	if loadErr != nil {
 		return "", loadErr
 	}
@@ -149,7 +149,7 @@ func (h *Handler) Complete(query string) (string, error) {
 //   - string: formatted drift report with violations, warnings, passed
 //   - error: context load error
 func (h *Handler) Drift() (string, error) {
-	ctx, loadErr := context.Load(h.ContextDir)
+	ctx, loadErr := load.Do(h.ContextDir)
 	if loadErr != nil {
 		return "", loadErr
 	}
@@ -353,7 +353,7 @@ func (h *Handler) Compact(archive bool) (string, error) {
 		return "", boundaryErr
 	}
 
-	ctx, loadErr := context.Load(h.ContextDir)
+	ctx, loadErr := load.Do(h.ContextDir)
 	if loadErr != nil {
 		return "", loadErr
 	}
@@ -439,7 +439,7 @@ func (h *Handler) Compact(archive bool) (string, error) {
 //   - string: next pending task or all-complete message
 //   - error: context load error
 func (h *Handler) Next() (string, error) {
-	ctx, loadErr := context.Load(h.ContextDir)
+	ctx, loadErr := load.Do(h.ContextDir)
 	if loadErr != nil {
 		return "", loadErr
 	}
@@ -477,7 +477,7 @@ func (h *Handler) Next() (string, error) {
 //   - string: matching task prompt with the completion hint, or empty
 //   - error: context load error
 func (h *Handler) CheckTaskCompletion(recentAction string) (string, error) {
-	ctx, loadErr := context.Load(h.ContextDir)
+	ctx, loadErr := load.Do(h.ContextDir)
 	if loadErr != nil {
 		return "", loadErr
 	}

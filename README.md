@@ -12,6 +12,36 @@ vendor lock-in.
 
 **Full documentation: [ctx.ist](https://ctx.ist)**
 
+## The `ctx` Manifesto
+
+> **Creation, not code. Context, not prompts. Verification, not vibes.**
+
+`ctx` is infrastructure for preserving intent under scale. Without durable
+context, intelligence resets. With `ctx`, creation compounds.
+
+Read the full **[Manifesto](MANIFESTO.md)** | **[ctx.ist/manifesto](https://ctx.ist/manifesto/)**
+
+## The Thesis
+
+> **Context as State: A Persistence Layer for Human-AI Cognition**
+
+AI-assisted development systems assemble context at prompt time using heuristic
+retrieval from mutable sources. These approaches optimize relevance at the moment
+of generation but provide no mechanism for persistence, verification, or
+accumulated learning across sessions. `ctx` treats context as deterministic state.
+
+Read the full **[Thesis](https://ctx.ist/thesis/)**
+
+## Core Documents
+
+| Document                                                          | Context                                           |
+|-------------------------------------------------------------------|---------------------------------------------------|
+| [Manifesto](https://ctx.ist/manifesto/)                           | Philosophy: creation, context, verification       |
+| [The Thesis](https://ctx.ist/thesis/)                             | Whitepaper: context as deterministic state        |
+| [Design Invariants](https://ctx.ist/reference/design-invariants/) | System properties that must always hold           |
+| [Tool Comparison](https://ctx.ist/reference/comparison/)          | How ctx differs from .cursorrules, Aider, Copilot |
+| [`ctx` Blog](https://ctx.ist/blog/)                               | Deep dives, architecture notes, learnings         |
+
 ## The Problem
 
 Most LLM-driven development fails not because models are weak: They fail because
@@ -92,16 +122,8 @@ ctx add learning "Mock functions must be hoisted in Jest"
 | [CLI Reference](https://ctx.ist/cli-reference/) | All commands and options               |
 | [Context Files](https://ctx.ist/context-files/) | File formats and structure             |
 | [Integrations](https://ctx.ist/integrations/)   | Claude Code, Cursor, Aider setup       |
-| [Ralph Loop](https://ctx.ist/ralph-loop/)       | Autonomous AI development workflows    |
-
-## Manifesto
-
-> **Creation, not code. Context, not prompts. Verification, not vibes.**
-
-`ctx` is infrastructure for preserving intent under scale. Without durable
-context, intelligence resets. With `ctx`, creation compounds.
-
-Read the full **[Manifesto](MANIFESTO.md)** | **[ctx.ist/manifesto](https://ctx.ist/manifesto/)**
+| [Recipes](https://ctx.ist/recipes/)             | Practical guides and workflows         |
+| [Security](https://ctx.ist/security/)           | Threat model, encryption, permissions  |
 
 ## Contributing
 

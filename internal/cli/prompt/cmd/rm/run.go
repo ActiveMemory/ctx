@@ -12,10 +12,10 @@ import (
 
 	"github.com/ActiveMemory/ctx/internal/config/file"
 	ctxerr "github.com/ActiveMemory/ctx/internal/err/prompt"
+	"github.com/ActiveMemory/ctx/internal/write/prompt"
 	"github.com/spf13/cobra"
 
 	"github.com/ActiveMemory/ctx/internal/cli/prompt/core"
-	"github.com/ActiveMemory/ctx/internal/write"
 )
 
 // Run deletes a prompt template by name.
@@ -37,6 +37,6 @@ func Run(cmd *cobra.Command, name string) error {
 		return ctxerr.Remove(removeErr)
 	}
 
-	write.PromptRemoved(cmd, name)
+	prompt.PromptRemoved(cmd, name)
 	return nil
 }

@@ -19,7 +19,7 @@ import (
 	"github.com/ActiveMemory/ctx/internal/err/backup"
 	fs2 "github.com/ActiveMemory/ctx/internal/err/fs"
 	ctxerr "github.com/ActiveMemory/ctx/internal/err/prompt"
-	"github.com/ActiveMemory/ctx/internal/write"
+	"github.com/ActiveMemory/ctx/internal/write/initialize"
 	"github.com/spf13/cobra"
 )
 
@@ -99,10 +99,10 @@ func UpdateCtxSection(cmd *cobra.Command, existing string, newTemplate []byte) e
 	if err := os.WriteFile(backupName, []byte(existing), fs.PermFile); err != nil {
 		return backup.CreateGeneric(err)
 	}
-	write.InitBackup(cmd, backupName)
+	initialize.Backup(cmd, backupName)
 	if err := os.WriteFile(claude.Md, []byte(newContent), fs.PermFile); err != nil {
 		return fs2.FileUpdate(claude.Md, err)
 	}
-	write.InitUpdatedCtxSection(cmd, claude.Md)
+	initialize.UpdatedCtxSection(cmd, claude.Md)
 	return nil
 }

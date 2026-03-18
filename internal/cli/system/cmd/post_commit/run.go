@@ -11,11 +11,11 @@ import (
 	"regexp"
 
 	"github.com/ActiveMemory/ctx/internal/config/hook"
+	ctxcontext "github.com/ActiveMemory/ctx/internal/context/resolve"
 	"github.com/spf13/cobra"
 
 	"github.com/ActiveMemory/ctx/internal/assets"
 	"github.com/ActiveMemory/ctx/internal/cli/system/core"
-	ctxcontext "github.com/ActiveMemory/ctx/internal/context"
 	"github.com/ActiveMemory/ctx/internal/notify"
 )
 

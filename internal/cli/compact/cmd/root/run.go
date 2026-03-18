@@ -11,11 +11,12 @@ import (
 	"fmt"
 	"os"
 
+	"github.com/ActiveMemory/ctx/internal/context/load"
 	"github.com/spf13/cobra"
 
 	"github.com/ActiveMemory/ctx/internal/cli/compact/core"
 	"github.com/ActiveMemory/ctx/internal/config/fs"
-	"github.com/ActiveMemory/ctx/internal/context"
+	errctx "github.com/ActiveMemory/ctx/internal/err/context"
 	ctxerr "github.com/ActiveMemory/ctx/internal/err/initialize"
 	"github.com/ActiveMemory/ctx/internal/rc"
 	"github.com/ActiveMemory/ctx/internal/tidy"
@@ -33,9 +34,9 @@ import (
 // Returns:
 //   - error: Non-nil if context loading fails or .context/ is not found
 func Run(cmd *cobra.Command, archive bool) error {
-	ctx, err := context.Load("")
+	ctx, err := load.Do("")
 	if err != nil {
-		var notFoundError *context.NotFoundError
+		var notFoundError *errctx.NotFoundError
 		if errors.As(err, &notFoundError) {
 			return ctxerr.ContextNotInitialized()
 		}
@@ -62,7 +63,7 @@ func Run(cmd *cobra.Command, archive bool) error {
 	}
 
 	// Reload context to pick up TASKS.md changes, then clean sections.
-	ctx, err = context.Load("")
+	ctx, err = load.Do("")
 	if err == nil {
 		result := tidy.CompactContext(ctx)
 		for i, sc := range result.SectionsCleaned {

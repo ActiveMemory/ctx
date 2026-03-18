@@ -11,15 +11,17 @@ import (
 
 	"github.com/ActiveMemory/ctx/internal/config/entry"
 	memory2 "github.com/ActiveMemory/ctx/internal/config/memory"
+	"github.com/ActiveMemory/ctx/internal/entity"
 	memory3 "github.com/ActiveMemory/ctx/internal/err/memory"
 	ctxerr "github.com/ActiveMemory/ctx/internal/err/state"
 	"github.com/ActiveMemory/ctx/internal/io"
+	"github.com/ActiveMemory/ctx/internal/write/ctximport"
+	"github.com/ActiveMemory/ctx/internal/write/sync"
 	"github.com/spf13/cobra"
 
 	"github.com/ActiveMemory/ctx/internal/cli/memory/core"
 	"github.com/ActiveMemory/ctx/internal/memory"
 	"github.com/ActiveMemory/ctx/internal/rc"
-	"github.com/ActiveMemory/ctx/internal/write"
 )
 
 // Run parses MEMORY.md entries, classifies them by heuristic keyword
@@ -38,7 +40,7 @@ func Run(cmd *cobra.Command, dryRun bool) error {
 
 	sourcePath, discoverErr := memory.DiscoverMemoryPath(projectRoot)
 	if discoverErr != nil {
-		write.ErrAutoMemoryNotActive(cmd, discoverErr)
+		sync.ErrAutoMemoryNotActive(cmd, discoverErr)
 		return memory3.NotFound()
 	}
 
@@ -51,7 +53,7 @@ func Run(cmd *cobra.Command, dryRun bool) error {
 
 	entries := memory.ParseEntries(string(sourceData))
 	if len(entries) == 0 {
-		write.ImportNoEntries(cmd, memory2.MemorySource)
+		ctximport.NoEntries(cmd, memory2.MemorySource)
 		return nil
 	}
 
@@ -60,9 +62,9 @@ func Run(cmd *cobra.Command, dryRun bool) error {
 		return ctxerr.Load(loadErr)
 	}
 
-	write.ImportScanHeader(cmd, memory2.MemorySource, len(entries))
+	ctximport.ScanHeader(cmd, memory2.MemorySource, len(entries))
 
-	var result core.ImportResult
+	var result entity.ImportResult
 
 	for _, e := range entries {
 		hash := memory.EntryHash(e.Text)
@@ -78,7 +80,7 @@ func Run(cmd *cobra.Command, dryRun bool) error {
 		if classification.Target == memory.TargetSkip {
 			result.Skipped++
 			if dryRun {
-				write.ImportEntrySkipped(cmd, title)
+				ctximport.EntrySkipped(cmd, title)
 			}
 			continue
 		}
@@ -86,14 +88,14 @@ func Run(cmd *cobra.Command, dryRun bool) error {
 		targetFile := entry.ToCtxFile[classification.Target]
 
 		if dryRun {
-			write.ImportEntryClassified(cmd, title, targetFile, classification.Keywords)
+			ctximport.EntryClassified(cmd, title, targetFile, classification.Keywords)
 		} else {
 			if promoteErr := memory.Promote(e, classification); promoteErr != nil {
-				write.ErrImportPromote(cmd, targetFile, promoteErr)
+				ctximport.ErrPromote(cmd, targetFile, promoteErr)
 				continue
 			}
 			state.MarkImported(hash, classification.Target)
-			write.ImportEntryAdded(cmd, title, targetFile)
+			ctximport.EntryAdded(cmd, title, targetFile)
 		}
 
 		switch classification.Target {
@@ -108,14 +110,7 @@ func Run(cmd *cobra.Command, dryRun bool) error {
 		}
 	}
 
-	write.ImportSummary(cmd, write.ImportCounts{
-		Conventions: result.Conventions,
-		Decisions:   result.Decisions,
-		Learnings:   result.Learnings,
-		Tasks:       result.Tasks,
-		Skipped:     result.Skipped,
-		Dupes:       result.Dupes,
-	}, dryRun)
+	ctximport.Summary(cmd, result, dryRun)
 
 	if !dryRun && result.Total() > 0 {
 		state.MarkImportedDone()

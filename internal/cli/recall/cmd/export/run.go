@@ -18,13 +18,15 @@ import (
 	fs2 "github.com/ActiveMemory/ctx/internal/err/fs"
 	journal2 "github.com/ActiveMemory/ctx/internal/err/journal"
 	ctxerr "github.com/ActiveMemory/ctx/internal/err/session"
+	"github.com/ActiveMemory/ctx/internal/write/err"
+	"github.com/ActiveMemory/ctx/internal/write/export"
+	"github.com/ActiveMemory/ctx/internal/write/recall"
 	"github.com/spf13/cobra"
 
 	"github.com/ActiveMemory/ctx/internal/cli/recall/core"
 	"github.com/ActiveMemory/ctx/internal/journal/state"
 	"github.com/ActiveMemory/ctx/internal/rc"
 	"github.com/ActiveMemory/ctx/internal/recall/parser"
-	"github.com/ActiveMemory/ctx/internal/write"
 )
 
 // Run handles the recall export command.
@@ -60,7 +62,7 @@ func Run(cmd *cobra.Command, args []string, opts core.ExportOpts) error {
 	}
 
 	if len(sessions) == 0 {
-		write.NoSessionsForProject(cmd, opts.AllProjects)
+		recall.NoSessionsForProject(cmd, opts.AllProjects)
 		return nil
 	}
 
@@ -81,7 +83,7 @@ func Run(cmd *cobra.Command, args []string, opts core.ExportOpts) error {
 		}
 		if len(toExport) > 1 {
 			lines := core.FormatSessionMatchLines(toExport)
-			write.AmbiguousSessionMatch(cmd, args[0], lines)
+			recall.AmbiguousSessionMatch(cmd, args[0], lines)
 			return ctxerr.AmbiguousQuery()
 		}
 		singleSession = true
@@ -115,7 +117,7 @@ func Run(cmd *cobra.Command, args []string, opts core.ExportOpts) error {
 
 	// 8. Dry-run → print summary and return.
 	if opts.DryRun {
-		write.ExportSummary(cmd, plan.NewCount, plan.RegenCount, plan.SkipCount, plan.LockedCount, true)
+		export.Summary(cmd, plan.NewCount, plan.RegenCount, plan.SkipCount, plan.LockedCount, true)
 		return nil
 	}
 
@@ -126,7 +128,7 @@ func Run(cmd *cobra.Command, args []string, opts core.ExportOpts) error {
 			return promptErr
 		}
 		if !ok {
-			write.Aborted(cmd)
+			recall.Aborted(cmd)
 			return nil
 		}
 	}
@@ -136,11 +138,11 @@ func Run(cmd *cobra.Command, args []string, opts core.ExportOpts) error {
 
 	// 11. Persist journal state.
 	if saveErr := jstate.Save(journalDir); saveErr != nil {
-		write.WarnFileErr(cmd, journal.FileState, saveErr)
+		err.WarnFile(cmd, journal.FileState, saveErr)
 	}
 
 	// 12. Print final summary.
-	write.ExportFinalSummary(cmd, exported, updated, renamed, skipped)
+	recall.ExportFinalSummary(cmd, exported, updated, renamed, skipped)
 
 	return nil
 }

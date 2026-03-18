@@ -54,11 +54,11 @@ func Do(
 	case method.ToolList:
 		return tool.DispatchList(req)
 	case method.ToolCall:
-		return tool.DispatchToolCall(h, req)
+		return tool.DispatchCall(h, req)
 	case method.PromptList:
 		return prompt.DispatchList(req)
 	case method.PromptGet:
-		return prompt.DispatchPromptGet(h, req)
+		return prompt.DispatchGet(h, req)
 	default:
 		return fallback.DispatchErr(req)
 	}

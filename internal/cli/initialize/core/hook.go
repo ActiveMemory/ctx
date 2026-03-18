@@ -17,12 +17,12 @@ import (
 	"github.com/ActiveMemory/ctx/internal/config/fs"
 	"github.com/ActiveMemory/ctx/internal/err/config"
 	fs2 "github.com/ActiveMemory/ctx/internal/err/fs"
-	ctxerr "github.com/ActiveMemory/ctx/internal/err/validate"
+	errparser "github.com/ActiveMemory/ctx/internal/err/parser"
+	"github.com/ActiveMemory/ctx/internal/write/initialize"
 	"github.com/spf13/cobra"
 
 	"github.com/ActiveMemory/ctx/internal/assets"
 	"github.com/ActiveMemory/ctx/internal/claude"
-	"github.com/ActiveMemory/ctx/internal/write"
 )
 
 // MergeSettingsPermissions merges ctx permissions into settings.local.json.
@@ -38,7 +38,7 @@ func MergeSettingsPermissions(cmd *cobra.Command) error {
 	fileExists := err == nil
 	if fileExists {
 		if err := json.Unmarshal(existingContent, &settings); err != nil {
-			return ctxerr.ParseFile(claude2.Settings, err)
+			return errparser.ParseFile(claude2.Settings, err)
 		}
 	}
 	allowModified := MergePermissions(&settings.Permissions.Allow, assets.DefaultAllowPermissions())
@@ -46,7 +46,7 @@ func MergeSettingsPermissions(cmd *cobra.Command) error {
 	allowDeduped := DeduplicatePermissions(&settings.Permissions.Allow)
 	denyDeduped := DeduplicatePermissions(&settings.Permissions.Deny)
 	if !allowModified && !denyModified && !allowDeduped && !denyDeduped {
-		write.InitNoChanges(cmd, claude2.Settings)
+		initialize.NoChanges(cmd, claude2.Settings)
 		return nil
 	}
 	if err := os.MkdirAll(dir.Claude, fs.PermExec); err != nil {
@@ -67,18 +67,18 @@ func MergeSettingsPermissions(cmd *cobra.Command) error {
 		merged := allowModified || denyModified
 		switch {
 		case merged && deduped:
-			write.InitPermsMergedDeduped(cmd, claude2.Settings)
+			initialize.PermsMergedDeduped(cmd, claude2.Settings)
 		case deduped:
-			write.InitPermsDeduped(cmd, claude2.Settings)
+			initialize.PermsDeduped(cmd, claude2.Settings)
 		case allowModified && denyModified:
-			write.InitPermsAllowDeny(cmd, claude2.Settings)
+			initialize.PermsAllowDeny(cmd, claude2.Settings)
 		case denyModified:
-			write.InitPermsDeny(cmd, claude2.Settings)
+			initialize.PermsDeny(cmd, claude2.Settings)
 		default:
-			write.InitPermsAllow(cmd, claude2.Settings)
+			initialize.PermsAllow(cmd, claude2.Settings)
 		}
 	} else {
-		write.InitCreated(cmd, claude2.Settings)
+		initialize.Created(cmd, claude2.Settings)
 	}
 	return nil
 }

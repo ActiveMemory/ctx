@@ -265,6 +265,8 @@ write.new-content:
   short: '  New content: %d lines since last sync'
 write.obsidian-generated:
   short: ✓ Generated Obsidian vault with %d entries in %s
+write.obsidian-next-steps-heading:
+  short: 'Next steps:'
 write.obsidian-next-steps:
   short: '  Open Obsidian → Open folder as vault → Select %s'
 write.pad-blob-written:

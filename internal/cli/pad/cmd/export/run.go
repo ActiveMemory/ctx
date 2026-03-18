@@ -14,10 +14,11 @@ import (
 
 	"github.com/ActiveMemory/ctx/internal/config/fs"
 	ctxerr "github.com/ActiveMemory/ctx/internal/err/fs"
+	"github.com/ActiveMemory/ctx/internal/write/export"
+	"github.com/ActiveMemory/ctx/internal/write/pad"
 	"github.com/spf13/cobra"
 
 	"github.com/ActiveMemory/ctx/internal/cli/pad/core"
-	"github.com/ActiveMemory/ctx/internal/write"
 )
 
 // runExport exports blob entries from the scratchpad to the given directory.
@@ -56,30 +57,30 @@ func runExport(cmd *cobra.Command, dir string, force, dryRun bool) error {
 				ts := fmt.Sprintf("%d", time.Now().Unix())
 				newName := ts + "-" + label
 				if dryRun {
-					write.InfoPathConversionExists(cmd, dir, label, newName)
+					pad.InfoPathConversionExists(cmd, dir, label, newName)
 					count++
 					continue
 				}
 				outPath = filepath.Join(dir, newName)
-				write.InfoExistsWritingAsAlternative(cmd, label, newName)
+				export.InfoExistsWritingAsAlternative(cmd, label, newName)
 			}
 		}
 
 		if dryRun {
-			write.PadExportPlan(cmd, label, outPath)
+			pad.PadExportPlan(cmd, label, outPath)
 			count++
 			continue
 		}
 
 		if writeErr := os.WriteFile(outPath, data, fs.PermSecret); writeErr != nil {
-			write.ErrPadExportWrite(cmd, label, writeErr)
+			pad.ErrPadExportWrite(cmd, label, writeErr)
 			continue
 		}
 
-		write.PadExportDone(cmd, label)
+		pad.PadExportDone(cmd, label)
 		count++
 	}
 
-	write.PadExportSummary(cmd, count, dryRun)
+	pad.PadExportSummary(cmd, count, dryRun)
 	return nil
 }

@@ -10,12 +10,13 @@ import (
 	"errors"
 	"fmt"
 
+	"github.com/ActiveMemory/ctx/internal/context/load"
 	ctxerr "github.com/ActiveMemory/ctx/internal/err/initialize"
 	"github.com/spf13/cobra"
 
 	"github.com/ActiveMemory/ctx/internal/cli/drift/core"
-	"github.com/ActiveMemory/ctx/internal/context"
 	"github.com/ActiveMemory/ctx/internal/drift"
+	errctx "github.com/ActiveMemory/ctx/internal/err/context"
 )
 
 // Run executes the drift command logic.
@@ -32,9 +33,9 @@ import (
 // Returns:
 //   - error: Non-nil if context loading fails or .context/ is not found
 func Run(cmd *cobra.Command, jsonOutput, fix bool) error {
-	ctx, err := context.Load("")
+	ctx, err := load.Do("")
 	if err != nil {
-		var notFoundError *context.NotFoundError
+		var notFoundError *errctx.NotFoundError
 		if errors.As(err, &notFoundError) {
 			return ctxerr.NotInitialized()
 		}
@@ -66,7 +67,7 @@ func Run(cmd *cobra.Command, jsonOutput, fix bool) error {
 		if result.Fixed > 0 {
 			cmd.Println()
 			cmd.Println("Re-checking after fixes...")
-			ctx, _ = context.Load("")
+			ctx, _ = load.Do("")
 			report = drift.Detect(ctx)
 		}
 	}

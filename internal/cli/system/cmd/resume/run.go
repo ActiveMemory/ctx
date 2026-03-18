@@ -9,11 +9,11 @@ package resume
 import (
 	"os"
 
+	session2 "github.com/ActiveMemory/ctx/internal/write/session"
 	"github.com/spf13/cobra"
 
 	"github.com/ActiveMemory/ctx/internal/cli/system/core"
 	"github.com/ActiveMemory/ctx/internal/config/session"
-	"github.com/ActiveMemory/ctx/internal/write"
 )
 
 // Run executes the resume logic.
@@ -39,6 +39,6 @@ func Run(cmd *cobra.Command, stdin *os.File) error {
 
 	path := core.PauseMarkerPath(sessionID)
 	_ = os.Remove(path)
-	write.SessionResumed(cmd, sessionID)
+	session2.SessionResumed(cmd, sessionID)
 	return nil
 }

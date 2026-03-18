@@ -12,13 +12,13 @@ import (
 	"github.com/ActiveMemory/ctx/internal/config/hook"
 	"github.com/ActiveMemory/ctx/internal/config/token"
 	"github.com/ActiveMemory/ctx/internal/config/tpl"
+	hook2 "github.com/ActiveMemory/ctx/internal/write/hook"
 	"github.com/spf13/cobra"
 
 	"github.com/ActiveMemory/ctx/internal/assets"
 	"github.com/ActiveMemory/ctx/internal/cli/system/core"
 	"github.com/ActiveMemory/ctx/internal/notify"
 	"github.com/ActiveMemory/ctx/internal/sysinfo"
-	"github.com/ActiveMemory/ctx/internal/write"
 )
 
 // Run executes the check-resources hook logic.
@@ -70,7 +70,7 @@ func Run(cmd *cobra.Command, stdin *os.File) error {
 		return nil
 	}
 
-	write.HookNudge(cmd, core.NudgeBox(
+	hook2.Nudge(cmd, core.NudgeBox(
 		assets.TextDesc(assets.TextDescKeyCheckResourcesRelayPrefix),
 		assets.TextDesc(assets.TextDescKeyCheckResourcesBoxTitle),
 		content))

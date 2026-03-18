@@ -13,9 +13,8 @@ import (
 	"github.com/ActiveMemory/ctx/internal/config/fs"
 	"github.com/ActiveMemory/ctx/internal/err/config"
 	ctxerr "github.com/ActiveMemory/ctx/internal/err/fs"
+	"github.com/ActiveMemory/ctx/internal/write/loop"
 	"github.com/spf13/cobra"
-
-	"github.com/ActiveMemory/ctx/internal/write"
 )
 
 // Run executes the loop command logic.
@@ -52,7 +51,7 @@ func Run(
 		return ctxerr.FileWrite(outputFile, writeErr)
 	}
 
-	write.InfoLoopGenerated(
+	loop.InfoGenerated(
 		cmd, outputFile, assets.LoopHeadingStart,
 		tool, promptFile, maxIterations, completionMsg,
 	)

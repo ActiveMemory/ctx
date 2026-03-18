@@ -18,7 +18,7 @@ import (
 	"github.com/ActiveMemory/ctx/internal/config/file"
 	"github.com/ActiveMemory/ctx/internal/config/session"
 	"github.com/ActiveMemory/ctx/internal/config/token"
-	ctxcontext "github.com/ActiveMemory/ctx/internal/context"
+	ctxcontext "github.com/ActiveMemory/ctx/internal/context/resolve"
 	"github.com/ActiveMemory/ctx/internal/io"
 	"github.com/ActiveMemory/ctx/internal/rc"
 )

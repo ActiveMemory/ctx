@@ -21,13 +21,13 @@ import (
 	crypto2 "github.com/ActiveMemory/ctx/internal/err/crypto"
 	fs2 "github.com/ActiveMemory/ctx/internal/err/fs"
 	ctxerr "github.com/ActiveMemory/ctx/internal/err/prompt"
+	"github.com/ActiveMemory/ctx/internal/write/initialize"
 	"github.com/spf13/cobra"
 
 	"github.com/ActiveMemory/ctx/internal/assets"
 	"github.com/ActiveMemory/ctx/internal/cli/initialize/core"
 	"github.com/ActiveMemory/ctx/internal/crypto"
 	"github.com/ActiveMemory/ctx/internal/rc"
-	"github.com/ActiveMemory/ctx/internal/write"
 )
 
 // gitignoreHeader is the section comment prepended to ctx-managed entries.
@@ -62,7 +62,7 @@ func Run(cmd *cobra.Command, force, minimal, merge, ralph, noPluginEnable bool) 
 	if _, err := os.Stat(contextDir); err == nil {
 		if !force && hasEssentialFiles(contextDir) {
 			// Prompt for confirmation
-			write.InfoInitOverwritePrompt(cmd, contextDir)
+			initialize.InfoOverwritePrompt(cmd, contextDir)
 			reader := bufio.NewReader(os.Stdin)
 			response, err := reader.ReadString('\n')
 			if err != nil {
@@ -70,7 +70,7 @@ func Run(cmd *cobra.Command, force, minimal, merge, ralph, noPluginEnable bool) 
 			}
 			response = strings.TrimSpace(strings.ToLower(response))
 			if response != cli.ConfirmShort && response != cli.ConfirmLong {
-				write.InfoInitAborted(cmd)
+				initialize.InfoAborted(cmd)
 				return nil
 			}
 		}
@@ -99,7 +99,7 @@ func Run(cmd *cobra.Command, force, minimal, merge, ralph, noPluginEnable bool) 
 
 		// Check if the file exists and --force not set
 		if _, err := os.Stat(targetPath); err == nil && !force {
-			write.InfoInitExistsSkipped(cmd, name)
+			initialize.InfoExistsSkipped(cmd, name)
 			continue
 		}
 
@@ -112,82 +112,82 @@ func Run(cmd *cobra.Command, force, minimal, merge, ralph, noPluginEnable bool) 
 			return fs2.FileWrite(targetPath, err)
 		}
 
-		write.InfoInitFileCreated(cmd, name)
+		initialize.InfoFileCreated(cmd, name)
 	}
 
-	write.InfoInitialized(cmd, contextDir)
+	initialize.InfoInitialized(cmd, contextDir)
 
 	// Create entry templates in .context/templates/
 	if err := core.CreateEntryTemplates(cmd, contextDir, force); err != nil {
 		// Non-fatal: warn but continue
-		write.InfoInitWarnNonFatal(cmd, "Entry templates", err)
+		initialize.InfoWarnNonFatal(cmd, "Entry templates", err)
 	}
 
 	// Create prompt templates in .context/prompts/
 	if err := core.CreatePromptTemplates(cmd, contextDir, force); err != nil {
 		// Non-fatal: warn but continue
-		write.InfoInitWarnNonFatal(cmd, "Prompt templates", err)
+		initialize.InfoWarnNonFatal(cmd, "Prompt templates", err)
 	}
 
 	// Set up scratchpad
 	if err := initScratchpad(cmd, contextDir); err != nil {
 		// Non-fatal: warn but continue
-		write.InfoInitWarnNonFatal(cmd, "Scratchpad", err)
+		initialize.InfoWarnNonFatal(cmd, "Scratchpad", err)
 	}
 
 	// Create project root files
-	write.InfoInitCreatingRootFiles(cmd)
+	initialize.InfoCreatingRootFiles(cmd)
 
 	// Create specs/ and ideas/ directories with README.md
 	if err := core.CreateProjectDirs(cmd); err != nil {
-		write.InfoInitWarnNonFatal(cmd, "Project dirs", err)
+		initialize.InfoWarnNonFatal(cmd, "Project dirs", err)
 	}
 
 	// Create PROMPT.md (uses ralph template if --ralph flag set)
 	if err := core.HandlePromptMd(cmd, force, merge, ralph); err != nil {
 		// Non-fatal: warn but continue
-		write.InfoInitWarnNonFatal(cmd, "PROMPT.md", err)
+		initialize.InfoWarnNonFatal(cmd, "PROMPT.md", err)
 	}
 
 	// Create IMPLEMENTATION_PLAN.md
 	if err := core.HandleImplementationPlan(cmd, force, merge); err != nil {
 		// Non-fatal: warn but continue
-		write.InfoInitWarnNonFatal(cmd, "IMPLEMENTATION_PLAN.md", err)
+		initialize.InfoWarnNonFatal(cmd, "IMPLEMENTATION_PLAN.md", err)
 	}
 
 	// Merge permissions into settings.local.json (no hook scaffolding)
-	write.InfoInitSettingUpPermissions(cmd)
+	initialize.InfoSettingUpPermissions(cmd)
 	if err := core.MergeSettingsPermissions(cmd); err != nil {
 		// Non-fatal: warn but continue
-		write.InfoInitWarnNonFatal(cmd, "Permissions", err)
+		initialize.InfoWarnNonFatal(cmd, "Permissions", err)
 	}
 
 	// Auto-enable plugin globally unless suppressed
 	if !noPluginEnable {
 		if pluginErr := core.EnablePluginGlobally(cmd); pluginErr != nil {
 			// Non-fatal: warn but continue
-			write.InfoInitWarnNonFatal(cmd, "Plugin enablement", pluginErr)
+			initialize.InfoWarnNonFatal(cmd, "Plugin enablement", pluginErr)
 		}
 	}
 
 	// Handle CLAUDE.md creation/merge
 	if err := core.HandleClaudeMd(cmd, force, merge); err != nil {
 		// Non-fatal: warn but continue
-		write.InfoInitWarnNonFatal(cmd, "CLAUDE.md", err)
+		initialize.InfoWarnNonFatal(cmd, "CLAUDE.md", err)
 	}
 
 	// Deploy Makefile.ctx and amend user Makefile
 	if err := core.HandleMakefileCtx(cmd); err != nil {
 		// Non-fatal: warn but continue
-		write.InfoInitWarnNonFatal(cmd, "Makefile", err)
+		initialize.InfoWarnNonFatal(cmd, "Makefile", err)
 	}
 
 	// Update .gitignore with recommended entries
 	if err := ensureGitignoreEntries(cmd); err != nil {
-		write.InfoInitWarnNonFatal(cmd, ".gitignore", err)
+		initialize.InfoWarnNonFatal(cmd, ".gitignore", err)
 	}
 
-	write.InfoInitNextSteps(cmd)
+	initialize.InfoNextSteps(cmd)
 
 	return nil
 }
@@ -216,9 +216,9 @@ func initScratchpad(cmd *cobra.Command, contextDir string) error {
 			if err := os.WriteFile(mdPath, nil, fs.PermFile); err != nil {
 				return fs2.Mkdir(mdPath, err)
 			}
-			write.InfoInitScratchpadPlaintext(cmd, mdPath)
+			initialize.InfoScratchpadPlaintext(cmd, mdPath)
 		} else {
-			write.InfoInitExistsSkipped(cmd, mdPath)
+			initialize.InfoExistsSkipped(cmd, mdPath)
 		}
 		return nil
 	}
@@ -229,13 +229,13 @@ func initScratchpad(cmd *cobra.Command, contextDir string) error {
 
 	// Check if key already exists (idempotent)
 	if _, err := os.Stat(kPath); err == nil {
-		write.InfoInitExistsSkipped(cmd, kPath)
+		initialize.InfoExistsSkipped(cmd, kPath)
 		return nil
 	}
 
 	// Warn if encrypted file exists but no key
 	if _, err := os.Stat(encPath); err == nil {
-		write.InfoInitScratchpadNoKey(cmd, kPath)
+		initialize.InfoScratchpadNoKey(cmd, kPath)
 		return nil
 	}
 
@@ -253,7 +253,7 @@ func initScratchpad(cmd *cobra.Command, contextDir string) error {
 	if err := crypto.SaveKey(kPath, key); err != nil {
 		return crypto2.SaveKey(err)
 	}
-	write.InfoInitScratchpadKeyCreated(cmd, kPath)
+	initialize.InfoScratchpadKeyCreated(cmd, kPath)
 
 	return nil
 }
@@ -313,7 +313,7 @@ func ensureGitignoreEntries(cmd *cobra.Command) error {
 		return err
 	}
 
-	write.InfoInitGitignoreUpdated(cmd, len(missing))
-	write.InfoInitGitignoreReview(cmd)
+	initialize.InfoGitignoreUpdated(cmd, len(missing))
+	initialize.InfoGitignoreReview(cmd)
 	return nil
 }

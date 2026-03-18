@@ -862,6 +862,20 @@ Taxonomy (from prefix analysis):
 
 - [ ] WC.2: Audit CLI packages for direct fmt.Print/Println usage — candidates for migration #added:2026-03-06
 
+### Phase WC2: Write Output Block Consolidation
+
+Spec: `specs/write-output-consolidation.md`. Read the spec before starting any WC2 task.
+
+Consolidate multi-line imperative `cmd.Println` sequences in `internal/write/`
+into pre-computed single-print block patterns. Separates conditional logic from
+I/O and replaces 4-8 individual Tpl\* constants per function with one block template.
+
+- [ ] WC2.1: Tier 1 — Consolidate multi-line functions with no conditionals: `InfoInitNextSteps`, `InfoObsidianGenerated`, `InfoJournalSiteGenerated`, `InfoDepsNoProject`, `ArchiveDryRun`, `ImportScanHeader`. Add `TplXxxBlock` YAML entries, wire through embed.go + config.go, remove replaced individual constants. #added:2026-03-17
+- [ ] WC2.2: Tier 2a — Consolidate conditional functions in info.go: `InfoLoopGenerated` (pre-compute iterLine). Prove the pre-computation pattern on the function that motivated this spec. #added:2026-03-17
+- [ ] WC2.3: Tier 2b — Consolidate conditional functions in sync/recall/notify: `SyncResult`, `CtxSyncHeader`, `CtxSyncAction`, `SessionMetadata`, `TestResult`, `SyncDryRun`, `PruneSummary`. Each needs 1-3 pre-computed strings before the single print call. #added:2026-03-17
+- [ ] WC2.4: Constant cleanup — verify all replaced individual `TplXxx*` config vars, `TextDescKey*` constants, and YAML entries are removed. Run `make lint` and `go test ./internal/write/...` to confirm no regressions. #added:2026-03-17
+- [ ] WC2.5: Update CONVENTIONS.md — add a "Write Package Output" subsection documenting the pre-compute-then-print pattern for future functions with 4+ Printlns and conditionals. #added:2026-03-17
+
 ## Later
 
 ### Phase PR: State Pruning (`ctx system prune`)
@@ -955,3 +969,11 @@ age-based — prune files older than N days (default 7).
 - [ ] F.1: MCP server integration: expose context as tools/resources via Model
   Context Protocol. Would enable deep integration with any
   MCP-compatible client. #priority:low #source:report-6
+- [ ] Q.1: Docstring cross-reference audit — compliance test that flags docstrings
+  mentioning domains that don't match their callers. Start with `write/**`,
+  extend to all `internal/`. Spec: `specs/docstring-cross-reference-audit.md`
+  #priority:medium #added:2026-03-17
+- [x] Q.2: Delete `write/config/` indirection layer — 232 vars that just alias
+  `assets.TextDesc(key)`. Callers should use assets directly. Also delete
+  `config2.go` (agent confusion artifact). ~232 call sites across `write/**`.
+  #priority:medium #added:2026-03-17

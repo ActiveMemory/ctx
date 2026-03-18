@@ -103,3 +103,17 @@ func Unmarshal(cause error) error {
 		assets.TextDesc(assets.TextDescKeyErrParserUnmarshal), cause,
 	)
 }
+
+// ParseFile wraps a failure to parse a file.
+//
+// Parameters:
+//   - path: file path that could not be parsed
+//   - cause: the underlying parse error
+//
+// Returns:
+//   - error: "failed to parse <path>: <cause>"
+func ParseFile(path string, cause error) error {
+	return fmt.Errorf(
+		assets.TextDesc(assets.TextDescKeyErrValidationParseFile), path, cause,
+	)
+}

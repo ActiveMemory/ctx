@@ -15,10 +15,10 @@ import (
 	"github.com/ActiveMemory/ctx/internal/config/pad"
 	ctxerr "github.com/ActiveMemory/ctx/internal/err/fs"
 	io2 "github.com/ActiveMemory/ctx/internal/io"
+	pad2 "github.com/ActiveMemory/ctx/internal/write/pad"
 	"github.com/spf13/cobra"
 
 	"github.com/ActiveMemory/ctx/internal/cli/pad/core"
-	"github.com/ActiveMemory/ctx/internal/write"
 )
 
 // runImport reads lines from a file (or stdin) and appends them as entries.
@@ -40,7 +40,7 @@ func runImport(cmd *cobra.Command, file string) error {
 		}
 		defer func() {
 			if cerr := f.Close(); cerr != nil {
-				write.ErrPadImportCloseWarning(cmd, file, cerr)
+				pad2.ErrPadImportCloseWarning(cmd, file, cerr)
 			}
 		}()
 		r = f
@@ -66,7 +66,7 @@ func runImport(cmd *cobra.Command, file string) error {
 	}
 
 	if count == 0 {
-		write.PadImportNone(cmd)
+		pad2.PadImportNone(cmd)
 		return nil
 	}
 
@@ -74,7 +74,7 @@ func runImport(cmd *cobra.Command, file string) error {
 		return writeErr
 	}
 
-	write.PadImportDone(cmd, count)
+	pad2.PadImportDone(cmd, count)
 	return nil
 }
 
@@ -116,19 +116,19 @@ func runImportBlobs(cmd *cobra.Command, path string) error {
 
 		data, fileErr := io2.SafeReadFile(path, name)
 		if fileErr != nil {
-			write.ErrPadImportBlobSkipped(cmd, name, fileErr)
+			pad2.ErrPadImportBlobSkipped(cmd, name, fileErr)
 			skipped++
 			continue
 		}
 
 		if len(data) > pad.MaxBlobSize {
-			write.ErrPadImportBlobTooLarge(cmd, name, pad.MaxBlobSize)
+			pad2.ErrPadImportBlobTooLarge(cmd, name, pad.MaxBlobSize)
 			skipped++
 			continue
 		}
 
 		entries = append(entries, core.MakeBlob(name, data))
-		write.PadImportBlobAdded(cmd, name)
+		pad2.PadImportBlobAdded(cmd, name)
 		added++
 	}
 
@@ -138,6 +138,6 @@ func runImportBlobs(cmd *cobra.Command, path string) error {
 		}
 	}
 
-	write.PadImportBlobSummary(cmd, added, skipped)
+	pad2.PadImportBlobSummary(cmd, added, skipped)
 	return nil
 }

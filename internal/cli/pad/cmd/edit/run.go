@@ -11,10 +11,10 @@ import (
 	"github.com/ActiveMemory/ctx/internal/err/fs"
 	ctxerr "github.com/ActiveMemory/ctx/internal/err/pad"
 	"github.com/ActiveMemory/ctx/internal/io"
+	pad2 "github.com/ActiveMemory/ctx/internal/write/pad"
 	"github.com/spf13/cobra"
 
 	"github.com/ActiveMemory/ctx/internal/cli/pad/core"
-	"github.com/ActiveMemory/ctx/internal/write"
 )
 
 // runEdit replaces entry at 1-based position n with new text.
@@ -42,7 +42,7 @@ func runEdit(cmd *cobra.Command, n int, text string) error {
 		return writeErr
 	}
 
-	write.PadEntryUpdated(cmd, n)
+	pad2.PadEntryUpdated(cmd, n)
 	return nil
 }
 
@@ -75,7 +75,7 @@ func runEditAppend(cmd *cobra.Command, n int, text string) error {
 		return writeErr
 	}
 
-	write.PadEntryUpdated(cmd, n)
+	pad2.PadEntryUpdated(cmd, n)
 	return nil
 }
 
@@ -108,7 +108,7 @@ func runEditPrepend(cmd *cobra.Command, n int, text string) error {
 		return writeErr
 	}
 
-	write.PadEntryUpdated(cmd, n)
+	pad2.PadEntryUpdated(cmd, n)
 	return nil
 }
 
@@ -161,6 +161,6 @@ func runEditBlob(cmd *cobra.Command, n int, filePath, labelText string) error {
 		return writeErr
 	}
 
-	write.PadEntryUpdated(cmd, n)
+	pad2.PadEntryUpdated(cmd, n)
 	return nil
 }

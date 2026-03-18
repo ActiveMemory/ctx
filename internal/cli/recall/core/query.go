@@ -9,7 +9,7 @@ package core
 import (
 	"os"
 
-	ctxerr "github.com/ActiveMemory/ctx/internal/err/validate"
+	errfs "github.com/ActiveMemory/ctx/internal/err/fs"
 	"github.com/ActiveMemory/ctx/internal/recall/parser"
 )
 
@@ -28,7 +28,7 @@ func FindSessions(allProjects bool) ([]*parser.Session, error) {
 	}
 	cwd, cwdErr := os.Getwd()
 	if cwdErr != nil {
-		return nil, ctxerr.WorkingDirectory(cwdErr)
+		return nil, errfs.WorkingDirectory(cwdErr)
 	}
 	return parser.FindSessionsForCWD(cwd)
 }

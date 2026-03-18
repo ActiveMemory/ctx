@@ -10,7 +10,7 @@ import (
 	"sort"
 
 	"github.com/ActiveMemory/ctx/internal/config/ctx"
-	"github.com/ActiveMemory/ctx/internal/context"
+	"github.com/ActiveMemory/ctx/internal/entity"
 )
 
 // SortByReadOrder sorts context files according to [config.ReadOrder].
@@ -23,8 +23,8 @@ import (
 //   - files: Context files to sort
 //
 // Returns:
-//   - []context.FileInfo: New slice with files sorted by read priority
-func SortByReadOrder(files []context.FileInfo) []context.FileInfo {
+//   - []entity.FileInfo: New slice with files sorted by read priority
+func SortByReadOrder(files []entity.FileInfo) []entity.FileInfo {
 	// Create a map for a quick priority lookup
 	priority := make(map[string]int)
 	for i, name := range ctx.ReadOrder {
@@ -32,7 +32,7 @@ func SortByReadOrder(files []context.FileInfo) []context.FileInfo {
 	}
 
 	// Copy and sort
-	sorted := make([]context.FileInfo, len(files))
+	sorted := make([]entity.FileInfo, len(files))
 	copy(sorted, files)
 
 	sort.Slice(sorted, func(i, j int) bool {

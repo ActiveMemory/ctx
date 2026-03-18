@@ -10,11 +10,11 @@ import (
 	"strings"
 
 	"github.com/ActiveMemory/ctx/internal/config/token"
+	"github.com/ActiveMemory/ctx/internal/write/guide"
 	"github.com/spf13/cobra"
 	"gopkg.in/yaml.v3"
 
 	"github.com/ActiveMemory/ctx/internal/claude"
-	"github.com/ActiveMemory/ctx/internal/write"
 )
 
 // parseSkillFrontmatter extracts YAML frontmatter from a SKILL.md file.
@@ -77,7 +77,7 @@ func listSkills(cmd *cobra.Command) error {
 		return skillsErr
 	}
 
-	write.InfoSkillsHeader(cmd)
+	guide.InfoSkillsHeader(cmd)
 
 	for _, name := range names {
 		content, readErr := claude.SkillContent(name)
@@ -91,7 +91,7 @@ func listSkills(cmd *cobra.Command) error {
 		}
 
 		desc := truncateDescription(meta.Description, 70)
-		write.InfoSkillLine(cmd, name, desc)
+		guide.InfoSkillLine(cmd, name, desc)
 	}
 	return nil
 }

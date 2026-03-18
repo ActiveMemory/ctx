@@ -17,11 +17,11 @@ import (
 	"github.com/ActiveMemory/ctx/internal/config/regex"
 	"github.com/ActiveMemory/ctx/internal/config/token"
 	ctxerr "github.com/ActiveMemory/ctx/internal/err/task"
+	"github.com/ActiveMemory/ctx/internal/write/complete"
 	"github.com/spf13/cobra"
 
 	"github.com/ActiveMemory/ctx/internal/rc"
 	"github.com/ActiveMemory/ctx/internal/task"
-	"github.com/ActiveMemory/ctx/internal/write"
 )
 
 // CompleteTask finds a task in TASKS.md by number or text match and marks
@@ -125,7 +125,7 @@ func Run(cmd *cobra.Command, args []string) error {
 		return completeErr
 	}
 
-	write.InfoCompletedTask(cmd, matchedTask)
+	complete.InfoCompletedTask(cmd, matchedTask)
 
 	return nil
 }

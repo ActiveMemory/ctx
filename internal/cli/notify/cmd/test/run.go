@@ -14,11 +14,11 @@ import (
 
 	"github.com/ActiveMemory/ctx/internal/config/crypto"
 	ctxerr "github.com/ActiveMemory/ctx/internal/err/notify"
+	notify2 "github.com/ActiveMemory/ctx/internal/write/notify"
 	"github.com/spf13/cobra"
 
 	"github.com/ActiveMemory/ctx/internal/notify"
 	"github.com/ActiveMemory/ctx/internal/rc"
-	"github.com/ActiveMemory/ctx/internal/write"
 )
 
 // runTest sends a test notification to the configured webhook.
@@ -34,7 +34,7 @@ func runTest(cmd *cobra.Command) error {
 		return ctxerr.LoadWebhook(loadErr)
 	}
 	if url == "" {
-		write.TestNoWebhook(cmd)
+		notify2.TestNoWebhook(cmd)
 		return nil
 	}
 
@@ -56,7 +56,7 @@ func runTest(cmd *cobra.Command) error {
 	}
 
 	if !notify.EventAllowed("test", rc.NotifyEvents()) {
-		write.TestFiltered(cmd)
+		notify2.TestFiltered(cmd)
 	}
 
 	resp, postErr := notify.PostJSON(url, body)
@@ -65,7 +65,7 @@ func runTest(cmd *cobra.Command) error {
 	}
 	defer func() { _ = resp.Body.Close() }()
 
-	write.TestResult(cmd, resp.StatusCode, crypto.NotifyEnc)
+	notify2.TestResult(cmd, resp.StatusCode, crypto.NotifyEnc)
 
 	return nil
 }
