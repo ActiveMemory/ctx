@@ -7,6 +7,7 @@
 package events
 
 import (
+	"github.com/ActiveMemory/ctx/internal/config/embed"
 	ctxerr "github.com/ActiveMemory/ctx/internal/err/recall"
 	"github.com/spf13/cobra"
 
@@ -45,7 +46,7 @@ func Run(cmd *cobra.Command) error {
 	}
 
 	if len(evts) == 0 {
-		cmd.Println(assets.TextDesc(assets.TextDescKeyEventsEmpty))
+		cmd.Println(assets.TextDesc(embed.TextDescKeyEventsEmpty))
 		return nil
 	}
 

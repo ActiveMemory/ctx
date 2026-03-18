@@ -11,6 +11,7 @@ import (
 	"fmt"
 
 	"github.com/ActiveMemory/ctx/internal/assets"
+	"github.com/ActiveMemory/ctx/internal/config/embed"
 	"github.com/ActiveMemory/ctx/internal/entity"
 	"github.com/spf13/cobra"
 )
@@ -32,31 +33,31 @@ func Text(
 	nextSteps []string,
 	warning string,
 ) {
-	cmd.Println(assets.TextDesc(assets.TextDescKeyWriteBootstrapTitle))
-	cmd.Println(assets.TextDesc(assets.TextDescKeyWriteBootstrapSep))
+	cmd.Println(assets.TextDesc(embed.TextDescKeyWriteBootstrapTitle))
+	cmd.Println(assets.TextDesc(embed.TextDescKeyWriteBootstrapSep))
 	cmd.Println()
-	cmd.Println(fmt.Sprintf(assets.TextDesc(assets.TextDescKeyWriteBootstrapDir), dir))
+	cmd.Println(fmt.Sprintf(assets.TextDesc(embed.TextDescKeyWriteBootstrapDir), dir))
 	cmd.Println()
-	cmd.Println(assets.TextDesc(assets.TextDescKeyWriteBootstrapFiles))
+	cmd.Println(assets.TextDesc(embed.TextDescKeyWriteBootstrapFiles))
 	cmd.Println(fileList)
 	cmd.Println()
-	cmd.Println(assets.TextDesc(assets.TextDescKeyWriteBootstrapRules))
+	cmd.Println(assets.TextDesc(embed.TextDescKeyWriteBootstrapRules))
 	for i, r := range rules {
 		cmd.Println(fmt.Sprintf(
-			assets.TextDesc(assets.TextDescKeyWriteBootstrapNumbered), i+1, r,
+			assets.TextDesc(embed.TextDescKeyWriteBootstrapNumbered), i+1, r,
 		))
 	}
 	cmd.Println()
-	cmd.Println(assets.TextDesc(assets.TextDescKeyWriteBootstrapNextSteps))
+	cmd.Println(assets.TextDesc(embed.TextDescKeyWriteBootstrapNextSteps))
 	for i, s := range nextSteps {
 		cmd.Println(fmt.Sprintf(
-			assets.TextDesc(assets.TextDescKeyWriteBootstrapNumbered), i+1, s,
+			assets.TextDesc(embed.TextDescKeyWriteBootstrapNumbered), i+1, s,
 		))
 	}
 	if warning != "" {
 		cmd.Println()
 		cmd.Println(fmt.Sprintf(
-			assets.TextDesc(assets.TextDescKeyWriteBootstrapWarning), warning,
+			assets.TextDesc(embed.TextDescKeyWriteBootstrapWarning), warning,
 		))
 	}
 }

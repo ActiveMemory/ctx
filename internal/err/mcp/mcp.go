@@ -11,6 +11,7 @@ import (
 	"fmt"
 
 	"github.com/ActiveMemory/ctx/internal/assets"
+	"github.com/ActiveMemory/ctx/internal/config/embed"
 )
 
 // TypeContentRequired returns an error when type or content is missing
@@ -20,7 +21,7 @@ import (
 //   - error: "type and content are required"
 func TypeContentRequired() error {
 	return errors.New(
-		assets.TextDesc(assets.TextDescKeyMCPTypeContentRequired),
+		assets.TextDesc(embed.TextDescKeyMCPTypeContentRequired),
 	)
 }
 
@@ -34,7 +35,7 @@ func TypeContentRequired() error {
 //   - error: "unknown event type: <eventType>"
 func UnknownEventType(eventType string) error {
 	return fmt.Errorf(
-		assets.TextDesc(assets.TextDescKeyMCPUnknownEventType),
+		assets.TextDesc(embed.TextDescKeyMCPUnknownEventType),
 		eventType,
 	)
 }

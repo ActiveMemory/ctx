@@ -10,6 +10,7 @@ import (
 	"fmt"
 
 	"github.com/ActiveMemory/ctx/internal/assets"
+	"github.com/ActiveMemory/ctx/internal/config/embed"
 )
 
 // NotFoundError is returned when the context directory does not exist.
@@ -22,7 +23,7 @@ type NotFoundError struct {
 // Returns:
 //   - string: Error message including the missing directory path
 func (e *NotFoundError) Error() string {
-	return assets.TextDesc(assets.TextDescKeyErrContextDirNotFound) + e.Dir
+	return assets.TextDesc(embed.TextDescKeyErrContextDirNotFound) + e.Dir
 }
 
 // NotFound returns a NotFoundError for the given directory.
@@ -47,7 +48,7 @@ func NotFound(dir string) *NotFoundError {
 //   - error: "context directory <dir> resolves outside project root <root>"
 func OutsideRoot(dir, root string) error {
 	return fmt.Errorf(
-		assets.TextDesc(assets.TextDescKeyErrValidateContextOutsideRoot), dir, root,
+		assets.TextDesc(embed.TextDescKeyErrValidateContextOutsideRoot), dir, root,
 	)
 }
 
@@ -60,7 +61,7 @@ func OutsideRoot(dir, root string) error {
 //   - error: "context directory <dir> is a symlink"
 func DirSymlink(dir string) error {
 	return fmt.Errorf(
-		assets.TextDesc(assets.TextDescKeyErrValidateContextDirSymlink), dir,
+		assets.TextDesc(embed.TextDescKeyErrValidateContextDirSymlink), dir,
 	)
 }
 
@@ -74,6 +75,6 @@ func DirSymlink(dir string) error {
 //   - error: "context file <file> is a symlink"
 func FileSymlink(file string) error {
 	return fmt.Errorf(
-		assets.TextDesc(assets.TextDescKeyErrValidateContextFileSymlink), file,
+		assets.TextDesc(embed.TextDescKeyErrValidateContextFileSymlink), file,
 	)
 }

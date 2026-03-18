@@ -7,6 +7,7 @@
 package resolve
 
 import (
+	"github.com/ActiveMemory/ctx/internal/config/embed"
 	"github.com/spf13/cobra"
 
 	"github.com/ActiveMemory/ctx/internal/assets"
@@ -17,7 +18,7 @@ import (
 // Returns:
 //   - *cobra.Command: Configured resolve subcommand
 func Cmd() *cobra.Command {
-	short, long := assets.CommandDesc(assets.CmdDescKeyPadResolve)
+	short, long := assets.CommandDesc(embed.CmdDescKeyPadResolve)
 	return &cobra.Command{
 		Use:   "resolve",
 		Short: short,

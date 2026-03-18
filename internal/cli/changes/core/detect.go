@@ -16,6 +16,7 @@ import (
 
 	"github.com/ActiveMemory/ctx/internal/assets"
 	"github.com/ActiveMemory/ctx/internal/config/dir"
+	"github.com/ActiveMemory/ctx/internal/config/embed"
 	"github.com/ActiveMemory/ctx/internal/config/load_gate"
 	time2 "github.com/ActiveMemory/ctx/internal/config/time"
 	"github.com/ActiveMemory/ctx/internal/config/token"
@@ -55,7 +56,7 @@ func DetectReferenceTime(since string) (time.Time, string, error) {
 
 	// Fallback: 24h ago.
 	t := time.Now().Add(-24 * time.Hour)
-	return t, assets.TextDesc(assets.TextDescKeyChangesFallbackLabel), nil
+	return t, assets.TextDesc(embed.TextDescKeyChangesFallbackLabel), nil
 }
 
 // ParseSinceFlag parses a duration (like "24h") or date (like "2026-03-01").
@@ -76,7 +77,7 @@ func ParseSinceFlag(since string) (time.Time, string, error) {
 
 	// Try date.
 	if t, err := time.Parse(time2.DateFormat, since); err == nil {
-		return t, assets.TextDesc(assets.TextDescKeyChangesSincePrefix) + since, nil
+		return t, assets.TextDesc(embed.TextDescKeyChangesSincePrefix) + since, nil
 	}
 
 	// Try RFC3339.
@@ -192,19 +193,19 @@ func ExtractTimestamp(jsonLine string) (time.Time, bool) {
 // Returns:
 //   - string: Human-readable time description
 func HumanAgo(d time.Duration) string {
-	ago := assets.TextDesc(assets.TextDescKeyTimeAgo)
+	ago := assets.TextDesc(embed.TextDescKeyTimeAgo)
 	switch {
 	case d < time.Minute:
-		return assets.TextDesc(assets.TextDescKeyTimeJustNow)
+		return assets.TextDesc(embed.TextDescKeyTimeJustNow)
 	case d < time.Hour:
 		m := int(d.Minutes())
-		return Pluralize(m, assets.TextDesc(assets.TextDescKeyTimeMinute)) + ago
+		return Pluralize(m, assets.TextDesc(embed.TextDescKeyTimeMinute)) + ago
 	case d < 24*time.Hour:
 		h := int(d.Hours())
-		return Pluralize(h, assets.TextDesc(assets.TextDescKeyTimeHour)) + ago
+		return Pluralize(h, assets.TextDesc(embed.TextDescKeyTimeHour)) + ago
 	default:
 		days := int(d.Hours() / 24)
-		return Pluralize(days, assets.TextDesc(assets.TextDescKeyTimeDay)) + ago
+		return Pluralize(days, assets.TextDesc(embed.TextDescKeyTimeDay)) + ago
 	}
 }
 

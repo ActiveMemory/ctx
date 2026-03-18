@@ -7,6 +7,7 @@
 package system
 
 import (
+	"github.com/ActiveMemory/ctx/internal/config/embed"
 	"github.com/spf13/cobra"
 
 	"github.com/ActiveMemory/ctx/internal/assets"
@@ -59,7 +60,7 @@ import (
 // Returns:
 //   - *cobra.Command: Parent command with resource display, plumbing, and hook subcommands
 func Cmd() *cobra.Command {
-	short, long := assets.CommandDesc(assets.CmdDescKeySystem)
+	short, long := assets.CommandDesc(embed.CmdDescKeySystem)
 
 	cmd := &cobra.Command{
 		Use:   "system",

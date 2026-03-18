@@ -7,6 +7,7 @@
 package unpublish
 
 import (
+	"github.com/ActiveMemory/ctx/internal/config/embed"
 	"github.com/spf13/cobra"
 
 	"github.com/ActiveMemory/ctx/internal/assets"
@@ -17,7 +18,7 @@ import (
 // Returns:
 //   - *cobra.Command: command for removing published context from MEMORY.md.
 func Cmd() *cobra.Command {
-	short, long := assets.CommandDesc(assets.CmdDescKeyMemoryUnpublish)
+	short, long := assets.CommandDesc(embed.CmdDescKeyMemoryUnpublish)
 	return &cobra.Command{
 		Use:   "unpublish",
 		Short: short,

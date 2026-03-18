@@ -10,6 +10,7 @@ import (
 	"os"
 	"path/filepath"
 
+	"github.com/ActiveMemory/ctx/internal/config/embed"
 	"github.com/ActiveMemory/ctx/internal/config/nudge"
 	"github.com/spf13/cobra"
 
@@ -58,7 +59,7 @@ func Run(cmd *cobra.Command, stdin *os.File) error {
 	// Threshold reached — reset and nudge.
 	core.WriteCounter(counterPath, 0)
 
-	fallback := assets.TextDesc(assets.TextDescKeyCheckTaskCompletionFallback)
+	fallback := assets.TextDesc(embed.TextDescKeyCheckTaskCompletionFallback)
 	msg := core.LoadMessage(
 		hook.CheckTaskCompletion, hook.VariantNudge, nil, fallback,
 	)
@@ -67,7 +68,7 @@ func Run(cmd *cobra.Command, stdin *os.File) error {
 	}
 	core.PrintHookContext(cmd, hook.EventPostToolUse, msg)
 
-	nudgeMsg := assets.TextDesc(assets.TextDescKeyCheckTaskCompletionNudgeMessage)
+	nudgeMsg := assets.TextDesc(embed.TextDescKeyCheckTaskCompletionNudgeMessage)
 	ref := notify.NewTemplateRef(
 		hook.CheckTaskCompletion, hook.VariantNudge, nil,
 	)

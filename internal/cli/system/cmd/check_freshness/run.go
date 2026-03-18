@@ -13,6 +13,7 @@ import (
 	"strings"
 	"time"
 
+	"github.com/ActiveMemory/ctx/internal/config/embed"
 	"github.com/spf13/cobra"
 
 	"github.com/ActiveMemory/ctx/internal/assets"
@@ -99,13 +100,13 @@ func Run(cmd *cobra.Command, stdin *os.File) error {
 	}
 
 	cmd.Println(core.NudgeBox(
-		assets.TextDesc(assets.TextDescKeyFreshnessRelayPrefix),
-		assets.TextDesc(assets.TextDescKeyFreshnessBoxTitle),
+		assets.TextDesc(embed.TextDescKeyFreshnessRelayPrefix),
+		assets.TextDesc(embed.TextDescKeyFreshnessBoxTitle),
 		content))
 
 	ref := notify.NewTemplateRef(hook.CheckFreshness, hook.VariantStale, vars)
 	core.NudgeAndRelay(hook.CheckFreshness+": "+
-		assets.TextDesc(assets.TextDescKeyFreshnessRelayMessage),
+		assets.TextDesc(embed.TextDescKeyFreshnessRelayMessage),
 		input.SessionID, ref,
 	)
 
@@ -149,22 +150,22 @@ func formatStaleEntries(entries []staleEntry) string {
 	for _, url := range urlOrder {
 		group := byURL[url]
 		for _, e := range group {
-			fmt.Fprintf(&b, assets.TextDesc(assets.TextDescKeyFreshnessFileEntry),
+			fmt.Fprintf(&b, assets.TextDesc(embed.TextDescKeyFreshnessFileEntry),
 				e.path, e.days, e.desc)
 			b.WriteString(token.NewlineLF)
 		}
-		fmt.Fprintf(&b, assets.TextDesc(assets.TextDescKeyFreshnessReviewURL), url)
+		fmt.Fprintf(&b, assets.TextDesc(embed.TextDescKeyFreshnessReviewURL), url)
 		b.WriteString(token.NewlineLF)
 	}
 
 	// Entries without review URLs
 	for _, e := range noURL {
-		fmt.Fprintf(&b, assets.TextDesc(assets.TextDescKeyFreshnessFileEntry),
+		fmt.Fprintf(&b, assets.TextDesc(embed.TextDescKeyFreshnessFileEntry),
 			e.path, e.days, e.desc)
 		b.WriteString(token.NewlineLF)
 	}
 
-	b.WriteString(assets.TextDesc(assets.TextDescKeyFreshnessTouchHint))
+	b.WriteString(assets.TextDesc(embed.TextDescKeyFreshnessTouchHint))
 
 	return b.String()
 }

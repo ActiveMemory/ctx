@@ -15,6 +15,7 @@ import (
 	"github.com/ActiveMemory/ctx/internal/assets"
 	"github.com/ActiveMemory/ctx/internal/cli/initialize"
 	"github.com/ActiveMemory/ctx/internal/config/bootstrap"
+	"github.com/ActiveMemory/ctx/internal/config/embed"
 	"github.com/ActiveMemory/ctx/internal/config/file"
 	"github.com/ActiveMemory/ctx/internal/config/token"
 )
@@ -31,7 +32,7 @@ func PluginWarning() string {
 	if initialize.PluginEnabledGlobally() || initialize.PluginEnabledLocally() {
 		return ""
 	}
-	return assets.TextDesc(assets.TextDescKeyBootstrapPluginWarning)
+	return assets.TextDesc(embed.TextDescKeyBootstrapPluginWarning)
 }
 
 // ListContextFiles reads the given directory and returns sorted .md filenames.
@@ -74,7 +75,7 @@ func ListContextFiles(dir string) []string {
 //   - string: formatted, wrapped file list.
 func WrapFileList(files []string, maxWidth int, indent string) string {
 	if len(files) == 0 {
-		return indent + assets.TextDesc(assets.TextDescKeyBootstrapNone)
+		return indent + assets.TextDesc(embed.TextDescKeyBootstrapNone)
 	}
 
 	var lines []string

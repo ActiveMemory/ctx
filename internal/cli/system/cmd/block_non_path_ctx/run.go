@@ -10,6 +10,7 @@ import (
 	"encoding/json"
 	"os"
 
+	"github.com/ActiveMemory/ctx/internal/config/embed"
 	"github.com/ActiveMemory/ctx/internal/config/hook"
 	"github.com/ActiveMemory/ctx/internal/config/regex"
 	"github.com/ActiveMemory/ctx/internal/config/token"
@@ -46,19 +47,19 @@ func Run(cmd *cobra.Command, stdin *os.File) error {
 	if regex.CtxRelativeStart.MatchString(command) ||
 		regex.CtxRelativeSep.MatchString(command) {
 		variant = hook.VariantDotSlash
-		fallback = assets.TextDesc(assets.TextDescKeyBlockDotSlash)
+		fallback = assets.TextDesc(embed.TextDescKeyBlockDotSlash)
 	}
 
 	if regex.CtxGoRun.MatchString(command) {
 		variant = hook.VariantGoRun
-		fallback = assets.TextDesc(assets.TextDescKeyBlockGoRun)
+		fallback = assets.TextDesc(embed.TextDescKeyBlockGoRun)
 	}
 
 	if variant == "" && (regex.CtxAbsoluteStart.MatchString(command) ||
 		regex.AbsoluteSep.MatchString(command)) {
 		if !regex.CtxTestException.MatchString(command) {
 			variant = hook.VariantAbsolutePath
-			fallback = assets.TextDesc(assets.TextDescKeyBlockAbsolutePath)
+			fallback = assets.TextDesc(embed.TextDescKeyBlockAbsolutePath)
 		}
 	}
 
@@ -71,13 +72,13 @@ func Run(cmd *cobra.Command, stdin *os.File) error {
 		resp := core.BlockResponse{
 			Decision: hook.DecisionBlock,
 			Reason: reason + token.NewlineLF + token.NewlineLF +
-				assets.TextDesc(assets.TextDescKeyBlockConstitutionSuffix),
+				assets.TextDesc(embed.TextDescKeyBlockConstitutionSuffix),
 		}
 		data, _ := json.Marshal(resp)
 		cmd.Println(string(data))
 		blockRef := notify.NewTemplateRef(hook.BlockNonPathCtx, variant, nil)
 		core.Relay(hook.BlockNonPathCtx+": "+
-			assets.TextDesc(assets.TextDescKeyBlockNonPathRelayMessage),
+			assets.TextDesc(embed.TextDescKeyBlockNonPathRelayMessage),
 			input.SessionID, blockRef,
 		)
 	}

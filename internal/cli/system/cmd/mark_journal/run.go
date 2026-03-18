@@ -10,6 +10,7 @@ import (
 	"fmt"
 	"strings"
 
+	"github.com/ActiveMemory/ctx/internal/config/embed"
 	"github.com/ActiveMemory/ctx/internal/config/journal"
 	ctxcontext "github.com/ActiveMemory/ctx/internal/context/resolve"
 	ctxerr "github.com/ActiveMemory/ctx/internal/err/journal"
@@ -60,7 +61,7 @@ func runMarkJournal(cmd *cobra.Command, filename, stage string) error {
 		if val == "" {
 			return ctxerr.StageNotSet(filename, stage)
 		}
-		cmd.Println(fmt.Sprintf(assets.TextDesc(assets.TextDescKeyMarkJournalChecked), filename, stage, val))
+		cmd.Println(fmt.Sprintf(assets.TextDesc(embed.TextDescKeyMarkJournalChecked), filename, stage, val))
 		return nil
 	}
 
@@ -72,6 +73,6 @@ func runMarkJournal(cmd *cobra.Command, filename, stage string) error {
 		return ctxerr.SaveStateFailed(saveErr)
 	}
 
-	cmd.Println(fmt.Sprintf(assets.TextDesc(assets.TextDescKeyMarkJournalMarked), filename, stage))
+	cmd.Println(fmt.Sprintf(assets.TextDesc(embed.TextDescKeyMarkJournalMarked), filename, stage))
 	return nil
 }

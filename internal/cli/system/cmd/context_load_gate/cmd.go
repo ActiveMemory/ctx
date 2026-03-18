@@ -9,6 +9,7 @@ package context_load_gate
 import (
 	"os"
 
+	"github.com/ActiveMemory/ctx/internal/config/embed"
 	"github.com/spf13/cobra"
 
 	"github.com/ActiveMemory/ctx/internal/assets"
@@ -19,7 +20,7 @@ import (
 // Returns:
 //   - *cobra.Command: Configured context-load-gate subcommand
 func Cmd() *cobra.Command {
-	short, long := assets.CommandDesc(assets.CmdDescKeySystemContextLoadGate)
+	short, long := assets.CommandDesc(embed.CmdDescKeySystemContextLoadGate)
 
 	return &cobra.Command{
 		Use:    "context-load-gate",

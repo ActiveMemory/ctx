@@ -9,6 +9,7 @@ package watch
 import (
 	"fmt"
 
+	"github.com/ActiveMemory/ctx/internal/config/embed"
 	"github.com/spf13/cobra"
 
 	"github.com/ActiveMemory/ctx/internal/assets"
@@ -22,7 +23,7 @@ func Watching(cmd *cobra.Command) {
 	if cmd == nil {
 		return
 	}
-	cmd.Println(assets.TextDesc(assets.TextDescKeyWatchWatching))
+	cmd.Println(assets.TextDesc(embed.TextDescKeyWatchWatching))
 }
 
 // DryRun prints the dry-run notice.
@@ -33,7 +34,7 @@ func DryRun(cmd *cobra.Command) {
 	if cmd == nil {
 		return
 	}
-	cmd.Println(assets.TextDesc(assets.TextDescKeyWatchDryRun))
+	cmd.Println(assets.TextDesc(embed.TextDescKeyWatchDryRun))
 }
 
 // StopHint prints the Ctrl+C stop hint.
@@ -44,7 +45,7 @@ func StopHint(cmd *cobra.Command) {
 	if cmd == nil {
 		return
 	}
-	cmd.Println(assets.TextDesc(assets.TextDescKeyWatchStopHint))
+	cmd.Println(assets.TextDesc(embed.TextDescKeyWatchStopHint))
 }
 
 // CloseLogError prints a log file close error.
@@ -57,7 +58,7 @@ func CloseLogError(cmd *cobra.Command, err error) {
 		return
 	}
 	cmd.Println(
-		fmt.Sprintf(assets.TextDesc(assets.TextDescKeyWatchCloseLogError), err),
+		fmt.Sprintf(assets.TextDesc(embed.TextDescKeyWatchCloseLogError), err),
 	)
 }
 
@@ -73,7 +74,7 @@ func DryRunPreview(cmd *cobra.Command, updateType, content string) {
 	}
 	cmd.Println(
 		fmt.Sprintf(
-			assets.TextDesc(assets.TextDescKeyWatchDryRunPreview),
+			assets.TextDesc(embed.TextDescKeyWatchDryRunPreview),
 			updateType, content,
 		),
 	)
@@ -91,7 +92,7 @@ func ApplyFailed(cmd *cobra.Command, updateType string, err error) {
 	}
 	cmd.Println(
 		fmt.Sprintf(
-			assets.TextDesc(assets.TextDescKeyWatchApplyFailed), updateType, err,
+			assets.TextDesc(embed.TextDescKeyWatchApplyFailed), updateType, err,
 		),
 	)
 }
@@ -107,6 +108,6 @@ func ApplySuccess(cmd *cobra.Command, updateType, content string) {
 		return
 	}
 	cmd.Println(fmt.Sprintf(
-		assets.TextDesc(assets.TextDescKeyWatchApplySuccess), updateType, content),
+		assets.TextDesc(embed.TextDescKeyWatchApplySuccess), updateType, content),
 	)
 }

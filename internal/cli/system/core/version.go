@@ -12,6 +12,7 @@ import (
 	"strings"
 	"time"
 
+	"github.com/ActiveMemory/ctx/internal/config/embed"
 	"github.com/ActiveMemory/ctx/internal/config/hook"
 	"github.com/ActiveMemory/ctx/internal/config/token"
 	"github.com/ActiveMemory/ctx/internal/config/tpl"
@@ -68,7 +69,7 @@ func CheckKeyAge(cmd *cobra.Command, sessionID string) {
 	}
 
 	keyFallback := fmt.Sprintf(
-		assets.TextDesc(assets.TextDescKeyCheckVersionKeyFallback), ageDays,
+		assets.TextDesc(embed.TextDescKeyCheckVersionKeyFallback), ageDays,
 	)
 	keyContent := LoadMessage(hook.CheckVersion, hook.VariantKeyRotation,
 		map[string]any{tpl.VarKeyAgeDays: ageDays}, keyFallback)
@@ -76,18 +77,18 @@ func CheckKeyAge(cmd *cobra.Command, sessionID string) {
 		return
 	}
 
-	boxTitle := assets.TextDesc(assets.TextDescKeyCheckVersionKeyBoxTitle)
-	relayPrefix := assets.TextDesc(assets.TextDescKeyCheckVersionKeyRelayPrefix)
+	boxTitle := assets.TextDesc(embed.TextDescKeyCheckVersionKeyBoxTitle)
+	relayPrefix := assets.TextDesc(embed.TextDescKeyCheckVersionKeyRelayPrefix)
 
 	cmd.Println(token.NewlineLF + NudgeBox(relayPrefix, boxTitle, keyContent))
 
 	keyRef := notify.NewTemplateRef(hook.CheckVersion, hook.VariantKeyRotation,
 		map[string]any{tpl.VarKeyAgeDays: ageDays})
 	keyNotifyMsg := fmt.Sprintf(
-		assets.TextDesc(assets.TextDescKeyRelayPrefixFormat),
+		assets.TextDesc(embed.TextDescKeyRelayPrefixFormat),
 		hook.CheckVersion,
 		fmt.Sprintf(
-			assets.TextDesc(assets.TextDescKeyCheckVersionKeyRelayFormat), ageDays,
+			assets.TextDesc(embed.TextDescKeyCheckVersionKeyRelayFormat), ageDays,
 		),
 	)
 	NudgeAndRelay(keyNotifyMsg, sessionID, keyRef)

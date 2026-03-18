@@ -7,6 +7,7 @@
 package export
 
 import (
+	"github.com/ActiveMemory/ctx/internal/config/embed"
 	"github.com/spf13/cobra"
 
 	"github.com/ActiveMemory/ctx/internal/assets"
@@ -20,7 +21,7 @@ import (
 func Cmd() *cobra.Command {
 	var opts core.ExportOpts
 
-	short, long := assets.CommandDesc(assets.CmdDescKeyRecallExport)
+	short, long := assets.CommandDesc(embed.CmdDescKeyRecallExport)
 
 	cmd := &cobra.Command{
 		Use:   "export [session-id]",
@@ -32,37 +33,37 @@ func Cmd() *cobra.Command {
 	}
 
 	cmd.Flags().BoolVar(
-		&opts.All, "all", false, assets.FlagDesc(assets.FlagDescKeyRecallExportAll),
+		&opts.All, "all", false, assets.FlagDesc(embed.FlagDescKeyRecallExportAll),
 	)
 	cmd.Flags().BoolVar(
 		&opts.AllProjects, "all-projects", false,
-		assets.FlagDesc(assets.FlagDescKeyRecallExportAllProjects),
+		assets.FlagDesc(embed.FlagDescKeyRecallExportAllProjects),
 	)
 	cmd.Flags().BoolVar(
 		&opts.Regenerate,
 		"regenerate", false,
-		assets.FlagDesc(assets.FlagDescKeyRecallExportRegenerate),
+		assets.FlagDesc(embed.FlagDescKeyRecallExportRegenerate),
 	)
 	cmd.Flags().BoolVar(
 		&opts.KeepFrontmatter,
 		"keep-frontmatter", true,
-		assets.FlagDesc(assets.FlagDescKeyRecallExportKeepFrontmatter),
+		assets.FlagDesc(embed.FlagDescKeyRecallExportKeepFrontmatter),
 	)
 
 	cmd.Flags().BoolVarP(
 		&opts.Yes,
 		"yes", "y", false,
-		assets.FlagDesc(assets.FlagDescKeyRecallExportYes),
+		assets.FlagDesc(embed.FlagDescKeyRecallExportYes),
 	)
 	cmd.Flags().BoolVar(
 		&opts.DryRun,
 		"dry-run", false,
-		assets.FlagDesc(assets.FlagDescKeyRecallExportDryRun),
+		assets.FlagDesc(embed.FlagDescKeyRecallExportDryRun),
 	)
 
 	// Deprecated: --skip-existing is now the default behavior for --all.
 	var skipExisting bool
-	cmd.Flags().BoolVar(&skipExisting, "skip-existing", false, assets.FlagDesc(assets.FlagDescKeyRecallExportSkipExisting))
+	cmd.Flags().BoolVar(&skipExisting, "skip-existing", false, assets.FlagDesc(embed.FlagDescKeyRecallExportSkipExisting))
 	_ = cmd.Flags().MarkDeprecated("skip-existing", "this is now the default behavior for --all")
 
 	return cmd

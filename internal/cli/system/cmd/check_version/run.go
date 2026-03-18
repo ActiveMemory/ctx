@@ -11,6 +11,7 @@ import (
 	"os"
 	"path/filepath"
 
+	"github.com/ActiveMemory/ctx/internal/config/embed"
 	"github.com/ActiveMemory/ctx/internal/config/hook"
 	"github.com/ActiveMemory/ctx/internal/config/tpl"
 	"github.com/ActiveMemory/ctx/internal/config/version"
@@ -78,7 +79,7 @@ func Run(cmd *cobra.Command, stdin *os.File) error {
 
 	// Version mismatch — emit warning
 	fallback := fmt.Sprintf(assets.TextDesc(
-		assets.TextDescKeyCheckVersionFallback), binaryVer, pluginVer,
+		embed.TextDescKeyCheckVersionFallback), binaryVer, pluginVer,
 	)
 	content := core.LoadMessage(hook.CheckVersion, hook.VariantMismatch,
 		map[string]any{
@@ -90,8 +91,8 @@ func Run(cmd *cobra.Command, stdin *os.File) error {
 		return nil
 	}
 
-	boxTitle := assets.TextDesc(assets.TextDescKeyCheckVersionBoxTitle)
-	relayPrefix := assets.TextDesc(assets.TextDescKeyCheckVersionRelayPrefix)
+	boxTitle := assets.TextDesc(embed.TextDescKeyCheckVersionBoxTitle)
+	relayPrefix := assets.TextDesc(embed.TextDescKeyCheckVersionRelayPrefix)
 
 	cmd.Println(core.NudgeBox(relayPrefix, boxTitle, content))
 
@@ -103,7 +104,7 @@ func Run(cmd *cobra.Command, stdin *os.File) error {
 	versionMsg := hook.CheckVersion + ": " +
 		fmt.Sprintf(
 			assets.TextDesc(
-				assets.TextDescKeyCheckVersionMismatchRelayFormat,
+				embed.TextDescKeyCheckVersionMismatchRelayFormat,
 			), binaryVer, pluginVer,
 		)
 	core.NudgeAndRelay(versionMsg, input.SessionID, ref)

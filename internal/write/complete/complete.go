@@ -10,6 +10,7 @@ import (
 	"fmt"
 
 	"github.com/ActiveMemory/ctx/internal/assets"
+	"github.com/ActiveMemory/ctx/internal/config/embed"
 	"github.com/spf13/cobra"
 )
 
@@ -19,5 +20,5 @@ import (
 //   - cmd: Cobra command for output
 //   - taskText: The completed task description
 func InfoCompletedTask(cmd *cobra.Command, taskText string) {
-	cmd.Println(fmt.Sprintf(assets.TextDesc(assets.TextDescKeyWriteCompletedTask), taskText))
+	cmd.Println(fmt.Sprintf(assets.TextDesc(embed.TextDescKeyWriteCompletedTask), taskText))
 }

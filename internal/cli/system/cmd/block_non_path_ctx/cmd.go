@@ -9,6 +9,7 @@ package block_non_path_ctx
 import (
 	"os"
 
+	"github.com/ActiveMemory/ctx/internal/config/embed"
 	"github.com/spf13/cobra"
 
 	"github.com/ActiveMemory/ctx/internal/assets"
@@ -19,7 +20,7 @@ import (
 // Returns:
 //   - *cobra.Command: Configured block-non-path-ctx subcommand
 func Cmd() *cobra.Command {
-	short, long := assets.CommandDesc(assets.CmdDescKeySystemBlockNonPathCtx)
+	short, long := assets.CommandDesc(embed.CmdDescKeySystemBlockNonPathCtx)
 
 	return &cobra.Command{
 		Use:    "block-non-path-ctx",

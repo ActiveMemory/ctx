@@ -10,6 +10,7 @@ import (
 	"fmt"
 
 	"github.com/ActiveMemory/ctx/internal/assets"
+	"github.com/ActiveMemory/ctx/internal/config/embed"
 	"github.com/spf13/cobra"
 )
 
@@ -25,13 +26,13 @@ func SyncDryRun(cmd *cobra.Command, sourcePath, mirrorPath string, hasDrift bool
 	if cmd == nil {
 		return
 	}
-	cmd.Println(assets.TextDesc(assets.TextDescKeyWriteDryRun))
-	cmd.Println(fmt.Sprintf(assets.TextDesc(assets.TextDescKeyWriteSource), sourcePath))
-	cmd.Println(fmt.Sprintf(assets.TextDesc(assets.TextDescKeyWriteMirror), mirrorPath))
+	cmd.Println(assets.TextDesc(embed.TextDescKeyWriteDryRun))
+	cmd.Println(fmt.Sprintf(assets.TextDesc(embed.TextDescKeyWriteSource), sourcePath))
+	cmd.Println(fmt.Sprintf(assets.TextDesc(embed.TextDescKeyWriteMirror), mirrorPath))
 	if hasDrift {
-		cmd.Println(assets.TextDesc(assets.TextDescKeyWriteStatusDrift))
+		cmd.Println(assets.TextDesc(embed.TextDescKeyWriteStatusDrift))
 	} else {
-		cmd.Println(assets.TextDesc(assets.TextDescKeyWriteStatusNoDrift))
+		cmd.Println(assets.TextDesc(embed.TextDescKeyWriteStatusNoDrift))
 	}
 }
 
@@ -55,20 +56,20 @@ func SyncResult(
 		return
 	}
 	if archivedTo != "" {
-		cmd.Println(fmt.Sprintf(assets.TextDesc(assets.TextDescKeyWriteArchived), archivedTo))
+		cmd.Println(fmt.Sprintf(assets.TextDesc(embed.TextDescKeyWriteArchived), archivedTo))
 	}
-	cmd.Println(fmt.Sprintf(assets.TextDesc(assets.TextDescKeyWriteSynced), sourceLabel, mirrorPath))
-	cmd.Println(fmt.Sprintf(assets.TextDesc(assets.TextDescKeyWriteSource), sourcePath))
+	cmd.Println(fmt.Sprintf(assets.TextDesc(embed.TextDescKeyWriteSynced), sourceLabel, mirrorPath))
+	cmd.Println(fmt.Sprintf(assets.TextDesc(embed.TextDescKeyWriteSource), sourcePath))
 
-	line := assets.TextDesc(assets.TextDescKeyWriteLines)
+	line := assets.TextDesc(embed.TextDescKeyWriteLines)
 	if mirrorLines > 0 {
-		line += assets.TextDesc(assets.TextDescKeyWriteLinesPrevious)
+		line += assets.TextDesc(embed.TextDescKeyWriteLinesPrevious)
 		cmd.Println(fmt.Sprintf(line, sourceLines, mirrorLines))
 	} else {
 		cmd.Println(fmt.Sprintf(line, sourceLines))
 	}
 	if sourceLines > mirrorLines {
-		cmd.Println(fmt.Sprintf(assets.TextDesc(assets.TextDescKeyWriteNewContent), sourceLines-mirrorLines))
+		cmd.Println(fmt.Sprintf(assets.TextDesc(embed.TextDescKeyWriteNewContent), sourceLines-mirrorLines))
 	}
 }
 

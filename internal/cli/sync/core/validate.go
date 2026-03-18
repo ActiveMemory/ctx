@@ -15,6 +15,7 @@ import (
 	"github.com/ActiveMemory/ctx/internal/assets"
 	ctxCfg "github.com/ActiveMemory/ctx/internal/config/ctx"
 	"github.com/ActiveMemory/ctx/internal/config/dep"
+	"github.com/ActiveMemory/ctx/internal/config/embed"
 	"github.com/ActiveMemory/ctx/internal/entity"
 )
 
@@ -55,11 +56,11 @@ func CheckPackageFiles(ctx *entity.Context) []Action {
 					Type: "DEPS",
 					File: ctxCfg.Architecture,
 					Description: fmt.Sprintf(
-						assets.TextDesc(assets.TextDescKeySyncDepsDescription),
+						assets.TextDesc(embed.TextDescKeySyncDepsDescription),
 						f, desc,
 					),
 					Suggestion: fmt.Sprintf(
-						assets.TextDesc(assets.TextDescKeySyncDepsSuggestion),
+						assets.TextDesc(embed.TextDescKeySyncDepsSuggestion),
 						ctxCfg.Architecture, ctxCfg.Dependency,
 					),
 				})
@@ -100,11 +101,11 @@ func CheckConfigFiles(ctx *entity.Context) []Action {
 					Type: "CONFIG",
 					File: ctxCfg.Convention,
 					Description: fmt.Sprintf(
-						assets.TextDesc(assets.TextDescKeySyncConfigDescription),
+						assets.TextDesc(embed.TextDescKeySyncConfigDescription),
 						matches[0], cfg.Topic,
 					),
 					Suggestion: fmt.Sprintf(
-						assets.TextDesc(assets.TextDescKeySyncConfigSuggestion),
+						assets.TextDesc(embed.TextDescKeySyncConfigSuggestion),
 						cfg.Topic, ctxCfg.Convention,
 					),
 				})
@@ -175,11 +176,11 @@ func CheckNewDirectories(ctx *entity.Context) []Action {
 				Type: "NEW_DIR",
 				File: ctxCfg.Architecture,
 				Description: fmt.Sprintf(
-					assets.TextDesc(assets.TextDescKeySyncDirDescription),
+					assets.TextDesc(embed.TextDescKeySyncDirDescription),
 					name,
 				),
 				Suggestion: fmt.Sprintf(
-					assets.TextDesc(assets.TextDescKeySyncDirSuggestion),
+					assets.TextDesc(embed.TextDescKeySyncDirSuggestion),
 					name, ctxCfg.Architecture,
 				),
 			})

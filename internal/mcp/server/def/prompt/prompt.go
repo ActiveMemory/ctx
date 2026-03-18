@@ -9,6 +9,7 @@ package prompt
 import (
 	"github.com/ActiveMemory/ctx/internal/assets"
 	"github.com/ActiveMemory/ctx/internal/config/cli"
+	"github.com/ActiveMemory/ctx/internal/config/embed"
 	"github.com/ActiveMemory/ctx/internal/config/mcp/field"
 	promptCfg "github.com/ActiveMemory/ctx/internal/config/mcp/prompt"
 	"github.com/ActiveMemory/ctx/internal/mcp/proto"
@@ -19,31 +20,31 @@ var Defs = []proto.Prompt{
 	{
 		Name: promptCfg.SessionStart,
 		Description: assets.TextDesc(
-			assets.TextDescKeyMCPPromptSessionStartDesc),
+			embed.TextDescKeyMCPPromptSessionStartDesc),
 	},
 	{
 		Name: promptCfg.AddDecision,
 		Description: assets.TextDesc(
-			assets.TextDescKeyMCPPromptAddDecisionDesc),
+			embed.TextDescKeyMCPPromptAddDecisionDesc),
 		Arguments: []proto.PromptArgument{
 			{
 				Name:        field.Content,
-				Description: assets.TextDesc(assets.TextDescKeyMCPPromptArgDecisionTitle),
+				Description: assets.TextDesc(embed.TextDescKeyMCPPromptArgDecisionTitle),
 				Required:    true,
 			},
 			{
 				Name:        cli.AttrContext,
-				Description: assets.TextDesc(assets.TextDescKeyMCPPromptArgDecisionCtx),
+				Description: assets.TextDesc(embed.TextDescKeyMCPPromptArgDecisionCtx),
 				Required:    true,
 			},
 			{
 				Name:        cli.AttrRationale,
-				Description: assets.TextDesc(assets.TextDescKeyMCPPromptArgDecisionRat),
+				Description: assets.TextDesc(embed.TextDescKeyMCPPromptArgDecisionRat),
 				Required:    true,
 			},
 			{
 				Name:        cli.AttrConsequence,
-				Description: assets.TextDesc(assets.TextDescKeyMCPPromptArgDecisionConseq),
+				Description: assets.TextDesc(embed.TextDescKeyMCPPromptArgDecisionConseq),
 				Required:    true,
 			},
 		},
@@ -51,26 +52,26 @@ var Defs = []proto.Prompt{
 	{
 		Name: promptCfg.AddLearning,
 		Description: assets.TextDesc(
-			assets.TextDescKeyMCPPromptAddLearningDesc),
+			embed.TextDescKeyMCPPromptAddLearningDesc),
 		Arguments: []proto.PromptArgument{
 			{
 				Name:        field.Content,
-				Description: assets.TextDesc(assets.TextDescKeyMCPPromptArgLearningTitle),
+				Description: assets.TextDesc(embed.TextDescKeyMCPPromptArgLearningTitle),
 				Required:    true,
 			},
 			{
 				Name:        cli.AttrContext,
-				Description: assets.TextDesc(assets.TextDescKeyMCPPromptArgLearningCtx),
+				Description: assets.TextDesc(embed.TextDescKeyMCPPromptArgLearningCtx),
 				Required:    true,
 			},
 			{
 				Name:        cli.AttrLesson,
-				Description: assets.TextDesc(assets.TextDescKeyMCPPromptArgLearningLesson),
+				Description: assets.TextDesc(embed.TextDescKeyMCPPromptArgLearningLesson),
 				Required:    true,
 			},
 			{
 				Name:        cli.AttrApplication,
-				Description: assets.TextDesc(assets.TextDescKeyMCPPromptArgLearningApp),
+				Description: assets.TextDesc(embed.TextDescKeyMCPPromptArgLearningApp),
 				Required:    true,
 			},
 		},
@@ -78,11 +79,11 @@ var Defs = []proto.Prompt{
 	{
 		Name: promptCfg.Reflect,
 		Description: assets.TextDesc(
-			assets.TextDescKeyMCPPromptReflectDesc),
+			embed.TextDescKeyMCPPromptReflectDesc),
 	},
 	{
 		Name: promptCfg.Checkpoint,
 		Description: assets.TextDesc(
-			assets.TextDescKeyMCPPromptCheckpointDesc),
+			embed.TextDescKeyMCPPromptCheckpointDesc),
 	},
 }

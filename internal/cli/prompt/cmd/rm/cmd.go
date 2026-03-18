@@ -7,6 +7,7 @@
 package rm
 
 import (
+	"github.com/ActiveMemory/ctx/internal/config/embed"
 	"github.com/spf13/cobra"
 
 	"github.com/ActiveMemory/ctx/internal/assets"
@@ -17,7 +18,7 @@ import (
 // Returns:
 //   - *cobra.Command: Configured rm subcommand
 func Cmd() *cobra.Command {
-	short, _ := assets.CommandDesc(assets.CmdDescKeyPromptRm)
+	short, _ := assets.CommandDesc(embed.CmdDescKeyPromptRm)
 
 	return &cobra.Command{
 		Use:   "rm NAME",

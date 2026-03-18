@@ -8,6 +8,7 @@ package root
 
 import (
 	"github.com/ActiveMemory/ctx/internal/config/cli"
+	"github.com/ActiveMemory/ctx/internal/config/embed"
 	"github.com/spf13/cobra"
 
 	"github.com/ActiveMemory/ctx/internal/assets"
@@ -18,7 +19,7 @@ import (
 // Returns:
 //   - *cobra.Command: Configured why command with document aliases
 func Cmd() *cobra.Command {
-	short, long := assets.CommandDesc(assets.CmdDescKeyWhy)
+	short, long := assets.CommandDesc(embed.CmdDescKeyWhy)
 
 	cmd := &cobra.Command{
 		Use:         "why [DOCUMENT]",

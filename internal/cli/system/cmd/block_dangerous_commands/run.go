@@ -10,6 +10,7 @@ import (
 	"encoding/json"
 	"os"
 
+	"github.com/ActiveMemory/ctx/internal/config/embed"
 	"github.com/ActiveMemory/ctx/internal/config/hook"
 	"github.com/ActiveMemory/ctx/internal/config/regex"
 	"github.com/spf13/cobra"
@@ -43,22 +44,22 @@ func Run(cmd *cobra.Command, stdin *os.File) error {
 
 	if regex.MidSudo.MatchString(command) {
 		variant = hook.VariantMidSudo
-		fallback = assets.TextDesc(assets.TextDescKeyBlockMidSudo)
+		fallback = assets.TextDesc(embed.TextDescKeyBlockMidSudo)
 	}
 
 	if variant == "" && regex.MidGitPush.MatchString(command) {
 		variant = hook.VariantMidGitPush
-		fallback = assets.TextDesc(assets.TextDescKeyBlockMidGitPush)
+		fallback = assets.TextDesc(embed.TextDescKeyBlockMidGitPush)
 	}
 
 	if variant == "" && regex.CpMvToBin.MatchString(command) {
 		variant = hook.VariantCpToBin
-		fallback = assets.TextDesc(assets.TextDescKeyBlockCpToBin)
+		fallback = assets.TextDesc(embed.TextDescKeyBlockCpToBin)
 	}
 
 	if variant == "" && regex.InstallToLocalBin.MatchString(command) {
 		variant = hook.VariantInstallToLocalBin
-		fallback = assets.TextDesc(assets.TextDescKeyBlockInstallToLocalBin)
+		fallback = assets.TextDesc(embed.TextDescKeyBlockInstallToLocalBin)
 	}
 
 	var reason string

@@ -8,7 +8,9 @@ package memory
 
 import (
 	"fmt"
+
 	"github.com/ActiveMemory/ctx/internal/assets"
+	"github.com/ActiveMemory/ctx/internal/config/embed"
 	"github.com/spf13/cobra"
 )
 
@@ -20,7 +22,7 @@ func NoChanges(cmd *cobra.Command) {
 	if cmd == nil {
 		return
 	}
-	cmd.Println(assets.TextDesc(assets.TextDescKeyWriteMemoryNoChanges))
+	cmd.Println(assets.TextDesc(embed.TextDescKeyWriteMemoryNoChanges))
 }
 
 // BridgeHeader prints the "Memory Bridge Status" heading.
@@ -31,7 +33,7 @@ func BridgeHeader(cmd *cobra.Command) {
 	if cmd == nil {
 		return
 	}
-	cmd.Println(assets.TextDesc(assets.TextDescKeyWriteMemoryBridgeHeader))
+	cmd.Println(assets.TextDesc(embed.TextDescKeyWriteMemoryBridgeHeader))
 }
 
 // SourceNotActive prints that auto memory is not active.
@@ -42,7 +44,7 @@ func SourceNotActive(cmd *cobra.Command) {
 	if cmd == nil {
 		return
 	}
-	cmd.Println(assets.TextDesc(assets.TextDescKeyWriteMemorySourceNotActive))
+	cmd.Println(assets.TextDesc(embed.TextDescKeyWriteMemorySourceNotActive))
 }
 
 // Source prints the source path.
@@ -54,7 +56,7 @@ func Source(cmd *cobra.Command, path string) {
 	if cmd == nil {
 		return
 	}
-	cmd.Println(fmt.Sprintf(assets.TextDesc(assets.TextDescKeyWriteMemorySource), path))
+	cmd.Println(fmt.Sprintf(assets.TextDesc(embed.TextDescKeyWriteMemorySource), path))
 }
 
 // Mirror prints the mirror relative path.
@@ -66,7 +68,7 @@ func Mirror(cmd *cobra.Command, relativePath string) {
 	if cmd == nil {
 		return
 	}
-	cmd.Println(fmt.Sprintf(assets.TextDesc(assets.TextDescKeyWriteMemoryMirror), relativePath))
+	cmd.Println(fmt.Sprintf(assets.TextDesc(embed.TextDescKeyWriteMemoryMirror), relativePath))
 }
 
 // LastSync prints the last sync timestamp with age.
@@ -79,7 +81,7 @@ func LastSync(cmd *cobra.Command, formatted, ago string) {
 	if cmd == nil {
 		return
 	}
-	cmd.Println(fmt.Sprintf(assets.TextDesc(assets.TextDescKeyWriteMemoryLastSync), formatted, ago))
+	cmd.Println(fmt.Sprintf(assets.TextDesc(embed.TextDescKeyWriteMemoryLastSync), formatted, ago))
 }
 
 // LastSyncNever prints that no sync has occurred.
@@ -90,7 +92,7 @@ func LastSyncNever(cmd *cobra.Command) {
 	if cmd == nil {
 		return
 	}
-	cmd.Println(assets.TextDesc(assets.TextDescKeyWriteMemoryLastSyncNever))
+	cmd.Println(assets.TextDesc(embed.TextDescKeyWriteMemoryLastSyncNever))
 }
 
 // SourceLines prints the MEMORY.md line count.
@@ -104,10 +106,10 @@ func SourceLines(cmd *cobra.Command, count int, drifted bool) {
 		return
 	}
 	if drifted {
-		cmd.Println(fmt.Sprintf(assets.TextDesc(assets.TextDescKeyWriteMemorySourceLinesDrift), count))
+		cmd.Println(fmt.Sprintf(assets.TextDesc(embed.TextDescKeyWriteMemorySourceLinesDrift), count))
 		return
 	}
-	cmd.Println(fmt.Sprintf(assets.TextDesc(assets.TextDescKeyWriteMemorySourceLines), count))
+	cmd.Println(fmt.Sprintf(assets.TextDesc(embed.TextDescKeyWriteMemorySourceLines), count))
 }
 
 // MirrorLines prints the mirror line count.
@@ -119,7 +121,7 @@ func MirrorLines(cmd *cobra.Command, count int) {
 	if cmd == nil {
 		return
 	}
-	cmd.Println(fmt.Sprintf(assets.TextDesc(assets.TextDescKeyWriteMemoryMirrorLines), count))
+	cmd.Println(fmt.Sprintf(assets.TextDesc(embed.TextDescKeyWriteMemoryMirrorLines), count))
 }
 
 // MirrorNotSynced prints that the mirror has not been synced yet.
@@ -130,7 +132,7 @@ func MirrorNotSynced(cmd *cobra.Command) {
 	if cmd == nil {
 		return
 	}
-	cmd.Println(assets.TextDesc(assets.TextDescKeyWriteMemoryMirrorNotSynced))
+	cmd.Println(assets.TextDesc(embed.TextDescKeyWriteMemoryMirrorNotSynced))
 }
 
 // DriftDetected prints that drift was detected.
@@ -141,7 +143,7 @@ func DriftDetected(cmd *cobra.Command) {
 	if cmd == nil {
 		return
 	}
-	cmd.Println(assets.TextDesc(assets.TextDescKeyWriteMemoryDriftDetected))
+	cmd.Println(assets.TextDesc(embed.TextDescKeyWriteMemoryDriftDetected))
 }
 
 // DriftNone prints that no drift was detected.
@@ -152,7 +154,7 @@ func DriftNone(cmd *cobra.Command) {
 	if cmd == nil {
 		return
 	}
-	cmd.Println(assets.TextDesc(assets.TextDescKeyWriteMemoryDriftNone))
+	cmd.Println(assets.TextDesc(embed.TextDescKeyWriteMemoryDriftNone))
 }
 
 // Archives prints the archive snapshot count.
@@ -165,5 +167,5 @@ func Archives(cmd *cobra.Command, count int, dir string) {
 	if cmd == nil {
 		return
 	}
-	cmd.Println(fmt.Sprintf(assets.TextDesc(assets.TextDescKeyWriteMemoryArchives), count, dir))
+	cmd.Println(fmt.Sprintf(assets.TextDesc(embed.TextDescKeyWriteMemoryArchives), count, dir))
 }

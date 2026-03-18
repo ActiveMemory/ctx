@@ -7,6 +7,7 @@
 package root
 
 import (
+	"github.com/ActiveMemory/ctx/internal/config/embed"
 	"github.com/spf13/cobra"
 
 	"github.com/ActiveMemory/ctx/internal/assets"
@@ -26,7 +27,7 @@ func Cmd() *cobra.Command {
 		verbose    bool
 	)
 
-	short, long := assets.CommandDesc(assets.CmdDescKeyStatus)
+	short, long := assets.CommandDesc(embed.CmdDescKeyStatus)
 
 	cmd := &cobra.Command{
 		Use:   "status",
@@ -39,11 +40,11 @@ func Cmd() *cobra.Command {
 
 	cmd.Flags().BoolVar(
 		&jsonOutput,
-		"json", false, assets.FlagDesc(assets.FlagDescKeyStatusJson),
+		"json", false, assets.FlagDesc(embed.FlagDescKeyStatusJson),
 	)
 	cmd.Flags().BoolVarP(
 		&verbose, "verbose", "v", false,
-		assets.FlagDesc(assets.FlagDescKeyStatusVerbose),
+		assets.FlagDesc(embed.FlagDescKeyStatusVerbose),
 	)
 
 	return cmd

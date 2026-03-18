@@ -12,6 +12,7 @@ import (
 	"strings"
 
 	"github.com/ActiveMemory/ctx/internal/config/ctx"
+	"github.com/ActiveMemory/ctx/internal/config/embed"
 	"github.com/ActiveMemory/ctx/internal/config/hook"
 	"github.com/ActiveMemory/ctx/internal/config/token"
 	"github.com/ActiveMemory/ctx/internal/config/tpl"
@@ -86,7 +87,7 @@ func ScanKnowledgeFiles(
 //   - string: formatted warning lines for template injection
 func FormatKnowledgeWarnings(findings []KnowledgeFinding) string {
 	var b strings.Builder
-	findingFmt := assets.TextDesc(assets.TextDescKeyCheckKnowledgeFindingFormat)
+	findingFmt := assets.TextDesc(embed.TextDescKeyCheckKnowledgeFindingFormat)
 	for _, f := range findings {
 		b.WriteString(fmt.Sprintf(findingFmt, f.File, f.Count, f.Unit, f.Threshold))
 	}
@@ -100,7 +101,7 @@ func FormatKnowledgeWarnings(findings []KnowledgeFinding) string {
 //   - sessionID: session identifier for notifications
 //   - fileWarnings: pre-formatted findings text
 func EmitKnowledgeWarning(cmd *cobra.Command, sessionID, fileWarnings string) {
-	fallback := fileWarnings + token.NewlineLF + assets.TextDesc(assets.TextDescKeyCheckKnowledgeFallback)
+	fallback := fileWarnings + token.NewlineLF + assets.TextDesc(embed.TextDescKeyCheckKnowledgeFallback)
 	content := LoadMessage(hook.CheckKnowledge, hook.VariantWarning,
 		map[string]any{tpl.VarFileWarnings: fileWarnings}, fallback)
 	if content == "" {
@@ -108,14 +109,14 @@ func EmitKnowledgeWarning(cmd *cobra.Command, sessionID, fileWarnings string) {
 	}
 
 	cmd.Println(NudgeBox(
-		assets.TextDesc(assets.TextDescKeyCheckKnowledgeRelayPrefix),
-		assets.TextDesc(assets.TextDescKeyCheckKnowledgeBoxTitle),
+		assets.TextDesc(embed.TextDescKeyCheckKnowledgeRelayPrefix),
+		assets.TextDesc(embed.TextDescKeyCheckKnowledgeBoxTitle),
 		content))
 
 	ref := notify.NewTemplateRef(hook.CheckKnowledge, hook.VariantWarning,
 		map[string]any{tpl.VarFileWarnings: fileWarnings})
-	notifyMsg := fmt.Sprintf(assets.TextDesc(assets.TextDescKeyRelayPrefixFormat),
-		hook.CheckKnowledge, assets.TextDesc(assets.TextDescKeyCheckKnowledgeRelayMessage))
+	notifyMsg := fmt.Sprintf(assets.TextDesc(embed.TextDescKeyRelayPrefixFormat),
+		hook.CheckKnowledge, assets.TextDesc(embed.TextDescKeyCheckKnowledgeRelayMessage))
 	NudgeAndRelay(notifyMsg, sessionID, ref)
 }
 

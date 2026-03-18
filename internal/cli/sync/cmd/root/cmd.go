@@ -7,6 +7,7 @@
 package root
 
 import (
+	"github.com/ActiveMemory/ctx/internal/config/embed"
 	"github.com/spf13/cobra"
 
 	"github.com/ActiveMemory/ctx/internal/assets"
@@ -26,7 +27,7 @@ import (
 func Cmd() *cobra.Command {
 	var dryRun bool
 
-	short, long := assets.CommandDesc(assets.CmdDescKeySync)
+	short, long := assets.CommandDesc(embed.CmdDescKeySync)
 
 	cmd := &cobra.Command{
 		Use:   "sync",
@@ -39,7 +40,7 @@ func Cmd() *cobra.Command {
 
 	cmd.Flags().BoolVar(
 		&dryRun,
-		"dry-run", false, assets.FlagDesc(assets.FlagDescKeySyncDryRun),
+		"dry-run", false, assets.FlagDesc(embed.FlagDescKeySyncDryRun),
 	)
 
 	return cmd

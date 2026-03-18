@@ -8,6 +8,7 @@ package catalog
 
 import (
 	"github.com/ActiveMemory/ctx/internal/assets"
+	"github.com/ActiveMemory/ctx/internal/config/embed"
 	"github.com/ActiveMemory/ctx/internal/config/mcp/mime"
 	"github.com/ActiveMemory/ctx/internal/config/mcp/resource"
 	"github.com/ActiveMemory/ctx/internal/config/mcp/server"
@@ -75,7 +76,7 @@ func ToList() proto.ResourceListResult {
 		URI:         AgentURI(),
 		Name:        resource.Agent,
 		MimeType:    mime.Markdown,
-		Description: assets.TextDesc(assets.TextDescKeyMCPResAgent),
+		Description: assets.TextDesc(embed.TextDescKeyMCPResAgent),
 	})
 
 	return proto.ResourceListResult{Resources: rr}

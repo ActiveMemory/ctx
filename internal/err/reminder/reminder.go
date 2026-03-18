@@ -11,6 +11,7 @@ import (
 	"fmt"
 
 	"github.com/ActiveMemory/ctx/internal/assets"
+	"github.com/ActiveMemory/ctx/internal/config/embed"
 )
 
 // Read wraps a failure to read the reminders file.
@@ -22,7 +23,7 @@ import (
 //   - error: "read reminders: <cause>"
 func Read(cause error) error {
 	return fmt.Errorf(
-		assets.TextDesc(assets.TextDescKeyErrReminderReadReminders), cause,
+		assets.TextDesc(embed.TextDescKeyErrReminderReadReminders), cause,
 	)
 }
 
@@ -35,7 +36,7 @@ func Read(cause error) error {
 //   - error: "parse reminders: <cause>"
 func Parse(cause error) error {
 	return fmt.Errorf(
-		assets.TextDesc(assets.TextDescKeyErrReminderParseReminders), cause,
+		assets.TextDesc(embed.TextDescKeyErrReminderParseReminders), cause,
 	)
 }
 
@@ -48,7 +49,7 @@ func Parse(cause error) error {
 //   - error: "invalid ID <value>"
 func InvalidID(value string) error {
 	return fmt.Errorf(
-		assets.TextDesc(assets.TextDescKeyErrReminderInvalidID), value,
+		assets.TextDesc(embed.TextDescKeyErrReminderInvalidID), value,
 	)
 }
 
@@ -61,7 +62,7 @@ func InvalidID(value string) error {
 //   - error: "no reminder with ID <id>"
 func NotFound(id int) error {
 	return fmt.Errorf(
-		assets.TextDesc(assets.TextDescKeyErrReminderNotFound), id,
+		assets.TextDesc(embed.TextDescKeyErrReminderNotFound), id,
 	)
 }
 
@@ -70,5 +71,5 @@ func NotFound(id int) error {
 // Returns:
 //   - error: "provide a reminder ID or use --all"
 func IDRequired() error {
-	return errors.New(assets.TextDesc(assets.TextDescKeyErrReminderIDRequired))
+	return errors.New(assets.TextDesc(embed.TextDescKeyErrReminderIDRequired))
 }

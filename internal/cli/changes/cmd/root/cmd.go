@@ -7,6 +7,7 @@
 package root
 
 import (
+	"github.com/ActiveMemory/ctx/internal/config/embed"
 	"github.com/spf13/cobra"
 
 	"github.com/ActiveMemory/ctx/internal/assets"
@@ -19,7 +20,7 @@ import (
 func Cmd() *cobra.Command {
 	var since string
 
-	short, long := assets.CommandDesc(assets.CmdDescKeyChanges)
+	short, long := assets.CommandDesc(embed.CmdDescKeyChanges)
 
 	cmd := &cobra.Command{
 		Use:   "changes",
@@ -30,7 +31,7 @@ func Cmd() *cobra.Command {
 		},
 	}
 
-	cmd.Flags().StringVar(&since, "since", "", assets.FlagDesc(assets.FlagDescKeyChangesSince))
+	cmd.Flags().StringVar(&since, "since", "", assets.FlagDesc(embed.FlagDescKeyChangesSince))
 
 	return cmd
 }

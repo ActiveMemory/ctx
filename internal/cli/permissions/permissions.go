@@ -7,6 +7,7 @@
 package permissions
 
 import (
+	"github.com/ActiveMemory/ctx/internal/config/embed"
 	"github.com/spf13/cobra"
 
 	"github.com/ActiveMemory/ctx/internal/assets"
@@ -24,7 +25,7 @@ import (
 // Returns:
 //   - *cobra.Command: Configured permissions command with subcommands
 func Cmd() *cobra.Command {
-	short, long := assets.CommandDesc(assets.CmdDescKeyPermissions)
+	short, long := assets.CommandDesc(embed.CmdDescKeyPermissions)
 
 	cmd := &cobra.Command{
 		Use:   "permissions",

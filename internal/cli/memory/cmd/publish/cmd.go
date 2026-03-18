@@ -7,6 +7,7 @@
 package publish
 
 import (
+	"github.com/ActiveMemory/ctx/internal/config/embed"
 	"github.com/ActiveMemory/ctx/internal/config/memory"
 	"github.com/spf13/cobra"
 
@@ -21,7 +22,7 @@ func Cmd() *cobra.Command {
 	var budget int
 	var dryRun bool
 
-	short, long := assets.CommandDesc(assets.CmdDescKeyMemoryPublish)
+	short, long := assets.CommandDesc(embed.CmdDescKeyMemoryPublish)
 	cmd := &cobra.Command{
 		Use:   "publish",
 		Short: short,
@@ -33,11 +34,11 @@ func Cmd() *cobra.Command {
 
 	cmd.Flags().IntVar(&budget,
 		"budget", memory.DefaultPublishBudget,
-		assets.FlagDesc(assets.FlagDescKeyMemoryPublishBudget),
+		assets.FlagDesc(embed.FlagDescKeyMemoryPublishBudget),
 	)
 	cmd.Flags().BoolVar(&dryRun,
 		"dry-run", false,
-		assets.FlagDesc(assets.FlagDescKeyMemoryPublishDryRun),
+		assets.FlagDesc(embed.FlagDescKeyMemoryPublishDryRun),
 	)
 
 	return cmd

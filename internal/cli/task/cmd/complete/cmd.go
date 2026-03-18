@@ -7,6 +7,7 @@
 package complete
 
 import (
+	"github.com/ActiveMemory/ctx/internal/config/embed"
 	"github.com/spf13/cobra"
 
 	"github.com/ActiveMemory/ctx/internal/assets"
@@ -20,7 +21,7 @@ import (
 // Returns:
 //   - *cobra.Command: Configured complete command
 func Cmd() *cobra.Command {
-	short, long := assets.CommandDesc(assets.CmdDescKeyComplete)
+	short, long := assets.CommandDesc(embed.CmdDescKeyComplete)
 
 	cmd := &cobra.Command{
 		Use:   "complete <task-id-or-text>",

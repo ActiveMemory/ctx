@@ -10,6 +10,7 @@ import (
 	"fmt"
 
 	"github.com/ActiveMemory/ctx/internal/assets"
+	"github.com/ActiveMemory/ctx/internal/config/embed"
 )
 
 // FlagRequired returns an error for a missing required flag.
@@ -21,7 +22,7 @@ import (
 //   - error: "required flag \"<name>\" not set"
 func FlagRequired(name string) error {
 	return fmt.Errorf(
-		assets.TextDesc(assets.TextDescKeyErrValidationFlagRequired), name,
+		assets.TextDesc(embed.TextDescKeyErrValidationFlagRequired), name,
 	)
 }
 
@@ -34,7 +35,7 @@ func FlagRequired(name string) error {
 //   - error: "<name> argument is required"
 func ArgRequired(name string) error {
 	return fmt.Errorf(
-		assets.TextDesc(assets.TextDescKeyErrValidationArgRequired), name,
+		assets.TextDesc(embed.TextDescKeyErrValidationArgRequired), name,
 	)
 }
 
@@ -49,7 +50,7 @@ func ArgRequired(name string) error {
 //   - error: "invalid selection: <input> (expected 1-<max>)"
 func InvalidSelection(input string, max int) error {
 	return fmt.Errorf(
-		assets.TextDesc(assets.TextDescKeyErrValidateInvalidSelection), input, max,
+		assets.TextDesc(embed.TextDescKeyErrValidateInvalidSelection), input, max,
 	)
 }
 
@@ -62,6 +63,6 @@ func InvalidSelection(input string, max int) error {
 //   - error: "unknown document <alias> (available: manifesto, about, invariants)"
 func UnknownDocument(alias string) error {
 	return fmt.Errorf(
-		assets.TextDesc(assets.TextDescKeyErrValidateUnknownDocument), alias,
+		assets.TextDesc(embed.TextDescKeyErrValidateUnknownDocument), alias,
 	)
 }

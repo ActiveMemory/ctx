@@ -18,6 +18,7 @@ import (
 
 	"github.com/ActiveMemory/ctx/internal/config/archive"
 	"github.com/ActiveMemory/ctx/internal/config/dir"
+	"github.com/ActiveMemory/ctx/internal/config/embed"
 	fs2 "github.com/ActiveMemory/ctx/internal/config/fs"
 	ctxerr "github.com/ActiveMemory/ctx/internal/err/backup"
 	io2 "github.com/ActiveMemory/ctx/internal/io"
@@ -260,8 +261,8 @@ func CheckSMBMountWarnings(smbURL string, warnings []string) []string {
 
 	if _, statErr := os.Stat(cfg.GVFSPath); os.IsNotExist(statErr) {
 		warnings = append(warnings,
-			fmt.Sprintf(assets.TextDesc(assets.TextDescKeyBackupSMBNotMounted), cfg.Host),
-			assets.TextDesc(assets.TextDescKeyBackupSMBUnavailable),
+			fmt.Sprintf(assets.TextDesc(embed.TextDescKeyBackupSMBNotMounted), cfg.Host),
+			assets.TextDesc(embed.TextDescKeyBackupSMBUnavailable),
 		)
 	}
 
@@ -281,8 +282,8 @@ func CheckBackupMarker(markerPath string, warnings []string) []string {
 	info, statErr := os.Stat(markerPath)
 	if os.IsNotExist(statErr) {
 		return append(warnings,
-			assets.TextDesc(assets.TextDescKeyBackupNoMarker),
-			assets.TextDesc(assets.TextDescKeyBackupRunHint),
+			assets.TextDesc(embed.TextDescKeyBackupNoMarker),
+			assets.TextDesc(embed.TextDescKeyBackupRunHint),
 		)
 	}
 	if statErr != nil {
@@ -292,8 +293,8 @@ func CheckBackupMarker(markerPath string, warnings []string) []string {
 	ageDays := int(time.Since(info.ModTime()).Hours() / 24)
 	if ageDays >= archive.BackupMaxAgeDays {
 		return append(warnings,
-			fmt.Sprintf(assets.TextDesc(assets.TextDescKeyBackupStale), ageDays),
-			assets.TextDesc(assets.TextDescKeyBackupRunHint),
+			fmt.Sprintf(assets.TextDesc(embed.TextDescKeyBackupStale), ageDays),
+			assets.TextDesc(embed.TextDescKeyBackupRunHint),
 		)
 	}
 

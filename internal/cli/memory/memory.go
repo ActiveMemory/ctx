@@ -7,6 +7,7 @@
 package memory
 
 import (
+	"github.com/ActiveMemory/ctx/internal/config/embed"
 	"github.com/spf13/cobra"
 
 	"github.com/ActiveMemory/ctx/internal/assets"
@@ -20,7 +21,7 @@ import (
 
 // Cmd returns the "ctx memory" parent command.
 func Cmd() *cobra.Command {
-	short, long := assets.CommandDesc(assets.CmdDescKeyMemory)
+	short, long := assets.CommandDesc(embed.CmdDescKeyMemory)
 	cmd := &cobra.Command{
 		Use:   "memory",
 		Short: short,

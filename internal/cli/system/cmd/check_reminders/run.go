@@ -11,6 +11,7 @@ import (
 	"os"
 	"time"
 
+	"github.com/ActiveMemory/ctx/internal/config/embed"
 	"github.com/ActiveMemory/ctx/internal/config/hook"
 	time2 "github.com/ActiveMemory/ctx/internal/config/time"
 	"github.com/ActiveMemory/ctx/internal/config/token"
@@ -65,12 +66,12 @@ func Run(cmd *cobra.Command, stdin *os.File) error {
 	// Build a pre-formatted reminder list for the template variable
 	var reminderList string
 	for _, r := range due {
-		reminderList += fmt.Sprintf(assets.TextDesc(assets.TextDescKeyCheckRemindersItemFormat)+token.NewlineLF, r.ID, r.Message)
+		reminderList += fmt.Sprintf(assets.TextDesc(embed.TextDescKeyCheckRemindersItemFormat)+token.NewlineLF, r.ID, r.Message)
 	}
 
 	fallback := reminderList +
-		token.NewlineLF + assets.TextDesc(assets.TextDescKeyCheckRemindersDismissHint) + token.NewlineLF +
-		assets.TextDesc(assets.TextDescKeyCheckRemindersDismissAllHint)
+		token.NewlineLF + assets.TextDesc(embed.TextDescKeyCheckRemindersDismissHint) + token.NewlineLF +
+		assets.TextDesc(embed.TextDescKeyCheckRemindersDismissAllHint)
 	vars := map[string]any{tpl.VarReminderList: reminderList}
 	content := core.LoadMessage(hook.CheckReminders, hook.VariantReminders, vars, fallback)
 	if content == "" {
@@ -78,12 +79,12 @@ func Run(cmd *cobra.Command, stdin *os.File) error {
 	}
 
 	cmd.Println(core.NudgeBox(
-		assets.TextDesc(assets.TextDescKeyCheckRemindersRelayPrefix),
-		assets.TextDesc(assets.TextDescKeyCheckRemindersBoxTitle),
+		assets.TextDesc(embed.TextDescKeyCheckRemindersRelayPrefix),
+		assets.TextDesc(embed.TextDescKeyCheckRemindersBoxTitle),
 		content))
 
 	ref := notify.NewTemplateRef(hook.CheckReminders, hook.VariantReminders, vars)
-	nudgeMsg := hook.CheckReminders + ": " + fmt.Sprintf(assets.TextDesc(assets.TextDescKeyCheckRemindersNudgeFormat), len(due))
+	nudgeMsg := hook.CheckReminders + ": " + fmt.Sprintf(assets.TextDesc(embed.TextDescKeyCheckRemindersNudgeFormat), len(due))
 	core.NudgeAndRelay(nudgeMsg, input.SessionID, ref)
 
 	return nil

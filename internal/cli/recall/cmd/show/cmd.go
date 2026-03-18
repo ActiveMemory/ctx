@@ -7,6 +7,7 @@
 package show
 
 import (
+	"github.com/ActiveMemory/ctx/internal/config/embed"
 	"github.com/spf13/cobra"
 
 	"github.com/ActiveMemory/ctx/internal/assets"
@@ -23,7 +24,7 @@ func Cmd() *cobra.Command {
 		allProjects bool
 	)
 
-	short, long := assets.CommandDesc(assets.CmdDescKeyRecallShow)
+	short, long := assets.CommandDesc(embed.CmdDescKeyRecallShow)
 
 	cmd := &cobra.Command{
 		Use:   "show [session-id]",
@@ -35,13 +36,13 @@ func Cmd() *cobra.Command {
 	}
 
 	cmd.Flags().BoolVar(&latest, "latest", false,
-		assets.FlagDesc(assets.FlagDescKeyRecallShowLatest),
+		assets.FlagDesc(embed.FlagDescKeyRecallShowLatest),
 	)
 	cmd.Flags().BoolVar(&full, "full", false,
-		assets.FlagDesc(assets.FlagDescKeyRecallShowFull),
+		assets.FlagDesc(embed.FlagDescKeyRecallShowFull),
 	)
 	cmd.Flags().BoolVar(&allProjects, "all-projects", false,
-		assets.FlagDesc(assets.FlagDescKeyRecallShowAllProjects),
+		assets.FlagDesc(embed.FlagDescKeyRecallShowAllProjects),
 	)
 
 	return cmd

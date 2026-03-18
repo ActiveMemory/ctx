@@ -10,6 +10,7 @@ import (
 	"fmt"
 
 	"github.com/ActiveMemory/ctx/internal/assets"
+	"github.com/ActiveMemory/ctx/internal/config/embed"
 	"github.com/spf13/cobra"
 )
 
@@ -19,7 +20,7 @@ import (
 //   - cmd: Cobra command for output
 //   - name: Filename that was removed
 func InfoOrphanRemoved(cmd *cobra.Command, name string) {
-	cmd.Println(fmt.Sprintf(assets.TextDesc(assets.TextDescKeyWriteJournalOrphanRemoved), name))
+	cmd.Println(fmt.Sprintf(assets.TextDesc(embed.TextDescKeyWriteJournalOrphanRemoved), name))
 }
 
 // InfoSiteGenerated reports successful site generation with next steps.
@@ -33,7 +34,7 @@ func InfoSiteGenerated(
 	cmd *cobra.Command, count int, output, zensicalBin string,
 ) {
 	cmd.Println(fmt.Sprintf(
-		assets.TextDesc(assets.TextDescKeyWriteJournalSiteGeneratedBlock),
+		assets.TextDesc(embed.TextDescKeyWriteJournalSiteGeneratedBlock),
 		count, output, output, zensicalBin,
 	))
 }
@@ -44,7 +45,7 @@ func InfoSiteGenerated(
 //   - cmd: Cobra command for output
 func InfoSiteStarting(cmd *cobra.Command) {
 	cmd.Println()
-	cmd.Println(assets.TextDesc(assets.TextDescKeyWriteJournalSiteStarting))
+	cmd.Println(assets.TextDesc(embed.TextDescKeyWriteJournalSiteStarting))
 }
 
 // InfoSiteBuilding reports a build is in progress.
@@ -53,5 +54,5 @@ func InfoSiteStarting(cmd *cobra.Command) {
 //   - cmd: Cobra command for output
 func InfoSiteBuilding(cmd *cobra.Command) {
 	cmd.Println()
-	cmd.Println(assets.TextDesc(assets.TextDescKeyWriteJournalSiteBuilding))
+	cmd.Println(assets.TextDesc(embed.TextDescKeyWriteJournalSiteBuilding))
 }

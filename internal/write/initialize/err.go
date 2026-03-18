@@ -7,6 +7,7 @@
 package initialize
 
 import (
+	"github.com/ActiveMemory/ctx/internal/config/embed"
 	"github.com/spf13/cobra"
 
 	"github.com/ActiveMemory/ctx/internal/assets"
@@ -22,5 +23,5 @@ func ErrCtxNotInPath(cmd *cobra.Command) {
 		return
 	}
 
-	cmd.PrintErrln(assets.TextDesc(assets.TextDescKeyErrInitCtxNotInPath))
+	cmd.PrintErrln(assets.TextDesc(embed.TextDescKeyErrInitCtxNotInPath))
 }

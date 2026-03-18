@@ -9,6 +9,7 @@ package pause
 import (
 	"os"
 
+	"github.com/ActiveMemory/ctx/internal/config/embed"
 	"github.com/spf13/cobra"
 
 	"github.com/ActiveMemory/ctx/internal/assets"
@@ -19,7 +20,7 @@ import (
 // Returns:
 //   - *cobra.Command: Configured pause subcommand
 func Cmd() *cobra.Command {
-	short, long := assets.CommandDesc(assets.CmdDescKeySystemPause)
+	short, long := assets.CommandDesc(embed.CmdDescKeySystemPause)
 
 	cmd := &cobra.Command{
 		Use:    "pause",
@@ -31,7 +32,7 @@ func Cmd() *cobra.Command {
 		},
 	}
 	cmd.Flags().String("session-id", "",
-		assets.FlagDesc(assets.FlagDescKeySystemPauseSessionId),
+		assets.FlagDesc(embed.FlagDescKeySystemPauseSessionId),
 	)
 	return cmd
 }

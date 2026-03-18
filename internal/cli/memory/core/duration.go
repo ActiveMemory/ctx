@@ -11,6 +11,7 @@ import (
 	"time"
 
 	"github.com/ActiveMemory/ctx/internal/assets"
+	"github.com/ActiveMemory/ctx/internal/config/embed"
 )
 
 // FormatDuration returns a human-readable duration string.
@@ -22,19 +23,19 @@ import (
 //   - string: human-readable representation (e.g. "3 hours", "1 day")
 func FormatDuration(d time.Duration) string {
 	if d < time.Minute {
-		return assets.TextDesc(assets.TextDescKeyTimeJustNow)
+		return assets.TextDesc(embed.TextDescKeyTimeJustNow)
 	}
 	if d < time.Hour {
 		return pluralize(int(d.Minutes()),
-			assets.TextDesc(assets.TextDescKeyTimeMinute))
+			assets.TextDesc(embed.TextDescKeyTimeMinute))
 	}
 	h := int(d.Hours())
 	if h < 24 {
 		return pluralize(h,
-			assets.TextDesc(assets.TextDescKeyTimeHour))
+			assets.TextDesc(embed.TextDescKeyTimeHour))
 	}
 	return pluralize(h/24,
-		assets.TextDesc(assets.TextDescKeyTimeDay))
+		assets.TextDesc(embed.TextDescKeyTimeDay))
 }
 
 // pluralize returns "1 unit" or "N units".

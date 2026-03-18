@@ -7,6 +7,7 @@
 package merge
 
 import (
+	"github.com/ActiveMemory/ctx/internal/config/embed"
 	"github.com/spf13/cobra"
 
 	"github.com/ActiveMemory/ctx/internal/assets"
@@ -20,7 +21,7 @@ func Cmd() *cobra.Command {
 	var keyFile string
 	var dryRun bool
 
-	short, long := assets.CommandDesc(assets.CmdDescKeyPadMerge)
+	short, long := assets.CommandDesc(embed.CmdDescKeyPadMerge)
 	cmd := &cobra.Command{
 		Use:   "merge FILE...",
 		Short: short,
@@ -32,9 +33,9 @@ func Cmd() *cobra.Command {
 	}
 
 	cmd.Flags().StringVarP(&keyFile, "key", "k", "",
-		assets.FlagDesc(assets.FlagDescKeyPadMergeKey))
+		assets.FlagDesc(embed.FlagDescKeyPadMergeKey))
 	cmd.Flags().BoolVar(&dryRun, "dry-run", false,
-		assets.FlagDesc(assets.FlagDescKeyPadMergeDryRun))
+		assets.FlagDesc(embed.FlagDescKeyPadMergeDryRun))
 
 	return cmd
 }

@@ -9,6 +9,7 @@ package check_map_staleness
 import (
 	"os"
 
+	"github.com/ActiveMemory/ctx/internal/config/embed"
 	"github.com/spf13/cobra"
 
 	"github.com/ActiveMemory/ctx/internal/assets"
@@ -19,7 +20,7 @@ import (
 // Returns:
 //   - *cobra.Command: Configured check-map-staleness subcommand
 func Cmd() *cobra.Command {
-	short, long := assets.CommandDesc(assets.CmdDescKeySystemCheckMapStaleness)
+	short, long := assets.CommandDesc(embed.CmdDescKeySystemCheckMapStaleness)
 
 	return &cobra.Command{
 		Use:    "check-map-staleness",

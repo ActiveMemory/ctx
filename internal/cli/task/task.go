@@ -16,6 +16,7 @@
 package task
 
 import (
+	"github.com/ActiveMemory/ctx/internal/config/embed"
 	"github.com/spf13/cobra"
 
 	"github.com/ActiveMemory/ctx/internal/assets"
@@ -33,7 +34,7 @@ import (
 // Returns:
 //   - *cobra.Command: Configured tasks command with subcommands
 func Cmd() *cobra.Command {
-	short, long := assets.CommandDesc(assets.CmdDescKeyTask)
+	short, long := assets.CommandDesc(embed.CmdDescKeyTask)
 
 	cmd := &cobra.Command{
 		Use:   "tasks",

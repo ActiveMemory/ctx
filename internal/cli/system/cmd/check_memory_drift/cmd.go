@@ -9,6 +9,7 @@ package check_memory_drift
 import (
 	"os"
 
+	"github.com/ActiveMemory/ctx/internal/config/embed"
 	"github.com/spf13/cobra"
 
 	"github.com/ActiveMemory/ctx/internal/assets"
@@ -19,7 +20,7 @@ import (
 // Returns:
 //   - *cobra.Command: Configured check-memory-drift subcommand
 func Cmd() *cobra.Command {
-	short, _ := assets.CommandDesc(assets.CmdDescKeySystemCheckMemoryDrift)
+	short, _ := assets.CommandDesc(embed.CmdDescKeySystemCheckMemoryDrift)
 
 	return &cobra.Command{
 		Use:    "check-memory-drift",

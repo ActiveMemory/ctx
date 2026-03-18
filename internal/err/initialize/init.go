@@ -11,6 +11,7 @@ import (
 	"fmt"
 
 	"github.com/ActiveMemory/ctx/internal/assets"
+	"github.com/ActiveMemory/ctx/internal/config/embed"
 )
 
 // NotInitialized returns an error indicating ctx has not been initialized.
@@ -18,7 +19,7 @@ import (
 // Returns:
 //   - error: "ctx: not initialized: run \"ctx init\" first"
 func NotInitialized() error {
-	return errors.New(assets.TextDesc(assets.TextDescKeyErrInitNotInitialized))
+	return errors.New(assets.TextDesc(embed.TextDescKeyErrInitNotInitialized))
 }
 
 // ContextNotInitialized returns an error when no .context/ directory is found.
@@ -27,7 +28,7 @@ func NotInitialized() error {
 //   - error: "no .context/ directory found. Run 'ctx init' first"
 func ContextNotInitialized() error {
 	return errors.New(
-		assets.TextDesc(assets.TextDescKeyErrInitContextNotInitialized),
+		assets.TextDesc(embed.TextDescKeyErrInitContextNotInitialized),
 	)
 }
 
@@ -40,7 +41,7 @@ func ContextNotInitialized() error {
 //   - error: "detecting reference time: <cause>"
 func DetectReferenceTime(cause error) error {
 	return fmt.Errorf(
-		assets.TextDesc(assets.TextDescKeyErrInitDetectReferenceTime), cause,
+		assets.TextDesc(embed.TextDescKeyErrInitDetectReferenceTime), cause,
 	)
 }
 
@@ -53,7 +54,7 @@ func DetectReferenceTime(cause error) error {
 //   - error: "cannot determine home directory: <cause>"
 func HomeDir(cause error) error {
 	return fmt.Errorf(
-		assets.TextDesc(assets.TextDescKeyErrInitHomeDir), cause,
+		assets.TextDesc(embed.TextDescKeyErrInitHomeDir), cause,
 	)
 }
 
@@ -67,7 +68,7 @@ func HomeDir(cause error) error {
 //   - error: "failed to read <dir> README template: <cause>"
 func ReadProjectReadme(dir string, cause error) error {
 	return fmt.Errorf(
-		assets.TextDesc(assets.TextDescKeyErrInitReadProjectReadme), dir, cause,
+		assets.TextDesc(embed.TextDescKeyErrInitReadProjectReadme), dir, cause,
 	)
 }
 
@@ -81,7 +82,7 @@ func ReadProjectReadme(dir string, cause error) error {
 //   - error: "failed to read <name> template: <cause>"
 func ReadTemplate(name string, cause error) error {
 	return fmt.Errorf(
-		assets.TextDesc(assets.TextDescKeyErrInitReadInitTemplate), name, cause,
+		assets.TextDesc(embed.TextDescKeyErrInitReadInitTemplate), name, cause,
 	)
 }
 
@@ -94,7 +95,7 @@ func ReadTemplate(name string, cause error) error {
 //   - error: "failed to create Makefile: <cause>"
 func CreateMakefile(cause error) error {
 	return fmt.Errorf(
-		assets.TextDesc(assets.TextDescKeyErrInitCreateMakefile), cause,
+		assets.TextDesc(embed.TextDescKeyErrInitCreateMakefile), cause,
 	)
 }
 
@@ -105,6 +106,6 @@ func CreateMakefile(cause error) error {
 //   - error: "ctx not found in PATH"
 func CtxNotInPath() error {
 	return errors.New(
-		assets.TextDesc(assets.TextDescKeyErrValidationCtxNotInPath),
+		assets.TextDesc(embed.TextDescKeyErrValidationCtxNotInPath),
 	)
 }

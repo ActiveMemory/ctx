@@ -10,6 +10,7 @@ import (
 	"fmt"
 
 	"github.com/ActiveMemory/ctx/internal/assets"
+	"github.com/ActiveMemory/ctx/internal/config/embed"
 	"github.com/spf13/cobra"
 )
 
@@ -20,6 +21,6 @@ import (
 //   - filename: Name of the file the entry was added to
 func InfoAddedTo(cmd *cobra.Command, filename string) {
 	cmd.Println(
-		fmt.Sprintf(assets.TextDesc(assets.TextDescKeyWriteAddedTo), filename),
+		fmt.Sprintf(assets.TextDesc(embed.TextDescKeyWriteAddedTo), filename),
 	)
 }

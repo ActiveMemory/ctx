@@ -8,6 +8,7 @@
 package status
 
 import (
+	"github.com/ActiveMemory/ctx/internal/config/embed"
 	"github.com/spf13/cobra"
 
 	"github.com/ActiveMemory/ctx/internal/assets"
@@ -18,7 +19,7 @@ import (
 // Returns:
 //   - *cobra.Command: command for showing memory bridge status.
 func Cmd() *cobra.Command {
-	short, long := assets.CommandDesc(assets.CmdDescKeyMemoryStatus)
+	short, long := assets.CommandDesc(embed.CmdDescKeyMemoryStatus)
 	return &cobra.Command{
 		Use:   "status",
 		Short: short,

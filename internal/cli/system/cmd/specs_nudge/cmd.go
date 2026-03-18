@@ -9,6 +9,7 @@ package specs_nudge
 import (
 	"os"
 
+	"github.com/ActiveMemory/ctx/internal/config/embed"
 	"github.com/spf13/cobra"
 
 	"github.com/ActiveMemory/ctx/internal/assets"
@@ -19,7 +20,7 @@ import (
 // Returns:
 //   - *cobra.Command: Configured specs-nudge subcommand
 func Cmd() *cobra.Command {
-	short, long := assets.CommandDesc(assets.CmdDescKeySystemSpecsNudge)
+	short, long := assets.CommandDesc(embed.CmdDescKeySystemSpecsNudge)
 
 	return &cobra.Command{
 		Use:    "specs-nudge",

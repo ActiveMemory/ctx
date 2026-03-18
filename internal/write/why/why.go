@@ -9,6 +9,7 @@ package why
 import (
 	"fmt"
 
+	"github.com/ActiveMemory/ctx/internal/config/embed"
 	"github.com/spf13/cobra"
 
 	"github.com/ActiveMemory/ctx/internal/assets"
@@ -22,7 +23,7 @@ func Banner(cmd *cobra.Command) {
 	if cmd == nil {
 		return
 	}
-	cmd.Println(assets.TextDesc(assets.TextDescKeyWhyBanner))
+	cmd.Println(assets.TextDesc(embed.TextDescKeyWhyBanner))
 }
 
 // MenuItem prints a numbered menu item.
@@ -37,7 +38,7 @@ func MenuItem(cmd *cobra.Command, index int, label string) {
 	}
 	cmd.Println(
 		fmt.Sprintf(
-			assets.TextDesc(assets.TextDescKeyWhyMenuItemFormat), index, label,
+			assets.TextDesc(embed.TextDescKeyWhyMenuItemFormat), index, label,
 		),
 	)
 }
@@ -50,5 +51,5 @@ func MenuPrompt(cmd *cobra.Command) {
 	if cmd == nil {
 		return
 	}
-	cmd.Print(assets.TextDesc(assets.TextDescKeyWhyMenuPrompt))
+	cmd.Print(assets.TextDesc(embed.TextDescKeyWhyMenuPrompt))
 }

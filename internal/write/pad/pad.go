@@ -11,6 +11,7 @@ import (
 	"path/filepath"
 
 	"github.com/ActiveMemory/ctx/internal/assets"
+	"github.com/ActiveMemory/ctx/internal/config/embed"
 	"github.com/spf13/cobra"
 )
 
@@ -30,7 +31,7 @@ func InfoPathConversionExists(
 	}
 	cmd.Println(
 		fmt.Sprintf(
-			assets.TextDesc(assets.TextDescKeyWritePathExists), oldPath, filepath.Join(rootDir, newPath),
+			assets.TextDesc(embed.TextDescKeyWritePathExists), oldPath, filepath.Join(rootDir, newPath),
 		),
 	)
 }

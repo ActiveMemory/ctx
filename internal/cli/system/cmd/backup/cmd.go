@@ -8,6 +8,7 @@ package backup
 
 import (
 	"github.com/ActiveMemory/ctx/internal/config/archive"
+	"github.com/ActiveMemory/ctx/internal/config/embed"
 	"github.com/spf13/cobra"
 
 	"github.com/ActiveMemory/ctx/internal/assets"
@@ -18,7 +19,7 @@ import (
 // Returns:
 //   - *cobra.Command: Configured backup subcommand
 func Cmd() *cobra.Command {
-	short, long := assets.CommandDesc(assets.CmdDescKeySystemBackup)
+	short, long := assets.CommandDesc(embed.CmdDescKeySystemBackup)
 
 	cmd := &cobra.Command{
 		Use:   "backup",
@@ -30,10 +31,10 @@ func Cmd() *cobra.Command {
 	}
 
 	cmd.Flags().String("scope", archive.BackupScopeAll,
-		assets.FlagDesc(assets.FlagDescKeySystemBackupScope),
+		assets.FlagDesc(embed.FlagDescKeySystemBackupScope),
 	)
 	cmd.Flags().Bool("json", false,
-		assets.FlagDesc(assets.FlagDescKeySystemBackupJson),
+		assets.FlagDesc(embed.FlagDescKeySystemBackupJson),
 	)
 
 	return cmd

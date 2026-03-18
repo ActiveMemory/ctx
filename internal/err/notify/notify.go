@@ -11,6 +11,7 @@ import (
 	"fmt"
 
 	"github.com/ActiveMemory/ctx/internal/assets"
+	"github.com/ActiveMemory/ctx/internal/config/embed"
 )
 
 // WebhookEmpty returns an error for blank webhook URL input.
@@ -18,7 +19,7 @@ import (
 // Returns:
 //   - error: "webhook URL cannot be empty"
 func WebhookEmpty() error {
-	return errors.New(assets.TextDesc(assets.TextDescKeyErrNotifyWebhookEmpty))
+	return errors.New(assets.TextDesc(embed.TextDescKeyErrNotifyWebhookEmpty))
 }
 
 // SaveWebhook wraps a webhook save failure.
@@ -30,7 +31,7 @@ func WebhookEmpty() error {
 //   - error: "save webhook: <cause>"
 func SaveWebhook(cause error) error {
 	return fmt.Errorf(
-		assets.TextDesc(assets.TextDescKeyErrNotifySaveWebhook), cause,
+		assets.TextDesc(embed.TextDescKeyErrNotifySaveWebhook), cause,
 	)
 }
 
@@ -43,7 +44,7 @@ func SaveWebhook(cause error) error {
 //   - error: "load webhook: <cause>"
 func LoadWebhook(cause error) error {
 	return fmt.Errorf(
-		assets.TextDesc(assets.TextDescKeyErrNotifyLoadWebhook), cause,
+		assets.TextDesc(embed.TextDescKeyErrNotifyLoadWebhook), cause,
 	)
 }
 
@@ -56,7 +57,7 @@ func LoadWebhook(cause error) error {
 //   - error: "marshal payload: <cause>"
 func MarshalPayload(cause error) error {
 	return fmt.Errorf(
-		assets.TextDesc(assets.TextDescKeyErrNotifyMarshalPayload), cause,
+		assets.TextDesc(embed.TextDescKeyErrNotifyMarshalPayload), cause,
 	)
 }
 
@@ -69,6 +70,6 @@ func MarshalPayload(cause error) error {
 //   - error: "send test notification: <cause>"
 func SendNotification(cause error) error {
 	return fmt.Errorf(
-		assets.TextDesc(assets.TextDescKeyErrNotifySendNotification), cause,
+		assets.TextDesc(embed.TextDescKeyErrNotifySendNotification), cause,
 	)
 }

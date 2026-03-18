@@ -12,6 +12,7 @@ import (
 	"strings"
 	"time"
 
+	"github.com/ActiveMemory/ctx/internal/config/embed"
 	"github.com/ActiveMemory/ctx/internal/config/event"
 	time2 "github.com/ActiveMemory/ctx/internal/config/time"
 	"github.com/spf13/cobra"
@@ -101,7 +102,7 @@ func OutputEventsJSON(cmd *cobra.Command, evts []notify.Payload) error {
 // Returns:
 //   - error: Always nil
 func OutputEventsHuman(cmd *cobra.Command, evts []notify.Payload) error {
-	fmtStr := assets.TextDesc(assets.TextDescKeyEventsHumanFormat)
+	fmtStr := assets.TextDesc(embed.TextDescKeyEventsHumanFormat)
 	for _, e := range evts {
 		ts := FormatEventTimestamp(e.Timestamp)
 		hookName := ExtractHookName(e)

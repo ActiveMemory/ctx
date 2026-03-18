@@ -15,6 +15,7 @@ import (
 	"strings"
 	"time"
 
+	"github.com/ActiveMemory/ctx/internal/config/embed"
 	"github.com/ActiveMemory/ctx/internal/config/file"
 	"github.com/ActiveMemory/ctx/internal/config/journal"
 	"github.com/ActiveMemory/ctx/internal/config/stats"
@@ -122,7 +123,7 @@ func ParseStatsFile(path, sid string) ([]StatsEntry, error) {
 //   - error: non-nil on output failure
 func DumpStats(cmd *cobra.Command, entries []StatsEntry, last int, jsonOut bool) error {
 	if len(entries) == 0 {
-		cmd.Println(assets.TextDesc(assets.TextDescKeyStatsEmpty))
+		cmd.Println(assets.TextDesc(embed.TextDescKeyStatsEmpty))
 		return nil
 	}
 
@@ -166,7 +167,7 @@ func OutputStatsJSON(cmd *cobra.Command, entries []StatsEntry) error {
 // Parameters:
 //   - cmd: Cobra command for output
 func PrintStatsHeader(cmd *cobra.Command) {
-	fmtStr := assets.TextDesc(assets.TextDescKeyStatsHeaderFormat)
+	fmtStr := assets.TextDesc(embed.TextDescKeyStatsHeaderFormat)
 	cmd.Println(fmt.Sprintf(fmtStr,
 		stats.HeaderTime, stats.HeaderSession,
 		stats.HeaderPrompt, stats.HeaderTokens,
@@ -189,7 +190,7 @@ func PrintStatsLine(cmd *cobra.Command, e *StatsEntry) {
 		sid = sid[:journal.SessionIDShortLen]
 	}
 	tokens := FormatTokenCount(e.Tokens)
-	cmd.Println(fmt.Sprintf(assets.TextDesc(assets.TextDescKeyStatsLineFormat),
+	cmd.Println(fmt.Sprintf(assets.TextDesc(embed.TextDescKeyStatsLineFormat),
 		ts, sid, e.Prompt, tokens, e.Pct, e.Event))
 }
 

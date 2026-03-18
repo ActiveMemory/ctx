@@ -11,6 +11,7 @@ import (
 	"fmt"
 
 	"github.com/ActiveMemory/ctx/internal/assets"
+	"github.com/ActiveMemory/ctx/internal/config/embed"
 )
 
 // UnknownProfile returns an error for an unrecognized config profile name.
@@ -22,7 +23,7 @@ import (
 //   - error: "unknown profile <name>: must be dev, base, or prod"
 func UnknownProfile(name string) error {
 	return fmt.Errorf(
-		assets.TextDesc(assets.TextDescKeyErrConfigUnknownProfile), name,
+		assets.TextDesc(embed.TextDescKeyErrConfigUnknownProfile), name,
 	)
 }
 
@@ -36,7 +37,7 @@ func UnknownProfile(name string) error {
 //   - error: "read <name>: <cause>"
 func ReadProfile(name string, cause error) error {
 	return fmt.Errorf(
-		assets.TextDesc(assets.TextDescKeyErrConfigReadProfile), name, cause,
+		assets.TextDesc(embed.TextDescKeyErrConfigReadProfile), name, cause,
 	)
 }
 
@@ -50,7 +51,7 @@ func ReadProfile(name string, cause error) error {
 //   - error: "unknown format <format> (supported: <list>)"
 func UnknownFormat(format, supported string) error {
 	return fmt.Errorf(
-		assets.TextDesc(assets.TextDescKeyErrConfigUnknownFormat),
+		assets.TextDesc(embed.TextDescKeyErrConfigUnknownFormat),
 		format, supported,
 	)
 }
@@ -65,7 +66,7 @@ func UnknownFormat(format, supported string) error {
 //   - error: "unknown project type <type> (supported: <list>)"
 func UnknownProjectType(projType, supported string) error {
 	return fmt.Errorf(
-		assets.TextDesc(assets.TextDescKeyErrConfigUnknownProjectType),
+		assets.TextDesc(embed.TextDescKeyErrConfigUnknownProjectType),
 		projType, supported,
 	)
 }
@@ -79,7 +80,7 @@ func UnknownProjectType(projType, supported string) error {
 //   - error: "invalid tool <tool>: must be claude, aider, or generic"
 func InvalidTool(tool string) error {
 	return fmt.Errorf(
-		assets.TextDesc(assets.TextDescKeyErrConfigInvalidTool), tool,
+		assets.TextDesc(embed.TextDescKeyErrConfigInvalidTool), tool,
 	)
 }
 
@@ -92,7 +93,7 @@ func InvalidTool(tool string) error {
 //   - error: "unsupported tool: <tool>"
 func UnsupportedTool(tool string) error {
 	return fmt.Errorf(
-		assets.TextDesc(assets.TextDescKeyErrConfigUnsupportedTool), tool,
+		assets.TextDesc(embed.TextDescKeyErrConfigUnsupportedTool), tool,
 	)
 }
 
@@ -105,7 +106,7 @@ func UnsupportedTool(tool string) error {
 //   - error: "unknown update type: <typeName>"
 func UnknownUpdateType(typeName string) error {
 	return fmt.Errorf(assets.TextDesc(
-		assets.TextDescKeyErrConfigUnknownUpdateType), typeName,
+		embed.TextDescKeyErrConfigUnknownUpdateType), typeName,
 	)
 }
 
@@ -115,7 +116,7 @@ func UnknownUpdateType(typeName string) error {
 //   - error: "no .claude/settings.local.json found"
 func SettingsNotFound() error {
 	return errors.New(
-		assets.TextDesc(assets.TextDescKeyErrConfigSettingsNotFound),
+		assets.TextDesc(embed.TextDescKeyErrConfigSettingsNotFound),
 	)
 }
 
@@ -125,7 +126,7 @@ func SettingsNotFound() error {
 //   - error: advises the user to run 'ctx permissions snapshot' first
 func GoldenNotFound() error {
 	return errors.New(
-		assets.TextDesc(assets.TextDescKeyErrConfigGoldenNotFound),
+		assets.TextDesc(embed.TextDescKeyErrConfigGoldenNotFound),
 	)
 }
 
@@ -138,7 +139,7 @@ func GoldenNotFound() error {
 //   - error: "read embedded schema: <cause>"
 func ReadEmbeddedSchema(cause error) error {
 	return fmt.Errorf(
-		assets.TextDesc(assets.TextDescKeyErrConfigReadEmbeddedSchema), cause,
+		assets.TextDesc(embed.TextDescKeyErrConfigReadEmbeddedSchema), cause,
 	)
 }
 
@@ -151,7 +152,7 @@ func ReadEmbeddedSchema(cause error) error {
 //   - error: "failed to marshal settings: <cause>"
 func MarshalSettings(cause error) error {
 	return fmt.Errorf(
-		assets.TextDesc(assets.TextDescKeyErrConfigMarshalSettings), cause,
+		assets.TextDesc(embed.TextDescKeyErrConfigMarshalSettings), cause,
 	)
 }
 
@@ -164,6 +165,6 @@ func MarshalSettings(cause error) error {
 //   - error: "failed to marshal enabledPlugins: <cause>"
 func MarshalPlugins(cause error) error {
 	return fmt.Errorf(
-		assets.TextDesc(assets.TextDescKeyErrConfigMarshalPlugins), cause,
+		assets.TextDesc(embed.TextDescKeyErrConfigMarshalPlugins), cause,
 	)
 }

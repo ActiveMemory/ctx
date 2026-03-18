@@ -11,6 +11,7 @@ import (
 	"strings"
 
 	"github.com/ActiveMemory/ctx/internal/assets"
+	"github.com/ActiveMemory/ctx/internal/config/embed"
 	"github.com/ActiveMemory/ctx/internal/config/token"
 	"github.com/spf13/cobra"
 )
@@ -411,7 +412,7 @@ func LockUnlockNone(cmd *cobra.Command) {
 	if cmd == nil {
 		return
 	}
-	cmd.Println(assets.TextDesc(assets.TextDescKeyWriteJournalSyncNone))
+	cmd.Println(assets.TextDesc(embed.TextDescKeyWriteJournalSyncNone))
 }
 
 // LockUnlockEntry prints the confirmation for a single locked/unlocked entry.
@@ -424,7 +425,7 @@ func LockUnlockEntry(cmd *cobra.Command, filename, verb string) {
 	if cmd == nil {
 		return
 	}
-	cmd.Println(fmt.Sprintf(assets.TextDesc(assets.TextDescKeyWriteLockUnlockEntry), filename, verb))
+	cmd.Println(fmt.Sprintf(assets.TextDesc(embed.TextDescKeyWriteLockUnlockEntry), filename, verb))
 }
 
 // LockUnlockSummary prints the lock/unlock summary.
@@ -438,10 +439,10 @@ func LockUnlockSummary(cmd *cobra.Command, verb string, count int) {
 		return
 	}
 	if count == 0 {
-		cmd.Println(fmt.Sprintf(assets.TextDesc(assets.TextDescKeyWriteLockUnlockNoChanges), verb))
+		cmd.Println(fmt.Sprintf(assets.TextDesc(embed.TextDescKeyWriteLockUnlockNoChanges), verb))
 		return
 	}
-	cmd.Println(fmt.Sprintf(assets.TextDesc(assets.TextDescKeyWriteLockUnlockSummary), strings.Title(verb), count)) //nolint:staticcheck // strings.Title is fine for single words
+	cmd.Println(fmt.Sprintf(assets.TextDesc(embed.TextDescKeyWriteLockUnlockSummary), strings.Title(verb), count)) //nolint:staticcheck // strings.Title is fine for single words
 }
 
 // JournalSyncNone prints the message when no journal entries are found.
@@ -452,7 +453,7 @@ func JournalSyncNone(cmd *cobra.Command) {
 	if cmd == nil {
 		return
 	}
-	cmd.Println(assets.TextDesc(assets.TextDescKeyWriteJournalSyncNone))
+	cmd.Println(assets.TextDesc(embed.TextDescKeyWriteJournalSyncNone))
 }
 
 // JournalSyncLocked prints a single locked-entry confirmation.
@@ -464,7 +465,7 @@ func JournalSyncLocked(cmd *cobra.Command, filename string) {
 	if cmd == nil {
 		return
 	}
-	cmd.Println(fmt.Sprintf(assets.TextDesc(assets.TextDescKeyWriteJournalSyncLocked), filename))
+	cmd.Println(fmt.Sprintf(assets.TextDesc(embed.TextDescKeyWriteJournalSyncLocked), filename))
 }
 
 // JournalSyncUnlocked prints a single unlocked-entry confirmation.
@@ -476,7 +477,7 @@ func JournalSyncUnlocked(cmd *cobra.Command, filename string) {
 	if cmd == nil {
 		return
 	}
-	cmd.Println(fmt.Sprintf(assets.TextDesc(assets.TextDescKeyWriteJournalSyncUnlocked), filename))
+	cmd.Println(fmt.Sprintf(assets.TextDesc(embed.TextDescKeyWriteJournalSyncUnlocked), filename))
 }
 
 // JournalSyncSummary prints the sync summary: match, locked count,
@@ -491,13 +492,13 @@ func JournalSyncSummary(cmd *cobra.Command, locked, unlocked int) {
 		return
 	}
 	if locked == 0 && unlocked == 0 {
-		cmd.Println(assets.TextDesc(assets.TextDescKeyWriteJournalSyncMatch))
+		cmd.Println(assets.TextDesc(embed.TextDescKeyWriteJournalSyncMatch))
 		return
 	}
 	if locked > 0 {
-		cmd.Println(fmt.Sprintf(assets.TextDesc(assets.TextDescKeyWriteJournalSyncLockedCount), locked))
+		cmd.Println(fmt.Sprintf(assets.TextDesc(embed.TextDescKeyWriteJournalSyncLockedCount), locked))
 	}
 	if unlocked > 0 {
-		cmd.Println(fmt.Sprintf(assets.TextDesc(assets.TextDescKeyWriteJournalSyncUnlockedCount), unlocked))
+		cmd.Println(fmt.Sprintf(assets.TextDesc(embed.TextDescKeyWriteJournalSyncUnlockedCount), unlocked))
 	}
 }

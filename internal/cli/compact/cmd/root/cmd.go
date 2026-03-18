@@ -7,6 +7,7 @@
 package root
 
 import (
+	"github.com/ActiveMemory/ctx/internal/config/embed"
 	"github.com/spf13/cobra"
 
 	"github.com/ActiveMemory/ctx/internal/assets"
@@ -26,7 +27,7 @@ import (
 func Cmd() *cobra.Command {
 	var archive bool
 
-	short, long := assets.CommandDesc(assets.CmdDescKeyCompact)
+	short, long := assets.CommandDesc(embed.CmdDescKeyCompact)
 
 	cmd := &cobra.Command{
 		Use:   "compact",
@@ -41,7 +42,7 @@ func Cmd() *cobra.Command {
 		&archive,
 		"archive",
 		false,
-		assets.FlagDesc(assets.FlagDescKeyCompactArchive),
+		assets.FlagDesc(embed.FlagDescKeyCompactArchive),
 	)
 
 	return cmd

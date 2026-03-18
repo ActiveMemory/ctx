@@ -12,6 +12,7 @@ import (
 	"strings"
 
 	"github.com/ActiveMemory/ctx/internal/config/cli"
+	"github.com/ActiveMemory/ctx/internal/config/embed"
 	"github.com/ActiveMemory/ctx/internal/config/token"
 	ctxerr "github.com/ActiveMemory/ctx/internal/err/fs"
 	"github.com/ActiveMemory/ctx/internal/write/export"
@@ -31,7 +32,7 @@ import (
 //   - error: non-nil if reading input fails.
 func ConfirmExport(cmd *cobra.Command, plan ExportPlan) (bool, error) {
 	export.Summary(cmd, plan.NewCount, plan.RegenCount, plan.SkipCount, plan.LockedCount, false)
-	cmd.Print(assets.TextDesc(assets.TextDescKeyConfirmProceed))
+	cmd.Print(assets.TextDesc(embed.TextDescKeyConfirmProceed))
 	reader := bufio.NewReader(os.Stdin)
 	response, readErr := reader.ReadString(token.NewlineLF[0])
 	if readErr != nil {

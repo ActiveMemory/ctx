@@ -14,6 +14,7 @@ import (
 	"strings"
 
 	"github.com/ActiveMemory/ctx/internal/assets"
+	"github.com/ActiveMemory/ctx/internal/config/embed"
 	"github.com/ActiveMemory/ctx/internal/config/fs"
 	"github.com/ActiveMemory/ctx/internal/config/pad"
 	"github.com/ActiveMemory/ctx/internal/config/token"
@@ -82,7 +83,7 @@ func EnsureKey() error {
 		return crypto2.SaveKey(saveErr)
 	}
 
-	fmt.Fprintln(os.Stderr, fmt.Sprintf(assets.TextDesc(assets.TextDescKeyPadKeyCreated), kp)) //nolint:errcheck // best-effort notice
+	fmt.Fprintln(os.Stderr, fmt.Sprintf(assets.TextDesc(embed.TextDescKeyPadKeyCreated), kp)) //nolint:errcheck // best-effort notice
 	return nil
 }
 

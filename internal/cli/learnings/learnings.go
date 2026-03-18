@@ -7,6 +7,7 @@
 package learnings
 
 import (
+	"github.com/ActiveMemory/ctx/internal/config/embed"
 	"github.com/spf13/cobra"
 
 	"github.com/ActiveMemory/ctx/internal/assets"
@@ -21,7 +22,7 @@ import (
 // Returns:
 //   - *cobra.Command: The learnings command with subcommands
 func Cmd() *cobra.Command {
-	short, long := assets.CommandDesc(assets.CmdDescKeyLearnings)
+	short, long := assets.CommandDesc(embed.CmdDescKeyLearnings)
 	cmd := &cobra.Command{
 		Use:   "learnings",
 		Short: short,

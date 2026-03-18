@@ -9,6 +9,7 @@ package mv
 import (
 	"strconv"
 
+	"github.com/ActiveMemory/ctx/internal/config/embed"
 	"github.com/spf13/cobra"
 
 	"github.com/ActiveMemory/ctx/internal/assets"
@@ -19,7 +20,7 @@ import (
 // Returns:
 //   - *cobra.Command: Configured mv subcommand
 func Cmd() *cobra.Command {
-	short, _ := assets.CommandDesc(assets.CmdDescKeyPadMv)
+	short, _ := assets.CommandDesc(embed.CmdDescKeyPadMv)
 	return &cobra.Command{
 		Use:   "mv N M",
 		Short: short,

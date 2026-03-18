@@ -9,6 +9,7 @@ package site
 import (
 	"path/filepath"
 
+	"github.com/ActiveMemory/ctx/internal/config/embed"
 	"github.com/spf13/cobra"
 
 	"github.com/ActiveMemory/ctx/internal/assets"
@@ -26,7 +27,7 @@ func Cmd() *cobra.Command {
 		build  bool
 	)
 
-	short, long := assets.CommandDesc(assets.CmdDescKeyJournalSite)
+	short, long := assets.CommandDesc(embed.CmdDescKeyJournalSite)
 	cmd := &cobra.Command{
 		Use:   "site",
 		Short: short,
@@ -38,13 +39,13 @@ func Cmd() *cobra.Command {
 
 	defaultOutput := filepath.Join(rc.ContextDir(), "journal-site")
 	cmd.Flags().StringVarP(
-		&output, "output", "o", defaultOutput, assets.FlagDesc(assets.FlagDescKeyJournalSiteOutput),
+		&output, "output", "o", defaultOutput, assets.FlagDesc(embed.FlagDescKeyJournalSiteOutput),
 	)
 	cmd.Flags().BoolVar(
-		&build, "build", false, assets.FlagDesc(assets.FlagDescKeyJournalSiteBuild),
+		&build, "build", false, assets.FlagDesc(embed.FlagDescKeyJournalSiteBuild),
 	)
 	cmd.Flags().BoolVar(
-		&serve, "serve", false, assets.FlagDesc(assets.FlagDescKeyJournalSiteServe),
+		&serve, "serve", false, assets.FlagDesc(embed.FlagDescKeyJournalSiteServe),
 	)
 
 	return cmd

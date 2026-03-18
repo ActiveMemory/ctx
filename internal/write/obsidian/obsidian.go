@@ -10,6 +10,7 @@ import (
 	"fmt"
 
 	"github.com/ActiveMemory/ctx/internal/assets"
+	"github.com/ActiveMemory/ctx/internal/config/embed"
 	"github.com/spf13/cobra"
 )
 
@@ -21,15 +22,15 @@ import (
 //   - output: Output directory path
 func InfoGenerated(cmd *cobra.Command, count int, output string) {
 	cmd.Println(
-		fmt.Sprintf(assets.TextDesc(assets.TextDescKeyWriteObsidianGenerated),
+		fmt.Sprintf(assets.TextDesc(embed.TextDescKeyWriteObsidianGenerated),
 			count, output,
 		),
 	)
 	cmd.Println()
-	cmd.Println(assets.TextDesc(assets.TextDescKeyWriteObsidianNextStepsHeading))
+	cmd.Println(assets.TextDesc(embed.TextDescKeyWriteObsidianNextStepsHeading))
 	cmd.Println(
 		fmt.Sprintf(
-			assets.TextDesc(assets.TextDescKeyWriteObsidianNextSteps),
+			assets.TextDesc(embed.TextDescKeyWriteObsidianNextSteps),
 			output,
 		),
 	)

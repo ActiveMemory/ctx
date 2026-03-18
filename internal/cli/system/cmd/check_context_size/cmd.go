@@ -9,6 +9,7 @@ package check_context_size
 import (
 	"os"
 
+	"github.com/ActiveMemory/ctx/internal/config/embed"
 	"github.com/spf13/cobra"
 
 	"github.com/ActiveMemory/ctx/internal/assets"
@@ -19,7 +20,7 @@ import (
 // Returns:
 //   - *cobra.Command: Configured check-context-size subcommand
 func Cmd() *cobra.Command {
-	short, long := assets.CommandDesc(assets.CmdDescKeySystemCheckContextSize)
+	short, long := assets.CommandDesc(embed.CmdDescKeySystemCheckContextSize)
 
 	return &cobra.Command{
 		Use:    "check-context-size",

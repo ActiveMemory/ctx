@@ -11,6 +11,7 @@ import (
 	"path/filepath"
 
 	"github.com/ActiveMemory/ctx/internal/config/archive"
+	"github.com/ActiveMemory/ctx/internal/config/embed"
 	"github.com/ActiveMemory/ctx/internal/config/env"
 	"github.com/ActiveMemory/ctx/internal/config/hook"
 	"github.com/ActiveMemory/ctx/internal/config/token"
@@ -81,13 +82,13 @@ func Run(cmd *cobra.Command, stdin *os.File) error {
 
 	// Emit VERBATIM relay
 	cmd.Println(core.NudgeBox(
-		assets.TextDesc(assets.TextDescKeyBackupRelayPrefix),
-		assets.TextDesc(assets.TextDescKeyBackupBoxTitle),
+		assets.TextDesc(embed.TextDescKeyBackupRelayPrefix),
+		assets.TextDesc(embed.TextDescKeyBackupBoxTitle),
 		content))
 
 	ref := notify.NewTemplateRef(hook.CheckBackupAge, hook.VariantWarning, vars)
 	core.NudgeAndRelay(hook.CheckBackupAge+": "+
-		assets.TextDesc(assets.TextDescKeyBackupRelayMessage),
+		assets.TextDesc(embed.TextDescKeyBackupRelayMessage),
 		input.SessionID, ref,
 	)
 

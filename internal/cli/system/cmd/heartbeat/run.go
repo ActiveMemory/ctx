@@ -12,6 +12,7 @@ import (
 	"path/filepath"
 
 	"github.com/ActiveMemory/ctx/internal/config/dir"
+	"github.com/ActiveMemory/ctx/internal/config/embed"
 	"github.com/ActiveMemory/ctx/internal/config/heartbeat"
 	"github.com/ActiveMemory/ctx/internal/config/hook"
 	"github.com/ActiveMemory/ctx/internal/config/stats"
@@ -85,10 +86,10 @@ func Run(_ *cobra.Command, stdin *os.File) error {
 	var msg string
 	if tokens > 0 {
 		pct := tokens * stats.PercentMultiplier / window
-		msg = fmt.Sprintf(assets.TextDesc(assets.TextDescKeyHeartbeatNotifyTokens),
+		msg = fmt.Sprintf(assets.TextDesc(embed.TextDescKeyHeartbeatNotifyTokens),
 			count, contextModified, core.FormatTokenCount(tokens), pct)
 	} else {
-		msg = fmt.Sprintf(assets.TextDesc(assets.TextDescKeyHeartbeatNotifyPlain),
+		msg = fmt.Sprintf(assets.TextDesc(embed.TextDescKeyHeartbeatNotifyPlain),
 			count, contextModified)
 	}
 	_ = notify.Send(hook.NotifyChannelHeartbeat, msg, sessionID, ref)
@@ -97,10 +98,10 @@ func Run(_ *cobra.Command, stdin *os.File) error {
 	var logLine string
 	if tokens > 0 {
 		pct := tokens * stats.PercentMultiplier / window
-		logLine = fmt.Sprintf(assets.TextDesc(assets.TextDescKeyHeartbeatLogTokens),
+		logLine = fmt.Sprintf(assets.TextDesc(embed.TextDescKeyHeartbeatLogTokens),
 			count, contextModified, core.FormatTokenCount(tokens), pct)
 	} else {
-		logLine = fmt.Sprintf(assets.TextDesc(assets.TextDescKeyHeartbeatLogPlain),
+		logLine = fmt.Sprintf(assets.TextDesc(embed.TextDescKeyHeartbeatLogPlain),
 			count, contextModified)
 	}
 	core.LogMessage(logFile, sessionID, logLine)

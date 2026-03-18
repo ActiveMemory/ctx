@@ -7,6 +7,7 @@
 package export
 
 import (
+	"github.com/ActiveMemory/ctx/internal/config/embed"
 	"github.com/spf13/cobra"
 
 	"github.com/ActiveMemory/ctx/internal/assets"
@@ -19,7 +20,7 @@ import (
 func Cmd() *cobra.Command {
 	var force, dryRun bool
 
-	short, long := assets.CommandDesc(assets.CmdDescKeyPadExport)
+	short, long := assets.CommandDesc(embed.CmdDescKeyPadExport)
 	cmd := &cobra.Command{
 		Use:   "export [DIR]",
 		Short: short,
@@ -36,11 +37,11 @@ func Cmd() *cobra.Command {
 
 	cmd.Flags().BoolVarP(
 		&force, "force", "f", false,
-		assets.FlagDesc(assets.FlagDescKeyPadExportForce),
+		assets.FlagDesc(embed.FlagDescKeyPadExportForce),
 	)
 	cmd.Flags().BoolVar(
 		&dryRun, "dry-run", false,
-		assets.FlagDesc(assets.FlagDescKeyPadExportDryRun),
+		assets.FlagDesc(embed.FlagDescKeyPadExportDryRun),
 	)
 
 	return cmd

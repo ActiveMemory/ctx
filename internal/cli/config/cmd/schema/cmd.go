@@ -7,6 +7,7 @@
 package schema
 
 import (
+	"github.com/ActiveMemory/ctx/internal/config/embed"
 	ctxerr "github.com/ActiveMemory/ctx/internal/err/config"
 	"github.com/spf13/cobra"
 
@@ -18,7 +19,7 @@ import (
 // Returns:
 //   - *cobra.Command: Configured schema subcommand
 func Cmd() *cobra.Command {
-	short, long := assets.CommandDesc(assets.CmdDescKeyConfigSchema)
+	short, long := assets.CommandDesc(embed.CmdDescKeyConfigSchema)
 
 	return &cobra.Command{
 		Use:   "schema",

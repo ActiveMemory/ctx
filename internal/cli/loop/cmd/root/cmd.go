@@ -7,6 +7,7 @@
 package root
 
 import (
+	"github.com/ActiveMemory/ctx/internal/config/embed"
 	"github.com/ActiveMemory/ctx/internal/config/loop"
 	"github.com/spf13/cobra"
 
@@ -38,7 +39,7 @@ func Cmd() *cobra.Command {
 		outputFile    string
 	)
 
-	short, long := assets.CommandDesc(assets.CmdDescKeyLoop)
+	short, long := assets.CommandDesc(embed.CmdDescKeyLoop)
 	cmd := &cobra.Command{
 		Use:   "loop",
 		Short: short,
@@ -52,25 +53,25 @@ func Cmd() *cobra.Command {
 
 	cmd.Flags().StringVarP(&promptFile,
 		"prompt", "p",
-		loop.PromptMd, assets.FlagDesc(assets.FlagDescKeyLoopPrompt),
+		loop.PromptMd, assets.FlagDesc(embed.FlagDescKeyLoopPrompt),
 	)
 	cmd.Flags().StringVarP(
-		&tool, "tool", "t", "claude", assets.FlagDesc(assets.FlagDescKeyLoopTool),
+		&tool, "tool", "t", "claude", assets.FlagDesc(embed.FlagDescKeyLoopTool),
 	)
 	cmd.Flags().IntVarP(
 		&maxIterations,
 		"max-iterations", "n",
-		0, assets.FlagDesc(assets.FlagDescKeyLoopMaxIterations),
+		0, assets.FlagDesc(embed.FlagDescKeyLoopMaxIterations),
 	)
 	cmd.Flags().StringVarP(
 		&completionMsg,
 		"completion", "c", loop.DefaultCompletionSignal,
-		assets.FlagDesc(assets.FlagDescKeyLoopCompletion),
+		assets.FlagDesc(embed.FlagDescKeyLoopCompletion),
 	)
 	cmd.Flags().StringVarP(
 		&outputFile,
 		"output", "o",
-		"loop.sh", assets.FlagDesc(assets.FlagDescKeyLoopOutput),
+		"loop.sh", assets.FlagDesc(embed.FlagDescKeyLoopOutput),
 	)
 
 	return cmd

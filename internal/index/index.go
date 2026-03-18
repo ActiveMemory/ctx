@@ -14,6 +14,7 @@ import (
 	"strings"
 
 	"github.com/ActiveMemory/ctx/internal/assets"
+	"github.com/ActiveMemory/ctx/internal/config/embed"
 	"github.com/ActiveMemory/ctx/internal/config/fs"
 	"github.com/ActiveMemory/ctx/internal/config/marker"
 	"github.com/ActiveMemory/ctx/internal/config/regex"
@@ -232,14 +233,14 @@ func ReindexFile(
 	entries := ParseHeaders(string(content))
 	if len(entries) == 0 {
 		_, err := fmt.Fprintf(
-			w, assets.TextDesc(assets.TextDescKeyDriftCleared)+token.NewlineLF, entryType)
+			w, assets.TextDesc(embed.TextDescKeyDriftCleared)+token.NewlineLF, entryType)
 		if err != nil {
 			return err
 		}
 	} else {
 		_, err := fmt.Fprintf(
 			w,
-			assets.TextDesc(assets.TextDescKeyDriftRegenerated)+token.NewlineLF, len(entries),
+			assets.TextDesc(embed.TextDescKeyDriftRegenerated)+token.NewlineLF, len(entries),
 		)
 		if err != nil {
 			return err

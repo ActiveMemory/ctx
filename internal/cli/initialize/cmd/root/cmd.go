@@ -8,6 +8,7 @@ package root
 
 import (
 	"github.com/ActiveMemory/ctx/internal/config/cli"
+	"github.com/ActiveMemory/ctx/internal/config/embed"
 	"github.com/spf13/cobra"
 
 	"github.com/ActiveMemory/ctx/internal/assets"
@@ -40,7 +41,7 @@ func Cmd() *cobra.Command {
 		noPluginEnable bool
 	)
 
-	short, long := assets.CommandDesc(assets.CmdDescKeyInitialize)
+	short, long := assets.CommandDesc(embed.CmdDescKeyInitialize)
 	cmd := &cobra.Command{
 		Use:         "init",
 		Short:       short,
@@ -53,24 +54,24 @@ func Cmd() *cobra.Command {
 
 	cmd.Flags().BoolVarP(
 		&force,
-		"force", "f", false, assets.FlagDesc(assets.FlagDescKeyInitializeForce),
+		"force", "f", false, assets.FlagDesc(embed.FlagDescKeyInitializeForce),
 	)
 	cmd.Flags().BoolVarP(
 		&minimal,
 		"minimal", "m", false,
-		assets.FlagDesc(assets.FlagDescKeyInitializeMinimal),
+		assets.FlagDesc(embed.FlagDescKeyInitializeMinimal),
 	)
 	cmd.Flags().BoolVar(
 		&merge, "merge", false,
-		assets.FlagDesc(assets.FlagDescKeyInitializeMerge),
+		assets.FlagDesc(embed.FlagDescKeyInitializeMerge),
 	)
 	cmd.Flags().BoolVar(
 		&ralph, "ralph", false,
-		assets.FlagDesc(assets.FlagDescKeyInitializeRalph),
+		assets.FlagDesc(embed.FlagDescKeyInitializeRalph),
 	)
 	cmd.Flags().BoolVar(
 		&noPluginEnable, "no-plugin-enable", false,
-		assets.FlagDesc(assets.FlagDescKeyInitializeNoPluginEnable),
+		assets.FlagDesc(embed.FlagDescKeyInitializeNoPluginEnable),
 	)
 
 	return cmd
