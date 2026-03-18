@@ -165,6 +165,20 @@ err.http.too-many-redirects:
   short: 'too many redirects: limit exceeded'
 err.http.unsafe-url-scheme:
   short: 'unsafe URL scheme: %s: only http and https are allowed'
+err.init.ctx-not-in-path:
+  short: |-
+    Error: ctx is not in your PATH
+    The hooks created by 'ctx init' require ctx to be in your PATH.
+    Without this, Claude Code hooks will fail silently.
+
+    To fix this:
+      1. Build:   make build
+      2. Install: sudo make install
+
+    Or manually:
+      sudo cp ./ctx /usr/local/bin/
+
+    Then run 'ctx init' again.
 err.init.context-not-initialized:
   short: "no .context/ directory found. Run 'ctx init' first"
 err.init.create-makefile:

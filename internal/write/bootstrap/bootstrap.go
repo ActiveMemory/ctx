@@ -24,7 +24,14 @@ import (
 //   - rules: ordered rule strings (numbered automatically).
 //   - nextSteps: ordered next-step strings (numbered automatically).
 //   - warning: optional warning string (empty string skips).
-func Text(cmd *cobra.Command, dir string, fileList string, rules []string, nextSteps []string, warning string) {
+func Text(
+	cmd *cobra.Command,
+	dir string,
+	fileList string,
+	rules []string,
+	nextSteps []string,
+	warning string,
+) {
 	cmd.Println(assets.TextDesc(assets.TextDescKeyWriteBootstrapTitle))
 	cmd.Println(assets.TextDesc(assets.TextDescKeyWriteBootstrapSep))
 	cmd.Println()
@@ -35,17 +42,22 @@ func Text(cmd *cobra.Command, dir string, fileList string, rules []string, nextS
 	cmd.Println()
 	cmd.Println(assets.TextDesc(assets.TextDescKeyWriteBootstrapRules))
 	for i, r := range rules {
-		cmd.Println(fmt.Sprintf(assets.TextDesc(assets.TextDescKeyWriteBootstrapNumbered), i+1, r))
+		cmd.Println(fmt.Sprintf(
+			assets.TextDesc(assets.TextDescKeyWriteBootstrapNumbered), i+1, r,
+		))
 	}
 	cmd.Println()
 	cmd.Println(assets.TextDesc(assets.TextDescKeyWriteBootstrapNextSteps))
 	for i, s := range nextSteps {
-		cmd.Println(fmt.Sprintf(assets.TextDesc(assets.TextDescKeyWriteBootstrapNumbered), i+1, s))
+		cmd.Println(fmt.Sprintf(
+			assets.TextDesc(assets.TextDescKeyWriteBootstrapNumbered), i+1, s,
+		))
 	}
-
 	if warning != "" {
 		cmd.Println()
-		cmd.Println(fmt.Sprintf(assets.TextDesc(assets.TextDescKeyWriteBootstrapWarning), warning))
+		cmd.Println(fmt.Sprintf(
+			assets.TextDesc(assets.TextDescKeyWriteBootstrapWarning), warning,
+		))
 	}
 }
 
@@ -60,7 +72,14 @@ func Text(cmd *cobra.Command, dir string, fileList string, rules []string, nextS
 //   - rules: list of rule strings.
 //   - nextSteps: list of next-step strings.
 //   - warning: optional warning string (empty string omits warnings).
-func JSON(cmd *cobra.Command, dir string, files []string, rules []string, nextSteps []string, warning string) {
+func JSON(
+	cmd *cobra.Command,
+	dir string,
+	files []string,
+	rules []string,
+	nextSteps []string,
+	warning string,
+) {
 	out := entity.BootstrapOutput{
 		ContextDir: dir,
 		Files:      files,

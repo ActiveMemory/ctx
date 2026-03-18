@@ -240,12 +240,15 @@ sync.dir.description:
   short: Directory '%s/' exists but not documented
 sync.dir.suggestion:
   short: Add '%s/' to %s with description
-task-archive.content-preview:
-  short: 'Archived content preview:'
-task-archive.dry-run-header:
-  short: Dry run - no files modified
-task-archive.dry-run-summary:
-  short: Would archive %d completed tasks (keeping %d pending)
+task-archive.dry-run-block:
+  short: |-
+    Dry run - no files modified
+
+    Would archive %d completed tasks (keeping %d pending)
+
+    Archived content preview:
+    %s
+    %s%s
 task-archive.no-completed:
   short: No completed tasks to archive.
 task-archive.pending-remain:

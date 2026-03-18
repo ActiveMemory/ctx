@@ -29,17 +29,12 @@ func InfoGenerated(
 	maxIterations int,
 	completionMsg string,
 ) {
-	cmd.Println(fmt.Sprintf(assets.TextDesc(assets.TextDescKeyWriteLoopGenerated), outputFile))
-	cmd.Println()
-	cmd.Println(heading)
-	cmd.Println(fmt.Sprintf(assets.TextDesc(assets.TextDescKeyWriteLoopRunCmd), outputFile))
-	cmd.Println()
-	cmd.Println(fmt.Sprintf(assets.TextDesc(assets.TextDescKeyWriteLoopTool), tool))
-	cmd.Println(fmt.Sprintf(assets.TextDesc(assets.TextDescKeyWriteLoopPrompt), promptFile))
+	iterLine := assets.TextDesc(assets.TextDescKeyWriteLoopUnlimited)
 	if maxIterations > 0 {
-		cmd.Println(fmt.Sprintf(assets.TextDesc(assets.TextDescKeyWriteLoopMaxIterations), maxIterations))
-	} else {
-		cmd.Println(assets.TextDesc(assets.TextDescKeyWriteLoopUnlimited))
+		iterLine = fmt.Sprintf(assets.TextDesc(assets.TextDescKeyWriteLoopMaxIterations), maxIterations)
 	}
-	cmd.Println(fmt.Sprintf(assets.TextDesc(assets.TextDescKeyWriteLoopCompletion), completionMsg))
+	cmd.Println(fmt.Sprintf(
+		assets.TextDesc(assets.TextDescKeyWriteLoopGeneratedBlock),
+		outputFile, heading, outputFile, tool, promptFile, iterLine, completionMsg,
+	))
 }

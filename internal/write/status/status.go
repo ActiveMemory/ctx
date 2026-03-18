@@ -41,14 +41,10 @@ func StatusHeader(cmd *cobra.Command, dir string, fileCount, totalTokens int) {
 	if cmd == nil {
 		return
 	}
-	cmd.Println(assets.TextDesc(assets.TextDescKeyWriteStatusTitle))
-	cmd.Println(assets.TextDesc(assets.TextDescKeyWriteStatusSeparator))
-	cmd.Println()
-	cmd.Println(fmt.Sprintf(assets.TextDesc(assets.TextDescKeyWriteStatusDir), dir))
-	cmd.Println(fmt.Sprintf(assets.TextDesc(assets.TextDescKeyWriteStatusFiles), fileCount))
-	cmd.Println(fmt.Sprintf(assets.TextDesc(assets.TextDescKeyWriteStatusTokens), format.Number(totalTokens)))
-	cmd.Println()
-	cmd.Println(assets.TextDesc(assets.TextDescKeyWriteStatusFilesHeader))
+	cmd.Println(fmt.Sprintf(
+		assets.TextDesc(assets.TextDescKeyWriteStatusHeaderBlock),
+		dir, fileCount, format.Number(totalTokens),
+	))
 }
 
 // StatusFileItem prints a single file entry in the status list.

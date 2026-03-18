@@ -73,7 +73,7 @@ func NoSessionsWithHint(cmd *cobra.Command, allProjects bool) {
 	}
 	if allProjects {
 		cmd.Println("No sessions found.")
-		cmd.Println("")
+		cmd.Println()
 		cmd.Println("Sessions are stored in ~/.claude/projects/")
 	} else {
 		cmd.Println("No sessions found for this project.")

@@ -67,7 +67,6 @@ func SyncResult(
 	} else {
 		cmd.Println(fmt.Sprintf(line, sourceLines))
 	}
-
 	if sourceLines > mirrorLines {
 		cmd.Println(fmt.Sprintf(assets.TextDesc(assets.TextDescKeyWriteNewContent), sourceLines-mirrorLines))
 	}

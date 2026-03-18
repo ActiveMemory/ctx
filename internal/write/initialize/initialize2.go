@@ -135,10 +135,5 @@ func InfoGitignoreReview(cmd *cobra.Command) {
 // Parameters:
 //   - cmd: Cobra command for output
 func InfoNextSteps(cmd *cobra.Command) {
-	cmd.Println()
-	cmd.Println(assets.TextDesc(assets.TextDescKeyWriteInitNextSteps))
-	cmd.Println()
-	cmd.Println(assets.TextDesc(assets.TextDescKeyWriteInitPluginInfo))
-	cmd.Println()
-	cmd.Println(assets.TextDesc(assets.TextDescKeyWriteInitPluginNote))
+	cmd.Println(assets.TextDesc(assets.TextDescKeyWriteInitNextStepsBlock))
 }

@@ -63,7 +63,7 @@ func runArchive(cmd *cobra.Command, dryRun bool) error {
 			archivableBlocks = append(archivableBlocks, block)
 		} else {
 			skippedCount++
-			archive2.ArchiveSkipping(cmd, block.ParentTaskText())
+			archive2.Skipping(cmd, block.ParentTaskText())
 		}
 	}
 
@@ -72,9 +72,9 @@ func runArchive(cmd *cobra.Command, dryRun bool) error {
 
 	if len(archivableBlocks) == 0 {
 		if skippedCount > 0 {
-			archive2.ArchiveSkipIncomplete(cmd, skippedCount)
+			archive2.SkipIncomplete(cmd, skippedCount)
 		} else {
-			archive2.ArchiveNoCompleted(cmd)
+			archive2.NoCompleted(cmd)
 		}
 		return nil
 	}
@@ -87,7 +87,7 @@ func runArchive(cmd *cobra.Command, dryRun bool) error {
 	}
 
 	if dryRun {
-		archive2.ArchiveDryRun(cmd, len(archivableBlocks), pendingCount,
+		archive2.DryRun(cmd, len(archivableBlocks), pendingCount,
 			archivedContent.String(), token.Separator)
 		return nil
 	}
@@ -108,7 +108,7 @@ func runArchive(cmd *cobra.Command, dryRun bool) error {
 		return ctxerr.FileWrite(updateErr)
 	}
 
-	archive2.ArchiveSuccess(cmd, len(archivableBlocks), archiveFilePath, pendingCount)
+	archive2.Success(cmd, len(archivableBlocks), archiveFilePath, pendingCount)
 
 	return nil
 }

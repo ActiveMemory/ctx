@@ -116,12 +116,22 @@ write.init-makefile-includes:
   short: '  ○ Makefile (already includes %s)'
 write.init-merged:
   short: '  ✓ %s (merged)'
-write.init-next-steps:
-  short: |-
-    Next steps:
-      1. Edit .context/TASKS.md to add your current tasks
-      2. Run 'ctx status' to see context summary
-      3. Run 'ctx agent' to get AI-ready context packet
+write.init-next-steps-block:
+  short: |4-
+
+      Next steps:
+        1. Edit .context/TASKS.md to add your current tasks
+        2. Run 'ctx status' to see context summary
+        3. Run 'ctx agent' to get AI-ready context packet
+
+      Claude Code users: install the ctx plugin for hooks & skills:
+        /plugin marketplace add ActiveMemory/ctx
+        /plugin install ctx@activememory-ctx
+
+      Note: local plugin installs are not auto-enabled globally.
+      Run 'ctx init' again after installing the plugin to enable it,
+      or manually add to ~/.claude/settings.json:
+        {"enabledPlugins": {"ctx@activememory-ctx": true}}
 write.init-no-changes:
   short: '  ○ %s (no changes needed)'
 write.init-overwrite-prompt:
@@ -140,17 +150,6 @@ write.init-plugin-already-enabled:
   short: '  ○ Plugin already enabled globally'
 write.init-plugin-enabled:
   short: '  ✓ Plugin enabled globally in %s'
-write.init-plugin-info:
-  short: |-
-    Claude Code users: install the ctx plugin for hooks & skills:
-      /plugin marketplace add ActiveMemory/ctx
-      /plugin install ctx@activememory-ctx
-write.init-plugin-note:
-  short: |-
-    Note: local plugin installs are not auto-enabled globally.
-    Run 'ctx init' again after installing the plugin to enable it,
-    or manually add to ~/.claude/settings.json:
-      {"enabledPlugins": {"ctx@activememory-ctx": true}}
 write.init-plugin-skipped:
   short: '  ○ Plugin enablement skipped (plugin not installed)'
 write.init-scratchpad-key-created:
@@ -177,14 +176,16 @@ write.initialized:
   short: Context initialized in %s/
 write.journal-orphan-removed:
   short: '  removed orphan: %s'
-write.journal-site-alt:
-  short: '  ctx journal site --serve'
 write.journal-site-building:
   short: Building site...
-write.journal-site-generated:
-  short: ✓ Generated site with %d entries in %s
-write.journal-site-next-steps:
-  short: '  cd %s && %s serve'
+write.journal-site-generated-block:
+  short: |-
+    ✓ Generated site with %d entries in %s
+
+    Next steps:
+      cd %s && %s serve
+      or
+      ctx journal site --serve
 write.journal-site-starting:
   short: Starting local server...
 write.journal-sync-locked:
@@ -215,18 +216,19 @@ write.lock-unlock-summary:
   short: |2-
 
     %s %d entry(s).
-write.loop-completion:
-  short: 'Completion signal: %s'
-write.loop-generated:
-  short: ✓ Generated %s
+write.loop-generated-block:
+  short: |-
+    ✓ Generated %s
+
+    %s
+      ./%s
+
+    Tool: %s
+    Prompt: %s
+    %s
+    Completion signal: %s
 write.loop-max-iterations:
   short: 'Max iterations: %d'
-write.loop-prompt:
-  short: 'Prompt: %s'
-write.loop-run-cmd:
-  short: '  ./%s'
-write.loop-tool:
-  short: 'Tool: %s'
 write.loop-unlimited:
   short: 'Max iterations: unlimited'
 write.memory-archives:
@@ -425,28 +427,26 @@ write.status-activity-header:
   short: 'Recent Activity:'
 write.status-activity-item:
   short: '  - %s modified %s'
-write.status-dir:
-  short: 'Context Directory: %s'
 write.status-drift:
   short: '  Status: drift detected (source is newer)'
 write.status-file-compact:
   short: '  %s %s (%s)'
 write.status-file-verbose:
   short: '  %s %s (%s) [%s tokens, %s]'
-write.status-files:
-  short: 'Total Files: %d'
-write.status-files-header:
-  short: 'Files:'
+write.status-header-block:
+  short: |-
+    Context Status
+    ====================
+
+    Context Directory: %s
+    Total Files: %d
+    Token Estimate: %s tokens
+
+    Files:
 write.status-no-drift:
   short: '  Status: no drift'
 write.status-preview-line:
   short: '      (%s)'
-write.status-separator:
-  short: ====================
-write.status-title:
-  short: Context Status
-write.status-tokens:
-  short: 'Token Estimate: %s tokens'
 write.sync-action:
   short: '%d. [%s] %s'
 write.sync-dry-run:

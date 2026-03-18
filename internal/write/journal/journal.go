@@ -32,12 +32,10 @@ func InfoOrphanRemoved(cmd *cobra.Command, name string) {
 func InfoSiteGenerated(
 	cmd *cobra.Command, count int, output, zensicalBin string,
 ) {
-	cmd.Println(fmt.Sprintf(assets.TextDesc(assets.TextDescKeyWriteJournalSiteGenerated), count, output))
-	cmd.Println()
-	cmd.Println("Next steps:")
-	cmd.Println(fmt.Sprintf(assets.TextDesc(assets.TextDescKeyWriteJournalSiteNextSteps), output, zensicalBin))
-	cmd.Println("  or")
-	cmd.Println(assets.TextDesc(assets.TextDescKeyWriteJournalSiteAlt))
+	cmd.Println(fmt.Sprintf(
+		assets.TextDesc(assets.TextDescKeyWriteJournalSiteGeneratedBlock),
+		count, output, output, zensicalBin,
+	))
 }
 
 // InfoSiteStarting reports the server is starting.

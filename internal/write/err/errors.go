@@ -8,8 +8,10 @@ package err
 
 import (
 	"fmt"
-	"github.com/ActiveMemory/ctx/internal/assets"
+
 	"github.com/spf13/cobra"
+
+	"github.com/ActiveMemory/ctx/internal/assets"
 )
 
 // WithError writes a prefixed error message to the command's stderr stream.
