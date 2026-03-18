@@ -45,13 +45,17 @@ const gitignoreHeader = "# ctx managed entries"
 //   - merge: If true, auto-merge ctx content into existing files
 //   - ralph: If true, use autonomous loop templates (no questions, signals)
 //   - noPluginEnable: If true, skip auto-enabling the plugin globally
+//   - caller: Identifies the calling tool (e.g. "vscode") for template overrides
 //
 // Returns:
 //   - error: Non-nil if directory creation or file operations fail
-func Run(cmd *cobra.Command, force, minimal, merge, ralph, noPluginEnable bool) error {
-	// Check if ctx is in PATH (required for hooks to work)
-	if err := core.CheckCtxInPath(cmd); err != nil {
-		return err
+func Run(cmd *cobra.Command, force, minimal, merge, ralph, noPluginEnable bool, caller string) error {
+	// Check if ctx is in PATH (required for hooks to work).
+	// Skip when a caller is set — the caller manages its own binary path.
+	if caller == "" {
+		if err := core.CheckCtxInPath(cmd); err != nil {
+			return err
+		}
 	}
 
 	contextDir := rc.ContextDir()
@@ -61,6 +65,12 @@ func Run(cmd *cobra.Command, force, minimal, merge, ralph, noPluginEnable bool) 
 	// treated as uninitialized — no overwrite prompt needed.
 	if _, err := os.Stat(contextDir); err == nil {
 		if !force && hasEssentialFiles(contextDir) {
+			// When called from an editor (--caller), stdin is unavailable.
+			// Skip the interactive prompt to prevent hanging.
+			if caller != "" {
+				initialize.InfoAborted(cmd)
+				return nil
+			}
 			// Prompt for confirmation
 			initialize.InfoOverwritePrompt(cmd, contextDir)
 			reader := bufio.NewReader(os.Stdin)
@@ -103,7 +113,7 @@ func Run(cmd *cobra.Command, force, minimal, merge, ralph, noPluginEnable bool) 
 			continue
 		}
 
-		content, err := assets.Template(name)
+		content, err := assets.TemplateForCaller(name, caller)
 		if err != nil {
 			return ctxerr.ReadTemplate(name, err)
 		}
@@ -144,50 +154,75 @@ func Run(cmd *cobra.Command, force, minimal, merge, ralph, noPluginEnable bool) 
 	}
 
 	// Create PROMPT.md (uses ralph template if --ralph flag set)
-	if err := core.HandlePromptMd(cmd, force, merge, ralph); err != nil {
+	// When called from an editor (--caller), auto-merge to avoid stdin prompt.
+	autoMerge := merge || caller != ""
+	if err := core.HandlePromptMd(cmd, force, autoMerge, ralph); err != nil {
 		// Non-fatal: warn but continue
 		initialize.InfoWarnNonFatal(cmd, "PROMPT.md", err)
 	}
 
 	// Create IMPLEMENTATION_PLAN.md
-	if err := core.HandleImplementationPlan(cmd, force, merge); err != nil {
+	// When called from an editor (--caller), auto-merge to avoid stdin prompt.
+	if err := core.HandleImplementationPlan(cmd, force, autoMerge); err != nil {
 		// Non-fatal: warn but continue
 		initialize.InfoWarnNonFatal(cmd, "IMPLEMENTATION_PLAN.md", err)
 	}
 
-	// Merge permissions into settings.local.json (no hook scaffolding)
-	initialize.InfoSettingUpPermissions(cmd)
-	if err := core.MergeSettingsPermissions(cmd); err != nil {
-		// Non-fatal: warn but continue
-		initialize.InfoWarnNonFatal(cmd, "Permissions", err)
-	}
-
-	// Auto-enable plugin globally unless suppressed
-	if !noPluginEnable {
-		if pluginErr := core.EnablePluginGlobally(cmd); pluginErr != nil {
+	// Claude Code specific artifacts — skip when called from another editor.
+	// These create .claude/settings.local.json, enable the plugin,
+	// and deploy Makefile.ctx — none of which are used by VS Code.
+	if caller == "" {
+		// Merge permissions into settings.local.json (no hook scaffolding)
+		initialize.InfoSettingUpPermissions(cmd)
+		if err := core.MergeSettingsPermissions(cmd); err != nil {
 			// Non-fatal: warn but continue
-			initialize.InfoWarnNonFatal(cmd, "Plugin enablement", pluginErr)
+			initialize.InfoWarnNonFatal(cmd, "Permissions", err)
+		}
+
+		// Auto-enable plugin globally unless suppressed
+		if !noPluginEnable {
+			if pluginErr := core.EnablePluginGlobally(cmd); pluginErr != nil {
+				// Non-fatal: warn but continue
+				initialize.InfoWarnNonFatal(cmd, "Plugin enablement", pluginErr)
+			}
 		}
 	}
 
-	// Handle CLAUDE.md creation/merge
-	if err := core.HandleClaudeMd(cmd, force, merge); err != nil {
+	// Handle CLAUDE.md creation/merge (uses caller-specific override when available)
+	// When called from an editor (--caller), auto-merge to avoid stdin prompt.
+	if err := core.HandleClaudeMd(cmd, force, autoMerge, caller); err != nil {
 		// Non-fatal: warn but continue
 		initialize.InfoWarnNonFatal(cmd, "CLAUDE.md", err)
 	}
 
-	// Deploy Makefile.ctx and amend user Makefile
-	if err := core.HandleMakefileCtx(cmd); err != nil {
-		// Non-fatal: warn but continue
-		initialize.InfoWarnNonFatal(cmd, "Makefile", err)
+	// Deploy Makefile.ctx and amend user Makefile (Claude Code only)
+	if caller == "" {
+		if err := core.HandleMakefileCtx(cmd); err != nil {
+			// Non-fatal: warn but continue
+			initialize.InfoWarnNonFatal(cmd, "Makefile", err)
+		}
 	}
 
 	// Update .gitignore with recommended entries
-	if err := ensureGitignoreEntries(cmd); err != nil {
+	if err := ensureGitignoreEntries(cmd, caller); err != nil {
 		initialize.InfoWarnNonFatal(cmd, ".gitignore", err)
 	}
 
-	initialize.InfoNextSteps(cmd)
+	// Caller-specific setup — skip Claude Code instructions when called
+	// from another editor.
+	if caller == "" {
+		initialize.InfoNextSteps(cmd)
+	} else {
+		// VS Code / other editor specific setup
+		cmd.Println("\nSetting up editor integration...")
+		if err := core.CreateVSCodeArtifacts(cmd); err != nil {
+			initialize.InfoWarnNonFatal(cmd, "VS Code artifacts", err)
+		}
+
+		cmd.Println("\nNext steps:")
+		cmd.Println("  1. Edit .context/TASKS.md to add your current tasks")
+		cmd.Println("  2. Run '@ctx /status' to see context summary")
+	}
 
 	return nil
 }
@@ -273,7 +308,10 @@ func hasEssentialFiles(contextDir string) bool {
 
 // ensureGitignoreEntries appends recommended .gitignore entries that are not
 // already present. Creates .gitignore if it does not exist.
-func ensureGitignoreEntries(cmd *cobra.Command) error {
+//
+// When caller is non-empty (editor integration), Claude Code-specific
+// entries like .claude/settings.local.json are skipped.
+func ensureGitignoreEntries(cmd *cobra.Command, caller string) error {
 	gitignorePath := ".gitignore"
 
 	content, err := os.ReadFile(gitignorePath)
@@ -287,9 +325,13 @@ func ensureGitignoreEntries(cmd *cobra.Command) error {
 		existing[strings.TrimSpace(line)] = true
 	}
 
-	// Collect missing entries.
+	// Collect missing entries, skipping Claude Code-specific ones for editors.
 	var missing []string
 	for _, entry := range file.Gitignore {
+		// .claude/ entries are only relevant when running without a caller
+		if caller != "" && strings.HasPrefix(entry, ".claude/") {
+			continue
+		}
 		if !existing[entry] {
 			missing = append(missing, entry)
 		}

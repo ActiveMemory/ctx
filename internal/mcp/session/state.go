@@ -23,6 +23,14 @@ type State struct {
 	AddsPerformed    map[string]int
 	sessionStartedAt time.Time
 	PendingFlush     []PendingUpdate
+
+	// Governance tracking — used by CheckGovernance() to emit
+	// contextual warnings in MCP tool responses.
+	sessionStarted   bool
+	contextLoaded    bool
+	lastDriftCheck   time.Time
+	lastContextWrite time.Time
+	callsSinceWrite  int
 }
 
 // PendingUpdate represents a context update awaiting human confirmation.

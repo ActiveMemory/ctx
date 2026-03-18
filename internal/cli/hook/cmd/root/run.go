@@ -7,6 +7,7 @@
 package root
 
 import (
+	"encoding/json"
 	"os"
 	"path/filepath"
 	"strings"
@@ -139,5 +140,43 @@ func WriteCopilotInstructions(cmd *cobra.Command) error {
 
 	hook.InfoCopilotSummary(cmd)
 
+	// Also create .vscode/mcp.json if it doesn't exist
+	if err := ensureVSCodeMCPJSON(cmd); err != nil {
+		cmd.Println("  ⚠ .vscode/mcp.json: " + err.Error())
+	}
+
+	return nil
+}
+
+// ensureVSCodeMCPJSON creates .vscode/mcp.json to register the ctx MCP
+// server for VS Code Copilot. Skips if the file already exists.
+func ensureVSCodeMCPJSON(cmd *cobra.Command) error {
+	vsDir := ".vscode"
+	target := filepath.Join(vsDir, "mcp.json")
+
+	if _, err := os.Stat(target); err == nil {
+		cmd.Println("  ○ " + target + " (exists, skipped)")
+		return nil
+	}
+
+	if err := os.MkdirAll(vsDir, fs.PermExec); err != nil {
+		return err
+	}
+
+	mcpCfg := map[string]interface{}{
+		"servers": map[string]interface{}{
+			"ctx": map[string]interface{}{
+				"command": "ctx",
+				"args":    []string{"mcp", "serve"},
+			},
+		},
+	}
+	data, _ := json.MarshalIndent(mcpCfg, "", "  ")
+	data = append(data, '\n')
+
+	if err := os.WriteFile(target, data, fs.PermFile); err != nil {
+		return err
+	}
+	cmd.Println("  ✓ " + target)
 	return nil
 }

@@ -9,6 +9,7 @@ package assets
 import (
 	"fmt"
 	"os"
+	"path/filepath"
 	"strings"
 	"testing"
 
@@ -114,13 +115,14 @@ func TestTextDescKeysResolve(t *testing.T) {
 	t.Logf("verified %d TextDescKey constants", len(keys))
 }
 
-// collectTextDescKeys extracts all TextDescKey constant values from embed.go
-// by parsing lines matching the pattern: TextDescKey... = "..."
+// collectTextDescKeys extracts all TextDescKey constant values from
+// config/embed/embeds.go by parsing lines matching the pattern:
+// TextDescKey... = "..."
 func collectTextDescKeys(t *testing.T) []string {
 	t.Helper()
-	data, err := os.ReadFile("embed.go")
+	data, err := os.ReadFile(filepath.Join("..", "config", "embed", "embeds.go"))
 	if err != nil {
-		t.Fatalf("read embed.go: %v", err)
+		t.Fatalf("read config/embed/embeds.go: %v", err)
 	}
 
 	var keys []string

@@ -3,7 +3,11 @@ node_modules/
 src/
 tsconfig.json
 vitest.config.ts
+vitest.workspace.ts
 package-lock.json
+test-insiders-sim.js
+*.vsix
+.github/
 **/*.map
 **/*.ts
 !dist/**
