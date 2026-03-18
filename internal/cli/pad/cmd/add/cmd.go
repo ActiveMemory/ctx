@@ -7,6 +7,7 @@
 package add
 
 import (
+	"github.com/ActiveMemory/ctx/internal/config/embed"
 	"github.com/spf13/cobra"
 
 	"github.com/ActiveMemory/ctx/internal/assets"
@@ -19,7 +20,7 @@ import (
 func Cmd() *cobra.Command {
 	var filePath string
 
-	short, _ := assets.CommandDesc(assets.CmdDescKeyPadAdd)
+	short, _ := assets.CommandDesc(embed.CmdDescKeyPadAdd)
 	cmd := &cobra.Command{
 		Use:   "add TEXT",
 		Short: short,
@@ -34,7 +35,7 @@ func Cmd() *cobra.Command {
 
 	cmd.Flags().StringVarP(&filePath,
 		"file", "f", "",
-		assets.FlagDesc(assets.FlagDescKeyPadAddFile),
+		assets.FlagDesc(embed.FlagDescKeyPadAddFile),
 	)
 
 	return cmd

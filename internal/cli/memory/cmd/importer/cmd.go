@@ -7,6 +7,7 @@
 package importer
 
 import (
+	"github.com/ActiveMemory/ctx/internal/config/embed"
 	"github.com/spf13/cobra"
 
 	"github.com/ActiveMemory/ctx/internal/assets"
@@ -19,7 +20,7 @@ import (
 func Cmd() *cobra.Command {
 	var dryRun bool
 
-	short, long := assets.CommandDesc(assets.CmdDescKeyMemoryImport)
+	short, long := assets.CommandDesc(embed.CmdDescKeyMemoryImport)
 	cmd := &cobra.Command{
 		Use:   "import",
 		Short: short,
@@ -31,7 +32,7 @@ func Cmd() *cobra.Command {
 
 	cmd.Flags().BoolVar(
 		&dryRun, "dry-run", false,
-		assets.FlagDesc(assets.FlagDescKeyMemoryImportDryRun),
+		assets.FlagDesc(embed.FlagDescKeyMemoryImportDryRun),
 	)
 
 	return cmd

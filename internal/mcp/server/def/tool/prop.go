@@ -9,6 +9,7 @@ package tool
 import (
 	"github.com/ActiveMemory/ctx/internal/assets"
 	"github.com/ActiveMemory/ctx/internal/config/cli"
+	"github.com/ActiveMemory/ctx/internal/config/embed"
 	"github.com/ActiveMemory/ctx/internal/config/mcp/schema"
 	"github.com/ActiveMemory/ctx/internal/mcp/proto"
 )
@@ -48,22 +49,22 @@ func EntryAttrProps(contextKey string) map[string]proto.Property {
 		cli.AttrRationale: {
 			Type: schema.String,
 			Description: assets.TextDesc(
-				assets.TextDescKeyMCPToolPropRationale),
+				embed.TextDescKeyMCPToolPropRationale),
 		},
 		cli.AttrConsequence: {
 			Type: schema.String,
 			Description: assets.TextDesc(
-				assets.TextDescKeyMCPToolPropConseq),
+				embed.TextDescKeyMCPToolPropConseq),
 		},
 		cli.AttrLesson: {
 			Type: schema.String,
 			Description: assets.TextDesc(
-				assets.TextDescKeyMCPToolPropLesson),
+				embed.TextDescKeyMCPToolPropLesson),
 		},
 		cli.AttrApplication: {
 			Type: schema.String,
 			Description: assets.TextDesc(
-				assets.TextDescKeyMCPToolPropApplication),
+				embed.TextDescKeyMCPToolPropApplication),
 		},
 	}
 }

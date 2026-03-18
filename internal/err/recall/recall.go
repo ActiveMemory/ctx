@@ -10,6 +10,7 @@ import (
 	"fmt"
 
 	"github.com/ActiveMemory/ctx/internal/assets"
+	"github.com/ActiveMemory/ctx/internal/config/embed"
 )
 
 // EventLogRead wraps a failure to read the event log.
@@ -21,7 +22,7 @@ import (
 //   - error: "reading event log: <cause>"
 func EventLogRead(cause error) error {
 	return fmt.Errorf(
-		assets.TextDesc(assets.TextDescKeyErrRecallEventLogRead), cause,
+		assets.TextDesc(embed.TextDescKeyErrRecallEventLogRead), cause,
 	)
 }
 
@@ -34,7 +35,7 @@ func EventLogRead(cause error) error {
 //   - error: "globbing stats files: <cause>"
 func StatsGlob(cause error) error {
 	return fmt.Errorf(
-		assets.TextDesc(assets.TextDescKeyErrRecallStatsGlob), cause,
+		assets.TextDesc(embed.TextDescKeyErrRecallStatsGlob), cause,
 	)
 }
 
@@ -47,7 +48,7 @@ func StatsGlob(cause error) error {
 //   - error: "<fileName> not found. Run 'ctx init' first"
 func ReindexFileNotFound(fileName string) error {
 	return fmt.Errorf(
-		assets.TextDesc(assets.TextDescKeyErrRecallReindexFileNotFound), fileName,
+		assets.TextDesc(embed.TextDescKeyErrRecallReindexFileNotFound), fileName,
 	)
 }
 
@@ -61,7 +62,7 @@ func ReindexFileNotFound(fileName string) error {
 //   - error: "failed to read <filePath>: <cause>"
 func ReindexFileRead(filePath string, cause error) error {
 	return fmt.Errorf(
-		assets.TextDesc(assets.TextDescKeyErrRecallReindexFileRead),
+		assets.TextDesc(embed.TextDescKeyErrRecallReindexFileRead),
 		filePath, cause,
 	)
 }
@@ -76,7 +77,7 @@ func ReindexFileRead(filePath string, cause error) error {
 //   - error: "failed to write <filePath>: <cause>"
 func ReindexFileWrite(filePath string, cause error) error {
 	return fmt.Errorf(
-		assets.TextDesc(assets.TextDescKeyErrRecallReindexFileWrite),
+		assets.TextDesc(embed.TextDescKeyErrRecallReindexFileWrite),
 		filePath, cause,
 	)
 }
@@ -90,6 +91,6 @@ func ReindexFileWrite(filePath string, cause error) error {
 //   - error: "failed to open log file: <cause>"
 func OpenLogFile(cause error) error {
 	return fmt.Errorf(
-		assets.TextDesc(assets.TextDescKeyErrRecallOpenLogFile), cause,
+		assets.TextDesc(embed.TextDescKeyErrRecallOpenLogFile), cause,
 	)
 }

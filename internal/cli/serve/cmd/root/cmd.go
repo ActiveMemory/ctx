@@ -7,6 +7,7 @@
 package root
 
 import (
+	"github.com/ActiveMemory/ctx/internal/config/embed"
 	"github.com/spf13/cobra"
 
 	"github.com/ActiveMemory/ctx/internal/assets"
@@ -19,7 +20,7 @@ import (
 // Returns:
 //   - *cobra.Command: The serve command
 func Cmd() *cobra.Command {
-	short, long := assets.CommandDesc(assets.CmdDescKeyServe)
+	short, long := assets.CommandDesc(embed.CmdDescKeyServe)
 
 	cmd := &cobra.Command{
 		Use:   "serve [directory]",

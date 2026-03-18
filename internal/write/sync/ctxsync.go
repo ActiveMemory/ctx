@@ -10,6 +10,7 @@ import (
 	"fmt"
 
 	"github.com/ActiveMemory/ctx/internal/assets"
+	"github.com/ActiveMemory/ctx/internal/config/embed"
 	"github.com/spf13/cobra"
 )
 
@@ -21,7 +22,7 @@ func CtxSyncInSync(cmd *cobra.Command) {
 	if cmd == nil {
 		return
 	}
-	cmd.Println(assets.TextDesc(assets.TextDescKeyWriteSyncInSync))
+	cmd.Println(assets.TextDesc(embed.TextDescKeyWriteSyncInSync))
 }
 
 // CtxSyncHeader prints the sync analysis heading and optional dry-run notice.
@@ -33,11 +34,11 @@ func CtxSyncHeader(cmd *cobra.Command, dryRun bool) {
 	if cmd == nil {
 		return
 	}
-	cmd.Println(assets.TextDesc(assets.TextDescKeyWriteSyncHeader))
-	cmd.Println(assets.TextDesc(assets.TextDescKeyWriteSyncSeparator))
+	cmd.Println(assets.TextDesc(embed.TextDescKeyWriteSyncHeader))
+	cmd.Println(assets.TextDesc(embed.TextDescKeyWriteSyncSeparator))
 	cmd.Println()
 	if dryRun {
-		cmd.Println(assets.TextDesc(assets.TextDescKeyWriteSyncDryRun))
+		cmd.Println(assets.TextDesc(embed.TextDescKeyWriteSyncDryRun))
 		cmd.Println()
 	}
 }
@@ -54,9 +55,9 @@ func CtxSyncAction(cmd *cobra.Command, index int, actionType, description, sugge
 	if cmd == nil {
 		return
 	}
-	cmd.Println(fmt.Sprintf(assets.TextDesc(assets.TextDescKeyWriteSyncAction), index, actionType, description))
+	cmd.Println(fmt.Sprintf(assets.TextDesc(embed.TextDescKeyWriteSyncAction), index, actionType, description))
 	if suggestion != "" {
-		cmd.Println(fmt.Sprintf(assets.TextDesc(assets.TextDescKeyWriteSyncSuggestion), suggestion))
+		cmd.Println(fmt.Sprintf(assets.TextDesc(embed.TextDescKeyWriteSyncSuggestion), suggestion))
 	}
 	cmd.Println()
 }
@@ -72,8 +73,8 @@ func CtxSyncSummary(cmd *cobra.Command, count int, dryRun bool) {
 		return
 	}
 	if dryRun {
-		cmd.Println(fmt.Sprintf(assets.TextDesc(assets.TextDescKeyWriteSyncDryRunSummary), count))
+		cmd.Println(fmt.Sprintf(assets.TextDesc(embed.TextDescKeyWriteSyncDryRunSummary), count))
 	} else {
-		cmd.Println(fmt.Sprintf(assets.TextDesc(assets.TextDescKeyWriteSyncSummary), count))
+		cmd.Println(fmt.Sprintf(assets.TextDesc(embed.TextDescKeyWriteSyncSummary), count))
 	}
 }

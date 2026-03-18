@@ -7,6 +7,7 @@
 package root
 
 import (
+	"github.com/ActiveMemory/ctx/internal/config/embed"
 	"github.com/spf13/cobra"
 
 	"github.com/ActiveMemory/ctx/internal/assets"
@@ -20,7 +21,7 @@ import (
 // Returns:
 //   - *cobra.Command: The reindex command
 func Cmd() *cobra.Command {
-	short, long := assets.CommandDesc(assets.CmdDescKeyReindex)
+	short, long := assets.CommandDesc(embed.CmdDescKeyReindex)
 
 	return &cobra.Command{
 		Use:   "reindex",

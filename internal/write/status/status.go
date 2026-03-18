@@ -10,6 +10,7 @@ import (
 	"fmt"
 
 	"github.com/ActiveMemory/ctx/internal/assets"
+	"github.com/ActiveMemory/ctx/internal/config/embed"
 	"github.com/ActiveMemory/ctx/internal/format"
 	"github.com/spf13/cobra"
 )
@@ -42,7 +43,7 @@ func StatusHeader(cmd *cobra.Command, dir string, fileCount, totalTokens int) {
 		return
 	}
 	cmd.Println(fmt.Sprintf(
-		assets.TextDesc(assets.TextDescKeyWriteStatusHeaderBlock),
+		assets.TextDesc(embed.TextDescKeyWriteStatusHeaderBlock),
 		dir, fileCount, format.Number(totalTokens),
 	))
 }
@@ -58,14 +59,14 @@ func StatusFileItem(cmd *cobra.Command, f StatusFileInfo, verbose bool) {
 		return
 	}
 	if verbose {
-		cmd.Println(fmt.Sprintf(assets.TextDesc(assets.TextDescKeyWriteStatusFileVerbose),
+		cmd.Println(fmt.Sprintf(assets.TextDesc(embed.TextDescKeyWriteStatusFileVerbose),
 			f.Indicator, f.Name, f.Status,
 			format.Number(f.Tokens), format.Bytes(f.Size)))
 		for _, line := range f.Preview {
-			cmd.Println(fmt.Sprintf(assets.TextDesc(assets.TextDescKeyWriteStatusPreviewLine), line))
+			cmd.Println(fmt.Sprintf(assets.TextDesc(embed.TextDescKeyWriteStatusPreviewLine), line))
 		}
 	} else {
-		cmd.Println(fmt.Sprintf(assets.TextDesc(assets.TextDescKeyWriteStatusFileCompact), f.Indicator, f.Name, f.Status))
+		cmd.Println(fmt.Sprintf(assets.TextDesc(embed.TextDescKeyWriteStatusFileCompact), f.Indicator, f.Name, f.Status))
 	}
 }
 
@@ -79,8 +80,8 @@ func StatusActivity(cmd *cobra.Command, entries []StatusActivityInfo) {
 		return
 	}
 	cmd.Println()
-	cmd.Println(assets.TextDesc(assets.TextDescKeyWriteStatusActivityHeader))
+	cmd.Println(assets.TextDesc(embed.TextDescKeyWriteStatusActivityHeader))
 	for _, e := range entries {
-		cmd.Println(fmt.Sprintf(assets.TextDesc(assets.TextDescKeyWriteStatusActivityItem), e.Name, e.Ago))
+		cmd.Println(fmt.Sprintf(assets.TextDesc(embed.TextDescKeyWriteStatusActivityItem), e.Name, e.Ago))
 	}
 }

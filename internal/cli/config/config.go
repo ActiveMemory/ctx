@@ -7,6 +7,7 @@
 package config
 
 import (
+	"github.com/ActiveMemory/ctx/internal/config/embed"
 	"github.com/spf13/cobra"
 
 	"github.com/ActiveMemory/ctx/internal/assets"
@@ -20,7 +21,7 @@ import (
 // Returns:
 //   - *cobra.Command: Configured config command with subcommands
 func Cmd() *cobra.Command {
-	short, long := assets.CommandDesc(assets.CmdDescKeyConfig)
+	short, long := assets.CommandDesc(embed.CmdDescKeyConfig)
 
 	cmd := &cobra.Command{
 		Use:   "config",

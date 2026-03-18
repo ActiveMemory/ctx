@@ -12,6 +12,7 @@ import (
 
 	"github.com/ActiveMemory/ctx/internal/assets"
 	"github.com/ActiveMemory/ctx/internal/config/ctx"
+	"github.com/ActiveMemory/ctx/internal/config/embed"
 	"github.com/ActiveMemory/ctx/internal/config/fs"
 	"github.com/ActiveMemory/ctx/internal/config/marker"
 	"github.com/ActiveMemory/ctx/internal/config/memory"
@@ -62,14 +63,14 @@ func SelectContent(contextDir string, budget int) (PublishResult, error) {
 //   - string: formatted Markdown with section headings and items
 func (r *PublishResult) Format() string {
 	var buf strings.Builder
-	buf.WriteString(assets.TextDesc(assets.TextDescKeyMemoryPublishTitle))
+	buf.WriteString(assets.TextDesc(embed.TextDescKeyMemoryPublishTitle))
 
-	writeSection(&buf, assets.TextDescKeyMemoryPublishTasks, r.Tasks, "")
-	writeSection(&buf, assets.TextDescKeyMemoryPublishDec,
+	writeSection(&buf, embed.TextDescKeyMemoryPublishTasks, r.Tasks, "")
+	writeSection(&buf, embed.TextDescKeyMemoryPublishDec,
 		r.Decisions, token.PrefixListDash,
 	)
-	writeSection(&buf, assets.TextDescKeyMemoryPublishConv, r.Conventions, "")
-	writeSection(&buf, assets.TextDescKeyMemoryPublishLrn,
+	writeSection(&buf, embed.TextDescKeyMemoryPublishConv, r.Conventions, "")
+	writeSection(&buf, embed.TextDescKeyMemoryPublishLrn,
 		r.Learnings, token.PrefixListDash,
 	)
 

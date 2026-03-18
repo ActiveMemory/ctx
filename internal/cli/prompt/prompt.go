@@ -7,6 +7,7 @@
 package prompt
 
 import (
+	"github.com/ActiveMemory/ctx/internal/config/embed"
 	"github.com/spf13/cobra"
 
 	"github.com/ActiveMemory/ctx/internal/assets"
@@ -23,7 +24,7 @@ import (
 // Returns:
 //   - *cobra.Command: Configured prompt command with subcommands
 func Cmd() *cobra.Command {
-	short, long := assets.CommandDesc(assets.CmdDescKeyPrompt)
+	short, long := assets.CommandDesc(embed.CmdDescKeyPrompt)
 
 	cmd := &cobra.Command{
 		Use:   "prompt",

@@ -9,6 +9,7 @@ package edit
 import (
 	"strconv"
 
+	"github.com/ActiveMemory/ctx/internal/config/embed"
 	ctxerr "github.com/ActiveMemory/ctx/internal/err/pad"
 	"github.com/spf13/cobra"
 
@@ -36,7 +37,7 @@ func Cmd() *cobra.Command {
 	var filePath string
 	var labelText string
 
-	short, long := assets.CommandDesc(assets.CmdDescKeyPadEdit)
+	short, long := assets.CommandDesc(embed.CmdDescKeyPadEdit)
 	cmd := &cobra.Command{
 		Use:   "edit N [TEXT]",
 		Short: short,
@@ -95,16 +96,16 @@ func Cmd() *cobra.Command {
 	}
 
 	cmd.Flags().StringVar(&appendText,
-		"append", "", assets.FlagDesc(assets.FlagDescKeyPadEditAppend),
+		"append", "", assets.FlagDesc(embed.FlagDescKeyPadEditAppend),
 	)
 	cmd.Flags().StringVar(&prependText,
-		"prepend", "", assets.FlagDesc(assets.FlagDescKeyPadEditPrepend),
+		"prepend", "", assets.FlagDesc(embed.FlagDescKeyPadEditPrepend),
 	)
 	cmd.Flags().StringVarP(&filePath,
-		"file", "f", "", assets.FlagDesc(assets.FlagDescKeyPadEditFile),
+		"file", "f", "", assets.FlagDesc(embed.FlagDescKeyPadEditFile),
 	)
 	cmd.Flags().StringVar(&labelText,
-		"label", "", assets.FlagDesc(assets.FlagDescKeyPadEditLabel),
+		"label", "", assets.FlagDesc(embed.FlagDescKeyPadEditLabel),
 	)
 
 	return cmd

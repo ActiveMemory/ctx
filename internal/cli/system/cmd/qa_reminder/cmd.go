@@ -9,6 +9,7 @@ package qa_reminder
 import (
 	"os"
 
+	"github.com/ActiveMemory/ctx/internal/config/embed"
 	"github.com/spf13/cobra"
 
 	"github.com/ActiveMemory/ctx/internal/assets"
@@ -19,7 +20,7 @@ import (
 // Returns:
 //   - *cobra.Command: Configured qa-reminder subcommand
 func Cmd() *cobra.Command {
-	short, long := assets.CommandDesc(assets.CmdDescKeySystemQaReminder)
+	short, long := assets.CommandDesc(embed.CmdDescKeySystemQaReminder)
 
 	return &cobra.Command{
 		Use:    "qa-reminder",

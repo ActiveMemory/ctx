@@ -7,6 +7,7 @@
 package list
 
 import (
+	"github.com/ActiveMemory/ctx/internal/config/embed"
 	"github.com/ActiveMemory/ctx/internal/config/journal"
 	"github.com/spf13/cobra"
 
@@ -27,7 +28,7 @@ func Cmd() *cobra.Command {
 		allProjects bool
 	)
 
-	short, long := assets.CommandDesc(assets.CmdDescKeyRecallList)
+	short, long := assets.CommandDesc(embed.CmdDescKeyRecallList)
 
 	cmd := &cobra.Command{
 		Use:   "list",
@@ -39,22 +40,22 @@ func Cmd() *cobra.Command {
 	}
 
 	cmd.Flags().IntVarP(&limit, "limit", "n", journal.DefaultRecallListLimit,
-		assets.FlagDesc(assets.FlagDescKeyRecallListLimit),
+		assets.FlagDesc(embed.FlagDescKeyRecallListLimit),
 	)
 	cmd.Flags().StringVarP(&project, "project", "p", "",
-		assets.FlagDesc(assets.FlagDescKeyRecallListProject),
+		assets.FlagDesc(embed.FlagDescKeyRecallListProject),
 	)
 	cmd.Flags().StringVarP(&tool, "tool", "t", "",
-		assets.FlagDesc(assets.FlagDescKeyRecallListTool),
+		assets.FlagDesc(embed.FlagDescKeyRecallListTool),
 	)
 	cmd.Flags().StringVar(&since, "since", "",
-		assets.FlagDesc(assets.FlagDescKeyRecallListSince),
+		assets.FlagDesc(embed.FlagDescKeyRecallListSince),
 	)
 	cmd.Flags().StringVar(&until, "until", "",
-		assets.FlagDesc(assets.FlagDescKeyRecallListUntil),
+		assets.FlagDesc(embed.FlagDescKeyRecallListUntil),
 	)
 	cmd.Flags().BoolVar(&allProjects, "all-projects", false,
-		assets.FlagDesc(assets.FlagDescKeyRecallListAllProjects),
+		assets.FlagDesc(embed.FlagDescKeyRecallListAllProjects),
 	)
 
 	return cmd

@@ -11,6 +11,7 @@ import (
 	"fmt"
 
 	"github.com/ActiveMemory/ctx/internal/assets"
+	"github.com/ActiveMemory/ctx/internal/config/embed"
 )
 
 // NotFound returns an error indicating that MEMORY.md was not
@@ -20,7 +21,7 @@ import (
 //   - error: "MEMORY.md not found"
 func NotFound() error {
 	return errors.New(
-		assets.TextDesc(assets.TextDescKeyErrMemoryNotFound),
+		assets.TextDesc(embed.TextDescKeyErrMemoryNotFound),
 	)
 }
 
@@ -33,7 +34,7 @@ func NotFound() error {
 //   - error: "MEMORY.md not found: <cause>"
 func DiscoverFailed(cause error) error {
 	return fmt.Errorf(
-		assets.TextDesc(assets.TextDescKeyErrMemoryDiscoverFailed), cause,
+		assets.TextDesc(embed.TextDescKeyErrMemoryDiscoverFailed), cause,
 	)
 }
 
@@ -46,7 +47,7 @@ func DiscoverFailed(cause error) error {
 //   - error: "computing diff: <cause>"
 func DiffFailed(cause error) error {
 	return fmt.Errorf(
-		assets.TextDesc(assets.TextDescKeyErrMemoryDiffFailed), cause,
+		assets.TextDesc(embed.TextDescKeyErrMemoryDiffFailed), cause,
 	)
 }
 
@@ -59,7 +60,7 @@ func DiffFailed(cause error) error {
 //   - error: "selecting content: <cause>"
 func SelectContentFailed(cause error) error {
 	return fmt.Errorf(
-		assets.TextDesc(assets.TextDescKeyErrMemorySelectContentFailed), cause,
+		assets.TextDesc(embed.TextDescKeyErrMemorySelectContentFailed), cause,
 	)
 }
 
@@ -72,7 +73,7 @@ func SelectContentFailed(cause error) error {
 //   - error: "publishing: <cause>"
 func PublishFailed(cause error) error {
 	return fmt.Errorf(
-		assets.TextDesc(assets.TextDescKeyErrMemoryPublishFailed), cause,
+		assets.TextDesc(embed.TextDescKeyErrMemoryPublishFailed), cause,
 	)
 }
 
@@ -85,7 +86,7 @@ func PublishFailed(cause error) error {
 //   - error: "reading MEMORY.md: <cause>"
 func Read(cause error) error {
 	return fmt.Errorf(
-		assets.TextDesc(assets.TextDescKeyErrMemoryReadMemory), cause,
+		assets.TextDesc(embed.TextDescKeyErrMemoryReadMemory), cause,
 	)
 }
 
@@ -98,7 +99,7 @@ func Read(cause error) error {
 //   - error: "writing MEMORY.md: <cause>"
 func Write(cause error) error {
 	return fmt.Errorf(
-		assets.TextDesc(assets.TextDescKeyErrMemoryWriteMemoryTop), cause,
+		assets.TextDesc(embed.TextDescKeyErrMemoryWriteMemoryTop), cause,
 	)
 }
 
@@ -111,7 +112,7 @@ func Write(cause error) error {
 //   - error: "sync failed: <cause>"
 func Sync(cause error) error {
 	return fmt.Errorf(
-		assets.TextDesc(assets.TextDescKeyErrMemorySyncFailed), cause,
+		assets.TextDesc(embed.TextDescKeyErrMemorySyncFailed), cause,
 	)
 }
 
@@ -124,7 +125,7 @@ func Sync(cause error) error {
 //   - error: "resolving project root: <cause>"
 func DiscoverResolveRoot(cause error) error {
 	return fmt.Errorf(
-		assets.TextDesc(assets.TextDescKeyErrMemoryDiscoverResolveRoot), cause,
+		assets.TextDesc(embed.TextDescKeyErrMemoryDiscoverResolveRoot), cause,
 	)
 }
 
@@ -137,7 +138,7 @@ func DiscoverResolveRoot(cause error) error {
 //   - error: "resolving home directory: <cause>"
 func DiscoverResolveHome(cause error) error {
 	return fmt.Errorf(
-		assets.TextDesc(assets.TextDescKeyErrMemoryDiscoverResolveHome), cause,
+		assets.TextDesc(embed.TextDescKeyErrMemoryDiscoverResolveHome), cause,
 	)
 }
 
@@ -150,7 +151,7 @@ func DiscoverResolveHome(cause error) error {
 //   - error: "no auto memory at <path>"
 func DiscoverNoMemory(path string) error {
 	return fmt.Errorf(
-		assets.TextDesc(assets.TextDescKeyErrMemoryDiscoverNoMemory), path,
+		assets.TextDesc(embed.TextDescKeyErrMemoryDiscoverNoMemory), path,
 	)
 }
 
@@ -163,7 +164,7 @@ func DiscoverNoMemory(path string) error {
 //   - error: "reading source: <cause>"
 func ReadSource(cause error) error {
 	return fmt.Errorf(
-		assets.TextDesc(assets.TextDescKeyErrMemoryReadSource), cause,
+		assets.TextDesc(embed.TextDescKeyErrMemoryReadSource), cause,
 	)
 }
 
@@ -176,7 +177,7 @@ func ReadSource(cause error) error {
 //   - error: "archiving previous mirror: <cause>"
 func ArchivePrevious(cause error) error {
 	return fmt.Errorf(
-		assets.TextDesc(assets.TextDescKeyErrMemoryArchivePrevious), cause,
+		assets.TextDesc(embed.TextDescKeyErrMemoryArchivePrevious), cause,
 	)
 }
 
@@ -189,7 +190,7 @@ func ArchivePrevious(cause error) error {
 //   - error: "creating memory directory: <cause>"
 func CreateDir(cause error) error {
 	return fmt.Errorf(
-		assets.TextDesc(assets.TextDescKeyErrMemoryCreateDir), cause,
+		assets.TextDesc(embed.TextDescKeyErrMemoryCreateDir), cause,
 	)
 }
 
@@ -202,7 +203,7 @@ func CreateDir(cause error) error {
 //   - error: "writing mirror: <cause>"
 func WriteMirror(cause error) error {
 	return fmt.Errorf(
-		assets.TextDesc(assets.TextDescKeyErrMemoryWriteMirror), cause,
+		assets.TextDesc(embed.TextDescKeyErrMemoryWriteMirror), cause,
 	)
 }
 
@@ -215,7 +216,7 @@ func WriteMirror(cause error) error {
 //   - error: "reading mirror for archive: <cause>"
 func ReadMirrorArchive(cause error) error {
 	return fmt.Errorf(
-		assets.TextDesc(assets.TextDescKeyErrMemoryReadMirrorArchive), cause,
+		assets.TextDesc(embed.TextDescKeyErrMemoryReadMirrorArchive), cause,
 	)
 }
 
@@ -228,7 +229,7 @@ func ReadMirrorArchive(cause error) error {
 //   - error: "creating archive directory: <cause>"
 func CreateArchiveDir(cause error) error {
 	return fmt.Errorf(
-		assets.TextDesc(assets.TextDescKeyErrMemoryCreateArchiveDir), cause,
+		assets.TextDesc(embed.TextDescKeyErrMemoryCreateArchiveDir), cause,
 	)
 }
 
@@ -241,7 +242,7 @@ func CreateArchiveDir(cause error) error {
 //   - error: "writing archive: <cause>"
 func WriteArchive(cause error) error {
 	return fmt.Errorf(
-		assets.TextDesc(assets.TextDescKeyErrMemoryWriteArchive), cause,
+		assets.TextDesc(embed.TextDescKeyErrMemoryWriteArchive), cause,
 	)
 }
 
@@ -254,7 +255,7 @@ func WriteArchive(cause error) error {
 //   - error: "reading mirror: <cause>"
 func ReadMirror(cause error) error {
 	return fmt.Errorf(
-		assets.TextDesc(assets.TextDescKeyErrMemoryReadMirror), cause,
+		assets.TextDesc(embed.TextDescKeyErrMemoryReadMirror), cause,
 	)
 }
 
@@ -267,7 +268,7 @@ func ReadMirror(cause error) error {
 //   - error: "reading diff source: <cause>"
 func ReadDiffSource(cause error) error {
 	return fmt.Errorf(
-		assets.TextDesc(assets.TextDescKeyErrMemoryReadDiffSource), cause,
+		assets.TextDesc(embed.TextDescKeyErrMemoryReadDiffSource), cause,
 	)
 }
 
@@ -280,7 +281,7 @@ func ReadDiffSource(cause error) error {
 //   - error: "selecting content: <cause>"
 func SelectContent(cause error) error {
 	return fmt.Errorf(
-		assets.TextDesc(assets.TextDescKeyErrMemorySelectContent), cause,
+		assets.TextDesc(embed.TextDescKeyErrMemorySelectContent), cause,
 	)
 }
 
@@ -293,6 +294,6 @@ func SelectContent(cause error) error {
 //   - error: "writing MEMORY.md: <cause>"
 func WriteMemory(cause error) error {
 	return fmt.Errorf(
-		assets.TextDesc(assets.TextDescKeyErrMemoryWriteMemory), cause,
+		assets.TextDesc(embed.TextDescKeyErrMemoryWriteMemory), cause,
 	)
 }

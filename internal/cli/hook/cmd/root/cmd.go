@@ -8,6 +8,7 @@ package root
 
 import (
 	"github.com/ActiveMemory/ctx/internal/config/cli"
+	"github.com/ActiveMemory/ctx/internal/config/embed"
 	"github.com/spf13/cobra"
 
 	"github.com/ActiveMemory/ctx/internal/assets"
@@ -26,7 +27,7 @@ import (
 func Cmd() *cobra.Command {
 	var write bool
 
-	short, long := assets.CommandDesc(assets.CmdDescKeyHook)
+	short, long := assets.CommandDesc(embed.CmdDescKeyHook)
 	cmd := &cobra.Command{
 		Use:         "hook <tool>",
 		Short:       short,
@@ -40,7 +41,7 @@ func Cmd() *cobra.Command {
 
 	cmd.Flags().BoolVarP(
 		&write, "write", "w", false,
-		assets.FlagDesc(assets.FlagDescKeyHookWrite),
+		assets.FlagDesc(embed.FlagDescKeyHookWrite),
 	)
 
 	return cmd

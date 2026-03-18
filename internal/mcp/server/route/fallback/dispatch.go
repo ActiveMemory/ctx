@@ -10,6 +10,7 @@ import (
 	"fmt"
 
 	"github.com/ActiveMemory/ctx/internal/assets"
+	"github.com/ActiveMemory/ctx/internal/config/embed"
 	"github.com/ActiveMemory/ctx/internal/mcp/proto"
 	"github.com/ActiveMemory/ctx/internal/mcp/server/out"
 )
@@ -25,7 +26,7 @@ import (
 func DispatchErr(req proto.Request) *proto.Response {
 	return out.ErrResponse(req.ID, proto.ErrCodeNotFound,
 		fmt.Sprintf(
-			assets.TextDesc(assets.TextDescKeyMCPMethodNotFound),
+			assets.TextDesc(embed.TextDescKeyMCPMethodNotFound),
 			req.Method,
 		),
 	)

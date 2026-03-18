@@ -13,6 +13,7 @@ import (
 	"strings"
 
 	"github.com/ActiveMemory/ctx/internal/config/ceremony"
+	"github.com/ActiveMemory/ctx/internal/config/embed"
 	"github.com/ActiveMemory/ctx/internal/config/file"
 	"github.com/ActiveMemory/ctx/internal/config/hook"
 	"github.com/ActiveMemory/ctx/internal/io"
@@ -104,16 +105,16 @@ func EmitCeremonyNudge(cmd *cobra.Command, remember, wrapup bool) (msg, variant 
 	switch {
 	case !remember && !wrapup:
 		variant = hook.VariantBoth
-		boxTitleKey = assets.TextDescKeyCeremonyBoxBoth
-		fallbackKey = assets.TextDescKeyCeremonyFallbackBoth
+		boxTitleKey = embed.TextDescKeyCeremonyBoxBoth
+		fallbackKey = embed.TextDescKeyCeremonyFallbackBoth
 	case !remember:
 		variant = hook.VariantRemember
-		boxTitleKey = assets.TextDescKeyCeremonyBoxRemember
-		fallbackKey = assets.TextDescKeyCeremonyFallbackRemember
+		boxTitleKey = embed.TextDescKeyCeremonyBoxRemember
+		fallbackKey = embed.TextDescKeyCeremonyFallbackRemember
 	case !wrapup:
 		variant = hook.VariantWrapup
-		boxTitleKey = assets.TextDescKeyCeremonyBoxWrapup
-		fallbackKey = assets.TextDescKeyCeremonyFallbackWrapup
+		boxTitleKey = embed.TextDescKeyCeremonyBoxWrapup
+		fallbackKey = embed.TextDescKeyCeremonyFallbackWrapup
 	}
 
 	boxTitle := assets.TextDesc(boxTitleKey)
@@ -124,7 +125,7 @@ func EmitCeremonyNudge(cmd *cobra.Command, remember, wrapup bool) (msg, variant 
 		return "", variant
 	}
 
-	relayPrefix := assets.TextDesc(assets.TextDescKeyCeremonyRelayPrefix)
+	relayPrefix := assets.TextDesc(embed.TextDescKeyCeremonyRelayPrefix)
 
 	msg = NudgeBox(relayPrefix, boxTitle, content)
 	cmd.Println(msg)

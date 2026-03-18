@@ -13,6 +13,7 @@ import (
 
 	"github.com/ActiveMemory/ctx/internal/assets"
 	"github.com/ActiveMemory/ctx/internal/config/cli"
+	"github.com/ActiveMemory/ctx/internal/config/embed"
 	"github.com/ActiveMemory/ctx/internal/config/mcp/cfg"
 	"github.com/ActiveMemory/ctx/internal/config/mcp/field"
 	timeCfg "github.com/ActiveMemory/ctx/internal/config/time"
@@ -59,7 +60,7 @@ func complete(
 	query, _ := args[field.Query].(string)
 	if query == "" {
 		return out.ToolError(
-			id, assets.TextDesc(assets.TextDescKeyMCPQueryRequired),
+			id, assets.TextDesc(embed.TextDescKeyMCPQueryRequired),
 		)
 	}
 	text, err := h.Complete(query)
@@ -91,7 +92,7 @@ func recall(
 		if parseErr != nil {
 			return out.ToolError(
 				id, fmt.Sprintf(
-					assets.TextDesc(assets.TextDescKeyMCPInvalidSinceDate),
+					assets.TextDesc(embed.TextDescKeyMCPInvalidSinceDate),
 					parseErr,
 				),
 			)
@@ -184,7 +185,7 @@ func sessionEvent(
 	eventType, _ := args[cli.AttrType].(string)
 	if eventType == "" {
 		return out.ToolError(id, assets.TextDesc(
-			assets.TextDescKeyMCPEventTypeRequired),
+			embed.TextDescKeyMCPEventTypeRequired),
 		)
 	}
 	caller, _ := args[field.Caller].(string)

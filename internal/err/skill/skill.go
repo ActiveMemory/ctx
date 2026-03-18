@@ -10,6 +10,7 @@ import (
 	"fmt"
 
 	"github.com/ActiveMemory/ctx/internal/assets"
+	"github.com/ActiveMemory/ctx/internal/config/embed"
 )
 
 // List wraps a failure to list embedded skill directories.
@@ -20,7 +21,7 @@ import (
 // Returns:
 //   - error: "failed to list skills: <cause>"
 func List(cause error) error {
-	return fmt.Errorf(assets.TextDesc(assets.TextDescKeyErrSkillList), cause)
+	return fmt.Errorf(assets.TextDesc(embed.TextDescKeyErrSkillList), cause)
 }
 
 // Read wraps a failure to read a skill's content.
@@ -33,6 +34,6 @@ func List(cause error) error {
 //   - error: "failed to read skill <name>: <cause>"
 func Read(name string, cause error) error {
 	return fmt.Errorf(
-		assets.TextDesc(assets.TextDescKeyErrSkillRead), name, cause,
+		assets.TextDesc(embed.TextDescKeyErrSkillRead), name, cause,
 	)
 }

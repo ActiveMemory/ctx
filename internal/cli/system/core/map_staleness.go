@@ -13,6 +13,7 @@ import (
 	"strings"
 
 	"github.com/ActiveMemory/ctx/internal/config/architecture"
+	"github.com/ActiveMemory/ctx/internal/config/embed"
 	"github.com/ActiveMemory/ctx/internal/config/hook"
 	"github.com/ActiveMemory/ctx/internal/config/token"
 	"github.com/ActiveMemory/ctx/internal/config/tpl"
@@ -74,7 +75,7 @@ func CountModuleCommits(since string) int {
 //   - dateStr: last refresh date (YYYY-MM-DD)
 //   - moduleCommits: number of commits touching modules since last refresh
 func EmitMapStalenessWarning(cmd *cobra.Command, sessionID, dateStr string, moduleCommits int) {
-	fallback := fmt.Sprintf(assets.TextDesc(assets.TextDescKeyCheckMapStalenessFallback), dateStr, moduleCommits)
+	fallback := fmt.Sprintf(assets.TextDesc(embed.TextDescKeyCheckMapStalenessFallback), dateStr, moduleCommits)
 	content := LoadMessage(hook.CheckMapStaleness, hook.VariantStale,
 		map[string]any{
 			tpl.VarLastRefreshDate: dateStr,
@@ -85,13 +86,13 @@ func EmitMapStalenessWarning(cmd *cobra.Command, sessionID, dateStr string, modu
 	}
 
 	cmd.Println(NudgeBox(
-		assets.TextDesc(assets.TextDescKeyCheckMapStalenessRelayPrefix),
-		assets.TextDesc(assets.TextDescKeyCheckMapStalenessBoxTitle),
+		assets.TextDesc(embed.TextDescKeyCheckMapStalenessRelayPrefix),
+		assets.TextDesc(embed.TextDescKeyCheckMapStalenessBoxTitle),
 		content))
 
 	ref := notify.NewTemplateRef(hook.CheckMapStaleness, hook.VariantStale,
 		map[string]any{tpl.VarLastRefreshDate: dateStr, tpl.VarModuleCount: moduleCommits})
-	notifyMsg := fmt.Sprintf(assets.TextDesc(assets.TextDescKeyRelayPrefixFormat),
-		hook.CheckMapStaleness, assets.TextDesc(assets.TextDescKeyCheckMapStalenessRelayMessage))
+	notifyMsg := fmt.Sprintf(assets.TextDesc(embed.TextDescKeyRelayPrefixFormat),
+		hook.CheckMapStaleness, assets.TextDesc(embed.TextDescKeyCheckMapStalenessRelayMessage))
 	NudgeAndRelay(notifyMsg, sessionID, ref)
 }

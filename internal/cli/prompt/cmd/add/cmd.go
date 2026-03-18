@@ -7,6 +7,7 @@
 package add
 
 import (
+	"github.com/ActiveMemory/ctx/internal/config/embed"
 	"github.com/spf13/cobra"
 
 	"github.com/ActiveMemory/ctx/internal/assets"
@@ -19,7 +20,7 @@ import (
 func Cmd() *cobra.Command {
 	var fromStdin bool
 
-	short, long := assets.CommandDesc(assets.CmdDescKeyPromptAdd)
+	short, long := assets.CommandDesc(embed.CmdDescKeyPromptAdd)
 
 	cmd := &cobra.Command{
 		Use:   "add NAME",
@@ -32,7 +33,7 @@ func Cmd() *cobra.Command {
 	}
 
 	cmd.Flags().BoolVar(&fromStdin,
-		"stdin", false, assets.FlagDesc(assets.FlagDescKeyPromptAddStdin),
+		"stdin", false, assets.FlagDesc(embed.FlagDescKeyPromptAddStdin),
 	)
 
 	return cmd

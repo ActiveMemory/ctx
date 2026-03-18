@@ -9,6 +9,7 @@ package check_resources
 import (
 	"os"
 
+	"github.com/ActiveMemory/ctx/internal/config/embed"
 	"github.com/ActiveMemory/ctx/internal/config/hook"
 	"github.com/ActiveMemory/ctx/internal/config/token"
 	"github.com/ActiveMemory/ctx/internal/config/tpl"
@@ -57,11 +58,11 @@ func Run(cmd *cobra.Command, stdin *os.File) error {
 
 	fallback := alertMessages +
 		token.NewlineLF + assets.TextDesc(
-		assets.TextDescKeyCheckResourcesFallbackLow) + token.NewlineLF +
+		embed.TextDescKeyCheckResourcesFallbackLow) + token.NewlineLF +
 		assets.TextDesc(
-			assets.TextDescKeyCheckResourcesFallbackPersist) + token.NewlineLF +
+			embed.TextDescKeyCheckResourcesFallbackPersist) + token.NewlineLF +
 		assets.TextDesc(
-			assets.TextDescKeyCheckResourcesFallbackEnd)
+			embed.TextDescKeyCheckResourcesFallbackEnd)
 	vars := map[string]any{tpl.VarAlertMessages: alertMessages}
 	content := core.LoadMessage(
 		hook.CheckResources, hook.VariantAlert, vars, fallback,
@@ -71,15 +72,15 @@ func Run(cmd *cobra.Command, stdin *os.File) error {
 	}
 
 	hook2.Nudge(cmd, core.NudgeBox(
-		assets.TextDesc(assets.TextDescKeyCheckResourcesRelayPrefix),
-		assets.TextDesc(assets.TextDescKeyCheckResourcesBoxTitle),
+		assets.TextDesc(embed.TextDescKeyCheckResourcesRelayPrefix),
+		assets.TextDesc(embed.TextDescKeyCheckResourcesBoxTitle),
 		content))
 
 	ref := notify.NewTemplateRef(
 		hook.CheckResources, hook.VariantAlert, vars,
 	)
 	core.NudgeAndRelay(hook.CheckResources+": "+
-		assets.TextDesc(assets.TextDescKeyCheckResourcesRelayMessage),
+		assets.TextDesc(embed.TextDescKeyCheckResourcesRelayMessage),
 		input.SessionID, ref,
 	)
 

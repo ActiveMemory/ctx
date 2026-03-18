@@ -11,6 +11,7 @@ import (
 	"fmt"
 
 	"github.com/ActiveMemory/ctx/internal/assets"
+	"github.com/ActiveMemory/ctx/internal/config/embed"
 	"github.com/ActiveMemory/ctx/internal/config/mcp/prompt"
 	"github.com/ActiveMemory/ctx/internal/mcp/handler"
 	"github.com/ActiveMemory/ctx/internal/mcp/proto"
@@ -46,7 +47,7 @@ func DispatchGet(
 	var params proto.GetPromptParams
 	if err := json.Unmarshal(req.Params, &params); err != nil {
 		return out.ErrResponse(req.ID, proto.ErrCodeInvalidArg,
-			assets.TextDesc(assets.TextDescKeyMCPInvalidParams))
+			assets.TextDesc(embed.TextDescKeyMCPInvalidParams))
 	}
 
 	switch params.Name {
@@ -69,7 +70,7 @@ func DispatchGet(
 		return out.ErrResponse(
 			req.ID, proto.ErrCodeNotFound,
 			fmt.Sprintf(
-				assets.TextDesc(assets.TextDescKeyMCPUnknownPrompt),
+				assets.TextDesc(embed.TextDescKeyMCPUnknownPrompt),
 				params.Name,
 			),
 		)

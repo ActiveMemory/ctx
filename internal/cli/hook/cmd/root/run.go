@@ -12,6 +12,7 @@ import (
 	"strings"
 
 	"github.com/ActiveMemory/ctx/internal/config/dir"
+	"github.com/ActiveMemory/ctx/internal/config/embed"
 	"github.com/ActiveMemory/ctx/internal/config/fs"
 	"github.com/ActiveMemory/ctx/internal/config/marker"
 	"github.com/ActiveMemory/ctx/internal/config/token"
@@ -42,19 +43,19 @@ func Run(cmd *cobra.Command, args []string, writeFile bool) error {
 
 	switch tool {
 	case "claude-code", "claude":
-		hook.InfoTool(cmd, assets.TextDesc(assets.TextDescKeyHookClaude))
+		hook.InfoTool(cmd, assets.TextDesc(embed.TextDescKeyHookClaude))
 
 	case "cursor":
-		hook.InfoTool(cmd, assets.TextDesc(assets.TextDescKeyHookCursor))
+		hook.InfoTool(cmd, assets.TextDesc(embed.TextDescKeyHookCursor))
 
 	case "aider":
-		hook.InfoTool(cmd, assets.TextDesc(assets.TextDescKeyHookAider))
+		hook.InfoTool(cmd, assets.TextDesc(embed.TextDescKeyHookAider))
 
 	case "copilot":
 		if writeFile {
 			return WriteCopilotInstructions(cmd)
 		}
-		hook.InfoTool(cmd, assets.TextDesc(assets.TextDescKeyHookCopilot))
+		hook.InfoTool(cmd, assets.TextDesc(embed.TextDescKeyHookCopilot))
 		cmd.Println()
 		content, readErr := assets.CopilotInstructions()
 		if readErr != nil {
@@ -63,11 +64,11 @@ func Run(cmd *cobra.Command, args []string, writeFile bool) error {
 		cmd.Print(string(content))
 
 	case "windsurf":
-		hook.InfoTool(cmd, assets.TextDesc(assets.TextDescKeyHookWindsurf))
+		hook.InfoTool(cmd, assets.TextDesc(embed.TextDescKeyHookWindsurf))
 
 	default:
 		hook.InfoUnknownTool(cmd, tool)
-		hook.InfoTool(cmd, assets.TextDesc(assets.TextDescKeyHookSupportedTools))
+		hook.InfoTool(cmd, assets.TextDesc(embed.TextDescKeyHookSupportedTools))
 		return config.UnsupportedTool(tool)
 	}
 

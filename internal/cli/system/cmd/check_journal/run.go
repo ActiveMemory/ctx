@@ -11,6 +11,7 @@ import (
 	"os"
 	"path/filepath"
 
+	"github.com/ActiveMemory/ctx/internal/config/embed"
 	"github.com/ActiveMemory/ctx/internal/config/env"
 	"github.com/ActiveMemory/ctx/internal/config/file"
 	"github.com/ActiveMemory/ctx/internal/config/hook"
@@ -88,17 +89,17 @@ func Run(cmd *cobra.Command, stdin *os.File) error {
 	case unexported > 0 && unenriched > 0:
 		variant = hook.VariantBoth
 		fallback = fmt.Sprintf(assets.TextDesc(
-			assets.TextDescKeyCheckJournalFallbackBoth), unexported, unenriched,
+			embed.TextDescKeyCheckJournalFallbackBoth), unexported, unenriched,
 		)
 	case unexported > 0:
 		variant = hook.VariantUnexported
 		fallback = fmt.Sprintf(assets.TextDesc(
-			assets.TextDescKeyCheckJournalFallbackUnexported), unexported,
+			embed.TextDescKeyCheckJournalFallbackUnexported), unexported,
 		)
 	default:
 		variant = hook.VariantUnenriched
 		fallback = fmt.Sprintf(assets.TextDesc(
-			assets.TextDescKeyCheckJournalFallbackUnenriched), unenriched,
+			embed.TextDescKeyCheckJournalFallbackUnenriched), unenriched,
 		)
 	}
 
@@ -107,14 +108,14 @@ func Run(cmd *cobra.Command, stdin *os.File) error {
 		return nil
 	}
 
-	boxTitle := assets.TextDesc(assets.TextDescKeyCheckJournalBoxTitle)
-	relayPrefix := assets.TextDesc(assets.TextDescKeyCheckJournalRelayPrefix)
+	boxTitle := assets.TextDesc(embed.TextDescKeyCheckJournalBoxTitle)
+	relayPrefix := assets.TextDesc(embed.TextDescKeyCheckJournalRelayPrefix)
 
 	cmd.Println(core.NudgeBox(relayPrefix, boxTitle, content))
 
 	ref := notify.NewTemplateRef(hook.CheckJournal, variant, vars)
 	journalMsg := hook.CheckJournal + ": " + fmt.Sprintf(
-		assets.TextDesc(assets.TextDescKeyCheckJournalRelayFormat),
+		assets.TextDesc(embed.TextDescKeyCheckJournalRelayFormat),
 		unexported, unenriched,
 	)
 	core.NudgeAndRelay(journalMsg, input.SessionID, ref)

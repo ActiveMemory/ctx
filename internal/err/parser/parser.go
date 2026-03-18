@@ -10,6 +10,7 @@ import (
 	"fmt"
 
 	"github.com/ActiveMemory/ctx/internal/assets"
+	"github.com/ActiveMemory/ctx/internal/config/embed"
 )
 
 // ReadFile wraps a session file read failure.
@@ -21,7 +22,7 @@ import (
 //   - error: "read file: <cause>"
 func ReadFile(cause error) error {
 	return fmt.Errorf(
-		assets.TextDesc(assets.TextDescKeyErrParserReadFile), cause,
+		assets.TextDesc(embed.TextDescKeyErrParserReadFile), cause,
 	)
 }
 
@@ -34,7 +35,7 @@ func ReadFile(cause error) error {
 //   - error: "open file: <cause>"
 func OpenFile(cause error) error {
 	return fmt.Errorf(
-		assets.TextDesc(assets.TextDescKeyErrParserOpenFile), cause,
+		assets.TextDesc(embed.TextDescKeyErrParserOpenFile), cause,
 	)
 }
 
@@ -47,7 +48,7 @@ func OpenFile(cause error) error {
 //   - error: "no parser found for file: <path>"
 func NoMatch(path string) error {
 	return fmt.Errorf(
-		assets.TextDesc(assets.TextDescKeyErrParserNoMatch), path,
+		assets.TextDesc(embed.TextDescKeyErrParserNoMatch), path,
 	)
 }
 
@@ -60,7 +61,7 @@ func NoMatch(path string) error {
 //   - error: "walk directory: <cause>"
 func WalkDir(cause error) error {
 	return fmt.Errorf(
-		assets.TextDesc(assets.TextDescKeyErrParserWalkDir), cause,
+		assets.TextDesc(embed.TextDescKeyErrParserWalkDir), cause,
 	)
 }
 
@@ -74,7 +75,7 @@ func WalkDir(cause error) error {
 //   - error: "<path>: <cause>"
 func FileError(path string, cause error) error {
 	return fmt.Errorf(
-		assets.TextDesc(assets.TextDescKeyErrParserFileError), path, cause,
+		assets.TextDesc(embed.TextDescKeyErrParserFileError), path, cause,
 	)
 }
 
@@ -87,7 +88,7 @@ func FileError(path string, cause error) error {
 //   - error: "scan file: <cause>"
 func ScanFile(cause error) error {
 	return fmt.Errorf(
-		assets.TextDesc(assets.TextDescKeyErrParserScanFile), cause,
+		assets.TextDesc(embed.TextDescKeyErrParserScanFile), cause,
 	)
 }
 
@@ -100,7 +101,7 @@ func ScanFile(cause error) error {
 //   - error: "unmarshal: <cause>"
 func Unmarshal(cause error) error {
 	return fmt.Errorf(
-		assets.TextDesc(assets.TextDescKeyErrParserUnmarshal), cause,
+		assets.TextDesc(embed.TextDescKeyErrParserUnmarshal), cause,
 	)
 }
 
@@ -114,6 +115,6 @@ func Unmarshal(cause error) error {
 //   - error: "failed to parse <path>: <cause>"
 func ParseFile(path string, cause error) error {
 	return fmt.Errorf(
-		assets.TextDesc(assets.TextDescKeyErrValidationParseFile), path, cause,
+		assets.TextDesc(embed.TextDescKeyErrValidationParseFile), path, cause,
 	)
 }

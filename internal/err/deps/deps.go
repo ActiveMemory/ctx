@@ -11,6 +11,7 @@ import (
 	"fmt"
 
 	"github.com/ActiveMemory/ctx/internal/assets"
+	"github.com/ActiveMemory/ctx/internal/config/embed"
 )
 
 // CargoNotFound returns an error when cargo is not in PATH.
@@ -18,7 +19,7 @@ import (
 // Returns:
 //   - error: advises installing the Rust toolchain
 func CargoNotFound() error {
-	return errors.New(assets.TextDesc(assets.TextDescKeyErrDepsCargoNotFound))
+	return errors.New(assets.TextDesc(embed.TextDescKeyErrDepsCargoNotFound))
 }
 
 // CargoMetadataFailed wraps a cargo metadata command failure.
@@ -29,7 +30,7 @@ func CargoNotFound() error {
 // Returns:
 //   - error: "cargo metadata failed: <cause>"
 func CargoMetadataFailed(cause error) error {
-	return fmt.Errorf(assets.TextDesc(assets.TextDescKeyErrDepsCargoMetadataFailed), cause)
+	return fmt.Errorf(assets.TextDesc(embed.TextDescKeyErrDepsCargoMetadataFailed), cause)
 }
 
 // ParseCargoMetadata wraps a cargo metadata parse failure.
@@ -40,5 +41,5 @@ func CargoMetadataFailed(cause error) error {
 // Returns:
 //   - error: "parsing cargo metadata: <cause>"
 func ParseCargoMetadata(cause error) error {
-	return fmt.Errorf(assets.TextDesc(assets.TextDescKeyErrDepsParseCargoMetadata), cause)
+	return fmt.Errorf(assets.TextDesc(embed.TextDescKeyErrDepsParseCargoMetadata), cause)
 }

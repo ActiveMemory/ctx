@@ -11,6 +11,7 @@ import (
 	"fmt"
 
 	"github.com/ActiveMemory/ctx/internal/assets"
+	"github.com/ActiveMemory/ctx/internal/config/embed"
 )
 
 // EntryRange returns an error for an out-of-range scratchpad entry.
@@ -23,7 +24,7 @@ import (
 //   - error: "entry <n> does not exist, scratchpad has <total> entries"
 func EntryRange(n, total int) error {
 	return fmt.Errorf(
-		assets.TextDesc(assets.TextDescKeyErrPadEntryRange), n, total,
+		assets.TextDesc(embed.TextDescKeyErrPadEntryRange), n, total,
 	)
 }
 
@@ -34,7 +35,7 @@ func EntryRange(n, total int) error {
 //   - error: describing the mutual exclusivity
 func EditBlobTextConflict() error {
 	return errors.New(
-		assets.TextDesc(assets.TextDescKeyErrPadEditBlobTextConflict),
+		assets.TextDesc(embed.TextDescKeyErrPadEditBlobTextConflict),
 	)
 }
 
@@ -45,7 +46,7 @@ func EditBlobTextConflict() error {
 //   - error: describing the mutual exclusivity
 func EditTextConflict() error {
 	return errors.New(
-		assets.TextDesc(assets.TextDescKeyErrPadEditTextConflict),
+		assets.TextDesc(embed.TextDescKeyErrPadEditTextConflict),
 	)
 }
 
@@ -55,7 +56,7 @@ func EditTextConflict() error {
 //   - error: prompting for a mode
 func EditNoMode() error {
 	return errors.New(
-		assets.TextDesc(assets.TextDescKeyErrPadEditNoMode),
+		assets.TextDesc(embed.TextDescKeyErrPadEditNoMode),
 	)
 }
 
@@ -65,7 +66,7 @@ func EditNoMode() error {
 //   - error: "cannot append to a blob entry"
 func BlobAppendNotAllowed() error {
 	return errors.New(
-		assets.TextDesc(assets.TextDescKeyErrPadBlobAppendNotAllowed),
+		assets.TextDesc(embed.TextDescKeyErrPadBlobAppendNotAllowed),
 	)
 }
 
@@ -75,7 +76,7 @@ func BlobAppendNotAllowed() error {
 //   - error: "cannot prepend to a blob entry"
 func BlobPrependNotAllowed() error {
 	return errors.New(
-		assets.TextDesc(assets.TextDescKeyErrPadBlobPrependNotAllowed),
+		assets.TextDesc(embed.TextDescKeyErrPadBlobPrependNotAllowed),
 	)
 }
 
@@ -88,7 +89,7 @@ func BlobPrependNotAllowed() error {
 //   - error: "entry <n> is not a blob entry"
 func NotBlobEntry(n int) error {
 	return fmt.Errorf(
-		assets.TextDesc(assets.TextDescKeyErrPadNotBlobEntry), n,
+		assets.TextDesc(embed.TextDescKeyErrPadNotBlobEntry), n,
 	)
 }
 
@@ -99,7 +100,7 @@ func NotBlobEntry(n int) error {
 //   - error: "resolve is only needed for encrypted scratchpads"
 func ResolveNotEncrypted() error {
 	return errors.New(
-		assets.TextDesc(assets.TextDescKeyErrPadResolveNotEncrypted),
+		assets.TextDesc(embed.TextDescKeyErrPadResolveNotEncrypted),
 	)
 }
 
@@ -112,7 +113,7 @@ func ResolveNotEncrypted() error {
 //   - error: "no conflict files found (<filename>.ours / <filename>.theirs)"
 func NoConflictFiles(filename string) error {
 	return fmt.Errorf(
-		assets.TextDesc(assets.TextDescKeyErrPadNoConflictFiles),
+		assets.TextDesc(embed.TextDescKeyErrPadNoConflictFiles),
 		filename, filename,
 	)
 }
@@ -123,7 +124,7 @@ func NoConflictFiles(filename string) error {
 //   - error: "--out can only be used with blob entries"
 func OutFlagRequiresBlob() error {
 	return errors.New(
-		assets.TextDesc(assets.TextDescKeyErrPadOutFlagRequiresBlob),
+		assets.TextDesc(embed.TextDescKeyErrPadOutFlagRequiresBlob),
 	)
 }
 
@@ -136,7 +137,7 @@ func OutFlagRequiresBlob() error {
 //   - error: "read scratchpad: <cause>"
 func ReadScratchpad(cause error) error {
 	return fmt.Errorf(
-		assets.TextDesc(assets.TextDescKeyErrPadReadScratchpad), cause,
+		assets.TextDesc(embed.TextDescKeyErrPadReadScratchpad), cause,
 	)
 }
 
@@ -149,7 +150,7 @@ func ReadScratchpad(cause error) error {
 //   - error: "invalid index: <value>"
 func InvalidIndex(value string) error {
 	return fmt.Errorf(
-		assets.TextDesc(assets.TextDescKeyErrPadInvalidIndex), value,
+		assets.TextDesc(embed.TextDescKeyErrPadInvalidIndex), value,
 	)
 }
 
@@ -163,6 +164,6 @@ func InvalidIndex(value string) error {
 //   - error: "file too large: <size> bytes (max <max>)"
 func FileTooLarge(size, max int) error {
 	return fmt.Errorf(
-		assets.TextDesc(assets.TextDescKeyErrPadFileTooLarge), size, max,
+		assets.TextDesc(embed.TextDescKeyErrPadFileTooLarge), size, max,
 	)
 }

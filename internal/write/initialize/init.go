@@ -10,6 +10,7 @@ import (
 	"fmt"
 
 	"github.com/ActiveMemory/ctx/internal/assets"
+	"github.com/ActiveMemory/ctx/internal/config/embed"
 	"github.com/spf13/cobra"
 )
 
@@ -19,7 +20,7 @@ import (
 //   - cmd: Cobra command for output
 //   - path: created file path
 func Created(cmd *cobra.Command, path string) {
-	cmd.Println(fmt.Sprintf(assets.TextDesc(assets.TextDescKeyWriteInitFileCreated), path))
+	cmd.Println(fmt.Sprintf(assets.TextDesc(embed.TextDescKeyWriteInitFileCreated), path))
 }
 
 // CreatedWith reports a file created with a qualifier (e.g. " (ralph mode)").
@@ -29,7 +30,7 @@ func Created(cmd *cobra.Command, path string) {
 //   - path: created file path
 //   - qualifier: additional info appended after the path
 func CreatedWith(cmd *cobra.Command, path, qualifier string) {
-	cmd.Println(fmt.Sprintf(assets.TextDesc(assets.TextDescKeyWriteInitCreatedWith), path, qualifier))
+	cmd.Println(fmt.Sprintf(assets.TextDesc(embed.TextDescKeyWriteInitCreatedWith), path, qualifier))
 }
 
 // Skipped reports a file skipped because it already exists.
@@ -38,7 +39,7 @@ func CreatedWith(cmd *cobra.Command, path, qualifier string) {
 //   - cmd: Cobra command for output
 //   - path: skipped file path
 func Skipped(cmd *cobra.Command, path string) {
-	cmd.Println(fmt.Sprintf(assets.TextDesc(assets.TextDescKeyWriteInitExistsSkipped), path))
+	cmd.Println(fmt.Sprintf(assets.TextDesc(embed.TextDescKeyWriteInitExistsSkipped), path))
 }
 
 // SkippedPlain reports a file skipped without detail.
@@ -47,7 +48,7 @@ func Skipped(cmd *cobra.Command, path string) {
 //   - cmd: Cobra command for output
 //   - path: skipped file path
 func SkippedPlain(cmd *cobra.Command, path string) {
-	cmd.Println(fmt.Sprintf(assets.TextDesc(assets.TextDescKeyWriteInitSkippedPlain), path))
+	cmd.Println(fmt.Sprintf(assets.TextDesc(embed.TextDescKeyWriteInitSkippedPlain), path))
 }
 
 // CtxContentExists reports a file skipped because ctx content exists.
@@ -56,7 +57,7 @@ func SkippedPlain(cmd *cobra.Command, path string) {
 //   - cmd: Cobra command for output
 //   - path: skipped file path
 func CtxContentExists(cmd *cobra.Command, path string) {
-	cmd.Println(fmt.Sprintf(assets.TextDesc(assets.TextDescKeyWriteInitCtxContentExists), path))
+	cmd.Println(fmt.Sprintf(assets.TextDesc(embed.TextDescKeyWriteInitCtxContentExists), path))
 }
 
 // Merged reports a file merged during init.
@@ -65,7 +66,7 @@ func CtxContentExists(cmd *cobra.Command, path string) {
 //   - cmd: Cobra command for output
 //   - path: merged file path
 func Merged(cmd *cobra.Command, path string) {
-	cmd.Println(fmt.Sprintf(assets.TextDesc(assets.TextDescKeyWriteInitMerged), path))
+	cmd.Println(fmt.Sprintf(assets.TextDesc(embed.TextDescKeyWriteInitMerged), path))
 }
 
 // Backup reports a backup file created.
@@ -74,7 +75,7 @@ func Merged(cmd *cobra.Command, path string) {
 //   - cmd: Cobra command for output
 //   - path: backup file path
 func Backup(cmd *cobra.Command, path string) {
-	cmd.Println(fmt.Sprintf(assets.TextDesc(assets.TextDescKeyWriteInitBackup), path))
+	cmd.Println(fmt.Sprintf(assets.TextDesc(embed.TextDescKeyWriteInitBackup), path))
 }
 
 // UpdatedCtxSection reports a file whose ctx section was updated.
@@ -83,7 +84,7 @@ func Backup(cmd *cobra.Command, path string) {
 //   - cmd: Cobra command for output
 //   - path: updated file path
 func UpdatedCtxSection(cmd *cobra.Command, path string) {
-	cmd.Println(fmt.Sprintf(assets.TextDesc(assets.TextDescKeyWriteInitUpdatedCtxSection), path))
+	cmd.Println(fmt.Sprintf(assets.TextDesc(embed.TextDescKeyWriteInitUpdatedCtxSection), path))
 }
 
 // UpdatedPlanSection reports a file whose plan section was updated.
@@ -92,7 +93,7 @@ func UpdatedCtxSection(cmd *cobra.Command, path string) {
 //   - cmd: Cobra command for output
 //   - path: updated file path
 func UpdatedPlanSection(cmd *cobra.Command, path string) {
-	cmd.Println(fmt.Sprintf(assets.TextDesc(assets.TextDescKeyWriteInitUpdatedPlanSection), path))
+	cmd.Println(fmt.Sprintf(assets.TextDesc(embed.TextDescKeyWriteInitUpdatedPlanSection), path))
 }
 
 // UpdatedPromptSection reports a file whose prompt section was updated.
@@ -101,7 +102,7 @@ func UpdatedPlanSection(cmd *cobra.Command, path string) {
 //   - cmd: Cobra command for output
 //   - path: updated file path
 func UpdatedPromptSection(cmd *cobra.Command, path string) {
-	cmd.Println(fmt.Sprintf(assets.TextDesc(assets.TextDescKeyWriteInitUpdatedPromptSection), path))
+	cmd.Println(fmt.Sprintf(assets.TextDesc(embed.TextDescKeyWriteInitUpdatedPromptSection), path))
 }
 
 // FileExistsNoCtx reports a file exists without ctx content.
@@ -110,7 +111,7 @@ func UpdatedPromptSection(cmd *cobra.Command, path string) {
 //   - cmd: Cobra command for output
 //   - path: file path
 func FileExistsNoCtx(cmd *cobra.Command, path string) {
-	cmd.Println(fmt.Sprintf(assets.TextDesc(assets.TextDescKeyWriteInitFileExistsNoCtx), path))
+	cmd.Println(fmt.Sprintf(assets.TextDesc(embed.TextDescKeyWriteInitFileExistsNoCtx), path))
 }
 
 // NoChanges reports a settings file with no changes needed.
@@ -119,7 +120,7 @@ func FileExistsNoCtx(cmd *cobra.Command, path string) {
 //   - cmd: Cobra command for output
 //   - path: settings file path
 func NoChanges(cmd *cobra.Command, path string) {
-	cmd.Println(fmt.Sprintf(assets.TextDesc(assets.TextDescKeyWriteInitNoChanges), path))
+	cmd.Println(fmt.Sprintf(assets.TextDesc(embed.TextDescKeyWriteInitNoChanges), path))
 }
 
 // PermsMergedDeduped reports permissions merged and deduped.
@@ -128,7 +129,7 @@ func NoChanges(cmd *cobra.Command, path string) {
 //   - cmd: Cobra command for output
 //   - path: settings file path
 func PermsMergedDeduped(cmd *cobra.Command, path string) {
-	cmd.Println(fmt.Sprintf(assets.TextDesc(assets.TextDescKeyWriteInitPermsMergedDeduped), path))
+	cmd.Println(fmt.Sprintf(assets.TextDesc(embed.TextDescKeyWriteInitPermsMergedDeduped), path))
 }
 
 // PermsDeduped reports duplicate permissions removed.
@@ -137,7 +138,7 @@ func PermsMergedDeduped(cmd *cobra.Command, path string) {
 //   - cmd: Cobra command for output
 //   - path: settings file path
 func PermsDeduped(cmd *cobra.Command, path string) {
-	cmd.Println(fmt.Sprintf(assets.TextDesc(assets.TextDescKeyWriteInitPermsDeduped), path))
+	cmd.Println(fmt.Sprintf(assets.TextDesc(embed.TextDescKeyWriteInitPermsDeduped), path))
 }
 
 // PermsAllowDeny reports allow+deny permissions added.
@@ -146,7 +147,7 @@ func PermsDeduped(cmd *cobra.Command, path string) {
 //   - cmd: Cobra command for output
 //   - path: settings file path
 func PermsAllowDeny(cmd *cobra.Command, path string) {
-	cmd.Println(fmt.Sprintf(assets.TextDesc(assets.TextDescKeyWriteInitPermsAllowDeny), path))
+	cmd.Println(fmt.Sprintf(assets.TextDesc(embed.TextDescKeyWriteInitPermsAllowDeny), path))
 }
 
 // PermsDeny reports deny permissions added.
@@ -155,7 +156,7 @@ func PermsAllowDeny(cmd *cobra.Command, path string) {
 //   - cmd: Cobra command for output
 //   - path: settings file path
 func PermsDeny(cmd *cobra.Command, path string) {
-	cmd.Println(fmt.Sprintf(assets.TextDesc(assets.TextDescKeyWriteInitPermsDeny), path))
+	cmd.Println(fmt.Sprintf(assets.TextDesc(embed.TextDescKeyWriteInitPermsDeny), path))
 }
 
 // PermsAllow reports ctx permissions added.
@@ -164,7 +165,7 @@ func PermsDeny(cmd *cobra.Command, path string) {
 //   - cmd: Cobra command for output
 //   - path: settings file path
 func PermsAllow(cmd *cobra.Command, path string) {
-	cmd.Println(fmt.Sprintf(assets.TextDesc(assets.TextDescKeyWriteInitPermsAllow), path))
+	cmd.Println(fmt.Sprintf(assets.TextDesc(embed.TextDescKeyWriteInitPermsAllow), path))
 }
 
 // MakefileCreated reports a new Makefile created with ctx include.
@@ -172,7 +173,7 @@ func PermsAllow(cmd *cobra.Command, path string) {
 // Parameters:
 //   - cmd: Cobra command for output
 func MakefileCreated(cmd *cobra.Command) {
-	cmd.Println(assets.TextDesc(assets.TextDescKeyWriteInitMakefileCreated))
+	cmd.Println(assets.TextDesc(embed.TextDescKeyWriteInitMakefileCreated))
 }
 
 // MakefileIncludes reports Makefile already includes the directive.
@@ -181,7 +182,7 @@ func MakefileCreated(cmd *cobra.Command) {
 //   - cmd: Cobra command for output
 //   - filename: included filename
 func MakefileIncludes(cmd *cobra.Command, filename string) {
-	cmd.Println(fmt.Sprintf(assets.TextDesc(assets.TextDescKeyWriteInitMakefileIncludes), filename))
+	cmd.Println(fmt.Sprintf(assets.TextDesc(embed.TextDescKeyWriteInitMakefileIncludes), filename))
 }
 
 // MakefileAppended reports an include appended to Makefile.
@@ -190,7 +191,7 @@ func MakefileIncludes(cmd *cobra.Command, filename string) {
 //   - cmd: Cobra command for output
 //   - filename: included filename
 func MakefileAppended(cmd *cobra.Command, filename string) {
-	cmd.Println(fmt.Sprintf(assets.TextDesc(assets.TextDescKeyWriteInitMakefileAppended), filename))
+	cmd.Println(fmt.Sprintf(assets.TextDesc(embed.TextDescKeyWriteInitMakefileAppended), filename))
 }
 
 // PluginSkipped reports plugin enablement was skipped.
@@ -198,7 +199,7 @@ func MakefileAppended(cmd *cobra.Command, filename string) {
 // Parameters:
 //   - cmd: Cobra command for output
 func PluginSkipped(cmd *cobra.Command) {
-	cmd.Println(assets.TextDesc(assets.TextDescKeyWriteInitPluginSkipped))
+	cmd.Println(assets.TextDesc(embed.TextDescKeyWriteInitPluginSkipped))
 }
 
 // PluginAlreadyEnabled reports plugin is already enabled globally.
@@ -206,7 +207,7 @@ func PluginSkipped(cmd *cobra.Command) {
 // Parameters:
 //   - cmd: Cobra command for output
 func PluginAlreadyEnabled(cmd *cobra.Command) {
-	cmd.Println(assets.TextDesc(assets.TextDescKeyWriteInitPluginAlreadyEnabled))
+	cmd.Println(assets.TextDesc(embed.TextDescKeyWriteInitPluginAlreadyEnabled))
 }
 
 // PluginEnabled reports plugin enabled globally.
@@ -215,7 +216,7 @@ func PluginAlreadyEnabled(cmd *cobra.Command) {
 //   - cmd: Cobra command for output
 //   - settingsPath: path to the settings file
 func PluginEnabled(cmd *cobra.Command, settingsPath string) {
-	cmd.Println(fmt.Sprintf(assets.TextDesc(assets.TextDescKeyWriteInitPluginEnabled), settingsPath))
+	cmd.Println(fmt.Sprintf(assets.TextDesc(embed.TextDescKeyWriteInitPluginEnabled), settingsPath))
 }
 
 // SkippedDir reports a directory skipped because it exists.
@@ -224,7 +225,7 @@ func PluginEnabled(cmd *cobra.Command, settingsPath string) {
 //   - cmd: Cobra command for output
 //   - dir: directory name
 func SkippedDir(cmd *cobra.Command, dir string) {
-	cmd.Println(fmt.Sprintf(assets.TextDesc(assets.TextDescKeyWriteInitSkippedDir), dir))
+	cmd.Println(fmt.Sprintf(assets.TextDesc(embed.TextDescKeyWriteInitSkippedDir), dir))
 }
 
 // CreatedDir reports a directory created during init.
@@ -233,5 +234,5 @@ func SkippedDir(cmd *cobra.Command, dir string) {
 //   - cmd: Cobra command for output
 //   - dir: directory name
 func CreatedDir(cmd *cobra.Command, dir string) {
-	cmd.Println(fmt.Sprintf(assets.TextDesc(assets.TextDescKeyWriteInitCreatedDir), dir))
+	cmd.Println(fmt.Sprintf(assets.TextDesc(embed.TextDescKeyWriteInitCreatedDir), dir))
 }

@@ -11,6 +11,7 @@ package bootstrap
 import (
 	"os"
 
+	"github.com/ActiveMemory/ctx/internal/config/embed"
 	ctxcontext "github.com/ActiveMemory/ctx/internal/context/validate"
 	"github.com/ActiveMemory/ctx/internal/err/fs"
 	ctxerr "github.com/ActiveMemory/ctx/internal/err/initialize"
@@ -45,7 +46,7 @@ func RootCmd() *cobra.Command {
 	var contextDir string
 	var allowOutsideCwd bool
 
-	short, long := assets.CommandDesc(assets.CmdDescKeyCtx)
+	short, long := assets.CommandDesc(embed.CmdDescKeyCtx)
 
 	cmd := &cobra.Command{
 		Use:     "ctx",

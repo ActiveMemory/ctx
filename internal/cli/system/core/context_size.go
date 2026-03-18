@@ -13,6 +13,7 @@ import (
 	"strconv"
 
 	"github.com/ActiveMemory/ctx/internal/config/dir"
+	"github.com/ActiveMemory/ctx/internal/config/embed"
 	"github.com/ActiveMemory/ctx/internal/config/hook"
 	"github.com/ActiveMemory/ctx/internal/config/regex"
 	"github.com/ActiveMemory/ctx/internal/config/stats"
@@ -37,13 +38,13 @@ import (
 // Returns:
 //   - string: formatted usage line (e.g., "⏱ Context window: ~12k tokens (~60% of 200k)")
 func TokenUsageLine(tokens, pct, windowSize int) string {
-	icon := assets.TextDesc(assets.TextDescKeyCheckContextSizeTokenNormal)
+	icon := assets.TextDesc(embed.TextDescKeyCheckContextSizeTokenNormal)
 	suffix := ""
 	if pct >= stats.ContextWindowThresholdPct {
-		icon = assets.TextDesc(assets.TextDescKeyCheckContextSizeTokenLow)
-		suffix = assets.TextDesc(assets.TextDescKeyCheckContextSizeRunningLowSuffix)
+		icon = assets.TextDesc(embed.TextDescKeyCheckContextSizeTokenLow)
+		suffix = assets.TextDesc(embed.TextDescKeyCheckContextSizeRunningLowSuffix)
 	}
-	return fmt.Sprintf(assets.TextDesc(assets.TextDescKeyCheckContextSizeTokenUsage),
+	return fmt.Sprintf(assets.TextDesc(embed.TextDescKeyCheckContextSizeTokenUsage),
 		icon, FormatTokenCount(tokens), pct, FormatWindowSize(windowSize), suffix)
 }
 
@@ -61,7 +62,7 @@ func OversizeNudgeContent() string {
 	}
 
 	tokenCount := ExtractOversizeTokens(data)
-	fallback := fmt.Sprintf(assets.TextDesc(assets.TextDescKeyCheckContextSizeOversizeFallback), tokenCount)
+	fallback := fmt.Sprintf(assets.TextDesc(embed.TextDescKeyCheckContextSizeOversizeFallback), tokenCount)
 	content := LoadMessage(hook.CheckContextSize, hook.VariantOversize,
 		map[string]any{tpl.VarTokenCount: tokenCount}, fallback)
 	if content == "" {
@@ -103,10 +104,10 @@ func ExtractOversizeTokens(data []byte) int {
 //   - pct: context window usage percentage
 //   - windowSize: total context window size
 func EmitCheckpoint(cmd *cobra.Command, logFile, sessionID string, count, tokens, pct, windowSize int) {
-	fallback := assets.TextDesc(assets.TextDescKeyCheckContextSizeCheckpointFallback)
+	fallback := assets.TextDesc(embed.TextDescKeyCheckContextSizeCheckpointFallback)
 	content := LoadMessage(hook.CheckContextSize, hook.VariantCheckpoint, nil, fallback)
 	if content == "" {
-		LogMessage(logFile, sessionID, fmt.Sprintf(assets.TextDesc(assets.TextDescKeyCheckContextSizeSilencedCheckpointLog), count))
+		LogMessage(logFile, sessionID, fmt.Sprintf(assets.TextDesc(embed.TextDescKeyCheckContextSizeSilencedCheckpointLog), count))
 		return
 	}
 	// Append optional token usage and oversize nudge to content
@@ -117,15 +118,15 @@ func EmitCheckpoint(cmd *cobra.Command, logFile, sessionID string, count, tokens
 		content += token.NewlineLF + extra
 	}
 	cmd.Println(NudgeBox(
-		assets.TextDesc(assets.TextDescKeyCheckContextSizeRelayPrefix),
-		fmt.Sprintf(assets.TextDesc(assets.TextDescKeyCheckContextSizeCheckpointBoxTitle), count),
+		assets.TextDesc(embed.TextDescKeyCheckContextSizeRelayPrefix),
+		fmt.Sprintf(assets.TextDesc(embed.TextDescKeyCheckContextSizeCheckpointBoxTitle), count),
 		content))
 	cmd.Println()
-	LogMessage(logFile, sessionID, fmt.Sprintf(assets.TextDesc(assets.TextDescKeyCheckContextSizeCheckpointLogFormat), count, tokens, pct))
+	LogMessage(logFile, sessionID, fmt.Sprintf(assets.TextDesc(embed.TextDescKeyCheckContextSizeCheckpointLogFormat), count, tokens, pct))
 	ref := notify.NewTemplateRef(hook.CheckContextSize, hook.VariantCheckpoint, nil)
-	checkpointMsg := fmt.Sprintf(assets.TextDesc(assets.TextDescKeyRelayPrefixFormat),
+	checkpointMsg := fmt.Sprintf(assets.TextDesc(embed.TextDescKeyRelayPrefixFormat),
 		hook.CheckContextSize,
-		fmt.Sprintf(assets.TextDesc(assets.TextDescKeyCheckContextSizeCheckpointRelayFormat), count))
+		fmt.Sprintf(assets.TextDesc(embed.TextDescKeyCheckContextSizeCheckpointRelayFormat), count))
 	NudgeAndRelay(checkpointMsg, sessionID, ref)
 }
 
@@ -139,24 +140,24 @@ func EmitCheckpoint(cmd *cobra.Command, logFile, sessionID string, count, tokens
 //   - tokens: token usage count
 //   - pct: context window usage percentage
 func EmitWindowWarning(cmd *cobra.Command, logFile, sessionID string, count, tokens, pct int) {
-	fallback := fmt.Sprintf(assets.TextDesc(assets.TextDescKeyCheckContextSizeWindowFallback), pct, FormatTokenCount(tokens))
+	fallback := fmt.Sprintf(assets.TextDesc(embed.TextDescKeyCheckContextSizeWindowFallback), pct, FormatTokenCount(tokens))
 	content := LoadMessage(hook.CheckContextSize, hook.VariantWindow,
 		map[string]any{tpl.VarPercentage: pct, tpl.VarTokenCount: FormatTokenCount(tokens)}, fallback)
 	if content == "" {
-		LogMessage(logFile, sessionID, fmt.Sprintf(assets.TextDesc(assets.TextDescKeyCheckContextSizeSilencedWindowLog), count, pct))
+		LogMessage(logFile, sessionID, fmt.Sprintf(assets.TextDesc(embed.TextDescKeyCheckContextSizeSilencedWindowLog), count, pct))
 		return
 	}
 	cmd.Println(NudgeBox(
-		assets.TextDesc(assets.TextDescKeyCheckContextSizeRelayPrefix),
-		assets.TextDesc(assets.TextDescKeyCheckContextSizeWindowBoxTitle),
+		assets.TextDesc(embed.TextDescKeyCheckContextSizeRelayPrefix),
+		assets.TextDesc(embed.TextDescKeyCheckContextSizeWindowBoxTitle),
 		content))
 	cmd.Println()
-	LogMessage(logFile, sessionID, fmt.Sprintf(assets.TextDesc(assets.TextDescKeyCheckContextSizeWindowLogFormat), count, tokens, pct))
+	LogMessage(logFile, sessionID, fmt.Sprintf(assets.TextDesc(embed.TextDescKeyCheckContextSizeWindowLogFormat), count, tokens, pct))
 	ref := notify.NewTemplateRef(hook.CheckContextSize, hook.VariantWindow,
 		map[string]any{tpl.VarPercentage: pct, tpl.VarTokenCount: FormatTokenCount(tokens)})
-	windowMsg := fmt.Sprintf(assets.TextDesc(assets.TextDescKeyRelayPrefixFormat),
+	windowMsg := fmt.Sprintf(assets.TextDesc(embed.TextDescKeyRelayPrefixFormat),
 		hook.CheckContextSize,
-		fmt.Sprintf(assets.TextDesc(assets.TextDescKeyCheckContextSizeWindowRelayFormat), pct))
+		fmt.Sprintf(assets.TextDesc(embed.TextDescKeyCheckContextSizeWindowRelayFormat), pct))
 	NudgeAndRelay(windowMsg, sessionID, ref)
 }
 
@@ -177,29 +178,29 @@ func EmitBillingWarning(cmd *cobra.Command, logFile, sessionID string, count, to
 		return // already fired
 	}
 
-	fallback := fmt.Sprintf(assets.TextDesc(assets.TextDescKeyCheckContextSizeBillingFallback),
+	fallback := fmt.Sprintf(assets.TextDesc(embed.TextDescKeyCheckContextSizeBillingFallback),
 		FormatTokenCount(tokens), FormatTokenCount(threshold))
 	content := LoadMessage(hook.CheckContextSize, hook.VariantBilling,
 		map[string]any{tpl.VarTokenCount: FormatTokenCount(tokens), tpl.VarThreshold: FormatTokenCount(threshold)}, fallback)
 	if content == "" {
-		LogMessage(logFile, sessionID, fmt.Sprintf(assets.TextDesc(assets.TextDescKeyCheckContextSizeSilencedBillingLog), count, tokens, threshold))
+		LogMessage(logFile, sessionID, fmt.Sprintf(assets.TextDesc(embed.TextDescKeyCheckContextSizeSilencedBillingLog), count, tokens, threshold))
 		TouchFile(warnedFile) // silenced counts as fired
 		return
 	}
 
 	cmd.Println(NudgeBox(
-		assets.TextDesc(assets.TextDescKeyCheckContextSizeBillingRelayPrefix),
-		assets.TextDesc(assets.TextDescKeyCheckContextSizeBillingBoxTitle),
+		assets.TextDesc(embed.TextDescKeyCheckContextSizeBillingRelayPrefix),
+		assets.TextDesc(embed.TextDescKeyCheckContextSizeBillingBoxTitle),
 		content))
 	cmd.Println()
 
 	TouchFile(warnedFile) // one-shot: mark as fired
-	LogMessage(logFile, sessionID, fmt.Sprintf(assets.TextDesc(assets.TextDescKeyCheckContextSizeBillingLogFormat), count, tokens, threshold))
+	LogMessage(logFile, sessionID, fmt.Sprintf(assets.TextDesc(embed.TextDescKeyCheckContextSizeBillingLogFormat), count, tokens, threshold))
 	ref := notify.NewTemplateRef(hook.CheckContextSize, hook.VariantBilling,
 		map[string]any{tpl.VarTokenCount: FormatTokenCount(tokens), tpl.VarThreshold: FormatTokenCount(threshold)})
-	billingMsg := fmt.Sprintf(assets.TextDesc(assets.TextDescKeyRelayPrefixFormat),
+	billingMsg := fmt.Sprintf(assets.TextDesc(embed.TextDescKeyRelayPrefixFormat),
 		hook.CheckContextSize,
-		fmt.Sprintf(assets.TextDesc(assets.TextDescKeyCheckContextSizeBillingRelayFormat),
+		fmt.Sprintf(assets.TextDesc(embed.TextDescKeyCheckContextSizeBillingRelayFormat),
 			FormatTokenCount(tokens), FormatTokenCount(threshold)))
 	NudgeAndRelay(billingMsg, sessionID, ref)
 }

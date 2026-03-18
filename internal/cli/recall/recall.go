@@ -7,6 +7,7 @@
 package recall
 
 import (
+	"github.com/ActiveMemory/ctx/internal/config/embed"
 	"github.com/spf13/cobra"
 
 	"github.com/ActiveMemory/ctx/internal/assets"
@@ -26,7 +27,7 @@ import (
 // Returns:
 //   - *cobra.Command: The recall command with list, show, and serve subcommands
 func Cmd() *cobra.Command {
-	short, long := assets.CommandDesc(assets.CmdDescKeyRecall)
+	short, long := assets.CommandDesc(embed.CmdDescKeyRecall)
 
 	cmd := &cobra.Command{
 		Use:   "recall",

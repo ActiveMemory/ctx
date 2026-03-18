@@ -8,6 +8,7 @@ package memory
 
 import (
 	"github.com/ActiveMemory/ctx/internal/assets"
+	"github.com/ActiveMemory/ctx/internal/config/embed"
 	"github.com/ActiveMemory/ctx/internal/config/entry"
 	ctxentry "github.com/ActiveMemory/ctx/internal/entry"
 )
@@ -34,14 +35,14 @@ func Promote(e Entry, classification Classification) error {
 
 	switch classification.Target {
 	case entry.Decision:
-		params.Context = assets.TextDesc(assets.TextDescKeyMemoryImportSource)
+		params.Context = assets.TextDesc(embed.TextDescKeyMemoryImportSource)
 		params.Rationale = extractBody(e.Text)
-		params.Consequence = assets.TextDesc(assets.TextDescKeyMemoryImportReview)
+		params.Consequence = assets.TextDesc(embed.TextDescKeyMemoryImportReview)
 
 	case entry.Learning:
-		params.Context = assets.TextDesc(assets.TextDescKeyMemoryImportSource)
+		params.Context = assets.TextDesc(embed.TextDescKeyMemoryImportSource)
 		params.Lesson = extractBody(e.Text)
-		params.Application = assets.TextDesc(assets.TextDescKeyMemoryImportReview)
+		params.Application = assets.TextDesc(embed.TextDescKeyMemoryImportReview)
 
 	case entry.Task:
 		// Tasks just need content: FormatTask handles the rest

@@ -11,6 +11,7 @@ import (
 	"net/http"
 
 	"github.com/ActiveMemory/ctx/internal/assets"
+	"github.com/ActiveMemory/ctx/internal/config/embed"
 	"github.com/spf13/cobra"
 )
 
@@ -22,7 +23,7 @@ func SetupPrompt(cmd *cobra.Command) {
 	if cmd == nil {
 		return
 	}
-	cmd.Print(assets.TextDesc(assets.TextDescKeyWriteSetupPrompt))
+	cmd.Print(assets.TextDesc(embed.TextDescKeyWriteSetupPrompt))
 }
 
 // SetupDone prints the success block after saving a webhook:
@@ -38,7 +39,7 @@ func SetupDone(cmd *cobra.Command, maskedURL, encPath string) {
 	}
 	cmd.Println(
 		fmt.Sprintf(
-			assets.TextDesc(assets.TextDescKeyWriteSetupDone),
+			assets.TextDesc(embed.TextDescKeyWriteSetupDone),
 			maskedURL, encPath,
 		),
 	)
@@ -52,7 +53,7 @@ func TestNoWebhook(cmd *cobra.Command) {
 	if cmd == nil {
 		return
 	}
-	cmd.Println(assets.TextDesc(assets.TextDescKeyWriteTestNoWebhook))
+	cmd.Println(assets.TextDesc(embed.TextDescKeyWriteTestNoWebhook))
 }
 
 // TestFiltered prints the notice when the test event is filtered.
@@ -63,7 +64,7 @@ func TestFiltered(cmd *cobra.Command) {
 	if cmd == nil {
 		return
 	}
-	cmd.Println(assets.TextDesc(assets.TextDescKeyWriteTestFiltered))
+	cmd.Println(assets.TextDesc(embed.TextDescKeyWriteTestFiltered))
 }
 
 // TestResult prints the webhook test response block: status line
@@ -79,14 +80,14 @@ func TestResult(cmd *cobra.Command, statusCode int, encPath string) {
 	}
 	cmd.Println(
 		fmt.Sprintf(
-			assets.TextDesc(assets.TextDescKeyWriteTestResult),
+			assets.TextDesc(embed.TextDescKeyWriteTestResult),
 			statusCode, http.StatusText(statusCode),
 		),
 	)
 	if statusCode >= http.StatusOK && statusCode < http.StatusMultipleChoices {
 		cmd.Println(
 			fmt.Sprintf(
-				assets.TextDesc(assets.TextDescKeyWriteTestWorking),
+				assets.TextDesc(embed.TextDescKeyWriteTestWorking),
 				encPath,
 			),
 		)

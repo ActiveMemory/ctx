@@ -10,6 +10,7 @@ import (
 	"os"
 	"regexp"
 
+	"github.com/ActiveMemory/ctx/internal/config/embed"
 	"github.com/ActiveMemory/ctx/internal/config/hook"
 	ctxcontext "github.com/ActiveMemory/ctx/internal/context/resolve"
 	"github.com/spf13/cobra"
@@ -59,7 +60,7 @@ func Run(cmd *cobra.Command, stdin *os.File) error {
 
 	hookName, variant := hook.PostCommit, hook.VariantNudge
 
-	fallback := assets.TextDesc(assets.TextDescKeyPostCommitFallback)
+	fallback := assets.TextDesc(embed.TextDescKeyPostCommitFallback)
 	msg := core.LoadMessage(hookName, variant, nil, fallback)
 	if msg == "" {
 		return nil
@@ -68,7 +69,7 @@ func Run(cmd *cobra.Command, stdin *os.File) error {
 	core.PrintHookContext(cmd, hook.EventPostToolUse, msg)
 
 	ref := notify.NewTemplateRef(hookName, variant, nil)
-	core.Relay(hookName+": "+assets.TextDesc(assets.TextDescKeyPostCommitRelayMessage), input.SessionID, ref)
+	core.Relay(hookName+": "+assets.TextDesc(embed.TextDescKeyPostCommitRelayMessage), input.SessionID, ref)
 
 	core.CheckVersionDrift(cmd, sessionID)
 

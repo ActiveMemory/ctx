@@ -9,6 +9,7 @@ package compact
 import (
 	"fmt"
 
+	"github.com/ActiveMemory/ctx/internal/config/embed"
 	"github.com/spf13/cobra"
 
 	"github.com/ActiveMemory/ctx/internal/assets"
@@ -20,7 +21,7 @@ import (
 //   - cmd: Cobra command for output
 //   - taskText: Truncated task description
 func InfoMovingTask(cmd *cobra.Command, taskText string) {
-	cmd.Println(fmt.Sprintf(assets.TextDesc(assets.TextDescKeyWriteMovingTask), taskText))
+	cmd.Println(fmt.Sprintf(assets.TextDesc(embed.TextDescKeyWriteMovingTask), taskText))
 }
 
 // InfoSkippingTask reports a task skipped due to incomplete children.
@@ -31,7 +32,7 @@ func InfoMovingTask(cmd *cobra.Command, taskText string) {
 func InfoSkippingTask(cmd *cobra.Command, taskText string) {
 	cmd.Println(
 		fmt.Sprintf(
-			assets.TextDesc(assets.TextDescKeyTaskArchiveSkipping), taskText,
+			assets.TextDesc(embed.TextDescKeyTaskArchiveSkipping), taskText,
 		),
 	)
 }
@@ -48,7 +49,7 @@ func InfoArchivedTasks(
 ) {
 	cmd.Println(
 		fmt.Sprintf(
-			assets.TextDesc(assets.TextDescKeyTaskArchiveSuccessWithAge),
+			assets.TextDesc(embed.TextDescKeyTaskArchiveSuccessWithAge),
 			count, archiveFile, days,
 		),
 	)

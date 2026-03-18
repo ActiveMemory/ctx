@@ -10,6 +10,7 @@ import (
 	"fmt"
 
 	"github.com/ActiveMemory/ctx/internal/assets"
+	"github.com/ActiveMemory/ctx/internal/config/embed"
 	"github.com/spf13/cobra"
 )
 
@@ -26,9 +27,9 @@ func ReminderAdded(cmd *cobra.Command, id int, message string, after *string) {
 	}
 	suffix := ""
 	if after != nil {
-		suffix = fmt.Sprintf(assets.TextDesc(assets.TextDescKeyWriteReminderAfterSuffix), *after)
+		suffix = fmt.Sprintf(assets.TextDesc(embed.TextDescKeyWriteReminderAfterSuffix), *after)
 	}
-	cmd.Println(fmt.Sprintf(assets.TextDesc(assets.TextDescKeyWriteReminderAdded), id, message, suffix))
+	cmd.Println(fmt.Sprintf(assets.TextDesc(embed.TextDescKeyWriteReminderAdded), id, message, suffix))
 }
 
 // ReminderItem prints a single reminder in the list.
@@ -45,9 +46,9 @@ func ReminderItem(cmd *cobra.Command, id int, message string, after *string, tod
 	}
 	annotation := ""
 	if after != nil && *after > today {
-		annotation = fmt.Sprintf(assets.TextDesc(assets.TextDescKeyWriteReminderNotDue), *after)
+		annotation = fmt.Sprintf(assets.TextDesc(embed.TextDescKeyWriteReminderNotDue), *after)
 	}
-	cmd.Println(fmt.Sprintf(assets.TextDesc(assets.TextDescKeyWriteReminderItem), id, message, annotation))
+	cmd.Println(fmt.Sprintf(assets.TextDesc(embed.TextDescKeyWriteReminderItem), id, message, annotation))
 }
 
 // ReminderDismissed prints the confirmation for a dismissed reminder.
@@ -60,7 +61,7 @@ func ReminderDismissed(cmd *cobra.Command, id int, message string) {
 	if cmd == nil {
 		return
 	}
-	cmd.Println(fmt.Sprintf(assets.TextDesc(assets.TextDescKeyWriteReminderDismissed), id, message))
+	cmd.Println(fmt.Sprintf(assets.TextDesc(embed.TextDescKeyWriteReminderDismissed), id, message))
 }
 
 // ReminderNone prints the message when there are no reminders.
@@ -71,7 +72,7 @@ func ReminderNone(cmd *cobra.Command) {
 	if cmd == nil {
 		return
 	}
-	cmd.Println(assets.TextDesc(assets.TextDescKeyWriteReminderNone))
+	cmd.Println(assets.TextDesc(embed.TextDescKeyWriteReminderNone))
 }
 
 // ReminderDismissedAll prints the summary after dismissing all reminders.
@@ -83,5 +84,5 @@ func ReminderDismissedAll(cmd *cobra.Command, count int) {
 	if cmd == nil {
 		return
 	}
-	cmd.Println(fmt.Sprintf(assets.TextDesc(assets.TextDescKeyWriteReminderDismissedAll), count))
+	cmd.Println(fmt.Sprintf(assets.TextDesc(embed.TextDescKeyWriteReminderDismissedAll), count))
 }

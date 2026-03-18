@@ -7,6 +7,7 @@
 package lock
 
 import (
+	"github.com/ActiveMemory/ctx/internal/config/embed"
 	"github.com/spf13/cobra"
 
 	"github.com/ActiveMemory/ctx/internal/assets"
@@ -22,7 +23,7 @@ import (
 func Cmd() *cobra.Command {
 	var all bool
 
-	short, long := assets.CommandDesc(assets.CmdDescKeyRecallLock)
+	short, long := assets.CommandDesc(embed.CmdDescKeyRecallLock)
 
 	cmd := &cobra.Command{
 		Use:   "lock <pattern>",
@@ -34,7 +35,7 @@ func Cmd() *cobra.Command {
 	}
 
 	cmd.Flags().BoolVar(&all, "all", false,
-		assets.FlagDesc(assets.FlagDescKeyRecallLockAll),
+		assets.FlagDesc(embed.FlagDescKeyRecallLockAll),
 	)
 
 	return cmd

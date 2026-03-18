@@ -9,6 +9,7 @@ package check_persistence
 import (
 	"os"
 
+	"github.com/ActiveMemory/ctx/internal/config/embed"
 	"github.com/spf13/cobra"
 
 	"github.com/ActiveMemory/ctx/internal/assets"
@@ -19,7 +20,7 @@ import (
 // Returns:
 //   - *cobra.Command: Configured check-persistence subcommand
 func Cmd() *cobra.Command {
-	short, long := assets.CommandDesc(assets.CmdDescKeySystemCheckPersistence)
+	short, long := assets.CommandDesc(embed.CmdDescKeySystemCheckPersistence)
 
 	return &cobra.Command{
 		Use:    "check-persistence",

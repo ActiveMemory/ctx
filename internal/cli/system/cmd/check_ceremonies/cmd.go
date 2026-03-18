@@ -9,6 +9,7 @@ package check_ceremonies
 import (
 	"os"
 
+	"github.com/ActiveMemory/ctx/internal/config/embed"
 	"github.com/spf13/cobra"
 
 	"github.com/ActiveMemory/ctx/internal/assets"
@@ -19,7 +20,7 @@ import (
 // Returns:
 //   - *cobra.Command: Configured check-ceremonies subcommand
 func Cmd() *cobra.Command {
-	short, long := assets.CommandDesc(assets.CmdDescKeySystemCheckCeremonies)
+	short, long := assets.CommandDesc(embed.CmdDescKeySystemCheckCeremonies)
 
 	return &cobra.Command{
 		Use:    "check-ceremonies",

@@ -12,6 +12,7 @@ import (
 	"os"
 
 	"github.com/ActiveMemory/ctx/internal/assets"
+	"github.com/ActiveMemory/ctx/internal/config/embed"
 )
 
 // LoadKey classifies a key-loading failure.
@@ -30,7 +31,7 @@ func LoadKey(cause error, keyPath string) error {
 		return NoKeyAt(keyPath)
 	}
 	return fmt.Errorf(
-		assets.TextDesc(assets.TextDescKeyErrCryptoLoadKey), cause,
+		assets.TextDesc(embed.TextDescKeyErrCryptoLoadKey), cause,
 	)
 }
 
@@ -43,7 +44,7 @@ func LoadKey(cause error, keyPath string) error {
 //   - error: "encrypt: <cause>"
 func EncryptFailed(cause error) error {
 	return fmt.Errorf(
-		assets.TextDesc(assets.TextDescKeyErrCryptoEncryptFailed), cause,
+		assets.TextDesc(embed.TextDescKeyErrCryptoEncryptFailed), cause,
 	)
 }
 
@@ -52,7 +53,7 @@ func EncryptFailed(cause error) error {
 // Returns:
 //   - error: "decryption failed: wrong key?"
 func DecryptFailed() error {
-	return errors.New(assets.TextDesc(assets.TextDescKeyErrCryptoDecryptFailed))
+	return errors.New(assets.TextDesc(embed.TextDescKeyErrCryptoDecryptFailed))
 }
 
 // NoKeyAt returns an error indicating a missing encryption key.
@@ -64,7 +65,7 @@ func DecryptFailed() error {
 //   - error: "encrypted scratchpad found but no key at <path>"
 func NoKeyAt(path string) error {
 	return fmt.Errorf(
-		assets.TextDesc(assets.TextDescKeyErrCryptoNoKeyAt), path,
+		assets.TextDesc(embed.TextDescKeyErrCryptoNoKeyAt), path,
 	)
 }
 
@@ -77,7 +78,7 @@ func NoKeyAt(path string) error {
 //   - error: "failed to save scratchpad key: <cause>"
 func SaveKey(cause error) error {
 	return fmt.Errorf(
-		assets.TextDesc(assets.TextDescKeyErrCryptoSaveKey), cause)
+		assets.TextDesc(embed.TextDescKeyErrCryptoSaveKey), cause)
 }
 
 // MkdirKeyDir wraps a failure to create the key directory.
@@ -89,7 +90,7 @@ func SaveKey(cause error) error {
 //   - error: "failed to create key dir: <cause>"
 func MkdirKeyDir(cause error) error {
 	return fmt.Errorf(
-		assets.TextDesc(assets.TextDescKeyErrCryptoMkdirKeyDir), cause,
+		assets.TextDesc(embed.TextDescKeyErrCryptoMkdirKeyDir), cause,
 	)
 }
 
@@ -102,7 +103,7 @@ func MkdirKeyDir(cause error) error {
 //   - error: "create cipher: <cause>"
 func CreateCipher(cause error) error {
 	return fmt.Errorf(
-		assets.TextDesc(assets.TextDescKeyErrCryptoCreateCipher), cause,
+		assets.TextDesc(embed.TextDescKeyErrCryptoCreateCipher), cause,
 	)
 }
 
@@ -115,7 +116,7 @@ func CreateCipher(cause error) error {
 //   - error: "create GCM: <cause>"
 func CreateGCM(cause error) error {
 	return fmt.Errorf(
-		assets.TextDesc(assets.TextDescKeyErrCryptoCreateGCM), cause,
+		assets.TextDesc(embed.TextDescKeyErrCryptoCreateGCM), cause,
 	)
 }
 
@@ -128,7 +129,7 @@ func CreateGCM(cause error) error {
 //   - error: "generate nonce: <cause>"
 func GenerateNonce(cause error) error {
 	return fmt.Errorf(
-		assets.TextDesc(assets.TextDescKeyErrCryptoGenerateNonce), cause,
+		assets.TextDesc(embed.TextDescKeyErrCryptoGenerateNonce), cause,
 	)
 }
 
@@ -141,7 +142,7 @@ func GenerateNonce(cause error) error {
 //   - error: "generate key: <cause>"
 func GenerateKey(cause error) error {
 	return fmt.Errorf(
-		assets.TextDesc(assets.TextDescKeyErrCryptoGenerateKey), cause,
+		assets.TextDesc(embed.TextDescKeyErrCryptoGenerateKey), cause,
 	)
 }
 
@@ -152,7 +153,7 @@ func GenerateKey(cause error) error {
 //   - error: "ciphertext too short"
 func CiphertextTooShort() error {
 	return errors.New(
-		assets.TextDesc(assets.TextDescKeyErrCryptoCiphertextTooShort),
+		assets.TextDesc(embed.TextDescKeyErrCryptoCiphertextTooShort),
 	)
 }
 
@@ -165,7 +166,7 @@ func CiphertextTooShort() error {
 //   - error: "decrypt: <cause>"
 func Decrypt(cause error) error {
 	return fmt.Errorf(
-		assets.TextDesc(assets.TextDescKeyErrCryptoDecrypt), cause,
+		assets.TextDesc(embed.TextDescKeyErrCryptoDecrypt), cause,
 	)
 }
 
@@ -177,7 +178,7 @@ func Decrypt(cause error) error {
 // Returns:
 //   - error: "read key: <cause>"
 func ReadKey(cause error) error {
-	return fmt.Errorf(assets.TextDesc(assets.TextDescKeyErrCryptoReadKey), cause)
+	return fmt.Errorf(assets.TextDesc(embed.TextDescKeyErrCryptoReadKey), cause)
 }
 
 // InvalidKeySize returns an error when a key file has the wrong size.
@@ -190,7 +191,7 @@ func ReadKey(cause error) error {
 //   - error: "invalid key size: got N bytes, want M"
 func InvalidKeySize(got, want int) error {
 	return fmt.Errorf(
-		assets.TextDesc(assets.TextDescKeyErrCryptoInvalidKeySize), got, want,
+		assets.TextDesc(embed.TextDescKeyErrCryptoInvalidKeySize), got, want,
 	)
 }
 
@@ -203,6 +204,6 @@ func InvalidKeySize(got, want int) error {
 //   - error: "write key: <cause>"
 func WriteKey(cause error) error {
 	return fmt.Errorf(
-		assets.TextDesc(assets.TextDescKeyErrCryptoWriteKey), cause,
+		assets.TextDesc(embed.TextDescKeyErrCryptoWriteKey), cause,
 	)
 }

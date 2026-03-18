@@ -8,6 +8,7 @@ package status
 
 import (
 	internalConfig "github.com/ActiveMemory/ctx/internal/config/cli"
+	"github.com/ActiveMemory/ctx/internal/config/embed"
 	"github.com/spf13/cobra"
 
 	"github.com/ActiveMemory/ctx/internal/assets"
@@ -19,7 +20,7 @@ import (
 // Returns:
 //   - *cobra.Command: Configured status subcommand
 func Cmd() *cobra.Command {
-	short, _ := assets.CommandDesc(assets.CmdDescKeyConfigStatus)
+	short, _ := assets.CommandDesc(embed.CmdDescKeyConfigStatus)
 
 	return &cobra.Command{
 		Use:         "status",

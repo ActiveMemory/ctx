@@ -14,6 +14,7 @@ import (
 	"github.com/ActiveMemory/ctx/internal/assets"
 	"github.com/ActiveMemory/ctx/internal/config/agent"
 	ctxCfg "github.com/ActiveMemory/ctx/internal/config/ctx"
+	"github.com/ActiveMemory/ctx/internal/config/embed"
 	"github.com/ActiveMemory/ctx/internal/config/token"
 	token2 "github.com/ActiveMemory/ctx/internal/context/token"
 	"github.com/ActiveMemory/ctx/internal/entity"
@@ -66,7 +67,7 @@ func AssembleBudgetPacket(ctx *entity.Context, budget int) *AssembledPacket {
 	now := time.Now()
 	pkt := &AssembledPacket{
 		Budget:      budget,
-		Instruction: assets.TextDesc(assets.TextDescKeyAgentInstruction),
+		Instruction: assets.TextDesc(embed.TextDescKeyAgentInstruction),
 	}
 
 	remaining := budget

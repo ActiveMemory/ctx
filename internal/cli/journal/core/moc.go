@@ -11,6 +11,7 @@ import (
 	"strings"
 
 	"github.com/ActiveMemory/ctx/internal/assets"
+	"github.com/ActiveMemory/ctx/internal/config/embed"
 	"github.com/ActiveMemory/ctx/internal/config/file"
 	"github.com/ActiveMemory/ctx/internal/config/journal"
 	"github.com/ActiveMemory/ctx/internal/config/token"
@@ -36,26 +37,26 @@ func GenerateHomeMOC(
 	nl := token.NewlineLF
 
 	sb.WriteString(assets.JournalHeadingSessionJournal + nl + nl)
-	sb.WriteString(assets.TextDesc(assets.TextDescKeyJournalMocNavDescription) + nl + nl)
+	sb.WriteString(assets.TextDesc(embed.TextDescKeyJournalMocNavDescription) + nl + nl)
 
-	sb.WriteString(assets.TextDesc(assets.TextDescKeyJournalMocBrowseBy) + nl + nl)
+	sb.WriteString(assets.TextDesc(embed.TextDescKeyJournalMocBrowseBy) + nl + nl)
 	if hasTopics {
 		sb.WriteString(fmt.Sprintf(
 			"- %s %s"+nl,
 			FormatWikilink("_Topics", "Topics"),
-			assets.TextDesc(assets.TextDescKeyJournalMocTopicsDesc)))
+			assets.TextDesc(embed.TextDescKeyJournalMocTopicsDesc)))
 	}
 	if hasFiles {
 		sb.WriteString(fmt.Sprintf(
 			"- %s %s"+nl,
 			FormatWikilink("_Key Files", "Key Files"),
-			assets.TextDesc(assets.TextDescKeyJournalMocFilesDesc)))
+			assets.TextDesc(embed.TextDescKeyJournalMocFilesDesc)))
 	}
 	if hasTypes {
 		sb.WriteString(fmt.Sprintf(
 			"- %s %s"+nl,
 			FormatWikilink("_Session Types", "Session Types"),
-			assets.TextDesc(assets.TextDescKeyJournalMocTypesDesc)))
+			assets.TextDesc(embed.TextDescKeyJournalMocTypesDesc)))
 	}
 	sb.WriteString(nl)
 

@@ -10,6 +10,7 @@ import (
 	"os"
 
 	bootstrap2 "github.com/ActiveMemory/ctx/internal/config/bootstrap"
+	"github.com/ActiveMemory/ctx/internal/config/embed"
 	ctxerr "github.com/ActiveMemory/ctx/internal/err/backup"
 	"github.com/ActiveMemory/ctx/internal/write/bootstrap"
 	"github.com/spf13/cobra"
@@ -43,10 +44,10 @@ func Run(cmd *cobra.Command) error {
 
 	files := core.ListContextFiles(dir)
 	rules := core.ParseNumberedLines(
-		assets.TextDesc(assets.TextDescKeyBootstrapRules),
+		assets.TextDesc(embed.TextDescKeyBootstrapRules),
 	)
 	nextSteps := core.ParseNumberedLines(
-		assets.TextDesc(assets.TextDescKeyBootstrapNextSteps),
+		assets.TextDesc(embed.TextDescKeyBootstrapNextSteps),
 	)
 	warning := core.PluginWarning()
 

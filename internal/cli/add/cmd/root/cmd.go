@@ -7,6 +7,7 @@
 package root
 
 import (
+	"github.com/ActiveMemory/ctx/internal/config/embed"
 	"github.com/spf13/cobra"
 
 	"github.com/ActiveMemory/ctx/internal/assets"
@@ -43,7 +44,7 @@ func Cmd() *cobra.Command {
 		application string
 	)
 
-	short, long := assets.CommandDesc(assets.CmdDescKeyAdd)
+	short, long := assets.CommandDesc(embed.CmdDescKeyAdd)
 
 	cmd := &cobra.Command{
 		Use:       "add <type> [content]",
@@ -68,7 +69,7 @@ func Cmd() *cobra.Command {
 	cmd.Flags().StringVarP(
 		&priority,
 		"priority", "p", "",
-		assets.FlagDesc(assets.FlagDescKeyAddPriority),
+		assets.FlagDesc(embed.FlagDescKeyAddPriority),
 	)
 	_ = cmd.RegisterFlagCompletionFunc(
 		"priority", func(_ *cobra.Command, _ []string, _ string) (
@@ -79,37 +80,37 @@ func Cmd() *cobra.Command {
 	cmd.Flags().StringVarP(
 		&section,
 		"section", "s", "",
-		assets.FlagDesc(assets.FlagDescKeyAddSection),
+		assets.FlagDesc(embed.FlagDescKeyAddSection),
 	)
 	cmd.Flags().StringVarP(
 		&fromFile,
 		"file", "f", "",
-		assets.FlagDesc(assets.FlagDescKeyAddFile),
+		assets.FlagDesc(embed.FlagDescKeyAddFile),
 	)
 	cmd.Flags().StringVarP(
 		&context,
 		"context", "c", "",
-		assets.FlagDesc(assets.FlagDescKeyAddContext),
+		assets.FlagDesc(embed.FlagDescKeyAddContext),
 	)
 	cmd.Flags().StringVarP(
 		&rationale,
 		"rationale", "r", "",
-		assets.FlagDesc(assets.FlagDescKeyAddRationale),
+		assets.FlagDesc(embed.FlagDescKeyAddRationale),
 	)
 	cmd.Flags().StringVar(
 		&consequence,
 		"consequence", "",
-		assets.FlagDesc(assets.FlagDescKeyAddConsequence),
+		assets.FlagDesc(embed.FlagDescKeyAddConsequence),
 	)
 	cmd.Flags().StringVarP(
 		&lesson,
 		"lesson", "l", "",
-		assets.FlagDesc(assets.FlagDescKeyAddLesson),
+		assets.FlagDesc(embed.FlagDescKeyAddLesson),
 	)
 	cmd.Flags().StringVarP(
 		&application,
 		"application", "a", "",
-		assets.FlagDesc(assets.FlagDescKeyAddApplication),
+		assets.FlagDesc(embed.FlagDescKeyAddApplication),
 	)
 
 	return cmd

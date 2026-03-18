@@ -14,6 +14,7 @@ import (
 	"github.com/ActiveMemory/ctx/internal/assets"
 	"github.com/ActiveMemory/ctx/internal/config/cli"
 	ctxCfg "github.com/ActiveMemory/ctx/internal/config/ctx"
+	"github.com/ActiveMemory/ctx/internal/config/embed"
 	"github.com/ActiveMemory/ctx/internal/config/mcp/field"
 	"github.com/ActiveMemory/ctx/internal/config/mcp/mime"
 	"github.com/ActiveMemory/ctx/internal/config/mcp/prompt"
@@ -40,12 +41,12 @@ func sessionStart(
 	if loadErr != nil {
 		return out.ErrResponse(id, proto.ErrCodeInternal,
 			fmt.Sprintf(
-				assets.TextDesc(assets.TextDescKeyMCPLoadContext), loadErr))
+				assets.TextDesc(embed.TextDescKeyMCPLoadContext), loadErr))
 	}
 
 	var sb strings.Builder
 	sb.WriteString(
-		assets.TextDesc(assets.TextDescKeyMCPPromptSessionStartHeader),
+		assets.TextDesc(embed.TextDescKeyMCPPromptSessionStartHeader),
 	)
 	sb.WriteString(token.NewlineLF)
 	sb.WriteString(token.NewlineLF)
@@ -57,19 +58,19 @@ func sessionStart(
 		}
 		_, _ = fmt.Fprintf(
 			&sb,
-			assets.TextDesc(assets.TextDescKeyMCPPromptSectionFormat),
+			assets.TextDesc(embed.TextDescKeyMCPPromptSectionFormat),
 			fileName, string(f.Content),
 		)
 	}
 
 	sb.WriteString(token.NewlineLF)
 	sb.WriteString(
-		assets.TextDesc(assets.TextDescKeyMCPPromptSessionStartFooter),
+		assets.TextDesc(embed.TextDescKeyMCPPromptSessionStartFooter),
 	)
 
 	return out.OkResponse(id, proto.GetPromptResult{
 		Description: assets.TextDesc(
-			assets.TextDescKeyMCPPromptSessionStartResultD,
+			embed.TextDescKeyMCPPromptSessionStartResultD,
 		),
 		Messages: []proto.PromptMessage{
 			{
@@ -101,25 +102,25 @@ func checkpoint(
 
 	var sb strings.Builder
 	sb.WriteString(
-		assets.TextDesc(assets.TextDescKeyMCPPromptCheckpointHeader),
+		assets.TextDesc(embed.TextDescKeyMCPPromptCheckpointHeader),
 	)
 	sb.WriteString(token.NewlineLF)
 	sb.WriteString(token.NewlineLF)
 
 	_, _ = fmt.Fprintf(
 		&sb,
-		assets.TextDesc(assets.TextDescKeyMCPPromptCheckpointStatsFormat),
+		assets.TextDesc(embed.TextDescKeyMCPPromptCheckpointStatsFormat),
 		toolCalls, adds, pending,
 	)
 
 	sb.WriteString(token.NewlineLF)
 	sb.WriteString(
-		assets.TextDesc(assets.TextDescKeyMCPPromptCheckpointSteps),
+		assets.TextDesc(embed.TextDescKeyMCPPromptCheckpointSteps),
 	)
 
 	return out.OkResponse(id, proto.GetPromptResult{
 		Description: assets.TextDesc(
-			assets.TextDescKeyMCPPromptCheckpointResultD,
+			embed.TextDescKeyMCPPromptCheckpointResultD,
 		),
 		Messages: []proto.PromptMessage{
 			{
@@ -146,18 +147,18 @@ func addDecision(
 	id json.RawMessage, args map[string]string,
 ) *proto.Response {
 	return buildEntry(id, promptdef.EntryPromptSpec{
-		KeyHeader:  assets.TextDescKeyMCPPromptAddDecisionHeader,
-		KeyFooter:  assets.TextDescKeyMCPPromptAddDecisionFooter,
-		FieldFmtK:  assets.TextDescKeyMCPPromptAddDecisionFieldFmt,
-		KeyResultD: assets.TextDescKeyMCPPromptAddDecisionResultD,
+		KeyHeader:  embed.TextDescKeyMCPPromptAddDecisionHeader,
+		KeyFooter:  embed.TextDescKeyMCPPromptAddDecisionFooter,
+		FieldFmtK:  embed.TextDescKeyMCPPromptAddDecisionFieldFmt,
+		KeyResultD: embed.TextDescKeyMCPPromptAddDecisionResultD,
 		Fields: []promptdef.EntryField{
-			{KeyLabel: assets.TextDescKeyMCPPromptLabelDecision,
+			{KeyLabel: embed.TextDescKeyMCPPromptLabelDecision,
 				Value: args[field.Content]},
-			{KeyLabel: assets.TextDescKeyMCPPromptLabelContext,
+			{KeyLabel: embed.TextDescKeyMCPPromptLabelContext,
 				Value: args[cli.AttrContext]},
-			{KeyLabel: assets.TextDescKeyMCPPromptLabelRationale,
+			{KeyLabel: embed.TextDescKeyMCPPromptLabelRationale,
 				Value: args[cli.AttrRationale]},
-			{KeyLabel: assets.TextDescKeyMCPPromptLabelConsequence,
+			{KeyLabel: embed.TextDescKeyMCPPromptLabelConsequence,
 				Value: args[cli.AttrConsequence]},
 		},
 	})
@@ -176,18 +177,18 @@ func addLearning(
 	id json.RawMessage, args map[string]string,
 ) *proto.Response {
 	return buildEntry(id, promptdef.EntryPromptSpec{
-		KeyHeader:  assets.TextDescKeyMCPPromptAddLearningHeader,
-		KeyFooter:  assets.TextDescKeyMCPPromptAddLearningFooter,
-		FieldFmtK:  assets.TextDescKeyMCPPromptAddLearningFieldFmt,
-		KeyResultD: assets.TextDescKeyMCPPromptAddLearningResultD,
+		KeyHeader:  embed.TextDescKeyMCPPromptAddLearningHeader,
+		KeyFooter:  embed.TextDescKeyMCPPromptAddLearningFooter,
+		FieldFmtK:  embed.TextDescKeyMCPPromptAddLearningFieldFmt,
+		KeyResultD: embed.TextDescKeyMCPPromptAddLearningResultD,
 		Fields: []promptdef.EntryField{
-			{KeyLabel: assets.TextDescKeyMCPPromptLabelLearning,
+			{KeyLabel: embed.TextDescKeyMCPPromptLabelLearning,
 				Value: args[field.Content]},
-			{KeyLabel: assets.TextDescKeyMCPPromptLabelContext,
+			{KeyLabel: embed.TextDescKeyMCPPromptLabelContext,
 				Value: args[cli.AttrContext]},
-			{KeyLabel: assets.TextDescKeyMCPPromptLabelLesson,
+			{KeyLabel: embed.TextDescKeyMCPPromptLabelLesson,
 				Value: args[cli.AttrLesson]},
-			{KeyLabel: assets.TextDescKeyMCPPromptLabelApplication,
+			{KeyLabel: embed.TextDescKeyMCPPromptLabelApplication,
 				Value: args[cli.AttrApplication]},
 		},
 	})
@@ -203,14 +204,14 @@ func addLearning(
 func reflect(id json.RawMessage) *proto.Response {
 	return out.OkResponse(id, proto.GetPromptResult{
 		Description: assets.TextDesc(
-			assets.TextDescKeyMCPPromptReflectResultD),
+			embed.TextDescKeyMCPPromptReflectResultD),
 		Messages: []proto.PromptMessage{
 			{
 				Role: prompt.RoleUser,
 				Content: proto.ToolContent{
 					Type: mime.ContentTypeText,
 					Text: assets.TextDesc(
-						assets.TextDescKeyMCPPromptReflectBody,
+						embed.TextDescKeyMCPPromptReflectBody,
 					),
 				},
 			},

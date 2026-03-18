@@ -10,6 +10,7 @@ import (
 	"errors"
 
 	"github.com/ActiveMemory/ctx/internal/assets"
+	"github.com/ActiveMemory/ctx/internal/config/embed"
 )
 
 // Violations returns an error when drift detection found violations.
@@ -18,6 +19,6 @@ import (
 //   - error: "drift detection found violations"
 func Violations() error {
 	return errors.New(
-		assets.TextDesc(assets.TextDescKeyErrValidationDriftViolations),
+		assets.TextDesc(embed.TextDescKeyErrValidationDriftViolations),
 	)
 }

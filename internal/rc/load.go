@@ -11,6 +11,7 @@ import (
 	"os"
 	"strconv"
 
+	"github.com/ActiveMemory/ctx/internal/config/embed"
 	"github.com/ActiveMemory/ctx/internal/config/env"
 	"github.com/ActiveMemory/ctx/internal/config/file"
 	"github.com/ActiveMemory/ctx/internal/config/token"
@@ -31,7 +32,7 @@ func loadRC() *CtxRC {
 	data, err := os.ReadFile(file.CtxRC)
 	if err == nil {
 		if yamlErr := yaml.Unmarshal(data, cfg); yamlErr != nil {
-			_, _ = fmt.Fprintf(os.Stderr, assets.TextDesc(assets.TextDescKeyRcParseWarning)+token.NewlineLF,
+			_, _ = fmt.Fprintf(os.Stderr, assets.TextDesc(embed.TextDescKeyRcParseWarning)+token.NewlineLF,
 				file.CtxRC, yamlErr)
 		}
 	}

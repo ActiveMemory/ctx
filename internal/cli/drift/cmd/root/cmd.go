@@ -7,6 +7,7 @@
 package root
 
 import (
+	"github.com/ActiveMemory/ctx/internal/config/embed"
 	"github.com/spf13/cobra"
 
 	"github.com/ActiveMemory/ctx/internal/assets"
@@ -29,7 +30,7 @@ func Cmd() *cobra.Command {
 		fix        bool
 	)
 
-	short, long := assets.CommandDesc(assets.CmdDescKeyDrift)
+	short, long := assets.CommandDesc(embed.CmdDescKeyDrift)
 	cmd := &cobra.Command{
 		Use:   "drift",
 		Short: short,
@@ -40,10 +41,10 @@ func Cmd() *cobra.Command {
 	}
 
 	cmd.Flags().BoolVar(
-		&jsonOutput, "json", false, assets.FlagDesc(assets.FlagDescKeyDriftJson),
+		&jsonOutput, "json", false, assets.FlagDesc(embed.FlagDescKeyDriftJson),
 	)
 	cmd.Flags().BoolVar(&fix,
-		"fix", false, assets.FlagDesc(assets.FlagDescKeyDriftFix),
+		"fix", false, assets.FlagDesc(embed.FlagDescKeyDriftFix),
 	)
 
 	return cmd

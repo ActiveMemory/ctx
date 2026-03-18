@@ -9,6 +9,7 @@ package notify
 import (
 	"strings"
 
+	"github.com/ActiveMemory/ctx/internal/config/embed"
 	errcli "github.com/ActiveMemory/ctx/internal/err/cli"
 	"github.com/spf13/cobra"
 
@@ -28,7 +29,7 @@ func Cmd() *cobra.Command {
 	var hook string
 	var variant string
 
-	short, long := assets.CommandDesc(assets.CmdDescKeyNotify)
+	short, long := assets.CommandDesc(embed.CmdDescKeyNotify)
 	cmd := &cobra.Command{
 		Use:   "notify [message]",
 		Short: short,
@@ -52,16 +53,16 @@ func Cmd() *cobra.Command {
 
 	cmd.Flags().StringVarP(&event,
 		"event", "e", "",
-		assets.FlagDesc(assets.FlagDescKeyNotifyEvent),
+		assets.FlagDesc(embed.FlagDescKeyNotifyEvent),
 	)
 	cmd.Flags().StringVarP(&sessionID,
-		"session-id", "s", "", assets.FlagDesc(assets.FlagDescKeyNotifySessionId),
+		"session-id", "s", "", assets.FlagDesc(embed.FlagDescKeyNotifySessionId),
 	)
 	cmd.Flags().StringVar(&hook,
-		"hook", "", assets.FlagDesc(assets.FlagDescKeyNotifyHook),
+		"hook", "", assets.FlagDesc(embed.FlagDescKeyNotifyHook),
 	)
 	cmd.Flags().StringVar(&variant,
-		"variant", "", assets.FlagDesc(assets.FlagDescKeyNotifyVariant),
+		"variant", "", assets.FlagDesc(embed.FlagDescKeyNotifyVariant),
 	)
 
 	cmd.AddCommand(setup.Cmd())

@@ -17,6 +17,7 @@ import (
 	taskcomplete "github.com/ActiveMemory/ctx/internal/cli/task/cmd/complete"
 	archiveCfg "github.com/ActiveMemory/ctx/internal/config/archive"
 	ctxCfg "github.com/ActiveMemory/ctx/internal/config/ctx"
+	"github.com/ActiveMemory/ctx/internal/config/embed"
 	entryCfg "github.com/ActiveMemory/ctx/internal/config/entry"
 	configfs "github.com/ActiveMemory/ctx/internal/config/fs"
 	"github.com/ActiveMemory/ctx/internal/config/mcp/cfg"
@@ -50,24 +51,24 @@ func (h *Handler) Status() (string, error) {
 	var sb strings.Builder
 	_, _ = fmt.Fprintf(
 		&sb,
-		assets.TextDesc(assets.TextDescKeyMCPStatusContextFormat), ctx.Dir,
+		assets.TextDesc(embed.TextDescKeyMCPStatusContextFormat), ctx.Dir,
 	)
 	_, _ = fmt.Fprintf(
 		&sb,
-		assets.TextDesc(assets.TextDescKeyMCPStatusFilesFormat), len(ctx.Files),
+		assets.TextDesc(embed.TextDescKeyMCPStatusFilesFormat), len(ctx.Files),
 	)
 	_, _ = fmt.Fprintf(
 		&sb,
-		assets.TextDesc(assets.TextDescKeyMCPStatusTokensFormat), ctx.TotalTokens,
+		assets.TextDesc(embed.TextDescKeyMCPStatusTokensFormat), ctx.TotalTokens,
 	)
 
 	for _, f := range ctx.Files {
-		status := assets.TextDesc(assets.TextDescKeyMCPStatusOK)
+		status := assets.TextDesc(embed.TextDescKeyMCPStatusOK)
 		if f.IsEmpty {
-			status = assets.TextDesc(assets.TextDescKeyMCPStatusEmpty)
+			status = assets.TextDesc(embed.TextDescKeyMCPStatusEmpty)
 		}
 		_, _ = fmt.Fprintf(
-			&sb, assets.TextDesc(assets.TextDescKeyMCPStatusFileFormat),
+			&sb, assets.TextDesc(embed.TextDescKeyMCPStatusFileFormat),
 			f.Name, f.Tokens, status,
 		)
 	}
@@ -110,7 +111,7 @@ func (h *Handler) Add(
 	}
 
 	return fmt.Sprintf(
-		assets.TextDesc(assets.TextDescKeyMCPAddedFormat),
+		assets.TextDesc(embed.TextDescKeyMCPAddedFormat),
 		entryType, fileName,
 	), nil
 }
@@ -138,7 +139,7 @@ func (h *Handler) Complete(query string) (string, error) {
 	}
 
 	return fmt.Sprintf(
-		assets.TextDesc(assets.TextDescKeyMCPCompletedFormat),
+		assets.TextDesc(embed.TextDescKeyMCPCompletedFormat),
 		completedTask,
 	), nil
 }
@@ -159,15 +160,15 @@ func (h *Handler) Drift() (string, error) {
 	var sb strings.Builder
 	_, _ = fmt.Fprintf(
 		&sb,
-		assets.TextDesc(assets.TextDescKeyMCPDriftStatusFormat),
+		assets.TextDesc(embed.TextDescKeyMCPDriftStatusFormat),
 		report.Status(),
 	)
 
 	if len(report.Violations) > 0 {
-		sb.WriteString(assets.TextDesc(assets.TextDescKeyMCPDriftViolations))
+		sb.WriteString(assets.TextDesc(embed.TextDescKeyMCPDriftViolations))
 		for _, v := range report.Violations {
 			_, _ = fmt.Fprintf(
-				&sb, assets.TextDesc(assets.TextDescKeyMCPDriftIssueFormat),
+				&sb, assets.TextDesc(embed.TextDescKeyMCPDriftIssueFormat),
 				v.Type, v.File, v.Message,
 			)
 		}
@@ -175,10 +176,10 @@ func (h *Handler) Drift() (string, error) {
 	}
 
 	if len(report.Warnings) > 0 {
-		sb.WriteString(assets.TextDesc(assets.TextDescKeyMCPDriftWarnings))
+		sb.WriteString(assets.TextDesc(embed.TextDescKeyMCPDriftWarnings))
 		for _, w := range report.Warnings {
 			_, _ = fmt.Fprintf(
-				&sb, assets.TextDesc(assets.TextDescKeyMCPDriftIssueFormat),
+				&sb, assets.TextDesc(embed.TextDescKeyMCPDriftIssueFormat),
 				w.Type, w.File, w.Message,
 			)
 		}
@@ -186,10 +187,10 @@ func (h *Handler) Drift() (string, error) {
 	}
 
 	if len(report.Passed) > 0 {
-		sb.WriteString(assets.TextDesc(assets.TextDescKeyMCPDriftPassed))
+		sb.WriteString(assets.TextDesc(embed.TextDescKeyMCPDriftPassed))
 		for _, p := range report.Passed {
 			_, _ = fmt.Fprintf(
-				&sb, assets.TextDesc(assets.TextDescKeyMCPDriftPassedFormat), p,
+				&sb, assets.TextDesc(embed.TextDescKeyMCPDriftPassedFormat), p,
 			)
 		}
 	}
@@ -230,12 +231,12 @@ func (h *Handler) Recall(limit int, since time.Time) (string, error) {
 	}
 
 	if len(sessions) == 0 {
-		return assets.TextDesc(assets.TextDescKeyMCPNoSessions), nil
+		return assets.TextDesc(embed.TextDescKeyMCPNoSessions), nil
 	}
 
 	var sb strings.Builder
 	_, _ = fmt.Fprintf(&sb,
-		assets.TextDesc(assets.TextDescKeyMCPSessionsFoundFormat),
+		assets.TextDesc(embed.TextDescKeyMCPSessionsFoundFormat),
 		len(sessions),
 	)
 
@@ -243,24 +244,24 @@ func (h *Handler) Recall(limit int, since time.Time) (string, error) {
 		duration := sess.Duration.Round(time.Second)
 		_, _ = fmt.Fprintf(
 			&sb,
-			assets.TextDesc(assets.TextDescKeyMCPRecallItemFormat),
+			assets.TextDesc(embed.TextDescKeyMCPRecallItemFormat),
 			i+1, sess.StartTime.Format(timeCfg.DateTimeFormat),
 		)
 		if sess.Project != "" {
 			_, _ = fmt.Fprintf(
-				&sb, assets.TextDesc(assets.TextDescKeyMCPRecallProjectFormat),
+				&sb, assets.TextDesc(embed.TextDescKeyMCPRecallProjectFormat),
 				sess.Project,
 			)
 		}
 		_, _ = fmt.Fprintf(
-			&sb, assets.TextDesc(assets.TextDescKeyMCPRecallDurationFormat),
+			&sb, assets.TextDesc(embed.TextDescKeyMCPRecallDurationFormat),
 			duration, sess.TurnCount,
 		)
 		sb.WriteString(token.NewlineLF)
 
 		if sess.FirstUserMsg != "" {
 			_, _ = fmt.Fprintf(
-				&sb, assets.TextDesc(assets.TextDescKeyMCPRecallFirstMsgFormat),
+				&sb, assets.TextDesc(embed.TextDescKeyMCPRecallFirstMsgFormat),
 				sess.FirstUserMsg,
 			)
 			sb.WriteString(token.NewlineLF)
@@ -300,10 +301,10 @@ func (h *Handler) WatchUpdate(
 			QueuedAt: time.Now(),
 		})
 		return fmt.Sprintf(
-			assets.TextDesc(assets.TextDescKeyMCPWatchCompletedFormat),
+			assets.TextDesc(embed.TextDescKeyMCPWatchCompletedFormat),
 			completedTask,
 		) + token.NewlineLF +
-			assets.TextDesc(assets.TextDescKeyMCPReviewStatus), nil
+			assets.TextDesc(embed.TextDescKeyMCPReviewStatus), nil
 	}
 
 	fileName, writeErr := entry.ValidateAndWrite(entry.Params{
@@ -332,10 +333,10 @@ func (h *Handler) WatchUpdate(
 	})
 
 	return fmt.Sprintf(
-		assets.TextDesc(assets.TextDescKeyMCPWroteFormat),
+		assets.TextDesc(embed.TextDescKeyMCPWroteFormat),
 		entryType, fileName,
 	) + token.NewlineLF +
-		assets.TextDesc(assets.TextDescKeyMCPReviewStatus), nil
+		assets.TextDesc(embed.TextDescKeyMCPReviewStatus), nil
 }
 
 // Compact moves completed tasks to the archive section.
@@ -395,7 +396,7 @@ func (h *Handler) Compact(archive bool) (string, error) {
 		); archiveErr != nil {
 			_, _ = fmt.Fprintf(
 				&sb,
-				assets.TextDesc(assets.TextDescKeyMCPCompactArchiveWarning)+
+				assets.TextDesc(embed.TextDescKeyMCPCompactArchiveWarning)+
 					token.NewlineLF,
 				archiveErr,
 			)
@@ -406,29 +407,29 @@ func (h *Handler) Compact(archive bool) (string, error) {
 	for _, taskText := range result.TasksMoved {
 		_, _ = fmt.Fprintf(&sb,
 			assets.TextDesc(
-				assets.TextDescKeyMCPCompactMovedFormat)+token.NewlineLF,
+				embed.TextDescKeyMCPCompactMovedFormat)+token.NewlineLF,
 			tidy.TruncateString(taskText, cfg.TruncateLen),
 		)
 	}
 	for _, sc := range result.SectionsCleaned {
 		_, _ = fmt.Fprintf(
 			&sb,
-			assets.TextDesc(assets.TextDescKeyMCPCompactRemovedSectFmt)+
+			assets.TextDesc(embed.TextDescKeyMCPCompactRemovedSectFmt)+
 				token.NewlineLF,
 			sc.Removed, sc.FileName,
 		)
 	}
 
 	if result.TotalChanges() == 0 {
-		return assets.TextDesc(assets.TextDescKeyMCPCompactClean), nil
+		return assets.TextDesc(embed.TextDescKeyMCPCompactClean), nil
 	}
 
 	_, _ = fmt.Fprintf(
 		&sb,
-		assets.TextDesc(assets.TextDescKeyMCPCompactedFormat),
+		assets.TextDesc(embed.TextDescKeyMCPCompactedFormat),
 		result.TotalChanges(),
 	)
-	sb.WriteString(assets.TextDesc(assets.TextDescKeyMCPReviewStatus))
+	sb.WriteString(assets.TextDesc(embed.TextDescKeyMCPReviewStatus))
 
 	return sb.String(), nil
 }
@@ -446,7 +447,7 @@ func (h *Handler) Next() (string, error) {
 
 	tasksFile := ctx.File(ctxCfg.Task)
 	if tasksFile == nil {
-		return assets.TextDesc(assets.TextDescKeyMCPNoTasks), nil
+		return assets.TextDesc(embed.TextDescKeyMCPNoTasks), nil
 	}
 
 	lines := strings.Split(string(tasksFile.Content), token.NewlineLF)
@@ -454,7 +455,7 @@ func (h *Handler) Next() (string, error) {
 	var result string
 	task.ForEachPending(lines, func(pt task.Pending) bool {
 		result = fmt.Sprintf(
-			assets.TextDesc(assets.TextDescKeyMCPNextTaskFormat),
+			assets.TextDesc(embed.TextDescKeyMCPNextTaskFormat),
 			pt.Index, pt.Content,
 		)
 		return true // stop after first
@@ -464,7 +465,7 @@ func (h *Handler) Next() (string, error) {
 		return result, nil
 	}
 
-	return assets.TextDesc(assets.TextDescKeyMCPAllTasksComplete), nil
+	return assets.TextDesc(embed.TextDescKeyMCPAllTasksComplete), nil
 }
 
 // CheckTaskCompletion checks if a recent action completed any pending
@@ -493,9 +494,9 @@ func (h *Handler) CheckTaskCompletion(recentAction string) (string, error) {
 	task.ForEachPending(lines, func(pt task.Pending) bool {
 		if recentAction != "" && task.ContainsOverlap(recentAction, pt.Content) {
 			result = fmt.Sprintf(
-				assets.TextDesc(assets.TextDescKeyMCPCheckTaskFormat)+
+				assets.TextDesc(embed.TextDescKeyMCPCheckTaskFormat)+
 					token.NewlineLF+
-					assets.TextDesc(assets.TextDescKeyMCPCheckTaskHint),
+					assets.TextDesc(embed.TextDescKeyMCPCheckTaskHint),
 				pt.Index, pt.Content, pt.Index,
 			)
 			return true
@@ -524,46 +525,46 @@ func (h *Handler) SessionEvent(
 		if caller != "" {
 			return fmt.Sprintf(
 				assets.TextDesc(
-					assets.TextDescKeyMCPSessionStartedCallerFormat,
+					embed.TextDescKeyMCPSessionStartedCallerFormat,
 				),
 				caller, h.ContextDir,
 			), nil
 		}
 		return fmt.Sprintf(
-			assets.TextDesc(assets.TextDescKeyMCPSessionStartedFormat),
+			assets.TextDesc(embed.TextDescKeyMCPSessionStartedFormat),
 			h.ContextDir,
 		), nil
 
 	case event.End:
 		pending := h.Session.PendingCount()
 		var sb strings.Builder
-		sb.WriteString(assets.TextDesc(assets.TextDescKeyMCPSessionEnding))
+		sb.WriteString(assets.TextDesc(embed.TextDescKeyMCPSessionEnding))
 		sb.WriteString(token.NewlineLF)
 
 		if pending > 0 {
 			_, _ = fmt.Fprintf(
 				&sb,
-				assets.TextDesc(assets.TextDescKeyMCPPendingUpdatesFormat),
+				assets.TextDesc(embed.TextDescKeyMCPPendingUpdatesFormat),
 				pending,
 			)
 			for i, pu := range h.Session.PendingFlush {
 				_, _ = fmt.Fprintf(
 					&sb,
-					assets.TextDesc(assets.TextDescKeyMCPPendingItemFormat)+
+					assets.TextDesc(embed.TextDescKeyMCPPendingItemFormat)+
 						token.NewlineLF,
 					i+1, pu.Type,
 					tidy.TruncateString(pu.Content, cfg.TruncateContentLen),
 				)
 			}
 			sb.WriteString(
-				assets.TextDesc(assets.TextDescKeyMCPReviewPending),
+				assets.TextDesc(embed.TextDescKeyMCPReviewPending),
 			)
 		} else {
-			sb.WriteString(assets.TextDesc(assets.TextDescKeyMCPNoPending))
+			sb.WriteString(assets.TextDesc(embed.TextDescKeyMCPNoPending))
 		}
 
 		_, _ = fmt.Fprintf(&sb,
-			assets.TextDesc(assets.TextDescKeyMCPSessionStatsFormat),
+			assets.TextDesc(embed.TextDescKeyMCPSessionStatsFormat),
 			h.Session.ToolCalls,
 			stat.TotalAdds(h.Session.AddsPerformed),
 		)
@@ -587,14 +588,14 @@ func (h *Handler) Remind() (string, error) {
 	}
 
 	if len(reminders) == 0 {
-		return assets.TextDesc(assets.TextDescKeyMCPNoReminders), nil
+		return assets.TextDesc(embed.TextDescKeyMCPNoReminders), nil
 	}
 
 	today := time.Now().Format(timeCfg.DateFormat)
 	var sb strings.Builder
 	_, _ = fmt.Fprintf(
 		&sb,
-		assets.TextDesc(assets.TextDescKeyMCPRemindersFormat),
+		assets.TextDesc(embed.TextDescKeyMCPRemindersFormat),
 		len(reminders),
 	)
 
@@ -604,13 +605,13 @@ func (h *Handler) Remind() (string, error) {
 			if *r.After > today {
 				annotation = fmt.Sprintf(
 					assets.TextDesc(
-						assets.TextDescKeyMCPReminderNotDueFormat,
+						embed.TextDescKeyMCPReminderNotDueFormat,
 					), *r.After,
 				)
 			}
 		}
 		_, _ = fmt.Fprintf(&sb, assets.TextDesc(
-			assets.TextDescKeyMCPReminderItemFormat)+token.NewlineLF,
+			embed.TextDescKeyMCPReminderItemFormat)+token.NewlineLF,
 			r.ID, r.Message, annotation)
 	}
 

@@ -13,6 +13,7 @@ import (
 	"strings"
 
 	"github.com/ActiveMemory/ctx/internal/config/ctx"
+	"github.com/ActiveMemory/ctx/internal/config/embed"
 	"github.com/ActiveMemory/ctx/internal/config/hook"
 	"github.com/ActiveMemory/ctx/internal/config/load_gate"
 	"github.com/ActiveMemory/ctx/internal/config/token"
@@ -76,7 +77,7 @@ func Run(cmd *cobra.Command, stdin *os.File) error {
 	var perFile []core.FileTokenEntry
 
 	content.WriteString(
-		assets.TextDesc(assets.TextDescKeyContextLoadGateHeader) +
+		assets.TextDesc(embed.TextDescKeyContextLoadGateHeader) +
 			strings.Repeat(
 				load_gate.ContextLoadSeparatorChar, load_gate.ContextLoadSeparatorWidth,
 			) +
@@ -101,10 +102,10 @@ func Run(cmd *cobra.Command, stdin *os.File) error {
 		case ctx.Decision, ctx.Learning:
 			idx := core.ExtractIndex(string(data))
 			if idx == "" {
-				idx = assets.TextDesc(assets.TextDescKeyContextLoadGateIndexFallback)
+				idx = assets.TextDesc(embed.TextDescKeyContextLoadGateIndexFallback)
 			}
 			content.WriteString(fmt.Sprintf(
-				assets.TextDesc(assets.TextDescKeyContextLoadGateIndexHeader), f, idx))
+				assets.TextDesc(embed.TextDescKeyContextLoadGateIndexHeader), f, idx))
 			tokens := token2.EstimateTokensString(idx)
 			totalTokens += tokens
 			perFile = append(perFile, core.FileTokenEntry{
@@ -116,7 +117,7 @@ func Run(cmd *cobra.Command, stdin *os.File) error {
 		default:
 			content.WriteString(fmt.Sprintf(
 				assets.TextDesc(
-					assets.TextDescKeyContextLoadGateFileHeader,
+					embed.TextDescKeyContextLoadGateFileHeader,
 				), f, string(data)))
 			tokens := token2.EstimateTokens(data)
 			totalTokens += tokens
@@ -140,14 +141,14 @@ func Run(cmd *cobra.Command, stdin *os.File) error {
 			load_gate.ContextLoadSeparatorChar, load_gate.ContextLoadSeparatorWidth,
 		) + token.NewlineLF)
 	content.WriteString(fmt.Sprintf(
-		assets.TextDesc(assets.TextDescKeyContextLoadGateFooter),
+		assets.TextDesc(embed.TextDescKeyContextLoadGateFooter),
 		filesLoaded, totalTokens))
 
 	core.PrintHookContext(cmd, hook.EventPreToolUse, content.String())
 
 	// Webhook: metadata only — never send file content externally
 	webhookMsg := fmt.Sprintf(
-		assets.TextDesc(assets.TextDescKeyContextLoadGateWebhook),
+		assets.TextDesc(embed.TextDescKeyContextLoadGateWebhook),
 		filesLoaded, totalTokens)
 	core.Relay(webhookMsg, input.SessionID, nil)
 

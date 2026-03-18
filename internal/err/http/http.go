@@ -11,6 +11,7 @@ import (
 	"fmt"
 
 	"github.com/ActiveMemory/ctx/internal/assets"
+	"github.com/ActiveMemory/ctx/internal/config/embed"
 )
 
 // UnsafeURLScheme returns an error when a URL uses a scheme other than
@@ -23,7 +24,7 @@ import (
 //   - error: "unsafe URL scheme: <scheme>: only http and https are allowed"
 func UnsafeURLScheme(scheme string) error {
 	return fmt.Errorf(
-		assets.TextDesc(assets.TextDescKeyErrHttpUnsafeURLScheme), scheme,
+		assets.TextDesc(embed.TextDescKeyErrHttpUnsafeURLScheme), scheme,
 	)
 }
 
@@ -36,7 +37,7 @@ func UnsafeURLScheme(scheme string) error {
 //   - error: "parse URL: <cause>"
 func ParseURL(cause error) error {
 	return fmt.Errorf(
-		assets.TextDesc(assets.TextDescKeyErrHttpParseURL), cause,
+		assets.TextDesc(embed.TextDescKeyErrHttpParseURL), cause,
 	)
 }
 
@@ -47,6 +48,6 @@ func ParseURL(cause error) error {
 //   - error: "too many redirects: limit exceeded"
 func TooManyRedirects() error {
 	return errors.New(
-		assets.TextDesc(assets.TextDescKeyErrHttpTooManyRedirects),
+		assets.TextDesc(embed.TextDescKeyErrHttpTooManyRedirects),
 	)
 }

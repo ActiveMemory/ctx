@@ -7,6 +7,7 @@
 package root
 
 import (
+	"github.com/ActiveMemory/ctx/internal/config/embed"
 	"github.com/spf13/cobra"
 
 	"github.com/ActiveMemory/ctx/internal/assets"
@@ -26,7 +27,7 @@ func Cmd() *cobra.Command {
 		dryRun  bool
 	)
 
-	short, long := assets.CommandDesc(assets.CmdDescKeyWatch)
+	short, long := assets.CommandDesc(embed.CmdDescKeyWatch)
 
 	cmd := &cobra.Command{
 		Use:   "watch",
@@ -38,10 +39,10 @@ func Cmd() *cobra.Command {
 	}
 
 	cmd.Flags().StringVar(
-		&logPath, "log", "", assets.FlagDesc(assets.FlagDescKeyWatchLog),
+		&logPath, "log", "", assets.FlagDesc(embed.FlagDescKeyWatchLog),
 	)
 	cmd.Flags().BoolVar(
-		&dryRun, "dry-run", false, assets.FlagDesc(assets.FlagDescKeyWatchDryRun),
+		&dryRun, "dry-run", false, assets.FlagDesc(embed.FlagDescKeyWatchDryRun),
 	)
 
 	return cmd

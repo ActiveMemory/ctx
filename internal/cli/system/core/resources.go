@@ -11,6 +11,7 @@ import (
 	"fmt"
 	"strings"
 
+	"github.com/ActiveMemory/ctx/internal/config/embed"
 	"github.com/ActiveMemory/ctx/internal/config/stats"
 	"github.com/spf13/cobra"
 
@@ -63,11 +64,11 @@ func SeverityFor(alerts []sysinfo.ResourceAlert, resource string) sysinfo.Severi
 func StatusText(sev sysinfo.Severity) string {
 	switch sev {
 	case sysinfo.SeverityWarning:
-		return assets.TextDesc(assets.TextDescKeyResourcesStatusWarn)
+		return assets.TextDesc(embed.TextDescKeyResourcesStatusWarn)
 	case sysinfo.SeverityDanger:
-		return assets.TextDesc(assets.TextDescKeyResourcesStatusDanger)
+		return assets.TextDesc(embed.TextDescKeyResourcesStatusDanger)
 	default:
-		return assets.TextDesc(assets.TextDescKeyResourcesStatusOk)
+		return assets.TextDesc(embed.TextDescKeyResourcesStatusOk)
 	}
 }
 
@@ -99,8 +100,8 @@ func FormatResourceLine(label, values, status string) string {
 //   - snap: collected system resource snapshot
 //   - alerts: evaluated resource alerts
 func OutputResourcesText(cmd *cobra.Command, snap sysinfo.Snapshot, alerts []sysinfo.ResourceAlert) {
-	cmd.Println(assets.TextDesc(assets.TextDescKeyResourcesHeader))
-	cmd.Println(assets.TextDesc(assets.TextDescKeyResourcesSeparator))
+	cmd.Println(assets.TextDesc(embed.TextDescKeyResourcesHeader))
+	cmd.Println(assets.TextDesc(embed.TextDescKeyResourcesSeparator))
 	cmd.Println()
 
 	// Memory line
@@ -152,14 +153,14 @@ func OutputResourcesText(cmd *cobra.Command, snap sysinfo.Snapshot, alerts []sys
 	// Summary
 	cmd.Println()
 	if len(alerts) == 0 {
-		cmd.Println(assets.TextDesc(assets.TextDescKeyResourcesAllClear))
+		cmd.Println(assets.TextDesc(embed.TextDescKeyResourcesAllClear))
 	} else {
-		cmd.Println(assets.TextDesc(assets.TextDescKeyResourcesAlerts))
+		cmd.Println(assets.TextDesc(embed.TextDescKeyResourcesAlerts))
 		for _, a := range alerts {
 			if a.Severity == sysinfo.SeverityDanger {
-				cmd.Println(fmt.Sprintf(assets.TextDesc(assets.TextDescKeyResourcesAlertDanger), a.Message))
+				cmd.Println(fmt.Sprintf(assets.TextDesc(embed.TextDescKeyResourcesAlertDanger), a.Message))
 			} else {
-				cmd.Println(fmt.Sprintf(assets.TextDesc(assets.TextDescKeyResourcesAlertWarning), a.Message))
+				cmd.Println(fmt.Sprintf(assets.TextDesc(embed.TextDescKeyResourcesAlertWarning), a.Message))
 			}
 		}
 	}

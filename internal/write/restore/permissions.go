@@ -10,6 +10,7 @@ import (
 	"fmt"
 
 	"github.com/ActiveMemory/ctx/internal/assets"
+	"github.com/ActiveMemory/ctx/internal/config/embed"
 	"github.com/spf13/cobra"
 )
 
@@ -21,7 +22,7 @@ func RestoreNoLocal(cmd *cobra.Command) {
 	if cmd == nil {
 		return
 	}
-	cmd.Println(assets.TextDesc(assets.TextDescKeyWriteRestoreNoLocal))
+	cmd.Println(assets.TextDesc(embed.TextDescKeyWriteRestoreNoLocal))
 }
 
 // RestoreMatch prints the message when settings already match golden.
@@ -32,7 +33,7 @@ func RestoreMatch(cmd *cobra.Command) {
 	if cmd == nil {
 		return
 	}
-	cmd.Println(assets.TextDesc(assets.TextDescKeyWriteRestoreMatch))
+	cmd.Println(assets.TextDesc(embed.TextDescKeyWriteRestoreMatch))
 }
 
 // RestoreDiff prints the permission diff block: dropped/restored
@@ -51,14 +52,14 @@ func RestoreDiff(
 	if cmd == nil {
 		return
 	}
-	printSection(cmd, assets.TextDesc(assets.TextDescKeyWriteRestoreDroppedHeader), assets.TextDesc(assets.TextDescKeyWriteRestoreRemoved), dropped)
-	printSection(cmd, assets.TextDesc(assets.TextDescKeyWriteRestoreRestoredHeader), assets.TextDesc(assets.TextDescKeyWriteRestoreAdded), restored)
-	printSection(cmd, assets.TextDesc(assets.TextDescKeyWriteRestoreDenyDroppedHeader), assets.TextDesc(assets.TextDescKeyWriteRestoreRemoved), denyDropped)
-	printSection(cmd, assets.TextDesc(assets.TextDescKeyWriteRestoreDenyRestoredHeader), assets.TextDesc(assets.TextDescKeyWriteRestoreAdded), denyRestored)
+	printSection(cmd, assets.TextDesc(embed.TextDescKeyWriteRestoreDroppedHeader), assets.TextDesc(embed.TextDescKeyWriteRestoreRemoved), dropped)
+	printSection(cmd, assets.TextDesc(embed.TextDescKeyWriteRestoreRestoredHeader), assets.TextDesc(embed.TextDescKeyWriteRestoreAdded), restored)
+	printSection(cmd, assets.TextDesc(embed.TextDescKeyWriteRestoreDenyDroppedHeader), assets.TextDesc(embed.TextDescKeyWriteRestoreRemoved), denyDropped)
+	printSection(cmd, assets.TextDesc(embed.TextDescKeyWriteRestoreDenyRestoredHeader), assets.TextDesc(embed.TextDescKeyWriteRestoreAdded), denyRestored)
 
 	if len(dropped) == 0 && len(restored) == 0 &&
 		len(denyDropped) == 0 && len(denyRestored) == 0 {
-		cmd.Println(assets.TextDesc(assets.TextDescKeyWriteRestorePermMatch))
+		cmd.Println(assets.TextDesc(embed.TextDescKeyWriteRestorePermMatch))
 	}
 }
 
@@ -70,7 +71,7 @@ func RestoreDone(cmd *cobra.Command) {
 	if cmd == nil {
 		return
 	}
-	cmd.Println(assets.TextDesc(assets.TextDescKeyWriteRestoreDone))
+	cmd.Println(assets.TextDesc(embed.TextDescKeyWriteRestoreDone))
 }
 
 // SnapshotDone prints the golden image save/update confirmation.
@@ -84,9 +85,9 @@ func SnapshotDone(cmd *cobra.Command, updated bool, path string) {
 		return
 	}
 	if updated {
-		cmd.Println(fmt.Sprintf(assets.TextDesc(assets.TextDescKeyWriteSnapshotUpdated), path))
+		cmd.Println(fmt.Sprintf(assets.TextDesc(embed.TextDescKeyWriteSnapshotUpdated), path))
 	} else {
-		cmd.Println(fmt.Sprintf(assets.TextDesc(assets.TextDescKeyWriteSnapshotSaved), path))
+		cmd.Println(fmt.Sprintf(assets.TextDesc(embed.TextDescKeyWriteSnapshotSaved), path))
 	}
 }
 

@@ -10,6 +10,7 @@ import (
 	"fmt"
 	"strings"
 
+	"github.com/ActiveMemory/ctx/internal/config/embed"
 	"github.com/spf13/cobra"
 
 	"github.com/ActiveMemory/ctx/internal/assets"
@@ -21,7 +22,7 @@ import (
 // Returns:
 //   - *cobra.Command: Configured mark-journal subcommand
 func Cmd() *cobra.Command {
-	short, long := assets.CommandDesc(assets.CmdDescKeySystemMarkJournal)
+	short, long := assets.CommandDesc(embed.CmdDescKeySystemMarkJournal)
 
 	cmd := &cobra.Command{
 		Use:    "mark-journal <filename> <stage>",
@@ -34,7 +35,7 @@ func Cmd() *cobra.Command {
 		},
 	}
 
-	cmd.Flags().Bool("check", false, assets.FlagDesc(assets.FlagDescKeySystemMarkjournalCheck))
+	cmd.Flags().Bool("check", false, assets.FlagDesc(embed.FlagDescKeySystemMarkjournalCheck))
 
 	return cmd
 }

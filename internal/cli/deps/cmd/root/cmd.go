@@ -7,6 +7,7 @@
 package root
 
 import (
+	"github.com/ActiveMemory/ctx/internal/config/embed"
 	"github.com/spf13/cobra"
 
 	"github.com/ActiveMemory/ctx/internal/assets"
@@ -28,7 +29,7 @@ func Cmd() *cobra.Command {
 		projType string
 	)
 
-	short, long := assets.CommandDesc(assets.CmdDescKeyDeps)
+	short, long := assets.CommandDesc(embed.CmdDescKeyDeps)
 	cmd := &cobra.Command{
 		Use:   "deps",
 		Short: short,
@@ -38,9 +39,9 @@ func Cmd() *cobra.Command {
 		},
 	}
 
-	cmd.Flags().StringVar(&format, "format", "mermaid", assets.FlagDesc(assets.FlagDescKeyDepsFormat))
-	cmd.Flags().BoolVar(&external, "external", false, assets.FlagDesc(assets.FlagDescKeyDepsExternal))
-	cmd.Flags().StringVar(&projType, "type", "", assets.FlagDesc(assets.FlagDescKeyDepsType))
+	cmd.Flags().StringVar(&format, "format", "mermaid", assets.FlagDesc(embed.FlagDescKeyDepsFormat))
+	cmd.Flags().BoolVar(&external, "external", false, assets.FlagDesc(embed.FlagDescKeyDepsExternal))
+	cmd.Flags().StringVar(&projType, "type", "", assets.FlagDesc(embed.FlagDescKeyDepsType))
 
 	return cmd
 }

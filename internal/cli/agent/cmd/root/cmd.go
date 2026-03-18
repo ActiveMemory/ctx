@@ -9,6 +9,7 @@ package root
 import (
 	"time"
 
+	"github.com/ActiveMemory/ctx/internal/config/embed"
 	"github.com/ActiveMemory/ctx/internal/config/fmt"
 	"github.com/spf13/cobra"
 
@@ -39,7 +40,7 @@ func Cmd() *cobra.Command {
 		session  string
 	)
 
-	short, long := assets.CommandDesc(assets.CmdDescKeyAgent)
+	short, long := assets.CommandDesc(embed.CmdDescKeyAgent)
 
 	cmd := &cobra.Command{
 		Use:   "agent",
@@ -55,18 +56,18 @@ func Cmd() *cobra.Command {
 
 	cmd.Flags().IntVar(
 		&budget,
-		"budget", rc.DefaultTokenBudget, assets.FlagDesc(assets.FlagDescKeyAgentBudget),
+		"budget", rc.DefaultTokenBudget, assets.FlagDesc(embed.FlagDescKeyAgentBudget),
 	)
 	cmd.Flags().StringVar(
-		&format, "format", fmt.FormatMarkdown, assets.FlagDesc(assets.FlagDescKeyAgentFormat),
+		&format, "format", fmt.FormatMarkdown, assets.FlagDesc(embed.FlagDescKeyAgentFormat),
 	)
 	cmd.Flags().DurationVar(
 		&cooldown, "cooldown", core.DefaultCooldown,
-		assets.FlagDesc(assets.FlagDescKeyAgentCooldown),
+		assets.FlagDesc(embed.FlagDescKeyAgentCooldown),
 	)
 	cmd.Flags().StringVar(
 		&session, "session", "",
-		assets.FlagDesc(assets.FlagDescKeyAgentSession),
+		assets.FlagDesc(embed.FlagDescKeyAgentSession),
 	)
 
 	return cmd

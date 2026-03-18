@@ -10,6 +10,7 @@ import (
 	"fmt"
 
 	"github.com/ActiveMemory/ctx/internal/assets"
+	"github.com/ActiveMemory/ctx/internal/config/embed"
 	"github.com/spf13/cobra"
 )
 
@@ -22,7 +23,7 @@ func PromptItem(cmd *cobra.Command, name string) {
 	if cmd == nil {
 		return
 	}
-	cmd.Println(fmt.Sprintf(assets.TextDesc(assets.TextDescKeyWritePromptItem), name))
+	cmd.Println(fmt.Sprintf(assets.TextDesc(embed.TextDescKeyWritePromptItem), name))
 }
 
 // PromptNone prints the message when no prompts are found.
@@ -33,5 +34,5 @@ func PromptNone(cmd *cobra.Command) {
 	if cmd == nil {
 		return
 	}
-	cmd.Println(assets.TextDesc(assets.TextDescKeyWritePromptNone))
+	cmd.Println(assets.TextDesc(embed.TextDescKeyWritePromptNone))
 }

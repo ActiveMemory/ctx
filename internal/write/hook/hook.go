@@ -10,6 +10,7 @@ import (
 	"fmt"
 
 	"github.com/ActiveMemory/ctx/internal/assets"
+	"github.com/ActiveMemory/ctx/internal/config/embed"
 	"github.com/spf13/cobra"
 )
 
@@ -48,8 +49,8 @@ func InfoTool(cmd *cobra.Command, content string) {
 //   - cmd: Cobra command for output
 //   - targetFile: Path to the existing file
 func InfoCopilotSkipped(cmd *cobra.Command, targetFile string) {
-	cmd.Println(fmt.Sprintf(assets.TextDesc(assets.TextDescKeyWriteHookCopilotSkipped), targetFile))
-	cmd.Println(assets.TextDesc(assets.TextDescKeyWriteHookCopilotForceHint))
+	cmd.Println(fmt.Sprintf(assets.TextDesc(embed.TextDescKeyWriteHookCopilotSkipped), targetFile))
+	cmd.Println(assets.TextDesc(embed.TextDescKeyWriteHookCopilotForceHint))
 }
 
 // InfoCopilotMerged reports that copilot instructions were merged
@@ -59,7 +60,7 @@ func InfoCopilotSkipped(cmd *cobra.Command, targetFile string) {
 //   - cmd: Cobra command for output
 //   - targetFile: Path to the merged file
 func InfoCopilotMerged(cmd *cobra.Command, targetFile string) {
-	cmd.Println(fmt.Sprintf(assets.TextDesc(assets.TextDescKeyWriteHookCopilotMerged), targetFile))
+	cmd.Println(fmt.Sprintf(assets.TextDesc(embed.TextDescKeyWriteHookCopilotMerged), targetFile))
 }
 
 // InfoCopilotCreated reports that copilot instructions were created.
@@ -68,7 +69,7 @@ func InfoCopilotMerged(cmd *cobra.Command, targetFile string) {
 //   - cmd: Cobra command for output
 //   - targetFile: Path to the created file
 func InfoCopilotCreated(cmd *cobra.Command, targetFile string) {
-	cmd.Println(fmt.Sprintf(assets.TextDesc(assets.TextDescKeyWriteHookCopilotCreated), targetFile))
+	cmd.Println(fmt.Sprintf(assets.TextDesc(embed.TextDescKeyWriteHookCopilotCreated), targetFile))
 }
 
 // InfoCopilotSessionsDir reports that the sessions directory was created.
@@ -77,7 +78,7 @@ func InfoCopilotCreated(cmd *cobra.Command, targetFile string) {
 //   - cmd: Cobra command for output
 //   - sessionsDir: Path to the sessions directory
 func InfoCopilotSessionsDir(cmd *cobra.Command, sessionsDir string) {
-	cmd.Println(fmt.Sprintf(assets.TextDesc(assets.TextDescKeyWriteHookCopilotSessionsDir), sessionsDir))
+	cmd.Println(fmt.Sprintf(assets.TextDesc(embed.TextDescKeyWriteHookCopilotSessionsDir), sessionsDir))
 }
 
 // InfoCopilotSummary prints the post-write summary for copilot.
@@ -86,7 +87,7 @@ func InfoCopilotSessionsDir(cmd *cobra.Command, sessionsDir string) {
 //   - cmd: Cobra command for output
 func InfoCopilotSummary(cmd *cobra.Command) {
 	cmd.Println()
-	cmd.Println(assets.TextDesc(assets.TextDescKeyWriteHookCopilotSummary))
+	cmd.Println(assets.TextDesc(embed.TextDescKeyWriteHookCopilotSummary))
 }
 
 // InfoUnknownTool prints the unknown tool message.
@@ -95,5 +96,5 @@ func InfoCopilotSummary(cmd *cobra.Command) {
 //   - cmd: Cobra command for output
 //   - tool: The unrecognized tool name
 func InfoUnknownTool(cmd *cobra.Command, tool string) {
-	cmd.Println(fmt.Sprintf(assets.TextDesc(assets.TextDescKeyWriteHookUnknownTool), tool))
+	cmd.Println(fmt.Sprintf(assets.TextDesc(embed.TextDescKeyWriteHookUnknownTool), tool))
 }

@@ -10,6 +10,7 @@ import (
 	"fmt"
 
 	"github.com/ActiveMemory/ctx/internal/assets"
+	"github.com/ActiveMemory/ctx/internal/config/embed"
 	"github.com/spf13/cobra"
 )
 
@@ -29,12 +30,12 @@ func InfoGenerated(
 	maxIterations int,
 	completionMsg string,
 ) {
-	iterLine := assets.TextDesc(assets.TextDescKeyWriteLoopUnlimited)
+	iterLine := assets.TextDesc(embed.TextDescKeyWriteLoopUnlimited)
 	if maxIterations > 0 {
-		iterLine = fmt.Sprintf(assets.TextDesc(assets.TextDescKeyWriteLoopMaxIterations), maxIterations)
+		iterLine = fmt.Sprintf(assets.TextDesc(embed.TextDescKeyWriteLoopMaxIterations), maxIterations)
 	}
 	cmd.Println(fmt.Sprintf(
-		assets.TextDesc(assets.TextDescKeyWriteLoopGeneratedBlock),
+		assets.TextDesc(embed.TextDescKeyWriteLoopGeneratedBlock),
 		outputFile, heading, outputFile, tool, promptFile, iterLine, completionMsg,
 	))
 }

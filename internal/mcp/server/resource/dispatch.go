@@ -11,6 +11,7 @@ import (
 	"fmt"
 
 	"github.com/ActiveMemory/ctx/internal/assets"
+	"github.com/ActiveMemory/ctx/internal/config/embed"
 	"github.com/ActiveMemory/ctx/internal/context/load"
 	"github.com/ActiveMemory/ctx/internal/mcp/proto"
 	"github.com/ActiveMemory/ctx/internal/mcp/server/catalog"
@@ -50,7 +51,7 @@ func DispatchRead(
 	); unmarshalErr != nil {
 		return out.ErrResponse(
 			req.ID, proto.ErrCodeInvalidArg,
-			assets.TextDesc(assets.TextDescKeyMCPInvalidParams),
+			assets.TextDesc(embed.TextDescKeyMCPInvalidParams),
 		)
 	}
 
@@ -58,7 +59,7 @@ func DispatchRead(
 	if loadErr != nil {
 		return out.ErrResponse(req.ID, proto.ErrCodeInternal,
 			fmt.Sprintf(
-				assets.TextDesc(assets.TextDescKeyMCPLoadContext),
+				assets.TextDesc(embed.TextDescKeyMCPLoadContext),
 				loadErr,
 			))
 	}
@@ -75,7 +76,7 @@ func DispatchRead(
 
 	return out.ErrResponse(req.ID, proto.ErrCodeInvalidArg,
 		fmt.Sprintf(
-			assets.TextDesc(assets.TextDescKeyMCPUnknownResource),
+			assets.TextDesc(embed.TextDescKeyMCPUnknownResource),
 			params.URI,
 		))
 }
@@ -121,13 +122,13 @@ func applySubscription(
 	); unmarshalErr != nil {
 		return out.ErrResponse(
 			req.ID, proto.ErrCodeInvalidArg,
-			assets.TextDesc(assets.TextDescKeyMCPInvalidParams),
+			assets.TextDesc(embed.TextDescKeyMCPInvalidParams),
 		)
 	}
 	if params.URI == "" {
 		return out.ErrResponse(
 			req.ID, proto.ErrCodeInvalidArg,
-			assets.TextDesc(assets.TextDescKeyMCPURIRequired),
+			assets.TextDesc(embed.TextDescKeyMCPURIRequired),
 		)
 	}
 	fn(params.URI)

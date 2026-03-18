@@ -7,6 +7,7 @@
 package root
 
 import (
+	"github.com/ActiveMemory/ctx/internal/config/embed"
 	"github.com/spf13/cobra"
 
 	"github.com/ActiveMemory/ctx/internal/assets"
@@ -30,7 +31,7 @@ func Cmd() *cobra.Command {
 		raw    bool
 	)
 
-	short, long := assets.CommandDesc(assets.CmdDescKeyLoad)
+	short, long := assets.CommandDesc(embed.CmdDescKeyLoad)
 	cmd := &cobra.Command{
 		Use:   "load",
 		Short: short,
@@ -47,10 +48,10 @@ func Cmd() *cobra.Command {
 	cmd.Flags().IntVar(
 		&budget, "budget",
 		rc.DefaultTokenBudget,
-		assets.FlagDesc(assets.FlagDescKeyLoadBudget),
+		assets.FlagDesc(embed.FlagDescKeyLoadBudget),
 	)
 	cmd.Flags().BoolVar(
-		&raw, "raw", false, assets.FlagDesc(assets.FlagDescKeyLoadRaw),
+		&raw, "raw", false, assets.FlagDesc(embed.FlagDescKeyLoadRaw),
 	)
 
 	return cmd

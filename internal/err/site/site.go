@@ -11,6 +11,7 @@ import (
 	"fmt"
 
 	"github.com/ActiveMemory/ctx/internal/assets"
+	"github.com/ActiveMemory/ctx/internal/config/embed"
 )
 
 // NoConfig returns an error when the zensical config file is missing.
@@ -21,7 +22,7 @@ import (
 // Returns:
 //   - error: "no zensical.toml found in <dir>"
 func NoConfig(dir string) error {
-	return fmt.Errorf(assets.TextDesc(assets.TextDescKeyErrSiteNoSiteConfig), dir)
+	return fmt.Errorf(assets.TextDesc(embed.TextDescKeyErrSiteNoSiteConfig), dir)
 }
 
 // MarshalFeed wraps a failure to marshal an Atom feed.
@@ -33,7 +34,7 @@ func NoConfig(dir string) error {
 //   - error: "cannot marshal feed: <cause>"
 func MarshalFeed(cause error) error {
 	return fmt.Errorf(
-		assets.TextDesc(assets.TextDescKeyErrSiteMarshalFeed), cause,
+		assets.TextDesc(embed.TextDescKeyErrSiteMarshalFeed), cause,
 	)
 }
 
@@ -42,5 +43,5 @@ func MarshalFeed(cause error) error {
 // Returns:
 //   - error: includes installation instructions
 func ZensicalNotFound() error {
-	return errors.New(assets.TextDesc(assets.TextDescKeyErrSiteZensicalNotFound))
+	return errors.New(assets.TextDesc(embed.TextDescKeyErrSiteZensicalNotFound))
 }

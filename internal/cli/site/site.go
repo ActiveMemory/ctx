@@ -7,6 +7,7 @@
 package site
 
 import (
+	"github.com/ActiveMemory/ctx/internal/config/embed"
 	"github.com/spf13/cobra"
 
 	"github.com/ActiveMemory/ctx/internal/assets"
@@ -21,7 +22,7 @@ import (
 // Returns:
 //   - *cobra.Command: Parent command with site management subcommands
 func Cmd() *cobra.Command {
-	short, long := assets.CommandDesc(assets.CmdDescKeySite)
+	short, long := assets.CommandDesc(embed.CmdDescKeySite)
 
 	cmd := &cobra.Command{
 		Use:   "site",

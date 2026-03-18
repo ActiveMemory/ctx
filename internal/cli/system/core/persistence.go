@@ -14,6 +14,7 @@ import (
 	"strings"
 
 	"github.com/ActiveMemory/ctx/internal/assets"
+	"github.com/ActiveMemory/ctx/internal/config/embed"
 	"github.com/ActiveMemory/ctx/internal/config/fs"
 	"github.com/ActiveMemory/ctx/internal/config/nudge"
 	"github.com/ActiveMemory/ctx/internal/config/token"
@@ -69,7 +70,7 @@ func ReadPersistenceState(path string) (PersistenceState, bool) {
 //   - path: absolute path to the state file
 //   - s: state to persist
 func WritePersistenceState(path string, s PersistenceState) {
-	content := fmt.Sprintf(assets.TextDesc(assets.TextDescKeyCheckPersistenceStateFormat),
+	content := fmt.Sprintf(assets.TextDesc(embed.TextDescKeyCheckPersistenceStateFormat),
 		s.Count, s.LastNudge, s.LastMtime)
 	_ = os.WriteFile(path, []byte(content), fs.PermSecret)
 }

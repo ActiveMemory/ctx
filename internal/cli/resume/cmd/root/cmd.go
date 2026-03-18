@@ -7,6 +7,7 @@
 package root
 
 import (
+	"github.com/ActiveMemory/ctx/internal/config/embed"
 	"github.com/spf13/cobra"
 
 	"github.com/ActiveMemory/ctx/internal/assets"
@@ -17,7 +18,7 @@ import (
 // Returns:
 //   - *cobra.Command: Configured resume command
 func Cmd() *cobra.Command {
-	short, long := assets.CommandDesc(assets.CmdDescKeyResume)
+	short, long := assets.CommandDesc(embed.CmdDescKeyResume)
 
 	cmd := &cobra.Command{
 		Use:   "resume",
@@ -30,7 +31,7 @@ func Cmd() *cobra.Command {
 	}
 
 	cmd.Flags().String("session-id", "",
-		assets.FlagDesc(assets.FlagDescKeyResumeSessionId),
+		assets.FlagDesc(embed.FlagDescKeyResumeSessionId),
 	)
 
 	return cmd

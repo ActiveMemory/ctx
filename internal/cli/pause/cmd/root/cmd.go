@@ -7,6 +7,7 @@
 package root
 
 import (
+	"github.com/ActiveMemory/ctx/internal/config/embed"
 	"github.com/spf13/cobra"
 
 	"github.com/ActiveMemory/ctx/internal/assets"
@@ -17,7 +18,7 @@ import (
 // Returns:
 //   - *cobra.Command: Configured pause command
 func Cmd() *cobra.Command {
-	short, long := assets.CommandDesc(assets.CmdDescKeyPause)
+	short, long := assets.CommandDesc(embed.CmdDescKeyPause)
 	cmd := &cobra.Command{
 		Use:   "pause",
 		Short: short,
@@ -28,7 +29,7 @@ func Cmd() *cobra.Command {
 		},
 	}
 	cmd.Flags().String("session-id", "",
-		assets.FlagDesc(assets.FlagDescKeyPauseSessionId),
+		assets.FlagDesc(embed.FlagDescKeyPauseSessionId),
 	)
 	return cmd
 }

@@ -10,6 +10,7 @@ import (
 	"encoding/json"
 
 	"github.com/ActiveMemory/ctx/internal/assets"
+	"github.com/ActiveMemory/ctx/internal/config/embed"
 	"github.com/ActiveMemory/ctx/internal/config/mcp/server"
 	"github.com/ActiveMemory/ctx/internal/mcp/proto"
 )
@@ -32,7 +33,7 @@ func Request(data []byte) (*proto.Request, *proto.Response) {
 			JSONRPC: server.JSONRPCVersion,
 			Error: &proto.RPCError{
 				Code:    proto.ErrCodeParse,
-				Message: assets.TextDesc(assets.TextDescKeyMCPParseError),
+				Message: assets.TextDesc(embed.TextDescKeyMCPParseError),
 			},
 		}
 	}

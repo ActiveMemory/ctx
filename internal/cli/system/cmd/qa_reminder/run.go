@@ -10,6 +10,7 @@ import (
 	"os"
 	"strings"
 
+	"github.com/ActiveMemory/ctx/internal/config/embed"
 	"github.com/ActiveMemory/ctx/internal/config/hook"
 	ctxcontext "github.com/ActiveMemory/ctx/internal/context/resolve"
 	"github.com/spf13/cobra"
@@ -41,7 +42,7 @@ func Run(cmd *cobra.Command, stdin *os.File) error {
 	if !strings.Contains(input.ToolInput.Command, "git") {
 		return nil
 	}
-	fallback := assets.TextDesc(assets.TextDescKeyQaReminderFallback)
+	fallback := assets.TextDesc(embed.TextDescKeyQaReminderFallback)
 	msg := core.LoadMessage(
 		hook.QAReminder, hook.VariantGate, nil, fallback,
 	)
@@ -54,7 +55,7 @@ func Run(cmd *cobra.Command, stdin *os.File) error {
 
 	ref := notify.NewTemplateRef(hook.QAReminder, hook.VariantGate, nil)
 	core.Relay(hook.QAReminder+": "+
-		assets.TextDesc(assets.TextDescKeyQaReminderRelayMessage),
+		assets.TextDesc(embed.TextDescKeyQaReminderRelayMessage),
 		input.SessionID, ref,
 	)
 	return nil

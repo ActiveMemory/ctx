@@ -11,6 +11,7 @@ import (
 	"strings"
 
 	"github.com/ActiveMemory/ctx/internal/assets"
+	"github.com/ActiveMemory/ctx/internal/config/embed"
 	"github.com/ActiveMemory/ctx/internal/entity"
 	"github.com/spf13/cobra"
 )
@@ -24,7 +25,7 @@ func NoEntries(cmd *cobra.Command, filename string) {
 	if cmd == nil {
 		return
 	}
-	cmd.Println(fmt.Sprintf(assets.TextDesc(assets.TextDescKeyWriteImportNoEntries), filename))
+	cmd.Println(fmt.Sprintf(assets.TextDesc(embed.TextDescKeyWriteImportNoEntries), filename))
 }
 
 // ScanHeader prints the scanning header: source name, entry count,
@@ -38,8 +39,8 @@ func ScanHeader(cmd *cobra.Command, filename string, count int) {
 	if cmd == nil {
 		return
 	}
-	cmd.Println(fmt.Sprintf(assets.TextDesc(assets.TextDescKeyWriteImportScanning), filename))
-	cmd.Println(fmt.Sprintf(assets.TextDesc(assets.TextDescKeyWriteImportFound), count))
+	cmd.Println(fmt.Sprintf(assets.TextDesc(embed.TextDescKeyWriteImportScanning), filename))
+	cmd.Println(fmt.Sprintf(assets.TextDesc(embed.TextDescKeyWriteImportFound), count))
 	cmd.Println()
 }
 
@@ -53,8 +54,8 @@ func EntrySkipped(cmd *cobra.Command, title string) {
 	if cmd == nil {
 		return
 	}
-	cmd.Println(fmt.Sprintf(assets.TextDesc(assets.TextDescKeyWriteImportEntry), title))
-	cmd.Println(assets.TextDesc(assets.TextDescKeyWriteImportClassifiedSkip))
+	cmd.Println(fmt.Sprintf(assets.TextDesc(embed.TextDescKeyWriteImportEntry), title))
+	cmd.Println(assets.TextDesc(embed.TextDescKeyWriteImportClassifiedSkip))
 	cmd.Println()
 }
 
@@ -70,8 +71,8 @@ func EntryClassified(cmd *cobra.Command, title, targetFile string, keywords []st
 	if cmd == nil {
 		return
 	}
-	cmd.Println(fmt.Sprintf(assets.TextDesc(assets.TextDescKeyWriteImportEntry), title))
-	cmd.Println(fmt.Sprintf(assets.TextDesc(assets.TextDescKeyWriteImportClassified), targetFile, strings.Join(keywords, ", ")))
+	cmd.Println(fmt.Sprintf(assets.TextDesc(embed.TextDescKeyWriteImportEntry), title))
+	cmd.Println(fmt.Sprintf(assets.TextDesc(embed.TextDescKeyWriteImportClassified), targetFile, strings.Join(keywords, ", ")))
 	cmd.Println()
 }
 
@@ -86,8 +87,8 @@ func EntryAdded(cmd *cobra.Command, title, targetFile string) {
 	if cmd == nil {
 		return
 	}
-	cmd.Println(fmt.Sprintf(assets.TextDesc(assets.TextDescKeyWriteImportEntry), title))
-	cmd.Println(fmt.Sprintf(assets.TextDesc(assets.TextDescKeyWriteImportAdded), targetFile))
+	cmd.Println(fmt.Sprintf(assets.TextDesc(embed.TextDescKeyWriteImportEntry), title))
+	cmd.Println(fmt.Sprintf(assets.TextDesc(embed.TextDescKeyWriteImportAdded), targetFile))
 	cmd.Println()
 }
 
@@ -120,27 +121,27 @@ func Summary(cmd *cobra.Command, result entity.ImportResult, dryRun bool) {
 
 	var summary string
 	if dryRun {
-		summary = fmt.Sprintf(assets.TextDesc(assets.TextDescKeyWriteImportSummaryDryRun), total)
+		summary = fmt.Sprintf(assets.TextDesc(embed.TextDescKeyWriteImportSummaryDryRun), total)
 	} else {
-		summary = fmt.Sprintf(assets.TextDesc(assets.TextDescKeyWriteImportSummary), total)
+		summary = fmt.Sprintf(assets.TextDesc(embed.TextDescKeyWriteImportSummary), total)
 	}
 
 	var parts []string
 	if result.Conventions > 0 {
 		parts = append(parts, fmt.Sprintf(
-			assets.TextDesc(assets.TextDescKeyImportCountConvention), result.Conventions))
+			assets.TextDesc(embed.TextDescKeyImportCountConvention), result.Conventions))
 	}
 	if result.Decisions > 0 {
 		parts = append(parts, fmt.Sprintf(
-			assets.TextDesc(assets.TextDescKeyImportCountDecision), result.Decisions))
+			assets.TextDesc(embed.TextDescKeyImportCountDecision), result.Decisions))
 	}
 	if result.Learnings > 0 {
 		parts = append(parts, fmt.Sprintf(
-			assets.TextDesc(assets.TextDescKeyImportCountLearning), result.Learnings))
+			assets.TextDesc(embed.TextDescKeyImportCountLearning), result.Learnings))
 	}
 	if result.Tasks > 0 {
 		parts = append(parts, fmt.Sprintf(
-			assets.TextDesc(assets.TextDescKeyImportCountTask), result.Tasks))
+			assets.TextDesc(embed.TextDescKeyImportCountTask), result.Tasks))
 	}
 	if len(parts) > 0 {
 		summary += fmt.Sprintf(" (%s)", strings.Join(parts, ", "))
@@ -148,9 +149,9 @@ func Summary(cmd *cobra.Command, result entity.ImportResult, dryRun bool) {
 	cmd.Println(summary)
 
 	if result.Skipped > 0 {
-		cmd.Println(fmt.Sprintf(assets.TextDesc(assets.TextDescKeyWriteImportSkipped), result.Skipped))
+		cmd.Println(fmt.Sprintf(assets.TextDesc(embed.TextDescKeyWriteImportSkipped), result.Skipped))
 	}
 	if result.Dupes > 0 {
-		cmd.Println(fmt.Sprintf(assets.TextDesc(assets.TextDescKeyWriteImportDuplicates), result.Dupes))
+		cmd.Println(fmt.Sprintf(assets.TextDesc(embed.TextDescKeyWriteImportDuplicates), result.Dupes))
 	}
 }

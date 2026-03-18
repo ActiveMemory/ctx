@@ -10,6 +10,7 @@ import (
 	"fmt"
 
 	"github.com/ActiveMemory/ctx/internal/assets"
+	"github.com/ActiveMemory/ctx/internal/config/embed"
 	"github.com/spf13/cobra"
 )
 
@@ -24,7 +25,7 @@ func SnapshotSaved(cmd *cobra.Command, snapshotPath string) {
 	}
 	cmd.Println(
 		fmt.Sprintf(
-			assets.TextDesc(assets.TextDescKeyTaskSnapshotSaved), snapshotPath))
+			assets.TextDesc(embed.TextDescKeyTaskSnapshotSaved), snapshotPath))
 }
 
 // SnapshotContent builds the snapshot file content with header and body.
@@ -40,9 +41,9 @@ func SnapshotSaved(cmd *cobra.Command, snapshotPath string) {
 //   - string: formatted snapshot content.
 func SnapshotContent(name, created, separator, nl, body string) string {
 	return fmt.Sprintf(
-		assets.TextDesc(assets.TextDescKeyTaskSnapshotHeaderFormat)+
+		assets.TextDesc(embed.TextDescKeyTaskSnapshotHeaderFormat)+
 			nl+nl+
-			assets.TextDesc(assets.TextDescKeyTaskSnapshotCreatedFormat)+
+			assets.TextDesc(embed.TextDescKeyTaskSnapshotCreatedFormat)+
 			nl+nl+separator+nl+nl+"%s",
 		name, created, body,
 	)

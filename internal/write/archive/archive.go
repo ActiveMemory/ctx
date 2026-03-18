@@ -9,6 +9,7 @@ package archive
 import (
 	"fmt"
 
+	"github.com/ActiveMemory/ctx/internal/config/embed"
 	"github.com/spf13/cobra"
 
 	"github.com/ActiveMemory/ctx/internal/assets"
@@ -26,7 +27,7 @@ func Skipping(cmd *cobra.Command, taskText string) {
 	}
 	cmd.Println(
 		fmt.Sprintf(
-			assets.TextDesc(assets.TextDescKeyTaskArchiveSkipping), taskText,
+			assets.TextDesc(embed.TextDescKeyTaskArchiveSkipping), taskText,
 		),
 	)
 }
@@ -43,7 +44,7 @@ func SkipIncomplete(cmd *cobra.Command, skippedCount int) {
 	}
 	cmd.Println(
 		fmt.Sprintf(
-			assets.TextDesc(assets.TextDescKeyTaskArchiveSkipIncomplete),
+			assets.TextDesc(embed.TextDescKeyTaskArchiveSkipIncomplete),
 			skippedCount,
 		),
 	)
@@ -58,7 +59,7 @@ func NoCompleted(cmd *cobra.Command) {
 	if cmd == nil {
 		return
 	}
-	cmd.Println(assets.TextDesc(assets.TextDescKeyTaskArchiveNoCompleted))
+	cmd.Println(assets.TextDesc(embed.TextDescKeyTaskArchiveNoCompleted))
 }
 
 // DryRun prints the dry-run preview for task archiving.
@@ -77,7 +78,7 @@ func DryRun(
 		return
 	}
 	cmd.Println(fmt.Sprintf(
-		assets.TextDesc(assets.TextDescKeyTaskArchiveDryRunBlock),
+		assets.TextDesc(embed.TextDescKeyTaskArchiveDryRunBlock),
 		archivableCount, pendingCount, separator, preview, separator,
 	))
 }
@@ -98,13 +99,13 @@ func Success(
 	}
 	cmd.Println(
 		fmt.Sprintf(
-			assets.TextDesc(assets.TextDescKeyTaskArchiveSuccess),
+			assets.TextDesc(embed.TextDescKeyTaskArchiveSuccess),
 			archivedCount, archiveFilePath,
 		),
 	)
 	cmd.Println(
 		fmt.Sprintf(
-			assets.TextDesc(assets.TextDescKeyTaskArchivePendingRemain),
+			assets.TextDesc(embed.TextDescKeyTaskArchivePendingRemain),
 			pendingCount,
 		),
 	)

@@ -7,6 +7,7 @@
 package snapshot
 
 import (
+	"github.com/ActiveMemory/ctx/internal/config/embed"
 	"github.com/spf13/cobra"
 
 	"github.com/ActiveMemory/ctx/internal/assets"
@@ -17,7 +18,7 @@ import (
 // Returns:
 //   - *cobra.Command: Configured snapshot subcommand
 func Cmd() *cobra.Command {
-	short, long := assets.CommandDesc(assets.CmdDescKeyPermissionsSnapshot)
+	short, long := assets.CommandDesc(embed.CmdDescKeyPermissionsSnapshot)
 
 	return &cobra.Command{
 		Use:   "snapshot",

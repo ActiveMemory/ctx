@@ -16,6 +16,7 @@ import (
 
 	"github.com/ActiveMemory/ctx/internal/assets"
 	"github.com/ActiveMemory/ctx/internal/config/dir"
+	"github.com/ActiveMemory/ctx/internal/config/embed"
 	"github.com/ActiveMemory/ctx/internal/config/file"
 	"github.com/ActiveMemory/ctx/internal/config/fs"
 	"github.com/ActiveMemory/ctx/internal/config/memory"
@@ -157,8 +158,8 @@ func countLines(data []byte) int {
 // simpleDiff produces a minimal unified-style diff header with added/removed lines.
 func simpleDiff(oldPath, newPath string, oldLines, newLines []string) string {
 	var buf strings.Builder
-	_, _ = fmt.Fprintf(&buf, assets.TextDesc(assets.TextDescKeyMemoryDiffOldFormat), oldPath)
-	_, _ = fmt.Fprintf(&buf, assets.TextDesc(assets.TextDescKeyMemoryDiffNewFormat), newPath)
+	_, _ = fmt.Fprintf(&buf, assets.TextDesc(embed.TextDescKeyMemoryDiffOldFormat), oldPath)
+	_, _ = fmt.Fprintf(&buf, assets.TextDesc(embed.TextDescKeyMemoryDiffNewFormat), newPath)
 
 	oldSet := make(map[string]bool, len(oldLines))
 	for _, l := range oldLines {

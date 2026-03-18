@@ -9,6 +9,7 @@ package post_commit
 import (
 	"os"
 
+	"github.com/ActiveMemory/ctx/internal/config/embed"
 	"github.com/spf13/cobra"
 
 	"github.com/ActiveMemory/ctx/internal/assets"
@@ -19,7 +20,7 @@ import (
 // Returns:
 //   - *cobra.Command: Configured post-commit subcommand
 func Cmd() *cobra.Command {
-	short, long := assets.CommandDesc(assets.CmdDescKeySystemPostCommit)
+	short, long := assets.CommandDesc(embed.CmdDescKeySystemPostCommit)
 
 	return &cobra.Command{
 		Use:    "post-commit",

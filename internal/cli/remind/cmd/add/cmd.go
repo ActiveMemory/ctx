@@ -7,6 +7,7 @@
 package add
 
 import (
+	"github.com/ActiveMemory/ctx/internal/config/embed"
 	"github.com/spf13/cobra"
 
 	"github.com/ActiveMemory/ctx/internal/assets"
@@ -19,7 +20,7 @@ import (
 func Cmd() *cobra.Command {
 	var afterFlag string
 
-	short, _ := assets.CommandDesc(assets.CmdDescKeyRemindAdd)
+	short, _ := assets.CommandDesc(embed.CmdDescKeyRemindAdd)
 
 	cmd := &cobra.Command{
 		Use:   "add TEXT",
@@ -31,7 +32,7 @@ func Cmd() *cobra.Command {
 	}
 
 	cmd.Flags().StringVarP(&afterFlag, "after", "a", "",
-		assets.FlagDesc(assets.FlagDescKeyRemindAddAfter),
+		assets.FlagDesc(embed.FlagDescKeyRemindAddAfter),
 	)
 
 	return cmd

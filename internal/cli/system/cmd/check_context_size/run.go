@@ -13,6 +13,7 @@ import (
 	"time"
 
 	"github.com/ActiveMemory/ctx/internal/config/dir"
+	"github.com/ActiveMemory/ctx/internal/config/embed"
 	"github.com/ActiveMemory/ctx/internal/config/event"
 	"github.com/ActiveMemory/ctx/internal/config/session"
 	"github.com/ActiveMemory/ctx/internal/config/stats"
@@ -82,7 +83,7 @@ func Run(cmd *cobra.Command, stdin *os.File) error {
 	// the wrap-up ceremony. The marker expires after 2 hours.
 	// Stats are still recorded so token usage tracking is continuous.
 	if core.WrappedUpRecently() {
-		core.LogMessage(logFile, sessionID, fmt.Sprintf(assets.TextDesc(assets.TextDescKeyCheckContextSizeSuppressedLogFormat), count))
+		core.LogMessage(logFile, sessionID, fmt.Sprintf(assets.TextDesc(embed.TextDescKeyCheckContextSizeSuppressedLogFormat), count))
 		core.WriteSessionStats(sessionID, core.SessionStats{
 			Timestamp:  time.Now().Format(time.RFC3339),
 			Prompt:     count,
@@ -116,7 +117,7 @@ func Run(cmd *cobra.Command, stdin *os.File) error {
 	default:
 		core.LogMessage(logFile, sessionID,
 			fmt.Sprintf(assets.TextDesc(
-				assets.TextDescKeyCheckContextSizeSilentLogFormat), count),
+				embed.TextDescKeyCheckContextSizeSilentLogFormat), count),
 		)
 	}
 
