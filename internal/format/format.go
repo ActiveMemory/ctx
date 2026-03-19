@@ -29,24 +29,24 @@ import (
 func TimeAgo(hours float64, mins int, fallbackDate string) string {
 	switch {
 	case hours < 1.0/60: // less than a minute
-		return desc.TextDesc(text.TextDescKeyWriteTimeJustNow)
+		return desc.TextDesc(text.DescKeyWriteTimeJustNow)
 	case hours < 1:
 		if mins == 1 {
-			return desc.TextDesc(text.TextDescKeyWriteTimeMinuteAgo)
+			return desc.TextDesc(text.DescKeyWriteTimeMinuteAgo)
 		}
-		return fmt.Sprintf(desc.TextDesc(text.TextDescKeyWriteTimeMinutesAgo), mins)
+		return fmt.Sprintf(desc.TextDesc(text.DescKeyWriteTimeMinutesAgo), mins)
 	case hours < 24:
 		h := int(hours)
 		if h == 1 {
-			return desc.TextDesc(text.TextDescKeyWriteTimeHourAgo)
+			return desc.TextDesc(text.DescKeyWriteTimeHourAgo)
 		}
-		return fmt.Sprintf(desc.TextDesc(text.TextDescKeyWriteTimeHoursAgo), h)
+		return fmt.Sprintf(desc.TextDesc(text.DescKeyWriteTimeHoursAgo), h)
 	case hours < 7*24:
 		days := int(hours / 24)
 		if days == 1 {
-			return desc.TextDesc(text.TextDescKeyWriteTimeDayAgo)
+			return desc.TextDesc(text.DescKeyWriteTimeDayAgo)
 		}
-		return fmt.Sprintf(desc.TextDesc(text.TextDescKeyWriteTimeDaysAgo), days)
+		return fmt.Sprintf(desc.TextDesc(text.DescKeyWriteTimeDaysAgo), days)
 	default:
 		return fallbackDate
 	}

@@ -56,26 +56,26 @@ func PublishPlan(
 	if cmd == nil {
 		return
 	}
-	cmd.Println(desc.TextDesc(text.TextDescKeyWritePublishHeader))
+	cmd.Println(desc.TextDesc(text.DescKeyWritePublishHeader))
 	cmd.Println()
-	cmd.Println(desc.TextDesc(text.TextDescKeyWritePublishSourceFiles))
-	cmd.Println(fmt.Sprintf(desc.TextDesc(text.TextDescKeyWritePublishBudget), budget))
+	cmd.Println(desc.TextDesc(text.DescKeyWritePublishSourceFiles))
+	cmd.Println(fmt.Sprintf(desc.TextDesc(text.DescKeyWritePublishBudget), budget))
 	cmd.Println()
-	cmd.Println(desc.TextDesc(text.TextDescKeyWritePublishBlock))
+	cmd.Println(desc.TextDesc(text.DescKeyWritePublishBlock))
 	if tasks > 0 {
-		cmd.Println(fmt.Sprintf(desc.TextDesc(text.TextDescKeyWritePublishTasks), tasks))
+		cmd.Println(fmt.Sprintf(desc.TextDesc(text.DescKeyWritePublishTasks), tasks))
 	}
 	if decisions > 0 {
-		cmd.Println(fmt.Sprintf(desc.TextDesc(text.TextDescKeyWritePublishDecisions), decisions))
+		cmd.Println(fmt.Sprintf(desc.TextDesc(text.DescKeyWritePublishDecisions), decisions))
 	}
 	if conventions > 0 {
-		cmd.Println(fmt.Sprintf(desc.TextDesc(text.TextDescKeyWritePublishConventions), conventions))
+		cmd.Println(fmt.Sprintf(desc.TextDesc(text.DescKeyWritePublishConventions), conventions))
 	}
 	if learnings > 0 {
-		cmd.Println(fmt.Sprintf(desc.TextDesc(text.TextDescKeyWritePublishLearnings), learnings))
+		cmd.Println(fmt.Sprintf(desc.TextDesc(text.DescKeyWritePublishLearnings), learnings))
 	}
 	cmd.Println()
-	cmd.Println(fmt.Sprintf(desc.TextDesc(text.TextDescKeyWritePublishTotal), totalLines, budget))
+	cmd.Println(fmt.Sprintf(desc.TextDesc(text.DescKeyWritePublishTotal), totalLines, budget))
 }
 
 // PublishDryRun prints the dry-run notice.
@@ -87,7 +87,7 @@ func PublishDryRun(cmd *cobra.Command) {
 		return
 	}
 	cmd.Println()
-	cmd.Println(desc.TextDesc(text.TextDescKeyWritePublishDryRun))
+	cmd.Println(desc.TextDesc(text.DescKeyWritePublishDryRun))
 }
 
 // PublishDone prints the success message with marker info.
@@ -99,5 +99,5 @@ func PublishDone(cmd *cobra.Command) {
 		return
 	}
 	cmd.Println()
-	cmd.Println(desc.TextDesc(text.TextDescKeyWritePublishDone))
+	cmd.Println(desc.TextDesc(text.DescKeyWritePublishDone))
 }

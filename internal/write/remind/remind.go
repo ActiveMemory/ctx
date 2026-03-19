@@ -27,9 +27,9 @@ func ReminderAdded(cmd *cobra.Command, id int, message string, after *string) {
 	}
 	suffix := ""
 	if after != nil {
-		suffix = fmt.Sprintf(desc.TextDesc(text.TextDescKeyWriteReminderAfterSuffix), *after)
+		suffix = fmt.Sprintf(desc.TextDesc(text.DescKeyWriteReminderAfterSuffix), *after)
 	}
-	cmd.Println(fmt.Sprintf(desc.TextDesc(text.TextDescKeyWriteReminderAdded), id, message, suffix))
+	cmd.Println(fmt.Sprintf(desc.TextDesc(text.DescKeyWriteReminderAdded), id, message, suffix))
 }
 
 // ReminderItem prints a single reminder in the list.
@@ -46,9 +46,9 @@ func ReminderItem(cmd *cobra.Command, id int, message string, after *string, tod
 	}
 	annotation := ""
 	if after != nil && *after > today {
-		annotation = fmt.Sprintf(desc.TextDesc(text.TextDescKeyWriteReminderNotDue), *after)
+		annotation = fmt.Sprintf(desc.TextDesc(text.DescKeyWriteReminderNotDue), *after)
 	}
-	cmd.Println(fmt.Sprintf(desc.TextDesc(text.TextDescKeyWriteReminderItem), id, message, annotation))
+	cmd.Println(fmt.Sprintf(desc.TextDesc(text.DescKeyWriteReminderItem), id, message, annotation))
 }
 
 // ReminderDismissed prints the confirmation for a dismissed reminder.
@@ -61,7 +61,7 @@ func ReminderDismissed(cmd *cobra.Command, id int, message string) {
 	if cmd == nil {
 		return
 	}
-	cmd.Println(fmt.Sprintf(desc.TextDesc(text.TextDescKeyWriteReminderDismissed), id, message))
+	cmd.Println(fmt.Sprintf(desc.TextDesc(text.DescKeyWriteReminderDismissed), id, message))
 }
 
 // ReminderNone prints the message when there are no reminders.
@@ -72,7 +72,7 @@ func ReminderNone(cmd *cobra.Command) {
 	if cmd == nil {
 		return
 	}
-	cmd.Println(desc.TextDesc(text.TextDescKeyWriteReminderNone))
+	cmd.Println(desc.TextDesc(text.DescKeyWriteReminderNone))
 }
 
 // ReminderDismissedAll prints the summary after dismissing all reminders.
@@ -84,5 +84,5 @@ func ReminderDismissedAll(cmd *cobra.Command, count int) {
 	if cmd == nil {
 		return
 	}
-	cmd.Println(fmt.Sprintf(desc.TextDesc(text.TextDescKeyWriteReminderDismissedAll), count))
+	cmd.Println(fmt.Sprintf(desc.TextDesc(text.DescKeyWriteReminderDismissedAll), count))
 }

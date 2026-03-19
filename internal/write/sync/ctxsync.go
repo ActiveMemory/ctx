@@ -22,7 +22,7 @@ func CtxSyncInSync(cmd *cobra.Command) {
 	if cmd == nil {
 		return
 	}
-	cmd.Println(desc.TextDesc(text.TextDescKeyWriteSyncInSync))
+	cmd.Println(desc.TextDesc(text.DescKeyWriteSyncInSync))
 }
 
 // CtxSyncHeader prints the sync analysis heading and optional dry-run notice.
@@ -34,11 +34,11 @@ func CtxSyncHeader(cmd *cobra.Command, dryRun bool) {
 	if cmd == nil {
 		return
 	}
-	cmd.Println(desc.TextDesc(text.TextDescKeyWriteSyncHeader))
-	cmd.Println(desc.TextDesc(text.TextDescKeyWriteSyncSeparator))
+	cmd.Println(desc.TextDesc(text.DescKeyWriteSyncHeader))
+	cmd.Println(desc.TextDesc(text.DescKeyWriteSyncSeparator))
 	cmd.Println()
 	if dryRun {
-		cmd.Println(desc.TextDesc(text.TextDescKeyWriteSyncDryRun))
+		cmd.Println(desc.TextDesc(text.DescKeyWriteSyncDryRun))
 		cmd.Println()
 	}
 }
@@ -55,9 +55,9 @@ func CtxSyncAction(cmd *cobra.Command, index int, actionType, description, sugge
 	if cmd == nil {
 		return
 	}
-	cmd.Println(fmt.Sprintf(desc.TextDesc(text.TextDescKeyWriteSyncAction), index, actionType, description))
+	cmd.Println(fmt.Sprintf(desc.TextDesc(text.DescKeyWriteSyncAction), index, actionType, description))
 	if suggestion != "" {
-		cmd.Println(fmt.Sprintf(desc.TextDesc(text.TextDescKeyWriteSyncSuggestion), suggestion))
+		cmd.Println(fmt.Sprintf(desc.TextDesc(text.DescKeyWriteSyncSuggestion), suggestion))
 	}
 	cmd.Println()
 }
@@ -73,8 +73,8 @@ func CtxSyncSummary(cmd *cobra.Command, count int, dryRun bool) {
 		return
 	}
 	if dryRun {
-		cmd.Println(fmt.Sprintf(desc.TextDesc(text.TextDescKeyWriteSyncDryRunSummary), count))
+		cmd.Println(fmt.Sprintf(desc.TextDesc(text.DescKeyWriteSyncDryRunSummary), count))
 	} else {
-		cmd.Println(fmt.Sprintf(desc.TextDesc(text.TextDescKeyWriteSyncSummary), count))
+		cmd.Println(fmt.Sprintf(desc.TextDesc(text.DescKeyWriteSyncSummary), count))
 	}
 }

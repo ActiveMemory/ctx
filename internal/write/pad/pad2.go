@@ -22,7 +22,7 @@ func PadEmpty(cmd *cobra.Command) {
 	if cmd == nil {
 		return
 	}
-	cmd.Println(desc.TextDesc(text.TextDescKeyWritePadEmpty))
+	cmd.Println(desc.TextDesc(text.DescKeyWritePadEmpty))
 }
 
 // PadKeyCreated prints a key creation notice to stderr.
@@ -46,7 +46,7 @@ func PadEntryAdded(cmd *cobra.Command, n int) {
 	if cmd == nil {
 		return
 	}
-	cmd.Println(fmt.Sprintf(desc.TextDesc(text.TextDescKeyWritePadEntryAdded), n))
+	cmd.Println(fmt.Sprintf(desc.TextDesc(text.DescKeyWritePadEntryAdded), n))
 }
 
 // PadEntryUpdated prints confirmation that a pad entry was updated.
@@ -58,7 +58,7 @@ func PadEntryUpdated(cmd *cobra.Command, n int) {
 	if cmd == nil {
 		return
 	}
-	cmd.Println(fmt.Sprintf(desc.TextDesc(text.TextDescKeyWritePadEntryUpdated), n))
+	cmd.Println(fmt.Sprintf(desc.TextDesc(text.DescKeyWritePadEntryUpdated), n))
 }
 
 // PadExportPlan prints a dry-run export line.
@@ -71,7 +71,7 @@ func PadExportPlan(cmd *cobra.Command, label, outPath string) {
 	if cmd == nil {
 		return
 	}
-	cmd.Println(fmt.Sprintf(desc.TextDesc(text.TextDescKeyWritePadExportPlan), label, outPath))
+	cmd.Println(fmt.Sprintf(desc.TextDesc(text.DescKeyWritePadExportPlan), label, outPath))
 }
 
 // PadExportDone prints a successfully exported blob line.
@@ -83,7 +83,7 @@ func PadExportDone(cmd *cobra.Command, label string) {
 	if cmd == nil {
 		return
 	}
-	cmd.Println(fmt.Sprintf(desc.TextDesc(text.TextDescKeyWritePadExportDone), label))
+	cmd.Println(fmt.Sprintf(desc.TextDesc(text.DescKeyWritePadExportDone), label))
 }
 
 // ErrPadExportWrite prints a blob write failure to stderr.
@@ -96,7 +96,7 @@ func ErrPadExportWrite(cmd *cobra.Command, label string, cause error) {
 	if cmd == nil {
 		return
 	}
-	cmd.PrintErrln(fmt.Sprintf(desc.TextDesc(text.TextDescKeyWritePadExportWriteFailed), label, cause))
+	cmd.PrintErrln(fmt.Sprintf(desc.TextDesc(text.DescKeyWritePadExportWriteFailed), label, cause))
 }
 
 // PadBlobWritten prints confirmation that a blob was written to a file.
@@ -109,7 +109,7 @@ func PadBlobWritten(cmd *cobra.Command, size int, path string) {
 	if cmd == nil {
 		return
 	}
-	cmd.Println(fmt.Sprintf(desc.TextDesc(text.TextDescKeyWritePadBlobWritten), size, path))
+	cmd.Println(fmt.Sprintf(desc.TextDesc(text.DescKeyWritePadBlobWritten), size, path))
 }
 
 // PadEntryRemoved prints confirmation that a pad entry was removed.
@@ -121,7 +121,7 @@ func PadEntryRemoved(cmd *cobra.Command, n int) {
 	if cmd == nil {
 		return
 	}
-	cmd.Println(fmt.Sprintf(desc.TextDesc(text.TextDescKeyWritePadEntryRemoved), n))
+	cmd.Println(fmt.Sprintf(desc.TextDesc(text.DescKeyWritePadEntryRemoved), n))
 }
 
 // PadResolveSide prints a conflict side block: header and numbered entries.
@@ -150,7 +150,7 @@ func PadEntryMoved(cmd *cobra.Command, from, to int) {
 	if cmd == nil {
 		return
 	}
-	cmd.Println(fmt.Sprintf(desc.TextDesc(text.TextDescKeyWritePadEntryMoved), from, to))
+	cmd.Println(fmt.Sprintf(desc.TextDesc(text.DescKeyWritePadEntryMoved), from, to))
 }
 
 // PadImportNone prints the message when no entries were found to import.
@@ -161,7 +161,7 @@ func PadImportNone(cmd *cobra.Command) {
 	if cmd == nil {
 		return
 	}
-	cmd.Println(desc.TextDesc(text.TextDescKeyWritePadImportNone))
+	cmd.Println(desc.TextDesc(text.DescKeyWritePadImportNone))
 }
 
 // PadImportDone prints the successful line import count.
@@ -173,7 +173,7 @@ func PadImportDone(cmd *cobra.Command, count int) {
 	if cmd == nil {
 		return
 	}
-	cmd.Println(fmt.Sprintf(desc.TextDesc(text.TextDescKeyWritePadImportDone), count))
+	cmd.Println(fmt.Sprintf(desc.TextDesc(text.DescKeyWritePadImportDone), count))
 }
 
 // PadImportBlobAdded prints a successfully imported blob line.
@@ -185,7 +185,7 @@ func PadImportBlobAdded(cmd *cobra.Command, name string) {
 	if cmd == nil {
 		return
 	}
-	cmd.Println(fmt.Sprintf(desc.TextDesc(text.TextDescKeyWritePadImportBlobAdded), name))
+	cmd.Println(fmt.Sprintf(desc.TextDesc(text.DescKeyWritePadImportBlobAdded), name))
 }
 
 // ErrPadImportBlobSkipped prints a skipped blob to stderr.
@@ -198,7 +198,7 @@ func ErrPadImportBlobSkipped(cmd *cobra.Command, name string, cause error) {
 	if cmd == nil {
 		return
 	}
-	cmd.PrintErrln(fmt.Sprintf(desc.TextDesc(text.TextDescKeyWritePadImportBlobSkipped), name, cause))
+	cmd.PrintErrln(fmt.Sprintf(desc.TextDesc(text.DescKeyWritePadImportBlobSkipped), name, cause))
 }
 
 // ErrPadImportBlobTooLarge prints a too-large blob skip to stderr.
@@ -211,7 +211,7 @@ func ErrPadImportBlobTooLarge(cmd *cobra.Command, name string, max int) {
 	if cmd == nil {
 		return
 	}
-	cmd.PrintErrln(fmt.Sprintf(desc.TextDesc(text.TextDescKeyWritePadImportBlobTooLarge), name, max))
+	cmd.PrintErrln(fmt.Sprintf(desc.TextDesc(text.DescKeyWritePadImportBlobTooLarge), name, max))
 }
 
 // PadImportBlobSummary prints the blob import summary or "no files" message.
@@ -225,10 +225,10 @@ func PadImportBlobSummary(cmd *cobra.Command, added, skipped int) {
 		return
 	}
 	if added == 0 && skipped == 0 {
-		cmd.Println(desc.TextDesc(text.TextDescKeyWritePadImportBlobNone))
+		cmd.Println(desc.TextDesc(text.DescKeyWritePadImportBlobNone))
 		return
 	}
-	cmd.Println(fmt.Sprintf(desc.TextDesc(text.TextDescKeyWritePadImportBlobSummary), added, skipped))
+	cmd.Println(fmt.Sprintf(desc.TextDesc(text.DescKeyWritePadImportBlobSummary), added, skipped))
 }
 
 // ErrPadImportCloseWarning prints a file close warning to stderr.
@@ -241,7 +241,7 @@ func ErrPadImportCloseWarning(cmd *cobra.Command, name string, cause error) {
 	if cmd == nil {
 		return
 	}
-	cmd.PrintErrln(fmt.Sprintf(desc.TextDesc(text.TextDescKeyWritePadImportCloseWarning), name, cause))
+	cmd.PrintErrln(fmt.Sprintf(desc.TextDesc(text.DescKeyWritePadImportCloseWarning), name, cause))
 }
 
 // PadMergeDupe prints a duplicate-skipped line during merge.
@@ -253,7 +253,7 @@ func PadMergeDupe(cmd *cobra.Command, display string) {
 	if cmd == nil {
 		return
 	}
-	cmd.Println(fmt.Sprintf(desc.TextDesc(text.TextDescKeyWritePadMergeDupe), display))
+	cmd.Println(fmt.Sprintf(desc.TextDesc(text.DescKeyWritePadMergeDupe), display))
 }
 
 // PadMergeAdded prints a newly added entry line during merge.
@@ -266,7 +266,7 @@ func PadMergeAdded(cmd *cobra.Command, display, file string) {
 	if cmd == nil {
 		return
 	}
-	cmd.Println(fmt.Sprintf(desc.TextDesc(text.TextDescKeyWritePadMergeAdded), display, file))
+	cmd.Println(fmt.Sprintf(desc.TextDesc(text.DescKeyWritePadMergeAdded), display, file))
 }
 
 // PadMergeBlobConflict prints a blob label conflict warning.
@@ -278,7 +278,7 @@ func PadMergeBlobConflict(cmd *cobra.Command, label string) {
 	if cmd == nil {
 		return
 	}
-	cmd.Println(fmt.Sprintf(desc.TextDesc(text.TextDescKeyWritePadMergeBlobConflict), label))
+	cmd.Println(fmt.Sprintf(desc.TextDesc(text.DescKeyWritePadMergeBlobConflict), label))
 }
 
 // PadMergeBinaryWarning prints a binary data warning for a source file.
@@ -290,7 +290,7 @@ func PadMergeBinaryWarning(cmd *cobra.Command, file string) {
 	if cmd == nil {
 		return
 	}
-	cmd.Println(fmt.Sprintf(desc.TextDesc(text.TextDescKeyWritePadMergeBinaryWarning), file))
+	cmd.Println(fmt.Sprintf(desc.TextDesc(text.DescKeyWritePadMergeBinaryWarning), file))
 }
 
 // PadMergeSummary prints the merge summary based on counts and mode.
@@ -305,20 +305,20 @@ func PadMergeSummary(cmd *cobra.Command, added, dupes int, dryRun bool) {
 		return
 	}
 	if added == 0 && dupes == 0 {
-		cmd.Println(desc.TextDesc(text.TextDescKeyWritePadMergeNone))
+		cmd.Println(desc.TextDesc(text.DescKeyWritePadMergeNone))
 		return
 	}
 	if added == 0 {
-		cmd.Println(fmt.Sprintf(desc.TextDesc(text.TextDescKeyWritePadMergeNoneNew), dupes, padPluralize("duplicate", dupes)))
+		cmd.Println(fmt.Sprintf(desc.TextDesc(text.DescKeyWritePadMergeNoneNew), dupes, padPluralize("duplicate", dupes)))
 		return
 	}
 	if dryRun {
-		cmd.Println(fmt.Sprintf(desc.TextDesc(text.TextDescKeyWritePadMergeDryRun),
+		cmd.Println(fmt.Sprintf(desc.TextDesc(text.DescKeyWritePadMergeDryRun),
 			added, padPluralize("entry", added),
 			dupes, padPluralize("duplicate", dupes)))
 		return
 	}
-	cmd.Println(fmt.Sprintf(desc.TextDesc(text.TextDescKeyWritePadMergeDone),
+	cmd.Println(fmt.Sprintf(desc.TextDesc(text.DescKeyWritePadMergeDone),
 		added, padPluralize("entry", added),
 		dupes, padPluralize("duplicate", dupes)))
 }
@@ -345,12 +345,12 @@ func PadExportSummary(cmd *cobra.Command, count int, dryRun bool) {
 		return
 	}
 	if count == 0 {
-		cmd.Println(desc.TextDesc(text.TextDescKeyWritePadExportNone))
+		cmd.Println(desc.TextDesc(text.DescKeyWritePadExportNone))
 		return
 	}
-	verb := desc.TextDesc(text.TextDescKeyWritePadExportVerbDone)
+	verb := desc.TextDesc(text.DescKeyWritePadExportVerbDone)
 	if dryRun {
-		verb = desc.TextDesc(text.TextDescKeyWritePadExportVerbDryRun)
+		verb = desc.TextDesc(text.DescKeyWritePadExportVerbDryRun)
 	}
-	cmd.Println(fmt.Sprintf(desc.TextDesc(text.TextDescKeyWritePadExportSummary), verb, count))
+	cmd.Println(fmt.Sprintf(desc.TextDesc(text.DescKeyWritePadExportSummary), verb, count))
 }

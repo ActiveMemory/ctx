@@ -43,7 +43,7 @@ func StatusHeader(cmd *cobra.Command, dir string, fileCount, totalTokens int) {
 		return
 	}
 	cmd.Println(fmt.Sprintf(
-		desc.TextDesc(text.TextDescKeyWriteStatusHeaderBlock),
+		desc.TextDesc(text.DescKeyWriteStatusHeaderBlock),
 		dir, fileCount, format.Number(totalTokens),
 	))
 }
@@ -59,14 +59,14 @@ func StatusFileItem(cmd *cobra.Command, f StatusFileInfo, verbose bool) {
 		return
 	}
 	if verbose {
-		cmd.Println(fmt.Sprintf(desc.TextDesc(text.TextDescKeyWriteStatusFileVerbose),
+		cmd.Println(fmt.Sprintf(desc.TextDesc(text.DescKeyWriteStatusFileVerbose),
 			f.Indicator, f.Name, f.Status,
 			format.Number(f.Tokens), format.Bytes(f.Size)))
 		for _, line := range f.Preview {
-			cmd.Println(fmt.Sprintf(desc.TextDesc(text.TextDescKeyWriteStatusPreviewLine), line))
+			cmd.Println(fmt.Sprintf(desc.TextDesc(text.DescKeyWriteStatusPreviewLine), line))
 		}
 	} else {
-		cmd.Println(fmt.Sprintf(desc.TextDesc(text.TextDescKeyWriteStatusFileCompact), f.Indicator, f.Name, f.Status))
+		cmd.Println(fmt.Sprintf(desc.TextDesc(text.DescKeyWriteStatusFileCompact), f.Indicator, f.Name, f.Status))
 	}
 }
 
@@ -80,8 +80,8 @@ func StatusActivity(cmd *cobra.Command, entries []StatusActivityInfo) {
 		return
 	}
 	cmd.Println()
-	cmd.Println(desc.TextDesc(text.TextDescKeyWriteStatusActivityHeader))
+	cmd.Println(desc.TextDesc(text.DescKeyWriteStatusActivityHeader))
 	for _, e := range entries {
-		cmd.Println(fmt.Sprintf(desc.TextDesc(text.TextDescKeyWriteStatusActivityItem), e.Name, e.Ago))
+		cmd.Println(fmt.Sprintf(desc.TextDesc(text.DescKeyWriteStatusActivityItem), e.Name, e.Ago))
 	}
 }

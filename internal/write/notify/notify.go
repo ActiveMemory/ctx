@@ -53,7 +53,7 @@ func TestNoWebhook(cmd *cobra.Command) {
 	if cmd == nil {
 		return
 	}
-	cmd.Println(desc.TextDesc(text.TextDescKeyWriteTestNoWebhook))
+	cmd.Println(desc.TextDesc(text.DescKeyWriteTestNoWebhook))
 }
 
 // TestFiltered prints the notice when the test event is filtered.
@@ -64,7 +64,7 @@ func TestFiltered(cmd *cobra.Command) {
 	if cmd == nil {
 		return
 	}
-	cmd.Println(desc.TextDesc(text.TextDescKeyWriteTestFiltered))
+	cmd.Println(desc.TextDesc(text.DescKeyWriteTestFiltered))
 }
 
 // TestResult prints the webhook test response block: status line
@@ -80,14 +80,14 @@ func TestResult(cmd *cobra.Command, statusCode int, encPath string) {
 	}
 	cmd.Println(
 		fmt.Sprintf(
-			desc.TextDesc(text.TextDescKeyWriteTestResult),
+			desc.TextDesc(text.DescKeyWriteTestResult),
 			statusCode, http.StatusText(statusCode),
 		),
 	)
 	if statusCode >= http.StatusOK && statusCode < http.StatusMultipleChoices {
 		cmd.Println(
 			fmt.Sprintf(
-				desc.TextDesc(text.TextDescKeyWriteTestWorking),
+				desc.TextDesc(text.DescKeyWriteTestWorking),
 				encPath,
 			),
 		)

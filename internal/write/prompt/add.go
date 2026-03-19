@@ -23,5 +23,5 @@ func PromptCreated(cmd *cobra.Command, name string) {
 	if cmd == nil {
 		return
 	}
-	cmd.Println(fmt.Sprintf(desc.TextDesc(text.TextDescKeyWritePromptCreated), name))
+	cmd.Println(fmt.Sprintf(desc.TextDesc(text.DescKeyWritePromptCreated), name))
 }

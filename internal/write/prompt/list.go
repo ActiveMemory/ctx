@@ -23,7 +23,7 @@ func PromptItem(cmd *cobra.Command, name string) {
 	if cmd == nil {
 		return
 	}
-	cmd.Println(fmt.Sprintf(desc.TextDesc(text.TextDescKeyWritePromptItem), name))
+	cmd.Println(fmt.Sprintf(desc.TextDesc(text.DescKeyWritePromptItem), name))
 }
 
 // PromptNone prints the message when no prompts are found.
@@ -34,5 +34,5 @@ func PromptNone(cmd *cobra.Command) {
 	if cmd == nil {
 		return
 	}
-	cmd.Println(desc.TextDesc(text.TextDescKeyWritePromptNone))
+	cmd.Println(desc.TextDesc(text.DescKeyWritePromptNone))
 }

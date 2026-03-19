@@ -22,7 +22,7 @@ func RestoreNoLocal(cmd *cobra.Command) {
 	if cmd == nil {
 		return
 	}
-	cmd.Println(desc.TextDesc(text.TextDescKeyWriteRestoreNoLocal))
+	cmd.Println(desc.TextDesc(text.DescKeyWriteRestoreNoLocal))
 }
 
 // RestoreMatch prints the message when settings already match golden.
@@ -33,7 +33,7 @@ func RestoreMatch(cmd *cobra.Command) {
 	if cmd == nil {
 		return
 	}
-	cmd.Println(desc.TextDesc(text.TextDescKeyWriteRestoreMatch))
+	cmd.Println(desc.TextDesc(text.DescKeyWriteRestoreMatch))
 }
 
 // RestoreDiff prints the permission diff block: dropped/restored
@@ -52,14 +52,14 @@ func RestoreDiff(
 	if cmd == nil {
 		return
 	}
-	printSection(cmd, desc.TextDesc(text.TextDescKeyWriteRestoreDroppedHeader), desc.TextDesc(text.TextDescKeyWriteRestoreRemoved), dropped)
-	printSection(cmd, desc.TextDesc(text.TextDescKeyWriteRestoreRestoredHeader), desc.TextDesc(text.TextDescKeyWriteRestoreAdded), restored)
-	printSection(cmd, desc.TextDesc(text.TextDescKeyWriteRestoreDenyDroppedHeader), desc.TextDesc(text.TextDescKeyWriteRestoreRemoved), denyDropped)
-	printSection(cmd, desc.TextDesc(text.TextDescKeyWriteRestoreDenyRestoredHeader), desc.TextDesc(text.TextDescKeyWriteRestoreAdded), denyRestored)
+	printSection(cmd, desc.TextDesc(text.DescKeyWriteRestoreDroppedHeader), desc.TextDesc(text.DescKeyWriteRestoreRemoved), dropped)
+	printSection(cmd, desc.TextDesc(text.DescKeyWriteRestoreRestoredHeader), desc.TextDesc(text.DescKeyWriteRestoreAdded), restored)
+	printSection(cmd, desc.TextDesc(text.DescKeyWriteRestoreDenyDroppedHeader), desc.TextDesc(text.DescKeyWriteRestoreRemoved), denyDropped)
+	printSection(cmd, desc.TextDesc(text.DescKeyWriteRestoreDenyRestoredHeader), desc.TextDesc(text.DescKeyWriteRestoreAdded), denyRestored)
 
 	if len(dropped) == 0 && len(restored) == 0 &&
 		len(denyDropped) == 0 && len(denyRestored) == 0 {
-		cmd.Println(desc.TextDesc(text.TextDescKeyWriteRestorePermMatch))
+		cmd.Println(desc.TextDesc(text.DescKeyWriteRestorePermMatch))
 	}
 }
 
@@ -71,7 +71,7 @@ func RestoreDone(cmd *cobra.Command) {
 	if cmd == nil {
 		return
 	}
-	cmd.Println(desc.TextDesc(text.TextDescKeyWriteRestoreDone))
+	cmd.Println(desc.TextDesc(text.DescKeyWriteRestoreDone))
 }
 
 // SnapshotDone prints the golden image save/update confirmation.
