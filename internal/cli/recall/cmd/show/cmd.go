@@ -7,10 +7,10 @@
 package show
 
 import (
-	"github.com/ActiveMemory/ctx/internal/config/embed"
+	"github.com/ActiveMemory/ctx/internal/assets/read/desc"
+	"github.com/ActiveMemory/ctx/internal/config/embed/cmd"
+	"github.com/ActiveMemory/ctx/internal/config/embed/flag"
 	"github.com/spf13/cobra"
-
-	"github.com/ActiveMemory/ctx/internal/assets"
 )
 
 // Cmd returns the recall show subcommand.
@@ -24,7 +24,7 @@ func Cmd() *cobra.Command {
 		allProjects bool
 	)
 
-	short, long := assets.CommandDesc(embed.CmdDescKeyRecallShow)
+	short, long := desc.CommandDesc(cmd.DescKeyRecallShow)
 
 	cmd := &cobra.Command{
 		Use:   "show [session-id]",
@@ -36,13 +36,13 @@ func Cmd() *cobra.Command {
 	}
 
 	cmd.Flags().BoolVar(&latest, "latest", false,
-		assets.FlagDesc(embed.FlagDescKeyRecallShowLatest),
+		desc.FlagDesc(flag.FlagDescKeyRecallShowLatest),
 	)
 	cmd.Flags().BoolVar(&full, "full", false,
-		assets.FlagDesc(embed.FlagDescKeyRecallShowFull),
+		desc.FlagDesc(flag.FlagDescKeyRecallShowFull),
 	)
 	cmd.Flags().BoolVar(&allProjects, "all-projects", false,
-		assets.FlagDesc(embed.FlagDescKeyRecallShowAllProjects),
+		desc.FlagDesc(flag.FlagDescKeyRecallShowAllProjects),
 	)
 
 	return cmd

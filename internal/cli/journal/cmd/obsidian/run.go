@@ -11,6 +11,7 @@ import (
 	"os"
 	"path/filepath"
 
+	"github.com/ActiveMemory/ctx/internal/assets/tpl"
 	"github.com/ActiveMemory/ctx/internal/config/dir"
 	"github.com/ActiveMemory/ctx/internal/config/file"
 	"github.com/ActiveMemory/ctx/internal/config/fs"
@@ -21,7 +22,6 @@ import (
 	obsidian2 "github.com/ActiveMemory/ctx/internal/write/obsidian"
 	"github.com/spf13/cobra"
 
-	"github.com/ActiveMemory/ctx/internal/assets"
 	"github.com/ActiveMemory/ctx/internal/cli/journal/core"
 	"github.com/ActiveMemory/ctx/internal/rc"
 )
@@ -96,7 +96,7 @@ func BuildObsidianVault(cmd *cobra.Command, journalDir, output string) error {
 		output, obsidian.DirConfig, obsidian.AppConfigFile,
 	)
 	if writeErr := os.WriteFile(
-		appConfigPath, []byte(assets.ObsidianAppConfig), fs.PermFile,
+		appConfigPath, []byte(obsidian.AppConfig), fs.PermFile,
 	); writeErr != nil {
 		return fs2.FileWrite(appConfigPath, writeErr)
 	}
@@ -105,7 +105,7 @@ func BuildObsidianVault(cmd *cobra.Command, journalDir, output string) error {
 	readmePath := filepath.Join(output, file.Readme)
 	if writeErr := os.WriteFile(
 		readmePath,
-		[]byte(fmt.Sprintf(assets.ObsidianReadme, journalDir)),
+		[]byte(fmt.Sprintf(tpl.TplObsidianReadme, journalDir)),
 		fs.PermFile,
 	); writeErr != nil {
 		return fs2.FileWrite(readmePath, writeErr)

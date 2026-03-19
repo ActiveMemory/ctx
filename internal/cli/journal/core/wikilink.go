@@ -12,8 +12,8 @@ import (
 	"regexp"
 	"strings"
 
-	"github.com/ActiveMemory/ctx/internal/assets"
 	"github.com/ActiveMemory/ctx/internal/config/file"
+	"github.com/ActiveMemory/ctx/internal/config/obsidian"
 	"github.com/ActiveMemory/ctx/internal/config/token"
 )
 
@@ -66,9 +66,9 @@ func ConvertMarkdownLinks(content string) string {
 //   - string: Formatted wikilink
 func FormatWikilink(target, display string) string {
 	if target == display {
-		return fmt.Sprintf(assets.ObsidianWikilinkPlain, target)
+		return fmt.Sprintf(obsidian.WikilinkPlain, target)
 	}
-	return fmt.Sprintf(assets.ObsidianWikilinkFmt, target, display)
+	return fmt.Sprintf(obsidian.WikilinkFmt, target, display)
 }
 
 // FormatWikilinkEntry formats a journal entry as a wikilink list item.

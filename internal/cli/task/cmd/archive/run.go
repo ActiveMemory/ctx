@@ -10,7 +10,9 @@ import (
 	"os"
 	"strings"
 
+	"github.com/ActiveMemory/ctx/internal/assets/read/desc"
 	"github.com/ActiveMemory/ctx/internal/config/archive"
+	"github.com/ActiveMemory/ctx/internal/config/embed/text"
 	"github.com/ActiveMemory/ctx/internal/config/fs"
 	"github.com/ActiveMemory/ctx/internal/config/token"
 	ctxerr "github.com/ActiveMemory/ctx/internal/err/task"
@@ -18,7 +20,6 @@ import (
 	archive2 "github.com/ActiveMemory/ctx/internal/write/archive"
 	"github.com/spf13/cobra"
 
-	"github.com/ActiveMemory/ctx/internal/assets"
 	"github.com/ActiveMemory/ctx/internal/cli/task/core"
 	"github.com/ActiveMemory/ctx/internal/tidy"
 )
@@ -93,7 +94,7 @@ func runArchive(cmd *cobra.Command, dryRun bool) error {
 	}
 
 	// Write to archive
-	archiveFilePath, writeErr := tidy.WriteArchive(archive.ArchiveScopeTasks, assets.HeadingArchivedTasks, archivedContent.String())
+	archiveFilePath, writeErr := tidy.WriteArchive(archive.ArchiveScopeTasks, desc.TextDesc(text.TextDescKeyHeadingArchivedTasks), archivedContent.String())
 	if writeErr != nil {
 		return writeErr
 	}

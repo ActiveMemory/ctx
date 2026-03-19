@@ -7,10 +7,9 @@
 package root
 
 import (
-	"github.com/ActiveMemory/ctx/internal/config/embed"
+	"github.com/ActiveMemory/ctx/internal/assets/read/desc"
+	"github.com/ActiveMemory/ctx/internal/config/embed/cmd"
 	"github.com/spf13/cobra"
-
-	"github.com/ActiveMemory/ctx/internal/assets"
 )
 
 // Cmd returns the reindex convenience command.
@@ -21,10 +20,10 @@ import (
 // Returns:
 //   - *cobra.Command: The reindex command
 func Cmd() *cobra.Command {
-	short, long := assets.CommandDesc(embed.CmdDescKeyReindex)
+	short, long := desc.CommandDesc(cmd.DescKeyReindex)
 
 	return &cobra.Command{
-		Use:   "reindex",
+		Use:   cmd.DescKeyReindex,
 		Short: short,
 		Long:  long,
 		RunE:  Run,

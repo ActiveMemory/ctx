@@ -39,17 +39,17 @@ These are inviolable:
 ## Execution
 
 ```bash
-ctx tasks archive $ARGUMENTS
+ctx task archive $ARGUMENTS
 ```
 
 **Example: preview first (recommended):**
 ```bash
-ctx tasks archive --dry-run
+ctx task archive --dry-run
 ```
 
 **Example: archive after confirming the preview:**
 ```bash
-ctx tasks archive
+ctx task archive
 ```
 
 Archived tasks go to `archive/tasks-YYYY-MM-DD.md` in the context directory,

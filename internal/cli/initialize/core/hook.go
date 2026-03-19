@@ -12,6 +12,7 @@ import (
 	"os"
 	"strings"
 
+	"github.com/ActiveMemory/ctx/internal/assets/read/lookup"
 	claude2 "github.com/ActiveMemory/ctx/internal/config/claude"
 	"github.com/ActiveMemory/ctx/internal/config/dir"
 	"github.com/ActiveMemory/ctx/internal/config/fs"
@@ -21,7 +22,6 @@ import (
 	"github.com/ActiveMemory/ctx/internal/write/initialize"
 	"github.com/spf13/cobra"
 
-	"github.com/ActiveMemory/ctx/internal/assets"
 	"github.com/ActiveMemory/ctx/internal/claude"
 )
 
@@ -41,8 +41,8 @@ func MergeSettingsPermissions(cmd *cobra.Command) error {
 			return errparser.ParseFile(claude2.Settings, err)
 		}
 	}
-	allowModified := MergePermissions(&settings.Permissions.Allow, assets.DefaultAllowPermissions())
-	denyModified := MergePermissions(&settings.Permissions.Deny, assets.DefaultDenyPermissions())
+	allowModified := MergePermissions(&settings.Permissions.Allow, lookup.PermAllowListDefault())
+	denyModified := MergePermissions(&settings.Permissions.Deny, lookup.PermDenyListDefault())
 	allowDeduped := DeduplicatePermissions(&settings.Permissions.Allow)
 	denyDeduped := DeduplicatePermissions(&settings.Permissions.Deny)
 	if !allowModified && !denyModified && !allowDeduped && !denyDeduped {

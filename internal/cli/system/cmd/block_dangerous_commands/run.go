@@ -10,12 +10,12 @@ import (
 	"encoding/json"
 	"os"
 
-	"github.com/ActiveMemory/ctx/internal/config/embed"
+	"github.com/ActiveMemory/ctx/internal/assets/read/desc"
+	"github.com/ActiveMemory/ctx/internal/config/embed/text"
 	"github.com/ActiveMemory/ctx/internal/config/hook"
 	"github.com/ActiveMemory/ctx/internal/config/regex"
 	"github.com/spf13/cobra"
 
-	"github.com/ActiveMemory/ctx/internal/assets"
 	"github.com/ActiveMemory/ctx/internal/cli/system/core"
 	"github.com/ActiveMemory/ctx/internal/notify"
 )
@@ -44,22 +44,22 @@ func Run(cmd *cobra.Command, stdin *os.File) error {
 
 	if regex.MidSudo.MatchString(command) {
 		variant = hook.VariantMidSudo
-		fallback = assets.TextDesc(embed.TextDescKeyBlockMidSudo)
+		fallback = desc.TextDesc(text.TextDescKeyBlockMidSudo)
 	}
 
 	if variant == "" && regex.MidGitPush.MatchString(command) {
 		variant = hook.VariantMidGitPush
-		fallback = assets.TextDesc(embed.TextDescKeyBlockMidGitPush)
+		fallback = desc.TextDesc(text.TextDescKeyBlockMidGitPush)
 	}
 
 	if variant == "" && regex.CpMvToBin.MatchString(command) {
 		variant = hook.VariantCpToBin
-		fallback = assets.TextDesc(embed.TextDescKeyBlockCpToBin)
+		fallback = desc.TextDesc(text.TextDescKeyBlockCpToBin)
 	}
 
 	if variant == "" && regex.InstallToLocalBin.MatchString(command) {
 		variant = hook.VariantInstallToLocalBin
-		fallback = assets.TextDesc(embed.TextDescKeyBlockInstallToLocalBin)
+		fallback = desc.TextDesc(text.TextDescKeyBlockInstallToLocalBin)
 	}
 
 	var reason string

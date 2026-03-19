@@ -7,11 +7,11 @@
 package root
 
 import (
+	"github.com/ActiveMemory/ctx/internal/assets/read/desc"
 	"github.com/ActiveMemory/ctx/internal/config/cli"
-	"github.com/ActiveMemory/ctx/internal/config/embed"
+	"github.com/ActiveMemory/ctx/internal/config/embed/cmd"
+	"github.com/ActiveMemory/ctx/internal/config/embed/flag"
 	"github.com/spf13/cobra"
-
-	"github.com/ActiveMemory/ctx/internal/assets"
 )
 
 // Cmd returns the "ctx init" command for initializing a .context/ directory.
@@ -41,7 +41,7 @@ func Cmd() *cobra.Command {
 		noPluginEnable bool
 	)
 
-	short, long := assets.CommandDesc(embed.CmdDescKeyInitialize)
+	short, long := desc.CommandDesc(cmd.DescKeyInitialize)
 	cmd := &cobra.Command{
 		Use:         "init",
 		Short:       short,
@@ -54,24 +54,24 @@ func Cmd() *cobra.Command {
 
 	cmd.Flags().BoolVarP(
 		&force,
-		"force", "f", false, assets.FlagDesc(embed.FlagDescKeyInitializeForce),
+		"force", "f", false, desc.FlagDesc(flag.FlagDescKeyInitializeForce),
 	)
 	cmd.Flags().BoolVarP(
 		&minimal,
 		"minimal", "m", false,
-		assets.FlagDesc(embed.FlagDescKeyInitializeMinimal),
+		desc.FlagDesc(flag.FlagDescKeyInitializeMinimal),
 	)
 	cmd.Flags().BoolVar(
 		&merge, "merge", false,
-		assets.FlagDesc(embed.FlagDescKeyInitializeMerge),
+		desc.FlagDesc(flag.FlagDescKeyInitializeMerge),
 	)
 	cmd.Flags().BoolVar(
 		&ralph, "ralph", false,
-		assets.FlagDesc(embed.FlagDescKeyInitializeRalph),
+		desc.FlagDesc(flag.FlagDescKeyInitializeRalph),
 	)
 	cmd.Flags().BoolVar(
 		&noPluginEnable, "no-plugin-enable", false,
-		assets.FlagDesc(embed.FlagDescKeyInitializeNoPluginEnable),
+		desc.FlagDesc(flag.FlagDescKeyInitializeNoPluginEnable),
 	)
 
 	return cmd

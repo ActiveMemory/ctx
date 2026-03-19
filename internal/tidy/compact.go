@@ -10,8 +10,9 @@ import (
 	"slices"
 	"strings"
 
-	"github.com/ActiveMemory/ctx/internal/assets"
+	"github.com/ActiveMemory/ctx/internal/assets/read/desc"
 	ctxCfg "github.com/ActiveMemory/ctx/internal/config/ctx"
+	"github.com/ActiveMemory/ctx/internal/config/embed/text"
 	"github.com/ActiveMemory/ctx/internal/config/token"
 	"github.com/ActiveMemory/ctx/internal/entity"
 )
@@ -98,7 +99,7 @@ func CompactContext(ctx *entity.Context) *CompactResult {
 
 			// Insert into Completed section.
 			for i, line := range newLines {
-				if strings.HasPrefix(line, assets.HeadingCompleted) {
+				if strings.HasPrefix(line, desc.TextDesc(text.TextDescKeyHeadingCompleted)) {
 					insertIdx := i + 1
 					for insertIdx < len(newLines) &&
 						newLines[insertIdx] != "" &&

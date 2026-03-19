@@ -1,0 +1,202 @@
+# Headings, column headers, and navigation labels used in generated Markdown.
+# Used by assets.TextDesc() for structured document output.
+
+# Context file headings
+heading.decisions:
+  short: '# Decisions'
+heading.learnings:
+  short: '# Learnings'
+heading.learning-entry-start:
+  short: '## ['
+
+# Column headers for index tables
+column.decision:
+  short: Decision
+column.learning:
+  short: Learning
+
+# Task section headings
+heading.completed:
+  short: '## Completed'
+heading.archived-tasks:
+  short: '# Archived Tasks'
+
+# Load command
+heading.context:
+  short: '# Context'
+
+# Loop command
+heading.loop-start:
+  short: 'To start the loop:'
+
+# Recall/export headings
+heading.tool-usage:
+  short: '## Tool Usage'
+heading.conversation:
+  short: '## Conversation'
+
+# Journal index headings
+heading.session-journal:
+  short: '# Session Journal'
+heading.topics:
+  short: '# Topics'
+heading.popular-topics:
+  short: '## Popular Topics'
+heading.longtail-topics:
+  short: '## Long-tail Topics'
+heading.key-files:
+  short: '# Key Files'
+heading.frequently-touched:
+  short: '## Frequently Touched'
+heading.single-session:
+  short: '## Single Session'
+heading.session-types:
+  short: '# Session Types'
+heading.suggestions:
+  short: '## Suggestions'
+heading.recent-sessions:
+  short: Recent Sessions
+
+# Journal navigation labels
+label.home:
+  short: Home
+label.topics:
+  short: Topics
+label.files:
+  short: Files
+label.types:
+  short: Types
+
+# Bold metadata field prefixes in journal/session Markdown.
+label.metadata-id:
+  short: '**ID**:'
+label.metadata-date:
+  short: '**Date**:'
+label.metadata-time:
+  short: '**Time**:'
+label.metadata-duration:
+  short: '**Duration**:'
+label.metadata-tool:
+  short: '**Tool**:'
+label.metadata-project:
+  short: '**Project**:'
+label.metadata-branch:
+  short: '**Branch**:'
+label.metadata-model:
+  short: '**Model**:'
+label.metadata-turns:
+  short: '**Turns**:'
+label.metadata-parts:
+  short: '**Parts**:'
+label.metadata-type:
+  short: '**Type**:'
+label.metadata-start-time:
+  short: '**start_time**:'
+label.metadata-end-time:
+  short: '**end_time**:'
+label.metadata-source:
+  short: '**Source**:'
+label.metadata-started:
+  short: '**Started**:'
+label.metadata-messages:
+  short: '**Messages**:'
+label.metadata-input-usage:
+  short: '**Tokens In**:'
+label.metadata-output-usage:
+  short: '**Tokens Out**:'
+label.metadata-total:
+  short: '**Total**:'
+
+# Plain-text metadata labels for HTML table rows.
+label.meta-id:
+  short: ID
+label.meta-date:
+  short: Date
+label.meta-time:
+  short: Time
+label.meta-duration:
+  short: Duration
+label.meta-tool:
+  short: Tool
+label.meta-project:
+  short: Project
+label.meta-branch:
+  short: Branch
+label.meta-model:
+  short: Model
+label.meta-turns:
+  short: Turns
+label.meta-tokens:
+  short: Tokens
+label.meta-parts:
+  short: Parts
+
+# Conversation role labels.
+label.role-user:
+  short: User
+label.role-assistant:
+  short: Assistant
+
+# Column headers for recall list output.
+label.col-slug:
+  short: Slug
+label.col-project:
+  short: Project
+label.col-date:
+  short: Date
+label.col-duration:
+  short: Duration
+label.col-turns:
+  short: Turns
+label.col-tokens:
+  short: Tokens
+
+# Section headers used in recall show output.
+label.section-tool-usage:
+  short: Tool Usage
+label.section-conversation:
+  short: Conversation
+label.section-conversation-preview:
+  short: Conversation Preview
+
+# Hints and markers.
+label.hint-use-full:
+  short: Use --full to see all messages
+label.hint-use-all-projects:
+  short: 'use --all-projects to search all'
+label.inline-tool:
+  short: 'Tool:'
+label.inline-error:
+  short: 'Error:'
+label.bold-reminder:
+  short: '**System Reminder**:'
+label.tool-output:
+  short: Tool Output
+label.suggestion-mode:
+  short: 'SUGGESTION MODE:'
+label.reason-exists:
+  short: exists
+label.reason-updated:
+  short: 'updated, frontmatter preserved'
+label.loop-complete:
+  short: '=== Loop Complete ==='
+
+# Obsidian vault headings and labels.
+heading.obsidian-related:
+  short: '## Related Sessions'
+label.obsidian-see-also:
+  short: '**See also**:'
+
+# Config file pattern topics for ctx sync.
+sync.topic.eslint:
+  short: linting conventions
+sync.topic.prettier:
+  short: formatting conventions
+sync.topic.tsconfig:
+  short: TypeScript configuration
+sync.topic.editorconfig:
+  short: editor configuration
+sync.topic.makefile:
+  short: build commands
+sync.topic.dockerfile:
+  short: containerization

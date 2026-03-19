@@ -12,8 +12,9 @@ import (
 	"path/filepath"
 	"strings"
 
+	"github.com/ActiveMemory/ctx/internal/assets/read/desc"
 	"github.com/ActiveMemory/ctx/internal/config/ctx"
-	"github.com/ActiveMemory/ctx/internal/config/embed"
+	"github.com/ActiveMemory/ctx/internal/config/embed/text"
 	"github.com/ActiveMemory/ctx/internal/config/hook"
 	"github.com/ActiveMemory/ctx/internal/config/load_gate"
 	"github.com/ActiveMemory/ctx/internal/config/token"
@@ -21,8 +22,7 @@ import (
 	"github.com/ActiveMemory/ctx/internal/io"
 	"github.com/spf13/cobra"
 
-	"github.com/ActiveMemory/ctx/internal/assets"
-	changescore "github.com/ActiveMemory/ctx/internal/cli/changes/core"
+	changecore "github.com/ActiveMemory/ctx/internal/cli/change/core"
 	"github.com/ActiveMemory/ctx/internal/cli/system/core"
 	"github.com/ActiveMemory/ctx/internal/rc"
 )
@@ -77,7 +77,7 @@ func Run(cmd *cobra.Command, stdin *os.File) error {
 	var perFile []core.FileTokenEntry
 
 	content.WriteString(
-		assets.TextDesc(embed.TextDescKeyContextLoadGateHeader) +
+		desc.TextDesc(text.TextDescKeyContextLoadGateHeader) +
 			strings.Repeat(
 				load_gate.ContextLoadSeparatorChar, load_gate.ContextLoadSeparatorWidth,
 			) +
@@ -102,10 +102,10 @@ func Run(cmd *cobra.Command, stdin *os.File) error {
 		case ctx.Decision, ctx.Learning:
 			idx := core.ExtractIndex(string(data))
 			if idx == "" {
-				idx = assets.TextDesc(embed.TextDescKeyContextLoadGateIndexFallback)
+				idx = desc.TextDesc(text.TextDescKeyContextLoadGateIndexFallback)
 			}
 			content.WriteString(fmt.Sprintf(
-				assets.TextDesc(embed.TextDescKeyContextLoadGateIndexHeader), f, idx))
+				desc.TextDesc(text.TextDescKeyContextLoadGateIndexHeader), f, idx))
 			tokens := token2.EstimateTokensString(idx)
 			totalTokens += tokens
 			perFile = append(perFile, core.FileTokenEntry{
@@ -116,8 +116,8 @@ func Run(cmd *cobra.Command, stdin *os.File) error {
 
 		default:
 			content.WriteString(fmt.Sprintf(
-				assets.TextDesc(
-					embed.TextDescKeyContextLoadGateFileHeader,
+				desc.TextDesc(
+					text.TextDescKeyContextLoadGateFileHeader,
 				), f, string(data)))
 			tokens := token2.EstimateTokens(data)
 			totalTokens += tokens
@@ -127,11 +127,11 @@ func Run(cmd *cobra.Command, stdin *os.File) error {
 	}
 
 	// Best-effort changes summary — never blocks injection
-	if refTime, refLabel, refErr := changescore.DetectReferenceTime(""); refErr == nil {
-		ctxChanges, _ := changescore.FindContextChanges(refTime)
-		codeChanges, _ := changescore.SummarizeCodeChanges(refTime)
+	if refTime, refLabel, refErr := changecore.DetectReferenceTime(""); refErr == nil {
+		ctxChanges, _ := changecore.FindContextChanges(refTime)
+		codeChanges, _ := changecore.SummarizeCodeChanges(refTime)
 		if len(ctxChanges) > 0 || codeChanges.CommitCount > 0 {
-			content.WriteString(token.NewlineLF + changescore.RenderChangesForHook(
+			content.WriteString(token.NewlineLF + changecore.RenderChangesForHook(
 				refLabel, ctxChanges, codeChanges))
 		}
 	}
@@ -141,14 +141,14 @@ func Run(cmd *cobra.Command, stdin *os.File) error {
 			load_gate.ContextLoadSeparatorChar, load_gate.ContextLoadSeparatorWidth,
 		) + token.NewlineLF)
 	content.WriteString(fmt.Sprintf(
-		assets.TextDesc(embed.TextDescKeyContextLoadGateFooter),
+		desc.TextDesc(text.TextDescKeyContextLoadGateFooter),
 		filesLoaded, totalTokens))
 
 	core.PrintHookContext(cmd, hook.EventPreToolUse, content.String())
 
 	// Webhook: metadata only — never send file content externally
 	webhookMsg := fmt.Sprintf(
-		assets.TextDesc(embed.TextDescKeyContextLoadGateWebhook),
+		desc.TextDesc(text.TextDescKeyContextLoadGateWebhook),
 		filesLoaded, totalTokens)
 	core.Relay(webhookMsg, input.SessionID, nil)
 

@@ -9,11 +9,11 @@ package pad
 import (
 	"fmt"
 
-	"github.com/ActiveMemory/ctx/internal/config/embed"
+	"github.com/ActiveMemory/ctx/internal/assets/read/desc"
+	"github.com/ActiveMemory/ctx/internal/config/embed/cmd"
 	"github.com/ActiveMemory/ctx/internal/write/pad"
 	"github.com/spf13/cobra"
 
-	"github.com/ActiveMemory/ctx/internal/assets"
 	"github.com/ActiveMemory/ctx/internal/cli/pad/cmd/add"
 	"github.com/ActiveMemory/ctx/internal/cli/pad/cmd/edit"
 	"github.com/ActiveMemory/ctx/internal/cli/pad/cmd/export"
@@ -33,9 +33,9 @@ import (
 // Returns:
 //   - *cobra.Command: Configured pad command with subcommands
 func Cmd() *cobra.Command {
-	short, long := assets.CommandDesc(embed.CmdDescKeyPad)
+	short, long := desc.CommandDesc(cmd.DescKeyPad)
 	cmd := &cobra.Command{
-		Use:   "pad",
+		Use:   cmd.DescKeyPad,
 		Short: short,
 		Long:  long,
 		Args:  cobra.NoArgs,

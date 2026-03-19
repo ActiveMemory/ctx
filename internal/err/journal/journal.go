@@ -10,8 +10,8 @@ import (
 	"errors"
 	"fmt"
 
-	"github.com/ActiveMemory/ctx/internal/assets"
-	"github.com/ActiveMemory/ctx/internal/config/embed"
+	"github.com/ActiveMemory/ctx/internal/assets/read/desc"
+	"github.com/ActiveMemory/ctx/internal/config/embed/text"
 )
 
 // LoadState wraps a journal state loading failure.
@@ -23,7 +23,7 @@ import (
 //   - error: "load journal state: <cause>"
 func LoadState(cause error) error {
 	return fmt.Errorf(
-		assets.TextDesc(embed.TextDescKeyErrJournalLoadJournalState), cause,
+		desc.TextDesc(text.TextDescKeyErrJournalLoadJournalState), cause,
 	)
 }
 
@@ -36,7 +36,7 @@ func LoadState(cause error) error {
 //   - error: "save journal state: <cause>"
 func SaveState(cause error) error {
 	return fmt.Errorf(
-		assets.TextDesc(embed.TextDescKeyErrJournalSaveJournalState), cause,
+		desc.TextDesc(text.TextDescKeyErrJournalSaveJournalState), cause,
 	)
 }
 
@@ -49,7 +49,7 @@ func SaveState(cause error) error {
 //   - error: "load journal state: <cause>"
 func LoadStateErr(cause error) error {
 	return fmt.Errorf(
-		assets.TextDesc(embed.TextDescKeyErrJournalLoadJournalState), cause,
+		desc.TextDesc(text.TextDescKeyErrJournalLoadJournalState), cause,
 	)
 }
 
@@ -62,7 +62,7 @@ func LoadStateErr(cause error) error {
 //   - error: "load journal state: <cause>"
 func LoadStateFailed(cause error) error {
 	return fmt.Errorf(
-		assets.TextDesc(embed.TextDescKeyErrJournalLoadJournalState), cause,
+		desc.TextDesc(text.TextDescKeyErrJournalLoadJournalState), cause,
 	)
 }
 
@@ -75,7 +75,7 @@ func LoadStateFailed(cause error) error {
 //   - error: "save journal state: <cause>"
 func SaveStateFailed(cause error) error {
 	return fmt.Errorf(
-		assets.TextDesc(embed.TextDescKeyErrJournalSaveJournalState), cause,
+		desc.TextDesc(text.TextDescKeyErrJournalSaveJournalState), cause,
 	)
 }
 
@@ -88,7 +88,7 @@ func SaveStateFailed(cause error) error {
 //   - error: includes a hint to run 'ctx recall export --all'
 func NoDir(path string) error {
 	return fmt.Errorf(
-		assets.TextDesc(embed.TextDescKeyErrJournalNoJournalDir), path,
+		desc.TextDesc(text.TextDescKeyErrJournalNoJournalDir), path,
 	)
 }
 
@@ -101,7 +101,7 @@ func NoDir(path string) error {
 //   - error: "failed to scan journal: <cause>"
 func Scan(cause error) error {
 	return fmt.Errorf(
-		assets.TextDesc(embed.TextDescKeyErrJournalScanJournal), cause,
+		desc.TextDesc(text.TextDescKeyErrJournalScanJournal), cause,
 	)
 }
 
@@ -114,7 +114,7 @@ func Scan(cause error) error {
 //   - error: includes a hint to run 'ctx recall export --all'
 func NoEntries(path string) error {
 	return fmt.Errorf(
-		assets.TextDesc(embed.TextDescKeyErrJournalNoJournalEntries), path,
+		desc.TextDesc(text.TextDescKeyErrJournalNoJournalEntries), path,
 	)
 }
 
@@ -127,7 +127,7 @@ func NoEntries(path string) error {
 //   - error: "no journal entries match: <patterns>"
 func NoEntriesMatch(patterns string) error {
 	return fmt.Errorf(
-		assets.TextDesc(embed.TextDescKeyErrJournalNoEntriesMatch), patterns,
+		desc.TextDesc(text.TextDescKeyErrJournalNoEntriesMatch), patterns,
 	)
 }
 
@@ -140,7 +140,7 @@ func NoEntriesMatch(patterns string) error {
 //   - error: "read journal directory: <cause>"
 func ReadDir(cause error) error {
 	return fmt.Errorf(
-		assets.TextDesc(embed.TextDescKeyErrJournalReadJournalDir), cause,
+		desc.TextDesc(text.TextDescKeyErrJournalReadJournalDir), cause,
 	)
 }
 
@@ -154,7 +154,7 @@ func ReadDir(cause error) error {
 //   - error: "unknown stage <stage>; valid: <valid>"
 func UnknownStage(stage, valid string) error {
 	return fmt.Errorf(
-		assets.TextDesc(embed.TextDescKeyErrJournalUnknownStage), stage, valid,
+		desc.TextDesc(text.TextDescKeyErrJournalUnknownStage), stage, valid,
 	)
 }
 
@@ -168,7 +168,7 @@ func UnknownStage(stage, valid string) error {
 //   - error: "<filename>: <stage> not set"
 func StageNotSet(filename, stage string) error {
 	return fmt.Errorf(
-		assets.TextDesc(embed.TextDescKeyErrJournalStageNotSet), filename, stage,
+		desc.TextDesc(text.TextDescKeyErrJournalStageNotSet), filename, stage,
 	)
 }
 
@@ -179,6 +179,6 @@ func StageNotSet(filename, stage string) error {
 //   - error: explains the flag dependency
 func RegenerateRequiresAll() error {
 	return errors.New(
-		assets.TextDesc(embed.TextDescKeyErrJournalRegenerateRequiresAll),
+		desc.TextDesc(text.TextDescKeyErrJournalRegenerateRequiresAll),
 	)
 }

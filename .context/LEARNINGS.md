@@ -3,6 +3,9 @@
 <!-- INDEX:START -->
 | Date | Learning |
 |------|--------|
+| 2026-03-18 | Tests in package X cannot import X/sub packages that import X back |
+| 2026-03-18 | Bulk sed on imports displaces aliased imports |
+| 2026-03-18 | Lazy sync.Once per-accessor is a code smell for static embedded data |
 | 2026-03-17 | Write package output census: 69 trivial/simple, 38 consolidation candidates, 18 complex |
 | 2026-03-16 | Docstring tasks require reading CONVENTIONS.md Documentation section first |
 | 2026-03-16 | Convention enforcement needs mechanical verification, not behavioral repetition |
@@ -79,6 +82,36 @@
 | 2026-02-19 | Feature can be code-complete but invisible to users |
 | 2026-01-28 | IDE is already the UI |
 <!-- INDEX:END -->
+
+---
+
+## [2026-03-18-193616] Tests in package X cannot import X/sub packages that import X back
+
+**Context**: embed_test.go in package assets kept importing read/ sub-packages that import assets.FS, creating cycles. Recurred 4 times this session.
+
+**Lesson**: Tests that exercise domain accessor packages must live in those packages, not in the parent. The parent test file can only use the shared resource (FS) directly.
+
+**Application**: When splitting functions from a parent package into sub-packages, move the corresponding tests too. Do not leave them in the parent.
+
+---
+
+## [2026-03-18-193602] Bulk sed on imports displaces aliased imports
+
+**Context**: Used sed to add desc import to 278 files. Files with aliased imports like ctxCfg config/ctx got the alias stolen by the new import line inserted before it.
+
+**Lesson**: sed insert-before-first-match does not understand Go import aliases. The alias attaches to whatever import line sed inserts, not the original target.
+
+**Application**: When bulk-adding imports, check for aliased imports first and handle them separately. Or use goimports if available.
+
+---
+
+## [2026-03-18-133457] Lazy sync.Once per-accessor is a code smell for static embedded data
+
+**Context**: assets package had 4 sync.Once guards, 4 exported maps, 4 Load*() functions, and a wrapper desc package — all to lazily load YAML from embed.FS that never mutates. Every accessor call went through sync.Once + global map + wrapper indirection.
+
+**Lesson**: When data is static and loaded from embedded bytes, scatter-loading with per-accessor sync.Once is over-engineering. A single Init() called eagerly at startup is simpler, and one sync.Once on Init() itself provides the test safety net. Exported maps that exist only for wrapper packages to reach are a sign the abstraction boundary is wrong.
+
+**Application**: Prefer eager Init() in main.go for static embedded data. Keep maps unexported. Accessors do plain map lookups. If a wrapper package exists solely to break a cycle caused by exported state, delete the wrapper and unexport the state.
 
 ---
 

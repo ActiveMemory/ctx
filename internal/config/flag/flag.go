@@ -23,3 +23,11 @@ const (
 	Lesson      = "lesson"
 	Application = "application"
 )
+
+// CLI flag names used in multiple commands.
+const (
+	// Since is the --since flag name.
+	Since = "--since"
+	// Until is the --until flag name.
+	Until = "--until"
+)

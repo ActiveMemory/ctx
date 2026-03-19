@@ -11,8 +11,10 @@ import (
 	"path/filepath"
 	"strings"
 
-	"github.com/ActiveMemory/ctx/internal/assets"
+	"github.com/ActiveMemory/ctx/internal/assets/read/desc"
+	"github.com/ActiveMemory/ctx/internal/config/embed/text"
 	"github.com/ActiveMemory/ctx/internal/config/fs"
+	"github.com/ActiveMemory/ctx/internal/config/session"
 	"github.com/ActiveMemory/ctx/internal/config/token"
 	"github.com/ActiveMemory/ctx/internal/write/err"
 	"github.com/ActiveMemory/ctx/internal/write/recall"
@@ -42,12 +44,12 @@ func ExecuteExport(
 	for _, fa := range plan.Actions {
 		if fa.Action == ActionLocked {
 			skipped++
-			recall.SkipFile(cmd, fa.Filename, assets.FrontmatterLocked)
+			recall.SkipFile(cmd, fa.Filename, session.FrontmatterLocked)
 			continue
 		}
 		if fa.Action == ActionSkip {
 			skipped++
-			recall.SkipFile(cmd, fa.Filename, assets.ReasonExists)
+			recall.SkipFile(cmd, fa.Filename, desc.TextDesc(text.TextDescKeyLabelReasonExists))
 			continue
 		}
 
@@ -92,7 +94,7 @@ func ExecuteExport(
 		jstate.MarkExported(fa.Filename)
 
 		if fileExists && !discard {
-			recall.ExportedFile(cmd, fa.Filename, assets.ReasonUpdated)
+			recall.ExportedFile(cmd, fa.Filename, desc.TextDesc(text.TextDescKeyLabelReasonUpdated))
 		} else {
 			recall.ExportedFile(cmd, fa.Filename, "")
 		}

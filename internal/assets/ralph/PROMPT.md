@@ -33,7 +33,7 @@ From `.context/TASKS.md`, select ONE task that is:
 
 After completing work:
 
-- Mark task complete: `ctx tasks complete "<task>"`
+- Mark task complete: `ctx task complete "<task>"`
 - Add learnings: `ctx add learning "..."`
 - Add decisions: `ctx add decision "..."`
 

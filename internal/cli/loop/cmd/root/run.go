@@ -9,7 +9,8 @@ package root
 import (
 	"os"
 
-	"github.com/ActiveMemory/ctx/internal/assets"
+	"github.com/ActiveMemory/ctx/internal/assets/read/desc"
+	"github.com/ActiveMemory/ctx/internal/config/embed/text"
 	"github.com/ActiveMemory/ctx/internal/config/fs"
 	"github.com/ActiveMemory/ctx/internal/err/config"
 	ctxerr "github.com/ActiveMemory/ctx/internal/err/fs"
@@ -52,7 +53,7 @@ func Run(
 	}
 
 	loop.InfoGenerated(
-		cmd, outputFile, assets.LoopHeadingStart,
+		cmd, outputFile, desc.TextDesc(text.TextDescKeyHeadingLoopStart),
 		tool, promptFile, maxIterations, completionMsg,
 	)
 

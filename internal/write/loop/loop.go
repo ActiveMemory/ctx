@@ -9,8 +9,8 @@ package loop
 import (
 	"fmt"
 
-	"github.com/ActiveMemory/ctx/internal/assets"
-	"github.com/ActiveMemory/ctx/internal/config/embed"
+	"github.com/ActiveMemory/ctx/internal/assets/read/desc"
+	"github.com/ActiveMemory/ctx/internal/config/embed/text"
 	"github.com/spf13/cobra"
 )
 
@@ -30,12 +30,12 @@ func InfoGenerated(
 	maxIterations int,
 	completionMsg string,
 ) {
-	iterLine := assets.TextDesc(embed.TextDescKeyWriteLoopUnlimited)
+	iterLine := desc.TextDesc(text.TextDescKeyWriteLoopUnlimited)
 	if maxIterations > 0 {
-		iterLine = fmt.Sprintf(assets.TextDesc(embed.TextDescKeyWriteLoopMaxIterations), maxIterations)
+		iterLine = fmt.Sprintf(desc.TextDesc(text.TextDescKeyWriteLoopMaxIterations), maxIterations)
 	}
 	cmd.Println(fmt.Sprintf(
-		assets.TextDesc(embed.TextDescKeyWriteLoopGeneratedBlock),
+		desc.TextDesc(text.TextDescKeyWriteLoopGeneratedBlock),
 		outputFile, heading, outputFile, tool, promptFile, iterLine, completionMsg,
 	))
 }

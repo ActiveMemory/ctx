@@ -12,6 +12,9 @@ import (
 	"path/filepath"
 	"strings"
 
+	"github.com/ActiveMemory/ctx/internal/assets/read/desc"
+	"github.com/ActiveMemory/ctx/internal/assets/read/template"
+	"github.com/ActiveMemory/ctx/internal/config/embed/text"
 	"github.com/ActiveMemory/ctx/internal/config/marker"
 	"github.com/ActiveMemory/ctx/internal/config/regex"
 	"github.com/ActiveMemory/ctx/internal/config/token"
@@ -20,7 +23,6 @@ import (
 	ctxErr "github.com/ActiveMemory/ctx/internal/err/task"
 	"github.com/spf13/cobra"
 
-	"github.com/ActiveMemory/ctx/internal/assets"
 	ctxCfg "github.com/ActiveMemory/ctx/internal/config/ctx"
 	"github.com/ActiveMemory/ctx/internal/config/fs"
 	"github.com/ActiveMemory/ctx/internal/drift"
@@ -128,7 +130,7 @@ func FixStaleness(cmd *cobra.Command, ctx *entity.Context) error {
 
 	for _, line := range lines {
 		// Track if we're in the Completed section
-		if strings.HasPrefix(line, assets.HeadingCompleted) {
+		if strings.HasPrefix(line, desc.TextDesc(text.TextDescKeyHeadingCompleted)) {
 			inCompletedSection = true
 			newLines = append(newLines, line)
 			continue
@@ -159,7 +161,7 @@ func FixStaleness(cmd *cobra.Command, ctx *entity.Context) error {
 		archiveContent += marker.PrefixTaskDone + " " + t + nl
 	}
 
-	archiveFile, writeErr := tidy.WriteArchive("tasks", assets.HeadingArchivedTasks, archiveContent)
+	archiveFile, writeErr := tidy.WriteArchive("tasks", desc.TextDesc(text.TextDescKeyHeadingArchivedTasks), archiveContent)
 	if writeErr != nil {
 		return writeErr
 	}
@@ -186,7 +188,7 @@ func FixStaleness(cmd *cobra.Command, ctx *entity.Context) error {
 // Returns:
 //   - error: Non-nil if the template is not found or file write fails
 func FixMissingFile(filename string) error {
-	content, err := assets.Template(filename)
+	content, err := template.Template(filename)
 	if err != nil {
 		return prompt.NoTemplate(filename, err)
 	}

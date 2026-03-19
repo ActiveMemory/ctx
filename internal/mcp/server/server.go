@@ -12,8 +12,8 @@ import (
 	"os"
 	"sync"
 
-	"github.com/ActiveMemory/ctx/internal/assets"
-	"github.com/ActiveMemory/ctx/internal/config/embed"
+	"github.com/ActiveMemory/ctx/internal/assets/read/desc"
+	"github.com/ActiveMemory/ctx/internal/config/embed/text"
 	"github.com/ActiveMemory/ctx/internal/config/mcp/cfg"
 	"github.com/ActiveMemory/ctx/internal/mcp/handler"
 	"github.com/ActiveMemory/ctx/internal/mcp/proto"
@@ -106,7 +106,7 @@ func (s *Server) Serve() error {
 			// Marshal failure: try to report it as an error response.
 			fallback := out.ErrResponse(
 				nil, proto.ErrCodeInternal,
-				assets.TextDesc(embed.TextDescKeyMCPFailedMarshal),
+				desc.TextDesc(text.TextDescKeyMCPFailedMarshal),
 			)
 			if fbErr := mcpIO.WriteJSON(s.out, &s.outMu, fallback); fbErr != nil {
 				return fbErr

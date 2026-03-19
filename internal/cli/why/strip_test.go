@@ -10,7 +10,7 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/ActiveMemory/ctx/internal/assets"
+	"github.com/ActiveMemory/ctx/internal/assets/read/philosophy"
 	whyroot "github.com/ActiveMemory/ctx/internal/cli/why/cmd/root"
 )
 
@@ -130,7 +130,7 @@ func TestStripMkDocs_PreservesCodeBlocks(t *testing.T) {
 }
 
 func TestStripMkDocs_EmbeddedManifesto(t *testing.T) {
-	content, loadErr := assets.WhyDoc("manifesto")
+	content, loadErr := philosophy.WhyDoc("manifesto")
 	if loadErr != nil {
 		t.Fatalf("failed to load embedded manifesto: %v", loadErr)
 	}

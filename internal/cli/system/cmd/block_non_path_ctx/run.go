@@ -10,13 +10,13 @@ import (
 	"encoding/json"
 	"os"
 
-	"github.com/ActiveMemory/ctx/internal/config/embed"
+	"github.com/ActiveMemory/ctx/internal/assets/read/desc"
+	"github.com/ActiveMemory/ctx/internal/config/embed/text"
 	"github.com/ActiveMemory/ctx/internal/config/hook"
 	"github.com/ActiveMemory/ctx/internal/config/regex"
 	"github.com/ActiveMemory/ctx/internal/config/token"
 	"github.com/spf13/cobra"
 
-	"github.com/ActiveMemory/ctx/internal/assets"
 	"github.com/ActiveMemory/ctx/internal/cli/system/core"
 	"github.com/ActiveMemory/ctx/internal/notify"
 )
@@ -47,19 +47,19 @@ func Run(cmd *cobra.Command, stdin *os.File) error {
 	if regex.CtxRelativeStart.MatchString(command) ||
 		regex.CtxRelativeSep.MatchString(command) {
 		variant = hook.VariantDotSlash
-		fallback = assets.TextDesc(embed.TextDescKeyBlockDotSlash)
+		fallback = desc.TextDesc(text.TextDescKeyBlockDotSlash)
 	}
 
 	if regex.CtxGoRun.MatchString(command) {
 		variant = hook.VariantGoRun
-		fallback = assets.TextDesc(embed.TextDescKeyBlockGoRun)
+		fallback = desc.TextDesc(text.TextDescKeyBlockGoRun)
 	}
 
 	if variant == "" && (regex.CtxAbsoluteStart.MatchString(command) ||
 		regex.AbsoluteSep.MatchString(command)) {
 		if !regex.CtxTestException.MatchString(command) {
 			variant = hook.VariantAbsolutePath
-			fallback = assets.TextDesc(embed.TextDescKeyBlockAbsolutePath)
+			fallback = desc.TextDesc(text.TextDescKeyBlockAbsolutePath)
 		}
 	}
 
@@ -72,13 +72,13 @@ func Run(cmd *cobra.Command, stdin *os.File) error {
 		resp := core.BlockResponse{
 			Decision: hook.DecisionBlock,
 			Reason: reason + token.NewlineLF + token.NewlineLF +
-				assets.TextDesc(embed.TextDescKeyBlockConstitutionSuffix),
+				desc.TextDesc(text.TextDescKeyBlockConstitutionSuffix),
 		}
 		data, _ := json.Marshal(resp)
 		cmd.Println(string(data))
 		blockRef := notify.NewTemplateRef(hook.BlockNonPathCtx, variant, nil)
 		core.Relay(hook.BlockNonPathCtx+": "+
-			assets.TextDesc(embed.TextDescKeyBlockNonPathRelayMessage),
+			desc.TextDesc(text.TextDescKeyBlockNonPathRelayMessage),
 			input.SessionID, blockRef,
 		)
 	}

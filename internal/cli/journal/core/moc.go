@@ -10,10 +10,11 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/ActiveMemory/ctx/internal/assets"
-	"github.com/ActiveMemory/ctx/internal/config/embed"
+	"github.com/ActiveMemory/ctx/internal/assets/read/desc"
+	"github.com/ActiveMemory/ctx/internal/config/embed/text"
 	"github.com/ActiveMemory/ctx/internal/config/file"
 	"github.com/ActiveMemory/ctx/internal/config/journal"
+	"github.com/ActiveMemory/ctx/internal/config/obsidian"
 	"github.com/ActiveMemory/ctx/internal/config/token"
 )
 
@@ -36,27 +37,27 @@ func GenerateHomeMOC(
 	var sb strings.Builder
 	nl := token.NewlineLF
 
-	sb.WriteString(assets.JournalHeadingSessionJournal + nl + nl)
-	sb.WriteString(assets.TextDesc(embed.TextDescKeyJournalMocNavDescription) + nl + nl)
+	sb.WriteString(desc.TextDesc(text.TextDescKeyHeadingSessionJournal) + nl + nl)
+	sb.WriteString(desc.TextDesc(text.TextDescKeyJournalMocNavDescription) + nl + nl)
 
-	sb.WriteString(assets.TextDesc(embed.TextDescKeyJournalMocBrowseBy) + nl + nl)
+	sb.WriteString(desc.TextDesc(text.TextDescKeyJournalMocBrowseBy) + nl + nl)
 	if hasTopics {
 		sb.WriteString(fmt.Sprintf(
 			"- %s %s"+nl,
 			FormatWikilink("_Topics", "Topics"),
-			assets.TextDesc(embed.TextDescKeyJournalMocTopicsDesc)))
+			desc.TextDesc(text.TextDescKeyJournalMocTopicsDesc)))
 	}
 	if hasFiles {
 		sb.WriteString(fmt.Sprintf(
 			"- %s %s"+nl,
 			FormatWikilink("_Key Files", "Key Files"),
-			assets.TextDesc(embed.TextDescKeyJournalMocFilesDesc)))
+			desc.TextDesc(text.TextDescKeyJournalMocFilesDesc)))
 	}
 	if hasTypes {
 		sb.WriteString(fmt.Sprintf(
 			"- %s %s"+nl,
 			FormatWikilink("_Session Types", "Session Types"),
-			assets.TextDesc(embed.TextDescKeyJournalMocTypesDesc)))
+			desc.TextDesc(text.TextDescKeyJournalMocTypesDesc)))
 	}
 	sb.WriteString(nl)
 
@@ -66,7 +67,7 @@ func GenerateHomeMOC(
 		recent = recent[:journal.MaxRecentSessions]
 	}
 
-	sb.WriteString(token.HeadingLevelTwoStart + assets.JournalHeadingRecentSessions + nl + nl)
+	sb.WriteString(token.HeadingLevelTwoStart + desc.TextDesc(text.TextDescKeyHeadingRecentSessions) + nl + nl)
 	for _, e := range recent {
 		sb.WriteString(FormatWikilinkEntry(e) + nl)
 	}
@@ -322,7 +323,7 @@ func GenerateRelatedFooter(
 	nl := token.NewlineLF
 
 	sb.WriteString(nl + token.Separator + nl + nl)
-	sb.WriteString(assets.ObsidianRelatedHeading + nl + nl)
+	sb.WriteString(desc.TextDesc(text.TextDescKeyHeadingObsidianRelated) + nl + nl)
 
 	// Topic links
 	if len(entry.Topics) > 0 {
@@ -331,7 +332,7 @@ func GenerateRelatedFooter(
 			FormatWikilink("_Topics", "Topics MOC"))
 		for _, t := range entry.Topics {
 			topicLinks = append(topicLinks,
-				fmt.Sprintf(assets.ObsidianWikilinkPlain, t))
+				fmt.Sprintf(obsidian.WikilinkPlain, t))
 		}
 		sb.WriteString("**Topics**: " + strings.Join(topicLinks, " · ") + nl + nl)
 	}
@@ -339,13 +340,13 @@ func GenerateRelatedFooter(
 	// Type link
 	if entry.Type != "" {
 		sb.WriteString(fmt.Sprintf("**Type**: %s"+nl+nl,
-			fmt.Sprintf(assets.ObsidianWikilinkPlain, entry.Type)))
+			fmt.Sprintf(obsidian.WikilinkPlain, entry.Type)))
 	}
 
 	// See also: other entries sharing topics
 	related := CollectRelated(entry, topicIndex, maxRelated)
 	if len(related) > 0 {
-		sb.WriteString(assets.ObsidianSeeAlso + nl)
+		sb.WriteString(desc.TextDesc(text.TextDescKeyLabelObsidianSeeAlso) + nl)
 		for _, rel := range related {
 			link := strings.TrimSuffix(rel.Filename, file.ExtMarkdown)
 			sb.WriteString(fmt.Sprintf("- %s"+nl,

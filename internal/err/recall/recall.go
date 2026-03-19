@@ -9,8 +9,8 @@ package recall
 import (
 	"fmt"
 
-	"github.com/ActiveMemory/ctx/internal/assets"
-	"github.com/ActiveMemory/ctx/internal/config/embed"
+	"github.com/ActiveMemory/ctx/internal/assets/read/desc"
+	"github.com/ActiveMemory/ctx/internal/config/embed/text"
 )
 
 // EventLogRead wraps a failure to read the event log.
@@ -22,7 +22,7 @@ import (
 //   - error: "reading event log: <cause>"
 func EventLogRead(cause error) error {
 	return fmt.Errorf(
-		assets.TextDesc(embed.TextDescKeyErrRecallEventLogRead), cause,
+		desc.TextDesc(text.TextDescKeyErrRecallEventLogRead), cause,
 	)
 }
 
@@ -35,7 +35,7 @@ func EventLogRead(cause error) error {
 //   - error: "globbing stats files: <cause>"
 func StatsGlob(cause error) error {
 	return fmt.Errorf(
-		assets.TextDesc(embed.TextDescKeyErrRecallStatsGlob), cause,
+		desc.TextDesc(text.TextDescKeyErrRecallStatsGlob), cause,
 	)
 }
 
@@ -48,7 +48,7 @@ func StatsGlob(cause error) error {
 //   - error: "<fileName> not found. Run 'ctx init' first"
 func ReindexFileNotFound(fileName string) error {
 	return fmt.Errorf(
-		assets.TextDesc(embed.TextDescKeyErrRecallReindexFileNotFound), fileName,
+		desc.TextDesc(text.TextDescKeyErrRecallReindexFileNotFound), fileName,
 	)
 }
 
@@ -62,7 +62,7 @@ func ReindexFileNotFound(fileName string) error {
 //   - error: "failed to read <filePath>: <cause>"
 func ReindexFileRead(filePath string, cause error) error {
 	return fmt.Errorf(
-		assets.TextDesc(embed.TextDescKeyErrRecallReindexFileRead),
+		desc.TextDesc(text.TextDescKeyErrRecallReindexFileRead),
 		filePath, cause,
 	)
 }
@@ -77,7 +77,7 @@ func ReindexFileRead(filePath string, cause error) error {
 //   - error: "failed to write <filePath>: <cause>"
 func ReindexFileWrite(filePath string, cause error) error {
 	return fmt.Errorf(
-		assets.TextDesc(embed.TextDescKeyErrRecallReindexFileWrite),
+		desc.TextDesc(text.TextDescKeyErrRecallReindexFileWrite),
 		filePath, cause,
 	)
 }
@@ -91,6 +91,6 @@ func ReindexFileWrite(filePath string, cause error) error {
 //   - error: "failed to open log file: <cause>"
 func OpenLogFile(cause error) error {
 	return fmt.Errorf(
-		assets.TextDesc(embed.TextDescKeyErrRecallOpenLogFile), cause,
+		desc.TextDesc(text.TextDescKeyErrRecallOpenLogFile), cause,
 	)
 }

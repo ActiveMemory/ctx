@@ -9,8 +9,8 @@ package obsidian
 import (
 	"fmt"
 
-	"github.com/ActiveMemory/ctx/internal/assets"
-	"github.com/ActiveMemory/ctx/internal/config/embed"
+	"github.com/ActiveMemory/ctx/internal/assets/read/desc"
+	"github.com/ActiveMemory/ctx/internal/config/embed/text"
 	"github.com/spf13/cobra"
 )
 
@@ -22,15 +22,15 @@ import (
 //   - output: Output directory path
 func InfoGenerated(cmd *cobra.Command, count int, output string) {
 	cmd.Println(
-		fmt.Sprintf(assets.TextDesc(embed.TextDescKeyWriteObsidianGenerated),
+		fmt.Sprintf(desc.TextDesc(text.TextDescKeyWriteObsidianGenerated),
 			count, output,
 		),
 	)
 	cmd.Println()
-	cmd.Println(assets.TextDesc(embed.TextDescKeyWriteObsidianNextStepsHeading))
+	cmd.Println(desc.TextDesc(text.TextDescKeyWriteObsidianNextStepsHeading))
 	cmd.Println(
 		fmt.Sprintf(
-			assets.TextDesc(embed.TextDescKeyWriteObsidianNextSteps),
+			desc.TextDesc(text.TextDescKeyWriteObsidianNextSteps),
 			output,
 		),
 	)

@@ -7,10 +7,9 @@
 package show
 
 import (
-	"github.com/ActiveMemory/ctx/internal/config/embed"
+	"github.com/ActiveMemory/ctx/internal/assets/read/desc"
+	"github.com/ActiveMemory/ctx/internal/config/embed/cmd"
 	"github.com/spf13/cobra"
-
-	"github.com/ActiveMemory/ctx/internal/assets"
 )
 
 // Cmd returns the prompt show subcommand.
@@ -18,7 +17,7 @@ import (
 // Returns:
 //   - *cobra.Command: Configured show subcommand
 func Cmd() *cobra.Command {
-	short, _ := assets.CommandDesc(embed.CmdDescKeyPromptShow)
+	short, _ := desc.CommandDesc(cmd.DescKeyPromptShow)
 
 	return &cobra.Command{
 		Use:   "show NAME",

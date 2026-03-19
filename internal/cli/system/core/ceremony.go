@@ -12,14 +12,13 @@ import (
 	"sort"
 	"strings"
 
+	"github.com/ActiveMemory/ctx/internal/assets/read/desc"
 	"github.com/ActiveMemory/ctx/internal/config/ceremony"
-	"github.com/ActiveMemory/ctx/internal/config/embed"
+	"github.com/ActiveMemory/ctx/internal/config/embed/text"
 	"github.com/ActiveMemory/ctx/internal/config/file"
 	"github.com/ActiveMemory/ctx/internal/config/hook"
 	"github.com/ActiveMemory/ctx/internal/io"
 	"github.com/spf13/cobra"
-
-	"github.com/ActiveMemory/ctx/internal/assets"
 )
 
 // RecentJournalFiles returns the n most recent markdown files in the given
@@ -105,27 +104,27 @@ func EmitCeremonyNudge(cmd *cobra.Command, remember, wrapup bool) (msg, variant 
 	switch {
 	case !remember && !wrapup:
 		variant = hook.VariantBoth
-		boxTitleKey = embed.TextDescKeyCeremonyBoxBoth
-		fallbackKey = embed.TextDescKeyCeremonyFallbackBoth
+		boxTitleKey = text.TextDescKeyCeremonyBoxBoth
+		fallbackKey = text.TextDescKeyCeremonyFallbackBoth
 	case !remember:
 		variant = hook.VariantRemember
-		boxTitleKey = embed.TextDescKeyCeremonyBoxRemember
-		fallbackKey = embed.TextDescKeyCeremonyFallbackRemember
+		boxTitleKey = text.TextDescKeyCeremonyBoxRemember
+		fallbackKey = text.TextDescKeyCeremonyFallbackRemember
 	case !wrapup:
 		variant = hook.VariantWrapup
-		boxTitleKey = embed.TextDescKeyCeremonyBoxWrapup
-		fallbackKey = embed.TextDescKeyCeremonyFallbackWrapup
+		boxTitleKey = text.TextDescKeyCeremonyBoxWrapup
+		fallbackKey = text.TextDescKeyCeremonyFallbackWrapup
 	}
 
-	boxTitle := assets.TextDesc(boxTitleKey)
-	fallback := assets.TextDesc(fallbackKey)
+	boxTitle := desc.TextDesc(boxTitleKey)
+	fallback := desc.TextDesc(fallbackKey)
 
 	content := LoadMessage(hook.CheckCeremonies, variant, nil, fallback)
 	if content == "" {
 		return "", variant
 	}
 
-	relayPrefix := assets.TextDesc(embed.TextDescKeyCeremonyRelayPrefix)
+	relayPrefix := desc.TextDesc(text.TextDescKeyCeremonyRelayPrefix)
 
 	msg = NudgeBox(relayPrefix, boxTitle, content)
 	cmd.Println(msg)

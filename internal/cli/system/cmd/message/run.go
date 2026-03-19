@@ -13,7 +13,9 @@ import (
 	"path/filepath"
 	"strings"
 
-	"github.com/ActiveMemory/ctx/internal/config/embed"
+	"github.com/ActiveMemory/ctx/internal/assets/read/desc"
+	"github.com/ActiveMemory/ctx/internal/assets/read/hook"
+	"github.com/ActiveMemory/ctx/internal/config/embed/text"
 	"github.com/ActiveMemory/ctx/internal/config/file"
 	"github.com/ActiveMemory/ctx/internal/config/msg"
 	"github.com/ActiveMemory/ctx/internal/err/fs"
@@ -21,7 +23,6 @@ import (
 	"github.com/ActiveMemory/ctx/internal/io"
 	"github.com/spf13/cobra"
 
-	"github.com/ActiveMemory/ctx/internal/assets"
 	"github.com/ActiveMemory/ctx/internal/assets/hooks/messages"
 	"github.com/ActiveMemory/ctx/internal/cli/system/core"
 )
@@ -66,10 +67,10 @@ func RunMessageList(cmd *cobra.Command) error {
 	headerFmt := fmt.Sprintf("%%-%ds %%-%ds %%-%ds %%s",
 		msg.MessageColHook, msg.MessageColVariant, msg.MessageColCategory)
 	cmd.Println(fmt.Sprintf(headerFmt,
-		assets.TextDesc(embed.TextDescKeyMessageListHeaderHook),
-		assets.TextDesc(embed.TextDescKeyMessageListHeaderVariant),
-		assets.TextDesc(embed.TextDescKeyMessageListHeaderCategory),
-		assets.TextDesc(embed.TextDescKeyMessageListHeaderOverride)))
+		desc.TextDesc(text.TextDescKeyMessageListHeaderHook),
+		desc.TextDesc(text.TextDescKeyMessageListHeaderVariant),
+		desc.TextDesc(text.TextDescKeyMessageListHeaderCategory),
+		desc.TextDesc(text.TextDescKeyMessageListHeaderOverride)))
 	cmd.Println(fmt.Sprintf(headerFmt,
 		strings.Repeat("\u2500", msg.MessageSepHook),
 		strings.Repeat("\u2500", msg.MessageSepVariant),
@@ -79,7 +80,7 @@ func RunMessageList(cmd *cobra.Command) error {
 	for _, e := range entries {
 		override := ""
 		if e.HasOverride {
-			override = assets.TextDesc(embed.TextDescKeyMessageOverrideLabel)
+			override = desc.TextDesc(text.TextDescKeyMessageOverrideLabel)
 		}
 		cmd.Println(fmt.Sprintf(headerFmt, e.Hook, e.Variant, e.Category, override))
 	}
@@ -99,16 +100,16 @@ func RunMessageList(cmd *cobra.Command) error {
 //
 // Returns:
 //   - error: Non-nil if the hook/variant is unknown or template is missing
-func RunMessageShow(cmd *cobra.Command, hook, variant string) error {
-	info := messages.Lookup(hook, variant)
+func RunMessageShow(cmd *cobra.Command, hk, variant string) error {
+	info := messages.Lookup(hk, variant)
 	if info == nil {
-		return core.ValidationError(hook, variant)
+		return core.ValidationError(hk, variant)
 	}
 
 	// Check user override first
-	oPath := core.OverridePath(hook, variant)
+	oPath := core.OverridePath(hk, variant)
 	if data, readErr := io.SafeReadUserFile(oPath); readErr == nil {
-		cmd.Println(fmt.Sprintf(assets.TextDesc(embed.TextDescKeyMessageSourceOverride), oPath))
+		cmd.Println(fmt.Sprintf(desc.TextDesc(text.TextDescKeyMessageSourceOverride), oPath))
 		core.PrintTemplateVars(cmd, info)
 		cmd.Println()
 		cmd.Print(string(data))
@@ -119,12 +120,12 @@ func RunMessageShow(cmd *cobra.Command, hook, variant string) error {
 	}
 
 	// Embedded default
-	data, readErr := assets.HookMessage(hook, variant+file.ExtTxt)
+	data, readErr := hook.Message(hk, variant+file.ExtTxt)
 	if readErr != nil {
-		return ctxerr.EmbeddedTemplateNotFound(hook, variant)
+		return ctxerr.EmbeddedTemplateNotFound(hk, variant)
 	}
 
-	cmd.Println(assets.TextDesc(embed.TextDescKeyMessageSourceDefault))
+	cmd.Println(desc.TextDesc(text.TextDescKeyMessageSourceDefault))
 	core.PrintTemplateVars(cmd, info)
 	cmd.Println()
 	cmd.Print(string(data))
@@ -147,29 +148,29 @@ func RunMessageShow(cmd *cobra.Command, hook, variant string) error {
 // Returns:
 //   - error: Non-nil if the hook/variant is unknown, override exists,
 //     or file operations fail
-func RunMessageEdit(cmd *cobra.Command, hook, variant string) error {
-	info := messages.Lookup(hook, variant)
+func RunMessageEdit(cmd *cobra.Command, hk, variant string) error {
+	info := messages.Lookup(hk, variant)
 	if info == nil {
-		return core.ValidationError(hook, variant)
+		return core.ValidationError(hk, variant)
 	}
 
-	oPath := core.OverridePath(hook, variant)
+	oPath := core.OverridePath(hk, variant)
 
 	// Refuse if override already exists
 	if _, statErr := os.Stat(oPath); statErr == nil {
-		return ctxerr.OverrideExists(oPath, hook, variant)
+		return ctxerr.OverrideExists(oPath, hk, variant)
 	}
 
 	// Warn for ctx-specific messages
 	if info.Category == messages.CategoryCtxSpecific {
-		cmd.Println(assets.TextDesc(embed.TextDescKeyMessageCtxSpecificWarning))
+		cmd.Println(desc.TextDesc(text.TextDescKeyMessageCtxSpecificWarning))
 		cmd.Println()
 	}
 
 	// Read embedded default
-	data, readErr := assets.HookMessage(hook, variant+file.ExtTxt)
+	data, readErr := hook.Message(hk, variant+file.ExtTxt)
 	if readErr != nil {
-		return ctxerr.EmbeddedTemplateNotFound(hook, variant)
+		return ctxerr.EmbeddedTemplateNotFound(hk, variant)
 	}
 
 	// Create directories
@@ -183,8 +184,8 @@ func RunMessageEdit(cmd *cobra.Command, hook, variant string) error {
 		return ctxerr.WriteOverride(oPath, writeErr)
 	}
 
-	cmd.Println(fmt.Sprintf(assets.TextDesc(embed.TextDescKeyMessageOverrideCreated), oPath))
-	cmd.Println(assets.TextDesc(embed.TextDescKeyMessageEditHint))
+	cmd.Println(fmt.Sprintf(desc.TextDesc(text.TextDescKeyMessageOverrideCreated), oPath))
+	cmd.Println(desc.TextDesc(text.TextDescKeyMessageEditHint))
 	core.PrintTemplateVars(cmd, info)
 
 	return nil
@@ -212,7 +213,7 @@ func RunMessageReset(cmd *cobra.Command, hook, variant string) error {
 
 	if removeErr := os.Remove(oPath); removeErr != nil {
 		if os.IsNotExist(removeErr) {
-			cmd.Println(fmt.Sprintf(assets.TextDesc(embed.TextDescKeyMessageNoOverride), hook, variant))
+			cmd.Println(fmt.Sprintf(desc.TextDesc(text.TextDescKeyMessageNoOverride), hook, variant))
 			return nil
 		}
 		return ctxerr.RemoveOverride(oPath, removeErr)
@@ -224,6 +225,6 @@ func RunMessageReset(cmd *cobra.Command, hook, variant string) error {
 	messagesDir := filepath.Dir(hookDir)
 	_ = os.Remove(messagesDir) // only succeeds if empty
 
-	cmd.Println(fmt.Sprintf(assets.TextDesc(embed.TextDescKeyMessageOverrideRemoved), hook, variant))
+	cmd.Println(fmt.Sprintf(desc.TextDesc(text.TextDescKeyMessageOverrideRemoved), hook, variant))
 	return nil
 }

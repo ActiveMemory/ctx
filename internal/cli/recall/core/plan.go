@@ -12,9 +12,10 @@ import (
 	"path/filepath"
 	"strings"
 
-	"github.com/ActiveMemory/ctx/internal/assets"
+	"github.com/ActiveMemory/ctx/internal/assets/tpl"
 	"github.com/ActiveMemory/ctx/internal/config/file"
 	"github.com/ActiveMemory/ctx/internal/config/journal"
+	"github.com/ActiveMemory/ctx/internal/config/session"
 	"github.com/ActiveMemory/ctx/internal/journal/state"
 	"github.com/ActiveMemory/ctx/internal/recall/parser"
 )
@@ -62,7 +63,7 @@ func PlanExport(
 			oldPath := filepath.Join(journalDir, oldFile)
 			if data, readErr := os.ReadFile(filepath.Clean(oldPath)); readErr == nil {
 				existingTitle = ExtractFrontmatterField(
-					string(data), assets.FrontmatterTitle,
+					string(data), session.FrontmatterTitle,
 				)
 			}
 		}
@@ -87,7 +88,7 @@ func PlanExport(
 		for part := 1; part <= numParts; part++ {
 			filename := baseFilename
 			if numParts > 1 && part > 1 {
-				filename = fmt.Sprintf(assets.TplRecallPartFilename, baseName, part)
+				filename = fmt.Sprintf(tpl.TplRecallPartFilename, baseName, part)
 			}
 			path := filepath.Join(journalDir, filename)
 
@@ -111,7 +112,7 @@ func PlanExport(
 			case FrontmatterHasLocked(path):
 				// Frontmatter says locked — promote to state so future
 				// operations skip the file without reparsing.
-				jstate.Mark(filename, assets.FrontmatterLocked)
+				jstate.Mark(filename, session.FrontmatterLocked)
 				action = ActionLocked
 				plan.LockedCount++
 			case singleSession || opts.Regenerate || opts.DiscardFrontmatter():

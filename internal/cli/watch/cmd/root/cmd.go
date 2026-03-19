@@ -7,10 +7,10 @@
 package root
 
 import (
-	"github.com/ActiveMemory/ctx/internal/config/embed"
+	"github.com/ActiveMemory/ctx/internal/assets/read/desc"
+	"github.com/ActiveMemory/ctx/internal/config/embed/cmd"
+	"github.com/ActiveMemory/ctx/internal/config/embed/flag"
 	"github.com/spf13/cobra"
-
-	"github.com/ActiveMemory/ctx/internal/assets"
 )
 
 // Cmd returns the watch command.
@@ -27,10 +27,10 @@ func Cmd() *cobra.Command {
 		dryRun  bool
 	)
 
-	short, long := assets.CommandDesc(embed.CmdDescKeyWatch)
+	short, long := desc.CommandDesc(cmd.DescKeyWatch)
 
 	cmd := &cobra.Command{
-		Use:   "watch",
+		Use:   cmd.DescKeyWatch,
 		Short: short,
 		Long:  long,
 		RunE: func(cmd *cobra.Command, _ []string) error {
@@ -39,10 +39,10 @@ func Cmd() *cobra.Command {
 	}
 
 	cmd.Flags().StringVar(
-		&logPath, "log", "", assets.FlagDesc(embed.FlagDescKeyWatchLog),
+		&logPath, "log", "", desc.FlagDesc(flag.FlagDescKeyWatchLog),
 	)
 	cmd.Flags().BoolVar(
-		&dryRun, "dry-run", false, assets.FlagDesc(embed.FlagDescKeyWatchDryRun),
+		&dryRun, "dry-run", false, desc.FlagDesc(flag.FlagDescKeyWatchDryRun),
 	)
 
 	return cmd

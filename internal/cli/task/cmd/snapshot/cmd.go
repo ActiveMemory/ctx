@@ -7,10 +7,9 @@
 package snapshot
 
 import (
-	"github.com/ActiveMemory/ctx/internal/config/embed"
+	"github.com/ActiveMemory/ctx/internal/assets/read/desc"
+	"github.com/ActiveMemory/ctx/internal/config/embed/cmd"
 	"github.com/spf13/cobra"
-
-	"github.com/ActiveMemory/ctx/internal/assets"
 )
 
 // Cmd returns the tasks snapshot subcommand.
@@ -25,7 +24,7 @@ import (
 // Returns:
 //   - *cobra.Command: Configured snapshot subcommand
 func Cmd() *cobra.Command {
-	short, long := assets.CommandDesc(embed.CmdDescKeyTaskSnapshot)
+	short, long := desc.CommandDesc(cmd.DescKeyTaskSnapshot)
 
 	cmd := &cobra.Command{
 		Use:   "snapshot [name]",

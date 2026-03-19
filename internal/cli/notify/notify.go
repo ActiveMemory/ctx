@@ -9,11 +9,12 @@ package notify
 import (
 	"strings"
 
-	"github.com/ActiveMemory/ctx/internal/config/embed"
+	"github.com/ActiveMemory/ctx/internal/assets/read/desc"
+	"github.com/ActiveMemory/ctx/internal/config/embed/cmd"
+	"github.com/ActiveMemory/ctx/internal/config/embed/flag"
 	errcli "github.com/ActiveMemory/ctx/internal/err/cli"
 	"github.com/spf13/cobra"
 
-	"github.com/ActiveMemory/ctx/internal/assets"
 	"github.com/ActiveMemory/ctx/internal/cli/notify/cmd/setup"
 	"github.com/ActiveMemory/ctx/internal/cli/notify/cmd/test"
 	notifylib "github.com/ActiveMemory/ctx/internal/notify"
@@ -29,9 +30,9 @@ func Cmd() *cobra.Command {
 	var hook string
 	var variant string
 
-	short, long := assets.CommandDesc(embed.CmdDescKeyNotify)
+	short, long := desc.CommandDesc(cmd.DescKeyNotify)
 	cmd := &cobra.Command{
-		Use:   "notify [message]",
+		Use:   cmd.DescKeyNotify + " [message]",
 		Short: short,
 		Long:  long,
 		Args:  cobra.MinimumNArgs(0),
@@ -53,16 +54,16 @@ func Cmd() *cobra.Command {
 
 	cmd.Flags().StringVarP(&event,
 		"event", "e", "",
-		assets.FlagDesc(embed.FlagDescKeyNotifyEvent),
+		desc.FlagDesc(flag.FlagDescKeyNotifyEvent),
 	)
 	cmd.Flags().StringVarP(&sessionID,
-		"session-id", "s", "", assets.FlagDesc(embed.FlagDescKeyNotifySessionId),
+		"session-id", "s", "", desc.FlagDesc(flag.FlagDescKeyNotifySessionId),
 	)
 	cmd.Flags().StringVar(&hook,
-		"hook", "", assets.FlagDesc(embed.FlagDescKeyNotifyHook),
+		"hook", "", desc.FlagDesc(flag.FlagDescKeyNotifyHook),
 	)
 	cmd.Flags().StringVar(&variant,
-		"variant", "", assets.FlagDesc(embed.FlagDescKeyNotifyVariant),
+		"variant", "", desc.FlagDesc(flag.FlagDescKeyNotifyVariant),
 	)
 
 	cmd.AddCommand(setup.Cmd())

@@ -9,10 +9,10 @@ package why
 import (
 	"fmt"
 
-	"github.com/ActiveMemory/ctx/internal/config/embed"
 	"github.com/spf13/cobra"
 
-	"github.com/ActiveMemory/ctx/internal/assets"
+	"github.com/ActiveMemory/ctx/internal/assets/read/desc"
+	"github.com/ActiveMemory/ctx/internal/config/embed/text"
 )
 
 // Banner prints the ctx ASCII art banner for the why menu.
@@ -23,7 +23,7 @@ func Banner(cmd *cobra.Command) {
 	if cmd == nil {
 		return
 	}
-	cmd.Println(assets.TextDesc(embed.TextDescKeyWhyBanner))
+	cmd.Println(desc.TextDesc(text.TextDescKeyWhyBanner))
 }
 
 // MenuItem prints a numbered menu item.
@@ -38,7 +38,7 @@ func MenuItem(cmd *cobra.Command, index int, label string) {
 	}
 	cmd.Println(
 		fmt.Sprintf(
-			assets.TextDesc(embed.TextDescKeyWhyMenuItemFormat), index, label,
+			desc.TextDesc(text.TextDescKeyWhyMenuItemFormat), index, label,
 		),
 	)
 }
@@ -51,5 +51,5 @@ func MenuPrompt(cmd *cobra.Command) {
 	if cmd == nil {
 		return
 	}
-	cmd.Print(assets.TextDesc(embed.TextDescKeyWhyMenuPrompt))
+	cmd.Print(desc.TextDesc(text.TextDescKeyWhyMenuPrompt))
 }

@@ -7,10 +7,10 @@
 package resources
 
 import (
-	"github.com/ActiveMemory/ctx/internal/config/embed"
+	"github.com/ActiveMemory/ctx/internal/assets/read/desc"
+	"github.com/ActiveMemory/ctx/internal/config/embed/cmd"
+	"github.com/ActiveMemory/ctx/internal/config/embed/flag"
 	"github.com/spf13/cobra"
-
-	"github.com/ActiveMemory/ctx/internal/assets"
 )
 
 // Cmd returns the "ctx system resources" subcommand.
@@ -18,7 +18,7 @@ import (
 // Returns:
 //   - *cobra.Command: Configured resources subcommand
 func Cmd() *cobra.Command {
-	short, long := assets.CommandDesc(embed.CmdDescKeySystemResources)
+	short, long := desc.CommandDesc(cmd.DescKeySystemResources)
 
 	cmd := &cobra.Command{
 		Use:   "resources",
@@ -29,7 +29,7 @@ func Cmd() *cobra.Command {
 		},
 	}
 	cmd.Flags().Bool("json", false,
-		assets.FlagDesc(embed.FlagDescKeySystemResourcesJson),
+		desc.FlagDesc(flag.FlagDescKeySystemResourcesJson),
 	)
 	return cmd
 }

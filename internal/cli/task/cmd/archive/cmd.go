@@ -7,10 +7,10 @@
 package archive
 
 import (
-	"github.com/ActiveMemory/ctx/internal/config/embed"
+	"github.com/ActiveMemory/ctx/internal/assets/read/desc"
+	"github.com/ActiveMemory/ctx/internal/config/embed/cmd"
+	"github.com/ActiveMemory/ctx/internal/config/embed/flag"
 	"github.com/spf13/cobra"
-
-	"github.com/ActiveMemory/ctx/internal/assets"
 )
 
 // Cmd returns the tasks archive subcommand.
@@ -27,7 +27,7 @@ import (
 func Cmd() *cobra.Command {
 	var dryRun bool
 
-	short, long := assets.CommandDesc(embed.CmdDescKeyTaskArchive)
+	short, long := desc.CommandDesc(cmd.DescKeyTaskArchive)
 
 	cmd := &cobra.Command{
 		Use:   "archive",
@@ -42,7 +42,7 @@ func Cmd() *cobra.Command {
 		&dryRun,
 		"dry-run",
 		false,
-		assets.FlagDesc(embed.FlagDescKeyTaskArchiveDryRun),
+		desc.FlagDesc(flag.FlagDescKeyTaskArchiveDryRun),
 	)
 
 	return cmd

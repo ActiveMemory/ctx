@@ -10,8 +10,8 @@ import (
 	"errors"
 	"fmt"
 
-	"github.com/ActiveMemory/ctx/internal/assets"
-	"github.com/ActiveMemory/ctx/internal/config/embed"
+	"github.com/ActiveMemory/ctx/internal/assets/read/desc"
+	"github.com/ActiveMemory/ctx/internal/config/embed/text"
 )
 
 // UnknownProfile returns an error for an unrecognized config profile name.
@@ -23,7 +23,7 @@ import (
 //   - error: "unknown profile <name>: must be dev, base, or prod"
 func UnknownProfile(name string) error {
 	return fmt.Errorf(
-		assets.TextDesc(embed.TextDescKeyErrConfigUnknownProfile), name,
+		desc.TextDesc(text.TextDescKeyErrConfigUnknownProfile), name,
 	)
 }
 
@@ -37,7 +37,7 @@ func UnknownProfile(name string) error {
 //   - error: "read <name>: <cause>"
 func ReadProfile(name string, cause error) error {
 	return fmt.Errorf(
-		assets.TextDesc(embed.TextDescKeyErrConfigReadProfile), name, cause,
+		desc.TextDesc(text.TextDescKeyErrConfigReadProfile), name, cause,
 	)
 }
 
@@ -51,7 +51,7 @@ func ReadProfile(name string, cause error) error {
 //   - error: "unknown format <format> (supported: <list>)"
 func UnknownFormat(format, supported string) error {
 	return fmt.Errorf(
-		assets.TextDesc(embed.TextDescKeyErrConfigUnknownFormat),
+		desc.TextDesc(text.TextDescKeyErrConfigUnknownFormat),
 		format, supported,
 	)
 }
@@ -66,7 +66,7 @@ func UnknownFormat(format, supported string) error {
 //   - error: "unknown project type <type> (supported: <list>)"
 func UnknownProjectType(projType, supported string) error {
 	return fmt.Errorf(
-		assets.TextDesc(embed.TextDescKeyErrConfigUnknownProjectType),
+		desc.TextDesc(text.TextDescKeyErrConfigUnknownProjectType),
 		projType, supported,
 	)
 }
@@ -80,7 +80,7 @@ func UnknownProjectType(projType, supported string) error {
 //   - error: "invalid tool <tool>: must be claude, aider, or generic"
 func InvalidTool(tool string) error {
 	return fmt.Errorf(
-		assets.TextDesc(embed.TextDescKeyErrConfigInvalidTool), tool,
+		desc.TextDesc(text.TextDescKeyErrConfigInvalidTool), tool,
 	)
 }
 
@@ -93,7 +93,7 @@ func InvalidTool(tool string) error {
 //   - error: "unsupported tool: <tool>"
 func UnsupportedTool(tool string) error {
 	return fmt.Errorf(
-		assets.TextDesc(embed.TextDescKeyErrConfigUnsupportedTool), tool,
+		desc.TextDesc(text.TextDescKeyErrConfigUnsupportedTool), tool,
 	)
 }
 
@@ -105,8 +105,8 @@ func UnsupportedTool(tool string) error {
 // Returns:
 //   - error: "unknown update type: <typeName>"
 func UnknownUpdateType(typeName string) error {
-	return fmt.Errorf(assets.TextDesc(
-		embed.TextDescKeyErrConfigUnknownUpdateType), typeName,
+	return fmt.Errorf(desc.TextDesc(
+		text.TextDescKeyErrConfigUnknownUpdateType), typeName,
 	)
 }
 
@@ -116,17 +116,17 @@ func UnknownUpdateType(typeName string) error {
 //   - error: "no .claude/settings.local.json found"
 func SettingsNotFound() error {
 	return errors.New(
-		assets.TextDesc(embed.TextDescKeyErrConfigSettingsNotFound),
+		desc.TextDesc(text.TextDescKeyErrConfigSettingsNotFound),
 	)
 }
 
 // GoldenNotFound returns an error when settings.golden.json is missing.
 //
 // Returns:
-//   - error: advises the user to run 'ctx permissions snapshot' first
+//   - error: advises the user to run 'ctx permission snapshot' first
 func GoldenNotFound() error {
 	return errors.New(
-		assets.TextDesc(embed.TextDescKeyErrConfigGoldenNotFound),
+		desc.TextDesc(text.TextDescKeyErrConfigGoldenNotFound),
 	)
 }
 
@@ -139,7 +139,7 @@ func GoldenNotFound() error {
 //   - error: "read embedded schema: <cause>"
 func ReadEmbeddedSchema(cause error) error {
 	return fmt.Errorf(
-		assets.TextDesc(embed.TextDescKeyErrConfigReadEmbeddedSchema), cause,
+		desc.TextDesc(text.TextDescKeyErrConfigReadEmbeddedSchema), cause,
 	)
 }
 
@@ -152,7 +152,7 @@ func ReadEmbeddedSchema(cause error) error {
 //   - error: "failed to marshal settings: <cause>"
 func MarshalSettings(cause error) error {
 	return fmt.Errorf(
-		assets.TextDesc(embed.TextDescKeyErrConfigMarshalSettings), cause,
+		desc.TextDesc(text.TextDescKeyErrConfigMarshalSettings), cause,
 	)
 }
 
@@ -165,6 +165,6 @@ func MarshalSettings(cause error) error {
 //   - error: "failed to marshal enabledPlugins: <cause>"
 func MarshalPlugins(cause error) error {
 	return fmt.Errorf(
-		assets.TextDesc(embed.TextDescKeyErrConfigMarshalPlugins), cause,
+		desc.TextDesc(text.TextDescKeyErrConfigMarshalPlugins), cause,
 	)
 }

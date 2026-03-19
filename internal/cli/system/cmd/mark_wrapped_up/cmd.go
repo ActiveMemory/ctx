@@ -7,10 +7,9 @@
 package mark_wrapped_up
 
 import (
-	"github.com/ActiveMemory/ctx/internal/config/embed"
+	"github.com/ActiveMemory/ctx/internal/assets/read/desc"
+	"github.com/ActiveMemory/ctx/internal/config/embed/cmd"
 	"github.com/spf13/cobra"
-
-	"github.com/ActiveMemory/ctx/internal/assets"
 )
 
 // Cmd returns the "ctx system mark-wrapped-up" subcommand.
@@ -18,7 +17,7 @@ import (
 // Returns:
 //   - *cobra.Command: Configured mark-wrapped-up subcommand
 func Cmd() *cobra.Command {
-	short, long := assets.CommandDesc(embed.CmdDescKeySystemMarkWrappedUp)
+	short, long := desc.CommandDesc(cmd.DescKeySystemMarkWrappedUp)
 
 	return &cobra.Command{
 		Use:    "mark-wrapped-up",

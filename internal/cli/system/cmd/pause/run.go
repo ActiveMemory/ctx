@@ -10,11 +10,11 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/ActiveMemory/ctx/internal/config/embed"
+	"github.com/ActiveMemory/ctx/internal/assets/read/desc"
+	"github.com/ActiveMemory/ctx/internal/config/embed/text"
 	"github.com/ActiveMemory/ctx/internal/config/session"
 	"github.com/spf13/cobra"
 
-	"github.com/ActiveMemory/ctx/internal/assets"
 	"github.com/ActiveMemory/ctx/internal/cli/system/core"
 )
 
@@ -43,7 +43,7 @@ func Run(cmd *cobra.Command, stdin *os.File) error {
 	path := core.PauseMarkerPath(sessionID)
 	core.WriteCounter(path, 0)
 	cmd.Println(
-		fmt.Sprintf(assets.TextDesc(embed.TextDescKeyPauseConfirmed), sessionID),
+		fmt.Sprintf(desc.TextDesc(text.TextDescKeyPauseConfirmed), sessionID),
 	)
 	return nil
 }

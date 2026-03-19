@@ -7,10 +7,10 @@
 package root
 
 import (
-	"github.com/ActiveMemory/ctx/internal/config/embed"
+	"github.com/ActiveMemory/ctx/internal/assets/read/desc"
+	"github.com/ActiveMemory/ctx/internal/config/embed/cmd"
+	"github.com/ActiveMemory/ctx/internal/config/embed/flag"
 	"github.com/spf13/cobra"
-
-	"github.com/ActiveMemory/ctx/internal/assets"
 )
 
 // Cmd returns the status command.
@@ -27,10 +27,10 @@ func Cmd() *cobra.Command {
 		verbose    bool
 	)
 
-	short, long := assets.CommandDesc(embed.CmdDescKeyStatus)
+	short, long := desc.CommandDesc(cmd.DescKeyStatus)
 
 	cmd := &cobra.Command{
-		Use:   "status",
+		Use:   cmd.DescKeyStatus,
 		Short: short,
 		Long:  long,
 		RunE: func(cmd *cobra.Command, _ []string) error {
@@ -40,11 +40,11 @@ func Cmd() *cobra.Command {
 
 	cmd.Flags().BoolVar(
 		&jsonOutput,
-		"json", false, assets.FlagDesc(embed.FlagDescKeyStatusJson),
+		"json", false, desc.FlagDesc(flag.FlagDescKeyStatusJson),
 	)
 	cmd.Flags().BoolVarP(
 		&verbose, "verbose", "v", false,
-		assets.FlagDesc(embed.FlagDescKeyStatusVerbose),
+		desc.FlagDesc(flag.FlagDescKeyStatusVerbose),
 	)
 
 	return cmd

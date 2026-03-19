@@ -12,13 +12,13 @@ import (
 	"strings"
 	"testing"
 
+	"github.com/ActiveMemory/ctx/internal/assets/read/desc"
 	"github.com/ActiveMemory/ctx/internal/config/dir"
+	"github.com/ActiveMemory/ctx/internal/config/embed/text"
 	"github.com/ActiveMemory/ctx/internal/config/file"
 	"github.com/ActiveMemory/ctx/internal/config/fs"
 	"github.com/ActiveMemory/ctx/internal/config/obsidian"
 	"github.com/spf13/cobra"
-
-	"github.com/ActiveMemory/ctx/internal/assets"
 )
 
 func TestRunJournalObsidianIntegration(t *testing.T) {
@@ -151,7 +151,7 @@ Just a plain session without enrichment.
 	}
 
 	// Verify entry has related footer
-	if !strings.Contains(entry1Str, assets.ObsidianRelatedHeading) {
+	if !strings.Contains(entry1Str, desc.TextDesc(text.TextDescKeyHeadingObsidianRelated)) {
 		t.Error("entry missing related sessions footer")
 	}
 

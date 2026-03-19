@@ -9,10 +9,9 @@ package watch
 import (
 	"fmt"
 
-	"github.com/ActiveMemory/ctx/internal/config/embed"
+	"github.com/ActiveMemory/ctx/internal/assets/read/desc"
+	"github.com/ActiveMemory/ctx/internal/config/embed/text"
 	"github.com/spf13/cobra"
-
-	"github.com/ActiveMemory/ctx/internal/assets"
 )
 
 // Watching prints the initial "watching" status line.
@@ -23,7 +22,7 @@ func Watching(cmd *cobra.Command) {
 	if cmd == nil {
 		return
 	}
-	cmd.Println(assets.TextDesc(embed.TextDescKeyWatchWatching))
+	cmd.Println(desc.TextDesc(text.TextDescKeyWatchWatching))
 }
 
 // DryRun prints the dry-run notice.
@@ -34,7 +33,7 @@ func DryRun(cmd *cobra.Command) {
 	if cmd == nil {
 		return
 	}
-	cmd.Println(assets.TextDesc(embed.TextDescKeyWatchDryRun))
+	cmd.Println(desc.TextDesc(text.TextDescKeyWatchDryRun))
 }
 
 // StopHint prints the Ctrl+C stop hint.
@@ -45,7 +44,7 @@ func StopHint(cmd *cobra.Command) {
 	if cmd == nil {
 		return
 	}
-	cmd.Println(assets.TextDesc(embed.TextDescKeyWatchStopHint))
+	cmd.Println(desc.TextDesc(text.TextDescKeyWatchStopHint))
 }
 
 // CloseLogError prints a log file close error.
@@ -58,7 +57,7 @@ func CloseLogError(cmd *cobra.Command, err error) {
 		return
 	}
 	cmd.Println(
-		fmt.Sprintf(assets.TextDesc(embed.TextDescKeyWatchCloseLogError), err),
+		fmt.Sprintf(desc.TextDesc(text.TextDescKeyWatchCloseLogError), err),
 	)
 }
 
@@ -74,7 +73,7 @@ func DryRunPreview(cmd *cobra.Command, updateType, content string) {
 	}
 	cmd.Println(
 		fmt.Sprintf(
-			assets.TextDesc(embed.TextDescKeyWatchDryRunPreview),
+			desc.TextDesc(text.TextDescKeyWatchDryRunPreview),
 			updateType, content,
 		),
 	)
@@ -92,7 +91,7 @@ func ApplyFailed(cmd *cobra.Command, updateType string, err error) {
 	}
 	cmd.Println(
 		fmt.Sprintf(
-			assets.TextDesc(embed.TextDescKeyWatchApplyFailed), updateType, err,
+			desc.TextDesc(text.TextDescKeyWatchApplyFailed), updateType, err,
 		),
 	)
 }
@@ -108,6 +107,6 @@ func ApplySuccess(cmd *cobra.Command, updateType, content string) {
 		return
 	}
 	cmd.Println(fmt.Sprintf(
-		assets.TextDesc(embed.TextDescKeyWatchApplySuccess), updateType, content),
+		desc.TextDesc(text.TextDescKeyWatchApplySuccess), updateType, content),
 	)
 }

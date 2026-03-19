@@ -14,7 +14,7 @@ package messages
 import (
 	"sync"
 
-	"github.com/ActiveMemory/ctx/internal/assets"
+	"github.com/ActiveMemory/ctx/internal/assets/read/hook"
 	fserr "github.com/ActiveMemory/ctx/internal/err/fs"
 	errparser "github.com/ActiveMemory/ctx/internal/err/parser"
 	"gopkg.in/yaml.v3"
@@ -57,7 +57,7 @@ var (
 //   - []HookMessageInfo: All entries sorted by hook then variant
 func Registry() []HookMessageInfo {
 	registryOnce.Do(func() {
-		raw, readErr := assets.HookMessageRegistry()
+		raw, readErr := hook.MessageRegistry()
 		if readErr != nil {
 			registryErr = fserr.FileRead("registry.yaml", readErr)
 			return

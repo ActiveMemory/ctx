@@ -10,15 +10,15 @@ import (
 	"os"
 	"path/filepath"
 
+	"github.com/ActiveMemory/ctx/internal/assets/read/desc"
 	"github.com/ActiveMemory/ctx/internal/config/archive"
-	"github.com/ActiveMemory/ctx/internal/config/embed"
+	"github.com/ActiveMemory/ctx/internal/config/embed/text"
 	"github.com/ActiveMemory/ctx/internal/config/env"
 	"github.com/ActiveMemory/ctx/internal/config/hook"
 	"github.com/ActiveMemory/ctx/internal/config/token"
 	"github.com/ActiveMemory/ctx/internal/config/tpl"
 	"github.com/spf13/cobra"
 
-	"github.com/ActiveMemory/ctx/internal/assets"
 	"github.com/ActiveMemory/ctx/internal/cli/system/core"
 	"github.com/ActiveMemory/ctx/internal/notify"
 )
@@ -82,13 +82,13 @@ func Run(cmd *cobra.Command, stdin *os.File) error {
 
 	// Emit VERBATIM relay
 	cmd.Println(core.NudgeBox(
-		assets.TextDesc(embed.TextDescKeyBackupRelayPrefix),
-		assets.TextDesc(embed.TextDescKeyBackupBoxTitle),
+		desc.TextDesc(text.TextDescKeyBackupRelayPrefix),
+		desc.TextDesc(text.TextDescKeyBackupBoxTitle),
 		content))
 
 	ref := notify.NewTemplateRef(hook.CheckBackupAge, hook.VariantWarning, vars)
 	core.NudgeAndRelay(hook.CheckBackupAge+": "+
-		assets.TextDesc(embed.TextDescKeyBackupRelayMessage),
+		desc.TextDesc(text.TextDescKeyBackupRelayMessage),
 		input.SessionID, ref,
 	)
 

@@ -7,10 +7,9 @@
 package resolve
 
 import (
-	"github.com/ActiveMemory/ctx/internal/config/embed"
+	"github.com/ActiveMemory/ctx/internal/assets/read/desc"
+	"github.com/ActiveMemory/ctx/internal/config/embed/cmd"
 	"github.com/spf13/cobra"
-
-	"github.com/ActiveMemory/ctx/internal/assets"
 )
 
 // Cmd returns the pad resolve subcommand.
@@ -18,7 +17,7 @@ import (
 // Returns:
 //   - *cobra.Command: Configured resolve subcommand
 func Cmd() *cobra.Command {
-	short, long := assets.CommandDesc(embed.CmdDescKeyPadResolve)
+	short, long := desc.CommandDesc(cmd.DescKeyPadResolve)
 	return &cobra.Command{
 		Use:   "resolve",
 		Short: short,

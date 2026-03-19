@@ -9,8 +9,8 @@ package export
 import (
 	"fmt"
 
-	"github.com/ActiveMemory/ctx/internal/assets"
-	"github.com/ActiveMemory/ctx/internal/config/embed"
+	"github.com/ActiveMemory/ctx/internal/assets/read/desc"
+	"github.com/ActiveMemory/ctx/internal/config/embed/text"
 	"github.com/spf13/cobra"
 )
 
@@ -27,5 +27,5 @@ func InfoExistsWritingAsAlternative(
 	if cmd == nil {
 		return
 	}
-	cmd.Println(fmt.Sprintf(assets.TextDesc(embed.TextDescKeyWriteExistsWritingAsAlternative), path, alternative))
+	cmd.Println(fmt.Sprintf(desc.TextDesc(text.TextDescKeyWriteExistsWritingAsAlternative), path, alternative))
 }

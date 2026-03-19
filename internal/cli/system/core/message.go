@@ -12,7 +12,7 @@ import (
 	"strings"
 	"text/template"
 
-	"github.com/ActiveMemory/ctx/internal/assets"
+	"github.com/ActiveMemory/ctx/internal/assets/read/hook"
 	"github.com/ActiveMemory/ctx/internal/config/box"
 	"github.com/ActiveMemory/ctx/internal/config/dir"
 	"github.com/ActiveMemory/ctx/internal/config/file"
@@ -42,17 +42,17 @@ import (
 //
 // Returns:
 //   - string: Rendered message or empty string for intentional silence
-func LoadMessage(hook, variant string, vars map[string]any, fallback string) string {
+func LoadMessage(hk, variant string, vars map[string]any, fallback string) string {
 	filename := variant + file.ExtTxt
 
 	// 1. User override in .context/
-	overrideDir := filepath.Join(rc.ContextDir(), dir.HooksMessages, hook)
+	overrideDir := filepath.Join(rc.ContextDir(), dir.HooksMessages, hk)
 	if data, readErr := io.SafeReadFile(overrideDir, filename); readErr == nil {
 		return renderTemplate(string(data), vars, fallback)
 	}
 
 	// 2. Embedded default
-	if data, readErr := assets.HookMessage(hook, filename); readErr == nil {
+	if data, readErr := hook.Message(hk, filename); readErr == nil {
 		return renderTemplate(string(data), vars, fallback)
 	}
 

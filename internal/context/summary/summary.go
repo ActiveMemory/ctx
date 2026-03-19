@@ -11,9 +11,9 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/ActiveMemory/ctx/internal/assets"
+	"github.com/ActiveMemory/ctx/internal/assets/read/desc"
 	"github.com/ActiveMemory/ctx/internal/config/ctx"
-	"github.com/ActiveMemory/ctx/internal/config/embed"
+	"github.com/ActiveMemory/ctx/internal/config/embed/text"
 	"github.com/ActiveMemory/ctx/internal/config/marker"
 	"github.com/ActiveMemory/ctx/internal/config/regex"
 	"github.com/ActiveMemory/ctx/internal/context/sanitize"
@@ -35,9 +35,9 @@ func summarizeConstitution(content []byte) string {
 			content, []byte(marker.PrefixTaskDone),
 		)
 	if count == 0 {
-		return assets.TextDesc(embed.TextDescKeySummaryLoaded)
+		return desc.TextDesc(text.TextDescKeySummaryLoaded)
 	}
-	return fmt.Sprintf(assets.TextDesc(embed.TextDescKeySummaryInvariants), count)
+	return fmt.Sprintf(desc.TextDesc(text.TextDescKeySummaryInvariants), count)
 }
 
 // summarizeTasks counts active and completed tasks in TASKS.md.
@@ -53,15 +53,15 @@ func summarizeTasks(content []byte) string {
 	completed := bytes.Count(content, []byte(marker.PrefixTaskDone))
 
 	if active == 0 && completed == 0 {
-		return assets.TextDesc(embed.TextDescKeySummaryEmpty)
+		return desc.TextDesc(text.TextDescKeySummaryEmpty)
 	}
 
 	var parts []string
 	if active > 0 {
-		parts = append(parts, fmt.Sprintf(assets.TextDesc(embed.TextDescKeySummaryActive), active))
+		parts = append(parts, fmt.Sprintf(desc.TextDesc(text.TextDescKeySummaryActive), active))
 	}
 	if completed > 0 {
-		parts = append(parts, fmt.Sprintf(assets.TextDesc(embed.TextDescKeySummaryCompleted), completed))
+		parts = append(parts, fmt.Sprintf(desc.TextDesc(text.TextDescKeySummaryCompleted), completed))
 	}
 	return strings.Join(parts, ", ")
 }
@@ -79,12 +79,12 @@ func summarizeDecisions(content []byte) string {
 	count := len(matches)
 
 	if count == 0 {
-		return assets.TextDesc(embed.TextDescKeySummaryEmpty)
+		return desc.TextDesc(text.TextDescKeySummaryEmpty)
 	}
 	if count == 1 {
-		return assets.TextDesc(embed.TextDescKeySummaryDecision)
+		return desc.TextDesc(text.TextDescKeySummaryDecision)
 	}
-	return fmt.Sprintf(assets.TextDesc(embed.TextDescKeySummaryDecisions), count)
+	return fmt.Sprintf(desc.TextDesc(text.TextDescKeySummaryDecisions), count)
 }
 
 // summarizeGlossary counts term definitions (**term**) in GLOSSARY.md.
@@ -99,12 +99,12 @@ func summarizeGlossary(content []byte) string {
 	count := len(matches)
 
 	if count == 0 {
-		return assets.TextDesc(embed.TextDescKeySummaryEmpty)
+		return desc.TextDesc(text.TextDescKeySummaryEmpty)
 	}
 	if count == 1 {
-		return assets.TextDesc(embed.TextDescKeySummaryTerm)
+		return desc.TextDesc(text.TextDescKeySummaryTerm)
 	}
-	return fmt.Sprintf(assets.TextDesc(embed.TextDescKeySummaryTerms), count)
+	return fmt.Sprintf(desc.TextDesc(text.TextDescKeySummaryTerms), count)
 }
 
 // GenerateSummary creates a brief summary for a context file based on its
@@ -128,8 +128,8 @@ func GenerateSummary(name string, content []byte) string {
 		return summarizeGlossary(content)
 	default:
 		if len(content) == 0 || sanitize.EffectivelyEmpty(content) {
-			return assets.TextDesc(embed.TextDescKeySummaryEmpty)
+			return desc.TextDesc(text.TextDescKeySummaryEmpty)
 		}
-		return assets.TextDesc(embed.TextDescKeySummaryLoaded)
+		return desc.TextDesc(text.TextDescKeySummaryLoaded)
 	}
 }

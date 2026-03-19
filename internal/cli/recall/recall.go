@@ -7,10 +7,10 @@
 package recall
 
 import (
-	"github.com/ActiveMemory/ctx/internal/config/embed"
+	"github.com/ActiveMemory/ctx/internal/assets/read/desc"
+	"github.com/ActiveMemory/ctx/internal/config/embed/cmd"
 	"github.com/spf13/cobra"
 
-	"github.com/ActiveMemory/ctx/internal/assets"
 	"github.com/ActiveMemory/ctx/internal/cli/recall/cmd/export"
 	"github.com/ActiveMemory/ctx/internal/cli/recall/cmd/list"
 	"github.com/ActiveMemory/ctx/internal/cli/recall/cmd/lock"
@@ -27,10 +27,10 @@ import (
 // Returns:
 //   - *cobra.Command: The recall command with list, show, and serve subcommands
 func Cmd() *cobra.Command {
-	short, long := assets.CommandDesc(embed.CmdDescKeyRecall)
+	short, long := desc.CommandDesc(cmd.DescKeyRecall)
 
 	cmd := &cobra.Command{
-		Use:   "recall",
+		Use:   cmd.DescKeyRecall,
 		Short: short,
 		Long:  long,
 	}

@@ -9,8 +9,8 @@ package sync
 import (
 	"fmt"
 
-	"github.com/ActiveMemory/ctx/internal/assets"
-	"github.com/ActiveMemory/ctx/internal/config/embed"
+	"github.com/ActiveMemory/ctx/internal/assets/read/desc"
+	"github.com/ActiveMemory/ctx/internal/config/embed/text"
 	"github.com/spf13/cobra"
 )
 
@@ -22,7 +22,7 @@ func CtxSyncInSync(cmd *cobra.Command) {
 	if cmd == nil {
 		return
 	}
-	cmd.Println(assets.TextDesc(embed.TextDescKeyWriteSyncInSync))
+	cmd.Println(desc.TextDesc(text.TextDescKeyWriteSyncInSync))
 }
 
 // CtxSyncHeader prints the sync analysis heading and optional dry-run notice.
@@ -34,11 +34,11 @@ func CtxSyncHeader(cmd *cobra.Command, dryRun bool) {
 	if cmd == nil {
 		return
 	}
-	cmd.Println(assets.TextDesc(embed.TextDescKeyWriteSyncHeader))
-	cmd.Println(assets.TextDesc(embed.TextDescKeyWriteSyncSeparator))
+	cmd.Println(desc.TextDesc(text.TextDescKeyWriteSyncHeader))
+	cmd.Println(desc.TextDesc(text.TextDescKeyWriteSyncSeparator))
 	cmd.Println()
 	if dryRun {
-		cmd.Println(assets.TextDesc(embed.TextDescKeyWriteSyncDryRun))
+		cmd.Println(desc.TextDesc(text.TextDescKeyWriteSyncDryRun))
 		cmd.Println()
 	}
 }
@@ -55,9 +55,9 @@ func CtxSyncAction(cmd *cobra.Command, index int, actionType, description, sugge
 	if cmd == nil {
 		return
 	}
-	cmd.Println(fmt.Sprintf(assets.TextDesc(embed.TextDescKeyWriteSyncAction), index, actionType, description))
+	cmd.Println(fmt.Sprintf(desc.TextDesc(text.TextDescKeyWriteSyncAction), index, actionType, description))
 	if suggestion != "" {
-		cmd.Println(fmt.Sprintf(assets.TextDesc(embed.TextDescKeyWriteSyncSuggestion), suggestion))
+		cmd.Println(fmt.Sprintf(desc.TextDesc(text.TextDescKeyWriteSyncSuggestion), suggestion))
 	}
 	cmd.Println()
 }
@@ -73,8 +73,8 @@ func CtxSyncSummary(cmd *cobra.Command, count int, dryRun bool) {
 		return
 	}
 	if dryRun {
-		cmd.Println(fmt.Sprintf(assets.TextDesc(embed.TextDescKeyWriteSyncDryRunSummary), count))
+		cmd.Println(fmt.Sprintf(desc.TextDesc(text.TextDescKeyWriteSyncDryRunSummary), count))
 	} else {
-		cmd.Println(fmt.Sprintf(assets.TextDesc(embed.TextDescKeyWriteSyncSummary), count))
+		cmd.Println(fmt.Sprintf(desc.TextDesc(text.TextDescKeyWriteSyncSummary), count))
 	}
 }

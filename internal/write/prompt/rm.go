@@ -9,19 +9,22 @@ package prompt
 import (
 	"fmt"
 
-	"github.com/ActiveMemory/ctx/internal/assets"
-	"github.com/ActiveMemory/ctx/internal/config/embed"
 	"github.com/spf13/cobra"
+
+	"github.com/ActiveMemory/ctx/internal/assets/read/desc"
+	"github.com/ActiveMemory/ctx/internal/config/embed/text"
 )
 
-// PromptRemoved prints the confirmation after removing a prompt template.
+// Removed prints the confirmation after removing a prompt template.
 //
 // Parameters:
 //   - cmd: Cobra command for output. Nil is a no-op.
 //   - name: prompt template name.
-func PromptRemoved(cmd *cobra.Command, name string) {
+func Removed(cmd *cobra.Command, name string) {
 	if cmd == nil {
 		return
 	}
-	cmd.Println(fmt.Sprintf(assets.TextDesc(embed.TextDescKeyWritePromptRemoved), name))
+	cmd.Println(
+		fmt.Sprintf(desc.TextDesc(text.TextDescKeyWritePromptRemoved), name),
+	)
 }

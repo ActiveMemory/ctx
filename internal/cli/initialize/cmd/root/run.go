@@ -12,6 +12,8 @@ import (
 	"path/filepath"
 	"strings"
 
+	"github.com/ActiveMemory/ctx/internal/assets/read/catalog"
+	"github.com/ActiveMemory/ctx/internal/assets/read/template"
 	"github.com/ActiveMemory/ctx/internal/config/cli"
 	"github.com/ActiveMemory/ctx/internal/config/ctx"
 	"github.com/ActiveMemory/ctx/internal/config/file"
@@ -24,7 +26,6 @@ import (
 	"github.com/ActiveMemory/ctx/internal/write/initialize"
 	"github.com/spf13/cobra"
 
-	"github.com/ActiveMemory/ctx/internal/assets"
 	"github.com/ActiveMemory/ctx/internal/cli/initialize/core"
 	"github.com/ActiveMemory/ctx/internal/crypto"
 	"github.com/ActiveMemory/ctx/internal/rc"
@@ -87,7 +88,7 @@ func Run(cmd *cobra.Command, force, minimal, merge, ralph, noPluginEnable bool) 
 		templatesToCreate = ctx.FilesRequired
 	} else {
 		var listErr error
-		templatesToCreate, listErr = assets.List()
+		templatesToCreate, listErr = catalog.List()
 		if listErr != nil {
 			return ctxerr.ListTemplates(listErr)
 		}
@@ -103,7 +104,7 @@ func Run(cmd *cobra.Command, force, minimal, merge, ralph, noPluginEnable bool) 
 			continue
 		}
 
-		content, err := assets.Template(name)
+		content, err := template.Template(name)
 		if err != nil {
 			return ctxerr.ReadTemplate(name, err)
 		}

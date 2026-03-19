@@ -31,6 +31,6 @@ func Run(cmd *cobra.Command, _ []string) error {
 		filePath,
 		ctx.Decision,
 		index.UpdateDecisions,
-		"decisions",
+		"decision",
 	)
 }

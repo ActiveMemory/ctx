@@ -7,10 +7,9 @@
 package initialize
 
 import (
-	"github.com/ActiveMemory/ctx/internal/config/embed"
+	"github.com/ActiveMemory/ctx/internal/assets/read/desc"
+	"github.com/ActiveMemory/ctx/internal/config/embed/text"
 	"github.com/spf13/cobra"
-
-	"github.com/ActiveMemory/ctx/internal/assets"
 )
 
 // ErrCtxNotInPath prints a multi-line diagnostic to stderr explaining
@@ -23,5 +22,5 @@ func ErrCtxNotInPath(cmd *cobra.Command) {
 		return
 	}
 
-	cmd.PrintErrln(assets.TextDesc(embed.TextDescKeyErrInitCtxNotInPath))
+	cmd.PrintErrln(desc.TextDesc(text.TextDescKeyErrInitCtxNotInPath))
 }

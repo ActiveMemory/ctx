@@ -7,10 +7,10 @@
 package root
 
 import (
-	"github.com/ActiveMemory/ctx/internal/config/embed"
+	"github.com/ActiveMemory/ctx/internal/assets/read/desc"
+	"github.com/ActiveMemory/ctx/internal/config/embed/cmd"
+	"github.com/ActiveMemory/ctx/internal/config/embed/flag"
 	"github.com/spf13/cobra"
-
-	"github.com/ActiveMemory/ctx/internal/assets"
 )
 
 // Cmd returns the "ctx sync" command for reconciling context with codebase.
@@ -27,10 +27,10 @@ import (
 func Cmd() *cobra.Command {
 	var dryRun bool
 
-	short, long := assets.CommandDesc(embed.CmdDescKeySync)
+	short, long := desc.CommandDesc(cmd.DescKeySync)
 
 	cmd := &cobra.Command{
-		Use:   "sync",
+		Use:   cmd.DescKeySync,
 		Short: short,
 		Long:  long,
 		RunE: func(cmd *cobra.Command, _ []string) error {
@@ -40,7 +40,7 @@ func Cmd() *cobra.Command {
 
 	cmd.Flags().BoolVar(
 		&dryRun,
-		"dry-run", false, assets.FlagDesc(embed.FlagDescKeySyncDryRun),
+		"dry-run", false, desc.FlagDesc(flag.FlagDescKeySyncDryRun),
 	)
 
 	return cmd

@@ -7,10 +7,10 @@
 package unlock
 
 import (
-	"github.com/ActiveMemory/ctx/internal/config/embed"
+	"github.com/ActiveMemory/ctx/internal/assets/read/desc"
+	"github.com/ActiveMemory/ctx/internal/config/embed/cmd"
+	"github.com/ActiveMemory/ctx/internal/config/embed/flag"
 	"github.com/spf13/cobra"
-
-	"github.com/ActiveMemory/ctx/internal/assets"
 )
 
 // Cmd returns the "ctx recall unlock" subcommand.
@@ -23,7 +23,7 @@ import (
 func Cmd() *cobra.Command {
 	var all bool
 
-	short, long := assets.CommandDesc(embed.CmdDescKeyRecallUnlock)
+	short, long := desc.CommandDesc(cmd.DescKeyRecallUnlock)
 
 	cmd := &cobra.Command{
 		Use:   "unlock <pattern>",
@@ -35,7 +35,7 @@ func Cmd() *cobra.Command {
 	}
 
 	cmd.Flags().BoolVar(&all, "all", false,
-		assets.FlagDesc(embed.FlagDescKeyRecallUnlockAll),
+		desc.FlagDesc(flag.FlagDescKeyRecallUnlockAll),
 	)
 
 	return cmd

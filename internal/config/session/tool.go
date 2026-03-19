@@ -13,3 +13,16 @@ const (
 	// ToolMarkdown is the tool identifier for Markdown session files.
 	ToolMarkdown = "markdown"
 )
+
+// Claude Code tool names used in session transcripts.
+const (
+	ToolRead      = "Read"
+	ToolWrite     = "Write"
+	ToolEdit      = "Edit"
+	ToolBash      = "Bash"
+	ToolGrep      = "Grep"
+	ToolGlob      = "Glob"
+	ToolWebFetch  = "WebFetch"
+	ToolWebSearch = "WebSearch"
+	ToolTask      = "Task"
+)

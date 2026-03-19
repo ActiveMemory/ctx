@@ -9,8 +9,8 @@ package prompt
 import (
 	"fmt"
 
-	"github.com/ActiveMemory/ctx/internal/assets"
-	"github.com/ActiveMemory/ctx/internal/config/embed"
+	"github.com/ActiveMemory/ctx/internal/assets/read/desc"
+	"github.com/ActiveMemory/ctx/internal/config/embed/text"
 )
 
 // Exists returns an error when a prompt template already exists.
@@ -21,7 +21,7 @@ import (
 // Returns:
 //   - error: "prompt <name> already exists"
 func Exists(name string) error {
-	return fmt.Errorf(assets.TextDesc(embed.TextDescKeyErrPromptExists), name)
+	return fmt.Errorf(desc.TextDesc(text.TextDescKeyErrPromptExists), name)
 }
 
 // NotFound returns an error when a prompt template does not exist.
@@ -32,7 +32,7 @@ func Exists(name string) error {
 // Returns:
 //   - error: "prompt <name> not found"
 func NotFound(name string) error {
-	return fmt.Errorf(assets.TextDesc(embed.TextDescKeyErrPromptNotFound), name)
+	return fmt.Errorf(desc.TextDesc(text.TextDescKeyErrPromptNotFound), name)
 }
 
 // Remove wraps a failure to remove a prompt template.
@@ -44,7 +44,7 @@ func NotFound(name string) error {
 //   - error: "remove prompt: <cause>"
 func Remove(cause error) error {
 	return fmt.Errorf(
-		assets.TextDesc(embed.TextDescKeyErrPromptRemovePrompt), cause,
+		desc.TextDesc(text.TextDescKeyErrPromptRemovePrompt), cause,
 	)
 }
 
@@ -58,7 +58,7 @@ func Remove(cause error) error {
 //   - error: "no template available for <filename>: <cause>"
 func NoTemplate(filename string, cause error) error {
 	return fmt.Errorf(
-		assets.TextDesc(embed.TextDescKeyErrPromptNoTemplate), filename, cause,
+		desc.TextDesc(text.TextDescKeyErrPromptNoTemplate), filename, cause,
 	)
 }
 
@@ -71,7 +71,7 @@ func NoTemplate(filename string, cause error) error {
 //   - error: advises the user to use --stdin
 func NoPromptTemplate(name string) error {
 	return fmt.Errorf(
-		assets.TextDesc(embed.TextDescKeyErrPromptNoPromptTemplate), name,
+		desc.TextDesc(text.TextDescKeyErrPromptNoPromptTemplate), name,
 	)
 }
 
@@ -84,7 +84,7 @@ func NoPromptTemplate(name string) error {
 //   - error: "failed to list prompt templates: <cause>"
 func ListPromptTemplates(cause error) error {
 	return fmt.Errorf(
-		assets.TextDesc(embed.TextDescKeyErrPromptListPromptTemplates), cause,
+		desc.TextDesc(text.TextDescKeyErrPromptListPromptTemplates), cause,
 	)
 }
 
@@ -98,7 +98,7 @@ func ListPromptTemplates(cause error) error {
 //   - error: "failed to read prompt template <name>: <cause>"
 func ReadPromptTemplate(name string, cause error) error {
 	return fmt.Errorf(
-		assets.TextDesc(embed.TextDescKeyErrPromptReadPromptTemplate), name, cause,
+		desc.TextDesc(text.TextDescKeyErrPromptReadPromptTemplate), name, cause,
 	)
 }
 
@@ -111,7 +111,7 @@ func ReadPromptTemplate(name string, cause error) error {
 //   - error: "failed to list entry templates: <cause>"
 func ListEntryTemplates(cause error) error {
 	return fmt.Errorf(
-		assets.TextDesc(embed.TextDescKeyErrPromptListEntryTemplates), cause,
+		desc.TextDesc(text.TextDescKeyErrPromptListEntryTemplates), cause,
 	)
 }
 
@@ -125,7 +125,7 @@ func ListEntryTemplates(cause error) error {
 //   - error: "failed to read entry template <name>: <cause>"
 func ReadEntryTemplate(name string, cause error) error {
 	return fmt.Errorf(
-		assets.TextDesc(embed.TextDescKeyErrPromptReadEntryTemplate), name, cause,
+		desc.TextDesc(text.TextDescKeyErrPromptReadEntryTemplate), name, cause,
 	)
 }
 
@@ -138,7 +138,7 @@ func ReadEntryTemplate(name string, cause error) error {
 //   - error: "failed to list templates: <cause>"
 func ListTemplates(cause error) error {
 	return fmt.Errorf(
-		assets.TextDesc(embed.TextDescKeyErrPromptListTemplates), cause,
+		desc.TextDesc(text.TextDescKeyErrPromptListTemplates), cause,
 	)
 }
 
@@ -152,7 +152,7 @@ func ListTemplates(cause error) error {
 //   - error: "failed to read template <name>: <cause>"
 func ReadTemplate(name string, cause error) error {
 	return fmt.Errorf(
-		assets.TextDesc(embed.TextDescKeyErrPromptReadTemplate), name, cause,
+		desc.TextDesc(text.TextDescKeyErrPromptReadTemplate), name, cause,
 	)
 }
 
@@ -165,7 +165,7 @@ func ReadTemplate(name string, cause error) error {
 //   - error: "template missing <kind> markers"
 func TemplateMissingMarkers(kind string) error {
 	return fmt.Errorf(
-		assets.TextDesc(embed.TextDescKeyErrPromptTemplateMissingMarkers), kind,
+		desc.TextDesc(text.TextDescKeyErrPromptTemplateMissingMarkers), kind,
 	)
 }
 
@@ -178,6 +178,6 @@ func TemplateMissingMarkers(kind string) error {
 //   - error: "<kind> start marker not found"
 func MarkerNotFound(kind string) error {
 	return fmt.Errorf(
-		assets.TextDesc(embed.TextDescKeyErrPromptMarkerNotFound), kind,
+		desc.TextDesc(text.TextDescKeyErrPromptMarkerNotFound), kind,
 	)
 }

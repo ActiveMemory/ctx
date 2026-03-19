@@ -11,9 +11,9 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/ActiveMemory/ctx/internal/assets"
+	"github.com/ActiveMemory/ctx/internal/assets/read/desc"
 	ctxCfg "github.com/ActiveMemory/ctx/internal/config/ctx"
-	"github.com/ActiveMemory/ctx/internal/config/embed"
+	"github.com/ActiveMemory/ctx/internal/config/embed/text"
 	"github.com/ActiveMemory/ctx/internal/config/mcp/mime"
 	"github.com/ActiveMemory/ctx/internal/config/token"
 	token2 "github.com/ActiveMemory/ctx/internal/context/token"
@@ -40,7 +40,7 @@ func readContextFile(
 	if f == nil {
 		return out.ErrResponse(id, proto.ErrCodeInvalidArg,
 			fmt.Sprintf(
-				assets.TextDesc(embed.TextDescKeyMCPFileNotFound),
+				desc.TextDesc(text.TextDescKeyMCPFileNotFound),
 				fileName,
 			))
 	}
@@ -72,7 +72,7 @@ func readAgentPacket(
 	id json.RawMessage, ctx *entity.Context, budget int,
 ) *proto.Response {
 	var sb strings.Builder
-	header := assets.TextDesc(embed.TextDescKeyMCPPacketHeader)
+	header := desc.TextDesc(text.TextDescKeyMCPPacketHeader)
 	sb.WriteString(header)
 
 	tokensUsed := token2.EstimateTokensString(header)
@@ -85,7 +85,7 @@ func readAgentPacket(
 		}
 
 		section := fmt.Sprintf(
-			assets.TextDesc(embed.TextDescKeyMCPSectionFormat),
+			desc.TextDesc(text.TextDescKeyMCPSectionFormat),
 			fileName, string(f.Content),
 		)
 		sectionTokens := token2.EstimateTokensString(section)
@@ -101,12 +101,12 @@ func readAgentPacket(
 
 	if len(skipped) > 0 {
 		sb.WriteString(
-			assets.TextDesc(embed.TextDescKeyMCPAlsoNoted),
+			desc.TextDesc(text.TextDescKeyMCPAlsoNoted),
 		)
 		for _, name := range skipped {
 			_, _ = fmt.Fprintf(
 				&sb,
-				assets.TextDesc(embed.TextDescKeyMCPOmittedFormat),
+				desc.TextDesc(text.TextDescKeyMCPOmittedFormat),
 				name,
 			)
 		}

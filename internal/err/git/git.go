@@ -10,8 +10,8 @@ import (
 	"errors"
 	"fmt"
 
-	"github.com/ActiveMemory/ctx/internal/assets"
-	"github.com/ActiveMemory/ctx/internal/config/embed"
+	"github.com/ActiveMemory/ctx/internal/assets/read/desc"
+	"github.com/ActiveMemory/ctx/internal/config/embed/text"
 )
 
 // NotFound returns an error when git is not installed.
@@ -20,7 +20,7 @@ import (
 // Returns:
 //   - error: message from the assets key parser.git-not-found
 func NotFound() error {
-	return errors.New(assets.TextDesc(embed.TextDescKeyParserGitNotFound))
+	return errors.New(desc.TextDesc(text.TextDescKeyParserGitNotFound))
 }
 
 // NotInRepo wraps a failure from git rev-parse.
@@ -32,6 +32,6 @@ func NotFound() error {
 //   - error: "not in a git repository: <cause>"
 func NotInRepo(cause error) error {
 	return fmt.Errorf(
-		assets.TextDesc(embed.TextDescKeyErrGitNotInGitRepo), cause,
+		desc.TextDesc(text.TextDescKeyErrGitNotInGitRepo), cause,
 	)
 }

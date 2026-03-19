@@ -13,6 +13,7 @@ import (
 	"strings"
 	"time"
 
+	claude2 "github.com/ActiveMemory/ctx/internal/assets/read/claude"
 	"github.com/ActiveMemory/ctx/internal/config/claude"
 	"github.com/ActiveMemory/ctx/internal/config/cli"
 	"github.com/ActiveMemory/ctx/internal/config/fs"
@@ -23,8 +24,6 @@ import (
 	ctxerr "github.com/ActiveMemory/ctx/internal/err/initialize"
 	"github.com/ActiveMemory/ctx/internal/write/initialize"
 	"github.com/spf13/cobra"
-
-	"github.com/ActiveMemory/ctx/internal/assets"
 )
 
 // HandleClaudeMd creates or merges CLAUDE.md with ctx content.
@@ -37,7 +36,7 @@ import (
 // Returns:
 //   - error: Non-nil if file operations fail
 func HandleClaudeMd(cmd *cobra.Command, force, autoMerge bool) error {
-	templateContent, err := assets.ClaudeMd()
+	templateContent, err := claude2.Md()
 	if err != nil {
 		return ctxerr.ReadTemplate("CLAUDE.md", err)
 	}

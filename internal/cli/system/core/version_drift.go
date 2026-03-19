@@ -13,11 +13,12 @@ import (
 	"path/filepath"
 	"strings"
 
-	"github.com/ActiveMemory/ctx/internal/config/embed"
+	"github.com/ActiveMemory/ctx/internal/assets/read/claude"
+	"github.com/ActiveMemory/ctx/internal/assets/read/desc"
+	"github.com/ActiveMemory/ctx/internal/config/embed/text"
 	"github.com/ActiveMemory/ctx/internal/config/hook"
 	"github.com/spf13/cobra"
 
-	"github.com/ActiveMemory/ctx/internal/assets"
 	"github.com/ActiveMemory/ctx/internal/notify"
 )
 
@@ -33,7 +34,7 @@ func CheckVersionDrift(cmd *cobra.Command, sessionID string) {
 		return
 	}
 
-	pluginVer, pluginErr := assets.PluginVersion()
+	pluginVer, pluginErr := claude.PluginVersion()
 	if pluginErr != nil || pluginVer == "" {
 		return
 	}
@@ -61,8 +62,8 @@ func CheckVersionDrift(cmd *cobra.Command, sessionID string) {
 	PrintHookContext(cmd, hook.EventPostToolUse, msg)
 
 	ref := notify.NewTemplateRef(hook.VersionDrift, hook.VariantNudge, vars)
-	Relay(fmt.Sprintf(assets.TextDesc(embed.TextDescKeyRelayPrefixFormat),
-		hook.VersionDrift, assets.TextDesc(embed.TextDescKeyVersionDriftRelayMessage)), sessionID, ref)
+	Relay(fmt.Sprintf(desc.TextDesc(text.TextDescKeyRelayPrefixFormat),
+		hook.VersionDrift, desc.TextDesc(text.TextDescKeyVersionDriftRelayMessage)), sessionID, ref)
 }
 
 // ReadVersionFile reads and trims the VERSION file from the project root.

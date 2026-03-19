@@ -7,14 +7,14 @@
 package prompt
 
 import (
-	"github.com/ActiveMemory/ctx/internal/config/embed"
 	"github.com/spf13/cobra"
 
-	"github.com/ActiveMemory/ctx/internal/assets"
+	"github.com/ActiveMemory/ctx/internal/assets/read/desc"
 	"github.com/ActiveMemory/ctx/internal/cli/prompt/cmd/add"
 	"github.com/ActiveMemory/ctx/internal/cli/prompt/cmd/list"
 	"github.com/ActiveMemory/ctx/internal/cli/prompt/cmd/rm"
 	"github.com/ActiveMemory/ctx/internal/cli/prompt/cmd/show"
+	ctxCmd "github.com/ActiveMemory/ctx/internal/config/embed/cmd"
 )
 
 // Cmd returns the prompt command with subcommands.
@@ -24,10 +24,10 @@ import (
 // Returns:
 //   - *cobra.Command: Configured prompt command with subcommands
 func Cmd() *cobra.Command {
-	short, long := assets.CommandDesc(embed.CmdDescKeyPrompt)
+	short, long := desc.CommandDesc(ctxCmd.DescKeyPrompt)
 
 	cmd := &cobra.Command{
-		Use:   "prompt",
+		Use:   ctxCmd.DescKeyPrompt,
 		Short: short,
 		Long:  long,
 		RunE: func(cmd *cobra.Command, _ []string) error {

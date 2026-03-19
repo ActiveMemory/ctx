@@ -9,8 +9,8 @@ package deps
 import (
 	"fmt"
 
-	"github.com/ActiveMemory/ctx/internal/assets"
-	"github.com/ActiveMemory/ctx/internal/config/embed"
+	"github.com/ActiveMemory/ctx/internal/assets/read/desc"
+	"github.com/ActiveMemory/ctx/internal/config/embed/text"
 	"github.com/spf13/cobra"
 )
 
@@ -20,9 +20,9 @@ import (
 //   - cmd: Cobra command for output
 //   - builderNames: Comma-separated list of supported project types
 func InfoNoProject(cmd *cobra.Command, builderNames string) {
-	cmd.Println(assets.TextDesc(embed.TextDescKeyWriteDepsNoProject))
-	cmd.Println(assets.TextDesc(embed.TextDescKeyWriteDepsLookingFor))
-	cmd.Println(fmt.Sprintf(assets.TextDesc(embed.TextDescKeyWriteDepsUseType), builderNames))
+	cmd.Println(desc.TextDesc(text.TextDescKeyWriteDepsNoProject))
+	cmd.Println(desc.TextDesc(text.TextDescKeyWriteDepsLookingFor))
+	cmd.Println(fmt.Sprintf(desc.TextDesc(text.TextDescKeyWriteDepsUseType), builderNames))
 }
 
 // InfoNoDeps reports that no dependencies were found.
@@ -30,5 +30,5 @@ func InfoNoProject(cmd *cobra.Command, builderNames string) {
 // Parameters:
 //   - cmd: Cobra command for output
 func InfoNoDeps(cmd *cobra.Command) {
-	cmd.Println(assets.TextDesc(embed.TextDescKeyWriteDepsNoDeps))
+	cmd.Println(desc.TextDesc(text.TextDescKeyWriteDepsNoDeps))
 }

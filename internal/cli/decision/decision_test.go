@@ -23,8 +23,8 @@ func TestCmd(t *testing.T) {
 		t.Fatal("Cmd() returned nil")
 	}
 
-	if cmd.Use != "decisions" {
-		t.Errorf("Cmd().Use = %q, want %q", cmd.Use, "decisions")
+	if cmd.Use != "decision" {
+		t.Errorf("Cmd().Use = %q, want %q", cmd.Use, "decision")
 	}
 
 	if cmd.Short == "" {

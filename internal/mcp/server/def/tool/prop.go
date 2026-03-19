@@ -7,9 +7,9 @@
 package tool
 
 import (
-	"github.com/ActiveMemory/ctx/internal/assets"
+	"github.com/ActiveMemory/ctx/internal/assets/read/desc"
 	"github.com/ActiveMemory/ctx/internal/config/cli"
-	"github.com/ActiveMemory/ctx/internal/config/embed"
+	"github.com/ActiveMemory/ctx/internal/config/embed/text"
 	"github.com/ActiveMemory/ctx/internal/config/mcp/schema"
 	"github.com/ActiveMemory/ctx/internal/mcp/proto"
 )
@@ -44,27 +44,27 @@ func EntryAttrProps(contextKey string) map[string]proto.Property {
 	return map[string]proto.Property{
 		cli.AttrContext: {
 			Type:        schema.String,
-			Description: assets.TextDesc(contextKey),
+			Description: desc.TextDesc(contextKey),
 		},
 		cli.AttrRationale: {
 			Type: schema.String,
-			Description: assets.TextDesc(
-				embed.TextDescKeyMCPToolPropRationale),
+			Description: desc.TextDesc(
+				text.TextDescKeyMCPToolPropRationale),
 		},
 		cli.AttrConsequence: {
 			Type: schema.String,
-			Description: assets.TextDesc(
-				embed.TextDescKeyMCPToolPropConseq),
+			Description: desc.TextDesc(
+				text.TextDescKeyMCPToolPropConseq),
 		},
 		cli.AttrLesson: {
 			Type: schema.String,
-			Description: assets.TextDesc(
-				embed.TextDescKeyMCPToolPropLesson),
+			Description: desc.TextDesc(
+				text.TextDescKeyMCPToolPropLesson),
 		},
 		cli.AttrApplication: {
 			Type: schema.String,
-			Description: assets.TextDesc(
-				embed.TextDescKeyMCPToolPropApplication),
+			Description: desc.TextDesc(
+				text.TextDescKeyMCPToolPropApplication),
 		},
 	}
 }

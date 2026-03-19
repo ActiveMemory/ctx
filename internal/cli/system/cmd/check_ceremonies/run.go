@@ -10,13 +10,13 @@ import (
 	"os"
 	"path/filepath"
 
+	"github.com/ActiveMemory/ctx/internal/assets/read/desc"
 	"github.com/ActiveMemory/ctx/internal/config/ceremony"
-	"github.com/ActiveMemory/ctx/internal/config/embed"
+	"github.com/ActiveMemory/ctx/internal/config/embed/text"
 	"github.com/ActiveMemory/ctx/internal/config/hook"
 	ctxcontext "github.com/ActiveMemory/ctx/internal/context/resolve"
 	"github.com/spf13/cobra"
 
-	"github.com/ActiveMemory/ctx/internal/assets"
 	"github.com/ActiveMemory/ctx/internal/cli/system/core"
 	"github.com/ActiveMemory/ctx/internal/notify"
 )
@@ -69,7 +69,7 @@ func Run(cmd *cobra.Command, stdin *os.File) error {
 	}
 	ref := notify.NewTemplateRef(hook.CheckCeremonies, variant, nil)
 	core.NudgeAndRelay(hook.CheckCeremonies+": "+
-		assets.TextDesc(embed.TextDescKeyCeremonyRelayMessage),
+		desc.TextDesc(text.TextDescKeyCeremonyRelayMessage),
 		input.SessionID, ref,
 	)
 	core.TouchFile(remindedFile)

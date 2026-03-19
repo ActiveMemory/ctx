@@ -138,9 +138,9 @@ For each approved group:
 4. **Rebuild the index**:
 
 ```bash
-ctx learnings reindex
+ctx learning reindex
 # or
-ctx decisions reindex
+ctx decision reindex
 ```
 
 ### Step 6: Report Results
@@ -181,7 +181,7 @@ Originals replaced by consolidated entries in LEARNINGS.md.
 - **Delete entries**: always archives originals as a paper trail
 - **Semantic understanding via embeddings**: uses keyword matching,
   which is sufficient for structured entries with consistent formatting
-- **Consolidate TASKS.md or CONVENTIONS.md**: use `ctx tasks archive`
+- **Consolidate TASKS.md or CONVENTIONS.md**: use `ctx task archive`
   for tasks; conventions rarely need consolidation
 
 ## Quality Checklist

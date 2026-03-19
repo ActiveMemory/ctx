@@ -7,9 +7,9 @@
 package catalog
 
 import (
-	"github.com/ActiveMemory/ctx/internal/assets"
+	"github.com/ActiveMemory/ctx/internal/assets/read/desc"
 	ctxCfg "github.com/ActiveMemory/ctx/internal/config/ctx"
-	"github.com/ActiveMemory/ctx/internal/config/embed"
+	"github.com/ActiveMemory/ctx/internal/config/embed/text"
 	"github.com/ActiveMemory/ctx/internal/config/mcp/resource"
 )
 
@@ -23,14 +23,14 @@ type mapping struct {
 
 // table defines all individual context file resources.
 var table = []mapping{
-	{ctxCfg.Constitution, resource.Constitution, assets.TextDesc(embed.TextDescKeyMCPResConstitution)},
-	{ctxCfg.Task, resource.Tasks, assets.TextDesc(embed.TextDescKeyMCPResTasks)},
-	{ctxCfg.Convention, resource.Conventions, assets.TextDesc(embed.TextDescKeyMCPResConventions)},
-	{ctxCfg.Architecture, resource.Architecture, assets.TextDesc(embed.TextDescKeyMCPResArchitecture)},
-	{ctxCfg.Decision, resource.Decisions, assets.TextDesc(embed.TextDescKeyMCPResDecisions)},
-	{ctxCfg.Learning, resource.Learnings, assets.TextDesc(embed.TextDescKeyMCPResLearnings)},
-	{ctxCfg.Glossary, resource.Glossary, assets.TextDesc(embed.TextDescKeyMCPResGlossary)},
-	{ctxCfg.AgentPlaybook, resource.Playbook, assets.TextDesc(embed.TextDescKeyMCPResPlaybook)},
+	{ctxCfg.Constitution, resource.Constitution, desc.TextDesc(text.TextDescKeyMCPResConstitution)},
+	{ctxCfg.Task, resource.Tasks, desc.TextDesc(text.TextDescKeyMCPResTasks)},
+	{ctxCfg.Convention, resource.Conventions, desc.TextDesc(text.TextDescKeyMCPResConventions)},
+	{ctxCfg.Architecture, resource.Architecture, desc.TextDesc(text.TextDescKeyMCPResArchitecture)},
+	{ctxCfg.Decision, resource.Decisions, desc.TextDesc(text.TextDescKeyMCPResDecisions)},
+	{ctxCfg.Learning, resource.Learnings, desc.TextDesc(text.TextDescKeyMCPResLearnings)},
+	{ctxCfg.Glossary, resource.Glossary, desc.TextDesc(text.TextDescKeyMCPResGlossary)},
+	{ctxCfg.AgentPlaybook, resource.Playbook, desc.TextDesc(text.TextDescKeyMCPResPlaybook)},
 }
 
 // uriLookup maps full resource URIs to context file names. Populated

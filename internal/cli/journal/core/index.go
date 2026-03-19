@@ -10,7 +10,9 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/ActiveMemory/ctx/internal/assets"
+	"github.com/ActiveMemory/ctx/internal/assets/read/desc"
+	"github.com/ActiveMemory/ctx/internal/assets/tpl"
+	"github.com/ActiveMemory/ctx/internal/config/embed/text"
 	"github.com/ActiveMemory/ctx/internal/config/token"
 )
 
@@ -57,18 +59,18 @@ func GenerateTopicsIndex(topics []TopicData) string {
 		}
 	}
 
-	sb.WriteString(assets.JournalHeadingTopics + nl + nl)
+	sb.WriteString(desc.TextDesc(text.TextDescKeyHeadingTopics) + nl + nl)
 	sb.WriteString(fmt.Sprintf(
-		assets.TplJournalTopicStats+nl+nl,
+		tpl.TplJournalTopicStats+nl+nl,
 		len(topics), CountUniqueSessions(topics), len(popular), len(longtail)))
 
 	WritePopularAndLongtail(&sb,
-		len(popular), assets.JournalHeadingPopularTopics,
+		len(popular), desc.TextDesc(text.TextDescKeyHeadingPopularTopics),
 		func(i int) (string, string, int) {
 			return popular[i].Name, popular[i].Name, len(popular[i].Entries)
 		},
-		len(longtail), assets.JournalHeadingLongtailTopics,
-		assets.TplJournalLongtailEntry,
+		len(longtail), desc.TextDesc(text.TextDescKeyHeadingLongtailTopics),
+		tpl.TplJournalLongtailEntry,
 		func(i int) (string, JournalEntry) {
 			return longtail[i].Name, longtail[i].Entries[0]
 		},
@@ -87,8 +89,8 @@ func GenerateTopicsIndex(topics []TopicData) string {
 //   - string: Markdown content for the topic page
 func GenerateTopicPage(topic TopicData) string {
 	return GenerateGroupedPage(
-		fmt.Sprintf(assets.TplJournalPageHeading, topic.Name),
-		fmt.Sprintf(assets.TplJournalTopicPageStats, len(topic.Entries)),
+		fmt.Sprintf(tpl.TplJournalPageHeading, topic.Name),
+		fmt.Sprintf(tpl.TplJournalTopicPageStats, len(topic.Entries)),
 		topic.Entries,
 	)
 }
@@ -148,21 +150,21 @@ func GenerateKeyFilesIndex(keyFiles []KeyFileData) string {
 		}
 	}
 
-	sb.WriteString(assets.JournalHeadingKeyFiles + nl + nl)
+	sb.WriteString(desc.TextDesc(text.TextDescKeyHeadingKeyFiles) + nl + nl)
 	sb.WriteString(fmt.Sprintf(
-		assets.TplJournalFileStats+nl+nl,
+		tpl.TplJournalFileStats+nl+nl,
 		len(keyFiles), totalSessions, len(popular), len(longtail)),
 	)
 
 	WritePopularAndLongtail(&sb,
-		len(popular), assets.JournalHeadingFrequentlyTouched,
+		len(popular), desc.TextDesc(text.TextDescKeyHeadingFrequentlyTouched),
 		func(i int) (string, string, int) {
 			return "`" + popular[i].Path + "`",
 				KeyFileSlug(popular[i].Path),
 				len(popular[i].Entries)
 		},
-		len(longtail), assets.JournalHeadingSingleSession,
-		assets.TplJournalLongtailCodeEntry,
+		len(longtail), desc.TextDesc(text.TextDescKeyHeadingSingleSession),
+		tpl.TplJournalLongtailCodeEntry,
 		func(i int) (string, JournalEntry) {
 			return longtail[i].Path, longtail[i].Entries[0]
 		},
@@ -181,8 +183,8 @@ func GenerateKeyFilesIndex(keyFiles []KeyFileData) string {
 //   - string: Markdown content for the key file page
 func GenerateKeyFilePage(kf KeyFileData) string {
 	return GenerateGroupedPage(
-		fmt.Sprintf(assets.TplJournalCodePageHeading, kf.Path),
-		fmt.Sprintf(assets.TplJournalFilePageStats, len(kf.Entries)),
+		fmt.Sprintf(tpl.TplJournalCodePageHeading, kf.Path),
+		fmt.Sprintf(tpl.TplJournalFilePageStats, len(kf.Entries)),
 		kf.Entries,
 	)
 }
@@ -224,9 +226,9 @@ func GenerateTypesIndex(sessionTypes []TypeData) string {
 		totalSessions += len(st.Entries)
 	}
 
-	sb.WriteString(assets.JournalHeadingSessionTypes + nl + nl)
+	sb.WriteString(desc.TextDesc(text.TextDescKeyHeadingSessionTypes) + nl + nl)
 	sb.WriteString(fmt.Sprintf(
-		assets.TplJournalTypeStats+nl+nl, len(sessionTypes), totalSessions),
+		tpl.TplJournalTypeStats+nl+nl, len(sessionTypes), totalSessions),
 	)
 
 	for _, st := range sessionTypes {
@@ -247,8 +249,8 @@ func GenerateTypesIndex(sessionTypes []TypeData) string {
 //   - string: Markdown content for the session type page
 func GenerateTypePage(st TypeData) string {
 	return GenerateGroupedPage(
-		fmt.Sprintf(assets.TplJournalPageHeading, st.Name),
-		fmt.Sprintf(assets.TplJournalTypePageStats, len(st.Entries), st.Name),
+		fmt.Sprintf(tpl.TplJournalPageHeading, st.Name),
+		fmt.Sprintf(tpl.TplJournalTypePageStats, len(st.Entries), st.Name),
 		st.Entries,
 	)
 }

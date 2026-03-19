@@ -13,9 +13,9 @@ import (
 	"strings"
 	"time"
 
-	"github.com/ActiveMemory/ctx/internal/assets"
+	"github.com/ActiveMemory/ctx/internal/assets/read/desc"
 	"github.com/ActiveMemory/ctx/internal/config/dir"
-	"github.com/ActiveMemory/ctx/internal/config/embed"
+	"github.com/ActiveMemory/ctx/internal/config/embed/text"
 	"github.com/ActiveMemory/ctx/internal/config/fs"
 	"github.com/ActiveMemory/ctx/internal/config/marker"
 	"github.com/ActiveMemory/ctx/internal/config/stats"
@@ -62,22 +62,22 @@ func WriteOversizeFlag(
 	_ = os.MkdirAll(sd, fs.PermRestrictedDir)
 
 	var flag strings.Builder
-	flag.WriteString(assets.TextDesc(embed.TextDescKeyContextLoadGateOversizeHeader))
+	flag.WriteString(desc.TextDesc(text.TextDescKeyContextLoadGateOversizeHeader))
 	flag.WriteString(strings.Repeat("=", stats.ContextSizeOversizeSepLen) + token.NewlineLF)
 	flag.WriteString(fmt.Sprintf(
-		assets.TextDesc(embed.TextDescKeyContextLoadGateOversizeTimestamp),
+		desc.TextDesc(text.TextDescKeyContextLoadGateOversizeTimestamp),
 		time.Now().UTC().Format(time.RFC3339)))
 	flag.WriteString(fmt.Sprintf(
-		assets.TextDesc(embed.TextDescKeyContextLoadGateOversizeInjected),
+		desc.TextDesc(text.TextDescKeyContextLoadGateOversizeInjected),
 		totalTokens, threshold))
-	flag.WriteString(assets.TextDesc(embed.TextDescKeyContextLoadGateOversizeBreakdown))
+	flag.WriteString(desc.TextDesc(text.TextDescKeyContextLoadGateOversizeBreakdown))
 	for _, entry := range perFile {
 		flag.WriteString(fmt.Sprintf(
-			assets.TextDesc(embed.TextDescKeyContextLoadGateOversizeFileEntry),
+			desc.TextDesc(text.TextDescKeyContextLoadGateOversizeFileEntry),
 			entry.Name, entry.Tokens))
 	}
 	flag.WriteString(token.NewlineLF)
-	flag.WriteString(assets.TextDesc(embed.TextDescKeyContextLoadGateOversizeAction))
+	flag.WriteString(desc.TextDesc(text.TextDescKeyContextLoadGateOversizeAction))
 
 	_ = os.WriteFile(
 		filepath.Join(sd, stats.ContextSizeInjectionOversizeFlag),

@@ -37,6 +37,6 @@ func Run(cmd *cobra.Command, name string) error {
 		return ctxerr.Remove(removeErr)
 	}
 
-	prompt.PromptRemoved(cmd, name)
+	prompt.Removed(cmd, name)
 	return nil
 }

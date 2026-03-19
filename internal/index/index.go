@@ -13,8 +13,8 @@ import (
 	"os"
 	"strings"
 
-	"github.com/ActiveMemory/ctx/internal/assets"
-	"github.com/ActiveMemory/ctx/internal/config/embed"
+	"github.com/ActiveMemory/ctx/internal/assets/read/desc"
+	"github.com/ActiveMemory/ctx/internal/config/embed/text"
 	"github.com/ActiveMemory/ctx/internal/config/fs"
 	"github.com/ActiveMemory/ctx/internal/config/marker"
 	"github.com/ActiveMemory/ctx/internal/config/regex"
@@ -177,7 +177,7 @@ func Update(content, fileHeader, columnHeader string) string {
 // Returns:
 //   - string: Updated content with regenerated index
 func UpdateDecisions(content string) string {
-	return Update(content, assets.HeadingDecisions, assets.ColumnDecision)
+	return Update(content, desc.TextDesc(text.TextDescKeyHeadingDecisions), desc.TextDesc(text.TextDescKeyColumnDecision))
 }
 
 // UpdateLearnings regenerates the learning index in LEARNINGS.md content.
@@ -188,7 +188,7 @@ func UpdateDecisions(content string) string {
 // Returns:
 //   - string: Updated content with regenerated index
 func UpdateLearnings(content string) string {
-	return Update(content, assets.HeadingLearnings, assets.ColumnLearning)
+	return Update(content, desc.TextDesc(text.TextDescKeyHeadingLearnings), desc.TextDesc(text.TextDescKeyColumnLearning))
 }
 
 // ReindexFile reads a context file, regenerates its index, and writes it back.
@@ -206,7 +206,7 @@ func UpdateLearnings(content string) string {
 //   - filePath: Full path to the context file
 //   - fileName: Display name for error messages (e.g., "DECISIONS.md")
 //   - updateFunc: Function to regenerate the index (e.g., UpdateDecisions)
-//   - entryType: Plural noun for the status message (e.g., "decisions")
+//   - entryType: Entity noun for the status message (e.g., "decision")
 //
 // Returns:
 //   - error: Non-nil if file operations fail
@@ -233,14 +233,14 @@ func ReindexFile(
 	entries := ParseHeaders(string(content))
 	if len(entries) == 0 {
 		_, err := fmt.Fprintf(
-			w, assets.TextDesc(embed.TextDescKeyDriftCleared)+token.NewlineLF, entryType)
+			w, desc.TextDesc(text.TextDescKeyDriftCleared)+token.NewlineLF, entryType)
 		if err != nil {
 			return err
 		}
 	} else {
 		_, err := fmt.Fprintf(
 			w,
-			assets.TextDesc(embed.TextDescKeyDriftRegenerated)+token.NewlineLF, len(entries),
+			desc.TextDesc(text.TextDescKeyDriftRegenerated)+token.NewlineLF, len(entries),
 		)
 		if err != nil {
 			return err

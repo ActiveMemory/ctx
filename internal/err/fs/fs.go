@@ -10,8 +10,9 @@ import (
 	"errors"
 	"fmt"
 
-	"github.com/ActiveMemory/ctx/internal/assets"
-	"github.com/ActiveMemory/ctx/internal/config/embed"
+	"github.com/ActiveMemory/ctx/internal/assets/read/desc"
+	"github.com/ActiveMemory/ctx/internal/assets/read/lookup"
+	"github.com/ActiveMemory/ctx/internal/config/embed/text"
 )
 
 // Mkdir wraps a directory creation failure.
@@ -23,7 +24,7 @@ import (
 // Returns:
 //   - error: "failed to create <desc>: <cause>"
 func Mkdir(desc string, cause error) error {
-	return fmt.Errorf(assets.TextDesc(embed.TextDescKeyErrFsMkdir), desc, cause)
+	return fmt.Errorf(lookup.TextDesc(text.TextDescKeyErrFsMkdir), desc, cause)
 }
 
 // ReadDir wraps a directory read failure.
@@ -36,7 +37,7 @@ func Mkdir(desc string, cause error) error {
 //   - error: "read <desc>: <cause>"
 func ReadDir(desc string, cause error) error {
 	return fmt.Errorf(
-		assets.TextDesc(embed.TextDescKeyErrFsReadDir), desc, cause,
+		lookup.TextDesc(text.TextDescKeyErrFsReadDir), desc, cause,
 	)
 }
 
@@ -49,7 +50,7 @@ func ReadDir(desc string, cause error) error {
 //   - error: "directory not found: <dir>"
 func DirNotFound(dir string) error {
 	return fmt.Errorf(
-		assets.TextDesc(embed.TextDescKeyErrFsDirNotFound), dir,
+		desc.TextDesc(text.TextDescKeyErrFsDirNotFound), dir,
 	)
 }
 
@@ -63,7 +64,7 @@ func DirNotFound(dir string) error {
 //   - error: "failed to write <path>: <cause>"
 func FileWrite(path string, cause error) error {
 	return fmt.Errorf(
-		assets.TextDesc(embed.TextDescKeyErrFsFileWrite), path, cause,
+		desc.TextDesc(text.TextDescKeyErrFsFileWrite), path, cause,
 	)
 }
 
@@ -77,7 +78,7 @@ func FileWrite(path string, cause error) error {
 //   - error: "failed to read <path>: <cause>"
 func FileRead(path string, cause error) error {
 	return fmt.Errorf(
-		assets.TextDesc(embed.TextDescKeyErrFsFileRead), path, cause,
+		desc.TextDesc(text.TextDescKeyErrFsFileRead), path, cause,
 	)
 }
 
@@ -91,7 +92,7 @@ func FileRead(path string, cause error) error {
 //   - error: "failed to amend <path>: <cause>"
 func FileAmend(path string, cause error) error {
 	return fmt.Errorf(
-		assets.TextDesc(embed.TextDescKeyErrFsFileAmend), path, cause,
+		desc.TextDesc(text.TextDescKeyErrFsFileAmend), path, cause,
 	)
 }
 
@@ -105,7 +106,7 @@ func FileAmend(path string, cause error) error {
 //   - error: "failed to update <path>: <cause>"
 func FileUpdate(path string, cause error) error {
 	return fmt.Errorf(
-		assets.TextDesc(embed.TextDescKeyErrFsFileUpdate), path, cause,
+		desc.TextDesc(text.TextDescKeyErrFsFileUpdate), path, cause,
 	)
 }
 
@@ -118,7 +119,7 @@ func FileUpdate(path string, cause error) error {
 //   - error: "write file: <cause>"
 func WriteFileFailed(cause error) error {
 	return fmt.Errorf(
-		assets.TextDesc(embed.TextDescKeyErrFsWriteFileFailed), cause,
+		desc.TextDesc(text.TextDescKeyErrFsWriteFileFailed), cause,
 	)
 }
 
@@ -132,7 +133,7 @@ func WriteFileFailed(cause error) error {
 //   - error: "failed to write merged <path>: <cause>"
 func WriteMerged(path string, cause error) error {
 	return fmt.Errorf(
-		assets.TextDesc(embed.TextDescKeyErrFsWriteMerged), path, cause,
+		desc.TextDesc(text.TextDescKeyErrFsWriteMerged), path, cause,
 	)
 }
 
@@ -146,7 +147,7 @@ func WriteMerged(path string, cause error) error {
 //   - error: "open <path>: <cause>"
 func OpenFile(path string, cause error) error {
 	return fmt.Errorf(
-		assets.TextDesc(embed.TextDescKeyErrFsOpenFile), path, cause,
+		desc.TextDesc(text.TextDescKeyErrFsOpenFile), path, cause,
 	)
 }
 
@@ -160,7 +161,7 @@ func OpenFile(path string, cause error) error {
 //   - error: "stat <path>: <cause>"
 func StatPath(path string, cause error) error {
 	return fmt.Errorf(
-		assets.TextDesc(embed.TextDescKeyErrFsStatPath), path, cause,
+		desc.TextDesc(text.TextDescKeyErrFsStatPath), path, cause,
 	)
 }
 
@@ -173,7 +174,7 @@ func StatPath(path string, cause error) error {
 //   - error: "<path> is not a directory"
 func NotDirectory(path string) error {
 	return fmt.Errorf(
-		assets.TextDesc(embed.TextDescKeyErrFsNotDirectory), path,
+		desc.TextDesc(text.TextDescKeyErrFsNotDirectory), path,
 	)
 }
 
@@ -187,7 +188,7 @@ func NotDirectory(path string) error {
 //   - error: "read directory <path>: <cause>"
 func ReadDirectory(path string, cause error) error {
 	return fmt.Errorf(
-		assets.TextDesc(embed.TextDescKeyErrFsReadDirectory), path, cause,
+		desc.TextDesc(text.TextDescKeyErrFsReadDirectory), path, cause,
 	)
 }
 
@@ -201,7 +202,7 @@ func ReadDirectory(path string, cause error) error {
 //   - error: "failed to create directory <dir>: <cause>"
 func CreateDir(dir string, cause error) error {
 	return fmt.Errorf(
-		assets.TextDesc(embed.TextDescKeyErrFsCreateDir), dir, cause,
+		desc.TextDesc(text.TextDescKeyErrFsCreateDir), dir, cause,
 	)
 }
 
@@ -215,7 +216,7 @@ func CreateDir(dir string, cause error) error {
 //   - error: "<cause>\nUse --allow-outside-cwd to override this check"
 func BoundaryViolation(cause error) error {
 	return fmt.Errorf(
-		assets.TextDesc(embed.TextDescKeyErrFsBoundaryViolation), cause,
+		desc.TextDesc(text.TextDescKeyErrFsBoundaryViolation), cause,
 	)
 }
 
@@ -228,7 +229,7 @@ func BoundaryViolation(cause error) error {
 //   - error: "read file: <cause>"
 func ReadFile(cause error) error {
 	return fmt.Errorf(
-		assets.TextDesc(embed.TextDescKeyErrFsReadFile), cause,
+		desc.TextDesc(text.TextDescKeyErrFsReadFile), cause,
 	)
 }
 
@@ -241,7 +242,7 @@ func ReadFile(cause error) error {
 //   - error: "failed to read input: <cause>"
 func ReadInput(cause error) error {
 	return fmt.Errorf(
-		assets.TextDesc(embed.TextDescKeyErrFsReadInput), cause,
+		desc.TextDesc(text.TextDescKeyErrFsReadInput), cause,
 	)
 }
 
@@ -254,7 +255,7 @@ func ReadInput(cause error) error {
 //   - error: "error reading input: <cause>"
 func ReadInputStream(cause error) error {
 	return fmt.Errorf(
-		assets.TextDesc(embed.TextDescKeyErrFsReadInputStream), cause,
+		desc.TextDesc(text.TextDescKeyErrFsReadInputStream), cause,
 	)
 }
 
@@ -264,7 +265,7 @@ func ReadInputStream(cause error) error {
 //   - error: "no input received"
 func NoInput() error {
 	return errors.New(
-		assets.TextDesc(embed.TextDescKeyErrFsNoInput),
+		desc.TextDesc(text.TextDescKeyErrFsNoInput),
 	)
 }
 
@@ -277,7 +278,7 @@ func NoInput() error {
 //   - error: "resolve base: <cause>"
 func ResolveBase(cause error) error {
 	return fmt.Errorf(
-		assets.TextDesc(embed.TextDescKeyErrFsResolveBase), cause,
+		desc.TextDesc(text.TextDescKeyErrFsResolveBase), cause,
 	)
 }
 
@@ -290,7 +291,7 @@ func ResolveBase(cause error) error {
 //   - error: "path escapes base directory: <filename>"
 func PathEscapesBase(filename string) error {
 	return fmt.Errorf(
-		assets.TextDesc(embed.TextDescKeyErrFsPathEscapesBase), filename,
+		desc.TextDesc(text.TextDescKeyErrFsPathEscapesBase), filename,
 	)
 }
 
@@ -303,7 +304,7 @@ func PathEscapesBase(filename string) error {
 //   - error: "resolve path: <cause>"
 func ResolvePath(cause error) error {
 	return fmt.Errorf(
-		assets.TextDesc(embed.TextDescKeyErrFsResolvePath), cause,
+		desc.TextDesc(text.TextDescKeyErrFsResolvePath), cause,
 	)
 }
 
@@ -313,7 +314,7 @@ func ResolvePath(cause error) error {
 //   - error: "refusing to access system path: /"
 func RefuseSystemPathRoot() error {
 	return errors.New(
-		assets.TextDesc(embed.TextDescKeyErrFsRefuseSystemPathRoot),
+		desc.TextDesc(text.TextDescKeyErrFsRefuseSystemPathRoot),
 	)
 }
 
@@ -326,7 +327,7 @@ func RefuseSystemPathRoot() error {
 //   - error: "refusing to access system path: <path>"
 func RefuseSystemPath(path string) error {
 	return fmt.Errorf(
-		assets.TextDesc(embed.TextDescKeyErrFsRefuseSystemPath), path,
+		desc.TextDesc(text.TextDescKeyErrFsRefuseSystemPath), path,
 	)
 }
 
@@ -339,6 +340,6 @@ func RefuseSystemPath(path string) error {
 //   - error: "failed to get working directory: <cause>"
 func WorkingDirectory(cause error) error {
 	return fmt.Errorf(
-		assets.TextDesc(embed.TextDescKeyErrValidationWorkingDirectory), cause,
+		desc.TextDesc(text.TextDescKeyErrValidationWorkingDirectory), cause,
 	)
 }

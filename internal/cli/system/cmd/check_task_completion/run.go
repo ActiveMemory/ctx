@@ -10,11 +10,11 @@ import (
 	"os"
 	"path/filepath"
 
-	"github.com/ActiveMemory/ctx/internal/config/embed"
+	"github.com/ActiveMemory/ctx/internal/assets/read/desc"
+	"github.com/ActiveMemory/ctx/internal/config/embed/text"
 	"github.com/ActiveMemory/ctx/internal/config/nudge"
 	"github.com/spf13/cobra"
 
-	"github.com/ActiveMemory/ctx/internal/assets"
 	"github.com/ActiveMemory/ctx/internal/cli/system/core"
 	"github.com/ActiveMemory/ctx/internal/config/hook"
 	"github.com/ActiveMemory/ctx/internal/notify"
@@ -59,7 +59,7 @@ func Run(cmd *cobra.Command, stdin *os.File) error {
 	// Threshold reached — reset and nudge.
 	core.WriteCounter(counterPath, 0)
 
-	fallback := assets.TextDesc(embed.TextDescKeyCheckTaskCompletionFallback)
+	fallback := desc.TextDesc(text.TextDescKeyCheckTaskCompletionFallback)
 	msg := core.LoadMessage(
 		hook.CheckTaskCompletion, hook.VariantNudge, nil, fallback,
 	)
@@ -68,7 +68,7 @@ func Run(cmd *cobra.Command, stdin *os.File) error {
 	}
 	core.PrintHookContext(cmd, hook.EventPostToolUse, msg)
 
-	nudgeMsg := assets.TextDesc(embed.TextDescKeyCheckTaskCompletionNudgeMessage)
+	nudgeMsg := desc.TextDesc(text.TextDescKeyCheckTaskCompletionNudgeMessage)
 	ref := notify.NewTemplateRef(
 		hook.CheckTaskCompletion, hook.VariantNudge, nil,
 	)

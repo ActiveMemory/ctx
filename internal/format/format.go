@@ -9,8 +9,8 @@ package format
 import (
 	"fmt"
 
-	"github.com/ActiveMemory/ctx/internal/assets"
-	"github.com/ActiveMemory/ctx/internal/config/embed"
+	"github.com/ActiveMemory/ctx/internal/assets/read/desc"
+	"github.com/ActiveMemory/ctx/internal/config/embed/text"
 )
 
 // TimeAgo returns a human-readable relative time duration.
@@ -29,24 +29,24 @@ import (
 func TimeAgo(hours float64, mins int, fallbackDate string) string {
 	switch {
 	case hours < 1.0/60: // less than a minute
-		return assets.TextDesc(embed.TextDescKeyWriteTimeJustNow)
+		return desc.TextDesc(text.TextDescKeyWriteTimeJustNow)
 	case hours < 1:
 		if mins == 1 {
-			return assets.TextDesc(embed.TextDescKeyWriteTimeMinuteAgo)
+			return desc.TextDesc(text.TextDescKeyWriteTimeMinuteAgo)
 		}
-		return fmt.Sprintf(assets.TextDesc(embed.TextDescKeyWriteTimeMinutesAgo), mins)
+		return fmt.Sprintf(desc.TextDesc(text.TextDescKeyWriteTimeMinutesAgo), mins)
 	case hours < 24:
 		h := int(hours)
 		if h == 1 {
-			return assets.TextDesc(embed.TextDescKeyWriteTimeHourAgo)
+			return desc.TextDesc(text.TextDescKeyWriteTimeHourAgo)
 		}
-		return fmt.Sprintf(assets.TextDesc(embed.TextDescKeyWriteTimeHoursAgo), h)
+		return fmt.Sprintf(desc.TextDesc(text.TextDescKeyWriteTimeHoursAgo), h)
 	case hours < 7*24:
 		days := int(hours / 24)
 		if days == 1 {
-			return assets.TextDesc(embed.TextDescKeyWriteTimeDayAgo)
+			return desc.TextDesc(text.TextDescKeyWriteTimeDayAgo)
 		}
-		return fmt.Sprintf(assets.TextDesc(embed.TextDescKeyWriteTimeDaysAgo), days)
+		return fmt.Sprintf(desc.TextDesc(text.TextDescKeyWriteTimeDaysAgo), days)
 	default:
 		return fallbackDate
 	}

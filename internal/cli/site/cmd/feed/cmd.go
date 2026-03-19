@@ -8,11 +8,11 @@
 package feed
 
 import (
-	"github.com/ActiveMemory/ctx/internal/config/embed"
+	"github.com/ActiveMemory/ctx/internal/assets/read/desc"
+	"github.com/ActiveMemory/ctx/internal/config/embed/cmd"
+	"github.com/ActiveMemory/ctx/internal/config/embed/flag"
 	"github.com/ActiveMemory/ctx/internal/config/rss"
 	"github.com/spf13/cobra"
-
-	"github.com/ActiveMemory/ctx/internal/assets"
 )
 
 // Cmd returns the "ctx site feed" subcommand.
@@ -25,7 +25,7 @@ func Cmd() *cobra.Command {
 		baseURL string
 	)
 
-	short, long := assets.CommandDesc(embed.CmdDescKeySiteFeed)
+	short, long := desc.CommandDesc(cmd.DescKeySiteFeed)
 
 	cmd := &cobra.Command{
 		Use:   "feed",
@@ -38,11 +38,11 @@ func Cmd() *cobra.Command {
 
 	cmd.Flags().StringVarP(
 		&out, "out", "o", rss.DefaultFeedOutPath,
-		assets.FlagDesc(embed.FlagDescKeySiteFeedOut),
+		desc.FlagDesc(flag.FlagDescKeySiteFeedOut),
 	)
 	cmd.Flags().StringVar(
 		&baseURL, "base-url", rss.DefaultFeedBaseURL,
-		assets.FlagDesc(embed.FlagDescKeySiteFeedBaseUrl),
+		desc.FlagDesc(flag.FlagDescKeySiteFeedBaseUrl),
 	)
 
 	return cmd

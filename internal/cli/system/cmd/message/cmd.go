@@ -7,10 +7,10 @@
 package message
 
 import (
-	"github.com/ActiveMemory/ctx/internal/config/embed"
+	"github.com/ActiveMemory/ctx/internal/assets/read/desc"
+	"github.com/ActiveMemory/ctx/internal/config/embed/cmd"
+	"github.com/ActiveMemory/ctx/internal/config/embed/flag"
 	"github.com/spf13/cobra"
-
-	"github.com/ActiveMemory/ctx/internal/assets"
 )
 
 // Cmd returns the "ctx system message" subcommand.
@@ -18,7 +18,7 @@ import (
 // Returns:
 //   - *cobra.Command: Configured message subcommand with sub-subcommands
 func Cmd() *cobra.Command {
-	short, long := assets.CommandDesc(embed.CmdDescKeySystemMessage)
+	short, long := desc.CommandDesc(cmd.DescKeySystemMessage)
 
 	cmd := &cobra.Command{
 		Use:   "message",
@@ -38,7 +38,7 @@ func Cmd() *cobra.Command {
 
 // messageListCmd returns the "ctx system message list" subcommand.
 func messageListCmd() *cobra.Command {
-	short, _ := assets.CommandDesc(embed.CmdDescKeySystemMessageList)
+	short, _ := desc.CommandDesc(cmd.DescKeySystemMessageList)
 
 	cmd := &cobra.Command{
 		Use:   "list",
@@ -47,13 +47,13 @@ func messageListCmd() *cobra.Command {
 			return RunMessageList(cmd)
 		},
 	}
-	cmd.Flags().Bool("json", false, assets.FlagDesc(embed.FlagDescKeySystemMessageJson))
+	cmd.Flags().Bool("json", false, desc.FlagDesc(flag.FlagDescKeySystemMessageJson))
 	return cmd
 }
 
 // messageShowCmd returns the "ctx system message show" subcommand.
 func messageShowCmd() *cobra.Command {
-	short, _ := assets.CommandDesc(embed.CmdDescKeySystemMessageShow)
+	short, _ := desc.CommandDesc(cmd.DescKeySystemMessageShow)
 
 	return &cobra.Command{
 		Use:   "show <hook> <variant>",
@@ -67,7 +67,7 @@ func messageShowCmd() *cobra.Command {
 
 // messageEditCmd returns the "ctx system message edit" subcommand.
 func messageEditCmd() *cobra.Command {
-	short, _ := assets.CommandDesc(embed.CmdDescKeySystemMessageEdit)
+	short, _ := desc.CommandDesc(cmd.DescKeySystemMessageEdit)
 
 	return &cobra.Command{
 		Use:   "edit <hook> <variant>",
@@ -81,7 +81,7 @@ func messageEditCmd() *cobra.Command {
 
 // messageResetCmd returns the "ctx system message reset" subcommand.
 func messageResetCmd() *cobra.Command {
-	short, _ := assets.CommandDesc(embed.CmdDescKeySystemMessageReset)
+	short, _ := desc.CommandDesc(cmd.DescKeySystemMessageReset)
 
 	return &cobra.Command{
 		Use:   "reset <hook> <variant>",

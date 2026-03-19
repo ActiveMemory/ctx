@@ -10,9 +10,9 @@ import (
 	"os"
 	"path/filepath"
 
-	"github.com/ActiveMemory/ctx/internal/assets"
+	"github.com/ActiveMemory/ctx/internal/assets/read/desc"
 	"github.com/ActiveMemory/ctx/internal/cli/system/core"
-	"github.com/ActiveMemory/ctx/internal/config/embed"
+	"github.com/ActiveMemory/ctx/internal/config/embed/text"
 	"github.com/ActiveMemory/ctx/internal/config/hook"
 	"github.com/ActiveMemory/ctx/internal/memory"
 	"github.com/ActiveMemory/ctx/internal/notify"
@@ -50,20 +50,20 @@ func Run(cmd *cobra.Command, stdin *os.File) error {
 		return nil
 	}
 
-	fallback := assets.TextDesc(embed.TextDescKeyCheckMemoryDriftContent)
+	fallback := desc.TextDesc(text.TextDescKeyCheckMemoryDriftContent)
 	content := core.LoadMessage(hook.CheckMemoryDrift, hook.VariantNudge, nil, fallback)
 	if content == "" {
 		return nil
 	}
 
 	cmd.Println(core.NudgeBox(
-		assets.TextDesc(embed.TextDescKeyCheckMemoryDriftRelayPrefix),
-		assets.TextDesc(embed.TextDescKeyCheckMemoryDriftBoxTitle),
+		desc.TextDesc(text.TextDescKeyCheckMemoryDriftRelayPrefix),
+		desc.TextDesc(text.TextDescKeyCheckMemoryDriftBoxTitle),
 		content))
 
 	ref := notify.NewTemplateRef(hook.CheckMemoryDrift, hook.VariantNudge, nil)
 	core.NudgeAndRelay(
-		hook.CheckMemoryDrift+": "+assets.TextDesc(embed.TextDescKeyCheckMemoryDriftRelayMessage),
+		hook.CheckMemoryDrift+": "+desc.TextDesc(text.TextDescKeyCheckMemoryDriftRelayMessage),
 		input.SessionID, ref,
 	)
 

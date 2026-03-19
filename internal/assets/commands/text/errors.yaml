@@ -34,7 +34,7 @@ err.backup.write-smb:
 err.context.dir-not-found:
   short: 'context directory not found: '
 err.config.golden-not-found:
-  short: "no .claude/settings.golden.json found — run 'ctx permissions snapshot' first"
+  short: "no .claude/settings.golden.json found — run 'ctx permission snapshot' first"
 err.config.invalid-tool:
   short: 'invalid tool %q: must be claude, aider, or generic'
 err.config.marshal-plugins:

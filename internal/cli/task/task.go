@@ -16,28 +16,28 @@
 package task
 
 import (
-	"github.com/ActiveMemory/ctx/internal/config/embed"
+	"github.com/ActiveMemory/ctx/internal/assets/read/desc"
+	"github.com/ActiveMemory/ctx/internal/config/embed/cmd"
 	"github.com/spf13/cobra"
 
-	"github.com/ActiveMemory/ctx/internal/assets"
 	"github.com/ActiveMemory/ctx/internal/cli/task/cmd/archive"
 	"github.com/ActiveMemory/ctx/internal/cli/task/cmd/complete"
 	"github.com/ActiveMemory/ctx/internal/cli/task/cmd/snapshot"
 )
 
-// Cmd returns the tasks command with subcommands.
+// Cmd returns the task command with subcommands.
 //
-// The tasks command provides utilities for managing the task lifecycle:
+// The task command provides utilities for managing the task lifecycle:
 //   - archive: Move completed tasks out of TASKS.md
 //   - snapshot: Create point-in-time backup without modification
 //
 // Returns:
-//   - *cobra.Command: Configured tasks command with subcommands
+//   - *cobra.Command: Configured task command with subcommands
 func Cmd() *cobra.Command {
-	short, long := assets.CommandDesc(embed.CmdDescKeyTask)
+	short, long := desc.CommandDesc(cmd.DescKeyTask)
 
 	cmd := &cobra.Command{
-		Use:   "tasks",
+		Use:   cmd.DescKeyTask,
 		Short: short,
 		Long:  long,
 	}

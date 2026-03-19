@@ -7,7 +7,7 @@
 package core
 
 import (
-	"github.com/ActiveMemory/ctx/internal/assets"
+	"github.com/ActiveMemory/ctx/internal/assets/read/desc"
 )
 
 // ExamplesForType returns example usage strings for a given entry type.
@@ -23,9 +23,9 @@ import (
 func ExamplesForType(fileType string) string {
 	const defaultKeyName = "default"
 
-	if desc := assets.ExampleDesc(fileType); desc != "" {
+	if desc := desc.ExampleDesc(fileType); desc != "" {
 		return desc
 	}
 
-	return assets.ExampleDesc(defaultKeyName)
+	return desc.ExampleDesc(defaultKeyName)
 }

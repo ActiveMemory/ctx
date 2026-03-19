@@ -9,8 +9,8 @@ package state
 import (
 	"fmt"
 
-	"github.com/ActiveMemory/ctx/internal/assets"
-	"github.com/ActiveMemory/ctx/internal/config/embed"
+	"github.com/ActiveMemory/ctx/internal/assets/read/desc"
+	"github.com/ActiveMemory/ctx/internal/config/embed/text"
 )
 
 // ReadingDir wraps a state directory read failure.
@@ -22,7 +22,7 @@ import (
 //   - error: "reading state directory: <cause>"
 func ReadingDir(cause error) error {
 	return fmt.Errorf(
-		assets.TextDesc(embed.TextDescKeyErrStateReadingStateDir), cause,
+		desc.TextDesc(text.TextDescKeyErrStateReadingStateDir), cause,
 	)
 }
 
@@ -34,7 +34,7 @@ func ReadingDir(cause error) error {
 // Returns:
 //   - error: "loading state: <cause>"
 func Load(cause error) error {
-	return fmt.Errorf(assets.TextDesc(embed.TextDescKeyErrStateLoadState), cause)
+	return fmt.Errorf(desc.TextDesc(text.TextDescKeyErrStateLoadState), cause)
 }
 
 // Save wraps a state-saving failure.
@@ -45,5 +45,5 @@ func Load(cause error) error {
 // Returns:
 //   - error: "saving state: <cause>"
 func Save(cause error) error {
-	return fmt.Errorf(assets.TextDesc(embed.TextDescKeyErrStateSaveState), cause)
+	return fmt.Errorf(desc.TextDesc(text.TextDescKeyErrStateSaveState), cause)
 }

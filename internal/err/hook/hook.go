@@ -9,8 +9,8 @@ package hook
 import (
 	"fmt"
 
-	"github.com/ActiveMemory/ctx/internal/assets"
-	"github.com/ActiveMemory/ctx/internal/config/embed"
+	"github.com/ActiveMemory/ctx/internal/assets/read/desc"
+	"github.com/ActiveMemory/ctx/internal/config/embed/text"
 )
 
 // EmbeddedTemplateNotFound returns an error when an embedded hook
@@ -24,7 +24,7 @@ import (
 //   - error: "embedded template not found for <hook>/<variant>"
 func EmbeddedTemplateNotFound(hook, variant string) error {
 	return fmt.Errorf(
-		assets.TextDesc(embed.TextDescKeyErrHookEmbeddedTemplateNotFound),
+		desc.TextDesc(text.TextDescKeyErrHookEmbeddedTemplateNotFound),
 		hook, variant,
 	)
 }
@@ -40,7 +40,7 @@ func EmbeddedTemplateNotFound(hook, variant string) error {
 // Returns:
 //   - error: "override already exists at <path>..."
 func OverrideExists(path, hook, variant string) error {
-	return fmt.Errorf(assets.TextDesc(embed.TextDescKeyErrHookOverrideExists),
+	return fmt.Errorf(desc.TextDesc(text.TextDescKeyErrHookOverrideExists),
 		path, hook, variant)
 }
 
@@ -54,7 +54,7 @@ func OverrideExists(path, hook, variant string) error {
 //   - error: "failed to write override <path>: <cause>"
 func WriteOverride(path string, cause error) error {
 	return fmt.Errorf(
-		assets.TextDesc(embed.TextDescKeyErrHookWriteOverride), path, cause,
+		desc.TextDesc(text.TextDescKeyErrHookWriteOverride), path, cause,
 	)
 }
 
@@ -68,7 +68,7 @@ func WriteOverride(path string, cause error) error {
 //   - error: "failed to remove override <path>: <cause>"
 func RemoveOverride(path string, cause error) error {
 	return fmt.Errorf(
-		assets.TextDesc(embed.TextDescKeyErrHookRemoveOverride), path, cause,
+		desc.TextDesc(text.TextDescKeyErrHookRemoveOverride), path, cause,
 	)
 }
 
@@ -81,7 +81,7 @@ func RemoveOverride(path string, cause error) error {
 //   - error: "unknown hook: <hook>..."
 func Unknown(hook string) error {
 	return fmt.Errorf(
-		assets.TextDesc(embed.TextDescKeyErrHookUnknownHook), hook,
+		desc.TextDesc(text.TextDescKeyErrHookUnknownHook), hook,
 	)
 }
 
@@ -96,6 +96,6 @@ func Unknown(hook string) error {
 //   - error: "unknown variant <variant> for hook <hook>..."
 func UnknownVariant(variant, hook string) error {
 	return fmt.Errorf(
-		assets.TextDesc(embed.TextDescKeyErrHookUnknownVariant), variant, hook,
+		desc.TextDesc(text.TextDescKeyErrHookUnknownVariant), variant, hook,
 	)
 }
