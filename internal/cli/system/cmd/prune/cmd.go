@@ -33,10 +33,10 @@ func Cmd() *cobra.Command {
 	}
 
 	cmd.Flags().IntVar(&days, "days", 7,
-		desc.FlagDesc(flag.FlagDescKeySystemPruneDays),
+		desc.FlagDesc(flag.DescKeySystemPruneDays),
 	)
 	cmd.Flags().BoolVar(&dryRun, "dry-run", false,
-		desc.FlagDesc(flag.FlagDescKeySystemPruneDryRun),
+		desc.FlagDesc(flag.DescKeySystemPruneDryRun),
 	)
 
 	return cmd

@@ -48,7 +48,7 @@ func Run(
 		if allProjects {
 			return ctxerr.NoneFound("")
 		}
-		return ctxerr.NoneFound(desc.TextDesc(text.TextDescKeyLabelHintUseAllProjects))
+		return ctxerr.NoneFound(desc.TextDesc(text.DescKeyLabelHintUseAllProjects))
 	}
 
 	var session *parser.Session
@@ -105,7 +105,7 @@ func Run(
 			toolCounts[t.Name]++
 		}
 
-		recall.SectionHeader(cmd, 2, desc.TextDesc(text.TextDescKeyLabelSectionToolUsage))
+		recall.SectionHeader(cmd, 2, desc.TextDesc(text.DescKeyLabelSectionToolUsage))
 		for name, count := range toolCounts {
 			recall.ListItem(cmd, "%s: %d", name, count)
 		}
@@ -114,12 +114,12 @@ func Run(
 
 	// Messages
 	if full {
-		recall.SectionHeader(cmd, 2, desc.TextDesc(text.TextDescKeyLabelSectionConversation))
+		recall.SectionHeader(cmd, 2, desc.TextDesc(text.DescKeyLabelSectionConversation))
 
 		for i, msg := range session.Messages {
-			role := desc.TextDesc(text.TextDescKeyLabelRoleUser)
+			role := desc.TextDesc(text.DescKeyLabelRoleUser)
 			if msg.BelongsToAssistant() {
-				role = desc.TextDesc(text.TextDescKeyLabelRoleAssistant)
+				role = desc.TextDesc(text.DescKeyLabelRoleAssistant)
 			} else if len(msg.ToolResults) > 0 && msg.Text == "" {
 				role = desc.TextDesc(text.TextDescKeyLabelToolOutput)
 			}
@@ -134,12 +134,12 @@ func Run(
 
 			for _, t := range msg.ToolUses {
 				toolInfo := core.FormatToolUse(t)
-				recall.SessionDetail(cmd, desc.TextDesc(text.TextDescKeyLabelInlineTool), toolInfo)
+				recall.SessionDetail(cmd, desc.TextDesc(text.DescKeyLabelInlineTool), toolInfo)
 			}
 
 			for _, tr := range msg.ToolResults {
 				if tr.IsError {
-					recall.Hint(cmd, desc.TextDesc(text.TextDescKeyLabelInlineError))
+					recall.Hint(cmd, desc.TextDesc(text.DescKeyLabelInlineError))
 				}
 				if tr.Content != "" {
 					content := core.StripLineNumbers(tr.Content)
@@ -152,7 +152,7 @@ func Run(
 			}
 		}
 	} else {
-		recall.SectionHeader(cmd, 2, desc.TextDesc(text.TextDescKeyLabelSectionConversationPreview))
+		recall.SectionHeader(cmd, 2, desc.TextDesc(text.DescKeyLabelSectionConversationPreview))
 
 		count := 0
 		for _, msg := range session.Messages {
@@ -170,7 +170,7 @@ func Run(
 			}
 		}
 		recall.BlankLine(cmd)
-		recall.Hint(cmd, desc.TextDesc(text.TextDescKeyLabelHintUseFull))
+		recall.Hint(cmd, desc.TextDesc(text.DescKeyLabelHintUseFull))
 	}
 
 	return nil

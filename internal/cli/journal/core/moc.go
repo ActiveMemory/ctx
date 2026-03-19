@@ -37,7 +37,7 @@ func GenerateHomeMOC(
 	var sb strings.Builder
 	nl := token.NewlineLF
 
-	sb.WriteString(desc.TextDesc(text.TextDescKeyHeadingSessionJournal) + nl + nl)
+	sb.WriteString(desc.TextDesc(text.DescKeyHeadingSessionJournal) + nl + nl)
 	sb.WriteString(desc.TextDesc(text.TextDescKeyJournalMocNavDescription) + nl + nl)
 
 	sb.WriteString(desc.TextDesc(text.TextDescKeyJournalMocBrowseBy) + nl + nl)
@@ -67,7 +67,7 @@ func GenerateHomeMOC(
 		recent = recent[:journal.MaxRecentSessions]
 	}
 
-	sb.WriteString(token.HeadingLevelTwoStart + desc.TextDesc(text.TextDescKeyHeadingRecentSessions) + nl + nl)
+	sb.WriteString(token.HeadingLevelTwoStart + desc.TextDesc(text.DescKeyHeadingRecentSessions) + nl + nl)
 	for _, e := range recent {
 		sb.WriteString(FormatWikilinkEntry(e) + nl)
 	}
@@ -323,7 +323,7 @@ func GenerateRelatedFooter(
 	nl := token.NewlineLF
 
 	sb.WriteString(nl + token.Separator + nl + nl)
-	sb.WriteString(desc.TextDesc(text.TextDescKeyHeadingObsidianRelated) + nl + nl)
+	sb.WriteString(desc.TextDesc(text.DescKeyHeadingObsidianRelated) + nl + nl)
 
 	// Topic links
 	if len(entry.Topics) > 0 {
@@ -346,7 +346,7 @@ func GenerateRelatedFooter(
 	// See also: other entries sharing topics
 	related := CollectRelated(entry, topicIndex, maxRelated)
 	if len(related) > 0 {
-		sb.WriteString(desc.TextDesc(text.TextDescKeyLabelObsidianSeeAlso) + nl)
+		sb.WriteString(desc.TextDesc(text.DescKeyLabelObsidianSeeAlso) + nl)
 		for _, rel := range related {
 			link := strings.TrimSuffix(rel.Filename, file.ExtMarkdown)
 			sb.WriteString(fmt.Sprintf("- %s"+nl,

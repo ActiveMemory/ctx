@@ -41,7 +41,7 @@ func Cmd() *cobra.Command {
 
 	cmd.Flags().BoolVarP(
 		&write, "write", "w", false,
-		desc.FlagDesc(flag.FlagDescKeyHookWrite),
+		desc.FlagDesc(flag.DescKeyHookWrite),
 	)
 
 	return cmd

@@ -40,22 +40,22 @@ func Cmd() *cobra.Command {
 	}
 
 	cmd.Flags().IntVarP(&limit, "limit", "n", journal.DefaultRecallListLimit,
-		desc.FlagDesc(flag.FlagDescKeyRecallListLimit),
+		desc.FlagDesc(flag.DescKeyRecallListLimit),
 	)
 	cmd.Flags().StringVarP(&project, "project", "p", "",
-		desc.FlagDesc(flag.FlagDescKeyRecallListProject),
+		desc.FlagDesc(flag.DescKeyRecallListProject),
 	)
 	cmd.Flags().StringVarP(&tool, "tool", "t", "",
-		desc.FlagDesc(flag.FlagDescKeyRecallListTool),
+		desc.FlagDesc(flag.DescKeyRecallListTool),
 	)
 	cmd.Flags().StringVar(&since, "since", "",
-		desc.FlagDesc(flag.FlagDescKeyRecallListSince),
+		desc.FlagDesc(flag.DescKeyRecallListSince),
 	)
 	cmd.Flags().StringVar(&until, "until", "",
-		desc.FlagDesc(flag.FlagDescKeyRecallListUntil),
+		desc.FlagDesc(flag.DescKeyRecallListUntil),
 	)
 	cmd.Flags().BoolVar(&allProjects, "all-projects", false,
-		desc.FlagDesc(flag.FlagDescKeyRecallListAllProjects),
+		desc.FlagDesc(flag.DescKeyRecallListAllProjects),
 	)
 
 	return cmd

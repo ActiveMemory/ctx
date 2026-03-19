@@ -142,31 +142,31 @@ func FormatJournalEntryPart(
 		// (Markdown tables don't render inside <details> in Zensical)
 		summaryText := fmt.Sprintf("%s · %s · %s", dateStr, durationStr, s.Model)
 		sb.WriteString(fmt.Sprintf(tpl.TplMetaDetailsOpen, summaryText))
-		sb.WriteString(fmt.Sprintf(tpl.TplMetaRow+nl, desc.TextDesc(text.TextDescKeyLabelMetaID), s.ID))
-		sb.WriteString(fmt.Sprintf(tpl.TplMetaRow+nl, desc.TextDesc(text.TextDescKeyLabelMetaDate), dateStr))
-		sb.WriteString(fmt.Sprintf(tpl.TplMetaRow+nl, desc.TextDesc(text.TextDescKeyLabelMetaTime), timeStr))
-		sb.WriteString(fmt.Sprintf(tpl.TplMetaRow+nl, desc.TextDesc(text.TextDescKeyLabelMetaDuration), durationStr))
-		sb.WriteString(fmt.Sprintf(tpl.TplMetaRow+nl, desc.TextDesc(text.TextDescKeyLabelMetaTool), s.Tool))
-		sb.WriteString(fmt.Sprintf(tpl.TplMetaRow+nl, desc.TextDesc(text.TextDescKeyLabelMetaProject), s.Project))
+		sb.WriteString(fmt.Sprintf(tpl.TplMetaRow+nl, desc.TextDesc(text.DescKeyLabelMetaID), s.ID))
+		sb.WriteString(fmt.Sprintf(tpl.TplMetaRow+nl, desc.TextDesc(text.DescKeyLabelMetaDate), dateStr))
+		sb.WriteString(fmt.Sprintf(tpl.TplMetaRow+nl, desc.TextDesc(text.DescKeyLabelMetaTime), timeStr))
+		sb.WriteString(fmt.Sprintf(tpl.TplMetaRow+nl, desc.TextDesc(text.DescKeyLabelMetaDuration), durationStr))
+		sb.WriteString(fmt.Sprintf(tpl.TplMetaRow+nl, desc.TextDesc(text.DescKeyLabelMetaTool), s.Tool))
+		sb.WriteString(fmt.Sprintf(tpl.TplMetaRow+nl, desc.TextDesc(text.DescKeyLabelMetaProject), s.Project))
 		if s.GitBranch != "" {
-			sb.WriteString(fmt.Sprintf(tpl.TplMetaRow+nl, desc.TextDesc(text.TextDescKeyLabelMetaBranch), s.GitBranch))
+			sb.WriteString(fmt.Sprintf(tpl.TplMetaRow+nl, desc.TextDesc(text.DescKeyLabelMetaBranch), s.GitBranch))
 		}
 		if s.Model != "" {
-			sb.WriteString(fmt.Sprintf(tpl.TplMetaRow+nl, desc.TextDesc(text.TextDescKeyLabelMetaModel), s.Model))
+			sb.WriteString(fmt.Sprintf(tpl.TplMetaRow+nl, desc.TextDesc(text.DescKeyLabelMetaModel), s.Model))
 		}
 		sb.WriteString(tpl.TplMetaDetailsClose + nl + nl)
 
 		// Token stats as collapsible HTML table
 		turnStr := fmt.Sprintf("%d", s.TurnCount)
 		sb.WriteString(fmt.Sprintf(tpl.TplMetaDetailsOpen, turnStr))
-		sb.WriteString(fmt.Sprintf(tpl.TplMetaRow+nl, desc.TextDesc(text.TextDescKeyLabelMetaTurns), turnStr))
+		sb.WriteString(fmt.Sprintf(tpl.TplMetaRow+nl, desc.TextDesc(text.DescKeyLabelMetaTurns), turnStr))
 		tokenSummary := fmt.Sprintf("%s (in: %s, out: %s)",
 			FormatTokens(s.TotalTokens),
 			FormatTokens(s.TotalTokensIn),
 			FormatTokens(s.TotalTokensOut))
-		sb.WriteString(fmt.Sprintf(tpl.TplMetaRow+nl, desc.TextDesc(text.TextDescKeyLabelMetaTokens), tokenSummary))
+		sb.WriteString(fmt.Sprintf(tpl.TplMetaRow+nl, desc.TextDesc(text.DescKeyLabelMetaTokens), tokenSummary))
 		if totalParts > 1 {
-			sb.WriteString(fmt.Sprintf(tpl.TplMetaRow+nl, desc.TextDesc(text.TextDescKeyLabelMetaParts),
+			sb.WriteString(fmt.Sprintf(tpl.TplMetaRow+nl, desc.TextDesc(text.DescKeyLabelMetaParts),
 				fmt.Sprintf("%d", totalParts)))
 		}
 		sb.WriteString(tpl.TplMetaDetailsClose + nl + nl)
@@ -176,7 +176,7 @@ func FormatJournalEntryPart(
 		// Tool usage summary
 		tools := s.AllToolUses()
 		if len(tools) > 0 {
-			sb.WriteString(desc.TextDesc(text.TextDescKeyHeadingToolUsage) + nl + nl)
+			sb.WriteString(desc.TextDesc(text.DescKeyHeadingToolUsage) + nl + nl)
 			toolCounts := make(map[string]int)
 			for _, t := range tools {
 				toolCounts[t.Name]++
@@ -202,7 +202,7 @@ func FormatJournalEntryPart(
 
 	// Conversation section
 	if part == 1 {
-		sb.WriteString(desc.TextDesc(text.TextDescKeyHeadingConversation) + nl + nl)
+		sb.WriteString(desc.TextDesc(text.DescKeyHeadingConversation) + nl + nl)
 	} else {
 		sb.WriteString(fmt.Sprintf(
 			tpl.TplRecallConversationContinued+nl+nl, part-1),
@@ -211,9 +211,9 @@ func FormatJournalEntryPart(
 
 	for i, msg := range messages {
 		msgNum := startMsgIdx + i + 1
-		role := desc.TextDesc(text.TextDescKeyLabelRoleUser)
+		role := desc.TextDesc(text.DescKeyLabelRoleUser)
 		if msg.BelongsToAssistant() {
-			role = desc.TextDesc(text.TextDescKeyLabelRoleAssistant)
+			role = desc.TextDesc(text.DescKeyLabelRoleAssistant)
 		} else if len(msg.ToolResults) > 0 && msg.Text == "" {
 			role = desc.TextDesc(text.TextDescKeyLabelToolOutput)
 		}

@@ -108,7 +108,7 @@ func Run(
 	recall.SessionListHeader(cmd, len(sessions), shown)
 
 	// Compute dynamic column widths from data.
-	slugW, projW := len(desc.TextDesc(text.TextDescKeyLabelColSlug)), len(desc.TextDesc(text.TextDescKeyLabelColProject))
+	slugW, projW := len(desc.TextDesc(text.DescKeyLabelColSlug)), len(desc.TextDesc(text.DescKeyLabelColProject))
 	for _, s := range filtered {
 		slug := core.Truncate(s.Slug, journal.SlugMaxLen)
 		if len(slug) > slugW {
@@ -122,8 +122,8 @@ func Run(
 	// Print column header.
 	rowFmt := fmt.Sprintf(tpl.TplRecallListRow, slugW, projW)
 	recall.SessionListRow(cmd, rowFmt,
-		desc.TextDesc(text.TextDescKeyLabelColSlug), desc.TextDesc(text.TextDescKeyLabelColProject), desc.TextDesc(text.TextDescKeyLabelColDate),
-		desc.TextDesc(text.TextDescKeyLabelColDuration), desc.TextDesc(text.TextDescKeyLabelColTurns), desc.TextDesc(text.TextDescKeyLabelColTokens))
+		desc.TextDesc(text.DescKeyLabelColSlug), desc.TextDesc(text.DescKeyLabelColProject), desc.TextDesc(text.DescKeyLabelColDate),
+		desc.TextDesc(text.DescKeyLabelColDuration), desc.TextDesc(text.DescKeyLabelColTurns), desc.TextDesc(text.DescKeyLabelColTokens))
 
 	// Print sessions.
 	for _, s := range filtered {

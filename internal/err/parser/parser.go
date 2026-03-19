@@ -115,6 +115,6 @@ func Unmarshal(cause error) error {
 //   - error: "failed to parse <path>: <cause>"
 func ParseFile(path string, cause error) error {
 	return fmt.Errorf(
-		desc.TextDesc(text.TextDescKeyErrValidationParseFile), path, cause,
+		desc.TextDesc(text.TextDescKeyErrValidateParseFile), path, cause,
 	)
 }

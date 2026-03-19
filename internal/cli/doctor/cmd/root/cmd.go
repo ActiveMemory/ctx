@@ -33,6 +33,6 @@ func Cmd() *cobra.Command {
 			return Run(cmd, jsonOut)
 		},
 	}
-	cmd.Flags().BoolP("json", "j", false, desc.FlagDesc(flag.FlagDescKeyDoctorJson))
+	cmd.Flags().BoolP("json", "j", false, desc.FlagDesc(flag.DescKeyDoctorJson))
 	return cmd
 }

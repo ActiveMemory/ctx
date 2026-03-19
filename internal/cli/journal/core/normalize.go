@@ -308,7 +308,7 @@ func WrapUserTurns(content string) string {
 		m := regex.TurnHeader.FindStringSubmatch(
 			strings.TrimSpace(lines[i]),
 		)
-		if m == nil || m[2] != desc.TextDesc(text.TextDescKeyLabelRoleUser) {
+		if m == nil || m[2] != desc.TextDesc(text.DescKeyLabelRoleUser) {
 			out = append(out, lines[i])
 			i++
 			continue

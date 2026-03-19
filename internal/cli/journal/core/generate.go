@@ -58,7 +58,7 @@ func GenerateIndex(entries []JournalEntry) string {
 		}
 	}
 
-	sb.WriteString(desc.TextDesc(text.TextDescKeyHeadingSessionJournal) + nl + nl)
+	sb.WriteString(desc.TextDesc(text.DescKeyHeadingSessionJournal) + nl + nl)
 	sb.WriteString(tpl.TplJournalIndexIntro + nl + nl)
 	sb.WriteString(fmt.Sprintf(tpl.TplJournalIndexStats+
 		nl+nl, len(regular), len(suggestions)))
@@ -78,7 +78,7 @@ func GenerateIndex(entries []JournalEntry) string {
 	// Suggestions section
 	if len(suggestions) > 0 {
 		sb.WriteString(token.Separator + nl + nl)
-		sb.WriteString(desc.TextDesc(text.TextDescKeyHeadingSuggestions) + nl + nl)
+		sb.WriteString(desc.TextDesc(text.DescKeyHeadingSuggestions) + nl + nl)
 		sb.WriteString(tpl.TplJournalSuggestionsNote + nl + nl)
 
 		for _, e := range suggestions {
@@ -212,22 +212,22 @@ func GenerateZensicalToml(
 	// Build navigation
 	sb.WriteString(zensical.TomlNavOpen + nl)
 	sb.WriteString(fmt.Sprintf(tpl.TplJournalNavItem+nl,
-		desc.TextDesc(text.TextDescKeyLabelHome), file.Index))
+		desc.TextDesc(text.DescKeyLabelHome), file.Index))
 	if len(topics) > 0 {
 		sb.WriteString(fmt.Sprintf(tpl.TplJournalNavItem+nl,
-			desc.TextDesc(text.TextDescKeyLabelTopics),
+			desc.TextDesc(text.DescKeyLabelTopics),
 			filepath.Join(dir.JournTopics, file.Index)),
 		)
 	}
 	if len(keyFiles) > 0 {
 		sb.WriteString(fmt.Sprintf(tpl.TplJournalNavItem+nl,
-			desc.TextDesc(text.TextDescKeyLabelFiles),
+			desc.TextDesc(text.DescKeyLabelFiles),
 			filepath.Join(dir.JournalFiles, file.Index)),
 		)
 	}
 	if len(sessionTypes) > 0 {
 		sb.WriteString(fmt.Sprintf(tpl.TplJournalNavItem+nl,
-			desc.TextDesc(text.TextDescKeyLabelTypes),
+			desc.TextDesc(text.DescKeyLabelTypes),
 			filepath.Join(dir.JournalTypes, file.Index)),
 		)
 	}
@@ -251,7 +251,7 @@ func GenerateZensicalToml(
 	}
 
 	sb.WriteString(fmt.Sprintf(
-		tpl.TplJournalNavSection+nl, desc.TextDesc(text.TextDescKeyHeadingRecentSessions)),
+		tpl.TplJournalNavSection+nl, desc.TextDesc(text.DescKeyHeadingRecentSessions)),
 	)
 	for _, e := range recent {
 		title := e.Title

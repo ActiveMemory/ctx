@@ -31,7 +31,7 @@ func Cmd() *cobra.Command {
 		},
 	}
 
-	cmd.Flags().StringVar(&since, "since", "", desc.FlagDesc(flag.FlagDescKeyChangesSince))
+	cmd.Flags().StringVar(&since, "since", "", desc.FlagDesc(flag.DescKeyChangesSince))
 
 	return cmd
 }

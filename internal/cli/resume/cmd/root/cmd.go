@@ -31,7 +31,7 @@ func Cmd() *cobra.Command {
 	}
 
 	cmd.Flags().String("session-id", "",
-		desc.FlagDesc(flag.FlagDescKeyResumeSessionId),
+		desc.FlagDesc(flag.DescKeyResumeSessionId),
 	)
 
 	return cmd

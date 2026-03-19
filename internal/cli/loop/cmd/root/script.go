@@ -52,7 +52,7 @@ func GenerateLoopScript(
 	}
 
 	script := fmt.Sprintf(tpl.TplLoopScript,
-		absPrompt, completionMsg, maxIterCheck, aiCommand, desc.TextDesc(text.TextDescKeyLabelLoopComplete), tpl.TplLoopNotify)
+		absPrompt, completionMsg, maxIterCheck, aiCommand, desc.TextDesc(text.DescKeyLabelLoopComplete), tpl.TplLoopNotify)
 
 	return script
 }

@@ -22,7 +22,7 @@ import (
 //   - error: "required flag \"<name>\" not set"
 func FlagRequired(name string) error {
 	return fmt.Errorf(
-		desc.TextDesc(text.TextDescKeyErrValidationFlagRequired), name,
+		desc.TextDesc(text.TextDescKeyErrValidateFlagRequired), name,
 	)
 }
 
@@ -35,7 +35,7 @@ func FlagRequired(name string) error {
 //   - error: "<name> argument is required"
 func ArgRequired(name string) error {
 	return fmt.Errorf(
-		desc.TextDesc(text.TextDescKeyErrValidationArgRequired), name,
+		desc.TextDesc(text.TextDescKeyErrValidateArgRequired), name,
 	)
 }
 

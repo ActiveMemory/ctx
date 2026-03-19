@@ -57,18 +57,18 @@ func Cmd() *cobra.Command {
 
 	cmd.Flags().IntVar(
 		&budget,
-		"budget", rc.DefaultTokenBudget, desc.FlagDesc(flag.FlagDescKeyAgentBudget),
+		"budget", rc.DefaultTokenBudget, desc.FlagDesc(flag.DescKeyAgentBudget),
 	)
 	cmd.Flags().StringVar(
-		&format, "format", fmt.FormatMarkdown, desc.FlagDesc(flag.FlagDescKeyAgentFormat),
+		&format, "format", fmt.FormatMarkdown, desc.FlagDesc(flag.DescKeyAgentFormat),
 	)
 	cmd.Flags().DurationVar(
 		&cooldown, "cooldown", core.DefaultCooldown,
-		desc.FlagDesc(flag.FlagDescKeyAgentCooldown),
+		desc.FlagDesc(flag.DescKeyAgentCooldown),
 	)
 	cmd.Flags().StringVar(
 		&session, "session", "",
-		desc.FlagDesc(flag.FlagDescKeyAgentSession),
+		desc.FlagDesc(flag.DescKeyAgentSession),
 	)
 
 	return cmd

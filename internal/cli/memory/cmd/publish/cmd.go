@@ -34,11 +34,11 @@ func Cmd() *cobra.Command {
 
 	cmd.Flags().IntVar(&budget,
 		"budget", memory.DefaultPublishBudget,
-		desc.FlagDesc(flag.FlagDescKeyMemoryPublishBudget),
+		desc.FlagDesc(flag.DescKeyMemoryPublishBudget),
 	)
 	cmd.Flags().BoolVar(&dryRun,
 		"dry-run", false,
-		desc.FlagDesc(flag.FlagDescKeyMemoryPublishDryRun),
+		desc.FlagDesc(flag.DescKeyMemoryPublishDryRun),
 	)
 
 	return cmd

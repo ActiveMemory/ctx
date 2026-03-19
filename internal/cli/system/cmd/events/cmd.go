@@ -30,22 +30,22 @@ func Cmd() *cobra.Command {
 	}
 
 	cmd.Flags().StringP(
-		"hook", "k", "", desc.FlagDesc(flag.FlagDescKeySystemEventsHook),
+		"hook", "k", "", desc.FlagDesc(flag.DescKeySystemEventsHook),
 	)
 	cmd.Flags().StringP(
-		"session", "s", "", desc.FlagDesc(flag.FlagDescKeySystemEventsSession),
+		"session", "s", "", desc.FlagDesc(flag.DescKeySystemEventsSession),
 	)
 	cmd.Flags().StringP(
-		"event", "e", "", desc.FlagDesc(flag.FlagDescKeySystemEventsEvent),
+		"event", "e", "", desc.FlagDesc(flag.DescKeySystemEventsEvent),
 	)
 	cmd.Flags().IntP(
-		"last", "n", 50, desc.FlagDesc(flag.FlagDescKeySystemEventsLast),
+		"last", "n", 50, desc.FlagDesc(flag.DescKeySystemEventsLast),
 	)
 	cmd.Flags().BoolP(
-		"json", "j", false, desc.FlagDesc(flag.FlagDescKeySystemEventsJson),
+		"json", "j", false, desc.FlagDesc(flag.DescKeySystemEventsJson),
 	)
 	cmd.Flags().BoolP(
-		"all", "a", false, desc.FlagDesc(flag.FlagDescKeySystemEventsAll),
+		"all", "a", false, desc.FlagDesc(flag.DescKeySystemEventsAll),
 	)
 
 	return cmd

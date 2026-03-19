@@ -49,7 +49,7 @@ func ExecuteExport(
 		}
 		if fa.Action == ActionSkip {
 			skipped++
-			recall.SkipFile(cmd, fa.Filename, desc.TextDesc(text.TextDescKeyLabelReasonExists))
+			recall.SkipFile(cmd, fa.Filename, desc.TextDesc(text.DescKeyLabelReasonExists))
 			continue
 		}
 
@@ -94,7 +94,7 @@ func ExecuteExport(
 		jstate.MarkExported(fa.Filename)
 
 		if fileExists && !discard {
-			recall.ExportedFile(cmd, fa.Filename, desc.TextDesc(text.TextDescKeyLabelReasonUpdated))
+			recall.ExportedFile(cmd, fa.Filename, desc.TextDesc(text.DescKeyLabelReasonUpdated))
 		} else {
 			recall.ExportedFile(cmd, fa.Filename, "")
 		}

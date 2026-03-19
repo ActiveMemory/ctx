@@ -39,10 +39,10 @@ func Cmd() *cobra.Command {
 	}
 
 	cmd.Flags().StringVar(
-		&logPath, "log", "", desc.FlagDesc(flag.FlagDescKeyWatchLog),
+		&logPath, "log", "", desc.FlagDesc(flag.DescKeyWatchLog),
 	)
 	cmd.Flags().BoolVar(
-		&dryRun, "dry-run", false, desc.FlagDesc(flag.FlagDescKeyWatchDryRun),
+		&dryRun, "dry-run", false, desc.FlagDesc(flag.DescKeyWatchDryRun),
 	)
 
 	return cmd

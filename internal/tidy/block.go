@@ -47,7 +47,7 @@ func ParseTaskBlocks(lines []string) []TaskBlock {
 		line := lines[i]
 
 		// Track if we're in the Completed section
-		if strings.HasPrefix(line, desc.TextDesc(text.TextDescKeyHeadingCompleted)) {
+		if strings.HasPrefix(line, desc.TextDesc(text.DescKeyHeadingCompleted)) {
 			inCompletedSection = true
 			i++
 			continue

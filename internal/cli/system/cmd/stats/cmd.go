@@ -30,16 +30,16 @@ func Cmd() *cobra.Command {
 	}
 
 	cmd.Flags().BoolP("follow", "f", false,
-		desc.FlagDesc(flag.FlagDescKeySystemStatsFollow),
+		desc.FlagDesc(flag.DescKeySystemStatsFollow),
 	)
 	cmd.Flags().StringP("session", "s", "",
-		desc.FlagDesc(flag.FlagDescKeySystemStatsSession),
+		desc.FlagDesc(flag.DescKeySystemStatsSession),
 	)
 	cmd.Flags().IntP("last", "n", 20,
-		desc.FlagDesc(flag.FlagDescKeySystemStatsLast),
+		desc.FlagDesc(flag.DescKeySystemStatsLast),
 	)
 	cmd.Flags().BoolP("json", "j", false,
-		desc.FlagDesc(flag.FlagDescKeySystemStatsJson),
+		desc.FlagDesc(flag.DescKeySystemStatsJson),
 	)
 
 	return cmd

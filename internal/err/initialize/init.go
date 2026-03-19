@@ -106,6 +106,6 @@ func CreateMakefile(cause error) error {
 //   - error: "ctx not found in PATH"
 func CtxNotInPath() error {
 	return errors.New(
-		desc.TextDesc(text.TextDescKeyErrValidationCtxNotInPath),
+		desc.TextDesc(text.TextDescKeyErrValidateCtxNotInPath),
 	)
 }

@@ -44,10 +44,10 @@ func Run(cmd *cobra.Command) error {
 
 	files := core.ListContextFiles(dir)
 	rules := core.ParseNumberedLines(
-		desc.TextDesc(text.TextDescKeyBootstrapRules),
+		desc.TextDesc(text.DescKeyBootstrapRules),
 	)
 	nextSteps := core.ParseNumberedLines(
-		desc.TextDesc(text.TextDescKeyBootstrapNextSteps),
+		desc.TextDesc(text.DescKeyBootstrapNextSteps),
 	)
 	warning := core.PluginWarning()
 

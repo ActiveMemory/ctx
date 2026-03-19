@@ -40,7 +40,7 @@ func Cmd() *cobra.Command {
 
 	cmd.Flags().BoolVar(
 		&dryRun,
-		"dry-run", false, desc.FlagDesc(flag.FlagDescKeySyncDryRun),
+		"dry-run", false, desc.FlagDesc(flag.DescKeySyncDryRun),
 	)
 
 	return cmd

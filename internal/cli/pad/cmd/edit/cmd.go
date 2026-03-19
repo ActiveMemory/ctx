@@ -96,16 +96,16 @@ func Cmd() *cobra.Command {
 	}
 
 	cmd.Flags().StringVar(&appendText,
-		"append", "", desc.FlagDesc(flag.FlagDescKeyPadEditAppend),
+		"append", "", desc.FlagDesc(flag.DescKeyPadEditAppend),
 	)
 	cmd.Flags().StringVar(&prependText,
-		"prepend", "", desc.FlagDesc(flag.FlagDescKeyPadEditPrepend),
+		"prepend", "", desc.FlagDesc(flag.DescKeyPadEditPrepend),
 	)
 	cmd.Flags().StringVarP(&filePath,
-		"file", "f", "", desc.FlagDesc(flag.FlagDescKeyPadEditFile),
+		"file", "f", "", desc.FlagDesc(flag.DescKeyPadEditFile),
 	)
 	cmd.Flags().StringVar(&labelText,
-		"label", "", desc.FlagDesc(flag.FlagDescKeyPadEditLabel),
+		"label", "", desc.FlagDesc(flag.DescKeyPadEditLabel),
 	)
 
 	return cmd

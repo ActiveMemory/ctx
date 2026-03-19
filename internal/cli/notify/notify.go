@@ -54,16 +54,16 @@ func Cmd() *cobra.Command {
 
 	cmd.Flags().StringVarP(&event,
 		"event", "e", "",
-		desc.FlagDesc(flag.FlagDescKeyNotifyEvent),
+		desc.FlagDesc(flag.DescKeyNotifyEvent),
 	)
 	cmd.Flags().StringVarP(&sessionID,
-		"session-id", "s", "", desc.FlagDesc(flag.FlagDescKeyNotifySessionId),
+		"session-id", "s", "", desc.FlagDesc(flag.DescKeyNotifySessionId),
 	)
 	cmd.Flags().StringVar(&hook,
-		"hook", "", desc.FlagDesc(flag.FlagDescKeyNotifyHook),
+		"hook", "", desc.FlagDesc(flag.DescKeyNotifyHook),
 	)
 	cmd.Flags().StringVar(&variant,
-		"variant", "", desc.FlagDesc(flag.FlagDescKeyNotifyVariant),
+		"variant", "", desc.FlagDesc(flag.DescKeyNotifyVariant),
 	)
 
 	cmd.AddCommand(setup.Cmd())

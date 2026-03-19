@@ -42,7 +42,7 @@ func Cmd() *cobra.Command {
 		&dryRun,
 		"dry-run",
 		false,
-		desc.FlagDesc(flag.FlagDescKeyTaskArchiveDryRun),
+		desc.FlagDesc(flag.DescKeyTaskArchiveDryRun),
 	)
 
 	return cmd

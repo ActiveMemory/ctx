@@ -53,7 +53,7 @@ func Run(
 	}
 
 	loop.InfoGenerated(
-		cmd, outputFile, desc.TextDesc(text.TextDescKeyHeadingLoopStart),
+		cmd, outputFile, desc.TextDesc(text.DescKeyHeadingLoopStart),
 		tool, promptFile, maxIterations, completionMsg,
 	)
 

@@ -29,7 +29,7 @@ func Cmd() *cobra.Command {
 		},
 	}
 	cmd.Flags().Bool("json", false,
-		desc.FlagDesc(flag.FlagDescKeySystemResourcesJson),
+		desc.FlagDesc(flag.DescKeySystemResourcesJson),
 	)
 	return cmd
 }

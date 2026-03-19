@@ -30,10 +30,10 @@ func Cmd() *cobra.Command {
 	}
 
 	cmd.Flags().Bool("json", false,
-		desc.FlagDesc(flag.FlagDescKeySystemBootstrapJson),
+		desc.FlagDesc(flag.DescKeySystemBootstrapJson),
 	)
 	cmd.Flags().BoolP("quiet", "q", false,
-		desc.FlagDesc(flag.FlagDescKeySystemBootstrapQuiet),
+		desc.FlagDesc(flag.DescKeySystemBootstrapQuiet),
 	)
 
 	return cmd

@@ -36,13 +36,13 @@ func Cmd() *cobra.Command {
 	}
 
 	cmd.Flags().BoolVar(&latest, "latest", false,
-		desc.FlagDesc(flag.FlagDescKeyRecallShowLatest),
+		desc.FlagDesc(flag.DescKeyRecallShowLatest),
 	)
 	cmd.Flags().BoolVar(&full, "full", false,
-		desc.FlagDesc(flag.FlagDescKeyRecallShowFull),
+		desc.FlagDesc(flag.DescKeyRecallShowFull),
 	)
 	cmd.Flags().BoolVar(&allProjects, "all-projects", false,
-		desc.FlagDesc(flag.FlagDescKeyRecallShowAllProjects),
+		desc.FlagDesc(flag.DescKeyRecallShowAllProjects),
 	)
 
 	return cmd

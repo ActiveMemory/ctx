@@ -340,6 +340,6 @@ func RefuseSystemPath(path string) error {
 //   - error: "failed to get working directory: <cause>"
 func WorkingDirectory(cause error) error {
 	return fmt.Errorf(
-		desc.TextDesc(text.TextDescKeyErrValidationWorkingDirectory), cause,
+		desc.TextDesc(text.TextDescKeyErrValidateWorkingDirectory), cause,
 	)
 }

@@ -86,10 +86,10 @@ func Run(_ *cobra.Command, stdin *os.File) error {
 	var msg string
 	if tokens > 0 {
 		pct := tokens * stats.PercentMultiplier / window
-		msg = fmt.Sprintf(desc.TextDesc(text.TextDescKeyHeartbeatNotifyTokens),
+		msg = fmt.Sprintf(desc.TextDesc(text.DescKeyHeartbeatNotifyTokens),
 			count, contextModified, core.FormatTokenCount(tokens), pct)
 	} else {
-		msg = fmt.Sprintf(desc.TextDesc(text.TextDescKeyHeartbeatNotifyPlain),
+		msg = fmt.Sprintf(desc.TextDesc(text.DescKeyHeartbeatNotifyPlain),
 			count, contextModified)
 	}
 	_ = notify.Send(hook.NotifyChannelHeartbeat, msg, sessionID, ref)
@@ -98,10 +98,10 @@ func Run(_ *cobra.Command, stdin *os.File) error {
 	var logLine string
 	if tokens > 0 {
 		pct := tokens * stats.PercentMultiplier / window
-		logLine = fmt.Sprintf(desc.TextDesc(text.TextDescKeyHeartbeatLogTokens),
+		logLine = fmt.Sprintf(desc.TextDesc(text.DescKeyHeartbeatLogTokens),
 			count, contextModified, core.FormatTokenCount(tokens), pct)
 	} else {
-		logLine = fmt.Sprintf(desc.TextDesc(text.TextDescKeyHeartbeatLogPlain),
+		logLine = fmt.Sprintf(desc.TextDesc(text.DescKeyHeartbeatLogPlain),
 			count, contextModified)
 	}
 	core.LogMessage(logFile, sessionID, logLine)

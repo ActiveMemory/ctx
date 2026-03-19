@@ -54,24 +54,24 @@ func Cmd() *cobra.Command {
 
 	cmd.Flags().BoolVarP(
 		&force,
-		"force", "f", false, desc.FlagDesc(flag.FlagDescKeyInitializeForce),
+		"force", "f", false, desc.FlagDesc(flag.DescKeyInitializeForce),
 	)
 	cmd.Flags().BoolVarP(
 		&minimal,
 		"minimal", "m", false,
-		desc.FlagDesc(flag.FlagDescKeyInitializeMinimal),
+		desc.FlagDesc(flag.DescKeyInitializeMinimal),
 	)
 	cmd.Flags().BoolVar(
 		&merge, "merge", false,
-		desc.FlagDesc(flag.FlagDescKeyInitializeMerge),
+		desc.FlagDesc(flag.DescKeyInitializeMerge),
 	)
 	cmd.Flags().BoolVar(
 		&ralph, "ralph", false,
-		desc.FlagDesc(flag.FlagDescKeyInitializeRalph),
+		desc.FlagDesc(flag.DescKeyInitializeRalph),
 	)
 	cmd.Flags().BoolVar(
 		&noPluginEnable, "no-plugin-enable", false,
-		desc.FlagDesc(flag.FlagDescKeyInitializeNoPluginEnable),
+		desc.FlagDesc(flag.DescKeyInitializeNoPluginEnable),
 	)
 
 	return cmd

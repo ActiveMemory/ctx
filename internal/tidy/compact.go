@@ -99,7 +99,7 @@ func CompactContext(ctx *entity.Context) *CompactResult {
 
 			// Insert into Completed section.
 			for i, line := range newLines {
-				if strings.HasPrefix(line, desc.TextDesc(text.TextDescKeyHeadingCompleted)) {
+				if strings.HasPrefix(line, desc.TextDesc(text.DescKeyHeadingCompleted)) {
 					insertIdx := i + 1
 					for insertIdx < len(newLines) &&
 						newLines[insertIdx] != "" &&

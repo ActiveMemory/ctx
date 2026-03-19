@@ -35,7 +35,7 @@ func Cmd() *cobra.Command {
 	}
 
 	cmd.Flags().BoolVar(&blobs, "blobs", false,
-		desc.FlagDesc(flag.FlagDescKeyPadImpBlobs))
+		desc.FlagDesc(flag.DescKeyPadImpBlobs))
 
 	return cmd
 }

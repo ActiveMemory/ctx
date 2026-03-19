@@ -47,7 +47,7 @@ func messageListCmd() *cobra.Command {
 			return RunMessageList(cmd)
 		},
 	}
-	cmd.Flags().Bool("json", false, desc.FlagDesc(flag.FlagDescKeySystemMessageJson))
+	cmd.Flags().Bool("json", false, desc.FlagDesc(flag.DescKeySystemMessageJson))
 	return cmd
 }
 

@@ -43,7 +43,7 @@ func Cmd() *cobra.Command {
 	}
 
 	cmd.Flags().StringVarP(&afterFlag, "after", "a", "",
-		desc.FlagDesc(flag.FlagDescKeyRemindAfter),
+		desc.FlagDesc(flag.DescKeyRemindAfter),
 	)
 
 	cmd.AddCommand(add.Cmd())

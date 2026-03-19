@@ -37,11 +37,11 @@ func Cmd() *cobra.Command {
 
 	cmd.Flags().BoolVarP(
 		&force, "force", "f", false,
-		desc.FlagDesc(flag.FlagDescKeyPadExportForce),
+		desc.FlagDesc(flag.DescKeyPadExportForce),
 	)
 	cmd.Flags().BoolVar(
 		&dryRun, "dry-run", false,
-		desc.FlagDesc(flag.FlagDescKeyPadExportDryRun),
+		desc.FlagDesc(flag.DescKeyPadExportDryRun),
 	)
 
 	return cmd

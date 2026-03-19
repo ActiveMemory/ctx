@@ -38,11 +38,11 @@ func Cmd() *cobra.Command {
 
 	cmd.Flags().StringVarP(
 		&out, "out", "o", rss.DefaultFeedOutPath,
-		desc.FlagDesc(flag.FlagDescKeySiteFeedOut),
+		desc.FlagDesc(flag.DescKeySiteFeedOut),
 	)
 	cmd.Flags().StringVar(
 		&baseURL, "base-url", rss.DefaultFeedBaseURL,
-		desc.FlagDesc(flag.FlagDescKeySiteFeedBaseUrl),
+		desc.FlagDesc(flag.DescKeySiteFeedBaseUrl),
 	)
 
 	return cmd

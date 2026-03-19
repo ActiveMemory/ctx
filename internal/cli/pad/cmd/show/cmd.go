@@ -44,7 +44,7 @@ func Cmd() *cobra.Command {
 	}
 
 	cmd.Flags().StringVar(&outPath,
-		"out", "", desc.FlagDesc(flag.FlagDescKeyPadShowOut),
+		"out", "", desc.FlagDesc(flag.DescKeyPadShowOut),
 	)
 
 	return cmd

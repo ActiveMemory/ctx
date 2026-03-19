@@ -31,10 +31,10 @@ func Cmd() *cobra.Command {
 	}
 
 	cmd.Flags().String("scope", archive.BackupScopeAll,
-		desc.FlagDesc(flag.FlagDescKeySystemBackupScope),
+		desc.FlagDesc(flag.DescKeySystemBackupScope),
 	)
 	cmd.Flags().Bool("json", false,
-		desc.FlagDesc(flag.FlagDescKeySystemBackupJson),
+		desc.FlagDesc(flag.DescKeySystemBackupJson),
 	)
 
 	return cmd

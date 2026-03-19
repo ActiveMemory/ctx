@@ -391,7 +391,7 @@ func (h *Handler) Compact(archive bool) (string, error) {
 		}
 		if _, archiveErr := tidy.WriteArchive(
 			archiveCfg.ArchiveScopeTasks,
-			desc.TextDesc(text.TextDescKeyHeadingArchivedTasks),
+			desc.TextDesc(text.DescKeyHeadingArchivedTasks),
 			archiveContent,
 		); archiveErr != nil {
 			_, _ = fmt.Fprintf(

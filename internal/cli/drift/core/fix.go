@@ -130,7 +130,7 @@ func FixStaleness(cmd *cobra.Command, ctx *entity.Context) error {
 
 	for _, line := range lines {
 		// Track if we're in the Completed section
-		if strings.HasPrefix(line, desc.TextDesc(text.TextDescKeyHeadingCompleted)) {
+		if strings.HasPrefix(line, desc.TextDesc(text.DescKeyHeadingCompleted)) {
 			inCompletedSection = true
 			newLines = append(newLines, line)
 			continue
@@ -161,7 +161,7 @@ func FixStaleness(cmd *cobra.Command, ctx *entity.Context) error {
 		archiveContent += marker.PrefixTaskDone + " " + t + nl
 	}
 
-	archiveFile, writeErr := tidy.WriteArchive("tasks", desc.TextDesc(text.TextDescKeyHeadingArchivedTasks), archiveContent)
+	archiveFile, writeErr := tidy.WriteArchive("tasks", desc.TextDesc(text.DescKeyHeadingArchivedTasks), archiveContent)
 	if writeErr != nil {
 		return writeErr
 	}

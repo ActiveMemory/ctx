@@ -40,13 +40,13 @@ func Cmd() *cobra.Command {
 
 	defaultOutput := filepath.Join(rc.ContextDir(), "journal-site")
 	cmd.Flags().StringVarP(
-		&output, "output", "o", defaultOutput, desc.FlagDesc(flag.FlagDescKeyJournalSiteOutput),
+		&output, "output", "o", defaultOutput, desc.FlagDesc(flag.DescKeyJournalSiteOutput),
 	)
 	cmd.Flags().BoolVar(
-		&build, "build", false, desc.FlagDesc(flag.FlagDescKeyJournalSiteBuild),
+		&build, "build", false, desc.FlagDesc(flag.DescKeyJournalSiteBuild),
 	)
 	cmd.Flags().BoolVar(
-		&serve, "serve", false, desc.FlagDesc(flag.FlagDescKeyJournalSiteServe),
+		&serve, "serve", false, desc.FlagDesc(flag.DescKeyJournalSiteServe),
 	)
 
 	return cmd

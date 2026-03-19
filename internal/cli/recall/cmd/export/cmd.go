@@ -34,37 +34,37 @@ func Cmd() *cobra.Command {
 	}
 
 	cmd.Flags().BoolVar(
-		&opts.All, "all", false, desc.FlagDesc(flag.FlagDescKeyRecallExportAll),
+		&opts.All, "all", false, desc.FlagDesc(flag.DescKeyRecallExportAll),
 	)
 	cmd.Flags().BoolVar(
 		&opts.AllProjects, "all-projects", false,
-		desc.FlagDesc(flag.FlagDescKeyRecallExportAllProjects),
+		desc.FlagDesc(flag.DescKeyRecallExportAllProjects),
 	)
 	cmd.Flags().BoolVar(
 		&opts.Regenerate,
 		"regenerate", false,
-		desc.FlagDesc(flag.FlagDescKeyRecallExportRegenerate),
+		desc.FlagDesc(flag.DescKeyRecallExportRegenerate),
 	)
 	cmd.Flags().BoolVar(
 		&opts.KeepFrontmatter,
 		"keep-frontmatter", true,
-		desc.FlagDesc(flag.FlagDescKeyRecallExportKeepFrontmatter),
+		desc.FlagDesc(flag.DescKeyRecallExportKeepFrontmatter),
 	)
 
 	cmd.Flags().BoolVarP(
 		&opts.Yes,
 		"yes", "y", false,
-		desc.FlagDesc(flag.FlagDescKeyRecallExportYes),
+		desc.FlagDesc(flag.DescKeyRecallExportYes),
 	)
 	cmd.Flags().BoolVar(
 		&opts.DryRun,
 		"dry-run", false,
-		desc.FlagDesc(flag.FlagDescKeyRecallExportDryRun),
+		desc.FlagDesc(flag.DescKeyRecallExportDryRun),
 	)
 
 	// Deprecated: --skip-existing is now the default behavior for --all.
 	var skipExisting bool
-	cmd.Flags().BoolVar(&skipExisting, "skip-existing", false, desc.FlagDesc(flag.FlagDescKeyRecallExportSkipExisting))
+	cmd.Flags().BoolVar(&skipExisting, "skip-existing", false, desc.FlagDesc(flag.DescKeyRecallExportSkipExisting))
 	_ = cmd.Flags().MarkDeprecated("skip-existing", "this is now the default behavior for --all")
 
 	return cmd

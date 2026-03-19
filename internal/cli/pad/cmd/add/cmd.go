@@ -35,7 +35,7 @@ func Cmd() *cobra.Command {
 
 	cmd.Flags().StringVarP(&filePath,
 		"file", "f", "",
-		desc.FlagDesc(flag.FlagDescKeyPadAddFile),
+		desc.FlagDesc(flag.DescKeyPadAddFile),
 	)
 
 	return cmd

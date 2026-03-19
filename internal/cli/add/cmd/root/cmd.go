@@ -70,7 +70,7 @@ func Cmd() *cobra.Command {
 	cmd.Flags().StringVarP(
 		&priority,
 		"priority", "p", "",
-		desc.FlagDesc(flag.FlagDescKeyAddPriority),
+		desc.FlagDesc(flag.DescKeyAddPriority),
 	)
 	_ = cmd.RegisterFlagCompletionFunc(
 		"priority", func(_ *cobra.Command, _ []string, _ string) (
@@ -81,37 +81,37 @@ func Cmd() *cobra.Command {
 	cmd.Flags().StringVarP(
 		&section,
 		"section", "s", "",
-		desc.FlagDesc(flag.FlagDescKeyAddSection),
+		desc.FlagDesc(flag.DescKeyAddSection),
 	)
 	cmd.Flags().StringVarP(
 		&fromFile,
 		"file", "f", "",
-		desc.FlagDesc(flag.FlagDescKeyAddFile),
+		desc.FlagDesc(flag.DescKeyAddFile),
 	)
 	cmd.Flags().StringVarP(
 		&context,
 		"context", "c", "",
-		desc.FlagDesc(flag.FlagDescKeyAddContext),
+		desc.FlagDesc(flag.DescKeyAddContext),
 	)
 	cmd.Flags().StringVarP(
 		&rationale,
 		"rationale", "r", "",
-		desc.FlagDesc(flag.FlagDescKeyAddRationale),
+		desc.FlagDesc(flag.DescKeyAddRationale),
 	)
 	cmd.Flags().StringVar(
 		&consequence,
 		"consequence", "",
-		desc.FlagDesc(flag.FlagDescKeyAddConsequence),
+		desc.FlagDesc(flag.DescKeyAddConsequence),
 	)
 	cmd.Flags().StringVarP(
 		&lesson,
 		"lesson", "l", "",
-		desc.FlagDesc(flag.FlagDescKeyAddLesson),
+		desc.FlagDesc(flag.DescKeyAddLesson),
 	)
 	cmd.Flags().StringVarP(
 		&application,
 		"application", "a", "",
-		desc.FlagDesc(flag.FlagDescKeyAddApplication),
+		desc.FlagDesc(flag.DescKeyAddApplication),
 	)
 
 	return cmd

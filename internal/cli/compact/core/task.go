@@ -81,7 +81,7 @@ func CompactTasks(
 				archiveContent += block.BlockContent() + nl + nl
 			}
 			if archiveFile, archiveErr := tidy.WriteArchive(
-				"tasks", desc.TextDesc(text.TextDescKeyHeadingArchivedTasks), archiveContent,
+				"tasks", desc.TextDesc(text.DescKeyHeadingArchivedTasks), archiveContent,
 			); archiveErr == nil {
 				compact.InfoArchivedTasks(
 					cmd, len(blocksToArchive), archiveFile, archiveDays)

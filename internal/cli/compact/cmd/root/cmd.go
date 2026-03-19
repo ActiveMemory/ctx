@@ -42,7 +42,7 @@ func Cmd() *cobra.Command {
 		&archive,
 		"archive",
 		false,
-		desc.FlagDesc(flag.FlagDescKeyCompactArchive),
+		desc.FlagDesc(flag.DescKeyCompactArchive),
 	)
 
 	return cmd

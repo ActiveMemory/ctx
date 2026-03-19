@@ -21,11 +21,11 @@ type ConfigPattern struct {
 // ConfigPatterns returns config file patterns with resolved topic descriptions.
 func ConfigPatterns() []ConfigPattern {
 	return []ConfigPattern{
-		{cfgsync.PatternEslint, TextDesc(text.TextDescKeySyncTopicEslint)},
-		{cfgsync.PatternPrettier, TextDesc(text.TextDescKeySyncTopicPrettier)},
-		{cfgsync.PatternTSConfig, TextDesc(text.TextDescKeySyncTopicTSConfig)},
-		{cfgsync.PatternEditorConf, TextDesc(text.TextDescKeySyncTopicEditorConfig)},
-		{cfgsync.PatternMakefile, TextDesc(text.TextDescKeySyncTopicMakefile)},
-		{cfgsync.PatternDockerfile, TextDesc(text.TextDescKeySyncTopicDockerfile)},
+		{cfgsync.PatternEslint, TextDesc(text.DescKeySyncTopicEslint)},
+		{cfgsync.PatternPrettier, TextDesc(text.DescKeySyncTopicPrettier)},
+		{cfgsync.PatternTSConfig, TextDesc(text.DescKeySyncTopicTSConfig)},
+		{cfgsync.PatternEditorConf, TextDesc(text.DescKeySyncTopicEditorConfig)},
+		{cfgsync.PatternMakefile, TextDesc(text.DescKeySyncTopicMakefile)},
+		{cfgsync.PatternDockerfile, TextDesc(text.DescKeySyncTopicDockerfile)},
 	}
 }

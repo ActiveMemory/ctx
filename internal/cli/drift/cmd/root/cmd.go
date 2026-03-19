@@ -41,10 +41,10 @@ func Cmd() *cobra.Command {
 	}
 
 	cmd.Flags().BoolVar(
-		&jsonOutput, "json", false, desc.FlagDesc(flag.FlagDescKeyDriftJson),
+		&jsonOutput, "json", false, desc.FlagDesc(flag.DescKeyDriftJson),
 	)
 	cmd.Flags().BoolVar(&fix,
-		"fix", false, desc.FlagDesc(flag.FlagDescKeyDriftFix),
+		"fix", false, desc.FlagDesc(flag.DescKeyDriftFix),
 	)
 
 	return cmd

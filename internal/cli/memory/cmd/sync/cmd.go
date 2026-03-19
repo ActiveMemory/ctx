@@ -32,7 +32,7 @@ func Cmd() *cobra.Command {
 	}
 
 	cmd.Flags().BoolVar(
-		&dryRun, "dry-run", false, desc.FlagDesc(flag.FlagDescKeyMemorySyncDryRun),
+		&dryRun, "dry-run", false, desc.FlagDesc(flag.DescKeyMemorySyncDryRun),
 	)
 
 	return cmd
