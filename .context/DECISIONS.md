@@ -3,6 +3,8 @@
 <!-- INDEX:START -->
 | Date | Decision |
 |------|--------|
+| 2026-03-18 | Eager Init() for static embedded data instead of per-accessor sync.Once |
+| 2026-03-18 | Singular command names for all CLI entities |
 | 2026-03-17 | Pre-compute-then-print for write package output blocks |
 | 2026-03-16 | Server methods only handle dispatch and I/O, not struct construction |
 | 2026-03-16 | Explicit Init over package-level init() for resource lookup |
@@ -53,6 +55,34 @@
 | 2026-02-26 | Security and permissions (consolidated) |
 | 2026-02-27 | Webhook and notification design (consolidated) |
 <!-- INDEX:END -->
+
+## [2026-03-18-193631] Eager Init() for static embedded data instead of per-accessor sync.Once
+
+**Status**: Accepted
+
+**Context**: 4 sync.Once guards + 4 exported maps + 4 Load functions + a wrapper package for YAML that never mutates.
+
+**Decision**: Eager Init() for static embedded data instead of per-accessor sync.Once
+
+**Rationale**: Data is static and required at startup. sync.Once per accessor is cargo cult. One Init() in main.go is sufficient. Tests call Init() in TestMain.
+
+**Consequence**: Maps unexported, accessors are plain lookups, permissions and stopwords also loaded eagerly. Zero sync.Once remains in the lookup pipeline.
+
+---
+
+## [2026-03-18-193623] Singular command names for all CLI entities
+
+**Status**: Accepted
+
+**Context**: ctx add used learning (singular) but ctx learnings was plural. Inconsistency across 6 commands.
+
+**Decision**: Singular command names for all CLI entities
+
+**Rationale**: Less headache for i18n; one rule (singular = entity); developers think in OOP. Use field values come from DescKey constants for single-source-of-truth renaming.
+
+**Consequence**: All commands singular: task, decision, learning, change, permission, dep. YAML keys, desc constants, directory names, and 50+ files updated.
+
+---
 
 ## [2026-03-17-105627] Pre-compute-then-print for write package output blocks
 

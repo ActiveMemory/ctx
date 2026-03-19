@@ -10,6 +10,7 @@ import (
 	"os"
 	"path/filepath"
 
+	"github.com/ActiveMemory/ctx/internal/assets/read/project"
 	"github.com/ActiveMemory/ctx/internal/config/dir"
 	"github.com/ActiveMemory/ctx/internal/config/file"
 	"github.com/ActiveMemory/ctx/internal/config/fs"
@@ -17,8 +18,6 @@ import (
 	ctxerr "github.com/ActiveMemory/ctx/internal/err/initialize"
 	"github.com/ActiveMemory/ctx/internal/write/initialize"
 	"github.com/spf13/cobra"
-
-	"github.com/ActiveMemory/ctx/internal/assets"
 )
 
 // ProjectDirs lists the project-root directories created by ctx init,
@@ -48,7 +47,7 @@ func CreateProjectDirs(cmd *cobra.Command) error {
 			return fs2.Mkdir(dir+"/", mkdirErr)
 		}
 
-		readme, readErr := assets.ProjectReadme(dir)
+		readme, readErr := project.ProjectReadme(dir)
 		if readErr != nil {
 			return ctxerr.ReadProjectReadme(dir, readErr)
 		}

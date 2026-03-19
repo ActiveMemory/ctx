@@ -10,13 +10,12 @@ import (
 	"os"
 	"path/filepath"
 
+	"github.com/ActiveMemory/ctx/internal/assets/read/entry"
 	"github.com/ActiveMemory/ctx/internal/config/fs"
 	fs2 "github.com/ActiveMemory/ctx/internal/err/fs"
 	ctxerr "github.com/ActiveMemory/ctx/internal/err/prompt"
 	"github.com/ActiveMemory/ctx/internal/write/initialize"
 	"github.com/spf13/cobra"
-
-	"github.com/ActiveMemory/ctx/internal/assets"
 )
 
 // CreateEntryTemplates creates entry template files in .context/templates/.
@@ -33,7 +32,7 @@ func CreateEntryTemplates(cmd *cobra.Command, contextDir string, force bool) err
 	if err := os.MkdirAll(templatesDir, fs.PermExec); err != nil {
 		return fs2.Mkdir(templatesDir, err)
 	}
-	entryTemplates, err := assets.ListEntry()
+	entryTemplates, err := entry.List()
 	if err != nil {
 		return ctxerr.ListEntryTemplates(err)
 	}
@@ -43,7 +42,7 @@ func CreateEntryTemplates(cmd *cobra.Command, contextDir string, force bool) err
 			initialize.Skipped(cmd, "templates/"+name)
 			continue
 		}
-		content, err := assets.Entry(name)
+		content, err := entry.ForName(name)
 		if err != nil {
 			return ctxerr.ReadEntryTemplate(name, err)
 		}

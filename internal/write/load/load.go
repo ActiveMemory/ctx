@@ -10,11 +10,13 @@ import (
 	"fmt"
 	"strings"
 
+	"github.com/ActiveMemory/ctx/internal/assets/read/desc"
+	"github.com/ActiveMemory/ctx/internal/assets/tpl"
+	"github.com/ActiveMemory/ctx/internal/config/embed/text"
 	"github.com/ActiveMemory/ctx/internal/config/token"
 	ctxToken "github.com/ActiveMemory/ctx/internal/context/token"
 	"github.com/spf13/cobra"
 
-	"github.com/ActiveMemory/ctx/internal/assets"
 	"github.com/ActiveMemory/ctx/internal/entity"
 )
 
@@ -64,8 +66,8 @@ func Assembled(
 	nl := token.NewlineLF
 	sep := token.Separator
 
-	sb.WriteString(assets.LoadHeadingContext + nl + nl)
-	_, _ = fmt.Fprintf(&sb, assets.TplLoadBudget+nl+nl, budget, totalTokens)
+	sb.WriteString(desc.TextDesc(text.TextDescKeyHeadingContext) + nl + nl)
+	_, _ = fmt.Fprintf(&sb, tpl.TplLoadBudget+nl+nl, budget, totalTokens)
 	sb.WriteString(sep + nl + nl)
 
 	tokensUsed := ctxToken.EstimateTokensString(sb.String())
@@ -77,11 +79,11 @@ func Assembled(
 
 		fileTokens := f.Tokens
 		if tokensUsed+fileTokens > budget {
-			_, _ = fmt.Fprintf(&sb, nl+sep+nl+nl+assets.TplLoadTruncated+nl, f.Name)
+			_, _ = fmt.Fprintf(&sb, nl+sep+nl+nl+tpl.TplLoadTruncated+nl, f.Name)
 			break
 		}
 
-		_, _ = fmt.Fprintf(&sb, assets.TplLoadSectionHeading+nl+nl, titleFn(f.Name))
+		_, _ = fmt.Fprintf(&sb, tpl.TplLoadSectionHeading+nl+nl, titleFn(f.Name))
 		sb.Write(f.Content)
 		if !strings.HasSuffix(string(f.Content), nl) {
 			sb.WriteString(nl)

@@ -7,10 +7,9 @@
 package diff
 
 import (
-	"github.com/ActiveMemory/ctx/internal/config/embed"
+	"github.com/ActiveMemory/ctx/internal/assets/read/desc"
+	"github.com/ActiveMemory/ctx/internal/config/embed/cmd"
 	"github.com/spf13/cobra"
-
-	"github.com/ActiveMemory/ctx/internal/assets"
 )
 
 // Cmd returns the memory diff subcommand.
@@ -18,7 +17,7 @@ import (
 // Returns:
 //   - *cobra.Command: command for showing memory diff.
 func Cmd() *cobra.Command {
-	short, long := assets.CommandDesc(embed.CmdDescKeyMemoryDiff)
+	short, long := desc.CommandDesc(cmd.DescKeyMemoryDiff)
 	return &cobra.Command{
 		Use:   "diff",
 		Short: short,

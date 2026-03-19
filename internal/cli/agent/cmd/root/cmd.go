@@ -9,11 +9,12 @@ package root
 import (
 	"time"
 
-	"github.com/ActiveMemory/ctx/internal/config/embed"
+	"github.com/ActiveMemory/ctx/internal/assets/read/desc"
+	"github.com/ActiveMemory/ctx/internal/config/embed/cmd"
+	"github.com/ActiveMemory/ctx/internal/config/embed/flag"
 	"github.com/ActiveMemory/ctx/internal/config/fmt"
 	"github.com/spf13/cobra"
 
-	"github.com/ActiveMemory/ctx/internal/assets"
 	"github.com/ActiveMemory/ctx/internal/cli/agent/core"
 	"github.com/ActiveMemory/ctx/internal/rc"
 )
@@ -40,10 +41,10 @@ func Cmd() *cobra.Command {
 		session  string
 	)
 
-	short, long := assets.CommandDesc(embed.CmdDescKeyAgent)
+	short, long := desc.CommandDesc(cmd.DescKeyAgent)
 
 	cmd := &cobra.Command{
-		Use:   "agent",
+		Use:   cmd.DescKeyAgent,
 		Short: short,
 		Long:  long,
 		RunE: func(cmd *cobra.Command, args []string) error {
@@ -56,18 +57,18 @@ func Cmd() *cobra.Command {
 
 	cmd.Flags().IntVar(
 		&budget,
-		"budget", rc.DefaultTokenBudget, assets.FlagDesc(embed.FlagDescKeyAgentBudget),
+		"budget", rc.DefaultTokenBudget, desc.FlagDesc(flag.FlagDescKeyAgentBudget),
 	)
 	cmd.Flags().StringVar(
-		&format, "format", fmt.FormatMarkdown, assets.FlagDesc(embed.FlagDescKeyAgentFormat),
+		&format, "format", fmt.FormatMarkdown, desc.FlagDesc(flag.FlagDescKeyAgentFormat),
 	)
 	cmd.Flags().DurationVar(
 		&cooldown, "cooldown", core.DefaultCooldown,
-		assets.FlagDesc(embed.FlagDescKeyAgentCooldown),
+		desc.FlagDesc(flag.FlagDescKeyAgentCooldown),
 	)
 	cmd.Flags().StringVar(
 		&session, "session", "",
-		assets.FlagDesc(embed.FlagDescKeyAgentSession),
+		desc.FlagDesc(flag.FlagDescKeyAgentSession),
 	)
 
 	return cmd

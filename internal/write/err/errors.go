@@ -9,10 +9,9 @@ package err
 import (
 	"fmt"
 
-	"github.com/ActiveMemory/ctx/internal/config/embed"
+	"github.com/ActiveMemory/ctx/internal/assets/read/desc"
+	"github.com/ActiveMemory/ctx/internal/config/embed/text"
 	"github.com/spf13/cobra"
-
-	"github.com/ActiveMemory/ctx/internal/assets"
 )
 
 // WithError writes a prefixed error message to the command's stderr stream.
@@ -24,7 +23,7 @@ func WithError(cmd *cobra.Command, err error) {
 	if cmd == nil {
 		return
 	}
-	cmd.PrintErrln(assets.TextDesc(embed.TextDescKeyWritePrefixError), err)
+	cmd.PrintErrln(desc.TextDesc(text.TextDescKeyWritePrefixError), err)
 }
 
 // WarnFile prints a non-fatal file operation warning to stderr.

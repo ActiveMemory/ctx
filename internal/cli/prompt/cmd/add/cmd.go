@@ -7,10 +7,10 @@
 package add
 
 import (
-	"github.com/ActiveMemory/ctx/internal/config/embed"
+	"github.com/ActiveMemory/ctx/internal/assets/read/desc"
+	"github.com/ActiveMemory/ctx/internal/config/embed/cmd"
+	"github.com/ActiveMemory/ctx/internal/config/embed/flag"
 	"github.com/spf13/cobra"
-
-	"github.com/ActiveMemory/ctx/internal/assets"
 )
 
 // Cmd returns the prompt add subcommand.
@@ -20,7 +20,7 @@ import (
 func Cmd() *cobra.Command {
 	var fromStdin bool
 
-	short, long := assets.CommandDesc(embed.CmdDescKeyPromptAdd)
+	short, long := desc.CommandDesc(cmd.DescKeyPromptAdd)
 
 	cmd := &cobra.Command{
 		Use:   "add NAME",
@@ -33,7 +33,7 @@ func Cmd() *cobra.Command {
 	}
 
 	cmd.Flags().BoolVar(&fromStdin,
-		"stdin", false, assets.FlagDesc(embed.FlagDescKeyPromptAddStdin),
+		"stdin", false, desc.FlagDesc(flag.FlagDescKeyPromptAddStdin),
 	)
 
 	return cmd

@@ -7,11 +7,11 @@
 package root
 
 import (
+	"github.com/ActiveMemory/ctx/internal/assets/read/desc"
 	"github.com/ActiveMemory/ctx/internal/config/cli"
-	"github.com/ActiveMemory/ctx/internal/config/embed"
+	"github.com/ActiveMemory/ctx/internal/config/embed/cmd"
+	"github.com/ActiveMemory/ctx/internal/config/embed/flag"
 	"github.com/spf13/cobra"
-
-	"github.com/ActiveMemory/ctx/internal/assets"
 )
 
 // Cmd returns the "ctx hook" command for generating AI tool integrations.
@@ -27,9 +27,9 @@ import (
 func Cmd() *cobra.Command {
 	var write bool
 
-	short, long := assets.CommandDesc(embed.CmdDescKeyHook)
+	short, long := desc.CommandDesc(cmd.DescKeyHook)
 	cmd := &cobra.Command{
-		Use:         "hook <tool>",
+		Use:         cmd.DescKeyHook + " <tool>",
 		Short:       short,
 		Annotations: map[string]string{cli.AnnotationSkipInit: cli.AnnotationTrue},
 		Long:        long,
@@ -41,7 +41,7 @@ func Cmd() *cobra.Command {
 
 	cmd.Flags().BoolVarP(
 		&write, "write", "w", false,
-		assets.FlagDesc(embed.FlagDescKeyHookWrite),
+		desc.FlagDesc(flag.FlagDescKeyHookWrite),
 	)
 
 	return cmd

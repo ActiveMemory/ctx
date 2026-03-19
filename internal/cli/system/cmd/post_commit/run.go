@@ -10,12 +10,12 @@ import (
 	"os"
 	"regexp"
 
-	"github.com/ActiveMemory/ctx/internal/config/embed"
+	"github.com/ActiveMemory/ctx/internal/assets/read/desc"
+	"github.com/ActiveMemory/ctx/internal/config/embed/text"
 	"github.com/ActiveMemory/ctx/internal/config/hook"
 	ctxcontext "github.com/ActiveMemory/ctx/internal/context/resolve"
 	"github.com/spf13/cobra"
 
-	"github.com/ActiveMemory/ctx/internal/assets"
 	"github.com/ActiveMemory/ctx/internal/cli/system/core"
 	"github.com/ActiveMemory/ctx/internal/notify"
 )
@@ -60,7 +60,7 @@ func Run(cmd *cobra.Command, stdin *os.File) error {
 
 	hookName, variant := hook.PostCommit, hook.VariantNudge
 
-	fallback := assets.TextDesc(embed.TextDescKeyPostCommitFallback)
+	fallback := desc.TextDesc(text.TextDescKeyPostCommitFallback)
 	msg := core.LoadMessage(hookName, variant, nil, fallback)
 	if msg == "" {
 		return nil
@@ -69,7 +69,7 @@ func Run(cmd *cobra.Command, stdin *os.File) error {
 	core.PrintHookContext(cmd, hook.EventPostToolUse, msg)
 
 	ref := notify.NewTemplateRef(hookName, variant, nil)
-	core.Relay(hookName+": "+assets.TextDesc(embed.TextDescKeyPostCommitRelayMessage), input.SessionID, ref)
+	core.Relay(hookName+": "+desc.TextDesc(text.TextDescKeyPostCommitRelayMessage), input.SessionID, ref)
 
 	core.CheckVersionDrift(cmd, sessionID)
 

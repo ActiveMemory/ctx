@@ -11,11 +11,11 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/ActiveMemory/ctx/internal/config/embed"
+	"github.com/ActiveMemory/ctx/internal/assets/read/desc"
+	"github.com/ActiveMemory/ctx/internal/config/embed/text"
 	"github.com/ActiveMemory/ctx/internal/config/stats"
 	"github.com/spf13/cobra"
 
-	"github.com/ActiveMemory/ctx/internal/assets"
 	"github.com/ActiveMemory/ctx/internal/sysinfo"
 )
 
@@ -64,11 +64,11 @@ func SeverityFor(alerts []sysinfo.ResourceAlert, resource string) sysinfo.Severi
 func StatusText(sev sysinfo.Severity) string {
 	switch sev {
 	case sysinfo.SeverityWarning:
-		return assets.TextDesc(embed.TextDescKeyResourcesStatusWarn)
+		return desc.TextDesc(text.TextDescKeyResourcesStatusWarn)
 	case sysinfo.SeverityDanger:
-		return assets.TextDesc(embed.TextDescKeyResourcesStatusDanger)
+		return desc.TextDesc(text.TextDescKeyResourcesStatusDanger)
 	default:
-		return assets.TextDesc(embed.TextDescKeyResourcesStatusOk)
+		return desc.TextDesc(text.TextDescKeyResourcesStatusOk)
 	}
 }
 
@@ -100,8 +100,8 @@ func FormatResourceLine(label, values, status string) string {
 //   - snap: collected system resource snapshot
 //   - alerts: evaluated resource alerts
 func OutputResourcesText(cmd *cobra.Command, snap sysinfo.Snapshot, alerts []sysinfo.ResourceAlert) {
-	cmd.Println(assets.TextDesc(embed.TextDescKeyResourcesHeader))
-	cmd.Println(assets.TextDesc(embed.TextDescKeyResourcesSeparator))
+	cmd.Println(desc.TextDesc(text.TextDescKeyResourcesHeader))
+	cmd.Println(desc.TextDesc(text.TextDescKeyResourcesSeparator))
 	cmd.Println()
 
 	// Memory line
@@ -153,14 +153,14 @@ func OutputResourcesText(cmd *cobra.Command, snap sysinfo.Snapshot, alerts []sys
 	// Summary
 	cmd.Println()
 	if len(alerts) == 0 {
-		cmd.Println(assets.TextDesc(embed.TextDescKeyResourcesAllClear))
+		cmd.Println(desc.TextDesc(text.TextDescKeyResourcesAllClear))
 	} else {
-		cmd.Println(assets.TextDesc(embed.TextDescKeyResourcesAlerts))
+		cmd.Println(desc.TextDesc(text.TextDescKeyResourcesAlerts))
 		for _, a := range alerts {
 			if a.Severity == sysinfo.SeverityDanger {
-				cmd.Println(fmt.Sprintf(assets.TextDesc(embed.TextDescKeyResourcesAlertDanger), a.Message))
+				cmd.Println(fmt.Sprintf(desc.TextDesc(text.TextDescKeyResourcesAlertDanger), a.Message))
 			} else {
-				cmd.Println(fmt.Sprintf(assets.TextDesc(embed.TextDescKeyResourcesAlertWarning), a.Message))
+				cmd.Println(fmt.Sprintf(desc.TextDesc(text.TextDescKeyResourcesAlertWarning), a.Message))
 			}
 		}
 	}

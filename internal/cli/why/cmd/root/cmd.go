@@ -7,11 +7,10 @@
 package root
 
 import (
+	"github.com/ActiveMemory/ctx/internal/assets/read/desc"
 	"github.com/ActiveMemory/ctx/internal/config/cli"
-	"github.com/ActiveMemory/ctx/internal/config/embed"
+	"github.com/ActiveMemory/ctx/internal/config/embed/cmd"
 	"github.com/spf13/cobra"
-
-	"github.com/ActiveMemory/ctx/internal/assets"
 )
 
 // Cmd returns the "ctx why" cobra command.
@@ -19,10 +18,10 @@ import (
 // Returns:
 //   - *cobra.Command: Configured why command with document aliases
 func Cmd() *cobra.Command {
-	short, long := assets.CommandDesc(embed.CmdDescKeyWhy)
+	short, long := desc.CommandDesc(cmd.DescKeyWhy)
 
 	cmd := &cobra.Command{
-		Use:         "why [DOCUMENT]",
+		Use:         cmd.DescKeyWhy + " [DOCUMENT]",
 		Short:       short,
 		Annotations: map[string]string{cli.AnnotationSkipInit: ""},
 		ValidArgs:   []string{"manifesto", "about", "invariants"},

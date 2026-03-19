@@ -74,7 +74,7 @@ doctor.resource-swap.format:
 doctor.task-completion.format:
   short: 'Tasks: %d/%d completed (%d%%)'
 doctor.task-completion.warning-suffix:
-  short: ' — consider archiving with ctx tasks archive'
+  short: ' — consider archiving with ctx task archive'
 doctor.webhook.info:
   short: No webhook configured (optional — use ctx notify setup)
 doctor.webhook.ok:

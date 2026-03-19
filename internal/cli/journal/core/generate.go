@@ -12,8 +12,10 @@ import (
 	"strings"
 	"unicode/utf8"
 
-	"github.com/ActiveMemory/ctx/internal/assets"
+	"github.com/ActiveMemory/ctx/internal/assets/read/desc"
+	"github.com/ActiveMemory/ctx/internal/assets/tpl"
 	"github.com/ActiveMemory/ctx/internal/config/dir"
+	"github.com/ActiveMemory/ctx/internal/config/embed/text"
 	"github.com/ActiveMemory/ctx/internal/config/file"
 	"github.com/ActiveMemory/ctx/internal/config/journal"
 	"github.com/ActiveMemory/ctx/internal/config/token"
@@ -28,7 +30,7 @@ import (
 // Returns:
 //   - string: Markdown README content with regeneration instructions
 func GenerateSiteReadme(journalDir string) string {
-	return fmt.Sprintf(assets.TplJournalSiteReadme, journalDir)
+	return fmt.Sprintf(tpl.TplJournalSiteReadme, journalDir)
 }
 
 // GenerateIndex creates the index.md content for the journal site.
@@ -56,16 +58,16 @@ func GenerateIndex(entries []JournalEntry) string {
 		}
 	}
 
-	sb.WriteString(assets.JournalHeadingSessionJournal + nl + nl)
-	sb.WriteString(assets.TplJournalIndexIntro + nl + nl)
-	sb.WriteString(fmt.Sprintf(assets.TplJournalIndexStats+
+	sb.WriteString(desc.TextDesc(text.TextDescKeyHeadingSessionJournal) + nl + nl)
+	sb.WriteString(tpl.TplJournalIndexIntro + nl + nl)
+	sb.WriteString(fmt.Sprintf(tpl.TplJournalIndexStats+
 		nl+nl, len(regular), len(suggestions)))
 
 	// Group regular sessions by month
 	months, monthOrder := GroupByMonth(regular)
 
 	for _, month := range monthOrder {
-		sb.WriteString(fmt.Sprintf(assets.TplJournalMonthHeading+nl+nl, month))
+		sb.WriteString(fmt.Sprintf(tpl.TplJournalMonthHeading+nl+nl, month))
 
 		for _, e := range months[month] {
 			sb.WriteString(FormatIndexEntry(e, nl))
@@ -76,8 +78,8 @@ func GenerateIndex(entries []JournalEntry) string {
 	// Suggestions section
 	if len(suggestions) > 0 {
 		sb.WriteString(token.Separator + nl + nl)
-		sb.WriteString(assets.JournalHeadingSuggestions + nl + nl)
-		sb.WriteString(assets.TplJournalSuggestionsNote + nl + nl)
+		sb.WriteString(desc.TextDesc(text.TextDescKeyHeadingSuggestions) + nl + nl)
+		sb.WriteString(tpl.TplJournalSuggestionsNote + nl + nl)
 
 		for _, e := range suggestions {
 			sb.WriteString(FormatIndexEntry(e, nl))
@@ -112,10 +114,10 @@ func FormatIndexEntry(e JournalEntry, nl string) string {
 	size := FormatSize(e.Size)
 
 	line := fmt.Sprintf(
-		assets.TplJournalIndexEntry+nl, timeStr, e.Title, link, project, size,
+		tpl.TplJournalIndexEntry+nl, timeStr, e.Title, link, project, size,
 	)
 	if e.Summary != "" {
-		line += fmt.Sprintf(assets.TplJournalIndexSummary+nl, e.Summary)
+		line += fmt.Sprintf(tpl.TplJournalIndexSummary+nl, e.Summary)
 	}
 	return line
 }
@@ -132,7 +134,7 @@ func FormatIndexEntry(e JournalEntry, nl string) string {
 func InjectSummary(content, summary string) string {
 	nl := token.NewlineLF
 	admonition := fmt.Sprintf(
-		assets.TplJournalSummaryAdmonition+nl+nl, summary,
+		tpl.TplJournalSummaryAdmonition+nl+nl, summary,
 	)
 
 	// Insert after frontmatter closing delimiter
@@ -171,7 +173,7 @@ func InjectSourceLink(content, sourcePath string) string {
 	relPath := filepath.Join(
 		dir.Context, dir.Journal, filepath.Base(absPath),
 	)
-	link := fmt.Sprintf(assets.TplJournalSourceLink+nl+nl,
+	link := fmt.Sprintf(tpl.TplJournalSourceLink+nl+nl,
 		absPath, relPath, relPath)
 
 	fmOpen := len(token.Separator + nl)
@@ -205,27 +207,27 @@ func GenerateZensicalToml(
 	var sb strings.Builder
 	nl := token.NewlineLF
 
-	sb.WriteString(assets.TplZensicalProject + nl)
+	sb.WriteString(tpl.TplZensicalProject + nl)
 
 	// Build navigation
 	sb.WriteString(zensical.TomlNavOpen + nl)
-	sb.WriteString(fmt.Sprintf(assets.TplJournalNavItem+nl,
-		assets.JournalLabelHome, file.Index))
+	sb.WriteString(fmt.Sprintf(tpl.TplJournalNavItem+nl,
+		desc.TextDesc(text.TextDescKeyLabelHome), file.Index))
 	if len(topics) > 0 {
-		sb.WriteString(fmt.Sprintf(assets.TplJournalNavItem+nl,
-			assets.JournalLabelTopics,
+		sb.WriteString(fmt.Sprintf(tpl.TplJournalNavItem+nl,
+			desc.TextDesc(text.TextDescKeyLabelTopics),
 			filepath.Join(dir.JournTopics, file.Index)),
 		)
 	}
 	if len(keyFiles) > 0 {
-		sb.WriteString(fmt.Sprintf(assets.TplJournalNavItem+nl,
-			assets.JournalLabelFiles,
+		sb.WriteString(fmt.Sprintf(tpl.TplJournalNavItem+nl,
+			desc.TextDesc(text.TextDescKeyLabelFiles),
 			filepath.Join(dir.JournalFiles, file.Index)),
 		)
 	}
 	if len(sessionTypes) > 0 {
-		sb.WriteString(fmt.Sprintf(assets.TplJournalNavItem+nl,
-			assets.JournalLabelTypes,
+		sb.WriteString(fmt.Sprintf(tpl.TplJournalNavItem+nl,
+			desc.TextDesc(text.TextDescKeyLabelTypes),
 			filepath.Join(dir.JournalTypes, file.Index)),
 		)
 	}
@@ -249,7 +251,7 @@ func GenerateZensicalToml(
 	}
 
 	sb.WriteString(fmt.Sprintf(
-		assets.TplJournalNavSection+nl, assets.JournalHeadingRecentSessions),
+		tpl.TplJournalNavSection+nl, desc.TextDesc(text.TextDescKeyHeadingRecentSessions)),
 	)
 	for _, e := range recent {
 		title := e.Title
@@ -259,15 +261,15 @@ func GenerateZensicalToml(
 		}
 		title = strings.ReplaceAll(title, `"`, `\"`)
 		sb.WriteString(fmt.Sprintf(
-			assets.TplJournalNavSessionItem+nl, title, e.Filename),
+			tpl.TplJournalNavSessionItem+nl, title, e.Filename),
 		)
 	}
 	sb.WriteString(zensical.TomlNavSectionClose + nl)
 	sb.WriteString(zensical.TomlNavClose + nl + nl)
 
-	sb.WriteString(assets.TplZensicalExtraCSS + nl)
+	sb.WriteString(tpl.TplZensicalExtraCSS + nl)
 
-	sb.WriteString(assets.TplZensicalTheme)
+	sb.WriteString(tpl.TplZensicalTheme)
 
 	return sb.String()
 }

@@ -23,6 +23,28 @@ const (
 	AppConfigFile = "app.json"
 )
 
+// Obsidian vault configuration content.
+const (
+	// AppConfig is the minimal app.json content that enforces
+	// wikilink mode and shows frontmatter properties.
+	AppConfig = `{
+  "useMarkdownLinks": false,
+  "showFrontmatter": true,
+  "strictLineBreaks": false
+}
+`
+)
+
+// Obsidian wikilink format templates.
+const (
+	// WikilinkFmt formats a wikilink with display text.
+	// Args: target, display.
+	WikilinkFmt = "[[%s|%s]]"
+	// WikilinkPlain formats a plain wikilink (no display text).
+	// Args: target.
+	WikilinkPlain = "[[%s]]"
+)
+
 // Obsidian MOC (Map of Content) page filenames.
 const (
 	// MOCPrefix is prepended to MOC filenames so they sort first

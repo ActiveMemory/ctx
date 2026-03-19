@@ -163,3 +163,5 @@
 - All user-facing text is routed through internal/assets with YAML-backed TextDescKeys — no inline strings in core/ or cmd/ packages
 
 - Every package under internal/config/ must have a doc.go with the project header and a one-line package comment
+
+- DescKey prefix (not CmdDescKey) for command description constants in config/embed/cmd/ — Go package hygiene: cmd.DescKeyFoo does not stutter like cmd.CmdDescKeyFoo

@@ -9,8 +9,8 @@ package fallback
 import (
 	"fmt"
 
-	"github.com/ActiveMemory/ctx/internal/assets"
-	"github.com/ActiveMemory/ctx/internal/config/embed"
+	"github.com/ActiveMemory/ctx/internal/assets/read/desc"
+	"github.com/ActiveMemory/ctx/internal/config/embed/text"
 	"github.com/ActiveMemory/ctx/internal/mcp/proto"
 	"github.com/ActiveMemory/ctx/internal/mcp/server/out"
 )
@@ -26,7 +26,7 @@ import (
 func DispatchErr(req proto.Request) *proto.Response {
 	return out.ErrResponse(req.ID, proto.ErrCodeNotFound,
 		fmt.Sprintf(
-			assets.TextDesc(embed.TextDescKeyMCPMethodNotFound),
+			desc.TextDesc(text.TextDescKeyMCPMethodNotFound),
 			req.Method,
 		),
 	)

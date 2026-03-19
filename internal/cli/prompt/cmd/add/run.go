@@ -11,6 +11,7 @@ import (
 	"os"
 	"path/filepath"
 
+	prompt2 "github.com/ActiveMemory/ctx/internal/assets/read/prompt"
 	"github.com/ActiveMemory/ctx/internal/config/file"
 	"github.com/ActiveMemory/ctx/internal/config/fs"
 	fs2 "github.com/ActiveMemory/ctx/internal/err/fs"
@@ -18,7 +19,6 @@ import (
 	"github.com/ActiveMemory/ctx/internal/write/prompt"
 	"github.com/spf13/cobra"
 
-	"github.com/ActiveMemory/ctx/internal/assets"
 	"github.com/ActiveMemory/ctx/internal/cli/prompt/core"
 )
 
@@ -55,7 +55,7 @@ func runAdd(cmd *cobra.Command, name string, fromStdin bool) error {
 	} else {
 		// Try to load from embedded starter templates.
 		var templateErr error
-		content, templateErr = assets.PromptTemplate(name + file.ExtMarkdown)
+		content, templateErr = prompt2.PromptTemplate(name + file.ExtMarkdown)
 		if templateErr != nil {
 			return ctxerr.NoPromptTemplate(name)
 		}

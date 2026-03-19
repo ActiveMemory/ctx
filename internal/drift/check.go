@@ -13,9 +13,9 @@ import (
 	"strings"
 	"time"
 
-	"github.com/ActiveMemory/ctx/internal/assets"
+	"github.com/ActiveMemory/ctx/internal/assets/read/desc"
 	ctxCfg "github.com/ActiveMemory/ctx/internal/config/ctx"
-	"github.com/ActiveMemory/ctx/internal/config/embed"
+	"github.com/ActiveMemory/ctx/internal/config/embed/text"
 	"github.com/ActiveMemory/ctx/internal/config/marker"
 	"github.com/ActiveMemory/ctx/internal/config/regex"
 	"github.com/ActiveMemory/ctx/internal/config/token"
@@ -74,7 +74,7 @@ func checkPathReferences(ctx *entity.Context, report *Report) {
 						File:    f.Name,
 						Line:    lineNum + 1,
 						Type:    IssueDeadPath,
-						Message: assets.TextDesc(embed.TextDescKeyDriftDeadPath),
+						Message: desc.TextDesc(text.TextDescKeyDriftDeadPath),
 						Path:    path,
 					})
 					foundDeadPaths = true
@@ -106,7 +106,7 @@ func checkStaleness(ctx *entity.Context, report *Report) {
 			report.Warnings = append(report.Warnings, Issue{
 				File:    f.Name,
 				Type:    IssueStaleness,
-				Message: assets.TextDesc(embed.TextDescKeyDriftStaleness),
+				Message: desc.TextDesc(text.TextDescKeyDriftStaleness),
 				Path:    "",
 			})
 			staleness = true
@@ -157,7 +157,7 @@ func checkConstitution(_ *entity.Context, report *Report) {
 					report.Violations = append(report.Violations, Issue{
 						File:    entry.Name(),
 						Type:    IssueSecret,
-						Message: assets.TextDesc(embed.TextDescKeyDriftSecret),
+						Message: desc.TextDesc(text.TextDescKeyDriftSecret),
 						Rule:    "no_secrets",
 					})
 					foundViolation = true
@@ -191,7 +191,7 @@ func checkRequiredFiles(ctx *entity.Context, report *Report) {
 			report.Warnings = append(report.Warnings, Issue{
 				File:    name,
 				Type:    IssueMissing,
-				Message: assets.TextDesc(embed.TextDescKeyDriftMissingFile),
+				Message: desc.TextDesc(text.TextDescKeyDriftMissingFile),
 			})
 			allPresent = false
 		}
@@ -237,7 +237,7 @@ func checkFileAge(ctx *entity.Context, report *Report) {
 			report.Warnings = append(report.Warnings, Issue{
 				File:    f.Name,
 				Type:    IssueStaleAge,
-				Message: fmt.Sprintf(assets.TextDesc(embed.TextDescKeyDriftStaleAge), days),
+				Message: fmt.Sprintf(desc.TextDesc(text.TextDescKeyDriftStaleAge), days),
 			})
 			foundStale = true
 		}
@@ -280,7 +280,7 @@ func checkEntryCount(ctx *entity.Context, report *Report) {
 				File: f.Name,
 				Type: IssueEntryCount,
 				Message: fmt.Sprintf(
-					assets.TextDesc(embed.TextDescKeyDriftEntryCount),
+					desc.TextDesc(text.TextDescKeyDriftEntryCount),
 					len(blocks), c.threshold,
 				),
 			})
@@ -333,7 +333,7 @@ func checkMissingPackages(ctx *entity.Context, report *Report) {
 			report.Warnings = append(report.Warnings, Issue{
 				File:    f.Name,
 				Type:    IssueMissingPackage,
-				Message: fmt.Sprintf(assets.TextDesc(embed.TextDescKeyDriftMissingPackage), pkg),
+				Message: fmt.Sprintf(desc.TextDesc(text.TextDescKeyDriftMissingPackage), pkg),
 				Path:    pkg,
 			})
 			found = true

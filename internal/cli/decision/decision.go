@@ -8,24 +8,24 @@
 package decision
 
 import (
-	"github.com/ActiveMemory/ctx/internal/config/embed"
+	"github.com/ActiveMemory/ctx/internal/assets/read/desc"
+	"github.com/ActiveMemory/ctx/internal/config/embed/cmd"
 	"github.com/spf13/cobra"
 
-	"github.com/ActiveMemory/ctx/internal/assets"
 	"github.com/ActiveMemory/ctx/internal/cli/decision/cmd/reindex"
 )
 
-// Cmd returns the decisions command with subcommands.
+// Cmd returns the decision command with subcommands.
 //
-// The decisions command provides utilities for managing the DECISIONS.md file,
+// The decision command provides utilities for managing the DECISIONS.md file,
 // including regenerating the quick-reference index.
 //
 // Returns:
-//   - *cobra.Command: The decisions command with subcommands
+//   - *cobra.Command: The decision command with subcommands
 func Cmd() *cobra.Command {
-	short, long := assets.CommandDesc(embed.CmdDescKeyDecision)
+	short, long := desc.CommandDesc(cmd.DescKeyDecision)
 	cmd := &cobra.Command{
-		Use:   "decisions",
+		Use:   cmd.DescKeyDecision,
 		Short: short,
 		Long:  long,
 	}

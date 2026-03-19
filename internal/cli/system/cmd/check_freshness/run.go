@@ -13,10 +13,10 @@ import (
 	"strings"
 	"time"
 
-	"github.com/ActiveMemory/ctx/internal/config/embed"
+	"github.com/ActiveMemory/ctx/internal/assets/read/desc"
+	"github.com/ActiveMemory/ctx/internal/config/embed/text"
 	"github.com/spf13/cobra"
 
-	"github.com/ActiveMemory/ctx/internal/assets"
 	"github.com/ActiveMemory/ctx/internal/cli/system/core"
 	"github.com/ActiveMemory/ctx/internal/config/freshness"
 	"github.com/ActiveMemory/ctx/internal/config/hook"
@@ -100,13 +100,13 @@ func Run(cmd *cobra.Command, stdin *os.File) error {
 	}
 
 	cmd.Println(core.NudgeBox(
-		assets.TextDesc(embed.TextDescKeyFreshnessRelayPrefix),
-		assets.TextDesc(embed.TextDescKeyFreshnessBoxTitle),
+		desc.TextDesc(text.TextDescKeyFreshnessRelayPrefix),
+		desc.TextDesc(text.TextDescKeyFreshnessBoxTitle),
 		content))
 
 	ref := notify.NewTemplateRef(hook.CheckFreshness, hook.VariantStale, vars)
 	core.NudgeAndRelay(hook.CheckFreshness+": "+
-		assets.TextDesc(embed.TextDescKeyFreshnessRelayMessage),
+		desc.TextDesc(text.TextDescKeyFreshnessRelayMessage),
 		input.SessionID, ref,
 	)
 
@@ -150,22 +150,22 @@ func formatStaleEntries(entries []staleEntry) string {
 	for _, url := range urlOrder {
 		group := byURL[url]
 		for _, e := range group {
-			fmt.Fprintf(&b, assets.TextDesc(embed.TextDescKeyFreshnessFileEntry),
+			fmt.Fprintf(&b, desc.TextDesc(text.TextDescKeyFreshnessFileEntry),
 				e.path, e.days, e.desc)
 			b.WriteString(token.NewlineLF)
 		}
-		fmt.Fprintf(&b, assets.TextDesc(embed.TextDescKeyFreshnessReviewURL), url)
+		fmt.Fprintf(&b, desc.TextDesc(text.TextDescKeyFreshnessReviewURL), url)
 		b.WriteString(token.NewlineLF)
 	}
 
 	// Entries without review URLs
 	for _, e := range noURL {
-		fmt.Fprintf(&b, assets.TextDesc(embed.TextDescKeyFreshnessFileEntry),
+		fmt.Fprintf(&b, desc.TextDesc(text.TextDescKeyFreshnessFileEntry),
 			e.path, e.days, e.desc)
 		b.WriteString(token.NewlineLF)
 	}
 
-	b.WriteString(assets.TextDesc(embed.TextDescKeyFreshnessTouchHint))
+	b.WriteString(desc.TextDesc(text.TextDescKeyFreshnessTouchHint))
 
 	return b.String()
 }

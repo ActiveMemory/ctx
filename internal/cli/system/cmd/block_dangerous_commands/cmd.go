@@ -9,10 +9,9 @@ package block_dangerous_commands
 import (
 	"os"
 
-	"github.com/ActiveMemory/ctx/internal/config/embed"
+	"github.com/ActiveMemory/ctx/internal/assets/read/desc"
+	"github.com/ActiveMemory/ctx/internal/config/embed/cmd"
 	"github.com/spf13/cobra"
-
-	"github.com/ActiveMemory/ctx/internal/assets"
 )
 
 // Cmd returns the "ctx system block-dangerous-commands" subcommand.
@@ -20,7 +19,7 @@ import (
 // Returns:
 //   - *cobra.Command: Configured block-dangerous-commands subcommand
 func Cmd() *cobra.Command {
-	short, long := assets.CommandDesc(embed.CmdDescKeySystemBlockDangerousCommands)
+	short, long := desc.CommandDesc(cmd.DescKeySystemBlockDangerousCommands)
 
 	return &cobra.Command{
 		Use:    "block-dangerous-commands",

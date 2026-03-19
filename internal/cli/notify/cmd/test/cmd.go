@@ -7,10 +7,9 @@
 package test
 
 import (
-	"github.com/ActiveMemory/ctx/internal/config/embed"
+	"github.com/ActiveMemory/ctx/internal/assets/read/desc"
+	"github.com/ActiveMemory/ctx/internal/config/embed/cmd"
 	"github.com/spf13/cobra"
-
-	"github.com/ActiveMemory/ctx/internal/assets"
 )
 
 // Cmd returns the "ctx notify test" subcommand.
@@ -18,7 +17,7 @@ import (
 // Returns:
 //   - *cobra.Command: Configured test subcommand
 func Cmd() *cobra.Command {
-	short, long := assets.CommandDesc(embed.CmdDescKeyNotifyTest)
+	short, long := desc.CommandDesc(cmd.DescKeyNotifyTest)
 	return &cobra.Command{
 		Use:   "test",
 		Short: short,

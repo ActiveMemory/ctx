@@ -12,10 +12,11 @@ import (
 	"path/filepath"
 	"strings"
 
-	"github.com/ActiveMemory/ctx/internal/assets"
+	"github.com/ActiveMemory/ctx/internal/assets/tpl"
 	"github.com/ActiveMemory/ctx/internal/config/file"
 	"github.com/ActiveMemory/ctx/internal/config/fs"
 	"github.com/ActiveMemory/ctx/internal/config/journal"
+	"github.com/ActiveMemory/ctx/internal/config/session"
 	"github.com/ActiveMemory/ctx/internal/config/token"
 	"github.com/ActiveMemory/ctx/internal/io"
 )
@@ -124,7 +125,7 @@ func ExtractSessionID(content string) string {
 
 	for _, line := range strings.Split(fmBlock, nl) {
 		line = strings.TrimSpace(line)
-		prefix := assets.FmKeySessionID + token.Colon
+		prefix := session.FmKeySessionID + token.Colon
 		if strings.HasPrefix(line, prefix) {
 			val := strings.TrimSpace(strings.TrimPrefix(line, prefix))
 			// Strip surrounding quotes.
@@ -215,8 +216,8 @@ func RenameJournalFiles(journalDir, oldBase, newBase string, numParts int) {
 
 	// Rename multipart files and update nav links.
 	for p := 2; p <= numParts; p++ {
-		oldPart := filepath.Join(journalDir, fmt.Sprintf(assets.TplRecallPartFilename, oldBase, p))
-		newPart := filepath.Join(journalDir, fmt.Sprintf(assets.TplRecallPartFilename, newBase, p))
+		oldPart := filepath.Join(journalDir, fmt.Sprintf(tpl.TplRecallPartFilename, oldBase, p))
+		newPart := filepath.Join(journalDir, fmt.Sprintf(tpl.TplRecallPartFilename, newBase, p))
 		if _, statErr := os.Stat(oldPart); statErr == nil {
 			_ = os.Rename(oldPart, newPart)
 		}
@@ -242,7 +243,7 @@ func UpdateNavLinks(journalDir, newBase, oldBase string, numParts int) {
 	files := []string{filepath.Join(journalDir, newBase+file.ExtMarkdown)}
 	for p := 2; p <= numParts; p++ {
 		files = append(files, filepath.Join(journalDir,
-			fmt.Sprintf(assets.TplRecallPartFilename, newBase, p)))
+			fmt.Sprintf(tpl.TplRecallPartFilename, newBase, p)))
 	}
 
 	for _, f := range files {

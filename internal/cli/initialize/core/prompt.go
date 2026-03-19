@@ -13,6 +13,8 @@ import (
 	"strings"
 	"time"
 
+	loop2 "github.com/ActiveMemory/ctx/internal/assets/read/loop"
+	"github.com/ActiveMemory/ctx/internal/assets/read/template"
 	"github.com/spf13/cobra"
 
 	"github.com/ActiveMemory/ctx/internal/config/cli"
@@ -25,8 +27,6 @@ import (
 	initErr "github.com/ActiveMemory/ctx/internal/err/initialize"
 	promptErr "github.com/ActiveMemory/ctx/internal/err/prompt"
 	"github.com/ActiveMemory/ctx/internal/write/initialize"
-
-	"github.com/ActiveMemory/ctx/internal/assets"
 )
 
 // HandlePromptMd creates or merges PROMPT.md with ctx content.
@@ -43,12 +43,12 @@ func HandlePromptMd(cmd *cobra.Command, force, autoMerge, ralph bool) error {
 	var templateContent []byte
 	var err error
 	if ralph {
-		templateContent, err = assets.RalphTemplate(loop.PromptMd)
+		templateContent, err = loop2.RalphTemplate(loop.PromptMd)
 		if err != nil {
 			return initErr.ReadTemplate("ralph PROMPT.md", err)
 		}
 	} else {
-		templateContent, err = assets.Template(loop.PromptMd)
+		templateContent, err = template.Template(loop.PromptMd)
 		if err != nil {
 			return initErr.ReadTemplate("PROMPT.md", err)
 		}

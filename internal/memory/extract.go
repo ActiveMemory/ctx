@@ -11,7 +11,7 @@ import (
 	"strings"
 	"time"
 
-	"github.com/ActiveMemory/ctx/internal/assets"
+	"github.com/ActiveMemory/ctx/internal/assets/read/desc"
 	"github.com/ActiveMemory/ctx/internal/config/marker"
 	"github.com/ActiveMemory/ctx/internal/config/memory"
 	cfgTime "github.com/ActiveMemory/ctx/internal/config/time"
@@ -50,7 +50,7 @@ func writeSection(
 	if len(items) == 0 {
 		return
 	}
-	buf.WriteString(assets.TextDesc(headingKey) + token.NewlineLF)
+	buf.WriteString(desc.TextDesc(headingKey) + token.NewlineLF)
 	for _, item := range items {
 		buf.WriteString(prefix + item + token.NewlineLF)
 	}

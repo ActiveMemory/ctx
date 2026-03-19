@@ -12,8 +12,9 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/ActiveMemory/ctx/internal/assets"
+	"github.com/ActiveMemory/ctx/internal/assets/read/desc"
 	"github.com/ActiveMemory/ctx/internal/cli/add/cmd/root"
+	"github.com/ActiveMemory/ctx/internal/config/embed/text"
 	"github.com/ActiveMemory/ctx/internal/config/marker"
 	"github.com/ActiveMemory/ctx/internal/write/add"
 	"github.com/spf13/cobra"
@@ -343,7 +344,7 @@ func TestInsertAfterHeader_WithCtxMarkers(t *testing.T) {
 	entry := "## [2026-01-02] New\n"
 
 	// The header "# Learnings" is found, then markers are skipped
-	result := core.InsertAfterHeader(content, entry, assets.HeadingLearnings)
+	result := core.InsertAfterHeader(content, entry, desc.TextDesc(text.TextDescKeyHeadingLearnings))
 	resultStr := string(result)
 
 	if !strings.Contains(resultStr, "New") {
@@ -356,7 +357,7 @@ func TestInsertAfterHeader_CtxMarkerWithoutClose(t *testing.T) {
 	content := "# Learnings\n" + marker.CtxMarkerStart + "\nunclosed marker content\nExisting\n"
 	entry := "## New entry\n"
 
-	result := core.InsertAfterHeader(content, entry, assets.HeadingLearnings)
+	result := core.InsertAfterHeader(content, entry, desc.TextDesc(text.TextDescKeyHeadingLearnings))
 	resultStr := string(result)
 
 	if !strings.Contains(resultStr, "New entry") {

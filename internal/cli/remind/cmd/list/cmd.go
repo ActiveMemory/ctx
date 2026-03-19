@@ -7,10 +7,9 @@
 package list
 
 import (
-	"github.com/ActiveMemory/ctx/internal/config/embed"
+	"github.com/ActiveMemory/ctx/internal/assets/read/desc"
+	"github.com/ActiveMemory/ctx/internal/config/embed/cmd"
 	"github.com/spf13/cobra"
-
-	"github.com/ActiveMemory/ctx/internal/assets"
 )
 
 // Cmd returns the remind list subcommand.
@@ -18,7 +17,7 @@ import (
 // Returns:
 //   - *cobra.Command: Configured list subcommand
 func Cmd() *cobra.Command {
-	short, _ := assets.CommandDesc(embed.CmdDescKeyRemindList)
+	short, _ := desc.CommandDesc(cmd.DescKeyRemindList)
 
 	return &cobra.Command{
 		Use:     "list",

@@ -11,14 +11,14 @@ import (
 	"os"
 	"path/filepath"
 
+	"github.com/ActiveMemory/ctx/internal/assets/read/desc"
 	"github.com/ActiveMemory/ctx/internal/config/dir"
-	"github.com/ActiveMemory/ctx/internal/config/embed"
+	"github.com/ActiveMemory/ctx/internal/config/embed/text"
 	"github.com/ActiveMemory/ctx/internal/config/hook"
 	"github.com/ActiveMemory/ctx/internal/config/nudge"
 	"github.com/ActiveMemory/ctx/internal/config/tpl"
 	"github.com/spf13/cobra"
 
-	"github.com/ActiveMemory/ctx/internal/assets"
 	"github.com/ActiveMemory/ctx/internal/cli/system/core"
 	"github.com/ActiveMemory/ctx/internal/notify"
 	"github.com/ActiveMemory/ctx/internal/rc"
@@ -60,7 +60,7 @@ func Run(cmd *cobra.Command, stdin *os.File) error {
 			LastMtime: initialMtime,
 		}
 		core.WritePersistenceState(stateFile, ps)
-		core.LogMessage(logFile, sessionID, fmt.Sprintf(assets.TextDesc(embed.TextDescKeyCheckPersistenceInitLogFormat), initialMtime))
+		core.LogMessage(logFile, sessionID, fmt.Sprintf(desc.TextDesc(text.TextDescKeyCheckPersistenceInitLogFormat), initialMtime))
 		return nil
 	}
 
@@ -72,38 +72,38 @@ func Run(cmd *cobra.Command, stdin *os.File) error {
 		ps.LastNudge = ps.Count
 		ps.LastMtime = currentMtime
 		core.WritePersistenceState(stateFile, ps)
-		core.LogMessage(logFile, sessionID, fmt.Sprintf(assets.TextDesc(embed.TextDescKeyCheckPersistenceModifiedLogFormat), ps.Count))
+		core.LogMessage(logFile, sessionID, fmt.Sprintf(desc.TextDesc(text.TextDescKeyCheckPersistenceModifiedLogFormat), ps.Count))
 		return nil
 	}
 
 	sinceNudge := ps.Count - ps.LastNudge
 
 	if core.PersistenceNudgeNeeded(ps.Count, sinceNudge) {
-		fallback := fmt.Sprintf(assets.TextDesc(embed.TextDescKeyCheckPersistenceFallback), sinceNudge)
+		fallback := fmt.Sprintf(desc.TextDesc(text.TextDescKeyCheckPersistenceFallback), sinceNudge)
 		content := core.LoadMessage(hook.CheckPersistence, hook.VariantNudge,
 			map[string]any{
 				tpl.VarPromptCount:       ps.Count,
 				tpl.VarPromptsSinceNudge: sinceNudge,
 			}, fallback)
 		if content == "" {
-			core.LogMessage(logFile, sessionID, fmt.Sprintf(assets.TextDesc(embed.TextDescKeyCheckPersistenceSilencedLogFormat), ps.Count))
+			core.LogMessage(logFile, sessionID, fmt.Sprintf(desc.TextDesc(text.TextDescKeyCheckPersistenceSilencedLogFormat), ps.Count))
 			core.WritePersistenceState(stateFile, ps)
 			return nil
 		}
 
-		boxTitle := assets.TextDesc(embed.TextDescKeyCheckPersistenceBoxTitle)
-		relayPrefix := assets.TextDesc(embed.TextDescKeyCheckPersistenceRelayPrefix)
+		boxTitle := desc.TextDesc(text.TextDescKeyCheckPersistenceBoxTitle)
+		relayPrefix := desc.TextDesc(text.TextDescKeyCheckPersistenceRelayPrefix)
 
-		cmd.Println(core.NudgeBox(relayPrefix, fmt.Sprintf(assets.TextDesc(embed.TextDescKeyCheckPersistenceBoxTitleFormat), boxTitle, ps.Count), content))
+		cmd.Println(core.NudgeBox(relayPrefix, fmt.Sprintf(desc.TextDesc(text.TextDescKeyCheckPersistenceBoxTitleFormat), boxTitle, ps.Count), content))
 		cmd.Println()
 		core.LogMessage(logFile, sessionID, fmt.Sprintf("prompt#%d NUDGE since_nudge=%d", ps.Count, sinceNudge))
 		ref := notify.NewTemplateRef(hook.CheckPersistence, hook.VariantNudge,
 			map[string]any{tpl.VarPromptCount: ps.Count, tpl.VarPromptsSinceNudge: sinceNudge})
-		_ = notify.Send(hook.NotifyChannelNudge, hook.CheckPersistence+": "+fmt.Sprintf(assets.TextDesc(embed.TextDescKeyCheckPersistenceCheckpointFormat), ps.Count), sessionID, ref)
-		core.Relay(hook.CheckPersistence+": "+fmt.Sprintf(assets.TextDesc(embed.TextDescKeyCheckPersistenceRelayFormat), sinceNudge), sessionID, ref)
+		_ = notify.Send(hook.NotifyChannelNudge, hook.CheckPersistence+": "+fmt.Sprintf(desc.TextDesc(text.TextDescKeyCheckPersistenceCheckpointFormat), ps.Count), sessionID, ref)
+		core.Relay(hook.CheckPersistence+": "+fmt.Sprintf(desc.TextDesc(text.TextDescKeyCheckPersistenceRelayFormat), sinceNudge), sessionID, ref)
 		ps.LastNudge = ps.Count
 	} else {
-		core.LogMessage(logFile, sessionID, fmt.Sprintf(assets.TextDesc(embed.TextDescKeyCheckPersistenceSilentLogFormat), ps.Count, sinceNudge))
+		core.LogMessage(logFile, sessionID, fmt.Sprintf(desc.TextDesc(text.TextDescKeyCheckPersistenceSilentLogFormat), ps.Count, sinceNudge))
 	}
 
 	core.WritePersistenceState(stateFile, ps)

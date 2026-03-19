@@ -9,7 +9,8 @@ package show
 import (
 	"strings"
 
-	"github.com/ActiveMemory/ctx/internal/assets"
+	"github.com/ActiveMemory/ctx/internal/assets/read/desc"
+	"github.com/ActiveMemory/ctx/internal/config/embed/text"
 	"github.com/ActiveMemory/ctx/internal/config/journal"
 	"github.com/ActiveMemory/ctx/internal/config/time"
 	"github.com/ActiveMemory/ctx/internal/config/token"
@@ -47,7 +48,7 @@ func Run(
 		if allProjects {
 			return ctxerr.NoneFound("")
 		}
-		return ctxerr.NoneFound(assets.HintUseAllProjects)
+		return ctxerr.NoneFound(desc.TextDesc(text.TextDescKeyLabelHintUseAllProjects))
 	}
 
 	var session *parser.Session
@@ -104,7 +105,7 @@ func Run(
 			toolCounts[t.Name]++
 		}
 
-		recall.SectionHeader(cmd, 2, assets.SectionToolUsage)
+		recall.SectionHeader(cmd, 2, desc.TextDesc(text.TextDescKeyLabelSectionToolUsage))
 		for name, count := range toolCounts {
 			recall.ListItem(cmd, "%s: %d", name, count)
 		}
@@ -113,14 +114,14 @@ func Run(
 
 	// Messages
 	if full {
-		recall.SectionHeader(cmd, 2, assets.SectionConversation)
+		recall.SectionHeader(cmd, 2, desc.TextDesc(text.TextDescKeyLabelSectionConversation))
 
 		for i, msg := range session.Messages {
-			role := assets.RoleUser
+			role := desc.TextDesc(text.TextDescKeyLabelRoleUser)
 			if msg.BelongsToAssistant() {
-				role = assets.LabelRoleAssistant
+				role = desc.TextDesc(text.TextDescKeyLabelRoleAssistant)
 			} else if len(msg.ToolResults) > 0 && msg.Text == "" {
-				role = assets.ToolOutput
+				role = desc.TextDesc(text.TextDescKeyLabelToolOutput)
 			}
 
 			recall.ConversationTurn(
@@ -133,12 +134,12 @@ func Run(
 
 			for _, t := range msg.ToolUses {
 				toolInfo := core.FormatToolUse(t)
-				recall.SessionDetail(cmd, assets.LabelTool, toolInfo)
+				recall.SessionDetail(cmd, desc.TextDesc(text.TextDescKeyLabelInlineTool), toolInfo)
 			}
 
 			for _, tr := range msg.ToolResults {
 				if tr.IsError {
-					recall.Hint(cmd, assets.LabelError)
+					recall.Hint(cmd, desc.TextDesc(text.TextDescKeyLabelInlineError))
 				}
 				if tr.Content != "" {
 					content := core.StripLineNumbers(tr.Content)
@@ -151,7 +152,7 @@ func Run(
 			}
 		}
 	} else {
-		recall.SectionHeader(cmd, 2, assets.SectionConversationPreview)
+		recall.SectionHeader(cmd, 2, desc.TextDesc(text.TextDescKeyLabelSectionConversationPreview))
 
 		count := 0
 		for _, msg := range session.Messages {
@@ -169,7 +170,7 @@ func Run(
 			}
 		}
 		recall.BlankLine(cmd)
-		recall.Hint(cmd, assets.HintUseFullFlag)
+		recall.Hint(cmd, desc.TextDesc(text.TextDescKeyLabelHintUseFull))
 	}
 
 	return nil

@@ -7,10 +7,11 @@
 package root
 
 import (
-	"github.com/ActiveMemory/ctx/internal/config/embed"
+	"github.com/ActiveMemory/ctx/internal/assets/read/desc"
+	"github.com/ActiveMemory/ctx/internal/config/embed/cmd"
+	"github.com/ActiveMemory/ctx/internal/config/embed/flag"
 	"github.com/spf13/cobra"
 
-	"github.com/ActiveMemory/ctx/internal/assets"
 	"github.com/ActiveMemory/ctx/internal/cli/add/core"
 )
 
@@ -44,10 +45,10 @@ func Cmd() *cobra.Command {
 		application string
 	)
 
-	short, long := assets.CommandDesc(embed.CmdDescKeyAdd)
+	short, long := desc.CommandDesc(cmd.DescKeyAdd)
 
 	cmd := &cobra.Command{
-		Use:       "add <type> [content]",
+		Use:       cmd.DescKeyAdd + " <type> [content]",
 		Short:     short,
 		Long:      long,
 		Args:      cobra.MinimumNArgs(1),
@@ -69,7 +70,7 @@ func Cmd() *cobra.Command {
 	cmd.Flags().StringVarP(
 		&priority,
 		"priority", "p", "",
-		assets.FlagDesc(embed.FlagDescKeyAddPriority),
+		desc.FlagDesc(flag.FlagDescKeyAddPriority),
 	)
 	_ = cmd.RegisterFlagCompletionFunc(
 		"priority", func(_ *cobra.Command, _ []string, _ string) (
@@ -80,37 +81,37 @@ func Cmd() *cobra.Command {
 	cmd.Flags().StringVarP(
 		&section,
 		"section", "s", "",
-		assets.FlagDesc(embed.FlagDescKeyAddSection),
+		desc.FlagDesc(flag.FlagDescKeyAddSection),
 	)
 	cmd.Flags().StringVarP(
 		&fromFile,
 		"file", "f", "",
-		assets.FlagDesc(embed.FlagDescKeyAddFile),
+		desc.FlagDesc(flag.FlagDescKeyAddFile),
 	)
 	cmd.Flags().StringVarP(
 		&context,
 		"context", "c", "",
-		assets.FlagDesc(embed.FlagDescKeyAddContext),
+		desc.FlagDesc(flag.FlagDescKeyAddContext),
 	)
 	cmd.Flags().StringVarP(
 		&rationale,
 		"rationale", "r", "",
-		assets.FlagDesc(embed.FlagDescKeyAddRationale),
+		desc.FlagDesc(flag.FlagDescKeyAddRationale),
 	)
 	cmd.Flags().StringVar(
 		&consequence,
 		"consequence", "",
-		assets.FlagDesc(embed.FlagDescKeyAddConsequence),
+		desc.FlagDesc(flag.FlagDescKeyAddConsequence),
 	)
 	cmd.Flags().StringVarP(
 		&lesson,
 		"lesson", "l", "",
-		assets.FlagDesc(embed.FlagDescKeyAddLesson),
+		desc.FlagDesc(flag.FlagDescKeyAddLesson),
 	)
 	cmd.Flags().StringVarP(
 		&application,
 		"application", "a", "",
-		assets.FlagDesc(embed.FlagDescKeyAddApplication),
+		desc.FlagDesc(flag.FlagDescKeyAddApplication),
 	)
 
 	return cmd

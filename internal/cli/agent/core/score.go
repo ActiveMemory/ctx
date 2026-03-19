@@ -10,7 +10,7 @@ import (
 	"strings"
 	"time"
 
-	"github.com/ActiveMemory/ctx/internal/assets"
+	"github.com/ActiveMemory/ctx/internal/assets/read/lookup"
 	"github.com/ActiveMemory/ctx/internal/config/agent"
 	time2 "github.com/ActiveMemory/ctx/internal/config/time"
 	"github.com/ActiveMemory/ctx/internal/context/token"
@@ -110,7 +110,7 @@ func ScoreEntry(eb *index.EntryBlock, keywords []string, now time.Time) float64 
 
 // stopWords returns the set of stop words from assets.
 func stopWords() map[string]bool {
-	return assets.StopWords()
+	return lookup.StopWords()
 }
 
 // ExtractTaskKeywords extracts meaningful keywords from task text.

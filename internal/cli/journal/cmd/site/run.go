@@ -11,6 +11,7 @@ import (
 	"os/exec"
 	"path/filepath"
 
+	journal3 "github.com/ActiveMemory/ctx/internal/assets/read/journal"
 	"github.com/ActiveMemory/ctx/internal/config/dir"
 	"github.com/ActiveMemory/ctx/internal/config/file"
 	"github.com/ActiveMemory/ctx/internal/config/fs"
@@ -22,7 +23,6 @@ import (
 	journal2 "github.com/ActiveMemory/ctx/internal/write/journal"
 	"github.com/spf13/cobra"
 
-	"github.com/ActiveMemory/ctx/internal/assets"
 	"github.com/ActiveMemory/ctx/internal/cli/journal/core"
 	"github.com/ActiveMemory/ctx/internal/journal/state"
 	"github.com/ActiveMemory/ctx/internal/rc"
@@ -104,7 +104,7 @@ func runJournalSite(
 		return fs2.Mkdir(stylesDir, mkErr)
 	}
 	cssPath := filepath.Join(stylesDir, zensical.ExtraCSS)
-	cssData, cssReadErr := assets.JournalExtraCSS()
+	cssData, cssReadErr := journal3.JournalExtraCSS()
 	if cssReadErr != nil {
 		return cssReadErr
 	}

@@ -10,6 +10,7 @@ import (
 	"os"
 	"strings"
 
+	"github.com/ActiveMemory/ctx/internal/assets/read/makefile"
 	"github.com/ActiveMemory/ctx/internal/config/fs"
 	"github.com/ActiveMemory/ctx/internal/config/project"
 	"github.com/ActiveMemory/ctx/internal/config/token"
@@ -17,8 +18,6 @@ import (
 	ctxerr "github.com/ActiveMemory/ctx/internal/err/initialize"
 	"github.com/ActiveMemory/ctx/internal/write/initialize"
 	"github.com/spf13/cobra"
-
-	"github.com/ActiveMemory/ctx/internal/assets"
 )
 
 // IncludeDirective is the line appended to the user's Makefile to pull
@@ -33,7 +32,7 @@ const IncludeDirective = "-include Makefile.ctx"
 // Returns:
 //   - error: Non-nil if file operations fail
 func HandleMakefileCtx(cmd *cobra.Command) error {
-	content, err := assets.MakefileCtx()
+	content, err := makefile.Ctx()
 	if err != nil {
 		return ctxerr.ReadTemplate("Makefile.ctx", err)
 	}

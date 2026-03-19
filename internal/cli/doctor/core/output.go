@@ -10,9 +10,9 @@ import (
 	"encoding/json"
 	"fmt"
 
-	"github.com/ActiveMemory/ctx/internal/assets"
+	"github.com/ActiveMemory/ctx/internal/assets/read/desc"
 	"github.com/ActiveMemory/ctx/internal/config/doctor"
-	"github.com/ActiveMemory/ctx/internal/config/embed"
+	"github.com/ActiveMemory/ctx/internal/config/embed/text"
 	"github.com/spf13/cobra"
 )
 
@@ -42,8 +42,8 @@ func OutputJSON(cmd *cobra.Command, report *Report) error {
 // Returns:
 //   - error: Always nil (satisfies interface)
 func OutputHuman(cmd *cobra.Command, report *Report) error {
-	cmd.Println(assets.TextDesc(embed.TextDescKeyDoctorOutputHeader))
-	cmd.Println(assets.TextDesc(embed.TextDescKeyDoctorOutputSeparator))
+	cmd.Println(desc.TextDesc(text.TextDescKeyDoctorOutputHeader))
+	cmd.Println(desc.TextDesc(text.TextDescKeyDoctorOutputSeparator))
 	cmd.Println()
 
 	// Group by category.
@@ -70,12 +70,12 @@ func OutputHuman(cmd *cobra.Command, report *Report) error {
 		cmd.Println(cat)
 		for _, r := range results {
 			icon := statusIcon(r.Status)
-			cmd.Println(fmt.Sprintf(assets.TextDesc(embed.TextDescKeyDoctorOutputResultLine), icon, r.Message))
+			cmd.Println(fmt.Sprintf(desc.TextDesc(text.TextDescKeyDoctorOutputResultLine), icon, r.Message))
 		}
 		cmd.Println()
 	}
 
-	cmd.Println(fmt.Sprintf(assets.TextDesc(embed.TextDescKeyDoctorOutputSummary), report.Warnings, report.Errors))
+	cmd.Println(fmt.Sprintf(desc.TextDesc(text.TextDescKeyDoctorOutputSummary), report.Warnings, report.Errors))
 	return nil
 }
 

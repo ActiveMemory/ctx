@@ -9,8 +9,8 @@ package date
 import (
 	"fmt"
 
-	"github.com/ActiveMemory/ctx/internal/assets"
-	"github.com/ActiveMemory/ctx/internal/config/embed"
+	"github.com/ActiveMemory/ctx/internal/assets/read/desc"
+	"github.com/ActiveMemory/ctx/internal/config/embed/text"
 )
 
 // InvalidDateValue returns an error for an invalid date string.
@@ -22,7 +22,7 @@ import (
 //   - error: "invalid date <value> (expected YYYY-MM-DD)"
 func InvalidDateValue(value string) error {
 	return fmt.Errorf(
-		assets.TextDesc(embed.TextDescKeyErrDateInvalidDateValue), value,
+		desc.TextDesc(text.TextDescKeyErrDateInvalidDateValue), value,
 	)
 }
 
@@ -37,6 +37,6 @@ func InvalidDateValue(value string) error {
 //   - error: "invalid <flag> date <value> (expected YYYY-MM-DD): <cause>"
 func InvalidDate(flag, value string, cause error) error {
 	return fmt.Errorf(
-		assets.TextDesc(embed.TextDescKeyErrDateInvalidDate), flag, value, cause,
+		desc.TextDesc(text.TextDescKeyErrDateInvalidDate), flag, value, cause,
 	)
 }

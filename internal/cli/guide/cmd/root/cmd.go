@@ -7,11 +7,11 @@
 package root
 
 import (
+	"github.com/ActiveMemory/ctx/internal/assets/read/desc"
 	"github.com/ActiveMemory/ctx/internal/config/cli"
-	"github.com/ActiveMemory/ctx/internal/config/embed"
+	"github.com/ActiveMemory/ctx/internal/config/embed/cmd"
+	"github.com/ActiveMemory/ctx/internal/config/embed/flag"
 	"github.com/spf13/cobra"
-
-	"github.com/ActiveMemory/ctx/internal/assets"
 )
 
 // Cmd returns the "ctx guide" cobra command.
@@ -24,9 +24,9 @@ func Cmd() *cobra.Command {
 		showCommands bool
 	)
 
-	short, long := assets.CommandDesc(embed.CmdDescKeyGuide)
+	short, long := desc.CommandDesc(cmd.DescKeyGuide)
 	cmd := &cobra.Command{
-		Use:         "guide",
+		Use:         cmd.DescKeyGuide,
 		Short:       short,
 		Annotations: map[string]string{cli.AnnotationSkipInit: ""},
 		Long:        long,
@@ -39,13 +39,13 @@ func Cmd() *cobra.Command {
 		&showSkills,
 		"skills",
 		false,
-		assets.FlagDesc(embed.FlagDescKeyGuideSkills),
+		desc.FlagDesc(flag.FlagDescKeyGuideSkills),
 	)
 	cmd.Flags().BoolVar(
 		&showCommands,
 		"commands",
 		false,
-		assets.FlagDesc(embed.FlagDescKeyGuideCommands),
+		desc.FlagDesc(flag.FlagDescKeyGuideCommands),
 	)
 
 	return cmd

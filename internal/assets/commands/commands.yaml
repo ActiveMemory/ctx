@@ -60,7 +60,7 @@ agent:
       ctx agent --format json                # JSON output for programmatic use
       ctx agent --session $PPID              # Cooldown scoped to calling process
   short: Print AI-ready context packet
-changes:
+change:
   long: |-
     Show changes in context files and code since the last AI session.
 
@@ -69,9 +69,9 @@ changes:
     date like "2026-03-01").
 
     Examples:
-      ctx changes                     # changes since last session
-      ctx changes --since 24h         # changes in last 24 hours
-      ctx changes --since 2026-03-01  # changes since specific date
+      ctx change                      # changes since last session
+      ctx change --since 24h          # changes in last 24 hours
+      ctx change --since 2026-03-01   # changes since specific date
   short: Show what changed since last session
 compact:
   long: |-
@@ -95,9 +95,9 @@ complete:
     Mark a task as completed in TASKS.md.
 
     You can specify a task by:
-      - Task number (e.g., "ctx tasks complete 3")
-      - Partial text match (e.g., "ctx tasks complete auth")
-      - Full task text (e.g., "ctx tasks complete 'Implement user authentication'")
+      - Task number (e.g., "ctx task complete 3")
+      - Partial text match (e.g., "ctx task complete auth")
+      - Full task text (e.g., "ctx task complete 'Implement user authentication'")
 
     The task will be marked with [x]
     and optionally moved to the Completed section.
@@ -160,7 +160,7 @@ decision:
       reindex    Regenerate the quick-reference index
 
     Examples:
-      ctx decisions reindex
+      ctx decision reindex
   short: Manage DECISIONS.md file
 decision.reindex:
   long: |-
@@ -173,9 +173,9 @@ decision.reindex:
     migrating existing files to use the index format.
 
     Examples:
-      ctx decisions reindex
+      ctx decision reindex
   short: Regenerate the quick-reference index
-deps:
+dep:
   long: |-
     Generate a dependency graph from source code.
 
@@ -340,20 +340,20 @@ journal.site:
       ctx journal site --build            # Generate and build HTML
       ctx journal site --serve            # Generate and serve locally
   short: Generate a static site from journal entries
-learnings:
+learning:
   long: |-
     Manage the LEARNINGS.md file and its quick-reference index.
 
-    The learnings file maintains an auto-generated index at the top for quick
+    The learning file maintains an auto-generated index at the top for quick
     scanning. Use the subcommands to manage this index.
 
     Subcommands:
       reindex    Regenerate the quick-reference index
 
     Examples:
-      ctx learnings reindex
+      ctx learning reindex
   short: Manage LEARNINGS.md file
-learnings.reindex:
+learning.reindex:
   long: |-
     Regenerate the quick-reference index at the top of LEARNINGS.md.
 
@@ -364,7 +364,7 @@ learnings.reindex:
     migrating existing files to use the index format.
 
     Examples:
-      ctx learnings reindex
+      ctx learning reindex
   short: Regenerate the quick-reference index
 load:
   long: |-
@@ -627,7 +627,7 @@ pause:
     The session ID is read from stdin JSON (same as hooks) or --session-id flag.
     Resume with: ctx resume
   short: Pause context hooks for this session
-permissions:
+permission:
   long: |-
     Manage Claude Code permission snapshots.
 
@@ -638,14 +638,14 @@ permissions:
       snapshot  Save settings.local.json as golden image
       restore   Reset settings.local.json from golden image
   short: Manage permission snapshots
-permissions.restore:
+permission.restore:
   long: |-
     Replace .claude/settings.local.json with the golden image.
 
     Prints a diff of dropped (session-accumulated) and restored permissions.
     No-op if the files already match.
   short: Reset settings.local.json from golden image
-permissions.snapshot:
+permission.snapshot:
   long: |-
     Save .claude/settings.local.json as the golden image.
 
@@ -840,8 +840,8 @@ reindex:
     and LEARNINGS.md in a single invocation.
 
     This is a convenience wrapper around:
-      ctx decisions reindex
-      ctx learnings reindex
+      ctx decision reindex
+      ctx learning reindex
 
     The index is a compact table showing date and title for each entry,
     allowing AI agents to quickly scan entries without reading the full file.

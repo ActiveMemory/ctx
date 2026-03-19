@@ -8,10 +8,9 @@
 package reindex
 
 import (
-	"github.com/ActiveMemory/ctx/internal/config/embed"
+	"github.com/ActiveMemory/ctx/internal/assets/read/desc"
+	"github.com/ActiveMemory/ctx/internal/config/embed/cmd"
 	"github.com/spf13/cobra"
-
-	"github.com/ActiveMemory/ctx/internal/assets"
 )
 
 // Cmd returns the reindex subcommand for decisions.
@@ -19,7 +18,7 @@ import (
 // Returns:
 //   - *cobra.Command: Command for regenerating the DECISIONS.md index
 func Cmd() *cobra.Command {
-	short, long := assets.CommandDesc(embed.CmdDescKeyDecisionReindex)
+	short, long := desc.CommandDesc(cmd.DescKeyDecisionReindex)
 	return &cobra.Command{
 		Use:   "reindex",
 		Short: short,

@@ -10,8 +10,8 @@ import (
 	"encoding/json"
 	"fmt"
 
-	"github.com/ActiveMemory/ctx/internal/assets"
-	"github.com/ActiveMemory/ctx/internal/config/embed"
+	"github.com/ActiveMemory/ctx/internal/assets/read/desc"
+	"github.com/ActiveMemory/ctx/internal/config/embed/text"
 	"github.com/ActiveMemory/ctx/internal/entity"
 	"github.com/spf13/cobra"
 )
@@ -33,31 +33,31 @@ func Text(
 	nextSteps []string,
 	warning string,
 ) {
-	cmd.Println(assets.TextDesc(embed.TextDescKeyWriteBootstrapTitle))
-	cmd.Println(assets.TextDesc(embed.TextDescKeyWriteBootstrapSep))
+	cmd.Println(desc.TextDesc(text.TextDescKeyWriteBootstrapTitle))
+	cmd.Println(desc.TextDesc(text.TextDescKeyWriteBootstrapSep))
 	cmd.Println()
-	cmd.Println(fmt.Sprintf(assets.TextDesc(embed.TextDescKeyWriteBootstrapDir), dir))
+	cmd.Println(fmt.Sprintf(desc.TextDesc(text.TextDescKeyWriteBootstrapDir), dir))
 	cmd.Println()
-	cmd.Println(assets.TextDesc(embed.TextDescKeyWriteBootstrapFiles))
+	cmd.Println(desc.TextDesc(text.TextDescKeyWriteBootstrapFiles))
 	cmd.Println(fileList)
 	cmd.Println()
-	cmd.Println(assets.TextDesc(embed.TextDescKeyWriteBootstrapRules))
+	cmd.Println(desc.TextDesc(text.TextDescKeyWriteBootstrapRules))
 	for i, r := range rules {
 		cmd.Println(fmt.Sprintf(
-			assets.TextDesc(embed.TextDescKeyWriteBootstrapNumbered), i+1, r,
+			desc.TextDesc(text.TextDescKeyWriteBootstrapNumbered), i+1, r,
 		))
 	}
 	cmd.Println()
-	cmd.Println(assets.TextDesc(embed.TextDescKeyWriteBootstrapNextSteps))
+	cmd.Println(desc.TextDesc(text.TextDescKeyWriteBootstrapNextSteps))
 	for i, s := range nextSteps {
 		cmd.Println(fmt.Sprintf(
-			assets.TextDesc(embed.TextDescKeyWriteBootstrapNumbered), i+1, s,
+			desc.TextDesc(text.TextDescKeyWriteBootstrapNumbered), i+1, s,
 		))
 	}
 	if warning != "" {
 		cmd.Println()
 		cmd.Println(fmt.Sprintf(
-			assets.TextDesc(embed.TextDescKeyWriteBootstrapWarning), warning,
+			desc.TextDesc(text.TextDescKeyWriteBootstrapWarning), warning,
 		))
 	}
 }

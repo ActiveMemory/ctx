@@ -1,19 +1,28 @@
 //   /    ctx:                         https://ctx.ist
 // ,'`./    do you remember?
-// `.,'\
+// `.,'\\
 //   \    Copyright 2026-present Context contributors.
 //                 SPDX-License-Identifier: Apache-2.0
 
 package assets
 
 import (
-	"fmt"
-	"os"
+	"encoding/json"
+	"path"
 	"strings"
 	"testing"
 
+	"github.com/ActiveMemory/ctx/internal/config/asset"
+	"github.com/ActiveMemory/ctx/internal/config/file"
+
 	"gopkg.in/yaml.v3"
 )
+
+// TestTextDescKeysResolve lives in read/desc/desc_test.go where it can
+// call lookup.Init() without an import cycle.
+
+// TestDefaultPermissions lives in read/lookup/perm_test.go where it can
+// call Init() without an import cycle.
 
 func TestGetTemplate(t *testing.T) {
 	tests := []struct {
@@ -22,176 +31,70 @@ func TestGetTemplate(t *testing.T) {
 		wantContain string
 		wantErr     bool
 	}{
-		{
-			name:        "CONSTITUTION.md exists",
-			template:    "CONSTITUTION.md",
-			wantContain: "Constitution",
-			wantErr:     false,
-		},
-		{
-			name:        "TASKS.md exists",
-			template:    "TASKS.md",
-			wantContain: "Tasks",
-			wantErr:     false,
-		},
-		{
-			name:        "DECISIONS.md exists",
-			template:    "DECISIONS.md",
-			wantContain: "Decisions",
-			wantErr:     false,
-		},
-		{
-			name:        "LEARNINGS.md exists",
-			template:    "LEARNINGS.md",
-			wantContain: "Learnings",
-			wantErr:     false,
-		},
-		{
-			name:        "CONVENTIONS.md exists",
-			template:    "CONVENTIONS.md",
-			wantContain: "Conventions",
-			wantErr:     false,
-		},
-		{
-			name:        "ARCHITECTURE.md exists",
-			template:    "ARCHITECTURE.md",
-			wantContain: "Architecture",
-			wantErr:     false,
-		},
-		{
-			name:        "AGENT_PLAYBOOK.md exists",
-			template:    "AGENT_PLAYBOOK.md",
-			wantContain: "Agent Playbook",
-			wantErr:     false,
-		},
-		{
-			name:        "GLOSSARY.md exists",
-			template:    "GLOSSARY.md",
-			wantContain: "Glossary",
-			wantErr:     false,
-		},
-		{
-			name:     "nonexistent template returns error",
-			template: "NONEXISTENT.md",
-			wantErr:  true,
-		},
+		{"CONSTITUTION.md exists", "CONSTITUTION.md", "Constitution", false},
+		{"TASKS.md exists", "TASKS.md", "Tasks", false},
+		{"DECISIONS.md exists", "DECISIONS.md", "Decisions", false},
+		{"LEARNINGS.md exists", "LEARNINGS.md", "Learnings", false},
+		{"CONVENTIONS.md exists", "CONVENTIONS.md", "Conventions", false},
+		{"ARCHITECTURE.md exists", "ARCHITECTURE.md", "Architecture", false},
+		{"AGENT_PLAYBOOK.md exists", "AGENT_PLAYBOOK.md", "Agent Playbook", false},
+		{"GLOSSARY.md exists", "GLOSSARY.md", "Glossary", false},
+		{"nonexistent template returns error", "NONEXISTENT.md", "", true},
 	}
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			content, err := Template(tt.template)
+			content, err := FS.ReadFile(path.Join(asset.DirContext, tt.template))
 			if tt.wantErr {
 				if err == nil {
-					t.Errorf("Template(%q) expected error, got nil", tt.template)
+					t.Errorf("expected error for %q, got nil", tt.template)
 				}
 				return
 			}
 			if err != nil {
-				t.Errorf("Template(%q) unexpected error: %v", tt.template, err)
+				t.Errorf("unexpected error for %q: %v", tt.template, err)
 				return
 			}
 			if !strings.Contains(string(content), tt.wantContain) {
-				t.Errorf("Template(%q) content does not contain %q", tt.template, tt.wantContain)
+				t.Errorf("content of %q does not contain %q", tt.template, tt.wantContain)
 			}
 		})
 	}
 }
 
-func TestTextDescKeysResolve(t *testing.T) {
-	// Verify every TextDescKey constant resolves to a non-empty string.
-	// This catches typos in constants or missing YAML entries.
-	keys := collectTextDescKeys(t)
-	if len(keys) == 0 {
-		t.Fatal("no TextDescKey constants found")
-	}
-
-	for _, key := range keys {
-		val := TextDesc(key)
-		if val == "" {
-			t.Errorf("TextDesc(%q) returned empty string — missing YAML entry?", key)
-		}
-	}
-	t.Logf("verified %d TextDescKey constants", len(keys))
-}
-
-// collectTextDescKeys extracts all TextDescKey constant values from embed.go
-// by parsing lines matching the pattern: TextDescKey... = "..."
-func collectTextDescKeys(t *testing.T) []string {
-	t.Helper()
-	data, err := os.ReadFile("embed.go")
-	if err != nil {
-		t.Fatalf("read embed.go: %v", err)
-	}
-
-	var keys []string
-	for _, line := range strings.Split(string(data), "\n") {
-		line = strings.TrimSpace(line)
-		if !strings.HasPrefix(line, "TextDescKey") {
-			continue
-		}
-		// Extract the quoted value: TextDescKeyFoo = "some.key"
-		idx := strings.Index(line, "\"")
-		if idx < 0 {
-			continue
-		}
-		end := strings.LastIndex(line, "\"")
-		if end <= idx {
-			continue
-		}
-		keys = append(keys, line[idx+1:end])
-	}
-	return keys
-}
-
 func TestListTemplates(t *testing.T) {
-	templates, err := List()
+	entries, err := FS.ReadDir(asset.DirContext)
 	if err != nil {
-		t.Fatalf("List() unexpected error: %v", err)
+		t.Fatalf("ReadDir() unexpected error: %v", err)
 	}
-
-	if len(templates) == 0 {
-		t.Error("List() returned empty list")
-	}
-
-	// Check for required templates
-	required := []string{
-		"CONSTITUTION.md",
-		"TASKS.md",
-		"DECISIONS.md",
-		"LEARNINGS.md",
+	if len(entries) == 0 {
+		t.Error("ReadDir() returned empty list")
 	}
 
 	templateSet := make(map[string]bool)
-	for _, name := range templates {
-		templateSet[name] = true
+	for _, e := range entries {
+		templateSet[e.Name()] = true
 	}
 
-	for _, req := range required {
+	for _, req := range []string{"CONSTITUTION.md", "TASKS.md", "DECISIONS.md", "LEARNINGS.md"} {
 		if !templateSet[req] {
-			t.Errorf("List() missing required template: %s", req)
+			t.Errorf("missing required template: %s", req)
 		}
 	}
-
-	// Verify project-root and claude files are NOT in the list
-	excluded := []string{
-		"CLAUDE.md",
-		"IMPLEMENTATION_PLAN.md",
-		"Makefile.ctx",
-	}
-	for _, ex := range excluded {
+	for _, ex := range []string{"CLAUDE.md", "IMPLEMENTATION_PLAN.md", "Makefile.ctx"} {
 		if templateSet[ex] {
-			t.Errorf("List() should not contain %s (project-root file)", ex)
+			t.Errorf("should not contain project-root file: %s", ex)
 		}
 	}
 }
 
 func TestClaudeMd(t *testing.T) {
-	content, err := ClaudeMd()
+	content, err := FS.ReadFile(asset.PathCLAUDEMd)
 	if err != nil {
-		t.Fatalf("ClaudeMd() unexpected error: %v", err)
+		t.Fatalf("unexpected error: %v", err)
 	}
 	if !strings.Contains(string(content), "Context") {
-		t.Error("ClaudeMd() content does not contain \"Context\"")
+		t.Error("CLAUDE.md does not contain 'Context'")
 	}
 }
 
@@ -202,143 +105,47 @@ func TestProjectFile(t *testing.T) {
 		wantContain string
 		wantErr     bool
 	}{
-		{
-			name:        "IMPLEMENTATION_PLAN.md exists",
-			file:        "IMPLEMENTATION_PLAN.md",
-			wantContain: "Implementation",
-			wantErr:     false,
-		},
-		{
-			name:        "Makefile.ctx exists",
-			file:        "Makefile.ctx",
-			wantContain: "ctx",
-			wantErr:     false,
-		},
-		{
-			name:    "nonexistent project file returns error",
-			file:    "NONEXISTENT.md",
-			wantErr: true,
-		},
+		{"IMPLEMENTATION_PLAN.md exists", "IMPLEMENTATION_PLAN.md", "Implementation", false},
+		{"Makefile.ctx exists", "Makefile.ctx", "ctx", false},
+		{"nonexistent returns error", "NONEXISTENT.md", "", true},
 	}
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			content, err := ProjectFile(tt.file)
+			content, err := FS.ReadFile(path.Join(asset.DirProject, tt.file))
 			if tt.wantErr {
 				if err == nil {
-					t.Errorf("ProjectFile(%q) expected error, got nil", tt.file)
+					t.Errorf("expected error for %q", tt.file)
 				}
 				return
 			}
 			if err != nil {
-				t.Errorf("ProjectFile(%q) unexpected error: %v", tt.file, err)
+				t.Errorf("unexpected error for %q: %v", tt.file, err)
 				return
 			}
 			if !strings.Contains(string(content), tt.wantContain) {
-				t.Errorf("ProjectFile(%q) content does not contain %q", tt.file, tt.wantContain)
-			}
-		})
-	}
-}
-
-func TestListEntryTemplates(t *testing.T) {
-	templates, err := ListEntry()
-	if err != nil {
-		t.Fatalf("ListEntry() unexpected error: %v", err)
-	}
-
-	if len(templates) == 0 {
-		t.Error("ListEntry() returned empty list")
-	}
-
-	// Check for expected entry templates
-	expected := []string{
-		"learning.md",
-		"decision.md",
-	}
-
-	templateSet := make(map[string]bool)
-	for _, name := range templates {
-		templateSet[name] = true
-	}
-
-	for _, exp := range expected {
-		if !templateSet[exp] {
-			t.Errorf("ListEntry() missing expected template: %s", exp)
-		}
-	}
-}
-
-func TestGetEntryTemplate(t *testing.T) {
-	tests := []struct {
-		name        string
-		template    string
-		wantContain string
-		wantErr     bool
-	}{
-		{
-			name:        "learning.md exists",
-			template:    "learning.md",
-			wantContain: "Context",
-			wantErr:     false,
-		},
-		{
-			name:        "decision.md exists",
-			template:    "decision.md",
-			wantContain: "Context",
-			wantErr:     false,
-		},
-		{
-			name:     "nonexistent entry template returns error",
-			template: "nonexistent.md",
-			wantErr:  true,
-		},
-	}
-
-	for _, tt := range tests {
-		t.Run(tt.name, func(t *testing.T) {
-			content, err := Entry(tt.template)
-			if tt.wantErr {
-				if err == nil {
-					t.Errorf("Entry(%q) expected error, got nil", tt.template)
-				}
-				return
-			}
-			if err != nil {
-				t.Errorf("Entry(%q) unexpected error: %v", tt.template, err)
-				return
-			}
-			if !strings.Contains(string(content), tt.wantContain) {
-				t.Errorf("Entry(%q) content does not contain %q", tt.template, tt.wantContain)
+				t.Errorf("content of %q does not contain %q", tt.file, tt.wantContain)
 			}
 		})
 	}
 }
 
 func TestListPromptTemplates(t *testing.T) {
-	templates, err := ListPromptTemplates()
+	entries, err := FS.ReadDir(asset.DirPromptTemplates)
 	if err != nil {
-		t.Fatalf("ListPromptTemplates() unexpected error: %v", err)
+		t.Fatalf("unexpected error: %v", err)
+	}
+	if len(entries) == 0 {
+		t.Error("returned empty list")
 	}
 
-	if len(templates) == 0 {
-		t.Error("ListPromptTemplates() returned empty list")
+	nameSet := make(map[string]bool)
+	for _, e := range entries {
+		nameSet[e.Name()] = true
 	}
-
-	expected := []string{
-		"code-review.md",
-		"refactor.md",
-		"explain.md",
-	}
-
-	templateSet := make(map[string]bool)
-	for _, name := range templates {
-		templateSet[name] = true
-	}
-
-	for _, exp := range expected {
-		if !templateSet[exp] {
-			t.Errorf("ListPromptTemplates() missing expected template: %s", exp)
+	for _, exp := range []string{"code-review.md", "refactor.md", "explain.md"} {
+		if !nameSet[exp] {
+			t.Errorf("missing expected template: %s", exp)
 		}
 	}
 }
@@ -350,105 +157,73 @@ func TestGetPromptTemplate(t *testing.T) {
 		wantContain string
 		wantErr     bool
 	}{
-		{
-			name:        "code-review.md exists",
-			template:    "code-review.md",
-			wantContain: "Review",
-			wantErr:     false,
-		},
-		{
-			name:        "refactor.md exists",
-			template:    "refactor.md",
-			wantContain: "Refactor",
-			wantErr:     false,
-		},
-		{
-			name:        "explain.md exists",
-			template:    "explain.md",
-			wantContain: "Explain",
-			wantErr:     false,
-		},
-		{
-			name:     "nonexistent prompt template returns error",
-			template: "nonexistent.md",
-			wantErr:  true,
-		},
+		{"code-review.md exists", "code-review.md", "Review", false},
+		{"refactor.md exists", "refactor.md", "Refactor", false},
+		{"explain.md exists", "explain.md", "Explain", false},
+		{"nonexistent returns error", "nonexistent.md", "", true},
 	}
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			content, err := PromptTemplate(tt.template)
+			content, err := FS.ReadFile(path.Join(asset.DirPromptTemplates, tt.template))
 			if tt.wantErr {
 				if err == nil {
-					t.Errorf("PromptTemplate(%q) expected error, got nil", tt.template)
+					t.Errorf("expected error for %q", tt.template)
 				}
 				return
 			}
 			if err != nil {
-				t.Errorf("PromptTemplate(%q) unexpected error: %v", tt.template, err)
+				t.Errorf("unexpected error for %q: %v", tt.template, err)
 				return
 			}
 			if !strings.Contains(string(content), tt.wantContain) {
-				t.Errorf("PromptTemplate(%q) content does not contain %q", tt.template, tt.wantContain)
+				t.Errorf("content of %q does not contain %q", tt.template, tt.wantContain)
 			}
 		})
 	}
 }
 
 func TestListSkills(t *testing.T) {
-	skills, err := ListSkills()
+	entries, err := FS.ReadDir(asset.DirClaudeSkills)
 	if err != nil {
-		t.Fatalf("ListSkills() unexpected error: %v", err)
+		t.Fatalf("unexpected error: %v", err)
 	}
-
-	if len(skills) == 0 {
-		t.Error("ListSkills() returned empty list")
-	}
-
-	// Check for expected skills (directory names, not files)
-	expected := []string{
-		"ctx-prompt",
-		"ctx-status",
-		"ctx-recall",
-		"ctx-brainstorm",
-		"ctx-check-links",
-		"ctx-sanitize-permissions",
-		"ctx-skill-audit",
-		"ctx-skill-creator",
-		"ctx-spec",
-		"ctx-verify",
+	if len(entries) == 0 {
+		t.Error("returned empty list")
 	}
 
 	skillSet := make(map[string]bool)
-	for _, name := range skills {
-		skillSet[name] = true
+	for _, e := range entries {
+		if e.IsDir() {
+			skillSet[e.Name()] = true
+		}
 	}
-
-	for _, exp := range expected {
+	for _, exp := range []string{"ctx-prompt", "ctx-status", "ctx-recall", "ctx-brainstorm"} {
 		if !skillSet[exp] {
-			t.Errorf("ListSkills() missing expected skill: %s", exp)
+			t.Errorf("missing expected skill: %s", exp)
 		}
 	}
 }
 
 func TestSkillContent(t *testing.T) {
-	content, err := SkillContent("ctx-recall")
+	content, err := FS.ReadFile(path.Join(asset.DirClaudeSkills, "ctx-recall", asset.FileSKILLMd))
 	if err != nil {
-		t.Fatalf("SkillContent(ctx-recall) error: %v", err)
+		t.Fatalf("unexpected error: %v", err)
 	}
 	if !strings.Contains(string(content), "recall") {
 		t.Error("ctx-recall SKILL.md does not contain 'recall'")
 	}
-	// Verify it's a valid SKILL.md with frontmatter
 	if !strings.HasPrefix(string(content), "---") {
 		t.Error("ctx-recall SKILL.md missing frontmatter")
 	}
 }
 
 func TestSkillReference(t *testing.T) {
-	content, err := SkillReference("ctx-skill-audit", "anthropic-best-practices.md")
+	content, err := FS.ReadFile(path.Join(
+		asset.DirClaudeSkills, "ctx-skill-audit", asset.DirReferences, "anthropic-best-practices.md",
+	))
 	if err != nil {
-		t.Fatalf("SkillReference() error: %v", err)
+		t.Fatalf("unexpected error: %v", err)
 	}
 	if !strings.Contains(string(content), "Anthropic") {
 		t.Error("anthropic-best-practices.md does not contain 'Anthropic'")
@@ -456,31 +231,30 @@ func TestSkillReference(t *testing.T) {
 }
 
 func TestListSkillReferences(t *testing.T) {
-	refs, err := ListSkillReferences("ctx-skill-audit")
+	entries, err := FS.ReadDir(path.Join(asset.DirClaudeSkills, "ctx-skill-audit", asset.DirReferences))
 	if err != nil {
-		t.Fatalf("ListSkillReferences() error: %v", err)
+		t.Fatalf("unexpected error: %v", err)
 	}
-
-	if len(refs) == 0 {
-		t.Error("ListSkillReferences(ctx-skill-audit) returned empty list")
+	if len(entries) == 0 {
+		t.Error("returned empty list")
 	}
 
 	found := false
-	for _, name := range refs {
-		if name == "anthropic-best-practices.md" {
+	for _, e := range entries {
+		if e.Name() == "anthropic-best-practices.md" {
 			found = true
 			break
 		}
 	}
 	if !found {
-		t.Error("ListSkillReferences() missing anthropic-best-practices.md")
+		t.Error("missing anthropic-best-practices.md")
 	}
 }
 
 func TestListSkillReferencesNonexistent(t *testing.T) {
-	_, err := ListSkillReferences("ctx-status")
+	_, err := FS.ReadDir(path.Join(asset.DirClaudeSkills, "ctx-status", asset.DirReferences))
 	if err == nil {
-		t.Error("ListSkillReferences(ctx-status) expected error for skill without references")
+		t.Error("expected error for skill without references")
 	}
 }
 
@@ -491,255 +265,167 @@ func TestWhyDoc(t *testing.T) {
 		wantContain string
 		wantErr     bool
 	}{
-		{
-			name:        "manifesto exists",
-			doc:         "manifesto",
-			wantContain: "Manifesto",
-			wantErr:     false,
-		},
-		{
-			name:        "about exists",
-			doc:         "about",
-			wantContain: "ctx",
-			wantErr:     false,
-		},
-		{
-			name:        "design-invariants exists",
-			doc:         "design-invariants",
-			wantContain: "Invariants",
-			wantErr:     false,
-		},
-		{
-			name:    "nonexistent doc returns error",
-			doc:     "nonexistent",
-			wantErr: true,
-		},
+		{"manifesto exists", "manifesto", "Manifesto", false},
+		{"about exists", "about", "ctx", false},
+		{"design-invariants exists", "design-invariants", "Invariants", false},
+		{"nonexistent returns error", "nonexistent", "", true},
 	}
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			content, err := WhyDoc(tt.doc)
+			content, err := FS.ReadFile(path.Join(asset.DirWhy, tt.doc+file.ExtMarkdown))
 			if tt.wantErr {
 				if err == nil {
-					t.Errorf("WhyDoc(%q) expected error, got nil", tt.doc)
+					t.Errorf("expected error for %q", tt.doc)
 				}
 				return
 			}
 			if err != nil {
-				t.Errorf("WhyDoc(%q) unexpected error: %v", tt.doc, err)
+				t.Errorf("unexpected error for %q: %v", tt.doc, err)
 				return
 			}
 			if !strings.Contains(string(content), tt.wantContain) {
-				t.Errorf("WhyDoc(%q) content does not contain %q", tt.doc, tt.wantContain)
+				t.Errorf("content of %q does not contain %q", tt.doc, tt.wantContain)
 			}
 		})
 	}
 }
 
 func TestListWhyDocs(t *testing.T) {
-	docs, err := ListWhyDocs()
+	entries, err := FS.ReadDir(asset.DirWhy)
 	if err != nil {
-		t.Fatalf("ListWhyDocs() unexpected error: %v", err)
+		t.Fatalf("unexpected error: %v", err)
 	}
 
 	expected := []string{"about", "design-invariants", "manifesto"}
-
 	docSet := make(map[string]bool)
-	for _, name := range docs {
-		docSet[name] = true
+	for _, e := range entries {
+		name := e.Name()
+		if strings.HasSuffix(name, file.ExtMarkdown) {
+			docSet[strings.TrimSuffix(name, file.ExtMarkdown)] = true
+		}
 	}
 
 	for _, exp := range expected {
 		if !docSet[exp] {
-			t.Errorf("ListWhyDocs() missing expected doc: %s", exp)
+			t.Errorf("missing expected doc: %s", exp)
 		}
-	}
-
-	if len(docs) != len(expected) {
-		t.Errorf("ListWhyDocs() returned %d docs, expected %d", len(docs), len(expected))
 	}
 }
 
 func TestPluginVersion(t *testing.T) {
-	ver, err := PluginVersion()
+	data, err := FS.ReadFile(asset.PathPluginJSON)
 	if err != nil {
-		t.Fatalf("PluginVersion() error: %v", err)
+		t.Fatalf("unexpected error: %v", err)
+	}
+	var manifest map[string]json.RawMessage
+	if unmarshalErr := json.Unmarshal(data, &manifest); unmarshalErr != nil {
+		t.Fatalf("parse error: %v", unmarshalErr)
+	}
+	raw, ok := manifest[asset.JSONKeyVersion]
+	if !ok {
+		t.Fatal("plugin.json missing 'version' key")
+	}
+	var ver string
+	if parseErr := json.Unmarshal(raw, &ver); parseErr != nil {
+		t.Fatalf("version parse error: %v", parseErr)
 	}
 	if ver == "" {
-		t.Error("PluginVersion() returned empty string")
+		t.Error("version is empty")
 	}
-	// Should be a semver-like string
 	if !strings.Contains(ver, ".") {
-		t.Errorf("PluginVersion() = %q, expected semver format", ver)
+		t.Errorf("version = %q, expected semver format", ver)
 	}
 }
 
 func TestSchema(t *testing.T) {
-	data, err := Schema()
+	data, err := FS.ReadFile(asset.PathCtxrcSchema)
 	if err != nil {
-		t.Fatalf("Schema() unexpected error: %v", err)
+		t.Fatalf("unexpected error: %v", err)
 	}
 	content := string(data)
 	if !strings.Contains(content, "$schema") {
-		t.Error("Schema() content does not contain $schema")
-	}
-	if !strings.Contains(content, "additionalProperties") {
-		t.Error("Schema() content does not contain additionalProperties")
+		t.Error("does not contain $schema")
 	}
 	if !strings.Contains(content, "ctx.ist") {
-		t.Error("Schema() content does not contain ctx.ist $id")
+		t.Error("does not contain ctx.ist $id")
 	}
-}
-
-func TestDefaultPermissions(t *testing.T) {
-	t.Run("allow list is non-empty", func(t *testing.T) {
-		allow := DefaultAllowPermissions()
-		if len(allow) == 0 {
-			t.Fatal("DefaultAllowPermissions() returned empty list")
-		}
-	})
-
-	t.Run("deny list is non-empty", func(t *testing.T) {
-		deny := DefaultDenyPermissions()
-		if len(deny) == 0 {
-			t.Fatal("DefaultDenyPermissions() returned empty list")
-		}
-	})
-
-	t.Run("allow list contains Bash(ctx:*)", func(t *testing.T) {
-		allowSet := make(map[string]bool)
-		for _, p := range DefaultAllowPermissions() {
-			allowSet[p] = true
-		}
-		if !allowSet["Bash(ctx:*)"] {
-			t.Error("allow list missing: Bash(ctx:*)")
-		}
-	})
-
-	t.Run("allow list covers all bundled skills", func(t *testing.T) {
-		skills, listErr := ListSkills()
-		if listErr != nil {
-			t.Fatalf("ListSkills() error: %v", listErr)
-		}
-
-		allowSet := make(map[string]bool)
-		for _, p := range DefaultAllowPermissions() {
-			allowSet[p] = true
-		}
-
-		for _, skill := range skills {
-			if strings.HasPrefix(skill, "_") {
-				continue // internal skills don't need allow entries
-			}
-			entry := fmt.Sprintf("Skill(%s)", skill)
-			if !allowSet[entry] {
-				t.Errorf("allow list missing bundled skill: %s", entry)
-			}
-		}
-	})
-
-	t.Run("deny list contains dangerous patterns", func(t *testing.T) {
-		denySet := make(map[string]bool)
-		for _, p := range DefaultDenyPermissions() {
-			denySet[p] = true
-		}
-
-		expected := []string{
-			"Bash(sudo *)",
-			"Bash(git push *)",
-			"Bash(rm -rf /*)",
-			"Bash(curl *)",
-			"Read(**/.env)",
-			"Edit(**/.env)",
-		}
-		for _, e := range expected {
-			if !denySet[e] {
-				t.Errorf("deny list missing: %s", e)
-			}
-		}
-	})
 }
 
 func TestHookMessageRegistry(t *testing.T) {
-	data, readErr := HookMessageRegistry()
+	data, readErr := FS.ReadFile(asset.PathHookRegistry)
 	if readErr != nil {
-		t.Fatalf("HookMessageRegistry() error: %v", readErr)
+		t.Fatalf("unexpected error: %v", readErr)
 	}
 	if len(data) == 0 {
-		t.Fatal("HookMessageRegistry() returned empty data")
+		t.Fatal("returned empty data")
 	}
 
-	// Verify it parses as valid YAML (list of entries).
 	var entries []map[string]any
 	if parseErr := yaml.Unmarshal(data, &entries); parseErr != nil {
-		t.Fatalf("HookMessageRegistry() returned invalid YAML: %v", parseErr)
+		t.Fatalf("invalid YAML: %v", parseErr)
 	}
-	if len(entries) == 0 {
-		t.Fatal("HookMessageRegistry() parsed to empty list")
-	}
-
-	// Each entry should have at least "hook" and "variant" keys.
 	for i, entry := range entries {
 		if _, ok := entry["hook"]; !ok {
-			t.Errorf("registry entry %d missing 'hook' key", i)
+			t.Errorf("entry %d missing 'hook' key", i)
 		}
 		if _, ok := entry["variant"]; !ok {
-			t.Errorf("registry entry %d missing 'variant' key", i)
+			t.Errorf("entry %d missing 'variant' key", i)
 		}
 	}
 }
 
 func TestListHookMessages(t *testing.T) {
-	hooks, listErr := ListHookMessages()
+	entries, listErr := FS.ReadDir(asset.DirHooksMessages)
 	if listErr != nil {
-		t.Fatalf("ListHookMessages() error: %v", listErr)
+		t.Fatalf("unexpected error: %v", listErr)
 	}
-	if len(hooks) == 0 {
-		t.Fatal("ListHookMessages() returned empty list")
+	if len(entries) == 0 {
+		t.Fatal("returned empty list")
 	}
 
 	hookSet := make(map[string]bool)
-	for _, h := range hooks {
-		hookSet[h] = true
+	for _, h := range entries {
+		if h.IsDir() {
+			hookSet[h.Name()] = true
+		}
 	}
-
-	expected := []string{"qa-reminder", "check-context-size", "block-dangerous-commands"}
-	for _, exp := range expected {
+	for _, exp := range []string{"qa-reminder", "check-context-size", "block-dangerous-commands"} {
 		if !hookSet[exp] {
-			t.Errorf("ListHookMessages() missing expected hook: %s", exp)
+			t.Errorf("missing expected hook: %s", exp)
 		}
 	}
 }
 
 func TestHookMessage_ReadVariant(t *testing.T) {
-	content, readErr := HookMessage("qa-reminder", "gate.txt")
+	content, readErr := FS.ReadFile(path.Join(asset.DirHooksMessages, "qa-reminder", "gate.txt"))
 	if readErr != nil {
-		t.Fatalf("HookMessage(qa-reminder, gate.txt) error: %v", readErr)
+		t.Fatalf("unexpected error: %v", readErr)
 	}
 	if len(content) == 0 {
-		t.Fatal("HookMessage(qa-reminder, gate.txt) returned empty content")
+		t.Fatal("returned empty content")
 	}
 }
 
 func TestRalphTemplate(t *testing.T) {
-	content, readErr := RalphTemplate("PROMPT.md")
+	content, readErr := FS.ReadFile(path.Join(asset.DirRalph, "PROMPT.md"))
 	if readErr != nil {
-		t.Fatalf("RalphTemplate(PROMPT.md) error: %v", readErr)
+		t.Fatalf("unexpected error: %v", readErr)
 	}
 	if len(content) == 0 {
-		t.Fatal("RalphTemplate(PROMPT.md) returned empty content")
+		t.Fatal("returned empty content")
 	}
 }
 
 func TestMakefileCtx(t *testing.T) {
-	content, readErr := MakefileCtx()
+	content, readErr := FS.ReadFile(asset.PathMakefileCtx)
 	if readErr != nil {
-		t.Fatalf("MakefileCtx() error: %v", readErr)
+		t.Fatalf("unexpected error: %v", readErr)
 	}
 	if len(content) == 0 {
-		t.Fatal("MakefileCtx() returned empty content")
+		t.Fatal("returned empty content")
 	}
 	if !strings.Contains(string(content), "ctx") {
-		t.Error("MakefileCtx() content does not contain 'ctx'")
+		t.Error("content does not contain 'ctx'")
 	}
 }

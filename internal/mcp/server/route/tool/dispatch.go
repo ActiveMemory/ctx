@@ -10,8 +10,8 @@ import (
 	"encoding/json"
 	"fmt"
 
-	"github.com/ActiveMemory/ctx/internal/assets"
-	"github.com/ActiveMemory/ctx/internal/config/embed"
+	"github.com/ActiveMemory/ctx/internal/assets/read/desc"
+	"github.com/ActiveMemory/ctx/internal/config/embed/text"
 	"github.com/ActiveMemory/ctx/internal/config/mcp/tool"
 	"github.com/ActiveMemory/ctx/internal/mcp/handler"
 	"github.com/ActiveMemory/ctx/internal/mcp/proto"
@@ -46,7 +46,7 @@ func DispatchCall(
 	if err := json.Unmarshal(req.Params, &params); err != nil {
 		return out.ErrResponse(
 			req.ID, proto.ErrCodeInvalidArg,
-			assets.TextDesc(embed.TextDescKeyMCPInvalidParams),
+			desc.TextDesc(text.TextDescKeyMCPInvalidParams),
 		)
 	}
 
@@ -81,7 +81,7 @@ func DispatchCall(
 		return out.ErrResponse(
 			req.ID, proto.ErrCodeNotFound,
 			fmt.Sprintf(
-				assets.TextDesc(embed.TextDescKeyMCPUnknownTool),
+				desc.TextDesc(text.TextDescKeyMCPUnknownTool),
 				params.Name,
 			),
 		)

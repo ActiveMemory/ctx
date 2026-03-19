@@ -977,3 +977,7 @@ age-based — prune files older than N days (default 7).
   `assets.TextDesc(key)`. Callers should use assets directly. Also delete
   `config2.go` (agent confusion artifact). ~232 call sites across `write/**`.
   #priority:medium #added:2026-03-17
+
+- [ ] Migrate Sprintf-based templates (tpl_*.go) to Go text/template or embedded template files — ObsidianReadme, LoopScript, and other multi-line format strings that can't move to YAML #added:2026-03-18-163629
+
+- [ ] Split internal/assets/embed_test.go — tests that call read/ packages must move to their respective read/ package to avoid import cycles #added:2026-03-18-192914

@@ -7,7 +7,7 @@
 package claude
 
 import (
-	"github.com/ActiveMemory/ctx/internal/assets"
+	"github.com/ActiveMemory/ctx/internal/assets/read/skill"
 	ctxerr "github.com/ActiveMemory/ctx/internal/err/skill"
 )
 
@@ -23,7 +23,7 @@ import (
 //     (e.g., "ctx-status", "ctx-reflect")
 //   - error: Non-nil if the skills directory cannot be read
 func Skills() ([]string, error) {
-	names, err := assets.ListSkills()
+	names, err := skill.SkillList()
 	if err != nil {
 		return nil, ctxerr.List(err)
 	}
@@ -39,7 +39,7 @@ func Skills() ([]string, error) {
 //   - []byte: Raw bytes of the SKILL.md file
 //   - error: Non-nil if the skill does not exist or cannot be read
 func SkillContent(name string) ([]byte, error) {
-	content, err := assets.SkillContent(name)
+	content, err := skill.SkillContent(name)
 	if err != nil {
 		return nil, ctxerr.Read(name, err)
 	}

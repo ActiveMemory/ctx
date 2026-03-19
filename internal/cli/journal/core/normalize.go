@@ -13,7 +13,8 @@ import (
 	"strings"
 	"unicode/utf8"
 
-	"github.com/ActiveMemory/ctx/internal/assets"
+	"github.com/ActiveMemory/ctx/internal/assets/read/desc"
+	"github.com/ActiveMemory/ctx/internal/config/embed/text"
 	"github.com/ActiveMemory/ctx/internal/config/journal"
 	"github.com/ActiveMemory/ctx/internal/config/regex"
 	"github.com/ActiveMemory/ctx/internal/config/token"
@@ -183,7 +184,7 @@ func WrapToolOutputs(content string) string {
 		m := regex.TurnHeader.FindStringSubmatch(
 			strings.TrimSpace(lines[i]),
 		)
-		if m == nil || m[2] != assets.ToolOutput {
+		if m == nil || m[2] != desc.TextDesc(text.TextDescKeyLabelToolOutput) {
 			out = append(out, lines[i])
 			i++
 			continue
@@ -307,7 +308,7 @@ func WrapUserTurns(content string) string {
 		m := regex.TurnHeader.FindStringSubmatch(
 			strings.TrimSpace(lines[i]),
 		)
-		if m == nil || m[2] != assets.RoleUser {
+		if m == nil || m[2] != desc.TextDesc(text.TextDescKeyLabelRoleUser) {
 			out = append(out, lines[i])
 			i++
 			continue

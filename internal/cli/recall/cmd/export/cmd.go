@@ -7,10 +7,11 @@
 package export
 
 import (
-	"github.com/ActiveMemory/ctx/internal/config/embed"
+	"github.com/ActiveMemory/ctx/internal/assets/read/desc"
+	"github.com/ActiveMemory/ctx/internal/config/embed/cmd"
+	"github.com/ActiveMemory/ctx/internal/config/embed/flag"
 	"github.com/spf13/cobra"
 
-	"github.com/ActiveMemory/ctx/internal/assets"
 	"github.com/ActiveMemory/ctx/internal/cli/recall/core"
 )
 
@@ -21,7 +22,7 @@ import (
 func Cmd() *cobra.Command {
 	var opts core.ExportOpts
 
-	short, long := assets.CommandDesc(embed.CmdDescKeyRecallExport)
+	short, long := desc.CommandDesc(cmd.DescKeyRecallExport)
 
 	cmd := &cobra.Command{
 		Use:   "export [session-id]",
@@ -33,37 +34,37 @@ func Cmd() *cobra.Command {
 	}
 
 	cmd.Flags().BoolVar(
-		&opts.All, "all", false, assets.FlagDesc(embed.FlagDescKeyRecallExportAll),
+		&opts.All, "all", false, desc.FlagDesc(flag.FlagDescKeyRecallExportAll),
 	)
 	cmd.Flags().BoolVar(
 		&opts.AllProjects, "all-projects", false,
-		assets.FlagDesc(embed.FlagDescKeyRecallExportAllProjects),
+		desc.FlagDesc(flag.FlagDescKeyRecallExportAllProjects),
 	)
 	cmd.Flags().BoolVar(
 		&opts.Regenerate,
 		"regenerate", false,
-		assets.FlagDesc(embed.FlagDescKeyRecallExportRegenerate),
+		desc.FlagDesc(flag.FlagDescKeyRecallExportRegenerate),
 	)
 	cmd.Flags().BoolVar(
 		&opts.KeepFrontmatter,
 		"keep-frontmatter", true,
-		assets.FlagDesc(embed.FlagDescKeyRecallExportKeepFrontmatter),
+		desc.FlagDesc(flag.FlagDescKeyRecallExportKeepFrontmatter),
 	)
 
 	cmd.Flags().BoolVarP(
 		&opts.Yes,
 		"yes", "y", false,
-		assets.FlagDesc(embed.FlagDescKeyRecallExportYes),
+		desc.FlagDesc(flag.FlagDescKeyRecallExportYes),
 	)
 	cmd.Flags().BoolVar(
 		&opts.DryRun,
 		"dry-run", false,
-		assets.FlagDesc(embed.FlagDescKeyRecallExportDryRun),
+		desc.FlagDesc(flag.FlagDescKeyRecallExportDryRun),
 	)
 
 	// Deprecated: --skip-existing is now the default behavior for --all.
 	var skipExisting bool
-	cmd.Flags().BoolVar(&skipExisting, "skip-existing", false, assets.FlagDesc(embed.FlagDescKeyRecallExportSkipExisting))
+	cmd.Flags().BoolVar(&skipExisting, "skip-existing", false, desc.FlagDesc(flag.FlagDescKeyRecallExportSkipExisting))
 	_ = cmd.Flags().MarkDeprecated("skip-existing", "this is now the default behavior for --all")
 
 	return cmd

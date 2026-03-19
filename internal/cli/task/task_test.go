@@ -356,8 +356,8 @@ func TestArchiveCommand_DryRunWithCompleted(t *testing.T) {
 
 func TestCmd_HasSubcommands(t *testing.T) {
 	cmd := Cmd()
-	if cmd.Use != "tasks" {
-		t.Errorf("cmd.Use = %q, want 'tasks'", cmd.Use)
+	if cmd.Use != "task" {
+		t.Errorf("cmd.Use = %q, want 'task'", cmd.Use)
 	}
 
 	names := make(map[string]bool)

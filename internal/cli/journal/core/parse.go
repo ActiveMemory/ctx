@@ -12,7 +12,8 @@ import (
 	"sort"
 	"strings"
 
-	"github.com/ActiveMemory/ctx/internal/assets"
+	"github.com/ActiveMemory/ctx/internal/assets/read/desc"
+	"github.com/ActiveMemory/ctx/internal/config/embed/text"
 	"github.com/ActiveMemory/ctx/internal/config/file"
 	"github.com/ActiveMemory/ctx/internal/config/journal"
 	"github.com/ActiveMemory/ctx/internal/config/regex"
@@ -124,7 +125,7 @@ func ParseJournalEntry(path, filename string) JournalEntry {
 	}
 
 	// Check for suggestion mode sessions
-	if strings.Contains(contentStr, assets.LabelSuggestionMode) {
+	if strings.Contains(contentStr, desc.TextDesc(text.TextDescKeyLabelSuggestionMode)) {
 		entry.Suggestive = true
 	}
 
@@ -141,16 +142,16 @@ func ParseJournalEntry(path, filename string) JournalEntry {
 		}
 
 		// Time from metadata
-		if strings.HasPrefix(line, assets.MetadataTime) {
+		if strings.HasPrefix(line, desc.TextDesc(text.TextDescKeyLabelMetadataTime)) {
 			entry.Time = strings.TrimSpace(
-				strings.TrimPrefix(line, assets.MetadataTime),
+				strings.TrimPrefix(line, desc.TextDesc(text.TextDescKeyLabelMetadataTime)),
 			)
 		}
 
 		// Project from metadata
-		if strings.HasPrefix(line, assets.MetadataProject) {
+		if strings.HasPrefix(line, desc.TextDesc(text.TextDescKeyLabelMetadataProject)) {
 			entry.Project = strings.TrimSpace(
-				strings.TrimPrefix(line, assets.MetadataProject),
+				strings.TrimPrefix(line, desc.TextDesc(text.TextDescKeyLabelMetadataProject)),
 			)
 		}
 

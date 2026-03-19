@@ -8,5 +8,5 @@
 //
 // It regenerates quick-reference indices for both DECISIONS.md and
 // LEARNINGS.md in a single invocation, replacing the need to run
-// ctx decisions reindex and ctx learnings reindex separately.
+// ctx decision reindex and ctx learning reindex separately.
 package reindex

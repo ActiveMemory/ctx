@@ -9,10 +9,9 @@ package check_version
 import (
 	"os"
 
-	"github.com/ActiveMemory/ctx/internal/config/embed"
+	"github.com/ActiveMemory/ctx/internal/assets/read/desc"
+	"github.com/ActiveMemory/ctx/internal/config/embed/cmd"
 	"github.com/spf13/cobra"
-
-	"github.com/ActiveMemory/ctx/internal/assets"
 )
 
 // Cmd returns the "ctx system check-version" subcommand.
@@ -20,7 +19,7 @@ import (
 // Returns:
 //   - *cobra.Command: Configured check-version subcommand
 func Cmd() *cobra.Command {
-	short, long := assets.CommandDesc(embed.CmdDescKeySystemCheckVersion)
+	short, long := desc.CommandDesc(cmd.DescKeySystemCheckVersion)
 
 	return &cobra.Command{
 		Use:    "check-version",

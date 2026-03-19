@@ -11,11 +11,11 @@ import (
 	"path/filepath"
 	"strings"
 
-	"github.com/ActiveMemory/ctx/internal/assets"
 	"github.com/ActiveMemory/ctx/internal/config/cli"
 	"github.com/ActiveMemory/ctx/internal/config/dir"
 	"github.com/ActiveMemory/ctx/internal/config/file"
 	"github.com/ActiveMemory/ctx/internal/config/fs"
+	"github.com/ActiveMemory/ctx/internal/config/session"
 	"github.com/ActiveMemory/ctx/internal/config/token"
 	"github.com/ActiveMemory/ctx/internal/err/journal"
 	ctxerr "github.com/ActiveMemory/ctx/internal/err/session"
@@ -29,7 +29,7 @@ import (
 
 // LockedFrontmatterLine is the YAML line inserted into frontmatter when
 // a journal entry is locked.
-var LockedFrontmatterLine = assets.FrontmatterLocked + token.Colon + " " +
+var LockedFrontmatterLine = session.FrontmatterLocked + token.Colon + " " +
 	cli.AnnotationTrue + "  # managed by ctx"
 
 // MatchJournalFiles returns journal .md filenames matching the given
@@ -122,7 +122,7 @@ func MultipartBase(filename string) string {
 }
 
 // lockedPrefix is the frontmatter key prefix for locked lines.
-var lockedPrefix = assets.FrontmatterLocked + token.Colon
+var lockedPrefix = session.FrontmatterLocked + token.Colon
 
 // UpdateLockFrontmatter inserts or removes the "locked: true" line in
 // a journal file's YAML frontmatter. The state file is the source of
@@ -268,9 +268,9 @@ func RunLockUnlock(
 		return nil
 	}
 
-	verb := assets.FrontmatterLocked
+	verb := session.FrontmatterLocked
 	if !lock {
-		verb = assets.Unlocked
+		verb = session.Unlocked
 	}
 
 	count := 0
@@ -285,9 +285,9 @@ func RunLockUnlock(
 
 		// Update state.
 		if lock {
-			jstate.Mark(filename, assets.FrontmatterLocked)
+			jstate.Mark(filename, session.FrontmatterLocked)
 		} else {
-			jstate.Clear(filename, assets.FrontmatterLocked)
+			jstate.Clear(filename, session.FrontmatterLocked)
 		}
 
 		// Update frontmatter for human visibility.

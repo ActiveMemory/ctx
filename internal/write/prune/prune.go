@@ -9,10 +9,9 @@ package prune
 import (
 	"fmt"
 
-	"github.com/ActiveMemory/ctx/internal/config/embed"
+	"github.com/ActiveMemory/ctx/internal/assets/read/desc"
+	"github.com/ActiveMemory/ctx/internal/config/embed/text"
 	"github.com/spf13/cobra"
-
-	"github.com/ActiveMemory/ctx/internal/assets"
 )
 
 // PruneDryRunLine prints a single dry-run prune candidate.
@@ -25,7 +24,7 @@ func PruneDryRunLine(cmd *cobra.Command, name, age string) {
 	if cmd == nil {
 		return
 	}
-	cmd.Println(fmt.Sprintf(assets.TextDesc(embed.TextDescKeyPruneDryRunLine), name, age))
+	cmd.Println(fmt.Sprintf(desc.TextDesc(text.TextDescKeyPruneDryRunLine), name, age))
 }
 
 // PruneErrorLine prints an error encountered while removing a file.
@@ -38,7 +37,7 @@ func PruneErrorLine(cmd *cobra.Command, name string, err error) {
 	if cmd == nil {
 		return
 	}
-	cmd.PrintErrln(fmt.Sprintf(assets.TextDesc(embed.TextDescKeyPruneErrorLine), name, err))
+	cmd.PrintErrln(fmt.Sprintf(desc.TextDesc(text.TextDescKeyPruneErrorLine), name, err))
 }
 
 // PruneSummary prints the prune results summary.
@@ -55,10 +54,10 @@ func PruneSummary(cmd *cobra.Command, dryRun bool, pruned, skipped, preserved in
 	}
 	if dryRun {
 		cmd.Println()
-		cmd.Println(fmt.Sprintf(assets.TextDesc(embed.TextDescKeyPruneDryRunSummary),
+		cmd.Println(fmt.Sprintf(desc.TextDesc(text.TextDescKeyPruneDryRunSummary),
 			pruned, skipped, preserved))
 	} else {
-		cmd.Println(fmt.Sprintf(assets.TextDesc(embed.TextDescKeyPruneSummary),
+		cmd.Println(fmt.Sprintf(desc.TextDesc(text.TextDescKeyPruneSummary),
 			pruned, skipped, preserved))
 	}
 }

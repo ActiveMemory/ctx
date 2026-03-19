@@ -11,8 +11,11 @@ import (
 	"path/filepath"
 	"strings"
 
+	"github.com/ActiveMemory/ctx/internal/assets/read/agent"
+	"github.com/ActiveMemory/ctx/internal/assets/read/desc"
+
 	"github.com/ActiveMemory/ctx/internal/config/dir"
-	"github.com/ActiveMemory/ctx/internal/config/embed"
+	"github.com/ActiveMemory/ctx/internal/config/embed/text"
 	"github.com/ActiveMemory/ctx/internal/config/fs"
 	"github.com/ActiveMemory/ctx/internal/config/marker"
 	"github.com/ActiveMemory/ctx/internal/config/token"
@@ -21,8 +24,6 @@ import (
 	writeErr "github.com/ActiveMemory/ctx/internal/write/err"
 	"github.com/ActiveMemory/ctx/internal/write/hook"
 	"github.com/spf13/cobra"
-
-	"github.com/ActiveMemory/ctx/internal/assets"
 )
 
 // Run executes the hook command logic.
@@ -43,32 +44,32 @@ func Run(cmd *cobra.Command, args []string, writeFile bool) error {
 
 	switch tool {
 	case "claude-code", "claude":
-		hook.InfoTool(cmd, assets.TextDesc(embed.TextDescKeyHookClaude))
+		hook.InfoTool(cmd, desc.TextDesc(text.TextDescKeyHookClaude))
 
 	case "cursor":
-		hook.InfoTool(cmd, assets.TextDesc(embed.TextDescKeyHookCursor))
+		hook.InfoTool(cmd, desc.TextDesc(text.TextDescKeyHookCursor))
 
 	case "aider":
-		hook.InfoTool(cmd, assets.TextDesc(embed.TextDescKeyHookAider))
+		hook.InfoTool(cmd, desc.TextDesc(text.TextDescKeyHookAider))
 
 	case "copilot":
 		if writeFile {
 			return WriteCopilotInstructions(cmd)
 		}
-		hook.InfoTool(cmd, assets.TextDesc(embed.TextDescKeyHookCopilot))
+		hook.InfoTool(cmd, desc.TextDesc(text.TextDescKeyHookCopilot))
 		cmd.Println()
-		content, readErr := assets.CopilotInstructions()
+		content, readErr := agent.CopilotInstructions()
 		if readErr != nil {
 			return readErr
 		}
 		cmd.Print(string(content))
 
 	case "windsurf":
-		hook.InfoTool(cmd, assets.TextDesc(embed.TextDescKeyHookWindsurf))
+		hook.InfoTool(cmd, desc.TextDesc(text.TextDescKeyHookWindsurf))
 
 	default:
 		hook.InfoUnknownTool(cmd, tool)
-		hook.InfoTool(cmd, assets.TextDesc(embed.TextDescKeyHookSupportedTools))
+		hook.InfoTool(cmd, desc.TextDesc(text.TextDescKeyHookSupportedTools))
 		return config.UnsupportedTool(tool)
 	}
 
@@ -96,7 +97,7 @@ func WriteCopilotInstructions(cmd *cobra.Command) error {
 	}
 
 	// Load the copilot instructions from embedded assets
-	instructions, readErr := assets.CopilotInstructions()
+	instructions, readErr := agent.CopilotInstructions()
 	if readErr != nil {
 		return readErr
 	}

@@ -12,10 +12,11 @@ import (
 	"path/filepath"
 	"strings"
 
-	"github.com/ActiveMemory/ctx/internal/assets"
+	"github.com/ActiveMemory/ctx/internal/assets/read/desc"
+	"github.com/ActiveMemory/ctx/internal/assets/read/lookup"
 	ctxCfg "github.com/ActiveMemory/ctx/internal/config/ctx"
 	"github.com/ActiveMemory/ctx/internal/config/dep"
-	"github.com/ActiveMemory/ctx/internal/config/embed"
+	"github.com/ActiveMemory/ctx/internal/config/embed/text"
 	"github.com/ActiveMemory/ctx/internal/entity"
 )
 
@@ -56,11 +57,11 @@ func CheckPackageFiles(ctx *entity.Context) []Action {
 					Type: "DEPS",
 					File: ctxCfg.Architecture,
 					Description: fmt.Sprintf(
-						assets.TextDesc(embed.TextDescKeySyncDepsDescription),
+						lookup.TextDesc(text.TextDescKeySyncDepsDescription),
 						f, desc,
 					),
 					Suggestion: fmt.Sprintf(
-						assets.TextDesc(embed.TextDescKeySyncDepsSuggestion),
+						lookup.TextDesc(text.TextDescKeySyncDepsSuggestion),
 						ctxCfg.Architecture, ctxCfg.Dependency,
 					),
 				})
@@ -85,7 +86,7 @@ func CheckPackageFiles(ctx *entity.Context) []Action {
 func CheckConfigFiles(ctx *entity.Context) []Action {
 	var actions []Action
 
-	for _, cfg := range assets.Patterns {
+	for _, cfg := range lookup.ConfigPatterns() {
 		matches, _ := filepath.Glob(cfg.Pattern)
 		if len(matches) > 0 {
 			// Check if CONVENTIONS.md mentions this
@@ -101,11 +102,11 @@ func CheckConfigFiles(ctx *entity.Context) []Action {
 					Type: "CONFIG",
 					File: ctxCfg.Convention,
 					Description: fmt.Sprintf(
-						assets.TextDesc(embed.TextDescKeySyncConfigDescription),
+						desc.TextDesc(text.TextDescKeySyncConfigDescription),
 						matches[0], cfg.Topic,
 					),
 					Suggestion: fmt.Sprintf(
-						assets.TextDesc(embed.TextDescKeySyncConfigSuggestion),
+						desc.TextDesc(text.TextDescKeySyncConfigSuggestion),
 						cfg.Topic, ctxCfg.Convention,
 					),
 				})
@@ -176,11 +177,11 @@ func CheckNewDirectories(ctx *entity.Context) []Action {
 				Type: "NEW_DIR",
 				File: ctxCfg.Architecture,
 				Description: fmt.Sprintf(
-					assets.TextDesc(embed.TextDescKeySyncDirDescription),
+					desc.TextDesc(text.TextDescKeySyncDirDescription),
 					name,
 				),
 				Suggestion: fmt.Sprintf(
-					assets.TextDesc(embed.TextDescKeySyncDirSuggestion),
+					desc.TextDesc(text.TextDescKeySyncDirSuggestion),
 					name, ctxCfg.Architecture,
 				),
 			})

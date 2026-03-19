@@ -7,10 +7,10 @@
 package memory
 
 import (
-	"github.com/ActiveMemory/ctx/internal/config/embed"
+	"github.com/ActiveMemory/ctx/internal/assets/read/desc"
+	"github.com/ActiveMemory/ctx/internal/config/embed/cmd"
 	"github.com/spf13/cobra"
 
-	"github.com/ActiveMemory/ctx/internal/assets"
 	"github.com/ActiveMemory/ctx/internal/cli/memory/cmd/diff"
 	"github.com/ActiveMemory/ctx/internal/cli/memory/cmd/importer"
 	"github.com/ActiveMemory/ctx/internal/cli/memory/cmd/publish"
@@ -21,9 +21,9 @@ import (
 
 // Cmd returns the "ctx memory" parent command.
 func Cmd() *cobra.Command {
-	short, long := assets.CommandDesc(embed.CmdDescKeyMemory)
+	short, long := desc.CommandDesc(cmd.DescKeyMemory)
 	cmd := &cobra.Command{
-		Use:   "memory",
+		Use:   cmd.DescKeyMemory,
 		Short: short,
 		Long:  long,
 	}

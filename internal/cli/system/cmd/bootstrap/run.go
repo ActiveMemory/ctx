@@ -9,13 +9,13 @@ package bootstrap
 import (
 	"os"
 
+	"github.com/ActiveMemory/ctx/internal/assets/read/desc"
 	bootstrap2 "github.com/ActiveMemory/ctx/internal/config/bootstrap"
-	"github.com/ActiveMemory/ctx/internal/config/embed"
+	"github.com/ActiveMemory/ctx/internal/config/embed/text"
 	ctxerr "github.com/ActiveMemory/ctx/internal/err/backup"
 	"github.com/ActiveMemory/ctx/internal/write/bootstrap"
 	"github.com/spf13/cobra"
 
-	"github.com/ActiveMemory/ctx/internal/assets"
 	"github.com/ActiveMemory/ctx/internal/cli/system/core"
 	"github.com/ActiveMemory/ctx/internal/rc"
 )
@@ -44,10 +44,10 @@ func Run(cmd *cobra.Command) error {
 
 	files := core.ListContextFiles(dir)
 	rules := core.ParseNumberedLines(
-		assets.TextDesc(embed.TextDescKeyBootstrapRules),
+		desc.TextDesc(text.TextDescKeyBootstrapRules),
 	)
 	nextSteps := core.ParseNumberedLines(
-		assets.TextDesc(embed.TextDescKeyBootstrapNextSteps),
+		desc.TextDesc(text.TextDescKeyBootstrapNextSteps),
 	)
 	warning := core.PluginWarning()
 

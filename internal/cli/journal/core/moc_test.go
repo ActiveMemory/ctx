@@ -10,7 +10,8 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/ActiveMemory/ctx/internal/assets"
+	"github.com/ActiveMemory/ctx/internal/assets/read/desc"
+	"github.com/ActiveMemory/ctx/internal/config/embed/text"
 )
 
 func TestGenerateHomeMOC(t *testing.T) {
@@ -113,7 +114,7 @@ func TestGenerateRelatedFooter(t *testing.T) {
 
 	got := GenerateRelatedFooter(entry, topicIndex, 5)
 
-	if !strings.Contains(got, assets.ObsidianRelatedHeading) {
+	if !strings.Contains(got, desc.TextDesc(text.TextDescKeyHeadingObsidianRelated)) {
 		t.Error("missing related heading")
 	}
 	if !strings.Contains(got, "[[_Topics|Topics MOC]]") {

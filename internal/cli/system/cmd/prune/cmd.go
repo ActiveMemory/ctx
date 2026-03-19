@@ -7,10 +7,10 @@
 package prune
 
 import (
-	"github.com/ActiveMemory/ctx/internal/config/embed"
+	"github.com/ActiveMemory/ctx/internal/assets/read/desc"
+	"github.com/ActiveMemory/ctx/internal/config/embed/cmd"
+	"github.com/ActiveMemory/ctx/internal/config/embed/flag"
 	"github.com/spf13/cobra"
-
-	"github.com/ActiveMemory/ctx/internal/assets"
 )
 
 // Cmd returns the "ctx system prune" subcommand.
@@ -21,7 +21,7 @@ func Cmd() *cobra.Command {
 	var days int
 	var dryRun bool
 
-	short, long := assets.CommandDesc(embed.CmdDescKeySystemPrune)
+	short, long := desc.CommandDesc(cmd.DescKeySystemPrune)
 
 	cmd := &cobra.Command{
 		Use:   "prune",
@@ -33,10 +33,10 @@ func Cmd() *cobra.Command {
 	}
 
 	cmd.Flags().IntVar(&days, "days", 7,
-		assets.FlagDesc(embed.FlagDescKeySystemPruneDays),
+		desc.FlagDesc(flag.FlagDescKeySystemPruneDays),
 	)
 	cmd.Flags().BoolVar(&dryRun, "dry-run", false,
-		assets.FlagDesc(embed.FlagDescKeySystemPruneDryRun),
+		desc.FlagDesc(flag.FlagDescKeySystemPruneDryRun),
 	)
 
 	return cmd

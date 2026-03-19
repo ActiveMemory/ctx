@@ -9,8 +9,8 @@ package backup
 import (
 	"fmt"
 
-	"github.com/ActiveMemory/ctx/internal/assets"
-	"github.com/ActiveMemory/ctx/internal/config/embed"
+	"github.com/ActiveMemory/ctx/internal/assets/read/desc"
+	"github.com/ActiveMemory/ctx/internal/config/embed/text"
 )
 
 // Create wraps a failure to create a backup file.
@@ -23,7 +23,7 @@ import (
 //   - error: "failed to create backup <name>: <cause>"
 func Create(name string, cause error) error {
 	return fmt.Errorf(
-		assets.TextDesc(embed.TextDescKeyErrBackupCreateBackup), name, cause,
+		desc.TextDesc(text.TextDescKeyErrBackupCreateBackup), name, cause,
 	)
 }
 
@@ -36,7 +36,7 @@ func Create(name string, cause error) error {
 //   - error: "failed to create backup: <cause>"
 func CreateGeneric(cause error) error {
 	return fmt.Errorf(
-		assets.TextDesc(embed.TextDescKeyErrBackupCreateBackupGeneric),
+		desc.TextDesc(text.TextDescKeyErrBackupCreateBackupGeneric),
 		cause,
 	)
 }
@@ -50,7 +50,7 @@ func CreateGeneric(cause error) error {
 //   - error: "create archive file: <cause>"
 func CreateArchive(cause error) error {
 	return fmt.Errorf(
-		assets.TextDesc(embed.TextDescKeyErrBackupCreateArchive),
+		desc.TextDesc(text.TextDescKeyErrBackupCreateArchive),
 		cause,
 	)
 }
@@ -64,7 +64,7 @@ func CreateArchive(cause error) error {
 //   - error: "failed to create archive directory: <cause>"
 func CreateArchiveDir(cause error) error {
 	return fmt.Errorf(
-		assets.TextDesc(embed.TextDescKeyErrBackupCreateArchiveDir),
+		desc.TextDesc(text.TextDescKeyErrBackupCreateArchiveDir),
 		cause)
 }
 
@@ -77,7 +77,7 @@ func CreateArchiveDir(cause error) error {
 //   - error: "failed to write archive: <cause>"
 func WriteArchive(cause error) error {
 	return fmt.Errorf(
-		assets.TextDesc(embed.TextDescKeyErrBackupWriteArchive),
+		desc.TextDesc(text.TextDescKeyErrBackupWriteArchive),
 		cause,
 	)
 }
@@ -91,7 +91,7 @@ func WriteArchive(cause error) error {
 //   - error: "parse SMB config: <cause>"
 func SMBConfig(cause error) error {
 	return fmt.Errorf(
-		assets.TextDesc(embed.TextDescKeyErrBackupBackupSMBConfig),
+		desc.TextDesc(text.TextDescKeyErrBackupBackupSMBConfig),
 		cause,
 	)
 }
@@ -105,7 +105,7 @@ func SMBConfig(cause error) error {
 //   - error: "project backup: <cause>"
 func Project(cause error) error {
 	return fmt.Errorf(
-		assets.TextDesc(embed.TextDescKeyErrBackupBackupProject),
+		desc.TextDesc(text.TextDescKeyErrBackupBackupProject),
 		cause,
 	)
 }
@@ -119,7 +119,7 @@ func Project(cause error) error {
 //   - error: "global backup: <cause>"
 func Global(cause error) error {
 	return fmt.Errorf(
-		assets.TextDesc(embed.TextDescKeyErrBackupBackupGlobal), cause,
+		desc.TextDesc(text.TextDescKeyErrBackupBackupGlobal), cause,
 	)
 }
 
@@ -132,7 +132,7 @@ func Global(cause error) error {
 //   - error: "invalid scope '<scope>': must be project, global, or all"
 func InvalidBackupScope(scope string) error {
 	return fmt.Errorf(
-		assets.TextDesc(embed.TextDescKeyErrBackupInvalidBackupScope), scope,
+		desc.TextDesc(text.TextDescKeyErrBackupInvalidBackupScope), scope,
 	)
 }
 
@@ -145,7 +145,7 @@ func InvalidBackupScope(scope string) error {
 //   - error: "source not found: <path>"
 func SourceNotFound(path string) error {
 	return fmt.Errorf(
-		assets.TextDesc(embed.TextDescKeyErrBackupSourceNotFound), path,
+		desc.TextDesc(text.TextDescKeyErrBackupSourceNotFound), path,
 	)
 }
 
@@ -158,7 +158,7 @@ func SourceNotFound(path string) error {
 //   - error: "invalid SMB URL: <url>"
 func InvalidSMBURL(url string) error {
 	return fmt.Errorf(
-		assets.TextDesc(embed.TextDescKeyErrBackupInvalidSMBURL), url,
+		desc.TextDesc(text.TextDescKeyErrBackupInvalidSMBURL), url,
 	)
 }
 
@@ -171,7 +171,7 @@ func InvalidSMBURL(url string) error {
 //   - error: "SMB URL missing share name: <url>"
 func SMBMissingShare(url string) error {
 	return fmt.Errorf(
-		assets.TextDesc(embed.TextDescKeyErrBackupSMBMissingShare), url,
+		desc.TextDesc(text.TextDescKeyErrBackupSMBMissingShare), url,
 	)
 }
 
@@ -185,7 +185,7 @@ func SMBMissingShare(url string) error {
 //   - error: "failed to mount <source>: <cause>"
 func MountFailed(source string, cause error) error {
 	return fmt.Errorf(
-		assets.TextDesc(embed.TextDescKeyErrBackupMountFailed), source, cause,
+		desc.TextDesc(text.TextDescKeyErrBackupMountFailed), source, cause,
 	)
 }
 
@@ -198,7 +198,7 @@ func MountFailed(source string, cause error) error {
 //   - error: "write to SMB: <cause>"
 func WriteSMB(cause error) error {
 	return fmt.Errorf(
-		assets.TextDesc(embed.TextDescKeyErrBackupWriteSMB), cause,
+		desc.TextDesc(text.TextDescKeyErrBackupWriteSMB), cause,
 	)
 }
 
@@ -211,6 +211,6 @@ func WriteSMB(cause error) error {
 //   - error: "context directory not found: <dir>: run 'ctx init'"
 func ContextDirNotFound(dir string) error {
 	return fmt.Errorf(
-		assets.TextDesc(embed.TextDescKeyErrBackupContextDirNotFound), dir,
+		desc.TextDesc(text.TextDescKeyErrBackupContextDirNotFound), dir,
 	)
 }

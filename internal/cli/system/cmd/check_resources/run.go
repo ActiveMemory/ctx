@@ -9,14 +9,14 @@ package check_resources
 import (
 	"os"
 
-	"github.com/ActiveMemory/ctx/internal/config/embed"
+	"github.com/ActiveMemory/ctx/internal/assets/read/desc"
+	"github.com/ActiveMemory/ctx/internal/config/embed/text"
 	"github.com/ActiveMemory/ctx/internal/config/hook"
 	"github.com/ActiveMemory/ctx/internal/config/token"
 	"github.com/ActiveMemory/ctx/internal/config/tpl"
 	hook2 "github.com/ActiveMemory/ctx/internal/write/hook"
 	"github.com/spf13/cobra"
 
-	"github.com/ActiveMemory/ctx/internal/assets"
 	"github.com/ActiveMemory/ctx/internal/cli/system/core"
 	"github.com/ActiveMemory/ctx/internal/notify"
 	"github.com/ActiveMemory/ctx/internal/sysinfo"
@@ -57,12 +57,12 @@ func Run(cmd *cobra.Command, stdin *os.File) error {
 	}
 
 	fallback := alertMessages +
-		token.NewlineLF + assets.TextDesc(
-		embed.TextDescKeyCheckResourcesFallbackLow) + token.NewlineLF +
-		assets.TextDesc(
-			embed.TextDescKeyCheckResourcesFallbackPersist) + token.NewlineLF +
-		assets.TextDesc(
-			embed.TextDescKeyCheckResourcesFallbackEnd)
+		token.NewlineLF + desc.TextDesc(
+		text.TextDescKeyCheckResourcesFallbackLow) + token.NewlineLF +
+		desc.TextDesc(
+			text.TextDescKeyCheckResourcesFallbackPersist) + token.NewlineLF +
+		desc.TextDesc(
+			text.TextDescKeyCheckResourcesFallbackEnd)
 	vars := map[string]any{tpl.VarAlertMessages: alertMessages}
 	content := core.LoadMessage(
 		hook.CheckResources, hook.VariantAlert, vars, fallback,
@@ -72,15 +72,15 @@ func Run(cmd *cobra.Command, stdin *os.File) error {
 	}
 
 	hook2.Nudge(cmd, core.NudgeBox(
-		assets.TextDesc(embed.TextDescKeyCheckResourcesRelayPrefix),
-		assets.TextDesc(embed.TextDescKeyCheckResourcesBoxTitle),
+		desc.TextDesc(text.TextDescKeyCheckResourcesRelayPrefix),
+		desc.TextDesc(text.TextDescKeyCheckResourcesBoxTitle),
 		content))
 
 	ref := notify.NewTemplateRef(
 		hook.CheckResources, hook.VariantAlert, vars,
 	)
 	core.NudgeAndRelay(hook.CheckResources+": "+
-		assets.TextDesc(embed.TextDescKeyCheckResourcesRelayMessage),
+		desc.TextDesc(text.TextDescKeyCheckResourcesRelayMessage),
 		input.SessionID, ref,
 	)
 

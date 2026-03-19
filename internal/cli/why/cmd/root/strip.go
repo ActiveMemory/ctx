@@ -10,8 +10,8 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/ActiveMemory/ctx/internal/assets"
-	"github.com/ActiveMemory/ctx/internal/config/embed"
+	"github.com/ActiveMemory/ctx/internal/assets/read/desc"
+	"github.com/ActiveMemory/ctx/internal/config/embed/text"
 	"github.com/ActiveMemory/ctx/internal/config/regex"
 	"github.com/ActiveMemory/ctx/internal/config/token"
 	"github.com/ActiveMemory/ctx/internal/config/zensical"
@@ -49,7 +49,7 @@ func StripMkDocs(content string) string {
 
 	inAdmonition := false
 	inTab := false
-	blockquotePrefix := assets.TextDesc(embed.TextDescKeyWhyBlockquotePrefix)
+	blockquotePrefix := desc.TextDesc(text.TextDescKeyWhyBlockquotePrefix)
 
 	for i := 0; i < len(lines); i++ {
 		line := lines[i]
@@ -69,7 +69,7 @@ func StripMkDocs(content string) string {
 				result = append(
 					result,
 					fmt.Sprintf(
-						assets.TextDesc(embed.TextDescKeyWhyAdmonitionFormat), title,
+						desc.TextDesc(text.TextDescKeyWhyAdmonitionFormat), title,
 					),
 				)
 			}
@@ -94,7 +94,7 @@ func StripMkDocs(content string) string {
 			title := ExtractTabTitle(line)
 			if title != "" {
 				result = append(result,
-					fmt.Sprintf(assets.TextDesc(embed.TextDescKeyWhyBoldFormat), title))
+					fmt.Sprintf(desc.TextDesc(text.TextDescKeyWhyBoldFormat), title))
 			}
 			continue
 		}

@@ -9,7 +9,8 @@ package task
 import (
 	"strings"
 
-	"github.com/ActiveMemory/ctx/internal/assets"
+	"github.com/ActiveMemory/ctx/internal/assets/read/desc"
+	"github.com/ActiveMemory/ctx/internal/config/embed/text"
 	"github.com/ActiveMemory/ctx/internal/config/mcp/cfg"
 	"github.com/ActiveMemory/ctx/internal/config/regex"
 	"github.com/ActiveMemory/ctx/internal/config/token"
@@ -29,7 +30,7 @@ func ForEachPending(lines []string, fn func(Pending) bool) {
 	idx := 0
 
 	for _, line := range lines {
-		if strings.HasPrefix(line, assets.HeadingCompleted) {
+		if strings.HasPrefix(line, desc.TextDesc(text.TextDescKeyHeadingCompleted)) {
 			inCompletedSection = true
 			continue
 		}

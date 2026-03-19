@@ -7,10 +7,10 @@
 package system
 
 import (
-	"github.com/ActiveMemory/ctx/internal/config/embed"
+	"github.com/ActiveMemory/ctx/internal/assets/read/desc"
+	"github.com/ActiveMemory/ctx/internal/config/embed/cmd"
 	"github.com/spf13/cobra"
 
-	"github.com/ActiveMemory/ctx/internal/assets"
 	"github.com/ActiveMemory/ctx/internal/cli/system/cmd/backup"
 	"github.com/ActiveMemory/ctx/internal/cli/system/cmd/block_dangerous_commands"
 	"github.com/ActiveMemory/ctx/internal/cli/system/cmd/block_non_path_ctx"
@@ -60,10 +60,10 @@ import (
 // Returns:
 //   - *cobra.Command: Parent command with resource display, plumbing, and hook subcommands
 func Cmd() *cobra.Command {
-	short, long := assets.CommandDesc(embed.CmdDescKeySystem)
+	short, long := desc.CommandDesc(cmd.DescKeySystem)
 
 	cmd := &cobra.Command{
-		Use:   "system",
+		Use:   cmd.DescKeySystem,
 		Short: short,
 		Long:  long,
 	}

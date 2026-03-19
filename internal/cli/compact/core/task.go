@@ -9,10 +9,11 @@ package core
 import (
 	"os"
 
+	"github.com/ActiveMemory/ctx/internal/assets/read/desc"
+	"github.com/ActiveMemory/ctx/internal/config/embed/text"
 	"github.com/ActiveMemory/ctx/internal/write/compact"
 	"github.com/spf13/cobra"
 
-	"github.com/ActiveMemory/ctx/internal/assets"
 	"github.com/ActiveMemory/ctx/internal/config/fs"
 	"github.com/ActiveMemory/ctx/internal/config/token"
 	"github.com/ActiveMemory/ctx/internal/entity"
@@ -80,7 +81,7 @@ func CompactTasks(
 				archiveContent += block.BlockContent() + nl + nl
 			}
 			if archiveFile, archiveErr := tidy.WriteArchive(
-				"tasks", assets.HeadingArchivedTasks, archiveContent,
+				"tasks", desc.TextDesc(text.TextDescKeyHeadingArchivedTasks), archiveContent,
 			); archiveErr == nil {
 				compact.InfoArchivedTasks(
 					cmd, len(blocksToArchive), archiveFile, archiveDays)

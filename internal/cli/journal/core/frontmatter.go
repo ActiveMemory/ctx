@@ -9,7 +9,7 @@ package core
 import (
 	"strings"
 
-	"github.com/ActiveMemory/ctx/internal/assets"
+	"github.com/ActiveMemory/ctx/internal/config/session"
 	"github.com/ActiveMemory/ctx/internal/config/token"
 	"gopkg.in/yaml.v3"
 )
@@ -54,24 +54,24 @@ func TransformFrontmatter(content, sourcePath string) string {
 	// Build the Obsidian frontmatter
 	ofm := ObsidianFrontmatter{}
 
-	if v, ok := raw[assets.FrontmatterTitle].(string); ok {
+	if v, ok := raw[session.FrontmatterTitle].(string); ok {
 		ofm.Title = v
 	}
-	if v, ok := raw[assets.FrontmatterDate].(string); ok {
+	if v, ok := raw[session.FrontmatterDate].(string); ok {
 		ofm.Date = v
 	}
-	if v, ok := raw[assets.FrontmatterType].(string); ok {
+	if v, ok := raw[session.FrontmatterType].(string); ok {
 		ofm.Type = v
 	}
-	if v, ok := raw[assets.FrontmatterOutcome].(string); ok {
+	if v, ok := raw[session.FrontmatterOutcome].(string); ok {
 		ofm.Outcome = v
 	}
 
 	// topics -> tags
-	ofm.Tags = ExtractStringSlice(raw, assets.FrontmatterTopics)
+	ofm.Tags = ExtractStringSlice(raw, session.FrontmatterTopics)
 
-	ofm.Technologies = ExtractStringSlice(raw, assets.FrontmatterTechnologies)
-	ofm.KeyFiles = ExtractStringSlice(raw, assets.FrontmatterKeyFiles)
+	ofm.Technologies = ExtractStringSlice(raw, session.FrontmatterTechnologies)
+	ofm.KeyFiles = ExtractStringSlice(raw, session.FrontmatterKeyFiles)
 
 	// Add aliases from the title
 	if ofm.Title != "" {

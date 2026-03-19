@@ -7,10 +7,9 @@
 package sync
 
 import (
-	"github.com/ActiveMemory/ctx/internal/config/embed"
+	"github.com/ActiveMemory/ctx/internal/assets/read/desc"
+	"github.com/ActiveMemory/ctx/internal/config/embed/cmd"
 	"github.com/spf13/cobra"
-
-	"github.com/ActiveMemory/ctx/internal/assets"
 )
 
 // Cmd returns the "ctx recall sync" subcommand.
@@ -22,7 +21,7 @@ import (
 // Returns:
 //   - *cobra.Command: Command for syncing lock state from frontmatter
 func Cmd() *cobra.Command {
-	short, long := assets.CommandDesc(embed.CmdDescKeyRecallSync)
+	short, long := desc.CommandDesc(cmd.DescKeyRecallSync)
 
 	cmd := &cobra.Command{
 		Use:   "sync",

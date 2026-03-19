@@ -10,8 +10,8 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/ActiveMemory/ctx/internal/assets"
-	"github.com/ActiveMemory/ctx/internal/config/embed"
+	"github.com/ActiveMemory/ctx/internal/assets/read/desc"
+	"github.com/ActiveMemory/ctx/internal/config/embed/text"
 	"github.com/ActiveMemory/ctx/internal/config/file"
 	"github.com/ActiveMemory/ctx/internal/config/token"
 )
@@ -62,6 +62,6 @@ func KeyFileSlug(path string) string {
 // Returns:
 //   - string: Formatted line (e.g., "- [topic](topic.md) (3 sessions)\n")
 func FormatSessionLink(label, slug string, count int) string {
-	return fmt.Sprintf(assets.TextDesc(embed.TextDescKeyJournalMocSessionLink),
+	return fmt.Sprintf(desc.TextDesc(text.TextDescKeyJournalMocSessionLink),
 		label, slug, file.ExtMarkdown, count, token.NewlineLF)
 }

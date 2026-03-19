@@ -10,7 +10,9 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/ActiveMemory/ctx/internal/assets"
+	"github.com/ActiveMemory/ctx/internal/assets/read/desc"
+	"github.com/ActiveMemory/ctx/internal/assets/tpl"
+	"github.com/ActiveMemory/ctx/internal/config/embed/text"
 	"github.com/ActiveMemory/ctx/internal/config/journal"
 	"github.com/ActiveMemory/ctx/internal/config/regex"
 	"github.com/ActiveMemory/ctx/internal/config/token"
@@ -61,7 +63,7 @@ func CollapseToolOutputs(content string) string {
 		}
 
 		// Non-tool-output turns pass through unchanged
-		if role != assets.ToolOutput {
+		if role != desc.TextDesc(text.TextDescKeyLabelToolOutput) {
 			for k := i; k < bodyEnd; k++ {
 				out = append(out, lines[k])
 			}
@@ -84,17 +86,17 @@ func CollapseToolOutputs(content string) string {
 
 		if nonBlank > journal.DetailsThreshold && !alreadyWrapped {
 			summary := fmt.Sprintf(
-				assets.TplRecallDetailsSummary, nonBlank,
+				tpl.TplRecallDetailsSummary, nonBlank,
 			)
 			out = append(out, header, "")
 			out = append(out,
-				fmt.Sprintf(assets.TplRecallDetailsOpen, summary),
+				fmt.Sprintf(tpl.TplRecallDetailsOpen, summary),
 			)
 			out = append(out, "")
 			for k := bodyStart; k < bodyEnd; k++ {
 				out = append(out, lines[k])
 			}
-			out = append(out, assets.TplRecallDetailsClose, "")
+			out = append(out, tpl.TplRecallDetailsClose, "")
 		} else {
 			for k := i; k < bodyEnd; k++ {
 				out = append(out, lines[k])

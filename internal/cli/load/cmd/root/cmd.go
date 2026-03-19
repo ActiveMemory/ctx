@@ -7,10 +7,11 @@
 package root
 
 import (
-	"github.com/ActiveMemory/ctx/internal/config/embed"
+	"github.com/ActiveMemory/ctx/internal/assets/read/desc"
+	"github.com/ActiveMemory/ctx/internal/config/embed/cmd"
+	"github.com/ActiveMemory/ctx/internal/config/embed/flag"
 	"github.com/spf13/cobra"
 
-	"github.com/ActiveMemory/ctx/internal/assets"
 	"github.com/ActiveMemory/ctx/internal/rc"
 )
 
@@ -31,9 +32,9 @@ func Cmd() *cobra.Command {
 		raw    bool
 	)
 
-	short, long := assets.CommandDesc(embed.CmdDescKeyLoad)
+	short, long := desc.CommandDesc(cmd.DescKeyLoad)
 	cmd := &cobra.Command{
-		Use:   "load",
+		Use:   cmd.DescKeyLoad,
 		Short: short,
 		Long:  long,
 		RunE: func(cmd *cobra.Command, args []string) error {
@@ -48,10 +49,10 @@ func Cmd() *cobra.Command {
 	cmd.Flags().IntVar(
 		&budget, "budget",
 		rc.DefaultTokenBudget,
-		assets.FlagDesc(embed.FlagDescKeyLoadBudget),
+		desc.FlagDesc(flag.FlagDescKeyLoadBudget),
 	)
 	cmd.Flags().BoolVar(
-		&raw, "raw", false, assets.FlagDesc(embed.FlagDescKeyLoadRaw),
+		&raw, "raw", false, desc.FlagDesc(flag.FlagDescKeyLoadRaw),
 	)
 
 	return cmd

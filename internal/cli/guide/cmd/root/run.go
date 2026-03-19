@@ -22,7 +22,7 @@ GETTING STARTED
 TRACKING DECISIONS & KNOWLEDGE
   ctx add -t TYPE       Add a decision, learning, convention, or task
   ctx complete          Mark a task as done in TASKS.md
-  ctx decisions reindex Rebuild the DECISIONS.md index table
+  ctx decision reindex  Rebuild the DECISIONS.md index table
 
 BROWSING HISTORY
   ctx recall list       List exported session transcripts

@@ -9,10 +9,9 @@ package check_reminders
 import (
 	"os"
 
-	"github.com/ActiveMemory/ctx/internal/config/embed"
+	"github.com/ActiveMemory/ctx/internal/assets/read/desc"
+	"github.com/ActiveMemory/ctx/internal/config/embed/cmd"
 	"github.com/spf13/cobra"
-
-	"github.com/ActiveMemory/ctx/internal/assets"
 )
 
 // Cmd returns the "ctx system check-reminders" subcommand.
@@ -20,7 +19,7 @@ import (
 // Returns:
 //   - *cobra.Command: Configured check-reminders subcommand
 func Cmd() *cobra.Command {
-	short, _ := assets.CommandDesc(embed.CmdDescKeySystemCheckReminders)
+	short, _ := desc.CommandDesc(cmd.DescKeySystemCheckReminders)
 
 	return &cobra.Command{
 		Use:    "check-reminders",

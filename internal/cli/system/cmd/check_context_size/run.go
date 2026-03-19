@@ -12,14 +12,14 @@ import (
 	"path/filepath"
 	"time"
 
+	"github.com/ActiveMemory/ctx/internal/assets/read/desc"
 	"github.com/ActiveMemory/ctx/internal/config/dir"
-	"github.com/ActiveMemory/ctx/internal/config/embed"
+	"github.com/ActiveMemory/ctx/internal/config/embed/text"
 	"github.com/ActiveMemory/ctx/internal/config/event"
 	"github.com/ActiveMemory/ctx/internal/config/session"
 	"github.com/ActiveMemory/ctx/internal/config/stats"
 	"github.com/spf13/cobra"
 
-	"github.com/ActiveMemory/ctx/internal/assets"
 	"github.com/ActiveMemory/ctx/internal/cli/system/core"
 	"github.com/ActiveMemory/ctx/internal/rc"
 )
@@ -83,7 +83,7 @@ func Run(cmd *cobra.Command, stdin *os.File) error {
 	// the wrap-up ceremony. The marker expires after 2 hours.
 	// Stats are still recorded so token usage tracking is continuous.
 	if core.WrappedUpRecently() {
-		core.LogMessage(logFile, sessionID, fmt.Sprintf(assets.TextDesc(embed.TextDescKeyCheckContextSizeSuppressedLogFormat), count))
+		core.LogMessage(logFile, sessionID, fmt.Sprintf(desc.TextDesc(text.TextDescKeyCheckContextSizeSuppressedLogFormat), count))
 		core.WriteSessionStats(sessionID, core.SessionStats{
 			Timestamp:  time.Now().Format(time.RFC3339),
 			Prompt:     count,
@@ -116,8 +116,8 @@ func Run(cmd *cobra.Command, stdin *os.File) error {
 		core.EmitWindowWarning(cmd, logFile, sessionID, count, tokens, pct)
 	default:
 		core.LogMessage(logFile, sessionID,
-			fmt.Sprintf(assets.TextDesc(
-				embed.TextDescKeyCheckContextSizeSilentLogFormat), count),
+			fmt.Sprintf(desc.TextDesc(
+				text.TextDescKeyCheckContextSizeSilentLogFormat), count),
 		)
 	}
 

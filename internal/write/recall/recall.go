@@ -10,8 +10,8 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/ActiveMemory/ctx/internal/assets"
-	"github.com/ActiveMemory/ctx/internal/config/embed"
+	"github.com/ActiveMemory/ctx/internal/assets/read/desc"
+	"github.com/ActiveMemory/ctx/internal/config/embed/text"
 	"github.com/ActiveMemory/ctx/internal/config/token"
 	"github.com/spf13/cobra"
 )
@@ -239,26 +239,26 @@ func SessionMetadata(cmd *cobra.Command, info SessionInfo) {
 	}
 	SectionHeader(cmd, 1, info.Slug)
 
-	SessionDetail(cmd, assets.MetadataID, info.ID)
-	SessionDetail(cmd, assets.MetadataTool, info.Tool)
-	SessionDetail(cmd, assets.MetadataProject, info.Project)
+	SessionDetail(cmd, desc.TextDesc(text.TextDescKeyLabelMetadataID), info.ID)
+	SessionDetail(cmd, desc.TextDesc(text.TextDescKeyLabelMetadataTool), info.Tool)
+	SessionDetail(cmd, desc.TextDesc(text.TextDescKeyLabelMetadataProject), info.Project)
 	if info.Branch != "" {
-		SessionDetail(cmd, assets.MetadataBranch, info.Branch)
+		SessionDetail(cmd, desc.TextDesc(text.TextDescKeyLabelMetadataBranch), info.Branch)
 	}
 	if info.Model != "" {
-		SessionDetail(cmd, assets.MetadataModel, info.Model)
+		SessionDetail(cmd, desc.TextDesc(text.TextDescKeyLabelMetadataModel), info.Model)
 	}
 	BlankLine(cmd)
 
-	SessionDetail(cmd, assets.MetadataStarted, info.Started)
-	SessionDetail(cmd, assets.MetadataDuration, info.Duration)
-	SessionDetailInt(cmd, assets.MetadataTurns, info.Turns)
-	SessionDetailInt(cmd, assets.MetadataMessages, info.Messages)
+	SessionDetail(cmd, desc.TextDesc(text.TextDescKeyLabelMetadataStarted), info.Started)
+	SessionDetail(cmd, desc.TextDesc(text.TextDescKeyLabelMetadataDuration), info.Duration)
+	SessionDetailInt(cmd, desc.TextDesc(text.TextDescKeyLabelMetadataTurns), info.Turns)
+	SessionDetailInt(cmd, desc.TextDesc(text.TextDescKeyLabelMetadataMessages), info.Messages)
 	BlankLine(cmd)
 
-	SessionDetail(cmd, assets.MetadataInputUsage, info.TokensIn)
-	SessionDetail(cmd, assets.MetadataOutputUsage, info.TokensOut)
-	SessionDetail(cmd, assets.MetadataTotal, info.TokensAll)
+	SessionDetail(cmd, desc.TextDesc(text.TextDescKeyLabelMetadataInputUsage), info.TokensIn)
+	SessionDetail(cmd, desc.TextDesc(text.TextDescKeyLabelMetadataOutputUsage), info.TokensOut)
+	SessionDetail(cmd, desc.TextDesc(text.TextDescKeyLabelMetadataTotal), info.TokensAll)
 	BlankLine(cmd)
 }
 
@@ -412,7 +412,7 @@ func LockUnlockNone(cmd *cobra.Command) {
 	if cmd == nil {
 		return
 	}
-	cmd.Println(assets.TextDesc(embed.TextDescKeyWriteJournalSyncNone))
+	cmd.Println(desc.TextDesc(text.TextDescKeyWriteJournalSyncNone))
 }
 
 // LockUnlockEntry prints the confirmation for a single locked/unlocked entry.
@@ -425,7 +425,7 @@ func LockUnlockEntry(cmd *cobra.Command, filename, verb string) {
 	if cmd == nil {
 		return
 	}
-	cmd.Println(fmt.Sprintf(assets.TextDesc(embed.TextDescKeyWriteLockUnlockEntry), filename, verb))
+	cmd.Println(fmt.Sprintf(desc.TextDesc(text.TextDescKeyWriteLockUnlockEntry), filename, verb))
 }
 
 // LockUnlockSummary prints the lock/unlock summary.
@@ -439,10 +439,10 @@ func LockUnlockSummary(cmd *cobra.Command, verb string, count int) {
 		return
 	}
 	if count == 0 {
-		cmd.Println(fmt.Sprintf(assets.TextDesc(embed.TextDescKeyWriteLockUnlockNoChanges), verb))
+		cmd.Println(fmt.Sprintf(desc.TextDesc(text.TextDescKeyWriteLockUnlockNoChanges), verb))
 		return
 	}
-	cmd.Println(fmt.Sprintf(assets.TextDesc(embed.TextDescKeyWriteLockUnlockSummary), strings.Title(verb), count)) //nolint:staticcheck // strings.Title is fine for single words
+	cmd.Println(fmt.Sprintf(desc.TextDesc(text.TextDescKeyWriteLockUnlockSummary), strings.Title(verb), count)) //nolint:staticcheck // strings.Title is fine for single words
 }
 
 // JournalSyncNone prints the message when no journal entries are found.
@@ -453,7 +453,7 @@ func JournalSyncNone(cmd *cobra.Command) {
 	if cmd == nil {
 		return
 	}
-	cmd.Println(assets.TextDesc(embed.TextDescKeyWriteJournalSyncNone))
+	cmd.Println(desc.TextDesc(text.TextDescKeyWriteJournalSyncNone))
 }
 
 // JournalSyncLocked prints a single locked-entry confirmation.
@@ -465,7 +465,7 @@ func JournalSyncLocked(cmd *cobra.Command, filename string) {
 	if cmd == nil {
 		return
 	}
-	cmd.Println(fmt.Sprintf(assets.TextDesc(embed.TextDescKeyWriteJournalSyncLocked), filename))
+	cmd.Println(fmt.Sprintf(desc.TextDesc(text.TextDescKeyWriteJournalSyncLocked), filename))
 }
 
 // JournalSyncUnlocked prints a single unlocked-entry confirmation.
@@ -477,7 +477,7 @@ func JournalSyncUnlocked(cmd *cobra.Command, filename string) {
 	if cmd == nil {
 		return
 	}
-	cmd.Println(fmt.Sprintf(assets.TextDesc(embed.TextDescKeyWriteJournalSyncUnlocked), filename))
+	cmd.Println(fmt.Sprintf(desc.TextDesc(text.TextDescKeyWriteJournalSyncUnlocked), filename))
 }
 
 // JournalSyncSummary prints the sync summary: match, locked count,
@@ -492,13 +492,13 @@ func JournalSyncSummary(cmd *cobra.Command, locked, unlocked int) {
 		return
 	}
 	if locked == 0 && unlocked == 0 {
-		cmd.Println(assets.TextDesc(embed.TextDescKeyWriteJournalSyncMatch))
+		cmd.Println(desc.TextDesc(text.TextDescKeyWriteJournalSyncMatch))
 		return
 	}
 	if locked > 0 {
-		cmd.Println(fmt.Sprintf(assets.TextDesc(embed.TextDescKeyWriteJournalSyncLockedCount), locked))
+		cmd.Println(fmt.Sprintf(desc.TextDesc(text.TextDescKeyWriteJournalSyncLockedCount), locked))
 	}
 	if unlocked > 0 {
-		cmd.Println(fmt.Sprintf(assets.TextDesc(embed.TextDescKeyWriteJournalSyncUnlockedCount), unlocked))
+		cmd.Println(fmt.Sprintf(desc.TextDesc(text.TextDescKeyWriteJournalSyncUnlockedCount), unlocked))
 	}
 }

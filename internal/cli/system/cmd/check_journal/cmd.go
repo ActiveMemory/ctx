@@ -9,10 +9,9 @@ package check_journal
 import (
 	"os"
 
-	"github.com/ActiveMemory/ctx/internal/config/embed"
+	"github.com/ActiveMemory/ctx/internal/assets/read/desc"
+	"github.com/ActiveMemory/ctx/internal/config/embed/cmd"
 	"github.com/spf13/cobra"
-
-	"github.com/ActiveMemory/ctx/internal/assets"
 )
 
 // Cmd returns the "ctx system check-journal" subcommand.
@@ -20,7 +19,7 @@ import (
 // Returns:
 //   - *cobra.Command: Configured check-journal subcommand
 func Cmd() *cobra.Command {
-	short, long := assets.CommandDesc(embed.CmdDescKeySystemCheckJournal)
+	short, long := desc.CommandDesc(cmd.DescKeySystemCheckJournal)
 
 	return &cobra.Command{
 		Use:    "check-journal",

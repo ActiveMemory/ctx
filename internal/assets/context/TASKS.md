@@ -10,7 +10,7 @@ UPDATE WHEN:
 
 DO NOT UPDATE FOR:
 - Reorganizing or moving tasks (violates CONSTITUTION)
-- Removing completed tasks (use ctx tasks archive instead)
+- Removing completed tasks (use ctx task archive instead)
 
 STRUCTURE RULES (see CONSTITUTION.md):
 - Tasks stay in their Phase section permanently: never move them

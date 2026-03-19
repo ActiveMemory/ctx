@@ -9,8 +9,8 @@ package backup
 import (
 	"fmt"
 
-	"github.com/ActiveMemory/ctx/internal/assets"
-	"github.com/ActiveMemory/ctx/internal/config/embed"
+	"github.com/ActiveMemory/ctx/internal/assets/read/desc"
+	"github.com/ActiveMemory/ctx/internal/config/embed/text"
 	"github.com/ActiveMemory/ctx/internal/format"
 	"github.com/spf13/cobra"
 )
@@ -27,9 +27,9 @@ func ResultLine(cmd *cobra.Command, scope, archive string, size int64, smbDest s
 	if cmd == nil {
 		return
 	}
-	line := fmt.Sprintf(assets.TextDesc(embed.TextDescKeyWriteBackupResult), scope, archive, format.Bytes(size))
+	line := fmt.Sprintf(desc.TextDesc(text.TextDescKeyWriteBackupResult), scope, archive, format.Bytes(size))
 	if smbDest != "" {
-		line += fmt.Sprintf(assets.TextDesc(embed.TextDescKeyWriteBackupSMBDest), smbDest)
+		line += fmt.Sprintf(desc.TextDesc(text.TextDescKeyWriteBackupSMBDest), smbDest)
 	}
 	cmd.Println(line)
 }

@@ -10,7 +10,8 @@ import (
 	"encoding/json"
 	"strings"
 
-	"github.com/ActiveMemory/ctx/internal/assets"
+	"github.com/ActiveMemory/ctx/internal/assets/read/desc"
+	"github.com/ActiveMemory/ctx/internal/config/embed/text"
 	"github.com/ActiveMemory/ctx/internal/config/marker"
 	"github.com/ActiveMemory/ctx/internal/config/regex"
 	"github.com/ActiveMemory/ctx/internal/config/token"
@@ -107,7 +108,7 @@ func StripSystemReminders(content string) string {
 		}
 
 		// Bold-style: **System Reminder**: ... (runs until blank line)
-		if strings.HasPrefix(trimmed, assets.BoldReminder) {
+		if strings.HasPrefix(trimmed, desc.TextDesc(text.TextDescKeyLabelBoldReminder)) {
 			inBoldReminder = true
 			continue
 		}
@@ -169,7 +170,7 @@ func CleanToolOutputJSON(content string) string {
 		matches := regex.TurnHeader.FindStringSubmatch(
 			strings.TrimSpace(lines[i]),
 		)
-		if matches == nil || matches[2] != assets.ToolOutput {
+		if matches == nil || matches[2] != desc.TextDesc(text.TextDescKeyLabelToolOutput) {
 			out = append(out, lines[i])
 			i++
 			continue

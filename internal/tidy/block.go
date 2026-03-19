@@ -10,7 +10,8 @@ import (
 	"strings"
 	"time"
 
-	"github.com/ActiveMemory/ctx/internal/assets"
+	"github.com/ActiveMemory/ctx/internal/assets/read/desc"
+	"github.com/ActiveMemory/ctx/internal/config/embed/text"
 	"github.com/ActiveMemory/ctx/internal/config/regex"
 	"github.com/ActiveMemory/ctx/internal/config/token"
 	"github.com/ActiveMemory/ctx/internal/task"
@@ -46,7 +47,7 @@ func ParseTaskBlocks(lines []string) []TaskBlock {
 		line := lines[i]
 
 		// Track if we're in the Completed section
-		if strings.HasPrefix(line, assets.HeadingCompleted) {
+		if strings.HasPrefix(line, desc.TextDesc(text.TextDescKeyHeadingCompleted)) {
 			inCompletedSection = true
 			i++
 			continue

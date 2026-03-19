@@ -9,7 +9,8 @@ package core
 import (
 	"strings"
 
-	"github.com/ActiveMemory/ctx/internal/assets"
+	"github.com/ActiveMemory/ctx/internal/assets/read/desc"
+	"github.com/ActiveMemory/ctx/internal/config/embed/text"
 	"github.com/ActiveMemory/ctx/internal/config/token"
 )
 
@@ -28,7 +29,7 @@ func insertBeforeFirstEntry(content, entry, header string) []byte {
 	search := content
 	offset := 0
 	for {
-		rel := strings.Index(search, assets.HeadingLearningStart)
+		rel := strings.Index(search, desc.TextDesc(text.TextDescKeyHeadingLearningStart))
 		if rel == -1 {
 			break
 		}
@@ -41,7 +42,7 @@ func insertBeforeFirstEntry(content, entry, header string) []byte {
 					content[entryIdx:],
 			)
 		}
-		offset = entryIdx + len(assets.HeadingLearningStart)
+		offset = entryIdx + len(desc.TextDesc(text.TextDescKeyHeadingLearningStart))
 		search = content[offset:]
 	}
 

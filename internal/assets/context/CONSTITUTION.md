@@ -45,7 +45,7 @@ re-run = verify/redo all tasks in order.
 
 ## Context Preservation Invariants
 
-- [ ] **Archival is allowed, deletion is not**: use `ctx tasks archive` to move 
+- [ ] **Archival is allowed, deletion is not**: use `ctx task archive` to move
   completed tasks to `.context/archive/`, never delete context history
 - [ ] **Archive preserves structure**: archived tasks keep their Phase headers 
   for traceability

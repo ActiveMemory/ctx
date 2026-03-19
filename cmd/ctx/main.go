@@ -10,12 +10,14 @@ package main
 import (
 	"os"
 
+	"github.com/ActiveMemory/ctx/internal/assets/read/lookup"
 	"github.com/ActiveMemory/ctx/internal/bootstrap"
 	writeErr "github.com/ActiveMemory/ctx/internal/write/err"
 )
 
 // main is the entry point of the application.
 func main() {
+	lookup.Init()
 	cmd := bootstrap.Initialize(bootstrap.RootCmd())
 
 	if err := cmd.Execute(); err != nil {

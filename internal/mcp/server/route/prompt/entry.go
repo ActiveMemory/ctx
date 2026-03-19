@@ -11,7 +11,7 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/ActiveMemory/ctx/internal/assets"
+	"github.com/ActiveMemory/ctx/internal/assets/read/desc"
 	"github.com/ActiveMemory/ctx/internal/config/mcp/mime"
 	"github.com/ActiveMemory/ctx/internal/config/mcp/prompt"
 	"github.com/ActiveMemory/ctx/internal/config/token"
@@ -32,23 +32,23 @@ import (
 func buildEntry(
 	id json.RawMessage, spec promptdef.EntryPromptSpec,
 ) *proto.Response {
-	fieldFmt := assets.TextDesc(spec.FieldFmtK)
+	fieldFmt := desc.TextDesc(spec.FieldFmtK)
 
 	var sb strings.Builder
-	sb.WriteString(assets.TextDesc(spec.KeyHeader))
+	sb.WriteString(desc.TextDesc(spec.KeyHeader))
 	sb.WriteString(token.NewlineLF)
 	sb.WriteString(token.NewlineLF)
 	for _, f := range spec.Fields {
 		_, _ = fmt.Fprintf(
 			&sb,
-			fieldFmt, assets.TextDesc(f.KeyLabel), f.Value,
+			fieldFmt, desc.TextDesc(f.KeyLabel), f.Value,
 		)
 	}
 	sb.WriteString(token.NewlineLF)
-	sb.WriteString(assets.TextDesc(spec.KeyFooter))
+	sb.WriteString(desc.TextDesc(spec.KeyFooter))
 
 	return out.OkResponse(id, proto.GetPromptResult{
-		Description: assets.TextDesc(spec.KeyResultD),
+		Description: desc.TextDesc(spec.KeyResultD),
 		Messages: []proto.PromptMessage{
 			{
 				Role: prompt.RoleUser,

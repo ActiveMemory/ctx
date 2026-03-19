@@ -12,10 +12,10 @@ import (
 	"strconv"
 	"strings"
 
+	"github.com/ActiveMemory/ctx/internal/assets/read/philosophy"
 	"github.com/ActiveMemory/ctx/internal/write/why"
 	"github.com/spf13/cobra"
 
-	"github.com/ActiveMemory/ctx/internal/assets"
 	errcli "github.com/ActiveMemory/ctx/internal/err/cli"
 	fserr "github.com/ActiveMemory/ctx/internal/err/fs"
 )
@@ -74,7 +74,7 @@ func ShowDoc(cmd *cobra.Command, alias string) error {
 		return errcli.UnknownDocument(alias)
 	}
 
-	content, loadErr := assets.WhyDoc(name)
+	content, loadErr := philosophy.WhyDoc(name)
 	if loadErr != nil {
 		return fserr.FileRead(name, loadErr)
 	}

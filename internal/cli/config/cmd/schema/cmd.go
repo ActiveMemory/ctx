@@ -7,11 +7,11 @@
 package schema
 
 import (
-	"github.com/ActiveMemory/ctx/internal/config/embed"
+	"github.com/ActiveMemory/ctx/internal/assets/read/desc"
+	"github.com/ActiveMemory/ctx/internal/assets/read/schema"
+	"github.com/ActiveMemory/ctx/internal/config/embed/cmd"
 	ctxerr "github.com/ActiveMemory/ctx/internal/err/config"
 	"github.com/spf13/cobra"
-
-	"github.com/ActiveMemory/ctx/internal/assets"
 )
 
 // Cmd returns the "ctx config schema" subcommand.
@@ -19,7 +19,7 @@ import (
 // Returns:
 //   - *cobra.Command: Configured schema subcommand
 func Cmd() *cobra.Command {
-	short, long := assets.CommandDesc(embed.CmdDescKeyConfigSchema)
+	short, long := desc.CommandDesc(cmd.DescKeyConfigSchema)
 
 	return &cobra.Command{
 		Use:   "schema",
@@ -27,7 +27,7 @@ func Cmd() *cobra.Command {
 		Long:  long,
 		Args:  cobra.NoArgs,
 		RunE: func(cmd *cobra.Command, _ []string) error {
-			data, readErr := assets.Schema()
+			data, readErr := schema.Schema()
 			if readErr != nil {
 				return ctxerr.ReadEmbeddedSchema(readErr)
 			}

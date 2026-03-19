@@ -9,10 +9,9 @@ package archive
 import (
 	"fmt"
 
-	"github.com/ActiveMemory/ctx/internal/config/embed"
+	"github.com/ActiveMemory/ctx/internal/assets/read/desc"
+	"github.com/ActiveMemory/ctx/internal/config/embed/text"
 	"github.com/spf13/cobra"
-
-	"github.com/ActiveMemory/ctx/internal/assets"
 )
 
 // Skipping prints a notice that a task block was skipped due to
@@ -27,7 +26,7 @@ func Skipping(cmd *cobra.Command, taskText string) {
 	}
 	cmd.Println(
 		fmt.Sprintf(
-			assets.TextDesc(embed.TextDescKeyTaskArchiveSkipping), taskText,
+			desc.TextDesc(text.TextDescKeyTaskArchiveSkipping), taskText,
 		),
 	)
 }
@@ -44,7 +43,7 @@ func SkipIncomplete(cmd *cobra.Command, skippedCount int) {
 	}
 	cmd.Println(
 		fmt.Sprintf(
-			assets.TextDesc(embed.TextDescKeyTaskArchiveSkipIncomplete),
+			desc.TextDesc(text.TextDescKeyTaskArchiveSkipIncomplete),
 			skippedCount,
 		),
 	)
@@ -59,7 +58,7 @@ func NoCompleted(cmd *cobra.Command) {
 	if cmd == nil {
 		return
 	}
-	cmd.Println(assets.TextDesc(embed.TextDescKeyTaskArchiveNoCompleted))
+	cmd.Println(desc.TextDesc(text.TextDescKeyTaskArchiveNoCompleted))
 }
 
 // DryRun prints the dry-run preview for task archiving.
@@ -78,7 +77,7 @@ func DryRun(
 		return
 	}
 	cmd.Println(fmt.Sprintf(
-		assets.TextDesc(embed.TextDescKeyTaskArchiveDryRunBlock),
+		desc.TextDesc(text.TextDescKeyTaskArchiveDryRunBlock),
 		archivableCount, pendingCount, separator, preview, separator,
 	))
 }
@@ -99,13 +98,13 @@ func Success(
 	}
 	cmd.Println(
 		fmt.Sprintf(
-			assets.TextDesc(embed.TextDescKeyTaskArchiveSuccess),
+			desc.TextDesc(text.TextDescKeyTaskArchiveSuccess),
 			archivedCount, archiveFilePath,
 		),
 	)
 	cmd.Println(
 		fmt.Sprintf(
-			assets.TextDesc(embed.TextDescKeyTaskArchivePendingRemain),
+			desc.TextDesc(text.TextDescKeyTaskArchivePendingRemain),
 			pendingCount,
 		),
 	)

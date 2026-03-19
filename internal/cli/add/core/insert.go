@@ -9,7 +9,8 @@ package core
 import (
 	"strings"
 
-	"github.com/ActiveMemory/ctx/internal/assets"
+	"github.com/ActiveMemory/ctx/internal/assets/read/desc"
+	"github.com/ActiveMemory/ctx/internal/config/embed/text"
 	"github.com/ActiveMemory/ctx/internal/config/marker"
 	"github.com/ActiveMemory/ctx/internal/config/token"
 )
@@ -211,5 +212,5 @@ func InsertDecision(content, entry, header string) []byte {
 // Returns:
 //   - []byte: Modified content with entry inserted
 func InsertLearning(content, entry string) []byte {
-	return insertBeforeFirstEntry(content, entry, assets.HeadingLearnings)
+	return insertBeforeFirstEntry(content, entry, desc.TextDesc(text.TextDescKeyHeadingLearnings))
 }

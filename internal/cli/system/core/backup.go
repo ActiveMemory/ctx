@@ -16,15 +16,14 @@ import (
 	"path/filepath"
 	"time"
 
+	"github.com/ActiveMemory/ctx/internal/assets/read/desc"
 	"github.com/ActiveMemory/ctx/internal/config/archive"
 	"github.com/ActiveMemory/ctx/internal/config/dir"
-	"github.com/ActiveMemory/ctx/internal/config/embed"
+	"github.com/ActiveMemory/ctx/internal/config/embed/text"
 	fs2 "github.com/ActiveMemory/ctx/internal/config/fs"
 	ctxerr "github.com/ActiveMemory/ctx/internal/err/backup"
 	io2 "github.com/ActiveMemory/ctx/internal/io"
 	"github.com/spf13/cobra"
-
-	"github.com/ActiveMemory/ctx/internal/assets"
 )
 
 // BackupProject creates a project-scoped backup archive.
@@ -261,8 +260,8 @@ func CheckSMBMountWarnings(smbURL string, warnings []string) []string {
 
 	if _, statErr := os.Stat(cfg.GVFSPath); os.IsNotExist(statErr) {
 		warnings = append(warnings,
-			fmt.Sprintf(assets.TextDesc(embed.TextDescKeyBackupSMBNotMounted), cfg.Host),
-			assets.TextDesc(embed.TextDescKeyBackupSMBUnavailable),
+			fmt.Sprintf(desc.TextDesc(text.TextDescKeyBackupSMBNotMounted), cfg.Host),
+			desc.TextDesc(text.TextDescKeyBackupSMBUnavailable),
 		)
 	}
 
@@ -282,8 +281,8 @@ func CheckBackupMarker(markerPath string, warnings []string) []string {
 	info, statErr := os.Stat(markerPath)
 	if os.IsNotExist(statErr) {
 		return append(warnings,
-			assets.TextDesc(embed.TextDescKeyBackupNoMarker),
-			assets.TextDesc(embed.TextDescKeyBackupRunHint),
+			desc.TextDesc(text.TextDescKeyBackupNoMarker),
+			desc.TextDesc(text.TextDescKeyBackupRunHint),
 		)
 	}
 	if statErr != nil {
@@ -293,8 +292,8 @@ func CheckBackupMarker(markerPath string, warnings []string) []string {
 	ageDays := int(time.Since(info.ModTime()).Hours() / 24)
 	if ageDays >= archive.BackupMaxAgeDays {
 		return append(warnings,
-			fmt.Sprintf(assets.TextDesc(embed.TextDescKeyBackupStale), ageDays),
-			assets.TextDesc(embed.TextDescKeyBackupRunHint),
+			fmt.Sprintf(desc.TextDesc(text.TextDescKeyBackupStale), ageDays),
+			desc.TextDesc(text.TextDescKeyBackupRunHint),
 		)
 	}
 

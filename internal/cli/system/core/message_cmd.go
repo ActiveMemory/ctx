@@ -12,13 +12,13 @@ import (
 	"path/filepath"
 	"strings"
 
+	"github.com/ActiveMemory/ctx/internal/assets/read/desc"
 	"github.com/ActiveMemory/ctx/internal/config/dir"
-	"github.com/ActiveMemory/ctx/internal/config/embed"
+	"github.com/ActiveMemory/ctx/internal/config/embed/text"
 	"github.com/ActiveMemory/ctx/internal/config/file"
 	ctxerr "github.com/ActiveMemory/ctx/internal/err/hook"
 	"github.com/spf13/cobra"
 
-	"github.com/ActiveMemory/ctx/internal/assets"
 	"github.com/ActiveMemory/ctx/internal/assets/hooks/messages"
 	"github.com/ActiveMemory/ctx/internal/rc"
 )
@@ -48,14 +48,14 @@ func ValidationError(hook, variant string) error {
 //   - info: hook message info containing template variable names
 func PrintTemplateVars(cmd *cobra.Command, info *messages.HookMessageInfo) {
 	if len(info.TemplateVars) == 0 {
-		cmd.Println(assets.TextDesc(embed.TextDescKeyMessageTemplateVarsNone))
+		cmd.Println(desc.TextDesc(text.TextDescKeyMessageTemplateVarsNone))
 		return
 	}
 	formatted := make([]string, len(info.TemplateVars))
 	for i, v := range info.TemplateVars {
 		formatted[i] = "{{." + v + "}}"
 	}
-	cmd.Println(fmt.Sprintf(assets.TextDesc(embed.TextDescKeyMessageTemplateVarsLabel), strings.Join(formatted, ", ")))
+	cmd.Println(fmt.Sprintf(desc.TextDesc(text.TextDescKeyMessageTemplateVarsLabel), strings.Join(formatted, ", ")))
 }
 
 // OverridePath returns the user override file path for a hook/variant.

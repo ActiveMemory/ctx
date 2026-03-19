@@ -7,10 +7,10 @@
 package events
 
 import (
-	"github.com/ActiveMemory/ctx/internal/config/embed"
+	"github.com/ActiveMemory/ctx/internal/assets/read/desc"
+	"github.com/ActiveMemory/ctx/internal/config/embed/cmd"
+	"github.com/ActiveMemory/ctx/internal/config/embed/flag"
 	"github.com/spf13/cobra"
-
-	"github.com/ActiveMemory/ctx/internal/assets"
 )
 
 // Cmd returns the "ctx system events" subcommand.
@@ -18,7 +18,7 @@ import (
 // Returns:
 //   - *cobra.Command: Configured events subcommand
 func Cmd() *cobra.Command {
-	short, long := assets.CommandDesc(embed.CmdDescKeySystemEvents)
+	short, long := desc.CommandDesc(cmd.DescKeySystemEvents)
 
 	cmd := &cobra.Command{
 		Use:   "events",
@@ -30,22 +30,22 @@ func Cmd() *cobra.Command {
 	}
 
 	cmd.Flags().StringP(
-		"hook", "k", "", assets.FlagDesc(embed.FlagDescKeySystemEventsHook),
+		"hook", "k", "", desc.FlagDesc(flag.FlagDescKeySystemEventsHook),
 	)
 	cmd.Flags().StringP(
-		"session", "s", "", assets.FlagDesc(embed.FlagDescKeySystemEventsSession),
+		"session", "s", "", desc.FlagDesc(flag.FlagDescKeySystemEventsSession),
 	)
 	cmd.Flags().StringP(
-		"event", "e", "", assets.FlagDesc(embed.FlagDescKeySystemEventsEvent),
+		"event", "e", "", desc.FlagDesc(flag.FlagDescKeySystemEventsEvent),
 	)
 	cmd.Flags().IntP(
-		"last", "n", 50, assets.FlagDesc(embed.FlagDescKeySystemEventsLast),
+		"last", "n", 50, desc.FlagDesc(flag.FlagDescKeySystemEventsLast),
 	)
 	cmd.Flags().BoolP(
-		"json", "j", false, assets.FlagDesc(embed.FlagDescKeySystemEventsJson),
+		"json", "j", false, desc.FlagDesc(flag.FlagDescKeySystemEventsJson),
 	)
 	cmd.Flags().BoolP(
-		"all", "a", false, assets.FlagDesc(embed.FlagDescKeySystemEventsAll),
+		"all", "a", false, desc.FlagDesc(flag.FlagDescKeySystemEventsAll),
 	)
 
 	return cmd

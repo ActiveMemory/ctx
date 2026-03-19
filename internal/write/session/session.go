@@ -9,10 +9,9 @@ package session
 import (
 	"fmt"
 
-	"github.com/ActiveMemory/ctx/internal/config/embed"
+	"github.com/ActiveMemory/ctx/internal/assets/read/desc"
+	"github.com/ActiveMemory/ctx/internal/config/embed/text"
 	"github.com/spf13/cobra"
-
-	"github.com/ActiveMemory/ctx/internal/assets"
 )
 
 // SessionPaused prints confirmation that hooks were paused.
@@ -24,7 +23,7 @@ func SessionPaused(cmd *cobra.Command, sessionID string) {
 	if cmd == nil {
 		return
 	}
-	cmd.Println(fmt.Sprintf(assets.TextDesc(embed.TextDescKeyWritePaused), sessionID))
+	cmd.Println(fmt.Sprintf(desc.TextDesc(text.TextDescKeyWritePaused), sessionID))
 }
 
 // SessionResumed prints confirmation that hooks were resumed.
@@ -36,7 +35,7 @@ func SessionResumed(cmd *cobra.Command, sessionID string) {
 	if cmd == nil {
 		return
 	}
-	cmd.Println(fmt.Sprintf(assets.TextDesc(embed.TextDescKeyWriteResumed), sessionID))
+	cmd.Println(fmt.Sprintf(desc.TextDesc(text.TextDescKeyWriteResumed), sessionID))
 }
 
 // SessionWrappedUp prints confirmation that the wrap-up marker was written.
@@ -47,5 +46,5 @@ func SessionWrappedUp(cmd *cobra.Command) {
 	if cmd == nil {
 		return
 	}
-	cmd.Println(assets.TextDesc(embed.TextDescKeyMarkWrappedUpConfirmed))
+	cmd.Println(desc.TextDesc(text.TextDescKeyMarkWrappedUpConfirmed))
 }

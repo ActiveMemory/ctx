@@ -9,12 +9,12 @@ package specs_nudge
 import (
 	"os"
 
-	"github.com/ActiveMemory/ctx/internal/config/embed"
+	"github.com/ActiveMemory/ctx/internal/assets/read/desc"
+	"github.com/ActiveMemory/ctx/internal/config/embed/text"
 	"github.com/ActiveMemory/ctx/internal/config/hook"
 	ctxcontext "github.com/ActiveMemory/ctx/internal/context/resolve"
 	"github.com/spf13/cobra"
 
-	"github.com/ActiveMemory/ctx/internal/assets"
 	"github.com/ActiveMemory/ctx/internal/cli/system/core"
 	"github.com/ActiveMemory/ctx/internal/notify"
 )
@@ -39,7 +39,7 @@ func Run(cmd *cobra.Command, stdin *os.File) error {
 	if paused {
 		return nil
 	}
-	fallback := assets.TextDesc(embed.TextDescKeySpecsNudgeFallback)
+	fallback := desc.TextDesc(text.TextDescKeySpecsNudgeFallback)
 	msg := core.LoadMessage(
 		hook.SpecsNudge, hook.VariantNudge, nil, fallback,
 	)
@@ -48,7 +48,7 @@ func Run(cmd *cobra.Command, stdin *os.File) error {
 	}
 	msg = ctxcontext.AppendDir(msg)
 	core.PrintHookContext(cmd, hook.EventPreToolUse, msg)
-	nudgeMsg := assets.TextDesc(embed.TextDescKeySpecsNudgeNudgeMessage)
+	nudgeMsg := desc.TextDesc(text.TextDescKeySpecsNudgeNudgeMessage)
 	ref := notify.NewTemplateRef(hook.SpecsNudge, hook.VariantNudge, nil)
 	core.Relay(hook.SpecsNudge+": "+nudgeMsg, input.SessionID, ref)
 	return nil

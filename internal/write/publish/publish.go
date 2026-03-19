@@ -9,8 +9,8 @@ package publish
 import (
 	"fmt"
 
-	"github.com/ActiveMemory/ctx/internal/assets"
-	"github.com/ActiveMemory/ctx/internal/config/embed"
+	"github.com/ActiveMemory/ctx/internal/assets/read/desc"
+	"github.com/ActiveMemory/ctx/internal/config/embed/text"
 	"github.com/spf13/cobra"
 )
 
@@ -23,7 +23,7 @@ func UnpublishNotFound(cmd *cobra.Command, filename string) {
 	if cmd == nil {
 		return
 	}
-	cmd.Println(fmt.Sprintf(assets.TextDesc(embed.TextDescKeyWriteUnpublishNotFound), filename))
+	cmd.Println(fmt.Sprintf(desc.TextDesc(text.TextDescKeyWriteUnpublishNotFound), filename))
 }
 
 // UnpublishDone prints that the published block was removed.
@@ -35,7 +35,7 @@ func UnpublishDone(cmd *cobra.Command, filename string) {
 	if cmd == nil {
 		return
 	}
-	cmd.Println(fmt.Sprintf(assets.TextDesc(embed.TextDescKeyWriteUnpublishDone), filename))
+	cmd.Println(fmt.Sprintf(desc.TextDesc(text.TextDescKeyWriteUnpublishDone), filename))
 }
 
 // PublishPlan prints the full publish plan: header, source files,
@@ -56,26 +56,26 @@ func PublishPlan(
 	if cmd == nil {
 		return
 	}
-	cmd.Println(assets.TextDesc(embed.TextDescKeyWritePublishHeader))
+	cmd.Println(desc.TextDesc(text.TextDescKeyWritePublishHeader))
 	cmd.Println()
-	cmd.Println(assets.TextDesc(embed.TextDescKeyWritePublishSourceFiles))
-	cmd.Println(fmt.Sprintf(assets.TextDesc(embed.TextDescKeyWritePublishBudget), budget))
+	cmd.Println(desc.TextDesc(text.TextDescKeyWritePublishSourceFiles))
+	cmd.Println(fmt.Sprintf(desc.TextDesc(text.TextDescKeyWritePublishBudget), budget))
 	cmd.Println()
-	cmd.Println(assets.TextDesc(embed.TextDescKeyWritePublishBlock))
+	cmd.Println(desc.TextDesc(text.TextDescKeyWritePublishBlock))
 	if tasks > 0 {
-		cmd.Println(fmt.Sprintf(assets.TextDesc(embed.TextDescKeyWritePublishTasks), tasks))
+		cmd.Println(fmt.Sprintf(desc.TextDesc(text.TextDescKeyWritePublishTasks), tasks))
 	}
 	if decisions > 0 {
-		cmd.Println(fmt.Sprintf(assets.TextDesc(embed.TextDescKeyWritePublishDecisions), decisions))
+		cmd.Println(fmt.Sprintf(desc.TextDesc(text.TextDescKeyWritePublishDecisions), decisions))
 	}
 	if conventions > 0 {
-		cmd.Println(fmt.Sprintf(assets.TextDesc(embed.TextDescKeyWritePublishConventions), conventions))
+		cmd.Println(fmt.Sprintf(desc.TextDesc(text.TextDescKeyWritePublishConventions), conventions))
 	}
 	if learnings > 0 {
-		cmd.Println(fmt.Sprintf(assets.TextDesc(embed.TextDescKeyWritePublishLearnings), learnings))
+		cmd.Println(fmt.Sprintf(desc.TextDesc(text.TextDescKeyWritePublishLearnings), learnings))
 	}
 	cmd.Println()
-	cmd.Println(fmt.Sprintf(assets.TextDesc(embed.TextDescKeyWritePublishTotal), totalLines, budget))
+	cmd.Println(fmt.Sprintf(desc.TextDesc(text.TextDescKeyWritePublishTotal), totalLines, budget))
 }
 
 // PublishDryRun prints the dry-run notice.
@@ -87,7 +87,7 @@ func PublishDryRun(cmd *cobra.Command) {
 		return
 	}
 	cmd.Println()
-	cmd.Println(assets.TextDesc(embed.TextDescKeyWritePublishDryRun))
+	cmd.Println(desc.TextDesc(text.TextDescKeyWritePublishDryRun))
 }
 
 // PublishDone prints the success message with marker info.
@@ -99,5 +99,5 @@ func PublishDone(cmd *cobra.Command) {
 		return
 	}
 	cmd.Println()
-	cmd.Println(assets.TextDesc(embed.TextDescKeyWritePublishDone))
+	cmd.Println(desc.TextDesc(text.TextDescKeyWritePublishDone))
 }

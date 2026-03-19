@@ -9,11 +9,11 @@ package show
 import (
 	"strconv"
 
-	"github.com/ActiveMemory/ctx/internal/config/embed"
+	"github.com/ActiveMemory/ctx/internal/assets/read/desc"
+	"github.com/ActiveMemory/ctx/internal/config/embed/cmd"
+	"github.com/ActiveMemory/ctx/internal/config/embed/flag"
 	ctxerr "github.com/ActiveMemory/ctx/internal/err/pad"
 	"github.com/spf13/cobra"
-
-	"github.com/ActiveMemory/ctx/internal/assets"
 )
 
 // Cmd returns the pad show subcommand.
@@ -28,7 +28,7 @@ import (
 func Cmd() *cobra.Command {
 	var outPath string
 
-	short, long := assets.CommandDesc(embed.CmdDescKeyPadShow)
+	short, long := desc.CommandDesc(cmd.DescKeyPadShow)
 	cmd := &cobra.Command{
 		Use:   "show N",
 		Short: short,
@@ -44,7 +44,7 @@ func Cmd() *cobra.Command {
 	}
 
 	cmd.Flags().StringVar(&outPath,
-		"out", "", assets.FlagDesc(embed.FlagDescKeyPadShowOut),
+		"out", "", desc.FlagDesc(flag.FlagDescKeyPadShowOut),
 	)
 
 	return cmd

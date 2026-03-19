@@ -12,7 +12,7 @@ import (
 	"path/filepath"
 	"strings"
 
-	"github.com/ActiveMemory/ctx/internal/assets"
+	"github.com/ActiveMemory/ctx/internal/assets/tpl"
 	"github.com/ActiveMemory/ctx/internal/config/file"
 	"github.com/ActiveMemory/ctx/internal/config/fs"
 	"github.com/ActiveMemory/ctx/internal/config/journal"
@@ -68,7 +68,7 @@ func WriteMonthSections(
 ) {
 	nl := token.NewlineLF
 	for _, month := range monthOrder {
-		_, _ = fmt.Fprintf(sb, assets.TplJournalMonthHeading+nl+nl, month)
+		_, _ = fmt.Fprintf(sb, tpl.TplJournalMonthHeading+nl+nl, month)
 		for _, e := range months[month] {
 			link := strings.TrimSuffix(e.Filename, file.ExtMarkdown)
 			timeStr := ""
@@ -76,10 +76,10 @@ func WriteMonthSections(
 				timeStr = e.Time[:journal.TimePrefixLen] + " "
 			}
 			_, _ = fmt.Fprintf(sb,
-				assets.TplJournalSubpageEntry+nl,
+				tpl.TplJournalSubpageEntry+nl,
 				timeStr, e.Title, linkPrefix, link)
 			if e.Summary != "" {
-				_, _ = fmt.Fprintf(sb, assets.TplJournalIndexSummary+nl, e.Summary)
+				_, _ = fmt.Fprintf(sb, tpl.TplJournalIndexSummary+nl, e.Summary)
 			}
 		}
 		sb.WriteString(nl)

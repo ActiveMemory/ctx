@@ -11,13 +11,13 @@ package bootstrap
 import (
 	"os"
 
-	"github.com/ActiveMemory/ctx/internal/config/embed"
+	"github.com/ActiveMemory/ctx/internal/assets/read/desc"
+	"github.com/ActiveMemory/ctx/internal/config/embed/cmd"
 	ctxcontext "github.com/ActiveMemory/ctx/internal/context/validate"
 	"github.com/ActiveMemory/ctx/internal/err/fs"
 	ctxerr "github.com/ActiveMemory/ctx/internal/err/initialize"
 	"github.com/spf13/cobra"
 
-	"github.com/ActiveMemory/ctx/internal/assets"
 	"github.com/ActiveMemory/ctx/internal/config/cli"
 	"github.com/ActiveMemory/ctx/internal/config/flag"
 	"github.com/ActiveMemory/ctx/internal/rc"
@@ -46,10 +46,10 @@ func RootCmd() *cobra.Command {
 	var contextDir string
 	var allowOutsideCwd bool
 
-	short, long := assets.CommandDesc(embed.CmdDescKeyCtx)
+	short, long := desc.CommandDesc(cmd.DescKeyCtx)
 
 	cmd := &cobra.Command{
-		Use:     "ctx",
+		Use:     cmd.DescKeyCtx,
 		Short:   short,
 		Long:    long,
 		Version: version,
@@ -107,13 +107,13 @@ func RootCmd() *cobra.Command {
 		&contextDir,
 		flag.ContextDir,
 		"",
-		assets.FlagDesc(flag.ContextDir),
+		desc.FlagDesc(flag.ContextDir),
 	)
 	cmd.PersistentFlags().BoolVar(
 		&allowOutsideCwd,
 		flag.AllowOutsideCwd,
 		false,
-		assets.FlagDesc(flag.AllowOutsideCwd),
+		desc.FlagDesc(flag.AllowOutsideCwd),
 	)
 
 	return cmd

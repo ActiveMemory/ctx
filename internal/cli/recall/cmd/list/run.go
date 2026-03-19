@@ -10,7 +10,10 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/ActiveMemory/ctx/internal/assets"
+	"github.com/ActiveMemory/ctx/internal/assets/read/desc"
+	"github.com/ActiveMemory/ctx/internal/assets/tpl"
+	"github.com/ActiveMemory/ctx/internal/config/embed/text"
+	"github.com/ActiveMemory/ctx/internal/config/flag"
 	"github.com/ActiveMemory/ctx/internal/config/journal"
 	"github.com/ActiveMemory/ctx/internal/config/time"
 	"github.com/ActiveMemory/ctx/internal/err/date"
@@ -47,11 +50,11 @@ func Run(
 	// Parse date filters
 	sinceTime, sinceErr := parse.Date(since)
 	if since != "" && sinceErr != nil {
-		return date.InvalidDate(assets.FlagSince, since, sinceErr)
+		return date.InvalidDate(flag.Since, since, sinceErr)
 	}
 	untilTime, untilErr := parse.Date(until)
 	if until != "" && untilErr != nil {
-		return date.InvalidDate(assets.FlagUntil, until, untilErr)
+		return date.InvalidDate(flag.Until, until, untilErr)
 	}
 	// --until is inclusive: advance to the end of the day
 	if until != "" {
@@ -105,7 +108,7 @@ func Run(
 	recall.SessionListHeader(cmd, len(sessions), shown)
 
 	// Compute dynamic column widths from data.
-	slugW, projW := len(assets.ColSlug), len(assets.ColProject)
+	slugW, projW := len(desc.TextDesc(text.TextDescKeyLabelColSlug)), len(desc.TextDesc(text.TextDescKeyLabelColProject))
 	for _, s := range filtered {
 		slug := core.Truncate(s.Slug, journal.SlugMaxLen)
 		if len(slug) > slugW {
@@ -117,10 +120,10 @@ func Run(
 	}
 
 	// Print column header.
-	rowFmt := fmt.Sprintf(assets.TplRecallListRow, slugW, projW)
+	rowFmt := fmt.Sprintf(tpl.TplRecallListRow, slugW, projW)
 	recall.SessionListRow(cmd, rowFmt,
-		assets.ColSlug, assets.ColProject, assets.ColDate,
-		assets.ColDuration, assets.ColTurns, assets.ColTokens)
+		desc.TextDesc(text.TextDescKeyLabelColSlug), desc.TextDesc(text.TextDescKeyLabelColProject), desc.TextDesc(text.TextDescKeyLabelColDate),
+		desc.TextDesc(text.TextDescKeyLabelColDuration), desc.TextDesc(text.TextDescKeyLabelColTurns), desc.TextDesc(text.TextDescKeyLabelColTokens))
 
 	// Print sessions.
 	for _, s := range filtered {

@@ -9,10 +9,9 @@ package check_task_completion
 import (
 	"os"
 
-	"github.com/ActiveMemory/ctx/internal/config/embed"
+	"github.com/ActiveMemory/ctx/internal/assets/read/desc"
+	"github.com/ActiveMemory/ctx/internal/config/embed/cmd"
 	"github.com/spf13/cobra"
-
-	"github.com/ActiveMemory/ctx/internal/assets"
 )
 
 // Cmd returns the "ctx system check-task-completion" subcommand.
@@ -20,7 +19,7 @@ import (
 // Returns:
 //   - *cobra.Command: Configured check-task-completion subcommand
 func Cmd() *cobra.Command {
-	short, long := assets.CommandDesc(embed.CmdDescKeySystemCheckTaskCompletion)
+	short, long := desc.CommandDesc(cmd.DescKeySystemCheckTaskCompletion)
 
 	return &cobra.Command{
 		Use:    "check-task-completion",
