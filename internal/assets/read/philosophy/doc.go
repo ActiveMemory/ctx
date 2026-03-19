@@ -4,5 +4,5 @@
 //   \\    Copyright 2026-present Context contributors.
 //                 SPDX-License-Identifier: Apache-2.0
 
-// WhyDoc reads a "why" document by name from the embedded filesystem.
+// Package philosophy provides access to embedded why-documents (manifesto, about, design invariants).
 package philosophy

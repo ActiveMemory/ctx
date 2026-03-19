@@ -4,5 +4,5 @@
 //   \\    Copyright 2026-present Context contributors.
 //                 SPDX-License-Identifier: Apache-2.0
 
-// Message reads a hook message template by hook name and filename.
+// Package hook provides access to hook message templates and the hook registry from embedded assets.
 package hook

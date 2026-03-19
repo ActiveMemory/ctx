@@ -4,5 +4,5 @@
 //   \\    Copyright 2026-present Context contributors.
 //                 SPDX-License-Identifier: Apache-2.0
 
-// RalphTemplate reads a Ralph-mode template file by name.
+// Package loop provides access to Ralph autonomous loop templates from embedded assets.
 package loop

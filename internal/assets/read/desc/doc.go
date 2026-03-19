@@ -4,5 +4,5 @@
 //   \\    Copyright 2026-present Context contributors.
 //                 SPDX-License-Identifier: Apache-2.0
 
-// CommandDesc returns the Short and Long descriptions for a command.
+// Package desc provides command, flag, text, and example description lookups backed by embedded YAML.
 package desc

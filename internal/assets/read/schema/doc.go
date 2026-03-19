@@ -4,5 +4,5 @@
 //   \\    Copyright 2026-present Context contributors.
 //                 SPDX-License-Identifier: Apache-2.0
 
-// Schema reads the embedded JSON Schema for .ctxrc.
+// Package schema provides access to the embedded JSON Schema for .ctxrc validation.
 package schema

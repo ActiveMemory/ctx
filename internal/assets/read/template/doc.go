@@ -4,5 +4,5 @@
 //   \\    Copyright 2026-present Context contributors.
 //                 SPDX-License-Identifier: Apache-2.0
 
-// Template reads a template file by name from the embedded filesystem.
+// Package template provides access to context template files (TASKS.md, DECISIONS.md, etc.) from embedded assets.
 package template

@@ -4,5 +4,5 @@
 //   \\    Copyright 2026-present Context contributors.
 //                 SPDX-License-Identifier: Apache-2.0
 
-// Ctx reads the ctx-owned Makefile include template.
+// Package makefile provides access to the embedded Makefile.ctx template.
 package makefile

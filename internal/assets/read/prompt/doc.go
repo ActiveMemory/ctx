@@ -4,5 +4,5 @@
 //   \\    Copyright 2026-present Context contributors.
 //                 SPDX-License-Identifier: Apache-2.0
 
-// PromptTemplateList returns available prompt template file names.
+// Package prompt provides access to embedded prompt templates for code review, refactoring, and explanation.
 package prompt
