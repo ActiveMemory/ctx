@@ -3,6 +3,7 @@
 <!-- INDEX:START -->
 | Date | Decision |
 |------|--------|
+| 2026-03-20 | Go-YAML linkage check added to lint-drift as check 5 |
 | 2026-03-18 | Eager Init() for static embedded data instead of per-accessor sync.Once |
 | 2026-03-18 | Singular command names for all CLI entities |
 | 2026-03-17 | Pre-compute-then-print for write package output blocks |
@@ -55,6 +56,20 @@
 | 2026-02-26 | Security and permissions (consolidated) |
 | 2026-02-27 | Webhook and notification design (consolidated) |
 <!-- INDEX:END -->
+
+## [2026-03-20-160103] Go-YAML linkage check added to lint-drift as check 5
+
+**Status**: Accepted
+
+**Context**: Prior refactoring sessions left broken and orphan linkages between Go DescKey constants and YAML entries that caused silent runtime failures
+
+**Decision**: Go-YAML linkage check added to lint-drift as check 5
+
+**Rationale**: Shell-based grep+comm approach fits the existing lint-drift pattern, runs at CI time, and is simpler than programmatic Go AST parsing
+
+**Consequence**: CI-time check catches orphans in both directions plus cross-namespace duplicates, preventing recurrence
+
+---
 
 ## [2026-03-18-193631] Eager Init() for static embedded data instead of per-accessor sync.Once
 
