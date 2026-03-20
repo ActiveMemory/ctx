@@ -427,8 +427,6 @@ resources.status-ok:
   short: ✓ ok
 resources.status-warn:
   short: ⚠ WARNING
-resume.confirmed:
-  short: Context hooks resumed for session %s
 specs-nudge.fallback:
   short: Save your plan to specs/ — these documents track what was designed for the current release. Use specs/feature-name.md naming. If this is a quick fix that doesn't need a spec, proceed without one.
 specs-nudge.nudge-message:

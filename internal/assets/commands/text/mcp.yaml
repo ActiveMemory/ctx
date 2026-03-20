@@ -124,8 +124,6 @@ mcp.unknown-resource:
   short: 'unknown resource: %s'
 mcp.unknown-tool:
   short: 'unknown tool: %s'
-mcp.write-failed:
-  short: 'write failed: %v'
 
 mcp.all-tasks-complete:
   short: All tasks completed. No pending work.

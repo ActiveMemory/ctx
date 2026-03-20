@@ -23,11 +23,6 @@ const (
 	TextDescKeyEventsEmpty       = "events.empty"
 	TextDescKeyEventsHumanFormat = "events.human-format"
 
-	TextDescKeyEventsCloseError = "events.close-error"
-	TextDescKeyEventsWriteError = "events.write-error"
-	TextDescKeyResumeConfirmed  = "resume.confirmed"
-	TextDescKeyMCPWriteFailed   = "mcp.write-failed"
-
 	TextDescKeyStatsEmpty        = "stats.empty"
 	TextDescKeyStatsHeaderFormat = "stats.header-format"
 	TextDescKeyStatsLineFormat   = "stats.line-format"

@@ -3,6 +3,7 @@
 <!-- INDEX:START -->
 | Date | Learning |
 |------|--------|
+| 2026-03-19 | Rename constants to avoid gosec G101 false positives |
 | 2026-03-18 | Tests in package X cannot import X/sub packages that import X back |
 | 2026-03-18 | Bulk sed on imports displaces aliased imports |
 | 2026-03-18 | Lazy sync.Once per-accessor is a code smell for static embedded data |
@@ -82,6 +83,16 @@
 | 2026-02-19 | Feature can be code-complete but invisible to users |
 | 2026-01-28 | IDE is already the UI |
 <!-- INDEX:END -->
+
+---
+
+## [2026-03-19-194942] Rename constants to avoid gosec G101 false positives
+
+**Context**: Constants named ColTokens, DriftPassed, StatusTokensFormat triggered gosec G101 credential detection. Suppressing with nolint or broadening .golangci.yml exclusion paths is fragile — paths change when files split.
+
+**Lesson**: Rename the constant to avoid the trigger word instead of suppressing the lint. Tokens→Usage, Passed→OK convey the same semantics without false positives. This is cleaner than nolint annotations or path-based exclusions that break on file reorganization.
+
+**Application**: When gosec flags a constant name, ask what the value semantically represents and rename to that. Do not add nolint, nosec, or path exclusions.
 
 ---
 
