@@ -7,6 +7,6 @@
 package text
 
 const (
-	TextDescKeyPostCommitFallback     = "post-commit.fallback"
-	TextDescKeyPostCommitRelayMessage = "post-commit.relay-message"
+	DescKeyPostCommitFallback     = "post-commit.fallback"
+	DescKeyPostCommitRelayMessage = "post-commit.relay-message"
 )

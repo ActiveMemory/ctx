@@ -22,7 +22,7 @@ import (
 //   - error: "read file: <cause>"
 func ReadFile(cause error) error {
 	return fmt.Errorf(
-		desc.TextDesc(text.TextDescKeyErrParserReadFile), cause,
+		desc.TextDesc(text.DescKeyErrParserReadFile), cause,
 	)
 }
 
@@ -35,7 +35,7 @@ func ReadFile(cause error) error {
 //   - error: "open file: <cause>"
 func OpenFile(cause error) error {
 	return fmt.Errorf(
-		desc.TextDesc(text.TextDescKeyErrParserOpenFile), cause,
+		desc.TextDesc(text.DescKeyErrParserOpenFile), cause,
 	)
 }
 
@@ -48,7 +48,7 @@ func OpenFile(cause error) error {
 //   - error: "no parser found for file: <path>"
 func NoMatch(path string) error {
 	return fmt.Errorf(
-		desc.TextDesc(text.TextDescKeyErrParserNoMatch), path,
+		desc.TextDesc(text.DescKeyErrParserNoMatch), path,
 	)
 }
 
@@ -61,7 +61,7 @@ func NoMatch(path string) error {
 //   - error: "walk directory: <cause>"
 func WalkDir(cause error) error {
 	return fmt.Errorf(
-		desc.TextDesc(text.TextDescKeyErrParserWalkDir), cause,
+		desc.TextDesc(text.DescKeyErrParserWalkDir), cause,
 	)
 }
 
@@ -75,7 +75,7 @@ func WalkDir(cause error) error {
 //   - error: "<path>: <cause>"
 func FileError(path string, cause error) error {
 	return fmt.Errorf(
-		desc.TextDesc(text.TextDescKeyErrParserFileError), path, cause,
+		desc.TextDesc(text.DescKeyErrParserFileError), path, cause,
 	)
 }
 
@@ -88,7 +88,7 @@ func FileError(path string, cause error) error {
 //   - error: "scan file: <cause>"
 func ScanFile(cause error) error {
 	return fmt.Errorf(
-		desc.TextDesc(text.TextDescKeyErrParserScanFile), cause,
+		desc.TextDesc(text.DescKeyErrParserScanFile), cause,
 	)
 }
 
@@ -101,7 +101,7 @@ func ScanFile(cause error) error {
 //   - error: "unmarshal: <cause>"
 func Unmarshal(cause error) error {
 	return fmt.Errorf(
-		desc.TextDesc(text.TextDescKeyErrParserUnmarshal), cause,
+		desc.TextDesc(text.DescKeyErrParserUnmarshal), cause,
 	)
 }
 
@@ -115,6 +115,6 @@ func Unmarshal(cause error) error {
 //   - error: "failed to parse <path>: <cause>"
 func ParseFile(path string, cause error) error {
 	return fmt.Errorf(
-		desc.TextDesc(text.TextDescKeyErrValidateParseFile), path, cause,
+		desc.TextDesc(text.DescKeyErrValidateParseFile), path, cause,
 	)
 }

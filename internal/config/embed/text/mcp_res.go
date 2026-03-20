@@ -7,13 +7,13 @@
 package text
 
 const (
-	TextDescKeyMCPResConstitution = "mcp.res-constitution"
-	TextDescKeyMCPResTasks        = "mcp.res-tasks"
-	TextDescKeyMCPResConventions  = "mcp.res-conventions"
-	TextDescKeyMCPResArchitecture = "mcp.res-architecture"
-	TextDescKeyMCPResDecisions    = "mcp.res-decisions"
-	TextDescKeyMCPResLearnings    = "mcp.res-learnings"
-	TextDescKeyMCPResGlossary     = "mcp.res-glossary"
-	TextDescKeyMCPResPlaybook     = "mcp.res-playbook"
-	TextDescKeyMCPResAgent        = "mcp.res-agent"
+	DescKeyMCPResConstitution = "mcp.res-constitution"
+	DescKeyMCPResTasks        = "mcp.res-tasks"
+	DescKeyMCPResConventions  = "mcp.res-conventions"
+	DescKeyMCPResArchitecture = "mcp.res-architecture"
+	DescKeyMCPResDecisions    = "mcp.res-decisions"
+	DescKeyMCPResLearnings    = "mcp.res-learnings"
+	DescKeyMCPResGlossary     = "mcp.res-glossary"
+	DescKeyMCPResPlaybook     = "mcp.res-playbook"
+	DescKeyMCPResAgent        = "mcp.res-agent"
 )

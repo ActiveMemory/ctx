@@ -7,9 +7,11 @@
 package flag
 
 const (
-	DescKeyChangesSince   = "changes.since"
-	DescKeyCompactArchive = "compact.archive"
-	DescKeyDoctorJson     = "doctor.json"
-	DescKeyHookWrite      = "hook.write"
-	DescKeyPromptAddStdin = "prompt.add.stdin"
+	DescKeyAllowOutsideCwd = "allow-outside-cwd"
+	DescKeyChangesSince    = "changes.since"
+	DescKeyCompactArchive  = "compact.archive"
+	DescKeyContextDir      = "context-dir"
+	DescKeyDoctorJson      = "doctor.json"
+	DescKeyHookWrite       = "hook.write"
+	DescKeyPromptAddStdin  = "prompt.add.stdin"
 )

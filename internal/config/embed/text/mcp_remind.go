@@ -7,7 +7,6 @@
 package text
 
 const (
-	TextDescKeyMCPReadRemindersFailed = "mcp.read-reminders-failed"
-	TextDescKeyMCPNoReminders         = "mcp.no-reminders"
-	TextDescKeyMCPRemindersFormat     = "mcp.reminders-format"
+	DescKeyMCPNoReminders     = "mcp.no-reminders"
+	DescKeyMCPRemindersFormat = "mcp.reminders-format"
 )

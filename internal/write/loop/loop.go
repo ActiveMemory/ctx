@@ -30,12 +30,12 @@ func InfoGenerated(
 	maxIterations int,
 	completionMsg string,
 ) {
-	iterLine := desc.TextDesc(text.TextDescKeyWriteLoopUnlimited)
+	iterLine := desc.TextDesc(text.DescKeyWriteLoopUnlimited)
 	if maxIterations > 0 {
-		iterLine = fmt.Sprintf(desc.TextDesc(text.TextDescKeyWriteLoopMaxIterations), maxIterations)
+		iterLine = fmt.Sprintf(desc.TextDesc(text.DescKeyWriteLoopMaxIterations), maxIterations)
 	}
 	cmd.Println(fmt.Sprintf(
-		desc.TextDesc(text.TextDescKeyWriteLoopGeneratedBlock),
+		desc.TextDesc(text.DescKeyWriteLoopGeneratedBlock),
 		outputFile, heading, outputFile, tool, promptFile, iterLine, completionMsg,
 	))
 }

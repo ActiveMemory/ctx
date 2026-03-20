@@ -23,7 +23,7 @@ func Banner(cmd *cobra.Command) {
 	if cmd == nil {
 		return
 	}
-	cmd.Println(desc.TextDesc(text.TextDescKeyWhyBanner))
+	cmd.Println(desc.TextDesc(text.DescKeyWhyBanner))
 }
 
 // MenuItem prints a numbered menu item.
@@ -38,7 +38,7 @@ func MenuItem(cmd *cobra.Command, index int, label string) {
 	}
 	cmd.Println(
 		fmt.Sprintf(
-			desc.TextDesc(text.TextDescKeyWhyMenuItemFormat), index, label,
+			desc.TextDesc(text.DescKeyWhyMenuItemFormat), index, label,
 		),
 	)
 }
@@ -51,5 +51,5 @@ func MenuPrompt(cmd *cobra.Command) {
 	if cmd == nil {
 		return
 	}
-	cmd.Print(desc.TextDesc(text.TextDescKeyWhyMenuPrompt))
+	cmd.Print(desc.TextDesc(text.DescKeyWhyMenuPrompt))
 }

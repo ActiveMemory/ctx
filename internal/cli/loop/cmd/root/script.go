@@ -48,11 +48,11 @@ func GenerateLoopScript(
 	maxIterCheck := ""
 	if maxIterations > 0 {
 		maxIterCheck = fmt.Sprintf(
-			tpl.TplLoopMaxIter, maxIterations, maxIterations, tpl.TplLoopNotify)
+			tpl.LoopMaxIter, maxIterations, maxIterations, tpl.LoopNotify)
 	}
 
-	script := fmt.Sprintf(tpl.TplLoopScript,
-		absPrompt, completionMsg, maxIterCheck, aiCommand, desc.TextDesc(text.DescKeyLabelLoopComplete), tpl.TplLoopNotify)
+	script := fmt.Sprintf(tpl.LoopScript,
+		absPrompt, completionMsg, maxIterCheck, aiCommand, desc.TextDesc(text.DescKeyLabelLoopComplete), tpl.LoopNotify)
 
 	return script
 }

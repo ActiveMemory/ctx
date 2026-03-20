@@ -23,7 +23,7 @@ type NotFoundError struct {
 // Returns:
 //   - string: Error message including the missing directory path
 func (e *NotFoundError) Error() string {
-	return desc.TextDesc(text.TextDescKeyErrContextDirNotFound) + e.Dir
+	return desc.TextDesc(text.DescKeyErrContextDirNotFound) + e.Dir
 }
 
 // NotFound returns a NotFoundError for the given directory.
@@ -48,7 +48,7 @@ func NotFound(dir string) *NotFoundError {
 //   - error: "context directory <dir> resolves outside project root <root>"
 func OutsideRoot(dir, root string) error {
 	return fmt.Errorf(
-		desc.TextDesc(text.TextDescKeyErrValidateContextOutsideRoot), dir, root,
+		desc.TextDesc(text.DescKeyErrValidateContextOutsideRoot), dir, root,
 	)
 }
 
@@ -61,7 +61,7 @@ func OutsideRoot(dir, root string) error {
 //   - error: "context directory <dir> is a symlink"
 func DirSymlink(dir string) error {
 	return fmt.Errorf(
-		desc.TextDesc(text.TextDescKeyErrValidateContextDirSymlink), dir,
+		desc.TextDesc(text.DescKeyErrValidateContextDirSymlink), dir,
 	)
 }
 
@@ -75,6 +75,6 @@ func DirSymlink(dir string) error {
 //   - error: "context file <file> is a symlink"
 func FileSymlink(file string) error {
 	return fmt.Errorf(
-		desc.TextDesc(text.TextDescKeyErrValidateContextFileSymlink), file,
+		desc.TextDesc(text.DescKeyErrValidateContextFileSymlink), file,
 	)
 }

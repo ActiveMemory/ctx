@@ -31,7 +31,7 @@ import (
 //   - error: non-nil if reading input fails.
 func ConfirmExport(cmd *cobra.Command, plan ExportPlan) (bool, error) {
 	export.Summary(cmd, plan.NewCount, plan.RegenCount, plan.SkipCount, plan.LockedCount, false)
-	cmd.Print(desc.TextDesc(text.TextDescKeyConfirmProceed))
+	cmd.Print(desc.TextDesc(text.DescKeyConfirmProceed))
 	reader := bufio.NewReader(os.Stdin)
 	response, readErr := reader.ReadString(token.NewlineLF[0])
 	if readErr != nil {

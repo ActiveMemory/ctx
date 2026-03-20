@@ -7,5 +7,14 @@
 package text
 
 const (
-	TextDescKeyAgentInstruction = "agent.instruction"
+	DescKeyAgentInstruction         = "agent.instruction"
+	DescKeyAgentPacketTitle         = "agent.packet-title"
+	DescKeyAgentPacketMeta          = "agent.packet-meta"
+	DescKeyAgentSectionReadOrder    = "agent.section-read-order"
+	DescKeyAgentSectionConstitution = "agent.section-constitution"
+	DescKeyAgentSectionTasks        = "agent.section-tasks"
+	DescKeyAgentSectionConventions  = "agent.section-conventions"
+	DescKeyAgentSectionDecisions    = "agent.section-decisions"
+	DescKeyAgentSectionLearnings    = "agent.section-learnings"
+	DescKeyAgentSectionSummaries    = "agent.section-summaries"
 )

@@ -11,17 +11,17 @@ package tpl
 // These templates define the structure of entries written to .context/ files
 // by the add command. Each uses fmt.Sprintf verbs for interpolation.
 const (
-	// TplTask formats a task checkbox line.
+	// Task formats a task checkbox line.
 	// Args: content, priorityTag, timestamp.
-	TplTask = "- [ ] %s%s #added:%s\n"
+	Task = "- [ ] %s%s #added:%s\n"
 
-	// TplTaskPriority formats the inline priority tag.
+	// TaskPriority formats the inline priority tag.
 	// Args: priority level.
-	TplTaskPriority = " #priority:%s"
+	TaskPriority = " #priority:%s"
 
-	// TplLearning formats a learning section with all ADR-style fields.
+	// Learning formats a learning section with all ADR-style fields.
 	// Args: timestamp, title, context, lesson, application.
-	TplLearning = `## [%s] %s
+	Learning = `## [%s] %s
 
 **Context**: %s
 
@@ -30,13 +30,13 @@ const (
 **Application**: %s
 `
 
-	// TplConvention formats a convention list item.
+	// Convention formats a convention list item.
 	// Args: content.
-	TplConvention = "- %s\n"
+	Convention = "- %s\n"
 
-	// TplDecision formats a decision section with all ADR fields.
+	// Decision formats a decision section with all ADR fields.
 	// Args: timestamp, title, context, title (repeated), rationale, consequence.
-	TplDecision = `## [%s] %s
+	Decision = `## [%s] %s
 
 **Status**: Accepted
 

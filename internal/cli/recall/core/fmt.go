@@ -26,7 +26,7 @@ func FormatSessionMatchLines(matches []*parser.Session) []string {
 	lines := make([]string, 0, len(matches))
 	for _, m := range matches {
 		lines = append(lines, fmt.Sprintf(
-			tpl.TplSessionMatch,
+			tpl.SessionMatch,
 			m.Slug,
 			m.ID[:journal.SessionIDShortLen],
 			m.StartTime.Format(time.DateTimeFormat)),

@@ -38,26 +38,26 @@ func GenerateHomeMOC(
 	nl := token.NewlineLF
 
 	sb.WriteString(desc.TextDesc(text.DescKeyHeadingSessionJournal) + nl + nl)
-	sb.WriteString(desc.TextDesc(text.TextDescKeyJournalMocNavDescription) + nl + nl)
+	sb.WriteString(desc.TextDesc(text.DescKeyJournalMocNavDescription) + nl + nl)
 
-	sb.WriteString(desc.TextDesc(text.TextDescKeyJournalMocBrowseBy) + nl + nl)
+	sb.WriteString(desc.TextDesc(text.DescKeyJournalMocBrowseBy) + nl + nl)
 	if hasTopics {
 		sb.WriteString(fmt.Sprintf(
 			"- %s %s"+nl,
 			FormatWikilink("_Topics", "Topics"),
-			desc.TextDesc(text.TextDescKeyJournalMocTopicsDesc)))
+			desc.TextDesc(text.DescKeyJournalMocTopicsDesc)))
 	}
 	if hasFiles {
 		sb.WriteString(fmt.Sprintf(
 			"- %s %s"+nl,
 			FormatWikilink("_Key Files", "Key Files"),
-			desc.TextDesc(text.TextDescKeyJournalMocFilesDesc)))
+			desc.TextDesc(text.DescKeyJournalMocFilesDesc)))
 	}
 	if hasTypes {
 		sb.WriteString(fmt.Sprintf(
 			"- %s %s"+nl,
 			FormatWikilink("_Session Types", "Session Types"),
-			desc.TextDesc(text.TextDescKeyJournalMocTypesDesc)))
+			desc.TextDesc(text.DescKeyJournalMocTypesDesc)))
 	}
 	sb.WriteString(nl)
 
@@ -101,7 +101,7 @@ func GenerateObsidianTopicsMOC(topics []TopicData) string {
 
 	sb.WriteString("# Topics" + nl + nl)
 	sb.WriteString(fmt.Sprintf(
-		"**%d topics** across **%d sessions** — **%d popular**, **%d long-tail**"+nl+nl,
+		desc.TextDesc(text.DescKeyJournalMocTopicStats)+nl+nl,
 		len(topics), CountUniqueSessions(topics),
 		len(popular), len(longtail)))
 
@@ -139,7 +139,7 @@ func GenerateObsidianTopicsMOC(topics []TopicData) string {
 func GenerateObsidianTopicPage(topic TopicData) string {
 	return GenerateObsidianGroupedPage(
 		fmt.Sprintf("# %s", topic.Name),
-		fmt.Sprintf("**%d sessions** with this topic.", len(topic.Entries)),
+		fmt.Sprintf(desc.TextDesc(text.DescKeyJournalMocTopicPageStats), len(topic.Entries)),
 		topic.Entries,
 	)
 }
@@ -177,7 +177,7 @@ func GenerateObsidianFilesMOC(keyFiles []KeyFileData) string {
 
 	sb.WriteString("# Key Files" + nl + nl)
 	sb.WriteString(fmt.Sprintf(
-		"**%d files** across **%d sessions** — **%d popular**, **%d long-tail**"+nl+nl,
+		desc.TextDesc(text.DescKeyJournalMocFileStats)+nl+nl,
 		len(keyFiles), totalSessions, len(popular), len(longtail)))
 
 	if len(popular) > 0 {
@@ -216,7 +216,7 @@ func GenerateObsidianFilesMOC(keyFiles []KeyFileData) string {
 func GenerateObsidianFilePage(kf KeyFileData) string {
 	return GenerateObsidianGroupedPage(
 		fmt.Sprintf("# `%s`", kf.Path),
-		fmt.Sprintf("**%d sessions** touching this file.", len(kf.Entries)),
+		fmt.Sprintf(desc.TextDesc(text.DescKeyJournalMocFilePageStats), len(kf.Entries)),
 		kf.Entries,
 	)
 }
@@ -240,7 +240,7 @@ func GenerateObsidianTypesMOC(sessionTypes []TypeData) string {
 
 	sb.WriteString("# Session Types" + nl + nl)
 	sb.WriteString(fmt.Sprintf(
-		"**%d types** across **%d sessions**"+nl+nl,
+		desc.TextDesc(text.DescKeyJournalMocTypeStats)+nl+nl,
 		len(sessionTypes), totalSessions))
 
 	for _, st := range sessionTypes {
@@ -263,7 +263,7 @@ func GenerateObsidianTypesMOC(sessionTypes []TypeData) string {
 func GenerateObsidianTypePage(st TypeData) string {
 	return GenerateObsidianGroupedPage(
 		fmt.Sprintf("# %s", st.Name),
-		fmt.Sprintf("**%d sessions** of type *%s*.", len(st.Entries), st.Name),
+		fmt.Sprintf(desc.TextDesc(text.DescKeyJournalMocTypePageStats), len(st.Entries), st.Name),
 		st.Entries,
 	)
 }
@@ -334,12 +334,12 @@ func GenerateRelatedFooter(
 			topicLinks = append(topicLinks,
 				fmt.Sprintf(obsidian.WikilinkPlain, t))
 		}
-		sb.WriteString("**Topics**: " + strings.Join(topicLinks, " · ") + nl + nl)
+		sb.WriteString(desc.TextDesc(text.DescKeyJournalMocTopicsLabel) + strings.Join(topicLinks, " · ") + nl + nl)
 	}
 
 	// Type link
 	if entry.Type != "" {
-		sb.WriteString(fmt.Sprintf("**Type**: %s"+nl+nl,
+		sb.WriteString(fmt.Sprintf(desc.TextDesc(text.DescKeyJournalMocTypeLabel)+"%s"+nl+nl,
 			fmt.Sprintf(obsidian.WikilinkPlain, entry.Type)))
 	}
 

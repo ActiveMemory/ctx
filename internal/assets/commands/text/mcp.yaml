@@ -88,7 +88,7 @@ mcp.status-files-format:
     Files: %d
 mcp.status-ok:
   short: OK
-mcp.status-tokens-format:
+mcp.status-usage-format:
   short: |+
     Tokens: ~%d
 
@@ -127,8 +127,6 @@ mcp.err-unknown-tool:
 
 mcp.all-tasks-complete:
   short: All tasks completed. No pending work.
-mcp.boundary-violation:
-  short: 'boundary violation: %v'
 mcp.check-task-format:
   short: 'Did this complete task #%d: "%s"?'
 mcp.check-task-hint:
@@ -139,8 +137,6 @@ mcp.format-compacted:
   short: "\nCompacted %d items. This reorganized TASKS.md.\n"
 mcp.event-type-required:
   short: type is required (start|end)
-mcp.find-sessions-failed:
-  short: 'failed to find sessions: %v'
 mcp.invalid-since-date:
   short: 'invalid since date (use YYYY-MM-DD): %v'
 mcp.next-task-format:
@@ -272,8 +268,6 @@ mcp.prompt-session-start-header:
   short: You are starting a new session. Read the following context files carefully.
 mcp.prompt-session-start-result-desc:
   short: Session initialization with full context load
-mcp.read-reminders-failed:
-  short: 'failed to read reminders: %v'
 mcp.reminders-format:
   short: "%d reminder(s):\n"
 mcp.review-pending:

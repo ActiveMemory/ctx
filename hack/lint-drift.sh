@@ -12,6 +12,7 @@
 #   2. Printf/PrintErrf with trailing \n (should use Println)
 #   3. Magic directory strings that have config.Dir* constants
 #   4. Literal ".md" (should use config.ExtMarkdown)
+#   5. Go DescKey ↔ YAML key linkage (embed/{cmd,flag,text} vs commands/)
 #
 # Exit code: number of issues found (0 = clean).
 
@@ -88,6 +89,100 @@ if [ "$count" -gt 0 ]; then
   echo "$hits"
   echo ""
   issues=$((issues + count))
+fi
+
+# ── 5. Go DescKey ↔ YAML key linkage ──────────────────────────────────
+# Every Go constant in internal/config/embed/{cmd,flag,text}/ must have
+# a matching YAML key, and vice versa. Orphans in either direction mean
+# broken lookups or dead entries.
+check_linkage() {
+  local label="$1" go_dir="$2" yaml_file="$3"
+  local go_keys yaml_keys missing_yaml missing_go
+
+  go_keys=$(grep -rh '= "' "$go_dir"/*.go 2>/dev/null \
+    | grep -v '//' \
+    | sed 's/.*= "//; s/"//' \
+    | sort -u)
+
+  yaml_keys=$(grep -E '^[a-z]' "$yaml_file" \
+    | sed 's/:$//' \
+    | sort -u)
+
+  missing_yaml=$(comm -23 <(echo "$go_keys") <(echo "$yaml_keys"))
+  missing_go=$(comm -13 <(echo "$go_keys") <(echo "$yaml_keys"))
+
+  local count=0
+  if [ -n "$missing_yaml" ]; then
+    local n; n=$(echo "$missing_yaml" | wc -l | tr -d ' ')
+    echo "==> $label: $n Go constant(s) missing from YAML:"
+    echo "$missing_yaml" | sed 's/^/    /'
+    echo ""
+    count=$((count + n))
+  fi
+  if [ -n "$missing_go" ]; then
+    local n; n=$(echo "$missing_go" | wc -l | tr -d ' ')
+    echo "==> $label: $n YAML key(s) missing from Go:"
+    echo "$missing_go" | sed 's/^/    /'
+    echo ""
+    count=$((count + n))
+  fi
+  issues=$((issues + count))
+}
+
+# cmd constants ↔ commands.yaml
+# ExampleKey* constants map to examples.yaml, not commands.yaml — exclude them.
+cmd_go_dir="internal/config/embed/cmd"
+cmd_go_keys=$(grep -rh '= "' "$cmd_go_dir"/*.go 2>/dev/null \
+  | grep -v '//' \
+  | grep -v 'ExampleKey' \
+  | sed 's/.*= "//; s/"//' \
+  | sort -u)
+cmd_yaml_keys=$(grep -E '^[a-z]' "internal/assets/commands/commands.yaml" \
+  | sed 's/:$//' \
+  | sort -u)
+cmd_missing_yaml=$(comm -23 <(echo "$cmd_go_keys") <(echo "$cmd_yaml_keys"))
+cmd_missing_go=$(comm -13 <(echo "$cmd_go_keys") <(echo "$cmd_yaml_keys"))
+if [ -n "$cmd_missing_yaml" ]; then
+  n=$(echo "$cmd_missing_yaml" | wc -l | tr -d ' ')
+  echo "==> cmd↔commands.yaml: $n Go constant(s) missing from YAML:"
+  echo "$cmd_missing_yaml" | sed 's/^/    /'
+  echo ""
+  issues=$((issues + n))
+fi
+if [ -n "$cmd_missing_go" ]; then
+  n=$(echo "$cmd_missing_go" | wc -l | tr -d ' ')
+  echo "==> cmd↔commands.yaml: $n YAML key(s) missing from Go:"
+  echo "$cmd_missing_go" | sed 's/^/    /'
+  echo ""
+  issues=$((issues + n))
+fi
+
+# flag constants ↔ flags.yaml
+check_linkage "flag↔flags.yaml" \
+  "internal/config/embed/flag" \
+  "internal/assets/commands/flags.yaml"
+
+# text constants ↔ text/*.yaml (merge all text YAML files)
+text_yaml_merged=$(mktemp)
+cat internal/assets/commands/text/*.yaml > "$text_yaml_merged"
+check_linkage "text↔text/*.yaml" \
+  "internal/config/embed/text" \
+  "$text_yaml_merged"
+rm -f "$text_yaml_merged"
+
+# Cross-namespace duplicates (same key value in cmd + flag + text)
+dupes=$(
+  grep -rh '= "' internal/config/embed/cmd/*.go internal/config/embed/flag/*.go internal/config/embed/text/*.go 2>/dev/null \
+    | grep -v '//' \
+    | sed 's/.*= "//; s/"//' \
+    | sort | uniq -d
+)
+if [ -n "$dupes" ]; then
+  dupe_count=$(echo "$dupes" | wc -l | tr -d ' ')
+  echo "==> Cross-namespace duplicates ($dupe_count key(s) appear in multiple embed packages):"
+  echo "$dupes" | sed 's/^/    /'
+  echo ""
+  issues=$((issues + dupe_count))
 fi
 
 # ── Summary ──────────────────────────────────────────────────────────

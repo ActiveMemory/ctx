@@ -8,11 +8,14 @@ package core
 
 import (
 	"github.com/ActiveMemory/ctx/internal/assets/read/desc"
+	"github.com/ActiveMemory/ctx/internal/config/embed/cmd"
 )
 
 // ExamplesForType returns example usage strings for a given entry type.
 //
 // The examples are loaded from the embedded commands.yaml asset.
+// Entry type keys (decision, task, learning, convention) are defined in
+// config/entry and match the YAML keys in examples.yaml.
 //
 // Parameters:
 //   - fileType: Entry type (e.g., "decision", "task", "learning", "convention")
@@ -21,11 +24,9 @@ import (
 //   - string: Formatted example commands; returns a generic example for
 //     unrecognized types
 func ExamplesForType(fileType string) string {
-	const defaultKeyName = "default"
-
 	if desc := desc.ExampleDesc(fileType); desc != "" {
 		return desc
 	}
 
-	return desc.ExampleDesc(defaultKeyName)
+	return desc.ExampleDesc(cmd.ExampleKeyDefault)
 }

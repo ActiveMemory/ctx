@@ -59,7 +59,7 @@ func DispatchRead(
 	if loadErr != nil {
 		return out.ErrResponse(req.ID, proto.ErrCodeInternal,
 			fmt.Sprintf(
-				desc.TextDesc(text.TextDescKeyMCPLoadContext),
+				desc.TextDesc(text.DescKeyMCPLoadContext),
 				loadErr,
 			))
 	}

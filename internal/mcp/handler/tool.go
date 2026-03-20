@@ -51,24 +51,24 @@ func (h *Handler) Status() (string, error) {
 	var sb strings.Builder
 	_, _ = fmt.Fprintf(
 		&sb,
-		desc.TextDesc(text.TextDescKeyMCPStatusContextFormat), ctx.Dir,
+		desc.TextDesc(text.DescKeyMCPStatusContextFormat), ctx.Dir,
 	)
 	_, _ = fmt.Fprintf(
 		&sb,
-		desc.TextDesc(text.TextDescKeyMCPStatusFilesFormat), len(ctx.Files),
+		desc.TextDesc(text.DescKeyMCPStatusFilesFormat), len(ctx.Files),
 	)
 	_, _ = fmt.Fprintf(
 		&sb,
-		desc.TextDesc(text.TextDescKeyMCPStatusUsageFormat), ctx.TotalTokens,
+		desc.TextDesc(text.DescKeyMCPStatusUsageFormat), ctx.TotalTokens,
 	)
 
 	for _, f := range ctx.Files {
-		status := desc.TextDesc(text.TextDescKeyMCPStatusOK)
+		status := desc.TextDesc(text.DescKeyMCPStatusOK)
 		if f.IsEmpty {
-			status = desc.TextDesc(text.TextDescKeyMCPStatusEmpty)
+			status = desc.TextDesc(text.DescKeyMCPStatusEmpty)
 		}
 		_, _ = fmt.Fprintf(
-			&sb, desc.TextDesc(text.TextDescKeyMCPStatusFileFormat),
+			&sb, desc.TextDesc(text.DescKeyMCPStatusFileFormat),
 			f.Name, f.Tokens, status,
 		)
 	}
@@ -111,7 +111,7 @@ func (h *Handler) Add(
 	}
 
 	return fmt.Sprintf(
-		desc.TextDesc(text.TextDescKeyMCPAddedFormat),
+		desc.TextDesc(text.DescKeyMCPAddedFormat),
 		entryType, fileName,
 	), nil
 }
@@ -139,7 +139,7 @@ func (h *Handler) Complete(query string) (string, error) {
 	}
 
 	return fmt.Sprintf(
-		desc.TextDesc(text.TextDescKeyMCPCompletedFormat),
+		desc.TextDesc(text.DescKeyMCPCompletedFormat),
 		completedTask,
 	), nil
 }
@@ -160,15 +160,15 @@ func (h *Handler) Drift() (string, error) {
 	var sb strings.Builder
 	_, _ = fmt.Fprintf(
 		&sb,
-		desc.TextDesc(text.TextDescKeyMCPDriftStatusFormat),
+		desc.TextDesc(text.DescKeyMCPDriftStatusFormat),
 		report.Status(),
 	)
 
 	if len(report.Violations) > 0 {
-		sb.WriteString(desc.TextDesc(text.TextDescKeyMCPDriftViolations))
+		sb.WriteString(desc.TextDesc(text.DescKeyMCPDriftViolations))
 		for _, v := range report.Violations {
 			_, _ = fmt.Fprintf(
-				&sb, desc.TextDesc(text.TextDescKeyMCPDriftIssueFormat),
+				&sb, desc.TextDesc(text.DescKeyMCPDriftIssueFormat),
 				v.Type, v.File, v.Message,
 			)
 		}
@@ -176,10 +176,10 @@ func (h *Handler) Drift() (string, error) {
 	}
 
 	if len(report.Warnings) > 0 {
-		sb.WriteString(desc.TextDesc(text.TextDescKeyMCPDriftWarnings))
+		sb.WriteString(desc.TextDesc(text.DescKeyMCPDriftWarnings))
 		for _, w := range report.Warnings {
 			_, _ = fmt.Fprintf(
-				&sb, desc.TextDesc(text.TextDescKeyMCPDriftIssueFormat),
+				&sb, desc.TextDesc(text.DescKeyMCPDriftIssueFormat),
 				w.Type, w.File, w.Message,
 			)
 		}
@@ -187,10 +187,10 @@ func (h *Handler) Drift() (string, error) {
 	}
 
 	if len(report.Passed) > 0 {
-		sb.WriteString(desc.TextDesc(text.TextDescKeyMCPDriftOK))
+		sb.WriteString(desc.TextDesc(text.DescKeyMCPDriftOK))
 		for _, p := range report.Passed {
 			_, _ = fmt.Fprintf(
-				&sb, desc.TextDesc(text.TextDescKeyMCPDriftOKFormat), p,
+				&sb, desc.TextDesc(text.DescKeyMCPDriftOKFormat), p,
 			)
 		}
 	}
@@ -231,12 +231,12 @@ func (h *Handler) Recall(limit int, since time.Time) (string, error) {
 	}
 
 	if len(sessions) == 0 {
-		return desc.TextDesc(text.TextDescKeyMCPNoSessions), nil
+		return desc.TextDesc(text.DescKeyMCPNoSessions), nil
 	}
 
 	var sb strings.Builder
 	_, _ = fmt.Fprintf(&sb,
-		desc.TextDesc(text.TextDescKeyMCPSessionsFoundFormat),
+		desc.TextDesc(text.DescKeyMCPSessionsFoundFormat),
 		len(sessions),
 	)
 
@@ -244,24 +244,24 @@ func (h *Handler) Recall(limit int, since time.Time) (string, error) {
 		duration := sess.Duration.Round(time.Second)
 		_, _ = fmt.Fprintf(
 			&sb,
-			desc.TextDesc(text.TextDescKeyMCPRecallItemFormat),
+			desc.TextDesc(text.DescKeyMCPRecallItemFormat),
 			i+1, sess.StartTime.Format(timeCfg.DateTimeFormat),
 		)
 		if sess.Project != "" {
 			_, _ = fmt.Fprintf(
-				&sb, desc.TextDesc(text.TextDescKeyMCPRecallProjectFormat),
+				&sb, desc.TextDesc(text.DescKeyMCPRecallProjectFormat),
 				sess.Project,
 			)
 		}
 		_, _ = fmt.Fprintf(
-			&sb, desc.TextDesc(text.TextDescKeyMCPRecallDurationFormat),
+			&sb, desc.TextDesc(text.DescKeyMCPRecallDurationFormat),
 			duration, sess.TurnCount,
 		)
 		sb.WriteString(token.NewlineLF)
 
 		if sess.FirstUserMsg != "" {
 			_, _ = fmt.Fprintf(
-				&sb, desc.TextDesc(text.TextDescKeyMCPRecallFirstMsgFormat),
+				&sb, desc.TextDesc(text.DescKeyMCPRecallFirstMsgFormat),
 				sess.FirstUserMsg,
 			)
 			sb.WriteString(token.NewlineLF)
@@ -304,7 +304,7 @@ func (h *Handler) WatchUpdate(
 			desc.TextDesc(text.DescKeyMCPFormatWatchCompleted),
 			completedTask,
 		) + token.NewlineLF +
-			desc.TextDesc(text.TextDescKeyMCPReviewStatus), nil
+			desc.TextDesc(text.DescKeyMCPReviewStatus), nil
 	}
 
 	fileName, writeErr := entry.ValidateAndWrite(entry.Params{
@@ -336,7 +336,7 @@ func (h *Handler) WatchUpdate(
 		desc.TextDesc(text.DescKeyMCPFormatWrote),
 		entryType, fileName,
 	) + token.NewlineLF +
-		desc.TextDesc(text.TextDescKeyMCPReviewStatus), nil
+		desc.TextDesc(text.DescKeyMCPReviewStatus), nil
 }
 
 // Compact moves completed tasks to the archive section.
@@ -396,7 +396,7 @@ func (h *Handler) Compact(archive bool) (string, error) {
 		); archiveErr != nil {
 			_, _ = fmt.Fprintf(
 				&sb,
-				desc.TextDesc(text.TextDescKeyMCPCompactArchiveWarning)+
+				desc.TextDesc(text.DescKeyMCPCompactArchiveWarning)+
 					token.NewlineLF,
 				archiveErr,
 			)
@@ -407,21 +407,21 @@ func (h *Handler) Compact(archive bool) (string, error) {
 	for _, taskText := range result.TasksMoved {
 		_, _ = fmt.Fprintf(&sb,
 			desc.TextDesc(
-				text.TextDescKeyMCPCompactMovedFormat)+token.NewlineLF,
+				text.DescKeyMCPCompactMovedFormat)+token.NewlineLF,
 			tidy.TruncateString(taskText, cfg.TruncateLen),
 		)
 	}
 	for _, sc := range result.SectionsCleaned {
 		_, _ = fmt.Fprintf(
 			&sb,
-			desc.TextDesc(text.TextDescKeyMCPCompactRemovedSectFmt)+
+			desc.TextDesc(text.DescKeyMCPCompactRemovedSectFmt)+
 				token.NewlineLF,
 			sc.Removed, sc.FileName,
 		)
 	}
 
 	if result.TotalChanges() == 0 {
-		return desc.TextDesc(text.TextDescKeyMCPCompactClean), nil
+		return desc.TextDesc(text.DescKeyMCPCompactClean), nil
 	}
 
 	_, _ = fmt.Fprintf(
@@ -429,7 +429,7 @@ func (h *Handler) Compact(archive bool) (string, error) {
 		desc.TextDesc(text.DescKeyMCPFormatCompacted),
 		result.TotalChanges(),
 	)
-	sb.WriteString(desc.TextDesc(text.TextDescKeyMCPReviewStatus))
+	sb.WriteString(desc.TextDesc(text.DescKeyMCPReviewStatus))
 
 	return sb.String(), nil
 }
@@ -447,7 +447,7 @@ func (h *Handler) Next() (string, error) {
 
 	tasksFile := ctx.File(ctxCfg.Task)
 	if tasksFile == nil {
-		return desc.TextDesc(text.TextDescKeyMCPNoTasks), nil
+		return desc.TextDesc(text.DescKeyMCPNoTasks), nil
 	}
 
 	lines := strings.Split(string(tasksFile.Content), token.NewlineLF)
@@ -455,7 +455,7 @@ func (h *Handler) Next() (string, error) {
 	var result string
 	task.ForEachPending(lines, func(pt task.Pending) bool {
 		result = fmt.Sprintf(
-			desc.TextDesc(text.TextDescKeyMCPNextTaskFormat),
+			desc.TextDesc(text.DescKeyMCPNextTaskFormat),
 			pt.Index, pt.Content,
 		)
 		return true // stop after first
@@ -465,7 +465,7 @@ func (h *Handler) Next() (string, error) {
 		return result, nil
 	}
 
-	return desc.TextDesc(text.TextDescKeyMCPAllTasksComplete), nil
+	return desc.TextDesc(text.DescKeyMCPAllTasksComplete), nil
 }
 
 // CheckTaskCompletion checks if a recent action completed any pending
@@ -494,9 +494,9 @@ func (h *Handler) CheckTaskCompletion(recentAction string) (string, error) {
 	task.ForEachPending(lines, func(pt task.Pending) bool {
 		if recentAction != "" && task.ContainsOverlap(recentAction, pt.Content) {
 			result = fmt.Sprintf(
-				desc.TextDesc(text.TextDescKeyMCPCheckTaskFormat)+
+				desc.TextDesc(text.DescKeyMCPCheckTaskFormat)+
 					token.NewlineLF+
-					desc.TextDesc(text.TextDescKeyMCPCheckTaskHint),
+					desc.TextDesc(text.DescKeyMCPCheckTaskHint),
 				pt.Index, pt.Content, pt.Index,
 			)
 			return true
@@ -525,26 +525,26 @@ func (h *Handler) SessionEvent(
 		if caller != "" {
 			return fmt.Sprintf(
 				desc.TextDesc(
-					text.TextDescKeyMCPSessionStartedCallerFormat,
+					text.DescKeyMCPSessionStartedCallerFormat,
 				),
 				caller, h.ContextDir,
 			), nil
 		}
 		return fmt.Sprintf(
-			desc.TextDesc(text.TextDescKeyMCPSessionStartedFormat),
+			desc.TextDesc(text.DescKeyMCPSessionStartedFormat),
 			h.ContextDir,
 		), nil
 
 	case event.End:
 		pending := h.Session.PendingCount()
 		var sb strings.Builder
-		sb.WriteString(desc.TextDesc(text.TextDescKeyMCPSessionEnding))
+		sb.WriteString(desc.TextDesc(text.DescKeyMCPSessionEnding))
 		sb.WriteString(token.NewlineLF)
 
 		if pending > 0 {
 			_, _ = fmt.Fprintf(
 				&sb,
-				desc.TextDesc(text.TextDescKeyMCPPendingUpdatesFormat),
+				desc.TextDesc(text.DescKeyMCPPendingUpdatesFormat),
 				pending,
 			)
 			for i, pu := range h.Session.PendingFlush {
@@ -557,10 +557,10 @@ func (h *Handler) SessionEvent(
 				)
 			}
 			sb.WriteString(
-				desc.TextDesc(text.TextDescKeyMCPReviewPending),
+				desc.TextDesc(text.DescKeyMCPReviewPending),
 			)
 		} else {
-			sb.WriteString(desc.TextDesc(text.TextDescKeyMCPNoPending))
+			sb.WriteString(desc.TextDesc(text.DescKeyMCPNoPending))
 		}
 
 		_, _ = fmt.Fprintf(&sb,
@@ -588,14 +588,14 @@ func (h *Handler) Remind() (string, error) {
 	}
 
 	if len(reminders) == 0 {
-		return desc.TextDesc(text.TextDescKeyMCPNoReminders), nil
+		return desc.TextDesc(text.DescKeyMCPNoReminders), nil
 	}
 
 	today := time.Now().Format(timeCfg.DateFormat)
 	var sb strings.Builder
 	_, _ = fmt.Fprintf(
 		&sb,
-		desc.TextDesc(text.TextDescKeyMCPRemindersFormat),
+		desc.TextDesc(text.DescKeyMCPRemindersFormat),
 		len(reminders),
 	)
 

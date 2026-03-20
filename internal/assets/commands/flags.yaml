@@ -84,10 +84,6 @@ loop.prompt:
   short: Prompt file to use
 loop.tool:
   short: 'AI tool: claude, aider, or generic'
-memory.budget:
-  short: Line budget for published content
-memory.dry-run:
-  short: Show classification plan without writing
 memory.import.dry-run:
   short: Show classification plan without writing
 memory.publish.budget:
@@ -96,8 +92,6 @@ memory.publish.dry-run:
   short: Show what would be published without writing
 memory.sync.dry-run:
   short: Show what would happen without writing
-no-color:
-  short: Disable colored output
 notify.event:
   short: Event name (required)
 notify.hook:

@@ -30,9 +30,9 @@ func FormatTask(content string, priority string) string {
 	timestamp := time.Now().Format(time2.TimestampCompact)
 	var priorityTag string
 	if priority != "" {
-		priorityTag = fmt.Sprintf(tpl.TplTaskPriority, priority)
+		priorityTag = fmt.Sprintf(tpl.TaskPriority, priority)
 	}
-	return fmt.Sprintf(tpl.TplTask, content, priorityTag, timestamp)
+	return fmt.Sprintf(tpl.Task, content, priorityTag, timestamp)
 }
 
 // FormatLearning formats a learning entry as a structured Markdown section.
@@ -51,7 +51,7 @@ func FormatTask(content string, priority string) string {
 func FormatLearning(title, context, lesson, application string) string {
 	timestamp := time.Now().Format(time2.TimestampCompact)
 	return fmt.Sprintf(
-		tpl.TplLearning, timestamp, title, context, lesson, application,
+		tpl.Learning, timestamp, title, context, lesson, application,
 	)
 }
 
@@ -65,7 +65,7 @@ func FormatLearning(title, context, lesson, application string) string {
 // Returns:
 //   - string: Formatted convention line with trailing newline
 func FormatConvention(content string) string {
-	return fmt.Sprintf(tpl.TplConvention, content)
+	return fmt.Sprintf(tpl.Convention, content)
 }
 
 // FormatDecision formats a decision entry as a structured Markdown section.
@@ -84,7 +84,7 @@ func FormatConvention(content string) string {
 func FormatDecision(title, context, rationale, consequence string) string {
 	timestamp := time.Now().Format(time2.TimestampCompact)
 	return fmt.Sprintf(
-		tpl.TplDecision,
+		tpl.Decision,
 		timestamp, title, context, title, rationale, consequence,
 	)
 }

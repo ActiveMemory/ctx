@@ -7,10 +7,10 @@
 package text
 
 const (
-	TextDescKeyCheckResourcesBoxTitle        = "check-resources.box-title"
-	TextDescKeyCheckResourcesFallbackLow     = "check-resources.fallback-low"
-	TextDescKeyCheckResourcesFallbackPersist = "check-resources.fallback-persist"
-	TextDescKeyCheckResourcesFallbackEnd     = "check-resources.fallback-end"
-	TextDescKeyCheckResourcesRelayMessage    = "check-resources.relay-message"
-	TextDescKeyCheckResourcesRelayPrefix     = "check-resources.relay-prefix"
+	DescKeyCheckResourcesBoxTitle        = "check-resources.box-title"
+	DescKeyCheckResourcesFallbackLow     = "check-resources.fallback-low"
+	DescKeyCheckResourcesFallbackPersist = "check-resources.fallback-persist"
+	DescKeyCheckResourcesFallbackEnd     = "check-resources.fallback-end"
+	DescKeyCheckResourcesRelayMessage    = "check-resources.relay-message"
+	DescKeyCheckResourcesRelayPrefix     = "check-resources.relay-prefix"
 )

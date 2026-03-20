@@ -70,8 +70,6 @@ label.types:
 # Bold metadata field prefixes in journal/session Markdown.
 label.metadata-id:
   short: '**ID**:'
-label.metadata-date:
-  short: '**Date**:'
 label.metadata-time:
   short: '**Time**:'
 label.metadata-duration:
@@ -86,16 +84,6 @@ label.metadata-model:
   short: '**Model**:'
 label.metadata-turns:
   short: '**Turns**:'
-label.metadata-parts:
-  short: '**Parts**:'
-label.metadata-type:
-  short: '**Type**:'
-label.metadata-start-time:
-  short: '**start_time**:'
-label.metadata-end-time:
-  short: '**end_time**:'
-label.metadata-source:
-  short: '**Source**:'
 label.metadata-started:
   short: '**Started**:'
 label.metadata-messages:

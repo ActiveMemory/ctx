@@ -7,10 +7,10 @@
 package text
 
 const (
-	TextDescKeyMCPDriftStatusFormat = "mcp.drift-status-format"
-	TextDescKeyMCPDriftViolations   = "mcp.drift-violations"
-	TextDescKeyMCPDriftWarnings     = "mcp.drift-warnings"
-	TextDescKeyMCPDriftOK           = "mcp.drift-ok"
-	TextDescKeyMCPDriftIssueFormat  = "mcp.drift-issue-format"
-	TextDescKeyMCPDriftOKFormat     = "mcp.drift-ok-format"
+	DescKeyMCPDriftStatusFormat = "mcp.drift-status-format"
+	DescKeyMCPDriftViolations   = "mcp.drift-violations"
+	DescKeyMCPDriftWarnings     = "mcp.drift-warnings"
+	DescKeyMCPDriftOK           = "mcp.drift-ok"
+	DescKeyMCPDriftIssueFormat  = "mcp.drift-issue-format"
+	DescKeyMCPDriftOKFormat     = "mcp.drift-ok-format"
 )

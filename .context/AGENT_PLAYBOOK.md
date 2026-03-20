@@ -184,6 +184,13 @@ user. These apply unless the user overrides them for the session
 These follow the same pattern as proactive persistence: offer once
 and respect "no."
 
+### Tool Preferences
+
+- **Web search**: always use the `gemini-search` MCP server for web
+  searches. It returns synthesized answers with citations and is faster
+  and more accurate than built-in web search. Only fall back to built-in
+  search if `gemini-search` is not connected.
+
 ## Own the Whole Branch
 
 When working on a branch, you own every issue on it — lint failures, test

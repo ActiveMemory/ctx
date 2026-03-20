@@ -23,6 +23,8 @@ The `validation` package has `SanitizeFilename` and `ValidateBoundary`
 but nothing for content or argument sanitization. `entry.Validate` only
 checks field presence, not content safety.
 
+- [ ] Evaluate Gemini Search MCP server as peer MCP for grounded web queries — try gemini-grounding, document in multi-tool-setup recipe if useful. See ideas/gemini-search-mcp.md #added:2026-03-20-141022
+
 - [ ] Create ctx-docstrings skill: audit and fix docstrings against CONVENTIONS.md Documentation section. Skill loads CONVENTIONS.md, scans functions in scope for missing/incomplete docstring sections (Parameters, Returns), reports violations, and optionally fixes them. Language-agnostic design with Go as first implementation. Deterministic enforcement via linter is tracked separately in ideas/spec-convention-enforcement.md #added:2026-03-16-114445
 
 - [ ] MCP-SAN.1: Add input length limits to all string arguments #priority:high #added:2026-03-15

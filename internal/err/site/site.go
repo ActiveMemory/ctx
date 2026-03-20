@@ -22,7 +22,7 @@ import (
 // Returns:
 //   - error: "no zensical.toml found in <dir>"
 func NoConfig(dir string) error {
-	return fmt.Errorf(desc.TextDesc(text.TextDescKeyErrSiteNoSiteConfig), dir)
+	return fmt.Errorf(desc.TextDesc(text.DescKeyErrSiteNoSiteConfig), dir)
 }
 
 // MarshalFeed wraps a failure to marshal an Atom feed.
@@ -34,7 +34,7 @@ func NoConfig(dir string) error {
 //   - error: "cannot marshal feed: <cause>"
 func MarshalFeed(cause error) error {
 	return fmt.Errorf(
-		desc.TextDesc(text.TextDescKeyErrSiteMarshalFeed), cause,
+		desc.TextDesc(text.DescKeyErrSiteMarshalFeed), cause,
 	)
 }
 
@@ -43,5 +43,5 @@ func MarshalFeed(cause error) error {
 // Returns:
 //   - error: includes installation instructions
 func ZensicalNotFound() error {
-	return errors.New(desc.TextDesc(text.TextDescKeyErrSiteZensicalNotFound))
+	return errors.New(desc.TextDesc(text.DescKeyErrSiteZensicalNotFound))
 }

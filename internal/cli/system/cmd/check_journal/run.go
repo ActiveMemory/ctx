@@ -89,17 +89,17 @@ func Run(cmd *cobra.Command, stdin *os.File) error {
 	case unexported > 0 && unenriched > 0:
 		variant = hook.VariantBoth
 		fallback = fmt.Sprintf(desc.TextDesc(
-			text.TextDescKeyCheckJournalFallbackBoth), unexported, unenriched,
+			text.DescKeyCheckJournalFallbackBoth), unexported, unenriched,
 		)
 	case unexported > 0:
 		variant = hook.VariantUnexported
 		fallback = fmt.Sprintf(desc.TextDesc(
-			text.TextDescKeyCheckJournalFallbackUnexported), unexported,
+			text.DescKeyCheckJournalFallbackUnexported), unexported,
 		)
 	default:
 		variant = hook.VariantUnenriched
 		fallback = fmt.Sprintf(desc.TextDesc(
-			text.TextDescKeyCheckJournalFallbackUnenriched), unenriched,
+			text.DescKeyCheckJournalFallbackUnenriched), unenriched,
 		)
 	}
 
@@ -108,14 +108,14 @@ func Run(cmd *cobra.Command, stdin *os.File) error {
 		return nil
 	}
 
-	boxTitle := desc.TextDesc(text.TextDescKeyCheckJournalBoxTitle)
-	relayPrefix := desc.TextDesc(text.TextDescKeyCheckJournalRelayPrefix)
+	boxTitle := desc.TextDesc(text.DescKeyCheckJournalBoxTitle)
+	relayPrefix := desc.TextDesc(text.DescKeyCheckJournalRelayPrefix)
 
 	cmd.Println(core.NudgeBox(relayPrefix, boxTitle, content))
 
 	ref := notify.NewTemplateRef(hook.CheckJournal, variant, vars)
 	journalMsg := hook.CheckJournal + ": " + fmt.Sprintf(
-		desc.TextDesc(text.TextDescKeyCheckJournalRelayFormat),
+		desc.TextDesc(text.DescKeyCheckJournalRelayFormat),
 		unexported, unenriched,
 	)
 	core.NudgeAndRelay(journalMsg, input.SessionID, ref)

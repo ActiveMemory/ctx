@@ -7,11 +7,11 @@
 package text
 
 const (
-	TextDescKeySpecsNudgeFallback     = "specs-nudge.fallback"
-	TextDescKeySpecsNudgeNudgeMessage = "specs-nudge.nudge-message"
+	DescKeySpecsNudgeFallback     = "specs-nudge.fallback"
+	DescKeySpecsNudgeNudgeMessage = "specs-nudge.nudge-message"
 )
 
 const (
-	TextDescKeyQaReminderFallback     = "qa-reminder.fallback"
-	TextDescKeyQaReminderRelayMessage = "qa-reminder.relay-message"
+	DescKeyQaReminderFallback     = "qa-reminder.fallback"
+	DescKeyQaReminderRelayMessage = "qa-reminder.relay-message"
 )

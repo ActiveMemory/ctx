@@ -7,10 +7,10 @@
 package text
 
 const (
-	TextDescKeyErrRecallEventLogRead        = "err.recall.event-log-read"
-	TextDescKeyErrRecallOpenLogFile         = "err.recall.open-log-file"
-	TextDescKeyErrRecallReindexFileNotFound = "err.recall.reindex-file-not-found"
-	TextDescKeyErrRecallReindexFileRead     = "err.recall.reindex-file-read"
-	TextDescKeyErrRecallReindexFileWrite    = "err.recall.reindex-file-write"
-	TextDescKeyErrRecallStatsGlob           = "err.recall.stats-glob"
+	DescKeyErrRecallEventLogRead        = "err.recall.event-log-read"
+	DescKeyErrRecallOpenLogFile         = "err.recall.open-log-file"
+	DescKeyErrRecallReindexFileNotFound = "err.recall.reindex-file-not-found"
+	DescKeyErrRecallReindexFileRead     = "err.recall.reindex-file-read"
+	DescKeyErrRecallReindexFileWrite    = "err.recall.reindex-file-write"
+	DescKeyErrRecallStatsGlob           = "err.recall.stats-glob"
 )

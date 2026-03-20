@@ -7,7 +7,7 @@
 package text
 
 const (
-	TextDescKeyMCPCompactMovedFormat    = "mcp.compact-moved-format"
-	TextDescKeyMCPCompactArchiveWarning = "mcp.compact-archive-warning"
-	TextDescKeyMCPCompactRemovedSectFmt = "mcp.compact-removed-sections-format"
+	DescKeyMCPCompactMovedFormat    = "mcp.compact-moved-format"
+	DescKeyMCPCompactArchiveWarning = "mcp.compact-archive-warning"
+	DescKeyMCPCompactRemovedSectFmt = "mcp.compact-removed-sections-format"
 )

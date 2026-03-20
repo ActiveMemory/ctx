@@ -7,15 +7,15 @@
 package text
 
 const (
-	TextDescKeyCheckPersistenceBoxTitle          = "check-persistence.box-title"
-	TextDescKeyCheckPersistenceBoxTitleFormat    = "check-persistence.box-title-format"
-	TextDescKeyCheckPersistenceCheckpointFormat  = "check-persistence.checkpoint-format"
-	TextDescKeyCheckPersistenceFallback          = "check-persistence.fallback"
-	TextDescKeyCheckPersistenceInitLogFormat     = "check-persistence.init-log-format"
-	TextDescKeyCheckPersistenceModifiedLogFormat = "check-persistence.modified-log-format"
-	TextDescKeyCheckPersistenceRelayFormat       = "check-persistence.relay-format"
-	TextDescKeyCheckPersistenceRelayPrefix       = "check-persistence.relay-prefix"
-	TextDescKeyCheckPersistenceSilencedLogFormat = "check-persistence.silenced-log-format"
-	TextDescKeyCheckPersistenceSilentLogFormat   = "check-persistence.silent-log-format"
-	TextDescKeyCheckPersistenceStateFormat       = "check-persistence.state-format"
+	DescKeyCheckPersistenceBoxTitle          = "check-persistence.box-title"
+	DescKeyCheckPersistenceBoxTitleFormat    = "check-persistence.box-title-format"
+	DescKeyCheckPersistenceCheckpointFormat  = "check-persistence.checkpoint-format"
+	DescKeyCheckPersistenceFallback          = "check-persistence.fallback"
+	DescKeyCheckPersistenceInitLogFormat     = "check-persistence.init-log-format"
+	DescKeyCheckPersistenceModifiedLogFormat = "check-persistence.modified-log-format"
+	DescKeyCheckPersistenceRelayFormat       = "check-persistence.relay-format"
+	DescKeyCheckPersistenceRelayPrefix       = "check-persistence.relay-prefix"
+	DescKeyCheckPersistenceSilencedLogFormat = "check-persistence.silenced-log-format"
+	DescKeyCheckPersistenceSilentLogFormat   = "check-persistence.silent-log-format"
+	DescKeyCheckPersistenceStateFormat       = "check-persistence.state-format"
 )

@@ -7,9 +7,9 @@
 package text
 
 const (
-	TextDescKeyErrReminderInvalidID      = "err.reminder.invalid-id"
-	TextDescKeyErrReminderParseReminders = "err.reminder.parse-reminders"
-	TextDescKeyErrReminderReadReminders  = "err.reminder.read-reminders"
-	TextDescKeyErrReminderIDRequired     = "err.reminder.reminder-id-required"
-	TextDescKeyErrReminderNotFound       = "err.reminder.reminder-not-found"
+	DescKeyErrReminderInvalidID      = "err.reminder.invalid-id"
+	DescKeyErrReminderParseReminders = "err.reminder.parse-reminders"
+	DescKeyErrReminderReadReminders  = "err.reminder.read-reminders"
+	DescKeyErrReminderIDRequired     = "err.reminder.reminder-id-required"
+	DescKeyErrReminderNotFound       = "err.reminder.reminder-not-found"
 )

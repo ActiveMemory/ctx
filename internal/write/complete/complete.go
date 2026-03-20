@@ -20,5 +20,5 @@ import (
 //   - cmd: Cobra command for output
 //   - taskText: The completed task description
 func InfoCompletedTask(cmd *cobra.Command, taskText string) {
-	cmd.Println(fmt.Sprintf(desc.TextDesc(text.TextDescKeyWriteCompletedTask), taskText))
+	cmd.Println(fmt.Sprintf(desc.TextDesc(text.DescKeyWriteCompletedTask), taskText))
 }

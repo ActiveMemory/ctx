@@ -23,7 +23,7 @@ func UnpublishNotFound(cmd *cobra.Command, filename string) {
 	if cmd == nil {
 		return
 	}
-	cmd.Println(fmt.Sprintf(desc.TextDesc(text.TextDescKeyWriteUnpublishNotFound), filename))
+	cmd.Println(fmt.Sprintf(desc.TextDesc(text.DescKeyWriteUnpublishNotFound), filename))
 }
 
 // UnpublishDone prints that the published block was removed.
@@ -35,7 +35,7 @@ func UnpublishDone(cmd *cobra.Command, filename string) {
 	if cmd == nil {
 		return
 	}
-	cmd.Println(fmt.Sprintf(desc.TextDesc(text.TextDescKeyWriteUnpublishDone), filename))
+	cmd.Println(fmt.Sprintf(desc.TextDesc(text.DescKeyWriteUnpublishDone), filename))
 }
 
 // PublishPlan prints the full publish plan: header, source files,

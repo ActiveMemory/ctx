@@ -19,12 +19,12 @@ func TestMain(m *testing.M) {
 	os.Exit(m.Run())
 }
 
-func TestTextDescKeysResolve(t *testing.T) {
-	// Verify every TextDescKey constant resolves to a non-empty string.
+func TestDescKeysResolve(t *testing.T) {
+	// Verify every DescKey constant resolves to a non-empty string.
 	// This catches typos in constants or missing YAML entries.
-	keys := collectTextDescKeys(t)
+	keys := collectDescKeys(t)
 	if len(keys) == 0 {
-		t.Fatal("no TextDescKey constants found")
+		t.Fatal("no DescKey constants found")
 	}
 
 	for _, key := range keys {
@@ -33,12 +33,12 @@ func TestTextDescKeysResolve(t *testing.T) {
 			t.Errorf("TextDesc(%q) returned empty string — missing YAML entry?", key)
 		}
 	}
-	t.Logf("verified %d TextDescKey constants", len(keys))
+	t.Logf("verified %d DescKey constants", len(keys))
 }
 
-// collectTextDescKeys extracts all TextDescKey constant values from the
-// text package by parsing lines matching the pattern: TextDescKey... = "..."
-func collectTextDescKeys(t *testing.T) []string {
+// collectDescKeys extracts all DescKey constant values from the
+// text package by parsing lines matching the pattern: DescKey... = "..."
+func collectDescKeys(t *testing.T) []string {
 	t.Helper()
 	data, err := os.ReadFile("../../../config/embed/text/text.go")
 	if err != nil {
@@ -48,7 +48,7 @@ func collectTextDescKeys(t *testing.T) []string {
 	var keys []string
 	for _, line := range strings.Split(string(data), "\n") {
 		line = strings.TrimSpace(line)
-		if !strings.HasPrefix(line, "TextDescKey") {
+		if !strings.HasPrefix(line, "DescKey") {
 			continue
 		}
 		idx := strings.Index(line, "\"")

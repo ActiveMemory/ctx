@@ -83,7 +83,7 @@ func EnsureKey() error {
 		return crypto2.SaveKey(saveErr)
 	}
 
-	fmt.Fprintln(os.Stderr, fmt.Sprintf(desc.TextDesc(text.TextDescKeyPadKeyCreated), kp)) //nolint:errcheck // best-effort notice
+	fmt.Fprintln(os.Stderr, fmt.Sprintf(desc.TextDesc(text.DescKeyPadKeyCreated), kp)) //nolint:errcheck // best-effort notice
 	return nil
 }
 

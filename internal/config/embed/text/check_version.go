@@ -7,12 +7,12 @@
 package text
 
 const (
-	TextDescKeyCheckVersionBoxTitle            = "check-version.box-title"
-	TextDescKeyCheckVersionFallback            = "check-version.fallback"
-	TextDescKeyCheckVersionKeyBoxTitle         = "check-version.key-box-title"
-	TextDescKeyCheckVersionKeyFallback         = "check-version.key-fallback"
-	TextDescKeyCheckVersionKeyRelayFormat      = "check-version.key-relay-format"
-	TextDescKeyCheckVersionKeyRelayPrefix      = "check-version.key-relay-prefix"
-	TextDescKeyCheckVersionMismatchRelayFormat = "check-version.mismatch-relay-format"
-	TextDescKeyCheckVersionRelayPrefix         = "check-version.relay-prefix"
+	DescKeyCheckVersionBoxTitle            = "check-version.box-title"
+	DescKeyCheckVersionFallback            = "check-version.fallback"
+	DescKeyCheckVersionKeyBoxTitle         = "check-version.key-box-title"
+	DescKeyCheckVersionKeyFallback         = "check-version.key-fallback"
+	DescKeyCheckVersionKeyRelayFormat      = "check-version.key-relay-format"
+	DescKeyCheckVersionKeyRelayPrefix      = "check-version.key-relay-prefix"
+	DescKeyCheckVersionMismatchRelayFormat = "check-version.mismatch-relay-format"
+	DescKeyCheckVersionRelayPrefix         = "check-version.relay-prefix"
 )

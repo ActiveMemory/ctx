@@ -7,8 +7,8 @@
 package text
 
 const (
-	TextDescKeyWriteDepsLookingFor = "write.deps-looking-for"
-	TextDescKeyWriteDepsNoDeps     = "write.deps-no-deps"
-	TextDescKeyWriteDepsNoProject  = "write.deps-no-project"
-	TextDescKeyWriteDepsUseType    = "write.deps-use-type"
+	DescKeyWriteDepsLookingFor = "write.deps-looking-for"
+	DescKeyWriteDepsNoDeps     = "write.deps-no-deps"
+	DescKeyWriteDepsNoProject  = "write.deps-no-project"
+	DescKeyWriteDepsUseType    = "write.deps-use-type"
 )

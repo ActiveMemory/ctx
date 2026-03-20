@@ -7,9 +7,7 @@
 package text
 
 const (
-	TextDescKeyMCPBoundaryViolation   = "mcp.boundary-violation"
-	TextDescKeyMCPInvalidSinceDate    = "mcp.invalid-since-date"
-	TextDescKeyMCPFindSessionsFailed  = "mcp.find-sessions-failed"
-	TextDescKeyMCPNoSessions          = "mcp.no-sessions"
-	TextDescKeyMCPSessionsFoundFormat = "mcp.sessions-found-format"
+	DescKeyMCPInvalidSinceDate    = "mcp.invalid-since-date"
+	DescKeyMCPNoSessions          = "mcp.no-sessions"
+	DescKeyMCPSessionsFoundFormat = "mcp.sessions-found-format"
 )

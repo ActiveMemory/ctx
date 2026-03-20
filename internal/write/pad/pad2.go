@@ -34,7 +34,7 @@ func PadKeyCreated(cmd *cobra.Command, path string) {
 	if cmd == nil {
 		return
 	}
-	cmd.PrintErrln(fmt.Sprintf(desc.TextDesc(text.TextDescKeyWritePadKeyCreated), path))
+	cmd.PrintErrln(fmt.Sprintf(desc.TextDesc(text.DescKeyWritePadKeyCreated), path))
 }
 
 // PadEntryAdded prints confirmation that a pad entry was added.
@@ -134,9 +134,9 @@ func PadResolveSide(cmd *cobra.Command, side string, entries []string) {
 	if cmd == nil {
 		return
 	}
-	cmd.Println(fmt.Sprintf(desc.TextDesc(text.TextDescKeyWritePadResolveHeader), side))
+	cmd.Println(fmt.Sprintf(desc.TextDesc(text.DescKeyWritePadResolveHeader), side))
 	for i, entry := range entries {
-		cmd.Println(fmt.Sprintf(desc.TextDesc(text.TextDescKeyWritePadResolveEntry), i+1, entry))
+		cmd.Println(fmt.Sprintf(desc.TextDesc(text.DescKeyWritePadResolveEntry), i+1, entry))
 	}
 }
 

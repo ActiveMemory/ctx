@@ -7,6 +7,6 @@
 package text
 
 const (
-	TextDescKeyMCPEventTypeRequired = "mcp.event-type-required"
-	TextDescKeyMCPUnknownEventType  = "mcp.unknown-event-type"
+	DescKeyMCPEventTypeRequired = "mcp.event-type-required"
+	DescKeyMCPUnknownEventType  = "mcp.unknown-event-type"
 )

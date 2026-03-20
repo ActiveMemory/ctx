@@ -7,7 +7,7 @@
 package text
 
 const (
-	TextDescKeyMarkJournalChecked     = "mark-journal.checked"
-	TextDescKeyMarkJournalMarked      = "mark-journal.marked"
-	TextDescKeyMarkWrappedUpConfirmed = "mark-wrapped-up.confirmed"
+	DescKeyMarkJournalChecked     = "mark-journal.checked"
+	DescKeyMarkJournalMarked      = "mark-journal.marked"
+	DescKeyMarkWrappedUpConfirmed = "mark-wrapped-up.confirmed"
 )

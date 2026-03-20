@@ -7,20 +7,20 @@
 package text
 
 const (
-	TextDescKeyHookAider          = "hook.aider"
-	TextDescKeyHookClaude         = "hook.claude"
-	TextDescKeyHookCopilot        = "hook.copilot"
-	TextDescKeyHookCursor         = "hook.cursor"
-	TextDescKeyHookSupportedTools = "hook.supported-tools"
-	TextDescKeyHookWindsurf       = "hook.windsurf"
+	DescKeyHookAider          = "hook.aider"
+	DescKeyHookClaude         = "hook.claude"
+	DescKeyHookCopilot        = "hook.copilot"
+	DescKeyHookCursor         = "hook.cursor"
+	DescKeyHookSupportedTools = "hook.supported-tools"
+	DescKeyHookWindsurf       = "hook.windsurf"
 )
 
 const (
-	TextDescKeyWriteHookCopilotCreated     = "write.hook-copilot-created"
-	TextDescKeyWriteHookCopilotForceHint   = "write.hook-copilot-force-hint"
-	TextDescKeyWriteHookCopilotMerged      = "write.hook-copilot-merged"
-	TextDescKeyWriteHookCopilotSessionsDir = "write.hook-copilot-sessions-dir"
-	TextDescKeyWriteHookCopilotSkipped     = "write.hook-copilot-skipped"
-	TextDescKeyWriteHookCopilotSummary     = "write.hook-copilot-summary"
-	TextDescKeyWriteHookUnknownTool        = "write.hook-unknown-tool"
+	DescKeyWriteHookCopilotCreated     = "write.hook-copilot-created"
+	DescKeyWriteHookCopilotForceHint   = "write.hook-copilot-force-hint"
+	DescKeyWriteHookCopilotMerged      = "write.hook-copilot-merged"
+	DescKeyWriteHookCopilotSessionsDir = "write.hook-copilot-sessions-dir"
+	DescKeyWriteHookCopilotSkipped     = "write.hook-copilot-skipped"
+	DescKeyWriteHookCopilotSummary     = "write.hook-copilot-summary"
+	DescKeyWriteHookUnknownTool        = "write.hook-unknown-tool"
 )

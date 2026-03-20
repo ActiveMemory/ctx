@@ -7,7 +7,7 @@
 package text
 
 const (
-	TextDescKeyWritePaused    = "write.paused"
-	TextDescKeyWriteResumed   = "write.resumed"
-	TextDescKeyPauseConfirmed = "pause.confirmed"
+	DescKeyWritePaused    = "write.paused"
+	DescKeyWriteResumed   = "write.resumed"
+	DescKeyPauseConfirmed = "pause.confirmed"
 )

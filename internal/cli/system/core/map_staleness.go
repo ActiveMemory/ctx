@@ -75,7 +75,7 @@ func CountModuleCommits(since string) int {
 //   - dateStr: last refresh date (YYYY-MM-DD)
 //   - moduleCommits: number of commits touching modules since last refresh
 func EmitMapStalenessWarning(cmd *cobra.Command, sessionID, dateStr string, moduleCommits int) {
-	fallback := fmt.Sprintf(desc.TextDesc(text.TextDescKeyCheckMapStalenessFallback), dateStr, moduleCommits)
+	fallback := fmt.Sprintf(desc.TextDesc(text.DescKeyCheckMapStalenessFallback), dateStr, moduleCommits)
 	content := LoadMessage(hook.CheckMapStaleness, hook.VariantStale,
 		map[string]any{
 			tpl.VarLastRefreshDate: dateStr,
@@ -86,13 +86,13 @@ func EmitMapStalenessWarning(cmd *cobra.Command, sessionID, dateStr string, modu
 	}
 
 	cmd.Println(NudgeBox(
-		desc.TextDesc(text.TextDescKeyCheckMapStalenessRelayPrefix),
-		desc.TextDesc(text.TextDescKeyCheckMapStalenessBoxTitle),
+		desc.TextDesc(text.DescKeyCheckMapStalenessRelayPrefix),
+		desc.TextDesc(text.DescKeyCheckMapStalenessBoxTitle),
 		content))
 
 	ref := notify.NewTemplateRef(hook.CheckMapStaleness, hook.VariantStale,
 		map[string]any{tpl.VarLastRefreshDate: dateStr, tpl.VarModuleCount: moduleCommits})
-	notifyMsg := fmt.Sprintf(desc.TextDesc(text.TextDescKeyRelayPrefixFormat),
-		hook.CheckMapStaleness, desc.TextDesc(text.TextDescKeyCheckMapStalenessRelayMessage))
+	notifyMsg := fmt.Sprintf(desc.TextDesc(text.DescKeyRelayPrefixFormat),
+		hook.CheckMapStaleness, desc.TextDesc(text.DescKeyCheckMapStalenessRelayMessage))
 	NudgeAndRelay(notifyMsg, sessionID, ref)
 }

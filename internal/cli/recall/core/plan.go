@@ -88,7 +88,7 @@ func PlanExport(
 		for part := 1; part <= numParts; part++ {
 			filename := baseFilename
 			if numParts > 1 && part > 1 {
-				filename = fmt.Sprintf(tpl.TplRecallPartFilename, baseName, part)
+				filename = fmt.Sprintf(tpl.RecallPartFilename, baseName, part)
 			}
 			path := filepath.Join(journalDir, filename)
 

@@ -7,13 +7,13 @@
 package text
 
 const (
-	TextDescKeyBlockNonPathRelayMessage = "block.non-path-relay-message"
-	TextDescKeyBlockConstitutionSuffix  = "block.constitution-suffix"
-	TextDescKeyBlockMidSudo             = "block.mid-sudo"
-	TextDescKeyBlockMidGitPush          = "block.mid-git-push"
-	TextDescKeyBlockCpToBin             = "block.cp-to-bin"
-	TextDescKeyBlockInstallToLocalBin   = "block.install-to-local-bin"
-	TextDescKeyBlockDotSlash            = "block.dot-slash"
-	TextDescKeyBlockGoRun               = "block.go-run"
-	TextDescKeyBlockAbsolutePath        = "block.absolute-path"
+	DescKeyBlockNonPathRelayMessage = "block.non-path-relay-message"
+	DescKeyBlockConstitutionSuffix  = "block.constitution-suffix"
+	DescKeyBlockMidSudo             = "block.mid-sudo"
+	DescKeyBlockMidGitPush          = "block.mid-git-push"
+	DescKeyBlockCpToBin             = "block.cp-to-bin"
+	DescKeyBlockInstallToLocalBin   = "block.install-to-local-bin"
+	DescKeyBlockDotSlash            = "block.dot-slash"
+	DescKeyBlockGoRun               = "block.go-run"
+	DescKeyBlockAbsolutePath        = "block.absolute-path"
 )

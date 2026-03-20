@@ -64,11 +64,11 @@ func SeverityFor(alerts []sysinfo.ResourceAlert, resource string) sysinfo.Severi
 func StatusText(sev sysinfo.Severity) string {
 	switch sev {
 	case sysinfo.SeverityWarning:
-		return desc.TextDesc(text.TextDescKeyResourcesStatusWarn)
+		return desc.TextDesc(text.DescKeyResourcesStatusWarn)
 	case sysinfo.SeverityDanger:
-		return desc.TextDesc(text.TextDescKeyResourcesStatusDanger)
+		return desc.TextDesc(text.DescKeyResourcesStatusDanger)
 	default:
-		return desc.TextDesc(text.TextDescKeyResourcesStatusOk)
+		return desc.TextDesc(text.DescKeyResourcesStatusOk)
 	}
 }
 
@@ -100,8 +100,8 @@ func FormatResourceLine(label, values, status string) string {
 //   - snap: collected system resource snapshot
 //   - alerts: evaluated resource alerts
 func OutputResourcesText(cmd *cobra.Command, snap sysinfo.Snapshot, alerts []sysinfo.ResourceAlert) {
-	cmd.Println(desc.TextDesc(text.TextDescKeyResourcesHeader))
-	cmd.Println(desc.TextDesc(text.TextDescKeyResourcesSeparator))
+	cmd.Println(desc.TextDesc(text.DescKeyResourcesHeader))
+	cmd.Println(desc.TextDesc(text.DescKeyResourcesSeparator))
 	cmd.Println()
 
 	// Memory line
@@ -153,14 +153,14 @@ func OutputResourcesText(cmd *cobra.Command, snap sysinfo.Snapshot, alerts []sys
 	// Summary
 	cmd.Println()
 	if len(alerts) == 0 {
-		cmd.Println(desc.TextDesc(text.TextDescKeyResourcesAllClear))
+		cmd.Println(desc.TextDesc(text.DescKeyResourcesAllClear))
 	} else {
-		cmd.Println(desc.TextDesc(text.TextDescKeyResourcesAlerts))
+		cmd.Println(desc.TextDesc(text.DescKeyResourcesAlerts))
 		for _, a := range alerts {
 			if a.Severity == sysinfo.SeverityDanger {
-				cmd.Println(fmt.Sprintf(desc.TextDesc(text.TextDescKeyResourcesAlertDanger), a.Message))
+				cmd.Println(fmt.Sprintf(desc.TextDesc(text.DescKeyResourcesAlertDanger), a.Message))
 			} else {
-				cmd.Println(fmt.Sprintf(desc.TextDesc(text.TextDescKeyResourcesAlertWarning), a.Message))
+				cmd.Println(fmt.Sprintf(desc.TextDesc(text.DescKeyResourcesAlertWarning), a.Message))
 			}
 		}
 	}

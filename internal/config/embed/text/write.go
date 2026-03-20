@@ -7,16 +7,16 @@
 package text
 
 const (
-	TextDescKeyWriteAddedTo  = "write.added-to"
-	TextDescKeyWriteArchived = "write.archived"
+	DescKeyWriteAddedTo  = "write.added-to"
+	DescKeyWriteArchived = "write.archived"
 )
 
 const (
-	TextDescKeyWriteDryRun                     = "write.dry-run"
-	TextDescKeyWriteExistsWritingAsAlternative = "write.exists-writing-as-alternative"
-	TextDescKeyWriteLines                      = "write.lines"
-	TextDescKeyWriteLinesPrevious              = "write.lines-previous"
-	TextDescKeyWriteMirror                     = "write.mirror"
-	TextDescKeyWriteNewContent                 = "write.new-content"
-	TextDescKeyWriteSource                     = "write.source"
+	DescKeyWriteDryRun                     = "write.dry-run"
+	DescKeyWriteExistsWritingAsAlternative = "write.exists-writing-as-alternative"
+	DescKeyWriteLines                      = "write.lines"
+	DescKeyWriteLinesPrevious              = "write.lines-previous"
+	DescKeyWriteMirror                     = "write.mirror"
+	DescKeyWriteNewContent                 = "write.new-content"
+	DescKeyWriteSource                     = "write.source"
 )

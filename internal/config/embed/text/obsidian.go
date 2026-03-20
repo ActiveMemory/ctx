@@ -13,7 +13,7 @@ const (
 )
 
 const (
-	TextDescKeyWriteObsidianGenerated        = "write.obsidian-generated"
-	TextDescKeyWriteObsidianNextStepsHeading = "write.obsidian-next-steps-heading"
-	TextDescKeyWriteObsidianNextSteps        = "write.obsidian-next-steps"
+	DescKeyWriteObsidianGenerated        = "write.obsidian-generated"
+	DescKeyWriteObsidianNextStepsHeading = "write.obsidian-next-steps-heading"
+	DescKeyWriteObsidianNextSteps        = "write.obsidian-next-steps"
 )

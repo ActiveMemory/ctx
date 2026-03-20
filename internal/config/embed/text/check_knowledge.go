@@ -7,9 +7,9 @@
 package text
 
 const (
-	TextDescKeyCheckKnowledgeBoxTitle      = "check-knowledge.box-title"
-	TextDescKeyCheckKnowledgeFallback      = "check-knowledge.fallback"
-	TextDescKeyCheckKnowledgeFindingFormat = "check-knowledge.finding-format"
-	TextDescKeyCheckKnowledgeRelayMessage  = "check-knowledge.relay-message"
-	TextDescKeyCheckKnowledgeRelayPrefix   = "check-knowledge.relay-prefix"
+	DescKeyCheckKnowledgeBoxTitle      = "check-knowledge.box-title"
+	DescKeyCheckKnowledgeFallback      = "check-knowledge.fallback"
+	DescKeyCheckKnowledgeFindingFormat = "check-knowledge.finding-format"
+	DescKeyCheckKnowledgeRelayMessage  = "check-knowledge.relay-message"
+	DescKeyCheckKnowledgeRelayPrefix   = "check-knowledge.relay-prefix"
 )

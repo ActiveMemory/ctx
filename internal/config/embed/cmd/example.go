@@ -4,9 +4,8 @@
 //   \    Copyright 2026-present Context contributors.
 //                 SPDX-License-Identifier: Apache-2.0
 
-package text
+package cmd
 
-const (
-	DescKeyWriteSkillLine    = "write.skill-line"
-	DescKeyWriteSkillsHeader = "write.skills-header"
-)
+// ExampleKeyDefault is the fallback key for example usage text
+// when no type-specific example exists in examples.yaml.
+const ExampleKeyDefault = "default"

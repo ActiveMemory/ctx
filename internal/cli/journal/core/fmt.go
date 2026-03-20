@@ -62,6 +62,6 @@ func KeyFileSlug(path string) string {
 // Returns:
 //   - string: Formatted line (e.g., "- [topic](topic.md) (3 sessions)\n")
 func FormatSessionLink(label, slug string, count int) string {
-	return fmt.Sprintf(desc.TextDesc(text.TextDescKeyJournalMocSessionLink),
+	return fmt.Sprintf(desc.TextDesc(text.DescKeyJournalMocSessionLink),
 		label, slug, file.ExtMarkdown, count, token.NewlineLF)
 }

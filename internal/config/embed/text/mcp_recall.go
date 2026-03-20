@@ -7,8 +7,8 @@
 package text
 
 const (
-	TextDescKeyMCPRecallItemFormat     = "mcp.recall-item-format"
-	TextDescKeyMCPRecallProjectFormat  = "mcp.recall-project-format"
-	TextDescKeyMCPRecallDurationFormat = "mcp.recall-duration-format"
-	TextDescKeyMCPRecallFirstMsgFormat = "mcp.recall-first-msg-format"
+	DescKeyMCPRecallItemFormat     = "mcp.recall-item-format"
+	DescKeyMCPRecallProjectFormat  = "mcp.recall-project-format"
+	DescKeyMCPRecallDurationFormat = "mcp.recall-duration-format"
+	DescKeyMCPRecallFirstMsgFormat = "mcp.recall-first-msg-format"
 )

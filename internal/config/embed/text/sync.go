@@ -18,7 +18,6 @@ const (
 	DescKeyWriteSyncSummary       = "write.sync-summary"
 )
 
-// Config file pattern topics for ctx sync (headings.yaml).
 const (
 	DescKeySyncTopicEslint       = "sync.topic.eslint"
 	DescKeySyncTopicPrettier     = "sync.topic.prettier"
@@ -29,10 +28,10 @@ const (
 )
 
 const (
-	TextDescKeySyncDepsDescription   = "sync.deps.description"
-	TextDescKeySyncDepsSuggestion    = "sync.deps.suggestion"
-	TextDescKeySyncConfigDescription = "sync.config.description"
-	TextDescKeySyncConfigSuggestion  = "sync.config.suggestion"
-	TextDescKeySyncDirDescription    = "sync.dir.description"
-	TextDescKeySyncDirSuggestion     = "sync.dir.suggestion"
+	DescKeySyncDepsDescription   = "sync.deps.description"
+	DescKeySyncDepsSuggestion    = "sync.deps.suggestion"
+	DescKeySyncConfigDescription = "sync.config.description"
+	DescKeySyncConfigSuggestion  = "sync.config.suggestion"
+	DescKeySyncDirDescription    = "sync.dir.description"
+	DescKeySyncDirSuggestion     = "sync.dir.suggestion"
 )

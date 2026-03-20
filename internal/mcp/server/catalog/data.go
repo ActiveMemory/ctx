@@ -23,14 +23,14 @@ type mapping struct {
 
 // table defines all individual context file resources.
 var table = []mapping{
-	{ctxCfg.Constitution, resource.Constitution, desc.TextDesc(text.TextDescKeyMCPResConstitution)},
-	{ctxCfg.Task, resource.Tasks, desc.TextDesc(text.TextDescKeyMCPResTasks)},
-	{ctxCfg.Convention, resource.Conventions, desc.TextDesc(text.TextDescKeyMCPResConventions)},
-	{ctxCfg.Architecture, resource.Architecture, desc.TextDesc(text.TextDescKeyMCPResArchitecture)},
-	{ctxCfg.Decision, resource.Decisions, desc.TextDesc(text.TextDescKeyMCPResDecisions)},
-	{ctxCfg.Learning, resource.Learnings, desc.TextDesc(text.TextDescKeyMCPResLearnings)},
-	{ctxCfg.Glossary, resource.Glossary, desc.TextDesc(text.TextDescKeyMCPResGlossary)},
-	{ctxCfg.AgentPlaybook, resource.Playbook, desc.TextDesc(text.TextDescKeyMCPResPlaybook)},
+	{ctxCfg.Constitution, resource.Constitution, desc.TextDesc(text.DescKeyMCPResConstitution)},
+	{ctxCfg.Task, resource.Tasks, desc.TextDesc(text.DescKeyMCPResTasks)},
+	{ctxCfg.Convention, resource.Conventions, desc.TextDesc(text.DescKeyMCPResConventions)},
+	{ctxCfg.Architecture, resource.Architecture, desc.TextDesc(text.DescKeyMCPResArchitecture)},
+	{ctxCfg.Decision, resource.Decisions, desc.TextDesc(text.DescKeyMCPResDecisions)},
+	{ctxCfg.Learning, resource.Learnings, desc.TextDesc(text.DescKeyMCPResLearnings)},
+	{ctxCfg.Glossary, resource.Glossary, desc.TextDesc(text.DescKeyMCPResGlossary)},
+	{ctxCfg.AgentPlaybook, resource.Playbook, desc.TextDesc(text.DescKeyMCPResPlaybook)},
 }
 
 // uriLookup maps full resource URIs to context file names. Populated

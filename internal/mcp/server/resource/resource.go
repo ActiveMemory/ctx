@@ -16,7 +16,7 @@ import (
 	"github.com/ActiveMemory/ctx/internal/config/embed/text"
 	"github.com/ActiveMemory/ctx/internal/config/mcp/mime"
 	"github.com/ActiveMemory/ctx/internal/config/token"
-	token2 "github.com/ActiveMemory/ctx/internal/context/token"
+	ctxToken "github.com/ActiveMemory/ctx/internal/context/token"
 	"github.com/ActiveMemory/ctx/internal/entity"
 	"github.com/ActiveMemory/ctx/internal/mcp/proto"
 	"github.com/ActiveMemory/ctx/internal/mcp/server/catalog"
@@ -72,10 +72,10 @@ func readAgentPacket(
 	id json.RawMessage, ctx *entity.Context, budget int,
 ) *proto.Response {
 	var sb strings.Builder
-	header := desc.TextDesc(text.TextDescKeyMCPPacketHeader)
+	header := desc.TextDesc(text.DescKeyMCPPacketHeader)
 	sb.WriteString(header)
 
-	tokensUsed := token2.EstimateTokensString(header)
+	tokensUsed := ctxToken.EstimateTokensString(header)
 	var skipped []string
 
 	for _, fileName := range ctxCfg.ReadOrder {
@@ -88,7 +88,7 @@ func readAgentPacket(
 			desc.TextDesc(text.DescKeyMCPFormatSection),
 			fileName, string(f.Content),
 		)
-		sectionTokens := token2.EstimateTokensString(section)
+		sectionTokens := ctxToken.EstimateTokensString(section)
 
 		if budget > 0 && tokensUsed+sectionTokens > budget {
 			skipped = append(skipped, fileName)
@@ -101,12 +101,12 @@ func readAgentPacket(
 
 	if len(skipped) > 0 {
 		sb.WriteString(
-			desc.TextDesc(text.TextDescKeyMCPAlsoNoted),
+			desc.TextDesc(text.DescKeyMCPAlsoNoted),
 		)
 		for _, name := range skipped {
 			_, _ = fmt.Fprintf(
 				&sb,
-				desc.TextDesc(text.TextDescKeyMCPOmittedFormat),
+				desc.TextDesc(text.DescKeyMCPOmittedFormat),
 				name,
 			)
 		}

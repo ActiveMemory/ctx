@@ -20,7 +20,7 @@ import (
 //   - cmd: Cobra command for output
 //   - name: Filename that was removed
 func InfoOrphanRemoved(cmd *cobra.Command, name string) {
-	cmd.Println(fmt.Sprintf(desc.TextDesc(text.TextDescKeyWriteJournalOrphanRemoved), name))
+	cmd.Println(fmt.Sprintf(desc.TextDesc(text.DescKeyWriteJournalOrphanRemoved), name))
 }
 
 // InfoSiteGenerated reports successful site generation with next steps.
@@ -34,7 +34,7 @@ func InfoSiteGenerated(
 	cmd *cobra.Command, count int, output, zensicalBin string,
 ) {
 	cmd.Println(fmt.Sprintf(
-		desc.TextDesc(text.TextDescKeyWriteJournalSiteGeneratedBlock),
+		desc.TextDesc(text.DescKeyWriteJournalSiteGeneratedBlock),
 		count, output, output, zensicalBin,
 	))
 }
@@ -45,7 +45,7 @@ func InfoSiteGenerated(
 //   - cmd: Cobra command for output
 func InfoSiteStarting(cmd *cobra.Command) {
 	cmd.Println()
-	cmd.Println(desc.TextDesc(text.TextDescKeyWriteJournalSiteStarting))
+	cmd.Println(desc.TextDesc(text.DescKeyWriteJournalSiteStarting))
 }
 
 // InfoSiteBuilding reports a build is in progress.
@@ -54,5 +54,5 @@ func InfoSiteStarting(cmd *cobra.Command) {
 //   - cmd: Cobra command for output
 func InfoSiteBuilding(cmd *cobra.Command) {
 	cmd.Println()
-	cmd.Println(desc.TextDesc(text.TextDescKeyWriteJournalSiteBuilding))
+	cmd.Println(desc.TextDesc(text.DescKeyWriteJournalSiteBuilding))
 }

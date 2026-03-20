@@ -7,12 +7,12 @@
 package text
 
 const (
-	TextDescKeyCeremonyBoxBoth          = "ceremony.box-both"
-	TextDescKeyCeremonyBoxRemember      = "ceremony.box-remember"
-	TextDescKeyCeremonyBoxWrapup        = "ceremony.box-wrapup"
-	TextDescKeyCeremonyFallbackBoth     = "ceremony.fallback-both"
-	TextDescKeyCeremonyFallbackRemember = "ceremony.fallback-remember"
-	TextDescKeyCeremonyFallbackWrapup   = "ceremony.fallback-wrapup"
-	TextDescKeyCeremonyRelayMessage     = "ceremony.relay-message"
-	TextDescKeyCeremonyRelayPrefix      = "ceremony.relay-prefix"
+	DescKeyCeremonyBoxBoth          = "ceremony.box-both"
+	DescKeyCeremonyBoxRemember      = "ceremony.box-remember"
+	DescKeyCeremonyBoxWrapup        = "ceremony.box-wrapup"
+	DescKeyCeremonyFallbackBoth     = "ceremony.fallback-both"
+	DescKeyCeremonyFallbackRemember = "ceremony.fallback-remember"
+	DescKeyCeremonyFallbackWrapup   = "ceremony.fallback-wrapup"
+	DescKeyCeremonyRelayMessage     = "ceremony.relay-message"
+	DescKeyCeremonyRelayPrefix      = "ceremony.relay-prefix"
 )

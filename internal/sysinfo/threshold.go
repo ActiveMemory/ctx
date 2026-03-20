@@ -34,7 +34,7 @@ func Evaluate(snap Snapshot) []ResourceAlert {
 	// Memory
 	if snap.Memory.Supported && snap.Memory.TotalBytes > 0 {
 		pct := percent(snap.Memory.UsedBytes, snap.Memory.TotalBytes)
-		msg := fmt.Sprintf(desc.TextDesc(text.TextDescKeyResourcesAlertMemory),
+		msg := fmt.Sprintf(desc.TextDesc(text.DescKeyResourcesAlertMemory),
 			pct, FormatGiB(snap.Memory.UsedBytes), FormatGiB(snap.Memory.TotalBytes))
 		if pct >= stats.ThresholdMemoryDangerPct {
 			alerts = append(alerts, ResourceAlert{
@@ -50,7 +50,7 @@ func Evaluate(snap Snapshot) []ResourceAlert {
 	// Swap
 	if snap.Memory.Supported && snap.Memory.SwapTotalBytes > 0 {
 		pct := percent(snap.Memory.SwapUsedBytes, snap.Memory.SwapTotalBytes)
-		msg := fmt.Sprintf(desc.TextDesc(text.TextDescKeyResourcesAlertSwap),
+		msg := fmt.Sprintf(desc.TextDesc(text.DescKeyResourcesAlertSwap),
 			pct, FormatGiB(snap.Memory.SwapUsedBytes), FormatGiB(snap.Memory.SwapTotalBytes))
 		if pct >= stats.ThresholdSwapDangerPct {
 			alerts = append(alerts, ResourceAlert{
@@ -66,7 +66,7 @@ func Evaluate(snap Snapshot) []ResourceAlert {
 	// Disk
 	if snap.Disk.Supported && snap.Disk.TotalBytes > 0 {
 		pct := percent(snap.Disk.UsedBytes, snap.Disk.TotalBytes)
-		msg := fmt.Sprintf(desc.TextDesc(text.TextDescKeyResourcesAlertDisk),
+		msg := fmt.Sprintf(desc.TextDesc(text.DescKeyResourcesAlertDisk),
 			pct, FormatGiB(snap.Disk.UsedBytes), FormatGiB(snap.Disk.TotalBytes))
 		if pct >= stats.ThresholdDiskDangerPct {
 			alerts = append(alerts, ResourceAlert{
@@ -82,7 +82,7 @@ func Evaluate(snap Snapshot) []ResourceAlert {
 	// Load (1m)
 	if snap.Load.Supported && snap.Load.NumCPU > 0 {
 		ratio := snap.Load.Load1 / float64(snap.Load.NumCPU)
-		msg := fmt.Sprintf(desc.TextDesc(text.TextDescKeyResourcesAlertLoad), ratio)
+		msg := fmt.Sprintf(desc.TextDesc(text.DescKeyResourcesAlertLoad), ratio)
 		if ratio >= stats.ThresholdLoadDangerRatio {
 			alerts = append(alerts, ResourceAlert{
 				Severity: SeverityDanger, Resource: "load", Message: msg,

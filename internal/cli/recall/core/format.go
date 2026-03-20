@@ -69,7 +69,7 @@ func FormatJournalFilename(s *parser.Session, slugOverride string) string {
 	if slugOverride != "" {
 		slug = slugOverride
 	}
-	return fmt.Sprintf(tpl.TplRecallFilename, date, slug, shortID)
+	return fmt.Sprintf(tpl.RecallFilename, date, slug, shortID)
 }
 
 // FormatJournalEntryPart generates Markdown content for a part of a journal entry.
@@ -141,35 +141,35 @@ func FormatJournalEntryPart(
 		// Session metadata as collapsible HTML table
 		// (Markdown tables don't render inside <details> in Zensical)
 		summaryText := fmt.Sprintf("%s · %s · %s", dateStr, durationStr, s.Model)
-		sb.WriteString(fmt.Sprintf(tpl.TplMetaDetailsOpen, summaryText))
-		sb.WriteString(fmt.Sprintf(tpl.TplMetaRow+nl, desc.TextDesc(text.DescKeyLabelMetaID), s.ID))
-		sb.WriteString(fmt.Sprintf(tpl.TplMetaRow+nl, desc.TextDesc(text.DescKeyLabelMetaDate), dateStr))
-		sb.WriteString(fmt.Sprintf(tpl.TplMetaRow+nl, desc.TextDesc(text.DescKeyLabelMetaTime), timeStr))
-		sb.WriteString(fmt.Sprintf(tpl.TplMetaRow+nl, desc.TextDesc(text.DescKeyLabelMetaDuration), durationStr))
-		sb.WriteString(fmt.Sprintf(tpl.TplMetaRow+nl, desc.TextDesc(text.DescKeyLabelMetaTool), s.Tool))
-		sb.WriteString(fmt.Sprintf(tpl.TplMetaRow+nl, desc.TextDesc(text.DescKeyLabelMetaProject), s.Project))
+		sb.WriteString(fmt.Sprintf(tpl.MetaDetailsOpen, summaryText))
+		sb.WriteString(fmt.Sprintf(tpl.MetaRow+nl, desc.TextDesc(text.DescKeyLabelMetaID), s.ID))
+		sb.WriteString(fmt.Sprintf(tpl.MetaRow+nl, desc.TextDesc(text.DescKeyLabelMetaDate), dateStr))
+		sb.WriteString(fmt.Sprintf(tpl.MetaRow+nl, desc.TextDesc(text.DescKeyLabelMetaTime), timeStr))
+		sb.WriteString(fmt.Sprintf(tpl.MetaRow+nl, desc.TextDesc(text.DescKeyLabelMetaDuration), durationStr))
+		sb.WriteString(fmt.Sprintf(tpl.MetaRow+nl, desc.TextDesc(text.DescKeyLabelMetaTool), s.Tool))
+		sb.WriteString(fmt.Sprintf(tpl.MetaRow+nl, desc.TextDesc(text.DescKeyLabelMetaProject), s.Project))
 		if s.GitBranch != "" {
-			sb.WriteString(fmt.Sprintf(tpl.TplMetaRow+nl, desc.TextDesc(text.DescKeyLabelMetaBranch), s.GitBranch))
+			sb.WriteString(fmt.Sprintf(tpl.MetaRow+nl, desc.TextDesc(text.DescKeyLabelMetaBranch), s.GitBranch))
 		}
 		if s.Model != "" {
-			sb.WriteString(fmt.Sprintf(tpl.TplMetaRow+nl, desc.TextDesc(text.DescKeyLabelMetaModel), s.Model))
+			sb.WriteString(fmt.Sprintf(tpl.MetaRow+nl, desc.TextDesc(text.DescKeyLabelMetaModel), s.Model))
 		}
-		sb.WriteString(tpl.TplMetaDetailsClose + nl + nl)
+		sb.WriteString(tpl.MetaDetailsClose + nl + nl)
 
 		// Token stats as collapsible HTML table
 		turnStr := fmt.Sprintf("%d", s.TurnCount)
-		sb.WriteString(fmt.Sprintf(tpl.TplMetaDetailsOpen, turnStr))
-		sb.WriteString(fmt.Sprintf(tpl.TplMetaRow+nl, desc.TextDesc(text.DescKeyLabelMetaTurns), turnStr))
+		sb.WriteString(fmt.Sprintf(tpl.MetaDetailsOpen, turnStr))
+		sb.WriteString(fmt.Sprintf(tpl.MetaRow+nl, desc.TextDesc(text.DescKeyLabelMetaTurns), turnStr))
 		tokenSummary := fmt.Sprintf("%s (in: %s, out: %s)",
 			FormatTokens(s.TotalTokens),
 			FormatTokens(s.TotalTokensIn),
 			FormatTokens(s.TotalTokensOut))
-		sb.WriteString(fmt.Sprintf(tpl.TplMetaRow+nl, desc.TextDesc(text.DescKeyLabelMetaTokens), tokenSummary))
+		sb.WriteString(fmt.Sprintf(tpl.MetaRow+nl, desc.TextDesc(text.DescKeyLabelMetaTokens), tokenSummary))
 		if totalParts > 1 {
-			sb.WriteString(fmt.Sprintf(tpl.TplMetaRow+nl, desc.TextDesc(text.DescKeyLabelMetaParts),
+			sb.WriteString(fmt.Sprintf(tpl.MetaRow+nl, desc.TextDesc(text.DescKeyLabelMetaParts),
 				fmt.Sprintf("%d", totalParts)))
 		}
-		sb.WriteString(tpl.TplMetaDetailsClose + nl + nl)
+		sb.WriteString(tpl.MetaDetailsClose + nl + nl)
 
 		sb.WriteString(sep + nl + nl)
 
@@ -183,7 +183,7 @@ func FormatJournalEntryPart(
 			}
 			for name, count := range toolCounts {
 				sb.WriteString(fmt.Sprintf(
-					tpl.TplRecallToolCount+nl, name, count),
+					tpl.RecallToolCount+nl, name, count),
 				)
 			}
 			sb.WriteString(nl + sep + nl + nl)
@@ -205,7 +205,7 @@ func FormatJournalEntryPart(
 		sb.WriteString(desc.TextDesc(text.DescKeyHeadingConversation) + nl + nl)
 	} else {
 		sb.WriteString(fmt.Sprintf(
-			tpl.TplRecallConversationContinued+nl+nl, part-1),
+			tpl.RecallConversationContinued+nl+nl, part-1),
 		)
 	}
 
@@ -215,11 +215,11 @@ func FormatJournalEntryPart(
 		if msg.BelongsToAssistant() {
 			role = desc.TextDesc(text.DescKeyLabelRoleAssistant)
 		} else if len(msg.ToolResults) > 0 && msg.Text == "" {
-			role = desc.TextDesc(text.TextDescKeyLabelToolOutput)
+			role = desc.TextDesc(text.DescKeyLabelToolOutput)
 		}
 
 		localTime := msg.Timestamp.Local()
-		sb.WriteString(fmt.Sprintf(tpl.TplRecallTurnHeader+nl+nl,
+		sb.WriteString(fmt.Sprintf(tpl.RecallTurnHeader+nl+nl,
 			msgNum, role, localTime.Format(time.Format)))
 
 		if msg.Text != "" {
@@ -234,13 +234,13 @@ func FormatJournalEntryPart(
 
 		// Tool uses
 		for _, t := range msg.ToolUses {
-			sb.WriteString(fmt.Sprintf(tpl.TplRecallToolUse+nl, FormatToolUse(t)))
+			sb.WriteString(fmt.Sprintf(tpl.RecallToolUse+nl, FormatToolUse(t)))
 		}
 
 		// Tool results
 		for _, tr := range msg.ToolResults {
 			if tr.IsError {
-				sb.WriteString(tpl.TplRecallErrorMarker + nl)
+				sb.WriteString(tpl.RecallErrorMarker + nl)
 			}
 			if tr.Content != "" {
 				content := StripLineNumbers(tr.Content)
@@ -249,20 +249,20 @@ func FormatJournalEntryPart(
 				lines := strings.Count(content, nl)
 
 				if lines > journal.DetailsThreshold {
-					summary := fmt.Sprintf(tpl.TplRecallDetailsSummary, lines)
-					sb.WriteString(fmt.Sprintf(tpl.TplRecallDetailsOpen+nl+nl, summary))
+					summary := fmt.Sprintf(tpl.RecallDetailsSummary, lines)
+					sb.WriteString(fmt.Sprintf(tpl.RecallDetailsOpen+nl+nl, summary))
 					sb.WriteString("<pre>" + nl + html.EscapeString(content) + nl + "</pre>" + nl)
-					sb.WriteString(tpl.TplRecallDetailsClose + nl)
+					sb.WriteString(tpl.RecallDetailsClose + nl)
 				} else {
 					sb.WriteString(fmt.Sprintf(
-						tpl.TplRecallFencedBlock+nl, fence, content, fence),
+						tpl.RecallFencedBlock+nl, fence, content, fence),
 					)
 				}
 
 				// Render system reminders as Markdown outside the code fence
 				for _, reminder := range reminders {
 					sb.WriteString(
-						fmt.Sprintf(nl+desc.TextDesc(text.TextDescKeyLabelBoldReminder)+" %s"+nl, reminder),
+						fmt.Sprintf(nl+desc.TextDesc(text.DescKeyLabelBoldReminder)+" %s"+nl, reminder),
 					)
 				}
 			}
@@ -295,17 +295,17 @@ func resolveHeading(title, slug, baseName string) string {
 
 // writeFmQuoted writes a YAML frontmatter quoted string field.
 func writeFmQuoted(sb *strings.Builder, key, value string) {
-	fmt.Fprintf(sb, tpl.TplFmQuoted+token.NewlineLF, key, value)
+	fmt.Fprintf(sb, tpl.FmQuoted+token.NewlineLF, key, value)
 }
 
 // writeFmString writes a YAML frontmatter bare string field.
 func writeFmString(sb *strings.Builder, key, value string) {
-	fmt.Fprintf(sb, tpl.TplFmString+token.NewlineLF, key, value)
+	fmt.Fprintf(sb, tpl.FmString+token.NewlineLF, key, value)
 }
 
 // writeFmInt writes a YAML frontmatter integer field.
 func writeFmInt(sb *strings.Builder, key string, value int) {
-	fmt.Fprintf(sb, tpl.TplFmInt+token.NewlineLF, key, value)
+	fmt.Fprintf(sb, tpl.FmInt+token.NewlineLF, key, value)
 }
 
 // FormatPartNavigation generates previous/next navigation links for
@@ -323,7 +323,7 @@ func FormatPartNavigation(part, totalParts int, baseName string) string {
 	var sb strings.Builder
 	nl := token.NewlineLF
 
-	sb.WriteString(fmt.Sprintf(tpl.TplRecallPartOf, part, totalParts))
+	sb.WriteString(fmt.Sprintf(tpl.RecallPartOf, part, totalParts))
 
 	if part > 1 || part < totalParts {
 		sb.WriteString(box.PipeSeparator)
@@ -333,9 +333,9 @@ func FormatPartNavigation(part, totalParts int, baseName string) string {
 	if part > 1 {
 		prevFile := baseName + file.ExtMarkdown
 		if part > 2 {
-			prevFile = fmt.Sprintf(tpl.TplRecallPartFilename, baseName, part-1)
+			prevFile = fmt.Sprintf(tpl.RecallPartFilename, baseName, part-1)
 		}
-		sb.WriteString(fmt.Sprintf(tpl.TplRecallNavPrev, prevFile))
+		sb.WriteString(fmt.Sprintf(tpl.RecallNavPrev, prevFile))
 	}
 
 	// Separator between prev and next
@@ -345,8 +345,8 @@ func FormatPartNavigation(part, totalParts int, baseName string) string {
 
 	// Next link
 	if part < totalParts {
-		nextFile := fmt.Sprintf(tpl.TplRecallPartFilename, baseName, part+1)
-		sb.WriteString(fmt.Sprintf(tpl.TplRecallNavNext, nextFile))
+		nextFile := fmt.Sprintf(tpl.RecallPartFilename, baseName, part+1)
+		sb.WriteString(fmt.Sprintf(tpl.RecallNavNext, nextFile))
 	}
 
 	sb.WriteString(nl)
@@ -498,5 +498,5 @@ func FormatToolUse(t parser.ToolUse) string {
 	if t.Name == session.ToolBash && len(val) > session.ToolDisplayMaxLen {
 		val = val[:session.ToolDisplayMaxLen] + token.Ellipsis
 	}
-	return fmt.Sprintf(tpl.TplToolDisplay, t.Name, val)
+	return fmt.Sprintf(tpl.ToolDisplay, t.Name, val)
 }

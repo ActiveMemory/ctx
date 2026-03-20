@@ -7,7 +7,7 @@
 package text
 
 const (
-	TextDescKeyWriteConfigProfileBase = "write.config-profile-base"
-	TextDescKeyWriteConfigProfileDev  = "write.config-profile-dev"
-	TextDescKeyWriteConfigProfileNone = "write.config-profile-none"
+	DescKeyWriteConfigProfileBase = "write.config-profile-base"
+	DescKeyWriteConfigProfileDev  = "write.config-profile-dev"
+	DescKeyWriteConfigProfileNone = "write.config-profile-none"
 )

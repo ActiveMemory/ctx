@@ -22,7 +22,7 @@ import (
 //   - error: "reading event log: <cause>"
 func EventLogRead(cause error) error {
 	return fmt.Errorf(
-		desc.TextDesc(text.TextDescKeyErrRecallEventLogRead), cause,
+		desc.TextDesc(text.DescKeyErrRecallEventLogRead), cause,
 	)
 }
 
@@ -35,7 +35,7 @@ func EventLogRead(cause error) error {
 //   - error: "globbing stats files: <cause>"
 func StatsGlob(cause error) error {
 	return fmt.Errorf(
-		desc.TextDesc(text.TextDescKeyErrRecallStatsGlob), cause,
+		desc.TextDesc(text.DescKeyErrRecallStatsGlob), cause,
 	)
 }
 
@@ -48,7 +48,7 @@ func StatsGlob(cause error) error {
 //   - error: "<fileName> not found. Run 'ctx init' first"
 func ReindexFileNotFound(fileName string) error {
 	return fmt.Errorf(
-		desc.TextDesc(text.TextDescKeyErrRecallReindexFileNotFound), fileName,
+		desc.TextDesc(text.DescKeyErrRecallReindexFileNotFound), fileName,
 	)
 }
 
@@ -62,7 +62,7 @@ func ReindexFileNotFound(fileName string) error {
 //   - error: "failed to read <filePath>: <cause>"
 func ReindexFileRead(filePath string, cause error) error {
 	return fmt.Errorf(
-		desc.TextDesc(text.TextDescKeyErrRecallReindexFileRead),
+		desc.TextDesc(text.DescKeyErrRecallReindexFileRead),
 		filePath, cause,
 	)
 }
@@ -77,7 +77,7 @@ func ReindexFileRead(filePath string, cause error) error {
 //   - error: "failed to write <filePath>: <cause>"
 func ReindexFileWrite(filePath string, cause error) error {
 	return fmt.Errorf(
-		desc.TextDesc(text.TextDescKeyErrRecallReindexFileWrite),
+		desc.TextDesc(text.DescKeyErrRecallReindexFileWrite),
 		filePath, cause,
 	)
 }
@@ -91,6 +91,6 @@ func ReindexFileWrite(filePath string, cause error) error {
 //   - error: "failed to open log file: <cause>"
 func OpenLogFile(cause error) error {
 	return fmt.Errorf(
-		desc.TextDesc(text.TextDescKeyErrRecallOpenLogFile), cause,
+		desc.TextDesc(text.DescKeyErrRecallOpenLogFile), cause,
 	)
 }

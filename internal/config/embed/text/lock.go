@@ -7,7 +7,7 @@
 package text
 
 const (
-	TextDescKeyWriteLockUnlockEntry     = "write.lock-unlock-entry"
-	TextDescKeyWriteLockUnlockNoChanges = "write.lock-unlock-no-changes"
-	TextDescKeyWriteLockUnlockSummary   = "write.lock-unlock-summary"
+	DescKeyWriteLockUnlockEntry     = "write.lock-unlock-entry"
+	DescKeyWriteLockUnlockNoChanges = "write.lock-unlock-no-changes"
+	DescKeyWriteLockUnlockSummary   = "write.lock-unlock-summary"
 )

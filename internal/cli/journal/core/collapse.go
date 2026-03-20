@@ -63,7 +63,7 @@ func CollapseToolOutputs(content string) string {
 		}
 
 		// Non-tool-output turns pass through unchanged
-		if role != desc.TextDesc(text.TextDescKeyLabelToolOutput) {
+		if role != desc.TextDesc(text.DescKeyLabelToolOutput) {
 			for k := i; k < bodyEnd; k++ {
 				out = append(out, lines[k])
 			}
@@ -86,17 +86,17 @@ func CollapseToolOutputs(content string) string {
 
 		if nonBlank > journal.DetailsThreshold && !alreadyWrapped {
 			summary := fmt.Sprintf(
-				tpl.TplRecallDetailsSummary, nonBlank,
+				tpl.RecallDetailsSummary, nonBlank,
 			)
 			out = append(out, header, "")
 			out = append(out,
-				fmt.Sprintf(tpl.TplRecallDetailsOpen, summary),
+				fmt.Sprintf(tpl.RecallDetailsOpen, summary),
 			)
 			out = append(out, "")
 			for k := bodyStart; k < bodyEnd; k++ {
 				out = append(out, lines[k])
 			}
-			out = append(out, tpl.TplRecallDetailsClose, "")
+			out = append(out, tpl.RecallDetailsClose, "")
 		} else {
 			for k := i; k < bodyEnd; k++ {
 				out = append(out, lines[k])

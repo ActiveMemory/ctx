@@ -7,38 +7,36 @@
 package text
 
 const (
-	TextDescKeyMemoryDiffOldFormat = "memory.diff-old-format"
-	TextDescKeyMemoryDiffNewFormat = "memory.diff-new-format"
-	TextDescKeyMemoryImportSource  = "memory.import-source"
+	DescKeyMemoryDiffOldFormat = "memory.diff-old-format"
+	DescKeyMemoryDiffNewFormat = "memory.diff-new-format"
+	DescKeyMemoryImportSource  = "memory.import-source"
 )
 
 const (
-	TextDescKeyMemoryPublishTitle = "memory.publish-title"
-	TextDescKeyMemoryPublishTasks = "memory.publish-tasks"
-	TextDescKeyMemoryPublishDec   = "memory.publish-decisions"
-	TextDescKeyMemoryPublishConv  = "memory.publish-conventions"
-	TextDescKeyMemoryPublishLrn   = "memory.publish-learnings"
+	DescKeyMemoryPublishTitle = "memory.publish-title"
+	DescKeyMemoryPublishTasks = "memory.publish-tasks"
+	DescKeyMemoryPublishDec   = "memory.publish-decisions"
+	DescKeyMemoryPublishConv  = "memory.publish-conventions"
+	DescKeyMemoryPublishLrn   = "memory.publish-learnings"
 )
 
 const (
-	TextDescKeyMemorySelectContent = "memory.select-content"
-	TextDescKeyMemoryWriteMemory   = "memory.write-memory"
-	TextDescKeyMemoryImportReview  = "memory.import-review"
+	DescKeyMemoryImportReview = "memory.import-review"
 )
 
 const (
-	TextDescKeyWriteMemoryArchives         = "write.memory-archives"
-	TextDescKeyWriteMemoryBridgeHeader     = "write.memory-bridge-header"
-	TextDescKeyWriteMemoryDriftDetected    = "write.memory-drift-detected"
-	TextDescKeyWriteMemoryDriftNone        = "write.memory-drift-none"
-	TextDescKeyWriteMemoryLastSync         = "write.memory-last-sync"
-	TextDescKeyWriteMemoryLastSyncNever    = "write.memory-last-sync-never"
-	TextDescKeyWriteMemoryMirror           = "write.memory-mirror"
-	TextDescKeyWriteMemoryMirrorLines      = "write.memory-mirror-lines"
-	TextDescKeyWriteMemoryMirrorNotSynced  = "write.memory-mirror-not-synced"
-	TextDescKeyWriteMemoryNoChanges        = "write.memory-no-changes"
-	TextDescKeyWriteMemorySource           = "write.memory-source"
-	TextDescKeyWriteMemorySourceLines      = "write.memory-source-lines"
-	TextDescKeyWriteMemorySourceLinesDrift = "write.memory-source-lines-drift"
-	TextDescKeyWriteMemorySourceNotActive  = "write.memory-source-not-active"
+	DescKeyWriteMemoryArchives         = "write.memory-archives"
+	DescKeyWriteMemoryBridgeHeader     = "write.memory-bridge-header"
+	DescKeyWriteMemoryDriftDetected    = "write.memory-drift-detected"
+	DescKeyWriteMemoryDriftNone        = "write.memory-drift-none"
+	DescKeyWriteMemoryLastSync         = "write.memory-last-sync"
+	DescKeyWriteMemoryLastSyncNever    = "write.memory-last-sync-never"
+	DescKeyWriteMemoryMirror           = "write.memory-mirror"
+	DescKeyWriteMemoryMirrorLines      = "write.memory-mirror-lines"
+	DescKeyWriteMemoryMirrorNotSynced  = "write.memory-mirror-not-synced"
+	DescKeyWriteMemoryNoChanges        = "write.memory-no-changes"
+	DescKeyWriteMemorySource           = "write.memory-source"
+	DescKeyWriteMemorySourceLines      = "write.memory-source-lines"
+	DescKeyWriteMemorySourceLinesDrift = "write.memory-source-lines-drift"
+	DescKeyWriteMemorySourceNotActive  = "write.memory-source-not-active"
 )

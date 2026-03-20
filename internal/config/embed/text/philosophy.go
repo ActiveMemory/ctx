@@ -7,10 +7,10 @@
 package text
 
 const (
-	TextDescKeyWhyAdmonitionFormat = "why.admonition-format"
-	TextDescKeyWhyBanner           = "why.banner"
-	TextDescKeyWhyBlockquotePrefix = "why.blockquote-prefix"
-	TextDescKeyWhyBoldFormat       = "why.bold-format"
-	TextDescKeyWhyMenuItemFormat   = "why.menu-item-format"
-	TextDescKeyWhyMenuPrompt       = "why.menu-prompt"
+	DescKeyWhyAdmonitionFormat = "why.admonition-format"
+	DescKeyWhyBanner           = "why.banner"
+	DescKeyWhyBlockquotePrefix = "why.blockquote-prefix"
+	DescKeyWhyBoldFormat       = "why.bold-format"
+	DescKeyWhyMenuItemFormat   = "why.menu-item-format"
+	DescKeyWhyMenuPrompt       = "why.menu-prompt"
 )

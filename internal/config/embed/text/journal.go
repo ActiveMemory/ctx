@@ -7,25 +7,31 @@
 package text
 
 const (
-	TextDescKeyJournalMocSessionLink    = "journal.moc.session-link"
-	TextDescKeyJournalMocNavDescription = "journal.moc.nav-description"
-	TextDescKeyJournalMocBrowseBy       = "journal.moc.browse-by"
-	TextDescKeyJournalMocTopicsDesc     = "journal.moc.topics-description"
-	TextDescKeyJournalMocFilesDesc      = "journal.moc.files-description"
-	TextDescKeyJournalMocTypesDesc      = "journal.moc.types-description"
+	DescKeyJournalMocBrowseBy       = "journal.moc.browse-by"
+	DescKeyJournalMocFilePageStats  = "journal.moc.file-page-stats"
+	DescKeyJournalMocFileStats      = "journal.moc.file-stats"
+	DescKeyJournalMocFilesDesc      = "journal.moc.files-description"
+	DescKeyJournalMocNavDescription = "journal.moc.nav-description"
+	DescKeyJournalMocSessionLink    = "journal.moc.session-link"
+	DescKeyJournalMocTopicPageStats = "journal.moc.topic-page-stats"
+	DescKeyJournalMocTopicStats     = "journal.moc.topic-stats"
+	DescKeyJournalMocTopicsDesc     = "journal.moc.topics-description"
+	DescKeyJournalMocTopicsLabel    = "journal.moc.topics-label"
+	DescKeyJournalMocTypeLabel      = "journal.moc.type-label"
+	DescKeyJournalMocTypePageStats  = "journal.moc.type-page-stats"
+	DescKeyJournalMocTypeStats      = "journal.moc.type-stats"
+	DescKeyJournalMocTypesDesc      = "journal.moc.types-description"
 )
 
 const (
-	TextDescKeyWriteJournalOrphanRemoved      = "write.journal-orphan-removed"
-	TextDescKeyWriteJournalSiteBuilding       = "write.journal-site-building"
-	TextDescKeyWriteJournalSiteGeneratedBlock = "write.journal-site-generated-block"
-	TextDescKeyWriteJournalSiteStarting       = "write.journal-site-starting"
-	TextDescKeyWriteJournalSyncLocked         = "write.journal-sync-locked"
-	TextDescKeyWriteJournalSyncLockedCount    = "write.journal-sync-locked-count"
-	TextDescKeyWriteJournalSyncMatch          = "write.journal-sync-match"
-	TextDescKeyWriteJournalSyncNone           = "write.journal-sync-none"
-	TextDescKeyWriteJournalSyncUnlocked       = "write.journal-sync-unlocked"
-	TextDescKeyWriteJournalSyncUnlockedCount  = "write.journal-sync-unlocked-count"
+	DescKeyWriteJournalOrphanRemoved      = "write.journal-orphan-removed"
+	DescKeyWriteJournalSiteBuilding       = "write.journal-site-building"
+	DescKeyWriteJournalSiteGeneratedBlock = "write.journal-site-generated-block"
+	DescKeyWriteJournalSiteStarting       = "write.journal-site-starting"
+	DescKeyWriteJournalSyncLocked         = "write.journal-sync-locked"
+	DescKeyWriteJournalSyncLockedCount    = "write.journal-sync-locked-count"
+	DescKeyWriteJournalSyncMatch          = "write.journal-sync-match"
+	DescKeyWriteJournalSyncNone           = "write.journal-sync-none"
+	DescKeyWriteJournalSyncUnlocked       = "write.journal-sync-unlocked"
+	DescKeyWriteJournalSyncUnlockedCount  = "write.journal-sync-unlocked-count"
 )
-
-const ()

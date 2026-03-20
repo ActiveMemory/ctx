@@ -7,22 +7,22 @@
 package text
 
 const (
-	TextDescKeyImportCountConvention = "import.count-convention"
-	TextDescKeyImportCountDecision   = "import.count-decision"
-	TextDescKeyImportCountLearning   = "import.count-learning"
-	TextDescKeyImportCountTask       = "import.count-task"
+	DescKeyImportCountConvention = "import.count-convention"
+	DescKeyImportCountDecision   = "import.count-decision"
+	DescKeyImportCountLearning   = "import.count-learning"
+	DescKeyImportCountTask       = "import.count-task"
 )
 
 const (
-	TextDescKeyWriteImportAdded          = "write.import-added"
-	TextDescKeyWriteImportClassified     = "write.import-classified"
-	TextDescKeyWriteImportClassifiedSkip = "write.import-classified-skip"
-	TextDescKeyWriteImportDuplicates     = "write.import-duplicates"
-	TextDescKeyWriteImportEntry          = "write.import-entry"
-	TextDescKeyWriteImportFound          = "write.import-found"
-	TextDescKeyWriteImportNoEntries      = "write.import-no-entries"
-	TextDescKeyWriteImportScanning       = "write.import-scanning"
-	TextDescKeyWriteImportSkipped        = "write.import-skipped"
-	TextDescKeyWriteImportSummary        = "write.import-summary"
-	TextDescKeyWriteImportSummaryDryRun  = "write.import-summary-dry-run"
+	DescKeyWriteImportAdded          = "write.import-added"
+	DescKeyWriteImportClassified     = "write.import-classified"
+	DescKeyWriteImportClassifiedSkip = "write.import-classified-skip"
+	DescKeyWriteImportDuplicates     = "write.import-duplicates"
+	DescKeyWriteImportEntry          = "write.import-entry"
+	DescKeyWriteImportFound          = "write.import-found"
+	DescKeyWriteImportNoEntries      = "write.import-no-entries"
+	DescKeyWriteImportScanning       = "write.import-scanning"
+	DescKeyWriteImportSkipped        = "write.import-skipped"
+	DescKeyWriteImportSummary        = "write.import-summary"
+	DescKeyWriteImportSummaryDryRun  = "write.import-summary-dry-run"
 )

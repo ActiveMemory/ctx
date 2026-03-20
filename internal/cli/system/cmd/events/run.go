@@ -46,7 +46,7 @@ func Run(cmd *cobra.Command) error {
 	}
 
 	if len(evts) == 0 {
-		cmd.Println(desc.TextDesc(text.TextDescKeyEventsEmpty))
+		cmd.Println(desc.TextDesc(text.DescKeyEventsEmpty))
 		return nil
 	}
 

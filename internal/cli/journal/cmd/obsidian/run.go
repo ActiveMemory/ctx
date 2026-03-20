@@ -105,7 +105,7 @@ func BuildObsidianVault(cmd *cobra.Command, journalDir, output string) error {
 	readmePath := filepath.Join(output, file.Readme)
 	if writeErr := os.WriteFile(
 		readmePath,
-		[]byte(fmt.Sprintf(tpl.TplObsidianReadme, journalDir)),
+		[]byte(fmt.Sprintf(tpl.ObsidianReadme, journalDir)),
 		fs.PermFile,
 	); writeErr != nil {
 		return fs2.FileWrite(readmePath, writeErr)

@@ -7,13 +7,13 @@
 package text
 
 const (
-	TextDescKeySummaryActive     = "summary.active"
-	TextDescKeySummaryCompleted  = "summary.completed"
-	TextDescKeySummaryDecision   = "summary.decision"
-	TextDescKeySummaryDecisions  = "summary.decisions"
-	TextDescKeySummaryEmpty      = "summary.empty"
-	TextDescKeySummaryInvariants = "summary.invariants"
-	TextDescKeySummaryLoaded     = "summary.loaded"
-	TextDescKeySummaryTerm       = "summary.term"
-	TextDescKeySummaryTerms      = "summary.terms"
+	DescKeySummaryActive     = "summary.active"
+	DescKeySummaryCompleted  = "summary.completed"
+	DescKeySummaryDecision   = "summary.decision"
+	DescKeySummaryDecisions  = "summary.decisions"
+	DescKeySummaryEmpty      = "summary.empty"
+	DescKeySummaryInvariants = "summary.invariants"
+	DescKeySummaryLoaded     = "summary.loaded"
+	DescKeySummaryTerm       = "summary.term"
+	DescKeySummaryTerms      = "summary.terms"
 )

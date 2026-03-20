@@ -7,14 +7,14 @@
 package text
 
 const (
-	TextDescKeyErrSessionAllWithPattern      = "err.session.all-with-pattern"
-	TextDescKeyErrSessionAllWithSessionID    = "err.session.all-with-session-id"
-	TextDescKeyErrSessionAmbiguousQuery      = "err.session.ambiguous-query"
-	TextDescKeyErrSessionFindSessions        = "err.session.find-sessions"
-	TextDescKeyErrSessionNoSessionsFound     = "err.session.no-sessions-found"
-	TextDescKeyErrSessionNoSessionsFoundHint = "err.session.no-sessions-found-hint"
-	TextDescKeyErrSessionIDRequired          = "err.session.session-id-required"
-	TextDescKeyErrSessionNotFound            = "err.session.session-not-found"
-	TextDescKeyErrSiteMarshalFeed            = "err.site.marshal-feed"
-	TextDescKeyErrSiteNoSiteConfig           = "err.site.no-site-config"
+	DescKeyErrSessionAllWithPattern      = "err.session.all-with-pattern"
+	DescKeyErrSessionAllWithSessionID    = "err.session.all-with-session-id"
+	DescKeyErrSessionAmbiguousQuery      = "err.session.ambiguous-query"
+	DescKeyErrSessionFindSessions        = "err.session.find-sessions"
+	DescKeyErrSessionNoSessionsFound     = "err.session.no-sessions-found"
+	DescKeyErrSessionNoSessionsFoundHint = "err.session.no-sessions-found-hint"
+	DescKeyErrSessionIDRequired          = "err.session.session-id-required"
+	DescKeyErrSessionNotFound            = "err.session.session-not-found"
+	DescKeyErrSiteMarshalFeed            = "err.site.marshal-feed"
+	DescKeyErrSiteNoSiteConfig           = "err.site.no-site-config"
 )

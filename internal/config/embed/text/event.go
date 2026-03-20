@@ -7,6 +7,6 @@
 package text
 
 const (
-	TextDescKeyEventsEmpty       = "events.empty"
-	TextDescKeyEventsHumanFormat = "events.human-format"
+	DescKeyEventsEmpty       = "events.empty"
+	DescKeyEventsHumanFormat = "events.human-format"
 )

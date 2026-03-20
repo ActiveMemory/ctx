@@ -7,7 +7,7 @@
 package text
 
 const (
-	TextDescKeyErrStateLoadState       = "err.state.load-state"
-	TextDescKeyErrStateReadingStateDir = "err.state.reading-state-dir"
-	TextDescKeyErrStateSaveState       = "err.state.save-state"
+	DescKeyErrStateLoadState       = "err.state.load-state"
+	DescKeyErrStateReadingStateDir = "err.state.reading-state-dir"
+	DescKeyErrStateSaveState       = "err.state.save-state"
 )

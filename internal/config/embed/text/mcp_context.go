@@ -7,5 +7,5 @@
 package text
 
 const (
-	TextDescKeyMCPLoadContext = "mcp.load-context"
+	DescKeyMCPLoadContext = "mcp.load-context"
 )

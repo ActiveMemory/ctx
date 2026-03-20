@@ -7,9 +7,9 @@
 package text
 
 const (
-	TextDescKeyErrNotifyLoadWebhook      = "err.notify.load-webhook"
-	TextDescKeyErrNotifyMarshalPayload   = "err.notify.marshal-payload"
-	TextDescKeyErrNotifySaveWebhook      = "err.notify.save-webhook"
-	TextDescKeyErrNotifySendNotification = "err.notify.send-notification"
-	TextDescKeyErrNotifyWebhookEmpty     = "err.notify.webhook-empty"
+	DescKeyErrNotifyLoadWebhook      = "err.notify.load-webhook"
+	DescKeyErrNotifyMarshalPayload   = "err.notify.marshal-payload"
+	DescKeyErrNotifySaveWebhook      = "err.notify.save-webhook"
+	DescKeyErrNotifySendNotification = "err.notify.send-notification"
+	DescKeyErrNotifyWebhookEmpty     = "err.notify.webhook-empty"
 )

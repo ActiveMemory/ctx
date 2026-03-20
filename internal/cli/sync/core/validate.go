@@ -57,11 +57,11 @@ func CheckPackageFiles(ctx *entity.Context) []Action {
 					Type: "DEPS",
 					File: ctxCfg.Architecture,
 					Description: fmt.Sprintf(
-						lookup.TextDesc(text.TextDescKeySyncDepsDescription),
+						lookup.TextDesc(text.DescKeySyncDepsDescription),
 						f, desc,
 					),
 					Suggestion: fmt.Sprintf(
-						lookup.TextDesc(text.TextDescKeySyncDepsSuggestion),
+						lookup.TextDesc(text.DescKeySyncDepsSuggestion),
 						ctxCfg.Architecture, ctxCfg.Dependency,
 					),
 				})
@@ -102,11 +102,11 @@ func CheckConfigFiles(ctx *entity.Context) []Action {
 					Type: "CONFIG",
 					File: ctxCfg.Convention,
 					Description: fmt.Sprintf(
-						desc.TextDesc(text.TextDescKeySyncConfigDescription),
+						desc.TextDesc(text.DescKeySyncConfigDescription),
 						matches[0], cfg.Topic,
 					),
 					Suggestion: fmt.Sprintf(
-						desc.TextDesc(text.TextDescKeySyncConfigSuggestion),
+						desc.TextDesc(text.DescKeySyncConfigSuggestion),
 						cfg.Topic, ctxCfg.Convention,
 					),
 				})
@@ -177,11 +177,11 @@ func CheckNewDirectories(ctx *entity.Context) []Action {
 				Type: "NEW_DIR",
 				File: ctxCfg.Architecture,
 				Description: fmt.Sprintf(
-					desc.TextDesc(text.TextDescKeySyncDirDescription),
+					desc.TextDesc(text.DescKeySyncDirDescription),
 					name,
 				),
 				Suggestion: fmt.Sprintf(
-					desc.TextDesc(text.TextDescKeySyncDirSuggestion),
+					desc.TextDesc(text.DescKeySyncDirSuggestion),
 					name, ctxCfg.Architecture,
 				),
 			})

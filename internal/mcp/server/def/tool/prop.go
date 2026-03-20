@@ -31,11 +31,11 @@ func MergeProps(dst, src map[string]proto.Property) map[string]proto.Property {
 
 // EntryAttrProps returns the five entry-attribute properties shared by
 // tools that accept structured context entries (add, watch-update).
-// contextKey selects the TextDescKey for the "context" field since
+// contextKey selects the DescKey for the "context" field since
 // each tool describes it differently.
 //
 // Parameters:
-//   - contextKey: TextDescKey selecting the description for the context field
+//   - contextKey: DescKey selecting the description for the context field
 //
 // Returns:
 //   - map[string]proto.Property: property map with context, rationale,
@@ -49,22 +49,22 @@ func EntryAttrProps(contextKey string) map[string]proto.Property {
 		cli.AttrRationale: {
 			Type: schema.String,
 			Description: desc.TextDesc(
-				text.TextDescKeyMCPToolPropRationale),
+				text.DescKeyMCPToolPropRationale),
 		},
 		cli.AttrConsequence: {
 			Type: schema.String,
 			Description: desc.TextDesc(
-				text.TextDescKeyMCPToolPropConseq),
+				text.DescKeyMCPToolPropConseq),
 		},
 		cli.AttrLesson: {
 			Type: schema.String,
 			Description: desc.TextDesc(
-				text.TextDescKeyMCPToolPropLesson),
+				text.DescKeyMCPToolPropLesson),
 		},
 		cli.AttrApplication: {
 			Type: schema.String,
 			Description: desc.TextDesc(
-				text.TextDescKeyMCPToolPropApplication),
+				text.DescKeyMCPToolPropApplication),
 		},
 	}
 }

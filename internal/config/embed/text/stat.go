@@ -7,7 +7,7 @@
 package text
 
 const (
-	TextDescKeyStatsEmpty        = "stats.empty"
-	TextDescKeyStatsHeaderFormat = "stats.header-format"
-	TextDescKeyStatsLineFormat   = "stats.line-format"
+	DescKeyStatsEmpty        = "stats.empty"
+	DescKeyStatsHeaderFormat = "stats.header-format"
+	DescKeyStatsLineFormat   = "stats.line-format"
 )

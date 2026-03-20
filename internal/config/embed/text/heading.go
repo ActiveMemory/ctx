@@ -27,7 +27,7 @@ const (
 
 // Headings, column headers, and navigation labels (headings.yaml).
 const (
-	TextDescKeyHeadingDecisions     = "heading.decisions"
-	TextDescKeyHeadingLearnings     = "heading.learnings"
-	TextDescKeyHeadingLearningStart = "heading.learning-entry-start"
+	DescKeyHeadingDecisions     = "heading.decisions"
+	DescKeyHeadingLearnings     = "heading.learnings"
+	DescKeyHeadingLearningStart = "heading.learning-entry-start"
 )

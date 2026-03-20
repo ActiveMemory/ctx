@@ -7,10 +7,10 @@
 package text
 
 const (
-	TextDescKeyCheckRemindersBoxTitle       = "check-reminders.box-title"
-	TextDescKeyCheckRemindersDismissHint    = "check-reminders.dismiss-hint"
-	TextDescKeyCheckRemindersDismissAllHint = "check-reminders.dismiss-all-hint"
-	TextDescKeyCheckRemindersItemFormat     = "check-reminders.item-format"
-	TextDescKeyCheckRemindersNudgeFormat    = "check-reminders.nudge-format"
-	TextDescKeyCheckRemindersRelayPrefix    = "check-reminders.relay-prefix"
+	DescKeyCheckRemindersBoxTitle       = "check-reminders.box-title"
+	DescKeyCheckRemindersDismissHint    = "check-reminders.dismiss-hint"
+	DescKeyCheckRemindersDismissAllHint = "check-reminders.dismiss-all-hint"
+	DescKeyCheckRemindersItemFormat     = "check-reminders.item-format"
+	DescKeyCheckRemindersNudgeFormat    = "check-reminders.nudge-format"
+	DescKeyCheckRemindersRelayPrefix    = "check-reminders.relay-prefix"
 )

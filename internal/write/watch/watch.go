@@ -22,7 +22,7 @@ func Watching(cmd *cobra.Command) {
 	if cmd == nil {
 		return
 	}
-	cmd.Println(desc.TextDesc(text.TextDescKeyWatchWatching))
+	cmd.Println(desc.TextDesc(text.DescKeyWatchWatching))
 }
 
 // DryRun prints the dry-run notice.
@@ -33,7 +33,7 @@ func DryRun(cmd *cobra.Command) {
 	if cmd == nil {
 		return
 	}
-	cmd.Println(desc.TextDesc(text.TextDescKeyWatchDryRun))
+	cmd.Println(desc.TextDesc(text.DescKeyWatchDryRun))
 }
 
 // StopHint prints the Ctrl+C stop hint.
@@ -44,7 +44,7 @@ func StopHint(cmd *cobra.Command) {
 	if cmd == nil {
 		return
 	}
-	cmd.Println(desc.TextDesc(text.TextDescKeyWatchStopHint))
+	cmd.Println(desc.TextDesc(text.DescKeyWatchStopHint))
 }
 
 // CloseLogError prints a log file close error.
@@ -57,7 +57,7 @@ func CloseLogError(cmd *cobra.Command, err error) {
 		return
 	}
 	cmd.Println(
-		fmt.Sprintf(desc.TextDesc(text.TextDescKeyWatchCloseLogError), err),
+		fmt.Sprintf(desc.TextDesc(text.DescKeyWatchCloseLogError), err),
 	)
 }
 
@@ -73,7 +73,7 @@ func DryRunPreview(cmd *cobra.Command, updateType, content string) {
 	}
 	cmd.Println(
 		fmt.Sprintf(
-			desc.TextDesc(text.TextDescKeyWatchDryRunPreview),
+			desc.TextDesc(text.DescKeyWatchDryRunPreview),
 			updateType, content,
 		),
 	)
@@ -91,7 +91,7 @@ func ApplyFailed(cmd *cobra.Command, updateType string, err error) {
 	}
 	cmd.Println(
 		fmt.Sprintf(
-			desc.TextDesc(text.TextDescKeyWatchApplyFailed), updateType, err,
+			desc.TextDesc(text.DescKeyWatchApplyFailed), updateType, err,
 		),
 	)
 }
@@ -107,6 +107,6 @@ func ApplySuccess(cmd *cobra.Command, updateType, content string) {
 		return
 	}
 	cmd.Println(fmt.Sprintf(
-		desc.TextDesc(text.TextDescKeyWatchApplySuccess), updateType, content),
+		desc.TextDesc(text.DescKeyWatchApplySuccess), updateType, content),
 	)
 }

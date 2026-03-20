@@ -23,7 +23,7 @@ import (
 //   - error: "read reminders: <cause>"
 func Read(cause error) error {
 	return fmt.Errorf(
-		desc.TextDesc(text.TextDescKeyErrReminderReadReminders), cause,
+		desc.TextDesc(text.DescKeyErrReminderReadReminders), cause,
 	)
 }
 
@@ -36,7 +36,7 @@ func Read(cause error) error {
 //   - error: "parse reminders: <cause>"
 func Parse(cause error) error {
 	return fmt.Errorf(
-		desc.TextDesc(text.TextDescKeyErrReminderParseReminders), cause,
+		desc.TextDesc(text.DescKeyErrReminderParseReminders), cause,
 	)
 }
 
@@ -49,7 +49,7 @@ func Parse(cause error) error {
 //   - error: "invalid ID <value>"
 func InvalidID(value string) error {
 	return fmt.Errorf(
-		desc.TextDesc(text.TextDescKeyErrReminderInvalidID), value,
+		desc.TextDesc(text.DescKeyErrReminderInvalidID), value,
 	)
 }
 
@@ -62,7 +62,7 @@ func InvalidID(value string) error {
 //   - error: "no reminder with ID <id>"
 func NotFound(id int) error {
 	return fmt.Errorf(
-		desc.TextDesc(text.TextDescKeyErrReminderNotFound), id,
+		desc.TextDesc(text.DescKeyErrReminderNotFound), id,
 	)
 }
 
@@ -71,5 +71,5 @@ func NotFound(id int) error {
 // Returns:
 //   - error: "provide a reminder ID or use --all"
 func IDRequired() error {
-	return errors.New(desc.TextDesc(text.TextDescKeyErrReminderIDRequired))
+	return errors.New(desc.TextDesc(text.DescKeyErrReminderIDRequired))
 }

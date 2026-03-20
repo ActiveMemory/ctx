@@ -7,6 +7,6 @@
 package text
 
 const (
-	TextDescKeyColumnDecision = "column.decision"
-	TextDescKeyColumnLearning = "column.learning"
+	DescKeyColumnDecision = "column.decision"
+	DescKeyColumnLearning = "column.learning"
 )

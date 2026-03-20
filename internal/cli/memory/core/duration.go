@@ -23,19 +23,19 @@ import (
 //   - string: human-readable representation (e.g. "3 hours", "1 day")
 func FormatDuration(d time.Duration) string {
 	if d < time.Minute {
-		return desc.TextDesc(text.TextDescKeyTimeJustNow)
+		return desc.TextDesc(text.DescKeyTimeJustNow)
 	}
 	if d < time.Hour {
 		return pluralize(int(d.Minutes()),
-			desc.TextDesc(text.TextDescKeyTimeMinute))
+			desc.TextDesc(text.DescKeyTimeMinute))
 	}
 	h := int(d.Hours())
 	if h < 24 {
 		return pluralize(h,
-			desc.TextDesc(text.TextDescKeyTimeHour))
+			desc.TextDesc(text.DescKeyTimeHour))
 	}
 	return pluralize(h/24,
-		desc.TextDesc(text.TextDescKeyTimeDay))
+		desc.TextDesc(text.DescKeyTimeDay))
 }
 
 // pluralize returns "1 unit" or "N units".

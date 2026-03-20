@@ -19,7 +19,7 @@ import (
 // Returns:
 //   - error: "ctx: not initialized: run \"ctx init\" first"
 func NotInitialized() error {
-	return errors.New(desc.TextDesc(text.TextDescKeyErrInitNotInitialized))
+	return errors.New(desc.TextDesc(text.DescKeyErrInitNotInitialized))
 }
 
 // ContextNotInitialized returns an error when no .context/ directory is found.
@@ -28,7 +28,7 @@ func NotInitialized() error {
 //   - error: "no .context/ directory found. Run 'ctx init' first"
 func ContextNotInitialized() error {
 	return errors.New(
-		desc.TextDesc(text.TextDescKeyErrInitContextNotInitialized),
+		desc.TextDesc(text.DescKeyErrInitContextNotInitialized),
 	)
 }
 
@@ -41,7 +41,7 @@ func ContextNotInitialized() error {
 //   - error: "detecting reference time: <cause>"
 func DetectReferenceTime(cause error) error {
 	return fmt.Errorf(
-		desc.TextDesc(text.TextDescKeyErrInitDetectReferenceTime), cause,
+		desc.TextDesc(text.DescKeyErrInitDetectReferenceTime), cause,
 	)
 }
 
@@ -54,7 +54,7 @@ func DetectReferenceTime(cause error) error {
 //   - error: "cannot determine home directory: <cause>"
 func HomeDir(cause error) error {
 	return fmt.Errorf(
-		desc.TextDesc(text.TextDescKeyErrInitHomeDir), cause,
+		desc.TextDesc(text.DescKeyErrInitHomeDir), cause,
 	)
 }
 
@@ -68,7 +68,7 @@ func HomeDir(cause error) error {
 //   - error: "failed to read <dir> README template: <cause>"
 func ReadProjectReadme(dir string, cause error) error {
 	return fmt.Errorf(
-		desc.TextDesc(text.TextDescKeyErrInitReadProjectReadme), dir, cause,
+		desc.TextDesc(text.DescKeyErrInitReadProjectReadme), dir, cause,
 	)
 }
 
@@ -82,7 +82,7 @@ func ReadProjectReadme(dir string, cause error) error {
 //   - error: "failed to read <name> template: <cause>"
 func ReadTemplate(name string, cause error) error {
 	return fmt.Errorf(
-		desc.TextDesc(text.TextDescKeyErrInitReadInitTemplate), name, cause,
+		desc.TextDesc(text.DescKeyErrInitReadInitTemplate), name, cause,
 	)
 }
 
@@ -95,7 +95,7 @@ func ReadTemplate(name string, cause error) error {
 //   - error: "failed to create Makefile: <cause>"
 func CreateMakefile(cause error) error {
 	return fmt.Errorf(
-		desc.TextDesc(text.TextDescKeyErrInitCreateMakefile), cause,
+		desc.TextDesc(text.DescKeyErrInitCreateMakefile), cause,
 	)
 }
 
@@ -106,6 +106,6 @@ func CreateMakefile(cause error) error {
 //   - error: "ctx not found in PATH"
 func CtxNotInPath() error {
 	return errors.New(
-		desc.TextDesc(text.TextDescKeyErrValidateCtxNotInPath),
+		desc.TextDesc(text.DescKeyErrValidateCtxNotInPath),
 	)
 }

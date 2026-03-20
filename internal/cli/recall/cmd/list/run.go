@@ -120,7 +120,7 @@ func Run(
 	}
 
 	// Print column header.
-	rowFmt := fmt.Sprintf(tpl.TplRecallListRow, slugW, projW)
+	rowFmt := fmt.Sprintf(tpl.RecallListRow, slugW, projW)
 	recall.SessionListRow(cmd, rowFmt,
 		desc.TextDesc(text.DescKeyLabelColSlug), desc.TextDesc(text.DescKeyLabelColProject), desc.TextDesc(text.DescKeyLabelColDate),
 		desc.TextDesc(text.DescKeyLabelColDuration), desc.TextDesc(text.DescKeyLabelColTurns), desc.TextDesc(text.DescKeyLabelColUsage))

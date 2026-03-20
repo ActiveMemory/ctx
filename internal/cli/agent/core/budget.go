@@ -16,38 +16,10 @@ import (
 	ctxCfg "github.com/ActiveMemory/ctx/internal/config/ctx"
 	"github.com/ActiveMemory/ctx/internal/config/embed/text"
 	"github.com/ActiveMemory/ctx/internal/config/token"
-	token2 "github.com/ActiveMemory/ctx/internal/context/token"
+	ctxToken "github.com/ActiveMemory/ctx/internal/context/token"
 	"github.com/ActiveMemory/ctx/internal/entity"
 	"github.com/ActiveMemory/ctx/internal/index"
 )
-
-// Budget tier allocation percentages are defined in config.
-
-// AssembledPacket holds the budget-aware output sections ready for rendering.
-//
-// Fields:
-//   - ReadOrder: File paths in recommended reading order
-//   - Constitution: Constitution rules (always included)
-//   - Tasks: Active tasks (budget-capped)
-//   - Conventions: Convention items (budget-capped)
-//   - Decisions: Full decision entries (scored, budget-fitted)
-//   - Learnings: Full learning entries (scored, budget-fitted)
-//   - Summaries: Title-only summaries of entries that didn't fit
-//   - Instruction: Behavioral instruction for the agent
-//   - Budget: Requested token budget
-//   - TokensUsed: Actual tokens consumed by the packet
-type AssembledPacket struct {
-	ReadOrder    []string
-	Constitution []string
-	Tasks        []string
-	Conventions  []string
-	Decisions    []string
-	Learnings    []string
-	Summaries    []string
-	Instruction  string
-	Budget       int
-	TokensUsed   int
-}
 
 // AssembleBudgetPacket builds a context packet respecting the token budget.
 //
@@ -67,7 +39,7 @@ func AssembleBudgetPacket(ctx *entity.Context, budget int) *AssembledPacket {
 	now := time.Now()
 	pkt := &AssembledPacket{
 		Budget:      budget,
-		Instruction: desc.TextDesc(text.TextDescKeyAgentInstruction),
+		Instruction: desc.TextDesc(text.DescKeyAgentInstruction),
 	}
 
 	remaining := budget
@@ -78,7 +50,7 @@ func AssembleBudgetPacket(ctx *entity.Context, budget int) *AssembledPacket {
 
 	tier1Tokens := EstimateSliceTokens(pkt.ReadOrder) +
 		EstimateSliceTokens(pkt.Constitution) +
-		token2.EstimateTokensString(pkt.Instruction)
+		ctxToken.EstimateTokensString(pkt.Instruction)
 	remaining -= tier1Tokens
 
 	if remaining <= 0 {
@@ -275,7 +247,7 @@ func FitItemsInBudget(items []string, budget int) []string {
 	used := 0
 	var result []string
 	for _, item := range items {
-		tokens := token2.EstimateTokensString(item)
+		tokens := ctxToken.EstimateTokensString(item)
 		if used+tokens > budget {
 			break
 		}
@@ -299,7 +271,7 @@ func FitItemsInBudget(items []string, budget int) []string {
 func EstimateSliceTokens(items []string) int {
 	total := 0
 	for _, item := range items {
-		total += token2.EstimateTokensString(item)
+		total += ctxToken.EstimateTokensString(item)
 	}
 	return total
 }
@@ -330,16 +302,16 @@ func RenderMarkdownPacket(pkt *AssembledPacket) string {
 	var sb strings.Builder
 	nl := token.NewlineLF
 
-	sb.WriteString("# Context Packet" + nl)
+	sb.WriteString(desc.TextDesc(text.DescKeyAgentPacketTitle) + nl)
 	sb.WriteString(
 		fmt.Sprintf(
-			"Generated: %s | Budget: %d tokens | Used: ~%d",
+			desc.TextDesc(text.DescKeyAgentPacketMeta),
 			time.Now().UTC().Format(time.RFC3339), pkt.Budget, pkt.TokensUsed,
 		) + nl + nl,
 	)
 
 	// Read order
-	sb.WriteString("## Read These Files (in order)" + nl)
+	sb.WriteString(desc.TextDesc(text.DescKeyAgentSectionReadOrder) + nl)
 	for i, path := range pkt.ReadOrder {
 		sb.WriteString(fmt.Sprintf("%d. %s", i+1, path) + nl)
 	}
@@ -347,7 +319,7 @@ func RenderMarkdownPacket(pkt *AssembledPacket) string {
 
 	// Constitution
 	if len(pkt.Constitution) > 0 {
-		sb.WriteString("## Constitution (NEVER VIOLATE)" + nl)
+		sb.WriteString(desc.TextDesc(text.DescKeyAgentSectionConstitution) + nl)
 		for _, rule := range pkt.Constitution {
 			sb.WriteString(fmt.Sprintf("- %s", rule) + nl)
 		}
@@ -356,7 +328,7 @@ func RenderMarkdownPacket(pkt *AssembledPacket) string {
 
 	// Tasks
 	if len(pkt.Tasks) > 0 {
-		sb.WriteString("## Current Tasks" + nl)
+		sb.WriteString(desc.TextDesc(text.DescKeyAgentSectionTasks) + nl)
 		for _, t := range pkt.Tasks {
 			sb.WriteString(t + nl)
 		}
@@ -365,7 +337,7 @@ func RenderMarkdownPacket(pkt *AssembledPacket) string {
 
 	// Conventions
 	if len(pkt.Conventions) > 0 {
-		sb.WriteString("## Key Conventions" + nl)
+		sb.WriteString(desc.TextDesc(text.DescKeyAgentSectionConventions) + nl)
 		for _, conv := range pkt.Conventions {
 			sb.WriteString(fmt.Sprintf("- %s", conv) + nl)
 		}
@@ -374,7 +346,7 @@ func RenderMarkdownPacket(pkt *AssembledPacket) string {
 
 	// Decisions (full body)
 	if len(pkt.Decisions) > 0 {
-		sb.WriteString("## Recent Decisions" + nl)
+		sb.WriteString(desc.TextDesc(text.DescKeyAgentSectionDecisions) + nl)
 		for _, dec := range pkt.Decisions {
 			sb.WriteString(dec + nl + nl)
 		}
@@ -382,7 +354,7 @@ func RenderMarkdownPacket(pkt *AssembledPacket) string {
 
 	// Learnings (full body)
 	if len(pkt.Learnings) > 0 {
-		sb.WriteString("## Key Learnings" + nl)
+		sb.WriteString(desc.TextDesc(text.DescKeyAgentSectionLearnings) + nl)
 		for _, learn := range pkt.Learnings {
 			sb.WriteString(learn + nl + nl)
 		}
@@ -390,7 +362,7 @@ func RenderMarkdownPacket(pkt *AssembledPacket) string {
 
 	// Summaries
 	if len(pkt.Summaries) > 0 {
-		sb.WriteString("## Also Noted" + nl)
+		sb.WriteString(desc.TextDesc(text.DescKeyAgentSectionSummaries) + nl)
 		for _, s := range pkt.Summaries {
 			sb.WriteString(fmt.Sprintf("- %s", s) + nl)
 		}

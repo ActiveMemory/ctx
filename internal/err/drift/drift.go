@@ -19,6 +19,6 @@ import (
 //   - error: "drift detection found violations"
 func Violations() error {
 	return errors.New(
-		desc.TextDesc(text.TextDescKeyErrValidateDriftViolations),
+		desc.TextDesc(text.DescKeyErrValidateDriftViolations),
 	)
 }

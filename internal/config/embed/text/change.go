@@ -7,6 +7,6 @@
 package text
 
 const (
-	TextDescKeyChangesFallbackLabel = "changes.fallback-label"
-	TextDescKeyChangesSincePrefix   = "changes.since-prefix"
+	DescKeyChangesFallbackLabel = "changes.fallback-label"
+	DescKeyChangesSincePrefix   = "changes.since-prefix"
 )

@@ -51,11 +51,11 @@ const (
 )
 
 const (
-	TextDescKeyWritePadResolveEntry  = "write.pad-resolve-entry"
-	TextDescKeyWritePadResolveHeader = "write.pad-resolve-header"
+	DescKeyWritePadResolveEntry  = "write.pad-resolve-entry"
+	DescKeyWritePadResolveHeader = "write.pad-resolve-header"
 )
 
 const (
-	TextDescKeyWritePadKeyCreated = "write.pad-key-created"
-	TextDescKeyPadKeyCreated      = "pad.key-created"
+	DescKeyWritePadKeyCreated = "write.pad-key-created"
+	DescKeyPadKeyCreated      = "pad.key-created"
 )

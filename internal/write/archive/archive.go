@@ -26,7 +26,7 @@ func Skipping(cmd *cobra.Command, taskText string) {
 	}
 	cmd.Println(
 		fmt.Sprintf(
-			desc.TextDesc(text.TextDescKeyTaskArchiveSkipping), taskText,
+			desc.TextDesc(text.DescKeyTaskArchiveSkipping), taskText,
 		),
 	)
 }
@@ -43,7 +43,7 @@ func SkipIncomplete(cmd *cobra.Command, skippedCount int) {
 	}
 	cmd.Println(
 		fmt.Sprintf(
-			desc.TextDesc(text.TextDescKeyTaskArchiveSkipIncomplete),
+			desc.TextDesc(text.DescKeyTaskArchiveSkipIncomplete),
 			skippedCount,
 		),
 	)
@@ -58,7 +58,7 @@ func NoCompleted(cmd *cobra.Command) {
 	if cmd == nil {
 		return
 	}
-	cmd.Println(desc.TextDesc(text.TextDescKeyTaskArchiveNoCompleted))
+	cmd.Println(desc.TextDesc(text.DescKeyTaskArchiveNoCompleted))
 }
 
 // DryRun prints the dry-run preview for task archiving.
@@ -77,7 +77,7 @@ func DryRun(
 		return
 	}
 	cmd.Println(fmt.Sprintf(
-		desc.TextDesc(text.TextDescKeyTaskArchiveDryRunBlock),
+		desc.TextDesc(text.DescKeyTaskArchiveDryRunBlock),
 		archivableCount, pendingCount, separator, preview, separator,
 	))
 }
@@ -98,13 +98,13 @@ func Success(
 	}
 	cmd.Println(
 		fmt.Sprintf(
-			desc.TextDesc(text.TextDescKeyTaskArchiveSuccess),
+			desc.TextDesc(text.DescKeyTaskArchiveSuccess),
 			archivedCount, archiveFilePath,
 		),
 	)
 	cmd.Println(
 		fmt.Sprintf(
-			desc.TextDesc(text.TextDescKeyTaskArchivePendingRemain),
+			desc.TextDesc(text.DescKeyTaskArchivePendingRemain),
 			pendingCount,
 		),
 	)

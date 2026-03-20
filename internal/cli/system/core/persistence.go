@@ -70,7 +70,7 @@ func ReadPersistenceState(path string) (PersistenceState, bool) {
 //   - path: absolute path to the state file
 //   - s: state to persist
 func WritePersistenceState(path string, s PersistenceState) {
-	content := fmt.Sprintf(desc.TextDesc(text.TextDescKeyCheckPersistenceStateFormat),
+	content := fmt.Sprintf(desc.TextDesc(text.DescKeyCheckPersistenceStateFormat),
 		s.Count, s.LastNudge, s.LastMtime)
 	_ = os.WriteFile(path, []byte(content), fs.PermSecret)
 }

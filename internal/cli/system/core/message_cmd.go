@@ -48,14 +48,14 @@ func ValidationError(hook, variant string) error {
 //   - info: hook message info containing template variable names
 func PrintTemplateVars(cmd *cobra.Command, info *messages.HookMessageInfo) {
 	if len(info.TemplateVars) == 0 {
-		cmd.Println(desc.TextDesc(text.TextDescKeyMessageTemplateVarsNone))
+		cmd.Println(desc.TextDesc(text.DescKeyMessageTemplateVarsNone))
 		return
 	}
 	formatted := make([]string, len(info.TemplateVars))
 	for i, v := range info.TemplateVars {
 		formatted[i] = "{{." + v + "}}"
 	}
-	cmd.Println(fmt.Sprintf(desc.TextDesc(text.TextDescKeyMessageTemplateVarsLabel), strings.Join(formatted, ", ")))
+	cmd.Println(fmt.Sprintf(desc.TextDesc(text.DescKeyMessageTemplateVarsLabel), strings.Join(formatted, ", ")))
 }
 
 // OverridePath returns the user override file path for a hook/variant.

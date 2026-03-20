@@ -41,12 +41,12 @@ func sessionStart(
 	if loadErr != nil {
 		return out.ErrResponse(id, proto.ErrCodeInternal,
 			fmt.Sprintf(
-				desc.TextDesc(text.TextDescKeyMCPLoadContext), loadErr))
+				desc.TextDesc(text.DescKeyMCPLoadContext), loadErr))
 	}
 
 	var sb strings.Builder
 	sb.WriteString(
-		desc.TextDesc(text.TextDescKeyMCPPromptSessionStartHeader),
+		desc.TextDesc(text.DescKeyMCPPromptSessionStartHeader),
 	)
 	sb.WriteString(token.NewlineLF)
 	sb.WriteString(token.NewlineLF)
@@ -58,19 +58,19 @@ func sessionStart(
 		}
 		_, _ = fmt.Fprintf(
 			&sb,
-			desc.TextDesc(text.TextDescKeyMCPPromptSectionFormat),
+			desc.TextDesc(text.DescKeyMCPPromptSectionFormat),
 			fileName, string(f.Content),
 		)
 	}
 
 	sb.WriteString(token.NewlineLF)
 	sb.WriteString(
-		desc.TextDesc(text.TextDescKeyMCPPromptSessionStartFooter),
+		desc.TextDesc(text.DescKeyMCPPromptSessionStartFooter),
 	)
 
 	return out.OkResponse(id, proto.GetPromptResult{
 		Description: desc.TextDesc(
-			text.TextDescKeyMCPPromptSessionStartResultD,
+			text.DescKeyMCPPromptSessionStartResultD,
 		),
 		Messages: []proto.PromptMessage{
 			{
@@ -102,25 +102,25 @@ func checkpoint(
 
 	var sb strings.Builder
 	sb.WriteString(
-		desc.TextDesc(text.TextDescKeyMCPPromptCheckpointHeader),
+		desc.TextDesc(text.DescKeyMCPPromptCheckpointHeader),
 	)
 	sb.WriteString(token.NewlineLF)
 	sb.WriteString(token.NewlineLF)
 
 	_, _ = fmt.Fprintf(
 		&sb,
-		desc.TextDesc(text.TextDescKeyMCPPromptCheckpointStatsFormat),
+		desc.TextDesc(text.DescKeyMCPPromptCheckpointStatsFormat),
 		toolCalls, adds, pending,
 	)
 
 	sb.WriteString(token.NewlineLF)
 	sb.WriteString(
-		desc.TextDesc(text.TextDescKeyMCPPromptCheckpointSteps),
+		desc.TextDesc(text.DescKeyMCPPromptCheckpointSteps),
 	)
 
 	return out.OkResponse(id, proto.GetPromptResult{
 		Description: desc.TextDesc(
-			text.TextDescKeyMCPPromptCheckpointResultD,
+			text.DescKeyMCPPromptCheckpointResultD,
 		),
 		Messages: []proto.PromptMessage{
 			{
@@ -147,18 +147,18 @@ func addDecision(
 	id json.RawMessage, args map[string]string,
 ) *proto.Response {
 	return buildEntry(id, promptdef.EntryPromptSpec{
-		KeyHeader:  text.TextDescKeyMCPPromptAddDecisionHeader,
-		KeyFooter:  text.TextDescKeyMCPPromptAddDecisionFooter,
-		FieldFmtK:  text.TextDescKeyMCPPromptAddDecisionFieldFmt,
-		KeyResultD: text.TextDescKeyMCPPromptAddDecisionResultD,
+		KeyHeader:  text.DescKeyMCPPromptAddDecisionHeader,
+		KeyFooter:  text.DescKeyMCPPromptAddDecisionFooter,
+		FieldFmtK:  text.DescKeyMCPPromptAddDecisionFieldFmt,
+		KeyResultD: text.DescKeyMCPPromptAddDecisionResultD,
 		Fields: []promptdef.EntryField{
-			{KeyLabel: text.TextDescKeyMCPPromptLabelDecision,
+			{KeyLabel: text.DescKeyMCPPromptLabelDecision,
 				Value: args[field.Content]},
-			{KeyLabel: text.TextDescKeyMCPPromptLabelContext,
+			{KeyLabel: text.DescKeyMCPPromptLabelContext,
 				Value: args[cli.AttrContext]},
-			{KeyLabel: text.TextDescKeyMCPPromptLabelRationale,
+			{KeyLabel: text.DescKeyMCPPromptLabelRationale,
 				Value: args[cli.AttrRationale]},
-			{KeyLabel: text.TextDescKeyMCPPromptLabelConsequence,
+			{KeyLabel: text.DescKeyMCPPromptLabelConsequence,
 				Value: args[cli.AttrConsequence]},
 		},
 	})
@@ -177,18 +177,18 @@ func addLearning(
 	id json.RawMessage, args map[string]string,
 ) *proto.Response {
 	return buildEntry(id, promptdef.EntryPromptSpec{
-		KeyHeader:  text.TextDescKeyMCPPromptAddLearningHeader,
-		KeyFooter:  text.TextDescKeyMCPPromptAddLearningFooter,
-		FieldFmtK:  text.TextDescKeyMCPPromptAddLearningFieldFmt,
-		KeyResultD: text.TextDescKeyMCPPromptAddLearningResultD,
+		KeyHeader:  text.DescKeyMCPPromptAddLearningHeader,
+		KeyFooter:  text.DescKeyMCPPromptAddLearningFooter,
+		FieldFmtK:  text.DescKeyMCPPromptAddLearningFieldFmt,
+		KeyResultD: text.DescKeyMCPPromptAddLearningResultD,
 		Fields: []promptdef.EntryField{
-			{KeyLabel: text.TextDescKeyMCPPromptLabelLearning,
+			{KeyLabel: text.DescKeyMCPPromptLabelLearning,
 				Value: args[field.Content]},
-			{KeyLabel: text.TextDescKeyMCPPromptLabelContext,
+			{KeyLabel: text.DescKeyMCPPromptLabelContext,
 				Value: args[cli.AttrContext]},
-			{KeyLabel: text.TextDescKeyMCPPromptLabelLesson,
+			{KeyLabel: text.DescKeyMCPPromptLabelLesson,
 				Value: args[cli.AttrLesson]},
-			{KeyLabel: text.TextDescKeyMCPPromptLabelApplication,
+			{KeyLabel: text.DescKeyMCPPromptLabelApplication,
 				Value: args[cli.AttrApplication]},
 		},
 	})
@@ -204,14 +204,14 @@ func addLearning(
 func reflect(id json.RawMessage) *proto.Response {
 	return out.OkResponse(id, proto.GetPromptResult{
 		Description: desc.TextDesc(
-			text.TextDescKeyMCPPromptReflectResultD),
+			text.DescKeyMCPPromptReflectResultD),
 		Messages: []proto.PromptMessage{
 			{
 				Role: prompt.RoleUser,
 				Content: proto.ToolContent{
 					Type: mime.ContentTypeText,
 					Text: desc.TextDesc(
-						text.TextDescKeyMCPPromptReflectBody,
+						text.DescKeyMCPPromptReflectBody,
 					),
 				},
 			},

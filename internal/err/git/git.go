@@ -18,9 +18,9 @@ import (
 // The message is loaded from assets and includes guidance for the user.
 //
 // Returns:
-//   - error: message from the assets key parser.git-not-found
+//   - error: message from the assets key err.parser.git-not-found
 func NotFound() error {
-	return errors.New(desc.TextDesc(text.TextDescKeyParserGitNotFound))
+	return errors.New(desc.TextDesc(text.DescKeyErrParserGitNotFound))
 }
 
 // NotInRepo wraps a failure from git rev-parse.
@@ -32,6 +32,6 @@ func NotFound() error {
 //   - error: "not in a git repository: <cause>"
 func NotInRepo(cause error) error {
 	return fmt.Errorf(
-		desc.TextDesc(text.TextDescKeyErrGitNotInGitRepo), cause,
+		desc.TextDesc(text.DescKeyErrGitNotInGitRepo), cause,
 	)
 }

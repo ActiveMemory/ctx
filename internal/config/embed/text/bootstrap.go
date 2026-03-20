@@ -14,12 +14,12 @@ const (
 )
 
 const (
-	TextDescKeyWriteBootstrapDir       = "write.bootstrap-dir"
-	TextDescKeyWriteBootstrapFiles     = "write.bootstrap-files"
-	TextDescKeyWriteBootstrapNextSteps = "write.bootstrap-next-steps"
-	TextDescKeyWriteBootstrapNumbered  = "write.bootstrap-numbered"
-	TextDescKeyWriteBootstrapRules     = "write.bootstrap-rules"
-	TextDescKeyWriteBootstrapSep       = "write.bootstrap-sep"
-	TextDescKeyWriteBootstrapTitle     = "write.bootstrap-title"
-	TextDescKeyWriteBootstrapWarning   = "write.bootstrap-warning"
+	DescKeyWriteBootstrapDir       = "write.bootstrap-dir"
+	DescKeyWriteBootstrapFiles     = "write.bootstrap-files"
+	DescKeyWriteBootstrapNextSteps = "write.bootstrap-next-steps"
+	DescKeyWriteBootstrapNumbered  = "write.bootstrap-numbered"
+	DescKeyWriteBootstrapRules     = "write.bootstrap-rules"
+	DescKeyWriteBootstrapSep       = "write.bootstrap-sep"
+	DescKeyWriteBootstrapTitle     = "write.bootstrap-title"
+	DescKeyWriteBootstrapWarning   = "write.bootstrap-warning"
 )

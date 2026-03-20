@@ -17,9 +17,9 @@ const (
 )
 
 const (
-	TextDescKeyTimeAgo     = "time.ago"
-	TextDescKeyTimeDay     = "time.day"
-	TextDescKeyTimeHour    = "time.hour"
-	TextDescKeyTimeJustNow = "time.just-now"
-	TextDescKeyTimeMinute  = "time.minute"
+	DescKeyTimeAgo     = "time.ago"
+	DescKeyTimeDay     = "time.day"
+	DescKeyTimeHour    = "time.hour"
+	DescKeyTimeJustNow = "time.just-now"
+	DescKeyTimeMinute  = "time.minute"
 )

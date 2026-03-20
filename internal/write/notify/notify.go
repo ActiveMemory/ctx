@@ -23,7 +23,7 @@ func SetupPrompt(cmd *cobra.Command) {
 	if cmd == nil {
 		return
 	}
-	cmd.Print(desc.TextDesc(text.TextDescKeyWriteSetupPrompt))
+	cmd.Print(desc.TextDesc(text.DescKeyWriteSetupPrompt))
 }
 
 // SetupDone prints the success block after saving a webhook:
@@ -39,7 +39,7 @@ func SetupDone(cmd *cobra.Command, maskedURL, encPath string) {
 	}
 	cmd.Println(
 		fmt.Sprintf(
-			desc.TextDesc(text.TextDescKeyWriteSetupDone),
+			desc.TextDesc(text.DescKeyWriteSetupDone),
 			maskedURL, encPath,
 		),
 	)

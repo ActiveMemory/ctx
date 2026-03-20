@@ -85,9 +85,9 @@ func SnapshotDone(cmd *cobra.Command, updated bool, path string) {
 		return
 	}
 	if updated {
-		cmd.Println(fmt.Sprintf(desc.TextDesc(text.TextDescKeyWriteSnapshotUpdated), path))
+		cmd.Println(fmt.Sprintf(desc.TextDesc(text.DescKeyWriteSnapshotUpdated), path))
 	} else {
-		cmd.Println(fmt.Sprintf(desc.TextDesc(text.TextDescKeyWriteSnapshotSaved), path))
+		cmd.Println(fmt.Sprintf(desc.TextDesc(text.DescKeyWriteSnapshotSaved), path))
 	}
 }
 

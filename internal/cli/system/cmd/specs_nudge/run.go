@@ -39,7 +39,7 @@ func Run(cmd *cobra.Command, stdin *os.File) error {
 	if paused {
 		return nil
 	}
-	fallback := desc.TextDesc(text.TextDescKeySpecsNudgeFallback)
+	fallback := desc.TextDesc(text.DescKeySpecsNudgeFallback)
 	msg := core.LoadMessage(
 		hook.SpecsNudge, hook.VariantNudge, nil, fallback,
 	)
@@ -48,7 +48,7 @@ func Run(cmd *cobra.Command, stdin *os.File) error {
 	}
 	msg = ctxcontext.AppendDir(msg)
 	core.PrintHookContext(cmd, hook.EventPreToolUse, msg)
-	nudgeMsg := desc.TextDesc(text.TextDescKeySpecsNudgeNudgeMessage)
+	nudgeMsg := desc.TextDesc(text.DescKeySpecsNudgeNudgeMessage)
 	ref := notify.NewTemplateRef(hook.SpecsNudge, hook.VariantNudge, nil)
 	core.Relay(hook.SpecsNudge+": "+nudgeMsg, input.SessionID, ref)
 	return nil

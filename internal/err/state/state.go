@@ -22,7 +22,7 @@ import (
 //   - error: "reading state directory: <cause>"
 func ReadingDir(cause error) error {
 	return fmt.Errorf(
-		desc.TextDesc(text.TextDescKeyErrStateReadingStateDir), cause,
+		desc.TextDesc(text.DescKeyErrStateReadingStateDir), cause,
 	)
 }
 
@@ -34,7 +34,7 @@ func ReadingDir(cause error) error {
 // Returns:
 //   - error: "loading state: <cause>"
 func Load(cause error) error {
-	return fmt.Errorf(desc.TextDesc(text.TextDescKeyErrStateLoadState), cause)
+	return fmt.Errorf(desc.TextDesc(text.DescKeyErrStateLoadState), cause)
 }
 
 // Save wraps a state-saving failure.
@@ -45,5 +45,5 @@ func Load(cause error) error {
 // Returns:
 //   - error: "saving state: <cause>"
 func Save(cause error) error {
-	return fmt.Errorf(desc.TextDesc(text.TextDescKeyErrStateSaveState), cause)
+	return fmt.Errorf(desc.TextDesc(text.DescKeyErrStateSaveState), cause)
 }

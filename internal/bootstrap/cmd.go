@@ -13,6 +13,7 @@ import (
 
 	"github.com/ActiveMemory/ctx/internal/assets/read/desc"
 	"github.com/ActiveMemory/ctx/internal/config/embed/cmd"
+	embedflag "github.com/ActiveMemory/ctx/internal/config/embed/flag"
 	ctxcontext "github.com/ActiveMemory/ctx/internal/context/validate"
 	"github.com/ActiveMemory/ctx/internal/err/fs"
 	ctxerr "github.com/ActiveMemory/ctx/internal/err/initialize"
@@ -107,13 +108,13 @@ func RootCmd() *cobra.Command {
 		&contextDir,
 		flag.ContextDir,
 		"",
-		desc.FlagDesc(flag.ContextDir),
+		desc.FlagDesc(embedflag.DescKeyContextDir),
 	)
 	cmd.PersistentFlags().BoolVar(
 		&allowOutsideCwd,
 		flag.AllowOutsideCwd,
 		false,
-		desc.FlagDesc(flag.AllowOutsideCwd),
+		desc.FlagDesc(embedflag.DescKeyAllowOutsideCwd),
 	)
 
 	return cmd

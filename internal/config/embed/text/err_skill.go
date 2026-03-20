@@ -7,6 +7,6 @@
 package text
 
 const (
-	TextDescKeyErrSkillList = "err.skill.skill-list"
-	TextDescKeyErrSkillRead = "err.skill.skill-read"
+	DescKeyErrSkillList = "err.skill.skill-list"
+	DescKeyErrSkillRead = "err.skill.skill-read"
 )

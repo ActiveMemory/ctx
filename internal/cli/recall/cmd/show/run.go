@@ -121,7 +121,7 @@ func Run(
 			if msg.BelongsToAssistant() {
 				role = desc.TextDesc(text.DescKeyLabelRoleAssistant)
 			} else if len(msg.ToolResults) > 0 && msg.Text == "" {
-				role = desc.TextDesc(text.TextDescKeyLabelToolOutput)
+				role = desc.TextDesc(text.DescKeyLabelToolOutput)
 			}
 
 			recall.ConversationTurn(

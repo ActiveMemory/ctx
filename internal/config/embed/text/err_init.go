@@ -7,12 +7,12 @@
 package text
 
 const (
-	TextDescKeyErrInitCtxNotInPath          = "err.init.ctx-not-in-path"
-	TextDescKeyErrInitContextNotInitialized = "err.init.context-not-initialized"
-	TextDescKeyErrInitCreateMakefile        = "err.init.create-makefile"
-	TextDescKeyErrInitDetectReferenceTime   = "err.init.detect-reference-time"
-	TextDescKeyErrInitHomeDir               = "err.init.home-dir"
-	TextDescKeyErrInitNotInitialized        = "err.init.not-initialized"
-	TextDescKeyErrInitReadInitTemplate      = "err.init.read-init-template"
-	TextDescKeyErrInitReadProjectReadme     = "err.init.read-project-readme"
+	DescKeyErrInitCtxNotInPath          = "err.init.ctx-not-in-path"
+	DescKeyErrInitContextNotInitialized = "err.init.context-not-initialized"
+	DescKeyErrInitCreateMakefile        = "err.init.create-makefile"
+	DescKeyErrInitDetectReferenceTime   = "err.init.detect-reference-time"
+	DescKeyErrInitHomeDir               = "err.init.home-dir"
+	DescKeyErrInitNotInitialized        = "err.init.not-initialized"
+	DescKeyErrInitReadInitTemplate      = "err.init.read-init-template"
+	DescKeyErrInitReadProjectReadme     = "err.init.read-project-readme"
 )

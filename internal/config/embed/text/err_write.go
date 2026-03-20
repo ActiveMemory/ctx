@@ -7,5 +7,6 @@
 package text
 
 const (
-	TextDescKeyWritePrefixError = "write.prefix-error"
+	DescKeyWritePrefixError = "write.prefix-error"
+	DescKeyWritePrefixWarn  = "write.prefix-warn"
 )

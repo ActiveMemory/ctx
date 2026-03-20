@@ -7,9 +7,9 @@
 package text
 
 const (
-	TextDescKeyMCPNoTasks          = "mcp.no-tasks"
-	TextDescKeyMCPNextTaskFormat   = "mcp.next-task-format"
-	TextDescKeyMCPAllTasksComplete = "mcp.all-tasks-complete"
-	TextDescKeyMCPCheckTaskFormat  = "mcp.check-task-format"
-	TextDescKeyMCPCheckTaskHint    = "mcp.check-task-hint"
+	DescKeyMCPNoTasks          = "mcp.no-tasks"
+	DescKeyMCPNextTaskFormat   = "mcp.next-task-format"
+	DescKeyMCPAllTasksComplete = "mcp.all-tasks-complete"
+	DescKeyMCPCheckTaskFormat  = "mcp.check-task-format"
+	DescKeyMCPCheckTaskHint    = "mcp.check-task-hint"
 )

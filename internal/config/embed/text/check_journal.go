@@ -7,10 +7,10 @@
 package text
 
 const (
-	TextDescKeyCheckJournalBoxTitle           = "check-journal.box-title"
-	TextDescKeyCheckJournalFallbackBoth       = "check-journal.fallback-both"
-	TextDescKeyCheckJournalFallbackUnenriched = "check-journal.fallback-unenriched"
-	TextDescKeyCheckJournalFallbackUnexported = "check-journal.fallback-unexported"
-	TextDescKeyCheckJournalRelayFormat        = "check-journal.relay-format"
-	TextDescKeyCheckJournalRelayPrefix        = "check-journal.relay-prefix"
+	DescKeyCheckJournalBoxTitle           = "check-journal.box-title"
+	DescKeyCheckJournalFallbackBoth       = "check-journal.fallback-both"
+	DescKeyCheckJournalFallbackUnenriched = "check-journal.fallback-unenriched"
+	DescKeyCheckJournalFallbackUnexported = "check-journal.fallback-unexported"
+	DescKeyCheckJournalRelayFormat        = "check-journal.relay-format"
+	DescKeyCheckJournalRelayPrefix        = "check-journal.relay-prefix"
 )

@@ -22,5 +22,5 @@ func ErrCtxNotInPath(cmd *cobra.Command) {
 		return
 	}
 
-	cmd.PrintErrln(desc.TextDesc(text.TextDescKeyErrInitCtxNotInPath))
+	cmd.PrintErrln(desc.TextDesc(text.DescKeyErrInitCtxNotInPath))
 }

@@ -35,14 +35,14 @@ func Promote(e Entry, classification Classification) error {
 
 	switch classification.Target {
 	case entry.Decision:
-		params.Context = desc.TextDesc(text.TextDescKeyMemoryImportSource)
+		params.Context = desc.TextDesc(text.DescKeyMemoryImportSource)
 		params.Rationale = extractBody(e.Text)
-		params.Consequence = desc.TextDesc(text.TextDescKeyMemoryImportReview)
+		params.Consequence = desc.TextDesc(text.DescKeyMemoryImportReview)
 
 	case entry.Learning:
-		params.Context = desc.TextDesc(text.TextDescKeyMemoryImportSource)
+		params.Context = desc.TextDesc(text.DescKeyMemoryImportSource)
 		params.Lesson = extractBody(e.Text)
-		params.Application = desc.TextDesc(text.TextDescKeyMemoryImportReview)
+		params.Application = desc.TextDesc(text.DescKeyMemoryImportReview)
 
 	case entry.Task:
 		// Tasks just need content: FormatTask handles the rest

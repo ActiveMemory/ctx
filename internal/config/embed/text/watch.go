@@ -7,14 +7,14 @@
 package text
 
 const (
-	TextDescKeyWatchApplyFailed   = "watch.apply-failed"
-	TextDescKeyWatchApplySuccess  = "watch.apply-success"
-	TextDescKeyWatchDryRunPreview = "watch.dry-run-preview"
-	TextDescKeyWatchWatching      = "watch.watching"
+	DescKeyWatchApplyFailed   = "watch.apply-failed"
+	DescKeyWatchApplySuccess  = "watch.apply-success"
+	DescKeyWatchDryRunPreview = "watch.dry-run-preview"
+	DescKeyWatchWatching      = "watch.watching"
 )
 
 const (
-	TextDescKeyWatchCloseLogError = "watch.close-log-error"
-	TextDescKeyWatchDryRun        = "watch.dry-run"
-	TextDescKeyWatchStopHint      = "watch.stop-hint"
+	DescKeyWatchCloseLogError = "watch.close-log-error"
+	DescKeyWatchDryRun        = "watch.dry-run-banner"
+	DescKeyWatchStopHint      = "watch.stop-hint"
 )

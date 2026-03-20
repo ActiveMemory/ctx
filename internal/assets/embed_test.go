@@ -18,7 +18,7 @@ import (
 	"gopkg.in/yaml.v3"
 )
 
-// TestTextDescKeysResolve lives in read/desc/desc_test.go where it can
+// TestDescKeysResolve lives in read/desc/desc_test.go where it can
 // call lookup.Init() without an import cycle.
 
 // TestDefaultPermissions lives in read/lookup/perm_test.go where it can

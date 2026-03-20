@@ -7,7 +7,7 @@
 package text
 
 const (
-	TextDescKeyMCPSessionStartedCallerFormat = "mcp.session-started-caller-format"
-	TextDescKeyMCPSessionStartedFormat       = "mcp.session-started-format"
-	TextDescKeyMCPSessionEnding              = "mcp.session-ending"
+	DescKeyMCPSessionStartedCallerFormat = "mcp.session-started-caller-format"
+	DescKeyMCPSessionStartedFormat       = "mcp.session-started-format"
+	DescKeyMCPSessionEnding              = "mcp.session-ending"
 )

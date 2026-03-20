@@ -34,9 +34,9 @@ const (
 )
 
 const (
-	TextDescKeyErrContextDirNotFound = "err.context.dir-not-found"
+	DescKeyErrContextDirNotFound = "err.context.dir-not-found"
 )
 
 const (
-	TextDescKeyWritePathExists = "write.path-exists"
+	DescKeyWritePathExists = "write.path-exists"
 )

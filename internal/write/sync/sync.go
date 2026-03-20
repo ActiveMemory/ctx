@@ -26,9 +26,9 @@ func SyncDryRun(cmd *cobra.Command, sourcePath, mirrorPath string, hasDrift bool
 	if cmd == nil {
 		return
 	}
-	cmd.Println(desc.TextDesc(text.TextDescKeyWriteDryRun))
-	cmd.Println(fmt.Sprintf(desc.TextDesc(text.TextDescKeyWriteSource), sourcePath))
-	cmd.Println(fmt.Sprintf(desc.TextDesc(text.TextDescKeyWriteMirror), mirrorPath))
+	cmd.Println(desc.TextDesc(text.DescKeyWriteDryRun))
+	cmd.Println(fmt.Sprintf(desc.TextDesc(text.DescKeyWriteSource), sourcePath))
+	cmd.Println(fmt.Sprintf(desc.TextDesc(text.DescKeyWriteMirror), mirrorPath))
 	if hasDrift {
 		cmd.Println(desc.TextDesc(text.DescKeyWriteStatusDrift))
 	} else {
@@ -56,20 +56,20 @@ func SyncResult(
 		return
 	}
 	if archivedTo != "" {
-		cmd.Println(fmt.Sprintf(desc.TextDesc(text.TextDescKeyWriteArchived), archivedTo))
+		cmd.Println(fmt.Sprintf(desc.TextDesc(text.DescKeyWriteArchived), archivedTo))
 	}
 	cmd.Println(fmt.Sprintf(desc.TextDesc(text.DescKeyWriteSynced), sourceLabel, mirrorPath))
-	cmd.Println(fmt.Sprintf(desc.TextDesc(text.TextDescKeyWriteSource), sourcePath))
+	cmd.Println(fmt.Sprintf(desc.TextDesc(text.DescKeyWriteSource), sourcePath))
 
-	line := desc.TextDesc(text.TextDescKeyWriteLines)
+	line := desc.TextDesc(text.DescKeyWriteLines)
 	if mirrorLines > 0 {
-		line += desc.TextDesc(text.TextDescKeyWriteLinesPrevious)
+		line += desc.TextDesc(text.DescKeyWriteLinesPrevious)
 		cmd.Println(fmt.Sprintf(line, sourceLines, mirrorLines))
 	} else {
 		cmd.Println(fmt.Sprintf(line, sourceLines))
 	}
 	if sourceLines > mirrorLines {
-		cmd.Println(fmt.Sprintf(desc.TextDesc(text.TextDescKeyWriteNewContent), sourceLines-mirrorLines))
+		cmd.Println(fmt.Sprintf(desc.TextDesc(text.DescKeyWriteNewContent), sourceLines-mirrorLines))
 	}
 }
 

@@ -5,7 +5,7 @@
 .PHONY: build test vet fmt lint lint-drift lint-docs clean all release build-all help \
 test-coverage smoke site site-feed site-serve site-serve-lan site-setup audit check plugin-reload \
 journal journal-serve journal-serve-lan gpg-fix gpg-test \
-sync-why check-why
+sync-why check-why gemini-search
 
 # Default binary name and output
 BINARY := ctx
@@ -198,6 +198,10 @@ gpg-fix:
 ## gpg-test: Test GPG signing configuration
 gpg-test:
 	./hack/gpg-fix.sh --test
+
+## gemini-search: Register gemini-search MCP server with Claude Code
+gemini-search:
+	@./hack/gemini-search.sh
 
 ## plugin-reload: Clear cached plugin (restart Claude Code to pick up skill/hook changes)
 plugin-reload:

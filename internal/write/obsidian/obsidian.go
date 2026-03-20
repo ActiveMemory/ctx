@@ -22,15 +22,15 @@ import (
 //   - output: Output directory path
 func InfoGenerated(cmd *cobra.Command, count int, output string) {
 	cmd.Println(
-		fmt.Sprintf(desc.TextDesc(text.TextDescKeyWriteObsidianGenerated),
+		fmt.Sprintf(desc.TextDesc(text.DescKeyWriteObsidianGenerated),
 			count, output,
 		),
 	)
 	cmd.Println()
-	cmd.Println(desc.TextDesc(text.TextDescKeyWriteObsidianNextStepsHeading))
+	cmd.Println(desc.TextDesc(text.DescKeyWriteObsidianNextStepsHeading))
 	cmd.Println(
 		fmt.Sprintf(
-			desc.TextDesc(text.TextDescKeyWriteObsidianNextSteps),
+			desc.TextDesc(text.DescKeyWriteObsidianNextSteps),
 			output,
 		),
 	)

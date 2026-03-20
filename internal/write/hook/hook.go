@@ -49,8 +49,8 @@ func InfoTool(cmd *cobra.Command, content string) {
 //   - cmd: Cobra command for output
 //   - targetFile: Path to the existing file
 func InfoCopilotSkipped(cmd *cobra.Command, targetFile string) {
-	cmd.Println(fmt.Sprintf(desc.TextDesc(text.TextDescKeyWriteHookCopilotSkipped), targetFile))
-	cmd.Println(desc.TextDesc(text.TextDescKeyWriteHookCopilotForceHint))
+	cmd.Println(fmt.Sprintf(desc.TextDesc(text.DescKeyWriteHookCopilotSkipped), targetFile))
+	cmd.Println(desc.TextDesc(text.DescKeyWriteHookCopilotForceHint))
 }
 
 // InfoCopilotMerged reports that copilot instructions were merged
@@ -60,7 +60,7 @@ func InfoCopilotSkipped(cmd *cobra.Command, targetFile string) {
 //   - cmd: Cobra command for output
 //   - targetFile: Path to the merged file
 func InfoCopilotMerged(cmd *cobra.Command, targetFile string) {
-	cmd.Println(fmt.Sprintf(desc.TextDesc(text.TextDescKeyWriteHookCopilotMerged), targetFile))
+	cmd.Println(fmt.Sprintf(desc.TextDesc(text.DescKeyWriteHookCopilotMerged), targetFile))
 }
 
 // InfoCopilotCreated reports that copilot instructions were created.
@@ -69,7 +69,7 @@ func InfoCopilotMerged(cmd *cobra.Command, targetFile string) {
 //   - cmd: Cobra command for output
 //   - targetFile: Path to the created file
 func InfoCopilotCreated(cmd *cobra.Command, targetFile string) {
-	cmd.Println(fmt.Sprintf(desc.TextDesc(text.TextDescKeyWriteHookCopilotCreated), targetFile))
+	cmd.Println(fmt.Sprintf(desc.TextDesc(text.DescKeyWriteHookCopilotCreated), targetFile))
 }
 
 // InfoCopilotSessionsDir reports that the sessions directory was created.
@@ -78,7 +78,7 @@ func InfoCopilotCreated(cmd *cobra.Command, targetFile string) {
 //   - cmd: Cobra command for output
 //   - sessionsDir: Path to the sessions directory
 func InfoCopilotSessionsDir(cmd *cobra.Command, sessionsDir string) {
-	cmd.Println(fmt.Sprintf(desc.TextDesc(text.TextDescKeyWriteHookCopilotSessionsDir), sessionsDir))
+	cmd.Println(fmt.Sprintf(desc.TextDesc(text.DescKeyWriteHookCopilotSessionsDir), sessionsDir))
 }
 
 // InfoCopilotSummary prints the post-write summary for copilot.
@@ -87,7 +87,7 @@ func InfoCopilotSessionsDir(cmd *cobra.Command, sessionsDir string) {
 //   - cmd: Cobra command for output
 func InfoCopilotSummary(cmd *cobra.Command) {
 	cmd.Println()
-	cmd.Println(desc.TextDesc(text.TextDescKeyWriteHookCopilotSummary))
+	cmd.Println(desc.TextDesc(text.DescKeyWriteHookCopilotSummary))
 }
 
 // InfoUnknownTool prints the unknown tool message.
@@ -96,5 +96,5 @@ func InfoCopilotSummary(cmd *cobra.Command) {
 //   - cmd: Cobra command for output
 //   - tool: The unrecognized tool name
 func InfoUnknownTool(cmd *cobra.Command, tool string) {
-	cmd.Println(fmt.Sprintf(desc.TextDesc(text.TextDescKeyWriteHookUnknownTool), tool))
+	cmd.Println(fmt.Sprintf(desc.TextDesc(text.DescKeyWriteHookUnknownTool), tool))
 }

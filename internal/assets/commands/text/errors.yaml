@@ -307,6 +307,8 @@ err.parser.unmarshal:
   short: 'unmarshal: %w'
 err.parser.walk-dir:
   short: 'walk directory: %w'
+err.parser.git-not-found:
+  short: git not found in PATH; install git to enable remote URL enrichment
 err.prompt.exists:
   short: prompt %q already exists
 err.prompt.list-entry-templates:

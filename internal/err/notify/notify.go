@@ -19,7 +19,7 @@ import (
 // Returns:
 //   - error: "webhook URL cannot be empty"
 func WebhookEmpty() error {
-	return errors.New(desc.TextDesc(text.TextDescKeyErrNotifyWebhookEmpty))
+	return errors.New(desc.TextDesc(text.DescKeyErrNotifyWebhookEmpty))
 }
 
 // SaveWebhook wraps a webhook save failure.
@@ -31,7 +31,7 @@ func WebhookEmpty() error {
 //   - error: "save webhook: <cause>"
 func SaveWebhook(cause error) error {
 	return fmt.Errorf(
-		desc.TextDesc(text.TextDescKeyErrNotifySaveWebhook), cause,
+		desc.TextDesc(text.DescKeyErrNotifySaveWebhook), cause,
 	)
 }
 
@@ -44,7 +44,7 @@ func SaveWebhook(cause error) error {
 //   - error: "load webhook: <cause>"
 func LoadWebhook(cause error) error {
 	return fmt.Errorf(
-		desc.TextDesc(text.TextDescKeyErrNotifyLoadWebhook), cause,
+		desc.TextDesc(text.DescKeyErrNotifyLoadWebhook), cause,
 	)
 }
 
@@ -57,7 +57,7 @@ func LoadWebhook(cause error) error {
 //   - error: "marshal payload: <cause>"
 func MarshalPayload(cause error) error {
 	return fmt.Errorf(
-		desc.TextDesc(text.TextDescKeyErrNotifyMarshalPayload), cause,
+		desc.TextDesc(text.DescKeyErrNotifyMarshalPayload), cause,
 	)
 }
 
@@ -70,6 +70,6 @@ func MarshalPayload(cause error) error {
 //   - error: "send test notification: <cause>"
 func SendNotification(cause error) error {
 	return fmt.Errorf(
-		desc.TextDesc(text.TextDescKeyErrNotifySendNotification), cause,
+		desc.TextDesc(text.DescKeyErrNotifySendNotification), cause,
 	)
 }

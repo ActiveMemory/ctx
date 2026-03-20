@@ -7,15 +7,15 @@
 package text
 
 const (
-	TextDescKeyErrValidateContextDirSymlink  = "err.validate.context-dir-symlink"
-	TextDescKeyErrValidateContextFileSymlink = "err.validate.context-file-symlink"
-	TextDescKeyErrValidateContextOutsideRoot = "err.validate.context-outside-root"
-	TextDescKeyErrValidateInvalidSelection   = "err.validate.invalid-selection"
-	TextDescKeyErrValidateUnknownDocument    = "err.validate.unknown-document"
-	TextDescKeyErrValidateArgRequired        = "err.validation.arg-required"
-	TextDescKeyErrValidateCtxNotInPath       = "err.validation.ctx-not-in-path"
-	TextDescKeyErrValidateDriftViolations    = "err.validation.drift-violations"
-	TextDescKeyErrValidateFlagRequired       = "err.validation.flag-required"
-	TextDescKeyErrValidateParseFile          = "err.validation.parse-file"
-	TextDescKeyErrValidateWorkingDirectory   = "err.validation.working-directory"
+	DescKeyErrValidateContextDirSymlink  = "err.validate.context-dir-symlink"
+	DescKeyErrValidateContextFileSymlink = "err.validate.context-file-symlink"
+	DescKeyErrValidateContextOutsideRoot = "err.validate.context-outside-root"
+	DescKeyErrValidateInvalidSelection   = "err.validate.invalid-selection"
+	DescKeyErrValidateUnknownDocument    = "err.validate.unknown-document"
+	DescKeyErrValidateArgRequired        = "err.validation.arg-required"
+	DescKeyErrValidateCtxNotInPath       = "err.validation.ctx-not-in-path"
+	DescKeyErrValidateDriftViolations    = "err.validation.drift-violations"
+	DescKeyErrValidateFlagRequired       = "err.validation.flag-required"
+	DescKeyErrValidateParseFile          = "err.validation.parse-file"
+	DescKeyErrValidateWorkingDirectory   = "err.validation.working-directory"
 )

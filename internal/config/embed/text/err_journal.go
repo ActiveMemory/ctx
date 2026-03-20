@@ -7,14 +7,14 @@
 package text
 
 const (
-	TextDescKeyErrJournalLoadJournalState      = "err.journal.load-journal-state"
-	TextDescKeyErrJournalNoEntriesMatch        = "err.journal.no-entries-match"
-	TextDescKeyErrJournalNoJournalDir          = "err.journal.no-journal-dir"
-	TextDescKeyErrJournalNoJournalEntries      = "err.journal.no-journal-entries"
-	TextDescKeyErrJournalReadJournalDir        = "err.journal.read-journal-dir"
-	TextDescKeyErrJournalRegenerateRequiresAll = "err.journal.regenerate-requires-all"
-	TextDescKeyErrJournalSaveJournalState      = "err.journal.save-journal-state"
-	TextDescKeyErrJournalScanJournal           = "err.journal.scan-journal"
-	TextDescKeyErrJournalStageNotSet           = "err.journal.stage-not-set"
-	TextDescKeyErrJournalUnknownStage          = "err.journal.unknown-stage"
+	DescKeyErrJournalLoadJournalState      = "err.journal.load-journal-state"
+	DescKeyErrJournalNoEntriesMatch        = "err.journal.no-entries-match"
+	DescKeyErrJournalNoJournalDir          = "err.journal.no-journal-dir"
+	DescKeyErrJournalNoJournalEntries      = "err.journal.no-journal-entries"
+	DescKeyErrJournalReadJournalDir        = "err.journal.read-journal-dir"
+	DescKeyErrJournalRegenerateRequiresAll = "err.journal.regenerate-requires-all"
+	DescKeyErrJournalSaveJournalState      = "err.journal.save-journal-state"
+	DescKeyErrJournalScanJournal           = "err.journal.scan-journal"
+	DescKeyErrJournalStageNotSet           = "err.journal.stage-not-set"
+	DescKeyErrJournalUnknownStage          = "err.journal.unknown-stage"
 )

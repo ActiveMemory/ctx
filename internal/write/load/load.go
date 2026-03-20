@@ -67,7 +67,7 @@ func Assembled(
 	sep := token.Separator
 
 	sb.WriteString(desc.TextDesc(text.DescKeyHeadingContext) + nl + nl)
-	_, _ = fmt.Fprintf(&sb, tpl.TplLoadBudget+nl+nl, budget, totalTokens)
+	_, _ = fmt.Fprintf(&sb, tpl.LoadBudget+nl+nl, budget, totalTokens)
 	sb.WriteString(sep + nl + nl)
 
 	tokensUsed := ctxToken.EstimateTokensString(sb.String())
@@ -79,11 +79,11 @@ func Assembled(
 
 		fileTokens := f.Tokens
 		if tokensUsed+fileTokens > budget {
-			_, _ = fmt.Fprintf(&sb, nl+sep+nl+nl+tpl.TplLoadTruncated+nl, f.Name)
+			_, _ = fmt.Fprintf(&sb, nl+sep+nl+nl+tpl.LoadTruncated+nl, f.Name)
 			break
 		}
 
-		_, _ = fmt.Fprintf(&sb, tpl.TplLoadSectionHeading+nl+nl, titleFn(f.Name))
+		_, _ = fmt.Fprintf(&sb, tpl.LoadSectionHeading+nl+nl, titleFn(f.Name))
 		sb.Write(f.Content)
 		if !strings.HasSuffix(string(f.Content), nl) {
 			sb.WriteString(nl)

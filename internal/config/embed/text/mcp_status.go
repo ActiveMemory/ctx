@@ -7,26 +7,26 @@
 package text
 
 const (
-	TextDescKeyMCPAddedFormat         = "mcp.added-format"
-	TextDescKeyMCPCompletedFormat     = "mcp.completed-format"
-	TextDescKeyMCPStatusContextFormat = "mcp.status-context-format"
-	TextDescKeyMCPStatusFilesFormat   = "mcp.status-files-format"
-	TextDescKeyMCPStatusUsageFormat   = "mcp.status-usage-format"
-	TextDescKeyMCPStatusFileFormat    = "mcp.status-file-format"
+	DescKeyMCPAddedFormat         = "mcp.added-format"
+	DescKeyMCPCompletedFormat     = "mcp.completed-format"
+	DescKeyMCPStatusContextFormat = "mcp.status-context-format"
+	DescKeyMCPStatusFilesFormat   = "mcp.status-files-format"
+	DescKeyMCPStatusUsageFormat   = "mcp.status-usage-format"
+	DescKeyMCPStatusFileFormat    = "mcp.status-file-format"
 )
 
 const (
-	TextDescKeyMCPStatusOK    = "mcp.status-ok"
-	TextDescKeyMCPStatusEmpty = "mcp.status-empty"
+	DescKeyMCPStatusOK    = "mcp.status-ok"
+	DescKeyMCPStatusEmpty = "mcp.status-empty"
 )
 
 const (
-	TextDescKeyMCPAlsoNoted     = "mcp.also-noted"
-	TextDescKeyMCPOmittedFormat = "mcp.omitted-format"
-	TextDescKeyMCPReviewStatus  = "mcp.review-status"
-	TextDescKeyMCPCompactClean  = "mcp.compact-clean"
+	DescKeyMCPAlsoNoted     = "mcp.also-noted"
+	DescKeyMCPOmittedFormat = "mcp.omitted-format"
+	DescKeyMCPReviewStatus  = "mcp.review-status"
+	DescKeyMCPCompactClean  = "mcp.compact-clean"
 )
 
 const (
-	TextDescKeyConfirmProceed = "confirm.proceed"
+	DescKeyConfirmProceed = "confirm.proceed"
 )

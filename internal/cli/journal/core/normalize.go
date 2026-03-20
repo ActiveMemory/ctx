@@ -184,7 +184,7 @@ func WrapToolOutputs(content string) string {
 		m := regex.TurnHeader.FindStringSubmatch(
 			strings.TrimSpace(lines[i]),
 		)
-		if m == nil || m[2] != desc.TextDesc(text.TextDescKeyLabelToolOutput) {
+		if m == nil || m[2] != desc.TextDesc(text.DescKeyLabelToolOutput) {
 			out = append(out, lines[i])
 			i++
 			continue

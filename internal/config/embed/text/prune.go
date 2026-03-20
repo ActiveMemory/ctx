@@ -7,8 +7,8 @@
 package text
 
 const (
-	TextDescKeyPruneDryRunLine    = "prune.dry-run-line"
-	TextDescKeyPruneDryRunSummary = "prune.dry-run-summary"
-	TextDescKeyPruneErrorLine     = "prune.error-line"
-	TextDescKeyPruneSummary       = "prune.summary"
+	DescKeyPruneDryRunLine    = "prune.dry-run-line"
+	DescKeyPruneDryRunSummary = "prune.dry-run-summary"
+	DescKeyPruneErrorLine     = "prune.error-line"
+	DescKeyPruneSummary       = "prune.summary"
 )

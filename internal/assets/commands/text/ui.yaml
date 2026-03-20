@@ -3,6 +3,24 @@
 
 agent.instruction:
   short: 'Before starting work, confirm to the user: "I have read the required context files and I''m following project conventions."'
+agent.packet-meta:
+  short: 'Generated: %s | Budget: %d tokens | Used: ~%d tokens'
+agent.packet-title:
+  short: '# Context Packet'
+agent.section-constitution:
+  short: '## Constitution (NEVER VIOLATE)'
+agent.section-conventions:
+  short: '## Key Conventions'
+agent.section-decisions:
+  short: '## Recent Decisions'
+agent.section-learnings:
+  short: '## Key Learnings'
+agent.section-read-order:
+  short: '## Read These Files'
+agent.section-summaries:
+  short: '## Also Noted'
+agent.section-tasks:
+  short: '## Current Tasks'
 changes.fallback-label:
   short: 24 hour(s) ago (default)
 changes.since-prefix:
@@ -138,8 +156,6 @@ journal.moc.files-description:
   short: — sessions grouped by file touched
 journal.moc.nav-description:
   short: Navigation hub for all journal entries.
-journal.moc.see-also:
-  short: '**See also**:'
 journal.moc.session-link:
   short: '- [%s](%s%s) (%d sessions)%s'
 journal.moc.topic-page-stats:
@@ -180,14 +196,8 @@ memory.publish-title:
   short: |+
     # Project Context (managed by ctx)
 
-memory.select-content:
-  short: 'selecting content: %v'
-memory.write-memory:
-  short: 'writing MEMORY.md: %v'
 pad.key-created:
   short: Scratchpad key created at %s
-parser.git-not-found:
-  short: git not found in PATH; install git to enable remote URL enrichment
 prune.dry-run-line:
   short: '  would prune: %s (age: %s)'
 prune.dry-run-summary:
@@ -281,7 +291,7 @@ watch.apply-success:
     ✓ Applied: [%s] %s
 watch.close-log-error:
   short: 'failed to close log file: %v'
-watch.dry-run:
+watch.dry-run-banner:
   short: DRY RUN — No changes will be made
 watch.dry-run-preview:
   short: |

@@ -49,7 +49,7 @@ func StripMkDocs(content string) string {
 
 	inAdmonition := false
 	inTab := false
-	blockquotePrefix := desc.TextDesc(text.TextDescKeyWhyBlockquotePrefix)
+	blockquotePrefix := desc.TextDesc(text.DescKeyWhyBlockquotePrefix)
 
 	for i := 0; i < len(lines); i++ {
 		line := lines[i]
@@ -69,7 +69,7 @@ func StripMkDocs(content string) string {
 				result = append(
 					result,
 					fmt.Sprintf(
-						desc.TextDesc(text.TextDescKeyWhyAdmonitionFormat), title,
+						desc.TextDesc(text.DescKeyWhyAdmonitionFormat), title,
 					),
 				)
 			}
@@ -94,7 +94,7 @@ func StripMkDocs(content string) string {
 			title := ExtractTabTitle(line)
 			if title != "" {
 				result = append(result,
-					fmt.Sprintf(desc.TextDesc(text.TextDescKeyWhyBoldFormat), title))
+					fmt.Sprintf(desc.TextDesc(text.DescKeyWhyBoldFormat), title))
 			}
 			continue
 		}

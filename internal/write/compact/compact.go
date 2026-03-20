@@ -20,7 +20,7 @@ import (
 //   - cmd: Cobra command for output
 //   - taskText: Truncated task description
 func InfoMovingTask(cmd *cobra.Command, taskText string) {
-	cmd.Println(fmt.Sprintf(desc.TextDesc(text.TextDescKeyWriteMovingTask), taskText))
+	cmd.Println(fmt.Sprintf(desc.TextDesc(text.DescKeyWriteMovingTask), taskText))
 }
 
 // InfoSkippingTask reports a task skipped due to incomplete children.
@@ -31,7 +31,7 @@ func InfoMovingTask(cmd *cobra.Command, taskText string) {
 func InfoSkippingTask(cmd *cobra.Command, taskText string) {
 	cmd.Println(
 		fmt.Sprintf(
-			desc.TextDesc(text.TextDescKeyTaskArchiveSkipping), taskText,
+			desc.TextDesc(text.DescKeyTaskArchiveSkipping), taskText,
 		),
 	)
 }
@@ -48,7 +48,7 @@ func InfoArchivedTasks(
 ) {
 	cmd.Println(
 		fmt.Sprintf(
-			desc.TextDesc(text.TextDescKeyTaskArchiveSuccessWithAge),
+			desc.TextDesc(text.DescKeyTaskArchiveSuccessWithAge),
 			count, archiveFile, days,
 		),
 	)

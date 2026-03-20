@@ -7,7 +7,7 @@
 package text
 
 const (
-	TextDescKeyMCPPendingUpdatesFormat = "mcp.pending-updates-format"
-	TextDescKeyMCPReviewPending        = "mcp.review-pending"
-	TextDescKeyMCPNoPending            = "mcp.no-pending"
+	DescKeyMCPPendingUpdatesFormat = "mcp.pending-updates-format"
+	DescKeyMCPReviewPending        = "mcp.review-pending"
+	DescKeyMCPNoPending            = "mcp.no-pending"
 )

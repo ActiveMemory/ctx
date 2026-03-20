@@ -28,12 +28,12 @@ func Run(cmd *cobra.Command, root string) error {
 	profile := core.DetectProfile()
 	switch profile {
 	case core.ProfileDev:
-		cmd.Println(desc.TextDesc(text.TextDescKeyWriteConfigProfileDev))
+		cmd.Println(desc.TextDesc(text.DescKeyWriteConfigProfileDev))
 	case core.ProfileBase:
-		cmd.Println(desc.TextDesc(text.TextDescKeyWriteConfigProfileBase))
+		cmd.Println(desc.TextDesc(text.DescKeyWriteConfigProfileBase))
 	default:
 		cmd.Println(fmt.Sprintf(
-			desc.TextDesc(text.TextDescKeyWriteConfigProfileNone),
+			desc.TextDesc(text.DescKeyWriteConfigProfileNone),
 			core.FileCtxRC,
 		))
 	}

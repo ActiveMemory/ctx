@@ -36,3 +36,31 @@ type Packet struct {
 	Summaries    []string `json:"summaries,omitempty"`
 	Instruction  string   `json:"instruction"`
 }
+
+// AssembledPacket holds the budget-aware output sections ready for rendering.
+//
+// Budget tier allocation percentages are defined in config.
+//
+// Fields:
+//   - ReadOrder: File paths in recommended reading order
+//   - Constitution: Constitution rules (always included)
+//   - Tasks: Active tasks (budget-capped)
+//   - Conventions: Convention items (budget-capped)
+//   - Decisions: Full decision entries (scored, budget-fitted)
+//   - Learnings: Full learning entries (scored, budget-fitted)
+//   - Summaries: Title-only summaries of entries that didn't fit
+//   - Instruction: Behavioral instruction for the agent
+//   - Budget: Requested token budget
+//   - TokensUsed: Actual tokens consumed by the packet
+type AssembledPacket struct {
+	ReadOrder    []string
+	Constitution []string
+	Tasks        []string
+	Conventions  []string
+	Decisions    []string
+	Learnings    []string
+	Summaries    []string
+	Instruction  string
+	Budget       int
+	TokensUsed   int
+}

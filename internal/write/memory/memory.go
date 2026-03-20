@@ -22,7 +22,7 @@ func NoChanges(cmd *cobra.Command) {
 	if cmd == nil {
 		return
 	}
-	cmd.Println(desc.TextDesc(text.TextDescKeyWriteMemoryNoChanges))
+	cmd.Println(desc.TextDesc(text.DescKeyWriteMemoryNoChanges))
 }
 
 // BridgeHeader prints the "Memory Bridge Status" heading.
@@ -33,7 +33,7 @@ func BridgeHeader(cmd *cobra.Command) {
 	if cmd == nil {
 		return
 	}
-	cmd.Println(desc.TextDesc(text.TextDescKeyWriteMemoryBridgeHeader))
+	cmd.Println(desc.TextDesc(text.DescKeyWriteMemoryBridgeHeader))
 }
 
 // SourceNotActive prints that auto memory is not active.
@@ -44,7 +44,7 @@ func SourceNotActive(cmd *cobra.Command) {
 	if cmd == nil {
 		return
 	}
-	cmd.Println(desc.TextDesc(text.TextDescKeyWriteMemorySourceNotActive))
+	cmd.Println(desc.TextDesc(text.DescKeyWriteMemorySourceNotActive))
 }
 
 // Source prints the source path.
@@ -56,7 +56,7 @@ func Source(cmd *cobra.Command, path string) {
 	if cmd == nil {
 		return
 	}
-	cmd.Println(fmt.Sprintf(desc.TextDesc(text.TextDescKeyWriteMemorySource), path))
+	cmd.Println(fmt.Sprintf(desc.TextDesc(text.DescKeyWriteMemorySource), path))
 }
 
 // Mirror prints the mirror relative path.
@@ -68,7 +68,7 @@ func Mirror(cmd *cobra.Command, relativePath string) {
 	if cmd == nil {
 		return
 	}
-	cmd.Println(fmt.Sprintf(desc.TextDesc(text.TextDescKeyWriteMemoryMirror), relativePath))
+	cmd.Println(fmt.Sprintf(desc.TextDesc(text.DescKeyWriteMemoryMirror), relativePath))
 }
 
 // LastSync prints the last sync timestamp with age.
@@ -81,7 +81,7 @@ func LastSync(cmd *cobra.Command, formatted, ago string) {
 	if cmd == nil {
 		return
 	}
-	cmd.Println(fmt.Sprintf(desc.TextDesc(text.TextDescKeyWriteMemoryLastSync), formatted, ago))
+	cmd.Println(fmt.Sprintf(desc.TextDesc(text.DescKeyWriteMemoryLastSync), formatted, ago))
 }
 
 // LastSyncNever prints that no sync has occurred.
@@ -92,7 +92,7 @@ func LastSyncNever(cmd *cobra.Command) {
 	if cmd == nil {
 		return
 	}
-	cmd.Println(desc.TextDesc(text.TextDescKeyWriteMemoryLastSyncNever))
+	cmd.Println(desc.TextDesc(text.DescKeyWriteMemoryLastSyncNever))
 }
 
 // SourceLines prints the MEMORY.md line count.
@@ -106,10 +106,10 @@ func SourceLines(cmd *cobra.Command, count int, drifted bool) {
 		return
 	}
 	if drifted {
-		cmd.Println(fmt.Sprintf(desc.TextDesc(text.TextDescKeyWriteMemorySourceLinesDrift), count))
+		cmd.Println(fmt.Sprintf(desc.TextDesc(text.DescKeyWriteMemorySourceLinesDrift), count))
 		return
 	}
-	cmd.Println(fmt.Sprintf(desc.TextDesc(text.TextDescKeyWriteMemorySourceLines), count))
+	cmd.Println(fmt.Sprintf(desc.TextDesc(text.DescKeyWriteMemorySourceLines), count))
 }
 
 // MirrorLines prints the mirror line count.
@@ -121,7 +121,7 @@ func MirrorLines(cmd *cobra.Command, count int) {
 	if cmd == nil {
 		return
 	}
-	cmd.Println(fmt.Sprintf(desc.TextDesc(text.TextDescKeyWriteMemoryMirrorLines), count))
+	cmd.Println(fmt.Sprintf(desc.TextDesc(text.DescKeyWriteMemoryMirrorLines), count))
 }
 
 // MirrorNotSynced prints that the mirror has not been synced yet.
@@ -132,7 +132,7 @@ func MirrorNotSynced(cmd *cobra.Command) {
 	if cmd == nil {
 		return
 	}
-	cmd.Println(desc.TextDesc(text.TextDescKeyWriteMemoryMirrorNotSynced))
+	cmd.Println(desc.TextDesc(text.DescKeyWriteMemoryMirrorNotSynced))
 }
 
 // DriftDetected prints that drift was detected.
@@ -143,7 +143,7 @@ func DriftDetected(cmd *cobra.Command) {
 	if cmd == nil {
 		return
 	}
-	cmd.Println(desc.TextDesc(text.TextDescKeyWriteMemoryDriftDetected))
+	cmd.Println(desc.TextDesc(text.DescKeyWriteMemoryDriftDetected))
 }
 
 // DriftNone prints that no drift was detected.
@@ -154,7 +154,7 @@ func DriftNone(cmd *cobra.Command) {
 	if cmd == nil {
 		return
 	}
-	cmd.Println(desc.TextDesc(text.TextDescKeyWriteMemoryDriftNone))
+	cmd.Println(desc.TextDesc(text.DescKeyWriteMemoryDriftNone))
 }
 
 // Archives prints the archive snapshot count.
@@ -167,5 +167,5 @@ func Archives(cmd *cobra.Command, count int, dir string) {
 	if cmd == nil {
 		return
 	}
-	cmd.Println(fmt.Sprintf(desc.TextDesc(text.TextDescKeyWriteMemoryArchives), count, dir))
+	cmd.Println(fmt.Sprintf(desc.TextDesc(text.DescKeyWriteMemoryArchives), count, dir))
 }

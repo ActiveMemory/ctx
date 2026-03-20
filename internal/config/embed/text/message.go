@@ -7,30 +7,30 @@
 package text
 
 const (
-	TextDescKeyMessageCtxSpecificWarning = "message.ctx-specific-warning"
-	TextDescKeyMessageEditHint           = "message.edit-hint"
+	DescKeyMessageCtxSpecificWarning = "message.ctx-specific-warning"
+	DescKeyMessageEditHint           = "message.edit-hint"
 )
 
 const (
-	TextDescKeyMessageListHeaderCategory = "message.list-header-category"
-	TextDescKeyMessageListHeaderHook     = "message.list-header-hook"
-	TextDescKeyMessageListHeaderOverride = "message.list-header-override"
-	TextDescKeyMessageListHeaderVariant  = "message.list-header-variant"
+	DescKeyMessageListHeaderCategory = "message.list-header-category"
+	DescKeyMessageListHeaderHook     = "message.list-header-hook"
+	DescKeyMessageListHeaderOverride = "message.list-header-override"
+	DescKeyMessageListHeaderVariant  = "message.list-header-variant"
 )
 
 const (
-	TextDescKeyMessageNoOverride      = "message.no-override"
-	TextDescKeyMessageOverrideCreated = "message.override-created"
-	TextDescKeyMessageOverrideLabel   = "message.override-label"
-	TextDescKeyMessageOverrideRemoved = "message.override-removed"
+	DescKeyMessageNoOverride      = "message.no-override"
+	DescKeyMessageOverrideCreated = "message.override-created"
+	DescKeyMessageOverrideLabel   = "message.override-label"
+	DescKeyMessageOverrideRemoved = "message.override-removed"
 )
 
 const (
-	TextDescKeyMessageSourceDefault  = "message.source-default"
-	TextDescKeyMessageSourceOverride = "message.source-override"
+	DescKeyMessageSourceDefault  = "message.source-default"
+	DescKeyMessageSourceOverride = "message.source-override"
 )
 
 const (
-	TextDescKeyMessageTemplateVarsLabel = "message.template-vars-label"
-	TextDescKeyMessageTemplateVarsNone  = "message.template-vars-none"
+	DescKeyMessageTemplateVarsLabel = "message.template-vars-label"
+	DescKeyMessageTemplateVarsNone  = "message.template-vars-none"
 )

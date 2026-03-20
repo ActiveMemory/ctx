@@ -31,7 +31,7 @@ func loadRC() *CtxRC {
 	data, err := os.ReadFile(file.CtxRC)
 	if err == nil {
 		if yamlErr := yaml.Unmarshal(data, cfg); yamlErr != nil {
-			_, _ = fmt.Fprintf(os.Stderr, desc.TextDesc(text.TextDescKeyRcParseWarning)+token.NewlineLF,
+			_, _ = fmt.Fprintf(os.Stderr, desc.TextDesc(text.DescKeyRcParseWarning)+token.NewlineLF,
 				file.CtxRC, yamlErr)
 		}
 	}

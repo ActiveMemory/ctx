@@ -9,6 +9,6 @@
 package text
 
 const (
-	TextDescKeyErrGitNotInGitRepo = "err.git.not-in-git-repo"
-	TextDescKeyParserGitNotFound  = "parser.git-not-found"
+	DescKeyErrGitNotInGitRepo   = "err.git.not-in-git-repo"
+	DescKeyErrParserGitNotFound = "err.parser.git-not-found"
 )

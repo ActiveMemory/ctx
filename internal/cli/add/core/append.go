@@ -37,7 +37,7 @@ func AppendEntry(
 		return InsertTask(entry, existingStr, section)
 	// Decisions: insert before existing entries for reverse-chronological order
 	case FileTypeIsDecision(fileType):
-		return InsertDecision(existingStr, entry, desc.TextDesc(text.TextDescKeyHeadingDecisions))
+		return InsertDecision(existingStr, entry, desc.TextDesc(text.DescKeyHeadingDecisions))
 	// Learnings: insert before existing entries for reverse-chronological order
 	case FileTypeIsLearning(fileType):
 		return InsertLearning(existingStr, entry)

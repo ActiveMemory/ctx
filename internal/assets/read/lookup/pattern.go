@@ -7,9 +7,8 @@
 package lookup
 
 import (
-	cfgsync "github.com/ActiveMemory/ctx/internal/config/sync"
-
 	"github.com/ActiveMemory/ctx/internal/config/embed/text"
+	"github.com/ActiveMemory/ctx/internal/config/sync"
 )
 
 // ConfigPattern pairs a glob pattern with its localizable topic description.
@@ -21,11 +20,11 @@ type ConfigPattern struct {
 // ConfigPatterns returns config file patterns with resolved topic descriptions.
 func ConfigPatterns() []ConfigPattern {
 	return []ConfigPattern{
-		{cfgsync.PatternEslint, TextDesc(text.DescKeySyncTopicEslint)},
-		{cfgsync.PatternPrettier, TextDesc(text.DescKeySyncTopicPrettier)},
-		{cfgsync.PatternTSConfig, TextDesc(text.DescKeySyncTopicTSConfig)},
-		{cfgsync.PatternEditorConf, TextDesc(text.DescKeySyncTopicEditorConfig)},
-		{cfgsync.PatternMakefile, TextDesc(text.DescKeySyncTopicMakefile)},
-		{cfgsync.PatternDockerfile, TextDesc(text.DescKeySyncTopicDockerfile)},
+		{sync.PatternEslint, TextDesc(text.DescKeySyncTopicEslint)},
+		{sync.PatternPrettier, TextDesc(text.DescKeySyncTopicPrettier)},
+		{sync.PatternTSConfig, TextDesc(text.DescKeySyncTopicTSConfig)},
+		{sync.PatternEditorConf, TextDesc(text.DescKeySyncTopicEditorConfig)},
+		{sync.PatternMakefile, TextDesc(text.DescKeySyncTopicMakefile)},
+		{sync.PatternDockerfile, TextDesc(text.DescKeySyncTopicDockerfile)},
 	}
 }

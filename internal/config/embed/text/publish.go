@@ -21,6 +21,6 @@ const (
 )
 
 const (
-	TextDescKeyWriteUnpublishDone     = "write.unpublish-done"
-	TextDescKeyWriteUnpublishNotFound = "write.unpublish-not-found"
+	DescKeyWriteUnpublishDone     = "write.unpublish-done"
+	DescKeyWriteUnpublishNotFound = "write.unpublish-not-found"
 )

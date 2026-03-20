@@ -27,5 +27,5 @@ func InfoExistsWritingAsAlternative(
 	if cmd == nil {
 		return
 	}
-	cmd.Println(fmt.Sprintf(desc.TextDesc(text.TextDescKeyWriteExistsWritingAsAlternative), path, alternative))
+	cmd.Println(fmt.Sprintf(desc.TextDesc(text.DescKeyWriteExistsWritingAsAlternative), path, alternative))
 }

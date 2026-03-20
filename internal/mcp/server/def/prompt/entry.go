@@ -6,14 +6,14 @@
 
 package prompt
 
-// EntryField pairs a label TextDescKey with a Value from prompt
+// EntryField pairs a label DescKey with a Value from prompt
 // arguments.
 type EntryField struct {
 	KeyLabel string
 	Value    string
 }
 
-// EntryPromptSpec holds the TextDescKeys that vary between
+// EntryPromptSpec holds the DescKeys that vary between
 // add-decision and add-learning prompts.
 type EntryPromptSpec struct {
 	KeyHeader  string

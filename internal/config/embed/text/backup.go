@@ -18,11 +18,11 @@ const (
 )
 
 const (
-	TextDescKeyWriteBackupResult  = "write.backup-result"
-	TextDescKeyWriteBackupSMBDest = "write.backup-smb-dest"
+	DescKeyWriteBackupResult  = "write.backup-result"
+	DescKeyWriteBackupSMBDest = "write.backup-smb-dest"
 )
 
 const (
-	TextDescKeyWriteSnapshotSaved   = "write.snapshot-saved"
-	TextDescKeyWriteSnapshotUpdated = "write.snapshot-updated"
+	DescKeyWriteSnapshotSaved   = "write.snapshot-saved"
+	DescKeyWriteSnapshotUpdated = "write.snapshot-updated"
 )

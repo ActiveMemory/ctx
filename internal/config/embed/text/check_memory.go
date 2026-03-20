@@ -7,8 +7,8 @@
 package text
 
 const (
-	TextDescKeyCheckMemoryDriftBoxTitle     = "check-memory-drift.box-title"
-	TextDescKeyCheckMemoryDriftContent      = "check-memory-drift.content"
-	TextDescKeyCheckMemoryDriftRelayMessage = "check-memory-drift.relay-message"
-	TextDescKeyCheckMemoryDriftRelayPrefix  = "check-memory-drift.relay-prefix"
+	DescKeyCheckMemoryDriftBoxTitle     = "check-memory-drift.box-title"
+	DescKeyCheckMemoryDriftContent      = "check-memory-drift.content"
+	DescKeyCheckMemoryDriftRelayMessage = "check-memory-drift.relay-message"
+	DescKeyCheckMemoryDriftRelayPrefix  = "check-memory-drift.relay-prefix"
 )

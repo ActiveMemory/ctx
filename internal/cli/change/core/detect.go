@@ -56,7 +56,7 @@ func DetectReferenceTime(since string) (time.Time, string, error) {
 
 	// Fallback: 24h ago.
 	t := time.Now().Add(-24 * time.Hour)
-	return t, desc.TextDesc(text.TextDescKeyChangesFallbackLabel), nil
+	return t, desc.TextDesc(text.DescKeyChangesFallbackLabel), nil
 }
 
 // ParseSinceFlag parses a duration (like "24h") or date (like "2026-03-01").
@@ -77,7 +77,7 @@ func ParseSinceFlag(since string) (time.Time, string, error) {
 
 	// Try date.
 	if t, err := time.Parse(time2.DateFormat, since); err == nil {
-		return t, desc.TextDesc(text.TextDescKeyChangesSincePrefix) + since, nil
+		return t, desc.TextDesc(text.DescKeyChangesSincePrefix) + since, nil
 	}
 
 	// Try RFC3339.
@@ -193,19 +193,19 @@ func ExtractTimestamp(jsonLine string) (time.Time, bool) {
 // Returns:
 //   - string: Human-readable time description
 func HumanAgo(d time.Duration) string {
-	ago := desc.TextDesc(text.TextDescKeyTimeAgo)
+	ago := desc.TextDesc(text.DescKeyTimeAgo)
 	switch {
 	case d < time.Minute:
-		return desc.TextDesc(text.TextDescKeyTimeJustNow)
+		return desc.TextDesc(text.DescKeyTimeJustNow)
 	case d < time.Hour:
 		m := int(d.Minutes())
-		return Pluralize(m, desc.TextDesc(text.TextDescKeyTimeMinute)) + ago
+		return Pluralize(m, desc.TextDesc(text.DescKeyTimeMinute)) + ago
 	case d < 24*time.Hour:
 		h := int(d.Hours())
-		return Pluralize(h, desc.TextDesc(text.TextDescKeyTimeHour)) + ago
+		return Pluralize(h, desc.TextDesc(text.DescKeyTimeHour)) + ago
 	default:
 		days := int(d.Hours() / 24)
-		return Pluralize(days, desc.TextDesc(text.TextDescKeyTimeDay)) + ago
+		return Pluralize(days, desc.TextDesc(text.DescKeyTimeDay)) + ago
 	}
 }
 

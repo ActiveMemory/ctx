@@ -80,7 +80,7 @@ func Run(cmd *cobra.Command, stdin *os.File) error {
 
 	// Version mismatch — emit warning
 	fallback := fmt.Sprintf(desc.TextDesc(
-		text.TextDescKeyCheckVersionFallback), binaryVer, pluginVer,
+		text.DescKeyCheckVersionFallback), binaryVer, pluginVer,
 	)
 	content := core.LoadMessage(hook.CheckVersion, hook.VariantMismatch,
 		map[string]any{
@@ -92,8 +92,8 @@ func Run(cmd *cobra.Command, stdin *os.File) error {
 		return nil
 	}
 
-	boxTitle := desc.TextDesc(text.TextDescKeyCheckVersionBoxTitle)
-	relayPrefix := desc.TextDesc(text.TextDescKeyCheckVersionRelayPrefix)
+	boxTitle := desc.TextDesc(text.DescKeyCheckVersionBoxTitle)
+	relayPrefix := desc.TextDesc(text.DescKeyCheckVersionRelayPrefix)
 
 	cmd.Println(core.NudgeBox(relayPrefix, boxTitle, content))
 
@@ -105,7 +105,7 @@ func Run(cmd *cobra.Command, stdin *os.File) error {
 	versionMsg := hook.CheckVersion + ": " +
 		fmt.Sprintf(
 			desc.TextDesc(
-				text.TextDescKeyCheckVersionMismatchRelayFormat,
+				text.DescKeyCheckVersionMismatchRelayFormat,
 			), binaryVer, pluginVer,
 		)
 	core.NudgeAndRelay(versionMsg, input.SessionID, ref)

@@ -74,7 +74,7 @@ func checkPathReferences(ctx *entity.Context, report *Report) {
 						File:    f.Name,
 						Line:    lineNum + 1,
 						Type:    IssueDeadPath,
-						Message: desc.TextDesc(text.TextDescKeyDriftDeadPath),
+						Message: desc.TextDesc(text.DescKeyDriftDeadPath),
 						Path:    path,
 					})
 					foundDeadPaths = true
@@ -106,7 +106,7 @@ func checkStaleness(ctx *entity.Context, report *Report) {
 			report.Warnings = append(report.Warnings, Issue{
 				File:    f.Name,
 				Type:    IssueStaleness,
-				Message: desc.TextDesc(text.TextDescKeyDriftStaleness),
+				Message: desc.TextDesc(text.DescKeyDriftStaleness),
 				Path:    "",
 			})
 			staleness = true
@@ -157,7 +157,7 @@ func checkConstitution(_ *entity.Context, report *Report) {
 					report.Violations = append(report.Violations, Issue{
 						File:    entry.Name(),
 						Type:    IssueSecret,
-						Message: desc.TextDesc(text.TextDescKeyDriftSecret),
+						Message: desc.TextDesc(text.DescKeyDriftSecret),
 						Rule:    "no_secrets",
 					})
 					foundViolation = true
@@ -191,7 +191,7 @@ func checkRequiredFiles(ctx *entity.Context, report *Report) {
 			report.Warnings = append(report.Warnings, Issue{
 				File:    name,
 				Type:    IssueMissing,
-				Message: desc.TextDesc(text.TextDescKeyDriftMissingFile),
+				Message: desc.TextDesc(text.DescKeyDriftMissingFile),
 			})
 			allPresent = false
 		}
@@ -237,7 +237,7 @@ func checkFileAge(ctx *entity.Context, report *Report) {
 			report.Warnings = append(report.Warnings, Issue{
 				File:    f.Name,
 				Type:    IssueStaleAge,
-				Message: fmt.Sprintf(desc.TextDesc(text.TextDescKeyDriftStaleAge), days),
+				Message: fmt.Sprintf(desc.TextDesc(text.DescKeyDriftStaleAge), days),
 			})
 			foundStale = true
 		}
@@ -280,7 +280,7 @@ func checkEntryCount(ctx *entity.Context, report *Report) {
 				File: f.Name,
 				Type: IssueEntryCount,
 				Message: fmt.Sprintf(
-					desc.TextDesc(text.TextDescKeyDriftEntryCount),
+					desc.TextDesc(text.DescKeyDriftEntryCount),
 					len(blocks), c.threshold,
 				),
 			})
@@ -293,7 +293,8 @@ func checkEntryCount(ctx *entity.Context, report *Report) {
 	}
 }
 
-// checkMissingPackages warns about internal/ directories not referenced in ARCHITECTURE.md.
+// checkMissingPackages warns about internal/ directories not referenced
+// in ARCHITECTURE.md.
 //
 // Extracts backtick-quoted internal/ paths from ARCHITECTURE.md, normalizes
 // them to top-level packages (e.g., internal/cli/pad → internal/cli), then
@@ -331,10 +332,12 @@ func checkMissingPackages(ctx *entity.Context, report *Report) {
 		pkg := "internal/" + entry.Name()
 		if !referenced[pkg] {
 			report.Warnings = append(report.Warnings, Issue{
-				File:    f.Name,
-				Type:    IssueMissingPackage,
-				Message: fmt.Sprintf(desc.TextDesc(text.TextDescKeyDriftMissingPackage), pkg),
-				Path:    pkg,
+				File: f.Name,
+				Type: IssueMissingPackage,
+				Message: fmt.Sprintf(
+					desc.TextDesc(text.DescKeyDriftMissingPackage), pkg,
+				),
+				Path: pkg,
 			})
 			found = true
 		}

@@ -60,7 +60,7 @@ func Run(cmd *cobra.Command, stdin *os.File) error {
 
 	hookName, variant := hook.PostCommit, hook.VariantNudge
 
-	fallback := desc.TextDesc(text.TextDescKeyPostCommitFallback)
+	fallback := desc.TextDesc(text.DescKeyPostCommitFallback)
 	msg := core.LoadMessage(hookName, variant, nil, fallback)
 	if msg == "" {
 		return nil
@@ -69,7 +69,7 @@ func Run(cmd *cobra.Command, stdin *os.File) error {
 	core.PrintHookContext(cmd, hook.EventPostToolUse, msg)
 
 	ref := notify.NewTemplateRef(hookName, variant, nil)
-	core.Relay(hookName+": "+desc.TextDesc(text.TextDescKeyPostCommitRelayMessage), input.SessionID, ref)
+	core.Relay(hookName+": "+desc.TextDesc(text.DescKeyPostCommitRelayMessage), input.SessionID, ref)
 
 	core.CheckVersionDrift(cmd, sessionID)
 

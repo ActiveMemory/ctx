@@ -130,7 +130,7 @@ config.schema:
   short: Print JSON Schema for .ctxrc
 config.status:
   short: Show active .ctxrc profile
-config.switchcmd:
+config.switch:
   long: |-
     Switch between .ctxrc configuration profiles.
 

@@ -177,7 +177,7 @@ func Update(content, fileHeader, columnHeader string) string {
 // Returns:
 //   - string: Updated content with regenerated index
 func UpdateDecisions(content string) string {
-	return Update(content, desc.TextDesc(text.TextDescKeyHeadingDecisions), desc.TextDesc(text.TextDescKeyColumnDecision))
+	return Update(content, desc.TextDesc(text.DescKeyHeadingDecisions), desc.TextDesc(text.DescKeyColumnDecision))
 }
 
 // UpdateLearnings regenerates the learning index in LEARNINGS.md content.
@@ -188,7 +188,7 @@ func UpdateDecisions(content string) string {
 // Returns:
 //   - string: Updated content with regenerated index
 func UpdateLearnings(content string) string {
-	return Update(content, desc.TextDesc(text.TextDescKeyHeadingLearnings), desc.TextDesc(text.TextDescKeyColumnLearning))
+	return Update(content, desc.TextDesc(text.DescKeyHeadingLearnings), desc.TextDesc(text.DescKeyColumnLearning))
 }
 
 // ReindexFile reads a context file, regenerates its index, and writes it back.
@@ -233,14 +233,14 @@ func ReindexFile(
 	entries := ParseHeaders(string(content))
 	if len(entries) == 0 {
 		_, err := fmt.Fprintf(
-			w, desc.TextDesc(text.TextDescKeyDriftCleared)+token.NewlineLF, entryType)
+			w, desc.TextDesc(text.DescKeyDriftCleared)+token.NewlineLF, entryType)
 		if err != nil {
 			return err
 		}
 	} else {
 		_, err := fmt.Fprintf(
 			w,
-			desc.TextDesc(text.TextDescKeyDriftRegenerated)+token.NewlineLF, len(entries),
+			desc.TextDesc(text.DescKeyDriftRegenerated)+token.NewlineLF, len(entries),
 		)
 		if err != nil {
 			return err

@@ -92,7 +92,7 @@ func recall(
 		if parseErr != nil {
 			return out.ToolError(
 				id, fmt.Sprintf(
-					desc.TextDesc(text.TextDescKeyMCPInvalidSinceDate),
+					desc.TextDesc(text.DescKeyMCPInvalidSinceDate),
 					parseErr,
 				),
 			)
@@ -185,7 +185,7 @@ func sessionEvent(
 	eventType, _ := args[cli.AttrType].(string)
 	if eventType == "" {
 		return out.ToolError(id, desc.TextDesc(
-			text.TextDescKeyMCPEventTypeRequired),
+			text.DescKeyMCPEventTypeRequired),
 		)
 	}
 	caller, _ := args[field.Caller].(string)

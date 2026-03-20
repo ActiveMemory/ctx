@@ -44,22 +44,22 @@ func Run(cmd *cobra.Command, stdin *os.File) error {
 
 	if regex.MidSudo.MatchString(command) {
 		variant = hook.VariantMidSudo
-		fallback = desc.TextDesc(text.TextDescKeyBlockMidSudo)
+		fallback = desc.TextDesc(text.DescKeyBlockMidSudo)
 	}
 
 	if variant == "" && regex.MidGitPush.MatchString(command) {
 		variant = hook.VariantMidGitPush
-		fallback = desc.TextDesc(text.TextDescKeyBlockMidGitPush)
+		fallback = desc.TextDesc(text.DescKeyBlockMidGitPush)
 	}
 
 	if variant == "" && regex.CpMvToBin.MatchString(command) {
 		variant = hook.VariantCpToBin
-		fallback = desc.TextDesc(text.TextDescKeyBlockCpToBin)
+		fallback = desc.TextDesc(text.DescKeyBlockCpToBin)
 	}
 
 	if variant == "" && regex.InstallToLocalBin.MatchString(command) {
 		variant = hook.VariantInstallToLocalBin
-		fallback = desc.TextDesc(text.TextDescKeyBlockInstallToLocalBin)
+		fallback = desc.TextDesc(text.DescKeyBlockInstallToLocalBin)
 	}
 
 	var reason string

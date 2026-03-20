@@ -35,7 +35,7 @@ func TypeContentRequired() error {
 //   - error: "unknown event type: <eventType>"
 func UnknownEventType(eventType string) error {
 	return fmt.Errorf(
-		desc.TextDesc(text.TextDescKeyMCPUnknownEventType),
+		desc.TextDesc(text.DescKeyMCPUnknownEventType),
 		eventType,
 	)
 }

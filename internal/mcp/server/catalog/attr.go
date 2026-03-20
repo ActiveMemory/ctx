@@ -76,7 +76,7 @@ func ToList() proto.ResourceListResult {
 		URI:         AgentURI(),
 		Name:        resource.Agent,
 		MimeType:    mime.Markdown,
-		Description: desc.TextDesc(text.TextDescKeyMCPResAgent),
+		Description: desc.TextDesc(text.DescKeyMCPResAgent),
 	})
 
 	return proto.ResourceListResult{Resources: rr}

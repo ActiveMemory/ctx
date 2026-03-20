@@ -104,16 +104,16 @@ func EmitCeremonyNudge(cmd *cobra.Command, remember, wrapup bool) (msg, variant 
 	switch {
 	case !remember && !wrapup:
 		variant = hook.VariantBoth
-		boxTitleKey = text.TextDescKeyCeremonyBoxBoth
-		fallbackKey = text.TextDescKeyCeremonyFallbackBoth
+		boxTitleKey = text.DescKeyCeremonyBoxBoth
+		fallbackKey = text.DescKeyCeremonyFallbackBoth
 	case !remember:
 		variant = hook.VariantRemember
-		boxTitleKey = text.TextDescKeyCeremonyBoxRemember
-		fallbackKey = text.TextDescKeyCeremonyFallbackRemember
+		boxTitleKey = text.DescKeyCeremonyBoxRemember
+		fallbackKey = text.DescKeyCeremonyFallbackRemember
 	case !wrapup:
 		variant = hook.VariantWrapup
-		boxTitleKey = text.TextDescKeyCeremonyBoxWrapup
-		fallbackKey = text.TextDescKeyCeremonyFallbackWrapup
+		boxTitleKey = text.DescKeyCeremonyBoxWrapup
+		fallbackKey = text.DescKeyCeremonyFallbackWrapup
 	}
 
 	boxTitle := desc.TextDesc(boxTitleKey)
@@ -124,7 +124,7 @@ func EmitCeremonyNudge(cmd *cobra.Command, remember, wrapup bool) (msg, variant 
 		return "", variant
 	}
 
-	relayPrefix := desc.TextDesc(text.TextDescKeyCeremonyRelayPrefix)
+	relayPrefix := desc.TextDesc(text.DescKeyCeremonyRelayPrefix)
 
 	msg = NudgeBox(relayPrefix, boxTitle, content)
 	cmd.Println(msg)

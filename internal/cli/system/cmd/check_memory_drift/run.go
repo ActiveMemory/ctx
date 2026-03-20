@@ -50,20 +50,20 @@ func Run(cmd *cobra.Command, stdin *os.File) error {
 		return nil
 	}
 
-	fallback := desc.TextDesc(text.TextDescKeyCheckMemoryDriftContent)
+	fallback := desc.TextDesc(text.DescKeyCheckMemoryDriftContent)
 	content := core.LoadMessage(hook.CheckMemoryDrift, hook.VariantNudge, nil, fallback)
 	if content == "" {
 		return nil
 	}
 
 	cmd.Println(core.NudgeBox(
-		desc.TextDesc(text.TextDescKeyCheckMemoryDriftRelayPrefix),
-		desc.TextDesc(text.TextDescKeyCheckMemoryDriftBoxTitle),
+		desc.TextDesc(text.DescKeyCheckMemoryDriftRelayPrefix),
+		desc.TextDesc(text.DescKeyCheckMemoryDriftBoxTitle),
 		content))
 
 	ref := notify.NewTemplateRef(hook.CheckMemoryDrift, hook.VariantNudge, nil)
 	core.NudgeAndRelay(
-		hook.CheckMemoryDrift+": "+desc.TextDesc(text.TextDescKeyCheckMemoryDriftRelayMessage),
+		hook.CheckMemoryDrift+": "+desc.TextDesc(text.DescKeyCheckMemoryDriftRelayMessage),
 		input.SessionID, ref,
 	)
 

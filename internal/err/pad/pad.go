@@ -24,7 +24,7 @@ import (
 //   - error: "entry <n> does not exist, scratchpad has <total> entries"
 func EntryRange(n, total int) error {
 	return fmt.Errorf(
-		desc.TextDesc(text.TextDescKeyErrPadEntryRange), n, total,
+		desc.TextDesc(text.DescKeyErrPadEntryRange), n, total,
 	)
 }
 
@@ -35,7 +35,7 @@ func EntryRange(n, total int) error {
 //   - error: describing the mutual exclusivity
 func EditBlobTextConflict() error {
 	return errors.New(
-		desc.TextDesc(text.TextDescKeyErrPadEditBlobTextConflict),
+		desc.TextDesc(text.DescKeyErrPadEditBlobTextConflict),
 	)
 }
 
@@ -46,7 +46,7 @@ func EditBlobTextConflict() error {
 //   - error: describing the mutual exclusivity
 func EditTextConflict() error {
 	return errors.New(
-		desc.TextDesc(text.TextDescKeyErrPadEditTextConflict),
+		desc.TextDesc(text.DescKeyErrPadEditTextConflict),
 	)
 }
 
@@ -56,7 +56,7 @@ func EditTextConflict() error {
 //   - error: prompting for a mode
 func EditNoMode() error {
 	return errors.New(
-		desc.TextDesc(text.TextDescKeyErrPadEditNoMode),
+		desc.TextDesc(text.DescKeyErrPadEditNoMode),
 	)
 }
 
@@ -66,7 +66,7 @@ func EditNoMode() error {
 //   - error: "cannot append to a blob entry"
 func BlobAppendNotAllowed() error {
 	return errors.New(
-		desc.TextDesc(text.TextDescKeyErrPadBlobAppendNotAllowed),
+		desc.TextDesc(text.DescKeyErrPadBlobAppendNotAllowed),
 	)
 }
 
@@ -76,7 +76,7 @@ func BlobAppendNotAllowed() error {
 //   - error: "cannot prepend to a blob entry"
 func BlobPrependNotAllowed() error {
 	return errors.New(
-		desc.TextDesc(text.TextDescKeyErrPadBlobPrependNotAllowed),
+		desc.TextDesc(text.DescKeyErrPadBlobPrependNotAllowed),
 	)
 }
 
@@ -89,7 +89,7 @@ func BlobPrependNotAllowed() error {
 //   - error: "entry <n> is not a blob entry"
 func NotBlobEntry(n int) error {
 	return fmt.Errorf(
-		desc.TextDesc(text.TextDescKeyErrPadNotBlobEntry), n,
+		desc.TextDesc(text.DescKeyErrPadNotBlobEntry), n,
 	)
 }
 
@@ -100,7 +100,7 @@ func NotBlobEntry(n int) error {
 //   - error: "resolve is only needed for encrypted scratchpads"
 func ResolveNotEncrypted() error {
 	return errors.New(
-		desc.TextDesc(text.TextDescKeyErrPadResolveNotEncrypted),
+		desc.TextDesc(text.DescKeyErrPadResolveNotEncrypted),
 	)
 }
 
@@ -113,7 +113,7 @@ func ResolveNotEncrypted() error {
 //   - error: "no conflict files found (<filename>.ours / <filename>.theirs)"
 func NoConflictFiles(filename string) error {
 	return fmt.Errorf(
-		desc.TextDesc(text.TextDescKeyErrPadNoConflictFiles),
+		desc.TextDesc(text.DescKeyErrPadNoConflictFiles),
 		filename, filename,
 	)
 }
@@ -124,7 +124,7 @@ func NoConflictFiles(filename string) error {
 //   - error: "--out can only be used with blob entries"
 func OutFlagRequiresBlob() error {
 	return errors.New(
-		desc.TextDesc(text.TextDescKeyErrPadOutFlagRequiresBlob),
+		desc.TextDesc(text.DescKeyErrPadOutFlagRequiresBlob),
 	)
 }
 
@@ -137,7 +137,7 @@ func OutFlagRequiresBlob() error {
 //   - error: "read scratchpad: <cause>"
 func ReadScratchpad(cause error) error {
 	return fmt.Errorf(
-		desc.TextDesc(text.TextDescKeyErrPadReadScratchpad), cause,
+		desc.TextDesc(text.DescKeyErrPadReadScratchpad), cause,
 	)
 }
 
@@ -150,7 +150,7 @@ func ReadScratchpad(cause error) error {
 //   - error: "invalid index: <value>"
 func InvalidIndex(value string) error {
 	return fmt.Errorf(
-		desc.TextDesc(text.TextDescKeyErrPadInvalidIndex), value,
+		desc.TextDesc(text.DescKeyErrPadInvalidIndex), value,
 	)
 }
 
@@ -164,6 +164,6 @@ func InvalidIndex(value string) error {
 //   - error: "file too large: <size> bytes (max <max>)"
 func FileTooLarge(size, max int) error {
 	return fmt.Errorf(
-		desc.TextDesc(text.TextDescKeyErrPadFileTooLarge), size, max,
+		desc.TextDesc(text.DescKeyErrPadFileTooLarge), size, max,
 	)
 }

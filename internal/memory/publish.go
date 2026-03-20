@@ -63,14 +63,14 @@ func SelectContent(contextDir string, budget int) (PublishResult, error) {
 //   - string: formatted Markdown with section headings and items
 func (r *PublishResult) Format() string {
 	var buf strings.Builder
-	buf.WriteString(desc.TextDesc(text.TextDescKeyMemoryPublishTitle))
+	buf.WriteString(desc.TextDesc(text.DescKeyMemoryPublishTitle))
 
-	writeSection(&buf, text.TextDescKeyMemoryPublishTasks, r.Tasks, "")
-	writeSection(&buf, text.TextDescKeyMemoryPublishDec,
+	writeSection(&buf, text.DescKeyMemoryPublishTasks, r.Tasks, "")
+	writeSection(&buf, text.DescKeyMemoryPublishDec,
 		r.Decisions, token.PrefixListDash,
 	)
-	writeSection(&buf, text.TextDescKeyMemoryPublishConv, r.Conventions, "")
-	writeSection(&buf, text.TextDescKeyMemoryPublishLrn,
+	writeSection(&buf, text.DescKeyMemoryPublishConv, r.Conventions, "")
+	writeSection(&buf, text.DescKeyMemoryPublishLrn,
 		r.Learnings, token.PrefixListDash,
 	)
 

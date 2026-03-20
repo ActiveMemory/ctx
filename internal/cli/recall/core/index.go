@@ -216,8 +216,8 @@ func RenameJournalFiles(journalDir, oldBase, newBase string, numParts int) {
 
 	// Rename multipart files and update nav links.
 	for p := 2; p <= numParts; p++ {
-		oldPart := filepath.Join(journalDir, fmt.Sprintf(tpl.TplRecallPartFilename, oldBase, p))
-		newPart := filepath.Join(journalDir, fmt.Sprintf(tpl.TplRecallPartFilename, newBase, p))
+		oldPart := filepath.Join(journalDir, fmt.Sprintf(tpl.RecallPartFilename, oldBase, p))
+		newPart := filepath.Join(journalDir, fmt.Sprintf(tpl.RecallPartFilename, newBase, p))
 		if _, statErr := os.Stat(oldPart); statErr == nil {
 			_ = os.Rename(oldPart, newPart)
 		}
@@ -243,7 +243,7 @@ func UpdateNavLinks(journalDir, newBase, oldBase string, numParts int) {
 	files := []string{filepath.Join(journalDir, newBase+file.ExtMarkdown)}
 	for p := 2; p <= numParts; p++ {
 		files = append(files, filepath.Join(journalDir,
-			fmt.Sprintf(tpl.TplRecallPartFilename, newBase, p)))
+			fmt.Sprintf(tpl.RecallPartFilename, newBase, p)))
 	}
 
 	for _, f := range files {
