@@ -85,7 +85,7 @@ func readAgentPacket(
 		}
 
 		section := fmt.Sprintf(
-			desc.TextDesc(text.TextDescKeyMCPSectionFormat),
+			desc.TextDesc(text.DescKeyMCPFormatSection),
 			fileName, string(f.Content),
 		)
 		sectionTokens := token2.EstimateTokensString(section)

@@ -301,7 +301,7 @@ func (h *Handler) WatchUpdate(
 			QueuedAt: time.Now(),
 		})
 		return fmt.Sprintf(
-			desc.TextDesc(text.TextDescKeyMCPWatchCompletedFormat),
+			desc.TextDesc(text.DescKeyMCPFormatWatchCompleted),
 			completedTask,
 		) + token.NewlineLF +
 			desc.TextDesc(text.TextDescKeyMCPReviewStatus), nil
@@ -333,7 +333,7 @@ func (h *Handler) WatchUpdate(
 	})
 
 	return fmt.Sprintf(
-		desc.TextDesc(text.TextDescKeyMCPWroteFormat),
+		desc.TextDesc(text.DescKeyMCPFormatWrote),
 		entryType, fileName,
 	) + token.NewlineLF +
 		desc.TextDesc(text.TextDescKeyMCPReviewStatus), nil
@@ -426,7 +426,7 @@ func (h *Handler) Compact(archive bool) (string, error) {
 
 	_, _ = fmt.Fprintf(
 		&sb,
-		desc.TextDesc(text.TextDescKeyMCPCompactedFormat),
+		desc.TextDesc(text.DescKeyMCPFormatCompacted),
 		result.TotalChanges(),
 	)
 	sb.WriteString(desc.TextDesc(text.TextDescKeyMCPReviewStatus))
@@ -550,7 +550,7 @@ func (h *Handler) SessionEvent(
 			for i, pu := range h.Session.PendingFlush {
 				_, _ = fmt.Fprintf(
 					&sb,
-					desc.TextDesc(text.TextDescKeyMCPPendingItemFormat)+
+					desc.TextDesc(text.DescKeyMCPFormatPendingItem)+
 						token.NewlineLF,
 					i+1, pu.Type,
 					tidy.TruncateString(pu.Content, cfg.TruncateContentLen),
@@ -564,7 +564,7 @@ func (h *Handler) SessionEvent(
 		}
 
 		_, _ = fmt.Fprintf(&sb,
-			desc.TextDesc(text.TextDescKeyMCPSessionStatsFormat),
+			desc.TextDesc(text.DescKeyMCPFormatSessionStats),
 			h.Session.ToolCalls,
 			stat.TotalAdds(h.Session.AddsPerformed),
 		)
@@ -605,13 +605,13 @@ func (h *Handler) Remind() (string, error) {
 			if *r.After > today {
 				annotation = fmt.Sprintf(
 					desc.TextDesc(
-						text.TextDescKeyMCPReminderNotDueFormat,
+						text.DescKeyMCPFormatReminderNotDue,
 					), *r.After,
 				)
 			}
 		}
 		_, _ = fmt.Fprintf(&sb, desc.TextDesc(
-			text.TextDescKeyMCPReminderItemFormat)+token.NewlineLF,
+			text.DescKeyMCPFormatReminderItem)+token.NewlineLF,
 			r.ID, r.Message, annotation)
 	}
 

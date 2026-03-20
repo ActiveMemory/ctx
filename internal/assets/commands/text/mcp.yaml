@@ -68,7 +68,7 @@ mcp.res-playbook:
   short: How agents should use this system
 mcp.res-tasks:
   short: Current work items and their status
-mcp.section-format:
+mcp.format-section:
   short: |+
     ---
     ## %s
@@ -135,7 +135,7 @@ mcp.check-task-hint:
   short: 'If yes, run: ctx complete %d'
 mcp.compact-clean:
   short: Nothing to compact — context is already clean.
-mcp.compacted-format:
+mcp.format-compacted:
   short: "\nCompacted %d items. This reorganized TASKS.md.\n"
 mcp.event-type-required:
   short: type is required (start|end)
@@ -286,7 +286,7 @@ mcp.session-started-caller-format:
   short: 'Session started for %s. Context: %s'
 mcp.session-started-format:
   short: 'Session started. Context: %s'
-mcp.session-stats-format:
+mcp.format-session-stats:
   short: "\nSession stats: %d tool calls, %d entries added."
 mcp.sessions-found-format:
   short: "Found %d session(s):\n\n"
@@ -340,11 +340,11 @@ mcp.compact-archive-warning:
   short: 'Archive warning: %v'
 mcp.compact-removed-sections-format:
   short: 'Removed %d empty sections from %s'
-mcp.pending-item-format:
+mcp.format-pending-item:
   short: '  %d. [%s] %s'
-mcp.reminder-item-format:
+mcp.format-reminder-item:
   short: '  [%d] %s%s'
-mcp.reminder-not-due-format:
+mcp.format-reminder-not-due:
   short: ' (after %s, not yet due)'
 mcp.unknown-event-type:
   short: 'unknown event type: %s (use start|end)'
@@ -352,7 +352,7 @@ mcp.unknown-prompt:
   short: 'unknown prompt: %s'
 mcp.uri-required:
   short: uri is required
-mcp.watch-completed-format:
+mcp.format-watch-completed:
   short: 'Completed: %s'
-mcp.wrote-format:
+mcp.format-wrote:
   short: Wrote %s to .context/%s.

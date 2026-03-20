@@ -36,26 +36,12 @@ const (
 	TextDescKeyMCPAlsoNoted     = "mcp.also-noted"
 	TextDescKeyMCPOmittedFormat = "mcp.omitted-format"
 
-	TextDescKeyMCPSectionFormat        = "mcp.section-format"
-	TextDescKeyMCPWatchCompletedFormat = "mcp.watch-completed-format"
-	TextDescKeyMCPWroteFormat          = "mcp.wrote-format"
-	TextDescKeyMCPCompactedFormat      = "mcp.compacted-format"
-	TextDescKeyMCPSessionStatsFormat   = "mcp.session-stats-format"
-	TextDescKeyMCPPendingItemFormat    = "mcp.pending-item-format"
-	TextDescKeyMCPReminderItemFormat   = "mcp.reminder-item-format"
-	TextDescKeyMCPReminderNotDueFormat = "mcp.reminder-not-due-format"
-
 	TextDescKeyMCPReviewStatus = "mcp.review-status"
 
 	TextDescKeyMCPCompactClean = "mcp.compact-clean"
 
 	TextDescKeyMCPEventTypeRequired = "mcp.event-type-required"
-
-	TextDescKeyMCPUnknownEventType = "mcp.unknown-event-type"
-
-	TextDescKeyMCPUnknownPrompt = "mcp.unknown-prompt"
-
-	TextDescKeyMCPURIRequired = "mcp.uri-required"
+	TextDescKeyMCPUnknownEventType  = "mcp.unknown-event-type"
 
 	TextDescKeyWriteAddedTo  = "write.added-to"
 	TextDescKeyWriteArchived = "write.archived"
