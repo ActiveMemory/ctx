@@ -7,5 +7,7 @@
 package text
 
 const (
-	DescKeyStopwords = "stopwords"
+	TextDescKeyWriteLoopGeneratedBlock = "write.loop-generated-block"
+	TextDescKeyWriteLoopMaxIterations  = "write.loop-max-iterations"
+	TextDescKeyWriteLoopUnlimited      = "write.loop-unlimited"
 )

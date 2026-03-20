@@ -19,3 +19,14 @@ const (
 	TextDescKeyMCPStatusOK    = "mcp.status-ok"
 	TextDescKeyMCPStatusEmpty = "mcp.status-empty"
 )
+
+const (
+	TextDescKeyMCPAlsoNoted     = "mcp.also-noted"
+	TextDescKeyMCPOmittedFormat = "mcp.omitted-format"
+	TextDescKeyMCPReviewStatus  = "mcp.review-status"
+	TextDescKeyMCPCompactClean  = "mcp.compact-clean"
+)
+
+const (
+	TextDescKeyConfirmProceed = "confirm.proceed"
+)

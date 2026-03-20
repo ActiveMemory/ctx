@@ -7,12 +7,14 @@
 package text
 
 const (
-	TextDescKeyDriftDeadPath       = "drift.dead-path"
-	TextDescKeyDriftEntryCount     = "drift.entry-count"
-	TextDescKeyDriftMissingFile    = "drift.missing-file"
-	TextDescKeyDriftRegenerated    = "drift.regenerated"
-	TextDescKeyDriftMissingPackage = "drift.missing-package"
-	TextDescKeyDriftSecret         = "drift.secret"
-	TextDescKeyDriftStaleAge       = "drift.stale-age"
-	TextDescKeyDriftStaleness      = "drift.staleness"
+	TextDescKeyDriftDeadPath            = "drift.dead-path"
+	TextDescKeyDriftEntryCount          = "drift.entry-count"
+	TextDescKeyDriftMissingFile         = "drift.missing-file"
+	TextDescKeyDriftRegenerated         = "drift.regenerated"
+	TextDescKeyDriftMissingPackage      = "drift.missing-package"
+	TextDescKeyDriftSecret              = "drift.secret"
+	TextDescKeyDriftStaleAge            = "drift.stale-age"
+	TextDescKeyDriftStaleness           = "drift.staleness"
+	TextDescKeyDriftCleared             = "drift.cleared"
+	TextDescKeyVersionDriftRelayMessage = "version-drift.relay-message"
 )

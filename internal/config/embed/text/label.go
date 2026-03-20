@@ -12,3 +12,9 @@ const (
 	DescKeyLabelFiles  = "label.files"
 	DescKeyLabelTypes  = "label.types"
 )
+
+const (
+	TextDescKeyLabelBoldReminder   = "label.bold-reminder"
+	TextDescKeyLabelToolOutput     = "label.tool-output"
+	TextDescKeyLabelSuggestionMode = "label.suggestion-mode"
+)

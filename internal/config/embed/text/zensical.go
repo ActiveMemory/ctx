@@ -7,5 +7,5 @@
 package text
 
 const (
-	DescKeyStopwords = "stopwords"
+	TextDescKeyErrSiteZensicalNotFound = "err.site.zensical-not-found"
 )

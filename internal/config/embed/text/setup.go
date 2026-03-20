@@ -7,5 +7,6 @@
 package text
 
 const (
-	DescKeyStopwords = "stopwords"
+	TextDescKeyWriteSetupDone   = "write.setup-done"
+	TextDescKeyWriteSetupPrompt = "write.setup-prompt"
 )

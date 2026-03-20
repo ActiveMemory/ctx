@@ -7,5 +7,6 @@
 package text
 
 const (
-	DescKeyStopwords = "stopwords"
+	TextDescKeyWriteSkillLine    = "write.skill-line"
+	TextDescKeyWriteSkillsHeader = "write.skills-header"
 )

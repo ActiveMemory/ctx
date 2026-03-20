@@ -85,5 +85,5 @@ func TextDesc(name string) string {
 }
 
 func TextDescStopWords() string {
-	return TextDesc(text.TextDescKeyStopwords)
+	return TextDesc(text.DescKeyStopwords)
 }
