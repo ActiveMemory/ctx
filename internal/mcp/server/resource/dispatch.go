@@ -128,7 +128,7 @@ func applySubscription(
 	if params.URI == "" {
 		return out.ErrResponse(
 			req.ID, proto.ErrCodeInvalidArg,
-			desc.TextDesc(text.TextDescKeyMCPURIRequired),
+			desc.TextDesc(text.DescKeyMCPErrURIRequired),
 		)
 	}
 	fn(params.URI)

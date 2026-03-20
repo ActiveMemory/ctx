@@ -70,7 +70,7 @@ func DispatchGet(
 		return out.ErrResponse(
 			req.ID, proto.ErrCodeNotFound,
 			fmt.Sprintf(
-				desc.TextDesc(text.TextDescKeyMCPUnknownPrompt),
+				desc.TextDesc(text.DescKeyMCPErrUnknownPrompt),
 				params.Name,
 			),
 		)
