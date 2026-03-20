@@ -60,7 +60,7 @@ func complete(
 	query, _ := args[field.Query].(string)
 	if query == "" {
 		return out.ToolError(
-			id, desc.TextDesc(text.TextDescKeyMCPQueryRequired),
+			id, desc.TextDesc(text.DescKeyMCPErrQueryRequired),
 		)
 	}
 	text, err := h.Complete(query)

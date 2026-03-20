@@ -48,7 +48,7 @@ mcp.packet-header:
 
 mcp.err-parse:
   short: parse error
-mcp.query-required:
+mcp.err-query-required:
   short: query is required
 mcp.res-agent:
   short: All context files assembled in priority read order
@@ -118,7 +118,7 @@ mcp.tool-prop-type:
   short: Entry type to add
 mcp.tool-status-desc:
   short: 'Show context health: file count, token estimate, and file summaries'
-mcp.type-content-required:
+mcp.err-type-content-required:
   short: type and content are required
 mcp.err-unknown-resource:
   short: 'unknown resource: %s'

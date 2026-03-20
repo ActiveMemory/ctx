@@ -21,7 +21,7 @@ import (
 //   - error: "type and content are required"
 func TypeContentRequired() error {
 	return errors.New(
-		desc.TextDesc(text.TextDescKeyMCPTypeContentRequired),
+		desc.TextDesc(text.DescKeyMCPErrTypeContentRequired),
 	)
 }
 

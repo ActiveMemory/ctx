@@ -7,11 +7,13 @@
 package text
 
 const (
-	DescKeyMCPErrMethodNotFound  = "mcp.err-method-not-found"
-	DescKeyMCPErrParse           = "mcp.err-parse"
-	DescKeyMCPErrFileNotFound    = "mcp.err-file-not-found"
-	DescKeyMCPErrInvalidParams   = "mcp.err-invalid-params"
-	DescKeyMCPErrUnknownResource = "mcp.err-unknown-resource"
-	DescKeyMCPErrUnknownTool     = "mcp.err-unknown-tool"
-	DescKeyMCPErrFailedMarshal   = "mcp.err-failed-marshal"
+	DescKeyMCPErrMethodNotFound      = "mcp.err-method-not-found"
+	DescKeyMCPErrParse               = "mcp.err-parse"
+	DescKeyMCPErrFileNotFound        = "mcp.err-file-not-found"
+	DescKeyMCPErrInvalidParams       = "mcp.err-invalid-params"
+	DescKeyMCPErrUnknownResource     = "mcp.err-unknown-resource"
+	DescKeyMCPErrUnknownTool         = "mcp.err-unknown-tool"
+	DescKeyMCPErrFailedMarshal       = "mcp.err-failed-marshal"
+	DescKeyMCPErrTypeContentRequired = "mcp.err-type-content-required"
+	DescKeyMCPErrQueryRequired       = "mcp.err-query-required"
 )

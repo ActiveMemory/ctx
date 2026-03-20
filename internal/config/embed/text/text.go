@@ -31,32 +31,25 @@ const (
 
 	TextDescKeyMCPLoadContext = "mcp.load-context"
 
-	TextDescKeyMCPTypeContentRequired = "mcp.type-content-required"
-	TextDescKeyMCPQueryRequired       = "mcp.query-required"
-
-	TextDescKeyMCPPacketHeader  = "mcp.packet-header"
-	TextDescKeyMCPSectionFormat = "mcp.section-format"
+	TextDescKeyMCPPacketHeader = "mcp.packet-header"
 
 	TextDescKeyMCPAlsoNoted     = "mcp.also-noted"
 	TextDescKeyMCPOmittedFormat = "mcp.omitted-format"
 
+	TextDescKeyMCPSectionFormat        = "mcp.section-format"
 	TextDescKeyMCPWatchCompletedFormat = "mcp.watch-completed-format"
+	TextDescKeyMCPWroteFormat          = "mcp.wrote-format"
+	TextDescKeyMCPCompactedFormat      = "mcp.compacted-format"
+	TextDescKeyMCPSessionStatsFormat   = "mcp.session-stats-format"
+	TextDescKeyMCPPendingItemFormat    = "mcp.pending-item-format"
+	TextDescKeyMCPReminderItemFormat   = "mcp.reminder-item-format"
+	TextDescKeyMCPReminderNotDueFormat = "mcp.reminder-not-due-format"
 
 	TextDescKeyMCPReviewStatus = "mcp.review-status"
 
-	TextDescKeyMCPWroteFormat = "mcp.wrote-format"
-
-	TextDescKeyMCPCompactClean    = "mcp.compact-clean"
-	TextDescKeyMCPCompactedFormat = "mcp.compacted-format"
+	TextDescKeyMCPCompactClean = "mcp.compact-clean"
 
 	TextDescKeyMCPEventTypeRequired = "mcp.event-type-required"
-
-	TextDescKeyMCPSessionStatsFormat = "mcp.session-stats-format"
-
-	TextDescKeyMCPPendingItemFormat = "mcp.pending-item-format"
-
-	TextDescKeyMCPReminderItemFormat   = "mcp.reminder-item-format"
-	TextDescKeyMCPReminderNotDueFormat = "mcp.reminder-not-due-format"
 
 	TextDescKeyMCPUnknownEventType = "mcp.unknown-event-type"
 
