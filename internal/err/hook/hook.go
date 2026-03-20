@@ -24,7 +24,7 @@ import (
 //   - error: "embedded template not found for <hook>/<variant>"
 func EmbeddedTemplateNotFound(hook, variant string) error {
 	return fmt.Errorf(
-		desc.TextDesc(text.TextDescKeyErrHookEmbeddedTemplateNotFound),
+		desc.TextDesc(text.DescKeyErrHookEmbeddedTemplateNotFound),
 		hook, variant,
 	)
 }
@@ -40,7 +40,7 @@ func EmbeddedTemplateNotFound(hook, variant string) error {
 // Returns:
 //   - error: "override already exists at <path>..."
 func OverrideExists(path, hook, variant string) error {
-	return fmt.Errorf(desc.TextDesc(text.TextDescKeyErrHookOverrideExists),
+	return fmt.Errorf(desc.TextDesc(text.DescKeyErrHookOverrideExists),
 		path, hook, variant)
 }
 
@@ -54,7 +54,7 @@ func OverrideExists(path, hook, variant string) error {
 //   - error: "failed to write override <path>: <cause>"
 func WriteOverride(path string, cause error) error {
 	return fmt.Errorf(
-		desc.TextDesc(text.TextDescKeyErrHookWriteOverride), path, cause,
+		desc.TextDesc(text.DescKeyErrHookWriteOverride), path, cause,
 	)
 }
 
@@ -68,7 +68,7 @@ func WriteOverride(path string, cause error) error {
 //   - error: "failed to remove override <path>: <cause>"
 func RemoveOverride(path string, cause error) error {
 	return fmt.Errorf(
-		desc.TextDesc(text.TextDescKeyErrHookRemoveOverride), path, cause,
+		desc.TextDesc(text.DescKeyErrHookRemoveOverride), path, cause,
 	)
 }
 
@@ -81,7 +81,7 @@ func RemoveOverride(path string, cause error) error {
 //   - error: "unknown hook: <hook>..."
 func Unknown(hook string) error {
 	return fmt.Errorf(
-		desc.TextDesc(text.TextDescKeyErrHookUnknownHook), hook,
+		desc.TextDesc(text.DescKeyErrHookUnknownHook), hook,
 	)
 }
 
@@ -96,6 +96,6 @@ func Unknown(hook string) error {
 //   - error: "unknown variant <variant> for hook <hook>..."
 func UnknownVariant(variant, hook string) error {
 	return fmt.Errorf(
-		desc.TextDesc(text.TextDescKeyErrHookUnknownVariant), variant, hook,
+		desc.TextDesc(text.DescKeyErrHookUnknownVariant), variant, hook,
 	)
 }

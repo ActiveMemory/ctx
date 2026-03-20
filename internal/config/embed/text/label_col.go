@@ -13,5 +13,5 @@ const (
 	DescKeyLabelColDate     = "label.col-date"
 	DescKeyLabelColDuration = "label.col-duration"
 	DescKeyLabelColTurns    = "label.col-turns"
-	DescKeyLabelColTokens   = "label.col-tokens"
+	DescKeyLabelColUsage    = "label.col-usage"
 )

@@ -12,3 +12,14 @@ const (
 	DescKeyBootstrapPluginWarning = "bootstrap.plugin-warning"
 	DescKeyBootstrapRules         = "bootstrap.rules"
 )
+
+const (
+	TextDescKeyWriteBootstrapDir       = "write.bootstrap-dir"
+	TextDescKeyWriteBootstrapFiles     = "write.bootstrap-files"
+	TextDescKeyWriteBootstrapNextSteps = "write.bootstrap-next-steps"
+	TextDescKeyWriteBootstrapNumbered  = "write.bootstrap-numbered"
+	TextDescKeyWriteBootstrapRules     = "write.bootstrap-rules"
+	TextDescKeyWriteBootstrapSep       = "write.bootstrap-sep"
+	TextDescKeyWriteBootstrapTitle     = "write.bootstrap-title"
+	TextDescKeyWriteBootstrapWarning   = "write.bootstrap-warning"
+)

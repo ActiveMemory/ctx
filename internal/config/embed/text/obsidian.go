@@ -11,3 +11,9 @@ const (
 	DescKeyHeadingObsidianRelated = "heading.obsidian-related"
 	DescKeyLabelObsidianSeeAlso   = "label.obsidian-see-also"
 )
+
+const (
+	TextDescKeyWriteObsidianGenerated        = "write.obsidian-generated"
+	TextDescKeyWriteObsidianNextStepsHeading = "write.obsidian-next-steps-heading"
+	TextDescKeyWriteObsidianNextSteps        = "write.obsidian-next-steps"
+)

@@ -22,7 +22,7 @@ import (
 //   - error: "invalid date <value> (expected YYYY-MM-DD)"
 func InvalidDateValue(value string) error {
 	return fmt.Errorf(
-		desc.TextDesc(text.TextDescKeyErrDateInvalidDateValue), value,
+		desc.TextDesc(text.DescKeyErrDateInvalidDateValue), value,
 	)
 }
 
@@ -37,6 +37,6 @@ func InvalidDateValue(value string) error {
 //   - error: "invalid <flag> date <value> (expected YYYY-MM-DD): <cause>"
 func InvalidDate(flag, value string, cause error) error {
 	return fmt.Errorf(
-		desc.TextDesc(text.TextDescKeyErrDateInvalidDate), flag, value, cause,
+		desc.TextDesc(text.DescKeyErrDateInvalidDate), flag, value, cause,
 	)
 }

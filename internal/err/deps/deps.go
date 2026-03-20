@@ -19,7 +19,7 @@ import (
 // Returns:
 //   - error: advises installing the Rust toolchain
 func CargoNotFound() error {
-	return errors.New(desc.TextDesc(text.TextDescKeyErrDepsCargoNotFound))
+	return errors.New(desc.TextDesc(text.DescKeyErrDepsCargoNotFound))
 }
 
 // CargoMetadataFailed wraps a cargo metadata command failure.
@@ -30,7 +30,7 @@ func CargoNotFound() error {
 // Returns:
 //   - error: "cargo metadata failed: <cause>"
 func CargoMetadataFailed(cause error) error {
-	return fmt.Errorf(desc.TextDesc(text.TextDescKeyErrDepsCargoMetadataFailed), cause)
+	return fmt.Errorf(desc.TextDesc(text.DescKeyErrDepsCargoMetadataFailed), cause)
 }
 
 // ParseCargoMetadata wraps a cargo metadata parse failure.
@@ -41,5 +41,5 @@ func CargoMetadataFailed(cause error) error {
 // Returns:
 //   - error: "parsing cargo metadata: <cause>"
 func ParseCargoMetadata(cause error) error {
-	return fmt.Errorf(desc.TextDesc(text.TextDescKeyErrDepsParseCargoMetadata), cause)
+	return fmt.Errorf(desc.TextDesc(text.DescKeyErrDepsParseCargoMetadata), cause)
 }

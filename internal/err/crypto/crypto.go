@@ -31,7 +31,7 @@ func LoadKey(cause error, keyPath string) error {
 		return NoKeyAt(keyPath)
 	}
 	return fmt.Errorf(
-		desc.TextDesc(text.TextDescKeyErrCryptoLoadKey), cause,
+		desc.TextDesc(text.DescKeyErrCryptoLoadKey), cause,
 	)
 }
 
@@ -44,7 +44,7 @@ func LoadKey(cause error, keyPath string) error {
 //   - error: "encrypt: <cause>"
 func EncryptFailed(cause error) error {
 	return fmt.Errorf(
-		desc.TextDesc(text.TextDescKeyErrCryptoEncryptFailed), cause,
+		desc.TextDesc(text.DescKeyErrCryptoEncryptFailed), cause,
 	)
 }
 
@@ -53,7 +53,7 @@ func EncryptFailed(cause error) error {
 // Returns:
 //   - error: "decryption failed: wrong key?"
 func DecryptFailed() error {
-	return errors.New(desc.TextDesc(text.TextDescKeyErrCryptoDecryptFailed))
+	return errors.New(desc.TextDesc(text.DescKeyErrCryptoDecryptFailed))
 }
 
 // NoKeyAt returns an error indicating a missing encryption key.
@@ -65,7 +65,7 @@ func DecryptFailed() error {
 //   - error: "encrypted scratchpad found but no key at <path>"
 func NoKeyAt(path string) error {
 	return fmt.Errorf(
-		desc.TextDesc(text.TextDescKeyErrCryptoNoKeyAt), path,
+		desc.TextDesc(text.DescKeyErrCryptoNoKeyAt), path,
 	)
 }
 
@@ -78,7 +78,7 @@ func NoKeyAt(path string) error {
 //   - error: "failed to save scratchpad key: <cause>"
 func SaveKey(cause error) error {
 	return fmt.Errorf(
-		desc.TextDesc(text.TextDescKeyErrCryptoSaveKey), cause)
+		desc.TextDesc(text.DescKeyErrCryptoSaveKey), cause)
 }
 
 // MkdirKeyDir wraps a failure to create the key directory.
@@ -90,7 +90,7 @@ func SaveKey(cause error) error {
 //   - error: "failed to create key dir: <cause>"
 func MkdirKeyDir(cause error) error {
 	return fmt.Errorf(
-		desc.TextDesc(text.TextDescKeyErrCryptoMkdirKeyDir), cause,
+		desc.TextDesc(text.DescKeyErrCryptoMkdirKeyDir), cause,
 	)
 }
 
@@ -103,7 +103,7 @@ func MkdirKeyDir(cause error) error {
 //   - error: "create cipher: <cause>"
 func CreateCipher(cause error) error {
 	return fmt.Errorf(
-		desc.TextDesc(text.TextDescKeyErrCryptoCreateCipher), cause,
+		desc.TextDesc(text.DescKeyErrCryptoCreateCipher), cause,
 	)
 }
 
@@ -116,7 +116,7 @@ func CreateCipher(cause error) error {
 //   - error: "create GCM: <cause>"
 func CreateGCM(cause error) error {
 	return fmt.Errorf(
-		desc.TextDesc(text.TextDescKeyErrCryptoCreateGCM), cause,
+		desc.TextDesc(text.DescKeyErrCryptoCreateGCM), cause,
 	)
 }
 
@@ -129,7 +129,7 @@ func CreateGCM(cause error) error {
 //   - error: "generate nonce: <cause>"
 func GenerateNonce(cause error) error {
 	return fmt.Errorf(
-		desc.TextDesc(text.TextDescKeyErrCryptoGenerateNonce), cause,
+		desc.TextDesc(text.DescKeyErrCryptoGenerateNonce), cause,
 	)
 }
 
@@ -142,7 +142,7 @@ func GenerateNonce(cause error) error {
 //   - error: "generate key: <cause>"
 func GenerateKey(cause error) error {
 	return fmt.Errorf(
-		desc.TextDesc(text.TextDescKeyErrCryptoGenerateKey), cause,
+		desc.TextDesc(text.DescKeyErrCryptoGenerateKey), cause,
 	)
 }
 
@@ -153,7 +153,7 @@ func GenerateKey(cause error) error {
 //   - error: "ciphertext too short"
 func CiphertextTooShort() error {
 	return errors.New(
-		desc.TextDesc(text.TextDescKeyErrCryptoCiphertextTooShort),
+		desc.TextDesc(text.DescKeyErrCryptoCiphertextTooShort),
 	)
 }
 
@@ -166,7 +166,7 @@ func CiphertextTooShort() error {
 //   - error: "decrypt: <cause>"
 func Decrypt(cause error) error {
 	return fmt.Errorf(
-		desc.TextDesc(text.TextDescKeyErrCryptoDecrypt), cause,
+		desc.TextDesc(text.DescKeyErrCryptoDecrypt), cause,
 	)
 }
 
@@ -178,7 +178,7 @@ func Decrypt(cause error) error {
 // Returns:
 //   - error: "read key: <cause>"
 func ReadKey(cause error) error {
-	return fmt.Errorf(desc.TextDesc(text.TextDescKeyErrCryptoReadKey), cause)
+	return fmt.Errorf(desc.TextDesc(text.DescKeyErrCryptoReadKey), cause)
 }
 
 // InvalidKeySize returns an error when a key file has the wrong size.
@@ -191,7 +191,7 @@ func ReadKey(cause error) error {
 //   - error: "invalid key size: got N bytes, want M"
 func InvalidKeySize(got, want int) error {
 	return fmt.Errorf(
-		desc.TextDesc(text.TextDescKeyErrCryptoInvalidKeySize), got, want,
+		desc.TextDesc(text.DescKeyErrCryptoInvalidKeySize), got, want,
 	)
 }
 
@@ -204,6 +204,6 @@ func InvalidKeySize(got, want int) error {
 //   - error: "write key: <cause>"
 func WriteKey(cause error) error {
 	return fmt.Errorf(
-		desc.TextDesc(text.TextDescKeyErrCryptoWriteKey), cause,
+		desc.TextDesc(text.DescKeyErrCryptoWriteKey), cause,
 	)
 }

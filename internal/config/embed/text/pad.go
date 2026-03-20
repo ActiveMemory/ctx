@@ -49,3 +49,12 @@ const (
 	DescKeyWritePadBlobWritten = "write.pad-blob-written"
 	DescKeyWritePadEmpty       = "write.pad-empty"
 )
+
+const (
+	TextDescKeyWritePadResolveEntry  = "write.pad-resolve-entry"
+	TextDescKeyWritePadResolveHeader = "write.pad-resolve-header"
+)
+
+const (
+	TextDescKeyWritePadKeyCreated = "write.pad-key-created"
+)

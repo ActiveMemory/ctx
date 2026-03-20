@@ -981,3 +981,5 @@ age-based — prune files older than N days (default 7).
 - [ ] Migrate Sprintf-based templates (tpl_*.go) to Go text/template or embedded template files — ObsidianReadme, LoopScript, and other multi-line format strings that can't move to YAML #added:2026-03-18-163629
 
 - [ ] Split internal/assets/embed_test.go — tests that call read/ packages must move to their respective read/ package to avoid import cycles #added:2026-03-18-192914
+
+- [ ] Improve recall/core format tests — replace hardcoded string assertions (e.g. Contains Tokens) with semantic checks that verify structure and values, not label text #added:2026-03-19-194645

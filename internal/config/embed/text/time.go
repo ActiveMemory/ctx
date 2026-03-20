@@ -15,3 +15,11 @@ const (
 	DescKeyWriteTimeMinuteAgo  = "write.time-minute-ago"
 	DescKeyWriteTimeMinutesAgo = "write.time-minutes-ago"
 )
+
+const (
+	TextDescKeyTimeAgo     = "time.ago"
+	TextDescKeyTimeDay     = "time.day"
+	TextDescKeyTimeHour    = "time.hour"
+	TextDescKeyTimeJustNow = "time.just-now"
+	TextDescKeyTimeMinute  = "time.minute"
+)

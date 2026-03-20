@@ -24,7 +24,7 @@ import (
 //   - error: "unsafe URL scheme: <scheme>: only http and https are allowed"
 func UnsafeURLScheme(scheme string) error {
 	return fmt.Errorf(
-		desc.TextDesc(text.TextDescKeyErrHttpUnsafeURLScheme), scheme,
+		desc.TextDesc(text.DescKeyErrHttpUnsafeURLScheme), scheme,
 	)
 }
 
@@ -37,7 +37,7 @@ func UnsafeURLScheme(scheme string) error {
 //   - error: "parse URL: <cause>"
 func ParseURL(cause error) error {
 	return fmt.Errorf(
-		desc.TextDesc(text.TextDescKeyErrHttpParseURL), cause,
+		desc.TextDesc(text.DescKeyErrHttpParseURL), cause,
 	)
 }
 
@@ -48,6 +48,6 @@ func ParseURL(cause error) error {
 //   - error: "too many redirects: limit exceeded"
 func TooManyRedirects() error {
 	return errors.New(
-		desc.TextDesc(text.TextDescKeyErrHttpTooManyRedirects),
+		desc.TextDesc(text.DescKeyErrHttpTooManyRedirects),
 	)
 }

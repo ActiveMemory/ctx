@@ -123,7 +123,7 @@ func Run(
 	rowFmt := fmt.Sprintf(tpl.TplRecallListRow, slugW, projW)
 	recall.SessionListRow(cmd, rowFmt,
 		desc.TextDesc(text.DescKeyLabelColSlug), desc.TextDesc(text.DescKeyLabelColProject), desc.TextDesc(text.DescKeyLabelColDate),
-		desc.TextDesc(text.DescKeyLabelColDuration), desc.TextDesc(text.DescKeyLabelColTurns), desc.TextDesc(text.DescKeyLabelColTokens))
+		desc.TextDesc(text.DescKeyLabelColDuration), desc.TextDesc(text.DescKeyLabelColTurns), desc.TextDesc(text.DescKeyLabelColUsage))
 
 	// Print sessions.
 	for _, s := range filtered {

@@ -24,3 +24,10 @@ const (
 	DescKeyHeadingSuggestions       = "heading.suggestions"
 	DescKeyHeadingRecentSessions    = "heading.recent-sessions"
 )
+
+// Headings, column headers, and navigation labels (headings.yaml).
+const (
+	TextDescKeyHeadingDecisions     = "heading.decisions"
+	TextDescKeyHeadingLearnings     = "heading.learnings"
+	TextDescKeyHeadingLearningStart = "heading.learning-entry-start"
+)

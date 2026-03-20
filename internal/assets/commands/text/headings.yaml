@@ -148,8 +148,8 @@ label.col-duration:
   short: Duration
 label.col-turns:
   short: Turns
-label.col-tokens:
-  short: Tokens
+label.col-usage:
+  short: Usage
 
 # Section headers used in recall show output.
 label.section-tool-usage:

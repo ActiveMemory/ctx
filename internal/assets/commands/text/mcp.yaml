@@ -13,10 +13,10 @@ mcp.completed-format:
 mcp.drift-issue-format:
   short: |2
       - [%s] %s: %s
-mcp.drift-passed:
+mcp.drift-ok:
   short: |
     Passed:
-mcp.drift-passed-format:
+mcp.drift-ok-format:
   short: |2
       - %s
 mcp.drift-status-format:

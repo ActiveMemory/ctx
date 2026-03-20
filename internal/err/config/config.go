@@ -23,7 +23,7 @@ import (
 //   - error: "unknown profile <name>: must be dev, base, or prod"
 func UnknownProfile(name string) error {
 	return fmt.Errorf(
-		desc.TextDesc(text.TextDescKeyErrConfigUnknownProfile), name,
+		desc.TextDesc(text.DescKeyErrConfigUnknownProfile), name,
 	)
 }
 
@@ -37,7 +37,7 @@ func UnknownProfile(name string) error {
 //   - error: "read <name>: <cause>"
 func ReadProfile(name string, cause error) error {
 	return fmt.Errorf(
-		desc.TextDesc(text.TextDescKeyErrConfigReadProfile), name, cause,
+		desc.TextDesc(text.DescKeyErrConfigReadProfile), name, cause,
 	)
 }
 
@@ -51,7 +51,7 @@ func ReadProfile(name string, cause error) error {
 //   - error: "unknown format <format> (supported: <list>)"
 func UnknownFormat(format, supported string) error {
 	return fmt.Errorf(
-		desc.TextDesc(text.TextDescKeyErrConfigUnknownFormat),
+		desc.TextDesc(text.DescKeyErrConfigUnknownFormat),
 		format, supported,
 	)
 }
@@ -66,7 +66,7 @@ func UnknownFormat(format, supported string) error {
 //   - error: "unknown project type <type> (supported: <list>)"
 func UnknownProjectType(projType, supported string) error {
 	return fmt.Errorf(
-		desc.TextDesc(text.TextDescKeyErrConfigUnknownProjectType),
+		desc.TextDesc(text.DescKeyErrConfigUnknownProjectType),
 		projType, supported,
 	)
 }
@@ -80,7 +80,7 @@ func UnknownProjectType(projType, supported string) error {
 //   - error: "invalid tool <tool>: must be claude, aider, or generic"
 func InvalidTool(tool string) error {
 	return fmt.Errorf(
-		desc.TextDesc(text.TextDescKeyErrConfigInvalidTool), tool,
+		desc.TextDesc(text.DescKeyErrConfigInvalidTool), tool,
 	)
 }
 
@@ -93,7 +93,7 @@ func InvalidTool(tool string) error {
 //   - error: "unsupported tool: <tool>"
 func UnsupportedTool(tool string) error {
 	return fmt.Errorf(
-		desc.TextDesc(text.TextDescKeyErrConfigUnsupportedTool), tool,
+		desc.TextDesc(text.DescKeyErrConfigUnsupportedTool), tool,
 	)
 }
 
@@ -106,7 +106,7 @@ func UnsupportedTool(tool string) error {
 //   - error: "unknown update type: <typeName>"
 func UnknownUpdateType(typeName string) error {
 	return fmt.Errorf(desc.TextDesc(
-		text.TextDescKeyErrConfigUnknownUpdateType), typeName,
+		text.DescKeyErrConfigUnknownUpdateType), typeName,
 	)
 }
 
@@ -116,7 +116,7 @@ func UnknownUpdateType(typeName string) error {
 //   - error: "no .claude/settings.local.json found"
 func SettingsNotFound() error {
 	return errors.New(
-		desc.TextDesc(text.TextDescKeyErrConfigSettingsNotFound),
+		desc.TextDesc(text.DescKeyErrConfigSettingsNotFound),
 	)
 }
 
@@ -126,7 +126,7 @@ func SettingsNotFound() error {
 //   - error: advises the user to run 'ctx permission snapshot' first
 func GoldenNotFound() error {
 	return errors.New(
-		desc.TextDesc(text.TextDescKeyErrConfigGoldenNotFound),
+		desc.TextDesc(text.DescKeyErrConfigGoldenNotFound),
 	)
 }
 
@@ -139,7 +139,7 @@ func GoldenNotFound() error {
 //   - error: "read embedded schema: <cause>"
 func ReadEmbeddedSchema(cause error) error {
 	return fmt.Errorf(
-		desc.TextDesc(text.TextDescKeyErrConfigReadEmbeddedSchema), cause,
+		desc.TextDesc(text.DescKeyErrConfigReadEmbeddedSchema), cause,
 	)
 }
 
@@ -152,7 +152,7 @@ func ReadEmbeddedSchema(cause error) error {
 //   - error: "failed to marshal settings: <cause>"
 func MarshalSettings(cause error) error {
 	return fmt.Errorf(
-		desc.TextDesc(text.TextDescKeyErrConfigMarshalSettings), cause,
+		desc.TextDesc(text.DescKeyErrConfigMarshalSettings), cause,
 	)
 }
 
@@ -165,6 +165,6 @@ func MarshalSettings(cause error) error {
 //   - error: "failed to marshal enabledPlugins: <cause>"
 func MarshalPlugins(cause error) error {
 	return fmt.Errorf(
-		desc.TextDesc(text.TextDescKeyErrConfigMarshalPlugins), cause,
+		desc.TextDesc(text.DescKeyErrConfigMarshalPlugins), cause,
 	)
 }

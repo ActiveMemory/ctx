@@ -59,7 +59,7 @@ func (h *Handler) Status() (string, error) {
 	)
 	_, _ = fmt.Fprintf(
 		&sb,
-		desc.TextDesc(text.TextDescKeyMCPStatusTokensFormat), ctx.TotalTokens,
+		desc.TextDesc(text.TextDescKeyMCPStatusUsageFormat), ctx.TotalTokens,
 	)
 
 	for _, f := range ctx.Files {
@@ -187,10 +187,10 @@ func (h *Handler) Drift() (string, error) {
 	}
 
 	if len(report.Passed) > 0 {
-		sb.WriteString(desc.TextDesc(text.TextDescKeyMCPDriftPassed))
+		sb.WriteString(desc.TextDesc(text.TextDescKeyMCPDriftOK))
 		for _, p := range report.Passed {
 			_, _ = fmt.Fprintf(
-				&sb, desc.TextDesc(text.TextDescKeyMCPDriftPassedFormat), p,
+				&sb, desc.TextDesc(text.TextDescKeyMCPDriftOKFormat), p,
 			)
 		}
 	}

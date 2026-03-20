@@ -21,7 +21,7 @@ import (
 //   - error: "MEMORY.md not found"
 func NotFound() error {
 	return errors.New(
-		desc.TextDesc(text.TextDescKeyErrMemoryNotFound),
+		desc.TextDesc(text.DescKeyErrMemoryNotFound),
 	)
 }
 
@@ -34,7 +34,7 @@ func NotFound() error {
 //   - error: "MEMORY.md not found: <cause>"
 func DiscoverFailed(cause error) error {
 	return fmt.Errorf(
-		desc.TextDesc(text.TextDescKeyErrMemoryDiscoverFailed), cause,
+		desc.TextDesc(text.DescKeyErrMemoryDiscoverFailed), cause,
 	)
 }
 
@@ -47,7 +47,7 @@ func DiscoverFailed(cause error) error {
 //   - error: "computing diff: <cause>"
 func DiffFailed(cause error) error {
 	return fmt.Errorf(
-		desc.TextDesc(text.TextDescKeyErrMemoryDiffFailed), cause,
+		desc.TextDesc(text.DescKeyErrMemoryDiffFailed), cause,
 	)
 }
 
@@ -60,7 +60,7 @@ func DiffFailed(cause error) error {
 //   - error: "selecting content: <cause>"
 func SelectContentFailed(cause error) error {
 	return fmt.Errorf(
-		desc.TextDesc(text.TextDescKeyErrMemorySelectContentFailed), cause,
+		desc.TextDesc(text.DescKeyErrMemorySelectContentFailed), cause,
 	)
 }
 
@@ -73,7 +73,7 @@ func SelectContentFailed(cause error) error {
 //   - error: "publishing: <cause>"
 func PublishFailed(cause error) error {
 	return fmt.Errorf(
-		desc.TextDesc(text.TextDescKeyErrMemoryPublishFailed), cause,
+		desc.TextDesc(text.DescKeyErrMemoryPublishFailed), cause,
 	)
 }
 
@@ -86,7 +86,7 @@ func PublishFailed(cause error) error {
 //   - error: "reading MEMORY.md: <cause>"
 func Read(cause error) error {
 	return fmt.Errorf(
-		desc.TextDesc(text.TextDescKeyErrMemoryReadMemory), cause,
+		desc.TextDesc(text.DescKeyErrMemoryReadMemory), cause,
 	)
 }
 
@@ -99,7 +99,7 @@ func Read(cause error) error {
 //   - error: "writing MEMORY.md: <cause>"
 func Write(cause error) error {
 	return fmt.Errorf(
-		desc.TextDesc(text.TextDescKeyErrMemoryWriteMemoryTop), cause,
+		desc.TextDesc(text.DescKeyErrMemoryWriteMemoryTop), cause,
 	)
 }
 
@@ -112,7 +112,7 @@ func Write(cause error) error {
 //   - error: "sync failed: <cause>"
 func Sync(cause error) error {
 	return fmt.Errorf(
-		desc.TextDesc(text.TextDescKeyErrMemorySyncFailed), cause,
+		desc.TextDesc(text.DescKeyErrMemorySyncFailed), cause,
 	)
 }
 
@@ -125,7 +125,7 @@ func Sync(cause error) error {
 //   - error: "resolving project root: <cause>"
 func DiscoverResolveRoot(cause error) error {
 	return fmt.Errorf(
-		desc.TextDesc(text.TextDescKeyErrMemoryDiscoverResolveRoot), cause,
+		desc.TextDesc(text.DescKeyErrMemoryDiscoverResolveRoot), cause,
 	)
 }
 
@@ -138,7 +138,7 @@ func DiscoverResolveRoot(cause error) error {
 //   - error: "resolving home directory: <cause>"
 func DiscoverResolveHome(cause error) error {
 	return fmt.Errorf(
-		desc.TextDesc(text.TextDescKeyErrMemoryDiscoverResolveHome), cause,
+		desc.TextDesc(text.DescKeyErrMemoryDiscoverResolveHome), cause,
 	)
 }
 
@@ -151,7 +151,7 @@ func DiscoverResolveHome(cause error) error {
 //   - error: "no auto memory at <path>"
 func DiscoverNoMemory(path string) error {
 	return fmt.Errorf(
-		desc.TextDesc(text.TextDescKeyErrMemoryDiscoverNoMemory), path,
+		desc.TextDesc(text.DescKeyErrMemoryDiscoverNoMemory), path,
 	)
 }
 
@@ -164,7 +164,7 @@ func DiscoverNoMemory(path string) error {
 //   - error: "reading source: <cause>"
 func ReadSource(cause error) error {
 	return fmt.Errorf(
-		desc.TextDesc(text.TextDescKeyErrMemoryReadSource), cause,
+		desc.TextDesc(text.DescKeyErrMemoryReadSource), cause,
 	)
 }
 
@@ -177,7 +177,7 @@ func ReadSource(cause error) error {
 //   - error: "archiving previous mirror: <cause>"
 func ArchivePrevious(cause error) error {
 	return fmt.Errorf(
-		desc.TextDesc(text.TextDescKeyErrMemoryArchivePrevious), cause,
+		desc.TextDesc(text.DescKeyErrMemoryArchivePrevious), cause,
 	)
 }
 
@@ -190,7 +190,7 @@ func ArchivePrevious(cause error) error {
 //   - error: "creating memory directory: <cause>"
 func CreateDir(cause error) error {
 	return fmt.Errorf(
-		desc.TextDesc(text.TextDescKeyErrMemoryCreateDir), cause,
+		desc.TextDesc(text.DescKeyErrMemoryCreateDir), cause,
 	)
 }
 
@@ -203,7 +203,7 @@ func CreateDir(cause error) error {
 //   - error: "writing mirror: <cause>"
 func WriteMirror(cause error) error {
 	return fmt.Errorf(
-		desc.TextDesc(text.TextDescKeyErrMemoryWriteMirror), cause,
+		desc.TextDesc(text.DescKeyErrMemoryWriteMirror), cause,
 	)
 }
 
@@ -216,7 +216,7 @@ func WriteMirror(cause error) error {
 //   - error: "reading mirror for archive: <cause>"
 func ReadMirrorArchive(cause error) error {
 	return fmt.Errorf(
-		desc.TextDesc(text.TextDescKeyErrMemoryReadMirrorArchive), cause,
+		desc.TextDesc(text.DescKeyErrMemoryReadMirrorArchive), cause,
 	)
 }
 
@@ -229,7 +229,7 @@ func ReadMirrorArchive(cause error) error {
 //   - error: "creating archive directory: <cause>"
 func CreateArchiveDir(cause error) error {
 	return fmt.Errorf(
-		desc.TextDesc(text.TextDescKeyErrMemoryCreateArchiveDir), cause,
+		desc.TextDesc(text.DescKeyErrMemoryCreateArchiveDir), cause,
 	)
 }
 
@@ -242,7 +242,7 @@ func CreateArchiveDir(cause error) error {
 //   - error: "writing archive: <cause>"
 func WriteArchive(cause error) error {
 	return fmt.Errorf(
-		desc.TextDesc(text.TextDescKeyErrMemoryWriteArchive), cause,
+		desc.TextDesc(text.DescKeyErrMemoryWriteArchive), cause,
 	)
 }
 
@@ -255,7 +255,7 @@ func WriteArchive(cause error) error {
 //   - error: "reading mirror: <cause>"
 func ReadMirror(cause error) error {
 	return fmt.Errorf(
-		desc.TextDesc(text.TextDescKeyErrMemoryReadMirror), cause,
+		desc.TextDesc(text.DescKeyErrMemoryReadMirror), cause,
 	)
 }
 
@@ -268,7 +268,7 @@ func ReadMirror(cause error) error {
 //   - error: "reading diff source: <cause>"
 func ReadDiffSource(cause error) error {
 	return fmt.Errorf(
-		desc.TextDesc(text.TextDescKeyErrMemoryReadDiffSource), cause,
+		desc.TextDesc(text.DescKeyErrMemoryReadDiffSource), cause,
 	)
 }
 
@@ -281,7 +281,7 @@ func ReadDiffSource(cause error) error {
 //   - error: "selecting content: <cause>"
 func SelectContent(cause error) error {
 	return fmt.Errorf(
-		desc.TextDesc(text.TextDescKeyErrMemorySelectContent), cause,
+		desc.TextDesc(text.DescKeyErrMemorySelectContent), cause,
 	)
 }
 
@@ -294,6 +294,6 @@ func SelectContent(cause error) error {
 //   - error: "writing MEMORY.md: <cause>"
 func WriteMemory(cause error) error {
 	return fmt.Errorf(
-		desc.TextDesc(text.TextDescKeyErrMemoryWriteMemory), cause,
+		desc.TextDesc(text.DescKeyErrMemoryWriteMemory), cause,
 	)
 }
