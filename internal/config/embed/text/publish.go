@@ -19,3 +19,8 @@ const (
 	DescKeyWritePublishTasks       = "write.publish-tasks"
 	DescKeyWritePublishTotal       = "write.publish-total"
 )
+
+const (
+	TextDescKeyWriteUnpublishDone     = "write.unpublish-done"
+	TextDescKeyWriteUnpublishNotFound = "write.unpublish-not-found"
+)

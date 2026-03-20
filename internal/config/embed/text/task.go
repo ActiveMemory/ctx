@@ -26,3 +26,8 @@ const (
 	TextDescKeyCheckTaskCompletionFallback     = "check-task-completion.fallback"
 	TextDescKeyCheckTaskCompletionNudgeMessage = "check-task-completion.nudge-message"
 )
+
+const (
+	TextDescKeyWriteCompletedTask = "write.completed-task"
+	TextDescKeyWriteMovingTask    = "write.moving-task"
+)

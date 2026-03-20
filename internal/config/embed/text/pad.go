@@ -57,4 +57,5 @@ const (
 
 const (
 	TextDescKeyWritePadKeyCreated = "write.pad-key-created"
+	TextDescKeyPadKeyCreated      = "pad.key-created"
 )

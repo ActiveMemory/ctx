@@ -7,5 +7,5 @@
 package text
 
 const (
-	DescKeyStopwords = "stopwords"
+	TextDescKeyAgentInstruction = "agent.instruction"
 )

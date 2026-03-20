@@ -75,3 +75,7 @@ const (
 	TextDescKeyWriteInitWarnNonFatal         = "write.init-warn-non-fatal"
 	TextDescKeyWriteInitialized              = "write.initialized"
 )
+
+const (
+	TextDescKeyRcParseWarning = "rc.parse_warning"
+)

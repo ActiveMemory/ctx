@@ -7,5 +7,6 @@
 package text
 
 const (
-	DescKeyStopwords = "stopwords"
+	TextDescKeyRelayPrefixFormat = "relay.prefix-format"
+	TextDescKeyMCPPacketHeader   = "mcp.packet-header"
 )

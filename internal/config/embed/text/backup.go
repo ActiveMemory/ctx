@@ -16,3 +16,13 @@ const (
 	DescKeyBackupSMBUnavailable = "backup.smb-unavailable"
 	DescKeyBackupStale          = "backup.stale"
 )
+
+const (
+	TextDescKeyWriteBackupResult  = "write.backup-result"
+	TextDescKeyWriteBackupSMBDest = "write.backup-smb-dest"
+)
+
+const (
+	TextDescKeyWriteSnapshotSaved   = "write.snapshot-saved"
+	TextDescKeyWriteSnapshotUpdated = "write.snapshot-updated"
+)

@@ -7,5 +7,6 @@
 package text
 
 const (
-	DescKeyStopwords = "stopwords"
+	TextDescKeyMCPEventTypeRequired = "mcp.event-type-required"
+	TextDescKeyMCPUnknownEventType  = "mcp.unknown-event-type"
 )

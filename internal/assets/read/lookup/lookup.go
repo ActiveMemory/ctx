@@ -30,7 +30,7 @@ func StopWords() map[string]bool {
 
 // loadStopWords parses the stopwords text entry into a lookup map.
 func loadStopWords() map[string]bool {
-	raw := TextDesc(text.TextDescKeyStopwords)
+	raw := TextDesc(text.DescKeyStopwords)
 	words := strings.Fields(raw)
 	m := make(map[string]bool, len(words))
 	for _, w := range words {
