@@ -40,7 +40,7 @@ func readContextFile(
 	if f == nil {
 		return out.ErrResponse(id, proto.ErrCodeInvalidArg,
 			fmt.Sprintf(
-				desc.TextDesc(text.TextDescKeyMCPFileNotFound),
+				desc.TextDesc(text.DescKeyMCPErrFileNotFound),
 				fileName,
 			))
 	}

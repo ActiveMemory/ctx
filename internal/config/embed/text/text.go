@@ -13,28 +13,9 @@ const (
 
 	TextDescKeyErrSiteZensicalNotFound = "err.site.zensical-not-found"
 
-	TextDescKeyErrSkillList = "err.skill.skill-list"
-	TextDescKeyErrSkillRead = "err.skill.skill-read"
+	TextDescKeyRelayPrefixFormat = "relay.prefix-format"
 
-	TextDescKeyErrStateLoadState       = "err.state.load-state"
-	TextDescKeyErrStateReadingStateDir = "err.state.reading-state-dir"
-	TextDescKeyErrStateSaveState       = "err.state.save-state"
-
-	TextDescKeyEventsEmpty       = "events.empty"
-	TextDescKeyEventsHumanFormat = "events.human-format"
-
-	TextDescKeyStatsEmpty        = "stats.empty"
-	TextDescKeyStatsHeaderFormat = "stats.header-format"
-	TextDescKeyStatsLineFormat   = "stats.line-format"
-
-	TextDescKeyCheckTaskCompletionFallback     = "check-task-completion.fallback"
-	TextDescKeyCheckTaskCompletionNudgeMessage = "check-task-completion.nudge-message"
-
-	TextDescKeyRelayPrefixFormat        = "relay.prefix-format"
 	TextDescKeyVersionDriftRelayMessage = "version-drift.relay-message"
-
-	TextDescKeyChangesFallbackLabel = "changes.fallback-label"
-	TextDescKeyChangesSincePrefix   = "changes.since-prefix"
 
 	TextDescKeyConfirmProceed = "confirm.proceed"
 
@@ -44,32 +25,16 @@ const (
 
 	TextDescKeyPauseConfirmed = "pause.confirmed"
 
-	TextDescKeyPostCommitFallback     = "post-commit.fallback"
-	TextDescKeyPostCommitRelayMessage = "post-commit.relay-message"
-
-	TextDescKeyMarkJournalChecked = "mark-journal.checked"
-	TextDescKeyMarkJournalMarked  = "mark-journal.marked"
-
-	TextDescKeyMarkWrappedUpConfirmed = "mark-wrapped-up.confirmed"
-
-	TextDescKeySpecsNudgeFallback     = "specs-nudge.fallback"
-	TextDescKeySpecsNudgeNudgeMessage = "specs-nudge.nudge-message"
-
-	TextDescKeyQaReminderFallback     = "qa-reminder.fallback"
-	TextDescKeyQaReminderRelayMessage = "qa-reminder.relay-message"
-
 	TextDescKeyRcParseWarning = "rc.parse_warning"
 
 	TextDescKeyDriftCleared = "drift.cleared"
 
-	TextDescKeyMCPFailedMarshal = "mcp.failed-marshal"
-
 	TextDescKeyMCPLoadContext = "mcp.load-context"
 
 	TextDescKeyMCPTypeContentRequired = "mcp.type-content-required"
+	TextDescKeyMCPQueryRequired       = "mcp.query-required"
 
-	TextDescKeyMCPQueryRequired = "mcp.query-required"
-
+	TextDescKeyMCPPacketHeader  = "mcp.packet-header"
 	TextDescKeyMCPSectionFormat = "mcp.section-format"
 
 	TextDescKeyMCPAlsoNoted     = "mcp.also-noted"

@@ -21,3 +21,8 @@ const (
 	TextDescKeyTaskSnapshotCreatedFormat = "task-snapshot.created-format"
 	TextDescKeyTaskSnapshotSaved         = "task-snapshot.saved"
 )
+
+const (
+	TextDescKeyCheckTaskCompletionFallback     = "check-task-completion.fallback"
+	TextDescKeyCheckTaskCompletionNudgeMessage = "check-task-completion.nudge-message"
+)

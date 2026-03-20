@@ -7,11 +7,11 @@
 package text
 
 const (
-	TextDescKeyMCPMethodNotFound  = "mcp.method-not-found"
-	TextDescKeyMCPPacketHeader    = "mcp.packet-header"
-	TextDescKeyMCPParseError      = "mcp.parse-error"
-	TextDescKeyMCPFileNotFound    = "mcp.file-not-found"
-	TextDescKeyMCPInvalidParams   = "mcp.invalid-params"
-	TextDescKeyMCPUnknownResource = "mcp.unknown-resource"
-	TextDescKeyMCPUnknownTool     = "mcp.unknown-tool"
+	DescKeyMCPErrMethodNotFound  = "mcp.err-method-not-found"
+	DescKeyMCPErrParse           = "mcp.err-parse"
+	DescKeyMCPErrFileNotFound    = "mcp.err-file-not-found"
+	DescKeyMCPErrInvalidParams   = "mcp.err-invalid-params"
+	DescKeyMCPErrUnknownResource = "mcp.err-unknown-resource"
+	DescKeyMCPErrUnknownTool     = "mcp.err-unknown-tool"
+	DescKeyMCPErrFailedMarshal   = "mcp.err-failed-marshal"
 )

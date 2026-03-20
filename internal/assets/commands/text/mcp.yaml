@@ -29,15 +29,15 @@ mcp.drift-violations:
 mcp.drift-warnings:
   short: |
     Warnings:
-mcp.failed-marshal:
+mcp.err-failed-marshal:
   short: failed to marshal response
-mcp.file-not-found:
+mcp.err-file-not-found:
   short: 'file not found: %s'
-mcp.invalid-params:
+mcp.err-invalid-params:
   short: invalid params
 mcp.load-context:
   short: 'failed to load context: %v'
-mcp.method-not-found:
+mcp.err-method-not-found:
   short: 'method not found: %s'
 mcp.omitted-format:
   short: |
@@ -46,7 +46,7 @@ mcp.packet-header:
   short: |+
     # Context Packet
 
-mcp.parse-error:
+mcp.err-parse:
   short: parse error
 mcp.query-required:
   short: query is required
@@ -120,9 +120,9 @@ mcp.tool-status-desc:
   short: 'Show context health: file count, token estimate, and file summaries'
 mcp.type-content-required:
   short: type and content are required
-mcp.unknown-resource:
+mcp.err-unknown-resource:
   short: 'unknown resource: %s'
-mcp.unknown-tool:
+mcp.err-unknown-tool:
   short: 'unknown tool: %s'
 
 mcp.all-tasks-complete:

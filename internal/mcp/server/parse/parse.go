@@ -33,7 +33,7 @@ func Request(data []byte) (*proto.Request, *proto.Response) {
 			JSONRPC: server.JSONRPCVersion,
 			Error: &proto.RPCError{
 				Code:    proto.ErrCodeParse,
-				Message: desc.TextDesc(text.TextDescKeyMCPParseError),
+				Message: desc.TextDesc(text.DescKeyMCPErrParse),
 			},
 		}
 	}

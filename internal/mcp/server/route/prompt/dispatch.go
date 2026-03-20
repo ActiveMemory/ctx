@@ -47,7 +47,7 @@ func DispatchGet(
 	var params proto.GetPromptParams
 	if err := json.Unmarshal(req.Params, &params); err != nil {
 		return out.ErrResponse(req.ID, proto.ErrCodeInvalidArg,
-			desc.TextDesc(text.TextDescKeyMCPInvalidParams))
+			desc.TextDesc(text.DescKeyMCPErrInvalidParams))
 	}
 
 	switch params.Name {

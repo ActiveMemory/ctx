@@ -26,7 +26,7 @@ import (
 func DispatchErr(req proto.Request) *proto.Response {
 	return out.ErrResponse(req.ID, proto.ErrCodeNotFound,
 		fmt.Sprintf(
-			desc.TextDesc(text.TextDescKeyMCPMethodNotFound),
+			desc.TextDesc(text.DescKeyMCPErrMethodNotFound),
 			req.Method,
 		),
 	)

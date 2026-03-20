@@ -106,7 +106,7 @@ func (s *Server) Serve() error {
 			// Marshal failure: try to report it as an error response.
 			fallback := out.ErrResponse(
 				nil, proto.ErrCodeInternal,
-				desc.TextDesc(text.TextDescKeyMCPFailedMarshal),
+				desc.TextDesc(text.DescKeyMCPErrFailedMarshal),
 			)
 			if fbErr := mcpIO.WriteJSON(s.out, &s.outMu, fallback); fbErr != nil {
 				return fbErr

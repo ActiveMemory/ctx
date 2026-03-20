@@ -27,3 +27,5 @@ const (
 	TextDescKeyWriteJournalSyncUnlocked       = "write.journal-sync-unlocked"
 	TextDescKeyWriteJournalSyncUnlockedCount  = "write.journal-sync-unlocked-count"
 )
+
+const ()
