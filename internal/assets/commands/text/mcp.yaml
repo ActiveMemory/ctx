@@ -348,9 +348,9 @@ mcp.format-reminder-not-due:
   short: ' (after %s, not yet due)'
 mcp.unknown-event-type:
   short: 'unknown event type: %s (use start|end)'
-mcp.unknown-prompt:
+mcp.err-unknown-prompt:
   short: 'unknown prompt: %s'
-mcp.uri-required:
+mcp.err-uri-required:
   short: uri is required
 mcp.format-watch-completed:
   short: 'Completed: %s'
