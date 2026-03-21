@@ -12,6 +12,7 @@ import (
 	"github.com/ActiveMemory/ctx/internal/assets/read/desc"
 	"github.com/ActiveMemory/ctx/internal/cli/system/core"
 	"github.com/ActiveMemory/ctx/internal/config/embed/text"
+	cflag "github.com/ActiveMemory/ctx/internal/config/flag"
 	recallErr "github.com/ActiveMemory/ctx/internal/err/recall"
 	"github.com/ActiveMemory/ctx/internal/log"
 )
@@ -25,12 +26,12 @@ import (
 // Returns:
 //   - error: Non-nil on event log read failure
 func Run(cmd *cobra.Command) error {
-	hook, _ := cmd.Flags().GetString("hook")
-	session, _ := cmd.Flags().GetString("session")
-	event, _ := cmd.Flags().GetString("event")
-	last, _ := cmd.Flags().GetInt("last")
-	jsonOut, _ := cmd.Flags().GetBool("json")
-	includeAll, _ := cmd.Flags().GetBool("all")
+	hook, _ := cmd.Flags().GetString(cflag.Hook)
+	session, _ := cmd.Flags().GetString(cflag.Session)
+	event, _ := cmd.Flags().GetString(cflag.Event)
+	last, _ := cmd.Flags().GetInt(cflag.Last)
+	jsonOut, _ := cmd.Flags().GetBool(cflag.JSON)
+	includeAll, _ := cmd.Flags().GetBool(cflag.All)
 
 	opts := log.QueryOpts{
 		Hook:           hook,

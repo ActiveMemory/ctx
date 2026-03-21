@@ -11,16 +11,16 @@ import (
 	"os"
 	"path/filepath"
 
+	"github.com/spf13/cobra"
+
 	"github.com/ActiveMemory/ctx/internal/assets/read/desc"
+	"github.com/ActiveMemory/ctx/internal/cli/system/core"
 	"github.com/ActiveMemory/ctx/internal/config/dir"
 	"github.com/ActiveMemory/ctx/internal/config/embed/text"
 	"github.com/ActiveMemory/ctx/internal/config/heartbeat"
 	"github.com/ActiveMemory/ctx/internal/config/hook"
 	"github.com/ActiveMemory/ctx/internal/config/stats"
 	"github.com/ActiveMemory/ctx/internal/config/tpl"
-	"github.com/spf13/cobra"
-
-	"github.com/ActiveMemory/ctx/internal/cli/system/core"
 	"github.com/ActiveMemory/ctx/internal/log"
 	"github.com/ActiveMemory/ctx/internal/notify"
 	"github.com/ActiveMemory/ctx/internal/rc"
@@ -49,8 +49,12 @@ func Run(_ *cobra.Command, stdin *os.File) error {
 	}
 
 	tmpDir := core.StateDir()
-	counterFile := filepath.Join(tmpDir, heartbeat.HeartbeatCounterPrefix+sessionID)
-	mtimeFile := filepath.Join(tmpDir, heartbeat.HeartbeatMtimePrefix+sessionID)
+	counterFile := filepath.Join(
+		tmpDir, heartbeat.HeartbeatCounterPrefix+sessionID,
+	)
+	mtimeFile := filepath.Join(
+		tmpDir, heartbeat.HeartbeatMtimePrefix+sessionID,
+	)
 	contextDir := rc.ContextDir()
 	logFile := filepath.Join(contextDir, dir.Logs, heartbeat.HeartbeatLogFile)
 

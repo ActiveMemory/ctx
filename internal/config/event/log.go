@@ -16,4 +16,6 @@ const (
 	EventLogMaxBytes = 1 << 20
 	// HookLogMaxBytes is the size threshold for hook log rotation (1MB).
 	HookLogMaxBytes = 1 << 20
+	// DefaultEventsLast is the default number of events shown by ctx system events.
+	DefaultEventsLast = 50
 )

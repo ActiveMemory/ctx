@@ -10,11 +10,11 @@ import (
 	"fmt"
 	"strings"
 
+	"github.com/spf13/cobra"
+
 	"github.com/ActiveMemory/ctx/internal/assets/read/desc"
 	"github.com/ActiveMemory/ctx/internal/config/embed/cmd"
 	"github.com/ActiveMemory/ctx/internal/config/embed/flag"
-	"github.com/spf13/cobra"
-
 	"github.com/ActiveMemory/ctx/internal/journal/state"
 )
 
@@ -25,7 +25,7 @@ import (
 func Cmd() *cobra.Command {
 	short, long := desc.Command(cmd.DescKeySystemMarkJournal)
 
-	cmd := &cobra.Command{
+	c := &cobra.Command{
 		Use:    cmd.UseSystemMarkJournal,
 		Short:  short,
 		Long:   fmt.Sprintf(long, strings.Join(state.ValidStages, ", ")),
@@ -36,7 +36,7 @@ func Cmd() *cobra.Command {
 		},
 	}
 
-	cmd.Flags().Bool("check", false, desc.Flag(flag.DescKeySystemMarkJournalCheck))
+	c.Flags().Bool("check", false, desc.Flag(flag.DescKeySystemMarkJournalCheck))
 
-	return cmd
+	return c
 }
