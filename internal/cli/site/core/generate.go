@@ -14,6 +14,7 @@ import (
 
 	"github.com/ActiveMemory/ctx/internal/config/file"
 	"github.com/ActiveMemory/ctx/internal/config/rss"
+	"github.com/ActiveMemory/ctx/internal/config/token"
 	errFs "github.com/ActiveMemory/ctx/internal/err/fs"
 	errSite "github.com/ActiveMemory/ctx/internal/err/site"
 )
@@ -28,7 +29,7 @@ import (
 // Returns:
 //   - error: Non-nil if marshalling or writing fails
 func GenerateAtom(posts []BlogPost, outPath, baseURL string) error {
-	baseURL = strings.TrimRight(baseURL, "/")
+	baseURL = strings.TrimRight(baseURL, rss.URLSlash)
 
 	feedURL := baseURL + rss.FeedPath
 	blogURL := baseURL + rss.BlogPath
@@ -51,7 +52,7 @@ func GenerateAtom(posts []BlogPost, outPath, baseURL string) error {
 
 	for _, p := range posts {
 		slug := strings.TrimSuffix(p.Filename, file.ExtMarkdown)
-		entryURL := blogURL + slug + "/"
+		entryURL := blogURL + slug + rss.URLSlash
 
 		entry := AtomEntry{
 			Title:   p.Title,
@@ -89,7 +90,7 @@ func GenerateAtom(posts []BlogPost, outPath, baseURL string) error {
 
 	output := []byte(rss.FeedXMLHeader)
 	output = append(output, xmlData...)
-	output = append(output, '\n')
+	output = append(output, token.NewlineLF[0])
 
 	if writeErr := os.WriteFile(outPath, output, 0o644); writeErr != nil {
 		return errFs.FileWrite(outPath, writeErr)

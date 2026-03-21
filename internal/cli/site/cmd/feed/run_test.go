@@ -17,6 +17,7 @@ import (
 	"github.com/spf13/cobra"
 
 	"github.com/ActiveMemory/ctx/internal/cli/site/core"
+	writeSite "github.com/ActiveMemory/ctx/internal/write/site"
 )
 
 // newTestCmd creates a cobra command with a captured output buffer.
@@ -85,7 +86,7 @@ func TestPrintReport_NoSkipped(t *testing.T) {
 		Included: 3,
 	}
 
-	core.PrintReport(cmd, "site/feed.xml", report)
+	writeSite.PrintFeedReport(cmd, "site/feed.xml", report)
 	out := testOutput(cmd)
 
 	if !strings.Contains(out, "3 entries") {
@@ -107,7 +108,7 @@ func TestPrintReport_WithWarnings(t *testing.T) {
 		Warnings: []string{"post.md \u2014 no summary paragraph found"},
 	}
 
-	core.PrintReport(cmd, "site/feed.xml", report)
+	writeSite.PrintFeedReport(cmd, "site/feed.xml", report)
 	out := testOutput(cmd)
 
 	if !strings.Contains(out, "Warnings:") {

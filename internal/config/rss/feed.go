@@ -33,4 +33,5 @@ const (
 	LinkRelSelf  = "self"
 	TimeSuffixZ  = "T00:00:00Z"
 	SkipSentinel = " \u2014 "
+	URLSlash     = "/"
 )

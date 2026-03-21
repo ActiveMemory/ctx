@@ -10,6 +10,7 @@ import (
 	"github.com/spf13/cobra"
 
 	"github.com/ActiveMemory/ctx/internal/cli/site/core"
+	writeSite "github.com/ActiveMemory/ctx/internal/write/site"
 )
 
 // Run orchestrates scanning and generation.
@@ -34,7 +35,7 @@ func Run(cmd *cobra.Command, blogDir, outPath, baseURL string) error {
 	}
 
 	report.Included = len(posts)
-	core.PrintReport(cmd, outPath, report)
+	writeSite.PrintFeedReport(cmd, outPath, report)
 
 	return nil
 }

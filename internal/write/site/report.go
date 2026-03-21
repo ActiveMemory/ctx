@@ -4,7 +4,7 @@
 //   \    Copyright 2026-present Context contributors.
 //                 SPDX-License-Identifier: Apache-2.0
 
-package core
+package site
 
 import (
 	"fmt"
@@ -12,16 +12,17 @@ import (
 	"github.com/spf13/cobra"
 
 	"github.com/ActiveMemory/ctx/internal/assets/read/desc"
+	siteCore "github.com/ActiveMemory/ctx/internal/cli/site/core"
 	"github.com/ActiveMemory/ctx/internal/config/embed/text"
 )
 
-// PrintReport outputs the feed generation summary.
+// PrintFeedReport outputs the feed generation summary.
 //
 // Parameters:
 //   - cmd: Cobra command for output messages
 //   - outPath: Path of the generated feed file
 //   - report: Feed generation report with counts and messages
-func PrintReport(cmd *cobra.Command, outPath string, report FeedReport) {
+func PrintFeedReport(cmd *cobra.Command, outPath string, report siteCore.FeedReport) {
 	cmd.Println()
 	cmd.Println(fmt.Sprintf(
 		desc.Text(text.DescKeySiteFeedGenerated), outPath, report.Included))
