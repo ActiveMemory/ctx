@@ -11,17 +11,17 @@ import (
 	"os"
 	"path/filepath"
 
+	"github.com/spf13/cobra"
+
 	"github.com/ActiveMemory/ctx/internal/assets/read/desc"
+	"github.com/ActiveMemory/ctx/internal/cli/system/core"
 	"github.com/ActiveMemory/ctx/internal/config/embed/text"
 	"github.com/ActiveMemory/ctx/internal/config/env"
 	"github.com/ActiveMemory/ctx/internal/config/file"
 	"github.com/ActiveMemory/ctx/internal/config/hook"
 	"github.com/ActiveMemory/ctx/internal/config/journal"
 	"github.com/ActiveMemory/ctx/internal/config/tpl"
-	ctxcontext "github.com/ActiveMemory/ctx/internal/context/resolve"
-	"github.com/spf13/cobra"
-
-	"github.com/ActiveMemory/ctx/internal/cli/system/core"
+	ctxResolve "github.com/ActiveMemory/ctx/internal/context/resolve"
 	"github.com/ActiveMemory/ctx/internal/notify"
 )
 
@@ -58,7 +58,7 @@ func Run(cmd *cobra.Command, stdin *os.File) error {
 	}
 
 	// Bail out if journal or Claude projects directories don't exist
-	jDir := ctxcontext.ResolvedJournalDir()
+	jDir := ctxResolve.ResolvedJournalDir()
 	if _, statErr := os.Stat(jDir); os.IsNotExist(statErr) {
 		return nil
 	}

@@ -10,10 +10,10 @@ import (
 	"os"
 	"path/filepath"
 
-	"github.com/ActiveMemory/ctx/internal/config/knowledge"
 	"github.com/spf13/cobra"
 
 	"github.com/ActiveMemory/ctx/internal/cli/system/core"
+	"github.com/ActiveMemory/ctx/internal/config/knowledge"
 )
 
 // Run executes the check-knowledge hook logic.

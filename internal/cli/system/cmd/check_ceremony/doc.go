@@ -9,4 +9,4 @@
 //
 // It scans recent journal entries for session ceremony usage and nudges
 // adoption of /ctx-remember and /ctx-wrap-up when missing.
-package check_ceremonies
+package check_ceremony

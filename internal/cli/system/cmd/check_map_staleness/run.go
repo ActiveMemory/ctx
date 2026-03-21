@@ -12,7 +12,7 @@ import (
 	"time"
 
 	"github.com/ActiveMemory/ctx/internal/config/architecture"
-	time2 "github.com/ActiveMemory/ctx/internal/config/time"
+	cfgTime "github.com/ActiveMemory/ctx/internal/config/time"
 	"github.com/spf13/cobra"
 
 	"github.com/ActiveMemory/ctx/internal/cli/system/core"
@@ -40,7 +40,9 @@ func Run(cmd *cobra.Command, stdin *os.File) error {
 	if paused {
 		return nil
 	}
-	markerPath := filepath.Join(core.StateDir(), architecture.MapStalenessThrottleID)
+	markerPath := filepath.Join(
+		core.StateDir(), architecture.MapStalenessThrottleID,
+	)
 	if core.IsDailyThrottled(markerPath) {
 		return nil
 	}
@@ -50,7 +52,7 @@ func Run(cmd *cobra.Command, stdin *os.File) error {
 		return nil
 	}
 
-	lastRun, parseErr := time.Parse(time2.DateFormat, info.LastRun)
+	lastRun, parseErr := time.Parse(cfgTime.DateFormat, info.LastRun)
 	if parseErr != nil {
 		return nil
 	}
@@ -65,7 +67,7 @@ func Run(cmd *cobra.Command, stdin *os.File) error {
 		return nil
 	}
 
-	dateStr := lastRun.Format(time2.DateFormat)
+	dateStr := lastRun.Format(cfgTime.DateFormat)
 	core.EmitMapStalenessWarning(cmd, input.SessionID, dateStr, moduleCommits)
 
 	core.TouchFile(markerPath)

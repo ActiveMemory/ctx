@@ -10,16 +10,16 @@ import (
 	"os"
 	"path/filepath"
 
+	"github.com/spf13/cobra"
+
 	"github.com/ActiveMemory/ctx/internal/assets/read/desc"
+	"github.com/ActiveMemory/ctx/internal/cli/system/core"
 	"github.com/ActiveMemory/ctx/internal/config/archive"
 	"github.com/ActiveMemory/ctx/internal/config/embed/text"
 	"github.com/ActiveMemory/ctx/internal/config/env"
 	"github.com/ActiveMemory/ctx/internal/config/hook"
 	"github.com/ActiveMemory/ctx/internal/config/token"
 	"github.com/ActiveMemory/ctx/internal/config/tpl"
-	"github.com/spf13/cobra"
-
-	"github.com/ActiveMemory/ctx/internal/cli/system/core"
 	"github.com/ActiveMemory/ctx/internal/notify"
 )
 
@@ -61,7 +61,9 @@ func Run(cmd *cobra.Command, stdin *os.File) error {
 	}
 
 	// Check 2: Is the backup stale?
-	markerPath := filepath.Join(home, archive.BackupMarkerDir, archive.BackupMarkerFile)
+	markerPath := filepath.Join(
+		home, archive.BackupMarkerDir, archive.BackupMarkerFile,
+	)
 	warnings = core.CheckBackupMarker(markerPath, warnings)
 
 	if len(warnings) == 0 {
@@ -75,7 +77,9 @@ func Run(cmd *cobra.Command, stdin *os.File) error {
 	}
 
 	vars := map[string]any{tpl.VarWarnings: warningText}
-	content := core.LoadMessage(hook.CheckBackupAge, hook.VariantWarning, vars, warningText)
+	content := core.LoadMessage(
+		hook.CheckBackupAge, hook.VariantWarning, vars, warningText,
+	)
 	if content == "" {
 		return nil
 	}

@@ -13,11 +13,11 @@ import (
 	"strings"
 	"time"
 
-	"github.com/ActiveMemory/ctx/internal/assets/read/desc"
-	"github.com/ActiveMemory/ctx/internal/config/embed/text"
 	"github.com/spf13/cobra"
 
+	"github.com/ActiveMemory/ctx/internal/assets/read/desc"
 	"github.com/ActiveMemory/ctx/internal/cli/system/core"
+	"github.com/ActiveMemory/ctx/internal/config/embed/text"
 	"github.com/ActiveMemory/ctx/internal/config/freshness"
 	"github.com/ActiveMemory/ctx/internal/config/hook"
 	"github.com/ActiveMemory/ctx/internal/config/token"
@@ -150,18 +150,27 @@ func formatStaleEntries(entries []staleEntry) string {
 	for _, url := range urlOrder {
 		group := byURL[url]
 		for _, e := range group {
-			fmt.Fprintf(&b, desc.Text(text.DescKeyFreshnessFileEntry),
+			_, err := fmt.Fprintf(&b, desc.Text(text.DescKeyFreshnessFileEntry),
 				e.path, e.days, e.desc)
+			if err != nil {
+				return ""
+			}
 			b.WriteString(token.NewlineLF)
 		}
-		fmt.Fprintf(&b, desc.Text(text.DescKeyFreshnessReviewURL), url)
+		_, err := fmt.Fprintf(&b, desc.Text(text.DescKeyFreshnessReviewURL), url)
+		if err != nil {
+			return ""
+		}
 		b.WriteString(token.NewlineLF)
 	}
 
 	// Entries without review URLs
 	for _, e := range noURL {
-		fmt.Fprintf(&b, desc.Text(text.DescKeyFreshnessFileEntry),
+		_, err := fmt.Fprintf(&b, desc.Text(text.DescKeyFreshnessFileEntry),
 			e.path, e.days, e.desc)
+		if err != nil {
+			return ""
+		}
 		b.WriteString(token.NewlineLF)
 	}
 

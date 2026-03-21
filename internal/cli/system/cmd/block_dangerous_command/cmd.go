@@ -4,7 +4,7 @@
 //   \    Copyright 2026-present Context contributors.
 //                 SPDX-License-Identifier: Apache-2.0
 
-package block_dangerous_commands
+package block_dangerous_command
 
 import (
 	"os"

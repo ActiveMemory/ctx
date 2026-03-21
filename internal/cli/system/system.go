@@ -12,11 +12,11 @@ import (
 	"github.com/spf13/cobra"
 
 	"github.com/ActiveMemory/ctx/internal/cli/system/cmd/backup"
-	"github.com/ActiveMemory/ctx/internal/cli/system/cmd/block_dangerous_commands"
+	"github.com/ActiveMemory/ctx/internal/cli/system/cmd/block_dangerous_command"
 	"github.com/ActiveMemory/ctx/internal/cli/system/cmd/block_non_path_ctx"
 	"github.com/ActiveMemory/ctx/internal/cli/system/cmd/bootstrap"
 	"github.com/ActiveMemory/ctx/internal/cli/system/cmd/check_backup_age"
-	"github.com/ActiveMemory/ctx/internal/cli/system/cmd/check_ceremonies"
+	"github.com/ActiveMemory/ctx/internal/cli/system/cmd/check_ceremony"
 	"github.com/ActiveMemory/ctx/internal/cli/system/cmd/check_context_size"
 	"github.com/ActiveMemory/ctx/internal/cli/system/cmd/check_freshness"
 	"github.com/ActiveMemory/ctx/internal/cli/system/cmd/check_journal"
@@ -70,11 +70,11 @@ func Cmd() *cobra.Command {
 
 	cmd.AddCommand(
 		backup.Cmd(),
-		block_dangerous_commands.Cmd(),
+		block_dangerous_command.Cmd(),
 		block_non_path_ctx.Cmd(),
 		bootstrap.Cmd(),
 		check_backup_age.Cmd(),
-		check_ceremonies.Cmd(),
+		check_ceremony.Cmd(),
 		check_context_size.Cmd(),
 		check_freshness.Cmd(),
 		check_journal.Cmd(),

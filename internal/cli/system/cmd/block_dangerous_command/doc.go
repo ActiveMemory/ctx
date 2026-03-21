@@ -10,4 +10,4 @@
 // It provides a regex safety net that catches dangerous command patterns
 // such as mid-command sudo, git push, and binary installs that the
 // deny-list cannot express.
-package block_dangerous_commands
+package block_dangerous_command
