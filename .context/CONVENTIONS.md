@@ -169,3 +169,5 @@
 - All cobra Use: fields must reference cmd.Use* constants, never raw strings or cmd.DescKey*
 
 - cmd/ directories contain only cmd.go, run.go, and tests — helpers and output go to core/
+
+- Package directory names are singular unless Go convention requires plural

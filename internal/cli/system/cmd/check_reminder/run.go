@@ -90,7 +90,8 @@ func Run(cmd *cobra.Command, stdin *os.File) error {
 		content))
 
 	ref := notify.NewTemplateRef(hook.CheckReminders, hook.VariantReminders, vars)
-	nudgeMsg := hook.CheckReminders + ": " + fmt.Sprintf(desc.Text(text.DescKeyCheckRemindersNudgeFormat), len(due))
+	nudgeMsg := fmt.Sprintf(desc.Text(text.DescKeyRelayPrefixFormat),
+		hook.CheckReminders, fmt.Sprintf(desc.Text(text.DescKeyCheckRemindersNudgeFormat), len(due)))
 	core.NudgeAndRelay(nudgeMsg, input.SessionID, ref)
 
 	return nil
