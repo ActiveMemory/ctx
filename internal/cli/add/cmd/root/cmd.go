@@ -8,14 +8,14 @@ package root
 
 import (
 	"github.com/ActiveMemory/ctx/internal/assets/read/desc"
+	"github.com/ActiveMemory/ctx/internal/cli/add/core"
+	"github.com/ActiveMemory/ctx/internal/cli/register"
 	"github.com/ActiveMemory/ctx/internal/config/embed/cmd"
 	"github.com/ActiveMemory/ctx/internal/config/embed/flag"
 	"github.com/ActiveMemory/ctx/internal/config/entry"
 	cflag "github.com/ActiveMemory/ctx/internal/config/flag"
 
 	"github.com/spf13/cobra"
-
-	"github.com/ActiveMemory/ctx/internal/cli/add/core"
 )
 
 // Cmd returns the "ctx add" command for appending entries to context files.
@@ -91,31 +91,11 @@ func Cmd() *cobra.Command {
 		cflag.File, cflag.ShortFile, "",
 		desc.FlagDesc(flag.DescKeyAddFile),
 	)
-	c.Flags().StringVarP(
-		&context,
-		cflag.Context, cflag.ShortContext, "",
-		desc.FlagDesc(flag.DescKeyAddContext),
-	)
-	c.Flags().StringVarP(
-		&rationale,
-		cflag.Rationale, cflag.ShortRationale, "",
-		desc.FlagDesc(flag.DescKeyAddRationale),
-	)
-	c.Flags().StringVar(
-		&consequence,
-		cflag.Consequence, "",
-		desc.FlagDesc(flag.DescKeyAddConsequence),
-	)
-	c.Flags().StringVarP(
-		&lesson,
-		cflag.Lesson, cflag.ShortLesson, "",
-		desc.FlagDesc(flag.DescKeyAddLesson),
-	)
-	c.Flags().StringVarP(
-		&application,
-		cflag.Application, cflag.ShortApplication, "",
-		desc.FlagDesc(flag.DescKeyAddApplication),
-	)
+	register.StringFlagP(c, &context, cflag.Context, cflag.ShortContext, flag.DescKeyAddContext)
+	register.StringFlagP(c, &rationale, cflag.Rationale, cflag.ShortRationale, flag.DescKeyAddRationale)
+	register.StringFlag(c, &consequence, cflag.Consequence, flag.DescKeyAddConsequence)
+	register.StringFlagP(c, &lesson, cflag.Lesson, cflag.ShortLesson, flag.DescKeyAddLesson)
+	register.StringFlagP(c, &application, cflag.Application, cflag.ShortApplication, flag.DescKeyAddApplication)
 
 	return c
 }

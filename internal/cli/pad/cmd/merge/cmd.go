@@ -7,11 +7,12 @@
 package merge
 
 import (
+	"github.com/spf13/cobra"
+
 	"github.com/ActiveMemory/ctx/internal/assets/read/desc"
 	"github.com/ActiveMemory/ctx/internal/config/embed/cmd"
 	"github.com/ActiveMemory/ctx/internal/config/embed/flag"
-	cflag "github.com/ActiveMemory/ctx/internal/config/flag"
-	"github.com/spf13/cobra"
+	cFlag "github.com/ActiveMemory/ctx/internal/config/flag"
 )
 
 // Cmd returns the pad merge subcommand.
@@ -23,8 +24,8 @@ func Cmd() *cobra.Command {
 	var dryRun bool
 
 	short, long := desc.CommandDesc(cmd.DescKeyPadMerge)
-	cmd := &cobra.Command{
-		Use:   "merge FILE...",
+	c := &cobra.Command{
+		Use:   cmd.UsePadMerge,
 		Short: short,
 		Long:  long,
 		Args:  cobra.MinimumNArgs(1),
@@ -33,10 +34,10 @@ func Cmd() *cobra.Command {
 		},
 	}
 
-	cmd.Flags().StringVarP(&keyFile, "key", "k", "",
+	c.Flags().StringVarP(&keyFile, cFlag.Key, cFlag.ShortKey, "",
 		desc.FlagDesc(flag.DescKeyPadMergeKey))
-	cmd.Flags().BoolVar(&dryRun, cflag.DryRun, false,
+	c.Flags().BoolVar(&dryRun, cFlag.DryRun, false,
 		desc.FlagDesc(flag.DescKeyPadMergeDryRun))
 
-	return cmd
+	return c
 }

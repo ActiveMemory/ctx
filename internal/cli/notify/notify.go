@@ -14,6 +14,7 @@ import (
 	"github.com/ActiveMemory/ctx/internal/assets/read/desc"
 	"github.com/ActiveMemory/ctx/internal/cli/notify/cmd/setup"
 	"github.com/ActiveMemory/ctx/internal/cli/notify/cmd/test"
+	"github.com/ActiveMemory/ctx/internal/cli/register"
 	"github.com/ActiveMemory/ctx/internal/config/embed/cmd"
 	"github.com/ActiveMemory/ctx/internal/config/embed/flag"
 	cFlag "github.com/ActiveMemory/ctx/internal/config/flag"
@@ -53,20 +54,10 @@ func Cmd() *cobra.Command {
 		},
 	}
 
-	c.Flags().StringVarP(&event,
-		cFlag.Event, cFlag.ShortEvent, "",
-		desc.FlagDesc(flag.DescKeyNotifyEvent),
-	)
-	c.Flags().StringVarP(&sessionID,
-		cFlag.SessionID, cFlag.ShortSessionID, "",
-		desc.FlagDesc(flag.DescKeyNotifySessionId),
-	)
-	c.Flags().StringVar(&hook,
-		cFlag.Hook, "", desc.FlagDesc(flag.DescKeyNotifyHook),
-	)
-	c.Flags().StringVar(&variant,
-		cFlag.Variant, "", desc.FlagDesc(flag.DescKeyNotifyVariant),
-	)
+	register.StringFlagP(c, &event, cFlag.Event, cFlag.ShortEvent, flag.DescKeyNotifyEvent)
+	register.StringFlagP(c, &sessionID, cFlag.SessionID, cFlag.ShortSessionID, flag.DescKeyNotifySessionId)
+	register.StringFlag(c, &hook, cFlag.Hook, flag.DescKeyNotifyHook)
+	register.StringFlag(c, &variant, cFlag.Variant, flag.DescKeyNotifyVariant)
 
 	c.AddCommand(setup.Cmd())
 	c.AddCommand(test.Cmd())

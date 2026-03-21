@@ -15,3 +15,6 @@ const AnnotationTrue = "true"
 
 // Binary is the ctx executable name used for PATH validation.
 const Binary = "ctx"
+
+// StdinSentinel is the conventional argument value meaning "read from stdin".
+const StdinSentinel = "-"

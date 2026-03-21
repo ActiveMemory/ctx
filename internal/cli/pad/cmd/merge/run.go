@@ -7,11 +7,11 @@
 package merge
 
 import (
-	ctxerr "github.com/ActiveMemory/ctx/internal/err/fs"
-	"github.com/ActiveMemory/ctx/internal/write/pad"
 	"github.com/spf13/cobra"
 
 	"github.com/ActiveMemory/ctx/internal/cli/pad/core"
+	ctEerr "github.com/ActiveMemory/ctx/internal/err/fs"
+	"github.com/ActiveMemory/ctx/internal/write/pad"
 )
 
 // Run reads entries from input files, deduplicates against the current
@@ -51,7 +51,7 @@ func Run(
 	for _, file := range files {
 		entries, fileErr := core.ReadFileEntries(file, key)
 		if fileErr != nil {
-			return ctxerr.OpenFile(file, fileErr)
+			return ctEerr.OpenFile(file, fileErr)
 		}
 
 		if core.HasBinaryEntries(entries) {

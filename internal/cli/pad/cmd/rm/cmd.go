@@ -9,9 +9,10 @@ package rm
 import (
 	"strconv"
 
+	"github.com/spf13/cobra"
+
 	"github.com/ActiveMemory/ctx/internal/assets/read/desc"
 	"github.com/ActiveMemory/ctx/internal/config/embed/cmd"
-	"github.com/spf13/cobra"
 )
 
 // Cmd returns the pad rm subcommand.
@@ -21,7 +22,7 @@ import (
 func Cmd() *cobra.Command {
 	short, _ := desc.CommandDesc(cmd.DescKeyPadRm)
 	return &cobra.Command{
-		Use:   "rm N",
+		Use:   cmd.UsePadRm,
 		Short: short,
 		Args:  cobra.ExactArgs(1),
 		RunE: func(cmd *cobra.Command, args []string) error {

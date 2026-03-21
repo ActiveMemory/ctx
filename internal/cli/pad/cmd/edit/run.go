@@ -7,17 +7,17 @@
 package edit
 
 import (
-	"github.com/ActiveMemory/ctx/internal/config/pad"
-	"github.com/ActiveMemory/ctx/internal/err/fs"
-	ctxerr "github.com/ActiveMemory/ctx/internal/err/pad"
-	"github.com/ActiveMemory/ctx/internal/io"
-	pad2 "github.com/ActiveMemory/ctx/internal/write/pad"
 	"github.com/spf13/cobra"
 
 	"github.com/ActiveMemory/ctx/internal/cli/pad/core"
+	"github.com/ActiveMemory/ctx/internal/config/pad"
+	"github.com/ActiveMemory/ctx/internal/err/fs"
+	ctxErr "github.com/ActiveMemory/ctx/internal/err/pad"
+	"github.com/ActiveMemory/ctx/internal/io"
+	writePad "github.com/ActiveMemory/ctx/internal/write/pad"
 )
 
-// runEdit replaces entry at 1-based position n with new text.
+// runEdit replaces the entry at 1-based position n with new text.
 //
 // Parameters:
 //   - cmd: Cobra command for output
@@ -42,7 +42,7 @@ func runEdit(cmd *cobra.Command, n int, text string) error {
 		return writeErr
 	}
 
-	pad2.PadEntryUpdated(cmd, n)
+	writePad.PadEntryUpdated(cmd, n)
 	return nil
 }
 
@@ -65,8 +65,8 @@ func runEditAppend(cmd *cobra.Command, n int, text string) error {
 		return validErr
 	}
 
-	if core.IsBlob(entries[n-1]) {
-		return ctxerr.BlobAppendNotAllowed()
+	if core.ContainsBlob(entries[n-1]) {
+		return ctxErr.BlobAppendNotAllowed()
 	}
 
 	entries[n-1] = entries[n-1] + " " + text
@@ -75,7 +75,7 @@ func runEditAppend(cmd *cobra.Command, n int, text string) error {
 		return writeErr
 	}
 
-	pad2.PadEntryUpdated(cmd, n)
+	writePad.PadEntryUpdated(cmd, n)
 	return nil
 }
 
@@ -98,8 +98,8 @@ func runEditPrepend(cmd *cobra.Command, n int, text string) error {
 		return validErr
 	}
 
-	if core.IsBlob(entries[n-1]) {
-		return ctxerr.BlobPrependNotAllowed()
+	if core.ContainsBlob(entries[n-1]) {
+		return ctxErr.BlobPrependNotAllowed()
 	}
 
 	entries[n-1] = text + " " + entries[n-1]
@@ -108,7 +108,7 @@ func runEditPrepend(cmd *cobra.Command, n int, text string) error {
 		return writeErr
 	}
 
-	pad2.PadEntryUpdated(cmd, n)
+	writePad.PadEntryUpdated(cmd, n)
 	return nil
 }
 
@@ -134,7 +134,7 @@ func runEditBlob(cmd *cobra.Command, n int, filePath, labelText string) error {
 
 	oldLabel, oldData, ok := core.SplitBlob(entries[n-1])
 	if !ok {
-		return ctxerr.NotBlobEntry(n)
+		return ctxErr.NotBlobEntry(n)
 	}
 
 	newLabel := oldLabel
@@ -150,7 +150,7 @@ func runEditBlob(cmd *cobra.Command, n int, filePath, labelText string) error {
 			return fs.ReadFile(readErr)
 		}
 		if len(data) > pad.MaxBlobSize {
-			return ctxerr.FileTooLarge(len(data), pad.MaxBlobSize)
+			return ctxErr.FileTooLarge(len(data), pad.MaxBlobSize)
 		}
 		newData = data
 	}
@@ -161,6 +161,6 @@ func runEditBlob(cmd *cobra.Command, n int, filePath, labelText string) error {
 		return writeErr
 	}
 
-	pad2.PadEntryUpdated(cmd, n)
+	writePad.PadEntryUpdated(cmd, n)
 	return nil
 }

@@ -14,6 +14,7 @@ import (
 	"github.com/ActiveMemory/ctx/internal/assets/read/desc"
 	"github.com/ActiveMemory/ctx/internal/config/embed/cmd"
 	"github.com/ActiveMemory/ctx/internal/config/embed/flag"
+	cFlag "github.com/ActiveMemory/ctx/internal/config/flag"
 	ctxErr "github.com/ActiveMemory/ctx/internal/err/pad"
 )
 
@@ -40,7 +41,7 @@ func Cmd() *cobra.Command {
 
 	short, long := desc.CommandDesc(cmd.DescKeyPadEdit)
 	c := &cobra.Command{
-		Use:   "edit N [TEXT]",
+		Use:   cmd.UsePadEdit,
 		Short: short,
 		Long:  long,
 		Args:  cobra.RangeArgs(1, 2),
@@ -97,16 +98,16 @@ func Cmd() *cobra.Command {
 	}
 
 	c.Flags().StringVar(&appendText,
-		"append", "", desc.FlagDesc(flag.DescKeyPadEditAppend),
+		cFlag.Append, "", desc.FlagDesc(flag.DescKeyPadEditAppend),
 	)
 	c.Flags().StringVar(&prependText,
-		"prepend", "", desc.FlagDesc(flag.DescKeyPadEditPrepend),
+		cFlag.Prepend, "", desc.FlagDesc(flag.DescKeyPadEditPrepend),
 	)
 	c.Flags().StringVarP(&filePath,
-		"file", "f", "", desc.FlagDesc(flag.DescKeyPadEditFile),
+		cFlag.File, cFlag.ShortFile, "", desc.FlagDesc(flag.DescKeyPadEditFile),
 	)
 	c.Flags().StringVar(&labelText,
-		"label", "", desc.FlagDesc(flag.DescKeyPadEditLabel),
+		cFlag.Label, "", desc.FlagDesc(flag.DescKeyPadEditLabel),
 	)
 
 	return c

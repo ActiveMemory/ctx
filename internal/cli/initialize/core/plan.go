@@ -13,9 +13,9 @@ import (
 	"strings"
 	"time"
 
-	project2 "github.com/ActiveMemory/ctx/internal/assets/read/project"
 	"github.com/spf13/cobra"
 
+	readProj "github.com/ActiveMemory/ctx/internal/assets/read/project"
 	"github.com/ActiveMemory/ctx/internal/config/cli"
 	"github.com/ActiveMemory/ctx/internal/config/fs"
 	"github.com/ActiveMemory/ctx/internal/config/marker"
@@ -38,14 +38,16 @@ import (
 // Returns:
 //   - error: Non-nil if file operations fail
 func HandleImplementationPlan(cmd *cobra.Command, force, autoMerge bool) error {
-	templateContent, err := project2.File(project.ImplementationPlan)
+	templateContent, err := readProj.File(project.ImplementationPlan)
 	if err != nil {
 		return errInit.ReadTemplate("IMPLEMENTATION_PLAN.md", err)
 	}
 	existingContent, err := os.ReadFile(project.ImplementationPlan)
 	fileExists := err == nil
 	if !fileExists {
-		if err := os.WriteFile(project.ImplementationPlan, templateContent, fs.PermFile); err != nil {
+		if err := os.WriteFile(
+			project.ImplementationPlan, templateContent, fs.PermFile,
+		); err != nil {
 			return errFs.FileWrite(project.ImplementationPlan, err)
 		}
 		initialize.Created(cmd, project.ImplementationPlan)

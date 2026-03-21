@@ -21,7 +21,7 @@ import (
 func Cmd() *cobra.Command {
 	short, _ := desc.CommandDesc(cmd.DescKeyPadMv)
 	return &cobra.Command{
-		Use:   "mv N M",
+		Use:   cmd.UsePadMv,
 		Short: short,
 		Args:  cobra.ExactArgs(2),
 		RunE: func(cmd *cobra.Command, args []string) error {
@@ -29,9 +29,9 @@ func Cmd() *cobra.Command {
 			if err != nil {
 				return err
 			}
-			m, err := strconv.Atoi(args[1])
-			if err != nil {
-				return err
+			m, cErr := strconv.Atoi(args[1])
+			if cErr != nil {
+				return cErr
 			}
 			return Run(cmd, n, m)
 		},

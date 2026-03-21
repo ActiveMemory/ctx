@@ -48,6 +48,7 @@ const (
 const (
 	DescKeyWritePadBlobWritten = "write.pad-blob-written"
 	DescKeyWritePadEmpty       = "write.pad-empty"
+	DescKeyWritePadListItem    = "write.pad-list-item"
 )
 
 const (

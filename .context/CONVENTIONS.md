@@ -165,3 +165,5 @@
 - Every package under internal/config/ must have a doc.go with the project header and a one-line package comment
 
 - DescKey prefix (not CmdDescKey) for command description constants in config/embed/cmd/ — Go package hygiene: cmd.DescKeyFoo does not stutter like cmd.CmdDescKeyFoo
+
+- All cobra Use: fields must reference cmd.Use* constants, never raw strings or cmd.DescKey*

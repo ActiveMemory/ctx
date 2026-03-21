@@ -9,11 +9,9 @@ package pad
 import (
 	"fmt"
 
-	"github.com/ActiveMemory/ctx/internal/assets/read/desc"
-	"github.com/ActiveMemory/ctx/internal/config/embed/cmd"
-	"github.com/ActiveMemory/ctx/internal/write/pad"
 	"github.com/spf13/cobra"
 
+	"github.com/ActiveMemory/ctx/internal/assets/read/desc"
 	"github.com/ActiveMemory/ctx/internal/cli/pad/cmd/add"
 	"github.com/ActiveMemory/ctx/internal/cli/pad/cmd/edit"
 	"github.com/ActiveMemory/ctx/internal/cli/pad/cmd/export"
@@ -24,6 +22,9 @@ import (
 	"github.com/ActiveMemory/ctx/internal/cli/pad/cmd/rm"
 	"github.com/ActiveMemory/ctx/internal/cli/pad/cmd/show"
 	"github.com/ActiveMemory/ctx/internal/cli/pad/core"
+	"github.com/ActiveMemory/ctx/internal/config/embed/cmd"
+	"github.com/ActiveMemory/ctx/internal/config/embed/text"
+	"github.com/ActiveMemory/ctx/internal/write/pad"
 )
 
 // Cmd returns the pad command with subcommands.
@@ -34,50 +35,39 @@ import (
 //   - *cobra.Command: Configured pad command with subcommands
 func Cmd() *cobra.Command {
 	short, long := desc.CommandDesc(cmd.DescKeyPad)
-	cmd := &cobra.Command{
+	c := &cobra.Command{
 		Use:   cmd.UsePad,
 		Short: short,
 		Long:  long,
 		Args:  cobra.NoArgs,
 		RunE: func(cmd *cobra.Command, _ []string) error {
-			return runList(cmd)
+			entries, err := core.ReadEntries()
+			if err != nil {
+				return err
+			}
+
+			if len(entries) == 0 {
+				pad.PadEmpty(cmd)
+				return nil
+			}
+
+			for i, entry := range entries {
+				cmd.Println(fmt.Sprintf(desc.TextDesc(text.DescKeyWritePadListItem), i+1, core.DisplayEntry(entry)))
+			}
+
+			return nil
 		},
 	}
 
-	cmd.AddCommand(show.Cmd())
-	cmd.AddCommand(add.Cmd())
-	cmd.AddCommand(rm.Cmd())
-	cmd.AddCommand(edit.Cmd())
-	cmd.AddCommand(mv.Cmd())
-	cmd.AddCommand(resolve.Cmd())
-	cmd.AddCommand(imp.Cmd())
-	cmd.AddCommand(export.Cmd())
-	cmd.AddCommand(merge.Cmd())
+	c.AddCommand(show.Cmd())
+	c.AddCommand(add.Cmd())
+	c.AddCommand(rm.Cmd())
+	c.AddCommand(edit.Cmd())
+	c.AddCommand(mv.Cmd())
+	c.AddCommand(resolve.Cmd())
+	c.AddCommand(imp.Cmd())
+	c.AddCommand(export.Cmd())
+	c.AddCommand(merge.Cmd())
 
-	return cmd
-}
-
-// runList prints all scratchpad entries numbered 1-based.
-//
-// Parameters:
-//   - cmd: Cobra command for output
-//
-// Returns:
-//   - error: Non-nil on read failure
-func runList(cmd *cobra.Command) error {
-	entries, err := core.ReadEntries()
-	if err != nil {
-		return err
-	}
-
-	if len(entries) == 0 {
-		pad.PadEmpty(cmd)
-		return nil
-	}
-
-	for i, entry := range entries {
-		cmd.Println(fmt.Sprintf("  %d. %s", i+1, core.DisplayEntry(entry)))
-	}
-
-	return nil
+	return c
 }

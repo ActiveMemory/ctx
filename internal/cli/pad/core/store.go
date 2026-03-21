@@ -15,12 +15,13 @@ import (
 
 	"github.com/ActiveMemory/ctx/internal/assets/read/desc"
 	"github.com/ActiveMemory/ctx/internal/config/embed/text"
+	"github.com/ActiveMemory/ctx/internal/config/file"
 	"github.com/ActiveMemory/ctx/internal/config/fs"
 	"github.com/ActiveMemory/ctx/internal/config/pad"
 	"github.com/ActiveMemory/ctx/internal/config/token"
 	"github.com/ActiveMemory/ctx/internal/crypto"
-	crypto2 "github.com/ActiveMemory/ctx/internal/err/crypto"
-	ctxerr "github.com/ActiveMemory/ctx/internal/err/pad"
+	errCrypto "github.com/ActiveMemory/ctx/internal/err/crypto"
+	errPad "github.com/ActiveMemory/ctx/internal/err/pad"
 	"github.com/ActiveMemory/ctx/internal/io"
 	"github.com/ActiveMemory/ctx/internal/rc"
 )
@@ -66,24 +67,29 @@ func EnsureKey() error {
 	// Encrypted file already exists without a key — we can't generate a new
 	// one because it wouldn't decrypt the existing data.
 	if _, err := os.Stat(ScratchpadPath()); err == nil {
-		return crypto2.NoKeyAt(kp)
+		return errCrypto.NoKeyAt(kp)
 	}
 
 	// First use: generate key.
 	key, genErr := crypto.GenerateKey()
 	if genErr != nil {
-		return crypto2.GenerateKey(genErr)
+		return errCrypto.GenerateKey(genErr)
 	}
 
 	if mkErr := os.MkdirAll(filepath.Dir(kp), fs.PermKeyDir); mkErr != nil {
-		return crypto2.MkdirKeyDir(mkErr)
+		return errCrypto.MkdirKeyDir(mkErr)
 	}
 
 	if saveErr := crypto.SaveKey(kp, key); saveErr != nil {
-		return crypto2.SaveKey(saveErr)
+		return errCrypto.SaveKey(saveErr)
 	}
 
-	fmt.Fprintln(os.Stderr, fmt.Sprintf(desc.TextDesc(text.DescKeyPadKeyCreated), kp)) //nolint:errcheck // best-effort notice
+	_, err := fmt.Fprintln(
+		os.Stderr, fmt.Sprintf(desc.TextDesc(text.DescKeyPadKeyCreated), kp),
+	)
+	if err != nil {
+		return err
+	}
 	return nil
 }
 
@@ -97,9 +103,7 @@ func EnsureKey() error {
 //   - error: Non-nil on read/write failure
 func EnsureGitignore(contextDir, filename string) error {
 	entry := filepath.Join(contextDir, filename)
-	const gitignorePath = ".gitignore"
-
-	content, err := os.ReadFile(gitignorePath)
+	content, err := os.ReadFile(file.FileGitignore)
 	if err != nil && !errors.Is(err, os.ErrNotExist) {
 		return err
 	}
@@ -114,7 +118,10 @@ func EnsureGitignore(contextDir, filename string) error {
 	if len(content) > 0 && !strings.HasSuffix(string(content), token.NewlineLF) {
 		sep = token.NewlineLF
 	}
-	return os.WriteFile(gitignorePath, []byte(string(content)+sep+entry+token.NewlineLF), fs.PermFile)
+	return os.WriteFile(
+		file.FileGitignore,
+		[]byte(string(content)+sep+entry+token.NewlineLF), fs.PermFile,
+	)
 }
 
 // ReadEntries reads the scratchpad and returns its entries.
@@ -135,7 +142,7 @@ func ReadEntries() ([]string, error) {
 		if errors.Is(err, os.ErrNotExist) {
 			return nil, nil
 		}
-		return nil, ctxerr.ReadScratchpad(err)
+		return nil, errPad.ReadScratchpad(err)
 	}
 
 	if !rc.ScratchpadEncrypt() {
@@ -145,12 +152,12 @@ func ReadEntries() ([]string, error) {
 	kp := KeyPath()
 	key, loadErr := crypto.LoadKey(kp)
 	if loadErr != nil {
-		return nil, crypto2.LoadKey(loadErr, kp)
+		return nil, errCrypto.LoadKey(loadErr, kp)
 	}
 
 	plaintext, decErr := crypto.Decrypt(key, data)
 	if decErr != nil {
-		return nil, crypto2.DecryptFailed()
+		return nil, errCrypto.DecryptFailed()
 	}
 
 	return ParseEntries(plaintext), nil
@@ -181,12 +188,12 @@ func WriteEntries(entries []string) error {
 	kp := KeyPath()
 	key, loadErr := crypto.LoadKey(kp)
 	if loadErr != nil {
-		return crypto2.LoadKey(loadErr, kp)
+		return errCrypto.LoadKey(loadErr, kp)
 	}
 
 	ciphertext, encErr := crypto.Encrypt(key, plaintext)
 	if encErr != nil {
-		return crypto2.EncryptFailed(encErr)
+		return errCrypto.EncryptFailed(encErr)
 	}
 
 	return os.WriteFile(path, ciphertext, fs.PermFile)

@@ -8,7 +8,7 @@ package core
 
 import (
 	"github.com/ActiveMemory/ctx/internal/crypto"
-	ctxerr "github.com/ActiveMemory/ctx/internal/err/crypto"
+	ctxErr "github.com/ActiveMemory/ctx/internal/err/crypto"
 	"github.com/ActiveMemory/ctx/internal/io"
 )
 
@@ -30,7 +30,7 @@ func DecryptFile(key []byte, baseDir, filename string) ([]string, error) {
 
 	plaintext, decErr := crypto.Decrypt(key, data)
 	if decErr != nil {
-		return nil, ctxerr.DecryptFailed()
+		return nil, ctxErr.DecryptFailed()
 	}
 
 	return ParseEntries(plaintext), nil

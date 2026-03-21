@@ -1252,10 +1252,10 @@ func TestMv_Plaintext(t *testing.T) {
 // --- Blob helper tests ---
 
 func TestIsBlob(t *testing.T) {
-	if !core.IsBlob("my plan:::SGVsbG8=") {
+	if !core.ContainsBlob("my plan:::SGVsbG8=") {
 		t.Error("expected isBlob to return true for blob entry")
 	}
-	if core.IsBlob("just a plain entry") {
+	if core.ContainsBlob("just a plain entry") {
 		t.Error("expected isBlob to return false for plain entry")
 	}
 }
@@ -1882,7 +1882,7 @@ func TestImportBlobs_Basic(t *testing.T) {
 		}
 	}
 
-	out, err := runCmd(newPadCmd("import", "--blobs", blobDir))
+	out, err := runCmd(newPadCmd("import", "--blob", blobDir))
 	if err != nil {
 		t.Fatalf("import --blobs error: %v", err)
 	}
@@ -1920,7 +1920,7 @@ func TestImportBlobs_SkipsDirectories(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	out, err := runCmd(newPadCmd("import", "--blobs", blobDir))
+	out, err := runCmd(newPadCmd("import", "--blob", blobDir))
 	if err != nil {
 		t.Fatalf("import --blobs error: %v", err)
 	}
@@ -1951,7 +1951,7 @@ func TestImportBlobs_SkipsTooLarge(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	out, err := runCmd(newPadCmd("import", "--blobs", blobDir))
+	out, err := runCmd(newPadCmd("import", "--blob", blobDir))
 	if err != nil {
 		t.Fatalf("import --blobs error: %v", err)
 	}
@@ -1971,7 +1971,7 @@ func TestImportBlobs_EmptyDir(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	out, err := runCmd(newPadCmd("import", "--blobs", blobDir))
+	out, err := runCmd(newPadCmd("import", "--blob", blobDir))
 	if err != nil {
 		t.Fatalf("import --blobs error: %v", err)
 	}
@@ -1988,7 +1988,7 @@ func TestImportBlobs_NotADirectory(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	_, err := runCmd(newPadCmd("import", "--blobs", regularFile))
+	_, err := runCmd(newPadCmd("import", "--blob", regularFile))
 	if err == nil {
 		t.Fatal("expected error for non-directory path")
 	}
@@ -2014,7 +2014,7 @@ func TestImportBlobs_AppendsToExisting(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	out, err := runCmd(newPadCmd("import", "--blobs", blobDir))
+	out, err := runCmd(newPadCmd("import", "--blob", blobDir))
 	if err != nil {
 		t.Fatalf("import --blobs error: %v", err)
 	}
@@ -2047,7 +2047,7 @@ func TestImportBlobs_Encrypted(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	out, err := runCmd(newPadCmd("import", "--blobs", blobDir))
+	out, err := runCmd(newPadCmd("import", "--blob", blobDir))
 	if err != nil {
 		t.Fatalf("import --blobs error: %v", err)
 	}
@@ -2078,7 +2078,7 @@ func TestImportBlobs_BlobContent(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	if _, err := runCmd(newPadCmd("import", "--blobs", blobDir)); err != nil {
+	if _, err := runCmd(newPadCmd("import", "--blob", blobDir)); err != nil {
 		t.Fatal(err)
 	}
 

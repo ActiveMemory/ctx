@@ -9,11 +9,13 @@ package show
 import (
 	"strconv"
 
+	"github.com/spf13/cobra"
+
 	"github.com/ActiveMemory/ctx/internal/assets/read/desc"
 	"github.com/ActiveMemory/ctx/internal/config/embed/cmd"
 	"github.com/ActiveMemory/ctx/internal/config/embed/flag"
-	ctxerr "github.com/ActiveMemory/ctx/internal/err/pad"
-	"github.com/spf13/cobra"
+	cflag "github.com/ActiveMemory/ctx/internal/config/flag"
+	ctxErr "github.com/ActiveMemory/ctx/internal/err/pad"
 )
 
 // Cmd returns the pad show subcommand.
@@ -29,23 +31,23 @@ func Cmd() *cobra.Command {
 	var outPath string
 
 	short, long := desc.CommandDesc(cmd.DescKeyPadShow)
-	cmd := &cobra.Command{
-		Use:   "show N",
+	c := &cobra.Command{
+		Use:   cmd.UsePadShow,
 		Short: short,
 		Long:  long,
 		Args:  cobra.ExactArgs(1),
 		RunE: func(cmd *cobra.Command, args []string) error {
 			n, err := strconv.Atoi(args[0])
 			if err != nil {
-				return ctxerr.InvalidIndex(args[0])
+				return ctxErr.InvalidIndex(args[0])
 			}
 			return Run(cmd, n, outPath)
 		},
 	}
 
-	cmd.Flags().StringVar(&outPath,
-		"out", "", desc.FlagDesc(flag.DescKeyPadShowOut),
+	c.Flags().StringVar(&outPath,
+		cflag.Out, "", desc.FlagDesc(flag.DescKeyPadShowOut),
 	)
 
-	return cmd
+	return c
 }

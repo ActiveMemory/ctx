@@ -7,11 +7,12 @@
 package export
 
 import (
+	"github.com/spf13/cobra"
+
 	"github.com/ActiveMemory/ctx/internal/assets/read/desc"
 	"github.com/ActiveMemory/ctx/internal/config/embed/cmd"
 	"github.com/ActiveMemory/ctx/internal/config/embed/flag"
-	cflag "github.com/ActiveMemory/ctx/internal/config/flag"
-	"github.com/spf13/cobra"
+	cFlag "github.com/ActiveMemory/ctx/internal/config/flag"
 )
 
 // Cmd returns the pad export subcommand.
@@ -22,8 +23,8 @@ func Cmd() *cobra.Command {
 	var force, dryRun bool
 
 	short, long := desc.CommandDesc(cmd.DescKeyPadExport)
-	cmd := &cobra.Command{
-		Use:   "export [DIR]",
+	c := &cobra.Command{
+		Use:   cmd.UsePadExport,
 		Short: short,
 		Long:  long,
 		Args:  cobra.MaximumNArgs(1),
@@ -36,14 +37,14 @@ func Cmd() *cobra.Command {
 		},
 	}
 
-	cmd.Flags().BoolVarP(
-		&force, "force", "f", false,
+	c.Flags().BoolVarP(
+		&force, cFlag.Force, cFlag.ShortForce, false,
 		desc.FlagDesc(flag.DescKeyPadExportForce),
 	)
-	cmd.Flags().BoolVar(
-		&dryRun, cflag.DryRun, false,
+	c.Flags().BoolVar(
+		&dryRun, cFlag.DryRun, false,
 		desc.FlagDesc(flag.DescKeyPadExportDryRun),
 	)
 
-	return cmd
+	return c
 }

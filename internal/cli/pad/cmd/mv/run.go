@@ -7,10 +7,10 @@
 package mv
 
 import (
-	"github.com/ActiveMemory/ctx/internal/write/pad"
 	"github.com/spf13/cobra"
 
 	"github.com/ActiveMemory/ctx/internal/cli/pad/core"
+	"github.com/ActiveMemory/ctx/internal/write/pad"
 )
 
 // Run moves entry from 1-based position n to 1-based position m.

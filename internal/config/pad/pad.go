@@ -10,6 +10,16 @@ package pad
 const (
 	// Enc is the encrypted scratchpad file.
 	Enc = "scratchpad.enc"
+	// EncOurs is the merge conflict "ours" variant.
+	EncOurs = Enc + ".ours"
+	// EncTheirs is the merge conflict "theirs" variant.
+	EncTheirs = Enc + ".theirs"
 	// Md is the plaintext scratchpad file.
 	Md = "scratchpad.md"
+)
+
+// Merge conflict side labels.
+const (
+	SideOurs   = "OURS"
+	SideTheirs = "THEIRS"
 )

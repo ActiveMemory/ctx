@@ -12,13 +12,14 @@ import (
 	"os"
 	"strings"
 
-	"github.com/ActiveMemory/ctx/internal/config/pad"
-	ctxerr "github.com/ActiveMemory/ctx/internal/err/fs"
-	io2 "github.com/ActiveMemory/ctx/internal/io"
-	pad2 "github.com/ActiveMemory/ctx/internal/write/pad"
 	"github.com/spf13/cobra"
 
 	"github.com/ActiveMemory/ctx/internal/cli/pad/core"
+	"github.com/ActiveMemory/ctx/internal/config/cli"
+	"github.com/ActiveMemory/ctx/internal/config/pad"
+	ctxErr "github.com/ActiveMemory/ctx/internal/err/fs"
+	internalIo "github.com/ActiveMemory/ctx/internal/io"
+	writePad "github.com/ActiveMemory/ctx/internal/write/pad"
 )
 
 // runImport reads lines from a file (or stdin) and appends them as entries.
@@ -31,16 +32,16 @@ import (
 //   - error: Non-nil on read/write failure
 func runImport(cmd *cobra.Command, file string) error {
 	var r io.Reader
-	if file == "-" {
+	if file == cli.StdinSentinel {
 		r = os.Stdin
 	} else {
-		f, err := io2.SafeOpenUserFile(file)
+		f, err := internalIo.SafeOpenUserFile(file)
 		if err != nil {
-			return ctxerr.OpenFile(file, err)
+			return ctxErr.OpenFile(file, err)
 		}
 		defer func() {
-			if cerr := f.Close(); cerr != nil {
-				pad2.ErrPadImportCloseWarning(cmd, file, cerr)
+			if cErr := f.Close(); cErr != nil {
+				writePad.ErrPadImportCloseWarning(cmd, file, cErr)
 			}
 		}()
 		r = f
@@ -62,11 +63,11 @@ func runImport(cmd *cobra.Command, file string) error {
 		count++
 	}
 	if scanErr := scanner.Err(); scanErr != nil {
-		return ctxerr.ReadInput(scanErr)
+		return ctxErr.ReadInput(scanErr)
 	}
 
 	if count == 0 {
-		pad2.PadImportNone(cmd)
+		writePad.PadImportNone(cmd)
 		return nil
 	}
 
@@ -74,7 +75,7 @@ func runImport(cmd *cobra.Command, file string) error {
 		return writeErr
 	}
 
-	pad2.PadImportDone(cmd, count)
+	writePad.PadImportDone(cmd, count)
 	return nil
 }
 
@@ -90,15 +91,15 @@ func runImport(cmd *cobra.Command, file string) error {
 func runImportBlobs(cmd *cobra.Command, path string) error {
 	info, statErr := os.Stat(path)
 	if statErr != nil {
-		return ctxerr.StatPath(path, statErr)
+		return ctxErr.StatPath(path, statErr)
 	}
 	if !info.IsDir() {
-		return ctxerr.NotDirectory(path)
+		return ctxErr.NotDirectory(path)
 	}
 
 	dirEntries, readErr := os.ReadDir(path)
 	if readErr != nil {
-		return ctxerr.ReadDirectory(path, readErr)
+		return ctxErr.ReadDirectory(path, readErr)
 	}
 
 	entries, loadErr := core.ReadEntries()
@@ -114,21 +115,21 @@ func runImportBlobs(cmd *cobra.Command, path string) error {
 
 		name := de.Name()
 
-		data, fileErr := io2.SafeReadFile(path, name)
+		data, fileErr := internalIo.SafeReadFile(path, name)
 		if fileErr != nil {
-			pad2.ErrPadImportBlobSkipped(cmd, name, fileErr)
+			writePad.ErrPadImportBlobSkipped(cmd, name, fileErr)
 			skipped++
 			continue
 		}
 
 		if len(data) > pad.MaxBlobSize {
-			pad2.ErrPadImportBlobTooLarge(cmd, name, pad.MaxBlobSize)
+			writePad.ErrPadImportBlobTooLarge(cmd, name, pad.MaxBlobSize)
 			skipped++
 			continue
 		}
 
 		entries = append(entries, core.MakeBlob(name, data))
-		pad2.PadImportBlobAdded(cmd, name)
+		writePad.PadImportBlobAdded(cmd, name)
 		added++
 	}
 
@@ -138,6 +139,6 @@ func runImportBlobs(cmd *cobra.Command, path string) error {
 		}
 	}
 
-	pad2.PadImportBlobSummary(cmd, added, skipped)
+	writePad.PadImportBlobSummary(cmd, added, skipped)
 	return nil
 }

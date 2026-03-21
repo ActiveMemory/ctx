@@ -12,14 +12,27 @@ import (
 	"path/filepath"
 	"time"
 
-	"github.com/ActiveMemory/ctx/internal/config/fs"
-	ctxerr "github.com/ActiveMemory/ctx/internal/err/fs"
-	"github.com/ActiveMemory/ctx/internal/write/export"
-	"github.com/ActiveMemory/ctx/internal/write/pad"
 	"github.com/spf13/cobra"
 
 	"github.com/ActiveMemory/ctx/internal/cli/pad/core"
+	"github.com/ActiveMemory/ctx/internal/config/fs"
+	"github.com/ActiveMemory/ctx/internal/config/token"
+	ctxErr "github.com/ActiveMemory/ctx/internal/err/fs"
+	"github.com/ActiveMemory/ctx/internal/write/export"
+	"github.com/ActiveMemory/ctx/internal/write/pad"
 )
+
+// tsWithLabel returns a timestamp-prefixed label for collision avoidance.
+//
+// Parameters:
+//   - label: Original filename or label
+//
+// Returns:
+//   - string: Unix timestamp + dash + label (e.g., "1711036800-notes.txt")
+func tsWithLabel(label string) string {
+	ts := fmt.Sprintf("%d", time.Now().Unix())
+	return ts + token.Dash + label
+}
 
 // runExport exports blob entries from the scratchpad to the given directory.
 //
@@ -39,7 +52,7 @@ func runExport(cmd *cobra.Command, dir string, force, dryRun bool) error {
 
 	if !dryRun {
 		if mkErr := os.MkdirAll(dir, fs.PermExec); mkErr != nil {
-			return ctxerr.Mkdir(dir, mkErr)
+			return ctxErr.Mkdir(dir, mkErr)
 		}
 	}
 
@@ -54,8 +67,7 @@ func runExport(cmd *cobra.Command, dir string, force, dryRun bool) error {
 
 		if !force {
 			if _, statErr := os.Stat(outPath); statErr == nil {
-				ts := fmt.Sprintf("%d", time.Now().Unix())
-				newName := ts + "-" + label
+				newName := tsWithLabel(label)
 				if dryRun {
 					pad.InfoPathConversionExists(cmd, dir, label, newName)
 					count++

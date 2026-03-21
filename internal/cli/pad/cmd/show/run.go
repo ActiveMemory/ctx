@@ -9,13 +9,13 @@ package show
 import (
 	"os"
 
-	"github.com/ActiveMemory/ctx/internal/config/fs"
-	fs2 "github.com/ActiveMemory/ctx/internal/err/fs"
-	ctxerr "github.com/ActiveMemory/ctx/internal/err/pad"
-	"github.com/ActiveMemory/ctx/internal/write/pad"
 	"github.com/spf13/cobra"
 
 	"github.com/ActiveMemory/ctx/internal/cli/pad/core"
+	"github.com/ActiveMemory/ctx/internal/config/fs"
+	errFs "github.com/ActiveMemory/ctx/internal/err/fs"
+	errPad "github.com/ActiveMemory/ctx/internal/err/pad"
+	"github.com/ActiveMemory/ctx/internal/write/pad"
 )
 
 // Run prints the raw text of entry at 1-based position n.
@@ -34,7 +34,7 @@ func Run(cmd *cobra.Command, n int, outPath string) error {
 	}
 
 	if len(entries) == 0 {
-		return ctxerr.EntryRange(n, 0)
+		return errPad.EntryRange(n, 0)
 	}
 
 	if validErr := core.ValidateIndex(n, entries); validErr != nil {
@@ -48,7 +48,7 @@ func Run(cmd *cobra.Command, n int, outPath string) error {
 			if writeErr := os.WriteFile(
 				outPath, data, fs.PermSecret,
 			); writeErr != nil {
-				return fs2.WriteFileFailed(writeErr)
+				return errFs.WriteFileFailed(writeErr)
 			}
 			pad.PadBlobWritten(cmd, len(data), outPath)
 			return nil
@@ -58,7 +58,7 @@ func Run(cmd *cobra.Command, n int, outPath string) error {
 	}
 
 	if outPath != "" {
-		return ctxerr.OutFlagRequiresBlob()
+		return errPad.OutFlagRequiresBlob()
 	}
 
 	cmd.Println(entry)

@@ -12,6 +12,7 @@ import (
 	"github.com/ActiveMemory/ctx/internal/assets/read/desc"
 	"github.com/ActiveMemory/ctx/internal/config/embed/cmd"
 	"github.com/ActiveMemory/ctx/internal/config/embed/flag"
+	cflag "github.com/ActiveMemory/ctx/internal/config/flag"
 )
 
 // Cmd returns the pad add subcommand.
@@ -23,7 +24,7 @@ func Cmd() *cobra.Command {
 
 	short, _ := desc.CommandDesc(cmd.DescKeyPadAdd)
 	c := &cobra.Command{
-		Use:   "add TEXT",
+		Use:   cmd.UsePadAdd,
 		Short: short,
 		Args:  cobra.ExactArgs(1),
 		RunE: func(cmd *cobra.Command, args []string) error {
@@ -35,7 +36,7 @@ func Cmd() *cobra.Command {
 	}
 
 	c.Flags().StringVarP(&filePath,
-		"file", "f", "",
+		cflag.File, cflag.ShortFile, "",
 		desc.FlagDesc(flag.DescKeyPadAddFile),
 	)
 

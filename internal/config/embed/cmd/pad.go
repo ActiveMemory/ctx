@@ -7,6 +7,18 @@
 package cmd
 
 const (
+	UsePadAdd     = "add TEXT"
+	UsePadEdit    = "edit N [TEXT]"
+	UsePadExport  = "export [DIR]"
+	UsePadImport  = "import FILE"
+	UsePadMerge   = "merge FILE..."
+	UsePadMv      = "mv N M"
+	UsePadResolve = "resolve"
+	UsePadRm      = "rm N"
+	UsePadShow    = "show N"
+)
+
+const (
 	DescKeyPad        = "pad"
 	DescKeyPadAdd     = "pad.add"
 	DescKeyPadEdit    = "pad.edit"

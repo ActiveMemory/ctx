@@ -275,6 +275,8 @@ write.pad-blob-written:
   short: Wrote %d bytes to %s
 write.pad-empty:
   short: Scratchpad is empty.
+write.pad-list-item:
+  short: '  %d. %s'
 write.pad-entry-added:
   short: Added entry %d.
 write.pad-entry-moved:

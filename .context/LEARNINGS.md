@@ -3,6 +3,7 @@
 <!-- INDEX:START -->
 | Date | Learning |
 |------|--------|
+| 2026-03-20 | replace_all on short tokens like function names will also replace their definitions |
 | 2026-03-20 | Commit messages containing script paths trigger PreToolUse hooks |
 | 2026-03-19 | Rename constants to avoid gosec G101 false positives |
 | 2026-03-18 | Tests in package X cannot import X/sub packages that import X back |
@@ -84,6 +85,16 @@
 | 2026-02-19 | Feature can be code-complete but invisible to users |
 | 2026-01-28 | IDE is already the UI |
 <!-- INDEX:END -->
+
+---
+
+## [2026-03-20-232518] replace_all on short tokens like function names will also replace their definitions
+
+**Context**: Using replace_all to rename HumanAgo to format.DurationAgo also changed the func declaration line to func format.DurationAgo which is invalid Go
+
+**Lesson**: replace_all matches everywhere in the file including function definitions, not just call sites
+
+**Application**: When renaming functions, delete the old definition separately rather than using replace_all. Or use a more specific match pattern that excludes func declarations.
 
 ---
 

@@ -3,6 +3,7 @@
 <!-- INDEX:START -->
 | Date | Decision |
 |------|--------|
+| 2026-03-20 | Shared formatting utilities belong in internal/format |
 | 2026-03-20 | Go-YAML linkage check added to lint-drift as check 5 |
 | 2026-03-18 | Eager Init() for static embedded data instead of per-accessor sync.Once |
 | 2026-03-18 | Singular command names for all CLI entities |
@@ -56,6 +57,20 @@
 | 2026-02-26 | Security and permissions (consolidated) |
 | 2026-02-27 | Webhook and notification design (consolidated) |
 <!-- INDEX:END -->
+
+## [2026-03-20-232506] Shared formatting utilities belong in internal/format
+
+**Status**: Accepted
+
+**Context**: Pluralize, Duration, DurationAgo, and TruncateFirstLine were duplicated across memory/core, change/core, and other CLI packages
+
+**Decision**: Shared formatting utilities belong in internal/format
+
+**Rationale**: internal/format already existed with TimeAgo and Number formatters. Centralizing prevents duplication and matches the convention that domain-agnostic utilities live in shared packages, not CLI subpackages
+
+**Consequence**: CLI packages import internal/format instead of defining local helpers. Local copies deleted.
+
+---
 
 ## [2026-03-20-160103] Go-YAML linkage check added to lint-drift as check 5
 

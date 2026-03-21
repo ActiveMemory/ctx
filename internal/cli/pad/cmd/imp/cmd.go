@@ -7,10 +7,12 @@
 package imp
 
 import (
+	"github.com/spf13/cobra"
+
 	"github.com/ActiveMemory/ctx/internal/assets/read/desc"
 	"github.com/ActiveMemory/ctx/internal/config/embed/cmd"
 	"github.com/ActiveMemory/ctx/internal/config/embed/flag"
-	"github.com/spf13/cobra"
+	cflag "github.com/ActiveMemory/ctx/internal/config/flag"
 )
 
 // Cmd returns the pad import subcommand.
@@ -21,8 +23,8 @@ func Cmd() *cobra.Command {
 	var blobs bool
 
 	short, long := desc.CommandDesc(cmd.DescKeyPadImp)
-	cmd := &cobra.Command{
-		Use:   "import FILE",
+	c := &cobra.Command{
+		Use:   cmd.UsePadImport,
 		Short: short,
 		Long:  long,
 		Args:  cobra.ExactArgs(1),
@@ -34,8 +36,8 @@ func Cmd() *cobra.Command {
 		},
 	}
 
-	cmd.Flags().BoolVar(&blobs, "blobs", false,
-		desc.FlagDesc(flag.DescKeyPadImpBlobs))
+	c.Flags().BoolVar(&blobs, cflag.Blob, false,
+		desc.FlagDesc(flag.DescKeyPadImpBlob))
 
-	return cmd
+	return c
 }

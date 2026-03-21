@@ -12,7 +12,7 @@
 // AES-256-GCM using a symmetric key at ~/.ctx/.ctx.key.
 //
 // File blobs can be stored as entries using the format "label:::base64data".
-// The add --file flag ingests a file, and show auto-decodes blob entries.
+// The add --file flag ingests a file and shows auto-decoded blob entries.
 // Blobs are subject to a 64KB pre-encoding size limit.
 //
 // A plaintext fallback (.context/scratchpad.md) is available via the
