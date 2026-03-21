@@ -7,14 +7,15 @@
 package root
 
 import (
+	"github.com/spf13/cobra"
+
 	"github.com/ActiveMemory/ctx/internal/assets/read/desc"
 	"github.com/ActiveMemory/ctx/internal/config/embed/cmd"
 	"github.com/ActiveMemory/ctx/internal/config/embed/flag"
-	cflag "github.com/ActiveMemory/ctx/internal/config/flag"
-	"github.com/spf13/cobra"
+	cFlag "github.com/ActiveMemory/ctx/internal/config/flag"
 )
 
-// Cmd returns the "ctx sync" command for reconciling context with codebase.
+// Cmd returns the "ctx sync" command for reconciling context with the codebase.
 //
 // The command scans the codebase for changes that should be reflected in
 // context files, such as new directories, package manager files, and
@@ -30,7 +31,7 @@ func Cmd() *cobra.Command {
 
 	short, long := desc.Command(cmd.DescKeySync)
 
-	cmd := &cobra.Command{
+	c := &cobra.Command{
 		Use:   cmd.UseSync,
 		Short: short,
 		Long:  long,
@@ -39,10 +40,10 @@ func Cmd() *cobra.Command {
 		},
 	}
 
-	cmd.Flags().BoolVar(
+	c.Flags().BoolVar(
 		&dryRun,
-		cflag.DryRun, false, desc.Flag(flag.DescKeySyncDryRun),
+		cFlag.DryRun, false, desc.Flag(flag.DescKeySyncDryRun),
 	)
 
-	return cmd
+	return c
 }

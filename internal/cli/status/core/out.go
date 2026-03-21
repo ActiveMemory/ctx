@@ -18,7 +18,7 @@ import (
 	"github.com/ActiveMemory/ctx/internal/format"
 )
 
-// OutputStatusJSON writes context status as JSON to the command output.
+// PersistStatusJSON writes context status as JSON to the command output.
 //
 // When verbose is true, includes content previews for each file.
 //
@@ -29,7 +29,7 @@ import (
 //
 // Returns:
 //   - error: Non-nil if JSON encoding fails
-func OutputStatusJSON(
+func PersistStatusJSON(
 	cmd *cobra.Command, ctx *entity.Context, verbose bool,
 ) error {
 	output := Output{
@@ -60,7 +60,7 @@ func OutputStatusJSON(
 	return enc.Encode(output)
 }
 
-// OutputStatusText writes context status as formatted text to the command output.
+// PersistStatusText writes context status as formatted text to the command output.
 //
 // Parameters:
 //   - cmd: Cobra command for output stream
@@ -69,7 +69,7 @@ func OutputStatusJSON(
 //
 // Returns:
 //   - error: Always nil (included for interface consistency)
-func OutputStatusText(
+func PersistStatusText(
 	cmd *cobra.Command, ctx *entity.Context, verbose bool,
 ) error {
 	status.StatusHeader(cmd, ctx.Dir, len(ctx.Files), ctx.TotalTokens)
