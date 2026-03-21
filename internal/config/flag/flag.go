@@ -69,6 +69,7 @@ const (
 	KeepFrontmatter = "keep-frontmatter"
 	Key             = "key"
 	Label           = "label"
+	Last            = "last"
 	Latest          = "latest"
 	Limit           = "limit"
 	MaxIterations   = "max-iterations"
@@ -99,11 +100,14 @@ const (
 // Shorthand letters for shared flags.
 const (
 	ShortAfter         = "a"
+	ShortAll           = "A"
 	ShortCompletion    = "c"
 	ShortEvent         = "e"
 	ShortForce         = "f"
+	ShortHook          = "K"
 	ShortJSON          = "j"
 	ShortKey           = "k"
+	ShortLast          = "N"
 	ShortMaxIterations = "n"
 	ShortMinimal       = "m"
 	ShortOutput        = "o"

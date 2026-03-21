@@ -7,12 +7,12 @@
 package events
 
 import (
-	"github.com/ActiveMemory/ctx/internal/assets/read/desc"
-	"github.com/ActiveMemory/ctx/internal/config/embed/text"
-	ctxerr "github.com/ActiveMemory/ctx/internal/err/recall"
 	"github.com/spf13/cobra"
 
+	"github.com/ActiveMemory/ctx/internal/assets/read/desc"
 	"github.com/ActiveMemory/ctx/internal/cli/system/core"
+	"github.com/ActiveMemory/ctx/internal/config/embed/text"
+	recallErr "github.com/ActiveMemory/ctx/internal/err/recall"
 	"github.com/ActiveMemory/ctx/internal/log"
 )
 
@@ -42,7 +42,7 @@ func Run(cmd *cobra.Command) error {
 
 	evts, queryErr := log.Query(opts)
 	if queryErr != nil {
-		return ctxerr.EventLogRead(queryErr)
+		return recallErr.EventLogRead(queryErr)
 	}
 
 	if len(evts) == 0 {

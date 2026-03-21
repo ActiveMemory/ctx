@@ -7,14 +7,13 @@
 package check_resources
 
 import (
+	"fmt"
 	"os"
 
 	"github.com/spf13/cobra"
 
-	"fmt"
 	"github.com/ActiveMemory/ctx/internal/assets/read/desc"
 	"github.com/ActiveMemory/ctx/internal/cli/system/core"
-
 	"github.com/ActiveMemory/ctx/internal/config/embed/text"
 	"github.com/ActiveMemory/ctx/internal/config/hook"
 	"github.com/ActiveMemory/ctx/internal/config/stats"

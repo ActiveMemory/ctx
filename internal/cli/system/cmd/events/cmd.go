@@ -12,6 +12,7 @@ import (
 	"github.com/ActiveMemory/ctx/internal/assets/read/desc"
 	"github.com/ActiveMemory/ctx/internal/config/embed/cmd"
 	"github.com/ActiveMemory/ctx/internal/config/embed/flag"
+	cflag "github.com/ActiveMemory/ctx/internal/config/flag"
 )
 
 // Cmd returns the "ctx system events" subcommand.
@@ -21,7 +22,7 @@ import (
 func Cmd() *cobra.Command {
 	short, long := desc.Command(cmd.DescKeySystemEvents)
 
-	cmd := &cobra.Command{
+	c := &cobra.Command{
 		Use:   cmd.UseSystemEvents,
 		Short: short,
 		Long:  long,
@@ -30,24 +31,24 @@ func Cmd() *cobra.Command {
 		},
 	}
 
-	cmd.Flags().StringP(
-		"hook", "k", "", desc.Flag(flag.DescKeySystemEventsHook),
+	c.Flags().StringP(
+		cflag.Hook, cflag.ShortHook, "", desc.Flag(flag.DescKeySystemEventsHook),
 	)
-	cmd.Flags().StringP(
-		"session", "s", "", desc.Flag(flag.DescKeySystemEventsSession),
+	c.Flags().StringP(
+		cflag.Session, cflag.ShortSessionID, "", desc.Flag(flag.DescKeySystemEventsSession),
 	)
-	cmd.Flags().StringP(
-		"event", "e", "", desc.Flag(flag.DescKeySystemEventsEvent),
+	c.Flags().StringP(
+		cflag.Event, cflag.ShortEvent, "", desc.Flag(flag.DescKeySystemEventsEvent),
 	)
-	cmd.Flags().IntP(
-		"last", "n", 50, desc.Flag(flag.DescKeySystemEventsLast),
+	c.Flags().IntP(
+		cflag.Last, cflag.ShortLast, 50, desc.Flag(flag.DescKeySystemEventsLast),
 	)
-	cmd.Flags().BoolP(
-		"json", "j", false, desc.Flag(flag.DescKeySystemEventsJson),
+	c.Flags().BoolP(
+		cflag.JSON, cflag.ShortJSON, false, desc.Flag(flag.DescKeySystemEventsJson),
 	)
-	cmd.Flags().BoolP(
-		"all", "a", false, desc.Flag(flag.DescKeySystemEventsAll),
+	c.Flags().BoolP(
+		cflag.All, cflag.ShortAll, false, desc.Flag(flag.DescKeySystemEventsAll),
 	)
 
-	return cmd
+	return c
 }
