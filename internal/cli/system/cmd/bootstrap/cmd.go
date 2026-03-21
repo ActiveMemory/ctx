@@ -7,10 +7,11 @@
 package bootstrap
 
 import (
+	"github.com/spf13/cobra"
+
 	"github.com/ActiveMemory/ctx/internal/assets/read/desc"
 	"github.com/ActiveMemory/ctx/internal/config/embed/cmd"
 	"github.com/ActiveMemory/ctx/internal/config/embed/flag"
-	"github.com/spf13/cobra"
 )
 
 // Cmd returns the "ctx system bootstrap" subcommand.
@@ -20,7 +21,7 @@ import (
 func Cmd() *cobra.Command {
 	short, long := desc.Command(cmd.DescKeySystemBootstrap)
 
-	cmd := &cobra.Command{
+	c := &cobra.Command{
 		Use:   cmd.UseSystemBootstrap,
 		Short: short,
 		Long:  long,
@@ -29,12 +30,12 @@ func Cmd() *cobra.Command {
 		},
 	}
 
-	cmd.Flags().Bool("json", false,
+	c.Flags().Bool("json", false,
 		desc.Flag(flag.DescKeySystemBootstrapJson),
 	)
-	cmd.Flags().BoolP("quiet", "q", false,
+	c.Flags().BoolP("quiet", "q", false,
 		desc.Flag(flag.DescKeySystemBootstrapQuiet),
 	)
 
-	return cmd
+	return c
 }

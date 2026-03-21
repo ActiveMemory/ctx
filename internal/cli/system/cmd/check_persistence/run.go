@@ -99,8 +99,8 @@ func Run(cmd *cobra.Command, stdin *os.File) error {
 		core.LogMessage(logFile, sessionID, fmt.Sprintf("prompt#%d NUDGE since_nudge=%d", ps.Count, sinceNudge))
 		ref := notify.NewTemplateRef(hook.CheckPersistence, hook.VariantNudge,
 			map[string]any{tpl.VarPromptCount: ps.Count, tpl.VarPromptsSinceNudge: sinceNudge})
-		_ = notify.Send(hook.NotifyChannelNudge, hook.CheckPersistence+": "+fmt.Sprintf(desc.Text(text.DescKeyCheckPersistenceCheckpointFormat), ps.Count), sessionID, ref)
-		core.Relay(hook.CheckPersistence+": "+fmt.Sprintf(desc.Text(text.DescKeyCheckPersistenceRelayFormat), sinceNudge), sessionID, ref)
+		_ = notify.Send(hook.NotifyChannelNudge, fmt.Sprintf(desc.Text(text.DescKeyRelayPrefixFormat), hook.CheckPersistence, fmt.Sprintf(desc.Text(text.DescKeyCheckPersistenceCheckpointFormat), ps.Count)), sessionID, ref)
+		core.Relay(fmt.Sprintf(desc.Text(text.DescKeyRelayPrefixFormat), hook.CheckPersistence, fmt.Sprintf(desc.Text(text.DescKeyCheckPersistenceRelayFormat), sinceNudge)), sessionID, ref)
 		ps.LastNudge = ps.Count
 	} else {
 		core.LogMessage(logFile, sessionID, fmt.Sprintf(desc.Text(text.DescKeyCheckPersistenceSilentLogFormat), ps.Count, sinceNudge))

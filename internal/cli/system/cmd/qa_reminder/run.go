@@ -7,6 +7,7 @@
 package qa_reminder
 
 import (
+	"fmt"
 	"os"
 	"strings"
 
@@ -54,8 +55,8 @@ func Run(cmd *cobra.Command, stdin *os.File) error {
 	core.PrintHookContext(cmd, hook.EventPreToolUse, msg)
 
 	ref := notify.NewTemplateRef(hook.QAReminder, hook.VariantGate, nil)
-	core.Relay(hook.QAReminder+": "+
-		desc.Text(text.DescKeyQaReminderRelayMessage),
+	core.Relay(fmt.Sprintf(desc.Text(text.DescKeyRelayPrefixFormat),
+		hook.QAReminder, desc.Text(text.DescKeyQaReminderRelayMessage)),
 		input.SessionID, ref,
 	)
 	return nil

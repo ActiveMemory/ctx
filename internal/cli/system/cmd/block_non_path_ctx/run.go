@@ -8,16 +8,17 @@ package block_non_path_ctx
 
 import (
 	"encoding/json"
+	"fmt"
 	"os"
 
+	"github.com/spf13/cobra"
+
 	"github.com/ActiveMemory/ctx/internal/assets/read/desc"
+	"github.com/ActiveMemory/ctx/internal/cli/system/core"
 	"github.com/ActiveMemory/ctx/internal/config/embed/text"
 	"github.com/ActiveMemory/ctx/internal/config/hook"
 	"github.com/ActiveMemory/ctx/internal/config/regex"
 	"github.com/ActiveMemory/ctx/internal/config/token"
-	"github.com/spf13/cobra"
-
-	"github.com/ActiveMemory/ctx/internal/cli/system/core"
 	"github.com/ActiveMemory/ctx/internal/notify"
 )
 
@@ -77,8 +78,8 @@ func Run(cmd *cobra.Command, stdin *os.File) error {
 		data, _ := json.Marshal(resp)
 		cmd.Println(string(data))
 		blockRef := notify.NewTemplateRef(hook.BlockNonPathCtx, variant, nil)
-		core.Relay(hook.BlockNonPathCtx+": "+
-			desc.Text(text.DescKeyBlockNonPathRelayMessage),
+		core.Relay(fmt.Sprintf(desc.Text(text.DescKeyRelayPrefixFormat),
+			hook.BlockNonPathCtx, desc.Text(text.DescKeyBlockNonPathRelayMessage)),
 			input.SessionID, blockRef,
 		)
 	}

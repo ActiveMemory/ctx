@@ -7,6 +7,7 @@
 package post_commit
 
 import (
+	"fmt"
 	"os"
 	"regexp"
 
@@ -69,7 +70,7 @@ func Run(cmd *cobra.Command, stdin *os.File) error {
 	core.PrintHookContext(cmd, hook.EventPostToolUse, msg)
 
 	ref := notify.NewTemplateRef(hookName, variant, nil)
-	core.Relay(hookName+": "+desc.Text(text.DescKeyPostCommitRelayMessage), input.SessionID, ref)
+	core.Relay(fmt.Sprintf(desc.Text(text.DescKeyRelayPrefixFormat), hookName, desc.Text(text.DescKeyPostCommitRelayMessage)), input.SessionID, ref)
 
 	core.CheckVersionDrift(cmd, sessionID)
 

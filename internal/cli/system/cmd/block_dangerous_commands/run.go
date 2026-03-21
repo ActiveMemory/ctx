@@ -8,6 +8,7 @@ package block_dangerous_commands
 
 import (
 	"encoding/json"
+	"fmt"
 	"os"
 
 	"github.com/ActiveMemory/ctx/internal/assets/read/desc"
@@ -77,7 +78,7 @@ func Run(cmd *cobra.Command, stdin *os.File) error {
 		data, _ := json.Marshal(resp)
 		cmd.Println(string(data))
 		ref := notify.NewTemplateRef(hook.BlockDangerousCommands, variant, nil)
-		core.Relay(hook.BlockDangerousCommands+": "+reason, input.SessionID, ref)
+		core.Relay(fmt.Sprintf(desc.Text(text.DescKeyRelayPrefixFormat), hook.BlockDangerousCommands, reason), input.SessionID, ref)
 	}
 
 	return nil

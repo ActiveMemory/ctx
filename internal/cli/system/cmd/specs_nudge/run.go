@@ -7,6 +7,7 @@
 package specs_nudge
 
 import (
+	"fmt"
 	"os"
 
 	"github.com/ActiveMemory/ctx/internal/assets/read/desc"
@@ -50,6 +51,6 @@ func Run(cmd *cobra.Command, stdin *os.File) error {
 	core.PrintHookContext(cmd, hook.EventPreToolUse, msg)
 	nudgeMsg := desc.Text(text.DescKeySpecsNudgeNudgeMessage)
 	ref := notify.NewTemplateRef(hook.SpecsNudge, hook.VariantNudge, nil)
-	core.Relay(hook.SpecsNudge+": "+nudgeMsg, input.SessionID, ref)
+	core.Relay(fmt.Sprintf(desc.Text(text.DescKeyRelayPrefixFormat), hook.SpecsNudge, nudgeMsg), input.SessionID, ref)
 	return nil
 }
