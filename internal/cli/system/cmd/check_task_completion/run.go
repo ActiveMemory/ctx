@@ -7,6 +7,7 @@
 package check_task_completion
 
 import (
+	"fmt"
 	"os"
 	"path/filepath"
 
@@ -73,7 +74,8 @@ func Run(cmd *cobra.Command, stdin *os.File) error {
 		hook.CheckTaskCompletion, hook.VariantNudge, nil,
 	)
 	core.Relay(
-		hook.CheckTaskCompletion+": "+nudgeMsg, input.SessionID, ref,
+		fmt.Sprintf(desc.Text(text.DescKeyRelayPrefixFormat),
+			hook.CheckTaskCompletion, nudgeMsg), input.SessionID, ref,
 	)
 
 	return nil
