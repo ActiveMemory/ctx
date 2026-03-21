@@ -9,17 +9,20 @@ package check_resources
 import (
 	"os"
 
-	"github.com/ActiveMemory/ctx/internal/assets/read/desc"
-	"github.com/ActiveMemory/ctx/internal/config/embed/text"
-	"github.com/ActiveMemory/ctx/internal/config/hook"
-	"github.com/ActiveMemory/ctx/internal/config/token"
-	"github.com/ActiveMemory/ctx/internal/config/tpl"
-	hook2 "github.com/ActiveMemory/ctx/internal/write/hook"
 	"github.com/spf13/cobra"
 
+	"fmt"
+	"github.com/ActiveMemory/ctx/internal/assets/read/desc"
 	"github.com/ActiveMemory/ctx/internal/cli/system/core"
+
+	"github.com/ActiveMemory/ctx/internal/config/embed/text"
+	"github.com/ActiveMemory/ctx/internal/config/hook"
+	"github.com/ActiveMemory/ctx/internal/config/stats"
+	"github.com/ActiveMemory/ctx/internal/config/token"
+	"github.com/ActiveMemory/ctx/internal/config/tpl"
 	"github.com/ActiveMemory/ctx/internal/notify"
 	"github.com/ActiveMemory/ctx/internal/sysinfo"
+	writeHook "github.com/ActiveMemory/ctx/internal/write/hook"
 )
 
 // Run executes the check-resources hook logic.
@@ -51,7 +54,7 @@ func Run(cmd *cobra.Command, stdin *os.File) error {
 	var alertMessages string
 	for _, a := range alerts {
 		if a.Severity == sysinfo.SeverityDanger {
-			alertMessages += "✖ " +
+			alertMessages += stats.IconError + token.Space +
 				a.Message + token.NewlineLF
 		}
 	}
@@ -71,7 +74,7 @@ func Run(cmd *cobra.Command, stdin *os.File) error {
 		return nil
 	}
 
-	hook2.Nudge(cmd, core.NudgeBox(
+	writeHook.Nudge(cmd, core.NudgeBox(
 		desc.Text(text.DescKeyCheckResourcesRelayPrefix),
 		desc.Text(text.DescKeyCheckResourcesBoxTitle),
 		content))
@@ -79,8 +82,8 @@ func Run(cmd *cobra.Command, stdin *os.File) error {
 	ref := notify.NewTemplateRef(
 		hook.CheckResources, hook.VariantAlert, vars,
 	)
-	core.NudgeAndRelay(hook.CheckResources+": "+
-		desc.Text(text.DescKeyCheckResourcesRelayMessage),
+	core.NudgeAndRelay(fmt.Sprintf(desc.Text(text.DescKeyRelayPrefixFormat),
+		hook.CheckResources, desc.Text(text.DescKeyCheckResourcesRelayMessage)),
 		input.SessionID, ref,
 	)
 

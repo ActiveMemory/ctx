@@ -12,18 +12,18 @@ import (
 	"path/filepath"
 	"strings"
 
+	"github.com/spf13/cobra"
+
 	"github.com/ActiveMemory/ctx/internal/assets/read/desc"
+	changeCore "github.com/ActiveMemory/ctx/internal/cli/change/core"
+	"github.com/ActiveMemory/ctx/internal/cli/system/core"
 	"github.com/ActiveMemory/ctx/internal/config/ctx"
 	"github.com/ActiveMemory/ctx/internal/config/embed/text"
 	"github.com/ActiveMemory/ctx/internal/config/hook"
 	"github.com/ActiveMemory/ctx/internal/config/load_gate"
 	"github.com/ActiveMemory/ctx/internal/config/token"
-	token2 "github.com/ActiveMemory/ctx/internal/context/token"
+	ctxToken "github.com/ActiveMemory/ctx/internal/context/token"
 	"github.com/ActiveMemory/ctx/internal/io"
-	"github.com/spf13/cobra"
-
-	changecore "github.com/ActiveMemory/ctx/internal/cli/change/core"
-	"github.com/ActiveMemory/ctx/internal/cli/system/core"
 	"github.com/ActiveMemory/ctx/internal/rc"
 )
 
@@ -106,7 +106,7 @@ func Run(cmd *cobra.Command, stdin *os.File) error {
 			}
 			content.WriteString(fmt.Sprintf(
 				desc.Text(text.DescKeyContextLoadGateIndexHeader), f, idx))
-			tokens := token2.EstimateTokensString(idx)
+			tokens := ctxToken.EstimateTokensString(idx)
 			totalTokens += tokens
 			perFile = append(perFile, core.FileTokenEntry{
 				Name:   f + load_gate.ContextLoadIndexSuffix,
@@ -119,7 +119,7 @@ func Run(cmd *cobra.Command, stdin *os.File) error {
 				desc.Text(
 					text.DescKeyContextLoadGateFileHeader,
 				), f, string(data)))
-			tokens := token2.EstimateTokens(data)
+			tokens := ctxToken.EstimateTokens(data)
 			totalTokens += tokens
 			perFile = append(perFile, core.FileTokenEntry{Name: f, Tokens: tokens})
 			filesLoaded++
@@ -127,11 +127,11 @@ func Run(cmd *cobra.Command, stdin *os.File) error {
 	}
 
 	// Best-effort changes summary — never blocks injection
-	if refTime, refLabel, refErr := changecore.DetectReferenceTime(""); refErr == nil {
-		ctxChanges, _ := changecore.FindContextChanges(refTime)
-		codeChanges, _ := changecore.SummarizeCodeChanges(refTime)
+	if refTime, refLabel, refErr := changeCore.DetectReferenceTime(""); refErr == nil {
+		ctxChanges, _ := changeCore.FindContextChanges(refTime)
+		codeChanges, _ := changeCore.SummarizeCodeChanges(refTime)
 		if len(ctxChanges) > 0 || codeChanges.CommitCount > 0 {
-			content.WriteString(token.NewlineLF + changecore.RenderChangesForHook(
+			content.WriteString(token.NewlineLF + changeCore.RenderChangesForHook(
 				refLabel, ctxChanges, codeChanges))
 		}
 	}

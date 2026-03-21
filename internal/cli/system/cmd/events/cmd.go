@@ -7,10 +7,11 @@
 package events
 
 import (
+	"github.com/spf13/cobra"
+
 	"github.com/ActiveMemory/ctx/internal/assets/read/desc"
 	"github.com/ActiveMemory/ctx/internal/config/embed/cmd"
 	"github.com/ActiveMemory/ctx/internal/config/embed/flag"
-	"github.com/spf13/cobra"
 )
 
 // Cmd returns the "ctx system events" subcommand.

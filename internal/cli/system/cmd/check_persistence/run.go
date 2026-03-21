@@ -112,22 +112,35 @@ func Run(cmd *cobra.Command, stdin *os.File) error {
 		)
 		cmd.Println()
 		core.LogMessage(logFile, sessionID, fmt.Sprintf(
-			desc.Text(text.DescKeyCheckPersistenceNudgeLogFormat), ps.Count, sinceNudge))
+			desc.Text(
+				text.DescKeyCheckPersistenceNudgeLogFormat), ps.Count, sinceNudge,
+		),
+		)
 		ref := notify.NewTemplateRef(hook.CheckPersistence, hook.VariantNudge,
-			map[string]any{tpl.VarPromptCount: ps.Count, tpl.VarPromptsSinceNudge: sinceNudge})
+			map[string]any{
+				tpl.VarPromptCount:       ps.Count,
+				tpl.VarPromptsSinceNudge: sinceNudge,
+			},
+		)
 		_ = notify.Send(
 			hook.NotifyChannelNudge,
 			fmt.Sprintf(
 				desc.Text(text.DescKeyRelayPrefixFormat),
 				hook.CheckPersistence,
-				fmt.Sprintf(desc.Text(text.DescKeyCheckPersistenceCheckpointFormat), ps.Count)),
+				fmt.Sprintf(
+					desc.Text(text.DescKeyCheckPersistenceCheckpointFormat),
+					ps.Count,
+				),
+			),
 			sessionID, ref,
 		)
 		core.Relay(
 			fmt.Sprintf(
 				desc.Text(text.DescKeyRelayPrefixFormat),
 				hook.CheckPersistence,
-				fmt.Sprintf(desc.Text(text.DescKeyCheckPersistenceRelayFormat), sinceNudge),
+				fmt.Sprintf(
+					desc.Text(text.DescKeyCheckPersistenceRelayFormat), sinceNudge,
+				),
 			),
 			sessionID, ref,
 		)
