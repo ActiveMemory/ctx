@@ -56,6 +56,7 @@ const (
 	BaseURL         = "base-url"
 	Blob            = "blob"
 	Build           = "build"
+	Check           = "check"
 	Commands        = "commands"
 	Completion      = "completion"
 	DryRun          = "dry-run"

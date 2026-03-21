@@ -15,6 +15,8 @@ import (
 	"github.com/ActiveMemory/ctx/internal/assets/read/desc"
 	"github.com/ActiveMemory/ctx/internal/config/embed/cmd"
 	"github.com/ActiveMemory/ctx/internal/config/embed/flag"
+	cflag "github.com/ActiveMemory/ctx/internal/config/flag"
+	"github.com/ActiveMemory/ctx/internal/config/token"
 	"github.com/ActiveMemory/ctx/internal/journal/state"
 )
 
@@ -28,7 +30,7 @@ func Cmd() *cobra.Command {
 	c := &cobra.Command{
 		Use:    cmd.UseSystemMarkJournal,
 		Short:  short,
-		Long:   fmt.Sprintf(long, strings.Join(state.ValidStages, ", ")),
+		Long:   fmt.Sprintf(long, strings.Join(state.ValidStages, token.CommaSpace)),
 		Hidden: true,
 		Args:   cobra.ExactArgs(2), //nolint:mnd // 2 positional args: filename, stage
 		RunE: func(cmd *cobra.Command, args []string) error {
@@ -36,7 +38,7 @@ func Cmd() *cobra.Command {
 		},
 	}
 
-	c.Flags().Bool("check", false, desc.Flag(flag.DescKeySystemMarkJournalCheck))
+	c.Flags().Bool(cflag.Check, false, desc.Flag(flag.DescKeySystemMarkJournalCheck))
 
 	return c
 }

@@ -12,8 +12,8 @@ import (
 	"github.com/ActiveMemory/ctx/internal/assets/read/desc"
 	"github.com/ActiveMemory/ctx/internal/cli/system/core"
 	"github.com/ActiveMemory/ctx/internal/config/embed/text"
-	cflag "github.com/ActiveMemory/ctx/internal/config/flag"
-	recallErr "github.com/ActiveMemory/ctx/internal/err/recall"
+	cFlag "github.com/ActiveMemory/ctx/internal/config/flag"
+	errRcall "github.com/ActiveMemory/ctx/internal/err/recall"
 	"github.com/ActiveMemory/ctx/internal/log"
 )
 
@@ -26,12 +26,12 @@ import (
 // Returns:
 //   - error: Non-nil on event log read failure
 func Run(cmd *cobra.Command) error {
-	hook, _ := cmd.Flags().GetString(cflag.Hook)
-	session, _ := cmd.Flags().GetString(cflag.Session)
-	event, _ := cmd.Flags().GetString(cflag.Event)
-	last, _ := cmd.Flags().GetInt(cflag.Last)
-	jsonOut, _ := cmd.Flags().GetBool(cflag.JSON)
-	includeAll, _ := cmd.Flags().GetBool(cflag.All)
+	hook, _ := cmd.Flags().GetString(cFlag.Hook)
+	session, _ := cmd.Flags().GetString(cFlag.Session)
+	event, _ := cmd.Flags().GetString(cFlag.Event)
+	last, _ := cmd.Flags().GetInt(cFlag.Last)
+	jsonOut, _ := cmd.Flags().GetBool(cFlag.JSON)
+	includeAll, _ := cmd.Flags().GetBool(cFlag.All)
 
 	opts := log.QueryOpts{
 		Hook:           hook,
@@ -43,7 +43,7 @@ func Run(cmd *cobra.Command) error {
 
 	evts, queryErr := log.Query(opts)
 	if queryErr != nil {
-		return recallErr.EventLogRead(queryErr)
+		return errRcall.EventLogRead(queryErr)
 	}
 
 	if len(evts) == 0 {
