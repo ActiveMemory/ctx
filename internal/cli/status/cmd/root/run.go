@@ -37,8 +37,8 @@ func Run(cmd *cobra.Command, jsonOutput, verbose bool) error {
 	}
 
 	if jsonOutput {
-		return core.OutputStatusJSON(cmd, ctx, verbose)
+		return core.PersistStatusJSON(cmd, ctx, verbose)
 	}
 
-	return core.OutputStatusText(cmd, ctx, verbose)
+	return core.PersistStatusText(cmd, ctx, verbose)
 }

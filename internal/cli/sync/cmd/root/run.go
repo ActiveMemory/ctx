@@ -9,13 +9,13 @@ package root
 import (
 	"errors"
 
-	"github.com/ActiveMemory/ctx/internal/context/load"
-	ctxerr "github.com/ActiveMemory/ctx/internal/err/initialize"
-	"github.com/ActiveMemory/ctx/internal/write/sync"
 	"github.com/spf13/cobra"
 
 	"github.com/ActiveMemory/ctx/internal/cli/sync/core"
-	errctx "github.com/ActiveMemory/ctx/internal/err/context"
+	"github.com/ActiveMemory/ctx/internal/context/load"
+	errCtx "github.com/ActiveMemory/ctx/internal/err/context"
+	initErr "github.com/ActiveMemory/ctx/internal/err/initialize"
+	"github.com/ActiveMemory/ctx/internal/write/sync"
 )
 
 // Run executes the sync command logic.
@@ -33,9 +33,9 @@ import (
 func Run(cmd *cobra.Command, dryRun bool) error {
 	ctx, err := load.Do("")
 	if err != nil {
-		var notFoundError *errctx.NotFoundError
+		var notFoundError *errCtx.NotFoundError
 		if errors.As(err, &notFoundError) {
-			return ctxerr.ContextNotInitialized()
+			return initErr.ContextNotInitialized()
 		}
 		return err
 	}
@@ -50,7 +50,8 @@ func Run(cmd *cobra.Command, dryRun bool) error {
 	sync.CtxSyncHeader(cmd, dryRun)
 
 	for i, action := range actions {
-		sync.CtxSyncAction(cmd, i+1, action.Type, action.Description, action.Suggestion)
+		sync.CtxSyncAction(
+			cmd, i+1, action.Type, action.Description, action.Suggestion)
 	}
 
 	sync.CtxSyncSummary(cmd, len(actions), dryRun)

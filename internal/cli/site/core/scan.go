@@ -92,7 +92,11 @@ func ScanBlogPosts(blogDir string) ([]BlogPost, FeedReport, error) {
 func ParsePost(path, filename string) (BlogPost, PostStatus) {
 	data, readErr := os.ReadFile(path)
 	if readErr != nil {
-		return BlogPost{Filename: filename, Summary: fmt.Sprintf(desc.Text(text.DescKeySiteSkipCannotRead), filename)}, PostSkipped
+		return BlogPost{
+			Filename: filename,
+			Summary: fmt.Sprintf(
+				desc.Text(text.DescKeySiteSkipCannotRead), filename),
+		}, PostSkipped
 	}
 
 	content := string(data)
@@ -100,13 +104,20 @@ func ParsePost(path, filename string) (BlogPost, PostStatus) {
 	sep := token.Separator
 
 	if !strings.HasPrefix(content, sep+nl) {
-		return BlogPost{Filename: filename, Summary: fmt.Sprintf(desc.Text(text.DescKeySiteSkipNoFrontmatter), filename)}, PostSkipped
+		return BlogPost{
+			Filename: filename,
+			Summary: fmt.Sprintf(
+				desc.Text(text.DescKeySiteSkipNoFrontmatter), filename),
+		}, PostSkipped
 	}
 
 	fmStart := len(sep + nl)
 	endIdx := strings.Index(content[fmStart:], nl+sep+nl)
 	if endIdx < 0 {
-		return BlogPost{Filename: filename, Summary: fmt.Sprintf(desc.Text(text.DescKeySiteSkipMalformed), filename)}, PostSkipped
+		return BlogPost{
+			Filename: filename,
+			Summary:  fmt.Sprintf(desc.Text(text.DescKeySiteSkipMalformed), filename),
+		}, PostSkipped
 	}
 
 	fmRaw := content[fmStart : fmStart+endIdx]
@@ -114,17 +125,33 @@ func ParsePost(path, filename string) (BlogPost, PostStatus) {
 
 	var fm BlogFrontmatter
 	if unmarshalErr := yaml.Unmarshal([]byte(fmRaw), &fm); unmarshalErr != nil {
-		return BlogPost{Filename: filename, Summary: fmt.Sprintf(desc.Text(text.DescKeySiteSkipParseError), filename, unmarshalErr)}, PostSkipped
+		return BlogPost{
+			Filename: filename,
+			Summary: fmt.Sprintf(desc.Text(text.DescKeySiteSkipParseError),
+				filename, unmarshalErr),
+		}, PostSkipped
 	}
 
 	if fm.ReviewedAndFinalized == nil || !*fm.ReviewedAndFinalized {
-		return BlogPost{Filename: filename, Summary: fmt.Sprintf(desc.Text(text.DescKeySiteSkipNotFinalized), filename)}, PostSkipped
+		return BlogPost{
+			Filename: filename,
+			Summary: fmt.Sprintf(
+				desc.Text(text.DescKeySiteSkipNotFinalized), filename),
+		}, PostSkipped
 	}
 	if fm.Title == "" {
-		return BlogPost{Filename: filename, Summary: fmt.Sprintf(desc.Text(text.DescKeySiteSkipMissingTitle), filename)}, PostSkipped
+		return BlogPost{
+			Filename: filename,
+			Summary: fmt.Sprintf(desc.Text(text.DescKeySiteSkipMissingTitle),
+				filename),
+		}, PostSkipped
 	}
 	if fm.Date == "" {
-		return BlogPost{Filename: filename, Summary: fmt.Sprintf(desc.Text(text.DescKeySiteSkipMissingDate), filename)}, PostSkipped
+		return BlogPost{
+			Filename: filename,
+			Summary: fmt.Sprintf(desc.Text(text.DescKeySiteSkipMissingDate),
+				filename),
+		}, PostSkipped
 	}
 
 	summary := ExtractSummary(body)

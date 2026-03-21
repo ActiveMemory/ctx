@@ -7,7 +7,7 @@
 // Package site provides the "ctx site" command for managing the ctx.ist
 // static site.
 //
-// Currently supports one subcommand:
+// Currently, supports one subcommand:
 //
 //   - ctx site feed: generates an Atom 1.0 feed from finalized blog posts
 //     in docs/blog/. Parses YAML frontmatter for title, date, author, and

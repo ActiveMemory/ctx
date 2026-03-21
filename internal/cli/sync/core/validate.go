@@ -35,7 +35,7 @@ import (
 func CheckPackageFiles(ctx *entity.Context) []Action {
 	var actions []Action
 
-	for f, desc := range dep.Packages {
+	for f, d := range dep.Packages {
 		if _, err := os.Stat(f); err == nil {
 			// File exists, check if we have DEPENDENCIES.md or similar
 			hasDepsDoc := false
@@ -58,7 +58,7 @@ func CheckPackageFiles(ctx *entity.Context) []Action {
 					File: ctxCfg.Architecture,
 					Description: fmt.Sprintf(
 						lookup.TextDesc(text.DescKeySyncDepsDescription),
-						f, desc,
+						f, d,
 					),
 					Suggestion: fmt.Sprintf(
 						lookup.TextDesc(text.DescKeySyncDepsSuggestion),
