@@ -81,8 +81,8 @@ func draftPost(title, date string) string {
 // TestPrintReport_NoSkipped verifies clean output with no issues.
 func TestPrintReport_NoSkipped(t *testing.T) {
 	cmd := newTestCmd()
-	report := feedReport{
-		included: 3,
+	report := core.FeedReport{
+		Included: 3,
 	}
 
 	printReport(cmd, "site/feed.xml", report)
@@ -102,9 +102,9 @@ func TestPrintReport_NoSkipped(t *testing.T) {
 // TestPrintReport_WithWarnings verifies warnings section appears.
 func TestPrintReport_WithWarnings(t *testing.T) {
 	cmd := newTestCmd()
-	report := feedReport{
-		included: 2,
-		warnings: []string{"post.md \u2014 no summary paragraph found"},
+	report := core.FeedReport{
+		Included: 2,
+		Warnings: []string{"post.md \u2014 no summary paragraph found"},
 	}
 
 	printReport(cmd, "site/feed.xml", report)
@@ -139,7 +139,7 @@ func TestFeed_Basic(t *testing.T) {
 	writePost(t, dir, "2026-01-03-third.md",
 		finalizedPost("Third", "2026-01-03", "Carol", nil))
 
-	posts, report, scanErr := scanBlogPosts(dir)
+	posts, report, scanErr := core.ScanBlogPosts(dir)
 	if scanErr != nil {
 		t.Fatal(scanErr)
 	}
@@ -147,15 +147,15 @@ func TestFeed_Basic(t *testing.T) {
 	if len(posts) != 3 {
 		t.Fatalf("expected 3 posts, got %d", len(posts))
 	}
-	if report.included != 0 {
-		// included is set by runFeed, not scanBlogPosts
+	if report.Included != 0 {
+		// included is set by runFeed, not core.ScanBlogPosts
 	}
-	if len(report.skipped) != 0 {
-		t.Errorf("expected 0 skipped, got %d", len(report.skipped))
+	if len(report.Skipped) != 0 {
+		t.Errorf("expected 0 skipped, got %d", len(report.Skipped))
 	}
 
 	outPath := filepath.Join(t.TempDir(), "feed.xml")
-	genErr := generateAtom(posts, outPath, "https://example.com")
+	genErr := core.GenerateAtom(posts, outPath, "https://example.com")
 	if genErr != nil {
 		t.Fatal(genErr)
 	}
@@ -186,7 +186,7 @@ func TestFeed_SkipsDrafts(t *testing.T) {
 	writePost(t, dir, "2026-01-03-implicit-draft.md",
 		"---\ntitle: Implicit\ndate: 2026-01-03\n---\n# Implicit\n\nContent.\n")
 
-	posts, report, scanErr := scanBlogPosts(dir)
+	posts, report, scanErr := core.ScanBlogPosts(dir)
 	if scanErr != nil {
 		t.Fatal(scanErr)
 	}
@@ -194,13 +194,13 @@ func TestFeed_SkipsDrafts(t *testing.T) {
 	if len(posts) != 1 {
 		t.Fatalf("expected 1 post, got %d", len(posts))
 	}
-	if posts[0].title != "Final" {
-		t.Errorf("expected 'Final', got %q", posts[0].title)
+	if posts[0].Title != "Final" {
+		t.Errorf("expected 'Final', got %q", posts[0].Title)
 	}
-	if len(report.skipped) != 2 {
+	if len(report.Skipped) != 2 {
 		t.Errorf(
 			"expected 2 skipped, got %d: %v",
-			len(report.skipped), report.skipped,
+			len(report.Skipped), report.Skipped,
 		)
 	}
 }
@@ -210,7 +210,7 @@ func TestFeed_MissingTitle(t *testing.T) {
 	writePost(t, dir, "2026-01-01-no-title.md",
 		"---\ndate: 2026-01-01\nreviewed_and_finalized: true\n---\n# Heading\n\nContent.\n")
 
-	posts, report, scanErr := scanBlogPosts(dir)
+	posts, report, scanErr := core.ScanBlogPosts(dir)
 	if scanErr != nil {
 		t.Fatal(scanErr)
 	}
@@ -218,12 +218,12 @@ func TestFeed_MissingTitle(t *testing.T) {
 	if len(posts) != 0 {
 		t.Errorf("expected 0 posts, got %d", len(posts))
 	}
-	if len(report.skipped) != 1 {
-		t.Fatalf("expected 1 skipped, got %d", len(report.skipped))
+	if len(report.Skipped) != 1 {
+		t.Fatalf("expected 1 skipped, got %d", len(report.Skipped))
 	}
-	if !strings.Contains(report.skipped[0], "missing title") {
+	if !strings.Contains(report.Skipped[0], "missing title") {
 		t.Errorf("expected 'missing title' reason, got %q",
-			report.skipped[0])
+			report.Skipped[0])
 	}
 }
 
@@ -232,7 +232,7 @@ func TestFeed_MissingDate(t *testing.T) {
 	writePost(t, dir, "2026-01-01-no-date.md",
 		"---\ntitle: No Date\nreviewed_and_finalized: true\n---\n# No Date\n\nContent.\n")
 
-	posts, report, scanErr := scanBlogPosts(dir)
+	posts, report, scanErr := core.ScanBlogPosts(dir)
 	if scanErr != nil {
 		t.Fatal(scanErr)
 	}
@@ -240,12 +240,12 @@ func TestFeed_MissingDate(t *testing.T) {
 	if len(posts) != 0 {
 		t.Errorf("expected 0 posts, got %d", len(posts))
 	}
-	if len(report.skipped) != 1 {
-		t.Fatalf("expected 1 skipped, got %d", len(report.skipped))
+	if len(report.Skipped) != 1 {
+		t.Fatalf("expected 1 skipped, got %d", len(report.Skipped))
 	}
-	if !strings.Contains(report.skipped[0], "missing date") {
+	if !strings.Contains(report.Skipped[0], "missing date") {
 		t.Errorf("expected 'missing date' reason, got %q",
-			report.skipped[0])
+			report.Skipped[0])
 	}
 }
 
@@ -255,7 +255,7 @@ func TestFeed_NoSummary(t *testing.T) {
 	writePost(t, dir, "2026-01-01-no-summary.md",
 		"---\ntitle: No Summary\ndate: 2026-01-01\nreviewed_and_finalized: true\n---\n# No Summary\n")
 
-	posts, report, scanErr := scanBlogPosts(dir)
+	posts, report, scanErr := core.ScanBlogPosts(dir)
 	if scanErr != nil {
 		t.Fatal(scanErr)
 	}
@@ -263,19 +263,19 @@ func TestFeed_NoSummary(t *testing.T) {
 	if len(posts) != 1 {
 		t.Fatalf("expected 1 post (with warning), got %d", len(posts))
 	}
-	if len(report.warnings) != 1 {
+	if len(report.Warnings) != 1 {
 		t.Fatalf(
-			"expected 1 warning, got %d", len(report.warnings),
+			"expected 1 warning, got %d", len(report.Warnings),
 		)
 	}
-	if !strings.Contains(report.warnings[0], "no summary") {
+	if !strings.Contains(report.Warnings[0], "no summary") {
 		t.Errorf("expected 'no summary' warning, got %q",
-			report.warnings[0])
+			report.Warnings[0])
 	}
 
 	// Verify summary is omitted in XML output.
 	outPath := filepath.Join(t.TempDir(), "feed.xml")
-	genErr := generateAtom(posts, outPath, "https://example.com")
+	genErr := core.GenerateAtom(posts, outPath, "https://example.com")
 	if genErr != nil {
 		t.Fatal(genErr)
 	}
@@ -289,13 +289,13 @@ func TestFeed_NoSummary(t *testing.T) {
 func TestFeed_EmptyBlog(t *testing.T) {
 	dir := t.TempDir()
 
-	posts, _, scanErr := scanBlogPosts(dir)
+	posts, _, scanErr := core.ScanBlogPosts(dir)
 	if scanErr != nil {
 		t.Fatal(scanErr)
 	}
 
 	outPath := filepath.Join(t.TempDir(), "feed.xml")
-	genErr := generateAtom(posts, outPath, "https://example.com")
+	genErr := core.GenerateAtom(posts, outPath, "https://example.com")
 	if genErr != nil {
 		t.Fatal(genErr)
 	}
@@ -324,7 +324,7 @@ func TestFeed_SortOrder(t *testing.T) {
 	writePost(t, dir, "2026-01-30-newest.md",
 		finalizedPost("Newest", "2026-01-30", "A", nil))
 
-	posts, _, scanErr := scanBlogPosts(dir)
+	posts, _, scanErr := core.ScanBlogPosts(dir)
 	if scanErr != nil {
 		t.Fatal(scanErr)
 	}
@@ -335,10 +335,10 @@ func TestFeed_SortOrder(t *testing.T) {
 
 	expected := []string{"Newest", "Middle", "Oldest"}
 	for i, want := range expected {
-		if posts[i].title != want {
+		if posts[i].Title != want {
 			t.Errorf(
 				"position %d: expected %q, got %q",
-				i, want, posts[i].title,
+				i, want, posts[i].Title,
 			)
 		}
 	}
@@ -349,7 +349,7 @@ func TestFeed_MalformedFrontmatter(t *testing.T) {
 	writePost(t, dir, "2026-01-01-bad.md",
 		"---\n: invalid: yaml: [[\n---\n# Bad\n\nContent.\n")
 
-	posts, report, scanErr := scanBlogPosts(dir)
+	posts, report, scanErr := core.ScanBlogPosts(dir)
 	if scanErr != nil {
 		t.Fatal(scanErr)
 	}
@@ -357,8 +357,8 @@ func TestFeed_MalformedFrontmatter(t *testing.T) {
 	if len(posts) != 0 {
 		t.Errorf("expected 0 posts, got %d", len(posts))
 	}
-	if len(report.skipped) != 1 {
-		t.Fatalf("expected 1 skipped, got %d", len(report.skipped))
+	if len(report.Skipped) != 1 {
+		t.Fatalf("expected 1 skipped, got %d", len(report.Skipped))
 	}
 }
 
@@ -370,15 +370,15 @@ func TestFeed_Idempotent(t *testing.T) {
 	outDir := t.TempDir()
 	outPath := filepath.Join(outDir, "feed.xml")
 
-	posts1, _, _ := scanBlogPosts(dir)
-	genErr1 := generateAtom(posts1, outPath, "https://example.com")
+	posts1, _, _ := core.ScanBlogPosts(dir)
+	genErr1 := core.GenerateAtom(posts1, outPath, "https://example.com")
 	if genErr1 != nil {
 		t.Fatal(genErr1)
 	}
 	data1, _ := os.ReadFile(outPath)
 
-	posts2, _, _ := scanBlogPosts(dir)
-	genErr2 := generateAtom(posts2, outPath, "https://example.com")
+	posts2, _, _ := core.ScanBlogPosts(dir)
+	genErr2 := core.GenerateAtom(posts2, outPath, "https://example.com")
 	if genErr2 != nil {
 		t.Fatal(genErr2)
 	}
@@ -395,13 +395,13 @@ func TestFeed_Categories(t *testing.T) {
 	writePost(t, dir, "2026-01-01-topics.md",
 		finalizedPost("Topics", "2026-01-01", "Alice", topics))
 
-	posts, _, scanErr := scanBlogPosts(dir)
+	posts, _, scanErr := core.ScanBlogPosts(dir)
 	if scanErr != nil {
 		t.Fatal(scanErr)
 	}
 
 	outPath := filepath.Join(t.TempDir(), "feed.xml")
-	genErr := generateAtom(posts, outPath, "https://example.com")
+	genErr := core.GenerateAtom(posts, outPath, "https://example.com")
 	if genErr != nil {
 		t.Fatal(genErr)
 	}
@@ -434,9 +434,9 @@ func TestFeed_CustomBaseURL(t *testing.T) {
 	writePost(t, dir, "2026-01-01-post.md",
 		finalizedPost("Post", "2026-01-01", "Alice", nil))
 
-	posts, _, _ := scanBlogPosts(dir)
+	posts, _, _ := core.ScanBlogPosts(dir)
 	outPath := filepath.Join(t.TempDir(), "feed.xml")
-	genErr := generateAtom(
+	genErr := core.GenerateAtom(
 		posts, outPath, "https://custom.example.com",
 	)
 	if genErr != nil {
@@ -470,7 +470,7 @@ func TestFeed_FilenameFilter(t *testing.T) {
 	writePost(t, dir, "draft-ideas.md", "# Ideas\n")
 	writePost(t, dir, "README.md", "# README\n")
 
-	posts, _, scanErr := scanBlogPosts(dir)
+	posts, _, scanErr := core.ScanBlogPosts(dir)
 	if scanErr != nil {
 		t.Fatal(scanErr)
 	}
@@ -478,7 +478,7 @@ func TestFeed_FilenameFilter(t *testing.T) {
 	if len(posts) != 1 {
 		t.Errorf("expected 1 post, got %d", len(posts))
 	}
-	if posts[0].title != "Valid" {
-		t.Errorf("expected 'Valid', got %q", posts[0].title)
+	if posts[0].Title != "Valid" {
+		t.Errorf("expected 'Valid', got %q", posts[0].Title)
 	}
 }
