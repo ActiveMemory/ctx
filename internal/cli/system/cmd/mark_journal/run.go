@@ -58,17 +58,25 @@ func runMarkJournal(cmd *cobra.Command, filename, stage string) error {
 		case journal.StageLocked:
 			val = fs.Locked
 		default:
-			return errJournal.UnknownStage(stage, strings.Join(state.ValidStages, token.CommaSpace))
+			return errJournal.UnknownStage(
+				stage, strings.Join(state.ValidStages, token.CommaSpace),
+			)
 		}
 		if val == "" {
 			return errJournal.StageNotSet(filename, stage)
 		}
-		cmd.Println(fmt.Sprintf(desc.Text(text.DescKeyMarkJournalChecked), filename, stage, val))
+		cmd.Println(
+			fmt.Sprintf(desc.Text(text.DescKeyMarkJournalChecked),
+				filename, stage, val,
+			),
+		)
 		return nil
 	}
 
 	if ok := jstate.Mark(filename, stage); !ok {
-		return errJournal.UnknownStage(stage, strings.Join(state.ValidStages, token.CommaSpace))
+		return errJournal.UnknownStage(
+			stage, strings.Join(state.ValidStages, token.CommaSpace),
+		)
 	}
 
 	if saveErr := jstate.Save(journalDir); saveErr != nil {
