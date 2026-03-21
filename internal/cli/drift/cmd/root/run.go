@@ -10,13 +10,15 @@ import (
 	"errors"
 	"fmt"
 
-	"github.com/ActiveMemory/ctx/internal/context/load"
-	ctxerr "github.com/ActiveMemory/ctx/internal/err/initialize"
 	"github.com/spf13/cobra"
 
+	"github.com/ActiveMemory/ctx/internal/assets/read/desc"
 	"github.com/ActiveMemory/ctx/internal/cli/drift/core"
+	"github.com/ActiveMemory/ctx/internal/config/embed/text"
+	"github.com/ActiveMemory/ctx/internal/context/load"
 	"github.com/ActiveMemory/ctx/internal/drift"
-	errctx "github.com/ActiveMemory/ctx/internal/err/context"
+	errCtx "github.com/ActiveMemory/ctx/internal/err/context"
+	ctxErr "github.com/ActiveMemory/ctx/internal/err/initialize"
 )
 
 // Run executes the drift command logic.
@@ -35,9 +37,9 @@ import (
 func Run(cmd *cobra.Command, jsonOutput, fix bool) error {
 	ctx, err := load.Do("")
 	if err != nil {
-		var notFoundError *errctx.NotFoundError
+		var notFoundError *errCtx.NotFoundError
 		if errors.As(err, &notFoundError) {
-			return ctxerr.NotInitialized()
+			return ctxErr.NotInitialized()
 		}
 		return err
 	}
@@ -46,27 +48,29 @@ func Run(cmd *cobra.Command, jsonOutput, fix bool) error {
 
 	// Apply fixes if requested
 	if fix && (len(report.Warnings) > 0 || len(report.Violations) > 0) {
-		cmd.Println("Applying fixes...")
+		cmd.Println(desc.TextDesc(text.DescKeyDriftApplying))
 		cmd.Println()
 
 		result := core.ApplyFixes(cmd, ctx, report)
 
 		cmd.Println()
 		if result.Fixed > 0 {
-			cmd.Println(fmt.Sprintf("✓ Fixed %d issue(s)", result.Fixed))
+			cmd.Println(fmt.Sprintf(
+				desc.TextDesc(text.DescKeyDriftFixedCount), result.Fixed))
 		}
 		if result.Skipped > 0 {
-			cmd.Println(fmt.Sprintf("○ Skipped %d issue(s) (cannot auto-fix)",
-				result.Skipped))
+			cmd.Println(fmt.Sprintf(
+				desc.TextDesc(text.DescKeyDriftSkippedCount), result.Skipped))
 		}
 		for _, errMsg := range result.Errors {
-			cmd.Println(fmt.Sprintf("⚠ Error: %s", errMsg))
+			cmd.Println(fmt.Sprintf(
+				desc.TextDesc(text.DescKeyDriftFixError), errMsg))
 		}
 
 		// Re-run detection to show the updated status
 		if result.Fixed > 0 {
 			cmd.Println()
-			cmd.Println("Re-checking after fixes...")
+			cmd.Println(desc.TextDesc(text.DescKeyDriftRechecking))
 			ctx, _ = load.Do("")
 			report = drift.Detect(ctx)
 		}

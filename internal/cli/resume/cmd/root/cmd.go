@@ -21,7 +21,7 @@ func Cmd() *cobra.Command {
 	short, long := desc.CommandDesc(cmd.DescKeyResume)
 
 	cmd := &cobra.Command{
-		Use:   cmd.DescKeyResume,
+		Use:   cmd.UseResume,
 		Short: short,
 		Long:  long,
 		RunE: func(cmd *cobra.Command, _ []string) error {

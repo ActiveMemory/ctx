@@ -49,7 +49,7 @@ func RootCmd() *cobra.Command {
 
 	short, long := desc.CommandDesc(cmd.DescKeyCtx)
 
-	cmd := &cobra.Command{
+	c := &cobra.Command{
 		Use:     cmd.DescKeyCtx,
 		Short:   short,
 		Long:    long,
@@ -98,24 +98,24 @@ func RootCmd() *cobra.Command {
 		},
 	}
 
-	// Cobra's cmd.Print() defaults to stderr (OutOrStderr). Set stdout
+	// Cobra's c.Print() defaults to stderr (OutOrStderr). Set stdout
 	// explicitly so all subcommands inherit the correct output, and shell
 	// redirection (>) works as expected.
-	cmd.SetOut(os.Stdout)
+	c.SetOut(os.Stdout)
 
 	// Global flags available to all subcommands
-	cmd.PersistentFlags().StringVar(
+	c.PersistentFlags().StringVar(
 		&contextDir,
 		flag.ContextDir,
 		"",
 		desc.FlagDesc(embedflag.DescKeyContextDir),
 	)
-	cmd.PersistentFlags().BoolVar(
+	c.PersistentFlags().BoolVar(
 		&allowOutsideCwd,
 		flag.AllowOutsideCwd,
 		false,
 		desc.FlagDesc(embedflag.DescKeyAllowOutsideCwd),
 	)
 
-	return cmd
+	return c
 }

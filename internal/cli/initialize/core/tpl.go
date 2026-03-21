@@ -10,12 +10,14 @@ import (
 	"os"
 	"path/filepath"
 
+	"github.com/spf13/cobra"
+
 	"github.com/ActiveMemory/ctx/internal/assets/read/entry"
+	"github.com/ActiveMemory/ctx/internal/config/dir"
 	"github.com/ActiveMemory/ctx/internal/config/fs"
-	fs2 "github.com/ActiveMemory/ctx/internal/err/fs"
+	errFs "github.com/ActiveMemory/ctx/internal/err/fs"
 	ctxerr "github.com/ActiveMemory/ctx/internal/err/prompt"
 	"github.com/ActiveMemory/ctx/internal/write/initialize"
-	"github.com/spf13/cobra"
 )
 
 // CreateEntryTemplates creates entry template files in .context/templates/.
@@ -27,10 +29,12 @@ import (
 //
 // Returns:
 //   - error: Non-nil if directory creation or file write fails
-func CreateEntryTemplates(cmd *cobra.Command, contextDir string, force bool) error {
-	templatesDir := filepath.Join(contextDir, "templates")
+func CreateEntryTemplates(
+	cmd *cobra.Command, contextDir string, force bool,
+) error {
+	templatesDir := filepath.Join(contextDir, dir.Templates)
 	if err := os.MkdirAll(templatesDir, fs.PermExec); err != nil {
-		return fs2.Mkdir(templatesDir, err)
+		return errFs.Mkdir(templatesDir, err)
 	}
 	entryTemplates, err := entry.List()
 	if err != nil {
@@ -39,7 +43,7 @@ func CreateEntryTemplates(cmd *cobra.Command, contextDir string, force bool) err
 	for _, name := range entryTemplates {
 		targetPath := filepath.Join(templatesDir, name)
 		if _, err := os.Stat(targetPath); err == nil && !force {
-			initialize.Skipped(cmd, "templates/"+name)
+			initialize.Skipped(cmd, filepath.Join(dir.Templates, name))
 			continue
 		}
 		content, err := entry.ForName(name)
@@ -47,9 +51,9 @@ func CreateEntryTemplates(cmd *cobra.Command, contextDir string, force bool) err
 			return ctxerr.ReadEntryTemplate(name, err)
 		}
 		if err := os.WriteFile(targetPath, content, fs.PermFile); err != nil {
-			return fs2.FileWrite(targetPath, err)
+			return errFs.FileWrite(targetPath, err)
 		}
-		initialize.Created(cmd, "templates/"+name)
+		initialize.Created(cmd, filepath.Join(dir.Templates, name))
 	}
 	return nil
 }

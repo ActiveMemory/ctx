@@ -72,7 +72,7 @@ func truncateDescription(desc string, maxLen int) string {
 // Returns:
 //   - error: Non-nil if skill listing fails
 func listSkills(cmd *cobra.Command) error {
-	names, skillsErr := claude.Skills()
+	names, skillsErr := claude.SkillList()
 	if skillsErr != nil {
 		return skillsErr
 	}

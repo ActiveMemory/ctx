@@ -16,10 +16,6 @@ import (
 	"github.com/ActiveMemory/ctx/internal/rc"
 )
 
-// DefaultCooldown is the default cooldown duration between context packet
-// emissions within the same session.
-const DefaultCooldown = agent.DefaultCooldown
-
 // CooldownActive checks whether the cooldown tombstone for the given
 // session is still fresh.
 //

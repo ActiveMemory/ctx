@@ -9,16 +9,17 @@ package core
 import (
 	"os"
 
-	"github.com/ActiveMemory/ctx/internal/assets/read/desc"
-	"github.com/ActiveMemory/ctx/internal/config/embed/text"
-	"github.com/ActiveMemory/ctx/internal/write/compact"
 	"github.com/spf13/cobra"
 
+	"github.com/ActiveMemory/ctx/internal/assets/read/desc"
+	archiveCfg "github.com/ActiveMemory/ctx/internal/config/archive"
+	"github.com/ActiveMemory/ctx/internal/config/embed/text"
 	"github.com/ActiveMemory/ctx/internal/config/fs"
 	"github.com/ActiveMemory/ctx/internal/config/token"
 	"github.com/ActiveMemory/ctx/internal/entity"
 	"github.com/ActiveMemory/ctx/internal/rc"
 	"github.com/ActiveMemory/ctx/internal/tidy"
+	"github.com/ActiveMemory/ctx/internal/write/compact"
 )
 
 // CompactTasks moves completed tasks to the "Completed" section in TASKS.md.
@@ -43,10 +44,10 @@ func CompactTasks(
 
 	// Report what happened.
 	for _, taskText := range result.TasksMoved {
-		compact.InfoMovingTask(cmd, tidy.TruncateString(taskText, 50))
+		compact.InfoMovingTask(cmd, tidy.TruncateString(taskText, token.TruncateLen))
 	}
 	for _, taskText := range result.TasksSkipped {
-		compact.InfoSkippingTask(cmd, tidy.TruncateString(taskText, 50))
+		compact.InfoSkippingTask(cmd, tidy.TruncateString(taskText, token.TruncateLen))
 	}
 
 	if len(result.TasksMoved) == 0 {
@@ -81,7 +82,9 @@ func CompactTasks(
 				archiveContent += block.BlockContent() + nl + nl
 			}
 			if archiveFile, archiveErr := tidy.WriteArchive(
-				"tasks", desc.TextDesc(text.DescKeyHeadingArchivedTasks), archiveContent,
+				archiveCfg.ArchiveScopeTasks,
+				desc.TextDesc(text.DescKeyHeadingArchivedTasks),
+				archiveContent,
 			); archiveErr == nil {
 				compact.InfoArchivedTasks(
 					cmd, len(blocksToArchive), archiveFile, archiveDays)

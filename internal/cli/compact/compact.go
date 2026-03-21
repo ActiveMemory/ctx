@@ -9,10 +9,10 @@ package compact
 import (
 	"github.com/spf13/cobra"
 
-	compactroot "github.com/ActiveMemory/ctx/internal/cli/compact/cmd/root"
+	compactRoot "github.com/ActiveMemory/ctx/internal/cli/compact/cmd/root"
 )
 
 // Cmd returns the "ctx compact" command for cleaning up context files.
 func Cmd() *cobra.Command {
-	return compactroot.Cmd()
+	return compactRoot.Cmd()
 }

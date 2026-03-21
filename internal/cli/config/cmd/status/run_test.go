@@ -15,7 +15,7 @@ import (
 
 	"github.com/spf13/cobra"
 
-	"github.com/ActiveMemory/ctx/internal/cli/config/core"
+	"github.com/ActiveMemory/ctx/internal/config/file"
 	"github.com/ActiveMemory/ctx/internal/rc"
 )
 
@@ -49,7 +49,7 @@ func chdirWithCleanup(t *testing.T, dir string) {
 func TestStatus_Dev(t *testing.T) {
 	root := t.TempDir()
 	if writeErr := os.WriteFile(
-		filepath.Join(root, core.FileCtxRC), []byte(devContent), 0o600,
+		filepath.Join(root, file.CtxRC), []byte(devContent), 0o600,
 	); writeErr != nil {
 		t.Fatal(writeErr)
 	}
@@ -69,7 +69,7 @@ func TestStatus_Dev(t *testing.T) {
 func TestStatus_Base(t *testing.T) {
 	root := t.TempDir()
 	if writeErr := os.WriteFile(
-		filepath.Join(root, core.FileCtxRC), []byte(baseContent), 0o600,
+		filepath.Join(root, file.CtxRC), []byte(baseContent), 0o600,
 	); writeErr != nil {
 		t.Fatal(writeErr)
 	}

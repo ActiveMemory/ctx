@@ -23,7 +23,7 @@ func Cmd() *cobra.Command {
 	short, _ := desc.CommandDesc(cmd.DescKeyConfigStatus)
 
 	return &cobra.Command{
-		Use:         "status",
+		Use:         cmd.UseConfigStatus,
 		Short:       short,
 		Annotations: map[string]string{internalConfig.AnnotationSkipInit: ""},
 		Args:        cobra.NoArgs,

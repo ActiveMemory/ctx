@@ -21,7 +21,7 @@ import (
 // Returns:
 //   - error: Non-nil if the process fails
 func Run(dir string) error {
-	z := exec.Command(zensical.Bin, "serve") //nolint:gosec // G204: args are constants
+	z := exec.Command(zensical.Bin, zensical.CmdServe) //nolint:gosec // G204: args are constants
 	z.Dir = dir
 	z.Stdout = os.Stdout
 	z.Stderr = os.Stderr

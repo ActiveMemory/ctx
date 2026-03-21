@@ -11,17 +11,18 @@ import (
 	"path/filepath"
 	"time"
 
-	"github.com/ActiveMemory/ctx/internal/config/dir"
-	"github.com/ActiveMemory/ctx/internal/config/memory"
-	time2 "github.com/ActiveMemory/ctx/internal/config/time"
-	ctxerr "github.com/ActiveMemory/ctx/internal/err/memory"
-	"github.com/ActiveMemory/ctx/internal/io"
-	memory2 "github.com/ActiveMemory/ctx/internal/write/memory"
 	"github.com/spf13/cobra"
 
 	"github.com/ActiveMemory/ctx/internal/cli/memory/core"
+	"github.com/ActiveMemory/ctx/internal/config/dir"
+	"github.com/ActiveMemory/ctx/internal/config/memory"
+	cfgTime "github.com/ActiveMemory/ctx/internal/config/time"
+	ctxerr "github.com/ActiveMemory/ctx/internal/err/memory"
+	"github.com/ActiveMemory/ctx/internal/format"
+	"github.com/ActiveMemory/ctx/internal/io"
 	mem "github.com/ActiveMemory/ctx/internal/memory"
 	"github.com/ActiveMemory/ctx/internal/rc"
+	writeMem "github.com/ActiveMemory/ctx/internal/write/memory"
 )
 
 // Run prints memory bridge status including source location,
@@ -38,24 +39,24 @@ func Run(cmd *cobra.Command) error {
 
 	sourcePath, discoverErr := mem.DiscoverMemoryPath(projectRoot)
 	if discoverErr != nil {
-		memory2.BridgeHeader(cmd)
-		memory2.SourceNotActive(cmd)
+		writeMem.BridgeHeader(cmd)
+		writeMem.SourceNotActive(cmd)
 		return ctxerr.NotFound()
 	}
 
-	memory2.BridgeHeader(cmd)
-	memory2.Source(cmd, sourcePath)
-	memory2.Mirror(cmd, memory.PathMemoryMirror)
+	writeMem.BridgeHeader(cmd)
+	writeMem.Source(cmd, sourcePath)
+	writeMem.Mirror(cmd, memory.PathMemoryMirror)
 
 	// Last sync time
 	state, _ := mem.LoadState(contextDir)
 	if state.LastSync != nil {
 		ago := time.Since(*state.LastSync).Truncate(time.Minute)
-		memory2.LastSync(cmd,
-			state.LastSync.Local().Format(time2.DateTimeFormat),
-			core.FormatDuration(ago))
+		writeMem.LastSync(cmd,
+			state.LastSync.Local().Format(cfgTime.DateTimeFormat),
+			format.Duration(ago))
 	} else {
-		memory2.LastSyncNever(cmd)
+		writeMem.LastSyncNever(cmd)
 	}
 
 	cmd.Println()
@@ -65,7 +66,7 @@ func Run(cmd *cobra.Command) error {
 	if sourceData, readErr := io.SafeReadFile(
 		filepath.Dir(sourcePath), filepath.Base(sourcePath),
 	); readErr == nil {
-		memory2.SourceLines(cmd, core.CountFileLines(sourceData), hasDrift)
+		writeMem.SourceLines(cmd, core.CountFileLines(sourceData), hasDrift)
 	}
 
 	// Mirror line count
@@ -73,21 +74,21 @@ func Run(cmd *cobra.Command) error {
 	if mirrorData, readErr := io.SafeReadFile(
 		memoryDir, memory.MemoryMirror,
 	); readErr == nil {
-		memory2.MirrorLines(cmd, core.CountFileLines(mirrorData))
+		writeMem.MirrorLines(cmd, core.CountFileLines(mirrorData))
 	} else {
-		memory2.MirrorNotSynced(cmd)
+		writeMem.MirrorNotSynced(cmd)
 	}
 
 	// Drift
 	if hasDrift {
-		memory2.DriftDetected(cmd)
+		writeMem.DriftDetected(cmd)
 	} else {
-		memory2.DriftNone(cmd)
+		writeMem.DriftNone(cmd)
 	}
 
 	// Archives
 	count := mem.ArchiveCount(contextDir)
-	memory2.Archives(cmd, count, dir.MemoryArchive)
+	writeMem.Archives(cmd, count, dir.MemoryArchive)
 
 	if hasDrift {
 		// Exit code 2 for drift

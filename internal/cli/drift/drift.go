@@ -9,10 +9,10 @@ package drift
 import (
 	"github.com/spf13/cobra"
 
-	driftroot "github.com/ActiveMemory/ctx/internal/cli/drift/cmd/root"
+	driftRoot "github.com/ActiveMemory/ctx/internal/cli/drift/cmd/root"
 )
 
 // Cmd returns the "ctx drift" command for detecting stale context.
 func Cmd() *cobra.Command {
-	return driftroot.Cmd()
+	return driftRoot.Cmd()
 }

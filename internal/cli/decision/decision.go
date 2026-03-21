@@ -8,11 +8,11 @@
 package decision
 
 import (
-	"github.com/ActiveMemory/ctx/internal/assets/read/desc"
-	"github.com/ActiveMemory/ctx/internal/config/embed/cmd"
 	"github.com/spf13/cobra"
 
+	"github.com/ActiveMemory/ctx/internal/assets/read/desc"
 	"github.com/ActiveMemory/ctx/internal/cli/decision/cmd/reindex"
+	"github.com/ActiveMemory/ctx/internal/config/embed/cmd"
 )
 
 // Cmd returns the decision command with subcommands.
@@ -24,13 +24,13 @@ import (
 //   - *cobra.Command: The decision command with subcommands
 func Cmd() *cobra.Command {
 	short, long := desc.CommandDesc(cmd.DescKeyDecision)
-	cmd := &cobra.Command{
-		Use:   cmd.DescKeyDecision,
+	c := &cobra.Command{
+		Use:   cmd.UseDecision,
 		Short: short,
 		Long:  long,
 	}
 
-	cmd.AddCommand(reindex.Cmd())
+	c.AddCommand(reindex.Cmd())
 
-	return cmd
+	return c
 }

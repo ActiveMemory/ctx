@@ -55,7 +55,7 @@ func runAdd(cmd *cobra.Command, name string, fromStdin bool) error {
 	} else {
 		// Try to load from embedded starter templates.
 		var templateErr error
-		content, templateErr = prompt2.PromptTemplate(name + file.ExtMarkdown)
+		content, templateErr = prompt2.Template(name + file.ExtMarkdown)
 		if templateErr != nil {
 			return ctxerr.NoPromptTemplate(name)
 		}

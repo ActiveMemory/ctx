@@ -68,3 +68,13 @@ const (
 	// CategoryEvents groups event log checks.
 	CategoryEvents = "Events"
 )
+
+// Thresholds for doctor health checks.
+const (
+	// TaskCompletionWarnPct is the completed-task ratio that triggers a warning.
+	TaskCompletionWarnPct = 80
+	// TaskCompletionMinCount is the minimum completed tasks before the ratio check applies.
+	TaskCompletionMinCount = 5
+	// ContextSizeWarnPct is the percentage of context window usage that triggers a warning.
+	ContextSizeWarnPct = 20
+)

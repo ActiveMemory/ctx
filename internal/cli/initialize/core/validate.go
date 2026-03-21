@@ -10,9 +10,10 @@ import (
 	"os"
 	"os/exec"
 
+	"github.com/ActiveMemory/ctx/internal/config/cli"
 	"github.com/ActiveMemory/ctx/internal/config/env"
 	"github.com/ActiveMemory/ctx/internal/err/initialize"
-	initialize2 "github.com/ActiveMemory/ctx/internal/write/initialize"
+	writeInit "github.com/ActiveMemory/ctx/internal/write/initialize"
 	"github.com/spf13/cobra"
 )
 
@@ -27,9 +28,9 @@ func CheckCtxInPath(cmd *cobra.Command) error {
 	if os.Getenv(env.SkipPathCheck) == env.True {
 		return nil
 	}
-	_, err := exec.LookPath("ctx")
+	_, err := exec.LookPath(cli.Binary)
 	if err != nil {
-		initialize2.ErrCtxNotInPath(cmd)
+		writeInit.ErrCtxNotInPath(cmd)
 		return initialize.CtxNotInPath()
 	}
 	return nil

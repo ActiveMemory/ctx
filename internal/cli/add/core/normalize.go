@@ -12,23 +12,6 @@ import (
 	"github.com/ActiveMemory/ctx/internal/config/token"
 )
 
-// CheckRequired returns the names of any fields whose values are empty.
-//
-// Parameters:
-//   - fields: Pairs of [name, value] to check
-//
-// Returns:
-//   - []string: Names of fields with empty values
-func CheckRequired(fields [][2]string) []string {
-	var missing []string
-	for _, f := range fields {
-		if f[1] == "" {
-			missing = append(missing, f[0])
-		}
-	}
-	return missing
-}
-
 // NormalizeTargetSection ensures a section heading has proper Markdown format.
 //
 // Prepends "## " if the section string does not already start with "##".

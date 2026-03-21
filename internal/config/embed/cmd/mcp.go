@@ -6,6 +6,8 @@
 
 package cmd
 
+const UseMcpServe = "serve"
+
 const (
 	DescKeyMcp      = "mcp"
 	DescKeyMcpServe = "mcp.serve"

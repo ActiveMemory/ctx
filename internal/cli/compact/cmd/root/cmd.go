@@ -7,10 +7,12 @@
 package root
 
 import (
+	"github.com/spf13/cobra"
+
 	"github.com/ActiveMemory/ctx/internal/assets/read/desc"
 	"github.com/ActiveMemory/ctx/internal/config/embed/cmd"
 	"github.com/ActiveMemory/ctx/internal/config/embed/flag"
-	"github.com/spf13/cobra"
+	cflag "github.com/ActiveMemory/ctx/internal/config/flag"
 )
 
 // Cmd returns the "ctx compact" command for cleaning up context files.
@@ -29,8 +31,8 @@ func Cmd() *cobra.Command {
 
 	short, long := desc.CommandDesc(cmd.DescKeyCompact)
 
-	cmd := &cobra.Command{
-		Use:   cmd.DescKeyCompact,
+	c := &cobra.Command{
+		Use:   cmd.UseCompact,
 		Short: short,
 		Long:  long,
 		RunE: func(cmd *cobra.Command, args []string) error {
@@ -38,12 +40,12 @@ func Cmd() *cobra.Command {
 		},
 	}
 
-	cmd.Flags().BoolVar(
+	c.Flags().BoolVar(
 		&archive,
-		"archive",
+		cflag.Archive,
 		false,
 		desc.FlagDesc(flag.DescKeyCompactArchive),
 	)
 
-	return cmd
+	return c
 }

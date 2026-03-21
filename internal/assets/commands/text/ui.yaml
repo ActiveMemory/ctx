@@ -23,8 +23,54 @@ agent.section-tasks:
   short: '## Current Tasks'
 changes.fallback-label:
   short: 24 hour(s) ago (default)
+changes.code-authors:
+  short: '- **Authors**: %s'
+changes.code-commits:
+  short: '- **%s** since reference point'
+changes.code-dirs:
+  short: '- **Directories touched**: %s'
+changes.code-heading:
+  short: '### Code Changes'
+changes.code-latest:
+  short: '- **Latest**: %s'
+changes.ctx-heading:
+  short: '### Context File Changes'
+changes.ctx-line:
+  short: '- `%s` — modified %s'
+changes.heading:
+  short: '## Changes Since Last Session'
+changes.hook-commits:
+  short: '%s since last session'
+changes.hook-commits-extra:
+  short: ' (latest: %s)'
+changes.hook-ctx-files:
+  short: 'Context files changed (%s): %s'
+changes.hook-prefix:
+  short: 'Changes since last session: '
+changes.none:
+  short: No changes detected since reference point.
+changes.ref-point:
+  short: '**Reference point**: %s'
 changes.since-prefix:
   short: 'since '
+compact.clean:
+  short: '✓ Nothing to compact — context is already clean'
+compact.heading:
+  short: Compact Analysis
+compact.sections-removed:
+  short: '✓ Removed %d empty sections from %s'
+compact.separator:
+  short: '================'
+compact.summary:
+  short: '✓ Compacted %d items'
+compact.task-error:
+  short: '⚠ Error processing TASKS.md: %v'
+config.already-on:
+  short: 'already on %s profile'
+config.created:
+  short: 'created %s from %s profile'
+config.switched:
+  short: 'switched to %s profile'
 confirm.proceed:
   short: 'Proceed? [y/N] '
 drift.cleared:
@@ -45,6 +91,146 @@ drift.stale-age:
   short: last modified %d days ago
 drift.staleness:
   short: has many completed items (consider archiving)
+drift.applying:
+  short: Applying fixes...
+drift.fixed-count:
+  short: '✓ Fixed %d issue(s)'
+drift.skipped-count:
+  short: '○ Skipped %d issue(s) (cannot auto-fix)'
+drift.fix-error:
+  short: '⚠ Error: %s'
+drift.rechecking:
+  short: Re-checking after fixes...
+drift.fix-staleness:
+  short: '✓ Fixed staleness in %s (archived completed tasks)'
+drift.fix-staleness-err:
+  short: 'staleness: %v'
+drift.fix-missing:
+  short: '✓ Created missing file: %s'
+drift.fix-missing-err:
+  short: 'missing %s: %v'
+drift.skip-dead-path:
+  short: '○ Cannot auto-fix dead path in %s:%d (%s)'
+drift.skip-stale-age:
+  short: '○ Cannot auto-fix file age: %s'
+drift.skip-sensitive-file:
+  short: '○ Cannot auto-fix potential sensitive file: %s'
+drift.archived:
+  short: '  Archived %d completed tasks to %s'
+drift.report-heading:
+  short: Drift Detection Report
+drift.report-separator:
+  short: '======================'
+drift.violations-heading:
+  short: '❌ VIOLATIONS (%d)'
+drift.violation-line:
+  short: '  - %s: %s'
+drift.violation-line-loc:
+  short: '  - %s:%d %s'
+drift.violation-rule:
+  short: ' (rule: %s)'
+drift.warnings-heading:
+  short: '⚠️  WARNINGS (%d)'
+drift.path-refs-label:
+  short: '  Path References:'
+drift.path-ref-line:
+  short: "  - %s:%d references '%s' (not found)"
+drift.staleness-label:
+  short: '  Staleness:'
+drift.staleness-line:
+  short: '  - %s %s'
+drift.other-label:
+  short: '  Other:'
+drift.other-line:
+  short: '  - %s: %s'
+drift.passed-heading:
+  short: '✅ PASSED (%d)'
+drift.passed-line:
+  short: '  - %s'
+drift.status-violation:
+  short: 'Status: VIOLATION — Constitution violations detected'
+drift.status-warning:
+  short: 'Status: WARNING — Issues detected that should be addressed'
+drift.status-ok:
+  short: 'Status: OK — No drift detected'
+drift.check-path-refs:
+  short: Path references are valid
+drift.check-staleness:
+  short: No staleness indicators
+drift.check-constitution:
+  short: Constitution rules respected
+drift.check-required:
+  short: All required files present
+drift.check-file-age:
+  short: No stale files by age
+guide.default:
+  short: |
+    ctx — persistent AI context
+
+    GETTING STARTED
+      ctx init              Create .context/ directory with templates
+      ctx status            Show context health summary
+      ctx doctor            Diagnose configuration issues
+
+    TRACKING DECISIONS & KNOWLEDGE
+      ctx add -t TYPE       Add a decision, learning, convention, or task
+      ctx complete          Mark a task as done in TASKS.md
+      ctx decision reindex  Rebuild the DECISIONS.md index table
+
+    BROWSING HISTORY
+      ctx recall list       List exported session transcripts
+      ctx recall show ID    Read a specific session transcript
+      ctx journal site      Generate a browsable journal site
+
+    AI CONTEXT
+      ctx agent             Load AI-optimized context packet (use --budget)
+      ctx load              Output raw assembled context
+      ctx drift             Detect stale or invalid context
+
+    MAINTENANCE
+      ctx compact           Archive completed tasks, trim context
+      ctx sync              Reconcile codebase changes with docs
+      ctx pad               Encrypted scratchpad for sensitive notes
+
+    KEY SKILLS
+      /ctx-commit           Commit with context capture
+      /ctx-implement        Execute a plan step-by-step
+      /ctx-next             Suggest what to work on next
+      /ctx-reflect          Surface persist-worthy items
+      /ctx-wrap-up          End-of-session persistence ceremony
+      /ctx-drift            Detect and fix context drift
+      /ctx-remember         Recall project context
+      /ctx-recall           Browse session history
+
+    RECIPES
+      Start session:      ctx agent --budget 4000
+      Record decision:    ctx add -t decision "Use PostgreSQL for persistence"
+      Check health:       ctx status && ctx drift
+      End session:        invoke /ctx-wrap-up
+
+    Full listings: ctx guide --skills | ctx guide --commands
+guide.commands-heading:
+  short: 'CLI Commands:'
+guide.command-line:
+  short: '  %-14s %s'
+init.label-entry-templates:
+  short: Entry templates
+init.label-prompt-templates:
+  short: Prompt templates
+init.label-scratchpad:
+  short: Scratchpad
+init.label-project-dirs:
+  short: Project dirs
+init.label-permissions:
+  short: Permissions
+init.label-plugin-enable:
+  short: Plugin enablement
+init.confirm-claude:
+  short: Would you like to append ctx context management instructions?
+init.confirm-prompt:
+  short: Would you like to merge ctx prompt instructions?
+init.ralph-mode:
+  short: ' (ralph mode)'
 events.empty:
   short: No events logged.
 events.human-format:
@@ -57,6 +243,10 @@ import.count-learning:
   short: '%d learning'
 import.count-task:
   short: '%d task'
+journal.consolidate-count:
+  short: '(×%d)'
+journal.project-label:
+  short: ' (%s)'
 journal.moc.browse-by:
   short: '## Browse by'
 journal.moc.file-page-stats:
@@ -76,15 +266,51 @@ journal.moc.topic-stats:
 journal.moc.topics-description:
   short: — sessions grouped by topic
 journal.moc.topics-label:
-  short: '**Topics**: '
+  short: '**Topics**: %s'
 journal.moc.type-label:
-  short: '**Type**: '
+  short: '**Type**: %s'
 journal.moc.type-page-stats:
   short: '**%d sessions** of type *%s*.'
 journal.moc.type-stats:
   short: '**%d types** across **%d sessions**'
 journal.moc.types-description:
   short: — sessions grouped by type
+journal.moc.browse-item:
+  short: '- %s %s'
+journal.moc.heading-topics:
+  short: '# Topics'
+journal.moc.heading-popular:
+  short: '## Popular Topics'
+journal.moc.heading-longtail:
+  short: '## Long-tail Topics'
+journal.moc.heading-files:
+  short: '# Key Files'
+journal.moc.heading-frequent:
+  short: '## Frequently Touched'
+journal.moc.heading-single:
+  short: '## Single Session'
+journal.moc.heading-types:
+  short: '# Session Types'
+journal.moc.heading-month:
+  short: '## %s'
+journal.moc.item-sessions:
+  short: '- %s (%d sessions)'
+journal.moc.item-named:
+  short: '- **%s** — %s'
+journal.moc.item-file-sessions:
+  short: '- %s (%d sessions)'
+journal.moc.item-file-named:
+  short: '- `%s` — %s'
+journal.moc.item-listed:
+  short: '- %s'
+journal.moc.page-title:
+  short: '# %s'
+journal.moc.code-title:
+  short: '# `%s`'
+journal.moc.topics-moc-link:
+  short: Topics MOC
+journal.moc.topic-separator:
+  short: ' · '
 memory.diff-new-format:
   short: |
     +++ %s (source)
@@ -186,6 +412,8 @@ task-snapshot.saved:
   short: ✓ Snapshot saved to %s
 time.ago:
   short: ' ago'
+time.commit:
+  short: commit
 time.day:
   short: day
 time.hour:

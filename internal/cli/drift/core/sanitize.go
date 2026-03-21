@@ -6,7 +6,11 @@
 
 package core
 
-import "github.com/ActiveMemory/ctx/internal/drift"
+import (
+	"github.com/ActiveMemory/ctx/internal/assets/read/desc"
+	"github.com/ActiveMemory/ctx/internal/config/embed/text"
+	"github.com/ActiveMemory/ctx/internal/drift"
+)
 
 // FormatCheckName converts internal check identifiers to human-readable names.
 //
@@ -20,15 +24,15 @@ import "github.com/ActiveMemory/ctx/internal/drift"
 func FormatCheckName(name drift.CheckName) string {
 	switch name {
 	case drift.CheckPathReferences:
-		return "Path references are valid"
+		return desc.TextDesc(text.DescKeyDriftCheckPathRefs)
 	case drift.CheckStaleness:
-		return "No staleness indicators"
+		return desc.TextDesc(text.DescKeyDriftCheckStaleness)
 	case drift.CheckConstitution:
-		return "Constitution rules respected"
+		return desc.TextDesc(text.DescKeyDriftCheckConstitution)
 	case drift.CheckRequiredFiles:
-		return "All required files present"
+		return desc.TextDesc(text.DescKeyDriftCheckRequired)
 	case drift.CheckFileAge:
-		return "No stale files by age"
+		return desc.TextDesc(text.DescKeyDriftCheckFileAge)
 	default:
 		return string(name)
 	}

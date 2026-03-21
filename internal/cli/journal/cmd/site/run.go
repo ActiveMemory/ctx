@@ -11,21 +11,21 @@ import (
 	"os/exec"
 	"path/filepath"
 
-	journal3 "github.com/ActiveMemory/ctx/internal/assets/read/journal"
+	"github.com/spf13/cobra"
+
+	readJournal "github.com/ActiveMemory/ctx/internal/assets/read/journal"
+	"github.com/ActiveMemory/ctx/internal/cli/journal/core"
 	"github.com/ActiveMemory/ctx/internal/config/dir"
 	"github.com/ActiveMemory/ctx/internal/config/file"
 	"github.com/ActiveMemory/ctx/internal/config/fs"
 	"github.com/ActiveMemory/ctx/internal/config/zensical"
-	fs2 "github.com/ActiveMemory/ctx/internal/err/fs"
+	errFs "github.com/ActiveMemory/ctx/internal/err/fs"
 	"github.com/ActiveMemory/ctx/internal/err/journal"
-	ctxerr "github.com/ActiveMemory/ctx/internal/err/site"
-	"github.com/ActiveMemory/ctx/internal/write/err"
-	journal2 "github.com/ActiveMemory/ctx/internal/write/journal"
-	"github.com/spf13/cobra"
-
-	"github.com/ActiveMemory/ctx/internal/cli/journal/core"
+	errSite "github.com/ActiveMemory/ctx/internal/err/site"
 	"github.com/ActiveMemory/ctx/internal/journal/state"
 	"github.com/ActiveMemory/ctx/internal/rc"
+	"github.com/ActiveMemory/ctx/internal/write/err"
+	writeJournal "github.com/ActiveMemory/ctx/internal/write/journal"
 )
 
 // runZensical executes zensical build or serve in the output directory.
@@ -40,7 +40,7 @@ func runZensical(dir, command string) error {
 	// Check if zensical is available
 	_, lookErr := exec.LookPath(zensical.Bin)
 	if lookErr != nil {
-		return ctxerr.ZensicalNotFound()
+		return errSite.ZensicalNotFound()
 	}
 
 	// G204: binary is a constant, command is from the caller
@@ -95,23 +95,23 @@ func runJournalSite(
 	// Create output directory structure
 	docsDir := filepath.Join(output, dir.JournalDocs)
 	if mkErr := os.MkdirAll(docsDir, fs.PermExec); mkErr != nil {
-		return fs2.Mkdir(docsDir, mkErr)
+		return errFs.Mkdir(docsDir, mkErr)
 	}
 
 	// Write the stylesheet for <pre> overflow control
 	stylesDir := filepath.Join(docsDir, zensical.Stylesheets)
 	if mkErr := os.MkdirAll(stylesDir, fs.PermExec); mkErr != nil {
-		return fs2.Mkdir(stylesDir, mkErr)
+		return errFs.Mkdir(stylesDir, mkErr)
 	}
 	cssPath := filepath.Join(stylesDir, zensical.ExtraCSS)
-	cssData, cssReadErr := journal3.JournalExtraCSS()
+	cssData, cssReadErr := readJournal.ExtraCSS()
 	if cssReadErr != nil {
 		return cssReadErr
 	}
 	if writeErr := os.WriteFile(
 		cssPath, cssData, fs.PermFile,
 	); writeErr != nil {
-		return fs2.FileWrite(cssPath, writeErr)
+		return errFs.FileWrite(cssPath, writeErr)
 	}
 
 	// Write README
@@ -120,7 +120,7 @@ func runJournalSite(
 		readmePath,
 		[]byte(core.GenerateSiteReadme(journalDir)), fs.PermFile,
 	); writeErr != nil {
-		return fs2.FileWrite(readmePath, writeErr)
+		return errFs.FileWrite(readmePath, writeErr)
 	}
 
 	// Soft-wrap source journal files in-place, then copy to docs/
@@ -182,7 +182,7 @@ func runJournalSite(
 			}
 			orphanPath := filepath.Join(docsDir, f.Name())
 			if rmErr := os.Remove(orphanPath); rmErr == nil {
-				journal2.InfoOrphanRemoved(cmd, f.Name())
+				writeJournal.InfoOrphanRemoved(cmd, f.Name())
 			}
 		}
 	}
@@ -193,7 +193,7 @@ func runJournalSite(
 	if writeErr := os.WriteFile(
 		indexPath, []byte(indexContent), fs.PermFile,
 	); writeErr != nil {
-		return fs2.FileWrite(indexPath, writeErr)
+		return errFs.FileWrite(indexPath, writeErr)
 	}
 
 	// Generate topic pages
@@ -232,7 +232,9 @@ func runJournalSite(
 	// Generate key files pages
 	var keyFileEntries []core.JournalEntry
 	for _, e := range entries {
-		if e.Suggestive || core.ContinuesMultipart(e.Filename) || len(e.KeyFiles) == 0 {
+		if e.Suggestive || core.ContinuesMultipart(
+			e.Filename,
+		) || len(e.KeyFiles) == 0 {
 			continue
 		}
 		keyFileEntries = append(keyFileEntries, e)
@@ -304,18 +306,18 @@ func runJournalSite(
 		tomlPath,
 		[]byte(tomlContent), fs.PermFile,
 	); writeErr != nil {
-		return fs2.FileWrite(tomlPath, writeErr)
+		return errFs.FileWrite(tomlPath, writeErr)
 	}
 
 	if serve {
-		journal2.InfoSiteStarting(cmd)
-		return runZensical(output, "serve")
+		writeJournal.InfoSiteStarting(cmd)
+		return runZensical(output, zensical.CmdServe)
 	} else if build {
-		journal2.InfoSiteBuilding(cmd)
-		return runZensical(output, "build")
+		writeJournal.InfoSiteBuilding(cmd)
+		return runZensical(output, zensical.CmdBuild)
 	}
 
-	journal2.InfoSiteGenerated(cmd, len(entries), output, zensical.Bin)
+	writeJournal.InfoSiteGenerated(cmd, len(entries), output, zensical.Bin)
 
 	return nil
 }

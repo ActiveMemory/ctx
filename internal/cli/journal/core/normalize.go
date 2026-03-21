@@ -118,7 +118,7 @@ func NormalizeContent(content string, fencesVerified bool) string {
 			}
 		}
 
-		// Insert blank line before list items when previous line is non-empty.
+		// Insert a blank line before list items when previous line is non-empty.
 		// Python-Markdown requires a blank line before the first list item.
 		if regex.ListStart.MatchString(line) &&
 			len(out) > 0 && strings.TrimSpace(out[len(out)-1]) != "" {
@@ -168,108 +168,42 @@ func NormalizeContent(content string, fencesVerified bool) string {
 // another session's file) because the real next turn (### 42.) is always
 // the smallest number > N.
 func WrapToolOutputs(content string) string {
-	lines := strings.Split(content, token.NewlineLF)
-	mask := PreBlockMask(lines)
-	turnSeq := CollectTurnNumbers(lines)
-	var out []string
-	i := 0
-
-	for i < len(lines) {
-		// Skip lines inside <pre> blocks — they are not real turn headers.
-		if mask[i] {
-			out = append(out, lines[i])
-			i++
-			continue
-		}
-		m := regex.TurnHeader.FindStringSubmatch(
-			strings.TrimSpace(lines[i]),
-		)
-		if m == nil || m[2] != desc.TextDesc(text.DescKeyLabelToolOutput) {
-			out = append(out, lines[i])
-			i++
-			continue
-		}
-
-		// Tool Output header — emit it, then collect body
-		turnNum, _ := strconv.Atoi(m[1])
-		turnTime := m[3]
-		out = append(out, lines[i])
-		i++
-
-		// The boundary target is the minimum turn number > turnNum.
-		// If the same number appears multiple times (e.g., an embedded
-		// ### 42. inside <pre> AND the real ### 42. after </details>),
-		// use the LAST occurrence — the real turn is always positionally
-		// after any embedded duplicates.
-		expectedNext := NextInSequence(turnSeq, turnNum)
-
-		// Scan ahead to find the last occurrence of expectedNext,
-		// skipping lines inside <pre> blocks (embedded content).
-		boundary := len(lines) // default: EOF
-		for j := i; j < len(lines); j++ {
-			if mask[j] {
-				continue
+	return ProcessTurns(content, desc.TextDesc(text.DescKeyLabelToolOutput),
+		func(out, body []string, atEOF bool) []string {
+			// If we hit EOF, split off any trailing multipart navigation
+			// footer (--- + **Part N of M**) so it's not swallowed.
+			var footer []string
+			if atEOF {
+				body, footer = SplitTrailingFooter(body)
 			}
-			nm := regex.TurnHeader.FindStringSubmatch(
-				strings.TrimSpace(lines[j]),
-			)
-			if nm != nil {
-				nextNum, _ := strconv.Atoi(nm[1])
-				nextTime := nm[3]
-				if nextNum == expectedNext && nextTime >= turnTime {
-					boundary = j
-				}
+
+			// Extract raw content — strip existing <details>/<pre> wrappers
+			// and unescape HTML entities from the export pipeline.
+			raw := StripPreWrapper(body)
+
+			// Drop empty or boilerplate tool outputs entirely (header + body).
+			// The header was already appended to out — remove it.
+			if IsBoilerplateToolOutput(raw) {
+				return out[:len(out)-1]
 			}
-		}
 
-		body := lines[i:boundary]
-		i = boundary
+			trimmed := TrimBlankLines(raw)
+			if len(trimmed) == 0 {
+				return out[:len(out)-1]
+			}
 
-		// If we hit EOF, split off any trailing multipart navigation
-		// footer (--- + **Part N of M**) so it's not swallowed.
-		var footer []string
-		if i >= len(lines) {
-			body, footer = SplitTrailingFooter(body)
-		}
+			// HTML-escape and wrap in <pre><code>...</code></pre>.
+			out = append(out, "", "<pre><code>")
+			for _, line := range trimmed {
+				out = append(out, html.EscapeString(line))
+			}
+			out = append(out, "</code></pre>", "")
 
-		// Extract raw content — strip existing <details>/<pre> wrappers
-		// and unescape HTML entities from the export pipeline.
-		raw := StripPreWrapper(body)
-
-		// Drop empty or boilerplate tool outputs entirely (header + body).
-		// The header was already appended to out — remove it.
-		if IsBoilerplateToolOutput(raw) {
-			out = out[:len(out)-1]
-			continue
-		}
-
-		// Trim leading/trailing blank lines.
-		start, end := 0, len(raw)-1
-		for start <= end && strings.TrimSpace(raw[start]) == "" {
-			start++
-		}
-		for end >= start && strings.TrimSpace(raw[end]) == "" {
-			end--
-		}
-
-		trimmed := raw[start : end+1]
-
-		// HTML-escape and wrap in <pre><code>...</code></pre>.
-		out = append(out, "")
-		out = append(out, "<pre><code>")
-		for _, line := range trimmed {
-			out = append(out, html.EscapeString(line))
-		}
-		out = append(out, "</code></pre>")
-		out = append(out, "")
-
-		// Emit footer after the block if present.
-		if len(footer) > 0 {
-			out = append(out, footer...)
-		}
-	}
-
-	return strings.Join(out, token.NewlineLF)
+			if len(footer) > 0 {
+				out = append(out, footer...)
+			}
+			return out
+		})
 }
 
 // WrapUserTurns finds User turn bodies and wraps them in <pre><code>
@@ -292,86 +226,22 @@ func WrapToolOutputs(content string) string {
 // Boundary detection reuses the same pre-scan + last-match-wins approach
 // as WrapToolOutputs.
 func WrapUserTurns(content string) string {
-	lines := strings.Split(content, token.NewlineLF)
-	mask := PreBlockMask(lines)
-	turnSeq := CollectTurnNumbers(lines)
-	var out []string
-	i := 0
-
-	for i < len(lines) {
-		// Skip lines inside <pre> blocks — they are not real turn headers.
-		if mask[i] {
-			out = append(out, lines[i])
-			i++
-			continue
-		}
-		m := regex.TurnHeader.FindStringSubmatch(
-			strings.TrimSpace(lines[i]),
-		)
-		if m == nil || m[2] != desc.TextDesc(text.DescKeyLabelRoleUser) {
-			out = append(out, lines[i])
-			i++
-			continue
-		}
-
-		// User turn header — emit it, then collect body
-		turnNum, _ := strconv.Atoi(m[1])
-		turnTime := m[3]
-		out = append(out, lines[i])
-		i++
-
-		expectedNext := NextInSequence(turnSeq, turnNum)
-
-		// Scan ahead to find the last occurrence of expectedNext,
-		// skipping lines inside <pre> blocks (embedded content).
-		boundary := len(lines) // default: EOF
-		for j := i; j < len(lines); j++ {
-			if mask[j] {
-				continue
+	return ProcessTurns(content, desc.TextDesc(text.DescKeyLabelRoleUser),
+		func(out, body []string, _ bool) []string {
+			trimmed := TrimBlankLines(body)
+			if len(trimmed) == 0 {
+				out = append(out, body...)
+				return out
 			}
-			nm := regex.TurnHeader.FindStringSubmatch(
-				strings.TrimSpace(lines[j]),
-			)
-			if nm != nil {
-				nextNum, _ := strconv.Atoi(nm[1])
-				nextTime := nm[3]
-				if nextNum == expectedNext && nextTime >= turnTime {
-					boundary = j
-				}
+
+			// HTML-escape and wrap in <pre><code>...</code></pre>.
+			out = append(out, "", "<pre><code>")
+			for _, line := range trimmed {
+				out = append(out, html.EscapeString(line))
 			}
-		}
-
-		body := lines[i:boundary]
-		i = boundary
-
-		// Trim leading/trailing blank lines from user body.
-		start, end := 0, len(body)-1
-		for start <= end && strings.TrimSpace(body[start]) == "" {
-			start++
-		}
-		for end >= start && strings.TrimSpace(body[end]) == "" {
-			end--
-		}
-
-		if start > end {
-			// Empty user turn — emit blank lines as-is
-			out = append(out, body...)
-			continue
-		}
-
-		trimmed := body[start : end+1]
-
-		// HTML-escape the content and wrap in <pre><code>...</code></pre>.
-		out = append(out, "")
-		out = append(out, "<pre><code>")
-		for _, line := range trimmed {
-			out = append(out, html.EscapeString(line))
-		}
-		out = append(out, "</code></pre>")
-		out = append(out, "")
-	}
-
-	return strings.Join(out, token.NewlineLF)
+			out = append(out, "</code></pre>", "")
+			return out
+		})
 }
 
 // StripPreWrapper removes <details>, <summary>, <pre>, </pre>, </details>
@@ -441,12 +311,12 @@ func IsBoilerplateToolOutput(raw []string) bool {
 	joined := strings.Join(nonBlank, " ")
 
 	switch {
-	case joined == "No matches found":
+	case joined == journal.BoilerplateNoMatch:
 		return true
-	case strings.HasPrefix(joined, "The file ") &&
-		strings.HasSuffix(joined, "has been updated successfully."):
+	case strings.HasPrefix(joined, journal.BoilerplateFilePrefix) &&
+		strings.HasSuffix(joined, journal.BoilerplateFileSuffix):
 		return true
-	case strings.Contains(joined, "denied this tool"):
+	case strings.Contains(joined, journal.BoilerplateDenied):
 		return true
 	}
 
@@ -535,7 +405,7 @@ func SplitTrailingFooter(body []string) ([]string, []string) {
 	// Verify a "**Part " line exists after the separator.
 	hasPartLabel := false
 	for j := sepIdx + 1; j < len(body); j++ {
-		if strings.HasPrefix(strings.TrimSpace(body[j]), "**Part ") {
+		if strings.HasPrefix(strings.TrimSpace(body[j]), journal.PartPrefix) {
 			hasPartLabel = true
 			break
 		}

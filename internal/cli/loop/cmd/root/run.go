@@ -9,13 +9,15 @@ package root
 import (
 	"os"
 
+	"github.com/spf13/cobra"
+
 	"github.com/ActiveMemory/ctx/internal/assets/read/desc"
 	"github.com/ActiveMemory/ctx/internal/config/embed/text"
 	"github.com/ActiveMemory/ctx/internal/config/fs"
+	loopCfg "github.com/ActiveMemory/ctx/internal/config/loop"
 	"github.com/ActiveMemory/ctx/internal/err/config"
-	ctxerr "github.com/ActiveMemory/ctx/internal/err/fs"
+	ctxErr "github.com/ActiveMemory/ctx/internal/err/fs"
 	"github.com/ActiveMemory/ctx/internal/write/loop"
-	"github.com/spf13/cobra"
 )
 
 // Run executes the loop command logic.
@@ -39,8 +41,7 @@ func Run(
 	maxIterations int,
 	completionMsg, outputFile string,
 ) error {
-	validTools := map[string]bool{"claude": true, "aider": true, "generic": true}
-	if !validTools[tool] {
+	if !loopCfg.ValidTools[tool] {
 		return config.InvalidTool(tool)
 	}
 
@@ -49,7 +50,7 @@ func Run(
 	if writeErr := os.WriteFile(
 		outputFile, []byte(script), fs.PermExec,
 	); writeErr != nil {
-		return ctxerr.FileWrite(outputFile, writeErr)
+		return ctxErr.FileWrite(outputFile, writeErr)
 	}
 
 	loop.InfoGenerated(

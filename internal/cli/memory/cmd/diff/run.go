@@ -9,12 +9,12 @@ package diff
 import (
 	"path/filepath"
 
-	ctxerr "github.com/ActiveMemory/ctx/internal/err/memory"
-	"github.com/ActiveMemory/ctx/internal/write/memory"
 	"github.com/spf13/cobra"
 
+	ctxErr "github.com/ActiveMemory/ctx/internal/err/memory"
 	mem "github.com/ActiveMemory/ctx/internal/memory"
 	"github.com/ActiveMemory/ctx/internal/rc"
+	"github.com/ActiveMemory/ctx/internal/write/memory"
 )
 
 // Run computes and prints a line-based diff between the mirror and
@@ -31,12 +31,12 @@ func Run(cmd *cobra.Command) error {
 
 	sourcePath, discoverErr := mem.DiscoverMemoryPath(projectRoot)
 	if discoverErr != nil {
-		return ctxerr.DiscoverFailed(discoverErr)
+		return ctxErr.DiscoverFailed(discoverErr)
 	}
 
 	diff, diffErr := mem.Diff(contextDir, sourcePath)
 	if diffErr != nil {
-		return ctxerr.DiffFailed(diffErr)
+		return ctxErr.DiffFailed(diffErr)
 	}
 
 	if diff == "" {

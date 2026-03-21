@@ -9,10 +9,10 @@ package dep
 import (
 	"github.com/spf13/cobra"
 
-	deproot "github.com/ActiveMemory/ctx/internal/cli/dep/cmd/root"
+	depRoot "github.com/ActiveMemory/ctx/internal/cli/dep/cmd/root"
 )
 
 // Cmd returns the dep command.
 func Cmd() *cobra.Command {
-	return deproot.Cmd()
+	return depRoot.Cmd()
 }

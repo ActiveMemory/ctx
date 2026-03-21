@@ -17,28 +17,28 @@ import (
 )
 
 func TestSkills(t *testing.T) {
-	skills, err := Skills()
+	skills, err := SkillList()
 	if err != nil {
-		t.Fatalf("Skills() unexpected error: %v", err)
+		t.Fatalf("SkillList() unexpected error: %v", err)
 	}
 
 	if len(skills) == 0 {
-		t.Error("Skills() returned empty list")
+		t.Error("SkillList() returned empty list")
 	}
 
 	// Check that all entries are skill directory names (no extension)
 	for _, skill := range skills {
 		if strings.Contains(skill, ".") {
-			t.Errorf("Skills() returned name with extension: %s", skill)
+			t.Errorf("SkillList() returned name with extension: %s", skill)
 		}
 	}
 }
 
 func TestSkillContent(t *testing.T) {
 	// First get the list of skills to test with
-	skills, err := Skills()
+	skills, err := SkillList()
 	if err != nil {
-		t.Fatalf("Skills() failed: %v", err)
+		t.Fatalf("SkillList() failed: %v", err)
 	}
 
 	if len(skills) == 0 {
@@ -68,9 +68,9 @@ func TestSkillContent(t *testing.T) {
 }
 
 func TestSkillContentAllSkills(t *testing.T) {
-	skills, err := Skills()
+	skills, err := SkillList()
 	if err != nil {
-		t.Fatalf("Skills() failed: %v", err)
+		t.Fatalf("SkillList() failed: %v", err)
 	}
 	for _, name := range skills {
 		content, err := SkillContent(name)
@@ -131,7 +131,7 @@ func TestScriptErrorPaths(t *testing.T) {
 	defer func() { assets.FS = orig }()
 	assets.FS = embed.FS{} // empty FS causes all reads to fail
 
-	if _, err := Skills(); err == nil {
-		t.Error("Skills() expected error with empty FS")
+	if _, err := SkillList(); err == nil {
+		t.Error("SkillList() expected error with empty FS")
 	}
 }

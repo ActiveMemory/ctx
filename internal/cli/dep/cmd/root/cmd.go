@@ -7,10 +7,13 @@
 package root
 
 import (
+	"github.com/spf13/cobra"
+
 	"github.com/ActiveMemory/ctx/internal/assets/read/desc"
 	"github.com/ActiveMemory/ctx/internal/config/embed/cmd"
 	"github.com/ActiveMemory/ctx/internal/config/embed/flag"
-	"github.com/spf13/cobra"
+	cFlag "github.com/ActiveMemory/ctx/internal/config/flag"
+	"github.com/ActiveMemory/ctx/internal/config/fmt"
 )
 
 // Cmd returns the dep command.
@@ -30,8 +33,8 @@ func Cmd() *cobra.Command {
 	)
 
 	short, long := desc.CommandDesc(cmd.DescKeyDep)
-	cmd := &cobra.Command{
-		Use:   cmd.DescKeyDep,
+	c := &cobra.Command{
+		Use:   cmd.UseDep,
 		Short: short,
 		Long:  long,
 		RunE: func(cmd *cobra.Command, _ []string) error {
@@ -39,9 +42,17 @@ func Cmd() *cobra.Command {
 		},
 	}
 
-	cmd.Flags().StringVar(&format, "format", "mermaid", desc.FlagDesc(flag.DescKeyDepsFormat))
-	cmd.Flags().BoolVar(&external, "external", false, desc.FlagDesc(flag.DescKeyDepsExternal))
-	cmd.Flags().StringVar(&projType, "type", "", desc.FlagDesc(flag.DescKeyDepsType))
+	c.Flags().StringVar(
+		&format,
+		cFlag.Format, fmt.FormatMermaid, desc.FlagDesc(flag.DescKeyDepsFormat),
+	)
+	c.Flags().BoolVar(
+		&external,
+		cFlag.External, false, desc.FlagDesc(flag.DescKeyDepsExternal),
+	)
+	c.Flags().StringVar(
+		&projType, cFlag.Type, "", desc.FlagDesc(flag.DescKeyDepsType),
+	)
 
-	return cmd
+	return c
 }

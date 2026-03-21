@@ -13,7 +13,7 @@ import (
 	"github.com/ActiveMemory/ctx/internal/config/asset"
 )
 
-// ProjectFile reads a project-root file by name from the embedded filesystem.
+// File reads a project-root file by name from the embedded filesystem.
 //
 // These files are deployed to the project root (not .context/) by dedicated
 // handlers during initialization.
@@ -24,11 +24,11 @@ import (
 // Returns:
 //   - []byte: File content
 //   - error: Non-nil if the file is not found or read fails
-func ProjectFile(name string) ([]byte, error) {
+func File(name string) ([]byte, error) {
 	return assets.FS.ReadFile(path.Join(asset.DirProject, name))
 }
 
-// ProjectReadme reads a project directory README template by directory name.
+// Readme reads a project directory README template by directory name.
 //
 // Templates are stored as project/<dir>-README.md in the embedded filesystem.
 //
@@ -38,7 +38,7 @@ func ProjectFile(name string) ([]byte, error) {
 // Returns:
 //   - []byte: README.md content for the directory
 //   - error: Non-nil if the file is not found or read fails
-func ProjectReadme(dir string) ([]byte, error) {
+func Readme(dir string) ([]byte, error) {
 	return assets.FS.ReadFile(
 		path.Join(asset.DirProject, path.Base(dir)+asset.SuffixReadme),
 	)

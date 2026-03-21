@@ -38,11 +38,11 @@ func Evaluate(snap Snapshot) []ResourceAlert {
 			pct, FormatGiB(snap.Memory.UsedBytes), FormatGiB(snap.Memory.TotalBytes))
 		if pct >= stats.ThresholdMemoryDangerPct {
 			alerts = append(alerts, ResourceAlert{
-				Severity: SeverityDanger, Resource: "memory", Message: msg,
+				Severity: SeverityDanger, Resource: ResourceMemory, Message: msg,
 			})
 		} else if pct >= stats.ThresholdMemoryWarnPct {
 			alerts = append(alerts, ResourceAlert{
-				Severity: SeverityWarning, Resource: "memory", Message: msg,
+				Severity: SeverityWarning, Resource: ResourceMemory, Message: msg,
 			})
 		}
 	}
@@ -54,11 +54,11 @@ func Evaluate(snap Snapshot) []ResourceAlert {
 			pct, FormatGiB(snap.Memory.SwapUsedBytes), FormatGiB(snap.Memory.SwapTotalBytes))
 		if pct >= stats.ThresholdSwapDangerPct {
 			alerts = append(alerts, ResourceAlert{
-				Severity: SeverityDanger, Resource: "swap", Message: msg,
+				Severity: SeverityDanger, Resource: ResourceSwap, Message: msg,
 			})
 		} else if pct >= stats.ThresholdSwapWarnPct {
 			alerts = append(alerts, ResourceAlert{
-				Severity: SeverityWarning, Resource: "swap", Message: msg,
+				Severity: SeverityWarning, Resource: ResourceSwap, Message: msg,
 			})
 		}
 	}
@@ -70,11 +70,11 @@ func Evaluate(snap Snapshot) []ResourceAlert {
 			pct, FormatGiB(snap.Disk.UsedBytes), FormatGiB(snap.Disk.TotalBytes))
 		if pct >= stats.ThresholdDiskDangerPct {
 			alerts = append(alerts, ResourceAlert{
-				Severity: SeverityDanger, Resource: "disk", Message: msg,
+				Severity: SeverityDanger, Resource: ResourceDisk, Message: msg,
 			})
 		} else if pct >= stats.ThresholdDiskWarnPct {
 			alerts = append(alerts, ResourceAlert{
-				Severity: SeverityWarning, Resource: "disk", Message: msg,
+				Severity: SeverityWarning, Resource: ResourceDisk, Message: msg,
 			})
 		}
 	}
@@ -85,11 +85,11 @@ func Evaluate(snap Snapshot) []ResourceAlert {
 		msg := fmt.Sprintf(desc.TextDesc(text.DescKeyResourcesAlertLoad), ratio)
 		if ratio >= stats.ThresholdLoadDangerRatio {
 			alerts = append(alerts, ResourceAlert{
-				Severity: SeverityDanger, Resource: "load", Message: msg,
+				Severity: SeverityDanger, Resource: ResourceLoad, Message: msg,
 			})
 		} else if ratio >= stats.ThresholdLoadWarnRatio {
 			alerts = append(alerts, ResourceAlert{
-				Severity: SeverityWarning, Resource: "load", Message: msg,
+				Severity: SeverityWarning, Resource: ResourceLoad, Message: msg,
 			})
 		}
 	}

@@ -7,88 +7,67 @@
 package core
 
 import (
-	"bufio"
-	"fmt"
-	"os"
-	"strings"
-	"time"
-
-	claude2 "github.com/ActiveMemory/ctx/internal/assets/read/claude"
-	"github.com/ActiveMemory/ctx/internal/config/claude"
-	"github.com/ActiveMemory/ctx/internal/config/cli"
-	"github.com/ActiveMemory/ctx/internal/config/fs"
-	"github.com/ActiveMemory/ctx/internal/config/marker"
-	"github.com/ActiveMemory/ctx/internal/config/token"
-	"github.com/ActiveMemory/ctx/internal/err/backup"
-	fs2 "github.com/ActiveMemory/ctx/internal/err/fs"
-	ctxerr "github.com/ActiveMemory/ctx/internal/err/initialize"
-	"github.com/ActiveMemory/ctx/internal/write/initialize"
 	"github.com/spf13/cobra"
+
+	readClaude "github.com/ActiveMemory/ctx/internal/assets/read/claude"
+	"github.com/ActiveMemory/ctx/internal/assets/read/desc"
+	"github.com/ActiveMemory/ctx/internal/config/claude"
+	"github.com/ActiveMemory/ctx/internal/config/embed/text"
+	"github.com/ActiveMemory/ctx/internal/config/marker"
+	ctxErr "github.com/ActiveMemory/ctx/internal/err/initialize"
+	"github.com/ActiveMemory/ctx/internal/write/initialize"
 )
 
 // HandleClaudeMd creates or merges CLAUDE.md with ctx content.
 //
 // Parameters:
 //   - cmd: Cobra command for output
-//   - force: If true, overwrite existing ctx section
+//   - force: If true, overwrite the existing ctx section
 //   - autoMerge: If true, skip interactive confirmation
 //
 // Returns:
 //   - error: Non-nil if file operations fail
 func HandleClaudeMd(cmd *cobra.Command, force, autoMerge bool) error {
-	templateContent, err := claude2.Md()
+	templateContent, err := readClaude.Md()
 	if err != nil {
-		return ctxerr.ReadTemplate("CLAUDE.md", err)
+		return ctxErr.ReadTemplate(claude.Md, err)
 	}
-	existingContent, err := os.ReadFile(claude.Md)
-	fileExists := err == nil
-	if !fileExists {
-		if err := os.WriteFile(claude.Md, templateContent, fs.PermFile); err != nil {
-			return fs2.FileWrite(claude.Md, err)
-		}
+
+	created, mergeErr := CreateOrMerge(cmd, MergeParams{
+		Filename:        claude.Md,
+		MarkerStart:     marker.CtxMarkerStart,
+		TemplateContent: templateContent,
+		Force:           force,
+		AutoMerge:       autoMerge,
+		ConfirmPrompt:   desc.TextDesc(text.DescKeyInitConfirmClaude),
+		UpdateFn:        UpdateCtxSection,
+	})
+
+	if mergeErr != nil {
+		return mergeErr
+	}
+
+	if created {
 		initialize.Created(cmd, claude.Md)
-		return nil
 	}
-	existingStr := string(existingContent)
-	hasCtxMarkers := strings.Contains(existingStr, marker.CtxMarkerStart)
-	if hasCtxMarkers {
-		if !force {
-			initialize.CtxContentExists(cmd, claude.Md)
-			return nil
-		}
-		return UpdateCtxSection(cmd, existingStr, templateContent)
-	}
-	if !autoMerge {
-		initialize.FileExistsNoCtx(cmd, claude.Md)
-		cmd.Println("Would you like to append ctx context management instructions?")
-		cmd.Print("[y/N] ")
-		reader := bufio.NewReader(os.Stdin)
-		response, err := reader.ReadString('\n')
-		if err != nil {
-			return fs2.ReadInput(err)
-		}
-		response = strings.TrimSpace(strings.ToLower(response))
-		if response != cli.ConfirmShort && response != cli.ConfirmLong {
-			initialize.SkippedPlain(cmd, claude.Md)
-			return nil
-		}
-	}
-	timestamp := time.Now().Unix()
-	backupName := fmt.Sprintf("%s.%d.bak", claude.Md, timestamp)
-	if err := os.WriteFile(backupName, existingContent, fs.PermFile); err != nil {
-		return backup.Create(backupName, err)
-	}
-	initialize.Backup(cmd, backupName)
-	insertPos := FindInsertionPoint(existingStr)
-	var mergedContent string
-	if insertPos == 0 {
-		mergedContent = string(templateContent) + token.NewlineLF + existingStr
-	} else {
-		mergedContent = existingStr[:insertPos] + token.NewlineLF + string(templateContent) + token.NewlineLF + existingStr[insertPos:]
-	}
-	if err := os.WriteFile(claude.Md, []byte(mergedContent), fs.PermFile); err != nil {
-		return fs2.WriteMerged(claude.Md, err)
-	}
-	initialize.Merged(cmd, claude.Md)
+
 	return nil
+}
+
+// UpdateCtxSection replaces the existing ctx section between markers with
+// new content.
+//
+// Parameters:
+//   - cmd: Cobra command for output
+//   - existing: Existing file content
+//   - newTemplate: New template content
+//
+// Returns:
+//   - error: Non-nil if markers are missing or file operations fail
+func UpdateCtxSection(cmd *cobra.Command, existing string, newTemplate []byte) error {
+	return UpdateMarkedSection(
+		cmd, claude.Md, existing, newTemplate,
+		marker.CtxMarkerStart, marker.CtxMarkerEnd,
+		initialize.UpdatedCtxSection,
+	)
 }

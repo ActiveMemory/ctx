@@ -11,3 +11,9 @@ const (
 	DescKeyWriteConfigProfileDev  = "write.config-profile-dev"
 	DescKeyWriteConfigProfileNone = "write.config-profile-none"
 )
+
+const (
+	DescKeyConfigAlreadyOn = "config.already-on"
+	DescKeyConfigCreated   = "config.created"
+	DescKeyConfigSwitched  = "config.switched"
+)

@@ -9,12 +9,12 @@ package root
 import (
 	"strings"
 
-	entry2 "github.com/ActiveMemory/ctx/internal/config/entry"
-	"github.com/ActiveMemory/ctx/internal/write/add"
 	"github.com/spf13/cobra"
 
 	"github.com/ActiveMemory/ctx/internal/cli/add/core"
+	cfgEntry "github.com/ActiveMemory/ctx/internal/config/entry"
 	"github.com/ActiveMemory/ctx/internal/entry"
+	"github.com/ActiveMemory/ctx/internal/write/add"
 )
 
 // Config is an alias for core.Config.
@@ -53,11 +53,13 @@ func Run(cmd *cobra.Command, args []string, flags Config) error {
 		Application: flags.Application,
 	}
 
-	if validateErr := entry.Validate(params, core.ExamplesForType); validateErr != nil {
+	if validateErr := entry.Validate(
+		params, core.ExamplesForType,
+	); validateErr != nil {
 		return validateErr
 	}
 
-	fName, ok := entry2.ToCtxFile[fType]
+	fName, ok := cfgEntry.ToCtxFile[fType]
 	if !ok {
 		return add.ErrUnknownType(fType)
 	}

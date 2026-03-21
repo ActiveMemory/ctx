@@ -16,6 +16,7 @@ import (
 	"github.com/spf13/cobra"
 
 	"github.com/ActiveMemory/ctx/internal/cli/config/core"
+	"github.com/ActiveMemory/ctx/internal/config/file"
 	"github.com/ActiveMemory/ctx/internal/rc"
 )
 
@@ -29,12 +30,12 @@ func setupProfiles(t *testing.T) string {
 	root := t.TempDir()
 
 	if writeErr := os.WriteFile(
-		filepath.Join(root, core.FileCtxRCDev), []byte(devContent), 0o600,
+		filepath.Join(root, file.CtxRCDev), []byte(devContent), 0o600,
 	); writeErr != nil {
 		t.Fatal(writeErr)
 	}
 	if writeErr := os.WriteFile(
-		filepath.Join(root, core.FileCtxRCBase), []byte(baseContent), 0o600,
+		filepath.Join(root, file.CtxRCBase), []byte(baseContent), 0o600,
 	); writeErr != nil {
 		t.Fatal(writeErr)
 	}
@@ -64,7 +65,7 @@ func cmdOutput(cmd *cobra.Command) string {
 func TestSwitch_DevToBase(t *testing.T) {
 	root := setupProfiles(t)
 	if writeErr := os.WriteFile(
-		filepath.Join(root, core.FileCtxRC), []byte(devContent), 0o600,
+		filepath.Join(root, file.CtxRC), []byte(devContent), 0o600,
 	); writeErr != nil {
 		t.Fatal(writeErr)
 	}
@@ -80,7 +81,7 @@ func TestSwitch_DevToBase(t *testing.T) {
 	}
 
 	rc.Reset()
-	if got := core.DetectProfile(); got != core.ProfileBase {
+	if got := core.DetectProfile(); got != file.ProfileBase {
 		t.Errorf("profile should be base after switch, got %q", got)
 	}
 }
@@ -88,7 +89,7 @@ func TestSwitch_DevToBase(t *testing.T) {
 func TestSwitch_BaseToDev(t *testing.T) {
 	root := setupProfiles(t)
 	if writeErr := os.WriteFile(
-		filepath.Join(root, core.FileCtxRC), []byte(baseContent), 0o600,
+		filepath.Join(root, file.CtxRC), []byte(baseContent), 0o600,
 	); writeErr != nil {
 		t.Fatal(writeErr)
 	}
@@ -104,7 +105,7 @@ func TestSwitch_BaseToDev(t *testing.T) {
 	}
 
 	rc.Reset()
-	if got := core.DetectProfile(); got != core.ProfileDev {
+	if got := core.DetectProfile(); got != file.ProfileDev {
 		t.Errorf("profile should be dev after switch, got %q", got)
 	}
 }
@@ -112,7 +113,7 @@ func TestSwitch_BaseToDev(t *testing.T) {
 func TestSwitch_AlreadyOnProfile(t *testing.T) {
 	root := setupProfiles(t)
 	if writeErr := os.WriteFile(
-		filepath.Join(root, core.FileCtxRC), []byte(devContent), 0o600,
+		filepath.Join(root, file.CtxRC), []byte(devContent), 0o600,
 	); writeErr != nil {
 		t.Fatal(writeErr)
 	}
@@ -131,7 +132,7 @@ func TestSwitch_AlreadyOnProfile(t *testing.T) {
 func TestSwitch_ProdAlias(t *testing.T) {
 	root := setupProfiles(t)
 	if writeErr := os.WriteFile(
-		filepath.Join(root, core.FileCtxRC), []byte(devContent), 0o600,
+		filepath.Join(root, file.CtxRC), []byte(devContent), 0o600,
 	); writeErr != nil {
 		t.Fatal(writeErr)
 	}
@@ -150,7 +151,7 @@ func TestSwitch_ProdAlias(t *testing.T) {
 func TestSwitch_Toggle_DevToBase(t *testing.T) {
 	root := setupProfiles(t)
 	if writeErr := os.WriteFile(
-		filepath.Join(root, core.FileCtxRC), []byte(devContent), 0o600,
+		filepath.Join(root, file.CtxRC), []byte(devContent), 0o600,
 	); writeErr != nil {
 		t.Fatal(writeErr)
 	}
@@ -161,7 +162,7 @@ func TestSwitch_Toggle_DevToBase(t *testing.T) {
 	}
 
 	rc.Reset()
-	if got := core.DetectProfile(); got != core.ProfileBase {
+	if got := core.DetectProfile(); got != file.ProfileBase {
 		t.Errorf("toggle from dev should go to base, got %q", got)
 	}
 }
@@ -169,7 +170,7 @@ func TestSwitch_Toggle_DevToBase(t *testing.T) {
 func TestSwitch_Toggle_BaseToDev(t *testing.T) {
 	root := setupProfiles(t)
 	if writeErr := os.WriteFile(
-		filepath.Join(root, core.FileCtxRC), []byte(baseContent), 0o600,
+		filepath.Join(root, file.CtxRC), []byte(baseContent), 0o600,
 	); writeErr != nil {
 		t.Fatal(writeErr)
 	}
@@ -180,7 +181,7 @@ func TestSwitch_Toggle_BaseToDev(t *testing.T) {
 	}
 
 	rc.Reset()
-	if got := core.DetectProfile(); got != core.ProfileDev {
+	if got := core.DetectProfile(); got != file.ProfileDev {
 		t.Errorf("toggle from base should go to dev, got %q", got)
 	}
 }
@@ -194,7 +195,7 @@ func TestSwitch_Toggle_MissingCtxrc(t *testing.T) {
 	}
 
 	rc.Reset()
-	if got := core.DetectProfile(); got != core.ProfileDev {
+	if got := core.DetectProfile(); got != file.ProfileDev {
 		t.Errorf("toggle from missing should go to dev, got %q", got)
 	}
 }

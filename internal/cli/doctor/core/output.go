@@ -13,6 +13,7 @@ import (
 	"github.com/ActiveMemory/ctx/internal/assets/read/desc"
 	"github.com/ActiveMemory/ctx/internal/config/doctor"
 	"github.com/ActiveMemory/ctx/internal/config/embed/text"
+	"github.com/ActiveMemory/ctx/internal/config/stats"
 	"github.com/spf13/cobra"
 )
 
@@ -69,34 +70,19 @@ func OutputHuman(cmd *cobra.Command, report *Report) error {
 		}
 		cmd.Println(cat)
 		for _, r := range results {
-			icon := statusIcon(r.Status)
-			cmd.Println(fmt.Sprintf(desc.TextDesc(text.DescKeyDoctorOutputResultLine), icon, r.Message))
+			icon := stats.StatusIcon(r.Status)
+			cmd.Println(fmt.Sprintf(
+				desc.TextDesc(text.DescKeyDoctorOutputResultLine), icon, r.Message),
+			)
 		}
 		cmd.Println()
 	}
 
-	cmd.Println(fmt.Sprintf(desc.TextDesc(text.DescKeyDoctorOutputSummary), report.Warnings, report.Errors))
+	cmd.Println(
+		fmt.Sprintf(
+			desc.TextDesc(text.DescKeyDoctorOutputSummary),
+			report.Warnings, report.Errors,
+		),
+	)
 	return nil
-}
-
-// statusIcon returns a unicode icon for the given status string.
-//
-// Parameters:
-//   - status: One of StatusOK, StatusWarning, StatusError, or StatusInfo
-//
-// Returns:
-//   - string: A single unicode character representing the status
-func statusIcon(status string) string {
-	switch status {
-	case StatusOK:
-		return "✓"
-	case StatusWarning:
-		return "⚠"
-	case StatusError:
-		return "✗"
-	case StatusInfo:
-		return "○"
-	default:
-		return "?"
-	}
 }

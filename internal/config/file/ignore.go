@@ -12,6 +12,12 @@ import (
 	"github.com/ActiveMemory/ctx/internal/config/dir"
 )
 
+// FileGitignore is the .gitignore filename.
+const FileGitignore = ".gitignore"
+
+// GitignoreHeader is the section comment prepended to ctx-managed entries.
+const GitignoreHeader = "# ctx managed entries"
+
 // Gitignore lists the recommended .gitignore entries added by ctx init.
 var Gitignore = []string{
 	path.Join(dir.Context, dir.Journal, "/"),

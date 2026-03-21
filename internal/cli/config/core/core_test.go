@@ -11,6 +11,7 @@ import (
 	"path/filepath"
 	"testing"
 
+	"github.com/ActiveMemory/ctx/internal/config/file"
 	"github.com/ActiveMemory/ctx/internal/rc"
 )
 
@@ -56,7 +57,7 @@ func TestCopyProfile_Success(t *testing.T) {
 		t.Fatalf("CopyProfile failed: %v", copyErr)
 	}
 
-	data, readErr := os.ReadFile(filepath.Join(root, FileCtxRC))
+	data, readErr := os.ReadFile(filepath.Join(root, file.CtxRC))
 	if readErr != nil {
 		t.Fatalf("expected .ctxrc to exist: %v", readErr)
 	}
@@ -70,14 +71,14 @@ func TestCopyProfile_Success(t *testing.T) {
 func TestDetectProfile_Dev(t *testing.T) {
 	root := t.TempDir()
 	if writeErr := os.WriteFile(
-		filepath.Join(root, FileCtxRC), []byte(devContent), 0o600,
+		filepath.Join(root, file.CtxRC), []byte(devContent), 0o600,
 	); writeErr != nil {
 		t.Fatal(writeErr)
 	}
 	chdirWithCleanup(t, root)
 
 	got := DetectProfile()
-	if got != ProfileDev {
+	if got != file.ProfileDev {
 		t.Errorf("expected dev, got %q", got)
 	}
 }
@@ -86,14 +87,14 @@ func TestDetectProfile_Dev(t *testing.T) {
 func TestDetectProfile_Base(t *testing.T) {
 	root := t.TempDir()
 	if writeErr := os.WriteFile(
-		filepath.Join(root, FileCtxRC), []byte(baseContent), 0o600,
+		filepath.Join(root, file.CtxRC), []byte(baseContent), 0o600,
 	); writeErr != nil {
 		t.Fatal(writeErr)
 	}
 	chdirWithCleanup(t, root)
 
 	got := DetectProfile()
-	if got != ProfileBase {
+	if got != file.ProfileBase {
 		t.Errorf("expected base, got %q", got)
 	}
 }

@@ -9,12 +9,13 @@ package root
 import (
 	"strings"
 
-	"github.com/ActiveMemory/ctx/internal/config/fmt"
-	ctxerr "github.com/ActiveMemory/ctx/internal/err/config"
-	"github.com/ActiveMemory/ctx/internal/write/deps"
 	"github.com/spf13/cobra"
 
 	"github.com/ActiveMemory/ctx/internal/cli/dep/core"
+	"github.com/ActiveMemory/ctx/internal/config/fmt"
+	"github.com/ActiveMemory/ctx/internal/config/token"
+	ctxErr "github.com/ActiveMemory/ctx/internal/err/config"
+	"github.com/ActiveMemory/ctx/internal/write/deps"
 )
 
 // Run executes the deps command logic.
@@ -31,24 +32,24 @@ import (
 func Run(cmd *cobra.Command, format string, external bool, projType string) error {
 	supportedFormats := strings.Join([]string{
 		fmt.FormatMermaid, fmt.FormatTable, fmt.FormatJSON,
-	}, ", ")
+	}, token.CommaSpace)
 
 	switch format {
 	case fmt.FormatMermaid, fmt.FormatTable, fmt.FormatJSON:
 	default:
-		return ctxerr.UnknownFormat(format, supportedFormats)
+		return ctxErr.UnknownFormat(format, supportedFormats)
 	}
 
 	var builder core.GraphBuilder
 	if projType != "" {
 		builder = core.FindBuilder(projType)
 		if builder == nil {
-			return ctxerr.UnknownProjectType(projType, strings.Join(core.BuilderNames(), ", "))
+			return ctxErr.UnknownProjectType(projType, strings.Join(core.BuilderNames(), token.CommaSpace))
 		}
 	} else {
 		builder = core.DetectBuilder()
 		if builder == nil {
-			deps.InfoNoProject(cmd, strings.Join(core.BuilderNames(), ", "))
+			deps.InfoNoProject(cmd, strings.Join(core.BuilderNames(), token.CommaSpace))
 			return nil
 		}
 	}
@@ -68,7 +69,7 @@ func Run(cmd *cobra.Command, format string, external bool, projType string) erro
 		cmd.Print(core.RenderMermaid(graph))
 	case fmt.FormatTable:
 		cmd.Print(core.RenderTable(graph))
-	case fmt.FormatJSON:
+	default:
 		cmd.Print(core.RenderJSON(graph))
 	}
 

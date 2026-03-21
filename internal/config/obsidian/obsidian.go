@@ -45,6 +45,10 @@ const (
 	WikilinkPlain = "[[%s]]"
 )
 
+// MaxRelated is the maximum number of "see also" entries in the
+// related sessions footer.
+const MaxRelated = 5
+
 // Obsidian MOC (Map of Content) page filenames.
 const (
 	// MOCPrefix is prepended to MOC filenames so they sort first

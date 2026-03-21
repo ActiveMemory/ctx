@@ -11,9 +11,10 @@ placeholders (`%s`, `%d`), which don't fit that model.
 
 ## How they will be replaced
 
-A Go `text/template` rendering pipeline (tracked in TASKS.md under
-"Phase: Template Pipeline") will replace these constants with proper
-`.tmpl` files in the embedded assets. Once that pipeline exists:
+A Go `text/template` rendering pipeline (tracked in TASKS.md:
+"Migrate Sprintf-based templates (tpl_*.go) to Go text/template")
+will replace these constants with proper `.tmpl` files in the
+embedded assets. Once that pipeline exists:
 
 1. Each `tpl_*.go` constant moves to an embedded `.tmpl` file
 2. Callers use `template.Execute()` with typed data instead of `fmt.Sprintf`

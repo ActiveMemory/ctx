@@ -19,7 +19,7 @@ import (
 func Cmd() *cobra.Command {
 	short, long := desc.CommandDesc(cmd.DescKeyNotifyTest)
 	return &cobra.Command{
-		Use:   "test",
+		Use:   cmd.UseNotifyTest,
 		Short: short,
 		Long:  long,
 		RunE: func(cmd *cobra.Command, _ []string) error {

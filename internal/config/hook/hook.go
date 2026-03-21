@@ -51,6 +51,22 @@ const (
 	VersionDrift = "version-drift"
 )
 
+// Supported integration tool names for ctx hook command.
+const (
+	ToolAider      = "aider"
+	ToolClaude     = "claude"
+	ToolClaudeCode = "claude-code"
+	ToolCopilot    = "copilot"
+	ToolCursor     = "cursor"
+	ToolWindsurf   = "windsurf"
+)
+
+// Copilot integration paths.
+const (
+	DirGitHub               = ".github"
+	FileCopilotInstructions = "copilot-instructions.md"
+)
+
 // Prefixes
 const (
 	// PrefixMemoryDriftThrottle is the state file prefix for per-session

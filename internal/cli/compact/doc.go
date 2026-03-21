@@ -7,7 +7,7 @@
 // Package compact implements the "ctx compact" command for cleaning up
 // and consolidating context files.
 //
-// The compact command performs maintenance on .context/ files including
+// The compact command performs maintenance on .context/ files, including
 // moving completed tasks to a dedicated section, optionally archiving
 // old content, and removing empty sections.
 package compact

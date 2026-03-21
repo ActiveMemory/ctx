@@ -11,24 +11,20 @@ import (
 	"os"
 	"path/filepath"
 
+	"github.com/spf13/cobra"
+
 	"github.com/ActiveMemory/ctx/internal/assets/tpl"
+	"github.com/ActiveMemory/ctx/internal/cli/journal/core"
 	"github.com/ActiveMemory/ctx/internal/config/dir"
 	"github.com/ActiveMemory/ctx/internal/config/file"
 	"github.com/ActiveMemory/ctx/internal/config/fs"
 	"github.com/ActiveMemory/ctx/internal/config/obsidian"
-	fs2 "github.com/ActiveMemory/ctx/internal/err/fs"
-	ctxerr "github.com/ActiveMemory/ctx/internal/err/journal"
-	"github.com/ActiveMemory/ctx/internal/write/err"
-	obsidian2 "github.com/ActiveMemory/ctx/internal/write/obsidian"
-	"github.com/spf13/cobra"
-
-	"github.com/ActiveMemory/ctx/internal/cli/journal/core"
+	errFs "github.com/ActiveMemory/ctx/internal/err/fs"
+	errJournal "github.com/ActiveMemory/ctx/internal/err/journal"
 	"github.com/ActiveMemory/ctx/internal/rc"
+	"github.com/ActiveMemory/ctx/internal/write/err"
+	writeObsidian "github.com/ActiveMemory/ctx/internal/write/obsidian"
 )
-
-// ObsidianMaxRelated is the maximum number of "see also" entries in the
-// related sessions footer.
-const ObsidianMaxRelated = 5
 
 // Run generates an Obsidian vault from journal entries.
 //
@@ -49,7 +45,9 @@ const ObsidianMaxRelated = 5
 // Returns:
 //   - error: Non-nil if generation fails
 func Run(cmd *cobra.Command, output string) error {
-	return BuildObsidianVault(cmd, filepath.Join(rc.ContextDir(), dir.Journal), output)
+	return BuildObsidianVault(
+		cmd, filepath.Join(rc.ContextDir(), dir.Journal), output,
+	)
 }
 
 // BuildObsidianVault generates an Obsidian vault from journal entries in
@@ -64,16 +62,16 @@ func Run(cmd *cobra.Command, output string) error {
 //   - error: Non-nil if generation fails
 func BuildObsidianVault(cmd *cobra.Command, journalDir, output string) error {
 	if _, statErr := os.Stat(journalDir); os.IsNotExist(statErr) {
-		return ctxerr.NoDir(journalDir)
+		return errJournal.NoDir(journalDir)
 	}
 
 	entries, scanErr := core.ScanJournalEntries(journalDir)
 	if scanErr != nil {
-		return ctxerr.Scan(scanErr)
+		return errJournal.Scan(scanErr)
 	}
 
 	if len(entries) == 0 {
-		return ctxerr.NoEntries(journalDir)
+		return errJournal.NoEntries(journalDir)
 	}
 
 	// Create output directory structure
@@ -85,9 +83,9 @@ func BuildObsidianVault(cmd *cobra.Command, journalDir, output string) error {
 		filepath.Join(output, dir.JournalFiles),
 		filepath.Join(output, dir.JournalTypes),
 	}
-	for _, dir := range dirs {
-		if mkErr := os.MkdirAll(dir, fs.PermExec); mkErr != nil {
-			return fs2.Mkdir(dir, mkErr)
+	for _, d := range dirs {
+		if mkErr := os.MkdirAll(d, fs.PermExec); mkErr != nil {
+			return errFs.Mkdir(d, mkErr)
 		}
 	}
 
@@ -98,7 +96,7 @@ func BuildObsidianVault(cmd *cobra.Command, journalDir, output string) error {
 	if writeErr := os.WriteFile(
 		appConfigPath, []byte(obsidian.AppConfig), fs.PermFile,
 	); writeErr != nil {
-		return fs2.FileWrite(appConfigPath, writeErr)
+		return errFs.FileWrite(appConfigPath, writeErr)
 	}
 
 	// Write README
@@ -108,7 +106,7 @@ func BuildObsidianVault(cmd *cobra.Command, journalDir, output string) error {
 		[]byte(fmt.Sprintf(tpl.ObsidianReadme, journalDir)),
 		fs.PermFile,
 	); writeErr != nil {
-		return fs2.FileWrite(readmePath, writeErr)
+		return errFs.FileWrite(readmePath, writeErr)
 	}
 
 	// Build indices for MOC pages and related footer
@@ -154,7 +152,7 @@ func BuildObsidianVault(cmd *cobra.Command, journalDir, output string) error {
 		)
 		transformed := core.TransformFrontmatter(normalized, sourcePath)
 		transformed = core.ConvertMarkdownLinks(transformed)
-		transformed += core.GenerateRelatedFooter(entry, topicIndex, ObsidianMaxRelated)
+		transformed += core.GenerateRelatedFooter(entry, topicIndex, obsidian.MaxRelated)
 
 		if writeErr := os.WriteFile(
 			dst, []byte(transformed), fs.PermFile,
@@ -172,7 +170,7 @@ func BuildObsidianVault(cmd *cobra.Command, journalDir, output string) error {
 			mocPath, []byte(core.GenerateObsidianTopicsMOC(topics)),
 			fs.PermFile,
 		); writeErr != nil {
-			return fs2.FileWrite(mocPath, writeErr)
+			return errFs.FileWrite(mocPath, writeErr)
 		}
 
 		for _, t := range topics {
@@ -197,7 +195,7 @@ func BuildObsidianVault(cmd *cobra.Command, journalDir, output string) error {
 			mocPath, []byte(core.GenerateObsidianFilesMOC(keyFiles)),
 			fs.PermFile,
 		); writeErr != nil {
-			return fs2.FileWrite(mocPath, writeErr)
+			return errFs.FileWrite(mocPath, writeErr)
 		}
 
 		for _, kf := range keyFiles {
@@ -223,7 +221,7 @@ func BuildObsidianVault(cmd *cobra.Command, journalDir, output string) error {
 			mocPath, []byte(core.GenerateObsidianTypesMOC(sessionTypes)),
 			fs.PermFile,
 		); writeErr != nil {
-			return fs2.FileWrite(mocPath, writeErr)
+			return errFs.FileWrite(mocPath, writeErr)
 		}
 
 		for _, st := range sessionTypes {
@@ -247,10 +245,10 @@ func BuildObsidianVault(cmd *cobra.Command, journalDir, output string) error {
 		)),
 		fs.PermFile,
 	); writeErr != nil {
-		return fs2.FileWrite(homePath, writeErr)
+		return errFs.FileWrite(homePath, writeErr)
 	}
 
-	obsidian2.InfoGenerated(cmd, len(entries), output)
+	writeObsidian.InfoGenerated(cmd, len(entries), output)
 
 	return nil
 }

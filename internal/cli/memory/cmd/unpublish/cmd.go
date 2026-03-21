@@ -7,9 +7,10 @@
 package unpublish
 
 import (
+	"github.com/spf13/cobra"
+
 	"github.com/ActiveMemory/ctx/internal/assets/read/desc"
 	"github.com/ActiveMemory/ctx/internal/config/embed/cmd"
-	"github.com/spf13/cobra"
 )
 
 // Cmd returns the memory unpublish subcommand.
@@ -19,7 +20,7 @@ import (
 func Cmd() *cobra.Command {
 	short, long := desc.CommandDesc(cmd.DescKeyMemoryUnpublish)
 	return &cobra.Command{
-		Use:   "unpublish",
+		Use:   cmd.UseMemoryUnpublish,
 		Short: short,
 		Long:  long,
 		RunE: func(cmd *cobra.Command, _ []string) error {

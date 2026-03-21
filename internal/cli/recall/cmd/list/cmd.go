@@ -10,6 +10,7 @@ import (
 	"github.com/ActiveMemory/ctx/internal/assets/read/desc"
 	"github.com/ActiveMemory/ctx/internal/config/embed/cmd"
 	"github.com/ActiveMemory/ctx/internal/config/embed/flag"
+	cflag "github.com/ActiveMemory/ctx/internal/config/flag"
 	"github.com/ActiveMemory/ctx/internal/config/journal"
 	"github.com/spf13/cobra"
 )
@@ -48,10 +49,10 @@ func Cmd() *cobra.Command {
 	cmd.Flags().StringVarP(&tool, "tool", "t", "",
 		desc.FlagDesc(flag.DescKeyRecallListTool),
 	)
-	cmd.Flags().StringVar(&since, "since", "",
+	cmd.Flags().StringVar(&since, cflag.Since, "",
 		desc.FlagDesc(flag.DescKeyRecallListSince),
 	)
-	cmd.Flags().StringVar(&until, "until", "",
+	cmd.Flags().StringVar(&until, cflag.Until, "",
 		desc.FlagDesc(flag.DescKeyRecallListUntil),
 	)
 	cmd.Flags().BoolVar(&allProjects, "all-projects", false,

@@ -20,7 +20,6 @@ import (
 	"github.com/ActiveMemory/ctx/internal/config/embed/text"
 	entryCfg "github.com/ActiveMemory/ctx/internal/config/entry"
 	configfs "github.com/ActiveMemory/ctx/internal/config/fs"
-	"github.com/ActiveMemory/ctx/internal/config/mcp/cfg"
 	"github.com/ActiveMemory/ctx/internal/config/mcp/event"
 	"github.com/ActiveMemory/ctx/internal/config/mcp/field"
 	timeCfg "github.com/ActiveMemory/ctx/internal/config/time"
@@ -408,7 +407,7 @@ func (h *Handler) Compact(archive bool) (string, error) {
 		_, _ = fmt.Fprintf(&sb,
 			desc.TextDesc(
 				text.DescKeyMCPCompactMovedFormat)+token.NewlineLF,
-			tidy.TruncateString(taskText, cfg.TruncateLen),
+			tidy.TruncateString(taskText, token.TruncateLen),
 		)
 	}
 	for _, sc := range result.SectionsCleaned {
@@ -553,7 +552,7 @@ func (h *Handler) SessionEvent(
 					desc.TextDesc(text.DescKeyMCPFormatPendingItem)+
 						token.NewlineLF,
 					i+1, pu.Type,
-					tidy.TruncateString(pu.Content, cfg.TruncateContentLen),
+					tidy.TruncateString(pu.Content, token.TruncateContentLen),
 				)
 			}
 			sb.WriteString(

@@ -7,13 +7,13 @@
 package config
 
 import (
-	"github.com/ActiveMemory/ctx/internal/assets/read/desc"
-	"github.com/ActiveMemory/ctx/internal/config/embed/cmd"
 	"github.com/spf13/cobra"
 
+	"github.com/ActiveMemory/ctx/internal/assets/read/desc"
 	"github.com/ActiveMemory/ctx/internal/cli/config/cmd/schema"
 	"github.com/ActiveMemory/ctx/internal/cli/config/cmd/status"
 	"github.com/ActiveMemory/ctx/internal/cli/config/cmd/switchcmd"
+	"github.com/ActiveMemory/ctx/internal/config/embed/cmd"
 )
 
 // Cmd returns the "ctx config" parent command.
@@ -23,17 +23,17 @@ import (
 func Cmd() *cobra.Command {
 	short, long := desc.CommandDesc(cmd.DescKeyConfig)
 
-	cmd := &cobra.Command{
-		Use:   cmd.DescKeyConfig,
+	c := &cobra.Command{
+		Use:   cmd.UseConfig,
 		Short: short,
 		Long:  long,
 	}
 
-	cmd.AddCommand(
+	c.AddCommand(
 		switchcmd.Cmd(),
 		status.Cmd(),
 		schema.Cmd(),
 	)
 
-	return cmd
+	return c
 }

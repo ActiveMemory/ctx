@@ -45,7 +45,7 @@ func AssembleBudgetPacket(ctx *entity.Context, budget int) *AssembledPacket {
 	remaining := budget
 
 	// Tier 1: Always included (constitution, read order, instruction)
-	pkt.ReadOrder = GetReadOrder(ctx)
+	pkt.ReadOrder = ReadOrder(ctx)
 	pkt.Constitution = ExtractConstitutionRules(ctx)
 
 	tier1Tokens := EstimateSliceTokens(pkt.ReadOrder) +

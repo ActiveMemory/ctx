@@ -7,11 +7,11 @@
 package learning
 
 import (
-	"github.com/ActiveMemory/ctx/internal/assets/read/desc"
-	"github.com/ActiveMemory/ctx/internal/config/embed/cmd"
 	"github.com/spf13/cobra"
 
+	"github.com/ActiveMemory/ctx/internal/assets/read/desc"
 	"github.com/ActiveMemory/ctx/internal/cli/learning/cmd/reindex"
+	"github.com/ActiveMemory/ctx/internal/config/embed/cmd"
 )
 
 // Cmd returns the learning command with subcommands.
@@ -23,13 +23,13 @@ import (
 //   - *cobra.Command: The learning command with subcommands
 func Cmd() *cobra.Command {
 	short, long := desc.CommandDesc(cmd.DescKeyLearning)
-	cmd := &cobra.Command{
-		Use:   cmd.DescKeyLearning,
+	c := &cobra.Command{
+		Use:   cmd.UseLearning,
 		Short: short,
 		Long:  long,
 	}
 
-	cmd.AddCommand(reindex.Cmd())
+	c.AddCommand(reindex.Cmd())
 
-	return cmd
+	return c
 }

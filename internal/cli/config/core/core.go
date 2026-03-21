@@ -8,27 +8,21 @@
 package core
 
 import (
+	"fmt"
 	"os"
 	"os/exec"
 	"path/filepath"
 	"strings"
 
+	"github.com/ActiveMemory/ctx/internal/assets/read/desc"
+	"github.com/ActiveMemory/ctx/internal/config/embed/text"
 	"github.com/ActiveMemory/ctx/internal/config/file"
 	"github.com/ActiveMemory/ctx/internal/config/fs"
+	cfgGit "github.com/ActiveMemory/ctx/internal/config/git"
 	"github.com/ActiveMemory/ctx/internal/err/config"
-	ctxerr "github.com/ActiveMemory/ctx/internal/err/git"
+	ctxErr "github.com/ActiveMemory/ctx/internal/err/git"
 	"github.com/ActiveMemory/ctx/internal/io"
 	"github.com/ActiveMemory/ctx/internal/rc"
-)
-
-// Profile file names and identifiers — aliased from internal/config.
-const (
-	FileCtxRC     = file.CtxRC
-	FileCtxRCBase = file.CtxRCBase
-	FileCtxRCDev  = file.CtxRCDev
-	ProfileDev    = file.ProfileDev
-	ProfileBase   = file.ProfileBase
-	ProfileProd   = file.ProfileProd
 )
 
 // DetectProfile returns the active profile name from the parsed .ctxrc.
@@ -54,7 +48,7 @@ func CopyProfile(root, srcFile string) error {
 		return config.ReadProfile(srcFile, readErr)
 	}
 
-	dst := filepath.Join(root, FileCtxRC)
+	dst := filepath.Join(root, file.CtxRC)
 	return os.WriteFile(dst, data, fs.PermFile)
 }
 
@@ -65,7 +59,7 @@ func CopyProfile(root, srcFile string) error {
 //
 // Parameters:
 //   - root: Git repository root directory
-//   - profile: Target profile name (ProfileDev or ProfileBase)
+//   - profile: Target profile name (file.ProfileDev or file.ProfileBase)
 //
 // Returns:
 //   - string: Status message for the user
@@ -73,12 +67,13 @@ func CopyProfile(root, srcFile string) error {
 func SwitchTo(root, profile string) (string, error) {
 	current := DetectProfile()
 	if current == profile {
-		return "already on " + profile + " profile", nil
+		return fmt.Sprintf(
+			desc.TextDesc(text.DescKeyConfigAlreadyOn), profile), nil
 	}
 
-	srcFile := FileCtxRCBase
-	if profile == ProfileDev {
-		srcFile = FileCtxRCDev
+	srcFile := file.CtxRCBase
+	if profile == file.ProfileDev {
+		srcFile = file.CtxRCDev
 	}
 
 	if copyErr := CopyProfile(root, srcFile); copyErr != nil {
@@ -86,9 +81,11 @@ func SwitchTo(root, profile string) (string, error) {
 	}
 
 	if current == "" {
-		return "created " + FileCtxRC + " from " + profile + " profile", nil
+		return fmt.Sprintf(
+			desc.TextDesc(text.DescKeyConfigCreated), file.CtxRC, profile), nil
 	}
-	return "switched to " + profile + " profile", nil
+	return fmt.Sprintf(
+		desc.TextDesc(text.DescKeyConfigSwitched), profile), nil
 }
 
 // GitRoot returns the git repository root directory.
@@ -97,13 +94,15 @@ func SwitchTo(root, profile string) (string, error) {
 // not inside a git repository. Features that depend on git should
 // degrade gracefully when this returns an error.
 func GitRoot() (string, error) {
-	if _, lookErr := exec.LookPath("git"); lookErr != nil {
-		return "", ctxerr.NotFound()
+	if _, lookErr := exec.LookPath(cfgGit.Binary); lookErr != nil {
+		return "", ctxErr.NotFound()
 	}
 
-	out, execErr := exec.Command("git", "rev-parse", "--show-toplevel").Output()
+	out, execErr := exec.Command( //nolint:gosec // args are literal constants
+		cfgGit.Binary, cfgGit.RevParse, cfgGit.FlagShowToplevel,
+	).Output()
 	if execErr != nil {
-		return "", ctxerr.NotInRepo(execErr)
+		return "", ctxErr.NotInRepo(execErr)
 	}
 	return strings.TrimSpace(string(out)), nil
 }

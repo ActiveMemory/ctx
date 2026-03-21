@@ -10,6 +10,9 @@ import (
 	"github.com/ActiveMemory/ctx/internal/assets/read/desc"
 	"github.com/ActiveMemory/ctx/internal/config/embed/cmd"
 	"github.com/ActiveMemory/ctx/internal/config/embed/flag"
+	"github.com/ActiveMemory/ctx/internal/config/entry"
+	cflag "github.com/ActiveMemory/ctx/internal/config/flag"
+
 	"github.com/spf13/cobra"
 
 	"github.com/ActiveMemory/ctx/internal/cli/add/core"
@@ -47,12 +50,12 @@ func Cmd() *cobra.Command {
 
 	short, long := desc.CommandDesc(cmd.DescKeyAdd)
 
-	cmd := &cobra.Command{
-		Use:       cmd.DescKeyAdd + " <type> [content]",
+	c := &cobra.Command{
+		Use:       cmd.UseAdd,
 		Short:     short,
 		Long:      long,
 		Args:      cobra.MinimumNArgs(1),
-		ValidArgs: []string{"task", "decision", "learning", "convention"},
+		ValidArgs: []string{entry.Task, entry.Decision, entry.Learning, entry.Convention},
 		RunE: func(cmd *cobra.Command, args []string) error {
 			return Run(cmd, args, core.Config{
 				Priority:    priority,
@@ -67,52 +70,52 @@ func Cmd() *cobra.Command {
 		},
 	}
 
-	cmd.Flags().StringVarP(
+	c.Flags().StringVarP(
 		&priority,
-		"priority", "p", "",
+		cflag.Priority, cflag.ShortPriority, "",
 		desc.FlagDesc(flag.DescKeyAddPriority),
 	)
-	_ = cmd.RegisterFlagCompletionFunc(
-		"priority", func(_ *cobra.Command, _ []string, _ string) (
+	_ = c.RegisterFlagCompletionFunc(
+		cflag.Priority, func(_ *cobra.Command, _ []string, _ string) (
 			[]string, cobra.ShellCompDirective,
 		) {
-			return []string{"high", "medium", "low"}, cobra.ShellCompDirectiveNoFileComp
+			return entry.Priorities, cobra.ShellCompDirectiveNoFileComp
 		})
-	cmd.Flags().StringVarP(
+	c.Flags().StringVarP(
 		&section,
-		"section", "s", "",
+		cflag.Section, cflag.ShortSection, "",
 		desc.FlagDesc(flag.DescKeyAddSection),
 	)
-	cmd.Flags().StringVarP(
+	c.Flags().StringVarP(
 		&fromFile,
-		"file", "f", "",
+		cflag.File, cflag.ShortFile, "",
 		desc.FlagDesc(flag.DescKeyAddFile),
 	)
-	cmd.Flags().StringVarP(
+	c.Flags().StringVarP(
 		&context,
-		"context", "c", "",
+		cflag.Context, cflag.ShortContext, "",
 		desc.FlagDesc(flag.DescKeyAddContext),
 	)
-	cmd.Flags().StringVarP(
+	c.Flags().StringVarP(
 		&rationale,
-		"rationale", "r", "",
+		cflag.Rationale, cflag.ShortRationale, "",
 		desc.FlagDesc(flag.DescKeyAddRationale),
 	)
-	cmd.Flags().StringVar(
+	c.Flags().StringVar(
 		&consequence,
-		"consequence", "",
+		cflag.Consequence, "",
 		desc.FlagDesc(flag.DescKeyAddConsequence),
 	)
-	cmd.Flags().StringVarP(
+	c.Flags().StringVarP(
 		&lesson,
-		"lesson", "l", "",
+		cflag.Lesson, cflag.ShortLesson, "",
 		desc.FlagDesc(flag.DescKeyAddLesson),
 	)
-	cmd.Flags().StringVarP(
+	c.Flags().StringVarP(
 		&application,
-		"application", "a", "",
+		cflag.Application, cflag.ShortApplication, "",
 		desc.FlagDesc(flag.DescKeyAddApplication),
 	)
 
-	return cmd
+	return c
 }

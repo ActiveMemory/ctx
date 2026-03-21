@@ -7,6 +7,12 @@
 package cmd
 
 const (
+	UseJournal         = "journal"
+	UseJournalObsidian = "obsidian"
+	UseJournalSite     = "site"
+)
+
+const (
 	DescKeyJournal         = "journal"
 	DescKeyJournalObsidian = "journal.obsidian"
 	DescKeyJournalSite     = "journal.site"

@@ -7,11 +7,12 @@
 package root
 
 import (
+	"github.com/spf13/cobra"
+
 	"github.com/ActiveMemory/ctx/internal/assets/read/desc"
 	"github.com/ActiveMemory/ctx/internal/config/embed/cmd"
 	"github.com/ActiveMemory/ctx/internal/config/embed/flag"
-	"github.com/spf13/cobra"
-
+	cflag "github.com/ActiveMemory/ctx/internal/config/flag"
 	"github.com/ActiveMemory/ctx/internal/rc"
 )
 
@@ -33,27 +34,27 @@ func Cmd() *cobra.Command {
 	)
 
 	short, long := desc.CommandDesc(cmd.DescKeyLoad)
-	cmd := &cobra.Command{
-		Use:   cmd.DescKeyLoad,
+	c := &cobra.Command{
+		Use:   cmd.UseLoad,
 		Short: short,
 		Long:  long,
 		RunE: func(cmd *cobra.Command, args []string) error {
-			// Use configured budget if flag not explicitly set
-			if !cmd.Flags().Changed("budget") {
+			// Use the configured budget if the flag is not explicitly set
+			if !cmd.Flags().Changed(cflag.Budget) {
 				budget = rc.TokenBudget()
 			}
 			return Run(cmd, budget, raw)
 		},
 	}
 
-	cmd.Flags().IntVar(
-		&budget, "budget",
+	c.Flags().IntVar(
+		&budget, cflag.Budget,
 		rc.DefaultTokenBudget,
 		desc.FlagDesc(flag.DescKeyLoadBudget),
 	)
-	cmd.Flags().BoolVar(
-		&raw, "raw", false, desc.FlagDesc(flag.DescKeyLoadRaw),
+	c.Flags().BoolVar(
+		&raw, cflag.Raw, false, desc.FlagDesc(flag.DescKeyLoadRaw),
 	)
 
-	return cmd
+	return c
 }

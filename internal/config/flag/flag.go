@@ -17,17 +17,84 @@ const PrefixLong = "--"
 
 // Add command flag names: used for both flag registration and error display.
 const (
-	Context     = "context"
-	Rationale   = "rationale"
-	Consequence = "consequence"
-	Lesson      = "lesson"
 	Application = "application"
+	Consequence = "consequence"
+	Context     = "context"
+	File        = "file"
+	Lesson      = "lesson"
+	Priority    = "priority"
+	Rationale   = "rationale"
+	Section     = "section"
+)
+
+// Flag shorthand letters for the add command.
+const (
+	ShortApplication = "a"
+	ShortContext     = "c"
+	ShortFile        = "f"
+	ShortLesson      = "l"
+	ShortPriority    = "p"
+	ShortRationale   = "r"
+	ShortSection     = "s"
+)
+
+// Agent command flag names.
+const (
+	Budget   = "budget"
+	Cooldown = "cooldown"
+	Format   = "format"
+	Session  = "session"
+)
+
+// Shared flag names used across commands.
+const (
+	AllProjects    = "all-projects"
+	Archive        = "archive"
+	Build          = "build"
+	Commands       = "commands"
+	Completion     = "completion"
+	DryRun         = "dry-run"
+	Event          = "event"
+	External       = "external"
+	Fix            = "fix"
+	Force          = "force"
+	Hook           = "hook"
+	JSON           = "json"
+	MaxIterations  = "max-iterations"
+	Merge          = "merge"
+	Message        = "message"
+	Minimal        = "minimal"
+	NoPluginEnable = "no-plugin-enable"
+	Output         = "output"
+	Prompt         = "prompt"
+	Ralph          = "ralph"
+	Raw            = "raw"
+	Serve          = "serve"
+	SessionID      = "session-id"
+	Skills         = "skills"
+	Tool           = "tool"
+	Type           = "type"
+	Variant        = "variant"
+	Write          = "write"
+)
+
+// Shorthand letters for shared flags.
+const (
+	ShortCompletion    = "c"
+	ShortEvent         = "e"
+	ShortForce         = "f"
+	ShortJSON          = "j"
+	ShortMaxIterations = "n"
+	ShortMinimal       = "m"
+	ShortOutput        = "o"
+	ShortPrompt        = "p"
+	ShortSessionID     = "s"
+	ShortTool          = "t"
+	ShortWrite         = "w"
 )
 
 // CLI flag names used in multiple commands.
 const (
-	// Since is the --since flag name.
-	Since = "--since"
-	// Until is the --until flag name.
-	Until = "--until"
+	Since = "since"
+	Until = "until"
 )

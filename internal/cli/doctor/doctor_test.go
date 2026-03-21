@@ -18,6 +18,7 @@ import (
 	"github.com/ActiveMemory/ctx/internal/config/claude"
 	"github.com/ActiveMemory/ctx/internal/config/ctx"
 	"github.com/ActiveMemory/ctx/internal/config/doctor"
+	"github.com/ActiveMemory/ctx/internal/config/stats"
 	"github.com/ActiveMemory/ctx/internal/rc"
 	"github.com/ActiveMemory/ctx/internal/sysinfo"
 )
@@ -327,7 +328,7 @@ func TestAddResourceResults_AllHealthy(t *testing.T) {
 		t.Fatalf("expected 4 results (memory, swap, disk, load), got %d", len(report.Results))
 	}
 	for _, r := range report.Results {
-		if r.Status != core.StatusOK {
+		if r.Status != stats.StatusOK {
 			t.Errorf("result %s: expected ok, got %s", r.Name, r.Status)
 		}
 		if r.Category != doctor.CategoryResources {
@@ -356,7 +357,7 @@ func TestAddResourceResults_MemoryWarning(t *testing.T) {
 	if report.Results[0].Name != "resource_memory" {
 		t.Errorf("expected resource_memory, got %s", report.Results[0].Name)
 	}
-	if report.Results[0].Status != core.StatusWarning {
+	if report.Results[0].Status != stats.StatusWarning {
 		t.Errorf("expected warning for 82%% memory, got %s", report.Results[0].Status)
 	}
 }
@@ -389,7 +390,7 @@ func TestAddResourceResults_DangerMapsToError(t *testing.T) {
 		t.Fatalf("expected 4 results, got %d", len(report.Results))
 	}
 	for _, r := range report.Results {
-		if r.Status != core.StatusError {
+		if r.Status != stats.StatusError {
 			t.Errorf("result %s: expected error for danger severity, got %s", r.Name, r.Status)
 		}
 	}
@@ -507,7 +508,7 @@ func TestCheckCtxrcValidation_NoFile(t *testing.T) {
 		t.Fatalf("expected 1 result, got %d", len(report.Results))
 	}
 	r := report.Results[0]
-	if r.Status != core.StatusOK {
+	if r.Status != stats.StatusOK {
 		t.Errorf("expected ok, got %s", r.Status)
 	}
 	if !strings.Contains(r.Message, "using defaults") {
@@ -540,7 +541,7 @@ func TestCheckCtxrcValidation_ValidFile(t *testing.T) {
 		t.Fatalf("expected 1 result, got %d", len(report.Results))
 	}
 	r := report.Results[0]
-	if r.Status != core.StatusOK {
+	if r.Status != stats.StatusOK {
 		t.Errorf("expected ok, got %s", r.Status)
 	}
 	if !strings.Contains(r.Message, "valid") {
@@ -573,7 +574,7 @@ func TestCheckCtxrcValidation_Typo(t *testing.T) {
 		t.Fatalf("expected 1 result, got %d", len(report.Results))
 	}
 	r := report.Results[0]
-	if r.Status != core.StatusWarning {
+	if r.Status != stats.StatusWarning {
 		t.Errorf("expected warning, got %s", r.Status)
 	}
 	if !strings.Contains(r.Message, "unknown") {

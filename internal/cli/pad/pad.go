@@ -35,7 +35,7 @@ import (
 func Cmd() *cobra.Command {
 	short, long := desc.CommandDesc(cmd.DescKeyPad)
 	cmd := &cobra.Command{
-		Use:   cmd.DescKeyPad,
+		Use:   cmd.UsePad,
 		Short: short,
 		Long:  long,
 		Args:  cobra.NoArgs,

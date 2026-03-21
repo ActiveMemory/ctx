@@ -110,6 +110,9 @@ func EnablePluginGlobally(cmd *cobra.Command) error {
 
 // PluginInstalled reports whether the ctx plugin is registered in
 // ~/.claude/plugins/installed_plugins.json.
+//
+// Returns:
+//   - bool: True if the plugin entry exists in the installed list
 func PluginInstalled() bool {
 	homeDir, homeErr := os.UserHomeDir()
 	if homeErr != nil {
@@ -130,6 +133,9 @@ func PluginInstalled() bool {
 
 // PluginEnabledGlobally reports whether the ctx plugin is enabled in
 // ~/.claude/settings.json.
+//
+// Returns:
+//   - bool: True if the plugin is listed under enabledPlugins
 func PluginEnabledGlobally() bool {
 	homeDir, homeErr := os.UserHomeDir()
 	if homeErr != nil {
@@ -157,6 +163,9 @@ func PluginEnabledGlobally() bool {
 
 // PluginEnabledLocally reports whether the ctx plugin is enabled in
 // .claude/settings.local.json in the current project.
+//
+// Returns:
+//   - bool: True if the plugin is listed under enabledPlugins locally
 func PluginEnabledLocally() bool {
 	data, readErr := os.ReadFile(claude.Settings)
 	if readErr != nil {

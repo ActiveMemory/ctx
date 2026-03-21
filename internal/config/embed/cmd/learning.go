@@ -6,6 +6,8 @@
 
 package cmd
 
+const UseLearning = "learning"
+
 const (
 	DescKeyLearning        = "learning"
 	DescKeyLearningReindex = "learning.reindex"

@@ -25,26 +25,3 @@ import (
 func WhyDoc(name string) ([]byte, error) {
 	return assets.FS.ReadFile(path.Join(asset.DirWhy, name+file.ExtMarkdown))
 }
-
-// WhyDocList returns available "why" document names (without extension).
-//
-// Returns:
-//   - []string: List of document names in why/
-//   - error: Non-nil if directory read fails
-func WhyDocList() ([]string, error) {
-	entries, readErr := assets.FS.ReadDir(asset.DirWhy)
-	if readErr != nil {
-		return nil, readErr
-	}
-
-	names := make([]string, 0, len(entries))
-	for _, entry := range entries {
-		if !entry.IsDir() {
-			name := entry.Name()
-			if len(name) > 3 && name[len(name)-3:] == file.ExtMarkdown {
-				names = append(names, name[:len(name)-3])
-			}
-		}
-	}
-	return names, nil
-}

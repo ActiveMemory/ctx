@@ -7,6 +7,15 @@
 package cmd
 
 const (
+	UseMemoryDiff      = "diff"
+	UseMemoryImport    = "import"
+	UseMemoryPublish   = "publish"
+	UseMemoryStatus    = "status"
+	UseMemorySync      = "sync"
+	UseMemoryUnpublish = "unpublish"
+)
+
+const (
 	DescKeyMemory          = "memory"
 	DescKeyMemoryDiff      = "memory.diff"
 	DescKeyMemoryImport    = "memory.import"

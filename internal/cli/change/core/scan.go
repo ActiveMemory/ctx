@@ -14,24 +14,11 @@ import (
 	"time"
 
 	"github.com/ActiveMemory/ctx/internal/config/file"
+	cfgGit "github.com/ActiveMemory/ctx/internal/config/git"
 	"github.com/ActiveMemory/ctx/internal/config/token"
-	ctxerr "github.com/ActiveMemory/ctx/internal/err/git"
+	ctxErr "github.com/ActiveMemory/ctx/internal/err/git"
 	"github.com/ActiveMemory/ctx/internal/rc"
 )
-
-// ContextChange represents a modified context file.
-type ContextChange struct {
-	Name    string
-	ModTime time.Time
-}
-
-// CodeSummary summarizes code changes since the reference time.
-type CodeSummary struct {
-	CommitCount int
-	LatestMsg   string
-	Dirs        []string
-	Authors     []string
-}
 
 // FindContextChanges returns context files modified after refTime.
 //
@@ -87,7 +74,7 @@ func SummarizeCodeChanges(refTime time.Time) (CodeSummary, error) {
 	var summary CodeSummary
 
 	// Count commits.
-	out, err := GitLogSince(refTime, "--oneline")
+	out, err := GitLogSince(refTime, cfgGit.FlagOneline)
 	if err != nil {
 		return summary, nil
 	}
@@ -100,20 +87,22 @@ func SummarizeCodeChanges(refTime time.Time) (CodeSummary, error) {
 
 	// Latest commit message (first line of oneline output).
 	if len(commitLines) > 0 {
-		parts := strings.SplitN(commitLines[0], " ", 2)
+		parts := strings.SplitN(commitLines[0], token.Space, 2)
 		if len(parts) == 2 {
 			summary.LatestMsg = parts[1]
 		}
 	}
 
 	// Directories touched.
-	dirOut, dirErr := GitLogSince(refTime, "--name-only", "--format=", "--no-commit-id")
+	dirOut, dirErr := GitLogSince(
+		refTime, cfgGit.FlagNameOnly, cfgGit.FormatEmpty, cfgGit.FlagNoCommitID,
+	)
 	if dirErr == nil {
 		summary.Dirs = UniqueTopDirs(string(dirOut))
 	}
 
 	// Authors.
-	authOut, authErr := GitLogSince(refTime, "--format=%aN")
+	authOut, authErr := GitLogSince(refTime, cfgGit.FormatAuthor)
 	if authErr == nil {
 		summary.Authors = UniqueLines(string(authOut))
 	}
@@ -134,12 +123,12 @@ func SummarizeCodeChanges(refTime time.Time) (CodeSummary, error) {
 //   - []byte: Raw git output
 //   - error: Non-nil if git fails
 func GitLogSince(t time.Time, extraArgs ...string) ([]byte, error) {
-	if _, lookErr := exec.LookPath("git"); lookErr != nil {
-		return nil, ctxerr.NotFound()
+	if _, lookErr := exec.LookPath(cfgGit.Binary); lookErr != nil {
+		return nil, ctxErr.NotFound()
 	}
-	args := []string{"log", "--since", t.Format(time.RFC3339)}
+	args := []string{cfgGit.Log, cfgGit.FlagSince, t.Format(time.RFC3339)}
 	args = append(args, extraArgs...)
-	return exec.Command("git", args...).Output() //nolint:gosec // args are literal flags + time.Format output
+	return exec.Command(cfgGit.Binary, args...).Output() //nolint:gosec // args are literal flags + time.Format output
 }
 
 // UniqueTopDirs extracts unique top-level directories from file paths.
@@ -151,13 +140,15 @@ func GitLogSince(t time.Time, extraArgs ...string) ([]byte, error) {
 //   - []string: Sorted unique top-level directory names
 func UniqueTopDirs(output string) []string {
 	seen := make(map[string]bool)
-	for _, line := range strings.Split(strings.TrimSpace(output), token.NewlineLF) {
+	for _, line := range strings.Split(
+		strings.TrimSpace(output), token.NewlineLF,
+	) {
 		line = strings.TrimSpace(line)
 		if line == "" {
 			continue
 		}
 		dir := line
-		if i := strings.Index(line, "/"); i >= 0 {
+		if i := strings.Index(line, cfgGit.PathSeparator); i >= 0 {
 			dir = line[:i]
 		}
 		seen[dir] = true
@@ -180,7 +171,9 @@ func UniqueTopDirs(output string) []string {
 //   - []string: Sorted unique non-empty lines
 func UniqueLines(output string) []string {
 	seen := make(map[string]bool)
-	for _, line := range strings.Split(strings.TrimSpace(output), token.NewlineLF) {
+	for _, line := range strings.Split(
+		strings.TrimSpace(output), token.NewlineLF,
+	) {
 		line = strings.TrimSpace(line)
 		if line != "" {
 			seen[line] = true

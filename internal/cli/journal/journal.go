@@ -7,12 +7,12 @@
 package journal
 
 import (
-	"github.com/ActiveMemory/ctx/internal/assets/read/desc"
-	"github.com/ActiveMemory/ctx/internal/config/embed/cmd"
 	"github.com/spf13/cobra"
 
+	"github.com/ActiveMemory/ctx/internal/assets/read/desc"
 	"github.com/ActiveMemory/ctx/internal/cli/journal/cmd/obsidian"
 	"github.com/ActiveMemory/ctx/internal/cli/journal/cmd/site"
+	"github.com/ActiveMemory/ctx/internal/config/embed/cmd"
 )
 
 // Cmd returns the journal command with subcommands.
@@ -24,14 +24,14 @@ import (
 //   - *cobra.Command: The journal command with subcommands
 func Cmd() *cobra.Command {
 	short, long := desc.CommandDesc(cmd.DescKeyJournal)
-	cmd := &cobra.Command{
-		Use:   cmd.DescKeyJournal,
+	c := &cobra.Command{
+		Use:   cmd.UseJournal,
 		Short: short,
 		Long:  long,
 	}
 
-	cmd.AddCommand(site.Cmd())
-	cmd.AddCommand(obsidian.Cmd())
+	c.AddCommand(site.Cmd())
+	c.AddCommand(obsidian.Cmd())
 
-	return cmd
+	return c
 }

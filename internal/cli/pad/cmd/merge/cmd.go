@@ -10,6 +10,7 @@ import (
 	"github.com/ActiveMemory/ctx/internal/assets/read/desc"
 	"github.com/ActiveMemory/ctx/internal/config/embed/cmd"
 	"github.com/ActiveMemory/ctx/internal/config/embed/flag"
+	cflag "github.com/ActiveMemory/ctx/internal/config/flag"
 	"github.com/spf13/cobra"
 )
 
@@ -34,7 +35,7 @@ func Cmd() *cobra.Command {
 
 	cmd.Flags().StringVarP(&keyFile, "key", "k", "",
 		desc.FlagDesc(flag.DescKeyPadMergeKey))
-	cmd.Flags().BoolVar(&dryRun, "dry-run", false,
+	cmd.Flags().BoolVar(&dryRun, cflag.DryRun, false,
 		desc.FlagDesc(flag.DescKeyPadMergeDryRun))
 
 	return cmd

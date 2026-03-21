@@ -7,6 +7,13 @@
 package cmd
 
 const (
+	UseConfig       = "config"
+	UseConfigSchema = "schema"
+	UseConfigStatus = "status"
+	UseConfigSwitch = "switch [dev|base]"
+)
+
+const (
 	DescKeyConfig       = "config"
 	DescKeyConfigSchema = "config.schema"
 	DescKeyConfigStatus = "config.status"

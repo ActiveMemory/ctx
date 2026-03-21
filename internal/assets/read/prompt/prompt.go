@@ -13,12 +13,12 @@ import (
 	"github.com/ActiveMemory/ctx/internal/config/asset"
 )
 
-// PromptTemplateList returns available prompt template file names.
+// TemplateList returns available prompt template file names.
 //
 // Returns:
 //   - []string: List of template filenames in prompt-templates/
 //   - error: Non-nil if directory read fails
-func PromptTemplateList() ([]string, error) {
+func TemplateList() ([]string, error) {
 	entries, err := assets.FS.ReadDir(asset.DirPromptTemplates)
 	if err != nil {
 		return nil, err
@@ -33,7 +33,7 @@ func PromptTemplateList() ([]string, error) {
 	return names, nil
 }
 
-// PromptTemplate reads a prompt template by name.
+// Template reads a prompt template by name.
 //
 // Parameters:
 //   - name: Template filename (e.g., "code-review.md")
@@ -41,6 +41,6 @@ func PromptTemplateList() ([]string, error) {
 // Returns:
 //   - []byte: Template content from prompt-templates/
 //   - error: Non-nil if the file is not found or read fails
-func PromptTemplate(name string) ([]byte, error) {
+func Template(name string) ([]byte, error) {
 	return assets.FS.ReadFile(path.Join(asset.DirPromptTemplates, name))
 }

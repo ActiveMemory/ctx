@@ -11,11 +11,11 @@ import (
 	"github.com/ActiveMemory/ctx/internal/config/asset"
 )
 
-// JournalExtraCSS reads the embedded extra.css for journal site generation.
+// ExtraCSS reads the embedded extra.css for journal site generation.
 //
 // Returns:
 //   - []byte: CSS content
 //   - error: Non-nil if the file is not found or read fails
-func JournalExtraCSS() ([]byte, error) {
+func ExtraCSS() ([]byte, error) {
 	return assets.FS.ReadFile(asset.PathExtraCSS)
 }

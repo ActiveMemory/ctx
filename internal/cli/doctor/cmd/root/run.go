@@ -10,6 +10,7 @@ import (
 	"github.com/spf13/cobra"
 
 	"github.com/ActiveMemory/ctx/internal/cli/doctor/core"
+	"github.com/ActiveMemory/ctx/internal/config/stats"
 )
 
 // Run executes the doctor command logic, running all health checks and
@@ -40,9 +41,9 @@ func Run(cmd *cobra.Command, jsonOutput bool) error {
 	// Count warnings and errors.
 	for _, r := range report.Results {
 		switch r.Status {
-		case core.StatusWarning:
+		case stats.StatusWarning:
 			report.Warnings++
-		case core.StatusError:
+		case stats.StatusError:
 			report.Errors++
 		}
 	}

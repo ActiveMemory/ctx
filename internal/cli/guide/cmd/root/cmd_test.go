@@ -9,6 +9,9 @@ package root
 import (
 	"strings"
 	"testing"
+
+	"github.com/ActiveMemory/ctx/internal/assets/read/desc"
+	"github.com/ActiveMemory/ctx/internal/config/embed/text"
 )
 
 func TestParseSkillFrontmatter(t *testing.T) {
@@ -55,8 +58,9 @@ func TestParseSkillFrontmatter(t *testing.T) {
 }
 
 func TestGuideLineCount(t *testing.T) {
-	lines := strings.Split(defaultGuide, "\n")
+	guide := desc.TextDesc(text.DescKeyGuideDefault)
+	lines := strings.Split(guide, "\n")
 	if len(lines) > 50 {
-		t.Errorf("defaultGuide has %d lines, want at most 50", len(lines))
+		t.Errorf("guide default has %d lines, want at most 50", len(lines))
 	}
 }

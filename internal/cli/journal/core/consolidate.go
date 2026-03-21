@@ -10,6 +10,8 @@ import (
 	"fmt"
 	"strings"
 
+	"github.com/ActiveMemory/ctx/internal/assets/read/desc"
+	"github.com/ActiveMemory/ctx/internal/config/embed/text"
 	"github.com/ActiveMemory/ctx/internal/config/regex"
 	"github.com/ActiveMemory/ctx/internal/config/token"
 )
@@ -58,7 +60,7 @@ func ConsolidateToolRuns(content string) string {
 
 		if count > 1 {
 			out = append(out, header, "", body, "",
-				fmt.Sprintf("(×%d)", count), "",
+				fmt.Sprintf(desc.TextDesc(text.DescKeyJournalConsolidateCount), count), "",
 			)
 		} else {
 			// Keep original lines (preserves blank lines as-is)

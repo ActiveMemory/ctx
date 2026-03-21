@@ -11,9 +11,9 @@ import (
 	ctxerr "github.com/ActiveMemory/ctx/internal/err/skill"
 )
 
-// Skills returns the list of embedded skill directory names.
+// SkillList returns the list of embedded skill directory names.
 //
-// These are Agent Skills (https://agentskills.io) following the specification
+// These are Agent SkillList (https://agentskills.io) following the specification
 // with SKILL.md files containing frontmatter (name, description) and
 // autonomy-focused instructions. They can be installed to .claude/skills/
 // via "ctx init".
@@ -22,8 +22,8 @@ import (
 //   - []string: Names of available skill directories
 //     (e.g., "ctx-status", "ctx-reflect")
 //   - error: Non-nil if the skills directory cannot be read
-func Skills() ([]string, error) {
-	names, err := skill.SkillList()
+func SkillList() ([]string, error) {
+	names, err := skill.List()
 	if err != nil {
 		return nil, ctxerr.List(err)
 	}
@@ -33,13 +33,13 @@ func Skills() ([]string, error) {
 // SkillContent returns the content of a skill's SKILL.md file by name.
 //
 // Parameters:
-//   - name: Skill directory name as returned by [Skills] (e.g., "ctx-status")
+//   - name: Skill directory name as returned by [SkillList] (e.g., "ctx-status")
 //
 // Returns:
 //   - []byte: Raw bytes of the SKILL.md file
 //   - error: Non-nil if the skill does not exist or cannot be read
 func SkillContent(name string) ([]byte, error) {
-	content, err := skill.SkillContent(name)
+	content, err := skill.Content(name)
 	if err != nil {
 		return nil, ctxerr.Read(name, err)
 	}

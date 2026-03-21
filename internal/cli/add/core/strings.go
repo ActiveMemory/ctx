@@ -39,7 +39,7 @@ func Contains(content, header string) (bool, int) {
 	return idx != -1, idx
 }
 
-// ContainsNewLine reports whether content contains a newline and
+// ContainsNewLine reports whether the content contains a newline and
 // returns its index.
 //
 // Parameters:

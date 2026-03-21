@@ -7,11 +7,13 @@
 package root
 
 import (
+	"github.com/spf13/cobra"
+
 	"github.com/ActiveMemory/ctx/internal/assets/read/desc"
 	"github.com/ActiveMemory/ctx/internal/config/embed/cmd"
 	"github.com/ActiveMemory/ctx/internal/config/embed/flag"
+	cFlag "github.com/ActiveMemory/ctx/internal/config/flag"
 	"github.com/ActiveMemory/ctx/internal/config/loop"
-	"github.com/spf13/cobra"
 )
 
 // Cmd returns the "ctx loop" command for generating Ralph loop scripts.
@@ -40,8 +42,8 @@ func Cmd() *cobra.Command {
 	)
 
 	short, long := desc.CommandDesc(cmd.DescKeyLoop)
-	cmd := &cobra.Command{
-		Use:   cmd.DescKeyLoop,
+	c := &cobra.Command{
+		Use:   cmd.UseLoop,
 		Short: short,
 		Long:  long,
 		RunE: func(cmd *cobra.Command, args []string) error {
@@ -51,28 +53,30 @@ func Cmd() *cobra.Command {
 		},
 	}
 
-	cmd.Flags().StringVarP(&promptFile,
-		"prompt", "p",
+	c.Flags().StringVarP(&promptFile,
+		cFlag.Prompt, cFlag.ShortPrompt,
 		loop.PromptMd, desc.FlagDesc(flag.DescKeyLoopPrompt),
 	)
-	cmd.Flags().StringVarP(
-		&tool, "tool", "t", "claude", desc.FlagDesc(flag.DescKeyLoopTool),
+	c.Flags().StringVarP(
+		&tool, cFlag.Tool, cFlag.ShortTool,
+		loop.DefaultTool, desc.FlagDesc(flag.DescKeyLoopTool),
 	)
-	cmd.Flags().IntVarP(
+	c.Flags().IntVarP(
 		&maxIterations,
-		"max-iterations", "n",
+		cFlag.MaxIterations, cFlag.ShortMaxIterations,
 		0, desc.FlagDesc(flag.DescKeyLoopMaxIterations),
 	)
-	cmd.Flags().StringVarP(
+	c.Flags().StringVarP(
 		&completionMsg,
-		"completion", "c", loop.DefaultCompletionSignal,
+		cFlag.Completion, cFlag.ShortCompletion,
+		loop.DefaultCompletionSignal,
 		desc.FlagDesc(flag.DescKeyLoopCompletion),
 	)
-	cmd.Flags().StringVarP(
+	c.Flags().StringVarP(
 		&outputFile,
-		"output", "o",
-		"loop.sh", desc.FlagDesc(flag.DescKeyLoopOutput),
+		cFlag.Output, cFlag.ShortOutput,
+		loop.DefaultOutput, desc.FlagDesc(flag.DescKeyLoopOutput),
 	)
 
-	return cmd
+	return c
 }

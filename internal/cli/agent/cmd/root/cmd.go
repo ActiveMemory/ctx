@@ -9,13 +9,14 @@ package root
 import (
 	"time"
 
-	"github.com/ActiveMemory/ctx/internal/assets/read/desc"
-	"github.com/ActiveMemory/ctx/internal/config/embed/cmd"
-	"github.com/ActiveMemory/ctx/internal/config/embed/flag"
-	"github.com/ActiveMemory/ctx/internal/config/fmt"
 	"github.com/spf13/cobra"
 
-	"github.com/ActiveMemory/ctx/internal/cli/agent/core"
+	"github.com/ActiveMemory/ctx/internal/assets/read/desc"
+	"github.com/ActiveMemory/ctx/internal/config/agent"
+	"github.com/ActiveMemory/ctx/internal/config/embed/cmd"
+	"github.com/ActiveMemory/ctx/internal/config/embed/flag"
+	cflag "github.com/ActiveMemory/ctx/internal/config/flag"
+	"github.com/ActiveMemory/ctx/internal/config/fmt"
 	"github.com/ActiveMemory/ctx/internal/rc"
 )
 
@@ -43,33 +44,35 @@ func Cmd() *cobra.Command {
 
 	short, long := desc.CommandDesc(cmd.DescKeyAgent)
 
-	cmd := &cobra.Command{
-		Use:   cmd.DescKeyAgent,
+	c := &cobra.Command{
+		Use:   cmd.UseAgent,
 		Short: short,
 		Long:  long,
 		RunE: func(cmd *cobra.Command, args []string) error {
-			if !cmd.Flags().Changed("budget") {
+			if !cmd.Flags().Changed(cflag.Budget) {
 				budget = rc.TokenBudget()
 			}
 			return Run(cmd, budget, format, cooldown, session)
 		},
 	}
 
-	cmd.Flags().IntVar(
+	c.Flags().IntVar(
 		&budget,
-		"budget", rc.DefaultTokenBudget, desc.FlagDesc(flag.DescKeyAgentBudget),
+		cflag.Budget, rc.DefaultTokenBudget,
+		desc.FlagDesc(flag.DescKeyAgentBudget),
 	)
-	cmd.Flags().StringVar(
-		&format, "format", fmt.FormatMarkdown, desc.FlagDesc(flag.DescKeyAgentFormat),
+	c.Flags().StringVar(
+		&format, cflag.Format, fmt.FormatMarkdown,
+		desc.FlagDesc(flag.DescKeyAgentFormat),
 	)
-	cmd.Flags().DurationVar(
-		&cooldown, "cooldown", core.DefaultCooldown,
+	c.Flags().DurationVar(
+		&cooldown, cflag.Cooldown, agent.DefaultCooldown,
 		desc.FlagDesc(flag.DescKeyAgentCooldown),
 	)
-	cmd.Flags().StringVar(
-		&session, "session", "",
+	c.Flags().StringVar(
+		&session, cflag.Session, "",
 		desc.FlagDesc(flag.DescKeyAgentSession),
 	)
 
-	return cmd
+	return c
 }

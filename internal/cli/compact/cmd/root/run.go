@@ -11,13 +11,15 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/ActiveMemory/ctx/internal/context/load"
 	"github.com/spf13/cobra"
 
+	"github.com/ActiveMemory/ctx/internal/assets/read/desc"
 	"github.com/ActiveMemory/ctx/internal/cli/compact/core"
+	"github.com/ActiveMemory/ctx/internal/config/embed/text"
 	"github.com/ActiveMemory/ctx/internal/config/fs"
-	errctx "github.com/ActiveMemory/ctx/internal/err/context"
-	ctxerr "github.com/ActiveMemory/ctx/internal/err/initialize"
+	"github.com/ActiveMemory/ctx/internal/context/load"
+	errCtx "github.com/ActiveMemory/ctx/internal/err/context"
+	ctxErr "github.com/ActiveMemory/ctx/internal/err/initialize"
 	"github.com/ActiveMemory/ctx/internal/rc"
 	"github.com/ActiveMemory/ctx/internal/tidy"
 )
@@ -36,9 +38,9 @@ import (
 func Run(cmd *cobra.Command, archive bool) error {
 	ctx, err := load.Do("")
 	if err != nil {
-		var notFoundError *errctx.NotFoundError
+		var notFoundError *errCtx.NotFoundError
 		if errors.As(err, &notFoundError) {
-			return ctxerr.ContextNotInitialized()
+			return ctxErr.ContextNotInitialized()
 		}
 		return err
 	}
@@ -48,8 +50,8 @@ func Run(cmd *cobra.Command, archive bool) error {
 		archive = true
 	}
 
-	cmd.Println("Compact Analysis")
-	cmd.Println("================")
+	cmd.Println(desc.TextDesc(text.DescKeyCompactHeading))
+	cmd.Println(desc.TextDesc(text.DescKeyCompactSeparator))
 	cmd.Println()
 
 	changes := 0
@@ -57,7 +59,8 @@ func Run(cmd *cobra.Command, archive bool) error {
 	// Process TASKS.md
 	tasksChanges, compactErr := core.CompactTasks(cmd, ctx, archive)
 	if compactErr != nil {
-		cmd.Println(fmt.Sprintf("⚠ Error processing TASKS.md: %v", compactErr))
+		cmd.Println(fmt.Sprintf(
+			desc.TextDesc(text.DescKeyCompactTaskError), compactErr))
 	} else {
 		changes += tasksChanges
 	}
@@ -72,20 +75,20 @@ func Run(cmd *cobra.Command, archive bool) error {
 				result.SectionFileUpdates[i].Content,
 				fs.PermFile,
 			); writeErr == nil {
-				cmd.Println(
-					fmt.Sprintf("✓ Removed %d empty sections from %s",
-						sc.Removed, sc.FileName),
-				)
+				cmd.Println(fmt.Sprintf(
+					desc.TextDesc(text.DescKeyCompactSectionsRemoved),
+					sc.Removed, sc.FileName))
 				changes += sc.Removed
 			}
 		}
 	}
 
 	if changes == 0 {
-		cmd.Println("✓ Nothing to compact — context is already clean")
+		cmd.Println(desc.TextDesc(text.DescKeyCompactClean))
 	} else {
 		cmd.Println()
-		cmd.Println(fmt.Sprintf("✓ Compacted %d items", changes))
+		cmd.Println(fmt.Sprintf(
+			desc.TextDesc(text.DescKeyCompactSummary), changes))
 	}
 
 	return nil

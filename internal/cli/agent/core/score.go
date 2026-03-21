@@ -12,22 +12,10 @@ import (
 
 	"github.com/ActiveMemory/ctx/internal/assets/read/lookup"
 	"github.com/ActiveMemory/ctx/internal/config/agent"
-	time2 "github.com/ActiveMemory/ctx/internal/config/time"
+	cfgTime "github.com/ActiveMemory/ctx/internal/config/time"
 	"github.com/ActiveMemory/ctx/internal/context/token"
 	"github.com/ActiveMemory/ctx/internal/index"
 )
-
-// ScoredEntry is an entry block with a computed relevance score.
-//
-// Fields:
-//   - EntryBlock: The parsed entry block from a knowledge file
-//   - Score: Combined recency + relevance score (0.0-2.0)
-//   - Tokens: Pre-computed token estimate of the full body
-type ScoredEntry struct {
-	index.EntryBlock
-	Score  float64
-	Tokens int
-}
 
 // RecencyScore returns a score based on the entry's age.
 //
@@ -44,9 +32,11 @@ type ScoredEntry struct {
 // Returns:
 //   - float64: Recency score between 0.2 and 1.0
 func RecencyScore(eb *index.EntryBlock, now time.Time) float64 {
-	entryDate, err := time.ParseInLocation(time2.DateFormat, eb.Entry.Date, time.Local)
+	entryDate, err := time.ParseInLocation(
+		cfgTime.DateFormat, eb.Entry.Date, time.Local,
+	)
 	if err != nil {
-		return 0.2
+		return agent.RecencyScoreOld
 	}
 	days := int(now.Sub(entryDate).Hours() / 24)
 	switch {
@@ -92,7 +82,7 @@ func RelevanceScore(eb *index.EntryBlock, keywords []string) float64 {
 // ScoreEntry computes the combined relevance score for an entry block.
 //
 // Superseded entries always get score 0.0.
-// All other entries get recency + task relevance (range 0.0-2.0).
+// All other entries get recency and task relevance (range 0.0-2.0).
 //
 // Parameters:
 //   - eb: Entry block to score
@@ -129,8 +119,8 @@ func ExtractTaskKeywords(tasks []string) []string {
 	for _, t := range tasks {
 		// Split on whitespace and common punctuation
 		words := strings.FieldsFunc(strings.ToLower(t), func(r rune) bool {
-			isAlnum := (r >= 'a' && r <= 'z') || (r >= '0' && r <= '9')
-			return !isAlnum && r != '-' && r != '_'
+			alnum := (r >= 'a' && r <= 'z') || (r >= '0' && r <= '9')
+			return !alnum && r != '-' && r != '_'
 		})
 		for _, w := range words {
 			if len(w) < 3 || stopWords()[w] || seen[w] {
@@ -152,7 +142,9 @@ func ExtractTaskKeywords(tasks []string) []string {
 //
 // Returns:
 //   - []ScoredEntry: Entries sorted by score descending, with token estimates
-func ScoreEntries(blocks []index.EntryBlock, keywords []string, now time.Time) []ScoredEntry {
+func ScoreEntries(
+	blocks []index.EntryBlock, keywords []string, now time.Time,
+) []ScoredEntry {
 	scored := make([]ScoredEntry, 0, len(blocks))
 	for i := range blocks {
 		s := ScoreEntry(&blocks[i], keywords, now)

@@ -10,6 +10,7 @@ import (
 	"github.com/ActiveMemory/ctx/internal/assets/read/desc"
 	"github.com/ActiveMemory/ctx/internal/config/cli"
 	"github.com/ActiveMemory/ctx/internal/config/embed/text"
+	"github.com/ActiveMemory/ctx/internal/config/entry"
 	"github.com/ActiveMemory/ctx/internal/config/mcp/field"
 	"github.com/ActiveMemory/ctx/internal/config/mcp/schema"
 	toolCfg "github.com/ActiveMemory/ctx/internal/config/mcp/tool"
@@ -50,7 +51,7 @@ var Defs = []proto.Tool{
 					Type: schema.String,
 					Description: desc.TextDesc(
 						text.DescKeyMCPToolPropPriority),
-					Enum: []string{"high", "medium", "low"},
+					Enum: entry.Priorities,
 				},
 			}, EntryAttrProps(
 				text.DescKeyMCPToolPropContext)),

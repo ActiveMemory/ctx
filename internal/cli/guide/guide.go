@@ -9,10 +9,10 @@ package guide
 import (
 	"github.com/spf13/cobra"
 
-	guideroot "github.com/ActiveMemory/ctx/internal/cli/guide/cmd/root"
+	guideRoot "github.com/ActiveMemory/ctx/internal/cli/guide/cmd/root"
 )
 
 // Cmd returns the "ctx guide" cobra command.
 func Cmd() *cobra.Command {
-	return guideroot.Cmd()
+	return guideRoot.Cmd()
 }

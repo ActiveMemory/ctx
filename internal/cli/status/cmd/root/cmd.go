@@ -30,7 +30,7 @@ func Cmd() *cobra.Command {
 	short, long := desc.CommandDesc(cmd.DescKeyStatus)
 
 	cmd := &cobra.Command{
-		Use:   cmd.DescKeyStatus,
+		Use:   cmd.UseStatus,
 		Short: short,
 		Long:  long,
 		RunE: func(cmd *cobra.Command, _ []string) error {

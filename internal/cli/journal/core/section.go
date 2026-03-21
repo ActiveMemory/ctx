@@ -18,7 +18,7 @@ import (
 	"github.com/ActiveMemory/ctx/internal/config/journal"
 	"github.com/ActiveMemory/ctx/internal/config/regex"
 	"github.com/ActiveMemory/ctx/internal/config/token"
-	ctxerr "github.com/ActiveMemory/ctx/internal/err/fs"
+	ctxErr "github.com/ActiveMemory/ctx/internal/err/fs"
 )
 
 // WriteSection creates a subdirectory, writes its index page, and calls
@@ -39,14 +39,14 @@ func WriteSection(
 ) error {
 	dir := filepath.Join(docsDir, subdir)
 	if mkErr := os.MkdirAll(dir, fs.PermExec); mkErr != nil {
-		return ctxerr.Mkdir(dir, mkErr)
+		return ctxErr.Mkdir(dir, mkErr)
 	}
 
 	indexPath := filepath.Join(dir, file.Index)
 	if writeErr := os.WriteFile(
 		indexPath, []byte(indexContent), fs.PermFile,
 	); writeErr != nil {
-		return ctxerr.FileWrite(indexPath, writeErr)
+		return ctxErr.FileWrite(indexPath, writeErr)
 	}
 
 	writePages(dir)

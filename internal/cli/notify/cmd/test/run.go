@@ -12,13 +12,13 @@ import (
 	"path/filepath"
 	"time"
 
-	"github.com/ActiveMemory/ctx/internal/config/crypto"
-	ctxerr "github.com/ActiveMemory/ctx/internal/err/notify"
-	notify2 "github.com/ActiveMemory/ctx/internal/write/notify"
 	"github.com/spf13/cobra"
 
+	"github.com/ActiveMemory/ctx/internal/config/crypto"
+	ctxErr "github.com/ActiveMemory/ctx/internal/err/notify"
 	"github.com/ActiveMemory/ctx/internal/notify"
 	"github.com/ActiveMemory/ctx/internal/rc"
+	iNotify "github.com/ActiveMemory/ctx/internal/write/notify"
 )
 
 // runTest sends a test notification to the configured webhook.
@@ -31,10 +31,10 @@ import (
 func runTest(cmd *cobra.Command) error {
 	url, loadErr := notify.LoadWebhook()
 	if loadErr != nil {
-		return ctxerr.LoadWebhook(loadErr)
+		return ctxErr.LoadWebhook(loadErr)
 	}
 	if url == "" {
-		notify2.TestNoWebhook(cmd)
+		iNotify.TestNoWebhook(cmd)
 		return nil
 	}
 
@@ -52,20 +52,20 @@ func runTest(cmd *cobra.Command) error {
 
 	body, marshalErr := json.Marshal(payload)
 	if marshalErr != nil {
-		return ctxerr.MarshalPayload(marshalErr)
+		return ctxErr.MarshalPayload(marshalErr)
 	}
 
 	if !notify.EventAllowed("test", rc.NotifyEvents()) {
-		notify2.TestFiltered(cmd)
+		iNotify.TestFiltered(cmd)
 	}
 
 	resp, postErr := notify.PostJSON(url, body)
 	if postErr != nil {
-		return ctxerr.SendNotification(postErr)
+		return ctxErr.SendNotification(postErr)
 	}
 	defer func() { _ = resp.Body.Close() }()
 
-	notify2.TestResult(cmd, resp.StatusCode, crypto.NotifyEnc)
+	iNotify.TestResult(cmd, resp.StatusCode, crypto.NotifyEnc)
 
 	return nil
 }

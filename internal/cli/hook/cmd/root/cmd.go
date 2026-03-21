@@ -7,11 +7,13 @@
 package root
 
 import (
+	"github.com/spf13/cobra"
+
 	"github.com/ActiveMemory/ctx/internal/assets/read/desc"
 	"github.com/ActiveMemory/ctx/internal/config/cli"
 	"github.com/ActiveMemory/ctx/internal/config/embed/cmd"
 	"github.com/ActiveMemory/ctx/internal/config/embed/flag"
-	"github.com/spf13/cobra"
+	cflag "github.com/ActiveMemory/ctx/internal/config/flag"
 )
 
 // Cmd returns the "ctx hook" command for generating AI tool integrations.
@@ -28,8 +30,8 @@ func Cmd() *cobra.Command {
 	var write bool
 
 	short, long := desc.CommandDesc(cmd.DescKeyHook)
-	cmd := &cobra.Command{
-		Use:         cmd.DescKeyHook + " <tool>",
+	c := &cobra.Command{
+		Use:         cmd.UseHook,
 		Short:       short,
 		Annotations: map[string]string{cli.AnnotationSkipInit: cli.AnnotationTrue},
 		Long:        long,
@@ -39,10 +41,10 @@ func Cmd() *cobra.Command {
 		},
 	}
 
-	cmd.Flags().BoolVarP(
-		&write, "write", "w", false,
+	c.Flags().BoolVarP(
+		&write, cflag.Write, cflag.ShortWrite, false,
 		desc.FlagDesc(flag.DescKeyHookWrite),
 	)
 
-	return cmd
+	return c
 }

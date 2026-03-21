@@ -16,8 +16,4 @@ const (
 	MinWordLen = 4
 	// MinWordOverlap is the minimum word matches to signal task completion.
 	MinWordOverlap = 2
-	// TruncateLen is the max display length for task text in compact output.
-	TruncateLen = 50
-	// TruncateContentLen is the max display length for pending update content.
-	TruncateContentLen = 60
 )

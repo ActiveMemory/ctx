@@ -7,12 +7,13 @@
 package root
 
 import (
-	internalmcp "github.com/ActiveMemory/ctx/internal/mcp/server"
-	"github.com/ActiveMemory/ctx/internal/rc"
 	"github.com/spf13/cobra"
+
+	internalMcp "github.com/ActiveMemory/ctx/internal/mcp/server"
+	"github.com/ActiveMemory/ctx/internal/rc"
 )
 
 func Cmd(cmd *cobra.Command, _ []string) error {
-	srv := internalmcp.NewServer(rc.ContextDir(), cmd.Root().Version)
+	srv := internalMcp.NewServer(rc.ContextDir(), cmd.Root().Version)
 	return srv.Serve()
 }

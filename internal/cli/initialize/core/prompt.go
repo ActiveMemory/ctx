@@ -7,25 +7,15 @@
 package core
 
 import (
-	"bufio"
-	"fmt"
-	"os"
-	"strings"
-	"time"
-
-	loop2 "github.com/ActiveMemory/ctx/internal/assets/read/loop"
-	"github.com/ActiveMemory/ctx/internal/assets/read/template"
 	"github.com/spf13/cobra"
 
-	"github.com/ActiveMemory/ctx/internal/config/cli"
-	"github.com/ActiveMemory/ctx/internal/config/fs"
+	"github.com/ActiveMemory/ctx/internal/assets/read/desc"
+	loop2 "github.com/ActiveMemory/ctx/internal/assets/read/loop"
+	"github.com/ActiveMemory/ctx/internal/assets/read/template"
+	"github.com/ActiveMemory/ctx/internal/config/embed/text"
 	"github.com/ActiveMemory/ctx/internal/config/loop"
 	"github.com/ActiveMemory/ctx/internal/config/marker"
-	"github.com/ActiveMemory/ctx/internal/config/token"
-	"github.com/ActiveMemory/ctx/internal/err/backup"
-	fsErr "github.com/ActiveMemory/ctx/internal/err/fs"
 	initErr "github.com/ActiveMemory/ctx/internal/err/initialize"
-	promptErr "github.com/ActiveMemory/ctx/internal/err/prompt"
 	"github.com/ActiveMemory/ctx/internal/write/initialize"
 )
 
@@ -41,72 +31,38 @@ import (
 //   - error: Non-nil if file operations fail
 func HandlePromptMd(cmd *cobra.Command, force, autoMerge, ralph bool) error {
 	var templateContent []byte
-	var err error
+	var readErr error
 	if ralph {
-		templateContent, err = loop2.RalphTemplate(loop.PromptMd)
-		if err != nil {
-			return initErr.ReadTemplate("ralph PROMPT.md", err)
+		templateContent, readErr = loop2.RalphTemplate(loop.PromptMd)
+		if readErr != nil {
+			return initErr.ReadTemplate(loop.PromptMd, readErr)
 		}
 	} else {
-		templateContent, err = template.Template(loop.PromptMd)
-		if err != nil {
-			return initErr.ReadTemplate("PROMPT.md", err)
+		templateContent, readErr = template.Template(loop.PromptMd)
+		if readErr != nil {
+			return initErr.ReadTemplate(loop.PromptMd, readErr)
 		}
 	}
-	existingContent, err := os.ReadFile(loop.PromptMd)
-	fileExists := err == nil
-	if !fileExists {
-		if err := os.WriteFile(loop.PromptMd, templateContent, fs.PermFile); err != nil {
-			return fsErr.FileWrite(loop.PromptMd, err)
-		}
+
+	created, mergeErr := CreateOrMerge(cmd, MergeParams{
+		Filename:        loop.PromptMd,
+		MarkerStart:     marker.PromptMarkerStart,
+		TemplateContent: templateContent,
+		Force:           force,
+		AutoMerge:       autoMerge,
+		ConfirmPrompt:   desc.TextDesc(text.DescKeyInitConfirmPrompt),
+		UpdateFn:        UpdatePromptSection,
+	})
+	if mergeErr != nil {
+		return mergeErr
+	}
+	if created {
 		mode := ""
 		if ralph {
-			mode = " (ralph mode)"
+			mode = desc.TextDesc(text.DescKeyInitRalphMode)
 		}
 		initialize.CreatedWith(cmd, loop.PromptMd, mode)
-		return nil
 	}
-	existingStr := string(existingContent)
-	hasCtxMarkers := strings.Contains(existingStr, marker.PromptMarkerStart)
-	if hasCtxMarkers {
-		if !force {
-			initialize.CtxContentExists(cmd, loop.PromptMd)
-			return nil
-		}
-		return UpdatePromptSection(cmd, existingStr, templateContent)
-	}
-	if !autoMerge {
-		initialize.FileExistsNoCtx(cmd, loop.PromptMd)
-		cmd.Println("Would you like to merge ctx prompt instructions?")
-		cmd.Print("[y/N] ")
-		reader := bufio.NewReader(os.Stdin)
-		response, err := reader.ReadString('\n')
-		if err != nil {
-			return fsErr.ReadInput(err)
-		}
-		response = strings.TrimSpace(strings.ToLower(response))
-		if response != cli.ConfirmShort && response != cli.ConfirmLong {
-			initialize.SkippedPlain(cmd, loop.PromptMd)
-			return nil
-		}
-	}
-	timestamp := time.Now().Unix()
-	backupName := fmt.Sprintf("%s.%d.bak", loop.PromptMd, timestamp)
-	if err := os.WriteFile(backupName, existingContent, fs.PermFile); err != nil {
-		return backup.Create(backupName, err)
-	}
-	initialize.Backup(cmd, backupName)
-	insertPos := FindInsertionPoint(existingStr)
-	var mergedContent string
-	if insertPos == 0 {
-		mergedContent = string(templateContent) + token.NewlineLF + existingStr
-	} else {
-		mergedContent = existingStr[:insertPos] + token.NewlineLF + string(templateContent) + token.NewlineLF + existingStr[insertPos:]
-	}
-	if err := os.WriteFile(loop.PromptMd, []byte(mergedContent), fs.PermFile); err != nil {
-		return fsErr.WriteMerged(loop.PromptMd, err)
-	}
-	initialize.Merged(cmd, loop.PromptMd)
 	return nil
 }
 
@@ -120,34 +76,12 @@ func HandlePromptMd(cmd *cobra.Command, force, autoMerge, ralph bool) error {
 //
 // Returns:
 //   - error: Non-nil if markers are missing or file operations fail
-func UpdatePromptSection(cmd *cobra.Command, existing string, newTemplate []byte) error {
-	startIdx := strings.Index(existing, marker.PromptMarkerStart)
-	if startIdx == -1 {
-		return promptErr.MarkerNotFound("prompt")
-	}
-	endIdx := strings.Index(existing, marker.PromptMarkerEnd)
-	if endIdx == -1 {
-		endIdx = len(existing)
-	} else {
-		endIdx += len(marker.PromptMarkerEnd)
-	}
-	templateStr := string(newTemplate)
-	templateStart := strings.Index(templateStr, marker.PromptMarkerStart)
-	templateEnd := strings.Index(templateStr, marker.PromptMarkerEnd)
-	if templateStart == -1 || templateEnd == -1 {
-		return promptErr.TemplateMissingMarkers("prompt")
-	}
-	promptContent := templateStr[templateStart : templateEnd+len(marker.PromptMarkerEnd)]
-	newContent := existing[:startIdx] + promptContent + existing[endIdx:]
-	timestamp := time.Now().Unix()
-	backupName := fmt.Sprintf("%s.%d.bak", loop.PromptMd, timestamp)
-	if err := os.WriteFile(backupName, []byte(existing), fs.PermFile); err != nil {
-		return backup.CreateGeneric(err)
-	}
-	initialize.Backup(cmd, backupName)
-	if err := os.WriteFile(loop.PromptMd, []byte(newContent), fs.PermFile); err != nil {
-		return fsErr.FileUpdate(loop.PromptMd, err)
-	}
-	initialize.UpdatedPromptSection(cmd, loop.PromptMd)
-	return nil
+func UpdatePromptSection(
+	cmd *cobra.Command, existing string, newTemplate []byte,
+) error {
+	return UpdateMarkedSection(
+		cmd, loop.PromptMd, existing, newTemplate,
+		marker.PromptMarkerStart, marker.PromptMarkerEnd,
+		initialize.UpdatedPromptSection,
+	)
 }

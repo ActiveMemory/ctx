@@ -28,7 +28,7 @@ func Cmd() *cobra.Command {
 	short, long := desc.CommandDesc(cmd.DescKeyPermission)
 
 	cmd := &cobra.Command{
-		Use:   cmd.DescKeyPermission,
+		Use:   cmd.UsePermission,
 		Short: short,
 		Long:  long,
 	}

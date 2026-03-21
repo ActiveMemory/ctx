@@ -30,7 +30,7 @@ func Cmd() *cobra.Command {
 	short, long := desc.CommandDesc(cmd.DescKeyRemind)
 
 	cmd := &cobra.Command{
-		Use:   cmd.DescKeyRemind + " [TEXT]",
+		Use:   cmd.UseRemind,
 		Short: short,
 		Long:  long,
 		Args:  cobra.ArbitraryArgs,

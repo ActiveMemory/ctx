@@ -11,13 +11,15 @@ import (
 	"fmt"
 	"time"
 
-	errdrift "github.com/ActiveMemory/ctx/internal/err/drift"
 	"github.com/spf13/cobra"
 
+	"github.com/ActiveMemory/ctx/internal/assets/read/desc"
+	"github.com/ActiveMemory/ctx/internal/config/embed/text"
 	"github.com/ActiveMemory/ctx/internal/drift"
+	errdrift "github.com/ActiveMemory/ctx/internal/err/drift"
 )
 
-// OutputDriftText writes the drift report as formatted text with colors.
+// OutputDriftText writes the drift report as formatted text with icons.
 //
 // Output is grouped into violations, warnings (by type), and passed checks.
 // Includes a summary status line at the end.
@@ -29,23 +31,31 @@ import (
 // Returns:
 //   - error: Non-nil if violations were detected
 func OutputDriftText(cmd *cobra.Command, report *drift.Report) error {
-	cmd.Println("Drift Detection Report")
-	cmd.Println("======================")
+	cmd.Println(desc.TextDesc(text.DescKeyDriftReportHeading))
+	cmd.Println(desc.TextDesc(text.DescKeyDriftReportSeparator))
 	cmd.Println()
 
 	// Violations
 	if len(report.Violations) > 0 {
 		cmd.Println(fmt.Sprintf(
-			"❌ VIOLATIONS (%d)", len(report.Violations)),
+			desc.TextDesc(
+				text.DescKeyDriftViolationsHeading), len(report.Violations)),
 		)
 		cmd.Println()
 		for _, v := range report.Violations {
-			line := fmt.Sprintf("  - %s: %s", v.File, v.Message)
+			line := fmt.Sprintf(
+				desc.TextDesc(text.DescKeyDriftViolationLine), v.File, v.Message,
+			)
 			if v.Line > 0 {
-				line = fmt.Sprintf("  - %s:%d %s", v.File, v.Line, v.Message)
+				line = fmt.Sprintf(
+					desc.TextDesc(text.DescKeyDriftViolationLineLoc),
+					v.File, v.Line, v.Message,
+				)
 			}
 			if v.Rule != "" {
-				line += fmt.Sprintf(" (rule: %s)", v.Rule)
+				line += fmt.Sprintf(
+					desc.TextDesc(text.DescKeyDriftViolationRule), v.Rule,
+				)
 			}
 			cmd.Println(line)
 		}
@@ -54,9 +64,8 @@ func OutputDriftText(cmd *cobra.Command, report *drift.Report) error {
 
 	// Warnings
 	if len(report.Warnings) > 0 {
-		cmd.Println(
-			fmt.Sprintf("⚠️  WARNINGS (%d)", len(report.Warnings)),
-		)
+		cmd.Println(fmt.Sprintf(
+			desc.TextDesc(text.DescKeyDriftWarningsHeading), len(report.Warnings)))
 		cmd.Println()
 
 		// Group by type
@@ -76,27 +85,28 @@ func OutputDriftText(cmd *cobra.Command, report *drift.Report) error {
 		}
 
 		if len(pathRefs) > 0 {
-			cmd.Println("  Path References:")
+			cmd.Println(desc.TextDesc(text.DescKeyDriftPathRefsLabel))
 			for _, w := range pathRefs {
 				cmd.Println(fmt.Sprintf(
-					"  - %s:%d references '%s' (not found)", w.File, w.Line, w.Path,
-				))
+					desc.TextDesc(text.DescKeyDriftPathRefLine), w.File, w.Line, w.Path))
 			}
 			cmd.Println()
 		}
 
 		if len(staleness) > 0 {
-			cmd.Println("  Staleness:")
+			cmd.Println(desc.TextDesc(text.DescKeyDriftStalenessLabel))
 			for _, w := range staleness {
-				cmd.Println(fmt.Sprintf("  - %s %s", w.File, w.Message))
+				cmd.Println(fmt.Sprintf(
+					desc.TextDesc(text.DescKeyDriftStalenessLine), w.File, w.Message))
 			}
 			cmd.Println()
 		}
 
 		if len(other) > 0 {
-			cmd.Println("  Other:")
+			cmd.Println(desc.TextDesc(text.DescKeyDriftOtherLabel))
 			for _, w := range other {
-				cmd.Println(fmt.Sprintf("  - %s: %s", w.File, w.Message))
+				cmd.Println(fmt.Sprintf(
+					desc.TextDesc(text.DescKeyDriftOtherLine), w.File, w.Message))
 			}
 			cmd.Println()
 		}
@@ -104,9 +114,11 @@ func OutputDriftText(cmd *cobra.Command, report *drift.Report) error {
 
 	// Passed
 	if len(report.Passed) > 0 {
-		cmd.Println(fmt.Sprintf("✅ PASSED (%d)", len(report.Passed)))
+		cmd.Println(fmt.Sprintf(
+			desc.TextDesc(text.DescKeyDriftPassedHeading), len(report.Passed)))
 		for _, p := range report.Passed {
-			cmd.Println(fmt.Sprintf("  - %s", FormatCheckName(p)))
+			cmd.Println(fmt.Sprintf(
+				desc.TextDesc(text.DescKeyDriftPassedLine), FormatCheckName(p)))
 		}
 		cmd.Println()
 	}
@@ -116,14 +128,14 @@ func OutputDriftText(cmd *cobra.Command, report *drift.Report) error {
 	switch status {
 	case drift.StatusViolation:
 		cmd.Println()
-		cmd.Println("Status: VIOLATION — Constitution violations detected")
+		cmd.Println(desc.TextDesc(text.DescKeyDriftStatusViolation))
 		return errdrift.Violations()
 	case drift.StatusWarning:
 		cmd.Println()
-		cmd.Println("Status: WARNING — Issues detected that should be addressed")
+		cmd.Println(desc.TextDesc(text.DescKeyDriftStatusWarning))
 	default:
 		cmd.Println()
-		cmd.Println("Status: OK — No drift detected")
+		cmd.Println(desc.TextDesc(text.DescKeyDriftStatusOK))
 	}
 
 	return nil

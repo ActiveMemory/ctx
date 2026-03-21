@@ -14,7 +14,7 @@ import (
 	"strings"
 
 	"github.com/ActiveMemory/ctx/internal/assets/read/desc"
-	"github.com/ActiveMemory/ctx/internal/cli/initialize"
+	initCore "github.com/ActiveMemory/ctx/internal/cli/initialize/core"
 	"github.com/ActiveMemory/ctx/internal/config/claude"
 	"github.com/ActiveMemory/ctx/internal/config/crypto"
 	"github.com/ActiveMemory/ctx/internal/config/ctx"
@@ -24,6 +24,8 @@ import (
 	"github.com/ActiveMemory/ctx/internal/config/marker"
 	"github.com/ActiveMemory/ctx/internal/config/regex"
 	"github.com/ActiveMemory/ctx/internal/config/reminder"
+	"github.com/ActiveMemory/ctx/internal/config/stats"
+	cfgToken "github.com/ActiveMemory/ctx/internal/config/token"
 	"github.com/ActiveMemory/ctx/internal/context/load"
 	"github.com/ActiveMemory/ctx/internal/context/token"
 	"github.com/ActiveMemory/ctx/internal/context/validate"
@@ -43,14 +45,14 @@ func CheckContextInitialized(report *Report) {
 		report.Results = append(report.Results, Result{
 			Name:     doctor.CheckContextInit,
 			Category: doctor.CategoryStructure,
-			Status:   StatusOK,
+			Status:   stats.StatusOK,
 			Message:  desc.TextDesc(text.DescKeyDoctorContextInitializedOk),
 		})
 	} else {
 		report.Results = append(report.Results, Result{
 			Name:     doctor.CheckContextInit,
 			Category: doctor.CategoryStructure,
-			Status:   StatusError,
+			Status:   stats.StatusError,
 			Message:  desc.TextDesc(text.DescKeyDoctorContextInitializedError),
 		})
 	}
@@ -77,20 +79,27 @@ func CheckRequiredFiles(report *Report) {
 		report.Results = append(report.Results, Result{
 			Name:     doctor.CheckRequiredFiles,
 			Category: doctor.CategoryStructure,
-			Status:   StatusOK,
-			Message:  fmt.Sprintf(desc.TextDesc(text.DescKeyDoctorRequiredFilesOk), present, total),
+			Status:   stats.StatusOK,
+			Message: fmt.Sprintf(
+				desc.TextDesc(text.DescKeyDoctorRequiredFilesOk),
+				present, total,
+			),
 		})
 	} else {
 		report.Results = append(report.Results, Result{
 			Name:     doctor.CheckRequiredFiles,
 			Category: doctor.CategoryStructure,
-			Status:   StatusError,
-			Message:  fmt.Sprintf(desc.TextDesc(text.DescKeyDoctorRequiredFilesError), present, total, strings.Join(missing, ", ")),
+			Status:   stats.StatusError,
+			Message: fmt.Sprintf(
+				desc.TextDesc(text.DescKeyDoctorRequiredFilesError),
+				present, total, strings.Join(missing, cfgToken.CommaSpace),
+			),
 		})
 	}
 }
 
-// CheckCtxrcValidation validates the .ctxrc file for unknown fields or parse errors.
+// CheckCtxrcValidation validates the .ctxrc file for unknown fields or parse
+// errors.
 //
 // Parameters:
 //   - report: Report to append the result to
@@ -101,7 +110,7 @@ func CheckCtxrcValidation(report *Report) {
 		report.Results = append(report.Results, Result{
 			Name:     doctor.CheckCtxrcValidation,
 			Category: doctor.CategoryStructure,
-			Status:   StatusOK,
+			Status:   stats.StatusOK,
 			Message:  desc.TextDesc(text.DescKeyDoctorCtxrcValidationOkNoFile),
 		})
 		return
@@ -112,8 +121,11 @@ func CheckCtxrcValidation(report *Report) {
 		report.Results = append(report.Results, Result{
 			Name:     doctor.CheckCtxrcValidation,
 			Category: doctor.CategoryStructure,
-			Status:   StatusError,
-			Message:  fmt.Sprintf(desc.TextDesc(text.DescKeyDoctorCtxrcValidationError), validateErr),
+			Status:   stats.StatusError,
+			Message: fmt.Sprintf(
+				desc.TextDesc(text.DescKeyDoctorCtxrcValidationError),
+				validateErr,
+			),
 		})
 		return
 	}
@@ -122,8 +134,12 @@ func CheckCtxrcValidation(report *Report) {
 		report.Results = append(report.Results, Result{
 			Name:     doctor.CheckCtxrcValidation,
 			Category: doctor.CategoryStructure,
-			Status:   StatusWarning,
-			Message:  fmt.Sprintf(desc.TextDesc(text.DescKeyDoctorCtxrcValidationWarning), strings.Join(warnings, "; ")),
+			Status:   stats.StatusWarning,
+			Message: fmt.Sprintf(
+				desc.TextDesc(
+					text.DescKeyDoctorCtxrcValidationWarning),
+				strings.Join(warnings, cfgToken.SemicolonSpace),
+			),
 		})
 		return
 	}
@@ -131,7 +147,7 @@ func CheckCtxrcValidation(report *Report) {
 	report.Results = append(report.Results, Result{
 		Name:     doctor.CheckCtxrcValidation,
 		Category: doctor.CategoryStructure,
-		Status:   StatusOK,
+		Status:   stats.StatusOK,
 		Message:  desc.TextDesc(text.DescKeyDoctorCtxrcValidationOk),
 	})
 }
@@ -145,18 +161,20 @@ func CheckDrift(report *Report) {
 		return // skip drift check if not initialized
 	}
 
-	ctx, loadErr := load.Do("")
+	c, loadErr := load.Do("")
 	if loadErr != nil {
 		report.Results = append(report.Results, Result{
 			Name:     doctor.CheckDrift,
 			Category: doctor.CategoryQuality,
-			Status:   StatusWarning,
-			Message:  fmt.Sprintf(desc.TextDesc(text.DescKeyDoctorDriftWarningLoad), loadErr),
+			Status:   stats.StatusWarning,
+			Message: fmt.Sprintf(
+				desc.TextDesc(text.DescKeyDoctorDriftWarningLoad), loadErr,
+			),
 		})
 		return
 	}
 
-	driftReport := drift.Detect(ctx)
+	driftReport := drift.Detect(c)
 	warnCount := len(driftReport.Warnings)
 	violCount := len(driftReport.Violations)
 
@@ -164,7 +182,7 @@ func CheckDrift(report *Report) {
 		report.Results = append(report.Results, Result{
 			Name:     doctor.CheckDrift,
 			Category: doctor.CategoryQuality,
-			Status:   StatusOK,
+			Status:   stats.StatusOK,
 			Message:  desc.TextDesc(text.DescKeyDoctorDriftOk),
 		})
 		return
@@ -172,22 +190,36 @@ func CheckDrift(report *Report) {
 
 	var parts []string
 	if violCount > 0 {
-		parts = append(parts, fmt.Sprintf(desc.TextDesc(text.DescKeyDoctorDriftViolations), violCount))
+		parts = append(
+			parts,
+			fmt.Sprintf(desc.TextDesc(text.DescKeyDoctorDriftViolations),
+				violCount,
+			),
+		)
 	}
 	if warnCount > 0 {
-		parts = append(parts, fmt.Sprintf(desc.TextDesc(text.DescKeyDoctorDriftWarnings), warnCount))
+		parts = append(
+			parts,
+			fmt.Sprintf(desc.TextDesc(text.DescKeyDoctorDriftWarnings),
+				warnCount,
+			),
+		)
 	}
 
-	status := StatusWarning
+	status := stats.StatusWarning
 	if violCount > 0 {
-		status = StatusError
+		status = stats.StatusError
 	}
 
 	report.Results = append(report.Results, Result{
 		Name:     doctor.CheckDrift,
 		Category: doctor.CategoryQuality,
 		Status:   status,
-		Message:  fmt.Sprintf(desc.TextDesc(text.DescKeyDoctorDriftDetected), strings.Join(parts, ", ")),
+		Message: fmt.Sprintf(
+			desc.TextDesc(
+				text.DescKeyDoctorDriftDetected),
+			strings.Join(parts, cfgToken.CommaSpace),
+		),
 	})
 }
 
@@ -196,12 +228,12 @@ func CheckDrift(report *Report) {
 // Parameters:
 //   - report: Report to append the result to
 func CheckPluginEnablement(report *Report) {
-	installed := initialize.PluginInstalled()
+	installed := initCore.PluginInstalled()
 	if !installed {
 		report.Results = append(report.Results, Result{
 			Name:     doctor.CheckPluginInstalled,
 			Category: doctor.CategoryPlugin,
-			Status:   StatusInfo,
+			Status:   stats.StatusInfo,
 			Message:  desc.TextDesc(text.DescKeyDoctorPluginInstalledInfo),
 		})
 		return
@@ -210,18 +242,18 @@ func CheckPluginEnablement(report *Report) {
 	report.Results = append(report.Results, Result{
 		Name:     doctor.CheckPluginInstalled,
 		Category: doctor.CategoryPlugin,
-		Status:   StatusOK,
+		Status:   stats.StatusOK,
 		Message:  desc.TextDesc(text.DescKeyDoctorPluginInstalledOk),
 	})
 
-	globalEnabled := initialize.PluginEnabledGlobally()
-	localEnabled := initialize.PluginEnabledLocally()
+	globalEnabled := initCore.PluginEnabledGlobally()
+	localEnabled := initCore.PluginEnabledLocally()
 
 	if globalEnabled {
 		report.Results = append(report.Results, Result{
 			Name:     doctor.CheckPluginEnabledGlobal,
 			Category: doctor.CategoryPlugin,
-			Status:   StatusOK,
+			Status:   stats.StatusOK,
 			Message:  desc.TextDesc(text.DescKeyDoctorPluginEnabledGlobalOk),
 		})
 	}
@@ -230,7 +262,7 @@ func CheckPluginEnablement(report *Report) {
 		report.Results = append(report.Results, Result{
 			Name:     doctor.CheckPluginEnabledLocal,
 			Category: doctor.CategoryPlugin,
-			Status:   StatusOK,
+			Status:   stats.StatusOK,
 			Message:  desc.TextDesc(text.DescKeyDoctorPluginEnabledLocalOk),
 		})
 	}
@@ -239,8 +271,11 @@ func CheckPluginEnablement(report *Report) {
 		report.Results = append(report.Results, Result{
 			Name:     doctor.CheckPluginEnabled,
 			Category: doctor.CategoryPlugin,
-			Status:   StatusWarning,
-			Message:  fmt.Sprintf(desc.TextDesc(text.DescKeyDoctorPluginEnabledWarning), claude.PluginID),
+			Status:   stats.StatusWarning,
+			Message: fmt.Sprintf(
+				desc.TextDesc(
+					text.DescKeyDoctorPluginEnabledWarning), claude.PluginID,
+			),
 		})
 	}
 }
@@ -254,14 +289,14 @@ func CheckEventLogging(report *Report) {
 		report.Results = append(report.Results, Result{
 			Name:     doctor.CheckEventLogging,
 			Category: doctor.CategoryHooks,
-			Status:   StatusOK,
+			Status:   stats.StatusOK,
 			Message:  desc.TextDesc(text.DescKeyDoctorEventLoggingOk),
 		})
 	} else {
 		report.Results = append(report.Results, Result{
 			Name:     doctor.CheckEventLogging,
 			Category: doctor.CategoryHooks,
-			Status:   StatusInfo,
+			Status:   stats.StatusInfo,
 			Message:  desc.TextDesc(text.DescKeyDoctorEventLoggingInfo),
 		})
 	}
@@ -278,14 +313,14 @@ func CheckWebhook(report *Report) {
 		report.Results = append(report.Results, Result{
 			Name:     doctor.CheckWebhook,
 			Category: doctor.CategoryHooks,
-			Status:   StatusOK,
+			Status:   stats.StatusOK,
 			Message:  desc.TextDesc(text.DescKeyDoctorWebhookOk),
 		})
 	} else {
 		report.Results = append(report.Results, Result{
 			Name:     doctor.CheckWebhook,
 			Category: doctor.CategoryHooks,
-			Status:   StatusInfo,
+			Status:   stats.StatusInfo,
 			Message:  desc.TextDesc(text.DescKeyDoctorWebhookInfo),
 		})
 	}
@@ -303,7 +338,7 @@ func CheckReminders(report *Report) {
 		report.Results = append(report.Results, Result{
 			Name:     doctor.CheckReminders,
 			Category: doctor.CategoryState,
-			Status:   StatusOK,
+			Status:   stats.StatusOK,
 			Message:  desc.TextDesc(text.DescKeyDoctorRemindersOk),
 		})
 		return
@@ -314,7 +349,7 @@ func CheckReminders(report *Report) {
 		report.Results = append(report.Results, Result{
 			Name:     doctor.CheckReminders,
 			Category: doctor.CategoryState,
-			Status:   StatusOK,
+			Status:   stats.StatusOK,
 			Message:  desc.TextDesc(text.DescKeyDoctorRemindersOk),
 		})
 		return
@@ -325,20 +360,23 @@ func CheckReminders(report *Report) {
 		report.Results = append(report.Results, Result{
 			Name:     doctor.CheckReminders,
 			Category: doctor.CategoryState,
-			Status:   StatusOK,
+			Status:   stats.StatusOK,
 			Message:  desc.TextDesc(text.DescKeyDoctorRemindersOk),
 		})
 	} else {
 		report.Results = append(report.Results, Result{
 			Name:     doctor.CheckReminders,
 			Category: doctor.CategoryState,
-			Status:   StatusInfo,
-			Message:  fmt.Sprintf(desc.TextDesc(text.DescKeyDoctorRemindersInfo), count),
+			Status:   stats.StatusInfo,
+			Message: fmt.Sprintf(
+				desc.TextDesc(text.DescKeyDoctorRemindersInfo), count,
+			),
 		})
 	}
 }
 
-// CheckTaskCompletion analyzes task completion ratio and suggests archiving.
+// CheckTaskCompletion analyzes the task completion ratio and suggests
+// archiving.
 //
 // Parameters:
 //   - report: Report to append the result to
@@ -366,20 +404,25 @@ func CheckTaskCompletion(report *Report) {
 	}
 
 	ratio := completed * 100 / total
-	msg := fmt.Sprintf(desc.TextDesc(text.DescKeyDoctorTaskCompletionFormat), completed, total, ratio)
+	msg := fmt.Sprintf(desc.TextDesc(
+		text.DescKeyDoctorTaskCompletionFormat),
+		completed, total, ratio,
+	)
 
-	if ratio >= 80 && completed > 5 {
+	if ratio >= doctor.TaskCompletionWarnPct && completed > doctor.TaskCompletionMinCount {
 		report.Results = append(report.Results, Result{
 			Name:     doctor.CheckTaskCompletion,
 			Category: doctor.CategoryState,
-			Status:   StatusWarning,
-			Message:  msg + desc.TextDesc(text.DescKeyDoctorTaskCompletionWarningSuffix),
+			Status:   stats.StatusWarning,
+			Message: msg + desc.TextDesc(
+				text.DescKeyDoctorTaskCompletionWarningSuffix,
+			),
 		})
 	} else {
 		report.Results = append(report.Results, Result{
 			Name:     doctor.CheckTaskCompletion,
 			Category: doctor.CategoryState,
-			Status:   StatusOK,
+			Status:   stats.StatusOK,
 			Message:  msg,
 		})
 	}
@@ -391,7 +434,7 @@ func CheckTaskCompletion(report *Report) {
 //   - report: Report to append the result to
 func CheckContextTokenSize(report *Report) {
 	// Only count files in ReadOrder — these are the files actually
-	// loaded into agent context. Other .md files (DETAILED_DESIGN.md,
+	// loaded into the agent context. Other .md files (DETAILED_DESIGN.md,
 	// map-tracking, etc.) exist on disk but aren't injected.
 	indexed := make(map[string]bool, len(ctx.ReadOrder))
 	for _, f := range ctx.ReadOrder {
@@ -399,7 +442,7 @@ func CheckContextTokenSize(report *Report) {
 	}
 
 	var totalTokens int
-	ctx, loadErr := load.Do("")
+	c, loadErr := load.Do("")
 	if loadErr != nil {
 		return
 	}
@@ -411,7 +454,7 @@ func CheckContextTokenSize(report *Report) {
 	}
 	var breakdown []fileTokens
 
-	for _, f := range ctx.Files {
+	for _, f := range c.Files {
 		if indexed[f.Name] {
 			tokens := token.EstimateTokens(f.Content)
 			totalTokens += tokens
@@ -420,21 +463,24 @@ func CheckContextTokenSize(report *Report) {
 	}
 
 	window := rc.ContextWindow()
-	msg := fmt.Sprintf(desc.TextDesc(text.DescKeyDoctorContextSizeFormat), totalTokens, window)
+	msg := fmt.Sprintf(
+		desc.TextDesc(text.DescKeyDoctorContextSizeFormat),
+		totalTokens, window,
+	)
 
-	warnThreshold := window / 5 // 20% of context window
+	warnThreshold := window * doctor.ContextSizeWarnPct / 100
 	if totalTokens > warnThreshold {
 		report.Results = append(report.Results, Result{
 			Name:     doctor.CheckContextSize,
 			Category: doctor.CategorySize,
-			Status:   StatusWarning,
+			Status:   stats.StatusWarning,
 			Message:  msg + desc.TextDesc(text.DescKeyDoctorContextSizeWarningSuffix),
 		})
 	} else {
 		report.Results = append(report.Results, Result{
 			Name:     doctor.CheckContextSize,
 			Category: doctor.CategorySize,
-			Status:   StatusOK,
+			Status:   stats.StatusOK,
 			Message:  msg,
 		})
 	}
@@ -444,8 +490,10 @@ func CheckContextTokenSize(report *Report) {
 		report.Results = append(report.Results, Result{
 			Name:     doctor.CheckContextFilePrefix + ft.name,
 			Category: doctor.CategorySize,
-			Status:   StatusInfo,
-			Message:  fmt.Sprintf(desc.TextDesc(text.DescKeyDoctorContextFileFormat), ft.name, ft.tokens),
+			Status:   stats.StatusInfo,
+			Message: fmt.Sprintf(
+				desc.TextDesc(text.DescKeyDoctorContextFileFormat), ft.name, ft.tokens,
+			),
 		})
 	}
 }
@@ -464,7 +512,7 @@ func CheckRecentEventActivity(report *Report) {
 		report.Results = append(report.Results, Result{
 			Name:     doctor.CheckRecentEvents,
 			Category: doctor.CategoryEvents,
-			Status:   StatusInfo,
+			Status:   stats.StatusInfo,
 			Message:  desc.TextDesc(text.DescKeyDoctorRecentEventsInfo),
 		})
 		return
@@ -473,8 +521,11 @@ func CheckRecentEventActivity(report *Report) {
 	report.Results = append(report.Results, Result{
 		Name:     doctor.CheckRecentEvents,
 		Category: doctor.CategoryEvents,
-		Status:   StatusOK,
-		Message:  fmt.Sprintf(desc.TextDesc(text.DescKeyDoctorRecentEventsOk), events[len(events)-1].Timestamp),
+		Status:   stats.StatusOK,
+		Message: fmt.Sprintf(
+			desc.TextDesc(text.DescKeyDoctorRecentEventsOk),
+			events[len(events)-1].Timestamp,
+		),
 	})
 }
 
@@ -512,7 +563,7 @@ func AddResourceResults(report *Report, snap sysinfo.Snapshot) {
 		report.Results = append(report.Results, Result{
 			Name:     doctor.CheckResourceMemory,
 			Category: doctor.CategoryResources,
-			Status:   SeverityToStatus(sevMap["memory"]),
+			Status:   SeverityToStatus(sevMap[sysinfo.ResourceMemory]),
 			Message:  msg,
 		})
 	}
@@ -527,7 +578,7 @@ func AddResourceResults(report *Report, snap sysinfo.Snapshot) {
 		report.Results = append(report.Results, Result{
 			Name:     doctor.CheckResourceSwap,
 			Category: doctor.CategoryResources,
-			Status:   SeverityToStatus(sevMap["swap"]),
+			Status:   SeverityToStatus(sevMap[sysinfo.ResourceSwap]),
 			Message:  msg,
 		})
 	}
@@ -542,7 +593,7 @@ func AddResourceResults(report *Report, snap sysinfo.Snapshot) {
 		report.Results = append(report.Results, Result{
 			Name:     doctor.CheckResourceDisk,
 			Category: doctor.CategoryResources,
-			Status:   SeverityToStatus(sevMap["disk"]),
+			Status:   SeverityToStatus(sevMap[sysinfo.ResourceDisk]),
 			Message:  msg,
 		})
 	}
@@ -555,7 +606,7 @@ func AddResourceResults(report *Report, snap sysinfo.Snapshot) {
 		report.Results = append(report.Results, Result{
 			Name:     doctor.CheckResourceLoad,
 			Category: doctor.CategoryResources,
-			Status:   SeverityToStatus(sevMap["load"]),
+			Status:   SeverityToStatus(sevMap[sysinfo.ResourceLoad]),
 			Message:  msg,
 		})
 	}
@@ -567,26 +618,26 @@ func AddResourceResults(report *Report, snap sysinfo.Snapshot) {
 //   - sev: Severity level from system resource evaluation
 //
 // Returns:
-//   - string: Corresponding status constant (StatusOK, StatusWarning, StatusError)
+//   - string: Corresponding status constant (stats.StatusOK, stats.StatusWarning, stats.StatusError)
 func SeverityToStatus(sev sysinfo.Severity) string {
 	switch sev {
 	case sysinfo.SeverityWarning:
-		return StatusWarning
+		return stats.StatusWarning
 	case sysinfo.SeverityDanger:
-		return StatusError
+		return stats.StatusError
 	default:
-		return StatusOK
+		return stats.StatusOK
 	}
 }
 
-// ResourcePct calculates the percentage of used vs total.
+// ResourcePct calculates the percentage of used versus total.
 //
 // Parameters:
 //   - used: Used amount
 //   - total: Total capacity
 //
 // Returns:
-//   - int: Percentage (0 if total is 0)
+//   - int: Percentage (0 if the total is 0)
 func ResourcePct(used, total uint64) int {
 	if total == 0 {
 		return 0

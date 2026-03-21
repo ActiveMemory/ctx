@@ -7,10 +7,11 @@
 package switchcmd
 
 import (
-	ctxerr "github.com/ActiveMemory/ctx/internal/err/config"
 	"github.com/spf13/cobra"
 
 	"github.com/ActiveMemory/ctx/internal/cli/config/core"
+	"github.com/ActiveMemory/ctx/internal/config/file"
+	ctxErr "github.com/ActiveMemory/ctx/internal/err/config"
 )
 
 // Run executes the profile switch logic.
@@ -29,26 +30,26 @@ func Run(cmd *cobra.Command, root string, args []string) error {
 	}
 
 	// Normalize "prod" alias.
-	if target == core.ProfileProd {
-		target = core.ProfileBase
+	if target == file.ProfileProd {
+		target = file.ProfileBase
 	}
 
 	var profile string
 	switch target {
-	case core.ProfileDev:
-		profile = core.ProfileDev
-	case core.ProfileBase:
-		profile = core.ProfileBase
+	case file.ProfileDev:
+		profile = file.ProfileDev
+	case file.ProfileBase:
+		profile = file.ProfileBase
 	case "":
 		// Toggle.
 		current := core.DetectProfile()
-		if current == core.ProfileDev {
-			profile = core.ProfileBase
+		if current == file.ProfileDev {
+			profile = file.ProfileBase
 		} else {
-			profile = core.ProfileDev
+			profile = file.ProfileDev
 		}
 	default:
-		return ctxerr.UnknownProfile(target)
+		return ctxErr.UnknownProfile(target)
 	}
 
 	msg, switchErr := core.SwitchTo(root, profile)

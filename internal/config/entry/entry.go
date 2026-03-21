@@ -27,6 +27,16 @@ const (
 	Unknown = "unknown"
 )
 
+// Priority levels for task entries.
+const (
+	PriorityHigh   = "high"
+	PriorityMedium = "medium"
+	PriorityLow    = "low"
+)
+
+// Priorities lists all valid priority levels for shell completion.
+var Priorities = []string{PriorityHigh, PriorityMedium, PriorityLow}
+
 // FromUserInput normalizes user input to a canonical entry type.
 //
 // Accepts singular and plural forms, case-insensitive.

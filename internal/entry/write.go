@@ -93,7 +93,7 @@ func Write(params Params) error {
 		); indexErr != nil {
 			return add.ErrIndexUpdate(filePath, indexErr)
 		}
-	case entry.Task, entry.Convention:
+		// case entry.Task, entry.Convention:
 		// No index to update for these types
 	}
 

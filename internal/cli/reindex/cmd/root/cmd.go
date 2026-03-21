@@ -23,7 +23,7 @@ func Cmd() *cobra.Command {
 	short, long := desc.CommandDesc(cmd.DescKeyReindex)
 
 	return &cobra.Command{
-		Use:   cmd.DescKeyReindex,
+		Use:   cmd.UseReindex,
 		Short: short,
 		Long:  long,
 		RunE:  Run,

@@ -20,7 +20,7 @@ import (
 func Cmd() *cobra.Command {
 	short, long := desc.CommandDesc(cmd.DescKeyPause)
 	cmd := &cobra.Command{
-		Use:   cmd.DescKeyPause,
+		Use:   cmd.UsePause,
 		Short: short,
 		Long:  long,
 		RunE: func(cmd *cobra.Command, _ []string) error {

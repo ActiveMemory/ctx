@@ -9,9 +9,10 @@ package core
 import (
 	"strings"
 
+	"gopkg.in/yaml.v3"
+
 	"github.com/ActiveMemory/ctx/internal/config/session"
 	"github.com/ActiveMemory/ctx/internal/config/token"
-	"gopkg.in/yaml.v3"
 )
 
 // TransformFrontmatter converts journal frontmatter to Obsidian format.

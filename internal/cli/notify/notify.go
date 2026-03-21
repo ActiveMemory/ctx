@@ -9,15 +9,16 @@ package notify
 import (
 	"strings"
 
-	"github.com/ActiveMemory/ctx/internal/assets/read/desc"
-	"github.com/ActiveMemory/ctx/internal/config/embed/cmd"
-	"github.com/ActiveMemory/ctx/internal/config/embed/flag"
-	errcli "github.com/ActiveMemory/ctx/internal/err/cli"
 	"github.com/spf13/cobra"
 
+	"github.com/ActiveMemory/ctx/internal/assets/read/desc"
 	"github.com/ActiveMemory/ctx/internal/cli/notify/cmd/setup"
 	"github.com/ActiveMemory/ctx/internal/cli/notify/cmd/test"
-	notifylib "github.com/ActiveMemory/ctx/internal/notify"
+	"github.com/ActiveMemory/ctx/internal/config/embed/cmd"
+	"github.com/ActiveMemory/ctx/internal/config/embed/flag"
+	cFlag "github.com/ActiveMemory/ctx/internal/config/flag"
+	errCli "github.com/ActiveMemory/ctx/internal/err/cli"
+	iNotify "github.com/ActiveMemory/ctx/internal/notify"
 )
 
 // Cmd returns the "ctx notify" parent command.
@@ -31,43 +32,44 @@ func Cmd() *cobra.Command {
 	var variant string
 
 	short, long := desc.CommandDesc(cmd.DescKeyNotify)
-	cmd := &cobra.Command{
-		Use:   cmd.DescKeyNotify + " [message]",
+	c := &cobra.Command{
+		Use:   cmd.UseNotify,
 		Short: short,
 		Long:  long,
 		Args:  cobra.MinimumNArgs(0),
 		RunE: func(cmd *cobra.Command, args []string) error {
 			if event == "" {
-				return errcli.FlagRequired("event")
+				return errCli.FlagRequired(cFlag.Event)
 			}
 			if len(args) == 0 {
-				return errcli.ArgRequired("message")
+				return errCli.ArgRequired(cFlag.Message)
 			}
 			message := strings.Join(args, " ")
-			var ref *notifylib.TemplateRef
+			var ref *iNotify.TemplateRef
 			if hook != "" {
-				ref = notifylib.NewTemplateRef(hook, variant, nil)
+				ref = iNotify.NewTemplateRef(hook, variant, nil)
 			}
-			return notifylib.Send(event, message, sessionID, ref)
+			return iNotify.Send(event, message, sessionID, ref)
 		},
 	}
 
-	cmd.Flags().StringVarP(&event,
-		"event", "e", "",
+	c.Flags().StringVarP(&event,
+		cFlag.Event, cFlag.ShortEvent, "",
 		desc.FlagDesc(flag.DescKeyNotifyEvent),
 	)
-	cmd.Flags().StringVarP(&sessionID,
-		"session-id", "s", "", desc.FlagDesc(flag.DescKeyNotifySessionId),
+	c.Flags().StringVarP(&sessionID,
+		cFlag.SessionID, cFlag.ShortSessionID, "",
+		desc.FlagDesc(flag.DescKeyNotifySessionId),
 	)
-	cmd.Flags().StringVar(&hook,
-		"hook", "", desc.FlagDesc(flag.DescKeyNotifyHook),
+	c.Flags().StringVar(&hook,
+		cFlag.Hook, "", desc.FlagDesc(flag.DescKeyNotifyHook),
 	)
-	cmd.Flags().StringVar(&variant,
-		"variant", "", desc.FlagDesc(flag.DescKeyNotifyVariant),
+	c.Flags().StringVar(&variant,
+		cFlag.Variant, "", desc.FlagDesc(flag.DescKeyNotifyVariant),
 	)
 
-	cmd.AddCommand(setup.Cmd())
-	cmd.AddCommand(test.Cmd())
+	c.AddCommand(setup.Cmd())
+	c.AddCommand(test.Cmd())
 
-	return cmd
+	return c
 }

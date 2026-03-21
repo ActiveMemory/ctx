@@ -38,7 +38,7 @@ import (
 // Returns:
 //   - error: Non-nil if file operations fail
 func HandleImplementationPlan(cmd *cobra.Command, force, autoMerge bool) error {
-	templateContent, err := project2.ProjectFile(project.ImplementationPlan)
+	templateContent, err := project2.File(project.ImplementationPlan)
 	if err != nil {
 		return errInit.ReadTemplate("IMPLEMENTATION_PLAN.md", err)
 	}

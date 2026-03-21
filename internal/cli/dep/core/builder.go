@@ -12,7 +12,7 @@ type GraphBuilder interface {
 	Name() string
 
 	// Detect returns true if the current directory contains this ecosystem's
-	// manifest file (e.g. go.mod, package.json).
+	// manifest file (e.g., go.mod, package.json).
 	Detect() bool
 
 	// Build produces an adjacency list of dependencies.

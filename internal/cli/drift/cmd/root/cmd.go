@@ -7,10 +7,12 @@
 package root
 
 import (
+	"github.com/spf13/cobra"
+
 	"github.com/ActiveMemory/ctx/internal/assets/read/desc"
 	"github.com/ActiveMemory/ctx/internal/config/embed/cmd"
 	"github.com/ActiveMemory/ctx/internal/config/embed/flag"
-	"github.com/spf13/cobra"
+	cflag "github.com/ActiveMemory/ctx/internal/config/flag"
 )
 
 // Cmd returns the "ctx drift" command for detecting stale context.
@@ -31,8 +33,8 @@ func Cmd() *cobra.Command {
 	)
 
 	short, long := desc.CommandDesc(cmd.DescKeyDrift)
-	cmd := &cobra.Command{
-		Use:   cmd.DescKeyDrift,
+	c := &cobra.Command{
+		Use:   cmd.UseDrift,
 		Short: short,
 		Long:  long,
 		RunE: func(cmd *cobra.Command, args []string) error {
@@ -40,12 +42,12 @@ func Cmd() *cobra.Command {
 		},
 	}
 
-	cmd.Flags().BoolVar(
-		&jsonOutput, "json", false, desc.FlagDesc(flag.DescKeyDriftJson),
+	c.Flags().BoolVar(
+		&jsonOutput, cflag.JSON, false, desc.FlagDesc(flag.DescKeyDriftJson),
 	)
-	cmd.Flags().BoolVar(&fix,
-		"fix", false, desc.FlagDesc(flag.DescKeyDriftFix),
+	c.Flags().BoolVar(&fix,
+		cflag.Fix, false, desc.FlagDesc(flag.DescKeyDriftFix),
 	)
 
-	return cmd
+	return c
 }

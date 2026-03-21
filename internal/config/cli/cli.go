@@ -12,3 +12,6 @@ const AnnotationSkipInit = "skipInitCheck"
 
 // AnnotationTrue is the canonical value for boolean cobra annotations.
 const AnnotationTrue = "true"
+
+// Binary is the ctx executable name used for PATH validation.
+const Binary = "ctx"

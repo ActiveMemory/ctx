@@ -22,7 +22,7 @@ func Cmd() *cobra.Command {
 	short, long := desc.CommandDesc(cmd.DescKeyServe)
 
 	cmd := &cobra.Command{
-		Use:   cmd.DescKeyServe + " [directory]",
+		Use:   cmd.UseServe,
 		Short: short,
 		Long:  long,
 		Args:  cobra.MaximumNArgs(1),

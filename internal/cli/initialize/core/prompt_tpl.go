@@ -10,13 +10,14 @@ import (
 	"os"
 	"path/filepath"
 
+	"github.com/spf13/cobra"
+
 	"github.com/ActiveMemory/ctx/internal/assets/read/prompt"
 	"github.com/ActiveMemory/ctx/internal/config/dir"
 	"github.com/ActiveMemory/ctx/internal/config/fs"
-	fs2 "github.com/ActiveMemory/ctx/internal/err/fs"
-	ctxerr "github.com/ActiveMemory/ctx/internal/err/prompt"
+	errFs "github.com/ActiveMemory/ctx/internal/err/fs"
+	ctxErr "github.com/ActiveMemory/ctx/internal/err/prompt"
 	"github.com/ActiveMemory/ctx/internal/write/initialize"
-	"github.com/spf13/cobra"
 )
 
 // CreatePromptTemplates creates prompt template files in .context/prompts/.
@@ -28,29 +29,31 @@ import (
 //
 // Returns:
 //   - error: Non-nil if directory creation or file write fails
-func CreatePromptTemplates(cmd *cobra.Command, contextDir string, force bool) error {
+func CreatePromptTemplates(
+	cmd *cobra.Command, contextDir string, force bool,
+) error {
 	promptDir := filepath.Join(contextDir, dir.Prompts)
 	if err := os.MkdirAll(promptDir, fs.PermExec); err != nil {
-		return fs2.Mkdir(promptDir, err)
+		return errFs.Mkdir(promptDir, err)
 	}
-	promptTemplates, err := prompt.PromptTemplateList()
+	promptTemplates, err := prompt.TemplateList()
 	if err != nil {
-		return ctxerr.ListPromptTemplates(err)
+		return ctxErr.ListPromptTemplates(err)
 	}
 	for _, name := range promptTemplates {
 		targetPath := filepath.Join(promptDir, name)
 		if _, err := os.Stat(targetPath); err == nil && !force {
-			initialize.Skipped(cmd, "prompts/"+name)
+			initialize.Skipped(cmd, filepath.Join(dir.Prompts, name))
 			continue
 		}
-		content, err := prompt.PromptTemplate(name)
+		content, err := prompt.Template(name)
 		if err != nil {
-			return ctxerr.ReadPromptTemplate(name, err)
+			return ctxErr.ReadPromptTemplate(name, err)
 		}
 		if err := os.WriteFile(targetPath, content, fs.PermFile); err != nil {
-			return fs2.FileWrite(targetPath, err)
+			return errFs.FileWrite(targetPath, err)
 		}
-		initialize.Created(cmd, "prompts/"+name)
+		initialize.Created(cmd, filepath.Join(dir.Prompts, name))
 	}
 	return nil
 }

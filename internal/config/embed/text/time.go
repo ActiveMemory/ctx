@@ -18,6 +18,7 @@ const (
 
 const (
 	DescKeyTimeAgo     = "time.ago"
+	DescKeyTimeCommit  = "time.commit"
 	DescKeyTimeDay     = "time.day"
 	DescKeyTimeHour    = "time.hour"
 	DescKeyTimeJustNow = "time.just-now"

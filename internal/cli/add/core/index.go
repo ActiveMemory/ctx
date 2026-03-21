@@ -15,14 +15,6 @@ import (
 	"github.com/ActiveMemory/ctx/internal/index"
 )
 
-// IndexEntry represents a parsed entry header from a context file.
-//
-// This is an alias for index.Entry for backward compatibility.
-type IndexEntry = index.Entry
-
-// DecisionEntry is an alias for IndexEntry for backward compatibility.
-type DecisionEntry = index.Entry
-
 // ParseEntryHeaders extracts all entries from file content.
 //
 // Delegates to index.ParseHeaders.
@@ -31,8 +23,8 @@ type DecisionEntry = index.Entry
 //   - content: The full content of a context file
 //
 // Returns:
-//   - []IndexEntry: Slice of parsed entries (may be empty)
-func ParseEntryHeaders(content string) []IndexEntry {
+//   - []index.Entry: Slice of parsed entries (may be empty)
+func ParseEntryHeaders(content string) []index.Entry {
 	return index.ParseHeaders(content)
 }
 
@@ -44,8 +36,8 @@ func ParseEntryHeaders(content string) []IndexEntry {
 //   - content: The full content of a context file
 //
 // Returns:
-//   - []DecisionEntry: Slice of parsed entries (it may be empty)
-func ParseDecisionHeaders(content string) []DecisionEntry {
+//   - []index.Entry: Slice of parsed entries (it may be empty)
+func ParseDecisionHeaders(content string) []index.Entry {
 	return index.ParseHeaders(content)
 }
 
@@ -59,7 +51,7 @@ func ParseDecisionHeaders(content string) []DecisionEntry {
 //
 // Returns:
 //   - string: Markdown table (without markers) or empty string
-func GenerateIndexTable(entries []IndexEntry, columnHeader string) string {
+func GenerateIndexTable(entries []index.Entry, columnHeader string) string {
 	return index.GenerateTable(entries, columnHeader)
 }
 
@@ -72,7 +64,7 @@ func GenerateIndexTable(entries []IndexEntry, columnHeader string) string {
 //
 // Returns:
 //   - string: Markdown table or empty string if no entries
-func GenerateIndex(entries []DecisionEntry) string {
+func GenerateIndex(entries []index.Entry) string {
 	return index.GenerateTable(entries, desc.TextDesc(text.DescKeyColumnDecision))
 }
 

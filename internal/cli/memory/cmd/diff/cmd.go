@@ -7,9 +7,10 @@
 package diff
 
 import (
+	"github.com/spf13/cobra"
+
 	"github.com/ActiveMemory/ctx/internal/assets/read/desc"
 	"github.com/ActiveMemory/ctx/internal/config/embed/cmd"
-	"github.com/spf13/cobra"
 )
 
 // Cmd returns the memory diff subcommand.
@@ -19,7 +20,7 @@ import (
 func Cmd() *cobra.Command {
 	short, long := desc.CommandDesc(cmd.DescKeyMemoryDiff)
 	return &cobra.Command{
-		Use:   "diff",
+		Use:   cmd.UseMemoryDiff,
 		Short: short,
 		Long:  long,
 		RunE: func(cmd *cobra.Command, _ []string) error {

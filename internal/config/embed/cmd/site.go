@@ -7,6 +7,11 @@
 package cmd
 
 const (
+	UseSite     = "site"
+	UseSiteFeed = "feed"
+)
+
+const (
 	DescKeySite     = "site"
 	DescKeySiteFeed = "site.feed"
 )

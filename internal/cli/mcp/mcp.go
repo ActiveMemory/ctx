@@ -8,33 +8,33 @@
 package mcp
 
 import (
-	"github.com/ActiveMemory/ctx/internal/assets/read/desc"
-	"github.com/ActiveMemory/ctx/internal/config/cli"
-	"github.com/ActiveMemory/ctx/internal/config/embed/cmd"
 	"github.com/spf13/cobra"
 
+	"github.com/ActiveMemory/ctx/internal/assets/read/desc"
 	"github.com/ActiveMemory/ctx/internal/cli/mcp/cmd/root"
+	"github.com/ActiveMemory/ctx/internal/config/cli"
+	"github.com/ActiveMemory/ctx/internal/config/embed/cmd"
 )
 
 // Cmd returns the mcp command group.
 func Cmd() *cobra.Command {
 	short, long := desc.CommandDesc(cmd.DescKeyMcp)
-	cmd := &cobra.Command{
-		Use:   cmd.DescKeyMcp,
+	c := &cobra.Command{
+		Use:   cmd.UseMcp,
 		Short: short,
 		Long:  long,
 	}
 
-	cmd.AddCommand(serveCmd())
+	c.AddCommand(serveCmd())
 
-	return cmd
+	return c
 }
 
 // serveCmd returns the mcp serve subcommand.
 func serveCmd() *cobra.Command {
 	serveShort, serveLong := desc.CommandDesc(cmd.DescKeyMcpServe)
 	return &cobra.Command{
-		Use:          "serve",
+		Use:          cmd.UseMcpServe,
 		Short:        serveShort,
 		Long:         serveLong,
 		Annotations:  map[string]string{cli.AnnotationSkipInit: cli.AnnotationTrue},

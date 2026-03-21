@@ -7,12 +7,12 @@
 package switchcmd
 
 import (
-	"github.com/ActiveMemory/ctx/internal/assets/read/desc"
-	internalConfig "github.com/ActiveMemory/ctx/internal/config/cli"
-	"github.com/ActiveMemory/ctx/internal/config/embed/cmd"
 	"github.com/spf13/cobra"
 
+	"github.com/ActiveMemory/ctx/internal/assets/read/desc"
 	"github.com/ActiveMemory/ctx/internal/cli/config/core"
+	internalConfig "github.com/ActiveMemory/ctx/internal/config/cli"
+	"github.com/ActiveMemory/ctx/internal/config/embed/cmd"
 )
 
 // Cmd returns the "ctx config switch" subcommand.
@@ -23,7 +23,7 @@ func Cmd() *cobra.Command {
 	short, long := desc.CommandDesc(cmd.DescKeyConfigSwitch)
 
 	return &cobra.Command{
-		Use:         "switch [dev|base]",
+		Use:         cmd.UseConfigSwitch,
 		Short:       short,
 		Annotations: map[string]string{internalConfig.AnnotationSkipInit: ""},
 		Long:        long,

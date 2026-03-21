@@ -9,13 +9,13 @@ package publish
 import (
 	"path/filepath"
 
-	ctxerr "github.com/ActiveMemory/ctx/internal/err/memory"
-	"github.com/ActiveMemory/ctx/internal/write/publish"
-	"github.com/ActiveMemory/ctx/internal/write/sync"
 	"github.com/spf13/cobra"
 
+	ctxErr "github.com/ActiveMemory/ctx/internal/err/memory"
 	mem "github.com/ActiveMemory/ctx/internal/memory"
 	"github.com/ActiveMemory/ctx/internal/rc"
+	"github.com/ActiveMemory/ctx/internal/write/publish"
+	"github.com/ActiveMemory/ctx/internal/write/sync"
 )
 
 // Run selects high-value context, formats it, and writes a marked block
@@ -35,12 +35,12 @@ func Run(cmd *cobra.Command, budget int, dryRun bool) error {
 	memoryPath, discoverErr := mem.DiscoverMemoryPath(projectRoot)
 	if discoverErr != nil {
 		sync.ErrAutoMemoryNotActive(cmd, discoverErr)
-		return ctxerr.NotFound()
+		return ctxErr.NotFound()
 	}
 
 	result, selectErr := mem.SelectContent(contextDir, budget)
 	if selectErr != nil {
-		return ctxerr.SelectContentFailed(selectErr)
+		return ctxErr.SelectContentFailed(selectErr)
 	}
 
 	publish.PublishPlan(cmd, budget,
@@ -54,8 +54,10 @@ func Run(cmd *cobra.Command, budget int, dryRun bool) error {
 		return nil
 	}
 
-	if _, publishErr := mem.Publish(contextDir, memoryPath, budget); publishErr != nil {
-		return ctxerr.PublishFailed(publishErr)
+	if _, publishErr := mem.Publish(
+		contextDir, memoryPath, budget,
+	); publishErr != nil {
+		return ctxErr.PublishFailed(publishErr)
 	}
 
 	publish.PublishDone(cmd)

@@ -19,4 +19,8 @@ const (
 	Stylesheets = "stylesheets"
 	// ExtraCSS is the custom CSS filename for journal sites.
 	ExtraCSS = "extra.css"
+	// CmdServe is the zensical serve subcommand.
+	CmdServe = "serve"
+	// CmdBuild is the zensical build subcommand.
+	CmdBuild = "build"
 )

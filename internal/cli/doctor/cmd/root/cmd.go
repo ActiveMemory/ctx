@@ -7,11 +7,13 @@
 package root
 
 import (
+	"github.com/spf13/cobra"
+
 	"github.com/ActiveMemory/ctx/internal/assets/read/desc"
 	"github.com/ActiveMemory/ctx/internal/config/cli"
 	"github.com/ActiveMemory/ctx/internal/config/embed/cmd"
 	"github.com/ActiveMemory/ctx/internal/config/embed/flag"
-	"github.com/spf13/cobra"
+	cFlag "github.com/ActiveMemory/ctx/internal/config/flag"
 )
 
 // Cmd returns the "ctx doctor" command.
@@ -23,16 +25,19 @@ import (
 //   - *cobra.Command: Configured doctor command with flags registered
 func Cmd() *cobra.Command {
 	short, long := desc.CommandDesc(cmd.DescKeyDoctor)
-	cmd := &cobra.Command{
-		Use:         cmd.DescKeyDoctor,
+	c := &cobra.Command{
+		Use:         cmd.UseDoctor,
 		Short:       short,
 		Annotations: map[string]string{cli.AnnotationSkipInit: cli.AnnotationTrue},
 		Long:        long,
 		RunE: func(cmd *cobra.Command, _ []string) error {
-			jsonOut, _ := cmd.Flags().GetBool("json")
+			jsonOut, _ := cmd.Flags().GetBool(cFlag.JSON)
 			return Run(cmd, jsonOut)
 		},
 	}
-	cmd.Flags().BoolP("json", "j", false, desc.FlagDesc(flag.DescKeyDoctorJson))
-	return cmd
+	c.Flags().BoolP(
+		cFlag.JSON, cFlag.ShortJSON, false,
+		desc.FlagDesc(flag.DescKeyDoctorJson),
+	)
+	return c
 }

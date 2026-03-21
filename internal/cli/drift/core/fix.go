@@ -12,21 +12,22 @@ import (
 	"path/filepath"
 	"strings"
 
+	"github.com/spf13/cobra"
+
 	"github.com/ActiveMemory/ctx/internal/assets/read/desc"
 	"github.com/ActiveMemory/ctx/internal/assets/read/template"
+	"github.com/ActiveMemory/ctx/internal/config/archive"
+	ctxCfg "github.com/ActiveMemory/ctx/internal/config/ctx"
 	"github.com/ActiveMemory/ctx/internal/config/embed/text"
+	"github.com/ActiveMemory/ctx/internal/config/fs"
 	"github.com/ActiveMemory/ctx/internal/config/marker"
 	"github.com/ActiveMemory/ctx/internal/config/regex"
 	"github.com/ActiveMemory/ctx/internal/config/token"
-	fs2 "github.com/ActiveMemory/ctx/internal/err/fs"
-	"github.com/ActiveMemory/ctx/internal/err/prompt"
-	ctxErr "github.com/ActiveMemory/ctx/internal/err/task"
-	"github.com/spf13/cobra"
-
-	ctxCfg "github.com/ActiveMemory/ctx/internal/config/ctx"
-	"github.com/ActiveMemory/ctx/internal/config/fs"
 	"github.com/ActiveMemory/ctx/internal/drift"
 	"github.com/ActiveMemory/ctx/internal/entity"
+	errFs "github.com/ActiveMemory/ctx/internal/err/fs"
+	"github.com/ActiveMemory/ctx/internal/err/prompt"
+	ctxErr "github.com/ActiveMemory/ctx/internal/err/task"
 	"github.com/ActiveMemory/ctx/internal/rc"
 	"github.com/ActiveMemory/ctx/internal/task"
 	"github.com/ActiveMemory/ctx/internal/tidy"
@@ -56,34 +57,30 @@ func ApplyFixes(
 		case drift.IssueStaleness:
 			if fixErr := FixStaleness(cmd, ctx); fixErr != nil {
 				result.Errors = append(result.Errors,
-					fmt.Sprintf("staleness: %v", fixErr))
+					fmt.Sprintf(desc.TextDesc(text.DescKeyDriftFixStalenessErr), fixErr))
 			} else {
-				cmd.Println(
-					fmt.Sprintf(
-						"✓ Fixed staleness in %s (archived completed tasks)",
-						issue.File),
-				)
+				cmd.Println(fmt.Sprintf(
+					desc.TextDesc(text.DescKeyDriftFixStaleness), issue.File))
 				result.Fixed++
 			}
 
 		case drift.IssueMissing:
 			if fixErr := FixMissingFile(issue.File); fixErr != nil {
 				result.Errors = append(result.Errors,
-					fmt.Sprintf("missing %s: %v", issue.File, fixErr))
+					fmt.Sprintf(desc.TextDesc(text.DescKeyDriftFixMissingErr), issue.File, fixErr))
 			} else {
-				cmd.Println(
-					fmt.Sprintf("✓ Created missing file: %s", issue.File),
-				)
+				cmd.Println(fmt.Sprintf(
+					desc.TextDesc(text.DescKeyDriftFixMissing), issue.File))
 				result.Fixed++
 			}
 
 		case drift.IssueDeadPath:
-			cmd.Println(fmt.Sprintf("○ Cannot auto-fix dead path in %s:%d (%s)",
+			cmd.Println(fmt.Sprintf(desc.TextDesc(text.DescKeyDriftSkipDeadPath),
 				issue.File, issue.Line, issue.Path))
 			result.Skipped++
 
 		case drift.IssueStaleAge:
-			cmd.Println(fmt.Sprintf("○ Cannot auto-fix file age: %s",
+			cmd.Println(fmt.Sprintf(desc.TextDesc(text.DescKeyDriftSkipStaleAge),
 				issue.File))
 			result.Skipped++
 		}
@@ -92,7 +89,7 @@ func ApplyFixes(
 	// Process violations (potential_secret) - never auto-fix
 	for _, issue := range report.Violations {
 		if issue.Type == drift.IssueSecret {
-			cmd.Println(fmt.Sprintf("○ Cannot auto-fix potential secret: %s",
+			cmd.Println(fmt.Sprintf(desc.TextDesc(text.DescKeyDriftSkipSensitiveFile),
 				issue.File))
 			result.Skipped++
 		}
@@ -161,7 +158,10 @@ func FixStaleness(cmd *cobra.Command, ctx *entity.Context) error {
 		archiveContent += marker.PrefixTaskDone + " " + t + nl
 	}
 
-	archiveFile, writeErr := tidy.WriteArchive("tasks", desc.TextDesc(text.DescKeyHeadingArchivedTasks), archiveContent)
+	archiveFile, writeErr := tidy.WriteArchive(
+		archive.ArchiveScopeTasks,
+		desc.TextDesc(text.DescKeyHeadingArchivedTasks), archiveContent,
+	)
 	if writeErr != nil {
 		return writeErr
 	}
@@ -174,13 +174,13 @@ func FixStaleness(cmd *cobra.Command, ctx *entity.Context) error {
 		return ctxErr.FileWrite(writeErr)
 	}
 
-	cmd.Println(fmt.Sprintf("  Archived %d completed tasks to %s",
+	cmd.Println(fmt.Sprintf(desc.TextDesc(text.DescKeyDriftArchived),
 		len(completedTasks), archiveFile))
 
 	return nil
 }
 
-// FixMissingFile creates a missing required context file from template.
+// FixMissingFile creates a missing required context file from the template.
 //
 // Parameters:
 //   - filename: Name of the file to create (e.g., "CONSTITUTION.md")
@@ -197,13 +197,13 @@ func FixMissingFile(filename string) error {
 
 	// Ensure .context/ directory exists
 	if mkErr := os.MkdirAll(rc.ContextDir(), fs.PermExec); mkErr != nil {
-		return fs2.Mkdir(rc.ContextDir(), mkErr)
+		return errFs.Mkdir(rc.ContextDir(), mkErr)
 	}
 
 	if writeErr := os.WriteFile(
 		targetPath, content, fs.PermFile,
 	); writeErr != nil {
-		return fs2.FileWrite(targetPath, writeErr)
+		return errFs.FileWrite(targetPath, writeErr)
 	}
 
 	return nil

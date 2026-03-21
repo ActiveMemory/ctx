@@ -10,6 +10,7 @@ import (
 	"github.com/ActiveMemory/ctx/internal/assets/read/desc"
 	"github.com/ActiveMemory/ctx/internal/config/embed/cmd"
 	"github.com/ActiveMemory/ctx/internal/config/embed/flag"
+	cflag "github.com/ActiveMemory/ctx/internal/config/flag"
 	"github.com/spf13/cobra"
 )
 
@@ -30,7 +31,7 @@ func Cmd() *cobra.Command {
 	short, long := desc.CommandDesc(cmd.DescKeySync)
 
 	cmd := &cobra.Command{
-		Use:   cmd.DescKeySync,
+		Use:   cmd.UseSync,
 		Short: short,
 		Long:  long,
 		RunE: func(cmd *cobra.Command, _ []string) error {
@@ -40,7 +41,7 @@ func Cmd() *cobra.Command {
 
 	cmd.Flags().BoolVar(
 		&dryRun,
-		"dry-run", false, desc.FlagDesc(flag.DescKeySyncDryRun),
+		cflag.DryRun, false, desc.FlagDesc(flag.DescKeySyncDryRun),
 	)
 
 	return cmd

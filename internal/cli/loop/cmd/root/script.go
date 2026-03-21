@@ -13,6 +13,7 @@ import (
 	"github.com/ActiveMemory/ctx/internal/assets/read/desc"
 	"github.com/ActiveMemory/ctx/internal/assets/tpl"
 	"github.com/ActiveMemory/ctx/internal/config/embed/text"
+	loopCfg "github.com/ActiveMemory/ctx/internal/config/loop"
 )
 
 // GenerateLoopScript creates a bash script for running a Ralph loop.
@@ -36,11 +37,11 @@ func GenerateLoopScript(
 
 	var aiCommand string
 	switch tool {
-	case "claude":
+	case loopCfg.DefaultTool:
 		aiCommand = fmt.Sprintf(`claude --print "$(cat %s)"`, absPrompt)
-	case "aider":
+	case loopCfg.ToolAider:
 		aiCommand = fmt.Sprintf(`aider --message-file %s`, absPrompt)
-	case "generic":
+	case loopCfg.ToolGeneric:
 		aiCommand = fmt.Sprintf(`# Replace with your AI CLI command
     cat %s | your-ai-cli`, absPrompt)
 	}
@@ -52,7 +53,9 @@ func GenerateLoopScript(
 	}
 
 	script := fmt.Sprintf(tpl.LoopScript,
-		absPrompt, completionMsg, maxIterCheck, aiCommand, desc.TextDesc(text.DescKeyLabelLoopComplete), tpl.LoopNotify)
+		absPrompt, completionMsg, maxIterCheck, aiCommand,
+		desc.TextDesc(text.DescKeyLabelLoopComplete), tpl.LoopNotify,
+	)
 
 	return script
 }

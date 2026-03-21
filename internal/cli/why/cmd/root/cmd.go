@@ -21,7 +21,7 @@ func Cmd() *cobra.Command {
 	short, long := desc.CommandDesc(cmd.DescKeyWhy)
 
 	cmd := &cobra.Command{
-		Use:         cmd.DescKeyWhy + " [DOCUMENT]",
+		Use:         cmd.UseWhy,
 		Short:       short,
 		Annotations: map[string]string{cli.AnnotationSkipInit: ""},
 		ValidArgs:   []string{"manifesto", "about", "invariants"},

@@ -9,13 +9,13 @@ package root
 import (
 	"errors"
 
-	"github.com/ActiveMemory/ctx/internal/context/load"
-	ctxerr "github.com/ActiveMemory/ctx/internal/err/initialize"
-	load2 "github.com/ActiveMemory/ctx/internal/write/load"
 	"github.com/spf13/cobra"
 
 	"github.com/ActiveMemory/ctx/internal/cli/load/core"
-	errctx "github.com/ActiveMemory/ctx/internal/err/context"
+	"github.com/ActiveMemory/ctx/internal/context/load"
+	errCtx "github.com/ActiveMemory/ctx/internal/err/context"
+	ctxErr "github.com/ActiveMemory/ctx/internal/err/initialize"
+	writeLoad "github.com/ActiveMemory/ctx/internal/write/load"
 )
 
 // Run executes the load command logic.
@@ -33,9 +33,9 @@ import (
 func Run(cmd *cobra.Command, budget int, raw bool) error {
 	ctx, err := load.Do("")
 	if err != nil {
-		var notFoundError *errctx.NotFoundError
+		var notFoundError *errCtx.NotFoundError
 		if errors.As(err, &notFoundError) {
-			return ctxerr.NotInitialized()
+			return ctxErr.NotInitialized()
 		}
 		return err
 	}
@@ -43,10 +43,10 @@ func Run(cmd *cobra.Command, budget int, raw bool) error {
 	files := core.SortByReadOrder(ctx.Files)
 
 	if raw {
-		return load2.Raw(cmd, files)
+		return writeLoad.Raw(cmd, files)
 	}
 
-	return load2.Assembled(
+	return writeLoad.Assembled(
 		cmd, files, budget, ctx.TotalTokens, core.FileNameToTitle,
 	)
 }

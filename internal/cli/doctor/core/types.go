@@ -6,24 +6,12 @@
 
 package core
 
-import (
-	"github.com/ActiveMemory/ctx/internal/config/stats"
-)
-
-// Status constants — aliased from config for local use.
-const (
-	StatusOK      = stats.StatusOK
-	StatusWarning = stats.StatusWarning
-	StatusError   = stats.StatusError
-	StatusInfo    = stats.StatusInfo
-)
-
 // Result represents a single check outcome.
 //
 // Fields:
 //   - Name: Machine-readable identifier for the check
 //   - Category: Grouping label (Structure, Quality, Plugin, etc.)
-//   - Status: One of StatusOK, StatusWarning, StatusError, StatusInfo
+//   - Status: One of stats.StatusOK, stats.StatusWarning, stats.StatusError, stats.StatusInfo
 //   - Message: Human-readable description of the outcome
 type Result struct {
 	Name     string `json:"name"`

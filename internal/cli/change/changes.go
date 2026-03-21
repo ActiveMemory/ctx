@@ -9,10 +9,10 @@ package change
 import (
 	"github.com/spf13/cobra"
 
-	changeroot "github.com/ActiveMemory/ctx/internal/cli/change/cmd/root"
+	changeRoot "github.com/ActiveMemory/ctx/internal/cli/change/cmd/root"
 )
 
 // Cmd returns the change command.
 func Cmd() *cobra.Command {
-	return changeroot.Cmd()
+	return changeRoot.Cmd()
 }

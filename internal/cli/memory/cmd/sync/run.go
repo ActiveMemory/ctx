@@ -9,14 +9,14 @@ package sync
 import (
 	"path/filepath"
 
-	memory2 "github.com/ActiveMemory/ctx/internal/config/memory"
-	memory3 "github.com/ActiveMemory/ctx/internal/err/memory"
-	ctxerr "github.com/ActiveMemory/ctx/internal/err/state"
-	"github.com/ActiveMemory/ctx/internal/write/sync"
 	"github.com/spf13/cobra"
 
+	cfgMem "github.com/ActiveMemory/ctx/internal/config/memory"
+	errMem "github.com/ActiveMemory/ctx/internal/err/memory"
+	ctxErr "github.com/ActiveMemory/ctx/internal/err/state"
 	"github.com/ActiveMemory/ctx/internal/memory"
 	"github.com/ActiveMemory/ctx/internal/rc"
+	"github.com/ActiveMemory/ctx/internal/write/sync"
 )
 
 // Run discovers MEMORY.md, mirrors it into .context/memory/, and
@@ -36,22 +36,22 @@ func Run(cmd *cobra.Command, dryRun bool) error {
 	sourcePath, discoverErr := memory.DiscoverMemoryPath(projectRoot)
 	if discoverErr != nil {
 		sync.ErrAutoMemoryNotActive(cmd, discoverErr)
-		return memory3.NotFound()
+		return errMem.NotFound()
 	}
 
 	if dryRun {
-		sync.SyncDryRun(cmd, sourcePath, memory2.PathMemoryMirror,
+		sync.SyncDryRun(cmd, sourcePath, cfgMem.PathMemoryMirror,
 			memory.HasDrift(contextDir, sourcePath))
 		return nil
 	}
 
 	result, syncErr := memory.Sync(contextDir, sourcePath)
 	if syncErr != nil {
-		return memory3.Sync(syncErr)
+		return errMem.Sync(syncErr)
 	}
 
 	sync.SyncResult(cmd,
-		memory2.MemorySource, memory2.PathMemoryMirror,
+		cfgMem.MemorySource, cfgMem.PathMemoryMirror,
 		result.SourcePath, filepath.Base(result.ArchivedTo),
 		result.SourceLines, result.MirrorLines,
 	)
@@ -59,11 +59,11 @@ func Run(cmd *cobra.Command, dryRun bool) error {
 	// Update sync state
 	state, loadErr := memory.LoadState(contextDir)
 	if loadErr != nil {
-		return ctxerr.Load(loadErr)
+		return ctxErr.Load(loadErr)
 	}
 	state.MarkSynced()
 	if saveErr := memory.SaveState(contextDir, state); saveErr != nil {
-		return ctxerr.Save(saveErr)
+		return ctxErr.Save(saveErr)
 	}
 
 	return nil

@@ -9,11 +9,12 @@ package status
 import (
 	"fmt"
 
-	"github.com/ActiveMemory/ctx/internal/assets/read/desc"
-	"github.com/ActiveMemory/ctx/internal/config/embed/text"
 	"github.com/spf13/cobra"
 
+	"github.com/ActiveMemory/ctx/internal/assets/read/desc"
 	"github.com/ActiveMemory/ctx/internal/cli/config/core"
+	"github.com/ActiveMemory/ctx/internal/config/embed/text"
+	"github.com/ActiveMemory/ctx/internal/config/file"
 )
 
 // Run prints the active .ctxrc profile.
@@ -27,14 +28,14 @@ import (
 func Run(cmd *cobra.Command, root string) error {
 	profile := core.DetectProfile()
 	switch profile {
-	case core.ProfileDev:
+	case file.ProfileDev:
 		cmd.Println(desc.TextDesc(text.DescKeyWriteConfigProfileDev))
-	case core.ProfileBase:
+	case file.ProfileBase:
 		cmd.Println(desc.TextDesc(text.DescKeyWriteConfigProfileBase))
 	default:
 		cmd.Println(fmt.Sprintf(
 			desc.TextDesc(text.DescKeyWriteConfigProfileNone),
-			core.FileCtxRC,
+			file.CtxRC,
 		))
 	}
 	return nil

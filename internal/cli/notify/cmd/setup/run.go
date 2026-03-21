@@ -11,13 +11,13 @@ import (
 	"os"
 	"strings"
 
-	"github.com/ActiveMemory/ctx/internal/config/crypto"
-	"github.com/ActiveMemory/ctx/internal/err/fs"
-	ctxerr "github.com/ActiveMemory/ctx/internal/err/notify"
-	"github.com/ActiveMemory/ctx/internal/write/notify"
 	"github.com/spf13/cobra"
 
-	notifylib "github.com/ActiveMemory/ctx/internal/notify"
+	"github.com/ActiveMemory/ctx/internal/config/crypto"
+	"github.com/ActiveMemory/ctx/internal/err/fs"
+	ctxErr "github.com/ActiveMemory/ctx/internal/err/notify"
+	iNotify "github.com/ActiveMemory/ctx/internal/notify"
+	"github.com/ActiveMemory/ctx/internal/write/notify"
 )
 
 // Run prompts for a webhook URL and saves it encrypted.
@@ -39,14 +39,14 @@ func Run(cmd *cobra.Command, stdin *os.File) error {
 	}
 	url := strings.TrimSpace(scanner.Text())
 	if url == "" {
-		return ctxerr.WebhookEmpty()
+		return ctxErr.WebhookEmpty()
 	}
 
-	if saveErr := notifylib.SaveWebhook(url); saveErr != nil {
-		return ctxerr.SaveWebhook(saveErr)
+	if saveErr := iNotify.SaveWebhook(url); saveErr != nil {
+		return ctxErr.SaveWebhook(saveErr)
 	}
 
-	notify.SetupDone(cmd, notifylib.MaskURL(url), crypto.NotifyEnc)
+	notify.SetupDone(cmd, iNotify.MaskURL(url), crypto.NotifyEnc)
 
 	return nil
 }

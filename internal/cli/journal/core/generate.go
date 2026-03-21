@@ -108,7 +108,7 @@ func FormatIndexEntry(e JournalEntry, nl string) string {
 
 	project := ""
 	if e.Project != "" {
-		project = fmt.Sprintf(" (%s)", e.Project)
+		project = fmt.Sprintf(desc.TextDesc(text.DescKeyJournalProjectLabel), e.Project)
 	}
 
 	size := FormatSize(e.Size)
@@ -126,7 +126,7 @@ func FormatIndexEntry(e JournalEntry, nl string) string {
 // frontmatter (and any source link). Placed before the first heading.
 //
 // Parameters:
-//   - content: Markdown content (may already have source link injected)
+//   - content: Markdown content (may already have the source link injected)
 //   - summary: Summary text from frontmatter
 //
 // Returns:

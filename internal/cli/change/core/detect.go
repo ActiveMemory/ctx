@@ -10,16 +10,17 @@ import (
 	"os"
 	"path/filepath"
 	"sort"
-	"strconv"
 	"strings"
 	"time"
 
 	"github.com/ActiveMemory/ctx/internal/assets/read/desc"
 	"github.com/ActiveMemory/ctx/internal/config/dir"
 	"github.com/ActiveMemory/ctx/internal/config/embed/text"
+	"github.com/ActiveMemory/ctx/internal/config/event"
 	"github.com/ActiveMemory/ctx/internal/config/load_gate"
-	time2 "github.com/ActiveMemory/ctx/internal/config/time"
+	cfgTime "github.com/ActiveMemory/ctx/internal/config/time"
 	"github.com/ActiveMemory/ctx/internal/config/token"
+	"github.com/ActiveMemory/ctx/internal/format"
 	"github.com/ActiveMemory/ctx/internal/io"
 	"github.com/ActiveMemory/ctx/internal/rc"
 )
@@ -46,12 +47,12 @@ func DetectReferenceTime(since string) (time.Time, string, error) {
 
 	// Try marker files.
 	if t, ok := DetectFromMarkers(); ok {
-		return t, HumanAgo(time.Since(t)), nil
+		return t, format.DurationAgo(time.Since(t)), nil
 	}
 
 	// Try events.jsonl.
 	if t, ok := DetectFromEvents(); ok {
-		return t, HumanAgo(time.Since(t)), nil
+		return t, format.DurationAgo(time.Since(t)), nil
 	}
 
 	// Fallback: 24h ago.
@@ -72,17 +73,17 @@ func ParseSinceFlag(since string) (time.Time, string, error) {
 	// Try duration first.
 	if d, err := time.ParseDuration(since); err == nil {
 		t := time.Now().Add(-d)
-		return t, HumanAgo(d), nil
+		return t, format.DurationAgo(d), nil
 	}
 
 	// Try date.
-	if t, err := time.Parse(time2.DateFormat, since); err == nil {
+	if t, err := time.Parse(cfgTime.DateFormat, since); err == nil {
 		return t, desc.TextDesc(text.DescKeyChangesSincePrefix) + since, nil
 	}
 
 	// Try RFC3339.
 	if t, err := time.Parse(time.RFC3339, since); err == nil {
-		return t, HumanAgo(time.Since(t)), nil
+		return t, format.DurationAgo(time.Since(t)), nil
 	}
 
 	return time.Time{}, "", os.ErrInvalid
@@ -137,14 +138,14 @@ func DetectFromMarkers() (time.Time, bool) {
 //   - time.Time: Event timestamp
 //   - bool: True if a valid event was found
 func DetectFromEvents() (time.Time, bool) {
-	eventsPath := filepath.Join(rc.ContextDir(), dir.State, "events.jsonl")
+	eventsPath := filepath.Join(rc.ContextDir(), dir.State, event.FileEventLog)
 	data, err := io.SafeReadUserFile(eventsPath)
 	if err != nil {
 		return time.Time{}, false
 	}
 
 	lines := strings.Split(strings.TrimSpace(string(data)), token.NewlineLF)
-	// Scan in reverse for last context-load-gate event.
+	// Scan in reverse for the last context-load-gate event.
 	for i := len(lines) - 1; i >= 0; i-- {
 		line := lines[i]
 		if !strings.Contains(line, load_gate.EventContextLoadGate) {
@@ -183,43 +184,4 @@ func ExtractTimestamp(jsonLine string) (time.Time, bool) {
 		return time.Time{}, false
 	}
 	return t, true
-}
-
-// HumanAgo returns a human-readable "ago" string from a duration.
-//
-// Parameters:
-//   - d: Duration to format
-//
-// Returns:
-//   - string: Human-readable time description
-func HumanAgo(d time.Duration) string {
-	ago := desc.TextDesc(text.DescKeyTimeAgo)
-	switch {
-	case d < time.Minute:
-		return desc.TextDesc(text.DescKeyTimeJustNow)
-	case d < time.Hour:
-		m := int(d.Minutes())
-		return Pluralize(m, desc.TextDesc(text.DescKeyTimeMinute)) + ago
-	case d < 24*time.Hour:
-		h := int(d.Hours())
-		return Pluralize(h, desc.TextDesc(text.DescKeyTimeHour)) + ago
-	default:
-		days := int(d.Hours() / 24)
-		return Pluralize(days, desc.TextDesc(text.DescKeyTimeDay)) + ago
-	}
-}
-
-// Pluralize returns "N unit" or "N units".
-//
-// Parameters:
-//   - n: Count
-//   - unit: Singular unit name
-//
-// Returns:
-//   - string: Pluralized string
-func Pluralize(n int, unit string) string {
-	if n == 1 {
-		return "1 " + unit
-	}
-	return strconv.Itoa(n) + " " + unit + "s"
 }

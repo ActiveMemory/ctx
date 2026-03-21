@@ -23,6 +23,40 @@ The `validation` package has `SanitizeFilename` and `ValidateBoundary`
 but nothing for content or argument sanitization. `entry.Validate` only
 checks field presence, not content safety.
 
+- [ ] Spec and implement CRLF-to-LF newline normalization for journal and context files #added:2026-03-20-224845
+
+- [ ] Test ctx on Windows — validate build, init, agent, drift, journal pipeline #added:2026-03-20-224835
+
+- [ ] Migrate moc.go hardcoded strings to YAML or Go templates #added:2026-03-20-214922
+
+- [ ] Audit and remove side-effect output from error-returning functions #added:2026-03-20-212212
+
+- [ ] Evaluate Windows support for sysinfo.Collect and path handling #added:2026-03-20-194930
+
+- [ ] Make doctor thresholds configurable via .ctxrc #added:2026-03-20-194923
+
+- [ ] Add Use* constants for all cobra subcommand Use strings #added:2026-03-20-184639
+
+- [ ] Design terminal-aware truncation for CLI output #added:2026-03-20-184509
+
+- [ ] Evaluate cross-platform path handling in change/core/scan.go — git always uses "/" but UniqueTopDirs should consider filepath.ToSlash for Windows robustness #added:2026-03-20-182103
+
+- [ ] Replace English-only Pluralize helper in change/core/detect.go with i18n-safe approach #added:2026-03-20-180502
+
+- [ ] Replace ASCII-only alnum check in agent/core/score.go with unicode.IsLetter/IsDigit #added:2026-03-20-175943
+
+- [ ] Systematic audit: extract all magic flag name strings across CLI commands into config/flag constants #added:2026-03-20-175155
+
+- [ ] Move generic string helpers from cli/add/core/strings.go to internal/format #added:2026-03-20-175046
+
+- [ ] Add missing flag name constants (priority, section, file) and priority level constants (high, medium, low) to config/flag #added:2026-03-20-170842
+
+- [ ] Improve test coverage for core packages at 0% #added:2026-03-20-164324
+
+- [ ] Migrate hook message templates from .txt files to YAML localization #added:2026-03-20-163801
+
+- [ ] Add cobra Example fields to CLI commands via examples.yaml #added:2026-03-20-163413
+
 - [ ] Evaluate Gemini Search MCP server as peer MCP for grounded web queries — try gemini-grounding, document in multi-tool-setup recipe if useful. See ideas/gemini-search-mcp.md #added:2026-03-20-141022
 
 - [ ] Create ctx-docstrings skill: audit and fix docstrings against CONVENTIONS.md Documentation section. Skill loads CONVENTIONS.md, scans functions in scope for missing/incomplete docstring sections (Parameters, Returns), reports violations, and optionally fixes them. Language-agnostic design with Go as first implementation. Deterministic enforcement via linter is tracked separately in ideas/spec-convention-enforcement.md #added:2026-03-16-114445

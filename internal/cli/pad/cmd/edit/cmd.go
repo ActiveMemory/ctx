@@ -9,11 +9,12 @@ package edit
 import (
 	"strconv"
 
+	"github.com/spf13/cobra"
+
 	"github.com/ActiveMemory/ctx/internal/assets/read/desc"
 	"github.com/ActiveMemory/ctx/internal/config/embed/cmd"
 	"github.com/ActiveMemory/ctx/internal/config/embed/flag"
-	ctxerr "github.com/ActiveMemory/ctx/internal/err/pad"
-	"github.com/spf13/cobra"
+	ctxErr "github.com/ActiveMemory/ctx/internal/err/pad"
 )
 
 // Cmd returns the pad edit subcommand.
@@ -38,7 +39,7 @@ func Cmd() *cobra.Command {
 	var labelText string
 
 	short, long := desc.CommandDesc(cmd.DescKeyPadEdit)
-	cmd := &cobra.Command{
+	c := &cobra.Command{
 		Use:   "edit N [TEXT]",
 		Short: short,
 		Long:  long,
@@ -46,7 +47,7 @@ func Cmd() *cobra.Command {
 		RunE: func(cmd *cobra.Command, args []string) error {
 			n, err := strconv.Atoi(args[0])
 			if err != nil {
-				return ctxerr.InvalidIndex(args[0])
+				return ctxErr.InvalidIndex(args[0])
 			}
 
 			hasPositional := len(args) == 2
@@ -57,7 +58,7 @@ func Cmd() *cobra.Command {
 
 			// --file/--label conflict with positional/--append/--prepend.
 			if (hasFile || hasLabel) && (hasPositional || hasAppend || hasPrepend) {
-				return ctxerr.EditBlobTextConflict()
+				return ctxErr.EditBlobTextConflict()
 			}
 
 			// Blob edit mode.
@@ -78,10 +79,10 @@ func Cmd() *cobra.Command {
 			}
 
 			if flagCount == 0 {
-				return ctxerr.EditNoMode()
+				return ctxErr.EditNoMode()
 			}
 			if flagCount > 1 {
-				return ctxerr.EditTextConflict()
+				return ctxErr.EditTextConflict()
 			}
 
 			switch {
@@ -95,18 +96,18 @@ func Cmd() *cobra.Command {
 		},
 	}
 
-	cmd.Flags().StringVar(&appendText,
+	c.Flags().StringVar(&appendText,
 		"append", "", desc.FlagDesc(flag.DescKeyPadEditAppend),
 	)
-	cmd.Flags().StringVar(&prependText,
+	c.Flags().StringVar(&prependText,
 		"prepend", "", desc.FlagDesc(flag.DescKeyPadEditPrepend),
 	)
-	cmd.Flags().StringVarP(&filePath,
+	c.Flags().StringVarP(&filePath,
 		"file", "f", "", desc.FlagDesc(flag.DescKeyPadEditFile),
 	)
-	cmd.Flags().StringVar(&labelText,
+	c.Flags().StringVar(&labelText,
 		"label", "", desc.FlagDesc(flag.DescKeyPadEditLabel),
 	)
 
-	return cmd
+	return c
 }

@@ -9,19 +9,19 @@ package importer
 import (
 	"path/filepath"
 
-	"github.com/ActiveMemory/ctx/internal/config/entry"
-	memory2 "github.com/ActiveMemory/ctx/internal/config/memory"
-	"github.com/ActiveMemory/ctx/internal/entity"
-	memory3 "github.com/ActiveMemory/ctx/internal/err/memory"
-	ctxerr "github.com/ActiveMemory/ctx/internal/err/state"
-	"github.com/ActiveMemory/ctx/internal/io"
-	"github.com/ActiveMemory/ctx/internal/write/ctximport"
-	"github.com/ActiveMemory/ctx/internal/write/sync"
 	"github.com/spf13/cobra"
 
-	"github.com/ActiveMemory/ctx/internal/cli/memory/core"
+	"github.com/ActiveMemory/ctx/internal/config/entry"
+	cfgMemory "github.com/ActiveMemory/ctx/internal/config/memory"
+	"github.com/ActiveMemory/ctx/internal/entity"
+	errMemory "github.com/ActiveMemory/ctx/internal/err/memory"
+	errState "github.com/ActiveMemory/ctx/internal/err/state"
+	"github.com/ActiveMemory/ctx/internal/format"
+	"github.com/ActiveMemory/ctx/internal/io"
 	"github.com/ActiveMemory/ctx/internal/memory"
 	"github.com/ActiveMemory/ctx/internal/rc"
+	"github.com/ActiveMemory/ctx/internal/write/ctximport"
+	"github.com/ActiveMemory/ctx/internal/write/sync"
 )
 
 // Run parses MEMORY.md entries, classifies them by heuristic keyword
@@ -41,28 +41,28 @@ func Run(cmd *cobra.Command, dryRun bool) error {
 	sourcePath, discoverErr := memory.DiscoverMemoryPath(projectRoot)
 	if discoverErr != nil {
 		sync.ErrAutoMemoryNotActive(cmd, discoverErr)
-		return memory3.NotFound()
+		return errMemory.NotFound()
 	}
 
 	sourceData, readErr := io.SafeReadFile(
 		filepath.Dir(sourcePath), filepath.Base(sourcePath),
 	)
 	if readErr != nil {
-		return memory3.Read(readErr)
+		return errMemory.Read(readErr)
 	}
 
 	entries := memory.ParseEntries(string(sourceData))
 	if len(entries) == 0 {
-		ctximport.NoEntries(cmd, memory2.MemorySource)
+		ctximport.NoEntries(cmd, cfgMemory.MemorySource)
 		return nil
 	}
 
 	state, loadErr := memory.LoadState(contextDir)
 	if loadErr != nil {
-		return ctxerr.Load(loadErr)
+		return errState.Load(loadErr)
 	}
 
-	ctximport.ScanHeader(cmd, memory2.MemorySource, len(entries))
+	ctximport.ScanHeader(cmd, cfgMemory.MemorySource, len(entries))
 
 	var result entity.ImportResult
 
@@ -75,7 +75,7 @@ func Run(cmd *cobra.Command, dryRun bool) error {
 		}
 
 		classification := memory.Classify(e)
-		title := core.Truncate(e.Text, 60)
+		title := format.TruncateFirstLine(e.Text, 60)
 
 		if classification.Target == memory.TargetSkip {
 			result.Skipped++
@@ -115,7 +115,7 @@ func Run(cmd *cobra.Command, dryRun bool) error {
 	if !dryRun && result.Total() > 0 {
 		state.MarkImportedDone()
 		if saveErr := memory.SaveState(contextDir, state); saveErr != nil {
-			return ctxerr.Save(saveErr)
+			return errState.Save(saveErr)
 		}
 	}
 

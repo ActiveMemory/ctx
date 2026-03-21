@@ -9,10 +9,10 @@ package load
 import (
 	"github.com/spf13/cobra"
 
-	loadroot "github.com/ActiveMemory/ctx/internal/cli/load/cmd/root"
+	loadRoot "github.com/ActiveMemory/ctx/internal/cli/load/cmd/root"
 )
 
 // Cmd returns the "ctx load" command for outputting assembled context.
 func Cmd() *cobra.Command {
-	return loadroot.Cmd()
+	return loadRoot.Cmd()
 }

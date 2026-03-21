@@ -6,6 +6,20 @@
 
 package core
 
+import "github.com/ActiveMemory/ctx/internal/index"
+
+// ScoredEntry is an entry block with a computed relevance score.
+//
+// Fields:
+//   - EntryBlock: The parsed entry block from a knowledge file
+//   - Score: Combined recency + relevance score (0.0-2.0)
+//   - Tokens: Pre-computed token estimate of the full body
+type ScoredEntry struct {
+	index.EntryBlock
+	Score  float64
+	Tokens int
+}
+
 // Packet represents the JSON output format for the agent command.
 //
 // This struct is serialized when using --format json and contains

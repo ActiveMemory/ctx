@@ -37,7 +37,7 @@ func Cmd() *cobra.Command {
 	short, long := desc.CommandDesc(cmd.DescKeyTask)
 
 	cmd := &cobra.Command{
-		Use:   cmd.DescKeyTask,
+		Use:   cmd.UseTask,
 		Short: short,
 		Long:  long,
 	}

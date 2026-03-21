@@ -8,6 +8,8 @@ package core
 
 import (
 	"os"
+
+	"github.com/ActiveMemory/ctx/internal/format"
 	"path/filepath"
 	"strings"
 	"testing"
@@ -32,8 +34,8 @@ func TestHumanAgo(t *testing.T) {
 		{24 * time.Hour, "1 day ago"},
 	}
 	for _, tt := range tests {
-		if got := HumanAgo(tt.d); got != tt.want {
-			t.Errorf("HumanAgo(%v) = %q, want %q", tt.d, got, tt.want)
+		if got := format.DurationAgo(tt.d); got != tt.want {
+			t.Errorf("DurationAgo(%v) = %q, want %q", tt.d, got, tt.want)
 		}
 	}
 }
@@ -98,7 +100,7 @@ func TestPluralize(t *testing.T) {
 		{0, "file", "0 files"},
 	}
 	for _, tt := range tests {
-		if got := Pluralize(tt.n, tt.unit); got != tt.want {
+		if got := format.Pluralize(tt.n, tt.unit); got != tt.want {
 			t.Errorf("Pluralize(%d, %q) = %q, want %q", tt.n, tt.unit, got, tt.want)
 		}
 	}

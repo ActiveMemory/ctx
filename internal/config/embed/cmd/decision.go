@@ -6,6 +6,8 @@
 
 package cmd
 
+const UseDecision = "decision"
+
 const (
 	DescKeyDecision        = "decision"
 	DescKeyDecisionReindex = "decision.reindex"

@@ -47,7 +47,7 @@ func CreateProjectDirs(cmd *cobra.Command) error {
 			return fs2.Mkdir(dir+"/", mkdirErr)
 		}
 
-		readme, readErr := project.ProjectReadme(dir)
+		readme, readErr := project.Readme(dir)
 		if readErr != nil {
 			return ctxerr.ReadProjectReadme(dir, readErr)
 		}

@@ -60,10 +60,18 @@ type Snapshot struct {
 	Load   LoadInfo
 }
 
+// Resource name constants for threshold evaluation.
+const (
+	ResourceMemory = "memory"
+	ResourceSwap   = "swap"
+	ResourceDisk   = "disk"
+	ResourceLoad   = "load"
+)
+
 // ResourceAlert describes a single threshold breach.
 type ResourceAlert struct {
 	Severity Severity
-	Resource string // "memory", "swap", "disk", "load"
+	Resource string
 	Message  string
 }
 

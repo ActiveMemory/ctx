@@ -52,6 +52,12 @@ type JournalEntry struct {
 	Summary    string
 }
 
+// PopularSplittable is implemented by MOC data types that can be
+// split into popular and long-tail groups.
+type PopularSplittable interface {
+	IsPopular() bool
+}
+
 // TopicData holds aggregated data for a single topic.
 type TopicData struct {
 	Name    string
@@ -59,12 +65,18 @@ type TopicData struct {
 	Popular bool
 }
 
+// IsPopular reports whether this topic is popular.
+func (t TopicData) IsPopular() bool { return t.Popular }
+
 // KeyFileData holds aggregated data for a single file path.
 type KeyFileData struct {
 	Path    string
 	Entries []JournalEntry
 	Popular bool
 }
+
+// IsPopular reports whether this key file is popular.
+func (kf KeyFileData) IsPopular() bool { return kf.Popular }
 
 // TypeData holds aggregated data for a session type.
 type TypeData struct {
