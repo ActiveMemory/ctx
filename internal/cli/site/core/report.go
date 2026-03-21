@@ -10,6 +10,9 @@ import (
 	"fmt"
 
 	"github.com/spf13/cobra"
+
+	"github.com/ActiveMemory/ctx/internal/assets/read/desc"
+	"github.com/ActiveMemory/ctx/internal/config/embed/text"
 )
 
 // PrintReport outputs the feed generation summary.
@@ -19,19 +22,23 @@ import (
 //   - outPath: Path of the generated feed file
 //   - report: Feed generation report with counts and messages
 func PrintReport(cmd *cobra.Command, outPath string, report FeedReport) {
-	cmd.Println(fmt.Sprintf("\nGenerated %s (%d entries)", outPath, report.Included))
+	cmd.Println()
+	cmd.Println(fmt.Sprintf(
+		desc.Text(text.DescKeySiteFeedGenerated), outPath, report.Included))
 
 	if len(report.Skipped) > 0 {
-		cmd.Println("\nSkipped:")
+		cmd.Println()
+		cmd.Println(desc.Text(text.DescKeySiteFeedSkipped))
 		for _, msg := range report.Skipped {
-			cmd.Println("  " + msg)
+			cmd.Println(fmt.Sprintf(desc.Text(text.DescKeySiteFeedItem), msg))
 		}
 	}
 
 	if len(report.Warnings) > 0 {
-		cmd.Println("\nWarnings:")
+		cmd.Println()
+		cmd.Println(desc.Text(text.DescKeySiteFeedWarnings))
 		for _, msg := range report.Warnings {
-			cmd.Println("  " + msg)
+			cmd.Println(fmt.Sprintf(desc.Text(text.DescKeySiteFeedItem), msg))
 		}
 	}
 }

@@ -377,6 +377,14 @@ recall.token-summary:
   short: '%s (in: %s, out: %s)'
 recall.tool-count-line:
   short: '%s: %d'
+site.feed-generated:
+  short: 'Generated %s (%d entries)'
+site.feed-skipped:
+  short: 'Skipped:'
+site.feed-warnings:
+  short: 'Warnings:'
+site.feed-item:
+  short: '  %s'
 sync.config.description:
   short: Found %s but %s not documented
 sync.config.suggestion:

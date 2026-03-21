@@ -25,3 +25,12 @@ const (
 	// FeedXMLHeader is the XML declaration prepended to feed output.
 	FeedXMLHeader = `<?xml version="1.0" encoding="utf-8"?>` + token.NewlineLF
 )
+
+// Feed URL path constants.
+const (
+	FeedPath     = "/feed.xml"
+	BlogPath     = "/blog/"
+	LinkRelSelf  = "self"
+	TimeSuffixZ  = "T00:00:00Z"
+	SkipSentinel = " \u2014 "
+)

@@ -30,12 +30,12 @@ import (
 func GenerateAtom(posts []BlogPost, outPath, baseURL string) error {
 	baseURL = strings.TrimRight(baseURL, "/")
 
-	feedURL := baseURL + "/feed.xml"
-	blogURL := baseURL + "/blog/"
+	feedURL := baseURL + rss.FeedPath
+	blogURL := baseURL + rss.BlogPath
 
 	updated := ""
 	if len(posts) > 0 {
-		updated = posts[0].Date + "T00:00:00Z"
+		updated = posts[0].Date + rss.TimeSuffixZ
 	}
 
 	feed := AtomFeed{
@@ -43,7 +43,7 @@ func GenerateAtom(posts []BlogPost, outPath, baseURL string) error {
 		Title: rss.FeedTitle,
 		Links: []AtomLink{
 			{Href: blogURL},
-			{Href: feedURL, Rel: "self"},
+			{Href: feedURL, Rel: rss.LinkRelSelf},
 		},
 		ID:      feedURL,
 		Updated: updated,
@@ -57,10 +57,10 @@ func GenerateAtom(posts []BlogPost, outPath, baseURL string) error {
 			Title:   p.Title,
 			Links:   []AtomLink{{Href: entryURL}},
 			ID:      entryURL,
-			Updated: p.Date + "T00:00:00Z",
+			Updated: p.Date + rss.TimeSuffixZ,
 		}
 
-		if p.Summary != "" && !strings.Contains(p.Summary, " \u2014 ") {
+		if p.Summary != "" && !strings.Contains(p.Summary, rss.SkipSentinel) {
 			entry.Summary = p.Summary
 		}
 
