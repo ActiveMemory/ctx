@@ -3,6 +3,7 @@
 <!-- INDEX:START -->
 | Date | Decision |
 |------|--------|
+| 2026-03-21 | Output functions belong in write/, logic and types in core/ |
 | 2026-03-20 | Shared formatting utilities belong in internal/format |
 | 2026-03-20 | Go-YAML linkage check added to lint-drift as check 5 |
 | 2026-03-18 | Eager Init() for static embedded data instead of per-accessor sync.Once |
@@ -57,6 +58,20 @@
 | 2026-02-26 | Security and permissions (consolidated) |
 | 2026-02-27 | Webhook and notification design (consolidated) |
 <!-- INDEX:END -->
+
+## [2026-03-21-084020] Output functions belong in write/, logic and types in core/
+
+**Status**: Accepted
+
+**Context**: PrintFeedReport was initially placed in cli/site/core/ but it calls cmd.Println — that's output formatting, not business logic
+
+**Decision**: Output functions belong in write/, logic and types in core/
+
+**Rationale**: The project taxonomy separates concerns: core/ owns domain logic, types, and helpers; write/ owns CLI output formatting that takes *cobra.Command for Println. Mixing them blurs the boundary and makes testing harder.
+
+**Consequence**: All functions that call cmd.Print/Println/Printf belong in the write/ package tree. core/ never imports cobra for output purposes.
+
+---
 
 ## [2026-03-20-232506] Shared formatting utilities belong in internal/format
 
