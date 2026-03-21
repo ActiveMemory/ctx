@@ -85,7 +85,7 @@ func TestPrintReport_NoSkipped(t *testing.T) {
 		Included: 3,
 	}
 
-	printReport(cmd, "site/feed.xml", report)
+	core.PrintReport(cmd, "site/feed.xml", report)
 	out := testOutput(cmd)
 
 	if !strings.Contains(out, "3 entries") {
@@ -107,7 +107,7 @@ func TestPrintReport_WithWarnings(t *testing.T) {
 		Warnings: []string{"post.md \u2014 no summary paragraph found"},
 	}
 
-	printReport(cmd, "site/feed.xml", report)
+	core.PrintReport(cmd, "site/feed.xml", report)
 	out := testOutput(cmd)
 
 	if !strings.Contains(out, "Warnings:") {

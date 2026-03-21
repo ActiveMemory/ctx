@@ -4,23 +4,21 @@
 //   \    Copyright 2026-present Context contributors.
 //                 SPDX-License-Identifier: Apache-2.0
 
-package feed
+package core
 
 import (
 	"fmt"
 
 	"github.com/spf13/cobra"
-
-	"github.com/ActiveMemory/ctx/internal/cli/site/core"
 )
 
-// printReport outputs the generation summary.
+// PrintReport outputs the feed generation summary.
 //
 // Parameters:
 //   - cmd: Cobra command for output messages
 //   - outPath: Path of the generated feed file
 //   - report: Feed generation report with counts and messages
-func printReport(cmd *cobra.Command, outPath string, report core.FeedReport) {
+func PrintReport(cmd *cobra.Command, outPath string, report FeedReport) {
 	cmd.Println(fmt.Sprintf("\nGenerated %s (%d entries)", outPath, report.Included))
 
 	if len(report.Skipped) > 0 {

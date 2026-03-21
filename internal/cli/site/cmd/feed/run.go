@@ -34,7 +34,7 @@ func Run(cmd *cobra.Command, blogDir, outPath, baseURL string) error {
 	}
 
 	report.Included = len(posts)
-	printReport(cmd, outPath, report)
+	core.PrintReport(cmd, outPath, report)
 
 	return nil
 }
