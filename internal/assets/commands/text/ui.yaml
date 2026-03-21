@@ -385,6 +385,22 @@ site.feed-warnings:
   short: 'Warnings:'
 site.feed-item:
   short: '  %s'
+site.skip-cannot-read:
+  short: '%s — cannot read file'
+site.skip-no-frontmatter:
+  short: '%s — no frontmatter found'
+site.skip-malformed:
+  short: '%s — malformed frontmatter'
+site.skip-parse-error:
+  short: '%s — %s'
+site.skip-not-finalized:
+  short: '%s — not finalized'
+site.skip-missing-title:
+  short: '%s — missing title'
+site.skip-missing-date:
+  short: '%s — missing date'
+site.warn-no-summary:
+  short: '%s — no summary paragraph found'
 sync.config.description:
   short: Found %s but %s not documented
 sync.config.suggestion:

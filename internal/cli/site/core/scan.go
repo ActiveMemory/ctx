@@ -16,6 +16,8 @@ import (
 
 	"gopkg.in/yaml.v3"
 
+	"github.com/ActiveMemory/ctx/internal/assets/read/desc"
+	"github.com/ActiveMemory/ctx/internal/config/embed/text"
 	"github.com/ActiveMemory/ctx/internal/config/token"
 	errFs "github.com/ActiveMemory/ctx/internal/err/fs"
 )
@@ -44,7 +46,7 @@ func ScanBlogPosts(blogDir string) ([]BlogPost, FeedReport, error) {
 
 	entries, readErr := os.ReadDir(blogDir)
 	if readErr != nil {
-		return nil, report, errFs.ReadDir("blog directory", readErr)
+		return nil, report, errFs.ReadDir(blogDir, readErr)
 	}
 
 	var posts []BlogPost
@@ -90,7 +92,7 @@ func ScanBlogPosts(blogDir string) ([]BlogPost, FeedReport, error) {
 func ParsePost(path, filename string) (BlogPost, PostStatus) {
 	data, readErr := os.ReadFile(path)
 	if readErr != nil {
-		return BlogPost{Filename: filename, Summary: filename + " \u2014 cannot read file"}, PostSkipped
+		return BlogPost{Filename: filename, Summary: fmt.Sprintf(desc.Text(text.DescKeySiteSkipCannotRead), filename)}, PostSkipped
 	}
 
 	content := string(data)
@@ -98,13 +100,13 @@ func ParsePost(path, filename string) (BlogPost, PostStatus) {
 	sep := token.Separator
 
 	if !strings.HasPrefix(content, sep+nl) {
-		return BlogPost{Filename: filename, Summary: filename + " \u2014 no frontmatter found"}, PostSkipped
+		return BlogPost{Filename: filename, Summary: fmt.Sprintf(desc.Text(text.DescKeySiteSkipNoFrontmatter), filename)}, PostSkipped
 	}
 
 	fmStart := len(sep + nl)
 	endIdx := strings.Index(content[fmStart:], nl+sep+nl)
 	if endIdx < 0 {
-		return BlogPost{Filename: filename, Summary: filename + " \u2014 malformed frontmatter"}, PostSkipped
+		return BlogPost{Filename: filename, Summary: fmt.Sprintf(desc.Text(text.DescKeySiteSkipMalformed), filename)}, PostSkipped
 	}
 
 	fmRaw := content[fmStart : fmStart+endIdx]
@@ -112,17 +114,17 @@ func ParsePost(path, filename string) (BlogPost, PostStatus) {
 
 	var fm BlogFrontmatter
 	if unmarshalErr := yaml.Unmarshal([]byte(fmRaw), &fm); unmarshalErr != nil {
-		return BlogPost{Filename: filename, Summary: fmt.Sprintf("%s \u2014 %s", filename, unmarshalErr)}, PostSkipped
+		return BlogPost{Filename: filename, Summary: fmt.Sprintf(desc.Text(text.DescKeySiteSkipParseError), filename, unmarshalErr)}, PostSkipped
 	}
 
 	if fm.ReviewedAndFinalized == nil || !*fm.ReviewedAndFinalized {
-		return BlogPost{Filename: filename, Summary: filename + " \u2014 not finalized"}, PostSkipped
+		return BlogPost{Filename: filename, Summary: fmt.Sprintf(desc.Text(text.DescKeySiteSkipNotFinalized), filename)}, PostSkipped
 	}
 	if fm.Title == "" {
-		return BlogPost{Filename: filename, Summary: filename + " \u2014 missing title"}, PostSkipped
+		return BlogPost{Filename: filename, Summary: fmt.Sprintf(desc.Text(text.DescKeySiteSkipMissingTitle), filename)}, PostSkipped
 	}
 	if fm.Date == "" {
-		return BlogPost{Filename: filename, Summary: filename + " \u2014 missing date"}, PostSkipped
+		return BlogPost{Filename: filename, Summary: fmt.Sprintf(desc.Text(text.DescKeySiteSkipMissingDate), filename)}, PostSkipped
 	}
 
 	summary := ExtractSummary(body)
@@ -131,7 +133,7 @@ func ParsePost(path, filename string) (BlogPost, PostStatus) {
 		return BlogPost{
 			Filename: filename, Title: fm.Title, Date: fm.Date,
 			Author: fm.Author, Topics: fm.Topics,
-			Summary: filename + " \u2014 no summary paragraph found",
+			Summary: fmt.Sprintf(desc.Text(text.DescKeySiteWarnNoSummary), filename),
 		}, PostWarn
 	}
 
@@ -165,8 +167,8 @@ func ExtractSummary(body string) string {
 		}
 
 		if trimmed == "" ||
-			strings.HasPrefix(trimmed, "!") ||
-			strings.HasPrefix(trimmed, "*") ||
+			strings.HasPrefix(trimmed, token.PrefixBang) ||
+			strings.HasPrefix(trimmed, token.PrefixStar) ||
 			strings.HasPrefix(trimmed, token.PrefixHeading) {
 			continue
 		}

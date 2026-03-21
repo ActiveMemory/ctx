@@ -15,7 +15,10 @@ const (
 	PrefixListDash = "- "
 	// PrefixListStar is the prefix for a star list item.
 	PrefixListStar = "* "
-	// MemoryMirrorPrefix is the filename prefix for archived mirror files.
+	// PrefixBang is the Markdown image/admonition prefix.
+	PrefixBang = "!"
+	// PrefixStar is the Markdown emphasis/bold prefix.
+	PrefixStar = "*"
 )
 
 const (

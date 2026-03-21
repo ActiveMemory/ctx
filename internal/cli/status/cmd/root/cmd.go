@@ -7,10 +7,11 @@
 package root
 
 import (
+	"github.com/spf13/cobra"
+
 	"github.com/ActiveMemory/ctx/internal/assets/read/desc"
 	"github.com/ActiveMemory/ctx/internal/config/embed/cmd"
 	"github.com/ActiveMemory/ctx/internal/config/embed/flag"
-	"github.com/spf13/cobra"
 )
 
 // Cmd returns the status command.
@@ -29,7 +30,7 @@ func Cmd() *cobra.Command {
 
 	short, long := desc.Command(cmd.DescKeyStatus)
 
-	cmd := &cobra.Command{
+	c := &cobra.Command{
 		Use:   cmd.UseStatus,
 		Short: short,
 		Long:  long,
@@ -38,14 +39,14 @@ func Cmd() *cobra.Command {
 		},
 	}
 
-	cmd.Flags().BoolVar(
+	c.Flags().BoolVar(
 		&jsonOutput,
 		"json", false, desc.Flag(flag.DescKeyStatusJson),
 	)
-	cmd.Flags().BoolVarP(
+	c.Flags().BoolVarP(
 		&verbose, "verbose", "v", false,
 		desc.Flag(flag.DescKeyStatusVerbose),
 	)
 
-	return cmd
+	return c
 }

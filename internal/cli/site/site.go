@@ -7,11 +7,11 @@
 package site
 
 import (
-	"github.com/ActiveMemory/ctx/internal/assets/read/desc"
-	"github.com/ActiveMemory/ctx/internal/config/embed/cmd"
 	"github.com/spf13/cobra"
 
+	"github.com/ActiveMemory/ctx/internal/assets/read/desc"
 	"github.com/ActiveMemory/ctx/internal/cli/site/cmd/feed"
+	"github.com/ActiveMemory/ctx/internal/config/embed/cmd"
 )
 
 // Cmd returns the "ctx site" parent command.
@@ -24,13 +24,13 @@ import (
 func Cmd() *cobra.Command {
 	short, long := desc.Command(cmd.DescKeySite)
 
-	cmd := &cobra.Command{
+	c := &cobra.Command{
 		Use:   cmd.UseSite,
 		Short: short,
 		Long:  long,
 	}
 
-	cmd.AddCommand(feed.Cmd())
+	c.AddCommand(feed.Cmd())
 
-	return cmd
+	return c
 }
