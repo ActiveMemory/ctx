@@ -12,6 +12,7 @@ import (
 	"github.com/ActiveMemory/ctx/internal/assets/read/desc"
 	"github.com/ActiveMemory/ctx/internal/config/embed/cmd"
 	"github.com/ActiveMemory/ctx/internal/config/embed/flag"
+	cflag "github.com/ActiveMemory/ctx/internal/config/flag"
 )
 
 // Cmd returns the "ctx system bootstrap" subcommand.
@@ -30,10 +31,10 @@ func Cmd() *cobra.Command {
 		},
 	}
 
-	c.Flags().Bool("json", false,
+	c.Flags().Bool(cflag.JSON, false,
 		desc.Flag(flag.DescKeySystemBootstrapJson),
 	)
-	c.Flags().BoolP("quiet", "q", false,
+	c.Flags().BoolP(cflag.Quiet, cflag.ShortQuiet, false,
 		desc.Flag(flag.DescKeySystemBootstrapQuiet),
 	)
 

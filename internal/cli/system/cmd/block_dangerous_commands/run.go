@@ -11,13 +11,13 @@ import (
 	"fmt"
 	"os"
 
+	"github.com/spf13/cobra"
+
 	"github.com/ActiveMemory/ctx/internal/assets/read/desc"
+	"github.com/ActiveMemory/ctx/internal/cli/system/core"
 	"github.com/ActiveMemory/ctx/internal/config/embed/text"
 	"github.com/ActiveMemory/ctx/internal/config/hook"
 	"github.com/ActiveMemory/ctx/internal/config/regex"
-	"github.com/spf13/cobra"
-
-	"github.com/ActiveMemory/ctx/internal/cli/system/core"
 	"github.com/ActiveMemory/ctx/internal/notify"
 )
 
@@ -78,7 +78,13 @@ func Run(cmd *cobra.Command, stdin *os.File) error {
 		data, _ := json.Marshal(resp)
 		cmd.Println(string(data))
 		ref := notify.NewTemplateRef(hook.BlockDangerousCommands, variant, nil)
-		core.Relay(fmt.Sprintf(desc.Text(text.DescKeyRelayPrefixFormat), hook.BlockDangerousCommands, reason), input.SessionID, ref)
+		core.Relay(fmt.Sprintf(
+			desc.Text(text.DescKeyRelayPrefixFormat),
+			hook.BlockDangerousCommands,
+			reason,
+		),
+			input.SessionID, ref,
+		)
 	}
 
 	return nil

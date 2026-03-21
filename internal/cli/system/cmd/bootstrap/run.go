@@ -9,15 +9,15 @@ package bootstrap
 import (
 	"os"
 
-	"github.com/ActiveMemory/ctx/internal/assets/read/desc"
-	bootstrap2 "github.com/ActiveMemory/ctx/internal/config/bootstrap"
-	"github.com/ActiveMemory/ctx/internal/config/embed/text"
-	ctxerr "github.com/ActiveMemory/ctx/internal/err/backup"
-	"github.com/ActiveMemory/ctx/internal/write/bootstrap"
 	"github.com/spf13/cobra"
 
+	"github.com/ActiveMemory/ctx/internal/assets/read/desc"
 	"github.com/ActiveMemory/ctx/internal/cli/system/core"
+	cfgBootstrap "github.com/ActiveMemory/ctx/internal/config/bootstrap"
+	"github.com/ActiveMemory/ctx/internal/config/embed/text"
+	errBackup "github.com/ActiveMemory/ctx/internal/err/backup"
 	"github.com/ActiveMemory/ctx/internal/rc"
+	"github.com/ActiveMemory/ctx/internal/write/bootstrap"
 )
 
 // Run executes the bootstrap command, emitting context directory info,
@@ -33,7 +33,7 @@ func Run(cmd *cobra.Command) error {
 	dir := rc.ContextDir()
 
 	if _, statErr := os.Stat(dir); os.IsNotExist(statErr) {
-		return ctxerr.ContextDirNotFound(dir)
+		return errBackup.ContextDirNotFound(dir)
 	}
 
 	quiet, _ := cmd.Flags().GetBool("quiet")
@@ -58,7 +58,7 @@ func Run(cmd *cobra.Command) error {
 	}
 
 	fileList := core.WrapFileList(
-		files, bootstrap2.BootstrapFileListWidth, bootstrap2.BootstrapFileListIndent,
+		files, cfgBootstrap.BootstrapFileListWidth, cfgBootstrap.BootstrapFileListIndent,
 	)
 	bootstrap.Text(cmd, dir, fileList, rules, nextSteps, warning)
 	return nil
