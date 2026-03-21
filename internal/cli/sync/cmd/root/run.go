@@ -51,7 +51,8 @@ func Run(cmd *cobra.Command, dryRun bool) error {
 
 	for i, action := range actions {
 		sync.CtxSyncAction(
-			cmd, i+1, action.Type, action.Description, action.Suggestion)
+			cmd, i+1, action.Type, action.Description, action.Suggestion,
+		)
 	}
 
 	sync.CtxSyncSummary(cmd, len(actions), dryRun)

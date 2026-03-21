@@ -17,6 +17,7 @@ import (
 	ctxCfg "github.com/ActiveMemory/ctx/internal/config/ctx"
 	"github.com/ActiveMemory/ctx/internal/config/dep"
 	"github.com/ActiveMemory/ctx/internal/config/embed/text"
+	syncCfg "github.com/ActiveMemory/ctx/internal/config/sync"
 	"github.com/ActiveMemory/ctx/internal/entity"
 )
 
@@ -44,7 +45,7 @@ func CheckPackageFiles(ctx *entity.Context) []Action {
 			} else {
 				for _, f := range ctx.Files {
 					if strings.Contains(strings.ToLower(string(f.Content)),
-						"dependencies",
+						syncCfg.KeywordDependencies,
 					) {
 						hasDepsDoc = true
 						break
@@ -54,7 +55,7 @@ func CheckPackageFiles(ctx *entity.Context) []Action {
 
 			if !hasDepsDoc {
 				actions = append(actions, Action{
-					Type: "DEPS",
+					Type: syncCfg.ActionDeps,
 					File: ctxCfg.Architecture,
 					Description: fmt.Sprintf(
 						lookup.TextDesc(text.DescKeySyncDepsDescription),
@@ -99,7 +100,7 @@ func CheckConfigFiles(ctx *entity.Context) []Action {
 			keyword = strings.TrimSuffix(keyword, "*")
 			if convContent == "" || !strings.Contains(convContent, keyword) {
 				actions = append(actions, Action{
-					Type: "CONFIG",
+					Type: syncCfg.ActionConfig,
 					File: ctxCfg.Convention,
 					Description: fmt.Sprintf(
 						desc.Text(text.DescKeySyncConfigDescription),
@@ -144,37 +145,18 @@ func CheckNewDirectories(ctx *entity.Context) []Action {
 		return actions
 	}
 
-	importantDirs := []string{
-		"src", "lib", "pkg", "internal",
-		"cmd", "api", "web", "app", "services", "components",
-	}
-
 	for _, entry := range entries {
 		if !entry.IsDir() {
 			continue
 		}
 		name := entry.Name()
-		// Skip hidden directories and common non-code directories
-		if strings.HasPrefix(name, ".") ||
-			name == "node_modules" ||
-			name == "vendor" ||
-			name == "dist" ||
-			name == "build" {
+		if strings.HasPrefix(name, ".") || syncCfg.SkipDirs[name] {
 			continue
 		}
 
-		// Check if this is an important directory not mentioned in ARCHITECTURE.md
-		isImportant := false
-		for _, imp := range importantDirs {
-			if name == imp {
-				isImportant = true
-				break
-			}
-		}
-
-		if isImportant && !strings.Contains(archContent, name) {
+		if syncCfg.ImportantDirs[name] && !strings.Contains(archContent, name) {
 			actions = append(actions, Action{
-				Type: "NEW_DIR",
+				Type: syncCfg.ActionNewDir,
 				File: ctxCfg.Architecture,
 				Description: fmt.Sprintf(
 					desc.Text(text.DescKeySyncDirDescription),
