@@ -15,6 +15,7 @@ import (
 	"github.com/ActiveMemory/ctx/internal/cli/system/core"
 	cfgBootstrap "github.com/ActiveMemory/ctx/internal/config/bootstrap"
 	"github.com/ActiveMemory/ctx/internal/config/embed/text"
+	cflag "github.com/ActiveMemory/ctx/internal/config/flag"
 	errBackup "github.com/ActiveMemory/ctx/internal/err/backup"
 	"github.com/ActiveMemory/ctx/internal/rc"
 	"github.com/ActiveMemory/ctx/internal/write/bootstrap"
@@ -36,7 +37,7 @@ func Run(cmd *cobra.Command) error {
 		return errBackup.ContextDirNotFound(dir)
 	}
 
-	quiet, _ := cmd.Flags().GetBool("quiet")
+	quiet, _ := cmd.Flags().GetBool(cflag.Quiet)
 	if quiet {
 		cmd.Println(dir)
 		return nil
@@ -51,14 +52,16 @@ func Run(cmd *cobra.Command) error {
 	)
 	warning := core.PluginWarning()
 
-	jsonFlag, _ := cmd.Flags().GetBool("json")
+	jsonFlag, _ := cmd.Flags().GetBool(cflag.JSON)
 	if jsonFlag {
 		bootstrap.JSON(cmd, dir, files, rules, nextSteps, warning)
 		return nil
 	}
 
 	fileList := core.WrapFileList(
-		files, cfgBootstrap.BootstrapFileListWidth, cfgBootstrap.BootstrapFileListIndent,
+		files,
+		cfgBootstrap.BootstrapFileListWidth,
+		cfgBootstrap.BootstrapFileListIndent,
 	)
 	bootstrap.Text(cmd, dir, fileList, rules, nextSteps, warning)
 	return nil
