@@ -10,8 +10,11 @@ import (
 	"github.com/spf13/cobra"
 
 	"github.com/ActiveMemory/ctx/internal/assets/read/desc"
+	"github.com/ActiveMemory/ctx/internal/cli/system/cmd/message/cmd/edit"
+	"github.com/ActiveMemory/ctx/internal/cli/system/cmd/message/cmd/list"
+	"github.com/ActiveMemory/ctx/internal/cli/system/cmd/message/cmd/reset"
+	"github.com/ActiveMemory/ctx/internal/cli/system/cmd/message/cmd/show"
 	"github.com/ActiveMemory/ctx/internal/config/embed/cmd"
-	"github.com/ActiveMemory/ctx/internal/config/embed/flag"
 )
 
 // Cmd returns the "ctx system message" subcommand.
@@ -28,68 +31,11 @@ func Cmd() *cobra.Command {
 	}
 
 	c.AddCommand(
-		messageListCmd(),
-		messageShowCmd(),
-		messageEditCmd(),
-		messageResetCmd(),
+		list.Cmd(),
+		show.Cmd(),
+		edit.Cmd(),
+		reset.Cmd(),
 	)
 
 	return c
-}
-
-// messageListCmd returns the "ctx system message list" subcommand.
-func messageListCmd() *cobra.Command {
-	short, _ := desc.Command(cmd.DescKeySystemMessageList)
-
-	cmd := &cobra.Command{
-		Use:   cmd.UseSystemMessageList,
-		Short: short,
-		RunE: func(cmd *cobra.Command, _ []string) error {
-			return RunMessageList(cmd)
-		},
-	}
-	cmd.Flags().Bool("json", false, desc.Flag(flag.DescKeySystemMessageJson))
-	return cmd
-}
-
-// messageShowCmd returns the "ctx system message show" subcommand.
-func messageShowCmd() *cobra.Command {
-	short, _ := desc.Command(cmd.DescKeySystemMessageShow)
-
-	return &cobra.Command{
-		Use:   cmd.UseSystemMessageShow,
-		Short: short,
-		Args:  cobra.ExactArgs(2),
-		RunE: func(cmd *cobra.Command, args []string) error {
-			return RunMessageShow(cmd, args[0], args[1])
-		},
-	}
-}
-
-// messageEditCmd returns the "ctx system message edit" subcommand.
-func messageEditCmd() *cobra.Command {
-	short, _ := desc.Command(cmd.DescKeySystemMessageEdit)
-
-	return &cobra.Command{
-		Use:   cmd.UseSystemMessageEdit,
-		Short: short,
-		Args:  cobra.ExactArgs(2),
-		RunE: func(cmd *cobra.Command, args []string) error {
-			return RunMessageEdit(cmd, args[0], args[1])
-		},
-	}
-}
-
-// messageResetCmd returns the "ctx system message reset" subcommand.
-func messageResetCmd() *cobra.Command {
-	short, _ := desc.Command(cmd.DescKeySystemMessageReset)
-
-	return &cobra.Command{
-		Use:   cmd.UseSystemMessageReset,
-		Short: short,
-		Args:  cobra.ExactArgs(2),
-		RunE: func(cmd *cobra.Command, args []string) error {
-			return RunMessageReset(cmd, args[0], args[1])
-		},
-	}
 }
