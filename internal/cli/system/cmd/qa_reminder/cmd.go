@@ -22,7 +22,7 @@ func Cmd() *cobra.Command {
 	short, long := desc.Command(cmd.DescKeySystemQaReminder)
 
 	return &cobra.Command{
-		Use:    "qa-reminder",
+		Use:    cmd.UseSystemQaReminder,
 		Short:  short,
 		Long:   long,
 		Hidden: true,

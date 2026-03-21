@@ -22,7 +22,7 @@ func Cmd() *cobra.Command {
 	short, long := desc.Command(cmd.DescKeySystemCheckMapStaleness)
 
 	return &cobra.Command{
-		Use:    "check-map-staleness",
+		Use:    cmd.UseSystemCheckMapStaleness,
 		Short:  short,
 		Long:   long,
 		Hidden: true,

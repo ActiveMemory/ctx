@@ -22,7 +22,7 @@ func Cmd() *cobra.Command {
 	short, long := desc.Command(cmd.DescKeySystemBlockDangerousCommands)
 
 	return &cobra.Command{
-		Use:    "block-dangerous-commands",
+		Use:    cmd.UseSystemBlockDangerousCommands,
 		Short:  short,
 		Long:   long,
 		Hidden: true,

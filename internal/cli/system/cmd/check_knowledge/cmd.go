@@ -22,7 +22,7 @@ func Cmd() *cobra.Command {
 	short, long := desc.Command(cmd.DescKeySystemCheckKnowledge)
 
 	return &cobra.Command{
-		Use:    "check-knowledge",
+		Use:    cmd.UseSystemCheckKnowledge,
 		Short:  short,
 		Long:   long,
 		Hidden: true,

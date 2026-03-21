@@ -22,7 +22,7 @@ func Cmd() *cobra.Command {
 	short, long := desc.Command(cmd.DescKeySystemCheckResources)
 
 	return &cobra.Command{
-		Use:    "check-resources",
+		Use:    cmd.UseSystemCheckResources,
 		Short:  short,
 		Long:   long,
 		Hidden: true,

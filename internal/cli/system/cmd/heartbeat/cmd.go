@@ -22,7 +22,7 @@ func Cmd() *cobra.Command {
 	short, long := desc.Command(cmd.DescKeySystemHeartbeat)
 
 	return &cobra.Command{
-		Use:    "heartbeat",
+		Use:    cmd.UseSystemHeartbeat,
 		Short:  short,
 		Long:   long,
 		Hidden: true,

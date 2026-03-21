@@ -21,7 +21,7 @@ func Cmd() *cobra.Command {
 	short, long := desc.Command(cmd.DescKeySystemEvents)
 
 	cmd := &cobra.Command{
-		Use:   "events",
+		Use:   cmd.UseSystemEvents,
 		Short: short,
 		Long:  long,
 		RunE: func(cmd *cobra.Command, _ []string) error {

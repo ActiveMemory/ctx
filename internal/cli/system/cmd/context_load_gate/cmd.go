@@ -22,7 +22,7 @@ func Cmd() *cobra.Command {
 	short, long := desc.Command(cmd.DescKeySystemContextLoadGate)
 
 	return &cobra.Command{
-		Use:    "context-load-gate",
+		Use:    cmd.UseSystemContextLoadGate,
 		Short:  short,
 		Long:   long,
 		Hidden: true,

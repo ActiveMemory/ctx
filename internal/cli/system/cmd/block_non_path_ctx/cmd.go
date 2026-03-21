@@ -22,7 +22,7 @@ func Cmd() *cobra.Command {
 	short, long := desc.Command(cmd.DescKeySystemBlockNonPathCtx)
 
 	return &cobra.Command{
-		Use:    "block-non-path-ctx",
+		Use:    cmd.UseSystemBlockNonPathCtx,
 		Short:  short,
 		Long:   long,
 		Hidden: true,

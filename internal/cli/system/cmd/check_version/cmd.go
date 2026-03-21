@@ -22,7 +22,7 @@ func Cmd() *cobra.Command {
 	short, long := desc.Command(cmd.DescKeySystemCheckVersion)
 
 	return &cobra.Command{
-		Use:    "check-version",
+		Use:    cmd.UseSystemCheckVersion,
 		Short:  short,
 		Long:   long,
 		Hidden: true,

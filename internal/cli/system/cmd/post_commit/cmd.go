@@ -22,7 +22,7 @@ func Cmd() *cobra.Command {
 	short, long := desc.Command(cmd.DescKeySystemPostCommit)
 
 	return &cobra.Command{
-		Use:    "post-commit",
+		Use:    cmd.UseSystemPostCommit,
 		Short:  short,
 		Long:   long,
 		Hidden: true,

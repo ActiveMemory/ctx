@@ -23,7 +23,7 @@ func Cmd() *cobra.Command {
 	short, long := desc.Command(cmd.DescKeySystemPause)
 
 	cmd := &cobra.Command{
-		Use:    "pause",
+		Use:    cmd.UseSystemPause,
 		Short:  short,
 		Long:   long,
 		Hidden: true,

@@ -22,7 +22,7 @@ func Cmd() *cobra.Command {
 	short, _ := desc.Command(cmd.DescKeySystemCheckReminders)
 
 	return &cobra.Command{
-		Use:    "check-reminders",
+		Use:    cmd.UseSystemCheckReminders,
 		Short:  short,
 		Hidden: true,
 		RunE: func(cmd *cobra.Command, _ []string) error {

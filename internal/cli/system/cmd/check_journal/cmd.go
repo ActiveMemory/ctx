@@ -22,7 +22,7 @@ func Cmd() *cobra.Command {
 	short, long := desc.Command(cmd.DescKeySystemCheckJournal)
 
 	return &cobra.Command{
-		Use:    "check-journal",
+		Use:    cmd.UseSystemCheckJournal,
 		Short:  short,
 		Long:   long,
 		Hidden: true,

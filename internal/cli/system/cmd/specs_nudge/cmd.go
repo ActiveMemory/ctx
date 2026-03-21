@@ -22,7 +22,7 @@ func Cmd() *cobra.Command {
 	short, long := desc.Command(cmd.DescKeySystemSpecsNudge)
 
 	return &cobra.Command{
-		Use:    "specs-nudge",
+		Use:    cmd.UseSystemSpecsNudge,
 		Short:  short,
 		Long:   long,
 		Hidden: true,

@@ -23,7 +23,7 @@ func Cmd() *cobra.Command {
 	short, long := desc.Command(cmd.DescKeySystemResume)
 
 	cmd := &cobra.Command{
-		Use:    "resume",
+		Use:    cmd.UseSystemResume,
 		Short:  short,
 		Long:   long,
 		Hidden: true,

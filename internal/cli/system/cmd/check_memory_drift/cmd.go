@@ -22,7 +22,7 @@ func Cmd() *cobra.Command {
 	short, _ := desc.Command(cmd.DescKeySystemCheckMemoryDrift)
 
 	return &cobra.Command{
-		Use:    "check-memory-drift",
+		Use:    cmd.UseSystemCheckMemoryDrift,
 		Short:  short,
 		Hidden: true,
 		RunE: func(cmd *cobra.Command, _ []string) error {

@@ -22,7 +22,7 @@ func Cmd() *cobra.Command {
 	short, long := desc.Command(cmd.DescKeySystemCheckPersistence)
 
 	return &cobra.Command{
-		Use:    "check-persistence",
+		Use:    cmd.UseSystemCheckPersistence,
 		Short:  short,
 		Long:   long,
 		Hidden: true,

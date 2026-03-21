@@ -25,7 +25,7 @@ func Cmd() *cobra.Command {
 	short, long := desc.Command(cmd.DescKeySystemPrune)
 
 	cmd := &cobra.Command{
-		Use:   "prune",
+		Use:   cmd.UseSystemPrune,
 		Short: short,
 		Long:  long,
 		RunE: func(cmd *cobra.Command, _ []string) error {

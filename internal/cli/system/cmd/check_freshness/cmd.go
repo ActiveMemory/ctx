@@ -22,7 +22,7 @@ func Cmd() *cobra.Command {
 	short, long := desc.Command(cmd.DescKeySystemCheckFreshness)
 
 	return &cobra.Command{
-		Use:    "check-freshness",
+		Use:    cmd.UseSystemCheckFreshness,
 		Short:  short,
 		Long:   long,
 		Hidden: true,

@@ -22,7 +22,7 @@ func Cmd() *cobra.Command {
 	short, long := desc.Command(cmd.DescKeySystemCheckBackupAge)
 
 	return &cobra.Command{
-		Use:    "check-backup-age",
+		Use:    cmd.UseSystemCheckBackupAge,
 		Short:  short,
 		Long:   long,
 		Hidden: true,

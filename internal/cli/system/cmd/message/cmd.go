@@ -21,7 +21,7 @@ func Cmd() *cobra.Command {
 	short, long := desc.Command(cmd.DescKeySystemMessage)
 
 	cmd := &cobra.Command{
-		Use:   "message",
+		Use:   cmd.UseSystemMessage,
 		Short: short,
 		Long:  long,
 	}
@@ -41,7 +41,7 @@ func messageListCmd() *cobra.Command {
 	short, _ := desc.Command(cmd.DescKeySystemMessageList)
 
 	cmd := &cobra.Command{
-		Use:   "list",
+		Use:   cmd.UseSystemMessageList,
 		Short: short,
 		RunE: func(cmd *cobra.Command, _ []string) error {
 			return RunMessageList(cmd)
@@ -56,7 +56,7 @@ func messageShowCmd() *cobra.Command {
 	short, _ := desc.Command(cmd.DescKeySystemMessageShow)
 
 	return &cobra.Command{
-		Use:   "show <hook> <variant>",
+		Use:   cmd.UseSystemMessageShow,
 		Short: short,
 		Args:  cobra.ExactArgs(2),
 		RunE: func(cmd *cobra.Command, args []string) error {
@@ -70,7 +70,7 @@ func messageEditCmd() *cobra.Command {
 	short, _ := desc.Command(cmd.DescKeySystemMessageEdit)
 
 	return &cobra.Command{
-		Use:   "edit <hook> <variant>",
+		Use:   cmd.UseSystemMessageEdit,
 		Short: short,
 		Args:  cobra.ExactArgs(2),
 		RunE: func(cmd *cobra.Command, args []string) error {
@@ -84,7 +84,7 @@ func messageResetCmd() *cobra.Command {
 	short, _ := desc.Command(cmd.DescKeySystemMessageReset)
 
 	return &cobra.Command{
-		Use:   "reset <hook> <variant>",
+		Use:   cmd.UseSystemMessageReset,
 		Short: short,
 		Args:  cobra.ExactArgs(2),
 		RunE: func(cmd *cobra.Command, args []string) error {

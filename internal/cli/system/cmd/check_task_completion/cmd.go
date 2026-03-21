@@ -22,7 +22,7 @@ func Cmd() *cobra.Command {
 	short, long := desc.Command(cmd.DescKeySystemCheckTaskCompletion)
 
 	return &cobra.Command{
-		Use:    "check-task-completion",
+		Use:    cmd.UseSystemCheckTaskCompletion,
 		Short:  short,
 		Long:   long,
 		Hidden: true,

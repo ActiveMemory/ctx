@@ -26,7 +26,7 @@ func Cmd() *cobra.Command {
 	short, long := desc.Command(cmd.DescKeySystemMarkJournal)
 
 	cmd := &cobra.Command{
-		Use:    "mark-journal <filename> <stage>",
+		Use:    cmd.UseSystemMarkJournal,
 		Short:  short,
 		Long:   fmt.Sprintf(long, strings.Join(state.ValidStages, ", ")),
 		Hidden: true,

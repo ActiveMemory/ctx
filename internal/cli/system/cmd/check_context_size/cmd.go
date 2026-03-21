@@ -22,7 +22,7 @@ func Cmd() *cobra.Command {
 	short, long := desc.Command(cmd.DescKeySystemCheckContextSize)
 
 	return &cobra.Command{
-		Use:    "check-context-size",
+		Use:    cmd.UseSystemCheckContextSize,
 		Short:  short,
 		Long:   long,
 		Hidden: true,

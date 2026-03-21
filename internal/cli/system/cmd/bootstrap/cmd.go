@@ -21,7 +21,7 @@ func Cmd() *cobra.Command {
 	short, long := desc.Command(cmd.DescKeySystemBootstrap)
 
 	cmd := &cobra.Command{
-		Use:   "bootstrap",
+		Use:   cmd.UseSystemBootstrap,
 		Short: short,
 		Long:  long,
 		RunE: func(cmd *cobra.Command, _ []string) error {
