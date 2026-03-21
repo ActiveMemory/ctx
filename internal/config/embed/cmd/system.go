@@ -6,6 +6,8 @@
 
 package cmd
 
+const UseSystemBackup = "backup"
+
 const (
 	DescKeySystem                       = "system"
 	DescKeySystemBackup                 = "system.backup"

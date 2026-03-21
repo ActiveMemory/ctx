@@ -83,6 +83,7 @@ const (
 	Ralph           = "ralph"
 	Raw             = "raw"
 	Regenerate      = "regenerate"
+	Scope           = "scope"
 	Serve           = "serve"
 	SessionID       = "session-id"
 	Skills          = "skills"

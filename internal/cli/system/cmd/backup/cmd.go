@@ -7,11 +7,13 @@
 package backup
 
 import (
+	"github.com/spf13/cobra"
+
 	"github.com/ActiveMemory/ctx/internal/assets/read/desc"
 	"github.com/ActiveMemory/ctx/internal/config/archive"
 	"github.com/ActiveMemory/ctx/internal/config/embed/cmd"
 	"github.com/ActiveMemory/ctx/internal/config/embed/flag"
-	"github.com/spf13/cobra"
+	cflag "github.com/ActiveMemory/ctx/internal/config/flag"
 )
 
 // Cmd returns the "ctx system backup" subcommand.
@@ -21,8 +23,8 @@ import (
 func Cmd() *cobra.Command {
 	short, long := desc.Command(cmd.DescKeySystemBackup)
 
-	cmd := &cobra.Command{
-		Use:   "backup",
+	c := &cobra.Command{
+		Use:   cmd.UseSystemBackup,
 		Short: short,
 		Long:  long,
 		RunE: func(cmd *cobra.Command, _ []string) error {
@@ -30,12 +32,12 @@ func Cmd() *cobra.Command {
 		},
 	}
 
-	cmd.Flags().String("scope", archive.BackupScopeAll,
+	c.Flags().String(cflag.Scope, archive.BackupScopeAll,
 		desc.Flag(flag.DescKeySystemBackupScope),
 	)
-	cmd.Flags().Bool("json", false,
+	c.Flags().Bool(cflag.JSON, false,
 		desc.Flag(flag.DescKeySystemBackupJson),
 	)
 
-	return cmd
+	return c
 }
