@@ -19,6 +19,7 @@ import (
 	"github.com/ActiveMemory/ctx/internal/config/file"
 	ctxerr "github.com/ActiveMemory/ctx/internal/err/hook"
 	"github.com/ActiveMemory/ctx/internal/io"
+	systemwrite "github.com/ActiveMemory/ctx/internal/write/system"
 )
 
 // Run executes the message show logic.
@@ -38,12 +39,12 @@ func Run(cmd *cobra.Command, hk, variant string) error {
 
 	oPath := core.OverridePath(hk, variant)
 	if data, readErr := io.SafeReadUserFile(oPath); readErr == nil {
-		cmd.Println(fmt.Sprintf(desc.Text(text.DescKeyMessageSourceOverride), oPath))
-		core.PrintTemplateVars(cmd, info)
-		cmd.Println()
-		cmd.Print(string(data))
+		systemwrite.Line(cmd, fmt.Sprintf(desc.Text(text.DescKeyMessageSourceOverride), oPath))
+		systemwrite.Line(cmd, core.FormatTemplateVars(info))
+		systemwrite.Line(cmd, "")
+		systemwrite.Raw(cmd, string(data))
 		if len(data) > 0 && data[len(data)-1] != '\n' {
-			cmd.Println()
+			systemwrite.Line(cmd, "")
 		}
 		return nil
 	}
@@ -53,12 +54,12 @@ func Run(cmd *cobra.Command, hk, variant string) error {
 		return ctxerr.EmbeddedTemplateNotFound(hk, variant)
 	}
 
-	cmd.Println(desc.Text(text.DescKeyMessageSourceDefault))
-	core.PrintTemplateVars(cmd, info)
-	cmd.Println()
-	cmd.Print(string(data))
+	systemwrite.Line(cmd, desc.Text(text.DescKeyMessageSourceDefault))
+	systemwrite.Line(cmd, core.FormatTemplateVars(info))
+	systemwrite.Line(cmd, "")
+	systemwrite.Raw(cmd, string(data))
 	if len(data) > 0 && data[len(data)-1] != '\n' {
-		cmd.Println()
+		systemwrite.Line(cmd, "")
 	}
 	return nil
 }

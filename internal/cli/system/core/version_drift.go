@@ -17,7 +17,6 @@ import (
 	"github.com/ActiveMemory/ctx/internal/assets/read/desc"
 	"github.com/ActiveMemory/ctx/internal/config/embed/text"
 	"github.com/ActiveMemory/ctx/internal/config/hook"
-	"github.com/spf13/cobra"
 
 	"github.com/ActiveMemory/ctx/internal/notify"
 )
@@ -26,26 +25,28 @@ import (
 // If any differ, it emits a relay box listing the drift. Silent when all match.
 //
 // Parameters:
-//   - cmd: Cobra command for output
 //   - sessionID: Session identifier
-func CheckVersionDrift(cmd *cobra.Command, sessionID string) {
+//
+// Returns:
+//   - string: JSON hook response to print, or empty string if no drift
+func CheckVersionDrift(sessionID string) string {
 	fileVer := ReadVersionFile()
 	if fileVer == "" {
-		return
+		return ""
 	}
 
 	pluginVer, pluginErr := claude.PluginVersion()
 	if pluginErr != nil || pluginVer == "" {
-		return
+		return ""
 	}
 
 	marketVer := ReadMarketplaceVersion()
 	if marketVer == "" {
-		return
+		return ""
 	}
 
 	if fileVer == pluginVer && pluginVer == marketVer {
-		return
+		return ""
 	}
 
 	vars := map[string]any{
@@ -57,13 +58,15 @@ func CheckVersionDrift(cmd *cobra.Command, sessionID string) {
 		"), marketplace.json (" + marketVer + ") are out of sync. Update all three before releasing."
 	msg := LoadMessage(hook.VersionDrift, hook.VariantNudge, vars, fallback)
 	if msg == "" {
-		return
+		return ""
 	}
-	PrintHookContext(cmd, hook.EventPostToolUse, msg)
+	response := FormatHookContext(hook.EventPostToolUse, msg)
 
 	ref := notify.NewTemplateRef(hook.VersionDrift, hook.VariantNudge, vars)
 	Relay(fmt.Sprintf(desc.Text(text.DescKeyRelayPrefixFormat),
 		hook.VersionDrift, desc.Text(text.DescKeyVersionDriftRelayMessage)), sessionID, ref)
+
+	return response
 }
 
 // ReadVersionFile reads and trims the VERSION file from the project root.

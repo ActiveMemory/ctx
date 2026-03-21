@@ -17,7 +17,6 @@ import (
 	"github.com/ActiveMemory/ctx/internal/config/embed/text"
 	"github.com/ActiveMemory/ctx/internal/config/file"
 	ctxerr "github.com/ActiveMemory/ctx/internal/err/hook"
-	"github.com/spf13/cobra"
 
 	"github.com/ActiveMemory/ctx/internal/assets/hooks/messages"
 	"github.com/ActiveMemory/ctx/internal/rc"
@@ -40,22 +39,23 @@ func ValidationError(hook, variant string) error {
 	return ctxerr.UnknownVariant(variant, hook)
 }
 
-// PrintTemplateVars prints available template variables for a hook message.
-// If no variables are defined, prints a "(none)" indicator.
+// FormatTemplateVars formats available template variables for a hook message.
+// If no variables are defined, returns a "(none)" indicator.
 //
 // Parameters:
-//   - cmd: Cobra command for output
 //   - info: hook message info containing template variable names
-func PrintTemplateVars(cmd *cobra.Command, info *messages.HookMessageInfo) {
+//
+// Returns:
+//   - string: formatted template variables line
+func FormatTemplateVars(info *messages.HookMessageInfo) string {
 	if len(info.TemplateVars) == 0 {
-		cmd.Println(desc.Text(text.DescKeyMessageTemplateVarsNone))
-		return
+		return desc.Text(text.DescKeyMessageTemplateVarsNone)
 	}
 	formatted := make([]string, len(info.TemplateVars))
 	for i, v := range info.TemplateVars {
 		formatted[i] = "{{." + v + "}}"
 	}
-	cmd.Println(fmt.Sprintf(desc.Text(text.DescKeyMessageTemplateVarsLabel), strings.Join(formatted, ", ")))
+	return fmt.Sprintf(desc.Text(text.DescKeyMessageTemplateVarsLabel), strings.Join(formatted, ", "))
 }
 
 // OverridePath returns the user override file path for a hook/variant.

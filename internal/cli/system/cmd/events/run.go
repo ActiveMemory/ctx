@@ -15,6 +15,7 @@ import (
 	cFlag "github.com/ActiveMemory/ctx/internal/config/flag"
 	errRcall "github.com/ActiveMemory/ctx/internal/err/recall"
 	"github.com/ActiveMemory/ctx/internal/log"
+	systemwrite "github.com/ActiveMemory/ctx/internal/write/system"
 )
 
 // Run executes the events subcommand, querying and displaying event log
@@ -47,12 +48,14 @@ func Run(cmd *cobra.Command) error {
 	}
 
 	if len(evts) == 0 {
-		cmd.Println(desc.Text(text.DescKeyEventsEmpty))
+		systemwrite.Line(cmd, desc.Text(text.DescKeyEventsEmpty))
 		return nil
 	}
 
 	if jsonOut {
-		return core.OutputEventsJSON(cmd, evts)
+		systemwrite.Lines(cmd, core.FormatEventsJSON(evts))
+	} else {
+		systemwrite.Lines(cmd, core.FormatEventsHuman(evts))
 	}
-	return core.OutputEventsHuman(cmd, evts)
+	return nil
 }

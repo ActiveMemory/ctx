@@ -19,6 +19,7 @@ import (
 
 	"github.com/ActiveMemory/ctx/internal/cli/system/core"
 	"github.com/ActiveMemory/ctx/internal/notify"
+	systemwrite "github.com/ActiveMemory/ctx/internal/write/system"
 )
 
 var (
@@ -67,12 +68,14 @@ func Run(cmd *cobra.Command, stdin *os.File) error {
 		return nil
 	}
 	msg = ctxcontext.AppendDir(msg)
-	core.PrintHookContext(cmd, hook.EventPostToolUse, msg)
+	systemwrite.Line(cmd, core.FormatHookContext(hook.EventPostToolUse, msg))
 
 	ref := notify.NewTemplateRef(hookName, variant, nil)
 	core.Relay(fmt.Sprintf(desc.Text(text.DescKeyRelayPrefixFormat), hookName, desc.Text(text.DescKeyPostCommitRelayMessage)), input.SessionID, ref)
 
-	core.CheckVersionDrift(cmd, sessionID)
+	if driftResponse := core.CheckVersionDrift(sessionID); driftResponse != "" {
+		systemwrite.Line(cmd, driftResponse)
+	}
 
 	return nil
 }

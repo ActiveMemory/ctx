@@ -18,6 +18,7 @@ import (
 
 	"github.com/ActiveMemory/ctx/internal/cli/system/core"
 	"github.com/ActiveMemory/ctx/internal/notify"
+	systemwrite "github.com/ActiveMemory/ctx/internal/write/system"
 )
 
 // Run executes the specs-nudge hook logic.
@@ -48,7 +49,7 @@ func Run(cmd *cobra.Command, stdin *os.File) error {
 		return nil
 	}
 	msg = ctxcontext.AppendDir(msg)
-	core.PrintHookContext(cmd, hook.EventPreToolUse, msg)
+	systemwrite.Line(cmd, core.FormatHookContext(hook.EventPreToolUse, msg))
 	nudgeMsg := desc.Text(text.DescKeySpecsNudgeNudgeMessage)
 	ref := notify.NewTemplateRef(hook.SpecsNudge, hook.VariantNudge, nil)
 	core.Relay(fmt.Sprintf(desc.Text(text.DescKeyRelayPrefixFormat), hook.SpecsNudge, nudgeMsg), input.SessionID, ref)

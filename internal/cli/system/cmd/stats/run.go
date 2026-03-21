@@ -14,6 +14,7 @@ import (
 
 	"github.com/ActiveMemory/ctx/internal/cli/system/core"
 	"github.com/ActiveMemory/ctx/internal/rc"
+	systemwrite "github.com/ActiveMemory/ctx/internal/write/system"
 )
 
 // Run executes the stats subcommand, reading and displaying per-session
@@ -39,13 +40,12 @@ func Run(cmd *cobra.Command) error {
 	}
 
 	if !follow {
-		return core.DumpStats(cmd, entries, last, jsonOut)
+		systemwrite.Lines(cmd, core.FormatDumpStats(entries, last, jsonOut))
+		return nil
 	}
 
 	// Dump existing entries first, then stream.
-	if dumpErr := core.DumpStats(cmd, entries, last, jsonOut); dumpErr != nil {
-		return dumpErr
-	}
+	systemwrite.Lines(cmd, core.FormatDumpStats(entries, last, jsonOut))
 
-	return core.StreamStats(cmd, dir, session, jsonOut)
+	return core.StreamStats(cmd.OutOrStdout(), dir, session, jsonOut)
 }

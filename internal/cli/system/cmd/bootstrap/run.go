@@ -19,6 +19,7 @@ import (
 	errBackup "github.com/ActiveMemory/ctx/internal/err/backup"
 	"github.com/ActiveMemory/ctx/internal/rc"
 	"github.com/ActiveMemory/ctx/internal/write/bootstrap"
+	systemwrite "github.com/ActiveMemory/ctx/internal/write/system"
 )
 
 // Run executes the bootstrap command, emitting context directory info,
@@ -39,7 +40,7 @@ func Run(cmd *cobra.Command) error {
 
 	quiet, _ := cmd.Flags().GetBool(cflag.Quiet)
 	if quiet {
-		cmd.Println(dir)
+		systemwrite.Line(cmd, dir)
 		return nil
 	}
 

@@ -18,7 +18,6 @@ import (
 	"github.com/ActiveMemory/ctx/internal/config/file"
 	"github.com/ActiveMemory/ctx/internal/config/hook"
 	"github.com/ActiveMemory/ctx/internal/io"
-	"github.com/spf13/cobra"
 )
 
 // RecentJournalFiles returns the n most recent markdown files in the given
@@ -87,18 +86,17 @@ func ScanJournalsForCeremonies(files []string) (remember, wrapup bool) {
 	return
 }
 
-// EmitCeremonyNudge builds and prints a ceremony nudge message box based on
-// which ceremonies (remember, wrapup) are missing from recent sessions.
+// EmitCeremonyNudge builds a ceremony nudge message box based on which
+// ceremonies (remember, wrapup) are missing from recent sessions.
 //
 // Parameters:
-//   - cmd: Cobra command used for output
 //   - remember: whether /ctx-remember was found in recent journals
 //   - wrapup: whether /ctx-wrap-up was found in recent journals
 //
 // Returns:
 //   - msg: the formatted nudge message, or empty string if no content
 //   - variant: the selected variant string for notifications
-func EmitCeremonyNudge(cmd *cobra.Command, remember, wrapup bool) (msg, variant string) {
+func EmitCeremonyNudge(remember, wrapup bool) (msg, variant string) {
 	var boxTitleKey, fallbackKey string
 
 	switch {
@@ -127,6 +125,5 @@ func EmitCeremonyNudge(cmd *cobra.Command, remember, wrapup bool) (msg, variant 
 	relayPrefix := desc.Text(text.DescKeyCeremonyRelayPrefix)
 
 	msg = NudgeBox(relayPrefix, boxTitle, content)
-	cmd.Println(msg)
 	return msg, variant
 }

@@ -22,6 +22,7 @@ import (
 	"github.com/ActiveMemory/ctx/internal/config/token"
 	"github.com/ActiveMemory/ctx/internal/config/tpl"
 	"github.com/ActiveMemory/ctx/internal/notify"
+	systemwrite "github.com/ActiveMemory/ctx/internal/write/system"
 )
 
 // Run executes the check-reminders hook logic.
@@ -84,7 +85,7 @@ func Run(cmd *cobra.Command, stdin *os.File) error {
 		return nil
 	}
 
-	cmd.Println(core.NudgeBox(
+	systemwrite.Line(cmd, core.NudgeBox(
 		desc.Text(text.DescKeyCheckRemindersRelayPrefix),
 		desc.Text(text.DescKeyCheckRemindersBoxTitle),
 		content))

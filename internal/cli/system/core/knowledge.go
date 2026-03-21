@@ -18,7 +18,6 @@ import (
 	"github.com/ActiveMemory/ctx/internal/config/token"
 	"github.com/ActiveMemory/ctx/internal/config/tpl"
 	"github.com/ActiveMemory/ctx/internal/io"
-	"github.com/spf13/cobra"
 
 	"github.com/ActiveMemory/ctx/internal/index"
 	"github.com/ActiveMemory/ctx/internal/notify"
@@ -94,58 +93,60 @@ func FormatKnowledgeWarnings(findings []KnowledgeFinding) string {
 	return b.String()
 }
 
-// EmitKnowledgeWarning builds and prints the knowledge file growth warning box.
+// EmitKnowledgeWarning builds the knowledge file growth warning box.
 //
 // Parameters:
-//   - cmd: Cobra command for output
 //   - sessionID: session identifier for notifications
 //   - fileWarnings: pre-formatted findings text
-func EmitKnowledgeWarning(cmd *cobra.Command, sessionID, fileWarnings string) {
+//
+// Returns:
+//   - string: formatted nudge box, or empty string if silenced
+func EmitKnowledgeWarning(sessionID, fileWarnings string) string {
 	fallback := fileWarnings + token.NewlineLF + desc.Text(text.DescKeyCheckKnowledgeFallback)
 	content := LoadMessage(hook.CheckKnowledge, hook.VariantWarning,
 		map[string]any{tpl.VarFileWarnings: fileWarnings}, fallback)
 	if content == "" {
-		return
+		return ""
 	}
 
-	cmd.Println(NudgeBox(
+	box := NudgeBox(
 		desc.Text(text.DescKeyCheckKnowledgeRelayPrefix),
 		desc.Text(text.DescKeyCheckKnowledgeBoxTitle),
-		content))
+		content)
 
 	ref := notify.NewTemplateRef(hook.CheckKnowledge, hook.VariantWarning,
 		map[string]any{tpl.VarFileWarnings: fileWarnings})
 	notifyMsg := fmt.Sprintf(desc.Text(text.DescKeyRelayPrefixFormat),
 		hook.CheckKnowledge, desc.Text(text.DescKeyCheckKnowledgeRelayMessage))
 	NudgeAndRelay(notifyMsg, sessionID, ref)
+	return box
 }
 
 // CheckKnowledgeHealth runs the full knowledge health check: scans files,
-// formats warnings, and emits output if any thresholds are exceeded.
-// Returns true if warnings were emitted.
+// formats warnings, and builds output if any thresholds are exceeded.
 //
 // Parameters:
-//   - cmd: Cobra command for output
 //   - sessionID: session identifier for notifications
 //
 // Returns:
-//   - bool: true if warnings were emitted
-func CheckKnowledgeHealth(cmd *cobra.Command, sessionID string) bool {
+//   - string: formatted nudge box, or empty string if no warnings
+//   - bool: true if warnings were found
+func CheckKnowledgeHealth(sessionID string) (string, bool) {
 	lrnThreshold := rc.EntryCountLearnings()
 	decThreshold := rc.EntryCountDecisions()
 	convThreshold := rc.ConventionLineCount()
 
 	// All disabled — nothing to check
 	if lrnThreshold == 0 && decThreshold == 0 && convThreshold == 0 {
-		return false
+		return "", false
 	}
 
 	findings := ScanKnowledgeFiles(rc.ContextDir(), decThreshold, lrnThreshold, convThreshold)
 	if len(findings) == 0 {
-		return false
+		return "", false
 	}
 
 	fileWarnings := FormatKnowledgeWarnings(findings)
-	EmitKnowledgeWarning(cmd, sessionID, fileWarnings)
-	return true
+	box := EmitKnowledgeWarning(sessionID, fileWarnings)
+	return box, true
 }

@@ -9,6 +9,7 @@ package core
 import (
 	"encoding/json"
 	"fmt"
+	"io"
 	"os"
 	"path/filepath"
 	"sort"
@@ -23,8 +24,7 @@ import (
 	time2 "github.com/ActiveMemory/ctx/internal/config/time"
 	"github.com/ActiveMemory/ctx/internal/config/token"
 	ctxerr "github.com/ActiveMemory/ctx/internal/err/recall"
-	"github.com/ActiveMemory/ctx/internal/io"
-	"github.com/spf13/cobra"
+	io2 "github.com/ActiveMemory/ctx/internal/io"
 )
 
 // ReadStatsDir reads all stats JSONL files, optionally filtered by session prefix.
@@ -91,7 +91,7 @@ func ExtractStatsSessionID(basename string) string {
 //   - []StatsEntry: parsed entries
 //   - error: non-nil on read failure
 func ParseStatsFile(path, sid string) ([]StatsEntry, error) {
-	data, readErr := io.SafeReadUserFile(path)
+	data, readErr := io2.SafeReadUserFile(path)
 	if readErr != nil {
 		return nil, readErr
 	}
@@ -110,20 +110,18 @@ func ParseStatsFile(path, sid string) ([]StatsEntry, error) {
 	return entries, nil
 }
 
-// DumpStats outputs the last N entries in either JSON or human-readable format.
+// FormatDumpStats formats the last N entries in either JSON or human-readable format.
 //
 // Parameters:
-//   - cmd: Cobra command for output
 //   - entries: stats entries to display
 //   - last: number of entries to show (0 for all)
 //   - jsonOut: whether to output as JSONL
 //
 // Returns:
-//   - error: non-nil on output failure
-func DumpStats(cmd *cobra.Command, entries []StatsEntry, last int, jsonOut bool) error {
+//   - []string: formatted output lines
+func FormatDumpStats(entries []StatsEntry, last int, jsonOut bool) []string {
 	if len(entries) == 0 {
-		cmd.Println(desc.Text(text.DescKeyStatsEmpty))
-		return nil
+		return []string{desc.Text(text.DescKeyStatsEmpty)}
 	}
 
 	// Tail: take last N entries.
@@ -132,65 +130,70 @@ func DumpStats(cmd *cobra.Command, entries []StatsEntry, last int, jsonOut bool)
 	}
 
 	if jsonOut {
-		return OutputStatsJSON(cmd, entries)
+		return FormatStatsJSON(entries)
 	}
 
-	PrintStatsHeader(cmd)
+	h1, h2 := FormatStatsHeader()
+	lines := []string{h1, h2}
 	for i := range entries {
-		PrintStatsLine(cmd, &entries[i])
+		lines = append(lines, FormatStatsLine(&entries[i]))
 	}
-	return nil
+	return lines
 }
 
-// OutputStatsJSON writes entries as raw JSONL.
+// FormatStatsJSON formats entries as raw JSONL lines.
 //
 // Parameters:
-//   - cmd: Cobra command for output
 //   - entries: stats entries to serialize
 //
 // Returns:
-//   - error: Always nil (marshal errors are silently skipped)
-func OutputStatsJSON(cmd *cobra.Command, entries []StatsEntry) error {
+//   - []string: JSON lines (marshal errors are silently skipped)
+func FormatStatsJSON(entries []StatsEntry) []string {
+	var lines []string
 	for _, e := range entries {
 		line, marshalErr := json.Marshal(e)
 		if marshalErr != nil {
 			continue
 		}
-		cmd.Println(string(line))
+		lines = append(lines, string(line))
 	}
-	return nil
+	return lines
 }
 
-// PrintStatsHeader prints the column header for human output.
+// FormatStatsHeader formats the column header lines for human output.
 //
-// Parameters:
-//   - cmd: Cobra command for output
-func PrintStatsHeader(cmd *cobra.Command) {
+// Returns:
+//   - string: header line
+//   - string: separator line
+func FormatStatsHeader() (string, string) {
 	fmtStr := desc.Text(text.DescKeyStatsHeaderFormat)
-	cmd.Println(fmt.Sprintf(fmtStr,
+	header := fmt.Sprintf(fmtStr,
 		stats.HeaderTime, stats.HeaderSession,
 		stats.HeaderPrompt, stats.HeaderTokens,
-		stats.HeaderPct, stats.HeaderEvent))
-	cmd.Println(fmt.Sprintf(fmtStr,
+		stats.HeaderPct, stats.HeaderEvent)
+	separator := fmt.Sprintf(fmtStr,
 		stats.SepTime, stats.SepSession,
 		stats.SepPrompt, stats.SepTokens,
-		stats.SepPct, stats.SepEvent))
+		stats.SepPct, stats.SepEvent)
+	return header, separator
 }
 
-// PrintStatsLine prints a single stats entry in human-readable format.
+// FormatStatsLine formats a single stats entry in human-readable format.
 //
 // Parameters:
-//   - cmd: Cobra command for output
-//   - e: stats entry to print
-func PrintStatsLine(cmd *cobra.Command, e *StatsEntry) {
+//   - e: stats entry to format
+//
+// Returns:
+//   - string: formatted stats line
+func FormatStatsLine(e *StatsEntry) string {
 	ts := FormatStatsTimestamp(e.Timestamp)
 	sid := e.Session
 	if len(sid) > journal.SessionIDShortLen {
 		sid = sid[:journal.SessionIDShortLen]
 	}
 	tokens := FormatTokenCount(e.Tokens)
-	cmd.Println(fmt.Sprintf(desc.Text(text.DescKeyStatsLineFormat),
-		ts, sid, e.Prompt, tokens, e.Pct, e.Event))
+	return fmt.Sprintf(desc.Text(text.DescKeyStatsLineFormat),
+		ts, sid, e.Prompt, tokens, e.Pct, e.Event)
 }
 
 // FormatStatsTimestamp converts an RFC3339 timestamp to local time display
@@ -220,7 +223,7 @@ func FormatStatsTimestamp(ts string) string {
 // Returns:
 //   - []StatsEntry: newly parsed entries
 func ReadNewLines(path string, offset int64, sid string) []StatsEntry {
-	f, openErr := io.SafeOpenUserFile(path)
+	f, openErr := io2.SafeOpenUserFile(path)
 	if openErr != nil {
 		return nil
 	}
@@ -250,17 +253,17 @@ func ReadNewLines(path string, offset int64, sid string) []StatsEntry {
 	return entries
 }
 
-// StreamStats polls for new JSONL lines and prints them as they arrive.
+// StreamStats polls for new JSONL lines and writes them as they arrive.
 //
 // Parameters:
-//   - cmd: Cobra command for output
+//   - w: output writer
 //   - dir: path to the state directory
 //   - sessionFilter: session ID prefix to filter by (empty for all)
 //   - jsonOut: whether to output as JSONL
 //
 // Returns:
 //   - error: Always nil
-func StreamStats(cmd *cobra.Command, dir, sessionFilter string, jsonOut bool) error {
+func StreamStats(w io.Writer, dir, sessionFilter string, jsonOut bool) error {
 	// Track file sizes to detect new content.
 	offsets := make(map[string]int64)
 	matches, _ := filepath.Glob(filepath.Join(dir, stats.FilePrefix+"*"+file.ExtJSONL))
@@ -296,10 +299,10 @@ func StreamStats(cmd *cobra.Command, dir, sessionFilter string, jsonOut bool) er
 				if jsonOut {
 					line, marshalErr := json.Marshal(newEntries[i])
 					if marshalErr == nil {
-						cmd.Println(string(line))
+						_, _ = fmt.Fprintln(w, string(line))
 					}
 				} else {
-					PrintStatsLine(cmd, &newEntries[i])
+					_, _ = fmt.Fprintln(w, FormatStatsLine(&newEntries[i]))
 				}
 			}
 			offsets[path] = info.Size()

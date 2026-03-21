@@ -19,6 +19,7 @@ import (
 
 	"github.com/ActiveMemory/ctx/internal/cli/system/core"
 	"github.com/ActiveMemory/ctx/internal/notify"
+	systemwrite "github.com/ActiveMemory/ctx/internal/write/system"
 )
 
 // Run executes the check-ceremonies hook logic.
@@ -63,7 +64,8 @@ func Run(cmd *cobra.Command, stdin *os.File) error {
 		return nil
 	}
 
-	msg, variant := core.EmitCeremonyNudge(cmd, remember, wrapup)
+	msg, variant := core.EmitCeremonyNudge(remember, wrapup)
+	systemwrite.Line(cmd, msg)
 	if msg == "" {
 		return nil
 	}
