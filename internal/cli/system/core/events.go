@@ -16,7 +16,6 @@ import (
 	"github.com/ActiveMemory/ctx/internal/config/embed/text"
 	"github.com/ActiveMemory/ctx/internal/config/event"
 	time2 "github.com/ActiveMemory/ctx/internal/config/time"
-	"github.com/spf13/cobra"
 
 	"github.com/ActiveMemory/ctx/internal/notify"
 )
@@ -74,40 +73,40 @@ func TruncateMessage(msg string, maxLen int) string {
 		event.EventsTruncationSuffix
 }
 
-// OutputEventsJSON writes events as raw JSONL to the command output.
+// FormatEventsJSON formats events as raw JSONL lines.
 //
 // Parameters:
-//   - cmd: Cobra command for output
 //   - evts: event payloads to serialize
 //
 // Returns:
-//   - error: Always nil (marshal errors are silently skipped)
-func OutputEventsJSON(cmd *cobra.Command, evts []notify.Payload) error {
+//   - []string: JSON lines (marshal errors are silently skipped)
+func FormatEventsJSON(evts []notify.Payload) []string {
+	var lines []string
 	for _, e := range evts {
 		line, marshalErr := json.Marshal(e)
 		if marshalErr != nil {
 			continue
 		}
-		cmd.Println(string(line))
+		lines = append(lines, string(line))
 	}
-	return nil
+	return lines
 }
 
-// OutputEventsHuman writes events in aligned columns for human reading.
+// FormatEventsHuman formats events in aligned columns for human reading.
 //
 // Parameters:
-//   - cmd: Cobra command for output
-//   - evts: event payloads to display
+//   - evts: event payloads to format
 //
 // Returns:
-//   - error: Always nil
-func OutputEventsHuman(cmd *cobra.Command, evts []notify.Payload) error {
+//   - []string: formatted event lines
+func FormatEventsHuman(evts []notify.Payload) []string {
 	fmtStr := desc.Text(text.DescKeyEventsHumanFormat)
+	lines := make([]string, 0, len(evts))
 	for _, e := range evts {
 		ts := FormatEventTimestamp(e.Timestamp)
 		hookName := ExtractHookName(e)
 		msg := TruncateMessage(e.Message, event.EventsMessageMaxLen)
-		cmd.Println(fmt.Sprintf(fmtStr, ts, e.Event, hookName, msg))
+		lines = append(lines, fmt.Sprintf(fmtStr, ts, e.Event, hookName, msg))
 	}
-	return nil
+	return lines
 }

@@ -20,6 +20,7 @@ import (
 	"github.com/ActiveMemory/ctx/internal/config/hook"
 	"github.com/ActiveMemory/ctx/internal/notify"
 	"github.com/ActiveMemory/ctx/internal/rc"
+	systemwrite "github.com/ActiveMemory/ctx/internal/write/system"
 )
 
 // Run executes the check-task-completion hook logic.
@@ -67,7 +68,7 @@ func Run(cmd *cobra.Command, stdin *os.File) error {
 	if msg == "" {
 		return nil
 	}
-	core.PrintHookContext(cmd, hook.EventPostToolUse, msg)
+	systemwrite.Line(cmd, core.FormatHookContext(hook.EventPostToolUse, msg))
 
 	nudgeMsg := desc.Text(text.DescKeyCheckTaskCompletionNudgeMessage)
 	ref := notify.NewTemplateRef(

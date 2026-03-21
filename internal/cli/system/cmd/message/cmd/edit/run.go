@@ -21,6 +21,7 @@ import (
 	"github.com/ActiveMemory/ctx/internal/config/file"
 	"github.com/ActiveMemory/ctx/internal/err/fs"
 	ctxerr "github.com/ActiveMemory/ctx/internal/err/hook"
+	systemwrite "github.com/ActiveMemory/ctx/internal/write/system"
 )
 
 // Run executes the message edit logic.
@@ -46,8 +47,8 @@ func Run(cmd *cobra.Command, hk, variant string) error {
 	}
 
 	if info.Category == messages.CategoryCtxSpecific {
-		cmd.Println(desc.Text(text.DescKeyMessageCtxSpecificWarning))
-		cmd.Println()
+		systemwrite.Line(cmd, desc.Text(text.DescKeyMessageCtxSpecificWarning))
+		systemwrite.Line(cmd, "")
 	}
 
 	data, readErr := hook.Message(hk, variant+file.ExtTxt)
@@ -64,9 +65,9 @@ func Run(cmd *cobra.Command, hk, variant string) error {
 		return ctxerr.WriteOverride(oPath, writeErr)
 	}
 
-	cmd.Println(fmt.Sprintf(desc.Text(text.DescKeyMessageOverrideCreated), oPath))
-	cmd.Println(desc.Text(text.DescKeyMessageEditHint))
-	core.PrintTemplateVars(cmd, info)
+	systemwrite.Line(cmd, fmt.Sprintf(desc.Text(text.DescKeyMessageOverrideCreated), oPath))
+	systemwrite.Line(cmd, desc.Text(text.DescKeyMessageEditHint))
+	systemwrite.Line(cmd, core.FormatTemplateVars(info))
 
 	return nil
 }

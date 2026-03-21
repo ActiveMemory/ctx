@@ -92,17 +92,20 @@ func FormatResourceLine(label, values, status string) string {
 	return left + strings.Repeat(" ", pad) + status
 }
 
-// OutputResourcesText prints system resource information in human-readable
-// table format with status indicators and alert summaries.
+// FormatResourcesText formats system resource information as human-readable
+// lines with status indicators and alert summaries.
 //
 // Parameters:
-//   - cmd: Cobra command for output
 //   - snap: collected system resource snapshot
 //   - alerts: evaluated resource alerts
-func OutputResourcesText(cmd *cobra.Command, snap sysinfo.Snapshot, alerts []sysinfo.ResourceAlert) {
-	cmd.Println(desc.Text(text.DescKeyResourcesHeader))
-	cmd.Println(desc.Text(text.DescKeyResourcesSeparator))
-	cmd.Println()
+//
+// Returns:
+//   - []string: formatted output lines
+func FormatResourcesText(snap sysinfo.Snapshot, alerts []sysinfo.ResourceAlert) []string {
+	var lines []string
+	lines = append(lines, desc.Text(text.DescKeyResourcesHeader))
+	lines = append(lines, desc.Text(text.DescKeyResourcesSeparator))
+	lines = append(lines, "")
 
 	// Memory line
 	if snap.Memory.Supported {
@@ -112,7 +115,7 @@ func OutputResourcesText(cmd *cobra.Command, snap sysinfo.Snapshot, alerts []sys
 			sysinfo.FormatGiB(snap.Memory.TotalBytes),
 			pct)
 		sev := SeverityFor(alerts, "memory")
-		cmd.Println(FormatResourceLine("Memory:", values, StatusText(sev)))
+		lines = append(lines, FormatResourceLine("Memory:", values, StatusText(sev)))
 	}
 
 	// Swap line
@@ -123,7 +126,7 @@ func OutputResourcesText(cmd *cobra.Command, snap sysinfo.Snapshot, alerts []sys
 			sysinfo.FormatGiB(snap.Memory.SwapTotalBytes),
 			pct)
 		sev := SeverityFor(alerts, "swap")
-		cmd.Println(FormatResourceLine("Swap:", values, StatusText(sev)))
+		lines = append(lines, FormatResourceLine("Swap:", values, StatusText(sev)))
 	}
 
 	// Disk line
@@ -134,7 +137,7 @@ func OutputResourcesText(cmd *cobra.Command, snap sysinfo.Snapshot, alerts []sys
 			sysinfo.FormatGiB(snap.Disk.TotalBytes),
 			pct)
 		sev := SeverityFor(alerts, "disk")
-		cmd.Println(FormatResourceLine("Disk:", values, StatusText(sev)))
+		lines = append(lines, FormatResourceLine("Disk:", values, StatusText(sev)))
 	}
 
 	// Load line
@@ -147,23 +150,24 @@ func OutputResourcesText(cmd *cobra.Command, snap sysinfo.Snapshot, alerts []sys
 			snap.Load.Load1, snap.Load.Load5, snap.Load.Load15,
 			snap.Load.NumCPU, ratio)
 		sev := SeverityFor(alerts, "load")
-		cmd.Println(FormatResourceLine("Load:", values, StatusText(sev)))
+		lines = append(lines, FormatResourceLine("Load:", values, StatusText(sev)))
 	}
 
 	// Summary
-	cmd.Println()
+	lines = append(lines, "")
 	if len(alerts) == 0 {
-		cmd.Println(desc.Text(text.DescKeyResourcesAllClear))
+		lines = append(lines, desc.Text(text.DescKeyResourcesAllClear))
 	} else {
-		cmd.Println(desc.Text(text.DescKeyResourcesAlerts))
+		lines = append(lines, desc.Text(text.DescKeyResourcesAlerts))
 		for _, a := range alerts {
 			if a.Severity == sysinfo.SeverityDanger {
-				cmd.Println(fmt.Sprintf(desc.Text(text.DescKeyResourcesAlertDanger), a.Message))
+				lines = append(lines, fmt.Sprintf(desc.Text(text.DescKeyResourcesAlertDanger), a.Message))
 			} else {
-				cmd.Println(fmt.Sprintf(desc.Text(text.DescKeyResourcesAlertWarning), a.Message))
+				lines = append(lines, fmt.Sprintf(desc.Text(text.DescKeyResourcesAlertWarning), a.Message))
 			}
 		}
 	}
+	return lines
 }
 
 // OutputResourcesJSON writes system resource information as formatted

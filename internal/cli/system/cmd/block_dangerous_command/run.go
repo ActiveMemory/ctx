@@ -19,6 +19,7 @@ import (
 	"github.com/ActiveMemory/ctx/internal/config/hook"
 	"github.com/ActiveMemory/ctx/internal/config/regex"
 	"github.com/ActiveMemory/ctx/internal/notify"
+	systemwrite "github.com/ActiveMemory/ctx/internal/write/system"
 )
 
 // Run executes the block-dangerous-commands hook logic.
@@ -76,7 +77,7 @@ func Run(cmd *cobra.Command, stdin *os.File) error {
 			Reason:   reason,
 		}
 		data, _ := json.Marshal(resp)
-		cmd.Println(string(data))
+		systemwrite.Line(cmd, string(data))
 		ref := notify.NewTemplateRef(hook.BlockDangerousCommands, variant, nil)
 		core.Relay(fmt.Sprintf(
 			desc.Text(text.DescKeyRelayPrefixFormat),

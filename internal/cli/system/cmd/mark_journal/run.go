@@ -20,6 +20,7 @@ import (
 	ctxResolve "github.com/ActiveMemory/ctx/internal/context/resolve"
 	errJournal "github.com/ActiveMemory/ctx/internal/err/journal"
 	"github.com/ActiveMemory/ctx/internal/journal/state"
+	systemwrite "github.com/ActiveMemory/ctx/internal/write/system"
 )
 
 // runMarkJournal handles the mark-journal command.
@@ -65,7 +66,7 @@ func runMarkJournal(cmd *cobra.Command, filename, stage string) error {
 		if val == "" {
 			return errJournal.StageNotSet(filename, stage)
 		}
-		cmd.Println(
+		systemwrite.Line(cmd,
 			fmt.Sprintf(desc.Text(text.DescKeyMarkJournalChecked),
 				filename, stage, val,
 			),
@@ -83,6 +84,6 @@ func runMarkJournal(cmd *cobra.Command, filename, stage string) error {
 		return errJournal.SaveStateFailed(saveErr)
 	}
 
-	cmd.Println(fmt.Sprintf(desc.Text(text.DescKeyMarkJournalMarked), filename, stage))
+	systemwrite.Line(cmd, fmt.Sprintf(desc.Text(text.DescKeyMarkJournalMarked), filename, stage))
 	return nil
 }

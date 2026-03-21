@@ -17,7 +17,6 @@ import (
 	"github.com/ActiveMemory/ctx/internal/config/hook"
 	"github.com/ActiveMemory/ctx/internal/config/token"
 	"github.com/ActiveMemory/ctx/internal/config/tpl"
-	"github.com/spf13/cobra"
 
 	"github.com/ActiveMemory/ctx/internal/notify"
 	"github.com/ActiveMemory/ctx/internal/rc"
@@ -48,24 +47,26 @@ func ParseMajorMinor(ver string) (major, minor int, ok bool) {
 	return m, n, true
 }
 
-// CheckKeyAge emits a nudge when the encryption key is older than the
+// CheckKeyAge builds a nudge when the encryption key is older than the
 // configured rotation threshold.
 //
 // Parameters:
-//   - cmd: Cobra command for output
 //   - sessionID: current session identifier
-func CheckKeyAge(cmd *cobra.Command, sessionID string) {
+//
+// Returns:
+//   - string: formatted nudge box (with leading newline), or empty string
+func CheckKeyAge(sessionID string) string {
 	kp := rc.KeyPath()
 	info, statErr := os.Stat(kp)
 	if statErr != nil {
-		return // no key: nothing to check
+		return "" // no key: nothing to check
 	}
 
 	ageDays := int(time.Since(info.ModTime()).Hours() / 24)
 	threshold := rc.KeyRotationDays()
 
 	if ageDays < threshold {
-		return
+		return ""
 	}
 
 	keyFallback := fmt.Sprintf(
@@ -74,13 +75,13 @@ func CheckKeyAge(cmd *cobra.Command, sessionID string) {
 	keyContent := LoadMessage(hook.CheckVersion, hook.VariantKeyRotation,
 		map[string]any{tpl.VarKeyAgeDays: ageDays}, keyFallback)
 	if keyContent == "" {
-		return
+		return ""
 	}
 
 	boxTitle := desc.Text(text.DescKeyCheckVersionKeyBoxTitle)
 	relayPrefix := desc.Text(text.DescKeyCheckVersionKeyRelayPrefix)
 
-	cmd.Println(token.NewlineLF + NudgeBox(relayPrefix, boxTitle, keyContent))
+	box := token.NewlineLF + NudgeBox(relayPrefix, boxTitle, keyContent)
 
 	keyRef := notify.NewTemplateRef(hook.CheckVersion, hook.VariantKeyRotation,
 		map[string]any{tpl.VarKeyAgeDays: ageDays})
@@ -92,4 +93,5 @@ func CheckKeyAge(cmd *cobra.Command, sessionID string) {
 		),
 	)
 	NudgeAndRelay(keyNotifyMsg, sessionID, keyRef)
+	return box
 }

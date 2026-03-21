@@ -13,18 +13,19 @@ import (
 	"time"
 
 	"github.com/ActiveMemory/ctx/internal/config/session"
-	"github.com/spf13/cobra"
 )
 
-// PrintHookContext emits a JSON HookResponse with additionalContext for the
+// FormatHookContext builds a JSON HookResponse with additionalContext for the
 // given hook event. This is the standard way for non-blocking hooks to inject
 // directives that the agent will actually process (plain text gets ignored).
 //
 // Parameters:
-//   - cmd: Cobra command for output
 //   - event: Hook event name
 //   - context: Additional context string
-func PrintHookContext(cmd *cobra.Command, event, context string) {
+//
+// Returns:
+//   - string: JSON-encoded hook response
+func FormatHookContext(event, context string) string {
 	resp := HookResponse{
 		HookSpecificOutput: &HookSpecificOutput{
 			HookEventName:     event,
@@ -32,7 +33,7 @@ func PrintHookContext(cmd *cobra.Command, event, context string) {
 		},
 	}
 	data, _ := json.Marshal(resp)
-	cmd.Println(string(data))
+	return string(data)
 }
 
 // HookPreamble reads hook input, resolves the session ID, and checks the

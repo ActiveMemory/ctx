@@ -22,6 +22,7 @@ import (
 	"github.com/ActiveMemory/ctx/internal/config/session"
 	"github.com/ActiveMemory/ctx/internal/config/stats"
 	"github.com/ActiveMemory/ctx/internal/rc"
+	systemwrite "github.com/ActiveMemory/ctx/internal/write/system"
 )
 
 // Run executes the check-context-size hook logic.
@@ -49,7 +50,7 @@ func Run(cmd *cobra.Command, stdin *os.File) error {
 
 	// Pause check — this hook is the designated single emitter
 	if turns := core.Paused(sessionID); turns > 0 {
-		cmd.Println(core.PausedMessage(turns))
+		systemwrite.Line(cmd, core.PausedMessage(turns))
 		return nil
 	}
 
@@ -75,7 +76,7 @@ func Run(cmd *cobra.Command, stdin *os.File) error {
 	// triggers — fires even during wrap-up suppression because cost
 	// guards are never convenience nudges.
 	if billingThreshold := rc.BillingTokenWarn(); billingThreshold > 0 && tokens >= billingThreshold {
-		core.EmitBillingWarning(cmd, logFile, sessionID, count, tokens, billingThreshold)
+		systemwrite.NudgeBlock(cmd, core.EmitBillingWarning(logFile, sessionID, count, tokens, billingThreshold))
 	}
 
 	// Wrap-up suppression: if the user recently ran /ctx-wrap-up,
@@ -114,10 +115,10 @@ func Run(cmd *cobra.Command, stdin *os.File) error {
 	switch {
 	case counterTriggered:
 		evt = event.EventCheckpoint
-		core.EmitCheckpoint(cmd, logFile, sessionID, count, tokens, pct, windowSize)
+		systemwrite.NudgeBlock(cmd, core.EmitCheckpoint(logFile, sessionID, count, tokens, pct, windowSize))
 	case windowTrigger:
 		evt = event.EventWindowWarning
-		core.EmitWindowWarning(cmd, logFile, sessionID, count, tokens, pct)
+		systemwrite.NudgeBlock(cmd, core.EmitWindowWarning(logFile, sessionID, count, tokens, pct))
 	default:
 		core.LogMessage(logFile, sessionID,
 			fmt.Sprintf(desc.Text(

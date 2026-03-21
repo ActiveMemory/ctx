@@ -23,13 +23,12 @@ import (
 	fs2 "github.com/ActiveMemory/ctx/internal/config/fs"
 	ctxerr "github.com/ActiveMemory/ctx/internal/err/backup"
 	io2 "github.com/ActiveMemory/ctx/internal/io"
-	"github.com/spf13/cobra"
 )
 
 // BackupProject creates a project-scoped backup archive.
 //
 // Parameters:
-//   - cmd: Cobra command for diagnostic output
+//   - w: writer for diagnostic output (typically stderr)
 //   - home: user home directory
 //   - timestamp: formatted timestamp for the archive filename
 //   - smb: optional SMB configuration (nil to skip remote copy)
@@ -38,7 +37,7 @@ import (
 //   - BackupResult: archive path, size, and optional SMB destination
 //   - error: non-nil on archive or SMB failure
 func BackupProject(
-	cmd *cobra.Command, home, timestamp string, smb *SMBConfig,
+	w io.Writer, home, timestamp string, smb *SMBConfig,
 ) (BackupResult, error) {
 	cwd, cwdErr := os.Getwd()
 	if cwdErr != nil {
@@ -56,7 +55,7 @@ func BackupProject(
 	}
 
 	result, finalizeErr := finalizeArchive(
-		cmd, archivePath, archiveName, archive.BackupScopeProject, entries, smb,
+		w, archivePath, archiveName, archive.BackupScopeProject, entries, smb,
 	)
 	if finalizeErr != nil {
 		return result, finalizeErr
@@ -74,7 +73,7 @@ func BackupProject(
 // BackupGlobal creates a global-scoped backup archive.
 //
 // Parameters:
-//   - cmd: Cobra command for diagnostic output
+//   - w: writer for diagnostic output (typically stderr)
 //   - home: user home directory
 //   - timestamp: formatted timestamp for the archive filename
 //   - smb: optional SMB configuration (nil to skip remote copy)
@@ -83,7 +82,7 @@ func BackupProject(
 //   - BackupResult: archive path, size, and optional SMB destination
 //   - error: non-nil on archive or SMB failure
 func BackupGlobal(
-	cmd *cobra.Command, home, timestamp string, smb *SMBConfig,
+	w io.Writer, home, timestamp string, smb *SMBConfig,
 ) (BackupResult, error) {
 	archiveName := fmt.Sprintf(archive.BackupTplGlobalArchive, timestamp)
 	archivePath := filepath.Join(os.TempDir(), archiveName)
@@ -93,17 +92,17 @@ func BackupGlobal(
 	}
 
 	return finalizeArchive(
-		cmd, archivePath, archiveName, archive.BackupScopeGlobal, entries, smb,
+		w, archivePath, archiveName, archive.BackupScopeGlobal, entries, smb,
 	)
 }
 
 // finalizeArchive creates the archive, populates the result with size,
 // and optionally copies to an SMB share.
 func finalizeArchive(
-	cmd *cobra.Command, archivePath, archiveName, scope string,
+	w io.Writer, archivePath, archiveName, scope string,
 	entries []ArchiveEntry, smb *SMBConfig,
 ) (BackupResult, error) {
-	if archiveErr := CreateArchive(archivePath, entries, cmd); archiveErr != nil {
+	if archiveErr := CreateArchive(archivePath, entries, w); archiveErr != nil {
 		return BackupResult{}, archiveErr
 	}
 
@@ -130,12 +129,12 @@ func finalizeArchive(
 // Parameters:
 //   - archivePath: output file path for the archive
 //   - entries: directories and files to include
-//   - cmd: Cobra command for diagnostic output
+//   - w: writer for diagnostic output (typically stderr)
 //
 // Returns:
 //   - error: non-nil on file creation or tar writing failure
 func CreateArchive(
-	archivePath string, entries []ArchiveEntry, cmd *cobra.Command,
+	archivePath string, entries []ArchiveEntry, w io.Writer,
 ) error {
 	outFile, createErr := os.Create(archivePath) //nolint:gosec // tmp path from our own code
 	if createErr != nil {
@@ -150,7 +149,7 @@ func CreateArchive(
 	defer func() { _ = tw.Close() }()
 
 	for _, entry := range entries {
-		if addErr := addEntry(tw, entry, cmd); addErr != nil {
+		if addErr := addEntry(tw, entry, w); addErr != nil {
 			return addErr
 		}
 	}
@@ -158,11 +157,11 @@ func CreateArchive(
 }
 
 // addEntry adds a single ArchiveEntry (file or directory) to the tar writer.
-func addEntry(tw *tar.Writer, entry ArchiveEntry, cmd *cobra.Command) error {
+func addEntry(tw *tar.Writer, entry ArchiveEntry, w io.Writer) error {
 	info, statErr := os.Stat(entry.SourcePath)
 	if os.IsNotExist(statErr) {
 		if entry.Optional {
-			cmd.PrintErrln(fmt.Sprintf("skipping %s (not found)", entry.Prefix))
+			_, _ = fmt.Fprintf(w, "skipping %s (not found)\n", entry.Prefix)
 			return nil
 		}
 		return ctxerr.SourceNotFound(entry.SourcePath)

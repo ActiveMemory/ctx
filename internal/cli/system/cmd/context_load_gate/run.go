@@ -25,6 +25,7 @@ import (
 	ctxToken "github.com/ActiveMemory/ctx/internal/context/token"
 	"github.com/ActiveMemory/ctx/internal/io"
 	"github.com/ActiveMemory/ctx/internal/rc"
+	systemwrite "github.com/ActiveMemory/ctx/internal/write/system"
 )
 
 // Run executes the context-load-gate hook logic.
@@ -144,7 +145,7 @@ func Run(cmd *cobra.Command, stdin *os.File) error {
 		desc.Text(text.DescKeyContextLoadGateFooter),
 		filesLoaded, totalTokens))
 
-	core.PrintHookContext(cmd, hook.EventPreToolUse, content.String())
+	systemwrite.Line(cmd, core.FormatHookContext(hook.EventPreToolUse, content.String()))
 
 	// Webhook: metadata only — never send file content externally
 	webhookMsg := fmt.Sprintf(

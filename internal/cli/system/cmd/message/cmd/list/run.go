@@ -19,6 +19,7 @@ import (
 	"github.com/ActiveMemory/ctx/internal/config/embed/text"
 	cflag "github.com/ActiveMemory/ctx/internal/config/flag"
 	"github.com/ActiveMemory/ctx/internal/config/msg"
+	systemwrite "github.com/ActiveMemory/ctx/internal/write/system"
 )
 
 // Run executes the message list logic.
@@ -56,12 +57,12 @@ func Run(cmd *cobra.Command) error {
 
 	headerFmt := fmt.Sprintf("%%-%ds %%-%ds %%-%ds %%s",
 		msg.MessageColHook, msg.MessageColVariant, msg.MessageColCategory)
-	cmd.Println(fmt.Sprintf(headerFmt,
+	systemwrite.Line(cmd, fmt.Sprintf(headerFmt,
 		desc.Text(text.DescKeyMessageListHeaderHook),
 		desc.Text(text.DescKeyMessageListHeaderVariant),
 		desc.Text(text.DescKeyMessageListHeaderCategory),
 		desc.Text(text.DescKeyMessageListHeaderOverride)))
-	cmd.Println(fmt.Sprintf(headerFmt,
+	systemwrite.Line(cmd, fmt.Sprintf(headerFmt,
 		strings.Repeat("\u2500", msg.MessageSepHook),
 		strings.Repeat("\u2500", msg.MessageSepVariant),
 		strings.Repeat("\u2500", msg.MessageSepCategory),
@@ -72,7 +73,7 @@ func Run(cmd *cobra.Command) error {
 		if e.HasOverride {
 			override = desc.Text(text.DescKeyMessageOverrideLabel)
 		}
-		cmd.Println(fmt.Sprintf(headerFmt, e.Hook, e.Variant, e.Category, override))
+		systemwrite.Line(cmd, fmt.Sprintf(headerFmt, e.Hook, e.Variant, e.Category, override))
 	}
 
 	return nil

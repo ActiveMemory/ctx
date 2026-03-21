@@ -19,7 +19,6 @@ import (
 	"github.com/ActiveMemory/ctx/internal/config/token"
 	"github.com/ActiveMemory/ctx/internal/config/tpl"
 	"github.com/ActiveMemory/ctx/internal/io"
-	"github.com/spf13/cobra"
 
 	"github.com/ActiveMemory/ctx/internal/notify"
 	"github.com/ActiveMemory/ctx/internal/rc"
@@ -66,15 +65,16 @@ func CountModuleCommits(since string) int {
 	return len(strings.Split(lines, token.NewlineLF))
 }
 
-// EmitMapStalenessWarning builds and prints the architecture map staleness
-// warning box.
+// EmitMapStalenessWarning builds the architecture map staleness warning box.
 //
 // Parameters:
-//   - cmd: Cobra command for output
 //   - sessionID: session identifier for notifications
 //   - dateStr: last refresh date (YYYY-MM-DD)
 //   - moduleCommits: number of commits touching modules since last refresh
-func EmitMapStalenessWarning(cmd *cobra.Command, sessionID, dateStr string, moduleCommits int) {
+//
+// Returns:
+//   - string: formatted nudge box, or empty string if silenced
+func EmitMapStalenessWarning(sessionID, dateStr string, moduleCommits int) string {
 	fallback := fmt.Sprintf(desc.Text(text.DescKeyCheckMapStalenessFallback), dateStr, moduleCommits)
 	content := LoadMessage(hook.CheckMapStaleness, hook.VariantStale,
 		map[string]any{
@@ -82,17 +82,18 @@ func EmitMapStalenessWarning(cmd *cobra.Command, sessionID, dateStr string, modu
 			tpl.VarModuleCount:     moduleCommits,
 		}, fallback)
 	if content == "" {
-		return
+		return ""
 	}
 
-	cmd.Println(NudgeBox(
+	box := NudgeBox(
 		desc.Text(text.DescKeyCheckMapStalenessRelayPrefix),
 		desc.Text(text.DescKeyCheckMapStalenessBoxTitle),
-		content))
+		content)
 
 	ref := notify.NewTemplateRef(hook.CheckMapStaleness, hook.VariantStale,
 		map[string]any{tpl.VarLastRefreshDate: dateStr, tpl.VarModuleCount: moduleCommits})
 	notifyMsg := fmt.Sprintf(desc.Text(text.DescKeyRelayPrefixFormat),
 		hook.CheckMapStaleness, desc.Text(text.DescKeyCheckMapStalenessRelayMessage))
 	NudgeAndRelay(notifyMsg, sessionID, ref)
+	return box
 }

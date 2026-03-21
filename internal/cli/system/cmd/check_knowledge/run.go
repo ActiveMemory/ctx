@@ -14,6 +14,7 @@ import (
 
 	"github.com/ActiveMemory/ctx/internal/cli/system/core"
 	"github.com/ActiveMemory/ctx/internal/config/knowledge"
+	systemwrite "github.com/ActiveMemory/ctx/internal/write/system"
 )
 
 // Run executes the check-knowledge hook logic.
@@ -44,7 +45,8 @@ func Run(cmd *cobra.Command, stdin *os.File) error {
 		return nil
 	}
 
-	if core.CheckKnowledgeHealth(cmd, sessionID) {
+	if box, warned := core.CheckKnowledgeHealth(sessionID); warned {
+		systemwrite.Line(cmd, box)
 		core.TouchFile(markerPath)
 	}
 
