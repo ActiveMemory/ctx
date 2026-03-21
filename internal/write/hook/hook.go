@@ -29,6 +29,44 @@ func Nudge(cmd *cobra.Command, nudgeBox string) {
 	cmd.Println(nudgeBox)
 }
 
+// NudgeBlock prints a nudge box followed by an empty line.
+// Empty box or nil cmd is a no-op.
+//
+// Parameters:
+//   - cmd: Cobra command for output. Nil is a no-op.
+//   - nudgeBox: fully formatted nudge box string.
+func NudgeBlock(cmd *cobra.Command, nudgeBox string) {
+	if cmd == nil || nudgeBox == "" {
+		return
+	}
+	cmd.Println(nudgeBox)
+	cmd.Println()
+}
+
+// HookContext prints a JSON hook response line. Nil cmd is a no-op.
+//
+// Parameters:
+//   - cmd: Cobra command for output. Nil is a no-op.
+//   - response: JSON-encoded hook response.
+func HookContext(cmd *cobra.Command, response string) {
+	if cmd == nil {
+		return
+	}
+	cmd.Println(response)
+}
+
+// BlockResponse prints a JSON block response line. Nil cmd is a no-op.
+//
+// Parameters:
+//   - cmd: Cobra command for output. Nil is a no-op.
+//   - response: JSON-encoded block response.
+func BlockResponse(cmd *cobra.Command, response string) {
+	if cmd == nil {
+		return
+	}
+	cmd.Println(response)
+}
+
 // InfoTool prints a tool integration section to stdout.
 //
 // The content is a pre-formatted multi-line text block loaded from

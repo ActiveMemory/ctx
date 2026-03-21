@@ -21,7 +21,7 @@ import (
 	"github.com/ActiveMemory/ctx/internal/config/token"
 	"github.com/ActiveMemory/ctx/internal/config/tpl"
 	"github.com/ActiveMemory/ctx/internal/notify"
-	systemwrite "github.com/ActiveMemory/ctx/internal/write/system"
+	writeHook "github.com/ActiveMemory/ctx/internal/write/hook"
 )
 
 // Run executes the check-backup-age hook logic.
@@ -86,7 +86,7 @@ func Run(cmd *cobra.Command, stdin *os.File) error {
 	}
 
 	// Emit VERBATIM relay
-	systemwrite.Line(cmd, core.NudgeBox(
+	writeHook.Nudge(cmd, core.NudgeBox(
 		desc.Text(text.DescKeyBackupRelayPrefix),
 		desc.Text(text.DescKeyBackupBoxTitle),
 		content))

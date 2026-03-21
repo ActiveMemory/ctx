@@ -22,7 +22,7 @@ import (
 	"github.com/ActiveMemory/ctx/internal/config/tpl"
 	"github.com/ActiveMemory/ctx/internal/notify"
 	"github.com/ActiveMemory/ctx/internal/rc"
-	systemwrite "github.com/ActiveMemory/ctx/internal/write/system"
+	writeHook "github.com/ActiveMemory/ctx/internal/write/hook"
 )
 
 // Run executes the check-persistence hook logic.
@@ -103,7 +103,7 @@ func Run(cmd *cobra.Command, stdin *os.File) error {
 		boxTitle := desc.Text(text.DescKeyCheckPersistenceBoxTitle)
 		relayPrefix := desc.Text(text.DescKeyCheckPersistenceRelayPrefix)
 
-		systemwrite.NudgeBlock(cmd,
+		writeHook.NudgeBlock(cmd,
 			core.NudgeBox(
 				relayPrefix, fmt.Sprintf(
 					desc.Text(text.DescKeyCheckPersistenceBoxTitleFormat),

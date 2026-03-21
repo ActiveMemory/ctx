@@ -7,16 +7,13 @@
 package pause
 
 import (
-	"fmt"
 	"os"
 
-	"github.com/ActiveMemory/ctx/internal/assets/read/desc"
-	"github.com/ActiveMemory/ctx/internal/config/embed/text"
 	"github.com/ActiveMemory/ctx/internal/config/session"
 	"github.com/spf13/cobra"
 
 	"github.com/ActiveMemory/ctx/internal/cli/system/core"
-	systemwrite "github.com/ActiveMemory/ctx/internal/write/system"
+	writePause "github.com/ActiveMemory/ctx/internal/write/pause"
 )
 
 // Run executes the pause logic.
@@ -43,8 +40,6 @@ func Run(cmd *cobra.Command, stdin *os.File) error {
 
 	path := core.PauseMarkerPath(sessionID)
 	core.WriteCounter(path, 0)
-	systemwrite.Line(cmd,
-		fmt.Sprintf(desc.Text(text.DescKeyPauseConfirmed), sessionID),
-	)
+	writePause.Confirmed(cmd, sessionID)
 	return nil
 }

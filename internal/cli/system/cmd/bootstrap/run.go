@@ -15,11 +15,10 @@ import (
 	"github.com/ActiveMemory/ctx/internal/cli/system/core"
 	cfgBootstrap "github.com/ActiveMemory/ctx/internal/config/bootstrap"
 	"github.com/ActiveMemory/ctx/internal/config/embed/text"
-	cflag "github.com/ActiveMemory/ctx/internal/config/flag"
+	cFlag "github.com/ActiveMemory/ctx/internal/config/flag"
 	errBackup "github.com/ActiveMemory/ctx/internal/err/backup"
 	"github.com/ActiveMemory/ctx/internal/rc"
 	"github.com/ActiveMemory/ctx/internal/write/bootstrap"
-	systemwrite "github.com/ActiveMemory/ctx/internal/write/system"
 )
 
 // Run executes the bootstrap command, emitting context directory info,
@@ -38,9 +37,9 @@ func Run(cmd *cobra.Command) error {
 		return errBackup.ContextDirNotFound(dir)
 	}
 
-	quiet, _ := cmd.Flags().GetBool(cflag.Quiet)
+	quiet, _ := cmd.Flags().GetBool(cFlag.Quiet)
 	if quiet {
-		systemwrite.Line(cmd, dir)
+		bootstrap.Dir(cmd, dir)
 		return nil
 	}
 
@@ -53,7 +52,7 @@ func Run(cmd *cobra.Command) error {
 	)
 	warning := core.PluginWarning()
 
-	jsonFlag, _ := cmd.Flags().GetBool(cflag.JSON)
+	jsonFlag, _ := cmd.Flags().GetBool(cFlag.JSON)
 	if jsonFlag {
 		bootstrap.JSON(cmd, dir, files, rules, nextSteps, warning)
 		return nil

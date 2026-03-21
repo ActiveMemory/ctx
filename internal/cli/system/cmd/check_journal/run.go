@@ -23,7 +23,7 @@ import (
 	"github.com/ActiveMemory/ctx/internal/config/tpl"
 	ctxResolve "github.com/ActiveMemory/ctx/internal/context/resolve"
 	"github.com/ActiveMemory/ctx/internal/notify"
-	systemwrite "github.com/ActiveMemory/ctx/internal/write/system"
+	writeHook "github.com/ActiveMemory/ctx/internal/write/hook"
 )
 
 // Run executes the check-journal hook logic.
@@ -112,7 +112,7 @@ func Run(cmd *cobra.Command, stdin *os.File) error {
 	boxTitle := desc.Text(text.DescKeyCheckJournalBoxTitle)
 	relayPrefix := desc.Text(text.DescKeyCheckJournalRelayPrefix)
 
-	systemwrite.Line(cmd, core.NudgeBox(relayPrefix, boxTitle, content))
+	writeHook.Nudge(cmd, core.NudgeBox(relayPrefix, boxTitle, content))
 
 	ref := notify.NewTemplateRef(hook.CheckJournal, variant, vars)
 	journalMsg := hook.CheckJournal + ": " + fmt.Sprintf(

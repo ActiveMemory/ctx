@@ -16,7 +16,7 @@ import (
 	"github.com/spf13/cobra"
 
 	"github.com/ActiveMemory/ctx/internal/cli/system/core"
-	systemwrite "github.com/ActiveMemory/ctx/internal/write/system"
+	writeHook "github.com/ActiveMemory/ctx/internal/write/hook"
 )
 
 // Run executes the check-map-staleness hook logic.
@@ -69,7 +69,7 @@ func Run(cmd *cobra.Command, stdin *os.File) error {
 	}
 
 	dateStr := lastRun.Format(cfgTime.DateFormat)
-	systemwrite.Line(cmd, core.EmitMapStalenessWarning(input.SessionID, dateStr, moduleCommits))
+	writeHook.Nudge(cmd, core.EmitMapStalenessWarning(input.SessionID, dateStr, moduleCommits))
 
 	core.TouchFile(markerPath)
 

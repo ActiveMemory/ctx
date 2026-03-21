@@ -11,7 +11,7 @@ import (
 
 	"github.com/ActiveMemory/ctx/internal/cli/system/core"
 	"github.com/ActiveMemory/ctx/internal/sysinfo"
-	systemwrite "github.com/ActiveMemory/ctx/internal/write/system"
+	writeResources "github.com/ActiveMemory/ctx/internal/write/resources"
 )
 
 // runResources executes the resources display logic.
@@ -34,6 +34,6 @@ func runResources(cmd *cobra.Command) error {
 		return core.OutputResourcesJSON(cmd, snap, alerts)
 	}
 
-	systemwrite.Lines(cmd, core.FormatResourcesText(snap, alerts))
+	writeResources.Text(cmd, core.FormatResourcesText(snap, alerts))
 	return nil
 }

@@ -24,7 +24,7 @@ import (
 	"github.com/ActiveMemory/ctx/internal/config/tpl"
 	"github.com/ActiveMemory/ctx/internal/notify"
 	"github.com/ActiveMemory/ctx/internal/rc"
-	systemwrite "github.com/ActiveMemory/ctx/internal/write/system"
+	writeHook "github.com/ActiveMemory/ctx/internal/write/hook"
 )
 
 // Run executes the check-freshness hook logic.
@@ -100,7 +100,7 @@ func Run(cmd *cobra.Command, stdin *os.File) error {
 		return nil
 	}
 
-	systemwrite.Line(cmd, core.NudgeBox(
+	writeHook.Nudge(cmd, core.NudgeBox(
 		desc.Text(text.DescKeyFreshnessRelayPrefix),
 		desc.Text(text.DescKeyFreshnessBoxTitle),
 		content))

@@ -7,18 +7,15 @@
 package reset
 
 import (
-	"fmt"
 	"os"
 	"path/filepath"
 
 	"github.com/spf13/cobra"
 
 	"github.com/ActiveMemory/ctx/internal/assets/hooks/messages"
-	"github.com/ActiveMemory/ctx/internal/assets/read/desc"
 	"github.com/ActiveMemory/ctx/internal/cli/system/core"
-	"github.com/ActiveMemory/ctx/internal/config/embed/text"
 	ctxerr "github.com/ActiveMemory/ctx/internal/err/hook"
-	systemwrite "github.com/ActiveMemory/ctx/internal/write/system"
+	writeMessage "github.com/ActiveMemory/ctx/internal/write/message"
 )
 
 // Run executes the message reset logic.
@@ -40,7 +37,7 @@ func Run(cmd *cobra.Command, hk, variant string) error {
 
 	if removeErr := os.Remove(oPath); removeErr != nil {
 		if os.IsNotExist(removeErr) {
-			systemwrite.Line(cmd, fmt.Sprintf(desc.Text(text.DescKeyMessageNoOverride), hk, variant))
+			writeMessage.NoOverride(cmd, hk, variant)
 			return nil
 		}
 		return ctxerr.RemoveOverride(oPath, removeErr)
@@ -51,6 +48,6 @@ func Run(cmd *cobra.Command, hk, variant string) error {
 	messagesDir := filepath.Dir(hookDir)
 	_ = os.Remove(messagesDir)
 
-	systemwrite.Line(cmd, fmt.Sprintf(desc.Text(text.DescKeyMessageOverrideRemoved), hk, variant))
+	writeMessage.OverrideRemoved(cmd, hk, variant)
 	return nil
 }

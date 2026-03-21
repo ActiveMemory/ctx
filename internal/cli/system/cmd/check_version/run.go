@@ -21,7 +21,7 @@ import (
 	"github.com/ActiveMemory/ctx/internal/config/tpl"
 	"github.com/ActiveMemory/ctx/internal/config/version"
 	"github.com/ActiveMemory/ctx/internal/notify"
-	systemwrite "github.com/ActiveMemory/ctx/internal/write/system"
+	writeHook "github.com/ActiveMemory/ctx/internal/write/hook"
 )
 
 // Run executes the check-version hook logic.
@@ -96,7 +96,7 @@ func Run(cmd *cobra.Command, stdin *os.File) error {
 	boxTitle := desc.Text(text.DescKeyCheckVersionBoxTitle)
 	relayPrefix := desc.Text(text.DescKeyCheckVersionRelayPrefix)
 
-	systemwrite.Line(cmd, core.NudgeBox(relayPrefix, boxTitle, content))
+	writeHook.Nudge(cmd, core.NudgeBox(relayPrefix, boxTitle, content))
 
 	ref := notify.NewTemplateRef(hook.CheckVersion, hook.VariantMismatch,
 		map[string]any{
@@ -112,7 +112,7 @@ func Run(cmd *cobra.Command, stdin *os.File) error {
 	core.TouchFile(markerFile)
 
 	// Key age check: piggyback on the daily version check
-	systemwrite.Line(cmd, core.CheckKeyAge(input.SessionID))
+	writeHook.Nudge(cmd, core.CheckKeyAge(input.SessionID))
 
 	return nil
 }

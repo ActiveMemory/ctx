@@ -16,6 +16,18 @@ import (
 	"github.com/spf13/cobra"
 )
 
+// Dir prints the context directory path (quiet mode). Nil cmd is a no-op.
+//
+// Parameters:
+//   - cmd: Cobra command for output
+//   - dir: absolute path to the context directory
+func Dir(cmd *cobra.Command, dir string) {
+	if cmd == nil {
+		return
+	}
+	cmd.Println(dir)
+}
+
 // Text prints the human-readable bootstrap output to stdout.
 //
 // Parameters:

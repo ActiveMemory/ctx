@@ -7,20 +7,17 @@
 package mark_journal
 
 import (
-	"fmt"
 	"strings"
 
 	"github.com/spf13/cobra"
 
-	"github.com/ActiveMemory/ctx/internal/assets/read/desc"
-	"github.com/ActiveMemory/ctx/internal/config/embed/text"
 	cflag "github.com/ActiveMemory/ctx/internal/config/flag"
 	"github.com/ActiveMemory/ctx/internal/config/journal"
 	"github.com/ActiveMemory/ctx/internal/config/token"
 	ctxResolve "github.com/ActiveMemory/ctx/internal/context/resolve"
 	errJournal "github.com/ActiveMemory/ctx/internal/err/journal"
 	"github.com/ActiveMemory/ctx/internal/journal/state"
-	systemwrite "github.com/ActiveMemory/ctx/internal/write/system"
+	writeJournal "github.com/ActiveMemory/ctx/internal/write/mark_journal"
 )
 
 // runMarkJournal handles the mark-journal command.
@@ -66,11 +63,7 @@ func runMarkJournal(cmd *cobra.Command, filename, stage string) error {
 		if val == "" {
 			return errJournal.StageNotSet(filename, stage)
 		}
-		systemwrite.Line(cmd,
-			fmt.Sprintf(desc.Text(text.DescKeyMarkJournalChecked),
-				filename, stage, val,
-			),
-		)
+		writeJournal.StageChecked(cmd, filename, stage, val)
 		return nil
 	}
 
@@ -84,6 +77,6 @@ func runMarkJournal(cmd *cobra.Command, filename, stage string) error {
 		return errJournal.SaveStateFailed(saveErr)
 	}
 
-	systemwrite.Line(cmd, fmt.Sprintf(desc.Text(text.DescKeyMarkJournalMarked), filename, stage))
+	writeJournal.StageMarked(cmd, filename, stage)
 	return nil
 }

@@ -8,18 +8,13 @@ package list
 
 import (
 	"encoding/json"
-	"fmt"
-	"strings"
 
 	"github.com/spf13/cobra"
 
 	"github.com/ActiveMemory/ctx/internal/assets/hooks/messages"
-	"github.com/ActiveMemory/ctx/internal/assets/read/desc"
 	"github.com/ActiveMemory/ctx/internal/cli/system/core"
-	"github.com/ActiveMemory/ctx/internal/config/embed/text"
 	cflag "github.com/ActiveMemory/ctx/internal/config/flag"
-	"github.com/ActiveMemory/ctx/internal/config/msg"
-	systemwrite "github.com/ActiveMemory/ctx/internal/write/system"
+	writeMessage "github.com/ActiveMemory/ctx/internal/write/message"
 )
 
 // Run executes the message list logic.
@@ -55,25 +50,9 @@ func Run(cmd *cobra.Command) error {
 		return enc.Encode(entries)
 	}
 
-	headerFmt := fmt.Sprintf("%%-%ds %%-%ds %%-%ds %%s",
-		msg.MessageColHook, msg.MessageColVariant, msg.MessageColCategory)
-	systemwrite.Line(cmd, fmt.Sprintf(headerFmt,
-		desc.Text(text.DescKeyMessageListHeaderHook),
-		desc.Text(text.DescKeyMessageListHeaderVariant),
-		desc.Text(text.DescKeyMessageListHeaderCategory),
-		desc.Text(text.DescKeyMessageListHeaderOverride)))
-	systemwrite.Line(cmd, fmt.Sprintf(headerFmt,
-		strings.Repeat("\u2500", msg.MessageSepHook),
-		strings.Repeat("\u2500", msg.MessageSepVariant),
-		strings.Repeat("\u2500", msg.MessageSepCategory),
-		strings.Repeat("\u2500", msg.MessageSepOverride)))
-
+	writeMessage.ListHeader(cmd)
 	for _, e := range entries {
-		override := ""
-		if e.HasOverride {
-			override = desc.Text(text.DescKeyMessageOverrideLabel)
-		}
-		systemwrite.Line(cmd, fmt.Sprintf(headerFmt, e.Hook, e.Variant, e.Category, override))
+		writeMessage.ListRow(cmd, e.Hook, e.Variant, e.Category, e.HasOverride)
 	}
 
 	return nil

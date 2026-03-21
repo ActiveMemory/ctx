@@ -7,21 +7,18 @@
 package edit
 
 import (
-	"fmt"
 	"os"
 	"path/filepath"
 
 	"github.com/spf13/cobra"
 
 	"github.com/ActiveMemory/ctx/internal/assets/hooks/messages"
-	"github.com/ActiveMemory/ctx/internal/assets/read/desc"
-	hook "github.com/ActiveMemory/ctx/internal/assets/read/hook"
+	"github.com/ActiveMemory/ctx/internal/assets/read/hook"
 	"github.com/ActiveMemory/ctx/internal/cli/system/core"
-	"github.com/ActiveMemory/ctx/internal/config/embed/text"
 	"github.com/ActiveMemory/ctx/internal/config/file"
 	"github.com/ActiveMemory/ctx/internal/err/fs"
 	ctxerr "github.com/ActiveMemory/ctx/internal/err/hook"
-	systemwrite "github.com/ActiveMemory/ctx/internal/write/system"
+	writeMessage "github.com/ActiveMemory/ctx/internal/write/message"
 )
 
 // Run executes the message edit logic.
@@ -47,8 +44,7 @@ func Run(cmd *cobra.Command, hk, variant string) error {
 	}
 
 	if info.Category == messages.CategoryCtxSpecific {
-		systemwrite.Line(cmd, desc.Text(text.DescKeyMessageCtxSpecificWarning))
-		systemwrite.Line(cmd, "")
+		writeMessage.CtxSpecificWarning(cmd)
 	}
 
 	data, readErr := hook.Message(hk, variant+file.ExtTxt)
@@ -65,9 +61,9 @@ func Run(cmd *cobra.Command, hk, variant string) error {
 		return ctxerr.WriteOverride(oPath, writeErr)
 	}
 
-	systemwrite.Line(cmd, fmt.Sprintf(desc.Text(text.DescKeyMessageOverrideCreated), oPath))
-	systemwrite.Line(cmd, desc.Text(text.DescKeyMessageEditHint))
-	systemwrite.Line(cmd, core.FormatTemplateVars(info))
+	writeMessage.OverrideCreated(cmd, oPath)
+	writeMessage.EditHint(cmd)
+	writeMessage.TemplateVars(cmd, core.FormatTemplateVars(info))
 
 	return nil
 }

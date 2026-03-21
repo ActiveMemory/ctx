@@ -9,13 +9,11 @@ package events
 import (
 	"github.com/spf13/cobra"
 
-	"github.com/ActiveMemory/ctx/internal/assets/read/desc"
 	"github.com/ActiveMemory/ctx/internal/cli/system/core"
-	"github.com/ActiveMemory/ctx/internal/config/embed/text"
 	cFlag "github.com/ActiveMemory/ctx/internal/config/flag"
 	errRcall "github.com/ActiveMemory/ctx/internal/err/recall"
 	"github.com/ActiveMemory/ctx/internal/log"
-	systemwrite "github.com/ActiveMemory/ctx/internal/write/system"
+	writeEvents "github.com/ActiveMemory/ctx/internal/write/events"
 )
 
 // Run executes the events subcommand, querying and displaying event log
@@ -48,14 +46,14 @@ func Run(cmd *cobra.Command) error {
 	}
 
 	if len(evts) == 0 {
-		systemwrite.Line(cmd, desc.Text(text.DescKeyEventsEmpty))
+		writeEvents.Empty(cmd)
 		return nil
 	}
 
 	if jsonOut {
-		systemwrite.Lines(cmd, core.FormatEventsJSON(evts))
+		writeEvents.JSON(cmd, core.FormatEventsJSON(evts))
 	} else {
-		systemwrite.Lines(cmd, core.FormatEventsHuman(evts))
+		writeEvents.Human(cmd, core.FormatEventsHuman(evts))
 	}
 	return nil
 }

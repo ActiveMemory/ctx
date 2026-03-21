@@ -19,7 +19,7 @@ import (
 
 	"github.com/ActiveMemory/ctx/internal/cli/system/core"
 	"github.com/ActiveMemory/ctx/internal/notify"
-	systemwrite "github.com/ActiveMemory/ctx/internal/write/system"
+	writeHook "github.com/ActiveMemory/ctx/internal/write/hook"
 )
 
 // Run executes the qa-reminder hook logic.
@@ -53,7 +53,7 @@ func Run(cmd *cobra.Command, stdin *os.File) error {
 	}
 	msg = ctxcontext.AppendDir(msg)
 
-	systemwrite.Line(cmd, core.FormatHookContext(hook.EventPreToolUse, msg))
+	writeHook.HookContext(cmd, core.FormatHookContext(hook.EventPreToolUse, msg))
 
 	ref := notify.NewTemplateRef(hook.QAReminder, hook.VariantGate, nil)
 	core.Relay(fmt.Sprintf(desc.Text(text.DescKeyRelayPrefixFormat),
