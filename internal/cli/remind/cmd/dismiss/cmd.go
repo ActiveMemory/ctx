@@ -21,7 +21,7 @@ import (
 func Cmd() *cobra.Command {
 	var allFlag bool
 
-	short, _ := desc.CommandDesc(cmd.DescKeyRemindDismiss)
+	short, _ := desc.Command(cmd.DescKeyRemindDismiss)
 
 	cmd := &cobra.Command{
 		Use:     "dismiss [ID]",
@@ -39,7 +39,7 @@ func Cmd() *cobra.Command {
 	}
 
 	cmd.Flags().BoolVar(&allFlag, "all", false,
-		desc.FlagDesc(flag.DescKeyRemindDismissAll),
+		desc.Flag(flag.DescKeyRemindDismissAll),
 	)
 
 	return cmd

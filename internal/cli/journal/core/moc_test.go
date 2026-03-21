@@ -114,7 +114,7 @@ func TestGenerateRelatedFooter(t *testing.T) {
 
 	got := GenerateRelatedFooter(entry, topicIndex, 5)
 
-	if !strings.Contains(got, desc.TextDesc(text.DescKeyHeadingObsidianRelated)) {
+	if !strings.Contains(got, desc.Text(text.DescKeyHeadingObsidianRelated)) {
 		t.Error("missing related heading")
 	}
 	if !strings.Contains(got, "[[_Topics|Topics MOC]]") {

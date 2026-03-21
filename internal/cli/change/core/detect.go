@@ -57,7 +57,7 @@ func DetectReferenceTime(since string) (time.Time, string, error) {
 
 	// Fallback: 24h ago.
 	t := time.Now().Add(-24 * time.Hour)
-	return t, desc.TextDesc(text.DescKeyChangesFallbackLabel), nil
+	return t, desc.Text(text.DescKeyChangesFallbackLabel), nil
 }
 
 // ParseSinceFlag parses a duration (like "24h") or date (like "2026-03-01").
@@ -78,7 +78,7 @@ func ParseSinceFlag(since string) (time.Time, string, error) {
 
 	// Try date.
 	if t, err := time.Parse(cfgTime.DateFormat, since); err == nil {
-		return t, desc.TextDesc(text.DescKeyChangesSincePrefix) + since, nil
+		return t, desc.Text(text.DescKeyChangesSincePrefix) + since, nil
 	}
 
 	// Try RFC3339.

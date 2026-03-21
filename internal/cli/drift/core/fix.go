@@ -57,30 +57,30 @@ func ApplyFixes(
 		case drift.IssueStaleness:
 			if fixErr := FixStaleness(cmd, ctx); fixErr != nil {
 				result.Errors = append(result.Errors,
-					fmt.Sprintf(desc.TextDesc(text.DescKeyDriftFixStalenessErr), fixErr))
+					fmt.Sprintf(desc.Text(text.DescKeyDriftFixStalenessErr), fixErr))
 			} else {
 				cmd.Println(fmt.Sprintf(
-					desc.TextDesc(text.DescKeyDriftFixStaleness), issue.File))
+					desc.Text(text.DescKeyDriftFixStaleness), issue.File))
 				result.Fixed++
 			}
 
 		case drift.IssueMissing:
 			if fixErr := FixMissingFile(issue.File); fixErr != nil {
 				result.Errors = append(result.Errors,
-					fmt.Sprintf(desc.TextDesc(text.DescKeyDriftFixMissingErr), issue.File, fixErr))
+					fmt.Sprintf(desc.Text(text.DescKeyDriftFixMissingErr), issue.File, fixErr))
 			} else {
 				cmd.Println(fmt.Sprintf(
-					desc.TextDesc(text.DescKeyDriftFixMissing), issue.File))
+					desc.Text(text.DescKeyDriftFixMissing), issue.File))
 				result.Fixed++
 			}
 
 		case drift.IssueDeadPath:
-			cmd.Println(fmt.Sprintf(desc.TextDesc(text.DescKeyDriftSkipDeadPath),
+			cmd.Println(fmt.Sprintf(desc.Text(text.DescKeyDriftSkipDeadPath),
 				issue.File, issue.Line, issue.Path))
 			result.Skipped++
 
 		case drift.IssueStaleAge:
-			cmd.Println(fmt.Sprintf(desc.TextDesc(text.DescKeyDriftSkipStaleAge),
+			cmd.Println(fmt.Sprintf(desc.Text(text.DescKeyDriftSkipStaleAge),
 				issue.File))
 			result.Skipped++
 		}
@@ -89,7 +89,7 @@ func ApplyFixes(
 	// Process violations (potential_secret) - never auto-fix
 	for _, issue := range report.Violations {
 		if issue.Type == drift.IssueSecret {
-			cmd.Println(fmt.Sprintf(desc.TextDesc(text.DescKeyDriftSkipSensitiveFile),
+			cmd.Println(fmt.Sprintf(desc.Text(text.DescKeyDriftSkipSensitiveFile),
 				issue.File))
 			result.Skipped++
 		}
@@ -127,7 +127,7 @@ func FixStaleness(cmd *cobra.Command, ctx *entity.Context) error {
 
 	for _, line := range lines {
 		// Track if we're in the Completed section
-		if strings.HasPrefix(line, desc.TextDesc(text.DescKeyHeadingCompleted)) {
+		if strings.HasPrefix(line, desc.Text(text.DescKeyHeadingCompleted)) {
 			inCompletedSection = true
 			newLines = append(newLines, line)
 			continue
@@ -160,7 +160,7 @@ func FixStaleness(cmd *cobra.Command, ctx *entity.Context) error {
 
 	archiveFile, writeErr := tidy.WriteArchive(
 		archive.ArchiveScopeTasks,
-		desc.TextDesc(text.DescKeyHeadingArchivedTasks), archiveContent,
+		desc.Text(text.DescKeyHeadingArchivedTasks), archiveContent,
 	)
 	if writeErr != nil {
 		return writeErr
@@ -174,7 +174,7 @@ func FixStaleness(cmd *cobra.Command, ctx *entity.Context) error {
 		return ctxErr.FileWrite(writeErr)
 	}
 
-	cmd.Println(fmt.Sprintf(desc.TextDesc(text.DescKeyDriftArchived),
+	cmd.Println(fmt.Sprintf(desc.Text(text.DescKeyDriftArchived),
 		len(completedTasks), archiveFile))
 
 	return nil

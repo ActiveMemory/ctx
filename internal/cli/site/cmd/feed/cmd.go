@@ -25,7 +25,7 @@ func Cmd() *cobra.Command {
 		baseURL string
 	)
 
-	short, long := desc.CommandDesc(cmd.DescKeySiteFeed)
+	short, long := desc.Command(cmd.DescKeySiteFeed)
 
 	cmd := &cobra.Command{
 		Use:   "feed",
@@ -38,11 +38,11 @@ func Cmd() *cobra.Command {
 
 	cmd.Flags().StringVarP(
 		&out, "out", "o", rss.DefaultFeedOutPath,
-		desc.FlagDesc(flag.DescKeySiteFeedOut),
+		desc.Flag(flag.DescKeySiteFeedOut),
 	)
 	cmd.Flags().StringVar(
 		&baseURL, "base-url", rss.DefaultFeedBaseURL,
-		desc.FlagDesc(flag.DescKeySiteFeedBaseUrl),
+		desc.Flag(flag.DescKeySiteFeedBaseUrl),
 	)
 
 	return cmd

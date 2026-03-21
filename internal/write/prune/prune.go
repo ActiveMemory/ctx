@@ -24,7 +24,7 @@ func PruneDryRunLine(cmd *cobra.Command, name, age string) {
 	if cmd == nil {
 		return
 	}
-	cmd.Println(fmt.Sprintf(desc.TextDesc(text.DescKeyPruneDryRunLine), name, age))
+	cmd.Println(fmt.Sprintf(desc.Text(text.DescKeyPruneDryRunLine), name, age))
 }
 
 // PruneErrorLine prints an error encountered while removing a file.
@@ -37,7 +37,7 @@ func PruneErrorLine(cmd *cobra.Command, name string, err error) {
 	if cmd == nil {
 		return
 	}
-	cmd.PrintErrln(fmt.Sprintf(desc.TextDesc(text.DescKeyPruneErrorLine), name, err))
+	cmd.PrintErrln(fmt.Sprintf(desc.Text(text.DescKeyPruneErrorLine), name, err))
 }
 
 // PruneSummary prints the prune results summary.
@@ -54,10 +54,10 @@ func PruneSummary(cmd *cobra.Command, dryRun bool, pruned, skipped, preserved in
 	}
 	if dryRun {
 		cmd.Println()
-		cmd.Println(fmt.Sprintf(desc.TextDesc(text.DescKeyPruneDryRunSummary),
+		cmd.Println(fmt.Sprintf(desc.Text(text.DescKeyPruneDryRunSummary),
 			pruned, skipped, preserved))
 	} else {
-		cmd.Println(fmt.Sprintf(desc.TextDesc(text.DescKeyPruneSummary),
+		cmd.Println(fmt.Sprintf(desc.Text(text.DescKeyPruneSummary),
 			pruned, skipped, preserved))
 	}
 }

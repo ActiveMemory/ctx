@@ -23,7 +23,7 @@ import (
 // Returns:
 //   - *cobra.Command: Configured mark-journal subcommand
 func Cmd() *cobra.Command {
-	short, long := desc.CommandDesc(cmd.DescKeySystemMarkJournal)
+	short, long := desc.Command(cmd.DescKeySystemMarkJournal)
 
 	cmd := &cobra.Command{
 		Use:    "mark-journal <filename> <stage>",
@@ -36,7 +36,7 @@ func Cmd() *cobra.Command {
 		},
 	}
 
-	cmd.Flags().Bool("check", false, desc.FlagDesc(flag.DescKeySystemMarkJournalCheck))
+	cmd.Flags().Bool("check", false, desc.Flag(flag.DescKeySystemMarkJournalCheck))
 
 	return cmd
 }

@@ -82,13 +82,13 @@ func Run(cmd *cobra.Command, stdin *os.File) error {
 
 	// Emit VERBATIM relay
 	cmd.Println(core.NudgeBox(
-		desc.TextDesc(text.DescKeyBackupRelayPrefix),
-		desc.TextDesc(text.DescKeyBackupBoxTitle),
+		desc.Text(text.DescKeyBackupRelayPrefix),
+		desc.Text(text.DescKeyBackupBoxTitle),
 		content))
 
 	ref := notify.NewTemplateRef(hook.CheckBackupAge, hook.VariantWarning, vars)
 	core.NudgeAndRelay(hook.CheckBackupAge+": "+
-		desc.TextDesc(text.DescKeyBackupRelayMessage),
+		desc.Text(text.DescKeyBackupRelayMessage),
 		input.SessionID, ref,
 	)
 

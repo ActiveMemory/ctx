@@ -48,7 +48,7 @@ func Cmd() *cobra.Command {
 		application string
 	)
 
-	short, long := desc.CommandDesc(cmd.DescKeyAdd)
+	short, long := desc.Command(cmd.DescKeyAdd)
 
 	c := &cobra.Command{
 		Use:       cmd.UseAdd,
@@ -73,7 +73,7 @@ func Cmd() *cobra.Command {
 	c.Flags().StringVarP(
 		&priority,
 		cflag.Priority, cflag.ShortPriority, "",
-		desc.FlagDesc(flag.DescKeyAddPriority),
+		desc.Flag(flag.DescKeyAddPriority),
 	)
 	_ = c.RegisterFlagCompletionFunc(
 		cflag.Priority, func(_ *cobra.Command, _ []string, _ string) (
@@ -84,12 +84,12 @@ func Cmd() *cobra.Command {
 	c.Flags().StringVarP(
 		&section,
 		cflag.Section, cflag.ShortSection, "",
-		desc.FlagDesc(flag.DescKeyAddSection),
+		desc.Flag(flag.DescKeyAddSection),
 	)
 	c.Flags().StringVarP(
 		&fromFile,
 		cflag.File, cflag.ShortFile, "",
-		desc.FlagDesc(flag.DescKeyAddFile),
+		desc.Flag(flag.DescKeyAddFile),
 	)
 	register.StringFlagP(c, &context, cflag.Context, cflag.ShortContext, flag.DescKeyAddContext)
 	register.StringFlagP(c, &rationale, cflag.Rationale, cflag.ShortRationale, flag.DescKeyAddRationale)

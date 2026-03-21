@@ -18,7 +18,7 @@ import (
 // Returns:
 //   - *cobra.Command: command for showing memory diff.
 func Cmd() *cobra.Command {
-	short, long := desc.CommandDesc(cmd.DescKeyMemoryDiff)
+	short, long := desc.Command(cmd.DescKeyMemoryDiff)
 	return &cobra.Command{
 		Use:   cmd.UseMemoryDiff,
 		Short: short,

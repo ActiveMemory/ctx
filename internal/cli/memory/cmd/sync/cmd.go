@@ -23,7 +23,7 @@ import (
 func Cmd() *cobra.Command {
 	var dryRun bool
 
-	short, long := desc.CommandDesc(cmd.DescKeyMemorySync)
+	short, long := desc.Command(cmd.DescKeyMemorySync)
 	c := &cobra.Command{
 		Use:   cmd.UseMemorySync,
 		Short: short,
@@ -34,7 +34,7 @@ func Cmd() *cobra.Command {
 	}
 
 	c.Flags().BoolVar(
-		&dryRun, cFlag.DryRun, false, desc.FlagDesc(flag.DescKeyMemorySyncDryRun),
+		&dryRun, cFlag.DryRun, false, desc.Flag(flag.DescKeyMemorySyncDryRun),
 	)
 
 	return c

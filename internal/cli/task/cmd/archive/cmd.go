@@ -28,7 +28,7 @@ import (
 func Cmd() *cobra.Command {
 	var dryRun bool
 
-	short, long := desc.CommandDesc(cmd.DescKeyTaskArchive)
+	short, long := desc.Command(cmd.DescKeyTaskArchive)
 
 	cmd := &cobra.Command{
 		Use:   "archive",
@@ -43,7 +43,7 @@ func Cmd() *cobra.Command {
 		&dryRun,
 		cflag.DryRun,
 		false,
-		desc.FlagDesc(flag.DescKeyTaskArchiveDryRun),
+		desc.Flag(flag.DescKeyTaskArchiveDryRun),
 	)
 
 	return cmd

@@ -18,7 +18,7 @@ import (
 // Returns:
 //   - *cobra.Command: Configured resolve subcommand
 func Cmd() *cobra.Command {
-	short, long := desc.CommandDesc(cmd.DescKeyPadResolve)
+	short, long := desc.Command(cmd.DescKeyPadResolve)
 	return &cobra.Command{
 		Use:   cmd.UsePadResolve,
 		Short: short,

@@ -23,7 +23,7 @@ func SetupPrompt(cmd *cobra.Command) {
 	if cmd == nil {
 		return
 	}
-	cmd.Print(desc.TextDesc(text.DescKeyWriteSetupPrompt))
+	cmd.Print(desc.Text(text.DescKeyWriteSetupPrompt))
 }
 
 // SetupDone prints the success block after saving a webhook:
@@ -39,7 +39,7 @@ func SetupDone(cmd *cobra.Command, maskedURL, encPath string) {
 	}
 	cmd.Println(
 		fmt.Sprintf(
-			desc.TextDesc(text.DescKeyWriteSetupDone),
+			desc.Text(text.DescKeyWriteSetupDone),
 			maskedURL, encPath,
 		),
 	)
@@ -53,7 +53,7 @@ func TestNoWebhook(cmd *cobra.Command) {
 	if cmd == nil {
 		return
 	}
-	cmd.Println(desc.TextDesc(text.DescKeyWriteTestNoWebhook))
+	cmd.Println(desc.Text(text.DescKeyWriteTestNoWebhook))
 }
 
 // TestFiltered prints the notice when the test event is filtered.
@@ -64,7 +64,7 @@ func TestFiltered(cmd *cobra.Command) {
 	if cmd == nil {
 		return
 	}
-	cmd.Println(desc.TextDesc(text.DescKeyWriteTestFiltered))
+	cmd.Println(desc.Text(text.DescKeyWriteTestFiltered))
 }
 
 // TestResult prints the webhook test response block: status line
@@ -80,14 +80,14 @@ func TestResult(cmd *cobra.Command, statusCode int, encPath string) {
 	}
 	cmd.Println(
 		fmt.Sprintf(
-			desc.TextDesc(text.DescKeyWriteTestResult),
+			desc.Text(text.DescKeyWriteTestResult),
 			statusCode, http.StatusText(statusCode),
 		),
 	)
 	if statusCode >= http.StatusOK && statusCode < http.StatusMultipleChoices {
 		cmd.Println(
 			fmt.Sprintf(
-				desc.TextDesc(text.DescKeyWriteTestWorking),
+				desc.Text(text.DescKeyWriteTestWorking),
 				encPath,
 			),
 		)

@@ -43,7 +43,7 @@ func Run(cmd *cobra.Command, stdin *os.File) error {
 	path := core.PauseMarkerPath(sessionID)
 	core.WriteCounter(path, 0)
 	cmd.Println(
-		fmt.Sprintf(desc.TextDesc(text.DescKeyPauseConfirmed), sessionID),
+		fmt.Sprintf(desc.Text(text.DescKeyPauseConfirmed), sessionID),
 	)
 	return nil
 }

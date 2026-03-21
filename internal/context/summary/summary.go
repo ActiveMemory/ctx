@@ -35,9 +35,9 @@ func summarizeConstitution(content []byte) string {
 			content, []byte(marker.PrefixTaskDone),
 		)
 	if count == 0 {
-		return desc.TextDesc(text.DescKeySummaryLoaded)
+		return desc.Text(text.DescKeySummaryLoaded)
 	}
-	return fmt.Sprintf(desc.TextDesc(text.DescKeySummaryInvariants), count)
+	return fmt.Sprintf(desc.Text(text.DescKeySummaryInvariants), count)
 }
 
 // summarizeTasks counts active and completed tasks in TASKS.md.
@@ -53,15 +53,15 @@ func summarizeTasks(content []byte) string {
 	completed := bytes.Count(content, []byte(marker.PrefixTaskDone))
 
 	if active == 0 && completed == 0 {
-		return desc.TextDesc(text.DescKeySummaryEmpty)
+		return desc.Text(text.DescKeySummaryEmpty)
 	}
 
 	var parts []string
 	if active > 0 {
-		parts = append(parts, fmt.Sprintf(desc.TextDesc(text.DescKeySummaryActive), active))
+		parts = append(parts, fmt.Sprintf(desc.Text(text.DescKeySummaryActive), active))
 	}
 	if completed > 0 {
-		parts = append(parts, fmt.Sprintf(desc.TextDesc(text.DescKeySummaryCompleted), completed))
+		parts = append(parts, fmt.Sprintf(desc.Text(text.DescKeySummaryCompleted), completed))
 	}
 	return strings.Join(parts, ", ")
 }
@@ -79,12 +79,12 @@ func summarizeDecisions(content []byte) string {
 	count := len(matches)
 
 	if count == 0 {
-		return desc.TextDesc(text.DescKeySummaryEmpty)
+		return desc.Text(text.DescKeySummaryEmpty)
 	}
 	if count == 1 {
-		return desc.TextDesc(text.DescKeySummaryDecision)
+		return desc.Text(text.DescKeySummaryDecision)
 	}
-	return fmt.Sprintf(desc.TextDesc(text.DescKeySummaryDecisions), count)
+	return fmt.Sprintf(desc.Text(text.DescKeySummaryDecisions), count)
 }
 
 // summarizeGlossary counts term definitions (**term**) in GLOSSARY.md.
@@ -99,12 +99,12 @@ func summarizeGlossary(content []byte) string {
 	count := len(matches)
 
 	if count == 0 {
-		return desc.TextDesc(text.DescKeySummaryEmpty)
+		return desc.Text(text.DescKeySummaryEmpty)
 	}
 	if count == 1 {
-		return desc.TextDesc(text.DescKeySummaryTerm)
+		return desc.Text(text.DescKeySummaryTerm)
 	}
-	return fmt.Sprintf(desc.TextDesc(text.DescKeySummaryTerms), count)
+	return fmt.Sprintf(desc.Text(text.DescKeySummaryTerms), count)
 }
 
 // GenerateSummary creates a brief summary for a context file based on its
@@ -128,8 +128,8 @@ func GenerateSummary(name string, content []byte) string {
 		return summarizeGlossary(content)
 	default:
 		if len(content) == 0 || sanitize.EffectivelyEmpty(content) {
-			return desc.TextDesc(text.DescKeySummaryEmpty)
+			return desc.Text(text.DescKeySummaryEmpty)
 		}
-		return desc.TextDesc(text.DescKeySummaryLoaded)
+		return desc.Text(text.DescKeySummaryLoaded)
 	}
 }

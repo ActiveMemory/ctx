@@ -11,15 +11,15 @@ import (
 	"os"
 	"path/filepath"
 
-	prompt2 "github.com/ActiveMemory/ctx/internal/assets/read/prompt"
-	"github.com/ActiveMemory/ctx/internal/config/file"
-	"github.com/ActiveMemory/ctx/internal/config/fs"
-	fs2 "github.com/ActiveMemory/ctx/internal/err/fs"
-	ctxerr "github.com/ActiveMemory/ctx/internal/err/prompt"
-	"github.com/ActiveMemory/ctx/internal/write/prompt"
 	"github.com/spf13/cobra"
 
+	readPrompt "github.com/ActiveMemory/ctx/internal/assets/read/prompt"
 	"github.com/ActiveMemory/ctx/internal/cli/prompt/core"
+	"github.com/ActiveMemory/ctx/internal/config/file"
+	"github.com/ActiveMemory/ctx/internal/config/fs"
+	errFs "github.com/ActiveMemory/ctx/internal/err/fs"
+	ctxErr "github.com/ActiveMemory/ctx/internal/err/prompt"
+	"github.com/ActiveMemory/ctx/internal/write/prompt"
 )
 
 // runAdd creates a new prompt template file.
@@ -34,14 +34,14 @@ import (
 func runAdd(cmd *cobra.Command, name string, fromStdin bool) error {
 	dir := core.PromptsDir()
 	if mkdirErr := os.MkdirAll(dir, fs.PermExec); mkdirErr != nil {
-		return fs2.Mkdir("prompts directory", mkdirErr)
+		return errFs.Mkdir(dir, mkdirErr)
 	}
 
 	path := filepath.Join(dir, name+file.ExtMarkdown)
 
-	// Check if file already exists.
+	// Check if the file already exists.
 	if _, statErr := os.Stat(path); statErr == nil {
-		return ctxerr.Exists(name)
+		return ctxErr.Exists(name)
 	}
 
 	var content []byte
@@ -50,19 +50,19 @@ func runAdd(cmd *cobra.Command, name string, fromStdin bool) error {
 		var readErr error
 		content, readErr = io.ReadAll(cmd.InOrStdin())
 		if readErr != nil {
-			return fs2.ReadInput(readErr)
+			return errFs.ReadInput(readErr)
 		}
 	} else {
 		// Try to load from embedded starter templates.
 		var templateErr error
-		content, templateErr = prompt2.Template(name + file.ExtMarkdown)
+		content, templateErr = readPrompt.Template(name + file.ExtMarkdown)
 		if templateErr != nil {
-			return ctxerr.NoPromptTemplate(name)
+			return ctxErr.NoPromptTemplate(name)
 		}
 	}
 
 	if writeErr := os.WriteFile(path, content, fs.PermFile); writeErr != nil {
-		return fs2.WriteFileFailed(writeErr)
+		return errFs.WriteFileFailed(writeErr)
 	}
 
 	prompt.PromptCreated(cmd, name)

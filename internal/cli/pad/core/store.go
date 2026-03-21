@@ -85,7 +85,7 @@ func EnsureKey() error {
 	}
 
 	_, err := fmt.Fprintln(
-		os.Stderr, fmt.Sprintf(desc.TextDesc(text.DescKeyPadKeyCreated), kp),
+		os.Stderr, fmt.Sprintf(desc.Text(text.DescKeyPadKeyCreated), kp),
 	)
 	if err != nil {
 		return err

@@ -19,7 +19,7 @@ import (
 // Returns:
 //   - *cobra.Command: The serve command
 func Cmd() *cobra.Command {
-	short, long := desc.CommandDesc(cmd.DescKeyServe)
+	short, long := desc.Command(cmd.DescKeyServe)
 
 	cmd := &cobra.Command{
 		Use:   cmd.UseServe,

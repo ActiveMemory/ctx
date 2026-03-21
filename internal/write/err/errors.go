@@ -23,7 +23,7 @@ func WithError(cmd *cobra.Command, err error) {
 	if cmd == nil {
 		return
 	}
-	cmd.PrintErrln(desc.TextDesc(text.DescKeyWritePrefixError), err)
+	cmd.PrintErrln(desc.Text(text.DescKeyWritePrefixError), err)
 }
 
 // WarnFile prints a non-fatal file operation warning to stderr.
@@ -36,5 +36,5 @@ func WarnFile(cmd *cobra.Command, path string, err error) {
 	if cmd == nil {
 		return
 	}
-	cmd.Println(fmt.Sprintf(desc.TextDesc(text.DescKeyWritePrefixWarn), path, err))
+	cmd.Println(fmt.Sprintf(desc.Text(text.DescKeyWritePrefixWarn), path, err))
 }

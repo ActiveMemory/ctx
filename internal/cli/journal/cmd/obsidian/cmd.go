@@ -27,7 +27,7 @@ import (
 func Cmd() *cobra.Command {
 	var output string
 
-	short, long := desc.CommandDesc(cmd.DescKeyJournalObsidian)
+	short, long := desc.Command(cmd.DescKeyJournalObsidian)
 	c := &cobra.Command{
 		Use:   cmd.UseJournalObsidian,
 		Short: short,
@@ -40,7 +40,7 @@ func Cmd() *cobra.Command {
 	defaultOutput := filepath.Join(rc.ContextDir(), obsidian.DirName)
 	c.Flags().StringVarP(
 		&output, cFlag.Output, cFlag.ShortOutput,
-		defaultOutput, desc.FlagDesc(flag.DescKeyJournalObsidianOutput),
+		defaultOutput, desc.Flag(flag.DescKeyJournalObsidianOutput),
 	)
 
 	return c

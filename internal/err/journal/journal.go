@@ -23,7 +23,7 @@ import (
 //   - error: "load journal state: <cause>"
 func LoadState(cause error) error {
 	return fmt.Errorf(
-		desc.TextDesc(text.DescKeyErrJournalLoadJournalState), cause,
+		desc.Text(text.DescKeyErrJournalLoadJournalState), cause,
 	)
 }
 
@@ -36,7 +36,7 @@ func LoadState(cause error) error {
 //   - error: "save journal state: <cause>"
 func SaveState(cause error) error {
 	return fmt.Errorf(
-		desc.TextDesc(text.DescKeyErrJournalSaveJournalState), cause,
+		desc.Text(text.DescKeyErrJournalSaveJournalState), cause,
 	)
 }
 
@@ -49,7 +49,7 @@ func SaveState(cause error) error {
 //   - error: "load journal state: <cause>"
 func LoadStateErr(cause error) error {
 	return fmt.Errorf(
-		desc.TextDesc(text.DescKeyErrJournalLoadJournalState), cause,
+		desc.Text(text.DescKeyErrJournalLoadJournalState), cause,
 	)
 }
 
@@ -62,7 +62,7 @@ func LoadStateErr(cause error) error {
 //   - error: "load journal state: <cause>"
 func LoadStateFailed(cause error) error {
 	return fmt.Errorf(
-		desc.TextDesc(text.DescKeyErrJournalLoadJournalState), cause,
+		desc.Text(text.DescKeyErrJournalLoadJournalState), cause,
 	)
 }
 
@@ -75,7 +75,7 @@ func LoadStateFailed(cause error) error {
 //   - error: "save journal state: <cause>"
 func SaveStateFailed(cause error) error {
 	return fmt.Errorf(
-		desc.TextDesc(text.DescKeyErrJournalSaveJournalState), cause,
+		desc.Text(text.DescKeyErrJournalSaveJournalState), cause,
 	)
 }
 
@@ -88,7 +88,7 @@ func SaveStateFailed(cause error) error {
 //   - error: includes a hint to run 'ctx recall export --all'
 func NoDir(path string) error {
 	return fmt.Errorf(
-		desc.TextDesc(text.DescKeyErrJournalNoJournalDir), path,
+		desc.Text(text.DescKeyErrJournalNoJournalDir), path,
 	)
 }
 
@@ -101,7 +101,7 @@ func NoDir(path string) error {
 //   - error: "failed to scan journal: <cause>"
 func Scan(cause error) error {
 	return fmt.Errorf(
-		desc.TextDesc(text.DescKeyErrJournalScanJournal), cause,
+		desc.Text(text.DescKeyErrJournalScanJournal), cause,
 	)
 }
 
@@ -114,7 +114,7 @@ func Scan(cause error) error {
 //   - error: includes a hint to run 'ctx recall export --all'
 func NoEntries(path string) error {
 	return fmt.Errorf(
-		desc.TextDesc(text.DescKeyErrJournalNoJournalEntries), path,
+		desc.Text(text.DescKeyErrJournalNoJournalEntries), path,
 	)
 }
 
@@ -127,7 +127,7 @@ func NoEntries(path string) error {
 //   - error: "no journal entries match: <patterns>"
 func NoEntriesMatch(patterns string) error {
 	return fmt.Errorf(
-		desc.TextDesc(text.DescKeyErrJournalNoEntriesMatch), patterns,
+		desc.Text(text.DescKeyErrJournalNoEntriesMatch), patterns,
 	)
 }
 
@@ -140,7 +140,7 @@ func NoEntriesMatch(patterns string) error {
 //   - error: "read journal directory: <cause>"
 func ReadDir(cause error) error {
 	return fmt.Errorf(
-		desc.TextDesc(text.DescKeyErrJournalReadJournalDir), cause,
+		desc.Text(text.DescKeyErrJournalReadJournalDir), cause,
 	)
 }
 
@@ -154,7 +154,7 @@ func ReadDir(cause error) error {
 //   - error: "unknown stage <stage>; valid: <valid>"
 func UnknownStage(stage, valid string) error {
 	return fmt.Errorf(
-		desc.TextDesc(text.DescKeyErrJournalUnknownStage), stage, valid,
+		desc.Text(text.DescKeyErrJournalUnknownStage), stage, valid,
 	)
 }
 
@@ -168,7 +168,7 @@ func UnknownStage(stage, valid string) error {
 //   - error: "<filename>: <stage> not set"
 func StageNotSet(filename, stage string) error {
 	return fmt.Errorf(
-		desc.TextDesc(text.DescKeyErrJournalStageNotSet), filename, stage,
+		desc.Text(text.DescKeyErrJournalStageNotSet), filename, stage,
 	)
 }
 
@@ -179,6 +179,6 @@ func StageNotSet(filename, stage string) error {
 //   - error: explains the flag dependency
 func RegenerateRequiresAll() error {
 	return errors.New(
-		desc.TextDesc(text.DescKeyErrJournalRegenerateRequiresAll),
+		desc.Text(text.DescKeyErrJournalRegenerateRequiresAll),
 	)
 }

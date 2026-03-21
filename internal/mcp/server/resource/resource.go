@@ -40,7 +40,7 @@ func readContextFile(
 	if f == nil {
 		return out.ErrResponse(id, proto.ErrCodeInvalidArg,
 			fmt.Sprintf(
-				desc.TextDesc(text.DescKeyMCPErrFileNotFound),
+				desc.Text(text.DescKeyMCPErrFileNotFound),
 				fileName,
 			))
 	}
@@ -72,7 +72,7 @@ func readAgentPacket(
 	id json.RawMessage, ctx *entity.Context, budget int,
 ) *proto.Response {
 	var sb strings.Builder
-	header := desc.TextDesc(text.DescKeyMCPPacketHeader)
+	header := desc.Text(text.DescKeyMCPPacketHeader)
 	sb.WriteString(header)
 
 	tokensUsed := ctxToken.EstimateTokensString(header)
@@ -85,7 +85,7 @@ func readAgentPacket(
 		}
 
 		section := fmt.Sprintf(
-			desc.TextDesc(text.DescKeyMCPFormatSection),
+			desc.Text(text.DescKeyMCPFormatSection),
 			fileName, string(f.Content),
 		)
 		sectionTokens := ctxToken.EstimateTokensString(section)
@@ -101,12 +101,12 @@ func readAgentPacket(
 
 	if len(skipped) > 0 {
 		sb.WriteString(
-			desc.TextDesc(text.DescKeyMCPAlsoNoted),
+			desc.Text(text.DescKeyMCPAlsoNoted),
 		)
 		for _, name := range skipped {
 			_, _ = fmt.Fprintf(
 				&sb,
-				desc.TextDesc(text.DescKeyMCPOmittedFormat),
+				desc.Text(text.DescKeyMCPOmittedFormat),
 				name,
 			)
 		}

@@ -11,13 +11,14 @@ import (
 	"os"
 	"strings"
 
+	"github.com/spf13/cobra"
+
 	"github.com/ActiveMemory/ctx/internal/assets/read/desc"
 	"github.com/ActiveMemory/ctx/internal/config/cli"
 	"github.com/ActiveMemory/ctx/internal/config/embed/text"
 	"github.com/ActiveMemory/ctx/internal/config/token"
-	ctxerr "github.com/ActiveMemory/ctx/internal/err/fs"
+	ctxErr "github.com/ActiveMemory/ctx/internal/err/fs"
 	"github.com/ActiveMemory/ctx/internal/write/export"
-	"github.com/spf13/cobra"
 )
 
 // ConfirmExport prints the plan summary and prompts for confirmation.
@@ -30,12 +31,15 @@ import (
 //   - bool: true if the user confirms.
 //   - error: non-nil if reading input fails.
 func ConfirmExport(cmd *cobra.Command, plan ExportPlan) (bool, error) {
-	export.Summary(cmd, plan.NewCount, plan.RegenCount, plan.SkipCount, plan.LockedCount, false)
-	cmd.Print(desc.TextDesc(text.DescKeyConfirmProceed))
+	export.Summary(
+		cmd,
+		plan.NewCount, plan.RegenCount, plan.SkipCount, plan.LockedCount, false,
+	)
+	cmd.Print(desc.Text(text.DescKeyConfirmProceed))
 	reader := bufio.NewReader(os.Stdin)
 	response, readErr := reader.ReadString(token.NewlineLF[0])
 	if readErr != nil {
-		return false, ctxerr.ReadInput(readErr)
+		return false, ctxErr.ReadInput(readErr)
 	}
 	response = strings.TrimSpace(strings.ToLower(response))
 	return response == cli.ConfirmShort || response == cli.ConfirmLong, nil

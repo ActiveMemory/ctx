@@ -17,7 +17,7 @@ import (
 // Returns:
 //   - *cobra.Command: Configured list subcommand
 func Cmd() *cobra.Command {
-	short, _ := desc.CommandDesc(cmd.DescKeyRemindList)
+	short, _ := desc.Command(cmd.DescKeyRemindList)
 
 	return &cobra.Command{
 		Use:     "list",

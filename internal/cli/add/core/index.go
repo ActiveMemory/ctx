@@ -65,7 +65,7 @@ func GenerateIndexTable(entries []index.Entry, columnHeader string) string {
 // Returns:
 //   - string: Markdown table or empty string if no entries
 func GenerateIndex(entries []index.Entry) string {
-	return index.GenerateTable(entries, desc.TextDesc(text.DescKeyColumnDecision))
+	return index.GenerateTable(entries, desc.Text(text.DescKeyColumnDecision))
 }
 
 // UpdateIndex regenerates the decision index in DECISIONS.md content.

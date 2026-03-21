@@ -9,17 +9,17 @@ package show
 import (
 	"strings"
 
+	"github.com/spf13/cobra"
+
 	"github.com/ActiveMemory/ctx/internal/assets/read/desc"
+	"github.com/ActiveMemory/ctx/internal/cli/recall/core"
 	"github.com/ActiveMemory/ctx/internal/config/embed/text"
 	"github.com/ActiveMemory/ctx/internal/config/journal"
 	"github.com/ActiveMemory/ctx/internal/config/time"
 	"github.com/ActiveMemory/ctx/internal/config/token"
-	ctxerr "github.com/ActiveMemory/ctx/internal/err/session"
-	"github.com/ActiveMemory/ctx/internal/write/recall"
-	"github.com/spf13/cobra"
-
-	"github.com/ActiveMemory/ctx/internal/cli/recall/core"
+	ctxErr "github.com/ActiveMemory/ctx/internal/err/session"
 	"github.com/ActiveMemory/ctx/internal/recall/parser"
+	"github.com/ActiveMemory/ctx/internal/write/recall"
 )
 
 // Run handles the recall show command.
@@ -41,14 +41,14 @@ func Run(
 ) error {
 	sessions, scanErr := core.FindSessions(allProjects)
 	if scanErr != nil {
-		return ctxerr.Find(scanErr)
+		return ctxErr.Find(scanErr)
 	}
 
 	if len(sessions) == 0 {
 		if allProjects {
-			return ctxerr.NoneFound("")
+			return ctxErr.NoneFound("")
 		}
-		return ctxerr.NoneFound(desc.TextDesc(text.DescKeyLabelHintUseAllProjects))
+		return ctxErr.NoneFound(desc.Text(text.DescKeyLabelHintUseAllProjects))
 	}
 
 	var session *parser.Session
@@ -57,7 +57,7 @@ func Run(
 	case latest:
 		session = sessions[0]
 	case len(args) == 0:
-		return ctxerr.IDRequired()
+		return ctxErr.IDRequired()
 	default:
 		query := strings.ToLower(args[0])
 		var matches []*parser.Session
@@ -68,14 +68,14 @@ func Run(
 			}
 		}
 		if len(matches) == 0 {
-			return ctxerr.NotFound(args[0])
+			return ctxErr.NotFound(args[0])
 		}
 		if len(matches) > 1 {
 			lines := core.FormatSessionMatchLines(matches)
 			recall.AmbiguousSessionMatchWithHint(
 				cmd, args[0], lines, matches[0].ID[:journal.SessionIDHintLen],
 			)
-			return ctxerr.AmbiguousQuery()
+			return ctxErr.AmbiguousQuery()
 		}
 		session = matches[0]
 	}
@@ -105,23 +105,23 @@ func Run(
 			toolCounts[t.Name]++
 		}
 
-		recall.SectionHeader(cmd, 2, desc.TextDesc(text.DescKeyLabelSectionToolUsage))
+		recall.SectionHeader(cmd, 2, desc.Text(text.DescKeyLabelSectionToolUsage))
 		for name, count := range toolCounts {
-			recall.ListItem(cmd, "%s: %d", name, count)
+			recall.ListItem(cmd, desc.Text(text.DescKeyRecallToolCountLine), name, count)
 		}
 		recall.BlankLine(cmd)
 	}
 
 	// Messages
 	if full {
-		recall.SectionHeader(cmd, 2, desc.TextDesc(text.DescKeyLabelSectionConversation))
+		recall.SectionHeader(cmd, 2, desc.Text(text.DescKeyLabelSectionConversation))
 
 		for i, msg := range session.Messages {
-			role := desc.TextDesc(text.DescKeyLabelRoleUser)
+			role := desc.Text(text.DescKeyLabelRoleUser)
 			if msg.BelongsToAssistant() {
-				role = desc.TextDesc(text.DescKeyLabelRoleAssistant)
+				role = desc.Text(text.DescKeyLabelRoleAssistant)
 			} else if len(msg.ToolResults) > 0 && msg.Text == "" {
-				role = desc.TextDesc(text.DescKeyLabelToolOutput)
+				role = desc.Text(text.DescKeyLabelToolOutput)
 			}
 
 			recall.ConversationTurn(
@@ -134,12 +134,14 @@ func Run(
 
 			for _, t := range msg.ToolUses {
 				toolInfo := core.FormatToolUse(t)
-				recall.SessionDetail(cmd, desc.TextDesc(text.DescKeyLabelInlineTool), toolInfo)
+				recall.SessionDetail(
+					cmd, desc.Text(text.DescKeyLabelInlineTool), toolInfo,
+				)
 			}
 
 			for _, tr := range msg.ToolResults {
 				if tr.IsError {
-					recall.Hint(cmd, desc.TextDesc(text.DescKeyLabelInlineError))
+					recall.Hint(cmd, desc.Text(text.DescKeyLabelInlineError))
 				}
 				if tr.Content != "" {
 					content := core.StripLineNumbers(tr.Content)
@@ -152,7 +154,9 @@ func Run(
 			}
 		}
 	} else {
-		recall.SectionHeader(cmd, 2, desc.TextDesc(text.DescKeyLabelSectionConversationPreview))
+		recall.SectionHeader(
+			cmd, 2, desc.Text(text.DescKeyLabelSectionConversationPreview),
+		)
 
 		count := 0
 		for _, msg := range session.Messages {
@@ -162,15 +166,15 @@ func Run(
 					recall.MoreTurns(cmd, session.TurnCount-journal.PreviewMaxTurns)
 					break
 				}
-				text := msg.Text
-				if len(text) > journal.PreviewMaxTextLen {
-					text = text[:journal.PreviewMaxTextLen] + token.Ellipsis
+				t := msg.Text
+				if len(t) > journal.PreviewMaxTextLen {
+					t = t[:journal.PreviewMaxTextLen] + token.Ellipsis
 				}
-				recall.NumberedItem(cmd, count, text)
+				recall.NumberedItem(cmd, count, t)
 			}
 		}
 		recall.BlankLine(cmd)
-		recall.Hint(cmd, desc.TextDesc(text.DescKeyLabelHintUseFull))
+		recall.Hint(cmd, desc.Text(text.DescKeyLabelHintUseFull))
 	}
 
 	return nil

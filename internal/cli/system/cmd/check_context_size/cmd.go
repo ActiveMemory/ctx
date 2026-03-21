@@ -19,7 +19,7 @@ import (
 // Returns:
 //   - *cobra.Command: Configured check-context-size subcommand
 func Cmd() *cobra.Command {
-	short, long := desc.CommandDesc(cmd.DescKeySystemCheckContextSize)
+	short, long := desc.Command(cmd.DescKeySystemCheckContextSize)
 
 	return &cobra.Command{
 		Use:    "check-context-size",

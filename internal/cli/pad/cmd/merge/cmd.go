@@ -23,7 +23,7 @@ func Cmd() *cobra.Command {
 	var keyFile string
 	var dryRun bool
 
-	short, long := desc.CommandDesc(cmd.DescKeyPadMerge)
+	short, long := desc.Command(cmd.DescKeyPadMerge)
 	c := &cobra.Command{
 		Use:   cmd.UsePadMerge,
 		Short: short,
@@ -35,9 +35,9 @@ func Cmd() *cobra.Command {
 	}
 
 	c.Flags().StringVarP(&keyFile, cFlag.Key, cFlag.ShortKey, "",
-		desc.FlagDesc(flag.DescKeyPadMergeKey))
+		desc.Flag(flag.DescKeyPadMergeKey))
 	c.Flags().BoolVar(&dryRun, cFlag.DryRun, false,
-		desc.FlagDesc(flag.DescKeyPadMergeDryRun))
+		desc.Flag(flag.DescKeyPadMergeDryRun))
 
 	return c
 }

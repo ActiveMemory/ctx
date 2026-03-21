@@ -18,7 +18,7 @@ import (
 // Returns:
 //   - *cobra.Command: command for removing published context from MEMORY.md.
 func Cmd() *cobra.Command {
-	short, long := desc.CommandDesc(cmd.DescKeyMemoryUnpublish)
+	short, long := desc.Command(cmd.DescKeyMemoryUnpublish)
 	return &cobra.Command{
 		Use:   cmd.UseMemoryUnpublish,
 		Short: short,

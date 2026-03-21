@@ -22,7 +22,7 @@ func NoChanges(cmd *cobra.Command) {
 	if cmd == nil {
 		return
 	}
-	cmd.Println(desc.TextDesc(text.DescKeyWriteMemoryNoChanges))
+	cmd.Println(desc.Text(text.DescKeyWriteMemoryNoChanges))
 }
 
 // BridgeHeader prints the "Memory Bridge Status" heading.
@@ -33,7 +33,7 @@ func BridgeHeader(cmd *cobra.Command) {
 	if cmd == nil {
 		return
 	}
-	cmd.Println(desc.TextDesc(text.DescKeyWriteMemoryBridgeHeader))
+	cmd.Println(desc.Text(text.DescKeyWriteMemoryBridgeHeader))
 }
 
 // SourceNotActive prints that auto memory is not active.
@@ -44,7 +44,7 @@ func SourceNotActive(cmd *cobra.Command) {
 	if cmd == nil {
 		return
 	}
-	cmd.Println(desc.TextDesc(text.DescKeyWriteMemorySourceNotActive))
+	cmd.Println(desc.Text(text.DescKeyWriteMemorySourceNotActive))
 }
 
 // Source prints the source path.
@@ -56,7 +56,7 @@ func Source(cmd *cobra.Command, path string) {
 	if cmd == nil {
 		return
 	}
-	cmd.Println(fmt.Sprintf(desc.TextDesc(text.DescKeyWriteMemorySource), path))
+	cmd.Println(fmt.Sprintf(desc.Text(text.DescKeyWriteMemorySource), path))
 }
 
 // Mirror prints the mirror relative path.
@@ -68,7 +68,7 @@ func Mirror(cmd *cobra.Command, relativePath string) {
 	if cmd == nil {
 		return
 	}
-	cmd.Println(fmt.Sprintf(desc.TextDesc(text.DescKeyWriteMemoryMirror), relativePath))
+	cmd.Println(fmt.Sprintf(desc.Text(text.DescKeyWriteMemoryMirror), relativePath))
 }
 
 // LastSync prints the last sync timestamp with age.
@@ -81,7 +81,7 @@ func LastSync(cmd *cobra.Command, formatted, ago string) {
 	if cmd == nil {
 		return
 	}
-	cmd.Println(fmt.Sprintf(desc.TextDesc(text.DescKeyWriteMemoryLastSync), formatted, ago))
+	cmd.Println(fmt.Sprintf(desc.Text(text.DescKeyWriteMemoryLastSync), formatted, ago))
 }
 
 // LastSyncNever prints that no sync has occurred.
@@ -92,7 +92,7 @@ func LastSyncNever(cmd *cobra.Command) {
 	if cmd == nil {
 		return
 	}
-	cmd.Println(desc.TextDesc(text.DescKeyWriteMemoryLastSyncNever))
+	cmd.Println(desc.Text(text.DescKeyWriteMemoryLastSyncNever))
 }
 
 // SourceLines prints the MEMORY.md line count.
@@ -106,10 +106,10 @@ func SourceLines(cmd *cobra.Command, count int, drifted bool) {
 		return
 	}
 	if drifted {
-		cmd.Println(fmt.Sprintf(desc.TextDesc(text.DescKeyWriteMemorySourceLinesDrift), count))
+		cmd.Println(fmt.Sprintf(desc.Text(text.DescKeyWriteMemorySourceLinesDrift), count))
 		return
 	}
-	cmd.Println(fmt.Sprintf(desc.TextDesc(text.DescKeyWriteMemorySourceLines), count))
+	cmd.Println(fmt.Sprintf(desc.Text(text.DescKeyWriteMemorySourceLines), count))
 }
 
 // MirrorLines prints the mirror line count.
@@ -121,7 +121,7 @@ func MirrorLines(cmd *cobra.Command, count int) {
 	if cmd == nil {
 		return
 	}
-	cmd.Println(fmt.Sprintf(desc.TextDesc(text.DescKeyWriteMemoryMirrorLines), count))
+	cmd.Println(fmt.Sprintf(desc.Text(text.DescKeyWriteMemoryMirrorLines), count))
 }
 
 // MirrorNotSynced prints that the mirror has not been synced yet.
@@ -132,7 +132,7 @@ func MirrorNotSynced(cmd *cobra.Command) {
 	if cmd == nil {
 		return
 	}
-	cmd.Println(desc.TextDesc(text.DescKeyWriteMemoryMirrorNotSynced))
+	cmd.Println(desc.Text(text.DescKeyWriteMemoryMirrorNotSynced))
 }
 
 // DriftDetected prints that drift was detected.
@@ -143,7 +143,7 @@ func DriftDetected(cmd *cobra.Command) {
 	if cmd == nil {
 		return
 	}
-	cmd.Println(desc.TextDesc(text.DescKeyWriteMemoryDriftDetected))
+	cmd.Println(desc.Text(text.DescKeyWriteMemoryDriftDetected))
 }
 
 // DriftNone prints that no drift was detected.
@@ -154,7 +154,7 @@ func DriftNone(cmd *cobra.Command) {
 	if cmd == nil {
 		return
 	}
-	cmd.Println(desc.TextDesc(text.DescKeyWriteMemoryDriftNone))
+	cmd.Println(desc.Text(text.DescKeyWriteMemoryDriftNone))
 }
 
 // Archives prints the archive snapshot count.
@@ -167,5 +167,5 @@ func Archives(cmd *cobra.Command, count int, dir string) {
 	if cmd == nil {
 		return
 	}
-	cmd.Println(fmt.Sprintf(desc.TextDesc(text.DescKeyWriteMemoryArchives), count, dir))
+	cmd.Println(fmt.Sprintf(desc.Text(text.DescKeyWriteMemoryArchives), count, dir))
 }

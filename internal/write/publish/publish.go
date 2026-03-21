@@ -23,7 +23,7 @@ func UnpublishNotFound(cmd *cobra.Command, filename string) {
 	if cmd == nil {
 		return
 	}
-	cmd.Println(fmt.Sprintf(desc.TextDesc(text.DescKeyWriteUnpublishNotFound), filename))
+	cmd.Println(fmt.Sprintf(desc.Text(text.DescKeyWriteUnpublishNotFound), filename))
 }
 
 // UnpublishDone prints that the published block was removed.
@@ -35,7 +35,7 @@ func UnpublishDone(cmd *cobra.Command, filename string) {
 	if cmd == nil {
 		return
 	}
-	cmd.Println(fmt.Sprintf(desc.TextDesc(text.DescKeyWriteUnpublishDone), filename))
+	cmd.Println(fmt.Sprintf(desc.Text(text.DescKeyWriteUnpublishDone), filename))
 }
 
 // PublishPlan prints the full publish plan: header, source files,
@@ -56,26 +56,26 @@ func PublishPlan(
 	if cmd == nil {
 		return
 	}
-	cmd.Println(desc.TextDesc(text.DescKeyWritePublishHeader))
+	cmd.Println(desc.Text(text.DescKeyWritePublishHeader))
 	cmd.Println()
-	cmd.Println(desc.TextDesc(text.DescKeyWritePublishSourceFiles))
-	cmd.Println(fmt.Sprintf(desc.TextDesc(text.DescKeyWritePublishBudget), budget))
+	cmd.Println(desc.Text(text.DescKeyWritePublishSourceFiles))
+	cmd.Println(fmt.Sprintf(desc.Text(text.DescKeyWritePublishBudget), budget))
 	cmd.Println()
-	cmd.Println(desc.TextDesc(text.DescKeyWritePublishBlock))
+	cmd.Println(desc.Text(text.DescKeyWritePublishBlock))
 	if tasks > 0 {
-		cmd.Println(fmt.Sprintf(desc.TextDesc(text.DescKeyWritePublishTasks), tasks))
+		cmd.Println(fmt.Sprintf(desc.Text(text.DescKeyWritePublishTasks), tasks))
 	}
 	if decisions > 0 {
-		cmd.Println(fmt.Sprintf(desc.TextDesc(text.DescKeyWritePublishDecisions), decisions))
+		cmd.Println(fmt.Sprintf(desc.Text(text.DescKeyWritePublishDecisions), decisions))
 	}
 	if conventions > 0 {
-		cmd.Println(fmt.Sprintf(desc.TextDesc(text.DescKeyWritePublishConventions), conventions))
+		cmd.Println(fmt.Sprintf(desc.Text(text.DescKeyWritePublishConventions), conventions))
 	}
 	if learnings > 0 {
-		cmd.Println(fmt.Sprintf(desc.TextDesc(text.DescKeyWritePublishLearnings), learnings))
+		cmd.Println(fmt.Sprintf(desc.Text(text.DescKeyWritePublishLearnings), learnings))
 	}
 	cmd.Println()
-	cmd.Println(fmt.Sprintf(desc.TextDesc(text.DescKeyWritePublishTotal), totalLines, budget))
+	cmd.Println(fmt.Sprintf(desc.Text(text.DescKeyWritePublishTotal), totalLines, budget))
 }
 
 // PublishDryRun prints the dry-run notice.
@@ -87,7 +87,7 @@ func PublishDryRun(cmd *cobra.Command) {
 		return
 	}
 	cmd.Println()
-	cmd.Println(desc.TextDesc(text.DescKeyWritePublishDryRun))
+	cmd.Println(desc.Text(text.DescKeyWritePublishDryRun))
 }
 
 // PublishDone prints the success message with marker info.
@@ -99,5 +99,5 @@ func PublishDone(cmd *cobra.Command) {
 		return
 	}
 	cmd.Println()
-	cmd.Println(desc.TextDesc(text.DescKeyWritePublishDone))
+	cmd.Println(desc.Text(text.DescKeyWritePublishDone))
 }

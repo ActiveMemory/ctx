@@ -18,7 +18,7 @@ import (
 
 // Cmd returns the mcp command group.
 func Cmd() *cobra.Command {
-	short, long := desc.CommandDesc(cmd.DescKeyMcp)
+	short, long := desc.Command(cmd.DescKeyMcp)
 	c := &cobra.Command{
 		Use:   cmd.UseMcp,
 		Short: short,
@@ -32,7 +32,7 @@ func Cmd() *cobra.Command {
 
 // serveCmd returns the mcp serve subcommand.
 func serveCmd() *cobra.Command {
-	serveShort, serveLong := desc.CommandDesc(cmd.DescKeyMcpServe)
+	serveShort, serveLong := desc.Command(cmd.DescKeyMcpServe)
 	return &cobra.Command{
 		Use:          cmd.UseMcpServe,
 		Short:        serveShort,

@@ -19,7 +19,7 @@ import (
 // Returns:
 //   - *cobra.Command: Configured check-version subcommand
 func Cmd() *cobra.Command {
-	short, long := desc.CommandDesc(cmd.DescKeySystemCheckVersion)
+	short, long := desc.Command(cmd.DescKeySystemCheckVersion)
 
 	return &cobra.Command{
 		Use:    "check-version",

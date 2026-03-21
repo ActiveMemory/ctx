@@ -29,7 +29,7 @@ import (
 func Cmd() *cobra.Command {
 	var archive bool
 
-	short, long := desc.CommandDesc(cmd.DescKeyCompact)
+	short, long := desc.Command(cmd.DescKeyCompact)
 
 	c := &cobra.Command{
 		Use:   cmd.UseCompact,
@@ -44,7 +44,7 @@ func Cmd() *cobra.Command {
 		&archive,
 		cflag.Archive,
 		false,
-		desc.FlagDesc(flag.DescKeyCompactArchive),
+		desc.Flag(flag.DescKeyCompactArchive),
 	)
 
 	return c

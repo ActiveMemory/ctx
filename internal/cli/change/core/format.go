@@ -32,22 +32,22 @@ func RenderChanges(
 	var b strings.Builder
 
 	b.WriteString(
-		desc.TextDesc(text.DescKeyChangesHeading) +
+		desc.Text(text.DescKeyChangesHeading) +
 			token.NewlineLF + token.NewlineLF,
 	)
 	b.WriteString(fmt.Sprintf(
-		desc.TextDesc(text.DescKeyChangesRefPoint)+
+		desc.Text(text.DescKeyChangesRefPoint)+
 			token.NewlineLF+token.NewlineLF, refLabel,
 	),
 	)
 
 	if len(ctxChanges) > 0 {
 		b.WriteString(
-			desc.TextDesc(text.DescKeyChangesCtxHeading) + token.NewlineLF,
+			desc.Text(text.DescKeyChangesCtxHeading) + token.NewlineLF,
 		)
 		for _, c := range ctxChanges {
 			b.WriteString(fmt.Sprintf(
-				desc.TextDesc(text.DescKeyChangesCtxLine)+token.NewlineLF,
+				desc.Text(text.DescKeyChangesCtxLine)+token.NewlineLF,
 				c.Name, c.ModTime.Format(cfgTime.DateTimeFormat)))
 		}
 		b.WriteString(token.NewlineLF)
@@ -55,33 +55,33 @@ func RenderChanges(
 
 	if code.CommitCount > 0 {
 		b.WriteString(
-			desc.TextDesc(text.DescKeyChangesCodeHeading) + token.NewlineLF,
+			desc.Text(text.DescKeyChangesCodeHeading) + token.NewlineLF,
 		)
 		b.WriteString(fmt.Sprintf(
-			desc.TextDesc(text.DescKeyChangesCodeCommits)+token.NewlineLF,
-			format.Pluralize(code.CommitCount, desc.TextDesc(text.DescKeyTimeCommit))))
+			desc.Text(text.DescKeyChangesCodeCommits)+token.NewlineLF,
+			format.Pluralize(code.CommitCount, desc.Text(text.DescKeyTimeCommit))))
 		if code.LatestMsg != "" {
 			b.WriteString(fmt.Sprintf(
-				desc.TextDesc(
+				desc.Text(
 					text.DescKeyChangesCodeLatest)+token.NewlineLF, code.LatestMsg,
 			),
 			)
 		}
 		if len(code.Dirs) > 0 {
 			b.WriteString(fmt.Sprintf(
-				desc.TextDesc(text.DescKeyChangesCodeDirs)+token.NewlineLF,
+				desc.Text(text.DescKeyChangesCodeDirs)+token.NewlineLF,
 				strings.Join(code.Dirs, token.CommaSpace)))
 		}
 		if len(code.Authors) > 0 {
 			b.WriteString(fmt.Sprintf(
-				desc.TextDesc(text.DescKeyChangesCodeAuthors)+token.NewlineLF,
+				desc.Text(text.DescKeyChangesCodeAuthors)+token.NewlineLF,
 				strings.Join(code.Authors, token.CommaSpace)))
 		}
 		b.WriteString(token.NewlineLF)
 	}
 
 	if len(ctxChanges) == 0 && code.CommitCount == 0 {
-		b.WriteString(desc.TextDesc(text.DescKeyChangesNone) + token.NewlineLF)
+		b.WriteString(desc.Text(text.DescKeyChangesNone) + token.NewlineLF)
 	}
 
 	return b.String()
@@ -107,7 +107,7 @@ func RenderChangesForHook(
 			names[i] = c.Name
 		}
 		parts = append(parts, fmt.Sprintf(
-			desc.TextDesc(text.DescKeyChangesHookCtxFiles),
+			desc.Text(text.DescKeyChangesHookCtxFiles),
 			refLabel, strings.Join(
 				names, token.CommaSpace),
 		),
@@ -116,11 +116,11 @@ func RenderChangesForHook(
 
 	if code.CommitCount > 0 {
 		msg := fmt.Sprintf(
-			desc.TextDesc(text.DescKeyChangesHookCommits),
-			format.Pluralize(code.CommitCount, desc.TextDesc(text.DescKeyTimeCommit)))
+			desc.Text(text.DescKeyChangesHookCommits),
+			format.Pluralize(code.CommitCount, desc.Text(text.DescKeyTimeCommit)))
 		if code.LatestMsg != "" {
 			msg += fmt.Sprintf(
-				desc.TextDesc(text.DescKeyChangesHookCommitsExtra), code.LatestMsg,
+				desc.Text(text.DescKeyChangesHookCommitsExtra), code.LatestMsg,
 			)
 		}
 		parts = append(parts, msg)
@@ -130,7 +130,7 @@ func RenderChangesForHook(
 		return ""
 	}
 
-	return desc.TextDesc(
+	return desc.Text(
 		text.DescKeyChangesHookPrefix,
 	) + strings.Join(
 		parts, token.PeriodSpace,

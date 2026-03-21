@@ -32,7 +32,7 @@ func Cmd() *cobra.Command {
 		fix        bool
 	)
 
-	short, long := desc.CommandDesc(cmd.DescKeyDrift)
+	short, long := desc.Command(cmd.DescKeyDrift)
 	c := &cobra.Command{
 		Use:   cmd.UseDrift,
 		Short: short,
@@ -43,10 +43,10 @@ func Cmd() *cobra.Command {
 	}
 
 	c.Flags().BoolVar(
-		&jsonOutput, cflag.JSON, false, desc.FlagDesc(flag.DescKeyDriftJson),
+		&jsonOutput, cflag.JSON, false, desc.Flag(flag.DescKeyDriftJson),
 	)
 	c.Flags().BoolVar(&fix,
-		cflag.Fix, false, desc.FlagDesc(flag.DescKeyDriftFix),
+		cflag.Fix, false, desc.Flag(flag.DescKeyDriftFix),
 	)
 
 	return c

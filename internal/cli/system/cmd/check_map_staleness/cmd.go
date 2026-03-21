@@ -19,7 +19,7 @@ import (
 // Returns:
 //   - *cobra.Command: Configured check-map-staleness subcommand
 func Cmd() *cobra.Command {
-	short, long := desc.CommandDesc(cmd.DescKeySystemCheckMapStaleness)
+	short, long := desc.Command(cmd.DescKeySystemCheckMapStaleness)
 
 	return &cobra.Command{
 		Use:    "check-map-staleness",

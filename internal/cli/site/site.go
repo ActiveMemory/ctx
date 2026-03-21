@@ -22,7 +22,7 @@ import (
 // Returns:
 //   - *cobra.Command: Parent command with site management subcommands
 func Cmd() *cobra.Command {
-	short, long := desc.CommandDesc(cmd.DescKeySite)
+	short, long := desc.Command(cmd.DescKeySite)
 
 	cmd := &cobra.Command{
 		Use:   cmd.UseSite,

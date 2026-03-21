@@ -47,7 +47,7 @@ func RootCmd() *cobra.Command {
 	var contextDir string
 	var allowOutsideCwd bool
 
-	short, long := desc.CommandDesc(cmd.DescKeyCtx)
+	short, long := desc.Command(cmd.DescKeyCtx)
 
 	c := &cobra.Command{
 		Use:     cmd.DescKeyCtx,
@@ -108,13 +108,13 @@ func RootCmd() *cobra.Command {
 		&contextDir,
 		flag.ContextDir,
 		"",
-		desc.FlagDesc(embedflag.DescKeyContextDir),
+		desc.Flag(embedflag.DescKeyContextDir),
 	)
 	c.PersistentFlags().BoolVar(
 		&allowOutsideCwd,
 		flag.AllowOutsideCwd,
 		false,
-		desc.FlagDesc(embedflag.DescKeyAllowOutsideCwd),
+		desc.Flag(embedflag.DescKeyAllowOutsideCwd),
 	)
 
 	return c

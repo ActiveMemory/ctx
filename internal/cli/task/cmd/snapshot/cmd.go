@@ -24,7 +24,7 @@ import (
 // Returns:
 //   - *cobra.Command: Configured snapshot subcommand
 func Cmd() *cobra.Command {
-	short, long := desc.CommandDesc(cmd.DescKeyTaskSnapshot)
+	short, long := desc.Command(cmd.DescKeyTaskSnapshot)
 
 	cmd := &cobra.Command{
 		Use:   "snapshot [name]",

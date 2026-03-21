@@ -58,7 +58,7 @@ func GenerateIndex(entries []JournalEntry) string {
 		}
 	}
 
-	sb.WriteString(desc.TextDesc(text.DescKeyHeadingSessionJournal) + nl + nl)
+	sb.WriteString(desc.Text(text.DescKeyHeadingSessionJournal) + nl + nl)
 	sb.WriteString(tpl.TplJournalIndexIntro + nl + nl)
 	sb.WriteString(fmt.Sprintf(tpl.TplJournalIndexStats+
 		nl+nl, len(regular), len(suggestions)))
@@ -78,7 +78,7 @@ func GenerateIndex(entries []JournalEntry) string {
 	// Suggestions section
 	if len(suggestions) > 0 {
 		sb.WriteString(token.Separator + nl + nl)
-		sb.WriteString(desc.TextDesc(text.DescKeyHeadingSuggestions) + nl + nl)
+		sb.WriteString(desc.Text(text.DescKeyHeadingSuggestions) + nl + nl)
 		sb.WriteString(tpl.TplJournalSuggestionsNote + nl + nl)
 
 		for _, e := range suggestions {
@@ -108,7 +108,7 @@ func FormatIndexEntry(e JournalEntry, nl string) string {
 
 	project := ""
 	if e.Project != "" {
-		project = fmt.Sprintf(desc.TextDesc(text.DescKeyJournalProjectLabel), e.Project)
+		project = fmt.Sprintf(desc.Text(text.DescKeyJournalProjectLabel), e.Project)
 	}
 
 	size := FormatSize(e.Size)
@@ -212,22 +212,22 @@ func GenerateZensicalToml(
 	// Build navigation
 	sb.WriteString(zensical.TomlNavOpen + nl)
 	sb.WriteString(fmt.Sprintf(tpl.TplJournalNavItem+nl,
-		desc.TextDesc(text.DescKeyLabelHome), file.Index))
+		desc.Text(text.DescKeyLabelHome), file.Index))
 	if len(topics) > 0 {
 		sb.WriteString(fmt.Sprintf(tpl.TplJournalNavItem+nl,
-			desc.TextDesc(text.DescKeyLabelTopics),
+			desc.Text(text.DescKeyLabelTopics),
 			filepath.Join(dir.JournTopics, file.Index)),
 		)
 	}
 	if len(keyFiles) > 0 {
 		sb.WriteString(fmt.Sprintf(tpl.TplJournalNavItem+nl,
-			desc.TextDesc(text.DescKeyLabelFiles),
+			desc.Text(text.DescKeyLabelFiles),
 			filepath.Join(dir.JournalFiles, file.Index)),
 		)
 	}
 	if len(sessionTypes) > 0 {
 		sb.WriteString(fmt.Sprintf(tpl.TplJournalNavItem+nl,
-			desc.TextDesc(text.DescKeyLabelTypes),
+			desc.Text(text.DescKeyLabelTypes),
 			filepath.Join(dir.JournalTypes, file.Index)),
 		)
 	}
@@ -251,7 +251,7 @@ func GenerateZensicalToml(
 	}
 
 	sb.WriteString(fmt.Sprintf(
-		tpl.TplJournalNavSection+nl, desc.TextDesc(text.DescKeyHeadingRecentSessions)),
+		tpl.TplJournalNavSection+nl, desc.Text(text.DescKeyHeadingRecentSessions)),
 	)
 	for _, e := range recent {
 		title := e.Title

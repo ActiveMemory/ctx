@@ -43,7 +43,7 @@ func Cmd() *cobra.Command {
 		noPluginEnable bool
 	)
 
-	short, long := desc.CommandDesc(cmd.DescKeyInitialize)
+	short, long := desc.Command(cmd.DescKeyInitialize)
 	c := &cobra.Command{
 		Use:         cmd.UseInit,
 		Short:       short,
@@ -57,24 +57,24 @@ func Cmd() *cobra.Command {
 	c.Flags().BoolVarP(
 		&force,
 		cflag.Force, cflag.ShortForce, false,
-		desc.FlagDesc(flag.DescKeyInitializeForce),
+		desc.Flag(flag.DescKeyInitializeForce),
 	)
 	c.Flags().BoolVarP(
 		&minimal,
 		cflag.Minimal, cflag.ShortMinimal, false,
-		desc.FlagDesc(flag.DescKeyInitializeMinimal),
+		desc.Flag(flag.DescKeyInitializeMinimal),
 	)
 	c.Flags().BoolVar(
 		&merge, cflag.Merge, false,
-		desc.FlagDesc(flag.DescKeyInitializeMerge),
+		desc.Flag(flag.DescKeyInitializeMerge),
 	)
 	c.Flags().BoolVar(
 		&ralph, cflag.Ralph, false,
-		desc.FlagDesc(flag.DescKeyInitializeRalph),
+		desc.Flag(flag.DescKeyInitializeRalph),
 	)
 	c.Flags().BoolVar(
 		&noPluginEnable, cflag.NoPluginEnable, false,
-		desc.FlagDesc(flag.DescKeyInitializeNoPluginEnable),
+		desc.Flag(flag.DescKeyInitializeNoPluginEnable),
 	)
 
 	return c

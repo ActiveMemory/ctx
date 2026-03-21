@@ -82,7 +82,7 @@ func CreateOrMerge(cmd *cobra.Command, p MergeParams) (bool, error) {
 	if !p.AutoMerge {
 		initialize.FileExistsNoCtx(cmd, p.Filename)
 		cmd.Println(p.ConfirmPrompt)
-		cmd.Print(desc.TextDesc(text.DescKeyConfirmProceed))
+		cmd.Print(desc.Text(text.DescKeyConfirmProceed))
 		reader := bufio.NewReader(os.Stdin)
 		response, inputErr := reader.ReadString(token.NewlineLF[0])
 		if inputErr != nil {

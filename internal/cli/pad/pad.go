@@ -34,7 +34,7 @@ import (
 // Returns:
 //   - *cobra.Command: Configured pad command with subcommands
 func Cmd() *cobra.Command {
-	short, long := desc.CommandDesc(cmd.DescKeyPad)
+	short, long := desc.Command(cmd.DescKeyPad)
 	c := &cobra.Command{
 		Use:   cmd.UsePad,
 		Short: short,
@@ -52,7 +52,7 @@ func Cmd() *cobra.Command {
 			}
 
 			for i, entry := range entries {
-				cmd.Println(fmt.Sprintf(desc.TextDesc(text.DescKeyWritePadListItem), i+1, core.DisplayEntry(entry)))
+				cmd.Println(fmt.Sprintf(desc.Text(text.DescKeyWritePadListItem), i+1, core.DisplayEntry(entry)))
 			}
 
 			return nil

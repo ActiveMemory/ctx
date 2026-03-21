@@ -58,7 +58,7 @@ func TestParseSkillFrontmatter(t *testing.T) {
 }
 
 func TestGuideLineCount(t *testing.T) {
-	guide := desc.TextDesc(text.DescKeyGuideDefault)
+	guide := desc.Text(text.DescKeyGuideDefault)
 	lines := strings.Split(guide, "\n")
 	if len(lines) > 50 {
 		t.Errorf("guide default has %d lines, want at most 50", len(lines))

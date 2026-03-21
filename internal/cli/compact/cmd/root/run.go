@@ -50,8 +50,8 @@ func Run(cmd *cobra.Command, archive bool) error {
 		archive = true
 	}
 
-	cmd.Println(desc.TextDesc(text.DescKeyCompactHeading))
-	cmd.Println(desc.TextDesc(text.DescKeyCompactSeparator))
+	cmd.Println(desc.Text(text.DescKeyCompactHeading))
+	cmd.Println(desc.Text(text.DescKeyCompactSeparator))
 	cmd.Println()
 
 	changes := 0
@@ -60,7 +60,7 @@ func Run(cmd *cobra.Command, archive bool) error {
 	tasksChanges, compactErr := core.CompactTasks(cmd, ctx, archive)
 	if compactErr != nil {
 		cmd.Println(fmt.Sprintf(
-			desc.TextDesc(text.DescKeyCompactTaskError), compactErr))
+			desc.Text(text.DescKeyCompactTaskError), compactErr))
 	} else {
 		changes += tasksChanges
 	}
@@ -76,7 +76,7 @@ func Run(cmd *cobra.Command, archive bool) error {
 				fs.PermFile,
 			); writeErr == nil {
 				cmd.Println(fmt.Sprintf(
-					desc.TextDesc(text.DescKeyCompactSectionsRemoved),
+					desc.Text(text.DescKeyCompactSectionsRemoved),
 					sc.Removed, sc.FileName))
 				changes += sc.Removed
 			}
@@ -84,11 +84,11 @@ func Run(cmd *cobra.Command, archive bool) error {
 	}
 
 	if changes == 0 {
-		cmd.Println(desc.TextDesc(text.DescKeyCompactClean))
+		cmd.Println(desc.Text(text.DescKeyCompactClean))
 	} else {
 		cmd.Println()
 		cmd.Println(fmt.Sprintf(
-			desc.TextDesc(text.DescKeyCompactSummary), changes))
+			desc.Text(text.DescKeyCompactSummary), changes))
 	}
 
 	return nil

@@ -19,7 +19,7 @@ import (
 // Returns:
 //   - *cobra.Command: Configured check-freshness subcommand
 func Cmd() *cobra.Command {
-	short, long := desc.CommandDesc(cmd.DescKeySystemCheckFreshness)
+	short, long := desc.Command(cmd.DescKeySystemCheckFreshness)
 
 	return &cobra.Command{
 		Use:    "check-freshness",

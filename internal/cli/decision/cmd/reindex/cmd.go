@@ -19,7 +19,7 @@ import (
 // Returns:
 //   - *cobra.Command: Command for regenerating the DECISIONS.md index
 func Cmd() *cobra.Command {
-	short, long := desc.CommandDesc(cmd.DescKeyDecisionReindex)
+	short, long := desc.Command(cmd.DescKeyDecisionReindex)
 	return &cobra.Command{
 		Use:   cmd.UseReindex,
 		Short: short,

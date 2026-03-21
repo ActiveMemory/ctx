@@ -47,19 +47,19 @@ func Run(cmd *cobra.Command, stdin *os.File) error {
 	if regex.CtxRelativeStart.MatchString(command) ||
 		regex.CtxRelativeSep.MatchString(command) {
 		variant = hook.VariantDotSlash
-		fallback = desc.TextDesc(text.DescKeyBlockDotSlash)
+		fallback = desc.Text(text.DescKeyBlockDotSlash)
 	}
 
 	if regex.CtxGoRun.MatchString(command) {
 		variant = hook.VariantGoRun
-		fallback = desc.TextDesc(text.DescKeyBlockGoRun)
+		fallback = desc.Text(text.DescKeyBlockGoRun)
 	}
 
 	if variant == "" && (regex.CtxAbsoluteStart.MatchString(command) ||
 		regex.AbsoluteSep.MatchString(command)) {
 		if !regex.CtxTestException.MatchString(command) {
 			variant = hook.VariantAbsolutePath
-			fallback = desc.TextDesc(text.DescKeyBlockAbsolutePath)
+			fallback = desc.Text(text.DescKeyBlockAbsolutePath)
 		}
 	}
 
@@ -72,13 +72,13 @@ func Run(cmd *cobra.Command, stdin *os.File) error {
 		resp := core.BlockResponse{
 			Decision: hook.DecisionBlock,
 			Reason: reason + token.NewlineLF + token.NewlineLF +
-				desc.TextDesc(text.DescKeyBlockConstitutionSuffix),
+				desc.Text(text.DescKeyBlockConstitutionSuffix),
 		}
 		data, _ := json.Marshal(resp)
 		cmd.Println(string(data))
 		blockRef := notify.NewTemplateRef(hook.BlockNonPathCtx, variant, nil)
 		core.Relay(hook.BlockNonPathCtx+": "+
-			desc.TextDesc(text.DescKeyBlockNonPathRelayMessage),
+			desc.Text(text.DescKeyBlockNonPathRelayMessage),
 			input.SessionID, blockRef,
 		)
 	}

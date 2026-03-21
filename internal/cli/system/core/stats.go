@@ -122,7 +122,7 @@ func ParseStatsFile(path, sid string) ([]StatsEntry, error) {
 //   - error: non-nil on output failure
 func DumpStats(cmd *cobra.Command, entries []StatsEntry, last int, jsonOut bool) error {
 	if len(entries) == 0 {
-		cmd.Println(desc.TextDesc(text.DescKeyStatsEmpty))
+		cmd.Println(desc.Text(text.DescKeyStatsEmpty))
 		return nil
 	}
 
@@ -166,7 +166,7 @@ func OutputStatsJSON(cmd *cobra.Command, entries []StatsEntry) error {
 // Parameters:
 //   - cmd: Cobra command for output
 func PrintStatsHeader(cmd *cobra.Command) {
-	fmtStr := desc.TextDesc(text.DescKeyStatsHeaderFormat)
+	fmtStr := desc.Text(text.DescKeyStatsHeaderFormat)
 	cmd.Println(fmt.Sprintf(fmtStr,
 		stats.HeaderTime, stats.HeaderSession,
 		stats.HeaderPrompt, stats.HeaderTokens,
@@ -189,7 +189,7 @@ func PrintStatsLine(cmd *cobra.Command, e *StatsEntry) {
 		sid = sid[:journal.SessionIDShortLen]
 	}
 	tokens := FormatTokenCount(e.Tokens)
-	cmd.Println(fmt.Sprintf(desc.TextDesc(text.DescKeyStatsLineFormat),
+	cmd.Println(fmt.Sprintf(desc.Text(text.DescKeyStatsLineFormat),
 		ts, sid, e.Prompt, tokens, e.Pct, e.Event))
 }
 

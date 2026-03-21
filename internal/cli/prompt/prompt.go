@@ -24,7 +24,7 @@ import (
 // Returns:
 //   - *cobra.Command: Configured prompt command with subcommands
 func Cmd() *cobra.Command {
-	short, long := desc.CommandDesc(ctxCmd.DescKeyPrompt)
+	short, long := desc.Command(ctxCmd.DescKeyPrompt)
 
 	cmd := &cobra.Command{
 		Use:   ctxCmd.DescKeyPrompt,

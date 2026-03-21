@@ -116,15 +116,15 @@ func EmitCeremonyNudge(cmd *cobra.Command, remember, wrapup bool) (msg, variant 
 		fallbackKey = text.DescKeyCeremonyFallbackWrapup
 	}
 
-	boxTitle := desc.TextDesc(boxTitleKey)
-	fallback := desc.TextDesc(fallbackKey)
+	boxTitle := desc.Text(boxTitleKey)
+	fallback := desc.Text(fallbackKey)
 
 	content := LoadMessage(hook.CheckCeremonies, variant, nil, fallback)
 	if content == "" {
 		return "", variant
 	}
 
-	relayPrefix := desc.TextDesc(text.DescKeyCeremonyRelayPrefix)
+	relayPrefix := desc.Text(text.DescKeyCeremonyRelayPrefix)
 
 	msg = NudgeBox(relayPrefix, boxTitle, content)
 	cmd.Println(msg)

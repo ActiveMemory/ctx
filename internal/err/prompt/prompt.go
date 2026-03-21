@@ -21,7 +21,7 @@ import (
 // Returns:
 //   - error: "prompt <name> already exists"
 func Exists(name string) error {
-	return fmt.Errorf(desc.TextDesc(text.DescKeyErrPromptExists), name)
+	return fmt.Errorf(desc.Text(text.DescKeyErrPromptExists), name)
 }
 
 // NotFound returns an error when a prompt template does not exist.
@@ -32,7 +32,7 @@ func Exists(name string) error {
 // Returns:
 //   - error: "prompt <name> not found"
 func NotFound(name string) error {
-	return fmt.Errorf(desc.TextDesc(text.DescKeyErrPromptNotFound), name)
+	return fmt.Errorf(desc.Text(text.DescKeyErrPromptNotFound), name)
 }
 
 // Remove wraps a failure to remove a prompt template.
@@ -44,7 +44,7 @@ func NotFound(name string) error {
 //   - error: "remove prompt: <cause>"
 func Remove(cause error) error {
 	return fmt.Errorf(
-		desc.TextDesc(text.DescKeyErrPromptRemovePrompt), cause,
+		desc.Text(text.DescKeyErrPromptRemovePrompt), cause,
 	)
 }
 
@@ -58,7 +58,7 @@ func Remove(cause error) error {
 //   - error: "no template available for <filename>: <cause>"
 func NoTemplate(filename string, cause error) error {
 	return fmt.Errorf(
-		desc.TextDesc(text.DescKeyErrPromptNoTemplate), filename, cause,
+		desc.Text(text.DescKeyErrPromptNoTemplate), filename, cause,
 	)
 }
 
@@ -71,7 +71,7 @@ func NoTemplate(filename string, cause error) error {
 //   - error: advises the user to use --stdin
 func NoPromptTemplate(name string) error {
 	return fmt.Errorf(
-		desc.TextDesc(text.DescKeyErrPromptNoPromptTemplate), name,
+		desc.Text(text.DescKeyErrPromptNoPromptTemplate), name,
 	)
 }
 
@@ -84,7 +84,7 @@ func NoPromptTemplate(name string) error {
 //   - error: "failed to list prompt templates: <cause>"
 func ListPromptTemplates(cause error) error {
 	return fmt.Errorf(
-		desc.TextDesc(text.DescKeyErrPromptListPromptTemplates), cause,
+		desc.Text(text.DescKeyErrPromptListPromptTemplates), cause,
 	)
 }
 
@@ -98,7 +98,7 @@ func ListPromptTemplates(cause error) error {
 //   - error: "failed to read prompt template <name>: <cause>"
 func ReadPromptTemplate(name string, cause error) error {
 	return fmt.Errorf(
-		desc.TextDesc(text.DescKeyErrPromptReadPromptTemplate), name, cause,
+		desc.Text(text.DescKeyErrPromptReadPromptTemplate), name, cause,
 	)
 }
 
@@ -111,7 +111,7 @@ func ReadPromptTemplate(name string, cause error) error {
 //   - error: "failed to list entry templates: <cause>"
 func ListEntryTemplates(cause error) error {
 	return fmt.Errorf(
-		desc.TextDesc(text.DescKeyErrPromptListEntryTemplates), cause,
+		desc.Text(text.DescKeyErrPromptListEntryTemplates), cause,
 	)
 }
 
@@ -125,7 +125,7 @@ func ListEntryTemplates(cause error) error {
 //   - error: "failed to read entry template <name>: <cause>"
 func ReadEntryTemplate(name string, cause error) error {
 	return fmt.Errorf(
-		desc.TextDesc(text.DescKeyErrPromptReadEntryTemplate), name, cause,
+		desc.Text(text.DescKeyErrPromptReadEntryTemplate), name, cause,
 	)
 }
 
@@ -138,7 +138,7 @@ func ReadEntryTemplate(name string, cause error) error {
 //   - error: "failed to list templates: <cause>"
 func ListTemplates(cause error) error {
 	return fmt.Errorf(
-		desc.TextDesc(text.DescKeyErrPromptListTemplates), cause,
+		desc.Text(text.DescKeyErrPromptListTemplates), cause,
 	)
 }
 
@@ -152,7 +152,7 @@ func ListTemplates(cause error) error {
 //   - error: "failed to read template <name>: <cause>"
 func ReadTemplate(name string, cause error) error {
 	return fmt.Errorf(
-		desc.TextDesc(text.DescKeyErrPromptReadTemplate), name, cause,
+		desc.Text(text.DescKeyErrPromptReadTemplate), name, cause,
 	)
 }
 
@@ -165,7 +165,7 @@ func ReadTemplate(name string, cause error) error {
 //   - error: "template missing <kind> markers"
 func TemplateMissingMarkers(kind string) error {
 	return fmt.Errorf(
-		desc.TextDesc(text.DescKeyErrPromptTemplateMissingMarkers), kind,
+		desc.Text(text.DescKeyErrPromptTemplateMissingMarkers), kind,
 	)
 }
 
@@ -178,6 +178,6 @@ func TemplateMissingMarkers(kind string) error {
 //   - error: "<kind> start marker not found"
 func MarkerNotFound(kind string) error {
 	return fmt.Errorf(
-		desc.TextDesc(text.DescKeyErrPromptMarkerNotFound), kind,
+		desc.Text(text.DescKeyErrPromptMarkerNotFound), kind,
 	)
 }

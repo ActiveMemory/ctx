@@ -117,10 +117,9 @@ func TestRecallExportCmd_Flags(t *testing.T) {
 		t.Fatal("export subcommand not found")
 	}
 
-	// Check flags (includes deprecated flags for backward compatibility).
 	flags := []string{
 		"all", "all-projects", "regenerate", "keep-frontmatter",
-		"yes", "dry-run", "skip-existing",
+		"yes", "dry-run",
 	}
 	for _, f := range flags {
 		if exportCmd.Flags().Lookup(f) == nil {

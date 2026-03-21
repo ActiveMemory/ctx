@@ -136,8 +136,6 @@ recall.export.keep-frontmatter:
   short: Preserve enriched YAML frontmatter during regeneration
 recall.export.regenerate:
   short: Re-export existing files (preserves YAML frontmatter by default)
-recall.export.skip-existing:
-  short: Skip files that already exist
 recall.export.yes:
   short: Skip confirmation prompt
 recall.list.all-projects:

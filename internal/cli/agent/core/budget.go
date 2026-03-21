@@ -39,7 +39,7 @@ func AssembleBudgetPacket(ctx *entity.Context, budget int) *AssembledPacket {
 	now := time.Now()
 	pkt := &AssembledPacket{
 		Budget:      budget,
-		Instruction: desc.TextDesc(text.DescKeyAgentInstruction),
+		Instruction: desc.Text(text.DescKeyAgentInstruction),
 	}
 
 	remaining := budget
@@ -302,16 +302,16 @@ func RenderMarkdownPacket(pkt *AssembledPacket) string {
 	var sb strings.Builder
 	nl := token.NewlineLF
 
-	sb.WriteString(desc.TextDesc(text.DescKeyAgentPacketTitle) + nl)
+	sb.WriteString(desc.Text(text.DescKeyAgentPacketTitle) + nl)
 	sb.WriteString(
 		fmt.Sprintf(
-			desc.TextDesc(text.DescKeyAgentPacketMeta),
+			desc.Text(text.DescKeyAgentPacketMeta),
 			time.Now().UTC().Format(time.RFC3339), pkt.Budget, pkt.TokensUsed,
 		) + nl + nl,
 	)
 
 	// Read order
-	sb.WriteString(desc.TextDesc(text.DescKeyAgentSectionReadOrder) + nl)
+	sb.WriteString(desc.Text(text.DescKeyAgentSectionReadOrder) + nl)
 	for i, path := range pkt.ReadOrder {
 		sb.WriteString(fmt.Sprintf("%d. %s", i+1, path) + nl)
 	}
@@ -319,7 +319,7 @@ func RenderMarkdownPacket(pkt *AssembledPacket) string {
 
 	// Constitution
 	if len(pkt.Constitution) > 0 {
-		sb.WriteString(desc.TextDesc(text.DescKeyAgentSectionConstitution) + nl)
+		sb.WriteString(desc.Text(text.DescKeyAgentSectionConstitution) + nl)
 		for _, rule := range pkt.Constitution {
 			sb.WriteString(fmt.Sprintf("- %s", rule) + nl)
 		}
@@ -328,7 +328,7 @@ func RenderMarkdownPacket(pkt *AssembledPacket) string {
 
 	// Tasks
 	if len(pkt.Tasks) > 0 {
-		sb.WriteString(desc.TextDesc(text.DescKeyAgentSectionTasks) + nl)
+		sb.WriteString(desc.Text(text.DescKeyAgentSectionTasks) + nl)
 		for _, t := range pkt.Tasks {
 			sb.WriteString(t + nl)
 		}
@@ -337,7 +337,7 @@ func RenderMarkdownPacket(pkt *AssembledPacket) string {
 
 	// Conventions
 	if len(pkt.Conventions) > 0 {
-		sb.WriteString(desc.TextDesc(text.DescKeyAgentSectionConventions) + nl)
+		sb.WriteString(desc.Text(text.DescKeyAgentSectionConventions) + nl)
 		for _, conv := range pkt.Conventions {
 			sb.WriteString(fmt.Sprintf("- %s", conv) + nl)
 		}
@@ -346,7 +346,7 @@ func RenderMarkdownPacket(pkt *AssembledPacket) string {
 
 	// Decisions (full body)
 	if len(pkt.Decisions) > 0 {
-		sb.WriteString(desc.TextDesc(text.DescKeyAgentSectionDecisions) + nl)
+		sb.WriteString(desc.Text(text.DescKeyAgentSectionDecisions) + nl)
 		for _, dec := range pkt.Decisions {
 			sb.WriteString(dec + nl + nl)
 		}
@@ -354,7 +354,7 @@ func RenderMarkdownPacket(pkt *AssembledPacket) string {
 
 	// Learnings (full body)
 	if len(pkt.Learnings) > 0 {
-		sb.WriteString(desc.TextDesc(text.DescKeyAgentSectionLearnings) + nl)
+		sb.WriteString(desc.Text(text.DescKeyAgentSectionLearnings) + nl)
 		for _, learn := range pkt.Learnings {
 			sb.WriteString(learn + nl + nl)
 		}
@@ -362,7 +362,7 @@ func RenderMarkdownPacket(pkt *AssembledPacket) string {
 
 	// Summaries
 	if len(pkt.Summaries) > 0 {
-		sb.WriteString(desc.TextDesc(text.DescKeyAgentSectionSummaries) + nl)
+		sb.WriteString(desc.Text(text.DescKeyAgentSectionSummaries) + nl)
 		for _, s := range pkt.Summaries {
 			sb.WriteString(fmt.Sprintf("- %s", s) + nl)
 		}

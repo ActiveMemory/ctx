@@ -7,9 +7,10 @@
 package snapshot
 
 import (
+	"github.com/spf13/cobra"
+
 	"github.com/ActiveMemory/ctx/internal/assets/read/desc"
 	"github.com/ActiveMemory/ctx/internal/config/embed/cmd"
-	"github.com/spf13/cobra"
 )
 
 // Cmd returns the "ctx permission snapshot" subcommand.
@@ -17,10 +18,10 @@ import (
 // Returns:
 //   - *cobra.Command: Configured snapshot subcommand
 func Cmd() *cobra.Command {
-	short, long := desc.CommandDesc(cmd.DescKeyPermissionSnapshot)
+	short, long := desc.Command(cmd.DescKeyPermissionSnapshot)
 
 	return &cobra.Command{
-		Use:   "snapshot",
+		Use:   cmd.UsePermissionSnapshot,
 		Short: short,
 		Long:  long,
 		RunE: func(cmd *cobra.Command, _ []string) error {

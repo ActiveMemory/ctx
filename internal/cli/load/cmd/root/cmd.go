@@ -33,7 +33,7 @@ func Cmd() *cobra.Command {
 		raw    bool
 	)
 
-	short, long := desc.CommandDesc(cmd.DescKeyLoad)
+	short, long := desc.Command(cmd.DescKeyLoad)
 	c := &cobra.Command{
 		Use:   cmd.UseLoad,
 		Short: short,
@@ -50,10 +50,10 @@ func Cmd() *cobra.Command {
 	c.Flags().IntVar(
 		&budget, cflag.Budget,
 		rc.DefaultTokenBudget,
-		desc.FlagDesc(flag.DescKeyLoadBudget),
+		desc.Flag(flag.DescKeyLoadBudget),
 	)
 	c.Flags().BoolVar(
-		&raw, cflag.Raw, false, desc.FlagDesc(flag.DescKeyLoadRaw),
+		&raw, cflag.Raw, false, desc.Flag(flag.DescKeyLoadRaw),
 	)
 
 	return c

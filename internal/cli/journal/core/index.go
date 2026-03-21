@@ -59,17 +59,17 @@ func GenerateTopicsIndex(topics []TopicData) string {
 		}
 	}
 
-	sb.WriteString(desc.TextDesc(text.DescKeyHeadingTopics) + nl + nl)
+	sb.WriteString(desc.Text(text.DescKeyHeadingTopics) + nl + nl)
 	sb.WriteString(fmt.Sprintf(
 		tpl.TplJournalTopicStats+nl+nl,
 		len(topics), CountUniqueSessions(topics), len(popular), len(longtail)))
 
 	WritePopularAndLongtail(&sb,
-		len(popular), desc.TextDesc(text.DescKeyHeadingPopularTopics),
+		len(popular), desc.Text(text.DescKeyHeadingPopularTopics),
 		func(i int) (string, string, int) {
 			return popular[i].Name, popular[i].Name, len(popular[i].Entries)
 		},
-		len(longtail), desc.TextDesc(text.DescKeyHeadingLongtailTopics),
+		len(longtail), desc.Text(text.DescKeyHeadingLongtailTopics),
 		tpl.TplJournalLongtailEntry,
 		func(i int) (string, JournalEntry) {
 			return longtail[i].Name, longtail[i].Entries[0]
@@ -150,20 +150,20 @@ func GenerateKeyFilesIndex(keyFiles []KeyFileData) string {
 		}
 	}
 
-	sb.WriteString(desc.TextDesc(text.DescKeyHeadingKeyFiles) + nl + nl)
+	sb.WriteString(desc.Text(text.DescKeyHeadingKeyFiles) + nl + nl)
 	sb.WriteString(fmt.Sprintf(
 		tpl.TplJournalFileStats+nl+nl,
 		len(keyFiles), totalSessions, len(popular), len(longtail)),
 	)
 
 	WritePopularAndLongtail(&sb,
-		len(popular), desc.TextDesc(text.DescKeyHeadingFrequentlyTouched),
+		len(popular), desc.Text(text.DescKeyHeadingFrequentlyTouched),
 		func(i int) (string, string, int) {
 			return "`" + popular[i].Path + "`",
 				KeyFileSlug(popular[i].Path),
 				len(popular[i].Entries)
 		},
-		len(longtail), desc.TextDesc(text.DescKeyHeadingSingleSession),
+		len(longtail), desc.Text(text.DescKeyHeadingSingleSession),
 		tpl.TplJournalLongtailCodeEntry,
 		func(i int) (string, JournalEntry) {
 			return longtail[i].Path, longtail[i].Entries[0]
@@ -226,7 +226,7 @@ func GenerateTypesIndex(sessionTypes []TypeData) string {
 		totalSessions += len(st.Entries)
 	}
 
-	sb.WriteString(desc.TextDesc(text.DescKeyHeadingSessionTypes) + nl + nl)
+	sb.WriteString(desc.Text(text.DescKeyHeadingSessionTypes) + nl + nl)
 	sb.WriteString(fmt.Sprintf(
 		tpl.TplJournalTypeStats+nl+nl, len(sessionTypes), totalSessions),
 	)

@@ -21,7 +21,7 @@ import (
 //   - error: "type and content are required"
 func TypeContentRequired() error {
 	return errors.New(
-		desc.TextDesc(text.DescKeyMCPErrTypeContentRequired),
+		desc.Text(text.DescKeyMCPErrTypeContentRequired),
 	)
 }
 
@@ -35,7 +35,7 @@ func TypeContentRequired() error {
 //   - error: "unknown event type: <eventType>"
 func UnknownEventType(eventType string) error {
 	return fmt.Errorf(
-		desc.TextDesc(text.DescKeyMCPUnknownEventType),
+		desc.Text(text.DescKeyMCPUnknownEventType),
 		eventType,
 	)
 }

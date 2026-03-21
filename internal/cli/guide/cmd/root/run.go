@@ -29,7 +29,7 @@ func Run(cmd *cobra.Command, showSkills, showCommands bool) error {
 	case showCommands:
 		return listCommands(cmd)
 	default:
-		cmd.Print(desc.TextDesc(text.DescKeyGuideDefault))
+		cmd.Print(desc.Text(text.DescKeyGuideDefault))
 		return nil
 	}
 }

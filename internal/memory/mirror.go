@@ -158,8 +158,8 @@ func countLines(data []byte) int {
 // simpleDiff produces a minimal unified-style diff header with added/removed lines.
 func simpleDiff(oldPath, newPath string, oldLines, newLines []string) string {
 	var buf strings.Builder
-	_, _ = fmt.Fprintf(&buf, desc.TextDesc(text.DescKeyMemoryDiffOldFormat), oldPath)
-	_, _ = fmt.Fprintf(&buf, desc.TextDesc(text.DescKeyMemoryDiffNewFormat), newPath)
+	_, _ = fmt.Fprintf(&buf, desc.Text(text.DescKeyMemoryDiffOldFormat), oldPath)
+	_, _ = fmt.Fprintf(&buf, desc.Text(text.DescKeyMemoryDiffNewFormat), newPath)
 
 	oldSet := make(map[string]bool, len(oldLines))
 	for _, l := range oldLines {

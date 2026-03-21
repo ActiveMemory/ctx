@@ -50,7 +50,7 @@ func writeSection(
 	if len(items) == 0 {
 		return
 	}
-	buf.WriteString(desc.TextDesc(headingKey) + token.NewlineLF)
+	buf.WriteString(desc.Text(headingKey) + token.NewlineLF)
 	for _, item := range items {
 		buf.WriteString(prefix + item + token.NewlineLF)
 	}

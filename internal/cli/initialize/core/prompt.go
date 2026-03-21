@@ -50,7 +50,7 @@ func HandlePromptMd(cmd *cobra.Command, force, autoMerge, ralph bool) error {
 		TemplateContent: templateContent,
 		Force:           force,
 		AutoMerge:       autoMerge,
-		ConfirmPrompt:   desc.TextDesc(text.DescKeyInitConfirmPrompt),
+		ConfirmPrompt:   desc.Text(text.DescKeyInitConfirmPrompt),
 		UpdateFn:        UpdatePromptSection,
 	})
 	if mergeErr != nil {
@@ -59,7 +59,7 @@ func HandlePromptMd(cmd *cobra.Command, force, autoMerge, ralph bool) error {
 	if created {
 		mode := ""
 		if ralph {
-			mode = desc.TextDesc(text.DescKeyInitRalphMode)
+			mode = desc.Text(text.DescKeyInitRalphMode)
 		}
 		initialize.CreatedWith(cmd, loop.PromptMd, mode)
 	}

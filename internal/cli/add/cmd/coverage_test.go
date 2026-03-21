@@ -344,7 +344,7 @@ func TestInsertAfterHeader_WithCtxMarkers(t *testing.T) {
 	entry := "## [2026-01-02] New\n"
 
 	// The header "# Learnings" is found, then markers are skipped
-	result := core.InsertAfterHeader(content, entry, desc.TextDesc(text.DescKeyHeadingLearnings))
+	result := core.InsertAfterHeader(content, entry, desc.Text(text.DescKeyHeadingLearnings))
 	resultStr := string(result)
 
 	if !strings.Contains(resultStr, "New") {
@@ -357,7 +357,7 @@ func TestInsertAfterHeader_CtxMarkerWithoutClose(t *testing.T) {
 	content := "# Learnings\n" + marker.CtxMarkerStart + "\nunclosed marker content\nExisting\n"
 	entry := "## New entry\n"
 
-	result := core.InsertAfterHeader(content, entry, desc.TextDesc(text.DescKeyHeadingLearnings))
+	result := core.InsertAfterHeader(content, entry, desc.Text(text.DescKeyHeadingLearnings))
 	resultStr := string(result)
 
 	if !strings.Contains(resultStr, "New entry") {

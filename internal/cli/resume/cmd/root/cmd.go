@@ -18,7 +18,7 @@ import (
 // Returns:
 //   - *cobra.Command: Configured resume command
 func Cmd() *cobra.Command {
-	short, long := desc.CommandDesc(cmd.DescKeyResume)
+	short, long := desc.Command(cmd.DescKeyResume)
 
 	cmd := &cobra.Command{
 		Use:   cmd.UseResume,
@@ -31,7 +31,7 @@ func Cmd() *cobra.Command {
 	}
 
 	cmd.Flags().String("session-id", "",
-		desc.FlagDesc(flag.DescKeyResumeSessionId),
+		desc.Flag(flag.DescKeyResumeSessionId),
 	)
 
 	return cmd

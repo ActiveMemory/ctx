@@ -22,7 +22,7 @@ import (
 // Returns:
 //   - *cobra.Command: The learning command with subcommands
 func Cmd() *cobra.Command {
-	short, long := desc.CommandDesc(cmd.DescKeyLearning)
+	short, long := desc.Command(cmd.DescKeyLearning)
 	c := &cobra.Command{
 		Use:   cmd.UseLearning,
 		Short: short,

@@ -10,12 +10,12 @@ import (
 	"os"
 	"path/filepath"
 
-	"github.com/ActiveMemory/ctx/internal/config/file"
-	ctxerr "github.com/ActiveMemory/ctx/internal/err/prompt"
-	"github.com/ActiveMemory/ctx/internal/write/prompt"
 	"github.com/spf13/cobra"
 
 	"github.com/ActiveMemory/ctx/internal/cli/prompt/core"
+	"github.com/ActiveMemory/ctx/internal/config/file"
+	ctxErr "github.com/ActiveMemory/ctx/internal/err/prompt"
+	"github.com/ActiveMemory/ctx/internal/write/prompt"
 )
 
 // Run deletes a prompt template by name.
@@ -30,11 +30,11 @@ func Run(cmd *cobra.Command, name string) error {
 	path := filepath.Join(core.PromptsDir(), name+file.ExtMarkdown)
 
 	if _, statErr := os.Stat(path); os.IsNotExist(statErr) {
-		return ctxerr.NotFound(name)
+		return ctxErr.NotFound(name)
 	}
 
 	if removeErr := os.Remove(path); removeErr != nil {
-		return ctxerr.Remove(removeErr)
+		return ctxErr.Remove(removeErr)
 	}
 
 	prompt.Removed(cmd, name)

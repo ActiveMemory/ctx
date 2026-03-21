@@ -26,7 +26,7 @@ func Cmd() *cobra.Command {
 		showCommands bool
 	)
 
-	short, long := desc.CommandDesc(cmd.DescKeyGuide)
+	short, long := desc.Command(cmd.DescKeyGuide)
 	c := &cobra.Command{
 		Use:         cmd.UseGuide,
 		Short:       short,
@@ -41,13 +41,13 @@ func Cmd() *cobra.Command {
 		&showSkills,
 		cflag.Skills,
 		false,
-		desc.FlagDesc(flag.DescKeyGuideSkills),
+		desc.Flag(flag.DescKeyGuideSkills),
 	)
 	c.Flags().BoolVar(
 		&showCommands,
 		cflag.Commands,
 		false,
-		desc.FlagDesc(flag.DescKeyGuideCommands),
+		desc.Flag(flag.DescKeyGuideCommands),
 	)
 
 	return c

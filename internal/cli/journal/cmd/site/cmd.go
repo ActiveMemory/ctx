@@ -30,7 +30,7 @@ func Cmd() *cobra.Command {
 		build  bool
 	)
 
-	short, long := desc.CommandDesc(cmd.DescKeyJournalSite)
+	short, long := desc.Command(cmd.DescKeyJournalSite)
 	c := &cobra.Command{
 		Use:   cmd.UseJournalSite,
 		Short: short,
@@ -43,15 +43,15 @@ func Cmd() *cobra.Command {
 	defaultOutput := filepath.Join(rc.ContextDir(), dir.JournalSite)
 	c.Flags().StringVarP(
 		&output, cflag.Output, cflag.ShortOutput, defaultOutput,
-		desc.FlagDesc(flag.DescKeyJournalSiteOutput),
+		desc.Flag(flag.DescKeyJournalSiteOutput),
 	)
 	c.Flags().BoolVar(
 		&build, cflag.Build, false,
-		desc.FlagDesc(flag.DescKeyJournalSiteBuild),
+		desc.Flag(flag.DescKeyJournalSiteBuild),
 	)
 	c.Flags().BoolVar(
 		&serve, cflag.Serve, false,
-		desc.FlagDesc(flag.DescKeyJournalSiteServe),
+		desc.Flag(flag.DescKeyJournalSiteServe),
 	)
 
 	return c

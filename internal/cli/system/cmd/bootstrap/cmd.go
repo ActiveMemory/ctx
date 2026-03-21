@@ -18,7 +18,7 @@ import (
 // Returns:
 //   - *cobra.Command: Configured bootstrap subcommand
 func Cmd() *cobra.Command {
-	short, long := desc.CommandDesc(cmd.DescKeySystemBootstrap)
+	short, long := desc.Command(cmd.DescKeySystemBootstrap)
 
 	cmd := &cobra.Command{
 		Use:   "bootstrap",
@@ -30,10 +30,10 @@ func Cmd() *cobra.Command {
 	}
 
 	cmd.Flags().Bool("json", false,
-		desc.FlagDesc(flag.DescKeySystemBootstrapJson),
+		desc.Flag(flag.DescKeySystemBootstrapJson),
 	)
 	cmd.Flags().BoolP("quiet", "q", false,
-		desc.FlagDesc(flag.DescKeySystemBootstrapQuiet),
+		desc.Flag(flag.DescKeySystemBootstrapQuiet),
 	)
 
 	return cmd

@@ -46,7 +46,7 @@ func DispatchCall(
 	if err := json.Unmarshal(req.Params, &params); err != nil {
 		return out.ErrResponse(
 			req.ID, proto.ErrCodeInvalidArg,
-			desc.TextDesc(text.DescKeyMCPErrInvalidParams),
+			desc.Text(text.DescKeyMCPErrInvalidParams),
 		)
 	}
 
@@ -81,7 +81,7 @@ func DispatchCall(
 		return out.ErrResponse(
 			req.ID, proto.ErrCodeNotFound,
 			fmt.Sprintf(
-				desc.TextDesc(text.DescKeyMCPErrUnknownTool),
+				desc.Text(text.DescKeyMCPErrUnknownTool),
 				params.Name,
 			),
 		)

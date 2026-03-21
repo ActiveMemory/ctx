@@ -19,71 +19,71 @@ import (
 var Defs = []proto.Prompt{
 	{
 		Name: promptCfg.SessionStart,
-		Description: desc.TextDesc(
+		Description: desc.Text(
 			text.DescKeyMCPPromptSessionStartDesc),
 	},
 	{
 		Name: promptCfg.AddDecision,
-		Description: desc.TextDesc(
+		Description: desc.Text(
 			text.DescKeyMCPPromptAddDecisionDesc),
 		Arguments: []proto.PromptArgument{
 			{
 				Name:        field.Content,
-				Description: desc.TextDesc(text.DescKeyMCPPromptArgDecisionTitle),
+				Description: desc.Text(text.DescKeyMCPPromptArgDecisionTitle),
 				Required:    true,
 			},
 			{
 				Name:        cli.AttrContext,
-				Description: desc.TextDesc(text.DescKeyMCPPromptArgDecisionCtx),
+				Description: desc.Text(text.DescKeyMCPPromptArgDecisionCtx),
 				Required:    true,
 			},
 			{
 				Name:        cli.AttrRationale,
-				Description: desc.TextDesc(text.DescKeyMCPPromptArgDecisionRat),
+				Description: desc.Text(text.DescKeyMCPPromptArgDecisionRat),
 				Required:    true,
 			},
 			{
 				Name:        cli.AttrConsequence,
-				Description: desc.TextDesc(text.DescKeyMCPPromptArgDecisionConseq),
+				Description: desc.Text(text.DescKeyMCPPromptArgDecisionConseq),
 				Required:    true,
 			},
 		},
 	},
 	{
 		Name: promptCfg.AddLearning,
-		Description: desc.TextDesc(
+		Description: desc.Text(
 			text.DescKeyMCPPromptAddLearningDesc),
 		Arguments: []proto.PromptArgument{
 			{
 				Name:        field.Content,
-				Description: desc.TextDesc(text.DescKeyMCPPromptArgLearningTitle),
+				Description: desc.Text(text.DescKeyMCPPromptArgLearningTitle),
 				Required:    true,
 			},
 			{
 				Name:        cli.AttrContext,
-				Description: desc.TextDesc(text.DescKeyMCPPromptArgLearningCtx),
+				Description: desc.Text(text.DescKeyMCPPromptArgLearningCtx),
 				Required:    true,
 			},
 			{
 				Name:        cli.AttrLesson,
-				Description: desc.TextDesc(text.DescKeyMCPPromptArgLearningLesson),
+				Description: desc.Text(text.DescKeyMCPPromptArgLearningLesson),
 				Required:    true,
 			},
 			{
 				Name:        cli.AttrApplication,
-				Description: desc.TextDesc(text.DescKeyMCPPromptArgLearningApp),
+				Description: desc.Text(text.DescKeyMCPPromptArgLearningApp),
 				Required:    true,
 			},
 		},
 	},
 	{
 		Name: promptCfg.Reflect,
-		Description: desc.TextDesc(
+		Description: desc.Text(
 			text.DescKeyMCPPromptReflectDesc),
 	},
 	{
 		Name: promptCfg.Checkpoint,
-		Description: desc.TextDesc(
+		Description: desc.Text(
 			text.DescKeyMCPPromptCheckpointDesc),
 	},
 }

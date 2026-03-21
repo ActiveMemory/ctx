@@ -7,10 +7,12 @@
 package show
 
 import (
+	"github.com/spf13/cobra"
+
 	"github.com/ActiveMemory/ctx/internal/assets/read/desc"
 	"github.com/ActiveMemory/ctx/internal/config/embed/cmd"
 	"github.com/ActiveMemory/ctx/internal/config/embed/flag"
-	"github.com/spf13/cobra"
+	cFlag "github.com/ActiveMemory/ctx/internal/config/flag"
 )
 
 // Cmd returns the recall show subcommand.
@@ -24,10 +26,10 @@ func Cmd() *cobra.Command {
 		allProjects bool
 	)
 
-	short, long := desc.CommandDesc(cmd.DescKeyRecallShow)
+	short, long := desc.Command(cmd.DescKeyRecallShow)
 
-	cmd := &cobra.Command{
-		Use:   "show [session-id]",
+	c := &cobra.Command{
+		Use:   cmd.UseRecallShow,
 		Short: short,
 		Long:  long,
 		RunE: func(cmd *cobra.Command, args []string) error {
@@ -35,15 +37,15 @@ func Cmd() *cobra.Command {
 		},
 	}
 
-	cmd.Flags().BoolVar(&latest, "latest", false,
-		desc.FlagDesc(flag.DescKeyRecallShowLatest),
+	c.Flags().BoolVar(&latest, cFlag.Latest, false,
+		desc.Flag(flag.DescKeyRecallShowLatest),
 	)
-	cmd.Flags().BoolVar(&full, "full", false,
-		desc.FlagDesc(flag.DescKeyRecallShowFull),
+	c.Flags().BoolVar(&full, cFlag.Full, false,
+		desc.Flag(flag.DescKeyRecallShowFull),
 	)
-	cmd.Flags().BoolVar(&allProjects, "all-projects", false,
-		desc.FlagDesc(flag.DescKeyRecallShowAllProjects),
+	c.Flags().BoolVar(&allProjects, cFlag.AllProjects, false,
+		desc.Flag(flag.DescKeyRecallShowAllProjects),
 	)
 
-	return cmd
+	return c
 }

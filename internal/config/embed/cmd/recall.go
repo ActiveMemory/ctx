@@ -7,6 +7,15 @@
 package cmd
 
 const (
+	UseRecallExport = "export [session-id]"
+	UseRecallList   = "list"
+	UseRecallLock   = "lock <pattern>"
+	UseRecallShow   = "show [session-id]"
+	UseRecallSync   = "sync"
+	UseRecallUnlock = "unlock <pattern>"
+)
+
+const (
 	DescKeyRecall       = "recall"
 	DescKeyRecallExport = "recall.export"
 	DescKeyRecallList   = "recall.list"

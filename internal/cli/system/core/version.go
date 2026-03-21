@@ -69,7 +69,7 @@ func CheckKeyAge(cmd *cobra.Command, sessionID string) {
 	}
 
 	keyFallback := fmt.Sprintf(
-		desc.TextDesc(text.DescKeyCheckVersionKeyFallback), ageDays,
+		desc.Text(text.DescKeyCheckVersionKeyFallback), ageDays,
 	)
 	keyContent := LoadMessage(hook.CheckVersion, hook.VariantKeyRotation,
 		map[string]any{tpl.VarKeyAgeDays: ageDays}, keyFallback)
@@ -77,18 +77,18 @@ func CheckKeyAge(cmd *cobra.Command, sessionID string) {
 		return
 	}
 
-	boxTitle := desc.TextDesc(text.DescKeyCheckVersionKeyBoxTitle)
-	relayPrefix := desc.TextDesc(text.DescKeyCheckVersionKeyRelayPrefix)
+	boxTitle := desc.Text(text.DescKeyCheckVersionKeyBoxTitle)
+	relayPrefix := desc.Text(text.DescKeyCheckVersionKeyRelayPrefix)
 
 	cmd.Println(token.NewlineLF + NudgeBox(relayPrefix, boxTitle, keyContent))
 
 	keyRef := notify.NewTemplateRef(hook.CheckVersion, hook.VariantKeyRotation,
 		map[string]any{tpl.VarKeyAgeDays: ageDays})
 	keyNotifyMsg := fmt.Sprintf(
-		desc.TextDesc(text.DescKeyRelayPrefixFormat),
+		desc.Text(text.DescKeyRelayPrefixFormat),
 		hook.CheckVersion,
 		fmt.Sprintf(
-			desc.TextDesc(text.DescKeyCheckVersionKeyRelayFormat), ageDays,
+			desc.Text(text.DescKeyCheckVersionKeyRelayFormat), ageDays,
 		),
 	)
 	NudgeAndRelay(keyNotifyMsg, sessionID, keyRef)

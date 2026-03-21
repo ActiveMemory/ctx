@@ -20,7 +20,7 @@ import (
 // Returns:
 //   - *cobra.Command: Configured rm subcommand
 func Cmd() *cobra.Command {
-	short, _ := desc.CommandDesc(cmd.DescKeyPadRm)
+	short, _ := desc.Command(cmd.DescKeyPadRm)
 	return &cobra.Command{
 		Use:   cmd.UsePadRm,
 		Short: short,

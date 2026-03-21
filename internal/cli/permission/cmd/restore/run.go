@@ -11,16 +11,16 @@ import (
 	"encoding/json"
 	"os"
 
-	claude2 "github.com/ActiveMemory/ctx/internal/config/claude"
-	"github.com/ActiveMemory/ctx/internal/config/fs"
-	"github.com/ActiveMemory/ctx/internal/err/config"
-	fs2 "github.com/ActiveMemory/ctx/internal/err/fs"
-	errparser "github.com/ActiveMemory/ctx/internal/err/parser"
-	"github.com/ActiveMemory/ctx/internal/write/restore"
 	"github.com/spf13/cobra"
 
 	"github.com/ActiveMemory/ctx/internal/claude"
 	"github.com/ActiveMemory/ctx/internal/cli/permission/core"
+	configClaude "github.com/ActiveMemory/ctx/internal/config/claude"
+	"github.com/ActiveMemory/ctx/internal/config/fs"
+	"github.com/ActiveMemory/ctx/internal/err/config"
+	errFs "github.com/ActiveMemory/ctx/internal/err/fs"
+	errParser "github.com/ActiveMemory/ctx/internal/err/parser"
+	"github.com/ActiveMemory/ctx/internal/write/restore"
 )
 
 // Run resets settings.local.json from the golden image.
@@ -31,26 +31,26 @@ import (
 // Returns:
 //   - error: Non-nil on read/write/parse failure or missing golden file
 func Run(cmd *cobra.Command) error {
-	goldenBytes, goldenReadErr := os.ReadFile(claude2.SettingsGolden)
+	goldenBytes, goldenReadErr := os.ReadFile(configClaude.SettingsGolden)
 	if goldenReadErr != nil {
 		if os.IsNotExist(goldenReadErr) {
 			return config.GoldenNotFound()
 		}
-		return fs2.FileRead(claude2.SettingsGolden, goldenReadErr)
+		return errFs.FileRead(configClaude.SettingsGolden, goldenReadErr)
 	}
 
-	localBytes, localReadErr := os.ReadFile(claude2.Settings)
+	localBytes, localReadErr := os.ReadFile(configClaude.Settings)
 	if localReadErr != nil {
 		if os.IsNotExist(localReadErr) {
 			if writeErr := os.WriteFile(
-				claude2.Settings, goldenBytes, fs.PermFile,
+				configClaude.Settings, goldenBytes, fs.PermFile,
 			); writeErr != nil {
-				return fs2.FileWrite(claude2.Settings, writeErr)
+				return errFs.FileWrite(configClaude.Settings, writeErr)
 			}
 			restore.RestoreNoLocal(cmd)
 			return nil
 		}
-		return fs2.FileRead(claude2.Settings, localReadErr)
+		return errFs.FileRead(configClaude.Settings, localReadErr)
 	}
 
 	if bytes.Equal(goldenBytes, localBytes) {
@@ -60,10 +60,10 @@ func Run(cmd *cobra.Command) error {
 
 	var golden, local claude.Settings
 	if goldenParseErr := json.Unmarshal(goldenBytes, &golden); goldenParseErr != nil {
-		return errparser.ParseFile(claude2.SettingsGolden, goldenParseErr)
+		return errParser.ParseFile(configClaude.SettingsGolden, goldenParseErr)
 	}
 	if localParseErr := json.Unmarshal(localBytes, &local); localParseErr != nil {
-		return errparser.ParseFile(claude2.Settings, localParseErr)
+		return errParser.ParseFile(configClaude.Settings, localParseErr)
 	}
 
 	restored, dropped := core.DiffStringSlices(
@@ -76,9 +76,9 @@ func Run(cmd *cobra.Command) error {
 	restore.RestoreDiff(cmd, dropped, restored, denyDropped, denyRestored)
 
 	if writeErr := os.WriteFile(
-		claude2.Settings, goldenBytes, fs.PermFile,
+		configClaude.Settings, goldenBytes, fs.PermFile,
 	); writeErr != nil {
-		return fs2.FileWrite(claude2.Settings, writeErr)
+		return errFs.FileWrite(configClaude.Settings, writeErr)
 	}
 
 	restore.RestoreDone(cmd)

@@ -61,7 +61,7 @@ func runMarkJournal(cmd *cobra.Command, filename, stage string) error {
 		if val == "" {
 			return ctxerr.StageNotSet(filename, stage)
 		}
-		cmd.Println(fmt.Sprintf(desc.TextDesc(text.DescKeyMarkJournalChecked), filename, stage, val))
+		cmd.Println(fmt.Sprintf(desc.Text(text.DescKeyMarkJournalChecked), filename, stage, val))
 		return nil
 	}
 
@@ -73,6 +73,6 @@ func runMarkJournal(cmd *cobra.Command, filename, stage string) error {
 		return ctxerr.SaveStateFailed(saveErr)
 	}
 
-	cmd.Println(fmt.Sprintf(desc.TextDesc(text.DescKeyMarkJournalMarked), filename, stage))
+	cmd.Println(fmt.Sprintf(desc.Text(text.DescKeyMarkJournalMarked), filename, stage))
 	return nil
 }

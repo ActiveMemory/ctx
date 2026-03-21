@@ -24,15 +24,15 @@ import (
 func FormatCheckName(name drift.CheckName) string {
 	switch name {
 	case drift.CheckPathReferences:
-		return desc.TextDesc(text.DescKeyDriftCheckPathRefs)
+		return desc.Text(text.DescKeyDriftCheckPathRefs)
 	case drift.CheckStaleness:
-		return desc.TextDesc(text.DescKeyDriftCheckStaleness)
+		return desc.Text(text.DescKeyDriftCheckStaleness)
 	case drift.CheckConstitution:
-		return desc.TextDesc(text.DescKeyDriftCheckConstitution)
+		return desc.Text(text.DescKeyDriftCheckConstitution)
 	case drift.CheckRequiredFiles:
-		return desc.TextDesc(text.DescKeyDriftCheckRequired)
+		return desc.Text(text.DescKeyDriftCheckRequired)
 	case drift.CheckFileAge:
-		return desc.TextDesc(text.DescKeyDriftCheckFileAge)
+		return desc.Text(text.DescKeyDriftCheckFileAge)
 	default:
 		return string(name)
 	}

@@ -20,9 +20,9 @@ import (
 //   - cmd: Cobra command for output
 //   - builderNames: Comma-separated list of supported project types
 func InfoNoProject(cmd *cobra.Command, builderNames string) {
-	cmd.Println(desc.TextDesc(text.DescKeyWriteDepsNoProject))
-	cmd.Println(desc.TextDesc(text.DescKeyWriteDepsLookingFor))
-	cmd.Println(fmt.Sprintf(desc.TextDesc(text.DescKeyWriteDepsUseType), builderNames))
+	cmd.Println(desc.Text(text.DescKeyWriteDepsNoProject))
+	cmd.Println(desc.Text(text.DescKeyWriteDepsLookingFor))
+	cmd.Println(fmt.Sprintf(desc.Text(text.DescKeyWriteDepsUseType), builderNames))
 }
 
 // InfoNoDeps reports that no dependencies were found.
@@ -30,5 +30,5 @@ func InfoNoProject(cmd *cobra.Command, builderNames string) {
 // Parameters:
 //   - cmd: Cobra command for output
 func InfoNoDeps(cmd *cobra.Command) {
-	cmd.Println(desc.TextDesc(text.DescKeyWriteDepsNoDeps))
+	cmd.Println(desc.Text(text.DescKeyWriteDepsNoDeps))
 }

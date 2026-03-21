@@ -142,31 +142,31 @@ func FormatJournalEntryPart(
 		// (Markdown tables don't render inside <details> in Zensical)
 		summaryText := fmt.Sprintf("%s · %s · %s", dateStr, durationStr, s.Model)
 		sb.WriteString(fmt.Sprintf(tpl.MetaDetailsOpen, summaryText))
-		sb.WriteString(fmt.Sprintf(tpl.MetaRow+nl, desc.TextDesc(text.DescKeyLabelMetaID), s.ID))
-		sb.WriteString(fmt.Sprintf(tpl.MetaRow+nl, desc.TextDesc(text.DescKeyLabelMetaDate), dateStr))
-		sb.WriteString(fmt.Sprintf(tpl.MetaRow+nl, desc.TextDesc(text.DescKeyLabelMetaTime), timeStr))
-		sb.WriteString(fmt.Sprintf(tpl.MetaRow+nl, desc.TextDesc(text.DescKeyLabelMetaDuration), durationStr))
-		sb.WriteString(fmt.Sprintf(tpl.MetaRow+nl, desc.TextDesc(text.DescKeyLabelMetaTool), s.Tool))
-		sb.WriteString(fmt.Sprintf(tpl.MetaRow+nl, desc.TextDesc(text.DescKeyLabelMetaProject), s.Project))
+		sb.WriteString(fmt.Sprintf(tpl.MetaRow+nl, desc.Text(text.DescKeyLabelMetaID), s.ID))
+		sb.WriteString(fmt.Sprintf(tpl.MetaRow+nl, desc.Text(text.DescKeyLabelMetaDate), dateStr))
+		sb.WriteString(fmt.Sprintf(tpl.MetaRow+nl, desc.Text(text.DescKeyLabelMetaTime), timeStr))
+		sb.WriteString(fmt.Sprintf(tpl.MetaRow+nl, desc.Text(text.DescKeyLabelMetaDuration), durationStr))
+		sb.WriteString(fmt.Sprintf(tpl.MetaRow+nl, desc.Text(text.DescKeyLabelMetaTool), s.Tool))
+		sb.WriteString(fmt.Sprintf(tpl.MetaRow+nl, desc.Text(text.DescKeyLabelMetaProject), s.Project))
 		if s.GitBranch != "" {
-			sb.WriteString(fmt.Sprintf(tpl.MetaRow+nl, desc.TextDesc(text.DescKeyLabelMetaBranch), s.GitBranch))
+			sb.WriteString(fmt.Sprintf(tpl.MetaRow+nl, desc.Text(text.DescKeyLabelMetaBranch), s.GitBranch))
 		}
 		if s.Model != "" {
-			sb.WriteString(fmt.Sprintf(tpl.MetaRow+nl, desc.TextDesc(text.DescKeyLabelMetaModel), s.Model))
+			sb.WriteString(fmt.Sprintf(tpl.MetaRow+nl, desc.Text(text.DescKeyLabelMetaModel), s.Model))
 		}
 		sb.WriteString(tpl.MetaDetailsClose + nl + nl)
 
 		// Token stats as collapsible HTML table
 		turnStr := fmt.Sprintf("%d", s.TurnCount)
 		sb.WriteString(fmt.Sprintf(tpl.MetaDetailsOpen, turnStr))
-		sb.WriteString(fmt.Sprintf(tpl.MetaRow+nl, desc.TextDesc(text.DescKeyLabelMetaTurns), turnStr))
+		sb.WriteString(fmt.Sprintf(tpl.MetaRow+nl, desc.Text(text.DescKeyLabelMetaTurns), turnStr))
 		tokenSummary := fmt.Sprintf("%s (in: %s, out: %s)",
 			FormatTokens(s.TotalTokens),
 			FormatTokens(s.TotalTokensIn),
 			FormatTokens(s.TotalTokensOut))
-		sb.WriteString(fmt.Sprintf(tpl.MetaRow+nl, desc.TextDesc(text.DescKeyLabelMetaTokens), tokenSummary))
+		sb.WriteString(fmt.Sprintf(tpl.MetaRow+nl, desc.Text(text.DescKeyLabelMetaTokens), tokenSummary))
 		if totalParts > 1 {
-			sb.WriteString(fmt.Sprintf(tpl.MetaRow+nl, desc.TextDesc(text.DescKeyLabelMetaParts),
+			sb.WriteString(fmt.Sprintf(tpl.MetaRow+nl, desc.Text(text.DescKeyLabelMetaParts),
 				fmt.Sprintf("%d", totalParts)))
 		}
 		sb.WriteString(tpl.MetaDetailsClose + nl + nl)
@@ -176,7 +176,7 @@ func FormatJournalEntryPart(
 		// Tool usage summary
 		tools := s.AllToolUses()
 		if len(tools) > 0 {
-			sb.WriteString(desc.TextDesc(text.DescKeyHeadingToolUsage) + nl + nl)
+			sb.WriteString(desc.Text(text.DescKeyHeadingToolUsage) + nl + nl)
 			toolCounts := make(map[string]int)
 			for _, t := range tools {
 				toolCounts[t.Name]++
@@ -202,7 +202,7 @@ func FormatJournalEntryPart(
 
 	// Conversation section
 	if part == 1 {
-		sb.WriteString(desc.TextDesc(text.DescKeyHeadingConversation) + nl + nl)
+		sb.WriteString(desc.Text(text.DescKeyHeadingConversation) + nl + nl)
 	} else {
 		sb.WriteString(fmt.Sprintf(
 			tpl.RecallConversationContinued+nl+nl, part-1),
@@ -211,11 +211,11 @@ func FormatJournalEntryPart(
 
 	for i, msg := range messages {
 		msgNum := startMsgIdx + i + 1
-		role := desc.TextDesc(text.DescKeyLabelRoleUser)
+		role := desc.Text(text.DescKeyLabelRoleUser)
 		if msg.BelongsToAssistant() {
-			role = desc.TextDesc(text.DescKeyLabelRoleAssistant)
+			role = desc.Text(text.DescKeyLabelRoleAssistant)
 		} else if len(msg.ToolResults) > 0 && msg.Text == "" {
-			role = desc.TextDesc(text.DescKeyLabelToolOutput)
+			role = desc.Text(text.DescKeyLabelToolOutput)
 		}
 
 		localTime := msg.Timestamp.Local()
@@ -262,7 +262,7 @@ func FormatJournalEntryPart(
 				// Render system reminders as Markdown outside the code fence
 				for _, reminder := range reminders {
 					sb.WriteString(
-						fmt.Sprintf(nl+desc.TextDesc(text.DescKeyLabelBoldReminder)+" %s"+nl, reminder),
+						fmt.Sprintf(nl+desc.Text(text.DescKeyLabelBoldReminder)+" %s"+nl, reminder),
 					)
 				}
 			}

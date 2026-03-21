@@ -20,7 +20,7 @@ import (
 // Returns:
 //   - *cobra.Command: Configured pause subcommand
 func Cmd() *cobra.Command {
-	short, long := desc.CommandDesc(cmd.DescKeySystemPause)
+	short, long := desc.Command(cmd.DescKeySystemPause)
 
 	cmd := &cobra.Command{
 		Use:    "pause",
@@ -32,7 +32,7 @@ func Cmd() *cobra.Command {
 		},
 	}
 	cmd.Flags().String("session-id", "",
-		desc.FlagDesc(flag.DescKeySystemPauseSessionId),
+		desc.Flag(flag.DescKeySystemPauseSessionId),
 	)
 	return cmd
 }

@@ -24,7 +24,7 @@ import (
 // Returns:
 //   - *cobra.Command: Configured doctor command with flags registered
 func Cmd() *cobra.Command {
-	short, long := desc.CommandDesc(cmd.DescKeyDoctor)
+	short, long := desc.Command(cmd.DescKeyDoctor)
 	c := &cobra.Command{
 		Use:         cmd.UseDoctor,
 		Short:       short,
@@ -37,7 +37,7 @@ func Cmd() *cobra.Command {
 	}
 	c.Flags().BoolP(
 		cFlag.JSON, cFlag.ShortJSON, false,
-		desc.FlagDesc(flag.DescKeyDoctorJson),
+		desc.Flag(flag.DescKeyDoctorJson),
 	)
 	return c
 }

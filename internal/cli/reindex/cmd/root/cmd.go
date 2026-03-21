@@ -20,7 +20,7 @@ import (
 // Returns:
 //   - *cobra.Command: The reindex command
 func Cmd() *cobra.Command {
-	short, long := desc.CommandDesc(cmd.DescKeyReindex)
+	short, long := desc.Command(cmd.DescKeyReindex)
 
 	return &cobra.Command{
 		Use:   cmd.UseReindex,

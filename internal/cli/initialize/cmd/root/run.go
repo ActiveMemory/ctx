@@ -126,19 +126,19 @@ func Run(
 	// Create entry templates in .context/templates/
 	if err := core.CreateEntryTemplates(cmd, contextDir, force); err != nil {
 		// Non-fatal: warn but continue
-		initialize.InfoWarnNonFatal(cmd, desc.TextDesc(text.DescKeyInitLabelEntryTemplates), err)
+		initialize.InfoWarnNonFatal(cmd, desc.Text(text.DescKeyInitLabelEntryTemplates), err)
 	}
 
 	// Create prompt templates in .context/prompts/
 	if err := core.CreatePromptTemplates(cmd, contextDir, force); err != nil {
 		// Non-fatal: warn but continue
-		initialize.InfoWarnNonFatal(cmd, desc.TextDesc(text.DescKeyInitLabelPromptTemplates), err)
+		initialize.InfoWarnNonFatal(cmd, desc.Text(text.DescKeyInitLabelPromptTemplates), err)
 	}
 
 	// Set up scratchpad
 	if err := initScratchpad(cmd, contextDir); err != nil {
 		// Non-fatal: warn but continue
-		initialize.InfoWarnNonFatal(cmd, desc.TextDesc(text.DescKeyInitLabelScratchpad), err)
+		initialize.InfoWarnNonFatal(cmd, desc.Text(text.DescKeyInitLabelScratchpad), err)
 	}
 
 	// Create project root files
@@ -146,7 +146,7 @@ func Run(
 
 	// Create specs/ and ideas/ directories with README.md
 	if err := core.CreateProjectDirs(cmd); err != nil {
-		initialize.InfoWarnNonFatal(cmd, desc.TextDesc(text.DescKeyInitLabelProjectDirs), err)
+		initialize.InfoWarnNonFatal(cmd, desc.Text(text.DescKeyInitLabelProjectDirs), err)
 	}
 
 	// Create PROMPT.md (uses ralph template if --ralph flag set)
@@ -165,14 +165,14 @@ func Run(
 	initialize.InfoSettingUpPermissions(cmd)
 	if err := core.MergeSettingsPermissions(cmd); err != nil {
 		// Non-fatal: warn but continue
-		initialize.InfoWarnNonFatal(cmd, desc.TextDesc(text.DescKeyInitLabelPermissions), err)
+		initialize.InfoWarnNonFatal(cmd, desc.Text(text.DescKeyInitLabelPermissions), err)
 	}
 
 	// Auto-enable plugin globally unless suppressed
 	if !noPluginEnable {
 		if pluginErr := core.EnablePluginGlobally(cmd); pluginErr != nil {
 			// Non-fatal: warn but continue
-			initialize.InfoWarnNonFatal(cmd, desc.TextDesc(text.DescKeyInitLabelPluginEnable), pluginErr)
+			initialize.InfoWarnNonFatal(cmd, desc.Text(text.DescKeyInitLabelPluginEnable), pluginErr)
 		}
 	}
 

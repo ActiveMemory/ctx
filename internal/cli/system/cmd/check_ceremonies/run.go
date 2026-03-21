@@ -69,7 +69,7 @@ func Run(cmd *cobra.Command, stdin *os.File) error {
 	}
 	ref := notify.NewTemplateRef(hook.CheckCeremonies, variant, nil)
 	core.NudgeAndRelay(hook.CheckCeremonies+": "+
-		desc.TextDesc(text.DescKeyCeremonyRelayMessage),
+		desc.Text(text.DescKeyCeremonyRelayMessage),
 		input.SessionID, ref,
 	)
 	core.TouchFile(remindedFile)

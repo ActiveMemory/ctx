@@ -83,7 +83,7 @@ func Run(cmd *cobra.Command, stdin *os.File) error {
 	// the wrap-up ceremony. The marker expires after 2 hours.
 	// Stats are still recorded so token usage tracking is continuous.
 	if core.WrappedUpRecently() {
-		core.LogMessage(logFile, sessionID, fmt.Sprintf(desc.TextDesc(text.DescKeyCheckContextSizeSuppressedLogFormat), count))
+		core.LogMessage(logFile, sessionID, fmt.Sprintf(desc.Text(text.DescKeyCheckContextSizeSuppressedLogFormat), count))
 		core.WriteSessionStats(sessionID, core.SessionStats{
 			Timestamp:  time.Now().Format(time.RFC3339),
 			Prompt:     count,
@@ -116,7 +116,7 @@ func Run(cmd *cobra.Command, stdin *os.File) error {
 		core.EmitWindowWarning(cmd, logFile, sessionID, count, tokens, pct)
 	default:
 		core.LogMessage(logFile, sessionID,
-			fmt.Sprintf(desc.TextDesc(
+			fmt.Sprintf(desc.Text(
 				text.DescKeyCheckContextSizeSilentLogFormat), count),
 		)
 	}

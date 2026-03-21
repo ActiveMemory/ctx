@@ -60,7 +60,7 @@ func Run(cmd *cobra.Command, stdin *os.File) error {
 			LastMtime: initialMtime,
 		}
 		core.WritePersistenceState(stateFile, ps)
-		core.LogMessage(logFile, sessionID, fmt.Sprintf(desc.TextDesc(text.DescKeyCheckPersistenceInitLogFormat), initialMtime))
+		core.LogMessage(logFile, sessionID, fmt.Sprintf(desc.Text(text.DescKeyCheckPersistenceInitLogFormat), initialMtime))
 		return nil
 	}
 
@@ -72,38 +72,38 @@ func Run(cmd *cobra.Command, stdin *os.File) error {
 		ps.LastNudge = ps.Count
 		ps.LastMtime = currentMtime
 		core.WritePersistenceState(stateFile, ps)
-		core.LogMessage(logFile, sessionID, fmt.Sprintf(desc.TextDesc(text.DescKeyCheckPersistenceModifiedLogFormat), ps.Count))
+		core.LogMessage(logFile, sessionID, fmt.Sprintf(desc.Text(text.DescKeyCheckPersistenceModifiedLogFormat), ps.Count))
 		return nil
 	}
 
 	sinceNudge := ps.Count - ps.LastNudge
 
 	if core.PersistenceNudgeNeeded(ps.Count, sinceNudge) {
-		fallback := fmt.Sprintf(desc.TextDesc(text.DescKeyCheckPersistenceFallback), sinceNudge)
+		fallback := fmt.Sprintf(desc.Text(text.DescKeyCheckPersistenceFallback), sinceNudge)
 		content := core.LoadMessage(hook.CheckPersistence, hook.VariantNudge,
 			map[string]any{
 				tpl.VarPromptCount:       ps.Count,
 				tpl.VarPromptsSinceNudge: sinceNudge,
 			}, fallback)
 		if content == "" {
-			core.LogMessage(logFile, sessionID, fmt.Sprintf(desc.TextDesc(text.DescKeyCheckPersistenceSilencedLogFormat), ps.Count))
+			core.LogMessage(logFile, sessionID, fmt.Sprintf(desc.Text(text.DescKeyCheckPersistenceSilencedLogFormat), ps.Count))
 			core.WritePersistenceState(stateFile, ps)
 			return nil
 		}
 
-		boxTitle := desc.TextDesc(text.DescKeyCheckPersistenceBoxTitle)
-		relayPrefix := desc.TextDesc(text.DescKeyCheckPersistenceRelayPrefix)
+		boxTitle := desc.Text(text.DescKeyCheckPersistenceBoxTitle)
+		relayPrefix := desc.Text(text.DescKeyCheckPersistenceRelayPrefix)
 
-		cmd.Println(core.NudgeBox(relayPrefix, fmt.Sprintf(desc.TextDesc(text.DescKeyCheckPersistenceBoxTitleFormat), boxTitle, ps.Count), content))
+		cmd.Println(core.NudgeBox(relayPrefix, fmt.Sprintf(desc.Text(text.DescKeyCheckPersistenceBoxTitleFormat), boxTitle, ps.Count), content))
 		cmd.Println()
 		core.LogMessage(logFile, sessionID, fmt.Sprintf("prompt#%d NUDGE since_nudge=%d", ps.Count, sinceNudge))
 		ref := notify.NewTemplateRef(hook.CheckPersistence, hook.VariantNudge,
 			map[string]any{tpl.VarPromptCount: ps.Count, tpl.VarPromptsSinceNudge: sinceNudge})
-		_ = notify.Send(hook.NotifyChannelNudge, hook.CheckPersistence+": "+fmt.Sprintf(desc.TextDesc(text.DescKeyCheckPersistenceCheckpointFormat), ps.Count), sessionID, ref)
-		core.Relay(hook.CheckPersistence+": "+fmt.Sprintf(desc.TextDesc(text.DescKeyCheckPersistenceRelayFormat), sinceNudge), sessionID, ref)
+		_ = notify.Send(hook.NotifyChannelNudge, hook.CheckPersistence+": "+fmt.Sprintf(desc.Text(text.DescKeyCheckPersistenceCheckpointFormat), ps.Count), sessionID, ref)
+		core.Relay(hook.CheckPersistence+": "+fmt.Sprintf(desc.Text(text.DescKeyCheckPersistenceRelayFormat), sinceNudge), sessionID, ref)
 		ps.LastNudge = ps.Count
 	} else {
-		core.LogMessage(logFile, sessionID, fmt.Sprintf(desc.TextDesc(text.DescKeyCheckPersistenceSilentLogFormat), ps.Count, sinceNudge))
+		core.LogMessage(logFile, sessionID, fmt.Sprintf(desc.Text(text.DescKeyCheckPersistenceSilentLogFormat), ps.Count, sinceNudge))
 	}
 
 	core.WritePersistenceState(stateFile, ps)

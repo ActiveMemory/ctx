@@ -19,7 +19,7 @@ import (
 // Returns:
 //   - *cobra.Command: Configured block-dangerous-commands subcommand
 func Cmd() *cobra.Command {
-	short, long := desc.CommandDesc(cmd.DescKeySystemBlockDangerousCommands)
+	short, long := desc.Command(cmd.DescKeySystemBlockDangerousCommands)
 
 	return &cobra.Command{
 		Use:    "block-dangerous-commands",

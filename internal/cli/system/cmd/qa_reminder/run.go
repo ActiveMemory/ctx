@@ -42,7 +42,7 @@ func Run(cmd *cobra.Command, stdin *os.File) error {
 	if !strings.Contains(input.ToolInput.Command, "git") {
 		return nil
 	}
-	fallback := desc.TextDesc(text.DescKeyQaReminderFallback)
+	fallback := desc.Text(text.DescKeyQaReminderFallback)
 	msg := core.LoadMessage(
 		hook.QAReminder, hook.VariantGate, nil, fallback,
 	)
@@ -55,7 +55,7 @@ func Run(cmd *cobra.Command, stdin *os.File) error {
 
 	ref := notify.NewTemplateRef(hook.QAReminder, hook.VariantGate, nil)
 	core.Relay(hook.QAReminder+": "+
-		desc.TextDesc(text.DescKeyQaReminderRelayMessage),
+		desc.Text(text.DescKeyQaReminderRelayMessage),
 		input.SessionID, ref,
 	)
 	return nil

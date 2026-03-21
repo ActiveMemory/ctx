@@ -19,7 +19,7 @@ import (
 // Returns:
 //   - *cobra.Command: Configured check-persistence subcommand
 func Cmd() *cobra.Command {
-	short, long := desc.CommandDesc(cmd.DescKeySystemCheckPersistence)
+	short, long := desc.Command(cmd.DescKeySystemCheckPersistence)
 
 	return &cobra.Command{
 		Use:    "check-persistence",

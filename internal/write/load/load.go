@@ -66,7 +66,7 @@ func Assembled(
 	nl := token.NewlineLF
 	sep := token.Separator
 
-	sb.WriteString(desc.TextDesc(text.DescKeyHeadingContext) + nl + nl)
+	sb.WriteString(desc.Text(text.DescKeyHeadingContext) + nl + nl)
 	_, _ = fmt.Fprintf(&sb, tpl.LoadBudget+nl+nl, budget, totalTokens)
 	sb.WriteString(sep + nl + nl)
 

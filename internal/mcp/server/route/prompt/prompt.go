@@ -41,12 +41,12 @@ func sessionStart(
 	if loadErr != nil {
 		return out.ErrResponse(id, proto.ErrCodeInternal,
 			fmt.Sprintf(
-				desc.TextDesc(text.DescKeyMCPLoadContext), loadErr))
+				desc.Text(text.DescKeyMCPLoadContext), loadErr))
 	}
 
 	var sb strings.Builder
 	sb.WriteString(
-		desc.TextDesc(text.DescKeyMCPPromptSessionStartHeader),
+		desc.Text(text.DescKeyMCPPromptSessionStartHeader),
 	)
 	sb.WriteString(token.NewlineLF)
 	sb.WriteString(token.NewlineLF)
@@ -58,18 +58,18 @@ func sessionStart(
 		}
 		_, _ = fmt.Fprintf(
 			&sb,
-			desc.TextDesc(text.DescKeyMCPPromptSectionFormat),
+			desc.Text(text.DescKeyMCPPromptSectionFormat),
 			fileName, string(f.Content),
 		)
 	}
 
 	sb.WriteString(token.NewlineLF)
 	sb.WriteString(
-		desc.TextDesc(text.DescKeyMCPPromptSessionStartFooter),
+		desc.Text(text.DescKeyMCPPromptSessionStartFooter),
 	)
 
 	return out.OkResponse(id, proto.GetPromptResult{
-		Description: desc.TextDesc(
+		Description: desc.Text(
 			text.DescKeyMCPPromptSessionStartResultD,
 		),
 		Messages: []proto.PromptMessage{
@@ -102,24 +102,24 @@ func checkpoint(
 
 	var sb strings.Builder
 	sb.WriteString(
-		desc.TextDesc(text.DescKeyMCPPromptCheckpointHeader),
+		desc.Text(text.DescKeyMCPPromptCheckpointHeader),
 	)
 	sb.WriteString(token.NewlineLF)
 	sb.WriteString(token.NewlineLF)
 
 	_, _ = fmt.Fprintf(
 		&sb,
-		desc.TextDesc(text.DescKeyMCPPromptCheckpointStatsFormat),
+		desc.Text(text.DescKeyMCPPromptCheckpointStatsFormat),
 		toolCalls, adds, pending,
 	)
 
 	sb.WriteString(token.NewlineLF)
 	sb.WriteString(
-		desc.TextDesc(text.DescKeyMCPPromptCheckpointSteps),
+		desc.Text(text.DescKeyMCPPromptCheckpointSteps),
 	)
 
 	return out.OkResponse(id, proto.GetPromptResult{
-		Description: desc.TextDesc(
+		Description: desc.Text(
 			text.DescKeyMCPPromptCheckpointResultD,
 		),
 		Messages: []proto.PromptMessage{
@@ -203,14 +203,14 @@ func addLearning(
 //   - *proto.Response: reflection prompt text
 func reflect(id json.RawMessage) *proto.Response {
 	return out.OkResponse(id, proto.GetPromptResult{
-		Description: desc.TextDesc(
+		Description: desc.Text(
 			text.DescKeyMCPPromptReflectResultD),
 		Messages: []proto.PromptMessage{
 			{
 				Role: prompt.RoleUser,
 				Content: proto.ToolContent{
 					Type: mime.ContentTypeText,
-					Text: desc.TextDesc(
+					Text: desc.Text(
 						text.DescKeyMCPPromptReflectBody,
 					),
 				},

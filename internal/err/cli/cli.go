@@ -22,7 +22,7 @@ import (
 //   - error: "required flag \"<name>\" not set"
 func FlagRequired(name string) error {
 	return fmt.Errorf(
-		desc.TextDesc(text.DescKeyErrValidateFlagRequired), name,
+		desc.Text(text.DescKeyErrValidateFlagRequired), name,
 	)
 }
 
@@ -35,7 +35,7 @@ func FlagRequired(name string) error {
 //   - error: "<name> argument is required"
 func ArgRequired(name string) error {
 	return fmt.Errorf(
-		desc.TextDesc(text.DescKeyErrValidateArgRequired), name,
+		desc.Text(text.DescKeyErrValidateArgRequired), name,
 	)
 }
 
@@ -50,7 +50,7 @@ func ArgRequired(name string) error {
 //   - error: "invalid selection: <input> (expected 1-<max>)"
 func InvalidSelection(input string, max int) error {
 	return fmt.Errorf(
-		desc.TextDesc(text.DescKeyErrValidateInvalidSelection), input, max,
+		desc.Text(text.DescKeyErrValidateInvalidSelection), input, max,
 	)
 }
 
@@ -63,6 +63,6 @@ func InvalidSelection(input string, max int) error {
 //   - error: "unknown document <alias> (available: manifesto, about, invariants)"
 func UnknownDocument(alias string) error {
 	return fmt.Errorf(
-		desc.TextDesc(text.DescKeyErrValidateUnknownDocument), alias,
+		desc.Text(text.DescKeyErrValidateUnknownDocument), alias,
 	)
 }

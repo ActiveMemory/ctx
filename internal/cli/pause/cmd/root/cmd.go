@@ -12,6 +12,7 @@ import (
 	"github.com/ActiveMemory/ctx/internal/assets/read/desc"
 	"github.com/ActiveMemory/ctx/internal/config/embed/cmd"
 	"github.com/ActiveMemory/ctx/internal/config/embed/flag"
+	cFlag "github.com/ActiveMemory/ctx/internal/config/flag"
 )
 
 // Cmd returns the top-level "ctx pause" command.
@@ -19,18 +20,18 @@ import (
 // Returns:
 //   - *cobra.Command: Configured pause command
 func Cmd() *cobra.Command {
-	short, long := desc.CommandDesc(cmd.DescKeyPause)
+	short, long := desc.Command(cmd.DescKeyPause)
 	c := &cobra.Command{
 		Use:   cmd.UsePause,
 		Short: short,
 		Long:  long,
 		RunE: func(cmd *cobra.Command, _ []string) error {
-			sessionID, _ := cmd.Flags().GetString("session-id")
+			sessionID, _ := cmd.Flags().GetString(cFlag.SessionID)
 			return Run(cmd, sessionID)
 		},
 	}
-	c.Flags().String("session-id", "",
-		desc.FlagDesc(flag.DescKeyPauseSessionId),
+	c.Flags().String(cFlag.SessionID, "",
+		desc.Flag(flag.DescKeyPauseSessionId),
 	)
 	return c
 }

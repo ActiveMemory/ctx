@@ -18,7 +18,7 @@ import (
 // Returns:
 //   - *cobra.Command: Configured stats subcommand
 func Cmd() *cobra.Command {
-	short, long := desc.CommandDesc(cmd.DescKeySystemStats)
+	short, long := desc.Command(cmd.DescKeySystemStats)
 
 	cmd := &cobra.Command{
 		Use:   "stats",
@@ -30,16 +30,16 @@ func Cmd() *cobra.Command {
 	}
 
 	cmd.Flags().BoolP("follow", "f", false,
-		desc.FlagDesc(flag.DescKeySystemStatsFollow),
+		desc.Flag(flag.DescKeySystemStatsFollow),
 	)
 	cmd.Flags().StringP("session", "s", "",
-		desc.FlagDesc(flag.DescKeySystemStatsSession),
+		desc.Flag(flag.DescKeySystemStatsSession),
 	)
 	cmd.Flags().IntP("last", "n", 20,
-		desc.FlagDesc(flag.DescKeySystemStatsLast),
+		desc.Flag(flag.DescKeySystemStatsLast),
 	)
 	cmd.Flags().BoolP("json", "j", false,
-		desc.FlagDesc(flag.DescKeySystemStatsJson),
+		desc.Flag(flag.DescKeySystemStatsJson),
 	)
 
 	return cmd

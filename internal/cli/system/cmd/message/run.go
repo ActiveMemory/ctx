@@ -67,10 +67,10 @@ func RunMessageList(cmd *cobra.Command) error {
 	headerFmt := fmt.Sprintf("%%-%ds %%-%ds %%-%ds %%s",
 		msg.MessageColHook, msg.MessageColVariant, msg.MessageColCategory)
 	cmd.Println(fmt.Sprintf(headerFmt,
-		desc.TextDesc(text.DescKeyMessageListHeaderHook),
-		desc.TextDesc(text.DescKeyMessageListHeaderVariant),
-		desc.TextDesc(text.DescKeyMessageListHeaderCategory),
-		desc.TextDesc(text.DescKeyMessageListHeaderOverride)))
+		desc.Text(text.DescKeyMessageListHeaderHook),
+		desc.Text(text.DescKeyMessageListHeaderVariant),
+		desc.Text(text.DescKeyMessageListHeaderCategory),
+		desc.Text(text.DescKeyMessageListHeaderOverride)))
 	cmd.Println(fmt.Sprintf(headerFmt,
 		strings.Repeat("\u2500", msg.MessageSepHook),
 		strings.Repeat("\u2500", msg.MessageSepVariant),
@@ -80,7 +80,7 @@ func RunMessageList(cmd *cobra.Command) error {
 	for _, e := range entries {
 		override := ""
 		if e.HasOverride {
-			override = desc.TextDesc(text.DescKeyMessageOverrideLabel)
+			override = desc.Text(text.DescKeyMessageOverrideLabel)
 		}
 		cmd.Println(fmt.Sprintf(headerFmt, e.Hook, e.Variant, e.Category, override))
 	}
@@ -109,7 +109,7 @@ func RunMessageShow(cmd *cobra.Command, hk, variant string) error {
 	// Check user override first
 	oPath := core.OverridePath(hk, variant)
 	if data, readErr := io.SafeReadUserFile(oPath); readErr == nil {
-		cmd.Println(fmt.Sprintf(desc.TextDesc(text.DescKeyMessageSourceOverride), oPath))
+		cmd.Println(fmt.Sprintf(desc.Text(text.DescKeyMessageSourceOverride), oPath))
 		core.PrintTemplateVars(cmd, info)
 		cmd.Println()
 		cmd.Print(string(data))
@@ -125,7 +125,7 @@ func RunMessageShow(cmd *cobra.Command, hk, variant string) error {
 		return ctxerr.EmbeddedTemplateNotFound(hk, variant)
 	}
 
-	cmd.Println(desc.TextDesc(text.DescKeyMessageSourceDefault))
+	cmd.Println(desc.Text(text.DescKeyMessageSourceDefault))
 	core.PrintTemplateVars(cmd, info)
 	cmd.Println()
 	cmd.Print(string(data))
@@ -163,7 +163,7 @@ func RunMessageEdit(cmd *cobra.Command, hk, variant string) error {
 
 	// Warn for ctx-specific messages
 	if info.Category == messages.CategoryCtxSpecific {
-		cmd.Println(desc.TextDesc(text.DescKeyMessageCtxSpecificWarning))
+		cmd.Println(desc.Text(text.DescKeyMessageCtxSpecificWarning))
 		cmd.Println()
 	}
 
@@ -184,8 +184,8 @@ func RunMessageEdit(cmd *cobra.Command, hk, variant string) error {
 		return ctxerr.WriteOverride(oPath, writeErr)
 	}
 
-	cmd.Println(fmt.Sprintf(desc.TextDesc(text.DescKeyMessageOverrideCreated), oPath))
-	cmd.Println(desc.TextDesc(text.DescKeyMessageEditHint))
+	cmd.Println(fmt.Sprintf(desc.Text(text.DescKeyMessageOverrideCreated), oPath))
+	cmd.Println(desc.Text(text.DescKeyMessageEditHint))
 	core.PrintTemplateVars(cmd, info)
 
 	return nil
@@ -213,7 +213,7 @@ func RunMessageReset(cmd *cobra.Command, hook, variant string) error {
 
 	if removeErr := os.Remove(oPath); removeErr != nil {
 		if os.IsNotExist(removeErr) {
-			cmd.Println(fmt.Sprintf(desc.TextDesc(text.DescKeyMessageNoOverride), hook, variant))
+			cmd.Println(fmt.Sprintf(desc.Text(text.DescKeyMessageNoOverride), hook, variant))
 			return nil
 		}
 		return ctxerr.RemoveOverride(oPath, removeErr)
@@ -225,6 +225,6 @@ func RunMessageReset(cmd *cobra.Command, hook, variant string) error {
 	messagesDir := filepath.Dir(hookDir)
 	_ = os.Remove(messagesDir) // only succeeds if empty
 
-	cmd.Println(fmt.Sprintf(desc.TextDesc(text.DescKeyMessageOverrideRemoved), hook, variant))
+	cmd.Println(fmt.Sprintf(desc.Text(text.DescKeyMessageOverrideRemoved), hook, variant))
 	return nil
 }

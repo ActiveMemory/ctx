@@ -102,7 +102,7 @@ func OutputEventsJSON(cmd *cobra.Command, evts []notify.Payload) error {
 // Returns:
 //   - error: Always nil
 func OutputEventsHuman(cmd *cobra.Command, evts []notify.Payload) error {
-	fmtStr := desc.TextDesc(text.DescKeyEventsHumanFormat)
+	fmtStr := desc.Text(text.DescKeyEventsHumanFormat)
 	for _, e := range evts {
 		ts := FormatEventTimestamp(e.Timestamp)
 		hookName := ExtractHookName(e)

@@ -21,6 +21,6 @@ import (
 //   - filename: Name of the file the entry was added to
 func InfoAddedTo(cmd *cobra.Command, filename string) {
 	cmd.Println(
-		fmt.Sprintf(desc.TextDesc(text.DescKeyWriteAddedTo), filename),
+		fmt.Sprintf(desc.Text(text.DescKeyWriteAddedTo), filename),
 	)
 }

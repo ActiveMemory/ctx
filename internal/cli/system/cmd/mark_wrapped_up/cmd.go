@@ -17,7 +17,7 @@ import (
 // Returns:
 //   - *cobra.Command: Configured mark-wrapped-up subcommand
 func Cmd() *cobra.Command {
-	short, long := desc.CommandDesc(cmd.DescKeySystemMarkWrappedUp)
+	short, long := desc.Command(cmd.DescKeySystemMarkWrappedUp)
 
 	return &cobra.Command{
 		Use:    "mark-wrapped-up",

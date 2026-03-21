@@ -32,7 +32,7 @@ func bodyLines(n int) string {
 }
 
 func TestCollapseToolOutputs_LongOutputWrapped(t *testing.T) {
-	header := turnHeader(1, desc.TextDesc(text.DescKeyLabelToolOutput), "10:00:00")
+	header := turnHeader(1, desc.Text(text.DescKeyLabelToolOutput), "10:00:00")
 	body := bodyLines(12)
 	input := header + "\n\n" + body + "\n"
 
@@ -56,7 +56,7 @@ func TestCollapseToolOutputs_LongOutputWrapped(t *testing.T) {
 }
 
 func TestCollapseToolOutputs_ShortOutputUnchanged(t *testing.T) {
-	header := turnHeader(1, desc.TextDesc(text.DescKeyLabelToolOutput), "10:00:00")
+	header := turnHeader(1, desc.Text(text.DescKeyLabelToolOutput), "10:00:00")
 	body := bodyLines(5)
 	input := header + "\n\n" + body + "\n"
 
@@ -71,7 +71,7 @@ func TestCollapseToolOutputs_ShortOutputUnchanged(t *testing.T) {
 }
 
 func TestCollapseToolOutputs_ExactThresholdUnchanged(t *testing.T) {
-	header := turnHeader(1, desc.TextDesc(text.DescKeyLabelToolOutput), "10:00:00")
+	header := turnHeader(1, desc.Text(text.DescKeyLabelToolOutput), "10:00:00")
 	body := bodyLines(journal.DetailsThreshold)
 	input := header + "\n\n" + body + "\n"
 
@@ -83,7 +83,7 @@ func TestCollapseToolOutputs_ExactThresholdUnchanged(t *testing.T) {
 }
 
 func TestCollapseToolOutputs_AlreadyWrappedNotDoubled(t *testing.T) {
-	header := turnHeader(1, desc.TextDesc(text.DescKeyLabelToolOutput), "10:00:00")
+	header := turnHeader(1, desc.Text(text.DescKeyLabelToolOutput), "10:00:00")
 	body := "<details>\n<summary>15 lines</summary>\n\n" +
 		bodyLines(15) + "\n</details>"
 	input := header + "\n\n" + body + "\n"
@@ -110,9 +110,9 @@ func TestCollapseToolOutputs_NonToolTurnsUntouched(t *testing.T) {
 }
 
 func TestCollapseToolOutputs_MixedTurns(t *testing.T) {
-	short := turnHeader(1, desc.TextDesc(text.DescKeyLabelToolOutput), "10:00:00") +
+	short := turnHeader(1, desc.Text(text.DescKeyLabelToolOutput), "10:00:00") +
 		"\n\n" + bodyLines(3) + "\n"
-	long := turnHeader(2, desc.TextDesc(text.DescKeyLabelToolOutput), "10:01:00") +
+	long := turnHeader(2, desc.Text(text.DescKeyLabelToolOutput), "10:01:00") +
 		"\n\n" + bodyLines(15) + "\n"
 	user := turnHeader(3, "User", "10:02:00") +
 		"\n\n" + bodyLines(20) + "\n"

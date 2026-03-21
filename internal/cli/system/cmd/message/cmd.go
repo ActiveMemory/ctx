@@ -18,7 +18,7 @@ import (
 // Returns:
 //   - *cobra.Command: Configured message subcommand with sub-subcommands
 func Cmd() *cobra.Command {
-	short, long := desc.CommandDesc(cmd.DescKeySystemMessage)
+	short, long := desc.Command(cmd.DescKeySystemMessage)
 
 	cmd := &cobra.Command{
 		Use:   "message",
@@ -38,7 +38,7 @@ func Cmd() *cobra.Command {
 
 // messageListCmd returns the "ctx system message list" subcommand.
 func messageListCmd() *cobra.Command {
-	short, _ := desc.CommandDesc(cmd.DescKeySystemMessageList)
+	short, _ := desc.Command(cmd.DescKeySystemMessageList)
 
 	cmd := &cobra.Command{
 		Use:   "list",
@@ -47,13 +47,13 @@ func messageListCmd() *cobra.Command {
 			return RunMessageList(cmd)
 		},
 	}
-	cmd.Flags().Bool("json", false, desc.FlagDesc(flag.DescKeySystemMessageJson))
+	cmd.Flags().Bool("json", false, desc.Flag(flag.DescKeySystemMessageJson))
 	return cmd
 }
 
 // messageShowCmd returns the "ctx system message show" subcommand.
 func messageShowCmd() *cobra.Command {
-	short, _ := desc.CommandDesc(cmd.DescKeySystemMessageShow)
+	short, _ := desc.Command(cmd.DescKeySystemMessageShow)
 
 	return &cobra.Command{
 		Use:   "show <hook> <variant>",
@@ -67,7 +67,7 @@ func messageShowCmd() *cobra.Command {
 
 // messageEditCmd returns the "ctx system message edit" subcommand.
 func messageEditCmd() *cobra.Command {
-	short, _ := desc.CommandDesc(cmd.DescKeySystemMessageEdit)
+	short, _ := desc.Command(cmd.DescKeySystemMessageEdit)
 
 	return &cobra.Command{
 		Use:   "edit <hook> <variant>",
@@ -81,7 +81,7 @@ func messageEditCmd() *cobra.Command {
 
 // messageResetCmd returns the "ctx system message reset" subcommand.
 func messageResetCmd() *cobra.Command {
-	short, _ := desc.CommandDesc(cmd.DescKeySystemMessageReset)
+	short, _ := desc.Command(cmd.DescKeySystemMessageReset)
 
 	return &cobra.Command{
 		Use:   "reset <hook> <variant>",

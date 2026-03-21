@@ -12,7 +12,6 @@ const (
 	DescKeyRecallExportDryRun          = "recall.export.dry-run"
 	DescKeyRecallExportKeepFrontmatter = "recall.export.keep-frontmatter"
 	DescKeyRecallExportRegenerate      = "recall.export.regenerate"
-	DescKeyRecallExportSkipExisting    = "recall.export.skip-existing"
 	DescKeyRecallExportYes             = "recall.export.yes"
 	DescKeyRecallListAllProjects       = "recall.list.all-projects"
 	DescKeyRecallListLimit             = "recall.list.limit"

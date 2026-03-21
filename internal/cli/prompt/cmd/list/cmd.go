@@ -17,10 +17,10 @@ import (
 // Returns:
 //   - *cobra.Command: Configured list subcommand
 func Cmd() *cobra.Command {
-	short, _ := desc.CommandDesc(cmd.DescKeyPromptList)
+	short, _ := desc.Command(cmd.DescKeyPromptList)
 
 	return &cobra.Command{
-		Use:   "list",
+		Use:   cmd.UsePromptList,
 		Short: short,
 		Args:  cobra.NoArgs,
 		RunE: func(cmd *cobra.Command, _ []string) error {

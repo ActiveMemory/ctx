@@ -77,7 +77,7 @@ func Run(cmd *cobra.Command, stdin *os.File) error {
 	var perFile []core.FileTokenEntry
 
 	content.WriteString(
-		desc.TextDesc(text.DescKeyContextLoadGateHeader) +
+		desc.Text(text.DescKeyContextLoadGateHeader) +
 			strings.Repeat(
 				load_gate.ContextLoadSeparatorChar, load_gate.ContextLoadSeparatorWidth,
 			) +
@@ -102,10 +102,10 @@ func Run(cmd *cobra.Command, stdin *os.File) error {
 		case ctx.Decision, ctx.Learning:
 			idx := core.ExtractIndex(string(data))
 			if idx == "" {
-				idx = desc.TextDesc(text.DescKeyContextLoadGateIndexFallback)
+				idx = desc.Text(text.DescKeyContextLoadGateIndexFallback)
 			}
 			content.WriteString(fmt.Sprintf(
-				desc.TextDesc(text.DescKeyContextLoadGateIndexHeader), f, idx))
+				desc.Text(text.DescKeyContextLoadGateIndexHeader), f, idx))
 			tokens := token2.EstimateTokensString(idx)
 			totalTokens += tokens
 			perFile = append(perFile, core.FileTokenEntry{
@@ -116,7 +116,7 @@ func Run(cmd *cobra.Command, stdin *os.File) error {
 
 		default:
 			content.WriteString(fmt.Sprintf(
-				desc.TextDesc(
+				desc.Text(
 					text.DescKeyContextLoadGateFileHeader,
 				), f, string(data)))
 			tokens := token2.EstimateTokens(data)
@@ -141,14 +141,14 @@ func Run(cmd *cobra.Command, stdin *os.File) error {
 			load_gate.ContextLoadSeparatorChar, load_gate.ContextLoadSeparatorWidth,
 		) + token.NewlineLF)
 	content.WriteString(fmt.Sprintf(
-		desc.TextDesc(text.DescKeyContextLoadGateFooter),
+		desc.Text(text.DescKeyContextLoadGateFooter),
 		filesLoaded, totalTokens))
 
 	core.PrintHookContext(cmd, hook.EventPreToolUse, content.String())
 
 	// Webhook: metadata only — never send file content externally
 	webhookMsg := fmt.Sprintf(
-		desc.TextDesc(text.DescKeyContextLoadGateWebhook),
+		desc.Text(text.DescKeyContextLoadGateWebhook),
 		filesLoaded, totalTokens)
 	core.Relay(webhookMsg, input.SessionID, nil)
 

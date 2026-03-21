@@ -60,7 +60,7 @@ func ConsolidateToolRuns(content string) string {
 
 		if count > 1 {
 			out = append(out, header, "", body, "",
-				fmt.Sprintf(desc.TextDesc(text.DescKeyJournalConsolidateCount), count), "",
+				fmt.Sprintf(desc.Text(text.DescKeyJournalConsolidateCount), count), "",
 			)
 		} else {
 			// Keep original lines (preserves blank lines as-is)

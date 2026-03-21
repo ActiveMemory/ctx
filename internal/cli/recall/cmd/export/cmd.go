@@ -7,13 +7,13 @@
 package export
 
 import (
-	"github.com/ActiveMemory/ctx/internal/assets/read/desc"
-	"github.com/ActiveMemory/ctx/internal/config/embed/cmd"
-	"github.com/ActiveMemory/ctx/internal/config/embed/flag"
-	cflag "github.com/ActiveMemory/ctx/internal/config/flag"
 	"github.com/spf13/cobra"
 
+	"github.com/ActiveMemory/ctx/internal/assets/read/desc"
 	"github.com/ActiveMemory/ctx/internal/cli/recall/core"
+	"github.com/ActiveMemory/ctx/internal/config/embed/cmd"
+	"github.com/ActiveMemory/ctx/internal/config/embed/flag"
+	cFlag "github.com/ActiveMemory/ctx/internal/config/flag"
 )
 
 // Cmd returns the recall export subcommand.
@@ -23,10 +23,10 @@ import (
 func Cmd() *cobra.Command {
 	var opts core.ExportOpts
 
-	short, long := desc.CommandDesc(cmd.DescKeyRecallExport)
+	short, long := desc.Command(cmd.DescKeyRecallExport)
 
-	cmd := &cobra.Command{
-		Use:   "export [session-id]",
+	c := &cobra.Command{
+		Use:   cmd.UseRecallExport,
 		Short: short,
 		Long:  long,
 		RunE: func(cmd *cobra.Command, args []string) error {
@@ -34,39 +34,29 @@ func Cmd() *cobra.Command {
 		},
 	}
 
-	cmd.Flags().BoolVar(
-		&opts.All, "all", false, desc.FlagDesc(flag.DescKeyRecallExportAll),
+	c.Flags().BoolVar(
+		&opts.All, cFlag.All, false, desc.Flag(flag.DescKeyRecallExportAll),
 	)
-	cmd.Flags().BoolVar(
-		&opts.AllProjects, "all-projects", false,
-		desc.FlagDesc(flag.DescKeyRecallExportAllProjects),
+	c.Flags().BoolVar(
+		&opts.AllProjects, cFlag.AllProjects, false,
+		desc.Flag(flag.DescKeyRecallExportAllProjects),
 	)
-	cmd.Flags().BoolVar(
-		&opts.Regenerate,
-		"regenerate", false,
-		desc.FlagDesc(flag.DescKeyRecallExportRegenerate),
+	c.Flags().BoolVar(
+		&opts.Regenerate, cFlag.Regenerate, false,
+		desc.Flag(flag.DescKeyRecallExportRegenerate),
 	)
-	cmd.Flags().BoolVar(
-		&opts.KeepFrontmatter,
-		"keep-frontmatter", true,
-		desc.FlagDesc(flag.DescKeyRecallExportKeepFrontmatter),
+	c.Flags().BoolVar(
+		&opts.KeepFrontmatter, cFlag.KeepFrontmatter, true,
+		desc.Flag(flag.DescKeyRecallExportKeepFrontmatter),
 	)
-
-	cmd.Flags().BoolVarP(
-		&opts.Yes,
-		"yes", "y", false,
-		desc.FlagDesc(flag.DescKeyRecallExportYes),
+	c.Flags().BoolVarP(
+		&opts.Yes, cFlag.Yes, cFlag.ShortYes, false,
+		desc.Flag(flag.DescKeyRecallExportYes),
 	)
-	cmd.Flags().BoolVar(
-		&opts.DryRun,
-		cflag.DryRun, false,
-		desc.FlagDesc(flag.DescKeyRecallExportDryRun),
+	c.Flags().BoolVar(
+		&opts.DryRun, cFlag.DryRun, false,
+		desc.Flag(flag.DescKeyRecallExportDryRun),
 	)
 
-	// Deprecated: --skip-existing is now the default behavior for --all.
-	var skipExisting bool
-	cmd.Flags().BoolVar(&skipExisting, "skip-existing", false, desc.FlagDesc(flag.DescKeyRecallExportSkipExisting))
-	_ = cmd.Flags().MarkDeprecated("skip-existing", "this is now the default behavior for --all")
-
-	return cmd
+	return c
 }

@@ -7,6 +7,13 @@
 package cmd
 
 const (
+	UsePromptAdd  = "add NAME"
+	UsePromptList = "list"
+	UsePromptRm   = "rm NAME"
+	UsePromptShow = "show NAME"
+)
+
+const (
 	DescKeyPrompt     = "prompt"
 	DescKeyPromptAdd  = "prompt.add"
 	DescKeyPromptList = "prompt.list"

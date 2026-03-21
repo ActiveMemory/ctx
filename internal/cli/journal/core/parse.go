@@ -126,7 +126,7 @@ func ParseJournalEntry(path, filename string) JournalEntry {
 	}
 
 	// Check for suggestion mode sessions
-	if strings.Contains(contentStr, desc.TextDesc(text.DescKeyLabelSuggestionMode)) {
+	if strings.Contains(contentStr, desc.Text(text.DescKeyLabelSuggestionMode)) {
 		entry.Suggestive = true
 	}
 
@@ -143,16 +143,16 @@ func ParseJournalEntry(path, filename string) JournalEntry {
 		}
 
 		// Time from metadata
-		if strings.HasPrefix(line, desc.TextDesc(text.DescKeyLabelMetadataTime)) {
+		if strings.HasPrefix(line, desc.Text(text.DescKeyLabelMetadataTime)) {
 			entry.Time = strings.TrimSpace(
-				strings.TrimPrefix(line, desc.TextDesc(text.DescKeyLabelMetadataTime)),
+				strings.TrimPrefix(line, desc.Text(text.DescKeyLabelMetadataTime)),
 			)
 		}
 
 		// Project from metadata
-		if strings.HasPrefix(line, desc.TextDesc(text.DescKeyLabelMetadataProject)) {
+		if strings.HasPrefix(line, desc.Text(text.DescKeyLabelMetadataProject)) {
 			entry.Project = strings.TrimSpace(
-				strings.TrimPrefix(line, desc.TextDesc(text.DescKeyLabelMetadataProject)),
+				strings.TrimPrefix(line, desc.Text(text.DescKeyLabelMetadataProject)),
 			)
 		}
 

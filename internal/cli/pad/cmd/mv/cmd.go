@@ -19,7 +19,7 @@ import (
 // Returns:
 //   - *cobra.Command: Configured mv subcommand
 func Cmd() *cobra.Command {
-	short, _ := desc.CommandDesc(cmd.DescKeyPadMv)
+	short, _ := desc.Command(cmd.DescKeyPadMv)
 	return &cobra.Command{
 		Use:   cmd.UsePadMv,
 		Short: short,

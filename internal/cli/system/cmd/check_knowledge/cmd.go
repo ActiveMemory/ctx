@@ -19,7 +19,7 @@ import (
 // Returns:
 //   - *cobra.Command: Configured check-knowledge subcommand
 func Cmd() *cobra.Command {
-	short, long := desc.CommandDesc(cmd.DescKeySystemCheckKnowledge)
+	short, long := desc.Command(cmd.DescKeySystemCheckKnowledge)
 
 	return &cobra.Command{
 		Use:    "check-knowledge",

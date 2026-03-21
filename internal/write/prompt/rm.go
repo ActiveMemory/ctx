@@ -25,6 +25,6 @@ func Removed(cmd *cobra.Command, name string) {
 		return
 	}
 	cmd.Println(
-		fmt.Sprintf(desc.TextDesc(text.DescKeyWritePromptRemoved), name),
+		fmt.Sprintf(desc.Text(text.DescKeyWritePromptRemoved), name),
 	)
 }

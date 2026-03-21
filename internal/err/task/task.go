@@ -19,7 +19,7 @@ import (
 // Returns:
 //   - error: "TASKS.md not found"
 func FileNotFound() error {
-	return errors.New(desc.TextDesc(text.DescKeyErrTaskFileNotFound))
+	return errors.New(desc.Text(text.DescKeyErrTaskFileNotFound))
 }
 
 // FileRead wraps a failure to read TASKS.md.
@@ -30,7 +30,7 @@ func FileNotFound() error {
 // Returns:
 //   - error: "failed to read TASKS.md: <cause>"
 func FileRead(cause error) error {
-	return fmt.Errorf(desc.TextDesc(text.DescKeyErrTaskFileRead), cause)
+	return fmt.Errorf(desc.Text(text.DescKeyErrTaskFileRead), cause)
 }
 
 // FileWrite wraps a failure to write TASKS.md.
@@ -41,7 +41,7 @@ func FileRead(cause error) error {
 // Returns:
 //   - error: "failed to write TASKS.md: <cause>"
 func FileWrite(cause error) error {
-	return fmt.Errorf(desc.TextDesc(text.DescKeyErrTaskFileWrite), cause)
+	return fmt.Errorf(desc.Text(text.DescKeyErrTaskFileWrite), cause)
 }
 
 // MultipleMatches returns an error when a query matches more than one task.
@@ -53,7 +53,7 @@ func FileWrite(cause error) error {
 //   - error: "multiple tasks match <query>; be more specific or use task number"
 func MultipleMatches(query string) error {
 	return fmt.Errorf(
-		desc.TextDesc(text.DescKeyErrTaskMultipleMatches), query,
+		desc.Text(text.DescKeyErrTaskMultipleMatches), query,
 	)
 }
 
@@ -65,7 +65,7 @@ func MultipleMatches(query string) error {
 // Returns:
 //   - error: "no task matching <query> found"
 func NotFound(query string) error {
-	return fmt.Errorf(desc.TextDesc(text.DescKeyErrTaskNotFound), query)
+	return fmt.Errorf(desc.Text(text.DescKeyErrTaskNotFound), query)
 }
 
 // NoneCompleted returns an error when there are no completed tasks to archive.
@@ -73,7 +73,7 @@ func NotFound(query string) error {
 // Returns:
 //   - error: "no completed tasks to archive"
 func NoneCompleted() error {
-	return errors.New(desc.TextDesc(text.DescKeyErrTaskNoCompletedTasks))
+	return errors.New(desc.Text(text.DescKeyErrTaskNoCompletedTasks))
 }
 
 // NoneSpecified returns an error when no task query was provided.
@@ -81,7 +81,7 @@ func NoneCompleted() error {
 // Returns:
 //   - error: "no task specified"
 func NoneSpecified() error {
-	return errors.New(desc.TextDesc(text.DescKeyErrTaskNoTaskSpecified))
+	return errors.New(desc.Text(text.DescKeyErrTaskNoTaskSpecified))
 }
 
 // NoMatch returns an error when no task matches the search query.
@@ -93,7 +93,7 @@ func NoneSpecified() error {
 //   - error: "no task matching \"<query>\" found"
 func NoMatch(query string) error {
 	return fmt.Errorf(
-		desc.TextDesc(text.DescKeyErrTaskNoTaskMatch), query,
+		desc.Text(text.DescKeyErrTaskNoTaskMatch), query,
 	)
 }
 
@@ -106,6 +106,6 @@ func NoMatch(query string) error {
 //   - error: "failed to write snapshot: <cause>"
 func SnapshotWrite(cause error) error {
 	return fmt.Errorf(
-		desc.TextDesc(text.DescKeyErrTaskSnapshotWrite), cause,
+		desc.Text(text.DescKeyErrTaskSnapshotWrite), cause,
 	)
 }

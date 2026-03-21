@@ -22,7 +22,7 @@ import (
 func Cmd() *cobra.Command {
 	var blobs bool
 
-	short, long := desc.CommandDesc(cmd.DescKeyPadImp)
+	short, long := desc.Command(cmd.DescKeyPadImp)
 	c := &cobra.Command{
 		Use:   cmd.UsePadImport,
 		Short: short,
@@ -37,7 +37,7 @@ func Cmd() *cobra.Command {
 	}
 
 	c.Flags().BoolVar(&blobs, cflag.Blob, false,
-		desc.FlagDesc(flag.DescKeyPadImpBlob))
+		desc.Flag(flag.DescKeyPadImpBlob))
 
 	return c
 }

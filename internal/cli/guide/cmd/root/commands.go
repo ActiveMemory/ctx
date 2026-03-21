@@ -24,14 +24,14 @@ import (
 //   - error: Always nil
 func listCommands(cmd *cobra.Command) error {
 	root := cmd.Root()
-	cmd.Println(desc.TextDesc(text.DescKeyGuideCommandsHead))
+	cmd.Println(desc.Text(text.DescKeyGuideCommandsHead))
 	cmd.Println()
 	for _, c := range root.Commands() {
 		if c.Hidden {
 			continue
 		}
 		cmd.Println(fmt.Sprintf(
-			desc.TextDesc(text.DescKeyGuideCommandLine), c.Name(), c.Short))
+			desc.Text(text.DescKeyGuideCommandLine), c.Name(), c.Short))
 	}
 	return nil
 }

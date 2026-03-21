@@ -20,7 +20,7 @@ import (
 // Returns:
 //   - *cobra.Command: Configured switch subcommand
 func Cmd() *cobra.Command {
-	short, long := desc.CommandDesc(cmd.DescKeyConfigSwitch)
+	short, long := desc.Command(cmd.DescKeyConfigSwitch)
 
 	return &cobra.Command{
 		Use:         cmd.UseConfigSwitch,

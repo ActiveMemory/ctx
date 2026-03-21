@@ -29,7 +29,7 @@ func insertBeforeFirstEntry(content, entry, header string) []byte {
 	search := content
 	offset := 0
 	for {
-		rel := strings.Index(search, desc.TextDesc(text.DescKeyHeadingLearningStart))
+		rel := strings.Index(search, desc.Text(text.DescKeyHeadingLearningStart))
 		if rel == -1 {
 			break
 		}
@@ -42,7 +42,7 @@ func insertBeforeFirstEntry(content, entry, header string) []byte {
 					content[entryIdx:],
 			)
 		}
-		offset = entryIdx + len(desc.TextDesc(text.DescKeyHeadingLearningStart))
+		offset = entryIdx + len(desc.Text(text.DescKeyHeadingLearningStart))
 		search = content[offset:]
 	}
 

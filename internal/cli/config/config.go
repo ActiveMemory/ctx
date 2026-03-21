@@ -21,7 +21,7 @@ import (
 // Returns:
 //   - *cobra.Command: Configured config command with subcommands
 func Cmd() *cobra.Command {
-	short, long := desc.CommandDesc(cmd.DescKeyConfig)
+	short, long := desc.Command(cmd.DescKeyConfig)
 
 	c := &cobra.Command{
 		Use:   cmd.UseConfig,

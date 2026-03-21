@@ -32,7 +32,7 @@ func Cmd() *cobra.Command {
 	var hook string
 	var variant string
 
-	short, long := desc.CommandDesc(cmd.DescKeyNotify)
+	short, long := desc.Command(cmd.DescKeyNotify)
 	c := &cobra.Command{
 		Use:   cmd.UseNotify,
 		Short: short,

@@ -21,21 +21,21 @@ import (
 var Defs = []proto.Tool{
 	{
 		Name: toolCfg.Status,
-		Description: desc.TextDesc(
+		Description: desc.Text(
 			text.DescKeyMCPToolStatusDesc),
 		InputSchema: proto.InputSchema{Type: schema.Object},
 		Annotations: &proto.ToolAnnotations{ReadOnlyHint: true},
 	},
 	{
 		Name: toolCfg.Add,
-		Description: desc.TextDesc(
+		Description: desc.Text(
 			text.DescKeyMCPToolAddDesc),
 		InputSchema: proto.InputSchema{
 			Type: schema.Object,
 			Properties: MergeProps(map[string]proto.Property{
 				cli.AttrType: {
 					Type: schema.String,
-					Description: desc.TextDesc(
+					Description: desc.Text(
 						text.DescKeyMCPToolPropType),
 					Enum: []string{
 						"task", "decision",
@@ -44,12 +44,12 @@ var Defs = []proto.Tool{
 				},
 				field.Content: {
 					Type: schema.String,
-					Description: desc.TextDesc(
+					Description: desc.Text(
 						text.DescKeyMCPToolPropContent),
 				},
 				field.Priority: {
 					Type: schema.String,
-					Description: desc.TextDesc(
+					Description: desc.Text(
 						text.DescKeyMCPToolPropPriority),
 					Enum: entry.Priorities,
 				},
@@ -61,14 +61,14 @@ var Defs = []proto.Tool{
 	},
 	{
 		Name: toolCfg.Complete,
-		Description: desc.TextDesc(
+		Description: desc.Text(
 			text.DescKeyMCPToolCompleteDesc),
 		InputSchema: proto.InputSchema{
 			Type: schema.Object,
 			Properties: map[string]proto.Property{
 				field.Query: {
 					Type: schema.String,
-					Description: desc.TextDesc(
+					Description: desc.Text(
 						text.DescKeyMCPToolPropQuery),
 				},
 			},
@@ -78,26 +78,26 @@ var Defs = []proto.Tool{
 	},
 	{
 		Name: toolCfg.Drift,
-		Description: desc.TextDesc(
+		Description: desc.Text(
 			text.DescKeyMCPToolDriftDesc),
 		InputSchema: proto.InputSchema{Type: schema.Object},
 		Annotations: &proto.ToolAnnotations{ReadOnlyHint: true},
 	},
 	{
 		Name: toolCfg.Recall,
-		Description: desc.TextDesc(
+		Description: desc.Text(
 			text.DescKeyMCPToolRecallDesc),
 		InputSchema: proto.InputSchema{
 			Type: schema.Object,
 			Properties: map[string]proto.Property{
 				field.Limit: {
 					Type: schema.Number,
-					Description: desc.TextDesc(
+					Description: desc.Text(
 						text.DescKeyMCPToolPropLimit),
 				},
 				field.Since: {
 					Type: schema.String,
-					Description: desc.TextDesc(
+					Description: desc.Text(
 						text.DescKeyMCPToolPropSince),
 				},
 			},
@@ -106,19 +106,19 @@ var Defs = []proto.Tool{
 	},
 	{
 		Name: toolCfg.WatchUpdate,
-		Description: desc.TextDesc(
+		Description: desc.Text(
 			text.DescKeyMCPToolWatchUpdateDesc),
 		InputSchema: proto.InputSchema{
 			Type: schema.Object,
 			Properties: MergeProps(map[string]proto.Property{
 				cli.AttrType: {
 					Type: schema.String,
-					Description: desc.TextDesc(
+					Description: desc.Text(
 						text.DescKeyMCPToolPropEntryType),
 				},
 				field.Content: {
 					Type: schema.String,
-					Description: desc.TextDesc(
+					Description: desc.Text(
 						text.DescKeyMCPToolPropMainContent),
 				},
 			}, EntryAttrProps(
@@ -129,14 +129,14 @@ var Defs = []proto.Tool{
 	},
 	{
 		Name: toolCfg.Compact,
-		Description: desc.TextDesc(
+		Description: desc.Text(
 			text.DescKeyMCPToolCompactDesc),
 		InputSchema: proto.InputSchema{
 			Type: schema.Object,
 			Properties: map[string]proto.Property{
 				field.Archive: {
 					Type: schema.Boolean,
-					Description: desc.TextDesc(
+					Description: desc.Text(
 						text.DescKeyMCPToolPropArchive),
 				},
 			},
@@ -145,21 +145,21 @@ var Defs = []proto.Tool{
 	},
 	{
 		Name: toolCfg.Next,
-		Description: desc.TextDesc(
+		Description: desc.Text(
 			text.DescKeyMCPToolNextDesc),
 		InputSchema: proto.InputSchema{Type: schema.Object},
 		Annotations: &proto.ToolAnnotations{ReadOnlyHint: true},
 	},
 	{
 		Name: toolCfg.CheckTaskCompletion,
-		Description: desc.TextDesc(
+		Description: desc.Text(
 			text.DescKeyMCPToolCheckTaskDesc),
 		InputSchema: proto.InputSchema{
 			Type: schema.Object,
 			Properties: map[string]proto.Property{
 				field.RecentAction: {
 					Type: schema.String,
-					Description: desc.TextDesc(
+					Description: desc.Text(
 						text.DescKeyMCPToolPropRecentAct),
 				},
 			},
@@ -168,19 +168,19 @@ var Defs = []proto.Tool{
 	},
 	{
 		Name: toolCfg.SessionEvent,
-		Description: desc.TextDesc(
+		Description: desc.Text(
 			text.DescKeyMCPToolSessionDesc),
 		InputSchema: proto.InputSchema{
 			Type: schema.Object,
 			Properties: map[string]proto.Property{
 				cli.AttrType: {
 					Type: schema.String,
-					Description: desc.TextDesc(
+					Description: desc.Text(
 						text.DescKeyMCPToolPropEventType),
 				},
 				field.Caller: {
 					Type: schema.String,
-					Description: desc.TextDesc(
+					Description: desc.Text(
 						text.DescKeyMCPToolPropCaller),
 				},
 			},
@@ -190,7 +190,7 @@ var Defs = []proto.Tool{
 	},
 	{
 		Name: toolCfg.Remind,
-		Description: desc.TextDesc(
+		Description: desc.Text(
 			text.DescKeyMCPToolRemindDesc),
 		InputSchema: proto.InputSchema{Type: schema.Object},
 		Annotations: &proto.ToolAnnotations{ReadOnlyHint: true},

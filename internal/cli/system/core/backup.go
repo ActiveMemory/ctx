@@ -260,8 +260,8 @@ func CheckSMBMountWarnings(smbURL string, warnings []string) []string {
 
 	if _, statErr := os.Stat(cfg.GVFSPath); os.IsNotExist(statErr) {
 		warnings = append(warnings,
-			fmt.Sprintf(desc.TextDesc(text.DescKeyBackupSMBNotMounted), cfg.Host),
-			desc.TextDesc(text.DescKeyBackupSMBUnavailable),
+			fmt.Sprintf(desc.Text(text.DescKeyBackupSMBNotMounted), cfg.Host),
+			desc.Text(text.DescKeyBackupSMBUnavailable),
 		)
 	}
 
@@ -281,8 +281,8 @@ func CheckBackupMarker(markerPath string, warnings []string) []string {
 	info, statErr := os.Stat(markerPath)
 	if os.IsNotExist(statErr) {
 		return append(warnings,
-			desc.TextDesc(text.DescKeyBackupNoMarker),
-			desc.TextDesc(text.DescKeyBackupRunHint),
+			desc.Text(text.DescKeyBackupNoMarker),
+			desc.Text(text.DescKeyBackupRunHint),
 		)
 	}
 	if statErr != nil {
@@ -292,8 +292,8 @@ func CheckBackupMarker(markerPath string, warnings []string) []string {
 	ageDays := int(time.Since(info.ModTime()).Hours() / 24)
 	if ageDays >= archive.BackupMaxAgeDays {
 		return append(warnings,
-			fmt.Sprintf(desc.TextDesc(text.DescKeyBackupStale), ageDays),
-			desc.TextDesc(text.DescKeyBackupRunHint),
+			fmt.Sprintf(desc.Text(text.DescKeyBackupStale), ageDays),
+			desc.Text(text.DescKeyBackupRunHint),
 		)
 	}
 

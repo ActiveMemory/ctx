@@ -19,7 +19,7 @@ import (
 // Returns:
 //   - *cobra.Command: Configured context-load-gate subcommand
 func Cmd() *cobra.Command {
-	short, long := desc.CommandDesc(cmd.DescKeySystemContextLoadGate)
+	short, long := desc.Command(cmd.DescKeySystemContextLoadGate)
 
 	return &cobra.Command{
 		Use:    "context-load-gate",

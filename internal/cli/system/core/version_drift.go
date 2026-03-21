@@ -62,8 +62,8 @@ func CheckVersionDrift(cmd *cobra.Command, sessionID string) {
 	PrintHookContext(cmd, hook.EventPostToolUse, msg)
 
 	ref := notify.NewTemplateRef(hook.VersionDrift, hook.VariantNudge, vars)
-	Relay(fmt.Sprintf(desc.TextDesc(text.DescKeyRelayPrefixFormat),
-		hook.VersionDrift, desc.TextDesc(text.DescKeyVersionDriftRelayMessage)), sessionID, ref)
+	Relay(fmt.Sprintf(desc.Text(text.DescKeyRelayPrefixFormat),
+		hook.VersionDrift, desc.Text(text.DescKeyVersionDriftRelayMessage)), sessionID, ref)
 }
 
 // ReadVersionFile reads and trims the VERSION file from the project root.

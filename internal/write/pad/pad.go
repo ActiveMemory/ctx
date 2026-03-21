@@ -31,7 +31,7 @@ func InfoPathConversionExists(
 	}
 	cmd.Println(
 		fmt.Sprintf(
-			desc.TextDesc(text.DescKeyWritePathExists), oldPath, filepath.Join(rootDir, newPath),
+			desc.Text(text.DescKeyWritePathExists), oldPath, filepath.Join(rootDir, newPath),
 		),
 	)
 }

@@ -18,7 +18,7 @@ import (
 // Returns:
 //   - *cobra.Command: Configured events subcommand
 func Cmd() *cobra.Command {
-	short, long := desc.CommandDesc(cmd.DescKeySystemEvents)
+	short, long := desc.Command(cmd.DescKeySystemEvents)
 
 	cmd := &cobra.Command{
 		Use:   "events",
@@ -30,22 +30,22 @@ func Cmd() *cobra.Command {
 	}
 
 	cmd.Flags().StringP(
-		"hook", "k", "", desc.FlagDesc(flag.DescKeySystemEventsHook),
+		"hook", "k", "", desc.Flag(flag.DescKeySystemEventsHook),
 	)
 	cmd.Flags().StringP(
-		"session", "s", "", desc.FlagDesc(flag.DescKeySystemEventsSession),
+		"session", "s", "", desc.Flag(flag.DescKeySystemEventsSession),
 	)
 	cmd.Flags().StringP(
-		"event", "e", "", desc.FlagDesc(flag.DescKeySystemEventsEvent),
+		"event", "e", "", desc.Flag(flag.DescKeySystemEventsEvent),
 	)
 	cmd.Flags().IntP(
-		"last", "n", 50, desc.FlagDesc(flag.DescKeySystemEventsLast),
+		"last", "n", 50, desc.Flag(flag.DescKeySystemEventsLast),
 	)
 	cmd.Flags().BoolP(
-		"json", "j", false, desc.FlagDesc(flag.DescKeySystemEventsJson),
+		"json", "j", false, desc.Flag(flag.DescKeySystemEventsJson),
 	)
 	cmd.Flags().BoolP(
-		"all", "a", false, desc.FlagDesc(flag.DescKeySystemEventsAll),
+		"all", "a", false, desc.Flag(flag.DescKeySystemEventsAll),
 	)
 
 	return cmd

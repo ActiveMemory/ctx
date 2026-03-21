@@ -62,22 +62,22 @@ func WriteOversizeFlag(
 	_ = os.MkdirAll(sd, fs.PermRestrictedDir)
 
 	var flag strings.Builder
-	flag.WriteString(desc.TextDesc(text.DescKeyContextLoadGateOversizeHeader))
+	flag.WriteString(desc.Text(text.DescKeyContextLoadGateOversizeHeader))
 	flag.WriteString(strings.Repeat("=", stats.ContextSizeOversizeSepLen) + token.NewlineLF)
 	flag.WriteString(fmt.Sprintf(
-		desc.TextDesc(text.DescKeyContextLoadGateOversizeTimestamp),
+		desc.Text(text.DescKeyContextLoadGateOversizeTimestamp),
 		time.Now().UTC().Format(time.RFC3339)))
 	flag.WriteString(fmt.Sprintf(
-		desc.TextDesc(text.DescKeyContextLoadGateOversizeInjected),
+		desc.Text(text.DescKeyContextLoadGateOversizeInjected),
 		totalTokens, threshold))
-	flag.WriteString(desc.TextDesc(text.DescKeyContextLoadGateOversizeBreakdown))
+	flag.WriteString(desc.Text(text.DescKeyContextLoadGateOversizeBreakdown))
 	for _, entry := range perFile {
 		flag.WriteString(fmt.Sprintf(
-			desc.TextDesc(text.DescKeyContextLoadGateOversizeFileEntry),
+			desc.Text(text.DescKeyContextLoadGateOversizeFileEntry),
 			entry.Name, entry.Tokens))
 	}
 	flag.WriteString(token.NewlineLF)
-	flag.WriteString(desc.TextDesc(text.DescKeyContextLoadGateOversizeAction))
+	flag.WriteString(desc.Text(text.DescKeyContextLoadGateOversizeAction))
 
 	_ = os.WriteFile(
 		filepath.Join(sd, stats.ContextSizeInjectionOversizeFlag),

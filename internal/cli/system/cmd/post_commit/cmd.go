@@ -19,7 +19,7 @@ import (
 // Returns:
 //   - *cobra.Command: Configured post-commit subcommand
 func Cmd() *cobra.Command {
-	short, long := desc.CommandDesc(cmd.DescKeySystemPostCommit)
+	short, long := desc.Command(cmd.DescKeySystemPostCommit)
 
 	return &cobra.Command{
 		Use:    "post-commit",

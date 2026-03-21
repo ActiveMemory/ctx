@@ -18,7 +18,7 @@ import (
 // Returns:
 //   - *cobra.Command: Configured resources subcommand
 func Cmd() *cobra.Command {
-	short, long := desc.CommandDesc(cmd.DescKeySystemResources)
+	short, long := desc.Command(cmd.DescKeySystemResources)
 
 	cmd := &cobra.Command{
 		Use:   "resources",
@@ -29,7 +29,7 @@ func Cmd() *cobra.Command {
 		},
 	}
 	cmd.Flags().Bool("json", false,
-		desc.FlagDesc(flag.DescKeySystemResourcesJson),
+		desc.Flag(flag.DescKeySystemResourcesJson),
 	)
 	return cmd
 }

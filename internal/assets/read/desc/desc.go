@@ -6,12 +6,9 @@
 
 package desc
 
-import (
-	"github.com/ActiveMemory/ctx/internal/assets/read/lookup"
-	"github.com/ActiveMemory/ctx/internal/config/embed/text"
-)
+import "github.com/ActiveMemory/ctx/internal/assets/read/lookup"
 
-// CommandDesc returns the Short and Long descriptions for a command.
+// Command returns the Short and Long descriptions for a command.
 //
 // Keys use dot notation: "pad", "pad.show", "system.bootstrap".
 // Returns empty strings if the key is not found.
@@ -22,7 +19,7 @@ import (
 // Returns:
 //   - short: One-line description
 //   - long: Multi-line help text (may be empty)
-func CommandDesc(key string) (short, long string) {
+func Command(key string) (short, long string) {
 	entry, ok := lookup.CommandsMap[key]
 	if !ok {
 		return "", ""
@@ -30,7 +27,7 @@ func CommandDesc(key string) (short, long string) {
 	return entry.Short, entry.Long
 }
 
-// FlagDesc returns the description for a flag.
+// Flag returns the description for a flag.
 //
 // Keys use dot notation: "add.file", "context-dir".
 // Returns an empty string if the key is not found.
@@ -40,7 +37,7 @@ func CommandDesc(key string) (short, long string) {
 //
 // Returns:
 //   - string: Flag description
-func FlagDesc(name string) string {
+func Flag(name string) string {
 	entry, ok := lookup.FlagsMap[name]
 	if !ok {
 		return ""
@@ -48,7 +45,7 @@ func FlagDesc(name string) string {
 	return entry.Short
 }
 
-// ExampleDesc returns example usage text for a given key.
+// Example returns example usage text for a given key.
 //
 // Keys match entry types: "decision", "learning", "task", "convention".
 // Returns an empty string if the key is not found.
@@ -58,7 +55,7 @@ func FlagDesc(name string) string {
 //
 // Returns:
 //   - string: Example text
-func ExampleDesc(name string) string {
+func Example(name string) string {
 	entry, ok := lookup.ExamplesMap[name]
 	if !ok {
 		return ""
@@ -66,7 +63,7 @@ func ExampleDesc(name string) string {
 	return entry.Short
 }
 
-// TextDesc returns a user-facing text string by key.
+// Text returns a user-facing text string by key.
 //
 // Keys use dot notation: "agent.instruction", "backup.run-hint".
 // Returns an empty string if the key is not found.
@@ -76,14 +73,10 @@ func ExampleDesc(name string) string {
 //
 // Returns:
 //   - string: Text content
-func TextDesc(name string) string {
+func Text(name string) string {
 	entry, ok := lookup.TextMap[name]
 	if !ok {
 		return ""
 	}
 	return entry.Short
-}
-
-func TextDescStopWords() string {
-	return TextDesc(text.DescKeyStopwords)
 }

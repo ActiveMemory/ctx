@@ -371,6 +371,8 @@ summary.term:
   short: 1 term
 summary.terms:
   short: '%d terms'
+recall.tool-count-line:
+  short: '%s: %d'
 sync.config.description:
   short: Found %s but %s not documented
 sync.config.suggestion:

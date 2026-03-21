@@ -22,7 +22,7 @@ import (
 func Cmd() *cobra.Command {
 	var dryRun bool
 
-	short, long := desc.CommandDesc(cmd.DescKeyMemoryImport)
+	short, long := desc.Command(cmd.DescKeyMemoryImport)
 	c := &cobra.Command{
 		Use:   cmd.UseMemoryImport,
 		Short: short,
@@ -34,7 +34,7 @@ func Cmd() *cobra.Command {
 
 	c.Flags().BoolVar(
 		&dryRun, cflag.DryRun, false,
-		desc.FlagDesc(flag.DescKeyMemoryImportDryRun),
+		desc.Flag(flag.DescKeyMemoryImportDryRun),
 	)
 
 	return c

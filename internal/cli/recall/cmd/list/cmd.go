@@ -7,12 +7,13 @@
 package list
 
 import (
+	"github.com/spf13/cobra"
+
 	"github.com/ActiveMemory/ctx/internal/assets/read/desc"
 	"github.com/ActiveMemory/ctx/internal/config/embed/cmd"
 	"github.com/ActiveMemory/ctx/internal/config/embed/flag"
-	cflag "github.com/ActiveMemory/ctx/internal/config/flag"
+	cFlag "github.com/ActiveMemory/ctx/internal/config/flag"
 	"github.com/ActiveMemory/ctx/internal/config/journal"
-	"github.com/spf13/cobra"
 )
 
 // Cmd returns the recall list subcommand.
@@ -29,10 +30,10 @@ func Cmd() *cobra.Command {
 		allProjects bool
 	)
 
-	short, long := desc.CommandDesc(cmd.DescKeyRecallList)
+	short, long := desc.Command(cmd.DescKeyRecallList)
 
-	cmd := &cobra.Command{
-		Use:   "list",
+	c := &cobra.Command{
+		Use:   cmd.UseRecallList,
 		Short: short,
 		Long:  long,
 		RunE: func(cmd *cobra.Command, args []string) error {
@@ -40,24 +41,26 @@ func Cmd() *cobra.Command {
 		},
 	}
 
-	cmd.Flags().IntVarP(&limit, "limit", "n", journal.DefaultRecallListLimit,
-		desc.FlagDesc(flag.DescKeyRecallListLimit),
+	c.Flags().IntVarP(
+		&limit, cFlag.Limit,
+		cFlag.ShortMaxIterations, journal.DefaultRecallListLimit,
+		desc.Flag(flag.DescKeyRecallListLimit),
 	)
-	cmd.Flags().StringVarP(&project, "project", "p", "",
-		desc.FlagDesc(flag.DescKeyRecallListProject),
+	c.Flags().StringVarP(&project, "project", "p", "",
+		desc.Flag(flag.DescKeyRecallListProject),
 	)
-	cmd.Flags().StringVarP(&tool, "tool", "t", "",
-		desc.FlagDesc(flag.DescKeyRecallListTool),
+	c.Flags().StringVarP(&tool, cFlag.Tool, cFlag.ShortTool, "",
+		desc.Flag(flag.DescKeyRecallListTool),
 	)
-	cmd.Flags().StringVar(&since, cflag.Since, "",
-		desc.FlagDesc(flag.DescKeyRecallListSince),
+	c.Flags().StringVar(&since, cFlag.Since, "",
+		desc.Flag(flag.DescKeyRecallListSince),
 	)
-	cmd.Flags().StringVar(&until, cflag.Until, "",
-		desc.FlagDesc(flag.DescKeyRecallListUntil),
+	c.Flags().StringVar(&until, cFlag.Until, "",
+		desc.Flag(flag.DescKeyRecallListUntil),
 	)
-	cmd.Flags().BoolVar(&allProjects, "all-projects", false,
-		desc.FlagDesc(flag.DescKeyRecallListAllProjects),
+	c.Flags().BoolVar(&allProjects, cFlag.AllProjects, false,
+		desc.Flag(flag.DescKeyRecallListAllProjects),
 	)
 
-	return cmd
+	return c
 }

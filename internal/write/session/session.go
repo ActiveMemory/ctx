@@ -23,7 +23,7 @@ func SessionPaused(cmd *cobra.Command, sessionID string) {
 	if cmd == nil {
 		return
 	}
-	cmd.Println(fmt.Sprintf(desc.TextDesc(text.DescKeyWritePaused), sessionID))
+	cmd.Println(fmt.Sprintf(desc.Text(text.DescKeyWritePaused), sessionID))
 }
 
 // SessionResumed prints confirmation that hooks were resumed.
@@ -35,7 +35,7 @@ func SessionResumed(cmd *cobra.Command, sessionID string) {
 	if cmd == nil {
 		return
 	}
-	cmd.Println(fmt.Sprintf(desc.TextDesc(text.DescKeyWriteResumed), sessionID))
+	cmd.Println(fmt.Sprintf(desc.Text(text.DescKeyWriteResumed), sessionID))
 }
 
 // SessionWrappedUp prints confirmation that the wrap-up marker was written.
@@ -46,5 +46,5 @@ func SessionWrappedUp(cmd *cobra.Command) {
 	if cmd == nil {
 		return
 	}
-	cmd.Println(desc.TextDesc(text.DescKeyMarkWrappedUpConfirmed))
+	cmd.Println(desc.Text(text.DescKeyMarkWrappedUpConfirmed))
 }

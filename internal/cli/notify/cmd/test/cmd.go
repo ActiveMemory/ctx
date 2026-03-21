@@ -17,7 +17,7 @@ import (
 // Returns:
 //   - *cobra.Command: Configured test subcommand
 func Cmd() *cobra.Command {
-	short, long := desc.CommandDesc(cmd.DescKeyNotifyTest)
+	short, long := desc.Command(cmd.DescKeyNotifyTest)
 	return &cobra.Command{
 		Use:   cmd.UseNotifyTest,
 		Short: short,

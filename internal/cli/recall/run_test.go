@@ -512,47 +512,6 @@ func TestRunRecallExport_KeepFrontmatterFalseResetsEnrichmentState(t *testing.T)
 	}
 }
 
-func TestRunRecallExport_SkipExistingLeavesFile(t *testing.T) {
-	tmpDir := t.TempDir()
-	t.Setenv("HOME", tmpDir)
-
-	projDir := filepath.Join(tmpDir, ".claude", "projects", "-home-test-skipproj")
-	createTestSessionJSONL(t, projDir, "sess-skip-004", "skip-existing", "/home/test/skipproj")
-
-	contextDir := filepath.Join(tmpDir, ".context")
-	journalDir := filepath.Join(contextDir, "journal")
-	if err := os.MkdirAll(journalDir, 0750); err != nil {
-		t.Fatal(err)
-	}
-
-	origDir, _ := os.Getwd()
-	if err := os.Chdir(tmpDir); err != nil {
-		t.Fatalf("chdir: %v", err)
-	}
-	defer func() { _ = os.Chdir(origDir) }()
-
-	// First export to discover the filename
-	_, mdFile := exportHelper(t, tmpDir)
-	path := filepath.Join(journalDir, mdFile)
-
-	// Overwrite the file with custom content
-	customContent := "my custom notes - do not overwrite\n"
-	if err := os.WriteFile(path, []byte(customContent), 0600); err != nil {
-		t.Fatal(err)
-	}
-
-	// Re-export with --skip-existing (deprecated but still accepted)
-	exportHelper(t, tmpDir, "--skip-existing")
-
-	data, err := os.ReadFile(filepath.Clean(path))
-	if err != nil {
-		t.Fatalf("read: %v", err)
-	}
-	if string(data) != customContent {
-		t.Errorf("--skip-existing should leave file unchanged\ngot:  %q\nwant: %q", string(data), customContent)
-	}
-}
-
 func TestRunRecallExport_AllSkipsExistingByDefault(t *testing.T) {
 	tmpDir := t.TempDir()
 	t.Setenv("HOME", tmpDir)

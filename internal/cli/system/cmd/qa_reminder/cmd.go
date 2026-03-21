@@ -19,7 +19,7 @@ import (
 // Returns:
 //   - *cobra.Command: Configured qa-reminder subcommand
 func Cmd() *cobra.Command {
-	short, long := desc.CommandDesc(cmd.DescKeySystemQaReminder)
+	short, long := desc.Command(cmd.DescKeySystemQaReminder)
 
 	return &cobra.Command{
 		Use:    "qa-reminder",

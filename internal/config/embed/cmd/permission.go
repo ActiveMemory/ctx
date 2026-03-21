@@ -7,6 +7,11 @@
 package cmd
 
 const (
+	UsePermissionRestore  = "restore"
+	UsePermissionSnapshot = "snapshot"
+)
+
+const (
 	DescKeyPermission         = "permission"
 	DescKeyPermissionRestore  = "permission.restore"
 	DescKeyPermissionSnapshot = "permission.snapshot"

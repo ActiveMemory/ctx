@@ -19,7 +19,7 @@ import (
 // Returns:
 //   - *cobra.Command: Configured specs-nudge subcommand
 func Cmd() *cobra.Command {
-	short, long := desc.CommandDesc(cmd.DescKeySystemSpecsNudge)
+	short, long := desc.Command(cmd.DescKeySystemSpecsNudge)
 
 	return &cobra.Command{
 		Use:    "specs-nudge",

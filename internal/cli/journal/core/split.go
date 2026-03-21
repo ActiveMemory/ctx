@@ -44,7 +44,7 @@ func writeSection[T any](sb *strings.Builder, headingKey string, items []T, form
 		return
 	}
 	nl := token.NewlineLF
-	sb.WriteString(desc.TextDesc(headingKey) + nl + nl)
+	sb.WriteString(desc.Text(headingKey) + nl + nl)
 	for _, item := range items {
 		sb.WriteString(formatFn(item))
 	}

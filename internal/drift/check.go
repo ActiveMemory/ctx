@@ -74,7 +74,7 @@ func checkPathReferences(ctx *entity.Context, report *Report) {
 						File:    f.Name,
 						Line:    lineNum + 1,
 						Type:    IssueDeadPath,
-						Message: desc.TextDesc(text.DescKeyDriftDeadPath),
+						Message: desc.Text(text.DescKeyDriftDeadPath),
 						Path:    path,
 					})
 					foundDeadPaths = true
@@ -106,7 +106,7 @@ func checkStaleness(ctx *entity.Context, report *Report) {
 			report.Warnings = append(report.Warnings, Issue{
 				File:    f.Name,
 				Type:    IssueStaleness,
-				Message: desc.TextDesc(text.DescKeyDriftStaleness),
+				Message: desc.Text(text.DescKeyDriftStaleness),
 				Path:    "",
 			})
 			staleness = true
@@ -157,7 +157,7 @@ func checkConstitution(_ *entity.Context, report *Report) {
 					report.Violations = append(report.Violations, Issue{
 						File:    entry.Name(),
 						Type:    IssueSecret,
-						Message: desc.TextDesc(text.DescKeyDriftSecret),
+						Message: desc.Text(text.DescKeyDriftSecret),
 						Rule:    "no_secrets",
 					})
 					foundViolation = true
@@ -191,7 +191,7 @@ func checkRequiredFiles(ctx *entity.Context, report *Report) {
 			report.Warnings = append(report.Warnings, Issue{
 				File:    name,
 				Type:    IssueMissing,
-				Message: desc.TextDesc(text.DescKeyDriftMissingFile),
+				Message: desc.Text(text.DescKeyDriftMissingFile),
 			})
 			allPresent = false
 		}
@@ -237,7 +237,7 @@ func checkFileAge(ctx *entity.Context, report *Report) {
 			report.Warnings = append(report.Warnings, Issue{
 				File:    f.Name,
 				Type:    IssueStaleAge,
-				Message: fmt.Sprintf(desc.TextDesc(text.DescKeyDriftStaleAge), days),
+				Message: fmt.Sprintf(desc.Text(text.DescKeyDriftStaleAge), days),
 			})
 			foundStale = true
 		}
@@ -280,7 +280,7 @@ func checkEntryCount(ctx *entity.Context, report *Report) {
 				File: f.Name,
 				Type: IssueEntryCount,
 				Message: fmt.Sprintf(
-					desc.TextDesc(text.DescKeyDriftEntryCount),
+					desc.Text(text.DescKeyDriftEntryCount),
 					len(blocks), c.threshold,
 				),
 			})
@@ -335,7 +335,7 @@ func checkMissingPackages(ctx *entity.Context, report *Report) {
 				File: f.Name,
 				Type: IssueMissingPackage,
 				Message: fmt.Sprintf(
-					desc.TextDesc(text.DescKeyDriftMissingPackage), pkg,
+					desc.Text(text.DescKeyDriftMissingPackage), pkg,
 				),
 				Path: pkg,
 			})

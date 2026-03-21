@@ -21,7 +21,7 @@ import (
 
 // Cmd returns the "ctx memory" parent command.
 func Cmd() *cobra.Command {
-	short, long := desc.CommandDesc(cmd.DescKeyMemory)
+	short, long := desc.Command(cmd.DescKeyMemory)
 	c := &cobra.Command{
 		Use:   cmd.UseMemory,
 		Short: short,

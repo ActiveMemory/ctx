@@ -21,7 +21,7 @@ import (
 // Returns:
 //   - error: "failed to list skills: <cause>"
 func List(cause error) error {
-	return fmt.Errorf(desc.TextDesc(text.DescKeyErrSkillList), cause)
+	return fmt.Errorf(desc.Text(text.DescKeyErrSkillList), cause)
 }
 
 // Read wraps a failure to read a skill's content.
@@ -34,6 +34,6 @@ func List(cause error) error {
 //   - error: "failed to read skill <name>: <cause>"
 func Read(name string, cause error) error {
 	return fmt.Errorf(
-		desc.TextDesc(text.DescKeyErrSkillRead), name, cause,
+		desc.Text(text.DescKeyErrSkillRead), name, cause,
 	)
 }

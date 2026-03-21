@@ -79,7 +79,7 @@ func Run(cmd *cobra.Command, stdin *os.File) error {
 	}
 
 	// Version mismatch — emit warning
-	fallback := fmt.Sprintf(desc.TextDesc(
+	fallback := fmt.Sprintf(desc.Text(
 		text.DescKeyCheckVersionFallback), binaryVer, pluginVer,
 	)
 	content := core.LoadMessage(hook.CheckVersion, hook.VariantMismatch,
@@ -92,8 +92,8 @@ func Run(cmd *cobra.Command, stdin *os.File) error {
 		return nil
 	}
 
-	boxTitle := desc.TextDesc(text.DescKeyCheckVersionBoxTitle)
-	relayPrefix := desc.TextDesc(text.DescKeyCheckVersionRelayPrefix)
+	boxTitle := desc.Text(text.DescKeyCheckVersionBoxTitle)
+	relayPrefix := desc.Text(text.DescKeyCheckVersionRelayPrefix)
 
 	cmd.Println(core.NudgeBox(relayPrefix, boxTitle, content))
 
@@ -104,7 +104,7 @@ func Run(cmd *cobra.Command, stdin *os.File) error {
 		})
 	versionMsg := hook.CheckVersion + ": " +
 		fmt.Sprintf(
-			desc.TextDesc(
+			desc.Text(
 				text.DescKeyCheckVersionMismatchRelayFormat,
 			), binaryVer, pluginVer,
 		)

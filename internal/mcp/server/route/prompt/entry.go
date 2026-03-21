@@ -32,23 +32,23 @@ import (
 func buildEntry(
 	id json.RawMessage, spec promptdef.EntryPromptSpec,
 ) *proto.Response {
-	fieldFmt := desc.TextDesc(spec.FieldFmtK)
+	fieldFmt := desc.Text(spec.FieldFmtK)
 
 	var sb strings.Builder
-	sb.WriteString(desc.TextDesc(spec.KeyHeader))
+	sb.WriteString(desc.Text(spec.KeyHeader))
 	sb.WriteString(token.NewlineLF)
 	sb.WriteString(token.NewlineLF)
 	for _, f := range spec.Fields {
 		_, _ = fmt.Fprintf(
 			&sb,
-			fieldFmt, desc.TextDesc(f.KeyLabel), f.Value,
+			fieldFmt, desc.Text(f.KeyLabel), f.Value,
 		)
 	}
 	sb.WriteString(token.NewlineLF)
-	sb.WriteString(desc.TextDesc(spec.KeyFooter))
+	sb.WriteString(desc.Text(spec.KeyFooter))
 
 	return out.OkResponse(id, proto.GetPromptResult{
-		Description: desc.TextDesc(spec.KeyResultD),
+		Description: desc.Text(spec.KeyResultD),
 		Messages: []proto.PromptMessage{
 			{
 				Role: prompt.RoleUser,

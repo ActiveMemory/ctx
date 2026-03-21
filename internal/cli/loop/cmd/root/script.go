@@ -54,7 +54,7 @@ func GenerateLoopScript(
 
 	script := fmt.Sprintf(tpl.LoopScript,
 		absPrompt, completionMsg, maxIterCheck, aiCommand,
-		desc.TextDesc(text.DescKeyLabelLoopComplete), tpl.LoopNotify,
+		desc.Text(text.DescKeyLabelLoopComplete), tpl.LoopNotify,
 	)
 
 	return script

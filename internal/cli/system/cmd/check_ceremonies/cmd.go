@@ -19,7 +19,7 @@ import (
 // Returns:
 //   - *cobra.Command: Configured check-ceremonies subcommand
 func Cmd() *cobra.Command {
-	short, long := desc.CommandDesc(cmd.DescKeySystemCheckCeremonies)
+	short, long := desc.Command(cmd.DescKeySystemCheckCeremonies)
 
 	return &cobra.Command{
 		Use:    "check-ceremonies",

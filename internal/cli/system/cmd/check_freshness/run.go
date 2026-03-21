@@ -100,13 +100,13 @@ func Run(cmd *cobra.Command, stdin *os.File) error {
 	}
 
 	cmd.Println(core.NudgeBox(
-		desc.TextDesc(text.DescKeyFreshnessRelayPrefix),
-		desc.TextDesc(text.DescKeyFreshnessBoxTitle),
+		desc.Text(text.DescKeyFreshnessRelayPrefix),
+		desc.Text(text.DescKeyFreshnessBoxTitle),
 		content))
 
 	ref := notify.NewTemplateRef(hook.CheckFreshness, hook.VariantStale, vars)
 	core.NudgeAndRelay(hook.CheckFreshness+": "+
-		desc.TextDesc(text.DescKeyFreshnessRelayMessage),
+		desc.Text(text.DescKeyFreshnessRelayMessage),
 		input.SessionID, ref,
 	)
 
@@ -150,22 +150,22 @@ func formatStaleEntries(entries []staleEntry) string {
 	for _, url := range urlOrder {
 		group := byURL[url]
 		for _, e := range group {
-			fmt.Fprintf(&b, desc.TextDesc(text.DescKeyFreshnessFileEntry),
+			fmt.Fprintf(&b, desc.Text(text.DescKeyFreshnessFileEntry),
 				e.path, e.days, e.desc)
 			b.WriteString(token.NewlineLF)
 		}
-		fmt.Fprintf(&b, desc.TextDesc(text.DescKeyFreshnessReviewURL), url)
+		fmt.Fprintf(&b, desc.Text(text.DescKeyFreshnessReviewURL), url)
 		b.WriteString(token.NewlineLF)
 	}
 
 	// Entries without review URLs
 	for _, e := range noURL {
-		fmt.Fprintf(&b, desc.TextDesc(text.DescKeyFreshnessFileEntry),
+		fmt.Fprintf(&b, desc.Text(text.DescKeyFreshnessFileEntry),
 			e.path, e.days, e.desc)
 		b.WriteString(token.NewlineLF)
 	}
 
-	b.WriteString(desc.TextDesc(text.DescKeyFreshnessTouchHint))
+	b.WriteString(desc.Text(text.DescKeyFreshnessTouchHint))
 
 	return b.String()
 }

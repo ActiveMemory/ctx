@@ -33,31 +33,31 @@ func Text(
 	nextSteps []string,
 	warning string,
 ) {
-	cmd.Println(desc.TextDesc(text.DescKeyWriteBootstrapTitle))
-	cmd.Println(desc.TextDesc(text.DescKeyWriteBootstrapSep))
+	cmd.Println(desc.Text(text.DescKeyWriteBootstrapTitle))
+	cmd.Println(desc.Text(text.DescKeyWriteBootstrapSep))
 	cmd.Println()
-	cmd.Println(fmt.Sprintf(desc.TextDesc(text.DescKeyWriteBootstrapDir), dir))
+	cmd.Println(fmt.Sprintf(desc.Text(text.DescKeyWriteBootstrapDir), dir))
 	cmd.Println()
-	cmd.Println(desc.TextDesc(text.DescKeyWriteBootstrapFiles))
+	cmd.Println(desc.Text(text.DescKeyWriteBootstrapFiles))
 	cmd.Println(fileList)
 	cmd.Println()
-	cmd.Println(desc.TextDesc(text.DescKeyWriteBootstrapRules))
+	cmd.Println(desc.Text(text.DescKeyWriteBootstrapRules))
 	for i, r := range rules {
 		cmd.Println(fmt.Sprintf(
-			desc.TextDesc(text.DescKeyWriteBootstrapNumbered), i+1, r,
+			desc.Text(text.DescKeyWriteBootstrapNumbered), i+1, r,
 		))
 	}
 	cmd.Println()
-	cmd.Println(desc.TextDesc(text.DescKeyWriteBootstrapNextSteps))
+	cmd.Println(desc.Text(text.DescKeyWriteBootstrapNextSteps))
 	for i, s := range nextSteps {
 		cmd.Println(fmt.Sprintf(
-			desc.TextDesc(text.DescKeyWriteBootstrapNumbered), i+1, s,
+			desc.Text(text.DescKeyWriteBootstrapNumbered), i+1, s,
 		))
 	}
 	if warning != "" {
 		cmd.Println()
 		cmd.Println(fmt.Sprintf(
-			desc.TextDesc(text.DescKeyWriteBootstrapWarning), warning,
+			desc.Text(text.DescKeyWriteBootstrapWarning), warning,
 		))
 	}
 }

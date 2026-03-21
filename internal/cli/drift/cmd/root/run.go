@@ -48,7 +48,7 @@ func Run(cmd *cobra.Command, jsonOutput, fix bool) error {
 
 	// Apply fixes if requested
 	if fix && (len(report.Warnings) > 0 || len(report.Violations) > 0) {
-		cmd.Println(desc.TextDesc(text.DescKeyDriftApplying))
+		cmd.Println(desc.Text(text.DescKeyDriftApplying))
 		cmd.Println()
 
 		result := core.ApplyFixes(cmd, ctx, report)
@@ -56,21 +56,21 @@ func Run(cmd *cobra.Command, jsonOutput, fix bool) error {
 		cmd.Println()
 		if result.Fixed > 0 {
 			cmd.Println(fmt.Sprintf(
-				desc.TextDesc(text.DescKeyDriftFixedCount), result.Fixed))
+				desc.Text(text.DescKeyDriftFixedCount), result.Fixed))
 		}
 		if result.Skipped > 0 {
 			cmd.Println(fmt.Sprintf(
-				desc.TextDesc(text.DescKeyDriftSkippedCount), result.Skipped))
+				desc.Text(text.DescKeyDriftSkippedCount), result.Skipped))
 		}
 		for _, errMsg := range result.Errors {
 			cmd.Println(fmt.Sprintf(
-				desc.TextDesc(text.DescKeyDriftFixError), errMsg))
+				desc.Text(text.DescKeyDriftFixError), errMsg))
 		}
 
 		// Re-run detection to show the updated status
 		if result.Fixed > 0 {
 			cmd.Println()
-			cmd.Println(desc.TextDesc(text.DescKeyDriftRechecking))
+			cmd.Println(desc.Text(text.DescKeyDriftRechecking))
 			ctx, _ = load.Do("")
 			report = drift.Detect(ctx)
 		}

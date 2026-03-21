@@ -19,7 +19,7 @@ import (
 // Returns:
 //   - *cobra.Command: Configured check-reminders subcommand
 func Cmd() *cobra.Command {
-	short, _ := desc.CommandDesc(cmd.DescKeySystemCheckReminders)
+	short, _ := desc.Command(cmd.DescKeySystemCheckReminders)
 
 	return &cobra.Command{
 		Use:    "check-reminders",

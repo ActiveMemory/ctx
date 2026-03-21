@@ -19,7 +19,7 @@ import (
 // Returns:
 //   - *cobra.Command: Configured heartbeat subcommand
 func Cmd() *cobra.Command {
-	short, long := desc.CommandDesc(cmd.DescKeySystemHeartbeat)
+	short, long := desc.Command(cmd.DescKeySystemHeartbeat)
 
 	return &cobra.Command{
 		Use:    "heartbeat",

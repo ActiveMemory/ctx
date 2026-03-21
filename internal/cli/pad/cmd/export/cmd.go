@@ -22,7 +22,7 @@ import (
 func Cmd() *cobra.Command {
 	var force, dryRun bool
 
-	short, long := desc.CommandDesc(cmd.DescKeyPadExport)
+	short, long := desc.Command(cmd.DescKeyPadExport)
 	c := &cobra.Command{
 		Use:   cmd.UsePadExport,
 		Short: short,
@@ -39,11 +39,11 @@ func Cmd() *cobra.Command {
 
 	c.Flags().BoolVarP(
 		&force, cFlag.Force, cFlag.ShortForce, false,
-		desc.FlagDesc(flag.DescKeyPadExportForce),
+		desc.Flag(flag.DescKeyPadExportForce),
 	)
 	c.Flags().BoolVar(
 		&dryRun, cFlag.DryRun, false,
-		desc.FlagDesc(flag.DescKeyPadExportDryRun),
+		desc.Flag(flag.DescKeyPadExportDryRun),
 	)
 
 	return c

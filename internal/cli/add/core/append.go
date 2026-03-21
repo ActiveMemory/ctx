@@ -38,7 +38,7 @@ func AppendEntry(
 	// Decisions: insert before existing entries for reverse-chronological order
 	case FileTypeIsDecision(fileType):
 		return InsertDecision(
-			existingStr, entry, desc.TextDesc(text.DescKeyHeadingDecisions),
+			existingStr, entry, desc.Text(text.DescKeyHeadingDecisions),
 		)
 	// Learnings: insert before existing entries for reverse-chronological order
 	case FileTypeIsLearning(fileType):

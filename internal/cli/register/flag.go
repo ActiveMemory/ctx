@@ -21,7 +21,7 @@ import (
 //   - name: Flag name constant
 //   - descKey: YAML DescKey for the flag description
 func StringFlag(c *cobra.Command, p *string, name, descKey string) {
-	c.Flags().StringVar(p, name, "", desc.FlagDesc(descKey))
+	c.Flags().StringVar(p, name, "", desc.Flag(descKey))
 }
 
 // StringFlagP registers a string flag with a shorthand letter.
@@ -33,5 +33,5 @@ func StringFlag(c *cobra.Command, p *string, name, descKey string) {
 //   - short: Shorthand letter
 //   - descKey: YAML DescKey for the flag description
 func StringFlagP(c *cobra.Command, p *string, name, short, descKey string) {
-	c.Flags().StringVarP(p, name, short, "", desc.FlagDesc(descKey))
+	c.Flags().StringVarP(p, name, short, "", desc.Flag(descKey))
 }

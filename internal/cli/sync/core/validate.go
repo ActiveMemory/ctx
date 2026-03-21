@@ -102,11 +102,11 @@ func CheckConfigFiles(ctx *entity.Context) []Action {
 					Type: "CONFIG",
 					File: ctxCfg.Convention,
 					Description: fmt.Sprintf(
-						desc.TextDesc(text.DescKeySyncConfigDescription),
+						desc.Text(text.DescKeySyncConfigDescription),
 						matches[0], cfg.Topic,
 					),
 					Suggestion: fmt.Sprintf(
-						desc.TextDesc(text.DescKeySyncConfigSuggestion),
+						desc.Text(text.DescKeySyncConfigSuggestion),
 						cfg.Topic, ctxCfg.Convention,
 					),
 				})
@@ -177,11 +177,11 @@ func CheckNewDirectories(ctx *entity.Context) []Action {
 				Type: "NEW_DIR",
 				File: ctxCfg.Architecture,
 				Description: fmt.Sprintf(
-					desc.TextDesc(text.DescKeySyncDirDescription),
+					desc.Text(text.DescKeySyncDirDescription),
 					name,
 				),
 				Suggestion: fmt.Sprintf(
-					desc.TextDesc(text.DescKeySyncDirSuggestion),
+					desc.Text(text.DescKeySyncDirSuggestion),
 					name, ctxCfg.Architecture,
 				),
 			})

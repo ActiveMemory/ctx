@@ -29,7 +29,7 @@ import (
 func Cmd() *cobra.Command {
 	var write bool
 
-	short, long := desc.CommandDesc(cmd.DescKeyHook)
+	short, long := desc.Command(cmd.DescKeyHook)
 	c := &cobra.Command{
 		Use:         cmd.UseHook,
 		Short:       short,
@@ -43,7 +43,7 @@ func Cmd() *cobra.Command {
 
 	c.Flags().BoolVarP(
 		&write, cflag.Write, cflag.ShortWrite, false,
-		desc.FlagDesc(flag.DescKeyHookWrite),
+		desc.Flag(flag.DescKeyHookWrite),
 	)
 
 	return c

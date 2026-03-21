@@ -22,7 +22,7 @@ func Cmd() *cobra.Command {
 	var days int
 	var dryRun bool
 
-	short, long := desc.CommandDesc(cmd.DescKeySystemPrune)
+	short, long := desc.Command(cmd.DescKeySystemPrune)
 
 	cmd := &cobra.Command{
 		Use:   "prune",
@@ -34,10 +34,10 @@ func Cmd() *cobra.Command {
 	}
 
 	cmd.Flags().IntVar(&days, "days", 7,
-		desc.FlagDesc(flag.DescKeySystemPruneDays),
+		desc.Flag(flag.DescKeySystemPruneDays),
 	)
 	cmd.Flags().BoolVar(&dryRun, cflag.DryRun, false,
-		desc.FlagDesc(flag.DescKeySystemPruneDryRun),
+		desc.Flag(flag.DescKeySystemPruneDryRun),
 	)
 
 	return cmd

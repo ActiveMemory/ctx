@@ -51,7 +51,7 @@ func DispatchRead(
 	); unmarshalErr != nil {
 		return out.ErrResponse(
 			req.ID, proto.ErrCodeInvalidArg,
-			desc.TextDesc(text.DescKeyMCPErrInvalidParams),
+			desc.Text(text.DescKeyMCPErrInvalidParams),
 		)
 	}
 
@@ -59,7 +59,7 @@ func DispatchRead(
 	if loadErr != nil {
 		return out.ErrResponse(req.ID, proto.ErrCodeInternal,
 			fmt.Sprintf(
-				desc.TextDesc(text.DescKeyMCPLoadContext),
+				desc.Text(text.DescKeyMCPLoadContext),
 				loadErr,
 			))
 	}
@@ -76,7 +76,7 @@ func DispatchRead(
 
 	return out.ErrResponse(req.ID, proto.ErrCodeInvalidArg,
 		fmt.Sprintf(
-			desc.TextDesc(text.DescKeyMCPErrUnknownResource),
+			desc.Text(text.DescKeyMCPErrUnknownResource),
 			params.URI,
 		))
 }
@@ -122,13 +122,13 @@ func applySubscription(
 	); unmarshalErr != nil {
 		return out.ErrResponse(
 			req.ID, proto.ErrCodeInvalidArg,
-			desc.TextDesc(text.DescKeyMCPErrInvalidParams),
+			desc.Text(text.DescKeyMCPErrInvalidParams),
 		)
 	}
 	if params.URI == "" {
 		return out.ErrResponse(
 			req.ID, proto.ErrCodeInvalidArg,
-			desc.TextDesc(text.DescKeyMCPErrURIRequired),
+			desc.Text(text.DescKeyMCPErrURIRequired),
 		)
 	}
 	fn(params.URI)

@@ -31,30 +31,30 @@ import (
 // Returns:
 //   - error: Non-nil if violations were detected
 func OutputDriftText(cmd *cobra.Command, report *drift.Report) error {
-	cmd.Println(desc.TextDesc(text.DescKeyDriftReportHeading))
-	cmd.Println(desc.TextDesc(text.DescKeyDriftReportSeparator))
+	cmd.Println(desc.Text(text.DescKeyDriftReportHeading))
+	cmd.Println(desc.Text(text.DescKeyDriftReportSeparator))
 	cmd.Println()
 
 	// Violations
 	if len(report.Violations) > 0 {
 		cmd.Println(fmt.Sprintf(
-			desc.TextDesc(
+			desc.Text(
 				text.DescKeyDriftViolationsHeading), len(report.Violations)),
 		)
 		cmd.Println()
 		for _, v := range report.Violations {
 			line := fmt.Sprintf(
-				desc.TextDesc(text.DescKeyDriftViolationLine), v.File, v.Message,
+				desc.Text(text.DescKeyDriftViolationLine), v.File, v.Message,
 			)
 			if v.Line > 0 {
 				line = fmt.Sprintf(
-					desc.TextDesc(text.DescKeyDriftViolationLineLoc),
+					desc.Text(text.DescKeyDriftViolationLineLoc),
 					v.File, v.Line, v.Message,
 				)
 			}
 			if v.Rule != "" {
 				line += fmt.Sprintf(
-					desc.TextDesc(text.DescKeyDriftViolationRule), v.Rule,
+					desc.Text(text.DescKeyDriftViolationRule), v.Rule,
 				)
 			}
 			cmd.Println(line)
@@ -65,7 +65,7 @@ func OutputDriftText(cmd *cobra.Command, report *drift.Report) error {
 	// Warnings
 	if len(report.Warnings) > 0 {
 		cmd.Println(fmt.Sprintf(
-			desc.TextDesc(text.DescKeyDriftWarningsHeading), len(report.Warnings)))
+			desc.Text(text.DescKeyDriftWarningsHeading), len(report.Warnings)))
 		cmd.Println()
 
 		// Group by type
@@ -85,28 +85,28 @@ func OutputDriftText(cmd *cobra.Command, report *drift.Report) error {
 		}
 
 		if len(pathRefs) > 0 {
-			cmd.Println(desc.TextDesc(text.DescKeyDriftPathRefsLabel))
+			cmd.Println(desc.Text(text.DescKeyDriftPathRefsLabel))
 			for _, w := range pathRefs {
 				cmd.Println(fmt.Sprintf(
-					desc.TextDesc(text.DescKeyDriftPathRefLine), w.File, w.Line, w.Path))
+					desc.Text(text.DescKeyDriftPathRefLine), w.File, w.Line, w.Path))
 			}
 			cmd.Println()
 		}
 
 		if len(staleness) > 0 {
-			cmd.Println(desc.TextDesc(text.DescKeyDriftStalenessLabel))
+			cmd.Println(desc.Text(text.DescKeyDriftStalenessLabel))
 			for _, w := range staleness {
 				cmd.Println(fmt.Sprintf(
-					desc.TextDesc(text.DescKeyDriftStalenessLine), w.File, w.Message))
+					desc.Text(text.DescKeyDriftStalenessLine), w.File, w.Message))
 			}
 			cmd.Println()
 		}
 
 		if len(other) > 0 {
-			cmd.Println(desc.TextDesc(text.DescKeyDriftOtherLabel))
+			cmd.Println(desc.Text(text.DescKeyDriftOtherLabel))
 			for _, w := range other {
 				cmd.Println(fmt.Sprintf(
-					desc.TextDesc(text.DescKeyDriftOtherLine), w.File, w.Message))
+					desc.Text(text.DescKeyDriftOtherLine), w.File, w.Message))
 			}
 			cmd.Println()
 		}
@@ -115,10 +115,10 @@ func OutputDriftText(cmd *cobra.Command, report *drift.Report) error {
 	// Passed
 	if len(report.Passed) > 0 {
 		cmd.Println(fmt.Sprintf(
-			desc.TextDesc(text.DescKeyDriftPassedHeading), len(report.Passed)))
+			desc.Text(text.DescKeyDriftPassedHeading), len(report.Passed)))
 		for _, p := range report.Passed {
 			cmd.Println(fmt.Sprintf(
-				desc.TextDesc(text.DescKeyDriftPassedLine), FormatCheckName(p)))
+				desc.Text(text.DescKeyDriftPassedLine), FormatCheckName(p)))
 		}
 		cmd.Println()
 	}
@@ -128,14 +128,14 @@ func OutputDriftText(cmd *cobra.Command, report *drift.Report) error {
 	switch status {
 	case drift.StatusViolation:
 		cmd.Println()
-		cmd.Println(desc.TextDesc(text.DescKeyDriftStatusViolation))
+		cmd.Println(desc.Text(text.DescKeyDriftStatusViolation))
 		return errdrift.Violations()
 	case drift.StatusWarning:
 		cmd.Println()
-		cmd.Println(desc.TextDesc(text.DescKeyDriftStatusWarning))
+		cmd.Println(desc.Text(text.DescKeyDriftStatusWarning))
 	default:
 		cmd.Println()
-		cmd.Println(desc.TextDesc(text.DescKeyDriftStatusOK))
+		cmd.Println(desc.Text(text.DescKeyDriftStatusOK))
 	}
 
 	return nil

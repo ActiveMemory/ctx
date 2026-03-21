@@ -39,7 +39,7 @@ func HandleClaudeMd(cmd *cobra.Command, force, autoMerge bool) error {
 		TemplateContent: templateContent,
 		Force:           force,
 		AutoMerge:       autoMerge,
-		ConfirmPrompt:   desc.TextDesc(text.DescKeyInitConfirmClaude),
+		ConfirmPrompt:   desc.Text(text.DescKeyInitConfirmClaude),
 		UpdateFn:        UpdateCtxSection,
 	})
 

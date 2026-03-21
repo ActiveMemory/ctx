@@ -34,7 +34,7 @@ import (
 // Returns:
 //   - *cobra.Command: Configured task command with subcommands
 func Cmd() *cobra.Command {
-	short, long := desc.CommandDesc(cmd.DescKeyTask)
+	short, long := desc.Command(cmd.DescKeyTask)
 
 	cmd := &cobra.Command{
 		Use:   cmd.UseTask,

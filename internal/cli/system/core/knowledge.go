@@ -87,7 +87,7 @@ func ScanKnowledgeFiles(
 //   - string: formatted warning lines for template injection
 func FormatKnowledgeWarnings(findings []KnowledgeFinding) string {
 	var b strings.Builder
-	findingFmt := desc.TextDesc(text.DescKeyCheckKnowledgeFindingFormat)
+	findingFmt := desc.Text(text.DescKeyCheckKnowledgeFindingFormat)
 	for _, f := range findings {
 		b.WriteString(fmt.Sprintf(findingFmt, f.File, f.Count, f.Unit, f.Threshold))
 	}
@@ -101,7 +101,7 @@ func FormatKnowledgeWarnings(findings []KnowledgeFinding) string {
 //   - sessionID: session identifier for notifications
 //   - fileWarnings: pre-formatted findings text
 func EmitKnowledgeWarning(cmd *cobra.Command, sessionID, fileWarnings string) {
-	fallback := fileWarnings + token.NewlineLF + desc.TextDesc(text.DescKeyCheckKnowledgeFallback)
+	fallback := fileWarnings + token.NewlineLF + desc.Text(text.DescKeyCheckKnowledgeFallback)
 	content := LoadMessage(hook.CheckKnowledge, hook.VariantWarning,
 		map[string]any{tpl.VarFileWarnings: fileWarnings}, fallback)
 	if content == "" {
@@ -109,14 +109,14 @@ func EmitKnowledgeWarning(cmd *cobra.Command, sessionID, fileWarnings string) {
 	}
 
 	cmd.Println(NudgeBox(
-		desc.TextDesc(text.DescKeyCheckKnowledgeRelayPrefix),
-		desc.TextDesc(text.DescKeyCheckKnowledgeBoxTitle),
+		desc.Text(text.DescKeyCheckKnowledgeRelayPrefix),
+		desc.Text(text.DescKeyCheckKnowledgeBoxTitle),
 		content))
 
 	ref := notify.NewTemplateRef(hook.CheckKnowledge, hook.VariantWarning,
 		map[string]any{tpl.VarFileWarnings: fileWarnings})
-	notifyMsg := fmt.Sprintf(desc.TextDesc(text.DescKeyRelayPrefixFormat),
-		hook.CheckKnowledge, desc.TextDesc(text.DescKeyCheckKnowledgeRelayMessage))
+	notifyMsg := fmt.Sprintf(desc.Text(text.DescKeyRelayPrefixFormat),
+		hook.CheckKnowledge, desc.Text(text.DescKeyCheckKnowledgeRelayMessage))
 	NudgeAndRelay(notifyMsg, sessionID, ref)
 }
 

@@ -27,9 +27,9 @@ func ResultLine(cmd *cobra.Command, scope, archive string, size int64, smbDest s
 	if cmd == nil {
 		return
 	}
-	line := fmt.Sprintf(desc.TextDesc(text.DescKeyWriteBackupResult), scope, archive, format.Bytes(size))
+	line := fmt.Sprintf(desc.Text(text.DescKeyWriteBackupResult), scope, archive, format.Bytes(size))
 	if smbDest != "" {
-		line += fmt.Sprintf(desc.TextDesc(text.DescKeyWriteBackupSMBDest), smbDest)
+		line += fmt.Sprintf(desc.Text(text.DescKeyWriteBackupSMBDest), smbDest)
 	}
 	cmd.Println(line)
 }

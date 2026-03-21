@@ -44,26 +44,26 @@ func EntryAttrProps(contextKey string) map[string]proto.Property {
 	return map[string]proto.Property{
 		cli.AttrContext: {
 			Type:        schema.String,
-			Description: desc.TextDesc(contextKey),
+			Description: desc.Text(contextKey),
 		},
 		cli.AttrRationale: {
 			Type: schema.String,
-			Description: desc.TextDesc(
+			Description: desc.Text(
 				text.DescKeyMCPToolPropRationale),
 		},
 		cli.AttrConsequence: {
 			Type: schema.String,
-			Description: desc.TextDesc(
+			Description: desc.Text(
 				text.DescKeyMCPToolPropConseq),
 		},
 		cli.AttrLesson: {
 			Type: schema.String,
-			Description: desc.TextDesc(
+			Description: desc.Text(
 				text.DescKeyMCPToolPropLesson),
 		},
 		cli.AttrApplication: {
 			Type: schema.String,
-			Description: desc.TextDesc(
+			Description: desc.Text(
 				text.DescKeyMCPToolPropApplication),
 		},
 	}

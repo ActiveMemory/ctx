@@ -7,9 +7,10 @@
 package restore
 
 import (
+	"github.com/spf13/cobra"
+
 	"github.com/ActiveMemory/ctx/internal/assets/read/desc"
 	"github.com/ActiveMemory/ctx/internal/config/embed/cmd"
-	"github.com/spf13/cobra"
 )
 
 // Cmd returns the "ctx permission restore" subcommand.
@@ -17,10 +18,10 @@ import (
 // Returns:
 //   - *cobra.Command: Configured restore subcommand
 func Cmd() *cobra.Command {
-	short, long := desc.CommandDesc(cmd.DescKeyPermissionRestore)
+	short, long := desc.Command(cmd.DescKeyPermissionRestore)
 
 	return &cobra.Command{
-		Use:   "restore",
+		Use:   cmd.UsePermissionRestore,
 		Short: short,
 		Long:  long,
 		RunE: func(cmd *cobra.Command, _ []string) error {

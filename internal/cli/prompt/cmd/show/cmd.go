@@ -7,9 +7,10 @@
 package show
 
 import (
+	"github.com/spf13/cobra"
+
 	"github.com/ActiveMemory/ctx/internal/assets/read/desc"
 	"github.com/ActiveMemory/ctx/internal/config/embed/cmd"
-	"github.com/spf13/cobra"
 )
 
 // Cmd returns the prompt show subcommand.
@@ -17,10 +18,10 @@ import (
 // Returns:
 //   - *cobra.Command: Configured show subcommand
 func Cmd() *cobra.Command {
-	short, _ := desc.CommandDesc(cmd.DescKeyPromptShow)
+	short, _ := desc.Command(cmd.DescKeyPromptShow)
 
 	return &cobra.Command{
-		Use:   "show NAME",
+		Use:   cmd.UsePromptShow,
 		Short: short,
 		Args:  cobra.ExactArgs(1),
 		RunE: func(cmd *cobra.Command, args []string) error {

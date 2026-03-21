@@ -151,7 +151,7 @@ Just a plain session without enrichment.
 	}
 
 	// Verify entry has related footer
-	if !strings.Contains(entry1Str, desc.TextDesc(text.DescKeyHeadingObsidianRelated)) {
+	if !strings.Contains(entry1Str, desc.Text(text.DescKeyHeadingObsidianRelated)) {
 		t.Error("entry missing related sessions footer")
 	}
 

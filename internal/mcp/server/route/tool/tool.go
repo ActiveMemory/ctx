@@ -60,7 +60,7 @@ func complete(
 	query, _ := args[field.Query].(string)
 	if query == "" {
 		return out.ToolError(
-			id, desc.TextDesc(text.DescKeyMCPErrQueryRequired),
+			id, desc.Text(text.DescKeyMCPErrQueryRequired),
 		)
 	}
 	text, err := h.Complete(query)
@@ -92,7 +92,7 @@ func recall(
 		if parseErr != nil {
 			return out.ToolError(
 				id, fmt.Sprintf(
-					desc.TextDesc(text.DescKeyMCPInvalidSinceDate),
+					desc.Text(text.DescKeyMCPInvalidSinceDate),
 					parseErr,
 				),
 			)
@@ -184,7 +184,7 @@ func sessionEvent(
 ) *proto.Response {
 	eventType, _ := args[cli.AttrType].(string)
 	if eventType == "" {
-		return out.ToolError(id, desc.TextDesc(
+		return out.ToolError(id, desc.Text(
 			text.DescKeyMCPEventTypeRequired),
 		)
 	}

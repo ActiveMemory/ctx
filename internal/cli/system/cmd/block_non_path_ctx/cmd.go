@@ -19,7 +19,7 @@ import (
 // Returns:
 //   - *cobra.Command: Configured block-non-path-ctx subcommand
 func Cmd() *cobra.Command {
-	short, long := desc.CommandDesc(cmd.DescKeySystemBlockNonPathCtx)
+	short, long := desc.Command(cmd.DescKeySystemBlockNonPathCtx)
 
 	return &cobra.Command{
 		Use:    "block-non-path-ctx",

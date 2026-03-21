@@ -19,7 +19,7 @@ import (
 // Returns:
 //   - *cobra.Command: Command for regenerating the LEARNINGS.md index
 func Cmd() *cobra.Command {
-	short, long := desc.CommandDesc(cmd.DescKeyLearningReindex)
+	short, long := desc.Command(cmd.DescKeyLearningReindex)
 	return &cobra.Command{
 		Use:   cmd.UseReindex,
 		Short: short,

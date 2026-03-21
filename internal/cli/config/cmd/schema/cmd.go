@@ -20,7 +20,7 @@ import (
 // Returns:
 //   - *cobra.Command: Configured schema subcommand
 func Cmd() *cobra.Command {
-	short, long := desc.CommandDesc(cmd.DescKeyConfigSchema)
+	short, long := desc.Command(cmd.DescKeyConfigSchema)
 
 	return &cobra.Command{
 		Use:   cmd.UseConfigSchema,

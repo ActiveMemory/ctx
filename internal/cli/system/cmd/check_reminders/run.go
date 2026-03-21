@@ -66,12 +66,12 @@ func Run(cmd *cobra.Command, stdin *os.File) error {
 	// Build a pre-formatted reminder list for the template variable
 	var reminderList string
 	for _, r := range due {
-		reminderList += fmt.Sprintf(desc.TextDesc(text.DescKeyCheckRemindersItemFormat)+token.NewlineLF, r.ID, r.Message)
+		reminderList += fmt.Sprintf(desc.Text(text.DescKeyCheckRemindersItemFormat)+token.NewlineLF, r.ID, r.Message)
 	}
 
 	fallback := reminderList +
-		token.NewlineLF + desc.TextDesc(text.DescKeyCheckRemindersDismissHint) + token.NewlineLF +
-		desc.TextDesc(text.DescKeyCheckRemindersDismissAllHint)
+		token.NewlineLF + desc.Text(text.DescKeyCheckRemindersDismissHint) + token.NewlineLF +
+		desc.Text(text.DescKeyCheckRemindersDismissAllHint)
 	vars := map[string]any{tpl.VarReminderList: reminderList}
 	content := core.LoadMessage(hook.CheckReminders, hook.VariantReminders, vars, fallback)
 	if content == "" {
@@ -79,12 +79,12 @@ func Run(cmd *cobra.Command, stdin *os.File) error {
 	}
 
 	cmd.Println(core.NudgeBox(
-		desc.TextDesc(text.DescKeyCheckRemindersRelayPrefix),
-		desc.TextDesc(text.DescKeyCheckRemindersBoxTitle),
+		desc.Text(text.DescKeyCheckRemindersRelayPrefix),
+		desc.Text(text.DescKeyCheckRemindersBoxTitle),
 		content))
 
 	ref := notify.NewTemplateRef(hook.CheckReminders, hook.VariantReminders, vars)
-	nudgeMsg := hook.CheckReminders + ": " + fmt.Sprintf(desc.TextDesc(text.DescKeyCheckRemindersNudgeFormat), len(due))
+	nudgeMsg := hook.CheckReminders + ": " + fmt.Sprintf(desc.Text(text.DescKeyCheckRemindersNudgeFormat), len(due))
 	core.NudgeAndRelay(nudgeMsg, input.SessionID, ref)
 
 	return nil

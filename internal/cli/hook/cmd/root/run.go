@@ -45,19 +45,19 @@ func Run(cmd *cobra.Command, args []string, writeFile bool) error {
 
 	switch tool {
 	case hookCfg.ToolClaudeCode, hookCfg.ToolClaude:
-		hook.InfoTool(cmd, desc.TextDesc(text.DescKeyHookClaude))
+		hook.InfoTool(cmd, desc.Text(text.DescKeyHookClaude))
 
 	case hookCfg.ToolCursor:
-		hook.InfoTool(cmd, desc.TextDesc(text.DescKeyHookCursor))
+		hook.InfoTool(cmd, desc.Text(text.DescKeyHookCursor))
 
 	case hookCfg.ToolAider:
-		hook.InfoTool(cmd, desc.TextDesc(text.DescKeyHookAider))
+		hook.InfoTool(cmd, desc.Text(text.DescKeyHookAider))
 
 	case hookCfg.ToolCopilot:
 		if writeFile {
 			return WriteCopilotInstructions(cmd)
 		}
-		hook.InfoTool(cmd, desc.TextDesc(text.DescKeyHookCopilot))
+		hook.InfoTool(cmd, desc.Text(text.DescKeyHookCopilot))
 		cmd.Println()
 		content, readErr := agent.CopilotInstructions()
 		if readErr != nil {
@@ -66,11 +66,11 @@ func Run(cmd *cobra.Command, args []string, writeFile bool) error {
 		cmd.Print(string(content))
 
 	case hookCfg.ToolWindsurf:
-		hook.InfoTool(cmd, desc.TextDesc(text.DescKeyHookWindsurf))
+		hook.InfoTool(cmd, desc.Text(text.DescKeyHookWindsurf))
 
 	default:
 		hook.InfoUnknownTool(cmd, tool)
-		hook.InfoTool(cmd, desc.TextDesc(text.DescKeyHookSupportedTools))
+		hook.InfoTool(cmd, desc.Text(text.DescKeyHookSupportedTools))
 		return config.UnsupportedTool(tool)
 	}
 

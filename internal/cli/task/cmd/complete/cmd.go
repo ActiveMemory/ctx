@@ -20,7 +20,7 @@ import (
 // Returns:
 //   - *cobra.Command: Configured complete command
 func Cmd() *cobra.Command {
-	short, long := desc.CommandDesc(cmd.DescKeyComplete)
+	short, long := desc.Command(cmd.DescKeyComplete)
 
 	cmd := &cobra.Command{
 		Use:   "complete <task-id-or-text>",

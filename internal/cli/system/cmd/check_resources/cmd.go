@@ -19,7 +19,7 @@ import (
 // Returns:
 //   - *cobra.Command: Configured check-resources subcommand
 func Cmd() *cobra.Command {
-	short, long := desc.CommandDesc(cmd.DescKeySystemCheckResources)
+	short, long := desc.Command(cmd.DescKeySystemCheckResources)
 
 	return &cobra.Command{
 		Use:    "check-resources",

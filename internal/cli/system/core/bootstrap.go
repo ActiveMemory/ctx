@@ -32,7 +32,7 @@ func PluginWarning() string {
 	if initCore.PluginEnabledGlobally() || initCore.PluginEnabledLocally() {
 		return ""
 	}
-	return desc.TextDesc(text.DescKeyBootstrapPluginWarning)
+	return desc.Text(text.DescKeyBootstrapPluginWarning)
 }
 
 // ListContextFiles reads the given directory and returns sorted .md filenames.
@@ -75,7 +75,7 @@ func ListContextFiles(dir string) []string {
 //   - string: formatted, wrapped file list.
 func WrapFileList(files []string, maxWidth int, indent string) string {
 	if len(files) == 0 {
-		return indent + desc.TextDesc(text.DescKeyBootstrapNone)
+		return indent + desc.Text(text.DescKeyBootstrapNone)
 	}
 
 	var lines []string

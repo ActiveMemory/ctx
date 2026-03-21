@@ -57,11 +57,11 @@ func Run(cmd *cobra.Command, stdin *os.File) error {
 	}
 
 	fallback := alertMessages +
-		token.NewlineLF + desc.TextDesc(
+		token.NewlineLF + desc.Text(
 		text.DescKeyCheckResourcesFallbackLow) + token.NewlineLF +
-		desc.TextDesc(
+		desc.Text(
 			text.DescKeyCheckResourcesFallbackPersist) + token.NewlineLF +
-		desc.TextDesc(
+		desc.Text(
 			text.DescKeyCheckResourcesFallbackEnd)
 	vars := map[string]any{tpl.VarAlertMessages: alertMessages}
 	content := core.LoadMessage(
@@ -72,15 +72,15 @@ func Run(cmd *cobra.Command, stdin *os.File) error {
 	}
 
 	hook2.Nudge(cmd, core.NudgeBox(
-		desc.TextDesc(text.DescKeyCheckResourcesRelayPrefix),
-		desc.TextDesc(text.DescKeyCheckResourcesBoxTitle),
+		desc.Text(text.DescKeyCheckResourcesRelayPrefix),
+		desc.Text(text.DescKeyCheckResourcesBoxTitle),
 		content))
 
 	ref := notify.NewTemplateRef(
 		hook.CheckResources, hook.VariantAlert, vars,
 	)
 	core.NudgeAndRelay(hook.CheckResources+": "+
-		desc.TextDesc(text.DescKeyCheckResourcesRelayMessage),
+		desc.Text(text.DescKeyCheckResourcesRelayMessage),
 		input.SessionID, ref,
 	)
 

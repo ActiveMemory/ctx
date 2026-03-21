@@ -33,24 +33,24 @@ import (
 func TimeAgo(hours float64, mins int, fallbackDate string) string {
 	switch {
 	case hours < 1.0/60: // less than a minute
-		return desc.TextDesc(text.DescKeyWriteTimeJustNow)
+		return desc.Text(text.DescKeyWriteTimeJustNow)
 	case hours < 1:
 		if mins == 1 {
-			return desc.TextDesc(text.DescKeyWriteTimeMinuteAgo)
+			return desc.Text(text.DescKeyWriteTimeMinuteAgo)
 		}
-		return fmt.Sprintf(desc.TextDesc(text.DescKeyWriteTimeMinutesAgo), mins)
+		return fmt.Sprintf(desc.Text(text.DescKeyWriteTimeMinutesAgo), mins)
 	case hours < 24:
 		h := int(hours)
 		if h == 1 {
-			return desc.TextDesc(text.DescKeyWriteTimeHourAgo)
+			return desc.Text(text.DescKeyWriteTimeHourAgo)
 		}
-		return fmt.Sprintf(desc.TextDesc(text.DescKeyWriteTimeHoursAgo), h)
+		return fmt.Sprintf(desc.Text(text.DescKeyWriteTimeHoursAgo), h)
 	case hours < 7*24:
 		days := int(hours / 24)
 		if days == 1 {
-			return desc.TextDesc(text.DescKeyWriteTimeDayAgo)
+			return desc.Text(text.DescKeyWriteTimeDayAgo)
 		}
-		return fmt.Sprintf(desc.TextDesc(text.DescKeyWriteTimeDaysAgo), days)
+		return fmt.Sprintf(desc.Text(text.DescKeyWriteTimeDaysAgo), days)
 	default:
 		return fallbackDate
 	}
@@ -81,13 +81,13 @@ func Pluralize(n int, unit string) string {
 func Duration(d time.Duration) string {
 	switch {
 	case d < time.Minute:
-		return desc.TextDesc(text.DescKeyTimeJustNow)
+		return desc.Text(text.DescKeyTimeJustNow)
 	case d < time.Hour:
-		return Pluralize(int(d.Minutes()), desc.TextDesc(text.DescKeyTimeMinute))
+		return Pluralize(int(d.Minutes()), desc.Text(text.DescKeyTimeMinute))
 	case d < 24*time.Hour:
-		return Pluralize(int(d.Hours()), desc.TextDesc(text.DescKeyTimeHour))
+		return Pluralize(int(d.Hours()), desc.Text(text.DescKeyTimeHour))
 	default:
-		return Pluralize(int(d.Hours()/24), desc.TextDesc(text.DescKeyTimeDay))
+		return Pluralize(int(d.Hours()/24), desc.Text(text.DescKeyTimeDay))
 	}
 }
 
@@ -103,7 +103,7 @@ func DurationAgo(d time.Duration) string {
 	if d < time.Minute {
 		return base
 	}
-	return base + desc.TextDesc(text.DescKeyTimeAgo)
+	return base + desc.Text(text.DescKeyTimeAgo)
 }
 
 // TruncateFirstLine returns the first line of s, capped at max characters.

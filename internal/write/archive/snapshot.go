@@ -25,7 +25,7 @@ func SnapshotSaved(cmd *cobra.Command, snapshotPath string) {
 	}
 	cmd.Println(
 		fmt.Sprintf(
-			desc.TextDesc(text.DescKeyTaskSnapshotSaved), snapshotPath))
+			desc.Text(text.DescKeyTaskSnapshotSaved), snapshotPath))
 }
 
 // SnapshotContent builds the snapshot file content with header and body.
@@ -41,9 +41,9 @@ func SnapshotSaved(cmd *cobra.Command, snapshotPath string) {
 //   - string: formatted snapshot content.
 func SnapshotContent(name, created, separator, nl, body string) string {
 	return fmt.Sprintf(
-		desc.TextDesc(text.DescKeyTaskSnapshotHeaderFormat)+
+		desc.Text(text.DescKeyTaskSnapshotHeaderFormat)+
 			nl+nl+
-			desc.TextDesc(text.DescKeyTaskSnapshotCreatedFormat)+
+			desc.Text(text.DescKeyTaskSnapshotCreatedFormat)+
 			nl+nl+separator+nl+nl+"%s",
 		name, created, body,
 	)

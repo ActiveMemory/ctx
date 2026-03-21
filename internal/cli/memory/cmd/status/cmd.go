@@ -18,7 +18,7 @@ import (
 // Returns:
 //   - *cobra.Command: command for showing memory bridge status.
 func Cmd() *cobra.Command {
-	short, long := desc.CommandDesc(cmd.DescKeyMemoryStatus)
+	short, long := desc.Command(cmd.DescKeyMemoryStatus)
 	return &cobra.Command{
 		Use:   cmd.UseMemoryStatus,
 		Short: short,

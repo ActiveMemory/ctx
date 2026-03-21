@@ -19,7 +19,7 @@ import (
 // Returns:
 //   - *cobra.Command: Configured backup subcommand
 func Cmd() *cobra.Command {
-	short, long := desc.CommandDesc(cmd.DescKeySystemBackup)
+	short, long := desc.Command(cmd.DescKeySystemBackup)
 
 	cmd := &cobra.Command{
 		Use:   "backup",
@@ -31,10 +31,10 @@ func Cmd() *cobra.Command {
 	}
 
 	cmd.Flags().String("scope", archive.BackupScopeAll,
-		desc.FlagDesc(flag.DescKeySystemBackupScope),
+		desc.Flag(flag.DescKeySystemBackupScope),
 	)
 	cmd.Flags().Bool("json", false,
-		desc.FlagDesc(flag.DescKeySystemBackupJson),
+		desc.Flag(flag.DescKeySystemBackupJson),
 	)
 
 	return cmd

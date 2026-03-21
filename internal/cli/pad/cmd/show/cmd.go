@@ -30,7 +30,7 @@ import (
 func Cmd() *cobra.Command {
 	var outPath string
 
-	short, long := desc.CommandDesc(cmd.DescKeyPadShow)
+	short, long := desc.Command(cmd.DescKeyPadShow)
 	c := &cobra.Command{
 		Use:   cmd.UsePadShow,
 		Short: short,
@@ -46,7 +46,7 @@ func Cmd() *cobra.Command {
 	}
 
 	c.Flags().StringVar(&outPath,
-		cflag.Out, "", desc.FlagDesc(flag.DescKeyPadShowOut),
+		cflag.Out, "", desc.Flag(flag.DescKeyPadShowOut),
 	)
 
 	return c

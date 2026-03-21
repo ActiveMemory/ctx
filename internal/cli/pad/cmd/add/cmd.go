@@ -22,7 +22,7 @@ import (
 func Cmd() *cobra.Command {
 	var filePath string
 
-	short, _ := desc.CommandDesc(cmd.DescKeyPadAdd)
+	short, _ := desc.Command(cmd.DescKeyPadAdd)
 	c := &cobra.Command{
 		Use:   cmd.UsePadAdd,
 		Short: short,
@@ -37,7 +37,7 @@ func Cmd() *cobra.Command {
 
 	c.Flags().StringVarP(&filePath,
 		cflag.File, cflag.ShortFile, "",
-		desc.FlagDesc(flag.DescKeyPadAddFile),
+		desc.Flag(flag.DescKeyPadAddFile),
 	)
 
 	return c

@@ -39,7 +39,7 @@ func Cmd() *cobra.Command {
 	var filePath string
 	var labelText string
 
-	short, long := desc.CommandDesc(cmd.DescKeyPadEdit)
+	short, long := desc.Command(cmd.DescKeyPadEdit)
 	c := &cobra.Command{
 		Use:   cmd.UsePadEdit,
 		Short: short,
@@ -98,16 +98,16 @@ func Cmd() *cobra.Command {
 	}
 
 	c.Flags().StringVar(&appendText,
-		cFlag.Append, "", desc.FlagDesc(flag.DescKeyPadEditAppend),
+		cFlag.Append, "", desc.Flag(flag.DescKeyPadEditAppend),
 	)
 	c.Flags().StringVar(&prependText,
-		cFlag.Prepend, "", desc.FlagDesc(flag.DescKeyPadEditPrepend),
+		cFlag.Prepend, "", desc.Flag(flag.DescKeyPadEditPrepend),
 	)
 	c.Flags().StringVarP(&filePath,
-		cFlag.File, cFlag.ShortFile, "", desc.FlagDesc(flag.DescKeyPadEditFile),
+		cFlag.File, cFlag.ShortFile, "", desc.Flag(flag.DescKeyPadEditFile),
 	)
 	c.Flags().StringVar(&labelText,
-		cFlag.Label, "", desc.FlagDesc(flag.DescKeyPadEditLabel),
+		cFlag.Label, "", desc.Flag(flag.DescKeyPadEditLabel),
 	)
 
 	return c

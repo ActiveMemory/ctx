@@ -7,12 +7,12 @@
 package permission
 
 import (
-	"github.com/ActiveMemory/ctx/internal/assets/read/desc"
-	"github.com/ActiveMemory/ctx/internal/config/embed/cmd"
 	"github.com/spf13/cobra"
 
+	"github.com/ActiveMemory/ctx/internal/assets/read/desc"
 	"github.com/ActiveMemory/ctx/internal/cli/permission/cmd/restore"
 	"github.com/ActiveMemory/ctx/internal/cli/permission/cmd/snapshot"
+	"github.com/ActiveMemory/ctx/internal/config/embed/cmd"
 )
 
 // Cmd returns the permission command with subcommands.
@@ -25,16 +25,16 @@ import (
 // Returns:
 //   - *cobra.Command: Configured permission command with subcommands
 func Cmd() *cobra.Command {
-	short, long := desc.CommandDesc(cmd.DescKeyPermission)
+	short, long := desc.Command(cmd.DescKeyPermission)
 
-	cmd := &cobra.Command{
+	c := &cobra.Command{
 		Use:   cmd.UsePermission,
 		Short: short,
 		Long:  long,
 	}
 
-	cmd.AddCommand(snapshot.Cmd())
-	cmd.AddCommand(restore.Cmd())
+	c.AddCommand(snapshot.Cmd())
+	c.AddCommand(restore.Cmd())
 
-	return cmd
+	return c
 }

@@ -68,7 +68,7 @@ func SwitchTo(root, profile string) (string, error) {
 	current := DetectProfile()
 	if current == profile {
 		return fmt.Sprintf(
-			desc.TextDesc(text.DescKeyConfigAlreadyOn), profile), nil
+			desc.Text(text.DescKeyConfigAlreadyOn), profile), nil
 	}
 
 	srcFile := file.CtxRCBase
@@ -82,10 +82,10 @@ func SwitchTo(root, profile string) (string, error) {
 
 	if current == "" {
 		return fmt.Sprintf(
-			desc.TextDesc(text.DescKeyConfigCreated), file.CtxRC, profile), nil
+			desc.Text(text.DescKeyConfigCreated), file.CtxRC, profile), nil
 	}
 	return fmt.Sprintf(
-		desc.TextDesc(text.DescKeyConfigSwitched), profile), nil
+		desc.Text(text.DescKeyConfigSwitched), profile), nil
 }
 
 // GitRoot returns the git repository root directory.

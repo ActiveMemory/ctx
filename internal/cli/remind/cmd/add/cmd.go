@@ -20,7 +20,7 @@ import (
 func Cmd() *cobra.Command {
 	var afterFlag string
 
-	short, _ := desc.CommandDesc(cmd.DescKeyRemindAdd)
+	short, _ := desc.Command(cmd.DescKeyRemindAdd)
 
 	cmd := &cobra.Command{
 		Use:   "add TEXT",
@@ -32,7 +32,7 @@ func Cmd() *cobra.Command {
 	}
 
 	cmd.Flags().StringVarP(&afterFlag, "after", "a", "",
-		desc.FlagDesc(flag.DescKeyRemindAddAfter),
+		desc.Flag(flag.DescKeyRemindAddAfter),
 	)
 
 	return cmd

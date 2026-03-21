@@ -24,7 +24,7 @@ func Cmd() *cobra.Command {
 	var budget int
 	var dryRun bool
 
-	short, long := desc.CommandDesc(cmd.DescKeyMemoryPublish)
+	short, long := desc.Command(cmd.DescKeyMemoryPublish)
 	c := &cobra.Command{
 		Use:   cmd.UseMemoryPublish,
 		Short: short,
@@ -36,11 +36,11 @@ func Cmd() *cobra.Command {
 
 	c.Flags().IntVar(&budget,
 		cFlag.Budget, memory.DefaultPublishBudget,
-		desc.FlagDesc(flag.DescKeyMemoryPublishBudget),
+		desc.Flag(flag.DescKeyMemoryPublishBudget),
 	)
 	c.Flags().BoolVar(&dryRun,
 		cFlag.DryRun, false,
-		desc.FlagDesc(flag.DescKeyMemoryPublishDryRun),
+		desc.Flag(flag.DescKeyMemoryPublishDryRun),
 	)
 
 	return c

@@ -19,7 +19,7 @@ import (
 // Returns:
 //   - *cobra.Command: Configured check-task-completion subcommand
 func Cmd() *cobra.Command {
-	short, long := desc.CommandDesc(cmd.DescKeySystemCheckTaskCompletion)
+	short, long := desc.Command(cmd.DescKeySystemCheckTaskCompletion)
 
 	return &cobra.Command{
 		Use:    "check-task-completion",

@@ -27,7 +27,7 @@ func Cmd() *cobra.Command {
 		verbose    bool
 	)
 
-	short, long := desc.CommandDesc(cmd.DescKeyStatus)
+	short, long := desc.Command(cmd.DescKeyStatus)
 
 	cmd := &cobra.Command{
 		Use:   cmd.UseStatus,
@@ -40,11 +40,11 @@ func Cmd() *cobra.Command {
 
 	cmd.Flags().BoolVar(
 		&jsonOutput,
-		"json", false, desc.FlagDesc(flag.DescKeyStatusJson),
+		"json", false, desc.Flag(flag.DescKeyStatusJson),
 	)
 	cmd.Flags().BoolVarP(
 		&verbose, "verbose", "v", false,
-		desc.FlagDesc(flag.DescKeyStatusVerbose),
+		desc.Flag(flag.DescKeyStatusVerbose),
 	)
 
 	return cmd

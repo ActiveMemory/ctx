@@ -10,20 +10,20 @@ import (
 	"fmt"
 	"strings"
 
+	"github.com/spf13/cobra"
+
 	"github.com/ActiveMemory/ctx/internal/assets/read/desc"
 	"github.com/ActiveMemory/ctx/internal/assets/tpl"
+	"github.com/ActiveMemory/ctx/internal/cli/recall/core"
 	"github.com/ActiveMemory/ctx/internal/config/embed/text"
 	"github.com/ActiveMemory/ctx/internal/config/flag"
 	"github.com/ActiveMemory/ctx/internal/config/journal"
 	"github.com/ActiveMemory/ctx/internal/config/time"
 	"github.com/ActiveMemory/ctx/internal/err/date"
-	ctxerr "github.com/ActiveMemory/ctx/internal/err/session"
-	"github.com/ActiveMemory/ctx/internal/write/recall"
-	"github.com/spf13/cobra"
-
-	"github.com/ActiveMemory/ctx/internal/cli/recall/core"
+	ctxErr "github.com/ActiveMemory/ctx/internal/err/session"
 	"github.com/ActiveMemory/ctx/internal/parse"
 	"github.com/ActiveMemory/ctx/internal/recall/parser"
+	"github.com/ActiveMemory/ctx/internal/write/recall"
 )
 
 // Run handles the recall list command.
@@ -63,7 +63,7 @@ func Run(
 
 	sessions, scanErr := core.FindSessions(allProjects)
 	if scanErr != nil {
-		return ctxerr.Find(scanErr)
+		return ctxErr.Find(scanErr)
 	}
 
 	if len(sessions) == 0 {
@@ -108,7 +108,8 @@ func Run(
 	recall.SessionListHeader(cmd, len(sessions), shown)
 
 	// Compute dynamic column widths from data.
-	slugW, projW := len(desc.TextDesc(text.DescKeyLabelColSlug)), len(desc.TextDesc(text.DescKeyLabelColProject))
+	slugW, projW := len(desc.Text(text.DescKeyLabelColSlug)),
+		len(desc.Text(text.DescKeyLabelColProject))
 	for _, s := range filtered {
 		slug := core.Truncate(s.Slug, journal.SlugMaxLen)
 		if len(slug) > slugW {
@@ -122,8 +123,13 @@ func Run(
 	// Print column header.
 	rowFmt := fmt.Sprintf(tpl.RecallListRow, slugW, projW)
 	recall.SessionListRow(cmd, rowFmt,
-		desc.TextDesc(text.DescKeyLabelColSlug), desc.TextDesc(text.DescKeyLabelColProject), desc.TextDesc(text.DescKeyLabelColDate),
-		desc.TextDesc(text.DescKeyLabelColDuration), desc.TextDesc(text.DescKeyLabelColTurns), desc.TextDesc(text.DescKeyLabelColUsage))
+		desc.Text(text.DescKeyLabelColSlug),
+		desc.Text(text.DescKeyLabelColProject),
+		desc.Text(text.DescKeyLabelColDate),
+		desc.Text(text.DescKeyLabelColDuration),
+		desc.Text(text.DescKeyLabelColTurns),
+		desc.Text(text.DescKeyLabelColUsage),
+	)
 
 	// Print sessions.
 	for _, s := range filtered {

@@ -94,7 +94,7 @@ func runArchive(cmd *cobra.Command, dryRun bool) error {
 	}
 
 	// Write to archive
-	archiveFilePath, writeErr := tidy.WriteArchive(archive.ArchiveScopeTasks, desc.TextDesc(text.DescKeyHeadingArchivedTasks), archivedContent.String())
+	archiveFilePath, writeErr := tidy.WriteArchive(archive.ArchiveScopeTasks, desc.Text(text.DescKeyHeadingArchivedTasks), archivedContent.String())
 	if writeErr != nil {
 		return writeErr
 	}

@@ -23,7 +23,7 @@ import (
 //   - error: "failed to find sessions: <cause>"
 func Find(cause error) error {
 	return fmt.Errorf(
-		desc.TextDesc(text.DescKeyErrSessionFindSessions), cause,
+		desc.Text(text.DescKeyErrSessionFindSessions), cause,
 	)
 }
 
@@ -36,7 +36,7 @@ func Find(cause error) error {
 //   - error: "session not found: <query>"
 func NotFound(query string) error {
 	return fmt.Errorf(
-		desc.TextDesc(text.DescKeyErrSessionNotFound), query,
+		desc.Text(text.DescKeyErrSessionNotFound), query,
 	)
 }
 
@@ -51,11 +51,11 @@ func NotFound(query string) error {
 func NoneFound(hint string) error {
 	if hint != "" {
 		return fmt.Errorf(
-			desc.TextDesc(text.DescKeyErrSessionNoSessionsFoundHint), hint,
+			desc.Text(text.DescKeyErrSessionNoSessionsFoundHint), hint,
 		)
 	}
 	return errors.New(
-		desc.TextDesc(text.DescKeyErrSessionNoSessionsFound),
+		desc.Text(text.DescKeyErrSessionNoSessionsFound),
 	)
 }
 
@@ -65,7 +65,7 @@ func NoneFound(hint string) error {
 // Returns:
 //   - error: "ambiguous query, use a more specific ID"
 func AmbiguousQuery() error {
-	return errors.New(desc.TextDesc(text.DescKeyErrSessionAmbiguousQuery))
+	return errors.New(desc.Text(text.DescKeyErrSessionAmbiguousQuery))
 }
 
 // IDRequired returns an error when no session ID was provided.
@@ -73,7 +73,7 @@ func AmbiguousQuery() error {
 // Returns:
 //   - error: "please provide a session ID or use --latest"
 func IDRequired() error {
-	return errors.New(desc.TextDesc(text.DescKeyErrSessionIDRequired))
+	return errors.New(desc.Text(text.DescKeyErrSessionIDRequired))
 }
 
 // AllWithID returns a validation error when --all is used with a session ID.
@@ -82,7 +82,7 @@ func IDRequired() error {
 //   - error: "cannot use --all with a session ID; use one or the other"
 func AllWithID() error {
 	return errors.New(
-		desc.TextDesc(text.DescKeyErrSessionAllWithSessionID),
+		desc.Text(text.DescKeyErrSessionAllWithSessionID),
 	)
 }
 
@@ -92,6 +92,6 @@ func AllWithID() error {
 //   - error: "cannot use --all with a pattern; use one or the other"
 func AllWithPattern() error {
 	return errors.New(
-		desc.TextDesc(text.DescKeyErrSessionAllWithPattern),
+		desc.Text(text.DescKeyErrSessionAllWithPattern),
 	)
 }

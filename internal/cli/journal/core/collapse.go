@@ -63,7 +63,7 @@ func CollapseToolOutputs(content string) string {
 		}
 
 		// Non-tool-output turns pass through unchanged
-		if role != desc.TextDesc(text.DescKeyLabelToolOutput) {
+		if role != desc.Text(text.DescKeyLabelToolOutput) {
 			for k := i; k < bodyEnd; k++ {
 				out = append(out, lines[k])
 			}

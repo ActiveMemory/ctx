@@ -19,7 +19,7 @@ import (
 // Returns:
 //   - *cobra.Command: Configured check-backup-age subcommand
 func Cmd() *cobra.Command {
-	short, long := desc.CommandDesc(cmd.DescKeySystemCheckBackupAge)
+	short, long := desc.Command(cmd.DescKeySystemCheckBackupAge)
 
 	return &cobra.Command{
 		Use:    "check-backup-age",

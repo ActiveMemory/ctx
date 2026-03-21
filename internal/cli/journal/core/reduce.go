@@ -108,7 +108,7 @@ func StripSystemReminders(content string) string {
 		}
 
 		// Bold-style: **System Reminder**: ... (runs until blank line)
-		if strings.HasPrefix(trimmed, desc.TextDesc(text.DescKeyLabelBoldReminder)) {
+		if strings.HasPrefix(trimmed, desc.Text(text.DescKeyLabelBoldReminder)) {
 			inBoldReminder = true
 			continue
 		}
@@ -170,7 +170,7 @@ func CleanToolOutputJSON(content string) string {
 		matches := regex.TurnHeader.FindStringSubmatch(
 			strings.TrimSpace(lines[i]),
 		)
-		if matches == nil || matches[2] != desc.TextDesc(text.DescKeyLabelToolOutput) {
+		if matches == nil || matches[2] != desc.Text(text.DescKeyLabelToolOutput) {
 			out = append(out, lines[i])
 			i++
 			continue

@@ -19,7 +19,7 @@ import (
 // Returns:
 //   - *cobra.Command: Configured check-memory-drift subcommand
 func Cmd() *cobra.Command {
-	short, _ := desc.CommandDesc(cmd.DescKeySystemCheckMemoryDrift)
+	short, _ := desc.Command(cmd.DescKeySystemCheckMemoryDrift)
 
 	return &cobra.Command{
 		Use:    "check-memory-drift",

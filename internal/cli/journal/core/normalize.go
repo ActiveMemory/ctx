@@ -168,7 +168,7 @@ func NormalizeContent(content string, fencesVerified bool) string {
 // another session's file) because the real next turn (### 42.) is always
 // the smallest number > N.
 func WrapToolOutputs(content string) string {
-	return ProcessTurns(content, desc.TextDesc(text.DescKeyLabelToolOutput),
+	return ProcessTurns(content, desc.Text(text.DescKeyLabelToolOutput),
 		func(out, body []string, atEOF bool) []string {
 			// If we hit EOF, split off any trailing multipart navigation
 			// footer (--- + **Part N of M**) so it's not swallowed.
@@ -226,7 +226,7 @@ func WrapToolOutputs(content string) string {
 // Boundary detection reuses the same pre-scan + last-match-wins approach
 // as WrapToolOutputs.
 func WrapUserTurns(content string) string {
-	return ProcessTurns(content, desc.TextDesc(text.DescKeyLabelRoleUser),
+	return ProcessTurns(content, desc.Text(text.DescKeyLabelRoleUser),
 		func(out, body []string, _ bool) []string {
 			trimmed := TrimBlankLines(body)
 			if len(trimmed) == 0 {

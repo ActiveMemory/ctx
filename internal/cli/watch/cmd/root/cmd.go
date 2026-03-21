@@ -28,7 +28,7 @@ func Cmd() *cobra.Command {
 		dryRun  bool
 	)
 
-	short, long := desc.CommandDesc(cmd.DescKeyWatch)
+	short, long := desc.Command(cmd.DescKeyWatch)
 
 	cmd := &cobra.Command{
 		Use:   cmd.UseWatch,
@@ -40,10 +40,10 @@ func Cmd() *cobra.Command {
 	}
 
 	cmd.Flags().StringVar(
-		&logPath, "log", "", desc.FlagDesc(flag.DescKeyWatchLog),
+		&logPath, "log", "", desc.Flag(flag.DescKeyWatchLog),
 	)
 	cmd.Flags().BoolVar(
-		&dryRun, cflag.DryRun, false, desc.FlagDesc(flag.DescKeyWatchDryRun),
+		&dryRun, cflag.DryRun, false, desc.Flag(flag.DescKeyWatchDryRun),
 	)
 
 	return cmd

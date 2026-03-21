@@ -59,7 +59,7 @@ func Run(cmd *cobra.Command, stdin *os.File) error {
 	// Threshold reached — reset and nudge.
 	core.WriteCounter(counterPath, 0)
 
-	fallback := desc.TextDesc(text.DescKeyCheckTaskCompletionFallback)
+	fallback := desc.Text(text.DescKeyCheckTaskCompletionFallback)
 	msg := core.LoadMessage(
 		hook.CheckTaskCompletion, hook.VariantNudge, nil, fallback,
 	)
@@ -68,7 +68,7 @@ func Run(cmd *cobra.Command, stdin *os.File) error {
 	}
 	core.PrintHookContext(cmd, hook.EventPostToolUse, msg)
 
-	nudgeMsg := desc.TextDesc(text.DescKeyCheckTaskCompletionNudgeMessage)
+	nudgeMsg := desc.Text(text.DescKeyCheckTaskCompletionNudgeMessage)
 	ref := notify.NewTemplateRef(
 		hook.CheckTaskCompletion, hook.VariantNudge, nil,
 	)

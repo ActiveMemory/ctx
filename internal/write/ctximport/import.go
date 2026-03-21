@@ -25,7 +25,7 @@ func NoEntries(cmd *cobra.Command, filename string) {
 	if cmd == nil {
 		return
 	}
-	cmd.Println(fmt.Sprintf(desc.TextDesc(text.DescKeyWriteImportNoEntries), filename))
+	cmd.Println(fmt.Sprintf(desc.Text(text.DescKeyWriteImportNoEntries), filename))
 }
 
 // ScanHeader prints the scanning header: source name, entry count,
@@ -39,8 +39,8 @@ func ScanHeader(cmd *cobra.Command, filename string, count int) {
 	if cmd == nil {
 		return
 	}
-	cmd.Println(fmt.Sprintf(desc.TextDesc(text.DescKeyWriteImportScanning), filename))
-	cmd.Println(fmt.Sprintf(desc.TextDesc(text.DescKeyWriteImportFound), count))
+	cmd.Println(fmt.Sprintf(desc.Text(text.DescKeyWriteImportScanning), filename))
+	cmd.Println(fmt.Sprintf(desc.Text(text.DescKeyWriteImportFound), count))
 	cmd.Println()
 }
 
@@ -54,8 +54,8 @@ func EntrySkipped(cmd *cobra.Command, title string) {
 	if cmd == nil {
 		return
 	}
-	cmd.Println(fmt.Sprintf(desc.TextDesc(text.DescKeyWriteImportEntry), title))
-	cmd.Println(desc.TextDesc(text.DescKeyWriteImportClassifiedSkip))
+	cmd.Println(fmt.Sprintf(desc.Text(text.DescKeyWriteImportEntry), title))
+	cmd.Println(desc.Text(text.DescKeyWriteImportClassifiedSkip))
 	cmd.Println()
 }
 
@@ -71,8 +71,8 @@ func EntryClassified(cmd *cobra.Command, title, targetFile string, keywords []st
 	if cmd == nil {
 		return
 	}
-	cmd.Println(fmt.Sprintf(desc.TextDesc(text.DescKeyWriteImportEntry), title))
-	cmd.Println(fmt.Sprintf(desc.TextDesc(text.DescKeyWriteImportClassified), targetFile, strings.Join(keywords, ", ")))
+	cmd.Println(fmt.Sprintf(desc.Text(text.DescKeyWriteImportEntry), title))
+	cmd.Println(fmt.Sprintf(desc.Text(text.DescKeyWriteImportClassified), targetFile, strings.Join(keywords, ", ")))
 	cmd.Println()
 }
 
@@ -87,8 +87,8 @@ func EntryAdded(cmd *cobra.Command, title, targetFile string) {
 	if cmd == nil {
 		return
 	}
-	cmd.Println(fmt.Sprintf(desc.TextDesc(text.DescKeyWriteImportEntry), title))
-	cmd.Println(fmt.Sprintf(desc.TextDesc(text.DescKeyWriteImportAdded), targetFile))
+	cmd.Println(fmt.Sprintf(desc.Text(text.DescKeyWriteImportEntry), title))
+	cmd.Println(fmt.Sprintf(desc.Text(text.DescKeyWriteImportAdded), targetFile))
 	cmd.Println()
 }
 
@@ -121,27 +121,27 @@ func Summary(cmd *cobra.Command, result entity.ImportResult, dryRun bool) {
 
 	var summary string
 	if dryRun {
-		summary = fmt.Sprintf(desc.TextDesc(text.DescKeyWriteImportSummaryDryRun), total)
+		summary = fmt.Sprintf(desc.Text(text.DescKeyWriteImportSummaryDryRun), total)
 	} else {
-		summary = fmt.Sprintf(desc.TextDesc(text.DescKeyWriteImportSummary), total)
+		summary = fmt.Sprintf(desc.Text(text.DescKeyWriteImportSummary), total)
 	}
 
 	var parts []string
 	if result.Conventions > 0 {
 		parts = append(parts, fmt.Sprintf(
-			desc.TextDesc(text.DescKeyImportCountConvention), result.Conventions))
+			desc.Text(text.DescKeyImportCountConvention), result.Conventions))
 	}
 	if result.Decisions > 0 {
 		parts = append(parts, fmt.Sprintf(
-			desc.TextDesc(text.DescKeyImportCountDecision), result.Decisions))
+			desc.Text(text.DescKeyImportCountDecision), result.Decisions))
 	}
 	if result.Learnings > 0 {
 		parts = append(parts, fmt.Sprintf(
-			desc.TextDesc(text.DescKeyImportCountLearning), result.Learnings))
+			desc.Text(text.DescKeyImportCountLearning), result.Learnings))
 	}
 	if result.Tasks > 0 {
 		parts = append(parts, fmt.Sprintf(
-			desc.TextDesc(text.DescKeyImportCountTask), result.Tasks))
+			desc.Text(text.DescKeyImportCountTask), result.Tasks))
 	}
 	if len(parts) > 0 {
 		summary += fmt.Sprintf(" (%s)", strings.Join(parts, ", "))
@@ -149,9 +149,9 @@ func Summary(cmd *cobra.Command, result entity.ImportResult, dryRun bool) {
 	cmd.Println(summary)
 
 	if result.Skipped > 0 {
-		cmd.Println(fmt.Sprintf(desc.TextDesc(text.DescKeyWriteImportSkipped), result.Skipped))
+		cmd.Println(fmt.Sprintf(desc.Text(text.DescKeyWriteImportSkipped), result.Skipped))
 	}
 	if result.Dupes > 0 {
-		cmd.Println(fmt.Sprintf(desc.TextDesc(text.DescKeyWriteImportDuplicates), result.Dupes))
+		cmd.Println(fmt.Sprintf(desc.Text(text.DescKeyWriteImportDuplicates), result.Dupes))
 	}
 }

@@ -22,7 +22,7 @@ import (
 func Cmd() *cobra.Command {
 	var since string
 
-	short, long := desc.CommandDesc(cmd.DescKeyChange)
+	short, long := desc.Command(cmd.DescKeyChange)
 
 	c := &cobra.Command{
 		Use:   cmd.UseChange,
@@ -35,7 +35,7 @@ func Cmd() *cobra.Command {
 
 	c.Flags().StringVar(
 		&since, cflag.Since, "",
-		desc.FlagDesc(flag.DescKeyChangesSince),
+		desc.Flag(flag.DescKeyChangesSince),
 	)
 
 	return c

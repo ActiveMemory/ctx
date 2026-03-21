@@ -60,7 +60,7 @@ import (
 // Returns:
 //   - *cobra.Command: Parent command with resource display, plumbing, and hook subcommands
 func Cmd() *cobra.Command {
-	short, long := desc.CommandDesc(cmd.DescKeySystem)
+	short, long := desc.Command(cmd.DescKeySystem)
 
 	cmd := &cobra.Command{
 		Use:   cmd.UseSystem,

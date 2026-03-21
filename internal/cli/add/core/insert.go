@@ -213,6 +213,6 @@ func InsertDecision(content, entry, header string) []byte {
 //   - []byte: Modified content with entry inserted
 func InsertLearning(content, entry string) []byte {
 	return insertBeforeFirstEntry(
-		content, entry, desc.TextDesc(text.DescKeyHeadingLearnings),
+		content, entry, desc.Text(text.DescKeyHeadingLearnings),
 	)
 }

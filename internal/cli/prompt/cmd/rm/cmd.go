@@ -7,9 +7,10 @@
 package rm
 
 import (
+	"github.com/spf13/cobra"
+
 	"github.com/ActiveMemory/ctx/internal/assets/read/desc"
 	"github.com/ActiveMemory/ctx/internal/config/embed/cmd"
-	"github.com/spf13/cobra"
 )
 
 // Cmd returns the prompt rm subcommand.
@@ -17,10 +18,10 @@ import (
 // Returns:
 //   - *cobra.Command: Configured rm subcommand
 func Cmd() *cobra.Command {
-	short, _ := desc.CommandDesc(cmd.DescKeyPromptRm)
+	short, _ := desc.Command(cmd.DescKeyPromptRm)
 
 	return &cobra.Command{
-		Use:   "rm NAME",
+		Use:   cmd.UsePromptRm,
 		Short: short,
 		Args:  cobra.ExactArgs(1),
 		RunE: func(cmd *cobra.Command, args []string) error {

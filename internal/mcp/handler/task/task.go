@@ -30,7 +30,7 @@ func ForEachPending(lines []string, fn func(Pending) bool) {
 	idx := 0
 
 	for _, line := range lines {
-		if strings.HasPrefix(line, desc.TextDesc(text.DescKeyHeadingCompleted)) {
+		if strings.HasPrefix(line, desc.Text(text.DescKeyHeadingCompleted)) {
 			inCompletedSection = true
 			continue
 		}

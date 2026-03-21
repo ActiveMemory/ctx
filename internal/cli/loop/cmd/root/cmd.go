@@ -41,7 +41,7 @@ func Cmd() *cobra.Command {
 		outputFile    string
 	)
 
-	short, long := desc.CommandDesc(cmd.DescKeyLoop)
+	short, long := desc.Command(cmd.DescKeyLoop)
 	c := &cobra.Command{
 		Use:   cmd.UseLoop,
 		Short: short,
@@ -55,27 +55,27 @@ func Cmd() *cobra.Command {
 
 	c.Flags().StringVarP(&promptFile,
 		cFlag.Prompt, cFlag.ShortPrompt,
-		loop.PromptMd, desc.FlagDesc(flag.DescKeyLoopPrompt),
+		loop.PromptMd, desc.Flag(flag.DescKeyLoopPrompt),
 	)
 	c.Flags().StringVarP(
 		&tool, cFlag.Tool, cFlag.ShortTool,
-		loop.DefaultTool, desc.FlagDesc(flag.DescKeyLoopTool),
+		loop.DefaultTool, desc.Flag(flag.DescKeyLoopTool),
 	)
 	c.Flags().IntVarP(
 		&maxIterations,
 		cFlag.MaxIterations, cFlag.ShortMaxIterations,
-		0, desc.FlagDesc(flag.DescKeyLoopMaxIterations),
+		0, desc.Flag(flag.DescKeyLoopMaxIterations),
 	)
 	c.Flags().StringVarP(
 		&completionMsg,
 		cFlag.Completion, cFlag.ShortCompletion,
 		loop.DefaultCompletionSignal,
-		desc.FlagDesc(flag.DescKeyLoopCompletion),
+		desc.Flag(flag.DescKeyLoopCompletion),
 	)
 	c.Flags().StringVarP(
 		&outputFile,
 		cFlag.Output, cFlag.ShortOutput,
-		loop.DefaultOutput, desc.FlagDesc(flag.DescKeyLoopOutput),
+		loop.DefaultOutput, desc.Flag(flag.DescKeyLoopOutput),
 	)
 
 	return c

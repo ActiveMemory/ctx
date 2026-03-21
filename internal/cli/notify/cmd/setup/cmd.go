@@ -20,7 +20,7 @@ import (
 // Returns:
 //   - *cobra.Command: Configured setup subcommand
 func Cmd() *cobra.Command {
-	short, long := desc.CommandDesc(cmd.DescKeyNotifySetup)
+	short, long := desc.Command(cmd.DescKeyNotifySetup)
 	return &cobra.Command{
 		Use:   cmd.UseNotifySetup,
 		Short: short,

@@ -19,7 +19,7 @@ import (
 // Parameters:
 //   - cmd: Cobra command for output
 func InfoSkillsHeader(cmd *cobra.Command) {
-	cmd.Println(desc.TextDesc(text.DescKeyWriteSkillsHeader))
+	cmd.Println(desc.Text(text.DescKeyWriteSkillsHeader))
 	cmd.Println()
 }
 
@@ -30,5 +30,5 @@ func InfoSkillsHeader(cmd *cobra.Command) {
 //   - name: Skill name
 //   - description: Truncated skill description
 func InfoSkillLine(cmd *cobra.Command, name, description string) {
-	cmd.Println(fmt.Sprintf(desc.TextDesc(text.DescKeyWriteSkillLine), name, description))
+	cmd.Println(fmt.Sprintf(desc.Text(text.DescKeyWriteSkillLine), name, description))
 }

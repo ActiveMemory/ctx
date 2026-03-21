@@ -11,22 +11,22 @@ import (
 	"path/filepath"
 	"strings"
 
+	"github.com/spf13/cobra"
+
+	"github.com/ActiveMemory/ctx/internal/cli/recall/core"
 	"github.com/ActiveMemory/ctx/internal/config/dir"
 	"github.com/ActiveMemory/ctx/internal/config/file"
 	"github.com/ActiveMemory/ctx/internal/config/fs"
 	"github.com/ActiveMemory/ctx/internal/config/journal"
-	fs2 "github.com/ActiveMemory/ctx/internal/err/fs"
-	journal2 "github.com/ActiveMemory/ctx/internal/err/journal"
-	ctxerr "github.com/ActiveMemory/ctx/internal/err/session"
-	"github.com/ActiveMemory/ctx/internal/write/err"
-	"github.com/ActiveMemory/ctx/internal/write/export"
-	"github.com/ActiveMemory/ctx/internal/write/recall"
-	"github.com/spf13/cobra"
-
-	"github.com/ActiveMemory/ctx/internal/cli/recall/core"
+	errFs "github.com/ActiveMemory/ctx/internal/err/fs"
+	errJournal "github.com/ActiveMemory/ctx/internal/err/journal"
+	ctxErr "github.com/ActiveMemory/ctx/internal/err/session"
 	"github.com/ActiveMemory/ctx/internal/journal/state"
 	"github.com/ActiveMemory/ctx/internal/rc"
 	"github.com/ActiveMemory/ctx/internal/recall/parser"
+	"github.com/ActiveMemory/ctx/internal/write/err"
+	"github.com/ActiveMemory/ctx/internal/write/export"
+	"github.com/ActiveMemory/ctx/internal/write/recall"
 )
 
 // Run handles the recall export command.
@@ -58,7 +58,7 @@ func Run(cmd *cobra.Command, args []string, opts core.ExportOpts) error {
 	// 3. Resolve sessions.
 	sessions, scanErr := core.FindSessions(opts.AllProjects)
 	if scanErr != nil {
-		return ctxerr.Find(scanErr)
+		return ctxErr.Find(scanErr)
 	}
 
 	if len(sessions) == 0 {
@@ -79,12 +79,12 @@ func Run(cmd *cobra.Command, args []string, opts core.ExportOpts) error {
 			}
 		}
 		if len(toExport) == 0 {
-			return ctxerr.NotFound(args[0])
+			return ctxErr.NotFound(args[0])
 		}
 		if len(toExport) > 1 {
 			lines := core.FormatSessionMatchLines(toExport)
 			recall.AmbiguousSessionMatch(cmd, args[0], lines)
-			return ctxerr.AmbiguousQuery()
+			return ctxErr.AmbiguousQuery()
 		}
 		singleSession = true
 	}
@@ -92,18 +92,20 @@ func Run(cmd *cobra.Command, args []string, opts core.ExportOpts) error {
 	// 4. Ensure journal directory exists.
 	journalDir := filepath.Join(rc.ContextDir(), dir.Journal)
 	if mkErr := os.MkdirAll(journalDir, fs.PermExec); mkErr != nil {
-		return fs2.Mkdir(dir.Journal, mkErr)
+		return errFs.Mkdir(dir.Journal, mkErr)
 	}
 
 	// 5. Load state + build index.
 	jstate, loadErr := state.Load(journalDir)
 	if loadErr != nil {
-		return journal2.LoadState(loadErr)
+		return errJournal.LoadState(loadErr)
 	}
 	sessionIndex := core.BuildSessionIndex(journalDir)
 
 	// 6. Build the plan.
-	plan := core.PlanExport(toExport, journalDir, sessionIndex, jstate, opts, singleSession)
+	plan := core.PlanExport(
+		toExport, journalDir, sessionIndex, jstate, opts, singleSession,
+	)
 
 	// 7. Execute renames.
 	renamed := 0
@@ -117,7 +119,10 @@ func Run(cmd *cobra.Command, args []string, opts core.ExportOpts) error {
 
 	// 8. Dry-run → print summary and return.
 	if opts.DryRun {
-		export.Summary(cmd, plan.NewCount, plan.RegenCount, plan.SkipCount, plan.LockedCount, true)
+		export.Summary(
+			cmd, plan.NewCount, plan.RegenCount,
+			plan.SkipCount, plan.LockedCount, true,
+		)
 		return nil
 	}
 

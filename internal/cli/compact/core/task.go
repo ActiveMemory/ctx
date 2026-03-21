@@ -83,7 +83,7 @@ func CompactTasks(
 			}
 			if archiveFile, archiveErr := tidy.WriteArchive(
 				archiveCfg.ArchiveScopeTasks,
-				desc.TextDesc(text.DescKeyHeadingArchivedTasks),
+				desc.Text(text.DescKeyHeadingArchivedTasks),
 				archiveContent,
 			); archiveErr == nil {
 				compact.InfoArchivedTasks(

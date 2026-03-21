@@ -9,12 +9,13 @@ package snapshot
 import (
 	"os"
 
+	"github.com/spf13/cobra"
+
 	"github.com/ActiveMemory/ctx/internal/config/claude"
 	"github.com/ActiveMemory/ctx/internal/config/fs"
 	"github.com/ActiveMemory/ctx/internal/err/config"
-	ctxerr "github.com/ActiveMemory/ctx/internal/err/fs"
+	ctxErr "github.com/ActiveMemory/ctx/internal/err/fs"
 	"github.com/ActiveMemory/ctx/internal/write/restore"
-	"github.com/spf13/cobra"
 )
 
 // Run saves settings.local.json as the golden image.
@@ -30,7 +31,7 @@ func Run(cmd *cobra.Command) error {
 		if os.IsNotExist(readErr) {
 			return config.SettingsNotFound()
 		}
-		return ctxerr.FileRead(claude.Settings, readErr)
+		return ctxErr.FileRead(claude.Settings, readErr)
 	}
 
 	updated := false
@@ -41,7 +42,7 @@ func Run(cmd *cobra.Command) error {
 	if writeErr := os.WriteFile(
 		claude.SettingsGolden, content, fs.PermFile,
 	); writeErr != nil {
-		return ctxerr.FileWrite(claude.SettingsGolden, writeErr)
+		return ctxErr.FileWrite(claude.SettingsGolden, writeErr)
 	}
 
 	restore.SnapshotDone(cmd, updated, claude.SettingsGolden)

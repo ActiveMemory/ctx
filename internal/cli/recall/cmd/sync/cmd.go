@@ -7,24 +7,25 @@
 package sync
 
 import (
+	"github.com/spf13/cobra"
+
 	"github.com/ActiveMemory/ctx/internal/assets/read/desc"
 	"github.com/ActiveMemory/ctx/internal/config/embed/cmd"
-	"github.com/spf13/cobra"
 )
 
 // Cmd returns the "ctx recall sync" subcommand.
 //
 // Scans journal markdowns and syncs their frontmatter lock state into
 // .state.json. This is the inverse of "ctx recall lock": the frontmatter
-// is treated as the source of truth, and state is updated to match.
+// is treated as the source of truth, and the state is updated to match.
 //
 // Returns:
 //   - *cobra.Command: Command for syncing lock state from frontmatter
 func Cmd() *cobra.Command {
-	short, long := desc.CommandDesc(cmd.DescKeyRecallSync)
+	short, long := desc.Command(cmd.DescKeyRecallSync)
 
-	cmd := &cobra.Command{
-		Use:   "sync",
+	c := &cobra.Command{
+		Use:   cmd.UseRecallSync,
 		Short: short,
 		Long:  long,
 		RunE: func(cmd *cobra.Command, _ []string) error {
@@ -32,5 +33,5 @@ func Cmd() *cobra.Command {
 		},
 	}
 
-	return cmd
+	return c
 }

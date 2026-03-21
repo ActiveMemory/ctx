@@ -32,7 +32,7 @@ func Cmd() *cobra.Command {
 		projType string
 	)
 
-	short, long := desc.CommandDesc(cmd.DescKeyDep)
+	short, long := desc.Command(cmd.DescKeyDep)
 	c := &cobra.Command{
 		Use:   cmd.UseDep,
 		Short: short,
@@ -44,14 +44,14 @@ func Cmd() *cobra.Command {
 
 	c.Flags().StringVar(
 		&format,
-		cFlag.Format, fmt.FormatMermaid, desc.FlagDesc(flag.DescKeyDepsFormat),
+		cFlag.Format, fmt.FormatMermaid, desc.Flag(flag.DescKeyDepsFormat),
 	)
 	c.Flags().BoolVar(
 		&external,
-		cFlag.External, false, desc.FlagDesc(flag.DescKeyDepsExternal),
+		cFlag.External, false, desc.Flag(flag.DescKeyDepsExternal),
 	)
 	c.Flags().StringVar(
-		&projType, cFlag.Type, "", desc.FlagDesc(flag.DescKeyDepsType),
+		&projType, cFlag.Type, "", desc.Flag(flag.DescKeyDepsType),
 	)
 
 	return c
