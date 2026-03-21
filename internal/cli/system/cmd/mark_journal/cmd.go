@@ -15,7 +15,7 @@ import (
 	"github.com/ActiveMemory/ctx/internal/assets/read/desc"
 	"github.com/ActiveMemory/ctx/internal/config/embed/cmd"
 	"github.com/ActiveMemory/ctx/internal/config/embed/flag"
-	cflag "github.com/ActiveMemory/ctx/internal/config/flag"
+	cFlag "github.com/ActiveMemory/ctx/internal/config/flag"
 	"github.com/ActiveMemory/ctx/internal/config/token"
 	"github.com/ActiveMemory/ctx/internal/journal/state"
 )
@@ -38,7 +38,7 @@ func Cmd() *cobra.Command {
 		},
 	}
 
-	c.Flags().Bool(cflag.Check, false, desc.Flag(flag.DescKeySystemMarkJournalCheck))
+	c.Flags().Bool(cFlag.Check, false, desc.Flag(flag.DescKeySystemMarkJournalCheck))
 
 	return c
 }

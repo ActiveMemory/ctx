@@ -10,12 +10,12 @@ import (
 	"os"
 	"path/filepath"
 
-	"github.com/ActiveMemory/ctx/internal/config/fs"
-	"github.com/ActiveMemory/ctx/internal/config/wrap"
-	"github.com/ActiveMemory/ctx/internal/write/session"
 	"github.com/spf13/cobra"
 
 	"github.com/ActiveMemory/ctx/internal/cli/system/core"
+	"github.com/ActiveMemory/ctx/internal/config/fs"
+	"github.com/ActiveMemory/ctx/internal/config/wrap"
+	"github.com/ActiveMemory/ctx/internal/write/session"
 )
 
 // Run creates or updates the wrap-up marker file.

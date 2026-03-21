@@ -14,7 +14,9 @@ import (
 
 	"github.com/ActiveMemory/ctx/internal/assets/read/desc"
 	"github.com/ActiveMemory/ctx/internal/config/embed/text"
+	cflag "github.com/ActiveMemory/ctx/internal/config/flag"
 	"github.com/ActiveMemory/ctx/internal/config/journal"
+	"github.com/ActiveMemory/ctx/internal/config/token"
 	ctxResolve "github.com/ActiveMemory/ctx/internal/context/resolve"
 	errJournal "github.com/ActiveMemory/ctx/internal/err/journal"
 	"github.com/ActiveMemory/ctx/internal/journal/state"
@@ -40,7 +42,7 @@ func runMarkJournal(cmd *cobra.Command, filename, stage string) error {
 		return errJournal.LoadStateFailed(loadErr)
 	}
 
-	check, _ := cmd.Flags().GetBool("check")
+	check, _ := cmd.Flags().GetBool(cflag.Check)
 	if check {
 		fs := jstate.Entries[filename]
 		var val string
@@ -56,7 +58,7 @@ func runMarkJournal(cmd *cobra.Command, filename, stage string) error {
 		case journal.StageLocked:
 			val = fs.Locked
 		default:
-			return errJournal.UnknownStage(stage, strings.Join(state.ValidStages, ", "))
+			return errJournal.UnknownStage(stage, strings.Join(state.ValidStages, token.CommaSpace))
 		}
 		if val == "" {
 			return errJournal.StageNotSet(filename, stage)
@@ -66,7 +68,7 @@ func runMarkJournal(cmd *cobra.Command, filename, stage string) error {
 	}
 
 	if ok := jstate.Mark(filename, stage); !ok {
-		return errJournal.UnknownStage(stage, strings.Join(state.ValidStages, ", "))
+		return errJournal.UnknownStage(stage, strings.Join(state.ValidStages, token.CommaSpace))
 	}
 
 	if saveErr := jstate.Save(journalDir); saveErr != nil {

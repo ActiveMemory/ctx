@@ -7,10 +7,11 @@
 package message
 
 import (
+	"github.com/spf13/cobra"
+
 	"github.com/ActiveMemory/ctx/internal/assets/read/desc"
 	"github.com/ActiveMemory/ctx/internal/config/embed/cmd"
 	"github.com/ActiveMemory/ctx/internal/config/embed/flag"
-	"github.com/spf13/cobra"
 )
 
 // Cmd returns the "ctx system message" subcommand.
@@ -20,20 +21,20 @@ import (
 func Cmd() *cobra.Command {
 	short, long := desc.Command(cmd.DescKeySystemMessage)
 
-	cmd := &cobra.Command{
+	c := &cobra.Command{
 		Use:   cmd.UseSystemMessage,
 		Short: short,
 		Long:  long,
 	}
 
-	cmd.AddCommand(
+	c.AddCommand(
 		messageListCmd(),
 		messageShowCmd(),
 		messageEditCmd(),
 		messageResetCmd(),
 	)
 
-	return cmd
+	return c
 }
 
 // messageListCmd returns the "ctx system message list" subcommand.
