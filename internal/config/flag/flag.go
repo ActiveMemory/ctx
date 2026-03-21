@@ -48,10 +48,12 @@ const (
 
 // Shared flag names used across commands.
 const (
+	After           = "after"
 	All             = "all"
 	AllProjects     = "all-projects"
 	Append          = "append"
 	Archive         = "archive"
+	BaseURL         = "base-url"
 	Blob            = "blob"
 	Build           = "build"
 	Commands        = "commands"
@@ -94,6 +96,7 @@ const (
 
 // Shorthand letters for shared flags.
 const (
+	ShortAfter         = "a"
 	ShortCompletion    = "c"
 	ShortEvent         = "e"
 	ShortForce         = "f"

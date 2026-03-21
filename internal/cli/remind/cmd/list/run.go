@@ -9,11 +9,11 @@ package list
 import (
 	"time"
 
-	time2 "github.com/ActiveMemory/ctx/internal/config/time"
-	"github.com/ActiveMemory/ctx/internal/write/remind"
 	"github.com/spf13/cobra"
 
 	"github.com/ActiveMemory/ctx/internal/cli/remind/core"
+	cfgTime "github.com/ActiveMemory/ctx/internal/config/time"
+	"github.com/ActiveMemory/ctx/internal/write/remind"
 )
 
 // Run prints all pending reminders with date annotations.
@@ -36,7 +36,7 @@ func Run(cmd *cobra.Command) error {
 		return nil
 	}
 
-	today := time.Now().Format(time2.DateFormat)
+	today := time.Now().Format(cfgTime.DateFormat)
 	for _, r := range reminders {
 		remind.ReminderItem(cmd, r.ID, r.Message, r.After, today)
 	}

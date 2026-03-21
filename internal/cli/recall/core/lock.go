@@ -11,6 +11,8 @@ import (
 	"path/filepath"
 	"strings"
 
+	"github.com/spf13/cobra"
+
 	"github.com/ActiveMemory/ctx/internal/config/cli"
 	"github.com/ActiveMemory/ctx/internal/config/dir"
 	"github.com/ActiveMemory/ctx/internal/config/file"
@@ -18,13 +20,11 @@ import (
 	"github.com/ActiveMemory/ctx/internal/config/session"
 	"github.com/ActiveMemory/ctx/internal/config/token"
 	"github.com/ActiveMemory/ctx/internal/err/journal"
-	ctxerr "github.com/ActiveMemory/ctx/internal/err/session"
+	ctxErr "github.com/ActiveMemory/ctx/internal/err/session"
 	"github.com/ActiveMemory/ctx/internal/io"
-	"github.com/ActiveMemory/ctx/internal/write/recall"
-	"github.com/spf13/cobra"
-
 	"github.com/ActiveMemory/ctx/internal/journal/state"
 	"github.com/ActiveMemory/ctx/internal/rc"
+	"github.com/ActiveMemory/ctx/internal/write/recall"
 )
 
 // LockedFrontmatterLine is the YAML line inserted into frontmatter when
@@ -244,7 +244,7 @@ func RunLockUnlock(
 		return cmd.Help()
 	}
 	if len(args) > 0 && all {
-		return ctxerr.AllWithPattern()
+		return ctxErr.AllWithPattern()
 	}
 
 	journalDir := filepath.Join(rc.ContextDir(), dir.Journal)

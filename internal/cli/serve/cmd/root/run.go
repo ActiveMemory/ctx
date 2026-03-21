@@ -14,7 +14,7 @@ import (
 	"github.com/ActiveMemory/ctx/internal/config/dir"
 	"github.com/ActiveMemory/ctx/internal/config/zensical"
 	"github.com/ActiveMemory/ctx/internal/err/fs"
-	ctxerr "github.com/ActiveMemory/ctx/internal/err/site"
+	ctxErr "github.com/ActiveMemory/ctx/internal/err/site"
 	zensicalBin "github.com/ActiveMemory/ctx/internal/exec/zensical"
 	"github.com/ActiveMemory/ctx/internal/rc"
 )
@@ -48,13 +48,13 @@ func Run(args []string) error {
 	// Check zensical.toml exists
 	tomlPath := filepath.Join(d, zensical.Toml)
 	if _, statErr = os.Stat(tomlPath); os.IsNotExist(statErr) {
-		return ctxerr.NoConfig(d)
+		return ctxErr.NoConfig(d)
 	}
 
 	// Check if zensical is available
 	_, lookErr := exec.LookPath(zensical.Bin)
 	if lookErr != nil {
-		return ctxerr.ZensicalNotFound()
+		return ctxErr.ZensicalNotFound()
 	}
 
 	return zensicalBin.Run(d)

@@ -7,6 +7,14 @@
 package cmd
 
 const (
+	UseRemindAdd          = "add TEXT"
+	UseRemindDismiss      = "dismiss [ID]"
+	UseRemindDismissAlias = "rm"
+	UseRemindList         = "list"
+	UseRemindListAlias    = "ls"
+)
+
+const (
 	DescKeyRemind        = "remind"
 	DescKeyRemindAdd     = "remind.add"
 	DescKeyRemindDismiss = "remind.dismiss"

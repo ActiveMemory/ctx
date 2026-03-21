@@ -10,6 +10,7 @@ import (
 	"strings"
 	"testing"
 
+	"github.com/ActiveMemory/ctx/internal/config/journal"
 	"github.com/ActiveMemory/ctx/internal/recall/parser"
 )
 
@@ -50,8 +51,8 @@ func TestSlugifyTitle(t *testing.T) {
 				t.Errorf("SlugifyTitle(%q) = %q, want %q", tt.input, got, tt.want)
 			}
 			// Slug must not exceed max length.
-			if len(got) > SlugMaxLen {
-				t.Errorf("SlugifyTitle(%q) length %d exceeds max %d", tt.input, len(got), SlugMaxLen)
+			if len(got) > journal.TitleSlugMaxLen {
+				t.Errorf("SlugifyTitle(%q) length %d exceeds max %d", tt.input, len(got), journal.TitleSlugMaxLen)
 			}
 		})
 	}

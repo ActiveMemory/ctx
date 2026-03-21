@@ -9,10 +9,10 @@ package serve
 import (
 	"github.com/spf13/cobra"
 
-	serveroot "github.com/ActiveMemory/ctx/internal/cli/serve/cmd/root"
+	serveRoot "github.com/ActiveMemory/ctx/internal/cli/serve/cmd/root"
 )
 
 // Cmd returns the serve command.
 func Cmd() *cobra.Command {
-	return serveroot.Cmd()
+	return serveRoot.Cmd()
 }

@@ -9,11 +9,11 @@ package root
 import (
 	"github.com/ActiveMemory/ctx/internal/assets/read/desc"
 	"github.com/ActiveMemory/ctx/internal/cli/add/core"
-	"github.com/ActiveMemory/ctx/internal/cli/register"
 	"github.com/ActiveMemory/ctx/internal/config/embed/cmd"
 	"github.com/ActiveMemory/ctx/internal/config/embed/flag"
 	"github.com/ActiveMemory/ctx/internal/config/entry"
 	cflag "github.com/ActiveMemory/ctx/internal/config/flag"
+	"github.com/ActiveMemory/ctx/internal/flagbind"
 
 	"github.com/spf13/cobra"
 )
@@ -91,11 +91,11 @@ func Cmd() *cobra.Command {
 		cflag.File, cflag.ShortFile, "",
 		desc.Flag(flag.DescKeyAddFile),
 	)
-	register.StringFlagP(c, &context, cflag.Context, cflag.ShortContext, flag.DescKeyAddContext)
-	register.StringFlagP(c, &rationale, cflag.Rationale, cflag.ShortRationale, flag.DescKeyAddRationale)
-	register.StringFlag(c, &consequence, cflag.Consequence, flag.DescKeyAddConsequence)
-	register.StringFlagP(c, &lesson, cflag.Lesson, cflag.ShortLesson, flag.DescKeyAddLesson)
-	register.StringFlagP(c, &application, cflag.Application, cflag.ShortApplication, flag.DescKeyAddApplication)
+	flagbind.StringFlagP(c, &context, cflag.Context, cflag.ShortContext, flag.DescKeyAddContext)
+	flagbind.StringFlagP(c, &rationale, cflag.Rationale, cflag.ShortRationale, flag.DescKeyAddRationale)
+	flagbind.StringFlag(c, &consequence, cflag.Consequence, flag.DescKeyAddConsequence)
+	flagbind.StringFlagP(c, &lesson, cflag.Lesson, cflag.ShortLesson, flag.DescKeyAddLesson)
+	flagbind.StringFlagP(c, &application, cflag.Application, cflag.ShortApplication, flag.DescKeyAddApplication)
 
 	return c
 }

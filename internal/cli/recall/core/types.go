@@ -17,7 +17,7 @@ const (
 	ActionNew        ExportAction = iota // file does not exist yet
 	ActionRegenerate                     // file exists and will be rewritten
 	ActionSkip                           // file exists and will be left alone
-	ActionLocked                         // file is locked — never overwritten
+	ActionLocked                         // file is locked: never overwritten
 )
 
 // ExportOpts holds all flag values for the export command.

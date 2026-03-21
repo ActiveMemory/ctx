@@ -7,9 +7,10 @@
 package list
 
 import (
+	"github.com/spf13/cobra"
+
 	"github.com/ActiveMemory/ctx/internal/assets/read/desc"
 	"github.com/ActiveMemory/ctx/internal/config/embed/cmd"
-	"github.com/spf13/cobra"
 )
 
 // Cmd returns the remind list subcommand.
@@ -20,8 +21,8 @@ func Cmd() *cobra.Command {
 	short, _ := desc.Command(cmd.DescKeyRemindList)
 
 	return &cobra.Command{
-		Use:     "list",
-		Aliases: []string{"ls"},
+		Use:     cmd.UseRemindList,
+		Aliases: []string{cmd.UseRemindListAlias},
 		Short:   short,
 		RunE: func(cmd *cobra.Command, _ []string) error {
 			return Run(cmd)

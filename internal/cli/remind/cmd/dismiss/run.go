@@ -9,11 +9,11 @@ package dismiss
 import (
 	"strconv"
 
-	ctxerr "github.com/ActiveMemory/ctx/internal/err/reminder"
-	"github.com/ActiveMemory/ctx/internal/write/remind"
 	"github.com/spf13/cobra"
 
 	"github.com/ActiveMemory/ctx/internal/cli/remind/core"
+	ctxErr "github.com/ActiveMemory/ctx/internal/err/reminder"
+	"github.com/ActiveMemory/ctx/internal/write/remind"
 )
 
 // RunDismiss removes a single reminder by ID and prints confirmation.
@@ -27,7 +27,7 @@ import (
 func RunDismiss(cmd *cobra.Command, idStr string) error {
 	id, parseErr := strconv.Atoi(idStr)
 	if parseErr != nil {
-		return ctxerr.InvalidID(idStr)
+		return ctxErr.InvalidID(idStr)
 	}
 
 	reminders, readErr := core.ReadReminders()
@@ -44,7 +44,7 @@ func RunDismiss(cmd *cobra.Command, idStr string) error {
 	}
 
 	if found < 0 {
-		return ctxerr.NotFound(id)
+		return ctxErr.NotFound(id)
 	}
 
 	remind.ReminderDismissed(cmd, reminders[found].ID, reminders[found].Message)

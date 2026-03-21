@@ -16,14 +16,11 @@ import (
 	"github.com/ActiveMemory/ctx/internal/recall/parser"
 )
 
-// SlugMaxLen is the maximum character length for a title-derived slug.
-const SlugMaxLen = 50
-
 // SlugifyTitle converts a human-readable title into a URL-friendly slug.
 //
 // Lowercases the input, replaces non-alphanumeric characters with hyphens,
 // collapses consecutive hyphens, trims leading/trailing hyphens, and
-// truncates on a word boundary at SlugMaxLen characters.
+// truncates on a word boundary at journal.TitleSlugMaxLen characters.
 //
 // Parameters:
 //   - title: Human-readable title string
@@ -45,21 +42,21 @@ func SlugifyTitle(title string) string {
 		default:
 			// Replace any non-alphanumeric character with a single hyphen.
 			if !prevHyphen && sb.Len() > 0 {
-				sb.WriteByte('-')
+				sb.WriteString(token.Dash)
 				prevHyphen = true
 			}
 		}
 	}
 
-	slug := strings.TrimRight(sb.String(), "-")
+	slug := strings.TrimRight(sb.String(), token.Dash)
 
-	if len(slug) <= SlugMaxLen {
+	if len(slug) <= journal.TitleSlugMaxLen {
 		return slug
 	}
 
 	// Truncate on a word (hyphen) boundary.
-	truncated := slug[:SlugMaxLen]
-	if idx := strings.LastIndex(truncated, "-"); idx > 0 {
+	truncated := slug[:journal.TitleSlugMaxLen]
+	if idx := strings.LastIndex(truncated, token.Dash); idx > 0 {
 		truncated = truncated[:idx]
 	}
 	return truncated
@@ -67,7 +64,7 @@ func SlugifyTitle(title string) string {
 
 // CleanTitle normalises a title for storage in YAML frontmatter.
 //
-// Replaces newlines, tabs and consecutive whitespace with single spaces,
+// Replaces newlines, tabs, and consecutive whitespace with single spaces,
 // trims the result, and strips the "..." truncation suffix that
 // parser.Session.FirstUserMsg may carry.
 //
@@ -82,7 +79,8 @@ func CleanTitle(s string) string {
 	var sb strings.Builder
 	prevSpace := false
 	for _, r := range s {
-		if r == rune(token.NewlineLF[0]) || r == rune(token.NewlineCRLF[0]) || r == rune(token.Tab[0]) {
+		if r == rune(token.NewlineLF[0]) ||
+			r == rune(token.NewlineCRLF[0]) || r == rune(token.Tab[0]) {
 			r = ' '
 		}
 		if r == ' ' {

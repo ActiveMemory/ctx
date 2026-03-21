@@ -7,14 +7,15 @@
 package remind
 
 import (
-	"github.com/ActiveMemory/ctx/internal/assets/read/desc"
-	"github.com/ActiveMemory/ctx/internal/config/embed/cmd"
-	"github.com/ActiveMemory/ctx/internal/config/embed/flag"
 	"github.com/spf13/cobra"
 
+	"github.com/ActiveMemory/ctx/internal/assets/read/desc"
 	"github.com/ActiveMemory/ctx/internal/cli/remind/cmd/add"
 	"github.com/ActiveMemory/ctx/internal/cli/remind/cmd/dismiss"
 	"github.com/ActiveMemory/ctx/internal/cli/remind/cmd/list"
+	"github.com/ActiveMemory/ctx/internal/config/embed/cmd"
+	"github.com/ActiveMemory/ctx/internal/config/embed/flag"
+	cFlag "github.com/ActiveMemory/ctx/internal/config/flag"
 )
 
 // Cmd returns the remind command with subcommands.
@@ -29,7 +30,7 @@ func Cmd() *cobra.Command {
 
 	short, long := desc.Command(cmd.DescKeyRemind)
 
-	cmd := &cobra.Command{
+	c := &cobra.Command{
 		Use:   cmd.UseRemind,
 		Short: short,
 		Long:  long,
@@ -42,13 +43,13 @@ func Cmd() *cobra.Command {
 		},
 	}
 
-	cmd.Flags().StringVarP(&afterFlag, "after", "a", "",
+	c.Flags().StringVarP(&afterFlag, cFlag.After, cFlag.ShortAfter, "",
 		desc.Flag(flag.DescKeyRemindAfter),
 	)
 
-	cmd.AddCommand(add.Cmd())
-	cmd.AddCommand(list.Cmd())
-	cmd.AddCommand(dismiss.Cmd())
+	c.AddCommand(add.Cmd())
+	c.AddCommand(list.Cmd())
+	c.AddCommand(dismiss.Cmd())
 
-	return cmd
+	return c
 }

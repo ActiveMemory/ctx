@@ -9,10 +9,10 @@ package resume
 import (
 	"github.com/spf13/cobra"
 
-	resumeroot "github.com/ActiveMemory/ctx/internal/cli/resume/cmd/root"
+	resumeRoot "github.com/ActiveMemory/ctx/internal/cli/resume/cmd/root"
 )
 
 // Cmd returns the top-level "ctx resume" command.
 func Cmd() *cobra.Command {
-	return resumeroot.Cmd()
+	return resumeRoot.Cmd()
 }

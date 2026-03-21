@@ -9,12 +9,12 @@ package add
 import (
 	"time"
 
-	time2 "github.com/ActiveMemory/ctx/internal/config/time"
-	ctxerr "github.com/ActiveMemory/ctx/internal/err/date"
-	"github.com/ActiveMemory/ctx/internal/write/remind"
 	"github.com/spf13/cobra"
 
 	"github.com/ActiveMemory/ctx/internal/cli/remind/core"
+	cfgTime "github.com/ActiveMemory/ctx/internal/config/time"
+	ctxerr "github.com/ActiveMemory/ctx/internal/err/date"
+	"github.com/ActiveMemory/ctx/internal/write/remind"
 )
 
 // Run creates a new reminder and prints confirmation.
@@ -40,7 +40,7 @@ func Run(cmd *cobra.Command, message, after string) error {
 		Created: time.Now().UTC().Format(time.RFC3339),
 	}
 	if after != "" {
-		if _, parseErr := time.Parse(time2.DateFormat, after); parseErr != nil {
+		if _, parseErr := time.Parse(cfgTime.DateFormat, after); parseErr != nil {
 			return ctxerr.InvalidDateValue(after)
 		}
 		r.After = &after

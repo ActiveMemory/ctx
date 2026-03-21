@@ -5,7 +5,7 @@
 //                 SPDX-License-Identifier: Apache-2.0
 
 // Package register provides helpers for cobra flag registration.
-package register
+package flagbind
 
 import (
 	"github.com/spf13/cobra"

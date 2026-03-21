@@ -23,6 +23,16 @@ The `validation` package has `SanitizeFilename` and `ValidateBoundary`
 but nothing for content or argument sanitization. `entry.Validate` only
 checks field presence, not content safety.
 
+- [ ] Refactor site/cmd/feed: extract helpers and types to core/, make Run public #added:2026-03-21-074859
+
+- [ ] Add Unicode-aware slugification for non-ASCII content #added:2026-03-21-070953
+
+- [ ] Make TitleSlugMaxLen configurable via .ctxrc #added:2026-03-21-070944
+
+- [ ] Add AST-based lint test to detect exported functions with no external callers #added:2026-03-21-070357
+
+- [ ] Audit exported functions used only within their own package and make them private #added:2026-03-21-070346
+
 - [ ] Spec and implement CRLF-to-LF newline normalization for journal and context files #added:2026-03-20-224845
 
 - [ ] Test ctx on Windows — validate build, init, agent, drift, journal pipeline #added:2026-03-20-224835

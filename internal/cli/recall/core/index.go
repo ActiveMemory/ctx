@@ -65,7 +65,7 @@ func BuildSessionIndex(journalDir string) map[string]string {
 			continue
 		}
 
-		// Pass 2: extract short ID from filename as fallback.
+		// Pass 2: extract short ID from the filename as fallback.
 		// Filename format: YYYY-MM-DD-slug-SHORTID.md or ...-pN.md
 		name := e.Name()
 		// Strip multipart suffix (e.g., "-p2.md" → config.ExtMarkdown).
@@ -111,29 +111,7 @@ func BuildSessionIndex(journalDir string) map[string]string {
 // Returns:
 //   - string: The session ID, or "" if not found
 func ExtractSessionID(content string) string {
-	nl := token.NewlineLF
-	fmOpen := token.Separator + nl
-
-	if !strings.HasPrefix(content, fmOpen) {
-		return ""
-	}
-	end := strings.Index(content[len(fmOpen):], nl+token.Separator+nl)
-	if end < 0 {
-		return ""
-	}
-	fmBlock := content[len(fmOpen) : len(fmOpen)+end]
-
-	for _, line := range strings.Split(fmBlock, nl) {
-		line = strings.TrimSpace(line)
-		prefix := session.FmKeySessionID + token.Colon
-		if strings.HasPrefix(line, prefix) {
-			val := strings.TrimSpace(strings.TrimPrefix(line, prefix))
-			// Strip surrounding quotes.
-			val = strings.Trim(val, `"'`)
-			return val
-		}
-	}
-	return ""
+	return ExtractFrontmatterField(content, session.FmKeySessionID)
 }
 
 // LookupSessionFile finds the existing filename for a session in the index.
@@ -216,14 +194,18 @@ func RenameJournalFiles(journalDir, oldBase, newBase string, numParts int) {
 
 	// Rename multipart files and update nav links.
 	for p := 2; p <= numParts; p++ {
-		oldPart := filepath.Join(journalDir, fmt.Sprintf(tpl.RecallPartFilename, oldBase, p))
-		newPart := filepath.Join(journalDir, fmt.Sprintf(tpl.RecallPartFilename, newBase, p))
+		oldPart := filepath.Join(
+			journalDir, fmt.Sprintf(tpl.RecallPartFilename, oldBase, p),
+		)
+		newPart := filepath.Join(
+			journalDir, fmt.Sprintf(tpl.RecallPartFilename, newBase, p),
+		)
 		if _, statErr := os.Stat(oldPart); statErr == nil {
 			_ = os.Rename(oldPart, newPart)
 		}
 	}
 
-	// Update navigation links inside all parts to reference new baseName.
+	// Update navigation links inside all parts to reference the new baseName.
 	UpdateNavLinks(journalDir, newBase, oldBase, numParts)
 }
 

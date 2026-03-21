@@ -121,7 +121,7 @@ func TestPrintReport_WithWarnings(t *testing.T) {
 // TestRunFeed_NoBlogDir verifies error when blog directory is missing.
 func TestRunFeed_NoBlogDir(t *testing.T) {
 	cmd := newTestCmd()
-	runErr := runFeed(cmd, "/nonexistent/blog/dir", "out.xml", "https://example.com")
+	runErr := Run(cmd, "/nonexistent/blog/dir", "out.xml", "https://example.com")
 	if runErr == nil {
 		t.Fatal("expected error for nonexistent blog directory")
 	}

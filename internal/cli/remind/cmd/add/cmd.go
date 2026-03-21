@@ -7,10 +7,12 @@
 package add
 
 import (
+	"github.com/spf13/cobra"
+
 	"github.com/ActiveMemory/ctx/internal/assets/read/desc"
 	"github.com/ActiveMemory/ctx/internal/config/embed/cmd"
 	"github.com/ActiveMemory/ctx/internal/config/embed/flag"
-	"github.com/spf13/cobra"
+	cflag "github.com/ActiveMemory/ctx/internal/config/flag"
 )
 
 // Cmd returns the remind add subcommand.
@@ -22,8 +24,8 @@ func Cmd() *cobra.Command {
 
 	short, _ := desc.Command(cmd.DescKeyRemindAdd)
 
-	cmd := &cobra.Command{
-		Use:   "add TEXT",
+	c := &cobra.Command{
+		Use:   cmd.UseRemindAdd,
 		Short: short,
 		Args:  cobra.ExactArgs(1),
 		RunE: func(cmd *cobra.Command, args []string) error {
@@ -31,9 +33,9 @@ func Cmd() *cobra.Command {
 		},
 	}
 
-	cmd.Flags().StringVarP(&afterFlag, "after", "a", "",
+	c.Flags().StringVarP(&afterFlag, cflag.After, cflag.ShortAfter, "",
 		desc.Flag(flag.DescKeyRemindAddAfter),
 	)
 
-	return cmd
+	return c
 }

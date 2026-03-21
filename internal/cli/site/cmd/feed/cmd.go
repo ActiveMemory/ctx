@@ -8,11 +8,13 @@
 package feed
 
 import (
+	"github.com/spf13/cobra"
+
 	"github.com/ActiveMemory/ctx/internal/assets/read/desc"
 	"github.com/ActiveMemory/ctx/internal/config/embed/cmd"
 	"github.com/ActiveMemory/ctx/internal/config/embed/flag"
+	cFlag "github.com/ActiveMemory/ctx/internal/config/flag"
 	"github.com/ActiveMemory/ctx/internal/config/rss"
-	"github.com/spf13/cobra"
 )
 
 // Cmd returns the "ctx site feed" subcommand.
@@ -27,23 +29,23 @@ func Cmd() *cobra.Command {
 
 	short, long := desc.Command(cmd.DescKeySiteFeed)
 
-	cmd := &cobra.Command{
-		Use:   "feed",
+	c := &cobra.Command{
+		Use:   cmd.UseSiteFeed,
 		Short: short,
 		Long:  long,
 		RunE: func(cmd *cobra.Command, _ []string) error {
-			return runFeed(cmd, rss.DefaultFeedInputDir, out, baseURL)
+			return Run(cmd, rss.DefaultFeedInputDir, out, baseURL)
 		},
 	}
 
-	cmd.Flags().StringVarP(
-		&out, "out", "o", rss.DefaultFeedOutPath,
+	c.Flags().StringVarP(
+		&out, cFlag.Out, cFlag.ShortOutput, rss.DefaultFeedOutPath,
 		desc.Flag(flag.DescKeySiteFeedOut),
 	)
-	cmd.Flags().StringVar(
-		&baseURL, "base-url", rss.DefaultFeedBaseURL,
+	c.Flags().StringVar(
+		&baseURL, cFlag.BaseURL, rss.DefaultFeedBaseURL,
 		desc.Flag(flag.DescKeySiteFeedBaseUrl),
 	)
 
-	return cmd
+	return c
 }

@@ -14,18 +14,10 @@ import (
 
 	"github.com/ActiveMemory/ctx/internal/config/fs"
 	"github.com/ActiveMemory/ctx/internal/config/reminder"
-	ctxerr "github.com/ActiveMemory/ctx/internal/err/reminder"
+	ctxErr "github.com/ActiveMemory/ctx/internal/err/reminder"
 	"github.com/ActiveMemory/ctx/internal/io"
 	"github.com/ActiveMemory/ctx/internal/rc"
 )
-
-// Reminder represents a single session-scoped reminder.
-type Reminder struct {
-	ID      int     `json:"id"`
-	Message string  `json:"message"`
-	Created string  `json:"created"`
-	After   *string `json:"after"` // nullable YYYY-MM-DD
-}
 
 // ReadReminders reads all reminders from the JSON file.
 //
@@ -38,11 +30,11 @@ func ReadReminders() ([]Reminder, error) {
 		if errors.Is(readErr, os.ErrNotExist) {
 			return nil, nil
 		}
-		return nil, ctxerr.Read(readErr)
+		return nil, ctxErr.Read(readErr)
 	}
 	var reminders []Reminder
 	if parseErr := json.Unmarshal(data, &reminders); parseErr != nil {
-		return nil, ctxerr.Parse(parseErr)
+		return nil, ctxErr.Parse(parseErr)
 	}
 	return reminders, nil
 }
@@ -70,13 +62,13 @@ func WriteReminders(reminders []Reminder) error {
 // Returns:
 //   - int: The next sequential ID
 func NextID(reminders []Reminder) int {
-	max := 0
+	mx := 0
 	for _, r := range reminders {
-		if r.ID > max {
-			max = r.ID
+		if r.ID > mx {
+			mx = r.ID
 		}
 	}
-	return max + 1
+	return mx + 1
 }
 
 // RemindersPath returns the full path to the reminders JSON file.

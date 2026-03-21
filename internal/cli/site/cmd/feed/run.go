@@ -11,53 +11,21 @@ import (
 	"fmt"
 	"os"
 	"path/filepath"
-	"regexp"
 	"sort"
 	"strings"
 
-	"github.com/ActiveMemory/ctx/internal/config/file"
-	"github.com/ActiveMemory/ctx/internal/config/rss"
-	"github.com/ActiveMemory/ctx/internal/config/token"
-	ctxerr "github.com/ActiveMemory/ctx/internal/err/fs"
-	siteerr "github.com/ActiveMemory/ctx/internal/err/site"
 	"github.com/spf13/cobra"
 	"gopkg.in/yaml.v3"
 
 	"github.com/ActiveMemory/ctx/internal/cli/site/core"
+	"github.com/ActiveMemory/ctx/internal/config/file"
+	"github.com/ActiveMemory/ctx/internal/config/rss"
+	"github.com/ActiveMemory/ctx/internal/config/token"
+	errFs "github.com/ActiveMemory/ctx/internal/err/fs"
+	errSite "github.com/ActiveMemory/ctx/internal/err/site"
 )
 
-// blogDatePattern matches filenames like 2026-02-25-slug.md.
-var blogDatePattern = regexp.MustCompile(
-	`^\d{4}-\d{2}-\d{2}-.+\.md$`,
-)
-
-// blogPost holds parsed metadata from a single blog post.
-type blogPost struct {
-	filename string
-	title    string
-	date     string
-	author   string
-	topics   []string
-	summary  string
-}
-
-// feedReport tracks what happened during feed generation.
-type feedReport struct {
-	included int
-	skipped  []string // "filename — reason"
-	warnings []string // "filename — reason"
-}
-
-// blogFrontmatter maps the YAML fields we care about.
-type blogFrontmatter struct {
-	Title                string   `yaml:"title"`
-	Date                 string   `yaml:"date"`
-	Author               string   `yaml:"author"`
-	Topics               []string `yaml:"topics"`
-	ReviewedAndFinalized *bool    `yaml:"reviewed_and_finalized"`
-}
-
-// runFeed orchestrates scanning and generation.
+// Run orchestrates scanning and generation.
 //
 // Parameters:
 //   - cmd: Cobra command for output messages
@@ -67,7 +35,7 @@ type blogFrontmatter struct {
 //
 // Returns:
 //   - error: Non-nil if scanning or generation fails
-func runFeed(
+func Run(
 	cmd *cobra.Command, blogDir, outPath, baseURL string,
 ) error {
 	posts, report, scanErr := scanBlogPosts(blogDir)
@@ -103,19 +71,19 @@ func scanBlogPosts(
 
 	info, statErr := os.Stat(blogDir)
 	if statErr != nil || !info.IsDir() {
-		return nil, report, ctxerr.DirNotFound(blogDir)
+		return nil, report, errFs.DirNotFound(blogDir)
 	}
 
 	entries, readErr := os.ReadDir(blogDir)
 	if readErr != nil {
-		return nil, report, ctxerr.ReadDir("blog directory", readErr)
+		return nil, report, errFs.ReadDir("blog directory", readErr)
 	}
 
 	var posts []blogPost
 
 	for _, entry := range entries {
 		name := entry.Name()
-		if entry.IsDir() || !blogDatePattern.MatchString(name) {
+		if entry.IsDir() || !regBlogDatePattern.MatchString(name) {
 			continue
 		}
 
@@ -378,12 +346,12 @@ func generateAtom(
 
 	outDir := filepath.Dir(outPath)
 	if mkErr := os.MkdirAll(outDir, 0o755); mkErr != nil {
-		return ctxerr.Mkdir("output directory", mkErr)
+		return errFs.Mkdir("output directory", mkErr)
 	}
 
 	xmlData, marshalErr := xml.MarshalIndent(feed, "", "  ")
 	if marshalErr != nil {
-		return siteerr.MarshalFeed(marshalErr)
+		return errSite.MarshalFeed(marshalErr)
 	}
 
 	output := []byte(rss.FeedXMLHeader)
@@ -393,7 +361,7 @@ func generateAtom(
 	if writeErr := os.WriteFile(
 		outPath, output, 0o644,
 	); writeErr != nil {
-		return ctxerr.FileWrite(outPath, writeErr)
+		return errFs.FileWrite(outPath, writeErr)
 	}
 
 	return nil

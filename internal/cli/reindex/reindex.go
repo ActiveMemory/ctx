@@ -9,10 +9,10 @@ package reindex
 import (
 	"github.com/spf13/cobra"
 
-	reindexroot "github.com/ActiveMemory/ctx/internal/cli/reindex/cmd/root"
+	reindexRoot "github.com/ActiveMemory/ctx/internal/cli/reindex/cmd/root"
 )
 
 // Cmd returns the reindex convenience command.
 func Cmd() *cobra.Command {
-	return reindexroot.Cmd()
+	return reindexRoot.Cmd()
 }

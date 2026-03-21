@@ -17,6 +17,9 @@ const (
 	// SlugMaxLen is the maximum display length for session slugs in
 	// recall list output.
 	SlugMaxLen = 36
+	// TitleSlugMaxLen is the maximum character length for title-derived
+	// slugs used in journal filenames.
+	TitleSlugMaxLen = 50
 	// SessionIDShortLen is the prefix length for short session IDs
 	// in summary output.
 	SessionIDShortLen = 8

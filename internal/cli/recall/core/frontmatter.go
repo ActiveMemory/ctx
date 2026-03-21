@@ -1,0 +1,73 @@
+//   /    ctx:                         https://ctx.ist
+// ,'`./    do you remember?
+// `.,'\
+//   \    Copyright 2026-present Context contributors.
+//                 SPDX-License-Identifier: Apache-2.0
+
+package core
+
+import (
+	"fmt"
+	"strings"
+
+	"github.com/ActiveMemory/ctx/internal/assets/tpl"
+	"github.com/ActiveMemory/ctx/internal/config/token"
+)
+
+// resolveHeading returns the first non-empty value among title, slug, baseName.
+//
+// Parameters:
+//   - title: Preferred heading text
+//   - slug: Fallback slug from session metadata
+//   - baseName: Last-resort filename base
+//
+// Returns:
+//   - string: First non-empty value
+func resolveHeading(title, slug, baseName string) string {
+	if title != "" {
+		return title
+	}
+	if slug != "" {
+		return slug
+	}
+	return baseName
+}
+
+// writeFmQuoted writes a YAML frontmatter quoted string field.
+//
+// Parameters:
+//   - sb: String builder to write to
+//   - key: Frontmatter key
+//   - value: Quoted string value
+func writeFmQuoted(sb *strings.Builder, key, value string) {
+	_, err := fmt.Fprintf(sb, tpl.FmQuoted+token.NewlineLF, key, value)
+	if err != nil {
+		return
+	}
+}
+
+// writeFmString writes a YAML frontmatter bare string field.
+//
+// Parameters:
+//   - sb: String builder to write to
+//   - key: Frontmatter key
+//   - value: Bare string value
+func writeFmString(sb *strings.Builder, key, value string) {
+	_, err := fmt.Fprintf(sb, tpl.FmString+token.NewlineLF, key, value)
+	if err != nil {
+		return
+	}
+}
+
+// writeFmInt writes a YAML frontmatter integer field.
+//
+// Parameters:
+//   - sb: String builder to write to
+//   - key: Frontmatter key
+//   - value: Integer value
+func writeFmInt(sb *strings.Builder, key string, value int) {
+	_, err := fmt.Fprintf(sb, tpl.FmInt+token.NewlineLF, key, value)
+	if err != nil {
+		return
+	}
+}

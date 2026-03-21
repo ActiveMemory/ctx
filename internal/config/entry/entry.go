@@ -27,6 +27,14 @@ const (
 	Unknown = "unknown"
 )
 
+// Plural forms used as labels and resource identifiers.
+const (
+	Decisions   = "decisions"
+	Learnings   = "learnings"
+	Conventions = "conventions"
+	Tasks       = "tasks"
+)
+
 // Priority levels for task entries.
 const (
 	PriorityHigh   = "high"

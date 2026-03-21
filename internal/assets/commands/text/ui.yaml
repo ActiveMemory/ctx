@@ -371,6 +371,10 @@ summary.term:
   short: 1 term
 summary.terms:
   short: '%d terms'
+recall.meta-summary:
+  short: '%s · %s · %s'
+recall.token-summary:
+  short: '%s (in: %s, out: %s)'
 recall.tool-count-line:
   short: '%s: %d'
 sync.config.description:

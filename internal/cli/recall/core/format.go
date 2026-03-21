@@ -25,6 +25,26 @@ import (
 	"github.com/ActiveMemory/ctx/internal/recall/parser"
 )
 
+// FormatSessionMatchLines formats session matches for ambiguous query output.
+//
+// Parameters:
+//   - matches: sessions that matched the query.
+//
+// Returns:
+//   - []string: pre-formatted lines, one per match.
+func FormatSessionMatchLines(matches []*parser.Session) []string {
+	lines := make([]string, 0, len(matches))
+	for _, m := range matches {
+		lines = append(lines, fmt.Sprintf(
+			tpl.SessionMatch,
+			m.Slug,
+			m.ID[:journal.SessionIDShortLen],
+			m.StartTime.Format(time.DateTimeFormat)),
+		)
+	}
+	return lines
+}
+
 // FenceForContent returns the appropriate code fence for content.
 //
 // Uses longer fences when content contains backticks to avoid
@@ -140,34 +160,73 @@ func FormatJournalEntryPart(
 
 		// Session metadata as collapsible HTML table
 		// (Markdown tables don't render inside <details> in Zensical)
-		summaryText := fmt.Sprintf("%s · %s · %s", dateStr, durationStr, s.Model)
+		summaryText := fmt.Sprintf(desc.Text(text.DescKeyRecallMetaSummary), dateStr, durationStr, s.Model)
 		sb.WriteString(fmt.Sprintf(tpl.MetaDetailsOpen, summaryText))
-		sb.WriteString(fmt.Sprintf(tpl.MetaRow+nl, desc.Text(text.DescKeyLabelMetaID), s.ID))
-		sb.WriteString(fmt.Sprintf(tpl.MetaRow+nl, desc.Text(text.DescKeyLabelMetaDate), dateStr))
-		sb.WriteString(fmt.Sprintf(tpl.MetaRow+nl, desc.Text(text.DescKeyLabelMetaTime), timeStr))
-		sb.WriteString(fmt.Sprintf(tpl.MetaRow+nl, desc.Text(text.DescKeyLabelMetaDuration), durationStr))
-		sb.WriteString(fmt.Sprintf(tpl.MetaRow+nl, desc.Text(text.DescKeyLabelMetaTool), s.Tool))
-		sb.WriteString(fmt.Sprintf(tpl.MetaRow+nl, desc.Text(text.DescKeyLabelMetaProject), s.Project))
+		sb.WriteString(fmt.Sprintf(
+			tpl.MetaRow+nl, desc.Text(text.DescKeyLabelMetaID), s.ID))
+		sb.WriteString(
+			fmt.Sprintf(
+				tpl.MetaRow+nl, desc.Text(text.DescKeyLabelMetaDate), dateStr,
+			),
+		)
+		sb.WriteString(
+			fmt.Sprintf(
+				tpl.MetaRow+nl, desc.Text(text.DescKeyLabelMetaTime), timeStr,
+			),
+		)
+		sb.WriteString(
+			fmt.Sprintf(
+				tpl.MetaRow+nl, desc.Text(text.DescKeyLabelMetaDuration), durationStr,
+			),
+		)
+		sb.WriteString(
+			fmt.Sprintf(
+				tpl.MetaRow+nl, desc.Text(text.DescKeyLabelMetaTool), s.Tool,
+			),
+		)
+		sb.WriteString(
+			fmt.Sprintf(
+				tpl.MetaRow+nl, desc.Text(text.DescKeyLabelMetaProject), s.Project,
+			),
+		)
 		if s.GitBranch != "" {
-			sb.WriteString(fmt.Sprintf(tpl.MetaRow+nl, desc.Text(text.DescKeyLabelMetaBranch), s.GitBranch))
+			sb.WriteString(
+				fmt.Sprintf(
+					tpl.MetaRow+nl, desc.Text(text.DescKeyLabelMetaBranch), s.GitBranch,
+				),
+			)
 		}
 		if s.Model != "" {
-			sb.WriteString(fmt.Sprintf(tpl.MetaRow+nl, desc.Text(text.DescKeyLabelMetaModel), s.Model))
+			sb.WriteString(
+				fmt.Sprintf(
+					tpl.MetaRow+nl, desc.Text(text.DescKeyLabelMetaModel), s.Model,
+				),
+			)
 		}
 		sb.WriteString(tpl.MetaDetailsClose + nl + nl)
 
 		// Token stats as collapsible HTML table
 		turnStr := fmt.Sprintf("%d", s.TurnCount)
 		sb.WriteString(fmt.Sprintf(tpl.MetaDetailsOpen, turnStr))
-		sb.WriteString(fmt.Sprintf(tpl.MetaRow+nl, desc.Text(text.DescKeyLabelMetaTurns), turnStr))
-		tokenSummary := fmt.Sprintf("%s (in: %s, out: %s)",
+		sb.WriteString(
+			fmt.Sprintf(
+				tpl.MetaRow+nl, desc.Text(text.DescKeyLabelMetaTurns), turnStr,
+			),
+		)
+		tokenSummary := fmt.Sprintf(desc.Text(text.DescKeyRecallTokenSummary),
 			FormatTokens(s.TotalTokens),
 			FormatTokens(s.TotalTokensIn),
 			FormatTokens(s.TotalTokensOut))
-		sb.WriteString(fmt.Sprintf(tpl.MetaRow+nl, desc.Text(text.DescKeyLabelMetaTokens), tokenSummary))
+		sb.WriteString(
+			fmt.Sprintf(
+				tpl.MetaRow+nl, desc.Text(text.DescKeyLabelMetaTokens), tokenSummary,
+			),
+		)
 		if totalParts > 1 {
-			sb.WriteString(fmt.Sprintf(tpl.MetaRow+nl, desc.Text(text.DescKeyLabelMetaParts),
-				fmt.Sprintf("%d", totalParts)))
+			sb.WriteString(
+				fmt.Sprintf(tpl.MetaRow+nl, desc.Text(text.DescKeyLabelMetaParts),
+					fmt.Sprintf("%d", totalParts)),
+			)
 		}
 		sb.WriteString(tpl.MetaDetailsClose + nl + nl)
 
@@ -189,7 +248,7 @@ func FormatJournalEntryPart(
 			sb.WriteString(nl + sep + nl + nl)
 		}
 	} else {
-		// Header (non-part-1) — same fallback as part 1.
+		// Header (non-part-1) — the same fallback as part 1.
 		heading := resolveHeading(title, s.Slug, baseName)
 		sb.WriteString(fmt.Sprintf(tpl.TplJournalPageHeading+nl+nl, heading))
 
@@ -223,13 +282,13 @@ func FormatJournalEntryPart(
 			msgNum, role, localTime.Format(time.Format)))
 
 		if msg.Text != "" {
-			text := msg.Text
+			t := msg.Text
 			// Normalize code fences in user messages
 			// (users often type "text: ```code")
 			if !msg.BelongsToAssistant() {
-				text = NormalizeCodeFences(text)
+				t = NormalizeCodeFences(t)
 			}
-			sb.WriteString(text + nl + nl)
+			sb.WriteString(t + nl + nl)
 		}
 
 		// Tool uses
@@ -243,15 +302,17 @@ func FormatJournalEntryPart(
 				sb.WriteString(tpl.RecallErrorMarker + nl)
 			}
 			if tr.Content != "" {
-				content := StripLineNumbers(tr.Content)
-				content, reminders := ExtractSystemReminders(content)
+				stripped := StripLineNumbers(tr.Content)
+				content, reminders := ExtractSystemReminders(stripped)
 				fence := FenceForContent(content)
 				lines := strings.Count(content, nl)
 
 				if lines > journal.DetailsThreshold {
 					summary := fmt.Sprintf(tpl.RecallDetailsSummary, lines)
 					sb.WriteString(fmt.Sprintf(tpl.RecallDetailsOpen+nl+nl, summary))
-					sb.WriteString("<pre>" + nl + html.EscapeString(content) + nl + "</pre>" + nl)
+					sb.WriteString("<pre>" + nl)
+					sb.WriteString(html.EscapeString(content) + nl)
+					sb.WriteString("</pre>" + nl)
 					sb.WriteString(tpl.RecallDetailsClose + nl)
 				} else {
 					sb.WriteString(fmt.Sprintf(
@@ -262,7 +323,10 @@ func FormatJournalEntryPart(
 				// Render system reminders as Markdown outside the code fence
 				for _, reminder := range reminders {
 					sb.WriteString(
-						fmt.Sprintf(nl+desc.Text(text.DescKeyLabelBoldReminder)+" %s"+nl, reminder),
+						fmt.Sprintf(
+							nl+desc.Text(text.DescKeyLabelBoldReminder)+" %s"+nl,
+							reminder,
+						),
 					)
 				}
 			}
@@ -280,32 +344,6 @@ func FormatJournalEntryPart(
 	}
 
 	return sb.String()
-}
-
-// resolveHeading returns the first non-empty value among title, slug, baseName.
-func resolveHeading(title, slug, baseName string) string {
-	if title != "" {
-		return title
-	}
-	if slug != "" {
-		return slug
-	}
-	return baseName
-}
-
-// writeFmQuoted writes a YAML frontmatter quoted string field.
-func writeFmQuoted(sb *strings.Builder, key, value string) {
-	fmt.Fprintf(sb, tpl.FmQuoted+token.NewlineLF, key, value)
-}
-
-// writeFmString writes a YAML frontmatter bare string field.
-func writeFmString(sb *strings.Builder, key, value string) {
-	fmt.Fprintf(sb, tpl.FmString+token.NewlineLF, key, value)
-}
-
-// writeFmInt writes a YAML frontmatter integer field.
-func writeFmInt(sb *strings.Builder, key string, value int) {
-	fmt.Fprintf(sb, tpl.FmInt+token.NewlineLF, key, value)
 }
 
 // FormatPartNavigation generates previous/next navigation links for
@@ -405,7 +443,7 @@ func Truncate(s string, max int) string {
 	if len(s) <= max {
 		return s
 	}
-	return s[:max-1] + "…"
+	return s[:max-len(token.Ellipsis)] + token.Ellipsis
 }
 
 // StripLineNumbers removes Claude Code's line number prefixes from content.
@@ -455,24 +493,11 @@ func ExtractSystemReminders(content string) (string, []string) {
 //   - string: Content with code fences properly separated by blank lines
 func NormalizeCodeFences(content string) string {
 	// Add newlines before code fences that follow text on the same line
-	result := regex.CodeFenceInline.ReplaceAllString(content, "$1\n\n$2")
+	doubleNL := token.NewlineLF + token.NewlineLF
+	result := regex.CodeFenceInline.ReplaceAllString(content, "$1"+doubleNL+"$2")
 	// Add newlines after code fences that are followed by text on the same line
-	result = regex.CodeFenceClose.ReplaceAllString(result, "$1\n\n$2")
+	result = regex.CodeFenceClose.ReplaceAllString(result, "$1"+doubleNL+"$2")
 	return result
-}
-
-// toolDisplayKey maps tool names to the JSON input key that best
-// describes each invocation.
-var toolDisplayKey = map[string]string{
-	session.ToolRead:      session.ToolInputFilePath,
-	session.ToolWrite:     session.ToolInputFilePath,
-	session.ToolEdit:      session.ToolInputFilePath,
-	session.ToolBash:      session.ToolInputCommand,
-	session.ToolGrep:      session.ToolInputPattern,
-	session.ToolGlob:      session.ToolInputPattern,
-	session.ToolWebFetch:  session.ToolInputURL,
-	session.ToolWebSearch: session.ToolInputQuery,
-	session.ToolTask:      session.ToolInputDescription,
 }
 
 // FormatToolUse formats a tool invocation with its key parameters.

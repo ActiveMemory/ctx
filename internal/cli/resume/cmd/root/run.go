@@ -9,10 +9,10 @@ package root
 import (
 	"os"
 
-	"github.com/ActiveMemory/ctx/internal/write/session"
 	"github.com/spf13/cobra"
 
 	"github.com/ActiveMemory/ctx/internal/cli/system/core"
+	"github.com/ActiveMemory/ctx/internal/write/session"
 )
 
 // Run executes the resume command.
