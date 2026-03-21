@@ -24,7 +24,7 @@ import (
 	"github.com/ActiveMemory/ctx/internal/cli/system/cmd/check_map_staleness"
 	"github.com/ActiveMemory/ctx/internal/cli/system/cmd/check_memory_drift"
 	"github.com/ActiveMemory/ctx/internal/cli/system/cmd/check_persistence"
-	"github.com/ActiveMemory/ctx/internal/cli/system/cmd/check_reminders"
+	"github.com/ActiveMemory/ctx/internal/cli/system/cmd/check_reminder"
 	"github.com/ActiveMemory/ctx/internal/cli/system/cmd/check_resources"
 	"github.com/ActiveMemory/ctx/internal/cli/system/cmd/check_task_completion"
 	"github.com/ActiveMemory/ctx/internal/cli/system/cmd/check_version"
@@ -82,7 +82,7 @@ func Cmd() *cobra.Command {
 		check_map_staleness.Cmd(),
 		check_memory_drift.Cmd(),
 		check_persistence.Cmd(),
-		check_reminders.Cmd(),
+		check_reminder.Cmd(),
 		check_resources.Cmd(),
 		check_task_completion.Cmd(),
 		check_version.Cmd(),

@@ -9,4 +9,4 @@
 //
 // It surfaces pending reminders at session start so the agent can act
 // on deferred tasks.
-package check_reminders
+package check_reminder

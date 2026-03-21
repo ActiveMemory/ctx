@@ -15,6 +15,7 @@ const (
 	DescKeyCheckPersistenceModifiedLogFormat = "check-persistence.modified-log-format"
 	DescKeyCheckPersistenceRelayFormat       = "check-persistence.relay-format"
 	DescKeyCheckPersistenceRelayPrefix       = "check-persistence.relay-prefix"
+	DescKeyCheckPersistenceNudgeLogFormat    = "check-persistence.nudge-log-format"
 	DescKeyCheckPersistenceSilencedLogFormat = "check-persistence.silenced-log-format"
 	DescKeyCheckPersistenceSilentLogFormat   = "check-persistence.silent-log-format"
 	DescKeyCheckPersistenceStateFormat       = "check-persistence.state-format"

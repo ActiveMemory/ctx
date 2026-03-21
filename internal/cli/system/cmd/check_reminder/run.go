@@ -4,23 +4,23 @@
 //   \    Copyright 2026-present Context contributors.
 //                 SPDX-License-Identifier: Apache-2.0
 
-package check_reminders
+package check_reminder
 
 import (
 	"fmt"
 	"os"
 	"time"
 
-	"github.com/ActiveMemory/ctx/internal/assets/read/desc"
-	"github.com/ActiveMemory/ctx/internal/config/embed/text"
-	"github.com/ActiveMemory/ctx/internal/config/hook"
-	time2 "github.com/ActiveMemory/ctx/internal/config/time"
-	"github.com/ActiveMemory/ctx/internal/config/token"
-	"github.com/ActiveMemory/ctx/internal/config/tpl"
 	"github.com/spf13/cobra"
 
-	remindcore "github.com/ActiveMemory/ctx/internal/cli/remind/core"
+	"github.com/ActiveMemory/ctx/internal/assets/read/desc"
+	remindCore "github.com/ActiveMemory/ctx/internal/cli/remind/core"
 	"github.com/ActiveMemory/ctx/internal/cli/system/core"
+	"github.com/ActiveMemory/ctx/internal/config/embed/text"
+	"github.com/ActiveMemory/ctx/internal/config/hook"
+	cfgTime "github.com/ActiveMemory/ctx/internal/config/time"
+	"github.com/ActiveMemory/ctx/internal/config/token"
+	"github.com/ActiveMemory/ctx/internal/config/tpl"
 	"github.com/ActiveMemory/ctx/internal/notify"
 )
 
@@ -46,13 +46,13 @@ func Run(cmd *cobra.Command, stdin *os.File) error {
 		return nil
 	}
 
-	reminders, readErr := remindcore.ReadReminders()
+	reminders, readErr := remindCore.ReadReminders()
 	if readErr != nil {
 		return nil // non-fatal: don't break session start
 	}
 
-	today := time.Now().Format(time2.DateFormat)
-	var due []remindcore.Reminder
+	today := time.Now().Format(cfgTime.DateFormat)
+	var due []remindCore.Reminder
 	for _, r := range reminders {
 		if r.After == nil || *r.After <= today {
 			due = append(due, r)
@@ -66,14 +66,20 @@ func Run(cmd *cobra.Command, stdin *os.File) error {
 	// Build a pre-formatted reminder list for the template variable
 	var reminderList string
 	for _, r := range due {
-		reminderList += fmt.Sprintf(desc.Text(text.DescKeyCheckRemindersItemFormat)+token.NewlineLF, r.ID, r.Message)
+		reminderList += fmt.Sprintf(
+			desc.Text(text.DescKeyCheckRemindersItemFormat)+token.NewlineLF,
+			r.ID, r.Message,
+		)
 	}
 
 	fallback := reminderList +
-		token.NewlineLF + desc.Text(text.DescKeyCheckRemindersDismissHint) + token.NewlineLF +
+		token.NewlineLF +
+		desc.Text(text.DescKeyCheckRemindersDismissHint) + token.NewlineLF +
 		desc.Text(text.DescKeyCheckRemindersDismissAllHint)
 	vars := map[string]any{tpl.VarReminderList: reminderList}
-	content := core.LoadMessage(hook.CheckReminders, hook.VariantReminders, vars, fallback)
+	content := core.LoadMessage(
+		hook.CheckReminders, hook.VariantReminders, vars, fallback,
+	)
 	if content == "" {
 		return nil
 	}

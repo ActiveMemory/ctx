@@ -226,6 +226,8 @@ check-persistence.fallback:
     Run /ctx-wrap-up to capture session context.
 check-persistence.init-log-format:
   short: init count=1 mtime=%d
+check-persistence.nudge-log-format:
+  short: 'prompt#%d NUDGE since_nudge=%d'
 check-persistence.modified-log-format:
   short: prompt#%d context-modified, reset nudge counter
 check-persistence.relay-format:
