@@ -10,13 +10,13 @@ import (
 	"fmt"
 	"strings"
 
+	"github.com/spf13/cobra"
+
 	"github.com/ActiveMemory/ctx/internal/assets/read/desc"
 	"github.com/ActiveMemory/ctx/internal/config/embed/text"
 	"github.com/ActiveMemory/ctx/internal/config/journal"
-	ctxcontext "github.com/ActiveMemory/ctx/internal/context/resolve"
-	ctxerr "github.com/ActiveMemory/ctx/internal/err/journal"
-	"github.com/spf13/cobra"
-
+	ctxResolve "github.com/ActiveMemory/ctx/internal/context/resolve"
+	errJournal "github.com/ActiveMemory/ctx/internal/err/journal"
 	"github.com/ActiveMemory/ctx/internal/journal/state"
 )
 
@@ -33,11 +33,11 @@ import (
 // Returns:
 //   - error: Non-nil on state load/save failure or unknown stage
 func runMarkJournal(cmd *cobra.Command, filename, stage string) error {
-	journalDir := ctxcontext.ResolvedJournalDir()
+	journalDir := ctxResolve.ResolvedJournalDir()
 
 	jstate, loadErr := state.Load(journalDir)
 	if loadErr != nil {
-		return ctxerr.LoadStateFailed(loadErr)
+		return errJournal.LoadStateFailed(loadErr)
 	}
 
 	check, _ := cmd.Flags().GetBool("check")
@@ -56,21 +56,21 @@ func runMarkJournal(cmd *cobra.Command, filename, stage string) error {
 		case journal.StageLocked:
 			val = fs.Locked
 		default:
-			return ctxerr.UnknownStage(stage, strings.Join(state.ValidStages, ", "))
+			return errJournal.UnknownStage(stage, strings.Join(state.ValidStages, ", "))
 		}
 		if val == "" {
-			return ctxerr.StageNotSet(filename, stage)
+			return errJournal.StageNotSet(filename, stage)
 		}
 		cmd.Println(fmt.Sprintf(desc.Text(text.DescKeyMarkJournalChecked), filename, stage, val))
 		return nil
 	}
 
 	if ok := jstate.Mark(filename, stage); !ok {
-		return ctxerr.UnknownStage(stage, strings.Join(state.ValidStages, ", "))
+		return errJournal.UnknownStage(stage, strings.Join(state.ValidStages, ", "))
 	}
 
 	if saveErr := jstate.Save(journalDir); saveErr != nil {
-		return ctxerr.SaveStateFailed(saveErr)
+		return errJournal.SaveStateFailed(saveErr)
 	}
 
 	cmd.Println(fmt.Sprintf(desc.Text(text.DescKeyMarkJournalMarked), filename, stage))
