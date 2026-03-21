@@ -11,14 +11,14 @@ import (
 	"os"
 	"time"
 
-	"github.com/ActiveMemory/ctx/internal/config/archive"
-	"github.com/ActiveMemory/ctx/internal/config/env"
-	backup2 "github.com/ActiveMemory/ctx/internal/err/backup"
-	ctxerr "github.com/ActiveMemory/ctx/internal/err/initialize"
-	"github.com/ActiveMemory/ctx/internal/write/backup"
 	"github.com/spf13/cobra"
 
 	"github.com/ActiveMemory/ctx/internal/cli/system/core"
+	"github.com/ActiveMemory/ctx/internal/config/archive"
+	"github.com/ActiveMemory/ctx/internal/config/env"
+	errBackup "github.com/ActiveMemory/ctx/internal/err/backup"
+	ctxErr "github.com/ActiveMemory/ctx/internal/err/initialize"
+	"github.com/ActiveMemory/ctx/internal/write/backup"
 )
 
 // Run executes the backup command logic.
@@ -39,12 +39,12 @@ func Run(cmd *cobra.Command) error {
 	switch scope {
 	case archive.BackupScopeProject, archive.BackupScopeGlobal, archive.BackupScopeAll:
 	default:
-		return backup2.InvalidBackupScope(scope)
+		return errBackup.InvalidBackupScope(scope)
 	}
 
 	home, homeErr := os.UserHomeDir()
 	if homeErr != nil {
-		return ctxerr.HomeDir(homeErr)
+		return ctxErr.HomeDir(homeErr)
 	}
 
 	smbURL := os.Getenv(env.BackupSMBURL)
@@ -54,7 +54,7 @@ func Run(cmd *cobra.Command) error {
 		var smbErr error
 		smb, smbErr = core.ParseSMBConfig(smbURL, smbSubdir)
 		if smbErr != nil {
-			return backup2.SMBConfig(smbErr)
+			return errBackup.SMBConfig(smbErr)
 		}
 	}
 
@@ -64,7 +64,7 @@ func Run(cmd *cobra.Command) error {
 	if scope == archive.BackupScopeProject || scope == archive.BackupScopeAll {
 		result, projErr := core.BackupProject(cmd, home, timestamp, smb)
 		if projErr != nil {
-			return backup2.Project(projErr)
+			return errBackup.Project(projErr)
 		}
 		results = append(results, result)
 	}
@@ -72,7 +72,7 @@ func Run(cmd *cobra.Command) error {
 	if scope == archive.BackupScopeGlobal || scope == archive.BackupScopeAll {
 		result, globalErr := core.BackupGlobal(cmd, home, timestamp, smb)
 		if globalErr != nil {
-			return backup2.Global(globalErr)
+			return errBackup.Global(globalErr)
 		}
 		results = append(results, result)
 	}

@@ -23,6 +23,8 @@ The `validation` package has `SanitizeFilename` and `ValidateBoundary`
 but nothing for content or argument sanitization. `entry.Validate` only
 checks field presence, not content safety.
 
+- [ ] Add Use* constants for all system subcommands #added:2026-03-21-092550
+
 - [ ] Refactor site/cmd/feed: extract helpers and types to core/, make Run public #added:2026-03-21-074859
 
 - [ ] Add Unicode-aware slugification for non-ASCII content #added:2026-03-21-070953
