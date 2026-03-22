@@ -42,7 +42,7 @@ func runEdit(cmd *cobra.Command, n int, text string) error {
 		return writeErr
 	}
 
-	writePad.PadEntryUpdated(cmd, n)
+	writePad.EntryUpdated(cmd, n)
 	return nil
 }
 
@@ -75,7 +75,7 @@ func runEditAppend(cmd *cobra.Command, n int, text string) error {
 		return writeErr
 	}
 
-	writePad.PadEntryUpdated(cmd, n)
+	writePad.EntryUpdated(cmd, n)
 	return nil
 }
 
@@ -108,7 +108,7 @@ func runEditPrepend(cmd *cobra.Command, n int, text string) error {
 		return writeErr
 	}
 
-	writePad.PadEntryUpdated(cmd, n)
+	writePad.EntryUpdated(cmd, n)
 	return nil
 }
 
@@ -161,6 +161,6 @@ func runEditBlob(cmd *cobra.Command, n int, filePath, labelText string) error {
 		return writeErr
 	}
 
-	writePad.PadEntryUpdated(cmd, n)
+	writePad.EntryUpdated(cmd, n)
 	return nil
 }

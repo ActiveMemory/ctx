@@ -79,17 +79,17 @@ func runExport(cmd *cobra.Command, dir string, force, dryRun bool) error {
 		}
 
 		if dryRun {
-			pad.PadExportPlan(cmd, label, outPath)
+			pad.ExportPlan(cmd, label, outPath)
 			count++
 			continue
 		}
 
 		if writeErr := os.WriteFile(outPath, data, fs.PermSecret); writeErr != nil {
-			pad.ErrPadExportWrite(cmd, label, writeErr)
+			pad.ErrExportWrite(cmd, label, writeErr)
 			continue
 		}
 
-		pad.PadExportDone(cmd, label)
+		pad.ExportDone(cmd, label)
 		count++
 	}
 

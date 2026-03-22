@@ -37,7 +37,7 @@ func runAdd(cmd *cobra.Command, text string) error {
 		return writeErr
 	}
 
-	writePad.PadEntryAdded(cmd, len(entries))
+	writePad.EntryAdded(cmd, len(entries))
 	return nil
 }
 
@@ -71,6 +71,6 @@ func runAddBlob(cmd *cobra.Command, label, filePath string) error {
 		return writeErr
 	}
 
-	writePad.PadEntryAdded(cmd, len(entries))
+	writePad.EntryAdded(cmd, len(entries))
 	return nil
 }

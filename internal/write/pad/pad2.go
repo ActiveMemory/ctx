@@ -14,89 +14,27 @@ import (
 	"github.com/spf13/cobra"
 )
 
-// PadEmpty prints the message when the scratchpad has no entries.
+// Empty prints the message when the scratchpad has no entries.
 //
 // Parameters:
 //   - cmd: Cobra command for output. Nil is a no-op.
-func PadEmpty(cmd *cobra.Command) {
+func Empty(cmd *cobra.Command) {
 	if cmd == nil {
 		return
 	}
 	cmd.Println(desc.Text(text.DescKeyWritePadEmpty))
 }
 
-// PadKeyCreated prints a key creation notice to stderr.
+// KeyCreated prints a key creation notice to stderr.
 //
 // Parameters:
 //   - cmd: Cobra command for output. Nil is a no-op.
 //   - path: key file path.
-func PadKeyCreated(cmd *cobra.Command, path string) {
+func KeyCreated(cmd *cobra.Command, path string) {
 	if cmd == nil {
 		return
 	}
 	cmd.PrintErrln(fmt.Sprintf(desc.Text(text.DescKeyWritePadKeyCreated), path))
-}
-
-// PadEntryAdded prints confirmation that a pad entry was added.
-//
-// Parameters:
-//   - cmd: Cobra command for output. Nil is a no-op.
-//   - n: entry number (1-based).
-func PadEntryAdded(cmd *cobra.Command, n int) {
-	if cmd == nil {
-		return
-	}
-	cmd.Println(fmt.Sprintf(desc.Text(text.DescKeyWritePadEntryAdded), n))
-}
-
-// PadEntryUpdated prints confirmation that a pad entry was updated.
-//
-// Parameters:
-//   - cmd: Cobra command for output. Nil is a no-op.
-//   - n: entry number (1-based).
-func PadEntryUpdated(cmd *cobra.Command, n int) {
-	if cmd == nil {
-		return
-	}
-	cmd.Println(fmt.Sprintf(desc.Text(text.DescKeyWritePadEntryUpdated), n))
-}
-
-// PadExportPlan prints a dry-run export line.
-//
-// Parameters:
-//   - cmd: Cobra command for output. Nil is a no-op.
-//   - label: blob label.
-//   - outPath: target file path.
-func PadExportPlan(cmd *cobra.Command, label, outPath string) {
-	if cmd == nil {
-		return
-	}
-	cmd.Println(fmt.Sprintf(desc.Text(text.DescKeyWritePadExportPlan), label, outPath))
-}
-
-// PadExportDone prints a successfully exported blob line.
-//
-// Parameters:
-//   - cmd: Cobra command for output. Nil is a no-op.
-//   - label: blob label.
-func PadExportDone(cmd *cobra.Command, label string) {
-	if cmd == nil {
-		return
-	}
-	cmd.Println(fmt.Sprintf(desc.Text(text.DescKeyWritePadExportDone), label))
-}
-
-// ErrPadExportWrite prints a blob write failure to stderr.
-//
-// Parameters:
-//   - cmd: Cobra command for output. Nil is a no-op.
-//   - label: blob label.
-//   - cause: the write error.
-func ErrPadExportWrite(cmd *cobra.Command, label string, cause error) {
-	if cmd == nil {
-		return
-	}
-	cmd.PrintErrln(fmt.Sprintf(desc.Text(text.DescKeyWritePadExportWriteFailed), label, cause))
 }
 
 // PadBlobWritten prints confirmation that a blob was written to a file.

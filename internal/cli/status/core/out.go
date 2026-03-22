@@ -12,7 +12,10 @@ import (
 
 	"github.com/spf13/cobra"
 
+	"github.com/ActiveMemory/ctx/internal/assets/read/desc"
+	"github.com/ActiveMemory/ctx/internal/config/embed/text"
 	cfgTime "github.com/ActiveMemory/ctx/internal/config/time"
+	"github.com/ActiveMemory/ctx/internal/config/token"
 	"github.com/ActiveMemory/ctx/internal/entity"
 	"github.com/ActiveMemory/ctx/internal/format"
 	"github.com/ActiveMemory/ctx/internal/write/status"
@@ -60,7 +63,8 @@ func PersistStatusJSON(
 	return enc.Encode(output)
 }
 
-// PersistStatusText writes context status as formatted text to the command output.
+// PersistStatusText writes context status as formatted text to the
+// command output.
 //
 // Parameters:
 //   - cmd: Cobra command for output stream
@@ -85,10 +89,10 @@ func PersistStatusText(
 			Size:   f.Size,
 		}
 		if f.IsEmpty {
-			fi.Indicator = "\u25cb"
-			fi.Status = "empty"
+			fi.Indicator = token.IconEmpty
+			fi.Status = desc.Text(text.DescKeyWriteStatusEmpty)
 		} else {
-			fi.Indicator = "\u2713"
+			fi.Indicator = token.IconOK
 			fi.Status = f.Summary
 		}
 		if verbose && !f.IsEmpty {
@@ -103,7 +107,11 @@ func PersistStatusText(
 		d := time.Since(f.ModTime)
 		entries[i] = status.StatusActivityInfo{
 			Name: f.Name,
-			Ago:  format.TimeAgo(d.Hours(), int(d.Minutes()), f.ModTime.Format(cfgTime.OlderFormat)),
+			Ago: format.TimeAgo(
+				d.Hours(),
+				int(d.Minutes()),
+				f.ModTime.Format(cfgTime.OlderFormat),
+			),
 		}
 	}
 	status.StatusActivity(cmd, entries)
