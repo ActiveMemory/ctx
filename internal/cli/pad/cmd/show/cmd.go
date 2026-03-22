@@ -14,7 +14,7 @@ import (
 	"github.com/ActiveMemory/ctx/internal/assets/read/desc"
 	"github.com/ActiveMemory/ctx/internal/config/embed/cmd"
 	"github.com/ActiveMemory/ctx/internal/config/embed/flag"
-	cflag "github.com/ActiveMemory/ctx/internal/config/flag"
+	cFlag "github.com/ActiveMemory/ctx/internal/config/flag"
 	ctxErr "github.com/ActiveMemory/ctx/internal/err/pad"
 )
 
@@ -46,7 +46,7 @@ func Cmd() *cobra.Command {
 	}
 
 	c.Flags().StringVar(&outPath,
-		cflag.Out, "", desc.Flag(flag.DescKeyPadShowOut),
+		cFlag.Out, "", desc.Flag(flag.DescKeyPadShowOut),
 	)
 
 	return c

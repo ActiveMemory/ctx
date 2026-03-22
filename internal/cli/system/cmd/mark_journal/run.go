@@ -11,7 +11,7 @@ import (
 
 	"github.com/spf13/cobra"
 
-	cflag "github.com/ActiveMemory/ctx/internal/config/flag"
+	cFlag "github.com/ActiveMemory/ctx/internal/config/flag"
 	"github.com/ActiveMemory/ctx/internal/config/journal"
 	"github.com/ActiveMemory/ctx/internal/config/token"
 	ctxResolve "github.com/ActiveMemory/ctx/internal/context/resolve"
@@ -40,7 +40,7 @@ func runMarkJournal(cmd *cobra.Command, filename, stage string) error {
 		return errJournal.LoadStateFailed(loadErr)
 	}
 
-	check, _ := cmd.Flags().GetBool(cflag.Check)
+	check, _ := cmd.Flags().GetBool(cFlag.Check)
 	if check {
 		fs := jstate.Entries[filename]
 		var val string

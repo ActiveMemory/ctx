@@ -13,7 +13,7 @@ import (
 
 	"github.com/ActiveMemory/ctx/internal/assets/hooks/messages"
 	"github.com/ActiveMemory/ctx/internal/cli/system/core"
-	cflag "github.com/ActiveMemory/ctx/internal/config/flag"
+	cFlag "github.com/ActiveMemory/ctx/internal/config/flag"
 	writeMessage "github.com/ActiveMemory/ctx/internal/write/message"
 )
 
@@ -43,7 +43,7 @@ func Run(cmd *cobra.Command) error {
 		entries = append(entries, entry)
 	}
 
-	jsonFlag, _ := cmd.Flags().GetBool(cflag.JSON)
+	jsonFlag, _ := cmd.Flags().GetBool(cFlag.JSON)
 	if jsonFlag {
 		enc := json.NewEncoder(cmd.OutOrStdout())
 		enc.SetIndent("", "  ")

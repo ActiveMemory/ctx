@@ -10,7 +10,7 @@ import (
 	"github.com/ActiveMemory/ctx/internal/assets/read/desc"
 	"github.com/ActiveMemory/ctx/internal/config/embed/cmd"
 	"github.com/ActiveMemory/ctx/internal/config/embed/flag"
-	cflag "github.com/ActiveMemory/ctx/internal/config/flag"
+	cFlag "github.com/ActiveMemory/ctx/internal/config/flag"
 	"github.com/spf13/cobra"
 )
 
@@ -36,7 +36,7 @@ func Cmd() *cobra.Command {
 	cmd.Flags().IntVar(&days, "days", 7,
 		desc.Flag(flag.DescKeySystemPruneDays),
 	)
-	cmd.Flags().BoolVar(&dryRun, cflag.DryRun, false,
+	cmd.Flags().BoolVar(&dryRun, cFlag.DryRun, false,
 		desc.Flag(flag.DescKeySystemPruneDryRun),
 	)
 

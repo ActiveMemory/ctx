@@ -12,7 +12,7 @@ import (
 	"github.com/ActiveMemory/ctx/internal/assets/read/desc"
 	"github.com/ActiveMemory/ctx/internal/config/embed/cmd"
 	"github.com/ActiveMemory/ctx/internal/config/embed/flag"
-	cflag "github.com/ActiveMemory/ctx/internal/config/flag"
+	cFlag "github.com/ActiveMemory/ctx/internal/config/flag"
 	"github.com/ActiveMemory/ctx/internal/rc"
 )
 
@@ -40,7 +40,7 @@ func Cmd() *cobra.Command {
 		Long:  long,
 		RunE: func(cmd *cobra.Command, args []string) error {
 			// Use the configured budget if the flag is not explicitly set
-			if !cmd.Flags().Changed(cflag.Budget) {
+			if !cmd.Flags().Changed(cFlag.Budget) {
 				budget = rc.TokenBudget()
 			}
 			return Run(cmd, budget, raw)
@@ -48,12 +48,12 @@ func Cmd() *cobra.Command {
 	}
 
 	c.Flags().IntVar(
-		&budget, cflag.Budget,
+		&budget, cFlag.Budget,
 		rc.DefaultTokenBudget,
 		desc.Flag(flag.DescKeyLoadBudget),
 	)
 	c.Flags().BoolVar(
-		&raw, cflag.Raw, false, desc.Flag(flag.DescKeyLoadRaw),
+		&raw, cFlag.Raw, false, desc.Flag(flag.DescKeyLoadRaw),
 	)
 
 	return c
