@@ -17,6 +17,7 @@ import (
 	"github.com/ActiveMemory/ctx/internal/config/box"
 	"github.com/ActiveMemory/ctx/internal/config/embed/text"
 	"github.com/ActiveMemory/ctx/internal/config/file"
+	cfgFmt "github.com/ActiveMemory/ctx/internal/config/format"
 	"github.com/ActiveMemory/ctx/internal/config/journal"
 	"github.com/ActiveMemory/ctx/internal/config/regex"
 	"github.com/ActiveMemory/ctx/internal/config/session"
@@ -401,17 +402,17 @@ func FormatPartNavigation(part, totalParts int, baseName string) string {
 func FormatDuration(d interface{ Minutes() float64 }) string {
 	mins := d.Minutes()
 	if mins < 1 {
-		return "<1m"
+		return desc.Text(text.DescKeyWriteFormatDurationLTMin)
 	}
 	if mins < 60 {
-		return fmt.Sprintf("%dm", int(mins))
+		return fmt.Sprintf(desc.Text(text.DescKeyWriteFormatDurationMin), int(mins))
 	}
 	hours := int(mins) / 60
 	remainMins := int(mins) % 60
 	if remainMins == 0 {
-		return fmt.Sprintf("%dh", hours)
+		return fmt.Sprintf(desc.Text(text.DescKeyWriteFormatDurationHour), hours)
 	}
-	return fmt.Sprintf("%dh%dm", hours, remainMins)
+	return fmt.Sprintf(desc.Text(text.DescKeyWriteFormatDurationHourMin), hours, remainMins)
 }
 
 // FormatTokens formats token counts in a human-readable way.
@@ -422,13 +423,13 @@ func FormatDuration(d interface{ Minutes() float64 }) string {
 // Returns:
 //   - string: Human-readable count (e.g., "500", "1.5K", "2.3M")
 func FormatTokens(tokens int) string {
-	if tokens < 1000 {
-		return fmt.Sprintf("%d", tokens)
+	if tokens < cfgFmt.SIThreshold {
+		return fmt.Sprintf(desc.Text(text.DescKeyWriteFormatSIInteger), tokens)
 	}
-	if tokens < 1000000 {
-		return fmt.Sprintf("%.1fK", float64(tokens)/1000)
+	if tokens < cfgFmt.SIThresholdM {
+		return fmt.Sprintf(desc.Text(text.DescKeyWriteFormatSIKiloUpper), float64(tokens)/cfgFmt.SIThreshold)
 	}
-	return fmt.Sprintf("%.1fM", float64(tokens)/1000000)
+	return fmt.Sprintf(desc.Text(text.DescKeyWriteFormatSIMegaUpper), float64(tokens)/cfgFmt.SIThresholdM)
 }
 
 // Truncate shortens s to max characters, appending "…" if truncated.

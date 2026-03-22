@@ -15,6 +15,7 @@ const (
 	DescKeyWriteDryRun                     = "write.dry-run"
 	DescKeyWriteExistsWritingAsAlternative = "write.exists-writing-as-alternative"
 	DescKeyWriteLines                      = "write.lines"
+	DescKeyWriteLogLineFormat              = "write.log-line-format"
 	DescKeyWriteLinesPrevious              = "write.lines-previous"
 	DescKeyWriteMirror                     = "write.mirror"
 	DescKeyWriteNewContent                 = "write.new-content"

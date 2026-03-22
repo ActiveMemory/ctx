@@ -15,3 +15,7 @@ const (
 	// ExtJSONL is the JSON Lines file extension.
 	ExtJSONL = ".jsonl"
 )
+
+// BackupFormat is the format string for timestamped backup file names.
+// Args: original filename, Unix timestamp.
+const BackupFormat = "%s.%d.bak"

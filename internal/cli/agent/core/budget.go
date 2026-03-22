@@ -121,7 +121,7 @@ func AssembleBudgetPacket(ctx *entity.Context, budget int) *AssembledPacket {
 //   - []string: All convention bullet items; nil if the file is not found
 func ExtractAllConventions(ctx *entity.Context) []string {
 	if f := ctx.File(ctxCfg.Convention); f != nil {
-		return ExtractBulletItems(string(f.Content), 1000)
+		return ExtractBulletItems(string(f.Content), agent.BulletItemLimit)
 	}
 	return nil
 }
@@ -179,8 +179,8 @@ func SplitBudget(total int, a, b []ScoredEntry) (int, int) {
 	}
 
 	// Minimum 30% each, proportional split of the rest
-	minA := total * 30 / 100
-	minB := total * 30 / 100
+	minA := total * agent.SplitMinPct / 100
+	minB := total * agent.SplitMinPct / 100
 	flex := total - minA - minB
 
 	aProportion := float64(aTokens) / float64(totalContent)
@@ -206,7 +206,7 @@ func FillSection(entries []ScoredEntry, budget int) ([]string, []string) {
 		return nil, nil
 	}
 
-	fullBudget := budget * 80 / 100
+	fullBudget := budget * agent.FullEntryPct / 100
 	used := 0
 	var full []string
 	var summaries []string
@@ -313,7 +313,7 @@ func RenderMarkdownPacket(pkt *AssembledPacket) string {
 	// Read order
 	sb.WriteString(desc.Text(text.DescKeyAgentSectionReadOrder) + nl)
 	for i, path := range pkt.ReadOrder {
-		sb.WriteString(fmt.Sprintf("%d. %s", i+1, path) + nl)
+		sb.WriteString(fmt.Sprintf(desc.Text(text.DescKeyWriteAgentNumberedItem), i+1, path) + nl)
 	}
 	sb.WriteString(nl)
 
@@ -321,7 +321,7 @@ func RenderMarkdownPacket(pkt *AssembledPacket) string {
 	if len(pkt.Constitution) > 0 {
 		sb.WriteString(desc.Text(text.DescKeyAgentSectionConstitution) + nl)
 		for _, rule := range pkt.Constitution {
-			sb.WriteString(fmt.Sprintf("- %s", rule) + nl)
+			sb.WriteString(fmt.Sprintf(desc.Text(text.DescKeyWriteAgentBulletItem), rule) + nl)
 		}
 		sb.WriteString(nl)
 	}
@@ -339,7 +339,7 @@ func RenderMarkdownPacket(pkt *AssembledPacket) string {
 	if len(pkt.Conventions) > 0 {
 		sb.WriteString(desc.Text(text.DescKeyAgentSectionConventions) + nl)
 		for _, conv := range pkt.Conventions {
-			sb.WriteString(fmt.Sprintf("- %s", conv) + nl)
+			sb.WriteString(fmt.Sprintf(desc.Text(text.DescKeyWriteAgentBulletItem), conv) + nl)
 		}
 		sb.WriteString(nl)
 	}
@@ -364,7 +364,7 @@ func RenderMarkdownPacket(pkt *AssembledPacket) string {
 	if len(pkt.Summaries) > 0 {
 		sb.WriteString(desc.Text(text.DescKeyAgentSectionSummaries) + nl)
 		for _, s := range pkt.Summaries {
-			sb.WriteString(fmt.Sprintf("- %s", s) + nl)
+			sb.WriteString(fmt.Sprintf(desc.Text(text.DescKeyWriteAgentBulletItem), s) + nl)
 		}
 		sb.WriteString(nl)
 	}

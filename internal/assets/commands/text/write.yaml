@@ -1,6 +1,10 @@
 # Output formatting strings for ctx CLI.
 # Used by assets.TextDesc() via the write package.
 
+write.agent-bullet-item:
+  short: "- %s"
+write.agent-numbered-item:
+  short: "%d. %s"
 write.added-to:
   short: ✓ Added to %s
 write.archived:
@@ -45,6 +49,50 @@ write.dry-run:
   short: Dry run — no files will be written.
 write.exists-writing-as-alternative:
   short: '  ! %s exists, writing as %s'
+write.export-nothing:
+  short: Nothing to export.
+write.export-part-new:
+  short: export %d new
+write.export-part-regen:
+  short: regenerate %d existing
+write.export-part-skip:
+  short: skip %d existing
+write.export-part-skip-locked:
+  short: skip %d locked
+write.export-summary:
+  short: '%s %s.'
+write.export-verb:
+  short: Will
+write.export-verb-dry-run:
+  short: Would
+write.format-bytes:
+  short: "%dB"
+write.format-duration-day:
+  short: "%dd"
+write.format-duration-hour:
+  short: "%dh"
+write.format-duration-hour-min:
+  short: "%dh%dm"
+write.format-duration-less-than-min:
+  short: "<1m"
+write.format-duration-min:
+  short: "%dm"
+write.format-kilobytes:
+  short: "%.1fKB"
+write.format-megabytes:
+  short: "%.1fMB"
+write.format-si-integer:
+  short: "%d"
+write.format-si-kilo:
+  short: "%.1fk"
+write.format-si-kilo-int:
+  short: "%dk"
+write.format-si-kilo-upper:
+  short: "%.1fK"
+write.format-si-mega-upper:
+  short: "%.1fM"
+write.format-thousands:
+  short: "%d,%03d"
 write.hook-copilot-created:
   short: '  ✓ %s'
 write.hook-copilot-force-hint:
@@ -86,6 +134,8 @@ write.import-summary:
   short: 'Imported: %d entries'
 write.import-summary-dry-run:
   short: 'Dry run — would import: %d entries'
+write.import-error-promote:
+  short: "  Error promoting to %s: %v"
 write.init-aborted:
   short: Aborted.
 write.init-backup:
@@ -136,6 +186,10 @@ write.init-no-changes:
   short: '  ○ %s (no changes needed)'
 write.init-overwrite-prompt:
   short: '%s already exists. Overwrite? [y/N] '
+write.init-plan-merge-prompt:
+  short: Would you like to merge ctx implementation plan template?
+write.init-plan-merge-confirm:
+  short: '[y/N] '
 write.init-perms-allow:
   short: '  ✓ %s (added ctx permissions)'
 write.init-perms-allow-deny:
@@ -216,6 +270,8 @@ write.lock-unlock-summary:
   short: |2-
 
     %s %d entry(s).
+write.log-line-format:
+  short: "[%s] [session:%s] %s\n"
 write.loop-generated-block:
   short: |-
     ✓ Generated %s
@@ -341,6 +397,8 @@ write.path-exists:
   short: '  %s -> %s (exists)'
 write.paused:
   short: Context hooks paused for session %s
+write.paused-message:
+  short: "ctx:paused (%d turns) — resume with /ctx-resume"
 write.prefix-error:
   short: 'Error: '
 write.prefix-warn:
@@ -495,5 +553,55 @@ write.time-minutes-ago:
   short: '%d minutes ago'
 write.unpublish-done:
   short: Removed published block from %s.
+write.recall-aborted:
+  short: Aborted.
+write.recall-ambiguous-hint:
+  short: "\nUse a more specific ID (e.g., ctx recall show %s)\n"
+write.recall-ambiguous-line:
+  short: "  %s\n"
+write.recall-ambiguous-match:
+  short: "Multiple sessions match '%s':"
+write.recall-ambiguous-match-stderr:
+  short: "Multiple sessions match '%s':\n"
+write.recall-code-block:
+  short: "```\n%s\n```\n"
+write.recall-conversation-turn:
+  short: "### %d. [%s] (%s)\n"
+write.recall-exported-new:
+  short: Exported %d new session(s)
+write.recall-exported-ok:
+  short: "  ok %s"
+write.recall-exported-ok-suffix:
+  short: "  ok %s (%s)"
+write.recall-footer-limit:
+  short: Use --limit to see more sessions
+write.recall-list-header:
+  short: "Found %d sessions\n\n"
+write.recall-list-header-filtered:
+  short: "Found %d sessions (%d shown)\n\n"
+write.recall-more-turns:
+  short: "... and %d more turns\n"
+write.recall-no-filters-match:
+  short: No sessions match the filters.
+write.recall-no-sessions:
+  short: No sessions found.
+write.recall-no-sessions-hint-all:
+  short: Use --all-projects to see sessions from all projects.
+write.recall-no-sessions-project:
+  short: No sessions found for this project.
+write.recall-no-sessions-project-hint:
+  short: No sessions found for this project. Use --all-projects to see all.
+write.recall-numbered-item:
+  short: "%d. %s\n"
+write.recall-renamed:
+  short: Renamed %d session(s) to title-based filenames
+write.recall-skip:
+  short: "  skip %s (%s)"
+write.recall-skipped:
+  short: Skipped %d existing file(s).
+write.recall-storage-hint:
+  short: Sessions are stored in ~/.claude/projects/
+write.recall-updated:
+  short: Updated %d existing session(s) (YAML frontmatter preserved)
 write.unpublish-not-found:
   short: No published block found in %s.

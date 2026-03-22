@@ -11,6 +11,14 @@ const (
 	// ResourcesStatusCol is the column where the status indicator starts
 	// in the resources text output.
 	ResourcesStatusCol = 52
+	// ResourcesLabelWidth is the left-aligned label column width.
+	ResourcesLabelWidth = 7
+)
+
+// Stats command defaults.
+const (
+	// DefaultLast is the default number of stats entries to display.
+	DefaultLast = 20
 )
 
 // Resource threshold constants for health evaluation.

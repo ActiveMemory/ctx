@@ -26,7 +26,7 @@ func SkipFile(cmd *cobra.Command, filename, reason string) {
 	if cmd == nil {
 		return
 	}
-	cmd.Println(fmt.Sprintf("  skip %s (%s)", filename, reason))
+	cmd.Println(fmt.Sprintf(desc.Text(text.DescKeyWriteRecallSkip), filename, reason))
 }
 
 // ExportedFile prints that a file was exported or updated.
@@ -41,9 +41,9 @@ func ExportedFile(cmd *cobra.Command, filename, suffix string) {
 		return
 	}
 	if suffix != "" {
-		cmd.Println(fmt.Sprintf("  ok %s (%s)", filename, suffix))
+		cmd.Println(fmt.Sprintf(desc.Text(text.DescKeyWriteRecallExportedOKSuffix), filename, suffix))
 	} else {
-		cmd.Println(fmt.Sprintf("  ok %s", filename))
+		cmd.Println(fmt.Sprintf(desc.Text(text.DescKeyWriteRecallExportedOK), filename))
 	}
 }
 
@@ -57,9 +57,9 @@ func NoSessionsForProject(cmd *cobra.Command, allProjects bool) {
 		return
 	}
 	if allProjects {
-		cmd.Println("No sessions found.")
+		cmd.Println(desc.Text(text.DescKeyWriteRecallNoSessions))
 	} else {
-		cmd.Println("No sessions found for this project. Use --all-projects to see all.")
+		cmd.Println(desc.Text(text.DescKeyWriteRecallNoSessionsProjectHint))
 	}
 }
 
@@ -73,12 +73,12 @@ func NoSessionsWithHint(cmd *cobra.Command, allProjects bool) {
 		return
 	}
 	if allProjects {
-		cmd.Println("No sessions found.")
+		cmd.Println(desc.Text(text.DescKeyWriteRecallNoSessions))
 		cmd.Println()
-		cmd.Println("Sessions are stored in ~/.claude/projects/")
+		cmd.Println(desc.Text(text.DescKeyWriteRecallStorageHint))
 	} else {
-		cmd.Println("No sessions found for this project.")
-		cmd.Println("Use --all-projects to see sessions from all projects.")
+		cmd.Println(desc.Text(text.DescKeyWriteRecallNoSessionsProject))
+		cmd.Println(desc.Text(text.DescKeyWriteRecallNoSessionsHintAll))
 	}
 }
 
@@ -92,7 +92,7 @@ func AmbiguousSessionMatch(cmd *cobra.Command, query string, lines []string) {
 	if cmd == nil {
 		return
 	}
-	cmd.PrintErrln(fmt.Sprintf("Multiple sessions match '%s':", query))
+	cmd.PrintErrln(fmt.Sprintf(desc.Text(text.DescKeyWriteRecallAmbiguousMatch), query))
 	for _, line := range lines {
 		cmd.PrintErrln(line)
 	}
@@ -109,11 +109,11 @@ func AmbiguousSessionMatchWithHint(cmd *cobra.Command, query string, lines []str
 	if cmd == nil {
 		return
 	}
-	_, _ = fmt.Fprintf(cmd.ErrOrStderr(), "Multiple sessions match '%s':\n", query)
+	_, _ = fmt.Fprintf(cmd.ErrOrStderr(), desc.Text(text.DescKeyWriteRecallAmbiguousMatchStderr), query)
 	for _, line := range lines {
-		_, _ = fmt.Fprintf(cmd.ErrOrStderr(), "  %s\n", line)
+		_, _ = fmt.Fprintf(cmd.ErrOrStderr(), desc.Text(text.DescKeyWriteRecallAmbiguousLine), line)
 	}
-	_, _ = fmt.Fprintf(cmd.ErrOrStderr(), "\nUse a more specific ID (e.g., ctx recall show %s)\n", hint)
+	_, _ = fmt.Fprintf(cmd.ErrOrStderr(), desc.Text(text.DescKeyWriteRecallAmbiguousHint), hint)
 }
 
 // Aborted prints that an operation was aborted.
@@ -124,7 +124,7 @@ func Aborted(cmd *cobra.Command) {
 	if cmd == nil {
 		return
 	}
-	cmd.Println("Aborted.")
+	cmd.Println(desc.Text(text.DescKeyWriteRecallAborted))
 }
 
 // ExportFinalSummary prints the final export summary with counts.
@@ -141,16 +141,16 @@ func ExportFinalSummary(cmd *cobra.Command, exported, updated, renamed, skipped 
 	}
 	cmd.Println()
 	if exported > 0 {
-		cmd.Println(fmt.Sprintf("Exported %d new session(s)", exported))
+		cmd.Println(fmt.Sprintf(desc.Text(text.DescKeyWriteRecallExportedNew), exported))
 	}
 	if updated > 0 {
-		cmd.Println(fmt.Sprintf("Updated %d existing session(s) (YAML frontmatter preserved)", updated))
+		cmd.Println(fmt.Sprintf(desc.Text(text.DescKeyWriteRecallUpdated), updated))
 	}
 	if renamed > 0 {
-		cmd.Println(fmt.Sprintf("Renamed %d session(s) to title-based filenames", renamed))
+		cmd.Println(fmt.Sprintf(desc.Text(text.DescKeyWriteRecallRenamed), renamed))
 	}
 	if skipped > 0 {
-		cmd.Println(fmt.Sprintf("Skipped %d existing file(s).", skipped))
+		cmd.Println(fmt.Sprintf(desc.Text(text.DescKeyWriteRecallSkipped), skipped))
 	}
 }
 
@@ -162,7 +162,7 @@ func NoFiltersMatch(cmd *cobra.Command) {
 	if cmd == nil {
 		return
 	}
-	cmd.Println("No sessions match the filters.")
+	cmd.Println(desc.Text(text.DescKeyWriteRecallNoFiltersMatch))
 }
 
 // SessionListHeader prints the session count header for recall list.
@@ -176,9 +176,9 @@ func SessionListHeader(cmd *cobra.Command, total, shown int) {
 		return
 	}
 	if shown > 0 && shown != total {
-		_, _ = fmt.Fprintf(cmd.OutOrStdout(), "Found %d sessions (%d shown)\n\n", total, shown)
+		_, _ = fmt.Fprintf(cmd.OutOrStdout(), desc.Text(text.DescKeyWriteRecallListHeaderFiltered), total, shown)
 	} else {
-		_, _ = fmt.Fprintf(cmd.OutOrStdout(), "Found %d sessions\n\n", total)
+		_, _ = fmt.Fprintf(cmd.OutOrStdout(), desc.Text(text.DescKeyWriteRecallListHeader), total)
 	}
 }
 
@@ -206,7 +206,7 @@ func SessionListFooter(cmd *cobra.Command, hasMore bool) {
 	}
 	_, _ = fmt.Fprintln(cmd.OutOrStdout())
 	if hasMore {
-		cmd.Println("Use --limit to see more sessions")
+		cmd.Println(desc.Text(text.DescKeyWriteRecallFooterLimit))
 	}
 }
 
@@ -325,7 +325,7 @@ func ConversationTurn(cmd *cobra.Command, index int, role, timestamp string) {
 	if cmd == nil {
 		return
 	}
-	_, _ = fmt.Fprintf(cmd.OutOrStdout(), "### %d. [%s] (%s)\n", index, role, timestamp)
+	_, _ = fmt.Fprintf(cmd.OutOrStdout(), desc.Text(text.DescKeyWriteRecallConversationTurn), index, role, timestamp)
 	_, _ = fmt.Fprintln(cmd.OutOrStdout())
 }
 
@@ -351,7 +351,7 @@ func CodeBlock(cmd *cobra.Command, content string) {
 	if cmd == nil {
 		return
 	}
-	_, _ = fmt.Fprintf(cmd.OutOrStdout(), "```\n%s\n```\n", content)
+	_, _ = fmt.Fprintf(cmd.OutOrStdout(), desc.Text(text.DescKeyWriteRecallCodeBlock), content)
 }
 
 // ListItem prints a Markdown list item to stdout.
@@ -372,12 +372,12 @@ func ListItem(cmd *cobra.Command, format string, args ...any) {
 // Parameters:
 //   - cmd: Cobra command for output. Nil is a no-op.
 //   - n: the item number.
-//   - text: the item text.
-func NumberedItem(cmd *cobra.Command, n int, text string) {
+//   - item: the item text.
+func NumberedItem(cmd *cobra.Command, n int, item string) {
 	if cmd == nil {
 		return
 	}
-	_, _ = fmt.Fprintf(cmd.OutOrStdout(), "%d. %s\n", n, text)
+	_, _ = fmt.Fprintf(cmd.OutOrStdout(), desc.Text(text.DescKeyWriteRecallNumberedItem), n, item)
 }
 
 // MoreTurns prints the "and N more turns" continuation line.
@@ -389,7 +389,7 @@ func MoreTurns(cmd *cobra.Command, remaining int) {
 	if cmd == nil {
 		return
 	}
-	_, _ = fmt.Fprintf(cmd.OutOrStdout(), "... and %d more turns\n", remaining)
+	_, _ = fmt.Fprintf(cmd.OutOrStdout(), desc.Text(text.DescKeyWriteRecallMoreTurns), remaining)
 }
 
 // Hint prints a usage hint to stdout.

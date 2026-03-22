@@ -13,6 +13,7 @@ import (
 	"github.com/ActiveMemory/ctx/internal/assets/read/desc"
 	"github.com/ActiveMemory/ctx/internal/config/embed/text"
 	"github.com/ActiveMemory/ctx/internal/config/file"
+	cfgFmt "github.com/ActiveMemory/ctx/internal/config/format"
 	"github.com/ActiveMemory/ctx/internal/config/token"
 )
 
@@ -24,15 +25,15 @@ import (
 // Returns:
 //   - string: Human-readable size (e.g., "512B", "1.5KB", "2.3MB")
 func FormatSize(bytes int64) string {
-	if bytes < 1024 {
-		return fmt.Sprintf("%dB", bytes)
+	if bytes < cfgFmt.IECUnit {
+		return fmt.Sprintf(desc.Text(text.DescKeyWriteFormatBytes), bytes)
 	}
-	kb := float64(bytes) / 1024
-	if kb < 1024 {
-		return fmt.Sprintf("%.1fKB", kb)
+	kb := float64(bytes) / cfgFmt.IECUnit
+	if kb < cfgFmt.IECUnit {
+		return fmt.Sprintf(desc.Text(text.DescKeyWriteFormatKilobytes), kb)
 	}
-	mb := kb / 1024
-	return fmt.Sprintf("%.1fMB", mb)
+	mb := kb / cfgFmt.IECUnit
+	return fmt.Sprintf(desc.Text(text.DescKeyWriteFormatMegabytes), mb)
 }
 
 // KeyFileSlug converts a file path to a safe slug for use as a filename.

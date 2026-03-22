@@ -14,7 +14,7 @@ import (
 
 	"github.com/ActiveMemory/ctx/internal/cli/system/core"
 	"github.com/ActiveMemory/ctx/internal/rc"
-	writeStats "github.com/ActiveMemory/ctx/internal/write/stats"
+	writeStats "github.com/ActiveMemory/ctx/internal/write/stat"
 )
 
 // Run executes the stats subcommand, reading and displaying per-session

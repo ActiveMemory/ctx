@@ -510,6 +510,18 @@ resources.all-clear:
   short: All clear — no resource warnings.
 resources.header:
   short: System Resources
+resources.label-disk:
+  short: "Disk:"
+resources.label-load:
+  short: "Load:"
+resources.label-memory:
+  short: "Memory:"
+resources.label-swap:
+  short: "Swap:"
+resources.load-format:
+  short: "%5.2f / %5.2f / %5.2f  (%d CPUs, ratio %.2f)"
+resources.value-format:
+  short: "%5s / %5s GB (%d%%)"
 resources.separator:
   short: ====================
 resources.status-danger:

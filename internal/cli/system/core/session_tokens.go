@@ -15,9 +15,12 @@ import (
 	"path/filepath"
 	"strings"
 
+	"github.com/ActiveMemory/ctx/internal/assets/read/desc"
 	"github.com/ActiveMemory/ctx/internal/config/claude"
 	"github.com/ActiveMemory/ctx/internal/config/dir"
+	"github.com/ActiveMemory/ctx/internal/config/embed/text"
 	"github.com/ActiveMemory/ctx/internal/config/file"
+	cfgFmt "github.com/ActiveMemory/ctx/internal/config/format"
 	"github.com/ActiveMemory/ctx/internal/config/fs"
 	"github.com/ActiveMemory/ctx/internal/config/session"
 	"github.com/ActiveMemory/ctx/internal/config/stats"
@@ -260,14 +263,14 @@ func ClaudeSettingsHas1M() bool {
 // Returns:
 //   - string: Abbreviated token count
 func FormatTokenCount(tokens int) string {
-	if tokens < 1000 {
-		return fmt.Sprintf("%d", tokens)
+	if tokens < cfgFmt.SIThreshold {
+		return fmt.Sprintf(desc.Text(text.DescKeyWriteFormatSIInteger), tokens)
 	}
-	k := float64(tokens) / 1000
+	k := float64(tokens) / cfgFmt.SIThreshold
 	if k < 10 {
-		return fmt.Sprintf("%.1fk", k)
+		return fmt.Sprintf(desc.Text(text.DescKeyWriteFormatSIKilo), k)
 	}
-	return fmt.Sprintf("%dk", int(k))
+	return fmt.Sprintf(desc.Text(text.DescKeyWriteFormatSIKiloInt), int(k))
 }
 
 // FormatWindowSize formats the context window size as a human-readable
@@ -279,8 +282,8 @@ func FormatTokenCount(tokens int) string {
 // Returns:
 //   - string: Abbreviated window size
 func FormatWindowSize(size int) string {
-	if size < 1000 {
-		return fmt.Sprintf("%d", size)
+	if size < cfgFmt.SIThreshold {
+		return fmt.Sprintf(desc.Text(text.DescKeyWriteFormatSIInteger), size)
 	}
-	return fmt.Sprintf("%dk", size/1000)
+	return fmt.Sprintf(desc.Text(text.DescKeyWriteFormatSIKiloInt), size/cfgFmt.SIThreshold)
 }

@@ -4,9 +4,13 @@
 //   \    Copyright 2026-present Context contributors.
 //                 SPDX-License-Identifier: Apache-2.0
 
-package resources
+package resource
 
-import "github.com/spf13/cobra"
+import (
+	"github.com/spf13/cobra"
+
+	writeIO "github.com/ActiveMemory/ctx/internal/write/io"
+)
 
 // Text prints resource table lines. Nil cmd is a no-op.
 //
@@ -14,10 +18,5 @@ import "github.com/spf13/cobra"
 //   - cmd: Cobra command for output
 //   - lines: pre-formatted resource lines (header, separator, rows, summary)
 func Text(cmd *cobra.Command, lines []string) {
-	if cmd == nil {
-		return
-	}
-	for _, line := range lines {
-		cmd.Println(line)
-	}
+	writeIO.Lines(cmd, lines)
 }

@@ -84,12 +84,16 @@ func StatusText(sev sysinfo.Severity) string {
 // Returns:
 //   - string: formatted line with aligned status
 func FormatResourceLine(label, values, status string) string {
-	left := fmt.Sprintf("%-7s  %s", label, values)
+	left := fmt.Sprintf(fmt.Sprintf("%%-%ds  %%s", stats.ResourcesLabelWidth), label, values)
 	pad := stats.ResourcesStatusCol - len(left)
 	if pad < 1 {
 		pad = 1
 	}
 	return left + strings.Repeat(" ", pad) + status
+}
+
+func resourceValueFormat() string {
+	return desc.Text(text.DescKeyResourcesValueFormat)
 }
 
 // FormatResourcesText formats system resource information as human-readable
@@ -110,34 +114,34 @@ func FormatResourcesText(snap sysinfo.Snapshot, alerts []sysinfo.ResourceAlert) 
 	// Memory line
 	if snap.Memory.Supported {
 		pct := PctOf(snap.Memory.UsedBytes, snap.Memory.TotalBytes)
-		values := fmt.Sprintf("%5s / %5s GB (%d%%)",
+		values := fmt.Sprintf(resourceValueFormat(),
 			sysinfo.FormatGiB(snap.Memory.UsedBytes),
 			sysinfo.FormatGiB(snap.Memory.TotalBytes),
 			pct)
-		sev := SeverityFor(alerts, "memory")
-		lines = append(lines, FormatResourceLine("Memory:", values, StatusText(sev)))
+		sev := SeverityFor(alerts, sysinfo.ResourceMemory)
+		lines = append(lines, FormatResourceLine(desc.Text(text.DescKeyResourcesLabelMemory), values, StatusText(sev)))
 	}
 
 	// Swap line
 	if snap.Memory.Supported {
 		pct := PctOf(snap.Memory.SwapUsedBytes, snap.Memory.SwapTotalBytes)
-		values := fmt.Sprintf("%5s / %5s GB (%d%%)",
+		values := fmt.Sprintf(resourceValueFormat(),
 			sysinfo.FormatGiB(snap.Memory.SwapUsedBytes),
 			sysinfo.FormatGiB(snap.Memory.SwapTotalBytes),
 			pct)
-		sev := SeverityFor(alerts, "swap")
-		lines = append(lines, FormatResourceLine("Swap:", values, StatusText(sev)))
+		sev := SeverityFor(alerts, sysinfo.ResourceSwap)
+		lines = append(lines, FormatResourceLine(desc.Text(text.DescKeyResourcesLabelSwap), values, StatusText(sev)))
 	}
 
 	// Disk line
 	if snap.Disk.Supported {
 		pct := PctOf(snap.Disk.UsedBytes, snap.Disk.TotalBytes)
-		values := fmt.Sprintf("%5s / %5s GB (%d%%)",
+		values := fmt.Sprintf(resourceValueFormat(),
 			sysinfo.FormatGiB(snap.Disk.UsedBytes),
 			sysinfo.FormatGiB(snap.Disk.TotalBytes),
 			pct)
-		sev := SeverityFor(alerts, "disk")
-		lines = append(lines, FormatResourceLine("Disk:", values, StatusText(sev)))
+		sev := SeverityFor(alerts, sysinfo.ResourceDisk)
+		lines = append(lines, FormatResourceLine(desc.Text(text.DescKeyResourcesLabelDisk), values, StatusText(sev)))
 	}
 
 	// Load line
@@ -146,11 +150,11 @@ func FormatResourcesText(snap sysinfo.Snapshot, alerts []sysinfo.ResourceAlert) 
 		if snap.Load.NumCPU > 0 {
 			ratio = snap.Load.Load1 / float64(snap.Load.NumCPU)
 		}
-		values := fmt.Sprintf("%5.2f / %5.2f / %5.2f  (%d CPUs, ratio %.2f)",
+		values := fmt.Sprintf(desc.Text(text.DescKeyResourcesLoadFormat),
 			snap.Load.Load1, snap.Load.Load5, snap.Load.Load15,
 			snap.Load.NumCPU, ratio)
-		sev := SeverityFor(alerts, "load")
-		lines = append(lines, FormatResourceLine("Load:", values, StatusText(sev)))
+		sev := SeverityFor(alerts, sysinfo.ResourceLoad)
+		lines = append(lines, FormatResourceLine(desc.Text(text.DescKeyResourcesLabelLoad), values, StatusText(sev)))
 	}
 
 	// Summary

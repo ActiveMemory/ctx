@@ -52,6 +52,12 @@ func Run(cmd *cobra.Command, stdin *os.File) error {
 	writeHook.HookContext(cmd, core.FormatHookContext(hook.EventPreToolUse, msg))
 	nudgeMsg := desc.Text(text.DescKeySpecsNudgeNudgeMessage)
 	ref := notify.NewTemplateRef(hook.SpecsNudge, hook.VariantNudge, nil)
-	core.Relay(fmt.Sprintf(desc.Text(text.DescKeyRelayPrefixFormat), hook.SpecsNudge, nudgeMsg), input.SessionID, ref)
+	core.Relay(
+		fmt.Sprintf(
+			desc.Text(text.DescKeyRelayPrefixFormat),
+			hook.SpecsNudge, nudgeMsg,
+		),
+		input.SessionID, ref,
+	)
 	return nil
 }

@@ -7,10 +7,13 @@
 package stats
 
 import (
+	"github.com/spf13/cobra"
+
 	"github.com/ActiveMemory/ctx/internal/assets/read/desc"
 	"github.com/ActiveMemory/ctx/internal/config/embed/cmd"
 	"github.com/ActiveMemory/ctx/internal/config/embed/flag"
-	"github.com/spf13/cobra"
+	cflag "github.com/ActiveMemory/ctx/internal/config/flag"
+	"github.com/ActiveMemory/ctx/internal/config/stats"
 )
 
 // Cmd returns the "ctx system stats" subcommand.
@@ -20,7 +23,7 @@ import (
 func Cmd() *cobra.Command {
 	short, long := desc.Command(cmd.DescKeySystemStats)
 
-	cmd := &cobra.Command{
+	c := &cobra.Command{
 		Use:   cmd.UseSystemStats,
 		Short: short,
 		Long:  long,
@@ -29,18 +32,18 @@ func Cmd() *cobra.Command {
 		},
 	}
 
-	cmd.Flags().BoolP("follow", "f", false,
+	c.Flags().BoolP(cflag.Follow, cflag.ShortFollow, false,
 		desc.Flag(flag.DescKeySystemStatsFollow),
 	)
-	cmd.Flags().StringP("session", "s", "",
+	c.Flags().StringP(cflag.Session, cflag.ShortSessionID, "",
 		desc.Flag(flag.DescKeySystemStatsSession),
 	)
-	cmd.Flags().IntP("last", "n", 20,
+	c.Flags().IntP(cflag.Last, cflag.ShortLast, stats.DefaultLast,
 		desc.Flag(flag.DescKeySystemStatsLast),
 	)
-	cmd.Flags().BoolP("json", "j", false,
+	c.Flags().BoolP(cflag.JSON, cflag.ShortJSON, false,
 		desc.Flag(flag.DescKeySystemStatsJson),
 	)
 
-	return cmd
+	return c
 }
