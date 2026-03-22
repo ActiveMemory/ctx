@@ -89,24 +89,6 @@ func TestParseSinceFlag(t *testing.T) {
 	}
 }
 
-func TestPluralWord(t *testing.T) {
-	tests := []struct {
-		n        int
-		singular string
-		plural   string
-		want     string
-	}{
-		{1, "commit", "commits", "commit"},
-		{5, "commit", "commits", "commits"},
-		{0, "file", "files", "files"},
-	}
-	for _, tt := range tests {
-		if got := format.PluralWord(tt.n, tt.singular, tt.plural); got != tt.want {
-			t.Errorf("PluralWord(%d, %q, %q) = %q, want %q", tt.n, tt.singular, tt.plural, got, tt.want)
-		}
-	}
-}
-
 func TestUniqueTopDirs(t *testing.T) {
 	input := "internal/cli/dep/deps.go\ninternal/cli/change/changes.go\ndocs/index.md\nREADME.md\n"
 	got := UniqueTopDirs(input)

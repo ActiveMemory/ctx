@@ -11,7 +11,6 @@ import (
 
 	"github.com/ActiveMemory/ctx/internal/assets/read/desc"
 	"github.com/ActiveMemory/ctx/internal/config/embed/text"
-	"github.com/ActiveMemory/ctx/internal/format"
 	"github.com/spf13/cobra"
 )
 
@@ -310,18 +309,34 @@ func PadMergeSummary(cmd *cobra.Command, added, dupes int, dryRun bool) {
 		return
 	}
 	if added == 0 {
-		cmd.Println(fmt.Sprintf(desc.Text(text.DescKeyWritePadMergeNoneNew), dupes, format.PluralWord(dupes, desc.Text(text.DescKeyWritePadWordDuplicate), desc.Text(text.DescKeyWritePadWordDuplicates))))
+		cmd.Println(desc.Text(text.DescKeyWritePadMergeNoneNew))
+		mergeSkipped(cmd, dupes)
 		return
 	}
 	if dryRun {
-		cmd.Println(fmt.Sprintf(desc.Text(text.DescKeyWritePadMergeDryRun),
-			added, format.PluralWord(added, desc.Text(text.DescKeyWritePadWordEntry), desc.Text(text.DescKeyWritePadWordEntries)),
-			dupes, format.PluralWord(dupes, desc.Text(text.DescKeyWritePadWordDuplicate), desc.Text(text.DescKeyWritePadWordDuplicates))))
-		return
+		if added == 1 {
+			cmd.Println(desc.Text(text.DescKeyWritePadMergeDryRun1Entry))
+		} else {
+			cmd.Println(fmt.Sprintf(desc.Text(text.DescKeyWritePadMergeDryRunNEntries), added))
+		}
+	} else {
+		if added == 1 {
+			cmd.Println(desc.Text(text.DescKeyWritePadMergeDone1Entry))
+		} else {
+			cmd.Println(fmt.Sprintf(desc.Text(text.DescKeyWritePadMergeDoneNEntries), added))
+		}
 	}
-	cmd.Println(fmt.Sprintf(desc.Text(text.DescKeyWritePadMergeDone),
-		added, format.PluralWord(added, desc.Text(text.DescKeyWritePadWordEntry), desc.Text(text.DescKeyWritePadWordEntries)),
-		dupes, format.PluralWord(dupes, desc.Text(text.DescKeyWritePadWordDuplicate), desc.Text(text.DescKeyWritePadWordDuplicates))))
+	if dupes > 0 {
+		mergeSkipped(cmd, dupes)
+	}
+}
+
+func mergeSkipped(cmd *cobra.Command, dupes int) {
+	if dupes == 1 {
+		cmd.Println(desc.Text(text.DescKeyWritePadMergeSkipped1))
+	} else {
+		cmd.Println(fmt.Sprintf(desc.Text(text.DescKeyWritePadMergeSkippedN), dupes))
+	}
 }
 
 // PadExportSummary prints the export summary or "no blobs" message.

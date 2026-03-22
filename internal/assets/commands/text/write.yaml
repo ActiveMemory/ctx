@@ -343,14 +343,6 @@ write.obsidian-next-steps:
   short: '  Open Obsidian → Open folder as vault → Select %s'
 write.pad-blob-written:
   short: Wrote %d bytes to %s
-write.pad-word-duplicate:
-  short: duplicate
-write.pad-word-duplicates:
-  short: duplicates
-write.pad-word-entry:
-  short: entry
-write.pad-word-entries:
-  short: entries
 write.pad-empty:
   short: Scratchpad is empty.
 write.pad-list-item:
@@ -401,16 +393,24 @@ write.pad-merge-binary-warning:
   short: '  ! %s appears to contain binary data; it may be encrypted (use --key)'
 write.pad-merge-blob-conflict:
   short: '  ! blob %q has different content across sources; both kept'
-write.pad-merge-done:
-  short: Merged %d new %s (%d %s skipped).
-write.pad-merge-dry-run:
-  short: Would merge %d new %s (%d %s skipped).
+write.pad-merge-done-1-entry:
+  short: Merged 1 new entry.
+write.pad-merge-done-n-entries:
+  short: Merged %d new entries.
+write.pad-merge-dry-run-1-entry:
+  short: Would merge 1 new entry.
+write.pad-merge-dry-run-n-entries:
+  short: Would merge %d new entries.
 write.pad-merge-dupe:
   short: '  = %-40s (duplicate, skipped)'
 write.pad-merge-none:
   short: No entries to merge.
 write.pad-merge-none-new:
-  short: No new entries to merge (%d %s skipped).
+  short: No new entries to merge.
+write.pad-merge-skipped-1:
+  short: '  Skipped 1 duplicate.'
+write.pad-merge-skipped-n:
+  short: '  Skipped %d duplicates.'
 write.pad-resolve-entry:
   short: '  %d. %s'
 write.pad-resolve-header:
