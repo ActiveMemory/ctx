@@ -12,6 +12,7 @@ import (
 
 	"github.com/ActiveMemory/ctx/internal/assets/read/desc"
 	"github.com/ActiveMemory/ctx/internal/config/embed/text"
+	"github.com/ActiveMemory/ctx/internal/config/token"
 	"github.com/ActiveMemory/ctx/internal/entity"
 	"github.com/spf13/cobra"
 )
@@ -72,7 +73,7 @@ func EntryClassified(cmd *cobra.Command, title, targetFile string, keywords []st
 		return
 	}
 	cmd.Println(fmt.Sprintf(desc.Text(text.DescKeyWriteImportEntry), title))
-	cmd.Println(fmt.Sprintf(desc.Text(text.DescKeyWriteImportClassified), targetFile, strings.Join(keywords, ", ")))
+	cmd.Println(fmt.Sprintf(desc.Text(text.DescKeyWriteImportClassified), targetFile, strings.Join(keywords, token.CommaSpace)))
 	cmd.Println()
 }
 
@@ -144,7 +145,7 @@ func Summary(cmd *cobra.Command, result entity.ImportResult, dryRun bool) {
 			desc.Text(text.DescKeyImportCountTask), result.Tasks))
 	}
 	if len(parts) > 0 {
-		summary += fmt.Sprintf(" (%s)", strings.Join(parts, ", "))
+		summary += fmt.Sprintf(desc.Text(text.DescKeyWriteImportBreakdown), strings.Join(parts, token.CommaSpace))
 	}
 	cmd.Println(summary)
 

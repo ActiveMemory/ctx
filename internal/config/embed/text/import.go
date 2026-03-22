@@ -15,6 +15,7 @@ const (
 
 const (
 	DescKeyWriteImportAdded          = "write.import-added"
+	DescKeyWriteImportBreakdown      = "write.import-breakdown"
 	DescKeyWriteImportClassified     = "write.import-classified"
 	DescKeyWriteImportClassifiedSkip = "write.import-classified-skip"
 	DescKeyWriteImportDuplicates     = "write.import-duplicates"
