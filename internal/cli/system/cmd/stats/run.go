@@ -13,6 +13,7 @@ import (
 	"github.com/spf13/cobra"
 
 	"github.com/ActiveMemory/ctx/internal/cli/system/core"
+	cFlag "github.com/ActiveMemory/ctx/internal/config/flag"
 	"github.com/ActiveMemory/ctx/internal/rc"
 	writeStats "github.com/ActiveMemory/ctx/internal/write/stat"
 )
@@ -27,10 +28,10 @@ import (
 // Returns:
 //   - error: Non-nil on stats directory read failure
 func Run(cmd *cobra.Command) error {
-	follow, _ := cmd.Flags().GetBool("follow")
-	session, _ := cmd.Flags().GetString("session")
-	last, _ := cmd.Flags().GetInt("last")
-	jsonOut, _ := cmd.Flags().GetBool("json")
+	follow, _ := cmd.Flags().GetBool(cFlag.Follow)
+	session, _ := cmd.Flags().GetString(cFlag.Session)
+	last, _ := cmd.Flags().GetInt(cFlag.Last)
+	jsonOut, _ := cmd.Flags().GetBool(cFlag.JSON)
 
 	dir := filepath.Join(rc.ContextDir(), dir.State)
 

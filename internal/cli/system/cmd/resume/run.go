@@ -13,6 +13,7 @@ import (
 	"github.com/spf13/cobra"
 
 	"github.com/ActiveMemory/ctx/internal/cli/system/core"
+	cFlag "github.com/ActiveMemory/ctx/internal/config/flag"
 	"github.com/ActiveMemory/ctx/internal/config/session"
 )
 
@@ -28,7 +29,7 @@ import (
 // Returns:
 //   - error: Always nil
 func Run(cmd *cobra.Command, stdin *os.File) error {
-	sessionID, _ := cmd.Flags().GetString("session-id")
+	sessionID, _ := cmd.Flags().GetString(cFlag.SessionID)
 	if sessionID == "" {
 		input := core.ReadInput(stdin)
 		sessionID = input.SessionID

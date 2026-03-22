@@ -12,6 +12,7 @@ import (
 	"github.com/ActiveMemory/ctx/internal/assets/read/desc"
 	"github.com/ActiveMemory/ctx/internal/config/embed/cmd"
 	"github.com/ActiveMemory/ctx/internal/config/embed/flag"
+	cFlag "github.com/ActiveMemory/ctx/internal/config/flag"
 	"github.com/spf13/cobra"
 )
 
@@ -32,7 +33,7 @@ func Cmd() *cobra.Command {
 		},
 	}
 
-	cmd.Flags().String("session-id", "",
+	cmd.Flags().String(cFlag.SessionID, "",
 		desc.Flag(flag.DescKeySystemResumeSessionId),
 	)
 
