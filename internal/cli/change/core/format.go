@@ -14,8 +14,14 @@ import (
 	"github.com/ActiveMemory/ctx/internal/config/embed/text"
 	cfgTime "github.com/ActiveMemory/ctx/internal/config/time"
 	"github.com/ActiveMemory/ctx/internal/config/token"
-	"github.com/ActiveMemory/ctx/internal/format"
 )
+
+func commitCount(n int) string {
+	if n == 1 {
+		return desc.Text(text.DescKeyTimeCommitCount)
+	}
+	return fmt.Sprintf(desc.Text(text.DescKeyTimeCommitsCount), n)
+}
 
 // RenderChanges renders the full CLI output for `ctx changes`.
 //
@@ -59,7 +65,7 @@ func RenderChanges(
 		)
 		b.WriteString(fmt.Sprintf(
 			desc.Text(text.DescKeyChangesCodeCommits)+token.NewlineLF,
-			format.Pluralize(code.CommitCount, desc.Text(text.DescKeyTimeCommit), desc.Text(text.DescKeyTimeCommits))))
+			commitCount(code.CommitCount)))
 		if code.LatestMsg != "" {
 			b.WriteString(fmt.Sprintf(
 				desc.Text(
@@ -117,7 +123,7 @@ func RenderChangesForHook(
 	if code.CommitCount > 0 {
 		msg := fmt.Sprintf(
 			desc.Text(text.DescKeyChangesHookCommits),
-			format.Pluralize(code.CommitCount, desc.Text(text.DescKeyTimeCommit), desc.Text(text.DescKeyTimeCommits)))
+			commitCount(code.CommitCount))
 		if code.LatestMsg != "" {
 			msg += fmt.Sprintf(
 				desc.Text(text.DescKeyChangesHookCommitsExtra), code.LatestMsg,
