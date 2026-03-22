@@ -10,6 +10,7 @@ import (
 	"github.com/spf13/cobra"
 
 	"github.com/ActiveMemory/ctx/internal/config/hook"
+	internalIo "github.com/ActiveMemory/ctx/internal/io"
 	"github.com/ActiveMemory/ctx/internal/log"
 	"github.com/ActiveMemory/ctx/internal/notify"
 	writeHook "github.com/ActiveMemory/ctx/internal/write/hook"
@@ -66,6 +67,6 @@ func EmitNudge(
 	ref := notify.NewTemplateRef(hookName, variant, vars)
 	NudgeAndRelay(hookName+": "+relayMessage, sessionID, ref)
 	if markerPath != "" {
-		TouchFile(markerPath)
+		internalIo.TouchFile(markerPath)
 	}
 }

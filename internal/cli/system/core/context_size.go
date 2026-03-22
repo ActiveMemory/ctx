@@ -189,7 +189,7 @@ func EmitBillingWarning(logFile, sessionID string, count, tokens, threshold int)
 		map[string]any{tpl.VarTokenCount: FormatTokenCount(tokens), tpl.VarThreshold: FormatTokenCount(threshold)}, fallback)
 	if content == "" {
 		LogMessage(logFile, sessionID, fmt.Sprintf(desc.Text(text.DescKeyCheckContextSizeSilencedBillingLog), count, tokens, threshold))
-		TouchFile(warnedFile) // silenced counts as fired
+		io.TouchFile(warnedFile) // silenced counts as fired
 		return ""
 	}
 
@@ -198,7 +198,7 @@ func EmitBillingWarning(logFile, sessionID string, count, tokens, threshold int)
 		desc.Text(text.DescKeyCheckContextSizeBillingBoxTitle),
 		content)
 
-	TouchFile(warnedFile) // one-shot: mark as fired
+	io.TouchFile(warnedFile) // one-shot: mark as fired
 	LogMessage(logFile, sessionID, fmt.Sprintf(desc.Text(text.DescKeyCheckContextSizeBillingLogFormat), count, tokens, threshold))
 	ref := notify.NewTemplateRef(hook.CheckContextSize, hook.VariantBilling,
 		map[string]any{tpl.VarTokenCount: FormatTokenCount(tokens), tpl.VarThreshold: FormatTokenCount(threshold)})

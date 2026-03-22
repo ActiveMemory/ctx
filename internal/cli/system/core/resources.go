@@ -21,7 +21,7 @@ import (
 )
 
 // PctOf calculates the percentage of used relative to total.
-// Returns 0 when total is zero to avoid division by zero.
+// Returns 0 when the total is zero to avoid division by zero.
 //
 // Parameters:
 //   - used: the consumed amount
@@ -135,7 +135,9 @@ func FormatResourcesText(snap sysinfo.Snapshot, alerts []sysinfo.ResourceAlert) 
 		values := fmt.Sprintf(resourceValueFormat(),
 			sysinfo.FormatGiB(e.used), sysinfo.FormatGiB(e.total), pct)
 		sev := SeverityFor(alerts, e.resource)
-		lines = append(lines, FormatResourceLine(desc.Text(e.labelKey), values, StatusText(sev)))
+		lines = append(
+			lines,
+			FormatResourceLine(desc.Text(e.labelKey), values, StatusText(sev)))
 	}
 
 	// Load line
@@ -148,7 +150,12 @@ func FormatResourcesText(snap sysinfo.Snapshot, alerts []sysinfo.ResourceAlert) 
 			snap.Load.Load1, snap.Load.Load5, snap.Load.Load15,
 			snap.Load.NumCPU, ratio)
 		sev := SeverityFor(alerts, sysinfo.ResourceLoad)
-		lines = append(lines, FormatResourceLine(desc.Text(text.DescKeyResourcesLabelLoad), values, StatusText(sev)))
+		lines = append(
+			lines,
+			FormatResourceLine(
+				desc.Text(text.DescKeyResourcesLabelLoad), values, StatusText(sev),
+			),
+		)
 	}
 
 	// Summary
@@ -159,9 +166,15 @@ func FormatResourcesText(snap sysinfo.Snapshot, alerts []sysinfo.ResourceAlert) 
 		lines = append(lines, desc.Text(text.DescKeyResourcesAlerts))
 		for _, a := range alerts {
 			if a.Severity == sysinfo.SeverityDanger {
-				lines = append(lines, fmt.Sprintf(desc.Text(text.DescKeyResourcesAlertDanger), a.Message))
+				lines = append(
+					lines,
+					fmt.Sprintf(desc.Text(text.DescKeyResourcesAlertDanger), a.Message),
+				)
 			} else {
-				lines = append(lines, fmt.Sprintf(desc.Text(text.DescKeyResourcesAlertWarning), a.Message))
+				lines = append(
+					lines,
+					fmt.Sprintf(desc.Text(text.DescKeyResourcesAlertWarning), a.Message),
+				)
 			}
 		}
 	}
@@ -178,7 +191,9 @@ func FormatResourcesText(snap sysinfo.Snapshot, alerts []sysinfo.ResourceAlert) 
 //
 // Returns:
 //   - error: Non-nil on JSON encoding failure
-func OutputResourcesJSON(cmd *cobra.Command, snap sysinfo.Snapshot, alerts []sysinfo.ResourceAlert) error {
+func OutputResourcesJSON(
+	cmd *cobra.Command, snap sysinfo.Snapshot, alerts []sysinfo.ResourceAlert,
+) error {
 	out := ResourceJSONOutput{}
 
 	out.Memory.TotalBytes = snap.Memory.TotalBytes
@@ -201,6 +216,7 @@ func OutputResourcesJSON(cmd *cobra.Command, snap sysinfo.Snapshot, alerts []sys
 	out.Load.Load5 = snap.Load.Load5
 	out.Load.Load15 = snap.Load.Load15
 	out.Load.NumCPU = snap.Load.NumCPU
+
 	if snap.Load.NumCPU > 0 {
 		out.Load.Ratio = snap.Load.Load1 / float64(snap.Load.NumCPU)
 	}

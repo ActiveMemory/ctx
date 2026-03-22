@@ -10,13 +10,13 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/ActiveMemory/ctx/internal/assets/read/desc"
-	"github.com/ActiveMemory/ctx/internal/config/embed/text"
-	"github.com/ActiveMemory/ctx/internal/config/hook"
-	ctxcontext "github.com/ActiveMemory/ctx/internal/context/resolve"
 	"github.com/spf13/cobra"
 
+	"github.com/ActiveMemory/ctx/internal/assets/read/desc"
 	"github.com/ActiveMemory/ctx/internal/cli/system/core"
+	"github.com/ActiveMemory/ctx/internal/config/embed/text"
+	"github.com/ActiveMemory/ctx/internal/config/hook"
+	ctxContext "github.com/ActiveMemory/ctx/internal/context/resolve"
 	"github.com/ActiveMemory/ctx/internal/notify"
 	writeHook "github.com/ActiveMemory/ctx/internal/write/hook"
 )
@@ -48,7 +48,7 @@ func Run(cmd *cobra.Command, stdin *os.File) error {
 	if msg == "" {
 		return nil
 	}
-	msg = ctxcontext.AppendDir(msg)
+	msg = ctxContext.AppendDir(msg)
 	writeHook.HookContext(cmd, core.FormatHookContext(hook.EventPreToolUse, msg))
 	nudgeMsg := desc.Text(text.DescKeySpecsNudgeNudgeMessage)
 	ref := notify.NewTemplateRef(hook.SpecsNudge, hook.VariantNudge, nil)
