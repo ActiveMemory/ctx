@@ -7,6 +7,7 @@
 package text
 
 const (
+	DescKeyWriteStatusEmpty          = "write.status-empty"
 	DescKeyWriteStatusActivityHeader = "write.status-activity-header"
 	DescKeyWriteStatusActivityItem   = "write.status-activity-item"
 	DescKeyWriteStatusDrift          = "write.status-drift"

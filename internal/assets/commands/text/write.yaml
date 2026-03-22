@@ -507,6 +507,8 @@ write.snapshot-updated:
   short: 'Updated golden image: %s'
 write.source:
   short: '  Source: %s'
+write.status-empty:
+  short: empty
 write.status-activity-header:
   short: 'Recent Activity:'
 write.status-activity-item:

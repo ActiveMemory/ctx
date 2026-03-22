@@ -10,9 +10,10 @@ import (
 	"fmt"
 	"path/filepath"
 
+	"github.com/spf13/cobra"
+
 	"github.com/ActiveMemory/ctx/internal/assets/read/desc"
 	"github.com/ActiveMemory/ctx/internal/config/embed/text"
-	"github.com/spf13/cobra"
 )
 
 // InfoPathConversionExists reports that a pad export target already
@@ -31,7 +32,10 @@ func InfoPathConversionExists(
 	}
 	cmd.Println(
 		fmt.Sprintf(
-			desc.Text(text.DescKeyWritePathExists), oldPath, filepath.Join(rootDir, newPath),
+			desc.Text(
+				text.DescKeyWritePathExists),
+			oldPath,
+			filepath.Join(rootDir, newPath),
 		),
 	)
 }

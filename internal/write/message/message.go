@@ -15,6 +15,7 @@ import (
 	"github.com/ActiveMemory/ctx/internal/assets/read/desc"
 	"github.com/ActiveMemory/ctx/internal/config/embed/text"
 	"github.com/ActiveMemory/ctx/internal/config/msg"
+	"github.com/ActiveMemory/ctx/internal/config/token"
 )
 
 // TemplateVars prints a formatted template variables line.
@@ -152,10 +153,10 @@ func ListHeader(cmd *cobra.Command) {
 		desc.Text(text.DescKeyMessageListHeaderCategory),
 		desc.Text(text.DescKeyMessageListHeaderOverride)))
 	cmd.Println(fmt.Sprintf(msg.MessageListFormat,
-		strings.Repeat("\u2500", msg.MessageSepHook),
-		strings.Repeat("\u2500", msg.MessageSepVariant),
-		strings.Repeat("\u2500", msg.MessageSepCategory),
-		strings.Repeat("\u2500", msg.MessageSepOverride)))
+		strings.Repeat(token.LineHorizontal, msg.MessageSepHook),
+		strings.Repeat(token.LineHorizontal, msg.MessageSepVariant),
+		strings.Repeat(token.LineHorizontal, msg.MessageSepCategory),
+		strings.Repeat(token.LineHorizontal, msg.MessageSepOverride)))
 }
 
 // ListRow prints a single message list table row. Nil cmd is a no-op.

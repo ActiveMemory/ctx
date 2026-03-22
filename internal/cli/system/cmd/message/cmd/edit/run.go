@@ -17,7 +17,7 @@ import (
 	"github.com/ActiveMemory/ctx/internal/cli/system/core"
 	"github.com/ActiveMemory/ctx/internal/config/file"
 	"github.com/ActiveMemory/ctx/internal/err/fs"
-	ctxerr "github.com/ActiveMemory/ctx/internal/err/hook"
+	errHook "github.com/ActiveMemory/ctx/internal/err/hook"
 	writeMessage "github.com/ActiveMemory/ctx/internal/write/message"
 )
 
@@ -40,7 +40,7 @@ func Run(cmd *cobra.Command, hk, variant string) error {
 	oPath := core.OverridePath(hk, variant)
 
 	if _, statErr := os.Stat(oPath); statErr == nil {
-		return ctxerr.OverrideExists(oPath, hk, variant)
+		return errHook.OverrideExists(oPath, hk, variant)
 	}
 
 	if info.Category == messages.CategoryCtxSpecific {
@@ -49,7 +49,7 @@ func Run(cmd *cobra.Command, hk, variant string) error {
 
 	data, readErr := hook.Message(hk, variant+file.ExtTxt)
 	if readErr != nil {
-		return ctxerr.EmbeddedTemplateNotFound(hk, variant)
+		return errHook.EmbeddedTemplateNotFound(hk, variant)
 	}
 
 	dir := filepath.Dir(oPath)
@@ -58,7 +58,7 @@ func Run(cmd *cobra.Command, hk, variant string) error {
 	}
 
 	if writeErr := os.WriteFile(oPath, data, 0o600); writeErr != nil {
-		return ctxerr.WriteOverride(oPath, writeErr)
+		return errHook.WriteOverride(oPath, writeErr)
 	}
 
 	writeMessage.OverrideCreated(cmd, oPath)

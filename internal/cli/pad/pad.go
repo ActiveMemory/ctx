@@ -47,7 +47,7 @@ func Cmd() *cobra.Command {
 			}
 
 			if len(entries) == 0 {
-				pad.PadEmpty(cmd)
+				pad.Empty(cmd)
 				return nil
 			}
 
