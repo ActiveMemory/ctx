@@ -10,12 +10,12 @@ import (
 	"encoding/json"
 	"time"
 
-	ctxtime "github.com/ActiveMemory/ctx/internal/config/time"
-	"github.com/ActiveMemory/ctx/internal/write/status"
 	"github.com/spf13/cobra"
 
+	cfgTime "github.com/ActiveMemory/ctx/internal/config/time"
 	"github.com/ActiveMemory/ctx/internal/entity"
 	"github.com/ActiveMemory/ctx/internal/format"
+	"github.com/ActiveMemory/ctx/internal/write/status"
 )
 
 // PersistStatusJSON writes context status as JSON to the command output.
@@ -103,7 +103,7 @@ func PersistStatusText(
 		d := time.Since(f.ModTime)
 		entries[i] = status.StatusActivityInfo{
 			Name: f.Name,
-			Ago:  format.TimeAgo(d.Hours(), int(d.Minutes()), f.ModTime.Format(ctxtime.OlderFormat)),
+			Ago:  format.TimeAgo(d.Hours(), int(d.Minutes()), f.ModTime.Format(cfgTime.OlderFormat)),
 		}
 	}
 	status.StatusActivity(cmd, entries)
