@@ -70,8 +70,8 @@ func (p *ClaudeCodeParser) buildSession(
 			if s.FirstUserMsg == "" && msg.Text != "" {
 				// Truncate preview
 				preview := msg.Text
-				if len(preview) > 100 {
-					preview = preview[:100] + token.Ellipsis
+				if len(preview) > session.PreviewMaxLen {
+					preview = preview[:session.PreviewMaxLen] + token.Ellipsis
 				}
 				s.FirstUserMsg = preview
 			}
@@ -262,7 +262,7 @@ func (p *MarkdownSessionParser) parseMarkdownSession(
 
 	if len(bodyParts) > 0 {
 		messages = append(messages, Message{
-			ID:        sessionID + "-summary",
+			ID:        sessionID + session.IDSuffixSummary,
 			Timestamp: startTime,
 			Role:      claude.RoleAssistant,
 			Text:      strings.Join(bodyParts, token.NewlineLF+token.NewlineLF),
@@ -273,7 +273,7 @@ func (p *MarkdownSessionParser) parseMarkdownSession(
 	if topic != "" {
 		turnCount = 1
 		messages = append([]Message{{
-			ID:        sessionID + "-topic",
+			ID:        sessionID + session.IDSuffixTopic,
 			Timestamp: startTime,
 			Role:      claude.RoleUser,
 			Text:      topic,
@@ -322,7 +322,7 @@ func parseSessionHeader(line string) (string, string) {
 	// Remove "# " prefix
 	rest := strings.TrimPrefix(line, token.HeadingLevelOneStart)
 
-	// Remove session prefix if present (e.g., "Session: ")
+	// Remove the session prefix if present (e.g., "Session: ")
 	for _, prefix := range rc.SessionPrefixes() {
 		rest = strings.TrimPrefix(rest, prefix+token.Space)
 		rest = strings.TrimPrefix(rest, prefix)

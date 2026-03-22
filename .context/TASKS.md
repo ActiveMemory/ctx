@@ -23,6 +23,8 @@ The `validation` package has `SanitizeFilename` and `ValidateBoundary`
 but nothing for content or argument sanitization. `entry.Validate` only
 checks field presence, not content safety.
 
+- [ ] Scan all config/**/* constants and catalog which ones should be ctxrc entries for user configurability #priority:medium #added:2026-03-22-095552
+
 - [ ] Sanitize session IDs before using in file paths #added:2026-03-21-103412
 
 - [ ] Update user-facing documentation for changed CLI flag shorthands #added:2026-03-21-102755

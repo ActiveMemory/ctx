@@ -68,7 +68,7 @@ func EditHint(cmd *cobra.Command) {
 	cmd.Println(desc.Text(text.DescKeyMessageEditHint))
 }
 
-// SourceOverride prints the override source header with file path.
+// SourceOverride prints the override source header with the file path.
 // Nil cmd is a no-op.
 //
 // Parameters:

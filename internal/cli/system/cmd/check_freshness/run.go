@@ -22,9 +22,7 @@ import (
 	"github.com/ActiveMemory/ctx/internal/config/hook"
 	"github.com/ActiveMemory/ctx/internal/config/token"
 	"github.com/ActiveMemory/ctx/internal/config/tpl"
-	"github.com/ActiveMemory/ctx/internal/notify"
 	"github.com/ActiveMemory/ctx/internal/rc"
-	writeHook "github.com/ActiveMemory/ctx/internal/write/hook"
 )
 
 // Run executes the check-freshness hook logic.
@@ -100,18 +98,12 @@ func Run(cmd *cobra.Command, stdin *os.File) error {
 		return nil
 	}
 
-	writeHook.Nudge(cmd, core.NudgeBox(
+	core.EmitNudge(cmd, content,
 		desc.Text(text.DescKeyFreshnessRelayPrefix),
 		desc.Text(text.DescKeyFreshnessBoxTitle),
-		content))
-
-	ref := notify.NewTemplateRef(hook.CheckFreshness, hook.VariantStale, vars)
-	core.NudgeAndRelay(hook.CheckFreshness+": "+
+		hook.CheckFreshness, hook.VariantStale,
 		desc.Text(text.DescKeyFreshnessRelayMessage),
-		input.SessionID, ref,
-	)
-
-	core.TouchFile(throttleFile)
+		input.SessionID, vars, throttleFile)
 
 	return nil
 }
