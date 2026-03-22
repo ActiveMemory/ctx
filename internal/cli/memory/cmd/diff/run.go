@@ -44,6 +44,6 @@ func Run(cmd *cobra.Command) error {
 		return nil
 	}
 
-	cmd.Print(diff)
+	memory.DiffOutput(cmd, diff)
 	return nil
 }

@@ -32,3 +32,39 @@ func InfoSkillsHeader(cmd *cobra.Command) {
 func InfoSkillLine(cmd *cobra.Command, name, description string) {
 	cmd.Println(fmt.Sprintf(desc.Text(text.DescKeyWriteSkillLine), name, description))
 }
+
+// CommandsHeader prints the commands list heading.
+//
+// Parameters:
+//   - cmd: Cobra command for output. Nil is a no-op.
+func CommandsHeader(cmd *cobra.Command) {
+	if cmd == nil {
+		return
+	}
+	cmd.Println(desc.Text(text.DescKeyGuideCommandsHead))
+	cmd.Println()
+}
+
+// CommandLine prints a single command entry.
+//
+// Parameters:
+//   - cmd: Cobra command for output. Nil is a no-op.
+//   - name: Command name.
+//   - short: Short description.
+func CommandLine(cmd *cobra.Command, name, short string) {
+	if cmd == nil {
+		return
+	}
+	cmd.Println(fmt.Sprintf(desc.Text(text.DescKeyGuideCommandLine), name, short))
+}
+
+// Default prints the default guide text.
+//
+// Parameters:
+//   - cmd: Cobra command for output. Nil is a no-op.
+func Default(cmd *cobra.Command) {
+	if cmd == nil {
+		return
+	}
+	cmd.Print(desc.Text(text.DescKeyGuideDefault))
+}

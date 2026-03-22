@@ -245,3 +245,16 @@ func SkippedDir(cmd *cobra.Command, dir string) {
 func CreatedDir(cmd *cobra.Command, dir string) {
 	cmd.Println(fmt.Sprintf(desc.Text(text.DescKeyWriteInitCreatedDir), dir))
 }
+
+// MergePrompt prints a merge confirmation prompt with [y/N] suffix.
+//
+// Parameters:
+//   - cmd: Cobra command for output. Nil is a no-op.
+//   - prompt: The confirmation prompt text.
+func MergePrompt(cmd *cobra.Command, prompt string) {
+	if cmd == nil {
+		return
+	}
+	cmd.Println(prompt)
+	cmd.Print(desc.Text(text.DescKeyConfirmProceed))
+}

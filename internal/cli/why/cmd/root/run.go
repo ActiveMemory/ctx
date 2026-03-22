@@ -38,7 +38,7 @@ func Run(cmd *cobra.Command, args []string) error {
 // showMenu presents a numbered menu and reads user selection from stdin.
 func showMenu(cmd *cobra.Command) error {
 	why.Banner(cmd)
-	cmd.Println()
+	why.Separator(cmd)
 	for i, doc := range DocOrder {
 		why.MenuItem(cmd, i+1, doc.Label)
 	}
@@ -56,7 +56,7 @@ func showMenu(cmd *cobra.Command) error {
 		return errcli.InvalidSelection(input, len(DocOrder))
 	}
 
-	cmd.Println()
+	why.Separator(cmd)
 	return ShowDoc(cmd, DocOrder[choice-1].Alias)
 }
 
@@ -80,7 +80,7 @@ func ShowDoc(cmd *cobra.Command, alias string) error {
 	}
 
 	cleaned := StripMkDocs(string(content))
-	cmd.Print(cleaned)
+	why.Content(cmd, cleaned)
 
 	return nil
 }

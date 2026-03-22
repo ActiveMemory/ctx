@@ -59,7 +59,7 @@ func Run(cmd *cobra.Command) error {
 		writeMem.LastSyncNever(cmd)
 	}
 
-	cmd.Println()
+	writeMem.StatusSeparator(cmd)
 
 	// Source line count
 	hasDrift := mem.HasDrift(contextDir, sourcePath)

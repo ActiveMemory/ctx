@@ -7,12 +7,9 @@
 package root
 
 import (
-	"fmt"
-
 	"github.com/spf13/cobra"
 
-	"github.com/ActiveMemory/ctx/internal/assets/read/desc"
-	"github.com/ActiveMemory/ctx/internal/config/embed/text"
+	"github.com/ActiveMemory/ctx/internal/write/guide"
 )
 
 // listCommands prints all non-hidden subcommands from the root.
@@ -24,14 +21,12 @@ import (
 //   - error: Always nil
 func listCommands(cmd *cobra.Command) error {
 	root := cmd.Root()
-	cmd.Println(desc.Text(text.DescKeyGuideCommandsHead))
-	cmd.Println()
+	guide.CommandsHeader(cmd)
 	for _, c := range root.Commands() {
 		if c.Hidden {
 			continue
 		}
-		cmd.Println(fmt.Sprintf(
-			desc.Text(text.DescKeyGuideCommandLine), c.Name(), c.Short))
+		guide.CommandLine(cmd, c.Name(), c.Short)
 	}
 	return nil
 }

@@ -169,3 +169,26 @@ func Archives(cmd *cobra.Command, count int, dir string) {
 	}
 	cmd.Println(fmt.Sprintf(desc.Text(text.DescKeyWriteMemoryArchives), count, dir))
 }
+
+// DiffOutput prints diff content to stdout.
+//
+// Parameters:
+//   - cmd: Cobra command for output. Nil is a no-op.
+//   - diff: The diff text to print.
+func DiffOutput(cmd *cobra.Command, diff string) {
+	if cmd == nil {
+		return
+	}
+	cmd.Print(diff)
+}
+
+// StatusSeparator prints a blank line for visual separation in status output.
+//
+// Parameters:
+//   - cmd: Cobra command for output. Nil is a no-op.
+func StatusSeparator(cmd *cobra.Command) {
+	if cmd == nil {
+		return
+	}
+	cmd.Println()
+}

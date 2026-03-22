@@ -110,3 +110,14 @@ func ApplySuccess(cmd *cobra.Command, updateType, content string) {
 		desc.Text(text.DescKeyWatchApplySuccess), updateType, content),
 	)
 }
+
+// Separator prints a blank line for visual separation.
+//
+// Parameters:
+//   - cmd: Cobra command for output. Nil is a no-op.
+func Separator(cmd *cobra.Command) {
+	if cmd == nil {
+		return
+	}
+	cmd.Println()
+}

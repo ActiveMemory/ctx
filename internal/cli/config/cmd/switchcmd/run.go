@@ -12,6 +12,7 @@ import (
 	"github.com/ActiveMemory/ctx/internal/cli/config/core"
 	"github.com/ActiveMemory/ctx/internal/config/file"
 	ctxErr "github.com/ActiveMemory/ctx/internal/err/config"
+	writeConfig "github.com/ActiveMemory/ctx/internal/write/config"
 )
 
 // Run executes the profile switch logic.
@@ -56,6 +57,6 @@ func Run(cmd *cobra.Command, root string, args []string) error {
 	if switchErr != nil {
 		return switchErr
 	}
-	cmd.Println(msg)
+	writeConfig.SwitchConfirm(cmd, msg)
 	return nil
 }

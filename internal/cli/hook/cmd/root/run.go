@@ -58,12 +58,12 @@ func Run(cmd *cobra.Command, args []string, writeFile bool) error {
 			return WriteCopilotInstructions(cmd)
 		}
 		hook.InfoTool(cmd, desc.Text(text.DescKeyHookCopilot))
-		cmd.Println()
+		hook.Separator(cmd)
 		content, readErr := agent.CopilotInstructions()
 		if readErr != nil {
 			return readErr
 		}
-		cmd.Print(string(content))
+		hook.Content(cmd, string(content))
 
 	case hookCfg.ToolWindsurf:
 		hook.InfoTool(cmd, desc.Text(text.DescKeyHookWindsurf))

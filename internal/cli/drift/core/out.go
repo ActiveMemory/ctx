@@ -17,6 +17,7 @@ import (
 	"github.com/ActiveMemory/ctx/internal/config/embed/text"
 	"github.com/ActiveMemory/ctx/internal/drift"
 	errdrift "github.com/ActiveMemory/ctx/internal/err/drift"
+	writeDrift "github.com/ActiveMemory/ctx/internal/write/drift"
 )
 
 // OutputDriftText writes the drift report as formatted text with icons.
@@ -31,17 +32,11 @@ import (
 // Returns:
 //   - error: Non-nil if violations were detected
 func OutputDriftText(cmd *cobra.Command, report *drift.Report) error {
-	cmd.Println(desc.Text(text.DescKeyDriftReportHeading))
-	cmd.Println(desc.Text(text.DescKeyDriftReportSeparator))
-	cmd.Println()
+	writeDrift.ReportHeader(cmd)
 
 	// Violations
 	if len(report.Violations) > 0 {
-		cmd.Println(fmt.Sprintf(
-			desc.Text(
-				text.DescKeyDriftViolationsHeading), len(report.Violations)),
-		)
-		cmd.Println()
+		writeDrift.ViolationsHeading(cmd, len(report.Violations))
 		for _, v := range report.Violations {
 			line := fmt.Sprintf(
 				desc.Text(text.DescKeyDriftViolationLine), v.File, v.Message,
@@ -57,16 +52,14 @@ func OutputDriftText(cmd *cobra.Command, report *drift.Report) error {
 					desc.Text(text.DescKeyDriftViolationRule), v.Rule,
 				)
 			}
-			cmd.Println(line)
+			writeDrift.ViolationLine(cmd, line)
 		}
-		cmd.Println()
+		writeDrift.BlankLine(cmd)
 	}
 
 	// Warnings
 	if len(report.Warnings) > 0 {
-		cmd.Println(fmt.Sprintf(
-			desc.Text(text.DescKeyDriftWarningsHeading), len(report.Warnings)))
-		cmd.Println()
+		writeDrift.WarningsHeading(cmd, len(report.Warnings))
 
 		// Group by type
 		var pathRefs []drift.Issue
@@ -85,57 +78,52 @@ func OutputDriftText(cmd *cobra.Command, report *drift.Report) error {
 		}
 
 		if len(pathRefs) > 0 {
-			cmd.Println(desc.Text(text.DescKeyDriftPathRefsLabel))
-			for _, w := range pathRefs {
-				cmd.Println(fmt.Sprintf(
-					desc.Text(text.DescKeyDriftPathRefLine), w.File, w.Line, w.Path))
+			items := make([]string, len(pathRefs))
+			for i, w := range pathRefs {
+				items[i] = fmt.Sprintf(
+					desc.Text(text.DescKeyDriftPathRefLine), w.File, w.Line, w.Path)
 			}
-			cmd.Println()
+			writeDrift.PathRefsBlock(cmd, items)
 		}
 
 		if len(staleness) > 0 {
-			cmd.Println(desc.Text(text.DescKeyDriftStalenessLabel))
-			for _, w := range staleness {
-				cmd.Println(fmt.Sprintf(
-					desc.Text(text.DescKeyDriftStalenessLine), w.File, w.Message))
+			items := make([]string, len(staleness))
+			for i, w := range staleness {
+				items[i] = fmt.Sprintf(
+					desc.Text(text.DescKeyDriftStalenessLine), w.File, w.Message)
 			}
-			cmd.Println()
+			writeDrift.StalenessBlock(cmd, items)
 		}
 
 		if len(other) > 0 {
-			cmd.Println(desc.Text(text.DescKeyDriftOtherLabel))
-			for _, w := range other {
-				cmd.Println(fmt.Sprintf(
-					desc.Text(text.DescKeyDriftOtherLine), w.File, w.Message))
+			items := make([]string, len(other))
+			for i, w := range other {
+				items[i] = fmt.Sprintf(
+					desc.Text(text.DescKeyDriftOtherLine), w.File, w.Message)
 			}
-			cmd.Println()
+			writeDrift.OtherBlock(cmd, items)
 		}
 	}
 
 	// Passed
 	if len(report.Passed) > 0 {
-		cmd.Println(fmt.Sprintf(
-			desc.Text(text.DescKeyDriftPassedHeading), len(report.Passed)))
+		writeDrift.PassedHeading(cmd, len(report.Passed))
 		for _, p := range report.Passed {
-			cmd.Println(fmt.Sprintf(
-				desc.Text(text.DescKeyDriftPassedLine), FormatCheckName(p)))
+			writeDrift.PassedLine(cmd, FormatCheckName(p))
 		}
-		cmd.Println()
+		writeDrift.BlankLine(cmd)
 	}
 
 	// Summary
 	status := report.Status()
 	switch status {
 	case drift.StatusViolation:
-		cmd.Println()
-		cmd.Println(desc.Text(text.DescKeyDriftStatusViolation))
+		writeDrift.StatusViolation(cmd)
 		return errdrift.Violations()
 	case drift.StatusWarning:
-		cmd.Println()
-		cmd.Println(desc.Text(text.DescKeyDriftStatusWarning))
+		writeDrift.StatusWarning(cmd)
 	default:
-		cmd.Println()
-		cmd.Println(desc.Text(text.DescKeyDriftStatusOK))
+		writeDrift.StatusOK(cmd)
 	}
 
 	return nil

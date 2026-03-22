@@ -53,7 +53,7 @@ func Run(cmd *cobra.Command, n int, outPath string) error {
 			pad.PadBlobWritten(cmd, len(data), outPath)
 			return nil
 		}
-		cmd.Print(string(data))
+		pad.ShowBlob(cmd, data)
 		return nil
 	}
 
@@ -61,6 +61,6 @@ func Run(cmd *cobra.Command, n int, outPath string) error {
 		return errPad.OutFlagRequiresBlob()
 	}
 
-	cmd.Println(entry)
+	pad.ShowEntry(cmd, entry)
 	return nil
 }

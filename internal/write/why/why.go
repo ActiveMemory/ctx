@@ -53,3 +53,26 @@ func MenuPrompt(cmd *cobra.Command) {
 	}
 	cmd.Print(desc.Text(text.DescKeyWhyMenuPrompt))
 }
+
+// Separator prints a blank line for visual separation.
+//
+// Parameters:
+//   - cmd: Cobra command for output. Nil is a no-op.
+func Separator(cmd *cobra.Command) {
+	if cmd == nil {
+		return
+	}
+	cmd.Println()
+}
+
+// Content prints document content to stdout.
+//
+// Parameters:
+//   - cmd: Cobra command for output. Nil is a no-op.
+//   - text: Pre-processed document text.
+func Content(cmd *cobra.Command, text string) {
+	if cmd == nil {
+		return
+	}
+	cmd.Print(text)
+}
