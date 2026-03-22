@@ -13,7 +13,9 @@ import (
 	"os/exec"
 	"path/filepath"
 
+	"github.com/ActiveMemory/ctx/internal/assets/read/desc"
 	"github.com/ActiveMemory/ctx/internal/config/archive"
+	"github.com/ActiveMemory/ctx/internal/config/embed/text"
 	"github.com/ActiveMemory/ctx/internal/config/fs"
 	ctxerr "github.com/ActiveMemory/ctx/internal/err/backup"
 	fserr "github.com/ActiveMemory/ctx/internal/err/fs"
@@ -58,7 +60,7 @@ func ParseSMBConfig(smbURL, subdir string) (*SMBConfig, error) {
 		subdir = archive.BackupDefaultSubdir
 	}
 
-	gvfsPath := fmt.Sprintf("/run/user/%d/gvfs/smb-share:server=%s,share=%s",
+	gvfsPath := fmt.Sprintf(desc.Text(text.DescKeyWriteFormatGVFSPath),
 		os.Getuid(), host, share)
 
 	return &SMBConfig{

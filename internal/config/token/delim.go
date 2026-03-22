@@ -6,8 +6,19 @@
 
 package token
 
-const emDash = "—"
+// EmDash is the em dash character used as a metadata separator.
+const EmDash = "—"
+
 const enDash = "-"
+
+// MiddleDot is the middle dot character used as a metadata item separator.
+const MiddleDot = "·"
+
+// MetaSeparator is the em dash separator with surrounding spaces.
+const MetaSeparator = " " + EmDash + " "
+
+// MetaJoin is the middle dot separator with surrounding spaces.
+const MetaJoin = " " + MiddleDot + " "
 
 const (
 	// Colon is the colon character used as a key-value separator.
@@ -32,4 +43,4 @@ const (
 
 // TopicSeparators are the delimiters between a date and topic in session
 // headers (e.g., "2026-01-15 - Fix API").
-var TopicSeparators = []string{" " + emDash + " ", " " + enDash + " "}
+var TopicSeparators = []string{MetaSeparator, " " + enDash + " "}

@@ -15,6 +15,12 @@ const (
 	ResourcesLabelWidth = 7
 )
 
+// Resources formatting patterns.
+const (
+	// FormatGiB is the precision format for GiB values.
+	FormatGiB = "%.1f"
+)
+
 // Stats command defaults.
 const (
 	// DefaultLast is the default number of stats entries to display.

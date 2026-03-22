@@ -7,7 +7,10 @@
 package text
 
 const (
+	DescKeyWriteFormatBytesRaw        = "write.format-bytes-raw"
+	DescKeyWriteFormatBytesUnit       = "write.format-bytes-unit"
 	DescKeyWriteFormatBytes           = "write.format-bytes"
+	DescKeyWriteFormatGVFSPath        = "write.format-gvfs-path"
 	DescKeyWriteFormatDurationDay     = "write.format-duration-day"
 	DescKeyWriteFormatDurationHour    = "write.format-duration-hour"
 	DescKeyWriteFormatDurationHourMin = "write.format-duration-hour-min"
@@ -21,4 +24,9 @@ const (
 	DescKeyWriteFormatSIKiloUpper     = "write.format-si-kilo-upper"
 	DescKeyWriteFormatSIMegaUpper     = "write.format-si-mega-upper"
 	DescKeyWriteFormatThousands       = "write.format-thousands"
+)
+
+const (
+	DescKeyWriteBackupSkipEntry  = "write.backup-skip-entry"
+	DescKeyWriteWikilinkListItem = "write.wikilink-list-item"
 )
