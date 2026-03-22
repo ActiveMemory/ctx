@@ -15,9 +15,7 @@ import (
 
 	"github.com/spf13/cobra"
 
-	"github.com/ActiveMemory/ctx/internal/assets/read/desc"
 	"github.com/ActiveMemory/ctx/internal/config/cli"
-	"github.com/ActiveMemory/ctx/internal/config/embed/text"
 	"github.com/ActiveMemory/ctx/internal/config/file"
 	"github.com/ActiveMemory/ctx/internal/config/fs"
 	"github.com/ActiveMemory/ctx/internal/config/token"
@@ -82,8 +80,7 @@ func CreateOrMerge(cmd *cobra.Command, p MergeParams) (bool, error) {
 
 	if !p.AutoMerge {
 		initialize.FileExistsNoCtx(cmd, p.Filename)
-		cmd.Println(p.ConfirmPrompt)
-		cmd.Print(desc.Text(text.DescKeyConfirmProceed))
+		initialize.MergePrompt(cmd, p.ConfirmPrompt)
 		reader := bufio.NewReader(os.Stdin)
 		response, inputErr := reader.ReadString(token.NewlineLF[0])
 		if inputErr != nil {

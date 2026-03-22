@@ -136,3 +136,26 @@ func InfoCopilotSummary(cmd *cobra.Command) {
 func InfoUnknownTool(cmd *cobra.Command, tool string) {
 	cmd.Println(fmt.Sprintf(desc.Text(text.DescKeyWriteHookUnknownTool), tool))
 }
+
+// Separator prints a blank line between hook output sections.
+//
+// Parameters:
+//   - cmd: Cobra command for output. Nil is a no-op.
+func Separator(cmd *cobra.Command) {
+	if cmd == nil {
+		return
+	}
+	cmd.Println()
+}
+
+// Content prints raw hook content to stdout.
+//
+// Parameters:
+//   - cmd: Cobra command for output. Nil is a no-op.
+//   - content: Pre-rendered content string.
+func Content(cmd *cobra.Command, content string) {
+	if cmd == nil {
+		return
+	}
+	cmd.Print(content)
+}

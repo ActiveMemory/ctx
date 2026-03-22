@@ -127,6 +127,17 @@ func Aborted(cmd *cobra.Command) {
 	cmd.Println(desc.Text(text.DescKeyWriteRecallAborted))
 }
 
+// ConfirmPrompt prints the [y/N] confirmation prompt.
+//
+// Parameters:
+//   - cmd: Cobra command for output. Nil is a no-op.
+func ConfirmPrompt(cmd *cobra.Command) {
+	if cmd == nil {
+		return
+	}
+	cmd.Print(desc.Text(text.DescKeyConfirmProceed))
+}
+
 // ExportFinalSummary prints the final export summary with counts.
 //
 // Parameters:

@@ -16,6 +16,7 @@ import (
 	"github.com/ActiveMemory/ctx/internal/err/fs"
 	ctxErr "github.com/ActiveMemory/ctx/internal/err/prompt"
 	"github.com/ActiveMemory/ctx/internal/io"
+	writePrompt "github.com/ActiveMemory/ctx/internal/write/prompt"
 )
 
 // Run reads and prints a prompt template by name.
@@ -37,6 +38,6 @@ func Run(cmd *cobra.Command, name string) error {
 		return fs.ReadFile(readErr)
 	}
 
-	cmd.Print(string(content))
+	writePrompt.ShowContent(cmd, content)
 	return nil
 }

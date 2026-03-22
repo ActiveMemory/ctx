@@ -277,6 +277,42 @@ func mergeSkipped(cmd *cobra.Command, dupes int) {
 	}
 }
 
+// ShowBlob prints raw blob data to stdout.
+//
+// Parameters:
+//   - cmd: Cobra command for output. Nil is a no-op.
+//   - data: Raw blob bytes.
+func ShowBlob(cmd *cobra.Command, data []byte) {
+	if cmd == nil {
+		return
+	}
+	cmd.Print(string(data))
+}
+
+// ShowEntry prints a pad entry with a trailing newline.
+//
+// Parameters:
+//   - cmd: Cobra command for output. Nil is a no-op.
+//   - entry: Entry text.
+func ShowEntry(cmd *cobra.Command, entry string) {
+	if cmd == nil {
+		return
+	}
+	cmd.Println(entry)
+}
+
+// ListEntry prints a formatted pad list item.
+//
+// Parameters:
+//   - cmd: Cobra command for output. Nil is a no-op.
+//   - line: Pre-formatted list item string.
+func ListEntry(cmd *cobra.Command, line string) {
+	if cmd == nil {
+		return
+	}
+	cmd.Println(line)
+}
+
 // PadExportSummary prints the export summary or "no blobs" message.
 //
 // Parameters:

@@ -66,11 +66,11 @@ func Run(cmd *cobra.Command, format string, external bool, projType string) erro
 
 	switch format {
 	case fmt.FormatMermaid:
-		cmd.Print(core.RenderMermaid(graph))
+		deps.Mermaid(cmd, core.RenderMermaid(graph))
 	case fmt.FormatTable:
-		cmd.Print(core.RenderTable(graph))
+		deps.Table(cmd, core.RenderTable(graph))
 	default:
-		cmd.Print(core.RenderJSON(graph))
+		deps.JSON(cmd, core.RenderJSON(graph))
 	}
 
 	return nil

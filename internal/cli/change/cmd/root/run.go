@@ -11,6 +11,7 @@ import (
 
 	"github.com/ActiveMemory/ctx/internal/cli/change/core"
 	ctxErr "github.com/ActiveMemory/ctx/internal/err/initialize"
+	writeChange "github.com/ActiveMemory/ctx/internal/write/change"
 )
 
 // Run executes the changes command logic.
@@ -33,6 +34,6 @@ func Run(cmd *cobra.Command, since string) error {
 	ctxChanges, _ := core.FindContextChanges(refTime)
 	codeChanges, _ := core.SummarizeCodeChanges(refTime)
 
-	cmd.Print(core.RenderChanges(refLabel, ctxChanges, codeChanges))
+	writeChange.Changes(cmd, core.RenderChanges(refLabel, ctxChanges, codeChanges))
 	return nil
 }

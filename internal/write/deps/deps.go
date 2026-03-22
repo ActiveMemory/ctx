@@ -32,3 +32,39 @@ func InfoNoProject(cmd *cobra.Command, builderNames string) {
 func InfoNoDeps(cmd *cobra.Command) {
 	cmd.Println(desc.Text(text.DescKeyWriteDepsNoDeps))
 }
+
+// Mermaid prints rendered Mermaid dependency graph output.
+//
+// Parameters:
+//   - cmd: Cobra command for output. Nil is a no-op.
+//   - content: Pre-rendered Mermaid graph string.
+func Mermaid(cmd *cobra.Command, content string) {
+	if cmd == nil {
+		return
+	}
+	cmd.Print(content)
+}
+
+// Table prints rendered table dependency output.
+//
+// Parameters:
+//   - cmd: Cobra command for output. Nil is a no-op.
+//   - content: Pre-rendered table string.
+func Table(cmd *cobra.Command, content string) {
+	if cmd == nil {
+		return
+	}
+	cmd.Print(content)
+}
+
+// JSON prints rendered JSON dependency output.
+//
+// Parameters:
+//   - cmd: Cobra command for output. Nil is a no-op.
+//   - content: Pre-rendered JSON string.
+func JSON(cmd *cobra.Command, content string) {
+	if cmd == nil {
+		return
+	}
+	cmd.Print(content)
+}

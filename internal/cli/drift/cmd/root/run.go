@@ -8,17 +8,15 @@ package root
 
 import (
 	"errors"
-	"fmt"
 
 	"github.com/spf13/cobra"
 
-	"github.com/ActiveMemory/ctx/internal/assets/read/desc"
 	"github.com/ActiveMemory/ctx/internal/cli/drift/core"
-	"github.com/ActiveMemory/ctx/internal/config/embed/text"
 	"github.com/ActiveMemory/ctx/internal/context/load"
 	"github.com/ActiveMemory/ctx/internal/drift"
 	errCtx "github.com/ActiveMemory/ctx/internal/err/context"
 	ctxErr "github.com/ActiveMemory/ctx/internal/err/initialize"
+	writeDrift "github.com/ActiveMemory/ctx/internal/write/drift"
 )
 
 // Run executes the drift command logic.
@@ -48,29 +46,24 @@ func Run(cmd *cobra.Command, jsonOutput, fix bool) error {
 
 	// Apply fixes if requested
 	if fix && (len(report.Warnings) > 0 || len(report.Violations) > 0) {
-		cmd.Println(desc.Text(text.DescKeyDriftApplying))
-		cmd.Println()
+		writeDrift.FixHeader(cmd)
 
 		result := core.ApplyFixes(cmd, ctx, report)
 
-		cmd.Println()
+		writeDrift.BlankLine(cmd)
 		if result.Fixed > 0 {
-			cmd.Println(fmt.Sprintf(
-				desc.Text(text.DescKeyDriftFixedCount), result.Fixed))
+			writeDrift.FixedCount(cmd, result.Fixed)
 		}
 		if result.Skipped > 0 {
-			cmd.Println(fmt.Sprintf(
-				desc.Text(text.DescKeyDriftSkippedCount), result.Skipped))
+			writeDrift.SkippedCount(cmd, result.Skipped)
 		}
 		for _, errMsg := range result.Errors {
-			cmd.Println(fmt.Sprintf(
-				desc.Text(text.DescKeyDriftFixError), errMsg))
+			writeDrift.FixError(cmd, errMsg)
 		}
 
 		// Re-run detection to show the updated status
 		if result.Fixed > 0 {
-			cmd.Println()
-			cmd.Println(desc.Text(text.DescKeyDriftRechecking))
+			writeDrift.FixRecheck(cmd)
 			ctx, _ = load.Do("")
 			report = drift.Detect(ctx)
 		}

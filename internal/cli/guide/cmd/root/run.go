@@ -9,8 +9,7 @@ package root
 import (
 	"github.com/spf13/cobra"
 
-	"github.com/ActiveMemory/ctx/internal/assets/read/desc"
-	"github.com/ActiveMemory/ctx/internal/config/embed/text"
+	"github.com/ActiveMemory/ctx/internal/write/guide"
 )
 
 // Run dispatches to the appropriate guide output based on flags.
@@ -29,7 +28,7 @@ func Run(cmd *cobra.Command, showSkills, showCommands bool) error {
 	case showCommands:
 		return listCommands(cmd)
 	default:
-		cmd.Print(desc.Text(text.DescKeyGuideDefault))
+		guide.Default(cmd)
 		return nil
 	}
 }

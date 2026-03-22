@@ -13,6 +13,7 @@ import (
 	"github.com/ActiveMemory/ctx/internal/assets/read/schema"
 	"github.com/ActiveMemory/ctx/internal/config/embed/cmd"
 	ctxErr "github.com/ActiveMemory/ctx/internal/err/config"
+	writeConfig "github.com/ActiveMemory/ctx/internal/write/config"
 )
 
 // Cmd returns the "ctx config schema" subcommand.
@@ -32,7 +33,7 @@ func Cmd() *cobra.Command {
 			if readErr != nil {
 				return ctxErr.ReadEmbeddedSchema(readErr)
 			}
-			cmd.Print(string(data))
+			writeConfig.Schema(cmd, data)
 			return nil
 		},
 	}

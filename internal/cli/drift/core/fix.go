@@ -31,6 +31,7 @@ import (
 	"github.com/ActiveMemory/ctx/internal/rc"
 	"github.com/ActiveMemory/ctx/internal/task"
 	"github.com/ActiveMemory/ctx/internal/tidy"
+	writeDrift "github.com/ActiveMemory/ctx/internal/write/drift"
 )
 
 // ApplyFixes attempts to auto-fix issues in the drift report.
@@ -59,8 +60,7 @@ func ApplyFixes(
 				result.Errors = append(result.Errors,
 					fmt.Sprintf(desc.Text(text.DescKeyDriftFixStalenessErr), fixErr))
 			} else {
-				cmd.Println(fmt.Sprintf(
-					desc.Text(text.DescKeyDriftFixStaleness), issue.File))
+				writeDrift.FixStaleness(cmd, issue.File)
 				result.Fixed++
 			}
 
@@ -69,19 +69,16 @@ func ApplyFixes(
 				result.Errors = append(result.Errors,
 					fmt.Sprintf(desc.Text(text.DescKeyDriftFixMissingErr), issue.File, fixErr))
 			} else {
-				cmd.Println(fmt.Sprintf(
-					desc.Text(text.DescKeyDriftFixMissing), issue.File))
+				writeDrift.FixMissing(cmd, issue.File)
 				result.Fixed++
 			}
 
 		case drift.IssueDeadPath:
-			cmd.Println(fmt.Sprintf(desc.Text(text.DescKeyDriftSkipDeadPath),
-				issue.File, issue.Line, issue.Path))
+			writeDrift.SkipDeadPath(cmd, issue.File, issue.Line, issue.Path)
 			result.Skipped++
 
 		case drift.IssueStaleAge:
-			cmd.Println(fmt.Sprintf(desc.Text(text.DescKeyDriftSkipStaleAge),
-				issue.File))
+			writeDrift.SkipStaleAge(cmd, issue.File)
 			result.Skipped++
 		}
 	}
@@ -89,8 +86,7 @@ func ApplyFixes(
 	// Process violations (potential_secret) - never auto-fix
 	for _, issue := range report.Violations {
 		if issue.Type == drift.IssueSecret {
-			cmd.Println(fmt.Sprintf(desc.Text(text.DescKeyDriftSkipSensitiveFile),
-				issue.File))
+			writeDrift.SkipSensitiveFile(cmd, issue.File)
 			result.Skipped++
 		}
 	}
@@ -174,8 +170,7 @@ func FixStaleness(cmd *cobra.Command, ctx *entity.Context) error {
 		return ctxErr.FileWrite(writeErr)
 	}
 
-	cmd.Println(fmt.Sprintf(desc.Text(text.DescKeyDriftArchived),
-		len(completedTasks), archiveFile))
+	writeDrift.Archived(cmd, len(completedTasks), archiveFile)
 
 	return nil
 }

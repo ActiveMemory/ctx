@@ -44,7 +44,7 @@ func Run(cmd *cobra.Command, logPath string, dryRun bool) error {
 		watch.DryRun(cmd)
 	}
 	watch.StopHint(cmd)
-	cmd.Println()
+	watch.Separator(cmd)
 
 	var reader io.Reader
 	if logPath != "" {

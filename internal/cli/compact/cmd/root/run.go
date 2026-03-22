@@ -8,20 +8,18 @@ package root
 
 import (
 	"errors"
-	"fmt"
 	"os"
 
 	"github.com/spf13/cobra"
 
-	"github.com/ActiveMemory/ctx/internal/assets/read/desc"
 	"github.com/ActiveMemory/ctx/internal/cli/compact/core"
-	"github.com/ActiveMemory/ctx/internal/config/embed/text"
 	"github.com/ActiveMemory/ctx/internal/config/fs"
 	"github.com/ActiveMemory/ctx/internal/context/load"
 	errCtx "github.com/ActiveMemory/ctx/internal/err/context"
 	ctxErr "github.com/ActiveMemory/ctx/internal/err/initialize"
 	"github.com/ActiveMemory/ctx/internal/rc"
 	"github.com/ActiveMemory/ctx/internal/tidy"
+	writeCompact "github.com/ActiveMemory/ctx/internal/write/compact"
 )
 
 // Run executes the compact command logic.
@@ -50,17 +48,14 @@ func Run(cmd *cobra.Command, archive bool) error {
 		archive = true
 	}
 
-	cmd.Println(desc.Text(text.DescKeyCompactHeading))
-	cmd.Println(desc.Text(text.DescKeyCompactSeparator))
-	cmd.Println()
+	writeCompact.ReportHeading(cmd)
 
 	changes := 0
 
 	// Process TASKS.md
 	tasksChanges, compactErr := core.CompactTasks(cmd, ctx, archive)
 	if compactErr != nil {
-		cmd.Println(fmt.Sprintf(
-			desc.Text(text.DescKeyCompactTaskError), compactErr))
+		writeCompact.TaskError(cmd, compactErr)
 	} else {
 		changes += tasksChanges
 	}
@@ -75,20 +70,16 @@ func Run(cmd *cobra.Command, archive bool) error {
 				result.SectionFileUpdates[i].Content,
 				fs.PermFile,
 			); writeErr == nil {
-				cmd.Println(fmt.Sprintf(
-					desc.Text(text.DescKeyCompactSectionsRemoved),
-					sc.Removed, sc.FileName))
+				writeCompact.SectionsRemoved(cmd, sc.Removed, sc.FileName)
 				changes += sc.Removed
 			}
 		}
 	}
 
 	if changes == 0 {
-		cmd.Println(desc.Text(text.DescKeyCompactClean))
+		writeCompact.ReportClean(cmd)
 	} else {
-		cmd.Println()
-		cmd.Println(fmt.Sprintf(
-			desc.Text(text.DescKeyCompactSummary), changes))
+		writeCompact.ReportSummary(cmd, changes)
 	}
 
 	return nil
