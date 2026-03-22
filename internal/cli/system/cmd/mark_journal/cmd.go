@@ -38,7 +38,11 @@ func Cmd() *cobra.Command {
 		},
 	}
 
-	c.Flags().Bool(cFlag.Check, false, desc.Flag(flag.DescKeySystemMarkJournalCheck))
+	c.Flags().Bool(
+		cFlag.Check,
+		false,
+		desc.Flag(flag.DescKeySystemMarkJournalCheck),
+	)
 
 	return c
 }

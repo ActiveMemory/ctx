@@ -171,3 +171,16 @@ type ResourceJSONOutput struct {
 	Alerts      []ResourceJSONAlert `json:"alerts"`
 	MaxSeverity string              `json:"max_severity"`
 }
+
+// StaleEntry describes a file that has not been modified within the
+// configured freshness window.
+type StaleEntry struct {
+	// Path is the relative file path.
+	Path string
+	// Desc is the human-readable file description.
+	Desc string
+	// ReviewURL is the optional URL for reviewing the file against upstream.
+	ReviewURL string
+	// Days is the number of days since last modification.
+	Days int
+}

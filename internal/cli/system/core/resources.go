@@ -11,10 +11,11 @@ import (
 	"fmt"
 	"strings"
 
+	"github.com/spf13/cobra"
+
 	"github.com/ActiveMemory/ctx/internal/assets/read/desc"
 	"github.com/ActiveMemory/ctx/internal/config/embed/text"
 	"github.com/ActiveMemory/ctx/internal/config/stats"
-	"github.com/spf13/cobra"
 
 	"github.com/ActiveMemory/ctx/internal/sysinfo"
 )

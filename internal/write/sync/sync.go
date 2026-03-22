@@ -9,12 +9,13 @@ package sync
 import (
 	"fmt"
 
+	"github.com/spf13/cobra"
+
 	"github.com/ActiveMemory/ctx/internal/assets/read/desc"
 	"github.com/ActiveMemory/ctx/internal/config/embed/text"
-	"github.com/spf13/cobra"
 )
 
-// SyncDryRun prints the full dry-run plan block: header, source path,
+// DryRun prints the full dry-run plan block: header, source path,
 // mirror path, and drift status.
 //
 // Parameters:
@@ -22,7 +23,7 @@ import (
 //   - sourcePath: absolute path to MEMORY.md.
 //   - mirrorPath: relative mirror path.
 //   - hasDrift: whether the source has changed since last sync.
-func SyncDryRun(cmd *cobra.Command, sourcePath, mirrorPath string, hasDrift bool) {
+func DryRun(cmd *cobra.Command, sourcePath, mirrorPath string, hasDrift bool) {
 	if cmd == nil {
 		return
 	}
@@ -36,7 +37,7 @@ func SyncDryRun(cmd *cobra.Command, sourcePath, mirrorPath string, hasDrift bool
 	}
 }
 
-// SyncResult prints the full sync result block: optional archive notice,
+// Result prints the full sync result block: optional archive notice,
 // synced confirmation, source path, line counts, and optional new content.
 //
 // Parameters:
@@ -47,7 +48,7 @@ func SyncDryRun(cmd *cobra.Command, sourcePath, mirrorPath string, hasDrift bool
 //   - archivedTo: archive basename, or empty if no archive was created.
 //   - sourceLines: current source line count.
 //   - mirrorLines: previous mirror line count.
-func SyncResult(
+func Result(
 	cmd *cobra.Command,
 	sourceLabel, mirrorPath, sourcePath, archivedTo string,
 	sourceLines, mirrorLines int,
@@ -83,5 +84,7 @@ func ErrAutoMemoryNotActive(cmd *cobra.Command, cause error) {
 	if cmd == nil {
 		return
 	}
-	cmd.PrintErrln(fmt.Sprintf(desc.Text(text.DescKeyWriteMemorySourceNotActiveErr), cause))
+	cmd.PrintErrln(
+		fmt.Sprintf(desc.Text(text.DescKeyWriteMemorySourceNotActiveErr), cause),
+	)
 }

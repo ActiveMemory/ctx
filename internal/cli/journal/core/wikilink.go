@@ -31,28 +31,29 @@ var RegexMarkdownLink = regexp.MustCompile(`\[([^]]+)]\(([^)]+)\)`)
 // Returns:
 //   - string: Content with internal links converted to [[target|display]]
 func ConvertMarkdownLinks(content string) string {
-	return RegexMarkdownLink.ReplaceAllStringFunc(content, func(match string) string {
-		parts := RegexMarkdownLink.FindStringSubmatch(match)
-		if len(parts) != 3 {
-			return match
-		}
+	return RegexMarkdownLink.ReplaceAllStringFunc(
+		content, func(match string) string {
+			parts := RegexMarkdownLink.FindStringSubmatch(match)
+			if len(parts) != 3 {
+				return match
+			}
 
-		display := parts[1]
-		target := parts[2]
+			display := parts[1]
+			target := parts[2]
 
-		// Skip external links
-		if strings.HasPrefix(target, "http://") ||
-			strings.HasPrefix(target, "https://") ||
-			strings.HasPrefix(target, "file://") {
-			return match
-		}
+			// Skip external links
+			if strings.HasPrefix(target, "http://") ||
+				strings.HasPrefix(target, "https://") ||
+				strings.HasPrefix(target, "file://") {
+				return match
+			}
 
-		// Strip path prefix (e.g., "../topics/", "../") and .md extension
-		target = filepath.Base(target)
-		target = strings.TrimSuffix(target, file.ExtMarkdown)
+			// Strip path prefix (e.g., "../topics/", "../") and .md extension
+			target = filepath.Base(target)
+			target = strings.TrimSuffix(target, file.ExtMarkdown)
 
-		return FormatWikilink(target, display)
-	})
+			return FormatWikilink(target, display)
+		})
 }
 
 // FormatWikilink formats a wikilink with optional display text.
@@ -98,6 +99,9 @@ func FormatWikilinkEntry(e JournalEntry) string {
 		suffix = token.MetaSeparator + strings.Join(meta, token.MetaJoin)
 	}
 
-	return fmt.Sprintf(desc.Text(text.DescKeyWriteWikilinkListItem),
-		FormatWikilink(link, e.Title), suffix)
+	return fmt.Sprintf(
+		desc.Text(text.DescKeyWriteWikilinkListItem),
+		FormatWikilink(link, e.Title),
+		suffix,
+	)
 }

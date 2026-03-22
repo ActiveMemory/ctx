@@ -32,7 +32,8 @@ func Cmd() *cobra.Command {
 		},
 	}
 
-	c.Flags().String(cFlag.SessionID, "",
+	c.Flags().String(
+		cFlag.SessionID, "",
 		desc.Flag(flag.DescKeyResumeSessionId),
 	)
 

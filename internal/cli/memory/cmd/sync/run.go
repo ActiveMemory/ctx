@@ -40,7 +40,7 @@ func Run(cmd *cobra.Command, dryRun bool) error {
 	}
 
 	if dryRun {
-		sync.SyncDryRun(cmd, sourcePath, cfgMem.PathMemoryMirror,
+		sync.DryRun(cmd, sourcePath, cfgMem.PathMemoryMirror,
 			memory.HasDrift(contextDir, sourcePath))
 		return nil
 	}
@@ -50,7 +50,7 @@ func Run(cmd *cobra.Command, dryRun bool) error {
 		return errMem.Sync(syncErr)
 	}
 
-	sync.SyncResult(cmd,
+	sync.Result(cmd,
 		cfgMem.MemorySource, cfgMem.PathMemoryMirror,
 		result.SourcePath, filepath.Base(result.ArchivedTo),
 		result.SourceLines, result.MirrorLines,

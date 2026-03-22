@@ -10,11 +10,12 @@ import (
 	"fmt"
 	"strings"
 
+	"github.com/spf13/cobra"
+
 	"github.com/ActiveMemory/ctx/internal/assets/read/desc"
 	"github.com/ActiveMemory/ctx/internal/config/embed/text"
 	"github.com/ActiveMemory/ctx/internal/config/token"
 	"github.com/ActiveMemory/ctx/internal/entity"
-	"github.com/spf13/cobra"
 )
 
 // NoEntries prints that no entries were found in the source file.
@@ -26,7 +27,9 @@ func NoEntries(cmd *cobra.Command, filename string) {
 	if cmd == nil {
 		return
 	}
-	cmd.Println(fmt.Sprintf(desc.Text(text.DescKeyWriteImportNoEntries), filename))
+	cmd.Println(
+		fmt.Sprintf(desc.Text(text.DescKeyWriteImportNoEntries), filename),
+	)
 }
 
 // ScanHeader prints the scanning header: source name, entry count,
@@ -68,12 +71,19 @@ func EntrySkipped(cmd *cobra.Command, title string) {
 //   - title: truncated entry title.
 //   - targetFile: destination filename.
 //   - keywords: matched classification keywords.
-func EntryClassified(cmd *cobra.Command, title, targetFile string, keywords []string) {
+func EntryClassified(
+	cmd *cobra.Command, title, targetFile string, keywords []string,
+) {
 	if cmd == nil {
 		return
 	}
 	cmd.Println(fmt.Sprintf(desc.Text(text.DescKeyWriteImportEntry), title))
-	cmd.Println(fmt.Sprintf(desc.Text(text.DescKeyWriteImportClassified), targetFile, strings.Join(keywords, token.CommaSpace)))
+	cmd.Println(
+		fmt.Sprintf(
+			desc.Text(text.DescKeyWriteImportClassified),
+			targetFile, strings.Join(keywords, token.CommaSpace),
+		),
+	)
 	cmd.Println()
 }
 
@@ -103,7 +113,11 @@ func ErrPromote(cmd *cobra.Command, targetFile string, cause error) {
 	if cmd == nil {
 		return
 	}
-	cmd.PrintErrln(fmt.Sprintf(desc.Text(text.DescKeyWriteImportErrorPromote), targetFile, cause))
+	cmd.PrintErrln(
+		fmt.Sprintf(
+			desc.Text(text.DescKeyWriteImportErrorPromote), targetFile, cause,
+		),
+	)
 }
 
 // Summary prints the full import summary block: total with
@@ -145,14 +159,21 @@ func Summary(cmd *cobra.Command, result entity.ImportResult, dryRun bool) {
 			desc.Text(text.DescKeyImportCountTask), result.Tasks))
 	}
 	if len(parts) > 0 {
-		summary += fmt.Sprintf(desc.Text(text.DescKeyWriteImportBreakdown), strings.Join(parts, token.CommaSpace))
+		summary += fmt.Sprintf(
+			desc.Text(text.DescKeyWriteImportBreakdown),
+			strings.Join(parts, token.CommaSpace),
+		)
 	}
 	cmd.Println(summary)
 
 	if result.Skipped > 0 {
-		cmd.Println(fmt.Sprintf(desc.Text(text.DescKeyWriteImportSkipped), result.Skipped))
+		cmd.Println(
+			fmt.Sprintf(desc.Text(text.DescKeyWriteImportSkipped), result.Skipped),
+		)
 	}
 	if result.Dupes > 0 {
-		cmd.Println(fmt.Sprintf(desc.Text(text.DescKeyWriteImportDuplicates), result.Dupes))
+		cmd.Println(
+			fmt.Sprintf(desc.Text(text.DescKeyWriteImportDuplicates), result.Dupes),
+		)
 	}
 }

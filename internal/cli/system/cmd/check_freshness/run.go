@@ -7,10 +7,8 @@
 package check_freshness
 
 import (
-	"fmt"
 	"os"
 	"path/filepath"
-	"strings"
 	"time"
 
 	"github.com/spf13/cobra"
@@ -20,7 +18,6 @@ import (
 	"github.com/ActiveMemory/ctx/internal/config/embed/text"
 	"github.com/ActiveMemory/ctx/internal/config/freshness"
 	"github.com/ActiveMemory/ctx/internal/config/hook"
-	"github.com/ActiveMemory/ctx/internal/config/token"
 	"github.com/ActiveMemory/ctx/internal/config/tpl"
 	"github.com/ActiveMemory/ctx/internal/rc"
 )
@@ -63,7 +60,7 @@ func Run(cmd *cobra.Command, stdin *os.File) error {
 	}
 
 	now := time.Now()
-	var staleEntries []staleEntry
+	var staleEntries []core.StaleEntry
 
 	for _, tf := range files {
 		absPath := filepath.Join(cwd, tf.Path)
@@ -78,11 +75,11 @@ func Run(cmd *cobra.Command, stdin *os.File) error {
 			continue
 		}
 
-		staleEntries = append(staleEntries, staleEntry{
-			path:      tf.Path,
-			desc:      tf.Desc,
-			reviewURL: tf.ReviewURL,
-			days:      int(age.Hours() / 24),
+		staleEntries = append(staleEntries, core.StaleEntry{
+			Path:      tf.Path,
+			Desc:      tf.Desc,
+			ReviewURL: tf.ReviewURL,
+			Days:      int(age.Hours() / 24),
 		})
 	}
 
@@ -90,7 +87,7 @@ func Run(cmd *cobra.Command, stdin *os.File) error {
 		return nil
 	}
 
-	staleText := formatStaleEntries(staleEntries)
+	staleText := core.FormatStaleEntries(staleEntries)
 
 	vars := map[string]any{tpl.VarStaleFiles: staleText}
 	content := core.LoadMessage(hook.CheckFreshness, hook.VariantStale, vars, staleText)
@@ -106,68 +103,4 @@ func Run(cmd *cobra.Command, stdin *os.File) error {
 		input.SessionID, vars, throttleFile)
 
 	return nil
-}
-
-type staleEntry struct {
-	path      string
-	desc      string
-	reviewURL string
-	days      int
-}
-
-// formatStaleEntries builds the display text for stale files.
-//
-// Groups entries by review URL. Entries without a URL get the generic
-// "touch to mark as reviewed" footer. Entries with URLs get a
-// "Review against: <url>" line after their group.
-func formatStaleEntries(entries []staleEntry) string {
-	// Partition: with URL (grouped) vs without URL
-	byURL := make(map[string][]staleEntry)
-	var noURL []staleEntry
-	var urlOrder []string
-
-	for _, e := range entries {
-		if e.reviewURL == "" {
-			noURL = append(noURL, e)
-			continue
-		}
-		if _, seen := byURL[e.reviewURL]; !seen {
-			urlOrder = append(urlOrder, e.reviewURL)
-		}
-		byURL[e.reviewURL] = append(byURL[e.reviewURL], e)
-	}
-
-	var b strings.Builder
-
-	// Entries with review URLs, grouped
-	for _, url := range urlOrder {
-		group := byURL[url]
-		for _, e := range group {
-			_, err := fmt.Fprintf(&b, desc.Text(text.DescKeyFreshnessFileEntry),
-				e.path, e.days, e.desc)
-			if err != nil {
-				return ""
-			}
-			b.WriteString(token.NewlineLF)
-		}
-		_, err := fmt.Fprintf(&b, desc.Text(text.DescKeyFreshnessReviewURL), url)
-		if err != nil {
-			return ""
-		}
-		b.WriteString(token.NewlineLF)
-	}
-
-	// Entries without review URLs
-	for _, e := range noURL {
-		_, err := fmt.Fprintf(&b, desc.Text(text.DescKeyFreshnessFileEntry),
-			e.path, e.days, e.desc)
-		if err != nil {
-			return ""
-		}
-		b.WriteString(token.NewlineLF)
-	}
-
-	b.WriteString(desc.Text(text.DescKeyFreshnessTouchHint))
-
-	return b.String()
 }

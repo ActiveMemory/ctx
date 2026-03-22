@@ -108,6 +108,26 @@ func SafeAppendFile(path string, perm os.FileMode) (*os.File, error) {
 	return os.OpenFile(clean, os.O_APPEND|os.O_CREATE|os.O_WRONLY, perm)
 }
 
+// SafeCreateFile creates a new file for writing after cleaning the path
+// and rejecting system directory prefixes. If the file already exists it
+// is truncated.
+//
+// Parameters:
+//   - path: file path to create
+//   - perm: file permission bits
+//
+// Returns:
+//   - *os.File: open file handle (caller must close)
+//   - error: non-nil on validation or create failure
+func SafeCreateFile(path string, perm os.FileMode) (*os.File, error) {
+	clean, validateErr := cleanAndValidate(path)
+	if validateErr != nil {
+		return nil, validateErr
+	}
+	//nolint:gosec // validated by cleanAndValidate
+	return os.OpenFile(clean, os.O_CREATE|os.O_TRUNC|os.O_WRONLY, perm)
+}
+
 // SafeWriteFile writes data to a file after cleaning the path and
 // rejecting system directory prefixes.
 //
