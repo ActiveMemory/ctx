@@ -16,6 +16,7 @@ import (
 	"github.com/ActiveMemory/ctx/internal/cli/system/core"
 	"github.com/ActiveMemory/ctx/internal/config/archive"
 	"github.com/ActiveMemory/ctx/internal/config/env"
+	cFlag "github.com/ActiveMemory/ctx/internal/config/flag"
 	errBackup "github.com/ActiveMemory/ctx/internal/err/backup"
 	ctxErr "github.com/ActiveMemory/ctx/internal/err/initialize"
 	"github.com/ActiveMemory/ctx/internal/write/backup"
@@ -33,8 +34,8 @@ import (
 //   - error: Non-nil on invalid scope, home directory lookup failure,
 //     SMB parse error, or archive creation failure
 func Run(cmd *cobra.Command) error {
-	scope, _ := cmd.Flags().GetString("scope")
-	jsonOut, _ := cmd.Flags().GetBool("json")
+	scope, _ := cmd.Flags().GetString(cFlag.Scope)
+	jsonOut, _ := cmd.Flags().GetBool(cFlag.JSON)
 
 	switch scope {
 	case archive.BackupScopeProject, archive.BackupScopeGlobal, archive.BackupScopeAll:

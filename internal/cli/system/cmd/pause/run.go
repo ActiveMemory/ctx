@@ -9,6 +9,7 @@ package pause
 import (
 	"os"
 
+	cFlag "github.com/ActiveMemory/ctx/internal/config/flag"
 	"github.com/ActiveMemory/ctx/internal/config/session"
 	"github.com/spf13/cobra"
 
@@ -29,7 +30,7 @@ import (
 // Returns:
 //   - error: Always nil
 func Run(cmd *cobra.Command, stdin *os.File) error {
-	sessionID, _ := cmd.Flags().GetString("session-id")
+	sessionID, _ := cmd.Flags().GetString(cFlag.SessionID)
 	if sessionID == "" {
 		input := core.ReadInput(stdin)
 		sessionID = input.SessionID

@@ -13,7 +13,7 @@ import (
 	"github.com/ActiveMemory/ctx/internal/config/archive"
 	"github.com/ActiveMemory/ctx/internal/config/embed/cmd"
 	"github.com/ActiveMemory/ctx/internal/config/embed/flag"
-	cflag "github.com/ActiveMemory/ctx/internal/config/flag"
+	cFlag "github.com/ActiveMemory/ctx/internal/config/flag"
 )
 
 // Cmd returns the "ctx system backup" subcommand.
@@ -32,10 +32,10 @@ func Cmd() *cobra.Command {
 		},
 	}
 
-	c.Flags().String(cflag.Scope, archive.BackupScopeAll,
+	c.Flags().String(cFlag.Scope, archive.BackupScopeAll,
 		desc.Flag(flag.DescKeySystemBackupScope),
 	)
-	c.Flags().Bool(cflag.JSON, false,
+	c.Flags().Bool(cFlag.JSON, false,
 		desc.Flag(flag.DescKeySystemBackupJson),
 	)
 

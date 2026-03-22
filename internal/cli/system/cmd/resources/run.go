@@ -10,6 +10,7 @@ import (
 	"github.com/spf13/cobra"
 
 	"github.com/ActiveMemory/ctx/internal/cli/system/core"
+	cFlag "github.com/ActiveMemory/ctx/internal/config/flag"
 	"github.com/ActiveMemory/ctx/internal/sysinfo"
 	writeResources "github.com/ActiveMemory/ctx/internal/write/resource"
 )
@@ -29,7 +30,7 @@ func runResources(cmd *cobra.Command) error {
 	snap := sysinfo.Collect(".")
 	alerts := sysinfo.Evaluate(snap)
 
-	jsonFlag, _ := cmd.Flags().GetBool("json")
+	jsonFlag, _ := cmd.Flags().GetBool(cFlag.JSON)
 	if jsonFlag {
 		return core.OutputResourcesJSON(cmd, snap, alerts)
 	}
