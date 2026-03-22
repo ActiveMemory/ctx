@@ -89,20 +89,20 @@ func TestParseSinceFlag(t *testing.T) {
 	}
 }
 
-func TestPluralize(t *testing.T) {
+func TestPluralWord(t *testing.T) {
 	tests := []struct {
 		n        int
 		singular string
 		plural   string
 		want     string
 	}{
-		{1, "commit", "commits", "1 commit"},
-		{5, "commit", "commits", "5 commits"},
-		{0, "file", "files", "0 files"},
+		{1, "commit", "commits", "commit"},
+		{5, "commit", "commits", "commits"},
+		{0, "file", "files", "files"},
 	}
 	for _, tt := range tests {
-		if got := format.Pluralize(tt.n, tt.singular, tt.plural); got != tt.want {
-			t.Errorf("Pluralize(%d, %q, %q) = %q, want %q", tt.n, tt.singular, tt.plural, got, tt.want)
+		if got := format.PluralWord(tt.n, tt.singular, tt.plural); got != tt.want {
+			t.Errorf("PluralWord(%d, %q, %q) = %q, want %q", tt.n, tt.singular, tt.plural, got, tt.want)
 		}
 	}
 }

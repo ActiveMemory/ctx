@@ -146,13 +146,12 @@ func ListHeader(cmd *cobra.Command) {
 	if cmd == nil {
 		return
 	}
-	fmtStr := listFormat()
-	cmd.Println(fmt.Sprintf(fmtStr,
+	cmd.Println(fmt.Sprintf(msg.MessageListFormat,
 		desc.Text(text.DescKeyMessageListHeaderHook),
 		desc.Text(text.DescKeyMessageListHeaderVariant),
 		desc.Text(text.DescKeyMessageListHeaderCategory),
 		desc.Text(text.DescKeyMessageListHeaderOverride)))
-	cmd.Println(fmt.Sprintf(fmtStr,
+	cmd.Println(fmt.Sprintf(msg.MessageListFormat,
 		strings.Repeat("\u2500", msg.MessageSepHook),
 		strings.Repeat("\u2500", msg.MessageSepVariant),
 		strings.Repeat("\u2500", msg.MessageSepCategory),
@@ -175,10 +174,5 @@ func ListRow(cmd *cobra.Command, hook, variant, category string, hasOverride boo
 	if hasOverride {
 		override = desc.Text(text.DescKeyMessageOverrideLabel)
 	}
-	cmd.Println(fmt.Sprintf(listFormat(), hook, variant, category, override))
-}
-
-func listFormat() string {
-	return fmt.Sprintf("%%-%ds %%-%ds %%-%ds %%s",
-		msg.MessageColHook, msg.MessageColVariant, msg.MessageColCategory)
+	cmd.Println(fmt.Sprintf(msg.MessageListFormat, hook, variant, category, override))
 }

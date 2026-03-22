@@ -8,7 +8,6 @@ package format
 
 import (
 	"fmt"
-	"strconv"
 	"strings"
 	"time"
 
@@ -57,19 +56,6 @@ func TimeAgo(hours float64, mins int, fallbackDate string) string {
 	}
 }
 
-// Pluralize returns "1 unit" or "N units" using singular/plural text keys.
-//
-// Parameters:
-//   - n: count
-//   - singular: singular form text key value
-//   - plural: plural form text key value
-//
-// Returns:
-//   - string: count + space + word form (e.g., "1 commit", "3 commits")
-func Pluralize(n int, singular, plural string) string {
-	return strconv.Itoa(n) + token.Space + PluralWord(n, singular, plural)
-}
-
 // PluralWord returns the singular or plural word form based on count.
 //
 // Parameters:
@@ -98,11 +84,23 @@ func Duration(d time.Duration) string {
 	case d < time.Minute:
 		return desc.Text(text.DescKeyTimeJustNow)
 	case d < time.Hour:
-		return Pluralize(int(d.Minutes()), desc.Text(text.DescKeyTimeMinute), desc.Text(text.DescKeyTimeMinutes))
+		n := int(d.Minutes())
+		if n == 1 {
+			return desc.Text(text.DescKeyTimeMinuteCount)
+		}
+		return fmt.Sprintf(desc.Text(text.DescKeyTimeMinutesCount), n)
 	case d < 24*time.Hour:
-		return Pluralize(int(d.Hours()), desc.Text(text.DescKeyTimeHour), desc.Text(text.DescKeyTimeHours))
+		n := int(d.Hours())
+		if n == 1 {
+			return desc.Text(text.DescKeyTimeHourCount)
+		}
+		return fmt.Sprintf(desc.Text(text.DescKeyTimeHoursCount), n)
 	default:
-		return Pluralize(int(d.Hours()/24), desc.Text(text.DescKeyTimeDay), desc.Text(text.DescKeyTimeDays))
+		n := int(d.Hours() / 24)
+		if n == 1 {
+			return desc.Text(text.DescKeyTimeDayCount)
+		}
+		return fmt.Sprintf(desc.Text(text.DescKeyTimeDaysCount), n)
 	}
 }
 

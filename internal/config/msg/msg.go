@@ -6,6 +6,12 @@
 
 package msg
 
+import "fmt"
+
+// MessageListFormat is the pre-computed printf format for message list rows.
+var MessageListFormat = fmt.Sprintf("%%-%ds %%-%ds %%-%ds %%s",
+	MessageColHook, MessageColVariant, MessageColCategory)
+
 // Message table formatting.
 const (
 	// MessageColHook is the column width for the Hook field in message list output.
