@@ -33,7 +33,7 @@ func runAdd(cmd *cobra.Command, text string) error {
 
 	entries = append(entries, text)
 
-	if writeErr := core.WriteEntries(entries); writeErr != nil {
+	if writeErr := core.WriteEntries(cmd, entries); writeErr != nil {
 		return writeErr
 	}
 
@@ -67,7 +67,7 @@ func runAddBlob(cmd *cobra.Command, label, filePath string) error {
 
 	entries = append(entries, core.MakeBlob(label, data))
 
-	if writeErr := core.WriteEntries(entries); writeErr != nil {
+	if writeErr := core.WriteEntries(cmd, entries); writeErr != nil {
 		return writeErr
 	}
 

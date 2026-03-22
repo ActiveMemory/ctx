@@ -38,7 +38,7 @@ func runEdit(cmd *cobra.Command, n int, text string) error {
 
 	entries[n-1] = text
 
-	if writeErr := core.WriteEntries(entries); writeErr != nil {
+	if writeErr := core.WriteEntries(cmd, entries); writeErr != nil {
 		return writeErr
 	}
 
@@ -71,7 +71,7 @@ func runEditAppend(cmd *cobra.Command, n int, text string) error {
 
 	entries[n-1] = entries[n-1] + " " + text
 
-	if writeErr := core.WriteEntries(entries); writeErr != nil {
+	if writeErr := core.WriteEntries(cmd, entries); writeErr != nil {
 		return writeErr
 	}
 
@@ -104,7 +104,7 @@ func runEditPrepend(cmd *cobra.Command, n int, text string) error {
 
 	entries[n-1] = text + " " + entries[n-1]
 
-	if writeErr := core.WriteEntries(entries); writeErr != nil {
+	if writeErr := core.WriteEntries(cmd, entries); writeErr != nil {
 		return writeErr
 	}
 
@@ -157,7 +157,7 @@ func runEditBlob(cmd *cobra.Command, n int, filePath, labelText string) error {
 
 	entries[n-1] = core.MakeBlob(newLabel, newData)
 
-	if writeErr := core.WriteEntries(entries); writeErr != nil {
+	if writeErr := core.WriteEntries(cmd, entries); writeErr != nil {
 		return writeErr
 	}
 

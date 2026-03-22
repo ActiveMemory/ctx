@@ -8,7 +8,6 @@ package pad
 
 import (
 	"fmt"
-	"os"
 
 	"github.com/spf13/cobra"
 
@@ -30,9 +29,13 @@ func Empty(cmd *cobra.Command) {
 // KeyCreated prints a key creation notice to stderr.
 //
 // Parameters:
+//   - cmd: Cobra command for output. Nil is a no-op.
 //   - path: key file path.
-func KeyCreated(path string) {
-	_, _ = fmt.Fprintln(os.Stderr, fmt.Sprintf(desc.Text(text.DescKeyWritePadKeyCreated), path))
+func KeyCreated(cmd *cobra.Command, path string) {
+	if cmd == nil {
+		return
+	}
+	cmd.PrintErrln(fmt.Sprintf(desc.Text(text.DescKeyWritePadKeyCreated), path))
 }
 
 func mergeSkipped(cmd *cobra.Command, dupes int) {

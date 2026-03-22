@@ -48,7 +48,10 @@ func RenderMermaid(graph map[string][]string) string {
 		src := MermaidID(pkg)
 		for _, d := range deps {
 			dst := MermaidID(d)
-			fmt.Fprintf(&b, edgeFmt, src, pkg, dst, d)
+			_, err := fmt.Fprintf(&b, edgeFmt, src, pkg, dst, d)
+			if err != nil {
+				return ""
+			}
 		}
 	}
 

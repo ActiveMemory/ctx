@@ -89,7 +89,7 @@ func Run(
 	merged := make([]string, 0, len(current)+len(newEntries))
 	merged = append(merged, current...)
 	merged = append(merged, newEntries...)
-	if writeErr := core.WriteEntries(merged); writeErr != nil {
+	if writeErr := core.WriteEntries(cmd, merged); writeErr != nil {
 		return writeErr
 	}
 

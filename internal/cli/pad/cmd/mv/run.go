@@ -43,7 +43,7 @@ func Run(cmd *cobra.Command, n, m int) error {
 	idx := m - 1
 	entries = append(entries[:idx], append([]string{entry}, entries[idx:]...)...)
 
-	if writeErr := core.WriteEntries(entries); writeErr != nil {
+	if writeErr := core.WriteEntries(cmd, entries); writeErr != nil {
 		return writeErr
 	}
 
