@@ -7,9 +7,12 @@
 package core
 
 import (
+	"github.com/spf13/cobra"
+
 	"github.com/ActiveMemory/ctx/internal/config/hook"
 	"github.com/ActiveMemory/ctx/internal/log"
 	"github.com/ActiveMemory/ctx/internal/notify"
+	writeHook "github.com/ActiveMemory/ctx/internal/write/hook"
 )
 
 // Relay sends a relay notification and appends the same event to the
@@ -36,4 +39,33 @@ func Relay(message, sessionID string, ref *notify.TemplateRef) {
 func NudgeAndRelay(message, sessionID string, ref *notify.TemplateRef) {
 	_ = notify.Send(hook.NotifyChannelNudge, message, sessionID, ref)
 	Relay(message, sessionID, ref)
+}
+
+// EmitNudge is the standard hook tail: print nudge box, send
+// nudge+relay notifications, and touch the throttle marker.
+//
+// Parameters:
+//   - cmd: Cobra command for output
+//   - content: nudge box content (from LoadMessage)
+//   - relayPrefix: relay prefix text (e.g., "check-backup-age")
+//   - boxTitle: nudge box title
+//   - hookName: hook name for notifications
+//   - variant: hook variant for template ref
+//   - relayMessage: human-readable relay suffix
+//   - sessionID: current session identifier
+//   - vars: template variables for the template ref (may be nil)
+//   - markerPath: throttle file to touch (empty string skips)
+func EmitNudge(
+	cmd *cobra.Command,
+	content, relayPrefix, boxTitle,
+	hookName, variant, relayMessage, sessionID string,
+	vars map[string]any,
+	markerPath string,
+) {
+	writeHook.Nudge(cmd, NudgeBox(relayPrefix, boxTitle, content))
+	ref := notify.NewTemplateRef(hookName, variant, vars)
+	NudgeAndRelay(hookName+": "+relayMessage, sessionID, ref)
+	if markerPath != "" {
+		TouchFile(markerPath)
+	}
 }

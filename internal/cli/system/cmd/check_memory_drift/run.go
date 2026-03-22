@@ -17,9 +17,7 @@ import (
 	"github.com/ActiveMemory/ctx/internal/config/embed/text"
 	"github.com/ActiveMemory/ctx/internal/config/hook"
 	"github.com/ActiveMemory/ctx/internal/memory"
-	"github.com/ActiveMemory/ctx/internal/notify"
 	"github.com/ActiveMemory/ctx/internal/rc"
-	writeHook "github.com/ActiveMemory/ctx/internal/write/hook"
 )
 
 // Run executes the check-memory-drift hook logic.
@@ -62,18 +60,12 @@ func Run(cmd *cobra.Command, stdin *os.File) error {
 		return nil
 	}
 
-	writeHook.Nudge(cmd, core.NudgeBox(
+	core.EmitNudge(cmd, content,
 		desc.Text(text.DescKeyCheckMemoryDriftRelayPrefix),
 		desc.Text(text.DescKeyCheckMemoryDriftBoxTitle),
-		content))
-
-	ref := notify.NewTemplateRef(hook.CheckMemoryDrift, hook.VariantNudge, nil)
-	core.NudgeAndRelay(
-		hook.CheckMemoryDrift+": "+desc.Text(text.DescKeyCheckMemoryDriftRelayMessage),
-		input.SessionID, ref,
-	)
-
-	core.TouchFile(tombstone)
+		hook.CheckMemoryDrift, hook.VariantNudge,
+		desc.Text(text.DescKeyCheckMemoryDriftRelayMessage),
+		input.SessionID, nil, tombstone)
 
 	return nil
 }

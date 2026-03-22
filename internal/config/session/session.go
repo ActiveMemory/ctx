@@ -10,6 +10,12 @@ package session
 const (
 	// IDUnknown is the fallback session ID when input lacks one.
 	IDUnknown = "unknown"
+	// IDSuffixSummary is appended to session IDs for summary messages.
+	IDSuffixSummary = "-summary"
+	// IDSuffixTopic is appended to session IDs for topic messages.
+	IDSuffixTopic = "-topic"
+	// PreviewMaxLen is the maximum character length for first-message previews.
+	PreviewMaxLen = 100
 	// TemplateName is the name used for Go text/template instances.
 	TemplateName = "msg"
 )

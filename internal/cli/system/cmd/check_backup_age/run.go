@@ -20,8 +20,6 @@ import (
 	"github.com/ActiveMemory/ctx/internal/config/hook"
 	"github.com/ActiveMemory/ctx/internal/config/token"
 	"github.com/ActiveMemory/ctx/internal/config/tpl"
-	"github.com/ActiveMemory/ctx/internal/notify"
-	writeHook "github.com/ActiveMemory/ctx/internal/write/hook"
 )
 
 // Run executes the check-backup-age hook logic.
@@ -85,19 +83,12 @@ func Run(cmd *cobra.Command, stdin *os.File) error {
 		return nil
 	}
 
-	// Emit VERBATIM relay
-	writeHook.Nudge(cmd, core.NudgeBox(
+	core.EmitNudge(cmd, content,
 		desc.Text(text.DescKeyBackupRelayPrefix),
 		desc.Text(text.DescKeyBackupBoxTitle),
-		content))
-
-	ref := notify.NewTemplateRef(hook.CheckBackupAge, hook.VariantWarning, vars)
-	core.NudgeAndRelay(hook.CheckBackupAge+": "+
+		hook.CheckBackupAge, hook.VariantWarning,
 		desc.Text(text.DescKeyBackupRelayMessage),
-		input.SessionID, ref,
-	)
-
-	core.TouchFile(throttleFile)
+		input.SessionID, vars, throttleFile)
 
 	return nil
 }
