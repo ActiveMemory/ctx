@@ -83,5 +83,5 @@ func ErrAutoMemoryNotActive(cmd *cobra.Command, cause error) {
 	if cmd == nil {
 		return
 	}
-	cmd.PrintErrln("Auto memory not active:", cause)
+	cmd.PrintErrln(fmt.Sprintf(desc.Text(text.DescKeyWriteMemorySourceNotActiveErr), cause))
 }

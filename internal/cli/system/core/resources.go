@@ -185,44 +185,7 @@ func FormatResourcesText(snap sysinfo.Snapshot, alerts []sysinfo.ResourceAlert) 
 // Returns:
 //   - error: Non-nil on JSON encoding failure
 func OutputResourcesJSON(cmd *cobra.Command, snap sysinfo.Snapshot, alerts []sysinfo.ResourceAlert) error {
-	type jsonAlert struct {
-		Severity string `json:"severity"`
-		Resource string `json:"resource"`
-		Message  string `json:"message"`
-	}
-	type jsonOutput struct {
-		Memory struct {
-			TotalBytes uint64 `json:"total_bytes"`
-			UsedBytes  uint64 `json:"used_bytes"`
-			Percent    int    `json:"percent"`
-			Supported  bool   `json:"supported"`
-		} `json:"memory"`
-		Swap struct {
-			TotalBytes uint64 `json:"total_bytes"`
-			UsedBytes  uint64 `json:"used_bytes"`
-			Percent    int    `json:"percent"`
-			Supported  bool   `json:"supported"`
-		} `json:"swap"`
-		Disk struct {
-			TotalBytes uint64 `json:"total_bytes"`
-			UsedBytes  uint64 `json:"used_bytes"`
-			Percent    int    `json:"percent"`
-			Path       string `json:"path"`
-			Supported  bool   `json:"supported"`
-		} `json:"disk"`
-		Load struct {
-			Load1     float64 `json:"load1"`
-			Load5     float64 `json:"load5"`
-			Load15    float64 `json:"load15"`
-			NumCPU    int     `json:"num_cpu"`
-			Ratio     float64 `json:"ratio"`
-			Supported bool    `json:"supported"`
-		} `json:"load"`
-		Alerts      []jsonAlert `json:"alerts"`
-		MaxSeverity string      `json:"max_severity"`
-	}
-
-	out := jsonOutput{}
+	out := ResourceJSONOutput{}
 
 	out.Memory.TotalBytes = snap.Memory.TotalBytes
 	out.Memory.UsedBytes = snap.Memory.UsedBytes
@@ -249,9 +212,9 @@ func OutputResourcesJSON(cmd *cobra.Command, snap sysinfo.Snapshot, alerts []sys
 	}
 	out.Load.Supported = snap.Load.Supported
 
-	out.Alerts = make([]jsonAlert, 0, len(alerts))
+	out.Alerts = make([]ResourceJSONAlert, 0, len(alerts))
 	for _, a := range alerts {
-		out.Alerts = append(out.Alerts, jsonAlert{
+		out.Alerts = append(out.Alerts, ResourceJSONAlert{
 			Severity: a.Severity.String(),
 			Resource: a.Resource,
 			Message:  a.Message,

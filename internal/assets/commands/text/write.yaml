@@ -124,6 +124,8 @@ write.import-added:
   short: '     Added to %s'
 write.import-classified:
   short: '     Classified: %s (keywords: %s)'
+write.import-breakdown:
+  short: ' (%s)'
 write.import-classified-skip:
   short: '     Classified: skip'
 write.import-duplicates:
@@ -323,6 +325,8 @@ write.memory-source-lines-drift:
   short: '  MEMORY.md:  %d lines (modified since last sync)'
 write.memory-source-not-active:
   short: '  Source: auto memory not active (MEMORY.md not found)'
+write.memory-source-not-active-err:
+  short: 'Auto memory not active: %v'
 write.mirror:
   short: '  Mirror: %s'
 write.moving-task:
