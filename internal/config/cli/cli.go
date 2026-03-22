@@ -16,5 +16,8 @@ const AnnotationTrue = "true"
 // Binary is the ctx executable name used for PATH validation.
 const Binary = "ctx"
 
+// CmdCompletion is the cobra completion subcommand name.
+const CmdCompletion = "completion"
+
 // StdinSentinel is the conventional argument value meaning "read from stdin".
 const StdinSentinel = "-"

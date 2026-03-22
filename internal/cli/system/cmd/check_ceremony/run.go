@@ -10,14 +10,15 @@ import (
 	"os"
 	"path/filepath"
 
+	"github.com/spf13/cobra"
+
 	"github.com/ActiveMemory/ctx/internal/assets/read/desc"
+	"github.com/ActiveMemory/ctx/internal/cli/system/core"
 	"github.com/ActiveMemory/ctx/internal/config/ceremony"
 	"github.com/ActiveMemory/ctx/internal/config/embed/text"
 	"github.com/ActiveMemory/ctx/internal/config/hook"
-	ctxcontext "github.com/ActiveMemory/ctx/internal/context/resolve"
-	"github.com/spf13/cobra"
-
-	"github.com/ActiveMemory/ctx/internal/cli/system/core"
+	ctxContext "github.com/ActiveMemory/ctx/internal/context/resolve"
+	internalIo "github.com/ActiveMemory/ctx/internal/io"
 	"github.com/ActiveMemory/ctx/internal/notify"
 	writeHook "github.com/ActiveMemory/ctx/internal/write/hook"
 )
@@ -46,12 +47,12 @@ func Run(cmd *cobra.Command, stdin *os.File) error {
 
 	remindedFile := filepath.Join(core.StateDir(), ceremony.CeremonyThrottleID)
 
-	if core.IsDailyThrottled(remindedFile) {
+	if core.DailyThrottled(remindedFile) {
 		return nil
 	}
 
 	files := core.RecentJournalFiles(
-		ctxcontext.ResolvedJournalDir(), ceremony.CeremonyJournalLookback,
+		ctxContext.ResolvedJournalDir(), ceremony.CeremonyJournalLookback,
 	)
 
 	if len(files) == 0 {
@@ -74,6 +75,6 @@ func Run(cmd *cobra.Command, stdin *os.File) error {
 		desc.Text(text.DescKeyCeremonyRelayMessage),
 		input.SessionID, ref,
 	)
-	core.TouchFile(remindedFile)
+	internalIo.TouchFile(remindedFile)
 	return nil
 }

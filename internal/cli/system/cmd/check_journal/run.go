@@ -22,6 +22,7 @@ import (
 	"github.com/ActiveMemory/ctx/internal/config/journal"
 	"github.com/ActiveMemory/ctx/internal/config/tpl"
 	ctxResolve "github.com/ActiveMemory/ctx/internal/context/resolve"
+	internalIo "github.com/ActiveMemory/ctx/internal/io"
 	"github.com/ActiveMemory/ctx/internal/notify"
 	writeHook "github.com/ActiveMemory/ctx/internal/write/hook"
 )
@@ -54,7 +55,7 @@ func Run(cmd *cobra.Command, stdin *os.File) error {
 	)
 
 	// Only remind once per day
-	if core.IsDailyThrottled(remindedFile) {
+	if core.DailyThrottled(remindedFile) {
 		return nil
 	}
 
@@ -121,6 +122,6 @@ func Run(cmd *cobra.Command, stdin *os.File) error {
 	)
 	core.NudgeAndRelay(journalMsg, input.SessionID, ref)
 
-	core.TouchFile(remindedFile)
+	internalIo.TouchFile(remindedFile)
 	return nil
 }

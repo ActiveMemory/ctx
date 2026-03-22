@@ -15,6 +15,7 @@ import (
 	"strings"
 	"time"
 
+	configFs "github.com/ActiveMemory/ctx/internal/config/fs"
 	fserr "github.com/ActiveMemory/ctx/internal/err/fs"
 	ctxerr "github.com/ActiveMemory/ctx/internal/err/http"
 )
@@ -144,6 +145,16 @@ func SafeWriteFile(path string, data []byte, perm os.FileMode) error {
 		return validateErr
 	}
 	return os.WriteFile(clean, data, perm) //nolint:gosec // validated by cleanAndValidate
+}
+
+// TouchFile creates or updates an empty marker file. Best-effort:
+// errors are silently ignored. Used for throttle markers and
+// one-shot flags in state directories.
+//
+// Parameters:
+//   - path: absolute file path to touch
+func TouchFile(path string) {
+	_ = os.WriteFile(path, nil, configFs.PermSecret) //nolint:gosec // state marker, path from internal code
 }
 
 // maxRedirects caps the number of HTTP redirects the client will follow.

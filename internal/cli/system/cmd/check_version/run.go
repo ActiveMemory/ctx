@@ -20,6 +20,7 @@ import (
 	"github.com/ActiveMemory/ctx/internal/config/hook"
 	"github.com/ActiveMemory/ctx/internal/config/tpl"
 	"github.com/ActiveMemory/ctx/internal/config/version"
+	internalIo "github.com/ActiveMemory/ctx/internal/io"
 	"github.com/ActiveMemory/ctx/internal/notify"
 	writeHook "github.com/ActiveMemory/ctx/internal/write/hook"
 )
@@ -49,7 +50,7 @@ func Run(cmd *cobra.Command, stdin *os.File) error {
 	tmpDir := core.StateDir()
 	markerFile := filepath.Join(tmpDir, version.ThrottleID)
 
-	if core.IsDailyThrottled(markerFile) {
+	if core.DailyThrottled(markerFile) {
 		return nil
 	}
 
@@ -57,7 +58,7 @@ func Run(cmd *cobra.Command, stdin *os.File) error {
 
 	// Skip check for dev builds
 	if binaryVer == version.DevBuild {
-		core.TouchFile(markerFile)
+		internalIo.TouchFile(markerFile)
 		return nil
 	}
 
@@ -70,12 +71,12 @@ func Run(cmd *cobra.Command, stdin *os.File) error {
 	pMajor, pMinor, pOK := core.ParseMajorMinor(pluginVer)
 
 	if !bOK || !pOK {
-		core.TouchFile(markerFile)
+		internalIo.TouchFile(markerFile)
 		return nil
 	}
 
 	if bMajor == pMajor && bMinor == pMinor {
-		core.TouchFile(markerFile)
+		internalIo.TouchFile(markerFile)
 		return nil
 	}
 
@@ -89,7 +90,7 @@ func Run(cmd *cobra.Command, stdin *os.File) error {
 			tpl.VarPluginVersion: pluginVer,
 		}, fallback)
 	if content == "" {
-		core.TouchFile(markerFile)
+		internalIo.TouchFile(markerFile)
 		return nil
 	}
 
@@ -109,7 +110,7 @@ func Run(cmd *cobra.Command, stdin *os.File) error {
 			binaryVer, pluginVer))
 	core.NudgeAndRelay(versionMsg, input.SessionID, ref)
 
-	core.TouchFile(markerFile)
+	internalIo.TouchFile(markerFile)
 
 	// Key age check: piggyback on the daily version check
 	writeHook.Nudge(cmd, core.CheckKeyAge(input.SessionID))

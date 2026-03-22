@@ -16,6 +16,7 @@ import (
 	"github.com/spf13/cobra"
 
 	"github.com/ActiveMemory/ctx/internal/cli/system/core"
+	internalIo "github.com/ActiveMemory/ctx/internal/io"
 	writeHook "github.com/ActiveMemory/ctx/internal/write/hook"
 )
 
@@ -44,7 +45,7 @@ func Run(cmd *cobra.Command, stdin *os.File) error {
 	markerPath := filepath.Join(
 		core.StateDir(), architecture.MapStalenessThrottleID,
 	)
-	if core.IsDailyThrottled(markerPath) {
+	if core.DailyThrottled(markerPath) {
 		return nil
 	}
 
@@ -71,7 +72,7 @@ func Run(cmd *cobra.Command, stdin *os.File) error {
 	dateStr := lastRun.Format(cfgTime.DateFormat)
 	writeHook.Nudge(cmd, core.EmitMapStalenessWarning(input.SessionID, dateStr, moduleCommits))
 
-	core.TouchFile(markerPath)
+	internalIo.TouchFile(markerPath)
 
 	return nil
 }

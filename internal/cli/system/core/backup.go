@@ -18,6 +18,7 @@ import (
 	"github.com/ActiveMemory/ctx/internal/config/dir"
 	"github.com/ActiveMemory/ctx/internal/config/embed/text"
 	configFs "github.com/ActiveMemory/ctx/internal/config/fs"
+	internalIo "github.com/ActiveMemory/ctx/internal/io"
 )
 
 // BackupProject creates a project-scoped backup archive.
@@ -60,7 +61,7 @@ func BackupProject(
 	markerDir := filepath.Join(home, archive.BackupMarkerDir)
 	_ = os.MkdirAll(markerDir, configFs.PermExec)
 	markerPath := filepath.Join(markerDir, archive.BackupMarkerFile)
-	TouchFile(markerPath)
+	internalIo.TouchFile(markerPath)
 
 	return result, nil
 }

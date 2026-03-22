@@ -7,8 +7,9 @@
 package stat
 
 import (
-	"github.com/ActiveMemory/ctx/internal/write/io"
 	"github.com/spf13/cobra"
+
+	"github.com/ActiveMemory/ctx/internal/write/io"
 )
 
 // Table prints stats table lines. Nil cmd is a no-op.

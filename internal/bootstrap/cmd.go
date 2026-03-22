@@ -11,16 +11,16 @@ package bootstrap
 import (
 	"os"
 
-	"github.com/ActiveMemory/ctx/internal/assets/read/desc"
-	"github.com/ActiveMemory/ctx/internal/config/embed/cmd"
-	embedflag "github.com/ActiveMemory/ctx/internal/config/embed/flag"
-	ctxcontext "github.com/ActiveMemory/ctx/internal/context/validate"
-	"github.com/ActiveMemory/ctx/internal/err/fs"
-	ctxerr "github.com/ActiveMemory/ctx/internal/err/initialize"
 	"github.com/spf13/cobra"
 
+	"github.com/ActiveMemory/ctx/internal/assets/read/desc"
 	"github.com/ActiveMemory/ctx/internal/config/cli"
+	"github.com/ActiveMemory/ctx/internal/config/embed/cmd"
+	embedFlag "github.com/ActiveMemory/ctx/internal/config/embed/flag"
 	"github.com/ActiveMemory/ctx/internal/config/flag"
+	ctxContext "github.com/ActiveMemory/ctx/internal/context/validate"
+	"github.com/ActiveMemory/ctx/internal/err/fs"
+	errInitialize "github.com/ActiveMemory/ctx/internal/err/initialize"
 	"github.com/ActiveMemory/ctx/internal/rc"
 	"github.com/ActiveMemory/ctx/internal/validation"
 )
@@ -42,8 +42,6 @@ var version = "dev"
 // Returns:
 //   - *cobra.Command: The configured root command with usage and version info
 func RootCmd() *cobra.Command {
-	const completionCmd = "completion"
-
 	var contextDir string
 	var allowOutsideCwd bool
 
@@ -75,7 +73,7 @@ func RootCmd() *cobra.Command {
 			if cmd.Hidden {
 				return nil
 			}
-			if p := cmd.Parent(); p != nil && p.Name() == completionCmd {
+			if p := cmd.Parent(); p != nil && p.Name() == cli.CmdCompletion {
 				return nil
 			}
 
@@ -90,8 +88,8 @@ func RootCmd() *cobra.Command {
 			}
 
 			// Require initialization.
-			if !ctxcontext.Initialized(rc.ContextDir()) {
-				return ctxerr.NotInitialized()
+			if !ctxContext.Initialized(rc.ContextDir()) {
+				return errInitialize.NotInitialized()
 			}
 
 			return nil
@@ -108,13 +106,13 @@ func RootCmd() *cobra.Command {
 		&contextDir,
 		flag.ContextDir,
 		"",
-		desc.Flag(embedflag.DescKeyContextDir),
+		desc.Flag(embedFlag.DescKeyContextDir),
 	)
 	c.PersistentFlags().BoolVar(
 		&allowOutsideCwd,
 		flag.AllowOutsideCwd,
 		false,
-		desc.Flag(embedflag.DescKeyAllowOutsideCwd),
+		desc.Flag(embedFlag.DescKeyAllowOutsideCwd),
 	)
 
 	return c

@@ -23,7 +23,7 @@ import (
 	"github.com/ActiveMemory/ctx/internal/config/load_gate"
 	"github.com/ActiveMemory/ctx/internal/config/token"
 	ctxToken "github.com/ActiveMemory/ctx/internal/context/token"
-	"github.com/ActiveMemory/ctx/internal/io"
+	internalIo "github.com/ActiveMemory/ctx/internal/io"
 	"github.com/ActiveMemory/ctx/internal/rc"
 	writeHook "github.com/ActiveMemory/ctx/internal/write/hook"
 )
@@ -65,7 +65,7 @@ func Run(cmd *cobra.Command, stdin *os.File) error {
 
 	// Create the marker before emitting — ensures one-shot even if
 	// the agent makes multiple parallel tool calls.
-	core.TouchFile(marker)
+	internalIo.TouchFile(marker)
 
 	// Auto-prune stale session state files (best-effort, silent).
 	// Runs once per session at startup — fast directory scan.
@@ -90,7 +90,7 @@ func Run(cmd *cobra.Command, stdin *os.File) error {
 			continue
 		}
 
-		data, readErr := io.SafeReadFile(dir, f)
+		data, readErr := internalIo.SafeReadFile(dir, f)
 		if readErr != nil {
 			continue // file missing — skip gracefully
 		}
