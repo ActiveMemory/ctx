@@ -16,13 +16,6 @@ import (
 	"github.com/ActiveMemory/ctx/internal/config/token"
 )
 
-func commitCount(n int) string {
-	if n == 1 {
-		return desc.Text(text.DescKeyTimeCommitCount)
-	}
-	return fmt.Sprintf(desc.Text(text.DescKeyTimeCommitsCount), n)
-}
-
 // RenderChanges renders the full CLI output for `ctx changes`.
 //
 // Parameters:

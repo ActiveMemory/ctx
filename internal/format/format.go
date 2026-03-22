@@ -132,7 +132,10 @@ func Number(n int) string {
 	if n < cfgFmt.SIThreshold {
 		return fmt.Sprintf(desc.Text(text.DescKeyWriteFormatSIInteger), n)
 	}
-	return fmt.Sprintf(desc.Text(text.DescKeyWriteFormatThousands), n/cfgFmt.SIThreshold, n%cfgFmt.SIThreshold)
+	return fmt.Sprintf(
+		desc.Text(text.DescKeyWriteFormatThousands),
+		n/cfgFmt.SIThreshold, n%cfgFmt.SIThreshold,
+	)
 }
 
 // Bytes returns a human-readable byte-size string.
