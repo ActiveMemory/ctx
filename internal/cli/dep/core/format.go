@@ -42,12 +42,13 @@ func RenderMermaid(graph map[string][]string) string {
 	// Sort keys for deterministic output.
 	keys := SortedKeys(graph)
 
+	edgeFmt := dep.MermaidEdgeFormat
 	for _, pkg := range keys {
 		deps := graph[pkg]
 		src := MermaidID(pkg)
-		for _, dep := range deps {
-			dst := MermaidID(dep)
-			fmt.Fprintf(&b, "    %s[\"%s\"] --> %s[\"%s\"]\n", src, pkg, dst, dep)
+		for _, d := range deps {
+			dst := MermaidID(d)
+			fmt.Fprintf(&b, edgeFmt, src, pkg, dst, d)
 		}
 	}
 

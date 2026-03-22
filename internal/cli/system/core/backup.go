@@ -161,7 +161,7 @@ func addEntry(tw *tar.Writer, entry ArchiveEntry, w io.Writer) error {
 	info, statErr := os.Stat(entry.SourcePath)
 	if os.IsNotExist(statErr) {
 		if entry.Optional {
-			_, _ = fmt.Fprintf(w, "skipping %s (not found)\n", entry.Prefix)
+			_, _ = fmt.Fprintf(w, desc.Text(text.DescKeyWriteBackupSkipEntry), entry.Prefix)
 			return nil
 		}
 		return ctxerr.SourceNotFound(entry.SourcePath)

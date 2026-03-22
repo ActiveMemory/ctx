@@ -150,12 +150,12 @@ func Number(n int) string {
 //   - string: human-readable size with unit
 func Bytes(b int64) string {
 	if b < cfgFmt.IECUnit {
-		return fmt.Sprintf("%d B", b)
+		return fmt.Sprintf(desc.Text(text.DescKeyWriteFormatBytesRaw), b)
 	}
 	div, exp := int64(cfgFmt.IECUnit), 0
 	for n := b / cfgFmt.IECUnit; n >= cfgFmt.IECUnit; n /= cfgFmt.IECUnit {
 		div *= cfgFmt.IECUnit
 		exp++
 	}
-	return fmt.Sprintf("%.1f %cB", float64(b)/float64(div), "KMGTPE"[exp])
+	return fmt.Sprintf(desc.Text(text.DescKeyWriteFormatBytesUnit), float64(b)/float64(div), "KMGTPE"[exp])
 }

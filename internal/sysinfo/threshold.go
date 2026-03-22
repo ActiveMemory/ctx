@@ -106,7 +106,7 @@ func Evaluate(snap Snapshot) []ResourceAlert {
 //   - string: Formatted GiB string (e.g. "14.7")
 func FormatGiB(bytes uint64) string {
 	gib := float64(bytes) / stats.ThresholdBytesPerGiB
-	return fmt.Sprintf("%.1f", gib)
+	return fmt.Sprintf(stats.FormatGiB, gib)
 }
 
 // percent computes the percentage of used relative to total.

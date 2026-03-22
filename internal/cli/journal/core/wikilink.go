@@ -12,6 +12,8 @@ import (
 	"regexp"
 	"strings"
 
+	"github.com/ActiveMemory/ctx/internal/assets/read/desc"
+	"github.com/ActiveMemory/ctx/internal/config/embed/text"
 	"github.com/ActiveMemory/ctx/internal/config/file"
 	"github.com/ActiveMemory/ctx/internal/config/obsidian"
 	"github.com/ActiveMemory/ctx/internal/config/token"
@@ -93,9 +95,9 @@ func FormatWikilinkEntry(e JournalEntry) string {
 
 	suffix := ""
 	if len(meta) > 0 {
-		suffix = " — " + strings.Join(meta, " · ")
+		suffix = token.MetaSeparator + strings.Join(meta, token.MetaJoin)
 	}
 
-	return fmt.Sprintf("- %s%s",
+	return fmt.Sprintf(desc.Text(text.DescKeyWriteWikilinkListItem),
 		FormatWikilink(link, e.Title), suffix)
 }

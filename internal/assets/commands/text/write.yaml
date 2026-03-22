@@ -11,6 +11,8 @@ write.archived:
   short: Archived previous mirror to %s
 write.backup-result:
   short: '%s: %s (%s)'
+write.backup-skip-entry:
+  short: "skipping %s (not found)\n"
 write.backup-smb-dest:
   short: ' → %s'
 write.bootstrap-dir:
@@ -67,6 +69,12 @@ write.export-verb-dry-run:
   short: Would
 write.format-bytes:
   short: "%dB"
+write.format-bytes-raw:
+  short: "%d B"
+write.format-bytes-unit:
+  short: "%.1f %cB"
+write.format-gvfs-path:
+  short: "/run/user/%d/gvfs/smb-share:server=%s,share=%s"
 write.format-duration-day:
   short: "%dd"
 write.format-duration-hour:
@@ -605,3 +613,5 @@ write.recall-updated:
   short: Updated %d existing session(s) (YAML frontmatter preserved)
 write.unpublish-not-found:
   short: No published block found in %s.
+write.wikilink-list-item:
+  short: "- %s%s"
