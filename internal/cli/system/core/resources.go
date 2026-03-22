@@ -112,37 +112,30 @@ func FormatResourcesText(snap sysinfo.Snapshot, alerts []sysinfo.ResourceAlert) 
 	lines = append(lines, desc.Text(text.DescKeyResourcesSeparator))
 	lines = append(lines, "")
 
-	// Memory line
-	if snap.Memory.Supported {
-		pct := PctOf(snap.Memory.UsedBytes, snap.Memory.TotalBytes)
-		values := fmt.Sprintf(resourceValueFormat(),
-			sysinfo.FormatGiB(snap.Memory.UsedBytes),
-			sysinfo.FormatGiB(snap.Memory.TotalBytes),
-			pct)
-		sev := SeverityFor(alerts, sysinfo.ResourceMemory)
-		lines = append(lines, FormatResourceLine(desc.Text(text.DescKeyResourcesLabelMemory), values, StatusText(sev)))
+	// Memory, Swap, Disk lines
+	type gibEntry struct {
+		supported   bool
+		used, total uint64
+		resource    string
+		labelKey    string
 	}
-
-	// Swap line
-	if snap.Memory.Supported {
-		pct := PctOf(snap.Memory.SwapUsedBytes, snap.Memory.SwapTotalBytes)
-		values := fmt.Sprintf(resourceValueFormat(),
-			sysinfo.FormatGiB(snap.Memory.SwapUsedBytes),
-			sysinfo.FormatGiB(snap.Memory.SwapTotalBytes),
-			pct)
-		sev := SeverityFor(alerts, sysinfo.ResourceSwap)
-		lines = append(lines, FormatResourceLine(desc.Text(text.DescKeyResourcesLabelSwap), values, StatusText(sev)))
+	gibEntries := []gibEntry{
+		{snap.Memory.Supported, snap.Memory.UsedBytes, snap.Memory.TotalBytes,
+			sysinfo.ResourceMemory, text.DescKeyResourcesLabelMemory},
+		{snap.Memory.Supported, snap.Memory.SwapUsedBytes, snap.Memory.SwapTotalBytes,
+			sysinfo.ResourceSwap, text.DescKeyResourcesLabelSwap},
+		{snap.Disk.Supported, snap.Disk.UsedBytes, snap.Disk.TotalBytes,
+			sysinfo.ResourceDisk, text.DescKeyResourcesLabelDisk},
 	}
-
-	// Disk line
-	if snap.Disk.Supported {
-		pct := PctOf(snap.Disk.UsedBytes, snap.Disk.TotalBytes)
+	for _, e := range gibEntries {
+		if !e.supported {
+			continue
+		}
+		pct := PctOf(e.used, e.total)
 		values := fmt.Sprintf(resourceValueFormat(),
-			sysinfo.FormatGiB(snap.Disk.UsedBytes),
-			sysinfo.FormatGiB(snap.Disk.TotalBytes),
-			pct)
-		sev := SeverityFor(alerts, sysinfo.ResourceDisk)
-		lines = append(lines, FormatResourceLine(desc.Text(text.DescKeyResourcesLabelDisk), values, StatusText(sev)))
+			sysinfo.FormatGiB(e.used), sysinfo.FormatGiB(e.total), pct)
+		sev := SeverityFor(alerts, e.resource)
+		lines = append(lines, FormatResourceLine(desc.Text(e.labelKey), values, StatusText(sev)))
 	}
 
 	// Load line
