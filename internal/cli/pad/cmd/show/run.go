@@ -50,10 +50,10 @@ func Run(cmd *cobra.Command, n int, outPath string) error {
 			); writeErr != nil {
 				return errFs.WriteFileFailed(writeErr)
 			}
-			pad.PadBlobWritten(cmd, len(data), outPath)
+			pad.BlobWritten(cmd, len(data), outPath)
 			return nil
 		}
-		pad.ShowBlob(cmd, data)
+		pad.BlobShow(cmd, data)
 		return nil
 	}
 
@@ -61,6 +61,6 @@ func Run(cmd *cobra.Command, n int, outPath string) error {
 		return errPad.OutFlagRequiresBlob()
 	}
 
-	pad.ShowEntry(cmd, entry)
+	pad.EntryShow(cmd, entry)
 	return nil
 }

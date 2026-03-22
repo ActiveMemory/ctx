@@ -46,11 +46,11 @@ func Run(cmd *cobra.Command) error {
 	}
 
 	if errOurs == nil {
-		writePad.PadResolveSide(cmd, pad.SideOurs, displayAll(ours))
+		writePad.ResolveSide(cmd, pad.SideOurs, displayAll(ours))
 	}
 
 	if errTheirs == nil {
-		writePad.PadResolveSide(cmd, pad.SideTheirs, displayAll(theirs))
+		writePad.ResolveSide(cmd, pad.SideTheirs, displayAll(theirs))
 	}
 
 	return nil

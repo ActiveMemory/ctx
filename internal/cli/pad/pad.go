@@ -52,7 +52,7 @@ func Cmd() *cobra.Command {
 			}
 
 			for i, entry := range entries {
-				pad.ListEntry(cmd, fmt.Sprintf(desc.Text(text.DescKeyWritePadListItem), i+1, core.DisplayEntry(entry)))
+				pad.EntryList(cmd, fmt.Sprintf(desc.Text(text.DescKeyWritePadListItem), i+1, core.DisplayEntry(entry)))
 			}
 
 			return nil

@@ -37,3 +37,52 @@ func EntryUpdated(cmd *cobra.Command, n int) {
 	}
 	cmd.Println(fmt.Sprintf(desc.Text(text.DescKeyWritePadEntryUpdated), n))
 }
+
+// EntryRemoved prints confirmation that a pad entry was removed.
+//
+// Parameters:
+//   - cmd: Cobra command for output. Nil is a no-op.
+//   - n: entry number (1-based).
+func EntryRemoved(cmd *cobra.Command, n int) {
+	if cmd == nil {
+		return
+	}
+	cmd.Println(fmt.Sprintf(desc.Text(text.DescKeyWritePadEntryRemoved), n))
+}
+
+// EntryMoved prints confirmation that a pad entry was moved.
+//
+// Parameters:
+//   - cmd: Cobra command for output. Nil is a no-op.
+//   - from: source position (1-based).
+//   - to: destination position (1-based).
+func EntryMoved(cmd *cobra.Command, from, to int) {
+	if cmd == nil {
+		return
+	}
+	cmd.Println(fmt.Sprintf(desc.Text(text.DescKeyWritePadEntryMoved), from, to))
+}
+
+// EntryShow prints a pad entry with a trailing newline.
+//
+// Parameters:
+//   - cmd: Cobra command for output. Nil is a no-op.
+//   - entry: Entry text.
+func EntryShow(cmd *cobra.Command, entry string) {
+	if cmd == nil {
+		return
+	}
+	cmd.Println(entry)
+}
+
+// EntryList prints a formatted pad list item.
+//
+// Parameters:
+//   - cmd: Cobra command for output. Nil is a no-op.
+//   - line: Pre-formatted list item string.
+func EntryList(cmd *cobra.Command, line string) {
+	if cmd == nil {
+		return
+	}
+	cmd.Println(line)
+}

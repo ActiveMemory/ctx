@@ -47,6 +47,6 @@ func Run(cmd *cobra.Command, n, m int) error {
 		return writeErr
 	}
 
-	pad.PadEntryMoved(cmd, n, m)
+	pad.EntryMoved(cmd, n, m)
 	return nil
 }

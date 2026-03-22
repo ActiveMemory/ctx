@@ -3,6 +3,8 @@
 <!-- INDEX:START -->
 | Date | Decision |
 |------|--------|
+| 2026-03-22 | No runtime pluralization — use singular/plural text key pairs |
+| 2026-03-22 | Output functions belong in write/, never in core/ or cmd/ |
 | 2026-03-21 | Output functions belong in write/, logic and types in core/ |
 | 2026-03-20 | Shared formatting utilities belong in internal/format |
 | 2026-03-20 | Go-YAML linkage check added to lint-drift as check 5 |
@@ -58,6 +60,34 @@
 | 2026-02-26 | Security and permissions (consolidated) |
 | 2026-02-27 | Webhook and notification design (consolidated) |
 <!-- INDEX:END -->
+
+## [2026-03-22-084509] No runtime pluralization — use singular/plural text key pairs
+
+**Status**: Accepted
+
+**Context**: Hardcoded English plural rules (+ s, y → ies) were scattered across format.Pluralize, padPluralize, and inline code — all i18n dead-ends
+
+**Decision**: No runtime pluralization — use singular/plural text key pairs
+
+**Rationale**: Different languages have vastly different plural rules. Complete sentence templates with embedded counts (time.minute-count '1 minute', time.minutes-count '%d minutes') let each locale define its own plural forms.
+
+**Consequence**: format.Pluralize and format.PluralWord are deleted. All plural output uses paired text keys with the count embedded in the template.
+
+---
+
+## [2026-03-22-084316] Output functions belong in write/, never in core/ or cmd/
+
+**Status**: Accepted
+
+**Context**: System write migration revealed that cmd.Print* calls scattered across core/ and cmd/ packages prevented localization and violated separation of concerns
+
+**Decision**: Output functions belong in write/, never in core/ or cmd/
+
+**Rationale**: The write/ taxonomy is flat by domain — each CLI feature gets its own write/ package. core/ owns logic and types, cmd/ owns orchestration, write/ owns all output.
+
+**Consequence**: All new CLI output must go through a write/ package. No cmd.Print* calls in internal/cli/ outside of internal/write/.
+
+---
 
 ## [2026-03-21-084020] Output functions belong in write/, logic and types in core/
 

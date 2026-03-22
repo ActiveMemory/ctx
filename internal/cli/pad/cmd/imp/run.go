@@ -41,7 +41,7 @@ func runImport(cmd *cobra.Command, file string) error {
 		}
 		defer func() {
 			if cErr := f.Close(); cErr != nil {
-				writePad.ErrPadImportCloseWarning(cmd, file, cErr)
+				writePad.ErrImportCloseWarning(cmd, file, cErr)
 			}
 		}()
 		r = f
@@ -67,7 +67,7 @@ func runImport(cmd *cobra.Command, file string) error {
 	}
 
 	if count == 0 {
-		writePad.PadImportNone(cmd)
+		writePad.ImportNone(cmd)
 		return nil
 	}
 
@@ -75,7 +75,7 @@ func runImport(cmd *cobra.Command, file string) error {
 		return writeErr
 	}
 
-	writePad.PadImportDone(cmd, count)
+	writePad.ImportDone(cmd, count)
 	return nil
 }
 
@@ -117,19 +117,19 @@ func runImportBlobs(cmd *cobra.Command, path string) error {
 
 		data, fileErr := internalIo.SafeReadFile(path, name)
 		if fileErr != nil {
-			writePad.ErrPadImportBlobSkipped(cmd, name, fileErr)
+			writePad.ErrImportBlobSkipped(cmd, name, fileErr)
 			skipped++
 			continue
 		}
 
 		if len(data) > pad.MaxBlobSize {
-			writePad.ErrPadImportBlobTooLarge(cmd, name, pad.MaxBlobSize)
+			writePad.ErrImportBlobTooLarge(cmd, name, pad.MaxBlobSize)
 			skipped++
 			continue
 		}
 
 		entries = append(entries, core.MakeBlob(name, data))
-		writePad.PadImportBlobAdded(cmd, name)
+		writePad.ImportBlobAdded(cmd, name)
 		added++
 	}
 
@@ -139,6 +139,6 @@ func runImportBlobs(cmd *cobra.Command, path string) error {
 		}
 	}
 
-	writePad.PadImportBlobSummary(cmd, added, skipped)
+	writePad.ImportBlobSummary(cmd, added, skipped)
 	return nil
 }

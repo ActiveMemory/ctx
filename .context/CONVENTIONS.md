@@ -171,3 +171,7 @@
 - cmd/ directories contain only cmd.go, run.go, and tests — helpers and output go to core/
 
 - Package directory names are singular unless Go convention requires plural
+
+- camelCase import aliases — cFlag not cflag, cfgFmt not cfgfmt
+
+- Icons and symbols as config/token constants, not unicode escapes

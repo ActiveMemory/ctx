@@ -8,13 +8,10 @@ package core
 
 import (
 	"errors"
-	"fmt"
 	"os"
 	"path/filepath"
 	"strings"
 
-	"github.com/ActiveMemory/ctx/internal/assets/read/desc"
-	"github.com/ActiveMemory/ctx/internal/config/embed/text"
 	"github.com/ActiveMemory/ctx/internal/config/file"
 	"github.com/ActiveMemory/ctx/internal/config/fs"
 	"github.com/ActiveMemory/ctx/internal/config/pad"
@@ -24,6 +21,7 @@ import (
 	errPad "github.com/ActiveMemory/ctx/internal/err/pad"
 	"github.com/ActiveMemory/ctx/internal/io"
 	"github.com/ActiveMemory/ctx/internal/rc"
+	writePad "github.com/ActiveMemory/ctx/internal/write/pad"
 )
 
 // ScratchpadPath returns the full path to the scratchpad file.
@@ -84,12 +82,7 @@ func EnsureKey() error {
 		return errCrypto.SaveKey(saveErr)
 	}
 
-	_, err := fmt.Fprintln(
-		os.Stderr, fmt.Sprintf(desc.Text(text.DescKeyPadKeyCreated), kp),
-	)
-	if err != nil {
-		return err
-	}
+	writePad.KeyCreated(kp)
 	return nil
 }
 

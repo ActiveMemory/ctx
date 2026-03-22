@@ -62,3 +62,26 @@ func ErrExportWrite(cmd *cobra.Command, label string, cause error) {
 		),
 	)
 }
+
+// ExportSummary prints the export summary or "no blobs" message.
+//
+// Parameters:
+//   - cmd: Cobra command for output. Nil is a no-op.
+//   - count: number of blobs exported.
+//   - dryRun: whether this was a dry run.
+func ExportSummary(cmd *cobra.Command, count int, dryRun bool) {
+	if cmd == nil {
+		return
+	}
+	if count == 0 {
+		cmd.Println(desc.Text(text.DescKeyWritePadExportNone))
+		return
+	}
+	verb := desc.Text(text.DescKeyWritePadExportVerbDone)
+	if dryRun {
+		verb = desc.Text(text.DescKeyWritePadExportVerbDryRun)
+	}
+	cmd.Println(
+		fmt.Sprintf(desc.Text(text.DescKeyWritePadExportSummary), verb, count),
+	)
+}

@@ -93,6 +93,6 @@ func runExport(cmd *cobra.Command, dir string, force, dryRun bool) error {
 		count++
 	}
 
-	pad.PadExportSummary(cmd, count, dryRun)
+	pad.ExportSummary(cmd, count, dryRun)
 	return nil
 }

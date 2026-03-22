@@ -55,34 +55,34 @@ func Run(
 		}
 
 		if core.HasBinaryEntries(entries) {
-			pad.PadMergeBinaryWarning(cmd, file)
+			pad.MergeBinaryWarning(cmd, file)
 		}
 
 		for _, entry := range entries {
 			if seen[entry] {
 				dupes++
-				pad.PadMergeDupe(cmd, core.DisplayEntry(entry))
+				pad.MergeDupe(cmd, core.DisplayEntry(entry))
 				continue
 			}
 			seen[entry] = true
 
 			if conflict, label := core.HasBlobConflict(entry, blobLabels); conflict {
-				pad.PadMergeBlobConflict(cmd, label)
+				pad.MergeBlobConflict(cmd, label)
 			}
 
 			newEntries = append(newEntries, entry)
 			added++
-			pad.PadMergeAdded(cmd, core.DisplayEntry(entry), file)
+			pad.MergeAdded(cmd, core.DisplayEntry(entry), file)
 		}
 	}
 
 	if added == 0 {
-		pad.PadMergeSummary(cmd, added, dupes, dryRun)
+		pad.MergeSummary(cmd, added, dupes, dryRun)
 		return nil
 	}
 
 	if dryRun {
-		pad.PadMergeSummary(cmd, added, dupes, dryRun)
+		pad.MergeSummary(cmd, added, dupes, dryRun)
 		return nil
 	}
 
@@ -93,6 +93,6 @@ func Run(
 		return writeErr
 	}
 
-	pad.PadMergeSummary(cmd, added, dupes, false)
+	pad.MergeSummary(cmd, added, dupes, false)
 	return nil
 }
