@@ -5,6 +5,8 @@ write.agent-bullet-item:
   short: "- %s"
 write.agent-numbered-item:
   short: "%d. %s"
+write.add-missing-fields:
+  short: '%s missing required fields: %s'
 write.added-to:
   short: ✓ Added to %s
 write.archived:
@@ -341,6 +343,14 @@ write.obsidian-next-steps:
   short: '  Open Obsidian → Open folder as vault → Select %s'
 write.pad-blob-written:
   short: Wrote %d bytes to %s
+write.pad-word-duplicate:
+  short: duplicate
+write.pad-word-duplicates:
+  short: duplicates
+write.pad-word-entry:
+  short: entry
+write.pad-word-entries:
+  short: entries
 write.pad-empty:
   short: Scratchpad is empty.
 write.pad-list-item:

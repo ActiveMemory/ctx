@@ -60,3 +60,10 @@ const (
 	DescKeyWritePadKeyCreated = "write.pad-key-created"
 	DescKeyPadKeyCreated      = "pad.key-created"
 )
+
+const (
+	DescKeyWritePadWordDuplicate  = "write.pad-word-duplicate"
+	DescKeyWritePadWordDuplicates = "write.pad-word-duplicates"
+	DescKeyWritePadWordEntry      = "write.pad-word-entry"
+	DescKeyWritePadWordEntries    = "write.pad-word-entries"
+)

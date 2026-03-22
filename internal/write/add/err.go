@@ -9,6 +9,10 @@ package add
 import (
 	"fmt"
 	"strings"
+
+	"github.com/ActiveMemory/ctx/internal/assets/read/desc"
+	"github.com/ActiveMemory/ctx/internal/config/embed/text"
+	"github.com/ActiveMemory/ctx/internal/config/token"
 )
 
 // ErrNoContent returns a simple error when no content source is available.
@@ -42,7 +46,7 @@ Example:
     --context "Need a reliable database for production workloads" \
     --rationale "PostgreSQL offers ACID compliance, JSON support, and team familiarity" \
     --consequence "Team needs PostgreSQL training; must set up replication"`,
-		strings.Join(missing, ", "))
+		strings.Join(missing, token.CommaSpace))
 }
 
 // ErrMissingLearning returns an error with usage help for incomplete learnings.
@@ -68,7 +72,7 @@ Example:
     --context "Tried to embed files from parent directory, got compile error" \
     --lesson "go:embed only works with files in same or child directories" \
     --application "Keep embedded files in internal/templates/, not project root"`,
-		strings.Join(missing, ", "))
+		strings.Join(missing, token.CommaSpace))
 }
 
 // ErrNoContentProvided returns an error with usage help when content is missing.
@@ -175,6 +179,6 @@ func ErrFileNotFound(path string) error {
 //   - error: Formatted error listing the missing fields
 func ErrMissingFields(entryType string, missing []string) error {
 	return fmt.Errorf(
-		"%s missing required fields: %s", entryType, strings.Join(missing, ", "),
+		desc.Text(text.DescKeyWriteAddMissingFields), entryType, strings.Join(missing, token.CommaSpace),
 	)
 }
