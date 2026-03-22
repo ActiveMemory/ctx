@@ -12,7 +12,7 @@ import (
 	"github.com/ActiveMemory/ctx/internal/assets/read/desc"
 	"github.com/ActiveMemory/ctx/internal/config/embed/cmd"
 	"github.com/ActiveMemory/ctx/internal/config/embed/flag"
-	cflag "github.com/ActiveMemory/ctx/internal/config/flag"
+	cFlag "github.com/ActiveMemory/ctx/internal/config/flag"
 )
 
 // Cmd returns the remind add subcommand.
@@ -33,7 +33,7 @@ func Cmd() *cobra.Command {
 		},
 	}
 
-	c.Flags().StringVarP(&afterFlag, cflag.After, cflag.ShortAfter, "",
+	c.Flags().StringVarP(&afterFlag, cFlag.After, cFlag.ShortAfter, "",
 		desc.Flag(flag.DescKeyRemindAddAfter),
 	)
 

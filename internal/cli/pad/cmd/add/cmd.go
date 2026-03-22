@@ -12,7 +12,7 @@ import (
 	"github.com/ActiveMemory/ctx/internal/assets/read/desc"
 	"github.com/ActiveMemory/ctx/internal/config/embed/cmd"
 	"github.com/ActiveMemory/ctx/internal/config/embed/flag"
-	cflag "github.com/ActiveMemory/ctx/internal/config/flag"
+	cFlag "github.com/ActiveMemory/ctx/internal/config/flag"
 )
 
 // Cmd returns the pad add subcommand.
@@ -36,7 +36,7 @@ func Cmd() *cobra.Command {
 	}
 
 	c.Flags().StringVarP(&filePath,
-		cflag.File, cflag.ShortFile, "",
+		cFlag.File, cFlag.ShortFile, "",
 		desc.Flag(flag.DescKeyPadAddFile),
 	)
 

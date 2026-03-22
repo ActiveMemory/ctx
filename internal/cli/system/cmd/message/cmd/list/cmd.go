@@ -12,7 +12,7 @@ import (
 	"github.com/ActiveMemory/ctx/internal/assets/read/desc"
 	"github.com/ActiveMemory/ctx/internal/config/embed/cmd"
 	"github.com/ActiveMemory/ctx/internal/config/embed/flag"
-	cflag "github.com/ActiveMemory/ctx/internal/config/flag"
+	cFlag "github.com/ActiveMemory/ctx/internal/config/flag"
 )
 
 // Cmd returns the "ctx system message list" subcommand.
@@ -29,6 +29,6 @@ func Cmd() *cobra.Command {
 			return Run(cmd)
 		},
 	}
-	c.Flags().Bool(cflag.JSON, false, desc.Flag(flag.DescKeySystemMessageJson))
+	c.Flags().Bool(cFlag.JSON, false, desc.Flag(flag.DescKeySystemMessageJson))
 	return c
 }

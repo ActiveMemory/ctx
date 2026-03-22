@@ -12,7 +12,7 @@ import (
 	"github.com/ActiveMemory/ctx/internal/config/embed/cmd"
 	"github.com/ActiveMemory/ctx/internal/config/embed/flag"
 	"github.com/ActiveMemory/ctx/internal/config/entry"
-	cflag "github.com/ActiveMemory/ctx/internal/config/flag"
+	cFlag "github.com/ActiveMemory/ctx/internal/config/flag"
 	"github.com/ActiveMemory/ctx/internal/flagbind"
 
 	"github.com/spf13/cobra"
@@ -72,30 +72,30 @@ func Cmd() *cobra.Command {
 
 	c.Flags().StringVarP(
 		&priority,
-		cflag.Priority, cflag.ShortPriority, "",
+		cFlag.Priority, cFlag.ShortPriority, "",
 		desc.Flag(flag.DescKeyAddPriority),
 	)
 	_ = c.RegisterFlagCompletionFunc(
-		cflag.Priority, func(_ *cobra.Command, _ []string, _ string) (
+		cFlag.Priority, func(_ *cobra.Command, _ []string, _ string) (
 			[]string, cobra.ShellCompDirective,
 		) {
 			return entry.Priorities, cobra.ShellCompDirectiveNoFileComp
 		})
 	c.Flags().StringVarP(
 		&section,
-		cflag.Section, cflag.ShortSection, "",
+		cFlag.Section, cFlag.ShortSection, "",
 		desc.Flag(flag.DescKeyAddSection),
 	)
 	c.Flags().StringVarP(
 		&fromFile,
-		cflag.File, cflag.ShortFile, "",
+		cFlag.File, cFlag.ShortFile, "",
 		desc.Flag(flag.DescKeyAddFile),
 	)
-	flagbind.StringFlagP(c, &context, cflag.Context, cflag.ShortContext, flag.DescKeyAddContext)
-	flagbind.StringFlagP(c, &rationale, cflag.Rationale, cflag.ShortRationale, flag.DescKeyAddRationale)
-	flagbind.StringFlag(c, &consequence, cflag.Consequence, flag.DescKeyAddConsequence)
-	flagbind.StringFlagP(c, &lesson, cflag.Lesson, cflag.ShortLesson, flag.DescKeyAddLesson)
-	flagbind.StringFlagP(c, &application, cflag.Application, cflag.ShortApplication, flag.DescKeyAddApplication)
+	flagbind.StringFlagP(c, &context, cFlag.Context, cFlag.ShortContext, flag.DescKeyAddContext)
+	flagbind.StringFlagP(c, &rationale, cFlag.Rationale, cFlag.ShortRationale, flag.DescKeyAddRationale)
+	flagbind.StringFlag(c, &consequence, cFlag.Consequence, flag.DescKeyAddConsequence)
+	flagbind.StringFlagP(c, &lesson, cFlag.Lesson, cFlag.ShortLesson, flag.DescKeyAddLesson)
+	flagbind.StringFlagP(c, &application, cFlag.Application, cFlag.ShortApplication, flag.DescKeyAddApplication)
 
 	return c
 }

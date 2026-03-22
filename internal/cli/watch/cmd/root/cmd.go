@@ -10,7 +10,7 @@ import (
 	"github.com/ActiveMemory/ctx/internal/assets/read/desc"
 	"github.com/ActiveMemory/ctx/internal/config/embed/cmd"
 	"github.com/ActiveMemory/ctx/internal/config/embed/flag"
-	cflag "github.com/ActiveMemory/ctx/internal/config/flag"
+	cFlag "github.com/ActiveMemory/ctx/internal/config/flag"
 	"github.com/spf13/cobra"
 )
 
@@ -43,7 +43,7 @@ func Cmd() *cobra.Command {
 		&logPath, "log", "", desc.Flag(flag.DescKeyWatchLog),
 	)
 	cmd.Flags().BoolVar(
-		&dryRun, cflag.DryRun, false, desc.Flag(flag.DescKeyWatchDryRun),
+		&dryRun, cFlag.DryRun, false, desc.Flag(flag.DescKeyWatchDryRun),
 	)
 
 	return cmd

@@ -12,7 +12,7 @@ import (
 	"github.com/ActiveMemory/ctx/internal/assets/read/desc"
 	"github.com/ActiveMemory/ctx/internal/config/embed/cmd"
 	"github.com/ActiveMemory/ctx/internal/config/embed/flag"
-	cflag "github.com/ActiveMemory/ctx/internal/config/flag"
+	cFlag "github.com/ActiveMemory/ctx/internal/config/flag"
 )
 
 // Cmd returns the pad import subcommand.
@@ -36,7 +36,7 @@ func Cmd() *cobra.Command {
 		},
 	}
 
-	c.Flags().BoolVar(&blobs, cflag.Blob, false,
+	c.Flags().BoolVar(&blobs, cFlag.Blob, false,
 		desc.Flag(flag.DescKeyPadImpBlob))
 
 	return c

@@ -13,7 +13,7 @@ import (
 	"github.com/ActiveMemory/ctx/internal/config/cli"
 	"github.com/ActiveMemory/ctx/internal/config/embed/cmd"
 	"github.com/ActiveMemory/ctx/internal/config/embed/flag"
-	cflag "github.com/ActiveMemory/ctx/internal/config/flag"
+	cFlag "github.com/ActiveMemory/ctx/internal/config/flag"
 )
 
 // Cmd returns the "ctx init" command for initializing a .context/ directory.
@@ -56,24 +56,24 @@ func Cmd() *cobra.Command {
 
 	c.Flags().BoolVarP(
 		&force,
-		cflag.Force, cflag.ShortForce, false,
+		cFlag.Force, cFlag.ShortForce, false,
 		desc.Flag(flag.DescKeyInitializeForce),
 	)
 	c.Flags().BoolVarP(
 		&minimal,
-		cflag.Minimal, cflag.ShortMinimal, false,
+		cFlag.Minimal, cFlag.ShortMinimal, false,
 		desc.Flag(flag.DescKeyInitializeMinimal),
 	)
 	c.Flags().BoolVar(
-		&merge, cflag.Merge, false,
+		&merge, cFlag.Merge, false,
 		desc.Flag(flag.DescKeyInitializeMerge),
 	)
 	c.Flags().BoolVar(
-		&ralph, cflag.Ralph, false,
+		&ralph, cFlag.Ralph, false,
 		desc.Flag(flag.DescKeyInitializeRalph),
 	)
 	c.Flags().BoolVar(
-		&noPluginEnable, cflag.NoPluginEnable, false,
+		&noPluginEnable, cFlag.NoPluginEnable, false,
 		desc.Flag(flag.DescKeyInitializeNoPluginEnable),
 	)
 

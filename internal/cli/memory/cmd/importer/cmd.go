@@ -12,7 +12,7 @@ import (
 	"github.com/ActiveMemory/ctx/internal/assets/read/desc"
 	"github.com/ActiveMemory/ctx/internal/config/embed/cmd"
 	"github.com/ActiveMemory/ctx/internal/config/embed/flag"
-	cflag "github.com/ActiveMemory/ctx/internal/config/flag"
+	cFlag "github.com/ActiveMemory/ctx/internal/config/flag"
 )
 
 // Cmd returns the memory import subcommand.
@@ -33,7 +33,7 @@ func Cmd() *cobra.Command {
 	}
 
 	c.Flags().BoolVar(
-		&dryRun, cflag.DryRun, false,
+		&dryRun, cFlag.DryRun, false,
 		desc.Flag(flag.DescKeyMemoryImportDryRun),
 	)
 

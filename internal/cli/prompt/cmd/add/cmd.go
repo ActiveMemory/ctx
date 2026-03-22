@@ -12,7 +12,7 @@ import (
 	"github.com/ActiveMemory/ctx/internal/assets/read/desc"
 	"github.com/ActiveMemory/ctx/internal/config/embed/cmd"
 	"github.com/ActiveMemory/ctx/internal/config/embed/flag"
-	cflag "github.com/ActiveMemory/ctx/internal/config/flag"
+	cFlag "github.com/ActiveMemory/ctx/internal/config/flag"
 )
 
 // Cmd returns the prompt add subcommand.
@@ -35,7 +35,7 @@ func Cmd() *cobra.Command {
 	}
 
 	c.Flags().BoolVar(&fromStdin,
-		cflag.Stdin, false, desc.Flag(flag.DescKeyPromptAddStdin),
+		cFlag.Stdin, false, desc.Flag(flag.DescKeyPromptAddStdin),
 	)
 
 	return c

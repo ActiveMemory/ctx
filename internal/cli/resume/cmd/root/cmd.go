@@ -12,7 +12,7 @@ import (
 	"github.com/ActiveMemory/ctx/internal/assets/read/desc"
 	"github.com/ActiveMemory/ctx/internal/config/embed/cmd"
 	"github.com/ActiveMemory/ctx/internal/config/embed/flag"
-	cflag "github.com/ActiveMemory/ctx/internal/config/flag"
+	cFlag "github.com/ActiveMemory/ctx/internal/config/flag"
 )
 
 // Cmd returns the top-level "ctx resume" command.
@@ -27,12 +27,12 @@ func Cmd() *cobra.Command {
 		Short: short,
 		Long:  long,
 		RunE: func(cmd *cobra.Command, _ []string) error {
-			sessionID, _ := cmd.Flags().GetString(cflag.SessionID)
+			sessionID, _ := cmd.Flags().GetString(cFlag.SessionID)
 			return Run(cmd, sessionID)
 		},
 	}
 
-	c.Flags().String(cflag.SessionID, "",
+	c.Flags().String(cFlag.SessionID, "",
 		desc.Flag(flag.DescKeyResumeSessionId),
 	)
 

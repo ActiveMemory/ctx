@@ -13,7 +13,7 @@ import (
 	"github.com/ActiveMemory/ctx/internal/config/cli"
 	"github.com/ActiveMemory/ctx/internal/config/embed/cmd"
 	"github.com/ActiveMemory/ctx/internal/config/embed/flag"
-	cflag "github.com/ActiveMemory/ctx/internal/config/flag"
+	cFlag "github.com/ActiveMemory/ctx/internal/config/flag"
 )
 
 // Cmd returns the "ctx hook" command for generating AI tool integrations.
@@ -42,7 +42,7 @@ func Cmd() *cobra.Command {
 	}
 
 	c.Flags().BoolVarP(
-		&write, cflag.Write, cflag.ShortWrite, false,
+		&write, cFlag.Write, cFlag.ShortWrite, false,
 		desc.Flag(flag.DescKeyHookWrite),
 	)
 
