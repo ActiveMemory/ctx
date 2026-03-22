@@ -56,22 +56,6 @@ func TimeAgo(hours float64, mins int, fallbackDate string) string {
 	}
 }
 
-// PluralWord returns the singular or plural word form based on count.
-//
-// Parameters:
-//   - n: count
-//   - singular: singular form (e.g., "entry")
-//   - plural: plural form (e.g., "entries")
-//
-// Returns:
-//   - string: the appropriate word form
-func PluralWord(n int, singular, plural string) string {
-	if n == 1 {
-		return singular
-	}
-	return plural
-}
-
 // Duration returns a human-readable duration string without a suffix.
 //
 // Parameters:

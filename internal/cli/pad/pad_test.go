@@ -2412,8 +2412,11 @@ func TestMerge_Basic(t *testing.T) {
 	if err != nil {
 		t.Fatalf("merge error: %v", err)
 	}
-	if !strings.Contains(out, "Merged 2 new entries (1 duplicate skipped).") {
+	if !strings.Contains(out, "Merged 2 new entries.") {
 		t.Errorf("output = %q, want merge summary", out)
+	}
+	if !strings.Contains(out, "Skipped 1 duplicate.") {
+		t.Errorf("output = %q, want skip summary", out)
 	}
 
 	// Verify all 4 unique entries exist.
@@ -2444,7 +2447,7 @@ func TestMerge_AllDuplicates(t *testing.T) {
 	if err != nil {
 		t.Fatalf("merge error: %v", err)
 	}
-	if !strings.Contains(out, "No new entries to merge (2 duplicates skipped).") {
+	if !strings.Contains(out, "No new entries to merge.") {
 		t.Errorf("output = %q, want no-new summary", out)
 	}
 }
@@ -2482,7 +2485,7 @@ func TestMerge_MultipleFiles(t *testing.T) {
 		t.Fatalf("merge error: %v", err)
 	}
 	// "shared" appears in both files; second occurrence is a dupe.
-	if !strings.Contains(out, "Merged 3 new entries (1 duplicate skipped).") {
+	if !strings.Contains(out, "Merged 3 new entries.") {
 		t.Errorf("output = %q, want multi-file summary", out)
 	}
 
@@ -2722,7 +2725,7 @@ func TestMerge_EmptyPadMerge(t *testing.T) {
 	if err != nil {
 		t.Fatalf("merge error: %v", err)
 	}
-	if !strings.Contains(out, "Merged 3 new entries (0 duplicates skipped).") {
+	if !strings.Contains(out, "Merged 3 new entries.") {
 		t.Errorf("output = %q, want empty pad merge", out)
 	}
 }
@@ -2813,7 +2816,7 @@ func TestMerge_CrossFileDedup(t *testing.T) {
 	}
 	// base: dupe (in pad), shared-ab from A: new, shared-ab from B: dupe
 	// unique-a: new, unique-b: new
-	if !strings.Contains(out, "Merged 3 new entries (2 duplicates skipped).") {
+	if !strings.Contains(out, "Merged 3 new entries.") {
 		t.Errorf("output = %q, want cross-file dedup summary", out)
 	}
 }
@@ -2846,7 +2849,7 @@ func TestMerge_EncryptedWithBlobDedup(t *testing.T) {
 		t.Fatalf("merge error: %v", err)
 	}
 	// blob is duplicate, "new-text" is new.
-	if !strings.Contains(out, "Merged 1 new entry (1 duplicate skipped).") {
+	if !strings.Contains(out, "Merged 1 new entry.") {
 		t.Errorf("output = %q, want encrypted blob dedup", out)
 	}
 }

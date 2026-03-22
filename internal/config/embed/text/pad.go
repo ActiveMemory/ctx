@@ -7,14 +7,18 @@
 package text
 
 const (
-	DescKeyWritePadMergeAdded         = "write.pad-merge-added"
-	DescKeyWritePadMergeBinaryWarning = "write.pad-merge-binary-warning"
-	DescKeyWritePadMergeBlobConflict  = "write.pad-merge-blob-conflict"
-	DescKeyWritePadMergeDone          = "write.pad-merge-done"
-	DescKeyWritePadMergeDryRun        = "write.pad-merge-dry-run"
-	DescKeyWritePadMergeDupe          = "write.pad-merge-dupe"
-	DescKeyWritePadMergeNone          = "write.pad-merge-none"
-	DescKeyWritePadMergeNoneNew       = "write.pad-merge-none-new"
+	DescKeyWritePadMergeAdded          = "write.pad-merge-added"
+	DescKeyWritePadMergeBinaryWarning  = "write.pad-merge-binary-warning"
+	DescKeyWritePadMergeBlobConflict   = "write.pad-merge-blob-conflict"
+	DescKeyWritePadMergeDone1Entry     = "write.pad-merge-done-1-entry"
+	DescKeyWritePadMergeDoneNEntries   = "write.pad-merge-done-n-entries"
+	DescKeyWritePadMergeDryRun1Entry   = "write.pad-merge-dry-run-1-entry"
+	DescKeyWritePadMergeDryRunNEntries = "write.pad-merge-dry-run-n-entries"
+	DescKeyWritePadMergeDupe           = "write.pad-merge-dupe"
+	DescKeyWritePadMergeNone           = "write.pad-merge-none"
+	DescKeyWritePadMergeNoneNew        = "write.pad-merge-none-new"
+	DescKeyWritePadMergeSkipped1       = "write.pad-merge-skipped-1"
+	DescKeyWritePadMergeSkippedN       = "write.pad-merge-skipped-n"
 )
 
 const (
@@ -59,11 +63,4 @@ const (
 const (
 	DescKeyWritePadKeyCreated = "write.pad-key-created"
 	DescKeyPadKeyCreated      = "pad.key-created"
-)
-
-const (
-	DescKeyWritePadWordDuplicate  = "write.pad-word-duplicate"
-	DescKeyWritePadWordDuplicates = "write.pad-word-duplicates"
-	DescKeyWritePadWordEntry      = "write.pad-word-entry"
-	DescKeyWritePadWordEntries    = "write.pad-word-entries"
 )
