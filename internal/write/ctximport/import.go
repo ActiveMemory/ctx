@@ -102,7 +102,7 @@ func ErrPromote(cmd *cobra.Command, targetFile string, cause error) {
 	if cmd == nil {
 		return
 	}
-	cmd.PrintErrln(fmt.Sprintf("  Error promoting to %s: %v", targetFile, cause))
+	cmd.PrintErrln(fmt.Sprintf(desc.Text(text.DescKeyWriteImportErrorPromote), targetFile, cause))
 }
 
 // Summary prints the full import summary block: total with

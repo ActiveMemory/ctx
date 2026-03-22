@@ -23,6 +23,7 @@ const (
 	DescKeyWriteImportNoEntries      = "write.import-no-entries"
 	DescKeyWriteImportScanning       = "write.import-scanning"
 	DescKeyWriteImportSkipped        = "write.import-skipped"
+	DescKeyWriteImportErrorPromote   = "write.import-error-promote"
 	DescKeyWriteImportSummary        = "write.import-summary"
 	DescKeyWriteImportSummaryDryRun  = "write.import-summary-dry-run"
 )

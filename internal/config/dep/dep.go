@@ -14,3 +14,15 @@ var Packages = map[string]string{
 	"requirements.txt": "Python dependencies",
 	"Gemfile":          "Ruby dependencies",
 }
+
+// Table formatting constants for dependency output.
+const (
+	// TableColPackage is the column width for package names in table output.
+	TableColPackage = 50
+	// TableColImports is the column width for import lists in table output.
+	TableColImports = 30
+	// TableHeaderPackage is the column header for package names.
+	TableHeaderPackage = "Package"
+	// TableHeaderImports is the column header for import lists.
+	TableHeaderImports = "Imports"
+)

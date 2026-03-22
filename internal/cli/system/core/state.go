@@ -15,9 +15,13 @@ import (
 	"strings"
 	"time"
 
+	"github.com/ActiveMemory/ctx/internal/assets/read/desc"
 	"github.com/ActiveMemory/ctx/internal/config/dir"
+	"github.com/ActiveMemory/ctx/internal/config/embed/text"
 	"github.com/ActiveMemory/ctx/internal/config/event"
+	"github.com/ActiveMemory/ctx/internal/config/journal"
 	"github.com/ActiveMemory/ctx/internal/config/session"
+	time2 "github.com/ActiveMemory/ctx/internal/config/time"
 	ctxcontext "github.com/ActiveMemory/ctx/internal/context/validate"
 	"github.com/ActiveMemory/ctx/internal/io"
 	"github.com/ActiveMemory/ctx/internal/rc"
@@ -79,12 +83,12 @@ func LogMessage(logFile, sessionID, msg string) {
 	RotateLog(logFile)
 
 	short := sessionID
-	if len(short) > 8 {
-		short = short[:8]
+	if len(short) > journal.SessionIDShortLen {
+		short = short[:journal.SessionIDShortLen]
 	}
 
-	line := fmt.Sprintf("[%s] [session:%s] %s\n",
-		time.Now().Format("2006-01-02 15:04:05"), short, msg)
+	line := fmt.Sprintf(desc.Text(text.DescKeyWriteLogLineFormat),
+		time.Now().Format(time2.DateTimePreciseFormat), short, msg)
 
 	f, openErr := os.OpenFile(logFile, os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0o600) //nolint:gosec // logFile is constructed internally
 	if openErr != nil {
@@ -194,7 +198,7 @@ func PausedMessage(turns int) string {
 	if turns <= 5 {
 		return "ctx:paused"
 	}
-	return fmt.Sprintf("ctx:paused (%d turns) — resume with /ctx-resume", turns)
+	return fmt.Sprintf(desc.Text(text.DescKeyWritePausedMessage), turns)
 }
 
 // Pause creates the session pause marker. Exported for use by the

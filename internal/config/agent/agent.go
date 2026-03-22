@@ -14,6 +14,16 @@ const (
 	TaskBudgetPct = 0.40
 	// ConventionBudgetPct is the fraction of the token budget allocated to conventions.
 	ConventionBudgetPct = 0.20
+
+	// BulletItemLimit is the maximum number of bullet items to extract from a context file.
+	BulletItemLimit = 1000
+
+	// SplitMinPct is the minimum percentage each section gets during budget splitting.
+	SplitMinPct = 30
+
+	// FullEntryPct is the percentage of section budget allocated to full entries
+	// (remainder goes to title-only summaries).
+	FullEntryPct = 80
 )
 
 // Cooldown configuration.

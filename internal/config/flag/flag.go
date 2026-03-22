@@ -42,6 +42,7 @@ const (
 const (
 	Budget   = "budget"
 	Cooldown = "cooldown"
+	Follow   = "follow"
 	Format   = "format"
 	Session  = "session"
 )
@@ -106,10 +107,11 @@ const (
 	ShortEvent         = "e"
 	ShortForce         = "f"
 	ShortHook          = "K"
+	ShortFollow        = "f"
 	ShortJSON          = "j"
 	ShortKey           = "k"
-	ShortLast          = "N"
-	ShortMaxIterations = "n"
+	ShortLast          = "n"
+	ShortMaxIterations = "M"
 	ShortMinimal       = "m"
 	ShortOutput        = "o"
 	ShortQuiet         = "q"

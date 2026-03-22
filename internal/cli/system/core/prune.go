@@ -13,6 +13,8 @@ import (
 	"regexp"
 	"time"
 
+	"github.com/ActiveMemory/ctx/internal/assets/read/desc"
+	"github.com/ActiveMemory/ctx/internal/config/embed/text"
 	time2 "github.com/ActiveMemory/ctx/internal/config/time"
 )
 
@@ -79,10 +81,10 @@ func AutoPrune(days int) int {
 func FormatAge(t time.Time) string {
 	d := time.Since(t)
 	if d < time.Hour {
-		return fmt.Sprintf("%dm", int(d.Minutes()))
+		return fmt.Sprintf(desc.Text(text.DescKeyWriteFormatDurationMin), int(d.Minutes()))
 	}
 	if d < 24*time.Hour {
-		return fmt.Sprintf("%dh", int(d.Hours()))
+		return fmt.Sprintf(desc.Text(text.DescKeyWriteFormatDurationHour), int(d.Hours()))
 	}
-	return fmt.Sprintf("%dd", int(d.Hours()/24))
+	return fmt.Sprintf(desc.Text(text.DescKeyWriteFormatDurationDay), int(d.Hours()/24))
 }

@@ -8,10 +8,8 @@ package core
 
 import (
 	"bufio"
-	"fmt"
 	"os"
 	"strings"
-	"time"
 
 	"github.com/spf13/cobra"
 
@@ -21,7 +19,6 @@ import (
 	"github.com/ActiveMemory/ctx/internal/config/marker"
 	"github.com/ActiveMemory/ctx/internal/config/project"
 	"github.com/ActiveMemory/ctx/internal/config/token"
-	"github.com/ActiveMemory/ctx/internal/err/backup"
 	errFs "github.com/ActiveMemory/ctx/internal/err/fs"
 	errInit "github.com/ActiveMemory/ctx/internal/err/initialize"
 	errPrompt "github.com/ActiveMemory/ctx/internal/err/prompt"
@@ -64,8 +61,7 @@ func HandleImplementationPlan(cmd *cobra.Command, force, autoMerge bool) error {
 	}
 	if !autoMerge {
 		initialize.FileExistsNoCtx(cmd, project.ImplementationPlan)
-		cmd.Println("Would you like to merge ctx implementation plan template?")
-		cmd.Print("[y/N] ")
+		initialize.PlanMergePrompt(cmd)
 		reader := bufio.NewReader(os.Stdin)
 		response, err := reader.ReadString('\n')
 		if err != nil {
@@ -77,12 +73,9 @@ func HandleImplementationPlan(cmd *cobra.Command, force, autoMerge bool) error {
 			return nil
 		}
 	}
-	timestamp := time.Now().Unix()
-	backupName := fmt.Sprintf("%s.%d.bak", project.ImplementationPlan, timestamp)
-	if err := os.WriteFile(backupName, existingContent, fs.PermFile); err != nil {
-		return backup.Create(backupName, err)
+	if bkErr := backupFile(cmd, project.ImplementationPlan, existingContent); bkErr != nil {
+		return bkErr
 	}
-	initialize.Backup(cmd, backupName)
 	insertPos := FindInsertionPoint(existingStr)
 	var mergedContent string
 	if insertPos == 0 {
@@ -126,12 +119,9 @@ func UpdatePlanSection(cmd *cobra.Command, existing string, newTemplate []byte) 
 	}
 	planContent := templateStr[templateStart : templateEnd+len(marker.PlanMarkerEnd)]
 	newContent := existing[:startIdx] + planContent + existing[endIdx:]
-	timestamp := time.Now().Unix()
-	backupName := fmt.Sprintf("%s.%d.bak", project.ImplementationPlan, timestamp)
-	if err := os.WriteFile(backupName, []byte(existing), fs.PermFile); err != nil {
-		return backup.CreateGeneric(err)
+	if bkErr := backupFile(cmd, project.ImplementationPlan, []byte(existing)); bkErr != nil {
+		return bkErr
 	}
-	initialize.Backup(cmd, backupName)
 	if err := os.WriteFile(project.ImplementationPlan, []byte(newContent), fs.PermFile); err != nil {
 		return errFs.FileUpdate(project.ImplementationPlan, err)
 	}

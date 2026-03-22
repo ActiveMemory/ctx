@@ -11,7 +11,7 @@ import (
 
 	"github.com/ActiveMemory/ctx/internal/cli/system/core"
 	"github.com/ActiveMemory/ctx/internal/sysinfo"
-	writeResources "github.com/ActiveMemory/ctx/internal/write/resources"
+	writeResources "github.com/ActiveMemory/ctx/internal/write/resource"
 )
 
 // runResources executes the resources display logic.

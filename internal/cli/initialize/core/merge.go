@@ -18,6 +18,7 @@ import (
 	"github.com/ActiveMemory/ctx/internal/assets/read/desc"
 	"github.com/ActiveMemory/ctx/internal/config/cli"
 	"github.com/ActiveMemory/ctx/internal/config/embed/text"
+	"github.com/ActiveMemory/ctx/internal/config/file"
 	"github.com/ActiveMemory/ctx/internal/config/fs"
 	"github.com/ActiveMemory/ctx/internal/config/token"
 	backupPkg "github.com/ActiveMemory/ctx/internal/err/backup"
@@ -37,7 +38,7 @@ import (
 //   - error: Non-nil if the backup write fails
 func backupFile(cmd *cobra.Command, filename string, content []byte) error {
 	timestamp := time.Now().Unix()
-	backupName := fmt.Sprintf("%s.%d.bak", filename, timestamp)
+	backupName := fmt.Sprintf(file.BackupFormat, filename, timestamp)
 	if writeErr := os.WriteFile(backupName, content, fs.PermFile); writeErr != nil {
 		return backupPkg.Create(backupName, writeErr)
 	}

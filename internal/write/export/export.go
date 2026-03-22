@@ -11,6 +11,9 @@ import (
 	"strings"
 
 	"github.com/spf13/cobra"
+
+	"github.com/ActiveMemory/ctx/internal/assets/read/desc"
+	"github.com/ActiveMemory/ctx/internal/config/embed/text"
 )
 
 // Summary prints what an export will (or would) do based on
@@ -32,26 +35,26 @@ func Summary(
 		return
 	}
 
-	verb := "Will"
+	verb := desc.Text(text.DescKeyWriteExportVerb)
 	if dryRun {
-		verb = "Would"
+		verb = desc.Text(text.DescKeyWriteExportVerbDryRun)
 	}
 	var parts []string
 	if newCount > 0 {
-		parts = append(parts, fmt.Sprintf("export %d new", newCount))
+		parts = append(parts, fmt.Sprintf(desc.Text(text.DescKeyWriteExportPartNew), newCount))
 	}
 	if regenCount > 0 {
-		parts = append(parts, fmt.Sprintf("regenerate %d existing", regenCount))
+		parts = append(parts, fmt.Sprintf(desc.Text(text.DescKeyWriteExportPartRegen), regenCount))
 	}
 	if skipCount > 0 {
-		parts = append(parts, fmt.Sprintf("skip %d existing", skipCount))
+		parts = append(parts, fmt.Sprintf(desc.Text(text.DescKeyWriteExportPartSkip), skipCount))
 	}
 	if lockedCount > 0 {
-		parts = append(parts, fmt.Sprintf("skip %d locked", lockedCount))
+		parts = append(parts, fmt.Sprintf(desc.Text(text.DescKeyWriteExportPartSkipLock), lockedCount))
 	}
 	if len(parts) == 0 {
-		cmd.Println("Nothing to export.")
+		cmd.Println(desc.Text(text.DescKeyWriteExportNothing))
 		return
 	}
-	cmd.Println(fmt.Sprintf("%s %s.", verb, strings.Join(parts, ", ")))
+	cmd.Println(fmt.Sprintf(desc.Text(text.DescKeyWriteExportSummary), verb, strings.Join(parts, ", ")))
 }

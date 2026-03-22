@@ -13,9 +13,11 @@ import (
 	"fmt"
 	"os"
 	"path/filepath"
+	"strings"
 	"time"
 
 	"github.com/ActiveMemory/ctx/internal/config/dir"
+	cfgFmt "github.com/ActiveMemory/ctx/internal/config/format"
 	"github.com/ActiveMemory/ctx/internal/config/fs"
 	"github.com/ActiveMemory/ctx/internal/config/memory"
 	time2 "github.com/ActiveMemory/ctx/internal/config/time"
@@ -71,7 +73,7 @@ func (s *State) MarkSynced() {
 // Uses SHA-256 of the text, truncated to 16 hex chars.
 func EntryHash(text string) string {
 	h := sha256.Sum256([]byte(text))
-	return fmt.Sprintf("%x", h[:8])
+	return fmt.Sprintf("%x", h[:cfgFmt.HashPrefixLen])
 }
 
 // Imported reports whether an entry hash has already been imported.
@@ -89,7 +91,7 @@ func (s *State) Imported(hash string) bool {
 // MarkImported records an entry hash with its target and date.
 func (s *State) MarkImported(hash, target string) {
 	date := time.Now().Format(time2.DateFormat)
-	entry := fmt.Sprintf("%s:%s:%s", hash, target, date)
+	entry := strings.Join([]string{hash, target, date}, token.Colon)
 	s.ImportedHashes = append(s.ImportedHashes, entry)
 }
 

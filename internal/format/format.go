@@ -14,6 +14,7 @@ import (
 
 	"github.com/ActiveMemory/ctx/internal/assets/read/desc"
 	"github.com/ActiveMemory/ctx/internal/config/embed/text"
+	cfgFmt "github.com/ActiveMemory/ctx/internal/config/format"
 	"github.com/ActiveMemory/ctx/internal/config/token"
 )
 
@@ -132,10 +133,10 @@ func TruncateFirstLine(s string, max int) string {
 // Returns:
 //   - string: formatted number with commas
 func Number(n int) string {
-	if n < 1000 {
-		return fmt.Sprintf("%d", n)
+	if n < cfgFmt.SIThreshold {
+		return fmt.Sprintf(desc.Text(text.DescKeyWriteFormatSIInteger), n)
 	}
-	return fmt.Sprintf("%d,%03d", n/1000, n%1000)
+	return fmt.Sprintf(desc.Text(text.DescKeyWriteFormatThousands), n/cfgFmt.SIThreshold, n%cfgFmt.SIThreshold)
 }
 
 // Bytes returns a human-readable byte-size string.
@@ -148,13 +149,12 @@ func Number(n int) string {
 // Returns:
 //   - string: human-readable size with unit
 func Bytes(b int64) string {
-	const unit = 1024
-	if b < unit {
+	if b < cfgFmt.IECUnit {
 		return fmt.Sprintf("%d B", b)
 	}
-	div, exp := int64(unit), 0
-	for n := b / unit; n >= unit; n /= unit {
-		div *= unit
+	div, exp := int64(cfgFmt.IECUnit), 0
+	for n := b / cfgFmt.IECUnit; n >= cfgFmt.IECUnit; n /= cfgFmt.IECUnit {
+		div *= cfgFmt.IECUnit
 		exp++
 	}
 	return fmt.Sprintf("%.1f %cB", float64(b)/float64(div), "KMGTPE"[exp])

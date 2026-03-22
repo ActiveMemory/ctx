@@ -12,6 +12,7 @@ import (
 	"sort"
 	"strings"
 
+	"github.com/ActiveMemory/ctx/internal/config/dep"
 	"github.com/ActiveMemory/ctx/internal/config/token"
 )
 
@@ -46,7 +47,7 @@ func RenderMermaid(graph map[string][]string) string {
 		src := MermaidID(pkg)
 		for _, dep := range deps {
 			dst := MermaidID(dep)
-			b.WriteString(fmt.Sprintf("    %s[\"%s\"] --> %s[\"%s\"]\n", src, pkg, dst, dep))
+			fmt.Fprintf(&b, "    %s[\"%s\"] --> %s[\"%s\"]\n", src, pkg, dst, dep)
 		}
 	}
 
@@ -61,14 +62,17 @@ func RenderMermaid(graph map[string][]string) string {
 // Returns:
 //   - string: Formatted table output
 func RenderTable(graph map[string][]string) string {
+	tf := fmt.Sprintf("%%-%ds %%s\n", dep.TableColPackage)
 	var b strings.Builder
-	b.WriteString(fmt.Sprintf("%-50s %s\n", "Package", "Imports"))
-	b.WriteString(fmt.Sprintf("%-50s %s\n", strings.Repeat("-", 50), strings.Repeat("-", 30)))
+	b.WriteString(fmt.Sprintf(tf, dep.TableHeaderPackage, dep.TableHeaderImports))
+	b.WriteString(fmt.Sprintf(tf,
+		strings.Repeat("-", dep.TableColPackage),
+		strings.Repeat("-", dep.TableColImports)))
 
 	keys := SortedKeys(graph)
 	for _, pkg := range keys {
 		deps := graph[pkg]
-		b.WriteString(fmt.Sprintf("%-50s %s\n", pkg, strings.Join(deps, ", ")))
+		b.WriteString(fmt.Sprintf(tf, pkg, strings.Join(deps, ", ")))
 	}
 
 	return b.String()

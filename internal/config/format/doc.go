@@ -4,5 +4,5 @@
 //   \    Copyright 2026-present Context contributors.
 //                 SPDX-License-Identifier: Apache-2.0
 
-// Package resources provides formatted output helpers for the resources command.
-package resources
+// Package format provides shared constants for number and unit formatting.
+package format
