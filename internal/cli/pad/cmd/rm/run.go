@@ -33,7 +33,7 @@ func Run(cmd *cobra.Command, n int) error {
 
 	entries = append(entries[:n-1], entries[n:]...)
 
-	if writeErr := core.WriteEntries(entries); writeErr != nil {
+	if writeErr := core.WriteEntries(cmd, entries); writeErr != nil {
 		return writeErr
 	}
 

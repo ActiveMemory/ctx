@@ -71,7 +71,7 @@ func runImport(cmd *cobra.Command, file string) error {
 		return nil
 	}
 
-	if writeErr := core.WriteEntries(entries); writeErr != nil {
+	if writeErr := core.WriteEntries(cmd, entries); writeErr != nil {
 		return writeErr
 	}
 
@@ -134,7 +134,7 @@ func runImportBlobs(cmd *cobra.Command, path string) error {
 	}
 
 	if added > 0 {
-		if writeErr := core.WriteEntries(entries); writeErr != nil {
+		if writeErr := core.WriteEntries(cmd, entries); writeErr != nil {
 			return writeErr
 		}
 	}

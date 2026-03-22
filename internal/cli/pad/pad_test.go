@@ -813,7 +813,7 @@ func TestEnsureKey_KeyAlreadyExists(t *testing.T) {
 	setupEncrypted(t)
 
 	// Key already exists from setup
-	err := core.EnsureKey()
+	err := core.EnsureKey(nil)
 	if err != nil {
 		t.Fatalf("ensureKey should succeed when key already exists: %v", err)
 	}
@@ -845,7 +845,7 @@ func TestEnsureKey_EncFileExistsNoKey(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	err := core.EnsureKey()
+	err := core.EnsureKey(nil)
 	if err == nil {
 		t.Fatal("expected error when enc file exists without key")
 	}
@@ -875,7 +875,7 @@ func TestEnsureKey_GeneratesNewKey(t *testing.T) {
 	}
 
 	// No key, no enc file -- should generate at user-level path.
-	err := core.EnsureKey()
+	err := core.EnsureKey(nil)
 	if err != nil {
 		t.Fatalf("ensureKey error: %v", err)
 	}
@@ -890,7 +890,7 @@ func TestWriteEntries_Plaintext(t *testing.T) {
 	setupPlaintext(t)
 
 	entries := []string{"one", "two"}
-	if err := core.WriteEntries(entries); err != nil {
+	if err := core.WriteEntries(nil, entries); err != nil {
 		t.Fatalf("writeEntries error: %v", err)
 	}
 

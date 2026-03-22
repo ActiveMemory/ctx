@@ -12,6 +12,8 @@ import (
 	"path/filepath"
 	"strings"
 
+	"github.com/spf13/cobra"
+
 	"github.com/ActiveMemory/ctx/internal/config/file"
 	"github.com/ActiveMemory/ctx/internal/config/fs"
 	"github.com/ActiveMemory/ctx/internal/config/pad"
@@ -52,9 +54,12 @@ func KeyPath() string {
 // error (a new key would not decrypt the existing data). On first use
 // this lets `ctx pad add` work without requiring `ctx init`.
 //
+// Parameters:
+//   - cmd: Cobra command for diagnostic output
+//
 // Returns:
 //   - error: Non-nil on missing key with existing data, or generation failure
-func EnsureKey() error {
+func EnsureKey(cmd *cobra.Command) error {
 	kp := KeyPath()
 
 	// Key already exists — nothing to do.
@@ -82,7 +87,7 @@ func EnsureKey() error {
 		return errCrypto.SaveKey(saveErr)
 	}
 
-	writePad.KeyCreated(kp)
+	writePad.KeyCreated(cmd, kp)
 	return nil
 }
 
@@ -162,11 +167,12 @@ func ReadEntries() ([]string, error) {
 // writing. In plaintext mode, they are written as a newline-delimited file.
 //
 // Parameters:
+//   - cmd: Cobra command for diagnostic output
 //   - entries: The scratchpad entries to write
 //
 // Returns:
 //   - error: Non-nil on key, encryption, or file write errors
-func WriteEntries(entries []string) error {
+func WriteEntries(cmd *cobra.Command, entries []string) error {
 	path := ScratchpadPath()
 	plaintext := FormatEntries(entries)
 
@@ -174,7 +180,7 @@ func WriteEntries(entries []string) error {
 		return os.WriteFile(path, plaintext, fs.PermFile)
 	}
 
-	if err := EnsureKey(); err != nil {
+	if err := EnsureKey(cmd); err != nil {
 		return err
 	}
 
