@@ -59,7 +59,7 @@ func RenderChanges(
 		)
 		b.WriteString(fmt.Sprintf(
 			desc.Text(text.DescKeyChangesCodeCommits)+token.NewlineLF,
-			format.Pluralize(code.CommitCount, desc.Text(text.DescKeyTimeCommit))))
+			format.Pluralize(code.CommitCount, desc.Text(text.DescKeyTimeCommit), desc.Text(text.DescKeyTimeCommits))))
 		if code.LatestMsg != "" {
 			b.WriteString(fmt.Sprintf(
 				desc.Text(
@@ -117,7 +117,7 @@ func RenderChangesForHook(
 	if code.CommitCount > 0 {
 		msg := fmt.Sprintf(
 			desc.Text(text.DescKeyChangesHookCommits),
-			format.Pluralize(code.CommitCount, desc.Text(text.DescKeyTimeCommit)))
+			format.Pluralize(code.CommitCount, desc.Text(text.DescKeyTimeCommit), desc.Text(text.DescKeyTimeCommits)))
 		if code.LatestMsg != "" {
 			msg += fmt.Sprintf(
 				desc.Text(text.DescKeyChangesHookCommitsExtra), code.LatestMsg,

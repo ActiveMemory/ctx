@@ -444,14 +444,22 @@ time.ago:
   short: ' ago'
 time.commit:
   short: commit
+time.commits:
+  short: commits
 time.day:
   short: day
+time.days:
+  short: days
 time.hour:
   short: hour
+time.hours:
+  short: hours
 time.just-now:
   short: just now
 time.minute:
   short: minute
+time.minutes:
+  short: minutes
 watch.apply-failed:
   short: |
     ✗ Failed to apply [%s]: %v

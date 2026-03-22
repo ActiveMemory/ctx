@@ -11,6 +11,7 @@ import (
 
 	"github.com/ActiveMemory/ctx/internal/assets/read/desc"
 	"github.com/ActiveMemory/ctx/internal/config/embed/text"
+	"github.com/ActiveMemory/ctx/internal/format"
 	"github.com/spf13/cobra"
 )
 
@@ -309,29 +310,18 @@ func PadMergeSummary(cmd *cobra.Command, added, dupes int, dryRun bool) {
 		return
 	}
 	if added == 0 {
-		cmd.Println(fmt.Sprintf(desc.Text(text.DescKeyWritePadMergeNoneNew), dupes, padPluralize("duplicate", dupes)))
+		cmd.Println(fmt.Sprintf(desc.Text(text.DescKeyWritePadMergeNoneNew), dupes, format.PluralWord(dupes, desc.Text(text.DescKeyWritePadWordDuplicate), desc.Text(text.DescKeyWritePadWordDuplicates))))
 		return
 	}
 	if dryRun {
 		cmd.Println(fmt.Sprintf(desc.Text(text.DescKeyWritePadMergeDryRun),
-			added, padPluralize("entry", added),
-			dupes, padPluralize("duplicate", dupes)))
+			added, format.PluralWord(added, desc.Text(text.DescKeyWritePadWordEntry), desc.Text(text.DescKeyWritePadWordEntries)),
+			dupes, format.PluralWord(dupes, desc.Text(text.DescKeyWritePadWordDuplicate), desc.Text(text.DescKeyWritePadWordDuplicates))))
 		return
 	}
 	cmd.Println(fmt.Sprintf(desc.Text(text.DescKeyWritePadMergeDone),
-		added, padPluralize("entry", added),
-		dupes, padPluralize("duplicate", dupes)))
-}
-
-// padPluralize is an internal helper matching core.Pluralize for write templates.
-func padPluralize(word string, count int) string {
-	if count == 1 {
-		return word
-	}
-	if len(word) > 0 && word[len(word)-1] == 'y' {
-		return word[:len(word)-1] + "ies"
-	}
-	return word + "s"
+		added, format.PluralWord(added, desc.Text(text.DescKeyWritePadWordEntry), desc.Text(text.DescKeyWritePadWordEntries)),
+		dupes, format.PluralWord(dupes, desc.Text(text.DescKeyWritePadWordDuplicate), desc.Text(text.DescKeyWritePadWordDuplicates))))
 }
 
 // PadExportSummary prints the export summary or "no blobs" message.
