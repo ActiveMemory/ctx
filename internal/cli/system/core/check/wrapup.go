@@ -15,11 +15,8 @@ import (
 	"github.com/ActiveMemory/ctx/internal/config/wrap"
 )
 
-// WrappedUpExpiry is how long the marker suppresses nudges.
-const WrappedUpExpiry = 2 * time.Hour
-
 // WrappedUpRecently checks whether the wrap-up marker exists and is
-// less than WrappedUpExpiry old.
+// less than the configured expiry old.
 //
 // Returns true if nudges should be suppressed.
 //
@@ -33,5 +30,5 @@ func WrappedUpRecently() bool {
 		return false
 	}
 
-	return time.Since(info.ModTime()) < WrappedUpExpiry
+	return time.Since(info.ModTime()) < wrap.WrappedUpExpiryHours*time.Hour
 }

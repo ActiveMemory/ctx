@@ -10,14 +10,14 @@ import (
 	"io"
 	"os"
 
-	"github.com/ActiveMemory/ctx/internal/context/validate"
-	"github.com/ActiveMemory/ctx/internal/err/initialize"
-	ctxerr "github.com/ActiveMemory/ctx/internal/err/recall"
-	io2 "github.com/ActiveMemory/ctx/internal/io"
-	"github.com/ActiveMemory/ctx/internal/write/watch"
 	"github.com/spf13/cobra"
 
 	"github.com/ActiveMemory/ctx/internal/cli/watch/core"
+	"github.com/ActiveMemory/ctx/internal/context/validate"
+	"github.com/ActiveMemory/ctx/internal/err/initialize"
+	errRecall "github.com/ActiveMemory/ctx/internal/err/recall"
+	internalIo "github.com/ActiveMemory/ctx/internal/io"
+	"github.com/ActiveMemory/ctx/internal/write/watch"
 )
 
 // Run executes the watch command logic.
@@ -28,7 +28,7 @@ import (
 //
 // Parameters:
 //   - cmd: Cobra command for output
-//   - logPath: Path to log file, or empty for stdin
+//   - logPath: Path to the log file, or empty for stdin
 //   - dryRun: If true, show what would be updated without making changes
 //
 // Returns:
@@ -48,9 +48,9 @@ func Run(cmd *cobra.Command, logPath string, dryRun bool) error {
 
 	var reader io.Reader
 	if logPath != "" {
-		file, err := io2.SafeOpenUserFile(logPath)
+		file, err := internalIo.SafeOpenUserFile(logPath)
 		if err != nil {
-			return ctxerr.OpenLogFile(err)
+			return errRecall.OpenLogFile(err)
 		}
 		defer func(file *os.File) {
 			if closeErr := file.Close(); closeErr != nil {

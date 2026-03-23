@@ -10,18 +10,18 @@ import (
 	"os"
 	"strings"
 
+	"github.com/spf13/cobra"
+
 	"github.com/ActiveMemory/ctx/internal/assets/read/desc"
+	"github.com/ActiveMemory/ctx/internal/cli/task/core"
 	"github.com/ActiveMemory/ctx/internal/config/archive"
 	"github.com/ActiveMemory/ctx/internal/config/embed/text"
 	"github.com/ActiveMemory/ctx/internal/config/fs"
 	"github.com/ActiveMemory/ctx/internal/config/token"
-	ctxerr "github.com/ActiveMemory/ctx/internal/err/task"
+	errTask "github.com/ActiveMemory/ctx/internal/err/task"
 	"github.com/ActiveMemory/ctx/internal/io"
-	archive2 "github.com/ActiveMemory/ctx/internal/write/archive"
-	"github.com/spf13/cobra"
-
-	"github.com/ActiveMemory/ctx/internal/cli/task/core"
 	"github.com/ActiveMemory/ctx/internal/tidy"
+	writeArchive "github.com/ActiveMemory/ctx/internal/write/archive"
 )
 
 // runArchive executes the archive subcommand logic.
@@ -42,13 +42,13 @@ func runArchive(cmd *cobra.Command, dryRun bool) error {
 
 	// Check if TASKS.md exists
 	if _, statErr := os.Stat(tasksPath); os.IsNotExist(statErr) {
-		return ctxerr.FileNotFound()
+		return errTask.FileNotFound()
 	}
 
 	// Read TASKS.md
 	content, readErr := io.SafeReadUserFile(tasksPath)
 	if readErr != nil {
-		return ctxerr.FileRead(readErr)
+		return errTask.FileRead(readErr)
 	}
 
 	lines := strings.Split(string(content), nl)
@@ -64,7 +64,7 @@ func runArchive(cmd *cobra.Command, dryRun bool) error {
 			archivableBlocks = append(archivableBlocks, block)
 		} else {
 			skippedCount++
-			archive2.Skipping(cmd, block.ParentTaskText())
+			writeArchive.Skipping(cmd, block.ParentTaskText())
 		}
 	}
 
@@ -73,9 +73,9 @@ func runArchive(cmd *cobra.Command, dryRun bool) error {
 
 	if len(archivableBlocks) == 0 {
 		if skippedCount > 0 {
-			archive2.SkipIncomplete(cmd, skippedCount)
+			writeArchive.SkipIncomplete(cmd, skippedCount)
 		} else {
-			archive2.NoCompleted(cmd)
+			writeArchive.NoCompleted(cmd)
 		}
 		return nil
 	}
@@ -88,13 +88,17 @@ func runArchive(cmd *cobra.Command, dryRun bool) error {
 	}
 
 	if dryRun {
-		archive2.DryRun(cmd, len(archivableBlocks), pendingCount,
+		writeArchive.DryRun(cmd, len(archivableBlocks), pendingCount,
 			archivedContent.String(), token.Separator)
 		return nil
 	}
 
-	// Write to archive
-	archiveFilePath, writeErr := tidy.WriteArchive(archive.ArchiveScopeTasks, desc.Text(text.DescKeyHeadingArchivedTasks), archivedContent.String())
+	// Write to the archive
+	archiveFilePath, writeErr := tidy.WriteArchive(
+		archive.ArchiveScopeTasks,
+		desc.Text(text.DescKeyHeadingArchivedTasks),
+		archivedContent.String(),
+	)
 	if writeErr != nil {
 		return writeErr
 	}
@@ -106,10 +110,12 @@ func runArchive(cmd *cobra.Command, dryRun bool) error {
 	if updateErr := os.WriteFile(
 		tasksPath, []byte(newContent), fs.PermFile,
 	); updateErr != nil {
-		return ctxerr.FileWrite(updateErr)
+		return errTask.FileWrite(updateErr)
 	}
 
-	archive2.Success(cmd, len(archivableBlocks), archiveFilePath, pendingCount)
+	writeArchive.Success(
+		cmd, len(archivableBlocks), archiveFilePath, pendingCount,
+	)
 
 	return nil
 }

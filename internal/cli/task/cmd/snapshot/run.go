@@ -12,16 +12,16 @@ import (
 	"path/filepath"
 	"time"
 
+	"github.com/spf13/cobra"
+
+	"github.com/ActiveMemory/ctx/internal/cli/task/core"
 	"github.com/ActiveMemory/ctx/internal/config/archive"
 	"github.com/ActiveMemory/ctx/internal/config/fs"
 	"github.com/ActiveMemory/ctx/internal/config/token"
 	"github.com/ActiveMemory/ctx/internal/err/backup"
-	ctxerr "github.com/ActiveMemory/ctx/internal/err/task"
-	archive2 "github.com/ActiveMemory/ctx/internal/write/archive"
-	"github.com/spf13/cobra"
-
-	"github.com/ActiveMemory/ctx/internal/cli/task/core"
+	errTask "github.com/ActiveMemory/ctx/internal/err/task"
 	"github.com/ActiveMemory/ctx/internal/validation"
+	writeArchive "github.com/ActiveMemory/ctx/internal/write/archive"
 )
 
 // Run executes the snapshot subcommand logic.
@@ -41,13 +41,13 @@ func Run(cmd *cobra.Command, args []string) error {
 
 	// Check if TASKS.md exists
 	if _, statErr := os.Stat(tasksPath); os.IsNotExist(statErr) {
-		return ctxerr.FileNotFound()
+		return errTask.FileNotFound()
 	}
 
 	// Read TASKS.md
 	content, readErr := os.ReadFile(filepath.Clean(tasksPath))
 	if readErr != nil {
-		return ctxerr.FileRead(readErr)
+		return errTask.FileRead(readErr)
 	}
 
 	// Ensure the archive directory exists
@@ -68,7 +68,7 @@ func Run(cmd *cobra.Command, args []string) error {
 
 	// Build snapshot content
 	nl := token.NewlineLF
-	snapshotContent := archive2.SnapshotContent(
+	snapshotContent := writeArchive.SnapshotContent(
 		name, now.Format(time.RFC3339), token.Separator, nl, string(content),
 	)
 
@@ -76,10 +76,10 @@ func Run(cmd *cobra.Command, args []string) error {
 	if writeErr := os.WriteFile(
 		snapshotPath, []byte(snapshotContent), fs.PermFile,
 	); writeErr != nil {
-		return ctxerr.SnapshotWrite(writeErr)
+		return errTask.SnapshotWrite(writeErr)
 	}
 
-	archive2.SnapshotSaved(cmd, snapshotPath)
+	writeArchive.SnapshotSaved(cmd, snapshotPath)
 
 	return nil
 }
