@@ -3,6 +3,7 @@
 <!-- INDEX:START -->
 | Date | Learning |
 |------|--------|
+| 2026-03-22 | Types in god-object files create circular dependencies |
 | 2026-03-20 | replace_all on short tokens like function names will also replace their definitions |
 | 2026-03-20 | Commit messages containing script paths trigger PreToolUse hooks |
 | 2026-03-19 | Rename constants to avoid gosec G101 false positives |
@@ -85,6 +86,16 @@
 | 2026-02-19 | Feature can be code-complete but invisible to users |
 | 2026-01-28 | IDE is already the UI |
 <!-- INDEX:END -->
+
+---
+
+## [2026-03-22-220846] Types in god-object files create circular dependencies
+
+**Context**: hook/types.go had 15+ types from 8 domains; session importing hook for SessionTokenInfo created a cycle
+
+**Lesson**: Moving types to their owning domain package breaks import cycles
+
+**Application**: When a type is only used by one domain package, move it there. Check with grep before assuming a type is cross-cutting.
 
 ---
 
