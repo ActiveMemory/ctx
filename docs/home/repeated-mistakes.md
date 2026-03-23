@@ -83,7 +83,7 @@ hit the same wall. With it, the AI knows before it starts.
 
 ### CONSTITUTION.md: Draw Hard Lines
 
-Some mistakes are not about forgetting -- they are about boundaries the
+Some mistakes are not about forgetting - they are about boundaries the
 AI should never cross. CONSTITUTION.md sets inviolable rules.
 
 ```markdown
@@ -102,7 +102,7 @@ Session five adds a tricky learning about timezone handling. Session
 twelve records a convention about error message formatting.
 
 By session twenty, your AI has a knowledge base that no single person
-carries in their head. New team members -- human or AI -- inherit it
+carries in their head. New team members - human or AI - inherit it
 instantly.
 
 The key insight: **you are not just coding. You are building a knowledge
@@ -132,5 +132,5 @@ ctx add learning "Vitest mock hoisting" \
   for persisting decisions, learnings, and conventions
 * [Context Files Reference](context-files.md): structure and format for
   every file in `.context/`
-* [About ctx](about.md): the bigger picture -- why persistent context
+* [About ctx](about.md): the bigger picture - why persistent context
   changes how you work with AI

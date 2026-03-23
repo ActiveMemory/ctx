@@ -16,7 +16,7 @@ debugging and trial-and-error. The result works, but the spec
 was never written down, the trade-offs were never recorded, and
 the next session has no idea why things are shaped this way.
 
-**How do you front-load design so implementation is straightforward?**
+**How do you front-load design so the implementation is straightforward?**
 
 ## TL;DR
 
@@ -32,13 +32,13 @@ the next.
 
 ## Commands and Skills Used
 
-| Tool               | Type  | Purpose                                         |
-|--------------------|-------|-------------------------------------------------|
-| `/ctx-brainstorm`  | Skill | Structured design dialogue: explore approaches  |
-| `/ctx-spec`        | Skill | Scaffold and fill out a spec from the template   |
-| `/ctx-add-task`    | Skill | Add implementation tasks to TASKS.md             |
-| `/ctx-implement`   | Skill | Execute a plan step-by-step with verification    |
-| `/ctx-add-decision`| Skill | Record design choices made during brainstorming  |
+| Tool                | Type  | Purpose                                         |
+|---------------------|-------|-------------------------------------------------|
+| `/ctx-brainstorm`   | Skill | Structured design dialogue: explore approaches  |
+| `/ctx-spec`         | Skill | Scaffold and fill out a spec from the template  |
+| `/ctx-add-task`     | Skill | Add implementation tasks to TASKS.md            |
+| `/ctx-implement`    | Skill | Execute a plan step-by-step with verification   |
+| `/ctx-add-decision` | Skill | Record design choices made during brainstorming |
 
 ## The Workflow
 
@@ -66,7 +66,7 @@ You: "Journal site only."
 Agent: [asks about update frequency, content scope, existing infra...]
        [presents 3 approaches with trade-offs]
 
-You: "Option 2 — generate at build time."
+You: "Option 2 - generate at build time."
 
 Agent: "Let me stress-test that. What happens when..."
        [probes edge cases]
@@ -75,7 +75,7 @@ Agent: "Let me stress-test that. What happens when..."
 ```
 
 The brainstorm produces a *validated design* in conversation. It doesn't
-produce a file — that's what the spec is for.
+produce a file - that's what the spec is for.
 
 ### Step 2: Write the Spec
 
@@ -102,9 +102,9 @@ You: "Generate feed.xml during ctx journal site. Atom format."
 Agent: [writes Approach, moves to Happy Path, then Edge Cases...]
 ```
 
-The skill spends extra time on **Edge Cases** and **Error Handling** — these
-are where specs earn their value. It pushes for at least 3 edge cases
-and won't accept "none" without challenge.
+The skill spends extra time on **Edge Cases** and **Error Handling**: These
+are where specs earn their value. The skill pushes for at least three edge cases
+and won't accept "none" without a challenge.
 
 Sections that don't apply can be skipped. The result is a complete spec
 at `specs/{feature-name}.md`.
@@ -160,12 +160,12 @@ before continuing.
 
 Not every feature needs all four steps. Use your judgment:
 
-| Situation | Start at |
-|-----------|----------|
-| Vague idea, multiple valid approaches | Step 1: Brainstorm |
-| Clear approach, need to document it | Step 2: Spec |
-| Spec already exists, need to plan work | Step 3: Tasks |
-| Tasks exist, ready to code | Step 4: Implement |
+| Situation                              | Start at           |
+|----------------------------------------|--------------------|
+| Vague idea, multiple valid approaches  | Step 1: Brainstorm |
+| Clear approach, need to document it    | Step 2: Spec       |
+| Spec already exists, need to plan work | Step 3: Tasks      |
+| Tasks exist, ready to code             | Step 4: Implement  |
 
 A brainstorm without a spec is fine for small decisions. A spec without
 a brainstorm is fine when the design is obvious. The full chain is for
@@ -175,14 +175,14 @@ features complex enough to warrant front-loaded design.
 
 You don't need skill names. Natural language works:
 
-| You say | What happens |
-|---------|-------------|
-| "Let's think through this feature" | `/ctx-brainstorm` |
-| "Spec this out" | `/ctx-spec` |
-| "Write a design doc for..." | `/ctx-spec` |
-| "Break this into tasks" | `/ctx-add-task` |
-| "Implement the spec" | `/ctx-implement` |
-| "Let's design before we build" | Starts at brainstorm |
+| You say                            | What happens         |
+|------------------------------------|----------------------|
+| "Let's think through this feature" | `/ctx-brainstorm`    |
+| "Spec this out"                    | `/ctx-spec`          |
+| "Write a design doc for..."        | `/ctx-spec`          |
+| "Break this into tasks"            | `/ctx-add-task`      |
+| "Implement the spec"               | `/ctx-implement`     |
+| "Let's design before we build"     | Starts at brainstorm |
 
 ## Tips
 
@@ -191,11 +191,11 @@ You don't need skill names. Natural language works:
 * **Specs prevent scope creep**. The Non-Goals section is as important as the
   approach. Writing down what you *won't* do keeps implementation focused.
 * **Edge cases are the point**. A spec that only describes the happy path
-  isn't a spec — it's a wish. The `/ctx-spec` skill pushes for at least 3
+  isn't a spec - it's a wish. The `/ctx-spec` skill pushes for at least 3
   edge cases because that's where designs break.
 * **Record decisions during brainstorming**. When you choose between
   approaches, the agent offers to persist the trade-off via
-  `/ctx-add-decision`. Accept — future sessions need to know *why*, not
+  `/ctx-add-decision`. Accept - future sessions need to know *why*, not
   just *what*.
 * **Specs are living documents**. Update them when implementation reveals
   new constraints. A spec that diverges from reality is worse than no spec.

@@ -170,20 +170,20 @@ ctx compact --archive
 
 ---
 
-### `ctx tasks`
+### `ctx task`
 
 Manage task completion, archival, and snapshots.
 
 ```bash
-ctx tasks <subcommand>
+ctx task <subcommand>
 ```
 
-#### `ctx tasks complete`
+#### `ctx task complete`
 
 Mark a task as completed.
 
 ```bash
-ctx tasks complete <task-id-or-text>
+ctx task complete <task-id-or-text>
 ```
 
 **Arguments**:
@@ -194,18 +194,18 @@ ctx tasks complete <task-id-or-text>
 
 ```bash
 # By text (partial match)
-ctx tasks complete "user auth"
+ctx task complete "user auth"
 
 # By task number
-ctx tasks complete 3
+ctx task complete 3
 ```
 
-#### `ctx tasks archive`
+#### `ctx task archive`
 
 Move completed tasks from `TASKS.md` to a timestamped archive file.
 
 ```bash
-ctx tasks archive [flags]
+ctx task archive [flags]
 ```
 
 **Flags**:
@@ -221,16 +221,16 @@ pending tasks (`[ ]`) remain in `TASKS.md`.
 **Example**:
 
 ```bash
-ctx tasks archive
-ctx tasks archive --dry-run
+ctx task archive
+ctx task archive --dry-run
 ```
 
-#### `ctx tasks snapshot`
+#### `ctx task snapshot`
 
 Create a point-in-time snapshot of `TASKS.md` without modifying the original.
 
 ```bash
-ctx tasks snapshot [name]
+ctx task snapshot [name]
 ```
 
 **Arguments**:
@@ -243,26 +243,26 @@ Snapshots are stored in `.context/archive/` with timestamped names
 **Example**:
 
 ```bash
-ctx tasks snapshot
-ctx tasks snapshot "before-refactor"
+ctx task snapshot
+ctx task snapshot "before-refactor"
 ```
 
 ---
 
-### `ctx permissions`
+### `ctx permission`
 
 Manage Claude Code permission snapshots.
 
 ```bash
-ctx permissions <subcommand>
+ctx permission <subcommand>
 ```
 
-#### `ctx permissions snapshot`
+#### `ctx permission snapshot`
 
 Save `.claude/settings.local.json` as the golden image.
 
 ```bash
-ctx permissions snapshot
+ctx permission snapshot
 ```
 
 Creates `.claude/settings.golden.json` as a byte-for-byte copy of the
@@ -274,16 +274,16 @@ with the team.
 **Example**:
 
 ```bash
-ctx permissions snapshot
+ctx permission snapshot
 # Saved golden image: .claude/settings.golden.json
 ```
 
-#### `ctx permissions restore`
+#### `ctx permission restore`
 
 Replace `settings.local.json` with the golden image.
 
 ```bash
-ctx permissions restore
+ctx permission restore
 ```
 
 Prints a diff of dropped (session-accumulated) and restored permissions.
@@ -292,7 +292,7 @@ No-op if the files already match.
 **Example**:
 
 ```bash
-ctx permissions restore
+ctx permission restore
 # Dropped 3 session permission(s):
 #   - Bash(cat /tmp/debug.log:*)
 #   - Bash(rm /tmp/test-*:*)
@@ -311,8 +311,8 @@ in a single invocation.
 ctx reindex
 ```
 
-This is a convenience wrapper around `ctx decisions reindex` and
-`ctx learnings reindex`. Both files grow at similar rates and users
+This is a convenience wrapper around `ctx decision reindex` and
+`ctx learning reindex`. Both files grow at similar rates and users
 typically want to reindex both after manual edits.
 
 The index is a compact table of date and title for each entry, allowing
@@ -328,20 +328,20 @@ ctx reindex
 
 ---
 
-### `ctx decisions`
+### `ctx decision`
 
 Manage the `DECISIONS.md` file.
 
 ```bash
-ctx decisions <subcommand>
+ctx decision <subcommand>
 ```
 
-#### `ctx decisions reindex`
+#### `ctx decision reindex`
 
 Regenerate the quick-reference index at the top of `DECISIONS.md`.
 
 ```bash
-ctx decisions reindex
+ctx decision reindex
 ```
 
 The index is a compact table showing the date and title for each decision,
@@ -353,26 +353,26 @@ files to use the index format.
 **Example**:
 
 ```bash
-ctx decisions reindex
+ctx decision reindex
 # ✓ Index regenerated with 12 entries
 ```
 
 ---
 
-### `ctx learnings`
+### `ctx learning`
 
 Manage the `LEARNINGS.md` file.
 
 ```bash
-ctx learnings <subcommand>
+ctx learning <subcommand>
 ```
 
-#### `ctx learnings reindex`
+#### `ctx learning reindex`
 
 Regenerate the quick-reference index at the top of `LEARNINGS.md`.
 
 ```bash
-ctx learnings reindex
+ctx learning reindex
 ```
 
 The index is a compact table showing the date and title for each learning,
@@ -384,6 +384,6 @@ files to use the index format.
 **Example**:
 
 ```bash
-ctx learnings reindex
+ctx learning reindex
 # ✓ Index regenerated with 8 entries
 ```

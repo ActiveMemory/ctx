@@ -34,24 +34,24 @@ Or in your AI assistant: `/ctx-prompt code-review`
 
 ## Commands and Skills Used
 
-| Tool                          | Type    | Purpose                                    |
-|-------------------------------|---------|--------------------------------------------|
-| `ctx prompt list`             | Command | List available prompt templates             |
-| `ctx prompt show <name>`      | Command | Print prompt content to stdout              |
-| `ctx prompt add <name>`       | Command | Create from embedded template or stdin      |
-| `ctx prompt rm <name>`        | Command | Delete a prompt template                    |
-| `ctx init`                    | Command | Stamps starter prompts during initialization |
-| `/ctx-prompt`                 | Skill   | List or apply prompt templates in-session   |
+| Tool                     | Type    | Purpose                                      |
+|--------------------------|---------|----------------------------------------------|
+| `ctx prompt list`        | Command | List available prompt templates              |
+| `ctx prompt show <name>` | Command | Print prompt content to stdout               |
+| `ctx prompt add <name>`  | Command | Create from embedded template or stdin       |
+| `ctx prompt rm <name>`   | Command | Delete a prompt template                     |
+| `ctx init`               | Command | Stamps starter prompts during initialization |
+| `/ctx-prompt`            | Skill   | List or apply prompt templates in-session    |
 
 ## The Workflow
 
 ### Creating Prompts
 
-**From starter templates** — `ctx init` stamps three starters:
+**From starter templates**: `ctx init` stamps three starters:
 
-- `code-review` — review checklist anchored to project conventions
-- `refactor` — refactoring with guard rails (tests first, preserve behavior)
-- `explain` — explain code for onboarding and knowledge transfer
+- `code-review`: review checklist anchored to project conventions
+- `refactor`: refactoring with guard rails (tests first, preserve behavior)
+- `explain`: explain code for onboarding and knowledge transfer
 
 **From embedded templates:**
 
@@ -73,7 +73,7 @@ echo "# Debug Checklist
 
 ### Using Prompts
 
-**In your AI assistant** — invoke the skill:
+**In your AI assistant**: invoke the skill:
 
 ```text
 /ctx-prompt code-review
@@ -82,7 +82,7 @@ echo "# Debug Checklist
 The agent retrieves the prompt and follows its instructions in your
 current context. If no name is given, it lists available prompts.
 
-**From the CLI** — pipe into other tools:
+**From the CLI**: pipe into other tools:
 
 ```bash
 ctx prompt show code-review    # print to stdout
@@ -100,7 +100,7 @@ add `.context/prompts/` to `.gitignore`.
 If it's longer, it's probably a skill.
 
 **Anchor to project context.** Reference `.context/CONVENTIONS.md` or
-`.context/ARCHITECTURE.md` in your prompts — the AI will read those files
+`.context/ARCHITECTURE.md` in your prompts: the AI will read those files
 for project-specific patterns.
 
 **Name prompts for the action, not the content.** Use `code-review` not

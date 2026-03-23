@@ -49,16 +49,16 @@ Read on for what each stage does and why.
 
 ## Commands and Skills Used
 
-| Tool                      | Type    | Purpose                                         |
-|---------------------------|---------|-------------------------------------------------|
-| `ctx recall list`         | Command | List parsed sessions with metadata              |
-| `ctx recall show`         | Command | Inspect a specific session in detail            |
-| `ctx recall export`       | Command | Export sessions to editable journal Markdown    |
-| `ctx journal site`        | Command | Generate a static site from journal entries     |
-| `ctx journal obsidian`    | Command | Generate an Obsidian vault from journal entries |
-| `ctx serve`               | Command | Serve any zensical directory (default: journal) |
-| `/ctx-recall`             | Skill   | Browse sessions inside your AI assistant        |
-| `/ctx-journal-enrich`     | Skill   | Add frontmatter metadata to a single entry      |
+| Tool                      | Type    | Purpose                                            |
+|---------------------------|---------|----------------------------------------------------|
+| `ctx recall list`         | Command | List parsed sessions with metadata                 |
+| `ctx recall show`         | Command | Inspect a specific session in detail               |
+| `ctx recall export`       | Command | Export sessions to editable journal Markdown       |
+| `ctx journal site`        | Command | Generate a static site from journal entries        |
+| `ctx journal obsidian`    | Command | Generate an Obsidian vault from journal entries    |
+| `ctx serve`               | Command | Serve any zensical directory (default: journal)    |
+| `/ctx-recall`             | Skill   | Browse sessions inside your AI assistant           |
+| `/ctx-journal-enrich`     | Skill   | Add frontmatter metadata to a single entry         |
 | `/ctx-journal-enrich-all` | Skill   | Full pipeline: export if needed, then batch-enrich |
 
 ## The Workflow
@@ -373,7 +373,7 @@ cleanup behavior helps you avoid losing session history.
 
 Claude Code retains session transcripts for approximately **30 days**.
 After that, JSONL files are automatically deleted during cleanup. Once
-deleted, `ctx recall` can no longer see those sessions — the data is
+deleted, `ctx recall` can no longer see those sessions - the data is
 gone.
 
 ### The `cleanupPeriodDays` Setting
@@ -381,11 +381,11 @@ gone.
 Claude Code exposes a `cleanupPeriodDays` setting in its configuration
 (`~/.claude/settings.json`) that controls retention:
 
-| Value | Behavior |
-|-------|----------|
-| `30` (default) | Transcripts older than 30 days are deleted |
-| `60`, `90`, etc. | Extends the retention window |
-| `0` | **Disables writing new transcripts entirely** — not "keep forever" |
+| Value            | Behavior                                                           |
+|------------------|--------------------------------------------------------------------|
+| `30` (default)   | Transcripts older than 30 days are deleted                         |
+| `60`, `90`, etc. | Extends the retention window                                       |
+| `0`              | **Disables writing new transcripts entirely** - not "keep forever" |
 
 !!! warning "Setting `cleanupPeriodDays` to 0"
     Setting this to `0` does **not** mean "never delete." It disables
@@ -394,12 +394,12 @@ Claude Code exposes a `cleanupPeriodDays` setting in its configuration
 
 ### Why Journal Export Matters
 
-The journal export pipeline (*Steps 1–4 above*) is your **archival
+The journal export pipeline (*Steps 1-4 above*) is your **archival
 mechanism**. Exported Markdown files in `.context/journal/` persist
 independently of Claude Code's cleanup cycle. Even after the source
 JSONL files are deleted, your journal entries remain.
 
-**Recommendation**: export regularly — weekly, or after any session worth
+**Recommendation**: export regularly - weekly, or after any session worth
 revisiting. A quick `ctx recall export --all` takes seconds and ensures
 nothing falls through the 30-day window.
 

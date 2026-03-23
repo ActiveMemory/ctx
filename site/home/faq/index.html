@@ -3783,11 +3783,11 @@ which you have to explicitly configure.</p>
 Team members and AI agents read the same context files.</p>
 <p>What <strong>not</strong> to commit:</p>
 <ul>
-<li><strong><code>.ctx.key</code></strong> — your encryption key. Stored at <code>~/.ctx/.ctx.key</code>,
+<li><strong><code>.ctx.key</code></strong>: your encryption key. Stored at <code>~/.ctx/.ctx.key</code>,
   never in the repo. <code>ctx init</code> handles this automatically.</li>
-<li><strong><code>journal/</code></strong> and <strong><code>logs/</code></strong> — generated data, potentially large.
+<li><strong><code>journal/</code></strong> and <strong><code>logs/</code></strong>: generated data, potentially large.
   <code>ctx init</code> adds these to <code>.gitignore</code>.</li>
-<li><strong><code>scratchpad.enc</code></strong> — your choice. It's encrypted, so it's safe to
+<li><strong><code>scratchpad.enc</code></strong>: your choice. It's encrypted, so it's safe to
   commit if you want shared scratchpad state. See
   <a href="../../reference/scratchpad/">Scratchpad</a> for details.</li>
 </ul>
@@ -3839,7 +3839,7 @@ content by file priority (CONSTITUTION first, GLOSSARY last) and
 trims lower-priority entries when the budget is tight.</p>
 <p>For manual maintenance, <code>ctx compact</code> archives completed tasks and
 old entries, keeping active context lean. You can also run
-<code>ctx tasks archive</code> to move completed tasks out of TASKS.md.</p>
+<code>ctx task archive</code> to move completed tasks out of TASKS.md.</p>
 <p>The goal is to keep context files focused on <strong>current</strong> state.
 Historical entries belong in git history or the archive.</p>
 <h2 id="is-context-meant-to-be-shared">Is .context/ meant to be shared?<a class="headerlink" href="#is-context-meant-to-be-shared" title="Permanent link">&para;</a></h2>
@@ -3853,9 +3853,9 @@ design.</p>
 <hr />
 <p><strong>Related</strong>:</p>
 <ul>
-<li><a href="../getting-started/">Getting Started</a> — installation and first setup</li>
-<li><a href="../configuration/">Configuration</a> — <code>.ctxrc</code>, environment variables, and defaults</li>
-<li><a href="../context-files/">Context Files</a> — what each file does and how to use it</li>
+<li><a href="../getting-started/">Getting Started</a> - installation and first setup</li>
+<li><a href="../configuration/">Configuration</a> - <code>.ctxrc</code>, environment variables, and defaults</li>
+<li><a href="../context-files/">Context Files</a> - what each file does and how to use it</li>
 </ul>
 
 

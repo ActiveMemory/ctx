@@ -16,13 +16,13 @@ icon: lucide/brain
 Claude Code maintains per-project auto memory at
 `~/.claude/projects/<slug>/memory/MEMORY.md`. This file is:
 
-- **Outside the repo** — not version-controlled, not portable
-- **Machine-specific** — tied to one `~/.claude/` directory
-- **Invisible to ctx** — context loading and hooks don't read it
+- **Outside the repo** - not version-controlled, not portable
+- **Machine-specific** - tied to one `~/.claude/` directory
+- **Invisible to ctx** - context loading and hooks don't read it
 
 Meanwhile, ctx maintains structured context files (DECISIONS.md,
 LEARNINGS.md, CONVENTIONS.md) that are git-tracked, portable, and
-token-budgeted — but Claude Code doesn't automatically write to them.
+token-budgeted - but Claude Code doesn't automatically write to them.
 
 The two systems hold complementary knowledge with no bridge between them.
 
@@ -35,7 +35,7 @@ ctx memory diff          # See what changed since last sync
 ```
 
 The `check-memory-drift` hook nudges automatically when MEMORY.md
-changes — you don't need to remember to sync manually.
+changes - you don't need to remember to sync manually.
 
 ## Commands and Skills Used
 
@@ -62,7 +62,7 @@ prefixes with `-`:
 ```
 
 `ctx memory` uses this encoding to locate MEMORY.md automatically
-from your project root — no configuration needed.
+from your project root - no configuration needed.
 
 ### Mirroring
 
@@ -139,12 +139,12 @@ ctx memory sync --dry-run
 
 ## Edge Cases
 
-| Scenario | Behavior |
-|----------|----------|
+| Scenario               | Behavior                                                                         |
+|------------------------|----------------------------------------------------------------------------------|
 | Auto memory not active | `sync` exits 1 with message. `status` reports "not active". Hook skips silently. |
-| First sync (no mirror) | Creates mirror without archiving. |
-| MEMORY.md is empty | Syncs to empty mirror (valid). |
-| Not initialized | Init guard rejects (same as all ctx commands). |
+| First sync (no mirror) | Creates mirror without archiving.                                                |
+| MEMORY.md is empty     | Syncs to empty mirror (valid).                                                   |
+| Not initialized        | Init guard rejects (same as all ctx commands).                                   |
 
 ## Importing Entries
 
@@ -158,20 +158,20 @@ ctx memory import              # Actually promote entries
 
 Each entry is classified by keyword heuristics:
 
-| Keywords | Target |
-|----------|--------|
-| `always use`, `prefer`, `never use`, `standard` | CONVENTIONS.md |
-| `decided`, `chose`, `trade-off`, `approach` | DECISIONS.md |
-| `gotcha`, `learned`, `watch out`, `bug`, `caveat` | LEARNINGS.md |
-| `todo`, `need to`, `follow up` | TASKS.md |
-| Everything else | Skipped |
+| Keywords                                          | Target         |
+|---------------------------------------------------|----------------|
+| `always use`, `prefer`, `never use`, `standard`   | CONVENTIONS.md |
+| `decided`, `chose`, `trade-off`, `approach`       | DECISIONS.md   |
+| `gotcha`, `learned`, `watch out`, `bug`, `caveat` | LEARNINGS.md   |
+| `todo`, `need to`, `follow up`                    | TASKS.md       |
+| Everything else                                   | Skipped        |
 
-Entries that don't match any pattern are skipped — they stay in the mirror
+Entries that don't match any pattern are skipped - they stay in the mirror
 for manual review. Deduplication (hash-based) prevents re-importing the
 same entry on subsequent runs.
 
 !!! tip "Review Before Importing"
-    Use `--dry-run` first. The heuristic classifier is deliberately simple —
+    Use `--dry-run` first. The heuristic classifier is deliberately simple -
     it may misclassify ambiguous entries. Review the plan, then import.
 
 ### Full Workflow
@@ -185,7 +185,7 @@ ctx memory import              # 3. Promote entries to .context/ files
 ## Publishing Context to MEMORY.md
 
 Push curated `.context/` content back into MEMORY.md so Claude Code sees
-structured project context on session start — without needing hooks.
+structured project context on session start - without needing hooks.
 
 ```bash
 ctx memory publish --dry-run    # Preview what would be published
@@ -220,7 +220,7 @@ ctx memory unpublish
 
 !!! tip "Publish at Wrap-Up, Not on Commit"
     The best time to publish is during session wrap-up, after persisting
-    decisions and learnings. Never auto-publish — give yourself a chance
+    decisions and learnings. Never auto-publish - give yourself a chance
     to review what's going into MEMORY.md.
 
 ### Full Bidirectional Workflow

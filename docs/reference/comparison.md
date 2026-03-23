@@ -237,7 +237,7 @@ what to remember, stores it automatically, and retrieves it implicitly.
 `ctx` is **system memory (L3)**: humans and agents explicitly curate
 decisions, learnings, and tasks in inspectable files.
 
-Auto-memory is convenient -- you do not configure anything. But it is also
+Auto-memory is convenient - you do not configure anything. But it is also
 opaque: you cannot see what was stored, edit it precisely, or share it
 across tools. `ctx` files are plain Markdown in your repository, visible
 in diffs and code review.
@@ -255,7 +255,7 @@ for **what to do** and load automatically at session start.
 `ctx` adds dimensions that rule files do not cover: architectural
 **decisions** with rationale, **learnings** discovered during development,
 active **tasks**, and a **constitution** that governs agent behavior.
-Critically, `ctx` context **accumulates** -- each session can add to it,
+Critically, `ctx` context **accumulates** - each session can add to it,
 and token budgeting ensures only the most relevant context is injected.
 
 Use rule files for static conventions. Use `ctx` for evolving project
@@ -277,7 +277,7 @@ and budget.
 ### Copilot @workspace
 
 GitHub Copilot's `@workspace` performs workspace-wide code search. It
-answers **"what code exists?"** -- finding function definitions, usages,
+answers **"what code exists?"** - finding function definitions, usages,
 and file structure across the repository.
 
 `ctx` answers a different question: **"what did we decide?"** It stores
@@ -291,7 +291,7 @@ Cline's memory bank stores session context within the Cline extension.
 The motivation is similar to `ctx`: help the agent remember across
 sessions.
 
-The key difference is portability. Cline memory is tied to Cline -- it
+The key difference is portability. Cline memory is tied to Cline - it
 does not transfer to Claude Code, Cursor, Aider, or any other tool.
 `ctx` is tool-agnostic: context lives in plain files that any editor,
 agent, or script can read. Switching tools does not mean losing memory.

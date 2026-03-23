@@ -2882,10 +2882,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#ctx-changes" class="md-nav__link">
+  <a href="#ctx-change" class="md-nav__link">
     <span class="md-ellipsis">
       
-        ctx changes
+        ctx change
       
     </span>
   </a>
@@ -2893,10 +2893,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#ctx-deps" class="md-nav__link">
+  <a href="#ctx-dep" class="md-nav__link">
     <span class="md-ellipsis">
       
-        ctx deps
+        ctx dep
       
     </span>
   </a>
@@ -4170,10 +4170,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#ctx-changes" class="md-nav__link">
+  <a href="#ctx-change" class="md-nav__link">
     <span class="md-ellipsis">
       
-        ctx changes
+        ctx change
       
     </span>
   </a>
@@ -4181,10 +4181,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#ctx-deps" class="md-nav__link">
+  <a href="#ctx-dep" class="md-nav__link">
     <span class="md-ellipsis">
       
-        ctx deps
+        ctx dep
       
     </span>
   </a>
@@ -4915,7 +4915,7 @@ markers. Claude-owned content outside the markers is preserved.</p>
 </span><span id="__span-15-6"><a id="__codelineno-15-6" name="__codelineno-15-6" href="#__codelineno-15-6"></a><span class="c1">#     3 recent decisions (from DECISIONS.md)</span>
 </span><span id="__span-15-7"><a id="__codelineno-15-7" name="__codelineno-15-7" href="#__codelineno-15-7"></a><span class="c1">#     5 key conventions (from CONVENTIONS.md)</span>
 </span><span id="__span-15-8"><a id="__codelineno-15-8" name="__codelineno-15-8" href="#__codelineno-15-8"></a><span class="c1">#   Total: 42 lines (within 80-line budget)</span>
-</span><span id="__span-15-9"><a id="__codelineno-15-9" name="__codelineno-15-9" href="#__codelineno-15-9"></a><span class="c1"># Dry run — no files written.</span>
+</span><span id="__span-15-9"><a id="__codelineno-15-9" name="__codelineno-15-9" href="#__codelineno-15-9"></a><span class="c1"># Dry run - no files written.</span>
 </span><span id="__span-15-10"><a id="__codelineno-15-10" name="__codelineno-15-10" href="#__codelineno-15-10"></a>
 </span><span id="__span-15-11"><a id="__codelineno-15-11" name="__codelineno-15-11" href="#__codelineno-15-11"></a>ctx<span class="w"> </span>memory<span class="w"> </span>publish<span class="w">              </span><span class="c1"># Write to MEMORY.md</span>
 </span><span id="__span-15-12"><a id="__codelineno-15-12" name="__codelineno-15-12" href="#__codelineno-15-12"></a>ctx<span class="w"> </span>memory<span class="w"> </span>publish<span class="w"> </span>--budget<span class="w"> </span><span class="m">40</span><span class="w">  </span><span class="c1"># Tighter budget</span>
@@ -4990,7 +4990,7 @@ fires once per session. See <a href="../../recipes/memory-bridge/">Memory Bridge
 </span><span id="__span-18-8"><a id="__codelineno-18-8" name="__codelineno-18-8" href="#__codelineno-18-8"></a><span class="c1">#   -&gt; &quot;decided to use heuristic classification over LLM-based&quot;</span>
 </span><span id="__span-18-9"><a id="__codelineno-18-9" name="__codelineno-18-9" href="#__codelineno-18-9"></a><span class="c1">#      Classified: DECISIONS.md (keywords: decided)</span>
 </span><span id="__span-18-10"><a id="__codelineno-18-10" name="__codelineno-18-10" href="#__codelineno-18-10"></a><span class="c1">#</span>
-</span><span id="__span-18-11"><a id="__codelineno-18-11" name="__codelineno-18-11" href="#__codelineno-18-11"></a><span class="c1"># Dry run — would import: 4 entries (1 convention, 1 decision, 1 learning, 1 task)</span>
+</span><span id="__span-18-11"><a id="__codelineno-18-11" name="__codelineno-18-11" href="#__codelineno-18-11"></a><span class="c1"># Dry run - would import: 4 entries (1 convention, 1 decision, 1 learning, 1 task)</span>
 </span><span id="__span-18-12"><a id="__codelineno-18-12" name="__codelineno-18-12" href="#__codelineno-18-12"></a><span class="c1"># Skipped: 2 entries (session notes/unclassified)</span>
 </span><span id="__span-18-13"><a id="__codelineno-18-13" name="__codelineno-18-13" href="#__codelineno-18-13"></a>
 </span><span id="__span-18-14"><a id="__codelineno-18-14" name="__codelineno-18-14" href="#__codelineno-18-14"></a>ctx<span class="w"> </span>memory<span class="w"> </span>import<span class="w">    </span><span class="c1"># Actually write entries to .context/ files</span>
@@ -5090,12 +5090,12 @@ lives outside the project and is never committed.</p>
 </tbody>
 </table>
 <hr />
-<h3 id="ctx-changes"><code>ctx changes</code><a class="headerlink" href="#ctx-changes" title="Permanent link">&para;</a></h3>
+<h3 id="ctx-change"><code>ctx change</code><a class="headerlink" href="#ctx-change" title="Permanent link">&para;</a></h3>
 <p>Show what changed in context files and code since your last session.</p>
 <p>Automatically detects the previous session boundary from state markers
 or event log. Useful at session start to quickly see what moved while
 you were away.</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-24-1"><a id="__codelineno-24-1" name="__codelineno-24-1" href="#__codelineno-24-1"></a>ctx<span class="w"> </span>changes<span class="w"> </span><span class="o">[</span>flags<span class="o">]</span>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-24-1"><a id="__codelineno-24-1" name="__codelineno-24-1" href="#__codelineno-24-1"></a>ctx<span class="w"> </span>change<span class="w"> </span><span class="o">[</span>flags<span class="o">]</span>
 </span></code></pre></div>
 <p><strong>Flags</strong>:</p>
 <table>
@@ -5121,13 +5121,13 @@ you were away.</p>
 </ol>
 <p><strong>Example</strong>:</p>
 <div class="language-bash highlight"><pre><span></span><code><span id="__span-25-1"><a id="__codelineno-25-1" name="__codelineno-25-1" href="#__codelineno-25-1"></a><span class="c1"># Auto-detect last session, show what changed</span>
-</span><span id="__span-25-2"><a id="__codelineno-25-2" name="__codelineno-25-2" href="#__codelineno-25-2"></a>ctx<span class="w"> </span>changes
+</span><span id="__span-25-2"><a id="__codelineno-25-2" name="__codelineno-25-2" href="#__codelineno-25-2"></a>ctx<span class="w"> </span>change
 </span><span id="__span-25-3"><a id="__codelineno-25-3" name="__codelineno-25-3" href="#__codelineno-25-3"></a>
 </span><span id="__span-25-4"><a id="__codelineno-25-4" name="__codelineno-25-4" href="#__codelineno-25-4"></a><span class="c1"># Changes in the last 48 hours</span>
-</span><span id="__span-25-5"><a id="__codelineno-25-5" name="__codelineno-25-5" href="#__codelineno-25-5"></a>ctx<span class="w"> </span>changes<span class="w"> </span>--since<span class="w"> </span>48h
+</span><span id="__span-25-5"><a id="__codelineno-25-5" name="__codelineno-25-5" href="#__codelineno-25-5"></a>ctx<span class="w"> </span>change<span class="w"> </span>--since<span class="w"> </span>48h
 </span><span id="__span-25-6"><a id="__codelineno-25-6" name="__codelineno-25-6" href="#__codelineno-25-6"></a>
 </span><span id="__span-25-7"><a id="__codelineno-25-7" name="__codelineno-25-7" href="#__codelineno-25-7"></a><span class="c1"># Changes since a specific date</span>
-</span><span id="__span-25-8"><a id="__codelineno-25-8" name="__codelineno-25-8" href="#__codelineno-25-8"></a>ctx<span class="w"> </span>changes<span class="w"> </span>--since<span class="w"> </span><span class="m">2026</span>-03-10
+</span><span id="__span-25-8"><a id="__codelineno-25-8" name="__codelineno-25-8" href="#__codelineno-25-8"></a>ctx<span class="w"> </span>change<span class="w"> </span>--since<span class="w"> </span><span class="m">2026</span>-03-10
 </span></code></pre></div>
 <p><strong>Output</strong>:</p>
 <div class="language-text highlight"><pre><span></span><code><span id="__span-26-1"><a id="__codelineno-26-1" name="__codelineno-26-1" href="#__codelineno-26-1"></a>## Changes Since Last Session
@@ -5135,8 +5135,8 @@ you were away.</p>
 </span><span id="__span-26-3"><a id="__codelineno-26-3" name="__codelineno-26-3" href="#__codelineno-26-3"></a>**Reference point**: 6 hours ago
 </span><span id="__span-26-4"><a id="__codelineno-26-4" name="__codelineno-26-4" href="#__codelineno-26-4"></a>
 </span><span id="__span-26-5"><a id="__codelineno-26-5" name="__codelineno-26-5" href="#__codelineno-26-5"></a>### Context File Changes
-</span><span id="__span-26-6"><a id="__codelineno-26-6" name="__codelineno-26-6" href="#__codelineno-26-6"></a>- `TASKS.md` — modified 2026-03-12 14:30
-</span><span id="__span-26-7"><a id="__codelineno-26-7" name="__codelineno-26-7" href="#__codelineno-26-7"></a>- `DECISIONS.md` — modified 2026-03-12 09:15
+</span><span id="__span-26-6"><a id="__codelineno-26-6" name="__codelineno-26-6" href="#__codelineno-26-6"></a>- `TASKS.md` - modified 2026-03-12 14:30
+</span><span id="__span-26-7"><a id="__codelineno-26-7" name="__codelineno-26-7" href="#__codelineno-26-7"></a>- `DECISIONS.md` - modified 2026-03-12 09:15
 </span><span id="__span-26-8"><a id="__codelineno-26-8" name="__codelineno-26-8" href="#__codelineno-26-8"></a>
 </span><span id="__span-26-9"><a id="__codelineno-26-9" name="__codelineno-26-9" href="#__codelineno-26-9"></a>### Code Changes
 </span><span id="__span-26-10"><a id="__codelineno-26-10" name="__codelineno-26-10" href="#__codelineno-26-10"></a>- **12 commits** since reference point
@@ -5148,11 +5148,11 @@ you were away.</p>
 git). Code changes use <code>git log --since</code> (empty when not in a git repo).</p>
 <p><strong>See also</strong>: <a href="../../recipes/session-changes/">Reviewing Session Changes</a></p>
 <hr />
-<h3 id="ctx-deps"><code>ctx deps</code><a class="headerlink" href="#ctx-deps" title="Permanent link">&para;</a></h3>
+<h3 id="ctx-dep"><code>ctx dep</code><a class="headerlink" href="#ctx-dep" title="Permanent link">&para;</a></h3>
 <p>Generate a dependency graph from source code.</p>
 <p>Auto-detects the project ecosystem from manifest files and outputs
 a dependency graph in Mermaid, table, or JSON format.</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-27-1"><a id="__codelineno-27-1" name="__codelineno-27-1" href="#__codelineno-27-1"></a>ctx<span class="w"> </span>deps<span class="w"> </span><span class="o">[</span>flags<span class="o">]</span>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-27-1"><a id="__codelineno-27-1" name="__codelineno-27-1" href="#__codelineno-27-1"></a>ctx<span class="w"> </span>dep<span class="w"> </span><span class="o">[</span>flags<span class="o">]</span>
 </span></code></pre></div>
 <p><strong>Supported ecosystems</strong>:</p>
 <table>
@@ -5216,19 +5216,19 @@ a dependency graph in Mermaid, table, or JSON format.</p>
 </table>
 <p><strong>Examples</strong>:</p>
 <div class="language-bash highlight"><pre><span></span><code><span id="__span-28-1"><a id="__codelineno-28-1" name="__codelineno-28-1" href="#__codelineno-28-1"></a><span class="c1"># Auto-detect and show internal deps as Mermaid</span>
-</span><span id="__span-28-2"><a id="__codelineno-28-2" name="__codelineno-28-2" href="#__codelineno-28-2"></a>ctx<span class="w"> </span>deps
+</span><span id="__span-28-2"><a id="__codelineno-28-2" name="__codelineno-28-2" href="#__codelineno-28-2"></a>ctx<span class="w"> </span>dep
 </span><span id="__span-28-3"><a id="__codelineno-28-3" name="__codelineno-28-3" href="#__codelineno-28-3"></a>
 </span><span id="__span-28-4"><a id="__codelineno-28-4" name="__codelineno-28-4" href="#__codelineno-28-4"></a><span class="c1"># Include external dependencies</span>
-</span><span id="__span-28-5"><a id="__codelineno-28-5" name="__codelineno-28-5" href="#__codelineno-28-5"></a>ctx<span class="w"> </span>deps<span class="w"> </span>--external
+</span><span id="__span-28-5"><a id="__codelineno-28-5" name="__codelineno-28-5" href="#__codelineno-28-5"></a>ctx<span class="w"> </span>dep<span class="w"> </span>--external
 </span><span id="__span-28-6"><a id="__codelineno-28-6" name="__codelineno-28-6" href="#__codelineno-28-6"></a>
 </span><span id="__span-28-7"><a id="__codelineno-28-7" name="__codelineno-28-7" href="#__codelineno-28-7"></a><span class="c1"># Force Node.js detection (useful when multiple manifests exist)</span>
-</span><span id="__span-28-8"><a id="__codelineno-28-8" name="__codelineno-28-8" href="#__codelineno-28-8"></a>ctx<span class="w"> </span>deps<span class="w"> </span>--type<span class="w"> </span>node
+</span><span id="__span-28-8"><a id="__codelineno-28-8" name="__codelineno-28-8" href="#__codelineno-28-8"></a>ctx<span class="w"> </span>dep<span class="w"> </span>--type<span class="w"> </span>node
 </span><span id="__span-28-9"><a id="__codelineno-28-9" name="__codelineno-28-9" href="#__codelineno-28-9"></a>
 </span><span id="__span-28-10"><a id="__codelineno-28-10" name="__codelineno-28-10" href="#__codelineno-28-10"></a><span class="c1"># Machine-readable output</span>
-</span><span id="__span-28-11"><a id="__codelineno-28-11" name="__codelineno-28-11" href="#__codelineno-28-11"></a>ctx<span class="w"> </span>deps<span class="w"> </span>--format<span class="w"> </span>json
+</span><span id="__span-28-11"><a id="__codelineno-28-11" name="__codelineno-28-11" href="#__codelineno-28-11"></a>ctx<span class="w"> </span>dep<span class="w"> </span>--format<span class="w"> </span>json
 </span><span id="__span-28-12"><a id="__codelineno-28-12" name="__codelineno-28-12" href="#__codelineno-28-12"></a>
 </span><span id="__span-28-13"><a id="__codelineno-28-13" name="__codelineno-28-13" href="#__codelineno-28-13"></a><span class="c1"># Table format</span>
-</span><span id="__span-28-14"><a id="__codelineno-28-14" name="__codelineno-28-14" href="#__codelineno-28-14"></a>ctx<span class="w"> </span>deps<span class="w"> </span>--format<span class="w"> </span>table
+</span><span id="__span-28-14"><a id="__codelineno-28-14" name="__codelineno-28-14" href="#__codelineno-28-14"></a>ctx<span class="w"> </span>dep<span class="w"> </span>--format<span class="w"> </span>table
 </span></code></pre></div>
 <p><strong>Ecosystem notes</strong>:</p>
 <ul>
@@ -5372,16 +5372,16 @@ decoded file content (or writes to disk with <code>--out</code>).</p>
 <p>Bulk-import lines from a file into the scratchpad. Each non-empty line
 becomes a separate entry. All entries are written in a single encrypt/write
 cycle.</p>
-<p>With <code>--blobs</code>, import all first-level files from a directory as blob
+<p>With <code>--blob</code>, import all first-level files from a directory as blob
 entries. Each file becomes a blob with the filename as its label.
 Subdirectories and non-regular files are skipped.</p>
 <div class="language-bash highlight"><pre><span></span><code><span id="__span-39-1"><a id="__codelineno-39-1" name="__codelineno-39-1" href="#__codelineno-39-1"></a>ctx<span class="w"> </span>pad<span class="w"> </span>import<span class="w"> </span>&lt;file&gt;
 </span><span id="__span-39-2"><a id="__codelineno-39-2" name="__codelineno-39-2" href="#__codelineno-39-2"></a>ctx<span class="w"> </span>pad<span class="w"> </span>import<span class="w"> </span>-<span class="w">              </span><span class="c1"># read from stdin</span>
-</span><span id="__span-39-3"><a id="__codelineno-39-3" name="__codelineno-39-3" href="#__codelineno-39-3"></a>ctx<span class="w"> </span>pad<span class="w"> </span>import<span class="w"> </span>--blobs<span class="w"> </span>&lt;dir&gt;<span class="w">  </span><span class="c1"># import directory files as blobs</span>
+</span><span id="__span-39-3"><a id="__codelineno-39-3" name="__codelineno-39-3" href="#__codelineno-39-3"></a>ctx<span class="w"> </span>pad<span class="w"> </span>import<span class="w"> </span>--blob<span class="w"> </span>&lt;dir&gt;<span class="w">  </span><span class="c1"># import directory files as blobs</span>
 </span></code></pre></div>
 <p><strong>Arguments</strong>:</p>
 <ul>
-<li><code>file</code>: Path to a text file, <code>-</code> for stdin, or a directory (with <code>--blobs</code>)</li>
+<li><code>file</code>: Path to a text file, <code>-</code> for stdin, or a directory (with <code>--blob</code>)</li>
 </ul>
 <p><strong>Flags</strong>:</p>
 <table>
@@ -5393,7 +5393,7 @@ Subdirectories and non-regular files are skipped.</p>
 </thead>
 <tbody>
 <tr>
-<td><code>--blobs</code></td>
+<td><code>--blob</code></td>
 <td>Import first-level files from a directory as blobs</td>
 </tr>
 </tbody>
@@ -5401,7 +5401,7 @@ Subdirectories and non-regular files are skipped.</p>
 <p><strong>Examples</strong>:</p>
 <div class="language-bash highlight"><pre><span></span><code><span id="__span-40-1"><a id="__codelineno-40-1" name="__codelineno-40-1" href="#__codelineno-40-1"></a>ctx<span class="w"> </span>pad<span class="w"> </span>import<span class="w"> </span>notes.txt
 </span><span id="__span-40-2"><a id="__codelineno-40-2" name="__codelineno-40-2" href="#__codelineno-40-2"></a>grep<span class="w"> </span>TODO<span class="w"> </span>*.go<span class="w"> </span><span class="p">|</span><span class="w"> </span>ctx<span class="w"> </span>pad<span class="w"> </span>import<span class="w"> </span>-
-</span><span id="__span-40-3"><a id="__codelineno-40-3" name="__codelineno-40-3" href="#__codelineno-40-3"></a>ctx<span class="w"> </span>pad<span class="w"> </span>import<span class="w"> </span>--blobs<span class="w"> </span>./ideas/
+</span><span id="__span-40-3"><a id="__codelineno-40-3" name="__codelineno-40-3" href="#__codelineno-40-3"></a>ctx<span class="w"> </span>pad<span class="w"> </span>import<span class="w"> </span>--blob<span class="w"> </span>./ideas/
 </span></code></pre></div>
 <h4 id="ctx-pad-export"><code>ctx pad export</code><a class="headerlink" href="#ctx-pad-export" title="Permanent link">&para;</a></h4>
 <p>Export all blob entries from the scratchpad to a directory as files.

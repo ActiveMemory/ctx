@@ -4390,7 +4390,7 @@ cleanup behavior helps you avoid losing session history.</p>
 <h3 id="default-behavior">Default Behavior<a class="headerlink" href="#default-behavior" title="Permanent link">&para;</a></h3>
 <p>Claude Code retains session transcripts for approximately <strong>30 days</strong>.
 After that, JSONL files are automatically deleted during cleanup. Once
-deleted, <code>ctx recall</code> can no longer see those sessions — the data is
+deleted, <code>ctx recall</code> can no longer see those sessions - the data is
 gone.</p>
 <h3 id="the-cleanupperioddays-setting">The <code>cleanupPeriodDays</code> Setting<a class="headerlink" href="#the-cleanupperioddays-setting" title="Permanent link">&para;</a></h3>
 <p>Claude Code exposes a <code>cleanupPeriodDays</code> setting in its configuration
@@ -4413,7 +4413,7 @@ gone.</p>
 </tr>
 <tr>
 <td><code>0</code></td>
-<td><strong>Disables writing new transcripts entirely</strong> — not "keep forever"</td>
+<td><strong>Disables writing new transcripts entirely</strong> - not "keep forever"</td>
 </tr>
 </tbody>
 </table>
@@ -4424,11 +4424,11 @@ transcript creation altogether. No new JSONL files are written, which
 means <code>ctx recall</code> sees nothing new. This is rarely what you want.</p>
 </div>
 <h3 id="why-journal-export-matters">Why Journal Export Matters<a class="headerlink" href="#why-journal-export-matters" title="Permanent link">&para;</a></h3>
-<p>The journal export pipeline (<em>Steps 1–4 above</em>) is your <strong>archival
+<p>The journal export pipeline (<em>Steps 1-4 above</em>) is your <strong>archival
 mechanism</strong>. Exported Markdown files in <code>.context/journal/</code> persist
 independently of Claude Code's cleanup cycle. Even after the source
 JSONL files are deleted, your journal entries remain.</p>
-<p><strong>Recommendation</strong>: export regularly — weekly, or after any session worth
+<p><strong>Recommendation</strong>: export regularly - weekly, or after any session worth
 revisiting. A quick <code>ctx recall export --all</code> takes seconds and ensures
 nothing falls through the 30-day window.</p>
 <h3 id="quick-archival-checklist">Quick Archival Checklist<a class="headerlink" href="#quick-archival-checklist" title="Permanent link">&para;</a></h3>

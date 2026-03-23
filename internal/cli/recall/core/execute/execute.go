@@ -39,10 +39,10 @@ import (
 //   - updated: number of existing files updated (frontmatter preserved).
 //   - skipped: number of files skipped (existing or locked).
 func Export(
-		cmd *cobra.Command,
-		plan entity.ExportPlan,
-		jstate *state.JournalState,
-		opts entity.ExportOpts,
+	cmd *cobra.Command,
+	plan entity.ExportPlan,
+	jstate *state.JournalState,
+	opts entity.ExportOpts,
 ) (exported, updated, skipped int) {
 	for _, fa := range plan.Actions {
 		if fa.Action == entity.ActionLocked {

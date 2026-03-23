@@ -4113,9 +4113,9 @@ grows cluttered with completed checkboxes that obscure the remaining work.</p>
 <p><strong>Manage Tasks</strong>:</p>
 <div class="language-bash highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>ctx<span class="w"> </span>add<span class="w"> </span>task<span class="w"> </span><span class="s2">&quot;Fix race condition&quot;</span><span class="w"> </span>--priority<span class="w"> </span>high<span class="w">  </span><span class="c1"># add</span>
 </span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>ctx<span class="w"> </span>add<span class="w"> </span>task<span class="w"> </span><span class="s2">&quot;Write tests&quot;</span><span class="w"> </span>--section<span class="w"> </span><span class="s2">&quot;Phase 2&quot;</span><span class="w">     </span><span class="c1"># add to phase</span>
-</span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>ctx<span class="w"> </span>tasks<span class="w"> </span><span class="nb">complete</span><span class="w"> </span><span class="s2">&quot;race condition&quot;</span><span class="w">                      </span><span class="c1"># mark done</span>
-</span><span id="__span-0-4"><a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>ctx<span class="w"> </span>tasks<span class="w"> </span>snapshot<span class="w"> </span><span class="s2">&quot;before-refactor&quot;</span><span class="w">               </span><span class="c1"># backup</span>
-</span><span id="__span-0-5"><a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>ctx<span class="w"> </span>tasks<span class="w"> </span>archive<span class="w">                                  </span><span class="c1"># clean up</span>
+</span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>ctx<span class="w"> </span>task<span class="w"> </span><span class="nb">complete</span><span class="w"> </span><span class="s2">&quot;race condition&quot;</span><span class="w">                      </span><span class="c1"># mark done</span>
+</span><span id="__span-0-4"><a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>ctx<span class="w"> </span>task<span class="w"> </span>snapshot<span class="w"> </span><span class="s2">&quot;before-refactor&quot;</span><span class="w">               </span><span class="c1"># backup</span>
+</span><span id="__span-0-5"><a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>ctx<span class="w"> </span>task<span class="w"> </span>archive<span class="w">                                  </span><span class="c1"># clean up</span>
 </span></code></pre></div>
 <p><strong>Pick Up the Next Task</strong>:</p>
 <div class="language-text highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>/ctx-next # pick what&#39;s next
@@ -4137,17 +4137,17 @@ grows cluttered with completed checkboxes that obscure the remaining work.</p>
 <td>Add a new task to <code>TASKS.md</code></td>
 </tr>
 <tr>
-<td><code>ctx tasks complete</code></td>
+<td><code>ctx task complete</code></td>
 <td>Command</td>
 <td>Mark a task as done by number or text</td>
 </tr>
 <tr>
-<td><code>ctx tasks snapshot</code></td>
+<td><code>ctx task snapshot</code></td>
 <td>Command</td>
 <td>Create a point-in-time backup of <code>TASKS.md</code></td>
 </tr>
 <tr>
-<td><code>ctx tasks archive</code></td>
+<td><code>ctx task archive</code></td>
 <td>Command</td>
 <td>Move completed tasks to archive file</td>
 </tr>
@@ -4203,7 +4203,7 @@ status is tracked via checkboxes and inline tags.</p>
 <div class="language-markdown highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="gu">## Phase 1: Core CLI</span>
 </span><span id="__span-3-2"><a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>
 </span><span id="__span-3-3"><a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="k">- [x]</span> Implement ctx add command <span class="sb">`#done:2026-02-01-143022`</span>
-</span><span id="__span-3-4"><a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="k">- [x]</span> Implement ctx tasks complete command <span class="sb">`#done:2026-02-03-091544`</span>
+</span><span id="__span-3-4"><a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="k">- [x]</span> Implement ctx task complete command <span class="sb">`#done:2026-02-03-091544`</span>
 </span><span id="__span-3-5"><a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="k">- [ ]</span> Add --section flag to ctx add task <span class="sb">`#priority:medium`</span>
 </span><span id="__span-3-6"><a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>
 </span><span id="__span-3-7"><a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="gu">## Phase 2: AI Integration</span>
@@ -4254,17 +4254,17 @@ recent work, and phase order.</p>
 <h3 id="step-4-complete-tasks">Step 4: Complete Tasks<a class="headerlink" href="#step-4-complete-tasks" title="Permanent link">&para;</a></h3>
 <p>When a task is done, mark it complete by number or partial text match:</p>
 <div class="language-bash highlight"><pre><span></span><code><span id="__span-7-1"><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="c1"># By task number (as shown in TASKS.md)</span>
-</span><span id="__span-7-2"><a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>ctx<span class="w"> </span>tasks<span class="w"> </span><span class="nb">complete</span><span class="w"> </span><span class="m">3</span>
+</span><span id="__span-7-2"><a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>ctx<span class="w"> </span>task<span class="w"> </span><span class="nb">complete</span><span class="w"> </span><span class="m">3</span>
 </span><span id="__span-7-3"><a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>
 </span><span id="__span-7-4"><a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a><span class="c1"># By partial text match</span>
-</span><span id="__span-7-5"><a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a>ctx<span class="w"> </span>tasks<span class="w"> </span><span class="nb">complete</span><span class="w"> </span><span class="s2">&quot;agent cooldown&quot;</span>
+</span><span id="__span-7-5"><a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a>ctx<span class="w"> </span>task<span class="w"> </span><span class="nb">complete</span><span class="w"> </span><span class="s2">&quot;agent cooldown&quot;</span>
 </span></code></pre></div>
 <p>The task's checkbox changes from <code>[ ]</code> to <code>[x]</code> and a <code>#done</code> timestamp is
 added. Tasks are never deleted: they stay in their phase section so history is
 preserved.</p>
 <div class="admonition tip">
 <p class="admonition-title">Be Conversational</p>
-<p>You rarely need to run <code>ctx tasks complete</code> yourself during an interactive session.</p>
+<p>You rarely need to run <code>ctx task complete</code> yourself during an interactive session.</p>
 <p>When you say something like "<em>the rate limiter is done</em>" or "<em>we finished that</em>,"
 the agent marks the task complete and moves on to suggesting what is next.</p>
 <p>The CLI commands are most useful for manual housekeeping, scripted workflows,
@@ -4275,10 +4275,10 @@ or when you want precision.</p>
 current task state. This creates a copy of <code>TASKS.md</code> in <code>.context/archive/</code>
 without modifying the original.</p>
 <div class="language-bash highlight"><pre><span></span><code><span id="__span-8-1"><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c1"># Default snapshot</span>
-</span><span id="__span-8-2"><a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>ctx<span class="w"> </span>tasks<span class="w"> </span>snapshot
+</span><span id="__span-8-2"><a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>ctx<span class="w"> </span>task<span class="w"> </span>snapshot
 </span><span id="__span-8-3"><a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>
 </span><span id="__span-8-4"><a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a><span class="c1"># Named snapshot (recommended before big changes)</span>
-</span><span id="__span-8-5"><a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a>ctx<span class="w"> </span>tasks<span class="w"> </span>snapshot<span class="w"> </span><span class="s2">&quot;before-refactor&quot;</span>
+</span><span id="__span-8-5"><a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a>ctx<span class="w"> </span>task<span class="w"> </span>snapshot<span class="w"> </span><span class="s2">&quot;before-refactor&quot;</span>
 </span></code></pre></div>
 <p>This creates a file like <code>.context/archive/tasks-before-refactor-2026-02-08-1430.md</code>.
 If the refactor goes sideways, and you need to confirm what the task state looked
@@ -4288,12 +4288,12 @@ review later.</p>
 <h3 id="step-6-archive-when-tasksmd-gets-cluttered">Step 6: Archive When <code>TASKS.md</code> Gets Cluttered<a class="headerlink" href="#step-6-archive-when-tasksmd-gets-cluttered" title="Permanent link">&para;</a></h3>
 <p>After several sessions, <code>TASKS.md</code> accumulates completed tasks that make it hard
 to see what is still pending.</p>
-<p>Use <code>ctx tasks archive</code> to move all <code>[x]</code> items to a timestamped archive file.</p>
+<p>Use <code>ctx task archive</code> to move all <code>[x]</code> items to a timestamped archive file.</p>
 <p>Start with a dry run to preview what will be moved:</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-9-1"><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>ctx<span class="w"> </span>tasks<span class="w"> </span>archive<span class="w"> </span>--dry-run
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-9-1"><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>ctx<span class="w"> </span>task<span class="w"> </span>archive<span class="w"> </span>--dry-run
 </span></code></pre></div>
 <p>Then archive:</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-10-1"><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a>ctx<span class="w"> </span>tasks<span class="w"> </span>archive
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-10-1"><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a>ctx<span class="w"> </span>task<span class="w"> </span>archive
 </span></code></pre></div>
 <p>Completed tasks move to <code>.context/archive/tasks-2026-02-08.md</code>. Phase headers
 are preserved in the archive for traceability. Pending tasks (<code>[ ]</code>) remain
@@ -4325,11 +4325,11 @@ marked <code>[x]</code> prematurely.</p>
 <td>"What should we work on?"</td>
 </tr>
 <tr>
-<td><code>ctx tasks complete "rate limiting"</code></td>
+<td><code>ctx task complete "rate limiting"</code></td>
 <td>"The rate limiter is done, what's next?"</td>
 </tr>
 <tr>
-<td><code>ctx tasks archive</code></td>
+<td><code>ctx task archive</code></td>
 <td>"<code>TASKS.md</code> is getting long, can you clean it up?"</td>
 </tr>
 <tr>
@@ -4486,17 +4486,17 @@ and next-task selection: all from natural conversation.</p>
 </span><span id="__span-16-8"><a id="__codelineno-16-8" name="__codelineno-16-8" href="#__codelineno-16-8"></a><span class="c1"># (from AI assistant) /ctx-next</span>
 </span><span id="__span-16-9"><a id="__codelineno-16-9" name="__codelineno-16-9" href="#__codelineno-16-9"></a>
 </span><span id="__span-16-10"><a id="__codelineno-16-10" name="__codelineno-16-10" href="#__codelineno-16-10"></a><span class="c1"># Mark done by text</span>
-</span><span id="__span-16-11"><a id="__codelineno-16-11" name="__codelineno-16-11" href="#__codelineno-16-11"></a>ctx<span class="w"> </span>tasks<span class="w"> </span><span class="nb">complete</span><span class="w"> </span><span class="s2">&quot;rate limiting&quot;</span>
+</span><span id="__span-16-11"><a id="__codelineno-16-11" name="__codelineno-16-11" href="#__codelineno-16-11"></a>ctx<span class="w"> </span>task<span class="w"> </span><span class="nb">complete</span><span class="w"> </span><span class="s2">&quot;rate limiting&quot;</span>
 </span><span id="__span-16-12"><a id="__codelineno-16-12" name="__codelineno-16-12" href="#__codelineno-16-12"></a>
 </span><span id="__span-16-13"><a id="__codelineno-16-13" name="__codelineno-16-13" href="#__codelineno-16-13"></a><span class="c1"># Mark done by number</span>
-</span><span id="__span-16-14"><a id="__codelineno-16-14" name="__codelineno-16-14" href="#__codelineno-16-14"></a>ctx<span class="w"> </span>tasks<span class="w"> </span><span class="nb">complete</span><span class="w"> </span><span class="m">5</span>
+</span><span id="__span-16-14"><a id="__codelineno-16-14" name="__codelineno-16-14" href="#__codelineno-16-14"></a>ctx<span class="w"> </span>task<span class="w"> </span><span class="nb">complete</span><span class="w"> </span><span class="m">5</span>
 </span><span id="__span-16-15"><a id="__codelineno-16-15" name="__codelineno-16-15" href="#__codelineno-16-15"></a>
 </span><span id="__span-16-16"><a id="__codelineno-16-16" name="__codelineno-16-16" href="#__codelineno-16-16"></a><span class="c1"># Snapshot before a risky refactor</span>
-</span><span id="__span-16-17"><a id="__codelineno-16-17" name="__codelineno-16-17" href="#__codelineno-16-17"></a>ctx<span class="w"> </span>tasks<span class="w"> </span>snapshot<span class="w"> </span><span class="s2">&quot;before-middleware-rewrite&quot;</span>
+</span><span id="__span-16-17"><a id="__codelineno-16-17" name="__codelineno-16-17" href="#__codelineno-16-17"></a>ctx<span class="w"> </span>task<span class="w"> </span>snapshot<span class="w"> </span><span class="s2">&quot;before-middleware-rewrite&quot;</span>
 </span><span id="__span-16-18"><a id="__codelineno-16-18" name="__codelineno-16-18" href="#__codelineno-16-18"></a>
 </span><span id="__span-16-19"><a id="__codelineno-16-19" name="__codelineno-16-19" href="#__codelineno-16-19"></a><span class="c1"># Archive completed tasks when the list gets long</span>
-</span><span id="__span-16-20"><a id="__codelineno-16-20" name="__codelineno-16-20" href="#__codelineno-16-20"></a>ctx<span class="w"> </span>tasks<span class="w"> </span>archive<span class="w"> </span>--dry-run<span class="w">     </span><span class="c1"># preview first</span>
-</span><span id="__span-16-21"><a id="__codelineno-16-21" name="__codelineno-16-21" href="#__codelineno-16-21"></a>ctx<span class="w"> </span>tasks<span class="w"> </span>archive<span class="w">               </span><span class="c1"># then archive</span>
+</span><span id="__span-16-20"><a id="__codelineno-16-20" name="__codelineno-16-20" href="#__codelineno-16-20"></a>ctx<span class="w"> </span>task<span class="w"> </span>archive<span class="w"> </span>--dry-run<span class="w">     </span><span class="c1"># preview first</span>
+</span><span id="__span-16-21"><a id="__codelineno-16-21" name="__codelineno-16-21" href="#__codelineno-16-21"></a>ctx<span class="w"> </span>task<span class="w"> </span>archive<span class="w">               </span><span class="c1"># then archive</span>
 </span></code></pre></div>
 <h2 id="tips">Tips<a class="headerlink" href="#tips" title="Permanent link">&para;</a></h2>
 <ul>
@@ -4536,7 +4536,7 @@ Store short-lived sensitive notes in an encrypted scratchpad.</p>
 <li><a href="../context-health/">Detecting and Fixing Drift</a>:
   keeping <code>TASKS.md</code> accurate over time</li>
 <li><a href="../../cli/context/">CLI Reference</a>:
-  full documentation for <code>ctx add</code>, <code>ctx tasks complete</code>, <code>ctx tasks</code></li>
+  full documentation for <code>ctx add</code>, <code>ctx task complete</code>, <code>ctx task</code></li>
 <li><a href="../../home/context-files/#tasksmd">Context Files: <code>TASKS.md</code></a>: 
   format and conventions for <code>TASKS.md</code></li>
 </ul>

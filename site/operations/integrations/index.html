@@ -5223,7 +5223,7 @@ both together.</p>
 </tr>
 <tr>
 <td><code>/ctx-add-decision</code></td>
-<td>Add a decision with context/rationale/consequences</td>
+<td>Add a decision with context/rationale/consequence</td>
 </tr>
 <tr>
 <td><code>/ctx-add-convention</code></td>
@@ -5672,7 +5672,7 @@ file awareness:</p>
 <tr>
 <td><code>decision</code></td>
 <td>DECISIONS.md</td>
-<td><code>context</code>, <code>rationale</code>, <code>consequences</code></td>
+<td><code>context</code>, <code>rationale</code>, <code>consequence</code></td>
 </tr>
 <tr>
 <td><code>learning</code></td>
@@ -5709,11 +5709,11 @@ file awareness:</p>
 <div class="language-xml highlight"><pre><span></span><code><span id="__span-29-1"><a id="__codelineno-29-1" name="__codelineno-29-1" href="#__codelineno-29-1"></a><span class="nt">&lt;context-update</span><span class="w"> </span><span class="na">type=</span><span class="s">&quot;decision&quot;</span>
 </span><span id="__span-29-2"><a id="__codelineno-29-2" name="__codelineno-29-2" href="#__codelineno-29-2"></a><span class="w">  </span><span class="na">context=</span><span class="s">&quot;Need a caching layer for API responses&quot;</span>
 </span><span id="__span-29-3"><a id="__codelineno-29-3" name="__codelineno-29-3" href="#__codelineno-29-3"></a><span class="w">  </span><span class="na">rationale=</span><span class="s">&quot;Redis is fast, well-supported, and team has experience&quot;</span>
-</span><span id="__span-29-4"><a id="__codelineno-29-4" name="__codelineno-29-4" href="#__codelineno-29-4"></a><span class="w">  </span><span class="na">consequences=</span><span class="s">&quot;Must provision Redis infrastructure; team training on Redis patterns&quot;</span>
+</span><span id="__span-29-4"><a id="__codelineno-29-4" name="__codelineno-29-4" href="#__codelineno-29-4"></a><span class="w">  </span><span class="na">consequence=</span><span class="s">&quot;Must provision Redis infrastructure; team training on Redis patterns&quot;</span>
 </span><span id="__span-29-5"><a id="__codelineno-29-5" name="__codelineno-29-5" href="#__codelineno-29-5"></a><span class="nt">&gt;</span>Use<span class="w"> </span>Redis<span class="w"> </span>for<span class="w"> </span>caching<span class="nt">&lt;/context-update&gt;</span>
 </span></code></pre></div>
 <p>Learnings require: <code>context</code>, <code>lesson</code>, <code>application</code> attributes.
-Decisions require: <code>context</code>, <code>rationale</code>, <code>consequences</code> attributes.
+Decisions require: <code>context</code>, <code>rationale</code>, <code>consequence</code> attributes.
 Updates missing required attributes are rejected with an error.</p>
 <h2 id="further-reading">Further Reading<a class="headerlink" href="#further-reading" title="Permanent link">&para;</a></h2>
 <ul>

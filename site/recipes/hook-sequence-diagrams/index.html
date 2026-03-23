@@ -3466,28 +3466,6 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#block-dangerous-commands" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        block-dangerous-commands
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#block-non-path-ctx" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        block-non-path-ctx
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
   <a href="#context-load-gate" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -3499,10 +3477,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#check-resources" class="md-nav__link">
+  <a href="#block-non-path-ctx" class="md-nav__link">
     <span class="md-ellipsis">
       
-        check-resources
+        block-non-path-ctx
       
     </span>
   </a>
@@ -3549,15 +3527,43 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#heartbeat" class="md-nav__link">
+  <a href="#post-commit" class="md-nav__link">
     <span class="md-ellipsis">
       
-        heartbeat
+        post-commit
       
     </span>
   </a>
   
 </li>
+        
+          <li class="md-nav__item">
+  <a href="#check-task-completion" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        check-task-completion
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#userpromptsubmit-hooks" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        UserPromptSubmit Hooks
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="UserPromptSubmit Hooks">
+      <ul class="md-nav__list">
         
           <li class="md-nav__item">
   <a href="#check-context-size" class="md-nav__link">
@@ -3571,10 +3577,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#check-persistence" class="md-nav__link">
+  <a href="#check-ceremonies" class="md-nav__link">
     <span class="md-ellipsis">
       
-        check-persistence
+        check-ceremonies
       
     </span>
   </a>
@@ -3586,28 +3592,6 @@
     <span class="md-ellipsis">
       
         check-freshness
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#check-backup-age" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        check-backup-age
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#check-ceremonies" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        check-ceremonies
       
     </span>
   </a>
@@ -3659,7 +3643,7 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#check-persistence_1" class="md-nav__link">
+  <a href="#check-persistence" class="md-nav__link">
     <span class="md-ellipsis">
       
         check-persistence
@@ -3681,10 +3665,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#check-task-completion" class="md-nav__link">
+  <a href="#check-resources" class="md-nav__link">
     <span class="md-ellipsis">
       
-        check-task-completion
+        check-resources
       
     </span>
   </a>
@@ -3703,10 +3687,49 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#post-commit" class="md-nav__link">
+  <a href="#heartbeat" class="md-nav__link">
     <span class="md-ellipsis">
       
-        post-commit
+        heartbeat
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#project-local-hooks" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Project-Local Hooks
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Project-Local Hooks">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#block-dangerous-commands" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        block-dangerous-commands
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#check-backup-age" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        check-backup-age
       
     </span>
   </a>
@@ -3769,60 +3792,21 @@
   <h1>Hook Sequence Diagrams</h1>
 
 <h2 id="hook-lifecycle">Hook Lifecycle<a class="headerlink" href="#hook-lifecycle" title="Permanent link">&para;</a></h2>
-<p>Every ctx hook is a Go binary invoked by Claude Code at either
-<code>PreToolUse</code> (before a tool runs) or <code>PostToolUse</code> (after it
-completes). Hooks receive JSON on stdin and emit JSON or plain
-text on stdout.</p>
+<p>Every ctx hook is a Go binary invoked by Claude Code at one of three
+lifecycle events: <code>PreToolUse</code> (before a tool runs, can block),
+<code>PostToolUse</code> (after a tool completes), or <code>UserPromptSubmit</code> (on
+every user prompt, before any tools run). Hooks receive JSON on stdin
+and emit JSON or plain text on stdout.</p>
 <p>This page documents the execution flow of every hook as a
 sequence diagram.</p>
 <hr />
+<!-- drift-check: jq -r '.hooks.PreToolUse[].hooks[].command' internal/assets/claude/hooks/hooks.json | grep 'ctx system' | sed 's/ctx system //' | sort -->
+
 <h2 id="pretooluse-hooks">PreToolUse Hooks<a class="headerlink" href="#pretooluse-hooks" title="Permanent link">&para;</a></h2>
 <p>These fire <strong>before</strong> a tool executes. They can block, gate, or
 inject context.</p>
-<h3 id="block-dangerous-commands">block-dangerous-commands<a class="headerlink" href="#block-dangerous-commands" title="Permanent link">&para;</a></h3>
-<p>Blocks dangerous shell patterns (sudo, git push, cp to bin).
-No initialization or pause checks — always active.</p>
-<pre class="mermaid"><code>sequenceDiagram
-    participant CC as Claude Code
-    participant Hook as block-dangerous-commands
-    participant Tpl as Message Template
-
-    CC-&gt;&gt;Hook: stdin {command, session_id}
-    Hook-&gt;&gt;Hook: Extract command
-    alt command empty
-        Hook--&gt;&gt;CC: (silent exit)
-    end
-    Hook-&gt;&gt;Hook: Test regex: sudo, git push, cp-to-bin, install-to-bin
-    alt no match
-        Hook--&gt;&gt;CC: (silent exit)
-    end
-    Hook-&gt;&gt;Tpl: LoadMessage(hook, variant, fallback)
-    Hook--&gt;&gt;CC: JSON {decision: BLOCK, reason}
-    Hook-&gt;&gt;Hook: NudgeAndRelay(message)</code></pre>
-<h3 id="block-non-path-ctx">block-non-path-ctx<a class="headerlink" href="#block-non-path-ctx" title="Permanent link">&para;</a></h3>
-<p>Blocks <code>./ctx</code>, <code>go run ./cmd/ctx</code>, or absolute-path ctx
-invocations. Constitutionally enforced.</p>
-<pre class="mermaid"><code>sequenceDiagram
-    participant CC as Claude Code
-    participant Hook as block-non-path-ctx
-    participant Tpl as Message Template
-
-    CC-&gt;&gt;Hook: stdin {command, session_id}
-    Hook-&gt;&gt;Hook: Extract command
-    alt command empty
-        Hook--&gt;&gt;CC: (silent exit)
-    end
-    Hook-&gt;&gt;Hook: Test regex: relative-path, go-run, absolute-path
-    alt no match
-        Hook--&gt;&gt;CC: (silent exit)
-    end
-    alt absolute-path + test exception
-        Hook--&gt;&gt;CC: (silent exit)
-    end
-    Hook-&gt;&gt;Tpl: LoadMessage(hook, variant, fallback)
-    Hook--&gt;&gt;CC: JSON {decision: BLOCK, reason + constitution suffix}
-    Hook-&gt;&gt;Hook: NudgeAndRelay(message)</code></pre>
 <h3 id="context-load-gate">context-load-gate<a class="headerlink" href="#context-load-gate" title="Permanent link">&para;</a></h3>
+<p>Matcher: <code>.*</code> (all tools)</p>
 <p>Injects the full context packet on first tool use of a session.
 One-shot per session.</p>
 <pre class="mermaid"><code>sequenceDiagram
@@ -3847,36 +3831,47 @@ One-shot per session.</p>
     end
     Hook-&gt;&gt;State: Create marker (one-shot guard)
     Hook-&gt;&gt;State: Prune stale session files
-    Hook-&gt;&gt;Ctx: Read files in priority order
-    Note over Hook,Ctx: DECISION/LEARNING: index only&lt;br/&gt;Others: full content
+    loop Each file in ReadOrder
+        alt GLOSSARY or TASK
+            Note over Hook: Skip (Task mentioned in footer only)
+        else DECISION or LEARNING
+            Hook-&gt;&gt;Ctx: Extract index table only
+        else other files
+            Hook-&gt;&gt;Ctx: Read full content
+        end
+        Hook-&gt;&gt;Hook: Estimate tokens per file
+    end
     Hook-&gt;&gt;Git: Detect changes since last session
     Hook-&gt;&gt;Hook: Build injection (files + changes + token counts)
     Hook--&gt;&gt;CC: JSON {additionalContext: injection}
     Hook-&gt;&gt;Hook: Send webhook (metadata only)
     Hook-&gt;&gt;State: Write oversize flag if tokens &gt; threshold</code></pre>
-<h3 id="check-resources">check-resources<a class="headerlink" href="#check-resources" title="Permanent link">&para;</a></h3>
-<p>Checks system resources (memory, swap, disk, load). Fires on
-every tool call. No initialization required.</p>
+<h3 id="block-non-path-ctx">block-non-path-ctx<a class="headerlink" href="#block-non-path-ctx" title="Permanent link">&para;</a></h3>
+<p>Matcher: <code>Bash</code></p>
+<p>Blocks <code>./ctx</code>, <code>go run ./cmd/ctx</code>, or absolute-path ctx
+invocations. Constitutionally enforced.</p>
 <pre class="mermaid"><code>sequenceDiagram
     participant CC as Claude Code
-    participant Hook as check-resources
-    participant Sys as sysinfo
+    participant Hook as block-non-path-ctx
     participant Tpl as Message Template
 
     CC-&gt;&gt;Hook: stdin {command, session_id}
-    Hook-&gt;&gt;Hook: HookPreamble (parse input, check pause)
-    alt paused
+    Hook-&gt;&gt;Hook: Extract command
+    alt command empty
         Hook--&gt;&gt;CC: (silent exit)
     end
-    Hook-&gt;&gt;Sys: Collect snapshot (memory, swap, disk, load)
-    Hook-&gt;&gt;Sys: Evaluate thresholds
-    alt max severity &lt; Danger
+    Hook-&gt;&gt;Hook: Test regex: relative-path, go-run, absolute-path
+    alt no match
         Hook--&gt;&gt;CC: (silent exit)
     end
-    Hook-&gt;&gt;Tpl: LoadMessage(hook, alert, vars, fallback)
-    Hook--&gt;&gt;CC: Nudge box (danger alerts)
+    alt absolute-path + test exception
+        Hook--&gt;&gt;CC: (silent exit)
+    end
+    Hook-&gt;&gt;Tpl: LoadMessage(hook, variant, fallback)
+    Hook--&gt;&gt;CC: JSON {decision: BLOCK, reason + constitution suffix}
     Hook-&gt;&gt;Hook: NudgeAndRelay(message)</code></pre>
 <h3 id="qa-reminder">qa-reminder<a class="headerlink" href="#qa-reminder" title="Permanent link">&para;</a></h3>
+<p>Matcher: <code>Bash</code></p>
 <p>Gate nudge before any git command. Reminds agent to lint/test.</p>
 <pre class="mermaid"><code>sequenceDiagram
     participant CC as Claude Code
@@ -3897,6 +3892,7 @@ every tool call. No initialization required.</p>
     Hook--&gt;&gt;CC: JSON {additionalContext: QA gate}
     Hook-&gt;&gt;Hook: Relay(message)</code></pre>
 <h3 id="specs-nudge">specs-nudge<a class="headerlink" href="#specs-nudge" title="Permanent link">&para;</a></h3>
+<p>Matcher: <code>EnterPlanMode</code></p>
 <p>Nudges agent to save plans/specs when new implementation detected.</p>
 <pre class="mermaid"><code>sequenceDiagram
     participant CC as Claude Code
@@ -3913,33 +3909,74 @@ every tool call. No initialization required.</p>
     Hook--&gt;&gt;CC: JSON {additionalContext: specs nudge}
     Hook-&gt;&gt;Hook: Relay(message)</code></pre>
 <hr />
+<!-- drift-check: jq -r '.hooks.PostToolUse[].hooks[].command' internal/assets/claude/hooks/hooks.json | grep 'ctx system' | sed 's/ctx system //' | sort -->
+
 <h2 id="posttooluse-hooks">PostToolUse Hooks<a class="headerlink" href="#posttooluse-hooks" title="Permanent link">&para;</a></h2>
 <p>These fire <strong>after</strong> a tool completes. They observe, nudge, and
 track state.</p>
-<h3 id="heartbeat">heartbeat<a class="headerlink" href="#heartbeat" title="Permanent link">&para;</a></h3>
-<p>Silent per-prompt pulse. Tracks prompt count, context modification,
-and token usage. The agent never sees this hook's output.</p>
+<h3 id="post-commit">post-commit<a class="headerlink" href="#post-commit" title="Permanent link">&para;</a></h3>
+<p>Matcher: <code>Bash</code></p>
+<p>Fires after <code>git commit</code> (not amend). Nudges for context capture
+and checks version drift.</p>
 <pre class="mermaid"><code>sequenceDiagram
     participant CC as Claude Code
-    participant Hook as heartbeat
+    participant Hook as post-commit
+    participant Tpl as Message Template
+
+    CC-&gt;&gt;Hook: stdin {command, session_id}
+    Hook-&gt;&gt;Hook: Check initialized + HookPreamble
+    alt not initialized or paused
+        Hook--&gt;&gt;CC: (silent exit)
+    end
+    Hook-&gt;&gt;Hook: Regex: command contains "git commit"?
+    alt not a git commit
+        Hook--&gt;&gt;CC: (silent exit)
+    end
+    Hook-&gt;&gt;Hook: Regex: command contains "--amend"?
+    alt is amend
+        Hook--&gt;&gt;CC: (silent exit)
+    end
+    Hook-&gt;&gt;Tpl: LoadMessage(hook, nudge, fallback)
+    Hook-&gt;&gt;Hook: AppendDir(message)
+    Hook--&gt;&gt;CC: JSON {additionalContext: post-commit nudge}
+    Hook-&gt;&gt;Hook: Relay(message)
+    Hook-&gt;&gt;Hook: CheckVersionDrift()</code></pre>
+<h3 id="check-task-completion">check-task-completion<a class="headerlink" href="#check-task-completion" title="Permanent link">&para;</a></h3>
+<p>Matcher: <code>Edit</code>, <code>Write</code></p>
+<p>Configurable-interval nudge after edits. Per-session counter resets
+after firing.</p>
+<pre class="mermaid"><code>sequenceDiagram
+    participant CC as Claude Code
+    participant Hook as check-task-completion
     participant State as .context/state/
-    participant Ctx as .context/ files
-    participant Notify as Webhook + EventLog
+    participant RC as .ctxrc
+    participant Tpl as Message Template
 
     CC-&gt;&gt;Hook: stdin {session_id}
     Hook-&gt;&gt;Hook: Check initialized + HookPreamble
     alt not initialized or paused
         Hook--&gt;&gt;CC: (silent exit)
     end
-    Hook-&gt;&gt;State: Increment heartbeat counter
-    Hook-&gt;&gt;Ctx: Get latest context file mtime
-    Hook-&gt;&gt;State: Compare with last recorded mtime
-    Hook-&gt;&gt;State: Update mtime record
-    Hook-&gt;&gt;State: Read session token info
-    Hook-&gt;&gt;Notify: Send heartbeat notification
-    Hook-&gt;&gt;Notify: Append to event log
-    Hook-&gt;&gt;State: Write heartbeat log entry
-    Note over Hook: No stdout — agent never sees this</code></pre>
+    Hook-&gt;&gt;RC: Read task nudge interval
+    alt interval &lt;= 0 (disabled)
+        Hook--&gt;&gt;CC: (silent exit)
+    end
+    Hook-&gt;&gt;State: Read per-session counter
+    Hook-&gt;&gt;Hook: Increment counter
+    alt counter &lt; interval
+        Hook-&gt;&gt;State: Write counter
+        Hook--&gt;&gt;CC: (silent exit)
+    end
+    Hook-&gt;&gt;State: Reset counter to 0
+    Hook-&gt;&gt;Tpl: LoadMessage(hook, nudge, fallback)
+    Hook--&gt;&gt;CC: JSON {additionalContext: task nudge}
+    Hook-&gt;&gt;Hook: Relay(message)</code></pre>
+<hr />
+<!-- drift-check: jq -r '.hooks.UserPromptSubmit[].hooks[].command' internal/assets/claude/hooks/hooks.json | sed 's/ctx system //' | sort -->
+
+<h2 id="userpromptsubmit-hooks">UserPromptSubmit Hooks<a class="headerlink" href="#userpromptsubmit-hooks" title="Permanent link">&para;</a></h2>
+<p>These fire <strong>on every user prompt</strong>, before any tools run. They
+perform health checks, track state, and nudge for housekeeping.</p>
 <h3 id="check-context-size">check-context-size<a class="headerlink" href="#check-context-size" title="Permanent link">&para;</a></h3>
 <p>Adaptive context window monitoring. Fires checkpoints, window
 warnings, and billing alerts based on prompt count and token usage.</p>
@@ -3997,95 +4034,6 @@ warnings, and billing alerts based on prompt count and token usage.</p>
         Hook-&gt;&gt;Hook: NudgeAndRelay(checkpoint message)
     end
     Hook-&gt;&gt;State: Write session stats</code></pre>
-<h3 id="check-persistence">check-persistence<a class="headerlink" href="#check-persistence" title="Permanent link">&para;</a></h3>
-<p>Tracks context file modification and nudges when edits happen
-without persisting context. Adaptive threshold based on prompt count.</p>
-<pre class="mermaid"><code>sequenceDiagram
-    participant CC as Claude Code
-    participant Hook as check-persistence
-    participant State as .context/state/
-    participant Ctx as .context/ files
-    participant Tpl as Message Template
-
-    CC-&gt;&gt;Hook: stdin {session_id}
-    Hook-&gt;&gt;Hook: Check initialized + HookPreamble
-    alt not initialized or paused
-        Hook--&gt;&gt;CC: (silent exit)
-    end
-    Hook-&gt;&gt;State: Read persistence state {Count, LastNudge, LastMtime}
-    alt first prompt (no state)
-        Hook-&gt;&gt;State: Initialize state {Count:1, LastNudge:0, LastMtime:now}
-        Hook--&gt;&gt;CC: (silent exit)
-    end
-    Hook-&gt;&gt;Hook: Increment Count
-    Hook-&gt;&gt;Ctx: Get current context mtime
-    alt context modified since LastMtime
-        Hook-&gt;&gt;State: Reset LastNudge = Count, update LastMtime
-        Hook--&gt;&gt;CC: (silent exit)
-    end
-    Hook-&gt;&gt;Hook: sinceNudge = Count - LastNudge
-    Hook-&gt;&gt;Hook: PersistenceNudgeNeeded(Count, sinceNudge)?
-    alt threshold not reached
-        Hook-&gt;&gt;State: Write state
-        Hook--&gt;&gt;CC: (silent exit)
-    end
-    Hook-&gt;&gt;Tpl: LoadMessage(hook, nudge, vars)
-    Hook--&gt;&gt;CC: Nudge box (prompt count, time since last persist)
-    Hook-&gt;&gt;Hook: NudgeAndRelay(message)
-    Hook-&gt;&gt;State: Update LastNudge = Count, write state</code></pre>
-<h3 id="check-freshness">check-freshness<a class="headerlink" href="#check-freshness" title="Permanent link">&para;</a></h3>
-<p>Daily check for technology-dependent constants that may need review.</p>
-<pre class="mermaid"><code>sequenceDiagram
-    participant CC as Claude Code
-    participant Hook as check-freshness
-    participant State as .context/state/
-    participant FS as Filesystem
-    participant Tpl as Message Template
-
-    CC-&gt;&gt;Hook: stdin {session_id}
-    Hook-&gt;&gt;Hook: Check initialized + HookPreamble
-    alt not initialized or paused
-        Hook--&gt;&gt;CC: (silent exit)
-    end
-    Hook-&gt;&gt;State: Check daily throttle marker
-    alt throttled
-        Hook--&gt;&gt;CC: (silent exit)
-    end
-    Hook-&gt;&gt;FS: Stat tracked files (5 source files)
-    alt all files modified within 6 months
-        Hook--&gt;&gt;CC: (silent exit)
-    end
-    Hook-&gt;&gt;Tpl: LoadMessage(hook, stale, {StaleFiles})
-    Hook--&gt;&gt;CC: Nudge box (stale file list + review URL)
-    Hook-&gt;&gt;Hook: NudgeAndRelay(message)
-    Hook-&gt;&gt;State: Touch throttle marker</code></pre>
-<h3 id="check-backup-age">check-backup-age<a class="headerlink" href="#check-backup-age" title="Permanent link">&para;</a></h3>
-<p>Daily check for SMB mount and backup freshness.</p>
-<pre class="mermaid"><code>sequenceDiagram
-    participant CC as Claude Code
-    participant Hook as check-backup-age
-    participant State as .context/state/
-    participant FS as Filesystem
-    participant Tpl as Message Template
-
-    CC-&gt;&gt;Hook: stdin {session_id}
-    Hook-&gt;&gt;Hook: Check initialized + HookPreamble
-    alt not initialized or paused
-        Hook--&gt;&gt;CC: (silent exit)
-    end
-    Hook-&gt;&gt;State: Check daily throttle marker
-    alt throttled
-        Hook--&gt;&gt;CC: (silent exit)
-    end
-    Hook-&gt;&gt;FS: Check SMB mount (if env var set)
-    Hook-&gt;&gt;FS: Check backup marker file age
-    alt no warnings
-        Hook--&gt;&gt;CC: (silent exit)
-    end
-    Hook-&gt;&gt;Tpl: LoadMessage(hook, warning, {Warnings})
-    Hook--&gt;&gt;CC: Nudge box (warnings)
-    Hook-&gt;&gt;Hook: NudgeAndRelay(message)
-    Hook-&gt;&gt;State: Touch throttle marker</code></pre>
 <h3 id="check-ceremonies">check-ceremonies<a class="headerlink" href="#check-ceremonies" title="Permanent link">&para;</a></h3>
 <p>Daily check for <code>/ctx-remember</code> and <code>/ctx-wrap-up</code> usage in
 recent journal entries.</p>
@@ -4116,6 +4064,32 @@ recent journal entries.</p>
     Hook-&gt;&gt;Tpl: LoadMessage(hook, variant, fallback)
     Note over Hook: variant: both | remember | wrapup
     Hook--&gt;&gt;CC: Nudge box (missing ceremonies)
+    Hook-&gt;&gt;Hook: NudgeAndRelay(message)
+    Hook-&gt;&gt;State: Touch throttle marker</code></pre>
+<h3 id="check-freshness">check-freshness<a class="headerlink" href="#check-freshness" title="Permanent link">&para;</a></h3>
+<p>Daily check for technology-dependent constants that may need review.</p>
+<pre class="mermaid"><code>sequenceDiagram
+    participant CC as Claude Code
+    participant Hook as check-freshness
+    participant State as .context/state/
+    participant FS as Filesystem
+    participant Tpl as Message Template
+
+    CC-&gt;&gt;Hook: stdin {session_id}
+    Hook-&gt;&gt;Hook: Check initialized + HookPreamble
+    alt not initialized or paused
+        Hook--&gt;&gt;CC: (silent exit)
+    end
+    Hook-&gt;&gt;State: Check daily throttle marker
+    alt throttled
+        Hook--&gt;&gt;CC: (silent exit)
+    end
+    Hook-&gt;&gt;FS: Stat tracked files (5 source files)
+    alt all files modified within 6 months
+        Hook--&gt;&gt;CC: (silent exit)
+    end
+    Hook-&gt;&gt;Tpl: LoadMessage(hook, stale, {StaleFiles})
+    Hook--&gt;&gt;CC: Nudge box (stale file list + review URL)
     Hook-&gt;&gt;Hook: NudgeAndRelay(message)
     Hook-&gt;&gt;State: Touch throttle marker</code></pre>
 <h3 id="check-journal">check-journal<a class="headerlink" href="#check-journal" title="Permanent link">&para;</a></h3>
@@ -4253,9 +4227,42 @@ configured thresholds.</p>
     Hook--&gt;&gt;CC: Nudge box (drift reminder)
     Hook-&gt;&gt;Hook: NudgeAndRelay(message)
     Hook-&gt;&gt;State: Touch session tombstone</code></pre>
-<h3 id="check-persistence_1">check-persistence<a class="headerlink" href="#check-persistence_1" title="Permanent link">&para;</a></h3>
-<p>See <a href="#check-persistence">check-persistence above</a> — listed under
-PostToolUse hooks.</p>
+<h3 id="check-persistence">check-persistence<a class="headerlink" href="#check-persistence" title="Permanent link">&para;</a></h3>
+<p>Tracks context file modification and nudges when edits happen
+without persisting context. Adaptive threshold based on prompt count.</p>
+<pre class="mermaid"><code>sequenceDiagram
+    participant CC as Claude Code
+    participant Hook as check-persistence
+    participant State as .context/state/
+    participant Ctx as .context/ files
+    participant Tpl as Message Template
+
+    CC-&gt;&gt;Hook: stdin {session_id}
+    Hook-&gt;&gt;Hook: Check initialized + HookPreamble
+    alt not initialized or paused
+        Hook--&gt;&gt;CC: (silent exit)
+    end
+    Hook-&gt;&gt;State: Read persistence state {Count, LastNudge, LastMtime}
+    alt first prompt (no state)
+        Hook-&gt;&gt;State: Initialize state {Count:1, LastNudge:0, LastMtime:now}
+        Hook--&gt;&gt;CC: (silent exit)
+    end
+    Hook-&gt;&gt;Hook: Increment Count
+    Hook-&gt;&gt;Ctx: Get current context mtime
+    alt context modified since LastMtime
+        Hook-&gt;&gt;State: Reset LastNudge = Count, update LastMtime
+        Hook--&gt;&gt;CC: (silent exit)
+    end
+    Hook-&gt;&gt;Hook: sinceNudge = Count - LastNudge
+    Hook-&gt;&gt;Hook: PersistenceNudgeNeeded(Count, sinceNudge)?
+    alt threshold not reached
+        Hook-&gt;&gt;State: Write state
+        Hook--&gt;&gt;CC: (silent exit)
+    end
+    Hook-&gt;&gt;Tpl: LoadMessage(hook, nudge, vars)
+    Hook--&gt;&gt;CC: Nudge box (prompt count, time since last persist)
+    Hook-&gt;&gt;Hook: NudgeAndRelay(message)
+    Hook-&gt;&gt;State: Update LastNudge = Count, write state</code></pre>
 <h3 id="check-reminders">check-reminders<a class="headerlink" href="#check-reminders" title="Permanent link">&para;</a></h3>
 <p>Per-prompt check for due reminders. No throttle.</p>
 <pre class="mermaid"><code>sequenceDiagram
@@ -4280,35 +4287,30 @@ PostToolUse hooks.</p>
     Hook-&gt;&gt;Tpl: LoadMessage(hook, reminders, {list})
     Hook--&gt;&gt;CC: Nudge box (reminder list + dismiss hints)
     Hook-&gt;&gt;Hook: NudgeAndRelay(message)</code></pre>
-<h3 id="check-task-completion">check-task-completion<a class="headerlink" href="#check-task-completion" title="Permanent link">&para;</a></h3>
-<p>Configurable-interval nudge after edits. Per-session counter resets
-after firing.</p>
+<h3 id="check-resources">check-resources<a class="headerlink" href="#check-resources" title="Permanent link">&para;</a></h3>
+<p>Checks system resources (memory, swap, disk, load). Fires on
+every prompt. No initialization required.</p>
 <pre class="mermaid"><code>sequenceDiagram
     participant CC as Claude Code
-    participant Hook as check-task-completion
-    participant State as .context/state/
-    participant RC as .ctxrc
+    participant Hook as check-resources
+    participant Sys as sysinfo
     participant Tpl as Message Template
 
-    CC-&gt;&gt;Hook: stdin {session_id}
-    Hook-&gt;&gt;Hook: Check initialized + HookPreamble
-    alt not initialized or paused
+    CC-&gt;&gt;Hook: stdin {command, session_id}
+    Hook-&gt;&gt;Hook: HookPreamble (parse input, check pause)
+    alt paused
         Hook--&gt;&gt;CC: (silent exit)
     end
-    Hook-&gt;&gt;RC: Read task nudge interval
-    alt interval &lt;= 0 (disabled)
+    Hook-&gt;&gt;Sys: Collect snapshot (memory, swap, disk, load)
+    Hook-&gt;&gt;Sys: Evaluate thresholds per metric
+    alt max severity &lt; Danger
         Hook--&gt;&gt;CC: (silent exit)
     end
-    Hook-&gt;&gt;State: Read per-session counter
-    Hook-&gt;&gt;Hook: Increment counter
-    alt counter &lt; interval
-        Hook-&gt;&gt;State: Write counter
-        Hook--&gt;&gt;CC: (silent exit)
-    end
-    Hook-&gt;&gt;State: Reset counter to 0
-    Hook-&gt;&gt;Tpl: LoadMessage(hook, nudge, fallback)
-    Hook--&gt;&gt;CC: JSON {additionalContext: task nudge}
-    Hook-&gt;&gt;Hook: Relay(message)</code></pre>
+    Hook-&gt;&gt;Hook: Filter alerts to Danger level only
+    Hook-&gt;&gt;Hook: Build alertMessages from danger alerts
+    Hook-&gt;&gt;Tpl: LoadMessage(hook, alert, {alertMessages}, fallback)
+    Hook--&gt;&gt;CC: Nudge box (danger alerts)
+    Hook-&gt;&gt;Hook: NudgeAndRelay(message)</code></pre>
 <h3 id="check-version">check-version<a class="headerlink" href="#check-version" title="Permanent link">&para;</a></h3>
 <p>Daily binary-vs-plugin version comparison with piggybacked key
 rotation check.</p>
@@ -4348,145 +4350,234 @@ rotation check.</p>
     Hook-&gt;&gt;Hook: NudgeAndRelay(message)
     Hook-&gt;&gt;State: Touch throttle
     Hook-&gt;&gt;Hook: CheckKeyAge() (piggybacked)</code></pre>
-<h3 id="post-commit">post-commit<a class="headerlink" href="#post-commit" title="Permanent link">&para;</a></h3>
-<p>Fires after <code>git commit</code> (not amend). Nudges for context capture
-and checks version drift.</p>
+<h3 id="heartbeat">heartbeat<a class="headerlink" href="#heartbeat" title="Permanent link">&para;</a></h3>
+<p>Silent per-prompt pulse. Tracks prompt count, context modification,
+and token usage. The agent never sees this hook's output.</p>
 <pre class="mermaid"><code>sequenceDiagram
     participant CC as Claude Code
-    participant Hook as post-commit
-    participant Tpl as Message Template
+    participant Hook as heartbeat
+    participant State as .context/state/
+    participant Ctx as .context/ files
+    participant Notify as Webhook + EventLog
 
-    CC-&gt;&gt;Hook: stdin {command, session_id}
+    CC-&gt;&gt;Hook: stdin {session_id}
     Hook-&gt;&gt;Hook: Check initialized + HookPreamble
     alt not initialized or paused
         Hook--&gt;&gt;CC: (silent exit)
     end
-    Hook-&gt;&gt;Hook: Regex: command contains "git commit"?
-    alt not a git commit
+    Hook-&gt;&gt;State: Increment heartbeat counter
+    Hook-&gt;&gt;Ctx: Get latest context file mtime
+    Hook-&gt;&gt;State: Compare with last recorded mtime
+    Hook-&gt;&gt;State: Update mtime record
+    Hook-&gt;&gt;State: Read session token info
+    Hook-&gt;&gt;Notify: Send heartbeat notification
+    Hook-&gt;&gt;Notify: Append to event log
+    Hook-&gt;&gt;State: Write heartbeat log entry
+    Note over Hook: No stdout - agent never sees this</code></pre>
+<hr />
+<h2 id="project-local-hooks">Project-Local Hooks<a class="headerlink" href="#project-local-hooks" title="Permanent link">&para;</a></h2>
+<p>These hooks are configured in <code>settings.local.json</code> and are <strong>not</strong>
+shipped with ctx. They are specific to individual developer setups.</p>
+<h3 id="block-dangerous-commands">block-dangerous-commands<a class="headerlink" href="#block-dangerous-commands" title="Permanent link">&para;</a></h3>
+<p>Lifecycle: PreToolUse. Matcher: <code>Bash</code></p>
+<p>Blocks dangerous shell patterns (sudo, git push, cp to bin).
+No initialization or pause checks: always active.</p>
+<pre class="mermaid"><code>sequenceDiagram
+    participant CC as Claude Code
+    participant Hook as block-dangerous-commands
+    participant Tpl as Message Template
+
+    CC-&gt;&gt;Hook: stdin {command, session_id}
+    Hook-&gt;&gt;Hook: Extract command
+    alt command empty
         Hook--&gt;&gt;CC: (silent exit)
     end
-    Hook-&gt;&gt;Hook: Regex: command contains "--amend"?
-    alt is amend
+    Note over Hook: Cascade: first matching regex wins
+    Hook-&gt;&gt;Hook: Test MidSudo regex
+    alt match
+        Hook-&gt;&gt;Hook: variant = sudo
+    end
+    Hook-&gt;&gt;Hook: Test MidGitPush regex (if no variant)
+    alt match
+        Hook-&gt;&gt;Hook: variant = git-push
+    end
+    Hook-&gt;&gt;Hook: Test CpMvToBin regex (if no variant)
+    alt match
+        Hook-&gt;&gt;Hook: variant = cp-to-bin
+    end
+    Hook-&gt;&gt;Hook: Test InstallToLocalBin regex (if no variant)
+    alt match
+        Hook-&gt;&gt;Hook: variant = install-to-bin
+    end
+    alt no variant matched
         Hook--&gt;&gt;CC: (silent exit)
     end
-    Hook-&gt;&gt;Tpl: LoadMessage(hook, nudge, fallback)
-    Hook-&gt;&gt;Hook: AppendDir(message)
-    Hook--&gt;&gt;CC: JSON {additionalContext: post-commit nudge}
-    Hook-&gt;&gt;Hook: Relay(message)
-    Hook-&gt;&gt;Hook: CheckVersionDrift()</code></pre>
+    Hook-&gt;&gt;Tpl: LoadMessage(hook, variant, fallback)
+    Hook--&gt;&gt;CC: JSON {decision: BLOCK, reason}
+    Hook-&gt;&gt;Hook: NudgeAndRelay(message)</code></pre>
+<h3 id="check-backup-age">check-backup-age<a class="headerlink" href="#check-backup-age" title="Permanent link">&para;</a></h3>
+<p>Lifecycle: UserPromptSubmit.</p>
+<p>Daily check for SMB mount and backup freshness.</p>
+<pre class="mermaid"><code>sequenceDiagram
+    participant CC as Claude Code
+    participant Hook as check-backup-age
+    participant State as .context/state/
+    participant FS as Filesystem
+    participant Tpl as Message Template
+
+    CC-&gt;&gt;Hook: stdin {session_id}
+    Hook-&gt;&gt;Hook: Check initialized + HookPreamble
+    alt not initialized or paused
+        Hook--&gt;&gt;CC: (silent exit)
+    end
+    Hook-&gt;&gt;State: Check daily throttle marker
+    alt throttled
+        Hook--&gt;&gt;CC: (silent exit)
+    end
+    Hook-&gt;&gt;FS: Check SMB mount (if env var set)
+    Hook-&gt;&gt;FS: Check backup marker file age
+    alt no warnings
+        Hook--&gt;&gt;CC: (silent exit)
+    end
+    Hook-&gt;&gt;Tpl: LoadMessage(hook, warning, {Warnings})
+    Hook--&gt;&gt;CC: Nudge box (warnings)
+    Hook-&gt;&gt;Hook: NudgeAndRelay(message)
+    Hook-&gt;&gt;State: Touch throttle marker</code></pre>
 <hr />
 <h2 id="throttling-summary">Throttling Summary<a class="headerlink" href="#throttling-summary" title="Permanent link">&para;</a></h2>
 <table>
 <thead>
 <tr>
 <th>Hook</th>
+<th>Lifecycle</th>
 <th>Throttle Type</th>
 <th>Scope</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td>block-dangerous-commands</td>
-<td>None</td>
-<td>Every match</td>
-</tr>
-<tr>
-<td>block-non-path-ctx</td>
-<td>None</td>
-<td>Every match</td>
-</tr>
-<tr>
 <td>context-load-gate</td>
+<td>PreToolUse</td>
 <td>One-shot marker</td>
 <td>Per session</td>
 </tr>
 <tr>
-<td>check-resources</td>
+<td>block-non-path-ctx</td>
+<td>PreToolUse</td>
 <td>None</td>
-<td>Every tool call</td>
+<td>Every match</td>
 </tr>
 <tr>
 <td>qa-reminder</td>
+<td>PreToolUse</td>
 <td>None</td>
 <td>Every git command</td>
 </tr>
 <tr>
 <td>specs-nudge</td>
+<td>PreToolUse</td>
 <td>None</td>
 <td>Every prompt</td>
 </tr>
 <tr>
-<td>heartbeat</td>
+<td>post-commit</td>
+<td>PostToolUse</td>
 <td>None</td>
-<td>Every prompt</td>
-</tr>
-<tr>
-<td>check-context-size</td>
-<td>Adaptive counter</td>
-<td>Per session</td>
-</tr>
-<tr>
-<td>check-persistence</td>
-<td>Adaptive counter</td>
-<td>Per session</td>
+<td>Every git commit</td>
 </tr>
 <tr>
 <td>check-task-completion</td>
+<td>PostToolUse</td>
 <td>Configurable interval</td>
 <td>Per session</td>
 </tr>
 <tr>
-<td>check-memory-drift</td>
-<td>Session tombstone</td>
-<td>Once per session</td>
-</tr>
-<tr>
-<td>check-reminders</td>
-<td>None</td>
-<td>Every prompt</td>
-</tr>
-<tr>
-<td>check-freshness</td>
-<td>Daily marker</td>
-<td>Once per day</td>
-</tr>
-<tr>
-<td>check-backup-age</td>
-<td>Daily marker</td>
-<td>Once per day</td>
+<td>check-context-size</td>
+<td>UserPromptSubmit</td>
+<td>Adaptive counter</td>
+<td>Per session</td>
 </tr>
 <tr>
 <td>check-ceremonies</td>
+<td>UserPromptSubmit</td>
+<td>Daily marker</td>
+<td>Once per day</td>
+</tr>
+<tr>
+<td>check-freshness</td>
+<td>UserPromptSubmit</td>
 <td>Daily marker</td>
 <td>Once per day</td>
 </tr>
 <tr>
 <td>check-journal</td>
+<td>UserPromptSubmit</td>
 <td>Daily marker</td>
 <td>Once per day</td>
 </tr>
 <tr>
 <td>check-knowledge</td>
+<td>UserPromptSubmit</td>
 <td>Daily marker</td>
 <td>Once per day</td>
 </tr>
 <tr>
 <td>check-map-staleness</td>
+<td>UserPromptSubmit</td>
 <td>Daily marker</td>
 <td>Once per day</td>
+</tr>
+<tr>
+<td>check-memory-drift</td>
+<td>UserPromptSubmit</td>
+<td>Session tombstone</td>
+<td>Once per session</td>
+</tr>
+<tr>
+<td>check-persistence</td>
+<td>UserPromptSubmit</td>
+<td>Adaptive counter</td>
+<td>Per session</td>
+</tr>
+<tr>
+<td>check-reminders</td>
+<td>UserPromptSubmit</td>
+<td>None</td>
+<td>Every prompt</td>
+</tr>
+<tr>
+<td>check-resources</td>
+<td>UserPromptSubmit</td>
+<td>None</td>
+<td>Every prompt</td>
 </tr>
 <tr>
 <td>check-version</td>
+<td>UserPromptSubmit</td>
 <td>Daily marker</td>
 <td>Once per day</td>
 </tr>
 <tr>
-<td>post-commit</td>
+<td>heartbeat</td>
+<td>UserPromptSubmit</td>
 <td>None</td>
-<td>Every git commit</td>
+<td>Every prompt</td>
+</tr>
+<tr>
+<td>block-dangerous-commands</td>
+<td>PreToolUse *</td>
+<td>None</td>
+<td>Every match</td>
+</tr>
+<tr>
+<td>check-backup-age</td>
+<td>UserPromptSubmit *</td>
+<td>Daily marker</td>
+<td>Once per day</td>
 </tr>
 </tbody>
 </table>
+<p>* Project-local hook (settings.local.json), not shipped with ctx.</p>
 <h2 id="state-file-reference">State File Reference<a class="headerlink" href="#state-file-reference" title="Permanent link">&para;</a></h2>
 <p>All state files live in <code>.context/state/</code>.</p>
 <table>

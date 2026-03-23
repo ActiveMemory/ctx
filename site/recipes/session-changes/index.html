@@ -3577,39 +3577,39 @@
 
 <h2 id="what-changed-while-you-were-away">What Changed While You Were Away?<a class="headerlink" href="#what-changed-while-you-were-away" title="Permanent link">&para;</a></h2>
 <p>Between sessions, teammates commit code, context files get updated,
-and decisions pile up. <code>ctx changes</code> gives you a single-command
+and decisions pile up. <code>ctx change</code> gives you a single-command
 summary of everything that moved since your last session.</p>
 <h2 id="quick-start">Quick Start<a class="headerlink" href="#quick-start" title="Permanent link">&para;</a></h2>
 <div class="language-bash highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># Auto-detects your last session and shows what changed</span>
-</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>ctx<span class="w"> </span>changes
+</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>ctx<span class="w"> </span>change
 </span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>
 </span><span id="__span-0-4"><a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="c1"># Check what changed in the last 48 hours</span>
-</span><span id="__span-0-5"><a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>ctx<span class="w"> </span>changes<span class="w"> </span>--since<span class="w"> </span>48h
+</span><span id="__span-0-5"><a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>ctx<span class="w"> </span>change<span class="w"> </span>--since<span class="w"> </span>48h
 </span><span id="__span-0-6"><a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>
 </span><span id="__span-0-7"><a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="c1"># Check since a specific date</span>
-</span><span id="__span-0-8"><a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>ctx<span class="w"> </span>changes<span class="w"> </span>--since<span class="w"> </span><span class="m">2026</span>-03-10
+</span><span id="__span-0-8"><a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>ctx<span class="w"> </span>change<span class="w"> </span>--since<span class="w"> </span><span class="m">2026</span>-03-10
 </span></code></pre></div>
 <h2 id="how-reference-time-works">How Reference Time Works<a class="headerlink" href="#how-reference-time-works" title="Permanent link">&para;</a></h2>
-<p><code>ctx changes</code> needs a reference point to compare against. It tries
+<p><code>ctx change</code> needs a reference point to compare against. It tries
 these sources in order:</p>
 <ol>
-<li><strong><code>--since</code> flag</strong> — explicit duration (<code>24h</code>, <code>72h</code>) or date
+<li><strong><code>--since</code> flag</strong>: explicit duration (<code>24h</code>, <code>72h</code>) or date
    (<code>2026-03-10</code>, RFC3339 timestamp)</li>
-<li><strong>Session markers</strong> — <code>ctx-loaded-*</code> files in <code>.context/state/</code>;
+<li><strong>Session markers</strong>: <code>ctx-loaded-*</code> files in <code>.context/state/</code>;
    picks the second-most-recent (your <em>previous</em> session start)</li>
-<li><strong>Event log</strong> — last <code>context-load-gate</code> event from
+<li><strong>Event log</strong>: last <code>context-load-gate</code> event from
    <code>.context/state/events.jsonl</code></li>
-<li><strong>Fallback</strong> — 24 hours ago</li>
+<li><strong>Fallback</strong>: 24 hours ago</li>
 </ol>
-<p>The marker-based detection means <code>ctx changes</code> usually just works
+<p>The marker-based detection means <code>ctx change</code> usually just works
 without any flags: it knows when you last loaded context and shows
 everything after that.</p>
 <h2 id="what-it-reports">What It Reports<a class="headerlink" href="#what-it-reports" title="Permanent link">&para;</a></h2>
 <h3 id="context-file-changes">Context file changes<a class="headerlink" href="#context-file-changes" title="Permanent link">&para;</a></h3>
 <p>Any <code>.md</code> file in <code>.context/</code> modified after the reference time:</p>
 <div class="language-text highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>### Context File Changes
-</span><span id="__span-1-2"><a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>- `TASKS.md` — modified 2026-03-11 14:30
-</span><span id="__span-1-3"><a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>- `DECISIONS.md` — modified 2026-03-11 09:15
+</span><span id="__span-1-2"><a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>- `TASKS.md` - modified 2026-03-11 14:30
+</span><span id="__span-1-3"><a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>- `DECISIONS.md` - modified 2026-03-11 09:15
 </span></code></pre></div>
 <h3 id="code-changes">Code changes<a class="headerlink" href="#code-changes" title="Permanent link">&para;</a></h3>
 <p>Git activity since the reference time:</p>
@@ -3620,26 +3620,26 @@ everything after that.</p>
 </span><span id="__span-2-5"><a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>- **Authors**: jose, claude
 </span></code></pre></div>
 <h2 id="integrating-into-session-start">Integrating Into Session Start<a class="headerlink" href="#integrating-into-session-start" title="Permanent link">&para;</a></h2>
-<p>Pair <code>ctx changes</code> with the <code>/ctx-remember</code> ceremony for a complete
+<p>Pair <code>ctx change</code> with the <code>/ctx-remember</code> ceremony for a complete
 session-start picture:</p>
 <div class="language-bash highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># 1. Load context (this also creates the session marker)</span>
 </span><span id="__span-3-2"><a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>ctx<span class="w"> </span>agent<span class="w"> </span>--budget<span class="w"> </span><span class="m">4000</span>
 </span><span id="__span-3-3"><a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>
 </span><span id="__span-3-4"><a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="c1"># 2. See what changed since your last session</span>
-</span><span id="__span-3-5"><a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>ctx<span class="w"> </span>changes
+</span><span id="__span-3-5"><a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>ctx<span class="w"> </span>change
 </span></code></pre></div>
 <p>Or script it:</p>
 <div class="language-bash highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># .context/hooks/session-start.sh</span>
 </span><span id="__span-4-2"><a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>ctx<span class="w"> </span>agent<span class="w"> </span>--budget<span class="w"> </span><span class="m">4000</span>
 </span><span id="__span-4-3"><a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;---&quot;</span>
-</span><span id="__span-4-4"><a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>ctx<span class="w"> </span>changes
+</span><span id="__span-4-4"><a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>ctx<span class="w"> </span>change
 </span></code></pre></div>
 <h2 id="team-workflows">Team Workflows<a class="headerlink" href="#team-workflows" title="Permanent link">&para;</a></h2>
-<p>When multiple people share a <code>.context/</code> directory, <code>ctx changes</code>
+<p>When multiple people share a <code>.context/</code> directory, <code>ctx change</code>
 shows who changed what:</p>
 <div class="language-bash highlight"><pre><span></span><code><span id="__span-5-1"><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># After pulling from remote</span>
 </span><span id="__span-5-2"><a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>git<span class="w"> </span>pull
-</span><span id="__span-5-3"><a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>ctx<span class="w"> </span>changes<span class="w"> </span>--since<span class="w"> </span>72h
+</span><span id="__span-5-3"><a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>ctx<span class="w"> </span>change<span class="w"> </span>--since<span class="w"> </span>72h
 </span></code></pre></div>
 <p>This surfaces context file changes from teammates that you might
 otherwise miss in the commit log.</p>
@@ -3650,7 +3650,7 @@ otherwise miss in the commit log.</p>
 <li><strong>Works without git.</strong> Context file changes are detected by
   filesystem mtime, not git. Code changes require git.</li>
 <li><strong>Hook integration.</strong> The <code>context-load-gate</code> hook writes the
-  session marker that <code>ctx changes</code> uses for auto-detection. If
+  session marker that <code>ctx change</code> uses for auto-detection. If
   you're not using the ctx plugin, markers won't exist and it falls
   back to the event log or 24h window.</li>
 </ul>

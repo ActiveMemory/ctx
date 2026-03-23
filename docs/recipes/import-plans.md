@@ -29,10 +29,10 @@ Plans are copied (*not moved*) to `specs/`, slugified by their H1 heading.
 
 ## Commands and Skills Used
 
-| Tool                 | Type  | Purpose                                     |
-|----------------------|-------|---------------------------------------------|
-| `/ctx-import-plans`  | Skill | List, filter, and import plan files to specs |
-| `/ctx-add-task`      | Skill | Optionally add a task referencing the spec   |
+| Tool                | Type  | Purpose                                      |
+|---------------------|-------|----------------------------------------------|
+| `/ctx-import-plans` | Skill | List, filter, and import plan files to specs |
+| `/ctx-add-task`     | Skill | Optionally add a task referencing the spec   |
 
 ## The Workflow
 
@@ -102,12 +102,12 @@ Agent: [runs /ctx-add-task for each spec]
 
 You don't need to remember the exact skill name:
 
-| You say                                     | What happens                    |
-|---------------------------------------------|---------------------------------|
-| "import my plans"                           | `/ctx-import-plans` (interactive) |
-| "save today's plans as specs"               | `/ctx-import-plans --today`     |
-| "import all plans from this week"           | `/ctx-import-plans --since ...` |
-| "turn that plan into a spec"                | `/ctx-import-plans` (filtered)  |
+| You say                           | What happens                      |
+|-----------------------------------|-----------------------------------|
+| "import my plans"                 | `/ctx-import-plans` (interactive) |
+| "save today's plans as specs"     | `/ctx-import-plans --today`       |
+| "import all plans from this week" | `/ctx-import-plans --since ...`   |
+| "turn that plan into a spec"      | `/ctx-import-plans` (filtered)    |
 
 ## Tips
 

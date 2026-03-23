@@ -34,10 +34,10 @@ See [Recommended Defaults](#recommended-defaults) for the full list.
 
 ## Commands and Skills Used
 
-| Command/Skill           | Role in this workflow                            |
-|-------------------------|--------------------------------------------------|
-| `ctx init`              | Populates default ctx permissions                |
-| `/ctx-drift`            | Detects missing or stale permission entries      |
+| Command/Skill               | Role in this workflow                            |
+|-----------------------------|--------------------------------------------------|
+| `ctx init`                  | Populates default ctx permissions                |
+| `/ctx-drift`                | Detects missing or stale permission entries      |
 | `/ctx-sanitize-permissions` | Audits for dangerous patterns (security-focused) |
 
 ## Recommended Defaults
@@ -181,12 +181,12 @@ The defaults block:
 
 **Requires manual discipline**: **Never** add these to `allow`:
 
-| Pattern                         | Risk                                      |
-|---------------------------------|-------------------------------------------|
-| `Bash(git reset:*)`             | Can discard uncommitted work              |
-| `Bash(git clean:*)`             | Deletes untracked files                   |
+| Pattern                           | Risk                                      |
+|-----------------------------------|-------------------------------------------|
+| `Bash(git reset:*)`               | Can discard uncommitted work              |
+| `Bash(git clean:*)`               | Deletes untracked files                   |
 | `Skill(ctx-sanitize-permissions)` | Edits this file: self-modification vector |
-| `Skill(release)`                | Runs the release pipeline: high impact    |
+| `Skill(release)`                  | Runs the release pipeline: high impact    |
 
 ## Hooks: Regex Safety Net
 

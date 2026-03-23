@@ -13,7 +13,7 @@ icon: lucide/folder-cog
 
 ## The Problem
 
-Every session creates tombstone files in `.context/state/` — small markers
+Every session creates tombstone files in `.context/state/` - small markers
 that suppress repeat hook nudges ("already checked context size", "already
 sent persistence reminder"). Over days and weeks, these accumulate into
 hundreds of files from long-dead sessions.
@@ -32,10 +32,10 @@ ctx system prune --days 1      # more aggressive: keep only today
 
 ## Commands Used
 
-| Tool                 | Type    | Purpose                                      |
-|----------------------|---------|----------------------------------------------|
-| `ctx system prune`   | Command | Remove old per-session state files            |
-| `ctx status`         | Command | Quick health overview including state dir     |
+| Tool               | Type    | Purpose                                   |
+|--------------------|---------|-------------------------------------------|
+| `ctx system prune` | Command | Remove old per-session state files        |
+| `ctx status`       | Command | Quick health overview including state dir |
 
 ## Understanding State Files
 
@@ -71,7 +71,7 @@ The output shows each file, its age, and a summary:
   would prune: context-check-abc123... (age: 3d)
   would prune: heartbeat-abc123... (age: 3d)
 
-Dry run — would prune 150 files (skip 70 recent, preserve 14 global)
+Dry run - would prune 150 files (skip 70 recent, preserve 14 global)
 ```
 
 ### Step 2: Prune
@@ -94,8 +94,8 @@ ls .context/state/ | grep -v '[0-9a-f]\{8\}-[0-9a-f]\{4\}'
 
 Legitimate global files (keep):
 
-- `events.jsonl` — event log
-- `memory-import.json` — import tracking state
+- `events.jsonl` - event log
+- `memory-import.json` - import tracking state
 
 Stale global tombstones (safe to delete):
 

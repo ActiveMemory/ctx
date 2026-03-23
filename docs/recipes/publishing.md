@@ -36,18 +36,18 @@ Read on for details on each stage.
 
 ## Commands and Skills Used
 
-| Tool                      | Type     | Purpose                                             |
-|---------------------------|----------|-----------------------------------------------------|
-| `ctx recall export`       | Command  | Export session JSONL to editable markdown           |
-| `ctx journal site`        | Command  | Generate a static site from journal entries         |
-| `ctx journal obsidian`    | Command  | Generate an Obsidian vault from journal entries     |
-| `ctx serve`               | Command  | Serve any zensical directory (default: journal)     |
-| `ctx site feed`           | Command  | Generate Atom feed from finalized blog posts        |
-| `make journal`            | Makefile | Shortcut for export + site rebuild                  |
+| Tool                      | Type     | Purpose                                                          |
+|---------------------------|----------|------------------------------------------------------------------|
+| `ctx recall export`       | Command  | Export session JSONL to editable markdown                        |
+| `ctx journal site`        | Command  | Generate a static site from journal entries                      |
+| `ctx journal obsidian`    | Command  | Generate an Obsidian vault from journal entries                  |
+| `ctx serve`               | Command  | Serve any zensical directory (default: journal)                  |
+| `ctx site feed`           | Command  | Generate Atom feed from finalized blog posts                     |
+| `make journal`            | Makefile | Shortcut for export + site rebuild                               |
 | `/ctx-journal-enrich-all` | Skill    | Full pipeline: export if needed, then batch-enrich (recommended) |
-| `/ctx-journal-enrich`     | Skill    | Add metadata, summaries, and tags to one entry      |
-| `/ctx-blog`               | Skill    | Draft a blog post from recent project activity      |
-| `/ctx-blog-changelog`     | Skill    | Write a themed post from a commit range             |
+| `/ctx-journal-enrich`     | Skill    | Add metadata, summaries, and tags to one entry                   |
+| `/ctx-blog`               | Skill    | Draft a blog post from recent project activity                   |
+| `/ctx-blog-changelog`     | Skill    | Write a themed post from a commit range                          |
 
 ## The Workflow
 

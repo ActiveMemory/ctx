@@ -237,5 +237,7 @@ or previous session topics.
 
 **Next Up**:
 
-* [Your First Session →](first-session.md): a step-by-step walkthrough from `ctx init` to verified recall
-* [Common Workflows →](common-workflows.md): day-to-day commands for tracking context, checking health, and browsing history
+* [Your First Session →](first-session.md): a step-by-step walkthrough 
+  from `ctx init` to verified recall
+* [Common Workflows →](common-workflows.md): day-to-day commands for 
+  tracking context, checking health, and browsing history

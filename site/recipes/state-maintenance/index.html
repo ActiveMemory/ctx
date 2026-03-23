@@ -3610,7 +3610,7 @@
 
 <p><img alt="ctx" src="../../images/ctx-banner.png" /></p>
 <h2 id="the-problem">The Problem<a class="headerlink" href="#the-problem" title="Permanent link">&para;</a></h2>
-<p>Every session creates tombstone files in <code>.context/state/</code> — small markers
+<p>Every session creates tombstone files in <code>.context/state/</code> - small markers
 that suppress repeat hook nudges ("already checked context size", "already
 sent persistence reminder"). Over days and weeks, these accumulate into
 hundreds of files from long-dead sessions.</p>
@@ -3665,7 +3665,7 @@ review.</p>
 <div class="language-text highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>  would prune: context-check-abc123... (age: 3d)
 </span><span id="__span-3-2"><a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>  would prune: heartbeat-abc123... (age: 3d)
 </span><span id="__span-3-3"><a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>
-</span><span id="__span-3-4"><a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>Dry run — would prune 150 files (skip 70 recent, preserve 14 global)
+</span><span id="__span-3-4"><a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>Dry run - would prune 150 files (skip 70 recent, preserve 14 global)
 </span></code></pre></div>
 <h3 id="step-2-prune">Step 2: Prune<a class="headerlink" href="#step-2-prune" title="Permanent link">&para;</a></h3>
 <p>Choose an age threshold. The default is 7 days:</p>
@@ -3679,8 +3679,8 @@ review.</p>
 </span></code></pre></div>
 <p>Legitimate global files (keep):</p>
 <ul>
-<li><code>events.jsonl</code> — event log</li>
-<li><code>memory-import.json</code> — import tracking state</li>
+<li><code>events.jsonl</code> - event log</li>
+<li><code>memory-import.json</code> - import tracking state</li>
 </ul>
 <p>Stale global tombstones (safe to delete):</p>
 <ul>

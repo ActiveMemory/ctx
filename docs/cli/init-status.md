@@ -34,7 +34,7 @@ ctx init [flags]
 - `IMPLEMENTATION_PLAN.md` with high-level project direction
 - `CLAUDE.md` with bootstrap instructions (or merges into existing)
 
-Claude Code hooks and skills are provided by the **ctx plugin**
+Claude Code hooks and skills are provided by the **`ctx` plugin**
 (see [Integrations](../operations/integrations.md#claude-code-full-integration)).
 
 **Example**:

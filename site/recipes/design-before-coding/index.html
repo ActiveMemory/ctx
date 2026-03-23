@@ -3900,7 +3900,7 @@ CLI interface doesn't fit the existing patterns. More refactoring.</p>
 debugging and trial-and-error. The result works, but the spec
 was never written down, the trade-offs were never recorded, and
 the next session has no idea why things are shaped this way.</p>
-<p><strong>How do you front-load design so implementation is straightforward?</strong></p>
+<p><strong>How do you front-load design so the implementation is straightforward?</strong></p>
 <h2 id="tldr">TL;DR<a class="headerlink" href="#tldr" title="Permanent link">&para;</a></h2>
 <div class="language-text highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>/ctx-brainstorm          # explore the design space
 </span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>/ctx-spec                # write the spec document
@@ -3969,7 +3969,7 @@ committed to an approach. The skill follows a gated process:</p>
 </span><span id="__span-1-8"><a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>Agent: [asks about update frequency, content scope, existing infra...]
 </span><span id="__span-1-9"><a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>       [presents 3 approaches with trade-offs]
 </span><span id="__span-1-10"><a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>
-</span><span id="__span-1-11"><a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>You: &quot;Option 2 — generate at build time.&quot;
+</span><span id="__span-1-11"><a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>You: &quot;Option 2 - generate at build time.&quot;
 </span><span id="__span-1-12"><a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>
 </span><span id="__span-1-13"><a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>Agent: &quot;Let me stress-test that. What happens when...&quot;
 </span><span id="__span-1-14"><a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>       [probes edge cases]
@@ -3977,7 +3977,7 @@ committed to an approach. The skill follows a gated process:</p>
 </span><span id="__span-1-16"><a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>       decision and write a spec?&quot;
 </span></code></pre></div>
 <p>The brainstorm produces a <em>validated design</em> in conversation. It doesn't
-produce a file — that's what the spec is for.</p>
+produce a file - that's what the spec is for.</p>
 <h3 id="step-2-write-the-spec">Step 2: Write the Spec<a class="headerlink" href="#step-2-write-the-spec" title="Permanent link">&para;</a></h3>
 <p>Once the design is clear, use <code>/ctx-spec</code> to produce the written artifact.
 The skill reads the project's spec template (<code>specs/tpl/spec-template.md</code>)
@@ -3999,9 +3999,9 @@ and walks through each section:</p>
 </span><span id="__span-2-15"><a id="__codelineno-2-15" name="__codelineno-2-15" href="#__codelineno-2-15"></a>
 </span><span id="__span-2-16"><a id="__codelineno-2-16" name="__codelineno-2-16" href="#__codelineno-2-16"></a>Agent: [writes Approach, moves to Happy Path, then Edge Cases...]
 </span></code></pre></div>
-<p>The skill spends extra time on <strong>Edge Cases</strong> and <strong>Error Handling</strong> — these
-are where specs earn their value. It pushes for at least 3 edge cases
-and won't accept "none" without challenge.</p>
+<p>The skill spends extra time on <strong>Edge Cases</strong> and <strong>Error Handling</strong>: These
+are where specs earn their value. The skill pushes for at least three edge cases
+and won't accept "none" without a challenge.</p>
 <p>Sections that don't apply can be skipped. The result is a complete spec
 at <code>specs/{feature-name}.md</code>.</p>
 <h3 id="step-3-break-into-tasks">Step 3: Break Into Tasks<a class="headerlink" href="#step-3-break-into-tasks" title="Permanent link">&para;</a></h3>
@@ -4114,11 +4114,11 @@ features complex enough to warrant front-loaded design.</p>
 <li><strong>Specs prevent scope creep</strong>. The Non-Goals section is as important as the
   approach. Writing down what you <em>won't</em> do keeps implementation focused.</li>
 <li><strong>Edge cases are the point</strong>. A spec that only describes the happy path
-  isn't a spec — it's a wish. The <code>/ctx-spec</code> skill pushes for at least 3
+  isn't a spec - it's a wish. The <code>/ctx-spec</code> skill pushes for at least 3
   edge cases because that's where designs break.</li>
 <li><strong>Record decisions during brainstorming</strong>. When you choose between
   approaches, the agent offers to persist the trade-off via
-  <code>/ctx-add-decision</code>. Accept — future sessions need to know <em>why</em>, not
+  <code>/ctx-add-decision</code>. Accept - future sessions need to know <em>why</em>, not
   just <em>what</em>.</li>
 <li><strong>Specs are living documents</strong>. Update them when implementation reveals
   new constraints. A spec that diverges from reality is worse than no spec.</li>

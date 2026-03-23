@@ -213,7 +213,7 @@ key_rotation_days: 30   # nudge sooner (default: 90)
 
 The webhook URL is encrypted with the same encryption key
 (`~/.ctx/.ctx.key`). Because the key lives at the user level, it is
-shared across all worktrees on the same machine —
+shared across all worktrees on the same machine -
 notifications work in worktrees automatically.
 
 This means **agents running in worktrees cannot send webhook alerts**.

@@ -39,17 +39,17 @@ Or just ask your agent: *"Is our context clean?"*
 
 ## Commands and Skills Used
 
-| Tool                   | Type    | Purpose                                        |
-|------------------------|---------|------------------------------------------------|
-| `ctx drift`            | Command | Detect stale paths, missing files, violations  |
-| `ctx drift --fix`      | Command | Auto-fix simple issues                         |
-| `ctx sync`             | Command | Reconcile context with codebase structure      |
-| `ctx compact`          | Command | Archive completed tasks, clean up empty sections |
-| `ctx status`           | Command | Quick health overview                          |
-| `/ctx-drift`           | Skill   | Structural plus semantic drift detection       |
-| `/ctx-architecture`             | Skill   | Refresh `ARCHITECTURE.md` from actual codebase |
-| `/ctx-status`          | Skill   | In-session context summary                     |
-| `/ctx-prompt-audit`    | Skill   | Audit prompt quality and token efficiency      |
+| Tool                | Type    | Purpose                                          |
+|---------------------|---------|--------------------------------------------------|
+| `ctx drift`         | Command | Detect stale paths, missing files, violations    |
+| `ctx drift --fix`   | Command | Auto-fix simple issues                           |
+| `ctx sync`          | Command | Reconcile context with codebase structure        |
+| `ctx compact`       | Command | Archive completed tasks, clean up empty sections |
+| `ctx status`        | Command | Quick health overview                            |
+| `/ctx-drift`        | Skill   | Structural plus semantic drift detection         |
+| `/ctx-architecture` | Skill   | Refresh `ARCHITECTURE.md` from actual codebase   |
+| `/ctx-status`       | Skill   | In-session context summary                       |
+| `/ctx-prompt-audit` | Skill   | Audit prompt quality and token efficiency        |
 
 ## The Workflow
 

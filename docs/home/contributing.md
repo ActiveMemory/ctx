@@ -182,7 +182,7 @@ Pattern to follow: the Claude Code JSONL parser in `internal/recall/parser/`.
 !!! note "Multilingual session headers"
     The Markdown parser recognizes session header prefixes configured via
     `session_prefixes` in `.ctxrc` (default: `Session:`). To support a new
-    language, users add a prefix to their `.ctxrc` — no code change needed.
+    language, users add a prefix to their `.ctxrc` - no code change needed.
     New parser implementations can use `rc.SessionPrefixes()` if they also
     need prefix-based header detection.
 

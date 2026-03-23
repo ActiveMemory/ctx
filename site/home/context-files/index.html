@@ -4685,7 +4685,7 @@ session started vs completed work.</p>
 <ul>
 <li>Never delete tasks; mark as <code>[x]</code> completed or <code>[-]</code> skipped</li>
 <li>Never move tasks between sections; use inline tags for status</li>
-<li>Use <code>ctx tasks archive</code> periodically to move completed tasks to archive</li>
+<li>Use <code>ctx task archive</code> periodically to move completed tasks to archive</li>
 <li>Mark current work with <code>#in-progress</code> inline tag</li>
 </ul>
 <hr />
@@ -4705,7 +4705,7 @@ get re-debated.</p>
 </span><span id="__span-2-10"><a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a>
 </span><span id="__span-2-11"><a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a><span class="gs">**Rationale**</span>: Why was this the right choice?
 </span><span id="__span-2-12"><a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a>
-</span><span id="__span-2-13"><a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a><span class="gs">**Consequences**</span>: What are the implications?
+</span><span id="__span-2-13"><a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a><span class="gs">**Consequence**</span>: What are the implications?
 </span><span id="__span-2-14"><a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a>
 </span><span id="__span-2-15"><a id="__codelineno-2-15" name="__codelineno-2-15" href="#__codelineno-2-15"></a><span class="gs">**Alternatives Considered**</span>:
 </span><span id="__span-2-16"><a id="__codelineno-2-16" name="__codelineno-2-16" href="#__codelineno-2-16"></a><span class="k">*</span><span class="w"> </span>Alternative A: Why rejected
@@ -4723,7 +4723,7 @@ get re-debated.</p>
 </span><span id="__span-3-9"><a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a><span class="gs">**Rationale**</span>: Catches more bugs at compile time. Team has experience
 </span><span id="__span-3-10"><a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a>with strict mode. Upfront cost pays off in reduced runtime errors.
 </span><span id="__span-3-11"><a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a>
-</span><span id="__span-3-12"><a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a><span class="gs">**Consequences**</span>: More verbose type annotations required. Some
+</span><span id="__span-3-12"><a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a><span class="gs">**Consequence**</span>: More verbose type annotations required. Some
 </span><span id="__span-3-13"><a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a>third-party libraries need type assertions.
 </span><span id="__span-3-14"><a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a>
 </span><span id="__span-3-15"><a id="__codelineno-3-15" name="__codelineno-3-15" href="#__codelineno-3-15"></a><span class="gs">**Alternatives Considered**</span>:
@@ -4920,14 +4920,14 @@ and update context.</p>
 </span><span id="__span-9-8"><a id="__codelineno-9-8" name="__codelineno-9-8" href="#__codelineno-9-8"></a><span class="nt">&lt;context-update</span><span class="w"> </span><span class="na">type=</span><span class="s">&quot;decision&quot;</span>
 </span><span id="__span-9-9"><a id="__codelineno-9-9" name="__codelineno-9-9" href="#__codelineno-9-9"></a><span class="w">  </span><span class="na">context=</span><span class="s">&quot;Need a caching layer&quot;</span>
 </span><span id="__span-9-10"><a id="__codelineno-9-10" name="__codelineno-9-10" href="#__codelineno-9-10"></a><span class="w">  </span><span class="na">rationale=</span><span class="s">&quot;Redis is fast and team has experience&quot;</span>
-</span><span id="__span-9-11"><a id="__codelineno-9-11" name="__codelineno-9-11" href="#__codelineno-9-11"></a><span class="w">  </span><span class="na">consequences=</span><span class="s">&quot;Must provision Redis infrastructure&quot;</span>
+</span><span id="__span-9-11"><a id="__codelineno-9-11" name="__codelineno-9-11" href="#__codelineno-9-11"></a><span class="w">  </span><span class="na">consequence=</span><span class="s">&quot;Must provision Redis infrastructure&quot;</span>
 </span><span id="__span-9-12"><a id="__codelineno-9-12" name="__codelineno-9-12" href="#__codelineno-9-12"></a><span class="nt">&gt;</span>Use<span class="w"> </span>Redis<span class="w"> </span>for<span class="w"> </span>caching<span class="nt">&lt;/context-update&gt;</span>
 </span></code></pre></div>
 <p>See <a href="../../operations/integrations/#context-update-commands">Integrations</a> 
 for full documentation.</p>
 <hr />
 <h2 id="prompts"><code>prompts/</code><a class="headerlink" href="#prompts" title="Permanent link">&para;</a></h2>
-<p><strong>Purpose</strong>: Store reusable prompt templates — plain markdown files with
+<p><strong>Purpose</strong>: Store reusable prompt templates - plain markdown files with
 no frontmatter that provide lightweight, named instructions for common
 tasks like code review, refactoring, or explaining code.</p>
 <h3 id="how-it-works">How It Works<a class="headerlink" href="#how-it-works" title="Permanent link">&para;</a></h3>

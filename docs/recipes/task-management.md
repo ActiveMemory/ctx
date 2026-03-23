@@ -23,9 +23,9 @@ How do you manage work items that span multiple sessions without losing context?
 ```bash
 ctx add task "Fix race condition" --priority high  # add
 ctx add task "Write tests" --section "Phase 2"     # add to phase
-ctx tasks complete "race condition"                      # mark done
-ctx tasks snapshot "before-refactor"               # backup
-ctx tasks archive                                  # clean up
+ctx task complete "race condition"                      # mark done
+ctx task snapshot "before-refactor"               # backup
+ctx task archive                                  # clean up
 ```
 
 **Pick Up the Next Task**:
@@ -38,15 +38,15 @@ Read on for the full workflow and conversational patterns.
 
 ## Commands and Skills Used
 
-| Tool                 | Type    | Purpose                                     |
-|----------------------|---------|---------------------------------------------|
-| `ctx add task`       | Command | Add a new task to `TASKS.md`                |
-| `ctx tasks complete`       | Command | Mark a task as done by number or text       |
-| `ctx tasks snapshot` | Command | Create a point-in-time backup of `TASKS.md` |
-| `ctx tasks archive`  | Command | Move completed tasks to archive file        |
-| `/ctx-add-task`      | Skill   | AI-assisted task creation with validation   |
-| `/ctx-archive`       | Skill   | AI-guided archival with safety checks       |
-| `/ctx-next`          | Skill   | Pick what to work on based on priorities    |
+| Tool                | Type    | Purpose                                     |
+|---------------------|---------|---------------------------------------------|
+| `ctx add task`      | Command | Add a new task to `TASKS.md`                |
+| `ctx task complete` | Command | Mark a task as done by number or text       |
+| `ctx task snapshot` | Command | Create a point-in-time backup of `TASKS.md` |
+| `ctx task archive`  | Command | Move completed tasks to archive file        |
+| `/ctx-add-task`     | Skill   | AI-assisted task creation with validation   |
+| `/ctx-archive`      | Skill   | AI-guided archival with safety checks       |
+| `/ctx-next`         | Skill   | Pick what to work on based on priorities    |
 
 ## The Workflow
 
@@ -96,7 +96,7 @@ status is tracked via checkboxes and inline tags.
 ## Phase 1: Core CLI
 
 - [x] Implement ctx add command `#done:2026-02-01-143022`
-- [x] Implement ctx tasks complete command `#done:2026-02-03-091544`
+- [x] Implement ctx task complete command `#done:2026-02-03-091544`
 - [ ] Add --section flag to ctx add task `#priority:medium`
 
 ## Phase 2: AI Integration
@@ -166,10 +166,10 @@ When a task is done, mark it complete by number or partial text match:
 
 ```bash
 # By task number (as shown in TASKS.md)
-ctx tasks complete 3
+ctx task complete 3
 
 # By partial text match
-ctx tasks complete "agent cooldown"
+ctx task complete "agent cooldown"
 ```
 
 The task's checkbox changes from `[ ]` to `[x]` and a `#done` timestamp is
@@ -177,7 +177,7 @@ added. Tasks are never deleted: they stay in their phase section so history is
 preserved.
 
 !!! tip "Be Conversational"
-    You rarely need to run `ctx tasks complete` yourself during an interactive session.
+    You rarely need to run `ctx task complete` yourself during an interactive session.
 
     When you say something like "*the rate limiter is done*" or "*we finished that*,"
     the agent marks the task complete and moves on to suggesting what is next.
@@ -193,10 +193,10 @@ without modifying the original.
 
 ```bash
 # Default snapshot
-ctx tasks snapshot
+ctx task snapshot
 
 # Named snapshot (recommended before big changes)
-ctx tasks snapshot "before-refactor"
+ctx task snapshot "before-refactor"
 ```
 
 This creates a file like `.context/archive/tasks-before-refactor-2026-02-08-1430.md`.
@@ -211,18 +211,18 @@ review later.
 After several sessions, `TASKS.md` accumulates completed tasks that make it hard
 to see what is still pending.
 
-Use `ctx tasks archive` to move all `[x]` items to a timestamped archive file.
+Use `ctx task archive` to move all `[x]` items to a timestamped archive file.
 
 Start with a dry run to preview what will be moved:
 
 ```bash
-ctx tasks archive --dry-run
+ctx task archive --dry-run
 ```
 
 Then archive:
 
 ```bash
-ctx tasks archive
+ctx task archive
 ```
 
 Completed tasks move to `.context/archive/tasks-2026-02-08.md`. Phase headers
@@ -250,8 +250,8 @@ These conversational prompts replace explicit commands during interactive sessio
 |----------------------------------------|----------------------------------------------------|
 | `ctx add task "Write tests for X"`     | "We should add tests for this: track that?"        |
 | `/ctx-next`                            | "What should we work on?"                          |
-| `ctx tasks complete "rate limiting"`         | "The rate limiter is done, what's next?"           |
-| `ctx tasks archive`                    | "`TASKS.md` is getting long, can you clean it up?" |
+| `ctx task complete "rate limiting"`    | "The rate limiter is done, what's next?"           |
+| `ctx task archive`                     | "`TASKS.md` is getting long, can you clean it up?" |
 | `ctx add task ... && ctx add task ...` | "Add follow-ups for what we just built."           |
 
 The agent translates these into the right `ctx` operations behind the scenes.
@@ -417,17 +417,17 @@ ctx add task "Write integration tests for rate limiter" --section "Phase 2"
 # (from AI assistant) /ctx-next
 
 # Mark done by text
-ctx tasks complete "rate limiting"
+ctx task complete "rate limiting"
 
 # Mark done by number
-ctx tasks complete 5
+ctx task complete 5
 
 # Snapshot before a risky refactor
-ctx tasks snapshot "before-middleware-rewrite"
+ctx task snapshot "before-middleware-rewrite"
 
 # Archive completed tasks when the list gets long
-ctx tasks archive --dry-run     # preview first
-ctx tasks archive               # then archive
+ctx task archive --dry-run     # preview first
+ctx task archive               # then archive
 ```
 
 ## Tips
@@ -470,6 +470,6 @@ Store short-lived sensitive notes in an encrypted scratchpad.
 * [Detecting and Fixing Drift](context-health.md):
   keeping `TASKS.md` accurate over time
 * [CLI Reference](../cli/context.md):
-  full documentation for `ctx add`, `ctx tasks complete`, `ctx tasks`
+  full documentation for `ctx add`, `ctx task complete`, `ctx task`
 * [Context Files: `TASKS.md`](../home/context-files.md#tasksmd): 
   format and conventions for `TASKS.md`

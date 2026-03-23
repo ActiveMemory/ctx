@@ -61,6 +61,7 @@ per-project.
     See [Environment Variables](#environment-variables)
     and [CLI Global Flags](#cli-global-flags) below for details.
 
+<!-- drift-check: diff <(grep 'yaml:' internal/rc/types.go | grep -oP '"[a-z_]+"' | tr -d '"' | sort -u | grep -v 'desc\|events\|path\|review_url\|profile\|key_path') <(sed -n '/^# \.ctxrc:/,/^```$/p' docs/home/configuration.md | grep -oP '^# ([a-z_]+):' | sed 's/^# //;s/://' | sort -u) -->
 ### Full Reference
 
 A commented `.ctxrc` showing all options and their defaults:
@@ -107,28 +108,29 @@ A commented `.ctxrc` showing all options and their defaults:
 #   - AGENT_PLAYBOOK.md
 ```
 
+<!-- drift-check: diff <(grep 'yaml:' internal/rc/types.go | grep -oP '"[a-z_]+"' | tr -d '"' | sort -u | grep -v 'desc\|events\|path\|review_url\|profile\|key_path') <(sed -n '/Option Reference/,/^\*\*Default/p' docs/home/configuration.md | grep -oP '`([a-z_.]+)`' | tr -d '`' | sed 's/notify\.events/notify/' | sort -u | grep -v 'string\|int\|bool\|\[\]') -->
 ### Option Reference
 
-| Option                  | Type       | Default        | Description                                             |
-|-------------------------|------------|----------------|---------------------------------------------------------|
-| `context_dir`           | `string`   | `.context`     | Context directory name (relative to project root)       |
-| `token_budget`          | `int`      | `8000`         | Default token budget for `ctx agent` and `ctx load`     |
-| `auto_archive`          | `bool`     | `true`         | Auto-archive completed tasks during `ctx compact`       |
-| `archive_after_days`    | `int`      | `7`            | Days before completed tasks are archived                |
-| `scratchpad_encrypt`    | `bool`     | `true`         | Encrypt scratchpad with AES-256-GCM                     |
-| `allow_outside_cwd`     | `bool`     | `false`        | Allow context directory outside the current working directory |
-| `event_log`             | `bool`     | `false`        | Enable local hook event logging to `.context/state/events.jsonl` |
-| `entry_count_learnings` | `int`      | `30`           | Drift warning when `LEARNINGS.md` exceeds this entry count (0 = disable) |
-| `entry_count_decisions` | `int`      | `20`           | Drift warning when `DECISIONS.md` exceeds this entry count (0 = disable) |
-| `convention_line_count` | `int`      | `200`          | Drift warning when `CONVENTIONS.md` exceeds this line count (0 = disable) |
-| `injection_token_warn`  | `int`      | `15000`        | Warn when auto-injected context exceeds this token count (0 = disable) |
-| `context_window`        | `int`      | `200000`       | Context window size in tokens. Auto-detected for Claude Code (200k/1M); override for other AI tools |
-| `billing_token_warn`    | `int`      | `0` *(off)*    | One-shot warning when session tokens exceed this threshold (0 = disabled). For plans where tokens beyond an included allowance cost extra |
-| `stale_age_days`        | `int`      | `30`           | Days before `ctx drift` flags a context file as stale (0 = disable) |
-| `key_rotation_days`     | `int`      | `90`           | Days before encryption key rotation nudge               |
-| `task_nudge_interval`   | `int`      | `5`            | Edit/Write calls between task completion nudges         |
-| `notify.events`         | `[]string` | *(all)*        | Event filter for webhook notifications (empty = all)    |
-| `priority_order`        | `[]string` | *(see below)*  | Custom file loading priority for context assembly       |
+| Option                  | Type       | Default       | Description                                                                                                                               |
+|-------------------------|------------|---------------|-------------------------------------------------------------------------------------------------------------------------------------------|
+| `context_dir`           | `string`   | `.context`    | Context directory name (relative to project root)                                                                                         |
+| `token_budget`          | `int`      | `8000`        | Default token budget for `ctx agent` and `ctx load`                                                                                       |
+| `auto_archive`          | `bool`     | `true`        | Auto-archive completed tasks during `ctx compact`                                                                                         |
+| `archive_after_days`    | `int`      | `7`           | Days before completed tasks are archived                                                                                                  |
+| `scratchpad_encrypt`    | `bool`     | `true`        | Encrypt scratchpad with AES-256-GCM                                                                                                       |
+| `allow_outside_cwd`     | `bool`     | `false`       | Allow context directory outside the current working directory                                                                             |
+| `event_log`             | `bool`     | `false`       | Enable local hook event logging to `.context/state/events.jsonl`                                                                          |
+| `entry_count_learnings` | `int`      | `30`          | Drift warning when `LEARNINGS.md` exceeds this entry count (0 = disable)                                                                  |
+| `entry_count_decisions` | `int`      | `20`          | Drift warning when `DECISIONS.md` exceeds this entry count (0 = disable)                                                                  |
+| `convention_line_count` | `int`      | `200`         | Drift warning when `CONVENTIONS.md` exceeds this line count (0 = disable)                                                                 |
+| `injection_token_warn`  | `int`      | `15000`       | Warn when auto-injected context exceeds this token count (0 = disable)                                                                    |
+| `context_window`        | `int`      | `200000`      | Context window size in tokens. Auto-detected for Claude Code (200k/1M); override for other AI tools                                       |
+| `billing_token_warn`    | `int`      | `0` *(off)*   | One-shot warning when session tokens exceed this threshold (0 = disabled). For plans where tokens beyond an included allowance cost extra |
+| `stale_age_days`        | `int`      | `30`          | Days before `ctx drift` flags a context file as stale (0 = disable)                                                                       |
+| `key_rotation_days`     | `int`      | `90`          | Days before encryption key rotation nudge                                                                                                 |
+| `task_nudge_interval`   | `int`      | `5`           | Edit/Write calls between task completion nudges                                                                                           |
+| `notify.events`         | `[]string` | *(all)*       | Event filter for webhook notifications (empty = all)                                                                                      |
+| `priority_order`        | `[]string` | *(see below)* | Custom file loading priority for context assembly                                                                                         |
 
 **Default priority order** (*used when `priority_order` is not set*):
 
@@ -146,6 +148,7 @@ behind this ordering.
 
 ---
 
+<!-- drift-check: diff <(grep -oP 'os\.Getenv\("[A-Z_]+"\)' internal/rc/rc.go | grep -oP '"[A-Z_]+"' | tr -d '"' | sort) <(sed -n '/Environment Variables/,/^---$/p' docs/home/configuration.md | grep -oP '`CTX_[A-Z_]+`' | tr -d '`' | sort -u) -->
 ## Environment Variables
 
 Environment variables override `.ctxrc` values but are overridden by CLI flags.
@@ -154,7 +157,6 @@ Environment variables override `.ctxrc` values but are overridden by CLI flags.
 |--------------------|---------------------------------------------|-------------------------|
 | `CTX_DIR`          | Override the context directory path         | `context_dir`           |
 | `CTX_TOKEN_BUDGET` | Override the default token budget           | `token_budget`          |
-| `NO_COLOR`         | Disable colored output when set (any value) | *(CLI flag only)*       |
 
 ### Examples
 
@@ -164,18 +166,11 @@ CTX_DIR=/shared/team-context ctx status
 
 # Increase token budget for a single run
 CTX_TOKEN_BUDGET=16000 ctx agent
-
-# Disable color in CI pipelines
-NO_COLOR=1 ctx drift --json
 ```
-
-!!! note "`NO_COLOR` Follows the [no-color.org](https://no-color.org) Convention"
-    Setting `NO_COLOR` to any non-empty value disables colored terminal output.
-
-    This is equivalent to the `--no-color` CLI flag.
 
 ---
 
+<!-- drift-check: diff <(ctx --help 2>&1 | grep -oP '^\s+--[a-z-]+' | sed 's/^\s*//' | sort) <(sed -n '/CLI Global Flags/,/^---$/p' docs/home/configuration.md | grep -oP '`(--[a-z-]+)`' | tr -d '`' | sort -u) -->
 ## CLI Global Flags
 
 CLI flags have the highest priority and override both environment variables and
@@ -185,7 +180,6 @@ CLI flags have the highest priority and override both environment variables and
 |------------------------|-----------------------------------------------------------|
 | `--context-dir <path>` | Override context directory (default: `.context/`)         |
 | `--allow-outside-cwd`  | Allow context directory outside current working directory |
-| `--no-color`           | Disable colored output                                    |
 | `--version`            | Show version and exit                                     |
 | `--help`               | Show command help and exit                                |
 

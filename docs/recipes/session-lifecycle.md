@@ -71,7 +71,7 @@ Read on for the full walkthrough with examples.
 
 The session lifecycle has seven steps. You will not always use every step
 (*for example, a quick bugfix might skip reflection, and a research session
-might skip committing*) but the full arc looks like this:
+might skip committing*), but the full arc looks like this:
 
 **Load context** > **Orient** > **Pick a Task** > **Work** > **Commit** >
 **Reflect**

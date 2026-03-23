@@ -3638,36 +3638,36 @@
 
 <h2 id="why-dependency-graphs">Why Dependency Graphs?<a class="headerlink" href="#why-dependency-graphs" title="Permanent link">&para;</a></h2>
 <p>Understanding how packages relate to each other is the first step in
-onboarding, refactoring, and architecture review. <code>ctx deps</code> generates
+onboarding, refactoring, and architecture review. <code>ctx dep</code> generates
 dependency graphs from source code so you can see the structure at a
 glance instead of tracing imports by hand.</p>
 <h2 id="quick-start">Quick Start<a class="headerlink" href="#quick-start" title="Permanent link">&para;</a></h2>
 <div class="language-bash highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># Auto-detect ecosystem and output Mermaid (default)</span>
-</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>ctx<span class="w"> </span>deps
+</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>ctx<span class="w"> </span>dep
 </span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>
 </span><span id="__span-0-4"><a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="c1"># Table format for a quick terminal overview</span>
-</span><span id="__span-0-5"><a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>ctx<span class="w"> </span>deps<span class="w"> </span>--format<span class="w"> </span>table
+</span><span id="__span-0-5"><a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>ctx<span class="w"> </span>dep<span class="w"> </span>--format<span class="w"> </span>table
 </span><span id="__span-0-6"><a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>
 </span><span id="__span-0-7"><a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="c1"># JSON for programmatic consumption</span>
-</span><span id="__span-0-8"><a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>ctx<span class="w"> </span>deps<span class="w"> </span>--format<span class="w"> </span>json
+</span><span id="__span-0-8"><a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>ctx<span class="w"> </span>dep<span class="w"> </span>--format<span class="w"> </span>json
 </span></code></pre></div>
 <h2 id="ecosystem-detection">Ecosystem Detection<a class="headerlink" href="#ecosystem-detection" title="Permanent link">&para;</a></h2>
-<p><code>ctx deps</code> looks for manifest files in this order:</p>
+<p><code>ctx dep</code> looks for manifest files in this order:</p>
 <ol>
-<li><strong>Go</strong> — <code>go.mod</code></li>
-<li><strong>Node.js</strong> — <code>package.json</code></li>
-<li><strong>Python</strong> — <code>pyproject.toml</code>, <code>setup.py</code>, <code>requirements.txt</code></li>
-<li><strong>Rust</strong> — <code>Cargo.toml</code></li>
+<li><strong>Go</strong>: <code>go.mod</code></li>
+<li><strong>Node.js</strong>: <code>package.json</code></li>
+<li><strong>Python</strong>: <code>pyproject.toml</code>, <code>setup.py</code>, <code>requirements.txt</code></li>
+<li><strong>Rust</strong>: <code>Cargo.toml</code></li>
 </ol>
 <p>First match wins. To override detection, use <code>--type</code>:</p>
 <div class="language-bash highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Force Python even if go.mod exists</span>
-</span><span id="__span-1-2"><a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>ctx<span class="w"> </span>deps<span class="w"> </span>--type<span class="w"> </span>python
+</span><span id="__span-1-2"><a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>ctx<span class="w"> </span>dep<span class="w"> </span>--type<span class="w"> </span>python
 </span></code></pre></div>
 <h2 id="output-formats">Output Formats<a class="headerlink" href="#output-formats" title="Permanent link">&para;</a></h2>
 <h3 id="mermaid-default">Mermaid (default)<a class="headerlink" href="#mermaid-default" title="Permanent link">&para;</a></h3>
 <p>Produces a Mermaid graph definition you can paste into GitHub PRs,
 Obsidian notes, or any Mermaid-compatible renderer.</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>ctx<span class="w"> </span>deps<span class="w"> </span>--format<span class="w"> </span>mermaid
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>ctx<span class="w"> </span>dep<span class="w"> </span>--format<span class="w"> </span>mermaid
 </span></code></pre></div>
 <pre class="mermaid"><code>graph TD
     internal/cli --&gt; internal/config
@@ -3675,7 +3675,7 @@ Obsidian notes, or any Mermaid-compatible renderer.</p>
     internal/config --&gt; internal/entry</code></pre>
 <h3 id="table">Table<a class="headerlink" href="#table" title="Permanent link">&para;</a></h3>
 <p>Flat two-column view for quick terminal scanning.</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>ctx<span class="w"> </span>deps<span class="w"> </span>--format<span class="w"> </span>table
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>ctx<span class="w"> </span>dep<span class="w"> </span>--format<span class="w"> </span>table
 </span></code></pre></div>
 <div class="language-text highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>PACKAGE                  DEPENDS ON
 </span><span id="__span-4-2"><a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>internal/cli             internal/config, internal/memory
@@ -3684,13 +3684,13 @@ Obsidian notes, or any Mermaid-compatible renderer.</p>
 </span></code></pre></div>
 <h3 id="json">JSON<a class="headerlink" href="#json" title="Permanent link">&para;</a></h3>
 <p>Machine-readable output for scripts and pipelines.</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-5-1"><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>ctx<span class="w"> </span>deps<span class="w"> </span>--format<span class="w"> </span>json<span class="w"> </span><span class="p">|</span><span class="w"> </span>jq<span class="w"> </span><span class="s1">&#39;.nodes | length&#39;</span>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-5-1"><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>ctx<span class="w"> </span>dep<span class="w"> </span>--format<span class="w"> </span>json<span class="w"> </span><span class="p">|</span><span class="w"> </span>jq<span class="w"> </span><span class="s1">&#39;.nodes | length&#39;</span>
 </span></code></pre></div>
 <h2 id="including-external-dependencies">Including External Dependencies<a class="headerlink" href="#including-external-dependencies" title="Permanent link">&para;</a></h2>
 <p>By default, only internal (first-party) dependencies are shown. Add
 <code>--external</code> to include third-party packages:</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-6-1"><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>ctx<span class="w"> </span>deps<span class="w"> </span>--external
-</span><span id="__span-6-2"><a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>ctx<span class="w"> </span>deps<span class="w"> </span>--external<span class="w"> </span>--format<span class="w"> </span>table
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-6-1"><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>ctx<span class="w"> </span>dep<span class="w"> </span>--external
+</span><span id="__span-6-2"><a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>ctx<span class="w"> </span>dep<span class="w"> </span>--external<span class="w"> </span>--format<span class="w"> </span>table
 </span></code></pre></div>
 <p>This is useful when auditing transitive dependencies or checking which
 packages pull in heavy external libraries.</p>
@@ -3708,7 +3708,7 @@ packages pull in heavy external libraries.</p>
 <h2 id="combining-with-other-commands">Combining with Other Commands<a class="headerlink" href="#combining-with-other-commands" title="Permanent link">&para;</a></h2>
 <h3 id="refactoring-with-ctx-drift">Refactoring with ctx drift<a class="headerlink" href="#refactoring-with-ctx-drift" title="Permanent link">&para;</a></h3>
 <div class="language-bash highlight"><pre><span></span><code><span id="__span-7-1"><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="c1"># See the dependency structure before refactoring</span>
-</span><span id="__span-7-2"><a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>ctx<span class="w"> </span>deps<span class="w"> </span>--format<span class="w"> </span>table
+</span><span id="__span-7-2"><a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>ctx<span class="w"> </span>dep<span class="w"> </span>--format<span class="w"> </span>table
 </span><span id="__span-7-3"><a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>
 </span><span id="__span-7-4"><a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a><span class="c1"># After moving packages, check for broken references</span>
 </span><span id="__span-7-5"><a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a>ctx<span class="w"> </span>drift
@@ -3716,22 +3716,22 @@ packages pull in heavy external libraries.</p>
 <h3 id="feeding-architecture-maps">Feeding architecture maps<a class="headerlink" href="#feeding-architecture-maps" title="Permanent link">&para;</a></h3>
 <p>Use JSON output as input for context files or architecture documentation:</p>
 <div class="language-bash highlight"><pre><span></span><code><span id="__span-8-1"><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c1"># Generate a dependency snapshot for the context directory</span>
-</span><span id="__span-8-2"><a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>ctx<span class="w"> </span>deps<span class="w"> </span>--format<span class="w"> </span>json<span class="w"> </span>&gt;<span class="w"> </span>.context/deps.json
+</span><span id="__span-8-2"><a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>ctx<span class="w"> </span>dep<span class="w"> </span>--format<span class="w"> </span>json<span class="w"> </span>&gt;<span class="w"> </span>.context/deps.json
 </span><span id="__span-8-3"><a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>
 </span><span id="__span-8-4"><a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a><span class="c1"># Or pipe into other tools</span>
-</span><span id="__span-8-5"><a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a>ctx<span class="w"> </span>deps<span class="w"> </span>--format<span class="w"> </span>mermaid<span class="w"> </span>&gt;&gt;<span class="w"> </span>docs/architecture.md
+</span><span id="__span-8-5"><a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a>ctx<span class="w"> </span>dep<span class="w"> </span>--format<span class="w"> </span>mermaid<span class="w"> </span>&gt;&gt;<span class="w"> </span>docs/architecture.md
 </span></code></pre></div>
 <h2 id="monorepos-and-multi-ecosystem-projects">Monorepos and Multi-Ecosystem Projects<a class="headerlink" href="#monorepos-and-multi-ecosystem-projects" title="Permanent link">&para;</a></h2>
-<p>In a monorepo with multiple ecosystems, <code>ctx deps</code> picks the first
+<p>In a monorepo with multiple ecosystems, <code>ctx dep</code> picks the first
 manifest it finds (Go beats Node.js beats Python beats Rust). Use
 <code>--type</code> to target a specific ecosystem:</p>
 <div class="language-bash highlight"><pre><span></span><code><span id="__span-9-1"><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="c1"># In a repo with both go.mod and package.json</span>
-</span><span id="__span-9-2"><a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>ctx<span class="w"> </span>deps<span class="w"> </span>--type<span class="w"> </span>node
-</span><span id="__span-9-3"><a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>ctx<span class="w"> </span>deps<span class="w"> </span>--type<span class="w"> </span>go
+</span><span id="__span-9-2"><a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>ctx<span class="w"> </span>dep<span class="w"> </span>--type<span class="w"> </span>node
+</span><span id="__span-9-3"><a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>ctx<span class="w"> </span>dep<span class="w"> </span>--type<span class="w"> </span>go
 </span></code></pre></div>
 <p>For separate subdirectories, run from each root:</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-10-1"><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="nb">cd</span><span class="w"> </span>services/api<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span>ctx<span class="w"> </span>deps<span class="w"> </span>--format<span class="w"> </span>table
-</span><span id="__span-10-2"><a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a><span class="nb">cd</span><span class="w"> </span>frontend<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span>ctx<span class="w"> </span>deps<span class="w"> </span>--type<span class="w"> </span>node<span class="w"> </span>--format<span class="w"> </span>mermaid
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-10-1"><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="nb">cd</span><span class="w"> </span>services/api<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span>ctx<span class="w"> </span>dep<span class="w"> </span>--format<span class="w"> </span>table
+</span><span id="__span-10-2"><a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a><span class="nb">cd</span><span class="w"> </span>frontend<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span>ctx<span class="w"> </span>dep<span class="w"> </span>--type<span class="w"> </span>node<span class="w"> </span>--format<span class="w"> </span>mermaid
 </span></code></pre></div>
 <h2 id="tips">Tips<a class="headerlink" href="#tips" title="Permanent link">&para;</a></h2>
 <ul>

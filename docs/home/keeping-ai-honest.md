@@ -15,7 +15,7 @@ icon: lucide/shield-check
 
 AI agents confabulate. They invent history that never happened, claim
 familiarity with decisions that were never made, and sometimes declare
-a task complete when it is not. This is not malice -- it is the default
+a task complete when it is not. This is not malice - it is the default
 behavior of a system optimizing for plausible-sounding responses.
 
 When your AI says "we decided to use Redis for caching last week," can
@@ -46,7 +46,7 @@ without imposing event sourcing on the entire domain model.
 The timestamp `2026-01-28-143022` is not decoration. It is a verifiable
 anchor. If the AI references this decision, you can open DECISIONS.md,
 find the entry, and confirm it says what the AI claims. If the entry
-does not exist, the AI is hallucinating -- and you know immediately.
+does not exist, the AI is hallucinating - and you know immediately.
 
 This is **grounded memory**: claims that trace back to artifacts you
 control and can audit.
@@ -54,7 +54,7 @@ control and can audit.
 ## CONSTITUTION.md: Hard Guardrails
 
 CONSTITUTION.md defines rules the AI must treat as inviolable. These
-are not suggestions or best practices -- they are constraints that
+are not suggestions or best practices - they are constraints that
 override task requirements.
 
 ```markdown
@@ -88,7 +88,7 @@ Hallucinating Memory"** with five explicit rules:
    your training data suggests MySQL, the files win.
 
 These rules create a behavioral contract. The AI is not left to guess
-how confident it should be -- it has explicit instructions to ground
+how confident it should be - it has explicit instructions to ground
 every claim in the context directory.
 
 ## Drift Detection
@@ -108,7 +108,7 @@ It scans context files for references to files, paths, and symbols
 that no longer exist in the codebase. Stale references get flagged
 so you can update or remove them before they mislead the next session.
 
-Regular drift checks -- weekly, or after major refactors -- keep your
+Regular drift checks - weekly, or after major refactors - keep your
 context files honest the same way tests keep your code honest.
 
 ## The Verification Loop
@@ -120,7 +120,7 @@ project's memory.
 
 This closes the loop. You write context. The AI reads context. The
 verification step confirms that context still matches reality. When
-it does not, you fix it -- and the next session starts from truth,
+it does not, you fix it - and the next session starts from truth,
 not from drift.
 
 ## Trust Through Structure

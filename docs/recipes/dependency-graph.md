@@ -11,7 +11,7 @@ title: Generating Dependency Graphs
 ## Why Dependency Graphs?
 
 Understanding how packages relate to each other is the first step in
-onboarding, refactoring, and architecture review. `ctx deps` generates
+onboarding, refactoring, and architecture review. `ctx dep` generates
 dependency graphs from source code so you can see the structure at a
 glance instead of tracing imports by hand.
 
@@ -19,29 +19,29 @@ glance instead of tracing imports by hand.
 
 ```bash
 # Auto-detect ecosystem and output Mermaid (default)
-ctx deps
+ctx dep
 
 # Table format for a quick terminal overview
-ctx deps --format table
+ctx dep --format table
 
 # JSON for programmatic consumption
-ctx deps --format json
+ctx dep --format json
 ```
 
 ## Ecosystem Detection
 
-`ctx deps` looks for manifest files in this order:
+`ctx dep` looks for manifest files in this order:
 
-1. **Go** — `go.mod`
-2. **Node.js** — `package.json`
-3. **Python** — `pyproject.toml`, `setup.py`, `requirements.txt`
-4. **Rust** — `Cargo.toml`
+1. **Go**: `go.mod`
+2. **Node.js**: `package.json`
+3. **Python**: `pyproject.toml`, `setup.py`, `requirements.txt`
+4. **Rust**: `Cargo.toml`
 
 First match wins. To override detection, use `--type`:
 
 ```bash
 # Force Python even if go.mod exists
-ctx deps --type python
+ctx dep --type python
 ```
 
 ## Output Formats
@@ -52,7 +52,7 @@ Produces a Mermaid graph definition you can paste into GitHub PRs,
 Obsidian notes, or any Mermaid-compatible renderer.
 
 ```bash
-ctx deps --format mermaid
+ctx dep --format mermaid
 ```
 
 ```mermaid
@@ -67,7 +67,7 @@ graph TD
 Flat two-column view for quick terminal scanning.
 
 ```bash
-ctx deps --format table
+ctx dep --format table
 ```
 
 ```
@@ -82,7 +82,7 @@ internal/memory          internal/index
 Machine-readable output for scripts and pipelines.
 
 ```bash
-ctx deps --format json | jq '.nodes | length'
+ctx dep --format json | jq '.nodes | length'
 ```
 
 ## Including External Dependencies
@@ -91,8 +91,8 @@ By default, only internal (first-party) dependencies are shown. Add
 `--external` to include third-party packages:
 
 ```bash
-ctx deps --external
-ctx deps --external --format table
+ctx dep --external
+ctx dep --external --format table
 ```
 
 This is useful when auditing transitive dependencies or checking which
@@ -115,7 +115,7 @@ packages pull in heavy external libraries.
 
 ```bash
 # See the dependency structure before refactoring
-ctx deps --format table
+ctx dep --format table
 
 # After moving packages, check for broken references
 ctx drift
@@ -127,29 +127,29 @@ Use JSON output as input for context files or architecture documentation:
 
 ```bash
 # Generate a dependency snapshot for the context directory
-ctx deps --format json > .context/deps.json
+ctx dep --format json > .context/deps.json
 
 # Or pipe into other tools
-ctx deps --format mermaid >> docs/architecture.md
+ctx dep --format mermaid >> docs/architecture.md
 ```
 
 ## Monorepos and Multi-Ecosystem Projects
 
-In a monorepo with multiple ecosystems, `ctx deps` picks the first
+In a monorepo with multiple ecosystems, `ctx dep` picks the first
 manifest it finds (Go beats Node.js beats Python beats Rust). Use
 `--type` to target a specific ecosystem:
 
 ```bash
 # In a repo with both go.mod and package.json
-ctx deps --type node
-ctx deps --type go
+ctx dep --type node
+ctx dep --type go
 ```
 
 For separate subdirectories, run from each root:
 
 ```bash
-cd services/api && ctx deps --format table
-cd frontend && ctx deps --type node --format mermaid
+cd services/api && ctx dep --format table
+cd frontend && ctx dep --type node --format mermaid
 ```
 
 ## Tips

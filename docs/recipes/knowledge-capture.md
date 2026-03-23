@@ -31,18 +31,18 @@ Or just tell your agent: *"What have we learned this session?"*
 
 ## Commands and Skills Used
 
-| Tool                    | Type    | Purpose                                       |
-|-------------------------|---------|-----------------------------------------------|
-| `ctx add decision`      | Command | Record an architectural decision              |
-| `ctx add learning`      | Command | Record a gotcha, tip, or lesson               |
-| `ctx add convention`    | Command | Record a coding pattern or standard           |
-| `ctx reindex`           | Command | Rebuild both quick-reference indices          |
-| `ctx decisions reindex` | Command | Rebuild the DECISIONS.md index                |
-| `ctx learnings reindex` | Command | Rebuild the LEARNINGS.md index                |
-| `/ctx-add-decision`     | Skill   | AI-guided decision capture with validation    |
-| `/ctx-add-learning`     | Skill   | AI-guided learning capture with validation    |
-| `/ctx-add-convention`   | Skill   | AI-guided convention recording with placement |
-| `/ctx-reflect`          | Skill   | Surface items worth persisting at breakpoints |
+| Tool                   | Type    | Purpose                                       |
+|------------------------|---------|-----------------------------------------------|
+| `ctx add decision`     | Command | Record an architectural decision              |
+| `ctx add learning`     | Command | Record a gotcha, tip, or lesson               |
+| `ctx add convention`   | Command | Record a coding pattern or standard           |
+| `ctx reindex`          | Command | Rebuild both quick-reference indices          |
+| `ctx decision reindex` | Command | Rebuild the DECISIONS.md index                |
+| `ctx learning reindex` | Command | Rebuild the LEARNINGS.md index                |
+| `/ctx-add-decision`    | Skill   | AI-guided decision capture with validation    |
+| `/ctx-add-learning`    | Skill   | AI-guided learning capture with validation    |
+| `/ctx-add-convention`  | Skill   | AI-guided convention recording with placement |
+| `/ctx-reflect`         | Skill   | Surface items worth persisting at breakpoints |
 
 ## The Workflow
 
@@ -196,7 +196,7 @@ ctx reindex
 ```
 
 This single command regenerates both indices. You can also reindex
-individually with `ctx decisions reindex` or `ctx learnings reindex`.
+individually with `ctx decision reindex` or `ctx learning reindex`.
 
 Run reindex after any manual edit. The index lets AI tools scan all entries
 without reading the full file, which matters when token budgets are tight.
@@ -403,6 +403,6 @@ Add, prioritize, complete, and archive tasks across sessions.
 * [Detecting and Fixing Drift](context-health.md): keeping knowledge files
   accurate as the codebase evolves
 * [CLI Reference](../cli/context.md): full documentation for `ctx add`,
-  `ctx decisions`, `ctx learnings`
+  `ctx decision`, `ctx learning`
 * [Context Files](../home/context-files.md): format and conventions for `DECISIONS.md`,
   `LEARNINGS.md`, and `CONVENTIONS.md`
