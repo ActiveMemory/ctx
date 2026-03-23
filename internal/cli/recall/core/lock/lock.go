@@ -34,7 +34,7 @@ var LockedFrontmatterLine = session.FrontmatterLocked + token.Colon + " " +
 
 // MatchJournalFiles returns journal .md filenames matching the given
 // patterns. If all is true, returns every .md file in the directory.
-// Multi-part files (base + -pN parts) are included when the base matches.
+// Multipart files (base + -pN parts) are included when the base matches.
 //
 // Parameters:
 //   - journalDir: Path to the journal directory

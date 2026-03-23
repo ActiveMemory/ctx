@@ -142,7 +142,9 @@ func CheckKnowledgeHealth(sessionID string) (string, bool) {
 		return "", false
 	}
 
-	findings := ScanKnowledgeFiles(rc.ContextDir(), decThreshold, lrnThreshold, convThreshold)
+	findings := ScanKnowledgeFiles(
+		rc.ContextDir(), decThreshold, lrnThreshold, convThreshold,
+	)
 	if len(findings) == 0 {
 		return "", false
 	}
