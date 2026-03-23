@@ -35,6 +35,7 @@ const (
 const (
 	DescKeyWriteInitMerged           = "write.init-merged"
 	DescKeyWriteInitNextStepsBlock   = "write.init-next-steps-block"
+	DescKeyWriteInitWorkflowTips     = "write.init-workflow-tips"
 	DescKeyWriteInitNoChanges        = "write.init-no-changes"
 	DescKeyWriteInitOverwritePrompt  = "write.init-overwrite-prompt"
 	DescKeyWriteInitPlanMergePrompt  = "write.init-plan-merge-prompt"

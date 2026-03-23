@@ -194,6 +194,7 @@ func Run(
 	}
 
 	initialize.InfoNextSteps(cmd)
+	initialize.InfoWorkflowTips(cmd)
 
 	return nil
 }

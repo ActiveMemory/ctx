@@ -194,6 +194,36 @@ write.init-next-steps-block:
       Run 'ctx init' again after installing the plugin to enable it,
       or manually add to ~/.claude/settings.json:
         {"enabledPlugins": {"ctx@activememory-ctx": true}}
+write.init-workflow-tips:
+  short: |4-
+
+      Workflow tips:
+
+        Every session:
+          /ctx-remember             Recall context and pick up where you left off
+          /ctx-wrap-up              Capture learnings, decisions, and tasks before ending
+
+        During work:
+          /ctx-status               Check context health, token usage, and file summary
+          /ctx-next                 Analyze tasks and suggest 1-3 concrete next actions
+          /ctx-commit               Commit code, then prompt for decisions worth persisting
+          /ctx-verify               Run verification before claiming a task is done
+
+        Planning and design:
+          /ctx-brainstorm           Structured design dialogue before implementation
+          /ctx-spec                 Scaffold a feature spec from the project template
+          /ctx-implement            Execute a plan step-by-step with checkpointed verification
+
+        Periodic maintenance:
+          /ctx-architecture         Build and refresh ARCHITECTURE.md and DETAILED_DESIGN.md
+          /ctx-consolidate          Merge overlapping entries in DECISIONS.md and LEARNINGS.md
+          /ctx-drift                Detect stale paths, broken references, and outdated context
+
+        Journal pipeline (every few sessions):
+          ctx recall export --all   Export session transcripts to .context/journal/
+          /ctx-journal-enrich-all   Add frontmatter, tags, and summaries to exported entries
+
+        Run 'ctx guide' for the full command reference.
 write.init-no-changes:
   short: '  ○ %s (no changes needed)'
 write.init-overwrite-prompt:

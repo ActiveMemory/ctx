@@ -138,3 +138,12 @@ func InfoGitignoreReview(cmd *cobra.Command) {
 func InfoNextSteps(cmd *cobra.Command) {
 	cmd.Println(desc.Text(text.DescKeyWriteInitNextStepsBlock))
 }
+
+// InfoWorkflowTips prints the workflow tips block showing key skills
+// and the ceremony loop.
+//
+// Parameters:
+//   - cmd: Cobra command for output
+func InfoWorkflowTips(cmd *cobra.Command) {
+	cmd.Println(desc.Text(text.DescKeyWriteInitWorkflowTips))
+}
