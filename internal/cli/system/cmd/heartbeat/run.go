@@ -113,7 +113,7 @@ func Run(_ *cobra.Command, stdin *os.File) error {
 		logLine = fmt.Sprintf(desc.Text(text.DescKeyHeartbeatLogPlain),
 			count, contextModified)
 	}
-	log2.LogMessage(logFile, sessionID, logLine)
+	log2.Message(logFile, sessionID, logLine)
 
 	// No stdout — agent never sees this hook.
 	return nil

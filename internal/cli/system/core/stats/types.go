@@ -6,10 +6,10 @@
 
 package stats
 
-import "github.com/ActiveMemory/ctx/internal/cli/system/core/session"
+import "github.com/ActiveMemory/ctx/internal/entity"
 
-// Entry is a SessionStats with the source session ID for display.
+// Entry is a Stats with the source session ID for display.
 type Entry struct {
-	session.SessionStats
+	entity.Stats
 	Session string `json:"session"`
 }

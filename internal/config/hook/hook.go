@@ -72,6 +72,10 @@ const (
 	// PrefixMemoryDriftThrottle is the state file prefix for per-session
 	// memory drift nudge tombstones.
 	PrefixMemoryDriftThrottle = "memory-drift-nudged-"
+	// PrefixPauseMarker is the state file prefix for session pause markers.
+	PrefixPauseMarker = "ctx-paused-"
+	// LabelPaused is the short status label emitted while hooks are paused.
+	LabelPaused = "ctx:paused"
 )
 
 // Hook event names (Claude Code hook lifecycle stages).

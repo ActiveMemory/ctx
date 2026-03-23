@@ -41,7 +41,7 @@ func EmitCheckpoint(logFile, sessionID string, count, tokens, pct, windowSize in
 	fallback := desc.Text(text.DescKeyCheckContextSizeCheckpointFallback)
 	content := message.LoadMessage(hook.CheckContextSize, hook.VariantCheckpoint, nil, fallback)
 	if content == "" {
-		log.LogMessage(logFile, sessionID, fmt.Sprintf(desc.Text(text.DescKeyCheckContextSizeSilencedCheckpointLog), count))
+		log.Message(logFile, sessionID, fmt.Sprintf(desc.Text(text.DescKeyCheckContextSizeSilencedCheckpointLog), count))
 		return ""
 	}
 	// Append optional token usage and oversize nudge to content
@@ -55,7 +55,7 @@ func EmitCheckpoint(logFile, sessionID string, count, tokens, pct, windowSize in
 		desc.Text(text.DescKeyCheckContextSizeRelayPrefix),
 		fmt.Sprintf(desc.Text(text.DescKeyCheckContextSizeCheckpointBoxTitle), count),
 		content)
-	log.LogMessage(logFile, sessionID, fmt.Sprintf(desc.Text(text.DescKeyCheckContextSizeCheckpointLogFormat), count, tokens, pct))
+	log.Message(logFile, sessionID, fmt.Sprintf(desc.Text(text.DescKeyCheckContextSizeCheckpointLogFormat), count, tokens, pct))
 	ref := notify.NewTemplateRef(hook.CheckContextSize, hook.VariantCheckpoint, nil)
 	checkpointMsg := fmt.Sprintf(desc.Text(text.DescKeyRelayPrefixFormat),
 		hook.CheckContextSize,
@@ -86,7 +86,7 @@ func EmitWindowWarning(logFile, sessionID string, count, tokens, pct int) string
 			stats.VarTokenCount: hook2.FormatTokenCount(tokens),
 		}, fallback)
 	if content == "" {
-		log.LogMessage(
+		log.Message(
 			logFile, sessionID,
 			fmt.Sprintf(desc.Text(text.DescKeyCheckContextSizeSilencedWindowLog),
 				count, pct,
@@ -98,7 +98,7 @@ func EmitWindowWarning(logFile, sessionID string, count, tokens, pct int) string
 		desc.Text(text.DescKeyCheckContextSizeRelayPrefix),
 		desc.Text(text.DescKeyCheckContextSizeWindowBoxTitle),
 		content)
-	log.LogMessage(
+	log.Message(
 		logFile, sessionID,
 		fmt.Sprintf(desc.Text(text.DescKeyCheckContextSizeWindowLogFormat),
 			count, tokens, pct,
@@ -146,7 +146,7 @@ func EmitBillingWarning(logFile, sessionID string, count, tokens, threshold int)
 			stats.VarThreshold:  hook2.FormatTokenCount(threshold),
 		}, fallback)
 	if content == "" {
-		log.LogMessage(
+		log.Message(
 			logFile, sessionID,
 			fmt.Sprintf(
 				desc.Text(text.DescKeyCheckContextSizeSilencedBillingLog),
@@ -163,7 +163,7 @@ func EmitBillingWarning(logFile, sessionID string, count, tokens, threshold int)
 		content)
 
 	io.TouchFile(warnedFile) // one-shot: mark as fired
-	log.LogMessage(
+	log.Message(
 		logFile, sessionID, fmt.Sprintf(
 			desc.Text(text.DescKeyCheckContextSizeBillingLogFormat),
 			count, tokens, threshold),

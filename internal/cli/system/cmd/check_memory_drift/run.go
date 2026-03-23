@@ -11,7 +11,6 @@ import (
 	"path/filepath"
 
 	hook2 "github.com/ActiveMemory/ctx/internal/cli/system/core/check"
-	"github.com/ActiveMemory/ctx/internal/cli/system/core/message"
 	"github.com/ActiveMemory/ctx/internal/cli/system/core/nudge"
 	"github.com/ActiveMemory/ctx/internal/cli/system/core/state"
 	"github.com/spf13/cobra"
@@ -55,20 +54,14 @@ func Run(cmd *cobra.Command, stdin *os.File) error {
 		return nil
 	}
 
-	fallback := desc.Text(text.DescKeyCheckMemoryDriftContent)
-	content := message.LoadMessage(
-		hook.CheckMemoryDrift, hook.VariantNudge, nil, fallback,
-	)
-	if content == "" {
-		return nil
-	}
-
-	nudge.EmitNudge(cmd, content,
+	nudge.LoadAndEmit(cmd,
+		hook.CheckMemoryDrift, hook.VariantNudge, nil,
+		desc.Text(text.DescKeyCheckMemoryDriftContent),
 		desc.Text(text.DescKeyCheckMemoryDriftRelayPrefix),
 		desc.Text(text.DescKeyCheckMemoryDriftBoxTitle),
-		hook.CheckMemoryDrift, hook.VariantNudge,
 		desc.Text(text.DescKeyCheckMemoryDriftRelayMessage),
-		input.SessionID, nil, tombstone)
+		input.SessionID, tombstone,
+	)
 
 	return nil
 }

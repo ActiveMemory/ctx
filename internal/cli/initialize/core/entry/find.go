@@ -31,7 +31,7 @@ func FindInsertionPoint(content string) int {
 		if strings.HasPrefix(trimmed, token.PrefixHeading) {
 			level := 0
 			for _, ch := range trimmed {
-				if ch == '#' {
+				if ch == rune(token.PrefixHeading[0]) {
 					level++
 				} else {
 					break

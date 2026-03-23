@@ -70,7 +70,7 @@ func BuildSessionIndex(journalDir string) map[string]string {
 		name := e.Name()
 		// Strip multipart suffix (e.g., "-p2.md" → config.ExtMarkdown).
 		baseName := strings.TrimSuffix(name, file.ExtMarkdown)
-		if idx := strings.LastIndex(baseName, "-p"); idx > 0 {
+		if idx := strings.LastIndex(baseName, journal.MultipartSuffix); idx > 0 {
 			suffix := baseName[idx+2:]
 			allDigits := true
 			for _, r := range suffix {

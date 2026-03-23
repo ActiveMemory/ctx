@@ -134,7 +134,7 @@ func Run(cmd *cobra.Command, args []string, opts entity.ExportOpts) error {
 
 	// 9. Confirmation prompt for regeneration.
 	if plan.RegenCount > 0 && !opts.Yes && !singleSession {
-		ok, promptErr := confirm.ConfirmExport(cmd, plan)
+		ok, promptErr := confirm.Export(cmd, plan)
 		if promptErr != nil {
 			return promptErr
 		}
@@ -145,7 +145,7 @@ func Run(cmd *cobra.Command, args []string, opts entity.ExportOpts) error {
 	}
 
 	// 10. Execute the export.
-	exported, updated, skipped := execute.ExecuteExport(cmd, plan, jstate, opts)
+	exported, updated, skipped := execute.Export(cmd, plan, jstate, opts)
 
 	// 11. Persist journal state.
 	if saveErr := jstate.Save(journalDir); saveErr != nil {

@@ -11,22 +11,22 @@ import (
 	"path/filepath"
 	"strings"
 
-	"github.com/ActiveMemory/ctx/internal/cli/recall/core/extract"
-	"github.com/ActiveMemory/ctx/internal/cli/recall/core/format"
-	"github.com/ActiveMemory/ctx/internal/entity"
 	"github.com/spf13/cobra"
 
 	"github.com/ActiveMemory/ctx/internal/assets/read/desc"
+	"github.com/ActiveMemory/ctx/internal/cli/recall/core/extract"
+	"github.com/ActiveMemory/ctx/internal/cli/recall/core/format"
 	"github.com/ActiveMemory/ctx/internal/config/embed/text"
 	"github.com/ActiveMemory/ctx/internal/config/fs"
 	"github.com/ActiveMemory/ctx/internal/config/session"
 	"github.com/ActiveMemory/ctx/internal/config/token"
+	"github.com/ActiveMemory/ctx/internal/entity"
 	"github.com/ActiveMemory/ctx/internal/journal/state"
 	"github.com/ActiveMemory/ctx/internal/write/err"
 	"github.com/ActiveMemory/ctx/internal/write/recall"
 )
 
-// ExecuteExport writes files according to the plan.
+// Export writes files according to the plan.
 //
 // Parameters:
 //   - cmd: Cobra command for output.
@@ -38,7 +38,7 @@ import (
 //   - exported: number of new files written.
 //   - updated: number of existing files updated (frontmatter preserved).
 //   - skipped: number of files skipped (existing or locked).
-func ExecuteExport(
+func Export(
 	cmd *cobra.Command,
 	plan entity.ExportPlan,
 	jstate *state.JournalState,
@@ -97,7 +97,9 @@ func ExecuteExport(
 		jstate.MarkExported(fa.Filename)
 
 		if fileExists && !discard {
-			recall.ExportedFile(cmd, fa.Filename, desc.Text(text.DescKeyLabelReasonUpdated))
+			recall.ExportedFile(
+				cmd, fa.Filename, desc.Text(text.DescKeyLabelReasonUpdated),
+			)
 		} else {
 			recall.ExportedFile(cmd, fa.Filename, "")
 		}

@@ -14,6 +14,7 @@ const (
 	Makefile = "Makefile"
 	// MakefileCtx is the ctx-owned Makefile include for project root.
 	MakefileCtx = "Makefile.ctx"
-	// MakefileIncludePrefix is the Make directive for optional includes.
-	MakefileIncludePrefix = "-include "
+	// MakefileIncludeDirective is the Make line that pulls in ctx targets.
+	// The leading dash suppresses errors when the file is absent.
+	MakefileIncludeDirective = "-include Makefile.ctx"
 )

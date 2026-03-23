@@ -12,6 +12,7 @@ import (
 	"github.com/ActiveMemory/ctx/internal/cli/system/core/nudge"
 	coreSession "github.com/ActiveMemory/ctx/internal/cli/system/core/session"
 	cfgSession "github.com/ActiveMemory/ctx/internal/config/session"
+	"github.com/ActiveMemory/ctx/internal/entity"
 )
 
 // Preamble reads hook input, resolves the session ID, and checks the
@@ -25,7 +26,7 @@ import (
 //   - sessionID: resolved session identifier (falls back to config.IDSessionUnknown)
 //   - paused: true if the session is currently paused
 func Preamble(stdin *os.File) (
-	input coreSession.HookInput, sessionID string, paused bool,
+	input entity.HookInput, sessionID string, paused bool,
 ) {
 	input = coreSession.ReadInput(stdin)
 	sessionID = input.SessionID

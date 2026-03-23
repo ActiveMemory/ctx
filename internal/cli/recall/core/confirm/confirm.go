@@ -11,17 +11,16 @@ import (
 	"os"
 	"strings"
 
-	"github.com/ActiveMemory/ctx/internal/entity"
-	"github.com/spf13/cobra"
-
 	"github.com/ActiveMemory/ctx/internal/config/cli"
 	"github.com/ActiveMemory/ctx/internal/config/token"
-	ctxErr "github.com/ActiveMemory/ctx/internal/err/fs"
+	"github.com/ActiveMemory/ctx/internal/entity"
+	errFs "github.com/ActiveMemory/ctx/internal/err/fs"
 	"github.com/ActiveMemory/ctx/internal/write/export"
 	"github.com/ActiveMemory/ctx/internal/write/recall"
+	"github.com/spf13/cobra"
 )
 
-// ConfirmExport prints the plan summary and prompts for confirmation.
+// Export prints the plan summary and prompts for confirmation.
 //
 // Parameters:
 //   - cmd: Cobra command for output.
@@ -30,7 +29,7 @@ import (
 // Returns:
 //   - bool: true if the user confirms.
 //   - error: non-nil if reading input fails.
-func ConfirmExport(cmd *cobra.Command, plan entity.ExportPlan) (bool, error) {
+func Export(cmd *cobra.Command, plan entity.ExportPlan) (bool, error) {
 	export.Summary(
 		cmd,
 		plan.NewCount, plan.RegenCount, plan.SkipCount, plan.LockedCount, false,
@@ -39,7 +38,7 @@ func ConfirmExport(cmd *cobra.Command, plan entity.ExportPlan) (bool, error) {
 	reader := bufio.NewReader(os.Stdin)
 	response, readErr := reader.ReadString(token.NewlineLF[0])
 	if readErr != nil {
-		return false, ctxErr.ReadInput(readErr)
+		return false, errFs.ReadInput(readErr)
 	}
 	response = strings.TrimSpace(strings.ToLower(response))
 	return response == cli.ConfirmShort || response == cli.ConfirmLong, nil

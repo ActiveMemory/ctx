@@ -12,10 +12,12 @@ const (
 	FileEventLog = "events.jsonl"
 	// FileEventLogPrev is the rotated (previous) event log file.
 	FileEventLogPrev = "events.1.jsonl"
-	// EventLogMaxBytes is the size threshold for log rotation (1MB).
-	EventLogMaxBytes = 1 << 20
+	// LogMaxBytes is the size threshold for log rotation (1MB).
+	LogMaxBytes = 1 << 20
 	// HookLogMaxBytes is the size threshold for hook log rotation (1MB).
 	HookLogMaxBytes = 1 << 20
+	// RotationSuffix is the suffix appended to log files during rotation.
+	RotationSuffix = ".1"
 	// DefaultEventsLast is the default number of events shown by ctx system events.
 	DefaultEventsLast = 50
 )

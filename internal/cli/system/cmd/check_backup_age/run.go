@@ -12,7 +12,6 @@ import (
 
 	archive2 "github.com/ActiveMemory/ctx/internal/cli/system/core/archive"
 	hook2 "github.com/ActiveMemory/ctx/internal/cli/system/core/check"
-	"github.com/ActiveMemory/ctx/internal/cli/system/core/message"
 	"github.com/ActiveMemory/ctx/internal/cli/system/core/nudge"
 	"github.com/ActiveMemory/ctx/internal/cli/system/core/state"
 	"github.com/spf13/cobra"
@@ -79,19 +78,13 @@ func Run(cmd *cobra.Command, stdin *os.File) error {
 	}
 
 	vars := map[string]any{archive.VarWarnings: warningText}
-	content := message.LoadMessage(
+	nudge.LoadAndEmit(cmd,
 		hook.CheckBackupAge, hook.VariantWarning, vars, warningText,
-	)
-	if content == "" {
-		return nil
-	}
-
-	nudge.EmitNudge(cmd, content,
 		desc.Text(text.DescKeyBackupRelayPrefix),
 		desc.Text(text.DescKeyBackupBoxTitle),
-		hook.CheckBackupAge, hook.VariantWarning,
 		desc.Text(text.DescKeyBackupRelayMessage),
-		input.SessionID, vars, throttleFile)
+		input.SessionID, throttleFile,
+	)
 
 	return nil
 }

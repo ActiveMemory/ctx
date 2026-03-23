@@ -13,7 +13,7 @@ import (
 )
 
 // rotate checks the current log file size and renames it to the
-// previous-generation path when it exceeds [event.EventLogMaxBytes].
+// previous-generation path when it exceeds [event.LogMaxBytes].
 // Best-effort: all errors are silently ignored so rotation never
 // blocks event logging.
 //
@@ -24,7 +24,7 @@ func rotate(logPath string) {
 	if statErr != nil {
 		return // file doesn't exist yet, nothing to rotate
 	}
-	if info.Size() < int64(event.EventLogMaxBytes) {
+	if info.Size() < int64(event.LogMaxBytes) {
 		return
 	}
 

@@ -24,8 +24,16 @@ func SeverityFor(alerts []ResourceAlert, resource string) Severity {
 	return SeverityOK
 }
 
-// Collect gathers a resource snapshot. The path argument determines which
-// filesystem is checked for disk usage (typically the working directory).
+// Collect gathers a resource snapshot.
+//
+// The path argument determines which filesystem is checked for disk usage
+// (typically the working directory).
+//
+// Parameters:
+//   - path: Filesystem path for disk usage check
+//
+// Returns:
+//   - Snapshot: Memory, disk, and load metrics
 func Collect(path string) Snapshot {
 	return Snapshot{
 		Memory: collectMemory(),
@@ -35,7 +43,14 @@ func Collect(path string) Snapshot {
 }
 
 // MaxSeverity returns the highest severity among the given alerts.
+//
 // Returns SeverityOK when the slice is empty.
+//
+// Parameters:
+//   - alerts: Resource alerts to evaluate
+//
+// Returns:
+//   - Severity: Highest severity found, or SeverityOK if empty
 func MaxSeverity(alerts []ResourceAlert) Severity {
 	highest := SeverityOK
 	for _, a := range alerts {

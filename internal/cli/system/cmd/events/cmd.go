@@ -14,6 +14,7 @@ import (
 	"github.com/ActiveMemory/ctx/internal/config/embed/flag"
 	"github.com/ActiveMemory/ctx/internal/config/event"
 	cFlag "github.com/ActiveMemory/ctx/internal/config/flag"
+	"github.com/ActiveMemory/ctx/internal/flagbind"
 )
 
 // Cmd returns the "ctx system events" subcommand.
@@ -44,13 +45,8 @@ func Cmd() *cobra.Command {
 		cFlag.Event, cFlag.ShortEvent, "",
 		desc.Flag(flag.DescKeySystemEventsEvent),
 	)
-	c.Flags().IntP(
-		cFlag.Last, cFlag.ShortLast, event.DefaultEventsLast,
-		desc.Flag(flag.DescKeySystemEventsLast),
-	)
-	c.Flags().BoolP(
-		cFlag.JSON, cFlag.ShortJSON, false,
-		desc.Flag(flag.DescKeySystemEventsJson),
+	flagbind.LastJSON(c, event.DefaultEventsLast,
+		flag.DescKeySystemEventsLast, flag.DescKeySystemEventsJson,
 	)
 	c.Flags().BoolP(
 		cFlag.All, cFlag.ShortAll, false,

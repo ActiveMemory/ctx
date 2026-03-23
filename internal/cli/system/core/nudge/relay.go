@@ -43,6 +43,37 @@ func NudgeAndRelay(message, sessionID string, ref *notify.TemplateRef) {
 	Relay(message, sessionID, ref)
 }
 
+// LoadAndEmit loads a hook message template and, if non-empty, emits the
+// standard nudge box + relay notification + throttle marker sequence.
+//
+// Parameters:
+//   - cmd: Cobra command for output
+//   - hookName: hook name for message lookup and notifications
+//   - variant: hook variant for message lookup and template ref
+//   - vars: template variables (may be nil)
+//   - fallback: fallback text if no template is found
+//   - relayPrefix: relay prefix text
+//   - boxTitle: nudge box title
+//   - relayMessage: human-readable relay suffix
+//   - sessionID: current session identifier
+//   - markerPath: throttle file to touch (empty string skips)
+func LoadAndEmit(
+	cmd *cobra.Command,
+	hookName, variant string,
+	vars map[string]any,
+	fallback,
+	relayPrefix, boxTitle, relayMessage, sessionID, markerPath string,
+) {
+	content := message.LoadMessage(hookName, variant, vars, fallback)
+	if content == "" {
+		return
+	}
+	EmitNudge(cmd, content,
+		relayPrefix, boxTitle, hookName, variant,
+		relayMessage, sessionID, vars, markerPath,
+	)
+}
+
 // EmitNudge is the standard hook tail: print nudge box, send
 // nudge+relay notifications, and touch the throttle marker.
 //

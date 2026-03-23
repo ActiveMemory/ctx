@@ -24,6 +24,7 @@ import (
 	"github.com/ActiveMemory/ctx/internal/config/stats"
 	time2 "github.com/ActiveMemory/ctx/internal/config/time"
 	"github.com/ActiveMemory/ctx/internal/config/token"
+	"github.com/ActiveMemory/ctx/internal/entity"
 	ctxerr "github.com/ActiveMemory/ctx/internal/err/recall"
 	io2 "github.com/ActiveMemory/ctx/internal/io"
 )
@@ -102,11 +103,11 @@ func ParseStatsFile(path, sid string) ([]Entry, error) {
 		if line == "" {
 			continue
 		}
-		var s session.SessionStats
+		var s entity.Stats
 		if jsonErr := json.Unmarshal([]byte(line), &s); jsonErr != nil {
 			continue
 		}
-		entries = append(entries, Entry{SessionStats: s, Session: sid})
+		entries = append(entries, Entry{Stats: s, Session: sid})
 	}
 	return entries, nil
 }
@@ -245,11 +246,11 @@ func ReadNewLines(path string, offset int64, sid string) []Entry {
 		if line == "" {
 			continue
 		}
-		var s session.SessionStats
+		var s entity.Stats
 		if jsonErr := json.Unmarshal([]byte(line), &s); jsonErr != nil {
 			continue
 		}
-		entries = append(entries, Entry{SessionStats: s, Session: sid})
+		entries = append(entries, Entry{Stats: s, Session: sid})
 	}
 	return entries
 }

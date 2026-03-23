@@ -10,12 +10,12 @@ import (
 	"encoding/json"
 	"time"
 
-	"github.com/ActiveMemory/ctx/internal/cli/status/core"
-	"github.com/ActiveMemory/ctx/internal/cli/status/core/preview"
-	"github.com/ActiveMemory/ctx/internal/cli/status/core/sort"
 	"github.com/spf13/cobra"
 
 	"github.com/ActiveMemory/ctx/internal/assets/read/desc"
+	"github.com/ActiveMemory/ctx/internal/cli/status/core"
+	"github.com/ActiveMemory/ctx/internal/cli/status/core/preview"
+	"github.com/ActiveMemory/ctx/internal/cli/status/core/sort"
 	"github.com/ActiveMemory/ctx/internal/config/embed/text"
 	cfgTime "github.com/ActiveMemory/ctx/internal/config/time"
 	"github.com/ActiveMemory/ctx/internal/config/token"

@@ -26,6 +26,7 @@ import (
 	"github.com/ActiveMemory/ctx/internal/config/session"
 	"github.com/ActiveMemory/ctx/internal/config/stats"
 	"github.com/ActiveMemory/ctx/internal/config/token"
+	"github.com/ActiveMemory/ctx/internal/entity"
 	io2 "github.com/ActiveMemory/ctx/internal/io"
 	"github.com/ActiveMemory/ctx/internal/rc"
 )
@@ -45,14 +46,14 @@ const MaxTailBytes = 32768
 // Returns:
 //   - SessionTokenInfo: Token count and model from the last assistant message
 //   - error: Non-nil only on unexpected I/O errors
-func ReadSessionTokenInfo(sessionID string) (TokenInfo, error) {
+func ReadSessionTokenInfo(sessionID string) (entity.TokenInfo, error) {
 	if sessionID == "" || sessionID == session.IDUnknown {
-		return TokenInfo{}, nil
+		return entity.TokenInfo{}, nil
 	}
 
 	path, findErr := FindJSONLPath(sessionID)
 	if findErr != nil || path == "" {
-		return TokenInfo{}, findErr
+		return entity.TokenInfo{}, findErr
 	}
 
 	return ParseLastUsageAndModel(path)
@@ -111,16 +112,16 @@ func FindJSONLPath(sessionID string) (string, error) {
 // Returns:
 //   - SessionTokenInfo: Token count and model, or zero value if not found
 //   - error: Non-nil only on I/O errors
-func ParseLastUsageAndModel(path string) (TokenInfo, error) {
+func ParseLastUsageAndModel(path string) (entity.TokenInfo, error) {
 	f, openErr := io2.SafeOpenUserFile(path)
 	if openErr != nil {
-		return TokenInfo{}, openErr
+		return entity.TokenInfo{}, openErr
 	}
 	defer func() { _ = f.Close() }()
 
 	info, statErr := f.Stat()
 	if statErr != nil {
-		return TokenInfo{}, statErr
+		return entity.TokenInfo{}, statErr
 	}
 
 	// Read the tail of the file
@@ -131,12 +132,12 @@ func ParseLastUsageAndModel(path string) (TokenInfo, error) {
 	}
 
 	if _, seekErr := f.Seek(offset, io.SeekStart); seekErr != nil {
-		return TokenInfo{}, seekErr
+		return entity.TokenInfo{}, seekErr
 	}
 
 	tail, readErr := io.ReadAll(f)
 	if readErr != nil {
-		return TokenInfo{}, readErr
+		return entity.TokenInfo{}, readErr
 	}
 
 	// Scan lines in reverse for the last assistant message with usage
@@ -167,14 +168,14 @@ func ParseLastUsageAndModel(path string) (TokenInfo, error) {
 		u := msg.Message.Usage
 		total := u.InputTokens + u.CacheCreationInputTokens + u.CacheReadInputTokens
 		if total > 0 {
-			return TokenInfo{
+			return entity.TokenInfo{
 				Tokens: total,
 				Model:  msg.Message.Model,
 			}, nil
 		}
 	}
 
-	return TokenInfo{}, nil
+	return entity.TokenInfo{}, nil
 }
 
 // ModelContextWindow returns the context window size for a known model ID.

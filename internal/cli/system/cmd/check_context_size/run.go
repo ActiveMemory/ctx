@@ -16,8 +16,9 @@ import (
 	"github.com/ActiveMemory/ctx/internal/cli/system/core/counter"
 	"github.com/ActiveMemory/ctx/internal/cli/system/core/log"
 	"github.com/ActiveMemory/ctx/internal/cli/system/core/nudge"
-	session2 "github.com/ActiveMemory/ctx/internal/cli/system/core/session"
+	coreSession "github.com/ActiveMemory/ctx/internal/cli/system/core/session"
 	"github.com/ActiveMemory/ctx/internal/cli/system/core/state"
+	"github.com/ActiveMemory/ctx/internal/entity"
 	"github.com/spf13/cobra"
 
 	"github.com/ActiveMemory/ctx/internal/assets/read/desc"
@@ -47,7 +48,7 @@ func Run(cmd *cobra.Command, stdin *os.File) error {
 	if !state.Initialized() {
 		return nil
 	}
-	input := session2.ReadInput(stdin)
+	input := coreSession.ReadInput(stdin)
 	sessionID := input.SessionID
 	if sessionID == "" {
 		sessionID = session.IDUnknown
@@ -68,9 +69,9 @@ func Run(cmd *cobra.Command, stdin *os.File) error {
 	counter.Write(counterFile, count)
 
 	// Read actual context window usage from session JSONL
-	info, _ := session2.ReadSessionTokenInfo(sessionID)
+	info, _ := coreSession.ReadSessionTokenInfo(sessionID)
 	tokens := info.Tokens
-	windowSize := session2.EffectiveContextWindow(info.Model)
+	windowSize := coreSession.EffectiveContextWindow(info.Model)
 	pct := 0
 	if windowSize > 0 && tokens > 0 {
 		pct = tokens * stats.PercentMultiplier / windowSize
@@ -89,12 +90,12 @@ func Run(cmd *cobra.Command, stdin *os.File) error {
 	// the wrap-up ceremony. The marker expires after 2 hours.
 	// Stats are still recorded so token usage tracking is continuous.
 	if check.WrappedUpRecently() {
-		log.LogMessage(
+		log.Message(
 			logFile, sessionID,
 			fmt.Sprintf(
 				desc.Text(text.DescKeyCheckContextSizeSuppressedLogFormat), count),
 		)
-		session2.WriteSessionStats(sessionID, session2.SessionStats{
+		coreSession.WriteSessionStats(sessionID, entity.Stats{
 			Timestamp:  time.Now().Format(time.RFC3339),
 			Prompt:     count,
 			Tokens:     tokens,
@@ -125,13 +126,13 @@ func Run(cmd *cobra.Command, stdin *os.File) error {
 		evt = event.EventWindowWarning
 		writeHook.NudgeBlock(cmd, nudge.EmitWindowWarning(logFile, sessionID, count, tokens, pct))
 	default:
-		log.LogMessage(logFile, sessionID,
+		log.Message(logFile, sessionID,
 			fmt.Sprintf(desc.Text(
 				text.DescKeyCheckContextSizeSilentLogFormat), count),
 		)
 	}
 
-	session2.WriteSessionStats(sessionID, session2.SessionStats{
+	coreSession.WriteSessionStats(sessionID, entity.Stats{
 		Timestamp:  time.Now().Format(time.RFC3339),
 		Prompt:     count,
 		Tokens:     tokens,

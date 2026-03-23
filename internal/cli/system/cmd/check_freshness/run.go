@@ -11,19 +11,17 @@ import (
 	"path/filepath"
 	"time"
 
-	hook2 "github.com/ActiveMemory/ctx/internal/cli/system/core/check"
-	"github.com/ActiveMemory/ctx/internal/cli/system/core/drift"
-	"github.com/ActiveMemory/ctx/internal/cli/system/core/message"
-	"github.com/ActiveMemory/ctx/internal/cli/system/core/nudge"
-	"github.com/ActiveMemory/ctx/internal/cli/system/core/state"
 	"github.com/spf13/cobra"
 
-	"github.com/ActiveMemory/ctx/internal/entity"
-
 	"github.com/ActiveMemory/ctx/internal/assets/read/desc"
+	coreCheck "github.com/ActiveMemory/ctx/internal/cli/system/core/check"
+	"github.com/ActiveMemory/ctx/internal/cli/system/core/drift"
+	"github.com/ActiveMemory/ctx/internal/cli/system/core/nudge"
+	"github.com/ActiveMemory/ctx/internal/cli/system/core/state"
 	"github.com/ActiveMemory/ctx/internal/config/embed/text"
 	"github.com/ActiveMemory/ctx/internal/config/freshness"
 	"github.com/ActiveMemory/ctx/internal/config/hook"
+	"github.com/ActiveMemory/ctx/internal/entity"
 	"github.com/ActiveMemory/ctx/internal/rc"
 )
 
@@ -42,7 +40,7 @@ import (
 // Returns:
 //   - error: Always nil (hook errors are non-fatal)
 func Run(cmd *cobra.Command, stdin *os.File) error {
-	input, _, paused := hook2.Preamble(stdin)
+	input, _, paused := coreCheck.Preamble(stdin)
 	if paused {
 		return nil
 	}
@@ -55,7 +53,7 @@ func Run(cmd *cobra.Command, stdin *os.File) error {
 	tmpDir := state.StateDir()
 	throttleFile := filepath.Join(tmpDir, freshness.ThrottleID)
 
-	if hook2.DailyThrottled(throttleFile) {
+	if coreCheck.DailyThrottled(throttleFile) {
 		return nil
 	}
 
@@ -95,17 +93,13 @@ func Run(cmd *cobra.Command, stdin *os.File) error {
 	staleText := drift.FormatStaleEntries(staleEntries)
 
 	vars := map[string]any{freshness.VarStaleFiles: staleText}
-	content := message.LoadMessage(hook.CheckFreshness, hook.VariantStale, vars, staleText)
-	if content == "" {
-		return nil
-	}
-
-	nudge.EmitNudge(cmd, content,
+	nudge.LoadAndEmit(cmd,
+		hook.CheckFreshness, hook.VariantStale, vars, staleText,
 		desc.Text(text.DescKeyFreshnessRelayPrefix),
 		desc.Text(text.DescKeyFreshnessBoxTitle),
-		hook.CheckFreshness, hook.VariantStale,
 		desc.Text(text.DescKeyFreshnessRelayMessage),
-		input.SessionID, vars, throttleFile)
+		input.SessionID, throttleFile,
+	)
 
 	return nil
 }

@@ -17,6 +17,7 @@ import (
 	"github.com/ActiveMemory/ctx/internal/config/dir"
 	"github.com/ActiveMemory/ctx/internal/config/file"
 	"github.com/ActiveMemory/ctx/internal/config/fs"
+	cfgJournal "github.com/ActiveMemory/ctx/internal/config/journal"
 	"github.com/ActiveMemory/ctx/internal/config/session"
 	"github.com/ActiveMemory/ctx/internal/config/token"
 	"github.com/ActiveMemory/ctx/internal/err/journal"
@@ -29,8 +30,7 @@ import (
 
 // LockedFrontmatterLine is the YAML line inserted into frontmatter when
 // a journal entry is locked.
-var LockedFrontmatterLine = session.FrontmatterLocked + token.Colon + " " +
-	cli.AnnotationTrue + "  # managed by ctx"
+const LockedFrontmatterLine = session.FrontmatterLockedLine
 
 // MatchJournalFiles returns journal .md filenames matching the given
 // patterns. If all is true, returns every .md file in the directory.
@@ -93,7 +93,7 @@ func MatchJournalFiles(
 	return result, nil
 }
 
-// MultipartBase returns the base name for a potentially multi-part file.
+// MultipartBase returns the base name for a potentially multipart file.
 // For "2026-01-21-slug-abc12345-p2.md" it returns
 // "2026-01-21-slug-abc12345.md". For non-multipart files, returns the
 // filename as-is.
@@ -105,7 +105,7 @@ func MatchJournalFiles(
 //   - string: Base filename (without -pN suffix)
 func MultipartBase(filename string) string {
 	base := strings.TrimSuffix(filename, file.ExtMarkdown)
-	if idx := strings.LastIndex(base, "-p"); idx > 0 {
+	if idx := strings.LastIndex(base, cfgJournal.MultipartSuffix); idx > 0 {
 		suffix := base[idx+2:]
 		allDigits := true
 		for _, r := range suffix {
@@ -160,7 +160,7 @@ func UpdateLockFrontmatter(path string, lock bool) {
 			return
 		}
 		// Insert before closing ---.
-		updated := content[:fmEnd] + nl + LockedFrontmatterLine +
+		updated := content[:fmEnd] + nl + session.FrontmatterLockedLine +
 			content[fmEnd:]
 		_ = io.SafeWriteFile(path, []byte(updated), fs.PermFile)
 	} else {
@@ -216,7 +216,7 @@ func FrontmatterHasLocked(path string) bool {
 		}
 		val := strings.TrimSpace(strings.TrimPrefix(trimmed, lockedPrefix))
 		// Strip inline comment (e.g. "true  # managed by ctx").
-		if idx := strings.Index(val, "#"); idx >= 0 {
+		if idx := strings.Index(val, token.PrefixComment); idx >= 0 {
 			val = strings.TrimSpace(val[:idx])
 		}
 		return val == cli.AnnotationTrue
@@ -263,7 +263,7 @@ func RunLockUnlock(
 		if all {
 			recall.LockUnlockNone(cmd)
 		} else {
-			return journal.NoEntriesMatch(strings.Join(args, ", "))
+			return journal.NoEntriesMatch(strings.Join(args, token.CommaSpace))
 		}
 		return nil
 	}

@@ -25,6 +25,9 @@ const (
 	// FrontmatterLocked is the YAML frontmatter key and journal state
 	// marker for locked entries.
 	FrontmatterLocked = "locked"
+	// FrontmatterLockedLine is the full YAML line inserted into frontmatter
+	// when a journal entry is locked.
+	FrontmatterLockedLine = "locked: true  # managed by ctx"
 	// Unlocked is the display label for unlocked entries.
 	Unlocked = "unlocked"
 )

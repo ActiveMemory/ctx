@@ -9,10 +9,10 @@ package pause
 import (
 	"github.com/spf13/cobra"
 
-	pauseroot "github.com/ActiveMemory/ctx/internal/cli/pause/cmd/root"
+	pauseRoot "github.com/ActiveMemory/ctx/internal/cli/pause/cmd/root"
 )
 
 // Cmd returns the top-level "ctx pause" command.
 func Cmd() *cobra.Command {
-	return pauseroot.Cmd()
+	return pauseRoot.Cmd()
 }

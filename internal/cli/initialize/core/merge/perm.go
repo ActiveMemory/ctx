@@ -113,9 +113,6 @@ func Permissions(slice *[]string, defaults []string) bool {
 	return added
 }
 
-// PluginPrefix is the prefix for plugin-scoped skill permissions.
-const PluginPrefix = cfgClaude.PluginScope
-
 // DeduplicatePermissions removes duplicate and redundant FQ-form permissions.
 //
 // Parameters:
@@ -142,8 +139,8 @@ func DeduplicatePermissions(slice *[]string) bool {
 			continue
 		}
 		seen[p] = true
-		if name, ok := skillName(p); ok && strings.HasPrefix(name, PluginPrefix) {
-			bareName := strings.TrimPrefix(name, PluginPrefix)
+		if name, ok := skillName(p); ok && strings.HasPrefix(name, cfgClaude.PluginScope) {
+			bareName := strings.TrimPrefix(name, cfgClaude.PluginScope)
 			bareName = strings.TrimSuffix(bareName, cfgClaude.PluginScopeWildcard)
 			if bareSkills[bareName] {
 				continue

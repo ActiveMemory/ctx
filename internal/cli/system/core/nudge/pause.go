@@ -17,6 +17,7 @@ import (
 	"github.com/ActiveMemory/ctx/internal/cli/system/core/counter"
 	"github.com/ActiveMemory/ctx/internal/cli/system/core/state"
 	"github.com/ActiveMemory/ctx/internal/config/embed/text"
+	"github.com/ActiveMemory/ctx/internal/config/hook"
 	"github.com/ActiveMemory/ctx/internal/io"
 )
 
@@ -28,7 +29,7 @@ import (
 // Returns:
 //   - string: Absolute path to the pause marker file
 func PauseMarkerPath(sessionID string) string {
-	return filepath.Join(state.StateDir(), "ctx-paused-"+sessionID)
+	return filepath.Join(state.StateDir(), hook.PrefixPauseMarker+sessionID)
 }
 
 // Paused checks if the session is paused. If paused, increments the
@@ -64,7 +65,7 @@ func PausedMessage(turns int) string {
 		return ""
 	}
 	if turns <= 5 {
-		return "ctx:paused"
+		return hook.LabelPaused
 	}
 	return fmt.Sprintf(desc.Text(text.DescKeyWritePausedMessage), turns)
 }

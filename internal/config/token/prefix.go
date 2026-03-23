@@ -15,6 +15,8 @@ const (
 	PrefixListDash = "- "
 	// PrefixListStar is the prefix for a star list item.
 	PrefixListStar = "* "
+	// PrefixComment is the inline comment marker in YAML.
+	PrefixComment = "#"
 	// PrefixBang is the Markdown image/admonition prefix.
 	PrefixBang = "!"
 	// PrefixStar is the Markdown emphasis/bold prefix.

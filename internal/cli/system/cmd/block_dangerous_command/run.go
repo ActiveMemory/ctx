@@ -14,6 +14,7 @@ import (
 	"github.com/ActiveMemory/ctx/internal/cli/system/core/message"
 	"github.com/ActiveMemory/ctx/internal/cli/system/core/nudge"
 	coreSession "github.com/ActiveMemory/ctx/internal/cli/system/core/session"
+	"github.com/ActiveMemory/ctx/internal/entity"
 	"github.com/spf13/cobra"
 
 	"github.com/ActiveMemory/ctx/internal/assets/read/desc"
@@ -74,7 +75,7 @@ func Run(cmd *cobra.Command, stdin *os.File) error {
 	}
 
 	if reason != "" {
-		resp := coreSession.BlockResponse{
+		resp := entity.BlockResponse{
 			Decision: hook.DecisionBlock,
 			Reason:   reason,
 		}

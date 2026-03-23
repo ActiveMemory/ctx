@@ -14,6 +14,7 @@ import (
 	"github.com/ActiveMemory/ctx/internal/config/embed/flag"
 	cFlag "github.com/ActiveMemory/ctx/internal/config/flag"
 	"github.com/ActiveMemory/ctx/internal/config/stats"
+	"github.com/ActiveMemory/ctx/internal/flagbind"
 )
 
 // Cmd returns the "ctx system stats" subcommand.
@@ -38,11 +39,8 @@ func Cmd() *cobra.Command {
 	c.Flags().StringP(cFlag.Session, cFlag.ShortSessionID, "",
 		desc.Flag(flag.DescKeySystemStatsSession),
 	)
-	c.Flags().IntP(cFlag.Last, cFlag.ShortLast, stats.DefaultLast,
-		desc.Flag(flag.DescKeySystemStatsLast),
-	)
-	c.Flags().BoolP(cFlag.JSON, cFlag.ShortJSON, false,
-		desc.Flag(flag.DescKeySystemStatsJson),
+	flagbind.LastJSON(c, stats.DefaultLast,
+		flag.DescKeySystemStatsLast, flag.DescKeySystemStatsJson,
 	)
 
 	return c

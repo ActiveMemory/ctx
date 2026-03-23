@@ -14,66 +14,10 @@ import (
 	"time"
 
 	"github.com/ActiveMemory/ctx/internal/cli/system/core/state"
+	"github.com/ActiveMemory/ctx/internal/config/fs"
 	cfgSession "github.com/ActiveMemory/ctx/internal/config/session"
+	"github.com/ActiveMemory/ctx/internal/entity"
 )
-
-// HookInput represents the JSON payload that Claude Code sends to hook
-// commands via stdin.
-type HookInput struct {
-	SessionID string    `json:"session_id"`
-	ToolInput ToolInput `json:"tool_input"`
-}
-
-// ToolInput contains the tool-specific fields from a Claude Code hook
-// invocation. For Bash hooks, Command holds the shell command.
-type ToolInput struct {
-	Command string `json:"command"`
-}
-
-// Response is the JSON output format for Claude Code hooks.
-// Using structured JSON ensures the agent processes the output as a directive
-// rather than treating it as ignorable plain text.
-type Response struct {
-	Output *ResponseOutput `json:"hookSpecificOutput,omitempty"`
-}
-
-// ResponseOutput carries event-specific fields inside a Response.
-type ResponseOutput struct {
-	HookEventName     string `json:"hookEventName"`
-	AdditionalContext string `json:"additionalContext,omitempty"`
-}
-
-// BlockResponse is the JSON output for blocked commands.
-type BlockResponse struct {
-	Decision string `json:"decision"`
-	Reason   string `json:"reason"`
-}
-
-// TokenInfo holds token usage and model information extracted from a
-// session's JSONL file.
-type TokenInfo struct {
-	Tokens int    // Total input tokens (input + cache_creation + cache_read)
-	Model  string // Model ID from the last assistant message, or ""
-}
-
-// usageData represents the minimal usage fields from a Claude Code JSONL
-// assistant message. Only the fields needed for token counting are included.
-type usageData struct {
-	InputTokens              int `json:"input_tokens"`
-	CacheCreationInputTokens int `json:"cache_creation_input_tokens"`
-	CacheReadInputTokens     int `json:"cache_read_input_tokens"`
-}
-
-// jsonlMessage represents the minimal structure of a Claude Code JSONL line
-// needed to extract usage and model data from assistant messages.
-type jsonlMessage struct {
-	Type    string `json:"type"`
-	Message struct {
-		Role  string    `json:"role"`
-		Model string    `json:"model"`
-		Usage usageData `json:"usage"`
-	} `json:"message"`
-}
 
 // FormatContext builds a JSON Response with additionalContext for the
 // given hook event. This is the standard way for non-blocking hooks to inject
@@ -86,25 +30,14 @@ type jsonlMessage struct {
 // Returns:
 //   - string: JSON-encoded hook response
 func FormatContext(event, context string) string {
-	resp := Response{
-		Output: &ResponseOutput{
+	resp := response{
+		Output: &responseOutput{
 			HookEventName:     event,
 			AdditionalContext: context,
 		},
 	}
 	data, _ := json.Marshal(resp)
 	return string(data)
-}
-
-// SessionStats holds the fields written to the per-session stats JSONL file.
-type SessionStats struct {
-	Timestamp  string `json:"ts"`
-	Prompt     int    `json:"prompt"`
-	Tokens     int    `json:"tokens"`
-	Pct        int    `json:"pct"`
-	WindowSize int    `json:"window"`
-	Model      string `json:"model,omitempty"`
-	Event      string `json:"event"`
 }
 
 // ReadInput reads and parses the JSON hook input from r.
@@ -120,11 +53,11 @@ type SessionStats struct {
 //   - r: Reader to read hook input from
 //
 // Returns:
-//   - HookInput: Parsed input or zero value
-func ReadInput(r io.Reader) HookInput {
+//   - entity.HookInput: Parsed input or zero value
+func ReadInput(r io.Reader) entity.HookInput {
 	if f, ok := r.(*os.File); ok {
 		if fi, readErr := f.Stat(); readErr == nil && fi.Mode()&os.ModeCharDevice != 0 {
-			return HookInput{}
+			return entity.HookInput{}
 		}
 	}
 
@@ -138,7 +71,7 @@ func ReadInput(r io.Reader) HookInput {
 		ch <- readResult{data, readErr}
 	}()
 
-	var input HookInput
+	var input entity.HookInput
 	select {
 	case res := <-ch:
 		if res.err == nil {
@@ -172,7 +105,7 @@ func ReadSessionID(stdin *os.File) string {
 // Parameters:
 //   - sessionID: Session identifier
 //   - stats: Stats entry to write
-func WriteSessionStats(sessionID string, stats SessionStats) {
+func WriteSessionStats(sessionID string, stats entity.Stats) {
 	path := filepath.Join(state.StateDir(), "stats-"+sessionID+".jsonl")
 	data, marshalErr := json.Marshal(stats)
 	if marshalErr != nil {
@@ -180,7 +113,7 @@ func WriteSessionStats(sessionID string, stats SessionStats) {
 	}
 	data = append(data, '\n')
 
-	f, openErr := os.OpenFile(path, os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0o600) //nolint:gosec // state dir path
+	f, openErr := os.OpenFile(path, os.O_APPEND|os.O_CREATE|os.O_WRONLY, fs.PermSecret) //nolint:gosec // state dir path
 	if openErr != nil {
 		return
 	}

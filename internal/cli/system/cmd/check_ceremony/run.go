@@ -10,17 +10,17 @@ import (
 	"os"
 	"path/filepath"
 
-	ceremony2 "github.com/ActiveMemory/ctx/internal/cli/system/core/ceremony"
-	hook2 "github.com/ActiveMemory/ctx/internal/cli/system/core/check"
-	"github.com/ActiveMemory/ctx/internal/cli/system/core/nudge"
-	"github.com/ActiveMemory/ctx/internal/cli/system/core/state"
 	"github.com/spf13/cobra"
 
 	"github.com/ActiveMemory/ctx/internal/assets/read/desc"
+	coreCeremony "github.com/ActiveMemory/ctx/internal/cli/system/core/ceremony"
+	coreCheck "github.com/ActiveMemory/ctx/internal/cli/system/core/check"
+	"github.com/ActiveMemory/ctx/internal/cli/system/core/nudge"
+	"github.com/ActiveMemory/ctx/internal/cli/system/core/state"
 	"github.com/ActiveMemory/ctx/internal/config/ceremony"
 	"github.com/ActiveMemory/ctx/internal/config/embed/text"
 	"github.com/ActiveMemory/ctx/internal/config/hook"
-	ctxContext "github.com/ActiveMemory/ctx/internal/context/resolve"
+	ctxResolve "github.com/ActiveMemory/ctx/internal/context/resolve"
 	internalIo "github.com/ActiveMemory/ctx/internal/io"
 	"github.com/ActiveMemory/ctx/internal/notify"
 	writeHook "github.com/ActiveMemory/ctx/internal/write/hook"
@@ -43,32 +43,32 @@ func Run(cmd *cobra.Command, stdin *os.File) error {
 		return nil
 	}
 
-	input, _, paused := hook2.Preamble(stdin)
+	input, _, paused := coreCheck.Preamble(stdin)
 	if paused {
 		return nil
 	}
 
 	remindedFile := filepath.Join(state.StateDir(), ceremony.CeremonyThrottleID)
 
-	if hook2.DailyThrottled(remindedFile) {
+	if coreCheck.DailyThrottled(remindedFile) {
 		return nil
 	}
 
-	files := ceremony2.RecentJournalFiles(
-		ctxContext.ResolvedJournalDir(), ceremony.CeremonyJournalLookback,
+	files := coreCeremony.RecentJournalFiles(
+		ctxResolve.ResolvedJournalDir(), ceremony.CeremonyJournalLookback,
 	)
 
 	if len(files) == 0 {
 		return nil
 	}
 
-	remember, wrapup := ceremony2.ScanJournalsForCeremonies(files)
+	remember, wrapup := coreCeremony.ScanJournalsForCeremonies(files)
 
 	if remember && wrapup {
 		return nil
 	}
 
-	msg, variant := ceremony2.EmitCeremonyNudge(remember, wrapup)
+	msg, variant := coreCeremony.EmitCeremonyNudge(remember, wrapup)
 	writeHook.Nudge(cmd, msg)
 	if msg == "" {
 		return nil

@@ -21,10 +21,6 @@ import (
 	"github.com/ActiveMemory/ctx/internal/write/initialize"
 )
 
-// IncludeDirective is the line appended to the user's Makefile to pull
-// in ctx targets. The leading dash suppresses errors when the file is absent.
-var IncludeDirective = project.MakefileIncludePrefix + project.MakefileCtx
-
 // HandleMakefileCtx deploys Makefile.ctx and amends the user Makefile.
 //
 // Parameters:
@@ -47,7 +43,7 @@ func HandleMakefileCtx(cmd *cobra.Command) error {
 
 	existing, readErr := os.ReadFile(project.Makefile)
 	if readErr != nil {
-		minimal := IncludeDirective + token.NewlineLF
+		minimal := project.MakefileIncludeDirective + token.NewlineLF
 		if err := os.WriteFile(
 			project.Makefile, []byte(minimal), fs.PermFile,
 		); err != nil {
@@ -57,7 +53,7 @@ func HandleMakefileCtx(cmd *cobra.Command) error {
 		return nil
 	}
 
-	if strings.Contains(string(existing), IncludeDirective) {
+	if strings.Contains(string(existing), project.MakefileIncludeDirective) {
 		initialize.MakefileIncludes(cmd, project.MakefileCtx)
 		return nil
 	}
@@ -67,7 +63,7 @@ func HandleMakefileCtx(cmd *cobra.Command) error {
 		amended += token.NewlineLF
 	}
 
-	amended += token.NewlineLF + IncludeDirective + token.NewlineLF
+	amended += token.NewlineLF + project.MakefileIncludeDirective + token.NewlineLF
 	if err := os.WriteFile(
 		project.Makefile, []byte(amended), fs.PermFile,
 	); err != nil {
