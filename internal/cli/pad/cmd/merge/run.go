@@ -7,9 +7,11 @@
 package merge
 
 import (
+	"github.com/ActiveMemory/ctx/internal/cli/pad/core/blob"
+	"github.com/ActiveMemory/ctx/internal/cli/pad/core/merge"
+	"github.com/ActiveMemory/ctx/internal/cli/pad/core/store"
 	"github.com/spf13/cobra"
 
-	"github.com/ActiveMemory/ctx/internal/cli/pad/core"
 	ctEerr "github.com/ActiveMemory/ctx/internal/err/fs"
 	"github.com/ActiveMemory/ctx/internal/write/pad"
 )
@@ -31,48 +33,48 @@ func Run(
 	keyFile string,
 	dryRun bool,
 ) error {
-	current, readErr := core.ReadEntries()
+	current, readErr := store.ReadEntries()
 	if readErr != nil {
 		return readErr
 	}
 
-	key := core.LoadMergeKey(keyFile)
+	key := merge.LoadMergeKey(keyFile)
 
 	seen := make(map[string]bool, len(current))
 	for _, e := range current {
 		seen[e] = true
 	}
 
-	blobLabels := core.BuildBlobLabelMap(current)
+	blobLabels := merge.BuildBlobLabelMap(current)
 
 	var added, dupes int
 	var newEntries []string
 
 	for _, file := range files {
-		entries, fileErr := core.ReadFileEntries(file, key)
+		entries, fileErr := merge.ReadFileEntries(file, key)
 		if fileErr != nil {
 			return ctEerr.OpenFile(file, fileErr)
 		}
 
-		if core.HasBinaryEntries(entries) {
+		if merge.HasBinaryEntries(entries) {
 			pad.MergeBinaryWarning(cmd, file)
 		}
 
 		for _, entry := range entries {
 			if seen[entry] {
 				dupes++
-				pad.MergeDupe(cmd, core.DisplayEntry(entry))
+				pad.MergeDupe(cmd, blob.DisplayEntry(entry))
 				continue
 			}
 			seen[entry] = true
 
-			if conflict, label := core.HasBlobConflict(entry, blobLabels); conflict {
+			if conflict, label := merge.HasBlobConflict(entry, blobLabels); conflict {
 				pad.MergeBlobConflict(cmd, label)
 			}
 
 			newEntries = append(newEntries, entry)
 			added++
-			pad.MergeAdded(cmd, core.DisplayEntry(entry), file)
+			pad.MergeAdded(cmd, blob.DisplayEntry(entry), file)
 		}
 	}
 
@@ -89,7 +91,7 @@ func Run(
 	merged := make([]string, 0, len(current)+len(newEntries))
 	merged = append(merged, current...)
 	merged = append(merged, newEntries...)
-	if writeErr := core.WriteEntries(cmd, merged); writeErr != nil {
+	if writeErr := store.WriteEntries(cmd, merged); writeErr != nil {
 		return writeErr
 	}
 

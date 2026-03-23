@@ -10,19 +10,20 @@ import (
 	"fmt"
 	"strings"
 
+	"github.com/ActiveMemory/ctx/internal/cli/recall/core/format"
+	"github.com/ActiveMemory/ctx/internal/cli/recall/core/query"
 	"github.com/spf13/cobra"
 
 	"github.com/ActiveMemory/ctx/internal/assets/read/desc"
 	"github.com/ActiveMemory/ctx/internal/assets/tpl"
-	"github.com/ActiveMemory/ctx/internal/cli/recall/core"
 	"github.com/ActiveMemory/ctx/internal/config/embed/text"
 	"github.com/ActiveMemory/ctx/internal/config/flag"
 	"github.com/ActiveMemory/ctx/internal/config/journal"
 	"github.com/ActiveMemory/ctx/internal/config/time"
+	"github.com/ActiveMemory/ctx/internal/entity"
 	"github.com/ActiveMemory/ctx/internal/err/date"
 	ctxErr "github.com/ActiveMemory/ctx/internal/err/session"
 	"github.com/ActiveMemory/ctx/internal/parse"
-	"github.com/ActiveMemory/ctx/internal/recall/parser"
 	"github.com/ActiveMemory/ctx/internal/write/recall"
 )
 
@@ -61,7 +62,7 @@ func Run(
 		untilTime = untilTime.Add(time.InclusiveUntilOffset)
 	}
 
-	sessions, scanErr := core.FindSessions(allProjects)
+	sessions, scanErr := query.FindSessions(allProjects)
 	if scanErr != nil {
 		return ctxErr.Find(scanErr)
 	}
@@ -72,7 +73,7 @@ func Run(
 	}
 
 	// Apply filters
-	var filtered []*parser.Session
+	var filtered []*entity.Session
 	for _, s := range sessions {
 		if project != "" && !strings.Contains(
 			strings.ToLower(s.Project), strings.ToLower(project),
@@ -111,7 +112,7 @@ func Run(
 	slugW, projW := len(desc.Text(text.DescKeyLabelColSlug)),
 		len(desc.Text(text.DescKeyLabelColProject))
 	for _, s := range filtered {
-		slug := core.Truncate(s.Slug, journal.SlugMaxLen)
+		slug := format.Truncate(s.Slug, journal.SlugMaxLen)
 		if len(slug) > slugW {
 			slugW = len(slug)
 		}
@@ -133,13 +134,13 @@ func Run(
 
 	// Print sessions.
 	for _, s := range filtered {
-		slug := core.Truncate(s.Slug, journal.SlugMaxLen)
+		slug := format.Truncate(s.Slug, journal.SlugMaxLen)
 		dateStr := s.StartTime.Local().Format(time.DateTimeFormat)
-		dur := core.FormatDuration(s.Duration)
+		dur := format.FormatDuration(s.Duration)
 		turns := fmt.Sprintf("%d", s.TurnCount)
 		tokens := ""
 		if s.TotalTokens > 0 {
-			tokens = core.FormatTokens(s.TotalTokens)
+			tokens = format.FormatTokens(s.TotalTokens)
 		}
 		recall.SessionListRow(cmd, rowFmt,
 			slug, s.Project, dateStr, dur, turns, tokens)

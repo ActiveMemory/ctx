@@ -8,18 +8,20 @@ package parser
 
 import (
 	"testing"
+
+	"github.com/ActiveMemory/ctx/internal/entity"
 )
 
 func TestMessage_UsesTools(t *testing.T) {
 	tests := []struct {
 		name string
-		msg  Message
+		msg  entity.Message
 		want bool
 	}{
-		{"empty message", Message{}, false},
-		{"text only", Message{Text: "hello"}, false},
-		{"with tool uses", Message{ToolUses: []ToolUse{{Name: "Bash"}}}, true},
-		{"multiple tools", Message{ToolUses: []ToolUse{{Name: "Read"}, {Name: "Write"}}}, true},
+		{"empty message", entity.Message{}, false},
+		{"text only", entity.Message{Text: "hello"}, false},
+		{"with tool uses", entity.Message{ToolUses: []entity.ToolUse{{Name: "Bash"}}}, true},
+		{"multiple tools", entity.Message{ToolUses: []entity.ToolUse{{Name: "Read"}, {Name: "Write"}}}, true},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
@@ -46,7 +48,7 @@ func TestMessage_Preview(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			msg := &Message{Text: tt.text}
+			msg := &entity.Message{Text: tt.text}
 			got := msg.Preview(tt.maxLen)
 			if got != tt.want {
 				t.Errorf("Preview(%d) = %q, want %q", tt.maxLen, got, tt.want)
@@ -58,22 +60,22 @@ func TestMessage_Preview(t *testing.T) {
 func TestSession_UserMessages(t *testing.T) {
 	tests := []struct {
 		name     string
-		messages []Message
+		messages []entity.Message
 		want     int
 	}{
 		{"empty session", nil, 0},
-		{"all user", []Message{{Role: "user"}, {Role: "user"}}, 2},
-		{"mixed roles", []Message{
+		{"all user", []entity.Message{{Role: "user"}, {Role: "user"}}, 2},
+		{"mixed roles", []entity.Message{
 			{Role: "user"},
 			{Role: "assistant"},
 			{Role: "user"},
 			{Role: "assistant"},
 		}, 2},
-		{"all assistant", []Message{{Role: "assistant"}, {Role: "assistant"}}, 0},
+		{"all assistant", []entity.Message{{Role: "assistant"}, {Role: "assistant"}}, 0},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			s := &Session{Messages: tt.messages}
+			s := &entity.Session{Messages: tt.messages}
 			got := s.UserMessages()
 			if len(got) != tt.want {
 				t.Errorf("UserMessages() returned %d, want %d", len(got), tt.want)
@@ -90,22 +92,22 @@ func TestSession_UserMessages(t *testing.T) {
 func TestSession_AssistantMessages(t *testing.T) {
 	tests := []struct {
 		name     string
-		messages []Message
+		messages []entity.Message
 		want     int
 	}{
 		{"empty session", nil, 0},
-		{"all assistant", []Message{{Role: "assistant"}, {Role: "assistant"}}, 2},
-		{"mixed roles", []Message{
+		{"all assistant", []entity.Message{{Role: "assistant"}, {Role: "assistant"}}, 2},
+		{"mixed roles", []entity.Message{
 			{Role: "user"},
 			{Role: "assistant"},
 			{Role: "user"},
 			{Role: "assistant"},
 		}, 2},
-		{"all user", []Message{{Role: "user"}, {Role: "user"}}, 0},
+		{"all user", []entity.Message{{Role: "user"}, {Role: "user"}}, 0},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			s := &Session{Messages: tt.messages}
+			s := &entity.Session{Messages: tt.messages}
 			got := s.AssistantMessages()
 			if len(got) != tt.want {
 				t.Errorf("AssistantMessages() returned %d, want %d", len(got), tt.want)

@@ -12,9 +12,10 @@ import (
 	"os"
 	"strings"
 
+	"github.com/ActiveMemory/ctx/internal/cli/pad/core/blob"
+	"github.com/ActiveMemory/ctx/internal/cli/pad/core/store"
 	"github.com/spf13/cobra"
 
-	"github.com/ActiveMemory/ctx/internal/cli/pad/core"
 	"github.com/ActiveMemory/ctx/internal/config/cli"
 	"github.com/ActiveMemory/ctx/internal/config/pad"
 	ctxErr "github.com/ActiveMemory/ctx/internal/err/fs"
@@ -47,7 +48,7 @@ func runImport(cmd *cobra.Command, file string) error {
 		r = f
 	}
 
-	entries, err := core.ReadEntries()
+	entries, err := store.ReadEntries()
 	if err != nil {
 		return err
 	}
@@ -71,7 +72,7 @@ func runImport(cmd *cobra.Command, file string) error {
 		return nil
 	}
 
-	if writeErr := core.WriteEntries(cmd, entries); writeErr != nil {
+	if writeErr := store.WriteEntries(cmd, entries); writeErr != nil {
 		return writeErr
 	}
 
@@ -102,7 +103,7 @@ func runImportBlobs(cmd *cobra.Command, path string) error {
 		return ctxErr.ReadDirectory(path, readErr)
 	}
 
-	entries, loadErr := core.ReadEntries()
+	entries, loadErr := store.ReadEntries()
 	if loadErr != nil {
 		return loadErr
 	}
@@ -128,13 +129,13 @@ func runImportBlobs(cmd *cobra.Command, path string) error {
 			continue
 		}
 
-		entries = append(entries, core.MakeBlob(name, data))
+		entries = append(entries, blob.MakeBlob(name, data))
 		writePad.ImportBlobAdded(cmd, name)
 		added++
 	}
 
 	if added > 0 {
-		if writeErr := core.WriteEntries(cmd, entries); writeErr != nil {
+		if writeErr := store.WriteEntries(cmd, entries); writeErr != nil {
 			return writeErr
 		}
 	}

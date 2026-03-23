@@ -7,9 +7,10 @@
 package resolve
 
 import (
+	crypto2 "github.com/ActiveMemory/ctx/internal/cli/pad/core/crypto"
+	"github.com/ActiveMemory/ctx/internal/cli/pad/core/store"
 	"github.com/spf13/cobra"
 
-	"github.com/ActiveMemory/ctx/internal/cli/pad/core"
 	"github.com/ActiveMemory/ctx/internal/config/pad"
 	"github.com/ActiveMemory/ctx/internal/crypto"
 	errCrypto "github.com/ActiveMemory/ctx/internal/err/crypto"
@@ -30,7 +31,7 @@ func Run(cmd *cobra.Command) error {
 		return ctxErr.ResolveNotEncrypted()
 	}
 
-	kp := core.KeyPath()
+	kp := store.KeyPath()
 	key, loadErr := crypto.LoadKey(kp)
 	if loadErr != nil {
 		return errCrypto.LoadKey(loadErr, kp)
@@ -38,8 +39,8 @@ func Run(cmd *cobra.Command) error {
 
 	dir := rc.ContextDir()
 
-	ours, errOurs := core.DecryptFile(key, dir, pad.EncOurs)
-	theirs, errTheirs := core.DecryptFile(key, dir, pad.EncTheirs)
+	ours, errOurs := crypto2.DecryptFile(key, dir, pad.EncOurs)
+	theirs, errTheirs := crypto2.DecryptFile(key, dir, pad.EncTheirs)
 
 	if errOurs != nil && errTheirs != nil {
 		return ctxErr.NoConflictFiles(pad.Enc)

@@ -12,9 +12,9 @@ import (
 	"path/filepath"
 	"time"
 
+	"github.com/ActiveMemory/ctx/internal/cli/task/core/path"
 	"github.com/spf13/cobra"
 
-	"github.com/ActiveMemory/ctx/internal/cli/task/core"
 	"github.com/ActiveMemory/ctx/internal/config/archive"
 	"github.com/ActiveMemory/ctx/internal/config/fs"
 	"github.com/ActiveMemory/ctx/internal/config/token"
@@ -36,8 +36,8 @@ import (
 // Returns:
 //   - error: Non-nil if TASKS.md doesn't exist or file operations fail
 func Run(cmd *cobra.Command, args []string) error {
-	tasksPath := core.TasksFilePath()
-	archivePath := core.ArchiveDirPath()
+	tasksPath := path.TasksFilePath()
+	archivePath := path.ArchiveDirPath()
 
 	// Check if TASKS.md exists
 	if _, statErr := os.Stat(tasksPath); os.IsNotExist(statErr) {

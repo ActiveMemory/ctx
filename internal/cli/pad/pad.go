@@ -9,6 +9,8 @@ package pad
 import (
 	"fmt"
 
+	"github.com/ActiveMemory/ctx/internal/cli/pad/core/blob"
+	"github.com/ActiveMemory/ctx/internal/cli/pad/core/store"
 	"github.com/spf13/cobra"
 
 	"github.com/ActiveMemory/ctx/internal/assets/read/desc"
@@ -21,7 +23,6 @@ import (
 	"github.com/ActiveMemory/ctx/internal/cli/pad/cmd/resolve"
 	"github.com/ActiveMemory/ctx/internal/cli/pad/cmd/rm"
 	"github.com/ActiveMemory/ctx/internal/cli/pad/cmd/show"
-	"github.com/ActiveMemory/ctx/internal/cli/pad/core"
 	"github.com/ActiveMemory/ctx/internal/config/embed/cmd"
 	"github.com/ActiveMemory/ctx/internal/config/embed/text"
 	"github.com/ActiveMemory/ctx/internal/write/pad"
@@ -41,7 +42,7 @@ func Cmd() *cobra.Command {
 		Long:  long,
 		Args:  cobra.NoArgs,
 		RunE: func(cmd *cobra.Command, _ []string) error {
-			entries, err := core.ReadEntries()
+			entries, err := store.ReadEntries()
 			if err != nil {
 				return err
 			}
@@ -52,7 +53,7 @@ func Cmd() *cobra.Command {
 			}
 
 			for i, entry := range entries {
-				pad.EntryList(cmd, fmt.Sprintf(desc.Text(text.DescKeyWritePadListItem), i+1, core.DisplayEntry(entry)))
+				pad.EntryList(cmd, fmt.Sprintf(desc.Text(text.DescKeyWritePadListItem), i+1, blob.DisplayEntry(entry)))
 			}
 
 			return nil

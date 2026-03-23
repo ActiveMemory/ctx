@@ -26,6 +26,7 @@ import (
 	"github.com/ActiveMemory/ctx/internal/config/token"
 	"github.com/ActiveMemory/ctx/internal/context/load"
 	"github.com/ActiveMemory/ctx/internal/drift"
+	"github.com/ActiveMemory/ctx/internal/entity"
 	"github.com/ActiveMemory/ctx/internal/entry"
 	mcpErr "github.com/ActiveMemory/ctx/internal/err/mcp"
 	"github.com/ActiveMemory/ctx/internal/mcp/handler/task"
@@ -214,7 +215,7 @@ func (h *Handler) Recall(limit int, since time.Time) (string, error) {
 
 	// Apply since filter.
 	if !since.IsZero() {
-		var filtered []*parser.Session
+		var filtered []*entity.Session
 		for _, sess := range sessions {
 			if sess.StartTime.After(since) ||
 				sess.StartTime.Equal(since) {

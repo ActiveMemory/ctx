@@ -7,9 +7,10 @@
 package add
 
 import (
+	"github.com/ActiveMemory/ctx/internal/cli/pad/core/blob"
+	"github.com/ActiveMemory/ctx/internal/cli/pad/core/store"
 	"github.com/spf13/cobra"
 
-	"github.com/ActiveMemory/ctx/internal/cli/pad/core"
 	"github.com/ActiveMemory/ctx/internal/config/pad"
 	"github.com/ActiveMemory/ctx/internal/err/fs"
 	ctxErr "github.com/ActiveMemory/ctx/internal/err/pad"
@@ -26,14 +27,14 @@ import (
 // Returns:
 //   - error: Non-nil on read/write failure
 func runAdd(cmd *cobra.Command, text string) error {
-	entries, err := core.ReadEntries()
+	entries, err := store.ReadEntries()
 	if err != nil {
 		return err
 	}
 
 	entries = append(entries, text)
 
-	if writeErr := core.WriteEntries(cmd, entries); writeErr != nil {
+	if writeErr := store.WriteEntries(cmd, entries); writeErr != nil {
 		return writeErr
 	}
 
@@ -60,14 +61,14 @@ func runAddBlob(cmd *cobra.Command, label, filePath string) error {
 		return ctxErr.FileTooLarge(len(data), pad.MaxBlobSize)
 	}
 
-	entries, readErr := core.ReadEntries()
+	entries, readErr := store.ReadEntries()
 	if readErr != nil {
 		return readErr
 	}
 
-	entries = append(entries, core.MakeBlob(label, data))
+	entries = append(entries, blob.MakeBlob(label, data))
 
-	if writeErr := core.WriteEntries(cmd, entries); writeErr != nil {
+	if writeErr := store.WriteEntries(cmd, entries); writeErr != nil {
 		return writeErr
 	}
 

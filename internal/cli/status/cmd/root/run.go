@@ -9,11 +9,11 @@ package root
 import (
 	"errors"
 
+	"github.com/ActiveMemory/ctx/internal/cli/status/core/out"
 	"github.com/ActiveMemory/ctx/internal/context/load"
 	ctxerr "github.com/ActiveMemory/ctx/internal/err/initialize"
 	"github.com/spf13/cobra"
 
-	"github.com/ActiveMemory/ctx/internal/cli/status/core"
 	errctx "github.com/ActiveMemory/ctx/internal/err/context"
 )
 
@@ -37,8 +37,8 @@ func Run(cmd *cobra.Command, jsonOutput, verbose bool) error {
 	}
 
 	if jsonOutput {
-		return core.PersistStatusJSON(cmd, ctx, verbose)
+		return out.PersistStatusJSON(cmd, ctx, verbose)
 	}
 
-	return core.PersistStatusText(cmd, ctx, verbose)
+	return out.PersistStatusText(cmd, ctx, verbose)
 }

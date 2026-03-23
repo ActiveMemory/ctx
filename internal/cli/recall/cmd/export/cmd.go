@@ -7,10 +7,10 @@
 package export
 
 import (
+	"github.com/ActiveMemory/ctx/internal/entity"
 	"github.com/spf13/cobra"
 
 	"github.com/ActiveMemory/ctx/internal/assets/read/desc"
-	"github.com/ActiveMemory/ctx/internal/cli/recall/core"
 	"github.com/ActiveMemory/ctx/internal/config/embed/cmd"
 	"github.com/ActiveMemory/ctx/internal/config/embed/flag"
 	cFlag "github.com/ActiveMemory/ctx/internal/config/flag"
@@ -21,7 +21,7 @@ import (
 // Returns:
 //   - *cobra.Command: Command for exporting sessions to journal files
 func Cmd() *cobra.Command {
-	var opts core.ExportOpts
+	var opts entity.ExportOpts
 
 	short, long := desc.Command(cmd.DescKeyRecallExport)
 

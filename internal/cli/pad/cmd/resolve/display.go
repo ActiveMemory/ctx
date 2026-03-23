@@ -6,7 +6,9 @@
 
 package resolve
 
-import "github.com/ActiveMemory/ctx/internal/cli/pad/core"
+import (
+	"github.com/ActiveMemory/ctx/internal/cli/pad/core/blob"
+)
 
 // displayAll converts raw scratchpad entries to their display form.
 //
@@ -18,7 +20,7 @@ import "github.com/ActiveMemory/ctx/internal/cli/pad/core"
 func displayAll(entries []string) []string {
 	out := make([]string, len(entries))
 	for i, e := range entries {
-		out[i] = core.DisplayEntry(e)
+		out[i] = blob.DisplayEntry(e)
 	}
 	return out
 }

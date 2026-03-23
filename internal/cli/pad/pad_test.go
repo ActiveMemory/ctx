@@ -15,12 +15,16 @@ import (
 	"strings"
 	"testing"
 
+	"github.com/ActiveMemory/ctx/internal/cli/pad/core/blob"
+	crypto2 "github.com/ActiveMemory/ctx/internal/cli/pad/core/crypto"
+	"github.com/ActiveMemory/ctx/internal/cli/pad/core/parse"
+	"github.com/ActiveMemory/ctx/internal/cli/pad/core/store"
+	"github.com/ActiveMemory/ctx/internal/cli/pad/core/validate"
 	"github.com/ActiveMemory/ctx/internal/config/dir"
 	"github.com/ActiveMemory/ctx/internal/config/pad"
 	ctxerr "github.com/ActiveMemory/ctx/internal/err/pad"
 	"github.com/spf13/cobra"
 
-	"github.com/ActiveMemory/ctx/internal/cli/pad/core"
 	"github.com/ActiveMemory/ctx/internal/config/fs"
 	"github.com/ActiveMemory/ctx/internal/crypto"
 	"github.com/ActiveMemory/ctx/internal/rc"
@@ -567,19 +571,19 @@ func TestPlaintext_ListFormat(t *testing.T) {
 }
 
 func TestParseEntries_EmptyInput(t *testing.T) {
-	entries := core.ParseEntries(nil)
+	entries := parse.ParseEntries(nil)
 	if entries != nil {
 		t.Errorf("core.ParseEntries(nil) = %v, want nil", entries)
 	}
 
-	entries = core.ParseEntries([]byte{})
+	entries = parse.ParseEntries([]byte{})
 	if entries != nil {
 		t.Errorf("core.ParseEntries(empty) = %v, want nil", entries)
 	}
 }
 
 func TestParseEntries_SkipsEmpty(t *testing.T) {
-	entries := core.ParseEntries([]byte("a\n\nb\n"))
+	entries := parse.ParseEntries([]byte("a\n\nb\n"))
 	if len(entries) != 2 {
 		t.Fatalf("len = %d, want 2", len(entries))
 	}
@@ -589,14 +593,14 @@ func TestParseEntries_SkipsEmpty(t *testing.T) {
 }
 
 func TestFormatEntries_Empty(t *testing.T) {
-	data := core.FormatEntries(nil)
+	data := parse.FormatEntries(nil)
 	if data != nil {
 		t.Errorf("core.FormatEntries(nil) = %v, want nil", data)
 	}
 }
 
 func TestFormatEntries_TrailingNewline(t *testing.T) {
-	data := core.FormatEntries([]string{"a", "b"})
+	data := parse.FormatEntries([]string{"a", "b"})
 	if string(data) != "a\nb\n" {
 		t.Errorf("formatEntries = %q, want %q", string(data), "a\nb\n")
 	}
@@ -607,21 +611,21 @@ func TestValidateIndex(t *testing.T) {
 
 	// Valid indices
 	for _, n := range []int{1, 2, 3} {
-		if err := core.ValidateIndex(n, entries); err != nil {
+		if err := validate.ValidateIndex(n, entries); err != nil {
 			t.Errorf("core.ValidateIndex(%d) should be valid: %v", n, err)
 		}
 	}
 
 	// Invalid indices
 	for _, n := range []int{0, -1, 4, 100} {
-		if err := core.ValidateIndex(n, entries); err == nil {
+		if err := validate.ValidateIndex(n, entries); err == nil {
 			t.Errorf("core.ValidateIndex(%d) should be invalid", n)
 		}
 	}
 }
 
 func TestValidateIndex_EmptySlice(t *testing.T) {
-	err := core.ValidateIndex(1, nil)
+	err := validate.ValidateIndex(1, nil)
 	if err == nil {
 		t.Error("validateIndex on nil slice should fail")
 	}
@@ -712,7 +716,7 @@ func TestEnsureGitignore_NewFile(t *testing.T) {
 	}
 	t.Cleanup(func() { _ = os.Chdir(origDir) })
 
-	err := core.EnsureGitignore(".context", ".ctx.key")
+	err := store.EnsureGitignore(".context", ".ctx.key")
 	if err != nil {
 		t.Fatalf("ensureGitignore error: %v", err)
 	}
@@ -739,7 +743,7 @@ func TestEnsureGitignore_AlreadyPresent(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	err := core.EnsureGitignore(".context", ".ctx.key")
+	err := store.EnsureGitignore(".context", ".ctx.key")
 	if err != nil {
 		t.Fatalf("ensureGitignore error: %v", err)
 	}
@@ -765,7 +769,7 @@ func TestEnsureGitignore_AppendToExisting(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	err := core.EnsureGitignore(".context", ".ctx.key")
+	err := store.EnsureGitignore(".context", ".ctx.key")
 	if err != nil {
 		t.Fatalf("ensureGitignore error: %v", err)
 	}
@@ -782,7 +786,7 @@ func TestEnsureGitignore_AppendToExisting(t *testing.T) {
 func TestScratchpadPath_Plaintext(t *testing.T) {
 	setupPlaintext(t)
 
-	path := core.ScratchpadPath()
+	path := store.ScratchpadPath()
 	if !strings.HasSuffix(path, pad.Md) {
 		t.Errorf("core.ScratchpadPath() = %q, want suffix %q", path, pad.Md)
 	}
@@ -791,7 +795,7 @@ func TestScratchpadPath_Plaintext(t *testing.T) {
 func TestScratchpadPath_Encrypted(t *testing.T) {
 	setupEncrypted(t)
 
-	path := core.ScratchpadPath()
+	path := store.ScratchpadPath()
 	if !strings.HasSuffix(path, pad.Enc) {
 		t.Errorf("core.ScratchpadPath() = %q, want suffix %q", path, pad.Enc)
 	}
@@ -800,7 +804,7 @@ func TestScratchpadPath_Encrypted(t *testing.T) {
 func TestKeyPath(t *testing.T) {
 	setupEncrypted(t)
 
-	path := core.KeyPath()
+	path := store.KeyPath()
 	if !strings.HasSuffix(path, ".key") {
 		t.Errorf("core.KeyPath() = %q, want suffix %q", path, ".key")
 	}
@@ -813,7 +817,7 @@ func TestEnsureKey_KeyAlreadyExists(t *testing.T) {
 	setupEncrypted(t)
 
 	// Key already exists from setup
-	err := core.EnsureKey(nil)
+	err := store.EnsureKey(nil)
 	if err != nil {
 		t.Fatalf("ensureKey should succeed when key already exists: %v", err)
 	}
@@ -845,7 +849,7 @@ func TestEnsureKey_EncFileExistsNoKey(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	err := core.EnsureKey(nil)
+	err := store.EnsureKey(nil)
 	if err == nil {
 		t.Fatal("expected error when enc file exists without key")
 	}
@@ -875,7 +879,7 @@ func TestEnsureKey_GeneratesNewKey(t *testing.T) {
 	}
 
 	// No key, no enc file -- should generate at user-level path.
-	err := core.EnsureKey(nil)
+	err := store.EnsureKey(nil)
 	if err != nil {
 		t.Fatalf("ensureKey error: %v", err)
 	}
@@ -890,11 +894,11 @@ func TestWriteEntries_Plaintext(t *testing.T) {
 	setupPlaintext(t)
 
 	entries := []string{"one", "two"}
-	if err := core.WriteEntries(nil, entries); err != nil {
+	if err := store.WriteEntries(nil, entries); err != nil {
 		t.Fatalf("writeEntries error: %v", err)
 	}
 
-	path := core.ScratchpadPath()
+	path := store.ScratchpadPath()
 	data, err := os.ReadFile(path) //nolint:gosec // test temp path
 	if err != nil {
 		t.Fatal(err)
@@ -907,12 +911,12 @@ func TestWriteEntries_Plaintext(t *testing.T) {
 func TestReadEntries_Plaintext(t *testing.T) {
 	setupPlaintext(t)
 
-	path := core.ScratchpadPath()
+	path := store.ScratchpadPath()
 	if err := os.WriteFile(path, []byte("alpha\nbeta\n"), 0600); err != nil {
 		t.Fatal(err)
 	}
 
-	entries, err := core.ReadEntries()
+	entries, err := store.ReadEntries()
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -924,7 +928,7 @@ func TestReadEntries_Plaintext(t *testing.T) {
 func TestReadEntries_NoFile(t *testing.T) {
 	setupEncrypted(t)
 
-	entries, err := core.ReadEntries()
+	entries, err := store.ReadEntries()
 	if err != nil {
 		t.Fatalf("readEntries with no file should return nil, nil: %v", err)
 	}
@@ -1119,7 +1123,7 @@ func TestDecryptFile_BadData(t *testing.T) {
 		t.Fatal(writeErr)
 	}
 
-	_, err := core.DecryptFile(key, tmpDir, "bad.enc")
+	_, err := crypto2.DecryptFile(key, tmpDir, "bad.enc")
 	if err == nil {
 		t.Fatal("expected decryption error for bad data")
 	}
@@ -1132,7 +1136,7 @@ func TestDecryptFile_MissingFile(t *testing.T) {
 	key, _ := crypto.GenerateKey()
 	tmpDir := t.TempDir()
 
-	_, err := core.DecryptFile(key, tmpDir, "nonexistent.enc")
+	_, err := crypto2.DecryptFile(key, tmpDir, "nonexistent.enc")
 	if err == nil {
 		t.Fatal("expected error for missing file")
 	}
@@ -1151,7 +1155,7 @@ func TestDecryptFile_ValidData(t *testing.T) {
 		t.Fatal(writeErr)
 	}
 
-	entries, err := core.DecryptFile(key, tmpDir, "good.enc")
+	entries, err := crypto2.DecryptFile(key, tmpDir, "good.enc")
 	if err != nil {
 		t.Fatalf("decryptFile error: %v", err)
 	}
@@ -1252,10 +1256,10 @@ func TestMv_Plaintext(t *testing.T) {
 // --- Blob helper tests ---
 
 func TestIsBlob(t *testing.T) {
-	if !core.ContainsBlob("my plan:::SGVsbG8=") {
+	if !blob.ContainsBlob("my plan:::SGVsbG8=") {
 		t.Error("expected isBlob to return true for blob entry")
 	}
-	if core.ContainsBlob("just a plain entry") {
+	if blob.ContainsBlob("just a plain entry") {
 		t.Error("expected isBlob to return false for plain entry")
 	}
 }
@@ -1265,7 +1269,7 @@ func TestSplitBlob_Valid(t *testing.T) {
 	encoded := base64.StdEncoding.EncodeToString(data)
 	entry := "my label" + pad.BlobSep + encoded
 
-	label, decoded, ok := core.SplitBlob(entry)
+	label, decoded, ok := blob.SplitBlob(entry)
 	if !ok {
 		t.Fatal("splitBlob returned ok=false for valid blob")
 	}
@@ -1278,14 +1282,14 @@ func TestSplitBlob_Valid(t *testing.T) {
 }
 
 func TestSplitBlob_NonBlob(t *testing.T) {
-	_, _, ok := core.SplitBlob("just a plain entry")
+	_, _, ok := blob.SplitBlob("just a plain entry")
 	if ok {
 		t.Error("splitBlob should return ok=false for non-blob entry")
 	}
 }
 
 func TestSplitBlob_MalformedBase64(t *testing.T) {
-	_, _, ok := core.SplitBlob("label:::not-valid-base64!!!")
+	_, _, ok := blob.SplitBlob("label:::not-valid-base64!!!")
 	if ok {
 		t.Error("splitBlob should return ok=false for malformed base64")
 	}
@@ -1293,9 +1297,9 @@ func TestSplitBlob_MalformedBase64(t *testing.T) {
 
 func TestMakeBlob_Roundtrip(t *testing.T) {
 	original := []byte("secret file content\nwith newlines\n")
-	entry := core.MakeBlob("my file", original)
+	entry := blob.MakeBlob("my file", original)
 
-	label, data, ok := core.SplitBlob(entry)
+	label, data, ok := blob.SplitBlob(entry)
 	if !ok {
 		t.Fatal("splitBlob failed on makeBlob output")
 	}
@@ -1308,8 +1312,8 @@ func TestMakeBlob_Roundtrip(t *testing.T) {
 }
 
 func TestDisplayEntry_Blob(t *testing.T) {
-	entry := core.MakeBlob("my plan", []byte("content"))
-	display := core.DisplayEntry(entry)
+	entry := blob.MakeBlob("my plan", []byte("content"))
+	display := blob.DisplayEntry(entry)
 	if display != "my plan [BLOB]" {
 		t.Errorf("displayEntry = %q, want %q", display, "my plan [BLOB]")
 	}
@@ -1317,7 +1321,7 @@ func TestDisplayEntry_Blob(t *testing.T) {
 
 func TestDisplayEntry_Plain(t *testing.T) {
 	entry := "just a note"
-	display := core.DisplayEntry(entry)
+	display := blob.DisplayEntry(entry)
 	if display != entry {
 		t.Errorf("displayEntry = %q, want %q", display, entry)
 	}
@@ -2083,7 +2087,7 @@ func TestImportBlobs_BlobContent(t *testing.T) {
 	}
 
 	// Read entries and verify splitBlob roundtrip
-	entries, readErr := core.ReadEntries()
+	entries, readErr := store.ReadEntries()
 	if readErr != nil {
 		t.Fatal(readErr)
 	}
@@ -2091,7 +2095,7 @@ func TestImportBlobs_BlobContent(t *testing.T) {
 		t.Fatalf("got %d entries, want 1", len(entries))
 	}
 
-	label, data, ok := core.SplitBlob(entries[0])
+	label, data, ok := blob.SplitBlob(entries[0])
 	if !ok {
 		t.Fatal("entry is not a valid blob")
 	}
@@ -2637,13 +2641,13 @@ func TestMerge_CustomKey(t *testing.T) {
 func TestMerge_BlobEntries(t *testing.T) {
 	tmpDir := setupPlaintext(t)
 
-	blobEntry := core.MakeBlob("test.txt", []byte("hello world"))
+	blobEntry := blob.MakeBlob("test.txt", []byte("hello world"))
 	if _, err := runCmd(newPadCmd("add", "text-entry")); err != nil {
 		t.Fatal(err)
 	}
 
 	// Create file with same blob + a new blob.
-	newBlob := core.MakeBlob("new.txt", []byte("new content"))
+	newBlob := blob.MakeBlob("new.txt", []byte("new content"))
 	mergeFile := filepath.Join(tmpDir, "blobs.md")
 	writePlaintextPad(t, mergeFile, []string{blobEntry, newBlob})
 
@@ -2663,7 +2667,7 @@ func TestMerge_BlobConflict(t *testing.T) {
 	tmpDir := setupPlaintext(t)
 
 	// Add a blob with label "config.json".
-	blob1 := core.MakeBlob("config.json", []byte(`{"v":1}`))
+	blob1 := blob.MakeBlob("config.json", []byte(`{"v":1}`))
 	mergeFile1 := filepath.Join(tmpDir, "first.md")
 	writePlaintextPad(t, mergeFile1, []string{blob1})
 	if _, err := runCmd(newPadCmd("merge", mergeFile1)); err != nil {
@@ -2671,7 +2675,7 @@ func TestMerge_BlobConflict(t *testing.T) {
 	}
 
 	// Merge a different blob with the same label.
-	blob2 := core.MakeBlob("config.json", []byte(`{"v":2}`))
+	blob2 := blob.MakeBlob("config.json", []byte(`{"v":2}`))
 	mergeFile2 := filepath.Join(tmpDir, "second.md")
 	writePlaintextPad(t, mergeFile2, []string{blob2})
 
@@ -2825,7 +2829,7 @@ func TestMerge_EncryptedWithBlobDedup(t *testing.T) {
 	tmpDir := setupEncrypted(t)
 
 	// Add a blob to the current pad.
-	blob := core.MakeBlob("readme.md", []byte("# README"))
+	blob := blob.MakeBlob("readme.md", []byte("# README"))
 	f := filepath.Join(tmpDir, "tmp-readme.md")
 	if err := os.WriteFile(f, []byte("# README"), 0600); err != nil {
 		t.Fatal(err)

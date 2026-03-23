@@ -9,9 +9,9 @@ package sync
 import (
 	"path/filepath"
 
+	"github.com/ActiveMemory/ctx/internal/cli/recall/core/lock"
 	"github.com/spf13/cobra"
 
-	"github.com/ActiveMemory/ctx/internal/cli/recall/core"
 	"github.com/ActiveMemory/ctx/internal/config/dir"
 	"github.com/ActiveMemory/ctx/internal/config/journal"
 	ctxErr "github.com/ActiveMemory/ctx/internal/err/journal"
@@ -36,7 +36,7 @@ func Run(cmd *cobra.Command) error {
 		return ctxErr.LoadState(loadErr)
 	}
 
-	files, matchErr := core.MatchJournalFiles(journalDir, nil, true)
+	files, matchErr := lock.MatchJournalFiles(journalDir, nil, true)
 	if matchErr != nil {
 		return matchErr
 	}
@@ -49,7 +49,7 @@ func Run(cmd *cobra.Command) error {
 
 	for _, filename := range files {
 		path := filepath.Join(journalDir, filename)
-		fmLocked := core.FrontmatterHasLocked(path)
+		fmLocked := lock.FrontmatterHasLocked(path)
 		stateLocked := jstate.Locked(filename)
 
 		switch {
