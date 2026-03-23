@@ -42,46 +42,6 @@ type MessageListEntry struct {
 	HasOverride  bool     `json:"has_override"`
 }
 
-// ResourceJSONAlert is a single resource alert for JSON output.
-type ResourceJSONAlert struct {
-	Severity string `json:"severity"`
-	Resource string `json:"resource"`
-	Message  string `json:"message"`
-}
-
-// ResourceJSONOutput is the top-level JSON output for system resources.
-type ResourceJSONOutput struct {
-	Memory struct {
-		TotalBytes uint64 `json:"total_bytes"`
-		UsedBytes  uint64 `json:"used_bytes"`
-		Percent    int    `json:"percent"`
-		Supported  bool   `json:"supported"`
-	} `json:"memory"`
-	Swap struct {
-		TotalBytes uint64 `json:"total_bytes"`
-		UsedBytes  uint64 `json:"used_bytes"`
-		Percent    int    `json:"percent"`
-		Supported  bool   `json:"supported"`
-	} `json:"swap"`
-	Disk struct {
-		TotalBytes uint64 `json:"total_bytes"`
-		UsedBytes  uint64 `json:"used_bytes"`
-		Percent    int    `json:"percent"`
-		Path       string `json:"path"`
-		Supported  bool   `json:"supported"`
-	} `json:"disk"`
-	Load struct {
-		Load1     float64 `json:"load1"`
-		Load5     float64 `json:"load5"`
-		Load15    float64 `json:"load15"`
-		NumCPU    int     `json:"num_cpu"`
-		Ratio     float64 `json:"ratio"`
-		Supported bool    `json:"supported"`
-	} `json:"load"`
-	Alerts      []ResourceJSONAlert `json:"alerts"`
-	MaxSeverity string              `json:"max_severity"`
-}
-
 // StaleEntry describes a file that has not been modified within the
 // configured freshness window.
 type StaleEntry struct {
