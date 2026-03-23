@@ -4,7 +4,7 @@
 //   \    Copyright 2026-present Context contributors.
 //                 SPDX-License-Identifier: Apache-2.0
 
-package core
+package version
 
 import (
 	"fmt"
@@ -13,6 +13,8 @@ import (
 	"time"
 
 	"github.com/ActiveMemory/ctx/internal/assets/read/desc"
+	"github.com/ActiveMemory/ctx/internal/cli/system/core/message"
+	"github.com/ActiveMemory/ctx/internal/cli/system/core/nudge"
 	"github.com/ActiveMemory/ctx/internal/config/embed/text"
 	"github.com/ActiveMemory/ctx/internal/config/hook"
 	"github.com/ActiveMemory/ctx/internal/config/token"
@@ -72,7 +74,7 @@ func CheckKeyAge(sessionID string) string {
 	keyFallback := fmt.Sprintf(
 		desc.Text(text.DescKeyCheckVersionKeyFallback), ageDays,
 	)
-	keyContent := LoadMessage(hook.CheckVersion, hook.VariantKeyRotation,
+	keyContent := message.LoadMessage(hook.CheckVersion, hook.VariantKeyRotation,
 		map[string]any{version.VarKeyAgeDays: ageDays}, keyFallback)
 	if keyContent == "" {
 		return ""
@@ -81,7 +83,7 @@ func CheckKeyAge(sessionID string) string {
 	boxTitle := desc.Text(text.DescKeyCheckVersionKeyBoxTitle)
 	relayPrefix := desc.Text(text.DescKeyCheckVersionKeyRelayPrefix)
 
-	box := token.NewlineLF + NudgeBox(relayPrefix, boxTitle, keyContent)
+	box := token.NewlineLF + message.NudgeBox(relayPrefix, boxTitle, keyContent)
 
 	keyRef := notify.NewTemplateRef(hook.CheckVersion, hook.VariantKeyRotation,
 		map[string]any{version.VarKeyAgeDays: ageDays})
@@ -92,6 +94,6 @@ func CheckKeyAge(sessionID string) string {
 			desc.Text(text.DescKeyCheckVersionKeyRelayFormat), ageDays,
 		),
 	)
-	NudgeAndRelay(keyNotifyMsg, sessionID, keyRef)
+	nudge.NudgeAndRelay(keyNotifyMsg, sessionID, keyRef)
 	return box
 }

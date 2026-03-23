@@ -12,13 +12,15 @@ import (
 	"path/filepath"
 	"time"
 
+	"github.com/ActiveMemory/ctx/internal/cli/system/core/check"
 	"github.com/ActiveMemory/ctx/internal/cli/system/core/counter"
+	"github.com/ActiveMemory/ctx/internal/cli/system/core/log"
 	"github.com/ActiveMemory/ctx/internal/cli/system/core/nudge"
 	session2 "github.com/ActiveMemory/ctx/internal/cli/system/core/session"
+	"github.com/ActiveMemory/ctx/internal/cli/system/core/state"
 	"github.com/spf13/cobra"
 
 	"github.com/ActiveMemory/ctx/internal/assets/read/desc"
-	"github.com/ActiveMemory/ctx/internal/cli/system/core"
 	"github.com/ActiveMemory/ctx/internal/config/dir"
 	"github.com/ActiveMemory/ctx/internal/config/embed/text"
 	"github.com/ActiveMemory/ctx/internal/config/event"
@@ -42,7 +44,7 @@ import (
 // Returns:
 //   - error: Always nil (hook errors are non-fatal)
 func Run(cmd *cobra.Command, stdin *os.File) error {
-	if !core.Initialized() {
+	if !state.Initialized() {
 		return nil
 	}
 	input := session2.ReadInput(stdin)
@@ -52,12 +54,12 @@ func Run(cmd *cobra.Command, stdin *os.File) error {
 	}
 
 	// Pause check — this hook is the designated single emitter
-	if turns := core.Paused(sessionID); turns > 0 {
-		writeHook.Nudge(cmd, core.PausedMessage(turns))
+	if turns := nudge.Paused(sessionID); turns > 0 {
+		writeHook.Nudge(cmd, nudge.PausedMessage(turns))
 		return nil
 	}
 
-	tmpDir := core.StateDir()
+	tmpDir := state.StateDir()
 	counterFile := filepath.Join(tmpDir, stats.ContextSizeCounterPrefix+sessionID)
 	logFile := filepath.Join(rc.ContextDir(), dir.Logs, stats.ContextSizeLogFile)
 
@@ -86,8 +88,8 @@ func Run(cmd *cobra.Command, stdin *os.File) error {
 	// suppress checkpoint and window nudges to avoid noise during/after
 	// the wrap-up ceremony. The marker expires after 2 hours.
 	// Stats are still recorded so token usage tracking is continuous.
-	if core.WrappedUpRecently() {
-		core.LogMessage(
+	if check.WrappedUpRecently() {
+		log.LogMessage(
 			logFile, sessionID,
 			fmt.Sprintf(
 				desc.Text(text.DescKeyCheckContextSizeSuppressedLogFormat), count),
@@ -123,7 +125,7 @@ func Run(cmd *cobra.Command, stdin *os.File) error {
 		evt = event.EventWindowWarning
 		writeHook.NudgeBlock(cmd, nudge.EmitWindowWarning(logFile, sessionID, count, tokens, pct))
 	default:
-		core.LogMessage(logFile, sessionID,
+		log.LogMessage(logFile, sessionID,
 			fmt.Sprintf(desc.Text(
 				text.DescKeyCheckContextSizeSilentLogFormat), count),
 		)

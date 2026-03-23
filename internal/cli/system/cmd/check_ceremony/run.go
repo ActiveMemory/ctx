@@ -12,10 +12,11 @@ import (
 
 	ceremony2 "github.com/ActiveMemory/ctx/internal/cli/system/core/ceremony"
 	hook2 "github.com/ActiveMemory/ctx/internal/cli/system/core/check"
+	"github.com/ActiveMemory/ctx/internal/cli/system/core/nudge"
+	"github.com/ActiveMemory/ctx/internal/cli/system/core/state"
 	"github.com/spf13/cobra"
 
 	"github.com/ActiveMemory/ctx/internal/assets/read/desc"
-	"github.com/ActiveMemory/ctx/internal/cli/system/core"
 	"github.com/ActiveMemory/ctx/internal/config/ceremony"
 	"github.com/ActiveMemory/ctx/internal/config/embed/text"
 	"github.com/ActiveMemory/ctx/internal/config/hook"
@@ -38,7 +39,7 @@ import (
 // Returns:
 //   - error: Always nil (hook errors are non-fatal)
 func Run(cmd *cobra.Command, stdin *os.File) error {
-	if !core.Initialized() {
+	if !state.Initialized() {
 		return nil
 	}
 
@@ -47,9 +48,9 @@ func Run(cmd *cobra.Command, stdin *os.File) error {
 		return nil
 	}
 
-	remindedFile := filepath.Join(core.StateDir(), ceremony.CeremonyThrottleID)
+	remindedFile := filepath.Join(state.StateDir(), ceremony.CeremonyThrottleID)
 
-	if core.DailyThrottled(remindedFile) {
+	if hook2.DailyThrottled(remindedFile) {
 		return nil
 	}
 
@@ -73,7 +74,7 @@ func Run(cmd *cobra.Command, stdin *os.File) error {
 		return nil
 	}
 	ref := notify.NewTemplateRef(hook.CheckCeremonies, variant, nil)
-	core.NudgeAndRelay(hook.CheckCeremonies+": "+
+	nudge.NudgeAndRelay(hook.CheckCeremonies+": "+
 		desc.Text(text.DescKeyCeremonyRelayMessage),
 		input.SessionID, ref,
 	)

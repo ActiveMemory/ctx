@@ -13,11 +13,11 @@ import (
 
 	"github.com/ActiveMemory/ctx/internal/cli/system/core/check"
 	"github.com/ActiveMemory/ctx/internal/cli/system/core/health"
+	"github.com/ActiveMemory/ctx/internal/cli/system/core/state"
 	"github.com/ActiveMemory/ctx/internal/config/architecture"
 	cfgTime "github.com/ActiveMemory/ctx/internal/config/time"
 	"github.com/spf13/cobra"
 
-	"github.com/ActiveMemory/ctx/internal/cli/system/core"
 	internalIo "github.com/ActiveMemory/ctx/internal/io"
 	writeHook "github.com/ActiveMemory/ctx/internal/write/hook"
 )
@@ -36,7 +36,7 @@ import (
 // Returns:
 //   - error: Always nil (hook errors are non-fatal)
 func Run(cmd *cobra.Command, stdin *os.File) error {
-	if !core.Initialized() {
+	if !state.Initialized() {
 		return nil
 	}
 
@@ -45,9 +45,9 @@ func Run(cmd *cobra.Command, stdin *os.File) error {
 		return nil
 	}
 	markerPath := filepath.Join(
-		core.StateDir(), architecture.MapStalenessThrottleID,
+		state.StateDir(), architecture.MapStalenessThrottleID,
 	)
-	if core.DailyThrottled(markerPath) {
+	if check.DailyThrottled(markerPath) {
 		return nil
 	}
 

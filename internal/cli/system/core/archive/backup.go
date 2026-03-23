@@ -16,7 +16,6 @@ import (
 	"time"
 
 	"github.com/ActiveMemory/ctx/internal/assets/read/desc"
-	"github.com/ActiveMemory/ctx/internal/cli/system/core"
 	"github.com/ActiveMemory/ctx/internal/config/archive"
 	"github.com/ActiveMemory/ctx/internal/config/dir"
 	"github.com/ActiveMemory/ctx/internal/config/embed/text"
@@ -70,7 +69,7 @@ func CreateArchive(
 //   - BackupResult: archive path, size, and optional SMB destination
 //   - error: non-nil on archive or SMB failure
 func BackupProject(
-	w io.Writer, home, timestamp string, smb *core.SMBConfig,
+	w io.Writer, home, timestamp string, smb *SMBConfig,
 ) (entity.BackupResult, error) {
 	cwd, cwdErr := os.Getwd()
 	if cwdErr != nil {
@@ -115,7 +114,7 @@ func BackupProject(
 //   - BackupResult: archive path, size, and optional SMB destination
 //   - error: non-nil on archive or SMB failure
 func BackupGlobal(
-	w io.Writer, home, timestamp string, smb *core.SMBConfig,
+	w io.Writer, home, timestamp string, smb *SMBConfig,
 ) (entity.BackupResult, error) {
 	archiveName := fmt.Sprintf(archive.BackupTplGlobalArchive, timestamp)
 	archivePath := filepath.Join(os.TempDir(), archiveName)
@@ -139,7 +138,7 @@ func BackupGlobal(
 // Returns:
 //   - []string: the warnings slice, possibly with SMB mount warnings appended
 func CheckSMBMountWarnings(smbURL string, warnings []string) []string {
-	cfg, cfgErr := core.ParseSMBConfig(smbURL, "")
+	cfg, cfgErr := ParseSMBConfig(smbURL, "")
 	if cfgErr != nil {
 		return warnings
 	}

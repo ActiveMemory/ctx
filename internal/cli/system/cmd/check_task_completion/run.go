@@ -14,12 +14,14 @@ import (
 	"github.com/ActiveMemory/ctx/internal/assets/read/desc"
 	hook2 "github.com/ActiveMemory/ctx/internal/cli/system/core/check"
 	"github.com/ActiveMemory/ctx/internal/cli/system/core/counter"
+	"github.com/ActiveMemory/ctx/internal/cli/system/core/message"
+	nudge2 "github.com/ActiveMemory/ctx/internal/cli/system/core/nudge"
 	coreSession "github.com/ActiveMemory/ctx/internal/cli/system/core/session"
+	"github.com/ActiveMemory/ctx/internal/cli/system/core/state"
 	"github.com/ActiveMemory/ctx/internal/config/embed/text"
 	"github.com/ActiveMemory/ctx/internal/config/nudge"
 	"github.com/spf13/cobra"
 
-	"github.com/ActiveMemory/ctx/internal/cli/system/core"
 	"github.com/ActiveMemory/ctx/internal/config/hook"
 	"github.com/ActiveMemory/ctx/internal/notify"
 	"github.com/ActiveMemory/ctx/internal/rc"
@@ -39,7 +41,7 @@ import (
 // Returns:
 //   - error: Always nil (hook errors are non-fatal)
 func Run(cmd *cobra.Command, stdin *os.File) error {
-	if !core.Initialized() {
+	if !state.Initialized() {
 		return nil
 	}
 	input, sessionID, paused := hook2.Preamble(stdin)
@@ -52,7 +54,7 @@ func Run(cmd *cobra.Command, stdin *os.File) error {
 		return nil
 	}
 
-	counterPath := filepath.Join(core.StateDir(), nudge.PrefixTask+sessionID)
+	counterPath := filepath.Join(state.StateDir(), nudge.PrefixTask+sessionID)
 	count := counter.Read(counterPath)
 	count++
 
@@ -65,7 +67,7 @@ func Run(cmd *cobra.Command, stdin *os.File) error {
 	counter.Write(counterPath, 0)
 
 	fallback := desc.Text(text.DescKeyCheckTaskCompletionFallback)
-	msg := core.LoadMessage(
+	msg := message.LoadMessage(
 		hook.CheckTaskCompletion, hook.VariantNudge, nil, fallback,
 	)
 	if msg == "" {
@@ -77,7 +79,7 @@ func Run(cmd *cobra.Command, stdin *os.File) error {
 	ref := notify.NewTemplateRef(
 		hook.CheckTaskCompletion, hook.VariantNudge, nil,
 	)
-	core.Relay(
+	nudge2.Relay(
 		fmt.Sprintf(desc.Text(text.DescKeyRelayPrefixFormat),
 			hook.CheckTaskCompletion, nudgeMsg), input.SessionID, ref,
 	)

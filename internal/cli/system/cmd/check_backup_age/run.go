@@ -12,10 +12,12 @@ import (
 
 	archive2 "github.com/ActiveMemory/ctx/internal/cli/system/core/archive"
 	hook2 "github.com/ActiveMemory/ctx/internal/cli/system/core/check"
+	"github.com/ActiveMemory/ctx/internal/cli/system/core/message"
+	"github.com/ActiveMemory/ctx/internal/cli/system/core/nudge"
+	"github.com/ActiveMemory/ctx/internal/cli/system/core/state"
 	"github.com/spf13/cobra"
 
 	"github.com/ActiveMemory/ctx/internal/assets/read/desc"
-	"github.com/ActiveMemory/ctx/internal/cli/system/core"
 	"github.com/ActiveMemory/ctx/internal/config/archive"
 	"github.com/ActiveMemory/ctx/internal/config/embed/text"
 	"github.com/ActiveMemory/ctx/internal/config/env"
@@ -41,10 +43,10 @@ func Run(cmd *cobra.Command, stdin *os.File) error {
 		return nil
 	}
 
-	tmpDir := core.StateDir()
+	tmpDir := state.StateDir()
 	throttleFile := filepath.Join(tmpDir, archive.BackupThrottleID)
 
-	if core.DailyThrottled(throttleFile) {
+	if hook2.DailyThrottled(throttleFile) {
 		return nil
 	}
 
@@ -77,14 +79,14 @@ func Run(cmd *cobra.Command, stdin *os.File) error {
 	}
 
 	vars := map[string]any{archive.VarWarnings: warningText}
-	content := core.LoadMessage(
+	content := message.LoadMessage(
 		hook.CheckBackupAge, hook.VariantWarning, vars, warningText,
 	)
 	if content == "" {
 		return nil
 	}
 
-	core.EmitNudge(cmd, content,
+	nudge.EmitNudge(cmd, content,
 		desc.Text(text.DescKeyBackupRelayPrefix),
 		desc.Text(text.DescKeyBackupBoxTitle),
 		hook.CheckBackupAge, hook.VariantWarning,

@@ -13,11 +13,13 @@ import (
 
 	hook2 "github.com/ActiveMemory/ctx/internal/cli/system/core/check"
 	"github.com/ActiveMemory/ctx/internal/cli/system/core/drift"
+	"github.com/ActiveMemory/ctx/internal/cli/system/core/message"
+	"github.com/ActiveMemory/ctx/internal/cli/system/core/nudge"
 	coreSession "github.com/ActiveMemory/ctx/internal/cli/system/core/session"
+	"github.com/ActiveMemory/ctx/internal/cli/system/core/state"
 	"github.com/spf13/cobra"
 
 	"github.com/ActiveMemory/ctx/internal/assets/read/desc"
-	"github.com/ActiveMemory/ctx/internal/cli/system/core"
 	"github.com/ActiveMemory/ctx/internal/config/embed/text"
 	"github.com/ActiveMemory/ctx/internal/config/hook"
 	ctxContext "github.com/ActiveMemory/ctx/internal/context/resolve"
@@ -43,7 +45,7 @@ var (
 // Returns:
 //   - error: Always nil (hook errors are non-fatal)
 func Run(cmd *cobra.Command, stdin *os.File) error {
-	if !core.Initialized() {
+	if !state.Initialized() {
 		return nil
 	}
 	input, sessionID, paused := hook2.Preamble(stdin)
@@ -66,7 +68,7 @@ func Run(cmd *cobra.Command, stdin *os.File) error {
 	hookName, variant := hook.PostCommit, hook.VariantNudge
 
 	fallback := desc.Text(text.DescKeyPostCommitFallback)
-	msg := core.LoadMessage(hookName, variant, nil, fallback)
+	msg := message.LoadMessage(hookName, variant, nil, fallback)
 	if msg == "" {
 		return nil
 	}
@@ -74,7 +76,7 @@ func Run(cmd *cobra.Command, stdin *os.File) error {
 	writeHook.HookContext(cmd, coreSession.FormatContext(hook.EventPostToolUse, msg))
 
 	ref := notify.NewTemplateRef(hookName, variant, nil)
-	core.Relay(fmt.Sprintf(desc.Text(text.DescKeyRelayPrefixFormat), hookName, desc.Text(text.DescKeyPostCommitRelayMessage)), input.SessionID, ref)
+	nudge.Relay(fmt.Sprintf(desc.Text(text.DescKeyRelayPrefixFormat), hookName, desc.Text(text.DescKeyPostCommitRelayMessage)), input.SessionID, ref)
 
 	if driftResponse := drift.CheckVersionDrift(sessionID); driftResponse != "" {
 		writeHook.HookContext(cmd, driftResponse)

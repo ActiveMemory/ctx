@@ -12,15 +12,17 @@ import (
 	"path/filepath"
 	"strings"
 
+	"github.com/ActiveMemory/ctx/internal/cli/system/core/health"
 	"github.com/ActiveMemory/ctx/internal/cli/system/core/load"
+	"github.com/ActiveMemory/ctx/internal/cli/system/core/nudge"
 	coreSession "github.com/ActiveMemory/ctx/internal/cli/system/core/session"
+	"github.com/ActiveMemory/ctx/internal/cli/system/core/state"
 	"github.com/spf13/cobra"
 
 	"github.com/ActiveMemory/ctx/internal/entity"
 
 	"github.com/ActiveMemory/ctx/internal/assets/read/desc"
 	changeCore "github.com/ActiveMemory/ctx/internal/cli/change/core"
-	"github.com/ActiveMemory/ctx/internal/cli/system/core"
 	"github.com/ActiveMemory/ctx/internal/config/ctx"
 	"github.com/ActiveMemory/ctx/internal/config/embed/text"
 	"github.com/ActiveMemory/ctx/internal/config/hook"
@@ -47,7 +49,7 @@ import (
 // Returns:
 //   - error: Always nil (hook errors are non-fatal)
 func Run(cmd *cobra.Command, stdin *os.File) error {
-	if !core.Initialized() {
+	if !state.Initialized() {
 		return nil
 	}
 
@@ -56,11 +58,11 @@ func Run(cmd *cobra.Command, stdin *os.File) error {
 		return nil
 	}
 
-	if core.Paused(input.SessionID) > 0 {
+	if nudge.Paused(input.SessionID) > 0 {
 		return nil
 	}
 
-	tmpDir := core.StateDir()
+	tmpDir := state.StateDir()
 	marker := filepath.Join(tmpDir, load_gate.PrefixCtxLoaded+input.SessionID)
 
 	if _, statErr := os.Stat(marker); statErr == nil {
@@ -73,7 +75,7 @@ func Run(cmd *cobra.Command, stdin *os.File) error {
 
 	// Auto-prune stale session state files (best-effort, silent).
 	// Runs once per session at startup — fast directory scan.
-	core.AutoPrune(load_gate.AutoPruneStaleDays)
+	health.AutoPrune(load_gate.AutoPruneStaleDays)
 
 	dir := rc.ContextDir()
 	var content strings.Builder
@@ -157,7 +159,7 @@ func Run(cmd *cobra.Command, stdin *os.File) error {
 	webhookMsg := fmt.Sprintf(
 		desc.Text(text.DescKeyContextLoadGateWebhook),
 		filesLoaded, totalTokens)
-	core.Relay(webhookMsg, input.SessionID, nil)
+	nudge.Relay(webhookMsg, input.SessionID, nil)
 
 	// Oversize nudge: write the flag for check-context-size to pick up
 	load.WriteOversizeFlag(dir, totalTokens, perFile)

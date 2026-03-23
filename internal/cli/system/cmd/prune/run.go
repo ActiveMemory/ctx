@@ -11,12 +11,12 @@ import (
 	"path/filepath"
 	"time"
 
+	"github.com/ActiveMemory/ctx/internal/cli/system/core/health"
+	"github.com/ActiveMemory/ctx/internal/cli/system/core/state"
 	time2 "github.com/ActiveMemory/ctx/internal/config/time"
 	ctxerr "github.com/ActiveMemory/ctx/internal/err/state"
 	"github.com/ActiveMemory/ctx/internal/write/prune"
 	"github.com/spf13/cobra"
-
-	"github.com/ActiveMemory/ctx/internal/cli/system/core"
 )
 
 // Run executes the prune logic.
@@ -33,7 +33,7 @@ import (
 // Returns:
 //   - error: Non-nil on state directory read failure
 func Run(cmd *cobra.Command, days int, dryRun bool) error {
-	dir := core.StateDir()
+	dir := state.StateDir()
 
 	entries, readErr := os.ReadDir(dir)
 	if readErr != nil {
@@ -51,7 +51,7 @@ func Run(cmd *cobra.Command, days int, dryRun bool) error {
 		name := entry.Name()
 
 		// Only prune files with UUID session IDs
-		if !core.UUIDPattern.MatchString(name) {
+		if !health.UUIDPattern.MatchString(name) {
 			preserved++
 			continue
 		}
@@ -67,7 +67,7 @@ func Run(cmd *cobra.Command, days int, dryRun bool) error {
 		}
 
 		if dryRun {
-			prune.PruneDryRunLine(cmd, name, core.FormatAge(info.ModTime()))
+			prune.PruneDryRunLine(cmd, name, health.FormatAge(info.ModTime()))
 			pruned++
 			continue
 		}

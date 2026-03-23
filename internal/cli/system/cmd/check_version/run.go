@@ -12,11 +12,14 @@ import (
 	"path/filepath"
 
 	hook2 "github.com/ActiveMemory/ctx/internal/cli/system/core/check"
+	"github.com/ActiveMemory/ctx/internal/cli/system/core/message"
+	"github.com/ActiveMemory/ctx/internal/cli/system/core/nudge"
+	"github.com/ActiveMemory/ctx/internal/cli/system/core/state"
+	version2 "github.com/ActiveMemory/ctx/internal/cli/system/core/version"
 	"github.com/spf13/cobra"
 
 	"github.com/ActiveMemory/ctx/internal/assets/read/claude"
 	"github.com/ActiveMemory/ctx/internal/assets/read/desc"
-	"github.com/ActiveMemory/ctx/internal/cli/system/core"
 	"github.com/ActiveMemory/ctx/internal/config/embed/text"
 	"github.com/ActiveMemory/ctx/internal/config/hook"
 	"github.com/ActiveMemory/ctx/internal/config/version"
@@ -38,7 +41,7 @@ import (
 // Returns:
 //   - error: Always nil (hook errors are non-fatal)
 func Run(cmd *cobra.Command, stdin *os.File) error {
-	if !core.Initialized() {
+	if !state.Initialized() {
 		return nil
 	}
 
@@ -47,10 +50,10 @@ func Run(cmd *cobra.Command, stdin *os.File) error {
 		return nil
 	}
 
-	tmpDir := core.StateDir()
+	tmpDir := state.StateDir()
 	markerFile := filepath.Join(tmpDir, version.ThrottleID)
 
-	if core.DailyThrottled(markerFile) {
+	if hook2.DailyThrottled(markerFile) {
 		return nil
 	}
 
@@ -67,8 +70,8 @@ func Run(cmd *cobra.Command, stdin *os.File) error {
 		return nil // embedded plugin.json missing — nothing to compare
 	}
 
-	bMajor, bMinor, bOK := core.ParseMajorMinor(binaryVer)
-	pMajor, pMinor, pOK := core.ParseMajorMinor(pluginVer)
+	bMajor, bMinor, bOK := version2.ParseMajorMinor(binaryVer)
+	pMajor, pMinor, pOK := version2.ParseMajorMinor(pluginVer)
 
 	if !bOK || !pOK {
 		internalIo.TouchFile(markerFile)
@@ -84,7 +87,7 @@ func Run(cmd *cobra.Command, stdin *os.File) error {
 	fallback := fmt.Sprintf(desc.Text(
 		text.DescKeyCheckVersionFallback), binaryVer, pluginVer,
 	)
-	content := core.LoadMessage(hook.CheckVersion, hook.VariantMismatch,
+	content := message.LoadMessage(hook.CheckVersion, hook.VariantMismatch,
 		map[string]any{
 			version.VarBinaryVersion: binaryVer,
 			version.VarPluginVersion: pluginVer,
@@ -97,7 +100,7 @@ func Run(cmd *cobra.Command, stdin *os.File) error {
 	boxTitle := desc.Text(text.DescKeyCheckVersionBoxTitle)
 	relayPrefix := desc.Text(text.DescKeyCheckVersionRelayPrefix)
 
-	writeHook.Nudge(cmd, core.NudgeBox(relayPrefix, boxTitle, content))
+	writeHook.Nudge(cmd, message.NudgeBox(relayPrefix, boxTitle, content))
 
 	ref := notify.NewTemplateRef(hook.CheckVersion, hook.VariantMismatch,
 		map[string]any{
@@ -108,12 +111,12 @@ func Run(cmd *cobra.Command, stdin *os.File) error {
 		hook.CheckVersion, fmt.Sprintf(
 			desc.Text(text.DescKeyCheckVersionMismatchRelayFormat),
 			binaryVer, pluginVer))
-	core.NudgeAndRelay(versionMsg, input.SessionID, ref)
+	nudge.NudgeAndRelay(versionMsg, input.SessionID, ref)
 
 	internalIo.TouchFile(markerFile)
 
 	// Key age check: piggyback on the daily version check
-	writeHook.Nudge(cmd, core.CheckKeyAge(input.SessionID))
+	writeHook.Nudge(cmd, version2.CheckKeyAge(input.SessionID))
 
 	return nil
 }

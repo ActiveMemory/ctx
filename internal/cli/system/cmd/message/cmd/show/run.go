@@ -7,13 +7,13 @@
 package show
 
 import (
+	"github.com/ActiveMemory/ctx/internal/cli/system/core/message"
 	"github.com/spf13/cobra"
 
 	"github.com/ActiveMemory/ctx/internal/assets/hooks/messages"
 	hook "github.com/ActiveMemory/ctx/internal/assets/read/hook"
-	"github.com/ActiveMemory/ctx/internal/cli/system/core"
 	"github.com/ActiveMemory/ctx/internal/config/file"
-	ctxerr "github.com/ActiveMemory/ctx/internal/err/hook"
+	ctxErr "github.com/ActiveMemory/ctx/internal/err/hook"
 	"github.com/ActiveMemory/ctx/internal/io"
 	writeMessage "github.com/ActiveMemory/ctx/internal/write/message"
 )
@@ -30,24 +30,24 @@ import (
 func Run(cmd *cobra.Command, hk, variant string) error {
 	info := messages.Lookup(hk, variant)
 	if info == nil {
-		return core.ValidationError(hk, variant)
+		return ctxErr.Validate(messages.Variants(hk) != nil, hk, variant)
 	}
 
-	oPath := core.OverridePath(hk, variant)
+	oPath := message.OverridePath(hk, variant)
 	if data, readErr := io.SafeReadUserFile(oPath); readErr == nil {
 		writeMessage.SourceOverride(cmd, oPath)
-		writeMessage.TemplateVars(cmd, core.FormatTemplateVars(info))
+		writeMessage.TemplateVars(cmd, message.FormatTemplateVars(info))
 		writeMessage.ContentBlock(cmd, data)
 		return nil
 	}
 
 	data, readErr := hook.Message(hk, variant+file.ExtTxt)
 	if readErr != nil {
-		return ctxerr.EmbeddedTemplateNotFound(hk, variant)
+		return ctxErr.EmbeddedTemplateNotFound(hk, variant)
 	}
 
 	writeMessage.SourceDefault(cmd)
-	writeMessage.TemplateVars(cmd, core.FormatTemplateVars(info))
+	writeMessage.TemplateVars(cmd, message.FormatTemplateVars(info))
 	writeMessage.ContentBlock(cmd, data)
 	return nil
 }

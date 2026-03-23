@@ -12,8 +12,10 @@ import (
 	"path/filepath"
 
 	"github.com/ActiveMemory/ctx/internal/assets/read/desc"
-	"github.com/ActiveMemory/ctx/internal/cli/system/core"
+	"github.com/ActiveMemory/ctx/internal/cli/system/core/log"
+	"github.com/ActiveMemory/ctx/internal/cli/system/core/message"
 	hook2 "github.com/ActiveMemory/ctx/internal/cli/system/core/session"
+	"github.com/ActiveMemory/ctx/internal/cli/system/core/state"
 	"github.com/ActiveMemory/ctx/internal/config/embed/text"
 	"github.com/ActiveMemory/ctx/internal/config/hook"
 	"github.com/ActiveMemory/ctx/internal/config/stats"
@@ -37,9 +39,9 @@ import (
 //   - string: formatted nudge box, or empty string if silenced
 func EmitCheckpoint(logFile, sessionID string, count, tokens, pct, windowSize int) string {
 	fallback := desc.Text(text.DescKeyCheckContextSizeCheckpointFallback)
-	content := core.LoadMessage(hook.CheckContextSize, hook.VariantCheckpoint, nil, fallback)
+	content := message.LoadMessage(hook.CheckContextSize, hook.VariantCheckpoint, nil, fallback)
 	if content == "" {
-		core.LogMessage(logFile, sessionID, fmt.Sprintf(desc.Text(text.DescKeyCheckContextSizeSilencedCheckpointLog), count))
+		log.LogMessage(logFile, sessionID, fmt.Sprintf(desc.Text(text.DescKeyCheckContextSizeSilencedCheckpointLog), count))
 		return ""
 	}
 	// Append optional token usage and oversize nudge to content
@@ -49,16 +51,16 @@ func EmitCheckpoint(logFile, sessionID string, count, tokens, pct, windowSize in
 	if extra := oversizeNudgeContent(); extra != "" {
 		content += token.NewlineLF + extra
 	}
-	box := core.NudgeBox(
+	box := message.NudgeBox(
 		desc.Text(text.DescKeyCheckContextSizeRelayPrefix),
 		fmt.Sprintf(desc.Text(text.DescKeyCheckContextSizeCheckpointBoxTitle), count),
 		content)
-	core.LogMessage(logFile, sessionID, fmt.Sprintf(desc.Text(text.DescKeyCheckContextSizeCheckpointLogFormat), count, tokens, pct))
+	log.LogMessage(logFile, sessionID, fmt.Sprintf(desc.Text(text.DescKeyCheckContextSizeCheckpointLogFormat), count, tokens, pct))
 	ref := notify.NewTemplateRef(hook.CheckContextSize, hook.VariantCheckpoint, nil)
 	checkpointMsg := fmt.Sprintf(desc.Text(text.DescKeyRelayPrefixFormat),
 		hook.CheckContextSize,
 		fmt.Sprintf(desc.Text(text.DescKeyCheckContextSizeCheckpointRelayFormat), count))
-	core.NudgeAndRelay(checkpointMsg, sessionID, ref)
+	NudgeAndRelay(checkpointMsg, sessionID, ref)
 	return box
 }
 
@@ -78,13 +80,13 @@ func EmitWindowWarning(logFile, sessionID string, count, tokens, pct int) string
 		desc.Text(text.DescKeyCheckContextSizeWindowFallback),
 		pct, hook2.FormatTokenCount(tokens),
 	)
-	content := core.LoadMessage(hook.CheckContextSize, hook.VariantWindow,
+	content := message.LoadMessage(hook.CheckContextSize, hook.VariantWindow,
 		map[string]any{
 			stats.VarPercentage: pct,
 			stats.VarTokenCount: hook2.FormatTokenCount(tokens),
 		}, fallback)
 	if content == "" {
-		core.LogMessage(
+		log.LogMessage(
 			logFile, sessionID,
 			fmt.Sprintf(desc.Text(text.DescKeyCheckContextSizeSilencedWindowLog),
 				count, pct,
@@ -92,11 +94,11 @@ func EmitWindowWarning(logFile, sessionID string, count, tokens, pct int) string
 		)
 		return ""
 	}
-	box := core.NudgeBox(
+	box := message.NudgeBox(
 		desc.Text(text.DescKeyCheckContextSizeRelayPrefix),
 		desc.Text(text.DescKeyCheckContextSizeWindowBoxTitle),
 		content)
-	core.LogMessage(
+	log.LogMessage(
 		logFile, sessionID,
 		fmt.Sprintf(desc.Text(text.DescKeyCheckContextSizeWindowLogFormat),
 			count, tokens, pct,
@@ -111,7 +113,7 @@ func EmitWindowWarning(logFile, sessionID string, count, tokens, pct int) string
 	windowMsg := fmt.Sprintf(desc.Text(text.DescKeyRelayPrefixFormat),
 		hook.CheckContextSize,
 		fmt.Sprintf(desc.Text(text.DescKeyCheckContextSizeWindowRelayFormat), pct))
-	core.NudgeAndRelay(windowMsg, sessionID, ref)
+	NudgeAndRelay(windowMsg, sessionID, ref)
 	return box
 }
 
@@ -130,7 +132,7 @@ func EmitWindowWarning(logFile, sessionID string, count, tokens, pct int) string
 func EmitBillingWarning(logFile, sessionID string, count, tokens, threshold int) string {
 	// One-shot guard: skip if already warned this session.
 	warnedFile := filepath.Join(
-		core.StateDir(), stats.ContextSizeBillingWarnedPrefix+sessionID,
+		state.StateDir(), stats.ContextSizeBillingWarnedPrefix+sessionID,
 	)
 	if _, statErr := os.Stat(warnedFile); statErr == nil {
 		return "" // already fired
@@ -138,13 +140,13 @@ func EmitBillingWarning(logFile, sessionID string, count, tokens, threshold int)
 
 	fallback := fmt.Sprintf(desc.Text(text.DescKeyCheckContextSizeBillingFallback),
 		hook2.FormatTokenCount(tokens), hook2.FormatTokenCount(threshold))
-	content := core.LoadMessage(hook.CheckContextSize, hook.VariantBilling,
+	content := message.LoadMessage(hook.CheckContextSize, hook.VariantBilling,
 		map[string]any{
 			stats.VarTokenCount: hook2.FormatTokenCount(tokens),
 			stats.VarThreshold:  hook2.FormatTokenCount(threshold),
 		}, fallback)
 	if content == "" {
-		core.LogMessage(
+		log.LogMessage(
 			logFile, sessionID,
 			fmt.Sprintf(
 				desc.Text(text.DescKeyCheckContextSizeSilencedBillingLog),
@@ -155,13 +157,13 @@ func EmitBillingWarning(logFile, sessionID string, count, tokens, threshold int)
 		return ""
 	}
 
-	box := core.NudgeBox(
+	box := message.NudgeBox(
 		desc.Text(text.DescKeyCheckContextSizeBillingRelayPrefix),
 		desc.Text(text.DescKeyCheckContextSizeBillingBoxTitle),
 		content)
 
 	io.TouchFile(warnedFile) // one-shot: mark as fired
-	core.LogMessage(
+	log.LogMessage(
 		logFile, sessionID, fmt.Sprintf(
 			desc.Text(text.DescKeyCheckContextSizeBillingLogFormat),
 			count, tokens, threshold),
@@ -180,6 +182,6 @@ func EmitBillingWarning(logFile, sessionID string, count, tokens, threshold int)
 			hook2.FormatTokenCount(tokens), hook2.FormatTokenCount(threshold),
 		),
 	)
-	core.NudgeAndRelay(billingMsg, sessionID, ref)
+	NudgeAndRelay(billingMsg, sessionID, ref)
 	return box
 }

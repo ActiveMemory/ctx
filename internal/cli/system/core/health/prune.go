@@ -4,7 +4,7 @@
 //   \    Copyright 2026-present Context contributors.
 //                 SPDX-License-Identifier: Apache-2.0
 
-package core
+package health
 
 import (
 	"fmt"
@@ -14,6 +14,7 @@ import (
 	"time"
 
 	"github.com/ActiveMemory/ctx/internal/assets/read/desc"
+	"github.com/ActiveMemory/ctx/internal/cli/system/core/state"
 	"github.com/ActiveMemory/ctx/internal/config/embed/text"
 	time2 "github.com/ActiveMemory/ctx/internal/config/time"
 )
@@ -34,7 +35,7 @@ var UUIDPattern = regexp.MustCompile(
 // Returns:
 //   - int: Number of files pruned
 func AutoPrune(days int) int {
-	dir := StateDir()
+	dir := state.StateDir()
 
 	entries, readErr := os.ReadDir(dir)
 	if readErr != nil {

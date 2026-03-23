@@ -13,7 +13,7 @@ import (
 	"strconv"
 
 	"github.com/ActiveMemory/ctx/internal/assets/read/desc"
-	"github.com/ActiveMemory/ctx/internal/cli/system/core"
+	"github.com/ActiveMemory/ctx/internal/cli/system/core/message"
 	hook2 "github.com/ActiveMemory/ctx/internal/cli/system/core/session"
 	"github.com/ActiveMemory/ctx/internal/config/dir"
 	"github.com/ActiveMemory/ctx/internal/config/embed/text"
@@ -64,7 +64,7 @@ func oversizeNudgeContent() string {
 	fallback := fmt.Sprintf(
 		desc.Text(text.DescKeyCheckContextSizeOversizeFallback), tokenCount,
 	)
-	content := core.LoadMessage(hook.CheckContextSize, hook.VariantOversize,
+	content := message.LoadMessage(hook.CheckContextSize, hook.VariantOversize,
 		map[string]any{stats.VarTokenCount: tokenCount}, fallback)
 	if content == "" {
 		_ = os.Remove(flagPath) // silenced, still consume the flag

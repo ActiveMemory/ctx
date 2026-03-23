@@ -12,10 +12,13 @@ import (
 	"path/filepath"
 
 	hook2 "github.com/ActiveMemory/ctx/internal/cli/system/core/check"
+	journal2 "github.com/ActiveMemory/ctx/internal/cli/system/core/journal"
+	"github.com/ActiveMemory/ctx/internal/cli/system/core/message"
+	"github.com/ActiveMemory/ctx/internal/cli/system/core/nudge"
+	"github.com/ActiveMemory/ctx/internal/cli/system/core/state"
 	"github.com/spf13/cobra"
 
 	"github.com/ActiveMemory/ctx/internal/assets/read/desc"
-	"github.com/ActiveMemory/ctx/internal/cli/system/core"
 	"github.com/ActiveMemory/ctx/internal/config/embed/text"
 	"github.com/ActiveMemory/ctx/internal/config/env"
 	"github.com/ActiveMemory/ctx/internal/config/file"
@@ -40,7 +43,7 @@ import (
 // Returns:
 //   - error: Always nil (hook errors are non-fatal)
 func Run(cmd *cobra.Command, stdin *os.File) error {
-	if !core.Initialized() {
+	if !state.Initialized() {
 		return nil
 	}
 	input, _, paused := hook2.Preamble(stdin)
@@ -48,14 +51,14 @@ func Run(cmd *cobra.Command, stdin *os.File) error {
 		return nil
 	}
 
-	tmpDir := core.StateDir()
+	tmpDir := state.StateDir()
 	remindedFile := filepath.Join(tmpDir, journal.CheckJournalThrottleID)
 	claudeProjectsDir := filepath.Join(
 		os.Getenv(env.Home), journal.CheckJournalClaudeProjectsSubdir,
 	)
 
 	// Only remind once per day
-	if core.DailyThrottled(remindedFile) {
+	if hook2.DailyThrottled(remindedFile) {
 		return nil
 	}
 
@@ -69,13 +72,13 @@ func Run(cmd *cobra.Command, stdin *os.File) error {
 	}
 
 	// Stage 1: Unexported sessions
-	newestJournal := core.NewestMtime(jDir, file.ExtMarkdown)
-	unexported := core.CountNewerFiles(
+	newestJournal := journal2.NewestMtime(jDir, file.ExtMarkdown)
+	unexported := journal2.CountNewerFiles(
 		claudeProjectsDir, file.ExtJSONL, newestJournal,
 	)
 
 	// Stage 2: Unenriched entries
-	unenriched := core.CountUnenriched(jDir)
+	unenriched := journal2.CountUnenriched(jDir)
 
 	if unexported == 0 && unenriched == 0 {
 		return nil
@@ -105,7 +108,7 @@ func Run(cmd *cobra.Command, stdin *os.File) error {
 		)
 	}
 
-	content := core.LoadMessage(hook.CheckJournal, variant, vars, fallback)
+	content := message.LoadMessage(hook.CheckJournal, variant, vars, fallback)
 	if content == "" {
 		return nil
 	}
@@ -113,14 +116,14 @@ func Run(cmd *cobra.Command, stdin *os.File) error {
 	boxTitle := desc.Text(text.DescKeyCheckJournalBoxTitle)
 	relayPrefix := desc.Text(text.DescKeyCheckJournalRelayPrefix)
 
-	writeHook.Nudge(cmd, core.NudgeBox(relayPrefix, boxTitle, content))
+	writeHook.Nudge(cmd, message.NudgeBox(relayPrefix, boxTitle, content))
 
 	ref := notify.NewTemplateRef(hook.CheckJournal, variant, vars)
 	journalMsg := hook.CheckJournal + ": " + fmt.Sprintf(
 		desc.Text(text.DescKeyCheckJournalRelayFormat),
 		unexported, unenriched,
 	)
-	core.NudgeAndRelay(journalMsg, input.SessionID, ref)
+	nudge.NudgeAndRelay(journalMsg, input.SessionID, ref)
 
 	internalIo.TouchFile(remindedFile)
 	return nil

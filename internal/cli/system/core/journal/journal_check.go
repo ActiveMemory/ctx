@@ -4,7 +4,7 @@
 //   \    Copyright 2026-present Context contributors.
 //                 SPDX-License-Identifier: Apache-2.0
 
-package core
+package journal
 
 import (
 	"os"
@@ -15,11 +15,11 @@ import (
 )
 
 // NewestMtime returns the most recent mtime (as Unix timestamp) of files
-// with the given extension in the directory. Returns 0 if none found.
+// with the given extension in the directory. Returns 0 if none is found.
 //
 // Parameters:
 //   - dir: absolute path to the directory to scan
-//   - ext: file extension to match (e.g. file.ExtMarkdown)
+//   - ext: file extension to match (e.g., file.ExtMarkdown)
 //
 // Returns:
 //   - int64: Unix timestamp of the newest matching file, or 0

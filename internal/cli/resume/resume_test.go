@@ -13,7 +13,7 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/ActiveMemory/ctx/internal/cli/system/core"
+	"github.com/ActiveMemory/ctx/internal/cli/system/core/nudge"
 	"github.com/ActiveMemory/ctx/internal/config/dir"
 	"github.com/ActiveMemory/ctx/internal/rc"
 )
@@ -53,7 +53,7 @@ func TestCmd_PauseResume_Roundtrip(t *testing.T) {
 	sessionID := "test-roundtrip"
 
 	// Pause first — creates the marker file.
-	core.Pause(sessionID)
+	nudge.Pause(sessionID)
 
 	markerPath := filepath.Join(tmpDir, dir.State, "ctx-paused-"+sessionID)
 	if _, statErr := os.Stat(markerPath); statErr != nil {

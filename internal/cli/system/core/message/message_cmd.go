@@ -4,7 +4,7 @@
 //   \    Copyright 2026-present Context contributors.
 //                 SPDX-License-Identifier: Apache-2.0
 
-package core
+package message
 
 import (
 	"fmt"
@@ -12,32 +12,13 @@ import (
 	"path/filepath"
 	"strings"
 
+	"github.com/ActiveMemory/ctx/internal/assets/hooks/messages"
 	"github.com/ActiveMemory/ctx/internal/assets/read/desc"
 	"github.com/ActiveMemory/ctx/internal/config/dir"
 	"github.com/ActiveMemory/ctx/internal/config/embed/text"
 	"github.com/ActiveMemory/ctx/internal/config/file"
-	ctxerr "github.com/ActiveMemory/ctx/internal/err/hook"
-
-	"github.com/ActiveMemory/ctx/internal/assets/hooks/messages"
 	"github.com/ActiveMemory/ctx/internal/rc"
 )
-
-// ValidationError returns an error for an unknown hook/variant combination.
-// It distinguishes between an entirely unknown hook and an unknown variant
-// within a known hook.
-//
-// Parameters:
-//   - hook: the hook name to validate
-//   - variant: the variant name to validate
-//
-// Returns:
-//   - error: descriptive error with guidance to list available options
-func ValidationError(hook, variant string) error {
-	if messages.Variants(hook) == nil {
-		return ctxerr.Unknown(hook)
-	}
-	return ctxerr.UnknownVariant(variant, hook)
-}
 
 // FormatTemplateVars formats available template variables for a hook message.
 // If no variables are defined, returns a "(none)" indicator.

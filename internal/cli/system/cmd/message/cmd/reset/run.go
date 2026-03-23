@@ -10,11 +10,11 @@ import (
 	"os"
 	"path/filepath"
 
+	"github.com/ActiveMemory/ctx/internal/cli/system/core/message"
 	"github.com/spf13/cobra"
 
 	"github.com/ActiveMemory/ctx/internal/assets/hooks/messages"
-	"github.com/ActiveMemory/ctx/internal/cli/system/core"
-	ctxerr "github.com/ActiveMemory/ctx/internal/err/hook"
+	ctxErr "github.com/ActiveMemory/ctx/internal/err/hook"
 	writeMessage "github.com/ActiveMemory/ctx/internal/write/message"
 )
 
@@ -30,17 +30,17 @@ import (
 func Run(cmd *cobra.Command, hk, variant string) error {
 	info := messages.Lookup(hk, variant)
 	if info == nil {
-		return core.ValidationError(hk, variant)
+		return ctxErr.Validate(messages.Variants(hk) != nil, hk, variant)
 	}
 
-	oPath := core.OverridePath(hk, variant)
+	oPath := message.OverridePath(hk, variant)
 
 	if removeErr := os.Remove(oPath); removeErr != nil {
 		if os.IsNotExist(removeErr) {
 			writeMessage.NoOverride(cmd, hk, variant)
 			return nil
 		}
-		return ctxerr.RemoveOverride(oPath, removeErr)
+		return ctxErr.RemoveOverride(oPath, removeErr)
 	}
 
 	hookDir := filepath.Dir(oPath)

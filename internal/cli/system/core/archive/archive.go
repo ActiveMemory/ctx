@@ -15,7 +15,6 @@ import (
 	"path/filepath"
 
 	"github.com/ActiveMemory/ctx/internal/assets/read/desc"
-	"github.com/ActiveMemory/ctx/internal/cli/system/core"
 	"github.com/ActiveMemory/ctx/internal/config/embed/text"
 	"github.com/ActiveMemory/ctx/internal/entity"
 	errBackup "github.com/ActiveMemory/ctx/internal/err/backup"
@@ -38,7 +37,7 @@ import (
 //   - error: non-nil on archive creation or SMB failure
 func finalizeArchive(
 	w io.Writer, archivePath, archiveName, scope string,
-	entries []entity.ArchiveEntry, smb *core.SMBConfig,
+	entries []entity.ArchiveEntry, smb *SMBConfig,
 ) (entity.BackupResult, error) {
 	if archiveErr := CreateArchive(archivePath, entries, w); archiveErr != nil {
 		return entity.BackupResult{}, archiveErr
@@ -50,10 +49,10 @@ func finalizeArchive(
 	}
 
 	if smb != nil {
-		if mountErr := core.EnsureSMBMount(smb); mountErr != nil {
+		if mountErr := EnsureSMBMount(smb); mountErr != nil {
 			return result, mountErr
 		}
-		if copyErr := core.CopyToSMB(smb, archivePath); copyErr != nil {
+		if copyErr := CopyToSMB(smb, archivePath); copyErr != nil {
 			return result, copyErr
 		}
 		result.SMBDest = filepath.Join(smb.GVFSPath, smb.Subdir, archiveName)

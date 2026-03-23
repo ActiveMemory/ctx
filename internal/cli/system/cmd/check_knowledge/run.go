@@ -12,9 +12,9 @@ import (
 
 	"github.com/ActiveMemory/ctx/internal/cli/system/core/check"
 	knowledge2 "github.com/ActiveMemory/ctx/internal/cli/system/core/knowledge"
+	"github.com/ActiveMemory/ctx/internal/cli/system/core/state"
 	"github.com/spf13/cobra"
 
-	"github.com/ActiveMemory/ctx/internal/cli/system/core"
 	"github.com/ActiveMemory/ctx/internal/config/knowledge"
 	internalIo "github.com/ActiveMemory/ctx/internal/io"
 	writeHook "github.com/ActiveMemory/ctx/internal/write/hook"
@@ -34,7 +34,7 @@ import (
 // Returns:
 //   - error: Always nil (hook errors are non-fatal)
 func Run(cmd *cobra.Command, stdin *os.File) error {
-	if !core.Initialized() {
+	if !state.Initialized() {
 		return nil
 	}
 
@@ -43,8 +43,8 @@ func Run(cmd *cobra.Command, stdin *os.File) error {
 		return nil
 	}
 
-	markerPath := filepath.Join(core.StateDir(), knowledge.KnowledgeThrottleID)
-	if core.DailyThrottled(markerPath) {
+	markerPath := filepath.Join(state.StateDir(), knowledge.KnowledgeThrottleID)
+	if check.DailyThrottled(markerPath) {
 		return nil
 	}
 

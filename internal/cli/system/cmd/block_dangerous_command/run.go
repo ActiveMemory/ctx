@@ -11,11 +11,12 @@ import (
 	"fmt"
 	"os"
 
+	"github.com/ActiveMemory/ctx/internal/cli/system/core/message"
+	"github.com/ActiveMemory/ctx/internal/cli/system/core/nudge"
 	coreSession "github.com/ActiveMemory/ctx/internal/cli/system/core/session"
 	"github.com/spf13/cobra"
 
 	"github.com/ActiveMemory/ctx/internal/assets/read/desc"
-	"github.com/ActiveMemory/ctx/internal/cli/system/core"
 	"github.com/ActiveMemory/ctx/internal/config/embed/text"
 	"github.com/ActiveMemory/ctx/internal/config/hook"
 	"github.com/ActiveMemory/ctx/internal/config/regex"
@@ -67,7 +68,7 @@ func Run(cmd *cobra.Command, stdin *os.File) error {
 
 	var reason string
 	if variant != "" {
-		reason = core.LoadMessage(
+		reason = message.LoadMessage(
 			hook.BlockDangerousCommands, variant, nil, fallback,
 		)
 	}
@@ -80,7 +81,7 @@ func Run(cmd *cobra.Command, stdin *os.File) error {
 		data, _ := json.Marshal(resp)
 		writeHook.BlockResponse(cmd, string(data))
 		ref := notify.NewTemplateRef(hook.BlockDangerousCommands, variant, nil)
-		core.Relay(fmt.Sprintf(
+		nudge.Relay(fmt.Sprintf(
 			desc.Text(text.DescKeyRelayPrefixFormat),
 			hook.BlockDangerousCommands,
 			reason,

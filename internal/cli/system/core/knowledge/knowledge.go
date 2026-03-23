@@ -12,7 +12,8 @@ import (
 	"strings"
 
 	"github.com/ActiveMemory/ctx/internal/assets/read/desc"
-	"github.com/ActiveMemory/ctx/internal/cli/system/core"
+	"github.com/ActiveMemory/ctx/internal/cli/system/core/message"
+	"github.com/ActiveMemory/ctx/internal/cli/system/core/nudge"
 	"github.com/ActiveMemory/ctx/internal/config/ctx"
 	"github.com/ActiveMemory/ctx/internal/config/embed/text"
 	"github.com/ActiveMemory/ctx/internal/config/hook"
@@ -117,13 +118,13 @@ func FormatKnowledgeWarnings(findings []Finding) string {
 //   - string: formatted nudge box, or empty string if silenced
 func EmitKnowledgeWarning(sessionID, fileWarnings string) string {
 	fallback := fileWarnings + token.NewlineLF + desc.Text(text.DescKeyCheckKnowledgeFallback)
-	content := core.LoadMessage(hook.CheckKnowledge, hook.VariantWarning,
+	content := message.LoadMessage(hook.CheckKnowledge, hook.VariantWarning,
 		map[string]any{knowledge.VarFileWarnings: fileWarnings}, fallback)
 	if content == "" {
 		return ""
 	}
 
-	box := core.NudgeBox(
+	box := message.NudgeBox(
 		desc.Text(text.DescKeyCheckKnowledgeRelayPrefix),
 		desc.Text(text.DescKeyCheckKnowledgeBoxTitle),
 		content)
@@ -132,7 +133,7 @@ func EmitKnowledgeWarning(sessionID, fileWarnings string) string {
 		map[string]any{knowledge.VarFileWarnings: fileWarnings})
 	notifyMsg := fmt.Sprintf(desc.Text(text.DescKeyRelayPrefixFormat),
 		hook.CheckKnowledge, desc.Text(text.DescKeyCheckKnowledgeRelayMessage))
-	core.NudgeAndRelay(notifyMsg, sessionID, ref)
+	nudge.NudgeAndRelay(notifyMsg, sessionID, ref)
 	return box
 }
 

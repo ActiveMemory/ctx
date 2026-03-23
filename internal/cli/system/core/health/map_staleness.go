@@ -13,7 +13,8 @@ import (
 	"strings"
 
 	"github.com/ActiveMemory/ctx/internal/assets/read/desc"
-	"github.com/ActiveMemory/ctx/internal/cli/system/core"
+	"github.com/ActiveMemory/ctx/internal/cli/system/core/message"
+	"github.com/ActiveMemory/ctx/internal/cli/system/core/nudge"
 	"github.com/ActiveMemory/ctx/internal/config/architecture"
 	"github.com/ActiveMemory/ctx/internal/config/embed/text"
 	"github.com/ActiveMemory/ctx/internal/config/hook"
@@ -82,7 +83,7 @@ func CountModuleCommits(since string) int {
 //   - string: formatted nudge box, or empty string if silenced
 func EmitMapStalenessWarning(sessionID, dateStr string, moduleCommits int) string {
 	fallback := fmt.Sprintf(desc.Text(text.DescKeyCheckMapStalenessFallback), dateStr, moduleCommits)
-	content := core.LoadMessage(hook.CheckMapStaleness, hook.VariantStale,
+	content := message.LoadMessage(hook.CheckMapStaleness, hook.VariantStale,
 		map[string]any{
 			architecture.VarLastRefreshDate: dateStr,
 			architecture.VarModuleCount:     moduleCommits,
@@ -91,7 +92,7 @@ func EmitMapStalenessWarning(sessionID, dateStr string, moduleCommits int) strin
 		return ""
 	}
 
-	box := core.NudgeBox(
+	box := message.NudgeBox(
 		desc.Text(text.DescKeyCheckMapStalenessRelayPrefix),
 		desc.Text(text.DescKeyCheckMapStalenessBoxTitle),
 		content)
@@ -100,6 +101,6 @@ func EmitMapStalenessWarning(sessionID, dateStr string, moduleCommits int) strin
 		map[string]any{architecture.VarLastRefreshDate: dateStr, architecture.VarModuleCount: moduleCommits})
 	notifyMsg := fmt.Sprintf(desc.Text(text.DescKeyRelayPrefixFormat),
 		hook.CheckMapStaleness, desc.Text(text.DescKeyCheckMapStalenessRelayMessage))
-	core.NudgeAndRelay(notifyMsg, sessionID, ref)
+	nudge.NudgeAndRelay(notifyMsg, sessionID, ref)
 	return box
 }

@@ -99,3 +99,21 @@ func UnknownVariant(variant, hook string) error {
 		desc.Text(text.DescKeyErrHookUnknownVariant), variant, hook,
 	)
 }
+
+// Validate returns an error for an unknown hook/variant combination.
+// It distinguishes between an entirely unknown hook and an unknown
+// variant within a known hook.
+//
+// Parameters:
+//   - hookExists: whether the hook name is recognized
+//   - hook: the hook name
+//   - variant: the variant name
+//
+// Returns:
+//   - error: descriptive error with guidance to list available options
+func Validate(hookExists bool, hook, variant string) error {
+	if !hookExists {
+		return Unknown(hook)
+	}
+	return UnknownVariant(variant, hook)
+}

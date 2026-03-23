@@ -15,7 +15,6 @@ import (
 	"github.com/ActiveMemory/ctx/internal/entity"
 	"github.com/spf13/cobra"
 
-	"github.com/ActiveMemory/ctx/internal/cli/system/core"
 	"github.com/ActiveMemory/ctx/internal/config/archive"
 	"github.com/ActiveMemory/ctx/internal/config/env"
 	cFlag "github.com/ActiveMemory/ctx/internal/config/flag"
@@ -52,10 +51,10 @@ func Run(cmd *cobra.Command) error {
 
 	smbURL := os.Getenv(env.BackupSMBURL)
 	smbSubdir := os.Getenv(env.BackupSMBSubdir)
-	var smb *core.SMBConfig
+	var smb *archive2.SMBConfig
 	if smbURL != "" {
 		var smbErr error
-		smb, smbErr = core.ParseSMBConfig(smbURL, smbSubdir)
+		smb, smbErr = archive2.ParseSMBConfig(smbURL, smbSubdir)
 		if smbErr != nil {
 			return errBackup.SMBConfig(smbErr)
 		}

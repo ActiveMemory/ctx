@@ -11,11 +11,13 @@ import (
 	"os"
 
 	hook2 "github.com/ActiveMemory/ctx/internal/cli/system/core/check"
+	"github.com/ActiveMemory/ctx/internal/cli/system/core/message"
+	"github.com/ActiveMemory/ctx/internal/cli/system/core/nudge"
 	coreSession "github.com/ActiveMemory/ctx/internal/cli/system/core/session"
+	"github.com/ActiveMemory/ctx/internal/cli/system/core/state"
 	"github.com/spf13/cobra"
 
 	"github.com/ActiveMemory/ctx/internal/assets/read/desc"
-	"github.com/ActiveMemory/ctx/internal/cli/system/core"
 	"github.com/ActiveMemory/ctx/internal/config/embed/text"
 	"github.com/ActiveMemory/ctx/internal/config/hook"
 	ctxContext "github.com/ActiveMemory/ctx/internal/context/resolve"
@@ -36,7 +38,7 @@ import (
 // Returns:
 //   - error: Always nil (hook errors are non-fatal)
 func Run(cmd *cobra.Command, stdin *os.File) error {
-	if !core.Initialized() {
+	if !state.Initialized() {
 		return nil
 	}
 	input, _, paused := hook2.Preamble(stdin)
@@ -44,7 +46,7 @@ func Run(cmd *cobra.Command, stdin *os.File) error {
 		return nil
 	}
 	fallback := desc.Text(text.DescKeySpecsNudgeFallback)
-	msg := core.LoadMessage(
+	msg := message.LoadMessage(
 		hook.SpecsNudge, hook.VariantNudge, nil, fallback,
 	)
 	if msg == "" {
@@ -54,7 +56,7 @@ func Run(cmd *cobra.Command, stdin *os.File) error {
 	writeHook.HookContext(cmd, coreSession.FormatContext(hook.EventPreToolUse, msg))
 	nudgeMsg := desc.Text(text.DescKeySpecsNudgeNudgeMessage)
 	ref := notify.NewTemplateRef(hook.SpecsNudge, hook.VariantNudge, nil)
-	core.Relay(
+	nudge.Relay(
 		fmt.Sprintf(
 			desc.Text(text.DescKeyRelayPrefixFormat),
 			hook.SpecsNudge, nudgeMsg,

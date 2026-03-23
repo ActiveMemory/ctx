@@ -13,7 +13,7 @@ import (
 	"path/filepath"
 	"time"
 
-	"github.com/ActiveMemory/ctx/internal/cli/system/core"
+	"github.com/ActiveMemory/ctx/internal/cli/system/core/state"
 	cfgSession "github.com/ActiveMemory/ctx/internal/config/session"
 )
 
@@ -173,7 +173,7 @@ func ReadSessionID(stdin *os.File) string {
 //   - sessionID: Session identifier
 //   - stats: Stats entry to write
 func WriteSessionStats(sessionID string, stats SessionStats) {
-	path := filepath.Join(core.StateDir(), "stats-"+sessionID+".jsonl")
+	path := filepath.Join(state.StateDir(), "stats-"+sessionID+".jsonl")
 	data, marshalErr := json.Marshal(stats)
 	if marshalErr != nil {
 		return

@@ -10,14 +10,14 @@ import (
 	"os"
 	"path/filepath"
 
+	"github.com/ActiveMemory/ctx/internal/cli/system/core/message"
 	"github.com/spf13/cobra"
 
 	"github.com/ActiveMemory/ctx/internal/assets/hooks/messages"
 	"github.com/ActiveMemory/ctx/internal/assets/read/hook"
-	"github.com/ActiveMemory/ctx/internal/cli/system/core"
 	"github.com/ActiveMemory/ctx/internal/config/file"
 	"github.com/ActiveMemory/ctx/internal/err/fs"
-	errHook "github.com/ActiveMemory/ctx/internal/err/hook"
+	ctxErr "github.com/ActiveMemory/ctx/internal/err/hook"
 	writeMessage "github.com/ActiveMemory/ctx/internal/write/message"
 )
 
@@ -34,13 +34,13 @@ import (
 func Run(cmd *cobra.Command, hk, variant string) error {
 	info := messages.Lookup(hk, variant)
 	if info == nil {
-		return core.ValidationError(hk, variant)
+		return ctxErr.Validate(messages.Variants(hk) != nil, hk, variant)
 	}
 
-	oPath := core.OverridePath(hk, variant)
+	oPath := message.OverridePath(hk, variant)
 
 	if _, statErr := os.Stat(oPath); statErr == nil {
-		return errHook.OverrideExists(oPath, hk, variant)
+		return ctxErr.OverrideExists(oPath, hk, variant)
 	}
 
 	if info.Category == messages.CategoryCtxSpecific {
@@ -49,7 +49,7 @@ func Run(cmd *cobra.Command, hk, variant string) error {
 
 	data, readErr := hook.Message(hk, variant+file.ExtTxt)
 	if readErr != nil {
-		return errHook.EmbeddedTemplateNotFound(hk, variant)
+		return ctxErr.EmbeddedTemplateNotFound(hk, variant)
 	}
 
 	dir := filepath.Dir(oPath)
@@ -58,12 +58,12 @@ func Run(cmd *cobra.Command, hk, variant string) error {
 	}
 
 	if writeErr := os.WriteFile(oPath, data, 0o600); writeErr != nil {
-		return errHook.WriteOverride(oPath, writeErr)
+		return ctxErr.WriteOverride(oPath, writeErr)
 	}
 
 	writeMessage.OverrideCreated(cmd, oPath)
 	writeMessage.EditHint(cmd)
-	writeMessage.TemplateVars(cmd, core.FormatTemplateVars(info))
+	writeMessage.TemplateVars(cmd, message.FormatTemplateVars(info))
 
 	return nil
 }

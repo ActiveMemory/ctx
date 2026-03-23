@@ -11,10 +11,12 @@ import (
 	"path/filepath"
 
 	hook2 "github.com/ActiveMemory/ctx/internal/cli/system/core/check"
+	"github.com/ActiveMemory/ctx/internal/cli/system/core/message"
+	"github.com/ActiveMemory/ctx/internal/cli/system/core/nudge"
+	"github.com/ActiveMemory/ctx/internal/cli/system/core/state"
 	"github.com/spf13/cobra"
 
 	"github.com/ActiveMemory/ctx/internal/assets/read/desc"
-	"github.com/ActiveMemory/ctx/internal/cli/system/core"
 	"github.com/ActiveMemory/ctx/internal/config/embed/text"
 	"github.com/ActiveMemory/ctx/internal/config/hook"
 	"github.com/ActiveMemory/ctx/internal/memory"
@@ -23,7 +25,7 @@ import (
 
 // Run executes the check-memory-drift hook logic.
 func Run(cmd *cobra.Command, stdin *os.File) error {
-	if !core.Initialized() {
+	if !state.Initialized() {
 		return nil
 	}
 
@@ -34,7 +36,7 @@ func Run(cmd *cobra.Command, stdin *os.File) error {
 
 	// Session tombstone: nudge once per session, per session ID
 	tombstone := filepath.Join(
-		core.StateDir(), hook.PrefixMemoryDriftThrottle+sessionID,
+		state.StateDir(), hook.PrefixMemoryDriftThrottle+sessionID,
 	)
 	if _, statErr := os.Stat(tombstone); statErr == nil {
 		return nil
@@ -54,14 +56,14 @@ func Run(cmd *cobra.Command, stdin *os.File) error {
 	}
 
 	fallback := desc.Text(text.DescKeyCheckMemoryDriftContent)
-	content := core.LoadMessage(
+	content := message.LoadMessage(
 		hook.CheckMemoryDrift, hook.VariantNudge, nil, fallback,
 	)
 	if content == "" {
 		return nil
 	}
 
-	core.EmitNudge(cmd, content,
+	nudge.EmitNudge(cmd, content,
 		desc.Text(text.DescKeyCheckMemoryDriftRelayPrefix),
 		desc.Text(text.DescKeyCheckMemoryDriftBoxTitle),
 		hook.CheckMemoryDrift, hook.VariantNudge,

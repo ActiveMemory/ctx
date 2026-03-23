@@ -4,13 +4,14 @@
 //   \    Copyright 2026-present Context contributors.
 //                 SPDX-License-Identifier: Apache-2.0
 
-package core
+package check
 
 import (
 	"os"
 	"path/filepath"
 	"time"
 
+	"github.com/ActiveMemory/ctx/internal/cli/system/core/state"
 	"github.com/ActiveMemory/ctx/internal/config/wrap"
 )
 
@@ -25,7 +26,7 @@ const WrappedUpExpiry = 2 * time.Hour
 // Returns:
 //   - bool: True if wrap-up marker is fresh
 func WrappedUpRecently() bool {
-	markerPath := filepath.Join(StateDir(), wrap.WrappedUpMarker)
+	markerPath := filepath.Join(state.StateDir(), wrap.WrappedUpMarker)
 
 	info, statErr := os.Stat(markerPath)
 	if statErr != nil {

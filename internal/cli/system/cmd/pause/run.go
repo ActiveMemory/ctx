@@ -9,9 +9,9 @@ package pause
 import (
 	"os"
 
+	"github.com/ActiveMemory/ctx/internal/cli/system/core/nudge"
 	"github.com/spf13/cobra"
 
-	"github.com/ActiveMemory/ctx/internal/cli/system/core"
 	"github.com/ActiveMemory/ctx/internal/cli/system/core/counter"
 	coreSession "github.com/ActiveMemory/ctx/internal/cli/system/core/session"
 	cFlag "github.com/ActiveMemory/ctx/internal/config/flag"
@@ -41,7 +41,7 @@ func Run(cmd *cobra.Command, stdin *os.File) error {
 		sessionID = session.IDUnknown
 	}
 
-	path := core.PauseMarkerPath(sessionID)
+	path := nudge.PauseMarkerPath(sessionID)
 	counter.Write(path, 0)
 	writePause.Confirmed(cmd, sessionID)
 	return nil

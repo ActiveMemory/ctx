@@ -13,7 +13,7 @@ import (
 	"strings"
 
 	"github.com/ActiveMemory/ctx/internal/assets/read/desc"
-	"github.com/ActiveMemory/ctx/internal/cli/system/core"
+	"github.com/ActiveMemory/ctx/internal/cli/system/core/message"
 	"github.com/ActiveMemory/ctx/internal/config/ceremony"
 	"github.com/ActiveMemory/ctx/internal/config/embed/text"
 	"github.com/ActiveMemory/ctx/internal/config/file"
@@ -118,13 +118,13 @@ func EmitCeremonyNudge(remember, wrapup bool) (msg, variant string) {
 	boxTitle := desc.Text(boxTitleKey)
 	fallback := desc.Text(fallbackKey)
 
-	content := core.LoadMessage(hook.CheckCeremonies, variant, nil, fallback)
+	content := message.LoadMessage(hook.CheckCeremonies, variant, nil, fallback)
 	if content == "" {
 		return "", variant
 	}
 
 	relayPrefix := desc.Text(text.DescKeyCeremonyRelayPrefix)
 
-	msg = core.NudgeBox(relayPrefix, boxTitle, content)
+	msg = message.NudgeBox(relayPrefix, boxTitle, content)
 	return msg, variant
 }

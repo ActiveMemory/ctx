@@ -4,7 +4,7 @@
 //   \    Copyright 2026-present Context contributors.
 //                 SPDX-License-Identifier: Apache-2.0
 
-package core
+package nudge
 
 import (
 	"fmt"
@@ -15,6 +15,7 @@ import (
 
 	"github.com/ActiveMemory/ctx/internal/assets/read/desc"
 	"github.com/ActiveMemory/ctx/internal/cli/system/core/counter"
+	"github.com/ActiveMemory/ctx/internal/cli/system/core/state"
 	"github.com/ActiveMemory/ctx/internal/config/embed/text"
 	"github.com/ActiveMemory/ctx/internal/io"
 )
@@ -27,7 +28,7 @@ import (
 // Returns:
 //   - string: Absolute path to the pause marker file
 func PauseMarkerPath(sessionID string) string {
-	return filepath.Join(StateDir(), "ctx-paused-"+sessionID)
+	return filepath.Join(state.StateDir(), "ctx-paused-"+sessionID)
 }
 
 // Paused checks if the session is paused. If paused, increments the

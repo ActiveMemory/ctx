@@ -9,7 +9,7 @@ package check
 import (
 	"os"
 
-	"github.com/ActiveMemory/ctx/internal/cli/system/core"
+	"github.com/ActiveMemory/ctx/internal/cli/system/core/nudge"
 	coreSession "github.com/ActiveMemory/ctx/internal/cli/system/core/session"
 	cfgSession "github.com/ActiveMemory/ctx/internal/config/session"
 )
@@ -32,6 +32,6 @@ func Preamble(stdin *os.File) (
 	if sessionID == "" {
 		sessionID = cfgSession.IDUnknown
 	}
-	paused = core.Paused(sessionID) > 0
+	paused = nudge.Paused(sessionID) > 0
 	return
 }

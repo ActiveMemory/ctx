@@ -9,10 +9,10 @@ package root
 import (
 	"os"
 
+	"github.com/ActiveMemory/ctx/internal/cli/system/core/nudge"
 	session2 "github.com/ActiveMemory/ctx/internal/cli/system/core/session"
 	"github.com/spf13/cobra"
 
-	"github.com/ActiveMemory/ctx/internal/cli/system/core"
 	"github.com/ActiveMemory/ctx/internal/write/session"
 )
 
@@ -28,7 +28,7 @@ func Run(cmd *cobra.Command, sessionID string) error {
 	if sessionID == "" {
 		sessionID = session2.ReadSessionID(os.Stdin)
 	}
-	core.Pause(sessionID)
+	nudge.Pause(sessionID)
 	session.SessionPaused(cmd, sessionID)
 	return nil
 }

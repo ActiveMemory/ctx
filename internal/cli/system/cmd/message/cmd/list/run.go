@@ -9,11 +9,11 @@ package list
 import (
 	"encoding/json"
 
+	"github.com/ActiveMemory/ctx/internal/cli/system/core/message"
 	"github.com/ActiveMemory/ctx/internal/entity"
 	"github.com/spf13/cobra"
 
 	"github.com/ActiveMemory/ctx/internal/assets/hooks/messages"
-	"github.com/ActiveMemory/ctx/internal/cli/system/core"
 	cFlag "github.com/ActiveMemory/ctx/internal/config/flag"
 	writeMessage "github.com/ActiveMemory/ctx/internal/write/message"
 )
@@ -36,7 +36,7 @@ func Run(cmd *cobra.Command) error {
 			Category:     info.Category,
 			Description:  info.Description,
 			TemplateVars: info.TemplateVars,
-			HasOverride:  core.HasOverride(info.Hook, info.Variant),
+			HasOverride:  message.HasOverride(info.Hook, info.Variant),
 		}
 		if entry.TemplateVars == nil {
 			entry.TemplateVars = []string{}

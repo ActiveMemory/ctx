@@ -14,12 +14,13 @@ import (
 	hook2 "github.com/ActiveMemory/ctx/internal/cli/system/core/check"
 	"github.com/ActiveMemory/ctx/internal/cli/system/core/counter"
 	heartbeat2 "github.com/ActiveMemory/ctx/internal/cli/system/core/heartbeat"
+	log2 "github.com/ActiveMemory/ctx/internal/cli/system/core/log"
 	"github.com/ActiveMemory/ctx/internal/cli/system/core/session"
+	"github.com/ActiveMemory/ctx/internal/cli/system/core/state"
 	"github.com/ActiveMemory/ctx/internal/cli/system/core/time"
 	"github.com/spf13/cobra"
 
 	"github.com/ActiveMemory/ctx/internal/assets/read/desc"
-	"github.com/ActiveMemory/ctx/internal/cli/system/core"
 	"github.com/ActiveMemory/ctx/internal/config/dir"
 	"github.com/ActiveMemory/ctx/internal/config/embed/text"
 	"github.com/ActiveMemory/ctx/internal/config/heartbeat"
@@ -44,7 +45,7 @@ import (
 // Returns:
 //   - error: Always nil (hook errors are non-fatal)
 func Run(_ *cobra.Command, stdin *os.File) error {
-	if !core.Initialized() {
+	if !state.Initialized() {
 		return nil
 	}
 	_, sessionID, paused := hook2.Preamble(stdin)
@@ -52,7 +53,7 @@ func Run(_ *cobra.Command, stdin *os.File) error {
 		return nil
 	}
 
-	tmpDir := core.StateDir()
+	tmpDir := state.StateDir()
 	counterFile := filepath.Join(
 		tmpDir, heartbeat.HeartbeatCounterPrefix+sessionID,
 	)
@@ -112,7 +113,7 @@ func Run(_ *cobra.Command, stdin *os.File) error {
 		logLine = fmt.Sprintf(desc.Text(text.DescKeyHeartbeatLogPlain),
 			count, contextModified)
 	}
-	core.LogMessage(logFile, sessionID, logLine)
+	log2.LogMessage(logFile, sessionID, logLine)
 
 	// No stdout — agent never sees this hook.
 	return nil

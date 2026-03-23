@@ -11,10 +11,11 @@ import (
 	"os"
 
 	hook2 "github.com/ActiveMemory/ctx/internal/cli/system/core/check"
+	"github.com/ActiveMemory/ctx/internal/cli/system/core/message"
 	"github.com/spf13/cobra"
 
 	"github.com/ActiveMemory/ctx/internal/assets/read/desc"
-	"github.com/ActiveMemory/ctx/internal/cli/system/core"
+	"github.com/ActiveMemory/ctx/internal/cli/system/core/nudge"
 	"github.com/ActiveMemory/ctx/internal/config/embed/text"
 	"github.com/ActiveMemory/ctx/internal/config/hook"
 	"github.com/ActiveMemory/ctx/internal/config/stats"
@@ -66,14 +67,14 @@ func Run(cmd *cobra.Command, stdin *os.File) error {
 		desc.Text(
 			text.DescKeyCheckResourcesFallbackEnd)
 	vars := map[string]any{stats.VarAlertMessages: alertMessages}
-	content := core.LoadMessage(
+	content := message.LoadMessage(
 		hook.CheckResources, hook.VariantAlert, vars, fallback,
 	)
 	if content == "" {
 		return nil
 	}
 
-	writeHook.Nudge(cmd, core.NudgeBox(
+	writeHook.Nudge(cmd, message.NudgeBox(
 		desc.Text(text.DescKeyCheckResourcesRelayPrefix),
 		desc.Text(text.DescKeyCheckResourcesBoxTitle),
 		content))
@@ -81,7 +82,7 @@ func Run(cmd *cobra.Command, stdin *os.File) error {
 	ref := notify.NewTemplateRef(
 		hook.CheckResources, hook.VariantAlert, vars,
 	)
-	core.NudgeAndRelay(fmt.Sprintf(desc.Text(text.DescKeyRelayPrefixFormat),
+	nudge.NudgeAndRelay(fmt.Sprintf(desc.Text(text.DescKeyRelayPrefixFormat),
 		hook.CheckResources, desc.Text(text.DescKeyCheckResourcesRelayMessage)),
 		input.SessionID, ref,
 	)

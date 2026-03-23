@@ -4,9 +4,10 @@
 //   \    Copyright 2026-present Context contributors.
 //                 SPDX-License-Identifier: Apache-2.0
 
-package core
+package nudge
 
 import (
+	"github.com/ActiveMemory/ctx/internal/cli/system/core/message"
 	"github.com/spf13/cobra"
 
 	"github.com/ActiveMemory/ctx/internal/config/hook"
@@ -63,7 +64,7 @@ func EmitNudge(
 	vars map[string]any,
 	markerPath string,
 ) {
-	writeHook.Nudge(cmd, NudgeBox(relayPrefix, boxTitle, content))
+	writeHook.Nudge(cmd, message.NudgeBox(relayPrefix, boxTitle, content))
 	ref := notify.NewTemplateRef(hookName, variant, vars)
 	NudgeAndRelay(hookName+": "+relayMessage, sessionID, ref)
 	if markerPath != "" {

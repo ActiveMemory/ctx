@@ -12,11 +12,13 @@ import (
 	"time"
 
 	hook2 "github.com/ActiveMemory/ctx/internal/cli/system/core/check"
+	"github.com/ActiveMemory/ctx/internal/cli/system/core/message"
+	"github.com/ActiveMemory/ctx/internal/cli/system/core/nudge"
+	"github.com/ActiveMemory/ctx/internal/cli/system/core/state"
 	"github.com/spf13/cobra"
 
 	"github.com/ActiveMemory/ctx/internal/assets/read/desc"
 	remindCore "github.com/ActiveMemory/ctx/internal/cli/remind/core"
-	"github.com/ActiveMemory/ctx/internal/cli/system/core"
 	"github.com/ActiveMemory/ctx/internal/config/embed/text"
 	"github.com/ActiveMemory/ctx/internal/config/hook"
 	"github.com/ActiveMemory/ctx/internal/config/reminder"
@@ -39,7 +41,7 @@ import (
 // Returns:
 //   - error: Always nil (hook errors are non-fatal)
 func Run(cmd *cobra.Command, stdin *os.File) error {
-	if !core.Initialized() {
+	if !state.Initialized() {
 		return nil
 	}
 
@@ -79,14 +81,14 @@ func Run(cmd *cobra.Command, stdin *os.File) error {
 		desc.Text(text.DescKeyCheckRemindersDismissHint) + token.NewlineLF +
 		desc.Text(text.DescKeyCheckRemindersDismissAllHint)
 	vars := map[string]any{reminder.VarReminderList: reminderList}
-	content := core.LoadMessage(
+	content := message.LoadMessage(
 		hook.CheckReminders, hook.VariantReminders, vars, fallback,
 	)
 	if content == "" {
 		return nil
 	}
 
-	writeHook.Nudge(cmd, core.NudgeBox(
+	writeHook.Nudge(cmd, message.NudgeBox(
 		desc.Text(text.DescKeyCheckRemindersRelayPrefix),
 		desc.Text(text.DescKeyCheckRemindersBoxTitle),
 		content))
@@ -97,7 +99,7 @@ func Run(cmd *cobra.Command, stdin *os.File) error {
 		hook.CheckReminders,
 		fmt.Sprintf(desc.Text(text.DescKeyCheckRemindersNudgeFormat), len(due)),
 	)
-	core.NudgeAndRelay(nudgeMsg, input.SessionID, ref)
+	nudge.NudgeAndRelay(nudgeMsg, input.SessionID, ref)
 
 	return nil
 }
