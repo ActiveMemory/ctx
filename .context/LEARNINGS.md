@@ -3,6 +3,8 @@
 <!-- INDEX:START -->
 | Date | Learning |
 |------|--------|
+| 2026-03-23 | Splitting core/ into subpackages reveals hidden structure |
+| 2026-03-23 | Higher-order callbacks in param structs are a code smell |
 | 2026-03-22 | Types in god-object files create circular dependencies |
 | 2026-03-20 | replace_all on short tokens like function names will also replace their definitions |
 | 2026-03-20 | Commit messages containing script paths trigger PreToolUse hooks |
@@ -86,6 +88,26 @@
 | 2026-02-19 | Feature can be code-complete but invisible to users |
 | 2026-01-28 | IDE is already the UI |
 <!-- INDEX:END -->
+
+---
+
+## [2026-03-23-003544] Splitting core/ into subpackages reveals hidden structure
+
+**Context**: init core/ was a flat bag of domain objects — splitting into backup/, claude/, entry/, merge/, plan/, plugin/, project/, prompt/, tpl/, validate/ exposed duplicated logic, misplaced types, and function-pointer smuggling that were invisible in the flat layout
+
+**Lesson**: Flat core/ packages hide coupling — circular dependency resolution during splits naturally groups related items, increases cohesion, and surfaces objects that don't belong
+
+**Application**: When a core/ package grows, split it into subpackages even if it creates temporary circular deps — resolving those deps is the design work that reveals the right structure
+
+---
+
+## [2026-03-23-003353] Higher-order callbacks in param structs are a code smell
+
+**Context**: MergeParams.UpdateFn and DeployParams.ListErr/ReadErr were function pointers where all callers passed thin wrappers varying only by a text key
+
+**Lesson**: If all callers pass thin wrappers around the same pattern (fmt.Errorf with different keys), the callback is just data in disguise
+
+**Application**: When a struct field is a function pointer, check if all callers vary only by a string key — if so, replace the callback with the key and let the consumer do the dispatch
 
 ---
 

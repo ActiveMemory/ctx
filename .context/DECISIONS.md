@@ -3,6 +3,7 @@
 <!-- INDEX:START -->
 | Date | Decision |
 |------|--------|
+| 2026-03-23 | Pure-data param structs in entity — replace function pointers with text keys |
 | 2026-03-22 | No runtime pluralization — use singular/plural text key pairs |
 | 2026-03-22 | Output functions belong in write/, never in core/ or cmd/ |
 | 2026-03-21 | Output functions belong in write/, logic and types in core/ |
@@ -60,6 +61,20 @@
 | 2026-02-26 | Security and permissions (consolidated) |
 | 2026-02-27 | Webhook and notification design (consolidated) |
 <!-- INDEX:END -->
+
+## [2026-03-23-003346] Pure-data param structs in entity — replace function pointers with text keys
+
+**Status**: Accepted
+
+**Context**: MergeParams had UpdateFn callback, DeployParams had ListErr/ReadErr function pointers — both smuggled side effects into data structs
+
+**Decision**: Pure-data param structs in entity — replace function pointers with text keys
+
+**Rationale**: Text keys are pure data, keep entity dependency-free, and the consuming function can do the dispatch itself
+
+**Consequence**: All cross-cutting param structs in entity must be function-pointer-free; I/O functions passed as direct parameters
+
+---
 
 ## [2026-03-22-084509] No runtime pluralization — use singular/plural text key pairs
 

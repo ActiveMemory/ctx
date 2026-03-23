@@ -11,14 +11,24 @@ import (
 	"os/exec"
 	"path/filepath"
 
+	"github.com/ActiveMemory/ctx/internal/cli/journal/core/collapse"
+	"github.com/ActiveMemory/ctx/internal/cli/journal/core/consolidate"
+	"github.com/ActiveMemory/ctx/internal/cli/journal/core/format"
+	"github.com/ActiveMemory/ctx/internal/cli/journal/core/generate"
+	"github.com/ActiveMemory/ctx/internal/cli/journal/core/normalize"
+	"github.com/ActiveMemory/ctx/internal/cli/journal/core/parse"
+	"github.com/ActiveMemory/ctx/internal/cli/journal/core/reduce"
+	"github.com/ActiveMemory/ctx/internal/cli/journal/core/section"
+	"github.com/ActiveMemory/ctx/internal/cli/journal/core/turn"
+	"github.com/ActiveMemory/ctx/internal/cli/journal/core/wrap"
 	"github.com/spf13/cobra"
 
 	readJournal "github.com/ActiveMemory/ctx/internal/assets/read/journal"
-	"github.com/ActiveMemory/ctx/internal/cli/journal/core"
 	"github.com/ActiveMemory/ctx/internal/config/dir"
 	"github.com/ActiveMemory/ctx/internal/config/file"
 	"github.com/ActiveMemory/ctx/internal/config/fs"
 	"github.com/ActiveMemory/ctx/internal/config/zensical"
+	"github.com/ActiveMemory/ctx/internal/entity"
 	errFs "github.com/ActiveMemory/ctx/internal/err/fs"
 	"github.com/ActiveMemory/ctx/internal/err/journal"
 	errSite "github.com/ActiveMemory/ctx/internal/err/site"
@@ -83,7 +93,7 @@ func runJournalSite(
 	}
 
 	// Scan journal files
-	entries, scanErr := core.ScanJournalEntries(journalDir)
+	entries, scanErr := parse.ScanJournalEntries(journalDir)
 	if scanErr != nil {
 		return journal.Scan(scanErr)
 	}
@@ -118,7 +128,7 @@ func runJournalSite(
 	readmePath := filepath.Join(output, file.Readme)
 	if writeErr := os.WriteFile(
 		readmePath,
-		[]byte(core.GenerateSiteReadme(journalDir)), fs.PermFile,
+		[]byte(generate.GenerateSiteReadme(journalDir)), fs.PermFile,
 	); writeErr != nil {
 		return errFs.FileWrite(readmePath, writeErr)
 	}
@@ -135,12 +145,12 @@ func runJournalSite(
 		}
 
 		// Normalize the source file for readability
-		normalized := core.CollapseToolOutputs(
-			core.SoftWrapContent(
-				core.MergeConsecutiveTurns(
-					core.ConsolidateToolRuns(
-						core.CleanToolOutputJSON(
-							core.StripSystemReminders(string(content)),
+		normalized := collapse.CollapseToolOutputs(
+			wrap.SoftWrapContent(
+				turn.MergeConsecutiveTurns(
+					consolidate.ConsolidateToolRuns(
+						reduce.CleanToolOutputJSON(
+							reduce.StripSystemReminders(string(content)),
 						),
 					),
 				),
@@ -156,11 +166,11 @@ func runJournalSite(
 
 		// Generate site copy with Markdown fixes
 		fv := jstate.FencesVerified(entry.Filename)
-		withLinks := core.InjectSourceLink(normalized, src)
+		withLinks := generate.InjectedSourceLink(normalized, src)
 		if entry.Summary != "" {
-			withLinks = core.InjectSummary(withLinks, entry.Summary)
+			withLinks = generate.InjectedSummary(withLinks, entry.Summary)
 		}
-		siteContent := core.NormalizeContent(withLinks, fv)
+		siteContent := normalize.NormalizeContent(withLinks, fv)
 		if writeErr := os.WriteFile(
 			dst, []byte(siteContent), fs.PermFile,
 		); writeErr != nil {
@@ -188,7 +198,7 @@ func runJournalSite(
 	}
 
 	// Generate index.md
-	indexContent := core.GenerateIndex(entries)
+	indexContent := generate.GenerateIndex(entries)
 	indexPath := filepath.Join(docsDir, file.Index)
 	if writeErr := os.WriteFile(
 		indexPath, []byte(indexContent), fs.PermFile,
@@ -197,20 +207,20 @@ func runJournalSite(
 	}
 
 	// Generate topic pages
-	var topicEntries []core.JournalEntry
+	var topicEntries []entity.JournalEntry
 	for _, e := range entries {
-		if e.Suggestive || core.ContinuesMultipart(e.Filename) || len(e.Topics) == 0 {
+		if e.Suggestive || section.ContinuesMultipart(e.Filename) || len(e.Topics) == 0 {
 			continue
 		}
 		topicEntries = append(topicEntries, e)
 	}
 
-	topics := core.BuildTopicIndex(topicEntries)
+	topics := section.BuildTopicIndex(topicEntries)
 
 	if len(topics) > 0 {
-		if writeErr := core.WriteSection(
+		if writeErr := section.WriteSection(
 			docsDir, dir.JournTopics,
-			core.GenerateTopicsIndex(topics),
+			section.GenerateTopicsIndex(topics),
 			func(dir string) {
 				for _, t := range topics {
 					if !t.Popular {
@@ -218,7 +228,7 @@ func runJournalSite(
 					}
 					pagePath := filepath.Join(dir, t.Name+file.ExtMarkdown)
 					if pageErr := os.WriteFile(
-						pagePath, []byte(core.GenerateTopicPage(t)),
+						pagePath, []byte(section.GenerateTopicPage(t)),
 						fs.PermFile,
 					); pageErr != nil {
 						err.WarnFile(cmd, pagePath, pageErr)
@@ -230,9 +240,9 @@ func runJournalSite(
 	}
 
 	// Generate key files pages
-	var keyFileEntries []core.JournalEntry
+	var keyFileEntries []entity.JournalEntry
 	for _, e := range entries {
-		if e.Suggestive || core.ContinuesMultipart(
+		if e.Suggestive || section.ContinuesMultipart(
 			e.Filename,
 		) || len(e.KeyFiles) == 0 {
 			continue
@@ -240,22 +250,22 @@ func runJournalSite(
 		keyFileEntries = append(keyFileEntries, e)
 	}
 
-	keyFiles := core.BuildKeyFileIndex(keyFileEntries)
+	keyFiles := section.BuildKeyFileIndex(keyFileEntries)
 
 	if len(keyFiles) > 0 {
-		if writeErr := core.WriteSection(
+		if writeErr := section.WriteSection(
 			docsDir, dir.JournalFiles,
-			core.GenerateKeyFilesIndex(keyFiles),
+			section.GenerateKeyFilesIndex(keyFiles),
 			func(dir string) {
 				for _, kf := range keyFiles {
 					if !kf.Popular {
 						continue
 					}
-					slug := core.KeyFileSlug(kf.Path)
+					slug := format.KeyFileSlug(kf.Path)
 					pagePath := filepath.Join(dir, slug+file.ExtMarkdown)
 					if pageErr := os.WriteFile(
 						pagePath, []byte(
-							core.GenerateKeyFilePage(kf)),
+							section.GenerateKeyFilePage(kf)),
 						fs.PermFile,
 					); pageErr != nil {
 						err.WarnFile(cmd, pagePath, pageErr)
@@ -267,27 +277,27 @@ func runJournalSite(
 	}
 
 	// Generate session type pages
-	var typeEntries []core.JournalEntry
+	var typeEntries []entity.JournalEntry
 	for _, e := range entries {
-		if e.Suggestive || core.ContinuesMultipart(e.Filename) || e.Type == "" {
+		if e.Suggestive || section.ContinuesMultipart(e.Filename) || e.Type == "" {
 			continue
 		}
 		typeEntries = append(typeEntries, e)
 	}
 
-	sessionTypes := core.BuildTypeIndex(typeEntries)
+	sessionTypes := section.BuildTypeIndex(typeEntries)
 
 	if len(sessionTypes) > 0 {
-		if writeErr := core.WriteSection(
+		if writeErr := section.WriteSection(
 			docsDir,
 			dir.JournalTypes,
-			core.GenerateTypesIndex(sessionTypes),
+			section.GenerateTypesIndex(sessionTypes),
 			func(dir string) {
 				for _, st := range sessionTypes {
 					pagePath := filepath.Join(dir, st.Name+file.ExtMarkdown)
 					if pageErr := os.WriteFile(
 						pagePath,
-						[]byte(core.GenerateTypePage(st)), fs.PermFile,
+						[]byte(section.GenerateTypePage(st)), fs.PermFile,
 					); pageErr != nil {
 						err.WarnFile(cmd, pagePath, pageErr)
 					}
@@ -298,7 +308,7 @@ func runJournalSite(
 	}
 
 	// Generate zensical.toml
-	tomlContent := core.GenerateZensicalToml(
+	tomlContent := generate.GenerateZensicalToml(
 		entries, topics, keyFiles, sessionTypes,
 	)
 	tomlPath := filepath.Join(output, zensical.Toml)
