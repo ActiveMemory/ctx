@@ -9,7 +9,7 @@ package root
 import (
 	"os"
 
-	"github.com/ActiveMemory/ctx/internal/cli/system/core/hook"
+	session2 "github.com/ActiveMemory/ctx/internal/cli/system/core/session"
 	"github.com/spf13/cobra"
 
 	"github.com/ActiveMemory/ctx/internal/cli/system/core"
@@ -26,7 +26,7 @@ import (
 //   - error: Always nil
 func Run(cmd *cobra.Command, sessionID string) error {
 	if sessionID == "" {
-		sessionID = hook.ReadSessionID(os.Stdin)
+		sessionID = session2.ReadSessionID(os.Stdin)
 	}
 	core.Resume(sessionID)
 	session.SessionResumed(cmd, sessionID)

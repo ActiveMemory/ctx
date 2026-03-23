@@ -9,13 +9,13 @@ package pause
 import (
 	"os"
 
-	"github.com/ActiveMemory/ctx/internal/cli/system/core/counter"
-	"github.com/ActiveMemory/ctx/internal/cli/system/core/hook"
-	cFlag "github.com/ActiveMemory/ctx/internal/config/flag"
-	"github.com/ActiveMemory/ctx/internal/config/session"
 	"github.com/spf13/cobra"
 
 	"github.com/ActiveMemory/ctx/internal/cli/system/core"
+	"github.com/ActiveMemory/ctx/internal/cli/system/core/counter"
+	coreSession "github.com/ActiveMemory/ctx/internal/cli/system/core/session"
+	cFlag "github.com/ActiveMemory/ctx/internal/config/flag"
+	"github.com/ActiveMemory/ctx/internal/config/session"
 	writePause "github.com/ActiveMemory/ctx/internal/write/pause"
 )
 
@@ -34,7 +34,7 @@ import (
 func Run(cmd *cobra.Command, stdin *os.File) error {
 	sessionID, _ := cmd.Flags().GetString(cFlag.SessionID)
 	if sessionID == "" {
-		input := hook.ReadInput(stdin)
+		input := coreSession.ReadInput(stdin)
 		sessionID = input.SessionID
 	}
 	if sessionID == "" {

@@ -4,7 +4,7 @@
 //   \    Copyright 2026-present Context contributors.
 //                 SPDX-License-Identifier: Apache-2.0
 
-package hook
+package stats
 
 import (
 	"encoding/json"
@@ -17,6 +17,8 @@ import (
 	"time"
 
 	"github.com/ActiveMemory/ctx/internal/assets/read/desc"
+	coreHook "github.com/ActiveMemory/ctx/internal/cli/system/core/hook"
+	"github.com/ActiveMemory/ctx/internal/cli/system/core/session"
 	"github.com/ActiveMemory/ctx/internal/config/embed/text"
 	"github.com/ActiveMemory/ctx/internal/config/file"
 	"github.com/ActiveMemory/ctx/internal/config/journal"
@@ -34,16 +36,16 @@ import (
 //   - sessionFilter: session ID prefix to filter by (empty for all)
 //
 // Returns:
-//   - []StatsEntry: sorted stats entries
+//   - []Entry: sorted stats entries
 //   - error: non-nil on glob failure
-func ReadStatsDir(dir, sessionFilter string) ([]StatsEntry, error) {
+func ReadStatsDir(dir, sessionFilter string) ([]Entry, error) {
 	pattern := filepath.Join(dir, stats.FilePrefix+"*"+file.ExtJSONL)
 	matches, globErr := filepath.Glob(pattern)
 	if globErr != nil {
 		return nil, ctxerr.StatsGlob(globErr)
 	}
 
-	var entries []StatsEntry
+	var entries []Entry
 	for _, path := range matches {
 		sid := ExtractStatsSessionID(filepath.Base(path))
 		if sessionFilter != "" && !strings.HasPrefix(sid, sessionFilter) {
@@ -88,24 +90,24 @@ func ExtractStatsSessionID(basename string) string {
 //   - sid: session ID for this file
 //
 // Returns:
-//   - []StatsEntry: parsed entries
+//   - []Entry: parsed entries
 //   - error: non-nil on read failure
-func ParseStatsFile(path, sid string) ([]StatsEntry, error) {
+func ParseStatsFile(path, sid string) ([]Entry, error) {
 	data, readErr := io2.SafeReadUserFile(path)
 	if readErr != nil {
 		return nil, readErr
 	}
 
-	var entries []StatsEntry
+	var entries []Entry
 	for _, line := range strings.Split(strings.TrimSpace(string(data)), token.NewlineLF) {
 		if line == "" {
 			continue
 		}
-		var s SessionStats
+		var s session.SessionStats
 		if jsonErr := json.Unmarshal([]byte(line), &s); jsonErr != nil {
 			continue
 		}
-		entries = append(entries, StatsEntry{SessionStats: s, Session: sid})
+		entries = append(entries, Entry{SessionStats: s, Session: sid})
 	}
 	return entries, nil
 }
@@ -119,7 +121,7 @@ func ParseStatsFile(path, sid string) ([]StatsEntry, error) {
 //
 // Returns:
 //   - []string: formatted output lines
-func FormatDumpStats(entries []StatsEntry, last int, jsonOut bool) []string {
+func FormatDumpStats(entries []Entry, last int, jsonOut bool) []string {
 	if len(entries) == 0 {
 		return []string{desc.Text(text.DescKeyStatsEmpty)}
 	}
@@ -148,7 +150,7 @@ func FormatDumpStats(entries []StatsEntry, last int, jsonOut bool) []string {
 //
 // Returns:
 //   - []string: JSON lines (marshal errors are silently skipped)
-func FormatStatsJSON(entries []StatsEntry) []string {
+func FormatStatsJSON(entries []Entry) []string {
 	var lines []string
 	for _, e := range entries {
 		line, marshalErr := json.Marshal(e)
@@ -185,13 +187,13 @@ func FormatStatsHeader() (string, string) {
 //
 // Returns:
 //   - string: formatted stats line
-func FormatStatsLine(e *StatsEntry) string {
+func FormatStatsLine(e *Entry) string {
 	ts := FormatStatsTimestamp(e.Timestamp)
 	sid := e.Session
 	if len(sid) > journal.SessionIDShortLen {
 		sid = sid[:journal.SessionIDShortLen]
 	}
-	tokens := FormatTokenCount(e.Tokens)
+	tokens := coreHook.FormatTokenCount(e.Tokens)
 	return fmt.Sprintf(desc.Text(text.DescKeyStatsLineFormat),
 		ts, sid, e.Prompt, tokens, e.Pct, e.Event)
 }
@@ -221,8 +223,8 @@ func FormatStatsTimestamp(ts string) string {
 //   - sid: session ID for this file
 //
 // Returns:
-//   - []StatsEntry: newly parsed entries
-func ReadNewLines(path string, offset int64, sid string) []StatsEntry {
+//   - []Entry: newly parsed entries
+func ReadNewLines(path string, offset int64, sid string) []Entry {
 	f, openErr := io2.SafeOpenUserFile(path)
 	if openErr != nil {
 		return nil
@@ -239,16 +241,16 @@ func ReadNewLines(path string, offset int64, sid string) []StatsEntry {
 		return nil
 	}
 
-	var entries []StatsEntry
+	var entries []Entry
 	for _, line := range strings.Split(strings.TrimSpace(string(buf[:n])), token.NewlineLF) {
 		if line == "" {
 			continue
 		}
-		var s SessionStats
+		var s session.SessionStats
 		if jsonErr := json.Unmarshal([]byte(line), &s); jsonErr != nil {
 			continue
 		}
-		entries = append(entries, StatsEntry{SessionStats: s, Session: sid})
+		entries = append(entries, Entry{SessionStats: s, Session: sid})
 	}
 	return entries
 }

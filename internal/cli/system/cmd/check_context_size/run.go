@@ -15,6 +15,7 @@ import (
 	"github.com/ActiveMemory/ctx/internal/cli/system/core/counter"
 	"github.com/ActiveMemory/ctx/internal/cli/system/core/hook"
 	"github.com/ActiveMemory/ctx/internal/cli/system/core/nudge"
+	session2 "github.com/ActiveMemory/ctx/internal/cli/system/core/session"
 	"github.com/spf13/cobra"
 
 	"github.com/ActiveMemory/ctx/internal/assets/read/desc"
@@ -45,7 +46,7 @@ func Run(cmd *cobra.Command, stdin *os.File) error {
 	if !core.Initialized() {
 		return nil
 	}
-	input := hook.ReadInput(stdin)
+	input := session2.ReadInput(stdin)
 	sessionID := input.SessionID
 	if sessionID == "" {
 		sessionID = session.IDUnknown
@@ -92,7 +93,7 @@ func Run(cmd *cobra.Command, stdin *os.File) error {
 			fmt.Sprintf(
 				desc.Text(text.DescKeyCheckContextSizeSuppressedLogFormat), count),
 		)
-		hook.WriteSessionStats(sessionID, hook.SessionStats{
+		session2.WriteSessionStats(sessionID, session2.SessionStats{
 			Timestamp:  time.Now().Format(time.RFC3339),
 			Prompt:     count,
 			Tokens:     tokens,
@@ -129,7 +130,7 @@ func Run(cmd *cobra.Command, stdin *os.File) error {
 		)
 	}
 
-	hook.WriteSessionStats(sessionID, hook.SessionStats{
+	session2.WriteSessionStats(sessionID, session2.SessionStats{
 		Timestamp:  time.Now().Format(time.RFC3339),
 		Prompt:     count,
 		Tokens:     tokens,

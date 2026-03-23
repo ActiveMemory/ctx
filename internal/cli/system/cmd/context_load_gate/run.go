@@ -13,6 +13,7 @@ import (
 	"strings"
 
 	hook2 "github.com/ActiveMemory/ctx/internal/cli/system/core/hook"
+	coreSession "github.com/ActiveMemory/ctx/internal/cli/system/core/session"
 	"github.com/spf13/cobra"
 
 	"github.com/ActiveMemory/ctx/internal/assets/read/desc"
@@ -48,7 +49,7 @@ func Run(cmd *cobra.Command, stdin *os.File) error {
 		return nil
 	}
 
-	input := hook2.ReadInput(stdin)
+	input := coreSession.ReadInput(stdin)
 	if input.SessionID == "" {
 		return nil
 	}

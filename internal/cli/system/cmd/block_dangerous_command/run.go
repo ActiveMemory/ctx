@@ -12,6 +12,7 @@ import (
 	"os"
 
 	hook2 "github.com/ActiveMemory/ctx/internal/cli/system/core/hook"
+	coreSession "github.com/ActiveMemory/ctx/internal/cli/system/core/session"
 	"github.com/spf13/cobra"
 
 	"github.com/ActiveMemory/ctx/internal/assets/read/desc"
@@ -36,7 +37,7 @@ import (
 // Returns:
 //   - error: Always nil (hook errors are non-fatal)
 func Run(cmd *cobra.Command, stdin *os.File) error {
-	input := hook2.ReadInput(stdin)
+	input := coreSession.ReadInput(stdin)
 	command := input.ToolInput.Command
 
 	if command == "" {
