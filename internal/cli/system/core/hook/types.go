@@ -32,19 +32,6 @@ type BlockResponse struct {
 	Reason   string `json:"reason"`
 }
 
-// HookInput represents the JSON payload that Claude Code sends to hook
-// commands via stdin.
-type HookInput struct {
-	SessionID string    `json:"session_id"`
-	ToolInput ToolInput `json:"tool_input"`
-}
-
-// ToolInput contains the tool-specific fields from a Claude Code hook
-// invocation. For Bash hooks, Command holds the shell command.
-type ToolInput struct {
-	Command string `json:"command"`
-}
-
 // HookResponse is the JSON output format for Claude Code hooks.
 // Using structured JSON ensures the agent processes the output as a directive
 // rather than treating it as ignorable plain text.
@@ -62,12 +49,6 @@ type HookSpecificOutput struct {
 type FileTokenEntry struct {
 	Name   string
 	Tokens int
-}
-
-// StatsEntry is a SessionStats with the source file for display.
-type StatsEntry struct {
-	SessionStats
-	Session string `json:"session"`
 }
 
 // SessionTokenInfo holds token usage and model information extracted from a

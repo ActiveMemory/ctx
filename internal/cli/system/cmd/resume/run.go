@@ -9,13 +9,13 @@ package resume
 import (
 	"os"
 
-	"github.com/ActiveMemory/ctx/internal/cli/system/core/hook"
-	session2 "github.com/ActiveMemory/ctx/internal/write/session"
 	"github.com/spf13/cobra"
 
 	"github.com/ActiveMemory/ctx/internal/cli/system/core"
+	coreSession "github.com/ActiveMemory/ctx/internal/cli/system/core/session"
 	cFlag "github.com/ActiveMemory/ctx/internal/config/flag"
 	"github.com/ActiveMemory/ctx/internal/config/session"
+	session2 "github.com/ActiveMemory/ctx/internal/write/session"
 )
 
 // Run executes the resume logic.
@@ -32,7 +32,7 @@ import (
 func Run(cmd *cobra.Command, stdin *os.File) error {
 	sessionID, _ := cmd.Flags().GetString(cFlag.SessionID)
 	if sessionID == "" {
-		input := hook.ReadInput(stdin)
+		input := coreSession.ReadInput(stdin)
 		sessionID = input.SessionID
 	}
 	if sessionID == "" {

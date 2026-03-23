@@ -9,7 +9,7 @@ package stats
 import (
 	"path/filepath"
 
-	"github.com/ActiveMemory/ctx/internal/cli/system/core/hook"
+	coreStats "github.com/ActiveMemory/ctx/internal/cli/system/core/stats"
 	"github.com/ActiveMemory/ctx/internal/config/dir"
 	"github.com/spf13/cobra"
 
@@ -35,18 +35,18 @@ func Run(cmd *cobra.Command) error {
 
 	dir := filepath.Join(rc.ContextDir(), dir.State)
 
-	entries, readErr := hook.ReadStatsDir(dir, session)
+	entries, readErr := coreStats.ReadStatsDir(dir, session)
 	if readErr != nil {
 		return readErr
 	}
 
 	if !follow {
-		writeStats.Table(cmd, hook.FormatDumpStats(entries, last, jsonOut))
+		writeStats.Table(cmd, coreStats.FormatDumpStats(entries, last, jsonOut))
 		return nil
 	}
 
 	// Dump existing entries first, then stream.
-	writeStats.Table(cmd, hook.FormatDumpStats(entries, last, jsonOut))
+	writeStats.Table(cmd, coreStats.FormatDumpStats(entries, last, jsonOut))
 
-	return hook.StreamStats(cmd.OutOrStdout(), dir, session, jsonOut)
+	return coreStats.StreamStats(cmd.OutOrStdout(), dir, session, jsonOut)
 }
