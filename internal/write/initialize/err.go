@@ -7,9 +7,10 @@
 package initialize
 
 import (
+	"github.com/spf13/cobra"
+
 	"github.com/ActiveMemory/ctx/internal/assets/read/desc"
 	"github.com/ActiveMemory/ctx/internal/config/embed/text"
-	"github.com/spf13/cobra"
 )
 
 // ErrCtxNotInPath prints a multi-line diagnostic to stderr explaining

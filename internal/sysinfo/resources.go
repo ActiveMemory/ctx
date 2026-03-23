@@ -26,18 +26,15 @@ func SeverityFor(alerts []ResourceAlert, resource string) Severity {
 
 // Collect gathers a resource snapshot.
 //
-// The path argument determines which filesystem is checked for disk usage
-// (typically the working directory).
-//
-// Parameters:
-//   - path: Filesystem path for disk usage check
+// Disk usage is checked for the filesystem containing the current working
+// directory.
 //
 // Returns:
 //   - Snapshot: Memory, disk, and load metrics
-func Collect(path string) Snapshot {
+func Collect() Snapshot {
 	return Snapshot{
 		Memory: collectMemory(),
-		Disk:   collectDisk(path),
+		Disk:   collectDisk(),
 		Load:   collectLoad(),
 	}
 }

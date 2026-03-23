@@ -7,7 +7,7 @@
 package feed
 
 import (
-	"github.com/ActiveMemory/ctx/internal/cli/site/core/generate"
+	"github.com/ActiveMemory/ctx/internal/cli/site/core/rss"
 	"github.com/ActiveMemory/ctx/internal/cli/site/core/scan"
 	"github.com/spf13/cobra"
 
@@ -30,7 +30,7 @@ func Run(cmd *cobra.Command, blogDir, outPath, baseURL string) error {
 		return scanErr
 	}
 
-	genErr := generate.GenerateAtom(posts, outPath, baseURL)
+	genErr := rss.Atom(posts, outPath, baseURL)
 	if genErr != nil {
 		return genErr
 	}

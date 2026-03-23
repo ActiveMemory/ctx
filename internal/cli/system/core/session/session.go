@@ -14,9 +14,14 @@ import (
 	"time"
 
 	"github.com/ActiveMemory/ctx/internal/cli/system/core/state"
+	"github.com/ActiveMemory/ctx/internal/config/file"
 	"github.com/ActiveMemory/ctx/internal/config/fs"
+	"github.com/ActiveMemory/ctx/internal/config/hook"
 	cfgSession "github.com/ActiveMemory/ctx/internal/config/session"
+	cfgStats "github.com/ActiveMemory/ctx/internal/config/stats"
+	"github.com/ActiveMemory/ctx/internal/config/token"
 	"github.com/ActiveMemory/ctx/internal/entity"
+	internalIo "github.com/ActiveMemory/ctx/internal/io"
 )
 
 // FormatContext builds a JSON Response with additionalContext for the
@@ -77,7 +82,7 @@ func ReadInput(r io.Reader) entity.HookInput {
 		if res.err == nil {
 			_ = json.Unmarshal(res.data, &input)
 		}
-	case <-time.After(2 * time.Second):
+	case <-time.After(hook.StdinReadTimeout * time.Second):
 	}
 	return input
 }
@@ -106,14 +111,17 @@ func ReadSessionID(stdin *os.File) string {
 //   - sessionID: Session identifier
 //   - stats: Stats entry to write
 func WriteSessionStats(sessionID string, stats entity.Stats) {
-	path := filepath.Join(state.StateDir(), "stats-"+sessionID+".jsonl")
+	path := filepath.Join(
+		state.StateDir(),
+		cfgStats.FilePrefix+sessionID+file.ExtJSONL,
+	)
 	data, marshalErr := json.Marshal(stats)
 	if marshalErr != nil {
 		return
 	}
-	data = append(data, '\n')
+	data = append(data, token.NewlineLF[0])
 
-	f, openErr := os.OpenFile(path, os.O_APPEND|os.O_CREATE|os.O_WRONLY, fs.PermSecret) //nolint:gosec // state dir path
+	f, openErr := internalIo.SafeAppendFile(path, fs.PermSecret)
 	if openErr != nil {
 		return
 	}

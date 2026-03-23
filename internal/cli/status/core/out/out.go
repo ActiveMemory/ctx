@@ -83,7 +83,7 @@ func PersistStatusText(
 
 	sortedFiles := make([]entity.FileInfo, len(ctx.Files))
 	copy(sortedFiles, ctx.Files)
-	sort.SortFilesByPriority(sortedFiles)
+	sort.FilesByPriority(sortedFiles)
 
 	for _, f := range sortedFiles {
 		fi := status.StatusFileInfo{
@@ -104,7 +104,7 @@ func PersistStatusText(
 		status.StatusFileItem(cmd, fi, verbose)
 	}
 
-	recentFiles := sort.RecentFilesSorted(ctx.Files, 3)
+	recentFiles := sort.RecentFiles(ctx.Files, 3)
 	entries := make([]status.StatusActivityInfo, len(recentFiles))
 	for i, f := range recentFiles {
 		d := time.Since(f.ModTime)

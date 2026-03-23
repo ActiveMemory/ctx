@@ -46,7 +46,10 @@ func ScanKnowledgeFiles(
 			count := len(index.ParseEntryBlocks(string(data)))
 			if count > decThreshold {
 				findings = append(findings, finding{
-					File: ctx.Decision, Count: count, Threshold: decThreshold, Unit: "entries",
+					File:      ctx.Decision,
+					Count:     count,
+					Threshold: decThreshold,
+					Unit:      unitEntries,
 				})
 			}
 		}
@@ -57,7 +60,10 @@ func ScanKnowledgeFiles(
 			count := len(index.ParseEntryBlocks(string(data)))
 			if count > lrnThreshold {
 				findings = append(findings, finding{
-					File: ctx.Learning, Count: count, Threshold: lrnThreshold, Unit: "entries",
+					File:      ctx.Learning,
+					Count:     count,
+					Threshold: lrnThreshold,
+					Unit:      unitEntries,
 				})
 			}
 		}
@@ -68,7 +74,10 @@ func ScanKnowledgeFiles(
 			lineCount := bytes.Count(data, []byte(token.NewlineLF))
 			if lineCount > convThreshold {
 				findings = append(findings, finding{
-					File: ctx.Convention, Count: lineCount, Threshold: convThreshold, Unit: "lines",
+					File:      ctx.Convention,
+					Count:     lineCount,
+					Threshold: convThreshold,
+					Unit:      unitLines,
 				})
 			}
 		}
@@ -103,7 +112,9 @@ func FormatKnowledgeWarnings(findings []finding) string {
 // Returns:
 //   - string: formatted nudge box, or empty string if silenced
 func EmitKnowledgeWarning(sessionID, fileWarnings string) string {
-	fallback := fileWarnings + token.NewlineLF + desc.Text(text.DescKeyCheckKnowledgeFallback)
+	fallback := fileWarnings + token.NewlineLF + desc.Text(
+		text.DescKeyCheckKnowledgeFallback,
+	)
 	content := message.LoadMessage(hook.CheckKnowledge, hook.VariantWarning,
 		map[string]any{knowledge.VarFileWarnings: fileWarnings}, fallback)
 	if content == "" {

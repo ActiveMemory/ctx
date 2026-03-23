@@ -34,9 +34,9 @@ func TestGetRecentFiles(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			got := RecentFilesSorted(files, tt.n)
+			got := RecentFiles(files, tt.n)
 			if len(got) != tt.want {
-				t.Errorf("RecentFilesSorted(n=%d) returned %d files, want %d", tt.n, len(got), tt.want)
+				t.Errorf("RecentFiles(n=%d) returned %d files, want %d", tt.n, len(got), tt.want)
 			}
 			if tt.first != "" && len(got) > 0 && got[0].Name != tt.first {
 				t.Errorf("first file = %q, want %q", got[0].Name, tt.first)
@@ -45,9 +45,9 @@ func TestGetRecentFiles(t *testing.T) {
 	}
 
 	t.Run("empty input", func(t *testing.T) {
-		got := RecentFilesSorted(nil, 5)
+		got := RecentFiles(nil, 5)
 		if len(got) != 0 {
-			t.Errorf("RecentFilesSorted(nil) returned %d files, want 0", len(got))
+			t.Errorf("RecentFiles(nil) returned %d files, want 0", len(got))
 		}
 	})
 }
@@ -59,7 +59,7 @@ func TestSortFilesByPriority(t *testing.T) {
 		{Name: "CONSTITUTION.md"},
 	}
 
-	SortFilesByPriority(files)
+	FilesByPriority(files)
 
 	// CONSTITUTION should come before TASKS
 	constitutionIdx := -1

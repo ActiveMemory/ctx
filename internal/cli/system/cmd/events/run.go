@@ -7,9 +7,9 @@
 package events
 
 import (
-	coreEvent "github.com/ActiveMemory/ctx/internal/cli/system/core/event"
 	"github.com/spf13/cobra"
 
+	coreEvent "github.com/ActiveMemory/ctx/internal/cli/system/core/event"
 	cFlag "github.com/ActiveMemory/ctx/internal/config/flag"
 	errRcall "github.com/ActiveMemory/ctx/internal/err/recall"
 	"github.com/ActiveMemory/ctx/internal/log"

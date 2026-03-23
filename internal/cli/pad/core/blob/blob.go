@@ -33,7 +33,7 @@ func ContainsBlob(entry string) bool {
 //   - label: Blob label (filename)
 //   - data: Decoded file content
 //   - ok: False for non-blob entries or malformed base64
-func SplitBlob(entry string) (label string, data []byte, ok bool) {
+func SplitBlob(entry string) (label string, d []byte, ok bool) {
 	idx := strings.Index(entry, pad.BlobSep)
 	if idx < 0 {
 		return "", nil, false
@@ -42,12 +42,12 @@ func SplitBlob(entry string) (label string, data []byte, ok bool) {
 	label = entry[:idx]
 	encoded := entry[idx+len(pad.BlobSep):]
 
-	data, err := base64.StdEncoding.DecodeString(encoded)
+	d, err := base64.StdEncoding.DecodeString(encoded)
 	if err != nil {
 		return "", nil, false
 	}
 
-	return label, data, true
+	return label, d, true
 }
 
 // MakeBlob creates a blob entry string from a label and file data.

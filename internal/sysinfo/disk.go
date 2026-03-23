@@ -8,25 +8,34 @@
 
 package sysinfo
 
-import "syscall"
+import (
+	"os"
+	"syscall"
+)
 
-// collectDisk queries filesystem statistics for the given mount path.
+// collectDisk queries filesystem statistics for the current working directory.
 //
 // Uses syscall.Statfs to obtain total and available block counts,
 // then converts to byte values. Returns a DiskInfo with Supported=false
-// if the statfs call fails (e.g. path does not exist).
-//
-// Parameters:
-//   - path: Filesystem path to query (typically "/" or a mount point)
+// if the working directory cannot be determined or statfs fails.
 //
 // Returns:
-//   - DiskInfo: Disk usage statistics for the filesystem containing path
-func collectDisk(path string) DiskInfo {
-	var stat syscall.Statfs_t
-	if err := syscall.Statfs(path, &stat); err != nil {
-		return DiskInfo{Path: path, Supported: false}
+//   - DiskInfo: Disk usage statistics for the filesystem containing CWD
+func collectDisk() DiskInfo {
+	cwd, cwdErr := os.Getwd()
+	if cwdErr != nil {
+		return DiskInfo{Supported: false, Err: cwdErr}
 	}
-	bsize := uint64(stat.Bsize) //nolint:unconvert,gosec // type varies by OS; Bsize is always positive
+
+	var stat syscall.Statfs_t
+
+	if statErr := syscall.Statfs(cwd, &stat); statErr != nil {
+		return DiskInfo{Path: cwd, Supported: false, Err: statErr}
+	}
+	if stat.Bsize <= 0 {
+		return DiskInfo{Path: cwd, Supported: false}
+	}
+	bsize := uint64(stat.Bsize)
 	total := stat.Blocks * bsize
 	free := stat.Bavail * bsize // available to unprivileged users
 	var used uint64
@@ -36,7 +45,7 @@ func collectDisk(path string) DiskInfo {
 	return DiskInfo{
 		TotalBytes: total,
 		UsedBytes:  used,
-		Path:       path,
+		Path:       cwd,
 		Supported:  true,
 	}
 }

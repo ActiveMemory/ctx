@@ -14,7 +14,6 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/ActiveMemory/ctx/internal/cli/site/core/generate"
 	"github.com/ActiveMemory/ctx/internal/cli/site/core/rss"
 	"github.com/ActiveMemory/ctx/internal/cli/site/core/scan"
 	"github.com/spf13/cobra"
@@ -159,7 +158,7 @@ func TestFeed_Basic(t *testing.T) {
 	}
 
 	outPath := filepath.Join(t.TempDir(), "feed.xml")
-	genErr := generate.GenerateAtom(posts, outPath, "https://example.com")
+	genErr := rss.Atom(posts, outPath, "https://example.com")
 	if genErr != nil {
 		t.Fatal(genErr)
 	}
@@ -279,7 +278,7 @@ func TestFeed_NoSummary(t *testing.T) {
 
 	// Verify summary is omitted in XML output.
 	outPath := filepath.Join(t.TempDir(), "feed.xml")
-	genErr := generate.GenerateAtom(posts, outPath, "https://example.com")
+	genErr := rss.Atom(posts, outPath, "https://example.com")
 	if genErr != nil {
 		t.Fatal(genErr)
 	}
@@ -299,7 +298,7 @@ func TestFeed_EmptyBlog(t *testing.T) {
 	}
 
 	outPath := filepath.Join(t.TempDir(), "feed.xml")
-	genErr := generate.GenerateAtom(posts, outPath, "https://example.com")
+	genErr := rss.Atom(posts, outPath, "https://example.com")
 	if genErr != nil {
 		t.Fatal(genErr)
 	}
@@ -375,14 +374,14 @@ func TestFeed_Idempotent(t *testing.T) {
 	outPath := filepath.Join(outDir, "feed.xml")
 
 	posts1, _, _ := scan.ScanBlogPosts(dir)
-	genErr1 := generate.GenerateAtom(posts1, outPath, "https://example.com")
+	genErr1 := rss.Atom(posts1, outPath, "https://example.com")
 	if genErr1 != nil {
 		t.Fatal(genErr1)
 	}
 	data1, _ := os.ReadFile(outPath)
 
 	posts2, _, _ := scan.ScanBlogPosts(dir)
-	genErr2 := generate.GenerateAtom(posts2, outPath, "https://example.com")
+	genErr2 := rss.Atom(posts2, outPath, "https://example.com")
 	if genErr2 != nil {
 		t.Fatal(genErr2)
 	}
@@ -405,7 +404,7 @@ func TestFeed_Categories(t *testing.T) {
 	}
 
 	outPath := filepath.Join(t.TempDir(), "feed.xml")
-	genErr := generate.GenerateAtom(posts, outPath, "https://example.com")
+	genErr := rss.Atom(posts, outPath, "https://example.com")
 	if genErr != nil {
 		t.Fatal(genErr)
 	}
@@ -440,7 +439,7 @@ func TestFeed_CustomBaseURL(t *testing.T) {
 
 	posts, _, _ := scan.ScanBlogPosts(dir)
 	outPath := filepath.Join(t.TempDir(), "feed.xml")
-	genErr := generate.GenerateAtom(
+	genErr := rss.Atom(
 		posts, outPath, "https://custom.example.com",
 	)
 	if genErr != nil {
