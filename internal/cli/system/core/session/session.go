@@ -30,6 +30,46 @@ type ToolInput struct {
 	Command string `json:"command"`
 }
 
+// Response is the JSON output format for Claude Code hooks.
+// Using structured JSON ensures the agent processes the output as a directive
+// rather than treating it as ignorable plain text.
+type Response struct {
+	Output *ResponseOutput `json:"hookSpecificOutput,omitempty"`
+}
+
+// ResponseOutput carries event-specific fields inside a Response.
+type ResponseOutput struct {
+	HookEventName     string `json:"hookEventName"`
+	AdditionalContext string `json:"additionalContext,omitempty"`
+}
+
+// BlockResponse is the JSON output for blocked commands.
+type BlockResponse struct {
+	Decision string `json:"decision"`
+	Reason   string `json:"reason"`
+}
+
+// FormatContext builds a JSON Response with additionalContext for the
+// given hook event. This is the standard way for non-blocking hooks to inject
+// directives that the agent will actually process (plain text gets ignored).
+//
+// Parameters:
+//   - event: Hook event name
+//   - context: Additional context string
+//
+// Returns:
+//   - string: JSON-encoded hook response
+func FormatContext(event, context string) string {
+	resp := Response{
+		Output: &ResponseOutput{
+			HookEventName:     event,
+			AdditionalContext: context,
+		},
+	}
+	data, _ := json.Marshal(resp)
+	return string(data)
+}
+
 // SessionStats holds the fields written to the per-session stats JSONL file.
 type SessionStats struct {
 	Timestamp  string `json:"ts"`

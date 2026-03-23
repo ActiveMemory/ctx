@@ -26,25 +26,6 @@ type BackupResult struct {
 	SMBDest string `json:"smb_dest,omitempty"`
 }
 
-// BlockResponse is the JSON output for blocked commands.
-type BlockResponse struct {
-	Decision string `json:"decision"`
-	Reason   string `json:"reason"`
-}
-
-// HookResponse is the JSON output format for Claude Code hooks.
-// Using structured JSON ensures the agent processes the output as a directive
-// rather than treating it as ignorable plain text.
-type HookResponse struct {
-	HookSpecificOutput *HookSpecificOutput `json:"hookSpecificOutput,omitempty"`
-}
-
-// HookSpecificOutput carries event-specific fields inside a HookResponse.
-type HookSpecificOutput struct {
-	HookEventName     string `json:"hookEventName"`
-	AdditionalContext string `json:"additionalContext,omitempty"`
-}
-
 // FileTokenEntry tracks per-file token counts during context injection.
 type FileTokenEntry struct {
 	Name   string

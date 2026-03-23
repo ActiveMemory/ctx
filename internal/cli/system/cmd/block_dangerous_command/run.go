@@ -11,7 +11,6 @@ import (
 	"fmt"
 	"os"
 
-	hook2 "github.com/ActiveMemory/ctx/internal/cli/system/core/hook"
 	coreSession "github.com/ActiveMemory/ctx/internal/cli/system/core/session"
 	"github.com/spf13/cobra"
 
@@ -74,7 +73,7 @@ func Run(cmd *cobra.Command, stdin *os.File) error {
 	}
 
 	if reason != "" {
-		resp := hook2.BlockResponse{
+		resp := coreSession.BlockResponse{
 			Decision: hook.DecisionBlock,
 			Reason:   reason,
 		}

@@ -14,6 +14,7 @@ import (
 	"github.com/ActiveMemory/ctx/internal/assets/read/desc"
 	"github.com/ActiveMemory/ctx/internal/cli/system/core/counter"
 	hook2 "github.com/ActiveMemory/ctx/internal/cli/system/core/hook"
+	coreSession "github.com/ActiveMemory/ctx/internal/cli/system/core/session"
 	"github.com/ActiveMemory/ctx/internal/config/embed/text"
 	"github.com/ActiveMemory/ctx/internal/config/nudge"
 	"github.com/spf13/cobra"
@@ -70,7 +71,7 @@ func Run(cmd *cobra.Command, stdin *os.File) error {
 	if msg == "" {
 		return nil
 	}
-	writeHook.HookContext(cmd, hook2.FormatContext(hook.EventPostToolUse, msg))
+	writeHook.HookContext(cmd, coreSession.FormatContext(hook.EventPostToolUse, msg))
 
 	nudgeMsg := desc.Text(text.DescKeyCheckTaskCompletionNudgeMessage)
 	ref := notify.NewTemplateRef(
