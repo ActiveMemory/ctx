@@ -34,15 +34,19 @@ var IncludeDirective = project.MakefileIncludePrefix + project.MakefileCtx
 //   - error: Non-nil if file operations fail
 func HandleMakefileCtx(cmd *cobra.Command) error {
 	content, err := makefile.Ctx()
+
 	if err != nil {
 		return errInitialize.ReadTemplate(project.MakefileCtx, err)
 	}
+
 	if err = os.WriteFile(project.MakefileCtx, content, fs.PermFile); err != nil {
 		return errFs.FileWrite(project.MakefileCtx, err)
 	}
+
 	initialize.Created(cmd, project.MakefileCtx)
-	existing, err := os.ReadFile(project.Makefile)
-	if err != nil {
+
+	existing, readErr := os.ReadFile(project.Makefile)
+	if readErr != nil {
 		minimal := IncludeDirective + token.NewlineLF
 		if err := os.WriteFile(
 			project.Makefile, []byte(minimal), fs.PermFile,
@@ -52,20 +56,24 @@ func HandleMakefileCtx(cmd *cobra.Command) error {
 		initialize.MakefileCreated(cmd)
 		return nil
 	}
+
 	if strings.Contains(string(existing), IncludeDirective) {
 		initialize.MakefileIncludes(cmd, project.MakefileCtx)
 		return nil
 	}
+
 	amended := string(existing)
 	if !strings.HasSuffix(amended, token.NewlineLF) {
 		amended += token.NewlineLF
 	}
+
 	amended += token.NewlineLF + IncludeDirective + token.NewlineLF
 	if err := os.WriteFile(
 		project.Makefile, []byte(amended), fs.PermFile,
 	); err != nil {
 		return errFs.FileAmend(project.Makefile, err)
 	}
+
 	initialize.MakefileAppended(cmd, project.MakefileCtx)
 	return nil
 }
