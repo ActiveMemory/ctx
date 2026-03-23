@@ -7,6 +7,7 @@
 package core
 
 import (
+	"github.com/ActiveMemory/ctx/internal/cli/initialize/core/merge"
 	"github.com/spf13/cobra"
 
 	"github.com/ActiveMemory/ctx/internal/assets/read/desc"
@@ -44,7 +45,7 @@ func HandlePromptMd(cmd *cobra.Command, force, autoMerge, ralph bool) error {
 		}
 	}
 
-	created, mergeErr := CreateOrMerge(cmd, MergeParams{
+	created, mergeErr := merge.CreateOrMerge(cmd, merge.Params{
 		Filename:        loop.PromptMd,
 		MarkerStart:     marker.PromptMarkerStart,
 		TemplateContent: templateContent,
@@ -79,7 +80,7 @@ func HandlePromptMd(cmd *cobra.Command, force, autoMerge, ralph bool) error {
 func UpdatePromptSection(
 	cmd *cobra.Command, existing string, newTemplate []byte,
 ) error {
-	return UpdateMarkedSection(
+	return merge.UpdateMarkedSection(
 		cmd, loop.PromptMd, existing, newTemplate,
 		marker.PromptMarkerStart, marker.PromptMarkerEnd,
 		initialize.UpdatedPromptSection,

@@ -7,7 +7,7 @@
 package claude
 
 import (
-	"github.com/ActiveMemory/ctx/internal/cli/initialize/core"
+	"github.com/ActiveMemory/ctx/internal/cli/initialize/core/merge"
 	"github.com/ActiveMemory/ctx/internal/config/claude"
 	"github.com/ActiveMemory/ctx/internal/config/marker"
 	"github.com/ActiveMemory/ctx/internal/write/initialize"
@@ -25,7 +25,7 @@ import (
 // Returns:
 //   - error: Non-nil if markers are missing or file operations fail
 func updateCtxSection(cmd *cobra.Command, existing string, newTemplate []byte) error {
-	return core.UpdateMarkedSection(
+	return merge.UpdateMarkedSection(
 		cmd, claude.Md, existing, newTemplate,
 		marker.CtxMarkerStart, marker.CtxMarkerEnd,
 		initialize.UpdatedCtxSection,

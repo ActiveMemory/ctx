@@ -8,42 +8,20 @@ package merge
 
 import (
 	"bufio"
-	"fmt"
 	"os"
 	"strings"
-	"time"
 
-	"github.com/ActiveMemory/ctx/internal/cli/initialize/core"
+	"github.com/ActiveMemory/ctx/internal/cli/initialize/core/backup"
+	"github.com/ActiveMemory/ctx/internal/cli/initialize/core/entry"
 	"github.com/spf13/cobra"
 
 	"github.com/ActiveMemory/ctx/internal/config/cli"
-	"github.com/ActiveMemory/ctx/internal/config/file"
 	"github.com/ActiveMemory/ctx/internal/config/fs"
 	"github.com/ActiveMemory/ctx/internal/config/token"
-	backupPkg "github.com/ActiveMemory/ctx/internal/err/backup"
 	errFs "github.com/ActiveMemory/ctx/internal/err/fs"
 	promptErr "github.com/ActiveMemory/ctx/internal/err/prompt"
 	"github.com/ActiveMemory/ctx/internal/write/initialize"
 )
-
-// backupFile creates a timestamped .bak copy and reports it.
-//
-// Parameters:
-//   - cmd: Cobra command for output
-//   - filename: Original file path
-//   - content: Content to back up
-//
-// Returns:
-//   - error: Non-nil if the backup write fails
-func backupFile(cmd *cobra.Command, filename string, content []byte) error {
-	timestamp := time.Now().Unix()
-	backupName := fmt.Sprintf(file.BackupFormat, filename, timestamp)
-	if writeErr := os.WriteFile(backupName, content, fs.PermFile); writeErr != nil {
-		return backupPkg.Create(backupName, writeErr)
-	}
-	initialize.Backup(cmd, backupName)
-	return nil
-}
 
 // CreateOrMerge handles the common pattern of creating a new file or
 // merging ctx content into an existing one.
@@ -55,7 +33,7 @@ func backupFile(cmd *cobra.Command, filename string, content []byte) error {
 // Returns:
 //   - created: True if the file was created fresh (no existing file)
 //   - error: Non-nil if file operations fail
-func CreateOrMerge(cmd *cobra.Command, p core.MergeParams) (bool, error) {
+func CreateOrMerge(cmd *cobra.Command, p Params) (bool, error) {
 	existingContent, readErr := os.ReadFile(p.Filename)
 	fileExists := readErr == nil
 
@@ -94,11 +72,11 @@ func CreateOrMerge(cmd *cobra.Command, p core.MergeParams) (bool, error) {
 		}
 	}
 
-	if bkErr := backupFile(cmd, p.Filename, existingContent); bkErr != nil {
+	if bkErr := backup.BackupFile(cmd, p.Filename, existingContent); bkErr != nil {
 		return false, bkErr
 	}
 
-	insertPos := FindInsertionPoint(existingStr)
+	insertPos := entry.FindInsertionPoint(existingStr)
 	var mergedContent string
 	if insertPos == 0 {
 		mergedContent = string(p.TemplateContent) + token.NewlineLF + existingStr
@@ -161,7 +139,7 @@ func UpdateMarkedSection(
 	sectionContent := templateStr[templateStart : templateEnd+len(markerEnd)]
 	newContent := existing[:startIdx] + sectionContent + existing[endIdx:]
 
-	if bkErr := backupFile(cmd, filename, []byte(existing)); bkErr != nil {
+	if bkErr := backup.BackupFile(cmd, filename, []byte(existing)); bkErr != nil {
 		return bkErr
 	}
 
