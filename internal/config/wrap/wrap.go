@@ -12,4 +12,6 @@ const (
 	WrappedUpMarker = "ctx-wrapped-up"
 	// WrappedUpContent is the content written to the wrap-up marker file.
 	WrappedUpContent = "wrapped-up"
+	// WrappedUpExpiryHours is how many hours the marker suppresses nudges.
+	WrappedUpExpiryHours = 2
 )

@@ -17,7 +17,7 @@ import (
 	"github.com/ActiveMemory/ctx/internal/config/dir"
 	"github.com/ActiveMemory/ctx/internal/config/memory"
 	cfgTime "github.com/ActiveMemory/ctx/internal/config/time"
-	ctxerr "github.com/ActiveMemory/ctx/internal/err/memory"
+	errMemory "github.com/ActiveMemory/ctx/internal/err/memory"
 	"github.com/ActiveMemory/ctx/internal/format"
 	"github.com/ActiveMemory/ctx/internal/io"
 	mem "github.com/ActiveMemory/ctx/internal/memory"
@@ -41,7 +41,7 @@ func Run(cmd *cobra.Command) error {
 	if discoverErr != nil {
 		writeMem.BridgeHeader(cmd)
 		writeMem.SourceNotActive(cmd)
-		return ctxerr.NotFound()
+		return errMemory.NotFound()
 	}
 
 	writeMem.BridgeHeader(cmd)

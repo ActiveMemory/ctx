@@ -10,19 +10,20 @@ import (
 	"os"
 	"strings"
 
+	"github.com/spf13/cobra"
+
 	"github.com/ActiveMemory/ctx/internal/assets/read/makefile"
 	"github.com/ActiveMemory/ctx/internal/config/fs"
 	"github.com/ActiveMemory/ctx/internal/config/project"
 	"github.com/ActiveMemory/ctx/internal/config/token"
-	fs2 "github.com/ActiveMemory/ctx/internal/err/fs"
-	ctxerr "github.com/ActiveMemory/ctx/internal/err/initialize"
+	errFs "github.com/ActiveMemory/ctx/internal/err/fs"
+	errInitialize "github.com/ActiveMemory/ctx/internal/err/initialize"
 	"github.com/ActiveMemory/ctx/internal/write/initialize"
-	"github.com/spf13/cobra"
 )
 
 // IncludeDirective is the line appended to the user's Makefile to pull
 // in ctx targets. The leading dash suppresses errors when the file is absent.
-const IncludeDirective = "-include Makefile.ctx"
+var IncludeDirective = "-include " + project.MakefileCtx
 
 // HandleMakefileCtx deploys Makefile.ctx and amends the user Makefile.
 //
@@ -34,17 +35,17 @@ const IncludeDirective = "-include Makefile.ctx"
 func HandleMakefileCtx(cmd *cobra.Command) error {
 	content, err := makefile.Ctx()
 	if err != nil {
-		return ctxerr.ReadTemplate("Makefile.ctx", err)
+		return errInitialize.ReadTemplate("Makefile.ctx", err)
 	}
 	if err = os.WriteFile(project.MakefileCtx, content, fs.PermFile); err != nil {
-		return fs2.FileWrite(project.MakefileCtx, err)
+		return errFs.FileWrite(project.MakefileCtx, err)
 	}
 	initialize.Created(cmd, project.MakefileCtx)
-	existing, err := os.ReadFile("Makefile")
+	existing, err := os.ReadFile(project.Makefile)
 	if err != nil {
 		minimal := IncludeDirective + token.NewlineLF
-		if err := os.WriteFile("Makefile", []byte(minimal), fs.PermFile); err != nil {
-			return ctxerr.CreateMakefile(err)
+		if err := os.WriteFile(project.Makefile, []byte(minimal), fs.PermFile); err != nil {
+			return errInitialize.CreateMakefile(err)
 		}
 		initialize.MakefileCreated(cmd)
 		return nil
@@ -58,8 +59,8 @@ func HandleMakefileCtx(cmd *cobra.Command) error {
 		amended += token.NewlineLF
 	}
 	amended += token.NewlineLF + IncludeDirective + token.NewlineLF
-	if err := os.WriteFile("Makefile", []byte(amended), fs.PermFile); err != nil {
-		return fs2.FileAmend("Makefile", err)
+	if err := os.WriteFile(project.Makefile, []byte(amended), fs.PermFile); err != nil {
+		return errFs.FileAmend(project.Makefile, err)
 	}
 	initialize.MakefileAppended(cmd, project.MakefileCtx)
 	return nil

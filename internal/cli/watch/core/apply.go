@@ -12,20 +12,20 @@ import (
 	"strings"
 
 	"github.com/ActiveMemory/ctx/internal/config/ctx"
-	entry2 "github.com/ActiveMemory/ctx/internal/config/entry"
+	cfgEntry "github.com/ActiveMemory/ctx/internal/config/entry"
 	"github.com/ActiveMemory/ctx/internal/config/fs"
 	"github.com/ActiveMemory/ctx/internal/config/regex"
 	"github.com/ActiveMemory/ctx/internal/config/token"
 	"github.com/ActiveMemory/ctx/internal/entry"
 	"github.com/ActiveMemory/ctx/internal/err/config"
-	ctxerr "github.com/ActiveMemory/ctx/internal/err/task"
+	errTask "github.com/ActiveMemory/ctx/internal/err/task"
 	"github.com/ActiveMemory/ctx/internal/rc"
 	"github.com/ActiveMemory/ctx/internal/task"
 )
 
 // ApplyUpdate routes a context update to the appropriate handler.
 //
-// Dispatches based on update type to add entries to context files
+// Dispatches based on the update type to add entries to context files
 // or mark tasks complete. For learnings and decisions, uses structured
 // fields (context, lesson, application, rationale, consequence) if
 // provided in the XML attributes.
@@ -37,15 +37,15 @@ import (
 //   - error: Non-nil if type is unknown or the handler fails
 func ApplyUpdate(update ContextUpdate) error {
 	switch update.Type {
-	case entry2.Task:
+	case cfgEntry.Task:
 		return RunAddSilent(update)
-	case entry2.Decision:
+	case cfgEntry.Decision:
 		return RunAddSilent(update)
-	case entry2.Learning:
+	case cfgEntry.Learning:
 		return RunAddSilent(update)
-	case entry2.Convention:
+	case cfgEntry.Convention:
 		return RunAddSilent(update)
-	case entry2.Complete:
+	case cfgEntry.Complete:
 		return RunCompleteSilent([]string{update.Content})
 	default:
 		return config.UnknownUpdateType(update.Type)
@@ -102,7 +102,7 @@ func RunAddSilent(update ContextUpdate) error {
 //     or file operations fail
 func RunCompleteSilent(args []string) error {
 	if len(args) < 1 {
-		return ctxerr.NoneSpecified()
+		return errTask.NoneSpecified()
 	}
 
 	query := args[0]
@@ -131,7 +131,7 @@ func RunCompleteSilent(args []string) error {
 	}
 
 	if matchedLine == -1 {
-		return ctxerr.NoMatch(query)
+		return errTask.NoMatch(query)
 	}
 
 	lines[matchedLine] = regex.Task.ReplaceAllString(

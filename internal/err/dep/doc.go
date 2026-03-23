@@ -5,4 +5,4 @@
 //                 SPDX-License-Identifier: Apache-2.0
 
 // Package deps provides error constructors for dependency analysis.
-package deps
+package dep

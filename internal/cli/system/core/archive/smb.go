@@ -17,7 +17,7 @@ import (
 	"github.com/ActiveMemory/ctx/internal/config/archive"
 	"github.com/ActiveMemory/ctx/internal/config/embed/text"
 	"github.com/ActiveMemory/ctx/internal/config/fs"
-	ctxerr "github.com/ActiveMemory/ctx/internal/err/backup"
+	backupErr "github.com/ActiveMemory/ctx/internal/err/backup"
 	fserr "github.com/ActiveMemory/ctx/internal/err/fs"
 	"github.com/ActiveMemory/ctx/internal/io"
 )
@@ -44,7 +44,7 @@ type SMBConfig struct {
 func ParseSMBConfig(smbURL, subdir string) (*SMBConfig, error) {
 	u, parseErr := url.Parse(smbURL)
 	if parseErr != nil || u.Host == "" {
-		return nil, ctxerr.InvalidSMBURL(smbURL)
+		return nil, backupErr.InvalidSMBURL(smbURL)
 	}
 
 	host := u.Host
@@ -53,7 +53,7 @@ func ParseSMBConfig(smbURL, subdir string) (*SMBConfig, error) {
 		share = share[1:]
 	}
 	if share == "" {
-		return nil, ctxerr.SMBMissingShare(smbURL)
+		return nil, backupErr.SMBMissingShare(smbURL)
 	}
 
 	if subdir == "" {
@@ -87,7 +87,7 @@ func EnsureSMBMount(cfg *SMBConfig) error {
 	//nolint:gosec // G204: smbURL is from user env, not untrusted input
 	mountCmd := exec.Command("gio", "mount", cfg.SourceURL)
 	if mountErr := mountCmd.Run(); mountErr != nil {
-		return ctxerr.MountFailed(cfg.SourceURL, mountErr)
+		return backupErr.MountFailed(cfg.SourceURL, mountErr)
 	}
 
 	return nil
@@ -114,7 +114,7 @@ func CopyToSMB(cfg *SMBConfig, localPath string) error {
 
 	destFile := filepath.Join(dest, filepath.Base(localPath))
 	if writeErr := os.WriteFile(destFile, data, fs.PermFile); writeErr != nil {
-		return ctxerr.WriteSMB(writeErr)
+		return backupErr.WriteSMB(writeErr)
 	}
 
 	return nil

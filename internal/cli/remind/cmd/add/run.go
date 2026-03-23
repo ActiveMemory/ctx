@@ -13,7 +13,7 @@ import (
 
 	"github.com/ActiveMemory/ctx/internal/cli/remind/core"
 	cfgTime "github.com/ActiveMemory/ctx/internal/config/time"
-	ctxerr "github.com/ActiveMemory/ctx/internal/err/date"
+	errDate "github.com/ActiveMemory/ctx/internal/err/date"
 	"github.com/ActiveMemory/ctx/internal/write/remind"
 )
 
@@ -41,7 +41,7 @@ func Run(cmd *cobra.Command, message, after string) error {
 	}
 	if after != "" {
 		if _, parseErr := time.Parse(cfgTime.DateFormat, after); parseErr != nil {
-			return ctxerr.InvalidDateValue(after)
+			return errDate.InvalidDateValue(after)
 		}
 		r.After = &after
 	}

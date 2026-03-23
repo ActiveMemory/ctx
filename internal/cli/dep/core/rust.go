@@ -12,7 +12,7 @@ import (
 	"os/exec"
 	"sort"
 
-	ctxerr "github.com/ActiveMemory/ctx/internal/err/deps"
+	errDeps "github.com/ActiveMemory/ctx/internal/err/dep"
 )
 
 // RustEcosystem is the ecosystem label for Rust projects.
@@ -92,17 +92,19 @@ type CargoNode struct {
 func RunCargoMetadata() (*CargoMetadata, error) {
 	_, lookErr := exec.LookPath("cargo")
 	if lookErr != nil {
-		return nil, ctxerr.CargoNotFound()
+		return nil, errDeps.CargoNotFound()
 	}
 
-	out, cmdErr := exec.Command("cargo", "metadata", "--format-version", "1", "--no-deps").Output() //nolint:gosec // fixed args
+	out, cmdErr := exec.Command(
+		"cargo", "metadata", "--format-version", "1", "--no-deps",
+	).Output() //nolint:gosec // fixed args
 	if cmdErr != nil {
-		return nil, ctxerr.CargoMetadataFailed(cmdErr)
+		return nil, errDeps.CargoMetadataFailed(cmdErr)
 	}
 
 	var meta CargoMetadata
 	if unmarshalErr := json.Unmarshal(out, &meta); unmarshalErr != nil {
-		return nil, ctxerr.ParseCargoMetadata(unmarshalErr)
+		return nil, errDeps.ParseCargoMetadata(unmarshalErr)
 	}
 	return &meta, nil
 }
@@ -115,17 +117,19 @@ func RunCargoMetadata() (*CargoMetadata, error) {
 func RunCargoMetadataFull() (*CargoMetadata, error) {
 	_, lookErr := exec.LookPath("cargo")
 	if lookErr != nil {
-		return nil, ctxerr.CargoNotFound()
+		return nil, errDeps.CargoNotFound()
 	}
 
-	out, cmdErr := exec.Command("cargo", "metadata", "--format-version", "1").Output() //nolint:gosec // fixed args
+	out, cmdErr := exec.Command(
+		"cargo", "metadata", "--format-version", "1",
+	).Output() //nolint:gosec // fixed args
 	if cmdErr != nil {
-		return nil, ctxerr.CargoMetadataFailed(cmdErr)
+		return nil, errDeps.CargoMetadataFailed(cmdErr)
 	}
 
 	var meta CargoMetadata
 	if unmarshalErr := json.Unmarshal(out, &meta); unmarshalErr != nil {
-		return nil, ctxerr.ParseCargoMetadata(unmarshalErr)
+		return nil, errDeps.ParseCargoMetadata(unmarshalErr)
 	}
 	return &meta, nil
 }
