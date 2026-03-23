@@ -4,7 +4,7 @@
 //   \    Copyright 2026-present Context contributors.
 //                 SPDX-License-Identifier: Apache-2.0
 
-package core
+package insert
 
 import (
 	"strings"
@@ -16,7 +16,7 @@ import (
 
 // insertBeforeFirstEntry scans for the first "## [" marker not inside an
 // HTML comment and inserts the entry before it. Falls back to
-// InsertAfterHeader when no real entries exist yet.
+// AfterHeader when no real entries exist yet.
 //
 // Parameters:
 //   - content: Existing file content
@@ -34,7 +34,7 @@ func insertBeforeFirstEntry(content, entry, header string) []byte {
 			break
 		}
 		entryIdx := offset + rel
-		if !IsInsideHTMLComment(content, entryIdx) {
+		if !ExistsInsideHTMLComment(content, entryIdx) {
 			return []byte(
 				content[:entryIdx] + entry +
 					token.NewlineLF + token.Separator +
@@ -46,5 +46,5 @@ func insertBeforeFirstEntry(content, entry, header string) []byte {
 		search = content[offset:]
 	}
 
-	return InsertAfterHeader(content, entry, header)
+	return AfterHeader(content, entry, header)
 }

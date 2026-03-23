@@ -147,3 +147,12 @@ func InfoNextSteps(cmd *cobra.Command) {
 func InfoWorkflowTips(cmd *cobra.Command) {
 	cmd.Println(desc.Text(text.DescKeyWriteInitWorkflowTips))
 }
+
+// InfoGettingStartedSaved reports that the quick-start reference file was written.
+//
+// Parameters:
+//   - cmd: Cobra command for output
+//   - path: File path that was written
+func InfoGettingStartedSaved(cmd *cobra.Command, path string) {
+	cmd.Println(fmt.Sprintf(desc.Text(text.DescKeyWriteInitGettingStartedSaved), path))
+}

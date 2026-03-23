@@ -4,7 +4,7 @@
 //   \    Copyright 2026-present Context contributors.
 //                 SPDX-License-Identifier: Apache-2.0
 
-package core
+package entity
 
 // EntryParams contains all parameters needed to add an entry to a context file.
 type EntryParams struct {
@@ -20,18 +20,8 @@ type EntryParams struct {
 	ContextDir  string
 }
 
-// Config holds all flags for the add command.
-//
-// Fields:
-//   - Priority: Priority level for tasks (high, medium, low)
-//   - Section: Target section in TASKS.md
-//   - FromFile: Read content from a file instead of argument
-//   - Context: Context field for decisions/learnings
-//   - Rationale: Rationale field for decisions
-//   - Consequence: Consequence field for decisions
-//   - Lesson: Lesson field for learnings
-//   - Application: Application field for learnings
-type Config struct {
+// AddConfig holds all flags for the add command.
+type AddConfig struct {
 	Priority    string
 	Section     string
 	FromFile    string

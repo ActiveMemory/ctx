@@ -17,4 +17,6 @@ const (
 	// MakefileIncludeDirective is the Make line that pulls in ctx targets.
 	// The leading dash suppresses errors when the file is absent.
 	MakefileIncludeDirective = "-include Makefile.ctx"
+	// GettingStarted is the quick-start reference file written during init.
+	GettingStarted = "GETTING_STARTED.md"
 )

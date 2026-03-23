@@ -4,12 +4,13 @@
 //   \    Copyright 2026-present Context contributors.
 //                 SPDX-License-Identifier: Apache-2.0
 
-package core
+package budget
 
 import (
 	"encoding/json"
 	"time"
 
+	"github.com/ActiveMemory/ctx/internal/cli/agent/core"
 	"github.com/spf13/cobra"
 
 	"github.com/ActiveMemory/ctx/internal/entity"
@@ -28,11 +29,11 @@ import (
 // Returns:
 //   - error: Non-nil if JSON encoding fails
 func OutputAgentJSON(
-	cmd *cobra.Command, ctx *entity.Context, budget int,
+		cmd *cobra.Command, ctx *entity.Context, budget int,
 ) error {
-	pkt := AssembleBudgetPacket(ctx, budget)
+	pkt := AssemblePacket(ctx, budget)
 
-	packet := Packet{
+	packet := core.Packet{
 		Generated:    time.Now().UTC().Format(time.RFC3339),
 		Budget:       pkt.Budget,
 		TokensUsed:   pkt.TokensUsed,
@@ -65,9 +66,9 @@ func OutputAgentJSON(
 // Returns:
 //   - error: Always nil (included for interface consistency)
 func OutputAgentMarkdown(
-	cmd *cobra.Command, ctx *entity.Context, budget int,
+		cmd *cobra.Command, ctx *entity.Context, budget int,
 ) error {
-	pkt := AssembleBudgetPacket(ctx, budget)
+	pkt := AssemblePacket(ctx, budget)
 	writeAgent.Packet(cmd, RenderMarkdownPacket(pkt))
 	return nil
 }

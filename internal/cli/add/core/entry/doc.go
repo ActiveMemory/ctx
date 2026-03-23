@@ -4,9 +4,6 @@
 //   \    Copyright 2026-present Context contributors.
 //                 SPDX-License-Identifier: Apache-2.0
 
+// Package entry provides file-type predicates for routing add entries to
+// the correct context file.
 package entry
-
-import "github.com/ActiveMemory/ctx/internal/entity"
-
-// Params is the shared entry parameter type.
-type Params = entity.EntryParams

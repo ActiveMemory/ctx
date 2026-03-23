@@ -7,15 +7,15 @@
 package root
 
 import (
+	"github.com/spf13/cobra"
+
 	"github.com/ActiveMemory/ctx/internal/assets/read/desc"
-	"github.com/ActiveMemory/ctx/internal/cli/add/core"
 	"github.com/ActiveMemory/ctx/internal/config/embed/cmd"
 	"github.com/ActiveMemory/ctx/internal/config/embed/flag"
 	"github.com/ActiveMemory/ctx/internal/config/entry"
 	cFlag "github.com/ActiveMemory/ctx/internal/config/flag"
+	"github.com/ActiveMemory/ctx/internal/entity"
 	"github.com/ActiveMemory/ctx/internal/flagbind"
-
-	"github.com/spf13/cobra"
 )
 
 // Cmd returns the "ctx add" command for appending entries to context files.
@@ -51,13 +51,18 @@ func Cmd() *cobra.Command {
 	short, long := desc.Command(cmd.DescKeyAdd)
 
 	c := &cobra.Command{
-		Use:       cmd.UseAdd,
-		Short:     short,
-		Long:      long,
-		Args:      cobra.MinimumNArgs(1),
-		ValidArgs: []string{entry.Task, entry.Decision, entry.Learning, entry.Convention},
+		Use:   cmd.UseAdd,
+		Short: short,
+		Long:  long,
+		Args:  cobra.MinimumNArgs(1),
+		ValidArgs: []string{
+			entry.Task,
+			entry.Decision,
+			entry.Learning,
+			entry.Convention,
+		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return Run(cmd, args, core.Config{
+			return Run(cmd, args, entity.AddConfig{
 				Priority:    priority,
 				Section:     section,
 				FromFile:    fromFile,
@@ -91,11 +96,26 @@ func Cmd() *cobra.Command {
 		cFlag.File, cFlag.ShortFile, "",
 		desc.Flag(flag.DescKeyAddFile),
 	)
-	flagbind.StringFlagP(c, &context, cFlag.Context, cFlag.ShortContext, flag.DescKeyAddContext)
-	flagbind.StringFlagP(c, &rationale, cFlag.Rationale, cFlag.ShortRationale, flag.DescKeyAddRationale)
-	flagbind.StringFlag(c, &consequence, cFlag.Consequence, flag.DescKeyAddConsequence)
-	flagbind.StringFlagP(c, &lesson, cFlag.Lesson, cFlag.ShortLesson, flag.DescKeyAddLesson)
-	flagbind.StringFlagP(c, &application, cFlag.Application, cFlag.ShortApplication, flag.DescKeyAddApplication)
+	flagbind.StringFlagP(
+		c, &context,
+		cFlag.Context, cFlag.ShortContext, flag.DescKeyAddContext,
+	)
+	flagbind.StringFlagP(
+		c, &rationale,
+		cFlag.Rationale, cFlag.ShortRationale, flag.DescKeyAddRationale,
+	)
+	flagbind.StringFlag(
+		c, &consequence,
+		cFlag.Consequence, flag.DescKeyAddConsequence,
+	)
+	flagbind.StringFlagP(
+		c, &lesson,
+		cFlag.Lesson, cFlag.ShortLesson, flag.DescKeyAddLesson,
+	)
+	flagbind.StringFlagP(
+		c, &application,
+		cFlag.Application, cFlag.ShortApplication, flag.DescKeyAddApplication,
+	)
 
 	return c
 }

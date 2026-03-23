@@ -4,18 +4,20 @@
 //   \    Copyright 2026-present Context contributors.
 //                 SPDX-License-Identifier: Apache-2.0
 
-package core
+package insert
 
 import (
 	"strings"
 
 	"github.com/ActiveMemory/ctx/internal/assets/read/desc"
+	"github.com/ActiveMemory/ctx/internal/cli/add/core/normalize"
 	"github.com/ActiveMemory/ctx/internal/config/embed/text"
 	"github.com/ActiveMemory/ctx/internal/config/marker"
 	"github.com/ActiveMemory/ctx/internal/config/token"
+	"github.com/ActiveMemory/ctx/internal/inspect"
 )
 
-// InsertAfterHeader finds a header line and inserts content after it.
+// AfterHeader finds a header line and inserts content after it.
 //
 // Skips blank lines and HTML comment blocks (<!-- ... -->) between the header
 // and the insertion point, so new entries land after index tables, format
@@ -29,25 +31,25 @@ import (
 //
 // Returns:
 //   - []byte: Modified content with entry inserted
-func InsertAfterHeader(content, entry, header string) []byte {
-	hasHeader, idx := Contains(content, header)
+func AfterHeader(content, entry, header string) []byte {
+	hasHeader, idx := inspect.Contains(content, header)
 	if !hasHeader {
 		return AppendAtEnd(content, entry)
 	}
 
-	hasNewLine, lineEnd := ContainsNewLine(content[idx:])
+	hasNewLine, lineEnd := inspect.ContainsNewLine(content[idx:])
 	if !hasNewLine {
 		// Header exists but no newline after (the file ends with a header line)
 		return AppendAtEnd(content, entry)
 	}
 
 	insertPoint := idx + lineEnd
-	insertPoint = SkipNewline(content, insertPoint)
+	insertPoint = inspect.SkipNewline(content, insertPoint)
 
 	// Skip blank lines and any HTML comment blocks (<!-- ... -->).
 	// This handles INDEX markers, format-guide comments, and ctx markers alike.
 	for insertPoint < len(content) {
-		if n := SkipNewline(content, insertPoint); n > insertPoint {
+		if n := inspect.SkipNewline(content, insertPoint); n > insertPoint {
 			insertPoint = n
 			continue
 		}
@@ -58,13 +60,13 @@ func InsertAfterHeader(content, entry, header string) []byte {
 		}
 
 		// Skip past the closing --> of this comment block.
-		hasCommentEnd, endIdx := ContainsEndComment(content[insertPoint:])
+		hasCommentEnd, endIdx := inspect.ContainsEndComment(content[insertPoint:])
 		if !hasCommentEnd {
 			break
 		}
 
 		insertPoint += endIdx + len(marker.CommentClose)
-		insertPoint = SkipWhitespace(content, insertPoint)
+		insertPoint = inspect.SkipWhitespace(content, insertPoint)
 	}
 
 	return []byte(content[:insertPoint] + entry)
@@ -81,13 +83,13 @@ func InsertAfterHeader(content, entry, header string) []byte {
 // Returns:
 //   - []byte: Content with entry appended
 func AppendAtEnd(content, entry string) []byte {
-	if !EndsWithNewline(content) {
+	if !inspect.EndsWithNewline(content) {
 		content += token.NewlineLF
 	}
 	return []byte(content + token.NewlineLF + entry)
 }
 
-// InsertTask inserts a task entry into TASKS.md.
+// Task inserts a task entry into TASKS.md.
 //
 // When section is explicitly provided, inserts after that section header.
 // When section is empty (default), finds the first unchecked task and
@@ -101,10 +103,10 @@ func AppendAtEnd(content, entry string) []byte {
 //
 // Returns:
 //   - []byte: Modified content with task inserted
-func InsertTask(entry, existingStr, section string) []byte {
+func Task(entry, existingStr, section string) []byte {
 	// Explicit section: honor it.
 	if section != "" {
-		return InsertTaskAfterSection(entry, existingStr, section)
+		return TaskAfterSection(entry, existingStr, section)
 	}
 
 	// Default: insert before the first unchecked task.
@@ -115,13 +117,13 @@ func InsertTask(entry, existingStr, section string) []byte {
 	}
 
 	// No unchecked tasks: append at the end.
-	if !EndsWithNewline(existingStr) {
+	if !inspect.EndsWithNewline(existingStr) {
 		existingStr += token.NewlineLF
 	}
 	return []byte(existingStr + token.NewlineLF + entry)
 }
 
-// InsertTaskAfterSection inserts a task after a named section header.
+// TaskAfterSection inserts a task after a named section header.
 //
 // Normalizes the section name to a Markdown heading, finds it in the
 // content, and inserts the entry immediately after. Falls back to
@@ -134,21 +136,21 @@ func InsertTask(entry, existingStr, section string) []byte {
 //
 // Returns:
 //   - []byte: Modified content with task inserted
-func InsertTaskAfterSection(entry, content, section string) []byte {
-	header := NormalizeTargetSection(section)
+func TaskAfterSection(entry, content, section string) []byte {
+	header := normalize.TargetSection(section)
 
-	found, idx := Contains(content, header)
+	found, idx := inspect.Contains(content, header)
 	if !found {
-		if !EndsWithNewline(content) {
+		if !inspect.EndsWithNewline(content) {
 			content += token.NewlineLF
 		}
 		return []byte(content + token.NewlineLF + entry)
 	}
 
-	hasNewLine, lineEnd := ContainsNewLine(content[idx:])
+	hasNewLine, lineEnd := inspect.ContainsNewLine(content[idx:])
 	if hasNewLine {
 		insertPoint := idx + lineEnd
-		insertPoint = SkipNewline(content, insertPoint)
+		insertPoint = inspect.SkipNewline(content, insertPoint)
 		return []byte(content[:insertPoint] + token.NewlineLF +
 			entry + content[insertPoint:])
 	}
@@ -156,7 +158,7 @@ func InsertTaskAfterSection(entry, content, section string) []byte {
 	return []byte(content + token.NewlineLF + entry)
 }
 
-// IsInsideHTMLComment reports whether the position idx in content falls
+// ExistsInsideHTMLComment reports whether the position idx in content falls
 // inside an HTML comment block (<!-- ... -->).
 //
 // Parameters:
@@ -165,7 +167,7 @@ func InsertTaskAfterSection(entry, content, section string) []byte {
 //
 // Returns:
 //   - bool: True if idx is between a <!-- and its closing -->
-func IsInsideHTMLComment(content string, idx int) bool {
+func ExistsInsideHTMLComment(content string, idx int) bool {
 	// Find the last <!-- before idx
 	openIdx := strings.LastIndex(content[:idx], marker.CommentOpen)
 	if openIdx == -1 {
@@ -182,11 +184,11 @@ func IsInsideHTMLComment(content string, idx int) bool {
 	return openIdx+closeIdx+len(marker.CommentClose) > idx
 }
 
-// InsertDecision inserts a decision entry before existing entries.
+// Decision inserts a decision entry before existing entries.
 //
 // Finds the first "## [" marker that is NOT inside an HTML comment block
 // and inserts before it, maintaining reverse-chronological order.
-// Falls back to InsertAfterHeader if no real entries exist yet.
+// Falls back to AfterHeader if no real entries exist yet.
 //
 // Parameters:
 //   - content: Existing file content
@@ -195,15 +197,15 @@ func IsInsideHTMLComment(content string, idx int) bool {
 //
 // Returns:
 //   - []byte: Modified content with entry inserted
-func InsertDecision(content, entry, header string) []byte {
+func Decision(content, entry, header string) []byte {
 	return insertBeforeFirstEntry(content, entry, header)
 }
 
-// InsertLearning inserts a learning entry before existing entries.
+// Learning inserts a learning entry before existing entries.
 //
 // Finds the first "## [" marker that is NOT inside an HTML comment block
 // and inserts before it, maintaining reverse-chronological order.
-// Falls back to InsertAfterHeader if no real entries exist yet.
+// Falls back to AfterHeader if no real entries exist yet.
 //
 // Parameters:
 //   - content: Existing file content
@@ -211,7 +213,7 @@ func InsertDecision(content, entry, header string) []byte {
 //
 // Returns:
 //   - []byte: Modified content with entry inserted
-func InsertLearning(content, entry string) []byte {
+func Learning(content, entry string) []byte {
 	return insertBeforeFirstEntry(
 		content, entry, desc.Text(text.DescKeyHeadingLearnings),
 	)

@@ -11,7 +11,8 @@ import (
 	"path/filepath"
 	"strings"
 
-	"github.com/ActiveMemory/ctx/internal/cli/add/core"
+	"github.com/ActiveMemory/ctx/internal/cli/add/core/format"
+	coreAppend "github.com/ActiveMemory/ctx/internal/cli/add/core/insert"
 	"github.com/ActiveMemory/ctx/internal/config/entry"
 	"github.com/ActiveMemory/ctx/internal/config/fs"
 	"github.com/ActiveMemory/ctx/internal/index"
@@ -55,22 +56,22 @@ func Write(params Params) error {
 	var formatted string
 	switch fType {
 	case entry.Decision:
-		formatted = core.FormatDecision(
+		formatted = format.Decision(
 			params.Content, params.Context, params.Rationale, params.Consequence,
 		)
 	case entry.Task:
-		formatted = core.FormatTask(params.Content, params.Priority)
+		formatted = format.Task(params.Content, params.Priority)
 	case entry.Learning:
-		formatted = core.FormatLearning(
+		formatted = format.Learning(
 			params.Content, params.Context, params.Lesson, params.Application,
 		)
 	case entry.Convention:
-		formatted = core.FormatConvention(params.Content)
+		formatted = format.Convention(params.Content)
 	default:
 		return add.ErrUnknownType(fType)
 	}
 
-	newContent := core.AppendEntry(existing, formatted, fType, params.Section)
+	newContent := coreAppend.AppendEntry(existing, formatted, fType, params.Section)
 
 	if writeErr := os.WriteFile(
 		filePath, newContent, fs.PermFile,

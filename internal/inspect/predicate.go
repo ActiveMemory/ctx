@@ -4,7 +4,7 @@
 //   \    Copyright 2026-present Context contributors.
 //                 SPDX-License-Identifier: Apache-2.0
 
-package core
+package inspect
 
 import (
 	"strings"
@@ -25,22 +25,23 @@ func EndsWithNewline(s string) bool {
 		strings.HasSuffix(s, token.NewlineLF)
 }
 
-// Contains reports whether content contains the header and returns its index.
+// Contains reports whether content contains the substring and returns its
+// index.
 //
 // Parameters:
 //   - content: String to search in
-//   - header: Substring to find
+//   - substr: Substring to find
 //
 // Returns:
-//   - bool: True if header is found
-//   - int: Index of header (-1 if not found)
-func Contains(content, header string) (bool, int) {
-	idx := strings.Index(content, header)
+//   - bool: True if substr is found
+//   - int: Index of substr (-1 if not found)
+func Contains(content, substr string) (bool, int) {
+	idx := strings.Index(content, substr)
 	return idx != -1, idx
 }
 
-// ContainsNewLine reports whether the content contains a newline and
-// returns its index.
+// ContainsNewLine reports whether content contains a newline and returns
+// its index.
 //
 // Parameters:
 //   - content: String to search in

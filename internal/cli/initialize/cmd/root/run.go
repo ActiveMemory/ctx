@@ -203,6 +203,9 @@ func Run(
 	initialize.InfoNextSteps(cmd)
 	initialize.InfoWorkflowTips(cmd)
 
+	// Save the quick-start reference to a project-root file.
+	writeGettingStarted(cmd)
+
 	return nil
 }
 
@@ -333,4 +336,20 @@ func ensureGitignoreEntries(cmd *cobra.Command) error {
 	initialize.InfoGitignoreUpdated(cmd, len(missing))
 	initialize.InfoGitignoreReview(cmd)
 	return nil
+}
+
+// writeGettingStarted saves the next-steps and workflow-tips text to
+// GETTING_STARTED.md in the project root. Best-effort: failures are
+// non-fatal since the same content was already printed to stdout.
+func writeGettingStarted(cmd *cobra.Command) {
+	content := desc.Text(text.DescKeyWriteInitNextStepsBlock) +
+		token.NewlineLF +
+		desc.Text(text.DescKeyWriteInitWorkflowTips) +
+		token.NewlineLF
+	if writeErr := os.WriteFile(
+		project.GettingStarted, []byte(content), fs.PermFile,
+	); writeErr != nil {
+		return
+	}
+	initialize.InfoGettingStartedSaved(cmd, project.GettingStarted)
 }

@@ -4,7 +4,7 @@
 //   \    Copyright 2026-present Context contributors.
 //                 SPDX-License-Identifier: Apache-2.0
 
-package core
+package budget
 
 import (
 	"fmt"
@@ -12,6 +12,7 @@ import (
 	"time"
 
 	"github.com/ActiveMemory/ctx/internal/assets/read/desc"
+	"github.com/ActiveMemory/ctx/internal/cli/agent/core"
 	"github.com/ActiveMemory/ctx/internal/config/agent"
 	ctxCfg "github.com/ActiveMemory/ctx/internal/config/ctx"
 	"github.com/ActiveMemory/ctx/internal/config/embed/text"
@@ -21,7 +22,7 @@ import (
 	"github.com/ActiveMemory/ctx/internal/index"
 )
 
-// AssembleBudgetPacket builds a context packet respecting the token budget.
+// AssemblePacket builds a context packet respecting the token budget.
 //
 // Allocation tiers:
 //   - Tier 1 (always): constitution, read order, instruction
@@ -35,9 +36,9 @@ import (
 //
 // Returns:
 //   - *AssembledPacket: Assembled packet within budget
-func AssembleBudgetPacket(ctx *entity.Context, budget int) *AssembledPacket {
+func AssemblePacket(ctx *entity.Context, budget int) *core.AssembledPacket {
 	now := time.Now()
-	pkt := &AssembledPacket{
+	pkt := &core.AssembledPacket{
 		Budget:      budget,
 		Instruction: desc.Text(text.DescKeyAgentInstruction),
 	}
@@ -45,8 +46,8 @@ func AssembleBudgetPacket(ctx *entity.Context, budget int) *AssembledPacket {
 	remaining := budget
 
 	// Tier 1: Always included (constitution, read order, instruction)
-	pkt.ReadOrder = ReadOrder(ctx)
-	pkt.Constitution = ExtractConstitutionRules(ctx)
+	pkt.ReadOrder = core.ReadOrder(ctx)
+	pkt.Constitution = core.ExtractConstitutionRules(ctx)
 
 	tier1Tokens := EstimateSliceTokens(pkt.ReadOrder) +
 		EstimateSliceTokens(pkt.Constitution) +
@@ -60,7 +61,7 @@ func AssembleBudgetPacket(ctx *entity.Context, budget int) *AssembledPacket {
 
 	// Tier 2: Tasks (up to 40% of the original budget)
 	taskCap := int(float64(budget) * agent.TaskBudgetPct)
-	allTasks := ExtractActiveTasks(ctx)
+	allTasks := core.ExtractActiveTasks(ctx)
 	pkt.Tasks = FitItemsInBudget(allTasks, taskCap)
 	taskTokens := EstimateSliceTokens(pkt.Tasks)
 	remaining -= taskTokens
@@ -83,14 +84,14 @@ func AssembleBudgetPacket(ctx *entity.Context, budget int) *AssembledPacket {
 	}
 
 	// Extract keywords from tasks for relevance scoring
-	keywords := ExtractTaskKeywords(pkt.Tasks)
+	keywords := core.ExtractTaskKeywords(pkt.Tasks)
 
 	// Tier 4+5: Decisions + Learnings (share remaining budget)
 	decisionBlocks := ParseEntryBlocks(ctx, ctxCfg.Decision)
 	learningBlocks := ParseEntryBlocks(ctx, ctxCfg.Learning)
 
-	scoredDecisions := ScoreEntries(decisionBlocks, keywords, now)
-	scoredLearnings := ScoreEntries(learningBlocks, keywords, now)
+	scoredDecisions := core.ScoreEntries(decisionBlocks, keywords, now)
+	scoredLearnings := core.ScoreEntries(learningBlocks, keywords, now)
 
 	// Split the remaining budget: proportional to content size, minimum 30% each
 	decTokens, learnTokens := SplitBudget(
@@ -121,7 +122,7 @@ func AssembleBudgetPacket(ctx *entity.Context, budget int) *AssembledPacket {
 //   - []string: All convention bullet items; nil if the file is not found
 func ExtractAllConventions(ctx *entity.Context) []string {
 	if f := ctx.File(ctxCfg.Convention); f != nil {
-		return ExtractBulletItems(string(f.Content), agent.BulletItemLimit)
+		return core.ExtractBulletItems(string(f.Content), agent.BulletItemLimit)
 	}
 	return nil
 }
@@ -154,7 +155,7 @@ func ParseEntryBlocks(ctx *entity.Context, fileName string) []index.EntryBlock {
 // Returns:
 //   - int: Budget for section a
 //   - int: Budget for section b
-func SplitBudget(total int, a, b []ScoredEntry) (int, int) {
+func SplitBudget(total int, a, b []core.ScoredEntry) (int, int) {
 	if len(a) == 0 && len(b) == 0 {
 		return 0, 0
 	}
@@ -201,7 +202,7 @@ func SplitBudget(total int, a, b []ScoredEntry) (int, int) {
 // Returns:
 //   - []string: Full entry bodies that fit in the budget
 //   - []string: Title-only summaries for entries that didn't fit
-func FillSection(entries []ScoredEntry, budget int) ([]string, []string) {
+func FillSection(entries []core.ScoredEntry, budget int) ([]string, []string) {
 	if len(entries) == 0 || budget <= 0 {
 		return nil, nil
 	}
@@ -283,7 +284,7 @@ func EstimateSliceTokens(items []string) int {
 //
 // Returns:
 //   - int: Total tokens
-func TotalEntryTokens(entries []ScoredEntry) int {
+func TotalEntryTokens(entries []core.ScoredEntry) int {
 	total := 0
 	for _, e := range entries {
 		total += e.Tokens
@@ -298,7 +299,7 @@ func TotalEntryTokens(entries []ScoredEntry) int {
 //
 // Returns:
 //   - string: Formatted Markdown output
-func RenderMarkdownPacket(pkt *AssembledPacket) string {
+func RenderMarkdownPacket(pkt *core.AssembledPacket) string {
 	var sb strings.Builder
 	nl := token.NewlineLF
 

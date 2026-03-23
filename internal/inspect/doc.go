@@ -4,9 +4,6 @@
 //   \    Copyright 2026-present Context contributors.
 //                 SPDX-License-Identifier: Apache-2.0
 
-package entry
-
-import "github.com/ActiveMemory/ctx/internal/entity"
-
-// Params is the shared entry parameter type.
-type Params = entity.EntryParams
+// Package inspect provides general-purpose string predicates and position
+// scanners used across ctx packages.
+package inspect

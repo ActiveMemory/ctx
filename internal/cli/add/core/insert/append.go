@@ -4,10 +4,11 @@
 //   \    Copyright 2026-present Context contributors.
 //                 SPDX-License-Identifier: Apache-2.0
 
-package core
+package insert
 
 import (
 	"github.com/ActiveMemory/ctx/internal/assets/read/desc"
+	coreEntry "github.com/ActiveMemory/ctx/internal/cli/add/core/entry"
 	"github.com/ActiveMemory/ctx/internal/config/embed/text"
 )
 
@@ -20,7 +21,7 @@ import (
 // Parameters:
 //   - existing: Current file content as bytes
 //   - entry: Pre-formatted entry text to insert
-//   - fileType: Entry type (e.g., "task", "decision", "learning", "convention")
+//   - fileType: AppendEntry type (e.g., "task", "decision", "learning", "convention")
 //   - section: Target section header for tasks; defaults to "## Next Up" if
 //     empty; a "## " prefix is added automatically if missing
 //
@@ -33,16 +34,16 @@ func AppendEntry(
 
 	switch {
 	// For tasks, find the appropriate section
-	case FileTypeIsTask(fileType):
-		return InsertTask(entry, existingStr, section)
+	case coreEntry.FileTypeIsTask(fileType):
+		return Task(entry, existingStr, section)
 	// Decisions: insert before existing entries for reverse-chronological order
-	case FileTypeIsDecision(fileType):
-		return InsertDecision(
+	case coreEntry.FileTypeIsDecision(fileType):
+		return Decision(
 			existingStr, entry, desc.Text(text.DescKeyHeadingDecisions),
 		)
 	// Learnings: insert before existing entries for reverse-chronological order
-	case FileTypeIsLearning(fileType):
-		return InsertLearning(existingStr, entry)
+	case coreEntry.FileTypeIsLearning(fileType):
+		return Learning(existingStr, entry)
 	default:
 		// Default (conventions): append at the end
 		return AppendAtEnd(existingStr, entry)

@@ -4,7 +4,7 @@
 //   \    Copyright 2026-present Context contributors.
 //                 SPDX-License-Identifier: Apache-2.0
 
-package core
+package format
 
 import (
 	"fmt"
@@ -14,7 +14,7 @@ import (
 	cfgTime "github.com/ActiveMemory/ctx/internal/config/time"
 )
 
-// FormatTask formats a task entry as a Markdown checkbox item.
+// Task formats a task entry as a Markdown checkbox item.
 //
 // The output includes a timestamp tag for session correlation and an optional
 // priority tag. Format: "- [ ] content #priority:level #added:YYYY-MM-DD-HHMMSS"
@@ -25,7 +25,7 @@ import (
 //
 // Returns:
 //   - string: Formatted task line with trailing newline
-func FormatTask(content string, priority string) string {
+func Task(content string, priority string) string {
 	// Use YYYY-MM-DD-HHMMSS timestamp for session correlation
 	timestamp := time.Now().Format(cfgTime.TimestampCompact)
 	var priorityTag string
@@ -35,7 +35,7 @@ func FormatTask(content string, priority string) string {
 	return fmt.Sprintf(tpl.Task, content, priorityTag, timestamp)
 }
 
-// FormatLearning formats a learning entry as a structured Markdown section.
+// Learning formats a learning entry as a structured Markdown section.
 //
 // The output includes a timestamped heading and complete sections for context,
 // lesson, and application.
@@ -48,14 +48,14 @@ func FormatTask(content string, priority string) string {
 //
 // Returns:
 //   - string: Formatted learning section with all fields
-func FormatLearning(title, context, lesson, application string) string {
+func Learning(title, context, lesson, application string) string {
 	timestamp := time.Now().Format(cfgTime.TimestampCompact)
 	return fmt.Sprintf(
 		tpl.Learning, timestamp, title, context, lesson, application,
 	)
 }
 
-// FormatConvention formats a convention entry as a simple Markdown list item.
+// Convention formats a convention entry as a simple Markdown list item.
 //
 // Format: "- content"
 //
@@ -64,11 +64,11 @@ func FormatLearning(title, context, lesson, application string) string {
 //
 // Returns:
 //   - string: Formatted convention line with trailing newline
-func FormatConvention(content string) string {
+func Convention(content string) string {
 	return fmt.Sprintf(tpl.Convention, content)
 }
 
-// FormatDecision formats a decision entry as a structured Markdown section.
+// Decision formats a decision entry as a structured Markdown section.
 //
 // The output includes a timestamped heading, status, and complete ADR sections
 // for context, rationale, and consequence.
@@ -81,7 +81,7 @@ func FormatConvention(content string) string {
 //
 // Returns:
 //   - string: Formatted decision section with all ADR fields
-func FormatDecision(title, context, rationale, consequence string) string {
+func Decision(title, context, rationale, consequence string) string {
 	timestamp := time.Now().Format(cfgTime.TimestampCompact)
 	return fmt.Sprintf(
 		tpl.Decision,

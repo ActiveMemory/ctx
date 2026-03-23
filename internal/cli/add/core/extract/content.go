@@ -4,7 +4,7 @@
 //   \    Copyright 2026-present Context contributors.
 //                 SPDX-License-Identifier: Apache-2.0
 
-package core
+package extract
 
 import (
 	"bufio"
@@ -12,10 +12,11 @@ import (
 	"strings"
 
 	"github.com/ActiveMemory/ctx/internal/config/token"
+	"github.com/ActiveMemory/ctx/internal/entity"
 	"github.com/ActiveMemory/ctx/internal/write/add"
 )
 
-// ExtractContent retrieves content from various sources for adding entries.
+// Content retrieves content from various sources for adding entries.
 //
 // Content is extracted in priority order:
 //  1. From the file specified by --file flag
@@ -29,7 +30,7 @@ import (
 // Returns:
 //   - string: Extracted and trimmed content
 //   - error: Non-nil if no content source is available or reading fails
-func ExtractContent(args []string, flags Config) (string, error) {
+func Content(args []string, flags entity.AddConfig) (string, error) {
 	if flags.FromFile != "" {
 		// Read from the file
 		fileContent, err := os.ReadFile(flags.FromFile)

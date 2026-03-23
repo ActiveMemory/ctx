@@ -4,7 +4,7 @@
 //   \    Copyright 2026-present Context contributors.
 //                 SPDX-License-Identifier: Apache-2.0
 
-package core
+package normalize
 
 import (
 	"strings"
@@ -12,7 +12,7 @@ import (
 	"github.com/ActiveMemory/ctx/internal/config/token"
 )
 
-// NormalizeTargetSection ensures a section heading has proper Markdown format.
+// TargetSection ensures a section heading has proper Markdown format.
 //
 // Prepends "## " if the section string does not already start with "##".
 // Callers must not pass an empty string; the empty case is handled by
@@ -23,7 +23,7 @@ import (
 //
 // Returns:
 //   - string: Normalized section heading (e.g., "## Phase 1")
-func NormalizeTargetSection(section string) string {
+func TargetSection(section string) string {
 	if !strings.HasPrefix(section, token.HeadingLevelTwoStart) {
 		return token.HeadingLevelTwoStart + section
 	}

@@ -4,11 +4,9 @@
 //   \    Copyright 2026-present Context contributors.
 //                 SPDX-License-Identifier: Apache-2.0
 
-package core
+package inspect
 
-import (
-	"github.com/ActiveMemory/ctx/internal/config/token"
-)
+import "github.com/ActiveMemory/ctx/internal/config/token"
 
 // SkipNewline advances pos past a newline (CRLF or LF) if present.
 //

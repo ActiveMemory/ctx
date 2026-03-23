@@ -14,14 +14,21 @@ import (
 
 	"github.com/ActiveMemory/ctx/internal/assets/read/desc"
 	"github.com/ActiveMemory/ctx/internal/cli/add/cmd/root"
+	entry2 "github.com/ActiveMemory/ctx/internal/cli/add/core/entry"
+	"github.com/ActiveMemory/ctx/internal/cli/add/core/example"
+	"github.com/ActiveMemory/ctx/internal/cli/add/core/extract"
+	"github.com/ActiveMemory/ctx/internal/cli/add/core/format"
+	"github.com/ActiveMemory/ctx/internal/cli/add/core/insert"
+	"github.com/ActiveMemory/ctx/internal/cli/add/core/normalize"
 	"github.com/ActiveMemory/ctx/internal/config/embed/text"
 	"github.com/ActiveMemory/ctx/internal/config/marker"
+	"github.com/ActiveMemory/ctx/internal/inspect"
 	"github.com/ActiveMemory/ctx/internal/write/add"
 	"github.com/spf13/cobra"
 
-	"github.com/ActiveMemory/ctx/internal/cli/add/core"
 	"github.com/ActiveMemory/ctx/internal/cli/initialize"
 	entrytype "github.com/ActiveMemory/ctx/internal/config/entry"
+	"github.com/ActiveMemory/ctx/internal/entity"
 	"github.com/ActiveMemory/ctx/internal/entry"
 )
 
@@ -39,7 +46,7 @@ func TestErrNoContent(t *testing.T) {
 func TestErrNoContentProvided(t *testing.T) {
 	for _, fType := range []string{entrytype.Decision, entrytype.Task, entrytype.Learning, entrytype.Convention, entrytype.Unknown} {
 		t.Run(fType, func(t *testing.T) {
-			err := add.ErrNoContentProvided(fType, core.ExamplesForType(fType))
+			err := add.ErrNoContentProvided(fType, example.ForType(fType))
 			if err == nil {
 				t.Fatal("expected non-nil error")
 			}
@@ -153,43 +160,43 @@ func TestExamplesForType(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.fType, func(t *testing.T) {
-			result := core.ExamplesForType(tt.fType)
+			result := example.ForType(tt.fType)
 			if !strings.Contains(result, tt.contains) {
-				t.Errorf("ExamplesForType(%q) should contain %q, got: %s", tt.fType, tt.contains, result)
+				t.Errorf("ForType(%q) should contain %q, got: %s", tt.fType, tt.contains, result)
 			}
 		})
 	}
 }
 
 // ---------------------------------------------------------------------------
-// fmt.go coverage - FormatTask with priority
+// fmt.go coverage - Task with priority
 // ---------------------------------------------------------------------------
 
 func TestFormatTaskWithPriority(t *testing.T) {
-	result := core.FormatTask("My task", "high")
+	result := format.Task("My task", "high")
 	if !strings.Contains(result, "#priority:high") {
-		t.Errorf("FormatTask with priority should contain '#priority:high', got: %s", result)
+		t.Errorf("Task with priority should contain '#priority:high', got: %s", result)
 	}
 	if !strings.Contains(result, "My task") {
-		t.Errorf("FormatTask should contain task content, got: %s", result)
+		t.Errorf("Task should contain task content, got: %s", result)
 	}
 	if !strings.Contains(result, "#added:") {
-		t.Errorf("FormatTask should contain '#added:' timestamp, got: %s", result)
+		t.Errorf("Task should contain '#added:' timestamp, got: %s", result)
 	}
 }
 
 func TestFormatTaskWithoutPriority(t *testing.T) {
-	result := core.FormatTask("Simple task", "")
+	result := format.Task("Simple task", "")
 	if strings.Contains(result, "#priority:") {
-		t.Errorf("FormatTask without priority should not contain '#priority:', got: %s", result)
+		t.Errorf("Task without priority should not contain '#priority:', got: %s", result)
 	}
 	if !strings.Contains(result, "Simple task") {
-		t.Errorf("FormatTask should contain task content, got: %s", result)
+		t.Errorf("Task should contain task content, got: %s", result)
 	}
 }
 
 // ---------------------------------------------------------------------------
-// pos.go coverage
+// inspect.go coverage
 // ---------------------------------------------------------------------------
 
 func TestSkipNewline(t *testing.T) {
@@ -207,7 +214,7 @@ func TestSkipNewline(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			got := core.SkipNewline(tt.s, tt.pos)
+			got := inspect.SkipNewline(tt.s, tt.pos)
 			if got != tt.want {
 				t.Errorf("SkipNewline(%q, %d) = %d, want %d", tt.s, tt.pos, got, tt.want)
 			}
@@ -232,7 +239,7 @@ func TestSkipWhitespace(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			got := core.SkipWhitespace(tt.s, tt.pos)
+			got := inspect.SkipWhitespace(tt.s, tt.pos)
 			if got != tt.want {
 				t.Errorf("SkipWhitespace(%q, %d) = %d, want %d", tt.s, tt.pos, got, tt.want)
 			}
@@ -254,7 +261,7 @@ func TestFindNewline(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			got := core.FindNewline(tt.s)
+			got := inspect.FindNewline(tt.s)
 			if got != tt.want {
 				t.Errorf("FindNewline(%q) = %d, want %d", tt.s, got, tt.want)
 			}
@@ -268,7 +275,7 @@ func TestFindNewline(t *testing.T) {
 
 func TestContainsEndComment(t *testing.T) {
 	t.Run("found", func(t *testing.T) {
-		found, idx := core.ContainsEndComment("some text --> more")
+		found, idx := inspect.ContainsEndComment("some text --> more")
 		if !found {
 			t.Error("expected to find comment close marker")
 		}
@@ -278,7 +285,7 @@ func TestContainsEndComment(t *testing.T) {
 	})
 
 	t.Run("not found", func(t *testing.T) {
-		found, idx := core.ContainsEndComment("no comment close here")
+		found, idx := inspect.ContainsEndComment("no comment close here")
 		if found {
 			t.Error("should not find comment close marker")
 		}
@@ -289,19 +296,19 @@ func TestContainsEndComment(t *testing.T) {
 }
 
 // ---------------------------------------------------------------------------
-// normalize.go coverage - NormalizeTargetSection both branches
+// normalize.go coverage - TargetSection both branches
 // ---------------------------------------------------------------------------
 
 func TestNormalizeTargetSection(t *testing.T) {
 	t.Run("without prefix", func(t *testing.T) {
-		result := core.NormalizeTargetSection("Phase 1")
+		result := normalize.TargetSection("Phase 1")
 		if result != "## Phase 1" {
 			t.Errorf("expected '## Phase 1', got %q", result)
 		}
 	})
 
 	t.Run("with prefix", func(t *testing.T) {
-		result := core.NormalizeTargetSection("## Phase 1")
+		result := normalize.TargetSection("## Phase 1")
 		if result != "## Phase 1" {
 			t.Errorf("expected '## Phase 1', got %q", result)
 		}
@@ -316,7 +323,7 @@ func TestInsertAfterHeader_NoHeader(t *testing.T) {
 	content := "Some content without any matching header\n"
 	entry := "- New entry\n"
 
-	result := core.InsertAfterHeader(content, entry, "# Missing Header")
+	result := insert.AfterHeader(content, entry, "# Missing Header")
 	resultStr := string(result)
 
 	if !strings.Contains(resultStr, "New entry") {
@@ -329,7 +336,7 @@ func TestInsertAfterHeader_HeaderAtEndOfFile(t *testing.T) {
 	content := "# Heading"
 	entry := "- New entry\n"
 
-	result := core.InsertAfterHeader(content, entry, "# Heading")
+	result := insert.AfterHeader(content, entry, "# Heading")
 	resultStr := string(result)
 
 	if !strings.Contains(resultStr, "New entry") {
@@ -344,7 +351,7 @@ func TestInsertAfterHeader_WithCtxMarkers(t *testing.T) {
 	entry := "## [2026-01-02] New\n"
 
 	// The header "# Learnings" is found, then markers are skipped
-	result := core.InsertAfterHeader(content, entry, desc.Text(text.DescKeyHeadingLearnings))
+	result := insert.AfterHeader(content, entry, desc.Text(text.DescKeyHeadingLearnings))
 	resultStr := string(result)
 
 	if !strings.Contains(resultStr, "New") {
@@ -357,7 +364,7 @@ func TestInsertAfterHeader_CtxMarkerWithoutClose(t *testing.T) {
 	content := "# Learnings\n" + marker.CtxMarkerStart + "\nunclosed marker content\nExisting\n"
 	entry := "## New entry\n"
 
-	result := core.InsertAfterHeader(content, entry, desc.Text(text.DescKeyHeadingLearnings))
+	result := insert.AfterHeader(content, entry, desc.Text(text.DescKeyHeadingLearnings))
 	resultStr := string(result)
 
 	if !strings.Contains(resultStr, "New entry") {
@@ -366,7 +373,7 @@ func TestInsertAfterHeader_CtxMarkerWithoutClose(t *testing.T) {
 }
 
 func TestAppendAtEnd_WithNewline(t *testing.T) {
-	result := core.AppendAtEnd("content\n", "entry\n")
+	result := insert.AppendAtEnd("content\n", "entry\n")
 	resultStr := string(result)
 	if !strings.Contains(resultStr, "entry") {
 		t.Error("entry should be appended")
@@ -374,7 +381,7 @@ func TestAppendAtEnd_WithNewline(t *testing.T) {
 }
 
 func TestAppendAtEnd_WithoutNewline(t *testing.T) {
-	result := core.AppendAtEnd("content", "entry\n")
+	result := insert.AppendAtEnd("content", "entry\n")
 	resultStr := string(result)
 	if !strings.Contains(resultStr, "entry") {
 		t.Error("entry should be appended")
@@ -390,7 +397,7 @@ func TestInsertTask_NoPendingNoNewline(t *testing.T) {
 	existing := "# Tasks\n\n- [x] Done task"
 	entry := "- [ ] New task\n"
 
-	result := core.InsertTask(entry, existing, "")
+	result := insert.Task(entry, existing, "")
 	resultStr := string(result)
 
 	if !strings.Contains(resultStr, "New task") {
@@ -402,7 +409,7 @@ func TestInsertTaskAfterSection_SectionNotFound(t *testing.T) {
 	content := "# Tasks\n\n- [x] Done\n"
 	entry := "- [ ] New task\n"
 
-	result := core.InsertTaskAfterSection(entry, content, "Missing Section")
+	result := insert.TaskAfterSection(entry, content, "Missing Section")
 	resultStr := string(result)
 
 	if !strings.Contains(resultStr, "New task") {
@@ -415,7 +422,7 @@ func TestInsertTaskAfterSection_SectionAtEnd(t *testing.T) {
 	content := "# Tasks\n\n## Phase 1"
 	entry := "- [ ] New task\n"
 
-	result := core.InsertTaskAfterSection(entry, content, "Phase 1")
+	result := insert.TaskAfterSection(entry, content, "Phase 1")
 	resultStr := string(result)
 
 	if !strings.Contains(resultStr, "New task") {
@@ -428,7 +435,7 @@ func TestInsertTaskAfterSection_ContentNoNewline(t *testing.T) {
 	content := "# Tasks"
 	entry := "- [ ] New task\n"
 
-	result := core.InsertTaskAfterSection(entry, content, "Missing")
+	result := insert.TaskAfterSection(entry, content, "Missing")
 	resultStr := string(result)
 
 	if !strings.Contains(resultStr, "New task") {
@@ -437,7 +444,7 @@ func TestInsertTaskAfterSection_ContentNoNewline(t *testing.T) {
 }
 
 // ---------------------------------------------------------------------------
-// content.go coverage - ExtractContent
+// content.go coverage - Content
 // ---------------------------------------------------------------------------
 
 func TestExtractContent_FromFile(t *testing.T) {
@@ -446,7 +453,7 @@ func TestExtractContent_FromFile(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	content, err := core.ExtractContent([]string{"task"}, core.Config{FromFile: tmpFile})
+	content, err := extract.Content([]string{"task"}, entity.AddConfig{FromFile: tmpFile})
 	if err != nil {
 		t.Fatalf("unexpected error: %v", err)
 	}
@@ -456,14 +463,14 @@ func TestExtractContent_FromFile(t *testing.T) {
 }
 
 func TestExtractContent_FromFileMissing(t *testing.T) {
-	_, err := core.ExtractContent([]string{"task"}, core.Config{FromFile: "/nonexistent/file"})
+	_, err := extract.Content([]string{"task"}, entity.AddConfig{FromFile: "/nonexistent/file"})
 	if err == nil {
 		t.Fatal("expected error for missing file")
 	}
 }
 
 func TestExtractContent_FromArgs(t *testing.T) {
-	content, err := core.ExtractContent([]string{"task", "hello", "world"}, core.Config{})
+	content, err := extract.Content([]string{"task", "hello", "world"}, entity.AddConfig{})
 	if err != nil {
 		t.Fatalf("unexpected error: %v", err)
 	}
@@ -474,7 +481,7 @@ func TestExtractContent_FromArgs(t *testing.T) {
 
 func TestExtractContent_NoContent(t *testing.T) {
 	// Only one arg (the type), no file, and stdin is not a pipe in tests
-	_, err := core.ExtractContent([]string{"task"}, core.Config{})
+	_, err := extract.Content([]string{"task"}, entity.AddConfig{})
 	if err == nil {
 		t.Fatal("expected error when no content source")
 	}
@@ -623,7 +630,7 @@ func TestRun_UnknownType(t *testing.T) {
 	addCmd := &cobra.Command{}
 	addCmd.SetOut(&strings.Builder{})
 	addCmd.SetErr(&strings.Builder{})
-	err := root.Run(addCmd, []string{"invalidtype", "Some content"}, core.Config{})
+	err := root.Run(addCmd, []string{"invalidtype", "Some content"}, entity.AddConfig{})
 	if err == nil {
 		t.Fatal("expected error for unknown type")
 	}
@@ -650,7 +657,7 @@ func TestRun_NoContent(t *testing.T) {
 	addCmd := &cobra.Command{}
 	addCmd.SetOut(&strings.Builder{})
 	addCmd.SetErr(&strings.Builder{})
-	err := root.Run(addCmd, []string{"task"}, core.Config{})
+	err := root.Run(addCmd, []string{"task"}, entity.AddConfig{})
 	if err == nil {
 		t.Fatal("expected error when no content provided")
 	}
@@ -680,7 +687,7 @@ func TestRun_TaskWithPriority(t *testing.T) {
 	addCmd := &cobra.Command{}
 	addCmd.SetOut(&strings.Builder{})
 	addCmd.SetErr(&strings.Builder{})
-	err := root.Run(addCmd, []string{"task", "High priority task"}, core.Config{Priority: "high"})
+	err := root.Run(addCmd, []string{"task", "High priority task"}, entity.AddConfig{Priority: "high"})
 	if err != nil {
 		t.Fatalf("Run task with priority failed: %v", err)
 	}
@@ -715,7 +722,7 @@ func TestRun_TaskWithSection(t *testing.T) {
 	addCmd := &cobra.Command{}
 	addCmd.SetOut(&strings.Builder{})
 	addCmd.SetErr(&strings.Builder{})
-	err := root.Run(addCmd, []string{"task", "Sectioned task"}, core.Config{Section: "Next Up"})
+	err := root.Run(addCmd, []string{"task", "Sectioned task"}, entity.AddConfig{Section: "Next Up"})
 	if err != nil {
 		t.Fatalf("Run task with section failed: %v", err)
 	}
@@ -735,23 +742,23 @@ func TestRun_TaskWithSection(t *testing.T) {
 
 func TestPredicates(t *testing.T) {
 	// Test plural forms
-	if !core.FileTypeIsTask("tasks") {
+	if !entry2.FileTypeIsTask("tasks") {
 		t.Error("FileTypeIsTask should accept 'tasks'")
 	}
-	if !core.FileTypeIsDecision("decisions") {
+	if !entry2.FileTypeIsDecision("decisions") {
 		t.Error("FileTypeIsDecision should accept 'decisions'")
 	}
-	if !core.FileTypeIsLearning("learnings") {
+	if !entry2.FileTypeIsLearning("learnings") {
 		t.Error("FileTypeIsLearning should accept 'learnings'")
 	}
 	// Test negative cases
-	if core.FileTypeIsTask("decision") {
+	if entry2.FileTypeIsTask("decision") {
 		t.Error("FileTypeIsTask should reject 'decision'")
 	}
-	if core.FileTypeIsDecision("task") {
+	if entry2.FileTypeIsDecision("task") {
 		t.Error("FileTypeIsDecision should reject 'task'")
 	}
-	if core.FileTypeIsLearning("convention") {
+	if entry2.FileTypeIsLearning("convention") {
 		t.Error("FileTypeIsLearning should reject 'convention'")
 	}
 }
@@ -773,7 +780,7 @@ func TestEndsWithNewline(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			got := core.EndsWithNewline(tt.s)
+			got := inspect.EndsWithNewline(tt.s)
 			if got != tt.want {
 				t.Errorf("EndsWithNewline(%q) = %v, want %v", tt.s, got, tt.want)
 			}
@@ -783,13 +790,13 @@ func TestEndsWithNewline(t *testing.T) {
 
 func TestContains(t *testing.T) {
 	t.Run("found", func(t *testing.T) {
-		found, idx := core.Contains("hello world", "world")
+		found, idx := inspect.Contains("hello world", "world")
 		if !found || idx != 6 {
 			t.Errorf("Contains() = (%v, %d), want (true, 6)", found, idx)
 		}
 	})
 	t.Run("not found", func(t *testing.T) {
-		found, idx := core.Contains("hello", "world")
+		found, idx := inspect.Contains("hello", "world")
 		if found || idx != -1 {
 			t.Errorf("Contains() = (%v, %d), want (false, -1)", found, idx)
 		}
@@ -798,13 +805,13 @@ func TestContains(t *testing.T) {
 
 func TestContainsNewLine(t *testing.T) {
 	t.Run("found", func(t *testing.T) {
-		found, idx := core.ContainsNewLine("abc\ndef")
+		found, idx := inspect.ContainsNewLine("abc\ndef")
 		if !found || idx != 3 {
 			t.Errorf("ContainsNewLine() = (%v, %d), want (true, 3)", found, idx)
 		}
 	})
 	t.Run("not found", func(t *testing.T) {
-		found, idx := core.ContainsNewLine("abcdef")
+		found, idx := inspect.ContainsNewLine("abcdef")
 		if found || idx != -1 {
 			t.Errorf("ContainsNewLine() = (%v, %d), want (false, -1)", found, idx)
 		}
@@ -812,13 +819,13 @@ func TestContainsNewLine(t *testing.T) {
 }
 
 func TestStartsWithCtxMarker(t *testing.T) {
-	if !core.StartsWithCtxMarker(marker.CtxMarkerStart + " rest") {
+	if !inspect.StartsWithCtxMarker(marker.CtxMarkerStart + " rest") {
 		t.Error("should detect CtxMarkerStart")
 	}
-	if !core.StartsWithCtxMarker(marker.CtxMarkerEnd + " rest") {
+	if !inspect.StartsWithCtxMarker(marker.CtxMarkerEnd + " rest") {
 		t.Error("should detect CtxMarkerEnd")
 	}
-	if core.StartsWithCtxMarker("no marker here") {
+	if inspect.StartsWithCtxMarker("no marker here") {
 		t.Error("should not detect marker in plain text")
 	}
 }

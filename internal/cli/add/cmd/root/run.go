@@ -9,16 +9,15 @@ package root
 import (
 	"strings"
 
+	"github.com/ActiveMemory/ctx/internal/cli/add/core/example"
+	"github.com/ActiveMemory/ctx/internal/cli/add/core/extract"
 	"github.com/spf13/cobra"
 
-	"github.com/ActiveMemory/ctx/internal/cli/add/core"
 	cfgEntry "github.com/ActiveMemory/ctx/internal/config/entry"
+	"github.com/ActiveMemory/ctx/internal/entity"
 	"github.com/ActiveMemory/ctx/internal/entry"
 	"github.com/ActiveMemory/ctx/internal/write/add"
 )
-
-// Config is an alias for core.Config.
-type Config = core.Config
 
 // Run executes the add command logic.
 //
@@ -33,12 +32,12 @@ type Config = core.Config
 // Returns:
 //   - error: Non-nil if content is missing, type is invalid, required flags
 //     are missing, or file operations fail
-func Run(cmd *cobra.Command, args []string, flags Config) error {
+func Run(cmd *cobra.Command, args []string, flags entity.AddConfig) error {
 	fType := strings.ToLower(args[0])
 
-	content, extractErr := core.ExtractContent(args, flags)
+	content, extractErr := extract.Content(args, flags)
 	if extractErr != nil || content == "" {
-		return add.ErrNoContentProvided(fType, core.ExamplesForType(fType))
+		return add.ErrNoContentProvided(fType, example.ForType(fType))
 	}
 
 	params := entry.Params{
@@ -54,7 +53,7 @@ func Run(cmd *cobra.Command, args []string, flags Config) error {
 	}
 
 	if validateErr := entry.Validate(
-		params, core.ExamplesForType,
+		params, example.ForType,
 	); validateErr != nil {
 		return validateErr
 	}

@@ -74,6 +74,7 @@ const (
 )
 
 const (
+	DescKeyWriteInitGettingStartedSaved  = "write.init-getting-started-saved"
 	DescKeyWriteInitSettingUpPermissions = "write.init-setting-up-permissions"
 	DescKeyWriteInitWarnNonFatal         = "write.init-warn-non-fatal"
 	DescKeyWriteInitialized              = "write.initialized"
