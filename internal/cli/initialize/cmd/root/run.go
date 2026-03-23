@@ -13,14 +13,18 @@ import (
 	"strings"
 
 	claude2 "github.com/ActiveMemory/ctx/internal/cli/initialize/core/claude"
+	"github.com/ActiveMemory/ctx/internal/cli/initialize/core/entry"
 	coreMerge "github.com/ActiveMemory/ctx/internal/cli/initialize/core/merge"
+	"github.com/ActiveMemory/ctx/internal/cli/initialize/core/plan"
+	"github.com/ActiveMemory/ctx/internal/cli/initialize/core/plugin"
 	project2 "github.com/ActiveMemory/ctx/internal/cli/initialize/core/project"
+	"github.com/ActiveMemory/ctx/internal/cli/initialize/core/prompt"
+	"github.com/ActiveMemory/ctx/internal/cli/initialize/core/validate"
 	"github.com/spf13/cobra"
 
 	"github.com/ActiveMemory/ctx/internal/assets/read/catalog"
 	"github.com/ActiveMemory/ctx/internal/assets/read/desc"
 	"github.com/ActiveMemory/ctx/internal/assets/read/template"
-	"github.com/ActiveMemory/ctx/internal/cli/initialize/core"
 	"github.com/ActiveMemory/ctx/internal/config/claude"
 	"github.com/ActiveMemory/ctx/internal/config/cli"
 	"github.com/ActiveMemory/ctx/internal/config/ctx"
@@ -59,7 +63,7 @@ func Run(
 	cmd *cobra.Command, force, minimal, merge, ralph, noPluginEnable bool,
 ) error {
 	// Check if ctx is in PATH (required for hooks to work)
-	if err := core.CheckCtxInPath(cmd); err != nil {
+	if err := validate.CheckCtxInPath(cmd); err != nil {
 		return err
 	}
 
@@ -127,13 +131,13 @@ func Run(
 	initialize.InfoInitialized(cmd, contextDir)
 
 	// Create entry templates in .context/templates/
-	if err := core.CreateEntryTemplates(cmd, contextDir, force); err != nil {
+	if err := entry.CreateEntryTemplates(cmd, contextDir, force); err != nil {
 		// Non-fatal: warn but continue
 		initialize.InfoWarnNonFatal(cmd, desc.Text(text.DescKeyInitLabelEntryTemplates), err)
 	}
 
 	// Create prompt templates in .context/prompts/
-	if err := core.CreatePromptTemplates(cmd, contextDir, force); err != nil {
+	if err := prompt.CreatePromptTemplates(cmd, contextDir, force); err != nil {
 		// Non-fatal: warn but continue
 		initialize.InfoWarnNonFatal(cmd, desc.Text(text.DescKeyInitLabelPromptTemplates), err)
 	}
@@ -153,27 +157,27 @@ func Run(
 	}
 
 	// Create PROMPT.md (uses ralph template if --ralph flag set)
-	if err := core.HandlePromptMd(cmd, force, merge, ralph); err != nil {
+	if err := prompt.HandlePromptMd(cmd, force, merge, ralph); err != nil {
 		// Non-fatal: warn but continue
 		initialize.InfoWarnNonFatal(cmd, loop.PromptMd, err)
 	}
 
 	// Create IMPLEMENTATION_PLAN.md
-	if err := core.HandleImplementationPlan(cmd, force, merge); err != nil {
+	if err := plan.HandleImplementationPlan(cmd, force, merge); err != nil {
 		// Non-fatal: warn but continue
 		initialize.InfoWarnNonFatal(cmd, project.ImplementationPlan, err)
 	}
 
 	// Merge permissions into settings.local.json (no hook scaffolding)
 	initialize.InfoSettingUpPermissions(cmd)
-	if err := coreMerge.MergeSettingsPermissions(cmd); err != nil {
+	if err := coreMerge.SettingsPermissions(cmd); err != nil {
 		// Non-fatal: warn but continue
 		initialize.InfoWarnNonFatal(cmd, desc.Text(text.DescKeyInitLabelPermissions), err)
 	}
 
 	// Auto-enable plugin globally unless suppressed
 	if !noPluginEnable {
-		if pluginErr := core.EnablePluginGlobally(cmd); pluginErr != nil {
+		if pluginErr := plugin.EnablePluginGlobally(cmd); pluginErr != nil {
 			// Non-fatal: warn but continue
 			initialize.InfoWarnNonFatal(cmd, desc.Text(text.DescKeyInitLabelPluginEnable), pluginErr)
 		}
@@ -186,7 +190,7 @@ func Run(
 	}
 
 	// Deploy Makefile.ctx and amend user Makefile
-	if err := core.HandleMakefileCtx(cmd); err != nil {
+	if err := project2.HandleMakefileCtx(cmd); err != nil {
 		// Non-fatal: warn but continue
 		initialize.InfoWarnNonFatal(cmd, sync.PatternMakefile, err)
 	}

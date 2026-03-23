@@ -13,44 +13,49 @@ import (
 	"strings"
 
 	"github.com/ActiveMemory/ctx/internal/assets/read/lookup"
-	claude2 "github.com/ActiveMemory/ctx/internal/config/claude"
+	cfgClaude "github.com/ActiveMemory/ctx/internal/config/claude"
 	"github.com/ActiveMemory/ctx/internal/config/dir"
 	"github.com/ActiveMemory/ctx/internal/config/fs"
+	"github.com/ActiveMemory/ctx/internal/config/token"
 	"github.com/ActiveMemory/ctx/internal/err/config"
-	fs2 "github.com/ActiveMemory/ctx/internal/err/fs"
-	errparser "github.com/ActiveMemory/ctx/internal/err/parser"
+	errFs "github.com/ActiveMemory/ctx/internal/err/fs"
+	errParser "github.com/ActiveMemory/ctx/internal/err/parser"
 	"github.com/ActiveMemory/ctx/internal/write/initialize"
 	"github.com/spf13/cobra"
 
 	"github.com/ActiveMemory/ctx/internal/claude"
 )
 
-// MergeSettingsPermissions merges ctx permissions into settings.local.json.
+// SettingsPermissions merges ctx permissions into settings.local.json.
 //
 // Parameters:
 //   - cmd: Cobra command for output
 //
 // Returns:
 //   - error: Non-nil if file operations fail
-func MergeSettingsPermissions(cmd *cobra.Command) error {
+func SettingsPermissions(cmd *cobra.Command) error {
 	var settings claude.Settings
-	existingContent, err := os.ReadFile(claude2.Settings)
+	existingContent, err := os.ReadFile(cfgClaude.Settings)
 	fileExists := err == nil
 	if fileExists {
 		if err := json.Unmarshal(existingContent, &settings); err != nil {
-			return errparser.ParseFile(claude2.Settings, err)
+			return errParser.ParseFile(cfgClaude.Settings, err)
 		}
 	}
-	allowModified := MergePermissions(&settings.Permissions.Allow, lookup.PermAllowListDefault())
-	denyModified := MergePermissions(&settings.Permissions.Deny, lookup.PermDenyListDefault())
+	allowModified := Permissions(
+		&settings.Permissions.Allow, lookup.PermAllowListDefault(),
+	)
+	denyModified := Permissions(
+		&settings.Permissions.Deny, lookup.PermDenyListDefault(),
+	)
 	allowDeduped := DeduplicatePermissions(&settings.Permissions.Allow)
 	denyDeduped := DeduplicatePermissions(&settings.Permissions.Deny)
 	if !allowModified && !denyModified && !allowDeduped && !denyDeduped {
-		initialize.NoChanges(cmd, claude2.Settings)
+		initialize.NoChanges(cmd, cfgClaude.Settings)
 		return nil
 	}
 	if err := os.MkdirAll(dir.Claude, fs.PermExec); err != nil {
-		return fs2.Mkdir(dir.Claude, err)
+		return errFs.Mkdir(dir.Claude, err)
 	}
 	var buf bytes.Buffer
 	encoder := json.NewEncoder(&buf)
@@ -59,31 +64,33 @@ func MergeSettingsPermissions(cmd *cobra.Command) error {
 	if err := encoder.Encode(settings); err != nil {
 		return config.MarshalSettings(err)
 	}
-	if err := os.WriteFile(claude2.Settings, buf.Bytes(), fs.PermFile); err != nil {
-		return fs2.FileWrite(claude2.Settings, err)
+	if err := os.WriteFile(
+		cfgClaude.Settings, buf.Bytes(), fs.PermFile,
+	); err != nil {
+		return errFs.FileWrite(cfgClaude.Settings, err)
 	}
 	if fileExists {
 		deduped := allowDeduped || denyDeduped
 		merged := allowModified || denyModified
 		switch {
 		case merged && deduped:
-			initialize.PermsMergedDeduped(cmd, claude2.Settings)
+			initialize.PermsMergedDeduped(cmd, cfgClaude.Settings)
 		case deduped:
-			initialize.PermsDeduped(cmd, claude2.Settings)
+			initialize.PermsDeduped(cmd, cfgClaude.Settings)
 		case allowModified && denyModified:
-			initialize.PermsAllowDeny(cmd, claude2.Settings)
+			initialize.PermsAllowDeny(cmd, cfgClaude.Settings)
 		case denyModified:
-			initialize.PermsDeny(cmd, claude2.Settings)
+			initialize.PermsDeny(cmd, cfgClaude.Settings)
 		default:
-			initialize.PermsAllow(cmd, claude2.Settings)
+			initialize.PermsAllow(cmd, cfgClaude.Settings)
 		}
 	} else {
-		initialize.Created(cmd, claude2.Settings)
+		initialize.Created(cmd, cfgClaude.Settings)
 	}
 	return nil
 }
 
-// MergePermissions adds default permissions that are not already present.
+// Permissions adds default permissions that are not already present.
 //
 // Parameters:
 //   - slice: Existing permissions slice to modify
@@ -91,7 +98,7 @@ func MergeSettingsPermissions(cmd *cobra.Command) error {
 //
 // Returns:
 //   - bool: True if any permissions were added
-func MergePermissions(slice *[]string, defaults []string) bool {
+func Permissions(slice *[]string, defaults []string) bool {
 	existing := make(map[string]bool)
 	for _, p := range *slice {
 		existing[p] = true
@@ -107,7 +114,7 @@ func MergePermissions(slice *[]string, defaults []string) bool {
 }
 
 // PluginPrefix is the prefix for plugin-scoped skill permissions.
-const PluginPrefix = "ctx:"
+const PluginPrefix = cfgClaude.PluginScope
 
 // DeduplicatePermissions removes duplicate and redundant FQ-form permissions.
 //
@@ -123,7 +130,7 @@ func DeduplicatePermissions(slice *[]string) bool {
 	bareSkills := make(map[string]bool)
 	for _, p := range *slice {
 		if name, ok := skillName(p); ok {
-			if !strings.Contains(name, ":") {
+			if !strings.Contains(name, token.Colon) {
 				bareSkills[name] = true
 			}
 		}
@@ -137,7 +144,7 @@ func DeduplicatePermissions(slice *[]string) bool {
 		seen[p] = true
 		if name, ok := skillName(p); ok && strings.HasPrefix(name, PluginPrefix) {
 			bareName := strings.TrimPrefix(name, PluginPrefix)
-			bareName = strings.TrimSuffix(bareName, ":*")
+			bareName = strings.TrimSuffix(bareName, cfgClaude.PluginScopeWildcard)
 			if bareSkills[bareName] {
 				continue
 			}

@@ -6,7 +6,11 @@
 
 package merge
 
-import "strings"
+import (
+	"strings"
+
+	cfgClaude "github.com/ActiveMemory/ctx/internal/config/claude"
+)
 
 // skillName extracts the skill name from a permission string like "Skill(name)".
 //
@@ -17,8 +21,9 @@ import "strings"
 //   - string: The skill name
 //   - bool: True if perm matches the Skill(...) format
 func skillName(perm string) (string, bool) {
-	if !strings.HasPrefix(perm, "Skill(") || !strings.HasSuffix(perm, ")") {
+	if !strings.HasPrefix(perm, cfgClaude.PermSkillPrefix) ||
+		!strings.HasSuffix(perm, cfgClaude.PermSkillSuffix) {
 		return "", false
 	}
-	return perm[len("Skill(") : len(perm)-1], true
+	return perm[len(cfgClaude.PermSkillPrefix) : len(perm)-len(cfgClaude.PermSkillSuffix)], true
 }

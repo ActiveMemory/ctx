@@ -4,17 +4,18 @@
 //   \    Copyright 2026-present Context contributors.
 //                 SPDX-License-Identifier: Apache-2.0
 
-package core
+package validate
 
 import (
 	"os"
 	"os/exec"
 
+	"github.com/spf13/cobra"
+
 	"github.com/ActiveMemory/ctx/internal/config/cli"
 	"github.com/ActiveMemory/ctx/internal/config/env"
 	"github.com/ActiveMemory/ctx/internal/err/initialize"
 	writeInit "github.com/ActiveMemory/ctx/internal/write/initialize"
-	"github.com/spf13/cobra"
 )
 
 // CheckCtxInPath verifies that the ctx binary is in PATH.

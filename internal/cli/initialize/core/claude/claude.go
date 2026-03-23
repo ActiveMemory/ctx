@@ -7,14 +7,15 @@
 package claude
 
 import (
-	"github.com/ActiveMemory/ctx/internal/cli/initialize/core/merge"
 	"github.com/spf13/cobra"
 
 	readClaude "github.com/ActiveMemory/ctx/internal/assets/read/claude"
 	"github.com/ActiveMemory/ctx/internal/assets/read/desc"
+	"github.com/ActiveMemory/ctx/internal/cli/initialize/core/merge"
 	"github.com/ActiveMemory/ctx/internal/config/claude"
 	"github.com/ActiveMemory/ctx/internal/config/embed/text"
 	"github.com/ActiveMemory/ctx/internal/config/marker"
+	"github.com/ActiveMemory/ctx/internal/entity"
 	errInitialize "github.com/ActiveMemory/ctx/internal/err/initialize"
 	"github.com/ActiveMemory/ctx/internal/write/initialize"
 )
@@ -34,14 +35,15 @@ func HandleClaudeMd(cmd *cobra.Command, force, autoMerge bool) error {
 		return errInitialize.ReadTemplate(claude.Md, err)
 	}
 
-	created, mergeErr := merge.CreateOrMerge(cmd, merge.Params{
+	created, mergeErr := merge.CreateOrMerge(cmd, entity.MergeParams{
 		Filename:        claude.Md,
 		MarkerStart:     marker.CtxMarkerStart,
+		MarkerEnd:       marker.CtxMarkerEnd,
 		TemplateContent: templateContent,
 		Force:           force,
 		AutoMerge:       autoMerge,
 		ConfirmPrompt:   desc.Text(text.DescKeyInitConfirmClaude),
-		UpdateFn:        updateCtxSection,
+		UpdateTextKey:   text.DescKeyWriteInitUpdatedCtxSection,
 	})
 
 	if mergeErr != nil {

@@ -11,13 +11,14 @@ import (
 	"os"
 	"strings"
 
-	"github.com/ActiveMemory/ctx/internal/cli/initialize/core/backup"
-	"github.com/ActiveMemory/ctx/internal/cli/initialize/core/entry"
 	"github.com/spf13/cobra"
 
+	"github.com/ActiveMemory/ctx/internal/cli/initialize/core/backup"
+	"github.com/ActiveMemory/ctx/internal/cli/initialize/core/entry"
 	"github.com/ActiveMemory/ctx/internal/config/cli"
 	"github.com/ActiveMemory/ctx/internal/config/fs"
 	"github.com/ActiveMemory/ctx/internal/config/token"
+	"github.com/ActiveMemory/ctx/internal/entity"
 	errFs "github.com/ActiveMemory/ctx/internal/err/fs"
 	promptErr "github.com/ActiveMemory/ctx/internal/err/prompt"
 	"github.com/ActiveMemory/ctx/internal/write/initialize"
@@ -33,7 +34,7 @@ import (
 // Returns:
 //   - created: True if the file was created fresh (no existing file)
 //   - error: Non-nil if file operations fail
-func CreateOrMerge(cmd *cobra.Command, p Params) (bool, error) {
+func CreateOrMerge(cmd *cobra.Command, p entity.MergeParams) (bool, error) {
 	existingContent, readErr := os.ReadFile(p.Filename)
 	fileExists := readErr == nil
 
@@ -54,7 +55,15 @@ func CreateOrMerge(cmd *cobra.Command, p Params) (bool, error) {
 			initialize.CtxContentExists(cmd, p.Filename)
 			return false, nil
 		}
-		return false, p.UpdateFn(cmd, existingStr, p.TemplateContent)
+		updateErr := UpdateMarkedSection(
+			cmd, p.Filename, existingStr, p.TemplateContent,
+			p.MarkerStart, p.MarkerEnd,
+		)
+		if updateErr != nil {
+			return false, updateErr
+		}
+		initialize.UpdatedSection(cmd, p.Filename, p.UpdateTextKey)
+		return false, nil
 	}
 
 	if !p.AutoMerge {
@@ -72,7 +81,7 @@ func CreateOrMerge(cmd *cobra.Command, p Params) (bool, error) {
 		}
 	}
 
-	if bkErr := backup.BackupFile(cmd, p.Filename, existingContent); bkErr != nil {
+	if bkErr := backup.File(cmd, p.Filename, existingContent); bkErr != nil {
 		return false, bkErr
 	}
 
@@ -106,7 +115,6 @@ func CreateOrMerge(cmd *cobra.Command, p Params) (bool, error) {
 //   - newTemplate: New template content (must contain both markers)
 //   - markerStart: Opening marker string
 //   - markerEnd: Closing marker string
-//   - updateInfoFn: Called after a successful write to report the update
 //
 // Returns:
 //   - error: Non-nil if markers are missing or file operations fail
@@ -115,7 +123,6 @@ func UpdateMarkedSection(
 	filename, existing string,
 	newTemplate []byte,
 	markerStart, markerEnd string,
-	updateInfoFn func(cmd *cobra.Command, filename string),
 ) error {
 	startIdx := strings.Index(existing, markerStart)
 	if startIdx == -1 {
@@ -139,7 +146,7 @@ func UpdateMarkedSection(
 	sectionContent := templateStr[templateStart : templateEnd+len(markerEnd)]
 	newContent := existing[:startIdx] + sectionContent + existing[endIdx:]
 
-	if bkErr := backup.BackupFile(cmd, filename, []byte(existing)); bkErr != nil {
+	if bkErr := backup.File(cmd, filename, []byte(existing)); bkErr != nil {
 		return bkErr
 	}
 
@@ -149,6 +156,5 @@ func UpdateMarkedSection(
 		return errFs.FileUpdate(filename, writeErr)
 	}
 
-	updateInfoFn(cmd, filename)
 	return nil
 }

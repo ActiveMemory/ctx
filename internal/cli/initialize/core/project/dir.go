@@ -10,13 +10,14 @@ import (
 	"os"
 	"path/filepath"
 
+	"github.com/spf13/cobra"
+
 	"github.com/ActiveMemory/ctx/internal/assets/read/project"
 	"github.com/ActiveMemory/ctx/internal/config/file"
 	"github.com/ActiveMemory/ctx/internal/config/fs"
 	errFs "github.com/ActiveMemory/ctx/internal/err/fs"
 	errInitialize "github.com/ActiveMemory/ctx/internal/err/initialize"
 	"github.com/ActiveMemory/ctx/internal/write/initialize"
-	"github.com/spf13/cobra"
 )
 
 // CreateProjectDirs creates project-root directories (specs/, ideas/) with
@@ -29,14 +30,14 @@ import (
 // Returns:
 //   - error: Non-nil if directory creation or file write fails
 func CreateProjectDirs(cmd *cobra.Command) error {
-	for _, d := range Dirs {
+	for _, d := range dirs {
 		if _, statErr := os.Stat(d); statErr == nil {
 			initialize.SkippedDir(cmd, d)
 			continue
 		}
 
 		if mkdirErr := os.MkdirAll(d, fs.PermExec); mkdirErr != nil {
-			return errFs.Mkdir(d+"/", mkdirErr)
+			return errFs.Mkdir(d, mkdirErr)
 		}
 
 		readme, readErr := project.Readme(d)

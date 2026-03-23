@@ -25,4 +25,17 @@ const (
 
 	// PluginID is the ctx plugin identifier in Claude Code.
 	PluginID = "ctx@activememory-ctx"
+
+	// KeyEnabledPlugins is the JSON key for enabled plugins in Claude Code settings.
+	KeyEnabledPlugins = "enabledPlugins"
+
+	// PluginScope is the permission scope prefix for plugin-scoped skills.
+	PluginScope = "ctx:"
+	// PluginScopeWildcard is the wildcard suffix for plugin-scoped permissions.
+	PluginScopeWildcard = ":*"
+
+	// PermSkillPrefix is the opening token of a Claude Code skill permission.
+	PermSkillPrefix = "Skill("
+	// PermSkillSuffix is the closing token of a Claude Code skill permission.
+	PermSkillSuffix = ")"
 )

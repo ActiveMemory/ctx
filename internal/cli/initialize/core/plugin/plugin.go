@@ -4,7 +4,7 @@
 //   \    Copyright 2026-present Context contributors.
 //                 SPDX-License-Identifier: Apache-2.0
 
-package core
+package plugin
 
 import (
 	"bytes"
@@ -24,12 +24,6 @@ import (
 	"github.com/ActiveMemory/ctx/internal/write/add"
 	"github.com/ActiveMemory/ctx/internal/write/initialize"
 )
-
-type installedPlugins struct {
-	Plugins map[string]json.RawMessage `json:"plugins"`
-}
-
-type globalSettings map[string]json.RawMessage
 
 // EnablePluginGlobally enables the ctx plugin in ~/.claude/settings.json.
 //
@@ -60,18 +54,18 @@ func EnablePluginGlobally(cmd *cobra.Command) error {
 	}
 	settingsPath := filepath.Join(claudeDir, claude.GlobalSettings)
 	var settings globalSettings
-	existingData, readErr := io.SafeReadUserFile(settingsPath)
-	if readErr != nil && !os.IsNotExist(readErr) {
-		return add.ErrFileRead(settingsPath, readErr)
+	existingData, safeReadErr := io.SafeReadUserFile(settingsPath)
+	if safeReadErr != nil && !os.IsNotExist(safeReadErr) {
+		return add.ErrFileRead(settingsPath, safeReadErr)
 	}
-	if readErr == nil {
+	if safeReadErr == nil {
 		if parseErr := json.Unmarshal(existingData, &settings); parseErr != nil {
 			return errParser.ParseFile(settingsPath, parseErr)
 		}
 	} else {
 		settings = make(globalSettings)
 	}
-	if raw, ok := settings["enabledPlugins"]; ok {
+	if raw, ok := settings[claude.KeyEnabledPlugins]; ok {
 		var enabled map[string]bool
 		if parseErr := json.Unmarshal(raw, &enabled); parseErr == nil {
 			if enabled[claude.PluginID] {
@@ -81,7 +75,7 @@ func EnablePluginGlobally(cmd *cobra.Command) error {
 		}
 	}
 	var enabled map[string]bool
-	if raw, ok := settings["enabledPlugins"]; ok {
+	if raw, ok := settings[claude.KeyEnabledPlugins]; ok {
 		if parseErr := json.Unmarshal(raw, &enabled); parseErr != nil {
 			enabled = make(map[string]bool)
 		}
@@ -93,7 +87,7 @@ func EnablePluginGlobally(cmd *cobra.Command) error {
 	if marshalErr != nil {
 		return config.MarshalPlugins(marshalErr)
 	}
-	settings["enabledPlugins"] = enabledJSON
+	settings[claude.KeyEnabledPlugins] = enabledJSON
 	var buf bytes.Buffer
 	encoder := json.NewEncoder(&buf)
 	encoder.SetEscapeHTML(false)
@@ -108,12 +102,12 @@ func EnablePluginGlobally(cmd *cobra.Command) error {
 	return nil
 }
 
-// PluginInstalled reports whether the ctx plugin is registered in
+// Installed reports whether the ctx plugin is registered in
 // ~/.claude/plugins/installed_plugins.json.
 //
 // Returns:
 //   - bool: True if the plugin entry exists in the installed list
-func PluginInstalled() bool {
+func Installed() bool {
 	homeDir, homeErr := os.UserHomeDir()
 	if homeErr != nil {
 		return false
@@ -131,12 +125,12 @@ func PluginInstalled() bool {
 	return found
 }
 
-// PluginEnabledGlobally reports whether the ctx plugin is enabled in
+// EnabledGlobally reports whether the ctx plugin is enabled in
 // ~/.claude/settings.json.
 //
 // Returns:
 //   - bool: True if the plugin is listed under enabledPlugins
-func PluginEnabledGlobally() bool {
+func EnabledGlobally() bool {
 	homeDir, homeErr := os.UserHomeDir()
 	if homeErr != nil {
 		return false
@@ -150,7 +144,7 @@ func PluginEnabledGlobally() bool {
 	if parseErr := json.Unmarshal(data, &settings); parseErr != nil {
 		return false
 	}
-	raw, ok := settings["enabledPlugins"]
+	raw, ok := settings[claude.KeyEnabledPlugins]
 	if !ok {
 		return false
 	}
@@ -161,12 +155,12 @@ func PluginEnabledGlobally() bool {
 	return enabled[claude.PluginID]
 }
 
-// PluginEnabledLocally reports whether the ctx plugin is enabled in
+// EnabledLocally reports whether the ctx plugin is enabled in
 // .claude/settings.local.json in the current project.
 //
 // Returns:
 //   - bool: True if the plugin is listed under enabledPlugins locally
-func PluginEnabledLocally() bool {
+func EnabledLocally() bool {
 	data, readErr := os.ReadFile(claude.Settings)
 	if readErr != nil {
 		return false
@@ -175,7 +169,7 @@ func PluginEnabledLocally() bool {
 	if parseErr := json.Unmarshal(data, &raw); parseErr != nil {
 		return false
 	}
-	epRaw, ok := raw["enabledPlugins"]
+	epRaw, ok := raw[claude.KeyEnabledPlugins]
 	if !ok {
 		return false
 	}

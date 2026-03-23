@@ -78,31 +78,14 @@ func Backup(cmd *cobra.Command, path string) {
 	cmd.Println(fmt.Sprintf(desc.Text(text.DescKeyWriteInitBackup), path))
 }
 
-// UpdatedCtxSection reports a file whose ctx section was updated.
+// UpdatedSection reports a file whose marked section was updated.
 //
 // Parameters:
 //   - cmd: Cobra command for output
 //   - path: updated file path
-func UpdatedCtxSection(cmd *cobra.Command, path string) {
-	cmd.Println(fmt.Sprintf(desc.Text(text.DescKeyWriteInitUpdatedCtxSection), path))
-}
-
-// UpdatedPlanSection reports a file whose plan section was updated.
-//
-// Parameters:
-//   - cmd: Cobra command for output
-//   - path: updated file path
-func UpdatedPlanSection(cmd *cobra.Command, path string) {
-	cmd.Println(fmt.Sprintf(desc.Text(text.DescKeyWriteInitUpdatedPlanSection), path))
-}
-
-// UpdatedPromptSection reports a file whose prompt section was updated.
-//
-// Parameters:
-//   - cmd: Cobra command for output
-//   - path: updated file path
-func UpdatedPromptSection(cmd *cobra.Command, path string) {
-	cmd.Println(fmt.Sprintf(desc.Text(text.DescKeyWriteInitUpdatedPromptSection), path))
+//   - textKey: text descriptor key for the update message
+func UpdatedSection(cmd *cobra.Command, path, textKey string) {
+	cmd.Println(fmt.Sprintf(desc.Text(textKey), path))
 }
 
 // FileExistsNoCtx reports a file exists without ctx content.

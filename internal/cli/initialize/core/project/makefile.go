@@ -4,7 +4,7 @@
 //   \    Copyright 2026-present Context contributors.
 //                 SPDX-License-Identifier: Apache-2.0
 
-package core
+package project
 
 import (
 	"os"
@@ -44,7 +44,9 @@ func HandleMakefileCtx(cmd *cobra.Command) error {
 	existing, err := os.ReadFile(project.Makefile)
 	if err != nil {
 		minimal := IncludeDirective + token.NewlineLF
-		if err := os.WriteFile(project.Makefile, []byte(minimal), fs.PermFile); err != nil {
+		if err := os.WriteFile(
+			project.Makefile, []byte(minimal), fs.PermFile,
+		); err != nil {
 			return errInitialize.CreateMakefile(err)
 		}
 		initialize.MakefileCreated(cmd)
@@ -59,7 +61,9 @@ func HandleMakefileCtx(cmd *cobra.Command) error {
 		amended += token.NewlineLF
 	}
 	amended += token.NewlineLF + IncludeDirective + token.NewlineLF
-	if err := os.WriteFile(project.Makefile, []byte(amended), fs.PermFile); err != nil {
+	if err := os.WriteFile(
+		project.Makefile, []byte(amended), fs.PermFile,
+	); err != nil {
 		return errFs.FileAmend(project.Makefile, err)
 	}
 	initialize.MakefileAppended(cmd, project.MakefileCtx)

@@ -4,17 +4,16 @@
 //   \    Copyright 2026-present Context contributors.
 //                 SPDX-License-Identifier: Apache-2.0
 
-package merge
+package entity
 
-import "github.com/spf13/cobra"
-
-// Params holds configuration for the create-or-merge file operation.
-type Params struct {
+// MergeParams holds configuration for create-or-merge file operations.
+type MergeParams struct {
 	Filename        string
 	MarkerStart     string
+	MarkerEnd       string
 	TemplateContent []byte
 	Force           bool
 	AutoMerge       bool
 	ConfirmPrompt   string
-	UpdateFn        func(cmd *cobra.Command, existing string, tpl []byte) error
+	UpdateTextKey   string
 }

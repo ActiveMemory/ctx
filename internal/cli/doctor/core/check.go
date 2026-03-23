@@ -14,7 +14,7 @@ import (
 	"strings"
 
 	"github.com/ActiveMemory/ctx/internal/assets/read/desc"
-	initCore "github.com/ActiveMemory/ctx/internal/cli/initialize/core"
+	initCore "github.com/ActiveMemory/ctx/internal/cli/initialize/core/plugin"
 	"github.com/ActiveMemory/ctx/internal/config/claude"
 	"github.com/ActiveMemory/ctx/internal/config/crypto"
 	"github.com/ActiveMemory/ctx/internal/config/ctx"
@@ -228,7 +228,7 @@ func CheckDrift(report *Report) {
 // Parameters:
 //   - report: Report to append the result to
 func CheckPluginEnablement(report *Report) {
-	installed := initCore.PluginInstalled()
+	installed := initCore.Installed()
 	if !installed {
 		report.Results = append(report.Results, Result{
 			Name:     doctor.CheckPluginInstalled,
@@ -246,8 +246,8 @@ func CheckPluginEnablement(report *Report) {
 		Message:  desc.Text(text.DescKeyDoctorPluginInstalledOk),
 	})
 
-	globalEnabled := initCore.PluginEnabledGlobally()
-	localEnabled := initCore.PluginEnabledLocally()
+	globalEnabled := initCore.EnabledGlobally()
+	localEnabled := initCore.EnabledLocally()
 
 	if globalEnabled {
 		report.Results = append(report.Results, Result{

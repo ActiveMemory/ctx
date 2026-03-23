@@ -4,19 +4,20 @@
 //   \    Copyright 2026-present Context contributors.
 //                 SPDX-License-Identifier: Apache-2.0
 
-package core
+package plan
 
 import (
 	"bufio"
 	"os"
 	"strings"
 
-	"github.com/ActiveMemory/ctx/internal/cli/initialize/core/backup"
-	"github.com/ActiveMemory/ctx/internal/cli/initialize/core/entry"
 	"github.com/spf13/cobra"
 
 	readProj "github.com/ActiveMemory/ctx/internal/assets/read/project"
+	"github.com/ActiveMemory/ctx/internal/cli/initialize/core/backup"
+	"github.com/ActiveMemory/ctx/internal/cli/initialize/core/entry"
 	"github.com/ActiveMemory/ctx/internal/config/cli"
+	"github.com/ActiveMemory/ctx/internal/config/embed/text"
 	"github.com/ActiveMemory/ctx/internal/config/fs"
 	"github.com/ActiveMemory/ctx/internal/config/marker"
 	"github.com/ActiveMemory/ctx/internal/config/project"
@@ -75,7 +76,7 @@ func HandleImplementationPlan(cmd *cobra.Command, force, autoMerge bool) error {
 			return nil
 		}
 	}
-	if bkErr := backup.BackupFile(cmd, project.ImplementationPlan, existingContent); bkErr != nil {
+	if bkErr := backup.File(cmd, project.ImplementationPlan, existingContent); bkErr != nil {
 		return bkErr
 	}
 	insertPos := entry.FindInsertionPoint(existingStr)
@@ -83,9 +84,12 @@ func HandleImplementationPlan(cmd *cobra.Command, force, autoMerge bool) error {
 	if insertPos == 0 {
 		mergedContent = string(templateContent) + token.NewlineLF + existingStr
 	} else {
-		mergedContent = existingStr[:insertPos] + token.NewlineLF + string(templateContent) + token.NewlineLF + existingStr[insertPos:]
+		mergedContent = existingStr[:insertPos] + token.NewlineLF +
+			string(templateContent) + token.NewlineLF + existingStr[insertPos:]
 	}
-	if err := os.WriteFile(project.ImplementationPlan, []byte(mergedContent), fs.PermFile); err != nil {
+	if err := os.WriteFile(
+		project.ImplementationPlan, []byte(mergedContent), fs.PermFile,
+	); err != nil {
 		return errFs.WriteMerged(project.ImplementationPlan, err)
 	}
 	initialize.Merged(cmd, project.ImplementationPlan)
@@ -102,7 +106,9 @@ func HandleImplementationPlan(cmd *cobra.Command, force, autoMerge bool) error {
 //
 // Returns:
 //   - error: Non-nil if markers are missing or file operations fail
-func UpdatePlanSection(cmd *cobra.Command, existing string, newTemplate []byte) error {
+func UpdatePlanSection(
+	cmd *cobra.Command, existing string, newTemplate []byte,
+) error {
 	startIdx := strings.Index(existing, marker.PlanMarkerStart)
 	if startIdx == -1 {
 		return errPrompt.MarkerNotFound("plan")
@@ -121,12 +127,18 @@ func UpdatePlanSection(cmd *cobra.Command, existing string, newTemplate []byte) 
 	}
 	planContent := templateStr[templateStart : templateEnd+len(marker.PlanMarkerEnd)]
 	newContent := existing[:startIdx] + planContent + existing[endIdx:]
-	if bkErr := backup.BackupFile(cmd, project.ImplementationPlan, []byte(existing)); bkErr != nil {
+	if bkErr := backup.File(
+		cmd, project.ImplementationPlan, []byte(existing),
+	); bkErr != nil {
 		return bkErr
 	}
-	if err := os.WriteFile(project.ImplementationPlan, []byte(newContent), fs.PermFile); err != nil {
+	if err := os.WriteFile(
+		project.ImplementationPlan, []byte(newContent), fs.PermFile,
+	); err != nil {
 		return errFs.FileUpdate(project.ImplementationPlan, err)
 	}
-	initialize.UpdatedPlanSection(cmd, project.ImplementationPlan)
+	initialize.UpdatedSection(
+		cmd, project.ImplementationPlan, text.DescKeyWriteInitUpdatedPlanSection,
+	)
 	return nil
 }

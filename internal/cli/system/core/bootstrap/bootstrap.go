@@ -13,7 +13,7 @@ import (
 	"strings"
 
 	"github.com/ActiveMemory/ctx/internal/assets/read/desc"
-	initCore "github.com/ActiveMemory/ctx/internal/cli/initialize/core"
+	initCore "github.com/ActiveMemory/ctx/internal/cli/initialize/core/plugin"
 	"github.com/ActiveMemory/ctx/internal/config/bootstrap"
 	"github.com/ActiveMemory/ctx/internal/config/embed/text"
 	"github.com/ActiveMemory/ctx/internal/config/file"
@@ -26,10 +26,10 @@ import (
 // Returns:
 //   - string: warning message, or empty string if no warning is needed.
 func PluginWarning() string {
-	if !initCore.PluginInstalled() {
+	if !initCore.Installed() {
 		return ""
 	}
-	if initCore.PluginEnabledGlobally() || initCore.PluginEnabledLocally() {
+	if initCore.EnabledGlobally() || initCore.EnabledLocally() {
 		return ""
 	}
 	return desc.Text(text.DescKeyBootstrapPluginWarning)

@@ -18,7 +18,7 @@ import (
 	"github.com/spf13/cobra"
 )
 
-// BackupFile creates a timestamped .bak copy and reports it.
+// File creates a timestamped .bak copy and reports it.
 //
 // Parameters:
 //   - cmd: Cobra command for output
@@ -27,7 +27,7 @@ import (
 //
 // Returns:
 //   - error: Non-nil if the backup write fails
-func BackupFile(cmd *cobra.Command, filename string, content []byte) error {
+func File(cmd *cobra.Command, filename string, content []byte) error {
 	timestamp := time.Now().Unix()
 	backupName := fmt.Sprintf(file.BackupFormat, filename, timestamp)
 	if writeErr := os.WriteFile(backupName, content, fs.PermFile); writeErr != nil {

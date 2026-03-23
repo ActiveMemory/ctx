@@ -28,7 +28,7 @@ func FindInsertionPoint(content string) int {
 			pos += len(line) + 1
 			continue
 		}
-		if strings.HasPrefix(trimmed, "#") {
+		if strings.HasPrefix(trimmed, token.PrefixHeading) {
 			level := 0
 			for _, ch := range trimmed {
 				if ch == '#' {
