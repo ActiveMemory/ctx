@@ -16,6 +16,7 @@ import (
 
 	"github.com/ActiveMemory/ctx/internal/cli/change/core/detect"
 	format2 "github.com/ActiveMemory/ctx/internal/cli/change/core/render"
+	"github.com/ActiveMemory/ctx/internal/cli/change/core/scan"
 	"github.com/ActiveMemory/ctx/internal/format"
 
 	"github.com/ActiveMemory/ctx/internal/entity"
@@ -96,7 +97,7 @@ func TestParseSinceFlag(t *testing.T) {
 
 func TestUniqueTopDirs(t *testing.T) {
 	input := "internal/cli/dep/deps.go\ninternal/cli/change/changes.go\ndocs/index.md\nREADME.md\n"
-	got := UniqueTopDirs(input)
+	got := scan.UniqueTopDirs(input)
 	want := []string{"README.md", "docs", "internal"}
 	if len(got) != len(want) {
 		t.Fatalf("UniqueTopDirs: got %v, want %v", got, want)
@@ -110,7 +111,7 @@ func TestUniqueTopDirs(t *testing.T) {
 
 func TestUniqueLines(t *testing.T) {
 	input := "Alice\nBob\nAlice\nCharlie\n"
-	got := UniqueLines(input)
+	got := scan.UniqueLines(input)
 	want := []string{"Alice", "Bob", "Charlie"}
 	if len(got) != len(want) {
 		t.Fatalf("UniqueLines: got %v, want %v", got, want)
@@ -281,7 +282,7 @@ func TestFindContextChanges(t *testing.T) {
 
 	// Reference time between old and recent.
 	refTime := time.Now().Add(-24 * time.Hour)
-	changes, findErr := FindContextChanges(refTime)
+	changes, findErr := scan.FindContextChanges(refTime)
 	if findErr != nil {
 		t.Fatalf("FindContextChanges error: %v", findErr)
 	}
@@ -300,7 +301,7 @@ func TestFindContextChanges_EmptyDir(t *testing.T) {
 	rc.Reset()
 
 	refTime := time.Now().Add(-1 * time.Hour)
-	changes, findErr := FindContextChanges(refTime)
+	changes, findErr := scan.FindContextChanges(refTime)
 	if findErr != nil {
 		t.Fatalf("FindContextChanges error: %v", findErr)
 	}

@@ -14,6 +14,7 @@ import (
 
 	"github.com/ActiveMemory/ctx/internal/cli/change/core/detect"
 	"github.com/ActiveMemory/ctx/internal/cli/change/core/render"
+	changeCore "github.com/ActiveMemory/ctx/internal/cli/change/core/scan"
 	"github.com/ActiveMemory/ctx/internal/cli/system/core/health"
 	"github.com/ActiveMemory/ctx/internal/cli/system/core/load"
 	"github.com/ActiveMemory/ctx/internal/cli/system/core/nudge"
@@ -24,7 +25,6 @@ import (
 	"github.com/ActiveMemory/ctx/internal/entity"
 
 	"github.com/ActiveMemory/ctx/internal/assets/read/desc"
-	changeCore "github.com/ActiveMemory/ctx/internal/cli/change/core"
 	"github.com/ActiveMemory/ctx/internal/config/ctx"
 	"github.com/ActiveMemory/ctx/internal/config/embed/text"
 	"github.com/ActiveMemory/ctx/internal/config/hook"
