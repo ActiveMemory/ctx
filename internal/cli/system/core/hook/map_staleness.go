@@ -4,7 +4,7 @@
 //   \    Copyright 2026-present Context contributors.
 //                 SPDX-License-Identifier: Apache-2.0
 
-package core
+package hook
 
 import (
 	"encoding/json"
@@ -13,11 +13,11 @@ import (
 	"strings"
 
 	"github.com/ActiveMemory/ctx/internal/assets/read/desc"
+	"github.com/ActiveMemory/ctx/internal/cli/system/core"
 	"github.com/ActiveMemory/ctx/internal/config/architecture"
 	"github.com/ActiveMemory/ctx/internal/config/embed/text"
 	"github.com/ActiveMemory/ctx/internal/config/hook"
 	"github.com/ActiveMemory/ctx/internal/config/token"
-	"github.com/ActiveMemory/ctx/internal/config/tpl"
 	"github.com/ActiveMemory/ctx/internal/io"
 
 	"github.com/ActiveMemory/ctx/internal/notify"
@@ -76,24 +76,24 @@ func CountModuleCommits(since string) int {
 //   - string: formatted nudge box, or empty string if silenced
 func EmitMapStalenessWarning(sessionID, dateStr string, moduleCommits int) string {
 	fallback := fmt.Sprintf(desc.Text(text.DescKeyCheckMapStalenessFallback), dateStr, moduleCommits)
-	content := LoadMessage(hook.CheckMapStaleness, hook.VariantStale,
+	content := core.LoadMessage(hook.CheckMapStaleness, hook.VariantStale,
 		map[string]any{
-			tpl.VarLastRefreshDate: dateStr,
-			tpl.VarModuleCount:     moduleCommits,
+			architecture.VarLastRefreshDate: dateStr,
+			architecture.VarModuleCount:     moduleCommits,
 		}, fallback)
 	if content == "" {
 		return ""
 	}
 
-	box := NudgeBox(
+	box := core.NudgeBox(
 		desc.Text(text.DescKeyCheckMapStalenessRelayPrefix),
 		desc.Text(text.DescKeyCheckMapStalenessBoxTitle),
 		content)
 
 	ref := notify.NewTemplateRef(hook.CheckMapStaleness, hook.VariantStale,
-		map[string]any{tpl.VarLastRefreshDate: dateStr, tpl.VarModuleCount: moduleCommits})
+		map[string]any{architecture.VarLastRefreshDate: dateStr, architecture.VarModuleCount: moduleCommits})
 	notifyMsg := fmt.Sprintf(desc.Text(text.DescKeyRelayPrefixFormat),
 		hook.CheckMapStaleness, desc.Text(text.DescKeyCheckMapStalenessRelayMessage))
-	NudgeAndRelay(notifyMsg, sessionID, ref)
+	core.NudgeAndRelay(notifyMsg, sessionID, ref)
 	return box
 }

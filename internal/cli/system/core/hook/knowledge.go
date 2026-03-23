@@ -4,7 +4,7 @@
 //   \    Copyright 2026-present Context contributors.
 //                 SPDX-License-Identifier: Apache-2.0
 
-package core
+package hook
 
 import (
 	"bytes"
@@ -12,11 +12,12 @@ import (
 	"strings"
 
 	"github.com/ActiveMemory/ctx/internal/assets/read/desc"
+	"github.com/ActiveMemory/ctx/internal/cli/system/core"
 	"github.com/ActiveMemory/ctx/internal/config/ctx"
 	"github.com/ActiveMemory/ctx/internal/config/embed/text"
 	"github.com/ActiveMemory/ctx/internal/config/hook"
+	"github.com/ActiveMemory/ctx/internal/config/knowledge"
 	"github.com/ActiveMemory/ctx/internal/config/token"
-	"github.com/ActiveMemory/ctx/internal/config/tpl"
 	"github.com/ActiveMemory/ctx/internal/io"
 
 	"github.com/ActiveMemory/ctx/internal/index"
@@ -103,22 +104,22 @@ func FormatKnowledgeWarnings(findings []KnowledgeFinding) string {
 //   - string: formatted nudge box, or empty string if silenced
 func EmitKnowledgeWarning(sessionID, fileWarnings string) string {
 	fallback := fileWarnings + token.NewlineLF + desc.Text(text.DescKeyCheckKnowledgeFallback)
-	content := LoadMessage(hook.CheckKnowledge, hook.VariantWarning,
-		map[string]any{tpl.VarFileWarnings: fileWarnings}, fallback)
+	content := core.LoadMessage(hook.CheckKnowledge, hook.VariantWarning,
+		map[string]any{knowledge.VarFileWarnings: fileWarnings}, fallback)
 	if content == "" {
 		return ""
 	}
 
-	box := NudgeBox(
+	box := core.NudgeBox(
 		desc.Text(text.DescKeyCheckKnowledgeRelayPrefix),
 		desc.Text(text.DescKeyCheckKnowledgeBoxTitle),
 		content)
 
 	ref := notify.NewTemplateRef(hook.CheckKnowledge, hook.VariantWarning,
-		map[string]any{tpl.VarFileWarnings: fileWarnings})
+		map[string]any{knowledge.VarFileWarnings: fileWarnings})
 	notifyMsg := fmt.Sprintf(desc.Text(text.DescKeyRelayPrefixFormat),
 		hook.CheckKnowledge, desc.Text(text.DescKeyCheckKnowledgeRelayMessage))
-	NudgeAndRelay(notifyMsg, sessionID, ref)
+	core.NudgeAndRelay(notifyMsg, sessionID, ref)
 	return box
 }
 

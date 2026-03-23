@@ -10,6 +10,7 @@ import (
 	"fmt"
 	"os"
 
+	hook2 "github.com/ActiveMemory/ctx/internal/cli/system/core/hook"
 	"github.com/spf13/cobra"
 
 	"github.com/ActiveMemory/ctx/internal/assets/read/desc"
@@ -18,7 +19,6 @@ import (
 	"github.com/ActiveMemory/ctx/internal/config/hook"
 	"github.com/ActiveMemory/ctx/internal/config/stats"
 	"github.com/ActiveMemory/ctx/internal/config/token"
-	"github.com/ActiveMemory/ctx/internal/config/tpl"
 	"github.com/ActiveMemory/ctx/internal/notify"
 	"github.com/ActiveMemory/ctx/internal/sysinfo"
 	writeHook "github.com/ActiveMemory/ctx/internal/write/hook"
@@ -37,7 +37,7 @@ import (
 // Returns:
 //   - error: Always nil (hook errors are non-fatal)
 func Run(cmd *cobra.Command, stdin *os.File) error {
-	input, _, paused := core.HookPreamble(stdin)
+	input, _, paused := hook2.Preamble(stdin)
 	if paused {
 		return nil
 	}
@@ -65,7 +65,7 @@ func Run(cmd *cobra.Command, stdin *os.File) error {
 			text.DescKeyCheckResourcesFallbackPersist) + token.NewlineLF +
 		desc.Text(
 			text.DescKeyCheckResourcesFallbackEnd)
-	vars := map[string]any{tpl.VarAlertMessages: alertMessages}
+	vars := map[string]any{stats.VarAlertMessages: alertMessages}
 	content := core.LoadMessage(
 		hook.CheckResources, hook.VariantAlert, vars, fallback,
 	)

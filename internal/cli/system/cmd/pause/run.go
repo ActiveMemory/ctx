@@ -9,6 +9,8 @@ package pause
 import (
 	"os"
 
+	"github.com/ActiveMemory/ctx/internal/cli/system/core/counter"
+	"github.com/ActiveMemory/ctx/internal/cli/system/core/hook"
 	cFlag "github.com/ActiveMemory/ctx/internal/config/flag"
 	"github.com/ActiveMemory/ctx/internal/config/session"
 	"github.com/spf13/cobra"
@@ -32,7 +34,7 @@ import (
 func Run(cmd *cobra.Command, stdin *os.File) error {
 	sessionID, _ := cmd.Flags().GetString(cFlag.SessionID)
 	if sessionID == "" {
-		input := core.ReadInput(stdin)
+		input := hook.ReadInput(stdin)
 		sessionID = input.SessionID
 	}
 	if sessionID == "" {
@@ -40,7 +42,7 @@ func Run(cmd *cobra.Command, stdin *os.File) error {
 	}
 
 	path := core.PauseMarkerPath(sessionID)
-	core.WriteCounter(path, 0)
+	counter.Write(path, 0)
 	writePause.Confirmed(cmd, sessionID)
 	return nil
 }

@@ -12,6 +12,7 @@ import (
 	"path/filepath"
 	"strings"
 
+	hook2 "github.com/ActiveMemory/ctx/internal/cli/system/core/hook"
 	"github.com/spf13/cobra"
 
 	"github.com/ActiveMemory/ctx/internal/assets/read/desc"
@@ -47,7 +48,7 @@ func Run(cmd *cobra.Command, stdin *os.File) error {
 		return nil
 	}
 
-	input := core.ReadInput(stdin)
+	input := hook2.ReadInput(stdin)
 	if input.SessionID == "" {
 		return nil
 	}
@@ -75,7 +76,7 @@ func Run(cmd *cobra.Command, stdin *os.File) error {
 	var content strings.Builder
 	var totalTokens int
 	var filesLoaded int
-	var perFile []core.FileTokenEntry
+	var perFile []hook2.FileTokenEntry
 
 	content.WriteString(
 		desc.Text(text.DescKeyContextLoadGateHeader) +
@@ -101,7 +102,7 @@ func Run(cmd *cobra.Command, stdin *os.File) error {
 			continue
 
 		case ctx.Decision, ctx.Learning:
-			idx := core.ExtractIndex(string(data))
+			idx := hook2.ExtractIndex(string(data))
 			if idx == "" {
 				idx = desc.Text(text.DescKeyContextLoadGateIndexFallback)
 			}
@@ -109,7 +110,7 @@ func Run(cmd *cobra.Command, stdin *os.File) error {
 				desc.Text(text.DescKeyContextLoadGateIndexHeader), f, idx))
 			tokens := ctxToken.EstimateTokensString(idx)
 			totalTokens += tokens
-			perFile = append(perFile, core.FileTokenEntry{
+			perFile = append(perFile, hook2.FileTokenEntry{
 				Name:   f + load_gate.ContextLoadIndexSuffix,
 				Tokens: tokens,
 			})
@@ -122,7 +123,7 @@ func Run(cmd *cobra.Command, stdin *os.File) error {
 				), f, string(data)))
 			tokens := ctxToken.EstimateTokens(data)
 			totalTokens += tokens
-			perFile = append(perFile, core.FileTokenEntry{Name: f, Tokens: tokens})
+			perFile = append(perFile, hook2.FileTokenEntry{Name: f, Tokens: tokens})
 			filesLoaded++
 		}
 	}
@@ -146,7 +147,7 @@ func Run(cmd *cobra.Command, stdin *os.File) error {
 		filesLoaded, totalTokens))
 
 	writeHook.HookContext(
-		cmd, core.FormatHookContext(hook.EventPreToolUse, content.String()),
+		cmd, hook2.FormatContext(hook.EventPreToolUse, content.String()),
 	)
 
 	// Webhook: metadata only — never send file content externally
@@ -156,7 +157,7 @@ func Run(cmd *cobra.Command, stdin *os.File) error {
 	core.Relay(webhookMsg, input.SessionID, nil)
 
 	// Oversize nudge: write the flag for check-context-size to pick up
-	core.WriteOversizeFlag(dir, totalTokens, perFile)
+	hook2.WriteOversizeFlag(dir, totalTokens, perFile)
 
 	return nil
 }

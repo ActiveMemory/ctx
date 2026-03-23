@@ -16,7 +16,7 @@ import (
 	"github.com/ActiveMemory/ctx/internal/config/embed/text"
 	"github.com/ActiveMemory/ctx/internal/config/hook"
 	"github.com/ActiveMemory/ctx/internal/config/token"
-	"github.com/ActiveMemory/ctx/internal/config/tpl"
+	"github.com/ActiveMemory/ctx/internal/config/version"
 
 	"github.com/ActiveMemory/ctx/internal/notify"
 	"github.com/ActiveMemory/ctx/internal/rc"
@@ -73,7 +73,7 @@ func CheckKeyAge(sessionID string) string {
 		desc.Text(text.DescKeyCheckVersionKeyFallback), ageDays,
 	)
 	keyContent := LoadMessage(hook.CheckVersion, hook.VariantKeyRotation,
-		map[string]any{tpl.VarKeyAgeDays: ageDays}, keyFallback)
+		map[string]any{version.VarKeyAgeDays: ageDays}, keyFallback)
 	if keyContent == "" {
 		return ""
 	}
@@ -84,7 +84,7 @@ func CheckKeyAge(sessionID string) string {
 	box := token.NewlineLF + NudgeBox(relayPrefix, boxTitle, keyContent)
 
 	keyRef := notify.NewTemplateRef(hook.CheckVersion, hook.VariantKeyRotation,
-		map[string]any{tpl.VarKeyAgeDays: ageDays})
+		map[string]any{version.VarKeyAgeDays: ageDays})
 	keyNotifyMsg := fmt.Sprintf(
 		desc.Text(text.DescKeyRelayPrefixFormat),
 		hook.CheckVersion,

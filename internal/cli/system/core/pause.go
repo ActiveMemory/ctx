@@ -14,6 +14,7 @@ import (
 	"strings"
 
 	"github.com/ActiveMemory/ctx/internal/assets/read/desc"
+	"github.com/ActiveMemory/ctx/internal/cli/system/core/counter"
 	"github.com/ActiveMemory/ctx/internal/config/embed/text"
 	"github.com/ActiveMemory/ctx/internal/io"
 )
@@ -45,7 +46,7 @@ func Paused(sessionID string) int {
 	}
 	count, _ := strconv.Atoi(strings.TrimSpace(string(data)))
 	count++
-	WriteCounter(path, count)
+	counter.Write(path, count)
 	return count
 }
 
@@ -73,7 +74,7 @@ func PausedMessage(turns int) string {
 // Parameters:
 //   - sessionID: Session identifier
 func Pause(sessionID string) {
-	WriteCounter(PauseMarkerPath(sessionID), 0)
+	counter.Write(PauseMarkerPath(sessionID), 0)
 }
 
 // Resume removes the session pause marker. Exported for use by the

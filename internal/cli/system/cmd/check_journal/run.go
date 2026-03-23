@@ -11,6 +11,7 @@ import (
 	"os"
 	"path/filepath"
 
+	hook2 "github.com/ActiveMemory/ctx/internal/cli/system/core/hook"
 	"github.com/spf13/cobra"
 
 	"github.com/ActiveMemory/ctx/internal/assets/read/desc"
@@ -20,7 +21,6 @@ import (
 	"github.com/ActiveMemory/ctx/internal/config/file"
 	"github.com/ActiveMemory/ctx/internal/config/hook"
 	"github.com/ActiveMemory/ctx/internal/config/journal"
-	"github.com/ActiveMemory/ctx/internal/config/tpl"
 	ctxResolve "github.com/ActiveMemory/ctx/internal/context/resolve"
 	internalIo "github.com/ActiveMemory/ctx/internal/io"
 	"github.com/ActiveMemory/ctx/internal/notify"
@@ -43,7 +43,7 @@ func Run(cmd *cobra.Command, stdin *os.File) error {
 	if !core.Initialized() {
 		return nil
 	}
-	input, _, paused := core.HookPreamble(stdin)
+	input, _, paused := hook2.Preamble(stdin)
 	if paused {
 		return nil
 	}
@@ -82,8 +82,8 @@ func Run(cmd *cobra.Command, stdin *os.File) error {
 	}
 
 	vars := map[string]any{
-		tpl.VarUnexportedCount: unexported,
-		tpl.VarUnenrichedCount: unenriched,
+		journal.VarUnexportedCount: unexported,
+		journal.VarUnenrichedCount: unenriched,
 	}
 
 	var variant, fallback string

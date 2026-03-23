@@ -4,7 +4,7 @@
 //   \    Copyright 2026-present Context contributors.
 //                 SPDX-License-Identifier: Apache-2.0
 
-package core
+package hook
 
 // ArchiveEntry describes a directory or file to include in a backup archive.
 type ArchiveEntry struct {

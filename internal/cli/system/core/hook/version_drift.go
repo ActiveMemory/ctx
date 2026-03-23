@@ -4,7 +4,7 @@
 //   \    Copyright 2026-present Context contributors.
 //                 SPDX-License-Identifier: Apache-2.0
 
-package core
+package hook
 
 import (
 	"encoding/json"
@@ -15,6 +15,7 @@ import (
 
 	"github.com/ActiveMemory/ctx/internal/assets/read/claude"
 	"github.com/ActiveMemory/ctx/internal/assets/read/desc"
+	"github.com/ActiveMemory/ctx/internal/cli/system/core"
 	"github.com/ActiveMemory/ctx/internal/config/embed/text"
 	"github.com/ActiveMemory/ctx/internal/config/hook"
 
@@ -56,14 +57,14 @@ func CheckVersionDrift(sessionID string) string {
 	}
 	fallback := "VERSION (" + fileVer + "), plugin.json (" + pluginVer +
 		"), marketplace.json (" + marketVer + ") are out of sync. Update all three before releasing."
-	msg := LoadMessage(hook.VersionDrift, hook.VariantNudge, vars, fallback)
+	msg := core.LoadMessage(hook.VersionDrift, hook.VariantNudge, vars, fallback)
 	if msg == "" {
 		return ""
 	}
-	response := FormatHookContext(hook.EventPostToolUse, msg)
+	response := FormatContext(hook.EventPostToolUse, msg)
 
 	ref := notify.NewTemplateRef(hook.VersionDrift, hook.VariantNudge, vars)
-	Relay(fmt.Sprintf(desc.Text(text.DescKeyRelayPrefixFormat),
+	core.Relay(fmt.Sprintf(desc.Text(text.DescKeyRelayPrefixFormat),
 		hook.VersionDrift, desc.Text(text.DescKeyVersionDriftRelayMessage)), sessionID, ref)
 
 	return response

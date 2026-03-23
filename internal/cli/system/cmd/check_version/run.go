@@ -11,6 +11,7 @@ import (
 	"os"
 	"path/filepath"
 
+	hook2 "github.com/ActiveMemory/ctx/internal/cli/system/core/hook"
 	"github.com/spf13/cobra"
 
 	"github.com/ActiveMemory/ctx/internal/assets/read/claude"
@@ -18,7 +19,6 @@ import (
 	"github.com/ActiveMemory/ctx/internal/cli/system/core"
 	"github.com/ActiveMemory/ctx/internal/config/embed/text"
 	"github.com/ActiveMemory/ctx/internal/config/hook"
-	"github.com/ActiveMemory/ctx/internal/config/tpl"
 	"github.com/ActiveMemory/ctx/internal/config/version"
 	internalIo "github.com/ActiveMemory/ctx/internal/io"
 	"github.com/ActiveMemory/ctx/internal/notify"
@@ -42,7 +42,7 @@ func Run(cmd *cobra.Command, stdin *os.File) error {
 		return nil
 	}
 
-	input, _, paused := core.HookPreamble(stdin)
+	input, _, paused := hook2.Preamble(stdin)
 	if paused {
 		return nil
 	}
@@ -86,8 +86,8 @@ func Run(cmd *cobra.Command, stdin *os.File) error {
 	)
 	content := core.LoadMessage(hook.CheckVersion, hook.VariantMismatch,
 		map[string]any{
-			tpl.VarBinaryVersion: binaryVer,
-			tpl.VarPluginVersion: pluginVer,
+			version.VarBinaryVersion: binaryVer,
+			version.VarPluginVersion: pluginVer,
 		}, fallback)
 	if content == "" {
 		internalIo.TouchFile(markerFile)
@@ -101,8 +101,8 @@ func Run(cmd *cobra.Command, stdin *os.File) error {
 
 	ref := notify.NewTemplateRef(hook.CheckVersion, hook.VariantMismatch,
 		map[string]any{
-			tpl.VarBinaryVersion: binaryVer,
-			tpl.VarPluginVersion: pluginVer,
+			version.VarBinaryVersion: binaryVer,
+			version.VarPluginVersion: pluginVer,
 		})
 	versionMsg := fmt.Sprintf(desc.Text(text.DescKeyRelayPrefixFormat),
 		hook.CheckVersion, fmt.Sprintf(

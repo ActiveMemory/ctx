@@ -9,6 +9,7 @@ package list
 import (
 	"encoding/json"
 
+	"github.com/ActiveMemory/ctx/internal/cli/system/core/hook"
 	"github.com/spf13/cobra"
 
 	"github.com/ActiveMemory/ctx/internal/assets/hooks/messages"
@@ -26,10 +27,10 @@ import (
 //   - error: Non-nil on JSON encoding failure
 func Run(cmd *cobra.Command) error {
 	registry := messages.Registry()
-	entries := make([]core.MessageListEntry, 0, len(registry))
+	entries := make([]hook.MessageListEntry, 0, len(registry))
 
 	for _, info := range registry {
-		entry := core.MessageListEntry{
+		entry := hook.MessageListEntry{
 			Hook:         info.Hook,
 			Variant:      info.Variant,
 			Category:     info.Category,

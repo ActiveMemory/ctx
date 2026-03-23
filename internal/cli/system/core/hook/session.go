@@ -4,13 +4,14 @@
 //   \    Copyright 2026-present Context contributors.
 //                 SPDX-License-Identifier: Apache-2.0
 
-package core
+package hook
 
 import (
 	"encoding/json"
 	"os"
 	"path/filepath"
 
+	"github.com/ActiveMemory/ctx/internal/cli/system/core"
 	"github.com/ActiveMemory/ctx/internal/config/session"
 )
 
@@ -33,7 +34,7 @@ type SessionStats struct {
 //   - sessionID: Session identifier
 //   - stats: Stats entry to write
 func WriteSessionStats(sessionID string, stats SessionStats) {
-	path := filepath.Join(StateDir(), "stats-"+sessionID+".jsonl")
+	path := filepath.Join(core.StateDir(), "stats-"+sessionID+".jsonl")
 	data, marshalErr := json.Marshal(stats)
 	if marshalErr != nil {
 		return

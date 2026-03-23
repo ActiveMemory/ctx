@@ -11,6 +11,7 @@ import (
 	"os"
 	"path/filepath"
 
+	hook2 "github.com/ActiveMemory/ctx/internal/cli/system/core/hook"
 	"github.com/ActiveMemory/ctx/internal/cli/system/core/time"
 	"github.com/spf13/cobra"
 
@@ -20,7 +21,6 @@ import (
 	"github.com/ActiveMemory/ctx/internal/config/embed/text"
 	"github.com/ActiveMemory/ctx/internal/config/hook"
 	"github.com/ActiveMemory/ctx/internal/config/nudge"
-	"github.com/ActiveMemory/ctx/internal/config/tpl"
 	"github.com/ActiveMemory/ctx/internal/notify"
 	"github.com/ActiveMemory/ctx/internal/rc"
 	writeHook "github.com/ActiveMemory/ctx/internal/write/hook"
@@ -42,7 +42,7 @@ func Run(cmd *cobra.Command, stdin *os.File) error {
 	if !core.Initialized() {
 		return nil
 	}
-	_, sessionID, paused := core.HookPreamble(stdin)
+	_, sessionID, paused := hook2.Preamble(stdin)
 	if paused {
 		return nil
 	}
@@ -53,15 +53,15 @@ func Run(cmd *cobra.Command, stdin *os.File) error {
 	logFile := filepath.Join(contextDir, dir.Logs, nudge.PersistenceLogFile)
 
 	// Initialize state if needed
-	ps, exists := core.ReadPersistenceState(stateFile)
+	ps, exists := hook2.ReadPersistenceState(stateFile)
 	if !exists {
 		initialMtime := time.GetLatestContextMtime(contextDir)
-		ps = core.PersistenceState{
+		ps = hook2.PersistenceState{
 			Count:     1,
 			LastNudge: 0,
 			LastMtime: initialMtime,
 		}
-		core.WritePersistenceState(stateFile, ps)
+		hook2.WritePersistenceState(stateFile, ps)
 		core.LogMessage(logFile, sessionID, fmt.Sprintf(
 			desc.Text(text.DescKeyCheckPersistenceInitLogFormat), initialMtime),
 		)
@@ -75,7 +75,7 @@ func Run(cmd *cobra.Command, stdin *os.File) error {
 	if currentMtime > ps.LastMtime {
 		ps.LastNudge = ps.Count
 		ps.LastMtime = currentMtime
-		core.WritePersistenceState(stateFile, ps)
+		hook2.WritePersistenceState(stateFile, ps)
 		core.LogMessage(logFile, sessionID, fmt.Sprintf(
 			desc.Text(text.DescKeyCheckPersistenceModifiedLogFormat), ps.Count),
 		)
@@ -84,20 +84,20 @@ func Run(cmd *cobra.Command, stdin *os.File) error {
 
 	sinceNudge := ps.Count - ps.LastNudge
 
-	if core.PersistenceNudgeNeeded(ps.Count, sinceNudge) {
+	if hook2.PersistenceNudgeNeeded(ps.Count, sinceNudge) {
 		fallback := fmt.Sprintf(
 			desc.Text(text.DescKeyCheckPersistenceFallback), sinceNudge,
 		)
 		content := core.LoadMessage(hook.CheckPersistence, hook.VariantNudge,
 			map[string]any{
-				tpl.VarPromptCount:       ps.Count,
-				tpl.VarPromptsSinceNudge: sinceNudge,
+				nudge.VarPromptCount:       ps.Count,
+				nudge.VarPromptsSinceNudge: sinceNudge,
 			}, fallback)
 		if content == "" {
 			core.LogMessage(logFile, sessionID, fmt.Sprintf(
 				desc.Text(text.DescKeyCheckPersistenceSilencedLogFormat), ps.Count),
 			)
-			core.WritePersistenceState(stateFile, ps)
+			hook2.WritePersistenceState(stateFile, ps)
 			return nil
 		}
 
@@ -119,8 +119,8 @@ func Run(cmd *cobra.Command, stdin *os.File) error {
 		)
 		ref := notify.NewTemplateRef(hook.CheckPersistence, hook.VariantNudge,
 			map[string]any{
-				tpl.VarPromptCount:       ps.Count,
-				tpl.VarPromptsSinceNudge: sinceNudge,
+				nudge.VarPromptCount:       ps.Count,
+				nudge.VarPromptsSinceNudge: sinceNudge,
 			},
 		)
 		_ = notify.Send(
@@ -156,6 +156,6 @@ func Run(cmd *cobra.Command, stdin *os.File) error {
 		)
 	}
 
-	core.WritePersistenceState(stateFile, ps)
+	hook2.WritePersistenceState(stateFile, ps)
 	return nil
 }

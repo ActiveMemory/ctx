@@ -12,6 +12,8 @@ import (
 	"path/filepath"
 
 	"github.com/ActiveMemory/ctx/internal/assets/read/desc"
+	"github.com/ActiveMemory/ctx/internal/cli/system/core/counter"
+	hook2 "github.com/ActiveMemory/ctx/internal/cli/system/core/hook"
 	"github.com/ActiveMemory/ctx/internal/config/embed/text"
 	"github.com/ActiveMemory/ctx/internal/config/nudge"
 	"github.com/spf13/cobra"
@@ -39,7 +41,7 @@ func Run(cmd *cobra.Command, stdin *os.File) error {
 	if !core.Initialized() {
 		return nil
 	}
-	input, sessionID, paused := core.HookPreamble(stdin)
+	input, sessionID, paused := hook2.Preamble(stdin)
 	if paused {
 		return nil
 	}
@@ -50,16 +52,16 @@ func Run(cmd *cobra.Command, stdin *os.File) error {
 	}
 
 	counterPath := filepath.Join(core.StateDir(), nudge.PrefixTask+sessionID)
-	count := core.ReadCounter(counterPath)
+	count := counter.Read(counterPath)
 	count++
 
 	if count < interval {
-		core.WriteCounter(counterPath, count)
+		counter.Write(counterPath, count)
 		return nil
 	}
 
 	// Threshold reached — reset and nudge.
-	core.WriteCounter(counterPath, 0)
+	counter.Write(counterPath, 0)
 
 	fallback := desc.Text(text.DescKeyCheckTaskCompletionFallback)
 	msg := core.LoadMessage(
@@ -68,7 +70,7 @@ func Run(cmd *cobra.Command, stdin *os.File) error {
 	if msg == "" {
 		return nil
 	}
-	writeHook.HookContext(cmd, core.FormatHookContext(hook.EventPostToolUse, msg))
+	writeHook.HookContext(cmd, hook2.FormatContext(hook.EventPostToolUse, msg))
 
 	nudgeMsg := desc.Text(text.DescKeyCheckTaskCompletionNudgeMessage)
 	ref := notify.NewTemplateRef(

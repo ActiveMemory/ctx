@@ -7,9 +7,9 @@
 package resources
 
 import (
+	"github.com/ActiveMemory/ctx/internal/cli/system/core/hook"
 	"github.com/spf13/cobra"
 
-	"github.com/ActiveMemory/ctx/internal/cli/system/core"
 	cFlag "github.com/ActiveMemory/ctx/internal/config/flag"
 	"github.com/ActiveMemory/ctx/internal/sysinfo"
 	writeResources "github.com/ActiveMemory/ctx/internal/write/resource"
@@ -32,9 +32,9 @@ func runResources(cmd *cobra.Command) error {
 
 	jsonFlag, _ := cmd.Flags().GetBool(cFlag.JSON)
 	if jsonFlag {
-		return core.OutputResourcesJSON(cmd, snap, alerts)
+		return hook.OutputResourcesJSON(cmd, snap, alerts)
 	}
 
-	writeResources.Text(cmd, core.FormatResourcesText(snap, alerts))
+	writeResources.Text(cmd, hook.FormatResourcesText(snap, alerts))
 	return nil
 }

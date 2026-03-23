@@ -4,7 +4,7 @@
 //   \    Copyright 2026-present Context contributors.
 //                 SPDX-License-Identifier: Apache-2.0
 
-package core
+package hook
 
 import (
 	"encoding/json"
@@ -12,10 +12,11 @@ import (
 	"os"
 	"time"
 
+	"github.com/ActiveMemory/ctx/internal/cli/system/core"
 	"github.com/ActiveMemory/ctx/internal/config/session"
 )
 
-// FormatHookContext builds a JSON HookResponse with additionalContext for the
+// FormatContext builds a JSON HookResponse with additionalContext for the
 // given hook event. This is the standard way for non-blocking hooks to inject
 // directives that the agent will actually process (plain text gets ignored).
 //
@@ -25,7 +26,7 @@ import (
 //
 // Returns:
 //   - string: JSON-encoded hook response
-func FormatHookContext(event, context string) string {
+func FormatContext(event, context string) string {
 	resp := HookResponse{
 		HookSpecificOutput: &HookSpecificOutput{
 			HookEventName:     event,
@@ -36,7 +37,7 @@ func FormatHookContext(event, context string) string {
 	return string(data)
 }
 
-// HookPreamble reads hook input, resolves the session ID, and checks the
+// Preamble reads hook input, resolves the session ID, and checks the
 // pause state. Most hooks share this exact preamble sequence.
 //
 // Parameters:
@@ -46,13 +47,15 @@ func FormatHookContext(event, context string) string {
 //   - input: parsed hook input
 //   - sessionID: resolved session identifier (falls back to config.IDSessionUnknown)
 //   - paused: true if the session is currently paused
-func HookPreamble(stdin *os.File) (input HookInput, sessionID string, paused bool) {
+func Preamble(stdin *os.File) (
+	input HookInput, sessionID string, paused bool,
+) {
 	input = ReadInput(stdin)
 	sessionID = input.SessionID
 	if sessionID == "" {
 		sessionID = session.IDUnknown
 	}
-	paused = Paused(sessionID) > 0
+	paused = core.Paused(sessionID) > 0
 	return
 }
 

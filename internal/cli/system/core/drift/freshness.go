@@ -4,13 +4,14 @@
 //   \    Copyright 2026-present Context contributors.
 //                 SPDX-License-Identifier: Apache-2.0
 
-package core
+package drift
 
 import (
 	"fmt"
 	"strings"
 
 	"github.com/ActiveMemory/ctx/internal/assets/read/desc"
+	"github.com/ActiveMemory/ctx/internal/cli/system/core/hook"
 	"github.com/ActiveMemory/ctx/internal/config/embed/text"
 	"github.com/ActiveMemory/ctx/internal/config/token"
 )
@@ -26,9 +27,9 @@ import (
 //
 // Returns:
 //   - string: formatted multi-line text for display
-func FormatStaleEntries(entries []StaleEntry) string {
-	byURL := make(map[string][]StaleEntry)
-	var noURL []StaleEntry
+func FormatStaleEntries(entries []hook.StaleEntry) string {
+	byURL := make(map[string][]hook.StaleEntry)
+	var noURL []hook.StaleEntry
 	var urlOrder []string
 
 	for _, e := range entries {

@@ -9,6 +9,7 @@ package resume
 import (
 	"os"
 
+	"github.com/ActiveMemory/ctx/internal/cli/system/core/hook"
 	session2 "github.com/ActiveMemory/ctx/internal/write/session"
 	"github.com/spf13/cobra"
 
@@ -31,7 +32,7 @@ import (
 func Run(cmd *cobra.Command, stdin *os.File) error {
 	sessionID, _ := cmd.Flags().GetString(cFlag.SessionID)
 	if sessionID == "" {
-		input := core.ReadInput(stdin)
+		input := hook.ReadInput(stdin)
 		sessionID = input.SessionID
 	}
 	if sessionID == "" {

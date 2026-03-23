@@ -7,9 +7,9 @@
 package events
 
 import (
+	coreEvent "github.com/ActiveMemory/ctx/internal/cli/system/core/event"
 	"github.com/spf13/cobra"
 
-	"github.com/ActiveMemory/ctx/internal/cli/system/core"
 	cFlag "github.com/ActiveMemory/ctx/internal/config/flag"
 	errRcall "github.com/ActiveMemory/ctx/internal/err/recall"
 	"github.com/ActiveMemory/ctx/internal/log"
@@ -51,9 +51,9 @@ func Run(cmd *cobra.Command) error {
 	}
 
 	if jsonOut {
-		writeEvents.JSON(cmd, core.FormatEventsJSON(evts))
+		writeEvents.JSON(cmd, coreEvent.FormatJSON(evts))
 	} else {
-		writeEvents.Human(cmd, core.FormatEventsHuman(evts))
+		writeEvents.Human(cmd, coreEvent.FormatHuman(evts))
 	}
 	return nil
 }

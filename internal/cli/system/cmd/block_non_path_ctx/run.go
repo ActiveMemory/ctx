@@ -11,6 +11,7 @@ import (
 	"fmt"
 	"os"
 
+	hook2 "github.com/ActiveMemory/ctx/internal/cli/system/core/hook"
 	"github.com/spf13/cobra"
 
 	"github.com/ActiveMemory/ctx/internal/assets/read/desc"
@@ -37,7 +38,7 @@ import (
 // Returns:
 //   - error: Always nil (hook errors are non-fatal)
 func Run(cmd *cobra.Command, stdin *os.File) error {
-	input := core.ReadInput(stdin)
+	input := hook2.ReadInput(stdin)
 	command := input.ToolInput.Command
 
 	if command == "" {
@@ -71,7 +72,7 @@ func Run(cmd *cobra.Command, stdin *os.File) error {
 	}
 
 	if reason != "" {
-		resp := core.BlockResponse{
+		resp := hook2.BlockResponse{
 			Decision: hook.DecisionBlock,
 			Reason: reason + token.NewlineLF + token.NewlineLF +
 				desc.Text(text.DescKeyBlockConstitutionSuffix),

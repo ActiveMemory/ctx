@@ -11,6 +11,7 @@ import (
 	"os"
 	"time"
 
+	hook2 "github.com/ActiveMemory/ctx/internal/cli/system/core/hook"
 	"github.com/spf13/cobra"
 
 	"github.com/ActiveMemory/ctx/internal/assets/read/desc"
@@ -18,9 +19,9 @@ import (
 	"github.com/ActiveMemory/ctx/internal/cli/system/core"
 	"github.com/ActiveMemory/ctx/internal/config/embed/text"
 	"github.com/ActiveMemory/ctx/internal/config/hook"
+	"github.com/ActiveMemory/ctx/internal/config/reminder"
 	cfgTime "github.com/ActiveMemory/ctx/internal/config/time"
 	"github.com/ActiveMemory/ctx/internal/config/token"
-	"github.com/ActiveMemory/ctx/internal/config/tpl"
 	"github.com/ActiveMemory/ctx/internal/notify"
 	writeHook "github.com/ActiveMemory/ctx/internal/write/hook"
 )
@@ -42,7 +43,7 @@ func Run(cmd *cobra.Command, stdin *os.File) error {
 		return nil
 	}
 
-	input, _, paused := core.HookPreamble(stdin)
+	input, _, paused := hook2.Preamble(stdin)
 	if paused {
 		return nil
 	}
@@ -77,7 +78,7 @@ func Run(cmd *cobra.Command, stdin *os.File) error {
 		token.NewlineLF +
 		desc.Text(text.DescKeyCheckRemindersDismissHint) + token.NewlineLF +
 		desc.Text(text.DescKeyCheckRemindersDismissAllHint)
-	vars := map[string]any{tpl.VarReminderList: reminderList}
+	vars := map[string]any{reminder.VarReminderList: reminderList}
 	content := core.LoadMessage(
 		hook.CheckReminders, hook.VariantReminders, vars, fallback,
 	)

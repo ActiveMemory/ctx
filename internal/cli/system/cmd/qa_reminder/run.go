@@ -11,6 +11,7 @@ import (
 	"os"
 	"strings"
 
+	hook2 "github.com/ActiveMemory/ctx/internal/cli/system/core/hook"
 	"github.com/spf13/cobra"
 
 	"github.com/ActiveMemory/ctx/internal/assets/read/desc"
@@ -37,7 +38,7 @@ func Run(cmd *cobra.Command, stdin *os.File) error {
 	if !core.Initialized() {
 		return nil
 	}
-	input, _, paused := core.HookPreamble(stdin)
+	input, _, paused := hook2.Preamble(stdin)
 	if paused {
 		return nil
 	}
@@ -53,7 +54,7 @@ func Run(cmd *cobra.Command, stdin *os.File) error {
 	}
 	msg = ctxContext.AppendDir(msg)
 
-	writeHook.HookContext(cmd, core.FormatHookContext(hook.EventPreToolUse, msg))
+	writeHook.HookContext(cmd, hook2.FormatContext(hook.EventPreToolUse, msg))
 
 	ref := notify.NewTemplateRef(hook.QAReminder, hook.VariantGate, nil)
 	core.Relay(fmt.Sprintf(desc.Text(text.DescKeyRelayPrefixFormat),

@@ -12,7 +12,9 @@ import (
 	"path/filepath"
 	"time"
 
-	"github.com/ActiveMemory/ctx/internal/cli/system/core/warn"
+	"github.com/ActiveMemory/ctx/internal/cli/system/core/counter"
+	"github.com/ActiveMemory/ctx/internal/cli/system/core/hook"
+	"github.com/ActiveMemory/ctx/internal/cli/system/core/nudge"
 	"github.com/spf13/cobra"
 
 	"github.com/ActiveMemory/ctx/internal/assets/read/desc"
@@ -43,7 +45,7 @@ func Run(cmd *cobra.Command, stdin *os.File) error {
 	if !core.Initialized() {
 		return nil
 	}
-	input := core.ReadInput(stdin)
+	input := hook.ReadInput(stdin)
 	sessionID := input.SessionID
 	if sessionID == "" {
 		sessionID = session.IDUnknown
@@ -60,13 +62,13 @@ func Run(cmd *cobra.Command, stdin *os.File) error {
 	logFile := filepath.Join(rc.ContextDir(), dir.Logs, stats.ContextSizeLogFile)
 
 	// Increment counter
-	count := core.ReadCounter(counterFile) + 1
-	core.WriteCounter(counterFile, count)
+	count := counter.Read(counterFile) + 1
+	counter.Write(counterFile, count)
 
 	// Read actual context window usage from session JSONL
-	info, _ := core.ReadSessionTokenInfo(sessionID)
+	info, _ := hook.ReadSessionTokenInfo(sessionID)
 	tokens := info.Tokens
-	windowSize := core.EffectiveContextWindow(info.Model)
+	windowSize := hook.EffectiveContextWindow(info.Model)
 	pct := 0
 	if windowSize > 0 && tokens > 0 {
 		pct = tokens * stats.PercentMultiplier / windowSize
@@ -77,7 +79,7 @@ func Run(cmd *cobra.Command, stdin *os.File) error {
 	// triggers — fires even during wrap-up suppression because cost
 	// guards are never convenience nudges.
 	if billingThreshold := rc.BillingTokenWarn(); billingThreshold > 0 && tokens >= billingThreshold {
-		writeHook.NudgeBlock(cmd, warn.EmitBillingWarning(logFile, sessionID, count, tokens, billingThreshold))
+		writeHook.NudgeBlock(cmd, nudge.EmitBillingWarning(logFile, sessionID, count, tokens, billingThreshold))
 	}
 
 	// Wrap-up suppression: if the user recently ran /ctx-wrap-up,
@@ -90,7 +92,7 @@ func Run(cmd *cobra.Command, stdin *os.File) error {
 			fmt.Sprintf(
 				desc.Text(text.DescKeyCheckContextSizeSuppressedLogFormat), count),
 		)
-		core.WriteSessionStats(sessionID, core.SessionStats{
+		hook.WriteSessionStats(sessionID, hook.SessionStats{
 			Timestamp:  time.Now().Format(time.RFC3339),
 			Prompt:     count,
 			Tokens:     tokens,
@@ -116,10 +118,10 @@ func Run(cmd *cobra.Command, stdin *os.File) error {
 	switch {
 	case counterTriggered:
 		evt = event.EventCheckpoint
-		writeHook.NudgeBlock(cmd, warn.EmitCheckpoint(logFile, sessionID, count, tokens, pct, windowSize))
+		writeHook.NudgeBlock(cmd, nudge.EmitCheckpoint(logFile, sessionID, count, tokens, pct, windowSize))
 	case windowTrigger:
 		evt = event.EventWindowWarning
-		writeHook.NudgeBlock(cmd, warn.EmitWindowWarning(logFile, sessionID, count, tokens, pct))
+		writeHook.NudgeBlock(cmd, nudge.EmitWindowWarning(logFile, sessionID, count, tokens, pct))
 	default:
 		core.LogMessage(logFile, sessionID,
 			fmt.Sprintf(desc.Text(
@@ -127,7 +129,7 @@ func Run(cmd *cobra.Command, stdin *os.File) error {
 		)
 	}
 
-	core.WriteSessionStats(sessionID, core.SessionStats{
+	hook.WriteSessionStats(sessionID, hook.SessionStats{
 		Timestamp:  time.Now().Format(time.RFC3339),
 		Prompt:     count,
 		Tokens:     tokens,

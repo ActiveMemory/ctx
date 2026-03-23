@@ -10,6 +10,7 @@ import (
 	"os"
 	"path/filepath"
 
+	"github.com/ActiveMemory/ctx/internal/cli/system/core/hook"
 	"github.com/spf13/cobra"
 
 	"github.com/ActiveMemory/ctx/internal/cli/system/core"
@@ -36,7 +37,7 @@ func Run(cmd *cobra.Command, stdin *os.File) error {
 		return nil
 	}
 
-	_, sessionID, paused := core.HookPreamble(stdin)
+	_, sessionID, paused := hook.Preamble(stdin)
 	if paused {
 		return nil
 	}
@@ -46,7 +47,7 @@ func Run(cmd *cobra.Command, stdin *os.File) error {
 		return nil
 	}
 
-	if box, warned := core.CheckKnowledgeHealth(sessionID); warned {
+	if box, warned := hook.CheckKnowledgeHealth(sessionID); warned {
 		writeHook.Nudge(cmd, box)
 		internalIo.TouchFile(markerPath)
 	}

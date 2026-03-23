@@ -11,6 +11,8 @@ import (
 	"path/filepath"
 	"time"
 
+	"github.com/ActiveMemory/ctx/internal/cli/system/core/drift"
+	hook2 "github.com/ActiveMemory/ctx/internal/cli/system/core/hook"
 	"github.com/spf13/cobra"
 
 	"github.com/ActiveMemory/ctx/internal/assets/read/desc"
@@ -18,7 +20,6 @@ import (
 	"github.com/ActiveMemory/ctx/internal/config/embed/text"
 	"github.com/ActiveMemory/ctx/internal/config/freshness"
 	"github.com/ActiveMemory/ctx/internal/config/hook"
-	"github.com/ActiveMemory/ctx/internal/config/tpl"
 	"github.com/ActiveMemory/ctx/internal/rc"
 )
 
@@ -37,7 +38,7 @@ import (
 // Returns:
 //   - error: Always nil (hook errors are non-fatal)
 func Run(cmd *cobra.Command, stdin *os.File) error {
-	input, _, paused := core.HookPreamble(stdin)
+	input, _, paused := hook2.Preamble(stdin)
 	if paused {
 		return nil
 	}
@@ -60,7 +61,7 @@ func Run(cmd *cobra.Command, stdin *os.File) error {
 	}
 
 	now := time.Now()
-	var staleEntries []core.StaleEntry
+	var staleEntries []hook2.StaleEntry
 
 	for _, tf := range files {
 		absPath := filepath.Join(cwd, tf.Path)
@@ -75,7 +76,7 @@ func Run(cmd *cobra.Command, stdin *os.File) error {
 			continue
 		}
 
-		staleEntries = append(staleEntries, core.StaleEntry{
+		staleEntries = append(staleEntries, hook2.StaleEntry{
 			Path:      tf.Path,
 			Desc:      tf.Desc,
 			ReviewURL: tf.ReviewURL,
@@ -87,9 +88,9 @@ func Run(cmd *cobra.Command, stdin *os.File) error {
 		return nil
 	}
 
-	staleText := core.FormatStaleEntries(staleEntries)
+	staleText := drift.FormatStaleEntries(staleEntries)
 
-	vars := map[string]any{tpl.VarStaleFiles: staleText}
+	vars := map[string]any{freshness.VarStaleFiles: staleText}
 	content := core.LoadMessage(hook.CheckFreshness, hook.VariantStale, vars, staleText)
 	if content == "" {
 		return nil

@@ -17,6 +17,7 @@ import (
 
 	"github.com/ActiveMemory/ctx/internal/assets/read/desc"
 	"github.com/ActiveMemory/ctx/internal/cli/system/core"
+	"github.com/ActiveMemory/ctx/internal/cli/system/core/hook"
 	"github.com/ActiveMemory/ctx/internal/config/archive"
 	"github.com/ActiveMemory/ctx/internal/config/dir"
 	"github.com/ActiveMemory/ctx/internal/config/embed/text"
@@ -35,7 +36,7 @@ import (
 // Returns:
 //   - error: non-nil on file creation or tar writing failure
 func CreateArchive(
-	archivePath string, entries []core.ArchiveEntry, w io.Writer,
+	archivePath string, entries []hook.ArchiveEntry, w io.Writer,
 ) error {
 	outFile, createErr := internalIo.SafeCreateFile(archivePath, configFs.PermFile)
 	if createErr != nil {
@@ -70,16 +71,16 @@ func CreateArchive(
 //   - error: non-nil on archive or SMB failure
 func BackupProject(
 	w io.Writer, home, timestamp string, smb *core.SMBConfig,
-) (core.BackupResult, error) {
+) (hook.BackupResult, error) {
 	cwd, cwdErr := os.Getwd()
 	if cwdErr != nil {
-		return core.BackupResult{}, cwdErr
+		return hook.BackupResult{}, cwdErr
 	}
 
 	archiveName := fmt.Sprintf(archive.BackupTplProjectArchive, timestamp)
 	archivePath := filepath.Join(os.TempDir(), archiveName)
 
-	entries := []core.ArchiveEntry{
+	entries := []hook.ArchiveEntry{
 		{SourcePath: filepath.Join(cwd, dir.Context), Prefix: dir.Context, ExcludeDir: dir.JournalSite},
 		{SourcePath: filepath.Join(cwd, dir.Claude), Prefix: dir.Claude},
 		{SourcePath: filepath.Join(cwd, dir.Ideas), Prefix: dir.Ideas, Optional: true},
@@ -115,11 +116,11 @@ func BackupProject(
 //   - error: non-nil on archive or SMB failure
 func BackupGlobal(
 	w io.Writer, home, timestamp string, smb *core.SMBConfig,
-) (core.BackupResult, error) {
+) (hook.BackupResult, error) {
 	archiveName := fmt.Sprintf(archive.BackupTplGlobalArchive, timestamp)
 	archivePath := filepath.Join(os.TempDir(), archiveName)
 
-	entries := []core.ArchiveEntry{
+	entries := []hook.ArchiveEntry{
 		{SourcePath: filepath.Join(home, dir.Claude), Prefix: dir.Claude, ExcludeDir: archive.BackupExcludeTodos},
 	}
 

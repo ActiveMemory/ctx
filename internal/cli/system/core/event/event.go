@@ -4,7 +4,7 @@
 //   \    Copyright 2026-present Context contributors.
 //                 SPDX-License-Identifier: Apache-2.0
 
-package core
+package event
 
 import (
 	"encoding/json"
@@ -15,12 +15,11 @@ import (
 	"github.com/ActiveMemory/ctx/internal/assets/read/desc"
 	"github.com/ActiveMemory/ctx/internal/config/embed/text"
 	"github.com/ActiveMemory/ctx/internal/config/event"
-	time2 "github.com/ActiveMemory/ctx/internal/config/time"
-
+	cfgTime "github.com/ActiveMemory/ctx/internal/config/time"
 	"github.com/ActiveMemory/ctx/internal/notify"
 )
 
-// FormatEventTimestamp converts an RFC3339 timestamp to local time display
+// FormatTimestamp converts an RFC3339 timestamp to local time display
 // using the DateTimePreciseFormat layout.
 //
 // Parameters:
@@ -29,12 +28,12 @@ import (
 // Returns:
 //   - string: local time formatted as "2006-01-02 15:04:05", or the
 //     original string on parse failure
-func FormatEventTimestamp(ts string) string {
+func FormatTimestamp(ts string) string {
 	t, parseErr := time.Parse(time.RFC3339, ts)
 	if parseErr != nil {
 		return ts
 	}
-	return t.Local().Format(time2.DateTimePreciseFormat)
+	return t.Local().Format(cfgTime.DateTimePreciseFormat)
 }
 
 // ExtractHookName gets the hook name from an event payload's detail field.
@@ -73,14 +72,14 @@ func TruncateMessage(msg string, maxLen int) string {
 		event.EventsTruncationSuffix
 }
 
-// FormatEventsJSON formats events as raw JSONL lines.
+// FormatJSON formats events as raw JSONL lines.
 //
 // Parameters:
 //   - evts: event payloads to serialize
 //
 // Returns:
 //   - []string: JSON lines (marshal errors are silently skipped)
-func FormatEventsJSON(evts []notify.Payload) []string {
+func FormatJSON(evts []notify.Payload) []string {
 	var lines []string
 	for _, e := range evts {
 		line, marshalErr := json.Marshal(e)
@@ -92,18 +91,18 @@ func FormatEventsJSON(evts []notify.Payload) []string {
 	return lines
 }
 
-// FormatEventsHuman formats events in aligned columns for human reading.
+// FormatHuman formats events in aligned columns for human reading.
 //
 // Parameters:
 //   - evts: event payloads to format
 //
 // Returns:
 //   - []string: formatted event lines
-func FormatEventsHuman(evts []notify.Payload) []string {
+func FormatHuman(evts []notify.Payload) []string {
 	fmtStr := desc.Text(text.DescKeyEventsHumanFormat)
 	lines := make([]string, 0, len(evts))
 	for _, e := range evts {
-		ts := FormatEventTimestamp(e.Timestamp)
+		ts := FormatTimestamp(e.Timestamp)
 		hookName := ExtractHookName(e)
 		msg := TruncateMessage(e.Message, event.EventsMessageMaxLen)
 		lines = append(lines, fmt.Sprintf(fmtStr, ts, e.Event, hookName, msg))

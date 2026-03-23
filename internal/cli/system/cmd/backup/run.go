@@ -12,6 +12,7 @@ import (
 	"time"
 
 	archive2 "github.com/ActiveMemory/ctx/internal/cli/system/core/archive"
+	"github.com/ActiveMemory/ctx/internal/cli/system/core/hook"
 	"github.com/spf13/cobra"
 
 	"github.com/ActiveMemory/ctx/internal/cli/system/core"
@@ -61,7 +62,7 @@ func Run(cmd *cobra.Command) error {
 	}
 
 	timestamp := time.Now().Format(archive.BackupTimestampFormat)
-	var results []core.BackupResult
+	var results []hook.BackupResult
 
 	if scope == archive.BackupScopeProject || scope == archive.BackupScopeAll {
 		result, projErr := archive2.BackupProject(cmd.ErrOrStderr(), home, timestamp, smb)

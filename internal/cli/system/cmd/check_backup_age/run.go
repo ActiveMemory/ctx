@@ -11,6 +11,7 @@ import (
 	"path/filepath"
 
 	archive2 "github.com/ActiveMemory/ctx/internal/cli/system/core/archive"
+	hook2 "github.com/ActiveMemory/ctx/internal/cli/system/core/hook"
 	"github.com/spf13/cobra"
 
 	"github.com/ActiveMemory/ctx/internal/assets/read/desc"
@@ -20,7 +21,6 @@ import (
 	"github.com/ActiveMemory/ctx/internal/config/env"
 	"github.com/ActiveMemory/ctx/internal/config/hook"
 	"github.com/ActiveMemory/ctx/internal/config/token"
-	"github.com/ActiveMemory/ctx/internal/config/tpl"
 )
 
 // Run executes the check-backup-age hook logic.
@@ -36,7 +36,7 @@ import (
 // Returns:
 //   - error: Always nil (hook errors are non-fatal)
 func Run(cmd *cobra.Command, stdin *os.File) error {
-	input, _, paused := core.HookPreamble(stdin)
+	input, _, paused := hook2.Preamble(stdin)
 	if paused {
 		return nil
 	}
@@ -76,7 +76,7 @@ func Run(cmd *cobra.Command, stdin *os.File) error {
 		warningText += w + token.NewlineLF
 	}
 
-	vars := map[string]any{tpl.VarWarnings: warningText}
+	vars := map[string]any{archive.VarWarnings: warningText}
 	content := core.LoadMessage(
 		hook.CheckBackupAge, hook.VariantWarning, vars, warningText,
 	)

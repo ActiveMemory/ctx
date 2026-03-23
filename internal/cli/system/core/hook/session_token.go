@@ -4,7 +4,7 @@
 //   \    Copyright 2026-present Context contributors.
 //                 SPDX-License-Identifier: Apache-2.0
 
-package core
+package hook
 
 import (
 	"bytes"
@@ -16,6 +16,7 @@ import (
 	"strings"
 
 	"github.com/ActiveMemory/ctx/internal/assets/read/desc"
+	"github.com/ActiveMemory/ctx/internal/cli/system/core"
 	"github.com/ActiveMemory/ctx/internal/config/claude"
 	"github.com/ActiveMemory/ctx/internal/config/dir"
 	"github.com/ActiveMemory/ctx/internal/config/embed/text"
@@ -71,7 +72,7 @@ func ReadSessionTokenInfo(sessionID string) (SessionTokenInfo, error) {
 //   - error: Non-nil only on unexpected errors
 func FindJSONLPath(sessionID string) (string, error) {
 	// Check cache first
-	cacheFile := filepath.Join(StateDir(), stats.JsonlPathCachePrefix+sessionID)
+	cacheFile := filepath.Join(core.StateDir(), stats.JsonlPathCachePrefix+sessionID)
 	if data, readErr := io2.SafeReadUserFile(cacheFile); readErr == nil {
 		cached := strings.TrimSpace(string(data))
 		if cached != "" {
