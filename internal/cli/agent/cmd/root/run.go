@@ -10,10 +10,10 @@ import (
 	"errors"
 	"time"
 
-	"github.com/ActiveMemory/ctx/internal/cli/agent/core/budget"
 	"github.com/spf13/cobra"
 
-	"github.com/ActiveMemory/ctx/internal/cli/agent/core"
+	coreBudget "github.com/ActiveMemory/ctx/internal/cli/agent/core/budget"
+	coreCooldown "github.com/ActiveMemory/ctx/internal/cli/agent/core/cooldown"
 	"github.com/ActiveMemory/ctx/internal/config/fmt"
 	"github.com/ActiveMemory/ctx/internal/context/load"
 	errCtx "github.com/ActiveMemory/ctx/internal/err/context"
@@ -39,13 +39,13 @@ import (
 // Returns:
 //   - error: Non-nil if context loading fails or .context/ is not found
 func Run(
-		cmd *cobra.Command,
-		budget int,
-		format string,
-		cooldown time.Duration,
-		session string,
+	cmd *cobra.Command,
+	budget int,
+	format string,
+	cooldown time.Duration,
+	session string,
 ) error {
-	if core.CooldownActive(session, cooldown) {
+	if coreCooldown.Active(session, cooldown) {
 		return nil
 	}
 
@@ -60,13 +60,13 @@ func Run(
 
 	var outputErr error
 	if format == fmt.FormatJSON {
-		outputErr = budget.OutputAgentJSON(cmd, ctx, budget)
+		outputErr = coreBudget.OutputAgentJSON(cmd, ctx, budget)
 	} else {
-		outputErr = budget.OutputAgentMarkdown(cmd, ctx, budget)
+		outputErr = coreBudget.OutputAgentMarkdown(cmd, ctx, budget)
 	}
 
 	if outputErr == nil {
-		core.TouchTombstone(session)
+		coreCooldown.TouchTombstone(session)
 	}
 
 	return outputErr

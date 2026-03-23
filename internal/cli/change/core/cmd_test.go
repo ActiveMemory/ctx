@@ -9,11 +9,14 @@ package core
 import (
 	"os"
 
-	"github.com/ActiveMemory/ctx/internal/format"
 	"path/filepath"
 	"strings"
 	"testing"
 	"time"
+
+	"github.com/ActiveMemory/ctx/internal/cli/change/core/detect"
+	format2 "github.com/ActiveMemory/ctx/internal/cli/change/core/render"
+	"github.com/ActiveMemory/ctx/internal/format"
 
 	"github.com/ActiveMemory/ctx/internal/entity"
 
@@ -44,7 +47,7 @@ func TestHumanAgo(t *testing.T) {
 
 func TestExtractTimestamp(t *testing.T) {
 	line := `{"event":"context-load-gate","timestamp":"2026-03-03T08:00:00Z","session":"abc"}`
-	ts, ok := ExtractTimestamp(line)
+	ts, ok := detect.ExtractTimestamp(line)
 	if !ok {
 		t.Fatal("ExtractTimestamp returned false")
 	}
@@ -53,7 +56,7 @@ func TestExtractTimestamp(t *testing.T) {
 	}
 
 	// No timestamp.
-	_, ok = ExtractTimestamp(`{"event":"other"}`)
+	_, ok = detect.ExtractTimestamp(`{"event":"other"}`)
 	if ok {
 		t.Error("expected false for line without timestamp")
 	}
@@ -61,7 +64,7 @@ func TestExtractTimestamp(t *testing.T) {
 
 func TestParseSinceFlag(t *testing.T) {
 	// Duration.
-	ts, label, err := ParseSinceFlag("6h")
+	ts, label, err := detect.ParseSinceFlag("6h")
 	if err != nil {
 		t.Fatalf("ParseSinceFlag(6h) error: %v", err)
 	}
@@ -73,7 +76,7 @@ func TestParseSinceFlag(t *testing.T) {
 	}
 
 	// Date.
-	ts, label, err = ParseSinceFlag("2026-03-01")
+	ts, label, err = detect.ParseSinceFlag("2026-03-01")
 	if err != nil {
 		t.Fatalf("ParseSinceFlag(2026-03-01) error: %v", err)
 	}
@@ -85,7 +88,7 @@ func TestParseSinceFlag(t *testing.T) {
 	}
 
 	// Invalid.
-	_, _, err = ParseSinceFlag("not-a-date")
+	_, _, err = detect.ParseSinceFlag("not-a-date")
 	if err == nil {
 		t.Error("expected error for invalid input")
 	}
@@ -130,7 +133,7 @@ func TestRenderChanges(t *testing.T) {
 		Authors:     []string{"Volkan"},
 	}
 
-	out := RenderChanges("6 hours ago", ctxChanges, code)
+	out := format2.Changes("6 hours ago", ctxChanges, code)
 	if !strings.Contains(out, "## Changes Since Last Session") {
 		t.Error("missing header")
 	}
@@ -151,7 +154,7 @@ func TestRenderChangesForHook(t *testing.T) {
 	}
 	code := entity.CodeSummary{CommitCount: 3, LatestMsg: "Fix bug"}
 
-	out := RenderChangesForHook("2 hours ago", ctxChanges, code)
+	out := format2.ChangesForHook("2 hours ago", ctxChanges, code)
 	if !strings.Contains(out, "Changes since last session") {
 		t.Error("missing hook header")
 	}
@@ -160,23 +163,23 @@ func TestRenderChangesForHook(t *testing.T) {
 	}
 
 	// Empty case.
-	out = RenderChangesForHook("1 hour ago", nil, entity.CodeSummary{})
+	out = format2.ChangesForHook("1 hour ago", nil, entity.CodeSummary{})
 	if out != "" {
 		t.Errorf("expected empty for no changes, got: %q", out)
 	}
 }
 
 func TestRenderChanges_NoChanges(t *testing.T) {
-	out := RenderChanges("1 hour ago", nil, entity.CodeSummary{})
+	out := format2.Changes("1 hour ago", nil, entity.CodeSummary{})
 	if !strings.Contains(out, "No changes detected") {
 		t.Error("expected 'No changes detected' message")
 	}
 }
 
 func TestDetectReferenceTime_SinceFlag(t *testing.T) {
-	_, label, detectErr := DetectReferenceTime("6h")
+	_, label, detectErr := detect.ReferenceTime("6h")
 	if detectErr != nil {
-		t.Fatalf("DetectReferenceTime(6h) error: %v", detectErr)
+		t.Fatalf("ReferenceTime(6h) error: %v", detectErr)
 	}
 	if !strings.Contains(label, "hour") {
 		t.Errorf("expected label containing 'hour', got: %s", label)
@@ -194,9 +197,9 @@ func TestDetectReferenceTime_Fallback(t *testing.T) {
 		t.Fatalf("MkdirAll: %v", mkErr)
 	}
 
-	_, label, detectErr := DetectReferenceTime("")
+	_, label, detectErr := detect.ReferenceTime("")
 	if detectErr != nil {
-		t.Fatalf("DetectReferenceTime fallback error: %v", detectErr)
+		t.Fatalf("ReferenceTime fallback error: %v", detectErr)
 	}
 	if !strings.Contains(label, "24 hour") {
 		t.Errorf("expected label containing '24 hour', got: %s", label)
@@ -239,9 +242,9 @@ func TestDetectReferenceTime_FromMarkers(t *testing.T) {
 		t.Fatalf("Chtimes newer: %v", chtErr)
 	}
 
-	refTime, _, detectErr := DetectReferenceTime("")
+	refTime, _, detectErr := detect.ReferenceTime("")
 	if detectErr != nil {
-		t.Fatalf("DetectReferenceTime from markers error: %v", detectErr)
+		t.Fatalf("ReferenceTime from markers error: %v", detectErr)
 	}
 
 	// Should return the second most recent (older) marker time.

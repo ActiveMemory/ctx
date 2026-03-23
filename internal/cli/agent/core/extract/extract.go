@@ -4,19 +4,20 @@
 //   \    Copyright 2026-present Context contributors.
 //                 SPDX-License-Identifier: Apache-2.0
 
-package core
+package extract
 
 import (
 	"strings"
 
 	ctxCfg "github.com/ActiveMemory/ctx/internal/config/ctx"
+	"github.com/ActiveMemory/ctx/internal/config/marker"
 	"github.com/ActiveMemory/ctx/internal/config/regex"
 	"github.com/ActiveMemory/ctx/internal/config/token"
 	"github.com/ActiveMemory/ctx/internal/entity"
 	"github.com/ActiveMemory/ctx/internal/task"
 )
 
-// ExtractBulletItems extracts Markdown bullet items up to a limit.
+// BulletItems extracts Markdown bullet items up to a limit.
 //
 // Skips empty items and lines starting with "#" (headers).
 //
@@ -26,7 +27,7 @@ import (
 //
 // Returns:
 //   - []string: Bullet item text without the "- " prefix
-func ExtractBulletItems(content string, limit int) []string {
+func BulletItems(content string, limit int) []string {
 	matches := regex.BulletItem.FindAllStringSubmatch(content, -1)
 	items := make([]string, 0, limit)
 	for i, m := range matches {
@@ -42,7 +43,7 @@ func ExtractBulletItems(content string, limit int) []string {
 	return items
 }
 
-// ExtractCheckboxItems extracts text from Markdown checkbox items.
+// CheckboxItems extracts text from Markdown checkbox items.
 //
 // Matches both checked "- [x]" and unchecked "- [ ]" items.
 //
@@ -51,7 +52,7 @@ func ExtractBulletItems(content string, limit int) []string {
 //
 // Returns:
 //   - []string: Text content of each checkbox item
-func ExtractCheckboxItems(content string) []string {
+func CheckboxItems(content string) []string {
 	matches := regex.Task.FindAllStringSubmatch(content, -1)
 	items := make([]string, 0, len(matches))
 	for _, m := range matches {
@@ -60,21 +61,21 @@ func ExtractCheckboxItems(content string) []string {
 	return items
 }
 
-// ExtractConstitutionRules extracts checkbox items from CONSTITUTION.md.
+// ConstitutionRules extracts checkbox items from CONSTITUTION.md.
 //
 // Parameters:
 //   - ctx: Loaded context containing the files
 //
 // Returns:
 //   - []string: List of constitution rules; nil if the file is not found
-func ExtractConstitutionRules(ctx *entity.Context) []string {
+func ConstitutionRules(ctx *entity.Context) []string {
 	if f := ctx.File(ctxCfg.Constitution); f != nil {
-		return ExtractCheckboxItems(string(f.Content))
+		return CheckboxItems(string(f.Content))
 	}
 	return nil
 }
 
-// ExtractUncheckedTasks extracts unchecked Markdown checkbox items.
+// UncheckedTasks extracts unchecked Markdown checkbox items.
 //
 // Only matches "- [ ]" items (not checked). Returns items with the
 // "- [ ]" prefix preserved for display.
@@ -84,18 +85,18 @@ func ExtractConstitutionRules(ctx *entity.Context) []string {
 //
 // Returns:
 //   - []string: Unchecked task items with "- [ ]" prefix
-func ExtractUncheckedTasks(content string) []string {
+func UncheckedTasks(content string) []string {
 	matches := regex.TaskMultiline.FindAllStringSubmatch(content, -1)
 	items := make([]string, 0, len(matches))
 	for _, m := range matches {
 		if task.Pending(m) {
-			items = append(items, "- [ ] "+strings.TrimSpace(task.Content(m)))
+			items = append(items, marker.PrefixTaskUndone+" "+strings.TrimSpace(task.Content(m)))
 		}
 	}
 	return items
 }
 
-// ExtractActiveTasks extracts unchecked task items from TASKS.md.
+// ActiveTasks extracts unchecked task items from TASKS.md.
 //
 // Parameters:
 //   - ctx: Loaded context containing the files
@@ -103,9 +104,9 @@ func ExtractUncheckedTasks(content string) []string {
 // Returns:
 //   - []string: List of active tasks with "- [ ]" prefix; nil if
 //     the file is not found
-func ExtractActiveTasks(ctx *entity.Context) []string {
+func ActiveTasks(ctx *entity.Context) []string {
 	if f := ctx.File(ctxCfg.Task); f != nil {
-		return ExtractUncheckedTasks(string(f.Content))
+		return UncheckedTasks(string(f.Content))
 	}
 	return nil
 }
