@@ -4,7 +4,7 @@
 //   \    Copyright 2026-present Context contributors.
 //                 SPDX-License-Identifier: Apache-2.0
 
-package core
+package ceremony
 
 import (
 	"os"
@@ -13,6 +13,7 @@ import (
 	"strings"
 
 	"github.com/ActiveMemory/ctx/internal/assets/read/desc"
+	"github.com/ActiveMemory/ctx/internal/cli/system/core"
 	"github.com/ActiveMemory/ctx/internal/config/ceremony"
 	"github.com/ActiveMemory/ctx/internal/config/embed/text"
 	"github.com/ActiveMemory/ctx/internal/config/file"
@@ -20,7 +21,7 @@ import (
 	"github.com/ActiveMemory/ctx/internal/io"
 )
 
-// RecentJournalFiles returns the n most recent markdown files in the given
+// RecentJournalFiles returns the n most recent Markdown files in the given
 // journal directory, sorted by filename descending (newest first).
 //
 // Parameters:
@@ -117,13 +118,13 @@ func EmitCeremonyNudge(remember, wrapup bool) (msg, variant string) {
 	boxTitle := desc.Text(boxTitleKey)
 	fallback := desc.Text(fallbackKey)
 
-	content := LoadMessage(hook.CheckCeremonies, variant, nil, fallback)
+	content := core.LoadMessage(hook.CheckCeremonies, variant, nil, fallback)
 	if content == "" {
 		return "", variant
 	}
 
 	relayPrefix := desc.Text(text.DescKeyCeremonyRelayPrefix)
 
-	msg = NudgeBox(relayPrefix, boxTitle, content)
+	msg = core.NudgeBox(relayPrefix, boxTitle, content)
 	return msg, variant
 }

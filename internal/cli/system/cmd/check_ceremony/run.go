@@ -10,6 +10,7 @@ import (
 	"os"
 	"path/filepath"
 
+	ceremony2 "github.com/ActiveMemory/ctx/internal/cli/system/core/ceremony"
 	"github.com/spf13/cobra"
 
 	"github.com/ActiveMemory/ctx/internal/assets/read/desc"
@@ -51,7 +52,7 @@ func Run(cmd *cobra.Command, stdin *os.File) error {
 		return nil
 	}
 
-	files := core.RecentJournalFiles(
+	files := ceremony2.RecentJournalFiles(
 		ctxContext.ResolvedJournalDir(), ceremony.CeremonyJournalLookback,
 	)
 
@@ -59,13 +60,13 @@ func Run(cmd *cobra.Command, stdin *os.File) error {
 		return nil
 	}
 
-	remember, wrapup := core.ScanJournalsForCeremonies(files)
+	remember, wrapup := ceremony2.ScanJournalsForCeremonies(files)
 
 	if remember && wrapup {
 		return nil
 	}
 
-	msg, variant := core.EmitCeremonyNudge(remember, wrapup)
+	msg, variant := ceremony2.EmitCeremonyNudge(remember, wrapup)
 	writeHook.Nudge(cmd, msg)
 	if msg == "" {
 		return nil

@@ -23,6 +23,8 @@ const MetaJoin = " " + MiddleDot + " "
 const (
 	// Colon is the colon character used as a key-value separator.
 	Colon = ":"
+	// Comma is the comma character.
+	Comma = ","
 	// CommaSpace is a comma-space separator for joining lists.
 	CommaSpace = ", "
 	// Dash is a hyphen used as a timestamp segment separator.

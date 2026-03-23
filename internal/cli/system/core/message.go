@@ -18,7 +18,7 @@ import (
 	"github.com/ActiveMemory/ctx/internal/config/file"
 	"github.com/ActiveMemory/ctx/internal/config/session"
 	"github.com/ActiveMemory/ctx/internal/config/token"
-	ctxcontext "github.com/ActiveMemory/ctx/internal/context/resolve"
+	ctxContext "github.com/ActiveMemory/ctx/internal/context/resolve"
 	"github.com/ActiveMemory/ctx/internal/io"
 	"github.com/ActiveMemory/ctx/internal/rc"
 )
@@ -119,7 +119,7 @@ func NudgeBox(relayPrefix, title, content string) string {
 	msg := relayPrefix + token.NewlineLF + token.NewlineLF +
 		box.Top + title + " " + strings.Repeat("─", pad) + token.NewlineLF
 	msg += BoxLines(content)
-	if line := ctxcontext.DirLine(); line != "" {
+	if line := ctxContext.DirLine(); line != "" {
 		msg += box.LinePrefix + line + token.NewlineLF
 	}
 	msg += box.Bottom

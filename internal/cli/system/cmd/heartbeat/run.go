@@ -11,6 +11,7 @@ import (
 	"os"
 	"path/filepath"
 
+	"github.com/ActiveMemory/ctx/internal/cli/system/core/time"
 	"github.com/spf13/cobra"
 
 	"github.com/ActiveMemory/ctx/internal/assets/read/desc"
@@ -63,7 +64,7 @@ func Run(_ *cobra.Command, stdin *os.File) error {
 	core.WriteCounter(counterFile, count)
 
 	// Detect context modification since the last heartbeat.
-	currentMtime := core.GetLatestContextMtime(contextDir)
+	currentMtime := time.GetLatestContextMtime(contextDir)
 	lastMtime := core.ReadMtime(mtimeFile)
 	contextModified := currentMtime > lastMtime
 	core.WriteMtime(mtimeFile, currentMtime)

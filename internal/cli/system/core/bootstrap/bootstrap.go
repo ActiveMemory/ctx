@@ -4,7 +4,7 @@
 //   \    Copyright 2026-present Context contributors.
 //                 SPDX-License-Identifier: Apache-2.0
 
-package core
+package bootstrap
 
 import (
 	"os"
@@ -84,7 +84,7 @@ func WrapFileList(files []string, maxWidth int, indent string) string {
 	for i, f := range files {
 		entry := f
 		if i < len(files)-1 {
-			entry += ","
+			entry += token.Comma
 		}
 
 		switch {
@@ -96,7 +96,7 @@ func WrapFileList(files []string, maxWidth int, indent string) string {
 			lines = append(lines, current)
 			current = indent + entry
 		default:
-			current += " " + entry
+			current += token.Space + entry
 		}
 	}
 	lines = append(lines, current)

@@ -11,6 +11,7 @@ import (
 	"os"
 	"path/filepath"
 
+	"github.com/ActiveMemory/ctx/internal/cli/system/core/time"
 	"github.com/spf13/cobra"
 
 	"github.com/ActiveMemory/ctx/internal/assets/read/desc"
@@ -54,7 +55,7 @@ func Run(cmd *cobra.Command, stdin *os.File) error {
 	// Initialize state if needed
 	ps, exists := core.ReadPersistenceState(stateFile)
 	if !exists {
-		initialMtime := core.GetLatestContextMtime(contextDir)
+		initialMtime := time.GetLatestContextMtime(contextDir)
 		ps = core.PersistenceState{
 			Count:     1,
 			LastNudge: 0,
@@ -68,7 +69,7 @@ func Run(cmd *cobra.Command, stdin *os.File) error {
 	}
 
 	ps.Count++
-	currentMtime := core.GetLatestContextMtime(contextDir)
+	currentMtime := time.GetLatestContextMtime(contextDir)
 
 	// If context files were modified since the last check, reset the nudge counter
 	if currentMtime > ps.LastMtime {

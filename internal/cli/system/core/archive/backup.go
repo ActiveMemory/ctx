@@ -4,9 +4,11 @@
 //   \    Copyright 2026-present Context contributors.
 //                 SPDX-License-Identifier: Apache-2.0
 
-package core
+package archive
 
 import (
+	"archive/tar"
+	"compress/gzip"
 	"fmt"
 	"io"
 	"os"
@@ -14,12 +16,46 @@ import (
 	"time"
 
 	"github.com/ActiveMemory/ctx/internal/assets/read/desc"
+	"github.com/ActiveMemory/ctx/internal/cli/system/core"
 	"github.com/ActiveMemory/ctx/internal/config/archive"
 	"github.com/ActiveMemory/ctx/internal/config/dir"
 	"github.com/ActiveMemory/ctx/internal/config/embed/text"
 	configFs "github.com/ActiveMemory/ctx/internal/config/fs"
+	errBackup "github.com/ActiveMemory/ctx/internal/err/backup"
 	internalIo "github.com/ActiveMemory/ctx/internal/io"
 )
+
+// CreateArchive builds a tar.gz archive from the given entries.
+//
+// Parameters:
+//   - archivePath: output file path for the archive
+//   - entries: directories and files to include
+//   - w: writer for diagnostic output (typically stderr)
+//
+// Returns:
+//   - error: non-nil on file creation or tar writing failure
+func CreateArchive(
+	archivePath string, entries []core.ArchiveEntry, w io.Writer,
+) error {
+	outFile, createErr := internalIo.SafeCreateFile(archivePath, configFs.PermFile)
+	if createErr != nil {
+		return errBackup.CreateArchive(createErr)
+	}
+	defer func() { _ = outFile.Close() }()
+
+	gzw := gzip.NewWriter(outFile)
+	defer func() { _ = gzw.Close() }()
+
+	tw := tar.NewWriter(gzw)
+	defer func() { _ = tw.Close() }()
+
+	for _, entry := range entries {
+		if addErr := addEntry(tw, entry, w); addErr != nil {
+			return addErr
+		}
+	}
+	return nil
+}
 
 // BackupProject creates a project-scoped backup archive.
 //
@@ -33,17 +69,17 @@ import (
 //   - BackupResult: archive path, size, and optional SMB destination
 //   - error: non-nil on archive or SMB failure
 func BackupProject(
-	w io.Writer, home, timestamp string, smb *SMBConfig,
-) (BackupResult, error) {
+	w io.Writer, home, timestamp string, smb *core.SMBConfig,
+) (core.BackupResult, error) {
 	cwd, cwdErr := os.Getwd()
 	if cwdErr != nil {
-		return BackupResult{}, cwdErr
+		return core.BackupResult{}, cwdErr
 	}
 
 	archiveName := fmt.Sprintf(archive.BackupTplProjectArchive, timestamp)
 	archivePath := filepath.Join(os.TempDir(), archiveName)
 
-	entries := []ArchiveEntry{
+	entries := []core.ArchiveEntry{
 		{SourcePath: filepath.Join(cwd, dir.Context), Prefix: dir.Context, ExcludeDir: dir.JournalSite},
 		{SourcePath: filepath.Join(cwd, dir.Claude), Prefix: dir.Claude},
 		{SourcePath: filepath.Join(cwd, dir.Ideas), Prefix: dir.Ideas, Optional: true},
@@ -78,12 +114,12 @@ func BackupProject(
 //   - BackupResult: archive path, size, and optional SMB destination
 //   - error: non-nil on archive or SMB failure
 func BackupGlobal(
-	w io.Writer, home, timestamp string, smb *SMBConfig,
-) (BackupResult, error) {
+	w io.Writer, home, timestamp string, smb *core.SMBConfig,
+) (core.BackupResult, error) {
 	archiveName := fmt.Sprintf(archive.BackupTplGlobalArchive, timestamp)
 	archivePath := filepath.Join(os.TempDir(), archiveName)
 
-	entries := []ArchiveEntry{
+	entries := []core.ArchiveEntry{
 		{SourcePath: filepath.Join(home, dir.Claude), Prefix: dir.Claude, ExcludeDir: archive.BackupExcludeTodos},
 	}
 
@@ -102,7 +138,7 @@ func BackupGlobal(
 // Returns:
 //   - []string: the warnings slice, possibly with SMB mount warnings appended
 func CheckSMBMountWarnings(smbURL string, warnings []string) []string {
-	cfg, cfgErr := ParseSMBConfig(smbURL, "")
+	cfg, cfgErr := core.ParseSMBConfig(smbURL, "")
 	if cfgErr != nil {
 		return warnings
 	}

@@ -10,6 +10,7 @@ import (
 	"os"
 	"path/filepath"
 
+	archive2 "github.com/ActiveMemory/ctx/internal/cli/system/core/archive"
 	"github.com/spf13/cobra"
 
 	"github.com/ActiveMemory/ctx/internal/assets/read/desc"
@@ -56,14 +57,14 @@ func Run(cmd *cobra.Command, stdin *os.File) error {
 
 	// Check 1: Is the SMB share mounted?
 	if smbURL := os.Getenv(env.BackupSMBURL); smbURL != "" {
-		warnings = core.CheckSMBMountWarnings(smbURL, warnings)
+		warnings = archive2.CheckSMBMountWarnings(smbURL, warnings)
 	}
 
 	// Check 2: Is the backup stale?
 	markerPath := filepath.Join(
 		home, archive.BackupMarkerDir, archive.BackupMarkerFile,
 	)
-	warnings = core.CheckBackupMarker(markerPath, warnings)
+	warnings = archive2.CheckBackupMarker(markerPath, warnings)
 
 	if len(warnings) == 0 {
 		return nil

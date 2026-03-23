@@ -12,6 +12,7 @@ import (
 	"path/filepath"
 	"time"
 
+	"github.com/ActiveMemory/ctx/internal/cli/system/core/warn"
 	"github.com/spf13/cobra"
 
 	"github.com/ActiveMemory/ctx/internal/assets/read/desc"
@@ -76,7 +77,7 @@ func Run(cmd *cobra.Command, stdin *os.File) error {
 	// triggers — fires even during wrap-up suppression because cost
 	// guards are never convenience nudges.
 	if billingThreshold := rc.BillingTokenWarn(); billingThreshold > 0 && tokens >= billingThreshold {
-		writeHook.NudgeBlock(cmd, core.EmitBillingWarning(logFile, sessionID, count, tokens, billingThreshold))
+		writeHook.NudgeBlock(cmd, warn.EmitBillingWarning(logFile, sessionID, count, tokens, billingThreshold))
 	}
 
 	// Wrap-up suppression: if the user recently ran /ctx-wrap-up,
@@ -115,10 +116,10 @@ func Run(cmd *cobra.Command, stdin *os.File) error {
 	switch {
 	case counterTriggered:
 		evt = event.EventCheckpoint
-		writeHook.NudgeBlock(cmd, core.EmitCheckpoint(logFile, sessionID, count, tokens, pct, windowSize))
+		writeHook.NudgeBlock(cmd, warn.EmitCheckpoint(logFile, sessionID, count, tokens, pct, windowSize))
 	case windowTrigger:
 		evt = event.EventWindowWarning
-		writeHook.NudgeBlock(cmd, core.EmitWindowWarning(logFile, sessionID, count, tokens, pct))
+		writeHook.NudgeBlock(cmd, warn.EmitWindowWarning(logFile, sessionID, count, tokens, pct))
 	default:
 		core.LogMessage(logFile, sessionID,
 			fmt.Sprintf(desc.Text(

@@ -11,6 +11,7 @@ import (
 	"os"
 	"time"
 
+	archive2 "github.com/ActiveMemory/ctx/internal/cli/system/core/archive"
 	"github.com/spf13/cobra"
 
 	"github.com/ActiveMemory/ctx/internal/cli/system/core"
@@ -63,7 +64,7 @@ func Run(cmd *cobra.Command) error {
 	var results []core.BackupResult
 
 	if scope == archive.BackupScopeProject || scope == archive.BackupScopeAll {
-		result, projErr := core.BackupProject(cmd.ErrOrStderr(), home, timestamp, smb)
+		result, projErr := archive2.BackupProject(cmd.ErrOrStderr(), home, timestamp, smb)
 		if projErr != nil {
 			return errBackup.Project(projErr)
 		}
@@ -71,7 +72,7 @@ func Run(cmd *cobra.Command) error {
 	}
 
 	if scope == archive.BackupScopeGlobal || scope == archive.BackupScopeAll {
-		result, globalErr := core.BackupGlobal(cmd.ErrOrStderr(), home, timestamp, smb)
+		result, globalErr := archive2.BackupGlobal(cmd.ErrOrStderr(), home, timestamp, smb)
 		if globalErr != nil {
 			return errBackup.Global(globalErr)
 		}

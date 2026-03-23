@@ -9,10 +9,10 @@ package bootstrap
 import (
 	"os"
 
+	bootstrap2 "github.com/ActiveMemory/ctx/internal/cli/system/core/bootstrap"
 	"github.com/spf13/cobra"
 
 	"github.com/ActiveMemory/ctx/internal/assets/read/desc"
-	"github.com/ActiveMemory/ctx/internal/cli/system/core"
 	cfgBootstrap "github.com/ActiveMemory/ctx/internal/config/bootstrap"
 	"github.com/ActiveMemory/ctx/internal/config/embed/text"
 	cFlag "github.com/ActiveMemory/ctx/internal/config/flag"
@@ -43,14 +43,14 @@ func Run(cmd *cobra.Command) error {
 		return nil
 	}
 
-	files := core.ListContextFiles(dir)
-	rules := core.ParseNumberedLines(
+	files := bootstrap2.ListContextFiles(dir)
+	rules := bootstrap2.ParseNumberedLines(
 		desc.Text(text.DescKeyBootstrapRules),
 	)
-	nextSteps := core.ParseNumberedLines(
+	nextSteps := bootstrap2.ParseNumberedLines(
 		desc.Text(text.DescKeyBootstrapNextSteps),
 	)
-	warning := core.PluginWarning()
+	warning := bootstrap2.PluginWarning()
 
 	jsonFlag, _ := cmd.Flags().GetBool(cFlag.JSON)
 	if jsonFlag {
@@ -58,7 +58,7 @@ func Run(cmd *cobra.Command) error {
 		return nil
 	}
 
-	fileList := core.WrapFileList(
+	fileList := bootstrap2.WrapFileList(
 		files,
 		cfgBootstrap.BootstrapFileListWidth,
 		cfgBootstrap.BootstrapFileListIndent,

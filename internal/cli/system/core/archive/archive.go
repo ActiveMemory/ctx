@@ -4,11 +4,10 @@
 //   \    Copyright 2026-present Context contributors.
 //                 SPDX-License-Identifier: Apache-2.0
 
-package core
+package archive
 
 import (
 	"archive/tar"
-	"compress/gzip"
 	"fmt"
 	"io"
 	"io/fs"
@@ -16,43 +15,11 @@ import (
 	"path/filepath"
 
 	"github.com/ActiveMemory/ctx/internal/assets/read/desc"
+	"github.com/ActiveMemory/ctx/internal/cli/system/core"
 	"github.com/ActiveMemory/ctx/internal/config/embed/text"
-	configFs "github.com/ActiveMemory/ctx/internal/config/fs"
 	errBackup "github.com/ActiveMemory/ctx/internal/err/backup"
 	internalIo "github.com/ActiveMemory/ctx/internal/io"
 )
-
-// CreateArchive builds a tar.gz archive from the given entries.
-//
-// Parameters:
-//   - archivePath: output file path for the archive
-//   - entries: directories and files to include
-//   - w: writer for diagnostic output (typically stderr)
-//
-// Returns:
-//   - error: non-nil on file creation or tar writing failure
-func CreateArchive(
-	archivePath string, entries []ArchiveEntry, w io.Writer,
-) error {
-	outFile, createErr := internalIo.SafeCreateFile(archivePath, configFs.PermFile)
-	if createErr != nil {
-		return errBackup.CreateArchive(createErr)
-	}
-	defer func() { _ = outFile.Close() }()
-
-	gzw := gzip.NewWriter(outFile)
-	defer func() { _ = gzw.Close() }()
-
-	tw := tar.NewWriter(gzw)
-	defer func() { _ = tw.Close() }()
-
-	for _, entry := range entries {
-		if addErr := addEntry(tw, entry, w); addErr != nil {
-			return addErr
-		}
-	}
-	return nil
-}
 
 // finalizeArchive creates the archive, populates the result with size,
 // and optionally copies to an SMB share.
@@ -70,22 +37,22 @@ func CreateArchive(
 //   - error: non-nil on archive creation or SMB failure
 func finalizeArchive(
 	w io.Writer, archivePath, archiveName, scope string,
-	entries []ArchiveEntry, smb *SMBConfig,
-) (BackupResult, error) {
+	entries []core.ArchiveEntry, smb *core.SMBConfig,
+) (core.BackupResult, error) {
 	if archiveErr := CreateArchive(archivePath, entries, w); archiveErr != nil {
-		return BackupResult{}, archiveErr
+		return core.BackupResult{}, archiveErr
 	}
 
-	result := BackupResult{Scope: scope, Archive: archivePath}
+	result := core.BackupResult{Scope: scope, Archive: archivePath}
 	if info, statErr := os.Stat(archivePath); statErr == nil {
 		result.Size = info.Size()
 	}
 
 	if smb != nil {
-		if mountErr := EnsureSMBMount(smb); mountErr != nil {
+		if mountErr := core.EnsureSMBMount(smb); mountErr != nil {
 			return result, mountErr
 		}
-		if copyErr := CopyToSMB(smb, archivePath); copyErr != nil {
+		if copyErr := core.CopyToSMB(smb, archivePath); copyErr != nil {
 			return result, copyErr
 		}
 		result.SMBDest = filepath.Join(smb.GVFSPath, smb.Subdir, archiveName)
@@ -104,11 +71,13 @@ func finalizeArchive(
 //
 // Returns:
 //   - error: non-nil on stat, walk, or tar write failure
-func addEntry(tw *tar.Writer, entry ArchiveEntry, w io.Writer) error {
+func addEntry(tw *tar.Writer, entry core.ArchiveEntry, w io.Writer) error {
 	info, statErr := os.Stat(entry.SourcePath)
 	if os.IsNotExist(statErr) {
 		if entry.Optional {
-			_, _ = fmt.Fprintf(w, desc.Text(text.DescKeyWriteBackupSkipEntry), entry.Prefix)
+			_, _ = fmt.Fprintf(
+				w, desc.Text(text.DescKeyWriteBackupSkipEntry), entry.Prefix,
+			)
 			return nil
 		}
 		return errBackup.SourceNotFound(entry.SourcePath)
