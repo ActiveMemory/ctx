@@ -4,7 +4,7 @@
 //   \    Copyright 2026-present Context contributors.
 //                 SPDX-License-Identifier: Apache-2.0
 
-package hook
+package session
 
 import (
 	"bytes"
@@ -45,14 +45,14 @@ const MaxTailBytes = 32768
 // Returns:
 //   - SessionTokenInfo: Token count and model from the last assistant message
 //   - error: Non-nil only on unexpected I/O errors
-func ReadSessionTokenInfo(sessionID string) (SessionTokenInfo, error) {
+func ReadSessionTokenInfo(sessionID string) (TokenInfo, error) {
 	if sessionID == "" || sessionID == session.IDUnknown {
-		return SessionTokenInfo{}, nil
+		return TokenInfo{}, nil
 	}
 
 	path, findErr := FindJSONLPath(sessionID)
 	if findErr != nil || path == "" {
-		return SessionTokenInfo{}, findErr
+		return TokenInfo{}, findErr
 	}
 
 	return ParseLastUsageAndModel(path)
@@ -111,16 +111,16 @@ func FindJSONLPath(sessionID string) (string, error) {
 // Returns:
 //   - SessionTokenInfo: Token count and model, or zero value if not found
 //   - error: Non-nil only on I/O errors
-func ParseLastUsageAndModel(path string) (SessionTokenInfo, error) {
+func ParseLastUsageAndModel(path string) (TokenInfo, error) {
 	f, openErr := io2.SafeOpenUserFile(path)
 	if openErr != nil {
-		return SessionTokenInfo{}, openErr
+		return TokenInfo{}, openErr
 	}
 	defer func() { _ = f.Close() }()
 
 	info, statErr := f.Stat()
 	if statErr != nil {
-		return SessionTokenInfo{}, statErr
+		return TokenInfo{}, statErr
 	}
 
 	// Read the tail of the file
@@ -131,12 +131,12 @@ func ParseLastUsageAndModel(path string) (SessionTokenInfo, error) {
 	}
 
 	if _, seekErr := f.Seek(offset, io.SeekStart); seekErr != nil {
-		return SessionTokenInfo{}, seekErr
+		return TokenInfo{}, seekErr
 	}
 
 	tail, readErr := io.ReadAll(f)
 	if readErr != nil {
-		return SessionTokenInfo{}, readErr
+		return TokenInfo{}, readErr
 	}
 
 	// Scan lines in reverse for the last assistant message with usage
@@ -167,14 +167,14 @@ func ParseLastUsageAndModel(path string) (SessionTokenInfo, error) {
 		u := msg.Message.Usage
 		total := u.InputTokens + u.CacheCreationInputTokens + u.CacheReadInputTokens
 		if total > 0 {
-			return SessionTokenInfo{
+			return TokenInfo{
 				Tokens: total,
 				Model:  msg.Message.Model,
 			}, nil
 		}
 	}
 
-	return SessionTokenInfo{}, nil
+	return TokenInfo{}, nil
 }
 
 // ModelContextWindow returns the context window size for a known model ID.

@@ -13,7 +13,6 @@ import (
 	"time"
 
 	"github.com/ActiveMemory/ctx/internal/cli/system/core/counter"
-	"github.com/ActiveMemory/ctx/internal/cli/system/core/hook"
 	"github.com/ActiveMemory/ctx/internal/cli/system/core/nudge"
 	session2 "github.com/ActiveMemory/ctx/internal/cli/system/core/session"
 	"github.com/spf13/cobra"
@@ -67,9 +66,9 @@ func Run(cmd *cobra.Command, stdin *os.File) error {
 	counter.Write(counterFile, count)
 
 	// Read actual context window usage from session JSONL
-	info, _ := hook.ReadSessionTokenInfo(sessionID)
+	info, _ := session2.ReadSessionTokenInfo(sessionID)
 	tokens := info.Tokens
-	windowSize := hook.EffectiveContextWindow(info.Model)
+	windowSize := session2.EffectiveContextWindow(info.Model)
 	pct := 0
 	if windowSize > 0 && tokens > 0 {
 		pct = tokens * stats.PercentMultiplier / windowSize

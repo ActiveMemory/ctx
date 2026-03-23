@@ -11,6 +11,7 @@ import (
 	"path/filepath"
 	"time"
 
+	"github.com/ActiveMemory/ctx/internal/cli/system/core/health"
 	"github.com/ActiveMemory/ctx/internal/cli/system/core/hook"
 	"github.com/ActiveMemory/ctx/internal/config/architecture"
 	cfgTime "github.com/ActiveMemory/ctx/internal/config/time"
@@ -50,7 +51,7 @@ func Run(cmd *cobra.Command, stdin *os.File) error {
 		return nil
 	}
 
-	info := hook.ReadMapTracking()
+	info := health.ReadMapTracking()
 	if info == nil || info.OptedOut {
 		return nil
 	}
@@ -65,13 +66,13 @@ func Run(cmd *cobra.Command, stdin *os.File) error {
 	}
 
 	// Count commits touching internal/ since last run
-	moduleCommits := hook.CountModuleCommits(info.LastRun)
+	moduleCommits := health.CountModuleCommits(info.LastRun)
 	if moduleCommits == 0 {
 		return nil
 	}
 
 	dateStr := lastRun.Format(cfgTime.DateFormat)
-	writeHook.Nudge(cmd, hook.EmitMapStalenessWarning(input.SessionID, dateStr, moduleCommits))
+	writeHook.Nudge(cmd, health.EmitMapStalenessWarning(input.SessionID, dateStr, moduleCommits))
 
 	internalIo.TouchFile(markerPath)
 

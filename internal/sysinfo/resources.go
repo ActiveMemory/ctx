@@ -75,6 +75,24 @@ type ResourceAlert struct {
 	Message  string
 }
 
+// SeverityFor returns the severity level for a given resource name
+// from an alert list. Returns SeverityOK if no alert matches.
+//
+// Parameters:
+//   - alerts: list of resource alerts to search
+//   - resource: resource name to match (e.g., "memory", "disk")
+//
+// Returns:
+//   - Severity: the severity level for the resource
+func SeverityFor(alerts []ResourceAlert, resource string) Severity {
+	for _, a := range alerts {
+		if a.Resource == resource {
+			return a.Severity
+		}
+	}
+	return SeverityOK
+}
+
 // Collect gathers a resource snapshot. The path argument determines which
 // filesystem is checked for disk usage (typically the working directory).
 func Collect(path string) Snapshot {

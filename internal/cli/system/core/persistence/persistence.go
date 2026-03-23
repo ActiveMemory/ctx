@@ -4,7 +4,7 @@
 //   \    Copyright 2026-present Context contributors.
 //                 SPDX-License-Identifier: Apache-2.0
 
-package hook
+package persistence
 
 import (
 	"fmt"
@@ -21,6 +21,13 @@ import (
 	"github.com/ActiveMemory/ctx/internal/io"
 )
 
+// State holds the counter state for persistence nudging.
+type State struct {
+	Count     int
+	LastNudge int
+	LastMtime int64
+}
+
 // ReadPersistenceState reads a persistence state file and returns the
 // parsed state. Returns ok=false if the file does not exist or cannot
 // be read.
@@ -31,13 +38,13 @@ import (
 // Returns:
 //   - PersistenceState: parsed counter state
 //   - bool: true if the file was read successfully
-func ReadPersistenceState(path string) (PersistenceState, bool) {
+func ReadPersistenceState(path string) (State, bool) {
 	data, readErr := io.SafeReadFile(filepath.Dir(path), filepath.Base(path))
 	if readErr != nil {
-		return PersistenceState{}, false
+		return State{}, false
 	}
 
-	var ps PersistenceState
+	var ps State
 	for _, line := range strings.Split(strings.TrimSpace(string(data)), token.NewlineLF) {
 		parts := strings.SplitN(line, token.KeyValueSep, 2)
 		if len(parts) != 2 {
@@ -69,7 +76,7 @@ func ReadPersistenceState(path string) (PersistenceState, bool) {
 // Parameters:
 //   - path: absolute path to the state file
 //   - s: state to persist
-func WritePersistenceState(path string, s PersistenceState) {
+func WritePersistenceState(path string, s State) {
 	content := fmt.Sprintf(desc.Text(text.DescKeyCheckPersistenceStateFormat),
 		s.Count, s.LastNudge, s.LastMtime)
 	_ = os.WriteFile(path, []byte(content), fs.PermSecret)

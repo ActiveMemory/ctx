@@ -4,7 +4,7 @@
 //   \    Copyright 2026-present Context contributors.
 //                 SPDX-License-Identifier: Apache-2.0
 
-package hook
+package knowledge
 
 import (
 	"bytes"
@@ -25,6 +25,19 @@ import (
 	"github.com/ActiveMemory/ctx/internal/rc"
 )
 
+// Finding describes a single knowledge file that exceeds its
+// configured threshold.
+type Finding struct {
+	// File is the context filename (e.g., DECISIONS.md).
+	File string
+	// Count is the actual entry or line count.
+	Count int
+	// Threshold is the configured maximum.
+	Threshold int
+	// Unit is the measurement unit ("entries" or "lines").
+	Unit string
+}
+
 // ScanKnowledgeFiles checks knowledge files against their configured
 // thresholds and returns any that exceed the limits.
 //
@@ -38,14 +51,14 @@ import (
 //   - []KnowledgeFinding: files exceeding thresholds, or nil if all within limits
 func ScanKnowledgeFiles(
 	contextDir string, decThreshold, lrnThreshold, convThreshold int,
-) []KnowledgeFinding {
-	var findings []KnowledgeFinding
+) []Finding {
+	var findings []Finding
 
 	if decThreshold > 0 {
 		if data, readErr := io.SafeReadFile(contextDir, ctx.Decision); readErr == nil {
 			count := len(index.ParseEntryBlocks(string(data)))
 			if count > decThreshold {
-				findings = append(findings, KnowledgeFinding{
+				findings = append(findings, Finding{
 					File: ctx.Decision, Count: count, Threshold: decThreshold, Unit: "entries",
 				})
 			}
@@ -56,7 +69,7 @@ func ScanKnowledgeFiles(
 		if data, readErr := io.SafeReadFile(contextDir, ctx.Learning); readErr == nil {
 			count := len(index.ParseEntryBlocks(string(data)))
 			if count > lrnThreshold {
-				findings = append(findings, KnowledgeFinding{
+				findings = append(findings, Finding{
 					File: ctx.Learning, Count: count, Threshold: lrnThreshold, Unit: "entries",
 				})
 			}
@@ -67,7 +80,7 @@ func ScanKnowledgeFiles(
 		if data, readErr := io.SafeReadFile(contextDir, ctx.Convention); readErr == nil {
 			lineCount := bytes.Count(data, []byte(token.NewlineLF))
 			if lineCount > convThreshold {
-				findings = append(findings, KnowledgeFinding{
+				findings = append(findings, Finding{
 					File: ctx.Convention, Count: lineCount, Threshold: convThreshold, Unit: "lines",
 				})
 			}
@@ -85,7 +98,7 @@ func ScanKnowledgeFiles(
 //
 // Returns:
 //   - string: formatted warning lines for template injection
-func FormatKnowledgeWarnings(findings []KnowledgeFinding) string {
+func FormatKnowledgeWarnings(findings []Finding) string {
 	var b strings.Builder
 	findingFmt := desc.Text(text.DescKeyCheckKnowledgeFindingFormat)
 	for _, f := range findings {

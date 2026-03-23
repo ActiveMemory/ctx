@@ -32,39 +32,6 @@ type FileTokenEntry struct {
 	Tokens int
 }
 
-// SessionTokenInfo holds token usage and model information extracted from a
-// session's JSONL file.
-type SessionTokenInfo struct {
-	Tokens int    // Total input tokens (input + cache_creation + cache_read)
-	Model  string // Model ID from the last assistant message, or ""
-}
-
-// usageData represents the minimal usage fields from a Claude Code JSONL
-// assistant message. Only the fields needed for token counting are included.
-type usageData struct {
-	InputTokens              int `json:"input_tokens"`
-	CacheCreationInputTokens int `json:"cache_creation_input_tokens"`
-	CacheReadInputTokens     int `json:"cache_read_input_tokens"`
-}
-
-// jsonlMessage represents the minimal structure of a Claude Code JSONL line
-// needed to extract usage and model data from assistant messages.
-type jsonlMessage struct {
-	Type    string `json:"type"`
-	Message struct {
-		Role  string    `json:"role"`
-		Model string    `json:"model"`
-		Usage usageData `json:"usage"`
-	} `json:"message"`
-}
-
-// PersistenceState holds the counter state for persistence nudging.
-type PersistenceState struct {
-	Count     int
-	LastNudge int
-	LastMtime int64
-}
-
 // MessageListEntry holds the data for a single row in the message list output.
 type MessageListEntry struct {
 	Hook         string   `json:"hook"`
@@ -73,25 +40,6 @@ type MessageListEntry struct {
 	Description  string   `json:"description"`
 	TemplateVars []string `json:"template_vars"`
 	HasOverride  bool     `json:"has_override"`
-}
-
-// MapTrackingInfo holds the minimal fields needed from map-tracking.json.
-type MapTrackingInfo struct {
-	OptedOut bool   `json:"opted_out"`
-	LastRun  string `json:"last_run"`
-}
-
-// KnowledgeFinding describes a single knowledge file that exceeds its
-// configured threshold.
-type KnowledgeFinding struct {
-	// File is the context filename (e.g., DECISIONS.md).
-	File string
-	// Count is the actual entry or line count.
-	Count int
-	// Threshold is the configured maximum.
-	Threshold int
-	// Unit is the measurement unit ("entries" or "lines").
-	Unit string
 }
 
 // ResourceJSONAlert is a single resource alert for JSON output.

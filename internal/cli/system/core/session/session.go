@@ -49,6 +49,32 @@ type BlockResponse struct {
 	Reason   string `json:"reason"`
 }
 
+// TokenInfo holds token usage and model information extracted from a
+// session's JSONL file.
+type TokenInfo struct {
+	Tokens int    // Total input tokens (input + cache_creation + cache_read)
+	Model  string // Model ID from the last assistant message, or ""
+}
+
+// usageData represents the minimal usage fields from a Claude Code JSONL
+// assistant message. Only the fields needed for token counting are included.
+type usageData struct {
+	InputTokens              int `json:"input_tokens"`
+	CacheCreationInputTokens int `json:"cache_creation_input_tokens"`
+	CacheReadInputTokens     int `json:"cache_read_input_tokens"`
+}
+
+// jsonlMessage represents the minimal structure of a Claude Code JSONL line
+// needed to extract usage and model data from assistant messages.
+type jsonlMessage struct {
+	Type    string `json:"type"`
+	Message struct {
+		Role  string    `json:"role"`
+		Model string    `json:"model"`
+		Usage usageData `json:"usage"`
+	} `json:"message"`
+}
+
 // FormatContext builds a JSON Response with additionalContext for the
 // given hook event. This is the standard way for non-blocking hooks to inject
 // directives that the agent will actually process (plain text gets ignored).

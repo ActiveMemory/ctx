@@ -17,7 +17,6 @@ import (
 	"time"
 
 	"github.com/ActiveMemory/ctx/internal/assets/read/desc"
-	coreHook "github.com/ActiveMemory/ctx/internal/cli/system/core/hook"
 	"github.com/ActiveMemory/ctx/internal/cli/system/core/session"
 	"github.com/ActiveMemory/ctx/internal/config/embed/text"
 	"github.com/ActiveMemory/ctx/internal/config/file"
@@ -193,7 +192,7 @@ func FormatStatsLine(e *Entry) string {
 	if len(sid) > journal.SessionIDShortLen {
 		sid = sid[:journal.SessionIDShortLen]
 	}
-	tokens := coreHook.FormatTokenCount(e.Tokens)
+	tokens := session.FormatTokenCount(e.Tokens)
 	return fmt.Sprintf(desc.Text(text.DescKeyStatsLineFormat),
 		ts, sid, e.Prompt, tokens, e.Pct, e.Event)
 }

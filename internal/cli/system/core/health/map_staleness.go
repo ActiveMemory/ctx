@@ -4,7 +4,7 @@
 //   \    Copyright 2026-present Context contributors.
 //                 SPDX-License-Identifier: Apache-2.0
 
-package hook
+package health
 
 import (
 	"encoding/json"
@@ -23,6 +23,12 @@ import (
 	"github.com/ActiveMemory/ctx/internal/notify"
 	"github.com/ActiveMemory/ctx/internal/rc"
 )
+
+// MapTrackingInfo holds the minimal fields needed from map-tracking.json.
+type MapTrackingInfo struct {
+	OptedOut bool   `json:"opted_out"`
+	LastRun  string `json:"last_run"`
+}
 
 // ReadMapTracking reads and parses the map-tracking.json file from the
 // context directory.

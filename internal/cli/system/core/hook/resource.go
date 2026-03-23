@@ -36,24 +36,6 @@ func PctOf(used, total uint64) int {
 	return int(float64(used) / float64(total) * 100)
 }
 
-// SeverityFor returns the severity level for a given resource name
-// from an alert list. Returns SeverityOK if no alert matches.
-//
-// Parameters:
-//   - alerts: list of resource alerts to search
-//   - resource: resource name to match (e.g., "memory", "disk")
-//
-// Returns:
-//   - sysinfo.Severity: the severity level for the resource
-func SeverityFor(alerts []sysinfo.ResourceAlert, resource string) sysinfo.Severity {
-	for _, a := range alerts {
-		if a.Resource == resource {
-			return a.Severity
-		}
-	}
-	return sysinfo.SeverityOK
-}
-
 // StatusText returns a human-readable status indicator string for a
 // severity level, using the embedded text assets.
 //
@@ -134,7 +116,7 @@ func FormatResourcesText(snap sysinfo.Snapshot, alerts []sysinfo.ResourceAlert) 
 		pct := PctOf(e.used, e.total)
 		values := fmt.Sprintf(resourceValueFormat(),
 			sysinfo.FormatGiB(e.used), sysinfo.FormatGiB(e.total), pct)
-		sev := SeverityFor(alerts, e.resource)
+		sev := sysinfo.SeverityFor(alerts, e.resource)
 		lines = append(
 			lines,
 			FormatResourceLine(desc.Text(e.labelKey), values, StatusText(sev)))
@@ -149,7 +131,7 @@ func FormatResourcesText(snap sysinfo.Snapshot, alerts []sysinfo.ResourceAlert) 
 		values := fmt.Sprintf(desc.Text(text.DescKeyResourcesLoadFormat),
 			snap.Load.Load1, snap.Load.Load5, snap.Load.Load15,
 			snap.Load.NumCPU, ratio)
-		sev := SeverityFor(alerts, sysinfo.ResourceLoad)
+		sev := sysinfo.SeverityFor(alerts, sysinfo.ResourceLoad)
 		lines = append(
 			lines,
 			FormatResourceLine(

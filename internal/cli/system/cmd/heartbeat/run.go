@@ -14,6 +14,7 @@ import (
 	"github.com/ActiveMemory/ctx/internal/cli/system/core/counter"
 	heartbeat2 "github.com/ActiveMemory/ctx/internal/cli/system/core/heartbeat"
 	hook2 "github.com/ActiveMemory/ctx/internal/cli/system/core/hook"
+	"github.com/ActiveMemory/ctx/internal/cli/system/core/session"
 	"github.com/ActiveMemory/ctx/internal/cli/system/core/time"
 	"github.com/spf13/cobra"
 
@@ -72,9 +73,9 @@ func Run(_ *cobra.Command, stdin *os.File) error {
 	heartbeat2.WriteMtime(mtimeFile, currentMtime)
 
 	// Read token usage for this session.
-	info, _ := hook2.ReadSessionTokenInfo(sessionID)
+	info, _ := session.ReadSessionTokenInfo(sessionID)
 	tokens := info.Tokens
-	window := hook2.EffectiveContextWindow(info.Model)
+	window := session.EffectiveContextWindow(info.Model)
 
 	// Build and send notification.
 	vars := map[string]any{
@@ -94,7 +95,7 @@ func Run(_ *cobra.Command, stdin *os.File) error {
 	if tokens > 0 {
 		pct := tokens * stats.PercentMultiplier / window
 		msg = fmt.Sprintf(desc.Text(text.DescKeyHeartbeatNotifyTokens),
-			count, contextModified, hook2.FormatTokenCount(tokens), pct)
+			count, contextModified, session.FormatTokenCount(tokens), pct)
 	} else {
 		msg = fmt.Sprintf(desc.Text(text.DescKeyHeartbeatNotifyPlain),
 			count, contextModified)
@@ -106,7 +107,7 @@ func Run(_ *cobra.Command, stdin *os.File) error {
 	if tokens > 0 {
 		pct := tokens * stats.PercentMultiplier / window
 		logLine = fmt.Sprintf(desc.Text(text.DescKeyHeartbeatLogTokens),
-			count, contextModified, hook2.FormatTokenCount(tokens), pct)
+			count, contextModified, session.FormatTokenCount(tokens), pct)
 	} else {
 		logLine = fmt.Sprintf(desc.Text(text.DescKeyHeartbeatLogPlain),
 			count, contextModified)

@@ -12,6 +12,7 @@ import (
 	"path/filepath"
 
 	hook2 "github.com/ActiveMemory/ctx/internal/cli/system/core/hook"
+	"github.com/ActiveMemory/ctx/internal/cli/system/core/persistence"
 	"github.com/ActiveMemory/ctx/internal/cli/system/core/time"
 	"github.com/spf13/cobra"
 
@@ -53,15 +54,15 @@ func Run(cmd *cobra.Command, stdin *os.File) error {
 	logFile := filepath.Join(contextDir, dir.Logs, nudge.PersistenceLogFile)
 
 	// Initialize state if needed
-	ps, exists := hook2.ReadPersistenceState(stateFile)
+	ps, exists := persistence.ReadPersistenceState(stateFile)
 	if !exists {
 		initialMtime := time.GetLatestContextMtime(contextDir)
-		ps = hook2.PersistenceState{
+		ps = persistence.State{
 			Count:     1,
 			LastNudge: 0,
 			LastMtime: initialMtime,
 		}
-		hook2.WritePersistenceState(stateFile, ps)
+		persistence.WritePersistenceState(stateFile, ps)
 		core.LogMessage(logFile, sessionID, fmt.Sprintf(
 			desc.Text(text.DescKeyCheckPersistenceInitLogFormat), initialMtime),
 		)
@@ -75,7 +76,7 @@ func Run(cmd *cobra.Command, stdin *os.File) error {
 	if currentMtime > ps.LastMtime {
 		ps.LastNudge = ps.Count
 		ps.LastMtime = currentMtime
-		hook2.WritePersistenceState(stateFile, ps)
+		persistence.WritePersistenceState(stateFile, ps)
 		core.LogMessage(logFile, sessionID, fmt.Sprintf(
 			desc.Text(text.DescKeyCheckPersistenceModifiedLogFormat), ps.Count),
 		)
@@ -84,7 +85,7 @@ func Run(cmd *cobra.Command, stdin *os.File) error {
 
 	sinceNudge := ps.Count - ps.LastNudge
 
-	if hook2.PersistenceNudgeNeeded(ps.Count, sinceNudge) {
+	if persistence.PersistenceNudgeNeeded(ps.Count, sinceNudge) {
 		fallback := fmt.Sprintf(
 			desc.Text(text.DescKeyCheckPersistenceFallback), sinceNudge,
 		)
@@ -97,7 +98,7 @@ func Run(cmd *cobra.Command, stdin *os.File) error {
 			core.LogMessage(logFile, sessionID, fmt.Sprintf(
 				desc.Text(text.DescKeyCheckPersistenceSilencedLogFormat), ps.Count),
 			)
-			hook2.WritePersistenceState(stateFile, ps)
+			persistence.WritePersistenceState(stateFile, ps)
 			return nil
 		}
 
@@ -156,6 +157,6 @@ func Run(cmd *cobra.Command, stdin *os.File) error {
 		)
 	}
 
-	hook2.WritePersistenceState(stateFile, ps)
+	persistence.WritePersistenceState(stateFile, ps)
 	return nil
 }
