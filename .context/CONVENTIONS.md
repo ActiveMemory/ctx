@@ -175,3 +175,7 @@
 - camelCase import aliases — cFlag not cflag, cfgFmt not cfgfmt
 
 - Icons and symbols as config/token constants, not unicode escapes
+
+- write/ packages write to stdio only — functions take *cobra.Command, not io.Writer. Exception: write/rc writes to os.Stderr because rc loads before cobra.
+
+- Cross-cutting domain types belong in internal/entity. Types used by one package belong in that package; types used across packages go to entity.
