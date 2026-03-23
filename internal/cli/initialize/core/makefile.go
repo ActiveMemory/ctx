@@ -23,7 +23,7 @@ import (
 
 // IncludeDirective is the line appended to the user's Makefile to pull
 // in ctx targets. The leading dash suppresses errors when the file is absent.
-var IncludeDirective = "-include " + project.MakefileCtx
+var IncludeDirective = project.MakefileIncludePrefix + project.MakefileCtx
 
 // HandleMakefileCtx deploys Makefile.ctx and amends the user Makefile.
 //
@@ -35,7 +35,7 @@ var IncludeDirective = "-include " + project.MakefileCtx
 func HandleMakefileCtx(cmd *cobra.Command) error {
 	content, err := makefile.Ctx()
 	if err != nil {
-		return errInitialize.ReadTemplate("Makefile.ctx", err)
+		return errInitialize.ReadTemplate(project.MakefileCtx, err)
 	}
 	if err = os.WriteFile(project.MakefileCtx, content, fs.PermFile); err != nil {
 		return errFs.FileWrite(project.MakefileCtx, err)

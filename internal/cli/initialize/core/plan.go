@@ -11,6 +11,7 @@ import (
 	"os"
 	"strings"
 
+	"github.com/ActiveMemory/ctx/internal/cli/initialize/core/merge"
 	"github.com/spf13/cobra"
 
 	readProj "github.com/ActiveMemory/ctx/internal/assets/read/project"
@@ -76,7 +77,7 @@ func HandleImplementationPlan(cmd *cobra.Command, force, autoMerge bool) error {
 	if bkErr := backupFile(cmd, project.ImplementationPlan, existingContent); bkErr != nil {
 		return bkErr
 	}
-	insertPos := FindInsertionPoint(existingStr)
+	insertPos := merge.FindInsertionPoint(existingStr)
 	var mergedContent string
 	if insertPos == 0 {
 		mergedContent = string(templateContent) + token.NewlineLF + existingStr

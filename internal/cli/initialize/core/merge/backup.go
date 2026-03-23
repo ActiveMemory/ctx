@@ -4,7 +4,7 @@
 //   \    Copyright 2026-present Context contributors.
 //                 SPDX-License-Identifier: Apache-2.0
 
-package core
+package merge
 
 import (
 	"bufio"
@@ -13,6 +13,7 @@ import (
 	"strings"
 	"time"
 
+	"github.com/ActiveMemory/ctx/internal/cli/initialize/core"
 	"github.com/spf13/cobra"
 
 	"github.com/ActiveMemory/ctx/internal/config/cli"
@@ -54,7 +55,7 @@ func backupFile(cmd *cobra.Command, filename string, content []byte) error {
 // Returns:
 //   - created: True if the file was created fresh (no existing file)
 //   - error: Non-nil if file operations fail
-func CreateOrMerge(cmd *cobra.Command, p MergeParams) (bool, error) {
+func CreateOrMerge(cmd *cobra.Command, p core.MergeParams) (bool, error) {
 	existingContent, readErr := os.ReadFile(p.Filename)
 	fileExists := readErr == nil
 

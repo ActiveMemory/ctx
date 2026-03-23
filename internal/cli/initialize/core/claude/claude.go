@@ -4,17 +4,18 @@
 //   \    Copyright 2026-present Context contributors.
 //                 SPDX-License-Identifier: Apache-2.0
 
-package core
+package claude
 
 import (
 	"github.com/spf13/cobra"
 
 	readClaude "github.com/ActiveMemory/ctx/internal/assets/read/claude"
 	"github.com/ActiveMemory/ctx/internal/assets/read/desc"
+	"github.com/ActiveMemory/ctx/internal/cli/initialize/core"
 	"github.com/ActiveMemory/ctx/internal/config/claude"
 	"github.com/ActiveMemory/ctx/internal/config/embed/text"
 	"github.com/ActiveMemory/ctx/internal/config/marker"
-	ctxErr "github.com/ActiveMemory/ctx/internal/err/initialize"
+	errInitialize "github.com/ActiveMemory/ctx/internal/err/initialize"
 	"github.com/ActiveMemory/ctx/internal/write/initialize"
 )
 
@@ -30,17 +31,17 @@ import (
 func HandleClaudeMd(cmd *cobra.Command, force, autoMerge bool) error {
 	templateContent, err := readClaude.Md()
 	if err != nil {
-		return ctxErr.ReadTemplate(claude.Md, err)
+		return errInitialize.ReadTemplate(claude.Md, err)
 	}
 
-	created, mergeErr := CreateOrMerge(cmd, MergeParams{
+	created, mergeErr := core.CreateOrMerge(cmd, core.MergeParams{
 		Filename:        claude.Md,
 		MarkerStart:     marker.CtxMarkerStart,
 		TemplateContent: templateContent,
 		Force:           force,
 		AutoMerge:       autoMerge,
 		ConfirmPrompt:   desc.Text(text.DescKeyInitConfirmClaude),
-		UpdateFn:        UpdateCtxSection,
+		UpdateFn:        updateCtxSection,
 	})
 
 	if mergeErr != nil {
@@ -52,22 +53,4 @@ func HandleClaudeMd(cmd *cobra.Command, force, autoMerge bool) error {
 	}
 
 	return nil
-}
-
-// UpdateCtxSection replaces the existing ctx section between markers with
-// new content.
-//
-// Parameters:
-//   - cmd: Cobra command for output
-//   - existing: Existing file content
-//   - newTemplate: New template content
-//
-// Returns:
-//   - error: Non-nil if markers are missing or file operations fail
-func UpdateCtxSection(cmd *cobra.Command, existing string, newTemplate []byte) error {
-	return UpdateMarkedSection(
-		cmd, claude.Md, existing, newTemplate,
-		marker.CtxMarkerStart, marker.CtxMarkerEnd,
-		initialize.UpdatedCtxSection,
-	)
 }

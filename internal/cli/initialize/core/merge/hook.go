@@ -4,7 +4,7 @@
 //   \    Copyright 2026-present Context contributors.
 //                 SPDX-License-Identifier: Apache-2.0
 
-package core
+package merge
 
 import (
 	"bytes"
@@ -122,7 +122,7 @@ func DeduplicatePermissions(slice *[]string) bool {
 	}
 	bareSkills := make(map[string]bool)
 	for _, p := range *slice {
-		if name, ok := SkillName(p); ok {
+		if name, ok := skillName(p); ok {
 			if !strings.Contains(name, ":") {
 				bareSkills[name] = true
 			}
@@ -135,7 +135,7 @@ func DeduplicatePermissions(slice *[]string) bool {
 			continue
 		}
 		seen[p] = true
-		if name, ok := SkillName(p); ok && strings.HasPrefix(name, PluginPrefix) {
+		if name, ok := skillName(p); ok && strings.HasPrefix(name, PluginPrefix) {
 			bareName := strings.TrimPrefix(name, PluginPrefix)
 			bareName = strings.TrimSuffix(bareName, ":*")
 			if bareSkills[bareName] {
@@ -147,19 +147,4 @@ func DeduplicatePermissions(slice *[]string) bool {
 	removed := len(*slice) != len(result)
 	*slice = result
 	return removed
-}
-
-// SkillName extracts the skill name from a permission string like "Skill(name)".
-//
-// Parameters:
-//   - perm: Permission string to parse
-//
-// Returns:
-//   - string: The skill name
-//   - bool: True if perm matches the Skill(...) format
-func SkillName(perm string) (string, bool) {
-	if !strings.HasPrefix(perm, "Skill(") || !strings.HasSuffix(perm, ")") {
-		return "", false
-	}
-	return perm[len("Skill(") : len(perm)-1], true
 }

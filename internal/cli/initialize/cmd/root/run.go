@@ -12,6 +12,9 @@ import (
 	"path/filepath"
 	"strings"
 
+	claude2 "github.com/ActiveMemory/ctx/internal/cli/initialize/core/claude"
+	coreMerge "github.com/ActiveMemory/ctx/internal/cli/initialize/core/merge"
+	project2 "github.com/ActiveMemory/ctx/internal/cli/initialize/core/project"
 	"github.com/spf13/cobra"
 
 	"github.com/ActiveMemory/ctx/internal/assets/read/catalog"
@@ -145,7 +148,7 @@ func Run(
 	initialize.InfoCreatingRootFiles(cmd)
 
 	// Create specs/ and ideas/ directories with README.md
-	if err := core.CreateProjectDirs(cmd); err != nil {
+	if err := project2.CreateProjectDirs(cmd); err != nil {
 		initialize.InfoWarnNonFatal(cmd, desc.Text(text.DescKeyInitLabelProjectDirs), err)
 	}
 
@@ -163,7 +166,7 @@ func Run(
 
 	// Merge permissions into settings.local.json (no hook scaffolding)
 	initialize.InfoSettingUpPermissions(cmd)
-	if err := core.MergeSettingsPermissions(cmd); err != nil {
+	if err := coreMerge.MergeSettingsPermissions(cmd); err != nil {
 		// Non-fatal: warn but continue
 		initialize.InfoWarnNonFatal(cmd, desc.Text(text.DescKeyInitLabelPermissions), err)
 	}
@@ -177,7 +180,7 @@ func Run(
 	}
 
 	// Handle CLAUDE.md creation/merge
-	if err := core.HandleClaudeMd(cmd, force, merge); err != nil {
+	if err := claude2.HandleClaudeMd(cmd, force, merge); err != nil {
 		// Non-fatal: warn but continue
 		initialize.InfoWarnNonFatal(cmd, claude.Md, err)
 	}

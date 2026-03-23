@@ -4,14 +4,13 @@
 //   \    Copyright 2026-present Context contributors.
 //                 SPDX-License-Identifier: Apache-2.0
 
-package core
+package project
 
 import (
 	"os"
 	"path/filepath"
 
 	"github.com/ActiveMemory/ctx/internal/assets/read/project"
-	"github.com/ActiveMemory/ctx/internal/config/dir"
 	"github.com/ActiveMemory/ctx/internal/config/file"
 	"github.com/ActiveMemory/ctx/internal/config/fs"
 	errFs "github.com/ActiveMemory/ctx/internal/err/fs"
@@ -19,13 +18,6 @@ import (
 	"github.com/ActiveMemory/ctx/internal/write/initialize"
 	"github.com/spf13/cobra"
 )
-
-// ProjectDirs lists the project-root directories created by ctx init,
-// each with an explanatory README.md.
-var ProjectDirs = []string{
-	dir.Specs,
-	dir.Ideas,
-}
 
 // CreateProjectDirs creates project-root directories (specs/, ideas/) with
 // README.md files. Skips directories that already exist. Creates the README
@@ -37,27 +29,27 @@ var ProjectDirs = []string{
 // Returns:
 //   - error: Non-nil if directory creation or file write fails
 func CreateProjectDirs(cmd *cobra.Command) error {
-	for _, dir := range ProjectDirs {
-		if _, statErr := os.Stat(dir); statErr == nil {
-			initialize.SkippedDir(cmd, dir)
+	for _, d := range Dirs {
+		if _, statErr := os.Stat(d); statErr == nil {
+			initialize.SkippedDir(cmd, d)
 			continue
 		}
 
-		if mkdirErr := os.MkdirAll(dir, fs.PermExec); mkdirErr != nil {
-			return errFs.Mkdir(dir+"/", mkdirErr)
+		if mkdirErr := os.MkdirAll(d, fs.PermExec); mkdirErr != nil {
+			return errFs.Mkdir(d+"/", mkdirErr)
 		}
 
-		readme, readErr := project.Readme(dir)
+		readme, readErr := project.Readme(d)
 		if readErr != nil {
-			return errInitialize.ReadProjectReadme(dir, readErr)
+			return errInitialize.ReadProjectReadme(d, readErr)
 		}
 
-		readmePath := filepath.Join(dir, file.Readme)
+		readmePath := filepath.Join(d, file.Readme)
 		if writeErr := os.WriteFile(readmePath, readme, fs.PermFile); writeErr != nil {
 			return errFs.FileWrite(readmePath, writeErr)
 		}
 
-		initialize.CreatedDir(cmd, dir)
+		initialize.CreatedDir(cmd, d)
 	}
 
 	return nil
