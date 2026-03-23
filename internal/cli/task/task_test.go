@@ -15,7 +15,8 @@ import (
 
 	"github.com/ActiveMemory/ctx/internal/cli/add"
 	"github.com/ActiveMemory/ctx/internal/cli/initialize"
-	"github.com/ActiveMemory/ctx/internal/cli/task/core"
+	"github.com/ActiveMemory/ctx/internal/cli/task/core/count"
+	"github.com/ActiveMemory/ctx/internal/cli/task/core/path"
 	"github.com/ActiveMemory/ctx/internal/config/ctx"
 	"github.com/ActiveMemory/ctx/internal/config/dir"
 	"github.com/ActiveMemory/ctx/internal/rc"
@@ -151,7 +152,7 @@ func TestCountPendingTasks(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			count := core.CountPendingTasks(tt.lines)
+			count := count.CountPendingTasks(tt.lines)
 			if count != tt.expected {
 				t.Errorf("CountPendingTasks() = %d, want %d", count, tt.expected)
 			}
@@ -162,7 +163,7 @@ func TestCountPendingTasks(t *testing.T) {
 func TestTasksFilePath(t *testing.T) {
 	setupTaskDir(t)
 
-	path := core.TasksFilePath()
+	path := path.TasksFilePath()
 	if !strings.Contains(path, ctx.Task) {
 		t.Errorf("TasksFilePath() = %q, want to contain %q", path, ctx.Task)
 	}
@@ -171,7 +172,7 @@ func TestTasksFilePath(t *testing.T) {
 func TestArchiveDirPath(t *testing.T) {
 	setupTaskDir(t)
 
-	path := core.ArchiveDirPath()
+	path := path.ArchiveDirPath()
 	if !strings.Contains(path, dir.Archive) {
 		t.Errorf("ArchiveDirPath() = %q, want to contain %q", path, dir.Archive)
 	}

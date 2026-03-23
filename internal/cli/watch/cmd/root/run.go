@@ -10,9 +10,9 @@ import (
 	"io"
 	"os"
 
+	"github.com/ActiveMemory/ctx/internal/cli/watch/core/stream"
 	"github.com/spf13/cobra"
 
-	"github.com/ActiveMemory/ctx/internal/cli/watch/core"
 	"github.com/ActiveMemory/ctx/internal/context/validate"
 	"github.com/ActiveMemory/ctx/internal/err/initialize"
 	errRecall "github.com/ActiveMemory/ctx/internal/err/recall"
@@ -62,5 +62,5 @@ func Run(cmd *cobra.Command, logPath string, dryRun bool) error {
 		reader = os.Stdin
 	}
 
-	return core.ProcessStream(cmd, reader, dryRun)
+	return stream.ProcessStream(cmd, reader, dryRun)
 }

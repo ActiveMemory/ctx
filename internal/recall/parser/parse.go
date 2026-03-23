@@ -20,6 +20,7 @@ import (
 	"github.com/ActiveMemory/ctx/internal/config/session"
 	cfgTime "github.com/ActiveMemory/ctx/internal/config/time"
 	"github.com/ActiveMemory/ctx/internal/config/token"
+	"github.com/ActiveMemory/ctx/internal/entity"
 	"github.com/ActiveMemory/ctx/internal/rc"
 )
 
@@ -31,10 +32,10 @@ import (
 //   - sourcePath: Path to the source JSONL file
 //
 // Returns:
-//   - *Session: Constructed session with messages, stats, and metadata
+//   - *entity.Session: Constructed session with messages, stats, and metadata
 func (p *ClaudeCodeParser) buildSession(
 	id string, rawMsgs []claudeRawMessage, sourcePath string,
-) *Session {
+) *entity.Session {
 	if len(rawMsgs) == 0 {
 		return nil
 	}
@@ -47,7 +48,7 @@ func (p *ClaudeCodeParser) buildSession(
 	first := rawMsgs[0]
 	last := rawMsgs[len(rawMsgs)-1]
 
-	s := &Session{
+	s := &entity.Session{
 		ID:         id,
 		Slug:       first.Slug,
 		Tool:       session.ToolClaudeCode,
@@ -104,10 +105,10 @@ func (p *ClaudeCodeParser) buildSession(
 //   - raw: Raw message from JSONL parsing
 //
 // Returns:
-//   - Message: Normalized message with text, tool uses,
+//   - entity.Message: Normalized message with text, tool uses,
 //     and tool results extracted
-func (p *ClaudeCodeParser) convertMessage(raw claudeRawMessage) Message {
-	msg := Message{
+func (p *ClaudeCodeParser) convertMessage(raw claudeRawMessage) entity.Message {
+	msg := entity.Message{
 		ID:        raw.UUID,
 		Timestamp: raw.Timestamp,
 		Role:      raw.Type,
@@ -141,7 +142,7 @@ func (p *ClaudeCodeParser) convertMessage(raw claudeRawMessage) Message {
 			if block.Input != nil {
 				inputStr = string(block.Input)
 			}
-			msg.ToolUses = append(msg.ToolUses, ToolUse{
+			msg.ToolUses = append(msg.ToolUses, entity.ToolUse{
 				ID:    block.ID,
 				Name:  block.Name,
 				Input: inputStr,
@@ -159,7 +160,7 @@ func (p *ClaudeCodeParser) convertMessage(raw claudeRawMessage) Message {
 					contentStr = string(block.Content)
 				}
 			}
-			msg.ToolResults = append(msg.ToolResults, ToolResult{
+			msg.ToolResults = append(msg.ToolResults, entity.ToolResult{
 				ToolUseID: block.ToolUseID,
 				Content:   contentStr,
 				IsError:   block.IsError,
@@ -207,10 +208,10 @@ func (p *ClaudeCodeParser) parseContentBlocks(
 //   - sourcePath: Path to the source file
 //
 // Returns:
-//   - *Session: The parsed session, or nil if no session header found
+//   - *entity.Session: The parsed session, or nil if no session header found
 func (p *MarkdownSessionParser) parseMarkdownSession(
 	content string, sourcePath string,
-) *Session {
+) *entity.Session {
 	lines := strings.Split(content, token.NewlineLF)
 
 	var headerLine string
@@ -247,7 +248,7 @@ func (p *MarkdownSessionParser) parseMarkdownSession(
 	sections := extractSections(lines)
 
 	// Build messages from sections
-	var messages []Message
+	var messages []entity.Message
 	turnCount := 0
 
 	// The session summary itself is treated as an assistant message
@@ -261,7 +262,7 @@ func (p *MarkdownSessionParser) parseMarkdownSession(
 	}
 
 	if len(bodyParts) > 0 {
-		messages = append(messages, Message{
+		messages = append(messages, entity.Message{
 			ID:        sessionID + session.IDSuffixSummary,
 			Timestamp: startTime,
 			Role:      claude.RoleAssistant,
@@ -272,7 +273,7 @@ func (p *MarkdownSessionParser) parseMarkdownSession(
 	// The topic acts as the initial user message
 	if topic != "" {
 		turnCount = 1
-		messages = append([]Message{{
+		messages = append([]entity.Message{{
 			ID:        sessionID + session.IDSuffixTopic,
 			Timestamp: startTime,
 			Role:      claude.RoleUser,
@@ -294,7 +295,7 @@ func (p *MarkdownSessionParser) parseMarkdownSession(
 		}
 	}
 
-	return &Session{
+	return &entity.Session{
 		ID:           sessionID,
 		Slug:         sessionID,
 		Tool:         session.ToolMarkdown,

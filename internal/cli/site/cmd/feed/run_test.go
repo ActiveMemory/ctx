@@ -14,6 +14,9 @@ import (
 	"strings"
 	"testing"
 
+	"github.com/ActiveMemory/ctx/internal/cli/site/core/generate"
+	"github.com/ActiveMemory/ctx/internal/cli/site/core/rss"
+	"github.com/ActiveMemory/ctx/internal/cli/site/core/scan"
 	"github.com/spf13/cobra"
 
 	"github.com/ActiveMemory/ctx/internal/cli/site/core"
@@ -140,7 +143,7 @@ func TestFeed_Basic(t *testing.T) {
 	writePost(t, dir, "2026-01-03-third.md",
 		finalizedPost("Third", "2026-01-03", "Carol", nil))
 
-	posts, report, scanErr := core.ScanBlogPosts(dir)
+	posts, report, scanErr := scan.ScanBlogPosts(dir)
 	if scanErr != nil {
 		t.Fatal(scanErr)
 	}
@@ -156,7 +159,7 @@ func TestFeed_Basic(t *testing.T) {
 	}
 
 	outPath := filepath.Join(t.TempDir(), "feed.xml")
-	genErr := core.GenerateAtom(posts, outPath, "https://example.com")
+	genErr := generate.GenerateAtom(posts, outPath, "https://example.com")
 	if genErr != nil {
 		t.Fatal(genErr)
 	}
@@ -166,7 +169,7 @@ func TestFeed_Basic(t *testing.T) {
 		t.Fatal(readErr)
 	}
 
-	var feed core.AtomFeed
+	var feed rss.AtomFeed
 	if unmarshalErr := xml.Unmarshal(data, &feed); unmarshalErr != nil {
 		t.Fatalf("invalid XML: %v", unmarshalErr)
 	}
@@ -187,7 +190,7 @@ func TestFeed_SkipsDrafts(t *testing.T) {
 	writePost(t, dir, "2026-01-03-implicit-draft.md",
 		"---\ntitle: Implicit\ndate: 2026-01-03\n---\n# Implicit\n\nContent.\n")
 
-	posts, report, scanErr := core.ScanBlogPosts(dir)
+	posts, report, scanErr := scan.ScanBlogPosts(dir)
 	if scanErr != nil {
 		t.Fatal(scanErr)
 	}
@@ -211,7 +214,7 @@ func TestFeed_MissingTitle(t *testing.T) {
 	writePost(t, dir, "2026-01-01-no-title.md",
 		"---\ndate: 2026-01-01\nreviewed_and_finalized: true\n---\n# Heading\n\nContent.\n")
 
-	posts, report, scanErr := core.ScanBlogPosts(dir)
+	posts, report, scanErr := scan.ScanBlogPosts(dir)
 	if scanErr != nil {
 		t.Fatal(scanErr)
 	}
@@ -233,7 +236,7 @@ func TestFeed_MissingDate(t *testing.T) {
 	writePost(t, dir, "2026-01-01-no-date.md",
 		"---\ntitle: No Date\nreviewed_and_finalized: true\n---\n# No Date\n\nContent.\n")
 
-	posts, report, scanErr := core.ScanBlogPosts(dir)
+	posts, report, scanErr := scan.ScanBlogPosts(dir)
 	if scanErr != nil {
 		t.Fatal(scanErr)
 	}
@@ -256,7 +259,7 @@ func TestFeed_NoSummary(t *testing.T) {
 	writePost(t, dir, "2026-01-01-no-summary.md",
 		"---\ntitle: No Summary\ndate: 2026-01-01\nreviewed_and_finalized: true\n---\n# No Summary\n")
 
-	posts, report, scanErr := core.ScanBlogPosts(dir)
+	posts, report, scanErr := scan.ScanBlogPosts(dir)
 	if scanErr != nil {
 		t.Fatal(scanErr)
 	}
@@ -276,7 +279,7 @@ func TestFeed_NoSummary(t *testing.T) {
 
 	// Verify summary is omitted in XML output.
 	outPath := filepath.Join(t.TempDir(), "feed.xml")
-	genErr := core.GenerateAtom(posts, outPath, "https://example.com")
+	genErr := generate.GenerateAtom(posts, outPath, "https://example.com")
 	if genErr != nil {
 		t.Fatal(genErr)
 	}
@@ -290,13 +293,13 @@ func TestFeed_NoSummary(t *testing.T) {
 func TestFeed_EmptyBlog(t *testing.T) {
 	dir := t.TempDir()
 
-	posts, _, scanErr := core.ScanBlogPosts(dir)
+	posts, _, scanErr := scan.ScanBlogPosts(dir)
 	if scanErr != nil {
 		t.Fatal(scanErr)
 	}
 
 	outPath := filepath.Join(t.TempDir(), "feed.xml")
-	genErr := core.GenerateAtom(posts, outPath, "https://example.com")
+	genErr := generate.GenerateAtom(posts, outPath, "https://example.com")
 	if genErr != nil {
 		t.Fatal(genErr)
 	}
@@ -306,7 +309,7 @@ func TestFeed_EmptyBlog(t *testing.T) {
 		t.Fatal(readErr)
 	}
 
-	var feed core.AtomFeed
+	var feed rss.AtomFeed
 	if unmarshalErr := xml.Unmarshal(data, &feed); unmarshalErr != nil {
 		t.Fatalf("invalid XML for empty feed: %v", unmarshalErr)
 	}
@@ -325,7 +328,7 @@ func TestFeed_SortOrder(t *testing.T) {
 	writePost(t, dir, "2026-01-30-newest.md",
 		finalizedPost("Newest", "2026-01-30", "A", nil))
 
-	posts, _, scanErr := core.ScanBlogPosts(dir)
+	posts, _, scanErr := scan.ScanBlogPosts(dir)
 	if scanErr != nil {
 		t.Fatal(scanErr)
 	}
@@ -350,7 +353,7 @@ func TestFeed_MalformedFrontmatter(t *testing.T) {
 	writePost(t, dir, "2026-01-01-bad.md",
 		"---\n: invalid: yaml: [[\n---\n# Bad\n\nContent.\n")
 
-	posts, report, scanErr := core.ScanBlogPosts(dir)
+	posts, report, scanErr := scan.ScanBlogPosts(dir)
 	if scanErr != nil {
 		t.Fatal(scanErr)
 	}
@@ -371,15 +374,15 @@ func TestFeed_Idempotent(t *testing.T) {
 	outDir := t.TempDir()
 	outPath := filepath.Join(outDir, "feed.xml")
 
-	posts1, _, _ := core.ScanBlogPosts(dir)
-	genErr1 := core.GenerateAtom(posts1, outPath, "https://example.com")
+	posts1, _, _ := scan.ScanBlogPosts(dir)
+	genErr1 := generate.GenerateAtom(posts1, outPath, "https://example.com")
 	if genErr1 != nil {
 		t.Fatal(genErr1)
 	}
 	data1, _ := os.ReadFile(outPath)
 
-	posts2, _, _ := core.ScanBlogPosts(dir)
-	genErr2 := core.GenerateAtom(posts2, outPath, "https://example.com")
+	posts2, _, _ := scan.ScanBlogPosts(dir)
+	genErr2 := generate.GenerateAtom(posts2, outPath, "https://example.com")
 	if genErr2 != nil {
 		t.Fatal(genErr2)
 	}
@@ -396,19 +399,19 @@ func TestFeed_Categories(t *testing.T) {
 	writePost(t, dir, "2026-01-01-topics.md",
 		finalizedPost("Topics", "2026-01-01", "Alice", topics))
 
-	posts, _, scanErr := core.ScanBlogPosts(dir)
+	posts, _, scanErr := scan.ScanBlogPosts(dir)
 	if scanErr != nil {
 		t.Fatal(scanErr)
 	}
 
 	outPath := filepath.Join(t.TempDir(), "feed.xml")
-	genErr := core.GenerateAtom(posts, outPath, "https://example.com")
+	genErr := generate.GenerateAtom(posts, outPath, "https://example.com")
 	if genErr != nil {
 		t.Fatal(genErr)
 	}
 
 	data, _ := os.ReadFile(outPath)
-	var feed core.AtomFeed
+	var feed rss.AtomFeed
 	xml.Unmarshal(data, &feed)
 
 	if len(feed.Entries) != 1 {
@@ -435,9 +438,9 @@ func TestFeed_CustomBaseURL(t *testing.T) {
 	writePost(t, dir, "2026-01-01-post.md",
 		finalizedPost("Post", "2026-01-01", "Alice", nil))
 
-	posts, _, _ := core.ScanBlogPosts(dir)
+	posts, _, _ := scan.ScanBlogPosts(dir)
 	outPath := filepath.Join(t.TempDir(), "feed.xml")
-	genErr := core.GenerateAtom(
+	genErr := generate.GenerateAtom(
 		posts, outPath, "https://custom.example.com",
 	)
 	if genErr != nil {
@@ -471,7 +474,7 @@ func TestFeed_FilenameFilter(t *testing.T) {
 	writePost(t, dir, "draft-ideas.md", "# Ideas\n")
 	writePost(t, dir, "README.md", "# README\n")
 
-	posts, _, scanErr := core.ScanBlogPosts(dir)
+	posts, _, scanErr := scan.ScanBlogPosts(dir)
 	if scanErr != nil {
 		t.Fatal(scanErr)
 	}

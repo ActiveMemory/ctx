@@ -18,6 +18,7 @@ import (
 	"github.com/ActiveMemory/ctx/internal/config/file"
 	"github.com/ActiveMemory/ctx/internal/config/parser"
 	"github.com/ActiveMemory/ctx/internal/config/session"
+	"github.com/ActiveMemory/ctx/internal/entity"
 	ctxerr "github.com/ActiveMemory/ctx/internal/err/parser"
 )
 
@@ -102,9 +103,9 @@ func (p *ClaudeCodeParser) Matches(path string) bool {
 //   - path: Path to the JSONL file to parse
 //
 // Returns:
-//   - []*Session: All sessions found in the file, sorted by start time
+//   - []*entity.Session: All sessions found in the file, sorted by start time
 //   - error: Non-nil if the file cannot be opened or read
-func (p *ClaudeCodeParser) ParseFile(path string) ([]*Session, error) {
+func (p *ClaudeCodeParser) ParseFile(path string) ([]*entity.Session, error) {
 	f, openErr := os.Open(filepath.Clean(path))
 	if openErr != nil {
 		return nil, ctxerr.OpenFile(openErr)
@@ -150,7 +151,7 @@ func (p *ClaudeCodeParser) ParseFile(path string) ([]*Session, error) {
 	}
 
 	// Convert to sessions
-	var sessions []*Session
+	var sessions []*entity.Session
 	for sessionID, msgs := range sessionMsgs {
 		session := p.buildSession(sessionID, msgs, path)
 		if session != nil {
@@ -176,10 +177,10 @@ func (p *ClaudeCodeParser) ParseFile(path string) ([]*Session, error) {
 //   - line: Raw JSONL line bytes to parse
 //
 // Returns:
-//   - *Message: The parsed message, or nil if the line should be skipped
+//   - *entity.Message: The parsed message, or nil if the line should be skipped
 //   - string: The session ID this message belongs to
 //   - error: Non-nil if JSON unmarshaling fails
-func (p *ClaudeCodeParser) ParseLine(line []byte) (*Message, string, error) {
+func (p *ClaudeCodeParser) ParseLine(line []byte) (*entity.Message, string, error) {
 	if len(line) == 0 {
 		return nil, "", nil
 	}

@@ -7,9 +7,8 @@
 package lock
 
 import (
+	coreLock "github.com/ActiveMemory/ctx/internal/cli/recall/core/lock"
 	"github.com/spf13/cobra"
-
-	"github.com/ActiveMemory/ctx/internal/cli/recall/core"
 )
 
 // runLockUnlock delegates to core.RunLockUnlock with lock=true.
@@ -27,5 +26,5 @@ func runLockUnlock(
 	args []string,
 	all, lock bool,
 ) error {
-	return core.RunLockUnlock(cmd, args, all, lock)
+	return coreLock.RunLockUnlock(cmd, args, all, lock)
 }

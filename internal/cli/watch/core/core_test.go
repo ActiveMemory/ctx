@@ -4,7 +4,7 @@
 //   \    Copyright 2026-present Context contributors.
 //                 SPDX-License-Identifier: Apache-2.0
 
-package core
+package core_test
 
 import (
 	"bytes"
@@ -14,6 +14,9 @@ import (
 	"testing"
 
 	"github.com/ActiveMemory/ctx/internal/cli/initialize"
+	"github.com/ActiveMemory/ctx/internal/cli/watch/core"
+	"github.com/ActiveMemory/ctx/internal/cli/watch/core/apply"
+	"github.com/ActiveMemory/ctx/internal/cli/watch/core/stream"
 	"github.com/ActiveMemory/ctx/internal/config/ctx"
 	"github.com/ActiveMemory/ctx/internal/config/entry"
 	"github.com/ActiveMemory/ctx/internal/rc"
@@ -43,20 +46,20 @@ func TestApplyUpdate(t *testing.T) {
 
 	tests := []struct {
 		name        string
-		update      ContextUpdate
+		update      core.ContextUpdate
 		checkFile   string
 		checkFor    string
 		expectError bool
 	}{
 		{
 			name:      "task update",
-			update:    ContextUpdate{Type: entry.Task, Content: "Test task from watch"},
+			update:    core.ContextUpdate{Type: entry.Task, Content: "Test task from watch"},
 			checkFile: ctx.Task,
 			checkFor:  "Test task from watch",
 		},
 		{
 			name: "decision update",
-			update: ContextUpdate{
+			update: core.ContextUpdate{
 				Type:        entry.Decision,
 				Content:     "Test decision from watch",
 				Context:     "Testing watch functionality",
@@ -68,7 +71,7 @@ func TestApplyUpdate(t *testing.T) {
 		},
 		{
 			name: "learning update",
-			update: ContextUpdate{
+			update: core.ContextUpdate{
 				Type:        entry.Learning,
 				Content:     "Test learning from watch",
 				Context:     "Testing watch functionality",
@@ -80,30 +83,30 @@ func TestApplyUpdate(t *testing.T) {
 		},
 		{
 			name:        "decision without required fields",
-			update:      ContextUpdate{Type: entry.Decision, Content: "Missing fields"},
+			update:      core.ContextUpdate{Type: entry.Decision, Content: "Missing fields"},
 			expectError: true,
 		},
 		{
 			name:        "learning without required fields",
-			update:      ContextUpdate{Type: entry.Learning, Content: "Missing fields"},
+			update:      core.ContextUpdate{Type: entry.Learning, Content: "Missing fields"},
 			expectError: true,
 		},
 		{
 			name:      "convention update",
-			update:    ContextUpdate{Type: entry.Convention, Content: "Test convention from watch"},
+			update:    core.ContextUpdate{Type: entry.Convention, Content: "Test convention from watch"},
 			checkFile: ctx.Convention,
 			checkFor:  "Test convention from watch",
 		},
 		{
 			name:        "unknown type",
-			update:      ContextUpdate{Type: "invalid", Content: "Should fail"},
+			update:      core.ContextUpdate{Type: "invalid", Content: "Should fail"},
 			expectError: true,
 		},
 	}
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			err := ApplyUpdate(tt.update)
+			err := apply.ApplyUpdate(tt.update)
 
 			if tt.expectError {
 				if err == nil {
@@ -164,8 +167,8 @@ func TestApplyCompleteUpdate(t *testing.T) {
 	}
 
 	// Complete the task
-	update := ContextUpdate{Type: entry.Complete, Content: "authentication"}
-	if err = ApplyUpdate(update); err != nil {
+	update := core.ContextUpdate{Type: entry.Complete, Content: "authentication"}
+	if err = apply.ApplyUpdate(update); err != nil {
 		t.Fatalf("ApplyUpdate failed: %v", err)
 	}
 
@@ -213,7 +216,7 @@ More output
 	var output bytes.Buffer
 	cmd.SetOut(&output)
 
-	err = ProcessStream(cmd, reader, false)
+	err = stream.ProcessStream(cmd, reader, false)
 	if err != nil {
 		t.Fatalf("ProcessStream failed: %v", err)
 	}
@@ -260,7 +263,7 @@ More output
 	var output bytes.Buffer
 	cmd.SetOut(&output)
 
-	err = ProcessStream(cmd, reader, false)
+	err = stream.ProcessStream(cmd, reader, false)
 	if err != nil {
 		t.Fatalf("ProcessStream failed: %v", err)
 	}
@@ -306,7 +309,7 @@ func TestExtractAttribute(t *testing.T) {
 	}
 
 	for _, tt := range tests {
-		result := ExtractAttribute(tt.tag, tt.attr)
+		result := stream.ExtractAttribute(tt.tag, tt.attr)
 		if result != tt.expected {
 			t.Errorf("ExtractAttribute(%q, %q) = %q, want %q", tt.tag, tt.attr, result, tt.expected)
 		}
@@ -335,7 +338,7 @@ func TestRunCompleteSilentNoMatch(t *testing.T) {
 	}
 
 	// Try to complete a non-existent task
-	err = RunCompleteSilent([]string{"nonexistent task query"})
+	err = apply.RunCompleteSilent([]string{"nonexistent task query"})
 	if err == nil {
 		t.Error("expected error for non-matching task")
 	}
@@ -345,7 +348,7 @@ func TestRunCompleteSilentNoMatch(t *testing.T) {
 }
 
 func TestRunCompleteSilent_NoArgs(t *testing.T) {
-	err := RunCompleteSilent([]string{})
+	err := apply.RunCompleteSilent([]string{})
 	if err == nil {
 		t.Fatal("expected error for empty args")
 	}
@@ -382,7 +385,7 @@ func TestProcessStream_DryRunMode(t *testing.T) {
 	var buf bytes.Buffer
 	cmd.SetOut(&buf)
 
-	err := ProcessStream(cmd, reader, true)
+	err := stream.ProcessStream(cmd, reader, true)
 	if err != nil {
 		t.Fatalf("ProcessStream error: %v", err)
 	}
@@ -422,7 +425,7 @@ func TestProcessStream_FailedApply(t *testing.T) {
 	var buf bytes.Buffer
 	cmd.SetOut(&buf)
 
-	err := ProcessStream(cmd, reader, false)
+	err := stream.ProcessStream(cmd, reader, false)
 	if err != nil {
 		t.Fatalf("ProcessStream should not return error for failed apply: %v", err)
 	}
@@ -459,7 +462,7 @@ func TestProcessStream_MultipleUpdates(t *testing.T) {
 	var buf bytes.Buffer
 	cmd.SetOut(&buf)
 
-	err := ProcessStream(cmd, reader, false)
+	err := stream.ProcessStream(cmd, reader, false)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -494,7 +497,7 @@ func TestProcessStream_DecisionWithAttributes(t *testing.T) {
 	var buf bytes.Buffer
 	cmd.SetOut(&buf)
 
-	err := ProcessStream(cmd, reader, false)
+	err := stream.ProcessStream(cmd, reader, false)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -539,7 +542,7 @@ Another line of normal output.
 	var buf bytes.Buffer
 	cmd.SetOut(&buf)
 
-	err := ProcessStream(cmd, reader, false)
+	err := stream.ProcessStream(cmd, reader, false)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -551,7 +554,7 @@ Another line of normal output.
 }
 
 func TestContextUpdate_Fields(t *testing.T) {
-	u := ContextUpdate{
+	u := core.ContextUpdate{
 		Type:        "learning",
 		Content:     "Title",
 		Context:     "ctx",
@@ -573,7 +576,7 @@ func TestContextUpdate_Fields(t *testing.T) {
 
 func TestExtractAttribute_Consequence(t *testing.T) {
 	tag := `<context-update type="decision" consequence="something changes">`
-	result := ExtractAttribute(tag, "consequence")
+	result := stream.ExtractAttribute(tag, "consequence")
 	if result != "something changes" {
 		t.Errorf("ExtractAttribute(consequence) = %q, want 'something changes'", result)
 	}
@@ -581,7 +584,7 @@ func TestExtractAttribute_Consequence(t *testing.T) {
 
 func TestExtractAttribute_Application(t *testing.T) {
 	tag := `<context-update type="learning" application="use jq">`
-	result := ExtractAttribute(tag, "application")
+	result := stream.ExtractAttribute(tag, "application")
 	if result != "use jq" {
 		t.Errorf("ExtractAttribute(application) = %q, want 'use jq'", result)
 	}
@@ -618,7 +621,7 @@ func TestProcessStream_CompleteUpdate(t *testing.T) {
 	var buf bytes.Buffer
 	cmd.SetOut(&buf)
 
-	err := ProcessStream(cmd, reader, false)
+	err := stream.ProcessStream(cmd, reader, false)
 	if err != nil {
 		t.Fatal(err)
 	}

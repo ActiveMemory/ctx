@@ -119,64 +119,6 @@ type claudeRawUsage struct {
 	CacheReadInputTokens     int `json:"cache_read_input_tokens,omitempty"`
 }
 
-// Message represents a single message in a session.
-//
-// This is tool-agnostic - all parsers normalize to this format.
-//
-// Fields:
-//
-// Identity:
-//   - ID: Unique message identifier
-//   - Timestamp: When the message was created
-//   - Role: Message role ("user" or "assistant")
-//
-// Content:
-//   - Text: Main text content
-//   - Thinking: Reasoning content (if available)
-//   - ToolUses: Tool invocations in this message
-//   - ToolResults: Results from tool invocations
-//
-// Token Usage:
-//   - TokensIn: Input tokens for this message (if available)
-//   - TokensOut: Output tokens for this message (if available)
-type Message struct {
-	ID        string    `json:"id"`
-	Timestamp time.Time `json:"timestamp"`
-	Role      string    `json:"role"`
-
-	Text        string       `json:"text,omitempty"`
-	Thinking    string       `json:"thinking,omitempty"`
-	ToolUses    []ToolUse    `json:"tool_uses,omitempty"`
-	ToolResults []ToolResult `json:"tool_results,omitempty"`
-
-	TokensIn  int `json:"tokens_in,omitempty"`
-	TokensOut int `json:"tokens_out,omitempty"`
-}
-
-// ToolUse represents a tool invocation by the assistant.
-//
-// Fields:
-//   - ID: Unique identifier for this tool use
-//   - Name: Tool name (e.g., "Bash", "Read", "Write", "Grep")
-//   - Input: JSON string of input parameters passed to the tool
-type ToolUse struct {
-	ID    string `json:"id"`
-	Name  string `json:"name"`
-	Input string `json:"input"`
-}
-
-// ToolResult represents the result of a tool invocation.
-//
-// Fields:
-//   - ToolUseID: ID of the ToolUse this result corresponds to
-//   - Content: The tool's output content
-//   - IsError: True if the tool execution failed
-type ToolResult struct {
-	ToolUseID string `json:"tool_use_id"`
-	Content   string `json:"content"`
-	IsError   bool   `json:"is_error,omitempty"`
-}
-
 // section holds a heading and its body content in document order.
 type section struct {
 	heading string

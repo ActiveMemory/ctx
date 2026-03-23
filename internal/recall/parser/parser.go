@@ -13,6 +13,7 @@ import (
 	"strings"
 
 	"github.com/ActiveMemory/ctx/internal/config/parser"
+	"github.com/ActiveMemory/ctx/internal/entity"
 	ctxerr "github.com/ActiveMemory/ctx/internal/err/parser"
 )
 
@@ -31,9 +32,9 @@ var registeredParsers = []SessionParser{
 //   - path: Path to the session file to parse
 //
 // Returns:
-//   - []*Session: All sessions found in the file
+//   - []*entity.Session: All sessions found in the file
 //   - error: Non-nil if no parser can handle the file or parsing fails
-func ParseFile(path string) ([]*Session, error) {
+func ParseFile(path string) ([]*entity.Session, error) {
 	for _, parser := range registeredParsers {
 		if parser.Matches(path) {
 			return parser.ParseFile(path)
@@ -53,9 +54,9 @@ func ParseFile(path string) ([]*Session, error) {
 //   - dir: Root directory to scan recursively
 //
 // Returns:
-//   - []*Session: All sessions found, sorted by start time (newest first)
+//   - []*entity.Session: All sessions found, sorted by start time (newest first)
 //   - error: Non-nil if directory traversal fails
-func ScanDirectory(dir string) ([]*Session, error) {
+func ScanDirectory(dir string) ([]*entity.Session, error) {
 	sessions, _, err := ScanDirectoryWithErrors(dir)
 	return sessions, err
 }
@@ -69,11 +70,11 @@ func ScanDirectory(dir string) ([]*Session, error) {
 //   - dir: Root directory to scan recursively
 //
 // Returns:
-//   - []*Session: Successfully parsed sessions, sorted by start time
+//   - []*entity.Session: Successfully parsed sessions, sorted by start time
 //   - []error: Errors from files that failed to parse
 //   - error: Non-nil if directory traversal fails
-func ScanDirectoryWithErrors(dir string) ([]*Session, []error, error) {
-	var allSessions []*Session
+func ScanDirectoryWithErrors(dir string) ([]*entity.Session, []error, error) {
+	var allSessions []*entity.Session
 	var parseErrors []error
 
 	err := filepath.Walk(dir, func(
@@ -135,9 +136,9 @@ func ScanDirectoryWithErrors(dir string) ([]*Session, []error, error) {
 //   - additionalDirs: Optional additional directories to scan
 //
 // Returns:
-//   - []*Session: Deduplicated sessions sorted by start time (newest first)
+//   - []*entity.Session: Deduplicated sessions sorted by start time (newest first)
 //   - error: Non-nil if scanning fails (partial results may still be returned)
-func FindSessions(additionalDirs ...string) ([]*Session, error) {
+func FindSessions(additionalDirs ...string) ([]*entity.Session, error) {
 	return findSessionsWithFilter(nil, additionalDirs...)
 }
 
@@ -155,18 +156,18 @@ func FindSessions(additionalDirs ...string) ([]*Session, error) {
 //   - additionalDirs: Optional additional directories to scan
 //
 // Returns:
-//   - []*Session: Filtered sessions sorted by start time (newest first)
+//   - []*entity.Session: Filtered sessions sorted by start time (newest first)
 //   - error: Non-nil if scanning fails
 func FindSessionsForCWD(
 	cwd string, additionalDirs ...string,
-) ([]*Session, error) {
+) ([]*entity.Session, error) {
 	// Get current project's git remote (if available)
 	currentRemote := gitRemote(cwd)
 
 	// Get path relative to home directory
 	currentRelPath := getPathRelativeToHome(cwd)
 
-	return findSessionsWithFilter(func(s *Session) bool {
+	return findSessionsWithFilter(func(s *entity.Session) bool {
 		// 1. Try git remote match (most robust)
 		if currentRemote != "" {
 			sessionRemote := gitRemote(s.CWD)

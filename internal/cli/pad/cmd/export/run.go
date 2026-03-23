@@ -12,9 +12,10 @@ import (
 	"path/filepath"
 	"time"
 
+	"github.com/ActiveMemory/ctx/internal/cli/pad/core/blob"
+	"github.com/ActiveMemory/ctx/internal/cli/pad/core/store"
 	"github.com/spf13/cobra"
 
-	"github.com/ActiveMemory/ctx/internal/cli/pad/core"
 	"github.com/ActiveMemory/ctx/internal/config/fs"
 	"github.com/ActiveMemory/ctx/internal/config/token"
 	ctxErr "github.com/ActiveMemory/ctx/internal/err/fs"
@@ -45,7 +46,7 @@ func tsWithLabel(label string) string {
 // Returns:
 //   - error: On directory creation or scratchpad read failure
 func runExport(cmd *cobra.Command, dir string, force, dryRun bool) error {
-	entries, readErr := core.ReadEntries()
+	entries, readErr := store.ReadEntries()
 	if readErr != nil {
 		return readErr
 	}
@@ -58,7 +59,7 @@ func runExport(cmd *cobra.Command, dir string, force, dryRun bool) error {
 
 	var count int
 	for _, entry := range entries {
-		label, data, ok := core.SplitBlob(entry)
+		label, data, ok := blob.SplitBlob(entry)
 		if !ok {
 			continue
 		}

@@ -10,10 +10,11 @@ import (
 	"os"
 	"strings"
 
+	"github.com/ActiveMemory/ctx/internal/cli/task/core/count"
+	"github.com/ActiveMemory/ctx/internal/cli/task/core/path"
 	"github.com/spf13/cobra"
 
 	"github.com/ActiveMemory/ctx/internal/assets/read/desc"
-	"github.com/ActiveMemory/ctx/internal/cli/task/core"
 	"github.com/ActiveMemory/ctx/internal/config/archive"
 	"github.com/ActiveMemory/ctx/internal/config/embed/text"
 	"github.com/ActiveMemory/ctx/internal/config/fs"
@@ -37,7 +38,7 @@ import (
 // Returns:
 //   - error: Non-nil if TASKS.md doesn't exist or file operations fail
 func runArchive(cmd *cobra.Command, dryRun bool) error {
-	tasksPath := core.TasksFilePath()
+	tasksPath := path.TasksFilePath()
 	nl := token.NewlineLF
 
 	// Check if TASKS.md exists
@@ -69,7 +70,7 @@ func runArchive(cmd *cobra.Command, dryRun bool) error {
 	}
 
 	// Count pending tasks
-	pendingCount := core.CountPendingTasks(lines)
+	pendingCount := count.CountPendingTasks(lines)
 
 	if len(archivableBlocks) == 0 {
 		if skippedCount > 0 {

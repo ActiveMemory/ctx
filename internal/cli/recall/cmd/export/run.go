@@ -11,9 +11,16 @@ import (
 	"path/filepath"
 	"strings"
 
+	"github.com/ActiveMemory/ctx/internal/cli/recall/core/confirm"
+	"github.com/ActiveMemory/ctx/internal/cli/recall/core/execute"
+	"github.com/ActiveMemory/ctx/internal/cli/recall/core/format"
+	"github.com/ActiveMemory/ctx/internal/cli/recall/core/index"
+	"github.com/ActiveMemory/ctx/internal/cli/recall/core/plan"
+	"github.com/ActiveMemory/ctx/internal/cli/recall/core/query"
+	"github.com/ActiveMemory/ctx/internal/cli/recall/core/validate"
+	"github.com/ActiveMemory/ctx/internal/entity"
 	"github.com/spf13/cobra"
 
-	"github.com/ActiveMemory/ctx/internal/cli/recall/core"
 	"github.com/ActiveMemory/ctx/internal/config/dir"
 	"github.com/ActiveMemory/ctx/internal/config/file"
 	"github.com/ActiveMemory/ctx/internal/config/fs"
@@ -23,7 +30,6 @@ import (
 	ctxErr "github.com/ActiveMemory/ctx/internal/err/session"
 	"github.com/ActiveMemory/ctx/internal/journal/state"
 	"github.com/ActiveMemory/ctx/internal/rc"
-	"github.com/ActiveMemory/ctx/internal/recall/parser"
 	"github.com/ActiveMemory/ctx/internal/write/err"
 	"github.com/ActiveMemory/ctx/internal/write/export"
 	"github.com/ActiveMemory/ctx/internal/write/recall"
@@ -38,7 +44,7 @@ import (
 //
 // Returns:
 //   - error: non-nil on validation, scan, or write failures.
-func Run(cmd *cobra.Command, args []string, opts core.ExportOpts) error {
+func Run(cmd *cobra.Command, args []string, opts entity.ExportOpts) error {
 	// --keep-frontmatter=false implies --regenerate
 	// (can't discard without regenerating).
 	if !opts.KeepFrontmatter {
@@ -46,7 +52,7 @@ func Run(cmd *cobra.Command, args []string, opts core.ExportOpts) error {
 	}
 
 	// 1. Validate flags.
-	if validateErr := core.ValidateExportFlags(args, opts); validateErr != nil {
+	if validateErr := validate.ValidateExportFlags(args, opts); validateErr != nil {
 		return validateErr
 	}
 
@@ -56,7 +62,7 @@ func Run(cmd *cobra.Command, args []string, opts core.ExportOpts) error {
 	}
 
 	// 3. Resolve sessions.
-	sessions, scanErr := core.FindSessions(opts.AllProjects)
+	sessions, scanErr := query.FindSessions(opts.AllProjects)
 	if scanErr != nil {
 		return ctxErr.Find(scanErr)
 	}
@@ -66,7 +72,7 @@ func Run(cmd *cobra.Command, args []string, opts core.ExportOpts) error {
 		return nil
 	}
 
-	var toExport []*parser.Session
+	var toExport []*entity.Session
 	singleSession := false
 	if opts.All {
 		toExport = sessions
@@ -82,7 +88,7 @@ func Run(cmd *cobra.Command, args []string, opts core.ExportOpts) error {
 			return ctxErr.NotFound(args[0])
 		}
 		if len(toExport) > 1 {
-			lines := core.FormatSessionMatchLines(toExport)
+			lines := format.FormatSessionMatchLines(toExport)
 			recall.AmbiguousSessionMatch(cmd, args[0], lines)
 			return ctxErr.AmbiguousQuery()
 		}
@@ -100,17 +106,17 @@ func Run(cmd *cobra.Command, args []string, opts core.ExportOpts) error {
 	if loadErr != nil {
 		return errJournal.LoadState(loadErr)
 	}
-	sessionIndex := core.BuildSessionIndex(journalDir)
+	sessionIndex := index.BuildSessionIndex(journalDir)
 
 	// 6. Build the plan.
-	plan := core.PlanExport(
+	plan := plan.PlanExport(
 		toExport, journalDir, sessionIndex, jstate, opts, singleSession,
 	)
 
 	// 7. Execute renames.
 	renamed := 0
 	for _, rop := range plan.RenameOps {
-		core.RenameJournalFiles(journalDir, rop.OldBase, rop.NewBase, rop.NumParts)
+		index.RenameJournalFiles(journalDir, rop.OldBase, rop.NewBase, rop.NumParts)
 		jstate.Rename(
 			rop.OldBase+file.ExtMarkdown, rop.NewBase+file.ExtMarkdown,
 		)
@@ -128,7 +134,7 @@ func Run(cmd *cobra.Command, args []string, opts core.ExportOpts) error {
 
 	// 9. Confirmation prompt for regeneration.
 	if plan.RegenCount > 0 && !opts.Yes && !singleSession {
-		ok, promptErr := core.ConfirmExport(cmd, plan)
+		ok, promptErr := confirm.ConfirmExport(cmd, plan)
 		if promptErr != nil {
 			return promptErr
 		}
@@ -139,7 +145,7 @@ func Run(cmd *cobra.Command, args []string, opts core.ExportOpts) error {
 	}
 
 	// 10. Execute the export.
-	exported, updated, skipped := core.ExecuteExport(cmd, plan, jstate, opts)
+	exported, updated, skipped := execute.ExecuteExport(cmd, plan, jstate, opts)
 
 	// 11. Persist journal state.
 	if saveErr := jstate.Save(journalDir); saveErr != nil {

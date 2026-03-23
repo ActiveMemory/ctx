@@ -9,16 +9,17 @@ package show
 import (
 	"strings"
 
+	"github.com/ActiveMemory/ctx/internal/cli/recall/core/format"
+	"github.com/ActiveMemory/ctx/internal/cli/recall/core/query"
 	"github.com/spf13/cobra"
 
 	"github.com/ActiveMemory/ctx/internal/assets/read/desc"
-	"github.com/ActiveMemory/ctx/internal/cli/recall/core"
 	"github.com/ActiveMemory/ctx/internal/config/embed/text"
 	"github.com/ActiveMemory/ctx/internal/config/journal"
 	"github.com/ActiveMemory/ctx/internal/config/time"
 	"github.com/ActiveMemory/ctx/internal/config/token"
+	"github.com/ActiveMemory/ctx/internal/entity"
 	ctxErr "github.com/ActiveMemory/ctx/internal/err/session"
-	"github.com/ActiveMemory/ctx/internal/recall/parser"
 	"github.com/ActiveMemory/ctx/internal/write/recall"
 )
 
@@ -39,7 +40,7 @@ import (
 func Run(
 	cmd *cobra.Command, args []string, latest, full, allProjects bool,
 ) error {
-	sessions, scanErr := core.FindSessions(allProjects)
+	sessions, scanErr := query.FindSessions(allProjects)
 	if scanErr != nil {
 		return ctxErr.Find(scanErr)
 	}
@@ -51,7 +52,7 @@ func Run(
 		return ctxErr.NoneFound(desc.Text(text.DescKeyLabelHintUseAllProjects))
 	}
 
-	var session *parser.Session
+	var session *entity.Session
 
 	switch {
 	case latest:
@@ -60,7 +61,7 @@ func Run(
 		return ctxErr.IDRequired()
 	default:
 		query := strings.ToLower(args[0])
-		var matches []*parser.Session
+		var matches []*entity.Session
 		for _, s := range sessions {
 			if strings.HasPrefix(strings.ToLower(s.ID), query) ||
 				strings.Contains(strings.ToLower(s.Slug), query) {
@@ -71,7 +72,7 @@ func Run(
 			return ctxErr.NotFound(args[0])
 		}
 		if len(matches) > 1 {
-			lines := core.FormatSessionMatchLines(matches)
+			lines := format.FormatSessionMatchLines(matches)
 			recall.AmbiguousSessionMatchWithHint(
 				cmd, args[0], lines, matches[0].ID[:journal.SessionIDHintLen],
 			)
@@ -89,12 +90,12 @@ func Run(
 		Branch:    session.GitBranch,
 		Model:     session.Model,
 		Started:   session.StartTime.Format(time.DateTimePreciseFormat),
-		Duration:  core.FormatDuration(session.Duration),
+		Duration:  format.FormatDuration(session.Duration),
 		Turns:     session.TurnCount,
 		Messages:  len(session.Messages),
-		TokensIn:  core.FormatTokens(session.TotalTokensIn),
-		TokensOut: core.FormatTokens(session.TotalTokensOut),
-		TokensAll: core.FormatTokens(session.TotalTokens),
+		TokensIn:  format.FormatTokens(session.TotalTokensIn),
+		TokensOut: format.FormatTokens(session.TotalTokensOut),
+		TokensAll: format.FormatTokens(session.TotalTokens),
 	})
 
 	// Tool usage summary
@@ -133,7 +134,7 @@ func Run(
 			}
 
 			for _, t := range msg.ToolUses {
-				toolInfo := core.FormatToolUse(t)
+				toolInfo := format.FormatToolUse(t)
 				recall.SessionDetail(
 					cmd, desc.Text(text.DescKeyLabelInlineTool), toolInfo,
 				)
@@ -144,7 +145,7 @@ func Run(
 					recall.Hint(cmd, desc.Text(text.DescKeyLabelInlineError))
 				}
 				if tr.Content != "" {
-					content := core.StripLineNumbers(tr.Content)
+					content := format.StripLineNumbers(tr.Content)
 					recall.CodeBlock(cmd, content)
 				}
 			}

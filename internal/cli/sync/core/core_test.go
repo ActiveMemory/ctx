@@ -4,7 +4,7 @@
 //   \    Copyright 2026-present Context contributors.
 //                 SPDX-License-Identifier: Apache-2.0
 
-package core
+package core_test
 
 import (
 	"os"
@@ -13,6 +13,9 @@ import (
 	"testing"
 
 	"github.com/ActiveMemory/ctx/internal/cli/initialize"
+	"github.com/ActiveMemory/ctx/internal/cli/sync/core"
+	"github.com/ActiveMemory/ctx/internal/cli/sync/core/action"
+	"github.com/ActiveMemory/ctx/internal/cli/sync/core/validate"
 	"github.com/ActiveMemory/ctx/internal/config/ctx"
 	"github.com/ActiveMemory/ctx/internal/config/dir"
 	"github.com/ActiveMemory/ctx/internal/context/load"
@@ -45,7 +48,7 @@ func TestDetectSyncActions_NoActions(t *testing.T) {
 	}
 
 	_ = tmpDir
-	actions := DetectSyncActions(ctx)
+	actions := action.DetectSyncActions(ctx)
 	// Just verify it runs without error
 	_ = actions
 }
@@ -65,7 +68,7 @@ func TestCheckNewDirectories_ImportantDirs(t *testing.T) {
 		}
 	}
 
-	actions := CheckNewDirectories(ctx)
+	actions := validate.CheckNewDirectories(ctx)
 	if len(actions) == 0 {
 		t.Error("expected actions for undocumented directories")
 	}
@@ -91,7 +94,7 @@ func TestCheckNewDirectories_SkipsHiddenAndVendor(t *testing.T) {
 		}
 	}
 
-	actions := CheckNewDirectories(ctx)
+	actions := validate.CheckNewDirectories(ctx)
 	for _, a := range actions {
 		for _, skip := range []string{".git", "node_modules", "vendor", "dist", "build"} {
 			if strings.Contains(a.Description, skip) {
@@ -119,7 +122,7 @@ func TestCheckNewDirectories_DocumentedDirsIgnored(t *testing.T) {
 		t.Fatal(mkErr)
 	}
 
-	actions := CheckNewDirectories(ctx)
+	actions := validate.CheckNewDirectories(ctx)
 	for _, a := range actions {
 		if strings.Contains(a.Description, "'src/'") {
 			t.Error("documented directory 'src' should not produce an action")
@@ -135,7 +138,7 @@ func TestCheckPackageFiles_NoPackages(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	actions := CheckPackageFiles(ctx)
+	actions := validate.CheckPackageFiles(ctx)
 	if len(actions) != 0 {
 		t.Errorf("expected no actions, got %d", len(actions))
 	}
@@ -160,7 +163,7 @@ func TestCheckPackageFiles_WithPackageFile(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	actions := CheckPackageFiles(ctx)
+	actions := validate.CheckPackageFiles(ctx)
 	found := false
 	for _, a := range actions {
 		if a.Type == "DEPS" {
@@ -190,7 +193,7 @@ func TestCheckPackageFiles_WithDepsDoc(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	actions := CheckPackageFiles(ctx)
+	actions := validate.CheckPackageFiles(ctx)
 	for _, a := range actions {
 		if a.Type == "DEPS" && strings.Contains(a.Description, "package.json") {
 			t.Error("should not produce DEPS action when DEPENDENCIES.md exists")
@@ -210,7 +213,7 @@ func TestCheckConfigFiles_NoConfigs(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	actions := CheckConfigFiles(ctx)
+	actions := validate.CheckConfigFiles(ctx)
 	// With Makefile removed, no config files should match
 	if len(actions) != 0 {
 		t.Errorf("expected no actions for clean dir, got %d", len(actions))
@@ -230,7 +233,7 @@ func TestCheckConfigFiles_WithConfigFile(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	actions := CheckConfigFiles(ctx)
+	actions := validate.CheckConfigFiles(ctx)
 	found := false
 	for _, a := range actions {
 		if a.Type == "CONFIG" {
@@ -262,7 +265,7 @@ func TestCheckConfigFiles_DocumentedInConventions(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	actions := CheckConfigFiles(ctx)
+	actions := validate.CheckConfigFiles(ctx)
 	for _, a := range actions {
 		if a.Type == "CONFIG" && strings.Contains(a.Description, "tsconfig") {
 			t.Error("tsconfig should not produce an action when documented in CONVENTIONS.md")
@@ -289,7 +292,7 @@ func TestCheckPackageFiles_ArchContainsDependencies(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	actions := CheckPackageFiles(ctx)
+	actions := validate.CheckPackageFiles(ctx)
 	for _, a := range actions {
 		if a.Type == "DEPS" && strings.Contains(a.Description, "go.mod") {
 			t.Error("should not produce DEPS action when ARCHITECTURE.md mentions dependencies")
@@ -298,7 +301,7 @@ func TestCheckPackageFiles_ArchContainsDependencies(t *testing.T) {
 }
 
 func TestAction_Fields(t *testing.T) {
-	a := Action{
+	a := core.Action{
 		Type:        "NEW_DIR",
 		File:        ctx.Architecture,
 		Description: "test description",
@@ -322,7 +325,7 @@ func TestRunSync_ActionWithEmptySuggestion(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	actions := DetectSyncActions(ctx)
+	actions := action.DetectSyncActions(ctx)
 	for _, a := range actions {
 		// All actions should have a non-empty Description
 		if a.Description == "" {

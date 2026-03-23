@@ -9,9 +9,9 @@ package root
 import (
 	"errors"
 
+	"github.com/ActiveMemory/ctx/internal/cli/sync/core/action"
 	"github.com/spf13/cobra"
 
-	"github.com/ActiveMemory/ctx/internal/cli/sync/core"
 	"github.com/ActiveMemory/ctx/internal/context/load"
 	errCtx "github.com/ActiveMemory/ctx/internal/err/context"
 	initErr "github.com/ActiveMemory/ctx/internal/err/initialize"
@@ -40,7 +40,7 @@ func Run(cmd *cobra.Command, dryRun bool) error {
 		return err
 	}
 
-	actions := core.DetectSyncActions(ctx)
+	actions := action.DetectSyncActions(ctx)
 
 	if len(actions) == 0 {
 		sync.CtxSyncInSync(cmd)

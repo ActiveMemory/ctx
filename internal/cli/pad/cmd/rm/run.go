@@ -7,9 +7,10 @@
 package rm
 
 import (
+	"github.com/ActiveMemory/ctx/internal/cli/pad/core/store"
+	"github.com/ActiveMemory/ctx/internal/cli/pad/core/validate"
 	"github.com/spf13/cobra"
 
-	"github.com/ActiveMemory/ctx/internal/cli/pad/core"
 	"github.com/ActiveMemory/ctx/internal/write/pad"
 )
 
@@ -22,18 +23,18 @@ import (
 // Returns:
 //   - error: Non-nil on invalid index or read/write failure
 func Run(cmd *cobra.Command, n int) error {
-	entries, err := core.ReadEntries()
+	entries, err := store.ReadEntries()
 	if err != nil {
 		return err
 	}
 
-	if validErr := core.ValidateIndex(n, entries); validErr != nil {
+	if validErr := validate.ValidateIndex(n, entries); validErr != nil {
 		return validErr
 	}
 
 	entries = append(entries[:n-1], entries[n:]...)
 
-	if writeErr := core.WriteEntries(cmd, entries); writeErr != nil {
+	if writeErr := store.WriteEntries(cmd, entries); writeErr != nil {
 		return writeErr
 	}
 

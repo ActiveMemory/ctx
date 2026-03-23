@@ -15,6 +15,7 @@ import (
 	"github.com/ActiveMemory/ctx/internal/config/file"
 	"github.com/ActiveMemory/ctx/internal/config/parser"
 	"github.com/ActiveMemory/ctx/internal/config/session"
+	"github.com/ActiveMemory/ctx/internal/entity"
 	ctxerr "github.com/ActiveMemory/ctx/internal/err/parser"
 )
 
@@ -104,9 +105,9 @@ func (p *MarkdownSessionParser) Matches(path string) bool {
 //   - path: Path to the Markdown file to parse
 //
 // Returns:
-//   - []*Session: A single-element slice with the parsed session
+//   - []*entity.Session: A single-element slice with the parsed session
 //   - error: Non-nil if the file cannot be opened or read
-func (p *MarkdownSessionParser) ParseFile(path string) ([]*Session, error) {
+func (p *MarkdownSessionParser) ParseFile(path string) ([]*entity.Session, error) {
 	content, err := os.ReadFile(filepath.Clean(path))
 	if err != nil {
 		return nil, ctxerr.ReadFile(err)
@@ -117,7 +118,7 @@ func (p *MarkdownSessionParser) ParseFile(path string) ([]*Session, error) {
 		return nil, nil
 	}
 
-	return []*Session{s}, nil
+	return []*entity.Session{s}, nil
 }
 
 // ParseLine is not applicable for Markdown files (they are not line-oriented).
@@ -127,6 +128,6 @@ func (p *MarkdownSessionParser) ParseFile(path string) ([]*Session, error) {
 //
 // Returns:
 //   - nil, "", nil always
-func (p *MarkdownSessionParser) ParseLine(_ []byte) (*Message, string, error) {
+func (p *MarkdownSessionParser) ParseLine(_ []byte) (*entity.Message, string, error) {
 	return nil, "", nil
 }

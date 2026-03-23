@@ -14,8 +14,10 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/ActiveMemory/ctx/internal/cli/recall/core"
+	"github.com/ActiveMemory/ctx/internal/cli/recall/core/extract"
+	"github.com/ActiveMemory/ctx/internal/cli/recall/core/index"
 	"github.com/ActiveMemory/ctx/internal/config/journal"
+	"github.com/ActiveMemory/ctx/internal/entity"
 	"github.com/ActiveMemory/ctx/internal/journal/state"
 )
 
@@ -375,7 +377,7 @@ func TestRunRecallExport_PreservesFrontmatter(t *testing.T) {
 	if err != nil {
 		t.Fatalf("read original: %v", err)
 	}
-	origTitle := core.ExtractFrontmatterField(string(origData), "title")
+	origTitle := index.ExtractFrontmatterField(string(origData), "title")
 
 	// Inject enriched frontmatter — keep the same title to avoid rename
 	enrichedFM := fmt.Sprintf("---\ndate: \"2026-01-20\"\ntitle: %q\nsummary: \"A curated summary\"\ntags:\n  - enriched\n---\n", origTitle)
@@ -428,7 +430,7 @@ func TestRunRecallExport_KeepFrontmatterFalseDiscards(t *testing.T) {
 	if err != nil {
 		t.Fatalf("read original: %v", err)
 	}
-	origTitle := core.ExtractFrontmatterField(string(origData), "title")
+	origTitle := index.ExtractFrontmatterField(string(origData), "title")
 
 	// Inject enriched frontmatter — keep the same title to avoid rename
 	enrichedFM := fmt.Sprintf("---\ndate: \"2026-01-20\"\ntitle: %q\nsummary: \"A curated summary\"\ntags:\n  - enriched\n---\n", origTitle)
@@ -950,7 +952,7 @@ func TestRunRecallExport_KeepFrontmatterFalse(t *testing.T) {
 	if readErr != nil {
 		t.Fatalf("read original: %v", readErr)
 	}
-	origTitle := core.ExtractFrontmatterField(string(origData), "title")
+	origTitle := index.ExtractFrontmatterField(string(origData), "title")
 
 	// Inject enriched frontmatter.
 	enrichedFM := fmt.Sprintf(
@@ -1011,7 +1013,7 @@ func TestRunRecallExport_KeepFrontmatterDefault(t *testing.T) {
 	if readErr != nil {
 		t.Fatalf("read original: %v", readErr)
 	}
-	origTitle := core.ExtractFrontmatterField(string(origData), "title")
+	origTitle := index.ExtractFrontmatterField(string(origData), "title")
 
 	// Inject enriched frontmatter.
 	enrichedFM := fmt.Sprintf(
@@ -1090,17 +1092,17 @@ func TestRunRecallExport_DryRunShowsLocked(t *testing.T) {
 func TestDiscardFrontmatter(t *testing.T) {
 	tests := []struct {
 		name string
-		opts core.ExportOpts
+		opts entity.ExportOpts
 		want bool
 	}{
 		{
 			name: "defaults",
-			opts: core.ExportOpts{KeepFrontmatter: true},
+			opts: entity.ExportOpts{KeepFrontmatter: true},
 			want: false,
 		},
 		{
 			name: "keep-frontmatter=false",
-			opts: core.ExportOpts{KeepFrontmatter: false},
+			opts: entity.ExportOpts{KeepFrontmatter: false},
 			want: true,
 		},
 	}
@@ -1337,13 +1339,13 @@ func TestRunRecallExport_MultipartFrontmatterPreservation(t *testing.T) {
 	if readErr != nil {
 		t.Fatalf("read part1: %v", readErr)
 	}
-	origTitle := core.ExtractFrontmatterField(string(origData), "title")
+	origTitle := index.ExtractFrontmatterField(string(origData), "title")
 
 	enrichedFM := fmt.Sprintf(
 		"---\ndate: \"2026-01-20\"\ntitle: %q\nsummary: \"Multipart curated summary\"\ntags:\n  - multipart-enriched\n---\n",
 		origTitle,
 	)
-	body := core.StripFrontmatter(string(origData))
+	body := extract.StripFrontmatter(string(origData))
 	if writeErr := os.WriteFile(part1Path, []byte(enrichedFM+"\n"+body), 0600); writeErr != nil {
 		t.Fatal(writeErr)
 	}

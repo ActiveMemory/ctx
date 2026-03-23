@@ -19,25 +19,11 @@ import (
 	"github.com/ActiveMemory/ctx/internal/config/hook"
 	"github.com/ActiveMemory/ctx/internal/config/knowledge"
 	"github.com/ActiveMemory/ctx/internal/config/token"
-	"github.com/ActiveMemory/ctx/internal/io"
-
 	"github.com/ActiveMemory/ctx/internal/index"
+	"github.com/ActiveMemory/ctx/internal/io"
 	"github.com/ActiveMemory/ctx/internal/notify"
 	"github.com/ActiveMemory/ctx/internal/rc"
 )
-
-// Finding describes a single knowledge file that exceeds its
-// configured threshold.
-type Finding struct {
-	// File is the context filename (e.g., DECISIONS.md).
-	File string
-	// Count is the actual entry or line count.
-	Count int
-	// Threshold is the configured maximum.
-	Threshold int
-	// Unit is the measurement unit ("entries" or "lines").
-	Unit string
-}
 
 // ScanKnowledgeFiles checks knowledge files against their configured
 // thresholds and returns any that exceed the limits.
@@ -52,14 +38,14 @@ type Finding struct {
 //   - []KnowledgeFinding: files exceeding thresholds, or nil if all within limits
 func ScanKnowledgeFiles(
 	contextDir string, decThreshold, lrnThreshold, convThreshold int,
-) []Finding {
-	var findings []Finding
+) []finding {
+	var findings []finding
 
 	if decThreshold > 0 {
 		if data, readErr := io.SafeReadFile(contextDir, ctx.Decision); readErr == nil {
 			count := len(index.ParseEntryBlocks(string(data)))
 			if count > decThreshold {
-				findings = append(findings, Finding{
+				findings = append(findings, finding{
 					File: ctx.Decision, Count: count, Threshold: decThreshold, Unit: "entries",
 				})
 			}
@@ -70,7 +56,7 @@ func ScanKnowledgeFiles(
 		if data, readErr := io.SafeReadFile(contextDir, ctx.Learning); readErr == nil {
 			count := len(index.ParseEntryBlocks(string(data)))
 			if count > lrnThreshold {
-				findings = append(findings, Finding{
+				findings = append(findings, finding{
 					File: ctx.Learning, Count: count, Threshold: lrnThreshold, Unit: "entries",
 				})
 			}
@@ -81,7 +67,7 @@ func ScanKnowledgeFiles(
 		if data, readErr := io.SafeReadFile(contextDir, ctx.Convention); readErr == nil {
 			lineCount := bytes.Count(data, []byte(token.NewlineLF))
 			if lineCount > convThreshold {
-				findings = append(findings, Finding{
+				findings = append(findings, finding{
 					File: ctx.Convention, Count: lineCount, Threshold: convThreshold, Unit: "lines",
 				})
 			}
@@ -99,7 +85,7 @@ func ScanKnowledgeFiles(
 //
 // Returns:
 //   - string: formatted warning lines for template injection
-func FormatKnowledgeWarnings(findings []Finding) string {
+func FormatKnowledgeWarnings(findings []finding) string {
 	var b strings.Builder
 	findingFmt := desc.Text(text.DescKeyCheckKnowledgeFindingFormat)
 	for _, f := range findings {

@@ -7,9 +7,10 @@
 package feed
 
 import (
+	"github.com/ActiveMemory/ctx/internal/cli/site/core/generate"
+	"github.com/ActiveMemory/ctx/internal/cli/site/core/scan"
 	"github.com/spf13/cobra"
 
-	"github.com/ActiveMemory/ctx/internal/cli/site/core"
 	writeSite "github.com/ActiveMemory/ctx/internal/write/site"
 )
 
@@ -24,12 +25,12 @@ import (
 // Returns:
 //   - error: Non-nil if scanning or generation fails
 func Run(cmd *cobra.Command, blogDir, outPath, baseURL string) error {
-	posts, report, scanErr := core.ScanBlogPosts(blogDir)
+	posts, report, scanErr := scan.ScanBlogPosts(blogDir)
 	if scanErr != nil {
 		return scanErr
 	}
 
-	genErr := core.GenerateAtom(posts, outPath, baseURL)
+	genErr := generate.GenerateAtom(posts, outPath, baseURL)
 	if genErr != nil {
 		return genErr
 	}

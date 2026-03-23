@@ -11,10 +11,12 @@ import (
 	"testing"
 	"time"
 
+	"github.com/ActiveMemory/ctx/internal/cli/recall/core/extract"
+	"github.com/ActiveMemory/ctx/internal/cli/recall/core/format"
+	"github.com/ActiveMemory/ctx/internal/cli/recall/core/validate"
 	"github.com/spf13/cobra"
 
-	"github.com/ActiveMemory/ctx/internal/cli/recall/core"
-	"github.com/ActiveMemory/ctx/internal/recall/parser"
+	"github.com/ActiveMemory/ctx/internal/entity"
 )
 
 func TestCmd(t *testing.T) {
@@ -158,7 +160,7 @@ func TestExtractFrontmatter(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			got := core.ExtractFrontmatter(tt.content)
+			got := extract.ExtractFrontmatter(tt.content)
 			if got != tt.want {
 				t.Errorf("ExtractFrontmatter() = %q, want %q", got, tt.want)
 			}
@@ -167,13 +169,13 @@ func TestExtractFrontmatter(t *testing.T) {
 }
 
 func TestFormatJournalFilename(t *testing.T) {
-	session := &parser.Session{
+	session := &entity.Session{
 		ID:        "abc12345-6789-0123-4567-890123456789",
 		Slug:      "gleaming-wobbling-sutherland",
 		StartTime: time.Date(2026, 1, 21, 14, 30, 0, 0, time.UTC),
 	}
 
-	filename := core.FormatJournalFilename(session, "")
+	filename := format.FormatJournalFilename(session, "")
 
 	// Should contain slug
 	if !strings.Contains(filename, "gleaming-wobbling-sutherland") {
@@ -194,30 +196,30 @@ func TestFormatJournalFilename(t *testing.T) {
 func TestIsEmptyMessage(t *testing.T) {
 	tests := []struct {
 		name string
-		msg  parser.Message
+		msg  entity.Message
 		want bool
 	}{
 		{
 			name: "empty message",
-			msg:  parser.Message{},
+			msg:  entity.Message{},
 			want: true,
 		},
 		{
 			name: "message with text",
-			msg:  parser.Message{Text: "Hello"},
+			msg:  entity.Message{Text: "Hello"},
 			want: false,
 		},
 		{
 			name: "message with tool uses",
-			msg: parser.Message{
-				ToolUses: []parser.ToolUse{{Name: "Bash"}},
+			msg: entity.Message{
+				ToolUses: []entity.ToolUse{{Name: "Bash"}},
 			},
 			want: false,
 		},
 		{
 			name: "message with tool results",
-			msg: parser.Message{
-				ToolResults: []parser.ToolResult{{Content: "output"}},
+			msg: entity.Message{
+				ToolResults: []entity.ToolResult{{Content: "output"}},
 			},
 			want: false,
 		},
@@ -225,7 +227,7 @@ func TestIsEmptyMessage(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			got := core.EmptyMessage(tt.msg)
+			got := validate.EmptyMessage(tt.msg)
 			if got != tt.want {
 				t.Errorf("EmptyMessage() = %v, want %v", got, tt.want)
 			}

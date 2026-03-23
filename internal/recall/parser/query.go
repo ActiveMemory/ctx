@@ -12,6 +12,7 @@ import (
 	"sort"
 
 	"github.com/ActiveMemory/ctx/internal/config/dir"
+	"github.com/ActiveMemory/ctx/internal/entity"
 )
 
 // findSessionsWithFilter scans common locations and additional directories
@@ -26,12 +27,12 @@ import (
 //   - additionalDirs: Optional additional directories to scan
 //
 // Returns:
-//   - []*Session: Deduplicated, filtered sessions sorted by start time
+//   - []*entity.Session: Deduplicated, filtered sessions sorted by start time
 //   - error: Currently always nil (errors are silently ignored)
 func findSessionsWithFilter(
-	filter func(*Session) bool, additionalDirs ...string,
-) ([]*Session, error) {
-	var allSessions []*Session
+	filter func(*entity.Session) bool, additionalDirs ...string,
+) ([]*entity.Session, error) {
+	var allSessions []*entity.Session
 	scannedDirs := make(map[string]bool)
 
 	// scanOnce scans a directory only if it hasn't been scanned yet.
@@ -67,7 +68,7 @@ func findSessionsWithFilter(
 	}
 
 	// Apply filter if provided
-	var filtered []*Session
+	var filtered []*entity.Session
 	for _, s := range allSessions {
 		if filter == nil || filter(s) {
 			filtered = append(filtered, s)
@@ -76,7 +77,7 @@ func findSessionsWithFilter(
 
 	// Deduplicate by session ID
 	seen := make(map[string]bool)
-	var unique []*Session
+	var unique []*entity.Session
 	for _, s := range filtered {
 		if !seen[s.ID] {
 			seen[s.ID] = true
