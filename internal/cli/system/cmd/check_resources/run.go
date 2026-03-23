@@ -10,7 +10,7 @@ import (
 	"fmt"
 	"os"
 
-	hook2 "github.com/ActiveMemory/ctx/internal/cli/system/core/hook"
+	hook2 "github.com/ActiveMemory/ctx/internal/cli/system/core/check"
 	"github.com/spf13/cobra"
 
 	"github.com/ActiveMemory/ctx/internal/assets/read/desc"

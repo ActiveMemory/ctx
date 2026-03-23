@@ -11,9 +11,9 @@ import (
 	"strings"
 
 	"github.com/ActiveMemory/ctx/internal/assets/read/desc"
-	"github.com/ActiveMemory/ctx/internal/cli/system/core/hook"
 	"github.com/ActiveMemory/ctx/internal/config/embed/text"
 	"github.com/ActiveMemory/ctx/internal/config/token"
+	"github.com/ActiveMemory/ctx/internal/entity"
 )
 
 // FormatStaleEntries builds the display text for stale files.
@@ -27,9 +27,9 @@ import (
 //
 // Returns:
 //   - string: formatted multi-line text for display
-func FormatStaleEntries(entries []hook.StaleEntry) string {
-	byURL := make(map[string][]hook.StaleEntry)
-	var noURL []hook.StaleEntry
+func FormatStaleEntries(entries []entity.StaleEntry) string {
+	byURL := make(map[string][]entity.StaleEntry)
+	var noURL []entity.StaleEntry
 	var urlOrder []string
 
 	for _, e := range entries {

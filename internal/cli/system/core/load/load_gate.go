@@ -4,7 +4,7 @@
 //   \    Copyright 2026-present Context contributors.
 //                 SPDX-License-Identifier: Apache-2.0
 
-package hook
+package load
 
 import (
 	"fmt"
@@ -20,6 +20,7 @@ import (
 	"github.com/ActiveMemory/ctx/internal/config/marker"
 	"github.com/ActiveMemory/ctx/internal/config/stats"
 	"github.com/ActiveMemory/ctx/internal/config/token"
+	"github.com/ActiveMemory/ctx/internal/entity"
 	"github.com/ActiveMemory/ctx/internal/rc"
 )
 
@@ -51,7 +52,7 @@ func ExtractIndex(content string) string {
 //   - totalTokens: total injected token count
 //   - perFile: per-file token breakdown for diagnostics
 func WriteOversizeFlag(
-	contextDir string, totalTokens int, perFile []FileTokenEntry,
+	contextDir string, totalTokens int, perFile []entity.FileTokenEntry,
 ) {
 	threshold := rc.InjectionTokenWarn()
 	if threshold == 0 || totalTokens <= threshold {

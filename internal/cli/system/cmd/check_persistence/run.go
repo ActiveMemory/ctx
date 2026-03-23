@@ -11,7 +11,7 @@ import (
 	"os"
 	"path/filepath"
 
-	hook2 "github.com/ActiveMemory/ctx/internal/cli/system/core/hook"
+	hook2 "github.com/ActiveMemory/ctx/internal/cli/system/core/check"
 	"github.com/ActiveMemory/ctx/internal/cli/system/core/persistence"
 	"github.com/ActiveMemory/ctx/internal/cli/system/core/time"
 	"github.com/spf13/cobra"

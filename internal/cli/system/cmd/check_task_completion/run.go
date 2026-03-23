@@ -12,8 +12,8 @@ import (
 	"path/filepath"
 
 	"github.com/ActiveMemory/ctx/internal/assets/read/desc"
+	hook2 "github.com/ActiveMemory/ctx/internal/cli/system/core/check"
 	"github.com/ActiveMemory/ctx/internal/cli/system/core/counter"
-	hook2 "github.com/ActiveMemory/ctx/internal/cli/system/core/hook"
 	coreSession "github.com/ActiveMemory/ctx/internal/cli/system/core/session"
 	"github.com/ActiveMemory/ctx/internal/config/embed/text"
 	"github.com/ActiveMemory/ctx/internal/config/nudge"

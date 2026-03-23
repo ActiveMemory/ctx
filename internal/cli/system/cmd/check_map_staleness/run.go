@@ -11,8 +11,8 @@ import (
 	"path/filepath"
 	"time"
 
+	"github.com/ActiveMemory/ctx/internal/cli/system/core/check"
 	"github.com/ActiveMemory/ctx/internal/cli/system/core/health"
-	"github.com/ActiveMemory/ctx/internal/cli/system/core/hook"
 	"github.com/ActiveMemory/ctx/internal/config/architecture"
 	cfgTime "github.com/ActiveMemory/ctx/internal/config/time"
 	"github.com/spf13/cobra"
@@ -40,7 +40,7 @@ func Run(cmd *cobra.Command, stdin *os.File) error {
 		return nil
 	}
 
-	input, _, paused := hook.Preamble(stdin)
+	input, _, paused := check.Preamble(stdin)
 	if paused {
 		return nil
 	}

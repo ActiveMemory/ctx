@@ -12,9 +12,11 @@ import (
 	"path/filepath"
 	"strings"
 
-	hook2 "github.com/ActiveMemory/ctx/internal/cli/system/core/hook"
+	"github.com/ActiveMemory/ctx/internal/cli/system/core/load"
 	coreSession "github.com/ActiveMemory/ctx/internal/cli/system/core/session"
 	"github.com/spf13/cobra"
+
+	"github.com/ActiveMemory/ctx/internal/entity"
 
 	"github.com/ActiveMemory/ctx/internal/assets/read/desc"
 	changeCore "github.com/ActiveMemory/ctx/internal/cli/change/core"
@@ -77,7 +79,7 @@ func Run(cmd *cobra.Command, stdin *os.File) error {
 	var content strings.Builder
 	var totalTokens int
 	var filesLoaded int
-	var perFile []hook2.FileTokenEntry
+	var perFile []entity.FileTokenEntry
 
 	content.WriteString(
 		desc.Text(text.DescKeyContextLoadGateHeader) +
@@ -103,7 +105,7 @@ func Run(cmd *cobra.Command, stdin *os.File) error {
 			continue
 
 		case ctx.Decision, ctx.Learning:
-			idx := hook2.ExtractIndex(string(data))
+			idx := load.ExtractIndex(string(data))
 			if idx == "" {
 				idx = desc.Text(text.DescKeyContextLoadGateIndexFallback)
 			}
@@ -111,7 +113,7 @@ func Run(cmd *cobra.Command, stdin *os.File) error {
 				desc.Text(text.DescKeyContextLoadGateIndexHeader), f, idx))
 			tokens := ctxToken.EstimateTokensString(idx)
 			totalTokens += tokens
-			perFile = append(perFile, hook2.FileTokenEntry{
+			perFile = append(perFile, entity.FileTokenEntry{
 				Name:   f + load_gate.ContextLoadIndexSuffix,
 				Tokens: tokens,
 			})
@@ -124,7 +126,7 @@ func Run(cmd *cobra.Command, stdin *os.File) error {
 				), f, string(data)))
 			tokens := ctxToken.EstimateTokens(data)
 			totalTokens += tokens
-			perFile = append(perFile, hook2.FileTokenEntry{Name: f, Tokens: tokens})
+			perFile = append(perFile, entity.FileTokenEntry{Name: f, Tokens: tokens})
 			filesLoaded++
 		}
 	}
@@ -158,7 +160,7 @@ func Run(cmd *cobra.Command, stdin *os.File) error {
 	core.Relay(webhookMsg, input.SessionID, nil)
 
 	// Oversize nudge: write the flag for check-context-size to pick up
-	hook2.WriteOversizeFlag(dir, totalTokens, perFile)
+	load.WriteOversizeFlag(dir, totalTokens, perFile)
 
 	return nil
 }

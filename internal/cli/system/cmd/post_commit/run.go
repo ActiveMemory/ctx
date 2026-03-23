@@ -11,8 +11,8 @@ import (
 	"os"
 	"regexp"
 
+	hook2 "github.com/ActiveMemory/ctx/internal/cli/system/core/check"
 	"github.com/ActiveMemory/ctx/internal/cli/system/core/drift"
-	hook2 "github.com/ActiveMemory/ctx/internal/cli/system/core/hook"
 	coreSession "github.com/ActiveMemory/ctx/internal/cli/system/core/session"
 	"github.com/spf13/cobra"
 

@@ -16,8 +16,8 @@ import (
 
 	"github.com/ActiveMemory/ctx/internal/assets/read/desc"
 	"github.com/ActiveMemory/ctx/internal/cli/system/core"
-	"github.com/ActiveMemory/ctx/internal/cli/system/core/hook"
 	"github.com/ActiveMemory/ctx/internal/config/embed/text"
+	"github.com/ActiveMemory/ctx/internal/entity"
 	errBackup "github.com/ActiveMemory/ctx/internal/err/backup"
 	internalIo "github.com/ActiveMemory/ctx/internal/io"
 )
@@ -38,13 +38,13 @@ import (
 //   - error: non-nil on archive creation or SMB failure
 func finalizeArchive(
 	w io.Writer, archivePath, archiveName, scope string,
-	entries []hook.ArchiveEntry, smb *core.SMBConfig,
-) (hook.BackupResult, error) {
+	entries []entity.ArchiveEntry, smb *core.SMBConfig,
+) (entity.BackupResult, error) {
 	if archiveErr := CreateArchive(archivePath, entries, w); archiveErr != nil {
-		return hook.BackupResult{}, archiveErr
+		return entity.BackupResult{}, archiveErr
 	}
 
-	result := hook.BackupResult{Scope: scope, Archive: archivePath}
+	result := entity.BackupResult{Scope: scope, Archive: archivePath}
 	if info, statErr := os.Stat(archivePath); statErr == nil {
 		result.Size = info.Size()
 	}
@@ -72,7 +72,7 @@ func finalizeArchive(
 //
 // Returns:
 //   - error: non-nil on stat, walk, or tar write failure
-func addEntry(tw *tar.Writer, entry hook.ArchiveEntry, w io.Writer) error {
+func addEntry(tw *tar.Writer, entry entity.ArchiveEntry, w io.Writer) error {
 	info, statErr := os.Stat(entry.SourcePath)
 	if os.IsNotExist(statErr) {
 		if entry.Optional {

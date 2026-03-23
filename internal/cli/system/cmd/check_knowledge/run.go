@@ -10,7 +10,7 @@ import (
 	"os"
 	"path/filepath"
 
-	"github.com/ActiveMemory/ctx/internal/cli/system/core/hook"
+	"github.com/ActiveMemory/ctx/internal/cli/system/core/check"
 	knowledge2 "github.com/ActiveMemory/ctx/internal/cli/system/core/knowledge"
 	"github.com/spf13/cobra"
 
@@ -38,7 +38,7 @@ func Run(cmd *cobra.Command, stdin *os.File) error {
 		return nil
 	}
 
-	_, sessionID, paused := hook.Preamble(stdin)
+	_, sessionID, paused := check.Preamble(stdin)
 	if paused {
 		return nil
 	}

@@ -11,7 +11,7 @@ import (
 	"os"
 	"strings"
 
-	hook2 "github.com/ActiveMemory/ctx/internal/cli/system/core/hook"
+	hook2 "github.com/ActiveMemory/ctx/internal/cli/system/core/check"
 	coreSession "github.com/ActiveMemory/ctx/internal/cli/system/core/session"
 	"github.com/spf13/cobra"
 

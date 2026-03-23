@@ -11,9 +11,11 @@ import (
 	"path/filepath"
 	"time"
 
+	hook2 "github.com/ActiveMemory/ctx/internal/cli/system/core/check"
 	"github.com/ActiveMemory/ctx/internal/cli/system/core/drift"
-	hook2 "github.com/ActiveMemory/ctx/internal/cli/system/core/hook"
 	"github.com/spf13/cobra"
+
+	"github.com/ActiveMemory/ctx/internal/entity"
 
 	"github.com/ActiveMemory/ctx/internal/assets/read/desc"
 	"github.com/ActiveMemory/ctx/internal/cli/system/core"
@@ -61,7 +63,7 @@ func Run(cmd *cobra.Command, stdin *os.File) error {
 	}
 
 	now := time.Now()
-	var staleEntries []hook2.StaleEntry
+	var staleEntries []entity.StaleEntry
 
 	for _, tf := range files {
 		absPath := filepath.Join(cwd, tf.Path)
@@ -76,7 +78,7 @@ func Run(cmd *cobra.Command, stdin *os.File) error {
 			continue
 		}
 
-		staleEntries = append(staleEntries, hook2.StaleEntry{
+		staleEntries = append(staleEntries, entity.StaleEntry{
 			Path:      tf.Path,
 			Desc:      tf.Desc,
 			ReviewURL: tf.ReviewURL,

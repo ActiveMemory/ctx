@@ -17,11 +17,11 @@ import (
 
 	"github.com/ActiveMemory/ctx/internal/assets/read/desc"
 	"github.com/ActiveMemory/ctx/internal/cli/system/core"
-	"github.com/ActiveMemory/ctx/internal/cli/system/core/hook"
 	"github.com/ActiveMemory/ctx/internal/config/archive"
 	"github.com/ActiveMemory/ctx/internal/config/dir"
 	"github.com/ActiveMemory/ctx/internal/config/embed/text"
 	configFs "github.com/ActiveMemory/ctx/internal/config/fs"
+	"github.com/ActiveMemory/ctx/internal/entity"
 	errBackup "github.com/ActiveMemory/ctx/internal/err/backup"
 	internalIo "github.com/ActiveMemory/ctx/internal/io"
 )
@@ -36,7 +36,7 @@ import (
 // Returns:
 //   - error: non-nil on file creation or tar writing failure
 func CreateArchive(
-	archivePath string, entries []hook.ArchiveEntry, w io.Writer,
+	archivePath string, entries []entity.ArchiveEntry, w io.Writer,
 ) error {
 	outFile, createErr := internalIo.SafeCreateFile(archivePath, configFs.PermFile)
 	if createErr != nil {
@@ -71,16 +71,16 @@ func CreateArchive(
 //   - error: non-nil on archive or SMB failure
 func BackupProject(
 	w io.Writer, home, timestamp string, smb *core.SMBConfig,
-) (hook.BackupResult, error) {
+) (entity.BackupResult, error) {
 	cwd, cwdErr := os.Getwd()
 	if cwdErr != nil {
-		return hook.BackupResult{}, cwdErr
+		return entity.BackupResult{}, cwdErr
 	}
 
 	archiveName := fmt.Sprintf(archive.BackupTplProjectArchive, timestamp)
 	archivePath := filepath.Join(os.TempDir(), archiveName)
 
-	entries := []hook.ArchiveEntry{
+	entries := []entity.ArchiveEntry{
 		{SourcePath: filepath.Join(cwd, dir.Context), Prefix: dir.Context, ExcludeDir: dir.JournalSite},
 		{SourcePath: filepath.Join(cwd, dir.Claude), Prefix: dir.Claude},
 		{SourcePath: filepath.Join(cwd, dir.Ideas), Prefix: dir.Ideas, Optional: true},
@@ -116,11 +116,11 @@ func BackupProject(
 //   - error: non-nil on archive or SMB failure
 func BackupGlobal(
 	w io.Writer, home, timestamp string, smb *core.SMBConfig,
-) (hook.BackupResult, error) {
+) (entity.BackupResult, error) {
 	archiveName := fmt.Sprintf(archive.BackupTplGlobalArchive, timestamp)
 	archivePath := filepath.Join(os.TempDir(), archiveName)
 
-	entries := []hook.ArchiveEntry{
+	entries := []entity.ArchiveEntry{
 		{SourcePath: filepath.Join(home, dir.Claude), Prefix: dir.Claude, ExcludeDir: archive.BackupExcludeTodos},
 	}
 
