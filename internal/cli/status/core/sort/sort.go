@@ -13,14 +13,14 @@ import (
 	"github.com/ActiveMemory/ctx/internal/rc"
 )
 
-// SortFilesByPriority sorts files in-place by the recommended read order.
+// FilesByPriority sorts files in-place by the recommended read order.
 //
 // Uses rc.FilePriority to determine ordering (CONSTITUTION first,
 // then TASKS, CONVENTIONS, etc.).
 //
 // Parameters:
 //   - files: Slice of files to sort (modified in place)
-func SortFilesByPriority(files []entity.FileInfo) {
+func FilesByPriority(files []entity.FileInfo) {
 	sort.Slice(files, func(i, j int) bool {
 		return rc.FilePriority(
 			files[i].Name,
@@ -28,7 +28,7 @@ func SortFilesByPriority(files []entity.FileInfo) {
 	})
 }
 
-// RecentFilesSorted returns the n most recently modified files.
+// RecentFiles returns the n most recently modified files.
 //
 // Parameters:
 //   - files: Source files to select from
@@ -37,7 +37,7 @@ func SortFilesByPriority(files []entity.FileInfo) {
 // Returns:
 //   - []entity.FileInfo: Up to n files sorted by modification time
 //     (newest first)
-func RecentFilesSorted(files []entity.FileInfo, n int) []entity.FileInfo {
+func RecentFiles(files []entity.FileInfo, n int) []entity.FileInfo {
 	sorted := make([]entity.FileInfo, len(files))
 	copy(sorted, files)
 	sort.Slice(sorted, func(i, j int) bool {

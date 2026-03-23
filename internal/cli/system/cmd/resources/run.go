@@ -26,7 +26,7 @@ import (
 // Returns:
 //   - error: Non-nil on JSON encoding failure
 func runResources(cmd *cobra.Command) error {
-	snap := sysinfo.Collect(".")
+	snap := sysinfo.Collect()
 	alerts := sysinfo.Evaluate(snap)
 
 	jsonFlag, _ := cmd.Flags().GetBool(cFlag.JSON)

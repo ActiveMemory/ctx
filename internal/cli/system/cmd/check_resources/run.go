@@ -10,11 +10,11 @@ import (
 	"fmt"
 	"os"
 
-	hook2 "github.com/ActiveMemory/ctx/internal/cli/system/core/check"
-	"github.com/ActiveMemory/ctx/internal/cli/system/core/message"
 	"github.com/spf13/cobra"
 
 	"github.com/ActiveMemory/ctx/internal/assets/read/desc"
+	coreCheck "github.com/ActiveMemory/ctx/internal/cli/system/core/check"
+	"github.com/ActiveMemory/ctx/internal/cli/system/core/message"
 	"github.com/ActiveMemory/ctx/internal/cli/system/core/nudge"
 	"github.com/ActiveMemory/ctx/internal/config/embed/text"
 	"github.com/ActiveMemory/ctx/internal/config/hook"
@@ -38,12 +38,12 @@ import (
 // Returns:
 //   - error: Always nil (hook errors are non-fatal)
 func Run(cmd *cobra.Command, stdin *os.File) error {
-	input, _, paused := hook2.Preamble(stdin)
+	input, _, paused := coreCheck.Preamble(stdin)
 	if paused {
 		return nil
 	}
 
-	snap := sysinfo.Collect(".")
+	snap := sysinfo.Collect()
 	alerts := sysinfo.Evaluate(snap)
 
 	if sysinfo.MaxSeverity(alerts) < sysinfo.SeverityDanger {

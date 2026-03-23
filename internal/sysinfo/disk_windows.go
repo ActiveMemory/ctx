@@ -8,6 +8,12 @@
 
 package sysinfo
 
-func collectDisk(path string) DiskInfo {
-	return DiskInfo{Path: path, Supported: false}
+import "os"
+
+func collectDisk() DiskInfo {
+	cwd, cwdErr := os.Getwd()
+	if cwdErr != nil {
+		return DiskInfo{Supported: false}
+	}
+	return DiskInfo{Path: cwd, Supported: false}
 }

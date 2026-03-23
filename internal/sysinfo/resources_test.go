@@ -51,7 +51,7 @@ func TestSeverity_String(t *testing.T) {
 }
 
 func TestCollect_DoesNotPanic(t *testing.T) {
-	snap := Collect(".")
+	snap := Collect()
 	// Should return a valid snapshot on any platform
 	_ = snap
 }

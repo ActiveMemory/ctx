@@ -24,7 +24,7 @@ func EmptyMessage(msg entity.Message) bool {
 	return msg.Text == "" && len(msg.ToolUses) == 0 && len(msg.ToolResults) == 0
 }
 
-// ValidateExportFlags checks for invalid flag combinations.
+// ExportFlags checks for invalid flag combinations.
 //
 // Parameters:
 //   - args: positional arguments (session IDs).
@@ -32,7 +32,7 @@ func EmptyMessage(msg entity.Message) bool {
 //
 // Returns:
 //   - error: non-nil if flags conflict.
-func ValidateExportFlags(args []string, opts entity.ExportOpts) error {
+func ExportFlags(args []string, opts entity.ExportOpts) error {
 	if len(args) > 0 && opts.All {
 		return ctxErr.AllWithID()
 	}

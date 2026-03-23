@@ -11,15 +11,15 @@ import (
 	"os"
 	"path/filepath"
 
-	hook2 "github.com/ActiveMemory/ctx/internal/cli/system/core/check"
-	"github.com/ActiveMemory/ctx/internal/cli/system/core/message"
-	"github.com/ActiveMemory/ctx/internal/cli/system/core/nudge"
-	"github.com/ActiveMemory/ctx/internal/cli/system/core/state"
-	version2 "github.com/ActiveMemory/ctx/internal/cli/system/core/version"
 	"github.com/spf13/cobra"
 
 	"github.com/ActiveMemory/ctx/internal/assets/read/claude"
 	"github.com/ActiveMemory/ctx/internal/assets/read/desc"
+	coreCheck "github.com/ActiveMemory/ctx/internal/cli/system/core/check"
+	"github.com/ActiveMemory/ctx/internal/cli/system/core/message"
+	"github.com/ActiveMemory/ctx/internal/cli/system/core/nudge"
+	"github.com/ActiveMemory/ctx/internal/cli/system/core/state"
+	coreVersion "github.com/ActiveMemory/ctx/internal/cli/system/core/version"
 	"github.com/ActiveMemory/ctx/internal/config/embed/text"
 	"github.com/ActiveMemory/ctx/internal/config/hook"
 	"github.com/ActiveMemory/ctx/internal/config/version"
@@ -45,7 +45,7 @@ func Run(cmd *cobra.Command, stdin *os.File) error {
 		return nil
 	}
 
-	input, _, paused := hook2.Preamble(stdin)
+	input, _, paused := coreCheck.Preamble(stdin)
 	if paused {
 		return nil
 	}
@@ -53,7 +53,7 @@ func Run(cmd *cobra.Command, stdin *os.File) error {
 	tmpDir := state.StateDir()
 	markerFile := filepath.Join(tmpDir, version.ThrottleID)
 
-	if hook2.DailyThrottled(markerFile) {
+	if coreCheck.DailyThrottled(markerFile) {
 		return nil
 	}
 
@@ -70,8 +70,8 @@ func Run(cmd *cobra.Command, stdin *os.File) error {
 		return nil // embedded plugin.json missing — nothing to compare
 	}
 
-	bMajor, bMinor, bOK := version2.ParseMajorMinor(binaryVer)
-	pMajor, pMinor, pOK := version2.ParseMajorMinor(pluginVer)
+	bMajor, bMinor, bOK := coreVersion.ParseMajorMinor(binaryVer)
+	pMajor, pMinor, pOK := coreVersion.ParseMajorMinor(pluginVer)
 
 	if !bOK || !pOK {
 		internalIo.TouchFile(markerFile)
@@ -116,7 +116,7 @@ func Run(cmd *cobra.Command, stdin *os.File) error {
 	internalIo.TouchFile(markerFile)
 
 	// Key age check: piggyback on the daily version check
-	writeHook.Nudge(cmd, version2.CheckKeyAge(input.SessionID))
+	writeHook.Nudge(cmd, coreVersion.CheckKeyAge(input.SessionID))
 
 	return nil
 }

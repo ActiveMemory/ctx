@@ -534,7 +534,7 @@ func CheckRecentEventActivity(report *Report) {
 // Parameters:
 //   - report: Report to append the result to
 func CheckSystemResources(report *Report) {
-	snap := sysinfo.Collect(".")
+	snap := sysinfo.Collect()
 	AddResourceResults(report, snap)
 }
 

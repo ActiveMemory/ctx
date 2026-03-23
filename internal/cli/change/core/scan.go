@@ -13,6 +13,8 @@ import (
 	"strings"
 	"time"
 
+	"github.com/ActiveMemory/ctx/internal/entity"
+
 	"github.com/ActiveMemory/ctx/internal/config/file"
 	cfgGit "github.com/ActiveMemory/ctx/internal/config/git"
 	"github.com/ActiveMemory/ctx/internal/config/token"
@@ -26,16 +28,16 @@ import (
 //   - refTime: Only include files modified after this time
 //
 // Returns:
-//   - []ContextChange: Modified files sorted by modtime descending
+//   - []entity.ContextChange: Modified files sorted by modtime descending
 //   - error: Non-nil if the context directory cannot be read
-func FindContextChanges(refTime time.Time) ([]ContextChange, error) {
+func FindContextChanges(refTime time.Time) ([]entity.ContextChange, error) {
 	dir := rc.ContextDir()
 	entries, err := os.ReadDir(dir)
 	if err != nil {
 		return nil, err
 	}
 
-	var changes []ContextChange
+	var changes []entity.ContextChange
 	for _, e := range entries {
 		if e.IsDir() || !strings.HasSuffix(e.Name(), file.ExtMarkdown) {
 			continue
@@ -45,7 +47,7 @@ func FindContextChanges(refTime time.Time) ([]ContextChange, error) {
 			continue
 		}
 		if info.ModTime().After(refTime) {
-			changes = append(changes, ContextChange{
+			changes = append(changes, entity.ContextChange{
 				Name:    e.Name(),
 				ModTime: info.ModTime(),
 			})
@@ -68,10 +70,10 @@ func FindContextChanges(refTime time.Time) ([]ContextChange, error) {
 //   - refTime: Only consider commits after this time
 //
 // Returns:
-//   - CodeSummary: Commit count, latest message, dirs, authors
+//   - entity.CodeSummary: Commit count, latest message, dirs, authors
 //   - error: Always nil (git failures yield empty summary)
-func SummarizeCodeChanges(refTime time.Time) (CodeSummary, error) {
-	var summary CodeSummary
+func SummarizeCodeChanges(refTime time.Time) (entity.CodeSummary, error) {
+	var summary entity.CodeSummary
 
 	// Count commits.
 	out, err := GitLogSince(refTime, cfgGit.FlagOneline)

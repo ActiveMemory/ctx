@@ -15,6 +15,8 @@ import (
 	"testing"
 	"time"
 
+	"github.com/ActiveMemory/ctx/internal/entity"
+
 	"github.com/ActiveMemory/ctx/internal/config/dir"
 	"github.com/ActiveMemory/ctx/internal/rc"
 )
@@ -118,10 +120,10 @@ func TestUniqueLines(t *testing.T) {
 }
 
 func TestRenderChanges(t *testing.T) {
-	ctxChanges := []ContextChange{
+	ctxChanges := []entity.ContextChange{
 		{Name: "TASKS.md", ModTime: time.Date(2026, 3, 3, 14, 30, 0, 0, time.UTC)},
 	}
-	code := CodeSummary{
+	code := entity.CodeSummary{
 		CommitCount: 5,
 		LatestMsg:   "Add deps command",
 		Dirs:        []string{"internal", "docs"},
@@ -144,10 +146,10 @@ func TestRenderChanges(t *testing.T) {
 }
 
 func TestRenderChangesForHook(t *testing.T) {
-	ctxChanges := []ContextChange{
+	ctxChanges := []entity.ContextChange{
 		{Name: "TASKS.md", ModTime: time.Now()},
 	}
-	code := CodeSummary{CommitCount: 3, LatestMsg: "Fix bug"}
+	code := entity.CodeSummary{CommitCount: 3, LatestMsg: "Fix bug"}
 
 	out := RenderChangesForHook("2 hours ago", ctxChanges, code)
 	if !strings.Contains(out, "Changes since last session") {
@@ -158,14 +160,14 @@ func TestRenderChangesForHook(t *testing.T) {
 	}
 
 	// Empty case.
-	out = RenderChangesForHook("1 hour ago", nil, CodeSummary{})
+	out = RenderChangesForHook("1 hour ago", nil, entity.CodeSummary{})
 	if out != "" {
 		t.Errorf("expected empty for no changes, got: %q", out)
 	}
 }
 
 func TestRenderChanges_NoChanges(t *testing.T) {
-	out := RenderChanges("1 hour ago", nil, CodeSummary{})
+	out := RenderChanges("1 hour ago", nil, entity.CodeSummary{})
 	if !strings.Contains(out, "No changes detected") {
 		t.Error("expected 'No changes detected' message")
 	}

@@ -12,9 +12,9 @@ import (
 	"path/filepath"
 	"strings"
 
-	"github.com/ActiveMemory/ctx/internal/cli/pad/core/parse"
 	"github.com/spf13/cobra"
 
+	"github.com/ActiveMemory/ctx/internal/cli/pad/core/parse"
 	"github.com/ActiveMemory/ctx/internal/config/file"
 	"github.com/ActiveMemory/ctx/internal/config/fs"
 	"github.com/ActiveMemory/ctx/internal/config/pad"

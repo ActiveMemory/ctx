@@ -10,13 +10,13 @@ import (
 	"os"
 	"path/filepath"
 
-	archive2 "github.com/ActiveMemory/ctx/internal/cli/system/core/archive"
-	hook2 "github.com/ActiveMemory/ctx/internal/cli/system/core/check"
-	"github.com/ActiveMemory/ctx/internal/cli/system/core/nudge"
-	"github.com/ActiveMemory/ctx/internal/cli/system/core/state"
 	"github.com/spf13/cobra"
 
 	"github.com/ActiveMemory/ctx/internal/assets/read/desc"
+	coreArchive "github.com/ActiveMemory/ctx/internal/cli/system/core/archive"
+	coreCheck "github.com/ActiveMemory/ctx/internal/cli/system/core/check"
+	"github.com/ActiveMemory/ctx/internal/cli/system/core/nudge"
+	"github.com/ActiveMemory/ctx/internal/cli/system/core/state"
 	"github.com/ActiveMemory/ctx/internal/config/archive"
 	"github.com/ActiveMemory/ctx/internal/config/embed/text"
 	"github.com/ActiveMemory/ctx/internal/config/env"
@@ -37,7 +37,7 @@ import (
 // Returns:
 //   - error: Always nil (hook errors are non-fatal)
 func Run(cmd *cobra.Command, stdin *os.File) error {
-	input, _, paused := hook2.Preamble(stdin)
+	input, _, paused := coreCheck.Preamble(stdin)
 	if paused {
 		return nil
 	}
@@ -45,7 +45,7 @@ func Run(cmd *cobra.Command, stdin *os.File) error {
 	tmpDir := state.StateDir()
 	throttleFile := filepath.Join(tmpDir, archive.BackupThrottleID)
 
-	if hook2.DailyThrottled(throttleFile) {
+	if coreCheck.DailyThrottled(throttleFile) {
 		return nil
 	}
 
@@ -58,14 +58,14 @@ func Run(cmd *cobra.Command, stdin *os.File) error {
 
 	// Check 1: Is the SMB share mounted?
 	if smbURL := os.Getenv(env.BackupSMBURL); smbURL != "" {
-		warnings = archive2.CheckSMBMountWarnings(smbURL, warnings)
+		warnings = coreArchive.CheckSMBMountWarnings(smbURL, warnings)
 	}
 
 	// Check 2: Is the backup stale?
 	markerPath := filepath.Join(
 		home, archive.BackupMarkerDir, archive.BackupMarkerFile,
 	)
-	warnings = archive2.CheckBackupMarker(markerPath, warnings)
+	warnings = coreArchive.CheckBackupMarker(markerPath, warnings)
 
 	if len(warnings) == 0 {
 		return nil

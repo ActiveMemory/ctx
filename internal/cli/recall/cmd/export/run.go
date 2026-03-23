@@ -52,7 +52,7 @@ func Run(cmd *cobra.Command, args []string, opts entity.ExportOpts) error {
 	}
 
 	// 1. Validate flags.
-	if validateErr := validate.ValidateExportFlags(args, opts); validateErr != nil {
+	if validateErr := validate.ExportFlags(args, opts); validateErr != nil {
 		return validateErr
 	}
 
@@ -109,7 +109,7 @@ func Run(cmd *cobra.Command, args []string, opts entity.ExportOpts) error {
 	sessionIndex := index.BuildSessionIndex(journalDir)
 
 	// 6. Build the plan.
-	plan := plan.PlanExport(
+	plan := plan.Export(
 		toExport, journalDir, sessionIndex, jstate, opts, singleSession,
 	)
 

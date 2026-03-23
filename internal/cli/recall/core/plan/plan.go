@@ -25,7 +25,7 @@ import (
 	"github.com/ActiveMemory/ctx/internal/journal/state"
 )
 
-// PlanExport builds an ExportPlan without writing any files.
+// Export builds an ExportPlan without writing any files.
 //
 // Parameters:
 //   - sessions: sessions to plan for.
@@ -37,7 +37,7 @@ import (
 //
 // Returns:
 //   - ExportPlan: the planned actions, counters, and pending renames.
-func PlanExport(
+func Export(
 	sessions []*entity.Session,
 	journalDir string,
 	sessionIndex map[string]string,
@@ -72,9 +72,9 @@ func PlanExport(
 				)
 			}
 		}
-		slug, title := slug.TitleSlug(s, existingTitle)
+		slg, title := slug.TitleSlug(s, existingTitle)
 
-		baseFilename := format.FormatJournalFilename(s, slug)
+		baseFilename := format.FormatJournalFilename(s, slg)
 		baseName := strings.TrimSuffix(baseFilename, file.ExtMarkdown)
 
 		// Detect renames (dedup: old slug → new slug).
@@ -138,7 +138,7 @@ func PlanExport(
 				EndIdx:     endIdx,
 				Action:     action,
 				Messages:   nonEmptyMsgs,
-				Slug:       slug,
+				Slug:       slg,
 				Title:      title,
 				BaseName:   baseName,
 			})

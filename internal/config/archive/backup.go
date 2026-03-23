@@ -10,7 +10,7 @@ package archive
 const (
 	// BackupDefaultSubdir is the default subdirectory on the SMB share.
 	BackupDefaultSubdir = "ctx-sessions"
-	// BackupMarkerFile is the state file touched on successful project backup.
+	// BackupMarkerFile is the state file touched on a successful project backup.
 	BackupMarkerFile = "ctx-last-backup"
 	// BackupScopeProject backs up only the project context.
 	BackupScopeProject = "project"

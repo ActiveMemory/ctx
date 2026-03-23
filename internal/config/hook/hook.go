@@ -69,6 +69,10 @@ const (
 
 // Prefixes
 const (
+	// StdinReadTimeout is the maximum time to wait for hook JSON on stdin
+	// before returning a zero-value input.
+	StdinReadTimeout = 2
+
 	// PrefixMemoryDriftThrottle is the state file prefix for per-session
 	// memory drift nudge tombstones.
 	PrefixMemoryDriftThrottle = "memory-drift-nudged-"

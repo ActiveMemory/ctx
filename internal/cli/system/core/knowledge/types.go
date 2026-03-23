@@ -6,6 +6,12 @@
 
 package knowledge
 
+// Unit labels for knowledge file findings.
+const (
+	unitEntries = "entries"
+	unitLines   = "lines"
+)
+
 // finding describes a single knowledge file that exceeds its
 // configured threshold.
 type finding struct {

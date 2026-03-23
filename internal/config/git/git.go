@@ -17,6 +17,7 @@ const (
 
 // Git rev-parse flags.
 const (
+	// FlagShowToplevel is a git flag.
 	FlagShowToplevel = "--show-toplevel"
 )
 

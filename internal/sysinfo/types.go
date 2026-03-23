@@ -42,6 +42,7 @@ type DiskInfo struct {
 	UsedBytes  uint64
 	Path       string
 	Supported  bool
+	Err        error
 }
 
 // LoadInfo holds system load averages and CPU count.

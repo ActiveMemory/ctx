@@ -10,6 +10,8 @@ import (
 	"fmt"
 	"strings"
 
+	"github.com/ActiveMemory/ctx/internal/entity"
+
 	"github.com/ActiveMemory/ctx/internal/assets/read/desc"
 	"github.com/ActiveMemory/ctx/internal/config/embed/text"
 	cfgTime "github.com/ActiveMemory/ctx/internal/config/time"
@@ -26,7 +28,7 @@ import (
 // Returns:
 //   - string: Formatted Markdown output
 func RenderChanges(
-	refLabel string, ctxChanges []ContextChange, code CodeSummary,
+	refLabel string, ctxChanges []entity.ContextChange, code entity.CodeSummary,
 ) string {
 	var b strings.Builder
 
@@ -96,7 +98,7 @@ func RenderChanges(
 // Returns:
 //   - string: Compact single-line summary, or empty if no changes
 func RenderChangesForHook(
-	refLabel string, ctxChanges []ContextChange, code CodeSummary,
+	refLabel string, ctxChanges []entity.ContextChange, code entity.CodeSummary,
 ) string {
 	var parts []string
 
