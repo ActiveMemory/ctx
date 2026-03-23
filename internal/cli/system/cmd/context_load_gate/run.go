@@ -12,6 +12,8 @@ import (
 	"path/filepath"
 	"strings"
 
+	"github.com/ActiveMemory/ctx/internal/cli/change/core/detect"
+	"github.com/ActiveMemory/ctx/internal/cli/change/core/render"
 	"github.com/ActiveMemory/ctx/internal/cli/system/core/health"
 	"github.com/ActiveMemory/ctx/internal/cli/system/core/load"
 	"github.com/ActiveMemory/ctx/internal/cli/system/core/nudge"
@@ -134,11 +136,11 @@ func Run(cmd *cobra.Command, stdin *os.File) error {
 	}
 
 	// Best-effort changes summary — never blocks injection
-	if refTime, refLabel, refErr := changeCore.DetectReferenceTime(""); refErr == nil {
+	if refTime, refLabel, refErr := detect.ReferenceTime(""); refErr == nil {
 		ctxChanges, _ := changeCore.FindContextChanges(refTime)
 		codeChanges, _ := changeCore.SummarizeCodeChanges(refTime)
 		if len(ctxChanges) > 0 || codeChanges.CommitCount > 0 {
-			content.WriteString(token.NewlineLF + changeCore.RenderChangesForHook(
+			content.WriteString(token.NewlineLF + render.ChangesForHook(
 				refLabel, ctxChanges, codeChanges))
 		}
 	}

@@ -4,7 +4,7 @@
 //   \    Copyright 2026-present Context contributors.
 //                 SPDX-License-Identifier: Apache-2.0
 
-package core
+package score
 
 import (
 	"strings"
@@ -144,12 +144,12 @@ func ExtractTaskKeywords(tasks []string) []string {
 //   - []ScoredEntry: Entries sorted by score descending, with token estimates
 func ScoreEntries(
 	blocks []index.EntryBlock, keywords []string, now time.Time,
-) []ScoredEntry {
-	scored := make([]ScoredEntry, 0, len(blocks))
+) []Entry {
+	scored := make([]Entry, 0, len(blocks))
 	for i := range blocks {
 		s := ScoreEntry(&blocks[i], keywords, now)
 		tokens := token.EstimateTokensString(blocks[i].BlockContent())
-		scored = append(scored, ScoredEntry{
+		scored = append(scored, Entry{
 			EntryBlock: blocks[i],
 			Score:      s,
 			Tokens:     tokens,

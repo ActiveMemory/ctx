@@ -7,6 +7,8 @@
 package root
 
 import (
+	"github.com/ActiveMemory/ctx/internal/cli/change/core/detect"
+	"github.com/ActiveMemory/ctx/internal/cli/change/core/render"
 	"github.com/spf13/cobra"
 
 	"github.com/ActiveMemory/ctx/internal/cli/change/core"
@@ -26,7 +28,7 @@ import (
 // Returns:
 //   - error: Non-nil if reference time detection fails
 func Run(cmd *cobra.Command, since string) error {
-	refTime, refLabel, err := core.DetectReferenceTime(since)
+	refTime, refLabel, err := detect.ReferenceTime(since)
 	if err != nil {
 		return ctxErr.DetectReferenceTime(err)
 	}
@@ -34,6 +36,6 @@ func Run(cmd *cobra.Command, since string) error {
 	ctxChanges, _ := core.FindContextChanges(refTime)
 	codeChanges, _ := core.SummarizeCodeChanges(refTime)
 
-	writeChange.Changes(cmd, core.RenderChanges(refLabel, ctxChanges, codeChanges))
+	writeChange.Changes(cmd, render.Changes(refLabel, ctxChanges, codeChanges))
 	return nil
 }

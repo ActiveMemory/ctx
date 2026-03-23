@@ -10,9 +10,25 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/ActiveMemory/ctx/internal/cli/agent/core"
+	"github.com/ActiveMemory/ctx/internal/cli/agent/core/score"
 	"github.com/ActiveMemory/ctx/internal/index"
 )
+
+func makeBlock(date, title, body string) index.EntryBlock {
+	header := "## [" + date + "-120000] " + title
+	lines := []string{header}
+	if body != "" {
+		lines = append(lines, "", body)
+	}
+	return index.EntryBlock{
+		Entry: index.Entry{
+			Timestamp: date + "-120000",
+			Date:      date,
+			Title:     title,
+		},
+		Lines: lines,
+	}
+}
 
 func TestFitItemsInBudget(t *testing.T) {
 	tests := []struct {
@@ -28,9 +44,9 @@ func TestFitItemsInBudget(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			got := FitItemsInBudget(tt.items, tt.budget)
+			got := FitItems(tt.items, tt.budget)
 			if len(got) != tt.want {
-				t.Errorf("FitItemsInBudget() returned %d items, want %d", len(got), tt.want)
+				t.Errorf("FitItems() returned %d items, want %d", len(got), tt.want)
 			}
 		})
 	}
@@ -40,8 +56,8 @@ func TestSplitBudget(t *testing.T) {
 	tests := []struct {
 		name       string
 		total      int
-		aEntries   []core.ScoredEntry
-		bEntries   []core.ScoredEntry
+		aEntries   []score.Entry
+		bEntries   []score.Entry
 		wantAMin   int
 		wantBMin   int
 		wantAMax   int
@@ -58,38 +74,38 @@ func TestSplitBudget(t *testing.T) {
 		{
 			name:  "a empty",
 			total: 1000,
-			bEntries: []core.ScoredEntry{
-				{EntryBlock: core.makeBlock("2026-02-19", "B", "body"), Tokens: 100},
+			bEntries: []score.Entry{
+				{EntryBlock: makeBlock("2026-02-19", "B", "body"), Tokens: 100},
 			},
 			wantAExact: 0, wantBExact: 1000, exact: true,
 		},
 		{
 			name:  "b empty",
 			total: 1000,
-			aEntries: []core.ScoredEntry{
-				{EntryBlock: core.makeBlock("2026-02-19", "A", "body"), Tokens: 100},
+			aEntries: []score.Entry{
+				{EntryBlock: makeBlock("2026-02-19", "A", "body"), Tokens: 100},
 			},
 			wantAExact: 1000, wantBExact: 0, exact: true,
 		},
 		{
 			name:  "both fit",
 			total: 1000,
-			aEntries: []core.ScoredEntry{
-				{EntryBlock: core.makeBlock("2026-02-19", "A", "body"), Tokens: 200},
+			aEntries: []score.Entry{
+				{EntryBlock: makeBlock("2026-02-19", "A", "body"), Tokens: 200},
 			},
-			bEntries: []core.ScoredEntry{
-				{EntryBlock: core.makeBlock("2026-02-19", "B", "body"), Tokens: 300},
+			bEntries: []score.Entry{
+				{EntryBlock: makeBlock("2026-02-19", "B", "body"), Tokens: 300},
 			},
 			wantAExact: 200, wantBExact: 300, exact: true,
 		},
 		{
 			name:  "exceeds budget gets proportional split",
 			total: 100,
-			aEntries: []core.ScoredEntry{
-				{EntryBlock: core.makeBlock("2026-02-19", "A", "body"), Tokens: 500},
+			aEntries: []score.Entry{
+				{EntryBlock: makeBlock("2026-02-19", "A", "body"), Tokens: 500},
 			},
-			bEntries: []core.ScoredEntry{
-				{EntryBlock: core.makeBlock("2026-02-19", "B", "body"), Tokens: 500},
+			bEntries: []score.Entry{
+				{EntryBlock: makeBlock("2026-02-19", "B", "body"), Tokens: 500},
 			},
 			// Each gets at least 30%, split proportionally
 			wantAMin: 30, wantAMax: 70,
@@ -98,23 +114,23 @@ func TestSplitBudget(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			gotA, gotB := SplitBudget(tt.total, tt.aEntries, tt.bEntries)
+			gotA, gotB := Split(tt.total, tt.aEntries, tt.bEntries)
 			if tt.exact {
 				if gotA != tt.wantAExact || gotB != tt.wantBExact {
-					t.Errorf("SplitBudget() = (%d, %d), want (%d, %d)",
+					t.Errorf("Split() = (%d, %d), want (%d, %d)",
 						gotA, gotB, tt.wantAExact, tt.wantBExact)
 				}
 			} else {
 				if gotA < tt.wantAMin || gotA > tt.wantAMax {
-					t.Errorf("SplitBudget() a = %d, want [%d, %d]",
+					t.Errorf("Split() a = %d, want [%d, %d]",
 						gotA, tt.wantAMin, tt.wantAMax)
 				}
 				if gotB < tt.wantBMin || gotB > tt.wantBMax {
-					t.Errorf("SplitBudget() b = %d, want [%d, %d]",
+					t.Errorf("Split() b = %d, want [%d, %d]",
 						gotB, tt.wantBMin, tt.wantBMax)
 				}
 				if gotA+gotB != tt.total {
-					t.Errorf("SplitBudget() a+b = %d, want %d", gotA+gotB, tt.total)
+					t.Errorf("Split() a+b = %d, want %d", gotA+gotB, tt.total)
 				}
 			}
 		})
@@ -122,19 +138,19 @@ func TestSplitBudget(t *testing.T) {
 }
 
 func TestFillSection(t *testing.T) {
-	entries := []core.ScoredEntry{
+	entries := []score.Entry{
 		{
-			EntryBlock: core.makeBlock("2026-02-19", "High score", "important body content here"),
+			EntryBlock: makeBlock("2026-02-19", "High score", "important body content here"),
 			Score:      1.8,
 			Tokens:     10,
 		},
 		{
-			EntryBlock: core.makeBlock("2026-02-10", "Medium score", "less important body"),
+			EntryBlock: makeBlock("2026-02-10", "Medium score", "less important body"),
 			Score:      1.0,
 			Tokens:     8,
 		},
 		{
-			EntryBlock: core.makeBlock("2025-10-01", "Low score", "old entry body text"),
+			EntryBlock: makeBlock("2025-10-01", "Low score", "old entry body text"),
 			Score:      0.3,
 			Tokens:     7,
 		},
@@ -177,7 +193,7 @@ func TestFillSection(t *testing.T) {
 	})
 
 	t.Run("superseded entries skipped", func(t *testing.T) {
-		superseded := []core.ScoredEntry{
+		superseded := []score.Entry{
 			{
 				EntryBlock: index.EntryBlock{
 					Entry: index.Entry{
@@ -214,7 +230,7 @@ func TestEstimateSliceTokens(t *testing.T) {
 }
 
 func TestRenderMarkdownPacket(t *testing.T) {
-	pkt := &core.AssembledPacket{
+	pkt := &assembledPacket{
 		ReadOrder:    []string{".context/CONSTITUTION.md"},
 		Constitution: []string{"Never violate"},
 		Tasks:        []string{"- [ ] Do something"},
@@ -257,7 +273,7 @@ func TestRenderMarkdownPacket(t *testing.T) {
 }
 
 func TestRenderMarkdownPacket_Empty(t *testing.T) {
-	pkt := &core.AssembledPacket{
+	pkt := &assembledPacket{
 		Instruction: "Do stuff.",
 		Budget:      100,
 	}

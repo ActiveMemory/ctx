@@ -4,7 +4,7 @@
 //   \    Copyright 2026-present Context contributors.
 //                 SPDX-License-Identifier: Apache-2.0
 
-package core
+package render
 
 import (
 	"fmt"
@@ -18,7 +18,7 @@ import (
 	"github.com/ActiveMemory/ctx/internal/config/token"
 )
 
-// RenderChanges renders the full CLI output for `ctx changes`.
+// Changes renders the full CLI output for `ctx changes`.
 //
 // Parameters:
 //   - refLabel: Human-readable reference time label
@@ -27,7 +27,7 @@ import (
 //
 // Returns:
 //   - string: Formatted Markdown output
-func RenderChanges(
+func Changes(
 	refLabel string, ctxChanges []entity.ContextChange, code entity.CodeSummary,
 ) string {
 	var b strings.Builder
@@ -88,7 +88,7 @@ func RenderChanges(
 	return b.String()
 }
 
-// RenderChangesForHook renders a compact summary for hook injection.
+// ChangesForHook renders a compact summary for hook injection.
 //
 // Parameters:
 //   - refLabel: Human-readable reference time label
@@ -97,7 +97,7 @@ func RenderChanges(
 //
 // Returns:
 //   - string: Compact single-line summary, or empty if no changes
-func RenderChangesForHook(
+func ChangesForHook(
 	refLabel string, ctxChanges []entity.ContextChange, code entity.CodeSummary,
 ) string {
 	var parts []string

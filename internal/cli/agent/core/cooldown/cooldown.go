@@ -4,7 +4,7 @@
 //   \    Copyright 2026-present Context contributors.
 //                 SPDX-License-Identifier: Apache-2.0
 
-package core
+package cooldown
 
 import (
 	"os"
@@ -16,7 +16,7 @@ import (
 	"github.com/ActiveMemory/ctx/internal/rc"
 )
 
-// CooldownActive checks whether the cooldown tombstone for the given
+// Active checks whether the cooldown tombstone for the given
 // session is still fresh.
 //
 // Parameters:
@@ -25,7 +25,7 @@ import (
 //
 // Returns:
 //   - bool: true if tombstone exists and is within the cooldown window
-func CooldownActive(session string, cooldown time.Duration) bool {
+func Active(session string, cooldown time.Duration) bool {
 	if session == "" || cooldown <= 0 {
 		return false
 	}

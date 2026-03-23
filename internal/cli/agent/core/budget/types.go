@@ -1,0 +1,36 @@
+//   /    ctx:                         https://ctx.ist
+// ,'`./    do you remember?
+// `.,'\
+//   \    Copyright 2026-present Context contributors.
+//                 SPDX-License-Identifier: Apache-2.0
+
+package budget
+
+// packet represents the JSON output format for the agent command.
+type packet struct {
+	Generated    string   `json:"generated"`
+	Budget       int      `json:"budget"`
+	TokensUsed   int      `json:"tokens_used"`
+	ReadOrder    []string `json:"read_order"`
+	Constitution []string `json:"constitution"`
+	Tasks        []string `json:"tasks"`
+	Conventions  []string `json:"conventions"`
+	Decisions    []string `json:"decisions"`
+	Learnings    []string `json:"learnings,omitempty"`
+	Summaries    []string `json:"summaries,omitempty"`
+	Instruction  string   `json:"instruction"`
+}
+
+// assembledPacket holds the budget-aware output sections ready for rendering.
+type assembledPacket struct {
+	ReadOrder    []string
+	Constitution []string
+	Tasks        []string
+	Conventions  []string
+	Decisions    []string
+	Learnings    []string
+	Summaries    []string
+	Instruction  string
+	Budget       int
+	TokensUsed   int
+}
