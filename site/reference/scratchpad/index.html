@@ -3963,7 +3963,7 @@ No external dependencies: Go stdlib only.</p>
 <td>Bulk-import lines from a file (or stdin with <code>-</code>)</td>
 </tr>
 <tr>
-<td><code>ctx pad import --blobs DIR</code></td>
+<td><code>ctx pad import --blob DIR</code></td>
 <td>Import directory files as blob entries</td>
 </tr>
 <tr>
@@ -4140,7 +4140,7 @@ English; the agent picks the right command.</p>
 <h2 id="worktrees">Worktrees<a class="headerlink" href="#worktrees" title="Permanent link">&para;</a></h2>
 <p>The encryption key lives at <code>~/.ctx/.ctx.key</code> (outside the project
 directory). Because all worktrees on the same machine share this path,
-<code>ctx pad</code> works in worktrees automatically — no special setup needed.</p>
+<code>ctx pad</code> works in worktrees automatically - no special setup needed.</p>
 <h2 id="key-distribution">Key Distribution<a class="headerlink" href="#key-distribution" title="Permanent link">&para;</a></h2>
 <p>The encryption key (<code>~/.ctx/.ctx.key</code>) stays on the machine where it
 was generated. <code>ctx</code> <strong>never</strong> transmits it.</p>

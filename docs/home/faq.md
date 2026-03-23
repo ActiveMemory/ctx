@@ -34,11 +34,11 @@ Team members and AI agents read the same context files.
 
 What **not** to commit:
 
-- **`.ctx.key`** — your encryption key. Stored at `~/.ctx/.ctx.key`,
+- **`.ctx.key`**: your encryption key. Stored at `~/.ctx/.ctx.key`,
   never in the repo. `ctx init` handles this automatically.
-- **`journal/`** and **`logs/`** — generated data, potentially large.
+- **`journal/`** and **`logs/`**: generated data, potentially large.
   `ctx init` adds these to `.gitignore`.
-- **`scratchpad.enc`** — your choice. It's encrypted, so it's safe to
+- **`scratchpad.enc`**: your choice. It's encrypted, so it's safe to
   commit if you want shared scratchpad state. See
   [Scratchpad](../reference/scratchpad.md) for details.
 
@@ -108,7 +108,7 @@ trims lower-priority entries when the budget is tight.
 
 For manual maintenance, `ctx compact` archives completed tasks and
 old entries, keeping active context lean. You can also run
-`ctx tasks archive` to move completed tasks out of TASKS.md.
+`ctx task archive` to move completed tasks out of TASKS.md.
 
 The goal is to keep context files focused on **current** state.
 Historical entries belong in git history or the archive.
@@ -128,6 +128,6 @@ design.
 
 **Related**:
 
-* [Getting Started](getting-started.md) — installation and first setup
-* [Configuration](configuration.md) — `.ctxrc`, environment variables, and defaults
-* [Context Files](context-files.md) — what each file does and how to use it
+* [Getting Started](getting-started.md) - installation and first setup
+* [Configuration](configuration.md) - `.ctxrc`, environment variables, and defaults
+* [Context Files](context-files.md) - what each file does and how to use it

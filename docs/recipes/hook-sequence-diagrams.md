@@ -10,75 +10,27 @@ title: Hook Sequence Diagrams
 
 ## Hook Lifecycle
 
-Every ctx hook is a Go binary invoked by Claude Code at either
-`PreToolUse` (before a tool runs) or `PostToolUse` (after it
-completes). Hooks receive JSON on stdin and emit JSON or plain
-text on stdout.
+Every ctx hook is a Go binary invoked by Claude Code at one of three
+lifecycle events: `PreToolUse` (before a tool runs, can block),
+`PostToolUse` (after a tool completes), or `UserPromptSubmit` (on
+every user prompt, before any tools run). Hooks receive JSON on stdin
+and emit JSON or plain text on stdout.
 
 This page documents the execution flow of every hook as a
 sequence diagram.
 
 ---
 
+<!-- drift-check: jq -r '.hooks.PreToolUse[].hooks[].command' internal/assets/claude/hooks/hooks.json | grep 'ctx system' | sed 's/ctx system //' | sort -->
+
 ## PreToolUse Hooks
 
 These fire **before** a tool executes. They can block, gate, or
 inject context.
 
-### block-dangerous-commands
-
-Blocks dangerous shell patterns (sudo, git push, cp to bin).
-No initialization or pause checks — always active.
-
-```mermaid
-sequenceDiagram
-    participant CC as Claude Code
-    participant Hook as block-dangerous-commands
-    participant Tpl as Message Template
-
-    CC->>Hook: stdin {command, session_id}
-    Hook->>Hook: Extract command
-    alt command empty
-        Hook-->>CC: (silent exit)
-    end
-    Hook->>Hook: Test regex: sudo, git push, cp-to-bin, install-to-bin
-    alt no match
-        Hook-->>CC: (silent exit)
-    end
-    Hook->>Tpl: LoadMessage(hook, variant, fallback)
-    Hook-->>CC: JSON {decision: BLOCK, reason}
-    Hook->>Hook: NudgeAndRelay(message)
-```
-
-### block-non-path-ctx
-
-Blocks `./ctx`, `go run ./cmd/ctx`, or absolute-path ctx
-invocations. Constitutionally enforced.
-
-```mermaid
-sequenceDiagram
-    participant CC as Claude Code
-    participant Hook as block-non-path-ctx
-    participant Tpl as Message Template
-
-    CC->>Hook: stdin {command, session_id}
-    Hook->>Hook: Extract command
-    alt command empty
-        Hook-->>CC: (silent exit)
-    end
-    Hook->>Hook: Test regex: relative-path, go-run, absolute-path
-    alt no match
-        Hook-->>CC: (silent exit)
-    end
-    alt absolute-path + test exception
-        Hook-->>CC: (silent exit)
-    end
-    Hook->>Tpl: LoadMessage(hook, variant, fallback)
-    Hook-->>CC: JSON {decision: BLOCK, reason + constitution suffix}
-    Hook->>Hook: NudgeAndRelay(message)
-```
-
 ### context-load-gate
+
+Matcher: `.*` (all tools)
 
 Injects the full context packet on first tool use of a session.
 One-shot per session.
@@ -106,8 +58,16 @@ sequenceDiagram
     end
     Hook->>State: Create marker (one-shot guard)
     Hook->>State: Prune stale session files
-    Hook->>Ctx: Read files in priority order
-    Note over Hook,Ctx: DECISION/LEARNING: index only<br/>Others: full content
+    loop Each file in ReadOrder
+        alt GLOSSARY or TASK
+            Note over Hook: Skip (Task mentioned in footer only)
+        else DECISION or LEARNING
+            Hook->>Ctx: Extract index table only
+        else other files
+            Hook->>Ctx: Read full content
+        end
+        Hook->>Hook: Estimate tokens per file
+    end
     Hook->>Git: Detect changes since last session
     Hook->>Hook: Build injection (files + changes + token counts)
     Hook-->>CC: JSON {additionalContext: injection}
@@ -115,34 +75,39 @@ sequenceDiagram
     Hook->>State: Write oversize flag if tokens > threshold
 ```
 
-### check-resources
+### block-non-path-ctx
 
-Checks system resources (memory, swap, disk, load). Fires on
-every tool call. No initialization required.
+Matcher: `Bash`
+
+Blocks `./ctx`, `go run ./cmd/ctx`, or absolute-path ctx
+invocations. Constitutionally enforced.
 
 ```mermaid
 sequenceDiagram
     participant CC as Claude Code
-    participant Hook as check-resources
-    participant Sys as sysinfo
+    participant Hook as block-non-path-ctx
     participant Tpl as Message Template
 
     CC->>Hook: stdin {command, session_id}
-    Hook->>Hook: HookPreamble (parse input, check pause)
-    alt paused
+    Hook->>Hook: Extract command
+    alt command empty
         Hook-->>CC: (silent exit)
     end
-    Hook->>Sys: Collect snapshot (memory, swap, disk, load)
-    Hook->>Sys: Evaluate thresholds
-    alt max severity < Danger
+    Hook->>Hook: Test regex: relative-path, go-run, absolute-path
+    alt no match
         Hook-->>CC: (silent exit)
     end
-    Hook->>Tpl: LoadMessage(hook, alert, vars, fallback)
-    Hook-->>CC: Nudge box (danger alerts)
+    alt absolute-path + test exception
+        Hook-->>CC: (silent exit)
+    end
+    Hook->>Tpl: LoadMessage(hook, variant, fallback)
+    Hook-->>CC: JSON {decision: BLOCK, reason + constitution suffix}
     Hook->>Hook: NudgeAndRelay(message)
 ```
 
 ### qa-reminder
+
+Matcher: `Bash`
 
 Gate nudge before any git command. Reminds agent to lint/test.
 
@@ -169,6 +134,8 @@ sequenceDiagram
 
 ### specs-nudge
 
+Matcher: `EnterPlanMode`
+
 Nudges agent to save plans/specs when new implementation detected.
 
 ```mermaid
@@ -190,39 +157,90 @@ sequenceDiagram
 
 ---
 
+<!-- drift-check: jq -r '.hooks.PostToolUse[].hooks[].command' internal/assets/claude/hooks/hooks.json | grep 'ctx system' | sed 's/ctx system //' | sort -->
+
 ## PostToolUse Hooks
 
 These fire **after** a tool completes. They observe, nudge, and
 track state.
 
-### heartbeat
+### post-commit
 
-Silent per-prompt pulse. Tracks prompt count, context modification,
-and token usage. The agent never sees this hook's output.
+Matcher: `Bash`
+
+Fires after `git commit` (not amend). Nudges for context capture
+and checks version drift.
 
 ```mermaid
 sequenceDiagram
     participant CC as Claude Code
-    participant Hook as heartbeat
+    participant Hook as post-commit
+    participant Tpl as Message Template
+
+    CC->>Hook: stdin {command, session_id}
+    Hook->>Hook: Check initialized + HookPreamble
+    alt not initialized or paused
+        Hook-->>CC: (silent exit)
+    end
+    Hook->>Hook: Regex: command contains "git commit"?
+    alt not a git commit
+        Hook-->>CC: (silent exit)
+    end
+    Hook->>Hook: Regex: command contains "--amend"?
+    alt is amend
+        Hook-->>CC: (silent exit)
+    end
+    Hook->>Tpl: LoadMessage(hook, nudge, fallback)
+    Hook->>Hook: AppendDir(message)
+    Hook-->>CC: JSON {additionalContext: post-commit nudge}
+    Hook->>Hook: Relay(message)
+    Hook->>Hook: CheckVersionDrift()
+```
+
+### check-task-completion
+
+Matcher: `Edit`, `Write`
+
+Configurable-interval nudge after edits. Per-session counter resets
+after firing.
+
+```mermaid
+sequenceDiagram
+    participant CC as Claude Code
+    participant Hook as check-task-completion
     participant State as .context/state/
-    participant Ctx as .context/ files
-    participant Notify as Webhook + EventLog
+    participant RC as .ctxrc
+    participant Tpl as Message Template
 
     CC->>Hook: stdin {session_id}
     Hook->>Hook: Check initialized + HookPreamble
     alt not initialized or paused
         Hook-->>CC: (silent exit)
     end
-    Hook->>State: Increment heartbeat counter
-    Hook->>Ctx: Get latest context file mtime
-    Hook->>State: Compare with last recorded mtime
-    Hook->>State: Update mtime record
-    Hook->>State: Read session token info
-    Hook->>Notify: Send heartbeat notification
-    Hook->>Notify: Append to event log
-    Hook->>State: Write heartbeat log entry
-    Note over Hook: No stdout — agent never sees this
+    Hook->>RC: Read task nudge interval
+    alt interval <= 0 (disabled)
+        Hook-->>CC: (silent exit)
+    end
+    Hook->>State: Read per-session counter
+    Hook->>Hook: Increment counter
+    alt counter < interval
+        Hook->>State: Write counter
+        Hook-->>CC: (silent exit)
+    end
+    Hook->>State: Reset counter to 0
+    Hook->>Tpl: LoadMessage(hook, nudge, fallback)
+    Hook-->>CC: JSON {additionalContext: task nudge}
+    Hook->>Hook: Relay(message)
 ```
+
+---
+
+<!-- drift-check: jq -r '.hooks.UserPromptSubmit[].hooks[].command' internal/assets/claude/hooks/hooks.json | sed 's/ctx system //' | sort -->
+
+## UserPromptSubmit Hooks
+
+These fire **on every user prompt**, before any tools run. They
+perform health checks, track state, and nudge for housekeeping.
 
 ### check-context-size
 
@@ -286,110 +304,6 @@ sequenceDiagram
     Hook->>State: Write session stats
 ```
 
-### check-persistence
-
-Tracks context file modification and nudges when edits happen
-without persisting context. Adaptive threshold based on prompt count.
-
-```mermaid
-sequenceDiagram
-    participant CC as Claude Code
-    participant Hook as check-persistence
-    participant State as .context/state/
-    participant Ctx as .context/ files
-    participant Tpl as Message Template
-
-    CC->>Hook: stdin {session_id}
-    Hook->>Hook: Check initialized + HookPreamble
-    alt not initialized or paused
-        Hook-->>CC: (silent exit)
-    end
-    Hook->>State: Read persistence state {Count, LastNudge, LastMtime}
-    alt first prompt (no state)
-        Hook->>State: Initialize state {Count:1, LastNudge:0, LastMtime:now}
-        Hook-->>CC: (silent exit)
-    end
-    Hook->>Hook: Increment Count
-    Hook->>Ctx: Get current context mtime
-    alt context modified since LastMtime
-        Hook->>State: Reset LastNudge = Count, update LastMtime
-        Hook-->>CC: (silent exit)
-    end
-    Hook->>Hook: sinceNudge = Count - LastNudge
-    Hook->>Hook: PersistenceNudgeNeeded(Count, sinceNudge)?
-    alt threshold not reached
-        Hook->>State: Write state
-        Hook-->>CC: (silent exit)
-    end
-    Hook->>Tpl: LoadMessage(hook, nudge, vars)
-    Hook-->>CC: Nudge box (prompt count, time since last persist)
-    Hook->>Hook: NudgeAndRelay(message)
-    Hook->>State: Update LastNudge = Count, write state
-```
-
-### check-freshness
-
-Daily check for technology-dependent constants that may need review.
-
-```mermaid
-sequenceDiagram
-    participant CC as Claude Code
-    participant Hook as check-freshness
-    participant State as .context/state/
-    participant FS as Filesystem
-    participant Tpl as Message Template
-
-    CC->>Hook: stdin {session_id}
-    Hook->>Hook: Check initialized + HookPreamble
-    alt not initialized or paused
-        Hook-->>CC: (silent exit)
-    end
-    Hook->>State: Check daily throttle marker
-    alt throttled
-        Hook-->>CC: (silent exit)
-    end
-    Hook->>FS: Stat tracked files (5 source files)
-    alt all files modified within 6 months
-        Hook-->>CC: (silent exit)
-    end
-    Hook->>Tpl: LoadMessage(hook, stale, {StaleFiles})
-    Hook-->>CC: Nudge box (stale file list + review URL)
-    Hook->>Hook: NudgeAndRelay(message)
-    Hook->>State: Touch throttle marker
-```
-
-### check-backup-age
-
-Daily check for SMB mount and backup freshness.
-
-```mermaid
-sequenceDiagram
-    participant CC as Claude Code
-    participant Hook as check-backup-age
-    participant State as .context/state/
-    participant FS as Filesystem
-    participant Tpl as Message Template
-
-    CC->>Hook: stdin {session_id}
-    Hook->>Hook: Check initialized + HookPreamble
-    alt not initialized or paused
-        Hook-->>CC: (silent exit)
-    end
-    Hook->>State: Check daily throttle marker
-    alt throttled
-        Hook-->>CC: (silent exit)
-    end
-    Hook->>FS: Check SMB mount (if env var set)
-    Hook->>FS: Check backup marker file age
-    alt no warnings
-        Hook-->>CC: (silent exit)
-    end
-    Hook->>Tpl: LoadMessage(hook, warning, {Warnings})
-    Hook-->>CC: Nudge box (warnings)
-    Hook->>Hook: NudgeAndRelay(message)
-    Hook->>State: Touch throttle marker
-```
-
 ### check-ceremonies
 
 Daily check for `/ctx-remember` and `/ctx-wrap-up` usage in
@@ -423,6 +337,37 @@ sequenceDiagram
     Hook->>Tpl: LoadMessage(hook, variant, fallback)
     Note over Hook: variant: both | remember | wrapup
     Hook-->>CC: Nudge box (missing ceremonies)
+    Hook->>Hook: NudgeAndRelay(message)
+    Hook->>State: Touch throttle marker
+```
+
+### check-freshness
+
+Daily check for technology-dependent constants that may need review.
+
+```mermaid
+sequenceDiagram
+    participant CC as Claude Code
+    participant Hook as check-freshness
+    participant State as .context/state/
+    participant FS as Filesystem
+    participant Tpl as Message Template
+
+    CC->>Hook: stdin {session_id}
+    Hook->>Hook: Check initialized + HookPreamble
+    alt not initialized or paused
+        Hook-->>CC: (silent exit)
+    end
+    Hook->>State: Check daily throttle marker
+    alt throttled
+        Hook-->>CC: (silent exit)
+    end
+    Hook->>FS: Stat tracked files (5 source files)
+    alt all files modified within 6 months
+        Hook-->>CC: (silent exit)
+    end
+    Hook->>Tpl: LoadMessage(hook, stale, {StaleFiles})
+    Hook-->>CC: Nudge box (stale file list + review URL)
     Hook->>Hook: NudgeAndRelay(message)
     Hook->>State: Touch throttle marker
 ```
@@ -584,8 +529,44 @@ sequenceDiagram
 
 ### check-persistence
 
-See [check-persistence above](#check-persistence) — listed under
-PostToolUse hooks.
+Tracks context file modification and nudges when edits happen
+without persisting context. Adaptive threshold based on prompt count.
+
+```mermaid
+sequenceDiagram
+    participant CC as Claude Code
+    participant Hook as check-persistence
+    participant State as .context/state/
+    participant Ctx as .context/ files
+    participant Tpl as Message Template
+
+    CC->>Hook: stdin {session_id}
+    Hook->>Hook: Check initialized + HookPreamble
+    alt not initialized or paused
+        Hook-->>CC: (silent exit)
+    end
+    Hook->>State: Read persistence state {Count, LastNudge, LastMtime}
+    alt first prompt (no state)
+        Hook->>State: Initialize state {Count:1, LastNudge:0, LastMtime:now}
+        Hook-->>CC: (silent exit)
+    end
+    Hook->>Hook: Increment Count
+    Hook->>Ctx: Get current context mtime
+    alt context modified since LastMtime
+        Hook->>State: Reset LastNudge = Count, update LastMtime
+        Hook-->>CC: (silent exit)
+    end
+    Hook->>Hook: sinceNudge = Count - LastNudge
+    Hook->>Hook: PersistenceNudgeNeeded(Count, sinceNudge)?
+    alt threshold not reached
+        Hook->>State: Write state
+        Hook-->>CC: (silent exit)
+    end
+    Hook->>Tpl: LoadMessage(hook, nudge, vars)
+    Hook-->>CC: Nudge box (prompt count, time since last persist)
+    Hook->>Hook: NudgeAndRelay(message)
+    Hook->>State: Update LastNudge = Count, write state
+```
 
 ### check-reminders
 
@@ -616,38 +597,33 @@ sequenceDiagram
     Hook->>Hook: NudgeAndRelay(message)
 ```
 
-### check-task-completion
+### check-resources
 
-Configurable-interval nudge after edits. Per-session counter resets
-after firing.
+Checks system resources (memory, swap, disk, load). Fires on
+every prompt. No initialization required.
 
 ```mermaid
 sequenceDiagram
     participant CC as Claude Code
-    participant Hook as check-task-completion
-    participant State as .context/state/
-    participant RC as .ctxrc
+    participant Hook as check-resources
+    participant Sys as sysinfo
     participant Tpl as Message Template
 
-    CC->>Hook: stdin {session_id}
-    Hook->>Hook: Check initialized + HookPreamble
-    alt not initialized or paused
+    CC->>Hook: stdin {command, session_id}
+    Hook->>Hook: HookPreamble (parse input, check pause)
+    alt paused
         Hook-->>CC: (silent exit)
     end
-    Hook->>RC: Read task nudge interval
-    alt interval <= 0 (disabled)
+    Hook->>Sys: Collect snapshot (memory, swap, disk, load)
+    Hook->>Sys: Evaluate thresholds per metric
+    alt max severity < Danger
         Hook-->>CC: (silent exit)
     end
-    Hook->>State: Read per-session counter
-    Hook->>Hook: Increment counter
-    alt counter < interval
-        Hook->>State: Write counter
-        Hook-->>CC: (silent exit)
-    end
-    Hook->>State: Reset counter to 0
-    Hook->>Tpl: LoadMessage(hook, nudge, fallback)
-    Hook-->>CC: JSON {additionalContext: task nudge}
-    Hook->>Hook: Relay(message)
+    Hook->>Hook: Filter alerts to Danger level only
+    Hook->>Hook: Build alertMessages from danger alerts
+    Hook->>Tpl: LoadMessage(hook, alert, {alertMessages}, fallback)
+    Hook-->>CC: Nudge box (danger alerts)
+    Hook->>Hook: NudgeAndRelay(message)
 ```
 
 ### check-version
@@ -694,84 +670,168 @@ sequenceDiagram
     Hook->>Hook: CheckKeyAge() (piggybacked)
 ```
 
-### post-commit
+### heartbeat
 
-Fires after `git commit` (not amend). Nudges for context capture
-and checks version drift.
+Silent per-prompt pulse. Tracks prompt count, context modification,
+and token usage. The agent never sees this hook's output.
 
 ```mermaid
 sequenceDiagram
     participant CC as Claude Code
-    participant Hook as post-commit
-    participant Tpl as Message Template
+    participant Hook as heartbeat
+    participant State as .context/state/
+    participant Ctx as .context/ files
+    participant Notify as Webhook + EventLog
 
-    CC->>Hook: stdin {command, session_id}
+    CC->>Hook: stdin {session_id}
     Hook->>Hook: Check initialized + HookPreamble
     alt not initialized or paused
         Hook-->>CC: (silent exit)
     end
-    Hook->>Hook: Regex: command contains "git commit"?
-    alt not a git commit
+    Hook->>State: Increment heartbeat counter
+    Hook->>Ctx: Get latest context file mtime
+    Hook->>State: Compare with last recorded mtime
+    Hook->>State: Update mtime record
+    Hook->>State: Read session token info
+    Hook->>Notify: Send heartbeat notification
+    Hook->>Notify: Append to event log
+    Hook->>State: Write heartbeat log entry
+    Note over Hook: No stdout - agent never sees this
+```
+
+---
+
+## Project-Local Hooks
+
+These hooks are configured in `settings.local.json` and are **not**
+shipped with ctx. They are specific to individual developer setups.
+
+### block-dangerous-commands
+
+Lifecycle: PreToolUse. Matcher: `Bash`
+
+Blocks dangerous shell patterns (sudo, git push, cp to bin).
+No initialization or pause checks: always active.
+
+```mermaid
+sequenceDiagram
+    participant CC as Claude Code
+    participant Hook as block-dangerous-commands
+    participant Tpl as Message Template
+
+    CC->>Hook: stdin {command, session_id}
+    Hook->>Hook: Extract command
+    alt command empty
         Hook-->>CC: (silent exit)
     end
-    Hook->>Hook: Regex: command contains "--amend"?
-    alt is amend
+    Note over Hook: Cascade: first matching regex wins
+    Hook->>Hook: Test MidSudo regex
+    alt match
+        Hook->>Hook: variant = sudo
+    end
+    Hook->>Hook: Test MidGitPush regex (if no variant)
+    alt match
+        Hook->>Hook: variant = git-push
+    end
+    Hook->>Hook: Test CpMvToBin regex (if no variant)
+    alt match
+        Hook->>Hook: variant = cp-to-bin
+    end
+    Hook->>Hook: Test InstallToLocalBin regex (if no variant)
+    alt match
+        Hook->>Hook: variant = install-to-bin
+    end
+    alt no variant matched
         Hook-->>CC: (silent exit)
     end
-    Hook->>Tpl: LoadMessage(hook, nudge, fallback)
-    Hook->>Hook: AppendDir(message)
-    Hook-->>CC: JSON {additionalContext: post-commit nudge}
-    Hook->>Hook: Relay(message)
-    Hook->>Hook: CheckVersionDrift()
+    Hook->>Tpl: LoadMessage(hook, variant, fallback)
+    Hook-->>CC: JSON {decision: BLOCK, reason}
+    Hook->>Hook: NudgeAndRelay(message)
+```
+
+### check-backup-age
+
+Lifecycle: UserPromptSubmit.
+
+Daily check for SMB mount and backup freshness.
+
+```mermaid
+sequenceDiagram
+    participant CC as Claude Code
+    participant Hook as check-backup-age
+    participant State as .context/state/
+    participant FS as Filesystem
+    participant Tpl as Message Template
+
+    CC->>Hook: stdin {session_id}
+    Hook->>Hook: Check initialized + HookPreamble
+    alt not initialized or paused
+        Hook-->>CC: (silent exit)
+    end
+    Hook->>State: Check daily throttle marker
+    alt throttled
+        Hook-->>CC: (silent exit)
+    end
+    Hook->>FS: Check SMB mount (if env var set)
+    Hook->>FS: Check backup marker file age
+    alt no warnings
+        Hook-->>CC: (silent exit)
+    end
+    Hook->>Tpl: LoadMessage(hook, warning, {Warnings})
+    Hook-->>CC: Nudge box (warnings)
+    Hook->>Hook: NudgeAndRelay(message)
+    Hook->>State: Touch throttle marker
 ```
 
 ---
 
 ## Throttling Summary
 
-| Hook | Throttle Type | Scope |
-|------|--------------|-------|
-| block-dangerous-commands | None | Every match |
-| block-non-path-ctx | None | Every match |
-| context-load-gate | One-shot marker | Per session |
-| check-resources | None | Every tool call |
-| qa-reminder | None | Every git command |
-| specs-nudge | None | Every prompt |
-| heartbeat | None | Every prompt |
-| check-context-size | Adaptive counter | Per session |
-| check-persistence | Adaptive counter | Per session |
-| check-task-completion | Configurable interval | Per session |
-| check-memory-drift | Session tombstone | Once per session |
-| check-reminders | None | Every prompt |
-| check-freshness | Daily marker | Once per day |
-| check-backup-age | Daily marker | Once per day |
-| check-ceremonies | Daily marker | Once per day |
-| check-journal | Daily marker | Once per day |
-| check-knowledge | Daily marker | Once per day |
-| check-map-staleness | Daily marker | Once per day |
-| check-version | Daily marker | Once per day |
-| post-commit | None | Every git commit |
+| Hook                     | Lifecycle          | Throttle Type         | Scope             |
+|--------------------------|--------------------|-----------------------|-------------------|
+| context-load-gate        | PreToolUse         | One-shot marker       | Per session       |
+| block-non-path-ctx       | PreToolUse         | None                  | Every match       |
+| qa-reminder              | PreToolUse         | None                  | Every git command |
+| specs-nudge              | PreToolUse         | None                  | Every prompt      |
+| post-commit              | PostToolUse        | None                  | Every git commit  |
+| check-task-completion    | PostToolUse        | Configurable interval | Per session       |
+| check-context-size       | UserPromptSubmit   | Adaptive counter      | Per session       |
+| check-ceremonies         | UserPromptSubmit   | Daily marker          | Once per day      |
+| check-freshness          | UserPromptSubmit   | Daily marker          | Once per day      |
+| check-journal            | UserPromptSubmit   | Daily marker          | Once per day      |
+| check-knowledge          | UserPromptSubmit   | Daily marker          | Once per day      |
+| check-map-staleness      | UserPromptSubmit   | Daily marker          | Once per day      |
+| check-memory-drift       | UserPromptSubmit   | Session tombstone     | Once per session  |
+| check-persistence        | UserPromptSubmit   | Adaptive counter      | Per session       |
+| check-reminders          | UserPromptSubmit   | None                  | Every prompt      |
+| check-resources          | UserPromptSubmit   | None                  | Every prompt      |
+| check-version            | UserPromptSubmit   | Daily marker          | Once per day      |
+| heartbeat                | UserPromptSubmit   | None                  | Every prompt      |
+| block-dangerous-commands | PreToolUse *       | None                  | Every match       |
+| check-backup-age         | UserPromptSubmit * | Daily marker          | Once per day      |
+
+\* Project-local hook (settings.local.json), not shipped with ctx.
 
 ## State File Reference
 
 All state files live in `.context/state/`.
 
-| File Pattern | Hook | Purpose |
-|-------------|------|---------|
-| `ctx-loaded-{session}` | context-load-gate | One-shot injection marker |
-| `ctx-paused-{session}` | (all) | Session pause marker |
-| `ctx-wrapped-up` | check-context-size | Suppress nudges after wrap-up (2h expiry) |
-| `freshness-checked` | check-freshness | Daily throttle |
-| `backup-reminded` | check-backup-age | Daily throttle |
-| `ceremony-reminded` | check-ceremonies | Daily throttle |
-| `journal-reminded` | check-journal | Daily throttle |
-| `knowledge-reminded` | check-knowledge | Daily throttle |
-| `map-staleness-reminded` | check-map-staleness | Daily throttle |
-| `version-checked` | check-version | Daily throttle |
-| `memory-drift-nudged-{session}` | check-memory-drift | Per-session tombstone |
-| `ctx-context-count-{session}` | check-context-size | Prompt counter |
-| `stats-{session}.jsonl` | check-context-size | Session stats log |
-| `persist-{session}` | check-persistence | Counter + mtime state |
-| `ctx-task-count-{session}` | check-task-completion | Prompt counter |
-| `heartbeat-count-{session}` | heartbeat | Prompt counter |
-| `heartbeat-mtime-{session}` | heartbeat | Last context mtime |
+| File Pattern                    | Hook                  | Purpose                                   |
+|---------------------------------|-----------------------|-------------------------------------------|
+| `ctx-loaded-{session}`          | context-load-gate     | One-shot injection marker                 |
+| `ctx-paused-{session}`          | (all)                 | Session pause marker                      |
+| `ctx-wrapped-up`                | check-context-size    | Suppress nudges after wrap-up (2h expiry) |
+| `freshness-checked`             | check-freshness       | Daily throttle                            |
+| `backup-reminded`               | check-backup-age      | Daily throttle                            |
+| `ceremony-reminded`             | check-ceremonies      | Daily throttle                            |
+| `journal-reminded`              | check-journal         | Daily throttle                            |
+| `knowledge-reminded`            | check-knowledge       | Daily throttle                            |
+| `map-staleness-reminded`        | check-map-staleness   | Daily throttle                            |
+| `version-checked`               | check-version         | Daily throttle                            |
+| `memory-drift-nudged-{session}` | check-memory-drift    | Per-session tombstone                     |
+| `ctx-context-count-{session}`   | check-context-size    | Prompt counter                            |
+| `stats-{session}.jsonl`         | check-context-size    | Session stats log                         |
+| `persist-{session}`             | check-persistence     | Counter + mtime state                     |
+| `ctx-task-count-{session}`      | check-task-completion | Prompt counter                            |
+| `heartbeat-count-{session}`     | heartbeat             | Prompt counter                            |
+| `heartbeat-mtime-{session}`     | heartbeat             | Last context mtime                        |

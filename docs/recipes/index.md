@@ -97,7 +97,7 @@ See what moved since your last session: context file edits, code
 commits, directories touched. Auto-detects session boundaries from
 state markers.
 
-**Uses**: `ctx changes`, `ctx agent`, `ctx status`
+**Uses**: `ctx change`, `ctx agent`, `ctx status`
 
 ---
 
@@ -120,8 +120,8 @@ and lessons learned, and **codify** conventions so they
 survive across sessions and team members.
 
 **Uses**: `ctx add decision`, `ctx add learning`,
-`ctx add convention`, `ctx decisions reindex`,
-`ctx learnings reindex`, `/ctx-add-decision`,
+`ctx add convention`, `ctx decision reindex`,
+`ctx learning reindex`, `/ctx-add-decision`,
 `/ctx-add-learning`, `/ctx-add-convention`, `/ctx-reflect`
 
 ---
@@ -132,8 +132,8 @@ survive across sessions and team members.
 `TASKS.md` focused as your project evolves across dozens of
 sessions.
 
-**Uses**: `ctx add task`, `ctx tasks complete`, `ctx tasks archive`,
-`ctx tasks snapshot`, `/ctx-add-task`, `/ctx-archive`, `/ctx-next`
+**Uses**: `ctx add task`, `ctx task complete`, `ctx task archive`,
+`ctx task snapshot`, `/ctx-add-task`, `/ctx-archive`, `/ctx-next`
 
 ---
 
@@ -264,7 +264,7 @@ what to **never** pre-approve, and a **maintenance workflow** for cleaning
 up session debris.
 
 **Uses**: `ctx init`, `/ctx-drift`, `/ctx-sanitize-permissions`,
-`ctx permissions snapshot`, `ctx permissions restore`
+`ctx permission snapshot`, `ctx permission restore`
 
 ---
 
@@ -273,7 +273,7 @@ up session debris.
 Capture a known-good permission **baseline** as a **golden image**, then restore
 at session start to automatically drop session-accumulated permissions.
 
-**Uses**: `ctx permissions snapshot`, `ctx permissions restore`,
+**Uses**: `ctx permission snapshot`, `ctx permission restore`,
 `/ctx-sanitize-permissions`
 
 ---
@@ -370,7 +370,7 @@ Map your project's internal and external **dependency structure**.
 Auto-detects Go, Node.js, Python, and Rust. Output as Mermaid,
 table, or JSON.
 
-**Uses**: `ctx deps`, `ctx drift`
+**Uses**: `ctx dep`, `ctx drift`
 
 ---
 

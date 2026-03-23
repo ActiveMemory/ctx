@@ -251,7 +251,7 @@ content and proposing metadata.
 
 The skill will:
 
-1. **Check if locked** — locked entries are skipped (same as export);
+1. **Check if locked** - locked entries are skipped (same as export);
 2. Find the matching journal file;
 3. Read and analyze the conversation;
 4. Propose frontmatter (*type, topics, outcome, technologies*);
@@ -398,7 +398,7 @@ export → enrich → rebuild
 | **Obsidian** | `ctx journal obsidian`     | Generates Obsidian vault with wikilinks | --                                 |
 
 !!! tip "One-command pipeline"
-    `/ctx-journal-enrich-all` handles export automatically — it detects
+    `/ctx-journal-enrich-all` handles export automatically - it detects
     unexported sessions and exports them before enriching. You only need
     to run `ctx journal site --build` afterward.
 

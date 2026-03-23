@@ -28,7 +28,7 @@ chmod 600 ~/.ctx/.ctx.key                                 # 3. secure it
 ```
 
 !!! tip "Finding Your Key File"
-    The key is always at `~/.ctx/.ctx.key` — one key, one machine.
+    The key is always at `~/.ctx/.ctx.key` - one key, one machine.
 
 !!! danger "Treat the Key Like a Password"
     The scratchpad key is the only thing protecting your **encrypted** entries.
@@ -93,7 +93,7 @@ The `.enc` file is tracked in git.
 Use any secure transfer method. The key is always at `~/.ctx/.ctx.key`:
 
 ```bash
-# scp — create the target directory first
+# scp - create the target directory first
 ssh user@machine-b "mkdir -p ~/.ctx && chmod 700 ~/.ctx"
 scp ~/.ctx/.ctx.key user@machine-b:~/.ctx/.ctx.key
 

@@ -57,7 +57,7 @@ Because the key is `.gitignore`d and the data is committed, you get:
 | `ctx pad mv N M`                  | Move entry from position N to position M               |
 | `ctx pad resolve`                 | Show both sides of a merge conflict for resolution     |
 | `ctx pad import FILE`             | Bulk-import lines from a file (or stdin with `-`)      |
-| `ctx pad import --blob DIR`      | Import directory files as blob entries                  |
+| `ctx pad import --blob DIR`       | Import directory files as blob entries                 |
 | `ctx pad export [DIR]`            | Export all blob entries to a directory as files        |
 | `ctx pad merge FILE...`           | Merge entries from other scratchpad files into current |
 
@@ -202,7 +202,7 @@ English; the agent picks the right command.
 
 The encryption key lives at `~/.ctx/.ctx.key` (outside the project
 directory). Because all worktrees on the same machine share this path,
-`ctx pad` works in worktrees automatically — no special setup needed.
+`ctx pad` works in worktrees automatically - no special setup needed.
 
 ## Key Distribution
 

@@ -20,16 +20,16 @@ context. This page gets you oriented fast.
 The files in `.context/` have a deliberate priority order. Read them
 top-down:
 
-1. **CONSTITUTION.md** — Hard rules. Read this before you touch anything.
+1. **CONSTITUTION.md**: Hard rules. Read this before you touch anything.
    These are inviolable constraints the team has agreed on.
-2. **TASKS.md** — Current and planned work. Shows what's in progress,
+2. **TASKS.md**: Current and planned work. Shows what's in progress,
    what's pending, and what's blocked.
-3. **CONVENTIONS.md** — How the team writes code. Naming patterns,
+3. **CONVENTIONS.md**: How the team writes code. Naming patterns,
    file organization, preferred idioms.
-4. **ARCHITECTURE.md** — System overview. Components, boundaries, data flow.
-5. **DECISIONS.md** — Why things are the way they are. Saves you from
+4. **ARCHITECTURE.md**: System overview. Components, boundaries, data flow.
+5. **DECISIONS.md**: Why things are the way they are. Saves you from
    re-proposing something the team already evaluated and rejected.
-6. **LEARNINGS.md** — Gotchas, tips, and hard-won lessons. The stuff
+6. **LEARNINGS.md**: Gotchas, tips, and hard-won lessons. The stuff
    that doesn't fit anywhere else but will save you hours.
 
 See [Context Files](context-files.md) for detailed documentation of
@@ -135,7 +135,9 @@ noise, not signal.
 
 **Related**:
 
-* [Getting Started](getting-started.md) — installation and setup from scratch
-* [Context Files](context-files.md) — detailed file reference
-* [Knowledge Capture](../recipes/knowledge-capture.md) — recording decisions, learnings, and conventions
-* [Session Lifecycle](../recipes/session-lifecycle.md) — how a typical AI session flows with ctx
+* [Getting Started](getting-started.md): installation and setup from scratch
+* [Context Files](context-files.md): detailed file reference
+* [Knowledge Capture](../recipes/knowledge-capture.md): recording decisions, 
+  learnings, and conventions
+* [Session Lifecycle](../recipes/session-lifecycle.md): how a typical AI 
+  session flows with ctx

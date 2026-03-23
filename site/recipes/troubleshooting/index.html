@@ -4135,7 +4135,7 @@ QA reminder events from that specific session.</p>
 <h2 id="common-problems">Common Problems<a class="headerlink" href="#common-problems" title="Permanent link">&para;</a></h2>
 <h3 id="ctx-not-initialized">"ctx: not initialized"<a class="headerlink" href="#ctx-not-initialized" title="Permanent link">&para;</a></h3>
 <p><strong>Symptoms</strong>: Any <code>ctx</code> command fails with
-<code>ctx: not initialized — run "ctx init" first</code>.</p>
+<code>ctx: not initialized - run "ctx init" first</code>.</p>
 <p><strong>Cause</strong>: You're running ctx in a directory without an initialized
 <code>.context/</code> directory. This guard runs on all user-facing commands to
 prevent confusing downstream errors.</p>
@@ -4163,7 +4163,7 @@ for the expected hook.</p>
 </span></code></pre></div>
 <p><strong>Common causes</strong>:</p>
 <ul>
-<li><strong>Plugin not installed</strong>: run <code>ctx init --claude</code> to reinstall</li>
+<li><strong>Plugin is not installed</strong>: run <code>ctx init --claude</code> to reinstall</li>
 <li><strong>PATH issue</strong>: the hook invokes <code>ctx</code> from PATH; ensure it resolves</li>
 <li><strong>Throttle active</strong>: most hooks fire once per day: check
   <code>.context/state/</code> for daily marker files</li>
@@ -4214,7 +4214,7 @@ exist, or decisions that were reversed.</p>
 <li><strong>Drift accumulated</strong>: stale path references in <code>ARCHITECTURE.md</code> or
   <code>CONVENTIONS.md</code>. Fix with <code>ctx drift --fix</code> or ask the agent to clean up.</li>
 <li><strong>Task backlog</strong>: too many completed tasks diluting active context. Archive
-  with <code>ctx tasks archive</code> or <code>ctx compact --archive</code>.</li>
+  with <code>ctx task archive</code> or <code>ctx compact --archive</code>.</li>
 <li><strong>Large context files</strong>: <code>LEARNINGS.md</code> with 40+ entries competes for
   attention. Consolidate with <code>/ctx-consolidate</code>.</li>
 <li><strong>Missing session ceremonies</strong>: if <code>/ctx-remember</code> and <code>/ctx-wrap-up</code> aren't

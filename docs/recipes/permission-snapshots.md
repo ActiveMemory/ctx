@@ -19,9 +19,9 @@ built-in way to reset to a known-good state.
 
 ```bash
 /ctx-sanitize-permissions               # audit for dangerous patterns
-ctx permissions snapshot            # save golden image
+ctx permission snapshot            # save golden image
 # ... sessions accumulate cruft ...
-ctx permissions restore             # reset to golden state
+ctx permission restore             # reset to golden state
 ```
 
 ## The Solution
@@ -33,11 +33,11 @@ with the team.
 
 ## Commands and Skills Used
 
-| Command/Skill                | Role in this workflow                          |
-|------------------------------|------------------------------------------------|
-| `ctx permissions snapshot`   | Save settings.local.json as golden image       |
-| `ctx permissions restore`    | Reset settings.local.json from golden image    |
-| `/ctx-sanitize-permissions`      | Audit for dangerous patterns before snapshotting |
+| Command/Skill               | Role in this workflow                            |
+|-----------------------------|--------------------------------------------------|
+| `ctx permission snapshot`   | Save settings.local.json as golden image         |
+| `ctx permission restore`    | Reset settings.local.json from golden image      |
+| `/ctx-sanitize-permissions` | Audit for dangerous patterns before snapshotting |
 
 ## Step by Step
 
@@ -55,7 +55,7 @@ recommended defaults.
 ### 2. Take a Snapshot
 
 ```bash
-ctx permissions snapshot
+ctx permission snapshot
 # Saved golden image: .claude/settings.golden.json
 ```
 
@@ -78,7 +78,7 @@ Add this instruction to your `CLAUDE.md`:
 ```markdown
 ## On Session Start
 
-Run `ctx permissions restore` to reset permissions to the golden image.
+Run `ctx permission restore` to reset permissions to the golden image.
 ```
 
 The agent will restore the golden image at the start of every session,
@@ -91,7 +91,7 @@ When you add a new permanent permission (*not a one-off debugging entry*):
 ```bash
 # Edit settings.local.json with the new permission
 # Then update the golden image:
-ctx permissions snapshot
+ctx permission snapshot
 git add .claude/settings.golden.json
 git commit -m "Update permission golden image: add cargo test"
 ```
@@ -101,12 +101,12 @@ git commit -m "Update permission golden image: add cargo test"
 You don't need to remember exact commands. These natural-language prompts
 work with agents trained on the `ctx` playbook:
 
-| What you say                              | What happens                                     |
-|-------------------------------------------|--------------------------------------------------|
-| "Save my current permissions as baseline" | Agent runs `ctx permissions snapshot`            |
-| "Reset permissions to the golden image"   | Agent runs `ctx permissions restore`             |
+| What you say                              | What happens                                         |
+|-------------------------------------------|------------------------------------------------------|
+| "Save my current permissions as baseline" | Agent runs `ctx permission snapshot`                 |
+| "Reset permissions to the golden image"   | Agent runs `ctx permission restore`                  |
 | "Clean up my permissions"                 | Agent runs `/ctx-sanitize-permissions` then snapshot |
-| "What permissions did I accumulate?"      | Agent diffs local vs golden                      |
+| "What permissions did I accumulate?"      | Agent diffs local vs golden                          |
 
 ## Next Up
 
@@ -117,5 +117,5 @@ posts, changelogs, and journal sites from your project activity.
 
 * [Permission Hygiene](claude-code-permissions.md): recommended defaults and
   maintenance workflow
-* [CLI Reference: ctx permissions](../cli/context.md#ctx-permissions):
+* [CLI Reference: ctx permission](../cli/context.md#ctx-permission):
   full command documentation

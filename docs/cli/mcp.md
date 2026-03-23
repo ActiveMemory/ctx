@@ -162,9 +162,9 @@ passed checks.
 
 Query recent AI session history (summaries, decisions, topics).
 
-| Argument | Type   | Required | Description                              |
-|----------|--------|----------|------------------------------------------|
-| `limit`  | number | No       | Max sessions to return (default: 5)      |
+| Argument | Type   | Required | Description                                            |
+|----------|--------|----------|--------------------------------------------------------|
+| `limit`  | number | No       | Max sessions to return (default: 5)                    |
 | `since`  | string | No       | ISO date filter: sessions after this date (YYYY-MM-DD) |
 
 **Read-only.**
@@ -173,25 +173,25 @@ Query recent AI session history (summaries, decisions, topics).
 
 Apply a structured context update to `.context/` files. Supports
 task, decision, learning, convention, and complete entry types.
-Human confirmation required before calling.
+Human confirmation is required before calling.
 
-| Argument       | Type   | Required | Description                              |
-|----------------|--------|----------|------------------------------------------|
-| `type`         | string | Yes      | Entry type: task, decision, learning, convention, complete |
-| `content`      | string | Yes      | Main content                             |
-| `context`      | string | Conditional | Context background (decisions/learnings) |
-| `rationale`    | string | Conditional | Rationale (decisions only)             |
-| `consequence`  | string | Conditional | Consequence (decisions only)           |
-| `lesson`       | string | Conditional | Lesson learned (learnings only)        |
-| `application`  | string | Conditional | How to apply (learnings only)          |
+| Argument      | Type   | Required    | Description                                                |
+|---------------|--------|-------------|------------------------------------------------------------|
+| `type`        | string | Yes         | Entry type: task, decision, learning, convention, complete |
+| `content`     | string | Yes         | Main content                                               |
+| `context`     | string | Conditional | Context background (decisions/learnings)                   |
+| `rationale`   | string | Conditional | Rationale (decisions only)                                 |
+| `consequence` | string | Conditional | Consequence (decisions only)                               |
+| `lesson`      | string | Conditional | Lesson learned (learnings only)                            |
+| `application` | string | Conditional | How to apply (learnings only)                              |
 
 ### `ctx_compact`
 
 Move completed tasks to the archive section and remove empty
 sections from context files. Human confirmation required.
 
-| Argument  | Type    | Required | Description                              |
-|-----------|---------|----------|------------------------------------------|
+| Argument  | Type    | Required | Description                                              |
+|-----------|---------|----------|----------------------------------------------------------|
 | `archive` | boolean | No       | Also write tasks to `.context/archive/` (default: false) |
 
 ### `ctx_next`
@@ -205,8 +205,8 @@ Suggest the next pending task based on priority and position.
 Advisory check: after a write operation, detect if any pending tasks
 were silently completed. Returns nudge text if a match is found.
 
-| Argument        | Type   | Required | Description                            |
-|-----------------|--------|----------|----------------------------------------|
+| Argument        | Type   | Required | Description                             |
+|-----------------|--------|----------|-----------------------------------------|
 | `recent_action` | string | No       | Brief description of what was just done |
 
 **Read-only.**
@@ -214,11 +214,11 @@ were silently completed. Returns nudge text if a match is found.
 ### `ctx_session_event`
 
 Signal a session lifecycle event. Type `end` triggers the session-end
-persistence ceremony — human confirmation required.
+persistence ceremony - human confirmation required.
 
-| Argument | Type   | Required | Description                              |
-|----------|--------|----------|------------------------------------------|
-| `type`   | string | Yes      | Event type: start, end                   |
+| Argument | Type   | Required | Description                                                  |
+|----------|--------|----------|--------------------------------------------------------------|
+| `type`   | string | Yes      | Event type: start, end                                       |
 | `caller` | string | No       | Caller identifier (cursor, windsurf, vscode, claude-desktop) |
 
 ### `ctx_remind`

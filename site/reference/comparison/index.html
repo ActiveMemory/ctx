@@ -4193,7 +4193,7 @@ where the tools are genuinely complementary.</p>
 what to remember, stores it automatically, and retrieves it implicitly.
 <code>ctx</code> is <strong>system memory (L3)</strong>: humans and agents explicitly curate
 decisions, learnings, and tasks in inspectable files.</p>
-<p>Auto-memory is convenient -- you do not configure anything. But it is also
+<p>Auto-memory is convenient - you do not configure anything. But it is also
 opaque: you cannot see what was stored, edit it precisely, or share it
 across tools. <code>ctx</code> files are plain Markdown in your repository, visible
 in diffs and code review.</p>
@@ -4207,7 +4207,7 @@ for <strong>what to do</strong> and load automatically at session start.</p>
 <p><code>ctx</code> adds dimensions that rule files do not cover: architectural
 <strong>decisions</strong> with rationale, <strong>learnings</strong> discovered during development,
 active <strong>tasks</strong>, and a <strong>constitution</strong> that governs agent behavior.
-Critically, <code>ctx</code> context <strong>accumulates</strong> -- each session can add to it,
+Critically, <code>ctx</code> context <strong>accumulates</strong> - each session can add to it,
 and token budgeting ensures only the most relevant context is injected.</p>
 <p>Use rule files for static conventions. Use <code>ctx</code> for evolving project
 memory.</p>
@@ -4223,7 +4223,7 @@ learnings. <code>ctx</code> provides the full lifecycle: load, accumulate, persi
 and budget.</p>
 <h3 id="copilot-workspace">Copilot @workspace<a class="headerlink" href="#copilot-workspace" title="Permanent link">&para;</a></h3>
 <p>GitHub Copilot's <code>@workspace</code> performs workspace-wide code search. It
-answers <strong>"what code exists?"</strong> -- finding function definitions, usages,
+answers <strong>"what code exists?"</strong> - finding function definitions, usages,
 and file structure across the repository.</p>
 <p><code>ctx</code> answers a different question: <strong>"what did we decide?"</strong> It stores
 architectural intent, not code indices. Copilot's workspace search and
@@ -4233,7 +4233,7 @@ preserves the reasoning behind it.</p>
 <p>Cline's memory bank stores session context within the Cline extension.
 The motivation is similar to <code>ctx</code>: help the agent remember across
 sessions.</p>
-<p>The key difference is portability. Cline memory is tied to Cline -- it
+<p>The key difference is portability. Cline memory is tied to Cline - it
 does not transfer to Claude Code, Cursor, Aider, or any other tool.
 <code>ctx</code> is tool-agnostic: context lives in plain files that any editor,
 agent, or script can read. Switching tools does not mean losing memory.</p>

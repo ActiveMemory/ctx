@@ -3920,7 +3920,7 @@ checklist, a review protocol, a release process. Each time, you re-explain
 the steps. The agent gets it mostly right but forgets edge cases you
 corrected last time.</p>
 <p>Skills solve this by encoding domain knowledge into a reusable document
-the agent loads automatically when triggered. A skill is not code — it is
+the agent loads automatically when triggered. A skill is not code - it is
 a structured prompt that captures what took you sessions to learn.</p>
 <h2 id="tldr">TL;DR<a class="headerlink" href="#tldr" title="Permanent link">&para;</a></h2>
 <div class="language-text highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>/ctx-skill-creator
@@ -3980,7 +3980,7 @@ to reuse.</p>
 </span></code></pre></div>
 <p>The skill-creator produces a <code>SKILL.md</code> file in <code>.claude/skills/your-skill/</code>.</p>
 <h3 id="step-3-test-with-realistic-prompts">Step 3: Test with Realistic Prompts<a class="headerlink" href="#step-3-test-with-realistic-prompts" title="Permanent link">&para;</a></h3>
-<p>The skill-creator proposes 2-3 test prompts — the kind of thing a real
+<p>The skill-creator proposes 2-3 test prompts - the kind of thing a real
 user would say. It runs each one and shows the result alongside a
 baseline (same prompt without the skill) so you can compare.</p>
 <div class="language-text highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>Agent: &quot;Here are test prompts I&#39;d try:
@@ -3991,12 +3991,12 @@ baseline (same prompt without the skill) so you can compare.</p>
 </span></code></pre></div>
 <h3 id="step-4-iterate-on-the-description">Step 4: Iterate on the Description<a class="headerlink" href="#step-4-iterate-on-the-description" title="Permanent link">&para;</a></h3>
 <p>The <code>description</code> field in frontmatter determines when a skill triggers.
-Claude tends to undertrigger — descriptions need to be specific and
+Claude tends to undertrigger - descriptions need to be specific and
 slightly "pushy":</p>
-<div class="language-yaml highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Weak — too vague, will undertrigger</span>
+<div class="language-yaml highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Weak - too vague, will undertrigger</span>
 </span><span id="__span-4-2"><a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="nt">description</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;Use</span><span class="nv"> </span><span class="s">for</span><span class="nv"> </span><span class="s">deployments&quot;</span>
 </span><span id="__span-4-3"><a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>
-</span><span id="__span-4-4"><a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="c1"># Strong — covers situations and synonyms</span>
+</span><span id="__span-4-4"><a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="c1"># Strong - covers situations and synonyms</span>
 </span><span id="__span-4-5"><a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="nt">description</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">&gt;-</span>
 </span><span id="__span-4-6"><a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a><span class="w">  </span><span class="no">Use when deploying to staging or production, running the release</span>
 </span><span id="__span-4-7"><a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="w">  </span><span class="no">checklist, or when the user says &#39;ship it&#39;, &#39;deploy this&#39;, or</span>
@@ -4062,7 +4062,7 @@ the repo.</p>
 <h2 id="tips">Tips<a class="headerlink" href="#tips" title="Permanent link">&para;</a></h2>
 <ul>
 <li><strong>Description is everything.</strong> A great skill with a vague description
-  never fires. Spend time on trigger coverage — synonyms, concrete
+  never fires. Spend time on trigger coverage - synonyms, concrete
   situations, edge cases.</li>
 <li><strong>Stay under 500 lines.</strong> If your skill is growing past this, move
   detail into <code>references/</code> files and point to them from <code>SKILL.md</code>.</li>

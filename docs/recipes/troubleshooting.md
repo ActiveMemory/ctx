@@ -140,7 +140,7 @@ QA reminder events from that specific session.
 ### "ctx: not initialized"
 
 **Symptoms**: Any `ctx` command fails with
-`ctx: not initialized — run "ctx init" first`.
+`ctx: not initialized - run "ctx init" first`.
 
 **Cause**: You're running ctx in a directory without an initialized
 `.context/` directory. This guard runs on all user-facing commands to
@@ -179,7 +179,7 @@ ctx system events --hook check-persistence
 
 **Common causes**:
 
-* **Plugin not installed**: run `ctx init --claude` to reinstall
+* **Plugin is not installed**: run `ctx init --claude` to reinstall
 * **PATH issue**: the hook invokes `ctx` from PATH; ensure it resolves
 * **Throttle active**: most hooks fire once per day: check
   `.context/state/` for daily marker files
@@ -240,7 +240,7 @@ ctx status --verbose
 * **Drift accumulated**: stale path references in `ARCHITECTURE.md` or
   `CONVENTIONS.md`. Fix with `ctx drift --fix` or ask the agent to clean up.
 * **Task backlog**: too many completed tasks diluting active context. Archive
-  with `ctx tasks archive` or `ctx compact --archive`.
+  with `ctx task archive` or `ctx compact --archive`.
 * **Large context files**: `LEARNINGS.md` with 40+ entries competes for
   attention. Consolidate with `/ctx-consolidate`.
 * **Missing session ceremonies**: if `/ctx-remember` and `/ctx-wrap-up` aren't

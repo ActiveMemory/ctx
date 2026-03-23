@@ -181,9 +181,9 @@ From `.context/TASKS.md`, select ONE task that is:
 
 After completing work:
 
-- Mark task complete in TASKS.md
-- Add any learnings to LEARNINGS.md
-- Add any decisions to DECISIONS.md
+- Mark task complete in `TASKS.md`
+- Add any learnings to `LEARNINGS.md`
+- Add any decisions to `DECISIONS.md`
 
 ## 5. Commit Changes
 
@@ -258,7 +258,7 @@ During the loop, the AI should update context files:
 
 **Mark task complete:**
 ```bash
-ctx tasks complete "implement user auth"
+ctx task complete "implement user auth"
 ```
 
 Or emit an update command (parsed by `ctx watch`):
@@ -379,7 +379,7 @@ End EVERY response with one of:
 **Fix**: Add explicit instructions to PROMPT.md:
 ```markdown
 After completing a task, you MUST:
-1. Run: ctx tasks complete "<task>"
+1. Run: ctx task complete "<task>"
 2. Add learnings: ctx add learning "..."
 ```
 
@@ -392,7 +392,7 @@ After completing a task, you MUST:
 ```markdown
 Order of operations:
 1. Complete coding work
-2. Update context files (*`ctx tasks complete`, `ctx add`*)
+2. Update context files (*`ctx task complete`, `ctx add`*)
 3. Commit **ALL** changes including `.context/`
 4. Then signal status
 ```
@@ -417,6 +417,7 @@ BEFORE any work:
 
 ## Resources
 
-- [Geoffrey Huntley's Ralph Wiggum Technique](https://ghuntley.com/ralph/): The original inspiration
+- [Geoffrey Huntley's Ralph Wiggum Technique](https://ghuntley.com/ralph/): 
+  The original inspiration
 - [Context CLI](../cli/index.md): Command reference
 - [Integrations](integrations.md): Tool-specific setup

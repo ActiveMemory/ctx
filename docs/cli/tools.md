@@ -262,7 +262,7 @@ ctx memory publish --dry-run
 #     3 recent decisions (from DECISIONS.md)
 #     5 key conventions (from CONVENTIONS.md)
 #   Total: 42 lines (within 80-line budget)
-# Dry run — no files written.
+# Dry run - no files written.
 
 ctx memory publish              # Write to MEMORY.md
 ctx memory publish --budget 40  # Tighter budget
@@ -320,7 +320,7 @@ ctx memory import --dry-run
 #   -> "decided to use heuristic classification over LLM-based"
 #      Classified: DECISIONS.md (keywords: decided)
 #
-# Dry run — would import: 4 entries (1 convention, 1 decision, 1 learning, 1 task)
+# Dry run - would import: 4 entries (1 convention, 1 decision, 1 learning, 1 task)
 # Skipped: 2 entries (session notes/unclassified)
 
 ctx memory import    # Actually write entries to .context/ files
@@ -399,7 +399,7 @@ ctx notify test
 
 ---
 
-### `ctx changes`
+### `ctx change`
 
 Show what changed in context files and code since your last session.
 
@@ -408,7 +408,7 @@ or event log. Useful at session start to quickly see what moved while
 you were away.
 
 ```bash
-ctx changes [flags]
+ctx change [flags]
 ```
 
 **Flags**:
@@ -428,13 +428,13 @@ ctx changes [flags]
 
 ```bash
 # Auto-detect last session, show what changed
-ctx changes
+ctx change
 
 # Changes in the last 48 hours
-ctx changes --since 48h
+ctx change --since 48h
 
 # Changes since a specific date
-ctx changes --since 2026-03-10
+ctx change --since 2026-03-10
 ```
 
 **Output**:
@@ -445,8 +445,8 @@ ctx changes --since 2026-03-10
 **Reference point**: 6 hours ago
 
 ### Context File Changes
-- `TASKS.md` — modified 2026-03-12 14:30
-- `DECISIONS.md` — modified 2026-03-12 09:15
+- `TASKS.md` - modified 2026-03-12 14:30
+- `DECISIONS.md` - modified 2026-03-12 09:15
 
 ### Code Changes
 - **12 commits** since reference point
@@ -462,7 +462,7 @@ git). Code changes use `git log --since` (empty when not in a git repo).
 
 ---
 
-### `ctx deps`
+### `ctx dep`
 
 Generate a dependency graph from source code.
 
@@ -470,7 +470,7 @@ Auto-detects the project ecosystem from manifest files and outputs
 a dependency graph in Mermaid, table, or JSON format.
 
 ```bash
-ctx deps [flags]
+ctx dep [flags]
 ```
 
 **Supported ecosystems**:
@@ -496,19 +496,19 @@ Detection order: Go, Node.js, Python, Rust. First match wins.
 
 ```bash
 # Auto-detect and show internal deps as Mermaid
-ctx deps
+ctx dep
 
 # Include external dependencies
-ctx deps --external
+ctx dep --external
 
 # Force Node.js detection (useful when multiple manifests exist)
-ctx deps --type node
+ctx dep --type node
 
 # Machine-readable output
-ctx deps --format json
+ctx dep --format json
 
 # Table format
-ctx deps --format table
+ctx dep --format table
 ```
 
 **Ecosystem notes**:

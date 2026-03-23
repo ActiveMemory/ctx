@@ -3886,11 +3886,11 @@ checklist or refactoring guard rails has two bad choices:</p>
 </table>
 <h2 id="the-workflow">The Workflow<a class="headerlink" href="#the-workflow" title="Permanent link">&para;</a></h2>
 <h3 id="creating-prompts">Creating Prompts<a class="headerlink" href="#creating-prompts" title="Permanent link">&para;</a></h3>
-<p><strong>From starter templates</strong> — <code>ctx init</code> stamps three starters:</p>
+<p><strong>From starter templates</strong>: <code>ctx init</code> stamps three starters:</p>
 <ul>
-<li><code>code-review</code> — review checklist anchored to project conventions</li>
-<li><code>refactor</code> — refactoring with guard rails (tests first, preserve behavior)</li>
-<li><code>explain</code> — explain code for onboarding and knowledge transfer</li>
+<li><code>code-review</code>: review checklist anchored to project conventions</li>
+<li><code>refactor</code>: refactoring with guard rails (tests first, preserve behavior)</li>
+<li><code>explain</code>: explain code for onboarding and knowledge transfer</li>
 </ul>
 <p><strong>From embedded templates:</strong></p>
 <div class="language-bash highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>ctx<span class="w"> </span>prompt<span class="w"> </span>add<span class="w"> </span>code-review<span class="w">    </span><span class="c1"># creates from built-in template</span>
@@ -3905,12 +3905,12 @@ checklist or refactoring guard rails has two bad choices:</p>
 </span><span id="__span-2-6"><a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="s2">4. Isolate the failing component&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>ctx<span class="w"> </span>prompt<span class="w"> </span>add<span class="w"> </span>debug<span class="w"> </span>--stdin
 </span></code></pre></div>
 <h3 id="using-prompts">Using Prompts<a class="headerlink" href="#using-prompts" title="Permanent link">&para;</a></h3>
-<p><strong>In your AI assistant</strong> — invoke the skill:</p>
+<p><strong>In your AI assistant</strong>: invoke the skill:</p>
 <div class="language-text highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>/ctx-prompt code-review
 </span></code></pre></div>
 <p>The agent retrieves the prompt and follows its instructions in your
 current context. If no name is given, it lists available prompts.</p>
-<p><strong>From the CLI</strong> — pipe into other tools:</p>
+<p><strong>From the CLI</strong>: pipe into other tools:</p>
 <div class="language-bash highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>ctx<span class="w"> </span>prompt<span class="w"> </span>show<span class="w"> </span>code-review<span class="w">    </span><span class="c1"># print to stdout</span>
 </span></code></pre></div>
 <h3 id="sharing-prompts">Sharing Prompts<a class="headerlink" href="#sharing-prompts" title="Permanent link">&para;</a></h3>
@@ -3921,7 +3921,7 @@ add <code>.context/prompts/</code> to <code>.gitignore</code>.</p>
 <p><strong>Keep prompts short and focused.</strong> A good prompt template is 5-15 lines.
 If it's longer, it's probably a skill.</p>
 <p><strong>Anchor to project context.</strong> Reference <code>.context/CONVENTIONS.md</code> or
-<code>.context/ARCHITECTURE.md</code> in your prompts — the AI will read those files
+<code>.context/ARCHITECTURE.md</code> in your prompts: the AI will read those files
 for project-specific patterns.</p>
 <p><strong>Name prompts for the action, not the content.</strong> Use <code>code-review</code> not
 <code>code-review-checklist</code>. The <code>.md</code> extension is added automatically.</p>

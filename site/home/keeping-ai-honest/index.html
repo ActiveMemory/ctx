@@ -3747,7 +3747,7 @@
 <h2 id="the-problem">The Problem<a class="headerlink" href="#the-problem" title="Permanent link">&para;</a></h2>
 <p>AI agents confabulate. They invent history that never happened, claim
 familiarity with decisions that were never made, and sometimes declare
-a task complete when it is not. This is not malice -- it is the default
+a task complete when it is not. This is not malice - it is the default
 behavior of a system optimizing for plausible-sounding responses.</p>
 <p>When your AI says "we decided to use Redis for caching last week," can
 you verify that? When it says "the auth module is complete," can you
@@ -3771,12 +3771,12 @@ fields. When the AI cites a decision, you can check it.</p>
 <p>The timestamp <code>2026-01-28-143022</code> is not decoration. It is a verifiable
 anchor. If the AI references this decision, you can open DECISIONS.md,
 find the entry, and confirm it says what the AI claims. If the entry
-does not exist, the AI is hallucinating -- and you know immediately.</p>
+does not exist, the AI is hallucinating - and you know immediately.</p>
 <p>This is <strong>grounded memory</strong>: claims that trace back to artifacts you
 control and can audit.</p>
 <h2 id="constitutionmd-hard-guardrails">CONSTITUTION.md: Hard Guardrails<a class="headerlink" href="#constitutionmd-hard-guardrails" title="Permanent link">&para;</a></h2>
 <p>CONSTITUTION.md defines rules the AI must treat as inviolable. These
-are not suggestions or best practices -- they are constraints that
+are not suggestions or best practices - they are constraints that
 override task requirements.</p>
 <div class="language-markdown highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="gh"># Constitution</span>
 </span><span id="__span-1-2"><a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>
@@ -3805,7 +3805,7 @@ Hallucinating Memory"</strong> with five explicit rules:</p>
    your training data suggests MySQL, the files win.</li>
 </ol>
 <p>These rules create a behavioral contract. The AI is not left to guess
-how confident it should be -- it has explicit instructions to ground
+how confident it should be - it has explicit instructions to ground
 every claim in the context directory.</p>
 <h2 id="drift-detection">Drift Detection<a class="headerlink" href="#drift-detection" title="Permanent link">&para;</a></h2>
 <p>Context files can go stale. You rename a package, delete a module, or
@@ -3818,7 +3818,7 @@ the AI treats outdated information as current truth.</p>
 <p>It scans context files for references to files, paths, and symbols
 that no longer exist in the codebase. Stale references get flagged
 so you can update or remove them before they mislead the next session.</p>
-<p>Regular drift checks -- weekly, or after major refactors -- keep your
+<p>Regular drift checks - weekly, or after major refactors - keep your
 context files honest the same way tests keep your code honest.</p>
 <h2 id="the-verification-loop">The Verification Loop<a class="headerlink" href="#the-verification-loop" title="Permanent link">&para;</a></h2>
 <p>The <code>/ctx-verify</code> skill provides an end-to-end check: it reads all
@@ -3827,7 +3827,7 @@ reports inconsistencies. Think of it as a health check for your
 project's memory.</p>
 <p>This closes the loop. You write context. The AI reads context. The
 verification step confirms that context still matches reality. When
-it does not, you fix it -- and the next session starts from truth,
+it does not, you fix it - and the next session starts from truth,
 not from drift.</p>
 <h2 id="trust-through-structure">Trust Through Structure<a class="headerlink" href="#trust-through-structure" title="Permanent link">&para;</a></h2>
 <p>The common thread across all of these mechanisms is <strong>structure over

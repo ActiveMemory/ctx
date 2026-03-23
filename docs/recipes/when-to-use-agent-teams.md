@@ -172,11 +172,11 @@ Four practical team compositions for common workflows.
 
 ### Feature Development (3 agents)
 
-| Role         | Responsibility                                              |
-|--------------|-------------------------------------------------------------|
-| Architect    | Writes spec in `specs/`, breaks work into TASKS.md phases   |
-| Implementer  | Picks tasks from TASKS.md, writes code, marks `[x]` done   |
-| Reviewer     | Runs tests, `ctx drift`, lint; files issues as new tasks    |
+| Role        | Responsibility                                            |
+|-------------|-----------------------------------------------------------|
+| Architect   | Writes spec in `specs/`, breaks work into TASKS.md phases |
+| Implementer | Picks tasks from TASKS.md, writes code, marks `[x]` done  |
+| Reviewer    | Runs tests, `ctx drift`, lint; files issues as new tasks  |
 
 **Coordination**: TASKS.md checkboxes. Architect writes tasks before
 implementer starts. Reviewer runs after each implementer commit.
@@ -186,12 +186,12 @@ Sequence the work so only one agent touches a file at a time.
 
 ### Consolidation Sprint (3-4 agents)
 
-| Role        | Responsibility                                               |
-|-------------|--------------------------------------------------------------|
-| Auditor     | Runs `ctx drift`, identifies stale paths and broken refs     |
-| Code Fixer  | Updates source code to match context (or vice versa)         |
-| Doc Writer  | Updates ARCHITECTURE.md, CONVENTIONS.md, and docs/           |
-| Test Fixer  | (Optional) Fixes tests broken by the fixer's changes        |
+| Role       | Responsibility                                           |
+|------------|----------------------------------------------------------|
+| Auditor    | Runs `ctx drift`, identifies stale paths and broken refs |
+| Code Fixer | Updates source code to match context (or vice versa)     |
+| Doc Writer | Updates ARCHITECTURE.md, CONVENTIONS.md, and docs/       |
+| Test Fixer | (Optional) Fixes tests broken by the fixer's changes     |
 
 **Coordination**: Auditor's `ctx drift` output is the shared work queue.
 Each agent claims a subset of issues by adding `#in-progress` labels.
@@ -201,10 +201,10 @@ Assign file ownership explicitly.
 
 ### Release Prep (2 agents)
 
-| Role           | Responsibility                                            |
-|----------------|-----------------------------------------------------------|
-| Release Notes  | Generates changelog from commits, writes release notes    |
-| Validation     | Runs full test suite, lint, build across platforms         |
+| Role          | Responsibility                                         |
+|---------------|--------------------------------------------------------|
+| Release Notes | Generates changelog from commits, writes release notes |
+| Validation    | Runs full test suite, lint, build across platforms     |
 
 **Coordination**: Both read TASKS.md to identify what shipped. Release
 notes agent works from `git log`; validation agent works from `make audit`.
@@ -224,7 +224,7 @@ agent stays in its lane.
 `zensical.toml` and index pages after content lands. Verifier builds
 after each batch.
 
-**Anti-pattern**: Content and cross-linker both editing `zensical.toml`.
+**Antipattern**: Content and cross-linker both editing `zensical.toml`.
 Batch nav updates into the cross-linker's pass.
 
 ## Tips

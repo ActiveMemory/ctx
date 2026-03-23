@@ -3345,6 +3345,17 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#ctx-prompt" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        /ctx-prompt
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#ctx-prompt-audit" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -3520,6 +3531,17 @@
   
     <nav class="md-nav" aria-label="Skill Authoring">
       <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#ctx-skill-audit" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        /ctx-skill-audit
+      
+    </span>
+  </a>
+  
+</li>
         
           <li class="md-nav__item">
   <a href="#ctx-skill-creator" class="md-nav__link">
@@ -4443,6 +4465,17 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#ctx-prompt" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        /ctx-prompt
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#ctx-prompt-audit" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -4618,6 +4651,17 @@
   
     <nav class="md-nav" aria-label="Skill Authoring">
       <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#ctx-skill-audit" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        /ctx-skill-audit
+      
+    </span>
+  </a>
+  
+</li>
         
           <li class="md-nav__item">
   <a href="#ctx-skill-creator" class="md-nav__link">
@@ -4890,6 +4934,11 @@ to invoke the relevant skills directly.</p>
 <td>user-invocable</td>
 </tr>
 <tr>
+<td><a href="#ctx-prompt"><code>/ctx-prompt</code></a></td>
+<td>Apply, list, and manage saved prompt templates</td>
+<td>user-invocable</td>
+</tr>
+<tr>
 <td><a href="#ctx-prompt-audit"><code>/ctx-prompt-audit</code></a></td>
 <td>Analyze prompting patterns for improvement</td>
 <td>user-invocable</td>
@@ -4952,6 +5001,11 @@ to invoke the relevant skills directly.</p>
 <tr>
 <td><a href="#ctx-doctor"><code>/ctx-doctor</code></a></td>
 <td>Troubleshoot ctx behavior with health checks and event analysis</td>
+<td>user-invocable</td>
+</tr>
+<tr>
+<td><a href="#ctx-skill-audit"><code>/ctx-skill-audit</code></a></td>
+<td>Audit skills against Anthropic prompting best practices</td>
 <td>user-invocable</td>
 </tr>
 <tr>
@@ -5049,9 +5103,9 @@ conventions: into <code>.context/</code> files.</p>
 <hr />
 <h3 id="ctx-add-decision"><code>/ctx-add-decision</code><a class="headerlink" href="#ctx-add-decision" title="Permanent link">&para;</a></h3>
 <p>Record an architectural decision with context, rationale, and
-consequences. Supports Y-statement (lightweight) and full ADR formats.</p>
+consequence. Supports Y-statement (lightweight) and full ADR formats.</p>
 <p><strong>Wraps</strong>: <code>ctx add decision "title" --context "..." --rationale "..."
---consequences "..."</code></p>
+--consequence "..."</code></p>
 <p><strong>See also</strong>:
 <a href="../../recipes/knowledge-capture/">Persisting Decisions, Learnings, and Conventions</a></p>
 <hr />
@@ -5074,7 +5128,7 @@ Targets patterns seen 2-3+ times.</p>
 <h3 id="ctx-archive"><code>/ctx-archive</code><a class="headerlink" href="#ctx-archive" title="Permanent link">&para;</a></h3>
 <p>Archive completed tasks from TASKS.md to a timestamped file in
 <code>.context/archive/</code>. Preserves phase headers for traceability.</p>
-<p><strong>Wraps</strong>: <code>ctx tasks archive [--dry-run]</code></p>
+<p><strong>Wraps</strong>: <code>ctx task archive [--dry-run]</code></p>
 <p><strong>See also</strong>: <a href="../../recipes/task-management/">Tracking Work Across Sessions</a></p>
 <hr />
 <h2 id="scratchpad">Scratchpad<a class="headerlink" href="#scratchpad" title="Permanent link">&para;</a></h2>
@@ -5158,6 +5212,16 @@ templates.</p>
 <p><strong>Wraps</strong>: <code>ctx drift [--fix]</code></p>
 <p><strong>See also</strong>:
 <a href="../../recipes/context-health/">Detecting and Fixing Drift</a></p>
+<hr />
+<h3 id="ctx-prompt"><code>/ctx-prompt</code><a class="headerlink" href="#ctx-prompt" title="Permanent link">&para;</a></h3>
+<p>Apply, list, and manage saved prompt templates from <code>.context/prompts/</code>.
+Prompt templates are plain Markdown files for common patterns like code
+review, refactoring, or explaining code.</p>
+<p><strong>Wraps</strong>: <code>ctx prompt list</code>, <code>ctx prompt show</code>, <code>ctx prompt apply</code>,
+<code>ctx prompt create</code></p>
+<p><strong>Trigger phrases</strong>: "use the code-review prompt", "list my prompts",
+"apply the refactor template", "create a prompt template"</p>
+<p><strong>See also</strong>: <a href="../../recipes/prompt-templates/">Prompt Templates</a></p>
 <hr />
 <h3 id="ctx-prompt-audit"><code>/ctx-prompt-audit</code><a class="headerlink" href="#ctx-prompt-audit" title="Permanent link">&para;</a></h3>
 <p>Analyze recent prompting patterns to identify vague or ineffective
@@ -5308,6 +5372,18 @@ intent (<em>"remind me to refactor swagger"</em>) into the corresponding
 <a href="../../recipes/session-reminders/">Session Reminders</a></p>
 <hr />
 <h2 id="skill-authoring">Skill Authoring<a class="headerlink" href="#skill-authoring" title="Permanent link">&para;</a></h2>
+<h3 id="ctx-skill-audit"><code>/ctx-skill-audit</code><a class="headerlink" href="#ctx-skill-audit" title="Permanent link">&para;</a></h3>
+<p>Audit one or more skills against Anthropic prompting best practices.
+Checks audit dimensions: positive framing, motivation, phantom references,
+examples, subagent guards, scope, and descriptions. Reports findings by
+severity with concrete fix suggestions.</p>
+<p><strong>Wraps</strong>: reads <code>internal/assets/claude/skills/*/SKILL.md</code> or
+<code>.claude/skills/*/SKILL.md</code>, references <code>anthropic-best-practices.md</code></p>
+<p><strong>Trigger phrases</strong>: "audit this skill", "check skill quality",
+"review the skills", "are our skills any good?"</p>
+<p><strong>See also</strong>: <a href="#ctx-skill-creator"><code>/ctx-skill-creator</code></a>,
+<a href="../../home/contributing/">Contributing</a></p>
+<hr />
 <h3 id="ctx-skill-creator"><code>/ctx-skill-creator</code><a class="headerlink" href="#ctx-skill-creator" title="Permanent link">&para;</a></h3>
 <p>Create, improve, and test skills. Guides the full lifecycle: capture
 intent, interview for edge cases, draft the SKILL.md, test with

@@ -201,19 +201,19 @@ You: /ctx-pad delete entry 3
 
 Once the skill is active, it translates intent into commands:
 
-| You say (after `/ctx-pad`)                | What the agent does                       |
-|-------------------------------------------|-------------------------------------------|
-| "jot down: check DNS after deploy"        | `ctx pad add "check DNS after deploy"`    |
-| "remember this: retry limit is 5"         | `ctx pad add "retry limit is 5"`          |
-| "show my scratchpad" / "what's on my pad" | `ctx pad`                                 |
-| "show me entry 3"                         | `ctx pad show 3`                          |
-| "delete the third one" / "remove entry 3" | `ctx pad rm 3`                            |
-| "change entry 2 to ..."                   | `ctx pad edit 2 "new text"`               |
-| "append ' +important' to entry 3"        | `ctx pad edit 3 --append " +important"`    |
-| "prepend 'URGENT:' to entry 1"            | `ctx pad edit 1 --prepend "URGENT: "`     |
-| "prioritize entry 4" / "move to the top"  | `ctx pad mv 4 1`                          |
-| "import my notes from notes.txt"          | `ctx pad import notes.txt`                |
-| "export all blobs to ./ideas"             | `ctx pad export ./ideas`                  |
+| You say (after `/ctx-pad`)                | What the agent does                     |
+|-------------------------------------------|-----------------------------------------|
+| "jot down: check DNS after deploy"        | `ctx pad add "check DNS after deploy"`  |
+| "remember this: retry limit is 5"         | `ctx pad add "retry limit is 5"`        |
+| "show my scratchpad" / "what's on my pad" | `ctx pad`                               |
+| "show me entry 3"                         | `ctx pad show 3`                        |
+| "delete the third one" / "remove entry 3" | `ctx pad rm 3`                          |
+| "change entry 2 to ..."                   | `ctx pad edit 2 "new text"`             |
+| "append ' +important' to entry 3"         | `ctx pad edit 3 --append " +important"` |
+| "prepend 'URGENT:' to entry 1"            | `ctx pad edit 1 --prepend "URGENT: "`   |
+| "prioritize entry 4" / "move to the top"  | `ctx pad mv 4 1`                        |
+| "import my notes from notes.txt"          | `ctx pad import notes.txt`              |
+| "export all blobs to ./ideas"             | `ctx pad export ./ideas`                |
 
 !!! tip "When in Doubt, Use the CLI Directly"
     The `ctx pad` commands work the same whether you run them yourself

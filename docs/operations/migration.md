@@ -269,7 +269,7 @@ Hooks and skills are provided by the `ctx` plugin (*not per-project files*).
 | File                           | Commit? | Why                                                          |
 |--------------------------------|---------|--------------------------------------------------------------|
 | `.claude/settings.local.json`  | No      | Machine-specific, accumulates session permissions            |
-| `.claude/settings.golden.json` | Yes     | Curated permission snapshot (via `ctx permissions snapshot`) |
+| `.claude/settings.golden.json` | Yes     | Curated permission snapshot (via `ctx permission snapshot`) |
 
 ### Merge Conflicts in Context Files
 

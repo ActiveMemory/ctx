@@ -4098,6 +4098,7 @@ See <a href="../contributing/#configuration-profiles">Contributing: Configuratio
 <p>See <a href="#environment-variables">Environment Variables</a>
 and <a href="#cli-global-flags">CLI Global Flags</a> below for details.</p>
 </div>
+<!-- drift-check: diff <(grep 'yaml:' internal/rc/types.go | grep -oP '"[a-z_]+"' | tr -d '"' | sort -u | grep -v 'desc\|events\|path\|review_url\|profile\|key_path') <(sed -n '/^# \.ctxrc:/,/^```$/p' docs/home/configuration.md | grep -oP '^# ([a-z_]+):' | sed 's/^# //;s/://' | sort -u) -->
 <h3 id="full-reference">Full Reference<a class="headerlink" href="#full-reference" title="Permanent link">&para;</a></h3>
 <p>A commented <code>.ctxrc</code> showing all options and their defaults:</p>
 <div class="language-yaml highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># .ctxrc: ctx runtime configuration</span>
@@ -4120,25 +4121,27 @@ and <a href="#cli-global-flags">CLI Global Flags</a> below for details.</p>
 </span><span id="__span-1-18"><a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a><span class="c1"># context_window: 200000      # auto-detected for Claude Code; override for other tools</span>
 </span><span id="__span-1-19"><a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a><span class="c1"># billing_token_warn: 0       # one-shot warning at this token count (0 = disabled)</span>
 </span><span id="__span-1-20"><a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a><span class="c1">#</span>
-</span><span id="__span-1-21"><a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a><span class="c1"># key_rotation_days: 90</span>
-</span><span id="__span-1-22"><a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a><span class="c1"># task_nudge_interval: 5   # Edit/Write calls between task completion nudges</span>
-</span><span id="__span-1-23"><a id="__codelineno-1-23" name="__codelineno-1-23" href="#__codelineno-1-23"></a><span class="c1">#</span>
-</span><span id="__span-1-24"><a id="__codelineno-1-24" name="__codelineno-1-24" href="#__codelineno-1-24"></a><span class="c1"># notify:               # requires: ctx notify setup</span>
-</span><span id="__span-1-25"><a id="__codelineno-1-25" name="__codelineno-1-25" href="#__codelineno-1-25"></a><span class="c1">#   events:             # required: no events sent unless listed</span>
-</span><span id="__span-1-26"><a id="__codelineno-1-26" name="__codelineno-1-26" href="#__codelineno-1-26"></a><span class="c1">#     - loop</span>
-</span><span id="__span-1-27"><a id="__codelineno-1-27" name="__codelineno-1-27" href="#__codelineno-1-27"></a><span class="c1">#     - nudge</span>
-</span><span id="__span-1-28"><a id="__codelineno-1-28" name="__codelineno-1-28" href="#__codelineno-1-28"></a><span class="c1">#     - relay</span>
-</span><span id="__span-1-29"><a id="__codelineno-1-29" name="__codelineno-1-29" href="#__codelineno-1-29"></a><span class="c1">#</span>
-</span><span id="__span-1-30"><a id="__codelineno-1-30" name="__codelineno-1-30" href="#__codelineno-1-30"></a><span class="c1"># priority_order:</span>
-</span><span id="__span-1-31"><a id="__codelineno-1-31" name="__codelineno-1-31" href="#__codelineno-1-31"></a><span class="c1">#   - CONSTITUTION.md</span>
-</span><span id="__span-1-32"><a id="__codelineno-1-32" name="__codelineno-1-32" href="#__codelineno-1-32"></a><span class="c1">#   - TASKS.md</span>
-</span><span id="__span-1-33"><a id="__codelineno-1-33" name="__codelineno-1-33" href="#__codelineno-1-33"></a><span class="c1">#   - CONVENTIONS.md</span>
-</span><span id="__span-1-34"><a id="__codelineno-1-34" name="__codelineno-1-34" href="#__codelineno-1-34"></a><span class="c1">#   - ARCHITECTURE.md</span>
-</span><span id="__span-1-35"><a id="__codelineno-1-35" name="__codelineno-1-35" href="#__codelineno-1-35"></a><span class="c1">#   - DECISIONS.md</span>
-</span><span id="__span-1-36"><a id="__codelineno-1-36" name="__codelineno-1-36" href="#__codelineno-1-36"></a><span class="c1">#   - LEARNINGS.md</span>
-</span><span id="__span-1-37"><a id="__codelineno-1-37" name="__codelineno-1-37" href="#__codelineno-1-37"></a><span class="c1">#   - GLOSSARY.md</span>
-</span><span id="__span-1-38"><a id="__codelineno-1-38" name="__codelineno-1-38" href="#__codelineno-1-38"></a><span class="c1">#   - AGENT_PLAYBOOK.md</span>
+</span><span id="__span-1-21"><a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a><span class="c1"># stale_age_days: 30      # days before drift flags a context file as stale (0 = disabled)</span>
+</span><span id="__span-1-22"><a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a><span class="c1"># key_rotation_days: 90</span>
+</span><span id="__span-1-23"><a id="__codelineno-1-23" name="__codelineno-1-23" href="#__codelineno-1-23"></a><span class="c1"># task_nudge_interval: 5   # Edit/Write calls between task completion nudges</span>
+</span><span id="__span-1-24"><a id="__codelineno-1-24" name="__codelineno-1-24" href="#__codelineno-1-24"></a><span class="c1">#</span>
+</span><span id="__span-1-25"><a id="__codelineno-1-25" name="__codelineno-1-25" href="#__codelineno-1-25"></a><span class="c1"># notify:               # requires: ctx notify setup</span>
+</span><span id="__span-1-26"><a id="__codelineno-1-26" name="__codelineno-1-26" href="#__codelineno-1-26"></a><span class="c1">#   events:             # required: no events sent unless listed</span>
+</span><span id="__span-1-27"><a id="__codelineno-1-27" name="__codelineno-1-27" href="#__codelineno-1-27"></a><span class="c1">#     - loop</span>
+</span><span id="__span-1-28"><a id="__codelineno-1-28" name="__codelineno-1-28" href="#__codelineno-1-28"></a><span class="c1">#     - nudge</span>
+</span><span id="__span-1-29"><a id="__codelineno-1-29" name="__codelineno-1-29" href="#__codelineno-1-29"></a><span class="c1">#     - relay</span>
+</span><span id="__span-1-30"><a id="__codelineno-1-30" name="__codelineno-1-30" href="#__codelineno-1-30"></a><span class="c1">#</span>
+</span><span id="__span-1-31"><a id="__codelineno-1-31" name="__codelineno-1-31" href="#__codelineno-1-31"></a><span class="c1"># priority_order:</span>
+</span><span id="__span-1-32"><a id="__codelineno-1-32" name="__codelineno-1-32" href="#__codelineno-1-32"></a><span class="c1">#   - CONSTITUTION.md</span>
+</span><span id="__span-1-33"><a id="__codelineno-1-33" name="__codelineno-1-33" href="#__codelineno-1-33"></a><span class="c1">#   - TASKS.md</span>
+</span><span id="__span-1-34"><a id="__codelineno-1-34" name="__codelineno-1-34" href="#__codelineno-1-34"></a><span class="c1">#   - CONVENTIONS.md</span>
+</span><span id="__span-1-35"><a id="__codelineno-1-35" name="__codelineno-1-35" href="#__codelineno-1-35"></a><span class="c1">#   - ARCHITECTURE.md</span>
+</span><span id="__span-1-36"><a id="__codelineno-1-36" name="__codelineno-1-36" href="#__codelineno-1-36"></a><span class="c1">#   - DECISIONS.md</span>
+</span><span id="__span-1-37"><a id="__codelineno-1-37" name="__codelineno-1-37" href="#__codelineno-1-37"></a><span class="c1">#   - LEARNINGS.md</span>
+</span><span id="__span-1-38"><a id="__codelineno-1-38" name="__codelineno-1-38" href="#__codelineno-1-38"></a><span class="c1">#   - GLOSSARY.md</span>
+</span><span id="__span-1-39"><a id="__codelineno-1-39" name="__codelineno-1-39" href="#__codelineno-1-39"></a><span class="c1">#   - AGENT_PLAYBOOK.md</span>
 </span></code></pre></div>
+<!-- drift-check: diff <(grep 'yaml:' internal/rc/types.go | grep -oP '"[a-z_]+"' | tr -d '"' | sort -u | grep -v 'desc\|events\|path\|review_url\|profile\|key_path') <(sed -n '/Option Reference/,/^\*\*Default/p' docs/home/configuration.md | grep -oP '`([a-z_.]+)`' | tr -d '`' | sed 's/notify\.events/notify/' | sort -u | grep -v 'string\|int\|bool\|\[\]') -->
 <h3 id="option-reference">Option Reference<a class="headerlink" href="#option-reference" title="Permanent link">&para;</a></h3>
 <table>
 <thead>
@@ -4229,6 +4232,12 @@ and <a href="#cli-global-flags">CLI Global Flags</a> below for details.</p>
 <td>One-shot warning when session tokens exceed this threshold (0 = disabled). For plans where tokens beyond an included allowance cost extra</td>
 </tr>
 <tr>
+<td><code>stale_age_days</code></td>
+<td><code>int</code></td>
+<td><code>30</code></td>
+<td>Days before <code>ctx drift</code> flags a context file as stale (0 = disable)</td>
+</tr>
+<tr>
 <td><code>key_rotation_days</code></td>
 <td><code>int</code></td>
 <td><code>90</code></td>
@@ -4268,6 +4277,7 @@ and <a href="#cli-global-flags">CLI Global Flags</a> below for details.</p>
 <p>See <a href="../context-files/#read-order-rationale">Context Files</a> for the rationale
 behind this ordering.</p>
 <hr />
+<!-- drift-check: diff <(grep -oP 'os\.Getenv\("[A-Z_]+"\)' internal/rc/rc.go | grep -oP '"[A-Z_]+"' | tr -d '"' | sort) <(sed -n '/Environment Variables/,/^---$/p' docs/home/configuration.md | grep -oP '`CTX_[A-Z_]+`' | tr -d '`' | sort -u) -->
 <h2 id="environment-variables">Environment Variables<a class="headerlink" href="#environment-variables" title="Permanent link">&para;</a></h2>
 <p>Environment variables override <code>.ctxrc</code> values but are overridden by CLI flags.</p>
 <table>
@@ -4289,11 +4299,6 @@ behind this ordering.</p>
 <td>Override the default token budget</td>
 <td><code>token_budget</code></td>
 </tr>
-<tr>
-<td><code>NO_COLOR</code></td>
-<td>Disable colored output when set (any value)</td>
-<td><em>(CLI flag only)</em></td>
-</tr>
 </tbody>
 </table>
 <h3 id="examples">Examples<a class="headerlink" href="#examples" title="Permanent link">&para;</a></h3>
@@ -4302,16 +4307,9 @@ behind this ordering.</p>
 </span><span id="__span-2-3"><a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>
 </span><span id="__span-2-4"><a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c1"># Increase token budget for a single run</span>
 </span><span id="__span-2-5"><a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="nv">CTX_TOKEN_BUDGET</span><span class="o">=</span><span class="m">16000</span><span class="w"> </span>ctx<span class="w"> </span>agent
-</span><span id="__span-2-6"><a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>
-</span><span id="__span-2-7"><a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="c1"># Disable color in CI pipelines</span>
-</span><span id="__span-2-8"><a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a><span class="nv">NO_COLOR</span><span class="o">=</span><span class="m">1</span><span class="w"> </span>ctx<span class="w"> </span>drift<span class="w"> </span>--json
 </span></code></pre></div>
-<div class="admonition note">
-<p class="admonition-title"><code>NO_COLOR</code> Follows the <a href="https://no-color.org">no-color.org</a> Convention</p>
-<p>Setting <code>NO_COLOR</code> to any non-empty value disables colored terminal output.</p>
-<p>This is equivalent to the <code>--no-color</code> CLI flag.</p>
-</div>
 <hr />
+<!-- drift-check: diff <(ctx --help 2>&1 | grep -oP '^\s+--[a-z-]+' | sed 's/^\s*//' | sort) <(sed -n '/CLI Global Flags/,/^---$/p' docs/home/configuration.md | grep -oP '`(--[a-z-]+)`' | tr -d '`' | sort -u) -->
 <h2 id="cli-global-flags">CLI Global Flags<a class="headerlink" href="#cli-global-flags" title="Permanent link">&para;</a></h2>
 <p>CLI flags have the highest priority and override both environment variables and
 <code>.ctxrc</code> settings. These flags are available on every <code>ctx</code> command.</p>
@@ -4330,10 +4328,6 @@ behind this ordering.</p>
 <tr>
 <td><code>--allow-outside-cwd</code></td>
 <td>Allow context directory outside current working directory</td>
-</tr>
-<tr>
-<td><code>--no-color</code></td>
-<td>Disable colored output</td>
 </tr>
 <tr>
 <td><code>--version</code></td>

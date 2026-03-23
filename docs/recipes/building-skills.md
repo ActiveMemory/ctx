@@ -13,7 +13,7 @@ the steps. The agent gets it mostly right but forgets edge cases you
 corrected last time.
 
 Skills solve this by encoding domain knowledge into a reusable document
-the agent loads automatically when triggered. A skill is not code — it is
+the agent loads automatically when triggered. A skill is not code - it is
 a structured prompt that captures what took you sessions to learn.
 
 ## TL;DR
@@ -30,7 +30,7 @@ it triggers correctly and produces good output.
 
 | Tool                 | Type    | Purpose                                                     |
 |----------------------|---------|-------------------------------------------------------------|
-| `/ctx-skill-creator` | Skill   | Interactive skill creation and improvement workflow          |
+| `/ctx-skill-creator` | Skill   | Interactive skill creation and improvement workflow         |
 | `ctx init`           | Command | Deploys template skills to `.claude/skills/` on first setup |
 
 ## The Workflow
@@ -75,7 +75,7 @@ The skill-creator produces a `SKILL.md` file in `.claude/skills/your-skill/`.
 
 ### Step 3: Test with Realistic Prompts
 
-The skill-creator proposes 2-3 test prompts — the kind of thing a real
+The skill-creator proposes 2-3 test prompts - the kind of thing a real
 user would say. It runs each one and shows the result alongside a
 baseline (same prompt without the skill) so you can compare.
 
@@ -90,14 +90,14 @@ Agent: "Here are test prompts I'd try:
 ### Step 4: Iterate on the Description
 
 The `description` field in frontmatter determines when a skill triggers.
-Claude tends to undertrigger — descriptions need to be specific and
+Claude tends to undertrigger - descriptions need to be specific and
 slightly "pushy":
 
 ```yaml
-# Weak — too vague, will undertrigger
+# Weak - too vague, will undertrigger
 description: "Use for deployments"
 
-# Strong — covers situations and synonyms
+# Strong - covers situations and synonyms
 description: >-
   Use when deploying to staging or production, running the release
   checklist, or when the user says 'ship it', 'deploy this', or
@@ -128,19 +128,19 @@ my-skill/
 
 Key sections in `SKILL.md`:
 
-| Section         | Purpose                              | Required? |
-|-----------------|--------------------------------------|-----------|
-| Frontmatter     | Name, description (trigger)          | Yes       |
-| When to Use     | Positive triggers                    | Yes       |
-| When NOT to Use | Prevents false activations           | Yes       |
-| Process         | Steps and commands                   | Yes       |
-| Examples        | Good/bad output pairs                | Recommended |
+| Section           | Purpose                            | Required?          |
+|-------------------|------------------------------------|--------------------|
+| Frontmatter       | Name, description (trigger)        | Yes                |
+| When to Use       | Positive triggers                  | Yes                |
+| When NOT to Use   | Prevents false activations         | Yes                |
+| Process           | Steps and commands                 | Yes                |
+| Examples          | Good/bad output pairs              | Recommended        |
 | Quality Checklist | Verify before reporting completion | For complex skills |
 
 ## Tips
 
 * **Description is everything.** A great skill with a vague description
-  never fires. Spend time on trigger coverage — synonyms, concrete
+  never fires. Spend time on trigger coverage - synonyms, concrete
   situations, edge cases.
 * **Stay under 500 lines.** If your skill is growing past this, move
   detail into `references/` files and point to them from `SKILL.md`.

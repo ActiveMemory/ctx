@@ -3613,21 +3613,14 @@
 <td>Override context directory (default: <code>.context/</code>)</td>
 </tr>
 <tr>
-<td><code>--no-color</code></td>
-<td>Disable colored output</td>
-</tr>
-<tr>
 <td><code>--allow-outside-cwd</code></td>
 <td>Allow context directory outside current working directory</td>
 </tr>
 </tbody>
 </table>
-<blockquote>
-<p>The <code>NO_COLOR=1</code> environment variable also disables colored output.</p>
-</blockquote>
 <p><strong>Initialization required.</strong> Most commands require a <code>.context/</code> directory
 created by <code>ctx init</code>. Running a command without one produces:</p>
-<div class="language-text highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>ctx: not initialized — run &quot;ctx init&quot; first
+<div class="language-text highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>ctx: not initialized - run &quot;ctx init&quot; first
 </span></code></pre></div>
 <p>Commands that work before initialization: <code>ctx init</code>, <code>ctx hook</code>,
 <code>ctx doctor</code>, and grouping commands that only show help (e.g. <code>ctx</code>
@@ -3676,11 +3669,11 @@ own guards and no-op gracefully.</p>
 <td>Archive completed tasks, clean up files</td>
 </tr>
 <tr>
-<td><a href="context/#ctx-tasks"><code>ctx tasks</code></a></td>
+<td><a href="context/#ctx-task"><code>ctx task</code></a></td>
 <td>Task completion, archival, and snapshots</td>
 </tr>
 <tr>
-<td><a href="context/#ctx-permissions"><code>ctx permissions</code></a></td>
+<td><a href="context/#ctx-permission"><code>ctx permission</code></a></td>
 <td>Permission snapshots (golden image)</td>
 </tr>
 <tr>
@@ -3688,11 +3681,11 @@ own guards and no-op gracefully.</p>
 <td>Regenerate indices for <code>DECISIONS.md</code> and <code>LEARNINGS.md</code></td>
 </tr>
 <tr>
-<td><a href="context/#ctx-decisions"><code>ctx decisions</code></a></td>
+<td><a href="context/#ctx-decision"><code>ctx decision</code></a></td>
 <td>Manage <code>DECISIONS.md</code> (reindex)</td>
 </tr>
 <tr>
-<td><a href="context/#ctx-learnings"><code>ctx learnings</code></a></td>
+<td><a href="context/#ctx-learning"><code>ctx learning</code></a></td>
 <td>Manage <code>LEARNINGS.md</code> (reindex)</td>
 </tr>
 <tr>
@@ -3728,11 +3721,11 @@ own guards and no-op gracefully.</p>
 <td>Send webhook notifications</td>
 </tr>
 <tr>
-<td><a href="tools/#ctx-changes"><code>ctx changes</code></a></td>
+<td><a href="tools/#ctx-change"><code>ctx change</code></a></td>
 <td>Show what changed since last session</td>
 </tr>
 <tr>
-<td><a href="tools/#ctx-deps"><code>ctx deps</code></a></td>
+<td><a href="tools/#ctx-dep"><code>ctx dep</code></a></td>
 <td>Show package dependency graph</td>
 </tr>
 <tr>
@@ -3837,10 +3830,6 @@ own guards and no-op gracefully.</p>
 <tr>
 <td><code>CTX_BACKUP_SMB_SUBDIR</code></td>
 <td>Subdirectory on SMB share (default: <code>ctx-sessions</code>)</td>
-</tr>
-<tr>
-<td><code>NO_COLOR</code></td>
-<td>Disable colored output when set</td>
 </tr>
 </tbody>
 </table>

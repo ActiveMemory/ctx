@@ -87,7 +87,7 @@ Stats are recorded even during wrap-up suppression (event: `suppressed`).
 
 **Billing guard**: When `billing_token_warn` is set in `.ctxrc`, a one-shot warning
 fires if session tokens exceed the threshold. This warning is independent of all
-other triggers — it fires even during wrap-up suppression.
+other triggers - it fires even during wrap-up suppression.
 
 ---
 
@@ -220,7 +220,7 @@ dismisses them.
 any haven't been modified in over 6 months. Daily throttle. Silent when
 no files are configured (opt-in via `.ctxrc`).
 
-**Why**: Model capabilities evolve — token budgets, attention limits,
+**Why**: Model capabilities evolve - token budgets, attention limits,
 and context window sizes that were accurate 6 months ago may no longer
 reflect best practices. This hook reminds you to review and touch the
 file to confirm values are still current.
@@ -245,7 +245,7 @@ it as reviewed."
 ```
 ┌─ Technology Constants Stale ──────────────────────
 │   config/thresholds.yaml (210 days ago)
-│     — Model token limits and batch sizes
+│     - Model token limits and batch sizes
 │   Review against: https://docs.example.com/limits
 │ Touch each file to mark it as reviewed.
 └───────────────────────────────────────────────────
@@ -414,22 +414,22 @@ notify:
 The `relay` event fires for **every** hook that produces output. This
 includes:
 
-| Hook                  | Event sent                  |
-|-----------------------|-----------------------------|
-| `check-context-size`  | `relay` + `nudge`           |
-| `check-persistence`   | `relay` + `nudge`           |
-| `check-ceremonies`    | `relay` + `nudge`           |
-| `check-journal`       | `relay` + `nudge`           |
-| `check-resources`     | `relay` + `nudge`           |
-| `check-knowledge`     | `relay` + `nudge`           |
-| `check-version`       | `relay` + `nudge`           |
-| `check-reminders`     | `relay` + `nudge`           |
-| `check-freshness`    | `relay` + `nudge`           |
-| `check-map-staleness` | `relay` + `nudge`           |
-| `heartbeat`           | `heartbeat` only            |
-| `block-non-path-ctx`  | `relay` only                |
-| `post-commit`         | `relay` only                |
-| `qa-reminder`         | `relay` only                |
+| Hook                  | Event sent        |
+|-----------------------|-------------------|
+| `check-context-size`  | `relay` + `nudge` |
+| `check-persistence`   | `relay` + `nudge` |
+| `check-ceremonies`    | `relay` + `nudge` |
+| `check-journal`       | `relay` + `nudge` |
+| `check-resources`     | `relay` + `nudge` |
+| `check-knowledge`     | `relay` + `nudge` |
+| `check-version`       | `relay` + `nudge` |
+| `check-reminders`     | `relay` + `nudge` |
+| `check-freshness`     | `relay` + `nudge` |
+| `check-map-staleness` | `relay` + `nudge` |
+| `heartbeat`           | `heartbeat` only  |
+| `block-non-path-ctx`  | `relay` only      |
+| `post-commit`         | `relay` only      |
+| `qa-reminder`         | `relay` only      |
 
 ### Step 3: Cross-Reference
 

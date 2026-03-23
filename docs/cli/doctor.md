@@ -126,7 +126,7 @@ Status indicators:
       "name": "task_completion",
       "category": "State",
       "status": "warning",
-      "message": "Tasks: 18/22 completed (82%): consider archiving with ctx tasks archive"
+      "message": "Tasks: 18/22 completed (82%): consider archiving with ctx task archive"
     },
     {
       "name": "context_size",

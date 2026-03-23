@@ -23,6 +23,8 @@ The `validation` package has `SanitizeFilename` and `ValidateBoundary`
 but nothing for content or argument sanitization. `entry.Validate` only
 checks field presence, not content safety.
 
+- [ ] Bug: check-version hook missing throttle touch on plugin version read error (run.go:70). When claude.PluginVersion() fails, the hook returns without touching the daily throttle marker, causing repeated checks on days when plugin.json is missing or corrupted. Fix: add internalIo.TouchFile(markerFile) before the early return. See docs/recipes/hook-sequence-diagrams.md check-version diagram which documents the expected behavior. #added:2026-03-23-162802
+
 - [ ] Design UserPromptSubmit hook that runs go build and surfaces compilation errors before the agent acts on stale assumptions #added:2026-03-23-120136
 
 - [ ] Scan all config/**/* constants and catalog which ones should be ctxrc entries for user configurability #priority:medium #added:2026-03-22-095552

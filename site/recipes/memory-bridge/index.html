@@ -4042,13 +4042,13 @@
 <p>Claude Code maintains per-project auto memory at
 <code>~/.claude/projects/&lt;slug&gt;/memory/MEMORY.md</code>. This file is:</p>
 <ul>
-<li><strong>Outside the repo</strong> — not version-controlled, not portable</li>
-<li><strong>Machine-specific</strong> — tied to one <code>~/.claude/</code> directory</li>
-<li><strong>Invisible to ctx</strong> — context loading and hooks don't read it</li>
+<li><strong>Outside the repo</strong> - not version-controlled, not portable</li>
+<li><strong>Machine-specific</strong> - tied to one <code>~/.claude/</code> directory</li>
+<li><strong>Invisible to ctx</strong> - context loading and hooks don't read it</li>
 </ul>
 <p>Meanwhile, ctx maintains structured context files (DECISIONS.md,
 LEARNINGS.md, CONVENTIONS.md) that are git-tracked, portable, and
-token-budgeted — but Claude Code doesn't automatically write to them.</p>
+token-budgeted - but Claude Code doesn't automatically write to them.</p>
 <p>The two systems hold complementary knowledge with no bridge between them.</p>
 <h2 id="tldr">TL;DR<a class="headerlink" href="#tldr" title="Permanent link">&para;</a></h2>
 <div class="language-bash highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>ctx<span class="w"> </span>memory<span class="w"> </span>sync<span class="w">          </span><span class="c1"># Mirror MEMORY.md into .context/memory/mirror.md</span>
@@ -4056,7 +4056,7 @@ token-budgeted — but Claude Code doesn't automatically write to them.</p>
 </span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>ctx<span class="w"> </span>memory<span class="w"> </span>diff<span class="w">          </span><span class="c1"># See what changed since last sync</span>
 </span></code></pre></div>
 <p>The <code>check-memory-drift</code> hook nudges automatically when MEMORY.md
-changes — you don't need to remember to sync manually.</p>
+changes - you don't need to remember to sync manually.</p>
 <h2 id="commands-and-skills-used">Commands and Skills Used<a class="headerlink" href="#commands-and-skills-used" title="Permanent link">&para;</a></h2>
 <table>
 <thead>
@@ -4112,7 +4112,7 @@ prefixes with <code>-</code>:</p>
 <div class="language-text highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>/home/jose/WORKSPACE/ctx  →  ~/.claude/projects/-home-jose-WORKSPACE-ctx/
 </span></code></pre></div>
 <p><code>ctx memory</code> uses this encoding to locate MEMORY.md automatically
-from your project root — no configuration needed.</p>
+from your project root - no configuration needed.</p>
 <h3 id="mirroring">Mirroring<a class="headerlink" href="#mirroring" title="Permanent link">&para;</a></h3>
 <p>When you run <code>ctx memory sync</code>:</p>
 <ol>
@@ -4228,12 +4228,12 @@ against the mirror. When drift is detected, the agent sees:</p>
 </tr>
 </tbody>
 </table>
-<p>Entries that don't match any pattern are skipped — they stay in the mirror
+<p>Entries that don't match any pattern are skipped - they stay in the mirror
 for manual review. Deduplication (hash-based) prevents re-importing the
 same entry on subsequent runs.</p>
 <div class="admonition tip">
 <p class="admonition-title">Review Before Importing</p>
-<p>Use <code>--dry-run</code> first. The heuristic classifier is deliberately simple —
+<p>Use <code>--dry-run</code> first. The heuristic classifier is deliberately simple -
 it may misclassify ambiguous entries. Review the plan, then import.</p>
 </div>
 <h3 id="full-workflow">Full Workflow<a class="headerlink" href="#full-workflow" title="Permanent link">&para;</a></h3>
@@ -4243,7 +4243,7 @@ it may misclassify ambiguous entries. Review the plan, then import.</p>
 </span></code></pre></div>
 <h2 id="publishing-context-to-memorymd">Publishing Context to MEMORY.md<a class="headerlink" href="#publishing-context-to-memorymd" title="Permanent link">&para;</a></h2>
 <p>Push curated <code>.context/</code> content back into MEMORY.md so Claude Code sees
-structured project context on session start — without needing hooks.</p>
+structured project context on session start - without needing hooks.</p>
 <div class="language-bash highlight"><pre><span></span><code><span id="__span-9-1"><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>ctx<span class="w"> </span>memory<span class="w"> </span>publish<span class="w"> </span>--dry-run<span class="w">    </span><span class="c1"># Preview what would be published</span>
 </span><span id="__span-9-2"><a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>ctx<span class="w"> </span>memory<span class="w"> </span>publish<span class="w">              </span><span class="c1"># Write to MEMORY.md</span>
 </span><span id="__span-9-3"><a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>ctx<span class="w"> </span>memory<span class="w"> </span>publish<span class="w"> </span>--budget<span class="w"> </span><span class="m">40</span><span class="w">  </span><span class="c1"># Tighter line budget</span>
@@ -4270,7 +4270,7 @@ structured project context on session start — without needing hooks.</p>
 <div class="admonition tip">
 <p class="admonition-title">Publish at Wrap-Up, Not on Commit</p>
 <p>The best time to publish is during session wrap-up, after persisting
-decisions and learnings. Never auto-publish — give yourself a chance
+decisions and learnings. Never auto-publish - give yourself a chance
 to review what's going into MEMORY.md.</p>
 </div>
 <h3 id="full-bidirectional-workflow">Full Bidirectional Workflow<a class="headerlink" href="#full-bidirectional-workflow" title="Permanent link">&para;</a></h3>

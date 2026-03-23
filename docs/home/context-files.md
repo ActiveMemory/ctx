@@ -171,7 +171,7 @@ session started vs completed work.
 
 * Never delete tasks; mark as `[x]` completed or `[-]` skipped
 * Never move tasks between sections; use inline tags for status
-* Use `ctx tasks archive` periodically to move completed tasks to archive
+* Use `ctx task archive` periodically to move completed tasks to archive
 * Mark current work with `#in-progress` inline tag
 
 ---
@@ -447,7 +447,7 @@ for full documentation.
 
 ## `prompts/`
 
-**Purpose**: Store reusable prompt templates — plain markdown files with
+**Purpose**: Store reusable prompt templates - plain markdown files with
 no frontmatter that provide lightweight, named instructions for common
 tasks like code review, refactoring, or explaining code.
 

@@ -3850,12 +3850,12 @@
 <p><img alt="ctx" src="../../images/ctx-banner.png" /></p>
 <h2 id="the-problem">The Problem<a class="headerlink" href="#the-problem" title="Permanent link">&para;</a></h2>
 <p>Your team works across languages. Session files written by AI tools
-might use headers like <code># Oturum: 2026-01-15 — API Düzeltme</code> (Turkish)
-or <code># セッション: 2026-01-15 — テスト</code> (Japanese) instead of
-<code># Session: 2026-01-15 — Fix API</code>.</p>
+might use headers like <code># Oturum: 2026-01-15 - API Düzeltme</code> (Turkish)
+or <code># セッション: 2026-01-15 - テスト</code> (Japanese) instead of
+<code># Session: 2026-01-15 - Fix API</code>.</p>
 <p>By default, ctx only recognizes <code>Session:</code> as a session header prefix.
 Files with other prefixes are silently skipped during recall export and
-journal generation — they look like regular Markdown, not sessions.</p>
+journal generation: They look like regular Markdown, not sessions.</p>
 <h2 id="tldr">TL;DR<a class="headerlink" href="#tldr" title="Permanent link">&para;</a></h2>
 <p>Add recognized prefixes to <code>.ctxrc</code>:</p>
 <div class="language-yaml highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="nt">session_prefixes</span><span class="p">:</span>
@@ -3867,14 +3867,14 @@ journal generation — they look like regular Markdown, not sessions.</p>
 <h2 id="how-it-works">How It Works<a class="headerlink" href="#how-it-works" title="Permanent link">&para;</a></h2>
 <p>The Markdown session parser detects session files by looking for an H1
 header that starts with a known prefix followed by a date:</p>
-<div class="language-markdown highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="gh"># Session: 2026-01-15 — Fix API Rate Limiting</span>
-</span><span id="__span-1-2"><a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="gh"># Oturum: 2026-01-15 — API Düzeltme</span>
-</span><span id="__span-1-3"><a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="gh"># セッション: 2026-01-15 — テスト</span>
+<div class="language-markdown highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="gh"># Session: 2026-01-15 - Fix API Rate Limiting</span>
+</span><span id="__span-1-2"><a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="gh"># Oturum: 2026-01-15 - API Düzeltme</span>
+</span><span id="__span-1-3"><a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="gh"># セッション: 2026-01-15 - テスト</span>
 </span></code></pre></div>
 <p>The list of recognized prefixes comes from <code>session_prefixes</code> in
 <code>.ctxrc</code>. When the key is absent or empty, ctx falls back to the
 built-in default: <code>["Session:"]</code>.</p>
-<p>Date-only headers (<code># 2026-01-15 — Morning Work</code>) are always recognized
+<p>Date-only headers (<code># 2026-01-15 - Morning Work</code>) are always recognized
 regardless of prefix configuration.</p>
 <h2 id="configuration">Configuration<a class="headerlink" href="#configuration" title="Permanent link">&para;</a></h2>
 <h3 id="adding-a-language">Adding a language<a class="headerlink" href="#adding-a-language" title="Permanent link">&para;</a></h3>
@@ -3945,18 +3945,18 @@ sessions from all team members regardless of language.</p>
 prefixes should appear in the output.</p>
 <h2 id="what-this-does-not-do">What This Does NOT Do<a class="headerlink" href="#what-this-does-not-do" title="Permanent link">&para;</a></h2>
 <ul>
-<li><strong>Change the interface language</strong> — ctx output is always English.
+<li><strong>Change the interface language</strong>: <code>ctx</code> output is always English.
   This setting only controls which session files ctx can <em>parse</em>.</li>
-<li><strong>Generate headers</strong> — ctx never writes session headers. The prefix
+<li><strong>Generate headers</strong>: <code>ctx</code> never writes session headers. The prefix
   list is recognition-only (input, not output).</li>
-<li><strong>Affect JSONL sessions</strong> — Claude Code JSONL transcripts don't use
+<li><strong>Affect JSONL sessions</strong>: Claude Code JSONL transcripts don't use
   header prefixes. This only applies to Markdown session files in
   <code>.context/sessions/</code>.</li>
 </ul>
 <h2 id="see-also">See Also<a class="headerlink" href="#see-also" title="Permanent link">&para;</a></h2>
-<p><em>See also: <a href="../multi-tool-setup/">Setup Across AI Tools</a> — complete
+<p><em>See also: <a href="../multi-tool-setup/">Setup Across AI Tools</a> - complete
 multi-tool setup including Markdown session configuration.</em></p>
-<p><em>See also: <a href="../../cli/">CLI Reference</a> — full <code>.ctxrc</code> field
+<p><em>See also: <a href="../../cli/">CLI Reference</a> - full <code>.ctxrc</code> field
 reference including <code>session_prefixes</code>.</em></p>
 
 

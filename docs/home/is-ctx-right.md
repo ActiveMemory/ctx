@@ -140,4 +140,5 @@ No dependencies to uninstall. No configuration to revert. **Just files**.
 
 * [Join the Community→](community.md): Open Source is better together.
 * [Getting Started →](getting-started.md): Full installation and setup.
-* [`ctx` and Similar Tools →](../reference/comparison.md): Detailed comparison with other approaches.
+* [`ctx` and Similar Tools →](../reference/comparison.md): Detailed comparison
+  with other approaches.

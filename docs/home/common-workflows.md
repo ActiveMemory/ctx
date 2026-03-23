@@ -41,7 +41,7 @@ ctx add learning "Mock functions must be hoisted in Jest" \
   --application "Place jest.mock() before imports"
 
 # Mark task complete
-ctx tasks complete "user auth"
+ctx task complete "user auth"
 ```
 
 ## Leave a Reminder for Next Session
@@ -288,7 +288,7 @@ agent's judgment.
 | `ctx add decision`   | `/ctx-add-decision`   | Agent drafts rationale and consequences from discussion    |
 | `ctx add learning`   | `/ctx-add-learning`   | Agent extracts the lesson from a debugging session         |
 | `ctx add convention` | `/ctx-add-convention` | Agent observes a repeated pattern and codifies it          |
-| `ctx tasks archive`  | `/ctx-archive`        | Agent reviews which tasks are truly done                   |
+| `ctx task archive`  | `/ctx-archive`        | Agent reviews which tasks are truly done                   |
 | `ctx pad`            | `/ctx-pad`            | Agent reads/writes scratchpad entries in conversation flow |
 | `ctx recall`         | `/ctx-recall`         | Agent searches session history with semantic understanding |
 | `ctx agent`          | `/ctx-agent`          | Agent loads and acts on the context packet                 |
@@ -329,19 +329,19 @@ These are infrastructure: used in scripts, CI, or one-time setup.
 |----------------------------|-------------------------------------------------|
 | `ctx init`                 | Initialize `.context/` directory                |
 | `ctx load`                 | Output assembled context for piping             |
-| `ctx tasks complete`             | Mark a task done by substring match             |
+| `ctx task complete`             | Mark a task done by substring match             |
 | `ctx sync`                 | Reconcile context with codebase state           |
 | `ctx compact`              | Consolidate and clean up context files          |
 | `ctx hook`                 | Generate AI tool integration config             |
 | `ctx watch`                | Watch AI output and auto-apply context updates  |
 | `ctx serve`                | Serve any zensical directory (default: journal) |
-| `ctx permissions snapshot` | Save settings as a golden image                 |
-| `ctx permissions restore`  | Restore settings from golden image              |
+| `ctx permission snapshot` | Save settings as a golden image                 |
+| `ctx permission restore`  | Restore settings from golden image              |
 | `ctx journal site`         | Generate browsable journal from exports         |
 | `ctx notify setup`         | Configure webhook notifications                 |
-| `ctx decisions`            | List and filter decisions                       |
-| `ctx learnings`            | List and filter learnings                       |
-| `ctx tasks`                | List tasks, manage archival and snapshots       |
+| `ctx decision`            | List and filter decisions                       |
+| `ctx learning`            | List and filter learnings                       |
+| `ctx task`                | List tasks, manage archival and snapshots       |
 | `ctx why`                  | Read the philosophy behind ctx                  |
 | `ctx guide`                | Quick-reference cheat sheet                     |
 | `ctx site`                 | Site management commands                        |
