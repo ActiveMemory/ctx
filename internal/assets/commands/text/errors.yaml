@@ -8,7 +8,7 @@ err.backup.backup-project:
 err.backup.backup-smb-config:
   short: 'parse SMB config: %w'
 err.backup.context-dir-not-found:
-  short: "context directory not found: %s — run 'ctx init'"
+  short: "context directory not found: %s - run 'ctx init'"
 err.backup.create-archive:
   short: 'create archive file: %w'
 err.backup.create-archive-dir:
@@ -34,7 +34,7 @@ err.backup.write-smb:
 err.context.dir-not-found:
   short: 'context directory not found: '
 err.config.golden-not-found:
-  short: "no .claude/settings.golden.json found — run 'ctx permission snapshot' first"
+  short: "no .claude/settings.golden.json found - run 'ctx permission snapshot' first"
 err.config.invalid-tool:
   short: 'invalid tool %q: must be claude, aider, or generic'
 err.config.marshal-plugins:
@@ -188,7 +188,7 @@ err.init.detect-reference-time:
 err.init.home-dir:
   short: 'cannot determine home directory: %w'
 err.init.not-initialized:
-  short: "ctx: not initialized — run \"ctx init\" first"
+  short: "ctx: not initialized - run \"ctx init\" first"
 err.init.read-init-template:
   short: 'failed to read %s template: %w'
 err.init.read-project-readme:
@@ -320,7 +320,7 @@ err.prompt.list-templates:
 err.prompt.marker-not-found:
   short: '%s start marker not found'
 err.prompt.no-prompt-template:
-  short: "no embedded template %q — use --stdin to provide content"
+  short: "no embedded template %q - use --stdin to provide content"
 err.prompt.no-template:
   short: 'no template available for %s: %w'
 err.prompt.not-found:

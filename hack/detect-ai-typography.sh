@@ -83,7 +83,10 @@ PATTERN='\x{2013}|\x{2014}|\x{2018}|\x{2019}|\x{201C}|\x{201D}|(?<!\|) -- |````'
 
 # Files where typographic punctuation is intentional.
 # Add glob patterns here to skip specific paths.
-EXCLUDE_PATTERNS=()
+EXCLUDE_PATTERNS=(
+  "*/config/token/delim.go"   # Intentional delimiter constants (EmDash, MetaSeparator)
+  "*_test.go"                 # Test files may contain intentional typographic literals
+)
 
 file_count=0
 hit_count=0

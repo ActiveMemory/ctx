@@ -9,6 +9,8 @@ package token
 const (
 	// PrefixHeading is the Markdown heading character used for prefix checks.
 	PrefixHeading = "#"
+	// PrefixDot is the dot prefix for hidden files and directories.
+	PrefixDot = "."
 	// PrefixBracket is the opening bracket used for placeholder checks.
 	PrefixBracket = "["
 	// PrefixListDash is the prefix for a dash list item.
@@ -26,4 +28,16 @@ const (
 const (
 	// LinkPrefixParent is the relative link prefix to the parent directory.
 	LinkPrefixParent = "../"
+	// PrefixHTTP is the scheme prefix for HTTP/HTTPS URLs.
+	PrefixHTTP = "http"
+	// PrefixProtocolRelative is the protocol-relative URL prefix.
+	PrefixProtocolRelative = "//"
+)
+
+// Template and glob indicator characters.
+const (
+	// GlobStar is the wildcard character in glob patterns.
+	GlobStar = "*"
+	// TemplateBrace is the opening brace in template/placeholder patterns.
+	TemplateBrace = "{"
 )

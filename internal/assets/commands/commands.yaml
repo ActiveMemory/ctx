@@ -115,7 +115,7 @@ config.schema:
   long: |-
     Print the JSON Schema for .ctxrc to stdout.
 
-    Pipe-friendly — redirect to a file for IDE integration:
+    Pipe-friendly - redirect to a file for IDE integration:
 
       ctx config schema > .ctxrc.schema.json
 
@@ -256,19 +256,19 @@ initialize:
     maintaining persistent context for AI coding assistants.
 
     The following files are created:
-      - CONSTITUTION.md  — Hard invariants that must never be violated
-      - TASKS.md         — Current and planned work
-      - DECISIONS.md     — Architectural decisions with rationale
-      - LEARNINGS.md     — Lessons learned, gotchas, tips
-      - CONVENTIONS.md   — Project patterns and standards
-      - ARCHITECTURE.md  — System overview
-      - GLOSSARY.md      — Domain terms and abbreviations
-      - AGENT_PLAYBOOK.md — How AI agents should use this system
+      - CONSTITUTION.md  : Hard invariants that must never be violated
+      - TASKS.md         : Current and planned work
+      - DECISIONS.md     : Architectural decisions with rationale
+      - LEARNINGS.md     : Lessons learned, gotchas, tips
+      - CONVENTIONS.md   : Project patterns and standards
+      - ARCHITECTURE.md  : System overview
+      - GLOSSARY.md      : Domain terms and abbreviations
+      - AGENT_PLAYBOOK.md: How AI agents should use this system
 
     Additionally, in the project root:
-      - PROMPT.md              — Session prompt for AI agents
-      - IMPLEMENTATION_PLAN.md — High-level project direction
-      - CLAUDE.md              — Claude Code configuration
+      - PROMPT.md              : Session prompt for AI agents
+      - IMPLEMENTATION_PLAN.md : High-level project direction
+      - CLAUDE.md              : Claude Code configuration
 
     Use --minimal to only create essential files
     (TASKS.md, DECISIONS.md, CONSTITUTION.md).
@@ -278,7 +278,7 @@ initialize:
     one-task-per-iteration discipline.
 
     By default (without --ralph), the agent is encouraged to ask questions
-    when requirements are unclear — better for collaborative sessions.
+    when requirements are unclear - better for collaborative sessions.
 
     If the ctx Claude Code plugin is installed, init auto-enables it in
     ~/.claude/settings.json so it works across all projects.
@@ -582,7 +582,7 @@ pad.merge:
 
     Each input file is auto-detected as encrypted or plaintext: decryption is
     attempted first, and on failure the file is parsed as plain text. Entries
-    are deduplicated by exact content — position does not matter.
+    are deduplicated by exact content - position does not matter.
 
     Use --key to provide a key file for encrypted pads from other projects.
 
@@ -659,7 +659,7 @@ prompt:
   long: |-
     Manage prompt templates stored in .context/prompts/.
 
-    Prompt templates are plain markdown files — no frontmatter, no build step.
+    Prompt templates are plain markdown files - no frontmatter, no build step.
     Use them as lightweight, reusable instructions for common tasks like
     code reviews, refactoring, or explaining code.
 
@@ -960,7 +960,7 @@ system:
       prune                Clean stale per-session state files
       events               Query the local hook event log
 
-    Hook subcommands (Claude Code plugin — safe to run manually):
+    Hook subcommands (Claude Code plugin - safe to run manually):
       context-load-gate           Context file read directive (PreToolUse)
       check-context-size          Context size checkpoint
       check-ceremonies            Session ceremony adoption nudge
@@ -1165,7 +1165,7 @@ system.contextloadgate:
     Fires on the first tool use per session via PreToolUse hook. Subsequent
     tool calls in the same session are silent (tracked by session marker file).
 
-    Reads context files directly and injects content — no delegation to
+    Reads context files directly and injects content - no delegation to
     bootstrap command, no agent compliance required.
     See specs/context-load-gate-v2.md for design rationale.
 
@@ -1195,7 +1195,7 @@ system.heartbeat:
     continuous session-alive visibility with metadata (prompt count, session ID,
     context modification status).
 
-    Unlike other hooks, the heartbeat never produces stdout — the agent never
+    Unlike other hooks, the heartbeat never produces stdout - the agent never
     sees it. It only fires a webhook and writes to the event log.
 
     Hook event: UserPromptSubmit
@@ -1225,7 +1225,7 @@ system.markwrappedup:
     a checkpoint. If the marker exists and is less than 2 hours old,
     the nudge is suppressed.
 
-    This is a plumbing command — use /ctx-wrap-up instead.
+    This is a plumbing command - use /ctx-wrap-up instead.
   short: Suppress checkpoint nudges after wrap-up
 system.message:
   long: |-
@@ -1389,9 +1389,9 @@ why:
     Surface ctx's philosophy documents in the terminal.
 
     Documents:
-      manifesto    The ctx Manifesto — creation, not code
-      about        About ctx — what it is and why it exists
-      invariants   Design invariants — properties that must hold
+      manifesto    The ctx Manifesto: creation, not code
+      about        About ctx: what it is and why it exists
+      invariants   Design invariants: properties that must hold
 
     Usage:
       ctx why              Interactive numbered menu

@@ -8,12 +8,12 @@ package tidy
 
 import (
 	"strings"
-	"time"
 
 	"github.com/ActiveMemory/ctx/internal/assets/read/desc"
 	"github.com/ActiveMemory/ctx/internal/config/embed/text"
 	"github.com/ActiveMemory/ctx/internal/config/regex"
 	"github.com/ActiveMemory/ctx/internal/config/token"
+	"github.com/ActiveMemory/ctx/internal/entity"
 	"github.com/ActiveMemory/ctx/internal/task"
 )
 
@@ -36,10 +36,10 @@ import (
 //   - lines: Slice of lines from the tasks file
 //
 // Returns:
-//   - []TaskBlock: All completed top-level task blocks found
+//   - []entity.TaskBlock: All completed top-level task blocks found
 //     (outside the Completed section)
-func ParseTaskBlocks(lines []string) []TaskBlock {
-	var blocks []TaskBlock
+func ParseTaskBlocks(lines []string) []entity.TaskBlock {
+	var blocks []entity.TaskBlock
 	inCompletedSection := false
 	i := 0
 
@@ -81,29 +81,6 @@ func ParseTaskBlocks(lines []string) []TaskBlock {
 	return blocks
 }
 
-// BlockContent returns the full content of a block as a single string.
-//
-// Returns:
-//   - string: All lines joined with newlines
-func (b *TaskBlock) BlockContent() string {
-	return strings.Join(b.Lines, token.NewlineLF)
-}
-
-// ParentTaskText extracts just the task text from the parent line.
-//
-// Returns:
-//   - string: Task text without the checkbox prefix, empty if no lines
-func (b *TaskBlock) ParentTaskText() string {
-	if len(b.Lines) == 0 {
-		return ""
-	}
-	match := regex.Task.FindStringSubmatch(b.Lines[0])
-	if match != nil {
-		return task.Content(match)
-	}
-	return ""
-}
-
 // RemoveBlocksFromLines removes the specified blocks from the lines slice.
 //
 // Blocks must be sorted by StartIndex in ascending order.
@@ -114,7 +91,7 @@ func (b *TaskBlock) ParentTaskText() string {
 //
 // Returns:
 //   - []string: New lines with blocks removed
-func RemoveBlocksFromLines(lines []string, blocks []TaskBlock) []string {
+func RemoveBlocksFromLines(lines []string, blocks []entity.TaskBlock) []string {
 	if len(blocks) == 0 {
 		return lines
 	}
@@ -136,19 +113,4 @@ func RemoveBlocksFromLines(lines []string, blocks []TaskBlock) []string {
 	}
 
 	return result
-}
-
-// OlderThan checks if the task was completed more than the specified days ago.
-//
-// Parameters:
-//   - days: Number of days threshold
-//
-// Returns:
-//   - bool: True if DoneTime is set and older than days ago, false otherwise
-func (b *TaskBlock) OlderThan(days int) bool {
-	if b.DoneTime == nil {
-		return false
-	}
-	threshold := time.Now().AddDate(0, 0, -days)
-	return b.DoneTime.Before(threshold)
 }

@@ -52,7 +52,7 @@ func TestCmd_PauseResume_Roundtrip(t *testing.T) {
 	tmpDir := setupStateDir(t)
 	sessionID := "test-roundtrip"
 
-	// Pause first — creates the marker file.
+	// Pause first - creates the marker file.
 	nudge.Pause(sessionID)
 
 	markerPath := filepath.Join(tmpDir, dir.State, "ctx-paused-"+sessionID)

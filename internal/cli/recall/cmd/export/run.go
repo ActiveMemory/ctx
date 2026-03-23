@@ -88,7 +88,7 @@ func Run(cmd *cobra.Command, args []string, opts entity.ExportOpts) error {
 			return ctxErr.NotFound(args[0])
 		}
 		if len(toExport) > 1 {
-			lines := format.FormatSessionMatchLines(toExport)
+			lines := format.SessionMatchLines(toExport)
 			recall.AmbiguousSessionMatch(cmd, args[0], lines)
 			return ctxErr.AmbiguousQuery()
 		}

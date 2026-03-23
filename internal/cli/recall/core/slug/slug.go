@@ -111,10 +111,10 @@ func CleanTitle(s string) string {
 // TitleSlug returns the best available slug for a session, following a
 // fallback hierarchy:
 //
-//  1. existingTitle — enriched title from previously exported frontmatter
-//  2. s.FirstUserMsg — first user message text
-//  3. s.Slug — Claude Code's random slug
-//  4. s.ID[:8] — short ID prefix
+//  1. existingTitle: enriched title from previously exported frontmatter
+//  2. s.FirstUserMsg: first user message text
+//  3. s.Slug: Claude Code's random slug
+//  4. s.ID[:8]: short ID prefix
 //
 // The chosen source (except s.Slug and s.ID[:8], which are already slugs)
 // is passed through SlugifyTitle.

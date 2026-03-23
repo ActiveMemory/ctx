@@ -74,7 +74,7 @@ func Export(
 		}
 		slg, title := slug.TitleSlug(s, existingTitle)
 
-		baseFilename := format.FormatJournalFilename(s, slg)
+		baseFilename := format.JournalFilename(s, slg)
 		baseName := strings.TrimSuffix(baseFilename, file.ExtMarkdown)
 
 		// Detect renames (dedup: old slug → new slug).
@@ -115,7 +115,7 @@ func Export(
 				action = entity.ActionLocked
 				plan.LockedCount++
 			case lock.FrontmatterHasLocked(path):
-				// Frontmatter says locked — promote to state so future
+				// Frontmatter says locked - promote to state so future
 				// operations skip the file without reparsing.
 				jstate.Mark(filename, session.FrontmatterLocked)
 				action = entity.ActionLocked

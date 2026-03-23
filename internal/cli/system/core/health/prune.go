@@ -26,7 +26,7 @@ var UUIDPattern = regexp.MustCompile(
 
 // AutoPrune silently removes session-scoped state files older than the
 // given number of days. Called from context-load-gate on session start.
-// Returns the number of files removed. Errors are swallowed — auto-prune
+// Returns the number of files removed. Errors are swallowed - auto-prune
 // is best-effort and must never block session startup.
 //
 // Parameters:

@@ -148,7 +148,7 @@ func CheckKnowledgeHealth(sessionID string) (string, bool) {
 	decThreshold := rc.EntryCountDecisions()
 	convThreshold := rc.ConventionLineCount()
 
-	// All disabled — nothing to check
+	// All disabled - nothing to check
 	if lrnThreshold == 0 && decThreshold == 0 && convThreshold == 0 {
 		return "", false
 	}

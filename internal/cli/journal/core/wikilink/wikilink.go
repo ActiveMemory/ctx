@@ -77,7 +77,7 @@ func FormatWikilink(target, display string) string {
 
 // FormatWikilinkEntry formats a journal entry as a wikilink list item.
 //
-// Output: - [[filename|title]] — `type` · `outcome`
+// Output: - [[filename|title]] - `type` · `outcome`
 //
 // Parameters:
 //   - e: JournalEntry to format

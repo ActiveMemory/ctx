@@ -144,7 +144,7 @@ func BuildObsidianVault(cmd *cobra.Command, journalDir, output string) error {
 			continue
 		}
 
-		// Normalize content (read-only — do NOT write back to source)
+		// Normalize content (read-only - do NOT write back to source)
 		normalized := wrap.SoftWrapContent(
 			turn.MergeConsecutiveTurns(
 				consolidate.ConsolidateToolRuns(

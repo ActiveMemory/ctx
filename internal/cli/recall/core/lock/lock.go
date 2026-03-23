@@ -142,7 +142,7 @@ func UpdateLockFrontmatter(path string, lock bool) {
 	fmOpen := token.Separator + nl
 
 	if !strings.HasPrefix(content, fmOpen) {
-		// No frontmatter — nothing to modify.
+		// No frontmatter - nothing to modify.
 		return
 	}
 

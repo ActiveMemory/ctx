@@ -50,7 +50,7 @@ write.deps-no-project:
 write.deps-use-type:
   short: 'Use --type to force: %s'
 write.dry-run:
-  short: Dry run — no files will be written.
+  short: Dry run - no files will be written.
 write.exists-writing-as-alternative:
   short: '  ! %s exists, writing as %s'
 write.export-nothing:
@@ -145,7 +145,7 @@ write.import-skipped:
 write.import-summary:
   short: 'Imported: %d entries'
 write.import-summary-dry-run:
-  short: 'Dry run — would import: %d entries'
+  short: 'Dry run - would import: %d entries'
 write.import-error-promote:
   short: "  Error promoting to %s: %v"
 write.init-aborted:
@@ -293,7 +293,7 @@ write.journal-sync-locked-count:
 
     Locked %d entry(s).
 write.journal-sync-match:
-  short: No changes — state already matches frontmatter.
+  short: No changes - state already matches frontmatter.
 write.journal-sync-none:
   short: No journal entries found.
 write.journal-sync-unlocked:
@@ -309,7 +309,7 @@ write.lines-previous:
 write.lock-unlock-entry:
   short: '  ok %s (%s)'
 write.lock-unlock-no-changes:
-  short: No changes — all matched entries already %s.
+  short: No changes - all matched entries already %s.
 write.lock-unlock-summary:
   short: |2-
 
@@ -452,7 +452,7 @@ write.path-exists:
 write.paused:
   short: Context hooks paused for session %s
 write.paused-message:
-  short: "ctx:paused (%d turns) — resume with /ctx-resume"
+  short: "ctx:paused (%d turns) - resume with /ctx-resume"
 write.prefix-error:
   short: 'Error: '
 write.prefix-warn:
@@ -476,7 +476,7 @@ write.publish-decisions:
 write.publish-done:
   short: 'Published to MEMORY.md (markers: <!-- ctx:published --> ... <!-- ctx:end -->)'
 write.publish-dry-run:
-  short: Dry run — no files written.
+  short: Dry run - no files written.
 write.publish-header:
   short: Publishing .context/ -> MEMORY.md...
 write.publish-learnings:
@@ -568,7 +568,7 @@ write.status-preview-line:
 write.sync-action:
   short: '%d. [%s] %s'
 write.sync-dry-run:
-  short: DRY RUN — No changes will be made
+  short: DRY RUN - no changes will be made
 write.sync-dry-run-summary:
   short: Found %d items to sync. Run without --dry-run to apply suggestions.
 write.sync-header:

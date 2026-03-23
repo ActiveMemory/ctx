@@ -39,10 +39,10 @@ import (
 //   - updated: number of existing files updated (frontmatter preserved).
 //   - skipped: number of files skipped (existing or locked).
 func Export(
-	cmd *cobra.Command,
-	plan entity.ExportPlan,
-	jstate *state.JournalState,
-	opts entity.ExportOpts,
+		cmd *cobra.Command,
+		plan entity.ExportPlan,
+		jstate *state.JournalState,
+		opts entity.ExportOpts,
 ) (exported, updated, skipped int) {
 	for _, fa := range plan.Actions {
 		if fa.Action == entity.ActionLocked {
@@ -58,7 +58,7 @@ func Export(
 
 		// Generate content, sanitizing any invalid UTF-8.
 		content := strings.ToValidUTF8(
-			format.FormatJournalEntryPart(
+			format.JournalEntryPart(
 				fa.Session, fa.Messages[fa.StartIdx:fa.EndIdx],
 				fa.StartIdx, fa.Part, fa.TotalParts, fa.BaseName, fa.Title,
 			),

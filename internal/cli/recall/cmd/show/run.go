@@ -38,7 +38,7 @@ import (
 // Returns:
 //   - error: non-nil if session not found or scanning fails
 func Run(
-	cmd *cobra.Command, args []string, latest, full, allProjects bool,
+		cmd *cobra.Command, args []string, latest, full, allProjects bool,
 ) error {
 	sessions, scanErr := query.FindSessions(allProjects)
 	if scanErr != nil {
@@ -64,7 +64,7 @@ func Run(
 		var matches []*entity.Session
 		for _, s := range sessions {
 			if strings.HasPrefix(strings.ToLower(s.ID), query) ||
-				strings.Contains(strings.ToLower(s.Slug), query) {
+					strings.Contains(strings.ToLower(s.Slug), query) {
 				matches = append(matches, s)
 			}
 		}
@@ -72,7 +72,7 @@ func Run(
 			return ctxErr.NotFound(args[0])
 		}
 		if len(matches) > 1 {
-			lines := format.FormatSessionMatchLines(matches)
+			lines := format.SessionMatchLines(matches)
 			recall.AmbiguousSessionMatchWithHint(
 				cmd, args[0], lines, matches[0].ID[:journal.SessionIDHintLen],
 			)
@@ -90,12 +90,12 @@ func Run(
 		Branch:    session.GitBranch,
 		Model:     session.Model,
 		Started:   session.StartTime.Format(time.DateTimePreciseFormat),
-		Duration:  format.FormatDuration(session.Duration),
+		Duration:  format.Duration(session.Duration),
 		Turns:     session.TurnCount,
 		Messages:  len(session.Messages),
-		TokensIn:  format.FormatTokens(session.TotalTokensIn),
-		TokensOut: format.FormatTokens(session.TotalTokensOut),
-		TokensAll: format.FormatTokens(session.TotalTokens),
+		TokensIn:  format.Tokens(session.TotalTokensIn),
+		TokensOut: format.Tokens(session.TotalTokensOut),
+		TokensAll: format.Tokens(session.TotalTokens),
 	})
 
 	// Tool usage summary
@@ -134,7 +134,7 @@ func Run(
 			}
 
 			for _, t := range msg.ToolUses {
-				toolInfo := format.FormatToolUse(t)
+				toolInfo := format.ToolUse(t)
 				recall.SessionDetail(
 					cmd, desc.Text(text.DescKeyLabelInlineTool), toolInfo,
 				)

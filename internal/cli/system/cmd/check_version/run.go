@@ -67,7 +67,7 @@ func Run(cmd *cobra.Command, stdin *os.File) error {
 
 	pluginVer, pluginErr := claude.PluginVersion()
 	if pluginErr != nil {
-		return nil // embedded plugin.json missing — nothing to compare
+		return nil // embedded plugin.json missing - nothing to compare
 	}
 
 	bMajor, bMinor, bOK := coreVersion.ParseMajorMinor(binaryVer)
@@ -83,7 +83,7 @@ func Run(cmd *cobra.Command, stdin *os.File) error {
 		return nil
 	}
 
-	// Version mismatch — emit warning
+	// Version mismatch - emit warning
 	fallback := fmt.Sprintf(desc.Text(
 		text.DescKeyCheckVersionFallback), binaryVer, pluginVer,
 	)

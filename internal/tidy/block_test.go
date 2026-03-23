@@ -10,6 +10,8 @@ import (
 	"strings"
 	"testing"
 	"time"
+
+	"github.com/ActiveMemory/ctx/internal/entity"
 )
 
 func TestGetIndentLevel(t *testing.T) {
@@ -298,7 +300,7 @@ func TestRemoveBlocksFromLines(t *testing.T) {
 		"## Completed",
 	}
 
-	blocks := []TaskBlock{
+	blocks := []entity.TaskBlock{
 		{StartIndex: 4, EndIndex: 6, Lines: []string{"- [x] First task", "  metadata"}},
 		{StartIndex: 7, EndIndex: 8, Lines: []string{"- [x] Third task"}},
 	}
@@ -327,7 +329,7 @@ func TestRemoveBlocksFromLines(t *testing.T) {
 }
 
 func TestBlockContent(t *testing.T) {
-	block := TaskBlock{
+	block := entity.TaskBlock{
 		Lines: []string{
 			"- [x] Parent task",
 			"  First child",
@@ -368,7 +370,7 @@ func TestParentTaskText(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			block := TaskBlock{Lines: tt.lines}
+			block := entity.TaskBlock{Lines: tt.lines}
 			got := block.ParentTaskText()
 			if got != tt.expected {
 				t.Errorf("ParentTaskText() = %q, want %q", got, tt.expected)
@@ -521,7 +523,7 @@ func TestTaskBlockIsOlderThan(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			block := TaskBlock{DoneTime: tt.doneTime}
+			block := entity.TaskBlock{DoneTime: tt.doneTime}
 			got := block.OlderThan(tt.days)
 			if got != tt.want {
 				t.Errorf("OlderThan(%d) = %v, want %v", tt.days, got, tt.want)

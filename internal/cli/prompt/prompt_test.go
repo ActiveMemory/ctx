@@ -76,7 +76,7 @@ func TestList_Empty(t *testing.T) {
 func TestList_NoDir(t *testing.T) {
 	setup(t)
 
-	// Don't create prompts dir — should handle gracefully
+	// Don't create prompts dir - should handle gracefully
 	out, err := runCmd(newPromptCmd("list"))
 	if err != nil {
 		t.Fatalf("unexpected error: %v", err)

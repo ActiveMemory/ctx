@@ -107,7 +107,7 @@ func TestPrintReport_WithWarnings(t *testing.T) {
 	cmd := newTestCmd()
 	report := core.FeedReport{
 		Included: 2,
-		Warnings: []string{"post.md \u2014 no summary paragraph found"},
+		Warnings: []string{"post.md - no summary paragraph found"},
 	}
 
 	writeSite.PrintFeedReport(cmd, "site/feed.xml", report)

@@ -106,7 +106,7 @@ func CheckRequiredFiles(report *Report) {
 func CheckCtxrcValidation(report *Report) {
 	data, readErr := io.SafeReadUserFile(file.CtxRC)
 	if readErr != nil {
-		// No .ctxrc is fine — defaults are used.
+		// No .ctxrc is fine - defaults are used.
 		report.Results = append(report.Results, Result{
 			Name:     doctor.CheckCtxrcValidation,
 			Category: doctor.CategoryStructure,
@@ -433,7 +433,7 @@ func CheckTaskCompletion(report *Report) {
 // Parameters:
 //   - report: Report to append the result to
 func CheckContextTokenSize(report *Report) {
-	// Only count files in ReadOrder — these are the files actually
+	// Only count files in ReadOrder: these are the files actually
 	// loaded into the agent context. Other .md files (DETAILED_DESIGN.md,
 	// map-tracking, etc.) exist on disk but aren't injected.
 	indexed := make(map[string]bool, len(ctx.ReadOrder))

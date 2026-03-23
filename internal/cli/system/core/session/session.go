@@ -52,7 +52,7 @@ func FormatContext(event, context string) string {
 //   - Terminal (character device): returns immediately
 //   - Pipe/file with no EOF within 2s: times out and returns zero value
 //
-// Both cases are harmless — hooks degrade gracefully with zero input.
+// Both cases are harmless - hooks degrade gracefully with zero input.
 //
 // Parameters:
 //   - r: Reader to read hook input from

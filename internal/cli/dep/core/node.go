@@ -108,7 +108,7 @@ func BuildNodeInternalGraph() (map[string][]string, error) {
 	}
 
 	if len(root.Workspaces.Patterns) == 0 {
-		// Single package — no internal dependency graph to show.
+		// Single package - no internal dependency graph to show.
 		return map[string][]string{}, nil
 	}
 
@@ -159,11 +159,11 @@ func BuildNodeFullGraph() (map[string][]string, error) {
 	}
 
 	if len(root.Workspaces.Patterns) == 0 {
-		// Single package — list all deps under package name.
+		// Single package - list all deps under package name.
 		return BuildNodeSinglePackageGraph(root)
 	}
 
-	// Workspace project — show each workspace's full deps.
+	// Workspace project - show each workspace's full deps.
 	wsPackages, discoverErr := DiscoverWorkspaces(root.Workspaces.Patterns)
 	if discoverErr != nil {
 		return nil, discoverErr

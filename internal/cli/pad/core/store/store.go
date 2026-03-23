@@ -63,12 +63,12 @@ func KeyPath() string {
 func EnsureKey(cmd *cobra.Command) error {
 	kp := KeyPath()
 
-	// Key already exists — nothing to do.
+	// Key already exists - nothing to do.
 	if _, err := os.Stat(kp); err == nil {
 		return nil
 	}
 
-	// Encrypted file already exists without a key — we can't generate a new
+	// Encrypted file already exists without a key - we can't generate a new
 	// one because it wouldn't decrypt the existing data.
 	if _, err := os.Stat(ScratchpadPath()); err == nil {
 		return errCrypto.NoKeyAt(kp)

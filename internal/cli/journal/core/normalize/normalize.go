@@ -17,14 +17,9 @@ import (
 	"github.com/ActiveMemory/ctx/internal/cli/journal/core/reduce"
 	"github.com/ActiveMemory/ctx/internal/config/embed/text"
 	"github.com/ActiveMemory/ctx/internal/config/journal"
+	"github.com/ActiveMemory/ctx/internal/config/marker"
 	"github.com/ActiveMemory/ctx/internal/config/regex"
 	"github.com/ActiveMemory/ctx/internal/config/token"
-)
-
-// HTML tag constants for pre-formatted blocks.
-const (
-	tagPre      = "<pre>"
-	tagPreClose = "</pre>"
 )
 
 // NormalizeContent sanitizes journal Markdown for static site rendering:
@@ -47,11 +42,11 @@ const (
 // Returns:
 //   - string: Sanitized content ready for static site rendering
 func NormalizeContent(content string, fencesVerified bool) string {
-	// Strip fences first — eliminates all nesting conflicts
+	// Strip fences first - eliminates all nesting conflicts
 	content = reduce.StripFences(content, fencesVerified)
 
 	// Wrap Tool Output and User turn bodies in <pre><code> with
-	// HTML-escaped content. Eliminates all markdown interpretation —
+	// HTML-escaped content. Eliminates all markdown interpretation:
 	// headings, separators, fence markers, HTML tags become inert.
 	// Strips <details>/<pre> wrappers from the source pipeline and
 	// re-wraps uniformly.
@@ -79,15 +74,15 @@ func NormalizeContent(content string, fencesVerified bool) string {
 		}
 
 		// Track <pre> blocks from WrapToolOutputs/WrapUserTurns.
-		// Content inside is HTML-escaped — skip all transforms.
+		// Content inside is HTML-escaped - skip all transforms.
 		trimmed := strings.TrimSpace(line)
-		if trimmed == "<pre><code>" || trimmed == tagPre {
+		if trimmed == "<pre><code>" || trimmed == marker.TagPre {
 			inPreBlock = true
 			out = append(out, line)
 			continue
 		}
 		if inPreBlock {
-			if trimmed == "</code></pre>" || trimmed == tagPreClose {
+			if trimmed == "</code></pre>" || trimmed == marker.TagPreClose {
 				inPreBlock = false
 			}
 			out = append(out, line)
@@ -152,7 +147,7 @@ func NormalizeContent(content string, fencesVerified bool) string {
 
 // WrapToolOutputs finds Tool Output sections and wraps their body in
 // <pre><code> with HTML-escaped content. This prevents all markdown
-// interpretation — headings, separators, HTML tags, fence markers all
+// interpretation: headings, separators, HTML tags, fence markers all
 // become inert entities.
 //
 // Requires pymdownx.highlight with use_pygments=false in the zensical
@@ -178,12 +173,12 @@ func WrapToolOutputs(content string) string {
 				body, footer = SplitTrailingFooter(body)
 			}
 
-			// Extract raw content — strip existing <details>/<pre> wrappers
+			// Extract raw content: strip existing <details>/<pre> wrappers
 			// and unescape HTML entities from the export pipeline.
 			raw := StripPreWrapper(body)
 
 			// Drop empty or boilerplate tool outputs entirely (header + body).
-			// The header was already appended to out — remove it.
+			// The header was already appended to out - remove it.
 			if IsBoilerplateToolOutput(raw) {
 				return out[:len(out)-1]
 			}
@@ -217,11 +212,11 @@ func WrapToolOutputs(content string) string {
 // extension hijacks <pre><code> and transforms block boundaries.
 //
 // Type 1 HTML block (<pre>) survives blank lines (ends at </pre>, not at a
-// blank line). HTML escaping prevents ALL inner content conflicts — fence
+// blank line). HTML escaping prevents ALL inner content conflicts: fence
 // markers, headings, HTML tags, etc. all become inert entities.
 //
 // Trade-off: markdown formatting in user messages (bold, links, lists) is
-// flattened to plain text. This is acceptable — preserving user input
+// flattened to plain text. This is acceptable: preserving user input
 // verbatim is more valuable than rendering decorative formatting.
 //
 // Boundary detection reuses the same pre-scan + last-match-wins approach
@@ -261,7 +256,7 @@ func StripPreWrapper(body []string) []string {
 		switch {
 		case trimmed == "<details>" || trimmed == "</details>":
 			continue
-		case trimmed == tagPre || trimmed == tagPreClose:
+		case trimmed == marker.TagPre || trimmed == marker.TagPreClose:
 			hadPre = true
 			continue
 		case strings.HasPrefix(trimmed, "<summary>") &&
@@ -272,7 +267,7 @@ func StripPreWrapper(body []string) []string {
 		}
 	}
 
-	// Only unescape when <pre> was found — the old export format
+	// Only unescape when <pre> was found: the old export format
 	// HTML-escapes content inside <pre> blocks. The CollapseToolOutputs
 	// format (just <details>/<summary>) does not escape content.
 	if hadPre {
@@ -302,7 +297,7 @@ func IsBoilerplateToolOutput(raw []string) bool {
 		}
 	}
 
-	// Empty body — no content at all.
+	// Empty body - no content at all.
 	if len(nonBlank) == 0 {
 		return true
 	}
@@ -333,12 +328,12 @@ func PreBlockMask(lines []string) []bool {
 	inPre := false
 	for i, line := range lines {
 		trimmed := strings.TrimSpace(line)
-		if !inPre && (trimmed == tagPre || trimmed == "<pre><code>") {
+		if !inPre && (trimmed == marker.TagPre || trimmed == "<pre><code>") {
 			inPre = true
 			continue
 		}
 		if inPre {
-			if trimmed == tagPreClose || trimmed == "</code></pre>" ||
+			if trimmed == marker.TagPreClose || trimmed == "</code></pre>" ||
 				trimmed == "</details>" {
 				inPre = false
 				continue
@@ -351,7 +346,7 @@ func PreBlockMask(lines []string) []bool {
 
 // CollectTurnNumbers extracts all turn numbers from turn headers in the
 // document, returning them sorted and deduplicated. Headers inside <pre>
-// blocks are skipped — they are embedded content from tool outputs that
+// blocks are skipped: they are embedded content from tool outputs that
 // read other journal files.
 func CollectTurnNumbers(lines []string) []int {
 	mask := PreBlockMask(lines)

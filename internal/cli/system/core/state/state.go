@@ -16,7 +16,7 @@ import (
 )
 
 // StateDir returns the project-scoped runtime state directory
-// (.context/state/). Ensures the directory exists on each call — MkdirAll
+// (.context/state/). Ensures the directory exists on each call - MkdirAll
 // is a no-op when the directory is already present.
 //
 // Returns:

@@ -694,7 +694,7 @@ func TestToolCompactClean(t *testing.T) {
 	if result.IsError {
 		t.Fatalf("unexpected tool error: %s", result.Content[0].Text)
 	}
-	// No completed tasks to move — should report clean.
+	// No completed tasks to move - should report clean.
 	text := result.Content[0].Text
 	if !strings.Contains(text, "clean") && !strings.Contains(text, "Compacted") {
 		t.Errorf("expected clean or compacted message, got: %s", text)
@@ -882,7 +882,7 @@ func TestToolRemind(t *testing.T) {
 	if result.IsError {
 		t.Fatalf("unexpected tool error: %s", result.Content[0].Text)
 	}
-	// No reminders file in test setup — should return "No reminders."
+	// No reminders file in test setup - should return "No reminders."
 	if !strings.Contains(result.Content[0].Text, "No reminders") {
 		t.Errorf("expected no reminders message, got: %s", result.Content[0].Text)
 	}
@@ -1037,7 +1037,7 @@ func TestSessionStateTracking(t *testing.T) {
 	request(t, srv, "tools/call", proto.CallToolParams{Name: "ctx_status"})
 	request(t, srv, "tools/call", proto.CallToolParams{Name: "ctx_next"})
 
-	// End session — should report tool call count.
+	// End session - should report tool call count.
 	resp := request(t, srv, "tools/call", proto.CallToolParams{
 		Name:      "ctx_session_event",
 		Arguments: map[string]interface{}{"type": "end"},

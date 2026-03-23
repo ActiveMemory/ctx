@@ -136,11 +136,11 @@ func Run(
 	for _, s := range filtered {
 		slug := format.Truncate(s.Slug, journal.SlugMaxLen)
 		dateStr := s.StartTime.Local().Format(time.DateTimeFormat)
-		dur := format.FormatDuration(s.Duration)
+		dur := format.Duration(s.Duration)
 		turns := fmt.Sprintf("%d", s.TurnCount)
 		tokens := ""
 		if s.TotalTokens > 0 {
-			tokens = format.FormatTokens(s.TotalTokens)
+			tokens = format.Tokens(s.TotalTokens)
 		}
 		recall.SessionListRow(cmd, rowFmt,
 			slug, s.Project, dateStr, dur, turns, tokens)

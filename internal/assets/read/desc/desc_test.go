@@ -30,7 +30,7 @@ func TestDescKeysResolve(t *testing.T) {
 	for _, key := range keys {
 		val := Text(key)
 		if val == "" {
-			t.Errorf("Text(%q) returned empty string — missing YAML entry?", key)
+			t.Errorf("Text(%q) returned empty string - missing YAML entry?", key)
 		}
 	}
 	t.Logf("verified %d DescKey constants", len(keys))

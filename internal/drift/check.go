@@ -14,9 +14,11 @@ import (
 	"time"
 
 	"github.com/ActiveMemory/ctx/internal/assets/read/desc"
-	ctxCfg "github.com/ActiveMemory/ctx/internal/config/ctx"
+	cfgCtx "github.com/ActiveMemory/ctx/internal/config/ctx"
 	"github.com/ActiveMemory/ctx/internal/config/embed/text"
+	"github.com/ActiveMemory/ctx/internal/config/file"
 	"github.com/ActiveMemory/ctx/internal/config/marker"
+	"github.com/ActiveMemory/ctx/internal/config/project"
 	"github.com/ActiveMemory/ctx/internal/config/regex"
 	"github.com/ActiveMemory/ctx/internal/config/token"
 	"github.com/ActiveMemory/ctx/internal/entity"
@@ -25,11 +27,11 @@ import (
 )
 
 // regInternalPkg matches backtick-quoted paths starting with "internal/".
-var regInternalPkg = regexp.MustCompile("`(internal/[^`]+)`")
+var regInternalPkg = regexp.MustCompile("`(" + project.DirInternalSlash + "[^`]+)`")
 
 // staleAgeExclude lists context files that are expected to be static
 // and should not trigger file-age warnings.
-var staleAgeExclude = []string{ctxCfg.Constitution}
+var staleAgeExclude = []string{cfgCtx.Constitution}
 
 // checkPathReferences scans ARCHITECTURE.md and CONVENTIONS.md for dead paths.
 //
@@ -43,7 +45,7 @@ func checkPathReferences(ctx *entity.Context, report *Report) {
 	foundDeadPaths := false
 
 	for _, f := range ctx.Files {
-		if f.Name != ctxCfg.Architecture && f.Name != ctxCfg.Convention {
+		if f.Name != cfgCtx.Architecture && f.Name != cfgCtx.Convention {
 			continue
 		}
 
@@ -53,17 +55,19 @@ func checkPathReferences(ctx *entity.Context, report *Report) {
 			for _, m := range matches {
 				path := m[1]
 				// Skip URLs and common non-file patterns
-				if strings.HasPrefix(path, "http") || strings.HasPrefix(path, "//") {
+				if strings.HasPrefix(path, token.PrefixHTTP) || strings.HasPrefix(path, token.PrefixProtocolRelative) {
 					continue
 				}
 				// Skip template patterns
-				if strings.Contains(path, "{") || strings.Contains(path, "*") {
+				if strings.Contains(path, token.TemplateBrace) || strings.Contains(path, token.GlobStar) {
 					continue
 				}
 				// Skip illustrative examples: bare filenames (no /)
 				// and shallow paths whose top-level directory doesn't
 				// exist in the project tree. Real references point
 				// into actual directories (internal/, cmd/, docs/).
+				// Forward slash is intentional: paths are extracted from
+				// Markdown content, which always uses "/" regardless of OS.
 				topDir := strings.SplitN(path, "/", 2)[0]
 				if _, dirErr := os.Stat(topDir); os.IsNotExist(dirErr) {
 					continue
@@ -99,7 +103,7 @@ func checkPathReferences(ctx *entity.Context, report *Report) {
 func checkStaleness(ctx *entity.Context, report *Report) {
 	staleness := false
 
-	if f := ctx.File(ctxCfg.Task); f != nil {
+	if f := ctx.File(cfgCtx.Task); f != nil {
 		// Count completed tasks
 		completedCount := strings.Count(string(f.Content), marker.PrefixTaskDone)
 		if completedCount > 10 {
@@ -146,8 +150,8 @@ func checkConstitution(_ *entity.Context, report *Report) {
 		name := strings.ToLower(entry.Name())
 		for _, pattern := range secretPatterns {
 			if strings.Contains(name, pattern) &&
-				!strings.HasSuffix(name, ".example") &&
-				!strings.HasSuffix(name, ".sample") {
+				!strings.HasSuffix(name, file.ExtExample) &&
+				!strings.HasSuffix(name, file.ExtSample) {
 				// Check if it contains actual content (not just template)
 				content, readFileErr := os.ReadFile(entry.Name())
 				if readFileErr != nil {
@@ -158,7 +162,7 @@ func checkConstitution(_ *entity.Context, report *Report) {
 						File:    entry.Name(),
 						Type:    IssueSecret,
 						Message: desc.Text(text.DescKeyDriftSecret),
-						Rule:    "no_secrets",
+						Rule:    RuleNoSecrets,
 					})
 					foundViolation = true
 				}
@@ -186,7 +190,7 @@ func checkRequiredFiles(ctx *entity.Context, report *Report) {
 		existingFiles[f.Name] = true
 	}
 
-	for _, name := range ctxCfg.FilesRequired {
+	for _, name := range cfgCtx.FilesRequired {
 		if !existingFiles[name] {
 			report.Warnings = append(report.Warnings, Issue{
 				File:    name,
@@ -261,8 +265,8 @@ func checkEntryCount(ctx *entity.Context, report *Report) {
 		file      string
 		threshold int
 	}{
-		{ctxCfg.Learning, rc.EntryCountLearnings()},
-		{ctxCfg.Decision, rc.EntryCountDecisions()},
+		{cfgCtx.Learning, rc.EntryCountLearnings()},
+		{cfgCtx.Decision, rc.EntryCountDecisions()},
 	}
 
 	found := false
@@ -305,7 +309,7 @@ func checkEntryCount(ctx *entity.Context, report *Report) {
 //   - ctx: Loaded context containing files to scan
 //   - report: Report to append warnings to (modified in place)
 func checkMissingPackages(ctx *entity.Context, report *Report) {
-	f := ctx.File(ctxCfg.Architecture)
+	f := ctx.File(cfgCtx.Architecture)
 	if f == nil {
 		return
 	}
@@ -319,7 +323,7 @@ func checkMissingPackages(ctx *entity.Context, report *Report) {
 	}
 
 	// Scan actual internal/ subdirectories (one level deep, directories only).
-	entries, err := os.ReadDir("internal")
+	entries, err := os.ReadDir(project.DirInternal)
 	if err != nil {
 		return
 	}
@@ -329,7 +333,7 @@ func checkMissingPackages(ctx *entity.Context, report *Report) {
 		if !entry.IsDir() {
 			continue
 		}
-		pkg := "internal/" + entry.Name()
+		pkg := project.DirInternalSlash + entry.Name()
 		if !referenced[pkg] {
 			report.Warnings = append(report.Warnings, Issue{
 				File: f.Name,

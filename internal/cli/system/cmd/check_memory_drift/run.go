@@ -46,7 +46,7 @@ func Run(cmd *cobra.Command, stdin *os.File) error {
 
 	sourcePath, discoverErr := memory.DiscoverMemoryPath(projectRoot)
 	if discoverErr != nil {
-		// Auto memory not active — skip silently
+		// Auto memory not active - skip silently
 		return nil
 	}
 

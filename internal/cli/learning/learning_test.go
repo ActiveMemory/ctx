@@ -91,7 +91,7 @@ func TestRunReindex_WithFile(t *testing.T) {
 
 	content := `# Learnings
 
-## 2026-01-15 — Always validate input
+## 2026-01-15 - Always validate input
 
 **Context:** Found a bug from invalid input
 **Lesson:** Validate at boundaries

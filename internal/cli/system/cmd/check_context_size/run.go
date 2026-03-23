@@ -54,7 +54,7 @@ func Run(cmd *cobra.Command, stdin *os.File) error {
 		sessionID = session.IDUnknown
 	}
 
-	// Pause check — this hook is the designated single emitter
+	// Pause check: this hook is the designated single emitter
 	if turns := nudge.Paused(sessionID); turns > 0 {
 		writeHook.Nudge(cmd, nudge.PausedMessage(turns))
 		return nil
@@ -79,7 +79,7 @@ func Run(cmd *cobra.Command, stdin *os.File) error {
 
 	// Billing threshold: one-shot warning when tokens exceed the
 	// user-configured billing_token_warn. Independent of all other
-	// triggers — fires even during wrap-up suppression because cost
+	// triggers - fires even during wrap-up suppression because cost
 	// guards are never convenience nudges.
 	if billingThreshold := rc.BillingTokenWarn(); billingThreshold > 0 && tokens >= billingThreshold {
 		writeHook.NudgeBlock(cmd, nudge.EmitBillingWarning(logFile, sessionID, count, tokens, billingThreshold))

@@ -58,6 +58,12 @@ const (
 	CheckMissingPackages CheckName = "missing_packages"
 )
 
+// Constitution rule names referenced in drift violations.
+const (
+	// RuleNoSecrets is the constitution rule for secret file detection.
+	RuleNoSecrets = "no_secrets"
+)
+
 // Issue represents a detected drift issue.
 //
 // Issues are categorized by type and may reference specific files, lines,

@@ -89,10 +89,10 @@ func WrapFileList(files []string, maxWidth int, indent string) string {
 
 		switch {
 		case current == indent:
-			// First entry on this line — always add it.
+			// First entry on this line - always add it.
 			current += entry
 		case len(current)+1+len(entry) > maxWidth:
-			// Would exceed width — start a new line.
+			// Would exceed width - start a new line.
 			lines = append(lines, current)
 			current = indent + entry
 		default:

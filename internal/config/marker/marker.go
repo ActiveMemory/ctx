@@ -14,6 +14,14 @@ const (
 	CommentClose = "-->"
 )
 
+// HTML element markers for preformatted content.
+const (
+	// TagPre is the opening tag for preformatted text blocks.
+	TagPre = "<pre>"
+	// TagPreClose is the closing tag for preformatted text blocks.
+	TagPreClose = "</pre>"
+)
+
 // Context block markers for embedding context in files.
 const (
 	// CtxMarkerStart marks the beginning of an embedded context block.

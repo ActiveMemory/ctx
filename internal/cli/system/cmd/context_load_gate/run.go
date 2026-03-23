@@ -71,12 +71,12 @@ func Run(cmd *cobra.Command, stdin *os.File) error {
 		return nil // already fired this session
 	}
 
-	// Create the marker before emitting — ensures one-shot even if
+	// Create the marker before emitting - ensures one-shot even if
 	// the agent makes multiple parallel tool calls.
 	internalIo.TouchFile(marker)
 
 	// Auto-prune stale session state files (best-effort, silent).
-	// Runs once per session at startup — fast directory scan.
+	// Runs once per session at startup - fast directory scan.
 	health.AutoPrune(load_gate.AutoPruneStaleDays)
 
 	dir := rc.ContextDir()
@@ -100,7 +100,7 @@ func Run(cmd *cobra.Command, stdin *os.File) error {
 
 		data, readErr := internalIo.SafeReadFile(dir, f)
 		if readErr != nil {
-			continue // file missing — skip gracefully
+			continue // file missing - skip gracefully
 		}
 
 		switch f {
@@ -135,7 +135,7 @@ func Run(cmd *cobra.Command, stdin *os.File) error {
 		}
 	}
 
-	// Best-effort changes summary — never blocks injection
+	// Best-effort changes summary - never blocks injection
 	if refTime, refLabel, refErr := detect.ReferenceTime(""); refErr == nil {
 		ctxChanges, _ := changeCore.FindContextChanges(refTime)
 		codeChanges, _ := changeCore.SummarizeCodeChanges(refTime)
@@ -157,7 +157,7 @@ func Run(cmd *cobra.Command, stdin *os.File) error {
 		cmd, coreSession.FormatContext(hook.EventPreToolUse, content.String()),
 	)
 
-	// Webhook: metadata only — never send file content externally
+	// Webhook: metadata only - never send file content externally
 	webhookMsg := fmt.Sprintf(
 		desc.Text(text.DescKeyContextLoadGateWebhook),
 		filesLoaded, totalTokens)

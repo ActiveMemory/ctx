@@ -13,6 +13,7 @@ import (
 	"github.com/ActiveMemory/ctx/internal/config/regex"
 	time2 "github.com/ActiveMemory/ctx/internal/config/time"
 	"github.com/ActiveMemory/ctx/internal/config/token"
+	"github.com/ActiveMemory/ctx/internal/entity"
 	"github.com/ActiveMemory/ctx/internal/task"
 )
 
@@ -34,12 +35,12 @@ func indentLevel(line string) int {
 //   - startIdx: Index of the parent task line
 //
 // Returns:
-//   - TaskBlock: Parsed block with all nested content
-func parseBlockAt(lines []string, startIdx int) TaskBlock {
+//   - entity.TaskBlock: Parsed block with all nested content
+func parseBlockAt(lines []string, startIdx int) entity.TaskBlock {
 	parentLine := lines[startIdx]
 	parentIndent := indentLevel(parentLine)
 
-	block := TaskBlock{
+	block := entity.TaskBlock{
 		Lines:        []string{parentLine},
 		StartIndex:   startIdx,
 		EndIndex:     startIdx + 1,

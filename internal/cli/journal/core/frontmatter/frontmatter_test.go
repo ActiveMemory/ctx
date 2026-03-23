@@ -62,7 +62,7 @@ func TestTransformFrontmatter(t *testing.T) {
 
 			if tt.wantTags {
 				if strings.Contains(got, "topics:") {
-					t.Error("output still contains 'topics:' — should be 'tags:'")
+					t.Error("output still contains 'topics:' - should be 'tags:'")
 				}
 				if !strings.Contains(got, "tags:") {
 					t.Error("output missing 'tags:' field")

@@ -72,7 +72,7 @@ func StripFences(content string, fencesVerified bool) string {
 //   - XML-style system reminders: <system-reminder>...</system-reminder>
 //   - Bold-style system reminders: **System Reminder**: ... (paragraph until blank line)
 //   - Context compaction summaries: multi-line <summary>...</summary> blocks
-//     (standalone <summary> on its own line — see config.TagCompactionSummaryOpen)
+//     (standalone <summary> on its own line - see config.TagCompactionSummaryOpen)
 //   - Compaction continuation boilerplate: "If you need specific details from
 //     before compaction..." paragraph
 //
@@ -216,7 +216,7 @@ func CleanToolOutputJSON(content string) string {
 			}
 		}
 
-		// Not JSON or parse failed — keep original
+		// Not JSON or parse failed - keep original
 		out = append(out, bodyLines...)
 	}
 

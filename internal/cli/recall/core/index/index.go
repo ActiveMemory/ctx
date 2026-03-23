@@ -80,7 +80,7 @@ func BuildSessionIndex(journalDir string) map[string]string {
 				}
 			}
 			if allDigits && len(suffix) > 0 {
-				// This is a multipart file; skip it — the base file
+				// This is a multipart file; skip it - the base file
 				// provides the index entry.
 				continue
 			}

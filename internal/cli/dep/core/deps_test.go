@@ -81,7 +81,7 @@ func TestDetectBuilder(t *testing.T) {
 	}
 	t.Cleanup(func() { _ = os.Chdir(orig) })
 
-	// Empty dir — no builder detected.
+	// Empty dir - no builder detected.
 	tmp := t.TempDir()
 	if chdirErr := os.Chdir(tmp); chdirErr != nil {
 		t.Fatal(chdirErr)
@@ -171,7 +171,7 @@ func TestDetectBuilder_PriorityOrder(t *testing.T) {
 		t.Fatal(chdirErr)
 	}
 
-	// Create both go.mod and package.json — Go should win (first in registry).
+	// Create both go.mod and package.json - Go should win (first in registry).
 	if writeErr := os.WriteFile(filepath.Join(tmp, "go.mod"), []byte("module test\n"), 0o644); writeErr != nil {
 		t.Fatal(writeErr)
 	}

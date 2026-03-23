@@ -44,7 +44,7 @@ func (p *PythonBuilder) Detect() bool {
 //   - map[string][]string: Dependency graph
 //   - error: Non-nil if manifest parsing fails
 func (p *PythonBuilder) Build(external bool) (map[string][]string, error) {
-	// Python builder always shows external deps — there's no internal
+	// Python builder always shows external deps - there's no internal
 	// package graph without import tracing. The external flag controls
 	// whether we include dev dependencies from pyproject.toml.
 	if _, statErr := os.Stat("pyproject.toml"); statErr == nil {
@@ -142,7 +142,7 @@ func ExtractPythonPkgName(line string) string {
 }
 
 // BuildPyprojectGraph parses pyproject.toml for dependencies.
-// Uses a simple line-based parser — no TOML library needed for this subset.
+// Uses a simple line-based parser - no TOML library needed for this subset.
 //
 // Parameters:
 //   - includeDevDeps: If true, include dev dependencies
@@ -244,7 +244,7 @@ func ParsePyprojectDeps(content string, sectionSuffix string) []string {
 			continue
 		}
 
-		// Inside a section — look for key = "version" (Poetry style).
+		// Inside a section - look for key = "version" (Poetry style).
 		if trimmed == "" || strings.HasPrefix(trimmed, "#") {
 			continue
 		}

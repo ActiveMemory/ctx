@@ -132,7 +132,7 @@ mcp.check-task-format:
 mcp.check-task-hint:
   short: 'If yes, run: ctx complete %d'
 mcp.compact-clean:
-  short: Nothing to compact — context is already clean.
+  short: Nothing to compact - context is already clean.
 mcp.format-compacted:
   short: "\nCompacted %d items. This reorganized TASKS.md.\n"
 mcp.event-type-required:
@@ -233,13 +233,13 @@ mcp.prompt-reflect-body:
   short: 'Reflect on this session and identify:
 
 
-    1. **Decisions made** — Record each with ctx_add type="decision"
+    1. **Decisions made** - Record each with ctx_add type="decision"
 
-    2. **Lessons learned** — Record each with ctx_add type="learning"
+    2. **Lessons learned** - Record each with ctx_add type="learning"
 
-    3. **Tasks completed** — Mark done with ctx_complete
+    3. **Tasks completed** - Mark done with ctx_complete
 
-    4. **New tasks identified** — Add with ctx_add type="task"
+    4. **New tasks identified** - Add with ctx_add type="task"
 
 
     Review what was discussed and changed. Don''t let important context slip away.
@@ -289,7 +289,7 @@ mcp.tool-check-task-desc:
     silently completed. Returns nudge text if found.'
 mcp.tool-compact-desc:
   short: Move completed tasks to archive section. Removes empty sections from all
-    context files. Human confirmation required — this reorganizes TASKS.md.
+    context files. Human confirmation required - this reorganizes TASKS.md.
 mcp.tool-next-desc:
   short: Suggest the next pending task based on priority and recency
 mcp.tool-prop-archive:
@@ -316,7 +316,7 @@ mcp.tool-remind-desc:
   short: List pending session-scoped reminders
 mcp.tool-session-desc:
   short: Signal a session lifecycle event. Type 'end' triggers the session-end persistence
-    ceremony — human confirmation required.
+    ceremony - human confirmation required.
 mcp.tool-watch-update-desc:
   short: Apply a structured context-update to .context/ files (learning, decision,
     task, convention, complete). Human confirmation required before calling.

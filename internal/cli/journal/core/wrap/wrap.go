@@ -15,7 +15,7 @@ import (
 
 // SoftWrapContent wraps long lines in source journal files to ~80 characters.
 // Skips only frontmatter and table rows. Wraps everything else including
-// content inside code fences — journal files are reference material, not
+// content inside code fences - journal files are reference material, not
 // executable code.
 //
 // Parameters:

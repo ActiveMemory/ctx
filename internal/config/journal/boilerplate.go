@@ -7,7 +7,7 @@
 package journal
 
 // Boilerplate detection patterns for tool output filtering.
-// These are parser vocabulary (not i18n text) — they match
+// These are parser vocabulary (not i18n text) - they match
 // Claude Code's fixed output strings.
 const (
 	BoilerplateNoMatch    = "No matches found"

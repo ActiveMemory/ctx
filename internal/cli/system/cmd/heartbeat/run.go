@@ -36,7 +36,7 @@ import (
 // Increments a per-session prompt counter, detects context file
 // modifications since the last heartbeat, reads token usage, and
 // emits a notification plus event log entry. Produces no stdout
-// output — the agent never sees this hook.
+// output; the agent never sees this hook.
 //
 // Parameters:
 //   - cmd: Cobra command (unused, heartbeat produces no output)
@@ -115,6 +115,6 @@ func Run(_ *cobra.Command, stdin *os.File) error {
 	}
 	log2.Message(logFile, sessionID, logLine)
 
-	// No stdout — agent never sees this hook.
+	// No stdout - agent never sees this hook.
 	return nil
 }

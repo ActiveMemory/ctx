@@ -103,7 +103,7 @@ func TestNormalizeContent(t *testing.T) {
 			},
 		},
 		{
-			"boilerplate tool output stripped — empty body",
+			"boilerplate tool output stripped - empty body",
 			"### 5. Tool Output (10:30:00)\n\n\n\n### 6. Assistant (10:30:01)\n\nhi",
 			false,
 			func(t *testing.T, got string) {
@@ -116,7 +116,7 @@ func TestNormalizeContent(t *testing.T) {
 			},
 		},
 		{
-			"boilerplate tool output stripped — no matches found",
+			"boilerplate tool output stripped - no matches found",
 			"### 5. Tool Output (10:30:00)\n\nNo matches found\n\n### 6. Assistant (10:30:01)\n\nhi",
 			false,
 			func(t *testing.T, got string) {

@@ -4,13 +4,13 @@
 doctor.context-file.format:
   short: '%-22s ~%d tokens'
 doctor.context-initialized.error:
-  short: Context not initialized — run ctx init
+  short: Context not initialized - run ctx init
 doctor.context-initialized.ok:
   short: Context initialized (.context/)
 doctor.context-size.format:
   short: 'Context size: ~%d tokens (window: %d)'
 doctor.context-size.warning-suffix:
-  short: ' — consider ctx compact'
+  short: ' - consider ctx compact'
 doctor.ctxrc-validation.error:
   short: '.ctxrc parse error: %v'
 doctor.ctxrc-validation.ok:
@@ -20,7 +20,7 @@ doctor.ctxrc-validation.ok-no-file:
 doctor.ctxrc-validation.warning:
   short: '.ctxrc has unknown fields: %s'
 doctor.drift.detected:
-  short: 'Drift: %s — run ctx drift for details'
+  short: 'Drift: %s - run ctx drift for details'
 doctor.drift.ok:
   short: No drift detected
 doctor.drift.violations:
@@ -46,7 +46,7 @@ doctor.plugin-enabled-global.ok:
 doctor.plugin-enabled-local.ok:
   short: Plugin enabled locally (.claude/settings.local.json)
 doctor.plugin-enabled.warning:
-  short: 'Plugin installed but not enabled — run ''ctx init'' to auto-enable, or add {"enabledPlugins": {"%s": true}} to ~/.claude/settings.json'
+  short: 'Plugin installed but not enabled - run ''ctx init'' to auto-enable, or add {"enabledPlugins": {"%s": true}} to ~/.claude/settings.json'
 doctor.plugin-installed.info:
   short: ctx plugin not installed
 doctor.plugin-installed.ok:
@@ -74,8 +74,8 @@ doctor.resource-swap.format:
 doctor.task-completion.format:
   short: 'Tasks: %d/%d completed (%d%%)'
 doctor.task-completion.warning-suffix:
-  short: ' — consider archiving with ctx task archive'
+  short: ' - consider archiving with ctx task archive'
 doctor.webhook.info:
-  short: No webhook configured (optional — use ctx notify setup)
+  short: No webhook configured (optional - use ctx notify setup)
 doctor.webhook.ok:
   short: Webhook configured

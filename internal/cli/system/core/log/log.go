@@ -22,7 +22,7 @@ import (
 
 // Message appends a timestamped log line to the given file.
 // Rotates the log when it exceeds config.HookLogMaxBytes, keeping one
-// previous generation (.1 suffix) — same pattern as eventlog.
+// previous generation (.1 suffix) - same pattern as eventlog.
 //
 // Parameters:
 //   - logFile: Absolute path to the log file

@@ -94,7 +94,7 @@ func MergeConsecutiveTurns(content string) string {
 			if nextMatches == nil || nextMatches[2] != role {
 				break
 			}
-			// Same role — skip the header, continue collecting body
+			// Same role - skip the header, continue collecting body
 			j++
 		}
 

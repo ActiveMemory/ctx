@@ -6,5 +6,5 @@
 
 // Package core provides shared scratchpad operations used by all pad
 // subcommand packages. It owns storage, encryption, blob handling,
-// parsing, and validation — subcommands import core, never each other.
+// parsing, and validation; subcommands import core, never each other.
 package core

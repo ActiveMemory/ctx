@@ -26,4 +26,4 @@ embedded assets. Once that pipeline exists:
 If you need a multi-line format string with placeholders, add it here
 with a comment explaining why it can't go to YAML (see `tpl_obsidian.go`
 for the pattern). Prefer this over scattering `const` blocks in CLI
-packages — at least they're collected in one place.
+packages - at least they're collected in one place.

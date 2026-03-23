@@ -14,6 +14,12 @@ const (
 	ExtTxt = ".txt"
 	// ExtJSONL is the JSON Lines file extension.
 	ExtJSONL = ".jsonl"
+	// ExtExample is the suffix for example/template files that are safe
+	// to have in the working directory (e.g., .env.example).
+	ExtExample = ".example"
+	// ExtSample is the suffix for sample files that are safe to have
+	// in the working directory (e.g., config.sample).
+	ExtSample = ".sample"
 )
 
 // BackupFormat is the format string for timestamped backup file names.

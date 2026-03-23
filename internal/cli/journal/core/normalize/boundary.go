@@ -42,7 +42,7 @@ func MatchTurnHeader(line string, masked bool) *TurnMatch {
 }
 
 // FindTurnBoundary scans lines from startIdx to find the boundary of the
-// current turn body — the last occurrence of expectedNext turn number
+// current turn body: the last occurrence of expectedNext turn number
 // that is not inside a pre block and has a timestamp >= turnTime.
 //
 // Parameters:

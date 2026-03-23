@@ -127,7 +127,7 @@ func TestRunSync_NoChanges(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	// Locked in both frontmatter and state — already in sync.
+	// Locked in both frontmatter and state - already in sync.
 	filename := "2026-01-21-test-abc12345.md"
 	content := "---\ndate: \"2026-01-21\"\nlocked: true\n---\n\n# Test\n"
 	if err := os.WriteFile(

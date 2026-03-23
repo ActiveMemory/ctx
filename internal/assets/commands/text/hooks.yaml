@@ -4,7 +4,7 @@
 backup.box-title:
   short: Backup Warning
 backup.no-marker:
-  short: No backup marker found — backup may have never run.
+  short: No backup marker found - backup may have never run.
 backup.relay-message:
   short: Backup warning
 backup.relay-prefix:
@@ -28,7 +28,7 @@ block.dot-slash:
 block.go-run:
   short: 'Use ''ctx'' from PATH, not ''go run ./cmd/ctx''. Ask the user to run: make build && sudo make install'
 block.install-to-local-bin:
-  short: Do not copy binaries to ~/.local/bin — this overrides the system ctx in /usr/local/bin. Use 'ctx' from PATH.
+  short: Do not copy binaries to ~/.local/bin - this overrides the system ctx in /usr/local/bin. Use 'ctx' from PATH.
 block.mid-git-push:
   short: git push requires explicit user approval.
 block.mid-sudo:
@@ -46,7 +46,7 @@ bootstrap.plugin-warning:
 bootstrap.rules:
   short: |-
     1. Use context_dir above for ALL file reads/writes
-    2. Never say "I don't have memory" — context IS your memory
+    2. Never say "I don't have memory" - context IS your memory
     3. Read files silently, present as recall (not search)
     4. Persist learnings/decisions before session ends
     5. Run `ctx agent` for content summaries
@@ -76,7 +76,7 @@ ceremony.fallback-remember:
     Try starting this session with /ctx-remember
 
     It loads your context, shows active tasks, and
-    picks up where you left off — no re-explaining.
+    picks up where you left off - no re-explaining.
 ceremony.fallback-wrapup:
   short: |-
     Your last 3 sessions didn't end with /ctx-wrap-up
@@ -120,7 +120,7 @@ check-context-size.oversize-fallback:
 check-context-size.relay-prefix:
   short: 'IMPORTANT: Relay this context checkpoint to the user VERBATIM before answering their question.'
 check-context-size.running-low-suffix:
-  short: ' — running low'
+  short: ' - running low'
 check-context-size.silenced-billing-log:
   short: prompt#%d billing-silenced tokens=%d threshold=%d
 check-context-size.silenced-checkpoint-log:
@@ -207,7 +207,7 @@ check-memory-drift.box-title:
 check-memory-drift.content:
   short: 'MEMORY.md has changed since last sync.%sRun: ctx memory sync'
 check-memory-drift.relay-message:
-  short: 'MEMORY.md has changed since last sync — run ctx memory sync'
+  short: 'MEMORY.md has changed since last sync - run ctx memory sync'
 check-memory-drift.relay-prefix:
   short: 'IMPORTANT: Relay this memory drift notice to the user VERBATIM before answering their question.'
 check-persistence.box-title:
@@ -307,12 +307,12 @@ context-load-gate.footer:
     For full decision or learning details, read the entry in DECISIONS.md or LEARNINGS.md by timestamp.
 context-load-gate.header:
   short: |
-    PROJECT CONTEXT (auto-loaded by system hook — already in your context window)
+    PROJECT CONTEXT (auto-loaded by system hook - already in your context window)
 context-load-gate.index-fallback:
   short: (no index entries)
 context-load-gate.index-header:
   short: |+
-    --- %s (index — read full entries by date when relevant) ---
+    --- %s (index - read full entries by date when relevant) ---
     %s
 
 context-load-gate.oversize-action:
@@ -340,7 +340,7 @@ context-load-gate.webhook:
 freshness.box-title:
   short: Technology Constants Stale
 freshness.file-entry:
-  short: '  %s (%d days ago) — %s'
+  short: '  %s (%d days ago) - %s'
 freshness.relay-message:
   short: Technology constant freshness check triggered
 freshness.relay-prefix:
@@ -489,7 +489,7 @@ post-commit.fallback:
 post-commit.relay-message:
   short: Commit succeeded, context capture offered
 qa-reminder.fallback:
-  short: 'HARD GATE — DO NOT COMMIT without completing ALL of these steps first: (1) lint the ENTIRE project, (2) test the ENTIRE project, (3) verify a clean working tree (no modified or untracked files left behind). Not just the files you changed — the whole branch. If unrelated modified files remain, offer to commit them separately, stash them, or get explicit confirmation to leave them. Do NOT say ''I''ll do that at the end'' or ''I''ll handle that after committing.'' Run lint and tests BEFORE every git commit, every time, no exceptions.'
+  short: 'HARD GATE - DO NOT COMMIT without completing ALL of these steps first: (1) lint the ENTIRE project, (2) test the ENTIRE project, (3) verify a clean working tree (no modified or untracked files left behind). Not just the files you changed - the whole branch. If unrelated modified files remain, offer to commit them separately, stash them, or get explicit confirmation to leave them. Do NOT say ''I''ll do that at the end'' or ''I''ll handle that after committing.'' Run lint and tests BEFORE every git commit, every time, no exceptions.'
 qa-reminder.relay-message:
   short: QA gate reminder emitted
 resources.alert-danger:
@@ -507,7 +507,7 @@ resources.alert-warning:
 resources.alerts:
   short: 'Alerts:'
 resources.all-clear:
-  short: All clear — no resource warnings.
+  short: All clear - no resource warnings.
 resources.header:
   short: System Resources
 resources.label-disk:
@@ -531,7 +531,7 @@ resources.status-ok:
 resources.status-warn:
   short: ⚠ WARNING
 specs-nudge.fallback:
-  short: Save your plan to specs/ — these documents track what was designed for the current release. Use specs/feature-name.md naming. If this is a quick fix that doesn't need a spec, proceed without one.
+  short: Save your plan to specs/ - these documents track what was designed for the current release. Use specs/feature-name.md naming. If this is a quick fix that doesn't need a spec, proceed without one.
 specs-nudge.nudge-message:
   short: plan-to-specs nudge emitted
 version-drift.relay-message:

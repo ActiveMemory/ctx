@@ -179,7 +179,7 @@ func runJournalSite(
 		}
 	}
 
-	// Remove orphan site files — entries whose source was renamed or deleted.
+	// Remove orphan site files: entries whose source was renamed or deleted.
 	knownFiles := make(map[string]bool, len(entries)+1)
 	knownFiles[file.Index] = true
 	for _, e := range entries {

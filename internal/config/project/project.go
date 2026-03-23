@@ -6,6 +6,15 @@
 
 package project
 
+// Go project directory constants.
+const (
+	// DirInternal is the conventional Go internal packages directory.
+	DirInternal = "internal"
+	// DirInternalSlash is DirInternal with a trailing slash for path
+	// prefix matching in Markdown content.
+	DirInternalSlash = DirInternal + "/"
+)
+
 // Project-root file constants (not inside .context/).
 const (
 	// ImplementationPlan is the high-level project direction file.

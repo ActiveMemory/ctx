@@ -63,7 +63,7 @@ func Run(cmd *cobra.Command, stdin *os.File) error {
 		return nil
 	}
 
-	// Threshold reached — reset and nudge.
+	// Threshold reached - reset and nudge.
 	counter.Write(counterPath, 0)
 
 	fallback := desc.Text(text.DescKeyCheckTaskCompletionFallback)

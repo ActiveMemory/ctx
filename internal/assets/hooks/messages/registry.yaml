@@ -1,4 +1,4 @@
-# Hook message registry — metadata for embedded .txt templates.
+# Hook message registry: metadata for embedded .txt templates.
 # Each entry maps to a template at <hook>/<variant>.txt.
 # Fields: hook, variant, category, description, vars (optional).
 

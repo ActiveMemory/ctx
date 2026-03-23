@@ -71,7 +71,7 @@ func Run(
 
 	// Check if .context/ already exists and is properly initialized.
 	// A directory with only logs/ (created by hooks before init) is
-	// treated as uninitialized — no overwrite prompt needed.
+	// treated as uninitialized - no overwrite prompt needed.
 	if _, err := os.Stat(contextDir); err == nil {
 		if !force && hasEssentialFiles(contextDir) {
 			// Prompt for confirmation

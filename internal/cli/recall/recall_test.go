@@ -175,7 +175,7 @@ func TestFormatJournalFilename(t *testing.T) {
 		StartTime: time.Date(2026, 1, 21, 14, 30, 0, 0, time.UTC),
 	}
 
-	filename := format.FormatJournalFilename(session, "")
+	filename := format.JournalFilename(session, "")
 
 	// Should contain slug
 	if !strings.Contains(filename, "gleaming-wobbling-sutherland") {

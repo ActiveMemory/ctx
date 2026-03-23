@@ -14,7 +14,7 @@ import (
 	"github.com/ActiveMemory/ctx/internal/entity"
 )
 
-// stubDuration implements the interface{ Minutes() float64 } used by FormatDuration.
+// stubDuration implements the interface{ Minutes() float64 } used by Duration.
 type stubDuration struct{ mins float64 }
 
 func (d stubDuration) Minutes() float64 { return d.mins }
@@ -37,9 +37,9 @@ func TestFormatDuration(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			got := FormatDuration(stubDuration{tt.mins})
+			got := Duration(stubDuration{tt.mins})
 			if got != tt.want {
-				t.Errorf("FormatDuration(%v) = %q, want %q", tt.mins, got, tt.want)
+				t.Errorf("Duration(%v) = %q, want %q", tt.mins, got, tt.want)
 			}
 		})
 	}
@@ -63,9 +63,9 @@ func TestFormatTokens(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			got := FormatTokens(tt.tokens)
+			got := Tokens(tt.tokens)
 			if got != tt.want {
-				t.Errorf("FormatTokens(%d) = %q, want %q", tt.tokens, got, tt.want)
+				t.Errorf("Tokens(%d) = %q, want %q", tt.tokens, got, tt.want)
 			}
 		})
 	}
@@ -254,9 +254,9 @@ func TestFormatToolUse(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			got := FormatToolUse(tt.tool)
+			got := ToolUse(tt.tool)
 			if got != tt.want {
-				t.Errorf("FormatToolUse() = %q, want %q", got, tt.want)
+				t.Errorf("ToolUse() = %q, want %q", got, tt.want)
 			}
 		})
 	}
@@ -311,7 +311,7 @@ func TestFormatPartNavigation(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			got := FormatPartNavigation(tt.part, tt.totalParts, tt.baseName)
+			got := PartNavigation(tt.part, tt.totalParts, tt.baseName)
 			if !strings.Contains(got, tt.wantPartOf) {
 				t.Errorf("missing part indicator %q in:\n%s", tt.wantPartOf, got)
 			}
@@ -339,7 +339,7 @@ func TestFormatPartNavigation(t *testing.T) {
 	}
 }
 
-// --- FormatJournalEntryPart tests ---
+// --- JournalEntryPart tests ---
 
 func TestFormatJournalEntryPart_SinglePart(t *testing.T) {
 	t.Setenv("TZ", "UTC")
@@ -362,7 +362,7 @@ func TestFormatJournalEntryPart_SinglePart(t *testing.T) {
 		},
 	}
 
-	got := FormatJournalEntryPart(s, s.Messages, 0, 1, 1, "2026-01-15-test-slug-abc12345", "")
+	got := JournalEntryPart(s, s.Messages, 0, 1, 1, "2026-01-15-test-slug-abc12345", "")
 
 	// Verify YAML frontmatter
 	if !strings.Contains(got, "---\ndate: \"2026-01-15\"") {
@@ -433,7 +433,7 @@ func TestFormatJournalEntryPart_MultiPart(t *testing.T) {
 	baseName := "2026-02-01-multi-part-session-multi-se"
 
 	// Part 1 of 3: has metadata + nav
-	part1 := FormatJournalEntryPart(s, s.Messages[:2], 0, 1, 3, baseName, "")
+	part1 := JournalEntryPart(s, s.Messages[:2], 0, 1, 3, baseName, "")
 	if !strings.Contains(part1, "<details>") {
 		t.Error("part 1 should have details metadata")
 	}
@@ -448,7 +448,7 @@ func TestFormatJournalEntryPart_MultiPart(t *testing.T) {
 	}
 
 	// Part 2 of 3: no metadata, has nav
-	part2 := FormatJournalEntryPart(s, s.Messages[2:], 2, 2, 3, baseName, "")
+	part2 := JournalEntryPart(s, s.Messages[2:], 2, 2, 3, baseName, "")
 	if strings.Contains(part2, "<details>") {
 		t.Error("part 2 should NOT have HTML details metadata")
 	}
@@ -519,7 +519,7 @@ func TestFormatJournalEntryPart_WithToolUse(t *testing.T) {
 		},
 	}
 
-	got := FormatJournalEntryPart(s, s.Messages, 0, 1, 1, "tool-session", "")
+	got := JournalEntryPart(s, s.Messages, 0, 1, 1, "tool-session", "")
 
 	// Verify formatted tool use
 	if !strings.Contains(got, "Read: /tmp/test.go") {
@@ -555,13 +555,13 @@ func TestFormatJournalFilename_WithSlugOverride(t *testing.T) {
 	}
 
 	// Without override: uses s.Slug.
-	got := FormatJournalFilename(s, "")
+	got := JournalFilename(s, "")
 	if got != "2026-01-15-random-claude-slug-abc12345.md" {
 		t.Errorf("without override = %q", got)
 	}
 
 	// With override: uses the override slug.
-	got = FormatJournalFilename(s, "fix-auth-bug")
+	got = JournalFilename(s, "fix-auth-bug")
 	if got != "2026-01-15-fix-auth-bug-abc12345.md" {
 		t.Errorf("with override = %q", got)
 	}
@@ -584,7 +584,7 @@ func TestFormatJournalEntryPart_SessionIDInFrontmatter(t *testing.T) {
 		},
 	}
 
-	got := FormatJournalEntryPart(s, s.Messages, 0, 1, 1, "base", "")
+	got := JournalEntryPart(s, s.Messages, 0, 1, 1, "base", "")
 
 	if !strings.Contains(got, `session_id: "abc12345-full-session-uuid"`) {
 		t.Error("missing session_id in frontmatter")
@@ -608,7 +608,7 @@ func TestFormatJournalEntryPart_TitleInFrontmatterAndHeading(t *testing.T) {
 		},
 	}
 
-	got := FormatJournalEntryPart(s, s.Messages, 0, 1, 1, "base", "Fix Authentication Bug")
+	got := JournalEntryPart(s, s.Messages, 0, 1, 1, "base", "Fix Authentication Bug")
 
 	// Title should appear in frontmatter.
 	if !strings.Contains(got, `title: "Fix Authentication Bug"`) {
@@ -641,7 +641,7 @@ func TestFormatJournalEntryPart_NoTitleUsesSlug(t *testing.T) {
 		},
 	}
 
-	got := FormatJournalEntryPart(s, s.Messages, 0, 1, 1, "base", "")
+	got := JournalEntryPart(s, s.Messages, 0, 1, 1, "base", "")
 
 	if !strings.Contains(got, "# gleaming-wobbling-sutherland") {
 		t.Error("H1 heading should fall back to slug when no title")

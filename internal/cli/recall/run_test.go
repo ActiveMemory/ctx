@@ -379,7 +379,7 @@ func TestRunRecallExport_PreservesFrontmatter(t *testing.T) {
 	}
 	origTitle := index.ExtractFrontmatterField(string(origData), "title")
 
-	// Inject enriched frontmatter — keep the same title to avoid rename
+	// Inject enriched frontmatter - keep the same title to avoid rename
 	enrichedFM := fmt.Sprintf("---\ndate: \"2026-01-20\"\ntitle: %q\nsummary: \"A curated summary\"\ntags:\n  - enriched\n---\n", origTitle)
 	body := "# hello from test\n\nBody content\n"
 	if writeErr := os.WriteFile(path, []byte(enrichedFM+"\n"+body), 0600); writeErr != nil {
@@ -432,14 +432,14 @@ func TestRunRecallExport_KeepFrontmatterFalseDiscards(t *testing.T) {
 	}
 	origTitle := index.ExtractFrontmatterField(string(origData), "title")
 
-	// Inject enriched frontmatter — keep the same title to avoid rename
+	// Inject enriched frontmatter - keep the same title to avoid rename
 	enrichedFM := fmt.Sprintf("---\ndate: \"2026-01-20\"\ntitle: %q\nsummary: \"A curated summary\"\ntags:\n  - enriched\n---\n", origTitle)
 	body := "# hello from test\n\nBody content\n"
 	if writeErr := os.WriteFile(path, []byte(enrichedFM+"\n"+body), 0600); writeErr != nil {
 		t.Fatal(writeErr)
 	}
 
-	// Re-export with --keep-frontmatter=false — should discard enriched frontmatter
+	// Re-export with --keep-frontmatter=false - should discard enriched frontmatter
 	exportHelper(t, tmpDir, "--keep-frontmatter=false", "--yes")
 
 	data, err := os.ReadFile(filepath.Clean(path))
@@ -542,7 +542,7 @@ func TestRunRecallExport_AllSkipsExistingByDefault(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	// Re-export with --all (no --regenerate) — should skip existing
+	// Re-export with --all (no --regenerate) - should skip existing
 	exportHelper(t, tmpDir)
 
 	data, err := os.ReadFile(filepath.Clean(path))
@@ -767,7 +767,7 @@ func TestRunRecallExport_SingleSessionAlwaysWrites(t *testing.T) {
 		t.Fatal(writeErr)
 	}
 
-	// Re-export same session by ID — should always regenerate without prompting
+	// Re-export same session by ID - should always regenerate without prompting
 	cmd2 := Cmd()
 	buf2 := new(bytes.Buffer)
 	cmd2.SetOut(buf2)
@@ -858,12 +858,12 @@ func TestRunRecallExport_LockedSkippedByDefault(t *testing.T) {
 	}
 
 	// Overwrite with custom content.
-	custom := "locked content — do not touch\n"
+	custom := "locked content - do not touch\n"
 	if writeErr := os.WriteFile(path, []byte(custom), 0600); writeErr != nil {
 		t.Fatal(writeErr)
 	}
 
-	// Re-export with --regenerate --yes — locked file should be skipped.
+	// Re-export with --regenerate --yes - locked file should be skipped.
 	exportHelper(t, tmpDir, "--regenerate", "--yes")
 
 	data, readErr := os.ReadFile(filepath.Clean(path))
@@ -908,7 +908,7 @@ func TestRunRecallExport_LockedSkippedByKeepFrontmatterFalse(t *testing.T) {
 	}
 
 	// Overwrite.
-	custom := "locked content — cannot override\n"
+	custom := "locked content - cannot override\n"
 	if writeErr := os.WriteFile(path, []byte(custom), 0600); writeErr != nil {
 		t.Fatal(writeErr)
 	}
@@ -967,7 +967,7 @@ func TestRunRecallExport_KeepFrontmatterFalse(t *testing.T) {
 		t.Fatal(writeErr)
 	}
 
-	// Re-export with --keep-frontmatter=false — discards frontmatter.
+	// Re-export with --keep-frontmatter=false - discards frontmatter.
 	exportHelper(t, tmpDir, "--keep-frontmatter=false", "--yes")
 
 	data, readErr := os.ReadFile(filepath.Clean(path))
@@ -1249,7 +1249,7 @@ func TestRunRecallExport_MalformedFrontmatterGracefulDegradation(t *testing.T) {
 		t.Fatal(writeErr)
 	}
 
-	// Re-export with --regenerate --yes — should not crash.
+	// Re-export with --regenerate --yes - should not crash.
 	exportHelper(t, tmpDir, "--regenerate", "--yes")
 
 	data, readErr := os.ReadFile(filepath.Clean(path))
@@ -1316,7 +1316,7 @@ func TestRunRecallExport_MultipartFrontmatterPreservation(t *testing.T) {
 	}
 	defer func() { _ = os.Chdir(origDir) }()
 
-	// First export — should produce 2 files (part 1 and part 2).
+	// First export - should produce 2 files (part 1 and part 2).
 	journalDir, _ := exportHelper(t, tmpDir)
 
 	entries, readErr := os.ReadDir(journalDir)

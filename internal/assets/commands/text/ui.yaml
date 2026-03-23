@@ -36,7 +36,7 @@ changes.code-latest:
 changes.ctx-heading:
   short: '### Context File Changes'
 changes.ctx-line:
-  short: '- `%s` — modified %s'
+  short: '- `%s` - modified %s'
 changes.heading:
   short: '## Changes Since Last Session'
 changes.hook-commits:
@@ -54,7 +54,7 @@ changes.ref-point:
 changes.since-prefix:
   short: 'since '
 compact.clean:
-  short: '✓ Nothing to compact — context is already clean'
+  short: '✓ Nothing to compact - context is already clean'
 compact.heading:
   short: Compact Analysis
 compact.sections-removed:
@@ -148,11 +148,11 @@ drift.passed-heading:
 drift.passed-line:
   short: '  - %s'
 drift.status-violation:
-  short: 'Status: VIOLATION — Constitution violations detected'
+  short: 'Status: VIOLATION - constitution violations detected'
 drift.status-warning:
-  short: 'Status: WARNING — Issues detected that should be addressed'
+  short: 'Status: WARNING - issues detected that should be addressed'
 drift.status-ok:
-  short: 'Status: OK — No drift detected'
+  short: 'Status: OK - no drift detected'
 drift.check-path-refs:
   short: Path references are valid
 drift.check-staleness:
@@ -165,7 +165,7 @@ drift.check-file-age:
   short: No stale files by age
 guide.default:
   short: |
-    ctx — persistent AI context
+    ctx - persistent AI context
 
     GETTING STARTED
       ctx init              Create .context/ directory with templates
@@ -252,9 +252,9 @@ journal.moc.browse-by:
 journal.moc.file-page-stats:
   short: '**%d sessions** touching this file.'
 journal.moc.file-stats:
-  short: '**%d files** across **%d sessions** — **%d popular**, **%d long-tail**'
+  short: '**%d files** across **%d sessions** - **%d popular**, **%d long-tail**'
 journal.moc.files-description:
-  short: — sessions grouped by file touched
+  short: '- sessions grouped by file touched'
 journal.moc.nav-description:
   short: Navigation hub for all journal entries.
 journal.moc.session-link:
@@ -262,9 +262,9 @@ journal.moc.session-link:
 journal.moc.topic-page-stats:
   short: '**%d sessions** with this topic.'
 journal.moc.topic-stats:
-  short: '**%d topics** across **%d sessions** — **%d popular**, **%d long-tail**'
+  short: '**%d topics** across **%d sessions** - **%d popular**, **%d long-tail**'
 journal.moc.topics-description:
-  short: — sessions grouped by topic
+  short: '- sessions grouped by topic'
 journal.moc.topics-label:
   short: '**Topics**: %s'
 journal.moc.type-label:
@@ -274,7 +274,7 @@ journal.moc.type-page-stats:
 journal.moc.type-stats:
   short: '**%d types** across **%d sessions**'
 journal.moc.types-description:
-  short: — sessions grouped by type
+  short: '- sessions grouped by type'
 journal.moc.browse-item:
   short: '- %s %s'
 journal.moc.heading-topics:
@@ -296,11 +296,11 @@ journal.moc.heading-month:
 journal.moc.item-sessions:
   short: '- %s (%d sessions)'
 journal.moc.item-named:
-  short: '- **%s** — %s'
+  short: '- **%s** - %s'
 journal.moc.item-file-sessions:
   short: '- %s (%d sessions)'
 journal.moc.item-file-named:
-  short: '- `%s` — %s'
+  short: '- `%s` - %s'
 journal.moc.item-listed:
   short: '- %s'
 journal.moc.page-title:
@@ -318,7 +318,7 @@ memory.diff-old-format:
   short: |
     --- %s (mirror)
 memory.import-review:
-  short: Imported from MEMORY.md — review and update as needed
+  short: Imported from MEMORY.md - review and update as needed
 memory.import-source:
   short: auto-memory import
 memory.publish-conventions:
@@ -338,7 +338,7 @@ pad.key-created:
 prune.dry-run-line:
   short: '  would prune: %s (age: %s)'
 prune.dry-run-summary:
-  short: Dry run — would prune %d files (skip %d recent, preserve %d global)
+  short: Dry run - would prune %d files (skip %d recent, preserve %d global)
 prune.error-line:
   short: '  error removing %s: %v'
 prune.summary:
@@ -386,21 +386,21 @@ site.feed-warnings:
 site.feed-item:
   short: '  %s'
 site.skip-cannot-read:
-  short: '%s — cannot read file'
+  short: '%s - cannot read file'
 site.skip-no-frontmatter:
-  short: '%s — no frontmatter found'
+  short: '%s - no frontmatter found'
 site.skip-malformed:
-  short: '%s — malformed frontmatter'
+  short: '%s - malformed frontmatter'
 site.skip-parse-error:
-  short: '%s — %s'
+  short: '%s - %s'
 site.skip-not-finalized:
-  short: '%s — not finalized'
+  short: '%s - not finalized'
 site.skip-missing-title:
-  short: '%s — missing title'
+  short: '%s - missing title'
 site.skip-missing-date:
-  short: '%s — missing date'
+  short: '%s - missing date'
 site.warn-no-summary:
-  short: '%s — no summary paragraph found'
+  short: '%s - no summary paragraph found'
 sync.config.description:
   short: Found %s but %s not documented
 sync.config.suggestion:
@@ -437,7 +437,7 @@ task-archive.success-with-age:
 task-snapshot.created-format:
   short: 'Created: %s'
 task-snapshot.header-format:
-  short: '# TASKS.md Snapshot — %s'
+  short: '# TASKS.md Snapshot - %s'
 task-snapshot.saved:
   short: ✓ Snapshot saved to %s
 time.ago:
@@ -485,7 +485,7 @@ watch.apply-success:
 watch.close-log-error:
   short: 'failed to close log file: %v'
 watch.dry-run-banner:
-  short: DRY RUN — No changes will be made
+  short: DRY RUN - no changes will be made
 watch.dry-run-preview:
   short: |
     ○ Would apply: [%s] %s

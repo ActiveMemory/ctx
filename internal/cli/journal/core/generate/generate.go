@@ -154,7 +154,7 @@ func InjectedSummary(content, summary string) string {
 		}
 	}
 
-	// No frontmatter — prepend
+	// No frontmatter - prepend
 	return admonition + content
 }
 

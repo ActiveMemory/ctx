@@ -176,7 +176,7 @@ func ExistsInsideHTMLComment(content string, idx int) bool {
 	// Check whether a --> closes that block before idx
 	closeIdx := strings.Index(content[openIdx:], marker.CommentClose)
 	if closeIdx == -1 {
-		// Unclosed comment — treat as inside
+		// Unclosed comment - treat as inside
 		return true
 	}
 	// The comment closes at openIdx+closeIdx; if that position is >= idx,

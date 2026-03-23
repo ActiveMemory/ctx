@@ -91,7 +91,7 @@ func TestRunReindex_WithFile(t *testing.T) {
 
 	content := `# Decisions
 
-## 2026-01-15 — Use YAML for config
+## 2026-01-15 - Use YAML for config
 
 **Context:** Need a config format
 **Rationale:** YAML is human-readable

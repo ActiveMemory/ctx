@@ -213,13 +213,13 @@ func TestInitGuard_BlocksUninitializedCommand(t *testing.T) {
 	if execErr == nil {
 		t.Fatal("expected error for uninitialized context directory")
 	}
-	if got := execErr.Error(); got != `ctx: not initialized — run "ctx init" first` {
+	if got := execErr.Error(); got != `ctx: not initialized - run "ctx init" first` {
 		t.Errorf("unexpected error: %s", got)
 	}
 }
 
 func TestInitGuard_AllowsAnnotatedCommand(t *testing.T) {
-	tmp := t.TempDir() // empty — not initialized
+	tmp := t.TempDir() // empty - not initialized
 
 	cmd := RootCmd()
 	dummy := &cobra.Command{
@@ -236,7 +236,7 @@ func TestInitGuard_AllowsAnnotatedCommand(t *testing.T) {
 }
 
 func TestInitGuard_AllowsHiddenCommand(t *testing.T) {
-	tmp := t.TempDir() // empty — not initialized
+	tmp := t.TempDir() // empty - not initialized
 
 	cmd := RootCmd()
 	dummy := &cobra.Command{
@@ -254,7 +254,7 @@ func TestInitGuard_AllowsHiddenCommand(t *testing.T) {
 
 func TestInitGuard_AllowsGroupingCommand(t *testing.T) {
 	cmd := RootCmd()
-	// Grouping command: no Run or RunE — just shows help.
+	// Grouping command: no Run or RunE - just shows help.
 	group := &cobra.Command{
 		Use:   "group",
 		Short: "A grouping command",
@@ -268,7 +268,7 @@ func TestInitGuard_AllowsGroupingCommand(t *testing.T) {
 }
 
 func TestInitGuard_AllowsCompletionSubcommand(t *testing.T) {
-	tmp := t.TempDir() // empty — not initialized
+	tmp := t.TempDir() // empty - not initialized
 	origDir, err := os.Getwd()
 	if err != nil {
 		t.Fatal(err)

@@ -141,7 +141,7 @@ func TestAdd_IDIncrement(t *testing.T) {
 	// Dismiss the middle one (ID 2).
 	_, _ = runCmd(newRemindCmd("dismiss", "2"))
 
-	// Add another — should get ID 4 (max existing is 3, so 3+1).
+	// Add another - should get ID 4 (max existing is 3, so 3+1).
 	out, err := runCmd(newRemindCmd("add", "fourth"))
 	if err != nil {
 		t.Fatalf("unexpected error: %v", err)

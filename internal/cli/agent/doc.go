@@ -27,20 +27,20 @@
 //   - Tier 3 (20%): Convention items from CONVENTIONS.md. Same
 //     fill-until-cap strategy as tasks.
 //   - Tier 4+5 (remaining): Decisions and learnings share whatever
-//     budget remains after tiers 1–3. The split is proportional to
+//     budget remains after tiers 1-3. The split is proportional to
 //     content size with a 30% minimum guarantee for each section
 //     (see [splitBudget]).
 //
 // # Entry Scoring
 //
 // Decisions and learnings are scored before budget fitting. Each entry
-// receives a combined score in the range 0.0–2.0, computed by
+// receives a combined score in the range 0.0-2.0, computed by
 // [scoreEntry] as:
 //
 //	score = recencyScore + relevanceScore
 //
 // Recency ([recencyScore]) uses age brackets: entries from the last
-// 7 days score 1.0, 8–30 days score 0.7, 31–90 days score 0.4, and
+// 7 days score 1.0, 8-30 days score 0.7, 31-90 days score 0.4, and
 // older entries score 0.2. This ensures recent context is preferred
 // without completely excluding older entries that may still be
 // relevant.
@@ -72,6 +72,6 @@
 //
 // All budget accounting uses [context.EstimateTokensString], which
 // applies a len/4 heuristic. This deliberately overestimates, which
-// is correct for budgeting — it is better to include slightly less
+// is correct for budgeting: it is better to include slightly less
 // than to overflow the context window.
 package agent

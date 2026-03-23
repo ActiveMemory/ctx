@@ -68,7 +68,7 @@ func CompactTasks(
 	// Archive if requested.
 	if archive && len(result.ArchivableBlocks) > 0 {
 		archiveDays := rc.ArchiveAfterDays()
-		var blocksToArchive []tidy.TaskBlock
+		var blocksToArchive []entity.TaskBlock
 		for _, block := range result.ArchivableBlocks {
 			if block.OlderThan(archiveDays) {
 				blocksToArchive = append(blocksToArchive, block)

@@ -19,6 +19,7 @@ import (
 	"github.com/ActiveMemory/ctx/internal/config/embed/text"
 	"github.com/ActiveMemory/ctx/internal/config/fs"
 	"github.com/ActiveMemory/ctx/internal/config/token"
+	"github.com/ActiveMemory/ctx/internal/entity"
 	errTask "github.com/ActiveMemory/ctx/internal/err/task"
 	"github.com/ActiveMemory/ctx/internal/io"
 	"github.com/ActiveMemory/ctx/internal/tidy"
@@ -58,7 +59,7 @@ func runArchive(cmd *cobra.Command, dryRun bool) error {
 	blocks := tidy.ParseTaskBlocks(lines)
 
 	// Filter to only archivable blocks (completed with no incomplete children)
-	var archivableBlocks []tidy.TaskBlock
+	var archivableBlocks []entity.TaskBlock
 	var skippedCount int
 	for _, block := range blocks {
 		if block.IsArchivable {
