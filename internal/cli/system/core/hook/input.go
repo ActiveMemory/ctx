@@ -7,34 +7,12 @@
 package hook
 
 import (
-	"encoding/json"
 	"os"
 
 	"github.com/ActiveMemory/ctx/internal/cli/system/core"
 	coreSession "github.com/ActiveMemory/ctx/internal/cli/system/core/session"
 	cfgSession "github.com/ActiveMemory/ctx/internal/config/session"
 )
-
-// FormatContext builds a JSON HookResponse with additionalContext for the
-// given hook event. This is the standard way for non-blocking hooks to inject
-// directives that the agent will actually process (plain text gets ignored).
-//
-// Parameters:
-//   - event: Hook event name
-//   - context: Additional context string
-//
-// Returns:
-//   - string: JSON-encoded hook response
-func FormatContext(event, context string) string {
-	resp := HookResponse{
-		HookSpecificOutput: &HookSpecificOutput{
-			HookEventName:     event,
-			AdditionalContext: context,
-		},
-	}
-	data, _ := json.Marshal(resp)
-	return string(data)
-}
 
 // Preamble reads hook input, resolves the session ID, and checks the
 // pause state. Most hooks share this exact preamble sequence.

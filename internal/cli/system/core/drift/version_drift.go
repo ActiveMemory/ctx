@@ -4,7 +4,7 @@
 //   \    Copyright 2026-present Context contributors.
 //                 SPDX-License-Identifier: Apache-2.0
 
-package hook
+package drift
 
 import (
 	"encoding/json"
@@ -16,6 +16,7 @@ import (
 	"github.com/ActiveMemory/ctx/internal/assets/read/claude"
 	"github.com/ActiveMemory/ctx/internal/assets/read/desc"
 	"github.com/ActiveMemory/ctx/internal/cli/system/core"
+	coreSession "github.com/ActiveMemory/ctx/internal/cli/system/core/session"
 	"github.com/ActiveMemory/ctx/internal/config/embed/text"
 	"github.com/ActiveMemory/ctx/internal/config/hook"
 
@@ -61,7 +62,7 @@ func CheckVersionDrift(sessionID string) string {
 	if msg == "" {
 		return ""
 	}
-	response := FormatContext(hook.EventPostToolUse, msg)
+	response := coreSession.FormatContext(hook.EventPostToolUse, msg)
 
 	ref := notify.NewTemplateRef(hook.VersionDrift, hook.VariantNudge, vars)
 	core.Relay(fmt.Sprintf(desc.Text(text.DescKeyRelayPrefixFormat),

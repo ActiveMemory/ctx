@@ -148,7 +148,7 @@ func Run(cmd *cobra.Command, stdin *os.File) error {
 		filesLoaded, totalTokens))
 
 	writeHook.HookContext(
-		cmd, hook2.FormatContext(hook.EventPreToolUse, content.String()),
+		cmd, coreSession.FormatContext(hook.EventPreToolUse, content.String()),
 	)
 
 	// Webhook: metadata only — never send file content externally
