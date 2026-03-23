@@ -11,7 +11,8 @@ import (
 	"os"
 	"strings"
 
-	"github.com/ActiveMemory/ctx/internal/cli/initialize/core/merge"
+	"github.com/ActiveMemory/ctx/internal/cli/initialize/core/backup"
+	"github.com/ActiveMemory/ctx/internal/cli/initialize/core/entry"
 	"github.com/spf13/cobra"
 
 	readProj "github.com/ActiveMemory/ctx/internal/assets/read/project"
@@ -74,10 +75,10 @@ func HandleImplementationPlan(cmd *cobra.Command, force, autoMerge bool) error {
 			return nil
 		}
 	}
-	if bkErr := backupFile(cmd, project.ImplementationPlan, existingContent); bkErr != nil {
+	if bkErr := backup.BackupFile(cmd, project.ImplementationPlan, existingContent); bkErr != nil {
 		return bkErr
 	}
-	insertPos := merge.FindInsertionPoint(existingStr)
+	insertPos := entry.FindInsertionPoint(existingStr)
 	var mergedContent string
 	if insertPos == 0 {
 		mergedContent = string(templateContent) + token.NewlineLF + existingStr
@@ -120,7 +121,7 @@ func UpdatePlanSection(cmd *cobra.Command, existing string, newTemplate []byte) 
 	}
 	planContent := templateStr[templateStart : templateEnd+len(marker.PlanMarkerEnd)]
 	newContent := existing[:startIdx] + planContent + existing[endIdx:]
-	if bkErr := backupFile(cmd, project.ImplementationPlan, []byte(existing)); bkErr != nil {
+	if bkErr := backup.BackupFile(cmd, project.ImplementationPlan, []byte(existing)); bkErr != nil {
 		return bkErr
 	}
 	if err := os.WriteFile(project.ImplementationPlan, []byte(newContent), fs.PermFile); err != nil {

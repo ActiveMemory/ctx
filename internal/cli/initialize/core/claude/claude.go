@@ -7,11 +7,11 @@
 package claude
 
 import (
+	"github.com/ActiveMemory/ctx/internal/cli/initialize/core/merge"
 	"github.com/spf13/cobra"
 
 	readClaude "github.com/ActiveMemory/ctx/internal/assets/read/claude"
 	"github.com/ActiveMemory/ctx/internal/assets/read/desc"
-	"github.com/ActiveMemory/ctx/internal/cli/initialize/core"
 	"github.com/ActiveMemory/ctx/internal/config/claude"
 	"github.com/ActiveMemory/ctx/internal/config/embed/text"
 	"github.com/ActiveMemory/ctx/internal/config/marker"
@@ -34,7 +34,7 @@ func HandleClaudeMd(cmd *cobra.Command, force, autoMerge bool) error {
 		return errInitialize.ReadTemplate(claude.Md, err)
 	}
 
-	created, mergeErr := core.CreateOrMerge(cmd, core.MergeParams{
+	created, mergeErr := merge.CreateOrMerge(cmd, merge.Params{
 		Filename:        claude.Md,
 		MarkerStart:     marker.CtxMarkerStart,
 		TemplateContent: templateContent,
