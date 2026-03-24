@@ -135,7 +135,7 @@ makes the *next* session **smarter**.
 **Connect with `ctx`**
 
 * [Join the Community →](community.md): ask questions, share workflows, and help shape what comes next
-* [Read the Blog →](../../blog/): real-world patterns, ponderings, and lessons learned from building `ctx` using `ctx`
+* [Read the Blog →](../blog/): real-world patterns, ponderings, and lessons learned from building `ctx` using `ctx`
 
 ----
 

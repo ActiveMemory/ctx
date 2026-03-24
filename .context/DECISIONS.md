@@ -3,6 +3,7 @@
 <!-- INDEX:START -->
 | Date | Decision |
 |------|--------|
+| 2026-03-23 | Pre/pre HTML tags promoted to shared constants in config/marker |
 | 2026-03-23 | Pure-data param structs in entity — replace function pointers with text keys |
 | 2026-03-22 | No runtime pluralization — use singular/plural text key pairs |
 | 2026-03-22 | Output functions belong in write/, never in core/ or cmd/ |
@@ -61,6 +62,20 @@
 | 2026-02-26 | Security and permissions (consolidated) |
 | 2026-02-27 | Webhook and notification design (consolidated) |
 <!-- INDEX:END -->
+
+## [2026-03-23-165612] Pre/pre HTML tags promoted to shared constants in config/marker
+
+**Status**: Accepted
+
+**Context**: Two packages (normalize and format) used hardcoded pre strings independently
+
+**Decision**: Pre/pre HTML tags promoted to shared constants in config/marker
+
+**Rationale**: Cross-package magic strings belong in config constants per CONVENTIONS.md
+
+**Consequence**: marker.TagPre and marker.TagPreClose are the canonical references; package-local constants deleted
+
+---
 
 ## [2026-03-23-003346] Pure-data param structs in entity — replace function pointers with text keys
 

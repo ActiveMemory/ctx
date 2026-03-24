@@ -821,7 +821,7 @@ ctx prompt rm <name>
 
 - `name`: Template name (without `.md` extension)
 
-**See also**: [Prompt Templates](../recipes/prompts.md)
+**See also**: [Prompt Templates](../recipes/prompt-templates.md)
 
 ---
 

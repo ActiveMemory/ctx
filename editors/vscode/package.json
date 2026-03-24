@@ -2,7 +2,7 @@
   "name": "ctx-context",
   "displayName": "ctx — Persistent Context for AI",
   "description": "Chat participant (@ctx) for persistent project context across AI coding sessions",
-  "version": "0.7.0",
+  "version": "0.8.0",
   "publisher": "activememory",
   "license": "Apache-2.0",
   "homepage": "https://github.com/ActiveMemory/ctx",
@@ -86,16 +86,12 @@
             "description": "Reconcile context with codebase"
           },
           {
-            "name": "complete",
-            "description": "Mark a task as completed"
+            "name": "task",
+            "description": "Task operations: complete, archive, snapshot"
           },
           {
             "name": "remind",
             "description": "Manage session-scoped reminders"
-          },
-          {
-            "name": "tasks",
-            "description": "Archive or snapshot tasks"
           },
           {
             "name": "pad",
@@ -108,6 +104,66 @@
           {
             "name": "system",
             "description": "System diagnostics and bootstrap"
+          },
+          {
+            "name": "memory",
+            "description": "Memory bridge operations (sync, status, diff, import, publish)"
+          },
+          {
+            "name": "journal",
+            "description": "Journal management (site, obsidian)"
+          },
+          {
+            "name": "doctor",
+            "description": "Context health diagnostics"
+          },
+          {
+            "name": "config",
+            "description": "Runtime configuration (switch, status, schema)"
+          },
+          {
+            "name": "prompt",
+            "description": "Prompt templates (list, add, show, rm)"
+          },
+          {
+            "name": "why",
+            "description": "Show rationale for context design decisions"
+          },
+          {
+            "name": "change",
+            "description": "Show recent codebase changes"
+          },
+          {
+            "name": "dep",
+            "description": "Show project dependencies"
+          },
+          {
+            "name": "guide",
+            "description": "Quick start guide"
+          },
+          {
+            "name": "permission",
+            "description": "Permission snapshot and restore"
+          },
+          {
+            "name": "site",
+            "description": "Documentation site (feed)"
+          },
+          {
+            "name": "loop",
+            "description": "Generate autonomous iteration scripts"
+          },
+          {
+            "name": "pause",
+            "description": "Pause context hooks for current session"
+          },
+          {
+            "name": "resume",
+            "description": "Resume context hooks"
+          },
+          {
+            "name": "reindex",
+            "description": "Rebuild context file indices"
           }
         ],
         "disambiguation": [
