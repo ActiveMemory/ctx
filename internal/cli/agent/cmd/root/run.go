@@ -17,7 +17,7 @@ import (
 	"github.com/ActiveMemory/ctx/internal/config/fmt"
 	"github.com/ActiveMemory/ctx/internal/context/load"
 	errCtx "github.com/ActiveMemory/ctx/internal/err/context"
-	ctxErr "github.com/ActiveMemory/ctx/internal/err/initialize"
+	errInit "github.com/ActiveMemory/ctx/internal/err/initialize"
 )
 
 // Run executes the agent command logic.
@@ -53,7 +53,7 @@ func Run(
 	if err != nil {
 		var notFoundError *errCtx.NotFoundError
 		if errors.As(err, &notFoundError) {
-			return ctxErr.NotInitialized()
+			return errInit.NotInitialized()
 		}
 		return err
 	}

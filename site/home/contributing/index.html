@@ -3523,6 +3523,8 @@
       
         
       
+        
+      
     
     
     
@@ -3656,6 +3658,36 @@
     
   
     AI Tools
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../operations/release/" class="md-nav__link">
+        
+  
+  
+    <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-package" viewBox="0 0 24 24"><path d="M11 21.73a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73zM12 22V12"/><path d="M3.29 7 12 12l8.71-5M7.5 4.27l9 5.15"/></svg>
+  
+  <span class="md-ellipsis">
+    
+  
+    Cutting a Release
   
 
     
@@ -4410,7 +4442,7 @@ your working tree: no reinstall needed after edits:</p>
 <tbody>
 <tr>
 <td><code>internal/assets/claude/skills/</code></td>
-<td>The 29 <code>ctx-*</code> skills that ship with the plugin</td>
+<td>The 39 <code>ctx-*</code> skills that ship with the plugin</td>
 <td>Yes</td>
 </tr>
 <tr>
@@ -4486,7 +4518,7 @@ and are now available to all ctx users: <code>/ctx-brainstorm</code>, <code>/ctx
 <li>Add a section to the appropriate CLI doc page in <code>docs/cli/</code>.</li>
 </ol>
 <p>Pattern to follow: <code>internal/cli/pad/pad.go</code> (parent with subcommands) or
-<code>internal/cli/complete/complete.go</code> (single command).</p>
+<code>internal/cli/drift/drift.go</code> (single command).</p>
 <h3 id="adding-a-new-session-parser">Adding a New Session Parser<a class="headerlink" href="#adding-a-new-session-parser" title="Permanent link">&para;</a></h3>
 <p>The recall system uses a <code>SessionParser</code> interface. To add support for a
 new AI tool (e.g. Aider, Cursor):</p>

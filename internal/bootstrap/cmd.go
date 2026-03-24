@@ -20,7 +20,7 @@ import (
 	"github.com/ActiveMemory/ctx/internal/config/flag"
 	ctxContext "github.com/ActiveMemory/ctx/internal/context/validate"
 	"github.com/ActiveMemory/ctx/internal/err/fs"
-	errInitialize "github.com/ActiveMemory/ctx/internal/err/initialize"
+	errInit "github.com/ActiveMemory/ctx/internal/err/initialize"
 	"github.com/ActiveMemory/ctx/internal/rc"
 	"github.com/ActiveMemory/ctx/internal/validation"
 )
@@ -89,7 +89,7 @@ func RootCmd() *cobra.Command {
 
 			// Require initialization.
 			if !ctxContext.Initialized(rc.ContextDir()) {
-				return errInitialize.NotInitialized()
+				return errInit.NotInitialized()
 			}
 
 			return nil

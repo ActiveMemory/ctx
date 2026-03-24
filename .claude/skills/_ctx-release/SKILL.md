@@ -13,8 +13,8 @@ All three prerequisites must be true:
 2. **`dist/RELEASE_NOTES.md`** exists (generate with `/_ctx-release-notes`)
 3. **Working tree is clean** (all changes committed)
 
-If any prerequisite fails, stop — running the release script with
-missing notes or a dirty tree can produce an incomplete or unsigned
+If any prerequisite fails, stop. Running the release script with
+missing notes or a dirty tree produces an incomplete or unsigned
 tag that must be manually deleted.
 
 ## When to Use
@@ -42,17 +42,23 @@ make release
 ```
 
 This script:
-- Updates version references in `docs/index.md`
+- Updates version in 4 config files (plugin.json, marketplace.json, VS Code package.json + lock)
+- Updates download URLs in 3 doc files (index.md, getting-started.md, integrations.md)
+- Adds new row to versions.md
 - Rebuilds the documentation site
-- Commits the docs update
+- Commits the version and docs update
 - Runs tests and smoke tests
-- Builds binaries for all platforms
+- Builds binaries for all 6 platforms
 - Creates and pushes a signed git tag
 - Updates the `latest` tag
 
-3. **After completion**, tell the user to create the GitHub release
-   at the URL shown in the script output and upload binaries from
-   `dist/`.
+3. **After completion**, verify the GitHub release was created by CI
+   at `https://github.com/ActiveMemory/ctx/releases`.
+
+## Full Runbook
+
+See [Cutting a Release](https://ctx.ist/operations/release/) for the
+complete step-by-step guide including troubleshooting.
 
 ## Quality Checklist
 
@@ -61,4 +67,4 @@ This script:
 - [ ] Working tree is clean
 - [ ] Tests and smoke tests pass
 - [ ] Tag is pushed to origin
-- [ ] User reminded to create GitHub release
+- [ ] GitHub release created by CI with all 6 binaries

@@ -15,7 +15,7 @@ import (
 	"github.com/ActiveMemory/ctx/internal/config/mcp/tool"
 	"github.com/ActiveMemory/ctx/internal/mcp/handler"
 	"github.com/ActiveMemory/ctx/internal/mcp/proto"
-	tooldef "github.com/ActiveMemory/ctx/internal/mcp/server/def/tool"
+	defTool "github.com/ActiveMemory/ctx/internal/mcp/server/def/tool"
 	"github.com/ActiveMemory/ctx/internal/mcp/server/out"
 )
 
@@ -27,7 +27,7 @@ import (
 // Returns:
 //   - *proto.Response: tool list response
 func DispatchList(req proto.Request) *proto.Response {
-	return out.OkResponse(req.ID, proto.ToolListResult{Tools: tooldef.Defs})
+	return out.OkResponse(req.ID, proto.ToolListResult{Tools: defTool.Defs})
 }
 
 // DispatchCall unmarshals tool call params and dispatches to the

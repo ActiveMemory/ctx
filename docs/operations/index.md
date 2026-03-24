@@ -31,6 +31,13 @@ Windsurf, and other AI coding tools.
 
 ---
 
+### [Cutting a Release](release.md)
+
+Step-by-step runbook for maintainers: bump version, generate
+release notes, run the release script, and verify the result.
+
+---
+
 ### [Autonomous Loops](autonomous-loop.md)
 
 Run an unattended AI agent that works through tasks overnight,

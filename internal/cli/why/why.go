@@ -9,10 +9,10 @@ package why
 import (
 	"github.com/spf13/cobra"
 
-	whyroot "github.com/ActiveMemory/ctx/internal/cli/why/cmd/root"
+	whyRoot "github.com/ActiveMemory/ctx/internal/cli/why/cmd/root"
 )
 
 // Cmd returns the "ctx why" cobra command.
 func Cmd() *cobra.Command {
-	return whyroot.Cmd()
+	return whyRoot.Cmd()
 }

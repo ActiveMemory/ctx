@@ -16,8 +16,8 @@ import (
 	"github.com/ActiveMemory/ctx/internal/write/why"
 	"github.com/spf13/cobra"
 
-	errcli "github.com/ActiveMemory/ctx/internal/err/cli"
-	fserr "github.com/ActiveMemory/ctx/internal/err/fs"
+	errCli "github.com/ActiveMemory/ctx/internal/err/cli"
+	errFs "github.com/ActiveMemory/ctx/internal/err/fs"
 )
 
 // Run dispatches to the interactive menu or direct document display.
@@ -47,13 +47,13 @@ func showMenu(cmd *cobra.Command) error {
 	reader := bufio.NewReader(os.Stdin)
 	input, readErr := reader.ReadString('\n')
 	if readErr != nil {
-		return fserr.ReadInput(readErr)
+		return errFs.ReadInput(readErr)
 	}
 
 	input = strings.TrimSpace(input)
 	choice, parseErr := strconv.Atoi(input)
 	if parseErr != nil || choice < 1 || choice > len(DocOrder) {
-		return errcli.InvalidSelection(input, len(DocOrder))
+		return errCli.InvalidSelection(input, len(DocOrder))
 	}
 
 	why.Separator(cmd)
@@ -71,12 +71,12 @@ func showMenu(cmd *cobra.Command) error {
 func ShowDoc(cmd *cobra.Command, alias string) error {
 	name, ok := DocAliases[alias]
 	if !ok {
-		return errcli.UnknownDocument(alias)
+		return errCli.UnknownDocument(alias)
 	}
 
 	content, loadErr := philosophy.WhyDoc(name)
 	if loadErr != nil {
-		return fserr.FileRead(name, loadErr)
+		return errFs.FileRead(name, loadErr)
 	}
 
 	cleaned := StripMkDocs(string(content))

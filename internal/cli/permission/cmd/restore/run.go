@@ -15,7 +15,7 @@ import (
 
 	"github.com/ActiveMemory/ctx/internal/claude"
 	"github.com/ActiveMemory/ctx/internal/cli/permission/core"
-	configClaude "github.com/ActiveMemory/ctx/internal/config/claude"
+	cfgClaude "github.com/ActiveMemory/ctx/internal/config/claude"
 	"github.com/ActiveMemory/ctx/internal/config/fs"
 	"github.com/ActiveMemory/ctx/internal/err/config"
 	errFs "github.com/ActiveMemory/ctx/internal/err/fs"
@@ -31,26 +31,26 @@ import (
 // Returns:
 //   - error: Non-nil on read/write/parse failure or missing golden file
 func Run(cmd *cobra.Command) error {
-	goldenBytes, goldenReadErr := os.ReadFile(configClaude.SettingsGolden)
+	goldenBytes, goldenReadErr := os.ReadFile(cfgClaude.SettingsGolden)
 	if goldenReadErr != nil {
 		if os.IsNotExist(goldenReadErr) {
 			return config.GoldenNotFound()
 		}
-		return errFs.FileRead(configClaude.SettingsGolden, goldenReadErr)
+		return errFs.FileRead(cfgClaude.SettingsGolden, goldenReadErr)
 	}
 
-	localBytes, localReadErr := os.ReadFile(configClaude.Settings)
+	localBytes, localReadErr := os.ReadFile(cfgClaude.Settings)
 	if localReadErr != nil {
 		if os.IsNotExist(localReadErr) {
 			if writeErr := os.WriteFile(
-				configClaude.Settings, goldenBytes, fs.PermFile,
+				cfgClaude.Settings, goldenBytes, fs.PermFile,
 			); writeErr != nil {
-				return errFs.FileWrite(configClaude.Settings, writeErr)
+				return errFs.FileWrite(cfgClaude.Settings, writeErr)
 			}
 			restore.RestoreNoLocal(cmd)
 			return nil
 		}
-		return errFs.FileRead(configClaude.Settings, localReadErr)
+		return errFs.FileRead(cfgClaude.Settings, localReadErr)
 	}
 
 	if bytes.Equal(goldenBytes, localBytes) {
@@ -60,10 +60,10 @@ func Run(cmd *cobra.Command) error {
 
 	var golden, local claude.Settings
 	if goldenParseErr := json.Unmarshal(goldenBytes, &golden); goldenParseErr != nil {
-		return errParser.ParseFile(configClaude.SettingsGolden, goldenParseErr)
+		return errParser.ParseFile(cfgClaude.SettingsGolden, goldenParseErr)
 	}
 	if localParseErr := json.Unmarshal(localBytes, &local); localParseErr != nil {
-		return errParser.ParseFile(configClaude.Settings, localParseErr)
+		return errParser.ParseFile(cfgClaude.Settings, localParseErr)
 	}
 
 	restored, dropped := core.DiffStringSlices(
@@ -76,9 +76,9 @@ func Run(cmd *cobra.Command) error {
 	restore.RestoreDiff(cmd, dropped, restored, denyDropped, denyRestored)
 
 	if writeErr := os.WriteFile(
-		configClaude.Settings, goldenBytes, fs.PermFile,
+		cfgClaude.Settings, goldenBytes, fs.PermFile,
 	); writeErr != nil {
-		return errFs.FileWrite(configClaude.Settings, writeErr)
+		return errFs.FileWrite(cfgClaude.Settings, writeErr)
 	}
 
 	restore.RestoreDone(cmd)

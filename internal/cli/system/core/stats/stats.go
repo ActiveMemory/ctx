@@ -22,11 +22,11 @@ import (
 	"github.com/ActiveMemory/ctx/internal/config/file"
 	"github.com/ActiveMemory/ctx/internal/config/journal"
 	"github.com/ActiveMemory/ctx/internal/config/stats"
-	time2 "github.com/ActiveMemory/ctx/internal/config/time"
+	cfgTime "github.com/ActiveMemory/ctx/internal/config/time"
 	"github.com/ActiveMemory/ctx/internal/config/token"
 	"github.com/ActiveMemory/ctx/internal/entity"
-	ctxerr "github.com/ActiveMemory/ctx/internal/err/recall"
-	io2 "github.com/ActiveMemory/ctx/internal/io"
+	errRecall "github.com/ActiveMemory/ctx/internal/err/recall"
+	internalIo "github.com/ActiveMemory/ctx/internal/io"
 )
 
 // ReadStatsDir reads all stats JSONL files, optionally filtered by session prefix.
@@ -42,7 +42,7 @@ func ReadStatsDir(dir, sessionFilter string) ([]Entry, error) {
 	pattern := filepath.Join(dir, stats.FilePrefix+"*"+file.ExtJSONL)
 	matches, globErr := filepath.Glob(pattern)
 	if globErr != nil {
-		return nil, ctxerr.StatsGlob(globErr)
+		return nil, errRecall.StatsGlob(globErr)
 	}
 
 	var entries []Entry
@@ -93,7 +93,7 @@ func ExtractStatsSessionID(basename string) string {
 //   - []Entry: parsed entries
 //   - error: non-nil on read failure
 func ParseStatsFile(path, sid string) ([]Entry, error) {
-	data, readErr := io2.SafeReadUserFile(path)
+	data, readErr := internalIo.SafeReadUserFile(path)
 	if readErr != nil {
 		return nil, readErr
 	}
@@ -212,7 +212,7 @@ func FormatStatsTimestamp(ts string) string {
 	if parseErr != nil {
 		return ts
 	}
-	return t.Local().Format(time2.DateTimePreciseFormat)
+	return t.Local().Format(cfgTime.DateTimePreciseFormat)
 }
 
 // ReadNewLines reads bytes from offset to end and parses JSONL lines.
@@ -225,7 +225,7 @@ func FormatStatsTimestamp(ts string) string {
 // Returns:
 //   - []Entry: newly parsed entries
 func ReadNewLines(path string, offset int64, sid string) []Entry {
-	f, openErr := io2.SafeOpenUserFile(path)
+	f, openErr := internalIo.SafeOpenUserFile(path)
 	if openErr != nil {
 		return nil
 	}

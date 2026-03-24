@@ -10,18 +10,18 @@ import (
 	"path/filepath"
 	"strings"
 
-	fserr "github.com/ActiveMemory/ctx/internal/err/fs"
+	errFs "github.com/ActiveMemory/ctx/internal/err/fs"
 )
 
 // rejectDangerousPath returns an error if the resolved absolute path
 // falls under a system directory that ctx should never touch.
 func rejectDangerousPath(absPath string) error {
 	if absPath == "/" {
-		return fserr.RefuseSystemPathRoot()
+		return errFs.RefuseSystemPathRoot()
 	}
 	for _, prefix := range dangerousPrefixes {
 		if strings.HasPrefix(absPath, prefix) {
-			return fserr.RefuseSystemPath(absPath)
+			return errFs.RefuseSystemPath(absPath)
 		}
 	}
 	return nil
@@ -33,7 +33,7 @@ func cleanAndValidate(path string) (string, error) {
 	clean := filepath.Clean(path)
 	abs, absErr := filepath.Abs(clean)
 	if absErr != nil {
-		return "", fserr.ResolvePath(absErr)
+		return "", errFs.ResolvePath(absErr)
 	}
 	if checkErr := rejectDangerousPath(abs); checkErr != nil {
 		return "", checkErr

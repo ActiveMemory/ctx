@@ -16,7 +16,7 @@ import (
 	"github.com/ActiveMemory/ctx/internal/config/mcp/prompt"
 	"github.com/ActiveMemory/ctx/internal/config/token"
 	"github.com/ActiveMemory/ctx/internal/mcp/proto"
-	promptdef "github.com/ActiveMemory/ctx/internal/mcp/server/def/prompt"
+	defPrompt "github.com/ActiveMemory/ctx/internal/mcp/server/def/prompt"
 	"github.com/ActiveMemory/ctx/internal/mcp/server/out"
 )
 
@@ -30,7 +30,7 @@ import (
 // Returns:
 //   - *proto.Response: formatted entry prompt
 func buildEntry(
-	id json.RawMessage, spec promptdef.EntryPromptSpec,
+	id json.RawMessage, spec defPrompt.EntryPromptSpec,
 ) *proto.Response {
 	fieldFmt := desc.Text(spec.FieldFmtK)
 

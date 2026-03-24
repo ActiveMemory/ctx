@@ -27,7 +27,9 @@ Generate release notes for the next release of Context CLI.
 1. **Read version and find baseline**:
 ```bash
 cat VERSION
-git describe --tags --abbrev=0 2>/dev/null
+# Use the latest tag globally, not ancestry-based git describe
+# (git describe follows reachability and misses tags on other branches)
+git tag --sort=-v:refname | head -1
 ```
 
 2. **Gather commits since last tag** (filter out noise):

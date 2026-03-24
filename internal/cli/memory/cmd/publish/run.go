@@ -11,7 +11,7 @@ import (
 
 	"github.com/spf13/cobra"
 
-	ctxErr "github.com/ActiveMemory/ctx/internal/err/memory"
+	errMemory "github.com/ActiveMemory/ctx/internal/err/memory"
 	mem "github.com/ActiveMemory/ctx/internal/memory"
 	"github.com/ActiveMemory/ctx/internal/rc"
 	"github.com/ActiveMemory/ctx/internal/write/publish"
@@ -35,12 +35,12 @@ func Run(cmd *cobra.Command, budget int, dryRun bool) error {
 	memoryPath, discoverErr := mem.DiscoverMemoryPath(projectRoot)
 	if discoverErr != nil {
 		sync.ErrAutoMemoryNotActive(cmd, discoverErr)
-		return ctxErr.NotFound()
+		return errMemory.NotFound()
 	}
 
 	result, selectErr := mem.SelectContent(contextDir, budget)
 	if selectErr != nil {
-		return ctxErr.SelectContentFailed(selectErr)
+		return errMemory.SelectContentFailed(selectErr)
 	}
 
 	publish.PublishPlan(cmd, budget,
@@ -57,7 +57,7 @@ func Run(cmd *cobra.Command, budget int, dryRun bool) error {
 	if _, publishErr := mem.Publish(
 		contextDir, memoryPath, budget,
 	); publishErr != nil {
-		return ctxErr.PublishFailed(publishErr)
+		return errMemory.PublishFailed(publishErr)
 	}
 
 	publish.PublishDone(cmd)

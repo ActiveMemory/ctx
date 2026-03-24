@@ -16,7 +16,7 @@ import (
 	"github.com/ActiveMemory/ctx/internal/assets/read/desc"
 	"github.com/ActiveMemory/ctx/internal/config/embed/text"
 	"github.com/ActiveMemory/ctx/internal/drift"
-	errdrift "github.com/ActiveMemory/ctx/internal/err/drift"
+	errDrift "github.com/ActiveMemory/ctx/internal/err/drift"
 	writeDrift "github.com/ActiveMemory/ctx/internal/write/drift"
 )
 
@@ -119,7 +119,7 @@ func OutputDriftText(cmd *cobra.Command, report *drift.Report) error {
 	switch status {
 	case drift.StatusViolation:
 		writeDrift.StatusViolation(cmd)
-		return errdrift.Violations()
+		return errDrift.Violations()
 	case drift.StatusWarning:
 		writeDrift.StatusWarning(cmd)
 	default:

@@ -14,7 +14,7 @@ import (
 
 	"github.com/ActiveMemory/ctx/internal/context/load"
 	errCtx "github.com/ActiveMemory/ctx/internal/err/context"
-	initErr "github.com/ActiveMemory/ctx/internal/err/initialize"
+	errInit "github.com/ActiveMemory/ctx/internal/err/initialize"
 	"github.com/ActiveMemory/ctx/internal/write/sync"
 )
 
@@ -35,7 +35,7 @@ func Run(cmd *cobra.Command, dryRun bool) error {
 	if err != nil {
 		var notFoundError *errCtx.NotFoundError
 		if errors.As(err, &notFoundError) {
-			return initErr.ContextNotInitialized()
+			return errInit.ContextNotInitialized()
 		}
 		return err
 	}

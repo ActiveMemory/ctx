@@ -4,19 +4,14 @@
 //   \    Copyright 2026-present Context contributors.
 //                 SPDX-License-Identifier: Apache-2.0
 
-// Package messages provides metadata for hook message templates.
-//
-// The registry is parsed from an embedded registry.yaml that lives
-// alongside the .txt template files. It is the metadata layer over
-// the embedded FS and changes only when hooks are added or removed.
 package messages
 
 import (
 	"sync"
 
 	"github.com/ActiveMemory/ctx/internal/assets/read/hook"
-	fserr "github.com/ActiveMemory/ctx/internal/err/fs"
-	errparser "github.com/ActiveMemory/ctx/internal/err/parser"
+	errFs "github.com/ActiveMemory/ctx/internal/err/fs"
+	errParser "github.com/ActiveMemory/ctx/internal/err/parser"
 	"gopkg.in/yaml.v3"
 )
 
@@ -59,12 +54,12 @@ func Registry() []HookMessageInfo {
 	registryOnce.Do(func() {
 		raw, readErr := hook.MessageRegistry()
 		if readErr != nil {
-			registryErr = fserr.FileRead("registry.yaml", readErr)
+			registryErr = errFs.FileRead("registry.yaml", readErr)
 			return
 		}
 		var entries []HookMessageInfo
 		if unmarshalErr := yaml.Unmarshal(raw, &entries); unmarshalErr != nil {
-			registryErr = errparser.ParseFile("registry.yaml", unmarshalErr)
+			registryErr = errParser.ParseFile("registry.yaml", unmarshalErr)
 			return
 		}
 		registryData = entries

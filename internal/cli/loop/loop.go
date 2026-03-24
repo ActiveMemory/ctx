@@ -9,10 +9,10 @@ package loop
 import (
 	"github.com/spf13/cobra"
 
-	looproot "github.com/ActiveMemory/ctx/internal/cli/loop/cmd/root"
+	loopRoot "github.com/ActiveMemory/ctx/internal/cli/loop/cmd/root"
 )
 
 // Cmd returns the "ctx loop" command for generating Ralph loop scripts.
 func Cmd() *cobra.Command {
-	return looproot.Cmd()
+	return loopRoot.Cmd()
 }

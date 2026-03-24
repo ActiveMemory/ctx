@@ -120,7 +120,7 @@ ctx/
 
 | Directory                        | What lives here                                 | Distributed to users? |
 |----------------------------------|-------------------------------------------------|-----------------------|
-| `internal/assets/claude/skills/` | The 29 `ctx-*` skills that ship with the plugin | Yes                   |
+| `internal/assets/claude/skills/` | The 39 `ctx-*` skills that ship with the plugin | Yes                   |
 | `.claude/skills/`                | Dev-only skills (release, QA, backup, etc.)     | No                    |
 
 **`internal/assets/claude/skills/`** is the single source of truth for
@@ -164,7 +164,7 @@ and are now available to all ctx users: `/ctx-brainstorm`, `/ctx-check-links`,
 6. Add a section to the appropriate CLI doc page in `docs/cli/`.
 
 Pattern to follow: `internal/cli/pad/pad.go` (parent with subcommands) or
-`internal/cli/complete/complete.go` (single command).
+`internal/cli/drift/drift.go` (single command).
 
 ### Adding a New Session Parser
 

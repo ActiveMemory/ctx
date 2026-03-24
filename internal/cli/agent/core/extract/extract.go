@@ -9,7 +9,7 @@ package extract
 import (
 	"strings"
 
-	ctxCfg "github.com/ActiveMemory/ctx/internal/config/ctx"
+	cfgCtx "github.com/ActiveMemory/ctx/internal/config/ctx"
 	"github.com/ActiveMemory/ctx/internal/config/marker"
 	"github.com/ActiveMemory/ctx/internal/config/regex"
 	"github.com/ActiveMemory/ctx/internal/config/token"
@@ -69,7 +69,7 @@ func CheckboxItems(content string) []string {
 // Returns:
 //   - []string: List of constitution rules; nil if the file is not found
 func ConstitutionRules(ctx *entity.Context) []string {
-	if f := ctx.File(ctxCfg.Constitution); f != nil {
+	if f := ctx.File(cfgCtx.Constitution); f != nil {
 		return CheckboxItems(string(f.Content))
 	}
 	return nil
@@ -105,7 +105,7 @@ func UncheckedTasks(content string) []string {
 //   - []string: List of active tasks with "- [ ]" prefix; nil if
 //     the file is not found
 func ActiveTasks(ctx *entity.Context) []string {
-	if f := ctx.File(ctxCfg.Task); f != nil {
+	if f := ctx.File(cfgCtx.Task); f != nil {
 		return UncheckedTasks(string(f.Content))
 	}
 	return nil

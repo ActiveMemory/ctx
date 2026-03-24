@@ -16,7 +16,7 @@ import (
 	"github.com/ActiveMemory/ctx/internal/config/parser"
 	"github.com/ActiveMemory/ctx/internal/config/session"
 	"github.com/ActiveMemory/ctx/internal/entity"
-	ctxerr "github.com/ActiveMemory/ctx/internal/err/parser"
+	errParser "github.com/ActiveMemory/ctx/internal/err/parser"
 )
 
 // MarkdownSessionParser parses Markdown session files written by AI agents.
@@ -110,7 +110,7 @@ func (p *MarkdownSessionParser) Matches(path string) bool {
 func (p *MarkdownSessionParser) ParseFile(path string) ([]*entity.Session, error) {
 	content, err := os.ReadFile(filepath.Clean(path))
 	if err != nil {
-		return nil, ctxerr.ReadFile(err)
+		return nil, errParser.ReadFile(err)
 	}
 
 	s := p.parseMarkdownSession(string(content), path)

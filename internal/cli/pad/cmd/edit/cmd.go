@@ -15,7 +15,7 @@ import (
 	"github.com/ActiveMemory/ctx/internal/config/embed/cmd"
 	"github.com/ActiveMemory/ctx/internal/config/embed/flag"
 	cFlag "github.com/ActiveMemory/ctx/internal/config/flag"
-	ctxErr "github.com/ActiveMemory/ctx/internal/err/pad"
+	errPad "github.com/ActiveMemory/ctx/internal/err/pad"
 )
 
 // Cmd returns the pad edit subcommand.
@@ -48,7 +48,7 @@ func Cmd() *cobra.Command {
 		RunE: func(cmd *cobra.Command, args []string) error {
 			n, err := strconv.Atoi(args[0])
 			if err != nil {
-				return ctxErr.InvalidIndex(args[0])
+				return errPad.InvalidIndex(args[0])
 			}
 
 			hasPositional := len(args) == 2
@@ -59,7 +59,7 @@ func Cmd() *cobra.Command {
 
 			// --file/--label conflict with positional/--append/--prepend.
 			if (hasFile || hasLabel) && (hasPositional || hasAppend || hasPrepend) {
-				return ctxErr.EditBlobTextConflict()
+				return errPad.EditBlobTextConflict()
 			}
 
 			// Blob edit mode.
@@ -80,10 +80,10 @@ func Cmd() *cobra.Command {
 			}
 
 			if flagCount == 0 {
-				return ctxErr.EditNoMode()
+				return errPad.EditNoMode()
 			}
 			if flagCount > 1 {
-				return ctxErr.EditTextConflict()
+				return errPad.EditTextConflict()
 			}
 
 			switch {

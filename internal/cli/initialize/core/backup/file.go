@@ -13,7 +13,7 @@ import (
 
 	"github.com/ActiveMemory/ctx/internal/config/file"
 	"github.com/ActiveMemory/ctx/internal/config/fs"
-	backupPkg "github.com/ActiveMemory/ctx/internal/err/backup"
+	errBackup "github.com/ActiveMemory/ctx/internal/err/backup"
 	"github.com/ActiveMemory/ctx/internal/write/initialize"
 	"github.com/spf13/cobra"
 )
@@ -31,7 +31,7 @@ func File(cmd *cobra.Command, filename string, content []byte) error {
 	timestamp := time.Now().Unix()
 	backupName := fmt.Sprintf(file.BackupFormat, filename, timestamp)
 	if writeErr := os.WriteFile(backupName, content, fs.PermFile); writeErr != nil {
-		return backupPkg.Create(backupName, writeErr)
+		return errBackup.Create(backupName, writeErr)
 	}
 	initialize.Backup(cmd, backupName)
 	return nil

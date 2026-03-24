@@ -14,7 +14,7 @@ import (
 	"github.com/ActiveMemory/ctx/internal/cli/prompt/core"
 	"github.com/ActiveMemory/ctx/internal/config/file"
 	"github.com/ActiveMemory/ctx/internal/err/fs"
-	ctxErr "github.com/ActiveMemory/ctx/internal/err/prompt"
+	errPrompt "github.com/ActiveMemory/ctx/internal/err/prompt"
 	"github.com/ActiveMemory/ctx/internal/io"
 	writePrompt "github.com/ActiveMemory/ctx/internal/write/prompt"
 )
@@ -33,7 +33,7 @@ func Run(cmd *cobra.Command, name string) error {
 	)
 	if readErr != nil {
 		if os.IsNotExist(readErr) {
-			return ctxErr.NotFound(name)
+			return errPrompt.NotFound(name)
 		}
 		return fs.ReadFile(readErr)
 	}

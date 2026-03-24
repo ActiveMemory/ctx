@@ -15,7 +15,7 @@ import (
 	"github.com/ActiveMemory/ctx/internal/config/embed/cmd"
 	"github.com/ActiveMemory/ctx/internal/config/embed/flag"
 	cFlag "github.com/ActiveMemory/ctx/internal/config/flag"
-	ctxErr "github.com/ActiveMemory/ctx/internal/err/pad"
+	errPad "github.com/ActiveMemory/ctx/internal/err/pad"
 )
 
 // Cmd returns the pad show subcommand.
@@ -39,7 +39,7 @@ func Cmd() *cobra.Command {
 		RunE: func(cmd *cobra.Command, args []string) error {
 			n, err := strconv.Atoi(args[0])
 			if err != nil {
-				return ctxErr.InvalidIndex(args[0])
+				return errPad.InvalidIndex(args[0])
 			}
 			return Run(cmd, n, outPath)
 		},

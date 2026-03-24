@@ -12,7 +12,7 @@ import (
 	"strings"
 
 	"github.com/ActiveMemory/ctx/internal/assets/read/desc"
-	ctxCfg "github.com/ActiveMemory/ctx/internal/config/ctx"
+	cfgCtx "github.com/ActiveMemory/ctx/internal/config/ctx"
 	"github.com/ActiveMemory/ctx/internal/config/embed/text"
 	"github.com/ActiveMemory/ctx/internal/config/mcp/mime"
 	"github.com/ActiveMemory/ctx/internal/config/token"
@@ -78,7 +78,7 @@ func readAgentPacket(
 	tokensUsed := ctxToken.EstimateTokensString(header)
 	var skipped []string
 
-	for _, fileName := range ctxCfg.ReadOrder {
+	for _, fileName := range cfgCtx.ReadOrder {
 		f := ctx.File(fileName)
 		if f == nil || f.IsEmpty {
 			continue

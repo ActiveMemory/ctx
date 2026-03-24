@@ -16,7 +16,7 @@ import (
 	"github.com/ActiveMemory/ctx/internal/config/embed/text"
 	"github.com/ActiveMemory/ctx/internal/config/mcp/cfg"
 	"github.com/ActiveMemory/ctx/internal/config/mcp/field"
-	timeCfg "github.com/ActiveMemory/ctx/internal/config/time"
+	cfgTime "github.com/ActiveMemory/ctx/internal/config/time"
 	"github.com/ActiveMemory/ctx/internal/mcp/handler"
 	"github.com/ActiveMemory/ctx/internal/mcp/proto"
 	"github.com/ActiveMemory/ctx/internal/mcp/server/extract"
@@ -88,7 +88,7 @@ func recall(
 	var since time.Time
 	if sinceStr, _ := args[field.Since].(string); sinceStr != "" {
 		var parseErr error
-		since, parseErr = time.Parse(timeCfg.DateFormat, sinceStr)
+		since, parseErr = time.Parse(cfgTime.DateFormat, sinceStr)
 		if parseErr != nil {
 			return out.ToolError(
 				id, fmt.Sprintf(

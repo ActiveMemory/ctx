@@ -4,7 +4,7 @@
 
 Thank you for your interest in contributing to `ctx`.
 
-**Full contributing guide**: https://ctx.ist/contributing/
+**Full contributing guide**: https://ctx.ist/home/contributing/
 
 The guide covers:
 

@@ -16,7 +16,7 @@ import (
 	"github.com/ActiveMemory/ctx/internal/config/file"
 	"github.com/ActiveMemory/ctx/internal/config/fs"
 	errFs "github.com/ActiveMemory/ctx/internal/err/fs"
-	errInitialize "github.com/ActiveMemory/ctx/internal/err/initialize"
+	errInit "github.com/ActiveMemory/ctx/internal/err/initialize"
 	"github.com/ActiveMemory/ctx/internal/write/initialize"
 )
 
@@ -42,7 +42,7 @@ func CreateProjectDirs(cmd *cobra.Command) error {
 
 		readme, readErr := project.Readme(d)
 		if readErr != nil {
-			return errInitialize.ReadProjectReadme(d, readErr)
+			return errInit.ReadProjectReadme(d, readErr)
 		}
 
 		readmePath := filepath.Join(d, file.Readme)
