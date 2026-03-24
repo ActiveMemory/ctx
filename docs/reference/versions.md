@@ -21,12 +21,20 @@ Tap the corresponding **view docs** to view the docs as they were at that releas
 
 | Version | Release Date | Documentation                                                     |
 |---------|--------------|-------------------------------------------------------------------|
+| v0.8.0  | 2026-03-23   | [view docs](https://github.com/ActiveMemory/ctx/tree/v0.8.0/docs) |
 | v0.6.0  | 2026-02-16   | [view docs](https://github.com/ActiveMemory/ctx/tree/v0.6.0/docs) |
 | v0.3.0  | 2026-02-07   | [view docs](https://github.com/ActiveMemory/ctx/tree/v0.3.0/docs) |
 | v0.2.0  | 2026-02-01   | [view docs](https://github.com/ActiveMemory/ctx/tree/v0.2.0/docs) |
 | v0.1.2  | 2026-01-27   | [view docs](https://github.com/ActiveMemory/ctx/tree/v0.1.2/docs) |
 | v0.1.1  | 2026-01-26   | [view docs](https://github.com/ActiveMemory/ctx/tree/v0.1.1/docs) |
 | v0.1.0  | 2026-01-25   | [view docs](https://github.com/ActiveMemory/ctx/tree/v0.1.0/docs) |
+
+### `v0.8.0`: The Architecture Release
+
+MCP server for tool-agnostic AI integration. Memory bridge connecting
+Claude Code auto-memory to `.context/`. Complete CLI restructuring into
+`cmd/ + core/` taxonomy. All user-facing strings externalized to YAML.
+`fatih/color` removed; two direct dependencies remain.
 
 ### `v0.6.0`: The Integration Release
 
@@ -69,7 +77,7 @@ and Claude Code hook integration.
 The [main documentation](../index.md) always reflects the latest development version.
 
 For the most recent stable release, see
-[v0.6.0](https://github.com/ActiveMemory/ctx/tree/v0.8.0/docs).
+[v0.8.0](https://github.com/ActiveMemory/ctx/tree/v0.8.0/docs).
 
 ## Changelog
 
