@@ -47,7 +47,7 @@ with encrypted URL storage.
 
 Journal static site generation via zensical. 49-skill audit and fix pass
 (positive framing, phantom reference removal, scope tightening).
-Context consolidation skill. golangci-lint v2 migration.
+Context consolidation skill. `golangci-lint` v2 migration.
 
 ### `v0.2.0`: The Archaeology Release
 
