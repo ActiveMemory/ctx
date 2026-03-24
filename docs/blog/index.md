@@ -9,6 +9,36 @@ Stories, insights, and lessons learned from **building** and **using** `ctx`.
 
 ---
 
+## Releases
+
+### [ctx v0.8.0: The Architecture Release](2026-03-23-ctx-v0.8.0-the-architecture-release.md)
+
+*March 23, 2026*: 374 commits, 1,708 Go files touched, and a near-complete
+architectural overhaul. Every CLI package restructured into `cmd/ + core/`
+taxonomy, all user-facing strings externalized to YAML, MCP server for
+tool-agnostic AI integration, and the memory bridge connecting Claude Code's
+auto-memory to `.context/`.
+
+**Topics**: release, architecture, refactoring, MCP, localization
+
+---
+
+## Field Notes
+
+### [We Broke the 3:1 Rule](2026-03-23-we-broke-the-3-1-rule.md)
+
+*March 23, 2026*: After v0.6.0, we ran 198 feature commits across 17 days
+before consolidating. The 3:1 rule says consolidate every 4th session. We
+did it after the 66th. The result: an 18-day, 181-commit cleanup marathon
+that took longer than the feature run itself. A follow-up to
+[The 3:1 Ratio](2026-02-17-the-3-1-ratio.md) with empirical evidence from
+the v0.8.0 cycle.
+
+**Topics**: consolidation, technical debt, development workflow, convention
+drift, field notes
+
+---
+
 ## Context Engineering
 
 ### [Agent Memory Is Infrastructure](2026-03-04-agent-memory-is-infrastructure.md)
