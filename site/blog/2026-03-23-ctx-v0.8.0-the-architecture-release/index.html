@@ -3662,9 +3662,9 @@
 <h2 id="the-starting-point">The Starting Point<a class="headerlink" href="#the-starting-point" title="Permanent link">&para;</a></h2>
 <p>This release matters if:</p>
 <ul>
-<li>you build tools that AI agents modify daily</li>
-<li>you care about long-lived project memory that survives sessions</li>
-<li>you've felt codebases drift faster than you can reason about them</li>
+<li>you build tools that AI agents modify daily;</li>
+<li>you care about long-lived project memory that survives sessions;</li>
+<li>you've felt codebases drift faster than you can reason about them.</li>
 </ul>
 <p><code>v0.6.0</code> shipped the plugin architecture: hooks and skills as a
 Claude Code plugin, shell scripts replaced by Go subcommands.</p>
@@ -3804,8 +3804,8 @@ you removed.</p>
   test coverage, and zero users. It existed because we once moved
   the encryption key path. Nobody was migrating from that era
   anymore. Deleted.</li>
-<li><strong>Per-package <code>err.go</code> files</strong>: the broken-window pattern. An
-  agent sees <code>err.go</code> in a package, adds another error constructor.
+<li><strong>Per-package <code>err.go</code> files</strong>: the <a href="https://blog.codinghorror.com/the-broken-window-theory/">broken-window pattern</a>: 
+  An agent sees <code>err.go</code> in a package, adds another error constructor.
   Now <code>err.go</code> has 30 constructors and nobody knows which are used.
   Consolidated into 22 domain files in <code>internal/err/</code>.</li>
 <li><strong><code>nolint:errcheck</code> directives</strong>: every single one, replaced by
