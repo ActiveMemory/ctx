@@ -4,11 +4,6 @@
 //   \    Copyright 2026-present Context contributors.
 //                 SPDX-License-Identifier: Apache-2.0
 
-// Package messages provides metadata for hook message templates.
-//
-// The registry is parsed from an embedded registry.yaml that lives
-// alongside the .txt template files. It is the metadata layer over
-// the embedded FS and changes only when hooks are added or removed.
 package messages
 
 import (
