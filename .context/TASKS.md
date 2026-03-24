@@ -23,6 +23,8 @@ The `validation` package has `SanitizeFilename` and `ValidateBoundary`
 but nothing for content or argument sanitization. `entry.Validate` only
 checks field presence, not content safety.
 
+- [ ] Implement consolidation nudge hook: count sessions since last consolidation, nudge after 6. Spec: `specs/consolidation-nudge-hook.md` #added:2026-03-23-223000
+
 - [ ] Bug: release script versions.md table insertion fails silently. The sed pattern on line 133 uses `$` anchor but the actual Markdown table header has column padding spaces before the trailing `|`. The row is never inserted. Fix: relax the header match pattern or switch to a simpler approach (e.g., insert after the separator line directly). Also verify the "latest stable" sed handles trailing `).\n` correctly. #priority:high #added:2026-03-23-221500
 
 - [ ] Bug: check-version hook missing throttle touch on plugin version read error (run.go:70). When claude.PluginVersion() fails, the hook returns without touching the daily throttle marker, causing repeated checks on days when plugin.json is missing or corrupted. Fix: add internalIo.TouchFile(markerFile) before the early return. See docs/recipes/hook-sequence-diagrams.md check-version diagram which documents the expected behavior. #added:2026-03-23-162802
