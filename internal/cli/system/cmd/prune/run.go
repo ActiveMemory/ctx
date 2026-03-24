@@ -13,8 +13,8 @@ import (
 
 	"github.com/ActiveMemory/ctx/internal/cli/system/core/health"
 	"github.com/ActiveMemory/ctx/internal/cli/system/core/state"
-	time2 "github.com/ActiveMemory/ctx/internal/config/time"
-	ctxerr "github.com/ActiveMemory/ctx/internal/err/state"
+	cfgTime "github.com/ActiveMemory/ctx/internal/config/time"
+	errState "github.com/ActiveMemory/ctx/internal/err/state"
 	"github.com/ActiveMemory/ctx/internal/write/prune"
 	"github.com/spf13/cobra"
 )
@@ -37,10 +37,10 @@ func Run(cmd *cobra.Command, days int, dryRun bool) error {
 
 	entries, readErr := os.ReadDir(dir)
 	if readErr != nil {
-		return ctxerr.ReadingDir(readErr)
+		return errState.ReadingDir(readErr)
 	}
 
-	cutoff := time.Now().Add(-time.Duration(days) * time2.HoursPerDay * time.Hour)
+	cutoff := time.Now().Add(-time.Duration(days) * cfgTime.HoursPerDay * time.Hour)
 	var pruned, skipped, preserved int
 
 	for _, entry := range entries {

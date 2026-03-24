@@ -13,21 +13,21 @@ import (
 	"github.com/ActiveMemory/ctx/internal/config/entry"
 	"github.com/ActiveMemory/ctx/internal/config/mcp/field"
 	"github.com/ActiveMemory/ctx/internal/config/mcp/schema"
-	toolCfg "github.com/ActiveMemory/ctx/internal/config/mcp/tool"
+	cfgMcpTool "github.com/ActiveMemory/ctx/internal/config/mcp/tool"
 	"github.com/ActiveMemory/ctx/internal/mcp/proto"
 )
 
 // Defs defines all available MCP tools.
 var Defs = []proto.Tool{
 	{
-		Name: toolCfg.Status,
+		Name: cfgMcpTool.Status,
 		Description: desc.Text(
 			text.DescKeyMCPToolStatusDesc),
 		InputSchema: proto.InputSchema{Type: schema.Object},
 		Annotations: &proto.ToolAnnotations{ReadOnlyHint: true},
 	},
 	{
-		Name: toolCfg.Add,
+		Name: cfgMcpTool.Add,
 		Description: desc.Text(
 			text.DescKeyMCPToolAddDesc),
 		InputSchema: proto.InputSchema{
@@ -60,7 +60,7 @@ var Defs = []proto.Tool{
 		Annotations: &proto.ToolAnnotations{},
 	},
 	{
-		Name: toolCfg.Complete,
+		Name: cfgMcpTool.Complete,
 		Description: desc.Text(
 			text.DescKeyMCPToolCompleteDesc),
 		InputSchema: proto.InputSchema{
@@ -77,14 +77,14 @@ var Defs = []proto.Tool{
 		Annotations: &proto.ToolAnnotations{IdempotentHint: true},
 	},
 	{
-		Name: toolCfg.Drift,
+		Name: cfgMcpTool.Drift,
 		Description: desc.Text(
 			text.DescKeyMCPToolDriftDesc),
 		InputSchema: proto.InputSchema{Type: schema.Object},
 		Annotations: &proto.ToolAnnotations{ReadOnlyHint: true},
 	},
 	{
-		Name: toolCfg.Recall,
+		Name: cfgMcpTool.Recall,
 		Description: desc.Text(
 			text.DescKeyMCPToolRecallDesc),
 		InputSchema: proto.InputSchema{
@@ -105,7 +105,7 @@ var Defs = []proto.Tool{
 		Annotations: &proto.ToolAnnotations{ReadOnlyHint: true},
 	},
 	{
-		Name: toolCfg.WatchUpdate,
+		Name: cfgMcpTool.WatchUpdate,
 		Description: desc.Text(
 			text.DescKeyMCPToolWatchUpdateDesc),
 		InputSchema: proto.InputSchema{
@@ -128,7 +128,7 @@ var Defs = []proto.Tool{
 		Annotations: &proto.ToolAnnotations{},
 	},
 	{
-		Name: toolCfg.Compact,
+		Name: cfgMcpTool.Compact,
 		Description: desc.Text(
 			text.DescKeyMCPToolCompactDesc),
 		InputSchema: proto.InputSchema{
@@ -144,14 +144,14 @@ var Defs = []proto.Tool{
 		Annotations: &proto.ToolAnnotations{},
 	},
 	{
-		Name: toolCfg.Next,
+		Name: cfgMcpTool.Next,
 		Description: desc.Text(
 			text.DescKeyMCPToolNextDesc),
 		InputSchema: proto.InputSchema{Type: schema.Object},
 		Annotations: &proto.ToolAnnotations{ReadOnlyHint: true},
 	},
 	{
-		Name: toolCfg.CheckTaskCompletion,
+		Name: cfgMcpTool.CheckTaskCompletion,
 		Description: desc.Text(
 			text.DescKeyMCPToolCheckTaskDesc),
 		InputSchema: proto.InputSchema{
@@ -167,7 +167,7 @@ var Defs = []proto.Tool{
 		Annotations: &proto.ToolAnnotations{ReadOnlyHint: true},
 	},
 	{
-		Name: toolCfg.SessionEvent,
+		Name: cfgMcpTool.SessionEvent,
 		Description: desc.Text(
 			text.DescKeyMCPToolSessionDesc),
 		InputSchema: proto.InputSchema{
@@ -189,7 +189,7 @@ var Defs = []proto.Tool{
 		Annotations: &proto.ToolAnnotations{},
 	},
 	{
-		Name: toolCfg.Remind,
+		Name: cfgMcpTool.Remind,
 		Description: desc.Text(
 			text.DescKeyMCPToolRemindDesc),
 		InputSchema: proto.InputSchema{Type: schema.Object},

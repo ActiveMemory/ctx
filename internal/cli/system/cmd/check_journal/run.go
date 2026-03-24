@@ -11,8 +11,8 @@ import (
 	"os"
 	"path/filepath"
 
-	hook2 "github.com/ActiveMemory/ctx/internal/cli/system/core/check"
-	journal2 "github.com/ActiveMemory/ctx/internal/cli/system/core/journal"
+	coreCheck "github.com/ActiveMemory/ctx/internal/cli/system/core/check"
+	coreJournal "github.com/ActiveMemory/ctx/internal/cli/system/core/journal"
 	"github.com/ActiveMemory/ctx/internal/cli/system/core/message"
 	"github.com/ActiveMemory/ctx/internal/cli/system/core/nudge"
 	"github.com/ActiveMemory/ctx/internal/cli/system/core/state"
@@ -46,7 +46,7 @@ func Run(cmd *cobra.Command, stdin *os.File) error {
 	if !state.Initialized() {
 		return nil
 	}
-	input, _, paused := hook2.Preamble(stdin)
+	input, _, paused := coreCheck.Preamble(stdin)
 	if paused {
 		return nil
 	}
@@ -58,7 +58,7 @@ func Run(cmd *cobra.Command, stdin *os.File) error {
 	)
 
 	// Only remind once per day
-	if hook2.DailyThrottled(remindedFile) {
+	if coreCheck.DailyThrottled(remindedFile) {
 		return nil
 	}
 
@@ -72,13 +72,13 @@ func Run(cmd *cobra.Command, stdin *os.File) error {
 	}
 
 	// Stage 1: Unexported sessions
-	newestJournal := journal2.NewestMtime(jDir, file.ExtMarkdown)
-	unexported := journal2.CountNewerFiles(
+	newestJournal := coreJournal.NewestMtime(jDir, file.ExtMarkdown)
+	unexported := coreJournal.CountNewerFiles(
 		claudeProjectsDir, file.ExtJSONL, newestJournal,
 	)
 
 	// Stage 2: Unenriched entries
-	unenriched := journal2.CountUnenriched(jDir)
+	unenriched := coreJournal.CountUnenriched(jDir)
 
 	if unexported == 0 && unenriched == 0 {
 		return nil

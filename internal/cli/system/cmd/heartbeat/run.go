@@ -11,10 +11,10 @@ import (
 	"os"
 	"path/filepath"
 
-	hook2 "github.com/ActiveMemory/ctx/internal/cli/system/core/check"
+	coreCheck "github.com/ActiveMemory/ctx/internal/cli/system/core/check"
 	"github.com/ActiveMemory/ctx/internal/cli/system/core/counter"
-	heartbeat2 "github.com/ActiveMemory/ctx/internal/cli/system/core/heartbeat"
-	log2 "github.com/ActiveMemory/ctx/internal/cli/system/core/log"
+	coreHeartbeat "github.com/ActiveMemory/ctx/internal/cli/system/core/heartbeat"
+	coreLog "github.com/ActiveMemory/ctx/internal/cli/system/core/log"
 	"github.com/ActiveMemory/ctx/internal/cli/system/core/session"
 	"github.com/ActiveMemory/ctx/internal/cli/system/core/state"
 	"github.com/ActiveMemory/ctx/internal/cli/system/core/time"
@@ -48,7 +48,7 @@ func Run(_ *cobra.Command, stdin *os.File) error {
 	if !state.Initialized() {
 		return nil
 	}
-	_, sessionID, paused := hook2.Preamble(stdin)
+	_, sessionID, paused := coreCheck.Preamble(stdin)
 	if paused {
 		return nil
 	}
@@ -69,9 +69,9 @@ func Run(_ *cobra.Command, stdin *os.File) error {
 
 	// Detect context modification since the last heartbeat.
 	currentMtime := time.GetLatestContextMtime(contextDir)
-	lastMtime := heartbeat2.ReadMtime(mtimeFile)
+	lastMtime := coreHeartbeat.ReadMtime(mtimeFile)
 	contextModified := currentMtime > lastMtime
-	heartbeat2.WriteMtime(mtimeFile, currentMtime)
+	coreHeartbeat.WriteMtime(mtimeFile, currentMtime)
 
 	// Read token usage for this session.
 	info, _ := session.ReadSessionTokenInfo(sessionID)
@@ -113,7 +113,7 @@ func Run(_ *cobra.Command, stdin *os.File) error {
 		logLine = fmt.Sprintf(desc.Text(text.DescKeyHeartbeatLogPlain),
 			count, contextModified)
 	}
-	log2.Message(logFile, sessionID, logLine)
+	coreLog.Message(logFile, sessionID, logLine)
 
 	// No stdout - agent never sees this hook.
 	return nil

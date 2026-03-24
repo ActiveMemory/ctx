@@ -18,7 +18,7 @@ import (
 
 	"github.com/ActiveMemory/ctx/internal/config/fs"
 	"github.com/ActiveMemory/ctx/internal/config/token"
-	ctxErr "github.com/ActiveMemory/ctx/internal/err/fs"
+	errFs "github.com/ActiveMemory/ctx/internal/err/fs"
 	"github.com/ActiveMemory/ctx/internal/write/export"
 	"github.com/ActiveMemory/ctx/internal/write/pad"
 )
@@ -53,7 +53,7 @@ func runExport(cmd *cobra.Command, dir string, force, dryRun bool) error {
 
 	if !dryRun {
 		if mkErr := os.MkdirAll(dir, fs.PermExec); mkErr != nil {
-			return ctxErr.Mkdir(dir, mkErr)
+			return errFs.Mkdir(dir, mkErr)
 		}
 	}
 

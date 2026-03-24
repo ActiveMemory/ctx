@@ -14,7 +14,7 @@ import (
 	"github.com/ActiveMemory/ctx/internal/cli/agent/core/score"
 	"github.com/ActiveMemory/ctx/internal/cli/agent/core/sort"
 	"github.com/ActiveMemory/ctx/internal/config/agent"
-	ctxCfg "github.com/ActiveMemory/ctx/internal/config/ctx"
+	cfgCtx "github.com/ActiveMemory/ctx/internal/config/ctx"
 	"github.com/ActiveMemory/ctx/internal/config/embed/text"
 	ctxToken "github.com/ActiveMemory/ctx/internal/context/token"
 	"github.com/ActiveMemory/ctx/internal/entity"
@@ -85,8 +85,8 @@ func AssemblePacket(ctx *entity.Context, budget int) *assembledPacket {
 	keywords := score.ExtractTaskKeywords(pkt.Tasks)
 
 	// Tier 4+5: Decisions + Learnings (share remaining budget)
-	decisionBlocks := ParseEntryBlocks(ctx, ctxCfg.Decision)
-	learningBlocks := ParseEntryBlocks(ctx, ctxCfg.Learning)
+	decisionBlocks := ParseEntryBlocks(ctx, cfgCtx.Decision)
+	learningBlocks := ParseEntryBlocks(ctx, cfgCtx.Learning)
 
 	scoredDecisions := score.ScoreEntries(decisionBlocks, keywords, now)
 	scoredLearnings := score.ScoreEntries(learningBlocks, keywords, now)

@@ -12,7 +12,7 @@ import (
 	"github.com/spf13/cobra"
 
 	"github.com/ActiveMemory/ctx/internal/assets/read/desc"
-	archiveCfg "github.com/ActiveMemory/ctx/internal/config/archive"
+	cfgArchive "github.com/ActiveMemory/ctx/internal/config/archive"
 	"github.com/ActiveMemory/ctx/internal/config/embed/text"
 	"github.com/ActiveMemory/ctx/internal/config/fs"
 	"github.com/ActiveMemory/ctx/internal/config/token"
@@ -82,7 +82,7 @@ func CompactTasks(
 				archiveContent += block.BlockContent() + nl + nl
 			}
 			if archiveFile, archiveErr := tidy.WriteArchive(
-				archiveCfg.ArchiveScopeTasks,
+				cfgArchive.ArchiveScopeTasks,
 				desc.Text(text.DescKeyHeadingArchivedTasks),
 				archiveContent,
 			); archiveErr == nil {

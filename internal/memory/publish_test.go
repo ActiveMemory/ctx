@@ -17,8 +17,8 @@ import (
 	"github.com/ActiveMemory/ctx/internal/config/ctx"
 	"github.com/ActiveMemory/ctx/internal/config/dir"
 	"github.com/ActiveMemory/ctx/internal/config/marker"
-	cfgmem "github.com/ActiveMemory/ctx/internal/config/memory"
-	time2 "github.com/ActiveMemory/ctx/internal/config/time"
+	cfgMem "github.com/ActiveMemory/ctx/internal/config/memory"
+	cfgTime "github.com/ActiveMemory/ctx/internal/config/time"
 	"github.com/ActiveMemory/ctx/internal/rc"
 )
 
@@ -151,7 +151,7 @@ func TestSelectContent(t *testing.T) {
 	}
 
 	// Create DECISIONS.md with a recent entry
-	ts := time.Now().Format(time2.TimestampCompact)
+	ts := time.Now().Format(cfgTime.TimestampCompact)
 	decisions := fmt.Sprintf("# Decisions\n\n## [%s] Use SQLite\n\nContext: testing\n", ts)
 	if writeErr := os.WriteFile(filepath.Join(contextDir, ctx.Decision), []byte(decisions), 0o644); writeErr != nil {
 		t.Fatal(writeErr)
@@ -168,7 +168,7 @@ func TestSelectContent(t *testing.T) {
 		t.Fatal(writeErr)
 	}
 
-	result, selectErr := SelectContent(contextDir, cfgmem.DefaultPublishBudget)
+	result, selectErr := SelectContent(contextDir, cfgMem.DefaultPublishBudget)
 	if selectErr != nil {
 		t.Fatalf("SelectContent: %v", selectErr)
 	}

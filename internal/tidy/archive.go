@@ -15,9 +15,9 @@ import (
 	"github.com/ActiveMemory/ctx/internal/config/archive"
 	"github.com/ActiveMemory/ctx/internal/config/dir"
 	"github.com/ActiveMemory/ctx/internal/config/fs"
-	time2 "github.com/ActiveMemory/ctx/internal/config/time"
+	cfgTime "github.com/ActiveMemory/ctx/internal/config/time"
 	"github.com/ActiveMemory/ctx/internal/config/token"
-	ctxerr "github.com/ActiveMemory/ctx/internal/err/backup"
+	errBackup "github.com/ActiveMemory/ctx/internal/err/backup"
 	"github.com/ActiveMemory/ctx/internal/rc"
 )
 
@@ -35,11 +35,11 @@ import (
 func WriteArchive(prefix, heading, content string) (string, error) {
 	archiveDir := filepath.Join(rc.ContextDir(), dir.Archive)
 	if mkErr := os.MkdirAll(archiveDir, fs.PermExec); mkErr != nil {
-		return "", ctxerr.CreateArchiveDir(mkErr)
+		return "", errBackup.CreateArchiveDir(mkErr)
 	}
 
 	now := time.Now()
-	dateStr := now.Format(time2.DateFormat)
+	dateStr := now.Format(cfgTime.DateFormat)
 	archiveFile := filepath.Join(
 		archiveDir,
 		fmt.Sprintf(archive.TplArchiveFilename, prefix, dateStr),
@@ -55,7 +55,7 @@ func WriteArchive(prefix, heading, content string) (string, error) {
 	}
 
 	if writeErr := os.WriteFile(archiveFile, []byte(finalContent), fs.PermFile); writeErr != nil {
-		return "", ctxerr.WriteArchive(writeErr)
+		return "", errBackup.WriteArchive(writeErr)
 	}
 
 	return archiveFile, nil

@@ -11,7 +11,7 @@ import (
 	"os"
 	"time"
 
-	archive2 "github.com/ActiveMemory/ctx/internal/cli/system/core/archive"
+	coreArchive "github.com/ActiveMemory/ctx/internal/cli/system/core/archive"
 	"github.com/ActiveMemory/ctx/internal/entity"
 	"github.com/spf13/cobra"
 
@@ -19,7 +19,7 @@ import (
 	"github.com/ActiveMemory/ctx/internal/config/env"
 	cFlag "github.com/ActiveMemory/ctx/internal/config/flag"
 	errBackup "github.com/ActiveMemory/ctx/internal/err/backup"
-	ctxErr "github.com/ActiveMemory/ctx/internal/err/initialize"
+	errInit "github.com/ActiveMemory/ctx/internal/err/initialize"
 	"github.com/ActiveMemory/ctx/internal/write/backup"
 )
 
@@ -46,15 +46,15 @@ func Run(cmd *cobra.Command) error {
 
 	home, homeErr := os.UserHomeDir()
 	if homeErr != nil {
-		return ctxErr.HomeDir(homeErr)
+		return errInit.HomeDir(homeErr)
 	}
 
 	smbURL := os.Getenv(env.BackupSMBURL)
 	smbSubdir := os.Getenv(env.BackupSMBSubdir)
-	var smb *archive2.SMBConfig
+	var smb *coreArchive.SMBConfig
 	if smbURL != "" {
 		var smbErr error
-		smb, smbErr = archive2.ParseSMBConfig(smbURL, smbSubdir)
+		smb, smbErr = coreArchive.ParseSMBConfig(smbURL, smbSubdir)
 		if smbErr != nil {
 			return errBackup.SMBConfig(smbErr)
 		}
@@ -64,7 +64,7 @@ func Run(cmd *cobra.Command) error {
 	var results []entity.BackupResult
 
 	if scope == archive.BackupScopeProject || scope == archive.BackupScopeAll {
-		result, projErr := archive2.BackupProject(cmd.ErrOrStderr(), home, timestamp, smb)
+		result, projErr := coreArchive.BackupProject(cmd.ErrOrStderr(), home, timestamp, smb)
 		if projErr != nil {
 			return errBackup.Project(projErr)
 		}
@@ -72,7 +72,7 @@ func Run(cmd *cobra.Command) error {
 	}
 
 	if scope == archive.BackupScopeGlobal || scope == archive.BackupScopeAll {
-		result, globalErr := archive2.BackupGlobal(cmd.ErrOrStderr(), home, timestamp, smb)
+		result, globalErr := coreArchive.BackupGlobal(cmd.ErrOrStderr(), home, timestamp, smb)
 		if globalErr != nil {
 			return errBackup.Global(globalErr)
 		}

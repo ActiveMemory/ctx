@@ -10,7 +10,7 @@ import (
 	"os"
 
 	"github.com/ActiveMemory/ctx/internal/entity"
-	errfs "github.com/ActiveMemory/ctx/internal/err/fs"
+	errFs "github.com/ActiveMemory/ctx/internal/err/fs"
 	"github.com/ActiveMemory/ctx/internal/recall/parser"
 )
 
@@ -29,7 +29,7 @@ func FindSessions(allProjects bool) ([]*entity.Session, error) {
 	}
 	cwd, cwdErr := os.Getwd()
 	if cwdErr != nil {
-		return nil, errfs.WorkingDirectory(cwdErr)
+		return nil, errFs.WorkingDirectory(cwdErr)
 	}
 	return parser.FindSessionsForCWD(cwd)
 }

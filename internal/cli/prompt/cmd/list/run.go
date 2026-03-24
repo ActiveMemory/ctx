@@ -14,7 +14,7 @@ import (
 
 	"github.com/ActiveMemory/ctx/internal/cli/prompt/core"
 	"github.com/ActiveMemory/ctx/internal/config/file"
-	ctxErr "github.com/ActiveMemory/ctx/internal/err/fs"
+	errFs "github.com/ActiveMemory/ctx/internal/err/fs"
 	"github.com/ActiveMemory/ctx/internal/write/prompt"
 )
 
@@ -34,7 +34,7 @@ func Run(cmd *cobra.Command) error {
 			prompt.PromptNone(cmd)
 			return nil
 		}
-		return ctxErr.ReadDirectory(dir, readErr)
+		return errFs.ReadDirectory(dir, readErr)
 	}
 
 	var found bool

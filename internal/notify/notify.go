@@ -18,7 +18,7 @@ import (
 	"path/filepath"
 	"time"
 
-	cryptoCfg "github.com/ActiveMemory/ctx/internal/config/crypto"
+	cfgCrypto "github.com/ActiveMemory/ctx/internal/config/crypto"
 	"github.com/ActiveMemory/ctx/internal/config/fs"
 	"github.com/ActiveMemory/ctx/internal/crypto"
 	"github.com/ActiveMemory/ctx/internal/io"
@@ -35,7 +35,7 @@ import (
 //   - error: non-nil only if decryption fails (missing files are silent)
 func LoadWebhook() (string, error) {
 	kp := rc.KeyPath()
-	encPath := filepath.Join(rc.ContextDir(), cryptoCfg.NotifyEnc)
+	encPath := filepath.Join(rc.ContextDir(), cfgCrypto.NotifyEnc)
 
 	key, err := crypto.LoadKey(kp)
 	if err != nil {
@@ -72,7 +72,7 @@ func LoadWebhook() (string, error) {
 //   - error: non-nil if key generation, encryption, or file write fails
 func SaveWebhook(url string) error {
 	kp := rc.KeyPath()
-	encPath := filepath.Join(rc.ContextDir(), cryptoCfg.NotifyEnc)
+	encPath := filepath.Join(rc.ContextDir(), cfgCrypto.NotifyEnc)
 
 	key, err := crypto.LoadKey(kp)
 	if err != nil {

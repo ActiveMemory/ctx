@@ -20,8 +20,8 @@ import (
 
 	"github.com/ActiveMemory/ctx/internal/config/crypto"
 	"github.com/ActiveMemory/ctx/internal/config/fs"
-	ctxerr "github.com/ActiveMemory/ctx/internal/err/crypto"
-	io2 "github.com/ActiveMemory/ctx/internal/io"
+	errCrypto "github.com/ActiveMemory/ctx/internal/err/crypto"
+	internalIo "github.com/ActiveMemory/ctx/internal/io"
 )
 
 // GenerateKey returns a new 256-bit random key.
@@ -32,7 +32,7 @@ import (
 func GenerateKey() ([]byte, error) {
 	key := make([]byte, crypto.KeySize)
 	if _, err := io.ReadFull(rand.Reader, key); err != nil {
-		return nil, ctxerr.GenerateKey(err)
+		return nil, errCrypto.GenerateKey(err)
 	}
 	return key, nil
 }
@@ -53,17 +53,17 @@ func GenerateKey() ([]byte, error) {
 func Encrypt(key, plaintext []byte) ([]byte, error) {
 	block, err := aes.NewCipher(key)
 	if err != nil {
-		return nil, ctxerr.CreateCipher(err)
+		return nil, errCrypto.CreateCipher(err)
 	}
 
 	gcm, err := cipher.NewGCM(block)
 	if err != nil {
-		return nil, ctxerr.CreateGCM(err)
+		return nil, errCrypto.CreateGCM(err)
 	}
 
 	nonce := make([]byte, crypto.NonceSize)
 	if _, err := io.ReadFull(rand.Reader, nonce); err != nil {
-		return nil, ctxerr.GenerateNonce(err)
+		return nil, errCrypto.GenerateNonce(err)
 	}
 
 	ciphertext := gcm.Seal(nonce, nonce, plaintext, nil)
@@ -82,17 +82,17 @@ func Encrypt(key, plaintext []byte) ([]byte, error) {
 //     authentication fails
 func Decrypt(key, ciphertext []byte) ([]byte, error) {
 	if len(ciphertext) < crypto.NonceSize {
-		return nil, ctxerr.CiphertextTooShort()
+		return nil, errCrypto.CiphertextTooShort()
 	}
 
 	block, err := aes.NewCipher(key)
 	if err != nil {
-		return nil, ctxerr.CreateCipher(err)
+		return nil, errCrypto.CreateCipher(err)
 	}
 
 	gcm, err := cipher.NewGCM(block)
 	if err != nil {
-		return nil, ctxerr.CreateGCM(err)
+		return nil, errCrypto.CreateGCM(err)
 	}
 
 	nonce := ciphertext[:crypto.NonceSize]
@@ -100,7 +100,7 @@ func Decrypt(key, ciphertext []byte) ([]byte, error) {
 
 	plaintext, err := gcm.Open(nil, nonce, data, nil)
 	if err != nil {
-		return nil, ctxerr.Decrypt(err)
+		return nil, errCrypto.Decrypt(err)
 	}
 
 	return plaintext, nil
@@ -115,12 +115,12 @@ func Decrypt(key, ciphertext []byte) ([]byte, error) {
 //   - []byte: The 32-byte key
 //   - error: Non-nil if the file cannot be read or is not exactly 32 bytes
 func LoadKey(path string) ([]byte, error) {
-	key, err := io2.SafeReadUserFile(path)
+	key, err := internalIo.SafeReadUserFile(path)
 	if err != nil {
-		return nil, ctxerr.ReadKey(err)
+		return nil, errCrypto.ReadKey(err)
 	}
 	if len(key) != crypto.KeySize {
-		return nil, ctxerr.InvalidKeySize(len(key), crypto.KeySize)
+		return nil, errCrypto.InvalidKeySize(len(key), crypto.KeySize)
 	}
 	return key, nil
 }
@@ -135,7 +135,7 @@ func LoadKey(path string) ([]byte, error) {
 //   - error: Non-nil if the file cannot be written
 func SaveKey(path string, key []byte) error {
 	if err := os.WriteFile(path, key, fs.PermSecret); err != nil {
-		return ctxerr.WriteKey(err)
+		return errCrypto.WriteKey(err)
 	}
 	return nil
 }

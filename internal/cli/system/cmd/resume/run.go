@@ -15,7 +15,7 @@ import (
 	coreSession "github.com/ActiveMemory/ctx/internal/cli/system/core/session"
 	cFlag "github.com/ActiveMemory/ctx/internal/config/flag"
 	"github.com/ActiveMemory/ctx/internal/config/session"
-	session2 "github.com/ActiveMemory/ctx/internal/write/session"
+	writeSession "github.com/ActiveMemory/ctx/internal/write/session"
 )
 
 // Run executes the resume logic.
@@ -41,6 +41,6 @@ func Run(cmd *cobra.Command, stdin *os.File) error {
 
 	path := nudge.PauseMarkerPath(sessionID)
 	_ = os.Remove(path)
-	session2.SessionResumed(cmd, sessionID)
+	writeSession.SessionResumed(cmd, sessionID)
 	return nil
 }

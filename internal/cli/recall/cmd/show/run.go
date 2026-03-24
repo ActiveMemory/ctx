@@ -19,7 +19,7 @@ import (
 	"github.com/ActiveMemory/ctx/internal/config/time"
 	"github.com/ActiveMemory/ctx/internal/config/token"
 	"github.com/ActiveMemory/ctx/internal/entity"
-	ctxErr "github.com/ActiveMemory/ctx/internal/err/session"
+	errSession "github.com/ActiveMemory/ctx/internal/err/session"
 	"github.com/ActiveMemory/ctx/internal/write/recall"
 )
 
@@ -42,14 +42,14 @@ func Run(
 ) error {
 	sessions, scanErr := query.FindSessions(allProjects)
 	if scanErr != nil {
-		return ctxErr.Find(scanErr)
+		return errSession.Find(scanErr)
 	}
 
 	if len(sessions) == 0 {
 		if allProjects {
-			return ctxErr.NoneFound("")
+			return errSession.NoneFound("")
 		}
-		return ctxErr.NoneFound(desc.Text(text.DescKeyLabelHintUseAllProjects))
+		return errSession.NoneFound(desc.Text(text.DescKeyLabelHintUseAllProjects))
 	}
 
 	var session *entity.Session
@@ -58,7 +58,7 @@ func Run(
 	case latest:
 		session = sessions[0]
 	case len(args) == 0:
-		return ctxErr.IDRequired()
+		return errSession.IDRequired()
 	default:
 		query := strings.ToLower(args[0])
 		var matches []*entity.Session
@@ -69,14 +69,14 @@ func Run(
 			}
 		}
 		if len(matches) == 0 {
-			return ctxErr.NotFound(args[0])
+			return errSession.NotFound(args[0])
 		}
 		if len(matches) > 1 {
 			lines := format.SessionMatchLines(matches)
 			recall.AmbiguousSessionMatchWithHint(
 				cmd, args[0], lines, matches[0].ID[:journal.SessionIDHintLen],
 			)
-			return ctxErr.AmbiguousQuery()
+			return errSession.AmbiguousQuery()
 		}
 		session = matches[0]
 	}

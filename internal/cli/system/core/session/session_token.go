@@ -27,7 +27,7 @@ import (
 	"github.com/ActiveMemory/ctx/internal/config/stats"
 	"github.com/ActiveMemory/ctx/internal/config/token"
 	"github.com/ActiveMemory/ctx/internal/entity"
-	io2 "github.com/ActiveMemory/ctx/internal/io"
+	internalIo "github.com/ActiveMemory/ctx/internal/io"
 	"github.com/ActiveMemory/ctx/internal/rc"
 )
 
@@ -74,7 +74,7 @@ func ReadSessionTokenInfo(sessionID string) (entity.TokenInfo, error) {
 func FindJSONLPath(sessionID string) (string, error) {
 	// Check cache first
 	cacheFile := filepath.Join(state.StateDir(), stats.JsonlPathCachePrefix+sessionID)
-	if data, readErr := io2.SafeReadUserFile(cacheFile); readErr == nil {
+	if data, readErr := internalIo.SafeReadUserFile(cacheFile); readErr == nil {
 		cached := strings.TrimSpace(string(data))
 		if cached != "" {
 			if _, statErr := os.Stat(cached); statErr == nil {
@@ -113,7 +113,7 @@ func FindJSONLPath(sessionID string) (string, error) {
 //   - SessionTokenInfo: Token count and model, or zero value if not found
 //   - error: Non-nil only on I/O errors
 func ParseLastUsageAndModel(path string) (entity.TokenInfo, error) {
-	f, openErr := io2.SafeOpenUserFile(path)
+	f, openErr := internalIo.SafeOpenUserFile(path)
 	if openErr != nil {
 		return entity.TokenInfo{}, openErr
 	}
@@ -243,7 +243,7 @@ func ClaudeSettingsHas1M() bool {
 	if homeErr != nil {
 		return false
 	}
-	data, readErr := io2.SafeReadUserFile(filepath.Join(home, dir.Claude, claude.GlobalSettings))
+	data, readErr := internalIo.SafeReadUserFile(filepath.Join(home, dir.Claude, claude.GlobalSettings))
 	if readErr != nil {
 		return false
 	}

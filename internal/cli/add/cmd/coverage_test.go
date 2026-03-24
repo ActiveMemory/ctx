@@ -14,7 +14,7 @@ import (
 
 	"github.com/ActiveMemory/ctx/internal/assets/read/desc"
 	"github.com/ActiveMemory/ctx/internal/cli/add/cmd/root"
-	entry2 "github.com/ActiveMemory/ctx/internal/cli/add/core/entry"
+	coreEntry "github.com/ActiveMemory/ctx/internal/cli/add/core/entry"
 	"github.com/ActiveMemory/ctx/internal/cli/add/core/example"
 	"github.com/ActiveMemory/ctx/internal/cli/add/core/extract"
 	"github.com/ActiveMemory/ctx/internal/cli/add/core/format"
@@ -27,7 +27,7 @@ import (
 	"github.com/spf13/cobra"
 
 	"github.com/ActiveMemory/ctx/internal/cli/initialize"
-	entrytype "github.com/ActiveMemory/ctx/internal/config/entry"
+	entryType "github.com/ActiveMemory/ctx/internal/config/entry"
 	"github.com/ActiveMemory/ctx/internal/entity"
 	"github.com/ActiveMemory/ctx/internal/entry"
 )
@@ -44,7 +44,7 @@ func TestErrNoContent(t *testing.T) {
 }
 
 func TestErrNoContentProvided(t *testing.T) {
-	for _, fType := range []string{entrytype.Decision, entrytype.Task, entrytype.Learning, entrytype.Convention, entrytype.Unknown} {
+	for _, fType := range []string{entryType.Decision, entryType.Task, entryType.Learning, entryType.Convention, entryType.Unknown} {
 		t.Run(fType, func(t *testing.T) {
 			err := add.ErrNoContentProvided(fType, example.ForType(fType))
 			if err == nil {
@@ -152,11 +152,11 @@ func TestExamplesForType(t *testing.T) {
 		fType    string
 		contains string
 	}{
-		{entrytype.Decision, "ctx add decision"},
-		{entrytype.Task, "ctx add task"},
-		{entrytype.Learning, "ctx add learning"},
-		{entrytype.Convention, "ctx add convention"},
-		{entrytype.Unknown, "ctx add <type>"},
+		{entryType.Decision, "ctx add decision"},
+		{entryType.Task, "ctx add task"},
+		{entryType.Learning, "ctx add learning"},
+		{entryType.Convention, "ctx add convention"},
+		{entryType.Unknown, "ctx add <type>"},
 	}
 	for _, tt := range tests {
 		t.Run(tt.fType, func(t *testing.T) {
@@ -742,23 +742,23 @@ func TestRun_TaskWithSection(t *testing.T) {
 
 func TestPredicates(t *testing.T) {
 	// Test plural forms
-	if !entry2.FileTypeIsTask("tasks") {
+	if !coreEntry.FileTypeIsTask("tasks") {
 		t.Error("FileTypeIsTask should accept 'tasks'")
 	}
-	if !entry2.FileTypeIsDecision("decisions") {
+	if !coreEntry.FileTypeIsDecision("decisions") {
 		t.Error("FileTypeIsDecision should accept 'decisions'")
 	}
-	if !entry2.FileTypeIsLearning("learnings") {
+	if !coreEntry.FileTypeIsLearning("learnings") {
 		t.Error("FileTypeIsLearning should accept 'learnings'")
 	}
 	// Test negative cases
-	if entry2.FileTypeIsTask("decision") {
+	if coreEntry.FileTypeIsTask("decision") {
 		t.Error("FileTypeIsTask should reject 'decision'")
 	}
-	if entry2.FileTypeIsDecision("task") {
+	if coreEntry.FileTypeIsDecision("task") {
 		t.Error("FileTypeIsDecision should reject 'task'")
 	}
-	if entry2.FileTypeIsLearning("convention") {
+	if coreEntry.FileTypeIsLearning("convention") {
 		t.Error("FileTypeIsLearning should reject 'convention'")
 	}
 }

@@ -9,7 +9,7 @@ package validate
 import (
 	"github.com/ActiveMemory/ctx/internal/entity"
 	"github.com/ActiveMemory/ctx/internal/err/journal"
-	ctxErr "github.com/ActiveMemory/ctx/internal/err/session"
+	errSession "github.com/ActiveMemory/ctx/internal/err/session"
 )
 
 // EmptyMessage reports whether a message has no meaningful content
@@ -34,7 +34,7 @@ func EmptyMessage(msg entity.Message) bool {
 //   - error: non-nil if flags conflict.
 func ExportFlags(args []string, opts entity.ExportOpts) error {
 	if len(args) > 0 && opts.All {
-		return ctxErr.AllWithID()
+		return errSession.AllWithID()
 	}
 	if opts.Regenerate && !opts.All {
 		return journal.RegenerateRequiresAll()

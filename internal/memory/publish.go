@@ -17,7 +17,7 @@ import (
 	"github.com/ActiveMemory/ctx/internal/config/marker"
 	"github.com/ActiveMemory/ctx/internal/config/memory"
 	"github.com/ActiveMemory/ctx/internal/config/token"
-	ctxerr "github.com/ActiveMemory/ctx/internal/err/memory"
+	errMemory "github.com/ActiveMemory/ctx/internal/err/memory"
 	"github.com/ActiveMemory/ctx/internal/io"
 )
 
@@ -157,7 +157,7 @@ func RemovePublished(content string) (string, bool) {
 func Publish(contextDir, memoryPath string, budget int) (PublishResult, error) {
 	result, selectErr := SelectContent(contextDir, budget)
 	if selectErr != nil {
-		return PublishResult{}, ctxerr.SelectContent(selectErr)
+		return PublishResult{}, errMemory.SelectContent(selectErr)
 	}
 
 	formatted := result.Format()
@@ -173,7 +173,7 @@ func Publish(contextDir, memoryPath string, budget int) (PublishResult, error) {
 	if writeErr := os.WriteFile(
 		memoryPath, []byte(merged), fs.PermFile,
 	); writeErr != nil {
-		return PublishResult{}, ctxerr.WriteMemory(writeErr)
+		return PublishResult{}, errMemory.WriteMemory(writeErr)
 	}
 
 	return result, nil

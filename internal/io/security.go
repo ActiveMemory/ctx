@@ -15,9 +15,9 @@ import (
 	"strings"
 	"time"
 
-	configFs "github.com/ActiveMemory/ctx/internal/config/fs"
-	fserr "github.com/ActiveMemory/ctx/internal/err/fs"
-	ctxerr "github.com/ActiveMemory/ctx/internal/err/http"
+	cfgFs "github.com/ActiveMemory/ctx/internal/config/fs"
+	errFs "github.com/ActiveMemory/ctx/internal/err/fs"
+	errHTTP "github.com/ActiveMemory/ctx/internal/err/http"
 )
 
 // SafeReadFile resolves filename within baseDir, verifies the result
@@ -37,13 +37,13 @@ import (
 func SafeReadFile(baseDir, filename string) ([]byte, error) {
 	absBase, absErr := filepath.Abs(baseDir)
 	if absErr != nil {
-		return nil, fserr.ResolveBase(absErr)
+		return nil, errFs.ResolveBase(absErr)
 	}
 
 	safe := filepath.Join(absBase, filepath.Base(filename))
 
 	if !strings.HasPrefix(safe, absBase+string(os.PathSeparator)) {
-		return nil, fserr.PathEscapesBase(filename)
+		return nil, errFs.PathEscapesBase(filename)
 	}
 
 	data, readErr := os.ReadFile(safe) //nolint:gosec
@@ -154,7 +154,7 @@ func SafeWriteFile(path string, data []byte, perm os.FileMode) error {
 // Parameters:
 //   - path: absolute file path to touch
 func TouchFile(path string) {
-	_ = os.WriteFile(path, nil, configFs.PermSecret) //nolint:gosec // state marker, path from internal code
+	_ = os.WriteFile(path, nil, cfgFs.PermSecret) //nolint:gosec // state marker, path from internal code
 }
 
 // maxRedirects caps the number of HTTP redirects the client will follow.
@@ -205,7 +205,7 @@ func SafePost(
 		Timeout: timeout,
 		CheckRedirect: func(_ *http.Request, via []*http.Request) error {
 			if len(via) >= maxRedirects {
-				return ctxerr.TooManyRedirects()
+				return errHTTP.TooManyRedirects()
 			}
 			return nil
 		},
@@ -221,11 +221,11 @@ func SafePost(
 func validateHTTPScheme(rawURL string) error {
 	parsed, parseErr := url.Parse(rawURL)
 	if parseErr != nil {
-		return ctxerr.ParseURL(parseErr)
+		return errHTTP.ParseURL(parseErr)
 	}
 	scheme := strings.ToLower(parsed.Scheme)
 	if scheme != "http" && scheme != "https" {
-		return ctxerr.UnsafeURLScheme(parsed.Scheme)
+		return errHTTP.UnsafeURLScheme(parsed.Scheme)
 	}
 	return nil
 }

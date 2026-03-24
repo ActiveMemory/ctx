@@ -20,7 +20,7 @@ import (
 	cfgFmt "github.com/ActiveMemory/ctx/internal/config/format"
 	"github.com/ActiveMemory/ctx/internal/config/fs"
 	"github.com/ActiveMemory/ctx/internal/config/memory"
-	time2 "github.com/ActiveMemory/ctx/internal/config/time"
+	cfgTime "github.com/ActiveMemory/ctx/internal/config/time"
 	"github.com/ActiveMemory/ctx/internal/config/token"
 	"github.com/ActiveMemory/ctx/internal/io"
 )
@@ -90,7 +90,7 @@ func (s *State) Imported(hash string) bool {
 
 // MarkImported records an entry hash with its target and date.
 func (s *State) MarkImported(hash, target string) {
-	date := time.Now().Format(time2.DateFormat)
+	date := time.Now().Format(cfgTime.DateFormat)
 	entry := strings.Join([]string{hash, target, date}, token.Colon)
 	s.ImportedHashes = append(s.ImportedHashes, entry)
 }

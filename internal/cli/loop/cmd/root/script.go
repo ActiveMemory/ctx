@@ -13,7 +13,7 @@ import (
 	"github.com/ActiveMemory/ctx/internal/assets/read/desc"
 	"github.com/ActiveMemory/ctx/internal/assets/tpl"
 	"github.com/ActiveMemory/ctx/internal/config/embed/text"
-	loopCfg "github.com/ActiveMemory/ctx/internal/config/loop"
+	cfgLoop "github.com/ActiveMemory/ctx/internal/config/loop"
 )
 
 // GenerateLoopScript creates a bash script for running a Ralph loop.
@@ -37,11 +37,11 @@ func GenerateLoopScript(
 
 	var aiCommand string
 	switch tool {
-	case loopCfg.DefaultTool:
+	case cfgLoop.DefaultTool:
 		aiCommand = fmt.Sprintf(`claude --print "$(cat %s)"`, absPrompt)
-	case loopCfg.ToolAider:
+	case cfgLoop.ToolAider:
 		aiCommand = fmt.Sprintf(`aider --message-file %s`, absPrompt)
-	case loopCfg.ToolGeneric:
+	case cfgLoop.ToolGeneric:
 		aiCommand = fmt.Sprintf(`# Replace with your AI CLI command
     cat %s | your-ai-cli`, absPrompt)
 	}

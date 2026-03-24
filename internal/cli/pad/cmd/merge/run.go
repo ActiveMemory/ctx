@@ -12,7 +12,7 @@ import (
 	"github.com/ActiveMemory/ctx/internal/cli/pad/core/store"
 	"github.com/spf13/cobra"
 
-	ctEerr "github.com/ActiveMemory/ctx/internal/err/fs"
+	errFs "github.com/ActiveMemory/ctx/internal/err/fs"
 	"github.com/ActiveMemory/ctx/internal/write/pad"
 )
 
@@ -53,7 +53,7 @@ func Run(
 	for _, file := range files {
 		entries, fileErr := merge.ReadFileEntries(file, key)
 		if fileErr != nil {
-			return ctEerr.OpenFile(file, fileErr)
+			return errFs.OpenFile(file, fileErr)
 		}
 
 		if merge.HasBinaryEntries(entries) {

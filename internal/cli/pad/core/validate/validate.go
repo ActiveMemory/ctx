@@ -7,7 +7,7 @@
 package validate
 
 import (
-	padErr "github.com/ActiveMemory/ctx/internal/err/pad"
+	errPad "github.com/ActiveMemory/ctx/internal/err/pad"
 )
 
 // ValidateIndex checks that n is a valid 1-based index into entries.
@@ -20,7 +20,7 @@ import (
 //   - error: Non-nil if n is out of range
 func ValidateIndex(n int, entries []string) error {
 	if n < 1 || n > len(entries) {
-		return padErr.EntryRange(n, len(entries))
+		return errPad.EntryRange(n, len(entries))
 	}
 	return nil
 }

@@ -11,7 +11,7 @@ import (
 
 	coreEvent "github.com/ActiveMemory/ctx/internal/cli/system/core/event"
 	cFlag "github.com/ActiveMemory/ctx/internal/config/flag"
-	errRcall "github.com/ActiveMemory/ctx/internal/err/recall"
+	errRecall "github.com/ActiveMemory/ctx/internal/err/recall"
 	"github.com/ActiveMemory/ctx/internal/log"
 	writeEvents "github.com/ActiveMemory/ctx/internal/write/events"
 )
@@ -42,7 +42,7 @@ func Run(cmd *cobra.Command) error {
 
 	evts, queryErr := log.Query(opts)
 	if queryErr != nil {
-		return errRcall.EventLogRead(queryErr)
+		return errRecall.EventLogRead(queryErr)
 	}
 
 	if len(evts) == 0 {

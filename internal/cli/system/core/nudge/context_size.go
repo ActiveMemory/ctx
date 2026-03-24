@@ -14,7 +14,7 @@ import (
 	"github.com/ActiveMemory/ctx/internal/assets/read/desc"
 	"github.com/ActiveMemory/ctx/internal/cli/system/core/log"
 	"github.com/ActiveMemory/ctx/internal/cli/system/core/message"
-	hook2 "github.com/ActiveMemory/ctx/internal/cli/system/core/session"
+	coreSession "github.com/ActiveMemory/ctx/internal/cli/system/core/session"
 	"github.com/ActiveMemory/ctx/internal/cli/system/core/state"
 	"github.com/ActiveMemory/ctx/internal/config/embed/text"
 	"github.com/ActiveMemory/ctx/internal/config/hook"
@@ -78,12 +78,12 @@ func EmitCheckpoint(logFile, sessionID string, count, tokens, pct, windowSize in
 func EmitWindowWarning(logFile, sessionID string, count, tokens, pct int) string {
 	fallback := fmt.Sprintf(
 		desc.Text(text.DescKeyCheckContextSizeWindowFallback),
-		pct, hook2.FormatTokenCount(tokens),
+		pct, coreSession.FormatTokenCount(tokens),
 	)
 	content := message.LoadMessage(hook.CheckContextSize, hook.VariantWindow,
 		map[string]any{
 			stats.VarPercentage: pct,
-			stats.VarTokenCount: hook2.FormatTokenCount(tokens),
+			stats.VarTokenCount: coreSession.FormatTokenCount(tokens),
 		}, fallback)
 	if content == "" {
 		log.Message(
@@ -107,7 +107,7 @@ func EmitWindowWarning(logFile, sessionID string, count, tokens, pct int) string
 	ref := notify.NewTemplateRef(hook.CheckContextSize, hook.VariantWindow,
 		map[string]any{
 			stats.VarPercentage: pct,
-			stats.VarTokenCount: hook2.FormatTokenCount(tokens),
+			stats.VarTokenCount: coreSession.FormatTokenCount(tokens),
 		},
 	)
 	windowMsg := fmt.Sprintf(desc.Text(text.DescKeyRelayPrefixFormat),
@@ -139,11 +139,11 @@ func EmitBillingWarning(logFile, sessionID string, count, tokens, threshold int)
 	}
 
 	fallback := fmt.Sprintf(desc.Text(text.DescKeyCheckContextSizeBillingFallback),
-		hook2.FormatTokenCount(tokens), hook2.FormatTokenCount(threshold))
+		coreSession.FormatTokenCount(tokens), coreSession.FormatTokenCount(threshold))
 	content := message.LoadMessage(hook.CheckContextSize, hook.VariantBilling,
 		map[string]any{
-			stats.VarTokenCount: hook2.FormatTokenCount(tokens),
-			stats.VarThreshold:  hook2.FormatTokenCount(threshold),
+			stats.VarTokenCount: coreSession.FormatTokenCount(tokens),
+			stats.VarThreshold:  coreSession.FormatTokenCount(threshold),
 		}, fallback)
 	if content == "" {
 		log.Message(
@@ -171,15 +171,15 @@ func EmitBillingWarning(logFile, sessionID string, count, tokens, threshold int)
 	ref := notify.NewTemplateRef(
 		hook.CheckContextSize, hook.VariantBilling,
 		map[string]any{
-			stats.VarTokenCount: hook2.FormatTokenCount(tokens),
-			stats.VarThreshold:  hook2.FormatTokenCount(threshold),
+			stats.VarTokenCount: coreSession.FormatTokenCount(tokens),
+			stats.VarThreshold:  coreSession.FormatTokenCount(threshold),
 		},
 	)
 	billingMsg := fmt.Sprintf(desc.Text(text.DescKeyRelayPrefixFormat),
 		hook.CheckContextSize,
 		fmt.Sprintf(
 			desc.Text(text.DescKeyCheckContextSizeBillingRelayFormat),
-			hook2.FormatTokenCount(tokens), hook2.FormatTokenCount(threshold),
+			coreSession.FormatTokenCount(tokens), coreSession.FormatTokenCount(threshold),
 		),
 	)
 	NudgeAndRelay(billingMsg, sessionID, ref)

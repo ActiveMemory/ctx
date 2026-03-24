@@ -9,10 +9,10 @@ package hook
 import (
 	"github.com/spf13/cobra"
 
-	hookroot "github.com/ActiveMemory/ctx/internal/cli/hook/cmd/root"
+	hookRoot "github.com/ActiveMemory/ctx/internal/cli/hook/cmd/root"
 )
 
 // Cmd returns the "ctx hook" command for generating AI tool integrations.
 func Cmd() *cobra.Command {
-	return hookroot.Cmd()
+	return hookRoot.Cmd()
 }

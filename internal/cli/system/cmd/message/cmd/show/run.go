@@ -11,9 +11,9 @@ import (
 	"github.com/spf13/cobra"
 
 	"github.com/ActiveMemory/ctx/internal/assets/hooks/messages"
-	hook "github.com/ActiveMemory/ctx/internal/assets/read/hook"
+	readHook "github.com/ActiveMemory/ctx/internal/assets/read/hook"
 	"github.com/ActiveMemory/ctx/internal/config/file"
-	ctxErr "github.com/ActiveMemory/ctx/internal/err/hook"
+	errHook "github.com/ActiveMemory/ctx/internal/err/hook"
 	"github.com/ActiveMemory/ctx/internal/io"
 	writeMessage "github.com/ActiveMemory/ctx/internal/write/message"
 )
@@ -30,7 +30,7 @@ import (
 func Run(cmd *cobra.Command, hk, variant string) error {
 	info := messages.Lookup(hk, variant)
 	if info == nil {
-		return ctxErr.Validate(messages.Variants(hk) != nil, hk, variant)
+		return errHook.Validate(messages.Variants(hk) != nil, hk, variant)
 	}
 
 	oPath := message.OverridePath(hk, variant)
@@ -41,9 +41,9 @@ func Run(cmd *cobra.Command, hk, variant string) error {
 		return nil
 	}
 
-	data, readErr := hook.Message(hk, variant+file.ExtTxt)
+	data, readErr := readHook.Message(hk, variant+file.ExtTxt)
 	if readErr != nil {
-		return ctxErr.EmbeddedTemplateNotFound(hk, variant)
+		return errHook.EmbeddedTemplateNotFound(hk, variant)
 	}
 
 	writeMessage.SourceDefault(cmd)

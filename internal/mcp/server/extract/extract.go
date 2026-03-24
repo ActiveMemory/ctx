@@ -9,7 +9,7 @@ package extract
 import (
 	"github.com/ActiveMemory/ctx/internal/config/cli"
 	"github.com/ActiveMemory/ctx/internal/config/mcp/field"
-	mcperr "github.com/ActiveMemory/ctx/internal/err/mcp"
+	errMcp "github.com/ActiveMemory/ctx/internal/err/mcp"
 	"github.com/ActiveMemory/ctx/internal/mcp/handler"
 )
 
@@ -29,7 +29,7 @@ func EntryArgs(
 	content, _ := args[field.Content].(string)
 
 	if entryType == "" || content == "" {
-		return "", "", mcperr.TypeContentRequired()
+		return "", "", errMcp.TypeContentRequired()
 	}
 
 	return entryType, content, nil

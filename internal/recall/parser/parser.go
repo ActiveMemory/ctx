@@ -14,7 +14,7 @@ import (
 
 	"github.com/ActiveMemory/ctx/internal/config/parser"
 	"github.com/ActiveMemory/ctx/internal/entity"
-	ctxerr "github.com/ActiveMemory/ctx/internal/err/parser"
+	errParser "github.com/ActiveMemory/ctx/internal/err/parser"
 )
 
 // registeredParsers holds all available session parsers.
@@ -40,7 +40,7 @@ func ParseFile(path string) ([]*entity.Session, error) {
 			return parser.ParseFile(path)
 		}
 	}
-	return nil, ctxerr.NoMatch(path)
+	return nil, errParser.NoMatch(path)
 }
 
 // ScanDirectory recursively scans a directory for session files.
@@ -103,7 +103,7 @@ func ScanDirectoryWithErrors(dir string) ([]*entity.Session, []error, error) {
 			if parser.Matches(path) {
 				sessions, err := parser.ParseFile(path)
 				if err != nil {
-					parseErrors = append(parseErrors, ctxerr.FileError(path, err))
+					parseErrors = append(parseErrors, errParser.FileError(path, err))
 					break
 				}
 				allSessions = append(allSessions, sessions...)
@@ -115,7 +115,7 @@ func ScanDirectoryWithErrors(dir string) ([]*entity.Session, []error, error) {
 	})
 
 	if err != nil {
-		return nil, nil, ctxerr.WalkDir(err)
+		return nil, nil, errParser.WalkDir(err)
 	}
 
 	// Sort by start time (newest first)

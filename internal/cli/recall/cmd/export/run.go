@@ -27,7 +27,7 @@ import (
 	"github.com/ActiveMemory/ctx/internal/config/journal"
 	errFs "github.com/ActiveMemory/ctx/internal/err/fs"
 	errJournal "github.com/ActiveMemory/ctx/internal/err/journal"
-	ctxErr "github.com/ActiveMemory/ctx/internal/err/session"
+	errSession "github.com/ActiveMemory/ctx/internal/err/session"
 	"github.com/ActiveMemory/ctx/internal/journal/state"
 	"github.com/ActiveMemory/ctx/internal/rc"
 	"github.com/ActiveMemory/ctx/internal/write/err"
@@ -64,7 +64,7 @@ func Run(cmd *cobra.Command, args []string, opts entity.ExportOpts) error {
 	// 3. Resolve sessions.
 	sessions, scanErr := query.FindSessions(opts.AllProjects)
 	if scanErr != nil {
-		return ctxErr.Find(scanErr)
+		return errSession.Find(scanErr)
 	}
 
 	if len(sessions) == 0 {
@@ -85,12 +85,12 @@ func Run(cmd *cobra.Command, args []string, opts entity.ExportOpts) error {
 			}
 		}
 		if len(toExport) == 0 {
-			return ctxErr.NotFound(args[0])
+			return errSession.NotFound(args[0])
 		}
 		if len(toExport) > 1 {
 			lines := format.SessionMatchLines(toExport)
 			recall.AmbiguousSessionMatch(cmd, args[0], lines)
-			return ctxErr.AmbiguousQuery()
+			return errSession.AmbiguousQuery()
 		}
 		singleSession = true
 	}
