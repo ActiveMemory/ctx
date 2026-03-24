@@ -41,6 +41,8 @@ checks field presence, not content safety.
 
 - [ ] Make TitleSlugMaxLen configurable via .ctxrc #added:2026-03-21-070944
 
+- [ ] Replace hack/lint-drift.sh with AST-based Go tests in internal/audit/. Spec: `specs/ast-audit-tests.md` #added:2026-03-23-210000
+
 - [ ] Add AST-based lint test to detect exported functions with no external callers #added:2026-03-21-070357
 
 - [ ] Audit exported functions used only within their own package and make them private #added:2026-03-21-070346
