@@ -11,7 +11,7 @@ import (
 
 	"github.com/spf13/cobra"
 
-	ctxErr "github.com/ActiveMemory/ctx/internal/err/memory"
+	errMemory "github.com/ActiveMemory/ctx/internal/err/memory"
 	mem "github.com/ActiveMemory/ctx/internal/memory"
 	"github.com/ActiveMemory/ctx/internal/rc"
 	"github.com/ActiveMemory/ctx/internal/write/memory"
@@ -31,12 +31,12 @@ func Run(cmd *cobra.Command) error {
 
 	sourcePath, discoverErr := mem.DiscoverMemoryPath(projectRoot)
 	if discoverErr != nil {
-		return ctxErr.DiscoverFailed(discoverErr)
+		return errMemory.DiscoverFailed(discoverErr)
 	}
 
 	diff, diffErr := mem.Diff(contextDir, sourcePath)
 	if diffErr != nil {
-		return ctxErr.DiffFailed(diffErr)
+		return errMemory.DiffFailed(diffErr)
 	}
 
 	if diff == "" {

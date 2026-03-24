@@ -16,7 +16,7 @@ import (
 	"github.com/ActiveMemory/ctx/internal/config/fs"
 	"github.com/ActiveMemory/ctx/internal/context/load"
 	errCtx "github.com/ActiveMemory/ctx/internal/err/context"
-	ctxErr "github.com/ActiveMemory/ctx/internal/err/initialize"
+	errInit "github.com/ActiveMemory/ctx/internal/err/initialize"
 	"github.com/ActiveMemory/ctx/internal/rc"
 	"github.com/ActiveMemory/ctx/internal/tidy"
 	writeCompact "github.com/ActiveMemory/ctx/internal/write/compact"
@@ -38,7 +38,7 @@ func Run(cmd *cobra.Command, archive bool) error {
 	if err != nil {
 		var notFoundError *errCtx.NotFoundError
 		if errors.As(err, &notFoundError) {
-			return ctxErr.ContextNotInitialized()
+			return errInit.ContextNotInitialized()
 		}
 		return err
 	}

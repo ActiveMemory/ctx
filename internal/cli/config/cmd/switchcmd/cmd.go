@@ -11,7 +11,7 @@ import (
 
 	"github.com/ActiveMemory/ctx/internal/assets/read/desc"
 	"github.com/ActiveMemory/ctx/internal/cli/config/core"
-	internalConfig "github.com/ActiveMemory/ctx/internal/config/cli"
+	cfgCli "github.com/ActiveMemory/ctx/internal/config/cli"
 	"github.com/ActiveMemory/ctx/internal/config/embed/cmd"
 )
 
@@ -25,7 +25,7 @@ func Cmd() *cobra.Command {
 	return &cobra.Command{
 		Use:         cmd.UseConfigSwitch,
 		Short:       short,
-		Annotations: map[string]string{internalConfig.AnnotationSkipInit: ""},
+		Annotations: map[string]string{cfgCli.AnnotationSkipInit: ""},
 		Long:        long,
 		Args:        cobra.MaximumNArgs(1),
 		RunE: func(cmd *cobra.Command, args []string) error {

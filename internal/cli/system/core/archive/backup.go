@@ -19,7 +19,7 @@ import (
 	"github.com/ActiveMemory/ctx/internal/config/archive"
 	"github.com/ActiveMemory/ctx/internal/config/dir"
 	"github.com/ActiveMemory/ctx/internal/config/embed/text"
-	configFs "github.com/ActiveMemory/ctx/internal/config/fs"
+	cfgFs "github.com/ActiveMemory/ctx/internal/config/fs"
 	"github.com/ActiveMemory/ctx/internal/entity"
 	errBackup "github.com/ActiveMemory/ctx/internal/err/backup"
 	internalIo "github.com/ActiveMemory/ctx/internal/io"
@@ -37,7 +37,7 @@ import (
 func CreateArchive(
 	archivePath string, entries []entity.ArchiveEntry, w io.Writer,
 ) error {
-	outFile, createErr := internalIo.SafeCreateFile(archivePath, configFs.PermFile)
+	outFile, createErr := internalIo.SafeCreateFile(archivePath, cfgFs.PermFile)
 	if createErr != nil {
 		return errBackup.CreateArchive(createErr)
 	}
@@ -95,7 +95,7 @@ func BackupProject(
 
 	// Touch marker file for check-backup-age hook.
 	markerDir := filepath.Join(home, archive.BackupMarkerDir)
-	_ = os.MkdirAll(markerDir, configFs.PermExec)
+	_ = os.MkdirAll(markerDir, cfgFs.PermExec)
 	markerPath := filepath.Join(markerDir, archive.BackupMarkerFile)
 	internalIo.TouchFile(markerPath)
 

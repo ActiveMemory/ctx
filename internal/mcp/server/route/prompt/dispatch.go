@@ -15,7 +15,7 @@ import (
 	"github.com/ActiveMemory/ctx/internal/config/mcp/prompt"
 	"github.com/ActiveMemory/ctx/internal/mcp/handler"
 	"github.com/ActiveMemory/ctx/internal/mcp/proto"
-	promptdef "github.com/ActiveMemory/ctx/internal/mcp/server/def/prompt"
+	defPrompt "github.com/ActiveMemory/ctx/internal/mcp/server/def/prompt"
 	"github.com/ActiveMemory/ctx/internal/mcp/server/out"
 )
 
@@ -28,7 +28,7 @@ import (
 //   - *proto.Response: prompt list response
 func DispatchList(req proto.Request) *proto.Response {
 	return out.OkResponse(
-		req.ID, proto.PromptListResult{Prompts: promptdef.Defs},
+		req.ID, proto.PromptListResult{Prompts: defPrompt.Defs},
 	)
 }
 

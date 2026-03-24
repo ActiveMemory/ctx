@@ -19,8 +19,8 @@ import (
 	"github.com/ActiveMemory/ctx/internal/config/marker"
 	"github.com/ActiveMemory/ctx/internal/config/regex"
 	"github.com/ActiveMemory/ctx/internal/config/token"
-	ctxerr "github.com/ActiveMemory/ctx/internal/err/recall"
-	io2 "github.com/ActiveMemory/ctx/internal/io"
+	errRecall "github.com/ActiveMemory/ctx/internal/err/recall"
+	internalIo "github.com/ActiveMemory/ctx/internal/io"
 )
 
 // ParseHeaders extracts all entries from file content.
@@ -216,18 +216,18 @@ func ReindexFile(
 	entryType string,
 ) error {
 	if _, err := os.Stat(filePath); os.IsNotExist(err) {
-		return ctxerr.ReindexFileNotFound(fileName)
+		return errRecall.ReindexFileNotFound(fileName)
 	}
 
-	content, err := io2.SafeReadUserFile(filePath)
+	content, err := internalIo.SafeReadUserFile(filePath)
 	if err != nil {
-		return ctxerr.ReindexFileRead(filePath, err)
+		return errRecall.ReindexFileRead(filePath, err)
 	}
 
 	updated := updateFunc(string(content))
 
 	if err := os.WriteFile(filePath, []byte(updated), fs.PermFile); err != nil {
-		return ctxerr.ReindexFileWrite(filePath, err)
+		return errRecall.ReindexFileWrite(filePath, err)
 	}
 
 	entries := ParseHeaders(string(content))

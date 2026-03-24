@@ -15,7 +15,7 @@ import (
 
 	"github.com/ActiveMemory/ctx/internal/context/sanitize"
 	"github.com/ActiveMemory/ctx/internal/context/validate"
-	errctx "github.com/ActiveMemory/ctx/internal/err/context"
+	errCtx "github.com/ActiveMemory/ctx/internal/err/context"
 )
 
 func TestExists(t *testing.T) {
@@ -137,7 +137,7 @@ func TestLoadNonExistent(t *testing.T) {
 		t.Error("Do() should return error for non-existent directory")
 	}
 
-	var notFoundError *errctx.NotFoundError
+	var notFoundError *errCtx.NotFoundError
 	ok := errors.As(err, &notFoundError)
 	if !ok {
 		t.Errorf("error should be *NotFoundError, got %T", err)
@@ -188,7 +188,7 @@ func TestIsEffectivelyEmpty(t *testing.T) {
 }
 
 func TestNotFoundError(t *testing.T) {
-	err := errctx.NotFound("/test/path")
+	err := errCtx.NotFound("/test/path")
 	expected := "context directory not found: /test/path"
 	if err.Error() != expected {
 		t.Errorf("NotFoundError.Error() = %q, want %q", err.Error(), expected)

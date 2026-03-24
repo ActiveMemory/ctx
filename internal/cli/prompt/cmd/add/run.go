@@ -18,7 +18,7 @@ import (
 	"github.com/ActiveMemory/ctx/internal/config/file"
 	"github.com/ActiveMemory/ctx/internal/config/fs"
 	errFs "github.com/ActiveMemory/ctx/internal/err/fs"
-	ctxErr "github.com/ActiveMemory/ctx/internal/err/prompt"
+	errPrompt "github.com/ActiveMemory/ctx/internal/err/prompt"
 	"github.com/ActiveMemory/ctx/internal/write/prompt"
 )
 
@@ -41,7 +41,7 @@ func runAdd(cmd *cobra.Command, name string, fromStdin bool) error {
 
 	// Check if the file already exists.
 	if _, statErr := os.Stat(path); statErr == nil {
-		return ctxErr.Exists(name)
+		return errPrompt.Exists(name)
 	}
 
 	var content []byte
@@ -57,7 +57,7 @@ func runAdd(cmd *cobra.Command, name string, fromStdin bool) error {
 		var templateErr error
 		content, templateErr = readPrompt.Template(name + file.ExtMarkdown)
 		if templateErr != nil {
-			return ctxErr.NoPromptTemplate(name)
+			return errPrompt.NoPromptTemplate(name)
 		}
 	}
 

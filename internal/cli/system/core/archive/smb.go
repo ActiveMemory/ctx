@@ -17,8 +17,8 @@ import (
 	"github.com/ActiveMemory/ctx/internal/config/archive"
 	"github.com/ActiveMemory/ctx/internal/config/embed/text"
 	"github.com/ActiveMemory/ctx/internal/config/fs"
-	backupErr "github.com/ActiveMemory/ctx/internal/err/backup"
-	fserr "github.com/ActiveMemory/ctx/internal/err/fs"
+	errBackup "github.com/ActiveMemory/ctx/internal/err/backup"
+	errFs "github.com/ActiveMemory/ctx/internal/err/fs"
 	"github.com/ActiveMemory/ctx/internal/io"
 )
 
@@ -44,7 +44,7 @@ type SMBConfig struct {
 func ParseSMBConfig(smbURL, subdir string) (*SMBConfig, error) {
 	u, parseErr := url.Parse(smbURL)
 	if parseErr != nil || u.Host == "" {
-		return nil, backupErr.InvalidSMBURL(smbURL)
+		return nil, errBackup.InvalidSMBURL(smbURL)
 	}
 
 	host := u.Host
@@ -53,7 +53,7 @@ func ParseSMBConfig(smbURL, subdir string) (*SMBConfig, error) {
 		share = share[1:]
 	}
 	if share == "" {
-		return nil, backupErr.SMBMissingShare(smbURL)
+		return nil, errBackup.SMBMissingShare(smbURL)
 	}
 
 	if subdir == "" {
@@ -87,7 +87,7 @@ func EnsureSMBMount(cfg *SMBConfig) error {
 	//nolint:gosec // G204: smbURL is from user env, not untrusted input
 	mountCmd := exec.Command("gio", "mount", cfg.SourceURL)
 	if mountErr := mountCmd.Run(); mountErr != nil {
-		return backupErr.MountFailed(cfg.SourceURL, mountErr)
+		return errBackup.MountFailed(cfg.SourceURL, mountErr)
 	}
 
 	return nil
@@ -104,17 +104,17 @@ func EnsureSMBMount(cfg *SMBConfig) error {
 func CopyToSMB(cfg *SMBConfig, localPath string) error {
 	dest := filepath.Join(cfg.GVFSPath, cfg.Subdir)
 	if mkdirErr := os.MkdirAll(dest, fs.PermExec); mkdirErr != nil {
-		return fserr.CreateDir(dest, mkdirErr)
+		return errFs.CreateDir(dest, mkdirErr)
 	}
 
 	data, readErr := io.SafeReadUserFile(localPath)
 	if readErr != nil {
-		return fserr.ReadFile(readErr)
+		return errFs.ReadFile(readErr)
 	}
 
 	destFile := filepath.Join(dest, filepath.Base(localPath))
 	if writeErr := os.WriteFile(destFile, data, fs.PermFile); writeErr != nil {
-		return backupErr.WriteSMB(writeErr)
+		return errBackup.WriteSMB(writeErr)
 	}
 
 	return nil

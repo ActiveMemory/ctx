@@ -13,7 +13,7 @@ import (
 
 	cfgMem "github.com/ActiveMemory/ctx/internal/config/memory"
 	errMem "github.com/ActiveMemory/ctx/internal/err/memory"
-	ctxErr "github.com/ActiveMemory/ctx/internal/err/state"
+	errState "github.com/ActiveMemory/ctx/internal/err/state"
 	"github.com/ActiveMemory/ctx/internal/memory"
 	"github.com/ActiveMemory/ctx/internal/rc"
 	"github.com/ActiveMemory/ctx/internal/write/sync"
@@ -59,11 +59,11 @@ func Run(cmd *cobra.Command, dryRun bool) error {
 	// Update sync state
 	state, loadErr := memory.LoadState(contextDir)
 	if loadErr != nil {
-		return ctxErr.Load(loadErr)
+		return errState.Load(loadErr)
 	}
 	state.MarkSynced()
 	if saveErr := memory.SaveState(contextDir, state); saveErr != nil {
-		return ctxErr.Save(saveErr)
+		return errState.Save(saveErr)
 	}
 
 	return nil

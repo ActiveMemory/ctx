@@ -15,10 +15,10 @@ import (
 	"github.com/ActiveMemory/ctx/internal/assets/read/desc"
 	"github.com/ActiveMemory/ctx/internal/assets/read/lookup"
 	"github.com/ActiveMemory/ctx/internal/cli/sync/core"
-	ctxCfg "github.com/ActiveMemory/ctx/internal/config/ctx"
+	cfgCtx "github.com/ActiveMemory/ctx/internal/config/ctx"
 	"github.com/ActiveMemory/ctx/internal/config/dep"
 	"github.com/ActiveMemory/ctx/internal/config/embed/text"
-	syncCfg "github.com/ActiveMemory/ctx/internal/config/sync"
+	cfgSync "github.com/ActiveMemory/ctx/internal/config/sync"
 	"github.com/ActiveMemory/ctx/internal/entity"
 )
 
@@ -41,12 +41,12 @@ func CheckPackageFiles(ctx *entity.Context) []core.Action {
 		if _, err := os.Stat(f); err == nil {
 			// File exists, check if we have DEPENDENCIES.md or similar
 			hasDepsDoc := false
-			if f := ctx.File(ctxCfg.Dependency); f != nil {
+			if f := ctx.File(cfgCtx.Dependency); f != nil {
 				hasDepsDoc = true
 			} else {
 				for _, f := range ctx.Files {
 					if strings.Contains(strings.ToLower(string(f.Content)),
-						syncCfg.KeywordDependencies,
+						cfgSync.KeywordDependencies,
 					) {
 						hasDepsDoc = true
 						break
@@ -56,15 +56,15 @@ func CheckPackageFiles(ctx *entity.Context) []core.Action {
 
 			if !hasDepsDoc {
 				actions = append(actions, core.Action{
-					Type: syncCfg.ActionDeps,
-					File: ctxCfg.Architecture,
+					Type: cfgSync.ActionDeps,
+					File: cfgCtx.Architecture,
 					Description: fmt.Sprintf(
 						lookup.TextDesc(text.DescKeySyncDepsDescription),
 						f, d,
 					),
 					Suggestion: fmt.Sprintf(
 						lookup.TextDesc(text.DescKeySyncDepsSuggestion),
-						ctxCfg.Architecture, ctxCfg.Dependency,
+						cfgCtx.Architecture, cfgCtx.Dependency,
 					),
 				})
 			}
@@ -93,7 +93,7 @@ func CheckConfigFiles(ctx *entity.Context) []core.Action {
 		if len(matches) > 0 {
 			// Check if CONVENTIONS.md mentions this
 			var convContent string
-			if f := ctx.File(ctxCfg.Convention); f != nil {
+			if f := ctx.File(cfgCtx.Convention); f != nil {
 				convContent = strings.ToLower(string(f.Content))
 			}
 
@@ -101,15 +101,15 @@ func CheckConfigFiles(ctx *entity.Context) []core.Action {
 			keyword = strings.TrimSuffix(keyword, "*")
 			if convContent == "" || !strings.Contains(convContent, keyword) {
 				actions = append(actions, core.Action{
-					Type: syncCfg.ActionConfig,
-					File: ctxCfg.Convention,
+					Type: cfgSync.ActionConfig,
+					File: cfgCtx.Convention,
 					Description: fmt.Sprintf(
 						desc.Text(text.DescKeySyncConfigDescription),
 						matches[0], cfg.Topic,
 					),
 					Suggestion: fmt.Sprintf(
 						desc.Text(text.DescKeySyncConfigSuggestion),
-						cfg.Topic, ctxCfg.Convention,
+						cfg.Topic, cfgCtx.Convention,
 					),
 				})
 			}
@@ -136,7 +136,7 @@ func CheckNewDirectories(ctx *entity.Context) []core.Action {
 
 	// Get ARCHITECTURE.md content
 	var archContent string
-	if f := ctx.File(ctxCfg.Architecture); f != nil {
+	if f := ctx.File(cfgCtx.Architecture); f != nil {
 		archContent = strings.ToLower(string(f.Content))
 	}
 
@@ -151,21 +151,21 @@ func CheckNewDirectories(ctx *entity.Context) []core.Action {
 			continue
 		}
 		name := entry.Name()
-		if strings.HasPrefix(name, ".") || syncCfg.SkipDirs[name] {
+		if strings.HasPrefix(name, ".") || cfgSync.SkipDirs[name] {
 			continue
 		}
 
-		if syncCfg.ImportantDirs[name] && !strings.Contains(archContent, name) {
+		if cfgSync.ImportantDirs[name] && !strings.Contains(archContent, name) {
 			actions = append(actions, core.Action{
-				Type: syncCfg.ActionNewDir,
-				File: ctxCfg.Architecture,
+				Type: cfgSync.ActionNewDir,
+				File: cfgCtx.Architecture,
 				Description: fmt.Sprintf(
 					desc.Text(text.DescKeySyncDirDescription),
 					name,
 				),
 				Suggestion: fmt.Sprintf(
 					desc.Text(text.DescKeySyncDirSuggestion),
-					name, ctxCfg.Architecture,
+					name, cfgCtx.Architecture,
 				),
 			})
 		}

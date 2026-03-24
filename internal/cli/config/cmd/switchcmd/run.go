@@ -11,7 +11,7 @@ import (
 
 	"github.com/ActiveMemory/ctx/internal/cli/config/core"
 	"github.com/ActiveMemory/ctx/internal/config/file"
-	ctxErr "github.com/ActiveMemory/ctx/internal/err/config"
+	errConfig "github.com/ActiveMemory/ctx/internal/err/config"
 	writeConfig "github.com/ActiveMemory/ctx/internal/write/config"
 )
 
@@ -50,7 +50,7 @@ func Run(cmd *cobra.Command, root string, args []string) error {
 			profile = file.ProfileDev
 		}
 	default:
-		return ctxErr.UnknownProfile(target)
+		return errConfig.UnknownProfile(target)
 	}
 
 	msg, switchErr := core.SwitchTo(root, profile)

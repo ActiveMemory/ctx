@@ -11,7 +11,7 @@ import (
 	"path/filepath"
 	"testing"
 
-	cryptocfg "github.com/ActiveMemory/ctx/internal/config/crypto"
+	cfgCrypto "github.com/ActiveMemory/ctx/internal/config/crypto"
 	"github.com/ActiveMemory/ctx/internal/config/fs"
 )
 
@@ -20,7 +20,7 @@ func TestGlobalKeyPath(t *testing.T) {
 	t.Setenv("HOME", dir)
 
 	got := GlobalKeyPath()
-	want := filepath.Join(dir, ".ctx", cryptocfg.ContextKey)
+	want := filepath.Join(dir, ".ctx", cfgCrypto.ContextKey)
 	if got != want {
 		t.Errorf("GlobalKeyPath() = %q, want %q", got, want)
 	}
@@ -71,7 +71,7 @@ func TestResolveKeyPath_ProjectLocalBeforeGlobal(t *testing.T) {
 	if err := os.MkdirAll(contextDir, 0750); err != nil {
 		t.Fatal(err)
 	}
-	localKey := filepath.Join(contextDir, cryptocfg.ContextKey)
+	localKey := filepath.Join(contextDir, cfgCrypto.ContextKey)
 	if err := os.WriteFile(localKey, []byte("local-key"), fs.PermSecret); err != nil {
 		t.Fatal(err)
 	}
@@ -80,7 +80,7 @@ func TestResolveKeyPath_ProjectLocalBeforeGlobal(t *testing.T) {
 	if err := os.MkdirAll(globalDir, fs.PermKeyDir); err != nil {
 		t.Fatal(err)
 	}
-	globalKey := filepath.Join(globalDir, cryptocfg.ContextKey)
+	globalKey := filepath.Join(globalDir, cfgCrypto.ContextKey)
 	if err := os.WriteFile(globalKey, []byte("global-key"), fs.PermSecret); err != nil {
 		t.Fatal(err)
 	}
@@ -100,7 +100,7 @@ func TestResolveKeyPath_FallbackToGlobal(t *testing.T) {
 	if err := os.MkdirAll(globalDir, fs.PermKeyDir); err != nil {
 		t.Fatal(err)
 	}
-	globalKey := filepath.Join(globalDir, cryptocfg.ContextKey)
+	globalKey := filepath.Join(globalDir, cfgCrypto.ContextKey)
 	if err := os.WriteFile(globalKey, []byte("global-key"), fs.PermSecret); err != nil {
 		t.Fatal(err)
 	}

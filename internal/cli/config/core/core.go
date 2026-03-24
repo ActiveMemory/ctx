@@ -20,7 +20,7 @@ import (
 	"github.com/ActiveMemory/ctx/internal/config/fs"
 	cfgGit "github.com/ActiveMemory/ctx/internal/config/git"
 	"github.com/ActiveMemory/ctx/internal/err/config"
-	ctxErr "github.com/ActiveMemory/ctx/internal/err/git"
+	errGit "github.com/ActiveMemory/ctx/internal/err/git"
 	"github.com/ActiveMemory/ctx/internal/io"
 	"github.com/ActiveMemory/ctx/internal/rc"
 )
@@ -95,14 +95,14 @@ func SwitchTo(root, profile string) (string, error) {
 // degrade gracefully when this returns an error.
 func GitRoot() (string, error) {
 	if _, lookErr := exec.LookPath(cfgGit.Binary); lookErr != nil {
-		return "", ctxErr.NotFound()
+		return "", errGit.NotFound()
 	}
 
 	out, execErr := exec.Command( //nolint:gosec // args are literal constants
 		cfgGit.Binary, cfgGit.RevParse, cfgGit.FlagShowToplevel,
 	).Output()
 	if execErr != nil {
-		return "", ctxErr.NotInRepo(execErr)
+		return "", errGit.NotInRepo(execErr)
 	}
 	return strings.TrimSpace(string(out)), nil
 }

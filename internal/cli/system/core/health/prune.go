@@ -16,7 +16,7 @@ import (
 	"github.com/ActiveMemory/ctx/internal/assets/read/desc"
 	"github.com/ActiveMemory/ctx/internal/cli/system/core/state"
 	"github.com/ActiveMemory/ctx/internal/config/embed/text"
-	time2 "github.com/ActiveMemory/ctx/internal/config/time"
+	cfgTime "github.com/ActiveMemory/ctx/internal/config/time"
 )
 
 // UUIDPattern matches a UUID (v4) anywhere in a filename.
@@ -42,7 +42,7 @@ func AutoPrune(days int) int {
 		return 0
 	}
 
-	cutoff := time.Now().Add(-time.Duration(days) * time2.HoursPerDay * time.Hour)
+	cutoff := time.Now().Add(-time.Duration(days) * cfgTime.HoursPerDay * time.Hour)
 	var pruned int
 
 	for _, entry := range entries {

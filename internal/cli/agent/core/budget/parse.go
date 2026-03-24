@@ -9,7 +9,7 @@ package budget
 import (
 	"github.com/ActiveMemory/ctx/internal/cli/agent/core/extract"
 	"github.com/ActiveMemory/ctx/internal/config/agent"
-	ctxCfg "github.com/ActiveMemory/ctx/internal/config/ctx"
+	cfgCtx "github.com/ActiveMemory/ctx/internal/config/ctx"
 	"github.com/ActiveMemory/ctx/internal/entity"
 	"github.com/ActiveMemory/ctx/internal/index"
 )
@@ -38,7 +38,7 @@ func ParseEntryBlocks(ctx *entity.Context, fileName string) []index.EntryBlock {
 // Returns:
 //   - []string: All convention bullet items; nil if the file is not found
 func ExtractAllConventions(ctx *entity.Context) []string {
-	if f := ctx.File(ctxCfg.Convention); f != nil {
+	if f := ctx.File(cfgCtx.Convention); f != nil {
 		return extract.BulletItems(string(f.Content), agent.BulletItemLimit)
 	}
 	return nil

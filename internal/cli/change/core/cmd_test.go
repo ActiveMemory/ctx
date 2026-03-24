@@ -15,7 +15,7 @@ import (
 	"time"
 
 	"github.com/ActiveMemory/ctx/internal/cli/change/core/detect"
-	format2 "github.com/ActiveMemory/ctx/internal/cli/change/core/render"
+	coreRender "github.com/ActiveMemory/ctx/internal/cli/change/core/render"
 	"github.com/ActiveMemory/ctx/internal/cli/change/core/scan"
 	"github.com/ActiveMemory/ctx/internal/format"
 
@@ -134,7 +134,7 @@ func TestRenderChanges(t *testing.T) {
 		Authors:     []string{"Volkan"},
 	}
 
-	out := format2.Changes("6 hours ago", ctxChanges, code)
+	out := coreRender.Changes("6 hours ago", ctxChanges, code)
 	if !strings.Contains(out, "## Changes Since Last Session") {
 		t.Error("missing header")
 	}
@@ -155,7 +155,7 @@ func TestRenderChangesForHook(t *testing.T) {
 	}
 	code := entity.CodeSummary{CommitCount: 3, LatestMsg: "Fix bug"}
 
-	out := format2.ChangesForHook("2 hours ago", ctxChanges, code)
+	out := coreRender.ChangesForHook("2 hours ago", ctxChanges, code)
 	if !strings.Contains(out, "Changes since last session") {
 		t.Error("missing hook header")
 	}
@@ -164,14 +164,14 @@ func TestRenderChangesForHook(t *testing.T) {
 	}
 
 	// Empty case.
-	out = format2.ChangesForHook("1 hour ago", nil, entity.CodeSummary{})
+	out = coreRender.ChangesForHook("1 hour ago", nil, entity.CodeSummary{})
 	if out != "" {
 		t.Errorf("expected empty for no changes, got: %q", out)
 	}
 }
 
 func TestRenderChanges_NoChanges(t *testing.T) {
-	out := format2.Changes("1 hour ago", nil, entity.CodeSummary{})
+	out := coreRender.Changes("1 hour ago", nil, entity.CodeSummary{})
 	if !strings.Contains(out, "No changes detected") {
 		t.Error("expected 'No changes detected' message")
 	}

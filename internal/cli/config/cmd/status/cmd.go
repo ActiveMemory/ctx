@@ -8,7 +8,7 @@ package status
 
 import (
 	"github.com/ActiveMemory/ctx/internal/assets/read/desc"
-	internalConfig "github.com/ActiveMemory/ctx/internal/config/cli"
+	cfgCli "github.com/ActiveMemory/ctx/internal/config/cli"
 	"github.com/ActiveMemory/ctx/internal/config/embed/cmd"
 	"github.com/spf13/cobra"
 
@@ -25,7 +25,7 @@ func Cmd() *cobra.Command {
 	return &cobra.Command{
 		Use:         cmd.UseConfigStatus,
 		Short:       short,
-		Annotations: map[string]string{internalConfig.AnnotationSkipInit: ""},
+		Annotations: map[string]string{cfgCli.AnnotationSkipInit: ""},
 		Args:        cobra.NoArgs,
 		RunE: func(cmd *cobra.Command, _ []string) error {
 			root, rootErr := core.GitRoot()

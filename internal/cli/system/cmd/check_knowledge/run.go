@@ -11,7 +11,7 @@ import (
 	"path/filepath"
 
 	"github.com/ActiveMemory/ctx/internal/cli/system/core/check"
-	knowledge2 "github.com/ActiveMemory/ctx/internal/cli/system/core/knowledge"
+	coreKnowledge "github.com/ActiveMemory/ctx/internal/cli/system/core/knowledge"
 	"github.com/ActiveMemory/ctx/internal/cli/system/core/state"
 	"github.com/spf13/cobra"
 
@@ -48,7 +48,7 @@ func Run(cmd *cobra.Command, stdin *os.File) error {
 		return nil
 	}
 
-	if box, warned := knowledge2.CheckKnowledgeHealth(sessionID); warned {
+	if box, warned := coreKnowledge.CheckKnowledgeHealth(sessionID); warned {
 		writeHook.Nudge(cmd, box)
 		internalIo.TouchFile(markerPath)
 	}

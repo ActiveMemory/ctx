@@ -13,22 +13,22 @@ import (
 	"time"
 
 	"github.com/ActiveMemory/ctx/internal/assets/read/desc"
-	remindcore "github.com/ActiveMemory/ctx/internal/cli/remind/core"
-	taskcomplete "github.com/ActiveMemory/ctx/internal/cli/task/cmd/complete"
-	archiveCfg "github.com/ActiveMemory/ctx/internal/config/archive"
-	ctxCfg "github.com/ActiveMemory/ctx/internal/config/ctx"
+	remindCore "github.com/ActiveMemory/ctx/internal/cli/remind/core"
+	taskComplete "github.com/ActiveMemory/ctx/internal/cli/task/cmd/complete"
+	cfgArchive "github.com/ActiveMemory/ctx/internal/config/archive"
+	cfgCtx "github.com/ActiveMemory/ctx/internal/config/ctx"
 	"github.com/ActiveMemory/ctx/internal/config/embed/text"
-	entryCfg "github.com/ActiveMemory/ctx/internal/config/entry"
-	configfs "github.com/ActiveMemory/ctx/internal/config/fs"
+	cfgEntry "github.com/ActiveMemory/ctx/internal/config/entry"
+	cfgFs "github.com/ActiveMemory/ctx/internal/config/fs"
 	"github.com/ActiveMemory/ctx/internal/config/mcp/event"
 	"github.com/ActiveMemory/ctx/internal/config/mcp/field"
-	timeCfg "github.com/ActiveMemory/ctx/internal/config/time"
+	cfgTime "github.com/ActiveMemory/ctx/internal/config/time"
 	"github.com/ActiveMemory/ctx/internal/config/token"
 	"github.com/ActiveMemory/ctx/internal/context/load"
 	"github.com/ActiveMemory/ctx/internal/drift"
 	"github.com/ActiveMemory/ctx/internal/entity"
 	"github.com/ActiveMemory/ctx/internal/entry"
-	mcpErr "github.com/ActiveMemory/ctx/internal/err/mcp"
+	errMcp "github.com/ActiveMemory/ctx/internal/err/mcp"
 	"github.com/ActiveMemory/ctx/internal/mcp/handler/task"
 	"github.com/ActiveMemory/ctx/internal/mcp/server/stat"
 	"github.com/ActiveMemory/ctx/internal/mcp/session"
@@ -131,7 +131,7 @@ func (h *Handler) Complete(query string) (string, error) {
 		return "", boundaryErr
 	}
 
-	completedTask, completeErr := taskcomplete.CompleteTask(
+	completedTask, completeErr := taskComplete.CompleteTask(
 		query, h.ContextDir,
 	)
 	if completeErr != nil {
@@ -245,7 +245,7 @@ func (h *Handler) Recall(limit int, since time.Time) (string, error) {
 		_, _ = fmt.Fprintf(
 			&sb,
 			desc.Text(text.DescKeyMCPRecallItemFormat),
-			i+1, sess.StartTime.Format(timeCfg.DateTimeFormat),
+			i+1, sess.StartTime.Format(cfgTime.DateTimeFormat),
 		)
 		if sess.Project != "" {
 			_, _ = fmt.Fprintf(
@@ -289,8 +289,8 @@ func (h *Handler) WatchUpdate(
 	}
 
 	// Handle the "complete" type as a special case.
-	if entryType == entryCfg.Complete {
-		completedTask, completeErr := taskcomplete.CompleteTask(
+	if entryType == cfgEntry.Complete {
+		completedTask, completeErr := taskComplete.CompleteTask(
 			content, h.ContextDir)
 		if completeErr != nil {
 			return "", completeErr
@@ -366,7 +366,7 @@ func (h *Handler) Compact(archive bool) (string, error) {
 		if writeErr := os.WriteFile(
 			result.TasksFileUpdate.Path,
 			result.TasksFileUpdate.Content,
-			configfs.PermFile,
+			cfgFs.PermFile,
 		); writeErr != nil {
 			return "", writeErr
 		}
@@ -375,7 +375,7 @@ func (h *Handler) Compact(archive bool) (string, error) {
 	// Write section-cleaned files.
 	for _, fu := range result.SectionFileUpdates {
 		if writeErr := os.WriteFile(
-			fu.Path, fu.Content, configfs.PermFile,
+			fu.Path, fu.Content, cfgFs.PermFile,
 		); writeErr != nil {
 			return "", writeErr
 		}
@@ -390,7 +390,7 @@ func (h *Handler) Compact(archive bool) (string, error) {
 				token.NewlineLF + token.NewlineLF
 		}
 		if _, archiveErr := tidy.WriteArchive(
-			archiveCfg.ArchiveScopeTasks,
+			cfgArchive.ArchiveScopeTasks,
 			desc.Text(text.DescKeyHeadingArchivedTasks),
 			archiveContent,
 		); archiveErr != nil {
@@ -445,7 +445,7 @@ func (h *Handler) Next() (string, error) {
 		return "", loadErr
 	}
 
-	tasksFile := ctx.File(ctxCfg.Task)
+	tasksFile := ctx.File(cfgCtx.Task)
 	if tasksFile == nil {
 		return desc.Text(text.DescKeyMCPNoTasks), nil
 	}
@@ -483,7 +483,7 @@ func (h *Handler) CheckTaskCompletion(recentAction string) (string, error) {
 		return "", loadErr
 	}
 
-	tasksFile := ctx.File(ctxCfg.Task)
+	tasksFile := ctx.File(cfgCtx.Task)
 	if tasksFile == nil {
 		return "", nil
 	}
@@ -572,7 +572,7 @@ func (h *Handler) SessionEvent(
 		return sb.String(), nil
 
 	default:
-		return "", mcpErr.UnknownEventType(eventType)
+		return "", errMcp.UnknownEventType(eventType)
 	}
 }
 
@@ -582,7 +582,7 @@ func (h *Handler) SessionEvent(
 //   - string: formatted reminder list or no-reminders message
 //   - error: reminder read error
 func (h *Handler) Remind() (string, error) {
-	reminders, readErr := remindcore.ReadReminders()
+	reminders, readErr := remindCore.ReadReminders()
 	if readErr != nil {
 		return "", readErr
 	}
@@ -591,7 +591,7 @@ func (h *Handler) Remind() (string, error) {
 		return desc.Text(text.DescKeyMCPNoReminders), nil
 	}
 
-	today := time.Now().Format(timeCfg.DateFormat)
+	today := time.Now().Format(cfgTime.DateFormat)
 	var sb strings.Builder
 	_, _ = fmt.Fprintf(
 		&sb,

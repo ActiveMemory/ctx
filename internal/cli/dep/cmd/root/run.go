@@ -14,7 +14,7 @@ import (
 	"github.com/ActiveMemory/ctx/internal/cli/dep/core"
 	"github.com/ActiveMemory/ctx/internal/config/fmt"
 	"github.com/ActiveMemory/ctx/internal/config/token"
-	ctxErr "github.com/ActiveMemory/ctx/internal/err/config"
+	errConfig "github.com/ActiveMemory/ctx/internal/err/config"
 	"github.com/ActiveMemory/ctx/internal/write/deps"
 )
 
@@ -37,14 +37,14 @@ func Run(cmd *cobra.Command, format string, external bool, projType string) erro
 	switch format {
 	case fmt.FormatMermaid, fmt.FormatTable, fmt.FormatJSON:
 	default:
-		return ctxErr.UnknownFormat(format, supportedFormats)
+		return errConfig.UnknownFormat(format, supportedFormats)
 	}
 
 	var builder core.GraphBuilder
 	if projType != "" {
 		builder = core.FindBuilder(projType)
 		if builder == nil {
-			return ctxErr.UnknownProjectType(projType, strings.Join(core.BuilderNames(), token.CommaSpace))
+			return errConfig.UnknownProjectType(projType, strings.Join(core.BuilderNames(), token.CommaSpace))
 		}
 	} else {
 		builder = core.DetectBuilder()

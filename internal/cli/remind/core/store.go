@@ -14,7 +14,7 @@ import (
 
 	"github.com/ActiveMemory/ctx/internal/config/fs"
 	"github.com/ActiveMemory/ctx/internal/config/reminder"
-	ctxErr "github.com/ActiveMemory/ctx/internal/err/reminder"
+	errReminder "github.com/ActiveMemory/ctx/internal/err/reminder"
 	"github.com/ActiveMemory/ctx/internal/io"
 	"github.com/ActiveMemory/ctx/internal/rc"
 )
@@ -30,11 +30,11 @@ func ReadReminders() ([]Reminder, error) {
 		if errors.Is(readErr, os.ErrNotExist) {
 			return nil, nil
 		}
-		return nil, ctxErr.Read(readErr)
+		return nil, errReminder.Read(readErr)
 	}
 	var reminders []Reminder
 	if parseErr := json.Unmarshal(data, &reminders); parseErr != nil {
-		return nil, ctxErr.Parse(parseErr)
+		return nil, errReminder.Parse(parseErr)
 	}
 	return reminders, nil
 }

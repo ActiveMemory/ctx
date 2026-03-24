@@ -11,19 +11,19 @@ import (
 	"github.com/ActiveMemory/ctx/internal/config/cli"
 	"github.com/ActiveMemory/ctx/internal/config/embed/text"
 	"github.com/ActiveMemory/ctx/internal/config/mcp/field"
-	promptCfg "github.com/ActiveMemory/ctx/internal/config/mcp/prompt"
+	cfgMcpPrompt "github.com/ActiveMemory/ctx/internal/config/mcp/prompt"
 	"github.com/ActiveMemory/ctx/internal/mcp/proto"
 )
 
 // Defs defines all available MCP prompts.
 var Defs = []proto.Prompt{
 	{
-		Name: promptCfg.SessionStart,
+		Name: cfgMcpPrompt.SessionStart,
 		Description: desc.Text(
 			text.DescKeyMCPPromptSessionStartDesc),
 	},
 	{
-		Name: promptCfg.AddDecision,
+		Name: cfgMcpPrompt.AddDecision,
 		Description: desc.Text(
 			text.DescKeyMCPPromptAddDecisionDesc),
 		Arguments: []proto.PromptArgument{
@@ -50,7 +50,7 @@ var Defs = []proto.Prompt{
 		},
 	},
 	{
-		Name: promptCfg.AddLearning,
+		Name: cfgMcpPrompt.AddLearning,
 		Description: desc.Text(
 			text.DescKeyMCPPromptAddLearningDesc),
 		Arguments: []proto.PromptArgument{
@@ -77,12 +77,12 @@ var Defs = []proto.Prompt{
 		},
 	},
 	{
-		Name: promptCfg.Reflect,
+		Name: cfgMcpPrompt.Reflect,
 		Description: desc.Text(
 			text.DescKeyMCPPromptReflectDesc),
 	},
 	{
-		Name: promptCfg.Checkpoint,
+		Name: cfgMcpPrompt.Checkpoint,
 		Description: desc.Text(
 			text.DescKeyMCPPromptCheckpointDesc),
 	},

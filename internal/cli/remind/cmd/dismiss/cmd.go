@@ -13,7 +13,7 @@ import (
 	"github.com/ActiveMemory/ctx/internal/config/embed/cmd"
 	"github.com/ActiveMemory/ctx/internal/config/embed/flag"
 	cFlag "github.com/ActiveMemory/ctx/internal/config/flag"
-	ctxErr "github.com/ActiveMemory/ctx/internal/err/reminder"
+	errReminder "github.com/ActiveMemory/ctx/internal/err/reminder"
 )
 
 // Cmd returns the remind dismiss subcommand.
@@ -34,7 +34,7 @@ func Cmd() *cobra.Command {
 				return RunDismissAll(cmd)
 			}
 			if len(args) == 0 {
-				return ctxErr.IDRequired()
+				return errReminder.IDRequired()
 			}
 			return RunDismiss(cmd, args[0])
 		},

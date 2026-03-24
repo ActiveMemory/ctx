@@ -20,7 +20,7 @@ import (
 	"github.com/ActiveMemory/ctx/internal/config/token"
 	"github.com/ActiveMemory/ctx/internal/entity"
 	errFs "github.com/ActiveMemory/ctx/internal/err/fs"
-	promptErr "github.com/ActiveMemory/ctx/internal/err/prompt"
+	errPrompt "github.com/ActiveMemory/ctx/internal/err/prompt"
 	"github.com/ActiveMemory/ctx/internal/write/initialize"
 )
 
@@ -126,7 +126,7 @@ func UpdateMarkedSection(
 ) error {
 	startIdx := strings.Index(existing, markerStart)
 	if startIdx == -1 {
-		return promptErr.MarkerNotFound(filename)
+		return errPrompt.MarkerNotFound(filename)
 	}
 
 	endIdx := strings.Index(existing, markerEnd)
@@ -140,7 +140,7 @@ func UpdateMarkedSection(
 	templateStart := strings.Index(templateStr, markerStart)
 	templateEnd := strings.Index(templateStr, markerEnd)
 	if templateStart == -1 || templateEnd == -1 {
-		return promptErr.TemplateMissingMarkers(filename)
+		return errPrompt.TemplateMissingMarkers(filename)
 	}
 
 	sectionContent := templateStr[templateStart : templateEnd+len(markerEnd)]

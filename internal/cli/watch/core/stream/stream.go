@@ -17,8 +17,8 @@ import (
 	"github.com/ActiveMemory/ctx/internal/config/cli"
 	"github.com/ActiveMemory/ctx/internal/config/regex"
 	"github.com/ActiveMemory/ctx/internal/config/watch"
-	ctxerr "github.com/ActiveMemory/ctx/internal/err/fs"
-	watch2 "github.com/ActiveMemory/ctx/internal/write/watch"
+	errFs "github.com/ActiveMemory/ctx/internal/err/fs"
+	writeWatch "github.com/ActiveMemory/ctx/internal/write/watch"
 	"github.com/spf13/cobra"
 )
 
@@ -79,13 +79,13 @@ func ProcessStream(cmd *cobra.Command, reader io.Reader, dryRun bool) error {
 				}
 
 				if dryRun {
-					watch2.DryRunPreview(cmd, update.Type, update.Content)
+					writeWatch.DryRunPreview(cmd, update.Type, update.Content)
 				} else {
 					err := apply.ApplyUpdate(update)
 					if err != nil {
-						watch2.ApplyFailed(cmd, update.Type, err)
+						writeWatch.ApplyFailed(cmd, update.Type, err)
 					} else {
-						watch2.ApplySuccess(cmd, update.Type, update.Content)
+						writeWatch.ApplySuccess(cmd, update.Type, update.Content)
 						updateCount++
 					}
 				}
@@ -94,7 +94,7 @@ func ProcessStream(cmd *cobra.Command, reader io.Reader, dryRun bool) error {
 	}
 
 	if err := scanner.Err(); err != nil {
-		return ctxerr.ReadInputStream(err)
+		return errFs.ReadInputStream(err)
 	}
 
 	return nil

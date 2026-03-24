@@ -15,7 +15,7 @@ import (
 
 	"github.com/ActiveMemory/ctx/internal/config/crypto"
 	"github.com/ActiveMemory/ctx/internal/err/fs"
-	ctxErr "github.com/ActiveMemory/ctx/internal/err/notify"
+	errNotify "github.com/ActiveMemory/ctx/internal/err/notify"
 	iNotify "github.com/ActiveMemory/ctx/internal/notify"
 	"github.com/ActiveMemory/ctx/internal/write/notify"
 )
@@ -39,11 +39,11 @@ func Run(cmd *cobra.Command, stdin *os.File) error {
 	}
 	url := strings.TrimSpace(scanner.Text())
 	if url == "" {
-		return ctxErr.WebhookEmpty()
+		return errNotify.WebhookEmpty()
 	}
 
 	if saveErr := iNotify.SaveWebhook(url); saveErr != nil {
-		return ctxErr.SaveWebhook(saveErr)
+		return errNotify.SaveWebhook(saveErr)
 	}
 
 	notify.SetupDone(cmd, iNotify.MaskURL(url), crypto.NotifyEnc)

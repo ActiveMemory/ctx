@@ -14,7 +14,7 @@ import (
 
 	"github.com/ActiveMemory/ctx/internal/config/dir"
 	"github.com/ActiveMemory/ctx/internal/config/journal"
-	ctxErr "github.com/ActiveMemory/ctx/internal/err/journal"
+	errJournal "github.com/ActiveMemory/ctx/internal/err/journal"
 	"github.com/ActiveMemory/ctx/internal/journal/state"
 	"github.com/ActiveMemory/ctx/internal/rc"
 	"github.com/ActiveMemory/ctx/internal/write/recall"
@@ -33,7 +33,7 @@ func Run(cmd *cobra.Command) error {
 
 	jstate, loadErr := state.Load(journalDir)
 	if loadErr != nil {
-		return ctxErr.LoadState(loadErr)
+		return errJournal.LoadState(loadErr)
 	}
 
 	files, matchErr := lock.MatchJournalFiles(journalDir, nil, true)
@@ -65,7 +65,7 @@ func Run(cmd *cobra.Command) error {
 	}
 
 	if saveErr := jstate.Save(journalDir); saveErr != nil {
-		return ctxErr.SaveState(saveErr)
+		return errJournal.SaveState(saveErr)
 	}
 
 	recall.JournalSyncSummary(cmd, locked, unlocked)

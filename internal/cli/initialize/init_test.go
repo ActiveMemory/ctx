@@ -14,7 +14,7 @@ import (
 	"testing"
 
 	"github.com/ActiveMemory/ctx/internal/claude"
-	claude2 "github.com/ActiveMemory/ctx/internal/config/claude"
+	cfgClaude "github.com/ActiveMemory/ctx/internal/config/claude"
 	"github.com/ActiveMemory/ctx/internal/config/ctx"
 	"github.com/ActiveMemory/ctx/internal/config/env"
 )
@@ -417,7 +417,7 @@ func TestRunInit_Merge(t *testing.T) {
 	t.Setenv("HOME", tmpDir)
 	t.Setenv(env.SkipPathCheck, env.True)
 
-	if err = os.WriteFile(claude2.Md, []byte("# My Project\n\nExisting.\n"), 0600); err != nil {
+	if err = os.WriteFile(cfgClaude.Md, []byte("# My Project\n\nExisting.\n"), 0600); err != nil {
 		t.Fatal(err)
 	}
 
@@ -427,7 +427,7 @@ func TestRunInit_Merge(t *testing.T) {
 		t.Fatalf("init --merge failed: %v", err)
 	}
 
-	content, _ := os.ReadFile(claude2.Md)
+	content, _ := os.ReadFile(cfgClaude.Md)
 	if !strings.Contains(string(content), "My Project") {
 		t.Error("original content lost with --merge")
 	}

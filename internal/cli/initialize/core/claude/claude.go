@@ -16,7 +16,7 @@ import (
 	"github.com/ActiveMemory/ctx/internal/config/embed/text"
 	"github.com/ActiveMemory/ctx/internal/config/marker"
 	"github.com/ActiveMemory/ctx/internal/entity"
-	errInitialize "github.com/ActiveMemory/ctx/internal/err/initialize"
+	errInit "github.com/ActiveMemory/ctx/internal/err/initialize"
 	"github.com/ActiveMemory/ctx/internal/write/initialize"
 )
 
@@ -32,7 +32,7 @@ import (
 func HandleClaudeMd(cmd *cobra.Command, force, autoMerge bool) error {
 	templateContent, err := readClaude.Md()
 	if err != nil {
-		return errInitialize.ReadTemplate(claude.Md, err)
+		return errInit.ReadTemplate(claude.Md, err)
 	}
 
 	created, mergeErr := merge.CreateOrMerge(cmd, entity.MergeParams{

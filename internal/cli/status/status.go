@@ -9,10 +9,10 @@ package status
 import (
 	"github.com/spf13/cobra"
 
-	statuRroot "github.com/ActiveMemory/ctx/internal/cli/status/cmd/root"
+	statusRoot "github.com/ActiveMemory/ctx/internal/cli/status/cmd/root"
 )
 
 // Cmd returns the status command.
 func Cmd() *cobra.Command {
-	return statuRroot.Cmd()
+	return statusRoot.Cmd()
 }

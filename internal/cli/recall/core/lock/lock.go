@@ -21,7 +21,7 @@ import (
 	"github.com/ActiveMemory/ctx/internal/config/session"
 	"github.com/ActiveMemory/ctx/internal/config/token"
 	"github.com/ActiveMemory/ctx/internal/err/journal"
-	ctxErr "github.com/ActiveMemory/ctx/internal/err/session"
+	errSession "github.com/ActiveMemory/ctx/internal/err/session"
 	"github.com/ActiveMemory/ctx/internal/io"
 	"github.com/ActiveMemory/ctx/internal/journal/state"
 	"github.com/ActiveMemory/ctx/internal/rc"
@@ -244,7 +244,7 @@ func RunLockUnlock(
 		return cmd.Help()
 	}
 	if len(args) > 0 && all {
-		return ctxErr.AllWithPattern()
+		return errSession.AllWithPattern()
 	}
 
 	journalDir := filepath.Join(rc.ContextDir(), dir.Journal)

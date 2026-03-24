@@ -10,7 +10,7 @@ import (
 	"github.com/ActiveMemory/ctx/internal/assets/read/desc"
 	"github.com/ActiveMemory/ctx/internal/config/embed/text"
 	"github.com/ActiveMemory/ctx/internal/config/entry"
-	ctxentry "github.com/ActiveMemory/ctx/internal/entry"
+	ctxEntry "github.com/ActiveMemory/ctx/internal/entry"
 )
 
 // Promote writes a classified entry to the appropriate .context/ file.
@@ -28,7 +28,7 @@ func Promote(e Entry, classification Classification) error {
 	// (first line, trimmed of Markdown markers)
 	title := extractTitle(e.Text)
 
-	params := ctxentry.Params{
+	params := ctxEntry.Params{
 		Type:    classification.Target,
 		Content: title,
 	}
@@ -51,5 +51,5 @@ func Promote(e Entry, classification Classification) error {
 		// Conventions just need content: FormatConvention handles the rest
 	}
 
-	return ctxentry.Write(params)
+	return ctxEntry.Write(params)
 }

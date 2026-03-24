@@ -11,10 +11,10 @@ import (
 
 	"github.com/ActiveMemory/ctx/internal/cli/status/core/out"
 	"github.com/ActiveMemory/ctx/internal/context/load"
-	ctxerr "github.com/ActiveMemory/ctx/internal/err/initialize"
+	errInit "github.com/ActiveMemory/ctx/internal/err/initialize"
 	"github.com/spf13/cobra"
 
-	errctx "github.com/ActiveMemory/ctx/internal/err/context"
+	errCtx "github.com/ActiveMemory/ctx/internal/err/context"
 )
 
 // Run executes the status command logic.
@@ -29,9 +29,9 @@ import (
 func Run(cmd *cobra.Command, jsonOutput, verbose bool) error {
 	ctx, err := load.Do("")
 	if err != nil {
-		var notFoundError *errctx.NotFoundError
+		var notFoundError *errCtx.NotFoundError
 		if errors.As(err, &notFoundError) {
-			return ctxerr.ContextNotInitialized()
+			return errInit.ContextNotInitialized()
 		}
 		return err
 	}

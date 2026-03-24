@@ -14,9 +14,9 @@ import (
 	"github.com/ActiveMemory/ctx/internal/assets/read/desc"
 	"github.com/ActiveMemory/ctx/internal/config/embed/text"
 	"github.com/ActiveMemory/ctx/internal/config/fs"
-	loopCfg "github.com/ActiveMemory/ctx/internal/config/loop"
+	cfgLoop "github.com/ActiveMemory/ctx/internal/config/loop"
 	"github.com/ActiveMemory/ctx/internal/err/config"
-	ctxErr "github.com/ActiveMemory/ctx/internal/err/fs"
+	errFs "github.com/ActiveMemory/ctx/internal/err/fs"
 	"github.com/ActiveMemory/ctx/internal/write/loop"
 )
 
@@ -41,7 +41,7 @@ func Run(
 	maxIterations int,
 	completionMsg, outputFile string,
 ) error {
-	if !loopCfg.ValidTools[tool] {
+	if !cfgLoop.ValidTools[tool] {
 		return config.InvalidTool(tool)
 	}
 
@@ -50,7 +50,7 @@ func Run(
 	if writeErr := os.WriteFile(
 		outputFile, []byte(script), fs.PermExec,
 	); writeErr != nil {
-		return ctxErr.FileWrite(outputFile, writeErr)
+		return errFs.FileWrite(outputFile, writeErr)
 	}
 
 	loop.InfoGenerated(

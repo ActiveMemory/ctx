@@ -13,7 +13,7 @@ import (
 	"strings"
 	"testing"
 
-	hookroot "github.com/ActiveMemory/ctx/internal/cli/hook/cmd/root"
+	hookRoot "github.com/ActiveMemory/ctx/internal/cli/hook/cmd/root"
 	"github.com/spf13/cobra"
 )
 
@@ -70,7 +70,7 @@ func hookCmdOutput(cmd *cobra.Command) string {
 func TestWriteCopilotInstructions_NewFile(t *testing.T) {
 	tmpDir := t.TempDir()
 
-	// hookroot.WriteCopilotInstructions uses relative paths, so chdir.
+	// hookRoot.WriteCopilotInstructions uses relative paths, so chdir.
 	origDir, wdErr := os.Getwd()
 	if wdErr != nil {
 		t.Fatal(wdErr)
@@ -83,8 +83,8 @@ func TestWriteCopilotInstructions_NewFile(t *testing.T) {
 	})
 
 	cmd := newHookTestCmd()
-	if runErr := hookroot.WriteCopilotInstructions(cmd); runErr != nil {
-		t.Fatalf("hookroot.WriteCopilotInstructions failed: %v", runErr)
+	if runErr := hookRoot.WriteCopilotInstructions(cmd); runErr != nil {
+		t.Fatalf("hookRoot.WriteCopilotInstructions failed: %v", runErr)
 	}
 
 	targetFile := filepath.Join(tmpDir, ".github", "copilot-instructions.md")
@@ -129,8 +129,8 @@ func TestWriteCopilotInstructions_ExistingWithMarker(t *testing.T) {
 	}
 
 	cmd := newHookTestCmd()
-	if runErr := hookroot.WriteCopilotInstructions(cmd); runErr != nil {
-		t.Fatalf("hookroot.WriteCopilotInstructions failed: %v", runErr)
+	if runErr := hookRoot.WriteCopilotInstructions(cmd); runErr != nil {
+		t.Fatalf("hookRoot.WriteCopilotInstructions failed: %v", runErr)
 	}
 
 	// File should be unchanged (skipped).
@@ -175,8 +175,8 @@ func TestWriteCopilotInstructions_ExistingWithoutMarker(t *testing.T) {
 	}
 
 	cmd := newHookTestCmd()
-	if runErr := hookroot.WriteCopilotInstructions(cmd); runErr != nil {
-		t.Fatalf("hookroot.WriteCopilotInstructions failed: %v", runErr)
+	if runErr := hookRoot.WriteCopilotInstructions(cmd); runErr != nil {
+		t.Fatalf("hookRoot.WriteCopilotInstructions failed: %v", runErr)
 	}
 
 	data, readErr := os.ReadFile(targetFile)

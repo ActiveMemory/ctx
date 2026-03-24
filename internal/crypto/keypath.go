@@ -11,7 +11,7 @@ import (
 	"path/filepath"
 	"strings"
 
-	cryptocfg "github.com/ActiveMemory/ctx/internal/config/crypto"
+	cfgCrypto "github.com/ActiveMemory/ctx/internal/config/crypto"
 	"github.com/ActiveMemory/ctx/internal/config/dir"
 )
 
@@ -24,7 +24,7 @@ func GlobalKeyPath() string {
 	if err != nil {
 		return ""
 	}
-	return filepath.Join(home, dir.CtxData, cryptocfg.ContextKey)
+	return filepath.Join(home, dir.CtxData, cfgCrypto.ContextKey)
 }
 
 // ExpandHome expands a leading ~/ prefix to the user's home directory.
@@ -69,7 +69,7 @@ func ResolveKeyPath(contextDir, overridePath string) string {
 	}
 
 	// Tier 2: project-local key.
-	local := filepath.Join(contextDir, cryptocfg.ContextKey)
+	local := filepath.Join(contextDir, cfgCrypto.ContextKey)
 	if _, err := os.Stat(local); err == nil {
 		return local
 	}

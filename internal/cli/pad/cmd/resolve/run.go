@@ -7,14 +7,14 @@
 package resolve
 
 import (
-	crypto2 "github.com/ActiveMemory/ctx/internal/cli/pad/core/crypto"
+	padCrypto "github.com/ActiveMemory/ctx/internal/cli/pad/core/crypto"
 	"github.com/ActiveMemory/ctx/internal/cli/pad/core/store"
 	"github.com/spf13/cobra"
 
 	"github.com/ActiveMemory/ctx/internal/config/pad"
 	"github.com/ActiveMemory/ctx/internal/crypto"
 	errCrypto "github.com/ActiveMemory/ctx/internal/err/crypto"
-	ctxErr "github.com/ActiveMemory/ctx/internal/err/pad"
+	errPad "github.com/ActiveMemory/ctx/internal/err/pad"
 	"github.com/ActiveMemory/ctx/internal/rc"
 	writePad "github.com/ActiveMemory/ctx/internal/write/pad"
 )
@@ -28,7 +28,7 @@ import (
 //   - error: Non-nil if no conflict files found or decryption fails
 func Run(cmd *cobra.Command) error {
 	if !rc.ScratchpadEncrypt() {
-		return ctxErr.ResolveNotEncrypted()
+		return errPad.ResolveNotEncrypted()
 	}
 
 	kp := store.KeyPath()
@@ -39,11 +39,11 @@ func Run(cmd *cobra.Command) error {
 
 	dir := rc.ContextDir()
 
-	ours, errOurs := crypto2.DecryptFile(key, dir, pad.EncOurs)
-	theirs, errTheirs := crypto2.DecryptFile(key, dir, pad.EncTheirs)
+	ours, errOurs := padCrypto.DecryptFile(key, dir, pad.EncOurs)
+	theirs, errTheirs := padCrypto.DecryptFile(key, dir, pad.EncTheirs)
 
 	if errOurs != nil && errTheirs != nil {
-		return ctxErr.NoConflictFiles(pad.Enc)
+		return errPad.NoConflictFiles(pad.Enc)
 	}
 
 	if errOurs == nil {

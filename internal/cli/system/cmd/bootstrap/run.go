@@ -9,7 +9,7 @@ package bootstrap
 import (
 	"os"
 
-	bootstrap2 "github.com/ActiveMemory/ctx/internal/cli/system/core/bootstrap"
+	coreBootstrap "github.com/ActiveMemory/ctx/internal/cli/system/core/bootstrap"
 	"github.com/spf13/cobra"
 
 	"github.com/ActiveMemory/ctx/internal/assets/read/desc"
@@ -43,14 +43,14 @@ func Run(cmd *cobra.Command) error {
 		return nil
 	}
 
-	files := bootstrap2.ListContextFiles(dir)
-	rules := bootstrap2.ParseNumberedLines(
+	files := coreBootstrap.ListContextFiles(dir)
+	rules := coreBootstrap.ParseNumberedLines(
 		desc.Text(text.DescKeyBootstrapRules),
 	)
-	nextSteps := bootstrap2.ParseNumberedLines(
+	nextSteps := coreBootstrap.ParseNumberedLines(
 		desc.Text(text.DescKeyBootstrapNextSteps),
 	)
-	warning := bootstrap2.PluginWarning()
+	warning := coreBootstrap.PluginWarning()
 
 	jsonFlag, _ := cmd.Flags().GetBool(cFlag.JSON)
 	if jsonFlag {
@@ -58,7 +58,7 @@ func Run(cmd *cobra.Command) error {
 		return nil
 	}
 
-	fileList := bootstrap2.WrapFileList(
+	fileList := coreBootstrap.WrapFileList(
 		files,
 		cfgBootstrap.BootstrapFileListWidth,
 		cfgBootstrap.BootstrapFileListIndent,

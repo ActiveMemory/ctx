@@ -12,12 +12,12 @@ import (
 	"path/filepath"
 	"strings"
 
-	claude2 "github.com/ActiveMemory/ctx/internal/cli/initialize/core/claude"
+	coreClaude "github.com/ActiveMemory/ctx/internal/cli/initialize/core/claude"
 	"github.com/ActiveMemory/ctx/internal/cli/initialize/core/entry"
 	coreMerge "github.com/ActiveMemory/ctx/internal/cli/initialize/core/merge"
 	"github.com/ActiveMemory/ctx/internal/cli/initialize/core/plan"
 	"github.com/ActiveMemory/ctx/internal/cli/initialize/core/plugin"
-	project2 "github.com/ActiveMemory/ctx/internal/cli/initialize/core/project"
+	coreProject "github.com/ActiveMemory/ctx/internal/cli/initialize/core/project"
 	"github.com/ActiveMemory/ctx/internal/cli/initialize/core/prompt"
 	"github.com/ActiveMemory/ctx/internal/cli/initialize/core/validate"
 	"github.com/spf13/cobra"
@@ -39,7 +39,7 @@ import (
 	"github.com/ActiveMemory/ctx/internal/crypto"
 	errCrypto "github.com/ActiveMemory/ctx/internal/err/crypto"
 	errFs "github.com/ActiveMemory/ctx/internal/err/fs"
-	ctxErr "github.com/ActiveMemory/ctx/internal/err/prompt"
+	errPrompt "github.com/ActiveMemory/ctx/internal/err/prompt"
 	"github.com/ActiveMemory/ctx/internal/rc"
 	"github.com/ActiveMemory/ctx/internal/write/initialize"
 )
@@ -102,7 +102,7 @@ func Run(
 		var listErr error
 		templatesToCreate, listErr = catalog.List()
 		if listErr != nil {
-			return ctxErr.ListTemplates(listErr)
+			return errPrompt.ListTemplates(listErr)
 		}
 	}
 
@@ -118,7 +118,7 @@ func Run(
 
 		content, err := template.Template(name)
 		if err != nil {
-			return ctxErr.ReadTemplate(name, err)
+			return errPrompt.ReadTemplate(name, err)
 		}
 
 		if err := os.WriteFile(targetPath, content, fs.PermFile); err != nil {
@@ -152,7 +152,7 @@ func Run(
 	initialize.InfoCreatingRootFiles(cmd)
 
 	// Create specs/ and ideas/ directories with README.md
-	if err := project2.CreateProjectDirs(cmd); err != nil {
+	if err := coreProject.CreateProjectDirs(cmd); err != nil {
 		initialize.InfoWarnNonFatal(cmd, desc.Text(text.DescKeyInitLabelProjectDirs), err)
 	}
 
@@ -184,13 +184,13 @@ func Run(
 	}
 
 	// Handle CLAUDE.md creation/merge
-	if err := claude2.HandleClaudeMd(cmd, force, merge); err != nil {
+	if err := coreClaude.HandleClaudeMd(cmd, force, merge); err != nil {
 		// Non-fatal: warn but continue
 		initialize.InfoWarnNonFatal(cmd, claude.Md, err)
 	}
 
 	// Deploy Makefile.ctx and amend user Makefile
-	if err := project2.HandleMakefileCtx(cmd); err != nil {
+	if err := coreProject.HandleMakefileCtx(cmd); err != nil {
 		// Non-fatal: warn but continue
 		initialize.InfoWarnNonFatal(cmd, sync.PatternMakefile, err)
 	}

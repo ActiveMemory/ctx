@@ -17,7 +17,7 @@ import (
 	"github.com/ActiveMemory/ctx/internal/assets/read/desc"
 	"github.com/ActiveMemory/ctx/internal/assets/read/template"
 	"github.com/ActiveMemory/ctx/internal/config/archive"
-	ctxCfg "github.com/ActiveMemory/ctx/internal/config/ctx"
+	cfgCtx "github.com/ActiveMemory/ctx/internal/config/ctx"
 	"github.com/ActiveMemory/ctx/internal/config/embed/text"
 	"github.com/ActiveMemory/ctx/internal/config/fs"
 	"github.com/ActiveMemory/ctx/internal/config/marker"
@@ -27,7 +27,7 @@ import (
 	"github.com/ActiveMemory/ctx/internal/entity"
 	errFs "github.com/ActiveMemory/ctx/internal/err/fs"
 	"github.com/ActiveMemory/ctx/internal/err/prompt"
-	ctxErr "github.com/ActiveMemory/ctx/internal/err/task"
+	errTask "github.com/ActiveMemory/ctx/internal/err/task"
 	"github.com/ActiveMemory/ctx/internal/rc"
 	"github.com/ActiveMemory/ctx/internal/task"
 	"github.com/ActiveMemory/ctx/internal/tidy"
@@ -106,10 +106,10 @@ func ApplyFixes(
 // Returns:
 //   - error: Non-nil if file operations fail
 func FixStaleness(cmd *cobra.Command, ctx *entity.Context) error {
-	tasksFile := ctx.File(ctxCfg.Task)
+	tasksFile := ctx.File(cfgCtx.Task)
 
 	if tasksFile == nil {
-		return ctxErr.FileNotFound()
+		return errTask.FileNotFound()
 	}
 
 	nl := token.NewlineLF
@@ -145,7 +145,7 @@ func FixStaleness(cmd *cobra.Command, ctx *entity.Context) error {
 	}
 
 	if len(completedTasks) == 0 {
-		return ctxErr.NoneCompleted()
+		return errTask.NoneCompleted()
 	}
 
 	// Build archive content
@@ -167,7 +167,7 @@ func FixStaleness(cmd *cobra.Command, ctx *entity.Context) error {
 	if writeErr := os.WriteFile(
 		tasksFile.Path, []byte(newContent), fs.PermFile,
 	); writeErr != nil {
-		return ctxErr.FileWrite(writeErr)
+		return errTask.FileWrite(writeErr)
 	}
 
 	writeDrift.Archived(cmd, len(completedTasks), archiveFile)

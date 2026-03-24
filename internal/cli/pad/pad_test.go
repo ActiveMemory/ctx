@@ -16,13 +16,13 @@ import (
 	"testing"
 
 	"github.com/ActiveMemory/ctx/internal/cli/pad/core/blob"
-	crypto2 "github.com/ActiveMemory/ctx/internal/cli/pad/core/crypto"
+	padCrypto "github.com/ActiveMemory/ctx/internal/cli/pad/core/crypto"
 	"github.com/ActiveMemory/ctx/internal/cli/pad/core/parse"
 	"github.com/ActiveMemory/ctx/internal/cli/pad/core/store"
 	"github.com/ActiveMemory/ctx/internal/cli/pad/core/validate"
 	"github.com/ActiveMemory/ctx/internal/config/dir"
 	"github.com/ActiveMemory/ctx/internal/config/pad"
-	ctxerr "github.com/ActiveMemory/ctx/internal/err/pad"
+	errPad "github.com/ActiveMemory/ctx/internal/err/pad"
 	"github.com/spf13/cobra"
 
 	"github.com/ActiveMemory/ctx/internal/config/fs"
@@ -632,7 +632,7 @@ func TestValidateIndex_EmptySlice(t *testing.T) {
 }
 
 func TestErrEntryRange(t *testing.T) {
-	err := ctxerr.EntryRange(5, 3)
+	err := errPad.EntryRange(5, 3)
 	msg := err.Error()
 	if !strings.Contains(msg, "5") || !strings.Contains(msg, "3") {
 		t.Errorf("EntryRange = %q, want indices 5 and 3 mentioned", msg)
@@ -1123,7 +1123,7 @@ func TestDecryptFile_BadData(t *testing.T) {
 		t.Fatal(writeErr)
 	}
 
-	_, err := crypto2.DecryptFile(key, tmpDir, "bad.enc")
+	_, err := padCrypto.DecryptFile(key, tmpDir, "bad.enc")
 	if err == nil {
 		t.Fatal("expected decryption error for bad data")
 	}
@@ -1136,7 +1136,7 @@ func TestDecryptFile_MissingFile(t *testing.T) {
 	key, _ := crypto.GenerateKey()
 	tmpDir := t.TempDir()
 
-	_, err := crypto2.DecryptFile(key, tmpDir, "nonexistent.enc")
+	_, err := padCrypto.DecryptFile(key, tmpDir, "nonexistent.enc")
 	if err == nil {
 		t.Fatal("expected error for missing file")
 	}
@@ -1155,7 +1155,7 @@ func TestDecryptFile_ValidData(t *testing.T) {
 		t.Fatal(writeErr)
 	}
 
-	entries, err := crypto2.DecryptFile(key, tmpDir, "good.enc")
+	entries, err := padCrypto.DecryptFile(key, tmpDir, "good.enc")
 	if err != nil {
 		t.Fatalf("decryptFile error: %v", err)
 	}

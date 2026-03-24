@@ -11,7 +11,7 @@ import (
 	"time"
 
 	"github.com/ActiveMemory/ctx/internal/config/regex"
-	time2 "github.com/ActiveMemory/ctx/internal/config/time"
+	cfgTime "github.com/ActiveMemory/ctx/internal/config/time"
 	"github.com/ActiveMemory/ctx/internal/config/token"
 	"github.com/ActiveMemory/ctx/internal/entity"
 	"github.com/ActiveMemory/ctx/internal/task"
@@ -111,7 +111,7 @@ func parseDoneTimestamp(line string) *time.Time {
 	}
 
 	// Parse YYYY-MM-DD-HHMMSS format
-	t, err := time.Parse(time2.TimestampCompact, match[1])
+	t, err := time.Parse(cfgTime.TimestampCompact, match[1])
 	if err != nil {
 		return nil
 	}

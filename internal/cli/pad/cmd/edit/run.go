@@ -14,7 +14,7 @@ import (
 
 	"github.com/ActiveMemory/ctx/internal/config/pad"
 	"github.com/ActiveMemory/ctx/internal/err/fs"
-	ctxErr "github.com/ActiveMemory/ctx/internal/err/pad"
+	errPad "github.com/ActiveMemory/ctx/internal/err/pad"
 	"github.com/ActiveMemory/ctx/internal/io"
 	writePad "github.com/ActiveMemory/ctx/internal/write/pad"
 )
@@ -68,7 +68,7 @@ func runEditAppend(cmd *cobra.Command, n int, text string) error {
 	}
 
 	if blob.ContainsBlob(entries[n-1]) {
-		return ctxErr.BlobAppendNotAllowed()
+		return errPad.BlobAppendNotAllowed()
 	}
 
 	entries[n-1] = entries[n-1] + " " + text
@@ -101,7 +101,7 @@ func runEditPrepend(cmd *cobra.Command, n int, text string) error {
 	}
 
 	if blob.ContainsBlob(entries[n-1]) {
-		return ctxErr.BlobPrependNotAllowed()
+		return errPad.BlobPrependNotAllowed()
 	}
 
 	entries[n-1] = text + " " + entries[n-1]
@@ -136,7 +136,7 @@ func runEditBlob(cmd *cobra.Command, n int, filePath, labelText string) error {
 
 	oldLabel, oldData, ok := blob.SplitBlob(entries[n-1])
 	if !ok {
-		return ctxErr.NotBlobEntry(n)
+		return errPad.NotBlobEntry(n)
 	}
 
 	newLabel := oldLabel
@@ -152,7 +152,7 @@ func runEditBlob(cmd *cobra.Command, n int, filePath, labelText string) error {
 			return fs.ReadFile(readErr)
 		}
 		if len(data) > pad.MaxBlobSize {
-			return ctxErr.FileTooLarge(len(data), pad.MaxBlobSize)
+			return errPad.FileTooLarge(len(data), pad.MaxBlobSize)
 		}
 		newData = data
 	}

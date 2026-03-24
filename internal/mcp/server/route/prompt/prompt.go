@@ -13,7 +13,7 @@ import (
 
 	"github.com/ActiveMemory/ctx/internal/assets/read/desc"
 	"github.com/ActiveMemory/ctx/internal/config/cli"
-	ctxCfg "github.com/ActiveMemory/ctx/internal/config/ctx"
+	cfgCtx "github.com/ActiveMemory/ctx/internal/config/ctx"
 	"github.com/ActiveMemory/ctx/internal/config/embed/text"
 	"github.com/ActiveMemory/ctx/internal/config/mcp/field"
 	"github.com/ActiveMemory/ctx/internal/config/mcp/mime"
@@ -21,7 +21,7 @@ import (
 	"github.com/ActiveMemory/ctx/internal/config/token"
 	"github.com/ActiveMemory/ctx/internal/context/load"
 	"github.com/ActiveMemory/ctx/internal/mcp/proto"
-	promptdef "github.com/ActiveMemory/ctx/internal/mcp/server/def/prompt"
+	defPrompt "github.com/ActiveMemory/ctx/internal/mcp/server/def/prompt"
 	"github.com/ActiveMemory/ctx/internal/mcp/server/out"
 	"github.com/ActiveMemory/ctx/internal/mcp/server/stat"
 )
@@ -51,7 +51,7 @@ func sessionStart(
 	sb.WriteString(token.NewlineLF)
 	sb.WriteString(token.NewlineLF)
 
-	for _, fileName := range ctxCfg.ReadOrder {
+	for _, fileName := range cfgCtx.ReadOrder {
 		f := ctx.File(fileName)
 		if f == nil || f.IsEmpty {
 			continue
@@ -146,12 +146,12 @@ func checkpoint(
 func addDecision(
 	id json.RawMessage, args map[string]string,
 ) *proto.Response {
-	return buildEntry(id, promptdef.EntryPromptSpec{
+	return buildEntry(id, defPrompt.EntryPromptSpec{
 		KeyHeader:  text.DescKeyMCPPromptAddDecisionHeader,
 		KeyFooter:  text.DescKeyMCPPromptAddDecisionFooter,
 		FieldFmtK:  text.DescKeyMCPPromptAddDecisionFieldFmt,
 		KeyResultD: text.DescKeyMCPPromptAddDecisionResultD,
-		Fields: []promptdef.EntryField{
+		Fields: []defPrompt.EntryField{
 			{KeyLabel: text.DescKeyMCPPromptLabelDecision,
 				Value: args[field.Content]},
 			{KeyLabel: text.DescKeyMCPPromptLabelContext,
@@ -176,12 +176,12 @@ func addDecision(
 func addLearning(
 	id json.RawMessage, args map[string]string,
 ) *proto.Response {
-	return buildEntry(id, promptdef.EntryPromptSpec{
+	return buildEntry(id, defPrompt.EntryPromptSpec{
 		KeyHeader:  text.DescKeyMCPPromptAddLearningHeader,
 		KeyFooter:  text.DescKeyMCPPromptAddLearningFooter,
 		FieldFmtK:  text.DescKeyMCPPromptAddLearningFieldFmt,
 		KeyResultD: text.DescKeyMCPPromptAddLearningResultD,
-		Fields: []promptdef.EntryField{
+		Fields: []defPrompt.EntryField{
 			{KeyLabel: text.DescKeyMCPPromptLabelLearning,
 				Value: args[field.Content]},
 			{KeyLabel: text.DescKeyMCPPromptLabelContext,

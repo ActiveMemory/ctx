@@ -11,7 +11,7 @@ import (
 	"os"
 	"strings"
 
-	hook2 "github.com/ActiveMemory/ctx/internal/cli/system/core/check"
+	coreCheck "github.com/ActiveMemory/ctx/internal/cli/system/core/check"
 	"github.com/ActiveMemory/ctx/internal/cli/system/core/message"
 	"github.com/ActiveMemory/ctx/internal/cli/system/core/nudge"
 	coreSession "github.com/ActiveMemory/ctx/internal/cli/system/core/session"
@@ -41,7 +41,7 @@ func Run(cmd *cobra.Command, stdin *os.File) error {
 	if !state.Initialized() {
 		return nil
 	}
-	input, _, paused := hook2.Preamble(stdin)
+	input, _, paused := coreCheck.Preamble(stdin)
 	if paused {
 		return nil
 	}

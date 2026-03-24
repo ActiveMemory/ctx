@@ -22,7 +22,7 @@ import (
 	"github.com/ActiveMemory/ctx/internal/config/time"
 	"github.com/ActiveMemory/ctx/internal/entity"
 	"github.com/ActiveMemory/ctx/internal/err/date"
-	ctxErr "github.com/ActiveMemory/ctx/internal/err/session"
+	errSession "github.com/ActiveMemory/ctx/internal/err/session"
 	"github.com/ActiveMemory/ctx/internal/parse"
 	"github.com/ActiveMemory/ctx/internal/write/recall"
 )
@@ -64,7 +64,7 @@ func Run(
 
 	sessions, scanErr := query.FindSessions(allProjects)
 	if scanErr != nil {
-		return ctxErr.Find(scanErr)
+		return errSession.Find(scanErr)
 	}
 
 	if len(sessions) == 0 {

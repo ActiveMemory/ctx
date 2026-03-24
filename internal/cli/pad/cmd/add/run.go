@@ -13,7 +13,7 @@ import (
 
 	"github.com/ActiveMemory/ctx/internal/config/pad"
 	"github.com/ActiveMemory/ctx/internal/err/fs"
-	ctxErr "github.com/ActiveMemory/ctx/internal/err/pad"
+	errPad "github.com/ActiveMemory/ctx/internal/err/pad"
 	"github.com/ActiveMemory/ctx/internal/io"
 	writePad "github.com/ActiveMemory/ctx/internal/write/pad"
 )
@@ -58,7 +58,7 @@ func runAddBlob(cmd *cobra.Command, label, filePath string) error {
 	}
 
 	if len(data) > pad.MaxBlobSize {
-		return ctxErr.FileTooLarge(len(data), pad.MaxBlobSize)
+		return errPad.FileTooLarge(len(data), pad.MaxBlobSize)
 	}
 
 	entries, readErr := store.ReadEntries()

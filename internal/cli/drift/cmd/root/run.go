@@ -15,7 +15,7 @@ import (
 	"github.com/ActiveMemory/ctx/internal/context/load"
 	"github.com/ActiveMemory/ctx/internal/drift"
 	errCtx "github.com/ActiveMemory/ctx/internal/err/context"
-	ctxErr "github.com/ActiveMemory/ctx/internal/err/initialize"
+	errInit "github.com/ActiveMemory/ctx/internal/err/initialize"
 	writeDrift "github.com/ActiveMemory/ctx/internal/write/drift"
 )
 
@@ -37,7 +37,7 @@ func Run(cmd *cobra.Command, jsonOutput, fix bool) error {
 	if err != nil {
 		var notFoundError *errCtx.NotFoundError
 		if errors.As(err, &notFoundError) {
-			return ctxErr.NotInitialized()
+			return errInit.NotInitialized()
 		}
 		return err
 	}

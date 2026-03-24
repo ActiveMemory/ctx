@@ -11,8 +11,8 @@ import (
 	"path/filepath"
 	"strings"
 
-	errctx "github.com/ActiveMemory/ctx/internal/err/context"
-	fserr "github.com/ActiveMemory/ctx/internal/err/fs"
+	errCtx "github.com/ActiveMemory/ctx/internal/err/context"
+	errFs "github.com/ActiveMemory/ctx/internal/err/fs"
 )
 
 // ValidateBoundary checks that dir resolves to a path within the current
@@ -21,19 +21,19 @@ import (
 func ValidateBoundary(dir string) error {
 	cwd, err := os.Getwd()
 	if err != nil {
-		return fserr.BoundaryViolation(err)
+		return errFs.BoundaryViolation(err)
 	}
 
 	absDir, err := filepath.Abs(dir)
 	if err != nil {
-		return fserr.BoundaryViolation(err)
+		return errFs.BoundaryViolation(err)
 	}
 
 	// Resolve symlinks in both paths so traversal via symlinked parents
 	// is caught.
 	resolvedCwd, err := filepath.EvalSymlinks(cwd)
 	if err != nil {
-		return fserr.BoundaryViolation(err)
+		return errFs.BoundaryViolation(err)
 	}
 
 	resolvedDir, err := filepath.EvalSymlinks(absDir)
@@ -47,7 +47,7 @@ func ValidateBoundary(dir string) error {
 	// Append os.PathSeparator to avoid "/foo/bar" matching "/foo/b".
 	root := resolvedCwd + string(os.PathSeparator)
 	if resolvedDir != resolvedCwd && !strings.HasPrefix(resolvedDir, root) {
-		return errctx.OutsideRoot(dir, resolvedCwd)
+		return errCtx.OutsideRoot(dir, resolvedCwd)
 	}
 
 	return nil
@@ -63,7 +63,7 @@ func CheckSymlinks(dir string) error {
 		return nil
 	}
 	if info.Mode()&os.ModeSymlink != 0 {
-		return errctx.DirSymlink(dir)
+		return errCtx.DirSymlink(dir)
 	}
 
 	// Check immediate children.
@@ -79,7 +79,7 @@ func CheckSymlinks(dir string) error {
 			continue
 		}
 		if ci.Mode()&os.ModeSymlink != 0 {
-			return errctx.FileSymlink(child)
+			return errCtx.FileSymlink(child)
 		}
 	}
 

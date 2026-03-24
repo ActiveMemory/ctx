@@ -18,11 +18,11 @@ import (
 	"github.com/ActiveMemory/ctx/internal/config/dir"
 	"github.com/ActiveMemory/ctx/internal/config/embed/text"
 	"github.com/ActiveMemory/ctx/internal/config/fs"
-	hookCfg "github.com/ActiveMemory/ctx/internal/config/hook"
+	cfgHook "github.com/ActiveMemory/ctx/internal/config/hook"
 	"github.com/ActiveMemory/ctx/internal/config/marker"
 	"github.com/ActiveMemory/ctx/internal/config/token"
 	"github.com/ActiveMemory/ctx/internal/err/config"
-	ctxErr "github.com/ActiveMemory/ctx/internal/err/fs"
+	errFs "github.com/ActiveMemory/ctx/internal/err/fs"
 	writeErr "github.com/ActiveMemory/ctx/internal/write/err"
 	"github.com/ActiveMemory/ctx/internal/write/hook"
 )
@@ -44,16 +44,16 @@ func Run(cmd *cobra.Command, args []string, writeFile bool) error {
 	tool := strings.ToLower(args[0])
 
 	switch tool {
-	case hookCfg.ToolClaudeCode, hookCfg.ToolClaude:
+	case cfgHook.ToolClaudeCode, cfgHook.ToolClaude:
 		hook.InfoTool(cmd, desc.Text(text.DescKeyHookClaude))
 
-	case hookCfg.ToolCursor:
+	case cfgHook.ToolCursor:
 		hook.InfoTool(cmd, desc.Text(text.DescKeyHookCursor))
 
-	case hookCfg.ToolAider:
+	case cfgHook.ToolAider:
 		hook.InfoTool(cmd, desc.Text(text.DescKeyHookAider))
 
-	case hookCfg.ToolCopilot:
+	case cfgHook.ToolCopilot:
 		if writeFile {
 			return WriteCopilotInstructions(cmd)
 		}
@@ -65,7 +65,7 @@ func Run(cmd *cobra.Command, args []string, writeFile bool) error {
 		}
 		hook.Content(cmd, string(content))
 
-	case hookCfg.ToolWindsurf:
+	case cfgHook.ToolWindsurf:
 		hook.InfoTool(cmd, desc.Text(text.DescKeyHookWindsurf))
 
 	default:
@@ -89,11 +89,11 @@ func Run(cmd *cobra.Command, args []string, writeFile bool) error {
 // Returns:
 //   - error: Non-nil if directory creation or file write fails
 func WriteCopilotInstructions(cmd *cobra.Command) error {
-	targetFile := filepath.Join(hookCfg.DirGitHub, hookCfg.FileCopilotInstructions)
+	targetFile := filepath.Join(cfgHook.DirGitHub, cfgHook.FileCopilotInstructions)
 
 	// Create .github/ directory if needed
-	if err := os.MkdirAll(hookCfg.DirGitHub, fs.PermExec); err != nil {
-		return ctxErr.Mkdir(hookCfg.DirGitHub, err)
+	if err := os.MkdirAll(cfgHook.DirGitHub, fs.PermExec); err != nil {
+		return errFs.Mkdir(cfgHook.DirGitHub, err)
 	}
 
 	// Load the copilot instructions from embedded assets
@@ -116,7 +116,7 @@ func WriteCopilotInstructions(cmd *cobra.Command) error {
 		// File exists without ctx markers: append ctx content
 		merged := existingStr + token.NewlineLF + string(instructions)
 		if wErr := os.WriteFile(targetFile, []byte(merged), fs.PermFile); wErr != nil {
-			return ctxErr.FileWrite(targetFile, wErr)
+			return errFs.FileWrite(targetFile, wErr)
 		}
 		hook.InfoCopilotMerged(cmd, targetFile)
 		return nil
@@ -126,7 +126,7 @@ func WriteCopilotInstructions(cmd *cobra.Command) error {
 	if wErr := os.WriteFile(
 		targetFile, instructions, fs.PermFile,
 	); wErr != nil {
-		return ctxErr.FileWrite(targetFile, wErr)
+		return errFs.FileWrite(targetFile, wErr)
 	}
 	hook.InfoCopilotCreated(cmd, targetFile)
 

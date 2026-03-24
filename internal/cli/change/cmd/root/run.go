@@ -12,7 +12,7 @@ import (
 	"github.com/ActiveMemory/ctx/internal/cli/change/core/scan"
 	"github.com/spf13/cobra"
 
-	ctxErr "github.com/ActiveMemory/ctx/internal/err/initialize"
+	errInit "github.com/ActiveMemory/ctx/internal/err/initialize"
 	writeChange "github.com/ActiveMemory/ctx/internal/write/change"
 )
 
@@ -30,7 +30,7 @@ import (
 func Run(cmd *cobra.Command, since string) error {
 	refTime, refLabel, err := detect.ReferenceTime(since)
 	if err != nil {
-		return ctxErr.DetectReferenceTime(err)
+		return errInit.DetectReferenceTime(err)
 	}
 
 	ctxChanges, _ := scan.FindContextChanges(refTime)

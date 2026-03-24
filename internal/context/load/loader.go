@@ -15,7 +15,7 @@ import (
 	"github.com/ActiveMemory/ctx/internal/context/summary"
 	"github.com/ActiveMemory/ctx/internal/context/token"
 	"github.com/ActiveMemory/ctx/internal/entity"
-	errctx "github.com/ActiveMemory/ctx/internal/err/context"
+	errCtx "github.com/ActiveMemory/ctx/internal/err/context"
 	"github.com/ActiveMemory/ctx/internal/rc"
 	"github.com/ActiveMemory/ctx/internal/validation"
 )
@@ -40,12 +40,12 @@ func Do(dir string) (*entity.Context, error) {
 	info, statErr := os.Stat(dir)
 	if statErr != nil {
 		if os.IsNotExist(statErr) {
-			return nil, errctx.NotFound(dir)
+			return nil, errCtx.NotFound(dir)
 		}
 		return nil, statErr
 	}
 	if !info.IsDir() {
-		return nil, errctx.NotFound(dir)
+		return nil, errCtx.NotFound(dir)
 	}
 
 	// Reject context directories that contain symlinks (M-2 defense).

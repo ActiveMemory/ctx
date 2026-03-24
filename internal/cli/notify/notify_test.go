@@ -17,7 +17,7 @@ import (
 
 	"github.com/ActiveMemory/ctx/internal/cli/notify/cmd/setup"
 	"github.com/ActiveMemory/ctx/internal/config/ctx"
-	notifylib "github.com/ActiveMemory/ctx/internal/notify"
+	libNotify "github.com/ActiveMemory/ctx/internal/notify"
 	"github.com/ActiveMemory/ctx/internal/rc"
 )
 
@@ -139,9 +139,9 @@ func TestMaskURL(t *testing.T) {
 	}
 
 	for _, tc := range tests {
-		got := notifylib.MaskURL(tc.input)
+		got := libNotify.MaskURL(tc.input)
 		if got != tc.want {
-			t.Errorf("notifylib.MaskURL(%q) = %q, want %q", tc.input, got, tc.want)
+			t.Errorf("libNotify.MaskURL(%q) = %q, want %q", tc.input, got, tc.want)
 		}
 	}
 }
@@ -206,7 +206,7 @@ func TestTest_WebhookSuccess(t *testing.T) {
 	defer server.Close()
 
 	// Save the test server URL as the webhook.
-	if saveErr := notifylib.SaveWebhook(server.URL); saveErr != nil {
+	if saveErr := libNotify.SaveWebhook(server.URL); saveErr != nil {
 		t.Fatalf("SaveWebhook() error = %v", saveErr)
 	}
 
@@ -240,7 +240,7 @@ func TestTest_WebhookServerError(t *testing.T) {
 	}))
 	defer server.Close()
 
-	if saveErr := notifylib.SaveWebhook(server.URL); saveErr != nil {
+	if saveErr := libNotify.SaveWebhook(server.URL); saveErr != nil {
 		t.Fatalf("SaveWebhook() error = %v", saveErr)
 	}
 

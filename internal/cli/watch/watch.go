@@ -9,10 +9,10 @@ package watch
 import (
 	"github.com/spf13/cobra"
 
-	watchroot "github.com/ActiveMemory/ctx/internal/cli/watch/cmd/root"
+	watchRoot "github.com/ActiveMemory/ctx/internal/cli/watch/cmd/root"
 )
 
 // Cmd returns the watch command.
 func Cmd() *cobra.Command {
-	return watchroot.Cmd()
+	return watchRoot.Cmd()
 }

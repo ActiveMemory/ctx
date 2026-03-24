@@ -9,7 +9,7 @@ package sort
 import (
 	"path/filepath"
 
-	ctxCfg "github.com/ActiveMemory/ctx/internal/config/ctx"
+	cfgCtx "github.com/ActiveMemory/ctx/internal/config/ctx"
 	"github.com/ActiveMemory/ctx/internal/entity"
 )
 
@@ -26,7 +26,7 @@ import (
 //   - []string: File paths in reading order (e.g., ".context/CONSTITUTION.md")
 func ReadOrder(ctx *entity.Context) []string {
 	var order []string
-	for _, name := range ctxCfg.ReadOrder {
+	for _, name := range cfgCtx.ReadOrder {
 		if f := ctx.File(name); f != nil && !f.IsEmpty {
 			order = append(order, filepath.Join(ctx.Dir, f.Name))
 		}

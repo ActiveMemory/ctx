@@ -18,7 +18,7 @@ import (
 
 	"github.com/ActiveMemory/ctx/internal/config/cli"
 	"github.com/ActiveMemory/ctx/internal/config/pad"
-	ctxErr "github.com/ActiveMemory/ctx/internal/err/fs"
+	errFs "github.com/ActiveMemory/ctx/internal/err/fs"
 	internalIo "github.com/ActiveMemory/ctx/internal/io"
 	writePad "github.com/ActiveMemory/ctx/internal/write/pad"
 )
@@ -38,7 +38,7 @@ func runImport(cmd *cobra.Command, file string) error {
 	} else {
 		f, err := internalIo.SafeOpenUserFile(file)
 		if err != nil {
-			return ctxErr.OpenFile(file, err)
+			return errFs.OpenFile(file, err)
 		}
 		defer func() {
 			if cErr := f.Close(); cErr != nil {
@@ -64,7 +64,7 @@ func runImport(cmd *cobra.Command, file string) error {
 		count++
 	}
 	if scanErr := scanner.Err(); scanErr != nil {
-		return ctxErr.ReadInput(scanErr)
+		return errFs.ReadInput(scanErr)
 	}
 
 	if count == 0 {
@@ -92,15 +92,15 @@ func runImport(cmd *cobra.Command, file string) error {
 func runImportBlobs(cmd *cobra.Command, path string) error {
 	info, statErr := os.Stat(path)
 	if statErr != nil {
-		return ctxErr.StatPath(path, statErr)
+		return errFs.StatPath(path, statErr)
 	}
 	if !info.IsDir() {
-		return ctxErr.NotDirectory(path)
+		return errFs.NotDirectory(path)
 	}
 
 	dirEntries, readErr := os.ReadDir(path)
 	if readErr != nil {
-		return ctxErr.ReadDirectory(path, readErr)
+		return errFs.ReadDirectory(path, readErr)
 	}
 
 	entries, loadErr := store.ReadEntries()

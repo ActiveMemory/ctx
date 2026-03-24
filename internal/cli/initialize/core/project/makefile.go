@@ -17,7 +17,7 @@ import (
 	"github.com/ActiveMemory/ctx/internal/config/project"
 	"github.com/ActiveMemory/ctx/internal/config/token"
 	errFs "github.com/ActiveMemory/ctx/internal/err/fs"
-	errInitialize "github.com/ActiveMemory/ctx/internal/err/initialize"
+	errInit "github.com/ActiveMemory/ctx/internal/err/initialize"
 	"github.com/ActiveMemory/ctx/internal/write/initialize"
 )
 
@@ -32,7 +32,7 @@ func HandleMakefileCtx(cmd *cobra.Command) error {
 	content, err := makefile.Ctx()
 
 	if err != nil {
-		return errInitialize.ReadTemplate(project.MakefileCtx, err)
+		return errInit.ReadTemplate(project.MakefileCtx, err)
 	}
 
 	if err = os.WriteFile(project.MakefileCtx, content, fs.PermFile); err != nil {
@@ -47,7 +47,7 @@ func HandleMakefileCtx(cmd *cobra.Command) error {
 		if err := os.WriteFile(
 			project.Makefile, []byte(minimal), fs.PermFile,
 		); err != nil {
-			return errInitialize.CreateMakefile(err)
+			return errInit.CreateMakefile(err)
 		}
 		initialize.MakefileCreated(cmd)
 		return nil
