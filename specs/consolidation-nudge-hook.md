@@ -74,25 +74,61 @@ Add a `consolidation` section to `.context/state/session.json`:
 }
 ```
 
-Increment `sessions_since` at each session start. Reset to 0 when
-consolidation is detected.
+Increment `sessions_since` at each session start.
+
+**Baseline lifecycle**:
+
+1. First `/ctx-consolidate` stamps `last_commit` (write-once).
+2. Subsequent consolidation sessions preserve the baseline.
+3. User runs `ctx system end-consolidation` (or
+   `/ctx-consolidate --done`) when consolidation is complete.
+   This clears the baseline and resets `sessions_since` to 0.
+4. The nudge hook counts from that reset point.
+
+You cannot programmatically distinguish a feature session from a
+consolidation session: sessions are mixed, multi-day consolidation
+arcs span dozens of sessions, and even "refactor" sessions may add
+features. The only reliable signal is the user explicitly declaring
+"consolidation is done."
+
+**Failure mode**: if the user forgets to end consolidation, the
+nudge never fires (the system assumes perpetual consolidation).
+This is safe: silence is better than a stale baseline causing
+wrong nudges. The `ctx status` output should show "in consolidation
+since <date>" as a passive reminder.
 
 ### Hook Behavior
 
 The hook runs during `UserPromptSubmit` (session start). When
 `sessions_since >= threshold`:
 
+**Entering consolidation** (sessions_since >= threshold):
+
 ```
 ┌─ Consolidation Reminder ─────────────────────────────
 │ 7 sessions since last consolidation (threshold: 6).
 │ Consider scheduling a consolidation session.
-│ Run: make audit
-│ Mark done: ctx system mark-consolidation
+│
+│ Start:  ctx system mark-consolidation
+│ Check:  make audit
 │ Snooze: ctx system snooze-consolidation
 └──────────────────────────────────────────────────
 ```
 
-The message is a nudge, not a gate. It does not block work.
+**During consolidation** (baseline is set, passive reminder):
+
+```
+┌─ Consolidation In Progress ──────────────────────────
+│ In consolidation since 2026-03-05 (baseline: 4ec5999).
+│
+│ Check:  make audit
+│ Done:   ctx system end-consolidation
+└──────────────────────────────────────────────────
+```
+
+Both messages are nudges, not gates. They do not block work.
+The "brain-dead ADHD" user should never have to remember
+what command to run next: the nudge tells them.
 
 ### Snooze
 
@@ -122,7 +158,8 @@ consolidation:
 ### New plumbing commands
 
 ```
-ctx system mark-consolidation    # reset counter, record baseline commit
+ctx system mark-consolidation    # record baseline commit (write-once)
+ctx system end-consolidation     # clear baseline, reset counter
 ctx system snooze-consolidation  # suppress nudge for N sessions
 ```
 
