@@ -112,6 +112,7 @@ nav = [
     "operations/migration.md",
     "operations/upgrading.md",
     "operations/integrations.md",
+    "operations/release.md",
     "operations/autonomous-loop.md",
   ]},
   { "Security" = [
