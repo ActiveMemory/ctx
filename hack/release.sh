@@ -100,15 +100,31 @@ rm -f "${PLUGIN_JSON}.bak"
 sed -i.bak -E "s/\"version\": \"[0-9]+\.[0-9]+\.[0-9]+\"/\"version\": \"${VERSION_NUM}\"/" "${MARKETPLACE_JSON}"
 rm -f "${MARKETPLACE_JSON}.bak"
 
+# Update VS Code extension version
+VSCODE_PKG="editors/vscode/package.json"
+VSCODE_LOCK="editors/vscode/package-lock.json"
+echo "Updating VS Code extension version in ${VSCODE_PKG} and ${VSCODE_LOCK}..."
+sed -i.bak -E "s/\"version\": \"[0-9]+\.[0-9]+\.[0-9]+\"/\"version\": \"${VERSION_NUM}\"/" "${VSCODE_PKG}"
+rm -f "${VSCODE_PKG}.bak"
+sed -i.bak -E "s/\"version\": \"[0-9]+\.[0-9]+\.[0-9]+\"/\"version\": \"${VERSION_NUM}\"/" "${VSCODE_LOCK}"
+rm -f "${VSCODE_LOCK}.bak"
+
 # Update version references in documentation
-echo "Updating version references in docs/index.md..."
-sed -i.bak -E "s|/v[0-9]+\.[0-9]+\.[0-9]+/ctx-[0-9]+\.[0-9]+\.[0-9]+|/v${VERSION_NUM}/ctx-${VERSION_NUM}|g" docs/index.md
-sed -i.bak -E "s|ctx-[0-9]+\.[0-9]+\.[0-9]+-linux-amd64|ctx-${VERSION_NUM}-linux-amd64|g" docs/index.md
-sed -i.bak -E "s|ctx-[0-9]+\.[0-9]+\.[0-9]+-linux-arm64|ctx-${VERSION_NUM}-linux-arm64|g" docs/index.md
-sed -i.bak -E "s|ctx-[0-9]+\.[0-9]+\.[0-9]+-darwin-amd64|ctx-${VERSION_NUM}-darwin-amd64|g" docs/index.md
-sed -i.bak -E "s|ctx-[0-9]+\.[0-9]+\.[0-9]+-darwin-arm64|ctx-${VERSION_NUM}-darwin-arm64|g" docs/index.md
-sed -i.bak -E "s|ctx-[0-9]+\.[0-9]+\.[0-9]+-windows-amd64|ctx-${VERSION_NUM}-windows-amd64|g" docs/index.md
-rm -f docs/index.md.bak
+echo "Updating version references in docs/index.md and docs/home/getting-started.md..."
+for doc in docs/index.md docs/home/getting-started.md; do
+  sed -i.bak -E "s|/v[0-9]+\.[0-9]+\.[0-9]+/ctx-[0-9]+\.[0-9]+\.[0-9]+|/v${VERSION_NUM}/ctx-${VERSION_NUM}|g" "${doc}"
+  sed -i.bak -E "s|ctx-[0-9]+\.[0-9]+\.[0-9]+-linux-amd64|ctx-${VERSION_NUM}-linux-amd64|g" "${doc}"
+  sed -i.bak -E "s|ctx-[0-9]+\.[0-9]+\.[0-9]+-linux-arm64|ctx-${VERSION_NUM}-linux-arm64|g" "${doc}"
+  sed -i.bak -E "s|ctx-[0-9]+\.[0-9]+\.[0-9]+-darwin-amd64|ctx-${VERSION_NUM}-darwin-amd64|g" "${doc}"
+  sed -i.bak -E "s|ctx-[0-9]+\.[0-9]+\.[0-9]+-darwin-arm64|ctx-${VERSION_NUM}-darwin-arm64|g" "${doc}"
+  sed -i.bak -E "s|ctx-[0-9]+\.[0-9]+\.[0-9]+-windows-amd64|ctx-${VERSION_NUM}-windows-amd64|g" "${doc}"
+  rm -f "${doc}.bak"
+done
+
+# Update VSIX version in integrations doc
+echo "Updating VSIX version in docs/operations/integrations.md..."
+sed -i.bak -E "s|ctx-context-[0-9]+\.[0-9]+\.[0-9]+\.vsix|ctx-context-${VERSION_NUM}.vsix|g" docs/operations/integrations.md
+rm -f docs/operations/integrations.md.bak
 
 # Update versions.md with new release
 echo "Updating docs/versions.md..."
@@ -129,7 +145,7 @@ make site
 
 # Commit docs and site updates
 echo "Committing documentation updates..."
-git add docs/index.md docs/versions.md site/ "${PLUGIN_JSON}"
+git add docs/index.md docs/home/getting-started.md docs/operations/integrations.md docs/versions.md site/ "${PLUGIN_JSON}" "${MARKETPLACE_JSON}" "${VSCODE_PKG}" "${VSCODE_LOCK}"
 git diff --cached --quiet || git commit -m "docs: update download links and versions page for ${VERSION}"
 echo ""
 

@@ -584,40 +584,82 @@ async function handleSync(
   return { metadata: { command: "sync" } };
 }
 
-async function handleComplete(
+async function handleTask(
   stream: vscode.ChatResponseStream,
   prompt: string,
   cwd: string,
   token: vscode.CancellationToken
 ): Promise<CtxResult> {
-  const taskRef = prompt.trim();
-  if (!taskRef) {
-    stream.markdown(
-      "**Usage:** `@ctx /complete <task-id-or-text>`\n\n" +
-        "Example: `@ctx /complete 3` or `@ctx /complete Fix login bug`"
-    );
-    return { metadata: { command: "complete" } };
-  }
+  const parts = prompt.trim().split(/\s+/);
+  const subcmd = parts[0]?.toLowerCase();
+  const rest = parts.slice(1).join(" ");
 
-  stream.progress("Marking task as completed...");
+  let args: string[];
+  let progressMsg: string;
+
+  switch (subcmd) {
+    case "complete": {
+      const taskRef = rest.trim();
+      if (!taskRef) {
+        stream.markdown(
+          "**Usage:** `@ctx /task complete <task-id-or-text>`\n\n" +
+            "Example: `@ctx /task complete 3` or " +
+            "`@ctx /task complete Fix login bug`"
+        );
+        return { metadata: { command: "task" } };
+      }
+      args = ["task", "complete", taskRef];
+      progressMsg = "Marking task as completed...";
+      break;
+    }
+    case "archive":
+      args = ["task", "archive"];
+      progressMsg = "Archiving completed tasks...";
+      break;
+    case "snapshot":
+      args = rest ? ["task", "snapshot", rest] : ["task", "snapshot"];
+      progressMsg = "Creating task snapshot...";
+      break;
+    default:
+      stream.markdown(
+        "**Usage:** `@ctx /task <subcommand>`\n\n" +
+          "| Subcommand | Description |\n" +
+          "|------------|-------------|\n" +
+          "| `complete <ref>` | Mark a task as completed |\n" +
+          "| `archive` | Move completed tasks to archive |\n" +
+          "| `snapshot [name]` | Create point-in-time snapshot |\n\n" +
+          "Example: `@ctx /task complete 3` or " +
+          "`@ctx /task archive`"
+      );
+      return { metadata: { command: "task" } };
+  }
+  args.push("--no-color");
+
+  stream.progress(progressMsg);
   try {
-    const { stdout, stderr } = await runCtx(
-      ["complete", taskRef, "--no-color"],
-      cwd,
-      token
-    );
+    const { stdout, stderr } = await runCtx(args, cwd, token);
     const output = (stdout + stderr).trim();
     if (output) {
       stream.markdown("```\n" + output + "\n```");
     } else {
-      stream.markdown(`Task **${taskRef}** marked as completed.`);
+      switch (subcmd) {
+        case "complete":
+          stream.markdown(`Task **${rest.trim()}** marked as completed.`);
+          break;
+        case "archive":
+          stream.markdown("Completed tasks archived.");
+          break;
+        default:
+          stream.markdown("Task snapshot created.");
+          break;
+      }
     }
   } catch (err: unknown) {
     stream.markdown(
-      `**Error:** Failed to complete task.\n\n\`\`\`\n${err instanceof Error ? err.message : String(err)}\n\`\`\``
+      `**Error:** Failed to ${subcmd} task.\n\n\`\`\`\n${err instanceof Error ? err.message : String(err)}\n\`\`\``
     );
   }
-  return { metadata: { command: "complete" } };
+  return { metadata: { command: "task" } };
 }
 
 async function handleRemind(
@@ -676,62 +718,6 @@ async function handleRemind(
     );
   }
   return { metadata: { command: "remind" } };
-}
-
-async function handleTasks(
-  stream: vscode.ChatResponseStream,
-  prompt: string,
-  cwd: string,
-  token: vscode.CancellationToken
-): Promise<CtxResult> {
-  const parts = prompt.trim().split(/\s+/);
-  const subcmd = parts[0]?.toLowerCase();
-  const rest = parts.slice(1).join(" ");
-
-  let args: string[];
-  let progressMsg: string;
-
-  switch (subcmd) {
-    case "archive":
-      args = ["tasks", "archive"];
-      progressMsg = "Archiving completed tasks...";
-      break;
-    case "snapshot":
-      args = rest ? ["tasks", "snapshot", rest] : ["tasks", "snapshot"];
-      progressMsg = "Creating task snapshot...";
-      break;
-    default:
-      stream.markdown(
-        "**Usage:** `@ctx /tasks <subcommand>`\n\n" +
-          "| Subcommand | Description |\n" +
-          "|------------|-------------|\n" +
-          "| `archive` | Move completed tasks to archive |\n" +
-          "| `snapshot [name]` | Create point-in-time snapshot |\n\n" +
-          "Example: `@ctx /tasks archive` or `@ctx /tasks snapshot pre-refactor`"
-      );
-      return { metadata: { command: "tasks" } };
-  }
-  args.push("--no-color");
-
-  stream.progress(progressMsg);
-  try {
-    const { stdout, stderr } = await runCtx(args, cwd, token);
-    const output = (stdout + stderr).trim();
-    if (output) {
-      stream.markdown("```\n" + output + "\n```");
-    } else {
-      stream.markdown(
-        subcmd === "archive"
-          ? "Completed tasks archived."
-          : "Task snapshot created."
-      );
-    }
-  } catch (err: unknown) {
-    stream.markdown(
-      `**Error:** Failed to ${subcmd} tasks.\n\n\`\`\`\n${err instanceof Error ? err.message : String(err)}\n\`\`\``
-    );
-  }
-  return { metadata: { command: "tasks" } };
 }
 
 async function handlePad(
@@ -813,7 +799,6 @@ async function handleNotify(
 ): Promise<CtxResult> {
   const parts = prompt.trim().split(/\s+/);
   const subcmd = parts[0]?.toLowerCase();
-  const rest = parts.slice(1).join(" ");
 
   let args: string[];
   let progressMsg: string;
@@ -903,7 +888,7 @@ async function handleSystem(
           "|------------|-------------|\n" +
           "| `resources` | Show system resource usage |\n" +
           "| `bootstrap` | Print context location for AI agents |\n" +
-          "| `message list\|show\|edit\|reset` | Manage hook messages |\n\n" +
+          "| `message list|show|edit|reset` | Manage hook messages |\n\n" +
           "Example: `@ctx /system resources` or `@ctx /system bootstrap`"
       );
       return { metadata: { command: "system" } };
@@ -925,6 +910,553 @@ async function handleSystem(
     );
   }
   return { metadata: { command: "system" } };
+}
+
+async function handleMemory(
+  stream: vscode.ChatResponseStream,
+  prompt: string,
+  cwd: string,
+  token: vscode.CancellationToken
+): Promise<CtxResult> {
+  const parts = prompt.trim().split(/\s+/);
+  const subcmd = parts[0]?.toLowerCase();
+
+  let args: string[];
+  let progressMsg: string;
+
+  switch (subcmd) {
+    case "sync":
+      args = ["memory", "sync"];
+      progressMsg = "Syncing memory bridge...";
+      break;
+    case "status":
+      args = ["memory", "status"];
+      progressMsg = "Checking memory status...";
+      break;
+    case "diff":
+      args = ["memory", "diff"];
+      progressMsg = "Diffing memory state...";
+      break;
+    case "import":
+      args = ["memory", "import"];
+      progressMsg = "Importing memory...";
+      break;
+    case "publish":
+      args = ["memory", "publish"];
+      progressMsg = "Publishing memory...";
+      break;
+    case "unpublish":
+      args = ["memory", "unpublish"];
+      progressMsg = "Unpublishing memory...";
+      break;
+    default:
+      stream.markdown(
+        "**Usage:** `@ctx /memory <subcommand>`\n\n" +
+          "| Subcommand | Description |\n" +
+          "|------------|-------------|\n" +
+          "| `sync` | Synchronize memory bridge |\n" +
+          "| `status` | Show memory bridge status |\n" +
+          "| `diff` | Show memory diff |\n" +
+          "| `import` | Import external memory |\n" +
+          "| `publish` | Publish curated context |\n" +
+          "| `unpublish` | Remove published context |\n\n" +
+          "Example: `@ctx /memory status` or `@ctx /memory sync`"
+      );
+      return { metadata: { command: "memory" } };
+  }
+  args.push("--no-color");
+
+  stream.progress(progressMsg);
+  try {
+    const { stdout, stderr } = await runCtx(args, cwd, token);
+    const output = (stdout + stderr).trim();
+    if (output) {
+      stream.markdown("```\n" + output + "\n```");
+    } else {
+      stream.markdown(`Memory ${subcmd} completed.`);
+    }
+  } catch (err: unknown) {
+    stream.markdown(
+      `**Error:** Failed to run memory ${subcmd}.\n\n\`\`\`\n${err instanceof Error ? err.message : String(err)}\n\`\`\``
+    );
+  }
+  return { metadata: { command: "memory" } };
+}
+
+async function handleJournal(
+  stream: vscode.ChatResponseStream,
+  prompt: string,
+  cwd: string,
+  token: vscode.CancellationToken
+): Promise<CtxResult> {
+  const parts = prompt.trim().split(/\s+/);
+  const subcmd = parts[0]?.toLowerCase();
+
+  let args: string[];
+  let progressMsg: string;
+
+  switch (subcmd) {
+    case "site":
+      args = ["journal", "site"];
+      progressMsg = "Generating journal site...";
+      break;
+    case "obsidian":
+      args = ["journal", "obsidian"];
+      progressMsg = "Exporting journal to Obsidian...";
+      break;
+    default:
+      stream.markdown(
+        "**Usage:** `@ctx /journal <subcommand>`\n\n" +
+          "| Subcommand | Description |\n" +
+          "|------------|-------------|\n" +
+          "| `site` | Generate journal site |\n" +
+          "| `obsidian` | Export journal to Obsidian |\n\n" +
+          "Example: `@ctx /journal site`"
+      );
+      return { metadata: { command: "journal" } };
+  }
+  args.push("--no-color");
+
+  stream.progress(progressMsg);
+  try {
+    const { stdout, stderr } = await runCtx(args, cwd, token);
+    const output = (stdout + stderr).trim();
+    if (output) {
+      stream.markdown("```\n" + output + "\n```");
+    } else {
+      stream.markdown(`Journal ${subcmd} completed.`);
+    }
+  } catch (err: unknown) {
+    stream.markdown(
+      `**Error:** Failed to run journal ${subcmd}.\n\n\`\`\`\n${err instanceof Error ? err.message : String(err)}\n\`\`\``
+    );
+  }
+  return { metadata: { command: "journal" } };
+}
+
+async function handleDoctor(
+  stream: vscode.ChatResponseStream,
+  cwd: string,
+  token: vscode.CancellationToken
+): Promise<CtxResult> {
+  stream.progress("Running context health diagnostics...");
+  try {
+    const { stdout, stderr } = await runCtx(["doctor", "--no-color"], cwd, token);
+    const output = (stdout + stderr).trim();
+    if (output) {
+      stream.markdown("```\n" + output + "\n```");
+    } else {
+      stream.markdown("Context health check passed.");
+    }
+  } catch (err: unknown) {
+    stream.markdown(
+      `**Error:** Failed to run doctor.\n\n\`\`\`\n${err instanceof Error ? err.message : String(err)}\n\`\`\``
+    );
+  }
+  return { metadata: { command: "doctor" } };
+}
+
+async function handleConfig(
+  stream: vscode.ChatResponseStream,
+  prompt: string,
+  cwd: string,
+  token: vscode.CancellationToken
+): Promise<CtxResult> {
+  const parts = prompt.trim().split(/\s+/);
+  const subcmd = parts[0]?.toLowerCase();
+  const rest = parts.slice(1).join(" ");
+
+  let args: string[];
+  let progressMsg: string;
+
+  switch (subcmd) {
+    case "switch":
+      args = rest ? ["config", "switch", rest] : ["config", "switch"];
+      progressMsg = "Switching configuration...";
+      break;
+    case "status":
+      args = ["config", "status"];
+      progressMsg = "Checking configuration status...";
+      break;
+    case "schema":
+      args = ["config", "schema"];
+      progressMsg = "Showing configuration schema...";
+      break;
+    default:
+      stream.markdown(
+        "**Usage:** `@ctx /config <subcommand>`\n\n" +
+          "| Subcommand | Description |\n" +
+          "|------------|-------------|\n" +
+          "| `switch` | Switch active configuration |\n" +
+          "| `status` | Show current configuration |\n" +
+          "| `schema` | Show configuration schema |\n\n" +
+          "Example: `@ctx /config status` or `@ctx /config switch minimal`"
+      );
+      return { metadata: { command: "config" } };
+  }
+  args.push("--no-color");
+
+  stream.progress(progressMsg);
+  try {
+    const { stdout, stderr } = await runCtx(args, cwd, token);
+    const output = (stdout + stderr).trim();
+    if (output) {
+      stream.markdown("```\n" + output + "\n```");
+    } else {
+      stream.markdown(`Config ${subcmd} completed.`);
+    }
+  } catch (err: unknown) {
+    stream.markdown(
+      `**Error:** Failed to run config ${subcmd}.\n\n\`\`\`\n${err instanceof Error ? err.message : String(err)}\n\`\`\``
+    );
+  }
+  return { metadata: { command: "config" } };
+}
+
+async function handlePrompt(
+  stream: vscode.ChatResponseStream,
+  prompt: string,
+  cwd: string,
+  token: vscode.CancellationToken
+): Promise<CtxResult> {
+  const parts = prompt.trim().split(/\s+/);
+  const subcmd = parts[0]?.toLowerCase();
+  const rest = parts.slice(1).join(" ");
+
+  let args: string[];
+  let progressMsg: string;
+
+  switch (subcmd) {
+    case "list":
+    case "ls":
+      args = ["prompt", "list"];
+      progressMsg = "Listing prompt templates...";
+      break;
+    case "add":
+      args = rest ? ["prompt", "add", rest] : ["prompt", "add"];
+      progressMsg = "Adding prompt template...";
+      break;
+    case "show":
+      args = rest ? ["prompt", "show", rest] : ["prompt", "show"];
+      progressMsg = "Showing prompt template...";
+      break;
+    case "rm":
+      args = rest ? ["prompt", "rm", rest] : ["prompt", "rm"];
+      progressMsg = "Removing prompt template...";
+      break;
+    default:
+      stream.markdown(
+        "**Usage:** `@ctx /prompt <subcommand>`\n\n" +
+          "| Subcommand | Description |\n" +
+          "|------------|-------------|\n" +
+          "| `list` | List prompt templates |\n" +
+          "| `add <name>` | Add a prompt template |\n" +
+          "| `show <name>` | Show a prompt template |\n" +
+          "| `rm <name>` | Remove a prompt template |\n\n" +
+          "Example: `@ctx /prompt list` or `@ctx /prompt show review`"
+      );
+      return { metadata: { command: "prompt" } };
+  }
+  args.push("--no-color");
+
+  stream.progress(progressMsg);
+  try {
+    const { stdout, stderr } = await runCtx(args, cwd, token);
+    const output = (stdout + stderr).trim();
+    if (output) {
+      stream.markdown("```\n" + output + "\n```");
+    } else {
+      stream.markdown(`Prompt ${subcmd} completed.`);
+    }
+  } catch (err: unknown) {
+    stream.markdown(
+      `**Error:** Failed to run prompt ${subcmd}.\n\n\`\`\`\n${err instanceof Error ? err.message : String(err)}\n\`\`\``
+    );
+  }
+  return { metadata: { command: "prompt" } };
+}
+
+async function handleWhy(
+  stream: vscode.ChatResponseStream,
+  prompt: string,
+  cwd: string,
+  token: vscode.CancellationToken
+): Promise<CtxResult> {
+  const filename = prompt.trim();
+  const args = filename ? ["why", filename] : ["why"];
+  args.push("--no-color");
+
+  stream.progress("Looking up design rationale...");
+  try {
+    const { stdout, stderr } = await runCtx(args, cwd, token);
+    const output = (stdout + stderr).trim();
+    if (output) {
+      stream.markdown("```\n" + output + "\n```");
+    } else {
+      stream.markdown("No rationale found.");
+    }
+  } catch (err: unknown) {
+    stream.markdown(
+      `**Error:** Failed to look up rationale.\n\n\`\`\`\n${err instanceof Error ? err.message : String(err)}\n\`\`\``
+    );
+  }
+  return { metadata: { command: "why" } };
+}
+
+async function handleChange(
+  stream: vscode.ChatResponseStream,
+  cwd: string,
+  token: vscode.CancellationToken
+): Promise<CtxResult> {
+  stream.progress("Checking recent codebase changes...");
+  try {
+    const { stdout, stderr } = await runCtx(["change", "--no-color"], cwd, token);
+    const output = (stdout + stderr).trim();
+    if (output) {
+      stream.markdown("```\n" + output + "\n```");
+    } else {
+      stream.markdown("No recent changes found.");
+    }
+  } catch (err: unknown) {
+    stream.markdown(
+      `**Error:** Failed to check changes.\n\n\`\`\`\n${err instanceof Error ? err.message : String(err)}\n\`\`\``
+    );
+  }
+  return { metadata: { command: "change" } };
+}
+
+async function handleDep(
+  stream: vscode.ChatResponseStream,
+  cwd: string,
+  token: vscode.CancellationToken
+): Promise<CtxResult> {
+  stream.progress("Checking project dependencies...");
+  try {
+    const { stdout, stderr } = await runCtx(["dep", "--no-color"], cwd, token);
+    const output = (stdout + stderr).trim();
+    if (output) {
+      stream.markdown("```\n" + output + "\n```");
+    } else {
+      stream.markdown("No dependencies found.");
+    }
+  } catch (err: unknown) {
+    stream.markdown(
+      `**Error:** Failed to check dependencies.\n\n\`\`\`\n${err instanceof Error ? err.message : String(err)}\n\`\`\``
+    );
+  }
+  return { metadata: { command: "dep" } };
+}
+
+async function handleGuide(
+  stream: vscode.ChatResponseStream,
+  cwd: string,
+  token: vscode.CancellationToken
+): Promise<CtxResult> {
+  stream.progress("Loading quick start guide...");
+  try {
+    const { stdout, stderr } = await runCtx(["guide", "--no-color"], cwd, token);
+    const output = (stdout + stderr).trim();
+    if (output) {
+      stream.markdown(output);
+    } else {
+      stream.markdown("No guide content available.");
+    }
+  } catch (err: unknown) {
+    stream.markdown(
+      `**Error:** Failed to load guide.\n\n\`\`\`\n${err instanceof Error ? err.message : String(err)}\n\`\`\``
+    );
+  }
+  return { metadata: { command: "guide" } };
+}
+
+async function handlePermission(
+  stream: vscode.ChatResponseStream,
+  prompt: string,
+  cwd: string,
+  token: vscode.CancellationToken
+): Promise<CtxResult> {
+  const parts = prompt.trim().split(/\s+/);
+  const subcmd = parts[0]?.toLowerCase();
+
+  let args: string[];
+  let progressMsg: string;
+
+  switch (subcmd) {
+    case "snapshot":
+      args = ["permission", "snapshot"];
+      progressMsg = "Taking permission snapshot...";
+      break;
+    case "restore":
+      args = ["permission", "restore"];
+      progressMsg = "Restoring permissions...";
+      break;
+    default:
+      stream.markdown(
+        "**Usage:** `@ctx /permission <subcommand>`\n\n" +
+          "| Subcommand | Description |\n" +
+          "|------------|-------------|\n" +
+          "| `snapshot` | Capture current file permissions |\n" +
+          "| `restore` | Restore saved permissions |\n\n" +
+          "Example: `@ctx /permission snapshot`"
+      );
+      return { metadata: { command: "permission" } };
+  }
+  args.push("--no-color");
+
+  stream.progress(progressMsg);
+  try {
+    const { stdout, stderr } = await runCtx(args, cwd, token);
+    const output = (stdout + stderr).trim();
+    if (output) {
+      stream.markdown("```\n" + output + "\n```");
+    } else {
+      stream.markdown(`Permission ${subcmd} completed.`);
+    }
+  } catch (err: unknown) {
+    stream.markdown(
+      `**Error:** Failed to ${subcmd} permissions.\n\n\`\`\`\n${err instanceof Error ? err.message : String(err)}\n\`\`\``
+    );
+  }
+  return { metadata: { command: "permission" } };
+}
+
+async function handleSite(
+  stream: vscode.ChatResponseStream,
+  prompt: string,
+  cwd: string,
+  token: vscode.CancellationToken
+): Promise<CtxResult> {
+  const parts = prompt.trim().split(/\s+/);
+  const subcmd = parts[0]?.toLowerCase();
+
+  let args: string[];
+  let progressMsg: string;
+
+  switch (subcmd) {
+    case "feed":
+      args = ["site", "feed"];
+      progressMsg = "Generating site feed...";
+      break;
+    default:
+      stream.markdown(
+        "**Usage:** `@ctx /site <subcommand>`\n\n" +
+          "| Subcommand | Description |\n" +
+          "|------------|-------------|\n" +
+          "| `feed` | Generate documentation site feed |\n\n" +
+          "Example: `@ctx /site feed`"
+      );
+      return { metadata: { command: "site" } };
+  }
+  args.push("--no-color");
+
+  stream.progress(progressMsg);
+  try {
+    const { stdout, stderr } = await runCtx(args, cwd, token);
+    const output = (stdout + stderr).trim();
+    if (output) {
+      stream.markdown("```\n" + output + "\n```");
+    } else {
+      stream.markdown(`Site ${subcmd} completed.`);
+    }
+  } catch (err: unknown) {
+    stream.markdown(
+      `**Error:** Failed to run site ${subcmd}.\n\n\`\`\`\n${err instanceof Error ? err.message : String(err)}\n\`\`\``
+    );
+  }
+  return { metadata: { command: "site" } };
+}
+
+async function handleLoop(
+  stream: vscode.ChatResponseStream,
+  prompt: string,
+  cwd: string,
+  token: vscode.CancellationToken
+): Promise<CtxResult> {
+  const toolName = prompt.trim();
+  const args = toolName ? ["loop", toolName] : ["loop"];
+  args.push("--no-color");
+
+  stream.progress("Generating iteration script...");
+  try {
+    const { stdout, stderr } = await runCtx(args, cwd, token);
+    const output = (stdout + stderr).trim();
+    if (output) {
+      stream.markdown("```\n" + output + "\n```");
+    } else {
+      stream.markdown("No loop script generated.");
+    }
+  } catch (err: unknown) {
+    stream.markdown(
+      `**Error:** Failed to generate loop script.\n\n\`\`\`\n${err instanceof Error ? err.message : String(err)}\n\`\`\``
+    );
+  }
+  return { metadata: { command: "loop" } };
+}
+
+async function handlePause(
+  stream: vscode.ChatResponseStream,
+  cwd: string,
+  token: vscode.CancellationToken
+): Promise<CtxResult> {
+  stream.progress("Pausing context hooks...");
+  try {
+    const { stdout, stderr } = await runCtx(["pause", "--no-color"], cwd, token);
+    const output = (stdout + stderr).trim();
+    if (output) {
+      stream.markdown("```\n" + output + "\n```");
+    } else {
+      stream.markdown("Context hooks paused for this session.");
+    }
+  } catch (err: unknown) {
+    stream.markdown(
+      `**Error:** Failed to pause hooks.\n\n\`\`\`\n${err instanceof Error ? err.message : String(err)}\n\`\`\``
+    );
+  }
+  return { metadata: { command: "pause" } };
+}
+
+async function handleResume(
+  stream: vscode.ChatResponseStream,
+  cwd: string,
+  token: vscode.CancellationToken
+): Promise<CtxResult> {
+  stream.progress("Resuming context hooks...");
+  try {
+    const { stdout, stderr } = await runCtx(["resume", "--no-color"], cwd, token);
+    const output = (stdout + stderr).trim();
+    if (output) {
+      stream.markdown("```\n" + output + "\n```");
+    } else {
+      stream.markdown("Context hooks resumed.");
+    }
+  } catch (err: unknown) {
+    stream.markdown(
+      `**Error:** Failed to resume hooks.\n\n\`\`\`\n${err instanceof Error ? err.message : String(err)}\n\`\`\``
+    );
+  }
+  return { metadata: { command: "resume" } };
+}
+
+async function handleReindex(
+  stream: vscode.ChatResponseStream,
+  cwd: string,
+  token: vscode.CancellationToken
+): Promise<CtxResult> {
+  stream.progress("Rebuilding context file indices...");
+  try {
+    const { stdout, stderr } = await runCtx(["reindex", "--no-color"], cwd, token);
+    const output = (stdout + stderr).trim();
+    if (output) {
+      stream.markdown("```\n" + output + "\n```");
+    } else {
+      stream.markdown("Context indices rebuilt.");
+    }
+  } catch (err: unknown) {
+    stream.markdown(
+      `**Error:** Failed to reindex.\n\n\`\`\`\n${err instanceof Error ? err.message : String(err)}\n\`\`\``
+    );
+  }
+  return { metadata: { command: "reindex" } };
 }
 
 async function handleFreeform(
@@ -949,13 +1481,13 @@ async function handleFreeform(
     return handleRecall(stream, request.prompt, cwd, token);
   }
   if (prompt.includes("complete") || prompt.includes("done") || prompt.includes("finish")) {
-    return handleComplete(stream, request.prompt, cwd, token);
+    return handleTask(stream, "complete " + request.prompt, cwd, token);
   }
   if (prompt.includes("remind")) {
     return handleRemind(stream, request.prompt, cwd, token);
   }
   if (prompt.includes("task")) {
-    return handleTasks(stream, request.prompt, cwd, token);
+    return handleTask(stream, request.prompt, cwd, token);
   }
   if (prompt.includes("pad") || prompt.includes("scratchpad") || prompt.includes("scratch")) {
     return handlePad(stream, request.prompt, cwd, token);
@@ -966,10 +1498,55 @@ async function handleFreeform(
   if (prompt.includes("system") || prompt.includes("resource") || prompt.includes("bootstrap")) {
     return handleSystem(stream, request.prompt, cwd, token);
   }
+  if (prompt.includes("memory")) {
+    return handleMemory(stream, request.prompt, cwd, token);
+  }
+  if (prompt.includes("journal")) {
+    return handleJournal(stream, request.prompt, cwd, token);
+  }
+  if (prompt.includes("doctor") || prompt.includes("health")) {
+    return handleDoctor(stream, cwd, token);
+  }
+  if (prompt.includes("config") || prompt.includes("configuration")) {
+    return handleConfig(stream, request.prompt, cwd, token);
+  }
+  if (prompt.includes("prompt") || prompt.includes("template")) {
+    return handlePrompt(stream, request.prompt, cwd, token);
+  }
+  if (prompt.includes("why") || prompt.includes("rationale")) {
+    return handleWhy(stream, request.prompt, cwd, token);
+  }
+  if (prompt.includes("change") || prompt.includes("recent")) {
+    return handleChange(stream, cwd, token);
+  }
+  if (prompt.includes("dep") || prompt.includes("dependenc")) {
+    return handleDep(stream, cwd, token);
+  }
+  if (prompt.includes("guide") || prompt.includes("quickstart") || prompt.includes("getting started")) {
+    return handleGuide(stream, cwd, token);
+  }
+  if (prompt.includes("permission")) {
+    return handlePermission(stream, request.prompt, cwd, token);
+  }
+  if (prompt.includes("site") || prompt.includes("feed")) {
+    return handleSite(stream, request.prompt, cwd, token);
+  }
+  if (prompt.includes("loop") || prompt.includes("iterate")) {
+    return handleLoop(stream, request.prompt, cwd, token);
+  }
+  if (prompt.includes("pause")) {
+    return handlePause(stream, cwd, token);
+  }
+  if (prompt.includes("resume")) {
+    return handleResume(stream, cwd, token);
+  }
+  if (prompt.includes("reindex") || prompt.includes("rebuild")) {
+    return handleReindex(stream, cwd, token);
+  }
 
   // Default: show help with available commands
   stream.markdown(
-    "## ctx — Persistent Context for AI\n\n" +
+    "## ctx -- Persistent Context for AI\n\n" +
       "Available commands:\n\n" +
       "| Command | Description |\n" +
       "|---------|-------------|\n" +
@@ -983,12 +1560,26 @@ async function handleFreeform(
       "| `/load` | Output assembled context |\n" +
       "| `/compact` | Archive completed tasks |\n" +
       "| `/sync` | Reconcile context with codebase |\n" +
-      "| `/complete` | Mark a task as completed |\n" +
+      "| `/task` | Task operations (complete, archive, snapshot) |\n" +
       "| `/remind` | Manage session reminders |\n" +
-      "| `/tasks` | Archive or snapshot tasks |\n" +
       "| `/pad` | Encrypted scratchpad |\n" +
       "| `/notify` | Webhook notifications |\n" +
-      "| `/system` | System diagnostics |\n\n" +
+      "| `/system` | System diagnostics |\n" +
+      "| `/memory` | Memory bridge operations |\n" +
+      "| `/journal` | Journal management |\n" +
+      "| `/doctor` | Context health diagnostics |\n" +
+      "| `/config` | Runtime configuration |\n" +
+      "| `/prompt` | Prompt templates |\n" +
+      "| `/why` | Design rationale for context files |\n" +
+      "| `/change` | Recent codebase changes |\n" +
+      "| `/dep` | Project dependencies |\n" +
+      "| `/guide` | Quick start guide |\n" +
+      "| `/permission` | Permission snapshot/restore |\n" +
+      "| `/site` | Documentation site |\n" +
+      "| `/loop` | Generate iteration scripts |\n" +
+      "| `/pause` | Pause context hooks |\n" +
+      "| `/resume` | Resume context hooks |\n" +
+      "| `/reindex` | Rebuild context indices |\n\n" +
       "Example: `@ctx /status` or `@ctx /add task Fix login bug`"
   );
   return { metadata: { command: "help" } };
@@ -1043,18 +1634,46 @@ const handler: vscode.ChatRequestHandler = async (
       return handleCompact(stream, cwd, token);
     case "sync":
       return handleSync(stream, cwd, token);
-    case "complete":
-      return handleComplete(stream, request.prompt, cwd, token);
+    case "task":
+      return handleTask(stream, request.prompt, cwd, token);
     case "remind":
       return handleRemind(stream, request.prompt, cwd, token);
-    case "tasks":
-      return handleTasks(stream, request.prompt, cwd, token);
     case "pad":
       return handlePad(stream, request.prompt, cwd, token);
     case "notify":
       return handleNotify(stream, request.prompt, cwd, token);
     case "system":
       return handleSystem(stream, request.prompt, cwd, token);
+    case "memory":
+      return handleMemory(stream, request.prompt, cwd, token);
+    case "journal":
+      return handleJournal(stream, request.prompt, cwd, token);
+    case "doctor":
+      return handleDoctor(stream, cwd, token);
+    case "config":
+      return handleConfig(stream, request.prompt, cwd, token);
+    case "prompt":
+      return handlePrompt(stream, request.prompt, cwd, token);
+    case "why":
+      return handleWhy(stream, request.prompt, cwd, token);
+    case "change":
+      return handleChange(stream, cwd, token);
+    case "dep":
+      return handleDep(stream, cwd, token);
+    case "guide":
+      return handleGuide(stream, cwd, token);
+    case "permission":
+      return handlePermission(stream, request.prompt, cwd, token);
+    case "site":
+      return handleSite(stream, request.prompt, cwd, token);
+    case "loop":
+      return handleLoop(stream, request.prompt, cwd, token);
+    case "pause":
+      return handlePause(stream, cwd, token);
+    case "resume":
+      return handleResume(stream, cwd, token);
+    case "reindex":
+      return handleReindex(stream, cwd, token);
     default:
       return handleFreeform(request, stream, cwd, token);
   }
@@ -1099,7 +1718,8 @@ export function activate(extensionContext: vscode.ExtensionContext) {
         case "status":
           followups.push(
             { prompt: "Detect context drift", command: "drift" },
-            { prompt: "Load full context", command: "load" }
+            { prompt: "Load full context", command: "load" },
+            { prompt: "Run health check", command: "doctor" }
           );
           break;
         case "drift":
@@ -1108,10 +1728,10 @@ export function activate(extensionContext: vscode.ExtensionContext) {
             { prompt: "Show context status", command: "status" }
           );
           break;
-        case "complete":
+        case "task":
           followups.push(
             { prompt: "Show context status", command: "status" },
-            { prompt: "Archive completed tasks", command: "tasks" }
+            { prompt: "Compact context", command: "compact" }
           );
           break;
         case "remind":
@@ -1119,21 +1739,48 @@ export function activate(extensionContext: vscode.ExtensionContext) {
             { prompt: "Show context status", command: "status" }
           );
           break;
-        case "tasks":
-          followups.push(
-            { prompt: "Show context status", command: "status" },
-            { prompt: "Compact context", command: "compact" }
-          );
-          break;
         case "pad":
           followups.push(
             { prompt: "List scratchpad", command: "pad" }
           );
           break;
+        case "memory":
+          followups.push(
+            { prompt: "Check memory status", command: "memory" },
+            { prompt: "Show context status", command: "status" }
+          );
+          break;
+        case "doctor":
+          followups.push(
+            { prompt: "Show context status", command: "status" },
+            { prompt: "Detect drift", command: "drift" }
+          );
+          break;
+        case "config":
+          followups.push(
+            { prompt: "Show config status", command: "config" }
+          );
+          break;
+        case "change":
+          followups.push(
+            { prompt: "Show context status", command: "status" }
+          );
+          break;
+        case "pause":
+          followups.push(
+            { prompt: "Resume hooks", command: "resume" }
+          );
+          break;
+        case "resume":
+          followups.push(
+            { prompt: "Show context status", command: "status" }
+          );
+          break;
         case "help":
           followups.push(
             { prompt: "Initialize project context", command: "init" },
-            { prompt: "Show context status", command: "status" }
+            { prompt: "Show context status", command: "status" },
+            { prompt: "Quick start guide", command: "guide" }
           );
           break;
       }
@@ -1152,12 +1799,26 @@ export {
   ensureCtxAvailable,
   bootstrap,
   getPlatformInfo,
-  handleComplete,
+  handleTask,
   handleRemind,
-  handleTasks,
   handlePad,
   handleNotify,
   handleSystem,
+  handleMemory,
+  handleJournal,
+  handleDoctor,
+  handleConfig,
+  handlePrompt,
+  handleWhy,
+  handleChange,
+  handleDep,
+  handleGuide,
+  handlePermission,
+  handleSite,
+  handleLoop,
+  handlePause,
+  handleResume,
+  handleReindex,
 };
 
 export function deactivate() {}

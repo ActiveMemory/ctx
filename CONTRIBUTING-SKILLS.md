@@ -6,7 +6,7 @@ session. This page is for contributors who want to understand what each
 skill does without reading individual `SKILL.md` files.
 
 For ctx plugin skills (`/ctx-status`, `/ctx-recall`, etc.), see the
-[ctx skills documentation](docs/skills.md).
+[ctx skills documentation](docs/reference/skills.md).
 
 ## Skill Catalog
 

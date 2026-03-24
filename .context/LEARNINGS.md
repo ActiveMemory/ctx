@@ -3,6 +3,8 @@
 <!-- INDEX:START -->
 | Date | Learning |
 |------|--------|
+| 2026-03-23 | Typography detection script needs exclusion lists for intentional uses |
+| 2026-03-23 | Subagents rename functions and restructure code beyond their scope |
 | 2026-03-23 | Splitting core/ into subpackages reveals hidden structure |
 | 2026-03-23 | Higher-order callbacks in param structs are a code smell |
 | 2026-03-22 | Types in god-object files create circular dependencies |
@@ -88,6 +90,26 @@
 | 2026-02-19 | Feature can be code-complete but invisible to users |
 | 2026-01-28 | IDE is already the UI |
 <!-- INDEX:END -->
+
+---
+
+## [2026-03-23-165611] Typography detection script needs exclusion lists for intentional uses
+
+**Context**: detect-ai-typography.sh flagged config/token/delim.go (intentional delimiter constants) and test files (test data containing em-dashes)
+
+**Lesson**: Detection scripts for convention enforcement need exclusion patterns for files where the flagged patterns are intentional data, not prose
+
+**Application**: Add exclusion patterns proactively when creating detection scripts; *_test.go and constant-definition files are common false positive sources
+
+---
+
+## [2026-03-23-165610] Subagents rename functions and restructure code beyond their scope
+
+**Context**: Agents tasked with fixing em-dashes in comments also renamed exported functions, changed import aliases, and modified function signatures
+
+**Lesson**: Always diff-audit agent output for structural changes before accepting edits, even when the task is narrowly scoped
+
+**Application**: After any agent batch edit, run git diff --stat and scan for non-comment changes before staging
 
 ---
 
