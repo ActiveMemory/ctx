@@ -13,6 +13,7 @@
 #   3. Magic directory strings that have config.Dir* constants
 #   4. Literal ".md" (should use config.ExtMarkdown)
 #   5. Go DescKey ↔ YAML key linkage (embed/{cmd,flag,text} vs commands/)
+#      Only DescKey* constants are checked — Use* and ExampleKey* are excluded.
 #
 # Exit code: number of issues found (0 = clean).
 
@@ -47,7 +48,7 @@ drift_count() {
 # ── 1. Literal "\n" ─────────────────────────────────────────────────
 # Match "\n" as a Go string (not inside comments or imports).
 # Skip config/token.go where the constant is defined.
-hits=$(drift_grep '"\\n"' 'token.go')
+hits=$(drift_grep '"\\n"' 'whitespace.go')
 count=$(drift_count "$hits")
 if [ "$count" -gt 0 ]; then
   echo "==> Literal \"\\n\" found ($count occurrences, use config.NewlineLF):"
@@ -82,7 +83,7 @@ done
 
 # ── 4. Literal ".md" ────────────────────────────────────────────────
 # Skip config/file.go where ExtMarkdown is defined.
-hits=$(drift_grep '"\.md"' 'file.go')
+hits=$(drift_grep '"\.md"' 'ext.go')
 count=$(drift_count "$hits")
 if [ "$count" -gt 0 ]; then
   echo "==> Literal \".md\" found ($count occurrences, use config.ExtMarkdown):"
@@ -130,11 +131,11 @@ check_linkage() {
 }
 
 # cmd constants ↔ commands.yaml
-# ExampleKey* constants map to examples.yaml, not commands.yaml — exclude them.
+# Only DescKey* constants are YAML lookup keys.
+# Use* constants are cobra Use fields; ExampleKey* map to examples.yaml.
 cmd_go_dir="internal/config/embed/cmd"
-cmd_go_keys=$(grep -rh '= "' "$cmd_go_dir"/*.go 2>/dev/null \
+cmd_go_keys=$(grep -rh 'DescKey.*= "' "$cmd_go_dir"/*.go 2>/dev/null \
   | grep -v '//' \
-  | grep -v 'ExampleKey' \
   | sed 's/.*= "//; s/"//' \
   | sort -u)
 cmd_yaml_keys=$(grep -E '^[a-z]' "internal/assets/commands/commands.yaml" \
@@ -170,20 +171,10 @@ check_linkage "text↔text/*.yaml" \
   "$text_yaml_merged"
 rm -f "$text_yaml_merged"
 
-# Cross-namespace duplicates (same key value in cmd + flag + text)
-dupes=$(
-  grep -rh '= "' internal/config/embed/cmd/*.go internal/config/embed/flag/*.go internal/config/embed/text/*.go 2>/dev/null \
-    | grep -v '//' \
-    | sed 's/.*= "//; s/"//' \
-    | sort | uniq -d
-)
-if [ -n "$dupes" ]; then
-  dupe_count=$(echo "$dupes" | wc -l | tr -d ' ')
-  echo "==> Cross-namespace duplicates ($dupe_count key(s) appear in multiple embed packages):"
-  echo "$dupes" | sed 's/^/    /'
-  echo ""
-  issues=$((issues + dupe_count))
-fi
+# Cross-namespace duplicates: cmd, flag, and text are separate YAML files
+# with separate Go packages — the same key in each is by design (e.g. "agent"
+# appears as a command description, a flag description, and a text string).
+# No check needed.
 
 # ── Summary ──────────────────────────────────────────────────────────
 if [ "$issues" -eq 0 ]; then
