@@ -3,6 +3,7 @@
 <!-- INDEX:START -->
 | Date | Decision |
 |------|--------|
+| 2026-03-24 | Write-once baseline with explicit end-consolidation for consolidation lifecycle |
 | 2026-03-23 | Pre/pre HTML tags promoted to shared constants in config/marker |
 | 2026-03-23 | Pure-data param structs in entity — replace function pointers with text keys |
 | 2026-03-22 | No runtime pluralization — use singular/plural text key pairs |
@@ -62,6 +63,20 @@
 | 2026-02-26 | Security and permissions (consolidated) |
 | 2026-02-27 | Webhook and notification design (consolidated) |
 <!-- INDEX:END -->
+
+## [2026-03-24-001001] Write-once baseline with explicit end-consolidation for consolidation lifecycle
+
+**Status**: Accepted
+
+**Context**: Designing the consolidation nudge hook; multi-pass consolidation spans dozens of sessions and you cannot programmatically distinguish feature from consolidation sessions
+
+**Decision**: Write-once baseline with explicit end-consolidation for consolidation lifecycle
+
+**Rationale**: First ctx-consolidate stamps baseline (write-once), user runs end-consolidation when done. Failure mode is silence (no stale nudges), not wrong behavior
+
+**Consequence**: Requires mark-consolidation, end-consolidation, and snooze-consolidation plumbing commands. Spec: specs/consolidation-nudge-hook.md
+
+---
 
 ## [2026-03-23-165612] Pre/pre HTML tags promoted to shared constants in config/marker
 

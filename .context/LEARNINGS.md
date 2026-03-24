@@ -3,6 +3,8 @@
 <!-- INDEX:START -->
 | Date | Learning |
 |------|--------|
+| 2026-03-24 | lint-drift false positives from conflating constant namespaces |
+| 2026-03-24 | git describe --tags follows ancestry, not global tag list |
 | 2026-03-23 | Typography detection script needs exclusion lists for intentional uses |
 | 2026-03-23 | Subagents rename functions and restructure code beyond their scope |
 | 2026-03-23 | Splitting core/ into subpackages reveals hidden structure |
@@ -90,6 +92,26 @@
 | 2026-02-19 | Feature can be code-complete but invisible to users |
 | 2026-01-28 | IDE is already the UI |
 <!-- INDEX:END -->
+
+---
+
+## [2026-03-24-001001] lint-drift false positives from conflating constant namespaces
+
+**Context**: lint-drift.sh checked all string constants in embed/cmd/*.go against commands.yaml, but Use* constants are cobra syntax strings, not YAML lookup keys
+
+**Lesson**: Shell grep on constant values cannot distinguish constant types; only DescKey* constants are YAML keys. AST-based analysis is needed for type-aware checks
+
+**Application**: Already captured in specs/ast-audit-tests.md; the lint-drift fix is shipped in v0.8.0
+
+---
+
+## [2026-03-24-000959] git describe --tags follows ancestry, not global tag list
+
+**Context**: Release notes skill diffed against v0.3.0 instead of v0.6.0 because the release branch diverged before v0.6.0 was tagged
+
+**Lesson**: git describe --tags --abbrev=0 follows reachability from HEAD; use git tag --sort=-v:refname | head -1 for the latest tag globally
+
+**Application**: Any script or skill that needs the latest release should use sorted tag list, not describe
 
 ---
 
