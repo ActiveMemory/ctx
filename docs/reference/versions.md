@@ -69,7 +69,7 @@ and Claude Code hook integration.
 The [main documentation](../index.md) always reflects the latest development version.
 
 For the most recent stable release, see
-[v0.6.0](https://github.com/ActiveMemory/ctx/tree/v0.6.0/docs).
+[v0.6.0](https://github.com/ActiveMemory/ctx/tree/v0.8.0/docs).
 
 ## Changelog
 
