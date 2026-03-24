@@ -127,17 +127,17 @@ sed -i.bak -E "s|ctx-context-[0-9]+\.[0-9]+\.[0-9]+\.vsix|ctx-context-${VERSION_
 rm -f docs/operations/integrations.md.bak
 
 # Update versions.md with new release
-echo "Updating docs/versions.md..."
+echo "Updating docs/reference/versions.md..."
 RELEASE_DATE=$(date +%Y-%m-%d)
 # Add new version row after the table header
 sed -i.bak "/^| Version | Release Date | Documentation |$/,/^|/{
     /^|-/a\\
 | ${VERSION} | ${RELEASE_DATE} | [View docs](https://github.com/ActiveMemory/ctx/tree/${VERSION}/docs) |
-}" docs/versions.md
+}" docs/reference/versions.md
 # Update the "latest stable" reference
-sed -i.bak -E "s|see \[v[0-9]+\.[0-9]+\.[0-9]+\]|see [${VERSION}]|g" docs/versions.md
-sed -i.bak -E "s|/tree/v[0-9]+\.[0-9]+\.[0-9]+/docs\)\.$|/tree/${VERSION}/docs).|g" docs/versions.md
-rm -f docs/versions.md.bak
+sed -i.bak -E "s|see \[v[0-9]+\.[0-9]+\.[0-9]+\]|see [${VERSION}]|g" docs/reference/versions.md
+sed -i.bak -E "s|/tree/v[0-9]+\.[0-9]+\.[0-9]+/docs\)\.$|/tree/${VERSION}/docs).|g" docs/reference/versions.md
+rm -f docs/reference/versions.md.bak
 
 # Rebuild site with updated docs
 echo "Rebuilding documentation site..."
@@ -145,7 +145,7 @@ make site
 
 # Commit docs and site updates
 echo "Committing documentation updates..."
-git add docs/index.md docs/home/getting-started.md docs/operations/integrations.md docs/versions.md site/ "${PLUGIN_JSON}" "${MARKETPLACE_JSON}" "${VSCODE_PKG}" "${VSCODE_LOCK}"
+git add docs/index.md docs/home/getting-started.md docs/operations/integrations.md docs/reference/versions.md site/ "${PLUGIN_JSON}" "${MARKETPLACE_JSON}" "${VSCODE_PKG}" "${VSCODE_LOCK}"
 git diff --cached --quiet || git commit -m "docs: update download links and versions page for ${VERSION}"
 echo ""
 
