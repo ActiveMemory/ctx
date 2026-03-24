@@ -477,7 +477,7 @@ npx @vscode/vsce package
 2. Install the `.vsix` file:
 
 ```bash
-code --install-extension ctx-context-0.7.0.vsix
+code --install-extension ctx-context-0.8.0.vsix
 ```
 
 3. Reload VS Code. Type `@ctx` in Copilot Chat to verify.
