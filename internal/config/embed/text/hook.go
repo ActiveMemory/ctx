@@ -10,12 +10,16 @@ const (
 	DescKeyHookAider          = "hook.aider"
 	DescKeyHookClaude         = "hook.claude"
 	DescKeyHookCopilot        = "hook.copilot"
+	DescKeyHookCopilotCLI     = "hook.copilot-cli"
 	DescKeyHookCursor         = "hook.cursor"
 	DescKeyHookSupportedTools = "hook.supported-tools"
 	DescKeyHookWindsurf       = "hook.windsurf"
 )
 
 const (
+	DescKeyWriteHookCopilotCLICreated  = "write.hook-copilot-cli-created"
+	DescKeyWriteHookCopilotCLISkipped  = "write.hook-copilot-cli-skipped"
+	DescKeyWriteHookCopilotCLISummary  = "write.hook-copilot-cli-summary"
 	DescKeyWriteHookCopilotCreated     = "write.hook-copilot-created"
 	DescKeyWriteHookCopilotForceHint   = "write.hook-copilot-force-hint"
 	DescKeyWriteHookCopilotMerged      = "write.hook-copilot-merged"

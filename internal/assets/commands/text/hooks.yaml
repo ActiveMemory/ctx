@@ -400,6 +400,22 @@ hook.copilot:
     or run with --write to generate the file directly:
 
       ctx hook copilot --write
+hook.copilot-cli:
+  short: |
+    GitHub Copilot CLI Integration
+    ==============================
+
+    Generate .github/hooks/ with ctx lifecycle hooks
+    for the GitHub Copilot CLI agent (cross-platform).
+
+    This creates:
+      .github/hooks/ctx-hooks.json    Hook configuration
+      .github/hooks/scripts/*.sh      Bash scripts (Linux/macOS/WSL)
+      .github/hooks/scripts/*.ps1     PowerShell scripts (Windows)
+
+    Run with --write to generate all files:
+
+      ctx hook copilot-cli --write
 hook.cursor:
   short: |
     Cursor IDE Integration
@@ -425,7 +441,8 @@ hook.supported-tools:
       claude-code  - Anthropic's Claude Code CLI (use plugin instead)
       cursor       - Cursor IDE
       aider        - Aider AI coding assistant
-      copilot      - GitHub Copilot
+      copilot      - GitHub Copilot (VS Code extension)
+      copilot-cli  - GitHub Copilot CLI (terminal agent)
       windsurf     - Windsurf IDE
 hook.windsurf:
   short: |

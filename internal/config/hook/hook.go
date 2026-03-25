@@ -57,6 +57,7 @@ const (
 	ToolClaude     = "claude"
 	ToolClaudeCode = "claude-code"
 	ToolCopilot    = "copilot"
+	ToolCopilotCLI = "copilot-cli"
 	ToolCursor     = "cursor"
 	ToolWindsurf   = "windsurf"
 )
@@ -64,7 +65,10 @@ const (
 // Copilot integration paths.
 const (
 	DirGitHub               = ".github"
+	DirGitHubHooks          = "hooks"
+	DirGitHubHooksScripts   = "scripts"
 	FileCopilotInstructions = "copilot-instructions.md"
+	FileCopilotCLIHooksJSON = "ctx-hooks.json"
 )
 
 // Prefixes
@@ -88,4 +92,12 @@ const (
 	EventPreToolUse = "PreToolUse"
 	// EventPostToolUse is the hook event for post-tool-use hooks.
 	EventPostToolUse = "PostToolUse"
+)
+
+// Copilot CLI hook event names (GitHub Copilot CLI lifecycle stages).
+const (
+	CLIEventSessionStart = "sessionStart"
+	CLIEventSessionEnd   = "sessionEnd"
+	CLIEventPreToolUse   = "preToolUse"
+	CLIEventPostToolUse  = "postToolUse"
 )

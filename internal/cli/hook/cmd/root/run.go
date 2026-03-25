@@ -66,6 +66,12 @@ func Run(cmd *cobra.Command, args []string, writeFile bool) error {
 		}
 		hook.Content(cmd, string(content))
 
+	case cfgHook.ToolCopilotCLI:
+		if writeFile {
+			return WriteCopilotCLIHooks(cmd)
+		}
+		hook.InfoTool(cmd, desc.Text(text.DescKeyHookCopilotCLI))
+
 	case cfgHook.ToolWindsurf:
 		hook.InfoTool(cmd, desc.Text(text.DescKeyHookWindsurf))
 
@@ -146,6 +152,61 @@ func WriteCopilotInstructions(cmd *cobra.Command) error {
 		cmd.Println("  ⚠ .vscode/mcp.json: " + err.Error())
 	}
 
+	return nil
+}
+
+// WriteCopilotCLIHooks generates .github/hooks/ctx-hooks.json and the
+// accompanying hook scripts for GitHub Copilot CLI integration.
+//
+// Creates the .github/hooks/ and .github/hooks/scripts/ directories if
+// needed and writes the JSON config plus bash and PowerShell scripts
+// from embedded assets. Skips if ctx-hooks.json already exists.
+//
+// Parameters:
+//   - cmd: Cobra command for output messages
+//
+// Returns:
+//   - error: Non-nil if directory creation or file write fails
+func WriteCopilotCLIHooks(cmd *cobra.Command) error {
+	hooksDir := filepath.Join(cfgHook.DirGitHub, cfgHook.DirGitHubHooks)
+	scriptsDir := filepath.Join(hooksDir, cfgHook.DirGitHubHooksScripts)
+	targetJSON := filepath.Join(hooksDir, cfgHook.FileCopilotCLIHooksJSON)
+
+	// Check if ctx-hooks.json already exists
+	if _, err := os.Stat(targetJSON); err == nil {
+		hook.InfoCopilotCLISkipped(cmd, targetJSON)
+		return nil
+	}
+
+	// Create directories
+	if err := os.MkdirAll(scriptsDir, fs.PermExec); err != nil {
+		return errFs.Mkdir(scriptsDir, err)
+	}
+
+	// Write ctx-hooks.json
+	jsonContent, readErr := agent.CopilotCLIHooksJSON()
+	if readErr != nil {
+		return readErr
+	}
+	if wErr := os.WriteFile(targetJSON, jsonContent, fs.PermFile); wErr != nil {
+		return errFs.FileWrite(targetJSON, wErr)
+	}
+	hook.InfoCopilotCLICreated(cmd, targetJSON)
+
+	// Write all hook scripts
+	scripts, scrErr := agent.CopilotCLIScripts()
+	if scrErr != nil {
+		return scrErr
+	}
+	for name, content := range scripts {
+		target := filepath.Join(scriptsDir, name)
+		if wErr := os.WriteFile(target, content, fs.PermExec); wErr != nil {
+			return errFs.FileWrite(target, wErr)
+		}
+		hook.InfoCopilotCLICreated(cmd, target)
+	}
+
+	hook.InfoCopilotCLISummary(cmd)
 	return nil
 }
 

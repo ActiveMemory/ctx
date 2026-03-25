@@ -103,6 +103,20 @@ write.format-si-mega-upper:
   short: "%.1fM"
 write.format-thousands:
   short: "%d,%03d"
+write.hook-copilot-cli-created:
+  short: '  ✓ %s'
+write.hook-copilot-cli-skipped:
+  short: '  ○ %s (ctx hooks exist, skipped)'
+write.hook-copilot-cli-summary:
+  short: |-
+    GitHub Copilot CLI will now:
+      1. Record session start/end via ctx
+      2. Block dangerous commands (preToolUse)
+      3. Audit tool invocations to .context/state/
+
+    Hooks work on all platforms:
+      Linux/macOS/WSL  →  .sh scripts
+      Windows          →  .ps1 scripts
 write.hook-copilot-created:
   short: '  ✓ %s'
 write.hook-copilot-force-hint:

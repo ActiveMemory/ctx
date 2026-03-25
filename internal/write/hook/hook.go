@@ -128,6 +128,34 @@ func InfoCopilotSummary(cmd *cobra.Command) {
 	cmd.Println(desc.Text(text.DescKeyWriteHookCopilotSummary))
 }
 
+// InfoCopilotCLICreated reports that copilot-cli hook files were created.
+//
+// Parameters:
+//   - cmd: Cobra command for output
+//   - targetFile: Path to the created file
+func InfoCopilotCLICreated(cmd *cobra.Command, targetFile string) {
+	cmd.Println(fmt.Sprintf(desc.Text(text.DescKeyWriteHookCopilotCLICreated), targetFile))
+}
+
+// InfoCopilotCLISkipped reports that copilot-cli hooks were skipped
+// because they already exist.
+//
+// Parameters:
+//   - cmd: Cobra command for output
+//   - targetFile: Path to the existing file
+func InfoCopilotCLISkipped(cmd *cobra.Command, targetFile string) {
+	cmd.Println(fmt.Sprintf(desc.Text(text.DescKeyWriteHookCopilotCLISkipped), targetFile))
+}
+
+// InfoCopilotCLISummary prints the post-write summary for copilot-cli.
+//
+// Parameters:
+//   - cmd: Cobra command for output
+func InfoCopilotCLISummary(cmd *cobra.Command) {
+	cmd.Println()
+	cmd.Println(desc.Text(text.DescKeyWriteHookCopilotCLISummary))
+}
+
 // InfoUnknownTool prints the unknown tool message.
 //
 // Parameters:
