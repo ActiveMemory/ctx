@@ -3,6 +3,11 @@
 <!-- INDEX:START -->
 | Date | Learning |
 |------|--------|
+| 2026-03-25 | v0.8.0 rebase: entity package absorbed Session/Message/ToolUse types — all parsers must use entity. prefix |
+| 2026-03-25 | v0.8.0 rebase: core packages split into subpackages — core.Initialized() moved to core/state |
+| 2026-03-25 | v0.8.0 rebase: cmd variable renamed to c in bootstrap/cmd.go — caller flag must use c.Flags() |
+| 2026-03-25 | v0.8.0 rebase: config/embed/embeds.go deleted, constants split into cmd/, flag/, text/ subdirectories |
+| 2026-03-25 | v0.8.0 rebase: 106 upstream commits in one cycle — rebase more frequently to avoid compound conflicts |
 | 2026-03-24 | lint-drift false positives from conflating constant namespaces |
 | 2026-03-24 | git describe --tags follows ancestry, not global tag list |
 | 2026-03-23 | Typography detection script needs exclusion lists for intentional uses |
