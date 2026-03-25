@@ -90,3 +90,31 @@ func CopilotCLIScripts() (map[string][]byte, error) {
 	}
 	return scripts, nil
 }
+
+// CopilotCLISkills reads all embedded Copilot CLI skill templates.
+// Returns a map of skill directory name to SKILL.md content for skills
+// in hooks/copilot-cli/skills/.
+//
+// Returns:
+//   - map[string][]byte: Skill name -> SKILL.md content
+//   - error: Non-nil if the directory read fails
+func CopilotCLISkills() (map[string][]byte, error) {
+	skills := make(map[string][]byte)
+	entries, dirErr := fs.ReadDir(assets.FS, asset.DirHooksCopilotCLISkills)
+	if dirErr != nil {
+		return nil, dirErr
+	}
+	for _, entry := range entries {
+		if !entry.IsDir() {
+			continue
+		}
+		name := entry.Name()
+		skillPath := asset.DirHooksCopilotCLISkills + "/" + name + "/" + asset.FileSKILLMd
+		content, readErr := assets.FS.ReadFile(skillPath)
+		if readErr != nil {
+			return nil, readErr
+		}
+		skills[name] = content
+	}
+	return skills, nil
+}

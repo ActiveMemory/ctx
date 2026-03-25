@@ -235,6 +235,11 @@ func WriteCopilotCLIHooks(cmd *cobra.Command) error {
 		cmd.Println("  ⚠ mcp-config.json: " + err.Error())
 	}
 
+	// Write .github/skills/<name>/SKILL.md for Copilot CLI skills
+	if err := writeCopilotCLISkills(cmd); err != nil {
+		writeErr.WarnFile(cmd, cfgHook.DirGitHubSkills, err)
+	}
+
 	hook.InfoCopilotCLISummary(cmd)
 	return nil
 }
@@ -289,6 +294,35 @@ func writeCopilotCLIInstructions(cmd *cobra.Command) error {
 		return wErr
 	}
 	hook.InfoCopilotCLICreated(cmd, target)
+	return nil
+}
+
+// writeCopilotCLISkills creates .github/skills/<name>/SKILL.md for each
+// embedded Copilot CLI skill template. Skips skills that already exist.
+func writeCopilotCLISkills(cmd *cobra.Command) error {
+	skills, readErr := agent.CopilotCLISkills()
+	if readErr != nil {
+		return readErr
+	}
+
+	skillsBase := filepath.Join(cfgHook.DirGitHub, cfgHook.DirGitHubSkills)
+	for name, content := range skills {
+		skillDir := filepath.Join(skillsBase, name)
+		target := filepath.Join(skillDir, cfgHook.FileSKILLMd)
+
+		if _, err := os.Stat(target); err == nil {
+			hook.InfoCopilotCLICreated(cmd, target+" (exists, skipped)")
+			continue
+		}
+
+		if err := os.MkdirAll(skillDir, fs.PermExec); err != nil {
+			return err
+		}
+		if wErr := os.WriteFile(target, content, fs.PermFile); wErr != nil {
+			return wErr
+		}
+		hook.InfoCopilotCLICreated(cmd, target)
+	}
 	return nil
 }
 

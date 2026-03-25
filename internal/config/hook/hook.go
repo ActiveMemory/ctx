@@ -70,11 +70,13 @@ const (
 	DirGitHubHooks          = "hooks"
 	DirGitHubHooksScripts   = "scripts"
 	DirGitHubInstructions   = "instructions"
+	DirGitHubSkills         = "skills"
 	FileAgentsMd            = "AGENTS.md"
 	FileAgentsCtxMd         = "ctx.md"
 	FileCopilotInstructions = "copilot-instructions.md"
 	FileCopilotCLIHooksJSON = "ctx-hooks.json"
 	FileInstructionsCtxMd   = "context.instructions.md"
+	FileSKILLMd             = "SKILL.md"
 )
 
 // Copilot CLI home directory and MCP config.
