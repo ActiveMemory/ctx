@@ -29,7 +29,7 @@ Files are designed to be human-readable, AI-parseable, and token-efficient.
 | `LEARNINGS.md`      | Lessons learned, gotchas, tips             | 6           |
 | `GLOSSARY.md`       | Domain terms and abbreviations             | 7           |
 | `AGENT_PLAYBOOK.md` | Instructions for AI tools                  | 8 (lowest)  |
-| `prompts/`          | Reusable prompt templates                  | (optional)  |
+| `templates/`        | Entry format templates for `ctx add`       | (optional)  |
 
 ## Read Order Rationale
 
@@ -442,6 +442,28 @@ and update context.
 
 See [Integrations](../operations/integrations.md#context-update-commands) 
 for full documentation.
+
+---
+
+## `templates/`
+
+**Purpose**: Format templates for `ctx add decision` and `ctx add learning`.
+These control the structure of new entries appended to DECISIONS.md and
+LEARNINGS.md.
+
+`ctx init` deploys two starter templates:
+
+- `decision.md` — sections: Context, Rationale, Consequence
+- `learning.md` — sections: Context, Lesson, Application
+
+### Customizing
+
+Edit the templates directly. Changes take effect immediately on the
+next `ctx add` command. For example, to add a "References" section to
+all new decisions, edit `.context/templates/decision.md`.
+
+Templates are committed to git, so customizations are shared with the
+team.
 
 ---
 
