@@ -1,5 +1,22 @@
 # Architecture
 
+<!--
+UPDATE WHEN:
+- New components or services are added
+- Components are removed or merged
+- Data flow between components changes
+- External dependencies or integrations change
+- Deployment topology changes
+
+DO NOT UPDATE FOR:
+- Internal implementation details (use code comments)
+- Minor refactoring that doesn't change boundaries
+- Bug fixes within existing components
+
+TIP: `ctx drift` scans this file for backtick-enclosed paths
+and warns if they do not exist on disk. Keep paths accurate.
+-->
+
 ## Overview
 
 ctx is a CLI tool that creates and manages a `.context/` directory

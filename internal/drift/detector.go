@@ -62,5 +62,8 @@ func Detect(ctx *entity.Context) *Report {
 	// Check for undocumented internal packages
 	checkMissingPackages(ctx, report)
 
+	// Check context file comment headers against templates
+	checkTemplateHeaders(ctx, report)
+
 	return report
 }

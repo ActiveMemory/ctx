@@ -1,5 +1,17 @@
 # Constitution
 
+<!--
+UPDATE WHEN:
+- Security requirements change or new vulnerabilities discovered
+- New invariants emerge from production incidents
+- Team agrees on new inviolable rules
+- Existing rules prove too restrictive or too loose
+
+DO NOT UPDATE FOR:
+- Preferences or suggestions (use CONVENTIONS.md)
+- Temporary constraints (use TASKS.md blockers)
+-->
+
 These rules are INVIOLABLE. If a task requires violating these, the task is wrong.
 
 ## Security Invariants

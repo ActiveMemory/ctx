@@ -14,6 +14,7 @@ import (
 	"time"
 
 	"github.com/ActiveMemory/ctx/internal/assets/read/desc"
+	readTpl "github.com/ActiveMemory/ctx/internal/assets/read/template"
 	cfgCtx "github.com/ActiveMemory/ctx/internal/config/ctx"
 	"github.com/ActiveMemory/ctx/internal/config/embed/text"
 	"github.com/ActiveMemory/ctx/internal/config/file"
@@ -349,5 +350,60 @@ func checkMissingPackages(ctx *entity.Context, report *Report) {
 
 	if !found {
 		report.Passed = append(report.Passed, CheckMissingPackages)
+	}
+}
+
+// extractFirstComment extracts the first HTML comment block from content.
+// Returns empty string if no comment found.
+func extractFirstComment(content string) string {
+	start := strings.Index(content, "<!--")
+	if start == -1 {
+		return ""
+	}
+	end := strings.Index(content[start:], "-->")
+	if end == -1 {
+		return ""
+	}
+	return strings.TrimSpace(content[start : start+end+3])
+}
+
+// checkTemplateHeaders compares context file comment headers against
+// the embedded templates. Warns when a file's header is missing or
+// doesn't match the template.
+//
+// Parameters:
+//   - ctx: Loaded context containing files to check
+//   - report: Report to append warnings to (modified in place)
+func checkTemplateHeaders(ctx *entity.Context, report *Report) {
+	found := false
+
+	for _, f := range ctx.Files {
+		tplContent, err := readTpl.Template(f.Name)
+		if err != nil {
+			continue // no template for this file
+		}
+
+		tplComment := extractFirstComment(string(tplContent))
+		if tplComment == "" {
+			continue // template has no comment header
+		}
+
+		liveComment := extractFirstComment(string(f.Content))
+		if liveComment == tplComment {
+			continue
+		}
+
+		report.Warnings = append(report.Warnings, Issue{
+			File: f.Name,
+			Type: IssueStaleHeader,
+			Message: fmt.Sprintf(
+				desc.Text(text.DescKeyDriftStaleHeader), f.Name,
+			),
+		})
+		found = true
+	}
+
+	if !found {
+		report.Passed = append(report.Passed, CheckTemplateHeaders)
 	}
 }

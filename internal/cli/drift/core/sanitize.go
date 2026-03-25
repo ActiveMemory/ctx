@@ -33,6 +33,8 @@ func FormatCheckName(name drift.CheckName) string {
 		return desc.Text(text.DescKeyDriftCheckRequired)
 	case drift.CheckFileAge:
 		return desc.Text(text.DescKeyDriftCheckFileAge)
+	case drift.CheckTemplateHeaders:
+		return desc.Text(text.DescKeyDriftCheckTemplateHeader)
 	default:
 		return string(name)
 	}

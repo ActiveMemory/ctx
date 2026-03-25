@@ -52,5 +52,7 @@ const (
 	DescKeyDriftCheckConstitution   = "drift.check-constitution"
 	DescKeyDriftCheckRequired       = "drift.check-required"
 	DescKeyDriftCheckFileAge        = "drift.check-file-age"
+	DescKeyDriftStaleHeader         = "drift.stale-header"
+	DescKeyDriftCheckTemplateHeader = "drift.check-template-header"
 	DescKeyVersionDriftRelayMessage = "version-drift.relay-message"
 )
