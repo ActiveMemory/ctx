@@ -9,7 +9,7 @@ to keep the main file within token budget. All entries preserved verbatim.
 
 **Consolidated from**: 4 entries (2026-01-20 to 2026-02-14)
 
-- ctx init is non-destructive: only creates .context/, CLAUDE.md, .claude/, PROMPT.md, and IMPLEMENTATION_PLAN.md. Zero awareness of .cursorrules, .aider.conf.yml, or other tools' configs.
+- ctx init is non-destructive: only creates .context/, CLAUDE.md, and .claude/. Zero awareness of .cursorrules, .aider.conf.yml, or other tools' configs.
 - CLAUDE.md merge insertion is position-aware: findInsertionPoint() finds the first H1, skips trailing blank lines, and inserts there. Never appends to end.
 - CLAUDE.md handling is a 3-state machine: no file (create), file without ctx markers (merge/prompt), file with `<!-- ctx:context -->` / `<!-- ctx:end -->` markers (skip or force-replace).
 - Always backup before modifying user files: file.bak before modification, marker comments for idempotency, offer merge not overwrite, provide `--merge` escape hatch.
@@ -127,7 +127,7 @@ to keep the main file within token budget. All entries preserved verbatim.
 
 - PROMPT.md is a Ralph loop iteration prompt ("what to do next, how to know when done"), not a project briefing. When it drifts into duplicating CLAUDE.md, delete it. Re-introduce only when actively using Ralph loops.
 - Only `internal/assets/` (formerly `internal/templates/`) matters for embedded templates — it's where Go embeds files into the binary. A root `templates/` directory is spec baggage. One source of truth: `internal/assets/ ──[ctx init]──> .context/`.
-- ctx and Ralph Loop are separate systems: `ctx init` creates `.context/` for context management; Ralph Loop uses PROMPT.md, IMPLEMENTATION_PLAN.md, and specs/ for iterative AI development. ctx does NOT create Ralph Loop infrastructure.
+- ctx and Ralph Loop are separate systems: `ctx init` creates `.context/` for context management; Ralph Loop uses `.context/prompts/loop.md` and specs/ for iterative AI development.
 
 ---
 

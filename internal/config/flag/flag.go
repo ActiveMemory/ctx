@@ -84,7 +84,6 @@ const (
 	Prepend         = "prepend"
 	Prompt          = "prompt"
 	Quiet           = "quiet"
-	Ralph           = "ralph"
 	Raw             = "raw"
 	Regenerate      = "regenerate"
 	Scope           = "scope"

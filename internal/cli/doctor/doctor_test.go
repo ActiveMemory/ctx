@@ -251,7 +251,7 @@ func TestDoctor_PluginInstalledNotEnabled(t *testing.T) {
 		"version": 2,
 		"plugins": map[string]any{
 			claude.PluginID: []map[string]string{
-				{"scope": "user", "version": "0.7.2"},
+				{"scope": "user", "version": "0.8.0"}, // TODO: this cannot be hardcoded!
 			},
 		},
 	}

@@ -15,7 +15,7 @@ import (
 	coreClaude "github.com/ActiveMemory/ctx/internal/cli/initialize/core/claude"
 	"github.com/ActiveMemory/ctx/internal/cli/initialize/core/entry"
 	coreMerge "github.com/ActiveMemory/ctx/internal/cli/initialize/core/merge"
-	"github.com/ActiveMemory/ctx/internal/cli/initialize/core/plan"
+
 	"github.com/ActiveMemory/ctx/internal/cli/initialize/core/plugin"
 	coreProject "github.com/ActiveMemory/ctx/internal/cli/initialize/core/project"
 	"github.com/ActiveMemory/ctx/internal/cli/initialize/core/prompt"
@@ -31,7 +31,7 @@ import (
 	"github.com/ActiveMemory/ctx/internal/config/embed/text"
 	"github.com/ActiveMemory/ctx/internal/config/file"
 	"github.com/ActiveMemory/ctx/internal/config/fs"
-	"github.com/ActiveMemory/ctx/internal/config/loop"
+
 	"github.com/ActiveMemory/ctx/internal/config/pad"
 	"github.com/ActiveMemory/ctx/internal/config/project"
 	"github.com/ActiveMemory/ctx/internal/config/sync"
@@ -47,20 +47,19 @@ import (
 // Run executes the init command logic.
 //
 // Creates a .context/ directory with template files. Handles existing
-// directories, minimal mode, and CLAUDE.md/PROMPT.md merge operations.
+// directories, minimal mode, and CLAUDE.md merge operations.
 //
 // Parameters:
 //   - cmd: Cobra command for output and input streams
 //   - force: If true, overwrite existing files without prompting
 //   - minimal: If true, only create essential files
 //   - merge: If true, auto-merge ctx content into existing files
-//   - ralph: If true, use autonomous loop templates (no questions, signals)
 //   - noPluginEnable: If true, skip auto-enabling the plugin globally
 //
 // Returns:
 //   - error: Non-nil if directory creation or file operations fail
 func Run(
-	cmd *cobra.Command, force, minimal, merge, ralph, noPluginEnable bool,
+	cmd *cobra.Command, force, minimal, merge, noPluginEnable bool,
 ) error {
 	// Check if ctx is in PATH (required for hooks to work)
 	if err := validate.CheckCtxInPath(cmd); err != nil {
@@ -154,18 +153,6 @@ func Run(
 	// Create specs/ and ideas/ directories with README.md
 	if err := coreProject.CreateProjectDirs(cmd); err != nil {
 		initialize.InfoWarnNonFatal(cmd, desc.Text(text.DescKeyInitLabelProjectDirs), err)
-	}
-
-	// Create PROMPT.md (uses ralph template if --ralph flag set)
-	if err := prompt.HandlePromptMd(cmd, force, merge, ralph); err != nil {
-		// Non-fatal: warn but continue
-		initialize.InfoWarnNonFatal(cmd, loop.PromptMd, err)
-	}
-
-	// Create IMPLEMENTATION_PLAN.md
-	if err := plan.HandleImplementationPlan(cmd, force, merge); err != nil {
-		// Non-fatal: warn but continue
-		initialize.InfoWarnNonFatal(cmd, project.ImplementationPlan, err)
 	}
 
 	// Merge permissions into settings.local.json (no hook scaffolding)

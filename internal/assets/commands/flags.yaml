@@ -55,13 +55,11 @@ hook.write:
 initialize.force:
   short: Overwrite existing context files
 initialize.merge:
-  short: Auto-merge ctx content into existing CLAUDE.md and PROMPT.md
+  short: Auto-merge ctx content into existing CLAUDE.md
 initialize.minimal:
   short: Only create essential files (TASKS.md, DECISIONS.md, CONSTITUTION.md)
 initialize.no-plugin-enable:
   short: Skip auto-enabling the ctx plugin in global Claude Code settings
-initialize.ralph:
-  short: Agent works autonomously without asking questions
 journal.obsidian.output:
   short: Output directory for vault
 journal.site.build:

@@ -227,10 +227,6 @@ init.label-plugin-enable:
   short: Plugin enablement
 init.confirm-claude:
   short: Would you like to append ctx context management instructions?
-init.confirm-prompt:
-  short: Would you like to merge ctx prompt instructions?
-init.ralph-mode:
-  short: ' (ralph mode)'
 events.empty:
   short: No events logged.
 events.human-format:

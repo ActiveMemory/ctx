@@ -33,13 +33,11 @@ const (
 )
 
 const (
-	DescKeyWriteInitMerged           = "write.init-merged"
-	DescKeyWriteInitNextStepsBlock   = "write.init-next-steps-block"
-	DescKeyWriteInitWorkflowTips     = "write.init-workflow-tips"
-	DescKeyWriteInitNoChanges        = "write.init-no-changes"
-	DescKeyWriteInitOverwritePrompt  = "write.init-overwrite-prompt"
-	DescKeyWriteInitPlanMergePrompt  = "write.init-plan-merge-prompt"
-	DescKeyWriteInitPlanMergeConfirm = "write.init-plan-merge-confirm"
+	DescKeyWriteInitMerged          = "write.init-merged"
+	DescKeyWriteInitNextStepsBlock  = "write.init-next-steps-block"
+	DescKeyWriteInitWorkflowTips    = "write.init-workflow-tips"
+	DescKeyWriteInitNoChanges       = "write.init-no-changes"
+	DescKeyWriteInitOverwritePrompt = "write.init-overwrite-prompt"
 )
 
 const (
@@ -68,9 +66,7 @@ const (
 )
 
 const (
-	DescKeyWriteInitUpdatedCtxSection    = "write.init-updated-ctx-section"
-	DescKeyWriteInitUpdatedPlanSection   = "write.init-updated-plan-section"
-	DescKeyWriteInitUpdatedPromptSection = "write.init-updated-prompt-section"
+	DescKeyWriteInitUpdatedCtxSection = "write.init-updated-ctx-section"
 )
 
 const (
@@ -93,8 +89,6 @@ const (
 // Init confirmation prompts and mode labels.
 const (
 	DescKeyInitConfirmClaude = "init.confirm-claude"
-	DescKeyInitConfirmPrompt = "init.confirm-prompt"
-	DescKeyInitRalphMode     = "init.ralph-mode"
 )
 
 const (

@@ -81,7 +81,7 @@ func TestListTemplates(t *testing.T) {
 			t.Errorf("missing required template: %s", req)
 		}
 	}
-	for _, ex := range []string{"CLAUDE.md", "IMPLEMENTATION_PLAN.md", "Makefile.ctx"} {
+	for _, ex := range []string{"CLAUDE.md", "Makefile.ctx"} {
 		if templateSet[ex] {
 			t.Errorf("should not contain project-root file: %s", ex)
 		}
@@ -105,7 +105,6 @@ func TestProjectFile(t *testing.T) {
 		wantContain string
 		wantErr     bool
 	}{
-		{"IMPLEMENTATION_PLAN.md exists", "IMPLEMENTATION_PLAN.md", "Implementation", false},
 		{"Makefile.ctx exists", "Makefile.ctx", "ctx", false},
 		{"nonexistent returns error", "NONEXISTENT.md", "", true},
 	}
@@ -399,16 +398,6 @@ func TestListHookMessages(t *testing.T) {
 
 func TestHookMessage_ReadVariant(t *testing.T) {
 	content, readErr := FS.ReadFile(path.Join(asset.DirHooksMessages, "qa-reminder", "gate.txt"))
-	if readErr != nil {
-		t.Fatalf("unexpected error: %v", readErr)
-	}
-	if len(content) == 0 {
-		t.Fatal("returned empty content")
-	}
-}
-
-func TestRalphTemplate(t *testing.T) {
-	content, readErr := FS.ReadFile(path.Join(asset.DirRalph, "PROMPT.md"))
 	if readErr != nil {
 		t.Fatalf("unexpected error: %v", readErr)
 	}

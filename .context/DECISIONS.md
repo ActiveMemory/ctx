@@ -847,7 +847,7 @@ See: `specs/injection-oversize-nudge.md`.
 **Consolidated from**: 3 decisions (2026-01-21 to 2026-01-28)
 
 - Removed AGENTS.md from project root. Consolidated on CLAUDE.md (auto-loaded) + .context/AGENT_PLAYBOOK.md as the canonical agent instruction path. Projects using ctx should not create AGENTS.md.
-- Separate orchestrator directive from agent tasks: `.context/TASKS.md` is the agent's mind (tasks the agent owns); `IMPLEMENTATION_PLAN.md` is the orchestrator's thin directive layer ("check your tasks"). Prevents task list drift.
+- ~~Separate orchestrator directive from agent tasks~~ (superseded 2026-03-25: IMPLEMENTATION_PLAN.md removed — TASKS.md is the single source of truth for work items, AGENT_PLAYBOOK.md covers agent behavior).
 - No custom UI -- IDE is the interface. UI is a liability; IDEs already excel at file browsing, search, markdown editing, and git integration. Focus CLI efforts on good markdown output.
 
 ---

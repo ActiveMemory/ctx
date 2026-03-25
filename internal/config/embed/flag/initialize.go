@@ -11,5 +11,4 @@ const (
 	DescKeyInitializeMerge          = "initialize.merge"
 	DescKeyInitializeMinimal        = "initialize.minimal"
 	DescKeyInitializeNoPluginEnable = "initialize.no-plugin-enable"
-	DescKeyInitializeRalph          = "initialize.ralph"
 )

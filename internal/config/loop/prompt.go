@@ -6,5 +6,5 @@
 
 package loop
 
-// PromptMd is the session prompt file in the project root.
-const PromptMd = "PROMPT.md"
+// PromptMd is the default prompt file for loop scripts.
+const PromptMd = ".context/prompts/loop.md"

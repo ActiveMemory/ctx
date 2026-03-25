@@ -13,79 +13,12 @@ TASK STATUS LABELS:
 - `#in-progress` — currently being worked on (add inline, don't move task)
 -->
 
-### Phase MCP-SAN: MCP Server Input Sanitization
+### Phase -3: DevEx
 
-Assignee: @CoderMungan
-
-The MCP server handlers (`internal/mcp/server/handle_*.go`) accept
-client-supplied input over JSON-RPC and use it with minimal validation.
-The `validation` package has `SanitizeFilename` and `ValidateBoundary`
-but nothing for content or argument sanitization. `entry.Validate` only
-checks field presence, not content safety.
-
-- [ ] Implement consolidation nudge hook: count sessions since last consolidation, nudge after 6. Spec: `specs/consolidation-nudge-hook.md` #added:2026-03-23-223000
-
-- [ ] Design UserPromptSubmit hook that runs `make audit` at session start and surfaces failures as a consolidation-debt warning before the agent acts on stale assumptions. Project-level hook (not bundled in ctx), configurable via .ctxrc or settings.json. Related: consolidation nudge hook spec. #added:2026-03-23-223500
-
-- [ ] Auto-record consolidation baseline commit: `/ctx-consolidate` and `ctx system mark-consolidation` should stamp HEAD hash + date into `.context/state/consolidation.json` only on first invocation (write-once until reset). Subsequent consolidation sessions preserve the original baseline. The baseline resets only when the consolidation nudge counter resets (i.e., when a new feature cycle begins). This way multi-pass consolidation keeps the true starting point. Related: `specs/consolidation-nudge-hook.md` #added:2026-03-23-224000
-
-- [ ] Bug: release script versions.md table insertion fails silently. The sed pattern on line 133 uses `$` anchor but the actual Markdown table header has column padding spaces before the trailing `|`. The row is never inserted. Fix: relax the header match pattern or switch to a simpler approach (e.g., insert after the separator line directly). Also verify the "latest stable" sed handles trailing `).\n` correctly. #priority:high #added:2026-03-23-221500
-
-- [ ] Bug: check-version hook missing throttle touch on plugin version read error (run.go:70). When claude.PluginVersion() fails, the hook returns without touching the daily throttle marker, causing repeated checks on days when plugin.json is missing or corrupted. Fix: add internalIo.TouchFile(markerFile) before the early return. See docs/recipes/hook-sequence-diagrams.md check-version diagram which documents the expected behavior. #added:2026-03-23-162802
-
-- [ ] Design UserPromptSubmit hook that runs go build and surfaces compilation errors before the agent acts on stale assumptions #added:2026-03-23-120136
-
-- [ ] Scan all config/**/* constants and catalog which ones should be ctxrc entries for user configurability #priority:medium #added:2026-03-22-095552
-
-- [ ] Sanitize session IDs before using in file paths #added:2026-03-21-103412
-
-- [ ] Update user-facing documentation for changed CLI flag shorthands #added:2026-03-21-102755
-
-- [ ] Add Use* constants for all system subcommands #added:2026-03-21-092550
-
-- [ ] Refactor site/cmd/feed: extract helpers and types to core/, make Run public #added:2026-03-21-074859
-
-- [ ] Add Unicode-aware slugification for non-ASCII content #added:2026-03-21-070953
-
-- [ ] Make TitleSlugMaxLen configurable via .ctxrc #added:2026-03-21-070944
-
-- [ ] Replace hack/lint-drift.sh with AST-based Go tests in internal/audit/. Spec: `specs/ast-audit-tests.md` #added:2026-03-23-210000
-
-- [ ] Add AST-based lint test to detect exported functions with no external callers #added:2026-03-21-070357
-
-- [ ] Audit exported functions used only within their own package and make them private #added:2026-03-21-070346
-
-- [ ] Spec and implement CRLF-to-LF newline normalization for journal and context files #added:2026-03-20-224845
-
-- [ ] Test ctx on Windows — validate build, init, agent, drift, journal pipeline #added:2026-03-20-224835
-
-- [ ] Migrate moc.go hardcoded strings to YAML or Go templates #added:2026-03-20-214922
-
-- [ ] Audit and remove side-effect output from error-returning functions #added:2026-03-20-212212
-
-- [ ] Evaluate Windows support for sysinfo.Collect and path handling #added:2026-03-20-194930
-
-- [ ] Make doctor thresholds configurable via .ctxrc #added:2026-03-20-194923
-
-- [ ] Add Use* constants for all cobra subcommand Use strings #added:2026-03-20-184639
-
-- [ ] Design terminal-aware truncation for CLI output #added:2026-03-20-184509
-
-- [ ] Evaluate cross-platform path handling in change/core/scan.go — git always uses "/" but UniqueTopDirs should consider filepath.ToSlash for Windows robustness #added:2026-03-20-182103
-
-- [ ] Replace English-only Pluralize helper in change/core/detect.go with i18n-safe approach #added:2026-03-20-180502
-
-- [ ] Replace ASCII-only alnum check in agent/core/score.go with unicode.IsLetter/IsDigit #added:2026-03-20-175943
-
-- [ ] Systematic audit: extract all magic flag name strings across CLI commands into config/flag constants #added:2026-03-20-175155
-
-- [ ] Move generic string helpers from cli/add/core/strings.go to internal/format #added:2026-03-20-175046
-
-- [ ] Add missing flag name constants (priority, section, file) and priority level constants (high, medium, low) to config/flag #added:2026-03-20-170842
-
-- [ ] Improve test coverage for core packages at 0% #added:2026-03-20-164324
-
-- [ ] Migrate hook message templates from .txt files to YAML localization #added:2026-03-20-163801
+[ ] Plugin enablement gap: Ref: `ideas/plugin-enablement-gap.md`. 
+Local-installed plugins get registered in `installed_plugins.json` but not 
+auto-added to `enabledPlugins`, so slash commands are invisible in non-ctx 
+projects.
 
 - [ ] Add cobra Example fields to CLI commands via examples.yaml #added:2026-03-20-163413
 
@@ -93,176 +26,113 @@ checks field presence, not content safety.
 
 - [ ] Create ctx-docstrings skill: audit and fix docstrings against CONVENTIONS.md Documentation section. Skill loads CONVENTIONS.md, scans functions in scope for missing/incomplete docstring sections (Parameters, Returns), reports violations, and optionally fixes them. Language-agnostic design with Go as first implementation. Deterministic enforcement via linter is tracked separately in ideas/spec-convention-enforcement.md #added:2026-03-16-114445
 
-- [ ] MCP-SAN.1: Add input length limits to all string arguments #priority:high #added:2026-03-15
-  - Define max lengths in `internal/config/mcp/cfg/` (e.g., `MaxContentLen`,
-    `MaxNameLen`, `MaxQueryLen`, `MaxCallerLen`)
-  - Apply length checks early in `handleToolsCall`, `handlePromptsGet`,
-    `handleResourcesRead`, `handleResourcesSubscribe`
-  - Cap `toolRecall` limit to a reasonable upper bound (e.g., 100)
-  - Return `ErrCodeInvalidArg` with a clear message when exceeded
-- [ ] MCP-SAN.2: Validate `entryType` against allowlist before use #priority:high #added:2026-03-15
-  - In `toolAdd` and `toolWatchUpdate`, check `entryType` exists in
-    `entryCfg.ToCtxFile` map before proceeding — return error if not
-  - This prevents writing entries with undefined type mappings
-- [ ] MCP-SAN.3: Sanitize content written to `.context/` files #priority:high #added:2026-03-15
-  - Content fields (`content`, `context`, `rationale`, `consequences`,
-    `lesson`, `application`) are written directly to Markdown files
-  - Strip or escape Markdown structure characters that could corrupt
-    parsing: entry headers (`## [YYYY-`), task checkboxes (`- [ ]`,
-    `- [x]`), constitution rule format (`- [ ] **Never`)
-  - Add a `SanitizeEntryContent` function in `internal/validation`
-  - Apply in `toolAdd`, `toolWatchUpdate`, and `buildEntryPrompt`
-- [ ] MCP-SAN.4: Sanitize reflected input in error/success messages #added:2026-03-15
-  - `params.Name` reflected in unknown-prompt/unknown-tool errors
-    (`handle_prompt.go:66`, `handle_tool.go:120`)
-  - `params.URI` reflected in unknown-resource error
-    (`handle_resource.go:104`)
-  - `caller` reflected in session-started message
-    (`handle_tool.go:804`)
-  - Truncate or strip control characters before including in responses
-- [ ] MCP-SAN.5: Add tests for all sanitization paths #added:2026-03-15
-  - Test that oversized inputs are rejected
-  - Test that invalid `entryType` values are rejected
-  - Test that Markdown injection in content fields is neutralized
-  - Test that reflected strings are truncated/safe
-  - Test that `toolRecall` limit is capped
+### Phase -2: Task completion nudge:
 
-### Phase MCP-COV: MCP Test Coverage
+- [ ] Design UserPromptSubmit hook that runs `make audit` at session start and 
+  surfaces failures as a consolidation-debt warning before the agent acts on stale assumptions. Project-level hook (not bundled in ctx), configurable via .ctxrc or settings.json. Related: consolidation nudge hook spec. #added:2026-03-23-223500
 
-Assignee: @CoderMungan
+- [ ] Bug: check-version hook missing throttle touch on plugin version read error (run.go:70). When claude.PluginVersion() fails, the hook returns without touching the daily throttle marker, causing repeated checks on days when plugin.json is missing or corrupted. Fix: add internalIo.TouchFile(markerFile) before the early return. See docs/recipes/hook-sequence-diagrams.md check-version diagram which documents the expected behavior. #added:2026-03-23-162802
 
-Current coverage: `mcp/server` 78.8%, `mcp/proto` 0%, `mcp/session` 0%,
-`mcp/server/entity` 0%. Goal: all packages above 80%.
+- [ ] Design UserPromptSubmit hook that runs go build and surfaces compilation errors before the agent acts on stale assumptions #added:2026-03-23-120136
 
-**mcp/session (0% → 80%+)**
+- [ ]: Architecture mapping skill refactoring:
+  - [ ] Update ctx-architecture skill based on the following findings; remove 
+    gitnexus from the template and the actual skill; have a separate follow-up enrichment
+    skill (see the next task where it also has a spec)
+        - [2026-03-25-021557] Code intelligence tools trade depth for breadth in 
+        architecture analysis
+          - **Context**: Compared three sessions analyzing a large codebase 
+          (~34k symbols): Session 1 (broken MCP) produced 5,866 lines of 
+          DETAILED_DESIGN with per-controller data flows, scale math, 
+          startup sequences. Session 2 (full MCP + same skill) produced 1,124 lines 
+          (5.2x less). Session 3 (enrichment) added verified graph data but couldn't 
+          recover the intimate code knowledge.
+          - **Lesson**: When graph query tools are available, agents satisfice 
+          instead of maximize. They get structural answers without reading code, 
+          missing operational details (defaults, timeouts, scale math, edge cases) 
+          that only emerge from line-by-line reading. The tool answers the question 
+          asked but prevents discovery of answers to questions never asked.
+          - **Application**: Architecture analysis skills should NOT offer MCP tools:
+          force code reading first. Use a separate enrichment skill to verify and 
+          extend with tools afterward. Constraint is the feature.
 
-- [ ] MCP-COV.1: Test `session.NewState` and state mutation methods #added:2026-03-15
-  - `NewState` returns initialized state with zero counters
-  - `RecordToolCall` increments `ToolCalls`
-  - `RecordAdd` increments per-type counter in `AddsPerformed`
-  - `QueuePendingUpdate` appends to `PendingFlush`
-  - `PendingCount` returns correct length
-  - Verify multiple calls accumulate correctly
+- [ ] Architecture Mapping (Enrichment):
+  **Context**: Skill that incrementally builds and maintains ARCHITECTURE.md
+  and DETAILED_DESIGN.md. Coverage tracked in map-tracking.json.
+  Spec: `specs/ctx-architecture.md`
+  - [ ] Create ctx-architecture-enrich skill: takes existing /ctx-architecture 
+  principal-mode artifacts as baseline, runs comprehensive enrichment pass via 
+  GitNexus MCP (blast radius verification, registration site discovery, 
+  execution flow tracing, domain clustering comparison, shallow module 
+  deep-dive). Spec: `ideas/spec-architecture-enrich.md`. Reference 
+  implementation: kubernetes-service enrichment pass 2026-03-25. 
+  #added:2026-03-25-120000
 
-**mcp/proto (0% → 80%+)**
+- [ ]: ctx-architecture-failure-analysis
+      **Context**: Adversarial analysis skill that identifies where a codebase will
+      silently betray you. Requires `ctx-architecture` artifacts as input (ARCHITECTURE.md,
+      DETAILED_DESIGN*.md, map-tracking.json). Does its own targeted deep reads focusing
+      on mutation points, shared mutable state, error swallowing, concurrency, implicit
+      ordering, missing enforcement, and scaling cliffs. Uses available tooling (GitNexus,
+      Gemini Search) to cross-reference patterns.
 
-- [ ] MCP-COV.2: Test JSON marshaling/unmarshaling round-trips for proto types #added:2026-03-15
-  - `Request`, `Response`, `Notification`, `RPCError`
-  - `InitializeParams` / `InitializeResult`
-  - `CallToolParams` / `CallToolResult`
-  - `GetPromptParams` / `GetPromptResult`
-  - `ReadResourceParams` / `ReadResourceResult`
-  - `SubscribeParams` / `UnsubscribeParams`
-  - Verify field names match JSON tags, omitempty behaves correctly
-- [ ] MCP-COV.3: Test `ToolDefs` completeness and schema validity #added:2026-03-15
-  - Every tool in `ToolDefs` has non-empty Name, Description, InputSchema
-  - InputSchema.Type is "object" for all tools
-  - Required fields listed in schema are present in Properties
-  - No duplicate tool names
+      Produces `DANGER-ZONES.md` — a ranked inventory of silent failure points with:
+      location, failure mode, blast radius, detection gap, and suggested fix. Two tiers:
+      "most likely to cause production incidents" and "less likely but equally dangerous."
 
-**mcp/server/entity (0% → 80%+)**
+      Distinct from a security threat model (which would be `ctx-threat-model` — a
+      separate skill for auth bypass, injection, privilege escalation, supply chain).
+      This skill focuses on correctness: race conditions, ordering assumptions, cache
+      staleness, fan-out amplification, non-atomic ownership, inverted logic,
+      force-delete orphans, global state mutation.
 
-- [ ] MCP-COV.4: Test `PromptDefs` completeness #added:2026-03-15
-  - Every prompt has non-empty Name and Description
-  - Required arguments have non-empty Name and Description
-  - No duplicate prompt names
-  - Argument names match expected field constants
+      - [ ] Design SKILL.md for ctx-architecture-failure-analysis: inputs 
+      (architecture artifacts), analysis phases, output format (DANGER-ZONES.md), 
+      quality checklist #added:2026-03-25-060000
+      - [ ] Define the adversarial analysis framework: categories of silent 
+      failure (concurrency, ordering, cache, amplification, ownership, error 
+      swallowing, global state) with heuristics for each #added:2026-03-25-060000
+      - [ ] Implement skill with GitNexus integration: use impact analysis for 
+      blast radius estimation, use context for shared-state detection #added:2026-03-25-060000
+      - [ ] Add Gemini Search integration: cross-reference discovered patterns 
+      against known failure modes in similar systems. #added:2026-03-25-060000
 
-**mcp/server gaps (78.8% → 85%+)**
+- [ ] dependency sanity check: on session start; I should be able to know
+  gitnexus mcp is up; gemini mcp is up. maybe a status report during ctx-remember.
 
-- [ ] MCP-COV.5: Test `promptAddLearning` (0% coverage) #added:2026-03-15
-  - Mirror the existing `promptAddDecision` test with learning-specific
-    arguments (`content`, `context`, `lesson`, `application`)
-- [ ] MCP-COV.6: Test `toolRemind` (26.7% coverage) #added:2026-03-15
-  - Test with no reminders → returns no-reminders message
-  - Test with active reminders → returns formatted list
-  - Test with future-dated reminder → shows "not due" annotation
-- [ ] MCP-COV.7: Test `toolDrift` (57.1% coverage) #added:2026-03-15
-  - Test with clean context → status OK, no violations
-  - Test with missing required files → violations reported
-  - Test with context load failure → error response
-- [ ] MCP-COV.8: Test `toolComplete` error paths (66.7% coverage) #added:2026-03-15
-  - Empty query → error
-  - Boundary violation → error
-  - Non-matching query → error from `CompleteTask`
-- [ ] MCP-COV.9: Test `emitNotification` and `handleNotification` (both 0%) #added:2026-03-15
-  - `emitNotification` writes valid JSON-RPC notification to stdout
-  - `handleNotification` for `notifications/initialized` returns nil
-  - Unknown notification method returns nil (no-op)
-- [ ] MCP-COV.10: Test `writeError` (0% coverage) #added:2026-03-15
-  - Triggers on malformed JSON input (non-JSON-RPC)
-  - Writes a valid JSON-RPC error response to stdout
-- [ ] MCP-COV.11: Test error paths for subscribe/unsubscribe (71.4%) #added:2026-03-15
-  - Invalid JSON params → `ErrCodeInvalidArg`
-  - Empty URI → `ErrCodeInvalidArg`
+- [ ] ctx-architecture-extend
+  **Context**: Companion to `ctx-architecture` and `ctx-failure-analysis`, completing
+  a trilogy: how does it work → where will it break → where does it grow.
+      Reads architecture artifacts → identifies registration patterns (interfaces, factory
+      functions, plugin systems, ordered slices, scheme registrations) → traces recent
+      additions via git log to confirm which extension points are actually used → produces
+      `EXTENSION-POINTS.md` ranked by frequency, with exact file locations, function
+      signatures, and the typical feature pattern (e.g., "most features require a variable
+      + a mutator + a machine-agent task").
 
-### Phase -2: Further Cleanup
+      Valuable for onboarding ("I need to add feature X, where do I start?") and
+      architecture review ("are we adding features in the right places?").
 
-* Human: internal/recall/parser requires a serious refactoring; for example
-  the parser object and its private and public methods need to go to its own
-  package and other helper functions need to go to a different adjacent package.
-* Human: internal/notify/notify.go requires refactoring (all functions bagged in
-  one file; types need to go to types.go per convention etc etc)
-* Human: split err package into sub packages.
+      - [ ] Design SKILL.md for ctx-extension-map: inputs (architecture artifacts + 
+      git log), analysis phases, output format (EXTENSION-POINTS.md), 
+      quality checklist #added:2026-03-25-062000
+      - [ ] Define extension point detection heuristics: interface registrations, 
+      factory patterns, ordered slices, scheme init blocks, //go:embed directories, 
+      feature flag structs with tags #added:2026-03-25-062000
+      - [ ] Add git log frequency analysis: trace recent commits to confirm 
+     which extension points are actively used vs. dormant #added:2026-03-25-062000
+      - [ ] Integrate with GitNexus: use cluster/process data to identify 
+      registration call sites and their callers #added:2026-03-25-062000
 
-### Phase -1: Quality Verification
+[ ] drift check should notify if claude permissions have insecure stuff in it.
 
+[ ] task: sync workspace to ARI_INBOX
 
-
-
-- [-] internal/claude/hooks/registry.go -> — truncated stub, intent unknown; registry is at internal/assets/hooks/messages/ and appears complete
-
-### Phase GK: Global Encryption Key — Spec: `specs/global-encryption-key.md`
-
-- [-] GK.6: Update ARCHITECTURE.md and DETAILED_DESIGN.md for new key resolution model — no references to old paths found in either file #added:2026-03-02-114146
-
-
-
-
-
-
-
-
-
-
-### Phase -2: Housekeeping (Clean Before Renovating)
-
-No broken windows. These fix structural issues in state management,
-directory layout, and agent hygiene before adding new features.
-
-Spec: `specs/user-level-dir-relocation.md`, `specs/state-consolidation.md`,
-`specs/task-completion-nudge.md`. Read the specs before starting any P-2 task.
-
-**Init guard and state consolidation:**
-
-
-
-**User-level directory relocation:**
-
-- [-] P-2.3: Relocate user-level dir from ~/.local/ctx to ~/.ctx — superseded by Phase GK (global encryption key at ~/.ctx/.ctx.key)
-  Spec: `specs/user-level-dir-relocation.md`
-  #priority:high #added:2026-03-01
-
-- [-] P-2.4: Update docs for ~/.ctx key path — superseded by GK.5 and GK.6
-  Spec: `specs/user-level-dir-relocation.md`
-  #priority:high #added:2026-03-01
-
-**Task completion nudge:**
-
-
-### Phase -0.5: Hack Script Absorption
+### Phase -1: Hack Script Absorption
 
 Absorb remaining `hack/` scripts into Go subcommands. Eliminates shell
 dependencies, improves portability, and makes the skill layer call `ctx`
 directly instead of `make` targets.
-
-**Remaining candidates (from review):**
-
-
-- [-] P-0.5.2: Evaluate `hack/context-watch.sh` for absorption as `ctx watch` or
-  `ctx system watch` — deleted instead; heartbeat now includes token telemetry
-  (tokens, context_window, usage_pct) making the watch script redundant.
-  #priority:low #added:2026-03-01 #done:2026-03-01
 
 ### Phase 0.9: Suppress Nudges After Wrap-Up
 
@@ -270,7 +140,6 @@ Spec: `specs/suppress-nudges-after-wrap-up.md`. Read the spec before starting
 any P0.9 task.
 
 **Phase 3 — Skill integration:**
-
 
 - [-] P0.9.2: Split cli-reference.md — moved to Future
   #added:2026-02-24-204208
@@ -282,15 +151,6 @@ any P0.9 task.
 
 Spec: `specs/rss-feed.md`. Read the spec before starting any P0.8 task.
 
-**Phase 4 — Tests and integration:**
-
-- [-] P0.8.2: Investigate converting UserPromptSubmit hooks to JSON output —
-  Skipped: VERBATIM boxes ARE the feature (human-readable nudges injected into
-  agent prompt). JSON would make them less useful. External tooling already gets
-  structured JSON via webhooks. #added:2026-02-22-194446
-
-
-
 ### Phase 0.4: Hook Message Templates
 
 Spec: `specs/future-complete/hook-message-templates.md`. Read the spec before
@@ -299,6 +159,8 @@ starting any P0.4 task.
 **Phase 2 — Discoverability + documentation:**
 
 Spec: `specs/future-complete/hook-message-customization.md`.
+
+- [ ] Migrate hook message templates from .txt files to YAML localization #added:2026-03-20-163801
 
 ### Phase 0.4.9: Injection Oversize Nudge
 
@@ -310,84 +172,62 @@ any P0.4.9 task.
 Spec: `specs/context-window-usage.md`. Read the spec before starting any
 P0.4.10 task.
 
-### Phase 0.6: Plugin Enablement Gap
+### Phase 0.5 Cleanup
 
-Ref: `ideas/plugin-enablement-gap.md`. Local-installed plugins get registered
-in `installed_plugins.json` but not auto-added to `enabledPlugins`, so slash
-commands are invisible in non-ctx projects.
+* Human: internal/recall/parser requires a serious refactoring; for example
+  the parser object and its private and public methods need to go to its own
+  package and other helper functions need to go to a different adjacent package.
+* Human: internal/notify/notify.go requires refactoring (all functions bagged in
+  one file; types need to go to types.go per convention etc etc)
+* Human: split err package into sub packages.
 
-### Prompting Guide — Canonical Reference
+- [ ] Add Use* constants for all system subcommands #added:2026-03-21-092550
 
-- [-] PG.1: Agent/tool compatibility matrix — moved to Future
-      #priority:medium #added:2026-02-25
+- [ ] Refactor site/cmd/feed: extract helpers and types to core/, make Run public #added:2026-03-21-074859
 
-- [-] PG.2: Versioning/stability note — moved to Future
-      #priority:low #added:2026-02-25
+- [ ] Add Use* constants for all cobra subcommand Use strings #added:2026-03-20-184639
 
-### Phase 0: Ideas (drift markers)
+- [ ] Systematic audit: extract all magic flag name strings across CLI commands into config/flag constants #added:2026-03-20-175155
 
-- [-] P0.1: Standardize drift-check comment format — moved to Future. AI parses
-  ad-hoc markers fine; standardization benefits tooling/CLI but not urgent.
-  #priority:medium #added:2026-02-28
+- [ ] Move generic string helpers from cli/add/core/strings.go to internal/format #added:2026-03-20-175046
 
-### Phase 0: Ideas (from competitive analysis)
-
-
-
+- [ ] Add missing flag name constants (priority, section, file) and priority level constants (high, medium, low) to config/flag #added:2026-03-20-170842
 
 ### Phase 0: Ideas
 
 **User-Facing Documentation** (from `ideas/done/REPORT-7-documentation.md`):
 Docs are feature-organized, not problem-organized. Key structural improvements:
 
-- [x] P0.6: Use-case page: "My AI Keeps Making the Same Mistakes" — problem-first
-      page showcasing DECISIONS.md and CONSTITUTION.md. Partially covered in
-      about.md but deserves standalone treatment as the #2 pain point.
-      #priority:medium #source:report-7 #added:2026-02-17 #done:2026-03-05
-
-- [x] P0.7: Use-case page: "Joining a ctx Project" — team onboarding guide. What
-      to read first, how to check context health, starting your first session,
-      adding context, session etiquette, common pitfalls. Currently
-      undocumented. #priority:medium #source:report-7 #added:2026-02-17 #done:2026-03-05
-
-- [x] P0.8: Use-case page: "Keeping AI Honest" — unique ctx differentiator.
-      Covers confabulation problem, grounded memory via context files,
-      anti-hallucination rules in AGENT_PLAYBOOK, verification loop,
-      ctx drift for detecting stale context. #priority:medium
-      #source:report-7 #added:2026-02-17 #done:2026-03-05
-
-- [x] P0.9: Expand comparison page with specific tool comparisons: .cursorrules,
-      Aider --read, Copilot @workspace, Cline memory, Windsurf rules.
-      Current page positions against categories but not the specific tools
-      users are evaluating. #priority:low #source:report-7 #added:2026-02-17 #done:2026-03-05
-
-- [x] P0.10: FAQ page: collect answers to common questions currently scattered
-      across docs — Why markdown? Does it work offline? What gets committed?
-      How big should my token budget be? Why not a database?
-      #priority:low #source:report-7 #added:2026-02-17 #done:2026-03-05
-
-- [x] P0.11: Enhance security page for team workflows: code review for .context/
-      files, gitignore patterns, team conventions for context management,
-      multi-developer sharing. #priority:low #source:report-7 #added:2026-02-17 #done:2026-03-05
-
-- [x] P0.12: Version history changelog summaries: each version entry should have
-      2-3 bullet points describing key changes, not just a link to the
-      source tree. #priority:low #source:report-7 #added:2026-02-17 #done:2026-03-05
-
 **Agent Team Strategies** (from `ideas/REPORT-8-agent-teams.md`):
 8 team compositions proposed. Reference material, not tasks. Key takeaways:
 
-- [x] P0.13: Document agent team recipes in `hack/` or `.context/`: team
-      compositions for feature dev (3 agents), consolidation sprint
-      (3-4 agents), release prep (2 agents), doc sprint (3 agents).
-      Include coordination patterns and anti-patterns. #priority:low #source:report-8 #done:2026-03-05
+
+- [ ] Scan all config/**/* constants and catalog which ones should be ctxrc entries for user configurability #priority:medium #added:2026-03-22-095552
+
+- [ ] Update user-facing documentation for changed CLI flag shorthands #added:2026-03-21-102755
+
+- [ ] Add Unicode-aware slugification for non-ASCII content #added:2026-03-21-070953
+
+- [ ] Make TitleSlugMaxLen configurable via .ctxrc #added:2026-03-21-070944
+
+- [ ] Spec and implement CRLF-to-LF newline normalization for journal and context files #added:2026-03-20-224845
+
+- [ ] Test ctx on Windows — validate build, init, agent, drift, journal pipeline #added:2026-03-20-224835
+
+- [ ] Evaluate Windows support for sysinfo.Collect and path handling #added:2026-03-20-194930
+
+- [ ] Make doctor thresholds configurable via .ctxrc #added:2026-03-20-194923
+
+- [ ] Evaluate cross-platform path handling in change/core/scan.go — git always uses "/" but UniqueTopDirs should consider filepath.ToSlash for Windows robustness #added:2026-03-20-182103
+
+- [ ] Replace English-only Pluralize helper in change/core/detect.go with i18n-safe approach #added:2026-03-20-180502
+
+- [ ] Replace ASCII-only alnum check in agent/core/score.go with unicode.IsLetter/IsDigit #added:2026-03-20-175943
 
 ### Phase S-0: Memory Bridge Groundwork
 
 Prerequisites that unblocked the memory bridge phases.
 
-- [x] Investigate Claude Code project directory naming: examine `~/.claude/projects/` to understand the path encoding scheme — full findings in `ideas/claude-code-project-directory-structure.md` #done:2026-03-05
-- [x] Design brainstorm and spec split — foundation in `specs/memory-bridge.md`, future phases in `specs/memory-import.md` and `specs/memory-publish.md` #done:2026-03-05
 
 ### Phase MB: Memory Bridge Foundation (`ctx memory`)
 
@@ -396,111 +236,6 @@ Spec: `specs/memory-bridge.md`. Read the spec before starting any MB task.
 Bridge Claude Code's auto memory (MEMORY.md) into `.context/` with discovery,
 mirroring, and drift detection. Foundation for future import/publish phases.
 
-**MB.1 — Config constants and directory setup:**
-
-- [x] MB.1.1: Add `DirMemory = "memory"` and `DirMemoryArchive = "memory/archive"` to `internal/config/dir.go`
-      DoD: constants compile, referenced by at least one other file
-      #priority:high #added:2026-03-05 #done:2026-03-05
-
-- [x] MB.1.2: Add `FileMemoryMirror = "mirror.md"` and `FileMemoryState = "memory-import.json"` to `internal/config/file.go`
-      DoD: constants compile, referenced by at least one other file
-      #priority:high #added:2026-03-05 #done:2026-03-05
-
-**MB.2 — Core package `internal/memory/`:**
-
-- [x] MB.2.1: Create `internal/memory/doc.go` with package documentation
-      DoD: `go build ./internal/memory/` succeeds
-      #priority:high #added:2026-03-05 #done:2026-03-05
-
-- [x] MB.2.2: Implement `discover.go` — `DiscoverMemoryPath(projectRoot string) (string, error)`
-      Slug encoding: replace `/` with `-`, prefix with `-`. Resolve via `~/.claude/projects/<slug>/memory/MEMORY.md`.
-      Handle edge cases: missing file (return error), symlinks, different home dirs.
-      DoD: function returns correct path for known project root; returns error when MEMORY.md absent
-      #priority:high #added:2026-03-05 #done:2026-03-05
-
-- [x] MB.2.3: Write `discover_test.go` — unit tests for slug encoding roundtrip, various home dirs (HOME isolation), missing MEMORY.md
-      DoD: `go test ./internal/memory/ -run Discover` passes with 3+ test cases
-      #priority:high #added:2026-03-05 #done:2026-03-05
-
-- [x] MB.2.4: Implement `mirror.go` — `Sync(contextDir, sourcePath string) error`, `Archive(contextDir string) error`, `Diff(contextDir, sourcePath string) (string, error)`
-      Sync: copy MEMORY.md to `.context/memory/mirror.md`, create dirs if needed.
-      Archive: snapshot current mirror to `archive/mirror-<timestamp>.md` before overwrite.
-      Diff: unified diff between mirror.md and current MEMORY.md.
-      DoD: Sync creates mirror, Archive creates timestamped snapshot, Diff returns unified diff string
-      #priority:high #added:2026-03-05 #done:2026-03-05
-
-- [x] MB.2.5: Write `mirror_test.go` — unit tests: first sync (no prior mirror), sync with archive, diff with changes, empty MEMORY.md
-      DoD: `go test ./internal/memory/ -run Mirror` passes with 4+ test cases
-      #priority:high #added:2026-03-05 #done:2026-03-05
-
-- [x] MB.2.6: Implement `state.go` — sync state tracking (load/save `memory-import.json` with `last_sync`, `last_import`, `last_publish`, `imported_hashes`)
-      DoD: state round-trips through JSON; missing file returns zero-value state
-      #priority:high #added:2026-03-05 #done:2026-03-05
-
-- [x] MB.2.7: Write `state_test.go` — unit tests: load/save roundtrip, missing file defaults, corrupt JSON error
-      DoD: `go test ./internal/memory/ -run State` passes with 3+ test cases
-      #priority:high #added:2026-03-05 #done:2026-03-05
-
-**MB.3 — CLI commands `internal/cli/memory/`:**
-
-- [x] MB.3.1: Create parent command `ctx memory` in `internal/cli/memory/memory.go`
-      DoD: `ctx memory --help` shows subcommands
-      #priority:high #added:2026-03-05 #done:2026-03-05
-
-- [x] MB.3.2: Register `memory` command in `internal/bootstrap/bootstrap.go`
-      DoD: `ctx memory` is accessible from the built binary
-      #priority:high #added:2026-03-05 #done:2026-03-05
-
-- [x] MB.3.3: Implement `ctx memory sync` in `sync.go`
-      Calls Discover → Archive (if mirror exists) → Sync → update state. Reports line counts and drift.
-      Exit 0 on success, exit 1 if MEMORY.md not found.
-      `--dry-run` flag shows plan without writing.
-      DoD: running `ctx memory sync` creates `.context/memory/mirror.md` matching source; `--dry-run` writes nothing
-      #priority:high #added:2026-03-05 #done:2026-03-05
-
-- [x] MB.3.4: Implement `ctx memory status` in `status.go`
-      Shows source path, mirror path, last sync time, line counts, drift indicator, archive count.
-      Exit 0 no drift, exit 1 MEMORY.md not found, exit 2 drift detected.
-      DoD: output matches spec format; exit codes are correct for each scenario
-      #priority:medium #added:2026-03-05 #done:2026-03-05
-
-- [x] MB.3.5: Implement `ctx memory diff` in `diff.go`
-      Shows unified diff between mirror and current MEMORY.md.
-      DoD: diff output shows added/removed lines; no output when identical
-      #priority:medium #added:2026-03-05 #done:2026-03-05
-
-**MB.4 — Hook integration:**
-
-- [x] MB.4.1: Implement `ctx system check-memory-drift` in `internal/cli/system/memory_drift.go`
-      Discover MEMORY.md → compare mtime against last sync → output nudge box if drifted.
-      Session tombstone at `.context/state/memory-drift-nudged` suppresses repeat nudges.
-      Skip silently if MEMORY.md doesn't exist.
-      DoD: hook outputs nudge box when drift detected; silent on no drift or missing source; nudge fires once per session
-      #priority:medium #added:2026-03-05 #done:2026-03-05
-
-- [x] MB.4.2: Register `check-memory-drift` in `internal/assets/claude/hooks/hooks.json` under `UserPromptSubmit`
-      DoD: hook fires on prompt submit; `ctx system check-memory-drift` is callable
-      #priority:medium #added:2026-03-05 #done:2026-03-05
-
-**MB.5 — Integration and docs:**
-
-- [x] MB.5.1: Run `make lint && make test` — all existing + new tests pass, no lint errors
-      DoD: clean `make lint` and `make test` output (golangci-lint not installed — go vet + gofmt clean)
-      #priority:high #added:2026-03-05 #done:2026-03-05
-
-- [x] MB.5.2: Update ARCHITECTURE.md — add `internal/memory` to Core Packages table, add `memory` to CLI Commands table, update component counts in drift-check comments
-      DoD: `ctx drift` does not flag new package as missing; counts match
-      #priority:medium #added:2026-03-05 #done:2026-03-05
-
-- [x] MB.5.3: Update DETAILED_DESIGN.md with `internal/memory` module deep dive
-      DoD: new section covers types, exports, data flow, edge cases
-      #priority:low #added:2026-03-05 #done:2026-03-05
-
-- [x] MB.5.4: Update cli-reference.md with `ctx memory` commands and add memory-bridge recipe
-      DoD: cli-reference.md has sync/status/diff entries; recipe covers discovery + sync + drift workflow
-      Note: site/ not rebuilt (zensical not installed on this machine)
-      #priority:medium #added:2026-03-05 #done:2026-03-05
-
 ### Phase MI: Memory Import Pipeline (`ctx memory import`)
 
 Spec: `specs/memory-import.md`. Read the spec before starting any MI task.
@@ -508,85 +243,12 @@ Spec: `specs/memory-import.md`. Read the spec before starting any MI task.
 Import entries from Claude Code's MEMORY.md into structured `.context/` files
 using heuristic classification. Builds on Phase MB foundation (discover, mirror, state).
 
-**MI.1 — Entry parser:**
-
-- [x] MI.1.1: Implement `internal/memory/parse.go` — `ParseEntries(content string) []Entry`
-      Parse MEMORY.md into discrete entries. Boundaries: headers (##, ###),
-      blank-line-separated paragraphs, list items (-, *). Each Entry has Text, StartLine, Type (header/paragraph/list).
-      DoD: parser splits a mixed MEMORY.md into correct entry boundaries
-      #priority:high #added:2026-03-05 #done:2026-03-05
-
-- [x] MI.1.2: Write `internal/memory/parse_test.go` — table-driven tests: headers, paragraphs, list items, mixed content, empty input
-      DoD: `go test ./internal/memory/ -run Parse` passes with 5+ test cases (7 tests)
-      #priority:high #added:2026-03-05 #done:2026-03-05
-
-**MI.2 — Classifier:**
-
-- [x] MI.2.1: Implement `internal/memory/classify.go` — `Classify(entry Entry) Classification`
-      Heuristic keyword matching: conventions (always/prefer/never/standard), decisions (decided/chose/trade-off/approach),
-      learnings (gotcha/learned/watch out/bug/caveat), tasks (todo/need to/follow up). Case-insensitive.
-      Priority order: conventions > decisions > learnings > tasks > skip.
-      Classification has Target (file type) and Confidence (matched keywords).
-      DoD: classifier assigns correct targets for representative entries
-      #priority:high #added:2026-03-05 #done:2026-03-05
-
-- [x] MI.2.2: Write `internal/memory/classify_test.go` — table-driven tests: one test per target type, ambiguous entry, skip case
-      DoD: `go test ./internal/memory/ -run Classify` passes with 6+ test cases (14 tests)
-      #priority:high #added:2026-03-05 #done:2026-03-05
-
-**MI.3 — Deduplication:**
-
-- [x] MI.3.1: Implement hash-based dedup in `internal/memory/state.go` — `EntryHash(text string) string`, `(*State).Imported(hash string) bool`, `(*State).MarkImported(hash, target string)`
-      Hash: SHA-256 truncated to 16 hex chars. Check against ImportedHashes before promoting.
-      DoD: duplicate entries are skipped; new entries pass through
-      #priority:high #added:2026-03-05 #done:2026-03-05
-
-- [x] MI.3.2: Write dedup tests in `internal/memory/state_test.go` — hash roundtrip, imported check, mark and re-check
-      DoD: `go test ./internal/memory/ -run Dedup` passes with 3+ test cases
-      #priority:high #added:2026-03-05 #done:2026-03-05
-
-**MI.4 — Promotion and CLI:**
-
-- [x] MI.4.1: Implement `internal/memory/promote.go` — `Promote(entry Entry, classification Classification) error`
-      Reuses `add.WriteEntry()` for decisions/learnings/tasks/conventions. Add "Source: auto-memory import" annotation.
-      DoD: promoted entry appears in correct .context/ file with proper formatting
-      #priority:high #added:2026-03-05 #done:2026-03-05
-
-- [x] MI.4.2: Wire `ctx memory import` in `internal/cli/memory/import.go`
-      Discover → read source → parse entries → classify → dedup → promote. Report counts per target + skipped.
-      `--dry-run` flag shows plan without writing.
-      DoD: `ctx memory import --dry-run` shows classification plan; without flag, entries appear in .context/ files
-      #priority:high #added:2026-03-05 #done:2026-03-05
-
-- [x] MI.4.3: Write `internal/memory/promote_test.go` — unit tests: promote decision, learning, task, convention to temp .context/
-      DoD: `go test ./internal/memory/ -run Promote` passes with 4+ test cases (5 tests)
-      #priority:medium #added:2026-03-05 #done:2026-03-05
-
-**MI.5 — Integration and docs:**
-
-- [x] MI.5.1: Integration test with fixture MEMORY.md — end-to-end: parse → classify → dedup → promote → verify files
-      DoD: test creates temp .context/, imports fixture, verifies entries landed in correct files
-      #priority:medium #added:2026-03-05 #done:2026-03-05
-
-- [x] MI.5.2: Run `go vet ./... && gofmt -l . && make test` — all tests pass, no formatting issues
-      DoD: clean output
-      #priority:high #added:2026-03-05 #done:2026-03-05
-
-- [x] MI.5.3: Update docs — add `ctx memory import` to cli/tools.md, update memory-bridge recipe with import workflow
-      DoD: docs cover import command, dry-run, and classification heuristics
-      #priority:medium #added:2026-03-05 #done:2026-03-05
-
 - [-] MI.future: `--interactive` mode for agent-assisted classification — skipped: `--dry-run` covers review; agents can use `ctx add` directly for overrides; interactive CLI prompts don't compose with agent workflows
 
 ### Phase S-3: Blog Post — "Agent Memory is Infrastructure"
 
 Spec: `specs/blog-agent-memory-infrastructure.md`.
 
-- [x] S-3.1: Draft blog post "Agent Memory is Infrastructure" #done:2026-03-04
-- [x] S-3.2: Review tone: generous toward Anthropic, concrete, honest about gaps #done:2026-03-04
-- [x] S-3.3: Add "The Arc" section connecting to blog series #done:2026-03-04
-- [x] S-3.4: Cross-link with companion posts #done:2026-03-04
-- [x] S-3.5: Publish after at least one memory feature ships #done:2026-03-05
 
 ### Phase MP: Memory Publish (`ctx memory publish`)
 
@@ -595,51 +257,6 @@ Spec: `specs/memory-publish.md`. Read the spec before starting any MP task.
 Push curated context from `.context/` into Claude Code's MEMORY.md so the agent
 sees structured project context on session start without needing hooks.
 
-**MP.1 — Content selection and formatting:**
-
-- [x] MP.1.1: Implement `internal/memory/publish.go` — `SelectContent(contextDir string, budget int) (string, error)`
-      Select pending tasks (max 10), recent decisions (7 days, max 5), key conventions (max 10), recent learnings (7 days, max 5).
-      Format as Markdown sections. Trim from bottom (learnings → conventions → decisions) if over budget.
-      DoD: returns formatted Markdown within line budget
-      #priority:high #added:2026-03-05 #done:2026-03-05
-
-- [x] MP.1.2: Implement marker-based merge — `MergePublished(existing, published string) string`
-      Wrap published block in `<!-- ctx:published -->` / `<!-- ctx:end -->` markers.
-      Replace existing marker block if present. Append if markers missing (recovery).
-      DoD: merge preserves Claude-owned content outside markers; replaces inside
-      #priority:high #added:2026-03-05 #done:2026-03-05
-
-- [x] MP.1.3: Write `internal/memory/publish_test.go` — marker insertion (empty file), marker replacement, marker stripping recovery, budget trimming, content selection priority
-      DoD: `go test ./internal/memory/ -run Publish` passes with 5+ test cases (7 tests)
-      #priority:high #added:2026-03-05 #done:2026-03-05
-
-**MP.2 — CLI command:**
-
-- [x] MP.2.1: Wire `ctx memory publish` in `internal/cli/memory/publish.go`
-      Discover MEMORY.md → select content → merge → write. Report published line counts.
-      `--budget` flag (default 80). `--dry-run` shows plan without writing.
-      DoD: `ctx memory publish --dry-run` shows what would be published; without flag, MEMORY.md is updated
-      #priority:high #added:2026-03-05 #done:2026-03-05
-
-- [x] MP.2.2: Wire `ctx memory unpublish` in `internal/cli/memory/unpublish.go`
-      Remove the `<!-- ctx:published -->` marker block from MEMORY.md, preserving Claude-owned content.
-      DoD: marker block removed, Claude content intact
-      #priority:medium #added:2026-03-05 #done:2026-03-05
-
-**MP.3 — Integration and docs:**
-
-- [x] MP.3.1: Integration test — covered by publish_test.go TestSelectContent (end-to-end with fixture .context/)
-      DoD: test round-trips publish → read → verify content between markers
-      #priority:medium #added:2026-03-05 #done:2026-03-05
-
-- [x] MP.3.2: Run `go vet ./... && gofmt -l . && make test` — all tests pass
-      DoD: clean output
-      #priority:high #added:2026-03-05 #done:2026-03-05
-
-- [x] MP.3.3: Update docs — add publish/unpublish to cli/tools.md, update memory-bridge recipe, update parent command help
-      DoD: docs cover publish workflow, budget flag, marker format
-      #priority:medium #added:2026-03-05 #done:2026-03-05
-
 ### Phase 9: Context Consolidation Skill `#priority:medium`
 
 **Context**: `/ctx-consolidate` skill that groups overlapping entries by keyword
@@ -647,20 +264,13 @@ similarity and merges them with user approval. Originals archived, not deleted.
 Spec: `specs/context-consolidation.md`
 Ref: https://github.com/ActiveMemory/ctx/issues/19 (Phase 3)
 
-### Phase 10: Architecture Mapping Skill (`/ctx-architecture`)
+- [ ] Implement consolidation nudge hook: count sessions since last consolidation, nudge after 6. Spec: `specs/consolidation-nudge-hook.md` #added:2026-03-23-223000
 
-**Context**: Skill that incrementally builds and maintains ARCHITECTURE.md
-and DETAILED_DESIGN.md. Coverage tracked in map-tracking.json.
-Spec: `specs/ctx-architecture.md`
+- [ ] Auto-record consolidation baseline commit: `/ctx-consolidate` and `ctx system mark-consolidation` should stamp HEAD hash + date into `.context/state/consolidation.json` only on first invocation (write-once until reset). Subsequent consolidation sessions preserve the original baseline. The baseline resets only when the consolidation nudge counter resets (i.e., when a new feature cycle begins). This way multi-pass consolidation keeps the true starting point. Related: `specs/consolidation-nudge-hook.md` #added:2026-03-23-224000
 
-### Docs: Knowledge Health
+### Phase EM: Extension Map Skill (`/ctx-extension-map`)
 
-- [x] DK.1: Create recipe for knowledge health flow: nudge detection → review →
-      `/ctx-consolidate` → archive originals. The old `knowledge-scaling.md`
-      recipe was deleted; this replaces it with the nudge-based approach.
-      #priority:medium #added:2026-02-21 #done:2026-03-05
-- [x] DK.2: Add consolidation cross-link to `knowledge-capture.md` "See also"
-      section. #priority:low #added:2026-02-21 — already present #done:2026-03-05
+question: is this done; or needs planning?
 
 ### Phase WC: Write Consolidation
 
@@ -668,8 +278,9 @@ Baseline commit: `4ec5999` (Auto-prune state directory on session start).
 Goal: consolidate user-facing messages into `internal/write/` as the central
 output package. All CLI commands should route printed output through this package.
 
-- [x] WC.1: Add godoc docstrings to all functions in `internal/write/`, add `doc.go` #added:2026-03-06 #done:2026-03-06
-- [x] Move add command example strings from core/example.go to assets — user-facing text for i18n #added:2026-03-06-191651
+- [ ] Migrate moc.go hardcoded strings to YAML or Go templates #added:2026-03-20-214922
+
+- [ ] Design terminal-aware truncation for CLI output #added:2026-03-20-184509
 
 ### Phase SP: Configurable Session Prefixes
 
@@ -678,34 +289,6 @@ Spec: `specs/session-prefixes.md`. Read the spec before starting any SP task.
 Replace hardcoded `session_prefix` / `session_prefix_alt` pair with a
 user-extensible `session_prefixes` list in `.ctxrc`. Parser vocabulary
 is not i18n text — it belongs in runtime config.
-
-**SP.1 — Config and defaults:**
-
-- [x] SP.1.1: Add `DefaultSessionPrefixes` to `internal/config/parser/` — `[]string{"Session:", "Oturum:"}` #priority:high #added:2026-03-14 #done:2026-03-14
-- [x] SP.1.2: Add `SessionPrefixes []string` field to `CtxRC` in `internal/rc/types.go` (`yaml:"session_prefixes"`) #priority:high #added:2026-03-14 #done:2026-03-14
-- [x] SP.1.3: Add `SessionPrefixes()` accessor to `internal/rc/rc.go` — returns rc list, falls back to `parser.DefaultSessionPrefixes` if empty/nil #priority:high #added:2026-03-14 #done:2026-03-14
-
-**SP.2 — Parser migration:**
-
-- [x] SP.2.1: Refactor `isSessionHeader()` and `parseSessionHeader()` in `markdown.go` to use `rc.SessionPrefixes()` instead of `assets.TextDesc()` #priority:high #added:2026-03-14 #done:2026-03-14
-- [x] SP.2.2: Remove `TextDescKeyParserSessionPrefix` and `TextDescKeyParserSessionPrefixAlt` from `internal/assets/embed.go` #priority:high #added:2026-03-14 #done:2026-03-14
-- [x] SP.2.3: Remove `parser.session_prefix` and `parser.session_prefix_alt` entries from `text.yaml` #priority:high #added:2026-03-14 #done:2026-03-14
-
-**SP.3 — Tests:**
-
-- [x] SP.3.1: Update `markdown_test.go` — keep Turkish cases, add custom-prefix test case (e.g., Japanese "セッション:") #priority:high #added:2026-03-14 #done:2026-03-14
-- [x] SP.3.2: Add `rc_test.go` test for `SessionPrefixes()` — default fallback and override behavior #priority:high #added:2026-03-14 #done:2026-03-14
-
-**SP.4 — Documentation:**
-
-- [x] SP.4.1: Add `session_prefixes` to `.ctxrc` reference in `docs/cli/index.md` #priority:medium #added:2026-03-14 #done:2026-03-14
-- [x] SP.4.2: Add multilingual session parsing section to `docs/recipes/multi-tool-setup.md` #priority:medium #added:2026-03-14 #done:2026-03-14
-- [x] SP.4.3: Update "Extensible Session Parsing" in ARCHITECTURE.md to mention configurable prefixes #priority:medium #added:2026-03-14 #done:2026-03-14
-- [x] SP.4.4: Verify `docs/home/contributing.md` mentions prefix extensibility in "Add a Session Parser" section #priority:low #added:2026-03-14 #done:2026-03-14
-
-**SP.5 — Validation:**
-
-- [x] SP.5.1: Run `make lint && make test` — all tests pass, no lint errors #priority:high #added:2026-03-14 #done:2026-03-14
 
 ### Phase EH: Error Handling Audit
 
@@ -776,6 +359,12 @@ lazy escapes that hide failures.
       DoD: grep output is clean or fully annotated; CI green
       #priority:high #added:2026-03-14
 
+- [ ] Add AST-based lint test to detect exported functions with no external callers #added:2026-03-21-070357
+
+- [ ] Audit exported functions used only within their own package and make them private #added:2026-03-21-070346
+
+- [ ] Audit and remove side-effect output from error-returning functions #added:2026-03-20-212212
+
 ### Phase ET: Error Package Taxonomy (`internal/err/`)
 
 `errors.go` is 1995 lines with 188 functions in a single file. Split into
@@ -802,31 +391,8 @@ Taxonomy (from prefix analysis):
 | `config.go`      | UnknownProfile, ReadProfile, UnknownFormat, UnknownProjectType, InvalidTool, UnsupportedTool, NotInitialized, ContextNotInitialized, ContextDirNotFound, FlagRequires* | 12 |
 | `errors.go`      | Remaining general-purpose: WorkingDirectory, CtxNotInPath, ReadInput, InvalidDate*, Reminder*, Drift*, Git*, Webhook*, etc. | ~25 |
 
-- [x] ET.1: Create the 14 domain files with copyright headers, move functions #done:2026-03-14
-      verify no function is duplicated or lost. Leave `errors.go` with only
-      the uncategorised remainder (~25 functions).
-      Validation: `grep -c '^func ' internal/err/*.go | awk -F: '{s+=$2} END {print s}'` equals 188.
-      DoD: `go build ./...` and `make test` pass; function count preserved
-      #priority:medium #added:2026-03-14
 
-- [x] ET.2: Verify all callers compile #done:2026-03-14
 
-- [x] ET.3: Split remaining errors.go (~31 functions) into final domain files: #done:2026-03-14
-      state.go (ReadingStateDir, LoadState, SaveState),
-      reminder.go (ReadReminders, ParseReminders, InvalidID, ReminderNotFound, ReminderIDRequired),
-      date.go (InvalidDateValue, InvalidDate),
-      init.go (NotInitialized, ContextNotInitialized, HomeDir, ReadProjectReadme, ReadInitTemplate, CreateMakefile, DetectReferenceTime),
-      git.go (GitNotFound, NotInGitRepo),
-      notify.go (WebhookEmpty, SaveWebhook, LoadWebhook, SendNotification — move MarshalPayload from config.go here),
-      validation.go (FlagRequired, ArgRequired, DriftViolations, NoInput, ReadInput, ReadInputStream),
-      site.go (NoSiteConfig, ZensicalNotFound).
-      After split, errors.go should be empty and deleted.
-      DoD: `grep -c '^func ' internal/err/*.go` sums to 188; no errors.go remains; `make lint && make test` green
-      #priority:high #added:2026-03-14 — `go build ./...` with no changes
-      outside `internal/err/`. Since it's the same package, no import changes
-      needed. Run `make test` to confirm.
-      DoD: CI green
-      #priority:medium #added:2026-03-14
 
 - [ ] Add freshness_files to .ctxrc defaults seeded by ctx init — currently the freshness config is only in the gitignored .ctxrc, so new clones don't get it. Consider a .ctxrc.defaults pattern or seeding via ctx init template. #priority:medium #added:2026-03-14-105143
 
@@ -910,7 +476,6 @@ Taxonomy (from prefix analysis):
 
 - [ ] Consider indexing tasks and conventions in TASKS.md and CONVENTIONS.md (currently only decisions and learnings have index tables) #added:2026-03-06-190225
 
-- [x] Move internal/cli/add/core/err.go error constructors to internal/err — 12 functions, update all callers #added:2026-03-06-190220
 
 - [ ] Remove FlagNoColor and fatih/color dependency — replace with stdlib terminal coloring or plain output #added:2026-03-06-182831
 
@@ -944,6 +509,16 @@ I/O and replaces 4-8 individual Tpl\* constants per function with one block temp
 - [ ] WC2.4: Constant cleanup — verify all replaced individual `TplXxx*` config vars, `TextDescKey*` constants, and YAML entries are removed. Run `make lint` and `go test ./internal/write/...` to confirm no regressions. #added:2026-03-17
 - [ ] WC2.5: Update CONVENTIONS.md — add a "Write Package Output" subsection documenting the pre-compute-then-print pattern for future functions with 4+ Printlns and conditionals. #added:2026-03-17
 
+## MCP-related
+
+### Phase MCP-SAN: MCP Server Input Sanitization
+
+[ ] Assignee: @CoderMungan -- https://github.com/ActiveMemory/ctx/issues/49
+
+### Phase MCP-COV: MCP Test Coverage
+
+[ ] Assignee: @CoderMungan -- https://github.com/ActiveMemory/ctx/issues/50
+
 ## Later
 
 ### Phase PR: State Pruning (`ctx system prune`)
@@ -951,21 +526,6 @@ I/O and replaces 4-8 individual Tpl\* constants per function with one block temp
 Clean stale per-session state files from `.context/state/`. Files with UUID
 session ID suffixes accumulate ~6-8 per session with no cleanup. Strategy:
 age-based — prune files older than N days (default 7).
-
-- [x] PR.1: Implement `ctx system prune` in `internal/cli/system/prune.go`
-      Scan `.context/state/` for files with UUID session ID suffixes.
-      Delete files older than `--days` (default 7). `--dry-run` shows plan.
-      Preserve global files (no UUID suffix): events.jsonl, memory-import.json, etc.
-      DoD: prunes old session files, reports count; `--dry-run` writes nothing
-      #priority:medium #added:2026-03-05 #done:2026-03-05
-
-- [x] PR.2: Write `internal/cli/system/prune_test.go` — age-based pruning, dry-run, global file preservation
-      DoD: `go test ./internal/cli/system/ -run Prune` passes with 3+ test cases
-      #priority:medium #added:2026-03-05 #done:2026-03-05
-
-- [x] PR.3: Run `go vet && make test`, update docs
-      DoD: clean build, system.go help updated
-      #priority:medium #added:2026-03-05 #done:2026-03-05
 
 - [ ] Regenerate site/ for state-maintenance recipe (docs/recipes/state-maintenance.md added but site not rebuilt) #added:2026-03-05-205425
 
@@ -983,10 +543,6 @@ age-based — prune files older than N days (default 7).
       #priority:medium #added:2026-02-19
 - [ ] P0.8.1: Install golangci-lint on the integration server #for-human
       #priority:medium #added:2026-02-23 #added:2026-02-23-170213
-- [x] PM.1: Add topic-based navigation to blog when post count reaches 15+ — grouped 24 posts into 6 topic sections #priority:low #added:2026-02-07-015054 #done:2026-03-05
-- [x] PM.2: Revisit Recipes nav structure when count reaches ~25 — already grouped in zensical.toml (6 sections); added missing prompt-templates.md; 29 recipes across 6 groups
-      into sub-sections (Sessions, Knowledge, Security, Advanced) to reduce
-      sidebar crowding. Currently at 18. #priority:low #added:2026-02-20
 - [ ] PM.3: Review hook diagnostic logs after a long session. Check
       `.context/logs/check-persistence.log` and
        `.context/logs/check-context-size.log` to verify hooks fire correctly.
@@ -994,10 +550,8 @@ age-based — prune files older than N days (default 7).
 - [ ] PM.4: Run `/consolidate` to address codebase drift. Considerable drift has
       accumulated (predicate naming, magic strings, hardcoded permissions,
       godoc style). #priority:medium #added:2026-02-06
-- [x] PM.5: Add `--since`/`--until` flags to `ctx recall list` for date range filtering (YYYY-MM-DD, both inclusive)
-      #priority:low #added:2026-02-09 #done:2026-03-05
-- [x] PM.6: Enhance CONTRIBUTING.md: added "How To Add Things" section to docs/home/contributing.md — new CLI command, new session parser, new bundled skill, test expectations. Updated project layout with memory/. Root CONTRIBUTING.md already links to the full guide.
-      #priority:medium #source:report-6 #added:2026-02-17 #done:2026-03-05
+- [ ] Improve test coverage for core packages at 0% #added:2026-03-20-164324
+
 - [ ] PM.7: Aider/Cursor parser implementations: the recall architecture was
       designed for extensibility (tool-agnostic Session type with
       tool-specific parsers). Adding basic Aider and Cursor parsers would
@@ -1041,13 +595,56 @@ age-based — prune files older than N days (default 7).
   mentioning domains that don't match their callers. Start with `write/**`,
   extend to all `internal/`. Spec: `specs/docstring-cross-reference-audit.md`
   #priority:medium #added:2026-03-17
-- [x] Q.2: Delete `write/config/` indirection layer — 232 vars that just alias
-  `assets.TextDesc(key)`. Callers should use assets directly. Also delete
-  `config2.go` (agent confusion artifact). ~232 call sites across `write/**`.
-  #priority:medium #added:2026-03-17
 
 - [ ] Migrate Sprintf-based templates (tpl_*.go) to Go text/template or embedded template files — ObsidianReadme, LoopScript, and other multi-line format strings that can't move to YAML #added:2026-03-18-163629
 
 - [ ] Split internal/assets/embed_test.go — tests that call read/ packages must move to their respective read/ package to avoid import cycles #added:2026-03-18-192914
 
 - [ ] Improve recall/core format tests — replace hardcoded string assertions (e.g. Contains Tokens) with semantic checks that verify structure and values, not label text #added:2026-03-19-194645
+
+### Phase BT: Build Tooling — `cmd/ctxctl`
+
+Replace shell-based build scripts (Makefile shell expansions, `hack/build-all.sh`,
+`hack/release.sh`, `hack/tag.sh`, `sync-*`/`check-*` targets) with a first-class
+Go binary at `cmd/ctxctl`. Shares internal packages with `ctx` (version, assets,
+embed FS). Installable: `go install github.com/ActiveMemory/ctx/cmd/ctxctl@latest`.
+Eliminates `jq` build dependency. Testable, cross-platform.
+
+- [ ] Bug: release script versions.md table insertion fails silently. The sed pattern on line 133 uses `$` anchor but the actual Markdown table header has column padding spaces before the trailing `|`. The row is never inserted. Fix: relax the header match pattern or switch to a simpler approach (e.g., insert after the separator line directly). Also verify the "latest stable" sed handles trailing `).\n` correctly. #priority:high #added:2026-03-23-221500
+
+- [ ] Replace hack/lint-drift.sh with AST-based Go tests in internal/audit/. Spec: `specs/ast-audit-tests.md` #added:2026-03-23-210000
+
+
+Dividing line: `ctx` is the user/agent tool, `ctxctl` is the maintainer/contributor
+tool. If a developer clones the repo and needs to build, test, release, or validate
+— that's `ctxctl`. If a user is working in a project and needs context — that's `ctx`.
+
+Strong fits beyond build/release:
+- `ctxctl plugin package` — package .claude-plugin for marketplace publishing
+- `ctxctl plugin validate` — validate plugin.json, hooks.json, skill structure
+- `ctxctl doctor` — contributor pre-flight (Go version, tools, GPG, hooks);
+  absorbs `hack/gpg-fix.sh` and `hack/gpg-test.sh`
+- `ctxctl changelog` — deterministic release notes from git log
+
+Reasonable fits if project grows:
+- `ctxctl test smoke` — replaces the shell pipeline in `make smoke`
+- `ctxctl site build/serve` — wraps zensical + feed generation
+- `ctxctl mcp register` — replaces `hack/gemini-search.sh` and future MCP registrations
+
+Not a fit (keep in `ctx`):
+- Anything user-facing in a project context (status, agent, drift, recall)
+- Anything Claude Code hooks call — hooks must call `ctx`, not `ctxctl`
+
+- [ ] Design `ctxctl` CLI surface: `ctxctl sync`, `ctxctl build`, `ctxctl release`, `ctxctl check`, `ctxctl tag` #added:2026-03-25-050000
+- [ ] Implement `ctxctl sync` — stamps VERSION into plugin.json + syncs why docs; replaces `sync-version`, `sync-why` #added:2026-03-25-050000
+- [ ] Implement `ctxctl check` — drift checks: version sync, why docs, lint-drift, lint-docs; replaces `check-*` targets #added:2026-03-25-050000
+- [ ] Implement `ctxctl build` — cross-platform builds with version stamping; replaces `build-all.sh` #added:2026-03-25-050000
+- [ ] Implement `ctxctl release` — full release flow (sync, build, tag, checksums); replaces `release.sh` + `tag.sh` #added:2026-03-25-050000
+- [ ] Simplify Makefile to thin wrappers: `make build` → `go run ./cmd/ctxctl build` #added:2026-03-25-050000
+- [ ] Remove `jq` build dependency once ctxctl handles JSON natively #added:2026-03-25-050000
+
+- [ ] Implement MCP warm-up in /ctx-remember session ceremony — when a graph/RAG tool is configured in .ctxrc, run one orientation query at session start to build procedural familiarity. Spec: `ideas/spec-mcp-warm-up-ceremony.md` #added:2026-03-25-120000
+
+- [ ] Update ctx doctor to check for graph tool availability — detect if a graph/RAG MCP is configured in .ctxrc, verify connection status, recommend installation if missing #added:2026-03-25-120000
+
+- [ ] Explore pluggable graph tool interface — replace hardcoded GitNexus references in skill text with configurable .ctxrc graph_tool key. Skills use template placeholder instead of literal tool names. Define minimum interface contract (query, context, impact). Spec: `ideas/spec-mcp-warm-up-ceremony.md` #added:2026-03-25-120000

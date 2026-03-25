@@ -23,7 +23,7 @@ import (
 // where the AI builds on previous work.
 //
 // Flags:
-//   - --prompt, -p: Prompt file to use (default "PROMPT.md")
+//   - --prompt, -p: Prompt file to use (default ".context/prompts/loop.md")
 //   - --tool, -t: AI tool - claude, aider, or generic (default "claude")
 //   - --max-iterations, -n: Maximum iterations, 0 for unlimited (default 0)
 //   - --completion, -c: Completion signal to detect

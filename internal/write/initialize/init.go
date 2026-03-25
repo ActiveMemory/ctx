@@ -202,15 +202,6 @@ func PluginEnabled(cmd *cobra.Command, settingsPath string) {
 	cmd.Println(fmt.Sprintf(desc.Text(text.DescKeyWriteInitPluginEnabled), settingsPath))
 }
 
-// PlanMergePrompt prints the interactive merge confirmation prompt.
-//
-// Parameters:
-//   - cmd: Cobra command for output
-func PlanMergePrompt(cmd *cobra.Command) {
-	cmd.Println(desc.Text(text.DescKeyWriteInitPlanMergePrompt))
-	cmd.Print(desc.Text(text.DescKeyWriteInitPlanMergeConfirm))
-}
-
 // SkippedDir reports a directory skipped because it exists.
 //
 // Parameters:

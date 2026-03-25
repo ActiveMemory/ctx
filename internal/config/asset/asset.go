@@ -23,7 +23,6 @@ const (
 	DirPermissions     = "permissions"
 	DirProject         = "project"
 	DirPromptTemplates = "prompt-templates"
-	DirRalph           = "ralph"
 	DirSchema          = "schema"
 	DirWhy             = "why"
 )

@@ -336,7 +336,7 @@ between iterations.
 This recipe shows how `ctx` supports long-running agent loops
 without losing context or intent.
 
-**Uses**: `ctx init --ralph`, `ctx loop`, `ctx watch`, `ctx load`,
+**Uses**: `ctx init`, `ctx loop`, `ctx watch`, `ctx load`,
 `/ctx-loop`, `/ctx-implement`
 
 ---

@@ -37,10 +37,6 @@ Context initialized in .context/
   ✓ GLOSSARY.md
   ✓ AGENT_PLAYBOOK.md
 
-Creating project root files...
-  ✓ PROMPT.md
-  ✓ IMPLEMENTATION_PLAN.md
-
 Setting up encryption key...
   ✓ ~/.ctx/.ctx.key
 

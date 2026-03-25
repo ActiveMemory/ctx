@@ -266,8 +266,6 @@ initialize:
       - AGENT_PLAYBOOK.md: How AI agents should use this system
 
     Additionally, in the project root:
-      - PROMPT.md              : Session prompt for AI agents
-      - IMPLEMENTATION_PLAN.md : High-level project direction
       - CLAUDE.md              : Claude Code configuration
 
     Use --minimal to only create essential files

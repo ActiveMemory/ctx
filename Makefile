@@ -5,7 +5,7 @@
 .PHONY: build test vet fmt lint lint-drift lint-docs clean all release build-all help \
 test-coverage smoke site site-feed site-serve site-serve-lan site-setup audit check plugin-reload \
 journal journal-serve journal-serve-lan gpg-fix gpg-test \
-sync-why check-why gemini-search
+sync-version check-version-sync sync-why check-why gemini-search
 
 # Default binary name and output
 BINARY := ctx
@@ -14,8 +14,15 @@ OUTPUT := $(BINARY)
 # Default target
 all: build
 
-## build: Build for current platform (syncs embedded docs first)
-build: sync-why
+## sync-version: Stamp VERSION into embedded plugin.json
+sync-version:
+	@V=$$(cat VERSION | tr -d '[:space:]'); \
+	jq --arg v "$$V" '.version = $$v' internal/assets/claude/.claude-plugin/plugin.json > internal/assets/claude/.claude-plugin/plugin.json.tmp && \
+	mv internal/assets/claude/.claude-plugin/plugin.json.tmp internal/assets/claude/.claude-plugin/plugin.json; \
+	echo "Plugin version synced to $$V"
+
+## build: Build for current platform (syncs version + embedded docs first)
+build: sync-version sync-why
 	CGO_ENABLED=0 go build -ldflags="-X github.com/ActiveMemory/ctx/internal/bootstrap.version=$$(cat VERSION | tr -d '[:space:]')" -o $(OUTPUT) ./cmd/ctx
 
 ## test: Run tests with coverage summary
@@ -110,6 +117,8 @@ audit:
 	@./hack/lint-drift.sh
 	@echo "==> Checking doc.go listings..."
 	@./hack/lint-docs.sh
+	@echo "==> Checking version sync..."
+	@$(MAKE) --no-print-directory check-version-sync
 	@echo "==> Checking why docs freshness..."
 	@$(MAKE) --no-print-directory check-why
 	@echo "==> Running tests..."
@@ -213,6 +222,16 @@ sync-why:
 	cp docs/home/about.md internal/assets/why/about.md
 	cp docs/reference/design-invariants.md internal/assets/why/design-invariants.md
 	@echo "Why docs synced."
+
+## check-version-sync: Verify VERSION file matches embedded plugin.json
+check-version-sync:
+	@V=$$(cat VERSION | tr -d '[:space:]'); \
+	PV=$$(jq -r '.version' internal/assets/claude/.claude-plugin/plugin.json); \
+	if [ "$$V" != "$$PV" ]; then \
+		echo "FAIL: VERSION ($$V) != plugin.json ($$PV) — run 'make sync-version'"; \
+		exit 1; \
+	fi; \
+	echo "Version sync OK ($$V)."
 
 ## check-why: Verify embedded why docs match source docs
 check-why:

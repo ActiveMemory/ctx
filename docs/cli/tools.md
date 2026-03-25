@@ -100,7 +100,7 @@ ctx loop [flags]
 | Flag                     | Short | Description                              | Default            |
 |--------------------------|-------|------------------------------------------|--------------------|
 | `--tool <tool>`          | `-t`  | AI tool: `claude`, `aider`, or `generic` | `claude`           |
-| `--prompt <file>`        | `-p`  | Prompt file to use                       | `PROMPT.md`        |
+| `--prompt <file>`        | `-p`  | Prompt file to use                       | `.context/prompts/loop.md` |
 | `--max-iterations <n>`   | `-n`  | Maximum iterations (0 = unlimited)       | `0`                |
 | `--completion <signal>`  | `-c`  | Completion signal to detect              | `SYSTEM_CONVERGED` |
 | `--output <file>`        | `-o`  | Output script filename                   | `loop.sh`          |

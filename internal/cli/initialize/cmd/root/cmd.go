@@ -26,9 +26,7 @@ import (
 //   - --force, -f: Overwrite existing context files without prompting
 //   - --minimal, -m: Only create essential files
 //     (TASKS, DECISIONS, CONSTITUTION)
-//   - --merge: Auto-merge ctx content into existing CLAUDE.md and PROMPT.md
-//   - --ralph: Use autonomous loop templates (no clarifying questions,
-//     one-task-per-iteration, completion signals)
+//   - --merge: Auto-merge ctx content into existing CLAUDE.md
 //   - --no-plugin-enable: Skip auto-enabling the ctx plugin in
 //     ~/.claude/settings.json
 //
@@ -39,7 +37,6 @@ func Cmd() *cobra.Command {
 		force          bool
 		minimal        bool
 		merge          bool
-		ralph          bool
 		noPluginEnable bool
 	)
 
@@ -50,7 +47,7 @@ func Cmd() *cobra.Command {
 		Annotations: map[string]string{cli.AnnotationSkipInit: cli.AnnotationTrue},
 		Long:        long,
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return Run(cmd, force, minimal, merge, ralph, noPluginEnable)
+			return Run(cmd, force, minimal, merge, noPluginEnable)
 		},
 	}
 
@@ -67,10 +64,6 @@ func Cmd() *cobra.Command {
 	c.Flags().BoolVar(
 		&merge, cFlag.Merge, false,
 		desc.Flag(flag.DescKeyInitializeMerge),
-	)
-	c.Flags().BoolVar(
-		&ralph, cFlag.Ralph, false,
-		desc.Flag(flag.DescKeyInitializeRalph),
 	)
 	c.Flags().BoolVar(
 		&noPluginEnable, cFlag.NoPluginEnable, false,

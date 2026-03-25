@@ -322,7 +322,7 @@ func TestCmd_Flags(t *testing.T) {
 	if cmd.Use != "init" {
 		t.Errorf("Cmd().Use = %q, want %q", cmd.Use, "init")
 	}
-	flags := []string{"force", "minimal", "merge", "ralph"}
+	flags := []string{"force", "minimal", "merge"}
 	for _, f := range flags {
 		if cmd.Flags().Lookup(f) == nil {
 			t.Errorf("missing --%s flag", f)

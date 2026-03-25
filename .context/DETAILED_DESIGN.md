@@ -520,7 +520,7 @@ Consult specific sections when working on a module.
 **Exported API**:
 - `Cmd() *cobra.Command` — flags: --force, --minimal, --merge, --ralph
 
-**Data flow**: Check PATH → create .context/ → prompt if exists → load templates → write files → create entry templates + tools + sessions dir → init scratchpad → create/merge PROMPT.md + IMPLEMENTATION_PLAN.md → merge settings.local.json → handle CLAUDE.md → deploy Makefile.ctx → update .gitignore
+**Data flow**: Check PATH → create .context/ → prompt if exists → load templates → write files → create entry templates + tools + sessions dir → init scratchpad → merge settings.local.json → handle CLAUDE.md → deploy Makefile.ctx → update .gitignore
 
 **Edge cases**:
 - Idempotent: existing files skipped unless --force

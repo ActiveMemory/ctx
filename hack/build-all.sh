@@ -34,6 +34,16 @@ TARGETS=(
 echo "Building Context CLI v${VERSION}"
 echo "========================================="
 
+# Sync VERSION into embedded plugin.json so the binary and marketplace agree
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+ROOT_DIR="$(dirname "$SCRIPT_DIR")"
+PLUGIN_JSON="${ROOT_DIR}/internal/assets/claude/.claude-plugin/plugin.json"
+if [ -f "$PLUGIN_JSON" ] && command -v jq &> /dev/null; then
+  jq --arg v "$VERSION" '.version = $v' "$PLUGIN_JSON" > "${PLUGIN_JSON}.tmp" && \
+    mv "${PLUGIN_JSON}.tmp" "$PLUGIN_JSON"
+  echo "Plugin version synced to ${VERSION}"
+fi
+
 # Clean and create output directory (preserve RELEASE_NOTES.md if it exists)
 if [ -f "${OUTPUT_DIR}/RELEASE_NOTES.md" ]; then
   mv "${OUTPUT_DIR}/RELEASE_NOTES.md" /tmp/RELEASE_NOTES.md.bak

@@ -17,8 +17,6 @@ const (
 
 // Project-root file constants (not inside .context/).
 const (
-	// ImplementationPlan is the high-level project direction file.
-	ImplementationPlan = "IMPLEMENTATION_PLAN.md"
 	// Makefile is the user's project Makefile.
 	Makefile = "Makefile"
 	// MakefileCtx is the ctx-owned Makefile include for project root.

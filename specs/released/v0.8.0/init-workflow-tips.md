@@ -1,4 +1,4 @@
----
+ ---
 title: Add workflow tips section to ctx init output
 date: 2026-03-22
 status: ready

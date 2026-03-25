@@ -230,10 +230,6 @@ write.init-no-changes:
   short: '  ○ %s (no changes needed)'
 write.init-overwrite-prompt:
   short: '%s already exists. Overwrite? [y/N] '
-write.init-plan-merge-prompt:
-  short: Would you like to merge ctx implementation plan template?
-write.init-plan-merge-confirm:
-  short: '[y/N] '
 write.init-perms-allow:
   short: '  ✓ %s (added ctx permissions)'
 write.init-perms-allow-deny:
@@ -264,10 +260,6 @@ write.init-skipped-plain:
   short: '  ○ %s (skipped)'
 write.init-updated-ctx-section:
   short: '  ✓ %s (updated ctx section)'
-write.init-updated-plan-section:
-  short: '  ✓ %s (updated plan section)'
-write.init-updated-prompt-section:
-  short: '  ✓ %s (updated prompt section)'
 write.init-warn-non-fatal:
   short: '  ⚠ %s: %v'
 write.initialized:

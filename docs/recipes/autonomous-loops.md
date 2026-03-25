@@ -24,7 +24,7 @@ context persistence as a **first-class deliverable**, not an *afterthought*.
 ## TL;DR
 
 ```bash
-ctx init --ralph                            # 1. init for unattended mode
+ctx init                                    # 1. init context
 # Edit TASKS.md with phased work items
 ctx loop --tool claude --max-iterations 10  # 2. generate loop.sh
 ./loop.sh 2>&1 | tee /tmp/loop.log &        # 3. run the loop
@@ -39,7 +39,7 @@ Read on for permissions, isolation, and completion signals.
 
 | Tool                    | Type    | Purpose                                                            |
 |-------------------------|---------|--------------------------------------------------------------------|
-| `ctx init --ralph`      | Command | Initialize project for unattended operation (no human in the loop) |
+| `ctx init`              | Command | Initialize project context and prompt templates                    |
 | `ctx loop`              | Command | Generate the loop shell script                                     |
 | `ctx watch`             | Command | Monitor AI output and persist context updates                      |
 | `ctx load`              | Command | Display assembled context (for debugging)                          |
@@ -51,20 +51,15 @@ Read on for permissions, isolation, and completion signals.
 ### Step 1: Initialize for Unattended Operation
 
 Start by creating a `.context/` directory configured so the agent can work
-without human input. The `--ralph` flag sets up `PROMPT.md` so the agent makes
-reasonable choices instead of asking clarifying questions.
+without human input.
 
 ```bash
-ctx init --ralph
+ctx init
 ```
 
-This creates `.context/` with the template files, a `PROMPT.md` configured for
-autonomous iteration, and seeds Claude Code permissions in
+This creates `.context/` with the template files (including a loop prompt at
+`.context/prompts/loop.md`), and seeds Claude Code permissions in
 `.claude/settings.local.json`. Install the `ctx` plugin for hooks and skills.
-
-Without `--ralph`, the agent will often pause when requirements are unclear.
-For unattended runs, you want it to choose a default and document the trade-off
-in `DECISIONS.md` instead.
 
 ### Step 2: Populate `TASKS.md` with Phased Work
 
@@ -96,9 +91,9 @@ through these systematically, top to bottom, using priority tags to break ties.
 Phased organization matters because it gives the agent natural boundaries.
 Phase 1 tasks should be completable without Phase 2 code existing yet.
 
-### Step 3: Configure PROMPT.md
+### Step 3: Configure the Loop Prompt
 
-The `--ralph` flag generates a `PROMPT.md` that instructs the agent to operate
+The loop prompt at `.context/prompts/loop.md` instructs the agent to operate
 autonomously:
 
 1. Read `.context/CONSTITUTION.md` first (hard rules, never violated)
@@ -108,9 +103,9 @@ autonomously:
 5. Commit changes (including `.context/`)
 6. Signal status with a completion signal
 
-You can customize `PROMPT.md` for your project. The critical parts are the
-one-task-per-iteration discipline, proactive context persistence, and completion
-signals at the end:
+You can customize `.context/prompts/loop.md` for your project. The critical
+parts are the one-task-per-iteration discipline, proactive context persistence,
+and completion signals at the end:
 
 ```markdown
 ## Signal Status
@@ -166,7 +161,7 @@ Claude Code supports a `--dangerously-skip-permissions` flag that disables all
 permission prompts:
 
 ```bash
-claude --dangerously-skip-permissions -p "$(cat .context/PROMPT.md)"
+claude --dangerously-skip-permissions -p "$(cat .context/prompts/loop.md)"
 ```
 
 !!! danger "This Flag Means What It Says"
@@ -238,11 +233,11 @@ ctx loop --tool claude --max-iterations 10
 # Generate for Aider
 ctx loop --tool aider --max-iterations 10
 
-# Custom prompt file and output filename (default prompt is PROMPT.md in project root)
+# Custom prompt file and output filename
 ctx loop --tool claude --prompt my-prompt.md --output my-loop.sh
 ```
 
-The generated script reads `PROMPT.md`, runs the tool, checks for completion
+The generated script reads `.context/prompts/loop.md`, runs the tool, checks for completion
 signals, and loops until done or the cap is reached.
 
 You can also use the `/ctx-loop` skill from inside Claude Code.
@@ -296,7 +291,7 @@ default this is `SYSTEM_CONVERGED`. You can change it with the
 ctx loop --tool claude --completion BOOTSTRAP_COMPLETE --max-iterations 5
 ```
 
-The following signals are conventions used in `PROMPT.md`:
+The following signals are conventions used in `.context/prompts/loop.md`:
 
 | Signal               | Convention                       | How the script handles it                          |
 |----------------------|----------------------------------|----------------------------------------------------|
@@ -342,8 +337,8 @@ Each step is verified (build, test, syntax check) before moving to the next.
 A typical overnight run:
 
 ```bash
-ctx init --ralph
-# Edit TASKS.md and PROMPT.md
+ctx init
+# Edit TASKS.md and .context/prompts/loop.md
 
 ctx loop --tool claude --max-iterations 20
 
@@ -448,7 +443,7 @@ Break any part of this contract and the loop degrades.
 * Keep tasks atomic. Each task should be completable in a single iteration.
 * Check signal discipline. If the loop runs forever, the agent is not emitting
   `SYSTEM_CONVERGED` or `SYSTEM_BLOCKED`. Make the signal requirement explicit
-  in `PROMPT.md`.
+  in `.context/prompts/loop.md`.
 * Commit after context updates. Finish code, update `.context/`, commit including
   `.context/`, then signal.
 * Set up [webhook notifications](webhook-notifications.md) to get notified
@@ -463,9 +458,9 @@ worktrees, and a full agent team.
 
 ## See Also
 
-* [Autonomous Loops](../operations/autonomous-loop.md): loop pattern, PROMPT.md templates, troubleshooting
+* [Autonomous Loops](../operations/autonomous-loop.md): loop pattern, prompt templates, troubleshooting
 * [CLI Reference: ctx loop](../cli/tools.md#ctx-loop): flags and options
 * [CLI Reference: ctx watch](../cli/tools.md#ctx-watch): watch mode details
-* [CLI Reference: ctx init](../cli/init-status.md#ctx-init): init flags including `--ralph`
+* [CLI Reference: ctx init](../cli/init-status.md#ctx-init): init flags
 * [The Complete Session](session-lifecycle.md): interactive workflow
 * [Tracking Work Across Sessions](task-management.md): structuring TASKS.md

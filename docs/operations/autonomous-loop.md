@@ -35,7 +35,7 @@ everything across iterations.
 
 ```mermaid
 graph TD
-    A[Start Loop] --> B[Load PROMPT.md]
+    A[Start Loop] --> B[Load .context/prompts/loop.md]
     B --> C[AI reads .context/]
     C --> D[AI picks task from TASKS.md]
     D --> E[AI completes task]
@@ -47,7 +47,7 @@ graph TD
     H -->|Continue| B
 ```
 
-1. Loop reads `PROMPT.md` and invokes AI
+1. Loop reads `.context/prompts/loop.md` and invokes AI
 2. AI loads context from `.context/`
 3. AI picks one task and completes it
 4. AI updates context files (mark task done, add learnings)
@@ -70,7 +70,7 @@ Create a `loop.sh`:
 #!/bin/bash
 # loop.sh: an autonomous iteration loop
 
-PROMPT_FILE="${1:-PROMPT.md}"
+PROMPT_FILE="${1:-.context/prompts/loop.md}"
 MAX_ITERATIONS="${2:-10}"
 OUTPUT_FILE="/tmp/loop_output.txt"
 
@@ -145,7 +145,7 @@ This is convenient for quick iterations, but be aware of important caveats:
     works fine. For overnight unattended runs or anything where iteration
     independence matters, use the shell while loop instead.
 
-## The `PROMPT.md` File
+## The `.context/prompts/loop.md` File
 
 The prompt file instructs the AI on how to work autonomously. Here's a template:
 
@@ -305,18 +305,15 @@ real time.
 Initialize a project for autonomous loop operation:
 
 ```bash
-# Initialize with autonomous agent behavior
-ctx init --ralph
+ctx init
 ```
 
-The `--ralph` flag creates a `PROMPT.md` where the agent:
+The loop prompt template is deployed to `.context/prompts/loop.md` during
+initialization. It instructs the agent to:
 
-* Works autonomously without asking clarifying questions;
-* Follows one-task-per-iteration discipline;
-* Uses `SYSTEM_CONVERGED` / `SYSTEM_BLOCKED` signals;
-
-Without `--ralph`, the agent is encouraged to ask questions when requirements
-are unclear: Better for collaborative human-agent sessions.
+* Work autonomously without asking clarifying questions;
+* Follow one-task-per-iteration discipline;
+* Use `SYSTEM_CONVERGED` / `SYSTEM_BLOCKED` signals;
 
 ## Example Project Structure
 
@@ -329,8 +326,6 @@ my-project/
 │   ├── LEARNINGS.md
 │   ├── CONVENTIONS.md
 │   └── sessions/         # Loop iteration history
-├── PROMPT.md             # Instructions for the AI
-├── IMPLEMENTATION_PLAN.md # High-level project direction
 ├── loop.sh               # Loop script (if not using Claude Code)
 └── src/                  # Your code
 ```
@@ -365,7 +360,7 @@ The loop will work through these systematically, marking each complete.
 
 **Cause:** AI not emitting completion signals
 
-**Fix:** Ensure PROMPT.md explicitly instructs signaling:
+**Fix:** Ensure .context/prompts/loop.md explicitly instructs signaling:
 ```markdown
 End EVERY response with one of:
 - SYSTEM_CONVERGED (if all tasks done)
@@ -376,7 +371,7 @@ End EVERY response with one of:
 
 **Cause**: AI not updating context files
 
-**Fix**: Add explicit instructions to PROMPT.md:
+**Fix**: Add explicit instructions to .context/prompts/loop.md:
 ```markdown
 After completing a task, you MUST:
 1. Run: ctx task complete "<task>"
@@ -401,7 +396,7 @@ Order of operations:
 
 **Cause**: Constitution not read first
 
-**Fix**: Make constitution check explicit in `PROMPT.md`:
+**Fix**: Make constitution check explicit in `.context/prompts/loop.md`:
 
 ```markdown
 BEFORE any work:

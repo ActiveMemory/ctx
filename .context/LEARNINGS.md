@@ -407,9 +407,9 @@
 
 ## [2026-03-12-133008] Project-root files vs context files are distinct categories
 
-**Context**: Tried moving ImplementationPlan constant to config/ctx assuming it was a context file
+**Context**: Tried moving ImplementationPlan constant to config/ctx assuming it was a context file. (Note: IMPLEMENTATION_PLAN.md was removed in 2026-03-25 as a dead file — no agent consumer.)
 
-**Lesson**: Files created by ctx init in the project root (Makefile, IMPLEMENTATION_PLAN.md) are scaffolding, not context files loaded via ReadOrder. They belong in config/file, not config/ctx
+**Lesson**: Files created by ctx init in the project root (Makefile) are scaffolding, not context files loaded via ReadOrder. They belong in config/file, not config/ctx
 
 **Application**: Before moving a file constant, check whether it is in ReadOrder (context) or created by init (project-root)
 
@@ -835,7 +835,7 @@
 - `ctx agent` is optimized for task execution (filters pending tasks, surfaces constitution, token-budget aware). Manual file reading is better for exploratory/memory questions (session history, timestamps, completed tasks).
 - On "Do you remember?" questions, immediately read .context/ files and run `ctx recall list --limit 5`. Never ask "would you like me to check?" — that is the obvious intent.
 - .context/ is NOT a Claude Code primitive. Only CLAUDE.md and .claude/settings.json are auto-loaded. The .context/ directory requires a hook or explicit CLAUDE.md instruction to be discovered.
-- Orchestrator (IMPLEMENTATION_PLAN.md) and agent (.context/TASKS.md) task lists must be separate. The orchestrator says "check your mind" — it doesn't maintain a parallel ledger.
+- ~~Orchestrator (IMPLEMENTATION_PLAN.md) and agent (.context/TASKS.md) task lists must be separate.~~ (Superseded 2026-03-25: IMPLEMENTATION_PLAN.md removed. TASKS.md is the single task source.)
 - Only CLAUDE.md is auto-loaded by Claude Code. Projects using ctx should rely on the CLAUDE.md -> AGENT_PLAYBOOK.md chain, not AGENTS.md.
 
 ---
