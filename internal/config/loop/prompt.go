@@ -7,4 +7,4 @@
 package loop
 
 // PromptMd is the default prompt file for loop scripts.
-const PromptMd = ".context/prompts/loop.md"
+const PromptMd = ".context/loop.md"

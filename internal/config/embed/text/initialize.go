@@ -78,12 +78,11 @@ const (
 
 // Init component labels for InfoWarnNonFatal diagnostic output.
 const (
-	DescKeyInitLabelEntryTemplates  = "init.label-entry-templates"
-	DescKeyInitLabelPromptTemplates = "init.label-prompt-templates"
-	DescKeyInitLabelScratchpad      = "init.label-scratchpad"
-	DescKeyInitLabelProjectDirs     = "init.label-project-dirs"
-	DescKeyInitLabelPermissions     = "init.label-permissions"
-	DescKeyInitLabelPluginEnable    = "init.label-plugin-enable"
+	DescKeyInitLabelEntryTemplates = "init.label-entry-templates"
+	DescKeyInitLabelScratchpad     = "init.label-scratchpad"
+	DescKeyInitLabelProjectDirs    = "init.label-project-dirs"
+	DescKeyInitLabelPermissions    = "init.label-permissions"
+	DescKeyInitLabelPluginEnable   = "init.label-plugin-enable"
 )
 
 // Init confirmation prompts and mode labels.

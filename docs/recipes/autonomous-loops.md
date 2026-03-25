@@ -58,7 +58,7 @@ ctx init
 ```
 
 This creates `.context/` with the template files (including a loop prompt at
-`.context/prompts/loop.md`), and seeds Claude Code permissions in
+`.context/loop.md`), and seeds Claude Code permissions in
 `.claude/settings.local.json`. Install the `ctx` plugin for hooks and skills.
 
 ### Step 2: Populate `TASKS.md` with Phased Work
@@ -93,7 +93,7 @@ Phase 1 tasks should be completable without Phase 2 code existing yet.
 
 ### Step 3: Configure the Loop Prompt
 
-The loop prompt at `.context/prompts/loop.md` instructs the agent to operate
+The loop prompt at `.context/loop.md` instructs the agent to operate
 autonomously:
 
 1. Read `.context/CONSTITUTION.md` first (hard rules, never violated)
@@ -103,7 +103,7 @@ autonomously:
 5. Commit changes (including `.context/`)
 6. Signal status with a completion signal
 
-You can customize `.context/prompts/loop.md` for your project. The critical
+You can customize `.context/loop.md` for your project. The critical
 parts are the one-task-per-iteration discipline, proactive context persistence,
 and completion signals at the end:
 
@@ -161,7 +161,7 @@ Claude Code supports a `--dangerously-skip-permissions` flag that disables all
 permission prompts:
 
 ```bash
-claude --dangerously-skip-permissions -p "$(cat .context/prompts/loop.md)"
+claude --dangerously-skip-permissions -p "$(cat .context/loop.md)"
 ```
 
 !!! danger "This Flag Means What It Says"
@@ -237,7 +237,7 @@ ctx loop --tool aider --max-iterations 10
 ctx loop --tool claude --prompt my-prompt.md --output my-loop.sh
 ```
 
-The generated script reads `.context/prompts/loop.md`, runs the tool, checks for completion
+The generated script reads `.context/loop.md`, runs the tool, checks for completion
 signals, and loops until done or the cap is reached.
 
 You can also use the `/ctx-loop` skill from inside Claude Code.
@@ -291,7 +291,7 @@ default this is `SYSTEM_CONVERGED`. You can change it with the
 ctx loop --tool claude --completion BOOTSTRAP_COMPLETE --max-iterations 5
 ```
 
-The following signals are conventions used in `.context/prompts/loop.md`:
+The following signals are conventions used in `.context/loop.md`:
 
 | Signal               | Convention                       | How the script handles it                          |
 |----------------------|----------------------------------|----------------------------------------------------|
@@ -338,7 +338,7 @@ A typical overnight run:
 
 ```bash
 ctx init
-# Edit TASKS.md and .context/prompts/loop.md
+# Edit TASKS.md and .context/loop.md
 
 ctx loop --tool claude --max-iterations 20
 
@@ -443,7 +443,7 @@ Break any part of this contract and the loop degrades.
 * Keep tasks atomic. Each task should be completable in a single iteration.
 * Check signal discipline. If the loop runs forever, the agent is not emitting
   `SYSTEM_CONVERGED` or `SYSTEM_BLOCKED`. Make the signal requirement explicit
-  in `.context/prompts/loop.md`.
+  in `.context/loop.md`.
 * Commit after context updates. Finish code, update `.context/`, commit including
   `.context/`, then signal.
 * Set up [webhook notifications](webhook-notifications.md) to get notified

@@ -372,12 +372,3 @@ table, or JSON.
 
 **Uses**: `ctx dep`, `ctx drift`
 
----
-
-### [Reusable Prompt Templates](prompt-templates.md)
-
-Store and reuse **prompt templates** in `.context/prompts/` for
-repeating tasks. Manage templates via CLI, reference them in skills
-and loop scripts.
-
-**Uses**: `ctx prompt`, `ctx prompt list`, `ctx prompt show`

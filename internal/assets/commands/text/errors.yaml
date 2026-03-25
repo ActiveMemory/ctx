@@ -309,30 +309,18 @@ err.parser.walk-dir:
   short: 'walk directory: %w'
 err.parser.git-not-found:
   short: git not found in PATH; install git to enable remote URL enrichment
-err.prompt.exists:
-  short: prompt %q already exists
 err.prompt.list-entry-templates:
   short: 'failed to list entry templates: %w'
-err.prompt.list-prompt-templates:
-  short: 'failed to list prompt templates: %w'
 err.prompt.list-templates:
   short: 'failed to list templates: %w'
 err.prompt.marker-not-found:
   short: '%s start marker not found'
-err.prompt.no-prompt-template:
-  short: "no embedded template %q - use --stdin to provide content"
 err.prompt.no-template:
   short: 'no template available for %s: %w'
-err.prompt.not-found:
-  short: prompt %q not found
 err.prompt.read-entry-template:
   short: 'failed to read entry template %s: %w'
-err.prompt.read-prompt-template:
-  short: 'failed to read prompt template %s: %w'
 err.prompt.read-template:
   short: 'failed to read template %s: %w'
-err.prompt.remove-prompt:
-  short: 'remove prompt: %w'
 err.prompt.template-missing-markers:
   short: template missing %s markers
 err.recall.event-log-read:

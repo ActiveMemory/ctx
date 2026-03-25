@@ -383,22 +383,6 @@ templates.
 
 ---
 
-### `/ctx-prompt`
-
-Apply, list, and manage saved prompt templates from `.context/prompts/`.
-Prompt templates are plain Markdown files for common patterns like code
-review, refactoring, or explaining code.
-
-**Wraps**: `ctx prompt list`, `ctx prompt show`, `ctx prompt apply`,
-`ctx prompt create`
-
-**Trigger phrases**: "use the code-review prompt", "list my prompts",
-"apply the refactor template", "create a prompt template"
-
-**See also**: [Prompt Templates](../recipes/prompt-templates.md)
-
----
-
 ### `/ctx-prompt-audit`
 
 Analyze recent prompting patterns to identify vague or ineffective

@@ -35,7 +35,7 @@ everything across iterations.
 
 ```mermaid
 graph TD
-    A[Start Loop] --> B[Load .context/prompts/loop.md]
+    A[Start Loop] --> B[Load .context/loop.md]
     B --> C[AI reads .context/]
     C --> D[AI picks task from TASKS.md]
     D --> E[AI completes task]
@@ -47,7 +47,7 @@ graph TD
     H -->|Continue| B
 ```
 
-1. Loop reads `.context/prompts/loop.md` and invokes AI
+1. Loop reads `.context/loop.md` and invokes AI
 2. AI loads context from `.context/`
 3. AI picks one task and completes it
 4. AI updates context files (mark task done, add learnings)
@@ -70,7 +70,7 @@ Create a `loop.sh`:
 #!/bin/bash
 # loop.sh: an autonomous iteration loop
 
-PROMPT_FILE="${1:-.context/prompts/loop.md}"
+PROMPT_FILE="${1:-.context/loop.md}"
 MAX_ITERATIONS="${2:-10}"
 OUTPUT_FILE="/tmp/loop_output.txt"
 
@@ -145,7 +145,7 @@ This is convenient for quick iterations, but be aware of important caveats:
     works fine. For overnight unattended runs or anything where iteration
     independence matters, use the shell while loop instead.
 
-## The `.context/prompts/loop.md` File
+## The `.context/loop.md` File
 
 The prompt file instructs the AI on how to work autonomously. Here's a template:
 
@@ -308,7 +308,7 @@ Initialize a project for autonomous loop operation:
 ctx init
 ```
 
-The loop prompt template is deployed to `.context/prompts/loop.md` during
+The loop prompt template is deployed to `.context/loop.md` during
 initialization. It instructs the agent to:
 
 * Work autonomously without asking clarifying questions;
@@ -360,7 +360,7 @@ The loop will work through these systematically, marking each complete.
 
 **Cause:** AI not emitting completion signals
 
-**Fix:** Ensure .context/prompts/loop.md explicitly instructs signaling:
+**Fix:** Ensure .context/loop.md explicitly instructs signaling:
 ```markdown
 End EVERY response with one of:
 - SYSTEM_CONVERGED (if all tasks done)
@@ -371,7 +371,7 @@ End EVERY response with one of:
 
 **Cause**: AI not updating context files
 
-**Fix**: Add explicit instructions to .context/prompts/loop.md:
+**Fix**: Add explicit instructions to .context/loop.md:
 ```markdown
 After completing a task, you MUST:
 1. Run: ctx task complete "<task>"
@@ -396,7 +396,7 @@ Order of operations:
 
 **Cause**: Constitution not read first
 
-**Fix**: Make constitution check explicit in `.context/prompts/loop.md`:
+**Fix**: Make constitution check explicit in `.context/loop.md`:
 
 ```markdown
 BEFORE any work:

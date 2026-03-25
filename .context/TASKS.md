@@ -13,6 +13,56 @@ TASK STATUS LABELS:
 - `#in-progress` — currently being worked on (add inline, don't move task)
 -->
 
+### Phase PD: Prompt Deprecation
+
+Spec: `specs/prompt-deprecation.md`. Read the spec before starting any PD task.
+
+Remove the prompt template system (`.context/prompts/`). Skills are the
+single concept for agent instructions. Promote bundled prompts to skills,
+relocate loop.md, delete `ctx prompt` CLI and `/ctx-prompt` skill.
+
+**PD.1 — Create new skills:**
+
+- [x] PD.1.1: Create `/ctx-code-review` skill in `internal/assets/claude/skills/ctx-code-review/SKILL.md` — promote code-review.md with proper frontmatter, trigger phrases, allowed-tools #priority:high #added:2026-03-25-203340 #done:2026-03-25
+- [x] PD.1.2: Create `/ctx-explain` skill in `internal/assets/claude/skills/ctx-explain/SKILL.md` — promote explain.md with proper frontmatter, trigger phrases, allowed-tools #priority:high #added:2026-03-25-203340 #done:2026-03-25
+- [x] PD.1.3: Create `/ctx-refactor` skill in `internal/assets/claude/skills/ctx-refactor/SKILL.md` — promote refactor.md with proper frontmatter, trigger phrases, allowed-tools #priority:high #added:2026-03-25-203340 #done:2026-03-25
+
+**PD.2 — Relocate loop.md:**
+
+- [x] PD.2.1: Move loop.md deployment from `.context/prompts/loop.md` to `.context/loop.md` — update `ctx init` to write loop.md to context root #priority:high #added:2026-03-25-203340 #done:2026-03-25
+- [x] PD.2.2: Update `internal/config/loop/prompt.go` default to `.context/loop.md` #priority:high #added:2026-03-25-203340 #done:2026-03-25
+- [x] PD.2.3: Update `ctx loop` tests for new default path #priority:high #added:2026-03-25-203340 #done:2026-03-25
+
+**PD.3 — Remove prompt system:**
+
+- [x] PD.3.1: Delete `/ctx-prompt` skill (`internal/assets/claude/skills/ctx-prompt/SKILL.md`) #priority:high #added:2026-03-25-203340 #done:2026-03-25
+- [x] PD.3.2: Delete `internal/assets/prompt-templates/` directory (all 4 files) #priority:high #added:2026-03-25-203340 #done:2026-03-25
+- [x] PD.3.3: Delete `internal/assets/read/prompt/` package #priority:high #added:2026-03-25-203340 #done:2026-03-25
+- [x] PD.3.4: Delete `internal/cli/prompt/` entire command tree #priority:high #added:2026-03-25-203340 #done:2026-03-25
+- [x] PD.3.5: Delete `internal/cli/initialize/core/prompt/` package (prompt_tpl.go, doc.go) #priority:high #added:2026-03-25-203340 #done:2026-03-25
+- [x] PD.3.6: Delete `internal/write/prompt/` package #priority:high #added:2026-03-25-203340 #done:2026-03-25
+- [x] PD.3.7: Remove `prompt` command registration from `internal/bootstrap/bootstrap.go` #priority:high #added:2026-03-25-203340 #done:2026-03-25
+- [x] PD.3.8: Remove `prompt-templates/*.md` from embed.go glob #priority:high #added:2026-03-25-203340 #done:2026-03-25
+- [x] PD.3.9: Remove `Prompts` constant from `internal/config/dir/dir.go` #priority:high #added:2026-03-25-203340 #done:2026-03-25
+- [x] PD.3.10: Remove `DirPromptTemplates` from `internal/config/asset/asset.go` #priority:high #added:2026-03-25-203340 #done:2026-03-25
+- [x] PD.3.11: Remove prompt-specific error keys/functions from `internal/config/embed/text/err_prompt.go` and `internal/err/prompt/` (keep if used elsewhere) #priority:high #added:2026-03-25-203340 #done:2026-03-25
+- [x] PD.3.12: Remove prompt entries from commands.yaml, flags.yaml, write.yaml, ui.yaml, err.yaml #priority:high #added:2026-03-25-203340 #done:2026-03-25
+- [x] PD.3.13: Remove prompt template tests from embed_test.go #priority:high #added:2026-03-25-203340 #done:2026-03-25
+
+**PD.4 — Update docs and context:**
+
+- [x] PD.4.1: Delete `docs/recipes/prompt-templates.md` #priority:medium #added:2026-03-25-203340 #done:2026-03-25
+- [x] PD.4.2: Update `docs/cli/tools.md` — remove `ctx prompt` section, update `ctx loop` default #priority:medium #added:2026-03-25-203340 #done:2026-03-25
+- [x] PD.4.3: Update `docs/cli/index.md` — remove `ctx prompt` entry #priority:medium #added:2026-03-25-203340 #done:2026-03-25
+- [x] PD.4.4: Update `docs/recipes/index.md` — remove prompt-templates recipe reference #priority:medium #added:2026-03-25-203340 #done:2026-03-25
+- [ ] PD.4.5: Update AGENT_PLAYBOOK.md — add generic "check available skills" instruction #priority:medium #added:2026-03-25-203340
+- [x] PD.4.6: Search and update any remaining doc references to `.context/prompts/` or `ctx prompt` #priority:medium #added:2026-03-25-203340 #done:2026-03-25
+
+**PD.5 — Validate:**
+
+- [x] PD.5.1: Run `make lint && make test` — all tests pass, no dangling imports #priority:high #added:2026-03-25-203340 #done:2026-03-25
+- [ ] PD.5.2: Run `ctx init` on a clean directory — verify no `.context/prompts/` created, `.context/loop.md` exists, new skills deployed #priority:high #added:2026-03-25-203340
+
 ### Phase -3: DevEx
 
 [ ] Plugin enablement gap: Ref: `ideas/plugin-enablement-gap.md`. 

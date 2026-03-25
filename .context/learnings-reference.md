@@ -127,7 +127,7 @@ to keep the main file within token budget. All entries preserved verbatim.
 
 - PROMPT.md is a Ralph loop iteration prompt ("what to do next, how to know when done"), not a project briefing. When it drifts into duplicating CLAUDE.md, delete it. Re-introduce only when actively using Ralph loops.
 - Only `internal/assets/` (formerly `internal/templates/`) matters for embedded templates — it's where Go embeds files into the binary. A root `templates/` directory is spec baggage. One source of truth: `internal/assets/ ──[ctx init]──> .context/`.
-- ctx and Ralph Loop are separate systems: `ctx init` creates `.context/` for context management; Ralph Loop uses `.context/prompts/loop.md` and specs/ for iterative AI development.
+- ctx and Ralph Loop are separate systems: `ctx init` creates `.context/` for context management; Ralph Loop uses `.context/loop.md` and specs/ for iterative AI development.
 
 ---
 

@@ -449,14 +449,6 @@ write.prefix-error:
   short: 'Error: '
 write.prefix-warn:
   short: '  ! %s: %v'
-write.prompt-created:
-  short: Created prompt %q.
-write.prompt-item:
-  short: '  %s'
-write.prompt-none:
-  short: No prompts found. Run 'ctx init' or 'ctx prompt add' to create prompts.
-write.prompt-removed:
-  short: Removed prompt %q.
 write.publish-block:
   short: '  Published block:'
 write.publish-budget:

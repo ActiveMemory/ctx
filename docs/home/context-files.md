@@ -445,26 +445,6 @@ for full documentation.
 
 ---
 
-## `prompts/`
-
-**Purpose**: Store reusable prompt templates - plain markdown files with
-no frontmatter that provide lightweight, named instructions for common
-tasks like code review, refactoring, or explaining code.
-
-### How It Works
-
-- `ctx init` stamps starter templates: `code-review.md`, `refactor.md`,
-  `explain.md`
-- Manage via `ctx prompt list`, `ctx prompt show`, `ctx prompt add`,
-  `ctx prompt rm`
-- Invoke in AI sessions with `/ctx-prompt <name>`
-- Committed to git by default for team sharing
-
-See the [Prompt Templates recipe](../recipes/prompt-templates.md) for
-the full workflow.
-
----
-
 ## Parsing Rules
 
 All context files follow these conventions:

@@ -31,7 +31,7 @@ import (
 	"github.com/ActiveMemory/ctx/internal/cli/pad"
 	"github.com/ActiveMemory/ctx/internal/cli/pause"
 	"github.com/ActiveMemory/ctx/internal/cli/permission"
-	"github.com/ActiveMemory/ctx/internal/cli/prompt"
+
 	"github.com/ActiveMemory/ctx/internal/cli/recall"
 	"github.com/ActiveMemory/ctx/internal/cli/reindex"
 	"github.com/ActiveMemory/ctx/internal/cli/remind"
@@ -82,7 +82,7 @@ func Initialize(cmd *cobra.Command) *cobra.Command {
 		pad.Cmd,
 		pause.Cmd,
 		permission.Cmd,
-		prompt.Cmd,
+
 		recall.Cmd,
 		reindex.Cmd,
 		remind.Cmd,

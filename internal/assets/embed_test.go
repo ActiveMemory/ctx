@@ -129,59 +129,6 @@ func TestProjectFile(t *testing.T) {
 	}
 }
 
-func TestListPromptTemplates(t *testing.T) {
-	entries, err := FS.ReadDir(asset.DirPromptTemplates)
-	if err != nil {
-		t.Fatalf("unexpected error: %v", err)
-	}
-	if len(entries) == 0 {
-		t.Error("returned empty list")
-	}
-
-	nameSet := make(map[string]bool)
-	for _, e := range entries {
-		nameSet[e.Name()] = true
-	}
-	for _, exp := range []string{"code-review.md", "refactor.md", "explain.md"} {
-		if !nameSet[exp] {
-			t.Errorf("missing expected template: %s", exp)
-		}
-	}
-}
-
-func TestGetPromptTemplate(t *testing.T) {
-	tests := []struct {
-		name        string
-		template    string
-		wantContain string
-		wantErr     bool
-	}{
-		{"code-review.md exists", "code-review.md", "Review", false},
-		{"refactor.md exists", "refactor.md", "Refactor", false},
-		{"explain.md exists", "explain.md", "Explain", false},
-		{"nonexistent returns error", "nonexistent.md", "", true},
-	}
-
-	for _, tt := range tests {
-		t.Run(tt.name, func(t *testing.T) {
-			content, err := FS.ReadFile(path.Join(asset.DirPromptTemplates, tt.template))
-			if tt.wantErr {
-				if err == nil {
-					t.Errorf("expected error for %q", tt.template)
-				}
-				return
-			}
-			if err != nil {
-				t.Errorf("unexpected error for %q: %v", tt.template, err)
-				return
-			}
-			if !strings.Contains(string(content), tt.wantContain) {
-				t.Errorf("content of %q does not contain %q", tt.template, tt.wantContain)
-			}
-		})
-	}
-}
-
 func TestListSkills(t *testing.T) {
 	entries, err := FS.ReadDir(asset.DirClaudeSkills)
 	if err != nil {
@@ -197,7 +144,7 @@ func TestListSkills(t *testing.T) {
 			skillSet[e.Name()] = true
 		}
 	}
-	for _, exp := range []string{"ctx-prompt", "ctx-status", "ctx-recall", "ctx-brainstorm"} {
+	for _, exp := range []string{"ctx-code-review", "ctx-status", "ctx-recall", "ctx-brainstorm"} {
 		if !skillSet[exp] {
 			t.Errorf("missing expected skill: %s", exp)
 		}

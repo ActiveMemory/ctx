@@ -653,39 +653,6 @@ permission.snapshot:
 
     Overwrites any existing golden file.
   short: Save settings.local.json as golden image
-prompt:
-  long: |-
-    Manage prompt templates stored in .context/prompts/.
-
-    Prompt templates are plain markdown files - no frontmatter, no build step.
-    Use them as lightweight, reusable instructions for common tasks like
-    code reviews, refactoring, or explaining code.
-
-    When invoked without a subcommand, lists all available prompts.
-
-    Subcommands:
-      list     List available prompt templates
-      show     Print a prompt template to stdout
-      add      Create a new prompt from embedded template or stdin
-      rm       Remove a prompt template
-  short: Manage reusable prompt templates
-prompt.add:
-  long: |-
-    Create a new prompt template in .context/prompts/.
-
-    By default, creates from an embedded starter template if one exists
-    with the given name. Use --stdin to read content from standard input.
-
-    Examples:
-      ctx prompt add code-review
-      echo "# My Prompt" | ctx prompt add my-prompt --stdin
-  short: Create a new prompt from embedded template or stdin
-prompt.list:
-  short: List available prompt templates
-prompt.rm:
-  short: Remove a prompt template
-prompt.show:
-  short: Print a prompt template to stdout
 recall:
   long: |-
     Browse and search AI session history from Claude Code and other tools.

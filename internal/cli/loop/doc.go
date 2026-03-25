@@ -15,7 +15,7 @@
 //
 // The generated script:
 //
-//  1. Reads the prompt file (default: .context/prompts/loop.md)
+//  1. Reads the prompt file (default: .context/loop.md)
 //  2. Runs the AI tool with the prompt
 //  3. Checks output for a completion signal
 //  4. Repeats until signal is detected or max iterations reached

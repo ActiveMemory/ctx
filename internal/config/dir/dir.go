@@ -32,8 +32,6 @@ const (
 	MemoryArchive = "memory/archive"
 	// Projects is the projects subdirectory within .claude/.
 	Projects = "projects"
-	// Prompts is the subdirectory for prompt templates within .context/.
-	Prompts = "prompts"
 	// Sessions is the subdirectory for session summaries within .context/.
 	Sessions = "sessions"
 	// Specs is the project-root directory for formalized plans and feature specs.

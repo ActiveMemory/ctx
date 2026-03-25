@@ -215,8 +215,6 @@ guide.command-line:
   short: '  %-14s %s'
 init.label-entry-templates:
   short: Entry templates
-init.label-prompt-templates:
-  short: Prompt templates
 init.label-scratchpad:
   short: Scratchpad
 init.label-project-dirs:

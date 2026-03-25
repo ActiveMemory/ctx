@@ -20,7 +20,7 @@
 | Entry header           | The timestamped heading format used in DECISIONS.md and LEARNINGS.md: `## [YYYY-MM-DD-HHMMSS] Title`. Parsed by `config.RegExEntryHeader`.                                                                  |
 | Index table            | The auto-generated markdown table at the top of DECISIONS.md and LEARNINGS.md (between `<!-- INDEX:START -->` and `<!-- INDEX:END -->` markers). Updated by `ctx add` and `ctx decision/learnings reindex`. |
 | Readback               | A structured summary where the agent plays back what it knows (last session, active tasks, recent decisions) so the user can confirm correct context was loaded. From aviation: pilots repeat ATC instructions back to confirm they heard correctly. In ctx, triggered by "do you remember?" or `/ctx-remember`. |
-| Ralph Loop             | An iterative autonomous AI development workflow that uses `.context/prompts/loop.md` as a directive. Separate from ctx but complementary: Ralph drives the loop, ctx provides the memory.                    |
+| Ralph Loop             | An iterative autonomous AI development workflow that uses `.context/loop.md` as a directive. Separate from ctx but complementary: Ralph drives the loop, ctx provides the memory.                             |
 
 | Skill                  | A Claude Code Agent Skill: a markdown file in `.claude/skills/` that teaches the agent a specialized workflow. Invoked via `/skill-name`.                                                                   |
 | Live skill             | The project-local copy of a skill in `.claude/skills/`. Can be edited by the user or agent. Contrast with template skill.                                                                                   |

@@ -18,7 +18,7 @@ import (
 
 	"github.com/ActiveMemory/ctx/internal/cli/initialize/core/plugin"
 	coreProject "github.com/ActiveMemory/ctx/internal/cli/initialize/core/project"
-	"github.com/ActiveMemory/ctx/internal/cli/initialize/core/prompt"
+
 	"github.com/ActiveMemory/ctx/internal/cli/initialize/core/validate"
 	"github.com/spf13/cobra"
 
@@ -133,12 +133,6 @@ func Run(
 	if err := entry.CreateEntryTemplates(cmd, contextDir, force); err != nil {
 		// Non-fatal: warn but continue
 		initialize.InfoWarnNonFatal(cmd, desc.Text(text.DescKeyInitLabelEntryTemplates), err)
-	}
-
-	// Create prompt templates in .context/prompts/
-	if err := prompt.CreatePromptTemplates(cmd, contextDir, force); err != nil {
-		// Non-fatal: warn but continue
-		initialize.InfoWarnNonFatal(cmd, desc.Text(text.DescKeyInitLabelPromptTemplates), err)
 	}
 
 	// Set up scratchpad
