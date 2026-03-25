@@ -31,6 +31,7 @@ package rc
 //   - SessionPrefixes: Recognized session header prefixes for Markdown parser (default: Session:)
 //   - StaleAgeDays: Days before a context file is flagged as stale by drift detection (default 30, 0 = disabled)
 //   - FreshnessFiles: Files to track for technology-dependent constant staleness (opt-in)
+//   - CompanionCheck: Check companion tool availability during /ctx-remember (default true)
 type CtxRC struct {
 	Profile             string          `yaml:"profile"`
 	ContextDir          string          `yaml:"context_dir"`
@@ -53,6 +54,7 @@ type CtxRC struct {
 	StaleAgeDays        int             `yaml:"stale_age_days"`
 	SessionPrefixes     []string        `yaml:"session_prefixes"`
 	FreshnessFiles      []FreshnessFile `yaml:"freshness_files"`
+	CompanionCheck      *bool           `yaml:"companion_check"`
 	Notify              *NotifyConfig   `yaml:"notify"`
 }
 

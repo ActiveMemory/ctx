@@ -108,6 +108,38 @@ tasks, or ask the user for direction if priorities are unclear.
 
 > "I found some session files. Here's what they contain..."
 
+## Companion Tool Check
+
+After presenting the readback, check companion tool availability.
+Skip this section entirely if `companion_check: false` is set in
+`.ctxrc` — check by running `ctx config status` and looking for
+the field value.
+
+**Companion tools** enhance ctx skills with web search and code
+intelligence. They are optional but recommended:
+
+| Tool | Purpose | Smoke test |
+|------|---------|------------|
+| Gemini Search | Grounded web search with citations | Call `mcp__gemini-search__search_with_grounding` with a simple query |
+| GitNexus | Code knowledge graph (symbols, blast radius, clusters) | Call `mcp__gitnexus__list_repos` |
+
+**Check procedure:**
+
+1. Attempt each smoke test silently
+2. For tools that respond: note as available (no output needed)
+3. For tools that fail or are not connected: append a brief note
+   after the readback:
+   > "Companion tools: Gemini Search is not connected (web search
+   > will fall back to built-in). Install via MCP settings if
+   > needed."
+4. For GitNexus specifically: if it responds but the current repo
+   is not indexed or the index is stale, suggest:
+   > "GitNexus index is stale — run `npx gitnexus analyze` to
+   > rehydrate."
+
+Present companion status as a one-line note after the readback,
+not a separate section. If everything is healthy, say nothing.
+
 ## Quality Checklist
 
 Before presenting the readback, verify:
@@ -116,3 +148,4 @@ Before presenting the readback, verify:
 - [ ] Structured readback has all four sections
 - [ ] No narration of the discovery process leaked into output
 - [ ] Readback feels like recall, not a file system tour
+- [ ] Companion tool check ran (unless suppressed via .ctxrc)

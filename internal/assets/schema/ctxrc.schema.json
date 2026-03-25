@@ -96,6 +96,11 @@
       "type": "string",
       "description": "Explicit encryption key file path."
     },
+    "companion_check": {
+      "type": "boolean",
+      "description": "Check companion tool availability (Gemini Search, GitNexus) during /ctx-remember. Set false to suppress.",
+      "default": true
+    },
     "notify": {
       "type": "object",
       "description": "Webhook notification settings.",
