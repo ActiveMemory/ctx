@@ -344,6 +344,65 @@ ctx hook aider
   works best when you reinforce the habit: a quick "*anything worth saving?*"
   after a debugging session goes a long way.
 
+## Companion Tools (Optional)
+
+ctx skills can leverage external MCP servers for web search and code
+intelligence. These are optional — ctx works without them — but they
+significantly improve skills like `/ctx-code-review`, `/ctx-explain`,
+and `/ctx-refactor`.
+
+### Gemini Search
+
+Provides grounded web search with citations. Used by skills and the
+agent playbook as the preferred search backend (faster and more accurate
+than built-in web search).
+
+**Setup**: Add the Gemini Search MCP server to your Claude Code settings.
+See the [Gemini Search MCP documentation](https://github.com/nicobailon/gemini-code-search-mcp)
+for installation.
+
+**Verification**:
+```bash
+# The agent checks this automatically during /ctx-remember
+# Manual test: ask the agent to search for something
+```
+
+### GitNexus
+
+Provides a code knowledge graph with symbol resolution, blast radius
+analysis, and domain clustering. Used by skills like `/ctx-refactor`
+(impact analysis) and `/ctx-code-review` (dependency awareness).
+
+**Setup**: Add the GitNexus MCP server to your Claude Code settings,
+then index your project:
+
+```bash
+npx gitnexus analyze
+```
+
+**Verification**:
+```bash
+# The agent checks this automatically during /ctx-remember
+# If the index is stale, it will suggest rehydrating
+```
+
+### Suppressing the Check
+
+If you don't use companion tools and want to skip the availability
+check at session start, add to `.ctxrc`:
+
+```yaml
+companion_check: false
+```
+
+### Future Direction
+
+The companion tool integration is evolving toward a pluggable model:
+bring your own search engine, bring your own code intelligence. The
+current integration is MCP-based and limited to Gemini Search and
+GitNexus. If you use a different search or code intelligence tool,
+skills will degrade gracefully to built-in capabilities.
+
 ## Next Up
 
 **[Keeping Context in a Separate Repo →](external-context.md)**: Store

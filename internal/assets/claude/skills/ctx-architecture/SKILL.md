@@ -151,30 +151,6 @@ git log --oneline --since="<last_analyzed>" \
 
 ### Phase 2: Survey (First Run) or Analyze Frontier (Subsequent Run)
 
-**Optional: GitNexus MCP enrichment**
-
-If GitNexus resources are available in the environment (the
-`list_repos` MCP tool responds), use them first for clustering
-and symbol context before the manual survey. Otherwise continue
-with the manual survey below — no need to ask. GitNexus provides pre-built knowledge graph data
-that significantly speeds up and deepens the survey phase:
-
-| GitNexus tool/resource             | Use for                                                                                                                             |
-|------------------------------------|-------------------------------------------------------------------------------------------------------------------------------------|
-| `gitnexus://repo/{name}/clusters`  | Domain groupings for DETAILED_DESIGN splitting — use these as the starting domain boundaries instead of inferring manually          |
-| `gitnexus://repo/{name}/processes` | Seed CHEAT-SHEETS.md lifecycle flows — these are execution flows extracted from the graph                                           |
-| `context({symbol})`                | Per-symbol 360° view — enriches Exported API and Dependencies sections; catches cross-package references manual reading misses      |
-| `impact({symbol})`                 | Blast radius per symbol — use as raw input for Danger zones (high blast radius = high modification risk); still add the *reasoning* |
-| `generate_map` prompt              | Seed ARCHITECTURE.md mermaid diagrams; verify and annotate before using                                                             |
-
-When GitNexus is available: run the graph queries first, then use
-manual file reading to add judgment, rationale, and "why" context
-that the graph alone can't provide. Do not copy graph output
-verbatim — synthesize it.
-
-When GitNexus is not available: proceed with full manual survey
-below. The skill works without it.
-
 **First run: full survey:**
 
 0. Run `ctx deps` to bootstrap the dependency graph:

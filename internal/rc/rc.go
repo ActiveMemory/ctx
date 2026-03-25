@@ -284,6 +284,20 @@ func EventLog() bool {
 	return RC().EventLog
 }
 
+// CompanionCheck returns whether the companion tool availability check
+// should run during /ctx-remember. Returns true (default) unless
+// explicitly set to false in .ctxrc.
+//
+// Returns:
+//   - bool: True if companion tools should be checked at session start
+func CompanionCheck() bool {
+	cfg := RC()
+	if cfg.CompanionCheck == nil {
+		return true
+	}
+	return *cfg.CompanionCheck
+}
+
 // AllowOutsideCwd returns whether boundary validation should be skipped.
 //
 // Returns false (default) when the field is not set in .ctxrc.
