@@ -77,7 +77,7 @@ func Cmd() *cobra.Command {
 		&noPluginEnable, cFlag.NoPluginEnable, false,
 		desc.Flag(flag.DescKeyInitializeNoPluginEnable),
 	)
-	cmd.Flags().StringVar(
+	c.Flags().StringVar(
 		&caller, "caller", "",
 		"Identify the calling tool (e.g. vscode) to tailor output",
 	)

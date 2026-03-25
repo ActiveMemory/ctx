@@ -22,6 +22,7 @@ import (
 	"github.com/ActiveMemory/ctx/internal/config/file"
 	"github.com/ActiveMemory/ctx/internal/config/session"
 	"github.com/ActiveMemory/ctx/internal/config/token"
+	"github.com/ActiveMemory/ctx/internal/entity"
 )
 
 // copilotKeyRequests is the key path segment for request arrays.
@@ -94,7 +95,7 @@ func (p *CopilotParser) Matches(path string) bool {
 //
 // Reconstructs the session by reading the initial snapshot (kind=0) and
 // applying incremental patches (kind=1 for scalar, kind=2 for array/object).
-func (p *CopilotParser) ParseFile(path string) ([]*Session, error) {
+func (p *CopilotParser) ParseFile(path string) ([]*entity.Session, error) {
 	file, openErr := os.Open(filepath.Clean(path))
 	if openErr != nil {
 		return nil, fmt.Errorf("open file: %w", openErr)
@@ -157,12 +158,12 @@ func (p *CopilotParser) ParseFile(path string) ([]*Session, error) {
 		return nil, nil
 	}
 
-	return []*Session{result}, nil
+	return []*entity.Session{result}, nil
 }
 
 // ParseLine is not meaningful for Copilot sessions since they use patches.
 // Returns nil for all lines.
-func (p *CopilotParser) ParseLine(_ []byte) (*Message, string, error) {
+func (p *CopilotParser) ParseLine(_ []byte) (*entity.Message, string, error) {
 	return nil, "", nil
 }
 
@@ -240,12 +241,12 @@ func (p *CopilotParser) parseKeyPath(keys []json.RawMessage) []string {
 // buildSession converts a reconstructed copilotRawSession into a Session.
 func (p *CopilotParser) buildSession(
 	raw *copilotRawSession, sourcePath string, cwd string,
-) *Session {
+) *entity.Session {
 	if len(raw.Requests) == 0 {
 		return nil
 	}
 
-	session := &Session{
+	session := &entity.Session{
 		ID:         raw.SessionID,
 		Tool:       session.ToolCopilot,
 		SourceFile: sourcePath,
@@ -260,7 +261,7 @@ func (p *CopilotParser) buildSession(
 
 	for _, req := range raw.Requests {
 		// User message
-		userMsg := Message{
+		userMsg := entity.Message{
 			ID:        req.RequestID,
 			Timestamp: time.UnixMilli(req.Timestamp),
 			Role:      claude.RoleUser,
@@ -319,12 +320,12 @@ func (p *CopilotParser) buildSession(
 // buildAssistantMessage extracts the assistant response from a request.
 func (p *CopilotParser) buildAssistantMessage(
 	req copilotRawRequest,
-) *Message {
+) *entity.Message {
 	if len(req.Response) == 0 {
 		return nil
 	}
 
-	msg := &Message{
+	msg := &entity.Message{
 		ID:        req.RequestID + "-response",
 		Timestamp: time.UnixMilli(req.Timestamp),
 		Role:      claude.RoleAssistant,
@@ -380,7 +381,7 @@ func (p *CopilotParser) buildAssistantMessage(
 }
 
 // parseToolInvocation extracts a ToolUse from a toolInvocationSerialized item.
-func (p *CopilotParser) parseToolInvocation(item copilotRawRespItem) *ToolUse {
+func (p *CopilotParser) parseToolInvocation(item copilotRawRespItem) *entity.ToolUse {
 	toolID := item.ToolID
 	if toolID == "" {
 		return nil
@@ -409,7 +410,7 @@ func (p *CopilotParser) parseToolInvocation(item copilotRawRespItem) *ToolUse {
 		}
 	}
 
-	return &ToolUse{
+	return &entity.ToolUse{
 		ID:    item.ToolCallID,
 		Name:  name,
 		Input: inputStr,

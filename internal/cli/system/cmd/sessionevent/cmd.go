@@ -11,7 +11,7 @@ import (
 
 	"github.com/spf13/cobra"
 
-	"github.com/ActiveMemory/ctx/internal/cli/system/core"
+	coreState "github.com/ActiveMemory/ctx/internal/cli/system/core/state"
 	"github.com/ActiveMemory/ctx/internal/log"
 	"github.com/ActiveMemory/ctx/internal/notify"
 )
@@ -48,7 +48,7 @@ Examples:
 }
 
 func runSessionEvent(cmd *cobra.Command, eventType, caller string) error {
-	if !core.Initialized() {
+	if !coreState.Initialized() {
 		return nil
 	}
 
