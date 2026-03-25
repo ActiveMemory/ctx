@@ -9,6 +9,8 @@ package validation
 import (
 	"os"
 	"path/filepath"
+	"runtime"
+	"strings"
 	"testing"
 )
 
@@ -39,6 +41,41 @@ func TestValidateBoundary(t *testing.T) {
 				t.Errorf("ValidateBoundary(%q) error = %v, wantErr %v", tt.dir, err, tt.wantErr)
 			}
 		})
+	}
+}
+
+func TestValidateBoundaryCaseInsensitive(t *testing.T) {
+	if runtime.GOOS != osWindows {
+		t.Skip("case-insensitive path test only applies to Windows")
+	}
+
+	// On Windows, EvalSymlinks normalizes casing to the filesystem's
+	// canonical form. When .context/ doesn't exist yet the fallback
+	// preserves the original cwd casing. The prefix check must be
+	// case-insensitive to avoid false "outside cwd" errors.
+	tmp := t.TempDir()
+
+	// Change cwd to a case-mangled version of the temp dir.
+	// TempDir returns canonical casing; flip it.
+	mangled := strings.ToUpper(tmp)
+	if mangled == tmp {
+		mangled = strings.ToLower(tmp)
+	}
+
+	orig, err := os.Getwd()
+	if err != nil {
+		t.Fatal(err)
+	}
+	defer func() { _ = os.Chdir(orig) }()
+
+	if err := os.Chdir(mangled); err != nil {
+		t.Skipf("cannot chdir to case-mangled path %q: %v", mangled, err)
+	}
+
+	// .context doesn't exist — this is the exact scenario that caused the
+	// false positive on Windows.
+	if err := ValidateBoundary(".context"); err != nil {
+		t.Errorf("ValidateBoundary(.context) with case-mangled cwd: %v", err)
 	}
 }
 
@@ -94,4 +131,46 @@ func TestCheckSymlinks(t *testing.T) {
 			t.Errorf("CheckSymlinks on non-existent dir: unexpected error: %v", err)
 		}
 	})
+}
+
+func TestValidateBoundary_WindowsCaseInsensitive(t *testing.T) {
+	if runtime.GOOS != osWindows {
+		t.Skip("Windows-only test")
+	}
+
+	// Simulate the VS Code plugin scenario: CWD has a lowercase drive letter
+	// but EvalSymlinks resolves to the actual (uppercase) casing.
+	// When .context doesn't exist yet (first init), the fallback path
+	// preserves the lowercase letter, causing a case mismatch.
+	cwd, err := os.Getwd()
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	// Swap the drive letter case to simulate VS Code's fsPath
+	if len(cwd) >= 2 && cwd[1] == ':' {
+		var swapped string
+		if cwd[0] >= 'A' && cwd[0] <= 'Z' {
+			swapped = strings.ToLower(cwd[:1]) + cwd[1:]
+		} else {
+			swapped = strings.ToUpper(cwd[:1]) + cwd[1:]
+		}
+
+		origDir, _ := os.Getwd()
+		if chErr := os.Chdir(swapped); chErr != nil {
+			t.Fatalf("cannot chdir to %s: %v", swapped, chErr)
+		}
+		defer func() { _ = os.Chdir(origDir) }()
+
+		// Non-existent subdir simulates .context before init
+		nonExistent := filepath.Join(swapped, ".nonexistent-ctx-dir")
+		if err := ValidateBoundary(nonExistent); err != nil {
+			t.Errorf("ValidateBoundary(%q) with swapped drive case should pass, got: %v", nonExistent, err)
+		}
+
+		// Also test the default relative path that ctx init uses
+		if err := ValidateBoundary(".context"); err != nil {
+			t.Errorf("ValidateBoundary(.context) with swapped drive case should pass, got: %v", err)
+		}
+	}
 }

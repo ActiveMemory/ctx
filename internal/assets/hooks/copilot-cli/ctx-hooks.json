@@ -1,0 +1,41 @@
+{
+  "version": 1,
+  "hooks": {
+    "sessionStart": [
+      {
+        "type": "command",
+        "bash": ".github/hooks/scripts/ctx-sessionStart.sh",
+        "powershell": ".github/hooks/scripts/ctx-sessionStart.ps1",
+        "cwd": ".",
+        "timeoutSec": 10
+      }
+    ],
+    "preToolUse": [
+      {
+        "type": "command",
+        "bash": ".github/hooks/scripts/ctx-preToolUse.sh",
+        "powershell": ".github/hooks/scripts/ctx-preToolUse.ps1",
+        "cwd": ".",
+        "timeoutSec": 5
+      }
+    ],
+    "postToolUse": [
+      {
+        "type": "command",
+        "bash": ".github/hooks/scripts/ctx-postToolUse.sh",
+        "powershell": ".github/hooks/scripts/ctx-postToolUse.ps1",
+        "cwd": ".",
+        "timeoutSec": 5
+      }
+    ],
+    "sessionEnd": [
+      {
+        "type": "command",
+        "bash": ".github/hooks/scripts/ctx-sessionEnd.sh",
+        "powershell": ".github/hooks/scripts/ctx-sessionEnd.ps1",
+        "cwd": ".",
+        "timeoutSec": 15
+      }
+    ]
+  }
+}

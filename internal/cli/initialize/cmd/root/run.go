@@ -56,15 +56,19 @@ import (
 //   - merge: If true, auto-merge ctx content into existing files
 //   - ralph: If true, use autonomous loop templates (no questions, signals)
 //   - noPluginEnable: If true, skip auto-enabling the plugin globally
+//   - caller: Identifies the calling tool (e.g. "vscode") for template overrides
 //
 // Returns:
 //   - error: Non-nil if directory creation or file operations fail
 func Run(
-	cmd *cobra.Command, force, minimal, merge, ralph, noPluginEnable bool,
+	cmd *cobra.Command, force, minimal, merge, ralph, noPluginEnable bool, caller string,
 ) error {
-	// Check if ctx is in PATH (required for hooks to work)
-	if err := validate.CheckCtxInPath(cmd); err != nil {
-		return err
+	// Check if ctx is in PATH (required for hooks to work).
+	// Skip when a caller is set — the caller manages its own binary path.
+	if caller == "" {
+		if err := validate.CheckCtxInPath(cmd); err != nil {
+			return err
+		}
 	}
 
 	contextDir := rc.ContextDir()
@@ -74,6 +78,12 @@ func Run(
 	// treated as uninitialized - no overwrite prompt needed.
 	if _, err := os.Stat(contextDir); err == nil {
 		if !force && hasEssentialFiles(contextDir) {
+			// When called from an editor (--caller), stdin is unavailable.
+			// Skip the interactive prompt to prevent hanging.
+			if caller != "" {
+				initialize.InfoAborted(cmd)
+				return nil
+			}
 			// Prompt for confirmation
 			initialize.InfoOverwritePrompt(cmd, contextDir)
 			reader := bufio.NewReader(os.Stdin)
@@ -157,42 +167,49 @@ func Run(
 	}
 
 	// Create PROMPT.md (uses ralph template if --ralph flag set)
-	if err := prompt.HandlePromptMd(cmd, force, merge, ralph); err != nil {
+	// When called from an editor (--caller), auto-merge to avoid stdin prompt.
+	autoMerge := merge || caller != ""
+	if err := prompt.HandlePromptMd(cmd, force, autoMerge, ralph); err != nil {
 		// Non-fatal: warn but continue
 		initialize.InfoWarnNonFatal(cmd, loop.PromptMd, err)
 	}
 
 	// Create IMPLEMENTATION_PLAN.md
-	if err := plan.HandleImplementationPlan(cmd, force, merge); err != nil {
+	if err := plan.HandleImplementationPlan(cmd, force, autoMerge); err != nil {
 		// Non-fatal: warn but continue
 		initialize.InfoWarnNonFatal(cmd, project.ImplementationPlan, err)
 	}
 
-	// Merge permissions into settings.local.json (no hook scaffolding)
-	initialize.InfoSettingUpPermissions(cmd)
-	if err := coreMerge.SettingsPermissions(cmd); err != nil {
-		// Non-fatal: warn but continue
-		initialize.InfoWarnNonFatal(cmd, desc.Text(text.DescKeyInitLabelPermissions), err)
-	}
-
-	// Auto-enable plugin globally unless suppressed
-	if !noPluginEnable {
-		if pluginErr := plugin.EnablePluginGlobally(cmd); pluginErr != nil {
+	// Claude Code specific artifacts — skip when called from another editor.
+	if caller == "" {
+		// Merge permissions into settings.local.json (no hook scaffolding)
+		initialize.InfoSettingUpPermissions(cmd)
+		if err := coreMerge.SettingsPermissions(cmd); err != nil {
 			// Non-fatal: warn but continue
-			initialize.InfoWarnNonFatal(cmd, desc.Text(text.DescKeyInitLabelPluginEnable), pluginErr)
+			initialize.InfoWarnNonFatal(cmd, desc.Text(text.DescKeyInitLabelPermissions), err)
+		}
+
+		// Auto-enable plugin globally unless suppressed
+		if !noPluginEnable {
+			if pluginErr := plugin.EnablePluginGlobally(cmd); pluginErr != nil {
+				// Non-fatal: warn but continue
+				initialize.InfoWarnNonFatal(cmd, desc.Text(text.DescKeyInitLabelPluginEnable), pluginErr)
+			}
 		}
 	}
 
 	// Handle CLAUDE.md creation/merge
-	if err := coreClaude.HandleClaudeMd(cmd, force, merge); err != nil {
+	if err := coreClaude.HandleClaudeMd(cmd, force, autoMerge); err != nil {
 		// Non-fatal: warn but continue
 		initialize.InfoWarnNonFatal(cmd, claude.Md, err)
 	}
 
-	// Deploy Makefile.ctx and amend user Makefile
-	if err := coreProject.HandleMakefileCtx(cmd); err != nil {
-		// Non-fatal: warn but continue
-		initialize.InfoWarnNonFatal(cmd, sync.PatternMakefile, err)
+	// Deploy Makefile.ctx and amend user Makefile (Claude Code only)
+	if caller == "" {
+		if err := coreProject.HandleMakefileCtx(cmd); err != nil {
+			// Non-fatal: warn but continue
+			initialize.InfoWarnNonFatal(cmd, sync.PatternMakefile, err)
+		}
 	}
 
 	// Update .gitignore with recommended entries

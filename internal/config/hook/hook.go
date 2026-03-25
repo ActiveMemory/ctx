@@ -53,10 +53,12 @@ const (
 
 // Supported integration tool names for ctx hook command.
 const (
+	ToolAgents     = "agents"
 	ToolAider      = "aider"
 	ToolClaude     = "claude"
 	ToolClaudeCode = "claude-code"
 	ToolCopilot    = "copilot"
+	ToolCopilotCLI = "copilot-cli"
 	ToolCursor     = "cursor"
 	ToolWindsurf   = "windsurf"
 )
@@ -64,7 +66,27 @@ const (
 // Copilot integration paths.
 const (
 	DirGitHub               = ".github"
+	DirGitHubAgents         = "agents"
+	DirGitHubHooks          = "hooks"
+	DirGitHubHooksScripts   = "scripts"
+	DirGitHubInstructions   = "instructions"
+	DirGitHubSkills         = "skills"
+	FileAgentsMd            = "AGENTS.md"
+	FileAgentsCtxMd         = "ctx.md"
 	FileCopilotInstructions = "copilot-instructions.md"
+	FileCopilotCLIHooksJSON = "ctx-hooks.json"
+	FileInstructionsCtxMd   = "context.instructions.md"
+	FileSKILLMd             = "SKILL.md"
+)
+
+// Copilot CLI home directory and MCP config.
+const (
+	// DirCopilotHome is the default Copilot CLI config directory name.
+	DirCopilotHome = ".copilot"
+	// EnvCopilotHome is the environment variable to override the config dir.
+	EnvCopilotHome = "COPILOT_HOME"
+	// FileMCPConfigJSON is the MCP server configuration file name.
+	FileMCPConfigJSON = "mcp-config.json"
 )
 
 // Prefixes
@@ -88,4 +110,12 @@ const (
 	EventPreToolUse = "PreToolUse"
 	// EventPostToolUse is the hook event for post-tool-use hooks.
 	EventPostToolUse = "PostToolUse"
+)
+
+// Copilot CLI hook event names (GitHub Copilot CLI lifecycle stages).
+const (
+	CLIEventSessionStart = "sessionStart"
+	CLIEventSessionEnd   = "sessionEnd"
+	CLIEventPreToolUse   = "preToolUse"
+	CLIEventPostToolUse  = "postToolUse"
 )

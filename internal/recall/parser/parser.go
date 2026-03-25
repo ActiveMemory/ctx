@@ -21,6 +21,8 @@ import (
 // Add new parsers here when supporting additional tools.
 var registeredParsers = []SessionParser{
 	NewClaudeCodeParser(),
+	NewCopilotParser(),
+	NewCopilotCLIParser(),
 	NewMarkdownSessionParser(),
 }
 

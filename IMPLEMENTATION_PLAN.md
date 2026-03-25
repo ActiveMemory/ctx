@@ -13,9 +13,9 @@ This file provides high-level direction. Detailed tasks live in `.context/TASKS.
 
 What does "done" look like for this project?
 
-1. **Goal** — Define your end state
-2. **Validation** — How will you know it works?
-3. **Handoff** — Can someone else pick this up?
+1. **Goal**: Define your end state
+2. **Validation**: How will you know it works?
+3. **Handoff**: Can someone else pick this up?
 
 ## Notes
 

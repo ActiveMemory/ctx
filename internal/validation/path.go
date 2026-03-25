@@ -9,11 +9,15 @@ package validation
 import (
 	"os"
 	"path/filepath"
+	"runtime"
 	"strings"
 
 	errCtx "github.com/ActiveMemory/ctx/internal/err/context"
 	errFs "github.com/ActiveMemory/ctx/internal/err/fs"
 )
+
+// osWindows is the GOOS value for Windows, extracted to satisfy goconst.
+const osWindows = "windows"
 
 // ValidateBoundary checks that dir resolves to a path within the current
 // working directory. Returns an error if the resolved path escapes the
@@ -43,10 +47,26 @@ func ValidateBoundary(dir string) error {
 		resolvedDir = filepath.Clean(absDir)
 	}
 
+	// On Windows, path comparisons must be case-insensitive because
+	// filepath.EvalSymlinks resolves to actual disk casing while
+	// os.Getwd preserves the casing from the caller (e.g. VS Code
+	// passes a lowercase drive letter via fsPath).
+	equal := func(a, b string) bool { return a == b }
+	hasPrefix := strings.HasPrefix
+	if runtime.GOOS == osWindows {
+		equal = strings.EqualFold
+		hasPrefix = func(s, prefix string) bool {
+			return len(s) >= len(prefix) && strings.EqualFold(s[:len(prefix)], prefix)
+		}
+	}
+
 	// Ensure the resolved dir is equal to or nested under the project root.
 	// Append os.PathSeparator to avoid "/foo/bar" matching "/foo/b".
+	// On Windows, use case-insensitive comparison since NTFS paths are
+	// case-insensitive but EvalSymlinks normalizes casing only for the
+	// existing cwd, not the non-existent target — creating a mismatch.
 	root := resolvedCwd + string(os.PathSeparator)
-	if resolvedDir != resolvedCwd && !strings.HasPrefix(resolvedDir, root) {
+	if !equal(resolvedDir, resolvedCwd) && !hasPrefix(resolvedDir, root) {
 		return errCtx.OutsideRoot(dir, resolvedCwd)
 	}
 

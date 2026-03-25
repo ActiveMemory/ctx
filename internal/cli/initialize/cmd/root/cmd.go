@@ -41,6 +41,7 @@ func Cmd() *cobra.Command {
 		merge          bool
 		ralph          bool
 		noPluginEnable bool
+		caller         string
 	)
 
 	short, long := desc.Command(cmd.DescKeyInitialize)
@@ -50,7 +51,7 @@ func Cmd() *cobra.Command {
 		Annotations: map[string]string{cli.AnnotationSkipInit: cli.AnnotationTrue},
 		Long:        long,
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return Run(cmd, force, minimal, merge, ralph, noPluginEnable)
+			return Run(cmd, force, minimal, merge, ralph, noPluginEnable, caller)
 		},
 	}
 
@@ -75,6 +76,10 @@ func Cmd() *cobra.Command {
 	c.Flags().BoolVar(
 		&noPluginEnable, cFlag.NoPluginEnable, false,
 		desc.Flag(flag.DescKeyInitializeNoPluginEnable),
+	)
+	c.Flags().StringVar(
+		&caller, "caller", "",
+		"Identify the calling tool (e.g. vscode) to tailor output",
 	)
 
 	return c

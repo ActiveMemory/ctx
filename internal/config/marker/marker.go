@@ -46,6 +46,14 @@ const (
 	CopilotMarkerEnd = "<!-- ctx:copilot:end -->"
 )
 
+// Agents block markers for AGENTS.md.
+const (
+	// AgentsMarkerStart marks the beginning of ctx-managed AGENTS.md content.
+	AgentsMarkerStart = "<!-- ctx:agents -->"
+	// AgentsMarkerEnd marks the end of ctx-managed AGENTS.md content.
+	AgentsMarkerEnd = "<!-- ctx:agents:end -->"
+)
+
 // Plan block markers for IMPLEMENTATION_PLAN.md.
 const (
 	// PlanMarkerStart marks the beginning of the plan block.
