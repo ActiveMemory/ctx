@@ -62,6 +62,11 @@ func findSessionsWithFilter(
 		scanOnce(dir)
 	}
 
+	// Check Copilot CLI session directories (~/.copilot/ or $COPILOT_HOME)
+	for _, dir := range CopilotCLISessionDirs() {
+		scanOnce(dir)
+	}
+
 	// Check .context/sessions/ in the current working directory
 	if cwd, cwdErr := os.Getwd(); cwdErr == nil {
 		scanOnce(filepath.Join(cwd, dir.Context, dir.Sessions))

@@ -12,6 +12,8 @@ const (
 	ToolClaudeCode = "claude-code"
 	// ToolCopilot is the tool identifier for VS Code Copilot Chat sessions.
 	ToolCopilot = "copilot"
+	// ToolCopilotCLI is the tool identifier for GitHub Copilot CLI sessions.
+	ToolCopilotCLI = "copilot-cli"
 	// ToolMarkdown is the tool identifier for Markdown session files.
 	ToolMarkdown = "markdown"
 )

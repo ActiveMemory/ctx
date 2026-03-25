@@ -230,6 +230,11 @@ func WriteCopilotCLIHooks(cmd *cobra.Command) error {
 		writeErr.WarnFile(cmd, cfgHook.DirGitHubInstructions, err)
 	}
 
+	// Register ctx MCP server in ~/.copilot/mcp-config.json
+	if err := ensureCopilotCLIMCPConfig(cmd); err != nil {
+		cmd.Println("  ⚠ mcp-config.json: " + err.Error())
+	}
+
 	hook.InfoCopilotCLISummary(cmd)
 	return nil
 }
@@ -365,6 +370,69 @@ func ensureVSCodeMCPJSON(cmd *cobra.Command) error {
 
 	if err := os.WriteFile(target, data, fs.PermFile); err != nil {
 		return err
+	}
+	cmd.Println("  ✓ " + target)
+	return nil
+}
+
+// ensureCopilotCLIMCPConfig registers the ctx MCP server in
+// ~/.copilot/mcp-config.json (or $COPILOT_HOME/mcp-config.json).
+// Merge-safe: reads existing config, adds ctx server, writes back.
+// Skips if ctx server is already registered.
+func ensureCopilotCLIMCPConfig(cmd *cobra.Command) error {
+	copilotHome := os.Getenv(cfgHook.EnvCopilotHome)
+	if copilotHome == "" {
+		home, err := os.UserHomeDir()
+		if err != nil {
+			return err
+		}
+		copilotHome = filepath.Join(home, cfgHook.DirCopilotHome)
+	}
+
+	target := filepath.Join(copilotHome, cfgHook.FileMCPConfigJSON)
+
+	// Read existing config if it exists
+	existing := make(map[string]interface{})
+	if data, err := os.ReadFile(filepath.Clean(target)); err == nil {
+		if jErr := json.Unmarshal(data, &existing); jErr != nil {
+			return jErr
+		}
+	}
+
+	// Get or create mcpServers map
+	servers, _ := existing["mcpServers"].(map[string]interface{})
+	if servers == nil {
+		servers = make(map[string]interface{})
+	}
+
+	// Check if ctx is already registered
+	if _, ok := servers["ctx"]; ok {
+		cmd.Println("  ○ " + target + " (ctx server exists, skipped)")
+		return nil
+	}
+
+	// Add ctx MCP server
+	servers["ctx"] = map[string]interface{}{
+		"type":    "local",
+		"command": "ctx",
+		"args":    []string{"mcp", "serve"},
+		"tools":   []string{"*"},
+	}
+	existing["mcpServers"] = servers
+
+	// Create directory if needed
+	if err := os.MkdirAll(copilotHome, fs.PermExec); err != nil {
+		return err
+	}
+
+	data, err := json.MarshalIndent(existing, "", "  ")
+	if err != nil {
+		return err
+	}
+	data = append(data, '\n')
+
+	if wErr := os.WriteFile(target, data, fs.PermFile); wErr != nil {
+		return wErr
 	}
 	cmd.Println("  ✓ " + target)
 	return nil

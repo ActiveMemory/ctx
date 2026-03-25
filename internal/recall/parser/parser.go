@@ -22,6 +22,7 @@ import (
 var registeredParsers = []SessionParser{
 	NewClaudeCodeParser(),
 	NewCopilotParser(),
+	NewCopilotCLIParser(),
 	NewMarkdownSessionParser(),
 }
 

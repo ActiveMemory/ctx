@@ -77,6 +77,16 @@ const (
 	FileInstructionsCtxMd   = "context.instructions.md"
 )
 
+// Copilot CLI home directory and MCP config.
+const (
+	// DirCopilotHome is the default Copilot CLI config directory name.
+	DirCopilotHome = ".copilot"
+	// EnvCopilotHome is the environment variable to override the config dir.
+	EnvCopilotHome = "COPILOT_HOME"
+	// FileMCPConfigJSON is the MCP server configuration file name.
+	FileMCPConfigJSON = "mcp-config.json"
+)
+
 // Prefixes
 const (
 	// StdinReadTimeout is the maximum time to wait for hook JSON on stdin
