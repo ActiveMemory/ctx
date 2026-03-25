@@ -34,6 +34,33 @@ func CopilotCLIHooksJSON() ([]byte, error) {
 	return assets.FS.ReadFile(asset.PathCopilotCLIHooksJSON)
 }
 
+// AgentsMd reads the embedded AGENTS.md template.
+//
+// Returns:
+//   - []byte: Template content from hooks/agents.md
+//   - error: Non-nil if the file is not found or read fails
+func AgentsMd() ([]byte, error) {
+	return assets.FS.ReadFile(asset.PathAgentsMd)
+}
+
+// AgentsCtxMd reads the embedded .github/agents/ctx.md template.
+//
+// Returns:
+//   - []byte: Template content from hooks/copilot-cli/agents-ctx.md
+//   - error: Non-nil if the file is not found or read fails
+func AgentsCtxMd() ([]byte, error) {
+	return assets.FS.ReadFile(asset.PathAgentsCtxMd)
+}
+
+// InstructionsCtxMd reads the embedded path-specific instructions.
+//
+// Returns:
+//   - []byte: Template content from hooks/copilot-cli/instructions-context.md
+//   - error: Non-nil if the file is not found or read fails
+func InstructionsCtxMd() ([]byte, error) {
+	return assets.FS.ReadFile(asset.PathInstructionsCtxMd)
+}
+
 // CopilotCLIScripts reads all embedded Copilot CLI hook scripts.
 // Returns a map of filename to content for scripts in
 // hooks/copilot-cli/scripts/.

@@ -47,8 +47,11 @@ const (
 	FileAllowTxt              = "allow.txt"
 	FileCLAUDEMd              = "CLAUDE.md"
 	FileCommandsYAML          = "commands.yaml"
+	FileAgentsMd              = "agents.md"
+	FileAgentsCtxMd           = "agents-ctx.md"
 	FileCopilotCLIHooksJSON   = "ctx-hooks.json"
 	FileCopilotInstructionsMd = "copilot-instructions.md"
+	FileInstructionsCtxMd     = "instructions-context.md"
 	FileCtxrcSchemaJSON       = "ctxrc.schema.json"
 	FileDenyTxt               = "deny.txt"
 	FileExamplesYAML          = "examples.yaml"
@@ -72,8 +75,11 @@ var (
 	PathCommandsYAML        = path.Join(DirCommands, FileCommandsYAML)
 	PathFlagsYAML           = path.Join(DirCommands, FileFlagsYAML)
 	PathExamplesYAML        = path.Join(DirCommands, FileExamplesYAML)
+	PathAgentsMd            = path.Join(DirHooks, FileAgentsMd)
+	PathAgentsCtxMd         = path.Join(DirHooksCopilotCLI, FileAgentsCtxMd)
 	PathCopilotCLIHooksJSON = path.Join(DirHooksCopilotCLI, FileCopilotCLIHooksJSON)
 	PathCopilotInstructions = path.Join(DirHooks, FileCopilotInstructionsMd)
+	PathInstructionsCtxMd   = path.Join(DirHooksCopilotCLI, FileInstructionsCtxMd)
 	PathHookRegistry        = path.Join(DirHooksMessages, FileRegistryYAML)
 	PathExtraCSS            = path.Join(DirJournal, FileExtraCSS)
 	PathMakefileCtx         = path.Join(DirProject, FileMakefileCtx)

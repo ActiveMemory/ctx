@@ -8,6 +8,7 @@ package text
 
 const (
 	DescKeyHookAider          = "hook.aider"
+	DescKeyHookAgents         = "hook.agents"
 	DescKeyHookClaude         = "hook.claude"
 	DescKeyHookCopilot        = "hook.copilot"
 	DescKeyHookCopilotCLI     = "hook.copilot-cli"
@@ -17,6 +18,10 @@ const (
 )
 
 const (
+	DescKeyWriteHookAgentsCreated      = "write.hook-agents-created"
+	DescKeyWriteHookAgentsMerged       = "write.hook-agents-merged"
+	DescKeyWriteHookAgentsSkipped      = "write.hook-agents-skipped"
+	DescKeyWriteHookAgentsSummary      = "write.hook-agents-summary"
 	DescKeyWriteHookCopilotCLICreated  = "write.hook-copilot-cli-created"
 	DescKeyWriteHookCopilotCLISkipped  = "write.hook-copilot-cli-skipped"
 	DescKeyWriteHookCopilotCLISummary  = "write.hook-copilot-cli-summary"

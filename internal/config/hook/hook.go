@@ -53,6 +53,7 @@ const (
 
 // Supported integration tool names for ctx hook command.
 const (
+	ToolAgents     = "agents"
 	ToolAider      = "aider"
 	ToolClaude     = "claude"
 	ToolClaudeCode = "claude-code"
@@ -65,10 +66,15 @@ const (
 // Copilot integration paths.
 const (
 	DirGitHub               = ".github"
+	DirGitHubAgents         = "agents"
 	DirGitHubHooks          = "hooks"
 	DirGitHubHooksScripts   = "scripts"
+	DirGitHubInstructions   = "instructions"
+	FileAgentsMd            = "AGENTS.md"
+	FileAgentsCtxMd         = "ctx.md"
 	FileCopilotInstructions = "copilot-instructions.md"
 	FileCopilotCLIHooksJSON = "ctx-hooks.json"
+	FileInstructionsCtxMd   = "context.instructions.md"
 )
 
 // Prefixes

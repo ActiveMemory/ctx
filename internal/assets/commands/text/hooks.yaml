@@ -357,6 +357,20 @@ heartbeat.notify-plain:
   short: 'heartbeat: prompt #%d (context_modified=%t)'
 heartbeat.notify-tokens:
   short: 'heartbeat: prompt #%d (context_modified=%t tokens=%s pct=%d%%)'
+hook.agents:
+  short: |
+    AGENTS.md (Universal Agent Instructions)
+    =========================================
+
+    Generate AGENTS.md in the project root with universal
+    agent instructions that work across all AI coding tools.
+
+    AGENTS.md is read natively by: Codex, Gemini CLI, OpenCode,
+    Claude Code, and GitHub Copilot CLI.
+
+    Run with --write to generate:
+
+      ctx hook agents --write
 hook.aider:
   short: |
     Aider Integration
@@ -438,6 +452,7 @@ hook.cursor:
 hook.supported-tools:
   short: |
     Supported tools:
+      agents       - AGENTS.md (universal agent instructions)
       claude-code  - Anthropic's Claude Code CLI (use plugin instead)
       cursor       - Cursor IDE
       aider        - Aider AI coding assistant

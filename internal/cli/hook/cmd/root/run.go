@@ -45,6 +45,18 @@ func Run(cmd *cobra.Command, args []string, writeFile bool) error {
 	tool := strings.ToLower(args[0])
 
 	switch tool {
+	case cfgHook.ToolAgents:
+		if writeFile {
+			return WriteAgentsMd(cmd)
+		}
+		hook.InfoTool(cmd, desc.Text(text.DescKeyHookAgents))
+		hook.Separator(cmd)
+		content, readErr := agent.AgentsMd()
+		if readErr != nil {
+			return readErr
+		}
+		hook.Content(cmd, string(content))
+
 	case cfgHook.ToolClaudeCode, cfgHook.ToolClaude:
 		hook.InfoTool(cmd, desc.Text(text.DescKeyHookClaude))
 
@@ -160,7 +172,9 @@ func WriteCopilotInstructions(cmd *cobra.Command) error {
 //
 // Creates the .github/hooks/ and .github/hooks/scripts/ directories if
 // needed and writes the JSON config plus bash and PowerShell scripts
-// from embedded assets. Skips if ctx-hooks.json already exists.
+// from embedded assets. Also writes .github/agents/ctx.md and
+// .github/instructions/context.instructions.md for Copilot CLI.
+// Skips if ctx-hooks.json already exists.
 //
 // Parameters:
 //   - cmd: Cobra command for output messages
@@ -206,7 +220,120 @@ func WriteCopilotCLIHooks(cmd *cobra.Command) error {
 		hook.InfoCopilotCLICreated(cmd, target)
 	}
 
+	// Write .github/agents/ctx.md
+	if err := writeCopilotCLIAgent(cmd); err != nil {
+		writeErr.WarnFile(cmd, cfgHook.DirGitHubAgents, err)
+	}
+
+	// Write .github/instructions/context.instructions.md
+	if err := writeCopilotCLIInstructions(cmd); err != nil {
+		writeErr.WarnFile(cmd, cfgHook.DirGitHubInstructions, err)
+	}
+
 	hook.InfoCopilotCLISummary(cmd)
+	return nil
+}
+
+// writeCopilotCLIAgent creates .github/agents/ctx.md for Copilot CLI
+// custom agent delegation. Skips if the file already exists.
+func writeCopilotCLIAgent(cmd *cobra.Command) error {
+	agentsDir := filepath.Join(cfgHook.DirGitHub, cfgHook.DirGitHubAgents)
+	target := filepath.Join(agentsDir, cfgHook.FileAgentsCtxMd)
+
+	if _, err := os.Stat(target); err == nil {
+		hook.InfoCopilotCLICreated(cmd, target+" (exists, skipped)")
+		return nil
+	}
+
+	if err := os.MkdirAll(agentsDir, fs.PermExec); err != nil {
+		return err
+	}
+
+	content, readErr := agent.AgentsCtxMd()
+	if readErr != nil {
+		return readErr
+	}
+	if wErr := os.WriteFile(target, content, fs.PermFile); wErr != nil {
+		return wErr
+	}
+	hook.InfoCopilotCLICreated(cmd, target)
+	return nil
+}
+
+// writeCopilotCLIInstructions creates
+// .github/instructions/context.instructions.md for path-specific
+// context file instructions. Skips if the file already exists.
+func writeCopilotCLIInstructions(cmd *cobra.Command) error {
+	instrDir := filepath.Join(cfgHook.DirGitHub, cfgHook.DirGitHubInstructions)
+	target := filepath.Join(instrDir, cfgHook.FileInstructionsCtxMd)
+
+	if _, err := os.Stat(target); err == nil {
+		hook.InfoCopilotCLICreated(cmd, target+" (exists, skipped)")
+		return nil
+	}
+
+	if err := os.MkdirAll(instrDir, fs.PermExec); err != nil {
+		return err
+	}
+
+	content, readErr := agent.InstructionsCtxMd()
+	if readErr != nil {
+		return readErr
+	}
+	if wErr := os.WriteFile(target, content, fs.PermFile); wErr != nil {
+		return wErr
+	}
+	hook.InfoCopilotCLICreated(cmd, target)
+	return nil
+}
+
+// WriteAgentsMd generates AGENTS.md in the project root.
+//
+// Creates AGENTS.md with universal agent instructions. Preserves existing
+// non-ctx content by checking for ctx:agents markers. If the file exists
+// with markers, skips. If it exists without markers, merges.
+//
+// Parameters:
+//   - cmd: Cobra command for output messages
+//
+// Returns:
+//   - error: Non-nil if file write fails
+func WriteAgentsMd(cmd *cobra.Command) error {
+	targetFile := cfgHook.FileAgentsMd
+
+	// Load the AGENTS.md template
+	agentsContent, readErr := agent.AgentsMd()
+	if readErr != nil {
+		return readErr
+	}
+
+	// Check if the file exists
+	existingContent, err := os.ReadFile(filepath.Clean(targetFile))
+	fileExists := err == nil
+
+	if fileExists {
+		existingStr := string(existingContent)
+		if strings.Contains(existingStr, marker.AgentsMarkerStart) {
+			hook.InfoAgentsSkipped(cmd, targetFile)
+			return nil
+		}
+
+		// File exists without ctx markers: append ctx content
+		merged := existingStr + token.NewlineLF + string(agentsContent)
+		if wErr := os.WriteFile(targetFile, []byte(merged), fs.PermFile); wErr != nil {
+			return errFs.FileWrite(targetFile, wErr)
+		}
+		hook.InfoAgentsMerged(cmd, targetFile)
+		return nil
+	}
+
+	// File doesn't exist: create it
+	if wErr := os.WriteFile(targetFile, agentsContent, fs.PermFile); wErr != nil {
+		return errFs.FileWrite(targetFile, wErr)
+	}
+	hook.InfoAgentsCreated(cmd, targetFile)
+
+	hook.InfoAgentsSummary(cmd)
 	return nil
 }
 

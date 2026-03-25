@@ -103,6 +103,17 @@ write.format-si-mega-upper:
   short: "%.1fM"
 write.format-thousands:
   short: "%d,%03d"
+write.hook-agents-created:
+  short: '  ✓ %s'
+write.hook-agents-merged:
+  short: '  ✓ %s (merged ctx section)'
+write.hook-agents-skipped:
+  short: '  ○ %s (ctx markers exist, skipped)'
+write.hook-agents-summary:
+  short: |-
+    AGENTS.md is now available for all AI coding tools.
+    Tools that read AGENTS.md natively: Codex, Gemini CLI, OpenCode,
+    Claude Code, GitHub Copilot CLI.
 write.hook-copilot-cli-created:
   short: '  ✓ %s'
 write.hook-copilot-cli-skipped:

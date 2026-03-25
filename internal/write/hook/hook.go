@@ -137,6 +137,43 @@ func InfoCopilotCLICreated(cmd *cobra.Command, targetFile string) {
 	cmd.Println(fmt.Sprintf(desc.Text(text.DescKeyWriteHookCopilotCLICreated), targetFile))
 }
 
+// InfoAgentsCreated reports that AGENTS.md was created.
+//
+// Parameters:
+//   - cmd: Cobra command for output
+//   - targetFile: Path to the created file
+func InfoAgentsCreated(cmd *cobra.Command, targetFile string) {
+	cmd.Println(fmt.Sprintf(desc.Text(text.DescKeyWriteHookAgentsCreated), targetFile))
+}
+
+// InfoAgentsMerged reports that ctx content was merged into AGENTS.md.
+//
+// Parameters:
+//   - cmd: Cobra command for output
+//   - targetFile: Path to the merged file
+func InfoAgentsMerged(cmd *cobra.Command, targetFile string) {
+	cmd.Println(fmt.Sprintf(desc.Text(text.DescKeyWriteHookAgentsMerged), targetFile))
+}
+
+// InfoAgentsSkipped reports that AGENTS.md was skipped because
+// ctx markers already exist.
+//
+// Parameters:
+//   - cmd: Cobra command for output
+//   - targetFile: Path to the existing file
+func InfoAgentsSkipped(cmd *cobra.Command, targetFile string) {
+	cmd.Println(fmt.Sprintf(desc.Text(text.DescKeyWriteHookAgentsSkipped), targetFile))
+}
+
+// InfoAgentsSummary prints the post-write summary for AGENTS.md.
+//
+// Parameters:
+//   - cmd: Cobra command for output
+func InfoAgentsSummary(cmd *cobra.Command) {
+	cmd.Println()
+	cmd.Println(desc.Text(text.DescKeyWriteHookAgentsSummary))
+}
+
 // InfoCopilotCLISkipped reports that copilot-cli hooks were skipped
 // because they already exist.
 //
