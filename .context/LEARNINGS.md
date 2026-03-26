@@ -17,6 +17,8 @@ DO NOT UPDATE FOR:
 <!-- INDEX:START -->
 | Date | Learning |
 |------|--------|
+| 2026-03-25 | Dead files accumulate when nothing consumes them |
+| 2026-03-25 | Template improvements don't propagate to existing projects |
 | 2026-03-24 | lint-drift false positives from conflating constant namespaces |
 | 2026-03-24 | git describe --tags follows ancestry, not global tag list |
 | 2026-03-23 | Typography detection script needs exclusion lists for intentional uses |
@@ -106,6 +108,26 @@ DO NOT UPDATE FOR:
 | 2026-02-19 | Feature can be code-complete but invisible to users |
 | 2026-01-28 | IDE is already the UI |
 <!-- INDEX:END -->
+
+---
+
+## [2026-03-25-173339] Dead files accumulate when nothing consumes them
+
+**Context**: IMPLEMENTATION_PLAN.md and PROMPT.md were created by ctx init but no agent, hook, or skill ever read them
+
+**Lesson**: Before adding a file to init scaffolding, verify there is at least one consumer. Periodically audit what init creates vs what the system reads.
+
+**Application**: The prompt deprecation spec documents the reasoning as a papertrail for future removals.
+
+---
+
+## [2026-03-25-173338] Template improvements don't propagate to existing projects
+
+**Context**: 5 of 8 context files in the ctx project itself had stale/missing comment headers — templates evolved but non-destructive init never re-synced them
+
+**Lesson**: Any template change is invisible to existing users until they run ctx init --force
+
+**Application**: Added drift detection (checkTemplateHeaders) to ctx drift. Consider surfacing this during ctx status too.
 
 ---
 

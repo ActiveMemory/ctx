@@ -962,6 +962,17 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#5-set-up-companion-tools-highly-recommended" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5. Set Up Companion Tools (Highly Recommended)
+      
+    </span>
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -2620,16 +2631,14 @@
   
   
     <li class="md-nav__item">
-      <a href="../../recipes/prompt-templates/" class="md-nav__link">
+      <a href="../../recipes/prompt-templates.md" class="md-nav__link">
         
   
-  
-    <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-message-square-text" viewBox="0 0 24 24"><path d="M22 17a2 2 0 0 1-2 2H6.828a2 2 0 0 0-1.414.586l-2.202 2.202A.71.71 0 0 1 2 21.286V5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2zM7 11h10M7 15h6M7 7h8"/></svg>
   
   <span class="md-ellipsis">
     
   
-    Reusable Prompt Templates
+    none
   
 
     
@@ -3782,6 +3791,17 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#5-set-up-companion-tools-highly-recommended" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5. Set Up Companion Tools (Highly Recommended)
+      
+    </span>
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -4025,12 +4045,37 @@ for automatic context loading.</p>
 <p>Ask your AI: <strong>"Do you remember?"</strong></p>
 <p>It should cite specific context: current tasks, recent decisions,
 or previous session topics.</p>
+<h3 id="5-set-up-companion-tools-highly-recommended">5. Set Up Companion Tools (Highly Recommended)<a class="headerlink" href="#5-set-up-companion-tools-highly-recommended" title="Permanent link">&para;</a></h3>
+<p>ctx works on its own, but two companion MCP servers unlock significantly
+better agent behavior. The investment is small and the benefits compound
+over sessions:</p>
+<ul>
+<li>
+<p><strong><a href="https://github.com/nicobailon/gemini-code-search-mcp">Gemini Search</a></strong>
+  — grounded web search with citations. Skills like <code>/ctx-code-review</code>
+  and <code>/ctx-explain</code> use it for up-to-date documentation lookups instead
+  of relying on training data.</p>
+</li>
+<li>
+<p><strong><a href="https://github.com/nicobailon/gitnexus-mcp">GitNexus</a></strong> — code
+  knowledge graph with symbol resolution, blast radius analysis, and
+  domain clustering. Skills like <code>/ctx-refactor</code> and <code>/ctx-code-review</code>
+  use it for impact analysis and dependency awareness.</p>
+</li>
+</ul>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-13-1"><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a><span class="c1"># Index your project for GitNexus (run once, then after major changes)</span>
+</span><span id="__span-13-2"><a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a>npx<span class="w"> </span>gitnexus<span class="w"> </span>analyze
+</span></code></pre></div>
+<p>Both are optional MCP servers: if they are not connected, skills degrade
+gracefully to built-in capabilities. See
+<a href="../../recipes/multi-tool-setup/#companion-tools-highly-recommended">Companion Tools</a>
+for setup details and verification.</p>
 <hr />
 <p><strong>Next Up</strong>:</p>
 <ul>
-<li><a href="../first-session/">Your First Session →</a>: a step-by-step walkthrough 
+<li><a href="../first-session/">Your First Session →</a>: a step-by-step walkthrough
   from <code>ctx init</code> to verified recall</li>
-<li><a href="../common-workflows/">Common Workflows →</a>: day-to-day commands for 
+<li><a href="../common-workflows/">Common Workflows →</a>: day-to-day commands for
   tracking context, checking health, and browsing history</li>
 </ul>
 

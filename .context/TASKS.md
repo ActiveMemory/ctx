@@ -35,44 +35,19 @@ relocate loop.md, delete `ctx prompt` CLI and `/ctx-prompt` skill.
 
 **PD.1 — Create new skills:**
 
-- [x] PD.1.1: Create `/ctx-code-review` skill in `internal/assets/claude/skills/ctx-code-review/SKILL.md` — promote code-review.md with proper frontmatter, trigger phrases, allowed-tools #priority:high #added:2026-03-25-203340 #done:2026-03-25
-- [x] PD.1.2: Create `/ctx-explain` skill in `internal/assets/claude/skills/ctx-explain/SKILL.md` — promote explain.md with proper frontmatter, trigger phrases, allowed-tools #priority:high #added:2026-03-25-203340 #done:2026-03-25
-- [x] PD.1.3: Create `/ctx-refactor` skill in `internal/assets/claude/skills/ctx-refactor/SKILL.md` — promote refactor.md with proper frontmatter, trigger phrases, allowed-tools #priority:high #added:2026-03-25-203340 #done:2026-03-25
 
 **PD.2 — Relocate loop.md:**
 
-- [x] PD.2.1: Move loop.md deployment from `.context/prompts/loop.md` to `.context/loop.md` — update `ctx init` to write loop.md to context root #priority:high #added:2026-03-25-203340 #done:2026-03-25
-- [x] PD.2.2: Update `internal/config/loop/prompt.go` default to `.context/loop.md` #priority:high #added:2026-03-25-203340 #done:2026-03-25
-- [x] PD.2.3: Update `ctx loop` tests for new default path #priority:high #added:2026-03-25-203340 #done:2026-03-25
 
 **PD.3 — Remove prompt system:**
 
-- [x] PD.3.1: Delete `/ctx-prompt` skill (`internal/assets/claude/skills/ctx-prompt/SKILL.md`) #priority:high #added:2026-03-25-203340 #done:2026-03-25
-- [x] PD.3.2: Delete `internal/assets/prompt-templates/` directory (all 4 files) #priority:high #added:2026-03-25-203340 #done:2026-03-25
-- [x] PD.3.3: Delete `internal/assets/read/prompt/` package #priority:high #added:2026-03-25-203340 #done:2026-03-25
-- [x] PD.3.4: Delete `internal/cli/prompt/` entire command tree #priority:high #added:2026-03-25-203340 #done:2026-03-25
-- [x] PD.3.5: Delete `internal/cli/initialize/core/prompt/` package (prompt_tpl.go, doc.go) #priority:high #added:2026-03-25-203340 #done:2026-03-25
-- [x] PD.3.6: Delete `internal/write/prompt/` package #priority:high #added:2026-03-25-203340 #done:2026-03-25
-- [x] PD.3.7: Remove `prompt` command registration from `internal/bootstrap/bootstrap.go` #priority:high #added:2026-03-25-203340 #done:2026-03-25
-- [x] PD.3.8: Remove `prompt-templates/*.md` from embed.go glob #priority:high #added:2026-03-25-203340 #done:2026-03-25
-- [x] PD.3.9: Remove `Prompts` constant from `internal/config/dir/dir.go` #priority:high #added:2026-03-25-203340 #done:2026-03-25
-- [x] PD.3.10: Remove `DirPromptTemplates` from `internal/config/asset/asset.go` #priority:high #added:2026-03-25-203340 #done:2026-03-25
-- [x] PD.3.11: Remove prompt-specific error keys/functions from `internal/config/embed/text/err_prompt.go` and `internal/err/prompt/` (keep if used elsewhere) #priority:high #added:2026-03-25-203340 #done:2026-03-25
-- [x] PD.3.12: Remove prompt entries from commands.yaml, flags.yaml, write.yaml, ui.yaml, err.yaml #priority:high #added:2026-03-25-203340 #done:2026-03-25
-- [x] PD.3.13: Remove prompt template tests from embed_test.go #priority:high #added:2026-03-25-203340 #done:2026-03-25
 
 **PD.4 — Update docs and context:**
 
-- [x] PD.4.1: Delete `docs/recipes/prompt-templates.md` #priority:medium #added:2026-03-25-203340 #done:2026-03-25
-- [x] PD.4.2: Update `docs/cli/tools.md` — remove `ctx prompt` section, update `ctx loop` default #priority:medium #added:2026-03-25-203340 #done:2026-03-25
-- [x] PD.4.3: Update `docs/cli/index.md` — remove `ctx prompt` entry #priority:medium #added:2026-03-25-203340 #done:2026-03-25
-- [x] PD.4.4: Update `docs/recipes/index.md` — remove prompt-templates recipe reference #priority:medium #added:2026-03-25-203340 #done:2026-03-25
 - [ ] PD.4.5: Update AGENT_PLAYBOOK.md — add generic "check available skills" instruction #priority:medium #added:2026-03-25-203340
-- [x] PD.4.6: Search and update any remaining doc references to `.context/prompts/` or `ctx prompt` #priority:medium #added:2026-03-25-203340 #done:2026-03-25
 
 **PD.5 — Validate:**
 
-- [x] PD.5.1: Run `make lint && make test` — all tests pass, no dangling imports #priority:high #added:2026-03-25-203340 #done:2026-03-25
 - [ ] PD.5.2: Run `ctx init` on a clean directory — verify no `.context/prompts/` created, `.context/loop.md` exists, new skills deployed #priority:high #added:2026-03-25-203340
 
 ### Phase -3: DevEx
@@ -84,18 +59,36 @@ projects.
 
 - [ ] Add cobra Example fields to CLI commands via examples.yaml #added:2026-03-20-163413
 
-- [ ] Evaluate Gemini Search MCP server as peer MCP for grounded web queries — try gemini-grounding, document in multi-tool-setup recipe if useful. See ideas/gemini-search-mcp.md #added:2026-03-20-141022
+- [ ] Evaluate Gemini Search MCP server as peer MCP for grounded web queries — 
+  try gemini-grounding, document in multi-tool-setup recipe if useful. 
+  See ideas/gemini-search-mcp.md #added:2026-03-20-141022
 
-- [ ] Create ctx-docstrings skill: audit and fix docstrings against CONVENTIONS.md Documentation section. Skill loads CONVENTIONS.md, scans functions in scope for missing/incomplete docstring sections (Parameters, Returns), reports violations, and optionally fixes them. Language-agnostic design with Go as first implementation. Deterministic enforcement via linter is tracked separately in ideas/spec-convention-enforcement.md #added:2026-03-16-114445
+- [ ] Create ctx-docstrings skill: audit and fix docstrings against 
+  CONVENTIONS.md Documentation section. Skill loads CONVENTIONS.md, scans 
+  functions in scope for missing/incomplete docstring sections 
+  (Parameters, Returns), reports violations, and optionally fixes them. 
+  Language-agnostic design with Go as first implementation. Deterministic 
+  enforcement via linter is tracked separately in 
+  ideas/spec-convention-enforcement.md #added:2026-03-16-114445
 
 ### Phase -2: Task completion nudge:
 
 - [ ] Design UserPromptSubmit hook that runs `make audit` at session start and 
-  surfaces failures as a consolidation-debt warning before the agent acts on stale assumptions. Project-level hook (not bundled in ctx), configurable via .ctxrc or settings.json. Related: consolidation nudge hook spec. #added:2026-03-23-223500
+  surfaces failures as a consolidation-debt warning before the agent acts on 
+  stale assumptions. Project-level hook (not bundled in ctx), configurable 
+  via .ctxrc or settings.json. 
+  Related: consolidation nudge hook spec. #added:2026-03-23-223500
 
-- [ ] Bug: check-version hook missing throttle touch on plugin version read error (run.go:70). When claude.PluginVersion() fails, the hook returns without touching the daily throttle marker, causing repeated checks on days when plugin.json is missing or corrupted. Fix: add internalIo.TouchFile(markerFile) before the early return. See docs/recipes/hook-sequence-diagrams.md check-version diagram which documents the expected behavior. #added:2026-03-23-162802
+- [ ] Bug: check-version hook missing throttle touch on plugin version read error 
+  (run.go:70). When claude.PluginVersion() fails, the hook returns without 
+  touching the daily throttle marker, causing repeated checks on days when 
+  plugin.json is missing or corrupted. Fix: add 
+  internalIo.TouchFile(markerFile) before the early return. 
+  See docs/recipes/hook-sequence-diagrams.md check-version diagram 
+  which documents the expected behavior. #added:2026-03-23-162802
 
-- [ ] Design UserPromptSubmit hook that runs go build and surfaces compilation errors before the agent acts on stale assumptions #added:2026-03-23-120136
+- [ ] Design UserPromptSubmit hook that runs go build and surfaces compilation 
+  errors before the agent acts on stale assumptions #added:2026-03-23-120136
 
 - [ ]: Architecture mapping skill refactoring:
   - [ ] Update ctx-architecture skill based on the following findings; remove 
@@ -435,23 +428,23 @@ just file reorganization.
 
 Taxonomy (from prefix analysis):
 
-| File             | Prefixes / Domain                                     | ~Count |
-|------------------|-------------------------------------------------------|--------|
-| `memory.go`      | Memory*, Discover*                                    | 17     |
-| `parser.go`      | Parser*                                               | 7      |
-| `crypto.go`      | Crypto*, Encrypt*, Decrypt*, GenerateKey, SaveKey, LoadKey, NoKeyAt | 14     |
-| `task.go`        | Task*, NoTaskSpecified, NoTaskMatch, NoCompletedTasks | 8      |
-| `journal.go`     | LoadJournalState*, SaveJournalState*, ReadJournalDir, NoJournalDir, NoJournalEntries, ScanJournal, UnknownStage, StageNotSet | 10 |
-| `session.go`     | Session*, FindSessions, NoSessionsFound, All*, Ambiguous* | 8 |
-| `pad.go`         | Edit*, Blob*, ReadScratchpad, OutFlagRequiresBlob, NoConflict*, Resolve* | 10 |
-| `recall.go`      | Reindex*, Stats*, EventLog*                           | 6      |
-| `fs.go`          | Read*, Write*, Open*, Stat*, File*, Mkdir*, CreateDir, DirNotFound, NotDirectory, Boundary* | 30 |
-| `backup.go`      | Backup*, CreateBackup*, CreateArchive*                | 6      |
-| `prompt.go`      | Prompt*, NoPromptTemplate, ListTemplates, ReadTemplate, NoTemplate | 7 |
-| `hook.go`        | Embedded*, Override*, UnknownHook, UnknownVariant, MarkerNotFound | 6 |
-| `skill.go`       | Skill*                                                | 2      |
-| `config.go`      | UnknownProfile, ReadProfile, UnknownFormat, UnknownProjectType, InvalidTool, UnsupportedTool, NotInitialized, ContextNotInitialized, ContextDirNotFound, FlagRequires* | 12 |
-| `errors.go`      | Remaining general-purpose: WorkingDirectory, CtxNotInPath, ReadInput, InvalidDate*, Reminder*, Drift*, Git*, Webhook*, etc. | ~25 |
+| File         | Prefixes / Domain                                                                                                                                                      | ~Count |
+|--------------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------|--------|
+| `memory.go`  | Memory*, Discover*                                                                                                                                                     | 17     |
+| `parser.go`  | Parser*                                                                                                                                                                | 7      |
+| `crypto.go`  | Crypto*, Encrypt*, Decrypt*, GenerateKey, SaveKey, LoadKey, NoKeyAt                                                                                                    | 14     |
+| `task.go`    | Task*, NoTaskSpecified, NoTaskMatch, NoCompletedTasks                                                                                                                  | 8      |
+| `journal.go` | LoadJournalState*, SaveJournalState*, ReadJournalDir, NoJournalDir, NoJournalEntries, ScanJournal, UnknownStage, StageNotSet                                           | 10     |
+| `session.go` | Session*, FindSessions, NoSessionsFound, All*, Ambiguous*                                                                                                              | 8      |
+| `pad.go`     | Edit*, Blob*, ReadScratchpad, OutFlagRequiresBlob, NoConflict*, Resolve*                                                                                               | 10     |
+| `recall.go`  | Reindex*, Stats*, EventLog*                                                                                                                                            | 6      |
+| `fs.go`      | Read*, Write*, Open*, Stat*, File*, Mkdir*, CreateDir, DirNotFound, NotDirectory, Boundary*                                                                            | 30     |
+| `backup.go`  | Backup*, CreateBackup*, CreateArchive*                                                                                                                                 | 6      |
+| `prompt.go`  | Prompt*, NoPromptTemplate, ListTemplates, ReadTemplate, NoTemplate                                                                                                     | 7      |
+| `hook.go`    | Embedded*, Override*, UnknownHook, UnknownVariant, MarkerNotFound                                                                                                      | 6      |
+| `skill.go`   | Skill*                                                                                                                                                                 | 2      |
+| `config.go`  | UnknownProfile, ReadProfile, UnknownFormat, UnknownProjectType, InvalidTool, UnsupportedTool, NotInitialized, ContextNotInitialized, ContextDirNotFound, FlagRequires* | 12     |
+| `errors.go`  | Remaining general-purpose: WorkingDirectory, CtxNotInPath, ReadInput, InvalidDate*, Reminder*, Drift*, Git*, Webhook*, etc.                                            | ~25    |
 
 
 
