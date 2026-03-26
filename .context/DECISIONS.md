@@ -3,6 +3,7 @@
 <!-- INDEX:START -->
 | Date | Decision |
 |------|--------|
+| 2026-03-25 | Architecture analysis and enrichment are separate skills — constraint is the feature |
 | 2026-03-25 | Companion tools documented as optional MCP enhancements with runtime check |
 | 2026-03-25 | Prompt templates removed — skills are the single agent instruction mechanism |
 | 2026-03-24 | Write-once baseline with explicit end-consolidation for consolidation lifecycle |
@@ -110,6 +111,20 @@ For significant decisions:
 ✗ No real alternatives existed
 
 -->
+
+## [2026-03-25-233646] Architecture analysis and enrichment are separate skills — constraint is the feature
+
+**Status**: Accepted
+
+**Context**: Observed that agents take shortcuts when code intelligence tools are available during architecture analysis. A 5.2x depth reduction was measured (5866 vs 1124 lines) when GitNexus was available during reading. Mentioning unavailable tools by name in a skill plants the idea for the agent to use them.
+
+**Decision**: Architecture analysis and enrichment are separate skills — constraint is the feature
+
+**Rationale**: Discovery requires forced reading without shortcuts. Validation and quantification are a separate pass. Two-pass compiler analogy: semantic parsing (human-style reading) then static analysis (graph enrichment). Never mention tools you want the agent to avoid — absence is the only reliable constraint.
+
+**Consequence**: ctx-architecture deliberately excludes code intelligence tools from allowed-tools and never mentions them. ctx-architecture-enrich is a separate skill that runs after, using the deep artifacts as baseline. Gemini is allowed in both for upstream/external lookups only.
+
+---
 
 ## [2026-03-25-173337] Companion tools documented as optional MCP enhancements with runtime check
 

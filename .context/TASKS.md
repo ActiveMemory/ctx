@@ -33,14 +33,11 @@ Remove the prompt template system (`.context/prompts/`). Skills are the
 single concept for agent instructions. Promote bundled prompts to skills,
 relocate loop.md, delete `ctx prompt` CLI and `/ctx-prompt` skill.
 
-**PD.1 — Create new skills:**
+**PD.1 — Create new skills:** *(archived)*
 
+**PD.2 — Relocate loop.md:** *(archived)*
 
-**PD.2 — Relocate loop.md:**
-
-
-**PD.3 — Remove prompt system:**
-
+**PD.3 — Remove prompt system:** *(archived)*
 
 **PD.4 — Update docs and context:**
 
@@ -52,16 +49,16 @@ relocate loop.md, delete `ctx prompt` CLI and `/ctx-prompt` skill.
 
 ### Phase -3: DevEx
 
-[ ] Plugin enablement gap: Ref: `ideas/plugin-enablement-gap.md`. 
+- [ ] Plugin enablement gap: Ref: `ideas/plugin-enablement-gap.md`. 
 Local-installed plugins get registered in `installed_plugins.json` but not 
 auto-added to `enabledPlugins`, so slash commands are invisible in non-ctx 
 projects.
 
 - [ ] Add cobra Example fields to CLI commands via examples.yaml #added:2026-03-20-163413
 
-- [ ] Evaluate Gemini Search MCP server as peer MCP for grounded web queries — 
-  try gemini-grounding, document in multi-tool-setup recipe if useful. 
-  See ideas/gemini-search-mcp.md #added:2026-03-20-141022
+- [x] Evaluate Gemini Search MCP server as peer MCP for grounded web queries —
+  try gemini-grounding, document in multi-tool-setup recipe if useful.
+  See ideas/gemini-search-mcp.md #added:2026-03-20-141022 #done:2026-03-26
 
 - [ ] Create ctx-docstrings skill: audit and fix docstrings against 
   CONVENTIONS.md Documentation section. Skill loads CONVENTIONS.md, scans 
@@ -90,10 +87,10 @@ projects.
 - [ ] Design UserPromptSubmit hook that runs go build and surfaces compilation 
   errors before the agent acts on stale assumptions #added:2026-03-23-120136
 
-- [ ]: Architecture mapping skill refactoring:
-  - [ ] Update ctx-architecture skill based on the following findings; remove 
+- [x]: Architecture mapping skill refactoring:
+  - [x] Update ctx-architecture skill based on the following findings; remove
     gitnexus from the template and the actual skill; have a separate follow-up enrichment
-    skill (see the next task where it also has a spec)
+    skill (see the next task where it also has a spec) #done:2026-03-26
         - [2026-03-25-021557] Code intelligence tools trade depth for breadth in 
         architecture analysis
           - **Context**: Compared three sessions analyzing a large codebase 
@@ -152,8 +149,11 @@ projects.
       - [ ] Add Gemini Search integration: cross-reference discovered patterns 
       against known failure modes in similar systems. #added:2026-03-25-060000
 
-- [ ] dependency sanity check: on session start; I should be able to know
+- [x] dependency sanity check: on session start; I should be able to know
   gitnexus mcp is up; gemini mcp is up. maybe a status report during ctx-remember.
+  Core check shipped in /ctx-remember companion tool smoke tests. Follow-up tasks
+  added for ctx self-check, configurable companion registry, and granular suppression.
+  #done:2026-03-26
 
 - [ ] ctx-architecture-extend
   **Context**: Companion to `ctx-architecture` and `ctx-failure-analysis`, completing
@@ -179,9 +179,27 @@ projects.
       - [ ] Integrate with GitNexus: use cluster/process data to identify 
       registration call sites and their callers #added:2026-03-25-062000
 
-[ ] drift check should notify if claude permissions have insecure stuff in it.
+### Phase CT: Companion Tool Integration
 
-[ ] task: sync workspace to ARI_INBOX
+Session-start checks, suppressibility, and registry for companion MCP tools.
+
+- [ ] ctx-remember preflight: verify ctx binary in PATH, plugin installed and enabled, binary version matches plugin version #priority:medium #added:2026-03-25-234514
+
+- [ ] Design suppressible companion check system: .ctxrc configures which companion tools to check (one search MCP, one graph MCP), smoke tests only run for configured tools, not auto-discovered. Keeps bootstrap fast and predictable. #priority:medium #added:2026-03-25-234516
+
+- [ ] Add per-tool suppression for ctx-remember checks: allow suppressing individual preflight checks (ctx binary, plugin, search MCP, graph MCP) via .ctxrc fields, not just companion_check: false blanket toggle #priority:low #added:2026-03-25-234518
+
+### Phase CLI-FIX: CLI Infrastructure Fixes
+
+- [ ] Bug: ctx add task appends to the last Phase section instead of a dedicated location. Tasks added via CLI land inside whatever Phase happens to be last in TASKS.md, breaking Phase structure. Fix: add mandatory --phase flag to ctx add task. If the named Phase section does not exist, create it. If --phase is omitted, error with available Phase names. No fallback section — mandatory placement forces intent at creation time. #priority:high #added:2026-03-25-234813
+
+### Phase BLOG: Blog Posts
+
+- [ ] Write blog post about architecture analysis + enrichment two-pass design after dogfooding run on ctx itself. Cover: the 5.2x depth observation, constraint-as-feature principle, watermelon-rind anti-pattern, and results from the ctx self-analysis. #priority:medium #added:2026-03-25-233650
+
+- [ ] drift check should notify if claude permissions have insecure stuff in it.
+
+- [ ] task: sync workspace to ARI_INBOX
 
 ### Phase -1: Hack Script Absorption
 
@@ -351,18 +369,6 @@ Systematic audit of silently discarded errors across the codebase.
 Many call sites use `_ =` or `_, _ =` to discard errors without
 any feedback. Some are legitimate (best-effort cleanup), most are
 lazy escapes that hide failures.
-
-- [ ] Add drift check: MCP prompt coverage vs bundled skills — programmatic check comparing config/mcp/prompt constants against assets.ListSkills() to detect skills without MCP prompt equivalents. Pair with the tool coverage drift check. @CoderMungan #priority:medium #added:2026-03-15-120519
-
-- [ ] MCP v0.3: expand MCP prompts to cover more skills — current 5 prompts (session-start, add-decision, add-learning, reflect, checkpoint) are a subset of ~30 bundled skills. Evaluate which skills benefit from protocol-native MCP prompt equivalents. Decision 2026-03-06 established 'Skills stay CLI-based; MCP Prompts are the protocol equivalent.' @CoderMungan #priority:medium #added:2026-03-15-120519
-
-- [ ] Add drift check: MCP tool coverage vs CLI commands — programmatic check that compares registered MCP tool names (config/mcp/tool) against ctx CLI subcommands to detect newly added CLI commands without MCP equivalents. Could be a drift detector check or a compliance test. @CoderMungan #priority:medium #added:2026-03-15-120116
-
-- [ ] MCP v0.3: expose additional CLI commands as MCP tools — candidates: ctx_load (full context packet), ctx_agent (token-budgeted packet), ctx_reindex (rebuild indices), ctx_sync (reconcile docs/code), ctx_doctor (health check). Evaluate which provide value over the protocol vs requiring terminal interaction. @CoderMungan #priority:medium #added:2026-03-15-120025
-
-- [ ] Make MCP defaults configurable via .ctxrc — add mcp_recall_limit, mcp_truncate_len, mcp_truncate_content_len, mcp_min_word_len, mcp_min_word_overlap fields to .ctxrc schema; expose via rc.MCP*() with fallback to config/mcp/cfg defaults; update tools.go to read from rc instead of cfg constants. @CoderMungan #priority:medium #added:2026-03-15-114700
-
-- [ ] MCP tools.go cleanup pass: magic strings, duplicated fragments, nested templates. Lines: 461:481 + 186:196 duplicated code; 335 magic number; 382:385 nested TextDescs → single template; 390+851 magic time literal; 443+499+800 magic words; 557+892+902 magic numbers; 590+638 nested TextDesc templating; 820 prefixed %s; 854 suffix %s #priority:high #added:2026-03-15-110429
 
 - [ ] EH.0: Create central warning sink — `internal/log/warn.go` with
       `var Sink io.Writer = os.Stderr` and `func Warn(format string, args ...any)`.
@@ -565,6 +571,20 @@ I/O and replaces 4-8 individual Tpl\* constants per function with one block temp
 - [ ] WC2.5: Update CONVENTIONS.md — add a "Write Package Output" subsection documenting the pre-compute-then-print pattern for future functions with 4+ Printlns and conditionals. #added:2026-03-17
 
 ## MCP-related
+
+### Phase MCP-V3: MCP v0.3 Expansion
+
+- [ ] Add drift check: MCP prompt coverage vs bundled skills — programmatic check comparing config/mcp/prompt constants against assets.ListSkills() to detect skills without MCP prompt equivalents. Pair with the tool coverage drift check. @CoderMungan #priority:medium #added:2026-03-15-120519
+
+- [ ] MCP v0.3: expand MCP prompts to cover more skills — current 5 prompts (session-start, add-decision, add-learning, reflect, checkpoint) are a subset of ~30 bundled skills. Evaluate which skills benefit from protocol-native MCP prompt equivalents. Decision 2026-03-06 established 'Skills stay CLI-based; MCP Prompts are the protocol equivalent.' @CoderMungan #priority:medium #added:2026-03-15-120519
+
+- [ ] Add drift check: MCP tool coverage vs CLI commands — programmatic check that compares registered MCP tool names (config/mcp/tool) against ctx CLI subcommands to detect newly added CLI commands without MCP equivalents. Could be a drift detector check or a compliance test. @CoderMungan #priority:medium #added:2026-03-15-120116
+
+- [ ] MCP v0.3: expose additional CLI commands as MCP tools — candidates: ctx_load (full context packet), ctx_agent (token-budgeted packet), ctx_reindex (rebuild indices), ctx_sync (reconcile docs/code), ctx_doctor (health check). Evaluate which provide value over the protocol vs requiring terminal interaction. @CoderMungan #priority:medium #added:2026-03-15-120025
+
+- [ ] Make MCP defaults configurable via .ctxrc — add mcp_recall_limit, mcp_truncate_len, mcp_truncate_content_len, mcp_min_word_len, mcp_min_word_overlap fields to .ctxrc schema; expose via rc.MCP*() with fallback to config/mcp/cfg defaults; update tools.go to read from rc instead of cfg constants. @CoderMungan #priority:medium #added:2026-03-15-114700
+
+- [ ] MCP tools.go cleanup pass: magic strings, duplicated fragments, nested templates. Lines: 461:481 + 186:196 duplicated code; 335 magic number; 382:385 nested TextDescs → single template; 390+851 magic time literal; 443+499+800 magic words; 557+892+902 magic numbers; 590+638 nested TextDesc templating; 820 prefixed %s; 854 suffix %s #priority:high #added:2026-03-15-110429
 
 ### Phase MCP-SAN: MCP Server Input Sanitization
 

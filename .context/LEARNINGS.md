@@ -17,6 +17,7 @@ DO NOT UPDATE FOR:
 <!-- INDEX:START -->
 | Date | Learning |
 |------|--------|
+| 2026-03-25 | Machine-generated CLAUDE.md content consumes per-turn budget without proportional value |
 | 2026-03-25 | Dead files accumulate when nothing consumes them |
 | 2026-03-25 | Template improvements don't propagate to existing projects |
 | 2026-03-24 | lint-drift false positives from conflating constant namespaces |
@@ -108,6 +109,16 @@ DO NOT UPDATE FOR:
 | 2026-02-19 | Feature can be code-complete but invisible to users |
 | 2026-01-28 | IDE is already the UI |
 <!-- INDEX:END -->
+
+---
+
+## [2026-03-25-234039] Machine-generated CLAUDE.md content consumes per-turn budget without proportional value
+
+**Context**: GitNexus injected 121 lines (61% of CLAUDE.md) with auto-generated skill pointers like 'Work in the Watch area (39 symbols)' — generic index data loaded on every conversation turn
+
+**Lesson**: CLAUDE.md is prime real estate — every token competes with project-specific instructions. Auto-generated content belongs in on-demand skills, not in always-loaded files
+
+**Application**: Audit CLAUDE.md periodically for content that could be delivered via skills instead. Prefer a one-line pointer over inline content for companion tools
 
 ---
 
