@@ -32,6 +32,10 @@ claude /plugin install ctx@activememory-ctx
 
 # ## Cursor / Aider / Copilot / Windsurf ##
 ctx hook cursor # or: aider, copilot, windsurf
+
+# ## Companion tools (highly recommended) ##
+npx gitnexus analyze          # code knowledge graph
+# Add Gemini Search MCP server for grounded web search
 ```
 
 Create a [`.ctxrc`](../home/configuration.md) in your project root to configure
@@ -344,12 +348,14 @@ ctx hook aider
   works best when you reinforce the habit: a quick "*anything worth saving?*"
   after a debugging session goes a long way.
 
-## Companion Tools (Optional)
+## Companion Tools (Highly Recommended)
 
 ctx skills can leverage external MCP servers for web search and code
-intelligence. These are optional — ctx works without them — but they
-significantly improve skills like `/ctx-code-review`, `/ctx-explain`,
-and `/ctx-refactor`.
+intelligence. ctx works without them, but they significantly improve
+agent behavior across sessions — the investment is small and the
+benefits compound. Skills like `/ctx-code-review`, `/ctx-explain`,
+and `/ctx-refactor` all become noticeably better with these tools
+connected.
 
 ### Gemini Search
 

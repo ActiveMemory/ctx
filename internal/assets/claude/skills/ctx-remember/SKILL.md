@@ -118,10 +118,10 @@ the field value.
 **Companion tools** enhance ctx skills with web search and code
 intelligence. They are optional but recommended:
 
-| Tool | Purpose | Smoke test |
-|------|---------|------------|
-| Gemini Search | Grounded web search with citations | Call `mcp__gemini-search__search_with_grounding` with a simple query |
-| GitNexus | Code knowledge graph (symbols, blast radius, clusters) | Call `mcp__gitnexus__list_repos` |
+| Tool          | Purpose                                                | Smoke test                                                           |
+|---------------|--------------------------------------------------------|----------------------------------------------------------------------|
+| Gemini Search | Grounded web search with citations                     | Call `mcp__gemini-search__search_with_grounding` with a simple query |
+| GitNexus      | Code knowledge graph (symbols, blast radius, clusters) | Call `mcp__gitnexus__list_repos`                                     |
 
 **Check procedure:**
 

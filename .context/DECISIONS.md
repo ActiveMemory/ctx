@@ -3,6 +3,8 @@
 <!-- INDEX:START -->
 | Date | Decision |
 |------|--------|
+| 2026-03-25 | Companion tools documented as optional MCP enhancements with runtime check |
+| 2026-03-25 | Prompt templates removed — skills are the single agent instruction mechanism |
 | 2026-03-24 | Write-once baseline with explicit end-consolidation for consolidation lifecycle |
 | 2026-03-23 | Pre/pre HTML tags promoted to shared constants in config/marker |
 | 2026-03-23 | Pure-data param structs in entity — replace function pointers with text keys |
@@ -108,6 +110,34 @@ For significant decisions:
 ✗ No real alternatives existed
 
 -->
+
+## [2026-03-25-173337] Companion tools documented as optional MCP enhancements with runtime check
+
+**Status**: Accepted
+
+**Context**: Gemini Search and GitNexus improve skills but no docs mentioned them and no code checked their availability
+
+**Decision**: Companion tools documented as optional MCP enhancements with runtime check
+
+**Rationale**: Users should know what tools enhance their workflow without being forced to install them. Suppressible via .ctxrc for users who don't want them.
+
+**Consequence**: /ctx-remember smoke-tests MCPs at session start. companion_check: false suppresses.
+
+---
+
+## [2026-03-25-173336] Prompt templates removed — skills are the single agent instruction mechanism
+
+**Status**: Accepted
+
+**Context**: Prompt templates (.context/prompts/) overlapped with skills but had no discoverability — even the project creator didn't know they existed
+
+**Decision**: Prompt templates removed — skills are the single agent instruction mechanism
+
+**Rationale**: Adding metadata to prompts to fix discoverability would recreate the skill system. One concept is better than two.
+
+**Consequence**: code-review, explain, refactor promoted to proper skills. ctx prompt CLI removed. loop.md retained as ctx loop config file at .context/loop.md.
+
+---
 
 ## [2026-03-24-001001] Write-once baseline with explicit end-consolidation for consolidation lifecycle
 

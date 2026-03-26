@@ -8,6 +8,7 @@
 title: "We Broke the 3:1 Rule"
 date: 2026-03-23
 author: Jose Alekhinne
+reviewed_and_finalized: true
 topics:
   - consolidation
   - technical debt

@@ -4,7 +4,37 @@
   <link href="https://ctx.ist/blog/"></link>
   <link href="https://ctx.ist/feed.xml" rel="self"></link>
   <id>https://ctx.ist/feed.xml</id>
-  <updated>2026-03-04T00:00:00Z</updated>
+  <updated>2026-03-23T00:00:00Z</updated>
+  <entry>
+    <title>We Broke the 3:1 Rule</title>
+    <link href="https://ctx.ist/blog/2026-03-23-we-broke-the-3-1-rule/"></link>
+    <id>https://ctx.ist/blog/2026-03-23-we-broke-the-3-1-rule/</id>
+    <updated>2026-03-23T00:00:00Z</updated>
+    <summary>The second best time is now.**</summary>
+    <author>
+      <name>Jose Alekhinne</name>
+    </author>
+    <category term="consolidation"></category>
+    <category term="technical debt"></category>
+    <category term="development workflow"></category>
+    <category term="convention drift"></category>
+    <category term="field notes"></category>
+  </entry>
+  <entry>
+    <title>ctx v0.8.0: The Architecture Release</title>
+    <link href="https://ctx.ist/blog/2026-03-23-ctx-v0.8.0-the-architecture-release/"></link>
+    <id>https://ctx.ist/blog/2026-03-23-ctx-v0.8.0-the-architecture-release/</id>
+    <updated>2026-03-23T00:00:00Z</updated>
+    <summary>This release matters if:</summary>
+    <author>
+      <name>Jose Alekhinne</name>
+    </author>
+    <category term="release"></category>
+    <category term="architecture"></category>
+    <category term="refactoring"></category>
+    <category term="MCP"></category>
+    <category term="localization"></category>
+  </entry>
   <entry>
     <title>Agent Memory Is Infrastructure</title>
     <link href="https://ctx.ist/blog/2026-03-04-agent-memory-is-infrastructure/"></link>

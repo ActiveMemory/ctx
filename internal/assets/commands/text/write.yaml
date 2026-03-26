@@ -194,6 +194,12 @@ write.init-next-steps-block:
       Run 'ctx init' again after installing the plugin to enable it,
       or manually add to ~/.claude/settings.json:
         {"enabledPlugins": {"ctx@activememory-ctx": true}}
+
+      Companion tools (highly recommended):
+        Set up Gemini Search and GitNexus MCP servers for grounded
+        web search and code intelligence. Skills degrade gracefully
+        without them, but work noticeably better with them connected.
+        See: https://ctx.ist/recipes/multi-tool-setup/#companion-tools
 write.init-workflow-tips:
   short: |4-
 

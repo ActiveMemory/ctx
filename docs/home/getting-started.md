@@ -233,11 +233,37 @@ Ask your AI: **"Do you remember?"**
 It should cite specific context: current tasks, recent decisions,
 or previous session topics.
 
+### 5. Set Up Companion Tools (Highly Recommended)
+
+ctx works on its own, but two companion MCP servers unlock significantly
+better agent behavior. The investment is small and the benefits compound
+over sessions:
+
+* **[Gemini Search](https://github.com/nicobailon/gemini-code-search-mcp)**
+  — grounded web search with citations. Skills like `/ctx-code-review`
+  and `/ctx-explain` use it for up-to-date documentation lookups instead
+  of relying on training data.
+
+* **[GitNexus](https://github.com/nicobailon/gitnexus-mcp)** — code
+  knowledge graph with symbol resolution, blast radius analysis, and
+  domain clustering. Skills like `/ctx-refactor` and `/ctx-code-review`
+  use it for impact analysis and dependency awareness.
+
+```bash
+# Index your project for GitNexus (run once, then after major changes)
+npx gitnexus analyze
+```
+
+Both are optional MCP servers: if they are not connected, skills degrade
+gracefully to built-in capabilities. See
+[Companion Tools](../recipes/multi-tool-setup.md#companion-tools-highly-recommended)
+for setup details and verification.
+
 ----
 
 **Next Up**:
 
-* [Your First Session →](first-session.md): a step-by-step walkthrough 
+* [Your First Session →](first-session.md): a step-by-step walkthrough
   from `ctx init` to verified recall
-* [Common Workflows →](common-workflows.md): day-to-day commands for 
+* [Common Workflows →](common-workflows.md): day-to-day commands for
   tracking context, checking health, and browsing history
