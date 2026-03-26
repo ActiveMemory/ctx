@@ -1,7 +1,7 @@
 ---
 name: ctx-architecture
 description: "Build and maintain architecture maps. Use to create or refresh ARCHITECTURE.md and DETAILED_DESIGN.md. Supports principal mode for deeper analysis: vision, future direction, bottlenecks, implementation alternatives, gaps, upstream proposals, and intervention points."
-allowed-tools: Bash(ctx:*), Bash(git:*), Bash(go:*), Read, Write, Edit, Glob, Grep
+allowed-tools: Bash(ctx:*), Bash(git:*), Bash(go:*), Read, Write, Edit, Glob, Grep, mcp__gemini-search__*
 ---
 
 Build and maintain two architecture documents incrementally:
@@ -76,6 +76,33 @@ Read `.context/map-tracking.json`. If it exists and
 > `.context/map-tracking.json` to re-enable.
 
 Then stop.
+
+### Phase 0.25: Companion Tool Check
+
+Check if **Gemini Search** MCP is available by attempting a
+simple query. Gemini is used for upstream documentation, design
+rationale, KEPs, peer-project patterns — anything outside the
+local codebase that helps understand *why* the code is shaped
+the way it is.
+
+**If available**: note it silently. Use Gemini throughout the
+analysis for upstream lookups. Prefer it over built-in web search.
+
+**If not available**: ask the user once:
+
+```
+Gemini Search is not connected. It helps me look up upstream
+design docs, KEPs, and peer-project patterns during analysis.
+
+Want to set it up now, or proceed without it?
+```
+
+Respect the answer and continue either way.
+
+**Important**: Gemini is for *upstream* and *external* context
+only. Do not use it to understand the local codebase — read the
+code directly. The depth of analysis comes from forced reading,
+not from search shortcuts.
 
 ### Phase 0.5: Quick Structure Scan + Focus Areas
 
@@ -365,8 +392,14 @@ Write `.context/map-tracking.json` with:
 
 ### Phase 5: Convergence Report + Search Prompts
 
-Print a structured convergence report. This is the primary output
-the user reads — make it clear and actionable.
+Print a structured convergence report AND write it to
+`.context/CONVERGENCE-REPORT.md`. The printed version is the
+primary output the user reads. The file version is the artifact
+that `/ctx-architecture-enrich` and future sessions consume.
+
+The source of truth for confidence scores is `map-tracking.json`.
+`CONVERGENCE-REPORT.md` is a human-readable view of that data —
+if they ever conflict, `map-tracking.json` wins.
 
 **Format:**
 
@@ -501,11 +534,14 @@ you.
   second, ADRs third
 - Maximum ~10 phrases total; fewer sharp ones beat many vague ones
 - Default: do NOT run the searches yourself
-- Exception: if the user requested principal-mode depth AND no
-  internal search tools are available, you may run public searches
-  for upstream ADRs, peer-project design docs, or KEPs — but only
-  for concepts the codebase shows clear dependency on; note what
-  you searched and what you found
+- Exception: if Gemini Search is available, you MAY run upstream
+  searches for KEPs, design docs, peer-project patterns, and ADRs
+  — but only for concepts the codebase shows clear dependency on.
+  Note what you searched and what you found. This applies in any
+  mode, not just principal mode.
+- If Gemini is not available and the user requested principal-mode
+  depth, you may fall back to built-in web search for the same
+  purpose
 
 ---
 
@@ -721,6 +757,48 @@ Skip if no meaningful peer exists. Do not force comparisons.
 Be direct. This document is for engineering judgment, not external
 audiences.
 
+### Phase P4: Write DANGER-ZONES.md
+
+Extract danger zones from all DETAILED_DESIGN.md module sections
+and compile them into a standalone `.context/DANGER-ZONES.md`.
+This is the consolidated view — one document a reviewer or new
+engineer can read to know where the dragons live.
+
+```markdown
+# Danger Zones
+
+_Generated <date> from DETAILED_DESIGN.md danger zone sections.
+Run `/ctx-architecture-enrich` to add verified blast radius data._
+
+## Summary
+
+| Module | Zone | Risk | Why |
+|--------|------|------|-----|
+| <path> | <symbol/area> | HIGH/MEDIUM/LOW | one-line reason |
+
+## By Module
+
+### <module_path>
+
+1. **<symbol or area>** — <why it's dangerous>
+   - Hidden coupling / ordering assumption / shared mutable state
+   - Modification advice: <what to check before changing>
+
+2. ...
+```
+
+**Rules:**
+- Only include danger zones from modules actually analyzed
+  (confidence ≥ 0.4)
+- Risk level is the skill's judgment based on code reading:
+  HIGH (will break things), MEDIUM (likely to cause subtle bugs),
+  LOW (worth knowing but manageable)
+- `/ctx-architecture-enrich` can later add verified blast radius
+  numbers — leave room for that (don't claim precision you don't
+  have from reading alone)
+- If no danger zones were identified, skip the file entirely
+  rather than writing an empty one
+
 ---
 
 ## Confidence Rubric
@@ -801,7 +879,10 @@ After running, verify:
 - [ ] Phrases ranked: shallow-module gaps first, concepts second,
   ADRs third
 - [ ] No more than ~10 phrases total
-- [ ] Skill did NOT run the searches itself
+- [ ] Skill did NOT run local-code searches itself (upstream
+  searches via Gemini are allowed)
+- [ ] CONVERGENCE-REPORT.md written to .context/ (not just printed)
+- [ ] Phase 0.25 Gemini check completed (available or user declined)
 - [ ] Phase 0.5 structure scan was run before any deep analysis
 - [ ] Focus areas question was asked with actual package names (not
   open-ended)
@@ -837,3 +918,7 @@ After running, verify:
   ≥2 upstream opportunities — specific, not generic)
 - [ ] Principal mode: cross-project comparisons included where
   meaningful peers exist (not forced)
+- [ ] Principal mode: DANGER-ZONES.md written with consolidated
+  danger zones from all analyzed modules (skip if none found)
+- [ ] Principal mode: DANGER-ZONES.md includes summary table and
+  per-module breakdown with risk levels and modification advice

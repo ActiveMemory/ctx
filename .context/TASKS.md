@@ -115,13 +115,13 @@ projects.
   **Context**: Skill that incrementally builds and maintains ARCHITECTURE.md
   and DETAILED_DESIGN.md. Coverage tracked in map-tracking.json.
   Spec: `specs/ctx-architecture.md`
-  - [ ] Create ctx-architecture-enrich skill: takes existing /ctx-architecture 
-  principal-mode artifacts as baseline, runs comprehensive enrichment pass via 
-  GitNexus MCP (blast radius verification, registration site discovery, 
-  execution flow tracing, domain clustering comparison, shallow module 
-  deep-dive). Spec: `ideas/spec-architecture-enrich.md`. Reference 
-  implementation: kubernetes-service enrichment pass 2026-03-25. 
-  #added:2026-03-25-120000
+  - [x] Create ctx-architecture-enrich skill: takes existing /ctx-architecture
+  principal-mode artifacts as baseline, runs comprehensive enrichment pass via
+  GitNexus MCP (blast radius verification, registration site discovery,
+  execution flow tracing, domain clustering comparison, shallow module
+  deep-dive). Spec: `ideas/spec-architecture-enrich.md`. Reference
+  implementation: kubernetes-service enrichment pass 2026-03-25.
+  #added:2026-03-25-120000 #done:2026-03-26
 
 - [ ]: ctx-architecture-failure-analysis
       **Context**: Adversarial analysis skill that identifies where a codebase will
