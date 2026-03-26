@@ -3884,7 +3884,7 @@ might use headers like <code># Oturum: 2026-01-15 - API Düzeltme</code> (Turkis
 or <code># セッション: 2026-01-15 - テスト</code> (Japanese) instead of
 <code># Session: 2026-01-15 - Fix API</code>.</p>
 <p>By default, ctx only recognizes <code>Session:</code> as a session header prefix.
-Files with other prefixes are silently skipped during recall export and
+Files with other prefixes are silently skipped during recall import and
 journal generation: They look like regular Markdown, not sessions.</p>
 <h2 id="tldr">TL;DR<a class="headerlink" href="#tldr" title="Permanent link">&para;</a></h2>
 <p>Add recognized prefixes to <code>.ctxrc</code>:</p>
@@ -3921,7 +3921,7 @@ not extended. If you still want English headers recognized, include
 </div>
 <h3 id="team-setup">Team setup<a class="headerlink" href="#team-setup" title="Permanent link">&para;</a></h3>
 <p>Commit <code>.ctxrc</code> to the repo so all team members share the same prefix
-list. This ensures <code>ctx recall export</code> and journal generation pick up
+list. This ensures <code>ctx recall import</code> and journal generation pick up
 sessions from all team members regardless of language.</p>
 <h3 id="common-prefixes">Common prefixes<a class="headerlink" href="#common-prefixes" title="Permanent link">&para;</a></h3>
 <table>

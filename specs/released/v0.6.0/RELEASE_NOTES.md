@@ -29,7 +29,7 @@ This release replaces shell hook scripts with native Go subcommands and ships ho
 - Add `allow_outside_cwd` option to `.contextrc` for path boundary override
 - Add `ctx init` auto-append of recommended `.gitignore` entries
 - Add `Context.File()` lookup method for programmatic context file access
-- Add journal reminder hook detecting unexported sessions and unenriched entries
+- Add journal reminder hook detecting unimported sessions and unenriched entries
 - Add SessionEnd cleanup hook removing stale temp files
 - Add persistence nudge hook with adaptive frequency based on prompt count
 - Add `/check-links` skill for dead link auditing

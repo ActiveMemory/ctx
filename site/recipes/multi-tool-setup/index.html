@@ -1451,10 +1451,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#step-6-export-session-transcripts-optional" class="md-nav__link">
+  <a href="#step-6-import-session-transcripts-optional" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Step 6: Export Session Transcripts (Optional)
+        Step 6: Import Session Transcripts (Optional)
       
     </span>
   </a>
@@ -3951,10 +3951,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#step-6-export-session-transcripts-optional" class="md-nav__link">
+  <a href="#step-6-import-session-transcripts-optional" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Step 6: Export Session Transcripts (Optional)
+        Step 6: Import Session Transcripts (Optional)
       
     </span>
   </a>
@@ -4231,8 +4231,8 @@ token budgets, context directory, drift thresholds, and more.</p>
 <td>Generate shell autocompletion for bash, zsh, or fish</td>
 </tr>
 <tr>
-<td><code>ctx recall export</code></td>
-<td>Export sessions to editable journal Markdown</td>
+<td><code>ctx recall import</code></td>
+<td>Import sessions to editable journal Markdown</td>
 </tr>
 </tbody>
 </table>
@@ -4412,9 +4412,9 @@ them automatically:</p>
 <p>To preview changes without modifying files:</p>
 <div class="language-bash highlight"><pre><span></span><code><span id="__span-17-1"><a id="__codelineno-17-1" name="__codelineno-17-1" href="#__codelineno-17-1"></a>ctx<span class="w"> </span>watch<span class="w"> </span>--dry-run<span class="w"> </span>--log<span class="w"> </span>/tmp/ai.log
 </span></code></pre></div>
-<h3 id="step-6-export-session-transcripts-optional">Step 6: Export Session Transcripts (<em>Optional</em>)<a class="headerlink" href="#step-6-export-session-transcripts-optional" title="Permanent link">&para;</a></h3>
-<p>If you want to browse past session transcripts, export them to the journal:</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-18-1"><a id="__codelineno-18-1" name="__codelineno-18-1" href="#__codelineno-18-1"></a>ctx<span class="w"> </span>recall<span class="w"> </span><span class="nb">export</span><span class="w"> </span>--all
+<h3 id="step-6-import-session-transcripts-optional">Step 6: Import Session Transcripts (<em>Optional</em>)<a class="headerlink" href="#step-6-import-session-transcripts-optional" title="Permanent link">&para;</a></h3>
+<p>If you want to browse past session transcripts, import them to the journal:</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-18-1"><a id="__codelineno-18-1" name="__codelineno-18-1" href="#__codelineno-18-1"></a>ctx<span class="w"> </span>recall<span class="w"> </span>import<span class="w"> </span>--all
 </span></code></pre></div>
 <p>This converts raw session data into editable Markdown files in
 <code>.context/journal/</code>. You can then enrich them with metadata using

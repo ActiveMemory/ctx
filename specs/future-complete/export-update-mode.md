@@ -1,8 +1,8 @@
-# Export Update Mode
+# Import Update Mode
 
 ## Problem
 
-T2.1 requests an `--update` mode for `ctx recall export` that preserves
+T2.1 requests an `--update` mode for `ctx recall import` that preserves
 enrichment metadata while regenerating conversation content. Investigation
 reveals the current codebase already implements this as the default behavior
 — but with a bug and unclear semantics.
@@ -11,7 +11,7 @@ reveals the current codebase already implements this as the default behavior
 
 ### Default behavior (no flags)
 
-When re-exporting a session whose journal file already exists:
+When re-importing a session whose journal file already exists:
 
 1. Regenerate conversation content from JSONL source
 2. Read existing file and extract YAML frontmatter
@@ -19,7 +19,7 @@ When re-exporting a session whose journal file already exists:
 4. Write merged result
 
 This **already preserves enriched frontmatter** (title, type, outcome,
-topics, technologies, summary) during re-export. The enrichment skill
+topics, technologies, summary) during re-import. The enrichment skill
 stores all metadata in the YAML frontmatter block, not in markdown
 sections, so the current `extractFrontmatter()` + `stripFrontmatter()`
 merge captures everything.
@@ -34,7 +34,7 @@ has no `!force` guard.
 
 ### --skip-existing flag
 
-Skips files entirely. No re-export, no update.
+Skips files entirely. No re-import, no update.
 
 ## What T2.1 Actually Needs
 
@@ -92,9 +92,9 @@ state package.
 
 Add tests for:
 
-1. Default re-export preserves frontmatter
-2. `--force` re-export discards frontmatter
-3. `--force` re-export resets enrichment state
+1. Default re-import preserves frontmatter
+2. `--force` re-import discards frontmatter
+3. `--force` re-import resets enrichment state
 4. `--skip-existing` leaves file untouched
 5. Multipart files: frontmatter preserved per-part
 6. Malformed frontmatter: graceful degradation
@@ -111,7 +111,7 @@ Update help text in `cmd.go` to clarify:
 
 ## Tasks
 
-### Phase 2: Export Preservation
+### Phase 2: Import Preservation
 
 - [ ] T2.1.1: Fix `--force` to actually discard frontmatter — add `!force`
       guard around frontmatter preservation in `run.go`. Currently the
@@ -125,7 +125,7 @@ Update help text in `cmd.go` to clarify:
       File: `internal/journal/state/state.go`
       #priority:medium
 
-- [ ] T2.1.3: Add tests for export merge behavior — default preserves
+- [ ] T2.1.3: Add tests for import merge behavior — default preserves
       frontmatter, `--force` discards it, `--skip-existing` leaves file
       untouched, multipart preservation, malformed frontmatter graceful
       degradation.
@@ -134,7 +134,7 @@ Update help text in `cmd.go` to clarify:
 
 - [ ] T2.1.4: Update help text and docs — clarify default update behavior
       in `cmd.go` Long description, update `docs/session-journal.md` if
-      it documents export flags.
+      it documents import flags.
       #priority:low
 
 ## What This Does NOT Do

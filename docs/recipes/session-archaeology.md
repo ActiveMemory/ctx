@@ -29,7 +29,7 @@ This recipe shows how to turn that raw session history into a **browsable**,
 **Export and Generate**
 
 ```bash
-ctx recall export --all
+ctx recall import --all
 ctx journal site --serve
 ```
 
@@ -53,13 +53,13 @@ Read on for what each stage does and why.
 |---------------------------|---------|----------------------------------------------------|
 | `ctx recall list`         | Command | List parsed sessions with metadata                 |
 | `ctx recall show`         | Command | Inspect a specific session in detail               |
-| `ctx recall export`       | Command | Export sessions to editable journal Markdown       |
+| `ctx recall import`       | Command | Import sessions to editable journal Markdown       |
 | `ctx journal site`        | Command | Generate a static site from journal entries        |
 | `ctx journal obsidian`    | Command | Generate an Obsidian vault from journal entries    |
 | `ctx serve`               | Command | Serve any zensical directory (default: journal)    |
 | `/ctx-recall`             | Skill   | Browse sessions inside your AI assistant           |
 | `/ctx-journal-enrich`     | Skill   | Add frontmatter metadata to a single entry         |
-| `/ctx-journal-enrich-all` | Skill   | Full pipeline: export if needed, then batch-enrich |
+| `/ctx-journal-enrich-all` | Skill   | Full pipeline: import if needed, then batch-enrich |
 
 ## The Workflow
 
@@ -70,18 +70,18 @@ Each stage is **idempotent** and **safe to re-run**:
 By default, each stage **skips** entries that have already been processed.
 
 ```text
-export -> enrich -> rebuild
+import -> enrich -> rebuild
 ```
 
 | Stage    | Tool                       | What it does                            | Skips if                           | Where        |
 |----------|----------------------------|-----------------------------------------|------------------------------------|--------------|
-| Export   | `ctx recall export --all`  | Converts session JSONL to Markdown      | File already exists (safe default) | CLI or agent |
+| Import   | `ctx recall import --all`  | Converts session JSONL to Markdown      | File already exists (safe default) | CLI or agent |
 | Enrich   | `/ctx-journal-enrich-all`  | Adds frontmatter, summaries, topic tags | Frontmatter already present        | Agent only   |
 | Rebuild  | `ctx journal site --build` | Generates browsable static HTML         | N/A                                | CLI only     |
 | Obsidian | `ctx journal obsidian`     | Generates Obsidian vault with wikilinks | N/A                                | CLI only     |
 
 !!! tip "Where Do You Run Each Stage?"
-    **Export** (*Steps 1 to 3*) works equally well from the terminal or inside your
+    **Import** (*Steps 1 to 3*) works equally well from the terminal or inside your
     AI assistant via `/ctx-recall`. The CLI is fine here: the agent adds no
     special intelligence, it just runs the same command.
 
@@ -154,20 +154,20 @@ ctx recall show --latest --full
 This is useful for checking what happened before deciding whether to export and
 enrich it.
 
-### Step 3: Export Sessions to the Journal
+### Step 3: Import Sessions to the Journal
 
-Export converts raw session data into editable Markdown files in
+Import converts raw session data into editable Markdown files in
 `.context/journal/`:
 
 ```bash
-# Export all sessions from the current project
-ctx recall export --all
+# Import all sessions from the current project
+ctx recall import --all
 
-# Export a single session
-ctx recall export gleaming-wobbling-sutherland
+# Import a single session
+ctx recall import gleaming-wobbling-sutherland
 
 # Include sessions from all projects
-ctx recall export --all --all-projects
+ctx recall import --all --all-projects
 ```
 
 !!! warning "--keep-frontmatter=false Discards Enrichments"
@@ -176,14 +176,14 @@ ctx recall export --all --all-projects
 
     **Back up your journal before using this flag**.
 
-Each exported file contains session metadata (*date, time, duration, model,
+Each imported file contains session metadata (*date, time, duration, model,
 project, git branch*), a tool usage summary, and the full conversation transcript.
 
-Re-exporting is safe. Running `ctx recall export --all` only exports **new**
+Re-importing is safe. Running `ctx recall import --all` only imports **new**
 sessions: Existing files are never touched. Use `--dry-run` to preview what
-would be exported without writing anything.
+would be imported without writing anything.
 
-To re-export existing files (*e.g., after a format improvement*), use
+To re-import existing files (*e.g., after a format improvement*), use
 `--regenerate`: Conversation content is regenerated while **preserving** any
 YAML frontmatter you or the **enrichment** skill has added. You'll be prompted
 before any files are overwritten.
@@ -219,11 +219,11 @@ before any files are overwritten.
 
 ### Step 4: Enrich with Metadata
 
-Raw exports have timestamps and transcripts but lack the semantic metadata that
+Raw imports have timestamps and transcripts but lack the semantic metadata that
 makes sessions searchable: topics, technology tags, outcome status, and
 summaries. The `/ctx-journal-enrich*` skills add this structured frontmatter.
 
-Locked entries are skipped by enrichment skills, just as they are by export.
+Locked entries are skipped by enrichment skills, just as they are by import.
 Lock entries you want to protect before running batch enrichment.
 
 Batch enrichment (*recommended*):
@@ -277,7 +277,7 @@ The skill also generates a summary and can extract **decisions**,
 
 ### Step 5: Generate and Serve the Site
 
-With exported and enriched journal files, generate the static site:
+With imported and enriched journal files, generate the static site:
 
 ```bash
 # Generate site structure only
@@ -317,7 +317,7 @@ remembering flags:
 ```text
 What did we work on last week?
 Show me the session about Redis.
-Export everything to the journal.
+Import everything to the journal.
 ```
 
 This is convenient but not required: `ctx recall list` gives you the same
@@ -337,7 +337,7 @@ You:   Yes, do it.
 Agent: Exports both, enriches, then proposes frontmatter.
 ```
 
-The value is staying in one context while the agent runs export -> enrich
+The value is staying in one context while the agent runs import -> enrich
 without you manually switching tools.
 
 ## Putting It All Together
@@ -345,8 +345,8 @@ without you manually switching tools.
 A typical pipeline from raw sessions to a browsable site:
 
 ```bash
-# Terminal: export and generate
-ctx recall export --all
+# Terminal: import and generate
+ctx recall import --all
 ctx journal site --serve
 ```
 
@@ -361,7 +361,7 @@ ctx journal site --serve
 ```
 
 If your project includes `Makefile.ctx` (deployed by `ctx init`), use
-`make journal` to combine export and rebuild stages. Then enrich inside
+`make journal` to combine import and rebuild stages. Then enrich inside
 Claude Code, then `make journal` again to pick up enrichments.
 
 ## Session Retention and Cleanup
@@ -392,20 +392,20 @@ Claude Code exposes a `cleanupPeriodDays` setting in its configuration
     transcript creation altogether. No new JSONL files are written, which
     means `ctx recall` sees nothing new. This is rarely what you want.
 
-### Why Journal Export Matters
+### Why Journal Import Matters
 
-The journal export pipeline (*Steps 1-4 above*) is your **archival
-mechanism**. Exported Markdown files in `.context/journal/` persist
+The journal import pipeline (*Steps 1-4 above*) is your **archival
+mechanism**. Imported Markdown files in `.context/journal/` persist
 independently of Claude Code's cleanup cycle. Even after the source
 JSONL files are deleted, your journal entries remain.
 
-**Recommendation**: export regularly - weekly, or after any session worth
-revisiting. A quick `ctx recall export --all` takes seconds and ensures
+**Recommendation**: import regularly - weekly, or after any session worth
+revisiting. A quick `ctx recall import --all` takes seconds and ensures
 nothing falls through the 30-day window.
 
 ### Quick Archival Checklist
 
-1. Run `ctx recall export --all` at least weekly
+1. Run `ctx recall import --all` at least weekly
 2. Enrich high-value sessions with `/ctx-journal-enrich` before the
    details fade from your own memory
 3. Lock enriched entries (`ctx recall lock <pattern>`) to protect them
@@ -416,7 +416,7 @@ nothing falls through the 30-day window.
 
 * Start with `/ctx-recall` inside your AI assistant. If you want to quickly check
 what happened in a recent session without leaving your editor, `/ctx-recall`
-lets you browse interactively without exporting.
+lets you browse interactively without importing.
 * Large sessions may be split automatically. Sessions with 200+ messages can be
 split into multiple parts (`session-abc123.md`, `session-abc123-p2.md`,
 `session-abc123-p3.md`) with navigation links between them. The site generator

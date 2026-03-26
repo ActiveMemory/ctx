@@ -1,5 +1,4 @@
 You have {{.UnimportedCount}} new session(s) not yet imported.
-{{.UnenrichedCount}} existing entries need enrichment.
 
 Process journal (imports and enriches):
   /ctx-journal-enrich-all

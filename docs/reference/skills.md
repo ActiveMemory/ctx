@@ -52,7 +52,7 @@ opinionated behavior on top.
 | [`/ctx-add-convention`](#ctx-add-convention)             | Record coding convention for consistency                        | user-invocable |
 | [`/ctx-archive`](#ctx-archive)                           | Archive completed tasks from TASKS.md                           | user-invocable |
 | [`/ctx-pad`](#ctx-pad)                                   | Manage encrypted scratchpad entries                             | user-invocable |
-| [`/ctx-recall`](#ctx-recall)                             | Browse and export AI session history                            | user-invocable |
+| [`/ctx-recall`](#ctx-recall)                             | Browse and import AI session history                            | user-invocable |
 | [`/ctx-journal-enrich`](#ctx-journal-enrich)             | Enrich single journal entry with metadata                       | user-invocable |
 | [`/ctx-journal-enrich-all`](#ctx-journal-enrich-all)     | Full journal pipeline: export if needed, then batch-enrich      | user-invocable |
 | [`/ctx-journal-normalize`](#ctx-journal-normalize)       | Normalize journal markdown for clean rendering                  | user-invocable |
@@ -271,10 +271,10 @@ into a structured journal.
 
 ### `/ctx-recall`
 
-Browse, inspect, and export AI session history. List recent sessions,
-show details by slug or ID, and export to `.context/journal/`.
+Browse, inspect, and import AI session history. List recent sessions,
+show details by slug or ID, and import to `.context/journal/`.
 
-**Wraps**: `ctx recall list`, `ctx recall show`, `ctx recall export`
+**Wraps**: `ctx recall list`, `ctx recall show`, `ctx recall import`
 
 **See also**:
 [Browsing and Enriching Past Sessions](../recipes/session-archaeology.md)
@@ -296,11 +296,11 @@ outcome, topics, technologies, and summary. Shows diff before writing.
 
 ### `/ctx-journal-enrich-all`
 
-Full journal pipeline: exports unexported sessions first, then
+Full journal pipeline: imports unimported sessions first, then
 batch-enriches all unenriched entries. Filters out short sessions
 and continuations. Can spawn subagents for large backlogs.
 
-**Wraps**: `ctx recall export --all` + iterates `/ctx-journal-enrich`
+**Wraps**: `ctx recall import --all` + iterates `/ctx-journal-enrich`
 
 **See also**:
 [Browsing and Enriching Past Sessions](../recipes/session-archaeology.md)

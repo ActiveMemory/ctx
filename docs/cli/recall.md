@@ -73,34 +73,34 @@ ctx recall show --latest
 ctx recall show --latest --full
 ```
 
-#### `ctx recall export`
+#### `ctx recall import`
 
-Export sessions to editable journal files in `.context/journal/`.
+Import sessions to editable journal files in `.context/journal/`.
 
 ```bash
-ctx recall export [session-id] [flags]
+ctx recall import [session-id] [flags]
 ```
 
 **Flags**:
 
-| Flag                 | Description                                                            |
-|----------------------|------------------------------------------------------------------------|
-| `--all`              | Export all sessions (only new files by default)                        |
-| `--all-projects`     | Export from all projects                                               |
-| `--regenerate`       | Re-export existing files (preserves YAML frontmatter by default)       |
-| `--keep-frontmatter` | Preserve enriched YAML frontmatter during regeneration (default: true) |
-| `--yes`, `-y`        | Skip confirmation prompt                                               |
-| `--dry-run`          | Show what would be exported without writing files                      |
+| Flag                 | Description                                                             |
+|----------------------|-------------------------------------------------------------------------|
+| `--all`              | Import all sessions (only new files by default)                         |
+| `--all-projects`     | Import from all projects                                                |
+| `--regenerate`       | Re-import existing files (preserves YAML frontmatter by default)        |
+| `--keep-frontmatter` | Preserve enriched YAML frontmatter during regeneration (default: true)  |
+| `--yes`, `-y`        | Skip confirmation prompt                                                |
+| `--dry-run`          | Show what would be imported without writing files                       |
 
-**Safe by default**: `--all` only exports new sessions. Existing files are
-skipped. Use `--regenerate` to re-export existing files (conversation content
+**Safe by default**: `--all` only imports new sessions. Existing files are
+skipped. Use `--regenerate` to re-import existing files (conversation content
 is regenerated, YAML frontmatter from enrichment is preserved by default).
 Use `--keep-frontmatter=false` to discard enriched frontmatter during
 regeneration.
 
 Locked entries (via `ctx recall lock`) are always skipped, regardless of flags.
 
-Single-session export (`ctx recall export <id>`) always writes without
+Single-session import (`ctx recall import <id>`) always writes without
 prompting, since you are explicitly targeting one session.
 
 The `journal/` directory should be gitignored (like `sessions/`) since it
@@ -109,17 +109,17 @@ contains raw conversation data.
 **Example**:
 
 ```bash
-ctx recall export abc123                 # Export one session
-ctx recall export --all                  # Export only new sessions
-ctx recall export --all --dry-run        # Preview what would be exported
-ctx recall export --all --regenerate     # Re-export existing (prompts)
-ctx recall export --all --regenerate -y  # Re-export without prompting
-ctx recall export --all --regenerate --keep-frontmatter=false -y  # Discard frontmatter
+ctx recall import abc123                 # Import one session
+ctx recall import --all                  # Import only new sessions
+ctx recall import --all --dry-run        # Preview what would be imported
+ctx recall import --all --regenerate     # Re-import existing (prompts)
+ctx recall import --all --regenerate -y  # Re-import without prompting
+ctx recall import --all --regenerate --keep-frontmatter=false -y  # Discard frontmatter
 ```
 
 #### `ctx recall lock`
 
-Protect journal entries from being overwritten by `export --regenerate` or
+Protect journal entries from being overwritten by `import --regenerate` or
 modified by enrichment skills (`/ctx-journal-enrich`, `/ctx-journal-enrich-all`).
 
 ```bash
@@ -193,7 +193,7 @@ ctx recall sync
 
 ### `ctx journal`
 
-Analyze and synthesize exported session files.
+Analyze and synthesize imported session files.
 
 ```bash
 ctx journal <subcommand>

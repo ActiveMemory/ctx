@@ -4,7 +4,7 @@
 //   \    Copyright 2026-present Context contributors.
 //                 SPDX-License-Identifier: Apache-2.0
 
-// Package export implements the ctx recall export subcommand.
+// Package importer implements the ctx recall import subcommand.
 //
-// It exports parsed sessions to journal markdown files.
-package export
+// It imports parsed sessions to journal markdown files.
+package importer

@@ -122,17 +122,17 @@ pad.show.out:
   short: write blob content to a file
 pause.session-id:
   short: Session ID (overrides stdin)
-recall.export.all:
-  short: Export all sessions from current project
-recall.export.all-projects:
+recall.import.all:
+  short: Import all sessions from current project
+recall.import.all-projects:
   short: Include sessions from all projects
-recall.export.dry-run:
-  short: Show what would be exported without writing files
-recall.export.keep-frontmatter:
+recall.import.dry-run:
+  short: Show what would be imported without writing files
+recall.import.keep-frontmatter:
   short: Preserve enriched YAML frontmatter during regeneration
-recall.export.regenerate:
-  short: Re-export existing files (preserves YAML frontmatter by default)
-recall.export.yes:
+recall.import.regenerate:
+  short: Re-import existing files (preserves YAML frontmatter by default)
+recall.import.yes:
   short: Skip confirmation prompt
 recall.list.all-projects:
   short: Include sessions from all projects

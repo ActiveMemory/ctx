@@ -15,22 +15,21 @@ import (
 	"github.com/ActiveMemory/ctx/internal/config/token"
 	"github.com/ActiveMemory/ctx/internal/entity"
 	errFs "github.com/ActiveMemory/ctx/internal/err/fs"
-	"github.com/ActiveMemory/ctx/internal/write/export"
 	"github.com/ActiveMemory/ctx/internal/write/recall"
 	"github.com/spf13/cobra"
 )
 
-// Export prints the plan summary and prompts for confirmation.
+// Import prints the plan summary and prompts for confirmation.
 //
 // Parameters:
 //   - cmd: Cobra command for output.
-//   - plan: the export plan to summarize.
+//   - plan: the import plan to summarize.
 //
 // Returns:
 //   - bool: true if the user confirms.
 //   - error: non-nil if reading input fails.
-func Export(cmd *cobra.Command, plan entity.ExportPlan) (bool, error) {
-	export.Summary(
+func Import(cmd *cobra.Command, plan entity.ImportPlan) (bool, error) {
+	recall.ImportSummary(
 		cmd,
 		plan.NewCount, plan.RegenCount, plan.SkipCount, plan.LockedCount, false,
 	)

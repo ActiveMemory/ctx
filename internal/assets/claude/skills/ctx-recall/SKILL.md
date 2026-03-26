@@ -4,14 +4,14 @@ description: "Browse session history. Use when referencing past discussions or f
 allowed-tools: Bash(ctx:*)
 ---
 
-Browse, inspect, and export AI session history.
+Browse, inspect, and import AI session history.
 
 ## When to Use
 
 - When the user asks "what did we do last time?" or references
   a past discussion
 - When looking for context from previous work sessions
-- When exporting sessions to the journal for enrichment
+- When importing sessions to the journal for enrichment
 - When searching for a specific session by topic, date, or ID
 
 ## When NOT to Use
@@ -29,7 +29,7 @@ Browse, inspect, and export AI session history.
 /ctx-recall
 /ctx-recall list --limit 5
 /ctx-recall show <slug-or-id>
-/ctx-recall export --all
+/ctx-recall import --all
 ```
 
 ## Subcommands
@@ -64,22 +64,22 @@ or slug name. Use `--latest` if no ID is given.
 Default output shows metadata and the first 5 user messages.
 Use `--full` for the complete conversation.
 
-### `ctx recall export`
+### `ctx recall import`
 
-Export sessions to the journal directory as markdown.
+Import sessions to the journal directory as markdown.
 
 | Flag                 | Default | Purpose                                          |
 |----------------------|---------|--------------------------------------------------|
-| `--all`              | false   | Export all sessions (only new files by default)  |
+| `--all`              | false   | Import all sessions (only new files by default)  |
 | `--all-projects`     | false   | Include all projects                             |
-| `--regenerate`       | false   | Re-export existing files (preserves frontmatter) |
+| `--regenerate`       | false   | Re-import existing files (preserves frontmatter) |
 | `--keep-frontmatter` | true    | Preserve enriched YAML frontmatter during regen  |
 | `--yes`, `-y`        | false   | Skip confirmation prompt                         |
-| `--dry-run`          | false   | Preview what would be exported                   |
+| `--dry-run`          | false   | Preview what would be imported                   |
 
-Accepts a session ID (always writes), or `--all` to export
+Accepts a session ID (always writes), or `--all` to import
 everything (safe by default: only new sessions, existing
-files skipped). Use `--regenerate` with `--all` to re-export
+files skipped). Use `--regenerate` with `--all` to re-import
 existing files; YAML frontmatter is preserved by default.
 Use `--keep-frontmatter=false` to discard enriched frontmatter.
 
@@ -90,7 +90,7 @@ parts with navigation links between them.
 
 ### `ctx recall lock`
 
-Protect journal entries from export regeneration.
+Protect journal entries from import regeneration.
 
 ```bash
 ctx recall lock <pattern>     # Lock matching entries
@@ -131,10 +131,10 @@ only the current project's sessions are shown by default.
 ## Process
 
 1. **Determine intent**: does the user want to list, inspect,
-   or export?
+   or import?
 2. **Run the appropriate subcommand** with relevant flags
 3. **Summarize results**: for `list`, highlight notable sessions;
-   for `show`, summarize key points; for `export`, report what
+   for `show`, summarize key points; for `import`, report what
    was written and suggest next steps (normalize, enrich)
 
 ## Typical Workflows
@@ -151,17 +151,17 @@ ctx recall list --project auth
 ctx recall show <slug>
 ```
 
-**"Export everything to the journal"**
+**"Import everything to the journal"**
 ```bash
-ctx recall export --all
+ctx recall import --all
 ```
-This only exports new sessions: existing files are skipped.
+This only imports new sessions: existing files are skipped.
 If the user asks what to do next, mention that `/ctx-journal-enrich-all`
-can enrich the exported journals.
+can enrich the imported journals.
 
-**"Re-export sessions after a format improvement"**
+**"Re-import sessions after a format improvement"**
 ```bash
-ctx recall export --all --regenerate -y
+ctx recall import --all --regenerate -y
 ```
 
 ## Quality Checklist
@@ -170,8 +170,8 @@ Before reporting results, verify:
 - [ ] Used the right subcommand for the user's intent
 - [ ] Applied filters if the user mentioned a project, date,
       or topic
-- [ ] For export, reminded the user about the normalize/enrich
+- [ ] For import, reminded the user about the normalize/enrich
       pipeline as next steps
-- [ ] Used `--all` for bulk export (safe: only new sessions)
+- [ ] Used `--all` for bulk import (safe: only new sessions)
 - [ ] Suggested `--dry-run` when user seems uncertain
 - [ ] Only used `--regenerate` when explicitly needed

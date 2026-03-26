@@ -2729,10 +2729,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#ctx-recall-export" class="md-nav__link">
+  <a href="#ctx-recall-import" class="md-nav__link">
     <span class="md-ellipsis">
       
-        ctx recall export
+        ctx recall import
       
     </span>
   </a>
@@ -3697,10 +3697,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#ctx-recall-export" class="md-nav__link">
+  <a href="#ctx-recall-import" class="md-nav__link">
     <span class="md-ellipsis">
       
-        ctx recall export
+        ctx recall import
       
     </span>
   </a>
@@ -3945,9 +3945,9 @@ start time, duration, turn count, and token usage.</p>
 </span><span id="__span-4-3"><a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>ctx<span class="w"> </span>recall<span class="w"> </span>show<span class="w"> </span>--latest
 </span><span id="__span-4-4"><a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>ctx<span class="w"> </span>recall<span class="w"> </span>show<span class="w"> </span>--latest<span class="w"> </span>--full
 </span></code></pre></div>
-<h4 id="ctx-recall-export"><code>ctx recall export</code><a class="headerlink" href="#ctx-recall-export" title="Permanent link">&para;</a></h4>
-<p>Export sessions to editable journal files in <code>.context/journal/</code>.</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-5-1"><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>ctx<span class="w"> </span>recall<span class="w"> </span><span class="nb">export</span><span class="w"> </span><span class="o">[</span>session-id<span class="o">]</span><span class="w"> </span><span class="o">[</span>flags<span class="o">]</span>
+<h4 id="ctx-recall-import"><code>ctx recall import</code><a class="headerlink" href="#ctx-recall-import" title="Permanent link">&para;</a></h4>
+<p>Import sessions to editable journal files in <code>.context/journal/</code>.</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-5-1"><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>ctx<span class="w"> </span>recall<span class="w"> </span>import<span class="w"> </span><span class="o">[</span>session-id<span class="o">]</span><span class="w"> </span><span class="o">[</span>flags<span class="o">]</span>
 </span></code></pre></div>
 <p><strong>Flags</strong>:</p>
 <table>
@@ -3960,15 +3960,15 @@ start time, duration, turn count, and token usage.</p>
 <tbody>
 <tr>
 <td><code>--all</code></td>
-<td>Export all sessions (only new files by default)</td>
+<td>Import all sessions (only new files by default)</td>
 </tr>
 <tr>
 <td><code>--all-projects</code></td>
-<td>Export from all projects</td>
+<td>Import from all projects</td>
 </tr>
 <tr>
 <td><code>--regenerate</code></td>
-<td>Re-export existing files (preserves YAML frontmatter by default)</td>
+<td>Re-import existing files (preserves YAML frontmatter by default)</td>
 </tr>
 <tr>
 <td><code>--keep-frontmatter</code></td>
@@ -3980,30 +3980,30 @@ start time, duration, turn count, and token usage.</p>
 </tr>
 <tr>
 <td><code>--dry-run</code></td>
-<td>Show what would be exported without writing files</td>
+<td>Show what would be imported without writing files</td>
 </tr>
 </tbody>
 </table>
-<p><strong>Safe by default</strong>: <code>--all</code> only exports new sessions. Existing files are
-skipped. Use <code>--regenerate</code> to re-export existing files (conversation content
+<p><strong>Safe by default</strong>: <code>--all</code> only imports new sessions. Existing files are
+skipped. Use <code>--regenerate</code> to re-import existing files (conversation content
 is regenerated, YAML frontmatter from enrichment is preserved by default).
 Use <code>--keep-frontmatter=false</code> to discard enriched frontmatter during
 regeneration.</p>
 <p>Locked entries (via <code>ctx recall lock</code>) are always skipped, regardless of flags.</p>
-<p>Single-session export (<code>ctx recall export &lt;id&gt;</code>) always writes without
+<p>Single-session import (<code>ctx recall import &lt;id&gt;</code>) always writes without
 prompting, since you are explicitly targeting one session.</p>
 <p>The <code>journal/</code> directory should be gitignored (like <code>sessions/</code>) since it
 contains raw conversation data.</p>
 <p><strong>Example</strong>:</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-6-1"><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>ctx<span class="w"> </span>recall<span class="w"> </span><span class="nb">export</span><span class="w"> </span>abc123<span class="w">                 </span><span class="c1"># Export one session</span>
-</span><span id="__span-6-2"><a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>ctx<span class="w"> </span>recall<span class="w"> </span><span class="nb">export</span><span class="w"> </span>--all<span class="w">                  </span><span class="c1"># Export only new sessions</span>
-</span><span id="__span-6-3"><a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>ctx<span class="w"> </span>recall<span class="w"> </span><span class="nb">export</span><span class="w"> </span>--all<span class="w"> </span>--dry-run<span class="w">        </span><span class="c1"># Preview what would be exported</span>
-</span><span id="__span-6-4"><a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a>ctx<span class="w"> </span>recall<span class="w"> </span><span class="nb">export</span><span class="w"> </span>--all<span class="w"> </span>--regenerate<span class="w">     </span><span class="c1"># Re-export existing (prompts)</span>
-</span><span id="__span-6-5"><a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a>ctx<span class="w"> </span>recall<span class="w"> </span><span class="nb">export</span><span class="w"> </span>--all<span class="w"> </span>--regenerate<span class="w"> </span>-y<span class="w">  </span><span class="c1"># Re-export without prompting</span>
-</span><span id="__span-6-6"><a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a>ctx<span class="w"> </span>recall<span class="w"> </span><span class="nb">export</span><span class="w"> </span>--all<span class="w"> </span>--regenerate<span class="w"> </span>--keep-frontmatter<span class="o">=</span><span class="nb">false</span><span class="w"> </span>-y<span class="w">  </span><span class="c1"># Discard frontmatter</span>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-6-1"><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>ctx<span class="w"> </span>recall<span class="w"> </span>import<span class="w"> </span>abc123<span class="w">                 </span><span class="c1"># Import one session</span>
+</span><span id="__span-6-2"><a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>ctx<span class="w"> </span>recall<span class="w"> </span>import<span class="w"> </span>--all<span class="w">                  </span><span class="c1"># Import only new sessions</span>
+</span><span id="__span-6-3"><a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>ctx<span class="w"> </span>recall<span class="w"> </span>import<span class="w"> </span>--all<span class="w"> </span>--dry-run<span class="w">        </span><span class="c1"># Preview what would be imported</span>
+</span><span id="__span-6-4"><a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a>ctx<span class="w"> </span>recall<span class="w"> </span>import<span class="w"> </span>--all<span class="w"> </span>--regenerate<span class="w">     </span><span class="c1"># Re-import existing (prompts)</span>
+</span><span id="__span-6-5"><a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a>ctx<span class="w"> </span>recall<span class="w"> </span>import<span class="w"> </span>--all<span class="w"> </span>--regenerate<span class="w"> </span>-y<span class="w">  </span><span class="c1"># Re-import without prompting</span>
+</span><span id="__span-6-6"><a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a>ctx<span class="w"> </span>recall<span class="w"> </span>import<span class="w"> </span>--all<span class="w"> </span>--regenerate<span class="w"> </span>--keep-frontmatter<span class="o">=</span><span class="nb">false</span><span class="w"> </span>-y<span class="w">  </span><span class="c1"># Discard frontmatter</span>
 </span></code></pre></div>
 <h4 id="ctx-recall-lock"><code>ctx recall lock</code><a class="headerlink" href="#ctx-recall-lock" title="Permanent link">&para;</a></h4>
-<p>Protect journal entries from being overwritten by <code>export --regenerate</code> or
+<p>Protect journal entries from being overwritten by <code>import --regenerate</code> or
 modified by enrichment skills (<code>/ctx-journal-enrich</code>, <code>/ctx-journal-enrich-all</code>).</p>
 <div class="language-bash highlight"><pre><span></span><code><span id="__span-7-1"><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>ctx<span class="w"> </span>recall<span class="w"> </span>lock<span class="w"> </span>&lt;pattern&gt;<span class="w"> </span><span class="o">[</span>flags<span class="o">]</span>
 </span></code></pre></div>
@@ -4070,7 +4070,7 @@ you add <code>locked: true</code> to frontmatter manually.</p>
 </span></code></pre></div>
 <hr />
 <h3 id="ctx-journal"><code>ctx journal</code><a class="headerlink" href="#ctx-journal" title="Permanent link">&para;</a></h3>
-<p>Analyze and synthesize exported session files.</p>
+<p>Analyze and synthesize imported session files.</p>
 <div class="language-bash highlight"><pre><span></span><code><span id="__span-13-1"><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a>ctx<span class="w"> </span>journal<span class="w"> </span>&lt;subcommand&gt;
 </span></code></pre></div>
 <h4 id="ctx-journal-site"><code>ctx journal site</code><a class="headerlink" href="#ctx-journal-site" title="Permanent link">&para;</a></h4>

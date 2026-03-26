@@ -12,7 +12,7 @@
 // Commands:
 //   - ctx recall list: List all parsed sessions
 //   - ctx recall show <id>: Show session details
-//   - ctx recall export: Export sessions to editable journal files
+//   - ctx recall import: Import sessions to editable journal files
 //   - ctx recall lock: Protect journal entries from export regeneration
 //   - ctx recall unlock: Remove lock protection from journal entries
 //   - ctx recall sync: Sync lock state from journal frontmatter to state file

@@ -56,7 +56,7 @@
 - Replace configurable session prefix pair with configurable list
 
 ### VS Code Extension
-- Add 15 commands: complete, remind, tasks, pad show/edit, notify, system bootstrap/stats/resources/backup, recall export/list, drift, status
+- Add 15 commands: complete, remind, tasks, pad show/edit, notify, system bootstrap/stats/resources/backup, recall import/list, drift, status
 - Auto-bootstrap ctx binary on first use
 - Fix task handler and broken documentation links
 
@@ -66,7 +66,7 @@
 - Add `SafeCreateFile` and `SafeAppendFile` with permission enforcement
 - Move encryption key to global `~/.ctx/.ctx.key` (replaces per-project slug keys)
 - Add Markdown session parser for tool-agnostic session ingestion
-- Safe-by-default recall export with lock/unlock and `--keep-frontmatter` flag
+- Safe-by-default recall import with lock/unlock and `--keep-frontmatter` flag
 
 ### System Monitoring
 - Add `sysinfo` package with platform build tags for OS metrics
@@ -78,7 +78,7 @@
 ## Bug Fixes
 
 - Fix `resourcesList` returning only 1 MCP resource; deduplicate subscribe/unsubscribe handlers
-- Fix recall export `--force` to properly discard enriched frontmatter
+- Fix recall import `--force` to properly discard enriched frontmatter
 - Fix decision insertion inside HTML comment blocks
 - Fix memory drift tombstone scoping (global tombstones were suppressing hooks across all sessions)
 - Fix `lint-drift.sh` false positives: `Use*` constants incorrectly checked against commands.yaml, wrong exclusion filenames, cross-namespace duplicate check flagging intentional key reuse

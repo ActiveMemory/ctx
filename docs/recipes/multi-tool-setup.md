@@ -53,7 +53,7 @@ Then start your AI tool and ask: "**Do you remember?**"
 | `ctx load`          | Output assembled context in read order (for manual pasting)  |
 | `ctx watch`         | Auto-apply context updates from AI output (non-native tools) |
 | `ctx completion`    | Generate shell autocompletion for bash, zsh, or fish         |
-| `ctx recall export` | Export sessions to editable journal Markdown                 |
+| `ctx recall import` | Import sessions to editable journal Markdown                 |
 
 ## The Workflow
 
@@ -288,12 +288,12 @@ To preview changes without modifying files:
 ctx watch --dry-run --log /tmp/ai.log
 ```
 
-### Step 6: Export Session Transcripts (*Optional*)
+### Step 6: Import Session Transcripts (*Optional*)
 
-If you want to browse past session transcripts, export them to the journal:
+If you want to browse past session transcripts, import them to the journal:
 
 ```bash
-ctx recall export --all
+ctx recall import --all
 ```
 
 This converts raw session data into editable Markdown files in

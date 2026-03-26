@@ -28,7 +28,7 @@ This release is a major evolution in how ctx works with AI agents. Slash command
 - Deploy `Makefile.ctx` template via `ctx init` (amend, never overwrite)
 - Add journal site `/files/` index with popular/long-tail split
 - Add journal site `/types/` pages grouping sessions by type
-- Change `ctx recall export` default to update mode preserving YAML frontmatter (`--skip-existing` for old behavior, `--force` for full overwrite)
+- Change `ctx recall import` default to update mode preserving YAML frontmatter (`--skip-existing` for old behavior, `--force` for full overwrite)
 - Add 7 deterministic normalize scripts for journal fence/metadata repair
 - Add `ctx-journal-normalize` skill for clean journal site rendering
 

@@ -29,22 +29,65 @@ func SkipFile(cmd *cobra.Command, filename, reason string) {
 	cmd.Println(fmt.Sprintf(desc.Text(text.DescKeyWriteRecallSkip), filename, reason))
 }
 
-// ExportedFile prints that a file was exported or updated.
+// ImportedFile prints that a file was imported or updated.
 //
 // Parameters:
 //   - cmd: Cobra command for output. Nil is a no-op.
-//   - filename: the exported file name.
+//   - filename: the imported file name.
 //   - suffix: optional annotation (e.g. "updated, frontmatter preserved").
 //     Empty string omits the parenthetical.
-func ExportedFile(cmd *cobra.Command, filename, suffix string) {
+func ImportedFile(cmd *cobra.Command, filename, suffix string) {
 	if cmd == nil {
 		return
 	}
 	if suffix != "" {
-		cmd.Println(fmt.Sprintf(desc.Text(text.DescKeyWriteRecallExportedOKSuffix), filename, suffix))
+		cmd.Println(fmt.Sprintf(desc.Text(text.DescKeyWriteRecallImportedOKSuffix), filename, suffix))
 	} else {
-		cmd.Println(fmt.Sprintf(desc.Text(text.DescKeyWriteRecallExportedOK), filename))
+		cmd.Println(fmt.Sprintf(desc.Text(text.DescKeyWriteRecallImportedOK), filename))
 	}
+}
+
+// ImportSummary prints what an import will (or would) do based on
+// aggregate counters.
+//
+// Parameters:
+//   - cmd: Cobra command for output. Nil is a no-op.
+//   - newCount: number of new files to import.
+//   - regenCount: number of existing files to regenerate.
+//   - skipCount: number of existing files to skip.
+//   - lockedCount: number of locked files to skip.
+//   - dryRun: when true, uses "Would" instead of "Will".
+func ImportSummary(
+	cmd *cobra.Command,
+	newCount, regenCount, skipCount, lockedCount int,
+	dryRun bool,
+) {
+	if cmd == nil {
+		return
+	}
+
+	verb := desc.Text(text.DescKeyWriteRecallImportVerb)
+	if dryRun {
+		verb = desc.Text(text.DescKeyWriteRecallImportVerbDryRun)
+	}
+	var parts []string
+	if newCount > 0 {
+		parts = append(parts, fmt.Sprintf(desc.Text(text.DescKeyWriteRecallImportPartNew), newCount))
+	}
+	if regenCount > 0 {
+		parts = append(parts, fmt.Sprintf(desc.Text(text.DescKeyWriteRecallImportPartRegen), regenCount))
+	}
+	if skipCount > 0 {
+		parts = append(parts, fmt.Sprintf(desc.Text(text.DescKeyWriteRecallImportPartSkip), skipCount))
+	}
+	if lockedCount > 0 {
+		parts = append(parts, fmt.Sprintf(desc.Text(text.DescKeyWriteRecallImportPartSkipLock), lockedCount))
+	}
+	if len(parts) == 0 {
+		cmd.Println(desc.Text(text.DescKeyWriteRecallImportNothing))
+		return
+	}
+	cmd.Println(fmt.Sprintf(desc.Text(text.DescKeyWriteRecallImportSummary), verb, strings.Join(parts, ", ")))
 }
 
 // NoSessionsForProject prints guidance when no sessions are found.
@@ -138,21 +181,21 @@ func ConfirmPrompt(cmd *cobra.Command) {
 	cmd.Print(desc.Text(text.DescKeyConfirmProceed))
 }
 
-// ExportFinalSummary prints the final export summary with counts.
+// ImportFinalSummary prints the final import summary with counts.
 //
 // Parameters:
 //   - cmd: Cobra command for output. Nil is a no-op.
-//   - exported: number of new files written.
+//   - imported: number of new files written.
 //   - updated: number of existing files updated.
 //   - renamed: number of files renamed.
 //   - skipped: number of files skipped.
-func ExportFinalSummary(cmd *cobra.Command, exported, updated, renamed, skipped int) {
+func ImportFinalSummary(cmd *cobra.Command, imported, updated, renamed, skipped int) {
 	if cmd == nil {
 		return
 	}
 	cmd.Println()
-	if exported > 0 {
-		cmd.Println(fmt.Sprintf(desc.Text(text.DescKeyWriteRecallExportedNew), exported))
+	if imported > 0 {
+		cmd.Println(fmt.Sprintf(desc.Text(text.DescKeyWriteRecallImportedNew), imported))
 	}
 	if updated > 0 {
 		cmd.Println(fmt.Sprintf(desc.Text(text.DescKeyWriteRecallUpdated), updated))

@@ -198,13 +198,13 @@ err.journal.load-journal-state:
 err.journal.no-entries-match:
   short: 'no journal entries match: %s'
 err.journal.no-journal-dir:
-  short: "no journal directory found at %s\nRun 'ctx recall export --all' first"
+  short: "no journal directory found at %s\nRun 'ctx recall import --all' first"
 err.journal.no-journal-entries:
-  short: "no journal entries found in %s\nRun 'ctx recall export --all' first"
+  short: "no journal entries found in %s\nRun 'ctx recall import --all' first"
 err.journal.read-journal-dir:
   short: 'read journal directory: %w'
 err.journal.regenerate-requires-all:
-  short: --regenerate requires --all (single-session export always writes)
+  short: --regenerate requires --all (single-session import always writes)
 err.journal.save-journal-state:
   short: 'save journal state: %w'
 err.journal.scan-journal:

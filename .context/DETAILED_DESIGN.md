@@ -534,7 +534,7 @@ Consult specific sections when working on a module.
 
 ## internal/cli/journal
 
-**Purpose**: Analyze and publish exported AI session files to static sites or Obsidian vaults. Largest package in the codebase (24 source files).
+**Purpose**: Analyze and publish imported AI session files to static sites or Obsidian vaults. Largest package in the codebase (24 source files).
 
 **Key types**: `journalFrontmatter` (YAML: title, date, time, project, session_id, model, tokens, type, outcome, topics, key_files, summary), `journalEntry` (parsed file metadata), `groupedIndex` (aggregated entries by key with popularity flag), `topicData`, `keyFileData`, `typeData` (index structures)
 
@@ -851,14 +851,14 @@ Consult specific sections when working on a module.
 | `check-context-size` | UserPromptSubmit | (all) | Adaptive counter: silent 1–15, every 5th 16–30, every 3rd 30+. Per-session counter in temp file | Per-session |
 | `check-persistence` | UserPromptSubmit | (all) | Track .context/ mtime; silent 1–10, nudge at #20 if no modifications, then every 15 prompts since last mod | Per-session |
 | `check-ceremonies` | UserPromptSubmit | (all) | Scan last 3 journal entries for "ctx-remember" and "ctx-wrap-up" strings; nudge missing ceremonies | Daily |
-| `check-journal` | UserPromptSubmit | (all) | Stage 1: count .jsonl files newer than latest journal export. Stage 2: count unenriched entries via journal/state. Suggest `ctx recall export --all` and `/ctx-journal-enrich-all` | Daily |
+| `check-journal` | UserPromptSubmit | (all) | Stage 1: count .jsonl files newer than latest journal export. Stage 2: count unenriched entries via journal/state. Suggest `ctx recall import --all` and `/ctx-journal-enrich-all` | Daily |
 | `check-reminders` | UserPromptSubmit | (all) | Surface due reminders (After ≤ today) from reminders.json with dismiss commands | None (until dismissed) |
 | `check-version` | UserPromptSubmit | (all) | Compare binary version (ldflags) vs plugin.json major.minor; skip "dev" builds. Piggyback: check encryption key age vs `rc.KeyRotationDays()` | Daily |
 | `check-resources` | UserPromptSubmit | (all) | `sysinfo.Collect()` + `Evaluate()`; output ONLY at DANGER severity (mem≥90%, swap≥75%, disk≥95%, load≥1.5x CPUs) | None |
 | `check-knowledge` | UserPromptSubmit | (all) | DECISIONS entry count vs `rc.EntryCountDecisions()` (default 20), LEARNINGS vs `rc.EntryCountLearnings()` (default 30), CONVENTIONS lines vs `rc.ConventionLineCount()` (default 200). Suggest /ctx-consolidate | Daily |
 | `check-map-staleness` | UserPromptSubmit | (all) | Two conditions (both required): map-tracking.json `last_run` >30 days AND `git log --since=<last_run> -- internal/` has commits. Suggest /ctx-architecture | Daily |
 | `check-backup-age` | UserPromptSubmit | (all) | Check SMB mount (via GVFS path from `CTX_BACKUP_SMB_URL` env) + backup marker mtime (>2 days). Suggest `ctx system backup` | Daily |
-| `mark-journal` | (plumbing) | — | `ctx system mark-journal <file> <stage> [--check]`. Valid stages: exported, enriched, normalized, fences_verified, locked | N/A |
+| `mark-journal` | (plumbing) | — | `ctx system mark-journal <file> <stage> [--check]`. Valid stages: imported, enriched, normalized, fences_verified, locked | N/A |
 | `cleanup-tmp` | SessionEnd | (all) | Remove files >15 days old from `secureTempDir()`. Silent side-effect, no output | N/A |
 
 **Hook output protocol**:

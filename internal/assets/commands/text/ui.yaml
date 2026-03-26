@@ -1,6 +1,23 @@
 # General UI text strings for ctx CLI.
 # Used by assets.TextDesc() for prompts, labels, and status output.
 
+group.getting-started:
+  short: "Getting Started:"
+group.context:
+  short: "Context (source of truth):"
+group.artifacts:
+  short: "Artifacts (.context/ files):"
+group.sessions:
+  short: "Sessions:"
+group.runtime:
+  short: "Runtime:"
+group.integration:
+  short: "Integration:"
+group.diagnostics:
+  short: "Diagnostics:"
+group.utilities:
+  short: "Utilities:"
+
 agent.instruction:
   short: 'Before starting work, confirm to the user: "I have read the required context files and I''m following project conventions."'
 agent.packet-meta:
@@ -182,7 +199,7 @@ guide.default:
       ctx decision reindex  Rebuild the DECISIONS.md index table
 
     BROWSING HISTORY
-      ctx recall list       List exported session transcripts
+      ctx recall list       List imported session transcripts
       ctx recall show ID    Read a specific session transcript
       ctx journal site      Generate a browsable journal site
 

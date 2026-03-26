@@ -126,9 +126,9 @@ hook bootstraps the habit until it becomes automatic.
 
 ---
 
-#### `check-journal`: Unexported Session Reminder
+#### `check-journal`: Unimported Session Reminder
 
-**What**: Detects unexported Claude Code sessions and unenriched journal
+**What**: Detects unimported Claude Code sessions and unenriched journal
 entries. Fires once per day.
 
 **Why**: Exported sessions become searchable history. Unenriched entries
@@ -142,7 +142,7 @@ lack metadata for filtering. Both decay in value over time.
 │ 5 existing entries need enrichment.
 │
 │ Export and enrich:
-│   ctx recall export --all
+│   ctx recall import --all
 │   /ctx-journal-enrich-all
 └────────────────────────────────────────────────
 ```

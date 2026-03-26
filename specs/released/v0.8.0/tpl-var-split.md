@@ -18,7 +18,7 @@ its domain config package.
 |-------------|---------------|------|
 | VarWarnings | config/archive | var.go |
 | VarStaleFiles | config/freshness | var.go |
-| VarUnexportedCount, VarUnenrichedCount | config/journal | var.go |
+| VarUnimportedCount, VarUnenrichedCount | config/journal | var.go |
 | VarPromptCount, VarPromptsSinceNudge | config/nudge | var.go |
 | VarReminderList | config/reminder | var.go |
 | VarAlertMessages, VarPercentage, VarTokenCount, VarThreshold | config/stats | var.go |

@@ -1,4 +1,0 @@
-You have {{.UnexportedCount}} new session(s) not yet exported.
-
-Process journal (exports and enriches):
-  /ctx-journal-enrich-all

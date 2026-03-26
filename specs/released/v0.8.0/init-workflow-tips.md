@@ -44,7 +44,7 @@ Workflow tips:
     /ctx-drift                Detect stale paths, broken references, and outdated context
 
   Journal pipeline (every few sessions):
-    ctx recall export --all   Export session transcripts to .context/journal/
+    ctx recall import --all   Import session transcripts to .context/journal/
     /ctx-journal-enrich-all   Add frontmatter, tags, and summaries to exported entries
 
   Run 'ctx guide' for the full command reference.

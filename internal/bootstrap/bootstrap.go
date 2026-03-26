@@ -9,6 +9,7 @@ package bootstrap
 import (
 	"github.com/spf13/cobra"
 
+	"github.com/ActiveMemory/ctx/internal/assets/read/desc"
 	"github.com/ActiveMemory/ctx/internal/cli/add"
 	"github.com/ActiveMemory/ctx/internal/cli/agent"
 	"github.com/ActiveMemory/ctx/internal/cli/change"
@@ -31,7 +32,6 @@ import (
 	"github.com/ActiveMemory/ctx/internal/cli/pad"
 	"github.com/ActiveMemory/ctx/internal/cli/pause"
 	"github.com/ActiveMemory/ctx/internal/cli/permission"
-
 	"github.com/ActiveMemory/ctx/internal/cli/recall"
 	"github.com/ActiveMemory/ctx/internal/cli/reindex"
 	"github.com/ActiveMemory/ctx/internal/cli/remind"
@@ -44,14 +44,12 @@ import (
 	"github.com/ActiveMemory/ctx/internal/cli/task"
 	"github.com/ActiveMemory/ctx/internal/cli/watch"
 	"github.com/ActiveMemory/ctx/internal/cli/why"
+	embedCmd "github.com/ActiveMemory/ctx/internal/config/embed/cmd"
+	embedText "github.com/ActiveMemory/ctx/internal/config/embed/text"
 )
 
-// Initialize registers all ctx subcommands with the root command.
-//
-// This function attaches all available subcommands to the provided root
-// command, including init, status, load, add, agent, drift,
-// sync, compact, decision, watch, hook, learnings, tasks, loop, recall,
-// journal, and serve.
+// Initialize registers all ctx subcommands with the root command and
+// organizes them into Cobra command groups for structured help output.
 //
 // Parameters:
 //   - cmd: The root cobra command to attach subcommands to
@@ -59,44 +57,93 @@ import (
 // Returns:
 //   - *cobra.Command: The same command with all subcommands registered
 func Initialize(cmd *cobra.Command) *cobra.Command {
-	for _, c := range []func() *cobra.Command{
-		add.Cmd,
-		agent.Cmd,
-		change.Cmd,
-		compact.Cmd,
-		config.Cmd,
-		decision.Cmd,
-		dep.Cmd,
-		doctor.Cmd,
-		drift.Cmd,
-		guide.Cmd,
-		hook.Cmd,
-		initialize.Cmd,
-		journal.Cmd,
-		learning.Cmd,
-		load.Cmd,
-		loop.Cmd,
-		mcp.Cmd,
-		memory.Cmd,
-		notify.Cmd,
-		pad.Cmd,
-		pause.Cmd,
-		permission.Cmd,
+	// Register groups — order determines display order in help.
+	cmd.AddGroup(
+		&cobra.Group{ID: embedCmd.GroupGettingStarted, Title: desc.Text(embedText.DescKeyGroupGettingStarted)},
+		&cobra.Group{ID: embedCmd.GroupContext, Title: desc.Text(embedText.DescKeyGroupContext)},
+		&cobra.Group{ID: embedCmd.GroupArtifacts, Title: desc.Text(embedText.DescKeyGroupArtifacts)},
+		&cobra.Group{ID: embedCmd.GroupSessions, Title: desc.Text(embedText.DescKeyGroupSessions)},
+		&cobra.Group{ID: embedCmd.GroupRuntime, Title: desc.Text(embedText.DescKeyGroupRuntime)},
+		&cobra.Group{ID: embedCmd.GroupIntegration, Title: desc.Text(embedText.DescKeyGroupIntegration)},
+		&cobra.Group{ID: embedCmd.GroupDiagnostics, Title: desc.Text(embedText.DescKeyGroupDiagnostics)},
+		&cobra.Group{ID: embedCmd.GroupUtilities, Title: desc.Text(embedText.DescKeyGroupUtilities)},
+	)
 
-		recall.Cmd,
-		reindex.Cmd,
-		remind.Cmd,
-		resume.Cmd,
-		serve.Cmd,
-		site.Cmd,
-		status.Cmd,
-		sync.Cmd,
-		system.Cmd,
-		task.Cmd,
-		watch.Cmd,
-		why.Cmd,
-	} {
-		cmd.AddCommand(c())
+	// Assign built-in commands to groups.
+	cmd.SetHelpCommandGroupID(embedCmd.GroupUtilities)
+	cmd.SetCompletionCommandGroupID(embedCmd.GroupUtilities)
+
+	// Command-to-group mapping. Centralized here so the taxonomy
+	// is visible in one place.
+	type registration struct {
+		cmd     func() *cobra.Command
+		groupID string
+	}
+
+	commands := []registration{
+		// Getting Started
+		{initialize.Cmd, embedCmd.GroupGettingStarted},
+		{status.Cmd, embedCmd.GroupGettingStarted},
+		{guide.Cmd, embedCmd.GroupGettingStarted},
+
+		// Context (source of truth)
+		{add.Cmd, embedCmd.GroupContext},
+		{load.Cmd, embedCmd.GroupContext},
+		{agent.Cmd, embedCmd.GroupContext},
+		{sync.Cmd, embedCmd.GroupContext},
+		{drift.Cmd, embedCmd.GroupContext},
+		{compact.Cmd, embedCmd.GroupContext},
+
+		// Artifacts (.context/ files)
+		{decision.Cmd, embedCmd.GroupArtifacts},
+		{learning.Cmd, embedCmd.GroupArtifacts},
+		{task.Cmd, embedCmd.GroupArtifacts},
+
+		// Sessions
+		{recall.Cmd, embedCmd.GroupSessions},
+		{journal.Cmd, embedCmd.GroupSessions},
+		{memory.Cmd, embedCmd.GroupSessions},
+		{remind.Cmd, embedCmd.GroupSessions},
+		{pad.Cmd, embedCmd.GroupSessions},
+
+		// Runtime
+		{config.Cmd, embedCmd.GroupRuntime},
+		{permission.Cmd, embedCmd.GroupRuntime},
+		{pause.Cmd, embedCmd.GroupRuntime},
+		{resume.Cmd, embedCmd.GroupRuntime},
+
+		// Integration
+		{hook.Cmd, embedCmd.GroupIntegration},
+		{mcp.Cmd, embedCmd.GroupIntegration},
+		{watch.Cmd, embedCmd.GroupIntegration},
+		{notify.Cmd, embedCmd.GroupIntegration},
+		{loop.Cmd, embedCmd.GroupIntegration},
+
+		// Diagnostics
+		{doctor.Cmd, embedCmd.GroupDiagnostics},
+		{change.Cmd, embedCmd.GroupDiagnostics},
+		{dep.Cmd, embedCmd.GroupDiagnostics},
+		{why.Cmd, embedCmd.GroupDiagnostics},
+
+		// serve and site are available via make targets — hidden.
+		{serve.Cmd, ""},
+		{site.Cmd, ""},
+
+		// Utilities (reindex — help and completion are auto-assigned above)
+		{reindex.Cmd, embedCmd.GroupUtilities},
+
+		// system is hidden — no group assignment needed.
+		{system.Cmd, ""},
+	}
+
+	for _, reg := range commands {
+		c := reg.cmd()
+		if reg.groupID != "" {
+			c.GroupID = reg.groupID
+		} else {
+			c.Hidden = true
+		}
+		cmd.AddCommand(c)
 	}
 
 	return cmd

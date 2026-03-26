@@ -7,12 +7,12 @@
 package flag
 
 const (
-	DescKeyRecallExportAll             = "recall.export.all"
-	DescKeyRecallExportAllProjects     = "recall.export.all-projects"
-	DescKeyRecallExportDryRun          = "recall.export.dry-run"
-	DescKeyRecallExportKeepFrontmatter = "recall.export.keep-frontmatter"
-	DescKeyRecallExportRegenerate      = "recall.export.regenerate"
-	DescKeyRecallExportYes             = "recall.export.yes"
+	DescKeyRecallImportAll             = "recall.import.all"
+	DescKeyRecallImportAllProjects     = "recall.import.all-projects"
+	DescKeyRecallImportDryRun          = "recall.import.dry-run"
+	DescKeyRecallImportKeepFrontmatter = "recall.import.keep-frontmatter"
+	DescKeyRecallImportRegenerate      = "recall.import.regenerate"
+	DescKeyRecallImportYes             = "recall.import.yes"
 	DescKeyRecallListAllProjects       = "recall.list.all-projects"
 	DescKeyRecallListLimit             = "recall.list.limit"
 	DescKeyRecallListProject           = "recall.list.project"

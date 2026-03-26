@@ -128,7 +128,7 @@ the project). All worktrees on the same machine share this path, so
 
 One thing to watch:
 
-- **Journal enrichment**: `ctx recall export` and `ctx journal enrich`
+- **Journal enrichment**: `ctx recall import` and `ctx journal enrich`
   resolve paths relative to the current working directory. Files
   created in a worktree stay in that worktree and are discarded on
   teardown. Enrich journals on the main branch after merging: the

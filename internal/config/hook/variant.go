@@ -29,8 +29,8 @@ const (
 	VariantRemember = "remember"
 	// VariantWrapup selects the template for missing /ctx-wrap-up.
 	VariantWrapup = "wrapup"
-	// VariantUnexported selects the unexported journal entries variant.
-	VariantUnexported = "unexported"
+	// VariantUnimported selects the unimported journal entries variant.
+	VariantUnimported = "unimported"
 	// VariantUnenriched selects the unenriched journal entries variant.
 	VariantUnenriched = "unenriched"
 	// VariantWarning selects the generic warning variant.

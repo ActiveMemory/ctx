@@ -87,7 +87,7 @@ ctx recall list --limit 5
 
 ### Journal Site
 
-Export session transcripts to a browsable static site with search,
+Import session transcripts to a browsable static site with search,
 navigation, and topic indices.
 
 !!! info ""
@@ -115,13 +115,13 @@ pipx install zensical
     `pipx` creates an **isolated environment** with the
     **correct Python version** automatically.
 
-### Export and Serve
+### Import and Serve
 
-Then, **export and serve**:
+Then, **import and serve**:
 
 ```bash
-# Export all sessions to .context/journal/ (only new files)
-ctx recall export --all
+# Import all sessions to .context/journal/ (only new files)
+ctx recall import --all
 
 # Generate and serve the journal site
 ctx journal site --serve
@@ -133,22 +133,22 @@ To update after new sessions, run the same two commands again.
 
 ### Safe By Default
 
-`ctx recall export --all` is **safe by default**: 
+`ctx recall import --all` is **safe by default**:
 
-* It only exports new sessions and **skips existing files**.
+* It only imports new sessions and **skips existing files**.
 * Locked entries (*via `ctx recall lock`*) are **always skipped** by
-  both export and enrichment skills.
+  both import and enrichment skills.
 * If you add `locked: true` to frontmatter during enrichment, run
   `ctx recall sync` to propagate the lock state to `.state.json`.
 
-### Re-Exporting Existing Files
+### Re-Importing Existing Files
 
-Here is how you regenerate existing files. 
+Here is how you regenerate existing files.
 
-**Backup your `.context` folder** before regeneration, as this is a 
+**Backup your `.context` folder** before regeneration, as this is a
 potentially destructive action.
 
-To re-export journal files, you need to explicitly opt-in using the 
+To re-import journal files, you need to explicitly opt-in using the
 `--regenerate` flag:
 
 
@@ -160,7 +160,7 @@ To re-export journal files, you need to explicitly opt-in using the
 !!! danger "Regeneration Overwrites Body Edits"
     `--regenerate` preserves your YAML frontmatter (*tags, summary,
     enrichment metadata*) but it **replaces the Markdown body** with a
-    fresh export. 
+    fresh import.
 
     **Any manual edits you made to the transcript will be lost**.
 

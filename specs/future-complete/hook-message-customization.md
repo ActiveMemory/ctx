@@ -51,7 +51,7 @@ Not all messages should be customized. Two categories:
 - check-context-size/checkpoint
 - check-persistence/nudge
 - check-ceremonies/{both,remember,wrapup}
-- check-journal/{both,unexported,unenriched}
+- check-journal/{both,unimported,unenriched}
 - check-knowledge/warning
 - check-map-staleness/stale
 - check-backup-age/warning

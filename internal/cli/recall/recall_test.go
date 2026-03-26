@@ -42,7 +42,7 @@ func TestCmd(t *testing.T) {
 func TestCmd_HasSubcommands(t *testing.T) {
 	cmd := Cmd()
 
-	expectedSubs := []string{"list", "show", "export", "lock", "unlock", "sync"}
+	expectedSubs := []string{"list", "show", "import", "lock", "unlock", "sync"}
 	subs := make(map[string]bool)
 
 	for _, sub := range cmd.Commands() {
@@ -104,19 +104,19 @@ func TestRecallShowCmd_Flags(t *testing.T) {
 	}
 }
 
-func TestRecallExportCmd_Flags(t *testing.T) {
+func TestRecallImportCmd_Flags(t *testing.T) {
 	cmd := Cmd()
 
-	var exportCmd *cobra.Command
+	var importCmd *cobra.Command
 	for _, sub := range cmd.Commands() {
-		if sub.Name() == "export" {
-			exportCmd = sub
+		if sub.Name() == "import" {
+			importCmd = sub
 			break
 		}
 	}
 
-	if exportCmd == nil {
-		t.Fatal("export subcommand not found")
+	if importCmd == nil {
+		t.Fatal("import subcommand not found")
 	}
 
 	flags := []string{
@@ -124,8 +124,8 @@ func TestRecallExportCmd_Flags(t *testing.T) {
 		"yes", "dry-run",
 	}
 	for _, f := range flags {
-		if exportCmd.Flags().Lookup(f) == nil {
-			t.Errorf("export subcommand missing --%s flag", f)
+		if importCmd.Flags().Lookup(f) == nil {
+			t.Errorf("import subcommand missing --%s flag", f)
 		}
 	}
 }

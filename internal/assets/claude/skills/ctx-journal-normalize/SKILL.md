@@ -7,7 +7,7 @@ Reconstruct journal entries as clean markdown from stripped plain text.
 
 ## Before Normalizing
 
-1. **Export first**: run `ctx recall export --all` (or `make journal`)
+1. **Import first**: run `ctx recall import --all` (or `make journal`)
    so there are journal files to normalize
 2. **Check if needed**: if the journal site renders cleanly, skip this
 

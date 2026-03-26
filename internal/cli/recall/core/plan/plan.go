@@ -25,27 +25,27 @@ import (
 	"github.com/ActiveMemory/ctx/internal/journal/state"
 )
 
-// Export builds an ExportPlan without writing any files.
+// Import builds an ImportPlan without writing any files.
 //
 // Parameters:
 //   - sessions: sessions to plan for.
 //   - journalDir: absolute path to the journal output directory.
 //   - sessionIndex: map of session ID to existing filename.
 //   - jstate: journal processing state for lock checks.
-//   - opts: export flag values.
-//   - singleSession: true when exporting a single session by ID.
+//   - opts: import flag values.
+//   - singleSession: true when importing a single session by ID.
 //
 // Returns:
-//   - ExportPlan: the planned actions, counters, and pending renames.
-func Export(
+//   - ImportPlan: the planned actions, counters, and pending renames.
+func Import(
 	sessions []*entity.Session,
 	journalDir string,
 	sessionIndex map[string]string,
 	jstate *state.JournalState,
-	opts entity.ExportOpts,
+	opts entity.ImportOpts,
 	singleSession bool,
-) entity.ExportPlan {
-	var plan entity.ExportPlan
+) entity.ImportPlan {
+	var plan entity.ImportPlan
 
 	for _, s := range sessions {
 		// Collect non-empty messages.
@@ -106,7 +106,7 @@ func Export(
 			_, statErr := os.Stat(path)
 			fileExists := statErr == nil
 
-			var action entity.ExportAction
+			var action entity.ImportAction
 			switch {
 			case !fileExists:
 				action = entity.ActionNew

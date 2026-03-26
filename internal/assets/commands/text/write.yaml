@@ -53,21 +53,21 @@ write.dry-run:
   short: Dry run - no files will be written.
 write.exists-writing-as-alternative:
   short: '  ! %s exists, writing as %s'
-write.export-nothing:
-  short: Nothing to export.
-write.export-part-new:
-  short: export %d new
-write.export-part-regen:
+write.recall-import-nothing:
+  short: Nothing to import.
+write.recall-import-part-new:
+  short: import %d new
+write.recall-import-part-regen:
   short: regenerate %d existing
-write.export-part-skip:
+write.recall-import-part-skip:
   short: skip %d existing
-write.export-part-skip-locked:
+write.recall-import-part-skip-locked:
   short: skip %d locked
-write.export-summary:
+write.recall-import-summary:
   short: '%s %s.'
-write.export-verb:
+write.recall-import-verb:
   short: Will
-write.export-verb-dry-run:
+write.recall-import-verb-dry-run:
   short: Would
 write.format-bytes:
   short: "%dB"
@@ -226,8 +226,8 @@ write.init-workflow-tips:
           /ctx-drift                Detect stale paths, broken references, and outdated context
 
         Journal pipeline (every few sessions):
-          ctx recall export --all   Export session transcripts to .context/journal/
-          /ctx-journal-enrich-all   Add frontmatter, tags, and summaries to exported entries
+          ctx recall import --all   Import session transcripts to .context/journal/
+          /ctx-journal-enrich-all   Add frontmatter, tags, and summaries to imported entries
 
         Run 'ctx guide' for the full command reference.
 write.init-getting-started-saved:
@@ -613,11 +613,11 @@ write.recall-code-block:
   short: "```\n%s\n```\n"
 write.recall-conversation-turn:
   short: "### %d. [%s] (%s)\n"
-write.recall-exported-new:
-  short: Exported %d new session(s)
-write.recall-exported-ok:
+write.recall-imported-new:
+  short: Imported %d new session(s)
+write.recall-imported-ok:
   short: "  ok %s"
-write.recall-exported-ok-suffix:
+write.recall-imported-ok-suffix:
   short: "  ok %s (%s)"
 write.recall-footer-limit:
   short: Use --limit to see more sessions

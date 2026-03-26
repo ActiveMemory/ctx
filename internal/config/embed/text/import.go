@@ -28,3 +28,14 @@ const (
 	DescKeyWriteImportSummary        = "write.import-summary"
 	DescKeyWriteImportSummaryDryRun  = "write.import-summary-dry-run"
 )
+
+const (
+	DescKeyWriteRecallImportNothing      = "write.recall-import-nothing"
+	DescKeyWriteRecallImportPartNew      = "write.recall-import-part-new"
+	DescKeyWriteRecallImportPartRegen    = "write.recall-import-part-regen"
+	DescKeyWriteRecallImportPartSkip     = "write.recall-import-part-skip"
+	DescKeyWriteRecallImportPartSkipLock = "write.recall-import-part-skip-locked"
+	DescKeyWriteRecallImportSummary      = "write.recall-import-summary"
+	DescKeyWriteRecallImportVerb         = "write.recall-import-verb"
+	DescKeyWriteRecallImportVerbDryRun   = "write.recall-import-verb-dry-run"
+)

@@ -99,7 +99,7 @@ Not all hooks should be customizable:
 | check-context-size | `checkpoint` | `PromptCount` |
 | check-persistence | `nudge` | `PromptCount`, `PromptsSinceNudge` |
 | check-ceremonies | `both`, `remember`, `wrapup` | *(none)* |
-| check-journal | `both`, `unexported`, `unenriched` | `UnexportedCount`, `UnenrichedCount` |
+| check-journal | `both`, `unimported`, `unenriched` | `UnimportedCount`, `UnenrichedCount` |
 | check-knowledge | `warning` | `FileWarnings` (formatted list) |
 | check-map-staleness | `stale` | `LastRefreshDate`, `ModuleCount` |
 | check-backup-age | `warning` | `Warnings` (formatted list) |
@@ -350,7 +350,7 @@ internal/assets/hooks/messages/
 │   └── checkpoint.txt
 ├── check-journal/
 │   ├── both.txt
-│   ├── unexported.txt
+│   ├── unimported.txt
 │   └── unenriched.txt
 ├── check-knowledge/
 │   └── warning.txt

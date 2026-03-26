@@ -4903,7 +4903,7 @@ to invoke the relevant skills directly.</p>
 </tr>
 <tr>
 <td><a href="#ctx-recall"><code>/ctx-recall</code></a></td>
-<td>Browse and export AI session history</td>
+<td>Browse and import AI session history</td>
 <td>user-invocable</td>
 </tr>
 <tr>
@@ -5152,9 +5152,9 @@ one-liner notes. Encrypted at rest with AES-256-GCM.</p>
 <p>Skills for browsing, exporting, and enriching your AI session history
 into a structured journal.</p>
 <h3 id="ctx-recall"><code>/ctx-recall</code><a class="headerlink" href="#ctx-recall" title="Permanent link">&para;</a></h3>
-<p>Browse, inspect, and export AI session history. List recent sessions,
-show details by slug or ID, and export to <code>.context/journal/</code>.</p>
-<p><strong>Wraps</strong>: <code>ctx recall list</code>, <code>ctx recall show</code>, <code>ctx recall export</code></p>
+<p>Browse, inspect, and import AI session history. List recent sessions,
+show details by slug or ID, and import to <code>.context/journal/</code>.</p>
+<p><strong>Wraps</strong>: <code>ctx recall list</code>, <code>ctx recall show</code>, <code>ctx recall import</code></p>
 <p><strong>See also</strong>:
 <a href="../../recipes/session-archaeology/">Browsing and Enriching Past Sessions</a></p>
 <hr />
@@ -5167,10 +5167,10 @@ outcome, topics, technologies, and summary. Shows diff before writing.</p>
 <a href="../../recipes/publishing/">Turning Activity into Content</a></p>
 <hr />
 <h3 id="ctx-journal-enrich-all"><code>/ctx-journal-enrich-all</code><a class="headerlink" href="#ctx-journal-enrich-all" title="Permanent link">&para;</a></h3>
-<p>Full journal pipeline: exports unexported sessions first, then
+<p>Full journal pipeline: imports unimported sessions first, then
 batch-enriches all unenriched entries. Filters out short sessions
 and continuations. Can spawn subagents for large backlogs.</p>
-<p><strong>Wraps</strong>: <code>ctx recall export --all</code> + iterates <code>/ctx-journal-enrich</code></p>
+<p><strong>Wraps</strong>: <code>ctx recall import --all</code> + iterates <code>/ctx-journal-enrich</code></p>
 <p><strong>See also</strong>:
 <a href="../../recipes/session-archaeology/">Browsing and Enriching Past Sessions</a></p>
 <hr />

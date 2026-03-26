@@ -45,13 +45,13 @@ func createTestSessionJSONL(t *testing.T, dir, sessionID, slug, cwd string) {
 func init() {
 }
 
-func TestRunRecallExport_ArgValidation(t *testing.T) {
+func TestRunRecallImport_ArgValidation(t *testing.T) {
 	// --all with a session ID should error
 	cmd := Cmd()
 	buf := new(bytes.Buffer)
 	cmd.SetOut(buf)
 	cmd.SetErr(buf)
-	cmd.SetArgs([]string{"export", "--all", "some-session"})
+	cmd.SetArgs([]string{"import", "--all", "some-session"})
 	err := cmd.Execute()
 	if err == nil {
 		t.Fatal("expected error with --all and session ID")
@@ -65,7 +65,7 @@ func TestRunRecallExport_ArgValidation(t *testing.T) {
 	buf3 := new(bytes.Buffer)
 	cmd3.SetOut(buf3)
 	cmd3.SetErr(buf3)
-	cmd3.SetArgs([]string{"export", "--regenerate", "some-session"})
+	cmd3.SetArgs([]string{"import", "--regenerate", "some-session"})
 	err3 := cmd3.Execute()
 	if err3 == nil {
 		t.Fatal("expected error with --regenerate without --all")
@@ -175,7 +175,7 @@ func TestRunRecallShow_BySlug(t *testing.T) {
 	}
 }
 
-func TestRunRecallExport_SingleSession(t *testing.T) {
+func TestRunRecallImport_SingleSession(t *testing.T) {
 	tmpDir := t.TempDir()
 	t.Setenv("HOME", tmpDir)
 
@@ -199,14 +199,14 @@ func TestRunRecallExport_SingleSession(t *testing.T) {
 	buf := new(bytes.Buffer)
 	cmd.SetOut(buf)
 	cmd.SetErr(buf)
-	cmd.SetArgs([]string{"export", "export-session", "--all-projects"})
+	cmd.SetArgs([]string{"import", "export-session", "--all-projects"})
 
 	if err := cmd.Execute(); err != nil {
 		t.Fatalf("unexpected error: %v", err)
 	}
 
 	output := buf.String()
-	if !strings.Contains(output, "Exported") || !strings.Contains(output, "session") {
+	if !strings.Contains(output, "Imported") || !strings.Contains(output, "session") {
 		t.Errorf("expected export confirmation, got:\n%s", output)
 	}
 
@@ -246,7 +246,7 @@ func TestRunRecallExport_SingleSession(t *testing.T) {
 	}())
 }
 
-func TestRunRecallExport_DedupRenamesOldFile(t *testing.T) {
+func TestRunRecallImport_DedupRenamesOldFile(t *testing.T) {
 	tmpDir := t.TempDir()
 	t.Setenv("HOME", tmpDir)
 
@@ -279,7 +279,7 @@ func TestRunRecallExport_DedupRenamesOldFile(t *testing.T) {
 	buf := new(bytes.Buffer)
 	cmd.SetOut(buf)
 	cmd.SetErr(buf)
-	cmd.SetArgs([]string{"export", "--all", "--all-projects", "--regenerate", "--yes"})
+	cmd.SetArgs([]string{"import", "--all", "--all-projects", "--regenerate", "--yes"})
 
 	if err := cmd.Execute(); err != nil {
 		t.Fatalf("unexpected error: %v", err)
@@ -320,20 +320,20 @@ func TestRunRecallExport_DedupRenamesOldFile(t *testing.T) {
 	}
 }
 
-// exportHelper runs "recall export --all --all-projects" in a temp dir and
-// returns the journal directory and the name of the first exported .md file.
-func exportHelper(t *testing.T, tmpDir string, extraArgs ...string) (journalDir string, mdFile string) {
+// importHelper runs "recall import --all --all-projects" in a temp dir and
+// returns the journal directory and the name of the first imported .md file.
+func importHelper(t *testing.T, tmpDir string, extraArgs ...string) (journalDir string, mdFile string) {
 	t.Helper()
 
 	cmd := Cmd()
 	buf := new(bytes.Buffer)
 	cmd.SetOut(buf)
 	cmd.SetErr(buf)
-	args := append([]string{"export", "--all", "--all-projects"}, extraArgs...)
+	args := append([]string{"import", "--all", "--all-projects"}, extraArgs...)
 	cmd.SetArgs(args)
 
 	if err := cmd.Execute(); err != nil {
-		t.Fatalf("export: %v\noutput: %s", err, buf.String())
+		t.Fatalf("import: %v\noutput: %s", err, buf.String())
 	}
 
 	journalDir = filepath.Join(tmpDir, ".context", "journal")
@@ -346,11 +346,11 @@ func exportHelper(t *testing.T, tmpDir string, extraArgs ...string) (journalDir 
 			return journalDir, e.Name()
 		}
 	}
-	t.Fatal("no .md file found after export")
+	t.Fatal("no .md file found after import")
 	return "", ""
 }
 
-func TestRunRecallExport_PreservesFrontmatter(t *testing.T) {
+func TestRunRecallImport_PreservesFrontmatter(t *testing.T) {
 	tmpDir := t.TempDir()
 	t.Setenv("HOME", tmpDir)
 
@@ -368,8 +368,8 @@ func TestRunRecallExport_PreservesFrontmatter(t *testing.T) {
 	}
 	defer func() { _ = os.Chdir(origDir) }()
 
-	// First export
-	journalDir, mdFile := exportHelper(t, tmpDir)
+	// First import
+	journalDir, mdFile := importHelper(t, tmpDir)
 	path := filepath.Join(journalDir, mdFile)
 
 	// Read the original frontmatter to get the generated title
@@ -386,8 +386,8 @@ func TestRunRecallExport_PreservesFrontmatter(t *testing.T) {
 		t.Fatal(writeErr)
 	}
 
-	// Re-export with --regenerate (safe default skips existing; we need regenerate to trigger re-export)
-	exportHelper(t, tmpDir, "--regenerate", "--yes")
+	// Re-import with --regenerate (safe default skips existing; we need regenerate to trigger re-export)
+	importHelper(t, tmpDir, "--regenerate", "--yes")
 
 	data, err := os.ReadFile(filepath.Clean(path))
 	if err != nil {
@@ -403,7 +403,7 @@ func TestRunRecallExport_PreservesFrontmatter(t *testing.T) {
 	}
 }
 
-func TestRunRecallExport_KeepFrontmatterFalseDiscards(t *testing.T) {
+func TestRunRecallImport_KeepFrontmatterFalseDiscards(t *testing.T) {
 	tmpDir := t.TempDir()
 	t.Setenv("HOME", tmpDir)
 
@@ -421,8 +421,8 @@ func TestRunRecallExport_KeepFrontmatterFalseDiscards(t *testing.T) {
 	}
 	defer func() { _ = os.Chdir(origDir) }()
 
-	// First export
-	journalDir, mdFile := exportHelper(t, tmpDir)
+	// First import
+	journalDir, mdFile := importHelper(t, tmpDir)
 	path := filepath.Join(journalDir, mdFile)
 
 	// Read the original frontmatter to get the generated title
@@ -439,8 +439,8 @@ func TestRunRecallExport_KeepFrontmatterFalseDiscards(t *testing.T) {
 		t.Fatal(writeErr)
 	}
 
-	// Re-export with --keep-frontmatter=false - should discard enriched frontmatter
-	exportHelper(t, tmpDir, "--keep-frontmatter=false", "--yes")
+	// Re-import with --keep-frontmatter=false - should discard enriched frontmatter
+	importHelper(t, tmpDir, "--keep-frontmatter=false", "--yes")
 
 	data, err := os.ReadFile(filepath.Clean(path))
 	if err != nil {
@@ -460,7 +460,7 @@ func TestRunRecallExport_KeepFrontmatterFalseDiscards(t *testing.T) {
 	}
 }
 
-func TestRunRecallExport_KeepFrontmatterFalseResetsEnrichmentState(t *testing.T) {
+func TestRunRecallImport_KeepFrontmatterFalseResetsEnrichmentState(t *testing.T) {
 	tmpDir := t.TempDir()
 	t.Setenv("HOME", tmpDir)
 
@@ -478,8 +478,8 @@ func TestRunRecallExport_KeepFrontmatterFalseResetsEnrichmentState(t *testing.T)
 	}
 	defer func() { _ = os.Chdir(origDir) }()
 
-	// First export
-	journalDir, mdFile := exportHelper(t, tmpDir)
+	// First import
+	journalDir, mdFile := importHelper(t, tmpDir)
 
 	// Manually mark the file as enriched in state
 	jstate, err := state.Load(journalDir)
@@ -497,8 +497,8 @@ func TestRunRecallExport_KeepFrontmatterFalseResetsEnrichmentState(t *testing.T)
 		t.Fatal("file should be marked enriched before re-export")
 	}
 
-	// Re-export with --keep-frontmatter=false
-	exportHelper(t, tmpDir, "--keep-frontmatter=false", "--yes")
+	// Re-import with --keep-frontmatter=false
+	importHelper(t, tmpDir, "--keep-frontmatter=false", "--yes")
 
 	// Load state again and verify enriched was cleared
 	jstate, err = state.Load(journalDir)
@@ -514,7 +514,7 @@ func TestRunRecallExport_KeepFrontmatterFalseResetsEnrichmentState(t *testing.T)
 	}
 }
 
-func TestRunRecallExport_AllSkipsExistingByDefault(t *testing.T) {
+func TestRunRecallImport_AllSkipsExistingByDefault(t *testing.T) {
 	tmpDir := t.TempDir()
 	t.Setenv("HOME", tmpDir)
 
@@ -532,8 +532,8 @@ func TestRunRecallExport_AllSkipsExistingByDefault(t *testing.T) {
 	}
 	defer func() { _ = os.Chdir(origDir) }()
 
-	// First export
-	journalDir, mdFile := exportHelper(t, tmpDir)
+	// First import
+	journalDir, mdFile := importHelper(t, tmpDir)
 	path := filepath.Join(journalDir, mdFile)
 
 	// Overwrite file body with custom content
@@ -542,8 +542,8 @@ func TestRunRecallExport_AllSkipsExistingByDefault(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	// Re-export with --all (no --regenerate) - should skip existing
-	exportHelper(t, tmpDir)
+	// Re-import with --all (no --regenerate) - should skip existing
+	importHelper(t, tmpDir)
 
 	data, err := os.ReadFile(filepath.Clean(path))
 	if err != nil {
@@ -554,7 +554,7 @@ func TestRunRecallExport_AllSkipsExistingByDefault(t *testing.T) {
 	}
 }
 
-func TestRunRecallExport_RegenerateReExports(t *testing.T) {
+func TestRunRecallImport_RegenerateReExports(t *testing.T) {
 	tmpDir := t.TempDir()
 	t.Setenv("HOME", tmpDir)
 
@@ -572,8 +572,8 @@ func TestRunRecallExport_RegenerateReExports(t *testing.T) {
 	}
 	defer func() { _ = os.Chdir(origDir) }()
 
-	// First export
-	journalDir, mdFile := exportHelper(t, tmpDir)
+	// First import
+	journalDir, mdFile := importHelper(t, tmpDir)
 	path := filepath.Join(journalDir, mdFile)
 
 	// Overwrite body
@@ -581,8 +581,8 @@ func TestRunRecallExport_RegenerateReExports(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	// Re-export with --regenerate --yes
-	exportHelper(t, tmpDir, "--regenerate", "--yes")
+	// Re-import with --regenerate --yes
+	importHelper(t, tmpDir, "--regenerate", "--yes")
 
 	data, err := os.ReadFile(filepath.Clean(path))
 	if err != nil {
@@ -593,12 +593,12 @@ func TestRunRecallExport_RegenerateReExports(t *testing.T) {
 	}
 }
 
-func TestRunRecallExport_RegenerateRequiresAll(t *testing.T) {
+func TestRunRecallImport_RegenerateRequiresAll(t *testing.T) {
 	cmd := Cmd()
 	buf := new(bytes.Buffer)
 	cmd.SetOut(buf)
 	cmd.SetErr(buf)
-	cmd.SetArgs([]string{"export", "--regenerate", "some-session"})
+	cmd.SetArgs([]string{"import", "--regenerate", "some-session"})
 
 	err := cmd.Execute()
 	if err == nil {
@@ -609,7 +609,7 @@ func TestRunRecallExport_RegenerateRequiresAll(t *testing.T) {
 	}
 }
 
-func TestRunRecallExport_DryRun(t *testing.T) {
+func TestRunRecallImport_DryRun(t *testing.T) {
 	tmpDir := t.TempDir()
 	t.Setenv("HOME", tmpDir)
 
@@ -631,7 +631,7 @@ func TestRunRecallExport_DryRun(t *testing.T) {
 	buf := new(bytes.Buffer)
 	cmd.SetOut(buf)
 	cmd.SetErr(buf)
-	cmd.SetArgs([]string{"export", "--all", "--all-projects", "--dry-run"})
+	cmd.SetArgs([]string{"import", "--all", "--all-projects", "--dry-run"})
 
 	if err := cmd.Execute(); err != nil {
 		t.Fatalf("unexpected error: %v", err)
@@ -656,7 +656,7 @@ func TestRunRecallExport_DryRun(t *testing.T) {
 	}
 }
 
-func TestRunRecallExport_DryRunRegenerate(t *testing.T) {
+func TestRunRecallImport_DryRunRegenerate(t *testing.T) {
 	tmpDir := t.TempDir()
 	t.Setenv("HOME", tmpDir)
 
@@ -674,15 +674,15 @@ func TestRunRecallExport_DryRunRegenerate(t *testing.T) {
 	}
 	defer func() { _ = os.Chdir(origDir) }()
 
-	// First export to create the file
-	exportHelper(t, tmpDir)
+	// First import to create the file
+	importHelper(t, tmpDir)
 
 	// Dry-run with --regenerate
 	cmd := Cmd()
 	buf := new(bytes.Buffer)
 	cmd.SetOut(buf)
 	cmd.SetErr(buf)
-	cmd.SetArgs([]string{"export", "--all", "--all-projects", "--regenerate", "--dry-run"})
+	cmd.SetArgs([]string{"import", "--all", "--all-projects", "--regenerate", "--dry-run"})
 
 	if err := cmd.Execute(); err != nil {
 		t.Fatalf("unexpected error: %v", err)
@@ -697,12 +697,12 @@ func TestRunRecallExport_DryRunRegenerate(t *testing.T) {
 	}
 }
 
-func TestRunRecallExport_BareExportPrintsHelp(t *testing.T) {
+func TestRunRecallImport_BareExportPrintsHelp(t *testing.T) {
 	cmd := Cmd()
 	buf := new(bytes.Buffer)
 	cmd.SetOut(buf)
 	cmd.SetErr(buf)
-	cmd.SetArgs([]string{"export"})
+	cmd.SetArgs([]string{"import"})
 
 	// Bare export should print help, not error
 	err := cmd.Execute()
@@ -711,12 +711,12 @@ func TestRunRecallExport_BareExportPrintsHelp(t *testing.T) {
 	}
 
 	output := buf.String()
-	if !strings.Contains(output, "Export AI sessions") {
+	if !strings.Contains(output, "Import AI sessions") {
 		t.Errorf("bare export should print help text, got:\n%s", output)
 	}
 }
 
-func TestRunRecallExport_SingleSessionAlwaysWrites(t *testing.T) {
+func TestRunRecallImport_SingleSessionAlwaysWrites(t *testing.T) {
 	tmpDir := t.TempDir()
 	t.Setenv("HOME", tmpDir)
 
@@ -734,12 +734,12 @@ func TestRunRecallExport_SingleSessionAlwaysWrites(t *testing.T) {
 	}
 	defer func() { _ = os.Chdir(origDir) }()
 
-	// First export via single session
+	// First import via single session
 	cmd1 := Cmd()
 	buf1 := new(bytes.Buffer)
 	cmd1.SetOut(buf1)
 	cmd1.SetErr(buf1)
-	cmd1.SetArgs([]string{"export", "single-write", "--all-projects"})
+	cmd1.SetArgs([]string{"import", "single-write", "--all-projects"})
 	if err := cmd1.Execute(); err != nil {
 		t.Fatalf("first export: %v", err)
 	}
@@ -767,12 +767,12 @@ func TestRunRecallExport_SingleSessionAlwaysWrites(t *testing.T) {
 		t.Fatal(writeErr)
 	}
 
-	// Re-export same session by ID - should always regenerate without prompting
+	// Re-import same session by ID - should always regenerate without prompting
 	cmd2 := Cmd()
 	buf2 := new(bytes.Buffer)
 	cmd2.SetOut(buf2)
 	cmd2.SetErr(buf2)
-	cmd2.SetArgs([]string{"export", "single-write", "--all-projects"})
+	cmd2.SetArgs([]string{"import", "single-write", "--all-projects"})
 	if execErr := cmd2.Execute(); execErr != nil {
 		t.Fatalf("second export: %v", execErr)
 	}
@@ -786,7 +786,7 @@ func TestRunRecallExport_SingleSessionAlwaysWrites(t *testing.T) {
 	}
 }
 
-func TestRunRecallExport_YesBypasses(t *testing.T) {
+func TestRunRecallImport_YesBypasses(t *testing.T) {
 	tmpDir := t.TempDir()
 	t.Setenv("HOME", tmpDir)
 
@@ -804,8 +804,8 @@ func TestRunRecallExport_YesBypasses(t *testing.T) {
 	}
 	defer func() { _ = os.Chdir(origDir) }()
 
-	// First export
-	journalDir, mdFile := exportHelper(t, tmpDir)
+	// First import
+	journalDir, mdFile := importHelper(t, tmpDir)
 	path := filepath.Join(journalDir, mdFile)
 
 	// Overwrite body
@@ -813,8 +813,8 @@ func TestRunRecallExport_YesBypasses(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	// Re-export with --regenerate --yes (no stdin prompt)
-	exportHelper(t, tmpDir, "--regenerate", "--yes")
+	// Re-import with --regenerate --yes (no stdin prompt)
+	importHelper(t, tmpDir, "--regenerate", "--yes")
 
 	data, err := os.ReadFile(filepath.Clean(path))
 	if err != nil {
@@ -825,7 +825,7 @@ func TestRunRecallExport_YesBypasses(t *testing.T) {
 	}
 }
 
-func TestRunRecallExport_LockedSkippedByDefault(t *testing.T) {
+func TestRunRecallImport_LockedSkippedByDefault(t *testing.T) {
 	tmpDir := t.TempDir()
 	t.Setenv("HOME", tmpDir)
 
@@ -843,8 +843,8 @@ func TestRunRecallExport_LockedSkippedByDefault(t *testing.T) {
 	}
 	defer func() { _ = os.Chdir(origDir) }()
 
-	// First export to create the file.
-	journalDir, mdFile := exportHelper(t, tmpDir)
+	// First import to create the file.
+	journalDir, mdFile := importHelper(t, tmpDir)
 	path := filepath.Join(journalDir, mdFile)
 
 	// Lock the entry in state.
@@ -863,8 +863,8 @@ func TestRunRecallExport_LockedSkippedByDefault(t *testing.T) {
 		t.Fatal(writeErr)
 	}
 
-	// Re-export with --regenerate --yes - locked file should be skipped.
-	exportHelper(t, tmpDir, "--regenerate", "--yes")
+	// Re-import with --regenerate --yes - locked file should be skipped.
+	importHelper(t, tmpDir, "--regenerate", "--yes")
 
 	data, readErr := os.ReadFile(filepath.Clean(path))
 	if readErr != nil {
@@ -875,7 +875,7 @@ func TestRunRecallExport_LockedSkippedByDefault(t *testing.T) {
 	}
 }
 
-func TestRunRecallExport_LockedSkippedByKeepFrontmatterFalse(t *testing.T) {
+func TestRunRecallImport_LockedSkippedByKeepFrontmatterFalse(t *testing.T) {
 	tmpDir := t.TempDir()
 	t.Setenv("HOME", tmpDir)
 
@@ -893,8 +893,8 @@ func TestRunRecallExport_LockedSkippedByKeepFrontmatterFalse(t *testing.T) {
 	}
 	defer func() { _ = os.Chdir(origDir) }()
 
-	// First export.
-	journalDir, mdFile := exportHelper(t, tmpDir)
+	// First import.
+	journalDir, mdFile := importHelper(t, tmpDir)
 	path := filepath.Join(journalDir, mdFile)
 
 	// Lock the entry.
@@ -914,7 +914,7 @@ func TestRunRecallExport_LockedSkippedByKeepFrontmatterFalse(t *testing.T) {
 	}
 
 	// Even --keep-frontmatter=false --yes should not overwrite a locked file.
-	exportHelper(t, tmpDir, "--keep-frontmatter=false", "--yes")
+	importHelper(t, tmpDir, "--keep-frontmatter=false", "--yes")
 
 	data, readErr := os.ReadFile(filepath.Clean(path))
 	if readErr != nil {
@@ -925,7 +925,7 @@ func TestRunRecallExport_LockedSkippedByKeepFrontmatterFalse(t *testing.T) {
 	}
 }
 
-func TestRunRecallExport_KeepFrontmatterFalse(t *testing.T) {
+func TestRunRecallImport_KeepFrontmatterFalse(t *testing.T) {
 	tmpDir := t.TempDir()
 	t.Setenv("HOME", tmpDir)
 
@@ -943,8 +943,8 @@ func TestRunRecallExport_KeepFrontmatterFalse(t *testing.T) {
 	}
 	defer func() { _ = os.Chdir(origDir) }()
 
-	// First export.
-	journalDir, mdFile := exportHelper(t, tmpDir)
+	// First import.
+	journalDir, mdFile := importHelper(t, tmpDir)
 	path := filepath.Join(journalDir, mdFile)
 
 	// Read generated title to keep filename stable.
@@ -967,8 +967,8 @@ func TestRunRecallExport_KeepFrontmatterFalse(t *testing.T) {
 		t.Fatal(writeErr)
 	}
 
-	// Re-export with --keep-frontmatter=false - discards frontmatter.
-	exportHelper(t, tmpDir, "--keep-frontmatter=false", "--yes")
+	// Re-import with --keep-frontmatter=false - discards frontmatter.
+	importHelper(t, tmpDir, "--keep-frontmatter=false", "--yes")
 
 	data, readErr := os.ReadFile(filepath.Clean(path))
 	if readErr != nil {
@@ -987,7 +987,7 @@ func TestRunRecallExport_KeepFrontmatterFalse(t *testing.T) {
 	}
 }
 
-func TestRunRecallExport_KeepFrontmatterDefault(t *testing.T) {
+func TestRunRecallImport_KeepFrontmatterDefault(t *testing.T) {
 	tmpDir := t.TempDir()
 	t.Setenv("HOME", tmpDir)
 
@@ -1005,8 +1005,8 @@ func TestRunRecallExport_KeepFrontmatterDefault(t *testing.T) {
 	}
 	defer func() { _ = os.Chdir(origDir) }()
 
-	// First export.
-	journalDir, mdFile := exportHelper(t, tmpDir)
+	// First import.
+	journalDir, mdFile := importHelper(t, tmpDir)
 	path := filepath.Join(journalDir, mdFile)
 
 	origData, readErr := os.ReadFile(filepath.Clean(path))
@@ -1027,8 +1027,8 @@ func TestRunRecallExport_KeepFrontmatterDefault(t *testing.T) {
 		t.Fatal(writeErr)
 	}
 
-	// Re-export with --regenerate (--keep-frontmatter defaults to true).
-	exportHelper(t, tmpDir, "--regenerate", "--yes")
+	// Re-import with --regenerate (--keep-frontmatter defaults to true).
+	importHelper(t, tmpDir, "--regenerate", "--yes")
 
 	data, readErr := os.ReadFile(filepath.Clean(path))
 	if readErr != nil {
@@ -1039,7 +1039,7 @@ func TestRunRecallExport_KeepFrontmatterDefault(t *testing.T) {
 	}
 }
 
-func TestRunRecallExport_DryRunShowsLocked(t *testing.T) {
+func TestRunRecallImport_DryRunShowsLocked(t *testing.T) {
 	tmpDir := t.TempDir()
 	t.Setenv("HOME", tmpDir)
 
@@ -1057,8 +1057,8 @@ func TestRunRecallExport_DryRunShowsLocked(t *testing.T) {
 	}
 	defer func() { _ = os.Chdir(origDir) }()
 
-	// Export, then lock.
-	journalDir, mdFile := exportHelper(t, tmpDir)
+	// Import, then lock.
+	journalDir, mdFile := importHelper(t, tmpDir)
 
 	jstate, loadErr := state.Load(journalDir)
 	if loadErr != nil {
@@ -1075,7 +1075,7 @@ func TestRunRecallExport_DryRunShowsLocked(t *testing.T) {
 	cmd.SetOut(buf)
 	cmd.SetErr(buf)
 	cmd.SetArgs([]string{
-		"export", "--all", "--all-projects",
+		"import", "--all", "--all-projects",
 		"--regenerate", "--dry-run",
 	})
 
@@ -1092,17 +1092,17 @@ func TestRunRecallExport_DryRunShowsLocked(t *testing.T) {
 func TestDiscardFrontmatter(t *testing.T) {
 	tests := []struct {
 		name string
-		opts entity.ExportOpts
+		opts entity.ImportOpts
 		want bool
 	}{
 		{
 			name: "defaults",
-			opts: entity.ExportOpts{KeepFrontmatter: true},
+			opts: entity.ImportOpts{KeepFrontmatter: true},
 			want: false,
 		},
 		{
 			name: "keep-frontmatter=false",
-			opts: entity.ExportOpts{KeepFrontmatter: false},
+			opts: entity.ImportOpts{KeepFrontmatter: false},
 			want: true,
 		},
 	}
@@ -1116,7 +1116,7 @@ func TestDiscardFrontmatter(t *testing.T) {
 	}
 }
 
-func TestRunRecallExport_FrontmatterLockedSkipsAndPromotesToState(t *testing.T) {
+func TestRunRecallImport_FrontmatterLockedSkipsAndPromotesToState(t *testing.T) {
 	tmpDir := t.TempDir()
 	t.Setenv("HOME", tmpDir)
 
@@ -1134,8 +1134,8 @@ func TestRunRecallExport_FrontmatterLockedSkipsAndPromotesToState(t *testing.T) 
 	}
 	defer func() { _ = os.Chdir(origDir) }()
 
-	// First export to create the file.
-	journalDir, mdFile := exportHelper(t, tmpDir)
+	// First import to create the file.
+	journalDir, mdFile := importHelper(t, tmpDir)
 	path := filepath.Join(journalDir, mdFile)
 
 	// Verify the file is NOT locked in state.
@@ -1159,8 +1159,8 @@ func TestRunRecallExport_FrontmatterLockedSkipsAndPromotesToState(t *testing.T) 
 		t.Fatal(writeErr)
 	}
 
-	// Re-export with --regenerate --yes.
-	exportHelper(t, tmpDir, "--regenerate", "--yes")
+	// Re-import with --regenerate --yes.
+	importHelper(t, tmpDir, "--regenerate", "--yes")
 
 	// File should be unchanged (locked via frontmatter).
 	after, readErr := os.ReadFile(filepath.Clean(path))
@@ -1181,7 +1181,7 @@ func TestRunRecallExport_FrontmatterLockedSkipsAndPromotesToState(t *testing.T) 
 	}
 }
 
-func TestRunRecallExport_KeepFrontmatterFalseImpliesRegenerate(t *testing.T) {
+func TestRunRecallImport_KeepFrontmatterFalseImpliesRegenerate(t *testing.T) {
 	tmpDir := t.TempDir()
 	t.Setenv("HOME", tmpDir)
 
@@ -1199,8 +1199,8 @@ func TestRunRecallExport_KeepFrontmatterFalseImpliesRegenerate(t *testing.T) {
 	}
 	defer func() { _ = os.Chdir(origDir) }()
 
-	// First export.
-	journalDir, mdFile := exportHelper(t, tmpDir)
+	// First import.
+	journalDir, mdFile := importHelper(t, tmpDir)
 	path := filepath.Join(journalDir, mdFile)
 
 	// Overwrite body with custom content.
@@ -1208,9 +1208,9 @@ func TestRunRecallExport_KeepFrontmatterFalseImpliesRegenerate(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	// Re-export with --keep-frontmatter=false (no explicit --regenerate).
+	// Re-import with --keep-frontmatter=false (no explicit --regenerate).
 	// The implication should cause regeneration.
-	exportHelper(t, tmpDir, "--keep-frontmatter=false", "--yes")
+	importHelper(t, tmpDir, "--keep-frontmatter=false", "--yes")
 
 	data, err := os.ReadFile(filepath.Clean(path))
 	if err != nil {
@@ -1221,7 +1221,7 @@ func TestRunRecallExport_KeepFrontmatterFalseImpliesRegenerate(t *testing.T) {
 	}
 }
 
-func TestRunRecallExport_MalformedFrontmatterGracefulDegradation(t *testing.T) {
+func TestRunRecallImport_MalformedFrontmatterGracefulDegradation(t *testing.T) {
 	tmpDir := t.TempDir()
 	t.Setenv("HOME", tmpDir)
 
@@ -1239,8 +1239,8 @@ func TestRunRecallExport_MalformedFrontmatterGracefulDegradation(t *testing.T) {
 	}
 	defer func() { _ = os.Chdir(origDir) }()
 
-	// First export to create the file.
-	journalDir, mdFile := exportHelper(t, tmpDir)
+	// First import to create the file.
+	journalDir, mdFile := importHelper(t, tmpDir)
 	path := filepath.Join(journalDir, mdFile)
 
 	// Overwrite with malformed YAML frontmatter (unclosed delimiter, invalid YAML).
@@ -1249,8 +1249,8 @@ func TestRunRecallExport_MalformedFrontmatterGracefulDegradation(t *testing.T) {
 		t.Fatal(writeErr)
 	}
 
-	// Re-export with --regenerate --yes - should not crash.
-	exportHelper(t, tmpDir, "--regenerate", "--yes")
+	// Re-import with --regenerate --yes - should not crash.
+	importHelper(t, tmpDir, "--regenerate", "--yes")
 
 	data, readErr := os.ReadFile(filepath.Clean(path))
 	if readErr != nil {
@@ -1297,7 +1297,7 @@ func createLargeTestSessionJSONL(t *testing.T, dir, sessionID, slug, cwd string,
 	}
 }
 
-func TestRunRecallExport_MultipartFrontmatterPreservation(t *testing.T) {
+func TestRunRecallImport_MultipartFrontmatterPreservation(t *testing.T) {
 	tmpDir := t.TempDir()
 	t.Setenv("HOME", tmpDir)
 
@@ -1316,8 +1316,8 @@ func TestRunRecallExport_MultipartFrontmatterPreservation(t *testing.T) {
 	}
 	defer func() { _ = os.Chdir(origDir) }()
 
-	// First export - should produce 2 files (part 1 and part 2).
-	journalDir, _ := exportHelper(t, tmpDir)
+	// First import - should produce 2 files (part 1 and part 2).
+	journalDir, _ := importHelper(t, tmpDir)
 
 	entries, readErr := os.ReadDir(journalDir)
 	if readErr != nil {
@@ -1350,8 +1350,8 @@ func TestRunRecallExport_MultipartFrontmatterPreservation(t *testing.T) {
 		t.Fatal(writeErr)
 	}
 
-	// Re-export with --regenerate --yes.
-	exportHelper(t, tmpDir, "--regenerate", "--yes")
+	// Re-import with --regenerate --yes.
+	importHelper(t, tmpDir, "--regenerate", "--yes")
 
 	// Verify part 1 preserved enriched frontmatter.
 	data, readErr := os.ReadFile(filepath.Clean(part1Path))

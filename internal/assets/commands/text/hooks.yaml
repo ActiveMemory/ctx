@@ -152,10 +152,10 @@ check-journal.box-title:
   short: Journal Reminder
 check-journal.fallback-both:
   short: |-
-    You have %d new session(s) not yet exported.
+    You have %d new session(s) not yet imported.
     %d existing entries need enrichment.
 
-    Process journal (exports and enriches):
+    Process journal (imports and enriches):
       /ctx-journal-enrich-all
 check-journal.fallback-unenriched:
   short: |-
@@ -163,14 +163,14 @@ check-journal.fallback-unenriched:
 
     Enrich:
       /ctx-journal-enrich-all
-check-journal.fallback-unexported:
+check-journal.fallback-unimported:
   short: |-
-    You have %d new session(s) not yet exported.
+    You have %d new session(s) not yet imported.
 
-    Process journal (exports and enriches):
+    Process journal (imports and enriches):
       /ctx-journal-enrich-all
 check-journal.relay-format:
-  short: '%d unexported, %d unenriched'
+  short: '%d unimported, %d unenriched'
 check-journal.relay-prefix:
   short: 'IMPORTANT: Relay this journal reminder to the user VERBATIM before answering their question.'
 check-knowledge.box-title:

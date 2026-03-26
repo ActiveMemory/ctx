@@ -191,9 +191,9 @@ from customization. These are the primary targets for override.
 | check-context-size  | checkpoint | Context capacity warning                 |
 | check-context-size  | oversize   | Injection oversize nudge                 |
 | check-context-size  | window     | Context window usage warning (>80%)      |
-| check-journal       | both       | Unexported sessions + unenriched entries |
+| check-journal       | both       | Unimported sessions + unenriched entries |
 | check-journal       | unenriched | Unenriched journal entries               |
-| check-journal       | unexported | Unexported sessions                      |
+| check-journal       | unimported | Unimported sessions                      |
 | check-knowledge     | warning    | Knowledge file growth                    |
 | check-map-staleness | stale      | Architecture map staleness               |
 | check-persistence   | nudge      | Context persistence nudge                |
@@ -231,9 +231,9 @@ them, but `edit` will warn you first.
 | check-context-size       | oversize               | `{{.TokenCount}}`                              |
 | check-context-size       | window                 | `{{.TokenCount}}`, `{{.Percentage}}`           |
 | check-ceremonies         | both, remember, wrapup | *(none)*                                       |
-| check-journal            | both                   | `{{.UnexportedCount}}`, `{{.UnenrichedCount}}` |
+| check-journal            | both                   | `{{.UnimportedCount}}`, `{{.UnenrichedCount}}` |
 | check-journal            | unenriched             | `{{.UnenrichedCount}}`                         |
-| check-journal            | unexported             | `{{.UnexportedCount}}`                         |
+| check-journal            | unimported             | `{{.UnimportedCount}}`                         |
 | check-knowledge          | warning                | `{{.FileWarnings}}`                            |
 | check-map-staleness      | stale                  | `{{.LastRefreshDate}}`, `{{.ModuleCount}}`     |
 | check-persistence        | nudge                  | `{{.PromptsSinceNudge}}`                       |

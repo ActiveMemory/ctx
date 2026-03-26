@@ -95,7 +95,7 @@ to keep the main file within token budget. All entries preserved verbatim.
 > **Historical**: `.context/sessions/` was removed in v0.4.0. These learnings are superseded but preserved for context.
 
 - SessionEnd hook fires on all exits including Ctrl+C — hook behavior still accurate for Claude Code, but ctx no longer uses it
-- Session filenames used YYYY-MM-DD-HHMMSS-topic.md — journal entries now use `ctx recall export` naming
+- Session filenames used YYYY-MM-DD-HHMMSS-topic.md — journal entries now use `ctx recall import` naming
 - Two tiers remain: curated (`.context/*.md`) and full dump (`~/.claude/projects/` + `.context/journal/`); middle `.context/sessions/` tier eliminated
 - Auto-load via PreToolUse worked; auto-save via SessionEnd removed because Claude Code retains transcripts natively
 
@@ -151,9 +151,9 @@ to keep the main file within token budget. All entries preserved verbatim.
 
 ---
 
-## [2026-02-20-142442] Default export already preserves enrichment — T2.1 was partially stale
+## [2026-02-20-142442] Default import already preserves enrichment — T2.1 was partially stale
 
-**Context**: Investigated ctx recall export --update and found the default behavior already preserves YAML frontmatter during re-export. The --force flag has a bug where it claims to discard frontmatter but does not.
+**Context**: Investigated ctx recall import --update and found the default behavior already preserves YAML frontmatter during re-import. The --force flag has a bug where it claims to discard frontmatter but does not.
 
 **Lesson**: Always read the current code before speccing a feature — the need may already be met, and the real work may be a bug fix rather than a new feature.
 

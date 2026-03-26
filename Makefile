@@ -177,10 +177,10 @@ site-serve:
 site-serve-lan:
 	zensical serve -a 0.0.0.0:8000
 
-## journal: Export sessions and regenerate journal site
+## journal: Import sessions and regenerate journal site
 journal:
-	@echo "==> Exporting sessions to journal..."
-	@ctx recall export --all
+	@echo "==> Importing sessions to journal..."
+	@ctx recall import --all
 	@echo "==> Generating journal site..."
 	@ctx journal site --build
 	@echo ""

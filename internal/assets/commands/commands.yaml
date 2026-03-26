@@ -142,12 +142,19 @@ config.switch:
   short: Switch .ctxrc profile
 ctx:
   long: |-
-    ctx (Context) maintains persistent context files that help
-      AI coding assistants understand your project's architecture, conventions,
-      decisions, and current tasks.
+    ctx (Context) - persistent context for AI coding assistants
+    https://ctx.ist - https://github.com/ActiveMemory/ctx
 
-      Use 'ctx init' to create a .context/ directory in your project,
-      then use 'ctx status', 'ctx load', and 'ctx agent' to work with context.
+    !  START: /ctx-remember
+    !    END: /ctx-wrap-up
+    !
+    !  MAINTENANCE (every 2–3 sessions):
+    !         ctx recall import --all
+    !         /ctx-journal-enrich-all
+    !
+    !  Skip this, and you will suffer.
+    !
+    !  ctx is not a skill: ctx is the persistence layer.
   short: Context - persistent context for AI coding assistants
 decision:
   long: |-
@@ -305,7 +312,7 @@ journal:
       ctx journal site --output ~/public  # Custom output directory
       ctx journal site --serve            # Generate and serve locally
       ctx journal obsidian                # Generate Obsidian vault
-  short: Analyze and synthesize exported sessions
+  short: Analyze and synthesize imported sessions
 journal.obsidian:
   long: |-
     Generate an Obsidian-compatible vault from .context/journal/ entries.
@@ -673,24 +680,24 @@ recall:
       ctx recall list --limit 5
       ctx recall show abc123
       ctx recall show --latest
-      ctx recall export --all
+      ctx recall import --all
       ctx recall lock 2026-01-21-session-abc12345.md
       ctx recall unlock --all
       ctx recall sync
   short: Browse and search AI session history
-recall.export:
+recall.import:
   long: |-
-    Export AI sessions to .context/journal/ as editable Markdown files.
+    Import AI sessions to .context/journal/ as editable Markdown files.
 
-    Exported files include session metadata, tool usage summary, and the full
+    Imported files include session metadata, tool usage summary, and the full
     conversation. You can edit these files to add notes, highlight key moments,
     or clean up the transcript.
 
-    By default, only sessions from the current project are exported. Use
+    By default, only sessions from the current project are imported. Use
     --all-projects to include sessions from all projects.
 
-    Safe by default: --all only exports new sessions. Existing files are
-    skipped. Use --regenerate to re-export existing files (preserves YAML
+    Safe by default: --all only imports new sessions. Existing files are
+    skipped. Use --regenerate to re-import existing files (preserves YAML
     frontmatter by default). Use --keep-frontmatter=false to discard
     enriched frontmatter during regeneration.
 
@@ -698,13 +705,13 @@ recall.export:
     of flags.
 
     Examples:
-      ctx recall export abc123                              # Export one session
-      ctx recall export --all                               # Export only new
-      ctx recall export --all --dry-run                     # Preview changes
-      ctx recall export --all --regenerate                  # Re-export (prompts)
-      ctx recall export --all --regenerate -y               # Re-export, no prompt
-      ctx recall export --all --regenerate --keep-frontmatter=false -y  # Discard frontmatter
-  short: Export sessions to editable journal files
+      ctx recall import abc123                              # Import one session
+      ctx recall import --all                               # Import only new
+      ctx recall import --all --dry-run                     # Preview changes
+      ctx recall import --all --regenerate                  # Re-import (prompts)
+      ctx recall import --all --regenerate -y               # Re-import, no prompt
+      ctx recall import --all --regenerate --keep-frontmatter=false -y  # Discard frontmatter
+  short: Import sessions to editable journal files
 recall.list:
   long: |-
     List AI sessions from the current project.
@@ -1040,13 +1047,13 @@ system.checkcontextsize:
   short: Context size checkpoint hook
 system.checkjournal:
   long: |-
-    Detects unexported Claude Code sessions and unenriched journal entries,
+    Detects unimported Claude Code sessions and unenriched journal entries,
     then prints actionable commands. Throttled to once per day.
 
     Hook event: UserPromptSubmit
-    Output: VERBATIM relay with export/enrich commands, silent otherwise
-    Silent when: no unexported sessions and no unenriched entries
-  short: Journal export/enrich reminder hook
+    Output: VERBATIM relay with import/enrich commands, silent otherwise
+    Silent when: no unimported sessions and no unenriched entries
+  short: Journal import/enrich reminder hook
 system.checkknowledge:
   long: |-
     Counts entries in DECISIONS.md and LEARNINGS.md and lines in

@@ -4,7 +4,7 @@
 //   \    Copyright 2026-present Context contributors.
 //                 SPDX-License-Identifier: Apache-2.0
 
-package export
+package importer
 
 import (
 	"os"
@@ -31,20 +31,19 @@ import (
 	"github.com/ActiveMemory/ctx/internal/journal/state"
 	"github.com/ActiveMemory/ctx/internal/rc"
 	"github.com/ActiveMemory/ctx/internal/write/err"
-	"github.com/ActiveMemory/ctx/internal/write/export"
 	"github.com/ActiveMemory/ctx/internal/write/recall"
 )
 
-// Run handles the recall export command.
+// Run handles the recall import command.
 //
 // Parameters:
 //   - cmd: Cobra command for output.
 //   - args: positional arguments (optional session ID).
-//   - opts: export flag values.
+//   - opts: import flag values.
 //
 // Returns:
 //   - error: non-nil on validation, scan, or write failures.
-func Run(cmd *cobra.Command, args []string, opts entity.ExportOpts) error {
+func Run(cmd *cobra.Command, args []string, opts entity.ImportOpts) error {
 	// --keep-frontmatter=false implies --regenerate
 	// (can't discard without regenerating).
 	if !opts.KeepFrontmatter {
@@ -52,11 +51,11 @@ func Run(cmd *cobra.Command, args []string, opts entity.ExportOpts) error {
 	}
 
 	// 1. Validate flags.
-	if validateErr := validate.ExportFlags(args, opts); validateErr != nil {
+	if validateErr := validate.ImportFlags(args, opts); validateErr != nil {
 		return validateErr
 	}
 
-	// 2. Bare export (no args, no --all) → show help (T2.8).
+	// 2. Bare import (no args, no --all) → show help (T2.8).
 	if len(args) == 0 && !opts.All {
 		return cmd.Help()
 	}
@@ -72,23 +71,23 @@ func Run(cmd *cobra.Command, args []string, opts entity.ExportOpts) error {
 		return nil
 	}
 
-	var toExport []*entity.Session
+	var toImport []*entity.Session
 	singleSession := false
 	if opts.All {
-		toExport = sessions
+		toImport = sessions
 	} else {
 		query := strings.ToLower(args[0])
 		for _, s := range sessions {
 			if strings.HasPrefix(strings.ToLower(s.ID), query) ||
 				strings.Contains(strings.ToLower(s.Slug), query) {
-				toExport = append(toExport, s)
+				toImport = append(toImport, s)
 			}
 		}
-		if len(toExport) == 0 {
+		if len(toImport) == 0 {
 			return errSession.NotFound(args[0])
 		}
-		if len(toExport) > 1 {
-			lines := format.SessionMatchLines(toExport)
+		if len(toImport) > 1 {
+			lines := format.SessionMatchLines(toImport)
 			recall.AmbiguousSessionMatch(cmd, args[0], lines)
 			return errSession.AmbiguousQuery()
 		}
@@ -109,8 +108,8 @@ func Run(cmd *cobra.Command, args []string, opts entity.ExportOpts) error {
 	sessionIndex := index.BuildSessionIndex(journalDir)
 
 	// 6. Build the plan.
-	plan := plan.Export(
-		toExport, journalDir, sessionIndex, jstate, opts, singleSession,
+	plan := plan.Import(
+		toImport, journalDir, sessionIndex, jstate, opts, singleSession,
 	)
 
 	// 7. Execute renames.
@@ -125,7 +124,7 @@ func Run(cmd *cobra.Command, args []string, opts entity.ExportOpts) error {
 
 	// 8. Dry-run → print summary and return.
 	if opts.DryRun {
-		export.Summary(
+		recall.ImportSummary(
 			cmd, plan.NewCount, plan.RegenCount,
 			plan.SkipCount, plan.LockedCount, true,
 		)
@@ -134,7 +133,7 @@ func Run(cmd *cobra.Command, args []string, opts entity.ExportOpts) error {
 
 	// 9. Confirmation prompt for regeneration.
 	if plan.RegenCount > 0 && !opts.Yes && !singleSession {
-		ok, promptErr := confirm.Export(cmd, plan)
+		ok, promptErr := confirm.Import(cmd, plan)
 		if promptErr != nil {
 			return promptErr
 		}
@@ -144,8 +143,8 @@ func Run(cmd *cobra.Command, args []string, opts entity.ExportOpts) error {
 		}
 	}
 
-	// 10. Execute the export.
-	exported, updated, skipped := execute.Export(cmd, plan, jstate, opts)
+	// 10. Execute the import.
+	imported, updated, skipped := execute.Import(cmd, plan, jstate, opts)
 
 	// 11. Persist journal state.
 	if saveErr := jstate.Save(journalDir); saveErr != nil {
@@ -153,7 +152,7 @@ func Run(cmd *cobra.Command, args []string, opts entity.ExportOpts) error {
 	}
 
 	// 12. Print final summary.
-	recall.ExportFinalSummary(cmd, exported, updated, renamed, skipped)
+	recall.ImportFinalSummary(cmd, imported, updated, renamed, skipped)
 
 	return nil
 }

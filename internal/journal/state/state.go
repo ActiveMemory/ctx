@@ -82,11 +82,11 @@ func (s *JournalState) Save(journalDir string) error {
 	return os.Rename(tmp, path)
 }
 
-// MarkExported records that a file was exported.
+// MarkImported records that a file was imported.
 //
 // Parameters:
 //   - filename: journal entry filename (e.g., "2026-01-21-session.md")
-func (s *JournalState) MarkExported(filename string) {
+func (s *JournalState) MarkImported(filename string) {
 	ff := s.Entries[filename]
 	ff.Exported = today()
 	s.Entries[filename] = ff

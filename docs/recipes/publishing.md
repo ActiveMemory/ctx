@@ -22,7 +22,7 @@ You want to turn this raw activity into:
 ## TL;DR
 
 ```bash
-ctx recall export --all             # 1. export sessions to markdown
+ctx recall import --all             # 1. import sessions to markdown
 
 /ctx-journal-enrich-all             # 2. add metadata and tags
 
@@ -38,41 +38,41 @@ Read on for details on each stage.
 
 | Tool                      | Type     | Purpose                                                          |
 |---------------------------|----------|------------------------------------------------------------------|
-| `ctx recall export`       | Command  | Export session JSONL to editable markdown                        |
+| `ctx recall import`       | Command  | Import session JSONL to editable markdown                        |
 | `ctx journal site`        | Command  | Generate a static site from journal entries                      |
 | `ctx journal obsidian`    | Command  | Generate an Obsidian vault from journal entries                  |
 | `ctx serve`               | Command  | Serve any zensical directory (default: journal)                  |
 | `ctx site feed`           | Command  | Generate Atom feed from finalized blog posts                     |
-| `make journal`            | Makefile | Shortcut for export + site rebuild                               |
-| `/ctx-journal-enrich-all` | Skill    | Full pipeline: export if needed, then batch-enrich (recommended) |
+| `make journal`            | Makefile | Shortcut for import + site rebuild                               |
+| `/ctx-journal-enrich-all` | Skill    | Full pipeline: import if needed, then batch-enrich (recommended) |
 | `/ctx-journal-enrich`     | Skill    | Add metadata, summaries, and tags to one entry                   |
 | `/ctx-blog`               | Skill    | Draft a blog post from recent project activity                   |
 | `/ctx-blog-changelog`     | Skill    | Write a themed post from a commit range                          |
 
 ## The Workflow
 
-### Step 1: Export Sessions to Markdown
+### Step 1: Import Sessions to Markdown
 
 Raw session data lives as JSONL files in Claude Code's internal storage. The
 first step is converting these into readable, editable markdown.
 
 ```bash
-# Export all sessions from the current project
-ctx recall export --all
+# Import all sessions from the current project
+ctx recall import --all
 
-# Export from all projects (if you work across multiple repos)
-ctx recall export --all --all-projects
+# Import from all projects (if you work across multiple repos)
+ctx recall import --all --all-projects
 
-# Export a single session by ID or slug
-ctx recall export abc123
-ctx recall export gleaming-wobbling-sutherland
+# Import a single session by ID or slug
+ctx recall import abc123
+ctx recall import gleaming-wobbling-sutherland
 ```
 
-Exported files land in `.context/journal/` as individual Markdown files with
+Imported files land in `.context/journal/` as individual Markdown files with
 session metadata and the full conversation transcript.
 
-`--all` is safe by default: Only new sessions are exported. Existing files
-are skipped. Use `--regenerate` to re-export existing files (YAML frontmatter
+`--all` is safe by default: Only new sessions are imported. Existing files
+are skipped. Use `--regenerate` to re-import existing files (YAML frontmatter
 is preserved). Use `--regenerate --keep-frontmatter=false -y` to regenerate
 everything including frontmatter.
 
@@ -154,7 +154,7 @@ Or use the Makefile shortcut that combines export and rebuild:
 make journal
 ```
 
-This runs `ctx recall export --all` followed by `ctx journal site --build`, then
+This runs `ctx recall import --all` followed by `ctx journal site --build`, then
 reminds you to enrich before rebuilding. To serve the built site, use
 `make journal-serve` or `ctx serve` (serve-only, no regeneration).
 
@@ -256,8 +256,8 @@ actually happened.
 The full pipeline from raw transcripts to published content:
 
 ```bash
-# 1. Export all sessions
-ctx recall export --all
+# 1. Import all sessions
+ctx recall import --all
 
 # 2. In Claude Code: enrich all entries with metadata
 /ctx-journal-enrich-all
@@ -277,13 +277,13 @@ ctx journal obsidian
 ```
 
 The journal pipeline is idempotent at every stage. You can rerun `ctx recall
-export --all` without losing enrichment. You can rebuild the site as many times
+import --all` without losing enrichment. You can rebuild the site as many times
 as you want.
 
 ## Tips
 
-* Export regularly. Run `ctx recall export --all` after each session to keep
-  your journal current. Only new sessions are exported: Existing files are
+* Import regularly. Run `ctx recall import --all` after each session to keep
+  your journal current. Only new sessions are imported: Existing files are
   skipped by default.
 * Use batch enrichment. `/ctx-journal-enrich-all` filters noise (suggestion
   sessions, trivial sessions, multipart continuations) so you do not have to

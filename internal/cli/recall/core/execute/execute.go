@@ -26,24 +26,24 @@ import (
 	"github.com/ActiveMemory/ctx/internal/write/recall"
 )
 
-// Export writes files according to the plan.
+// Import writes files according to the plan.
 //
 // Parameters:
 //   - cmd: Cobra command for output.
-//   - plan: the export plan with file actions.
-//   - jstate: journal state to update as files are exported.
-//   - opts: export flag values.
+//   - plan: the import plan with file actions.
+//   - jstate: journal state to update as files are imported.
+//   - opts: import flag values.
 //
 // Returns:
-//   - exported: number of new files written.
+//   - imported: number of new files written.
 //   - updated: number of existing files updated (frontmatter preserved).
 //   - skipped: number of files skipped (existing or locked).
-func Export(
+func Import(
 	cmd *cobra.Command,
-	plan entity.ExportPlan,
+	plan entity.ImportPlan,
 	jstate *state.JournalState,
-	opts entity.ExportOpts,
-) (exported, updated, skipped int) {
+	opts entity.ImportOpts,
+) (imported, updated, skipped int) {
 	for _, fa := range plan.Actions {
 		if fa.Action == entity.ActionLocked {
 			skipped++
@@ -83,7 +83,7 @@ func Export(
 		if fileExists && !discard {
 			updated++
 		} else {
-			exported++
+			imported++
 		}
 
 		// Write file.
@@ -94,16 +94,16 @@ func Export(
 			continue
 		}
 
-		jstate.MarkExported(fa.Filename)
+		jstate.MarkImported(fa.Filename)
 
 		if fileExists && !discard {
-			recall.ExportedFile(
+			recall.ImportedFile(
 				cmd, fa.Filename, desc.Text(text.DescKeyLabelReasonUpdated),
 			)
 		} else {
-			recall.ExportedFile(cmd, fa.Filename, "")
+			recall.ImportedFile(cmd, fa.Filename, "")
 		}
 	}
 
-	return exported, updated, skipped
+	return imported, updated, skipped
 }

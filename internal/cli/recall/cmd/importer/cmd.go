@@ -4,7 +4,7 @@
 //   \    Copyright 2026-present Context contributors.
 //                 SPDX-License-Identifier: Apache-2.0
 
-package export
+package importer
 
 import (
 	"github.com/ActiveMemory/ctx/internal/entity"
@@ -16,17 +16,17 @@ import (
 	cFlag "github.com/ActiveMemory/ctx/internal/config/flag"
 )
 
-// Cmd returns the recall export subcommand.
+// Cmd returns the recall import subcommand.
 //
 // Returns:
-//   - *cobra.Command: Command for exporting sessions to journal files
+//   - *cobra.Command: Command for importing sessions to journal files
 func Cmd() *cobra.Command {
-	var opts entity.ExportOpts
+	var opts entity.ImportOpts
 
-	short, long := desc.Command(cmd.DescKeyRecallExport)
+	short, long := desc.Command(cmd.DescKeyRecallImport)
 
 	c := &cobra.Command{
-		Use:   cmd.UseRecallExport,
+		Use:   cmd.UseRecallImport,
 		Short: short,
 		Long:  long,
 		RunE: func(cmd *cobra.Command, args []string) error {
@@ -35,27 +35,27 @@ func Cmd() *cobra.Command {
 	}
 
 	c.Flags().BoolVar(
-		&opts.All, cFlag.All, false, desc.Flag(flag.DescKeyRecallExportAll),
+		&opts.All, cFlag.All, false, desc.Flag(flag.DescKeyRecallImportAll),
 	)
 	c.Flags().BoolVar(
 		&opts.AllProjects, cFlag.AllProjects, false,
-		desc.Flag(flag.DescKeyRecallExportAllProjects),
+		desc.Flag(flag.DescKeyRecallImportAllProjects),
 	)
 	c.Flags().BoolVar(
 		&opts.Regenerate, cFlag.Regenerate, false,
-		desc.Flag(flag.DescKeyRecallExportRegenerate),
+		desc.Flag(flag.DescKeyRecallImportRegenerate),
 	)
 	c.Flags().BoolVar(
 		&opts.KeepFrontmatter, cFlag.KeepFrontmatter, true,
-		desc.Flag(flag.DescKeyRecallExportKeepFrontmatter),
+		desc.Flag(flag.DescKeyRecallImportKeepFrontmatter),
 	)
 	c.Flags().BoolVarP(
 		&opts.Yes, cFlag.Yes, cFlag.ShortYes, false,
-		desc.Flag(flag.DescKeyRecallExportYes),
+		desc.Flag(flag.DescKeyRecallImportYes),
 	)
 	c.Flags().BoolVar(
 		&opts.DryRun, cFlag.DryRun, false,
-		desc.Flag(flag.DescKeyRecallExportDryRun),
+		desc.Flag(flag.DescKeyRecallImportDryRun),
 	)
 
 	return c

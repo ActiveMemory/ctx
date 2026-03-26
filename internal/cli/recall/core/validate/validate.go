@@ -24,15 +24,15 @@ func EmptyMessage(msg entity.Message) bool {
 	return msg.Text == "" && len(msg.ToolUses) == 0 && len(msg.ToolResults) == 0
 }
 
-// ExportFlags checks for invalid flag combinations.
+// ImportFlags checks for invalid flag combinations.
 //
 // Parameters:
 //   - args: positional arguments (session IDs).
-//   - opts: export flag values.
+//   - opts: import flag values.
 //
 // Returns:
 //   - error: non-nil if flags conflict.
-func ExportFlags(args []string, opts entity.ExportOpts) error {
+func ImportFlags(args []string, opts entity.ImportOpts) error {
 	if len(args) > 0 && opts.All {
 		return errSession.AllWithID()
 	}

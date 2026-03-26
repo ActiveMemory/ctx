@@ -166,7 +166,7 @@ special setup needed.
 
 One thing to watch:
 
-* **Journal enrichment**: `ctx recall export` and `ctx journal enrich`
+* **Journal enrichment**: `ctx recall import` and `ctx journal enrich`
   write files relative to the current working directory. Enrichments
   created in a worktree stay there and are discarded on teardown.
   **Enrich journals on the main branch after merging**: the JSONL session

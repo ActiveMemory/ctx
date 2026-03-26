@@ -163,9 +163,11 @@ DO NOT UPDATE FOR:
 
 - New CLI subcommand documentation checklist: When adding a new CLI subcommand, update docs in at least three places: (1) Feature page (e.g., docs/scratchpad.md) — commands table, usage section, skill/NL table. (2) CLI reference (docs/cli-reference.md) — full reference entry with args, flags, examples. (3) Relevant recipes — any recipe that covers the feature area. (4) zensical.toml — only if adding a new page.
 
+- Rename/refactor documentation checklist: When renaming a command, flag, function, or concept, scope ALL documentation impact before implementation. The project has three documentation anchors plus one tangential: (1) Docstrings in source code. (2) User-facing docs (`docs/`). (3) Recipes (`docs/recipes/`). (4) Blog posts and release notes — update command names but preserve historical prose. Also check: skills (`internal/assets/claude/skills/`), hook messages (`internal/assets/hooks/messages/`), YAML text files (`internal/assets/`), `.context/` files, and specs (`specs/`).
+
 - Always stage site/ when committing docs/ changes — the generated HTML is tracked in git with no CI build step.
 
-- Zero //nolint:errcheck policy — handle errors, don't suppress them. In test code: use t.Fatal(err) for setup errors, _ = os.Chdir(orig) for cleanup. In production code: use defer func() { _ = f.Close() }() for best-effort close. For gosec false positives: prefer config-level exclusions in .golangci.yml.
+- Zero silent error discard policy — handle every error, never suppress with `_ =` or `//nolint:errcheck`. In test code: use `t.Fatal(err)` for setup errors, use `t.Log(err)` for cleanup errors (not `_ =`). In production code: defer-close must log failures to stderr (`if err := f.Close(); err != nil { fmt.Fprintf(os.Stderr, "ctx: close %s: %v\n", path, err) }`), never `_ = f.Close()`. For write/read errors: return the error or log to stderr. For os.Remove/Rename: log to stderr at minimum. For gosec false positives: fix the code to satisfy the linter rather than adding nolint markers or config-level exclusions — the goal is zero golangci-lint suppressions. See TASKS.md EH.0–EH.5 for the full error handling cleanup plan.
 
 - Error constructors belong in internal/err, never in per-package err.go files — eliminates the broken-window pattern where agents add local errors when they see a local err.go exists.
 

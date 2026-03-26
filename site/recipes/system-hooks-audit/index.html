@@ -2180,10 +2180,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#check-journal-unexported-session-reminder" class="md-nav__link">
+  <a href="#check-journal-unimported-session-reminder" class="md-nav__link">
     <span class="md-ellipsis">
       
-        check-journal: Unexported Session Reminder
+        check-journal: Unimported Session Reminder
       
     </span>
   </a>
@@ -4096,10 +4096,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#check-journal-unexported-session-reminder" class="md-nav__link">
+  <a href="#check-journal-unimported-session-reminder" class="md-nav__link">
     <span class="md-ellipsis">
       
-        check-journal: Unexported Session Reminder
+        check-journal: Unimported Session Reminder
       
     </span>
   </a>
@@ -4672,8 +4672,8 @@ catches the "<em>we talked about it but never wrote it down</em>" failure mode.<
 hook bootstraps the habit until it becomes automatic.</p>
 <p><strong>Output</strong>: Tailored nudge depending on which ceremony is missing.</p>
 <hr />
-<h4 id="check-journal-unexported-session-reminder"><code>check-journal</code>: Unexported Session Reminder<a class="headerlink" href="#check-journal-unexported-session-reminder" title="Permanent link">&para;</a></h4>
-<p><strong>What</strong>: Detects unexported Claude Code sessions and unenriched journal
+<h4 id="check-journal-unimported-session-reminder"><code>check-journal</code>: Unimported Session Reminder<a class="headerlink" href="#check-journal-unimported-session-reminder" title="Permanent link">&para;</a></h4>
+<p><strong>What</strong>: Detects unimported Claude Code sessions and unenriched journal
 entries. Fires once per day.</p>
 <p><strong>Why</strong>: Exported sessions become searchable history. Unenriched entries
 lack metadata for filtering. Both decay in value over time.</p>
@@ -4683,7 +4683,7 @@ lack metadata for filtering. Both decay in value over time.</p>
 </span><span id="__span-3-3"><a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>│ 5 existing entries need enrichment.
 </span><span id="__span-3-4"><a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>│
 </span><span id="__span-3-5"><a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>│ Export and enrich:
-</span><span id="__span-3-6"><a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>│   ctx recall export --all
+</span><span id="__span-3-6"><a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>│   ctx recall import --all
 </span><span id="__span-3-7"><a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>│   /ctx-journal-enrich-all
 </span><span id="__span-3-8"><a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>└────────────────────────────────────────────────
 </span></code></pre></div>
