@@ -47,6 +47,13 @@ import (
 	embedText "github.com/ActiveMemory/ctx/internal/config/embed/text"
 )
 
+// registration pairs a command constructor with its group ID.
+// An empty groupID marks the command as hidden.
+type registration struct {
+	cmd     func() *cobra.Command
+	groupID string
+}
+
 // Initialize registers all ctx subcommands with the root command and
 // organizes them into Cobra command groups for structured help output.
 //
@@ -74,65 +81,16 @@ func Initialize(cmd *cobra.Command) *cobra.Command {
 
 	// Command-to-group mapping. Centralized here so the taxonomy
 	// is visible in one place.
-	type registration struct {
-		cmd     func() *cobra.Command
-		groupID string
-	}
-
-	commands := []registration{
-		// Getting Started
-		{initialize.Cmd, embedCmd.GroupGettingStarted},
-		{status.Cmd, embedCmd.GroupGettingStarted},
-		{guide.Cmd, embedCmd.GroupGettingStarted},
-
-		// Context (source of truth)
-		{add.Cmd, embedCmd.GroupContext},
-		{load.Cmd, embedCmd.GroupContext},
-		{agent.Cmd, embedCmd.GroupContext},
-		{sync.Cmd, embedCmd.GroupContext},
-		{drift.Cmd, embedCmd.GroupContext},
-		{compact.Cmd, embedCmd.GroupContext},
-
-		// Artifacts (.context/ files)
-		{decision.Cmd, embedCmd.GroupArtifacts},
-		{learning.Cmd, embedCmd.GroupArtifacts},
-		{task.Cmd, embedCmd.GroupArtifacts},
-
-		// Sessions
-		{journal.Cmd, embedCmd.GroupSessions},
-		{memory.Cmd, embedCmd.GroupSessions},
-		{remind.Cmd, embedCmd.GroupSessions},
-		{pad.Cmd, embedCmd.GroupSessions},
-
-		// Runtime
-		{config.Cmd, embedCmd.GroupRuntime},
-		{permission.Cmd, embedCmd.GroupRuntime},
-		{pause.Cmd, embedCmd.GroupRuntime},
-		{resume.Cmd, embedCmd.GroupRuntime},
-
-		// Integration
-		{hook.Cmd, embedCmd.GroupIntegration},
-		{mcp.Cmd, embedCmd.GroupIntegration},
-		{watch.Cmd, embedCmd.GroupIntegration},
-		{notify.Cmd, embedCmd.GroupIntegration},
-		{loop.Cmd, embedCmd.GroupIntegration},
-
-		// Diagnostics
-		{doctor.Cmd, embedCmd.GroupDiagnostics},
-		{change.Cmd, embedCmd.GroupDiagnostics},
-		{dep.Cmd, embedCmd.GroupDiagnostics},
-		{why.Cmd, embedCmd.GroupDiagnostics},
-
-		// serve and site are available via make targets — hidden.
-		{serve.Cmd, ""},
-		{site.Cmd, ""},
-
-		// Utilities (reindex — help and completion are auto-assigned above)
-		{reindex.Cmd, embedCmd.GroupUtilities},
-
-		// system is hidden — no group assignment needed.
-		{system.Cmd, ""},
-	}
+	var commands []registration
+	commands = append(commands, gettingStarted()...)
+	commands = append(commands, contextCmds()...)
+	commands = append(commands, artifacts()...)
+	commands = append(commands, sessions()...)
+	commands = append(commands, runtimeCmds()...)
+	commands = append(commands, integrations()...)
+	commands = append(commands, diagnostics()...)
+	commands = append(commands, utilities()...)
+	commands = append(commands, hiddenCmds()...)
 
 	for _, reg := range commands {
 		c := reg.cmd()
@@ -145,4 +103,82 @@ func Initialize(cmd *cobra.Command) *cobra.Command {
 	}
 
 	return cmd
+}
+
+func gettingStarted() []registration {
+	return []registration{
+		{initialize.Cmd, embedCmd.GroupGettingStarted},
+		{status.Cmd, embedCmd.GroupGettingStarted},
+		{guide.Cmd, embedCmd.GroupGettingStarted},
+	}
+}
+
+func contextCmds() []registration {
+	return []registration{
+		{add.Cmd, embedCmd.GroupContext},
+		{load.Cmd, embedCmd.GroupContext},
+		{agent.Cmd, embedCmd.GroupContext},
+		{sync.Cmd, embedCmd.GroupContext},
+		{drift.Cmd, embedCmd.GroupContext},
+		{compact.Cmd, embedCmd.GroupContext},
+	}
+}
+
+func artifacts() []registration {
+	return []registration{
+		{decision.Cmd, embedCmd.GroupArtifacts},
+		{learning.Cmd, embedCmd.GroupArtifacts},
+		{task.Cmd, embedCmd.GroupArtifacts},
+	}
+}
+
+func sessions() []registration {
+	return []registration{
+		{journal.Cmd, embedCmd.GroupSessions},
+		{memory.Cmd, embedCmd.GroupSessions},
+		{remind.Cmd, embedCmd.GroupSessions},
+		{pad.Cmd, embedCmd.GroupSessions},
+	}
+}
+
+func runtimeCmds() []registration {
+	return []registration{
+		{config.Cmd, embedCmd.GroupRuntime},
+		{permission.Cmd, embedCmd.GroupRuntime},
+		{pause.Cmd, embedCmd.GroupRuntime},
+		{resume.Cmd, embedCmd.GroupRuntime},
+	}
+}
+
+func integrations() []registration {
+	return []registration{
+		{hook.Cmd, embedCmd.GroupIntegration},
+		{mcp.Cmd, embedCmd.GroupIntegration},
+		{watch.Cmd, embedCmd.GroupIntegration},
+		{notify.Cmd, embedCmd.GroupIntegration},
+		{loop.Cmd, embedCmd.GroupIntegration},
+	}
+}
+
+func diagnostics() []registration {
+	return []registration{
+		{doctor.Cmd, embedCmd.GroupDiagnostics},
+		{change.Cmd, embedCmd.GroupDiagnostics},
+		{dep.Cmd, embedCmd.GroupDiagnostics},
+		{why.Cmd, embedCmd.GroupDiagnostics},
+	}
+}
+
+func utilities() []registration {
+	return []registration{
+		{reindex.Cmd, embedCmd.GroupUtilities},
+	}
+}
+
+func hiddenCmds() []registration {
+	return []registration{
+		{serve.Cmd, ""},
+		{site.Cmd, ""},
+		{system.Cmd, ""},
+	}
 }
