@@ -261,6 +261,10 @@ Spec: `specs/journal-merge-completion.md`. Read the spec before starting any JMC
 
 - [ ] Write blog post about architecture analysis + enrichment two-pass design after dogfooding run on ctx itself. Cover: the 5.2x depth observation, constraint-as-feature principle, watermelon-rind anti-pattern, and results from the ctx self-analysis. #priority:medium #added:2026-03-25-233650
 
+- [ ] Blog post: "Writing a CONSTITUTION for your AI agent" — showcase ctx's CONSTITUTION.md as a pattern for hard invariants that agents cannot violate. Cover: why advisory rules fail (agents game qualifiers), what belongs in a constitution vs conventions, the spec-at-commit enforcement story from this session, examples of good rules (absolute, binary, no interpretation needed). Include a recipe for writing your own. #priority:medium #added:2026-03-27-115500
+
+- [ ] Recipe: "How to write a good CONSTITUTION.md" — practical guide with categories (security, quality, process, structure), anti-patterns (vague qualifiers, unenforced rules), enforcement mechanisms (hooks, commit gates), and a starter template. #priority:medium #added:2026-03-27-115500
+
 - [ ] drift check should notify if claude permissions have insecure stuff in it.
 
 - [ ] task: sync workspace to ARI_INBOX

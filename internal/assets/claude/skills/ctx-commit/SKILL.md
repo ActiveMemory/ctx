@@ -28,25 +28,19 @@ recording the context behind it.
 
 ## Process
 
-### 1. Spec verification (CONSTITUTION requirement)
+### 1. Check CONSTITUTION for commit rules
 
-Every commit MUST reference a spec. Before anything else:
+Read `.context/CONSTITUTION.md` (if it exists) for commit-specific
+rules. Common project rules to look for and enforce:
 
-1. Identify which spec covers the current work. Check:
-   - The in-progress task in TASKS.md — does it reference a `Spec:` line?
-   - Recent specs in `specs/` that match the work being done
-2. Verify the spec file exists: `ls specs/<name>.md`
-3. If no spec exists:
-   - **Stop.** Do not proceed with the commit.
-   - Tell the agent: "No spec found for this work. Create a
-     retroactive spec in `specs/` or ask the human to scope one.
-     This is a CONSTITUTION requirement — no exceptions. Even a
-     one-liner fix needs a spec for traceability."
-   - If the human explicitly authorizes skipping the spec for this
-     commit, note this in the commit message body.
+- **Spec-per-commit**: Add a `Spec:` trailer, verify a spec file exists in
+  `specs/` before proceeding. If no spec exists, stop and offer to run
+  `/ctx-spec` to scaffold one.
+- **Sign-off**: `Signed-off-by:`, include it.
+- **Other trailers**: Honor any project-specific trailer requirements.
 
-The spec reference goes in the commit message as a `Spec:` trailer
-(see Commit Message Format below).
+Read CONSTITUTION fully and apply all relevant rules before
+proceeding to pre-commit checks.
 
 ### 2. Pre-commit checks
 
@@ -54,10 +48,8 @@ Unless the user says `--skip-qa` or "skip checks":
 
 - Run `git diff --name-only` to see what changed
 - Run the project's build and lint commands to verify nothing is broken.
-  Check for a Makefile, package.json, or equivalent. Common patterns:
-  - `make build` / `make lint` (if Makefile exists)
-  - `npm test` / `npm run build` (if package.json exists)
-  - `cargo build` / `cargo test` (if Cargo.toml exists)
+  Check for a Makefile, package.json, or equivalent. If you cannot
+  identify the build/lint commands, ask the user before proceeding.
 - If the build or lint fails, stop and report: do not commit broken code
 
 ### 3. Stage and commit
@@ -97,40 +89,47 @@ ctx add learning "Go embed requires files in same package" \
 
 ### 5. Reflect
 
-After every commit, run a brief reflection to capture the bigger
-picture before moving on:
-
-> **Quick reflect**: What did this commit accomplish? Any follow-up
-> work, open questions, or things the next session should know?
-
-Record anything worth persisting. This step is mandatory — skipping
-reflection is how context gets lost between sessions.
+After every commit, run `/ctx-reflect` to capture the bigger
+picture before moving on. This is mandatory — skipping reflection
+is how context gets lost between sessions.
 
 ## Commit Message Format
 
 Follow the repository's existing commit style. Draft messages
 that:
 - Focus on **why**, not what (the diff shows what)
-- Are concise (1-2 sentences)
 - Use lowercase, no period at the end
-- Include `Spec:` trailer referencing the spec file (CONSTITUTION requirement)
-- Include `Signed-off-by:` trailer
+- Scale detail to match scope: a one-file fix gets 1-2 sentences;
+  a multi-package change gets a summary paragraph plus a bulleted
+  list of what changed and why
+- Include any trailers required by CONSTITUTION (e.g., `Spec:`,
+  `Signed-off-by:`)
 
 Example:
 ```
-gate checkpoint nudges behind minimum context window percentage
+complete journal-recall merge wiring and cross-cutting cleanup
 
-Counter-based checkpoints fire regardless of context usage,
-producing noise at 5-8% on 1M windows. Gate behind 20% minimum.
+Wire journal commands through journal/core packages instead of
+recall/core. Move importer, lock, unlock, sync cmd packages from
+recall/cmd to journal/cmd.
 
-Spec: specs/hook-accountability.md
-Signed-off-by: <users-name-configured-in-git> <users-email-configured-in-git>
+Changes:
+- journal/core/{plan,execute,query} are now canonical
+- sourcefm/sourceformat renamed to source/frontmatter, source/format
+- Magic numbers extracted to config/stats constants
+- state.StateDir renamed to state.Dir across 26 callers
+- splitLines moved to parse.ByteLines
+- /ctx-commit skill generalized to be language-agnostic
+
+Spec: specs/journal-merge-completion.md
+Signed-off-by: Jane Doe <jane@example.com>
 ```
 
 ## Commit Discipline
 
-- **Spec trailer is mandatory** — this is the primary gate. If you
-  cannot identify a spec, stop and resolve before committing.
+- **Spec trailer is mandatory** — identify the spec that covers
+  this work and include `Spec:` in the commit message. If
+  CONSTITUTION also requires it, this is non-negotiable.
 - **Confirm the message** with the user before committing (or use
   their provided message)
 - **Always present the context prompt**: this is the whole point
