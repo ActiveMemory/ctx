@@ -10,10 +10,12 @@ const (
 	UseJournal         = "journal"
 	UseJournalObsidian = "obsidian"
 	UseJournalSite     = "site"
+	UseJournalSource   = "source"
 )
 
 const (
 	DescKeyJournal         = "journal"
 	DescKeyJournalObsidian = "journal.obsidian"
 	DescKeyJournalSite     = "journal.site"
+	DescKeyJournalSource   = "journal.source"
 )

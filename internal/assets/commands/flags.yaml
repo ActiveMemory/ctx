@@ -68,6 +68,24 @@ journal.site.output:
   short: Output directory for site
 journal.site.serve:
   short: Run zensical serve after generating
+journal.source.all-projects:
+  short: Include sessions from all projects
+journal.source.full:
+  short: Show full message content (with --show or --latest)
+journal.source.latest:
+  short: Show the most recent session
+journal.source.limit:
+  short: Maximum sessions to display
+journal.source.project:
+  short: Filter by project name
+journal.source.show:
+  short: Show details of a specific session by slug or ID
+journal.source.since:
+  short: Show sessions on or after this date (YYYY-MM-DD)
+journal.source.tool:
+  short: Filter by tool (e.g., claude-code)
+journal.source.until:
+  short: Show sessions on or before this date (YYYY-MM-DD)
 load.budget:
   short: Token budget for assembly
 load.raw:

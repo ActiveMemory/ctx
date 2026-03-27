@@ -75,7 +75,6 @@ func TestInitialize(t *testing.T) {
 		"learning",
 		"task",
 		"loop",
-		"recall",
 		"journal",
 		"serve",
 		"guide",

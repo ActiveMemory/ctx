@@ -298,21 +298,27 @@ initialize:
   short: Initialize a new .context/ directory with template files
 journal:
   long: |-
-    Work with exported session files in .context/journal/.
+    Manage AI session history: import, inspect, protect, and publish.
 
-    The journal system provides tools for analyzing, enriching, and
-    publishing your AI session history.
+    The journal system provides the full lifecycle for session history in
+    .context/journal/ — from raw session files through to published sites.
 
     Subcommands:
+      source    List and inspect raw session files
+      import    Import sessions to editable journal files
+      lock      Protect journal entries from regeneration
+      unlock    Remove lock protection from journal entries
+      sync      Sync lock state from frontmatter to state file
       site      Generate a static site from journal entries
       obsidian  Generate an Obsidian vault from journal entries
 
     Examples:
-      ctx journal site                    # Generate site in .context/journal-site/
-      ctx journal site --output ~/public  # Custom output directory
-      ctx journal site --serve            # Generate and serve locally
-      ctx journal obsidian                # Generate Obsidian vault
-  short: Analyze and synthesize imported sessions
+      ctx journal source                    # List available sessions
+      ctx journal source --show abc123      # Inspect a session
+      ctx journal import --all              # Import all new sessions
+      ctx journal lock --all                # Protect all entries
+      ctx journal site --serve              # Generate and serve locally
+  short: Manage session history and journal
 journal.obsidian:
   long: |-
     Generate an Obsidian-compatible vault from .context/journal/ entries.
@@ -345,6 +351,20 @@ journal.site:
       ctx journal site --build            # Generate and build HTML
       ctx journal site --serve            # Generate and serve locally
   short: Generate a static site from journal entries
+journal.source:
+  long: |-
+    List and inspect raw AI session files available for journal import.
+
+    Default behavior lists all available sessions. Use --show to inspect
+    a specific session by slug or ID before importing.
+
+    Examples:
+      ctx journal source                         # List available sessions
+      ctx journal source --limit 5               # Show last 5 sessions
+      ctx journal source --show abc123           # Inspect a session
+      ctx journal source --latest --full         # Show full latest session
+      ctx journal source --project myapp         # Filter by project
+  short: List and inspect session sources
 learning:
   long: |-
     Manage the LEARNINGS.md file and its quick-reference index.

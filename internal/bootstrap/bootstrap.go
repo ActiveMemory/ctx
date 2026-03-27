@@ -32,7 +32,6 @@ import (
 	"github.com/ActiveMemory/ctx/internal/cli/pad"
 	"github.com/ActiveMemory/ctx/internal/cli/pause"
 	"github.com/ActiveMemory/ctx/internal/cli/permission"
-	"github.com/ActiveMemory/ctx/internal/cli/recall"
 	"github.com/ActiveMemory/ctx/internal/cli/reindex"
 	"github.com/ActiveMemory/ctx/internal/cli/remind"
 	"github.com/ActiveMemory/ctx/internal/cli/resume"
@@ -100,7 +99,6 @@ func Initialize(cmd *cobra.Command) *cobra.Command {
 		{task.Cmd, embedCmd.GroupArtifacts},
 
 		// Sessions
-		{recall.Cmd, embedCmd.GroupSessions},
 		{journal.Cmd, embedCmd.GroupSessions},
 		{memory.Cmd, embedCmd.GroupSessions},
 		{remind.Cmd, embedCmd.GroupSessions},
