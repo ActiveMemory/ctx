@@ -45,7 +45,7 @@ func Run(cmd *cobra.Command, stdin *os.File) error {
 		return nil
 	}
 	markerPath := filepath.Join(
-		state.StateDir(), architecture.MapStalenessThrottleID,
+		state.Dir(), architecture.MapStalenessThrottleID,
 	)
 	if check.DailyThrottled(markerPath) {
 		return nil

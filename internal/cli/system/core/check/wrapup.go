@@ -23,7 +23,7 @@ import (
 // Returns:
 //   - bool: True if wrap-up marker is fresh
 func WrappedUpRecently() bool {
-	markerPath := filepath.Join(state.StateDir(), wrap.WrappedUpMarker)
+	markerPath := filepath.Join(state.Dir(), wrap.WrappedUpMarker)
 
 	info, statErr := os.Stat(markerPath)
 	if statErr != nil {

@@ -12,7 +12,7 @@ import (
 	"github.com/ActiveMemory/ctx/internal/config/token"
 )
 
-// ExtractFrontmatter returns the YAML frontmatter block from content,
+// Frontmatter returns the YAML frontmatter block from content,
 // including the delimiters and trailing newline.
 //
 // Parameters:
@@ -20,7 +20,7 @@ import (
 //
 // Returns:
 //   - string: The frontmatter block including delimiters, or "" if not found
-func ExtractFrontmatter(content string) string {
+func Frontmatter(content string) string {
 	nl := token.NewlineLF
 	fmOpen := token.Separator + nl
 	fmClose := nl + token.Separator + nl
@@ -45,7 +45,7 @@ func ExtractFrontmatter(content string) string {
 // Returns:
 //   - string: Content without frontmatter
 func StripFrontmatter(content string) string {
-	fm := ExtractFrontmatter(content)
+	fm := Frontmatter(content)
 	if fm == "" {
 		return content
 	}

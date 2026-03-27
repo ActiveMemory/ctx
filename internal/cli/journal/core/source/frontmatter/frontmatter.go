@@ -4,7 +4,7 @@
 //   \    Copyright 2026-present Context contributors.
 //                 SPDX-License-Identifier: Apache-2.0
 
-package sourcefm
+package frontmatter
 
 import (
 	"fmt"
@@ -14,7 +14,7 @@ import (
 	"github.com/ActiveMemory/ctx/internal/config/token"
 )
 
-// resolveHeading returns the first non-empty value among title, slug, baseName.
+// ResolveHeading returns the first non-empty value among title, slug, baseName.
 //
 // Parameters:
 //   - title: Preferred heading text
@@ -33,7 +33,7 @@ func ResolveHeading(title, slug, baseName string) string {
 	return baseName
 }
 
-// writeFmQuoted writes a YAML frontmatter quoted string field.
+// WriteFmQuoted writes a YAML frontmatter quoted string field.
 //
 // Parameters:
 //   - sb: String builder to write to
@@ -46,7 +46,7 @@ func WriteFmQuoted(sb *strings.Builder, key, value string) {
 	}
 }
 
-// writeFmString writes a YAML frontmatter bare string field.
+// WriteFmString writes a YAML frontmatter bare string field.
 //
 // Parameters:
 //   - sb: String builder to write to
@@ -59,7 +59,7 @@ func WriteFmString(sb *strings.Builder, key, value string) {
 	}
 }
 
-// writeFmInt writes a YAML frontmatter integer field.
+// WriteFmInt writes a YAML frontmatter integer field.
 //
 // Parameters:
 //   - sb: String builder to write to

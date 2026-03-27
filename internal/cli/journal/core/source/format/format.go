@@ -4,7 +4,7 @@
 //   \    Copyright 2026-present Context contributors.
 //                 SPDX-License-Identifier: Apache-2.0
 
-package sourceformat
+package format
 
 import (
 	"encoding/json"
@@ -14,7 +14,7 @@ import (
 
 	"github.com/ActiveMemory/ctx/internal/assets/read/desc"
 	"github.com/ActiveMemory/ctx/internal/assets/tpl"
-	"github.com/ActiveMemory/ctx/internal/cli/recall/core/frontmatter"
+	"github.com/ActiveMemory/ctx/internal/cli/journal/core/source/frontmatter"
 	"github.com/ActiveMemory/ctx/internal/config/box"
 	"github.com/ActiveMemory/ctx/internal/config/embed/text"
 	"github.com/ActiveMemory/ctx/internal/config/file"

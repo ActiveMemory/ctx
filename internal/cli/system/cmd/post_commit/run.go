@@ -10,7 +10,6 @@ import (
 	"fmt"
 	"os"
 	"os/exec"
-	"regexp"
 	"strings"
 
 	coreCheck "github.com/ActiveMemory/ctx/internal/cli/system/core/check"
@@ -27,24 +26,19 @@ import (
 	"github.com/ActiveMemory/ctx/internal/config/file"
 	cfgGit "github.com/ActiveMemory/ctx/internal/config/git"
 	"github.com/ActiveMemory/ctx/internal/config/hook"
+	"github.com/ActiveMemory/ctx/internal/config/regex"
+	"github.com/ActiveMemory/ctx/internal/config/stats"
 	"github.com/ActiveMemory/ctx/internal/config/token"
 	ctxContext "github.com/ActiveMemory/ctx/internal/context/resolve"
 	"github.com/ActiveMemory/ctx/internal/notify"
 	writeHook "github.com/ActiveMemory/ctx/internal/write/hook"
 )
 
-var (
-	reGitCommit = regexp.MustCompile(`git\s+commit`)
-	reAmend     = regexp.MustCompile(`--amend`)
-	// reTaskRef matches Phase-style task references like HA.1, P-2.5, PD.3, CT.1.
-	reTaskRef = regexp.MustCompile(`\b[A-Z]+-?\d+\.?\d*\b`)
-)
-
 // Run executes the post-commit hook logic.
 //
 // After a successful git commit (non-amend), nudges the agent to offer
 // context capture (decision or learning) and to run lints/tests before
-// pushing. Also checks for version drift.
+// pushing. Also checks for version drift and spec enforcement.
 //
 // Parameters:
 //   - cmd: Cobra command for output
@@ -63,13 +57,11 @@ func Run(cmd *cobra.Command, stdin *os.File) error {
 
 	command := input.ToolInput.Command
 
-	// Only trigger on git commit commands
-	if !reGitCommit.MatchString(command) {
+	if !regex.GitCommit.MatchString(command) {
 		return nil
 	}
 
-	// Skip amend commits
-	if reAmend.MatchString(command) {
+	if regex.GitAmend.MatchString(command) {
 		return nil
 	}
 
@@ -90,25 +82,12 @@ func Run(cmd *cobra.Command, stdin *os.File) error {
 		writeHook.HookContext(cmd, driftResponse)
 	}
 
-	// Spec enforcement: score the commit for bypass indicators.
 	if violations := scoreCommitViolations(); violations != "" {
 		writeHook.NudgeBlock(cmd, violations)
 	}
 
 	return nil
 }
-
-// Violation point values for bypass detection.
-const (
-	violationSpecMissing    = 3
-	violationSignoffMissing = 1
-	violationTaskRefMissing = 1
-	violationSingleLine     = 1
-	violationNoTasksChanged = 1
-
-	violationThresholdNudge = 2
-	violationThresholdWarn  = 4
-)
 
 // scoreCommitViolations reads the last commit and scores it for signs that
 // the agent bypassed /ctx-commit. Returns a formatted nudge box for the
@@ -123,54 +102,49 @@ func scoreCommitViolations() string {
 	score := 0
 	var missing []string
 
-	// Missing Spec: trailer (3 points).
 	if !strings.Contains(commitMsg, cfgGit.TrailerSpec) {
-		score += violationSpecMissing
-		missing = append(missing, "Spec: trailer")
+		score += stats.ViolationSpecMissing
+		missing = append(missing, desc.Text(text.DescKeyPostCommitMissingSpec))
 	}
 
-	// Missing Signed-off-by: trailer (1 point).
 	if !strings.Contains(commitMsg, cfgGit.TrailerSignedOffBy) {
-		score += violationSignoffMissing
-		missing = append(missing, "Signed-off-by: trailer")
+		score += stats.ViolationSignoffMissing
+		missing = append(missing, desc.Text(text.DescKeyPostCommitMissingSignoff))
 	}
 
-	// Single-line message — no body (1 point).
 	lines := strings.Split(strings.TrimSpace(commitMsg), token.NewlineLF)
 	if len(lines) <= 1 {
-		score += violationSingleLine
-		missing = append(missing, "commit body")
+		score += stats.ViolationSingleLine
+		missing = append(missing, desc.Text(text.DescKeyPostCommitMissingBody))
 	}
 
-	// No task reference in message (1 point).
-	if !reTaskRef.MatchString(commitMsg) {
-		score += violationTaskRefMissing
-		missing = append(missing, "task reference")
+	if !regex.TaskRef.MatchString(commitMsg) {
+		score += stats.ViolationTaskRefMissing
+		missing = append(missing, desc.Text(text.DescKeyPostCommitMissingTaskRef))
 	}
 
-	// Source files changed but no TASKS.md in diff (1 point).
 	diffBytes, diffErr := exec.Command("git", "diff-tree", "--no-commit-id", "--name-only", "-r", "HEAD").Output() //nolint:gosec // G204: all args are string literals
 	if diffErr == nil {
 		diffFiles := string(diffBytes)
 		hasSource := strings.Contains(diffFiles, file.ExtGo)
 		hasTasks := strings.Contains(diffFiles, cfgCtx.Task)
 		if hasSource && !hasTasks {
-			score += violationNoTasksChanged
-			missing = append(missing, "TASKS.md update")
+			score += stats.ViolationNoTasksChanged
+			missing = append(missing, desc.Text(text.DescKeyPostCommitMissingTaskUpdate))
 		}
 	}
 
-	if score < violationThresholdNudge {
+	if score < stats.ViolationThresholdNudge {
 		return ""
 	}
 
-	severity := "informal"
-	if score >= violationThresholdWarn {
-		severity = "bypassed /ctx-commit"
+	severity := desc.Text(text.DescKeyPostCommitSeverityInformal)
+	if score >= stats.ViolationThresholdWarn {
+		severity = desc.Text(text.DescKeyPostCommitSeveritySkipped)
 	}
 
-	title := fmt.Sprintf("Commit Audit (score: %d — %s)", score, severity)
-	content := fmt.Sprintf("Missing: %s", strings.Join(missing, ", "))
+	title := fmt.Sprintf(desc.Text(text.DescKeyPostCommitAuditTitle), score, severity)
+	content := fmt.Sprintf(desc.Text(text.DescKeyPostCommitAuditContent), strings.Join(missing, ", "))
 
 	return message.NudgeBox(
 		desc.Text(text.DescKeyPostCommitRelayPrefix),

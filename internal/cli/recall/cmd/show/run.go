@@ -9,8 +9,8 @@ package show
 import (
 	"strings"
 
-	"github.com/ActiveMemory/ctx/internal/cli/recall/core/format"
-	"github.com/ActiveMemory/ctx/internal/cli/recall/core/query"
+	"github.com/ActiveMemory/ctx/internal/cli/journal/core/query"
+	sourceFormat "github.com/ActiveMemory/ctx/internal/cli/journal/core/source/format"
 	"github.com/spf13/cobra"
 
 	"github.com/ActiveMemory/ctx/internal/assets/read/desc"
@@ -72,7 +72,7 @@ func Run(
 			return errSession.NotFound(args[0])
 		}
 		if len(matches) > 1 {
-			lines := format.SessionMatchLines(matches)
+			lines := sourceFormat.SessionMatchLines(matches)
 			recall.AmbiguousSessionMatchWithHint(
 				cmd, args[0], lines, matches[0].ID[:journal.SessionIDHintLen],
 			)
@@ -90,12 +90,12 @@ func Run(
 		Branch:    session.GitBranch,
 		Model:     session.Model,
 		Started:   session.StartTime.Format(time.DateTimePreciseFormat),
-		Duration:  format.Duration(session.Duration),
+		Duration:  sourceFormat.Duration(session.Duration),
 		Turns:     session.TurnCount,
 		Messages:  len(session.Messages),
-		TokensIn:  format.Tokens(session.TotalTokensIn),
-		TokensOut: format.Tokens(session.TotalTokensOut),
-		TokensAll: format.Tokens(session.TotalTokens),
+		TokensIn:  sourceFormat.Tokens(session.TotalTokensIn),
+		TokensOut: sourceFormat.Tokens(session.TotalTokensOut),
+		TokensAll: sourceFormat.Tokens(session.TotalTokens),
 	})
 
 	// Tool usage summary
@@ -134,7 +134,7 @@ func Run(
 			}
 
 			for _, t := range msg.ToolUses {
-				toolInfo := format.ToolUse(t)
+				toolInfo := sourceFormat.ToolUse(t)
 				recall.SessionDetail(
 					cmd, desc.Text(text.DescKeyLabelInlineTool), toolInfo,
 				)
@@ -145,7 +145,7 @@ func Run(
 					recall.Hint(cmd, desc.Text(text.DescKeyLabelInlineError))
 				}
 				if tr.Content != "" {
-					content := format.StripLineNumbers(tr.Content)
+					content := sourceFormat.StripLineNumbers(tr.Content)
 					recall.CodeBlock(cmd, content)
 				}
 			}

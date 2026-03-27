@@ -13,11 +13,11 @@ import (
 	"strings"
 
 	"github.com/ActiveMemory/ctx/internal/assets/tpl"
-	"github.com/ActiveMemory/ctx/internal/cli/recall/core/format"
-	"github.com/ActiveMemory/ctx/internal/cli/recall/core/index"
-	"github.com/ActiveMemory/ctx/internal/cli/recall/core/lock"
-	"github.com/ActiveMemory/ctx/internal/cli/recall/core/slug"
-	"github.com/ActiveMemory/ctx/internal/cli/recall/core/validate"
+	"github.com/ActiveMemory/ctx/internal/cli/journal/core/index"
+	"github.com/ActiveMemory/ctx/internal/cli/journal/core/lock"
+	"github.com/ActiveMemory/ctx/internal/cli/journal/core/slug"
+	sourceFormat "github.com/ActiveMemory/ctx/internal/cli/journal/core/source/format"
+	"github.com/ActiveMemory/ctx/internal/cli/journal/core/validate"
 	"github.com/ActiveMemory/ctx/internal/config/file"
 	"github.com/ActiveMemory/ctx/internal/config/journal"
 	"github.com/ActiveMemory/ctx/internal/config/session"
@@ -74,7 +74,7 @@ func Import(
 		}
 		slg, title := slug.TitleSlug(s, existingTitle)
 
-		baseFilename := format.JournalFilename(s, slg)
+		baseFilename := sourceFormat.JournalFilename(s, slg)
 		baseName := strings.TrimSuffix(baseFilename, file.ExtMarkdown)
 
 		// Detect renames (dedup: old slug → new slug).

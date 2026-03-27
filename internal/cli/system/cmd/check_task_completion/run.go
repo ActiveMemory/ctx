@@ -54,7 +54,7 @@ func Run(cmd *cobra.Command, stdin *os.File) error {
 		return nil
 	}
 
-	counterPath := filepath.Join(state.StateDir(), nudge.PrefixTask+sessionID)
+	counterPath := filepath.Join(state.Dir(), nudge.PrefixTask+sessionID)
 	count := counter.Read(counterPath)
 	count++
 

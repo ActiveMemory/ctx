@@ -14,8 +14,8 @@ import (
 	"github.com/spf13/cobra"
 
 	"github.com/ActiveMemory/ctx/internal/assets/read/desc"
-	"github.com/ActiveMemory/ctx/internal/cli/recall/core/extract"
-	"github.com/ActiveMemory/ctx/internal/cli/recall/core/format"
+	"github.com/ActiveMemory/ctx/internal/cli/journal/core/extract"
+	sourceFormat "github.com/ActiveMemory/ctx/internal/cli/journal/core/source/format"
 	"github.com/ActiveMemory/ctx/internal/config/embed/text"
 	"github.com/ActiveMemory/ctx/internal/config/fs"
 	"github.com/ActiveMemory/ctx/internal/config/session"
@@ -58,7 +58,7 @@ func Import(
 
 		// Generate content, sanitizing any invalid UTF-8.
 		content := strings.ToValidUTF8(
-			format.JournalEntryPart(
+			sourceFormat.JournalEntryPart(
 				fa.Session, fa.Messages[fa.StartIdx:fa.EndIdx],
 				fa.StartIdx, fa.Part, fa.TotalParts, fa.BaseName, fa.Title,
 			),
@@ -72,7 +72,7 @@ func Import(
 		if fileExists && !discard {
 			existing, readErr := os.ReadFile(filepath.Clean(fa.Path))
 			if readErr == nil {
-				if fm := extract.ExtractFrontmatter(string(existing)); fm != "" {
+				if fm := extract.Frontmatter(string(existing)); fm != "" {
 					content = fm + token.NewlineLF + extract.StripFrontmatter(content)
 				}
 			}

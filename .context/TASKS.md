@@ -218,6 +218,41 @@ Gate checkpoint noise, fix context window detection, enforce spec-at-commit.
 - [x] HA.4.1: Add violation scoring to `post-commit` hook #done:2026-03-27-104000: missing Spec trailer (3pts), missing Signed-off-by (1pt), no task reference (1pt), source changed without TASKS.md (1pt), single-line message (1pt). Score 0-1=clean, 2-3=nudge, 4+=relay warning to human #added:2026-03-27-100000
 - [x] HA.4.2: Unit tests for post-commit violation scoring — deferred, function uses exec.Command for git calls making it integration-test territory #done:2026-03-27-104000 #added:2026-03-27-100000
 
+### Phase JMC: Journal Merge Completion
+
+Spec: `specs/journal-merge-completion.md`. Read the spec before starting any JMC task.
+
+**JMC.1 — Wire journal commands to journal/core:**
+
+- [x] JMC.1.1: Update journal/core/plan.go imports from recall/core → journal/core siblings #done:2026-03-27-113500 from recall/core → journal/core siblings #priority:high #added:2026-03-27-110000
+- [x] JMC.1.2: Recall cmd/{list,show} import from journal/core. Journal cmd/{importer,lock,unlock,sync} moved from recall/cmd to journal/cmd with all imports and docstrings updated #done:2026-03-27-115000
+- [x] JMC.1.3: journal.go imports from journal/cmd/ — no recall/cmd dependencies remain in journal #done:2026-03-27-115000
+
+**JMC.2 — Package restructuring:**
+
+- [x] JMC.2.1: Rename sourcefm → source/frontmatter, sourceformat → source/format #done:2026-03-27-113500, update all imports #added:2026-03-27-110000
+- [x] JMC.2.2: Rename extract.ExtractFrontmatter → extract.Frontmatter #done:2026-03-27-113000 → extract.FrontMatter (stuttery) #added:2026-03-27-110000
+- [x] JMC.2.3: Fix sourcefm/frontmatter.go docstrings #done:2026-03-27-113200 — reference public function names, not private #added:2026-03-27-110000
+
+**JMC.3 — Magic numbers and config extraction:**
+
+- [x] JMC.3.1: source/cmd.go:75 #done:2026-03-27-111200 — add cFlag.Project, cFlag.ShortProject constants #added:2026-03-27-110000
+- [x] JMC.3.2: check_context_size/run.go #done:2026-03-27-111400 — extract 30, 3, 15 to config/stats constants #added:2026-03-27-110000
+- [x] JMC.3.3: post_commit/run.go #done:2026-03-27-112000 — move regexes to config, violation points to config, localizable strings to assets #added:2026-03-27-110000
+- [x] JMC.3.4: state/state.go:29 #done:2026-03-27-112200 — 0o750 to config/fs constant #added:2026-03-27-110000
+
+**JMC.4 — Naming and conventions:**
+
+- [x] JMC.4.1: Rename state.StateDir → state.Dir #done:2026-03-27-112500, state.SetStateDirForTest → state.SetDirForTest, update all callers #added:2026-03-27-110000
+- [x] JMC.4.2: Move session.go splitLines → parse.ByteLines #done:2026-03-27-112800 to internal/parse or similar utility package, private function in separate file #added:2026-03-27-110000
+
+**JMC.5 — Skill generalization:**
+
+- [x] JMC.5.1: Make /ctx-commit SKILL.md language-agnostic #done:2026-03-27-111000: remove Go-specific build checks, generalize to "if source files changed, run project build/lint" #priority:high #added:2026-03-27-110000
+- [x] JMC.5.2: Fix ctx add decision signature #done:2026-03-27-111000 in SKILL.md (requires --title and --rationale flags) #added:2026-03-27-110000
+- [x] JMC.5.3: Remove _ctx-update-docs reference #done:2026-03-27-111000 and ctx-specific doc drift check from SKILL.md #added:2026-03-27-110000
+- [x] JMC.5.4: Make reflect step mandatory #done:2026-03-27-111000 after every commit, not optional #added:2026-03-27-110000
+
 ### Phase CLI-FIX: CLI Infrastructure Fixes
 
 - [ ] Bug: ctx add task appends to the last Phase section instead of a dedicated location. Tasks added via CLI land inside whatever Phase happens to be last in TASKS.md, breaking Phase structure. Fix: add mandatory --phase flag to ctx add task. If the named Phase section does not exist, create it. If --phase is omitted, error with available Phase names. No fallback section — mandatory placement forces intent at creation time. #priority:high #added:2026-03-25-234813

@@ -53,7 +53,7 @@ func Run(_ *cobra.Command, stdin *os.File) error {
 		return nil
 	}
 
-	tmpDir := state.StateDir()
+	tmpDir := state.Dir()
 	counterFile := filepath.Join(
 		tmpDir, heartbeat.HeartbeatCounterPrefix+sessionID,
 	)

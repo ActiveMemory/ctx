@@ -50,7 +50,7 @@ func Run(cmd *cobra.Command, stdin *os.File) error {
 		return nil
 	}
 
-	tmpDir := state.StateDir()
+	tmpDir := state.Dir()
 	markerFile := filepath.Join(tmpDir, version.ThrottleID)
 
 	if coreCheck.DailyThrottled(markerFile) {

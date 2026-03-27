@@ -53,7 +53,7 @@ func Run(cmd *cobra.Command, stdin *os.File) error {
 		return nil
 	}
 
-	tmpDir := state.StateDir()
+	tmpDir := state.Dir()
 	stateFile := filepath.Join(tmpDir, nudge.PersistenceNudgePrefix+sessionID)
 	contextDir := rc.ContextDir()
 	logFile := filepath.Join(contextDir, dir.Logs, nudge.PersistenceLogFile)

@@ -45,8 +45,8 @@ func TestModelContextWindow(t *testing.T) {
 func TestLatestSessionPct(t *testing.T) {
 	// Set up a temp state dir.
 	tmpDir := t.TempDir()
-	state.SetStateDirForTest(tmpDir)
-	t.Cleanup(func() { state.SetStateDirForTest("") })
+	state.SetDirForTest(tmpDir)
+	t.Cleanup(func() { state.SetDirForTest("") })
 
 	sessionID := "test-session-pct"
 

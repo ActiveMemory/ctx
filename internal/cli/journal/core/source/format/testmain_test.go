@@ -4,5 +4,16 @@
 //   \    Copyright 2026-present Context contributors.
 //                 SPDX-License-Identifier: Apache-2.0
 
-// Package sourceformat transforms session data into formatted journal Markdown with frontmatter and turn headers.
-package sourceformat
+package format
+
+import (
+	"os"
+	"testing"
+
+	"github.com/ActiveMemory/ctx/internal/assets/read/lookup"
+)
+
+func TestMain(m *testing.M) {
+	lookup.Init()
+	os.Exit(m.Run())
+}

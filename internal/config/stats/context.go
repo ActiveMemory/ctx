@@ -31,4 +31,32 @@ const (
 	JsonlPathCachePrefix = "jsonl-path-"
 	// ContextSizeOversizeSepLen is the separator length for the oversize flag file header.
 	ContextSizeOversizeSepLen = 35
+
+	// CheckpointLateThreshold is the prompt count above which the late
+	// checkpoint frequency kicks in.
+	CheckpointLateThreshold = 30
+	// CheckpointLateInterval is how often (in prompts) checkpoints fire
+	// after the late threshold.
+	CheckpointLateInterval = 3
+	// CheckpointEarlyThreshold is the prompt count above which the early
+	// checkpoint frequency kicks in.
+	CheckpointEarlyThreshold = 15
+	// CheckpointEarlyInterval is how often (in prompts) checkpoints fire
+	// during the early window (between early and late thresholds).
+	CheckpointEarlyInterval = 5
+
+	// ViolationSpecMissing is the score for a missing Spec: trailer.
+	ViolationSpecMissing = 3
+	// ViolationSignoffMissing is the score for a missing Signed-off-by: trailer.
+	ViolationSignoffMissing = 1
+	// ViolationTaskRefMissing is the score for no task reference in the message.
+	ViolationTaskRefMissing = 1
+	// ViolationSingleLine is the score for a single-line commit message.
+	ViolationSingleLine = 1
+	// ViolationNoTasksChanged is the score for source changes without TASKS.md update.
+	ViolationNoTasksChanged = 1
+	// ViolationThresholdNudge is the minimum score to emit a nudge.
+	ViolationThresholdNudge = 2
+	// ViolationThresholdWarn is the minimum score to emit a warning.
+	ViolationThresholdWarn = 4
 )

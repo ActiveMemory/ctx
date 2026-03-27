@@ -73,7 +73,7 @@ func ReadSessionTokenInfo(sessionID string) (entity.TokenInfo, error) {
 //   - error: Non-nil only on unexpected errors
 func FindJSONLPath(sessionID string) (string, error) {
 	// Check cache first
-	cacheFile := filepath.Join(state.StateDir(), stats.JsonlPathCachePrefix+sessionID)
+	cacheFile := filepath.Join(state.Dir(), stats.JsonlPathCachePrefix+sessionID)
 	if data, readErr := internalIo.SafeReadUserFile(cacheFile); readErr == nil {
 		cached := strings.TrimSpace(string(data))
 		if cached != "" {

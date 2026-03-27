@@ -29,7 +29,7 @@ import (
 // Returns:
 //   - string: Absolute path to the pause marker file
 func PauseMarkerPath(sessionID string) string {
-	return filepath.Join(state.StateDir(), hook.PrefixPauseMarker+sessionID)
+	return filepath.Join(state.Dir(), hook.PrefixPauseMarker+sessionID)
 }
 
 // Paused checks if the session is paused. If paused, increments the

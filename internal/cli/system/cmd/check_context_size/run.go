@@ -60,7 +60,7 @@ func Run(cmd *cobra.Command, stdin *os.File) error {
 		return nil
 	}
 
-	tmpDir := state.StateDir()
+	tmpDir := state.Dir()
 	counterFile := filepath.Join(tmpDir, stats.ContextSizeCounterPrefix+sessionID)
 	logFile := filepath.Join(rc.ContextDir(), dir.Logs, stats.ContextSizeLogFile)
 
@@ -111,10 +111,10 @@ func Run(cmd *cobra.Command, stdin *os.File) error {
 	// window usage to eliminate noise on large windows (e.g., 1M).
 	counterTriggered := false
 	if pct >= stats.ContextCheckpointMinPct {
-		if count > 30 {
-			counterTriggered = count%3 == 0
-		} else if count > 15 {
-			counterTriggered = count%5 == 0
+		if count > stats.CheckpointLateThreshold {
+			counterTriggered = count%stats.CheckpointLateInterval == 0
+		} else if count > stats.CheckpointEarlyThreshold {
+			counterTriggered = count%stats.CheckpointEarlyInterval == 0
 		}
 	}
 

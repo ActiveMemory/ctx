@@ -35,7 +35,7 @@ func Run(cmd *cobra.Command, stdin *os.File) error {
 
 	// Session tombstone: nudge once per session, per session ID
 	tombstone := filepath.Join(
-		state.StateDir(), hook.PrefixMemoryDriftThrottle+sessionID,
+		state.Dir(), hook.PrefixMemoryDriftThrottle+sessionID,
 	)
 	if _, statErr := os.Stat(tombstone); statErr == nil {
 		return nil

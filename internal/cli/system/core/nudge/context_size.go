@@ -132,7 +132,7 @@ func EmitWindowWarning(logFile, sessionID string, count, tokens, pct int) string
 func EmitBillingWarning(logFile, sessionID string, count, tokens, threshold int) string {
 	// One-shot guard: skip if already warned this session.
 	warnedFile := filepath.Join(
-		state.StateDir(), stats.ContextSizeBillingWarnedPrefix+sessionID,
+		state.Dir(), stats.ContextSizeBillingWarnedPrefix+sessionID,
 	)
 	if _, statErr := os.Stat(warnedFile); statErr == nil {
 		return "" // already fired

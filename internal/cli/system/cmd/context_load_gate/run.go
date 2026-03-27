@@ -64,7 +64,7 @@ func Run(cmd *cobra.Command, stdin *os.File) error {
 		return nil
 	}
 
-	tmpDir := state.StateDir()
+	tmpDir := state.Dir()
 	marker := filepath.Join(tmpDir, load_gate.PrefixCtxLoaded+input.SessionID)
 
 	if _, statErr := os.Stat(marker); statErr == nil {

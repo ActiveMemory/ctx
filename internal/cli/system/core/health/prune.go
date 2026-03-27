@@ -35,7 +35,7 @@ var UUIDPattern = regexp.MustCompile(
 // Returns:
 //   - int: Number of files pruned
 func AutoPrune(days int) int {
-	dir := state.StateDir()
+	dir := state.Dir()
 
 	entries, readErr := os.ReadDir(dir)
 	if readErr != nil {

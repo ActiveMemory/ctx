@@ -53,9 +53,12 @@ The spec reference goes in the commit message as a `Spec:` trailer
 Unless the user says `--skip-qa` or "skip checks":
 
 - Run `git diff --name-only` to see what changed
-- If Go files changed, run `CGO_ENABLED=0 go build -o /dev/null ./cmd/ctx`
-  to verify the build
-- If build fails, stop and report: do not commit broken code
+- Run the project's build and lint commands to verify nothing is broken.
+  Check for a Makefile, package.json, or equivalent. Common patterns:
+  - `make build` / `make lint` (if Makefile exists)
+  - `npm test` / `npm run build` (if package.json exists)
+  - `cargo build` / `cargo test` (if Cargo.toml exists)
+- If the build or lint fails, stop and report: do not commit broken code
 
 ### 3. Stage and commit
 
@@ -74,50 +77,34 @@ After a successful commit, ask the user:
 > **Any context to capture?**
 >
 > - **Decision**: Did you make a design choice or trade-off?
->   (I'll record it with `ctx add decision`)
 > - **Learning**: Did you hit a gotcha or discover something?
->   (I'll record it with `ctx add learning`)
 > - **Neither**: No context to capture: we're done.
 
 Wait for the user's response. If they provide a decision or
 learning, record it using the appropriate command:
 
 ```bash
-ctx add decision "..."
+ctx add decision "Use PostgreSQL" \
+  --context "Need a reliable database" \
+  --rationale "ACID compliance and JSON support" \
+  --consequence "Team needs training"
 ```
 
 ```bash
-ctx add learning --context "..." --lesson "..." --application "..."
+ctx add learning "Go embed requires files in same package" \
+  --context "..." --lesson "..." --application "..."
 ```
 
-### 5. Doc drift check (conditional)
+### 5. Reflect
 
-If the committed files include source code that could affect
-documentation (Go files in `internal/cli/`, `internal/config/`,
-`internal/assets/`, `cmd/`), remind the user:
+After every commit, run a brief reflection to capture the bigger
+picture before moving on:
 
-> Source files changed - want me to run `/_ctx-update-docs` to check
-> for doc drift?
+> **Quick reflect**: What did this commit accomplish? Any follow-up
+> work, open questions, or things the next session should know?
 
-Skip this prompt if:
-- Only non-code files changed (markdown, config, scripts)
-- Only test files changed
-- The user already ran `/update-docs` this session
-
-### 6. Reflect (optional)
-
-If the commit represents a significant milestone (completing a
-feature, finishing a multi-session effort, resolving a complex
-bug), suggest a reflection:
-
-> This looks like a good checkpoint. Want me to run a quick
-> `/ctx-reflect` to capture the bigger picture?
-
-Only suggest this for substantial commits: not every commit
-needs reflection. Signs a reflection is warranted:
-- Multiple files changed across different packages
-- The commit closes out a task from TASKS.md
-- The work spanned discussion of trade-offs or alternatives
+Record anything worth persisting. This step is mandatory — skipping
+reflection is how context gets lost between sessions.
 
 ## Commit Message Format
 
@@ -148,8 +135,8 @@ Signed-off-by: <users-name-configured-in-git> <users-email-configured-in-git>
   their provided message)
 - **Always present the context prompt**: this is the whole point
   of the skill
-- **Suggest reflection only when warranted**: and accept "no"
-  gracefully
+- **Always reflect**: even a one-sentence reflection prevents
+  context loss
 - **Check for secrets** (`.env`, credentials, tokens) in the diff
   before staging
 
@@ -157,7 +144,7 @@ Signed-off-by: <users-name-configured-in-git> <users-email-configured-in-git>
 
 Before committing, verify:
 - [ ] Spec exists and is referenced in the commit message
-- [ ] Build passes (if Go files changed)
+- [ ] Build and lint pass
 - [ ] Commit message is concise and explains the why
 - [ ] `Spec:` and `Signed-off-by:` trailers are present
 - [ ] No secrets or sensitive files in the staged changes
@@ -166,8 +153,7 @@ Before committing, verify:
 After committing, verify:
 - [ ] Context prompt was presented to the user
 - [ ] Any decisions/learnings provided were recorded
-- [ ] Doc drift check was offered (if source code changed)
-- [ ] Reflection was suggested if the commit was substantial
+- [ ] Reflection was completed
 
 ## Human Relay
 

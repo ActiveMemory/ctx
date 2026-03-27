@@ -10,13 +10,13 @@ import (
 	"github.com/spf13/cobra"
 
 	"github.com/ActiveMemory/ctx/internal/assets/read/desc"
+	"github.com/ActiveMemory/ctx/internal/cli/journal/cmd/importer"
+	"github.com/ActiveMemory/ctx/internal/cli/journal/cmd/lock"
 	"github.com/ActiveMemory/ctx/internal/cli/journal/cmd/obsidian"
 	"github.com/ActiveMemory/ctx/internal/cli/journal/cmd/site"
 	"github.com/ActiveMemory/ctx/internal/cli/journal/cmd/source"
-	"github.com/ActiveMemory/ctx/internal/cli/recall/cmd/importer"
-	"github.com/ActiveMemory/ctx/internal/cli/recall/cmd/lock"
-	recallSync "github.com/ActiveMemory/ctx/internal/cli/recall/cmd/sync"
-	"github.com/ActiveMemory/ctx/internal/cli/recall/cmd/unlock"
+	journalSync "github.com/ActiveMemory/ctx/internal/cli/journal/cmd/sync"
+	"github.com/ActiveMemory/ctx/internal/cli/journal/cmd/unlock"
 	"github.com/ActiveMemory/ctx/internal/config/embed/cmd"
 )
 
@@ -39,7 +39,7 @@ func Cmd() *cobra.Command {
 	c.AddCommand(importer.Cmd())
 	c.AddCommand(lock.Cmd())
 	c.AddCommand(unlock.Cmd())
-	c.AddCommand(recallSync.Cmd())
+	c.AddCommand(journalSync.Cmd())
 	c.AddCommand(site.Cmd())
 	c.AddCommand(obsidian.Cmd())
 

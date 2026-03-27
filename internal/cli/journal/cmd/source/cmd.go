@@ -72,7 +72,7 @@ func Cmd() *cobra.Command {
 		cFlag.ShortMaxIterations, journal.DefaultRecallListLimit,
 		desc.Flag(flag.DescKeyJournalSourceLimit),
 	)
-	c.Flags().StringVarP(&project, "project", "p", "",
+	c.Flags().StringVarP(&project, cFlag.Project, cFlag.ShortProject, "",
 		desc.Flag(flag.DescKeyJournalSourceProject),
 	)
 	c.Flags().StringVarP(&tool, cFlag.Tool, cFlag.ShortTool, "",

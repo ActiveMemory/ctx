@@ -34,7 +34,7 @@ import (
 	"github.com/ActiveMemory/ctx/internal/write/recall"
 )
 
-// Run handles the recall import command.
+// Run handles the journal import command.
 //
 // Parameters:
 //   - cmd: Cobra command for output.

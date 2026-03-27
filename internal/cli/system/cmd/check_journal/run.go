@@ -51,7 +51,7 @@ func Run(cmd *cobra.Command, stdin *os.File) error {
 		return nil
 	}
 
-	tmpDir := state.StateDir()
+	tmpDir := state.Dir()
 	remindedFile := filepath.Join(tmpDir, journal.CheckJournalThrottleID)
 	claudeProjectsDir := filepath.Join(
 		os.Getenv(env.Home), journal.CheckJournalClaudeProjectsSubdir,

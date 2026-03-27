@@ -29,7 +29,7 @@ import (
 // Returns:
 //   - error: Non-nil if the marker file cannot be written
 func Run(cmd *cobra.Command) error {
-	markerPath := filepath.Join(state.StateDir(), wrap.WrappedUpMarker)
+	markerPath := filepath.Join(state.Dir(), wrap.WrappedUpMarker)
 
 	if writeErr := os.WriteFile(
 		markerPath, []byte(wrap.WrappedUpContent), fs.PermSecret,

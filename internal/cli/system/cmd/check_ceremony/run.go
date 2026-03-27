@@ -48,7 +48,7 @@ func Run(cmd *cobra.Command, stdin *os.File) error {
 		return nil
 	}
 
-	remindedFile := filepath.Join(state.StateDir(), ceremony.CeremonyThrottleID)
+	remindedFile := filepath.Join(state.Dir(), ceremony.CeremonyThrottleID)
 
 	if coreCheck.DailyThrottled(remindedFile) {
 		return nil

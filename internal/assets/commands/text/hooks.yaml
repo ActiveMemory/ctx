@@ -492,6 +492,24 @@ post-commit.relay-message:
   short: Commit succeeded, context capture offered
 post-commit.relay-prefix:
   short: 'IMPORTANT: Relay this commit audit to the user VERBATIM before answering their question.'
+post-commit.missing-spec:
+  short: 'Spec: trailer'
+post-commit.missing-signoff:
+  short: 'Signed-off-by: trailer'
+post-commit.missing-body:
+  short: commit body
+post-commit.missing-task-ref:
+  short: task reference
+post-commit.missing-task-update:
+  short: TASKS.md update
+post-commit.severity-informal:
+  short: informal
+post-commit.severity-bypassed:
+  short: bypassed /ctx-commit
+post-commit.audit-title:
+  short: 'Commit Audit (score: %d — %s)'
+post-commit.audit-content:
+  short: 'Missing: %s'
 qa-reminder.fallback:
   short: 'HARD GATE - DO NOT COMMIT without completing ALL of these steps first: (1) lint the ENTIRE project, (2) test the ENTIRE project, (3) verify a clean working tree (no modified or untracked files left behind). Not just the files you changed - the whole branch. If unrelated modified files remain, offer to commit them separately, stash them, or get explicit confirmation to leave them. Do NOT say ''I''ll do that at the end'' or ''I''ll handle that after committing.'' Run lint and tests BEFORE every git commit, every time, no exceptions.'
 qa-reminder.relay-message:

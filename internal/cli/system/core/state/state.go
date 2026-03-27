@@ -11,32 +11,33 @@ import (
 	"path/filepath"
 
 	"github.com/ActiveMemory/ctx/internal/config/dir"
+	"github.com/ActiveMemory/ctx/internal/config/fs"
 	ctxContext "github.com/ActiveMemory/ctx/internal/context/validate"
 	"github.com/ActiveMemory/ctx/internal/rc"
 )
 
-// StateDir returns the project-scoped runtime state directory
-// (.context/state/). Ensures the directory exists on each call - MkdirAll
+// Dir returns the project-scoped runtime state directory
+// (.context/state/). Ensures the directory exists on each call — MkdirAll
 // is a no-op when the directory is already present.
 //
 // Returns:
 //   - string: Absolute path to the state directory
-func StateDir() string {
-	if stateDirOverride != "" {
-		return stateDirOverride
+func Dir() string {
+	if dirOverride != "" {
+		return dirOverride
 	}
 	d := filepath.Join(rc.ContextDir(), dir.State)
-	_ = os.MkdirAll(d, 0o750)
+	_ = os.MkdirAll(d, fs.PermRestrictedDir)
 	return d
 }
 
-// stateDirOverride allows tests to redirect StateDir() to a temp directory.
-var stateDirOverride string
+// dirOverride allows tests to redirect Dir() to a temp directory.
+var dirOverride string
 
-// SetStateDirForTest overrides StateDir() for testing. Pass an empty string
+// SetDirForTest overrides Dir() for testing. Pass an empty string
 // to restore default behavior. Only call from tests.
-func SetStateDirForTest(dir string) {
-	stateDirOverride = dir
+func SetDirForTest(d string) {
+	dirOverride = d
 }
 
 // Initialized reports whether the context directory has been properly set up

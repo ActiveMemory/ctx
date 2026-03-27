@@ -10,8 +10,8 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/ActiveMemory/ctx/internal/cli/recall/core/format"
-	"github.com/ActiveMemory/ctx/internal/cli/recall/core/query"
+	"github.com/ActiveMemory/ctx/internal/cli/journal/core/query"
+	sourceFormat "github.com/ActiveMemory/ctx/internal/cli/journal/core/source/format"
 	"github.com/spf13/cobra"
 
 	"github.com/ActiveMemory/ctx/internal/assets/read/desc"
@@ -112,7 +112,7 @@ func Run(
 	slugW, projW := len(desc.Text(text.DescKeyLabelColSlug)),
 		len(desc.Text(text.DescKeyLabelColProject))
 	for _, s := range filtered {
-		slug := format.Truncate(s.Slug, journal.SlugMaxLen)
+		slug := sourceFormat.Truncate(s.Slug, journal.SlugMaxLen)
 		if len(slug) > slugW {
 			slugW = len(slug)
 		}
@@ -134,13 +134,13 @@ func Run(
 
 	// Print sessions.
 	for _, s := range filtered {
-		slug := format.Truncate(s.Slug, journal.SlugMaxLen)
+		slug := sourceFormat.Truncate(s.Slug, journal.SlugMaxLen)
 		dateStr := s.StartTime.Local().Format(time.DateTimeFormat)
-		dur := format.Duration(s.Duration)
+		dur := sourceFormat.Duration(s.Duration)
 		turns := fmt.Sprintf("%d", s.TurnCount)
 		tokens := ""
 		if s.TotalTokens > 0 {
-			tokens = format.Tokens(s.TotalTokens)
+			tokens = sourceFormat.Tokens(s.TotalTokens)
 		}
 		recall.SessionListRow(cmd, rowFmt,
 			slug, s.Project, dateStr, dur, turns, tokens)

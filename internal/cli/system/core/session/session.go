@@ -22,6 +22,7 @@ import (
 	"github.com/ActiveMemory/ctx/internal/config/token"
 	"github.com/ActiveMemory/ctx/internal/entity"
 	internalIo "github.com/ActiveMemory/ctx/internal/io"
+	"github.com/ActiveMemory/ctx/internal/parse"
 )
 
 // FormatContext builds a JSON Response with additionalContext for the
@@ -115,7 +116,7 @@ func ReadSessionID(stdin *os.File) string {
 //   - int: Latest context window usage percentage (0-100), or 0 if unknown
 func LatestSessionPct(sessionID string) int {
 	path := filepath.Join(
-		state.StateDir(),
+		state.Dir(),
 		cfgStats.FilePrefix+sessionID+file.ExtJSONL,
 	)
 	data, readErr := internalIo.SafeReadUserFile(path)
@@ -124,7 +125,7 @@ func LatestSessionPct(sessionID string) int {
 	}
 
 	// Scan from the end for the last non-empty line.
-	lines := splitLines(data)
+	lines := parse.ByteLines(data)
 	for i := len(lines) - 1; i >= 0; i-- {
 		line := lines[i]
 		if len(line) == 0 {
@@ -139,24 +140,6 @@ func LatestSessionPct(sessionID string) int {
 	return 0
 }
 
-// splitLines splits data on newline bytes, returning non-empty slices.
-func splitLines(data []byte) [][]byte {
-	var lines [][]byte
-	start := 0
-	for i, b := range data {
-		if b == token.NewlineLF[0] {
-			if i > start {
-				lines = append(lines, data[start:i])
-			}
-			start = i + 1
-		}
-	}
-	if start < len(data) {
-		lines = append(lines, data[start:])
-	}
-	return lines
-}
-
 // WriteSessionStats appends a JSONL line to .context/state/stats-{sessionID}.jsonl.
 // The file is designed for `tail -f` monitoring of token usage across prompts.
 // Best-effort: errors are silently ignored.
@@ -166,7 +149,7 @@ func splitLines(data []byte) [][]byte {
 //   - stats: Stats entry to write
 func WriteSessionStats(sessionID string, stats entity.Stats) {
 	path := filepath.Join(
-		state.StateDir(),
+		state.Dir(),
 		cfgStats.FilePrefix+sessionID+file.ExtJSONL,
 	)
 	data, marshalErr := json.Marshal(stats)
