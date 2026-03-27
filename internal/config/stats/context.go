@@ -18,6 +18,11 @@ const (
 	// ContextWindowThresholdPct is the percentage of context window usage
 	// that triggers an independent warning, regardless of prompt count.
 	ContextWindowThresholdPct = 80
+	// ContextCheckpointMinPct is the minimum context window usage percentage
+	// below which counter-based checkpoint nudges are suppressed. This
+	// eliminates noise on large context windows (e.g., 1M) where prompt
+	// count is a poor proxy for session depth.
+	ContextCheckpointMinPct = 20
 	// ContextSizeBillingWarnedPrefix is the state file prefix for the one-shot billing warning guard.
 	ContextSizeBillingWarnedPrefix = "billing-warned-"
 	// ContextSizeInjectionOversizeFlag is the state file name for the injection-oversize one-shot flag.

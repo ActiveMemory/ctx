@@ -19,12 +19,14 @@ import (
 	"github.com/ActiveMemory/ctx/internal/cli/system/core/message"
 	coreNudge "github.com/ActiveMemory/ctx/internal/cli/system/core/nudge"
 	"github.com/ActiveMemory/ctx/internal/cli/system/core/persistence"
+	coreSession "github.com/ActiveMemory/ctx/internal/cli/system/core/session"
 	"github.com/ActiveMemory/ctx/internal/cli/system/core/state"
 	"github.com/ActiveMemory/ctx/internal/cli/system/core/time"
 	"github.com/ActiveMemory/ctx/internal/config/dir"
 	"github.com/ActiveMemory/ctx/internal/config/embed/text"
 	"github.com/ActiveMemory/ctx/internal/config/hook"
 	"github.com/ActiveMemory/ctx/internal/config/nudge"
+	"github.com/ActiveMemory/ctx/internal/config/stats"
 	"github.com/ActiveMemory/ctx/internal/notify"
 	"github.com/ActiveMemory/ctx/internal/rc"
 	writeHook "github.com/ActiveMemory/ctx/internal/write/hook"
@@ -87,6 +89,17 @@ func Run(cmd *cobra.Command, stdin *os.File) error {
 	}
 
 	sinceNudge := ps.Count - ps.LastNudge
+
+	// Gate persistence nudges behind minimum context window usage.
+	// Below the threshold, prompt count is a poor proxy for session depth.
+	pct := coreSession.LatestSessionPct(sessionID)
+	if pct > 0 && pct < stats.ContextCheckpointMinPct {
+		log.Message(logFile, sessionID, fmt.Sprintf(
+			desc.Text(text.DescKeyCheckPersistenceSuppressedLogFormat),
+			pct, stats.ContextCheckpointMinPct, ps.Count))
+		persistence.WritePersistenceState(stateFile, ps)
+		return nil
+	}
 
 	if persistence.PersistenceNudgeNeeded(ps.Count, sinceNudge) {
 		fallback := fmt.Sprintf(

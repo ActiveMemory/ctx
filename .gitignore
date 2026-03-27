@@ -45,6 +45,7 @@ dist/
 # Local Claude Code settings (machine-specific paths)
 .claude/settings.local.json
 .claude/ralph-loop.local.md
+.claude/scheduled_tasks.lock
 
 # Hook diagnostic logs (machine-specific, not committed)
 .context/logs/

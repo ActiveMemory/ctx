@@ -243,6 +243,8 @@ check-persistence.state-format:
     count=%d
     last_nudge=%d
     last_mtime=%d
+check-persistence.suppressed-log-format:
+  short: 'persistence: suppressed (pct=%d%% < %d%% min), count=%d'
 check-reminders.box-title:
   short: Reminders
 check-reminders.dismiss-all-hint:
@@ -488,6 +490,8 @@ post-commit.fallback:
   short: 'Commit succeeded. 1. Offer context capture to the user: Decision (design choice?), Learning (gotcha?), or Neither. 2. Ask the user: "Want me to run lints and tests before you push?" Do NOT push. The user pushes manually.'
 post-commit.relay-message:
   short: Commit succeeded, context capture offered
+post-commit.relay-prefix:
+  short: 'IMPORTANT: Relay this commit audit to the user VERBATIM before answering their question.'
 qa-reminder.fallback:
   short: 'HARD GATE - DO NOT COMMIT without completing ALL of these steps first: (1) lint the ENTIRE project, (2) test the ENTIRE project, (3) verify a clean working tree (no modified or untracked files left behind). Not just the files you changed - the whole branch. If unrelated modified files remain, offer to commit them separately, stash them, or get explicit confirmation to leave them. Do NOT say ''I''ll do that at the end'' or ''I''ll handle that after committing.'' Run lint and tests BEFORE every git commit, every time, no exceptions.'
 qa-reminder.relay-message:

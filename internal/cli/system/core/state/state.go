@@ -22,9 +22,21 @@ import (
 // Returns:
 //   - string: Absolute path to the state directory
 func StateDir() string {
+	if stateDirOverride != "" {
+		return stateDirOverride
+	}
 	d := filepath.Join(rc.ContextDir(), dir.State)
 	_ = os.MkdirAll(d, 0o750)
 	return d
+}
+
+// stateDirOverride allows tests to redirect StateDir() to a temp directory.
+var stateDirOverride string
+
+// SetStateDirForTest overrides StateDir() for testing. Pass an empty string
+// to restore default behavior. Only call from tests.
+func SetStateDirForTest(dir string) {
+	stateDirOverride = dir
 }
 
 // Initialized reports whether the context directory has been properly set up

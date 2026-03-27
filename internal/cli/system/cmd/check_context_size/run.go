@@ -107,12 +107,15 @@ func Run(cmd *cobra.Command, stdin *os.File) error {
 		return nil
 	}
 
-	// Adaptive frequency (prompt counter)
+	// Adaptive frequency (prompt counter), gated behind minimum context
+	// window usage to eliminate noise on large windows (e.g., 1M).
 	counterTriggered := false
-	if count > 30 {
-		counterTriggered = count%3 == 0
-	} else if count > 15 {
-		counterTriggered = count%5 == 0
+	if pct >= stats.ContextCheckpointMinPct {
+		if count > 30 {
+			counterTriggered = count%3 == 0
+		} else if count > 15 {
+			counterTriggered = count%5 == 0
+		}
 	}
 
 	windowTrigger := pct >= stats.ContextWindowThresholdPct

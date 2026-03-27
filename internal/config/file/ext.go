@@ -12,6 +12,8 @@ const (
 	ExtMarkdown = ".md"
 	// ExtTxt is the plain text file extension.
 	ExtTxt = ".txt"
+	// ExtGo is the Go source file extension.
+	ExtGo = ".go"
 	// ExtJSONL is the JSON Lines file extension.
 	ExtJSONL = ".jsonl"
 	// ExtExample is the suffix for example/template files that are safe

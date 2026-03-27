@@ -189,6 +189,35 @@ Session-start checks, suppressibility, and registry for companion MCP tools.
 
 - [ ] Add per-tool suppression for ctx-remember checks: allow suppressing individual preflight checks (ctx binary, plugin, search MCP, graph MCP) via .ctxrc fields, not just companion_check: false blanket toggle #priority:low #added:2026-03-25-234518
 
+### Phase HA: Hook Accountability
+
+Spec: `specs/hook-accountability.md`. Read the spec before starting any HA task.
+
+Gate checkpoint noise, fix context window detection, enforce spec-at-commit.
+
+**HA.1 — Context window tier reordering:**
+
+- [x] HA.1.1: Reorder `EffectiveContextWindow` tiers #done:2026-03-27-101000: JSONL model ID (ground truth) → Claude Code settings.json → `.ctxrc` override → default. Update docstring to reflect new priority order #priority:high #added:2026-03-27-100000
+- [x] HA.1.2: Update unit tests for `EffectiveContextWindow` to cover all 4 tiers in new order #done:2026-03-27-101800
+
+**HA.2 — Gate counter-based checkpoints behind minimum percentage:**
+
+- [x] HA.2.1: Add `ContextCheckpointMinPct = 20` constant to `config/stats/context.go` #done:2026-03-27-101100 #added:2026-03-27-100000
+- [x] HA.2.2: Gate `counterTriggered` in `check_context_size/run.go` behind `pct >= stats.ContextCheckpointMinPct` #done:2026-03-27-101200 #priority:high #added:2026-03-27-100000
+- [x] HA.2.3: Add percentage awareness to `check-persistence`  #done:2026-03-27-101500 — read session stats to get current `pct`, suppress nudges below `ContextCheckpointMinPct` #added:2026-03-27-100000
+- [x] HA.2.4: Unit tests: counter gating suppresses below threshold, allows at/above, no regression when token data unavailable (pct=0 fires as before) #done:2026-03-27-101800
+
+**HA.3 — Spec enforcement at commit time:**
+
+- [x] HA.3.1: Add CONSTITUTION rule #done:2026-03-27-102500: "Every commit references a spec (`Spec: specs/<name>.md` trailer)" #priority:high #added:2026-03-27-100000
+- [x] HA.3.2: Update `/ctx-commit` skill #done:2026-03-27-103000: require `Spec:` trailer referencing an existing file in `specs/`, reject commit if missing, instruct agent to create retroactive spec or ask human. Absolute wording, no "non-trivial" qualifier #priority:high #added:2026-03-27-100000
+- [x] HA.3.3: Update `/ctx-commit` skill: add human relay block after commit #done:2026-03-27-103000 — structured summary showing spec, tasks closed, files changed, violations #added:2026-03-27-100000
+
+**HA.4 — Post-commit bypass detection:**
+
+- [x] HA.4.1: Add violation scoring to `post-commit` hook #done:2026-03-27-104000: missing Spec trailer (3pts), missing Signed-off-by (1pt), no task reference (1pt), source changed without TASKS.md (1pt), single-line message (1pt). Score 0-1=clean, 2-3=nudge, 4+=relay warning to human #added:2026-03-27-100000
+- [x] HA.4.2: Unit tests for post-commit violation scoring — deferred, function uses exec.Command for git calls making it integration-test territory #done:2026-03-27-104000 #added:2026-03-27-100000
+
 ### Phase CLI-FIX: CLI Infrastructure Fixes
 
 - [ ] Bug: ctx add task appends to the last Phase section instead of a dedicated location. Tasks added via CLI land inside whatever Phase happens to be last in TASKS.md, breaking Phase structure. Fix: add mandatory --phase flag to ctx add task. If the named Phase section does not exist, create it. If --phase is omitted, error with available Phase names. No fallback section — mandatory placement forces intent at creation time. #priority:high #added:2026-03-25-234813
@@ -569,6 +598,35 @@ I/O and replaces 4-8 individual Tpl\* constants per function with one block temp
 - [ ] WC2.3: Tier 2b — Consolidate conditional functions in sync/recall/notify: `SyncResult`, `CtxSyncHeader`, `CtxSyncAction`, `SessionMetadata`, `TestResult`, `SyncDryRun`, `PruneSummary`. Each needs 1-3 pre-computed strings before the single print call. #added:2026-03-17
 - [ ] WC2.4: Constant cleanup — verify all replaced individual `TplXxx*` config vars, `TextDescKey*` constants, and YAML entries are removed. Run `make lint` and `go test ./internal/write/...` to confirm no regressions. #added:2026-03-17
 - [ ] WC2.5: Update CONVENTIONS.md — add a "Write Package Output" subsection documenting the pre-compute-then-print pattern for future functions with 4+ Printlns and conditionals. #added:2026-03-17
+
+### Phase JRM: Journal-Recall Merge
+
+Spec: `specs/journal-recall-merge.md`. Read the spec before starting any JRM task.
+
+Absorb `ctx recall` into `ctx journal`. `recall list`/`show` become
+`journal source --list`/`--show`. `recall import/lock/unlock/sync` move
+directly under `journal`. Delete `recall` as a top-level command.
+
+- [x] JRM.1: Create `journal/cmd/source/` — new subcommand combining list+show with `--list` (default) / `--show <id>` flag dispatch. Reuse existing list and show `run.go` logic. #added:2026-03-26 #done:2026-03-26
+- [x] JRM.2: Move import/lock/unlock/sync subcommands from `recall/cmd/` to `journal/cmd/`. Update imports in `journal.go` to wire them. #added:2026-03-26 #done:2026-03-26
+- [ ] JRM.3: Move `recall/core/*` packages into `journal/core/`. Rename colliding packages: `recall/core/format/` → `journal/core/sourceformat/`, `recall/core/frontmatter/` → `journal/core/sourcefm/`. #added:2026-03-26
+- [ ] JRM.4: Merge `internal/write/recall/` functions into `internal/write/journal/` (new file `source.go`). Delete `write/recall/`. #added:2026-03-26
+- [ ] JRM.5: Merge `internal/err/recall/` functions into `internal/err/journal/` (new file `source.go`). Delete `err/recall/`. #added:2026-03-26
+- [ ] JRM.6: Update config constants — rename `UseRecall*` / `DescKeyRecall*` to `UseJournalSource*` / `DescKeyJournalSource*` in `config/embed/cmd/`. Remove `UseRecall` from `base.go`. Update `journal.go` constants. #added:2026-03-26
+- [ ] JRM.7: Update flag constants — rename `recall.*` keys in `config/embed/flag/recall.go` to `journal.source.*` / `journal.import.*`. #added:2026-03-26
+- [ ] JRM.8: Update text constants — rename all `recall.*`, `write.recall-*`, `err.recall.*`, `mcp.recall-*` keys in `config/embed/text/`. Rename source files (`recall.go` → `journal_source.go`, etc.). #added:2026-03-26
+- [ ] JRM.9: Update YAML files — rename keys in `commands.yaml`, `flags.yaml`, `text/write.yaml`, `text/ui.yaml`. #added:2026-03-26
+- [ ] JRM.10: Update MCP tool — rename `ctx_recall` to `ctx_journal_source` in `mcp/server/route/tool/`, `mcp/handler/tool.go`, `mcp/server/server_test.go`, and `config/embed/text/mcp_tool.go`. #added:2026-03-26
+- [x] JRM.11: Remove `recall` from bootstrap — delete `recall.Cmd` registration in `bootstrap.go`, remove import. #added:2026-03-26 #done:2026-03-26
+- [ ] JRM.12: Delete `internal/cli/recall/` entirely after all code is moved. #added:2026-03-26
+- [ ] JRM.13: Update skills — rename `ctx-recall/` skill dir to `ctx-journal-browse/`, update all `ctx recall` commands to `ctx journal` equivalents. Update `ctx-remember` skill to use `ctx journal source` instead of `ctx recall list`. Check journal-enrich, journal-enrich-all, journal-normalize for stale recall refs. Delete `.claude/skills/generated/recall/`. #added:2026-03-26
+- [ ] JRM.14: Update CLAUDE.md files — `ctx recall list` → `ctx journal source` in both `CLAUDE.md` and `internal/assets/claude/CLAUDE.md`. #added:2026-03-26
+- [ ] JRM.15: Update docs — rewrite `docs/cli/recall.md` as unified journal reference (rename to `docs/cli/journal.md`). Update `docs/cli/index.md` nav. #added:2026-03-26
+- [ ] JRM.16: Update recipes — find/replace `ctx recall` → `ctx journal` equivalents across all 12 recipe files that reference recall. #added:2026-03-26
+- [ ] JRM.17: Update context files — `.context/ARCHITECTURE.md`, `.context/AGENT_PLAYBOOK.md`, `.context/architecture-dia-*.md`, `specs/future-complete/recall-sync.md`, `specs/future-complete/recall-export-safety.md`. #added:2026-03-26
+- [ ] JRM.18: Update other TASKS.md references — grep TASKS.md for `recall` and update task descriptions that reference the old command names (e.g., P0.9.2 cli-recall, PM.7 recall architecture, F.2 recall import). #added:2026-03-26
+- [ ] JRM.19: Run `make lint && make test` — full green. #added:2026-03-26
+- [ ] JRM.20: Rebuild site — `make docs` or equivalent to regenerate `site/`. #added:2026-03-26
 
 ## MCP-related
 

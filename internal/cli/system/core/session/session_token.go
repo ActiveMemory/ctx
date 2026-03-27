@@ -180,7 +180,7 @@ func ParseLastUsageAndModel(path string) (entity.TokenInfo, error) {
 
 // ModelContextWindow returns the context window size for a known model ID.
 // Returns 0 if the model is not recognized, signaling callers to fall back
-// to rc.ContextWindow() or the default.
+// to other detection tiers.
 //
 // Parameters:
 //   - model: Model ID string from the JSONL (e.g., "claude-opus-4-6-20260205")
@@ -192,22 +192,27 @@ func ModelContextWindow(model string) int {
 		return 0
 	}
 
-	if strings.HasPrefix(model, "claude-") {
-		return rc.DefaultContextWindow
+	if !strings.HasPrefix(model, claude.ModelPrefix) {
+		return 0
 	}
 
-	return 0
+	// 1M models include "[1m]" in the model ID suffix.
+	if strings.Contains(strings.ToLower(model), claude.ModelSuffix1M) {
+		return ContextWindow1M
+	}
+
+	return rc.DefaultContextWindow
 }
 
 // ContextWindow1M is the context window size for 1M-capable models.
 const ContextWindow1M = 1_000_000
 
 // EffectiveContextWindow returns the context window size using a four-tier
-// fallback:
+// fallback where ground truth outranks configuration:
 //
-//  1. Explicit .ctxrc context_window (non-default value wins)
-//  2. Claude Code ~/.claude/settings.json model selection ([1m] suffix → 1M)
-//  3. JSONL model ID prefix (all claude-* → 200k)
+//  1. JSONL model ID — actual model running the session (ground truth)
+//  2. Claude Code ~/.claude/settings.json — configured model selection
+//  3. Explicit .ctxrc context_window — manual override / escape hatch
 //  4. rc.ContextWindow() default (200k)
 //
 // Parameters:
@@ -216,16 +221,16 @@ const ContextWindow1M = 1_000_000
 // Returns:
 //   - int: Effective context window size in tokens
 func EffectiveContextWindow(model string) int {
-	// Tier 1: explicit .ctxrc override (non-default value wins).
-	if w := rc.RC().ContextWindow; w > 0 && w != rc.DefaultContextWindow {
+	// Tier 1: model-based detection (ground truth from session JSONL).
+	if w := ModelContextWindow(model); w > 0 {
 		return w
 	}
 	// Tier 2: auto-detect from Claude Code settings.
 	if ClaudeSettingsHas1M() {
 		return ContextWindow1M
 	}
-	// Tier 3: model-based detection (all Claude models → 200k).
-	if w := ModelContextWindow(model); w > 0 {
+	// Tier 3: explicit .ctxrc override (fallback for non-Claude tools).
+	if w := rc.RC().ContextWindow; w > 0 && w != rc.DefaultContextWindow {
 		return w
 	}
 	// Tier 4: default.
@@ -253,7 +258,7 @@ func ClaudeSettingsHas1M() bool {
 	if jsonErr := json.Unmarshal(data, &settings); jsonErr != nil {
 		return false
 	}
-	return strings.Contains(strings.ToLower(settings.Model), "[1m]")
+	return strings.Contains(strings.ToLower(settings.Model), claude.ModelSuffix1M)
 }
 
 // FormatTokenCount formats a token count as a human-readable abbreviated

@@ -33,3 +33,11 @@ const (
 
 // PathSeparator is the separator git uses in file paths (always forward slash).
 const PathSeparator = "/"
+
+// Git commit trailers.
+const (
+	// TrailerSpec is the commit trailer for spec references.
+	TrailerSpec = "Spec: specs/"
+	// TrailerSignedOffBy is the commit trailer for sign-off.
+	TrailerSignedOffBy = "Signed-off-by:"
+)

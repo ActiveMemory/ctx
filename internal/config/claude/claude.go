@@ -6,6 +6,14 @@
 
 package claude
 
+// Claude model identification.
+const (
+	// ModelPrefix is the prefix for all Claude model IDs in JSONL.
+	ModelPrefix = "claude-"
+	// ModelSuffix1M is the suffix indicating a 1M context window model.
+	ModelSuffix1M = "[1m]"
+)
+
 // Claude API content block types.
 const (
 	// BlockText is a text content block.

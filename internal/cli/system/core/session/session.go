@@ -103,6 +103,60 @@ func ReadSessionID(stdin *os.File) string {
 	return input.SessionID
 }
 
+// LatestSessionPct returns the most recent context window usage percentage
+// from the session stats JSONL. Returns 0 if no stats are available.
+// This allows other hooks (e.g., check-persistence) to gate their nudges
+// based on actual context window usage without re-reading the JSONL.
+//
+// Parameters:
+//   - sessionID: Session identifier
+//
+// Returns:
+//   - int: Latest context window usage percentage (0-100), or 0 if unknown
+func LatestSessionPct(sessionID string) int {
+	path := filepath.Join(
+		state.StateDir(),
+		cfgStats.FilePrefix+sessionID+file.ExtJSONL,
+	)
+	data, readErr := internalIo.SafeReadUserFile(path)
+	if readErr != nil {
+		return 0
+	}
+
+	// Scan from the end for the last non-empty line.
+	lines := splitLines(data)
+	for i := len(lines) - 1; i >= 0; i-- {
+		line := lines[i]
+		if len(line) == 0 {
+			continue
+		}
+		var s entity.Stats
+		if jsonErr := json.Unmarshal(line, &s); jsonErr != nil {
+			continue
+		}
+		return s.Pct
+	}
+	return 0
+}
+
+// splitLines splits data on newline bytes, returning non-empty slices.
+func splitLines(data []byte) [][]byte {
+	var lines [][]byte
+	start := 0
+	for i, b := range data {
+		if b == token.NewlineLF[0] {
+			if i > start {
+				lines = append(lines, data[start:i])
+			}
+			start = i + 1
+		}
+	}
+	if start < len(data) {
+		lines = append(lines, data[start:])
+	}
+	return lines
+}
+
 // WriteSessionStats appends a JSONL line to .context/state/stats-{sessionID}.jsonl.
 // The file is designed for `tail -f` monitoring of token usage across prompts.
 // Best-effort: errors are silently ignored.
