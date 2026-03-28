@@ -33,7 +33,7 @@ import (
 //
 // Returns:
 //   - *entity.Session: Constructed session with messages, stats, and metadata
-func (p *ClaudeCodeParser) buildSession(
+func (p *ClaudeCode) buildSession(
 	id string, rawMsgs []claudeRawMessage, sourcePath string,
 ) *entity.Session {
 	if len(rawMsgs) == 0 {
@@ -107,7 +107,7 @@ func (p *ClaudeCodeParser) buildSession(
 // Returns:
 //   - entity.Message: Normalized message with text, tool uses,
 //     and tool results extracted
-func (p *ClaudeCodeParser) convertMessage(raw claudeRawMessage) entity.Message {
+func (p *ClaudeCode) convertMessage(raw claudeRawMessage) entity.Message {
 	msg := entity.Message{
 		ID:        raw.UUID,
 		Timestamp: raw.Timestamp,
@@ -179,7 +179,7 @@ func (p *ClaudeCodeParser) convertMessage(raw claudeRawMessage) entity.Message {
 // Returns:
 //   - []claudeRawBlock: Parsed content blocks
 //     (text, thinking, tool_use, tool_result)
-func (p *ClaudeCodeParser) parseContentBlocks(
+func (p *ClaudeCode) parseContentBlocks(
 	content json.RawMessage,
 ) []claudeRawBlock {
 	if len(content) == 0 {
@@ -209,7 +209,7 @@ func (p *ClaudeCodeParser) parseContentBlocks(
 //
 // Returns:
 //   - *entity.Session: The parsed session, or nil if no session header found
-func (p *MarkdownSessionParser) parseMarkdownSession(
+func (p *MarkdownSession) parseMarkdownSession(
 	content string, sourcePath string,
 ) *entity.Session {
 	lines := strings.Split(content, token.NewlineLF)

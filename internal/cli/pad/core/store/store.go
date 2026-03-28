@@ -141,7 +141,7 @@ func ReadEntries() ([]string, error) {
 		if errors.Is(err, os.ErrNotExist) {
 			return nil, nil
 		}
-		return nil, errPad.ReadScratchpad(err)
+		return nil, errPad.ReadPad(err)
 	}
 
 	if !rc.ScratchpadEncrypt() {

@@ -29,7 +29,7 @@ func Run(cmd *cobra.Command) error {
 	contextDir := rc.ContextDir()
 	projectRoot := filepath.Dir(contextDir)
 
-	sourcePath, discoverErr := mem.DiscoverMemoryPath(projectRoot)
+	sourcePath, discoverErr := mem.DiscoverPath(projectRoot)
 	if discoverErr != nil {
 		return errMemory.DiscoverFailed(discoverErr)
 	}

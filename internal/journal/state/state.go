@@ -32,28 +32,28 @@ const CurrentVersion = 1
 //   - journalDir: path to the journal directory
 //
 // Returns:
-//   - *JournalState: loaded or empty state
+//   - *State: loaded or empty state
 //   - error: non-nil if the file exists but cannot be read or parsed
-func Load(journalDir string) (*JournalState, error) {
-	path := filepath.Join(journalDir, journal.FileState)
+func Load(journalDir string) (*State, error) {
+	path := filepath.Join(journalDir, journal.File)
 
 	data, err := os.ReadFile(filepath.Clean(path))
 	if os.IsNotExist(err) {
-		return &JournalState{
+		return &State{
 			Version: CurrentVersion,
-			Entries: make(map[string]FileState),
+			Entries: make(map[string]File),
 		}, nil
 	}
 	if err != nil {
 		return nil, err
 	}
 
-	var s JournalState
+	var s State
 	if err := json.Unmarshal(data, &s); err != nil {
 		return nil, err
 	}
 	if s.Entries == nil {
-		s.Entries = make(map[string]FileState)
+		s.Entries = make(map[string]File)
 	}
 	return &s, nil
 }
@@ -66,14 +66,14 @@ func Load(journalDir string) (*JournalState, error) {
 //
 // Returns:
 //   - error: non-nil if marshalling or file write fails
-func (s *JournalState) Save(journalDir string) error {
+func (s *State) Save(journalDir string) error {
 	data, err := json.MarshalIndent(s, "", "  ")
 	if err != nil {
 		return err
 	}
 	data = append(data, '\n')
 
-	path := filepath.Join(journalDir, journal.FileState)
+	path := filepath.Join(journalDir, journal.File)
 	tmp := path + ".tmp"
 
 	if err := os.WriteFile(tmp, data, fs.PermFile); err != nil {
@@ -86,7 +86,7 @@ func (s *JournalState) Save(journalDir string) error {
 //
 // Parameters:
 //   - filename: journal entry filename (e.g., "2026-01-21-session.md")
-func (s *JournalState) MarkImported(filename string) {
+func (s *State) MarkImported(filename string) {
 	ff := s.Entries[filename]
 	ff.Exported = today()
 	s.Entries[filename] = ff
@@ -96,7 +96,7 @@ func (s *JournalState) MarkImported(filename string) {
 //
 // Parameters:
 //   - filename: journal entry filename
-func (s *JournalState) MarkEnriched(filename string) {
+func (s *State) MarkEnriched(filename string) {
 	ff := s.Entries[filename]
 	ff.Enriched = today()
 	s.Entries[filename] = ff
@@ -106,7 +106,7 @@ func (s *JournalState) MarkEnriched(filename string) {
 //
 // Parameters:
 //   - filename: journal entry filename
-func (s *JournalState) MarkNormalized(filename string) {
+func (s *State) MarkNormalized(filename string) {
 	ff := s.Entries[filename]
 	ff.Normalized = today()
 	s.Entries[filename] = ff
@@ -116,7 +116,7 @@ func (s *JournalState) MarkNormalized(filename string) {
 //
 // Parameters:
 //   - filename: journal entry filename
-func (s *JournalState) MarkFencesVerified(filename string) {
+func (s *State) MarkFencesVerified(filename string) {
 	ff := s.Entries[filename]
 	ff.FencesVerified = today()
 	s.Entries[filename] = ff
@@ -131,7 +131,7 @@ func (s *JournalState) MarkFencesVerified(filename string) {
 //
 // Returns:
 //   - bool: false if stage is not recognized
-func (s *JournalState) Mark(filename, stage string) bool {
+func (s *State) Mark(filename, stage string) bool {
 	ff := s.Entries[filename]
 	switch stage {
 	case journal.StageExported:
@@ -159,7 +159,7 @@ func (s *JournalState) Mark(filename, stage string) bool {
 //
 // Returns:
 //   - bool: false if stage is not recognized
-func (s *JournalState) Clear(filename, stage string) bool {
+func (s *State) Clear(filename, stage string) bool {
 	ff := s.Entries[filename]
 	switch stage {
 	case journal.StageExported:
@@ -186,7 +186,7 @@ func (s *JournalState) Clear(filename, stage string) bool {
 //
 // Returns:
 //   - bool: true if the file has a lock date recorded
-func (s *JournalState) Locked(filename string) bool {
+func (s *State) Locked(filename string) bool {
 	return s.Entries[filename].Locked != ""
 }
 
@@ -196,7 +196,7 @@ func (s *JournalState) Locked(filename string) bool {
 // Parameters:
 //   - oldName: current filename in state
 //   - newName: target filename
-func (s *JournalState) Rename(oldName, newName string) {
+func (s *State) Rename(oldName, newName string) {
 	ff, ok := s.Entries[oldName]
 	if !ok {
 		return
@@ -210,7 +210,7 @@ func (s *JournalState) Rename(oldName, newName string) {
 //
 // Parameters:
 //   - filename: journal entry filename
-func (s *JournalState) ClearEnriched(filename string) {
+func (s *State) ClearEnriched(filename string) {
 	ff := s.Entries[filename]
 	ff.Enriched = ""
 	s.Entries[filename] = ff
@@ -223,7 +223,7 @@ func (s *JournalState) ClearEnriched(filename string) {
 //
 // Returns:
 //   - bool: true if the file has an enriched date
-func (s *JournalState) Enriched(filename string) bool {
+func (s *State) Enriched(filename string) bool {
 	return s.Entries[filename].Enriched != ""
 }
 
@@ -234,7 +234,7 @@ func (s *JournalState) Enriched(filename string) bool {
 //
 // Returns:
 //   - bool: true if the file has a normalized date
-func (s *JournalState) Normalized(filename string) bool {
+func (s *State) Normalized(filename string) bool {
 	return s.Entries[filename].Normalized != ""
 }
 
@@ -245,7 +245,7 @@ func (s *JournalState) Normalized(filename string) bool {
 //
 // Returns:
 //   - bool: true if the file has a fences-verified date
-func (s *JournalState) FencesVerified(filename string) bool {
+func (s *State) FencesVerified(filename string) bool {
 	return s.Entries[filename].FencesVerified != ""
 }
 
@@ -256,7 +256,7 @@ func (s *JournalState) FencesVerified(filename string) bool {
 //
 // Returns:
 //   - bool: true if the file has an exported date
-func (s *JournalState) Exported(filename string) bool {
+func (s *State) Exported(filename string) bool {
 	return s.Entries[filename].Exported != ""
 }
 
@@ -268,7 +268,7 @@ func (s *JournalState) Exported(filename string) bool {
 //
 // Returns:
 //   - int: number of unenriched Markdown files
-func (s *JournalState) CountUnenriched(journalDir string) int {
+func (s *State) CountUnenriched(journalDir string) int {
 	entries, err := os.ReadDir(journalDir)
 	if err != nil {
 		return 0

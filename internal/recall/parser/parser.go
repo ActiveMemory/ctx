@@ -19,9 +19,9 @@ import (
 
 // registeredParsers holds all available session parsers.
 // Add new parsers here when supporting additional tools.
-var registeredParsers = []SessionParser{
-	NewClaudeCodeParser(),
-	NewMarkdownSessionParser(),
+var registeredParsers = []Session{
+	NewClaudeCode(),
+	NewMarkdownSession(),
 }
 
 // ParseFile parses a session file using the appropriate parser.
@@ -195,8 +195,8 @@ func FindSessionsForCWD(
 //   - tool: Tool identifier (e.g., "claude-code")
 //
 // Returns:
-//   - SessionParser: The parser for the tool, or nil if not found
-func Parser(tool string) SessionParser {
+//   - Session: The parser for the tool, or nil if not found
+func Parser(tool string) Session {
 	for _, parser := range registeredParsers {
 		if parser.Tool() == tool {
 			return parser

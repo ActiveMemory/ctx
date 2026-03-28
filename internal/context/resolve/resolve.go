@@ -13,12 +13,12 @@ import (
 	"github.com/ActiveMemory/ctx/internal/rc"
 )
 
-// ResolvedJournalDir returns the path to the journal directory within the
+// JournalDir returns the path to the journal directory within the
 // configured context directory.
 //
 // Returns:
 //   - string: Absolute path to the journal directory
-func ResolvedJournalDir() string {
+func JournalDir() string {
 	return filepath.Join(rc.ContextDir(), dir.Journal)
 }
 

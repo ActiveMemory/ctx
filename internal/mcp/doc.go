@@ -61,7 +61,7 @@
 //
 // # Usage
 //
-//	server := mcp.NewServer(contextDir, version)
+//	server := mcp.New(contextDir, version)
 //	server.Serve()  // blocks, reads stdin, writes stdout
 //
 // # Design Invariants

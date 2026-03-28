@@ -47,7 +47,7 @@ func ForEachPending(lines []string, fn func(Pending) bool) {
 		if match == nil || !task.Pending(match) {
 			continue
 		}
-		if task.SubTask(match) {
+		if task.Sub(match) {
 			continue
 		}
 

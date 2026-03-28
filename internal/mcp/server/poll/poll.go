@@ -22,9 +22,9 @@ import (
 // polling.
 const defaultPollInterval = 5 * time.Second
 
-// ResourcePoller tracks subscribed resources and polls for file
+// Poller tracks subscribed resources and polls for file
 // changes.
-type ResourcePoller struct {
+type Poller struct {
 	mu         sync.Mutex
 	subs       map[string]bool      // URI → subscribed
 	mtimes     map[string]time.Time // file path → last known mtime
@@ -33,18 +33,18 @@ type ResourcePoller struct {
 	notifyFunc func(proto.Notification) // callback to emit notifications
 }
 
-// NewResourcePoller creates a poller for the given context directory.
+// NewPoller creates a poller for the given context directory.
 //
 // Parameters:
 //   - contextDir: path to the .context/ directory
 //   - notifyFn: callback to emit resource change notifications
 //
 // Returns:
-//   - *ResourcePoller: initialized poller (not yet polling)
-func NewResourcePoller(
+//   - *Poller: initialized poller (not yet polling)
+func NewPoller(
 	contextDir string, notifyFn func(proto.Notification),
-) *ResourcePoller {
-	return &ResourcePoller{
+) *Poller {
+	return &Poller{
 		subs:       make(map[string]bool),
 		mtimes:     make(map[string]time.Time),
 		contextDir: contextDir,
@@ -60,7 +60,7 @@ func NewResourcePoller(
 //
 // Parameters:
 //   - uri: resource URI to watch for changes
-func (p *ResourcePoller) Subscribe(uri string) {
+func (p *Poller) Subscribe(uri string) {
 	p.mu.Lock()
 	defer p.mu.Unlock()
 
@@ -86,7 +86,7 @@ func (p *ResourcePoller) Subscribe(uri string) {
 //
 // Parameters:
 //   - uri: resource URI to stop watching
-func (p *ResourcePoller) Unsubscribe(uri string) {
+func (p *Poller) Unsubscribe(uri string) {
 	p.mu.Lock()
 	defer p.mu.Unlock()
 
@@ -99,7 +99,7 @@ func (p *ResourcePoller) Unsubscribe(uri string) {
 }
 
 // Stop shuts down the poller goroutine.
-func (p *ResourcePoller) Stop() {
+func (p *Poller) Stop() {
 	p.mu.Lock()
 	defer p.mu.Unlock()
 
@@ -111,7 +111,7 @@ func (p *ResourcePoller) Stop() {
 
 // poll checks subscribed resources for mtime changes on a fixed
 // interval.
-func (p *ResourcePoller) poll() {
+func (p *Poller) poll() {
 	ticker := time.NewTicker(defaultPollInterval)
 	defer ticker.Stop()
 
@@ -130,14 +130,14 @@ func (p *ResourcePoller) poll() {
 //
 // Parameters:
 //   - fn: replacement notification callback
-func (p *ResourcePoller) SetNotifyFunc(fn func(proto.Notification)) {
+func (p *Poller) SetNotifyFunc(fn func(proto.Notification)) {
 	p.notifyFunc = fn
 }
 
 // CheckChanges compares current mtimes to snapshots and emits
 // notifications. Exported for tests that need to trigger a poll
 // cycle without waiting for the timer.
-func (p *ResourcePoller) CheckChanges() {
+func (p *Poller) CheckChanges() {
 	p.mu.Lock()
 	uris := make([]string, 0, len(p.subs))
 	for uri := range p.subs {

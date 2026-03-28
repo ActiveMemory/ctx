@@ -63,7 +63,7 @@ func Run(cmd *cobra.Command, stdin *os.File) error {
 	}
 
 	// Bail out if journal or Claude projects directories don't exist
-	jDir := ctxResolve.ResolvedJournalDir()
+	jDir := ctxResolve.JournalDir()
 	if _, statErr := os.Stat(jDir); os.IsNotExist(statErr) {
 		return nil
 	}

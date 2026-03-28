@@ -61,12 +61,12 @@ func TestDiscoverMemoryPath_Found(t *testing.T) {
 		t.Fatal(writeErr)
 	}
 
-	got, discoverErr := DiscoverMemoryPath(projectRoot)
+	got, discoverErr := DiscoverPath(projectRoot)
 	if discoverErr != nil {
 		t.Fatalf("unexpected error: %v", discoverErr)
 	}
 	if got != memFile {
-		t.Errorf("DiscoverMemoryPath() = %q, want %q", got, memFile)
+		t.Errorf("DiscoverPath() = %q, want %q", got, memFile)
 	}
 }
 
@@ -75,7 +75,7 @@ func TestDiscoverMemoryPath_NotFound(t *testing.T) {
 	t.Setenv("HOME", home)
 
 	projectRoot := filepath.Join(home, "WORKSPACE", "nonexistent")
-	_, discoverErr := DiscoverMemoryPath(projectRoot)
+	_, discoverErr := DiscoverPath(projectRoot)
 	if discoverErr == nil {
 		t.Fatal("expected error for missing MEMORY.md, got nil")
 	}

@@ -43,9 +43,9 @@ func TestEstimateTokens(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			result := EstimateTokens(tt.content)
+			result := Estimate(tt.content)
 			if result != tt.expected {
-				t.Errorf("EstimateTokens() = %d, want %d (len=%d)", result, tt.expected, len(tt.content))
+				t.Errorf("Estimate() = %d, want %d (len=%d)", result, tt.expected, len(tt.content))
 			}
 		})
 	}
@@ -76,9 +76,9 @@ func TestEstimateTokensString(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			result := EstimateTokensString(tt.input)
+			result := EstimateString(tt.input)
 			if result != tt.expected {
-				t.Errorf("EstimateTokensString(%q) = %d, want %d", tt.input, result, tt.expected)
+				t.Errorf("EstimateString(%q) = %d, want %d", tt.input, result, tt.expected)
 			}
 		})
 	}

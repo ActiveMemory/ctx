@@ -36,7 +36,7 @@ import (
 //     be opened, or stream processing fails
 func Run(cmd *cobra.Command, logPath string, dryRun bool) error {
 	if !validate.Exists("") {
-		return initialize.ContextNotInitialized()
+		return initialize.ContextNotInit()
 	}
 
 	watch.Started(cmd)

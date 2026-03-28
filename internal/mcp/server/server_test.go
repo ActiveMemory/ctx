@@ -54,7 +54,7 @@ func newTestServer(t *testing.T) (*Server, string) {
 			t.Fatalf("write %s: %v", name, err)
 		}
 	}
-	srv := NewServer(contextDir, "test")
+	srv := New(contextDir, "test")
 	return srv, contextDir
 }
 

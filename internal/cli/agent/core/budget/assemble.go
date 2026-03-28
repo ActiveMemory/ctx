@@ -49,7 +49,7 @@ func AssemblePacket(ctx *entity.Context, budget int) *assembledPacket {
 
 	tier1Tokens := EstimateSliceTokens(pkt.ReadOrder) +
 		EstimateSliceTokens(pkt.Constitution) +
-		ctxToken.EstimateTokensString(pkt.Instruction)
+		ctxToken.EstimateString(pkt.Instruction)
 	remaining -= tier1Tokens
 
 	if remaining <= 0 {

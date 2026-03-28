@@ -85,7 +85,7 @@ func Do(dir string) (*entity.Context, error) {
 			continue
 		}
 
-		tokens := token.EstimateTokens(content)
+		tokens := token.Estimate(content)
 		fi := entity.FileInfo{
 			Name:    name,
 			Path:    filePath,
@@ -94,7 +94,7 @@ func Do(dir string) (*entity.Context, error) {
 			Content: content,
 			IsEmpty: len(content) == 0 || sanitize.EffectivelyEmpty(content),
 			Tokens:  tokens,
-			Summary: summary.GenerateSummary(name, content),
+			Summary: summary.Generate(name, content),
 		}
 
 		ctx.Files = append(ctx.Files, fi)

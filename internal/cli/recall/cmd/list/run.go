@@ -52,11 +52,11 @@ func Run(
 	// Parse date filters
 	sinceTime, sinceErr := parse.Date(since)
 	if since != "" && sinceErr != nil {
-		return date.InvalidDate(flag.PrefixLong+flag.Since, since, sinceErr)
+		return date.Invalid(flag.PrefixLong+flag.Since, since, sinceErr)
 	}
 	untilTime, untilErr := parse.Date(until)
 	if until != "" && untilErr != nil {
-		return date.InvalidDate(flag.PrefixLong+flag.Until, until, untilErr)
+		return date.Invalid(flag.PrefixLong+flag.Until, until, untilErr)
 	}
 	// --until is inclusive: advance to the end of the day
 	if until != "" {

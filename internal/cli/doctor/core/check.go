@@ -456,7 +456,7 @@ func CheckContextTokenSize(report *Report) {
 
 	for _, f := range c.Files {
 		if indexed[f.Name] {
-			tokens := token.EstimateTokens(f.Content)
+			tokens := token.Estimate(f.Content)
 			totalTokens += tokens
 			breakdown = append(breakdown, fileTokens{name: f.Name, tokens: tokens})
 		}

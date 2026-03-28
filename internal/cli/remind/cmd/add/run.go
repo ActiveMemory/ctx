@@ -41,7 +41,7 @@ func Run(cmd *cobra.Command, message, after string) error {
 	}
 	if after != "" {
 		if _, parseErr := time.Parse(cfgTime.DateFormat, after); parseErr != nil {
-			return errDate.InvalidDateValue(after)
+			return errDate.InvalidValue(after)
 		}
 		r.After = &after
 	}

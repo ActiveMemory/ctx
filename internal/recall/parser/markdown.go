@@ -19,7 +19,7 @@ import (
 	errParser "github.com/ActiveMemory/ctx/internal/err/parser"
 )
 
-// MarkdownSessionParser parses Markdown session files written by AI agents.
+// MarkdownSession parses Markdown session files written by AI agents.
 //
 // This parser handles the tool-agnostic session format used by non-Claude
 // tools (Copilot, Cursor, Aider, etc.) where the AI agent saves session
@@ -40,21 +40,21 @@ import (
 //
 //	## Next Steps
 //	- ...
-type MarkdownSessionParser struct{}
+type MarkdownSession struct{}
 
-// NewMarkdownSessionParser creates a new Markdown session parser.
+// NewMarkdownSession creates a new Markdown session parser.
 //
 // Returns:
-//   - *MarkdownSessionParser: A parser instance for Markdown session files
-func NewMarkdownSessionParser() *MarkdownSessionParser {
-	return &MarkdownSessionParser{}
+//   - *MarkdownSession: A parser instance for Markdown session files
+func NewMarkdownSession() *MarkdownSession {
+	return &MarkdownSession{}
 }
 
 // Tool returns the tool identifier for this parser.
 //
 // Returns:
 //   - string: The identifier "markdown"
-func (p *MarkdownSessionParser) Tool() string {
+func (p *MarkdownSession) Tool() string {
 	return session.ToolMarkdown
 }
 
@@ -68,7 +68,7 @@ func (p *MarkdownSessionParser) Tool() string {
 //
 // Returns:
 //   - bool: True if this parser can handle the file
-func (p *MarkdownSessionParser) Matches(path string) bool {
+func (p *MarkdownSession) Matches(path string) bool {
 	if !strings.HasSuffix(path, file.ExtMarkdown) {
 		return false
 	}
@@ -107,7 +107,7 @@ func (p *MarkdownSessionParser) Matches(path string) bool {
 // Returns:
 //   - []*entity.Session: A single-element slice with the parsed session
 //   - error: Non-nil if the file cannot be opened or read
-func (p *MarkdownSessionParser) ParseFile(path string) ([]*entity.Session, error) {
+func (p *MarkdownSession) ParseFile(path string) ([]*entity.Session, error) {
 	content, err := os.ReadFile(filepath.Clean(path))
 	if err != nil {
 		return nil, errParser.ReadFile(err)
@@ -128,6 +128,6 @@ func (p *MarkdownSessionParser) ParseFile(path string) ([]*entity.Session, error
 //
 // Returns:
 //   - nil, "", nil always
-func (p *MarkdownSessionParser) ParseLine(_ []byte) (*entity.Message, string, error) {
+func (p *MarkdownSession) ParseLine(_ []byte) (*entity.Message, string, error) {
 	return nil, "", nil
 }

@@ -264,9 +264,9 @@ func TestIsSubTask(t *testing.T) {
 			if match == nil {
 				t.Fatalf("line did not match task pattern: %q", tt.line)
 			}
-			got := SubTask(match)
+			got := Sub(match)
 			if got != tt.want {
-				t.Errorf("SubTask() = %v, want %v", got, tt.want)
+				t.Errorf("Sub() = %v, want %v", got, tt.want)
 			}
 		})
 	}

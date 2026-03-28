@@ -16,7 +16,7 @@ import (
 	errMemory "github.com/ActiveMemory/ctx/internal/err/memory"
 )
 
-// DiscoverMemoryPath locates Claude Code's auto memory file for the
+// DiscoverPath locates Claude Code's auto memory file for the
 // given project root. The path is derived from how Claude Code encodes
 // project directories: absolute path with "/" replaced by "-", prefixed
 // with "-".
@@ -26,7 +26,7 @@ import (
 //
 // Parameters:
 //   - projectRoot: Project root directory to derive the memory path from
-func DiscoverMemoryPath(projectRoot string) (string, error) {
+func DiscoverPath(projectRoot string) (string, error) {
 	abs, absErr := filepath.Abs(projectRoot)
 	if absErr != nil {
 		return "", errMemory.DiscoverResolveRoot(absErr)
@@ -41,7 +41,7 @@ func DiscoverMemoryPath(projectRoot string) (string, error) {
 	memPath := filepath.Join(home, dir.Claude, dir.Projects, slug, dir.Memory, memory.Source)
 
 	if _, statErr := os.Stat(memPath); statErr != nil {
-		return "", errMemory.DiscoverNoMemory(memPath)
+		return "", errMemory.NoDiscovery(memPath)
 	}
 	return memPath, nil
 }

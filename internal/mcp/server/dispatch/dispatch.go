@@ -33,7 +33,7 @@ import (
 //   - *proto.Response: result or error response
 func Do(
 	version string, h *handler.Handler,
-	resList proto.ResourceListResult, poller *poll.ResourcePoller,
+	resList proto.ResourceListResult, poller *poll.Poller,
 	req proto.Request,
 ) *proto.Response {
 	switch req.Method {

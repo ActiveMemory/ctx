@@ -70,7 +70,7 @@ func Assembled(
 	_, _ = fmt.Fprintf(&sb, tpl.LoadBudget+nl+nl, budget, totalTokens)
 	sb.WriteString(sep + nl + nl)
 
-	tokensUsed := ctxToken.EstimateTokensString(sb.String())
+	tokensUsed := ctxToken.EstimateString(sb.String())
 
 	for _, f := range files {
 		if f.IsEmpty {

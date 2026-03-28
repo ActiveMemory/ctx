@@ -28,7 +28,7 @@ func FitItems(items []string, budget int) []string {
 	used := 0
 	var result []string
 	for _, item := range items {
-		tokens := ctxToken.EstimateTokensString(item)
+		tokens := ctxToken.EstimateString(item)
 		if used+tokens > budget {
 			break
 		}
@@ -52,7 +52,7 @@ func FitItems(items []string, budget int) []string {
 func EstimateSliceTokens(items []string) int {
 	total := 0
 	for _, item := range items {
-		total += ctxToken.EstimateTokensString(item)
+		total += ctxToken.EstimateString(item)
 	}
 	return total
 }

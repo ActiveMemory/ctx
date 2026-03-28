@@ -75,7 +75,7 @@ func readAgentPacket(
 	header := desc.Text(text.DescKeyMCPPacketHeader)
 	sb.WriteString(header)
 
-	tokensUsed := ctxToken.EstimateTokensString(header)
+	tokensUsed := ctxToken.EstimateString(header)
 	var skipped []string
 
 	for _, fileName := range cfgCtx.ReadOrder {
@@ -88,7 +88,7 @@ func readAgentPacket(
 			desc.Text(text.DescKeyMCPFormatSection),
 			fileName, string(f.Content),
 		)
-		sectionTokens := ctxToken.EstimateTokensString(section)
+		sectionTokens := ctxToken.EstimateString(section)
 
 		if budget > 0 && tokensUsed+sectionTokens > budget {
 			skipped = append(skipped, fileName)

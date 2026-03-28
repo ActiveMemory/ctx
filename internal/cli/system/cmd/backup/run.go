@@ -41,7 +41,7 @@ func Run(cmd *cobra.Command) error {
 	switch scope {
 	case archive.BackupScopeProject, archive.BackupScopeGlobal, archive.BackupScopeAll:
 	default:
-		return errBackup.InvalidBackupScope(scope)
+		return errBackup.InvalidScope(scope)
 	}
 
 	home, homeErr := os.UserHomeDir()

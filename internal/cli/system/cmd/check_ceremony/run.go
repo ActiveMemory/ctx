@@ -55,7 +55,7 @@ func Run(cmd *cobra.Command, stdin *os.File) error {
 	}
 
 	files := coreCeremony.RecentJournalFiles(
-		ctxResolve.ResolvedJournalDir(), ceremony.JournalLookback,
+		ctxResolve.JournalDir(), ceremony.JournalLookback,
 	)
 
 	if len(files) == 0 {

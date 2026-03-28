@@ -6,15 +6,15 @@
 
 package state
 
-// JournalState is the top-level state file structure.
-type JournalState struct {
-	Version int                  `json:"version"`
-	Entries map[string]FileState `json:"entries"`
+// State is the top-level state file structure.
+type State struct {
+	Version int             `json:"version"`
+	Entries map[string]File `json:"entries"`
 }
 
-// FileState tracks processing stages for a single journal entry.
+// File tracks processing stages for a single journal entry.
 // Values are date strings (YYYY-MM-DD) indicating when the stage completed.
-type FileState struct {
+type File struct {
 	Exported       string `json:"exported,omitempty"`
 	Enriched       string `json:"enriched,omitempty"`
 	Normalized     string `json:"normalized,omitempty"`

@@ -14,19 +14,19 @@ import (
 	"github.com/ActiveMemory/ctx/internal/config/embed/text"
 )
 
-// NotInitialized returns an error indicating ctx has not been initialized.
+// NotInit returns an error indicating ctx has not been initialized.
 //
 // Returns:
 //   - error: "ctx: not initialized: run \"ctx init\" first"
-func NotInitialized() error {
+func NotInit() error {
 	return errors.New(desc.Text(text.DescKeyErrInitNotInitialized))
 }
 
-// ContextNotInitialized returns an error when no .context/ directory is found.
+// ContextNotInit returns an error when no .context/ directory is found.
 //
 // Returns:
 //   - error: "no .context/ directory found. Run 'ctx init' first"
-func ContextNotInitialized() error {
+func ContextNotInit() error {
 	return errors.New(
 		desc.Text(text.DescKeyErrInitContextNotInitialized),
 	)

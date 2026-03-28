@@ -35,7 +35,7 @@ func Run(cmd *cobra.Command, dryRun bool) error {
 	if err != nil {
 		var notFoundError *errCtx.NotFoundError
 		if errors.As(err, &notFoundError) {
-			return errInit.ContextNotInitialized()
+			return errInit.ContextNotInit()
 		}
 		return err
 	}

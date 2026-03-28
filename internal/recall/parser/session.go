@@ -8,11 +8,11 @@ package parser
 
 import "github.com/ActiveMemory/ctx/internal/entity"
 
-// SessionParser defines the interface for tool-specific session parsers.
+// Session defines the interface for tool-specific session parsers.
 //
 // Each AI tool (Claude Code, Aider, Cursor) implements this interface
 // to parse its specific format into the common Session type.
-type SessionParser interface {
+type Session interface {
 	// ParseFile reads a session file and returns all sessions found.
 	// A single file may contain multiple sessions (grouped by session ID).
 	ParseFile(path string) ([]*entity.Session, error)

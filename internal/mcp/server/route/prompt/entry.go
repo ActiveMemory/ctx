@@ -30,7 +30,7 @@ import (
 // Returns:
 //   - *proto.Response: formatted entry prompt
 func buildEntry(
-	id json.RawMessage, spec defPrompt.EntryPromptSpec,
+	id json.RawMessage, spec defPrompt.EntrySpec,
 ) *proto.Response {
 	fieldFmt := desc.Text(spec.FieldFmtK)
 

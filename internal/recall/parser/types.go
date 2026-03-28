@@ -8,7 +8,7 @@
 //
 // It parses AI coding assistant session transcripts into structured Go types
 // that can be rendered, searched, and analyzed. The package uses a tool-agnostic
-// Session output type with tool-specific parsers (e.g., ClaudeCodeParser).
+// Session output type with tool-specific parsers (e.g., ClaudeCode).
 package parser
 
 import (

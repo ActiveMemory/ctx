@@ -22,26 +22,26 @@ import (
 	errParser "github.com/ActiveMemory/ctx/internal/err/parser"
 )
 
-// ClaudeCodeParser parses Claude Code JSONL session files.
+// ClaudeCode parses Claude Code JSONL session files.
 //
 // Claude Code stores sessions as JSONL files where each line is a
 // self-contained JSON object representing a message. Messages are
 // linked via parentUuid and grouped by sessionId.
-type ClaudeCodeParser struct{}
+type ClaudeCode struct{}
 
-// NewClaudeCodeParser creates a new Claude Code session parser.
+// NewClaudeCode creates a new Claude Code session parser.
 //
 // Returns:
-//   - *ClaudeCodeParser: A parser instance for Claude Code JSONL files
-func NewClaudeCodeParser() *ClaudeCodeParser {
-	return &ClaudeCodeParser{}
+//   - *ClaudeCode: A parser instance for Claude Code JSONL files
+func NewClaudeCode() *ClaudeCode {
+	return &ClaudeCode{}
 }
 
 // Tool returns the tool identifier for this parser.
 //
 // Returns:
 //   - string: The identifier "claude-code"
-func (p *ClaudeCodeParser) Tool() string {
+func (p *ClaudeCode) Tool() string {
 	return session.ToolClaudeCode
 }
 
@@ -55,7 +55,7 @@ func (p *ClaudeCodeParser) Tool() string {
 //
 // Returns:
 //   - bool: True if this parser can handle the file
-func (p *ClaudeCodeParser) Matches(path string) bool {
+func (p *ClaudeCode) Matches(path string) bool {
 	// Check extension
 	if !strings.HasSuffix(path, file.ExtJSONL) {
 		return false
@@ -105,7 +105,7 @@ func (p *ClaudeCodeParser) Matches(path string) bool {
 // Returns:
 //   - []*entity.Session: All sessions found in the file, sorted by start time
 //   - error: Non-nil if the file cannot be opened or read
-func (p *ClaudeCodeParser) ParseFile(path string) ([]*entity.Session, error) {
+func (p *ClaudeCode) ParseFile(path string) ([]*entity.Session, error) {
 	f, openErr := os.Open(filepath.Clean(path))
 	if openErr != nil {
 		return nil, errParser.OpenFile(openErr)
@@ -180,7 +180,7 @@ func (p *ClaudeCodeParser) ParseFile(path string) ([]*entity.Session, error) {
 //   - *entity.Message: The parsed message, or nil if the line should be skipped
 //   - string: The session ID this message belongs to
 //   - error: Non-nil if JSON unmarshaling fails
-func (p *ClaudeCodeParser) ParseLine(line []byte) (*entity.Message, string, error) {
+func (p *ClaudeCode) ParseLine(line []byte) (*entity.Message, string, error) {
 	if len(line) == 0 {
 		return nil, "", nil
 	}
@@ -199,5 +199,5 @@ func (p *ClaudeCodeParser) ParseLine(line []byte) (*entity.Message, string, erro
 	return &msg, raw.SessionID, nil
 }
 
-// Ensure ClaudeCodeParser implements SessionParser.
-var _ SessionParser = (*ClaudeCodeParser)(nil)
+// Ensure ClaudeCode implements Session.
+var _ Session = (*ClaudeCode)(nil)

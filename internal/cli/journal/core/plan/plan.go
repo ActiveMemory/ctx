@@ -41,7 +41,7 @@ func Import(
 	sessions []*entity.Session,
 	journalDir string,
 	sessionIndex map[string]string,
-	jstate *state.JournalState,
+	jstate *state.State,
 	opts entity.ImportOpts,
 	singleSession bool,
 ) entity.ImportPlan {

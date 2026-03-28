@@ -16,14 +16,14 @@ import (
 )
 
 func TestMarkdownSessionParser_Tool(t *testing.T) {
-	p := NewMarkdownSessionParser()
+	p := NewMarkdownSession()
 	if got := p.Tool(); got != session.ToolMarkdown {
 		t.Errorf("Tool() = %q, want %q", got, session.ToolMarkdown)
 	}
 }
 
 func TestMarkdownSessionParser_Matches(t *testing.T) {
-	p := NewMarkdownSessionParser()
+	p := NewMarkdownSession()
 	dir := t.TempDir()
 
 	tests := []struct {
@@ -89,7 +89,7 @@ func TestMarkdownSessionParser_Matches(t *testing.T) {
 }
 
 func TestMarkdownSessionParser_ParseFile(t *testing.T) {
-	p := NewMarkdownSessionParser()
+	p := NewMarkdownSession()
 
 	// Set up directory structure: project/.context/sessions/
 	dir := t.TempDir()
@@ -155,7 +155,7 @@ func TestMarkdownSessionParser_ParseFile(t *testing.T) {
 }
 
 func TestMarkdownSessionParser_ParseFile_NoHeader(t *testing.T) {
-	p := NewMarkdownSessionParser()
+	p := NewMarkdownSession()
 	dir := t.TempDir()
 
 	path := filepath.Join(dir, "no-header.md")
@@ -175,7 +175,7 @@ func TestMarkdownSessionParser_ParseFile_NoHeader(t *testing.T) {
 }
 
 func TestMarkdownSessionParser_ParseLine(t *testing.T) {
-	p := NewMarkdownSessionParser()
+	p := NewMarkdownSession()
 	msg, sessID, err := p.ParseLine([]byte("anything"))
 	if msg != nil || sessID != "" || err != nil {
 		t.Error("ParseLine should return nil, empty, nil for markdown parser")

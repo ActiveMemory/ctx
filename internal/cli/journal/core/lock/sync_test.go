@@ -80,9 +80,9 @@ func TestRunSync_UnlocksFromFrontmatter(t *testing.T) {
 	}
 
 	// Pre-set locked state.
-	jstate := &state.JournalState{
+	jstate := &state.State{
 		Version: state.CurrentVersion,
-		Entries: map[string]state.FileState{
+		Entries: map[string]state.File{
 			filename: {Exported: "2026-01-21", Locked: "2026-01-21"},
 		},
 	}
@@ -136,9 +136,9 @@ func TestRunSync_NoChanges(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	jstate := &state.JournalState{
+	jstate := &state.State{
 		Version: state.CurrentVersion,
-		Entries: map[string]state.FileState{
+		Entries: map[string]state.File{
 			filename: {Exported: "2026-01-21", Locked: "2026-01-21"},
 		},
 	}
@@ -229,9 +229,9 @@ func TestRunSync_MixedFiles(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	jstate := &state.JournalState{
+	jstate := &state.State{
 		Version: state.CurrentVersion,
-		Entries: map[string]state.FileState{
+		Entries: map[string]state.File{
 			fileB: {Exported: "2026-01-22", Locked: "2026-01-22"},
 		},
 	}

@@ -32,9 +32,9 @@ func TestLoad_MissingFile(t *testing.T) {
 func TestRoundTrip(t *testing.T) {
 	dir := t.TempDir()
 
-	s := &JournalState{
+	s := &State{
 		Version: CurrentVersion,
-		Entries: map[string]FileState{
+		Entries: map[string]File{
 			"2026-01-21-test-abc12345.md": {
 				Exported: "2026-01-21",
 				Enriched: "2026-01-22",
@@ -80,9 +80,9 @@ func TestCountUnenriched(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	s := &JournalState{
+	s := &State{
 		Version: CurrentVersion,
-		Entries: map[string]FileState{
+		Entries: map[string]File{
 			"a.md": {Enriched: "2026-01-21"},
 		},
 	}
@@ -94,9 +94,9 @@ func TestCountUnenriched(t *testing.T) {
 }
 
 func TestRename(t *testing.T) {
-	s := &JournalState{
+	s := &State{
 		Version: CurrentVersion,
-		Entries: map[string]FileState{
+		Entries: map[string]File{
 			"old-name.md": {
 				Exported:       "2026-01-21",
 				Enriched:       "2026-01-22",
@@ -125,9 +125,9 @@ func TestRename(t *testing.T) {
 }
 
 func TestRename_NoOp(t *testing.T) {
-	s := &JournalState{
+	s := &State{
 		Version: CurrentVersion,
-		Entries: make(map[string]FileState),
+		Entries: make(map[string]File),
 	}
 
 	// Should not panic or create entries
@@ -138,9 +138,9 @@ func TestRename_NoOp(t *testing.T) {
 }
 
 func TestQueryHelpers(t *testing.T) {
-	s := &JournalState{
+	s := &State{
 		Version: CurrentVersion,
-		Entries: map[string]FileState{
+		Entries: map[string]File{
 			"full.md": {
 				Exported:       "2026-01-21",
 				Enriched:       "2026-01-22",
@@ -179,9 +179,9 @@ func TestQueryHelpers(t *testing.T) {
 }
 
 func TestClearEnriched(t *testing.T) {
-	s := &JournalState{
+	s := &State{
 		Version: CurrentVersion,
-		Entries: map[string]FileState{
+		Entries: map[string]File{
 			"test.md": {
 				Exported: "2026-01-21",
 				Enriched: "2026-01-22",
@@ -205,9 +205,9 @@ func TestClearEnriched(t *testing.T) {
 }
 
 func TestClearEnriched_NoOp(t *testing.T) {
-	s := &JournalState{
+	s := &State{
 		Version: CurrentVersion,
-		Entries: map[string]FileState{
+		Entries: map[string]File{
 			"test.md": {Exported: "2026-01-21"},
 		},
 	}
@@ -223,9 +223,9 @@ func TestClearEnriched_NoOp(t *testing.T) {
 }
 
 func TestMark(t *testing.T) {
-	s := &JournalState{
+	s := &State{
 		Version: CurrentVersion,
-		Entries: make(map[string]FileState),
+		Entries: make(map[string]File),
 	}
 
 	if ok := s.Mark("test.md", journal.StageExported); !ok {
@@ -241,9 +241,9 @@ func TestMark(t *testing.T) {
 }
 
 func TestMark_AllStages(t *testing.T) {
-	s := &JournalState{
+	s := &State{
 		Version: CurrentVersion,
-		Entries: make(map[string]FileState),
+		Entries: make(map[string]File),
 	}
 
 	for _, stage := range ValidStages {
@@ -260,9 +260,9 @@ func TestMark_AllStages(t *testing.T) {
 }
 
 func TestClear(t *testing.T) {
-	s := &JournalState{
+	s := &State{
 		Version: CurrentVersion,
-		Entries: map[string]FileState{
+		Entries: map[string]File{
 			"test.md": {
 				Exported: "2026-01-21",
 				Enriched: "2026-01-22",
@@ -291,9 +291,9 @@ func TestClear(t *testing.T) {
 }
 
 func TestClear_AllStages(t *testing.T) {
-	s := &JournalState{
+	s := &State{
 		Version: CurrentVersion,
-		Entries: make(map[string]FileState),
+		Entries: make(map[string]File),
 	}
 
 	// Set all stages, then clear all.
@@ -314,9 +314,9 @@ func TestClear_AllStages(t *testing.T) {
 }
 
 func TestLocked(t *testing.T) {
-	s := &JournalState{
+	s := &State{
 		Version: CurrentVersion,
-		Entries: make(map[string]FileState),
+		Entries: make(map[string]File),
 	}
 
 	if s.Locked("test.md") {
@@ -337,9 +337,9 @@ func TestLocked(t *testing.T) {
 func TestLocked_RoundTrip(t *testing.T) {
 	dir := t.TempDir()
 
-	s := &JournalState{
+	s := &State{
 		Version: CurrentVersion,
-		Entries: map[string]FileState{
+		Entries: map[string]File{
 			"locked.md":   {Exported: "2026-01-21", Locked: "2026-01-22"},
 			"unlocked.md": {Exported: "2026-01-21"},
 		},

@@ -15,7 +15,7 @@ import (
 )
 
 func TestClaudeCodeParser_Matches(t *testing.T) {
-	parser := NewClaudeCodeParser()
+	parser := NewClaudeCode()
 
 	// Create temp directory
 	dir := t.TempDir()
@@ -50,7 +50,7 @@ func TestClaudeCodeParser_Matches(t *testing.T) {
 }
 
 func TestClaudeCodeParser_ParseFile(t *testing.T) {
-	parser := NewClaudeCodeParser()
+	parser := NewClaudeCode()
 	dir := t.TempDir()
 
 	// Create test JSONL with multiple messages
@@ -145,7 +145,7 @@ func TestClaudeCodeParser_ParseFile(t *testing.T) {
 }
 
 func TestClaudeCodeParser_ParseFile_WithToolUse(t *testing.T) {
-	parser := NewClaudeCodeParser()
+	parser := NewClaudeCode()
 	dir := t.TempDir()
 
 	jsonlFile := filepath.Join(dir, "tools.jsonl")
@@ -188,7 +188,7 @@ func TestClaudeCodeParser_ParseFile_WithToolUse(t *testing.T) {
 }
 
 func TestClaudeCodeParser_ParseFile_MultipleSessions(t *testing.T) {
-	parser := NewClaudeCodeParser()
+	parser := NewClaudeCode()
 	dir := t.TempDir()
 
 	// JSONL with two different sessions
@@ -220,7 +220,7 @@ func TestClaudeCodeParser_ParseFile_MultipleSessions(t *testing.T) {
 }
 
 func TestClaudeCodeParser_ParseFile_SkipsMalformed(t *testing.T) {
-	parser := NewClaudeCodeParser()
+	parser := NewClaudeCode()
 	dir := t.TempDir()
 
 	// Mix of valid and invalid lines

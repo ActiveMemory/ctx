@@ -146,7 +146,7 @@ func checkpoint(
 func addDecision(
 	id json.RawMessage, args map[string]string,
 ) *proto.Response {
-	return buildEntry(id, defPrompt.EntryPromptSpec{
+	return buildEntry(id, defPrompt.EntrySpec{
 		KeyHeader:  text.DescKeyMCPPromptAddDecisionHeader,
 		KeyFooter:  text.DescKeyMCPPromptAddDecisionFooter,
 		FieldFmtK:  text.DescKeyMCPPromptAddDecisionFieldFmt,
@@ -176,7 +176,7 @@ func addDecision(
 func addLearning(
 	id json.RawMessage, args map[string]string,
 ) *proto.Response {
-	return buildEntry(id, defPrompt.EntryPromptSpec{
+	return buildEntry(id, defPrompt.EntrySpec{
 		KeyHeader:  text.DescKeyMCPPromptAddLearningHeader,
 		KeyFooter:  text.DescKeyMCPPromptAddLearningFooter,
 		FieldFmtK:  text.DescKeyMCPPromptAddLearningFieldFmt,

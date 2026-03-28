@@ -32,7 +32,7 @@ func Run(cmd *cobra.Command, budget int, dryRun bool) error {
 	contextDir := rc.ContextDir()
 	projectRoot := filepath.Dir(contextDir)
 
-	memoryPath, discoverErr := mem.DiscoverMemoryPath(projectRoot)
+	memoryPath, discoverErr := mem.DiscoverPath(projectRoot)
 	if discoverErr != nil {
 		sync.ErrAutoMemoryNotActive(cmd, discoverErr)
 		return errMemory.NotFound()

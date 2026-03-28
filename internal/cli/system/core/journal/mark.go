@@ -36,7 +36,7 @@ type MarkResult struct {
 //   - CheckResult: Stage value
 //   - error: Non-nil on state load failure, unknown stage, or unset stage
 func CheckStage(filename, stage string) (CheckResult, error) {
-	journalDir := ctxResolve.ResolvedJournalDir()
+	journalDir := ctxResolve.JournalDir()
 	jstate, loadErr := state.Load(journalDir)
 	if loadErr != nil {
 		return CheckResult{}, errJournal.LoadStateFailed(loadErr)
@@ -75,7 +75,7 @@ func CheckStage(filename, stage string) (CheckResult, error) {
 // Returns:
 //   - error: Non-nil on unknown stage or state load/save failure
 func MarkStage(filename, stage string) error {
-	journalDir := ctxResolve.ResolvedJournalDir()
+	journalDir := ctxResolve.JournalDir()
 	jstate, loadErr := state.Load(journalDir)
 	if loadErr != nil {
 		return errJournal.LoadStateFailed(loadErr)

@@ -16,7 +16,7 @@ import (
 )
 
 // Init builds the URI-to-file lookup map. Must be called once before
-// FileForURI is used (called from NewServer during bootstrap).
+// FileForURI is used (called from New during bootstrap).
 func Init() {
 	uriLookup = make(map[string]string, len(table))
 	for _, m := range table {
@@ -56,7 +56,7 @@ func FileForURI(uri string) string {
 }
 
 // ToList constructs the immutable resource list. Called once from
-// NewServer.
+// New.
 //
 // Returns:
 //   - proto.ResourceListResult: all resources including the agent packet

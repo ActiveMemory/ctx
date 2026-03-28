@@ -114,7 +114,7 @@ func Run(cmd *cobra.Command, stdin *os.File) error {
 			}
 			content.WriteString(fmt.Sprintf(
 				desc.Text(text.DescKeyContextLoadGateIndexHeader), f, idx))
-			tokens := ctxToken.EstimateTokensString(idx)
+			tokens := ctxToken.EstimateString(idx)
 			totalTokens += tokens
 			perFile = append(perFile, entity.FileTokenEntry{
 				Name:   f + load_gate.ContextLoadIndexSuffix,
@@ -127,7 +127,7 @@ func Run(cmd *cobra.Command, stdin *os.File) error {
 				desc.Text(
 					text.DescKeyContextLoadGateFileHeader,
 				), f, string(data)))
-			tokens := ctxToken.EstimateTokens(data)
+			tokens := ctxToken.Estimate(data)
 			totalTokens += tokens
 			perFile = append(perFile, entity.FileTokenEntry{Name: f, Tokens: tokens})
 			filesLoaded++

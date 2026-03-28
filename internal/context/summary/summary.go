@@ -107,7 +107,7 @@ func summarizeGlossary(content []byte) string {
 	return fmt.Sprintf(desc.Text(text.DescKeySummaryTerms), count)
 }
 
-// GenerateSummary creates a brief summary for a context file based on its
+// Generate creates a brief summary for a context file based on its
 // name and content.
 //
 // Parameters:
@@ -116,7 +116,7 @@ func summarizeGlossary(content []byte) string {
 //
 // Returns:
 //   - string: Summary string (e.g., "3 active, 2 completed" or "empty")
-func GenerateSummary(name string, content []byte) string {
+func Generate(name string, content []byte) string {
 	switch name {
 	case ctx.Constitution:
 		return summarizeConstitution(content)

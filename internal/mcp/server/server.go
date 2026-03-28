@@ -40,11 +40,11 @@ type Server struct {
 	out          io.Writer
 	outMu        sync.Mutex // guards all writes to out
 	in           io.Reader
-	poller       *poll.ResourcePoller
+	poller       *poll.Poller
 	resourceList proto.ResourceListResult // pre-built, immutable after init
 }
 
-// NewServer creates a new MCP server for the given context directory.
+// New creates a new MCP server for the given context directory.
 //
 // Parameters:
 //   - contextDir: path to the .context/ directory
@@ -52,7 +52,7 @@ type Server struct {
 //
 // Returns:
 //   - *Server: a configured MCP server ready to serve
-func NewServer(contextDir, version string) *Server {
+func New(contextDir, version string) *Server {
 	catalog.Init()
 	srv := &Server{
 		handler:      handler.New(contextDir, rc.TokenBudget()),
@@ -61,7 +61,7 @@ func NewServer(contextDir, version string) *Server {
 		in:           os.Stdin,
 		resourceList: catalog.ToList(),
 	}
-	srv.poller = poll.NewResourcePoller(contextDir, func(n proto.Notification) {
+	srv.poller = poll.NewPoller(contextDir, func(n proto.Notification) {
 		_ = mcpIO.WriteJSON(srv.out, &srv.outMu, n)
 	})
 	return srv

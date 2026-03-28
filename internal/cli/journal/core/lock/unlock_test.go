@@ -87,9 +87,9 @@ func TestRunLockUnlock_UnlockSingle(t *testing.T) {
 	}
 
 	// Pre-set locked state.
-	jstate := &state.JournalState{
+	jstate := &state.State{
 		Version: state.CurrentVersion,
-		Entries: map[string]state.FileState{
+		Entries: map[string]state.File{
 			filename: {Exported: "2026-01-21", Locked: "2026-01-21"},
 		},
 	}
@@ -191,9 +191,9 @@ func TestRunLockUnlock_AlreadyLocked(t *testing.T) {
 	}
 
 	// Pre-set locked state.
-	jstate := &state.JournalState{
+	jstate := &state.State{
 		Version: state.CurrentVersion,
-		Entries: map[string]state.FileState{
+		Entries: map[string]state.File{
 			filename: {Locked: "2026-01-21"},
 		},
 	}

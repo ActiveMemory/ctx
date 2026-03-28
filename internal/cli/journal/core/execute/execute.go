@@ -41,7 +41,7 @@ import (
 func Import(
 	cmd *cobra.Command,
 	plan entity.ImportPlan,
-	jstate *state.JournalState,
+	jstate *state.State,
 	opts entity.ImportOpts,
 ) (imported, updated, skipped int) {
 	for _, fa := range plan.Actions {

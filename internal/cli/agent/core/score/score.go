@@ -143,7 +143,7 @@ func All(
 	scored := make([]Entry, 0, len(blocks))
 	for i := range blocks {
 		s := Score(&blocks[i], keywords, now)
-		tokens := token.EstimateTokensString(blocks[i].BlockContent())
+		tokens := token.EstimateString(blocks[i].BlockContent())
 		scored = append(scored, Entry{
 			EntryBlock: blocks[i],
 			Score:      s,

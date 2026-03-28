@@ -13,9 +13,9 @@ type EntryField struct {
 	Value    string
 }
 
-// EntryPromptSpec holds the DescKeys that vary between
+// EntrySpec holds the DescKeys that vary between
 // add-decision and add-learning prompts.
-type EntryPromptSpec struct {
+type EntrySpec struct {
 	KeyHeader  string
 	KeyFooter  string
 	FieldFmtK  string

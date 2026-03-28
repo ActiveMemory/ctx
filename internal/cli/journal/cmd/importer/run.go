@@ -148,7 +148,7 @@ func Run(cmd *cobra.Command, args []string, opts entity.ImportOpts) error {
 
 	// 11. Persist journal state.
 	if saveErr := jstate.Save(journalDir); saveErr != nil {
-		err.WarnFile(cmd, journal.FileState, saveErr)
+		err.WarnFile(cmd, journal.File, saveErr)
 	}
 
 	// 12. Print final summary.

@@ -123,14 +123,14 @@ func Global(cause error) error {
 	)
 }
 
-// InvalidBackupScope returns an error for an unrecognized backup scope value.
+// InvalidScope returns an error for an unrecognized backup scope value.
 //
 // Parameters:
 //   - scope: the invalid scope string
 //
 // Returns:
 //   - error: "invalid scope '<scope>': must be project, global, or all"
-func InvalidBackupScope(scope string) error {
+func InvalidScope(scope string) error {
 	return fmt.Errorf(
 		desc.Text(text.DescKeyErrBackupInvalidBackupScope), scope,
 	)

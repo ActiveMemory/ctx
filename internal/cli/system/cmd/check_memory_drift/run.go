@@ -51,7 +51,7 @@ func Run(cmd *cobra.Command, stdin *os.File) error {
 	contextDir := rc.ContextDir()
 	projectRoot := filepath.Dir(contextDir)
 
-	sourcePath, discoverErr := memory.DiscoverMemoryPath(projectRoot)
+	sourcePath, discoverErr := memory.DiscoverPath(projectRoot)
 	if discoverErr != nil {
 		// Auto memory not active - skip silently
 		return nil

@@ -191,7 +191,7 @@ func UpdateLearnings(content string) string {
 	return Update(content, desc.Text(text.DescKeyHeadingLearnings), desc.Text(text.DescKeyColumnLearning))
 }
 
-// ReindexFile reads a context file, regenerates its index, and writes it back.
+// Reindex reads a context file, regenerates its index, and writes it back.
 //
 // This is a convenience function that handles the common reindex workflow:
 // check the file exists, read content, apply update function, write back,
@@ -210,7 +210,7 @@ func UpdateLearnings(content string) string {
 //
 // Returns:
 //   - error: Non-nil if file operations fail
-func ReindexFile(
+func Reindex(
 	w io.Writer, filePath, fileName string,
 	updateFunc func(string) string,
 	entryType string,

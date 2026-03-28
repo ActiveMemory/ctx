@@ -146,7 +146,7 @@ func TestGetPathRelativeToHome(t *testing.T) {
 }
 
 func TestParseLine(t *testing.T) {
-	p := NewClaudeCodeParser()
+	p := NewClaudeCode()
 
 	tests := []struct {
 		name     string

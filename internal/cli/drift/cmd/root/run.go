@@ -37,7 +37,7 @@ func Run(cmd *cobra.Command, jsonOutput, fix bool) error {
 	if err != nil {
 		var notFoundError *errCtx.NotFoundError
 		if errors.As(err, &notFoundError) {
-			return errInit.NotInitialized()
+			return errInit.NotInit()
 		}
 		return err
 	}
