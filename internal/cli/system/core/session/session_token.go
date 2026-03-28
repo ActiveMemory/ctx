@@ -210,9 +210,9 @@ const ContextWindow1M = 1_000_000
 // EffectiveContextWindow returns the context window size using a four-tier
 // fallback where ground truth outranks configuration:
 //
-//  1. JSONL model ID — actual model running the session (ground truth)
-//  2. Claude Code ~/.claude/settings.json — configured model selection
-//  3. Explicit .ctxrc context_window — manual override / escape hatch
+//  1. JSONL model ID: actual model running the session (ground truth)
+//  2. Claude Code ~/.claude/settings.json: configured model selection
+//  3. Explicit .ctxrc context_window: manual override / escape hatch
 //  4. rc.ContextWindow() default (200k)
 //
 // Parameters:
@@ -248,7 +248,9 @@ func ClaudeSettingsHas1M() bool {
 	if homeErr != nil {
 		return false
 	}
-	data, readErr := internalIo.SafeReadUserFile(filepath.Join(home, dir.Claude, claude.GlobalSettings))
+	data, readErr := internalIo.SafeReadUserFile(
+		filepath.Join(home, dir.Claude, claude.GlobalSettings),
+	)
 	if readErr != nil {
 		return false
 	}
@@ -292,5 +294,7 @@ func FormatWindowSize(size int) string {
 	if size < cfgFmt.SIThreshold {
 		return fmt.Sprintf(desc.Text(text.DescKeyWriteFormatSIInteger), size)
 	}
-	return fmt.Sprintf(desc.Text(text.DescKeyWriteFormatSIKiloInt), size/cfgFmt.SIThreshold)
+	return fmt.Sprintf(
+		desc.Text(text.DescKeyWriteFormatSIKiloInt), size/cfgFmt.SIThreshold,
+	)
 }

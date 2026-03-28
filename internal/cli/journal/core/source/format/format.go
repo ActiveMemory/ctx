@@ -18,14 +18,14 @@ import (
 	"github.com/ActiveMemory/ctx/internal/config/box"
 	"github.com/ActiveMemory/ctx/internal/config/embed/text"
 	"github.com/ActiveMemory/ctx/internal/config/file"
-	cfgFmt "github.com/ActiveMemory/ctx/internal/config/format"
 	"github.com/ActiveMemory/ctx/internal/config/journal"
 	"github.com/ActiveMemory/ctx/internal/config/marker"
-	"github.com/ActiveMemory/ctx/internal/config/regex"
 	"github.com/ActiveMemory/ctx/internal/config/session"
 	"github.com/ActiveMemory/ctx/internal/config/time"
 	"github.com/ActiveMemory/ctx/internal/config/token"
 	"github.com/ActiveMemory/ctx/internal/entity"
+	sharedFmt "github.com/ActiveMemory/ctx/internal/format"
+	"github.com/ActiveMemory/ctx/internal/parse"
 )
 
 // PartNavigation generates previous/next navigation links for
@@ -97,29 +97,17 @@ func Duration(d interface{ Minutes() float64 }) string {
 }
 
 // Tokens formats token counts in a human-readable way.
+// Delegates to the shared format package.
 //
 // Parameters:
 //   - tokens: Token count to format
 //
 // Returns:
 //   - string: Human-readable count (e.g., "500", "1.5K", "2.3M")
-func Tokens(tokens int) string {
-	if tokens < cfgFmt.SIThreshold {
-		return fmt.Sprintf(desc.Text(text.DescKeyWriteFormatSIInteger), tokens)
-	}
-	if tokens < cfgFmt.SIThresholdM {
-		return fmt.Sprintf(
-			desc.Text(text.DescKeyWriteFormatSIKiloUpper),
-			float64(tokens)/cfgFmt.SIThreshold,
-		)
-	}
-	return fmt.Sprintf(
-		desc.Text(text.DescKeyWriteFormatSIMegaUpper),
-		float64(tokens)/cfgFmt.SIThresholdM,
-	)
-}
+func Tokens(tokens int) string { return sharedFmt.Tokens(tokens) }
 
 // Truncate shortens s to max characters, appending "…" if truncated.
+// Delegates to the shared format package.
 //
 // Parameters:
 //   - s: String to truncate
@@ -127,28 +115,20 @@ func Tokens(tokens int) string {
 //
 // Returns:
 //   - string: Truncated string
-func Truncate(s string, max int) string {
-	if len(s) <= max {
-		return s
-	}
-	return s[:max-len(token.Ellipsis)] + token.Ellipsis
-}
+func Truncate(s string, max int) string { return sharedFmt.Truncate(s, max) }
 
 // StripLineNumbers removes Claude Code's line number prefixes from content.
+// Delegates to the shared parse package.
 //
 // Parameters:
 //   - content: Text potentially containing "    1→" style prefixes
 //
 // Returns:
 //   - string: Content with line number prefixes removed
-func StripLineNumbers(content string) string {
-	return regex.LineNumber.ReplaceAllString(content, "")
-}
+func StripLineNumbers(content string) string { return parse.StripLineNumbers(content) }
 
 // ExtractSystemReminders separates system-reminder content from tool output.
-//
-// Claude Code injects <system-reminder> tags into tool results. This function
-// extracts them so they can be rendered as Markdown outside code fences.
+// Delegates to the shared parse package.
 //
 // Parameters:
 //   - content: Tool result content potentially containing system-reminder tags
@@ -157,36 +137,18 @@ func StripLineNumbers(content string) string {
 //   - string: Content with system-reminder tags removed
 //   - []string: Extracted reminder texts (may be empty)
 func ExtractSystemReminders(content string) (string, []string) {
-	matches := regex.SystemReminder.FindAllStringSubmatch(content, -1)
-	var reminders []string
-	for _, m := range matches {
-		if len(m) > 1 && m[1] != "" {
-			reminders = append(reminders, m[1])
-		}
-	}
-	cleaned := regex.SystemReminder.ReplaceAllString(content, "")
-	return cleaned, reminders
+	return parse.ExtractSystemReminders(content)
 }
 
 // NormalizeCodeFences ensures code fences are on their own lines with proper spacing.
-//
-// Users often type "text: ```code" without proper line breaks. Markdown requires
-// code fences to be on their own lines with blank lines separating them from
-// surrounding content.
+// Delegates to the shared parse package.
 //
 // Parameters:
 //   - content: Text that may contain inline code fences
 //
 // Returns:
 //   - string: Content with code fences properly separated by blank lines
-func NormalizeCodeFences(content string) string {
-	// Add newlines before code fences that follow text on the same line
-	doubleNL := token.NewlineLF + token.NewlineLF
-	result := regex.CodeFenceInline.ReplaceAllString(content, "$1"+doubleNL+"$2")
-	// Add newlines after code fences that are followed by text on the same line
-	result = regex.CodeFenceClose.ReplaceAllString(result, "$1"+doubleNL+"$2")
-	return result
-}
+func NormalizeCodeFences(content string) string { return parse.NormalizeCodeFences(content) }
 
 // ToolUse formats a tool invocation with its key parameters.
 //
@@ -235,23 +197,14 @@ func SessionMatchLines(matches []*entity.Session) []string {
 }
 
 // FenceForContent returns the appropriate code fence for content.
-//
-// Uses longer fences when content contains backticks to avoid
-// nested Markdown rendering issues. Starts with ``` and adds
-// more backticks as needed.
+// Delegates to the shared parse package.
 //
 // Parameters:
 //   - content: The content to be fenced
 //
 // Returns:
-//   - string: A fence string (e.g., "```", "````", "```"")
-func FenceForContent(content string) string {
-	fence := token.CodeFence
-	for strings.Contains(content, fence) {
-		fence += token.Backtick
-	}
-	return fence
-}
+//   - string: A fence string (e.g., "```", "````")
+func FenceForContent(content string) string { return parse.FenceForContent(content) }
 
 // JournalFilename generates the filename for a journal entry.
 //
