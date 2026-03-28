@@ -66,7 +66,7 @@ func RenderMermaid(graph map[string][]string) string {
 // Returns:
 //   - string: Formatted table output
 func RenderTable(graph map[string][]string) string {
-	tf := fmt.Sprintf("%%-%ds %%s\n", dep.TableColPackage)
+	tf := fmt.Sprintf(dep.TableRowFormat, dep.TableColPackage)
 	var b strings.Builder
 	b.WriteString(fmt.Sprintf(tf, dep.TableHeaderPackage, dep.TableHeaderImports))
 	b.WriteString(fmt.Sprintf(tf,

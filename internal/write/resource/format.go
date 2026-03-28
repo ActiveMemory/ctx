@@ -60,7 +60,7 @@ func statusText(sev sysinfo.Severity) string {
 //   - string: Padded single-line row
 func formatLine(label, values, status string) string {
 	left := fmt.Sprintf(
-		fmt.Sprintf("%%-%ds  %%s", stats.ResourcesLabelWidth), label, values)
+		fmt.Sprintf(desc.Text(text.DescKeyResourcesRowFormat), stats.ResourcesLabelWidth), label, values)
 	pad := stats.ResourcesStatusCol - len(left)
 	if pad < 1 {
 		pad = 1

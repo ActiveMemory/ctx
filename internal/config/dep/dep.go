@@ -25,6 +25,8 @@ const (
 	TableHeaderPackage = "Package"
 	// TableHeaderImports is the column header for import lists.
 	TableHeaderImports = "Imports"
+	// TableRowFormat is the dynamic-width row format template for table output.
+	TableRowFormat = "%%-%ds %%s\n"
 	// MermaidEdgeFormat is the Mermaid graph edge format string.
 	MermaidEdgeFormat = "    %s[\"%s\"] --> %s[\"%s\"]\n"
 )
