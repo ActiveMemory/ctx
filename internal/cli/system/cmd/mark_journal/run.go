@@ -7,16 +7,10 @@
 package mark_journal
 
 import (
-	"strings"
-
 	"github.com/spf13/cobra"
 
+	coreJournal "github.com/ActiveMemory/ctx/internal/cli/system/core/journal"
 	cFlag "github.com/ActiveMemory/ctx/internal/config/flag"
-	"github.com/ActiveMemory/ctx/internal/config/journal"
-	"github.com/ActiveMemory/ctx/internal/config/token"
-	ctxResolve "github.com/ActiveMemory/ctx/internal/context/resolve"
-	errJournal "github.com/ActiveMemory/ctx/internal/err/journal"
-	"github.com/ActiveMemory/ctx/internal/journal/state"
 	writeJournal "github.com/ActiveMemory/ctx/internal/write/mark_journal"
 )
 
@@ -33,48 +27,18 @@ import (
 // Returns:
 //   - error: Non-nil on state load/save failure or unknown stage
 func RunMarkJournal(cmd *cobra.Command, filename, stage string) error {
-	journalDir := ctxResolve.ResolvedJournalDir()
-
-	jstate, loadErr := state.Load(journalDir)
-	if loadErr != nil {
-		return errJournal.LoadStateFailed(loadErr)
-	}
-
 	check, _ := cmd.Flags().GetBool(cFlag.Check)
 	if check {
-		fs := jstate.Entries[filename]
-		var val string
-		switch stage {
-		case journal.StageExported:
-			val = fs.Exported
-		case journal.StageEnriched:
-			val = fs.Enriched
-		case journal.StageNormalized:
-			val = fs.Normalized
-		case journal.StageFencesVerified:
-			val = fs.FencesVerified
-		case journal.StageLocked:
-			val = fs.Locked
-		default:
-			return errJournal.UnknownStage(
-				stage, strings.Join(state.ValidStages, token.CommaSpace),
-			)
+		r, checkErr := coreJournal.CheckStage(filename, stage)
+		if checkErr != nil {
+			return checkErr
 		}
-		if val == "" {
-			return errJournal.StageNotSet(filename, stage)
-		}
-		writeJournal.StageChecked(cmd, filename, stage, val)
+		writeJournal.StageChecked(cmd, filename, stage, r.Value)
 		return nil
 	}
 
-	if ok := jstate.Mark(filename, stage); !ok {
-		return errJournal.UnknownStage(
-			stage, strings.Join(state.ValidStages, token.CommaSpace),
-		)
-	}
-
-	if saveErr := jstate.Save(journalDir); saveErr != nil {
-		return errJournal.SaveStateFailed(saveErr)
+	if markErr := coreJournal.MarkStage(filename, stage); markErr != nil {
+		return markErr
 	}
 
 	writeJournal.StageMarked(cmd, filename, stage)

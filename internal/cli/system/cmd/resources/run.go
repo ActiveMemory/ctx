@@ -9,8 +9,8 @@ package resources
 import (
 	"github.com/spf13/cobra"
 
+	coreResource "github.com/ActiveMemory/ctx/internal/cli/system/core/resource"
 	cFlag "github.com/ActiveMemory/ctx/internal/config/flag"
-	"github.com/ActiveMemory/ctx/internal/sysinfo"
 	writeResources "github.com/ActiveMemory/ctx/internal/write/resource"
 )
 
@@ -26,8 +26,7 @@ import (
 // Returns:
 //   - error: Non-nil on JSON encoding failure
 func RunResources(cmd *cobra.Command) error {
-	snap := sysinfo.Collect()
-	alerts := sysinfo.Evaluate(snap)
+	snap, alerts := coreResource.Snapshot()
 
 	jsonFlag, _ := cmd.Flags().GetBool(cFlag.JSON)
 	if jsonFlag {

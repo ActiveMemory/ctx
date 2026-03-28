@@ -17,7 +17,7 @@ import (
 )
 
 // Dir returns the project-scoped runtime state directory
-// (.context/state/). Ensures the directory exists on each call — MkdirAll
+// (.context/state/). Ensures the directory exists on each call. MkdirAll
 // is a no-op when the directory is already present.
 //
 // Returns:
@@ -35,14 +35,14 @@ func Dir() string {
 var dirOverride string
 
 // SetDirForTest overrides Dir() for testing. Pass an empty string
-// to restore default behavior. Only call from tests.
+// to restore the default behavior. Only call from tests.
 func SetDirForTest(d string) {
 	dirOverride = d
 }
 
 // Initialized reports whether the context directory has been properly set up
 // via "ctx init". Hooks should no-op when this returns false to avoid
-// creating partial state (e.g. logs/) before initialization.
+// creating a partial state (e.g. logs/) before initialization.
 //
 // Returns:
 //   - bool: True if context directory is initialized

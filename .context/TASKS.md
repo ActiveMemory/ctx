@@ -255,10 +255,10 @@ Spec: `specs/journal-merge-completion.md`. Read the spec before starting any JMC
 
 **JMC.6 — Extract remaining cmd/ logic to core/:**
 
-- [ ] JMC.6.1: Extract task/cmd/archive RunArchive logic to task/core/archive #added:2026-03-27-130000
-- [ ] JMC.6.2: Extract notify/cmd/test RunTest logic to notify/core/test #added:2026-03-27-130000
-- [ ] JMC.6.3: Extract system/cmd/mark_journal RunMarkJournal logic to system/core/journal #added:2026-03-27-130000
-- [ ] JMC.6.4: Extract system/cmd/resources RunResources logic to system/core/resource #added:2026-03-27-130000
+- [x] JMC.6.1: Extract task/cmd/archive RunArchive logic to task/core/archive #done:2026-03-27-133000
+- [x] JMC.6.2: Extract notify/cmd/test RunTest logic to notify/core/test #done:2026-03-27-133000
+- [x] JMC.6.3: Extract system/cmd/mark_journal RunMarkJournal logic to system/core/journal/mark.go #done:2026-03-27-133000
+- [x] JMC.6.4: Extract system/cmd/resources RunResources logic to system/core/resource #done:2026-03-27-133000
 
 ### Phase CLI-FIX: CLI Infrastructure Fixes
 

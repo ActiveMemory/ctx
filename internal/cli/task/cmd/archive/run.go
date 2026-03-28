@@ -7,22 +7,10 @@
 package archive
 
 import (
-	"os"
-	"strings"
-
-	"github.com/ActiveMemory/ctx/internal/cli/task/core/count"
-	"github.com/ActiveMemory/ctx/internal/cli/task/core/path"
 	"github.com/spf13/cobra"
 
-	"github.com/ActiveMemory/ctx/internal/assets/read/desc"
-	"github.com/ActiveMemory/ctx/internal/config/archive"
-	"github.com/ActiveMemory/ctx/internal/config/embed/text"
-	"github.com/ActiveMemory/ctx/internal/config/fs"
+	coreArchive "github.com/ActiveMemory/ctx/internal/cli/task/core/archive"
 	"github.com/ActiveMemory/ctx/internal/config/token"
-	"github.com/ActiveMemory/ctx/internal/entity"
-	errTask "github.com/ActiveMemory/ctx/internal/err/task"
-	"github.com/ActiveMemory/ctx/internal/io"
-	"github.com/ActiveMemory/ctx/internal/tidy"
 	writeArchive "github.com/ActiveMemory/ctx/internal/write/archive"
 )
 
@@ -39,85 +27,35 @@ import (
 // Returns:
 //   - error: Non-nil if TASKS.md doesn't exist or file operations fail
 func RunArchive(cmd *cobra.Command, dryRun bool) error {
-	tasksPath := path.TasksFilePath()
-	nl := token.NewlineLF
-
-	// Check if TASKS.md exists
-	if _, statErr := os.Stat(tasksPath); os.IsNotExist(statErr) {
-		return errTask.FileNotFound()
+	r, planErr := coreArchive.Plan()
+	if planErr != nil {
+		return planErr
 	}
 
-	// Read TASKS.md
-	content, readErr := io.SafeReadUserFile(tasksPath)
-	if readErr != nil {
-		return errTask.FileRead(readErr)
+	for _, name := range r.SkippedNames {
+		writeArchive.Skipping(cmd, name)
 	}
 
-	lines := strings.Split(string(content), nl)
-
-	// Parse task blocks using block-based parsing
-	blocks := tidy.ParseTaskBlocks(lines)
-
-	// Filter to only archivable blocks (completed with no incomplete children)
-	var archivableBlocks []entity.TaskBlock
-	var skippedCount int
-	for _, block := range blocks {
-		if block.IsArchivable {
-			archivableBlocks = append(archivableBlocks, block)
-		} else {
-			skippedCount++
-			writeArchive.Skipping(cmd, block.ParentTaskText())
-		}
-	}
-
-	// Count pending tasks
-	pendingCount := count.CountPendingTasks(lines)
-
-	if len(archivableBlocks) == 0 {
-		if skippedCount > 0 {
-			writeArchive.SkipIncomplete(cmd, skippedCount)
+	if len(r.Archivable) == 0 {
+		if len(r.SkippedNames) > 0 {
+			writeArchive.SkipIncomplete(cmd, len(r.SkippedNames))
 		} else {
 			writeArchive.NoCompleted(cmd)
 		}
 		return nil
 	}
 
-	// Build archived content
-	var archivedContent strings.Builder
-	for _, block := range archivableBlocks {
-		archivedContent.WriteString(block.BlockContent())
-		archivedContent.WriteString(nl)
-	}
-
 	if dryRun {
-		writeArchive.DryRun(cmd, len(archivableBlocks), pendingCount,
-			archivedContent.String(), token.Separator)
+		writeArchive.DryRun(cmd, len(r.Archivable), r.PendingCount,
+			r.Content, token.Separator)
 		return nil
 	}
 
-	// Write to the archive
-	archiveFilePath, writeErr := tidy.WriteArchive(
-		archive.ArchiveScopeTasks,
-		desc.Text(text.DescKeyHeadingArchivedTasks),
-		archivedContent.String(),
-	)
-	if writeErr != nil {
-		return writeErr
+	archivePath, execErr := coreArchive.Execute(r)
+	if execErr != nil {
+		return execErr
 	}
 
-	// Remove archived blocks from lines and write back
-	newLines := tidy.RemoveBlocksFromLines(lines, archivableBlocks)
-	newContent := strings.Join(newLines, nl)
-
-	if updateErr := os.WriteFile(
-		tasksPath, []byte(newContent), fs.PermFile,
-	); updateErr != nil {
-		return errTask.FileWrite(updateErr)
-	}
-
-	writeArchive.Success(
-		cmd, len(archivableBlocks), archiveFilePath, pendingCount,
-	)
-
+	writeArchive.Success(cmd, len(r.Archivable), archivePath, r.PendingCount)
 	return nil
 }
