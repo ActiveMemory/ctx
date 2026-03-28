@@ -36,11 +36,11 @@ import (
 // Returns:
 //   - map[string]string: session ID → filename mapping
 func SessionIndex(journalDir string) map[string]string {
-	index := make(map[string]string)
+	sessionMap := make(map[string]string)
 
 	entries, readErr := os.ReadDir(journalDir)
 	if readErr != nil {
-		return index
+		return sessionMap
 	}
 
 	for _, e := range entries {
@@ -59,8 +59,8 @@ func SessionIndex(journalDir string) map[string]string {
 			// Only map the base filename (without -p* suffix) or each
 			// part file to the same session ID. The caller uses
 			// index[sessionID] to find the base filename.
-			if _, exists := index[sid]; !exists {
-				index[sid] = e.Name()
+			if _, exists := sessionMap[sid]; !exists {
+				sessionMap[sid] = e.Name()
 			}
 			continue
 		}
@@ -91,13 +91,13 @@ func SessionIndex(journalDir string) map[string]string {
 			shortID := baseName[len(baseName)-journal.ShortIDLen:]
 			// Store with the short ID as key (caller matches against
 			// session.ID[:8]).
-			if _, exists := index[shortID]; !exists {
-				index[shortID] = name
+			if _, exists := sessionMap[shortID]; !exists {
+				sessionMap[shortID] = name
 			}
 		}
 	}
 
-	return index
+	return sessionMap
 }
 
 // ExtractSessionID parses session_id from YAML frontmatter.

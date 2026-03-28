@@ -141,11 +141,11 @@ func compact(
 	id json.RawMessage, args map[string]interface{},
 	fn func(bool) (string, error),
 ) *proto.Response {
-	archive := false
+	doArchive := false
 	if v, ok := args[field.Archive].(bool); ok {
-		archive = v
+		doArchive = v
 	}
-	text, err := fn(archive)
+	text, err := fn(doArchive)
 	return out.ToolResult(id, text, err)
 }
 

@@ -108,13 +108,13 @@ func Run(cmd *cobra.Command, args []string, opts entity.ImportOpts) error {
 	sessionIndex := index.SessionIndex(journalDir)
 
 	// 6. Build the plan.
-	plan := plan.Import(
+	importPlan := plan.Import(
 		toImport, journalDir, sessionIndex, jstate, opts, singleSession,
 	)
 
 	// 7. Execute renames.
 	renamed := 0
-	for _, rop := range plan.RenameOps {
+	for _, rop := range importPlan.RenameOps {
 		index.RenameJournalFiles(journalDir, rop.OldBase, rop.NewBase, rop.NumParts)
 		jstate.Rename(
 			rop.OldBase+file.ExtMarkdown, rop.NewBase+file.ExtMarkdown,
@@ -125,15 +125,15 @@ func Run(cmd *cobra.Command, args []string, opts entity.ImportOpts) error {
 	// 8. Dry-run → print summary and return.
 	if opts.DryRun {
 		recall.ImportSummary(
-			cmd, plan.NewCount, plan.RegenCount,
-			plan.SkipCount, plan.LockedCount, true,
+			cmd, importPlan.NewCount, importPlan.RegenCount,
+			importPlan.SkipCount, importPlan.LockedCount, true,
 		)
 		return nil
 	}
 
 	// 9. Confirmation prompt for regeneration.
-	if plan.RegenCount > 0 && !opts.Yes && !singleSession {
-		ok, promptErr := confirm.Import(cmd, plan)
+	if importPlan.RegenCount > 0 && !opts.Yes && !singleSession {
+		ok, promptErr := confirm.Import(cmd, importPlan)
 		if promptErr != nil {
 			return promptErr
 		}
@@ -144,7 +144,7 @@ func Run(cmd *cobra.Command, args []string, opts entity.ImportOpts) error {
 	}
 
 	// 10. Execute the import.
-	imported, updated, skipped := execute.Import(cmd, plan, jstate, opts)
+	imported, updated, skipped := execute.Import(cmd, importPlan, jstate, opts)
 
 	// 11. Persist journal state.
 	if saveErr := jstate.Save(journalDir); saveErr != nil {

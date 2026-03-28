@@ -153,9 +153,9 @@ func (p *ClaudeCode) ParseFile(path string) ([]*entity.Session, error) {
 	// Convert to sessions
 	var sessions []*entity.Session
 	for sessionID, msgs := range sessionMsgs {
-		session := p.buildSession(sessionID, msgs, path)
-		if session != nil {
-			sessions = append(sessions, session)
+		s := p.buildSession(sessionID, msgs, path)
+		if s != nil {
+			sessions = append(sessions, s)
 		}
 	}
 

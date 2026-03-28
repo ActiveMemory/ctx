@@ -49,9 +49,9 @@ func Run(cmd *cobra.Command, dryRun bool) error {
 
 	sync.Header(cmd, dryRun)
 
-	for i, action := range actions {
+	for i, a := range actions {
 		sync.Action(
-			cmd, i+1, action.Type, action.Description, action.Suggestion,
+			cmd, i+1, a.Type, a.Description, a.Suggestion,
 		)
 	}
 
