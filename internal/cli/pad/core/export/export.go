@@ -7,14 +7,11 @@
 package export
 
 import (
-	"fmt"
 	"os"
 	"path/filepath"
-	"time"
 
 	"github.com/ActiveMemory/ctx/internal/cli/pad/core/blob"
 	"github.com/ActiveMemory/ctx/internal/cli/pad/core/store"
-	"github.com/ActiveMemory/ctx/internal/config/token"
 )
 
 // Item represents a single blob ready for export.
@@ -64,16 +61,4 @@ func Plan(dir string, force bool) ([]Item, error) {
 	}
 
 	return items, nil
-}
-
-// tsWithLabel returns a timestamp-prefixed label for collision avoidance.
-//
-// Parameters:
-//   - label: Suffix to append after the Unix timestamp
-//
-// Returns:
-//   - string: Label in the form "<unix_epoch>-<label>"
-func tsWithLabel(label string) string {
-	ts := fmt.Sprintf("%d", time.Now().Unix())
-	return ts + token.Dash + label
 }

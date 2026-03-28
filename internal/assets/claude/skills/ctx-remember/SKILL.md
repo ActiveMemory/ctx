@@ -112,7 +112,7 @@ tasks, or ask the user for direction if priorities are unclear.
 
 After presenting the readback, check companion tool availability.
 Skip this section entirely if `companion_check: false` is set in
-`.ctxrc` — check by running `ctx config status` and looking for
+`.ctxrc`: check by running `ctx config status` and looking for
 the field value.
 
 **Companion tools** enhance ctx skills with web search and code
@@ -134,7 +134,7 @@ intelligence. They are optional but recommended:
    > needed."
 4. For GitNexus specifically: if it responds but the current repo
    is not indexed or the index is stale, suggest:
-   > "GitNexus index is stale — run `npx gitnexus analyze` to
+   > "GitNexus index is stale: run `npx gitnexus analyze` to
    > rehydrate."
 
 Present companion status as a one-line note after the readback,

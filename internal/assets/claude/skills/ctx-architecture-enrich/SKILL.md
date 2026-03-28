@@ -13,14 +13,14 @@ efficiently provide.
 ## Design Principle
 
 **Reading first, tools second.** `/ctx-architecture` produces
-deep artifacts through forced code reading — no code intelligence
+deep artifacts through forced code reading - no code intelligence
 tools, no shortcuts. This skill runs AFTER that pass, using the
 deep artifacts as a baseline. It verifies, quantifies, and extends
-— it never substitutes for reading.
+- it never substitutes for reading.
 
 The separation exists because agents take shortcuts when code
 intelligence tools are available during analysis. A structural
-query returns an answer without opening the file — so the agent
+query returns an answer without opening the file - so the agent
 never discovers the operational details (defaults, timeouts, scale
 math, edge cases) that only emerge from line-by-line reading. The
 tool answers the question asked but prevents discovery of answers
@@ -40,12 +40,12 @@ to questions never asked.
 
 ## When NOT to Use
 
-- As a substitute for `/ctx-architecture` — if no architecture
+- As a substitute for `/ctx-architecture` - if no architecture
   artifacts exist, run `/ctx-architecture` first
-- When GitNexus MCP is not connected or the index is stale —
+- When GitNexus MCP is not connected or the index is stale -
   preflight will catch this
 - Immediately after `/ctx-architecture` in the same session without
-  user request — let the user review the base artifacts first
+  user request - let the user review the base artifacts first
 
 ---
 
@@ -53,19 +53,19 @@ to questions never asked.
 
 The skill refuses to run if these are missing:
 
-- `.context/ARCHITECTURE.md` — the authoritative architecture map
-- `.context/DETAILED_DESIGN.md` (or domain split files) — per-module
+- `.context/ARCHITECTURE.md` - the authoritative architecture map
+- `.context/DETAILED_DESIGN.md` (or domain split files) - per-module
   deep reference
-- `.context/map-tracking.json` — coverage state and confidence scores
+- `.context/map-tracking.json` - coverage state and confidence scores
 
 The skill checks and warns if these are missing but proceeds
 without them:
 
-- `.context/DANGER-ZONES.md` — consolidated danger zones (if absent,
+- `.context/DANGER-ZONES.md` - consolidated danger zones (if absent,
   extracts from DETAILED_DESIGN.md danger zone sections)
-- `.context/CONVERGENCE-REPORT.md` — convergence state
-- `.context/ARCHITECTURE-PRINCIPAL.md` — principal analysis
-- `.context/CHEAT-SHEETS.md` — lifecycle flow cheat sheets
+- `.context/CONVERGENCE-REPORT.md` - convergence state
+- `.context/ARCHITECTURE-PRINCIPAL.md` - principal analysis
+- `.context/CHEAT-SHEETS.md` - lifecycle flow cheat sheets
 
 ---
 
@@ -106,7 +106,7 @@ If the index is stale (commits after last index):
 - **≤ 5 commits behind**: warn and proceed.
   ```
   GitNexus index is slightly stale (last indexed: <date>,
-  <N> commits since). Proceeding — results may be incomplete
+  <N> commits since). Proceeding - results may be incomplete
   for recently changed code.
   ```
 - **> 5 commits behind**: hard stop.
@@ -144,9 +144,9 @@ from DETAILED_DESIGN.md if no standalone file exists):
    ```
 
 2. **Record blast radius**:
-   - d=1 count (direct callers — WILL BREAK)
-   - d=2 count (indirect dependents — LIKELY AFFECTED)
-   - d=3 count (transitive — MAY NEED TESTING)
+   - d=1 count (direct callers - WILL BREAK)
+   - d=2 count (indirect dependents - LIKELY AFFECTED)
+   - d=3 count (transitive - MAY NEED TESTING)
    - Affected process/execution flow count
 
 3. **Assign verified risk level**:
@@ -159,7 +159,7 @@ from DETAILED_DESIGN.md if no standalone file exists):
    Guidelines (adjust for scale):
    - CRITICAL: d=1 > 10 or crosses 3+ domains
    - HIGH: d=1 > 5 or crosses 2 domains
-   - MEDIUM: d=1 2–5, single domain
+   - MEDIUM: d=1 2-5, single domain
    - LOW: d=1 ≤ 1, localized
 
    Graph data is a lower bound, not ground truth. Dynamic dispatch,
@@ -169,12 +169,12 @@ from DETAILED_DESIGN.md if no standalone file exists):
 
    ```
    Risk: HIGH (enriched <date> via GitNexus)
-   ⚠ Possible undercount — dynamic or indirect usage suspected
+   ⚠ Possible undercount - dynamic or indirect usage suspected
    ```
 
 4. **Update DANGER-ZONES.md** with enrichment data:
    ```markdown
-   1. **<symbol>** — <original description>
+   1. **<symbol>** - <original description>
       - Blast radius: d=1: N, d=2: N, d=3: N
       - Affected flows: <list of process names>
       - Risk: HIGH (enriched 2026-03-25 via GitNexus)
@@ -219,11 +219,11 @@ sections:
    Registration function: `<func>` in `<file>`
 
    Registered implementations:
-   1. `<impl>` — `<file>:<line>`
+   1. `<impl>` - `<file>:<line>`
    2. ...
 
    Unregistered (defined but not wired):
-   - `<impl>` — `<file>:<line>` (potential dead code or
+   - `<impl>` - `<file>:<line>` (potential dead code or
      conditional registration)
    ```
 
@@ -236,15 +236,15 @@ sections:
    READ gitnexus://repo/<name>/processes
    ```
 
-2. **Select the most significant flows** (10–15). Prefer flows
+2. **Select the most significant flows** (10-15). Prefer flows
    that:
    - Share symbols with other flows (high centrality)
    - Originate from public APIs or entry points
    - Cross multiple domains
-   Step count alone is not a good signal — a 50-step internal
+   Step count alone is not a good signal - a 50-step internal
    flow matters less than a 10-step cross-domain API flow.
 
-3. **Identify multi-flow hotspots** — symbols that appear
+3. **Identify multi-flow hotspots** - symbols that appear
    in 3+ execution flows are integration points worth knowing
 
 4. **Update CHEAT-SHEETS.md** with an execution flow index:
@@ -280,7 +280,7 @@ sections:
 2. **Read manual domain splits** from DETAILED_DESIGN.md (the
    domain file index if split, or section headers if monolithic)
 
-3. **Compare** — surface mismatches:
+3. **Compare** - surface mismatches:
    - Modules that GitNexus groups together but the manual split
      separates → potential hidden coupling
    - Modules that GitNexus separates but the manual split groups
@@ -308,7 +308,7 @@ sections:
    domains, flag as:
 
    ⚠ Architectural boundary violation: <domain A> ↔ <domain B>
-     N cross-boundary calls — consider refactoring or redefining
+     N cross-boundary calls - consider refactoring or redefining
      the boundary.
    ```
 
@@ -328,11 +328,11 @@ For each module at confidence < 0.75 in `map-tracking.json`:
    mcp__gitnexus__context({name: "<key exported symbol>"})
    ```
 
-3. **Read process participation** — which execution flows does
+3. **Read process participation** - which execution flows does
    this module participate in?
 
 4. **Update the module's DETAILED_DESIGN.md section** with
-   findings — callers, execution flow participation, cross-module
+   findings - callers, execution flow participation, cross-module
    relationships that reading alone may have missed
 
 5. **Update confidence score** in `map-tracking.json` with
@@ -350,7 +350,7 @@ For each module at confidence < 0.75 in `map-tracking.json`:
    does not justify a bump.
 
    **Litmus test**: if the module's purpose cannot be restated
-   in 1–2 sentences after enrichment, do NOT increase confidence.
+   in 1-2 sentences after enrichment, do NOT increase confidence.
    Numbers without narrative are noise.
 
 ---
@@ -427,7 +427,7 @@ this skill produces).
 ## Design Constraints
 
 - **Sequential phases**: each phase MUST complete before the next
-  begins. Do not interleave phases — complete one, write its
+  begins. Do not interleave phases - complete one, write its
   results, then move to the next.
 - **Idempotent**: running enrichment twice updates existing
   annotations, does not duplicate them. Before adding enrichment

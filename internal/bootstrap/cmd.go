@@ -89,7 +89,7 @@ func RootCmd() *cobra.Command {
 
 			// Require initialization.
 			if !ctxContext.Initialized(rc.ContextDir()) {
-				return errInit.NotInit()
+				return errInit.NotInitialized()
 			}
 
 			return nil

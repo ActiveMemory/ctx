@@ -16,10 +16,8 @@ import (
 	"strings"
 	"time"
 
-	"github.com/ActiveMemory/ctx/internal/config/dir"
 	cfgFmt "github.com/ActiveMemory/ctx/internal/config/format"
 	"github.com/ActiveMemory/ctx/internal/config/fs"
-	"github.com/ActiveMemory/ctx/internal/config/memory"
 	cfgTime "github.com/ActiveMemory/ctx/internal/config/time"
 	"github.com/ActiveMemory/ctx/internal/config/token"
 	"github.com/ActiveMemory/ctx/internal/io"
@@ -115,15 +113,4 @@ func (s *State) MarkImported(hash, target string) {
 func (s *State) MarkImportedDone() {
 	now := time.Now().UTC()
 	s.LastImport = &now
-}
-
-// statePath returns the filesystem path to the memory state JSON file.
-//
-// Parameters:
-//   - contextDir: Root context directory
-//
-// Returns:
-//   - string: Absolute path to the state file
-func statePath(contextDir string) string {
-	return filepath.Join(contextDir, dir.State, memory.State)
 }

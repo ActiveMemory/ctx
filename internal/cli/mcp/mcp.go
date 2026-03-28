@@ -11,8 +11,6 @@ import (
 	"github.com/spf13/cobra"
 
 	"github.com/ActiveMemory/ctx/internal/assets/read/desc"
-	"github.com/ActiveMemory/ctx/internal/cli/mcp/cmd/root"
-	"github.com/ActiveMemory/ctx/internal/config/cli"
 	"github.com/ActiveMemory/ctx/internal/config/embed/cmd"
 )
 
@@ -31,20 +29,4 @@ func Cmd() *cobra.Command {
 	c.AddCommand(serveCmd())
 
 	return c
-}
-
-// serveCmd returns the mcp serve subcommand.
-//
-// Returns:
-//   - *cobra.Command: Configured serve subcommand with init-skip annotation
-func serveCmd() *cobra.Command {
-	serveShort, serveLong := desc.Command(cmd.DescKeyMcpServe)
-	return &cobra.Command{
-		Use:          cmd.UseMcpServe,
-		Short:        serveShort,
-		Long:         serveLong,
-		Annotations:  map[string]string{cli.AnnotationSkipInit: cli.AnnotationTrue},
-		SilenceUsage: true,
-		RunE:         root.Cmd,
-	}
 }

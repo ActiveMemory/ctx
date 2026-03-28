@@ -50,7 +50,7 @@ Lead with the most important finding. Use this structure:
 ## Review: <scope>
 
 ### Issues
-- **[severity]** file:line — description
+- **[severity]** file:line - description
 
 ### Observations
 - Note anything non-obvious but not necessarily wrong
