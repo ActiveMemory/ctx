@@ -73,8 +73,8 @@ func ContainsEndComment(content string) (bool, int) {
 //   - s: String to check
 //
 // Returns:
-//   - bool: True if s starts with CtxMarkerStart or CtxMarkerEnd
+//   - bool: True if s starts with CtxStart or CtxEnd
 func StartsWithCtxMarker(s string) bool {
-	return strings.HasPrefix(s, marker.CtxMarkerStart) ||
-		strings.HasPrefix(s, marker.CtxMarkerEnd)
+	return strings.HasPrefix(s, marker.CtxStart) ||
+		strings.HasPrefix(s, marker.CtxEnd)
 }

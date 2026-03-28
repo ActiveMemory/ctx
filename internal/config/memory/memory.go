@@ -14,14 +14,14 @@ import (
 
 // Memory bridge file constants for .context/memory/ directory.
 const (
-	// MemorySource is the Claude Code auto memory filename.
-	MemorySource = "MEMORY.md"
-	// MemoryMirror is the raw copy of Claude Code's MEMORY.md.
-	MemoryMirror = "mirror.md"
-	// MemoryState is the sync/import tracking state file.
-	MemoryState = "memory-import.json"
+	// Source is the Claude Code auto memory filename.
+	Source = "MEMORY.md"
+	// Mirror is the raw copy of Claude Code's MEMORY.md.
+	Mirror = "mirror.md"
+	// State is the sync/import tracking state file.
+	State = "memory-import.json"
 )
 
 // PathMemoryMirror is the relative path from the project root to the
 // memory mirror file. Constructed from directory and file constants.
-var PathMemoryMirror = filepath.Join(dir.Context, dir.Memory, MemoryMirror)
+var PathMemoryMirror = filepath.Join(dir.Context, dir.Memory, Mirror)

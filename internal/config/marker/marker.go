@@ -24,18 +24,18 @@ const (
 
 // Context block markers for embedding context in files.
 const (
-	// CtxMarkerStart marks the beginning of an embedded context block.
-	CtxMarkerStart = "<!-- ctx:context -->"
-	// CtxMarkerEnd marks the end of an embedded context block.
-	CtxMarkerEnd = "<!-- ctx:end -->"
+	// CtxStart marks the beginning of an embedded context block.
+	CtxStart = "<!-- ctx:context -->"
+	// CtxEnd marks the end of an embedded context block.
+	CtxEnd = "<!-- ctx:end -->"
 )
 
 // Copilot block markers for .github/copilot-instructions.md.
 const (
-	// CopilotMarkerStart marks the beginning of ctx-managed Copilot content.
-	CopilotMarkerStart = "<!-- ctx:copilot -->"
-	// CopilotMarkerEnd marks the end of ctx-managed Copilot content.
-	CopilotMarkerEnd = "<!-- ctx:copilot:end -->"
+	// CopilotStart marks the beginning of ctx-managed Copilot content.
+	CopilotStart = "<!-- ctx:copilot -->"
+	// CopilotEnd marks the end of ctx-managed Copilot content.
+	CopilotEnd = "<!-- ctx:copilot:end -->"
 )
 
 // Index markers for auto-generated table of contents sections.
@@ -61,10 +61,10 @@ const (
 
 // Published block markers for MEMORY.md.
 const (
-	// PublishMarkerStart begins the ctx-published block in MEMORY.md.
-	PublishMarkerStart = "<!-- ctx:published -->"
-	// PublishMarkerEnd ends the ctx-published block in MEMORY.md.
-	PublishMarkerEnd = "<!-- ctx:end -->"
+	// PublishStart begins the ctx-published block in MEMORY.md.
+	PublishStart = "<!-- ctx:published -->"
+	// PublishEnd ends the ctx-published block in MEMORY.md.
+	PublishEnd = "<!-- ctx:end -->"
 )
 
 // Entry status markers for knowledge files.

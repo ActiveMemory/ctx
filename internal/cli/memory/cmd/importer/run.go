@@ -53,7 +53,7 @@ func Run(cmd *cobra.Command, dryRun bool) error {
 
 	entries := memory.Entries(string(sourceData))
 	if len(entries) == 0 {
-		ctximport.NoEntries(cmd, cfgMemory.MemorySource)
+		ctximport.NoEntries(cmd, cfgMemory.Source)
 		return nil
 	}
 
@@ -62,7 +62,7 @@ func Run(cmd *cobra.Command, dryRun bool) error {
 		return errState.Load(loadErr)
 	}
 
-	ctximport.ScanHeader(cmd, cfgMemory.MemorySource, len(entries))
+	ctximport.ScanHeader(cmd, cfgMemory.Source, len(entries))
 
 	var result entity.ImportResult
 

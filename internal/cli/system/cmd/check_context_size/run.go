@@ -102,7 +102,7 @@ func Run(cmd *cobra.Command, stdin *os.File) error {
 			Pct:        pct,
 			WindowSize: windowSize,
 			Model:      info.Model,
-			Event:      event.EventSuppressed,
+			Event:      event.Suppressed,
 		})
 		return nil
 	}
@@ -120,13 +120,13 @@ func Run(cmd *cobra.Command, stdin *os.File) error {
 
 	windowTrigger := pct >= stats.ContextWindowThresholdPct
 
-	evt := event.EventSilent
+	evt := event.Silent
 	switch {
 	case counterTriggered:
-		evt = event.EventCheckpoint
+		evt = event.Checkpoint
 		writeHook.NudgeBlock(cmd, nudge.EmitCheckpoint(logFile, sessionID, count, tokens, pct, windowSize))
 	case windowTrigger:
-		evt = event.EventWindowWarning
+		evt = event.WindowWarning
 		writeHook.NudgeBlock(cmd, nudge.EmitWindowWarning(logFile, sessionID, count, tokens, pct))
 	default:
 		log.Message(logFile, sessionID,

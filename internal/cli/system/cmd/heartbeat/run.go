@@ -55,13 +55,13 @@ func Run(_ *cobra.Command, stdin *os.File) error {
 
 	tmpDir := state.Dir()
 	counterFile := filepath.Join(
-		tmpDir, heartbeat.HeartbeatCounterPrefix+sessionID,
+		tmpDir, heartbeat.CounterPrefix+sessionID,
 	)
 	mtimeFile := filepath.Join(
-		tmpDir, heartbeat.HeartbeatMtimePrefix+sessionID,
+		tmpDir, heartbeat.MtimePrefix+sessionID,
 	)
 	contextDir := rc.ContextDir()
-	logFile := filepath.Join(contextDir, dir.Logs, heartbeat.HeartbeatLogFile)
+	logFile := filepath.Join(contextDir, dir.Logs, heartbeat.LogFile)
 
 	// Increment prompt counter.
 	count := counter.Read(counterFile) + 1

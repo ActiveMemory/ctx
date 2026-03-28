@@ -51,7 +51,7 @@ func Run(cmd *cobra.Command, dryRun bool) error {
 	}
 
 	sync.Result(cmd,
-		cfgMem.MemorySource, cfgMem.PathMemoryMirror,
+		cfgMem.Source, cfgMem.PathMemoryMirror,
 		result.SourcePath, filepath.Base(result.ArchivedTo),
 		result.SourceLines, result.MirrorLines,
 	)

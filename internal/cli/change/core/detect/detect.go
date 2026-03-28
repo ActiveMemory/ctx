@@ -70,7 +70,7 @@ func FromMarkers() (time.Time, bool) {
 //   - time.Time: Event timestamp
 //   - bool: True if a valid event was found
 func FromEvents() (time.Time, bool) {
-	eventsPath := filepath.Join(rc.ContextDir(), dir.State, event.FileEventLog)
+	eventsPath := filepath.Join(rc.ContextDir(), dir.State, event.FileLog)
 	data, err := io.SafeReadUserFile(eventsPath)
 	if err != nil {
 		return time.Time{}, false

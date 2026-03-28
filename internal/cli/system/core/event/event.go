@@ -20,7 +20,7 @@ import (
 )
 
 // FormatTimestamp converts an RFC3339 timestamp to local time display
-// using the DateTimePreciseFormat layout.
+// using the DateTimePreciseFmt layout.
 //
 // Parameters:
 //   - ts: RFC3339-formatted timestamp string
@@ -33,7 +33,7 @@ func FormatTimestamp(ts string) string {
 	if parseErr != nil {
 		return ts
 	}
-	return t.Local().Format(cfgTime.DateTimePreciseFormat)
+	return t.Local().Format(cfgTime.DateTimePreciseFmt)
 }
 
 // ExtractHookName gets the hook name from an event payload's detail field.
@@ -43,7 +43,7 @@ func FormatTimestamp(ts string) string {
 //   - e: event payload to inspect
 //
 // Returns:
-//   - string: hook name, or EventsHookFallback if undetermined
+//   - string: hook name, or HookFallback if undetermined
 func ExtractHookName(e notify.Payload) string {
 	if e.Detail != nil && e.Detail.Hook != "" {
 		return e.Detail.Hook
@@ -52,7 +52,7 @@ func ExtractHookName(e notify.Payload) string {
 	if idx := strings.Index(e.Message, ":"); idx > 0 {
 		return e.Message[:idx]
 	}
-	return event.EventsHookFallback
+	return event.HookFallback
 }
 
 // TruncateMessage limits message length for display, appending a
@@ -68,8 +68,8 @@ func TruncateMessage(msg string, maxLen int) string {
 	if len(msg) <= maxLen {
 		return msg
 	}
-	return msg[:maxLen-len(event.EventsTruncationSuffix)] +
-		event.EventsTruncationSuffix
+	return msg[:maxLen-len(event.TruncationSuffix)] +
+		event.TruncationSuffix
 }
 
 // FormatJSON formats events as raw JSONL lines.
@@ -104,7 +104,7 @@ func FormatHuman(evts []notify.Payload) []string {
 	for _, e := range evts {
 		ts := FormatTimestamp(e.Timestamp)
 		hookName := ExtractHookName(e)
-		msg := TruncateMessage(e.Message, event.EventsMessageMaxLen)
+		msg := TruncateMessage(e.Message, event.MessageMaxLen)
 		lines = append(lines, fmt.Sprintf(fmtStr, ts, e.Event, hookName, msg))
 	}
 	return lines

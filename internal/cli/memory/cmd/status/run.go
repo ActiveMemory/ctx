@@ -53,7 +53,7 @@ func Run(cmd *cobra.Command) error {
 	if state.LastSync != nil {
 		ago := time.Since(*state.LastSync).Truncate(time.Minute)
 		writeMem.LastSync(cmd,
-			state.LastSync.Local().Format(cfgTime.DateTimeFormat),
+			state.LastSync.Local().Format(cfgTime.DateTimeFmt),
 			format.Duration(ago))
 	} else {
 		writeMem.LastSyncNever(cmd)
@@ -72,7 +72,7 @@ func Run(cmd *cobra.Command) error {
 	// Mirror line count
 	memoryDir := filepath.Join(contextDir, dir.Memory)
 	if mirrorData, readErr := io.SafeReadFile(
-		memoryDir, memory.MemoryMirror,
+		memoryDir, memory.Mirror,
 	); readErr == nil {
 		writeMem.MirrorLines(cmd, core.CountFileLines(mirrorData))
 	} else {

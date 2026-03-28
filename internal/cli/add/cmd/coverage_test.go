@@ -346,7 +346,7 @@ func TestInsertAfterHeader_HeaderAtEndOfFile(t *testing.T) {
 
 func TestInsertAfterHeader_WithCtxMarkers(t *testing.T) {
 	content := "# Learnings\n" +
-		marker.CtxMarkerStart + "\nsome context\n" + marker.CommentClose + "\n\n" +
+		marker.CtxStart + "\nsome context\n" + marker.CommentClose + "\n\n" +
 		"## [2026-01-01] Existing\n"
 	entry := "## [2026-01-02] New\n"
 
@@ -361,7 +361,7 @@ func TestInsertAfterHeader_WithCtxMarkers(t *testing.T) {
 
 func TestInsertAfterHeader_CtxMarkerWithoutClose(t *testing.T) {
 	// ctx marker start present but no close marker
-	content := "# Learnings\n" + marker.CtxMarkerStart + "\nunclosed marker content\nExisting\n"
+	content := "# Learnings\n" + marker.CtxStart + "\nunclosed marker content\nExisting\n"
 	entry := "## New entry\n"
 
 	result := insert.AfterHeader(content, entry, desc.Text(text.DescKeyHeadingLearnings))
@@ -819,11 +819,11 @@ func TestContainsNewLine(t *testing.T) {
 }
 
 func TestStartsWithCtxMarker(t *testing.T) {
-	if !inspect.StartsWithCtxMarker(marker.CtxMarkerStart + " rest") {
-		t.Error("should detect CtxMarkerStart")
+	if !inspect.StartsWithCtxMarker(marker.CtxStart + " rest") {
+		t.Error("should detect CtxStart")
 	}
-	if !inspect.StartsWithCtxMarker(marker.CtxMarkerEnd + " rest") {
-		t.Error("should detect CtxMarkerEnd")
+	if !inspect.StartsWithCtxMarker(marker.CtxEnd + " rest") {
+		t.Error("should detect CtxEnd")
 	}
 	if inspect.StartsWithCtxMarker("no marker here") {
 		t.Error("should not detect marker in plain text")

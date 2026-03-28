@@ -58,7 +58,7 @@ func setupTestDir(t *testing.T, enableLog bool) string {
 
 func TestAppend_Disabled(t *testing.T) {
 	tmpDir := setupTestDir(t, false)
-	logPath := filepath.Join(tmpDir, dir.Context, dir.State, event.FileEventLog)
+	logPath := filepath.Join(tmpDir, dir.Context, dir.State, event.FileLog)
 
 	AppendEvent("relay", "test message", "session-1", nil)
 
@@ -69,7 +69,7 @@ func TestAppend_Disabled(t *testing.T) {
 
 func TestAppend_Basic(t *testing.T) {
 	tmpDir := setupTestDir(t, true)
-	logPath := filepath.Join(tmpDir, dir.Context, dir.State, event.FileEventLog)
+	logPath := filepath.Join(tmpDir, dir.Context, dir.State, event.FileLog)
 
 	detail := notify.NewTemplateRef("qa-reminder", "gate", nil)
 	AppendEvent("relay", "QA gate reminder", "session-1", detail)
@@ -119,8 +119,8 @@ func TestAppend_CreatesStateDir(t *testing.T) {
 
 func TestAppend_Rotation(t *testing.T) {
 	tmpDir := setupTestDir(t, true)
-	logPath := filepath.Join(tmpDir, dir.Context, dir.State, event.FileEventLog)
-	prevPath := filepath.Join(tmpDir, dir.Context, dir.State, event.FileEventLogPrev)
+	logPath := filepath.Join(tmpDir, dir.Context, dir.State, event.FileLog)
+	prevPath := filepath.Join(tmpDir, dir.Context, dir.State, event.FileLogPrev)
 
 	// Create state dir and write a file that exceeds the max size.
 	stateDir := filepath.Join(tmpDir, dir.Context, dir.State)
@@ -153,8 +153,8 @@ func TestAppend_Rotation(t *testing.T) {
 
 func TestAppend_RotationOverwrite(t *testing.T) {
 	tmpDir := setupTestDir(t, true)
-	logPath := filepath.Join(tmpDir, dir.Context, dir.State, event.FileEventLog)
-	prevPath := filepath.Join(tmpDir, dir.Context, dir.State, event.FileEventLogPrev)
+	logPath := filepath.Join(tmpDir, dir.Context, dir.State, event.FileLog)
+	prevPath := filepath.Join(tmpDir, dir.Context, dir.State, event.FileLogPrev)
 
 	stateDir := filepath.Join(tmpDir, dir.Context, dir.State)
 	if mkErr := os.MkdirAll(stateDir, fs.PermExec); mkErr != nil {
@@ -255,7 +255,7 @@ func TestQuery_IncludeRotated(t *testing.T) {
 	}
 
 	// Write events to rotated file.
-	prevPath := filepath.Join(stateDir, event.FileEventLogPrev)
+	prevPath := filepath.Join(stateDir, event.FileLogPrev)
 	prevLine := `{"event":"relay","message":"old event","timestamp":"2026-01-01T00:00:00Z","project":"test"}` + "\n"
 	if writeErr := os.WriteFile(prevPath, []byte(prevLine), fs.PermFile); writeErr != nil {
 		t.Fatalf("failed to write .1 file: %v", writeErr)
@@ -289,7 +289,7 @@ func TestQuery_CorruptLine(t *testing.T) {
 		t.Fatalf("failed to create state dir: %v", mkErr)
 	}
 
-	logPath := filepath.Join(stateDir, event.FileEventLog)
+	logPath := filepath.Join(stateDir, event.FileLog)
 	content := `{"event":"relay","message":"good","timestamp":"2026-01-01T00:00:00Z","project":"test"}
 not valid json
 {"event":"nudge","message":"also good","timestamp":"2026-01-02T00:00:00Z","project":"test"}

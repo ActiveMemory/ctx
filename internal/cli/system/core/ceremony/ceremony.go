@@ -74,10 +74,10 @@ func ScanJournalsForCeremonies(files []string) (remember, wrapup bool) {
 			continue
 		}
 		content := string(data)
-		if !remember && strings.Contains(content, ceremony.CeremonyRememberCmd) {
+		if !remember && strings.Contains(content, ceremony.RememberCmd) {
 			remember = true
 		}
-		if !wrapup && strings.Contains(content, ceremony.CeremonyWrapUpCmd) {
+		if !wrapup && strings.Contains(content, ceremony.WrapUpCmd) {
 			wrapup = true
 		}
 		if remember && wrapup {

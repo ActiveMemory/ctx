@@ -19,7 +19,7 @@ import (
 // Returns:
 //   - string: path under the active context directory
 func logFilePath() string {
-	return filepath.Join(rc.ContextDir(), dir.State, event.FileEventLog)
+	return filepath.Join(rc.ContextDir(), dir.State, event.FileLog)
 }
 
 // prevLogFilePath returns the absolute path to the rotated event log.
@@ -27,5 +27,5 @@ func logFilePath() string {
 // Returns:
 //   - string: path under the active context directory
 func prevLogFilePath() string {
-	return filepath.Join(rc.ContextDir(), dir.State, event.FileEventLogPrev)
+	return filepath.Join(rc.ContextDir(), dir.State, event.FileLogPrev)
 }

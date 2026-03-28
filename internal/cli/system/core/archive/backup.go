@@ -76,7 +76,7 @@ func BackupProject(
 		return entity.BackupResult{}, cwdErr
 	}
 
-	archiveName := fmt.Sprintf(archive.BackupTplProjectArchive, timestamp)
+	archiveName := fmt.Sprintf(archive.TplProjectArchive, timestamp)
 	archivePath := filepath.Join(os.TempDir(), archiveName)
 
 	entries := []entity.ArchiveEntry{
@@ -116,7 +116,7 @@ func BackupProject(
 func BackupGlobal(
 	w io.Writer, home, timestamp string, smb *SMBConfig,
 ) (entity.BackupResult, error) {
-	archiveName := fmt.Sprintf(archive.BackupTplGlobalArchive, timestamp)
+	archiveName := fmt.Sprintf(archive.TplGlobalArchive, timestamp)
 	archivePath := filepath.Join(os.TempDir(), archiveName)
 
 	entries := []entity.ArchiveEntry{

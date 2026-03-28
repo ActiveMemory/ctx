@@ -80,7 +80,7 @@ func Run(cmd *cobra.Command, stdin *os.File) error {
 		token.NewlineLF +
 		desc.Text(text.DescKeyCheckRemindersDismissHint) + token.NewlineLF +
 		desc.Text(text.DescKeyCheckRemindersDismissAllHint)
-	vars := map[string]any{reminder.VarReminderList: reminderList}
+	vars := map[string]any{reminder.VarList: reminderList}
 	content := message.Load(
 		hook.CheckReminders, hook.VariantReminders, vars, fallback,
 	)

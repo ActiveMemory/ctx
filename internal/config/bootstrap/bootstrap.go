@@ -8,8 +8,8 @@ package bootstrap
 
 // Bootstrap display constants.
 const (
-	// BootstrapFileListWidth is the character width at which the file list wraps.
-	BootstrapFileListWidth = 55
-	// BootstrapFileListIndent is the indentation prefix for file list lines.
-	BootstrapFileListIndent = "  "
+	// FileListWidth is the character width at which the file list wraps.
+	FileListWidth = 55
+	// FileListIndent is the indentation prefix for file list lines.
+	FileListIndent = "  "
 )

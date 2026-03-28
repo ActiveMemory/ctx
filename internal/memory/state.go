@@ -125,5 +125,5 @@ func (s *State) MarkImportedDone() {
 // Returns:
 //   - string: Absolute path to the state file
 func statePath(contextDir string) string {
-	return filepath.Join(contextDir, dir.State, memory.MemoryState)
+	return filepath.Join(contextDir, dir.State, memory.State)
 }

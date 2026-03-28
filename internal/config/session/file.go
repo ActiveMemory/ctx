@@ -7,7 +7,7 @@
 package session
 
 const (
-	// DefaultSessionFilename is the fallback filename component when
+	// DefaultFilename is the fallback filename component when
 	// sanitization produces an empty string.
-	DefaultSessionFilename = "session"
+	DefaultFilename = "session"
 )

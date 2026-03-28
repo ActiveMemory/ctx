@@ -108,7 +108,7 @@ func WriteCopilotInstructions(cmd *cobra.Command) error {
 
 	if fileExists {
 		existingStr := string(existingContent)
-		if strings.Contains(existingStr, marker.CopilotMarkerStart) {
+		if strings.Contains(existingStr, marker.CopilotStart) {
 			hook.InfoCopilotSkipped(cmd, targetFile)
 			return nil
 		}

@@ -42,7 +42,7 @@ func WriteArchive(prefix, heading, content string) (string, error) {
 	dateStr := now.Format(cfgTime.DateFormat)
 	archiveFile := filepath.Join(
 		archiveDir,
-		fmt.Sprintf(archive.TplArchiveFilename, prefix, dateStr),
+		fmt.Sprintf(archive.TplFilename, prefix, dateStr),
 	)
 
 	nl := token.NewlineLF
@@ -50,7 +50,7 @@ func WriteArchive(prefix, heading, content string) (string, error) {
 	if existing, readErr := os.ReadFile(filepath.Clean(archiveFile)); readErr == nil {
 		finalContent = string(existing) + nl + content
 	} else {
-		finalContent = heading + archive.ArchiveDateSep +
+		finalContent = heading + archive.DateSep +
 			dateStr + nl + nl + content
 	}
 

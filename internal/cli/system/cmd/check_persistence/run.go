@@ -54,7 +54,7 @@ func Run(cmd *cobra.Command, stdin *os.File) error {
 	}
 
 	tmpDir := state.Dir()
-	stateFile := filepath.Join(tmpDir, nudge.PersistenceNudgePrefix+sessionID)
+	stateFile := filepath.Join(tmpDir, nudge.PersistencePrefix+sessionID)
 	contextDir := rc.ContextDir()
 	logFile := filepath.Join(contextDir, dir.Logs, nudge.PersistenceLogFile)
 
@@ -107,8 +107,8 @@ func Run(cmd *cobra.Command, stdin *os.File) error {
 		)
 		content := message.Load(hook.CheckPersistence, hook.VariantNudge,
 			map[string]any{
-				nudge.VarPromptCount:       ps.Count,
-				nudge.VarPromptsSinceNudge: sinceNudge,
+				nudge.VarPromptCount: ps.Count,
+				nudge.VarSinceNudge:  sinceNudge,
 			}, fallback)
 		if content == "" {
 			log.Message(logFile, sessionID, fmt.Sprintf(
@@ -136,8 +136,8 @@ func Run(cmd *cobra.Command, stdin *os.File) error {
 		)
 		ref := notify.NewTemplateRef(hook.CheckPersistence, hook.VariantNudge,
 			map[string]any{
-				nudge.VarPromptCount:       ps.Count,
-				nudge.VarPromptsSinceNudge: sinceNudge,
+				nudge.VarPromptCount: ps.Count,
+				nudge.VarSinceNudge:  sinceNudge,
 			},
 		)
 		_ = notify.Send(

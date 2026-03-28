@@ -245,7 +245,7 @@ func (h *Handler) Recall(limit int, since time.Time) (string, error) {
 		_, _ = fmt.Fprintf(
 			&sb,
 			desc.Text(text.DescKeyMCPRecallItemFormat),
-			i+1, sess.StartTime.Format(cfgTime.DateTimeFormat),
+			i+1, sess.StartTime.Format(cfgTime.DateTimeFmt),
 		)
 		if sess.Project != "" {
 			_, _ = fmt.Fprintf(
@@ -390,7 +390,7 @@ func (h *Handler) Compact(archive bool) (string, error) {
 				token.NewlineLF + token.NewlineLF
 		}
 		if _, archiveErr := tidy.WriteArchive(
-			cfgArchive.ArchiveScopeTasks,
+			cfgArchive.ScopeTasks,
 			desc.Text(text.DescKeyHeadingArchivedTasks),
 			archiveContent,
 		); archiveErr != nil {

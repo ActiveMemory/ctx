@@ -8,6 +8,6 @@ package reminder
 
 // Reminder file constants for .context/ directory.
 const (
-	// Reminders is the session-scoped reminders file.
-	Reminders = "reminders.json"
+	// File is the session-scoped reminders file.
+	File = "reminders.json"
 )

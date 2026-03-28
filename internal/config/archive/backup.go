@@ -18,12 +18,12 @@ const (
 	BackupScopeGlobal = "global"
 	// BackupScopeAll backs up both project and global.
 	BackupScopeAll = "all"
-	// BackupTplProjectArchive is the filename template for project archives.
+	// TplProjectArchive is the filename template for project archives.
 	// Argument: timestamp.
-	BackupTplProjectArchive = "ctx-backup-%s.tar.gz"
-	// BackupTplGlobalArchive is the filename template for global archives.
+	TplProjectArchive = "ctx-backup-%s.tar.gz"
+	// TplGlobalArchive is the filename template for global archives.
 	// Argument: timestamp.
-	BackupTplGlobalArchive = "claude-global-backup-%s.tar.gz"
+	TplGlobalArchive = "claude-global-backup-%s.tar.gz"
 	// BackupTimestampFormat is the compact timestamp layout for backup filenames.
 	BackupTimestampFormat = "20060102-150405"
 	// BackupExcludeTodos is the directory name excluded from global backups.

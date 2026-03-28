@@ -48,14 +48,14 @@ func Run(cmd *cobra.Command, stdin *os.File) error {
 		return nil
 	}
 
-	remindedFile := filepath.Join(state.Dir(), ceremony.CeremonyThrottleID)
+	remindedFile := filepath.Join(state.Dir(), ceremony.ThrottleID)
 
 	if coreCheck.DailyThrottled(remindedFile) {
 		return nil
 	}
 
 	files := coreCeremony.RecentJournalFiles(
-		ctxResolve.ResolvedJournalDir(), ceremony.CeremonyJournalLookback,
+		ctxResolve.ResolvedJournalDir(), ceremony.JournalLookback,
 	)
 
 	if len(files) == 0 {

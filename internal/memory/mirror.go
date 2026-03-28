@@ -34,7 +34,7 @@ import (
 //   - sourcePath: Path to the source MEMORY.md file
 func Sync(contextDir, sourcePath string) (SyncResult, error) {
 	mirrorDir := filepath.Join(contextDir, dir.Memory)
-	mirrorPath := filepath.Join(mirrorDir, memory.MemoryMirror)
+	mirrorPath := filepath.Join(mirrorDir, memory.Mirror)
 
 	sourceData, readErr := io.SafeReadUserFile(sourcePath)
 	if readErr != nil {
@@ -74,7 +74,7 @@ func Sync(contextDir, sourcePath string) (SyncResult, error) {
 // Parameters:
 //   - contextDir: Path to the project context directory
 func Archive(contextDir string) (string, error) {
-	mirrorPath := filepath.Join(contextDir, dir.Memory, memory.MemoryMirror)
+	mirrorPath := filepath.Join(contextDir, dir.Memory, memory.Mirror)
 	archiveDir := filepath.Join(contextDir, dir.MemoryArchive)
 
 	data, readErr := io.SafeReadUserFile(mirrorPath)
@@ -86,7 +86,7 @@ func Archive(contextDir string) (string, error) {
 		return "", errMemory.CreateArchiveDir(mkErr)
 	}
 
-	ts := time.Now().Format(cfgTime.TimestampCompact)
+	ts := time.Now().Format(cfgTime.CompactTimestamp)
 	archivePath := filepath.Join(archiveDir, memory.PrefixMirror+ts+file.ExtMarkdown)
 
 	if writeErr := os.WriteFile(archivePath, data, fs.PermFile); writeErr != nil {
@@ -103,7 +103,7 @@ func Archive(contextDir string) (string, error) {
 //   - contextDir: Path to the project context directory
 //   - sourcePath: Path to the source MEMORY.md file
 func Diff(contextDir, sourcePath string) (string, error) {
-	mirrorPath := filepath.Join(contextDir, dir.Memory, memory.MemoryMirror)
+	mirrorPath := filepath.Join(contextDir, dir.Memory, memory.Mirror)
 
 	mirrorData, mirrorErr := io.SafeReadUserFile(mirrorPath)
 	if mirrorErr != nil {
@@ -135,7 +135,7 @@ func Diff(contextDir, sourcePath string) (string, error) {
 // Returns:
 //   - bool: True if MEMORY.md has been modified since the last sync
 func HasDrift(contextDir, sourcePath string) bool {
-	mirrorPath := filepath.Join(contextDir, dir.Memory, memory.MemoryMirror)
+	mirrorPath := filepath.Join(contextDir, dir.Memory, memory.Mirror)
 
 	sourceInfo, sourceErr := os.Stat(sourcePath)
 	if sourceErr != nil {

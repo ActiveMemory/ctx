@@ -10,6 +10,6 @@ package nudge
 const (
 	// VarPromptCount is the template variable for prompt counter.
 	VarPromptCount = "PromptCount"
-	// VarPromptsSinceNudge is the template variable for prompts since last nudge.
-	VarPromptsSinceNudge = "PromptsSinceNudge"
+	// VarSinceNudge is the template variable for prompts since last nudge.
+	VarSinceNudge = "PromptsSinceNudge"
 )

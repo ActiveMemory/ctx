@@ -8,12 +8,12 @@ package event
 
 // Context-size event names.
 const (
-	// EventSuppressed is the event name for suppressed prompts.
-	EventSuppressed = "suppressed"
-	// EventSilent is the event name for silent (no-action) prompts.
-	EventSilent = "silent"
-	// EventCheckpoint is the event name for context checkpoint emissions.
-	EventCheckpoint = "checkpoint"
-	// EventWindowWarning is the event name for context window warning emissions.
-	EventWindowWarning = "window-warning"
+	// Suppressed is the event name for suppressed prompts.
+	Suppressed = "suppressed"
+	// Silent is the event name for silent (no-action) prompts.
+	Silent = "silent"
+	// Checkpoint is the event name for context checkpoint emissions.
+	Checkpoint = "checkpoint"
+	// WindowWarning is the event name for context window warning emissions.
+	WindowWarning = "window-warning"
 )

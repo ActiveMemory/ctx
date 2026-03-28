@@ -136,7 +136,7 @@ func Run(
 	// Print sessions.
 	for _, s := range filtered {
 		slug := sharedFmt.Truncate(s.Slug, journal.SlugMaxLen)
-		dateStr := s.StartTime.Local().Format(time.DateTimeFormat)
+		dateStr := s.StartTime.Local().Format(time.DateTimeFmt)
 		dur := sourceFormat.Duration(s.Duration)
 		turns := fmt.Sprintf("%d", s.TurnCount)
 		tokens := ""

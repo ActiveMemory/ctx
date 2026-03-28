@@ -111,7 +111,7 @@ func parseDoneTimestamp(line string) *time.Time {
 	}
 
 	// Parse YYYY-MM-DD-HHMMSS format
-	t, err := time.Parse(cfgTime.TimestampCompact, match[1])
+	t, err := time.Parse(cfgTime.CompactTimestamp, match[1])
 	if err != nil {
 		return nil
 	}

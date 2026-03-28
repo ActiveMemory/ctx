@@ -10,8 +10,8 @@ import "github.com/ActiveMemory/ctx/internal/config/file"
 
 // Task archive/snapshot constants.
 const (
-	// ArchiveScopeTasks is the scope identifier for task archives.
-	ArchiveScopeTasks = "tasks"
+	// ScopeTasks is the scope identifier for task archives.
+	ScopeTasks = "tasks"
 	// DefaultSnapshotName is the default name when no snapshot name is provided.
 	DefaultSnapshotName = "snapshot"
 	// SnapshotFilenameFormat is the filename template for task snapshots.

@@ -199,7 +199,7 @@ func FormatLine(e *Entry) string {
 }
 
 // FormatTimestamp converts an RFC3339 timestamp to local time display
-// using the DateTimePreciseFormat layout.
+// using the DateTimePreciseFmt layout.
 //
 // Parameters:
 //   - ts: RFC3339-formatted timestamp string
@@ -212,7 +212,7 @@ func FormatTimestamp(ts string) string {
 	if parseErr != nil {
 		return ts
 	}
-	return t.Local().Format(cfgTime.DateTimePreciseFormat)
+	return t.Local().Format(cfgTime.DateTimePreciseFmt)
 }
 
 // ReadNewLines reads bytes from offset to end and parses JSONL lines.

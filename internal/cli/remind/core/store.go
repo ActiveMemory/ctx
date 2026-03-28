@@ -76,5 +76,5 @@ func NextID(reminders []Reminder) int {
 // Returns:
 //   - string: Absolute path to reminders.json
 func RemindersPath() string {
-	return filepath.Join(rc.ContextDir(), reminder.Reminders)
+	return filepath.Join(rc.ContextDir(), reminder.File)
 }

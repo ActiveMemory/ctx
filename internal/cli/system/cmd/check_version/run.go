@@ -89,8 +89,8 @@ func Run(cmd *cobra.Command, stdin *os.File) error {
 	)
 	content := message.Load(hook.CheckVersion, hook.VariantMismatch,
 		map[string]any{
-			version.VarBinaryVersion: binaryVer,
-			version.VarPluginVersion: pluginVer,
+			version.VarBinary: binaryVer,
+			version.VarPlugin: pluginVer,
 		}, fallback)
 	if content == "" {
 		internalIo.TouchFile(markerFile)
@@ -104,8 +104,8 @@ func Run(cmd *cobra.Command, stdin *os.File) error {
 
 	ref := notify.NewTemplateRef(hook.CheckVersion, hook.VariantMismatch,
 		map[string]any{
-			version.VarBinaryVersion: binaryVer,
-			version.VarPluginVersion: pluginVer,
+			version.VarBinary: binaryVer,
+			version.VarPlugin: pluginVer,
 		})
 	versionMsg := fmt.Sprintf(desc.Text(text.DescKeyRelayPrefixFormat),
 		hook.CheckVersion, fmt.Sprintf(

@@ -52,9 +52,9 @@ func Run(cmd *cobra.Command, stdin *os.File) error {
 	}
 
 	tmpDir := state.Dir()
-	remindedFile := filepath.Join(tmpDir, journal.CheckJournalThrottleID)
+	remindedFile := filepath.Join(tmpDir, journal.ThrottleID)
 	claudeProjectsDir := filepath.Join(
-		os.Getenv(env.Home), journal.CheckJournalClaudeProjectsSubdir,
+		os.Getenv(env.Home), journal.ClaudeProjectsSubdir,
 	)
 
 	// Only remind once per day

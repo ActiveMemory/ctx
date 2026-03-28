@@ -12,15 +12,15 @@ import "time"
 const (
 	// DateFormat is the canonical YYYY-MM-DD date layout for time.Parse.
 	DateFormat = "2006-01-02"
-	// DateTimeFormat is DateFormat with hours and minutes (HH:MM).
-	DateTimeFormat = "2006-01-02 15:04"
-	// DateTimePreciseFormat is DateFormat with hours, minutes, and seconds.
-	DateTimePreciseFormat = "2006-01-02 15:04:05"
+	// DateTimeFmt is DateFormat with hours and minutes (HH:MM).
+	DateTimeFmt = "2006-01-02 15:04"
+	// DateTimePreciseFmt is DateFormat with hours, minutes, and seconds.
+	DateTimePreciseFmt = "2006-01-02 15:04:05"
 	// Format is the hours:minutes:seconds layout for timestamps.
 	Format = "15:04:05"
-	// TimestampCompact is the YYYYMMDD-HHMMSS layout used in entry headers
+	// CompactTimestamp is the YYYYMMDD-HHMMSS layout used in entry headers
 	// and task timestamps (e.g., 2026-01-28-143022).
-	TimestampCompact = "2006-01-02-150405"
+	CompactTimestamp = "2006-01-02-150405"
 )
 
 // DateMinLen is the minimum string length for a YYYY-MM-DD date (10 characters).

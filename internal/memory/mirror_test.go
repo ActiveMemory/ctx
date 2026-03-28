@@ -38,7 +38,7 @@ func TestSync_FirstRun(t *testing.T) {
 		t.Errorf("SourceLines = %d, want 4", result.SourceLines)
 	}
 
-	mirrorPath := filepath.Join(contextDir, dir.Memory, memory.MemoryMirror)
+	mirrorPath := filepath.Join(contextDir, dir.Memory, memory.Mirror)
 	mirrorData, readErr := os.ReadFile(mirrorPath)
 	if readErr != nil {
 		t.Fatalf("reading mirror: %v", readErr)
@@ -58,7 +58,7 @@ func TestSync_WithArchive(t *testing.T) {
 	if mkErr := os.MkdirAll(mirrorDir, 0o755); mkErr != nil {
 		t.Fatal(mkErr)
 	}
-	mirrorPath := filepath.Join(mirrorDir, memory.MemoryMirror)
+	mirrorPath := filepath.Join(mirrorDir, memory.Mirror)
 	oldContent := "# Memory v1\n"
 	if writeErr := os.WriteFile(mirrorPath, []byte(oldContent), 0o644); writeErr != nil {
 		t.Fatal(writeErr)
@@ -114,7 +114,7 @@ func TestDiff_Identical(t *testing.T) {
 	if mkErr := os.MkdirAll(mirrorDir, 0o755); mkErr != nil {
 		t.Fatal(mkErr)
 	}
-	mirrorPath := filepath.Join(mirrorDir, memory.MemoryMirror)
+	mirrorPath := filepath.Join(mirrorDir, memory.Mirror)
 	if writeErr := os.WriteFile(mirrorPath, []byte(content), 0o644); writeErr != nil {
 		t.Fatal(writeErr)
 	}
@@ -141,7 +141,7 @@ func TestDiff_WithChanges(t *testing.T) {
 	if mkErr := os.MkdirAll(mirrorDir, 0o755); mkErr != nil {
 		t.Fatal(mkErr)
 	}
-	mirrorPath := filepath.Join(mirrorDir, memory.MemoryMirror)
+	mirrorPath := filepath.Join(mirrorDir, memory.Mirror)
 	if writeErr := os.WriteFile(mirrorPath, []byte("# Memory\nold line\n"), 0o644); writeErr != nil {
 		t.Fatal(writeErr)
 	}

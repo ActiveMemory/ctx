@@ -8,12 +8,12 @@ package heartbeat
 
 // Heartbeat state file prefixes.
 const (
-	// HeartbeatCounterPrefix is the state file prefix for per-session
+	// CounterPrefix is the state file prefix for per-session
 	// heartbeat prompt counters.
-	HeartbeatCounterPrefix = "heartbeat-"
-	// HeartbeatMtimePrefix is the state file prefix for per-session
+	CounterPrefix = "heartbeat-"
+	// MtimePrefix is the state file prefix for per-session
 	// heartbeat context mtime tracking.
-	HeartbeatMtimePrefix = "heartbeat-mtime-"
-	// HeartbeatLogFile is the log filename for heartbeat events.
-	HeartbeatLogFile = "heartbeat.log"
+	MtimePrefix = "heartbeat-mtime-"
+	// LogFile is the log filename for heartbeat events.
+	LogFile = "heartbeat.log"
 )

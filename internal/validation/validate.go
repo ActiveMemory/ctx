@@ -37,7 +37,7 @@ func SanitizeFilename(s string) string {
 		s = s[:file.MaxNameLen]
 	}
 	if s == "" {
-		s = session.DefaultSessionFilename
+		s = session.DefaultFilename
 	}
 	return s
 }

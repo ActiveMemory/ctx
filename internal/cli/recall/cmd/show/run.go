@@ -91,7 +91,7 @@ func Run(
 		Project:   session.Project,
 		Branch:    session.GitBranch,
 		Model:     session.Model,
-		Started:   session.StartTime.Format(time.DateTimePreciseFormat),
+		Started:   session.StartTime.Format(time.DateTimePreciseFmt),
 		Duration:  sourceFormat.Duration(session.Duration),
 		Turns:     session.TurnCount,
 		Messages:  len(session.Messages),

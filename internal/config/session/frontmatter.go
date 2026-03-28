@@ -40,5 +40,5 @@ const (
 	FmKeyModel     = "model"
 	FmKeyTokensIn  = "tokens_in"
 	FmKeyTokensOut = "tokens_out"
-	FmKeySessionID = "session_id"
+	FmKeyID        = "session_id"
 )

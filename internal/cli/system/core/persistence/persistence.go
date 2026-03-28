@@ -56,7 +56,7 @@ func ReadState(path string) (State, bool) {
 			if parseErr == nil {
 				ps.Count = n
 			}
-		case nudge.PersistenceKeyLastNudge:
+		case nudge.KeyLastNudge:
 			n, parseErr := strconv.Atoi(parts[1])
 			if parseErr == nil {
 				ps.LastNudge = n

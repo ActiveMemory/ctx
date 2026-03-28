@@ -111,7 +111,7 @@ func SessionIndex(journalDir string) map[string]string {
 // Returns:
 //   - string: The session ID, or "" if not found
 func ExtractSessionID(content string) string {
-	return ExtractFrontmatterField(content, session.FmKeySessionID)
+	return ExtractFrontmatterField(content, session.FmKeyID)
 }
 
 // LookupSessionFile finds the existing filename for a session in the index.

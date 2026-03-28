@@ -91,16 +91,16 @@ func (r *PublishResult) Format() string {
 //   - string: merged content
 //   - bool: true if markers were missing (appended instead of replaced)
 func MergePublished(existing, published string) (string, bool) {
-	block := marker.PublishMarkerStart + token.NewlineLF +
-		published + marker.PublishMarkerEnd + token.NewlineLF
+	block := marker.PublishStart + token.NewlineLF +
+		published + marker.PublishEnd + token.NewlineLF
 
-	startIdx := strings.Index(existing, marker.PublishMarkerStart)
-	endIdx := strings.Index(existing, marker.PublishMarkerEnd)
+	startIdx := strings.Index(existing, marker.PublishStart)
+	endIdx := strings.Index(existing, marker.PublishEnd)
 
 	if startIdx >= 0 && endIdx > startIdx {
 		// Replace the existing block
 		before := existing[:startIdx]
-		after := existing[endIdx+len(marker.PublishMarkerEnd):]
+		after := existing[endIdx+len(marker.PublishEnd):]
 		// Trim trailing newline from after to avoid double blank lines
 		after = strings.TrimPrefix(after, token.NewlineLF)
 		return before + block + after, false
@@ -123,15 +123,15 @@ func MergePublished(existing, published string) (string, bool) {
 //   - string: content with the publish block removed
 //   - bool: true if markers were found and removed
 func RemovePublished(content string) (string, bool) {
-	startIdx := strings.Index(content, marker.PublishMarkerStart)
-	endIdx := strings.Index(content, marker.PublishMarkerEnd)
+	startIdx := strings.Index(content, marker.PublishStart)
+	endIdx := strings.Index(content, marker.PublishEnd)
 
 	if startIdx < 0 || endIdx <= startIdx {
 		return content, false
 	}
 
 	before := content[:startIdx]
-	after := content[endIdx+len(marker.PublishMarkerEnd):]
+	after := content[endIdx+len(marker.PublishEnd):]
 	after = strings.TrimPrefix(after, token.NewlineLF)
 
 	result := strings.TrimRight(before, token.NewlineLF)

@@ -8,10 +8,10 @@ package wrap
 
 // Wrap-up marker configuration.
 const (
-	// WrappedUpMarker is the state file name for the wrap-up suppression marker.
-	WrappedUpMarker = "ctx-wrapped-up"
-	// WrappedUpContent is the content written to the wrap-up marker file.
-	WrappedUpContent = "wrapped-up"
-	// WrappedUpExpiryHours is how many hours the marker suppresses nudges.
-	WrappedUpExpiryHours = 2
+	// Marker is the state file name for the wrap-up suppression marker.
+	Marker = "ctx-wrapped-up"
+	// Content is the content written to the wrap-up marker file.
+	Content = "wrapped-up"
+	// ExpiryHours is how many hours the marker suppresses nudges.
+	ExpiryHours = 2
 )

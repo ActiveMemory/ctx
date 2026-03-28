@@ -29,10 +29,10 @@ import (
 // Returns:
 //   - error: Non-nil if the marker file cannot be written
 func Run(cmd *cobra.Command) error {
-	markerPath := filepath.Join(state.Dir(), wrap.WrappedUpMarker)
+	markerPath := filepath.Join(state.Dir(), wrap.Marker)
 
 	if writeErr := os.WriteFile(
-		markerPath, []byte(wrap.WrappedUpContent), fs.PermSecret,
+		markerPath, []byte(wrap.Content), fs.PermSecret,
 	); writeErr != nil {
 		return writeErr
 	}

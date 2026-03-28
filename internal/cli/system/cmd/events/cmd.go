@@ -45,7 +45,7 @@ func Cmd() *cobra.Command {
 		cFlag.Event, cFlag.ShortEvent, "",
 		desc.Flag(flag.DescKeySystemEventsEvent),
 	)
-	flagbind.LastJSON(c, event.DefaultEventsLast,
+	flagbind.LastJSON(c, event.DefaultLast,
 		flag.DescKeySystemEventsLast, flag.DescKeySystemEventsJson,
 	)
 	c.Flags().BoolP(

@@ -40,7 +40,7 @@ func Message(logFile, sessionID, msg string) {
 	}
 
 	line := fmt.Sprintf(desc.Text(text.DescKeyWriteLogLineFormat),
-		time.Now().Format(cfgTime.DateTimePreciseFormat), short, msg)
+		time.Now().Format(cfgTime.DateTimePreciseFmt), short, msg)
 
 	f, openErr := os.OpenFile(logFile, os.O_APPEND|os.O_CREATE|os.O_WRONLY, fs.PermSecret) //nolint:gosec // logFile is constructed internally
 	if openErr != nil {

@@ -49,7 +49,7 @@ func Run(cmd *cobra.Command) error {
 
 	cleaned, found := memory.RemovePublished(string(data))
 	if !found {
-		publish.UnpublishNotFound(cmd, cfgMem.MemorySource)
+		publish.UnpublishNotFound(cmd, cfgMem.Source)
 		return nil
 	}
 
@@ -59,6 +59,6 @@ func Run(cmd *cobra.Command) error {
 		return ctxErr.Write(writeErr)
 	}
 
-	publish.UnpublishDone(cmd, cfgMem.MemorySource)
+	publish.UnpublishDone(cmd, cfgMem.Source)
 	return nil
 }

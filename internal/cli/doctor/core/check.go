@@ -332,7 +332,7 @@ func CheckWebhook(report *Report) {
 //   - report: Report to append the result to
 func CheckReminders(report *Report) {
 	dir := rc.ContextDir()
-	remindersPath := filepath.Join(dir, reminder.Reminders)
+	remindersPath := filepath.Join(dir, reminder.File)
 	data, readErr := io.SafeReadUserFile(remindersPath)
 	if readErr != nil {
 		report.Results = append(report.Results, Result{

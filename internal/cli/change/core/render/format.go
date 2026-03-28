@@ -48,7 +48,7 @@ func Changes(
 		for _, c := range ctxChanges {
 			b.WriteString(fmt.Sprintf(
 				desc.Text(text.DescKeyChangesCtxLine)+token.NewlineLF,
-				c.Name, c.ModTime.Format(cfgTime.DateTimeFormat)))
+				c.Name, c.ModTime.Format(cfgTime.DateTimeFmt)))
 		}
 		b.WriteString(token.NewlineLF)
 	}

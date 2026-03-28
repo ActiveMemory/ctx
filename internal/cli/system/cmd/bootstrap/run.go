@@ -60,8 +60,8 @@ func Run(cmd *cobra.Command) error {
 
 	fileList := coreBootstrap.WrapFileList(
 		files,
-		cfgBootstrap.BootstrapFileListWidth,
-		cfgBootstrap.BootstrapFileListIndent,
+		cfgBootstrap.FileListWidth,
+		cfgBootstrap.FileListIndent,
 	)
 	bootstrap.Text(cmd, dir, fileList, rules, nextSteps, warning)
 	return nil

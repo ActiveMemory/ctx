@@ -136,7 +136,7 @@ func SessionMatchLines(matches []*entity.Session) []string {
 			tpl.SessionMatch,
 			m.Slug,
 			m.ID[:journal.SessionIDShortLen],
-			m.StartTime.Format(time.DateTimeFormat)),
+			m.StartTime.Format(time.DateTimeFmt)),
 		)
 	}
 	return lines
@@ -220,7 +220,7 @@ func JournalEntryPart(
 		if s.TotalTokensOut > 0 {
 			frontmatter.WriteFmInt(&sb, session.FmKeyTokensOut, s.TotalTokensOut)
 		}
-		frontmatter.WriteFmQuoted(&sb, session.FmKeySessionID, s.ID)
+		frontmatter.WriteFmQuoted(&sb, session.FmKeyID, s.ID)
 		if title != "" {
 			frontmatter.WriteFmQuoted(&sb, session.FrontmatterTitle, title)
 		}

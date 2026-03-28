@@ -37,8 +37,8 @@ func HandleMd(cmd *cobra.Command, force, autoMerge bool) error {
 
 	created, mergeErr := merge.OrCreate(cmd, entity.MergeParams{
 		Filename:        claude.Md,
-		MarkerStart:     marker.CtxMarkerStart,
-		MarkerEnd:       marker.CtxMarkerEnd,
+		MarkerStart:     marker.CtxStart,
+		MarkerEnd:       marker.CtxEnd,
 		TemplateContent: templateContent,
 		Force:           force,
 		AutoMerge:       autoMerge,

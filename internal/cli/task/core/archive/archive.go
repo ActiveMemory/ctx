@@ -90,7 +90,7 @@ func Plan() (Result, error) {
 //   - error: Non-nil on write failure
 func Execute(r Result) (string, error) {
 	archivePath, writeErr := tidy.WriteArchive(
-		archive.ArchiveScopeTasks,
+		archive.ScopeTasks,
 		desc.Text(text.DescKeyHeadingArchivedTasks),
 		r.Content,
 	)
