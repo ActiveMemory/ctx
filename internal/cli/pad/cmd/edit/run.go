@@ -7,15 +7,10 @@
 package edit
 
 import (
-	"github.com/ActiveMemory/ctx/internal/cli/pad/core/blob"
-	"github.com/ActiveMemory/ctx/internal/cli/pad/core/store"
-	"github.com/ActiveMemory/ctx/internal/cli/pad/core/validate"
 	"github.com/spf13/cobra"
 
-	"github.com/ActiveMemory/ctx/internal/config/pad"
-	"github.com/ActiveMemory/ctx/internal/err/fs"
-	errPad "github.com/ActiveMemory/ctx/internal/err/pad"
-	"github.com/ActiveMemory/ctx/internal/io"
+	coreEdit "github.com/ActiveMemory/ctx/internal/cli/pad/core/edit"
+	"github.com/ActiveMemory/ctx/internal/cli/pad/core/store"
 	writePad "github.com/ActiveMemory/ctx/internal/write/pad"
 )
 
@@ -29,21 +24,13 @@ import (
 // Returns:
 //   - error: Non-nil on invalid index or read/write failure
 func RunEdit(cmd *cobra.Command, n int, text string) error {
-	entries, err := store.ReadEntries()
-	if err != nil {
-		return err
+	entries, editErr := coreEdit.Replace(n, text)
+	if editErr != nil {
+		return editErr
 	}
-
-	if validErr := validate.ValidateIndex(n, entries); validErr != nil {
-		return validErr
-	}
-
-	entries[n-1] = text
-
 	if writeErr := store.WriteEntries(cmd, entries); writeErr != nil {
 		return writeErr
 	}
-
 	writePad.EntryUpdated(cmd, n)
 	return nil
 }
@@ -58,25 +45,13 @@ func RunEdit(cmd *cobra.Command, n int, text string) error {
 // Returns:
 //   - error: Non-nil on invalid index, blob entry, or read/write failure
 func RunEditAppend(cmd *cobra.Command, n int, text string) error {
-	entries, err := store.ReadEntries()
-	if err != nil {
-		return err
+	entries, editErr := coreEdit.Append(n, text)
+	if editErr != nil {
+		return editErr
 	}
-
-	if validErr := validate.ValidateIndex(n, entries); validErr != nil {
-		return validErr
-	}
-
-	if blob.ContainsBlob(entries[n-1]) {
-		return errPad.BlobAppendNotAllowed()
-	}
-
-	entries[n-1] = entries[n-1] + " " + text
-
 	if writeErr := store.WriteEntries(cmd, entries); writeErr != nil {
 		return writeErr
 	}
-
 	writePad.EntryUpdated(cmd, n)
 	return nil
 }
@@ -91,25 +66,13 @@ func RunEditAppend(cmd *cobra.Command, n int, text string) error {
 // Returns:
 //   - error: Non-nil on invalid index, blob entry, or read/write failure
 func RunEditPrepend(cmd *cobra.Command, n int, text string) error {
-	entries, err := store.ReadEntries()
-	if err != nil {
-		return err
+	entries, editErr := coreEdit.Prepend(n, text)
+	if editErr != nil {
+		return editErr
 	}
-
-	if validErr := validate.ValidateIndex(n, entries); validErr != nil {
-		return validErr
-	}
-
-	if blob.ContainsBlob(entries[n-1]) {
-		return errPad.BlobPrependNotAllowed()
-	}
-
-	entries[n-1] = text + " " + entries[n-1]
-
 	if writeErr := store.WriteEntries(cmd, entries); writeErr != nil {
 		return writeErr
 	}
-
 	writePad.EntryUpdated(cmd, n)
 	return nil
 }
@@ -125,44 +88,13 @@ func RunEditPrepend(cmd *cobra.Command, n int, text string) error {
 // Returns:
 //   - error: Non-nil on invalid index, non-blob entry, or read/write failure
 func RunEditBlob(cmd *cobra.Command, n int, filePath, labelText string) error {
-	entries, err := store.ReadEntries()
-	if err != nil {
-		return err
+	entries, editErr := coreEdit.UpdateBlob(n, filePath, labelText)
+	if editErr != nil {
+		return editErr
 	}
-
-	if validErr := validate.ValidateIndex(n, entries); validErr != nil {
-		return validErr
-	}
-
-	oldLabel, oldData, ok := blob.SplitBlob(entries[n-1])
-	if !ok {
-		return errPad.NotBlobEntry(n)
-	}
-
-	newLabel := oldLabel
-	newData := oldData
-
-	if labelText != "" {
-		newLabel = labelText
-	}
-
-	if filePath != "" {
-		data, readErr := io.SafeReadUserFile(filePath)
-		if readErr != nil {
-			return fs.ReadFile(readErr)
-		}
-		if len(data) > pad.MaxBlobSize {
-			return errPad.FileTooLarge(len(data), pad.MaxBlobSize)
-		}
-		newData = data
-	}
-
-	entries[n-1] = blob.MakeBlob(newLabel, newData)
-
 	if writeErr := store.WriteEntries(cmd, entries); writeErr != nil {
 		return writeErr
 	}
-
 	writePad.EntryUpdated(cmd, n)
 	return nil
 }

@@ -7,15 +7,12 @@
 package imp
 
 import (
-	"bufio"
-	"io"
 	"os"
-	"strings"
 
-	"github.com/ActiveMemory/ctx/internal/cli/pad/core/blob"
-	"github.com/ActiveMemory/ctx/internal/cli/pad/core/store"
 	"github.com/spf13/cobra"
 
+	coreImp "github.com/ActiveMemory/ctx/internal/cli/pad/core/imp"
+	"github.com/ActiveMemory/ctx/internal/cli/pad/core/store"
 	"github.com/ActiveMemory/ctx/internal/config/cli"
 	"github.com/ActiveMemory/ctx/internal/config/pad"
 	errFs "github.com/ActiveMemory/ctx/internal/err/fs"
@@ -32,13 +29,13 @@ import (
 // Returns:
 //   - error: Non-nil on read/write failure
 func RunImport(cmd *cobra.Command, file string) error {
-	var r io.Reader
+	var r *os.File
 	if file == cli.StdinSentinel {
 		r = os.Stdin
 	} else {
-		f, err := internalIo.SafeOpenUserFile(file)
-		if err != nil {
-			return errFs.OpenFile(file, err)
+		f, openErr := internalIo.SafeOpenUserFile(file)
+		if openErr != nil {
+			return errFs.OpenFile(file, openErr)
 		}
 		defer func() {
 			if cErr := f.Close(); cErr != nil {
@@ -48,23 +45,9 @@ func RunImport(cmd *cobra.Command, file string) error {
 		r = f
 	}
 
-	entries, err := store.ReadEntries()
-	if err != nil {
-		return err
-	}
-
-	var count int
-	scanner := bufio.NewScanner(r)
-	for scanner.Scan() {
-		line := strings.TrimSpace(scanner.Text())
-		if line == "" {
-			continue
-		}
-		entries = append(entries, line)
-		count++
-	}
-	if scanErr := scanner.Err(); scanErr != nil {
-		return errFs.ReadInput(scanErr)
+	entries, count, readErr := coreImp.FromReader(r)
+	if readErr != nil {
+		return readErr
 	}
 
 	if count == 0 {
@@ -90,48 +73,24 @@ func RunImport(cmd *cobra.Command, file string) error {
 // Returns:
 //   - error: Non-nil on read/write failure
 func RunImportBlobs(cmd *cobra.Command, path string) error {
-	info, statErr := os.Stat(path)
-	if statErr != nil {
-		return errFs.StatPath(path, statErr)
-	}
-	if !info.IsDir() {
-		return errFs.NotDirectory(path)
+	entries, added, results, dirErr := coreImp.FromDirectory(path)
+	if dirErr != nil {
+		return dirErr
 	}
 
-	dirEntries, readErr := os.ReadDir(path)
-	if readErr != nil {
-		return errFs.ReadDirectory(path, readErr)
-	}
-
-	entries, loadErr := store.ReadEntries()
-	if loadErr != nil {
-		return loadErr
-	}
-
-	var added, skipped int
-	for _, de := range dirEntries {
-		if !de.Type().IsRegular() {
-			continue
-		}
-
-		name := de.Name()
-
-		data, fileErr := internalIo.SafeReadFile(path, name)
-		if fileErr != nil {
-			writePad.ErrImportBlobSkipped(cmd, name, fileErr)
+	// Report per-file outcomes.
+	skipped := 0
+	for _, r := range results {
+		switch {
+		case r.Err != nil:
+			writePad.ErrImportBlobSkipped(cmd, r.Name, r.Err)
 			skipped++
-			continue
-		}
-
-		if len(data) > pad.MaxBlobSize {
-			writePad.ErrImportBlobTooLarge(cmd, name, pad.MaxBlobSize)
+		case r.TooLarge:
+			writePad.ErrImportBlobTooLarge(cmd, r.Name, pad.MaxBlobSize)
 			skipped++
-			continue
+		case r.Added:
+			writePad.ImportBlobAdded(cmd, r.Name)
 		}
-
-		entries = append(entries, blob.MakeBlob(name, data))
-		writePad.ImportBlobAdded(cmd, name)
-		added++
 	}
 
 	if added > 0 {
