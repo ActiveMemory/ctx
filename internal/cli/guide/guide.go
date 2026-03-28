@@ -13,6 +13,9 @@ import (
 )
 
 // Cmd returns the "ctx guide" cobra command.
+//
+// Returns:
+//   - *cobra.Command: The guide command with subcommands registered
 func Cmd() *cobra.Command {
 	return guideRoot.Cmd()
 }

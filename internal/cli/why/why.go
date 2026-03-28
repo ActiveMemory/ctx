@@ -13,6 +13,9 @@ import (
 )
 
 // Cmd returns the "ctx why" cobra command.
+//
+// Returns:
+//   - *cobra.Command: The why command with subcommands registered
 func Cmd() *cobra.Command {
 	return whyRoot.Cmd()
 }

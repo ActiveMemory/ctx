@@ -131,6 +131,9 @@ func EventAllowed(event string, allowed []string) bool {
 //   - message: short human-readable summary
 //   - sessionID: Claude Code session ID (may be empty)
 //   - detail: structured template reference (nil omits the field)
+//
+// Returns:
+//   - error: Delivery error, or nil if sent successfully or silently skipped
 func Send(event, message, sessionID string, detail *TemplateRef) error {
 	if !EventAllowed(event, rc.NotifyEvents()) {
 		return nil

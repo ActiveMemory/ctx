@@ -80,7 +80,7 @@ func FixError(cmd *cobra.Command, errMsg string) {
 		desc.Text(text.DescKeyDriftFixError), errMsg))
 }
 
-// FixApplied prints a fix result for a successfully fixed issue.
+// FixStaleness prints a fix result for a successfully fixed issue.
 // Nil cmd is a no-op.
 //
 // Parameters:

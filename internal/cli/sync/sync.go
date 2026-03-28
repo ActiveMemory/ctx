@@ -13,6 +13,9 @@ import (
 )
 
 // Cmd returns the "ctx sync" command for reconciling context with codebase.
+//
+// Returns:
+//   - *cobra.Command: The sync command with subcommands registered
 func Cmd() *cobra.Command {
 	return syncRoot.Cmd()
 }

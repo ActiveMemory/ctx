@@ -17,6 +17,9 @@ import (
 )
 
 // Cmd returns the mcp command group.
+//
+// Returns:
+//   - *cobra.Command: The mcp command with subcommands registered
 func Cmd() *cobra.Command {
 	short, long := desc.Command(cmd.DescKeyMcp)
 	c := &cobra.Command{

@@ -13,6 +13,9 @@ import (
 )
 
 // Cmd returns the "ctx agent" command for generating AI-ready context packets.
+//
+// Returns:
+//   - *cobra.Command: The agent command with subcommands registered
 func Cmd() *cobra.Command {
 	return agentRoot.Cmd()
 }

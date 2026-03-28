@@ -13,6 +13,9 @@ import (
 )
 
 // Cmd returns the dep command.
+//
+// Returns:
+//   - *cobra.Command: The dep command with subcommands registered
 func Cmd() *cobra.Command {
 	return depRoot.Cmd()
 }

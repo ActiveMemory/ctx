@@ -13,6 +13,9 @@ import (
 )
 
 // Cmd returns the status command.
+//
+// Returns:
+//   - *cobra.Command: The status command with subcommands registered
 func Cmd() *cobra.Command {
 	return statusRoot.Cmd()
 }

@@ -28,6 +28,10 @@ import (
 
 // Sync copies sourcePath to .context/memory/mirror.md, archiving the
 // previous mirror if one exists. Creates directories as needed.
+//
+// Parameters:
+//   - contextDir: Path to the project context directory
+//   - sourcePath: Path to the source MEMORY.md file
 func Sync(contextDir, sourcePath string) (SyncResult, error) {
 	mirrorDir := filepath.Join(contextDir, dir.Memory)
 	mirrorPath := filepath.Join(mirrorDir, memory.MemoryMirror)
@@ -66,6 +70,9 @@ func Sync(contextDir, sourcePath string) (SyncResult, error) {
 
 // Archive copies the current mirror.md to archive/mirror-<timestamp>.md.
 // Returns the archive path. Returns an error if no mirror exists.
+//
+// Parameters:
+//   - contextDir: Path to the project context directory
 func Archive(contextDir string) (string, error) {
 	mirrorPath := filepath.Join(contextDir, dir.Memory, memory.MemoryMirror)
 	archiveDir := filepath.Join(contextDir, dir.MemoryArchive)
@@ -91,6 +98,10 @@ func Archive(contextDir string) (string, error) {
 
 // Diff returns a simple line-based diff between the mirror and the source.
 // Returns empty string when files are identical.
+//
+// Parameters:
+//   - contextDir: Path to the project context directory
+//   - sourcePath: Path to the source MEMORY.md file
 func Diff(contextDir, sourcePath string) (string, error) {
 	mirrorPath := filepath.Join(contextDir, dir.Memory, memory.MemoryMirror)
 
@@ -116,6 +127,13 @@ func Diff(contextDir, sourcePath string) (string, error) {
 
 // HasDrift checks whether MEMORY.md has been modified since the last sync.
 // Returns false if either file is missing (no drift to report).
+//
+// Parameters:
+//   - contextDir: Path to the project context directory
+//   - sourcePath: Path to the source MEMORY.md file
+//
+// Returns:
+//   - bool: True if MEMORY.md has been modified since the last sync
 func HasDrift(contextDir, sourcePath string) bool {
 	mirrorPath := filepath.Join(contextDir, dir.Memory, memory.MemoryMirror)
 
@@ -133,6 +151,12 @@ func HasDrift(contextDir, sourcePath string) bool {
 }
 
 // ArchiveCount returns the number of archived mirror snapshots.
+//
+// Parameters:
+//   - contextDir: Path to the project context directory
+//
+// Returns:
+//   - int: Number of archived mirror snapshot files
 func ArchiveCount(contextDir string) int {
 	archiveDir := filepath.Join(contextDir, dir.MemoryArchive)
 	entries, readErr := os.ReadDir(archiveDir)

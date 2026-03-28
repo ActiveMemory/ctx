@@ -36,16 +36,19 @@ var dirOverride string
 
 // SetDirForTest overrides Dir() for testing. Pass an empty string
 // to restore the default behavior. Only call from tests.
+//
+// Parameters:
+//   - d: Directory path to use, or empty string to restore default
 func SetDirForTest(d string) {
 	dirOverride = d
 }
 
 // Initialized reports whether the context directory has been properly set up
 // via "ctx init". Hooks should no-op when this returns false to avoid
-// creating a partial state (e.g. logs/) before initialization.
+// creating a partial state (e.g., logs/) before initialization.
 //
 // Returns:
-//   - bool: True if context directory is initialized
+//   - bool: True if the context directory is initialized
 func Initialized() bool {
 	return ctxContext.Initialized(rc.ContextDir())
 }

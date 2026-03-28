@@ -27,6 +27,9 @@ import (
 
 // LoadState reads the sync state from .context/state/memory-import.json.
 // Returns a zero-value State if the file does not exist.
+//
+// Parameters:
+//   - contextDir: Path to the project context directory
 func LoadState(contextDir string) (State, error) {
 	path := statePath(contextDir)
 	data, readErr := io.SafeReadUserFile(path)
@@ -48,6 +51,13 @@ func LoadState(contextDir string) (State, error) {
 }
 
 // SaveState writes the sync state to .context/state/memory-import.json.
+//
+// Parameters:
+//   - contextDir: Path to the project context directory
+//   - s: State to persist
+//
+// Returns:
+//   - error: Non-nil if the state file cannot be written
 func SaveState(contextDir string, s State) error {
 	path := statePath(contextDir)
 	dir := filepath.Dir(path)
@@ -71,6 +81,12 @@ func (s *State) MarkSynced() {
 
 // EntryHash computes a deduplication hash for an entry.
 // Uses SHA-256 of the text, truncated to 16 hex chars.
+//
+// Parameters:
+//   - text: Entry text to hash
+//
+// Returns:
+//   - string: Truncated SHA-256 hex digest for deduplication
 func EntryHash(text string) string {
 	h := sha256.Sum256([]byte(text))
 	return fmt.Sprintf("%x", h[:cfgFmt.HashPrefixLen])

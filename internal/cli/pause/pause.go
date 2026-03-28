@@ -13,6 +13,9 @@ import (
 )
 
 // Cmd returns the top-level "ctx pause" command.
+//
+// Returns:
+//   - *cobra.Command: The pause command with subcommands registered
 func Cmd() *cobra.Command {
 	return pauseRoot.Cmd()
 }

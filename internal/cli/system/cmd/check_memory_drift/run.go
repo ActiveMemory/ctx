@@ -23,6 +23,13 @@ import (
 )
 
 // Run executes the check-memory-drift hook logic.
+//
+// Parameters:
+//   - cmd: Cobra command instance
+//   - stdin: Standard input for reading hook payload
+//
+// Returns:
+//   - error: Non-nil if the drift check encounters an unrecoverable error
 func Run(cmd *cobra.Command, stdin *os.File) error {
 	if !state.Initialized() {
 		return nil

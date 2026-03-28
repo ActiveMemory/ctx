@@ -20,6 +20,9 @@ import (
 )
 
 // Cmd returns the "ctx memory" parent command.
+//
+// Returns:
+//   - *cobra.Command: The memory command with subcommands registered
 func Cmd() *cobra.Command {
 	short, long := desc.Command(cmd.DescKeyMemory)
 	c := &cobra.Command{

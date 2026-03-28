@@ -23,6 +23,9 @@ import (
 //
 // Returns the resolved path if the file exists, or an error if auto
 // memory has not been created yet.
+//
+// Parameters:
+//   - projectRoot: Project root directory to derive the memory path from
 func DiscoverMemoryPath(projectRoot string) (string, error) {
 	abs, absErr := filepath.Abs(projectRoot)
 	if absErr != nil {
@@ -47,6 +50,12 @@ func DiscoverMemoryPath(projectRoot string) (string, error) {
 // project directory slug format: "/" replaced by "-", prefixed with "-".
 //
 // Example: /home/jose/WORKSPACE/ctx → -home-jose-WORKSPACE-ctx
+//
+// Parameters:
+//   - absPath: Absolute project path to encode
+//
+// Returns:
+//   - string: Slug-encoded path with dashes replacing separators
 func ProjectSlug(absPath string) string {
 	// Strip leading "/" then replace remaining "/" with "-", prefix with "-"
 	return "-" + strings.ReplaceAll(absPath[1:], "/", "-")
