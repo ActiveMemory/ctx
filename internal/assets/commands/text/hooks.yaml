@@ -507,7 +507,7 @@ post-commit.severity-informal:
 post-commit.severity-bypassed:
   short: bypassed /ctx-commit
 post-commit.audit-title:
-  short: 'Commit Audit (score: %d — %s)'
+  short: 'Commit Audit (score: %d - %s)'
 post-commit.audit-content:
   short: 'Missing: %s'
 qa-reminder.fallback:

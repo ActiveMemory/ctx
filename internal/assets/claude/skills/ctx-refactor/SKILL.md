@@ -40,7 +40,7 @@ Follow these in order. Do not skip steps.
 1. Read `.context/CONVENTIONS.md` to load project patterns
 2. Read the target code and its tests
 3. If no tests exist, write them first (confirm with user)
-4. Plan the refactoring steps — present to user before starting
+4. Plan the refactoring steps: present to user before starting
 5. Execute one step at a time, running tests between each
 6. After all steps, run `make lint && make test`
 
@@ -51,8 +51,8 @@ Before starting, present the plan:
 ```
 ## Refactoring Plan: <target>
 
-1. <step> — why
-2. <step> — why
+1. <step>: why
+2. <step>: why
 ...
 
 Tests to verify: <list>

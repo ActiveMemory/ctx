@@ -53,7 +53,7 @@ func Run(
 	if err != nil {
 		var notFoundError *errCtx.NotFoundError
 		if errors.As(err, &notFoundError) {
-			return errInit.NotInit()
+			return errInit.NotInitialized()
 		}
 		return err
 	}

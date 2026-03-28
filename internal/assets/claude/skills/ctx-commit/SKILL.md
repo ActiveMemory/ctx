@@ -90,7 +90,7 @@ ctx add learning "Go embed requires files in same package" \
 ### 5. Reflect
 
 After every commit, run `/ctx-reflect` to capture the bigger
-picture before moving on. This is mandatory — skipping reflection
+picture before moving on. This is mandatory: Skipping reflection
 is how context gets lost between sessions.
 
 ## Commit Message Format
@@ -127,7 +127,7 @@ Signed-off-by: Jane Doe <jane@example.com>
 
 ## Commit Discipline
 
-- **Spec trailer is mandatory** — identify the spec that covers
+- **Spec trailer is mandatory**: identify the spec that covers
   this work and include `Spec:` in the commit message. If
   CONSTITUTION also requires it, this is non-negotiable.
 - **Confirm the message** with the user before committing (or use

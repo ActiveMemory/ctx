@@ -41,5 +41,5 @@ Cover each dimension in order. Skip any that don't apply.
 3. Trace callers and callees if connections matter
 4. Present the explanation following the structure above
 
-Keep it concise. Lead with the "what" — the reader wants to orient
+Keep it concise. Lead with the "what": the reader wants to orient
 before diving into "why" and "how."

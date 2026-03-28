@@ -148,7 +148,7 @@ ctx:
     !  START: /ctx-remember
     !    END: /ctx-wrap-up
     !
-    !  MAINTENANCE (every 2–3 sessions):
+    !  MAINTENANCE (every 2-3 sessions):
     !         ctx recall import --all
     !         /ctx-journal-enrich-all
     !
@@ -301,7 +301,7 @@ journal:
     Manage AI session history: import, inspect, protect, and publish.
 
     The journal system provides the full lifecycle for session history in
-    .context/journal/ — from raw session files through to published sites.
+    .context/journal/ - from raw session files through to published sites.
 
     Subcommands:
       source    List and inspect raw session files

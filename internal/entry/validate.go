@@ -52,20 +52,3 @@ func Validate(params Params, examplesFn func(string) string) error {
 
 	return nil
 }
-
-// checkRequired returns the names of any fields whose values are empty.
-//
-// Parameters:
-//   - fields: Pairs of [name, value] to validate
-//
-// Returns:
-//   - []string: Names of fields with empty values; nil when all are populated
-func checkRequired(fields [][2]string) []string {
-	var missing []string
-	for _, f := range fields {
-		if f[1] == "" {
-			missing = append(missing, f[0])
-		}
-	}
-	return missing
-}

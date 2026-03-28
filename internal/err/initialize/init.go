@@ -14,11 +14,11 @@ import (
 	"github.com/ActiveMemory/ctx/internal/config/embed/text"
 )
 
-// NotInit returns an error indicating ctx has not been initialized.
+// NotInitialized returns an error indicating ctx has not been initialized.
 //
 // Returns:
 //   - error: "ctx: not initialized: run \"ctx init\" first"
-func NotInit() error {
+func NotInitialized() error {
 	return errors.New(desc.Text(text.DescKeyErrInitNotInitialized))
 }
 
