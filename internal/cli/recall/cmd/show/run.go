@@ -9,17 +9,19 @@ package show
 import (
 	"strings"
 
-	"github.com/ActiveMemory/ctx/internal/cli/journal/core/query"
-	sourceFormat "github.com/ActiveMemory/ctx/internal/cli/journal/core/source/format"
 	"github.com/spf13/cobra"
 
 	"github.com/ActiveMemory/ctx/internal/assets/read/desc"
+	"github.com/ActiveMemory/ctx/internal/cli/journal/core/query"
+	sourceFormat "github.com/ActiveMemory/ctx/internal/cli/journal/core/source/format"
 	"github.com/ActiveMemory/ctx/internal/config/embed/text"
 	"github.com/ActiveMemory/ctx/internal/config/journal"
 	"github.com/ActiveMemory/ctx/internal/config/time"
 	"github.com/ActiveMemory/ctx/internal/config/token"
 	"github.com/ActiveMemory/ctx/internal/entity"
 	errSession "github.com/ActiveMemory/ctx/internal/err/session"
+	sharedFmt "github.com/ActiveMemory/ctx/internal/format"
+	"github.com/ActiveMemory/ctx/internal/parse"
 	"github.com/ActiveMemory/ctx/internal/write/recall"
 )
 
@@ -93,9 +95,9 @@ func Run(
 		Duration:  sourceFormat.Duration(session.Duration),
 		Turns:     session.TurnCount,
 		Messages:  len(session.Messages),
-		TokensIn:  sourceFormat.Tokens(session.TotalTokensIn),
-		TokensOut: sourceFormat.Tokens(session.TotalTokensOut),
-		TokensAll: sourceFormat.Tokens(session.TotalTokens),
+		TokensIn:  sharedFmt.Tokens(session.TotalTokensIn),
+		TokensOut: sharedFmt.Tokens(session.TotalTokensOut),
+		TokensAll: sharedFmt.Tokens(session.TotalTokens),
 	})
 
 	// Tool usage summary
@@ -145,7 +147,7 @@ func Run(
 					recall.Hint(cmd, desc.Text(text.DescKeyLabelInlineError))
 				}
 				if tr.Content != "" {
-					content := sourceFormat.StripLineNumbers(tr.Content)
+					content := parse.StripLineNumbers(tr.Content)
 					recall.CodeBlock(cmd, content)
 				}
 			}

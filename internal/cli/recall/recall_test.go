@@ -11,9 +11,9 @@ import (
 	"testing"
 	"time"
 
-	"github.com/ActiveMemory/ctx/internal/cli/recall/core/extract"
-	"github.com/ActiveMemory/ctx/internal/cli/recall/core/format"
-	"github.com/ActiveMemory/ctx/internal/cli/recall/core/validate"
+	"github.com/ActiveMemory/ctx/internal/cli/journal/core/extract"
+	"github.com/ActiveMemory/ctx/internal/cli/journal/core/source/format"
+	"github.com/ActiveMemory/ctx/internal/cli/journal/core/validate"
 	"github.com/spf13/cobra"
 
 	"github.com/ActiveMemory/ctx/internal/entity"
@@ -160,7 +160,7 @@ func TestExtractFrontmatter(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			got := extract.ExtractFrontmatter(tt.content)
+			got := extract.Frontmatter(tt.content)
 			if got != tt.want {
 				t.Errorf("ExtractFrontmatter() = %q, want %q", got, tt.want)
 			}

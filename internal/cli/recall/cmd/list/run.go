@@ -10,12 +10,12 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/ActiveMemory/ctx/internal/cli/journal/core/query"
-	sourceFormat "github.com/ActiveMemory/ctx/internal/cli/journal/core/source/format"
 	"github.com/spf13/cobra"
 
 	"github.com/ActiveMemory/ctx/internal/assets/read/desc"
 	"github.com/ActiveMemory/ctx/internal/assets/tpl"
+	"github.com/ActiveMemory/ctx/internal/cli/journal/core/query"
+	sourceFormat "github.com/ActiveMemory/ctx/internal/cli/journal/core/source/format"
 	"github.com/ActiveMemory/ctx/internal/config/embed/text"
 	"github.com/ActiveMemory/ctx/internal/config/flag"
 	"github.com/ActiveMemory/ctx/internal/config/journal"
@@ -23,6 +23,7 @@ import (
 	"github.com/ActiveMemory/ctx/internal/entity"
 	"github.com/ActiveMemory/ctx/internal/err/date"
 	errSession "github.com/ActiveMemory/ctx/internal/err/session"
+	sharedFmt "github.com/ActiveMemory/ctx/internal/format"
 	"github.com/ActiveMemory/ctx/internal/parse"
 	"github.com/ActiveMemory/ctx/internal/write/recall"
 )
@@ -112,7 +113,7 @@ func Run(
 	slugW, projW := len(desc.Text(text.DescKeyLabelColSlug)),
 		len(desc.Text(text.DescKeyLabelColProject))
 	for _, s := range filtered {
-		slug := sourceFormat.Truncate(s.Slug, journal.SlugMaxLen)
+		slug := sharedFmt.Truncate(s.Slug, journal.SlugMaxLen)
 		if len(slug) > slugW {
 			slugW = len(slug)
 		}
@@ -134,13 +135,13 @@ func Run(
 
 	// Print sessions.
 	for _, s := range filtered {
-		slug := sourceFormat.Truncate(s.Slug, journal.SlugMaxLen)
+		slug := sharedFmt.Truncate(s.Slug, journal.SlugMaxLen)
 		dateStr := s.StartTime.Local().Format(time.DateTimeFormat)
 		dur := sourceFormat.Duration(s.Duration)
 		turns := fmt.Sprintf("%d", s.TurnCount)
 		tokens := ""
 		if s.TotalTokens > 0 {
-			tokens = sourceFormat.Tokens(s.TotalTokens)
+			tokens = sharedFmt.Tokens(s.TotalTokens)
 		}
 		recall.SessionListRow(cmd, rowFmt,
 			slug, s.Project, dateStr, dur, turns, tokens)
