@@ -9,9 +9,10 @@ package guide
 import (
 	"fmt"
 
+	"github.com/spf13/cobra"
+
 	"github.com/ActiveMemory/ctx/internal/assets/read/desc"
 	"github.com/ActiveMemory/ctx/internal/config/embed/text"
-	"github.com/spf13/cobra"
 )
 
 // InfoSkillsHeader prints the skills list heading.

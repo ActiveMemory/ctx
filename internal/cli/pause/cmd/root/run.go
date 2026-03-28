@@ -9,10 +9,10 @@ package root
 import (
 	"os"
 
-	"github.com/ActiveMemory/ctx/internal/cli/system/core/nudge"
-	coreSession "github.com/ActiveMemory/ctx/internal/cli/system/core/session"
 	"github.com/spf13/cobra"
 
+	"github.com/ActiveMemory/ctx/internal/cli/system/core/nudge"
+	coreSession "github.com/ActiveMemory/ctx/internal/cli/system/core/session"
 	"github.com/ActiveMemory/ctx/internal/write/session"
 )
 

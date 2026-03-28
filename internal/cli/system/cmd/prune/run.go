@@ -11,12 +11,13 @@ import (
 	"path/filepath"
 	"time"
 
+	"github.com/spf13/cobra"
+
 	"github.com/ActiveMemory/ctx/internal/cli/system/core/health"
 	"github.com/ActiveMemory/ctx/internal/cli/system/core/state"
 	cfgTime "github.com/ActiveMemory/ctx/internal/config/time"
 	errState "github.com/ActiveMemory/ctx/internal/err/state"
 	"github.com/ActiveMemory/ctx/internal/write/prune"
-	"github.com/spf13/cobra"
 )
 
 // Run executes the prune logic.

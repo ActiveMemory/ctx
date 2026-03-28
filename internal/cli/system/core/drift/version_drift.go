@@ -20,7 +20,6 @@ import (
 	coreSession "github.com/ActiveMemory/ctx/internal/cli/system/core/session"
 	"github.com/ActiveMemory/ctx/internal/config/embed/text"
 	"github.com/ActiveMemory/ctx/internal/config/hook"
-
 	"github.com/ActiveMemory/ctx/internal/notify"
 )
 

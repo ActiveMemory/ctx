@@ -7,11 +7,11 @@
 package merge
 
 import (
+	"github.com/spf13/cobra"
+
 	"github.com/ActiveMemory/ctx/internal/cli/pad/core/blob"
 	"github.com/ActiveMemory/ctx/internal/cli/pad/core/merge"
 	"github.com/ActiveMemory/ctx/internal/cli/pad/core/store"
-	"github.com/spf13/cobra"
-
 	errFs "github.com/ActiveMemory/ctx/internal/err/fs"
 	"github.com/ActiveMemory/ctx/internal/write/pad"
 )

@@ -9,11 +9,11 @@ package show
 import (
 	"os"
 
+	"github.com/spf13/cobra"
+
 	"github.com/ActiveMemory/ctx/internal/cli/pad/core/blob"
 	"github.com/ActiveMemory/ctx/internal/cli/pad/core/store"
 	"github.com/ActiveMemory/ctx/internal/cli/pad/core/validate"
-	"github.com/spf13/cobra"
-
 	"github.com/ActiveMemory/ctx/internal/config/fs"
 	errFs "github.com/ActiveMemory/ctx/internal/err/fs"
 	errPad "github.com/ActiveMemory/ctx/internal/err/pad"

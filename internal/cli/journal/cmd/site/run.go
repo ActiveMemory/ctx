@@ -11,6 +11,9 @@ import (
 	"os/exec"
 	"path/filepath"
 
+	"github.com/spf13/cobra"
+
+	readJournal "github.com/ActiveMemory/ctx/internal/assets/read/journal"
 	"github.com/ActiveMemory/ctx/internal/cli/journal/core/collapse"
 	"github.com/ActiveMemory/ctx/internal/cli/journal/core/consolidate"
 	"github.com/ActiveMemory/ctx/internal/cli/journal/core/format"
@@ -21,9 +24,6 @@ import (
 	"github.com/ActiveMemory/ctx/internal/cli/journal/core/section"
 	"github.com/ActiveMemory/ctx/internal/cli/journal/core/turn"
 	"github.com/ActiveMemory/ctx/internal/cli/journal/core/wrap"
-	"github.com/spf13/cobra"
-
-	readJournal "github.com/ActiveMemory/ctx/internal/assets/read/journal"
 	"github.com/ActiveMemory/ctx/internal/config/dir"
 	"github.com/ActiveMemory/ctx/internal/config/file"
 	"github.com/ActiveMemory/ctx/internal/config/fs"

@@ -7,12 +7,12 @@
 package status
 
 import (
-	"github.com/ActiveMemory/ctx/internal/assets/read/desc"
-	cfgCli "github.com/ActiveMemory/ctx/internal/config/cli"
-	"github.com/ActiveMemory/ctx/internal/config/embed/cmd"
 	"github.com/spf13/cobra"
 
+	"github.com/ActiveMemory/ctx/internal/assets/read/desc"
 	"github.com/ActiveMemory/ctx/internal/cli/config/core"
+	cfgCli "github.com/ActiveMemory/ctx/internal/config/cli"
+	"github.com/ActiveMemory/ctx/internal/config/embed/cmd"
 )
 
 // Cmd returns the "ctx config status" subcommand.

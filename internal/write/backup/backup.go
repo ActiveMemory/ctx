@@ -9,10 +9,11 @@ package backup
 import (
 	"fmt"
 
+	"github.com/spf13/cobra"
+
 	"github.com/ActiveMemory/ctx/internal/assets/read/desc"
 	"github.com/ActiveMemory/ctx/internal/config/embed/text"
 	"github.com/ActiveMemory/ctx/internal/format"
-	"github.com/spf13/cobra"
 )
 
 // ResultLine prints a single backup result with optional SMB destination.

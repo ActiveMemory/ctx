@@ -7,10 +7,10 @@
 package mv
 
 import (
-	"github.com/ActiveMemory/ctx/internal/cli/pad/core/store"
-	"github.com/ActiveMemory/ctx/internal/cli/pad/core/validate"
 	"github.com/spf13/cobra"
 
+	"github.com/ActiveMemory/ctx/internal/cli/pad/core/store"
+	"github.com/ActiveMemory/ctx/internal/cli/pad/core/validate"
 	"github.com/ActiveMemory/ctx/internal/write/pad"
 )
 

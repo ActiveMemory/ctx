@@ -9,10 +9,10 @@ package stats
 import (
 	"path/filepath"
 
-	coreStats "github.com/ActiveMemory/ctx/internal/cli/system/core/stats"
-	"github.com/ActiveMemory/ctx/internal/config/dir"
 	"github.com/spf13/cobra"
 
+	coreStats "github.com/ActiveMemory/ctx/internal/cli/system/core/stats"
+	"github.com/ActiveMemory/ctx/internal/config/dir"
 	cFlag "github.com/ActiveMemory/ctx/internal/config/flag"
 	"github.com/ActiveMemory/ctx/internal/rc"
 	writeStats "github.com/ActiveMemory/ctx/internal/write/stat"

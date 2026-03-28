@@ -11,13 +11,13 @@ import (
 	"path/filepath"
 	"time"
 
+	"github.com/spf13/cobra"
+
 	"github.com/ActiveMemory/ctx/internal/cli/system/core/check"
 	"github.com/ActiveMemory/ctx/internal/cli/system/core/health"
 	"github.com/ActiveMemory/ctx/internal/cli/system/core/state"
 	"github.com/ActiveMemory/ctx/internal/config/architecture"
 	cfgTime "github.com/ActiveMemory/ctx/internal/config/time"
-	"github.com/spf13/cobra"
-
 	internalIo "github.com/ActiveMemory/ctx/internal/io"
 	writeHook "github.com/ActiveMemory/ctx/internal/write/hook"
 )

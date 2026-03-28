@@ -10,11 +10,11 @@ import (
 	"os"
 	"path/filepath"
 
+	"github.com/spf13/cobra"
+
 	"github.com/ActiveMemory/ctx/internal/cli/system/core/check"
 	coreKnowledge "github.com/ActiveMemory/ctx/internal/cli/system/core/knowledge"
 	"github.com/ActiveMemory/ctx/internal/cli/system/core/state"
-	"github.com/spf13/cobra"
-
 	"github.com/ActiveMemory/ctx/internal/config/knowledge"
 	internalIo "github.com/ActiveMemory/ctx/internal/io"
 	writeHook "github.com/ActiveMemory/ctx/internal/write/hook"

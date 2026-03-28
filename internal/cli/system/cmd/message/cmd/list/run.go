@@ -9,12 +9,12 @@ package list
 import (
 	"encoding/json"
 
-	"github.com/ActiveMemory/ctx/internal/cli/system/core/message"
-	"github.com/ActiveMemory/ctx/internal/entity"
 	"github.com/spf13/cobra"
 
 	"github.com/ActiveMemory/ctx/internal/assets/hooks/messages"
+	"github.com/ActiveMemory/ctx/internal/cli/system/core/message"
 	cFlag "github.com/ActiveMemory/ctx/internal/config/flag"
+	"github.com/ActiveMemory/ctx/internal/entity"
 	writeMessage "github.com/ActiveMemory/ctx/internal/write/message"
 )
 

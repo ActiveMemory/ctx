@@ -11,6 +11,9 @@ import (
 	"os"
 	"path/filepath"
 
+	"github.com/spf13/cobra"
+
+	"github.com/ActiveMemory/ctx/internal/assets/tpl"
 	"github.com/ActiveMemory/ctx/internal/cli/journal/core/consolidate"
 	"github.com/ActiveMemory/ctx/internal/cli/journal/core/format"
 	"github.com/ActiveMemory/ctx/internal/cli/journal/core/frontmatter"
@@ -21,9 +24,6 @@ import (
 	"github.com/ActiveMemory/ctx/internal/cli/journal/core/turn"
 	"github.com/ActiveMemory/ctx/internal/cli/journal/core/wikilink"
 	"github.com/ActiveMemory/ctx/internal/cli/journal/core/wrap"
-	"github.com/spf13/cobra"
-
-	"github.com/ActiveMemory/ctx/internal/assets/tpl"
 	"github.com/ActiveMemory/ctx/internal/config/dir"
 	"github.com/ActiveMemory/ctx/internal/config/file"
 	"github.com/ActiveMemory/ctx/internal/config/fs"

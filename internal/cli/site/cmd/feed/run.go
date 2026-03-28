@@ -7,10 +7,10 @@
 package feed
 
 import (
-	"github.com/ActiveMemory/ctx/internal/cli/site/core/rss"
-	"github.com/ActiveMemory/ctx/internal/cli/site/core/scan"
 	"github.com/spf13/cobra"
 
+	"github.com/ActiveMemory/ctx/internal/cli/site/core/rss"
+	"github.com/ActiveMemory/ctx/internal/cli/site/core/scan"
 	writeSite "github.com/ActiveMemory/ctx/internal/write/site"
 )
 

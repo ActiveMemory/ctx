@@ -13,11 +13,10 @@ import (
 	"strings"
 	"time"
 
-	"github.com/ActiveMemory/ctx/internal/entity"
-
 	"github.com/ActiveMemory/ctx/internal/config/file"
 	cfgGit "github.com/ActiveMemory/ctx/internal/config/git"
 	"github.com/ActiveMemory/ctx/internal/config/token"
+	"github.com/ActiveMemory/ctx/internal/entity"
 	ctxErr "github.com/ActiveMemory/ctx/internal/err/git"
 	"github.com/ActiveMemory/ctx/internal/rc"
 )

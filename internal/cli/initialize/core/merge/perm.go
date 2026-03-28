@@ -12,7 +12,10 @@ import (
 	"os"
 	"strings"
 
+	"github.com/spf13/cobra"
+
 	"github.com/ActiveMemory/ctx/internal/assets/read/lookup"
+	"github.com/ActiveMemory/ctx/internal/claude"
 	cfgClaude "github.com/ActiveMemory/ctx/internal/config/claude"
 	"github.com/ActiveMemory/ctx/internal/config/dir"
 	"github.com/ActiveMemory/ctx/internal/config/fs"
@@ -21,9 +24,6 @@ import (
 	errFs "github.com/ActiveMemory/ctx/internal/err/fs"
 	errParser "github.com/ActiveMemory/ctx/internal/err/parser"
 	"github.com/ActiveMemory/ctx/internal/write/initialize"
-	"github.com/spf13/cobra"
-
-	"github.com/ActiveMemory/ctx/internal/claude"
 )
 
 // SettingsPermissions merges ctx permissions into settings.local.json.

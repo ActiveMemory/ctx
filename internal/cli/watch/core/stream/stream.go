@@ -12,6 +12,8 @@ import (
 	"regexp"
 	"strings"
 
+	"github.com/spf13/cobra"
+
 	"github.com/ActiveMemory/ctx/internal/cli/watch/core"
 	"github.com/ActiveMemory/ctx/internal/cli/watch/core/apply"
 	"github.com/ActiveMemory/ctx/internal/config/cli"
@@ -19,7 +21,6 @@ import (
 	"github.com/ActiveMemory/ctx/internal/config/watch"
 	errFs "github.com/ActiveMemory/ctx/internal/err/fs"
 	writeWatch "github.com/ActiveMemory/ctx/internal/write/watch"
-	"github.com/spf13/cobra"
 )
 
 // ExtractAttribute extracts a named attribute from an XML tag string.

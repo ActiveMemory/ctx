@@ -9,10 +9,11 @@ package status
 import (
 	"fmt"
 
+	"github.com/spf13/cobra"
+
 	"github.com/ActiveMemory/ctx/internal/assets/read/desc"
 	"github.com/ActiveMemory/ctx/internal/config/embed/text"
 	"github.com/ActiveMemory/ctx/internal/format"
-	"github.com/spf13/cobra"
 )
 
 // StatusFileInfo holds prepared data for a single file in status output.

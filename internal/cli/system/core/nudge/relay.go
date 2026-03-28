@@ -7,9 +7,9 @@
 package nudge
 
 import (
-	"github.com/ActiveMemory/ctx/internal/cli/system/core/message"
 	"github.com/spf13/cobra"
 
+	"github.com/ActiveMemory/ctx/internal/cli/system/core/message"
 	"github.com/ActiveMemory/ctx/internal/config/hook"
 	internalIo "github.com/ActiveMemory/ctx/internal/io"
 	"github.com/ActiveMemory/ctx/internal/log"

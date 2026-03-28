@@ -9,9 +9,9 @@ package root
 import (
 	"errors"
 
-	"github.com/ActiveMemory/ctx/internal/cli/sync/core/action"
 	"github.com/spf13/cobra"
 
+	"github.com/ActiveMemory/ctx/internal/cli/sync/core/action"
 	"github.com/ActiveMemory/ctx/internal/context/load"
 	errCtx "github.com/ActiveMemory/ctx/internal/err/context"
 	errInit "github.com/ActiveMemory/ctx/internal/err/initialize"

@@ -9,9 +9,10 @@ package err
 import (
 	"fmt"
 
+	"github.com/spf13/cobra"
+
 	"github.com/ActiveMemory/ctx/internal/assets/read/desc"
 	"github.com/ActiveMemory/ctx/internal/config/embed/text"
-	"github.com/spf13/cobra"
 )
 
 // WithError writes a prefixed error message to the command's stderr stream.

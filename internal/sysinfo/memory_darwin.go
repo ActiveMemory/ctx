@@ -9,11 +9,11 @@
 package sysinfo
 
 import (
-	"github.com/ActiveMemory/ctx/internal/config/token"
-
 	"os/exec"
 	"strconv"
 	"strings"
+
+	"github.com/ActiveMemory/ctx/internal/config/token"
 )
 
 // collectMemory queries physical and swap memory usage on macOS.

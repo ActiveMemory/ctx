@@ -9,9 +9,9 @@ package reindex
 import (
 	"path/filepath"
 
-	"github.com/ActiveMemory/ctx/internal/config/ctx"
 	"github.com/spf13/cobra"
 
+	"github.com/ActiveMemory/ctx/internal/config/ctx"
 	"github.com/ActiveMemory/ctx/internal/index"
 	"github.com/ActiveMemory/ctx/internal/rc"
 )

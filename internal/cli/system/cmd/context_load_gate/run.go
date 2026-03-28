@@ -12,6 +12,9 @@ import (
 	"path/filepath"
 	"strings"
 
+	"github.com/spf13/cobra"
+
+	"github.com/ActiveMemory/ctx/internal/assets/read/desc"
 	"github.com/ActiveMemory/ctx/internal/cli/change/core/detect"
 	"github.com/ActiveMemory/ctx/internal/cli/change/core/render"
 	changeCore "github.com/ActiveMemory/ctx/internal/cli/change/core/scan"
@@ -20,17 +23,13 @@ import (
 	"github.com/ActiveMemory/ctx/internal/cli/system/core/nudge"
 	coreSession "github.com/ActiveMemory/ctx/internal/cli/system/core/session"
 	"github.com/ActiveMemory/ctx/internal/cli/system/core/state"
-	"github.com/spf13/cobra"
-
-	"github.com/ActiveMemory/ctx/internal/entity"
-
-	"github.com/ActiveMemory/ctx/internal/assets/read/desc"
 	"github.com/ActiveMemory/ctx/internal/config/ctx"
 	"github.com/ActiveMemory/ctx/internal/config/embed/text"
 	"github.com/ActiveMemory/ctx/internal/config/hook"
 	"github.com/ActiveMemory/ctx/internal/config/load_gate"
 	"github.com/ActiveMemory/ctx/internal/config/token"
 	ctxToken "github.com/ActiveMemory/ctx/internal/context/token"
+	"github.com/ActiveMemory/ctx/internal/entity"
 	internalIo "github.com/ActiveMemory/ctx/internal/io"
 	"github.com/ActiveMemory/ctx/internal/rc"
 	writeHook "github.com/ActiveMemory/ctx/internal/write/hook"

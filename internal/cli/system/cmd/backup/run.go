@@ -11,13 +11,13 @@ import (
 	"os"
 	"time"
 
-	coreArchive "github.com/ActiveMemory/ctx/internal/cli/system/core/archive"
-	"github.com/ActiveMemory/ctx/internal/entity"
 	"github.com/spf13/cobra"
 
+	coreArchive "github.com/ActiveMemory/ctx/internal/cli/system/core/archive"
 	"github.com/ActiveMemory/ctx/internal/config/archive"
 	"github.com/ActiveMemory/ctx/internal/config/env"
 	cFlag "github.com/ActiveMemory/ctx/internal/config/flag"
+	"github.com/ActiveMemory/ctx/internal/entity"
 	errBackup "github.com/ActiveMemory/ctx/internal/err/backup"
 	errInit "github.com/ActiveMemory/ctx/internal/err/initialize"
 	"github.com/ActiveMemory/ctx/internal/write/backup"

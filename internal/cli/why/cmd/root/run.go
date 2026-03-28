@@ -12,12 +12,12 @@ import (
 	"strconv"
 	"strings"
 
-	"github.com/ActiveMemory/ctx/internal/assets/read/philosophy"
-	"github.com/ActiveMemory/ctx/internal/write/why"
 	"github.com/spf13/cobra"
 
+	"github.com/ActiveMemory/ctx/internal/assets/read/philosophy"
 	errCli "github.com/ActiveMemory/ctx/internal/err/cli"
 	errFs "github.com/ActiveMemory/ctx/internal/err/fs"
+	"github.com/ActiveMemory/ctx/internal/write/why"
 )
 
 // Run dispatches to the interactive menu or direct document display.

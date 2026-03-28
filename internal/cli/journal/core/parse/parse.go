@@ -12,7 +12,6 @@ import (
 	"sort"
 	"strings"
 
-	"github.com/ActiveMemory/ctx/internal/entity"
 	"gopkg.in/yaml.v3"
 
 	"github.com/ActiveMemory/ctx/internal/assets/read/desc"
@@ -21,6 +20,7 @@ import (
 	"github.com/ActiveMemory/ctx/internal/config/journal"
 	"github.com/ActiveMemory/ctx/internal/config/regex"
 	"github.com/ActiveMemory/ctx/internal/config/token"
+	"github.com/ActiveMemory/ctx/internal/entity"
 )
 
 // ScanJournalEntries reads all journal Markdown files and extracts metadata.

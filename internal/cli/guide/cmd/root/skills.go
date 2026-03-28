@@ -9,12 +9,12 @@ package root
 import (
 	"strings"
 
-	"github.com/ActiveMemory/ctx/internal/config/token"
-	"github.com/ActiveMemory/ctx/internal/write/guide"
 	"github.com/spf13/cobra"
 	"gopkg.in/yaml.v3"
 
 	"github.com/ActiveMemory/ctx/internal/claude"
+	"github.com/ActiveMemory/ctx/internal/config/token"
+	"github.com/ActiveMemory/ctx/internal/write/guide"
 )
 
 // parseSkillFrontmatter extracts YAML frontmatter from a SKILL.md file.

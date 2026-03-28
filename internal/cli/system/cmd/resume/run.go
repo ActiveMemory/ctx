@@ -9,9 +9,9 @@ package resume
 import (
 	"os"
 
-	"github.com/ActiveMemory/ctx/internal/cli/system/core/nudge"
 	"github.com/spf13/cobra"
 
+	"github.com/ActiveMemory/ctx/internal/cli/system/core/nudge"
 	coreSession "github.com/ActiveMemory/ctx/internal/cli/system/core/session"
 	cFlag "github.com/ActiveMemory/ctx/internal/config/flag"
 	"github.com/ActiveMemory/ctx/internal/config/session"

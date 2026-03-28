@@ -7,10 +7,9 @@
 package system
 
 import (
-	"github.com/ActiveMemory/ctx/internal/assets/read/desc"
-	"github.com/ActiveMemory/ctx/internal/config/embed/cmd"
 	"github.com/spf13/cobra"
 
+	"github.com/ActiveMemory/ctx/internal/assets/read/desc"
 	"github.com/ActiveMemory/ctx/internal/cli/system/cmd/backup"
 	"github.com/ActiveMemory/ctx/internal/cli/system/cmd/block_dangerous_command"
 	"github.com/ActiveMemory/ctx/internal/cli/system/cmd/block_non_path_ctx"
@@ -42,6 +41,7 @@ import (
 	"github.com/ActiveMemory/ctx/internal/cli/system/cmd/resume"
 	"github.com/ActiveMemory/ctx/internal/cli/system/cmd/specs_nudge"
 	"github.com/ActiveMemory/ctx/internal/cli/system/cmd/stats"
+	"github.com/ActiveMemory/ctx/internal/config/embed/cmd"
 )
 
 // Cmd returns the "ctx system" parent command.

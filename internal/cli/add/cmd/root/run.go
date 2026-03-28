@@ -9,10 +9,10 @@ package root
 import (
 	"strings"
 
-	"github.com/ActiveMemory/ctx/internal/cli/add/core/example"
-	"github.com/ActiveMemory/ctx/internal/cli/add/core/extract"
 	"github.com/spf13/cobra"
 
+	"github.com/ActiveMemory/ctx/internal/cli/add/core/example"
+	"github.com/ActiveMemory/ctx/internal/cli/add/core/extract"
 	cfgEntry "github.com/ActiveMemory/ctx/internal/config/entry"
 	"github.com/ActiveMemory/ctx/internal/entity"
 	"github.com/ActiveMemory/ctx/internal/entry"

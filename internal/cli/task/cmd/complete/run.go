@@ -12,16 +12,16 @@ import (
 	"strconv"
 	"strings"
 
+	"github.com/spf13/cobra"
+
 	"github.com/ActiveMemory/ctx/internal/config/ctx"
 	"github.com/ActiveMemory/ctx/internal/config/fs"
 	"github.com/ActiveMemory/ctx/internal/config/regex"
 	"github.com/ActiveMemory/ctx/internal/config/token"
 	errTask "github.com/ActiveMemory/ctx/internal/err/task"
-	"github.com/ActiveMemory/ctx/internal/write/complete"
-	"github.com/spf13/cobra"
-
 	"github.com/ActiveMemory/ctx/internal/rc"
 	"github.com/ActiveMemory/ctx/internal/task"
+	"github.com/ActiveMemory/ctx/internal/write/complete"
 )
 
 // CompleteTask finds a task in TASKS.md by number or text match and marks

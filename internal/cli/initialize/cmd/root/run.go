@@ -12,26 +12,23 @@ import (
 	"path/filepath"
 	"strings"
 
-	coreClaude "github.com/ActiveMemory/ctx/internal/cli/initialize/core/claude"
-	"github.com/ActiveMemory/ctx/internal/cli/initialize/core/entry"
-	coreMerge "github.com/ActiveMemory/ctx/internal/cli/initialize/core/merge"
-
-	"github.com/ActiveMemory/ctx/internal/cli/initialize/core/plugin"
-	coreProject "github.com/ActiveMemory/ctx/internal/cli/initialize/core/project"
-
-	"github.com/ActiveMemory/ctx/internal/cli/initialize/core/validate"
 	"github.com/spf13/cobra"
 
 	"github.com/ActiveMemory/ctx/internal/assets/read/catalog"
 	"github.com/ActiveMemory/ctx/internal/assets/read/desc"
 	"github.com/ActiveMemory/ctx/internal/assets/read/template"
+	coreClaude "github.com/ActiveMemory/ctx/internal/cli/initialize/core/claude"
+	"github.com/ActiveMemory/ctx/internal/cli/initialize/core/entry"
+	coreMerge "github.com/ActiveMemory/ctx/internal/cli/initialize/core/merge"
+	"github.com/ActiveMemory/ctx/internal/cli/initialize/core/plugin"
+	coreProject "github.com/ActiveMemory/ctx/internal/cli/initialize/core/project"
+	"github.com/ActiveMemory/ctx/internal/cli/initialize/core/validate"
 	"github.com/ActiveMemory/ctx/internal/config/claude"
 	"github.com/ActiveMemory/ctx/internal/config/cli"
 	"github.com/ActiveMemory/ctx/internal/config/ctx"
 	"github.com/ActiveMemory/ctx/internal/config/embed/text"
 	"github.com/ActiveMemory/ctx/internal/config/file"
 	"github.com/ActiveMemory/ctx/internal/config/fs"
-
 	"github.com/ActiveMemory/ctx/internal/config/pad"
 	"github.com/ActiveMemory/ctx/internal/config/project"
 	"github.com/ActiveMemory/ctx/internal/config/sync"

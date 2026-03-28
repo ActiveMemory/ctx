@@ -10,10 +10,10 @@ import (
 	"os"
 	"path/filepath"
 
-	"github.com/ActiveMemory/ctx/internal/cli/system/core/message"
 	"github.com/spf13/cobra"
 
 	"github.com/ActiveMemory/ctx/internal/assets/hooks/messages"
+	"github.com/ActiveMemory/ctx/internal/cli/system/core/message"
 	errHook "github.com/ActiveMemory/ctx/internal/err/hook"
 	writeMessage "github.com/ActiveMemory/ctx/internal/write/message"
 )

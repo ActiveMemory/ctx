@@ -9,10 +9,11 @@ package messages
 import (
 	"sync"
 
+	"gopkg.in/yaml.v3"
+
 	"github.com/ActiveMemory/ctx/internal/assets/read/hook"
 	errFs "github.com/ActiveMemory/ctx/internal/err/fs"
 	errParser "github.com/ActiveMemory/ctx/internal/err/parser"
-	"gopkg.in/yaml.v3"
 )
 
 // HookMessageInfo describes a single hook message template entry.

@@ -10,13 +10,13 @@ import (
 	"fmt"
 	"strings"
 
+	"github.com/spf13/cobra"
+
 	"github.com/ActiveMemory/ctx/internal/assets/read/desc"
 	"github.com/ActiveMemory/ctx/internal/assets/tpl"
 	"github.com/ActiveMemory/ctx/internal/config/embed/text"
 	"github.com/ActiveMemory/ctx/internal/config/token"
 	ctxToken "github.com/ActiveMemory/ctx/internal/context/token"
-	"github.com/spf13/cobra"
-
 	"github.com/ActiveMemory/ctx/internal/entity"
 )
 

@@ -7,11 +7,11 @@
 package root
 
 import (
+	"github.com/spf13/cobra"
+
 	"github.com/ActiveMemory/ctx/internal/cli/change/core/detect"
 	"github.com/ActiveMemory/ctx/internal/cli/change/core/render"
 	"github.com/ActiveMemory/ctx/internal/cli/change/core/scan"
-	"github.com/spf13/cobra"
-
 	errInit "github.com/ActiveMemory/ctx/internal/err/initialize"
 	writeChange "github.com/ActiveMemory/ctx/internal/write/change"
 )
