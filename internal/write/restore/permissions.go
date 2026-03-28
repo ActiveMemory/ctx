@@ -15,29 +15,29 @@ import (
 	"github.com/ActiveMemory/ctx/internal/config/embed/text"
 )
 
-// RestoreNoLocal prints the message when golden is restored with no local file.
+// NoLocal prints the message when golden is restored with no local file.
 //
 // Parameters:
 //   - cmd: Cobra command for output. Nil is a no-op.
-func RestoreNoLocal(cmd *cobra.Command) {
+func NoLocal(cmd *cobra.Command) {
 	if cmd == nil {
 		return
 	}
 	cmd.Println(desc.Text(text.DescKeyWriteRestoreNoLocal))
 }
 
-// RestoreMatch prints the message when settings already match golden.
+// Match prints the message when settings already match golden.
 //
 // Parameters:
 //   - cmd: Cobra command for output. Nil is a no-op.
-func RestoreMatch(cmd *cobra.Command) {
+func Match(cmd *cobra.Command) {
 	if cmd == nil {
 		return
 	}
 	cmd.Println(desc.Text(text.DescKeyWriteRestoreMatch))
 }
 
-// RestoreDiff prints the permission diff block: dropped/restored
+// Diff prints the permission diff block: dropped/restored
 // allow and deny entries, or a note that only non-permission settings differ.
 //
 // Parameters:
@@ -46,7 +46,7 @@ func RestoreMatch(cmd *cobra.Command) {
 //   - restored: allow permissions added back.
 //   - denyDropped: deny rules removed.
 //   - denyRestored: deny rules added back.
-func RestoreDiff(
+func Diff(
 	cmd *cobra.Command,
 	dropped, restored, denyDropped, denyRestored []string,
 ) {
@@ -64,11 +64,11 @@ func RestoreDiff(
 	}
 }
 
-// RestoreDone prints the success message after restore.
+// Done prints the success message after restore.
 //
 // Parameters:
 //   - cmd: Cobra command for output. Nil is a no-op.
-func RestoreDone(cmd *cobra.Command) {
+func Done(cmd *cobra.Command) {
 	if cmd == nil {
 		return
 	}

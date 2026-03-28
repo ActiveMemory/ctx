@@ -125,7 +125,7 @@ func Run(cmd *cobra.Command, args []string) error {
 		return completeErr
 	}
 
-	complete.InfoCompletedTask(cmd, matchedTask)
+	complete.Completed(cmd, matchedTask)
 
 	return nil
 }

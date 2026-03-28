@@ -60,7 +60,7 @@ func Run(cmd *cobra.Command, format string, external bool, projType string) erro
 	}
 
 	if len(graph) == 0 {
-		deps.InfoNoDeps(cmd)
+		deps.NoDeps(cmd)
 		return nil
 	}
 

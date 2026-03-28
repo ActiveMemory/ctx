@@ -79,14 +79,14 @@ func PersistStatusJSON(
 func PersistStatusText(
 	cmd *cobra.Command, ctx *entity.Context, verbose bool,
 ) error {
-	status.StatusHeader(cmd, ctx.Dir, len(ctx.Files), ctx.TotalTokens)
+	status.Header(cmd, ctx.Dir, len(ctx.Files), ctx.TotalTokens)
 
 	sortedFiles := make([]entity.FileInfo, len(ctx.Files))
 	copy(sortedFiles, ctx.Files)
 	sort.FilesByPriority(sortedFiles)
 
 	for _, f := range sortedFiles {
-		fi := status.StatusFileInfo{
+		fi := status.FileInfo{
 			Name:   f.Name,
 			Tokens: f.Tokens,
 			Size:   f.Size,
@@ -101,14 +101,14 @@ func PersistStatusText(
 		if verbose && !f.IsEmpty {
 			fi.Preview = preview.Content(string(f.Content), 3)
 		}
-		status.StatusFileItem(cmd, fi, verbose)
+		status.FileItem(cmd, fi, verbose)
 	}
 
 	recentFiles := sort.RecentFiles(ctx.Files, 3)
-	entries := make([]status.StatusActivityInfo, len(recentFiles))
+	entries := make([]status.ActivityInfo, len(recentFiles))
 	for i, f := range recentFiles {
 		d := time.Since(f.ModTime)
-		entries[i] = status.StatusActivityInfo{
+		entries[i] = status.ActivityInfo{
 			Name: f.Name,
 			Ago: format.TimeAgo(
 				d.Hours(),
@@ -117,7 +117,7 @@ func PersistStatusText(
 			),
 		}
 	}
-	status.StatusActivity(cmd, entries)
+	status.Activity(cmd, entries)
 
 	return nil
 }

@@ -41,6 +41,6 @@ func Run(cmd *cobra.Command, stdin *os.File) error {
 
 	path := nudge.PauseMarkerPath(sessionID)
 	_ = os.Remove(path)
-	writeSession.SessionResumed(cmd, sessionID)
+	writeSession.Resumed(cmd, sessionID)
 	return nil
 }

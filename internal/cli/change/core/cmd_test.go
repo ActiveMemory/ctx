@@ -134,7 +134,7 @@ func TestRenderChanges(t *testing.T) {
 		Authors:     []string{"Volkan"},
 	}
 
-	out := coreRender.Changes("6 hours ago", ctxChanges, code)
+	out := coreRender.List("6 hours ago", ctxChanges, code)
 	if !strings.Contains(out, "## Changes Since Last Session") {
 		t.Error("missing header")
 	}
@@ -171,7 +171,7 @@ func TestRenderChangesForHook(t *testing.T) {
 }
 
 func TestRenderChanges_NoChanges(t *testing.T) {
-	out := coreRender.Changes("1 hour ago", nil, entity.CodeSummary{})
+	out := coreRender.List("1 hour ago", nil, entity.CodeSummary{})
 	if !strings.Contains(out, "No changes detected") {
 		t.Error("expected 'No changes detected' message")
 	}

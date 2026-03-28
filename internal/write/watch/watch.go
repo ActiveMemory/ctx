@@ -15,11 +15,11 @@ import (
 	"github.com/ActiveMemory/ctx/internal/config/embed/text"
 )
 
-// Watching prints the initial "watching" status line.
+// Started prints the initial "watching" status line.
 //
 // Parameters:
 //   - cmd: Cobra command for output. Nil is a no-op.
-func Watching(cmd *cobra.Command) {
+func Started(cmd *cobra.Command) {
 	if cmd == nil {
 		return
 	}

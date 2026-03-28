@@ -39,7 +39,7 @@ func Run(cmd *cobra.Command, logPath string, dryRun bool) error {
 		return initialize.ContextNotInitialized()
 	}
 
-	watch.Watching(cmd)
+	watch.Started(cmd)
 	if dryRun {
 		watch.DryRun(cmd)
 	}

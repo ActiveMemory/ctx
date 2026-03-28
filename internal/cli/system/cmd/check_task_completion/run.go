@@ -73,7 +73,7 @@ func Run(cmd *cobra.Command, stdin *os.File) error {
 	if msg == "" {
 		return nil
 	}
-	writeHook.HookContext(
+	writeHook.Context(
 		cmd, coreSession.FormatContext(hook.EventPostToolUse, msg),
 	)
 

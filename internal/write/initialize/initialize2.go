@@ -50,12 +50,12 @@ func InfoFileCreated(cmd *cobra.Command, name string) {
 	cmd.Println(fmt.Sprintf(desc.Text(text.DescKeyWriteInitFileCreated), name))
 }
 
-// InfoInitialized reports successful context directory initialization.
+// Initialized reports successful context directory initialization.
 //
 // Parameters:
 //   - cmd: Cobra command for output
 //   - contextDir: the path to the initialized .context/ directory
-func InfoInitialized(cmd *cobra.Command, contextDir string) {
+func Initialized(cmd *cobra.Command, contextDir string) {
 	cmd.Println()
 	cmd.Println(fmt.Sprintf(desc.Text(text.DescKeyWriteInitialized), contextDir))
 }

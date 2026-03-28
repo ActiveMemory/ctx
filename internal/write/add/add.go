@@ -15,12 +15,12 @@ import (
 	"github.com/ActiveMemory/ctx/internal/config/embed/text"
 )
 
-// InfoAddedTo confirms an entry was added to a context file.
+// Added confirms an entry was added to a context file.
 //
 // Parameters:
 //   - cmd: Cobra command for output
 //   - filename: Name of the file the entry was added to
-func InfoAddedTo(cmd *cobra.Command, filename string) {
+func Added(cmd *cobra.Command, filename string) {
 	cmd.Println(
 		fmt.Sprintf(desc.Text(text.DescKeyWriteAddedTo), filename),
 	)

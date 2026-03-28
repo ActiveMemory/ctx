@@ -73,13 +73,13 @@ func Run(cmd *cobra.Command, stdin *os.File) error {
 		return nil
 	}
 	msg = ctxContext.AppendDir(msg)
-	writeHook.HookContext(cmd, coreSession.FormatContext(hook.EventPostToolUse, msg))
+	writeHook.Context(cmd, coreSession.FormatContext(hook.EventPostToolUse, msg))
 
 	ref := notify.NewTemplateRef(hookName, variant, nil)
 	nudge.Relay(fmt.Sprintf(desc.Text(text.DescKeyRelayPrefixFormat), hookName, desc.Text(text.DescKeyPostCommitRelayMessage)), input.SessionID, ref)
 
 	if driftResponse := drift.CheckVersion(sessionID); driftResponse != "" {
-		writeHook.HookContext(cmd, driftResponse)
+		writeHook.Context(cmd, driftResponse)
 	}
 
 	if violations := scoreCommitViolations(); violations != "" {

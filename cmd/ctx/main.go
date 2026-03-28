@@ -21,7 +21,7 @@ func main() {
 	cmd := bootstrap.Initialize(bootstrap.RootCmd())
 
 	if err := cmd.Execute(); err != nil {
-		writeErr.WithError(cmd, err)
+		writeErr.With(cmd, err)
 		os.Exit(1)
 	}
 }

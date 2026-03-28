@@ -17,7 +17,7 @@ import (
 	"github.com/ActiveMemory/ctx/internal/entity"
 )
 
-// Changes renders the full CLI output for `ctx changes`.
+// List renders the full CLI output for `ctx changes`.
 //
 // Parameters:
 //   - refLabel: Human-readable reference time label
@@ -26,7 +26,7 @@ import (
 //
 // Returns:
 //   - string: Formatted Markdown output
-func Changes(
+func List(
 	refLabel string, ctxChanges []entity.ContextChange, code entity.CodeSummary,
 ) string {
 	var b strings.Builder

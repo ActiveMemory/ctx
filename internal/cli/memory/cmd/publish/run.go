@@ -43,14 +43,14 @@ func Run(cmd *cobra.Command, budget int, dryRun bool) error {
 		return errMemory.SelectContentFailed(selectErr)
 	}
 
-	publish.PublishPlan(cmd, budget,
+	publish.Plan(cmd, budget,
 		len(result.Tasks), len(result.Decisions),
 		len(result.Conventions), len(result.Learnings),
 		result.TotalLines,
 	)
 
 	if dryRun {
-		publish.PublishDryRun(cmd)
+		publish.DryRun(cmd)
 		return nil
 	}
 
@@ -60,7 +60,7 @@ func Run(cmd *cobra.Command, budget int, dryRun bool) error {
 		return errMemory.PublishFailed(publishErr)
 	}
 
-	publish.PublishDone(cmd)
+	publish.Done(cmd)
 
 	return nil
 }

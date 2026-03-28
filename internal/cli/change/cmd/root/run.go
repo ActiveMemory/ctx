@@ -36,6 +36,6 @@ func Run(cmd *cobra.Command, since string) error {
 	ctxChanges, _ := scan.FindContextChanges(refTime)
 	codeChanges, _ := scan.SummarizeCodeChanges(refTime)
 
-	writeChange.Changes(cmd, render.Changes(refLabel, ctxChanges, codeChanges))
+	writeChange.List(cmd, render.List(refLabel, ctxChanges, codeChanges))
 	return nil
 }

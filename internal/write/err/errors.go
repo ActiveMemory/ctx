@@ -15,12 +15,12 @@ import (
 	"github.com/ActiveMemory/ctx/internal/config/embed/text"
 )
 
-// WithError writes a prefixed error message to the command's stderr stream.
+// With writes a prefixed error message to the command's stderr stream.
 //
 // Parameters:
 //   - cmd: Cobra command whose stderr stream receives the message. Nil is a no-op.
 //   - err: the error to display after the "Error: " prefix.
-func WithError(cmd *cobra.Command, err error) {
+func With(cmd *cobra.Command, err error) {
 	if cmd == nil {
 		return
 	}

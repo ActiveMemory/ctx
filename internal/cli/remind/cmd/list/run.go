@@ -32,13 +32,13 @@ func Run(cmd *cobra.Command) error {
 	}
 
 	if len(reminders) == 0 {
-		remind.ReminderNone(cmd)
+		remind.None(cmd)
 		return nil
 	}
 
 	today := time.Now().Format(cfgTime.DateFormat)
 	for _, r := range reminders {
-		remind.ReminderItem(cmd, r.ID, r.Message, r.After, today)
+		remind.Item(cmd, r.ID, r.Message, r.After, today)
 	}
 
 	return nil
