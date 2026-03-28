@@ -151,7 +151,7 @@ func Content(content string, fencesVerified bool) string {
 // become inert entities.
 //
 // Requires pymdownx.highlight with use_pygments=false in the zensical
-// config (set in TplZensicalTheme) to prevent the highlight extension
+// config (set in ZensicalTheme) to prevent the highlight extension
 // from hijacking <pre><code> blocks.
 //
 // Tool outputs already wrapped in <details><pre> by the export pipeline
@@ -214,7 +214,7 @@ func WrapToolOutputs(content string) string {
 // of rendering bugs caused by stray/unclosed fence markers in user messages.
 //
 // Requires pymdownx.highlight with use_pygments=false in the zensical
-// config (set in TplZensicalTheme). With Pygments enabled, the highlight
+// config (set in ZensicalTheme). With Pygments enabled, the highlight
 // extension hijacks <pre><code> and transforms block boundaries.
 //
 // Type 1 HTML block (<pre>) survives blank lines (ends at </pre>, not at a

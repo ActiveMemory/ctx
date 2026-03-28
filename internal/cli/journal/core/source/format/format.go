@@ -228,7 +228,7 @@ func JournalEntryPart(
 
 		// Header: prefer title, fall back to slug, then baseName.
 		heading := frontmatter.ResolveHeading(title, s.Slug, baseName)
-		sb.WriteString(fmt.Sprintf(tpl.TplJournalPageHeading+nl+nl, heading))
+		sb.WriteString(fmt.Sprintf(tpl.JournalPageHeading+nl+nl, heading))
 
 		// Navigation header for multipart sessions
 		if totalParts > 1 {
@@ -330,7 +330,7 @@ func JournalEntryPart(
 	} else {
 		// Header (non-part-1) - the same fallback as part 1.
 		heading := frontmatter.ResolveHeading(title, s.Slug, baseName)
-		sb.WriteString(fmt.Sprintf(tpl.TplJournalPageHeading+nl+nl, heading))
+		sb.WriteString(fmt.Sprintf(tpl.JournalPageHeading+nl+nl, heading))
 
 		// Navigation header for multipart sessions
 		if totalParts > 1 {
