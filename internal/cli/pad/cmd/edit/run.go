@@ -19,7 +19,7 @@ import (
 	writePad "github.com/ActiveMemory/ctx/internal/write/pad"
 )
 
-// runEdit replaces the entry at 1-based position n with new text.
+// RunEdit replaces the entry at 1-based position n with new text.
 //
 // Parameters:
 //   - cmd: Cobra command for output
@@ -28,7 +28,7 @@ import (
 //
 // Returns:
 //   - error: Non-nil on invalid index or read/write failure
-func runEdit(cmd *cobra.Command, n int, text string) error {
+func RunEdit(cmd *cobra.Command, n int, text string) error {
 	entries, err := store.ReadEntries()
 	if err != nil {
 		return err
@@ -48,7 +48,7 @@ func runEdit(cmd *cobra.Command, n int, text string) error {
 	return nil
 }
 
-// runEditAppend appends text to the entry at 1-based position n.
+// RunEditAppend appends text to the entry at 1-based position n.
 //
 // Parameters:
 //   - cmd: Cobra command for output
@@ -57,7 +57,7 @@ func runEdit(cmd *cobra.Command, n int, text string) error {
 //
 // Returns:
 //   - error: Non-nil on invalid index, blob entry, or read/write failure
-func runEditAppend(cmd *cobra.Command, n int, text string) error {
+func RunEditAppend(cmd *cobra.Command, n int, text string) error {
 	entries, err := store.ReadEntries()
 	if err != nil {
 		return err
@@ -81,7 +81,7 @@ func runEditAppend(cmd *cobra.Command, n int, text string) error {
 	return nil
 }
 
-// runEditPrepend prepends text to the entry at 1-based position n.
+// RunEditPrepend prepends text to the entry at 1-based position n.
 //
 // Parameters:
 //   - cmd: Cobra command for output
@@ -90,7 +90,7 @@ func runEditAppend(cmd *cobra.Command, n int, text string) error {
 //
 // Returns:
 //   - error: Non-nil on invalid index, blob entry, or read/write failure
-func runEditPrepend(cmd *cobra.Command, n int, text string) error {
+func RunEditPrepend(cmd *cobra.Command, n int, text string) error {
 	entries, err := store.ReadEntries()
 	if err != nil {
 		return err
@@ -114,7 +114,7 @@ func runEditPrepend(cmd *cobra.Command, n int, text string) error {
 	return nil
 }
 
-// runEditBlob replaces the file content and/or label of a blob entry.
+// RunEditBlob replaces the file content and/or label of a blob entry.
 //
 // Parameters:
 //   - cmd: Cobra command for output
@@ -124,7 +124,7 @@ func runEditPrepend(cmd *cobra.Command, n int, text string) error {
 //
 // Returns:
 //   - error: Non-nil on invalid index, non-blob entry, or read/write failure
-func runEditBlob(cmd *cobra.Command, n int, filePath, labelText string) error {
+func RunEditBlob(cmd *cobra.Command, n int, filePath, labelText string) error {
 	entries, err := store.ReadEntries()
 	if err != nil {
 		return err

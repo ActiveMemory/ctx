@@ -26,7 +26,7 @@ import (
 	writeArchive "github.com/ActiveMemory/ctx/internal/write/archive"
 )
 
-// runArchive executes the archive subcommand logic.
+// RunArchive executes the archive subcommand logic.
 //
 // Moves completed tasks (marked with [x]) from TASKS.md to a timestamped
 // archive file, including all nested content (subtasks, metadata). Tasks
@@ -38,7 +38,7 @@ import (
 //
 // Returns:
 //   - error: Non-nil if TASKS.md doesn't exist or file operations fail
-func runArchive(cmd *cobra.Command, dryRun bool) error {
+func RunArchive(cmd *cobra.Command, dryRun bool) error {
 	tasksPath := path.TasksFilePath()
 	nl := token.NewlineLF
 

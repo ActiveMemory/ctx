@@ -35,7 +35,7 @@ func tsWithLabel(label string) string {
 	return ts + token.Dash + label
 }
 
-// runExport exports blob entries from the scratchpad to the given directory.
+// RunExport exports blob entries from the scratchpad to the given directory.
 //
 // Parameters:
 //   - cmd: Cobra command for output routing
@@ -45,7 +45,7 @@ func tsWithLabel(label string) string {
 //
 // Returns:
 //   - error: On directory creation or scratchpad read failure
-func runExport(cmd *cobra.Command, dir string, force, dryRun bool) error {
+func RunExport(cmd *cobra.Command, dir string, force, dryRun bool) error {
 	entries, readErr := store.ReadEntries()
 	if readErr != nil {
 		return readErr
