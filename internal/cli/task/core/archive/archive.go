@@ -17,21 +17,10 @@ import (
 	"github.com/ActiveMemory/ctx/internal/config/embed/text"
 	"github.com/ActiveMemory/ctx/internal/config/fs"
 	"github.com/ActiveMemory/ctx/internal/config/token"
-	"github.com/ActiveMemory/ctx/internal/entity"
 	errTask "github.com/ActiveMemory/ctx/internal/err/task"
 	"github.com/ActiveMemory/ctx/internal/io"
 	"github.com/ActiveMemory/ctx/internal/tidy"
 )
-
-// Result holds the outcome of an archive operation for the caller to report.
-type Result struct {
-	Archivable   []entity.TaskBlock
-	SkippedNames []string
-	PendingCount int
-	Content      string
-	ArchivePath  string
-	NewTasksBody string
-}
 
 // Plan reads TASKS.md, parses task blocks, and identifies archivable
 // blocks. Returns a Result with all data needed for dry-run reporting

@@ -21,13 +21,6 @@ import (
 	"github.com/ActiveMemory/ctx/internal/io"
 )
 
-// State holds the counter state for persistence nudging.
-type State struct {
-	Count     int
-	LastNudge int
-	LastMtime int64
-}
-
 // ReadState reads a persistence state file and returns the
 // parsed state. Returns ok=false if the file does not exist or cannot
 // be read.

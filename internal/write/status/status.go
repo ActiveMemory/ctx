@@ -16,22 +16,6 @@ import (
 	"github.com/ActiveMemory/ctx/internal/format"
 )
 
-// FileInfo holds prepared data for a single file in status output.
-type FileInfo struct {
-	Indicator string
-	Name      string
-	Status    string
-	Tokens    int
-	Size      int64
-	Preview   []string
-}
-
-// ActivityInfo holds prepared data for a recent activity entry.
-type ActivityInfo struct {
-	Name string
-	Ago  string
-}
-
 // Header prints the status heading and summary block.
 //
 // Parameters:

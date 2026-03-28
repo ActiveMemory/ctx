@@ -14,13 +14,6 @@ import (
 	"github.com/ActiveMemory/ctx/internal/config/token"
 )
 
-// TurnMatch holds the result of matching a turn header line.
-type TurnMatch struct {
-	Num  int
-	Role string
-	Time string
-}
-
 // MatchTurnHeader attempts to parse a turn header from a line.
 //
 // Parameters:

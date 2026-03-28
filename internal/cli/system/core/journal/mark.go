@@ -16,16 +16,6 @@ import (
 	"github.com/ActiveMemory/ctx/internal/journal/state"
 )
 
-// CheckResult holds the outcome of checking a stage value.
-type CheckResult struct {
-	Value string
-}
-
-// MarkResult holds the outcome of marking a stage.
-type MarkResult struct {
-	Marked bool
-}
-
 // CheckStage reads the current value of a processing stage for a file.
 //
 // Parameters:

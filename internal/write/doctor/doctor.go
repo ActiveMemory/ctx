@@ -17,13 +17,6 @@ import (
 	"github.com/ActiveMemory/ctx/internal/config/stats"
 )
 
-// ResultItem holds the display data for a single doctor check result.
-type ResultItem struct {
-	Category string
-	Status   string
-	Message  string
-}
-
 // JSON prints pre-marshaled JSON data to the command's output stream.
 // Nil cmd is a no-op.
 //

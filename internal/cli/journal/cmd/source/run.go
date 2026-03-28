@@ -10,19 +10,6 @@ import (
 	"github.com/spf13/cobra"
 )
 
-// Opts holds all flags for the source subcommand.
-type Opts struct {
-	ShowID      string
-	Latest      bool
-	Full        bool
-	Limit       int
-	Project     string
-	Tool        string
-	Since       string
-	Until       string
-	AllProjects bool
-}
-
 // Run dispatches to list or show mode based on flags.
 //
 // Show mode is triggered by --show <id>, --latest, or a positional argument.

@@ -9,7 +9,6 @@ package poll
 import (
 	"os"
 	"path/filepath"
-	"sync"
 	"time"
 
 	"github.com/ActiveMemory/ctx/internal/config/mcp/notify"
@@ -21,17 +20,6 @@ import (
 // defaultPollInterval is the default interval for resource change
 // polling.
 const defaultPollInterval = 5 * time.Second
-
-// Poller tracks subscribed resources and polls for file
-// changes.
-type Poller struct {
-	mu         sync.Mutex
-	subs       map[string]bool      // URI → subscribed
-	mtimes     map[string]time.Time // file path → last known mtime
-	contextDir string
-	pollStop   chan struct{}
-	notifyFunc func(proto.Notification) // callback to emit notifications
-}
 
 // NewPoller creates a poller for the given context directory.
 //

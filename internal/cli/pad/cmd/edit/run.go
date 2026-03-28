@@ -14,26 +14,6 @@ import (
 	writePad "github.com/ActiveMemory/ctx/internal/write/pad"
 )
 
-// Mode selects the edit operation.
-type Mode int
-
-// Edit modes.
-const (
-	ModeReplace Mode = iota
-	ModeAppend
-	ModePrepend
-	ModeBlob
-)
-
-// Opts holds all parameters for an edit operation.
-type Opts struct {
-	N         int
-	Text      string
-	FilePath  string
-	LabelText string
-	Mode      Mode
-}
-
 // Run edits a scratchpad entry based on the selected mode.
 //
 // Parameters:

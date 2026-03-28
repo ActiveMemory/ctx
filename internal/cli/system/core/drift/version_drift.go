@@ -83,13 +83,6 @@ func ReadVersionFile() string {
 	return strings.TrimSpace(string(data))
 }
 
-// MarketplaceManifest is the structure of .claude-plugin/marketplace.json.
-type MarketplaceManifest struct {
-	Plugins []struct {
-		Version string `json:"version"`
-	} `json:"plugins"`
-}
-
 // ReadMarketplaceVersion parses .claude-plugin/marketplace.json and returns
 // plugins[0].version, or empty string if the file is missing or malformed.
 //
