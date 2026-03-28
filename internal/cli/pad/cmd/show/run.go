@@ -39,13 +39,13 @@ func Run(cmd *cobra.Command, n int, outPath string) error {
 		return errPad.EntryRange(n, 0)
 	}
 
-	if validErr := validate.ValidateIndex(n, entries); validErr != nil {
+	if validErr := validate.Index(n, entries); validErr != nil {
 		return validErr
 	}
 
 	entry := entries[n-1]
 
-	if _, data, ok := blob.SplitBlob(entry); ok {
+	if _, data, ok := blob.Split(entry); ok {
 		if outPath != "" {
 			if writeErr := os.WriteFile(
 				outPath, data, fs.PermSecret,

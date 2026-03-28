@@ -25,14 +25,14 @@ import (
 	"github.com/ActiveMemory/ctx/internal/write/initialize"
 )
 
-// EnablePluginGlobally enables the ctx plugin in ~/.claude/settings.json.
+// EnableGlobally enables the ctx plugin in ~/.claude/settings.json.
 //
 // Parameters:
 //   - cmd: Cobra command for output
 //
 // Returns:
 //   - error: Non-nil if file operations fail
-func EnablePluginGlobally(cmd *cobra.Command) error {
+func EnableGlobally(cmd *cobra.Command) error {
 	homeDir, homeErr := os.UserHomeDir()
 	if homeErr != nil {
 		return errInit.HomeDir(homeErr)

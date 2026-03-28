@@ -66,7 +66,7 @@ func TestNormalizeContent(t *testing.T) {
 			false,
 			func(t *testing.T, got string) {
 				if strings.Contains(got, "\n") {
-					t.Error("NormalizeContent should not wrap lines")
+					t.Error("Content should not wrap lines")
 				}
 			},
 		},
@@ -142,7 +142,7 @@ func TestNormalizeContent(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			got := NormalizeContent(tt.input, tt.fencesVerified)
+			got := Content(tt.input, tt.fencesVerified)
 			tt.check(t, got)
 		})
 	}

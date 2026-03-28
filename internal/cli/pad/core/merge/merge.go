@@ -38,21 +38,21 @@ func ReadFileEntries(path string, key []byte) ([]string, error) {
 	if key != nil {
 		plaintext, decErr := crypto.Decrypt(key, data)
 		if decErr == nil {
-			return parse.ParseEntries(plaintext), nil
+			return parse.Entries(plaintext), nil
 		}
 	}
 
-	return parse.ParseEntries(data), nil
+	return parse.Entries(data), nil
 }
 
-// LoadMergeKey loads the encryption key for merge input decryption.
+// LoadKey loads the encryption key for merge input decryption.
 //
 // Parameters:
 //   - keyFile: explicit key file path (empty string = use project key).
 //
 // Returns:
 //   - []byte: the loaded key, or nil if no key is available.
-func LoadMergeKey(keyFile string) []byte {
+func LoadKey(keyFile string) []byte {
 	path := keyFile
 	if path == "" {
 		path = store.KeyPath()
@@ -75,7 +75,7 @@ func LoadMergeKey(keyFile string) []byte {
 func BuildBlobLabelMap(entries []string) map[string]string {
 	labels := make(map[string]string)
 	for _, entry := range entries {
-		if label, _, ok := blob.SplitBlob(entry); ok {
+		if label, _, ok := blob.Split(entry); ok {
 			labels[label] = entry
 		}
 	}
@@ -93,7 +93,7 @@ func BuildBlobLabelMap(entries []string) map[string]string {
 //   - bool: true if a conflict was detected.
 //   - string: the conflicting label (empty if no conflict).
 func HasBlobConflict(entry string, blobLabels map[string]string) (bool, string) {
-	label, _, ok := blob.SplitBlob(entry)
+	label, _, ok := blob.Split(entry)
 	if !ok {
 		return false, ""
 	}

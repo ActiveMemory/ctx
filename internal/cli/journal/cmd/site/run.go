@@ -128,7 +128,7 @@ func Run(
 	readmePath := filepath.Join(output, file.Readme)
 	if writeErr := os.WriteFile(
 		readmePath,
-		[]byte(generate.GenerateSiteReadme(journalDir)), fs.PermFile,
+		[]byte(generate.SiteReadme(journalDir)), fs.PermFile,
 	); writeErr != nil {
 		return errFs.FileWrite(readmePath, writeErr)
 	}
@@ -145,10 +145,10 @@ func Run(
 		}
 
 		// Normalize the source file for readability
-		normalized := collapse.CollapseToolOutputs(
-			wrap.SoftWrapContent(
-				turn.MergeConsecutiveTurns(
-					consolidate.ConsolidateToolRuns(
+		normalized := collapse.ToolOutputs(
+			wrap.Content(
+				turn.MergeConsecutive(
+					consolidate.ToolRuns(
 						reduce.CleanToolOutputJSON(
 							reduce.StripSystemReminders(string(content)),
 						),
@@ -170,7 +170,7 @@ func Run(
 		if entry.Summary != "" {
 			withLinks = generate.InjectedSummary(withLinks, entry.Summary)
 		}
-		siteContent := normalize.NormalizeContent(withLinks, fv)
+		siteContent := normalize.Content(withLinks, fv)
 		if writeErr := os.WriteFile(
 			dst, []byte(siteContent), fs.PermFile,
 		); writeErr != nil {
@@ -198,7 +198,7 @@ func Run(
 	}
 
 	// Generate index.md
-	indexContent := generate.GenerateIndex(entries)
+	indexContent := generate.Index(entries)
 	indexPath := filepath.Join(docsDir, file.Index)
 	if writeErr := os.WriteFile(
 		indexPath, []byte(indexContent), fs.PermFile,
@@ -218,7 +218,7 @@ func Run(
 	topics := section.BuildTopicIndex(topicEntries)
 
 	if len(topics) > 0 {
-		if writeErr := section.WriteSection(
+		if writeErr := section.Write(
 			docsDir, dir.JournTopics,
 			section.GenerateTopicsIndex(topics),
 			func(dir string) {
@@ -253,7 +253,7 @@ func Run(
 	keyFiles := section.BuildKeyFileIndex(keyFileEntries)
 
 	if len(keyFiles) > 0 {
-		if writeErr := section.WriteSection(
+		if writeErr := section.Write(
 			docsDir, dir.JournalFiles,
 			section.GenerateKeyFilesIndex(keyFiles),
 			func(dir string) {
@@ -288,7 +288,7 @@ func Run(
 	sessionTypes := section.BuildTypeIndex(typeEntries)
 
 	if len(sessionTypes) > 0 {
-		if writeErr := section.WriteSection(
+		if writeErr := section.Write(
 			docsDir,
 			dir.JournalTypes,
 			section.GenerateTypesIndex(sessionTypes),
@@ -308,7 +308,7 @@ func Run(
 	}
 
 	// Generate zensical.toml
-	tomlContent := generate.GenerateZensicalToml(
+	tomlContent := generate.ZensicalToml(
 		entries, topics, keyFiles, sessionTypes,
 	)
 	tomlPath := filepath.Join(output, zensical.Toml)

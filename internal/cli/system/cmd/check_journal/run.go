@@ -108,7 +108,7 @@ func Run(cmd *cobra.Command, stdin *os.File) error {
 		)
 	}
 
-	content := message.LoadMessage(hook.CheckJournal, variant, vars, fallback)
+	content := message.Load(hook.CheckJournal, variant, vars, fallback)
 	if content == "" {
 		return nil
 	}
@@ -123,7 +123,7 @@ func Run(cmd *cobra.Command, stdin *os.File) error {
 		desc.Text(text.DescKeyCheckJournalRelayFormat),
 		unimported, unenriched,
 	)
-	nudge.NudgeAndRelay(journalMsg, input.SessionID, ref)
+	nudge.EmitAndRelay(journalMsg, input.SessionID, ref)
 
 	internalIo.TouchFile(remindedFile)
 	return nil

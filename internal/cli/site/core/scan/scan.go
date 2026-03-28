@@ -27,7 +27,7 @@ var regBlogDatePattern = regexp.MustCompile(
 	`^\d{4}-\d{2}-\d{2}-.+\.md$`,
 )
 
-// ScanBlogPosts reads blog posts from blogDir, parses metadata, and
+// BlogPosts reads blog posts from blogDir, parses metadata, and
 // returns them sorted by date descending.
 //
 // Parameters:
@@ -37,7 +37,7 @@ var regBlogDatePattern = regexp.MustCompile(
 //   - []BlogPost: Parsed blog posts sorted by date descending
 //   - FeedReport: Report of skipped and warned entries
 //   - error: Non-nil if directory access fails
-func ScanBlogPosts(blogDir string) ([]core.BlogPost, core.FeedReport, error) {
+func BlogPosts(blogDir string) ([]core.BlogPost, core.FeedReport, error) {
 	var report core.FeedReport
 
 	info, statErr := os.Stat(blogDir)

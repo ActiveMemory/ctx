@@ -30,7 +30,7 @@ import (
 // Returns:
 //   - []TopicData: Topics sorted by session count descending, then name
 func BuildTopicIndex(entries []entity.JournalEntry) []entity.TopicData {
-	grouped := group.BuildGroupedIndex(
+	grouped := group.GroupedIndex(
 		entries,
 		func(e entity.JournalEntry) []string { return e.Topics },
 	)
@@ -66,7 +66,7 @@ func GenerateTopicsIndex(topics []entity.TopicData) string {
 	sb.WriteString(desc.Text(text.DescKeyHeadingTopics) + nl + nl)
 	sb.WriteString(fmt.Sprintf(
 		tpl.TplJournalTopicStats+nl+nl,
-		len(topics), session.CountUniqueSessions(topics), len(popular), len(longtail)))
+		len(topics), session.CountUnique(topics), len(popular), len(longtail)))
 
 	WritePopularAndLongtail(&sb,
 		len(popular), desc.Text(text.DescKeyHeadingPopularTopics),
@@ -109,7 +109,7 @@ func GenerateTopicPage(topic entity.TopicData) string {
 // Returns:
 //   - []KeyFileData: Key files sorted by session count descending, then path
 func BuildKeyFileIndex(entries []entity.JournalEntry) []entity.KeyFileData {
-	grouped := group.BuildGroupedIndex(
+	grouped := group.GroupedIndex(
 		entries,
 		func(e entity.JournalEntry) []string { return e.KeyFiles },
 	)
@@ -203,7 +203,7 @@ func GenerateKeyFilePage(kf entity.KeyFileData) string {
 // Returns:
 //   - []TypeData: Session types sorted by count descending, then name
 func BuildTypeIndex(entries []entity.JournalEntry) []entity.TypeData {
-	grouped := group.BuildGroupedIndex(
+	grouped := group.GroupedIndex(
 		entries,
 		func(e entity.JournalEntry) []string { return []string{e.Type} },
 	)
@@ -236,7 +236,7 @@ func GenerateTypesIndex(sessionTypes []entity.TypeData) string {
 	)
 
 	for _, st := range sessionTypes {
-		sb.WriteString(format.FormatSessionLink(st.Name, st.Name, len(st.Entries)))
+		sb.WriteString(format.SessionLink(st.Name, st.Name, len(st.Entries)))
 	}
 	sb.WriteString(nl)
 

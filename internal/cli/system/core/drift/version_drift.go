@@ -23,7 +23,7 @@ import (
 	"github.com/ActiveMemory/ctx/internal/notify"
 )
 
-// CheckVersionDrift compares VERSION, plugin.json, and marketplace.json.
+// CheckVersion compares VERSION, plugin.json, and marketplace.json.
 // If any differ, it emits a relay box listing the drift. Silent when all match.
 //
 // Parameters:
@@ -31,7 +31,7 @@ import (
 //
 // Returns:
 //   - string: JSON hook response to print, or empty string if no drift
-func CheckVersionDrift(sessionID string) string {
+func CheckVersion(sessionID string) string {
 	fileVer := ReadVersionFile()
 	if fileVer == "" {
 		return ""
@@ -58,7 +58,7 @@ func CheckVersionDrift(sessionID string) string {
 	}
 	fallback := "VERSION (" + fileVer + "), plugin.json (" + pluginVer +
 		"), marketplace.json (" + marketVer + ") are out of sync. Update all three before releasing."
-	msg := message.LoadMessage(hook.VersionDrift, hook.VariantNudge, vars, fallback)
+	msg := message.Load(hook.VersionDrift, hook.VariantNudge, vars, fallback)
 	if msg == "" {
 		return ""
 	}

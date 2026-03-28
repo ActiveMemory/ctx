@@ -30,7 +30,7 @@ func TestGenerateHomeMOC(t *testing.T) {
 		},
 	}
 
-	got := GenerateHomeMOC(entries, true, true, true)
+	got := Home(entries, true, true, true)
 
 	if !strings.Contains(got, "# Session Journal") {
 		t.Error("missing main heading")
@@ -54,7 +54,7 @@ func TestGenerateHomeMOCNoSections(t *testing.T) {
 		{Filename: "entry.md", Title: "Test"},
 	}
 
-	got := GenerateHomeMOC(entries, false, false, false)
+	got := Home(entries, false, false, false)
 
 	if strings.Contains(got, "[[_Topics") {
 		t.Error("should not have topics link when hasTopics=false")
@@ -80,7 +80,7 @@ func TestGenerateObsidianTopicsMOC(t *testing.T) {
 		},
 	}
 
-	got := GenerateObsidianTopicsMOC(topics)
+	got := ObsidianTopics(topics)
 
 	if !strings.Contains(got, "[[caching]]") {
 		t.Error("missing popular topic wikilink")

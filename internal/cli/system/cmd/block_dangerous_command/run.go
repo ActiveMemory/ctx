@@ -69,7 +69,7 @@ func Run(cmd *cobra.Command, stdin *os.File) error {
 
 	var reason string
 	if variant != "" {
-		reason = message.LoadMessage(
+		reason = message.Load(
 			hook.BlockDangerousCommands, variant, nil, fallback,
 		)
 	}

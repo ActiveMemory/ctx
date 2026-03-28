@@ -68,13 +68,13 @@ func Run(cmd *cobra.Command, stdin *os.File) error {
 		return nil
 	}
 
-	msg, variant := coreCeremony.EmitCeremonyNudge(remember, wrapup)
+	msg, variant := coreCeremony.Emit(remember, wrapup)
 	writeHook.Nudge(cmd, msg)
 	if msg == "" {
 		return nil
 	}
 	ref := notify.NewTemplateRef(hook.CheckCeremonies, variant, nil)
-	nudge.NudgeAndRelay(hook.CheckCeremonies+": "+
+	nudge.EmitAndRelay(hook.CheckCeremonies+": "+
 		desc.Text(text.DescKeyCeremonyRelayMessage),
 		input.SessionID, ref,
 	)

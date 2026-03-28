@@ -28,7 +28,7 @@ type State struct {
 	LastMtime int64
 }
 
-// ReadPersistenceState reads a persistence state file and returns the
+// ReadState reads a persistence state file and returns the
 // parsed state. Returns ok=false if the file does not exist or cannot
 // be read.
 //
@@ -38,7 +38,7 @@ type State struct {
 // Returns:
 //   - PersistenceState: parsed counter state
 //   - bool: true if the file was read successfully
-func ReadPersistenceState(path string) (State, bool) {
+func ReadState(path string) (State, bool) {
 	data, readErr := io.SafeReadFile(filepath.Dir(path), filepath.Base(path))
 	if readErr != nil {
 		return State{}, false
@@ -71,18 +71,18 @@ func ReadPersistenceState(path string) (State, bool) {
 	return ps, true
 }
 
-// WritePersistenceState writes the persistence state to the given file.
+// WriteState writes the persistence state to the given file.
 //
 // Parameters:
 //   - path: absolute path to the state file
 //   - s: state to persist
-func WritePersistenceState(path string, s State) {
+func WriteState(path string, s State) {
 	content := fmt.Sprintf(desc.Text(text.DescKeyCheckPersistenceStateFormat),
 		s.Count, s.LastNudge, s.LastMtime)
 	_ = os.WriteFile(path, []byte(content), fs.PermSecret)
 }
 
-// PersistenceNudgeNeeded determines whether a persistence nudge should
+// NudgeNeeded determines whether a persistence nudge should
 // fire based on prompt count and the number of prompts since the last nudge.
 //
 // Parameters:
@@ -91,7 +91,7 @@ func WritePersistenceState(path string, s State) {
 //
 // Returns:
 //   - bool: true if a nudge should be emitted
-func PersistenceNudgeNeeded(count, sinceNudge int) bool {
+func NudgeNeeded(count, sinceNudge int) bool {
 	if count >= nudge.PersistenceEarlyMin && count <= nudge.PersistenceEarlyMax && sinceNudge >= nudge.PersistenceEarlyInterval {
 		return true
 	}

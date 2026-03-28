@@ -41,7 +41,7 @@ type Result struct {
 //   - Result: Parsed archive plan
 //   - error: Non-nil if TASKS.md doesn't exist or can't be read
 func Plan() (Result, error) {
-	tasksPath := path.TasksFilePath()
+	tasksPath := path.FilePath()
 	nl := token.NewlineLF
 
 	if _, statErr := os.Stat(tasksPath); os.IsNotExist(statErr) {
@@ -65,7 +65,7 @@ func Plan() (Result, error) {
 		}
 	}
 
-	r.PendingCount = count.CountPendingTasks(lines)
+	r.PendingCount = count.Pending(lines)
 
 	var archivedContent strings.Builder
 	for _, block := range r.Archivable {
@@ -98,7 +98,7 @@ func Execute(r Result) (string, error) {
 		return "", writeErr
 	}
 
-	tasksPath := path.TasksFilePath()
+	tasksPath := path.FilePath()
 	if updateErr := os.WriteFile(tasksPath, []byte(r.NewTasksBody), fs.PermFile); updateErr != nil {
 		return "", errTask.FileWrite(updateErr)
 	}

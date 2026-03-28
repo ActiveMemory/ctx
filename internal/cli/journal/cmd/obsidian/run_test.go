@@ -99,9 +99,9 @@ Just a plain session without enrichment.
 	cmd.SetOut(&strings.Builder{})
 	cmd.SetErr(&strings.Builder{})
 
-	buildErr := BuildObsidianVault(cmd, journalDir, outputDir)
+	buildErr := BuildVault(cmd, journalDir, outputDir)
 	if buildErr != nil {
-		t.Fatalf("BuildObsidianVault failed: %v", buildErr)
+		t.Fatalf("BuildVault failed: %v", buildErr)
 	}
 
 	// Verify vault structure

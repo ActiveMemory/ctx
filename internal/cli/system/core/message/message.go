@@ -23,7 +23,7 @@ import (
 	"github.com/ActiveMemory/ctx/internal/rc"
 )
 
-// LoadMessage loads a hook message template by hook name and variant.
+// Load loads a hook message template by hook name and variant.
 //
 // Priority:
 //  1. .context/hooks/messages/{hook}/{variant}.txt (user override)
@@ -42,7 +42,7 @@ import (
 //
 // Returns:
 //   - string: Rendered message or empty string for intentional silence
-func LoadMessage(hk, variant string, vars map[string]any, fallback string) string {
+func Load(hk, variant string, vars map[string]any, fallback string) string {
 	filename := variant + file.ExtTxt
 
 	// 1. User override in .context/

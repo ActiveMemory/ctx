@@ -29,7 +29,7 @@ import (
 	internalIo "github.com/ActiveMemory/ctx/internal/io"
 )
 
-// ReadStatsDir reads all stats JSONL files, optionally filtered by session prefix.
+// ReadDir reads all stats JSONL files, optionally filtered by session prefix.
 //
 // Parameters:
 //   - dir: path to the state directory
@@ -38,7 +38,7 @@ import (
 // Returns:
 //   - []Entry: sorted stats entries
 //   - error: non-nil on glob failure
-func ReadStatsDir(dir, sessionFilter string) ([]Entry, error) {
+func ReadDir(dir, sessionFilter string) ([]Entry, error) {
 	pattern := filepath.Join(dir, stats.FilePrefix+"*"+file.ExtJSONL)
 	matches, globErr := filepath.Glob(pattern)
 	if globErr != nil {
@@ -47,11 +47,11 @@ func ReadStatsDir(dir, sessionFilter string) ([]Entry, error) {
 
 	var entries []Entry
 	for _, path := range matches {
-		sid := ExtractStatsSessionID(filepath.Base(path))
+		sid := ExtractSessionID(filepath.Base(path))
 		if sessionFilter != "" && !strings.HasPrefix(sid, sessionFilter) {
 			continue
 		}
-		fileEntries, parseErr := ParseStatsFile(path, sid)
+		fileEntries, parseErr := ParseFile(path, sid)
 		if parseErr != nil {
 			continue
 		}
@@ -70,7 +70,7 @@ func ReadStatsDir(dir, sessionFilter string) ([]Entry, error) {
 	return entries, nil
 }
 
-// ExtractStatsSessionID gets the session ID from a filename like
+// ExtractSessionID gets the session ID from a filename like
 // "stats-abc123.jsonl".
 //
 // Parameters:
@@ -78,12 +78,12 @@ func ReadStatsDir(dir, sessionFilter string) ([]Entry, error) {
 //
 // Returns:
 //   - string: session ID
-func ExtractStatsSessionID(basename string) string {
+func ExtractSessionID(basename string) string {
 	s := strings.TrimPrefix(basename, stats.FilePrefix)
 	return strings.TrimSuffix(s, file.ExtJSONL)
 }
 
-// ParseStatsFile reads all JSONL lines from a stats file.
+// ParseFile reads all JSONL lines from a stats file.
 //
 // Parameters:
 //   - path: absolute path to the stats file
@@ -92,7 +92,7 @@ func ExtractStatsSessionID(basename string) string {
 // Returns:
 //   - []Entry: parsed entries
 //   - error: non-nil on read failure
-func ParseStatsFile(path, sid string) ([]Entry, error) {
+func ParseFile(path, sid string) ([]Entry, error) {
 	data, readErr := internalIo.SafeReadUserFile(path)
 	if readErr != nil {
 		return nil, readErr
@@ -112,7 +112,7 @@ func ParseStatsFile(path, sid string) ([]Entry, error) {
 	return entries, nil
 }
 
-// FormatDumpStats formats the last N entries in either JSON or human-readable format.
+// FormatDump formats the last N entries in either JSON or human-readable format.
 //
 // Parameters:
 //   - entries: stats entries to display
@@ -121,7 +121,7 @@ func ParseStatsFile(path, sid string) ([]Entry, error) {
 //
 // Returns:
 //   - []string: formatted output lines
-func FormatDumpStats(entries []Entry, last int, jsonOut bool) []string {
+func FormatDump(entries []Entry, last int, jsonOut bool) []string {
 	if len(entries) == 0 {
 		return []string{desc.Text(text.DescKeyStatsEmpty)}
 	}
@@ -132,25 +132,25 @@ func FormatDumpStats(entries []Entry, last int, jsonOut bool) []string {
 	}
 
 	if jsonOut {
-		return FormatStatsJSON(entries)
+		return FormatJSON(entries)
 	}
 
-	h1, h2 := FormatStatsHeader()
+	h1, h2 := FormatHeader()
 	lines := []string{h1, h2}
 	for i := range entries {
-		lines = append(lines, FormatStatsLine(&entries[i]))
+		lines = append(lines, FormatLine(&entries[i]))
 	}
 	return lines
 }
 
-// FormatStatsJSON formats entries as raw JSONL lines.
+// FormatJSON formats entries as raw JSONL lines.
 //
 // Parameters:
 //   - entries: stats entries to serialize
 //
 // Returns:
 //   - []string: JSON lines (marshal errors are silently skipped)
-func FormatStatsJSON(entries []Entry) []string {
+func FormatJSON(entries []Entry) []string {
 	var lines []string
 	for _, e := range entries {
 		line, marshalErr := json.Marshal(e)
@@ -162,12 +162,12 @@ func FormatStatsJSON(entries []Entry) []string {
 	return lines
 }
 
-// FormatStatsHeader formats the column header lines for human output.
+// FormatHeader formats the column header lines for human output.
 //
 // Returns:
 //   - string: header line
 //   - string: separator line
-func FormatStatsHeader() (string, string) {
+func FormatHeader() (string, string) {
 	fmtStr := desc.Text(text.DescKeyStatsHeaderFormat)
 	header := fmt.Sprintf(fmtStr,
 		stats.HeaderTime, stats.HeaderSession,
@@ -180,15 +180,15 @@ func FormatStatsHeader() (string, string) {
 	return header, separator
 }
 
-// FormatStatsLine formats a single stats entry in human-readable format.
+// FormatLine formats a single stats entry in human-readable format.
 //
 // Parameters:
 //   - e: stats entry to format
 //
 // Returns:
 //   - string: formatted stats line
-func FormatStatsLine(e *Entry) string {
-	ts := FormatStatsTimestamp(e.Timestamp)
+func FormatLine(e *Entry) string {
+	ts := FormatTimestamp(e.Timestamp)
 	sid := e.Session
 	if len(sid) > journal.SessionIDShortLen {
 		sid = sid[:journal.SessionIDShortLen]
@@ -198,7 +198,7 @@ func FormatStatsLine(e *Entry) string {
 		ts, sid, e.Prompt, tokens, e.Pct, e.Event)
 }
 
-// FormatStatsTimestamp converts an RFC3339 timestamp to local time display
+// FormatTimestamp converts an RFC3339 timestamp to local time display
 // using the DateTimePreciseFormat layout.
 //
 // Parameters:
@@ -207,7 +207,7 @@ func FormatStatsLine(e *Entry) string {
 // Returns:
 //   - string: local time formatted as "2006-01-02 15:04:05", or the
 //     original string on parse failure
-func FormatStatsTimestamp(ts string) string {
+func FormatTimestamp(ts string) string {
 	t, parseErr := time.Parse(time.RFC3339, ts)
 	if parseErr != nil {
 		return ts
@@ -255,7 +255,7 @@ func ReadNewLines(path string, offset int64, sid string) []Entry {
 	return entries
 }
 
-// StreamStats polls for new JSONL lines and writes them as they arrive.
+// Stream polls for new JSONL lines and writes them as they arrive.
 //
 // Parameters:
 //   - w: output writer
@@ -265,7 +265,7 @@ func ReadNewLines(path string, offset int64, sid string) []Entry {
 //
 // Returns:
 //   - error: Always nil
-func StreamStats(w io.Writer, dir, sessionFilter string, jsonOut bool) error {
+func Stream(w io.Writer, dir, sessionFilter string, jsonOut bool) error {
 	// Track file sizes to detect new content.
 	offsets := make(map[string]int64)
 	matches, _ := filepath.Glob(filepath.Join(dir, stats.FilePrefix+"*"+file.ExtJSONL))
@@ -282,7 +282,7 @@ func StreamStats(w io.Writer, dir, sessionFilter string, jsonOut bool) error {
 	for range ticker.C {
 		matches, _ = filepath.Glob(filepath.Join(dir, stats.FilePrefix+"*"+file.ExtJSONL))
 		for _, path := range matches {
-			sid := ExtractStatsSessionID(filepath.Base(path))
+			sid := ExtractSessionID(filepath.Base(path))
 			if sessionFilter != "" && !strings.HasPrefix(sid, sessionFilter) {
 				continue
 			}
@@ -304,7 +304,7 @@ func StreamStats(w io.Writer, dir, sessionFilter string, jsonOut bool) error {
 						_, _ = fmt.Fprintln(w, string(line))
 					}
 				} else {
-					_, _ = fmt.Fprintln(w, FormatStatsLine(&newEntries[i]))
+					_, _ = fmt.Fprintln(w, FormatLine(&newEntries[i]))
 				}
 			}
 			offsets[path] = info.Size()

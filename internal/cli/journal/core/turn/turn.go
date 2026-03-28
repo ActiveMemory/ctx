@@ -13,7 +13,7 @@ import (
 	"github.com/ActiveMemory/ctx/internal/config/token"
 )
 
-// ExtractTurnBody extracts the body text from lines[start:] until the next
+// Body extracts the body text from lines[start:] until the next
 // turn header. Skips a leading blank line.
 //
 // Parameters:
@@ -23,7 +23,7 @@ import (
 // Returns:
 //   - string: Trimmed body content
 //   - int: Index one past the last body line
-func ExtractTurnBody(lines []string, start int) (string, int) {
+func Body(lines []string, start int) (string, int) {
 	bodyStart := start
 	// Skip blank line after header
 	if bodyStart < len(lines) && strings.TrimSpace(lines[bodyStart]) == "" {
@@ -44,7 +44,7 @@ func ExtractTurnBody(lines []string, start int) (string, int) {
 	return body, bodyEnd
 }
 
-// MergeConsecutiveTurns merges back-to-back turns from the same role into a
+// MergeConsecutive merges back-to-back turns from the same role into a
 // single turn. Keeps the first header and concatenates all bodies. This reduces
 // noise from sequences like 4 consecutive Assistant turns each with a single
 // tool call.
@@ -54,7 +54,7 @@ func ExtractTurnBody(lines []string, start int) (string, int) {
 //
 // Returns:
 //   - string: Content with consecutive same-role turns merged
-func MergeConsecutiveTurns(content string) string {
+func MergeConsecutive(content string) string {
 	lines := strings.Split(content, token.NewlineLF)
 	var out []string
 	i := 0

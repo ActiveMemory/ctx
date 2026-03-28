@@ -82,7 +82,7 @@ func CountModuleCommits(since string) int {
 //   - string: formatted nudge box, or empty string if silenced
 func EmitMapStalenessWarning(sessionID, dateStr string, moduleCommits int) string {
 	fallback := fmt.Sprintf(desc.Text(text.DescKeyCheckMapStalenessFallback), dateStr, moduleCommits)
-	content := message.LoadMessage(hook.CheckMapStaleness, hook.VariantStale,
+	content := message.Load(hook.CheckMapStaleness, hook.VariantStale,
 		map[string]any{
 			architecture.VarLastRefreshDate: dateStr,
 			architecture.VarModuleCount:     moduleCommits,
@@ -100,6 +100,6 @@ func EmitMapStalenessWarning(sessionID, dateStr string, moduleCommits int) strin
 		map[string]any{architecture.VarLastRefreshDate: dateStr, architecture.VarModuleCount: moduleCommits})
 	notifyMsg := fmt.Sprintf(desc.Text(text.DescKeyRelayPrefixFormat),
 		hook.CheckMapStaleness, desc.Text(text.DescKeyCheckMapStalenessRelayMessage))
-	nudge.NudgeAndRelay(notifyMsg, sessionID, ref)
+	nudge.EmitAndRelay(notifyMsg, sessionID, ref)
 	return box
 }

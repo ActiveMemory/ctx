@@ -152,9 +152,9 @@ func TestCountPendingTasks(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			count := count.CountPendingTasks(tt.lines)
+			count := count.Pending(tt.lines)
 			if count != tt.expected {
-				t.Errorf("CountPendingTasks() = %d, want %d", count, tt.expected)
+				t.Errorf("Pending() = %d, want %d", count, tt.expected)
 			}
 		})
 	}
@@ -163,18 +163,18 @@ func TestCountPendingTasks(t *testing.T) {
 func TestTasksFilePath(t *testing.T) {
 	setupTaskDir(t)
 
-	path := path.TasksFilePath()
+	path := path.FilePath()
 	if !strings.Contains(path, ctx.Task) {
-		t.Errorf("TasksFilePath() = %q, want to contain %q", path, ctx.Task)
+		t.Errorf("FilePath() = %q, want to contain %q", path, ctx.Task)
 	}
 }
 
 func TestArchiveDirPath(t *testing.T) {
 	setupTaskDir(t)
 
-	path := path.ArchiveDirPath()
+	path := path.ArchiveDir()
 	if !strings.Contains(path, dir.Archive) {
-		t.Errorf("ArchiveDirPath() = %q, want to contain %q", path, dir.Archive)
+		t.Errorf("ArchiveDir() = %q, want to contain %q", path, dir.Archive)
 	}
 }
 

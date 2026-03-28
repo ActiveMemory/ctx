@@ -42,7 +42,7 @@ func oversizeNudgeContent() string {
 	fallback := fmt.Sprintf(
 		desc.Text(text.DescKeyCheckContextSizeOversizeFallback), tokenCount,
 	)
-	content := message.LoadMessage(hook.CheckContextSize, hook.VariantOversize,
+	content := message.Load(hook.CheckContextSize, hook.VariantOversize,
 		map[string]any{stats.VarTokenCount: tokenCount}, fallback)
 	if content == "" {
 		_ = os.Remove(flagPath) // silenced, still consume the flag

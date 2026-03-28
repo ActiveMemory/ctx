@@ -88,8 +88,8 @@ func AssemblePacket(ctx *entity.Context, budget int) *assembledPacket {
 	decisionBlocks := ParseEntryBlocks(ctx, cfgCtx.Decision)
 	learningBlocks := ParseEntryBlocks(ctx, cfgCtx.Learning)
 
-	scoredDecisions := score.ScoreEntries(decisionBlocks, keywords, now)
-	scoredLearnings := score.ScoreEntries(learningBlocks, keywords, now)
+	scoredDecisions := score.All(decisionBlocks, keywords, now)
+	scoredLearnings := score.All(learningBlocks, keywords, now)
 
 	// Split the remaining budget: proportional to content size, minimum 30% each
 	decTokens, learnTokens := Split(

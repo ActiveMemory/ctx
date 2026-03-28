@@ -32,7 +32,7 @@ func Message(logFile, sessionID, msg string) {
 	d := filepath.Dir(logFile)
 	_ = os.MkdirAll(d, fs.PermRestrictedDir)
 
-	RotateLog(logFile)
+	Rotate(logFile)
 
 	short := sessionID
 	if len(short) > journal.SessionIDShortLen {
@@ -50,12 +50,12 @@ func Message(logFile, sessionID, msg string) {
 	_, _ = f.WriteString(line)
 }
 
-// RotateLog checks the log file size and rotates if it exceeds
+// Rotate checks the log file size and rotates if it exceeds
 // config.HookLogMaxBytes. The previous generation is replaced.
 //
 // Parameters:
 //   - logFile: Absolute path to the log file
-func RotateLog(logFile string) {
+func Rotate(logFile string) {
 	info, statErr := os.Stat(logFile)
 	if statErr != nil {
 		return

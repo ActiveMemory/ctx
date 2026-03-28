@@ -14,18 +14,18 @@ import (
 	"github.com/ActiveMemory/ctx/internal/rc"
 )
 
-// TasksFilePath returns the path to TASKS.md.
+// FilePath returns the path to TASKS.md.
 //
 // Returns:
 //   - string: Full path to .context/TASKS.md
-func TasksFilePath() string {
+func FilePath() string {
 	return filepath.Join(rc.ContextDir(), ctx.Task)
 }
 
-// ArchiveDirPath returns the path to the archive directory.
+// ArchiveDir returns the path to the archive directory.
 //
 // Returns:
 //   - string: Full path to .context/archive/
-func ArchiveDirPath() string {
+func ArchiveDir() string {
 	return filepath.Join(rc.ContextDir(), dir.Archive)
 }

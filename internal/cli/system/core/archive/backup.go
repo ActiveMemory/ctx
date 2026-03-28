@@ -25,7 +25,7 @@ import (
 	internalIo "github.com/ActiveMemory/ctx/internal/io"
 )
 
-// CreateArchive builds a tar.gz archive from the given entries.
+// Create builds a tar.gz archive from the given entries.
 //
 // Parameters:
 //   - archivePath: output file path for the archive
@@ -34,7 +34,7 @@ import (
 //
 // Returns:
 //   - error: non-nil on file creation or tar writing failure
-func CreateArchive(
+func Create(
 	archivePath string, entries []entity.ArchiveEntry, w io.Writer,
 ) error {
 	outFile, createErr := internalIo.SafeCreateFile(archivePath, cfgFs.PermFile)

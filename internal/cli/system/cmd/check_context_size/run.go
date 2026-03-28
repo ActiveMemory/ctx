@@ -69,7 +69,7 @@ func Run(cmd *cobra.Command, stdin *os.File) error {
 	counter.Write(counterFile, count)
 
 	// Read actual context window usage from session JSONL
-	info, _ := coreSession.ReadSessionTokenInfo(sessionID)
+	info, _ := coreSession.ReadTokenInfo(sessionID)
 	tokens := info.Tokens
 	windowSize := coreSession.EffectiveContextWindow(info.Model)
 	pct := 0
@@ -95,7 +95,7 @@ func Run(cmd *cobra.Command, stdin *os.File) error {
 			fmt.Sprintf(
 				desc.Text(text.DescKeyCheckContextSizeSuppressedLogFormat), count),
 		)
-		coreSession.WriteSessionStats(sessionID, entity.Stats{
+		coreSession.WriteStats(sessionID, entity.Stats{
 			Timestamp:  time.Now().Format(time.RFC3339),
 			Prompt:     count,
 			Tokens:     tokens,
@@ -135,7 +135,7 @@ func Run(cmd *cobra.Command, stdin *os.File) error {
 		)
 	}
 
-	coreSession.WriteSessionStats(sessionID, entity.Stats{
+	coreSession.WriteStats(sessionID, entity.Stats{
 		Timestamp:  time.Now().Format(time.RFC3339),
 		Prompt:     count,
 		Tokens:     tokens,

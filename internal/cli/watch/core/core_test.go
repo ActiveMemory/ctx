@@ -23,7 +23,7 @@ import (
 	"github.com/spf13/cobra"
 )
 
-// TestApplyUpdate tests the ApplyUpdate function routing.
+// TestApplyUpdate tests the Update function routing.
 func TestApplyUpdate(t *testing.T) {
 	tmpDir, err := os.MkdirTemp("", "watch-apply-test-*")
 	if err != nil {
@@ -106,7 +106,7 @@ func TestApplyUpdate(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			err := apply.ApplyUpdate(tt.update)
+			err := apply.Update(tt.update)
 
 			if tt.expectError {
 				if err == nil {
@@ -116,7 +116,7 @@ func TestApplyUpdate(t *testing.T) {
 			}
 
 			if err != nil {
-				t.Fatalf("ApplyUpdate failed: %v", err)
+				t.Fatalf("Update failed: %v", err)
 			}
 
 			// Verify content was added
@@ -168,8 +168,8 @@ func TestApplyCompleteUpdate(t *testing.T) {
 
 	// Complete the task
 	update := core.ContextUpdate{Type: entry.Complete, Content: "authentication"}
-	if err = apply.ApplyUpdate(update); err != nil {
-		t.Fatalf("ApplyUpdate failed: %v", err)
+	if err = apply.Update(update); err != nil {
+		t.Fatalf("Update failed: %v", err)
 	}
 
 	// Verify task was marked complete
@@ -216,9 +216,9 @@ More output
 	var output bytes.Buffer
 	cmd.SetOut(&output)
 
-	err = stream.ProcessStream(cmd, reader, false)
+	err = stream.Process(cmd, reader, false)
 	if err != nil {
-		t.Fatalf("ProcessStream failed: %v", err)
+		t.Fatalf("Process failed: %v", err)
 	}
 
 	// Verify task was written
@@ -263,9 +263,9 @@ More output
 	var output bytes.Buffer
 	cmd.SetOut(&output)
 
-	err = stream.ProcessStream(cmd, reader, false)
+	err = stream.Process(cmd, reader, false)
 	if err != nil {
-		t.Fatalf("ProcessStream failed: %v", err)
+		t.Fatalf("Process failed: %v", err)
 	}
 
 	// Verify learning was written with structured fields
@@ -385,9 +385,9 @@ func TestProcessStream_DryRunMode(t *testing.T) {
 	var buf bytes.Buffer
 	cmd.SetOut(&buf)
 
-	err := stream.ProcessStream(cmd, reader, true)
+	err := stream.Process(cmd, reader, true)
 	if err != nil {
-		t.Fatalf("ProcessStream error: %v", err)
+		t.Fatalf("Process error: %v", err)
 	}
 
 	out := buf.String()
@@ -425,9 +425,9 @@ func TestProcessStream_FailedApply(t *testing.T) {
 	var buf bytes.Buffer
 	cmd.SetOut(&buf)
 
-	err := stream.ProcessStream(cmd, reader, false)
+	err := stream.Process(cmd, reader, false)
 	if err != nil {
-		t.Fatalf("ProcessStream should not return error for failed apply: %v", err)
+		t.Fatalf("Process should not return error for failed apply: %v", err)
 	}
 
 	out := buf.String()
@@ -462,7 +462,7 @@ func TestProcessStream_MultipleUpdates(t *testing.T) {
 	var buf bytes.Buffer
 	cmd.SetOut(&buf)
 
-	err := stream.ProcessStream(cmd, reader, false)
+	err := stream.Process(cmd, reader, false)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -497,7 +497,7 @@ func TestProcessStream_DecisionWithAttributes(t *testing.T) {
 	var buf bytes.Buffer
 	cmd.SetOut(&buf)
 
-	err := stream.ProcessStream(cmd, reader, false)
+	err := stream.Process(cmd, reader, false)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -542,7 +542,7 @@ Another line of normal output.
 	var buf bytes.Buffer
 	cmd.SetOut(&buf)
 
-	err := stream.ProcessStream(cmd, reader, false)
+	err := stream.Process(cmd, reader, false)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -621,7 +621,7 @@ func TestProcessStream_CompleteUpdate(t *testing.T) {
 	var buf bytes.Buffer
 	cmd.SetOut(&buf)
 
-	err := stream.ProcessStream(cmd, reader, false)
+	err := stream.Process(cmd, reader, false)
 	if err != nil {
 		t.Fatal(err)
 	}

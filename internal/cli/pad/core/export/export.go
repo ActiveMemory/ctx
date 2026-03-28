@@ -44,7 +44,7 @@ func Plan(dir string, force bool) ([]Item, error) {
 
 	var items []Item
 	for _, entry := range entries {
-		label, data, ok := blob.SplitBlob(entry)
+		label, data, ok := blob.Split(entry)
 		if !ok {
 			continue
 		}

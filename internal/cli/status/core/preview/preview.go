@@ -15,7 +15,7 @@ import (
 	"github.com/ActiveMemory/ctx/internal/config/token"
 )
 
-// ContentPreview returns the first n non-empty, meaningful lines
+// Content returns the first n non-empty, meaningful lines
 // from content.
 //
 // Skips empty lines, YAML frontmatter delimiters, and HTML comments.
@@ -27,7 +27,7 @@ import (
 //
 // Returns:
 //   - []string: Up to n meaningful lines from the content
-func ContentPreview(content string, n int) []string {
+func Content(content string, n int) []string {
 	lines := strings.Split(content, token.NewlineLF)
 	var preview []string
 

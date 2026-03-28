@@ -46,7 +46,7 @@ func Run(cmd *cobra.Command, stdin *os.File) error {
 		return nil
 	}
 	fallback := desc.Text(text.DescKeySpecsNudgeFallback)
-	msg := message.LoadMessage(
+	msg := message.Load(
 		hook.SpecsNudge, hook.VariantNudge, nil, fallback,
 	)
 	if msg == "" {

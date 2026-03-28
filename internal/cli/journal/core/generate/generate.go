@@ -26,25 +26,25 @@ import (
 	"github.com/ActiveMemory/ctx/internal/entity"
 )
 
-// GenerateSiteReadme creates a README for the journal-site directory.
+// SiteReadme creates a README for the journal-site directory.
 //
 // Parameters:
 //   - journalDir: Path to the source journal directory
 //
 // Returns:
 //   - string: Markdown README content with regeneration instructions
-func GenerateSiteReadme(journalDir string) string {
+func SiteReadme(journalDir string) string {
 	return fmt.Sprintf(tpl.TplJournalSiteReadme, journalDir)
 }
 
-// GenerateIndex creates the index.md content for the journal site.
+// Index creates the index.md content for the journal site.
 //
 // Parameters:
 //   - entries: All journal entries to include
 //
 // Returns:
 //   - string: Markdown content for index.md
-func GenerateIndex(entries []entity.JournalEntry) string {
+func Index(entries []entity.JournalEntry) string {
 	var sb strings.Builder
 	nl := token.NewlineLF
 
@@ -68,7 +68,7 @@ func GenerateIndex(entries []entity.JournalEntry) string {
 		nl+nl, len(regular), len(suggestions)))
 
 	// Group regular sessions by month
-	months, monthOrder := group.GroupByMonth(regular)
+	months, monthOrder := group.ByMonth(regular)
 
 	for _, month := range monthOrder {
 		sb.WriteString(fmt.Sprintf(tpl.TplJournalMonthHeading+nl+nl, month))
@@ -115,7 +115,7 @@ func formatIndexEntry(e entity.JournalEntry, nl string) string {
 		project = fmt.Sprintf(desc.Text(text.DescKeyJournalProjectLabel), e.Project)
 	}
 
-	size := format.FormatSize(e.Size)
+	size := format.Size(e.Size)
 
 	line := fmt.Sprintf(
 		tpl.TplJournalIndexEntry+nl, timeStr, e.Title, link, project, size,
@@ -193,7 +193,7 @@ func InjectedSourceLink(content, sourcePath string) string {
 	return link + content
 }
 
-// GenerateZensicalToml creates the zensical.toml configuration for the
+// ZensicalToml creates the zensical.toml configuration for the
 // journal site.
 //
 // Parameters:
@@ -204,7 +204,7 @@ func InjectedSourceLink(content, sourcePath string) string {
 //
 // Returns:
 //   - string: Complete zensical.toml content
-func GenerateZensicalToml(
+func ZensicalToml(
 	entries []entity.JournalEntry, topics []entity.TopicData,
 	keyFiles []entity.KeyFileData, sessionTypes []entity.TypeData,
 ) string {

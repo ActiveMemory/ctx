@@ -142,7 +142,7 @@ func TestUpdateLockFrontmatter_Lock(t *testing.T) {
 		t.Fatal(writeErr)
 	}
 
-	UpdateLockFrontmatter(path, true)
+	UpdateFrontmatter(path, true)
 
 	data, readErr := os.ReadFile(filepath.Clean(path))
 	if readErr != nil {
@@ -165,7 +165,7 @@ func TestUpdateLockFrontmatter_Unlock(t *testing.T) {
 		t.Fatal(writeErr)
 	}
 
-	UpdateLockFrontmatter(path, false)
+	UpdateFrontmatter(path, false)
 
 	data, readErr := os.ReadFile(filepath.Clean(path))
 	if readErr != nil {
@@ -187,7 +187,7 @@ func TestUpdateLockFrontmatter_NoFrontmatter(t *testing.T) {
 		t.Fatal(writeErr)
 	}
 
-	UpdateLockFrontmatter(path, true)
+	UpdateFrontmatter(path, true)
 
 	data, readErr := os.ReadFile(filepath.Clean(path))
 	if readErr != nil {
@@ -207,7 +207,7 @@ func TestUpdateLockFrontmatter_IdempotentLock(t *testing.T) {
 		t.Fatal(writeErr)
 	}
 
-	UpdateLockFrontmatter(path, true)
+	UpdateFrontmatter(path, true)
 
 	data, readErr := os.ReadFile(filepath.Clean(path))
 	if readErr != nil {
@@ -271,16 +271,16 @@ func TestFrontmatterHasLocked(t *testing.T) {
 				t.Fatal(writeErr)
 			}
 
-			got := FrontmatterHasLocked(path)
+			got := HasLocked(path)
 			if got != tt.want {
-				t.Errorf("FrontmatterHasLocked() = %v, want %v", got, tt.want)
+				t.Errorf("HasLocked() = %v, want %v", got, tt.want)
 			}
 		})
 	}
 }
 
 func TestFrontmatterHasLocked_MissingFile(t *testing.T) {
-	got := FrontmatterHasLocked("/nonexistent/path/test.md")
+	got := HasLocked("/nonexistent/path/test.md")
 	if got {
 		t.Error("missing file should return false")
 	}

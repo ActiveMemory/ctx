@@ -73,7 +73,7 @@ func CheckKeyAge(sessionID string) string {
 	keyFallback := fmt.Sprintf(
 		desc.Text(text.DescKeyCheckVersionKeyFallback), ageDays,
 	)
-	keyContent := message.LoadMessage(hook.CheckVersion, hook.VariantKeyRotation,
+	keyContent := message.Load(hook.CheckVersion, hook.VariantKeyRotation,
 		map[string]any{version.VarKeyAgeDays: ageDays}, keyFallback)
 	if keyContent == "" {
 		return ""
@@ -93,6 +93,6 @@ func CheckKeyAge(sessionID string) string {
 			desc.Text(text.DescKeyCheckVersionKeyRelayFormat), ageDays,
 		),
 	)
-	nudge.NudgeAndRelay(keyNotifyMsg, sessionID, keyRef)
+	nudge.EmitAndRelay(keyNotifyMsg, sessionID, keyRef)
 	return box
 }

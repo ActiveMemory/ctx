@@ -67,7 +67,7 @@ func Run(cmd *cobra.Command, stdin *os.File) error {
 	counter.Write(counterPath, 0)
 
 	fallback := desc.Text(text.DescKeyCheckTaskCompletionFallback)
-	msg := message.LoadMessage(
+	msg := message.Load(
 		hook.CheckTaskCompletion, hook.VariantNudge, nil, fallback,
 	)
 	if msg == "" {

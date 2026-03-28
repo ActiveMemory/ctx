@@ -40,7 +40,7 @@ func Run(cmd *cobra.Command, dryRun bool) error {
 		return err
 	}
 
-	actions := action.DetectSyncActions(ctx)
+	actions := action.Detect(ctx)
 
 	if len(actions) == 0 {
 		sync.CtxSyncInSync(cmd)

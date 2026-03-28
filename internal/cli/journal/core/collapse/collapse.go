@@ -18,7 +18,7 @@ import (
 	"github.com/ActiveMemory/ctx/internal/config/token"
 )
 
-// CollapseToolOutputs wraps long Tool Output turn bodies in collapsible
+// ToolOutputs wraps long Tool Output turn bodies in collapsible
 // <details> blocks. Entries exported before the collapse feature was added
 // have raw multi-line tool output; this pass retroactively collapses them.
 //
@@ -27,7 +27,7 @@ import (
 //
 // Returns:
 //   - string: Content with long tool outputs wrapped in <details> tags
-func CollapseToolOutputs(content string) string {
+func ToolOutputs(content string) string {
 	lines := strings.Split(content, token.NewlineLF)
 	var out []string
 	i := 0
@@ -46,7 +46,7 @@ func CollapseToolOutputs(content string) string {
 		role := matches[2]
 		header := lines[i]
 
-		// Find body boundaries (mirror ExtractTurnBody logic)
+		// Find body boundaries (mirror Body logic)
 		bodyStart := i + 1
 		if bodyStart < len(lines) &&
 			strings.TrimSpace(lines[bodyStart]) == "" {

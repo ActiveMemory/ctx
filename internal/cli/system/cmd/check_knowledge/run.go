@@ -48,7 +48,7 @@ func Run(cmd *cobra.Command, stdin *os.File) error {
 		return nil
 	}
 
-	if box, warned := coreKnowledge.CheckKnowledgeHealth(sessionID); warned {
+	if box, warned := coreKnowledge.CheckHealth(sessionID); warned {
 		writeHook.Nudge(cmd, box)
 		internalIo.TouchFile(markerPath)
 	}

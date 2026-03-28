@@ -24,7 +24,7 @@ import (
 	"github.com/ActiveMemory/ctx/internal/write/initialize"
 )
 
-// CreateOrMerge handles the common pattern of creating a new file or
+// OrCreate handles the common pattern of creating a new file or
 // merging ctx content into an existing one.
 //
 // Parameters:
@@ -34,7 +34,7 @@ import (
 // Returns:
 //   - created: True if the file was created fresh (no existing file)
 //   - error: Non-nil if file operations fail
-func CreateOrMerge(cmd *cobra.Command, p entity.MergeParams) (bool, error) {
+func OrCreate(cmd *cobra.Command, p entity.MergeParams) (bool, error) {
 	existingContent, readErr := os.ReadFile(p.Filename)
 	fileExists := readErr == nil
 
