@@ -19,6 +19,12 @@ var (
 )
 
 // loadPermissions reads an embedded permission file and splits it into entries.
+//
+// Parameters:
+//   - path: Embedded filesystem path to the permission file
+//
+// Returns:
+//   - []string: Non-empty, non-comment lines from the file; nil on read failure
 func loadPermissions(path string) []string {
 	data, readErr := assets.FS.ReadFile(path)
 	if readErr != nil {

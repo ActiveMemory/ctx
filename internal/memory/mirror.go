@@ -172,6 +172,13 @@ func ArchiveCount(contextDir string) int {
 	return count
 }
 
+// countLines returns the number of newline characters in data.
+//
+// Parameters:
+//   - data: Raw byte content to scan
+//
+// Returns:
+//   - int: Count of newline characters; zero for empty input
 func countLines(data []byte) int {
 	if len(data) == 0 {
 		return 0
@@ -180,6 +187,15 @@ func countLines(data []byte) int {
 }
 
 // simpleDiff produces a minimal unified-style diff header with added/removed lines.
+//
+// Parameters:
+//   - oldPath: Label for the old file in the diff header
+//   - newPath: Label for the new file in the diff header
+//   - oldLines: Lines from the previous version
+//   - newLines: Lines from the current version
+//
+// Returns:
+//   - string: Formatted diff showing added and removed lines
 func simpleDiff(oldPath, newPath string, oldLines, newLines []string) string {
 	var buf strings.Builder
 	_, _ = fmt.Fprintf(&buf, desc.Text(text.DescKeyMemoryDiffOldFormat), oldPath)

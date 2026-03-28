@@ -67,6 +67,12 @@ func Plan(dir string, force bool) ([]Item, error) {
 }
 
 // tsWithLabel returns a timestamp-prefixed label for collision avoidance.
+//
+// Parameters:
+//   - label: Suffix to append after the Unix timestamp
+//
+// Returns:
+//   - string: Label in the form "<unix_epoch>-<label>"
 func tsWithLabel(label string) string {
 	ts := fmt.Sprintf("%d", time.Now().Unix())
 	return ts + token.Dash + label

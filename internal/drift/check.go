@@ -355,6 +355,12 @@ func checkMissingPackages(ctx *entity.Context, report *Report) {
 
 // extractFirstComment extracts the first HTML comment block from content.
 // Returns empty string if no comment found.
+//
+// Parameters:
+//   - content: Raw file content to scan for an HTML comment
+//
+// Returns:
+//   - string: Trimmed comment including delimiters, or empty string if none found
 func extractFirstComment(content string) string {
 	start := strings.Index(content, "<!--")
 	if start == -1 {

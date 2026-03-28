@@ -36,6 +36,12 @@ func Run(cmd *cobra.Command, args []string) error {
 }
 
 // showMenu presents a numbered menu and reads user selection from stdin.
+//
+// Parameters:
+//   - cmd: Cobra command for output and context
+//
+// Returns:
+//   - error: Non-nil on read failure or invalid selection
 func showMenu(cmd *cobra.Command) error {
 	why.Banner(cmd)
 	why.Separator(cmd)

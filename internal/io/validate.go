@@ -15,6 +15,12 @@ import (
 
 // rejectDangerousPath returns an error if the resolved absolute path
 // falls under a system directory that ctx should never touch.
+//
+// Parameters:
+//   - absPath: Resolved absolute path to check
+//
+// Returns:
+//   - error: Non-nil if the path is root or under a dangerous prefix
 func rejectDangerousPath(absPath string) error {
 	if absPath == "/" {
 		return errFs.RefuseSystemPathRoot()
@@ -29,6 +35,13 @@ func rejectDangerousPath(absPath string) error {
 
 // cleanAndValidate resolves a path and checks it against dangerous
 // system prefixes. Returns the cleaned path.
+//
+// Parameters:
+//   - path: Raw path to clean and validate
+//
+// Returns:
+//   - string: Cleaned path on success
+//   - error: Non-nil if resolution fails or the path is dangerous
 func cleanAndValidate(path string) (string, error) {
 	clean := filepath.Clean(path)
 	abs, absErr := filepath.Abs(clean)

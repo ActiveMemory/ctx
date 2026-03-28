@@ -91,6 +91,14 @@ func JSON(cmd *cobra.Command, snap sysinfo.Snapshot, alerts []sysinfo.ResourceAl
 	return enc.Encode(out)
 }
 
+// pctOf calculates the integer percentage of used relative to total.
+//
+// Parameters:
+//   - used: Numerator value
+//   - total: Denominator value; returns 0 when zero to avoid division by zero
+//
+// Returns:
+//   - int: Percentage as an integer (0-100)
 func pctOf(used, total uint64) int {
 	if total == 0 {
 		return 0
@@ -98,6 +106,13 @@ func pctOf(used, total uint64) int {
 	return int(float64(used) / float64(total) * 100)
 }
 
+// statusText returns a human-readable label for a severity level.
+//
+// Parameters:
+//   - sev: Severity to convert
+//
+// Returns:
+//   - string: Localized status label (ok, warning, or danger)
 func statusText(sev sysinfo.Severity) string {
 	switch sev {
 	case sysinfo.SeverityWarning:
@@ -109,6 +124,15 @@ func statusText(sev sysinfo.Severity) string {
 	}
 }
 
+// formatLine builds a fixed-width table row with label, values, and status columns.
+//
+// Parameters:
+//   - label: Left-aligned resource name
+//   - values: Usage figures placed after the label
+//   - status: Right-aligned status indicator
+//
+// Returns:
+//   - string: Padded single-line row
 func formatLine(label, values, status string) string {
 	left := fmt.Sprintf(
 		fmt.Sprintf("%%-%ds  %%s", stats.ResourcesLabelWidth), label, values)
@@ -119,6 +143,14 @@ func formatLine(label, values, status string) string {
 	return left + strings.Repeat(" ", pad) + status
 }
 
+// formatText renders the resource snapshot and alerts as a human-readable text table.
+//
+// Parameters:
+//   - snap: System resource snapshot with memory, disk, and inode data
+//   - alerts: Threshold alerts to annotate each row
+//
+// Returns:
+//   - []string: Lines of formatted text, including header and separator
 func formatText(snap sysinfo.Snapshot, alerts []sysinfo.ResourceAlert) []string {
 	var lines []string
 	lines = append(lines, desc.Text(text.DescKeyResourcesHeader))
