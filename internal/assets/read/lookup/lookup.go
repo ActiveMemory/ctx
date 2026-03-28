@@ -36,6 +36,9 @@ func StopWords() map[string]bool {
 }
 
 // loadStopWords parses the stopwords text entry into a lookup map.
+//
+// Returns:
+//   - map[string]bool: Set of lowercase stop words keyed for O(1) membership checks
 func loadStopWords() map[string]bool {
 	raw := TextDesc(text.DescKeyStopwords)
 	words := strings.Fields(raw)

@@ -259,6 +259,12 @@ func initScratchpad(cmd *cobra.Command, contextDir string) error {
 // essential context files (TASKS.md, CONSTITUTION.md, DECISIONS.md). A
 // directory with only logs/ or other non-essential content is considered
 // uninitialized.
+//
+// Parameters:
+//   - contextDir: Absolute path to the context directory to inspect
+//
+// Returns:
+//   - bool: True if at least one essential file exists
 func hasEssentialFiles(contextDir string) bool {
 	for _, f := range ctx.FilesRequired {
 		if _, err := os.Stat(filepath.Join(contextDir, f)); err == nil {
@@ -270,6 +276,12 @@ func hasEssentialFiles(contextDir string) bool {
 
 // ensureGitignoreEntries appends recommended .gitignore entries that are not
 // already present. Creates .gitignore if it does not exist.
+//
+// Parameters:
+//   - cmd: Cobra command for status output
+//
+// Returns:
+//   - error: Non-nil on read or write failure
 func ensureGitignoreEntries(cmd *cobra.Command) error {
 	content, err := os.ReadFile(file.FileGitignore)
 	if err != nil && !os.IsNotExist(err) {
@@ -319,6 +331,9 @@ func ensureGitignoreEntries(cmd *cobra.Command) error {
 // writeGettingStarted saves the next-steps and workflow-tips text to
 // GETTING_STARTED.md in the project root. Best-effort: failures are
 // non-fatal since the same content was already printed to stdout.
+//
+// Parameters:
+//   - cmd: Cobra command for status output
 func writeGettingStarted(cmd *cobra.Command) {
 	content := desc.Text(text.DescKeyWriteInitNextStepsBlock) +
 		token.NewlineLF +

@@ -35,6 +35,14 @@ func Run(cmd *cobra.Command, idStr string, all bool) error {
 	return dismissOne(cmd, idStr)
 }
 
+// dismissOne removes a single reminder by its numeric ID.
+//
+// Parameters:
+//   - cmd: Cobra command for status output
+//   - idStr: String representation of the reminder ID
+//
+// Returns:
+//   - error: Non-nil on invalid ID, missing reminder, or write failure
 func dismissOne(cmd *cobra.Command, idStr string) error {
 	id, parseErr := strconv.Atoi(idStr)
 	if parseErr != nil {
@@ -63,6 +71,13 @@ func dismissOne(cmd *cobra.Command, idStr string) error {
 	return core.WriteReminders(reminders)
 }
 
+// dismissAll removes every active reminder.
+//
+// Parameters:
+//   - cmd: Cobra command for status output
+//
+// Returns:
+//   - error: Non-nil on read or write failure
 func dismissAll(cmd *cobra.Command) error {
 	reminders, readErr := core.ReadReminders()
 	if readErr != nil {

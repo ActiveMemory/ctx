@@ -92,6 +92,9 @@ func Run(cmd *cobra.Command, stdin *os.File) error {
 // scoreCommitViolations reads the last commit and scores it for signs that
 // the agent bypassed /ctx-commit. Returns a formatted nudge box for the
 // human, or empty string if the commit looks clean.
+//
+// Returns:
+//   - string: Formatted nudge box, or empty string if no violations detected
 func scoreCommitViolations() string {
 	msgBytes, msgErr := exec.Command("git", "log", "-1", "--format=%B").Output() //nolint:gosec // G204: all args are string literals
 	if msgErr != nil {

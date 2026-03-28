@@ -64,6 +64,14 @@ func LoadMessage(hk, variant string, vars map[string]any, fallback string) strin
 // Returns the fallback on any parse or execution error. Returns empty
 // string if the template content is empty or whitespace-only
 // (intentional silence).
+//
+// Parameters:
+//   - tmpl: Go text/template source string
+//   - vars: Key-value pairs available inside the template
+//   - fallback: Returned when parsing or execution fails
+//
+// Returns:
+//   - string: Rendered output, empty string for silent templates, or fallback on error
 func renderTemplate(tmpl string, vars map[string]any, fallback string) string {
 	if strings.TrimSpace(tmpl) == "" {
 		return "" // intentional silence

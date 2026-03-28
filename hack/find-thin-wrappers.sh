@@ -5,7 +5,7 @@
 find internal/ cmd/ -name '*.go' ! -name '*_test.go' ! -name 'doc.go' | sort | while read -r file; do
   # Use awk to find functions where the body is just "return pkg.Func(...)"
   awk '
-    /^func [A-Z]/ {
+    /^func [a-zA-Z]/ {
       funcline = $0
       funcname = $2
       sub(/\(.*/, "", funcname)

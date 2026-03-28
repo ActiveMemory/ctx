@@ -34,6 +34,9 @@ func Cmd() *cobra.Command {
 }
 
 // serveCmd returns the mcp serve subcommand.
+//
+// Returns:
+//   - *cobra.Command: Configured serve subcommand with init-skip annotation
 func serveCmd() *cobra.Command {
 	serveShort, serveLong := desc.Command(cmd.DescKeyMcpServe)
 	return &cobra.Command{

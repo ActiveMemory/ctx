@@ -218,6 +218,12 @@ func SafePost(
 
 // validateHTTPScheme parses the URL and rejects any scheme other than
 // http or https.
+//
+// Parameters:
+//   - rawURL: URL string to validate
+//
+// Returns:
+//   - error: Non-nil if the URL is unparseable or uses a non-HTTP scheme
 func validateHTTPScheme(rawURL string) error {
 	parsed, parseErr := url.Parse(rawURL)
 	if parseErr != nil {

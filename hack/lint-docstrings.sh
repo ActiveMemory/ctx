@@ -19,7 +19,7 @@
 set -euo pipefail
 
 find internal/ cmd/ -name '*.go' ! -name '*_test.go' ! -name 'doc.go' | sort | while read -r file; do
-  grep -n '^func [A-Z]' "$file" | while IFS=: read -r lineno rest; do
+  grep -n '^func [a-zA-Z]' "$file" | while IFS=: read -r lineno rest; do
     funcname=$(echo "$rest" | sed 's/^func \([A-Za-z0-9_]*\).*/\1/')
 
     prev=$((lineno - 1))

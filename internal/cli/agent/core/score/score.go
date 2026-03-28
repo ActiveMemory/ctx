@@ -98,11 +98,6 @@ func ScoreEntry(eb *index.EntryBlock, keywords []string, now time.Time) float64 
 	return RecencyScore(eb, now) + RelevanceScore(eb, keywords)
 }
 
-// stopWords returns the set of stop words from assets.
-func stopWords() map[string]bool {
-	return lookup.StopWords()
-}
-
 // ExtractTaskKeywords extracts meaningful keywords from task text.
 //
 // Splits task text on whitespace and punctuation, lowercases, and filters
@@ -123,7 +118,7 @@ func ExtractTaskKeywords(tasks []string) []string {
 			return !alnum && r != '-' && r != '_'
 		})
 		for _, w := range words {
-			if len(w) < 3 || stopWords()[w] || seen[w] {
+			if len(w) < 3 || lookup.StopWords()[w] || seen[w] {
 				continue
 			}
 			seen[w] = true

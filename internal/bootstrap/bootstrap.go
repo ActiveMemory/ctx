@@ -105,6 +105,10 @@ func Initialize(cmd *cobra.Command) *cobra.Command {
 	return cmd
 }
 
+// gettingStarted returns command registrations for the getting-started group.
+//
+// Returns:
+//   - []registration: Init, status, and guide commands
 func gettingStarted() []registration {
 	return []registration{
 		{initialize.Cmd, embedCmd.GroupGettingStarted},
@@ -113,6 +117,10 @@ func gettingStarted() []registration {
 	}
 }
 
+// contextCmds returns command registrations for the context management group.
+//
+// Returns:
+//   - []registration: Add, load, agent, sync, drift, and compact commands
 func contextCmds() []registration {
 	return []registration{
 		{add.Cmd, embedCmd.GroupContext},
@@ -124,6 +132,10 @@ func contextCmds() []registration {
 	}
 }
 
+// artifacts returns command registrations for the artifacts group.
+//
+// Returns:
+//   - []registration: Decision, learning, and task commands
 func artifacts() []registration {
 	return []registration{
 		{decision.Cmd, embedCmd.GroupArtifacts},
@@ -132,6 +144,10 @@ func artifacts() []registration {
 	}
 }
 
+// sessions returns command registrations for the sessions group.
+//
+// Returns:
+//   - []registration: Journal, memory, remind, and pad commands
 func sessions() []registration {
 	return []registration{
 		{journal.Cmd, embedCmd.GroupSessions},
@@ -141,6 +157,10 @@ func sessions() []registration {
 	}
 }
 
+// runtimeCmds returns command registrations for the runtime configuration group.
+//
+// Returns:
+//   - []registration: Config, permission, pause, and resume commands
 func runtimeCmds() []registration {
 	return []registration{
 		{config.Cmd, embedCmd.GroupRuntime},
@@ -150,6 +170,10 @@ func runtimeCmds() []registration {
 	}
 }
 
+// integrations returns command registrations for the integrations group.
+//
+// Returns:
+//   - []registration: Hook, mcp, watch, notify, and loop commands
 func integrations() []registration {
 	return []registration{
 		{hook.Cmd, embedCmd.GroupIntegration},
@@ -160,6 +184,10 @@ func integrations() []registration {
 	}
 }
 
+// diagnostics returns command registrations for the diagnostics group.
+//
+// Returns:
+//   - []registration: Doctor, change, dep, and why commands
 func diagnostics() []registration {
 	return []registration{
 		{doctor.Cmd, embedCmd.GroupDiagnostics},
@@ -169,12 +197,20 @@ func diagnostics() []registration {
 	}
 }
 
+// utilities returns command registrations for the utilities group.
+//
+// Returns:
+//   - []registration: Reindex command
 func utilities() []registration {
 	return []registration{
 		{reindex.Cmd, embedCmd.GroupUtilities},
 	}
 }
 
+// hiddenCmds returns command registrations that are not shown in help output.
+//
+// Returns:
+//   - []registration: Serve, site, and system commands with no group assignment
 func hiddenCmds() []registration {
 	return []registration{
 		{serve.Cmd, ""},

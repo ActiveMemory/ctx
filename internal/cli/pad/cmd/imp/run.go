@@ -39,6 +39,14 @@ func Run(cmd *cobra.Command, path string, blobs bool) error {
 	return runLines(cmd, path)
 }
 
+// runLines imports pad entries from a line-delimited file or stdin.
+//
+// Parameters:
+//   - cmd: Cobra command for status output
+//   - file: Path to the input file, or "-" for stdin
+//
+// Returns:
+//   - error: Non-nil on open, read, or write failure
 func runLines(cmd *cobra.Command, file string) error {
 	var r *os.File
 	if file == cli.StdinSentinel {
@@ -74,6 +82,14 @@ func runLines(cmd *cobra.Command, file string) error {
 	return nil
 }
 
+// runBlobs imports pad entries from files in a directory.
+//
+// Parameters:
+//   - cmd: Cobra command for status output
+//   - path: Directory path containing blob files to import
+//
+// Returns:
+//   - error: Non-nil on directory read or entry write failure
 func runBlobs(cmd *cobra.Command, path string) error {
 	entries, added, results, dirErr := coreImp.FromDirectory(path)
 	if dirErr != nil {

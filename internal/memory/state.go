@@ -117,6 +117,13 @@ func (s *State) MarkImportedDone() {
 	s.LastImport = &now
 }
 
+// statePath returns the filesystem path to the memory state JSON file.
+//
+// Parameters:
+//   - contextDir: Root context directory
+//
+// Returns:
+//   - string: Absolute path to the state file
 func statePath(contextDir string) string {
 	return filepath.Join(contextDir, dir.State, memory.MemoryState)
 }
