@@ -32,7 +32,7 @@ func Cmd() *cobra.Command {
 		Short: short,
 		Long:  long,
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return runLockUnlock(cmd, args, all, true)
+			return Run(cmd, args, all)
 		},
 	}
 
