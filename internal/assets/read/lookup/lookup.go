@@ -12,6 +12,13 @@ import (
 	"github.com/ActiveMemory/ctx/internal/config/embed/text"
 )
 
+// TextDesc resolves a text description key to its short value.
+//
+// Parameters:
+//   - name: Text key to look up (e.g., "check-persistence.fallback")
+//
+// Returns:
+//   - string: Short description text, or empty string if not found
 func TextDesc(name string) string {
 	entry, ok := TextMap[name]
 	if !ok {

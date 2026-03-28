@@ -18,6 +18,9 @@ type ConfigPattern struct {
 }
 
 // ConfigPatterns returns config file patterns with resolved topic descriptions.
+//
+// Returns:
+//   - []ConfigPattern: All known config file patterns with their topic descriptions
 func ConfigPatterns() []ConfigPattern {
 	return []ConfigPattern{
 		{sync.PatternEslint, TextDesc(text.DescKeySyncTopicEslint)},

@@ -13,6 +13,9 @@ import (
 )
 
 // Cmd returns the "ctx loop" command for generating Ralph loop scripts.
+//
+// Returns:
+//   - *cobra.Command: The loop command with subcommands registered
 func Cmd() *cobra.Command {
 	return loopRoot.Cmd()
 }

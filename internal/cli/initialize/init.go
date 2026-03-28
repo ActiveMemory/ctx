@@ -13,6 +13,9 @@ import (
 )
 
 // Cmd returns the "ctx init" command for initializing a .context/ directory.
+//
+// Returns:
+//   - *cobra.Command: The init command with subcommands registered
 func Cmd() *cobra.Command {
 	return initRoot.Cmd()
 }

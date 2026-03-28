@@ -13,6 +13,9 @@ import (
 )
 
 // Cmd returns the top-level "ctx resume" command.
+//
+// Returns:
+//   - *cobra.Command: The resume command with subcommands registered
 func Cmd() *cobra.Command {
 	return resumeRoot.Cmd()
 }

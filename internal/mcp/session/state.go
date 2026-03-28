@@ -34,6 +34,12 @@ type PendingUpdate struct {
 }
 
 // NewState creates a new session state for the given context directory.
+//
+// Parameters:
+//   - contextDir: Path to the project context directory
+//
+// Returns:
+//   - *State: Initialized session state with empty counters
 func NewState(contextDir string) *State {
 	return &State{
 		contextDir:       contextDir,

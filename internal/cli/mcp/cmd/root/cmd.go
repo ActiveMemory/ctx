@@ -13,6 +13,14 @@ import (
 	"github.com/ActiveMemory/ctx/internal/rc"
 )
 
+// Cmd starts the MCP server over stdin/stdout.
+//
+// Parameters:
+//   - cmd: Cobra command for version access
+//   - _: Unused positional arguments
+//
+// Returns:
+//   - error: Non-nil if the server fails to start or encounters an I/O error
 func Cmd(cmd *cobra.Command, _ []string) error {
 	srv := internalMcp.NewServer(rc.ContextDir(), cmd.Root().Version)
 	return srv.Serve()

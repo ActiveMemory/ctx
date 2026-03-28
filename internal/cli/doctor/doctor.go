@@ -15,6 +15,9 @@ import (
 )
 
 // Cmd returns the "ctx doctor" command.
+//
+// Returns:
+//   - *cobra.Command: The doctor command with subcommands registered
 func Cmd() *cobra.Command {
 	return root.Cmd()
 }

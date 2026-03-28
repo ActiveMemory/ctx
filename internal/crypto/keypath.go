@@ -19,6 +19,9 @@ import (
 //
 // Returns ~/.ctx/.ctx.key using os.UserHomeDir.
 // Returns an empty string if the home directory cannot be determined.
+//
+// Returns:
+//   - string: Absolute path to the global encryption key, or empty string on failure
 func GlobalKeyPath() string {
 	home, err := os.UserHomeDir()
 	if err != nil {

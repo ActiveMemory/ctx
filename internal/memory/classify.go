@@ -45,6 +45,9 @@ var rules = []classRule{
 //
 // Matching is case-insensitive. The first rule with a keyword match wins
 // (priority: conventions > decisions > learnings > tasks > skip).
+//
+// Parameters:
+//   - entry: Parsed memory entry to classify
 func Classify(entry Entry) Classification {
 	lower := strings.ToLower(entry.Text)
 

@@ -50,6 +50,14 @@ func Run(cmd *cobra.Command, args []string, opts Opts) error {
 }
 
 // RunShow delegates to the show command's Run function.
+//
+// Parameters:
+//   - cmd: Cobra command instance
+//   - args: Positional arguments from the command line
+//   - opts: Resolved command options
+//
+// Returns:
+//   - error: Non-nil if the show command fails
 func RunShow(cmd *cobra.Command, args []string, opts Opts) error {
 	// If --show <id> was used, pass the ID as a positional arg to show.Run.
 	showArgs := args

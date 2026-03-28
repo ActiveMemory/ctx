@@ -13,6 +13,9 @@ import (
 )
 
 // Cmd returns the watch command.
+//
+// Returns:
+//   - *cobra.Command: The watch command with subcommands registered
 func Cmd() *cobra.Command {
 	return watchRoot.Cmd()
 }

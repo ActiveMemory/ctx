@@ -18,6 +18,12 @@ import (
 // ValidateBoundary checks that dir resolves to a path within the current
 // working directory. Returns an error if the resolved path escapes the
 // project root.
+//
+// Parameters:
+//   - dir: Directory path to validate
+//
+// Returns:
+//   - error: Non-nil if the path escapes the project root
 func ValidateBoundary(dir string) error {
 	cwd, err := os.Getwd()
 	if err != nil {
@@ -55,6 +61,12 @@ func ValidateBoundary(dir string) error {
 
 // CheckSymlinks checks whether dir itself or any of its immediate children
 // are symlinks. Returns an error describing the first symlink found.
+//
+// Parameters:
+//   - dir: Directory path to check for symlinks
+//
+// Returns:
+//   - error: Non-nil if a symlink is found in the directory or its children
 func CheckSymlinks(dir string) error {
 	// Check the directory itself.
 	info, err := os.Lstat(dir)

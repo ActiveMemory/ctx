@@ -163,6 +163,12 @@ func NormalizeContent(content string, fencesVerified bool) string {
 // journal files (e.g., ### 802. Assistant inside a tool output that read
 // another session's file) because the real next turn (### 42.) is always
 // the smallest number > N.
+//
+// Parameters:
+//   - content: Raw markdown content containing tool output sections
+//
+// Returns:
+//   - string: Transformed markdown with tool outputs wrapped in pre/code blocks
 func WrapToolOutputs(content string) string {
 	return ProcessTurns(content, desc.Text(text.DescKeyLabelToolOutput),
 		func(out, body []string, atEOF bool) []string {
@@ -221,6 +227,12 @@ func WrapToolOutputs(content string) string {
 //
 // Boundary detection reuses the same pre-scan + last-match-wins approach
 // as WrapToolOutputs.
+//
+// Parameters:
+//   - content: Raw markdown content containing user turn sections
+//
+// Returns:
+//   - string: Transformed markdown with user turns wrapped in pre/code blocks
 func WrapUserTurns(content string) string {
 	return ProcessTurns(content, desc.Text(text.DescKeyLabelRoleUser),
 		func(out, body []string, _ bool) []string {
@@ -247,6 +259,12 @@ func WrapUserTurns(content string) string {
 // content is returned as-is since it was never HTML-escaped.
 //
 // Returns raw content lines ready for wrapping.
+//
+// Parameters:
+//   - body: Lines of tool output body to unwrap
+//
+// Returns:
+//   - []string: Raw content lines with wrapper tags removed and entities unescaped
 func StripPreWrapper(body []string) []string {
 	var inner []string
 	hadPre := false
@@ -288,6 +306,12 @@ func StripPreWrapper(body []string) []string {
 //   - "No matches found" (grep/glob with zero results)
 //   - Edit confirmations ("The file ... has been updated successfully.")
 //   - Hook denials ("Hook PreToolUse:... denied this tool")
+//
+// Parameters:
+//   - raw: Lines of raw tool output content to check
+//
+// Returns:
+//   - bool: True if the output is empty or matches a boilerplate pattern
 func IsBoilerplateToolOutput(raw []string) bool {
 	// Collect non-blank lines.
 	var nonBlank []string
@@ -323,6 +347,12 @@ func IsBoilerplateToolOutput(raw []string) bool {
 // inside a <pre> block (between <pre>/<pre><code> and </pre>/</code></pre>).
 // This allows turn-header scanning to skip embedded headers from tool outputs
 // that quote other journal files.
+//
+// Parameters:
+//   - lines: Document lines to scan for pre block regions
+//
+// Returns:
+//   - []bool: Boolean slice where true indicates the line is inside a pre block
 func PreBlockMask(lines []string) []bool {
 	mask := make([]bool, len(lines))
 	inPre := false
@@ -348,6 +378,12 @@ func PreBlockMask(lines []string) []bool {
 // document, returning them sorted and deduplicated. Headers inside <pre>
 // blocks are skipped: they are embedded content from tool outputs that
 // read other journal files.
+//
+// Parameters:
+//   - lines: Document lines to extract turn numbers from
+//
+// Returns:
+//   - []int: Sorted, deduplicated turn numbers found in the document
 func CollectTurnNumbers(lines []string) []int {
 	mask := PreBlockMask(lines)
 	seen := make(map[int]bool)
@@ -372,6 +408,13 @@ func CollectTurnNumbers(lines []string) []int {
 
 // NextInSequence returns the smallest number in the sorted slice that is
 // strictly greater than n. Returns -1 if no such number exists.
+//
+// Parameters:
+//   - sorted: Sorted slice of turn numbers
+//   - n: Reference number to search after
+//
+// Returns:
+//   - int: Smallest number greater than n, or -1 if none exists
 func NextInSequence(sorted []int, n int) int {
 	idx := sort.SearchInts(sorted, n+1)
 	if idx < len(sorted) {
@@ -385,6 +428,9 @@ func NextInSequence(sorted []int, n int) int {
 // (possibly across multiple lines) by a "**Part N of M**" label with
 // navigation links. Returns (body without footer, footer lines). If no
 // footer is found, returns the original body and nil.
+//
+// Parameters:
+//   - body: Lines of tool output body to split
 func SplitTrailingFooter(body []string) ([]string, []string) {
 	// Find the last "---" separator and check if a "**Part " line follows.
 	sepIdx := -1

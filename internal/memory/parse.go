@@ -20,6 +20,12 @@ import (
 //   - Consecutive list items (- or *) are grouped into a single entry
 //
 // The top-level heading (# Title) is skipped as it's structural, not content.
+//
+// Parameters:
+//   - content: Raw markdown content to parse into entries
+//
+// Returns:
+//   - []Entry: Parsed entries grouped by headers, paragraphs, and list blocks
 func ParseEntries(content string) []Entry {
 	if strings.TrimSpace(content) == "" {
 		return nil

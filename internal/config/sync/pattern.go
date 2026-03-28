@@ -40,6 +40,9 @@ var SkipDirs = map[string]bool{
 }
 
 // Patterns returns all config file glob patterns in detection order.
+//
+// Returns:
+//   - []string: Glob patterns for all supported config file types
 func Patterns() []string {
 	return []string{
 		PatternEslint,
