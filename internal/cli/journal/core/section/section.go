@@ -91,7 +91,7 @@ func WriteMonths(
 ) {
 	nl := token.NewlineLF
 	for _, month := range monthOrder {
-		_, _ = fmt.Fprintf(sb, tpl.TplJournalMonthHeading+nl+nl, month)
+		_, _ = fmt.Fprintf(sb, tpl.JournalMonthHeading+nl+nl, month)
 		for _, e := range months[month] {
 			link := strings.TrimSuffix(e.Filename, file.ExtMarkdown)
 			timeStr := ""
@@ -99,10 +99,10 @@ func WriteMonths(
 				timeStr = e.Time[:journal.TimePrefixLen] + " "
 			}
 			_, _ = fmt.Fprintf(sb,
-				tpl.TplJournalSubpageEntry+nl,
+				tpl.JournalSubpageEntry+nl,
 				timeStr, e.Title, linkPrefix, link)
 			if e.Summary != "" {
-				_, _ = fmt.Fprintf(sb, tpl.TplJournalIndexSummary+nl, e.Summary)
+				_, _ = fmt.Fprintf(sb, tpl.JournalIndexSummary+nl, e.Summary)
 			}
 		}
 		sb.WriteString(nl)

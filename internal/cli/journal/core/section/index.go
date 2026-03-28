@@ -65,7 +65,7 @@ func GenerateTopicsIndex(topics []entity.TopicData) string {
 
 	sb.WriteString(desc.Text(text.DescKeyHeadingTopics) + nl + nl)
 	sb.WriteString(fmt.Sprintf(
-		tpl.TplJournalTopicStats+nl+nl,
+		tpl.JournalTopicStats+nl+nl,
 		len(topics), session.CountUnique(topics), len(popular), len(longtail)))
 
 	WritePopularAndLongtail(&sb,
@@ -74,7 +74,7 @@ func GenerateTopicsIndex(topics []entity.TopicData) string {
 			return popular[i].Name, popular[i].Name, len(popular[i].Entries)
 		},
 		len(longtail), desc.Text(text.DescKeyHeadingLongtailTopics),
-		tpl.TplJournalLongtailEntry,
+		tpl.JournalLongtailEntry,
 		func(i int) (string, entity.JournalEntry) {
 			return longtail[i].Name, longtail[i].Entries[0]
 		},
@@ -93,8 +93,8 @@ func GenerateTopicsIndex(topics []entity.TopicData) string {
 //   - string: Markdown content for the topic page
 func GenerateTopicPage(topic entity.TopicData) string {
 	return GenerateGroupedPage(
-		fmt.Sprintf(tpl.TplJournalPageHeading, topic.Name),
-		fmt.Sprintf(tpl.TplJournalTopicPageStats, len(topic.Entries)),
+		fmt.Sprintf(tpl.JournalPageHeading, topic.Name),
+		fmt.Sprintf(tpl.JournalTopicPageStats, len(topic.Entries)),
 		topic.Entries,
 	)
 }
@@ -156,7 +156,7 @@ func GenerateKeyFilesIndex(keyFiles []entity.KeyFileData) string {
 
 	sb.WriteString(desc.Text(text.DescKeyHeadingKeyFiles) + nl + nl)
 	sb.WriteString(fmt.Sprintf(
-		tpl.TplJournalFileStats+nl+nl,
+		tpl.JournalFileStats+nl+nl,
 		len(keyFiles), totalSessions, len(popular), len(longtail)),
 	)
 
@@ -168,7 +168,7 @@ func GenerateKeyFilesIndex(keyFiles []entity.KeyFileData) string {
 				len(popular[i].Entries)
 		},
 		len(longtail), desc.Text(text.DescKeyHeadingSingleSession),
-		tpl.TplJournalLongtailCodeEntry,
+		tpl.JournalLongtailCodeEntry,
 		func(i int) (string, entity.JournalEntry) {
 			return longtail[i].Path, longtail[i].Entries[0]
 		},
@@ -187,8 +187,8 @@ func GenerateKeyFilesIndex(keyFiles []entity.KeyFileData) string {
 //   - string: Markdown content for the key file page
 func GenerateKeyFilePage(kf entity.KeyFileData) string {
 	return GenerateGroupedPage(
-		fmt.Sprintf(tpl.TplJournalCodePageHeading, kf.Path),
-		fmt.Sprintf(tpl.TplJournalFilePageStats, len(kf.Entries)),
+		fmt.Sprintf(tpl.JournalCodePageHeading, kf.Path),
+		fmt.Sprintf(tpl.JournalFilePageStats, len(kf.Entries)),
 		kf.Entries,
 	)
 }
@@ -232,7 +232,7 @@ func GenerateTypesIndex(sessionTypes []entity.TypeData) string {
 
 	sb.WriteString(desc.Text(text.DescKeyHeadingSessionTypes) + nl + nl)
 	sb.WriteString(fmt.Sprintf(
-		tpl.TplJournalTypeStats+nl+nl, len(sessionTypes), totalSessions),
+		tpl.JournalTypeStats+nl+nl, len(sessionTypes), totalSessions),
 	)
 
 	for _, st := range sessionTypes {
@@ -253,8 +253,8 @@ func GenerateTypesIndex(sessionTypes []entity.TypeData) string {
 //   - string: Markdown content for the session type page
 func GenerateTypePage(st entity.TypeData) string {
 	return GenerateGroupedPage(
-		fmt.Sprintf(tpl.TplJournalPageHeading, st.Name),
-		fmt.Sprintf(tpl.TplJournalTypePageStats, len(st.Entries), st.Name),
+		fmt.Sprintf(tpl.JournalPageHeading, st.Name),
+		fmt.Sprintf(tpl.JournalTypePageStats, len(st.Entries), st.Name),
 		st.Entries,
 	)
 }
