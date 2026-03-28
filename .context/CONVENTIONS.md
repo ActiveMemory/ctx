@@ -196,3 +196,5 @@ DO NOT UPDATE FOR:
 - Cross-cutting domain types belong in internal/entity. Types used by one package belong in that package; types used across packages go to entity.
 
 - Import grouping: stdlib — blank line — external deps (cobra, yaml) — blank line — ctx imports. Three groups, always in this order. goimports handles stdlib vs external but does not separate external deps from ctx imports — that separation is a manual convention.
+
+- All run functions in cmd/ packages are exported PascalCase — Run, RunImport, RunArchive etc. No private runXXX variants. There is no semantic distinction between a sole Run and a multi-dispatch RunXXX; they are all command entry points.
