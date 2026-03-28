@@ -29,8 +29,8 @@ import (
 //   - bool: True if a valid marker was found
 func FromMarkers() (time.Time, bool) {
 	stateDir := filepath.Join(rc.ContextDir(), dir.State)
-	entries, err := os.ReadDir(stateDir)
-	if err != nil {
+	entries, readDirErr := os.ReadDir(stateDir)
+	if readDirErr != nil {
 		return time.Time{}, false
 	}
 
@@ -71,8 +71,8 @@ func FromMarkers() (time.Time, bool) {
 //   - bool: True if a valid event was found
 func FromEvents() (time.Time, bool) {
 	eventsPath := filepath.Join(rc.ContextDir(), dir.State, event.FileLog)
-	data, err := io.SafeReadUserFile(eventsPath)
-	if err != nil {
+	data, readErr := io.SafeReadUserFile(eventsPath)
+	if readErr != nil {
 		return time.Time{}, false
 	}
 

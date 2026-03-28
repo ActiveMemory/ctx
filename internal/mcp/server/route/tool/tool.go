@@ -40,8 +40,8 @@ func add(
 	if extractErr != nil {
 		return out.ToolError(id, extractErr.Error())
 	}
-	text, err := h.Add(entryType, content, extract.Opts(args))
-	return out.ToolResult(id, text, err)
+	text, addErr := h.Add(entryType, content, extract.Opts(args))
+	return out.ToolResult(id, text, addErr)
 }
 
 // complete extracts the query and delegates to handler.Complete.
@@ -63,8 +63,8 @@ func complete(
 			id, desc.Text(text.DescKeyMCPErrQueryRequired),
 		)
 	}
-	text, err := h.Complete(query)
-	return out.ToolResult(id, text, err)
+	text, completeErr := h.Complete(query)
+	return out.ToolResult(id, text, completeErr)
 }
 
 // recall extracts limit/since and calls the recall function.
@@ -99,8 +99,8 @@ func recall(
 		}
 	}
 
-	text, err := fn(limit, since)
-	return out.ToolResult(id, text, err)
+	text, recallErr := fn(limit, since)
+	return out.ToolResult(id, text, recallErr)
 }
 
 // watchUpdate extracts MCP args and delegates to
@@ -121,10 +121,10 @@ func watchUpdate(
 	if extractErr != nil {
 		return out.ToolError(id, extractErr.Error())
 	}
-	text, err := h.WatchUpdate(
+	text, updateErr := h.WatchUpdate(
 		entryType, content, extract.Opts(args),
 	)
-	return out.ToolResult(id, text, err)
+	return out.ToolResult(id, text, updateErr)
 }
 
 // compact extracts the archive flag and calls the compact
@@ -145,8 +145,8 @@ func compact(
 	if v, ok := args[field.Archive].(bool); ok {
 		doArchive = v
 	}
-	text, err := fn(doArchive)
-	return out.ToolResult(id, text, err)
+	text, compactErr := fn(doArchive)
+	return out.ToolResult(id, text, compactErr)
 }
 
 // checkTaskCompletion extracts recent_action and calls the
@@ -164,8 +164,8 @@ func checkTaskCompletion(
 	fn func(string) (string, error),
 ) *proto.Response {
 	recentAction, _ := args[field.RecentAction].(string)
-	text, err := fn(recentAction)
-	return out.ToolResult(id, text, err)
+	text, checkErr := fn(recentAction)
+	return out.ToolResult(id, text, checkErr)
 }
 
 // sessionEvent extracts the event type/caller and calls the
@@ -189,6 +189,6 @@ func sessionEvent(
 		)
 	}
 	caller, _ := args[field.Caller].(string)
-	text, err := fn(eventType, caller)
-	return out.ToolResult(id, text, err)
+	text, eventErr := fn(eventType, caller)
+	return out.ToolResult(id, text, eventErr)
 }

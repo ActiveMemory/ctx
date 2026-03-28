@@ -37,20 +37,20 @@ const CurrentVersion = 1
 func Load(journalDir string) (*State, error) {
 	path := filepath.Join(journalDir, journal.File)
 
-	data, err := os.ReadFile(filepath.Clean(path))
-	if os.IsNotExist(err) {
+	data, readErr := os.ReadFile(filepath.Clean(path))
+	if os.IsNotExist(readErr) {
 		return &State{
 			Version: CurrentVersion,
 			Entries: make(map[string]File),
 		}, nil
 	}
-	if err != nil {
-		return nil, err
+	if readErr != nil {
+		return nil, readErr
 	}
 
 	var s State
-	if err := json.Unmarshal(data, &s); err != nil {
-		return nil, err
+	if unmarshalErr := json.Unmarshal(data, &s); unmarshalErr != nil {
+		return nil, unmarshalErr
 	}
 	if s.Entries == nil {
 		s.Entries = make(map[string]File)
@@ -67,17 +67,17 @@ func Load(journalDir string) (*State, error) {
 // Returns:
 //   - error: non-nil if marshalling or file write fails
 func (s *State) Save(journalDir string) error {
-	data, err := json.MarshalIndent(s, "", "  ")
-	if err != nil {
-		return err
+	data, marshalErr := json.MarshalIndent(s, "", "  ")
+	if marshalErr != nil {
+		return marshalErr
 	}
 	data = append(data, '\n')
 
 	path := filepath.Join(journalDir, journal.File)
 	tmp := path + ".tmp"
 
-	if err := os.WriteFile(tmp, data, fs.PermFile); err != nil {
-		return err
+	if writeErr := os.WriteFile(tmp, data, fs.PermFile); writeErr != nil {
+		return writeErr
 	}
 	return os.Rename(tmp, path)
 }
@@ -269,8 +269,8 @@ func (s *State) Exported(filename string) bool {
 // Returns:
 //   - int: number of unenriched Markdown files
 func (s *State) CountUnenriched(journalDir string) int {
-	entries, err := os.ReadDir(journalDir)
-	if err != nil {
+	entries, readErr := os.ReadDir(journalDir)
+	if readErr != nil {
 		return 0
 	}
 

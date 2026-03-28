@@ -38,7 +38,7 @@ func CheckPackageFiles(ctx *entity.Context) []core.Action {
 	var actions []core.Action
 
 	for f, d := range dep.Packages {
-		if _, err := os.Stat(f); err == nil {
+		if _, statErr := os.Stat(f); statErr == nil {
 			// File exists, check if we have DEPENDENCIES.md or similar
 			hasDepsDoc := false
 			if f := ctx.File(cfgCtx.Dependency); f != nil {
@@ -141,8 +141,8 @@ func CheckNewDirectories(ctx *entity.Context) []core.Action {
 	}
 
 	// Scan top-level directories
-	entries, err := os.ReadDir(".")
-	if err != nil {
+	entries, readDirErr := os.ReadDir(".")
+	if readDirErr != nil {
 		return actions
 	}
 

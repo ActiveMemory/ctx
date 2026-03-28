@@ -23,9 +23,9 @@ import (
 //     (e.g., "ctx-status", "ctx-reflect")
 //   - error: Non-nil if the skills directory cannot be read
 func SkillList() ([]string, error) {
-	names, err := skill.List()
-	if err != nil {
-		return nil, errSkill.List(err)
+	names, listErr := skill.List()
+	if listErr != nil {
+		return nil, errSkill.List(listErr)
 	}
 	return names, nil
 }
@@ -39,9 +39,9 @@ func SkillList() ([]string, error) {
 //   - []byte: Raw bytes of the SKILL.md file
 //   - error: Non-nil if the skill does not exist or cannot be read
 func SkillContent(name string) ([]byte, error) {
-	content, err := skill.Content(name)
-	if err != nil {
-		return nil, errSkill.Read(name, err)
+	content, readErr := skill.Content(name)
+	if readErr != nil {
+		return nil, errSkill.Read(name, readErr)
 	}
 	return content, nil
 }

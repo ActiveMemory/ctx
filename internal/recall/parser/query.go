@@ -37,14 +37,14 @@ func findSessionsWithFilter(
 
 	// scanOnce scans a directory only if it hasn't been scanned yet.
 	scanOnce := func(dir string) {
-		resolved, err := filepath.EvalSymlinks(dir)
-		if err != nil {
+		resolved, symlinkErr := filepath.EvalSymlinks(dir)
+		if symlinkErr != nil {
 			resolved = filepath.Clean(dir)
 		}
 		if scannedDirs[resolved] {
 			return
 		}
-		if info, err := os.Stat(resolved); err == nil && info.IsDir() {
+		if info, statErr := os.Stat(resolved); statErr == nil && info.IsDir() {
 			scannedDirs[resolved] = true
 			sessions, _ := ScanDirectory(resolved)
 			allSessions = append(allSessions, sessions...)
@@ -52,8 +52,8 @@ func findSessionsWithFilter(
 	}
 
 	// Check Claude Code default location
-	home, err := os.UserHomeDir()
-	if err == nil {
+	home, homeErr := os.UserHomeDir()
+	if homeErr == nil {
 		scanOnce(filepath.Join(home, dir.Claude, dir.Projects))
 	}
 

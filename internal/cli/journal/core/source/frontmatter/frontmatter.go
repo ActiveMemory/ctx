@@ -40,8 +40,8 @@ func ResolveHeading(title, slug, baseName string) string {
 //   - key: Frontmatter key
 //   - value: Quoted string value
 func WriteFmQuoted(sb *strings.Builder, key, value string) {
-	_, err := fmt.Fprintf(sb, tpl.FmQuoted+token.NewlineLF, key, value)
-	if err != nil {
+	_, writeErr := fmt.Fprintf(sb, tpl.FmQuoted+token.NewlineLF, key, value)
+	if writeErr != nil {
 		return
 	}
 }
@@ -53,8 +53,8 @@ func WriteFmQuoted(sb *strings.Builder, key, value string) {
 //   - key: Frontmatter key
 //   - value: Bare string value
 func WriteFmString(sb *strings.Builder, key, value string) {
-	_, err := fmt.Fprintf(sb, tpl.FmString+token.NewlineLF, key, value)
-	if err != nil {
+	_, writeErr := fmt.Fprintf(sb, tpl.FmString+token.NewlineLF, key, value)
+	if writeErr != nil {
 		return
 	}
 }
@@ -66,8 +66,8 @@ func WriteFmString(sb *strings.Builder, key, value string) {
 //   - key: Frontmatter key
 //   - value: Integer value
 func WriteFmInt(sb *strings.Builder, key string, value int) {
-	_, err := fmt.Fprintf(sb, tpl.FmInt+token.NewlineLF, key, value)
-	if err != nil {
+	_, writeErr := fmt.Fprintf(sb, tpl.FmInt+token.NewlineLF, key, value)
+	if writeErr != nil {
 		return
 	}
 }

@@ -79,8 +79,8 @@ func (p *MarkdownSession) Matches(path string) bool {
 		return false
 	}
 
-	f, err := os.Open(filepath.Clean(path))
-	if err != nil {
+	f, openErr := os.Open(filepath.Clean(path))
+	if openErr != nil {
 		return false
 	}
 	defer func() { _ = f.Close() }()
@@ -108,9 +108,9 @@ func (p *MarkdownSession) Matches(path string) bool {
 //   - []*entity.Session: A single-element slice with the parsed session
 //   - error: Non-nil if the file cannot be opened or read
 func (p *MarkdownSession) ParseFile(path string) ([]*entity.Session, error) {
-	content, err := os.ReadFile(filepath.Clean(path))
-	if err != nil {
-		return nil, errParser.ReadFile(err)
+	content, readErr := os.ReadFile(filepath.Clean(path))
+	if readErr != nil {
+		return nil, errParser.ReadFile(readErr)
 	}
 
 	s := p.parseMarkdownSession(string(content), path)

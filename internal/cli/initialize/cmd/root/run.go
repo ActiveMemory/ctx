@@ -59,8 +59,8 @@ func Run(
 	cmd *cobra.Command, force, minimal, merge, noPluginEnable bool,
 ) error {
 	// Check if ctx is in PATH (required for hooks to work)
-	if err := validate.CheckCtxInPath(cmd); err != nil {
-		return err
+	if pathErr := validate.CheckCtxInPath(cmd); pathErr != nil {
+		return pathErr
 	}
 
 	contextDir := rc.ContextDir()
@@ -68,14 +68,14 @@ func Run(
 	// Check if .context/ already exists and is properly initialized.
 	// A directory with only logs/ (created by hooks before init) is
 	// treated as uninitialized - no overwrite prompt needed.
-	if _, err := os.Stat(contextDir); err == nil {
+	if _, statErr := os.Stat(contextDir); statErr == nil {
 		if !force && hasEssentialFiles(contextDir) {
 			// Prompt for confirmation
 			initialize.InfoOverwritePrompt(cmd, contextDir)
 			reader := bufio.NewReader(os.Stdin)
-			response, err := reader.ReadString(token.NewlineLF[0])
-			if err != nil {
-				return errFs.ReadInput(err)
+			response, readErr := reader.ReadString(token.NewlineLF[0])
+			if readErr != nil {
+				return errFs.ReadInput(readErr)
 			}
 			response = strings.TrimSpace(strings.ToLower(response))
 			if response != cli.ConfirmShort && response != cli.ConfirmLong {
@@ -86,8 +86,8 @@ func Run(
 	}
 
 	// Create .context/ directory
-	if err := os.MkdirAll(contextDir, fs.PermExec); err != nil {
-		return errFs.Mkdir(contextDir, err)
+	if mkdirErr := os.MkdirAll(contextDir, fs.PermExec); mkdirErr != nil {
+		return errFs.Mkdir(contextDir, mkdirErr)
 	}
 
 	// Get the list of templates to create
@@ -107,18 +107,18 @@ func Run(
 		targetPath := filepath.Join(contextDir, name)
 
 		// Check if the file exists and --force not set
-		if _, err := os.Stat(targetPath); err == nil && !force {
+		if _, statErr := os.Stat(targetPath); statErr == nil && !force {
 			initialize.InfoExistsSkipped(cmd, name)
 			continue
 		}
 
-		content, err := template.Template(name)
-		if err != nil {
-			return errPrompt.ReadTemplate(name, err)
+		content, tplErr := template.Template(name)
+		if tplErr != nil {
+			return errPrompt.ReadTemplate(name, tplErr)
 		}
 
-		if err := os.WriteFile(targetPath, content, fs.PermFile); err != nil {
-			return errFs.FileWrite(targetPath, err)
+		if writeErr := os.WriteFile(targetPath, content, fs.PermFile); writeErr != nil {
+			return errFs.FileWrite(targetPath, writeErr)
 		}
 
 		initialize.InfoFileCreated(cmd, name)
@@ -127,30 +127,30 @@ func Run(
 	initialize.Initialized(cmd, contextDir)
 
 	// Create entry templates in .context/templates/
-	if err := entry.CreateTemplates(cmd, contextDir, force); err != nil {
+	if tplErr := entry.CreateTemplates(cmd, contextDir, force); tplErr != nil {
 		// Non-fatal: warn but continue
-		initialize.InfoWarnNonFatal(cmd, desc.Text(text.DescKeyInitLabelEntryTemplates), err)
+		initialize.InfoWarnNonFatal(cmd, desc.Text(text.DescKeyInitLabelEntryTemplates), tplErr)
 	}
 
 	// Set up scratchpad
-	if err := initScratchpad(cmd, contextDir); err != nil {
+	if padErr := initScratchpad(cmd, contextDir); padErr != nil {
 		// Non-fatal: warn but continue
-		initialize.InfoWarnNonFatal(cmd, desc.Text(text.DescKeyInitLabelScratchpad), err)
+		initialize.InfoWarnNonFatal(cmd, desc.Text(text.DescKeyInitLabelScratchpad), padErr)
 	}
 
 	// Create project root files
 	initialize.InfoCreatingRootFiles(cmd)
 
 	// Create specs/ and ideas/ directories with README.md
-	if err := coreProject.CreateDirs(cmd); err != nil {
-		initialize.InfoWarnNonFatal(cmd, desc.Text(text.DescKeyInitLabelProjectDirs), err)
+	if dirsErr := coreProject.CreateDirs(cmd); dirsErr != nil {
+		initialize.InfoWarnNonFatal(cmd, desc.Text(text.DescKeyInitLabelProjectDirs), dirsErr)
 	}
 
 	// Merge permissions into settings.local.json (no hook scaffolding)
 	initialize.InfoSettingUpPermissions(cmd)
-	if err := coreMerge.SettingsPermissions(cmd); err != nil {
+	if permsErr := coreMerge.SettingsPermissions(cmd); permsErr != nil {
 		// Non-fatal: warn but continue
-		initialize.InfoWarnNonFatal(cmd, desc.Text(text.DescKeyInitLabelPermissions), err)
+		initialize.InfoWarnNonFatal(cmd, desc.Text(text.DescKeyInitLabelPermissions), permsErr)
 	}
 
 	// Auto-enable plugin globally unless suppressed
@@ -162,20 +162,20 @@ func Run(
 	}
 
 	// Handle CLAUDE.md creation/merge
-	if err := coreClaude.HandleMd(cmd, force, merge); err != nil {
+	if claudeErr := coreClaude.HandleMd(cmd, force, merge); claudeErr != nil {
 		// Non-fatal: warn but continue
-		initialize.InfoWarnNonFatal(cmd, claude.Md, err)
+		initialize.InfoWarnNonFatal(cmd, claude.Md, claudeErr)
 	}
 
 	// Deploy Makefile.ctx and amend user Makefile
-	if err := coreProject.HandleMakefileCtx(cmd); err != nil {
+	if makeErr := coreProject.HandleMakefileCtx(cmd); makeErr != nil {
 		// Non-fatal: warn but continue
-		initialize.InfoWarnNonFatal(cmd, sync.PatternMakefile, err)
+		initialize.InfoWarnNonFatal(cmd, sync.PatternMakefile, makeErr)
 	}
 
 	// Update .gitignore with recommended entries
-	if err := ensureGitignoreEntries(cmd); err != nil {
-		initialize.InfoWarnNonFatal(cmd, file.FileGitignore, err)
+	if ignoreErr := ensureGitignoreEntries(cmd); ignoreErr != nil {
+		initialize.InfoWarnNonFatal(cmd, file.FileGitignore, ignoreErr)
 	}
 
 	initialize.InfoNextSteps(cmd)
@@ -207,9 +207,9 @@ func initScratchpad(cmd *cobra.Command, contextDir string) error {
 	if !rc.ScratchpadEncrypt() {
 		// Plaintext mode: create empty scratchpad.md if not present
 		mdPath := filepath.Join(contextDir, pad.Md)
-		if _, err := os.Stat(mdPath); err != nil {
-			if err := os.WriteFile(mdPath, nil, fs.PermFile); err != nil {
-				return errFs.Mkdir(mdPath, err)
+		if _, statErr := os.Stat(mdPath); statErr != nil {
+			if writeErr := os.WriteFile(mdPath, nil, fs.PermFile); writeErr != nil {
+				return errFs.Mkdir(mdPath, writeErr)
 			}
 			initialize.InfoScratchpadPlaintext(cmd, mdPath)
 		} else {
@@ -223,13 +223,13 @@ func initScratchpad(cmd *cobra.Command, contextDir string) error {
 	encPath := filepath.Join(contextDir, pad.Enc)
 
 	// Check if the key already exists (idempotent)
-	if _, err := os.Stat(kPath); err == nil {
+	if _, keyStatErr := os.Stat(kPath); keyStatErr == nil {
 		initialize.InfoExistsSkipped(cmd, kPath)
 		return nil
 	}
 
 	// Warn if the encrypted file exists but no key
-	if _, err := os.Stat(encPath); err == nil {
+	if _, encStatErr := os.Stat(encPath); encStatErr == nil {
 		initialize.InfoScratchpadNoKey(cmd, kPath)
 		return nil
 	}
@@ -242,13 +242,13 @@ func initScratchpad(cmd *cobra.Command, contextDir string) error {
 	}
 
 	// Generate key
-	key, err := crypto.GenerateKey()
-	if err != nil {
-		return errCrypto.GenerateKey(err)
+	key, genErr := crypto.GenerateKey()
+	if genErr != nil {
+		return errCrypto.GenerateKey(genErr)
 	}
 
-	if err := crypto.SaveKey(kPath, key); err != nil {
-		return errCrypto.SaveKey(err)
+	if saveErr := crypto.SaveKey(kPath, key); saveErr != nil {
+		return errCrypto.SaveKey(saveErr)
 	}
 	initialize.InfoScratchpadKeyCreated(cmd, kPath)
 
@@ -267,7 +267,7 @@ func initScratchpad(cmd *cobra.Command, contextDir string) error {
 //   - bool: True if at least one essential file exists
 func hasEssentialFiles(contextDir string) bool {
 	for _, f := range ctx.FilesRequired {
-		if _, err := os.Stat(filepath.Join(contextDir, f)); err == nil {
+		if _, statErr := os.Stat(filepath.Join(contextDir, f)); statErr == nil {
 			return true
 		}
 	}
@@ -283,9 +283,9 @@ func hasEssentialFiles(contextDir string) bool {
 // Returns:
 //   - error: Non-nil on read or write failure
 func ensureGitignoreEntries(cmd *cobra.Command) error {
-	content, err := os.ReadFile(file.FileGitignore)
-	if err != nil && !os.IsNotExist(err) {
-		return err
+	content, readErr := os.ReadFile(file.FileGitignore)
+	if readErr != nil && !os.IsNotExist(readErr) {
+		return readErr
 	}
 
 	// Build set of existing trimmed lines.
@@ -316,11 +316,11 @@ func ensureGitignoreEntries(cmd *cobra.Command) error {
 		sb.WriteString(entry + token.NewlineLF)
 	}
 
-	if err := os.WriteFile(
+	if writeErr := os.WriteFile(
 		file.FileGitignore, append(content, []byte(sb.String())...),
 		fs.PermFile,
-	); err != nil {
-		return err
+	); writeErr != nil {
+		return writeErr
 	}
 
 	initialize.InfoGitignoreUpdated(cmd, len(missing))

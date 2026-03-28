@@ -35,11 +35,11 @@ import (
 //   - error: Non-nil if file operations fail
 func SettingsPermissions(cmd *cobra.Command) error {
 	var settings claude.Settings
-	existingContent, err := os.ReadFile(cfgClaude.Settings)
-	fileExists := err == nil
+	existingContent, readErr := os.ReadFile(cfgClaude.Settings)
+	fileExists := readErr == nil
 	if fileExists {
-		if err := json.Unmarshal(existingContent, &settings); err != nil {
-			return errParser.ParseFile(cfgClaude.Settings, err)
+		if unmarshalErr := json.Unmarshal(existingContent, &settings); unmarshalErr != nil {
+			return errParser.ParseFile(cfgClaude.Settings, unmarshalErr)
 		}
 	}
 	allowModified := Permissions(
@@ -54,20 +54,20 @@ func SettingsPermissions(cmd *cobra.Command) error {
 		initialize.NoChanges(cmd, cfgClaude.Settings)
 		return nil
 	}
-	if err := os.MkdirAll(dir.Claude, fs.PermExec); err != nil {
-		return errFs.Mkdir(dir.Claude, err)
+	if mkdirErr := os.MkdirAll(dir.Claude, fs.PermExec); mkdirErr != nil {
+		return errFs.Mkdir(dir.Claude, mkdirErr)
 	}
 	var buf bytes.Buffer
 	encoder := json.NewEncoder(&buf)
 	encoder.SetEscapeHTML(false)
 	encoder.SetIndent("", "  ")
-	if err := encoder.Encode(settings); err != nil {
-		return config.MarshalSettings(err)
+	if encodeErr := encoder.Encode(settings); encodeErr != nil {
+		return config.MarshalSettings(encodeErr)
 	}
-	if err := os.WriteFile(
+	if writeErr := os.WriteFile(
 		cfgClaude.Settings, buf.Bytes(), fs.PermFile,
-	); err != nil {
-		return errFs.FileWrite(cfgClaude.Settings, err)
+	); writeErr != nil {
+		return errFs.FileWrite(cfgClaude.Settings, writeErr)
 	}
 	if fileExists {
 		deduped := allowDeduped || denyDeduped

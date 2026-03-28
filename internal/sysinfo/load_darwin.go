@@ -24,14 +24,14 @@ import (
 // Returns:
 //   - LoadInfo: System load averages and CPU count
 func collectLoad() LoadInfo {
-	out, err := exec.Command("sysctl", "-n", "vm.loadavg").Output()
-	if err != nil {
+	out, cmdErr := exec.Command("sysctl", "-n", "vm.loadavg").Output()
+	if cmdErr != nil {
 		return LoadInfo{Supported: false}
 	}
 	// Output: "{ 0.52 0.41 0.38 }"
 	s := strings.Trim(strings.TrimSpace(string(out)), "{ }")
 	var load1, load5, load15 float64
-	if _, err := fmt.Sscanf(s, "%f %f %f", &load1, &load5, &load15); err != nil {
+	if _, scanErr := fmt.Sscanf(s, "%f %f %f", &load1, &load5, &load15); scanErr != nil {
 		return LoadInfo{Supported: false}
 	}
 	return LoadInfo{

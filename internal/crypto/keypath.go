@@ -23,8 +23,8 @@ import (
 // Returns:
 //   - string: Absolute path to the global encryption key, or empty string on failure
 func GlobalKeyPath() string {
-	home, err := os.UserHomeDir()
-	if err != nil {
+	home, homeErr := os.UserHomeDir()
+	if homeErr != nil {
 		return ""
 	}
 	return filepath.Join(home, dir.CtxData, cfgCrypto.ContextKey)
@@ -44,8 +44,8 @@ func ExpandHome(path string) string {
 	if !strings.HasPrefix(path, "~/") {
 		return path
 	}
-	home, err := os.UserHomeDir()
-	if err != nil {
+	home, homeErr := os.UserHomeDir()
+	if homeErr != nil {
 		return path
 	}
 	return filepath.Join(home, path[2:])
@@ -73,7 +73,7 @@ func ResolveKeyPath(contextDir, overridePath string) string {
 
 	// Tier 2: project-local key.
 	local := filepath.Join(contextDir, cfgCrypto.ContextKey)
-	if _, err := os.Stat(local); err == nil {
+	if _, statErr := os.Stat(local); statErr == nil {
 		return local
 	}
 

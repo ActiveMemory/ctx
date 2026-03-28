@@ -92,8 +92,8 @@ func WriteCopilotInstructions(cmd *cobra.Command) error {
 	targetFile := filepath.Join(cfgHook.DirGitHub, cfgHook.FileCopilotInstructions)
 
 	// Create .github/ directory if needed
-	if err := os.MkdirAll(cfgHook.DirGitHub, fs.PermExec); err != nil {
-		return errFs.Mkdir(cfgHook.DirGitHub, err)
+	if mkdirErr := os.MkdirAll(cfgHook.DirGitHub, fs.PermExec); mkdirErr != nil {
+		return errFs.Mkdir(cfgHook.DirGitHub, mkdirErr)
 	}
 
 	// Load the copilot instructions from embedded assets
@@ -103,8 +103,8 @@ func WriteCopilotInstructions(cmd *cobra.Command) error {
 	}
 
 	// Check if the file exists
-	existingContent, err := os.ReadFile(filepath.Clean(targetFile))
-	fileExists := err == nil
+	existingContent, readErr := os.ReadFile(filepath.Clean(targetFile))
+	fileExists := readErr == nil
 
 	if fileExists {
 		existingStr := string(existingContent)

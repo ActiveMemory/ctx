@@ -33,9 +33,9 @@ import (
 func Content(args []string, flags entity.AddConfig) (string, error) {
 	if flags.FromFile != "" {
 		// Read from the file
-		fileContent, err := os.ReadFile(flags.FromFile)
-		if err != nil {
-			return "", add.ErrFileRead(flags.FromFile, err)
+		fileContent, readErr := os.ReadFile(flags.FromFile)
+		if readErr != nil {
+			return "", add.ErrFileRead(flags.FromFile, readErr)
 		}
 		return strings.TrimSpace(string(fileContent)), nil
 	}
@@ -54,8 +54,8 @@ func Content(args []string, flags entity.AddConfig) (string, error) {
 		for scanner.Scan() {
 			lines = append(lines, scanner.Text())
 		}
-		if err := scanner.Err(); err != nil {
-			return "", add.ErrStdinRead(err)
+		if scanErr := scanner.Err(); scanErr != nil {
+			return "", add.ErrStdinRead(scanErr)
 		}
 		return strings.TrimSpace(strings.Join(lines, token.NewlineLF)), nil
 	}

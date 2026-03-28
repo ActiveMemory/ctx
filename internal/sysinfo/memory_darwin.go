@@ -26,26 +26,26 @@ import (
 //   - MemInfo: Physical and swap memory statistics
 func collectMemory() MemInfo {
 	// Total physical memory
-	out, err := exec.Command("sysctl", "-n", "hw.memsize").Output()
-	if err != nil {
+	out, memErr := exec.Command("sysctl", "-n", "hw.memsize").Output()
+	if memErr != nil {
 		return MemInfo{Supported: false}
 	}
-	totalBytes, err := strconv.ParseUint(strings.TrimSpace(string(out)), 10, 64)
-	if err != nil {
+	totalBytes, parseErr := strconv.ParseUint(strings.TrimSpace(string(out)), 10, 64)
+	if parseErr != nil {
 		return MemInfo{Supported: false}
 	}
 
 	// Memory page stats via vm_stat
 	var usedBytes uint64
-	out, err = exec.Command("vm_stat").Output()
-	if err == nil {
+	out, vmStatErr := exec.Command("vm_stat").Output()
+	if vmStatErr == nil {
 		usedBytes = parseVMStat(string(out), totalBytes)
 	}
 
 	// Swap via sysctl
 	var swapTotal, swapUsed uint64
-	out, err = exec.Command("sysctl", "-n", "vm.swapusage").Output()
-	if err == nil {
+	out, swapErr := exec.Command("sysctl", "-n", "vm.swapusage").Output()
+	if swapErr == nil {
 		swapTotal, swapUsed = parseSwapUsage(string(out))
 	}
 
@@ -77,7 +77,7 @@ func parseVMStat(output string, totalBytes uint64) uint64 {
 	for _, line := range strings.Split(output, token.NewlineLF) {
 		if strings.Contains(line, "page size of") {
 			for _, word := range strings.Fields(line) {
-				if n, err := strconv.ParseUint(word, 10, 64); err == nil && n > 0 {
+				if n, parseErr := strconv.ParseUint(word, 10, 64); parseErr == nil && n > 0 {
 					pageSize = n
 					break
 				}
@@ -90,7 +90,7 @@ func parseVMStat(output string, totalBytes uint64) uint64 {
 		}
 		key := strings.TrimSpace(parts[0])
 		val := strings.TrimSpace(strings.TrimSuffix(strings.TrimSpace(parts[1]), "."))
-		if n, err := strconv.ParseUint(val, 10, 64); err == nil {
+		if n, parseErr := strconv.ParseUint(val, 10, 64); parseErr == nil {
 			pages[key] = n
 		}
 	}
@@ -116,8 +116,8 @@ func parseVMStat(output string, totalBytes uint64) uint64 {
 func parseSwapUsage(output string) (total, used uint64) {
 	parseMB := func(s string) uint64 {
 		s = strings.TrimSuffix(strings.TrimSpace(s), "M")
-		f, err := strconv.ParseFloat(s, 64)
-		if err != nil {
+		f, parseErr := strconv.ParseFloat(s, 64)
+		if parseErr != nil {
 			return 0
 		}
 		return uint64(f * 1024 * 1024)

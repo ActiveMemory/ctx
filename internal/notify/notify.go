@@ -37,25 +37,25 @@ func LoadWebhook() (string, error) {
 	kp := rc.KeyPath()
 	encPath := filepath.Join(rc.ContextDir(), cfgCrypto.NotifyEnc)
 
-	key, err := crypto.LoadKey(kp)
-	if err != nil {
-		if os.IsNotExist(err) {
+	key, loadErr := crypto.LoadKey(kp)
+	if loadErr != nil {
+		if os.IsNotExist(loadErr) {
 			return "", nil
 		}
 		return "", nil
 	}
 
-	ciphertext, err := io.SafeReadUserFile(encPath)
-	if err != nil {
-		if os.IsNotExist(err) {
+	ciphertext, readErr := io.SafeReadUserFile(encPath)
+	if readErr != nil {
+		if os.IsNotExist(readErr) {
 			return "", nil
 		}
 		return "", nil
 	}
 
-	plaintext, err := crypto.Decrypt(key, ciphertext)
-	if err != nil {
-		return "", err
+	plaintext, decryptErr := crypto.Decrypt(key, ciphertext)
+	if decryptErr != nil {
+		return "", decryptErr
 	}
 
 	return string(plaintext), nil
@@ -74,12 +74,13 @@ func SaveWebhook(url string) error {
 	kp := rc.KeyPath()
 	encPath := filepath.Join(rc.ContextDir(), cfgCrypto.NotifyEnc)
 
-	key, err := crypto.LoadKey(kp)
-	if err != nil {
+	key, loadErr := crypto.LoadKey(kp)
+	if loadErr != nil {
 		// Key doesn't exist: generate one.
-		key, err = crypto.GenerateKey()
-		if err != nil {
-			return err
+		var genErr error
+		key, genErr = crypto.GenerateKey()
+		if genErr != nil {
+			return genErr
 		}
 		if mkdirErr := os.MkdirAll(
 			filepath.Dir(kp), fs.PermKeyDir,
@@ -91,9 +92,9 @@ func SaveWebhook(url string) error {
 		}
 	}
 
-	ciphertext, err := crypto.Encrypt(key, []byte(url))
-	if err != nil {
-		return err
+	ciphertext, encryptErr := crypto.Encrypt(key, []byte(url))
+	if encryptErr != nil {
+		return encryptErr
 	}
 
 	return os.WriteFile(encPath, ciphertext, fs.PermSecret)
@@ -139,8 +140,8 @@ func Send(event, message, sessionID string, detail *TemplateRef) error {
 		return nil
 	}
 
-	url, err := LoadWebhook()
-	if err != nil || url == "" {
+	url, webhookErr := LoadWebhook()
+	if webhookErr != nil || url == "" {
 		return nil
 	}
 
@@ -158,13 +159,13 @@ func Send(event, message, sessionID string, detail *TemplateRef) error {
 		Project:   project,
 	}
 
-	body, err := json.Marshal(payload)
-	if err != nil {
+	body, marshalErr := json.Marshal(payload)
+	if marshalErr != nil {
 		return nil
 	}
 
-	resp, err := PostJSON(url, body)
-	if err != nil {
+	resp, postErr := PostJSON(url, body)
+	if postErr != nil {
 		return nil // fire-and-forget
 	}
 	_ = resp.Body.Close()

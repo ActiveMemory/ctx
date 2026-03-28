@@ -273,6 +273,12 @@ Spec: `specs/stuttery-rename.md`. Read the spec before starting any SR task.
 - [x] SR.4: tpl/* template constants (26 symbols) #done:2026-03-28-020000 — drop Tpl prefix from all journal/zensical templates #added:2026-03-28-010000
 - [x] SR.5: other core packages (26 symbols, 1 collision kept) #done:2026-03-28-020000 — parser, token, state, server, poll, prompt, memory, index, task, resolve, summary, backup, date, initialize #added:2026-03-28-010000
 
+**JMC.7 — Eliminate remaining recall/cmd dependencies:**
+
+- [ ] JMC.7.1: Move recall/cmd/list logic into journal/cmd/source — source/run.go still delegates list mode to recall/cmd/list.Run. Inline or absorb. #priority:high #added:2026-03-28-030000
+- [ ] JMC.7.2: Move recall/cmd/show logic into journal/cmd/source — source/run.go delegates show mode to recall/cmd/show.Run. Inline or absorb. #priority:high #added:2026-03-28-030000
+- [ ] JMC.7.3: After JMC.7.1-7.2, recall/cmd/ has only backward-compat delegates. Evaluate deleting recall/cmd/ entirely or keeping thin wrappers. #added:2026-03-28-030000
+
 ### Phase CLI-FIX: CLI Infrastructure Fixes
 
 - [ ] Bug: ctx add task appends to the last Phase section instead of a dedicated location. Tasks added via CLI land inside whatever Phase happens to be last in TASKS.md, breaking Phase structure. Fix: add mandatory --phase flag to ctx add task. If the named Phase section does not exist, create it. If --phase is omitted, error with available Phase names. No fallback section — mandatory placement forces intent at creation time. #priority:high #added:2026-03-25-234813

@@ -82,9 +82,9 @@ func Process(cmd *cobra.Command, reader io.Reader, dryRun bool) error {
 				if dryRun {
 					writeWatch.DryRunPreview(cmd, update.Type, update.Content)
 				} else {
-					err := apply.Update(update)
-					if err != nil {
-						writeWatch.ApplyFailed(cmd, update.Type, err)
+					applyErr := apply.Update(update)
+					if applyErr != nil {
+						writeWatch.ApplyFailed(cmd, update.Type, applyErr)
 					} else {
 						writeWatch.ApplySuccess(cmd, update.Type, update.Content)
 						updateCount++
@@ -94,8 +94,8 @@ func Process(cmd *cobra.Command, reader io.Reader, dryRun bool) error {
 		}
 	}
 
-	if err := scanner.Err(); err != nil {
-		return errFs.ReadInputStream(err)
+	if scanErr := scanner.Err(); scanErr != nil {
+		return errFs.ReadInputStream(scanErr)
 	}
 
 	return nil

@@ -64,13 +64,13 @@ func EnsureKey(cmd *cobra.Command) error {
 	kp := KeyPath()
 
 	// Key already exists - nothing to do.
-	if _, err := os.Stat(kp); err == nil {
+	if _, statErr := os.Stat(kp); statErr == nil {
 		return nil
 	}
 
 	// Encrypted file already exists without a key - we can't generate a new
 	// one because it wouldn't decrypt the existing data.
-	if _, err := os.Stat(ScratchpadPath()); err == nil {
+	if _, statErr := os.Stat(ScratchpadPath()); statErr == nil {
 		return errCrypto.NoKeyAt(kp)
 	}
 
@@ -102,9 +102,9 @@ func EnsureKey(cmd *cobra.Command) error {
 //   - error: Non-nil on read/write failure
 func EnsureGitignore(contextDir, filename string) error {
 	entry := filepath.Join(contextDir, filename)
-	content, err := os.ReadFile(file.FileGitignore)
-	if err != nil && !errors.Is(err, os.ErrNotExist) {
-		return err
+	content, readErr := os.ReadFile(file.FileGitignore)
+	if readErr != nil && !errors.Is(readErr, os.ErrNotExist) {
+		return readErr
 	}
 
 	for _, line := range strings.Split(string(content), token.NewlineLF) {
@@ -136,12 +136,12 @@ func ReadEntries() ([]string, error) {
 	dir := filepath.Dir(path)
 	name := filepath.Base(path)
 
-	data, err := io.SafeReadFile(dir, name)
-	if err != nil {
-		if errors.Is(err, os.ErrNotExist) {
+	data, readErr := io.SafeReadFile(dir, name)
+	if readErr != nil {
+		if errors.Is(readErr, os.ErrNotExist) {
 			return nil, nil
 		}
-		return nil, errPad.ReadPad(err)
+		return nil, errPad.ReadPad(readErr)
 	}
 
 	if !rc.ScratchpadEncrypt() {
@@ -181,8 +181,8 @@ func WriteEntries(cmd *cobra.Command, entries []string) error {
 		return os.WriteFile(path, plaintext, fs.PermFile)
 	}
 
-	if err := EnsureKey(cmd); err != nil {
-		return err
+	if ensureErr := EnsureKey(cmd); ensureErr != nil {
+		return ensureErr
 	}
 
 	kp := KeyPath()

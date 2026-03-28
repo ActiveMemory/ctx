@@ -79,8 +79,8 @@ func RunAddSilent(update core.ContextUpdate) error {
 	}
 
 	// Validate required fields (same as ctx add)
-	if err := entry.Validate(params, nil); err != nil {
-		return err
+	if validateErr := entry.Validate(params, nil); validateErr != nil {
+		return validateErr
 	}
 
 	// Write using the shared function
@@ -110,9 +110,9 @@ func RunCompleteSilent(args []string) error {
 	filePath := filepath.Join(rc.ContextDir(), ctx.Task)
 	nl := token.NewlineLF
 
-	content, err := os.ReadFile(filepath.Clean(filePath))
-	if err != nil {
-		return err
+	content, readErr := os.ReadFile(filepath.Clean(filePath))
+	if readErr != nil {
+		return readErr
 	}
 
 	lines := strings.Split(string(content), nl)

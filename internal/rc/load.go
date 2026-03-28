@@ -26,8 +26,8 @@ func loadRC() *CtxRC {
 	cfg := Default()
 
 	// Try to load .ctxrc from the current directory
-	data, err := os.ReadFile(file.CtxRC)
-	if err == nil {
+	data, readErr := os.ReadFile(file.CtxRC)
+	if readErr == nil {
 		if yamlErr := yaml.Unmarshal(data, cfg); yamlErr != nil {
 			writeRC.ParseWarning(file.CtxRC, yamlErr)
 		}
@@ -38,7 +38,7 @@ func loadRC() *CtxRC {
 		cfg.ContextDir = envDir
 	}
 	if envBudget := os.Getenv(env.CtxTokenBudget); envBudget != "" {
-		if budget, err := strconv.Atoi(envBudget); err == nil && budget > 0 {
+		if budget, parseErr := strconv.Atoi(envBudget); parseErr == nil && budget > 0 {
 			cfg.TokenBudget = budget
 		}
 	}

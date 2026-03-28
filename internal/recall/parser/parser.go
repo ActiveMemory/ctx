@@ -57,8 +57,8 @@ func ParseFile(path string) ([]*entity.Session, error) {
 //   - []*entity.Session: All sessions found, sorted by start time (newest first)
 //   - error: Non-nil if directory traversal fails
 func ScanDirectory(dir string) ([]*entity.Session, error) {
-	sessions, _, err := ScanDirectoryWithErrors(dir)
-	return sessions, err
+	sessions, _, scanErr := ScanDirectoryWithErrors(dir)
+	return sessions, scanErr
 }
 
 // ScanDirectoryWithErrors is like ScanDirectory but also returns parse errors.
@@ -77,7 +77,7 @@ func ScanDirectoryWithErrors(dir string) ([]*entity.Session, []error, error) {
 	var allSessions []*entity.Session
 	var parseErrors []error
 
-	err := filepath.Walk(dir, func(
+	walkErr := filepath.Walk(dir, func(
 		path string, info os.FileInfo, err error,
 	) error {
 		if err != nil {
@@ -114,8 +114,8 @@ func ScanDirectoryWithErrors(dir string) ([]*entity.Session, []error, error) {
 		return nil
 	})
 
-	if err != nil {
-		return nil, nil, errParser.WalkDir(err)
+	if walkErr != nil {
+		return nil, nil, errParser.WalkDir(walkErr)
 	}
 
 	// Sort by start time (newest first)

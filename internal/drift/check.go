@@ -74,7 +74,7 @@ func checkPathReferences(ctx *entity.Context, report *Report) {
 					continue
 				}
 				// Check if the file exists
-				if _, err := os.Stat(path); os.IsNotExist(err) {
+				if _, statErr := os.Stat(path); os.IsNotExist(statErr) {
 					report.Warnings = append(report.Warnings, Issue{
 						File:    f.Name,
 						Line:    lineNum + 1,
@@ -324,8 +324,8 @@ func checkMissingPackages(ctx *entity.Context, report *Report) {
 	}
 
 	// Scan actual internal/ subdirectories (one level deep, directories only).
-	entries, err := os.ReadDir(project.DirInternal)
-	if err != nil {
+	entries, readErr := os.ReadDir(project.DirInternal)
+	if readErr != nil {
 		return
 	}
 
@@ -384,8 +384,8 @@ func checkTemplateHeaders(ctx *entity.Context, report *Report) {
 	found := false
 
 	for _, f := range ctx.Files {
-		tplContent, err := readTpl.Template(f.Name)
-		if err != nil {
+		tplContent, tplErr := readTpl.Template(f.Name)
+		if tplErr != nil {
 			continue // no template for this file
 		}
 

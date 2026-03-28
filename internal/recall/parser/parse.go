@@ -153,7 +153,7 @@ func (p *ClaudeCode) convertMessage(raw claudeRawMessage) entity.Message {
 			if block.Content != nil {
 				// Try to unmarshal as JSON string first (handles escaping)
 				var unescaped string
-				if err := json.Unmarshal(block.Content, &unescaped); err == nil {
+				if unmarshalErr := json.Unmarshal(block.Content, &unescaped); unmarshalErr == nil {
 					contentStr = unescaped
 				} else {
 					// Fallback to raw bytes
@@ -188,13 +188,13 @@ func (p *ClaudeCode) parseContentBlocks(
 
 	// Try parsing as the array of blocks first
 	var blocks []claudeRawBlock
-	if err := json.Unmarshal(content, &blocks); err == nil {
+	if unmarshalErr := json.Unmarshal(content, &blocks); unmarshalErr == nil {
 		return blocks
 	}
 
 	// Try parsing as a simple string
 	var text string
-	if err := json.Unmarshal(content, &text); err == nil && text != "" {
+	if textErr := json.Unmarshal(content, &text); textErr == nil && text != "" {
 		return []claudeRawBlock{{Type: claude.BlockText, Text: text}}
 	}
 
@@ -236,8 +236,8 @@ func (p *MarkdownSession) parseMarkdownSession(
 	// Parse date from header or fall back to file modification time
 	startTime := parseSessionDate(date)
 	if startTime.IsZero() {
-		info, err := os.Stat(sourcePath)
-		if err == nil {
+		info, statErr := os.Stat(sourcePath)
+		if statErr == nil {
 			startTime = info.ModTime()
 		} else {
 			startTime = time.Now()
@@ -354,8 +354,8 @@ func parseSessionHeader(line string) (string, string) {
 // Returns:
 //   - time.Time: Parsed time, or zero value on failure
 func parseSessionDate(dateStr string) time.Time {
-	t, err := time.Parse(cfgTime.DateFormat, dateStr)
-	if err != nil {
+	t, parseErr := time.Parse(cfgTime.DateFormat, dateStr)
+	if parseErr != nil {
 		return time.Time{}
 	}
 	return t

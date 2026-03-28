@@ -215,35 +215,35 @@ func Reindex(
 	updateFunc func(string) string,
 	entryType string,
 ) error {
-	if _, err := os.Stat(filePath); os.IsNotExist(err) {
+	if _, statErr := os.Stat(filePath); os.IsNotExist(statErr) {
 		return errRecall.ReindexFileNotFound(fileName)
 	}
 
-	content, err := internalIo.SafeReadUserFile(filePath)
-	if err != nil {
-		return errRecall.ReindexFileRead(filePath, err)
+	content, readErr := internalIo.SafeReadUserFile(filePath)
+	if readErr != nil {
+		return errRecall.ReindexFileRead(filePath, readErr)
 	}
 
 	updated := updateFunc(string(content))
 
-	if err := os.WriteFile(filePath, []byte(updated), fs.PermFile); err != nil {
-		return errRecall.ReindexFileWrite(filePath, err)
+	if writeErr := os.WriteFile(filePath, []byte(updated), fs.PermFile); writeErr != nil {
+		return errRecall.ReindexFileWrite(filePath, writeErr)
 	}
 
 	entries := ParseHeaders(string(content))
 	if len(entries) == 0 {
-		_, err := fmt.Fprintf(
+		_, printErr := fmt.Fprintf(
 			w, desc.Text(text.DescKeyDriftCleared)+token.NewlineLF, entryType)
-		if err != nil {
-			return err
+		if printErr != nil {
+			return printErr
 		}
 	} else {
-		_, err := fmt.Fprintf(
+		_, printErr := fmt.Fprintf(
 			w,
 			desc.Text(text.DescKeyDriftRegenerated)+token.NewlineLF, len(entries),
 		)
-		if err != nil {
-			return err
+		if printErr != nil {
+			return printErr
 		}
 	}
 

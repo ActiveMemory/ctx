@@ -31,9 +31,9 @@ import (
 //   - error: Non-nil if the context directory cannot be read
 func FindContextChanges(refTime time.Time) ([]entity.ContextChange, error) {
 	dir := rc.ContextDir()
-	entries, err := os.ReadDir(dir)
-	if err != nil {
-		return nil, err
+	entries, readDirErr := os.ReadDir(dir)
+	if readDirErr != nil {
+		return nil, readDirErr
 	}
 
 	var changes []entity.ContextChange
@@ -75,8 +75,8 @@ func SummarizeCodeChanges(refTime time.Time) (entity.CodeSummary, error) {
 	var summary entity.CodeSummary
 
 	// Count commits.
-	out, err := GitLogSince(refTime, cfgGit.FlagOneline)
-	if err != nil {
+	out, logErr := GitLogSince(refTime, cfgGit.FlagOneline)
+	if logErr != nil {
 		return summary, nil
 	}
 	lines := strings.TrimSpace(string(out))

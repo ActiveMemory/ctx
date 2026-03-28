@@ -25,25 +25,25 @@ import (
 // Returns:
 //   - error: Non-nil if the path escapes the project root
 func ValidateBoundary(dir string) error {
-	cwd, err := os.Getwd()
-	if err != nil {
-		return errFs.BoundaryViolation(err)
+	cwd, cwdErr := os.Getwd()
+	if cwdErr != nil {
+		return errFs.BoundaryViolation(cwdErr)
 	}
 
-	absDir, err := filepath.Abs(dir)
-	if err != nil {
-		return errFs.BoundaryViolation(err)
+	absDir, absErr := filepath.Abs(dir)
+	if absErr != nil {
+		return errFs.BoundaryViolation(absErr)
 	}
 
 	// Resolve symlinks in both paths so traversal via symlinked parents
 	// is caught.
-	resolvedCwd, err := filepath.EvalSymlinks(cwd)
-	if err != nil {
-		return errFs.BoundaryViolation(err)
+	resolvedCwd, resolveErr := filepath.EvalSymlinks(cwd)
+	if resolveErr != nil {
+		return errFs.BoundaryViolation(resolveErr)
 	}
 
-	resolvedDir, err := filepath.EvalSymlinks(absDir)
-	if err != nil {
+	resolvedDir, dirResolveErr := filepath.EvalSymlinks(absDir)
+	if dirResolveErr != nil {
 		// If the target doesn't exist yet (e.g. before init), fall back
 		// to the absolute path for the prefix check.
 		resolvedDir = filepath.Clean(absDir)
@@ -69,8 +69,8 @@ func ValidateBoundary(dir string) error {
 //   - error: Non-nil if a symlink is found in the directory or its children
 func CheckSymlinks(dir string) error {
 	// Check the directory itself.
-	info, err := os.Lstat(dir)
-	if err != nil {
+	info, lstatErr := os.Lstat(dir)
+	if lstatErr != nil {
 		// Non-existent dir is not our concern: let the caller handle it.
 		return nil
 	}
@@ -79,15 +79,15 @@ func CheckSymlinks(dir string) error {
 	}
 
 	// Check immediate children.
-	entries, err := os.ReadDir(dir)
-	if err != nil {
+	entries, readDirErr := os.ReadDir(dir)
+	if readDirErr != nil {
 		return nil
 	}
 
 	for _, entry := range entries {
 		child := filepath.Join(dir, entry.Name())
-		ci, err := os.Lstat(child)
-		if err != nil {
+		ci, childLstatErr := os.Lstat(child)
+		if childLstatErr != nil {
 			continue
 		}
 		if ci.Mode()&os.ModeSymlink != 0 {

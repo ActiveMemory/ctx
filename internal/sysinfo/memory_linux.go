@@ -23,8 +23,8 @@ import (
 // Returns:
 //   - MemInfo: Physical and swap memory statistics
 func collectMemory() MemInfo {
-	f, err := os.Open("/proc/meminfo")
-	if err != nil {
+	f, openErr := os.Open("/proc/meminfo")
+	if openErr != nil {
 		return MemInfo{Supported: false}
 	}
 	defer func() { _ = f.Close() }()
@@ -52,7 +52,7 @@ func parseMeminfo(r io.Reader) MemInfo {
 		}
 		key := strings.TrimSpace(parts[0])
 		val := strings.TrimSuffix(strings.TrimSpace(parts[1]), " kB")
-		if n, err := strconv.ParseUint(strings.TrimSpace(val), 10, 64); err == nil {
+		if n, parseErr := strconv.ParseUint(strings.TrimSpace(val), 10, 64); parseErr == nil {
 			vals[key] = n * 1024 // kB → bytes
 		}
 	}
