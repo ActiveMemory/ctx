@@ -29,10 +29,7 @@ func Cmd() *cobra.Command {
 		Long:  long,
 		Args:  cobra.ExactArgs(1),
 		RunE: func(cmd *cobra.Command, args []string) error {
-			if blobs {
-				return RunImportBlobs(cmd, args[0])
-			}
-			return RunImport(cmd, args[0])
+			return Run(cmd, args[0], blobs)
 		},
 	}
 

@@ -18,7 +18,7 @@ import (
 	writePad "github.com/ActiveMemory/ctx/internal/write/pad"
 )
 
-// RunExport exports blob entries from the scratchpad to the given directory.
+// Run exports blob entries from the scratchpad to the given directory.
 //
 // Parameters:
 //   - cmd: Cobra command for output routing
@@ -28,7 +28,7 @@ import (
 //
 // Returns:
 //   - error: On directory creation or scratchpad read failure
-func RunExport(cmd *cobra.Command, dir string, force, dryRun bool) error {
+func Run(cmd *cobra.Command, dir string, force, dryRun bool) error {
 	if !dryRun {
 		if mkErr := os.MkdirAll(dir, fs.PermExec); mkErr != nil {
 			return errFs.Mkdir(dir, mkErr)

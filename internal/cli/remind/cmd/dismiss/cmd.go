@@ -31,12 +31,12 @@ func Cmd() *cobra.Command {
 		Short:   short,
 		RunE: func(cmd *cobra.Command, args []string) error {
 			if allFlag {
-				return RunDismissAll(cmd)
+				return Run(cmd, "", allFlag)
 			}
 			if len(args) == 0 {
 				return errReminder.IDRequired()
 			}
-			return RunDismiss(cmd, args[0])
+			return Run(cmd, args[0], allFlag)
 		},
 	}
 

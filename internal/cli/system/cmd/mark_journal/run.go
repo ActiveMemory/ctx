@@ -14,7 +14,7 @@ import (
 	writeJournal "github.com/ActiveMemory/ctx/internal/write/mark_journal"
 )
 
-// RunMarkJournal handles the mark-journal command.
+// Run handles the mark-journal command.
 //
 // Marks a journal file as having reached a given processing stage, or
 // checks the current stage value when --check is set.
@@ -26,7 +26,7 @@ import (
 //
 // Returns:
 //   - error: Non-nil on state load/save failure or unknown stage
-func RunMarkJournal(cmd *cobra.Command, filename, stage string) error {
+func Run(cmd *cobra.Command, filename, stage string) error {
 	check, _ := cmd.Flags().GetBool(cFlag.Check)
 	if check {
 		r, checkErr := coreJournal.CheckStage(filename, stage)

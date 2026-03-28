@@ -26,7 +26,7 @@ func Cmd() *cobra.Command {
 		Short: short,
 		Long:  long,
 		RunE: func(cmd *cobra.Command, _ []string) error {
-			return RunResources(cmd)
+			return Run(cmd)
 		},
 	}
 	cmd.Flags().Bool(cFlag.JSON, false,

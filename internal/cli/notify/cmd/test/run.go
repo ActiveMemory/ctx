@@ -14,14 +14,14 @@ import (
 	writeNotify "github.com/ActiveMemory/ctx/internal/write/notify"
 )
 
-// RunTest sends a test notification to the configured webhook.
+// Run sends a test notification to the configured webhook.
 //
 // Parameters:
 //   - cmd: Cobra command for output
 //
 // Returns:
 //   - error: Non-nil on webhook load or HTTP failure
-func RunTest(cmd *cobra.Command) error {
+func Run(cmd *cobra.Command) error {
 	r, sendErr := coreTest.Send()
 	if sendErr != nil {
 		return sendErr

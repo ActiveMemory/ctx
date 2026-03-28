@@ -14,7 +14,7 @@ import (
 	writeResources "github.com/ActiveMemory/ctx/internal/write/resource"
 )
 
-// RunResources executes the resources display logic.
+// Run executes the resources display logic.
 //
 // Collects a system resource snapshot, evaluates alerts, and outputs
 // results as either a JSON object or a human-readable table with
@@ -25,7 +25,7 @@ import (
 //
 // Returns:
 //   - error: Non-nil on JSON encoding failure
-func RunResources(cmd *cobra.Command) error {
+func Run(cmd *cobra.Command) error {
 	snap, alerts := coreResource.Snapshot()
 
 	jsonFlag, _ := cmd.Flags().GetBool(cFlag.JSON)
