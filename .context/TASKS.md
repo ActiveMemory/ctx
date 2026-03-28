@@ -253,6 +253,13 @@ Spec: `specs/journal-merge-completion.md`. Read the spec before starting any JMC
 - [x] JMC.5.3: Remove _ctx-update-docs reference #done:2026-03-27-111000 and ctx-specific doc drift check from SKILL.md #added:2026-03-27-110000
 - [x] JMC.5.4: Make reflect step mandatory #done:2026-03-27-111000 after every commit, not optional #added:2026-03-27-110000
 
+**JMC.6 — Extract remaining cmd/ logic to core/:**
+
+- [ ] JMC.6.1: Extract task/cmd/archive RunArchive logic to task/core/archive #added:2026-03-27-130000
+- [ ] JMC.6.2: Extract notify/cmd/test RunTest logic to notify/core/test #added:2026-03-27-130000
+- [ ] JMC.6.3: Extract system/cmd/mark_journal RunMarkJournal logic to system/core/journal #added:2026-03-27-130000
+- [ ] JMC.6.4: Extract system/cmd/resources RunResources logic to system/core/resource #added:2026-03-27-130000
+
 ### Phase CLI-FIX: CLI Infrastructure Fixes
 
 - [ ] Bug: ctx add task appends to the last Phase section instead of a dedicated location. Tasks added via CLI land inside whatever Phase happens to be last in TASKS.md, breaking Phase structure. Fix: add mandatory --phase flag to ctx add task. If the named Phase section does not exist, create it. If --phase is omitted, error with available Phase names. No fallback section — mandatory placement forces intent at creation time. #priority:high #added:2026-03-25-234813
