@@ -38,4 +38,8 @@ const (
 	DescKeyWriteRecallSkipped               = "write.recall-skipped"
 	DescKeyWriteRecallStorageHint           = "write.recall-storage-hint"
 	DescKeyWriteRecallUpdated               = "write.recall-updated"
+	DescKeyWriteRecallDetailString          = "write.recall-detail-string"
+	DescKeyWriteRecallDetailInt             = "write.recall-detail-int"
+	DescKeyWriteRecallSectionHeading        = "write.recall-section-heading"
+	DescKeyWriteRecallBulletItem            = "write.recall-bullet-item"
 )

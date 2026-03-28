@@ -649,6 +649,14 @@ write.recall-storage-hint:
   short: Sessions are stored in ~/.claude/projects/
 write.recall-updated:
   short: Updated %d existing session(s) (YAML frontmatter preserved)
+write.recall-detail-string:
+  short: '%s %s'
+write.recall-detail-int:
+  short: '%s %d'
+write.recall-section-heading:
+  short: '%s %s'
+write.recall-bullet-item:
+  short: '- %s'
 write.unpublish-not-found:
   short: No published block found in %s.
 write.wikilink-list-item:

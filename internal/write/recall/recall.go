@@ -310,7 +310,7 @@ func SessionDetail(cmd *cobra.Command, label, value string) {
 	if cmd == nil {
 		return
 	}
-	_, _ = fmt.Fprintf(cmd.OutOrStdout(), "%s %s\n", label, value)
+	_, _ = fmt.Fprintf(cmd.OutOrStdout(), desc.Text(text.DescKeyWriteRecallDetailString)+token.NewlineLF, label, value)
 }
 
 // SessionDetailInt prints a labeled integer metadata line to stdout.
@@ -323,7 +323,7 @@ func SessionDetailInt(cmd *cobra.Command, label string, value int) {
 	if cmd == nil {
 		return
 	}
-	_, _ = fmt.Fprintf(cmd.OutOrStdout(), "%s %d\n", label, value)
+	_, _ = fmt.Fprintf(cmd.OutOrStdout(), desc.Text(text.DescKeyWriteRecallDetailInt)+token.NewlineLF, label, value)
 }
 
 // SectionHeader prints a Markdown section heading to stdout.
@@ -337,7 +337,7 @@ func SectionHeader(cmd *cobra.Command, level int, title string) {
 		return
 	}
 	prefix := strings.Repeat("#", level)
-	_, _ = fmt.Fprintf(cmd.OutOrStdout(), "%s %s\n", prefix, title)
+	_, _ = fmt.Fprintf(cmd.OutOrStdout(), desc.Text(text.DescKeyWriteRecallSectionHeading)+token.NewlineLF, prefix, title)
 	_, _ = fmt.Fprintln(cmd.OutOrStdout())
 }
 
@@ -402,7 +402,7 @@ func ListItem(cmd *cobra.Command, format string, args ...any) {
 	if cmd == nil {
 		return
 	}
-	_, _ = fmt.Fprintf(cmd.OutOrStdout(), "- "+format+token.NewlineLF, args...)
+	_, _ = fmt.Fprintf(cmd.OutOrStdout(), token.PrefixListDash+format+token.NewlineLF, args...)
 }
 
 // NumberedItem prints a numbered item to stdout.
@@ -480,7 +480,7 @@ func LockUnlockSummary(cmd *cobra.Command, verb string, count int) {
 		cmd.Println(fmt.Sprintf(desc.Text(text.DescKeyWriteLockUnlockNoChanges), verb))
 		return
 	}
-	cmd.Println(fmt.Sprintf(desc.Text(text.DescKeyWriteLockUnlockSummary), strings.Title(verb), count)) //nolint:staticcheck // strings.Title is fine for single words
+	cmd.Println(fmt.Sprintf(desc.Text(text.DescKeyWriteLockUnlockSummary), strings.ToUpper(verb[:1])+verb[1:], count))
 }
 
 // JournalSyncNone prints the message when no journal entries are found.
