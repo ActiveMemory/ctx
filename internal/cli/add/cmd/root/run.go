@@ -67,7 +67,7 @@ func Run(cmd *cobra.Command, args []string, flags entity.AddConfig) error {
 		return writeErr
 	}
 
-	add.InfoAddedTo(cmd, fName)
+	add.Added(cmd, fName)
 
 	return nil
 }

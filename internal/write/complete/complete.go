@@ -15,11 +15,11 @@ import (
 	"github.com/ActiveMemory/ctx/internal/config/embed/text"
 )
 
-// InfoCompletedTask reports a task marked complete.
+// Completed reports a task marked complete.
 //
 // Parameters:
 //   - cmd: Cobra command for output
 //   - taskText: The completed task description
-func InfoCompletedTask(cmd *cobra.Command, taskText string) {
+func Completed(cmd *cobra.Command, taskText string) {
 	cmd.Println(fmt.Sprintf(desc.Text(text.DescKeyWriteCompletedTask), taskText))
 }

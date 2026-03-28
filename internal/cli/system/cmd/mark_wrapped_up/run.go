@@ -37,6 +37,6 @@ func Run(cmd *cobra.Command) error {
 		return writeErr
 	}
 
-	session.SessionWrappedUp(cmd)
+	session.WrappedUp(cmd)
 	return nil
 }

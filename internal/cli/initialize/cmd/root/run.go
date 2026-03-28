@@ -124,7 +124,7 @@ func Run(
 		initialize.InfoFileCreated(cmd, name)
 	}
 
-	initialize.InfoInitialized(cmd, contextDir)
+	initialize.Initialized(cmd, contextDir)
 
 	// Create entry templates in .context/templates/
 	if err := entry.CreateTemplates(cmd, contextDir, force); err != nil {

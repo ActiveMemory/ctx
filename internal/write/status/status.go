@@ -16,8 +16,8 @@ import (
 	"github.com/ActiveMemory/ctx/internal/format"
 )
 
-// StatusFileInfo holds prepared data for a single file in status output.
-type StatusFileInfo struct {
+// FileInfo holds prepared data for a single file in status output.
+type FileInfo struct {
 	Indicator string
 	Name      string
 	Status    string
@@ -26,20 +26,20 @@ type StatusFileInfo struct {
 	Preview   []string
 }
 
-// StatusActivityInfo holds prepared data for a recent activity entry.
-type StatusActivityInfo struct {
+// ActivityInfo holds prepared data for a recent activity entry.
+type ActivityInfo struct {
 	Name string
 	Ago  string
 }
 
-// StatusHeader prints the status heading and summary block.
+// Header prints the status heading and summary block.
 //
 // Parameters:
 //   - cmd: Cobra command for output. Nil is a no-op.
 //   - dir: Context directory path.
 //   - fileCount: Number of context files.
 //   - totalTokens: Estimated total token count.
-func StatusHeader(cmd *cobra.Command, dir string, fileCount, totalTokens int) {
+func Header(cmd *cobra.Command, dir string, fileCount, totalTokens int) {
 	if cmd == nil {
 		return
 	}
@@ -49,13 +49,13 @@ func StatusHeader(cmd *cobra.Command, dir string, fileCount, totalTokens int) {
 	))
 }
 
-// StatusFileItem prints a single file entry in the status list.
+// FileItem prints a single file entry in the status list.
 //
 // Parameters:
 //   - cmd: Cobra command for output. Nil is a no-op.
 //   - f: Prepared file info.
 //   - verbose: If true, include tokens, size, and preview.
-func StatusFileItem(cmd *cobra.Command, f StatusFileInfo, verbose bool) {
+func FileItem(cmd *cobra.Command, f FileInfo, verbose bool) {
 	if cmd == nil {
 		return
 	}
@@ -71,12 +71,12 @@ func StatusFileItem(cmd *cobra.Command, f StatusFileInfo, verbose bool) {
 	}
 }
 
-// StatusActivity prints the recent activity section.
+// Activity prints the recent activity section.
 //
 // Parameters:
 //   - cmd: Cobra command for output. Nil is a no-op.
 //   - entries: Recent activity entries.
-func StatusActivity(cmd *cobra.Command, entries []StatusActivityInfo) {
+func Activity(cmd *cobra.Command, entries []ActivityInfo) {
 	if cmd == nil {
 		return
 	}

@@ -17,7 +17,7 @@ import (
 
 // Transform converts journal frontmatter to Obsidian format.
 //
-// Changes applied:
+// List applied:
 //   - topics -> tags (Obsidian-recognized key)
 //   - aliases added from title (makes entries findable by name)
 //   - source_file added with the relative path to the source entry

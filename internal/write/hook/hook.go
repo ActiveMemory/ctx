@@ -44,12 +44,12 @@ func NudgeBlock(cmd *cobra.Command, nudgeBox string) {
 	cmd.Println()
 }
 
-// HookContext prints a JSON hook response line. Nil cmd is a no-op.
+// Context prints a JSON hook response line. Nil cmd is a no-op.
 //
 // Parameters:
 //   - cmd: Cobra command for output. Nil is a no-op.
 //   - response: JSON-encoded hook response.
-func HookContext(cmd *cobra.Command, response string) {
+func Context(cmd *cobra.Command, response string) {
 	if cmd == nil {
 		return
 	}

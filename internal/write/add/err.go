@@ -107,7 +107,7 @@ func ErrFileRead(path string, cause error) error {
 	return fmt.Errorf("failed to read %s: %w", path, cause)
 }
 
-// ErrFileWriteAdd wraps a file write failure with the file path.
+// ErrFileWrite wraps a file write failure with the file path.
 //
 // Parameters:
 //   - path: File path that failed to write
@@ -115,7 +115,7 @@ func ErrFileRead(path string, cause error) error {
 //
 // Returns:
 //   - error: "failed to write <path>: <cause>"
-func ErrFileWriteAdd(path string, cause error) error {
+func ErrFileWrite(path string, cause error) error {
 	return fmt.Errorf("failed to write %s: %w", path, cause)
 }
 

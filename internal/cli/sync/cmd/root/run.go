@@ -43,19 +43,19 @@ func Run(cmd *cobra.Command, dryRun bool) error {
 	actions := action.Detect(ctx)
 
 	if len(actions) == 0 {
-		sync.CtxSyncInSync(cmd)
+		sync.InSync(cmd)
 		return nil
 	}
 
-	sync.CtxSyncHeader(cmd, dryRun)
+	sync.Header(cmd, dryRun)
 
 	for i, action := range actions {
-		sync.CtxSyncAction(
+		sync.Action(
 			cmd, i+1, action.Type, action.Description, action.Suggestion,
 		)
 	}
 
-	sync.CtxSyncSummary(cmd, len(actions), dryRun)
+	sync.Summary(cmd, len(actions), dryRun)
 
 	return nil
 }

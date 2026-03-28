@@ -51,6 +51,6 @@ func Run(cmd *cobra.Command, message, after string) error {
 		return writeErr
 	}
 
-	remind.ReminderAdded(cmd, r.ID, r.Message, r.After)
+	remind.Added(cmd, r.ID, r.Message, r.After)
 	return nil
 }

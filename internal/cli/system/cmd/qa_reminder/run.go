@@ -57,7 +57,7 @@ func Run(cmd *cobra.Command, stdin *os.File) error {
 	}
 	msg = ctxContext.AppendDir(msg)
 
-	writeHook.HookContext(cmd, coreSession.FormatContext(hook.EventPreToolUse, msg))
+	writeHook.Context(cmd, coreSession.FormatContext(hook.EventPreToolUse, msg))
 
 	ref := notify.NewTemplateRef(hook.QAReminder, hook.VariantGate, nil)
 	nudge.Relay(fmt.Sprintf(desc.Text(text.DescKeyRelayPrefixFormat),

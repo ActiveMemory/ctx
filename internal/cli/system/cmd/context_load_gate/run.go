@@ -152,7 +152,7 @@ func Run(cmd *cobra.Command, stdin *os.File) error {
 		desc.Text(text.DescKeyContextLoadGateFooter),
 		filesLoaded, totalTokens))
 
-	writeHook.HookContext(
+	writeHook.Context(
 		cmd, coreSession.FormatContext(hook.EventPreToolUse, content.String()),
 	)
 

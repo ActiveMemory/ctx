@@ -66,7 +66,7 @@ func dismissOne(cmd *cobra.Command, idStr string) error {
 		return errReminder.NotFound(id)
 	}
 
-	remind.ReminderDismissed(cmd, reminders[found].ID, reminders[found].Message)
+	remind.Dismissed(cmd, reminders[found].ID, reminders[found].Message)
 	reminders = append(reminders[:found], reminders[found+1:]...)
 	return core.WriteReminders(reminders)
 }
@@ -85,14 +85,14 @@ func dismissAll(cmd *cobra.Command) error {
 	}
 
 	if len(reminders) == 0 {
-		remind.ReminderNone(cmd)
+		remind.None(cmd)
 		return nil
 	}
 
 	for _, r := range reminders {
-		remind.ReminderDismissed(cmd, r.ID, r.Message)
+		remind.Dismissed(cmd, r.ID, r.Message)
 	}
-	remind.ReminderDismissedAll(cmd, len(reminders))
+	remind.DismissedAll(cmd, len(reminders))
 
 	return core.WriteReminders([]core.Reminder{})
 }

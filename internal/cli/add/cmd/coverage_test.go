@@ -72,7 +72,7 @@ func TestErrFileRead(t *testing.T) {
 }
 
 func TestErrFileWrite(t *testing.T) {
-	err := add.ErrFileWriteAdd("/some/path", os.ErrPermission)
+	err := add.ErrFileWrite("/some/path", os.ErrPermission)
 	if err == nil {
 		t.Fatal("expected non-nil error")
 	}

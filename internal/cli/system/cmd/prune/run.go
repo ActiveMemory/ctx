@@ -68,20 +68,20 @@ func Run(cmd *cobra.Command, days int, dryRun bool) error {
 		}
 
 		if dryRun {
-			prune.PruneDryRunLine(cmd, name, health.FormatAge(info.ModTime()))
+			prune.DryRunLine(cmd, name, health.FormatAge(info.ModTime()))
 			pruned++
 			continue
 		}
 
 		path := filepath.Join(dir, name)
 		if rmErr := os.Remove(path); rmErr != nil {
-			prune.PruneErrorLine(cmd, name, rmErr)
+			prune.ErrorLine(cmd, name, rmErr)
 			continue
 		}
 		pruned++
 	}
 
-	prune.PruneSummary(cmd, dryRun, pruned, skipped, preserved)
+	prune.Summary(cmd, dryRun, pruned, skipped, preserved)
 
 	return nil
 }

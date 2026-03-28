@@ -15,31 +15,31 @@ import (
 	"github.com/ActiveMemory/ctx/internal/config/embed/text"
 )
 
-// UnpublishNotFound prints that no published block was found.
+// NotFound prints that no published block was found.
 //
 // Parameters:
 //   - cmd: Cobra command for output. Nil is a no-op.
 //   - filename: source file name (e.g. "MEMORY.md").
-func UnpublishNotFound(cmd *cobra.Command, filename string) {
+func NotFound(cmd *cobra.Command, filename string) {
 	if cmd == nil {
 		return
 	}
 	cmd.Println(fmt.Sprintf(desc.Text(text.DescKeyWriteUnpublishNotFound), filename))
 }
 
-// UnpublishDone prints that the published block was removed.
+// Unpublished prints that the published block was removed.
 //
 // Parameters:
 //   - cmd: Cobra command for output. Nil is a no-op.
 //   - filename: source file name (e.g. "MEMORY.md").
-func UnpublishDone(cmd *cobra.Command, filename string) {
+func Unpublished(cmd *cobra.Command, filename string) {
 	if cmd == nil {
 		return
 	}
 	cmd.Println(fmt.Sprintf(desc.Text(text.DescKeyWriteUnpublishDone), filename))
 }
 
-// PublishPlan prints the full publish plan: header, source files,
+// Plan prints the full publish plan: header, source files,
 // budget, per-file counts, and total.
 //
 // Parameters:
@@ -50,7 +50,7 @@ func UnpublishDone(cmd *cobra.Command, filename string) {
 //   - conventions: number of key conventions selected.
 //   - learnings: number of recent learnings selected.
 //   - totalLines: total lines in the published block.
-func PublishPlan(
+func Plan(
 	cmd *cobra.Command,
 	budget, tasks, decisions, conventions, learnings, totalLines int,
 ) {
@@ -79,11 +79,11 @@ func PublishPlan(
 	cmd.Println(fmt.Sprintf(desc.Text(text.DescKeyWritePublishTotal), totalLines, budget))
 }
 
-// PublishDryRun prints the dry-run notice.
+// DryRun prints the dry-run notice.
 //
 // Parameters:
 //   - cmd: Cobra command for output. Nil is a no-op.
-func PublishDryRun(cmd *cobra.Command) {
+func DryRun(cmd *cobra.Command) {
 	if cmd == nil {
 		return
 	}
@@ -91,11 +91,11 @@ func PublishDryRun(cmd *cobra.Command) {
 	cmd.Println(desc.Text(text.DescKeyWritePublishDryRun))
 }
 
-// PublishDone prints the success message with marker info.
+// Done prints the success message with marker info.
 //
 // Parameters:
 //   - cmd: Cobra command for output. Nil is a no-op.
-func PublishDone(cmd *cobra.Command) {
+func Done(cmd *cobra.Command) {
 	if cmd == nil {
 		return
 	}

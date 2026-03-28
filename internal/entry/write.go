@@ -76,7 +76,7 @@ func Write(params Params) error {
 	if writeErr := os.WriteFile(
 		filePath, newContent, fs.PermFile,
 	); writeErr != nil {
-		return add.ErrFileWriteAdd(filePath, writeErr)
+		return add.ErrFileWrite(filePath, writeErr)
 	}
 
 	switch fType {

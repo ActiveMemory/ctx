@@ -53,7 +53,7 @@ func Run(cmd *cobra.Command, stdin *os.File) error {
 		return nil
 	}
 	msg = ctxContext.AppendDir(msg)
-	writeHook.HookContext(cmd, coreSession.FormatContext(hook.EventPreToolUse, msg))
+	writeHook.Context(cmd, coreSession.FormatContext(hook.EventPreToolUse, msg))
 	nudgeMsg := desc.Text(text.DescKeySpecsNudgeNudgeMessage)
 	ref := notify.NewTemplateRef(hook.SpecsNudge, hook.VariantNudge, nil)
 	nudge.Relay(
