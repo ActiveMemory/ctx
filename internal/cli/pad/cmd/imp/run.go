@@ -23,7 +23,7 @@ import (
 	writePad "github.com/ActiveMemory/ctx/internal/write/pad"
 )
 
-// runImport reads lines from a file (or stdin) and appends them as entries.
+// RunImport reads lines from a file (or stdin) and appends them as entries.
 //
 // Parameters:
 //   - cmd: Cobra command for output
@@ -31,7 +31,7 @@ import (
 //
 // Returns:
 //   - error: Non-nil on read/write failure
-func runImport(cmd *cobra.Command, file string) error {
+func RunImport(cmd *cobra.Command, file string) error {
 	var r io.Reader
 	if file == cli.StdinSentinel {
 		r = os.Stdin
@@ -80,7 +80,7 @@ func runImport(cmd *cobra.Command, file string) error {
 	return nil
 }
 
-// runImportBlobs reads first-level files from a directory and imports
+// RunImportBlobs reads first-level files from a directory and imports
 // each as a blob entry.
 //
 // Parameters:
@@ -89,7 +89,7 @@ func runImport(cmd *cobra.Command, file string) error {
 //
 // Returns:
 //   - error: Non-nil on read/write failure
-func runImportBlobs(cmd *cobra.Command, path string) error {
+func RunImportBlobs(cmd *cobra.Command, path string) error {
 	info, statErr := os.Stat(path)
 	if statErr != nil {
 		return errFs.StatPath(path, statErr)

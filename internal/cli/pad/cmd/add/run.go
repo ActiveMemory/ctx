@@ -18,7 +18,7 @@ import (
 	writePad "github.com/ActiveMemory/ctx/internal/write/pad"
 )
 
-// runAdd appends a new entry and prints confirmation.
+// RunAdd appends a new entry and prints confirmation.
 //
 // Parameters:
 //   - cmd: Cobra command for output
@@ -26,7 +26,7 @@ import (
 //
 // Returns:
 //   - error: Non-nil on read/write failure
-func runAdd(cmd *cobra.Command, text string) error {
+func RunAdd(cmd *cobra.Command, text string) error {
 	entries, err := store.ReadEntries()
 	if err != nil {
 		return err
@@ -42,7 +42,7 @@ func runAdd(cmd *cobra.Command, text string) error {
 	return nil
 }
 
-// runAddBlob reads a file, encodes it as a blob entry, and appends it.
+// RunAddBlob reads a file, encodes it as a blob entry, and appends it.
 //
 // Parameters:
 //   - cmd: Cobra command for output
@@ -51,7 +51,7 @@ func runAdd(cmd *cobra.Command, text string) error {
 //
 // Returns:
 //   - error: Non-nil on read/write failure or file too large
-func runAddBlob(cmd *cobra.Command, label, filePath string) error {
+func RunAddBlob(cmd *cobra.Command, label, filePath string) error {
 	data, err := io.SafeReadUserFile(filePath)
 	if err != nil {
 		return fs.ReadFile(err)

@@ -29,9 +29,9 @@ func Cmd() *cobra.Command {
 		Args:  cobra.ExactArgs(1),
 		RunE: func(cmd *cobra.Command, args []string) error {
 			if filePath != "" {
-				return runAddBlob(cmd, args[0], filePath)
+				return RunAddBlob(cmd, args[0], filePath)
 			}
-			return runAdd(cmd, args[0])
+			return RunAdd(cmd, args[0])
 		},
 	}
 

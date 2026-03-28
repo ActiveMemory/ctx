@@ -64,7 +64,7 @@ func Cmd() *cobra.Command {
 
 			// Blob edit mode.
 			if hasFile || hasLabel {
-				return runEditBlob(cmd, n, filePath, labelText)
+				return RunEditBlob(cmd, n, filePath, labelText)
 			}
 
 			// Validate mutual exclusivity of positional/--append/--prepend.
@@ -88,11 +88,11 @@ func Cmd() *cobra.Command {
 
 			switch {
 			case hasAppend:
-				return runEditAppend(cmd, n, appendText)
+				return RunEditAppend(cmd, n, appendText)
 			case hasPrepend:
-				return runEditPrepend(cmd, n, prependText)
+				return RunEditPrepend(cmd, n, prependText)
 			default:
-				return runEdit(cmd, n, args[1])
+				return RunEdit(cmd, n, args[1])
 			}
 		},
 	}

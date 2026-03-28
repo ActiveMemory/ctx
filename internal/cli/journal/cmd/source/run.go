@@ -40,7 +40,7 @@ type Opts struct {
 //   - error: non-nil if the delegated command fails
 func Run(cmd *cobra.Command, args []string, opts Opts) error {
 	if opts.ShowID != "" || opts.Latest || len(args) > 0 {
-		return runShow(cmd, args, opts)
+		return RunShow(cmd, args, opts)
 	}
 
 	return list.Run(
@@ -49,8 +49,8 @@ func Run(cmd *cobra.Command, args []string, opts Opts) error {
 	)
 }
 
-// runShow delegates to the show command's Run function.
-func runShow(cmd *cobra.Command, args []string, opts Opts) error {
+// RunShow delegates to the show command's Run function.
+func RunShow(cmd *cobra.Command, args []string, opts Opts) error {
 	// If --show <id> was used, pass the ID as a positional arg to show.Run.
 	showArgs := args
 	if opts.ShowID != "" {
