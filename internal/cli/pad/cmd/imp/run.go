@@ -20,15 +20,26 @@ import (
 	writePad "github.com/ActiveMemory/ctx/internal/write/pad"
 )
 
-// RunImport reads lines from a file (or stdin) and appends them as entries.
+// Run imports entries into the scratchpad from a file, stdin, or directory.
+//
+// When blobs is true, imports directory contents as blob entries.
+// Otherwise reads lines from a file (or stdin when path is "-").
 //
 // Parameters:
 //   - cmd: Cobra command for output
-//   - file: File path or "-" for stdin
+//   - path: File path, "-" for stdin, or directory path (when blobs is true)
+//   - blobs: When true, import directory contents as blob entries
 //
 // Returns:
 //   - error: Non-nil on read/write failure
-func RunImport(cmd *cobra.Command, file string) error {
+func Run(cmd *cobra.Command, path string, blobs bool) error {
+	if blobs {
+		return runBlobs(cmd, path)
+	}
+	return runLines(cmd, path)
+}
+
+func runLines(cmd *cobra.Command, file string) error {
 	var r *os.File
 	if file == cli.StdinSentinel {
 		r = os.Stdin
@@ -63,22 +74,12 @@ func RunImport(cmd *cobra.Command, file string) error {
 	return nil
 }
 
-// RunImportBlobs reads first-level files from a directory and imports
-// each as a blob entry.
-//
-// Parameters:
-//   - cmd: Cobra command for output
-//   - path: Directory path containing files to import
-//
-// Returns:
-//   - error: Non-nil on read/write failure
-func RunImportBlobs(cmd *cobra.Command, path string) error {
+func runBlobs(cmd *cobra.Command, path string) error {
 	entries, added, results, dirErr := coreImp.FromDirectory(path)
 	if dirErr != nil {
 		return dirErr
 	}
 
-	// Report per-file outcomes.
 	skipped := 0
 	for _, r := range results {
 		switch {

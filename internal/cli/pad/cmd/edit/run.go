@@ -14,87 +14,56 @@ import (
 	writePad "github.com/ActiveMemory/ctx/internal/write/pad"
 )
 
-// RunEdit replaces the entry at 1-based position n with new text.
-//
-// Parameters:
-//   - cmd: Cobra command for output
-//   - n: 1-based entry index
-//   - text: Replacement text
-//
-// Returns:
-//   - error: Non-nil on invalid index or read/write failure
-func RunEdit(cmd *cobra.Command, n int, text string) error {
-	entries, editErr := coreEdit.Replace(n, text)
-	if editErr != nil {
-		return editErr
-	}
-	if writeErr := store.WriteEntries(cmd, entries); writeErr != nil {
-		return writeErr
-	}
-	writePad.EntryUpdated(cmd, n)
-	return nil
+// Mode selects the edit operation.
+type Mode int
+
+// Edit modes.
+const (
+	ModeReplace Mode = iota
+	ModeAppend
+	ModePrepend
+	ModeBlob
+)
+
+// Opts holds all parameters for an edit operation.
+type Opts struct {
+	N         int
+	Text      string
+	FilePath  string
+	LabelText string
+	Mode      Mode
 }
 
-// RunEditAppend appends text to the entry at 1-based position n.
+// Run edits a scratchpad entry based on the selected mode.
 //
 // Parameters:
 //   - cmd: Cobra command for output
-//   - n: 1-based entry index
-//   - text: Text to append
+//   - opts: Edit operation parameters
 //
 // Returns:
-//   - error: Non-nil on invalid index, blob entry, or read/write failure
-func RunEditAppend(cmd *cobra.Command, n int, text string) error {
-	entries, editErr := coreEdit.Append(n, text)
-	if editErr != nil {
-		return editErr
-	}
-	if writeErr := store.WriteEntries(cmd, entries); writeErr != nil {
-		return writeErr
-	}
-	writePad.EntryUpdated(cmd, n)
-	return nil
-}
+//   - error: Non-nil on invalid index, type mismatch, or read/write failure
+func Run(cmd *cobra.Command, opts Opts) error {
+	var entries []string
+	var editErr error
 
-// RunEditPrepend prepends text to the entry at 1-based position n.
-//
-// Parameters:
-//   - cmd: Cobra command for output
-//   - n: 1-based entry index
-//   - text: Text to prepend
-//
-// Returns:
-//   - error: Non-nil on invalid index, blob entry, or read/write failure
-func RunEditPrepend(cmd *cobra.Command, n int, text string) error {
-	entries, editErr := coreEdit.Prepend(n, text)
+	switch opts.Mode {
+	case ModeAppend:
+		entries, editErr = coreEdit.Append(opts.N, opts.Text)
+	case ModePrepend:
+		entries, editErr = coreEdit.Prepend(opts.N, opts.Text)
+	case ModeBlob:
+		entries, editErr = coreEdit.UpdateBlob(opts.N, opts.FilePath, opts.LabelText)
+	default:
+		entries, editErr = coreEdit.Replace(opts.N, opts.Text)
+	}
 	if editErr != nil {
 		return editErr
 	}
-	if writeErr := store.WriteEntries(cmd, entries); writeErr != nil {
-		return writeErr
-	}
-	writePad.EntryUpdated(cmd, n)
-	return nil
-}
 
-// RunEditBlob replaces the file content and/or label of a blob entry.
-//
-// Parameters:
-//   - cmd: Cobra command for output
-//   - n: 1-based entry index
-//   - filePath: New file content path (empty to keep existing)
-//   - labelText: New label (empty to keep existing)
-//
-// Returns:
-//   - error: Non-nil on invalid index, non-blob entry, or read/write failure
-func RunEditBlob(cmd *cobra.Command, n int, filePath, labelText string) error {
-	entries, editErr := coreEdit.UpdateBlob(n, filePath, labelText)
-	if editErr != nil {
-		return editErr
-	}
 	if writeErr := store.WriteEntries(cmd, entries); writeErr != nil {
 		return writeErr
 	}
-	writePad.EntryUpdated(cmd, n)
+
+	writePad.EntryUpdated(cmd, opts.N)
 	return nil
 }

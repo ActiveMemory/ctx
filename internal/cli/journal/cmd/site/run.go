@@ -38,7 +38,7 @@ import (
 	writeJournal "github.com/ActiveMemory/ctx/internal/write/journal"
 )
 
-// RunZensical executes zensical build or serve in the output directory.
+// runZensical executes zensical build or serve in the output directory.
 //
 // Parameters:
 //   - dir: Directory containing the generated site
@@ -46,7 +46,7 @@ import (
 //
 // Returns:
 //   - error: Non-nil if zensical is not found or fails
-func RunZensical(dir, command string) error {
+func runZensical(dir, command string) error {
 	// Check if zensical is available
 	_, lookErr := exec.LookPath(zensical.Bin)
 	if lookErr != nil {
@@ -63,7 +63,7 @@ func RunZensical(dir, command string) error {
 	return cmd.Run()
 }
 
-// RunJournalSite handles the journal site command.
+// Run handles the journal site command.
 //
 // Scans .context/journal/ for Markdown files, generates a zensical project
 // structure, and optionally builds or serves the site.
@@ -76,7 +76,7 @@ func RunZensical(dir, command string) error {
 //
 // Returns:
 //   - error: Non-nil if generation fails
-func RunJournalSite(
+func Run(
 	cmd *cobra.Command, output string, build, serve bool,
 ) error {
 	journalDir := filepath.Join(rc.ContextDir(), dir.Journal)
@@ -321,10 +321,10 @@ func RunJournalSite(
 
 	if serve {
 		writeJournal.InfoSiteStarting(cmd)
-		return RunZensical(output, zensical.CmdServe)
+		return runZensical(output, zensical.CmdServe)
 	} else if build {
 		writeJournal.InfoSiteBuilding(cmd)
-		return RunZensical(output, zensical.CmdBuild)
+		return runZensical(output, zensical.CmdBuild)
 	}
 
 	writeJournal.InfoSiteGenerated(cmd, len(entries), output, zensical.Bin)

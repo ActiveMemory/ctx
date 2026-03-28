@@ -14,41 +14,29 @@ import (
 	writePad "github.com/ActiveMemory/ctx/internal/write/pad"
 )
 
-// RunAdd appends a new entry and prints confirmation.
+// Run appends a new text or blob entry to the scratchpad.
+//
+// When filePath is non-empty, the entry is imported as a blob with text
+// as the label. Otherwise text is added as a plain entry.
 //
 // Parameters:
 //   - cmd: Cobra command for output
-//   - text: Entry text to add
-//
-// Returns:
-//   - error: Non-nil on read/write failure
-func RunAdd(cmd *cobra.Command, text string) error {
-	entries, addErr := coreAdd.Entry(text)
-	if addErr != nil {
-		return addErr
-	}
-
-	if writeErr := store.WriteEntries(cmd, entries); writeErr != nil {
-		return writeErr
-	}
-
-	writePad.EntryAdded(cmd, len(entries))
-	return nil
-}
-
-// RunAddBlob reads a file, encodes it as a blob entry, and appends it.
-//
-// Parameters:
-//   - cmd: Cobra command for output
-//   - label: Blob label (filename)
-//   - filePath: Path to the file to ingest
+//   - text: Entry text or blob label
+//   - filePath: Blob file path (empty for plain text entry)
 //
 // Returns:
 //   - error: Non-nil on read/write failure or file too large
-func RunAddBlob(cmd *cobra.Command, label, filePath string) error {
-	entries, blobErr := coreAdd.Blob(label, filePath)
-	if blobErr != nil {
-		return blobErr
+func Run(cmd *cobra.Command, text, filePath string) error {
+	var entries []string
+	var addErr error
+
+	if filePath != "" {
+		entries, addErr = coreAdd.Blob(text, filePath)
+	} else {
+		entries, addErr = coreAdd.Entry(text)
+	}
+	if addErr != nil {
+		return addErr
 	}
 
 	if writeErr := store.WriteEntries(cmd, entries); writeErr != nil {

@@ -16,15 +16,26 @@ import (
 	"github.com/ActiveMemory/ctx/internal/write/remind"
 )
 
-// RunDismiss removes a single reminder by ID and prints confirmation.
+// Run dismisses one or all reminders based on the all flag.
+//
+// When all is true, removes every reminder. Otherwise removes the
+// single reminder identified by idStr.
 //
 // Parameters:
 //   - cmd: Cobra command for output
-//   - idStr: String representation of the reminder ID
+//   - idStr: String reminder ID (ignored when all is true)
+//   - all: When true, dismiss all reminders
 //
 // Returns:
 //   - error: Non-nil on invalid ID, missing reminder, or write failure
-func RunDismiss(cmd *cobra.Command, idStr string) error {
+func Run(cmd *cobra.Command, idStr string, all bool) error {
+	if all {
+		return dismissAll(cmd)
+	}
+	return dismissOne(cmd, idStr)
+}
+
+func dismissOne(cmd *cobra.Command, idStr string) error {
 	id, parseErr := strconv.Atoi(idStr)
 	if parseErr != nil {
 		return errReminder.InvalidID(idStr)
@@ -52,14 +63,7 @@ func RunDismiss(cmd *cobra.Command, idStr string) error {
 	return core.WriteReminders(reminders)
 }
 
-// RunDismissAll removes all reminders and prints confirmation.
-//
-// Parameters:
-//   - cmd: Cobra command for output
-//
-// Returns:
-//   - error: Non-nil on read or write failure
-func RunDismissAll(cmd *cobra.Command) error {
+func dismissAll(cmd *cobra.Command) error {
 	reminders, readErr := core.ReadReminders()
 	if readErr != nil {
 		return readErr
