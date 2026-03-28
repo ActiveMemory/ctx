@@ -8,9 +8,7 @@ package server
 
 import (
 	"bufio"
-	"io"
 	"os"
-	"sync"
 
 	"github.com/ActiveMemory/ctx/internal/assets/read/desc"
 	"github.com/ActiveMemory/ctx/internal/config/embed/text"
@@ -25,24 +23,6 @@ import (
 	"github.com/ActiveMemory/ctx/internal/mcp/server/poll"
 	"github.com/ActiveMemory/ctx/internal/rc"
 )
-
-// Server is an MCP server that exposes ctx context over JSON-RPC 2.0.
-//
-// It reads JSON-RPC requests from stdin and writes responses to stdout,
-// following the Model Context Protocol specification.
-//
-// Thread-safety: outMu serialises all writes to out (main loop and poller
-// goroutine). The main loop itself is single-threaded, so request
-// dispatch and session mutations need no additional locking.
-type Server struct {
-	handler      *handler.Handler
-	version      string
-	out          io.Writer
-	outMu        sync.Mutex // guards all writes to out
-	in           io.Reader
-	poller       *poll.Poller
-	resourceList proto.ResourceListResult // pre-built, immutable after init
-}
 
 // New creates a new MCP server for the given context directory.
 //

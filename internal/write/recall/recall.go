@@ -265,23 +265,6 @@ func SessionListFooter(cmd *cobra.Command, hasMore bool) {
 	}
 }
 
-// SessionInfo holds pre-formatted session metadata for display.
-type SessionInfo struct {
-	Slug      string
-	ID        string
-	Tool      string
-	Project   string
-	Branch    string // empty to omit
-	Model     string // empty to omit
-	Started   string
-	Duration  string
-	Turns     int
-	Messages  int
-	TokensIn  string
-	TokensOut string
-	TokensAll string
-}
-
 // SessionMetadata prints the full session metadata block: identity,
 // timing, and token usage sections separated by blank lines.
 //

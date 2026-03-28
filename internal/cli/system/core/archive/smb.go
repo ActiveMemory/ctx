@@ -22,15 +22,6 @@ import (
 	"github.com/ActiveMemory/ctx/internal/io"
 )
 
-// SMBConfig holds parsed SMB share connection details.
-type SMBConfig struct {
-	Host      string
-	Share     string
-	Subdir    string
-	GVFSPath  string
-	SourceURL string
-}
-
 // ParseSMBConfig parses an SMB URL and subdirectory into a config struct
 // with the derived GVFS mount path.
 //

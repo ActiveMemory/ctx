@@ -14,15 +14,6 @@ import (
 	"github.com/ActiveMemory/ctx/internal/cli/pad/core/store"
 )
 
-// Item represents a single blob ready for export.
-type Item struct {
-	Label   string
-	Data    []byte
-	OutPath string
-	AltName string // Non-empty when collision renamed
-	Exists  bool   // True when outPath already exists
-}
-
 // Plan extracts blob entries from the scratchpad and computes output
 // paths, handling filename collisions with timestamp prefixes.
 //

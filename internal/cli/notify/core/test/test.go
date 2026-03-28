@@ -18,13 +18,6 @@ import (
 	"github.com/ActiveMemory/ctx/internal/rc"
 )
 
-// Result holds the outcome of a test notification.
-type Result struct {
-	NoWebhook  bool
-	Filtered   bool
-	StatusCode int
-}
-
 // Send loads the configured webhook, builds a test payload, and posts it.
 // Returns a Result for the cmd layer to report.
 //

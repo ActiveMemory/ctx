@@ -19,14 +19,6 @@ import (
 	internalIo "github.com/ActiveMemory/ctx/internal/io"
 )
 
-// BlobResult holds the outcome of importing a single file as a blob.
-type BlobResult struct {
-	Name     string
-	Err      error
-	TooLarge bool
-	Added    bool
-}
-
 // FromReader reads non-empty lines from r, appends them to the current
 // scratchpad entries, and returns the updated list with the count of
 // new entries. The caller owns writing the result.

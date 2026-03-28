@@ -11,12 +11,6 @@ import (
 	"github.com/ActiveMemory/ctx/internal/config/sync"
 )
 
-// ConfigPattern pairs a glob pattern with its localizable topic description.
-type ConfigPattern struct {
-	Pattern string
-	Topic   string
-}
-
 // ConfigPatterns returns config file patterns with resolved topic descriptions.
 //
 // Returns:
