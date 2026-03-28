@@ -22,11 +22,11 @@ func NotInitialized() error {
 	return errors.New(desc.Text(text.DescKeyErrInitNotInitialized))
 }
 
-// ContextNotInit returns an error when no .context/ directory is found.
+// ContextNotInitialized returns an error when no .context/ directory is found.
 //
 // Returns:
 //   - error: "no .context/ directory found. Run 'ctx init' first"
-func ContextNotInit() error {
+func ContextNotInitialized() error {
 	return errors.New(
 		desc.Text(text.DescKeyErrInitContextNotInitialized),
 	)

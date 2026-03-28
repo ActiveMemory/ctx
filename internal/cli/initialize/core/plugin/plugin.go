@@ -15,6 +15,7 @@ import (
 	"github.com/spf13/cobra"
 
 	"github.com/ActiveMemory/ctx/internal/config/claude"
+	"github.com/ActiveMemory/ctx/internal/config/dir"
 	"github.com/ActiveMemory/ctx/internal/config/fs"
 	"github.com/ActiveMemory/ctx/internal/err/config"
 	errFs "github.com/ActiveMemory/ctx/internal/err/fs"
@@ -37,7 +38,7 @@ func EnableGlobally(cmd *cobra.Command) error {
 	if homeErr != nil {
 		return errInit.HomeDir(homeErr)
 	}
-	claudeDir := filepath.Join(homeDir, ".claude")
+	claudeDir := filepath.Join(homeDir, dir.Claude)
 	installedPath := filepath.Join(claudeDir, claude.InstalledPlugins)
 	installedData, readErr := io.SafeReadUserFile(installedPath)
 	if readErr != nil {
@@ -112,7 +113,7 @@ func Installed() bool {
 	if homeErr != nil {
 		return false
 	}
-	installedPath := filepath.Join(homeDir, ".claude", claude.InstalledPlugins)
+	installedPath := filepath.Join(homeDir, dir.Claude, claude.InstalledPlugins)
 	data, readErr := io.SafeReadUserFile(installedPath)
 	if readErr != nil {
 		return false
@@ -135,7 +136,7 @@ func EnabledGlobally() bool {
 	if homeErr != nil {
 		return false
 	}
-	settingsPath := filepath.Join(homeDir, ".claude", claude.GlobalSettings)
+	settingsPath := filepath.Join(homeDir, dir.Claude, claude.GlobalSettings)
 	data, readErr := io.SafeReadUserFile(settingsPath)
 	if readErr != nil {
 		return false
