@@ -12,8 +12,8 @@ import (
 	"strings"
 	"testing"
 
+	"github.com/ActiveMemory/ctx/internal/cli/journal/core/lock"
 	"github.com/ActiveMemory/ctx/internal/cli/recall"
-	"github.com/ActiveMemory/ctx/internal/cli/recall/core/lock"
 	"github.com/ActiveMemory/ctx/internal/config/fs"
 	"github.com/ActiveMemory/ctx/internal/journal/state"
 )

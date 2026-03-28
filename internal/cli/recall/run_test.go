@@ -14,8 +14,8 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/ActiveMemory/ctx/internal/cli/recall/core/extract"
-	"github.com/ActiveMemory/ctx/internal/cli/recall/core/index"
+	"github.com/ActiveMemory/ctx/internal/cli/journal/core/extract"
+	"github.com/ActiveMemory/ctx/internal/cli/journal/core/index"
 	"github.com/ActiveMemory/ctx/internal/config/journal"
 	"github.com/ActiveMemory/ctx/internal/entity"
 	"github.com/ActiveMemory/ctx/internal/journal/state"

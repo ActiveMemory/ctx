@@ -96,60 +96,6 @@ func Duration(d interface{ Minutes() float64 }) string {
 	return fmt.Sprintf(desc.Text(text.DescKeyWriteFormatDurationHourMin), hours, remainMins)
 }
 
-// Tokens formats token counts in a human-readable way.
-// Delegates to the shared format package.
-//
-// Parameters:
-//   - tokens: Token count to format
-//
-// Returns:
-//   - string: Human-readable count (e.g., "500", "1.5K", "2.3M")
-func Tokens(tokens int) string { return sharedFmt.Tokens(tokens) }
-
-// Truncate shortens s to max characters, appending "…" if truncated.
-// Delegates to the shared format package.
-//
-// Parameters:
-//   - s: String to truncate
-//   - max: Maximum length
-//
-// Returns:
-//   - string: Truncated string
-func Truncate(s string, max int) string { return sharedFmt.Truncate(s, max) }
-
-// StripLineNumbers removes Claude Code's line number prefixes from content.
-// Delegates to the shared parse package.
-//
-// Parameters:
-//   - content: Text potentially containing "    1→" style prefixes
-//
-// Returns:
-//   - string: Content with line number prefixes removed
-func StripLineNumbers(content string) string { return parse.StripLineNumbers(content) }
-
-// ExtractSystemReminders separates system-reminder content from tool output.
-// Delegates to the shared parse package.
-//
-// Parameters:
-//   - content: Tool result content potentially containing system-reminder tags
-//
-// Returns:
-//   - string: Content with system-reminder tags removed
-//   - []string: Extracted reminder texts (may be empty)
-func ExtractSystemReminders(content string) (string, []string) {
-	return parse.ExtractSystemReminders(content)
-}
-
-// NormalizeCodeFences ensures code fences are on their own lines with proper spacing.
-// Delegates to the shared parse package.
-//
-// Parameters:
-//   - content: Text that may contain inline code fences
-//
-// Returns:
-//   - string: Content with code fences properly separated by blank lines
-func NormalizeCodeFences(content string) string { return parse.NormalizeCodeFences(content) }
-
 // ToolUse formats a tool invocation with its key parameters.
 //
 // Parameters:
@@ -195,16 +141,6 @@ func SessionMatchLines(matches []*entity.Session) []string {
 	}
 	return lines
 }
-
-// FenceForContent returns the appropriate code fence for content.
-// Delegates to the shared parse package.
-//
-// Parameters:
-//   - content: The content to be fenced
-//
-// Returns:
-//   - string: A fence string (e.g., "```", "````")
-func FenceForContent(content string) string { return parse.FenceForContent(content) }
 
 // JournalFilename generates the filename for a journal entry.
 //
@@ -358,9 +294,9 @@ func JournalEntryPart(
 			),
 		)
 		tokenSummary := fmt.Sprintf(desc.Text(text.DescKeyRecallTokenSummary),
-			Tokens(s.TotalTokens),
-			Tokens(s.TotalTokensIn),
-			Tokens(s.TotalTokensOut))
+			sharedFmt.Tokens(s.TotalTokens),
+			sharedFmt.Tokens(s.TotalTokensIn),
+			sharedFmt.Tokens(s.TotalTokensOut))
 		sb.WriteString(
 			fmt.Sprintf(
 				tpl.MetaRow+nl, desc.Text(text.DescKeyLabelMetaTokens), tokenSummary,
@@ -430,7 +366,7 @@ func JournalEntryPart(
 			// Normalize code fences in user messages
 			// (users often type "text: ```code")
 			if !msg.BelongsToAssistant() {
-				t = NormalizeCodeFences(t)
+				t = parse.NormalizeCodeFences(t)
 			}
 			sb.WriteString(t + nl + nl)
 		}
@@ -446,9 +382,9 @@ func JournalEntryPart(
 				sb.WriteString(tpl.RecallErrorMarker + nl)
 			}
 			if tr.Content != "" {
-				stripped := StripLineNumbers(tr.Content)
-				content, reminders := ExtractSystemReminders(stripped)
-				fence := FenceForContent(content)
+				stripped := parse.StripLineNumbers(tr.Content)
+				content, reminders := parse.ExtractSystemReminders(stripped)
+				fence := parse.FenceForContent(content)
 				lines := strings.Count(content, nl)
 
 				if lines > journal.DetailsThreshold {

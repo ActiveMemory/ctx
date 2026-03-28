@@ -7,7 +7,7 @@
 package unlock
 
 import (
-	"github.com/ActiveMemory/ctx/internal/cli/recall/core/lock"
+	"github.com/ActiveMemory/ctx/internal/cli/journal/core/lock"
 	"github.com/spf13/cobra"
 )
 
