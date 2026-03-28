@@ -30,7 +30,7 @@ func Relay(message, sessionID string, ref *notify.TemplateRef) {
 	log.AppendEvent(hook.NotifyChannelRelay, message, sessionID, ref)
 }
 
-// Relay sends both a nudge and a relay notification, then
+// EmitAndRelay sends both a nudge and a relay notification, then
 // appends the relay event to the local event log. Used by hooks that
 // emit both notification types with the same message.
 //

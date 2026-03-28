@@ -41,7 +41,7 @@ func CreateGeneric(cause error) error {
 	)
 }
 
-// Create wraps an archive creation failure.
+// CreateArchive wraps an archive creation failure.
 //
 // Parameters:
 //   - cause: the underlying error

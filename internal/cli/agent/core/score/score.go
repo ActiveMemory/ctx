@@ -79,7 +79,7 @@ func Relevance(eb *index.EntryBlock, keywords []string) float64 {
 	return float64(matches) / float64(agent.RelevanceMatchCap)
 }
 
-// Entry computes the combined relevance score for an entry block.
+// Score computes the combined relevance score for an entry block.
 //
 // Superseded entries always get score 0.0.
 // All other entries get recency and task relevance (range 0.0-2.0).
@@ -128,7 +128,7 @@ func ExtractTaskKeywords(tasks []string) []string {
 	return keywords
 }
 
-// Entries scores and sorts entry blocks by relevance.
+// All scores and sorts entry blocks by relevance.
 //
 // Parameters:
 //   - blocks: Parsed entry blocks from a knowledge file
@@ -150,7 +150,7 @@ func All(
 			Tokens:     tokens,
 		})
 	}
-	// Sort by score descending (stable for equal scores — preserves file order)
+	// Sort by score descending (stable for equal scores: preserves file order)
 	for i := 1; i < len(scored); i++ {
 		for j := i; j > 0 && scored[j].Score > scored[j-1].Score; j-- {
 			scored[j], scored[j-1] = scored[j-1], scored[j]

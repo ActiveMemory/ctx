@@ -285,7 +285,7 @@ func SelectContent(cause error) error {
 	)
 }
 
-// Write wraps a failure to write MEMORY.md.
+// WriteMemory wraps a failure to write MEMORY.md.
 //
 // Parameters:
 //   - cause: the underlying write error
