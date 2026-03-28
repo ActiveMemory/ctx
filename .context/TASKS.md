@@ -265,6 +265,8 @@ Spec: `specs/journal-merge-completion.md`. Read the spec before starting any JMC
 
 - [ ] Recipe: "How to write a good CONSTITUTION.md" — practical guide with categories (security, quality, process, structure), anti-patterns (vague qualifiers, unenforced rules), enforcement mechanisms (hooks, commit gates), and a starter template. #priority:medium #added:2026-03-27-115500
 
+- [ ] Import grouping compliance test: parse all .go files, verify imports follow stdlib — external — ctx three-group ordering. Add to internal/compliance/. Catches violations that goimports misses (it merges external and ctx into one group). #priority:medium #added:2026-03-27-120000
+
 - [ ] drift check should notify if claude permissions have insecure stuff in it.
 
 - [ ] task: sync workspace to ARI_INBOX

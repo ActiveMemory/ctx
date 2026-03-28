@@ -194,3 +194,5 @@ DO NOT UPDATE FOR:
 - write/ packages write to stdio only — functions take *cobra.Command, not io.Writer. Exception: write/rc writes to os.Stderr because rc loads before cobra.
 
 - Cross-cutting domain types belong in internal/entity. Types used by one package belong in that package; types used across packages go to entity.
+
+- Import grouping: stdlib — blank line — external deps (cobra, yaml) — blank line — ctx imports. Three groups, always in this order. goimports handles stdlib vs external but does not separate external deps from ctx imports — that separation is a manual convention.

@@ -11,6 +11,8 @@ import (
 	"path/filepath"
 	"strings"
 
+	"github.com/spf13/cobra"
+
 	"github.com/ActiveMemory/ctx/internal/cli/journal/core/confirm"
 	"github.com/ActiveMemory/ctx/internal/cli/journal/core/execute"
 	"github.com/ActiveMemory/ctx/internal/cli/journal/core/index"
@@ -18,13 +20,11 @@ import (
 	"github.com/ActiveMemory/ctx/internal/cli/journal/core/query"
 	sourceFormat "github.com/ActiveMemory/ctx/internal/cli/journal/core/source/format"
 	"github.com/ActiveMemory/ctx/internal/cli/journal/core/validate"
-	"github.com/ActiveMemory/ctx/internal/entity"
-	"github.com/spf13/cobra"
-
 	"github.com/ActiveMemory/ctx/internal/config/dir"
 	"github.com/ActiveMemory/ctx/internal/config/file"
 	"github.com/ActiveMemory/ctx/internal/config/fs"
 	"github.com/ActiveMemory/ctx/internal/config/journal"
+	"github.com/ActiveMemory/ctx/internal/entity"
 	errFs "github.com/ActiveMemory/ctx/internal/err/fs"
 	errJournal "github.com/ActiveMemory/ctx/internal/err/journal"
 	errSession "github.com/ActiveMemory/ctx/internal/err/session"
