@@ -7,8 +7,9 @@
 package unlock
 
 import (
-	"github.com/ActiveMemory/ctx/internal/cli/journal/core/lock"
 	"github.com/spf13/cobra"
+
+	"github.com/ActiveMemory/ctx/internal/cli/journal/core/lock"
 )
 
 // Run delegates to core.RunLockUnlock with lock=false.

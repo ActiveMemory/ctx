@@ -9,9 +9,9 @@ package sync
 import (
 	"path/filepath"
 
-	"github.com/ActiveMemory/ctx/internal/cli/journal/core/lock"
 	"github.com/spf13/cobra"
 
+	"github.com/ActiveMemory/ctx/internal/cli/journal/core/lock"
 	"github.com/ActiveMemory/ctx/internal/config/dir"
 	"github.com/ActiveMemory/ctx/internal/config/journal"
 	errJournal "github.com/ActiveMemory/ctx/internal/err/journal"
