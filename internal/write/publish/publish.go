@@ -13,6 +13,7 @@ import (
 
 	"github.com/ActiveMemory/ctx/internal/assets/read/desc"
 	"github.com/ActiveMemory/ctx/internal/config/embed/text"
+	writeIo "github.com/ActiveMemory/ctx/internal/write/io"
 )
 
 // NotFound prints that no published block was found.
@@ -63,18 +64,10 @@ func Plan(
 	cmd.Println(fmt.Sprintf(desc.Text(text.DescKeyWritePublishBudget), budget))
 	cmd.Println()
 	cmd.Println(desc.Text(text.DescKeyWritePublishBlock))
-	if tasks > 0 {
-		cmd.Println(fmt.Sprintf(desc.Text(text.DescKeyWritePublishTasks), tasks))
-	}
-	if decisions > 0 {
-		cmd.Println(fmt.Sprintf(desc.Text(text.DescKeyWritePublishDecisions), decisions))
-	}
-	if conventions > 0 {
-		cmd.Println(fmt.Sprintf(desc.Text(text.DescKeyWritePublishConventions), conventions))
-	}
-	if learnings > 0 {
-		cmd.Println(fmt.Sprintf(desc.Text(text.DescKeyWritePublishLearnings), learnings))
-	}
+	writeIo.CountLine(cmd, text.DescKeyWritePublishTasks, tasks)
+	writeIo.CountLine(cmd, text.DescKeyWritePublishDecisions, decisions)
+	writeIo.CountLine(cmd, text.DescKeyWritePublishConventions, conventions)
+	writeIo.CountLine(cmd, text.DescKeyWritePublishLearnings, learnings)
 	cmd.Println()
 	cmd.Println(fmt.Sprintf(desc.Text(text.DescKeyWritePublishTotal), totalLines, budget))
 }

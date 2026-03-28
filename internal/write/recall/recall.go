@@ -15,6 +15,7 @@ import (
 	"github.com/ActiveMemory/ctx/internal/assets/read/desc"
 	"github.com/ActiveMemory/ctx/internal/config/embed/text"
 	"github.com/ActiveMemory/ctx/internal/config/token"
+	writeIo "github.com/ActiveMemory/ctx/internal/write/io"
 )
 
 // SkipFile prints that a file was skipped during export.
@@ -195,18 +196,10 @@ func ImportFinalSummary(cmd *cobra.Command, imported, updated, renamed, skipped 
 		return
 	}
 	cmd.Println()
-	if imported > 0 {
-		cmd.Println(fmt.Sprintf(desc.Text(text.DescKeyWriteRecallImportedNew), imported))
-	}
-	if updated > 0 {
-		cmd.Println(fmt.Sprintf(desc.Text(text.DescKeyWriteRecallUpdated), updated))
-	}
-	if renamed > 0 {
-		cmd.Println(fmt.Sprintf(desc.Text(text.DescKeyWriteRecallRenamed), renamed))
-	}
-	if skipped > 0 {
-		cmd.Println(fmt.Sprintf(desc.Text(text.DescKeyWriteRecallSkipped), skipped))
-	}
+	writeIo.CountLine(cmd, text.DescKeyWriteRecallImportedNew, imported)
+	writeIo.CountLine(cmd, text.DescKeyWriteRecallUpdated, updated)
+	writeIo.CountLine(cmd, text.DescKeyWriteRecallRenamed, renamed)
+	writeIo.CountLine(cmd, text.DescKeyWriteRecallSkipped, skipped)
 }
 
 // NoFiltersMatch prints that no sessions matched the applied filters.
