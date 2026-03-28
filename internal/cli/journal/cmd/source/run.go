@@ -8,9 +8,6 @@ package source
 
 import (
 	"github.com/spf13/cobra"
-
-	"github.com/ActiveMemory/ctx/internal/cli/recall/cmd/list"
-	"github.com/ActiveMemory/ctx/internal/cli/recall/cmd/show"
 )
 
 // Opts holds all flags for the source subcommand.
@@ -43,27 +40,5 @@ func Run(cmd *cobra.Command, args []string, opts Opts) error {
 		return runShow(cmd, args, opts)
 	}
 
-	return list.Run(
-		cmd, opts.Limit, opts.Project, opts.Tool,
-		opts.Since, opts.Until, opts.AllProjects,
-	)
-}
-
-// runShow delegates to the show command's Run function.
-//
-// Parameters:
-//   - cmd: Cobra command instance
-//   - args: Positional arguments from the command line
-//   - opts: Resolved command options
-//
-// Returns:
-//   - error: Non-nil if the show command fails
-func runShow(cmd *cobra.Command, args []string, opts Opts) error {
-	// If --show <id> was used, pass the ID as a positional arg to show.Run.
-	showArgs := args
-	if opts.ShowID != "" {
-		showArgs = []string{opts.ShowID}
-	}
-
-	return show.Run(cmd, showArgs, opts.Latest, opts.Full, opts.AllProjects)
+	return runList(cmd, opts)
 }

@@ -275,8 +275,8 @@ Spec: `specs/stuttery-rename.md`. Read the spec before starting any SR task.
 
 **JMC.7 — Eliminate remaining recall/cmd dependencies:**
 
-- [ ] JMC.7.1: Move recall/cmd/list logic into journal/cmd/source — source/run.go still delegates list mode to recall/cmd/list.Run. Inline or absorb. #priority:high #added:2026-03-28-030000
-- [ ] JMC.7.2: Move recall/cmd/show logic into journal/cmd/source — source/run.go delegates show mode to recall/cmd/show.Run. Inline or absorb. #priority:high #added:2026-03-28-030000
+- [x] JMC.7.1: Move recall/cmd/list logic into journal/cmd/source/list.go #done:2026-03-28-040000 — source/run.go still delegates list mode to recall/cmd/list.Run. Inline or absorb. #priority:high #added:2026-03-28-030000
+- [x] JMC.7.2: Move recall/cmd/show logic into journal/cmd/source/show.go #done:2026-03-28-040000 — source/run.go delegates show mode to recall/cmd/show.Run. Inline or absorb. #priority:high #added:2026-03-28-030000
 - [ ] JMC.7.3: After JMC.7.1-7.2, recall/cmd/ has only backward-compat delegates. Evaluate deleting recall/cmd/ entirely or keeping thin wrappers. #added:2026-03-28-030000
 
 ### Phase CLI-FIX: CLI Infrastructure Fixes
