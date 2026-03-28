@@ -22,7 +22,7 @@ func TestBuildSessionIndex_WithSessionID(t *testing.T) {
 		t.Fatal(writeErr)
 	}
 
-	idx := BuildSessionIndex(dir)
+	idx := SessionIndex(dir)
 
 	if got, ok := idx["abc12345-full-uuid"]; !ok {
 		t.Error("expected session_id key in index")
@@ -40,7 +40,7 @@ func TestBuildSessionIndex_ShortIDFallback(t *testing.T) {
 		t.Fatal(writeErr)
 	}
 
-	idx := BuildSessionIndex(dir)
+	idx := SessionIndex(dir)
 
 	if got, ok := idx["abc12345"]; !ok {
 		t.Error("expected short ID key in index")
@@ -63,7 +63,7 @@ func TestBuildSessionIndex_SkipsMultipartFiles(t *testing.T) {
 		t.Fatal(writeErr)
 	}
 
-	idx := BuildSessionIndex(dir)
+	idx := SessionIndex(dir)
 
 	// Should only have one entry for the short ID.
 	if got, ok := idx["abc12345"]; !ok {
@@ -75,14 +75,14 @@ func TestBuildSessionIndex_SkipsMultipartFiles(t *testing.T) {
 
 func TestBuildSessionIndex_EmptyDir(t *testing.T) {
 	dir := t.TempDir()
-	idx := BuildSessionIndex(dir)
+	idx := SessionIndex(dir)
 	if len(idx) != 0 {
 		t.Errorf("expected empty index, got %d entries", len(idx))
 	}
 }
 
 func TestBuildSessionIndex_NonexistentDir(t *testing.T) {
-	idx := BuildSessionIndex("/nonexistent/path/to/journal")
+	idx := SessionIndex("/nonexistent/path/to/journal")
 	if len(idx) != 0 {
 		t.Errorf("expected empty index for nonexistent dir, got %d entries", len(idx))
 	}

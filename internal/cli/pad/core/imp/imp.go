@@ -114,7 +114,7 @@ func FromDirectory(dir string) ([]string, int, []BlobResult, error) {
 			continue
 		}
 
-		entries = append(entries, blob.MakeBlob(name, data))
+		entries = append(entries, blob.Make(name, data))
 		results = append(results, BlobResult{Name: name, Added: true})
 		added++
 	}

@@ -57,5 +57,5 @@ func Blob(label, filePath string) ([]string, error) {
 		return nil, loadErr
 	}
 
-	return append(entries, blob.MakeBlob(label, data)), nil
+	return append(entries, blob.Make(label, data)), nil
 }

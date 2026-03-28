@@ -27,7 +27,7 @@ Some content here.
 		t.Fatalf("failed to write temp file: %v", writeErr)
 	}
 
-	entry := ParseJournalEntry(path, filename)
+	entry := JournalEntry(path, filename)
 
 	if entry.Filename != filename {
 		t.Errorf("Filename = %q, want %q", entry.Filename, filename)
@@ -68,7 +68,7 @@ Content here.
 		t.Fatalf("failed to write temp file: %v", writeErr)
 	}
 
-	entry := ParseJournalEntry(path, filename)
+	entry := JournalEntry(path, filename)
 
 	if !entry.Suggestive {
 		t.Error("Suggestive should be true for suggestion mode sessions")
@@ -76,7 +76,7 @@ Content here.
 }
 
 func TestParseJournalEntry_MissingFile(t *testing.T) {
-	entry := ParseJournalEntry("/nonexistent/path.md", "2026-01-21-test.md")
+	entry := JournalEntry("/nonexistent/path.md", "2026-01-21-test.md")
 
 	if entry.Title != "2026-01-21-test" {
 		t.Errorf("Title = %q, want %q", entry.Title, "2026-01-21-test")
@@ -92,7 +92,7 @@ func TestParseJournalEntry_WithFrontmatter(t *testing.T) {
 		t.Fatal(writeErr)
 	}
 
-	entry := ParseJournalEntry(path, filename)
+	entry := JournalEntry(path, filename)
 
 	if entry.Title != "Feature: Add caching" {
 		t.Errorf("Title = %q, want %q", entry.Title, "Feature: Add caching")
@@ -141,7 +141,7 @@ func TestParseJournalEntry_SessionID(t *testing.T) {
 		t.Fatal(writeErr)
 	}
 
-	entry := ParseJournalEntry(path, filename)
+	entry := JournalEntry(path, filename)
 
 	if entry.SessionID != "01abc-def-456" {
 		t.Errorf("SessionID = %q, want %q", entry.SessionID, "01abc-def-456")
@@ -157,7 +157,7 @@ func TestParseJournalEntry_NoSessionID(t *testing.T) {
 		t.Fatal(writeErr)
 	}
 
-	entry := ParseJournalEntry(path, filename)
+	entry := JournalEntry(path, filename)
 
 	if entry.SessionID != "" {
 		t.Errorf("SessionID = %q, want empty", entry.SessionID)
@@ -197,7 +197,7 @@ func TestParseJournalEntry_TitleSanitization(t *testing.T) {
 				t.Fatal(writeErr)
 			}
 
-			entry := ParseJournalEntry(path, filename)
+			entry := JournalEntry(path, filename)
 			if entry.Title != tt.wantTitle {
 				t.Errorf("Title = %q, want %q", entry.Title, tt.wantTitle)
 			}

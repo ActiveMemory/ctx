@@ -68,13 +68,13 @@ func Run(_ *cobra.Command, stdin *os.File) error {
 	counter.Write(counterFile, count)
 
 	// Detect context modification since the last heartbeat.
-	currentMtime := time.GetLatestContextMtime(contextDir)
+	currentMtime := time.GetLatestMtime(contextDir)
 	lastMtime := coreHeartbeat.ReadMtime(mtimeFile)
 	contextModified := currentMtime > lastMtime
 	coreHeartbeat.WriteMtime(mtimeFile, currentMtime)
 
 	// Read token usage for this session.
-	info, _ := session.ReadSessionTokenInfo(sessionID)
+	info, _ := session.ReadTokenInfo(sessionID)
 	tokens := info.Tokens
 	window := session.EffectiveContextWindow(info.Model)
 

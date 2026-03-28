@@ -21,7 +21,7 @@ import (
 	"github.com/ActiveMemory/ctx/internal/io"
 )
 
-// BuildSessionIndex scans journal .md files in journalDir and returns a
+// SessionIndex scans journal .md files in journalDir and returns a
 // map of session_id → filename.
 //
 // Two-pass matching:
@@ -35,7 +35,7 @@ import (
 //
 // Returns:
 //   - map[string]string: session ID → filename mapping
-func BuildSessionIndex(journalDir string) map[string]string {
+func SessionIndex(journalDir string) map[string]string {
 	index := make(map[string]string)
 
 	entries, readErr := os.ReadDir(journalDir)
@@ -120,7 +120,7 @@ func ExtractSessionID(content string) string {
 // back to the short ID (filename-based legacy match).
 //
 // Parameters:
-//   - index: Session index from BuildSessionIndex
+//   - index: Session index from SessionIndex
 //   - sessionID: Full session UUID
 //
 // Returns:

@@ -29,10 +29,10 @@ func Run(cmd *cobra.Command, n, m int) error {
 		return err
 	}
 
-	if validErr := validate.ValidateIndex(n, entries); validErr != nil {
+	if validErr := validate.Index(n, entries); validErr != nil {
 		return validErr
 	}
-	if validErr := validate.ValidateIndex(m, entries); validErr != nil {
+	if validErr := validate.Index(m, entries); validErr != nil {
 		return validErr
 	}
 

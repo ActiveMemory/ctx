@@ -16,7 +16,7 @@ import (
 	"github.com/ActiveMemory/ctx/internal/entity"
 )
 
-// CreateEntryTemplates creates entry template files in .context/templates/.
+// CreateTemplates creates entry template files in .context/templates/.
 //
 // Parameters:
 //   - cmd: Cobra command for output
@@ -25,7 +25,7 @@ import (
 //
 // Returns:
 //   - error: Non-nil if directory creation or file write fails
-func CreateEntryTemplates(
+func CreateTemplates(
 	cmd *cobra.Command, contextDir string, force bool,
 ) error {
 	return tpl.DeployTemplates(cmd, contextDir, force,

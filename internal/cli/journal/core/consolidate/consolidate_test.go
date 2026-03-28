@@ -30,7 +30,7 @@ func TestConsolidateToolRuns(t *testing.T) {
 		"Done",
 	}, "\n")
 
-	got := ConsolidateToolRuns(content)
+	got := ToolRuns(content)
 
 	if !strings.Contains(got, "\u00d73)") {
 		t.Errorf("expected (x3) count marker, got:\n%s", got)
@@ -54,7 +54,7 @@ func TestConsolidateToolRuns_DifferentTools(t *testing.T) {
 		"Write file.go",
 	}, "\n")
 
-	got := ConsolidateToolRuns(content)
+	got := ToolRuns(content)
 
 	if strings.Contains(got, "\u00d7") {
 		t.Error("different bodies should not be consolidated")
@@ -69,7 +69,7 @@ func TestConsolidateToolRuns_DifferentTools(t *testing.T) {
 
 func TestConsolidateToolRuns_SingleTurn(t *testing.T) {
 	content := "### 1. Assistant (10:00:00)\n\nSingle turn\n"
-	got := ConsolidateToolRuns(content)
+	got := ToolRuns(content)
 
 	if strings.Contains(got, "\u00d7") {
 		t.Error("single turn should not have count marker")

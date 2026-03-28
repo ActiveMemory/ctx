@@ -12,7 +12,7 @@ import (
 	"github.com/ActiveMemory/ctx/internal/config/token"
 )
 
-// ParseEntries splits MEMORY.md content into discrete entries.
+// Entries splits MEMORY.md content into discrete entries.
 //
 // Entry boundaries:
 //   - Markdown headers (## or ###) start a new entry
@@ -26,7 +26,7 @@ import (
 //
 // Returns:
 //   - []Entry: Parsed entries grouped by headers, paragraphs, and list blocks
-func ParseEntries(content string) []Entry {
+func Entries(content string) []Entry {
 	if strings.TrimSpace(content) == "" {
 		return nil
 	}

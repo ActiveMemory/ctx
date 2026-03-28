@@ -49,7 +49,7 @@ func Run(cmd *cobra.Command, stdin *os.File) error {
 		return nil
 	}
 	fallback := desc.Text(text.DescKeyQaReminderFallback)
-	msg := message.LoadMessage(
+	msg := message.Load(
 		hook.QAReminder, hook.VariantGate, nil, fallback,
 	)
 	if msg == "" {

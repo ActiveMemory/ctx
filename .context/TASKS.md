@@ -260,6 +260,19 @@ Spec: `specs/journal-merge-completion.md`. Read the spec before starting any JMC
 - [x] JMC.6.3: Extract system/cmd/mark_journal RunMarkJournal logic to system/core/journal/mark.go #done:2026-03-27-133000
 - [x] JMC.6.4: Extract system/cmd/resources RunResources logic to system/core/resource #done:2026-03-27-133000
 
+### Phase SR: Stuttery Rename
+
+Spec: `specs/stuttery-rename.md`. Read the spec before starting any SR task.
+
+288 exported symbols contain their package name, causing stutter.
+57 DescKey constants excluded (YAML key coupling). 231 to rename.
+
+- [ ] SR.1: cli/* functions (86 symbols) — score, collapse, format, generate, normalize, parse, section, slug, turn, wikilink, wrap, blob, merge, validate, scan, preview, action, archive, ceremony, drift, knowledge, log, message, nudge, persistence, session, stats, time, count, path, apply, stream, complete #priority:high #added:2026-03-28-010000
+- [ ] SR.2: config/* constants (55 symbols) — event, heartbeat, journal, knowledge, marker, memory, nudge, reminder, session, time, version, wrap, archive, bootstrap, box, ceremony, file #added:2026-03-28-010000
+- [ ] SR.3: write/* output functions (38 symbols) — remind, status, sync, restore, publish, prune, hook, initialize, complete, deps, change, add, err, session, archive, export #added:2026-03-28-010000
+- [ ] SR.4: tpl/* template constants (26 symbols) — drop Tpl prefix from all journal/zensical templates #added:2026-03-28-010000
+- [ ] SR.5: other core packages (26 symbols) — parser, token, state, server, poll, prompt, memory, index, task, resolve, summary, backup, date, initialize #added:2026-03-28-010000
+
 ### Phase CLI-FIX: CLI Infrastructure Fixes
 
 - [ ] Bug: ctx add task appends to the last Phase section instead of a dedicated location. Tasks added via CLI land inside whatever Phase happens to be last in TASKS.md, breaking Phase structure. Fix: add mandatory --phase flag to ctx add task. If the named Phase section does not exist, create it. If --phase is omitted, error with available Phase names. No fallback section — mandatory placement forces intent at creation time. #priority:high #added:2026-03-25-234813

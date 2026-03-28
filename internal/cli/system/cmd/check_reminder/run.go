@@ -81,7 +81,7 @@ func Run(cmd *cobra.Command, stdin *os.File) error {
 		desc.Text(text.DescKeyCheckRemindersDismissHint) + token.NewlineLF +
 		desc.Text(text.DescKeyCheckRemindersDismissAllHint)
 	vars := map[string]any{reminder.VarReminderList: reminderList}
-	content := message.LoadMessage(
+	content := message.Load(
 		hook.CheckReminders, hook.VariantReminders, vars, fallback,
 	)
 	if content == "" {
@@ -99,7 +99,7 @@ func Run(cmd *cobra.Command, stdin *os.File) error {
 		hook.CheckReminders,
 		fmt.Sprintf(desc.Text(text.DescKeyCheckRemindersNudgeFormat), len(due)),
 	)
-	nudge.NudgeAndRelay(nudgeMsg, input.SessionID, ref)
+	nudge.EmitAndRelay(nudgeMsg, input.SessionID, ref)
 
 	return nil
 }

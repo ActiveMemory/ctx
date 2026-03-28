@@ -16,7 +16,7 @@ import (
 	"github.com/ActiveMemory/ctx/internal/entity"
 )
 
-// SlugifyTitle converts a human-readable title into a URL-friendly slug.
+// FromTitle converts a human-readable title into a URL-friendly slug.
 //
 // Lowercases the input, replaces non-alphanumeric characters with hyphens,
 // collapses consecutive hyphens, trims leading/trailing hyphens, and
@@ -27,7 +27,7 @@ import (
 //
 // Returns:
 //   - string: Slugified string (may be empty if input is empty or all punctuation)
-func SlugifyTitle(title string) string {
+func FromTitle(title string) string {
 	// Strip the "..." truncation suffix from FirstUserMsg if present.
 	title = strings.TrimSuffix(title, token.Ellipsis)
 
@@ -108,7 +108,7 @@ func CleanTitle(s string) string {
 	return out
 }
 
-// TitleSlug returns the best available slug for a session, following a
+// ForTitle returns the best available slug for a session, following a
 // fallback hierarchy:
 //
 //  1. existingTitle: enriched title from previously exported frontmatter
@@ -117,7 +117,7 @@ func CleanTitle(s string) string {
 //  4. s.ID[:8]: short ID prefix
 //
 // The chosen source (except s.Slug and s.ID[:8], which are already slugs)
-// is passed through SlugifyTitle.
+// is passed through FromTitle.
 //
 // Parameters:
 //   - s: Session to derive the slug from
@@ -127,10 +127,10 @@ func CleanTitle(s string) string {
 //   - slug: URL-friendly slug for the filename
 //   - title: Human-readable title for the H1 heading (empty when falling
 //     back to s.Slug or s.ID)
-func TitleSlug(s *entity.Session, existingTitle string) (slug, title string) {
+func ForTitle(s *entity.Session, existingTitle string) (slug, title string) {
 	if existingTitle != "" {
 		clean := CleanTitle(existingTitle)
-		sl := SlugifyTitle(clean)
+		sl := FromTitle(clean)
 		if sl != "" {
 			return sl, clean
 		}
@@ -138,7 +138,7 @@ func TitleSlug(s *entity.Session, existingTitle string) (slug, title string) {
 
 	if s.FirstUserMsg != "" {
 		clean := CleanTitle(s.FirstUserMsg)
-		sl := SlugifyTitle(clean)
+		sl := FromTitle(clean)
 		if sl != "" {
 			return sl, clean
 		}

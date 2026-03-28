@@ -25,7 +25,7 @@ import (
 	errFs "github.com/ActiveMemory/ctx/internal/err/fs"
 )
 
-// WriteSection creates a subdirectory, writes its index page, and calls
+// Write creates a subdirectory, writes its index page, and calls
 // writePages to emit individual pages. All three index sections (topics,
 // files, types) follow this identical structure.
 //
@@ -37,7 +37,7 @@ import (
 //
 // Returns:
 //   - error: Non-nil if directory creation or index write fails
-func WriteSection(
+func Write(
 	docsDir, subdir, indexContent string,
 	writePages func(dir string),
 ) error {
@@ -57,14 +57,14 @@ func WriteSection(
 	return nil
 }
 
-// WriteFormattedSection writes a headed list section to sb if items is non-empty.
+// WriteFormatted writes a headed list section to sb if items is non-empty.
 //
 // Parameters:
 //   - sb: String builder to write to
 //   - headingKey: YAML DescKey for the section heading
 //   - items: Slice of items to render
 //   - formatFn: Function that renders one item as a string
-func WriteFormattedSection[T any](sb *strings.Builder, headingKey string, items []T, formatFn func(T) string) {
+func WriteFormatted[T any](sb *strings.Builder, headingKey string, items []T, formatFn func(T) string) {
 	if len(items) == 0 {
 		return
 	}
@@ -76,7 +76,7 @@ func WriteFormattedSection[T any](sb *strings.Builder, headingKey string, items 
 	sb.WriteString(nl)
 }
 
-// WriteMonthSections writes month-grouped entry links to a string builder.
+// WriteMonths writes month-grouped entry links to a string builder.
 //
 // Parameters:
 //   - sb: String builder to write to
@@ -84,7 +84,7 @@ func WriteFormattedSection[T any](sb *strings.Builder, headingKey string, items 
 //   - monthOrder: Month strings in display order
 //   - linkPrefix: Path prefix for links (e.g., config.LinkPrefixParent for
 //     subpages, "" for index)
-func WriteMonthSections(
+func WriteMonths(
 	sb *strings.Builder,
 	months map[string][]entity.JournalEntry,
 	monthOrder []string, linkPrefix string,
@@ -126,8 +126,8 @@ func GenerateGroupedPage(heading, stats string, entries []entity.JournalEntry) s
 	sb.WriteString(heading + nl + nl)
 	sb.WriteString(stats + nl + nl)
 
-	months, monthOrder := group.GroupByMonth(entries)
-	WriteMonthSections(&sb, months, monthOrder, token.LinkPrefixParent)
+	months, monthOrder := group.ByMonth(entries)
+	WriteMonths(&sb, months, monthOrder, token.LinkPrefixParent)
 
 	return sb.String()
 }
@@ -158,7 +158,7 @@ func WritePopularAndLongtail(
 		sb.WriteString(popHeading + nl + nl)
 		for i := range popCount {
 			label, slug, count := popItem(i)
-			sb.WriteString(format.FormatSessionLink(label, slug, count))
+			sb.WriteString(format.SessionLink(label, slug, count))
 		}
 		sb.WriteString(nl)
 	}

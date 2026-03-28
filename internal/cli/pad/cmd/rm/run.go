@@ -28,7 +28,7 @@ func Run(cmd *cobra.Command, n int) error {
 		return err
 	}
 
-	if validErr := validate.ValidateIndex(n, entries); validErr != nil {
+	if validErr := validate.Index(n, entries); validErr != nil {
 		return validErr
 	}
 

@@ -6,9 +6,9 @@
 
 package frontmatter
 
-// ObsidianFrontmatter represents the YAML frontmatter for Obsidian vault
+// Obsidian represents the YAML frontmatter for Obsidian vault
 // entries. Extends JournalFrontmatter with Obsidian-specific fields.
-type ObsidianFrontmatter struct {
+type Obsidian struct {
 	Title        string   `yaml:"title"`
 	Date         string   `yaml:"date"`
 	Type         string   `yaml:"type,omitempty"`

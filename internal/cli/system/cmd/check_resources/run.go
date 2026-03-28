@@ -67,7 +67,7 @@ func Run(cmd *cobra.Command, stdin *os.File) error {
 		desc.Text(
 			text.DescKeyCheckResourcesFallbackEnd)
 	vars := map[string]any{stats.VarAlertMessages: alertMessages}
-	content := message.LoadMessage(
+	content := message.Load(
 		hook.CheckResources, hook.VariantAlert, vars, fallback,
 	)
 	if content == "" {
@@ -82,7 +82,7 @@ func Run(cmd *cobra.Command, stdin *os.File) error {
 	ref := notify.NewTemplateRef(
 		hook.CheckResources, hook.VariantAlert, vars,
 	)
-	nudge.NudgeAndRelay(fmt.Sprintf(desc.Text(text.DescKeyRelayPrefixFormat),
+	nudge.Relay(fmt.Sprintf(desc.Text(text.DescKeyRelayPrefixFormat),
 		hook.CheckResources, desc.Text(text.DescKeyCheckResourcesRelayMessage)),
 		input.SessionID, ref,
 	)

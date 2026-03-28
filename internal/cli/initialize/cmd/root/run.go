@@ -127,7 +127,7 @@ func Run(
 	initialize.InfoInitialized(cmd, contextDir)
 
 	// Create entry templates in .context/templates/
-	if err := entry.CreateEntryTemplates(cmd, contextDir, force); err != nil {
+	if err := entry.CreateTemplates(cmd, contextDir, force); err != nil {
 		// Non-fatal: warn but continue
 		initialize.InfoWarnNonFatal(cmd, desc.Text(text.DescKeyInitLabelEntryTemplates), err)
 	}
@@ -142,7 +142,7 @@ func Run(
 	initialize.InfoCreatingRootFiles(cmd)
 
 	// Create specs/ and ideas/ directories with README.md
-	if err := coreProject.CreateProjectDirs(cmd); err != nil {
+	if err := coreProject.CreateDirs(cmd); err != nil {
 		initialize.InfoWarnNonFatal(cmd, desc.Text(text.DescKeyInitLabelProjectDirs), err)
 	}
 
@@ -155,14 +155,14 @@ func Run(
 
 	// Auto-enable plugin globally unless suppressed
 	if !noPluginEnable {
-		if pluginErr := plugin.EnablePluginGlobally(cmd); pluginErr != nil {
+		if pluginErr := plugin.EnableGlobally(cmd); pluginErr != nil {
 			// Non-fatal: warn but continue
 			initialize.InfoWarnNonFatal(cmd, desc.Text(text.DescKeyInitLabelPluginEnable), pluginErr)
 		}
 	}
 
 	// Handle CLAUDE.md creation/merge
-	if err := coreClaude.HandleClaudeMd(cmd, force, merge); err != nil {
+	if err := coreClaude.HandleMd(cmd, force, merge); err != nil {
 		// Non-fatal: warn but continue
 		initialize.InfoWarnNonFatal(cmd, claude.Md, err)
 	}

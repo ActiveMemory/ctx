@@ -38,7 +38,7 @@ func Run(
 		return readErr
 	}
 
-	key := merge.LoadMergeKey(keyFile)
+	key := merge.LoadKey(keyFile)
 
 	seen := make(map[string]bool, len(current))
 	for _, e := range current {

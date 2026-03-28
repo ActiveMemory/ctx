@@ -34,5 +34,5 @@ func DecryptFile(key []byte, baseDir, filename string) ([]string, error) {
 		return nil, errCrypto.DecryptFailed()
 	}
 
-	return parse.ParseEntries(plaintext), nil
+	return parse.Entries(plaintext), nil
 }

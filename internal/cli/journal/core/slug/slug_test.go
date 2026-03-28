@@ -46,13 +46,13 @@ func TestSlugifyTitle(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			got := SlugifyTitle(tt.input)
+			got := FromTitle(tt.input)
 			if got != tt.want {
-				t.Errorf("SlugifyTitle(%q) = %q, want %q", tt.input, got, tt.want)
+				t.Errorf("FromTitle(%q) = %q, want %q", tt.input, got, tt.want)
 			}
 			// Slug must not exceed max length.
 			if len(got) > journal.TitleSlugMaxLen {
-				t.Errorf("SlugifyTitle(%q) length %d exceeds max %d", tt.input, len(got), journal.TitleSlugMaxLen)
+				t.Errorf("FromTitle(%q) length %d exceeds max %d", tt.input, len(got), journal.TitleSlugMaxLen)
 			}
 		})
 	}
@@ -191,12 +191,12 @@ func TestTitleSlug_FallbackHierarchy(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			gotSlug, gotTitle := TitleSlug(tt.session, tt.existingTitle)
+			gotSlug, gotTitle := ForTitle(tt.session, tt.existingTitle)
 			if gotSlug != tt.wantSlug {
-				t.Errorf("TitleSlug() slug = %q, want %q", gotSlug, tt.wantSlug)
+				t.Errorf("ForTitle() slug = %q, want %q", gotSlug, tt.wantSlug)
 			}
 			if gotTitle != tt.wantTitle {
-				t.Errorf("TitleSlug() title = %q, want %q", gotTitle, tt.wantTitle)
+				t.Errorf("ForTitle() title = %q, want %q", gotTitle, tt.wantTitle)
 			}
 		})
 	}

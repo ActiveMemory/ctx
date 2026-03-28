@@ -12,14 +12,14 @@ import (
 	"github.com/ActiveMemory/ctx/internal/config/token"
 )
 
-// ParseEntries splits raw bytes into entry lines, filtering empty lines.
+// Entries splits raw bytes into entry lines, filtering empty lines.
 //
 // Parameters:
 //   - data: Raw scratchpad content
 //
 // Returns:
 //   - []string: Non-empty lines, or nil if data is empty
-func ParseEntries(data []byte) []string {
+func Entries(data []byte) []string {
 	if len(data) == 0 {
 		return nil
 	}

@@ -68,7 +68,7 @@ func Run(cmd *cobra.Command, stdin *os.File) error {
 	hookName, variant := hook.PostCommit, hook.VariantNudge
 
 	fallback := desc.Text(text.DescKeyPostCommitFallback)
-	msg := message.LoadMessage(hookName, variant, nil, fallback)
+	msg := message.Load(hookName, variant, nil, fallback)
 	if msg == "" {
 		return nil
 	}
@@ -78,7 +78,7 @@ func Run(cmd *cobra.Command, stdin *os.File) error {
 	ref := notify.NewTemplateRef(hookName, variant, nil)
 	nudge.Relay(fmt.Sprintf(desc.Text(text.DescKeyRelayPrefixFormat), hookName, desc.Text(text.DescKeyPostCommitRelayMessage)), input.SessionID, ref)
 
-	if driftResponse := drift.CheckVersionDrift(sessionID); driftResponse != "" {
+	if driftResponse := drift.CheckVersion(sessionID); driftResponse != "" {
 		writeHook.HookContext(cmd, driftResponse)
 	}
 

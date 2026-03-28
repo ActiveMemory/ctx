@@ -40,7 +40,7 @@ func ExtractAttribute(tag, attrName string) string {
 	return ""
 }
 
-// ProcessStream reads from a stream and applies context updates.
+// Process reads from a stream and applies context updates.
 //
 // Scans input line-by-line looking for <context-update> XML tags.
 // When found, parses the type and content, then either displays
@@ -53,7 +53,7 @@ func ExtractAttribute(tag, attrName string) string {
 //
 // Returns:
 //   - error: Non-nil if a read error occurs
-func ProcessStream(cmd *cobra.Command, reader io.Reader, dryRun bool) error {
+func Process(cmd *cobra.Command, reader io.Reader, dryRun bool) error {
 	scanner := bufio.NewScanner(reader)
 	// Use a larger buffer for long lines
 	buf := make([]byte, 0, watch.StreamScannerInitCap)
@@ -82,7 +82,7 @@ func ProcessStream(cmd *cobra.Command, reader io.Reader, dryRun bool) error {
 				if dryRun {
 					writeWatch.DryRunPreview(cmd, update.Type, update.Content)
 				} else {
-					err := apply.ApplyUpdate(update)
+					err := apply.Update(update)
 					if err != nil {
 						writeWatch.ApplyFailed(cmd, update.Type, err)
 					} else {

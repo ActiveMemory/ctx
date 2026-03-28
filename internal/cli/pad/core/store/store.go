@@ -145,7 +145,7 @@ func ReadEntries() ([]string, error) {
 	}
 
 	if !rc.ScratchpadEncrypt() {
-		return parse.ParseEntries(data), nil
+		return parse.Entries(data), nil
 	}
 
 	kp := KeyPath()
@@ -159,7 +159,7 @@ func ReadEntries() ([]string, error) {
 		return nil, errCrypto.DecryptFailed()
 	}
 
-	return parse.ParseEntries(plaintext), nil
+	return parse.Entries(plaintext), nil
 }
 
 // WriteEntries writes entries to the scratchpad file.

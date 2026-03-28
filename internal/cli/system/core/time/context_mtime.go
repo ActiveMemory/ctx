@@ -13,14 +13,14 @@ import (
 	"github.com/ActiveMemory/ctx/internal/config/file"
 )
 
-// GetLatestContextMtime returns the most recent mtime of any .context/*.md file.
+// GetLatestMtime returns the most recent mtime of any .context/*.md file.
 //
 // Parameters:
 //   - contextDir: Path to the context directory
 //
 // Returns:
 //   - int64: Unix timestamp of the most recent modification, or 0
-func GetLatestContextMtime(contextDir string) int64 {
+func GetLatestMtime(contextDir string) int64 {
 	entries, readErr := os.ReadDir(contextDir)
 	if readErr != nil {
 		return 0

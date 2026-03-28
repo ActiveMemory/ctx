@@ -34,7 +34,7 @@ func TestIntegration_ParseClassifyPromote(t *testing.T) {
 	defer cleanup()
 
 	// Parse
-	entries := ParseEntries(fixtureMemory)
+	entries := Entries(fixtureMemory)
 	if len(entries) == 0 {
 		t.Fatal("expected entries from fixture")
 	}

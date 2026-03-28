@@ -88,7 +88,7 @@ func ReadInput(r io.Reader) entity.HookInput {
 	return input
 }
 
-// ReadSessionID reads the session ID from stdin JSON, returning the
+// ReadID reads the session ID from stdin JSON, returning the
 // fallback "unknown" if stdin is empty or unparseable.
 //
 // Parameters:
@@ -96,7 +96,7 @@ func ReadInput(r io.Reader) entity.HookInput {
 //
 // Returns:
 //   - string: Session ID or config.IDSessionUnknown
-func ReadSessionID(stdin *os.File) string {
+func ReadID(stdin *os.File) string {
 	input := ReadInput(stdin)
 	if input.SessionID == "" {
 		return cfgSession.IDUnknown
@@ -104,7 +104,7 @@ func ReadSessionID(stdin *os.File) string {
 	return input.SessionID
 }
 
-// LatestSessionPct returns the most recent context window usage percentage
+// LatestPct returns the most recent context window usage percentage
 // from the session stats JSONL. Returns 0 if no stats are available.
 // This allows other hooks (e.g., check-persistence) to gate their nudges
 // based on actual context window usage without re-reading the JSONL.
@@ -114,7 +114,7 @@ func ReadSessionID(stdin *os.File) string {
 //
 // Returns:
 //   - int: Latest context window usage percentage (0-100), or 0 if unknown
-func LatestSessionPct(sessionID string) int {
+func LatestPct(sessionID string) int {
 	path := filepath.Join(
 		state.Dir(),
 		cfgStats.FilePrefix+sessionID+file.ExtJSONL,
@@ -140,14 +140,14 @@ func LatestSessionPct(sessionID string) int {
 	return 0
 }
 
-// WriteSessionStats appends a JSONL line to .context/state/stats-{sessionID}.jsonl.
+// WriteStats appends a JSONL line to .context/state/stats-{sessionID}.jsonl.
 // The file is designed for `tail -f` monitoring of token usage across prompts.
 // Best-effort: errors are silently ignored.
 //
 // Parameters:
 //   - sessionID: Session identifier
 //   - stats: Stats entry to write
-func WriteSessionStats(sessionID string, stats entity.Stats) {
+func WriteStats(sessionID string, stats entity.Stats) {
 	path := filepath.Join(
 		state.Dir(),
 		cfgStats.FilePrefix+sessionID+file.ExtJSONL,

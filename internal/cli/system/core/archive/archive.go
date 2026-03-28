@@ -39,7 +39,7 @@ func finalizeArchive(
 	w io.Writer, archivePath, archiveName, scope string,
 	entries []entity.ArchiveEntry, smb *SMBConfig,
 ) (entity.BackupResult, error) {
-	if archiveErr := CreateArchive(archivePath, entries, w); archiveErr != nil {
+	if archiveErr := Create(archivePath, entries, w); archiveErr != nil {
 		return entity.BackupResult{}, archiveErr
 	}
 

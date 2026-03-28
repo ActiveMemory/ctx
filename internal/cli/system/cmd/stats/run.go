@@ -35,18 +35,18 @@ func Run(cmd *cobra.Command) error {
 
 	dir := filepath.Join(rc.ContextDir(), dir.State)
 
-	entries, readErr := coreStats.ReadStatsDir(dir, session)
+	entries, readErr := coreStats.ReadDir(dir, session)
 	if readErr != nil {
 		return readErr
 	}
 
 	if !follow {
-		writeStats.Table(cmd, coreStats.FormatDumpStats(entries, last, jsonOut))
+		writeStats.Table(cmd, coreStats.FormatDump(entries, last, jsonOut))
 		return nil
 	}
 
 	// Dump existing entries first, then stream.
-	writeStats.Table(cmd, coreStats.FormatDumpStats(entries, last, jsonOut))
+	writeStats.Table(cmd, coreStats.FormatDump(entries, last, jsonOut))
 
-	return coreStats.StreamStats(cmd.OutOrStdout(), dir, session, jsonOut)
+	return coreStats.Stream(cmd.OutOrStdout(), dir, session, jsonOut)
 }

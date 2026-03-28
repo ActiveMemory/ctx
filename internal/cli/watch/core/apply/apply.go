@@ -24,7 +24,7 @@ import (
 	"github.com/ActiveMemory/ctx/internal/task"
 )
 
-// ApplyUpdate routes a context update to the appropriate handler.
+// Update routes a context update to the appropriate handler.
 //
 // Dispatches based on the update type to add entries to context files
 // or mark tasks complete. For learnings and decisions, uses structured
@@ -36,7 +36,7 @@ import (
 //
 // Returns:
 //   - error: Non-nil if type is unknown or the handler fails
-func ApplyUpdate(update core.ContextUpdate) error {
+func Update(update core.ContextUpdate) error {
 	switch update.Type {
 	case cfgEntry.Task:
 		return RunAddSilent(update)

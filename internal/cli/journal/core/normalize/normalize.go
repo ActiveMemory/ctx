@@ -22,7 +22,7 @@ import (
 	"github.com/ActiveMemory/ctx/internal/config/token"
 )
 
-// NormalizeContent sanitizes journal Markdown for static site rendering:
+// Content sanitizes journal Markdown for static site rendering:
 //   - Strips code fence markers (eliminates nesting conflicts)
 //   - Wraps Tool Output and User sections in <pre><code> with HTML-escaped content
 //   - Sanitizes H1 headings (strips Claude tags, truncates to 75 chars)
@@ -41,7 +41,7 @@ import (
 //
 // Returns:
 //   - string: Sanitized content ready for static site rendering
-func NormalizeContent(content string, fencesVerified bool) string {
+func Content(content string, fencesVerified bool) string {
 	// Strip fences first - eliminates all nesting conflicts
 	content = reduce.StripFences(content, fencesVerified)
 
@@ -255,7 +255,7 @@ func WrapUserTurns(content string) string {
 // StripPreWrapper removes <details>, <summary>, <pre>, </pre>, </details>
 // wrapper lines from tool output body. When <pre> tags are found (the old
 // export format that HTML-escapes content), entities are unescaped. When
-// only <details>/<summary> are found (CollapseToolOutputs format), inner
+// only <details>/<summary> are found (ToolOutputs format), inner
 // content is returned as-is since it was never HTML-escaped.
 //
 // Returns raw content lines ready for wrapping.
@@ -286,7 +286,7 @@ func StripPreWrapper(body []string) []string {
 	}
 
 	// Only unescape when <pre> was found: the old export format
-	// HTML-escapes content inside <pre> blocks. The CollapseToolOutputs
+	// HTML-escapes content inside <pre> blocks. The ToolOutputs
 	// format (just <details>/<summary>) does not escape content.
 	if hadPre {
 		for j, line := range inner {
@@ -327,7 +327,7 @@ func IsBoilerplateToolOutput(raw []string) bool {
 	}
 
 	// Join all non-blank lines for multi-line pattern matching.
-	// SoftWrapContent can split single messages across lines.
+	// Content can split single messages across lines.
 	joined := strings.Join(nonBlank, " ")
 
 	switch {

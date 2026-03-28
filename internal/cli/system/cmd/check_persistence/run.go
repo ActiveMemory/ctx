@@ -59,15 +59,15 @@ func Run(cmd *cobra.Command, stdin *os.File) error {
 	logFile := filepath.Join(contextDir, dir.Logs, nudge.PersistenceLogFile)
 
 	// Initialize state if needed
-	ps, exists := persistence.ReadPersistenceState(stateFile)
+	ps, exists := persistence.ReadState(stateFile)
 	if !exists {
-		initialMtime := time.GetLatestContextMtime(contextDir)
+		initialMtime := time.GetLatestMtime(contextDir)
 		ps = persistence.State{
 			Count:     1,
 			LastNudge: 0,
 			LastMtime: initialMtime,
 		}
-		persistence.WritePersistenceState(stateFile, ps)
+		persistence.WriteState(stateFile, ps)
 		log.Message(logFile, sessionID, fmt.Sprintf(
 			desc.Text(text.DescKeyCheckPersistenceInitLogFormat), initialMtime),
 		)
@@ -75,13 +75,13 @@ func Run(cmd *cobra.Command, stdin *os.File) error {
 	}
 
 	ps.Count++
-	currentMtime := time.GetLatestContextMtime(contextDir)
+	currentMtime := time.GetLatestMtime(contextDir)
 
 	// If context files were modified since the last check, reset the nudge counter
 	if currentMtime > ps.LastMtime {
 		ps.LastNudge = ps.Count
 		ps.LastMtime = currentMtime
-		persistence.WritePersistenceState(stateFile, ps)
+		persistence.WriteState(stateFile, ps)
 		log.Message(logFile, sessionID, fmt.Sprintf(
 			desc.Text(text.DescKeyCheckPersistenceModifiedLogFormat), ps.Count),
 		)
@@ -92,20 +92,20 @@ func Run(cmd *cobra.Command, stdin *os.File) error {
 
 	// Gate persistence nudges behind minimum context window usage.
 	// Below the threshold, prompt count is a poor proxy for session depth.
-	pct := coreSession.LatestSessionPct(sessionID)
+	pct := coreSession.LatestPct(sessionID)
 	if pct > 0 && pct < stats.ContextCheckpointMinPct {
 		log.Message(logFile, sessionID, fmt.Sprintf(
 			desc.Text(text.DescKeyCheckPersistenceSuppressedLogFormat),
 			pct, stats.ContextCheckpointMinPct, ps.Count))
-		persistence.WritePersistenceState(stateFile, ps)
+		persistence.WriteState(stateFile, ps)
 		return nil
 	}
 
-	if persistence.PersistenceNudgeNeeded(ps.Count, sinceNudge) {
+	if persistence.NudgeNeeded(ps.Count, sinceNudge) {
 		fallback := fmt.Sprintf(
 			desc.Text(text.DescKeyCheckPersistenceFallback), sinceNudge,
 		)
-		content := message.LoadMessage(hook.CheckPersistence, hook.VariantNudge,
+		content := message.Load(hook.CheckPersistence, hook.VariantNudge,
 			map[string]any{
 				nudge.VarPromptCount:       ps.Count,
 				nudge.VarPromptsSinceNudge: sinceNudge,
@@ -114,7 +114,7 @@ func Run(cmd *cobra.Command, stdin *os.File) error {
 			log.Message(logFile, sessionID, fmt.Sprintf(
 				desc.Text(text.DescKeyCheckPersistenceSilencedLogFormat), ps.Count),
 			)
-			persistence.WritePersistenceState(stateFile, ps)
+			persistence.WriteState(stateFile, ps)
 			return nil
 		}
 
@@ -173,6 +173,6 @@ func Run(cmd *cobra.Command, stdin *os.File) error {
 		)
 	}
 
-	persistence.WritePersistenceState(stateFile, ps)
+	persistence.WriteState(stateFile, ps)
 	return nil
 }

@@ -26,7 +26,7 @@ func TestMergeConsecutiveTurns(t *testing.T) {
 		"User text",
 	}, "\n")
 
-	got := MergeConsecutiveTurns(content)
+	got := MergeConsecutive(content)
 
 	if strings.Contains(got, "### 2. Assistant") {
 		t.Error("consecutive same-role header should be merged")
@@ -60,7 +60,7 @@ func TestMergeConsecutiveTurns_DifferentRoles(t *testing.T) {
 		"Another assistant text",
 	}, "\n")
 
-	got := MergeConsecutiveTurns(content)
+	got := MergeConsecutive(content)
 
 	if !strings.Contains(got, "### 1. Assistant") {
 		t.Error("first assistant header missing")

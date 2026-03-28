@@ -30,7 +30,7 @@ func Relay(message, sessionID string, ref *notify.TemplateRef) {
 	log.AppendEvent(hook.NotifyChannelRelay, message, sessionID, ref)
 }
 
-// NudgeAndRelay sends both a nudge and a relay notification, then
+// Relay sends both a nudge and a relay notification, then
 // appends the relay event to the local event log. Used by hooks that
 // emit both notification types with the same message.
 //
@@ -38,7 +38,7 @@ func Relay(message, sessionID string, ref *notify.TemplateRef) {
 //   - message: human-readable event description
 //   - sessionID: current session identifier
 //   - ref: template reference for filtering/aggregation (may be nil)
-func NudgeAndRelay(message, sessionID string, ref *notify.TemplateRef) {
+func EmitAndRelay(message, sessionID string, ref *notify.TemplateRef) {
 	_ = notify.Send(hook.NotifyChannelNudge, message, sessionID, ref)
 	Relay(message, sessionID, ref)
 }
@@ -64,22 +64,22 @@ func LoadAndEmit(
 	fallback,
 	relayPrefix, boxTitle, relayMessage, sessionID, markerPath string,
 ) {
-	content := message.LoadMessage(hookName, variant, vars, fallback)
+	content := message.Load(hookName, variant, vars, fallback)
 	if content == "" {
 		return
 	}
-	EmitNudge(cmd, content,
+	Emit(cmd, content,
 		relayPrefix, boxTitle, hookName, variant,
 		relayMessage, sessionID, vars, markerPath,
 	)
 }
 
-// EmitNudge is the standard hook tail: print nudge box, send
+// Emit is the standard hook tail: print nudge box, send
 // nudge+relay notifications, and touch the throttle marker.
 //
 // Parameters:
 //   - cmd: Cobra command for output
-//   - content: nudge box content (from LoadMessage)
+//   - content: nudge box content (from Load)
 //   - relayPrefix: relay prefix text (e.g., "check-backup-age")
 //   - boxTitle: nudge box title
 //   - hookName: hook name for notifications
@@ -88,7 +88,7 @@ func LoadAndEmit(
 //   - sessionID: current session identifier
 //   - vars: template variables for the template ref (may be nil)
 //   - markerPath: throttle file to touch (empty string skips)
-func EmitNudge(
+func Emit(
 	cmd *cobra.Command,
 	content, relayPrefix, boxTitle,
 	hookName, variant, relayMessage, sessionID string,
@@ -97,7 +97,7 @@ func EmitNudge(
 ) {
 	writeHook.Nudge(cmd, message.NudgeBox(relayPrefix, boxTitle, content))
 	ref := notify.NewTemplateRef(hookName, variant, vars)
-	NudgeAndRelay(hookName+": "+relayMessage, sessionID, ref)
+	Relay(hookName+": "+relayMessage, sessionID, ref)
 	if markerPath != "" {
 		internalIo.TouchFile(markerPath)
 	}

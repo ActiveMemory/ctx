@@ -62,5 +62,5 @@ func Run(cmd *cobra.Command, logPath string, dryRun bool) error {
 		reader = os.Stdin
 	}
 
-	return stream.ProcessStream(cmd, reader, dryRun)
+	return stream.Process(cmd, reader, dryRun)
 }

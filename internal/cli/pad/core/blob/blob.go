@@ -13,18 +13,18 @@ import (
 	"github.com/ActiveMemory/ctx/internal/config/pad"
 )
 
-// ContainsBlob returns true if the entry contains the blob separator.
+// Contains returns true if the entry contains the blob separator.
 //
 // Parameters:
 //   - entry: Scratchpad entry string
 //
 // Returns:
 //   - bool: True if entry is a blob
-func ContainsBlob(entry string) bool {
+func Contains(entry string) bool {
 	return strings.Contains(entry, pad.BlobSep)
 }
 
-// SplitBlob parses a blob entry into its label and decoded data.
+// Split parses a blob entry into its label and decoded data.
 //
 // Parameters:
 //   - entry: Scratchpad entry string
@@ -33,7 +33,7 @@ func ContainsBlob(entry string) bool {
 //   - label: Blob label (filename)
 //   - data: Decoded file content
 //   - ok: False for non-blob entries or malformed base64
-func SplitBlob(entry string) (label string, d []byte, ok bool) {
+func Split(entry string) (label string, d []byte, ok bool) {
 	idx := strings.Index(entry, pad.BlobSep)
 	if idx < 0 {
 		return "", nil, false
@@ -50,7 +50,7 @@ func SplitBlob(entry string) (label string, d []byte, ok bool) {
 	return label, d, true
 }
 
-// MakeBlob creates a blob entry string from a label and file data.
+// Make creates a blob entry string from a label and file data.
 //
 // Parameters:
 //   - label: Blob label (filename)
@@ -58,7 +58,7 @@ func SplitBlob(entry string) (label string, d []byte, ok bool) {
 //
 // Returns:
 //   - string: Formatted blob entry
-func MakeBlob(label string, data []byte) string {
+func Make(label string, data []byte) string {
 	return label + pad.BlobSep + base64.StdEncoding.EncodeToString(data)
 }
 
@@ -72,7 +72,7 @@ func MakeBlob(label string, data []byte) string {
 // Returns:
 //   - string: Human-readable entry representation
 func DisplayEntry(entry string) string {
-	if label, _, ok := SplitBlob(entry); ok {
+	if label, _, ok := Split(entry); ok {
 		return label + pad.BlobTag
 	}
 	return entry

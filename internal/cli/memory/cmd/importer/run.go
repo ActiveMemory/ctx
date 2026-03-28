@@ -51,7 +51,7 @@ func Run(cmd *cobra.Command, dryRun bool) error {
 		return errMemory.Read(readErr)
 	}
 
-	entries := memory.ParseEntries(string(sourceData))
+	entries := memory.Entries(string(sourceData))
 	if len(entries) == 0 {
 		ctximport.NoEntries(cmd, cfgMemory.MemorySource)
 		return nil

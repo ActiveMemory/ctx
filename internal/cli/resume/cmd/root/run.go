@@ -26,7 +26,7 @@ import (
 //   - error: Always nil
 func Run(cmd *cobra.Command, sessionID string) error {
 	if sessionID == "" {
-		sessionID = coreSession.ReadSessionID(os.Stdin)
+		sessionID = coreSession.ReadID(os.Stdin)
 	}
 	nudge.Resume(sessionID)
 	session.SessionResumed(cmd, sessionID)

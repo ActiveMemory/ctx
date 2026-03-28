@@ -12,7 +12,7 @@ import (
 	"github.com/ActiveMemory/ctx/internal/cli/journal/core/lock"
 )
 
-// Run delegates to core.RunLockUnlock with lock=false.
+// Run delegates to core.Run with lock=false.
 //
 // Parameters:
 //   - cmd: Cobra command for output
@@ -26,5 +26,5 @@ func Run(
 	args []string,
 	all bool,
 ) error {
-	return lock.RunLockUnlock(cmd, args, all, false)
+	return lock.Run(cmd, args, all, false)
 }

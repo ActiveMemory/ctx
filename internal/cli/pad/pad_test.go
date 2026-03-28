@@ -571,19 +571,19 @@ func TestPlaintext_ListFormat(t *testing.T) {
 }
 
 func TestParseEntries_EmptyInput(t *testing.T) {
-	entries := parse.ParseEntries(nil)
+	entries := parse.Entries(nil)
 	if entries != nil {
-		t.Errorf("core.ParseEntries(nil) = %v, want nil", entries)
+		t.Errorf("core.Entries(nil) = %v, want nil", entries)
 	}
 
-	entries = parse.ParseEntries([]byte{})
+	entries = parse.Entries([]byte{})
 	if entries != nil {
-		t.Errorf("core.ParseEntries(empty) = %v, want nil", entries)
+		t.Errorf("core.Entries(empty) = %v, want nil", entries)
 	}
 }
 
 func TestParseEntries_SkipsEmpty(t *testing.T) {
-	entries := parse.ParseEntries([]byte("a\n\nb\n"))
+	entries := parse.Entries([]byte("a\n\nb\n"))
 	if len(entries) != 2 {
 		t.Fatalf("len = %d, want 2", len(entries))
 	}
@@ -611,21 +611,21 @@ func TestValidateIndex(t *testing.T) {
 
 	// Valid indices
 	for _, n := range []int{1, 2, 3} {
-		if err := validate.ValidateIndex(n, entries); err != nil {
-			t.Errorf("core.ValidateIndex(%d) should be valid: %v", n, err)
+		if err := validate.Index(n, entries); err != nil {
+			t.Errorf("core.Index(%d) should be valid: %v", n, err)
 		}
 	}
 
 	// Invalid indices
 	for _, n := range []int{0, -1, 4, 100} {
-		if err := validate.ValidateIndex(n, entries); err == nil {
-			t.Errorf("core.ValidateIndex(%d) should be invalid", n)
+		if err := validate.Index(n, entries); err == nil {
+			t.Errorf("core.Index(%d) should be invalid", n)
 		}
 	}
 }
 
 func TestValidateIndex_EmptySlice(t *testing.T) {
-	err := validate.ValidateIndex(1, nil)
+	err := validate.Index(1, nil)
 	if err == nil {
 		t.Error("validateIndex on nil slice should fail")
 	}
@@ -1256,10 +1256,10 @@ func TestMv_Plaintext(t *testing.T) {
 // --- Blob helper tests ---
 
 func TestIsBlob(t *testing.T) {
-	if !blob.ContainsBlob("my plan:::SGVsbG8=") {
+	if !blob.Contains("my plan:::SGVsbG8=") {
 		t.Error("expected isBlob to return true for blob entry")
 	}
-	if blob.ContainsBlob("just a plain entry") {
+	if blob.Contains("just a plain entry") {
 		t.Error("expected isBlob to return false for plain entry")
 	}
 }
@@ -1269,7 +1269,7 @@ func TestSplitBlob_Valid(t *testing.T) {
 	encoded := base64.StdEncoding.EncodeToString(data)
 	entry := "my label" + pad.BlobSep + encoded
 
-	label, decoded, ok := blob.SplitBlob(entry)
+	label, decoded, ok := blob.Split(entry)
 	if !ok {
 		t.Fatal("splitBlob returned ok=false for valid blob")
 	}
@@ -1282,14 +1282,14 @@ func TestSplitBlob_Valid(t *testing.T) {
 }
 
 func TestSplitBlob_NonBlob(t *testing.T) {
-	_, _, ok := blob.SplitBlob("just a plain entry")
+	_, _, ok := blob.Split("just a plain entry")
 	if ok {
 		t.Error("splitBlob should return ok=false for non-blob entry")
 	}
 }
 
 func TestSplitBlob_MalformedBase64(t *testing.T) {
-	_, _, ok := blob.SplitBlob("label:::not-valid-base64!!!")
+	_, _, ok := blob.Split("label:::not-valid-base64!!!")
 	if ok {
 		t.Error("splitBlob should return ok=false for malformed base64")
 	}
@@ -1297,9 +1297,9 @@ func TestSplitBlob_MalformedBase64(t *testing.T) {
 
 func TestMakeBlob_Roundtrip(t *testing.T) {
 	original := []byte("secret file content\nwith newlines\n")
-	entry := blob.MakeBlob("my file", original)
+	entry := blob.Make("my file", original)
 
-	label, data, ok := blob.SplitBlob(entry)
+	label, data, ok := blob.Split(entry)
 	if !ok {
 		t.Fatal("splitBlob failed on makeBlob output")
 	}
@@ -1312,7 +1312,7 @@ func TestMakeBlob_Roundtrip(t *testing.T) {
 }
 
 func TestDisplayEntry_Blob(t *testing.T) {
-	entry := blob.MakeBlob("my plan", []byte("content"))
+	entry := blob.Make("my plan", []byte("content"))
 	display := blob.DisplayEntry(entry)
 	if display != "my plan [BLOB]" {
 		t.Errorf("displayEntry = %q, want %q", display, "my plan [BLOB]")
@@ -2095,7 +2095,7 @@ func TestImportBlobs_BlobContent(t *testing.T) {
 		t.Fatalf("got %d entries, want 1", len(entries))
 	}
 
-	label, data, ok := blob.SplitBlob(entries[0])
+	label, data, ok := blob.Split(entries[0])
 	if !ok {
 		t.Fatal("entry is not a valid blob")
 	}
@@ -2641,13 +2641,13 @@ func TestMerge_CustomKey(t *testing.T) {
 func TestMerge_BlobEntries(t *testing.T) {
 	tmpDir := setupPlaintext(t)
 
-	blobEntry := blob.MakeBlob("test.txt", []byte("hello world"))
+	blobEntry := blob.Make("test.txt", []byte("hello world"))
 	if _, err := runCmd(newPadCmd("add", "text-entry")); err != nil {
 		t.Fatal(err)
 	}
 
 	// Create file with same blob + a new blob.
-	newBlob := blob.MakeBlob("new.txt", []byte("new content"))
+	newBlob := blob.Make("new.txt", []byte("new content"))
 	mergeFile := filepath.Join(tmpDir, "blobs.md")
 	writePlaintextPad(t, mergeFile, []string{blobEntry, newBlob})
 
@@ -2667,7 +2667,7 @@ func TestMerge_BlobConflict(t *testing.T) {
 	tmpDir := setupPlaintext(t)
 
 	// Add a blob with label "config.json".
-	blob1 := blob.MakeBlob("config.json", []byte(`{"v":1}`))
+	blob1 := blob.Make("config.json", []byte(`{"v":1}`))
 	mergeFile1 := filepath.Join(tmpDir, "first.md")
 	writePlaintextPad(t, mergeFile1, []string{blob1})
 	if _, err := runCmd(newPadCmd("merge", mergeFile1)); err != nil {
@@ -2675,7 +2675,7 @@ func TestMerge_BlobConflict(t *testing.T) {
 	}
 
 	// Merge a different blob with the same label.
-	blob2 := blob.MakeBlob("config.json", []byte(`{"v":2}`))
+	blob2 := blob.Make("config.json", []byte(`{"v":2}`))
 	mergeFile2 := filepath.Join(tmpDir, "second.md")
 	writePlaintextPad(t, mergeFile2, []string{blob2})
 
@@ -2829,7 +2829,7 @@ func TestMerge_EncryptedWithBlobDedup(t *testing.T) {
 	tmpDir := setupEncrypted(t)
 
 	// Add a blob to the current pad.
-	blob := blob.MakeBlob("readme.md", []byte("# README"))
+	blob := blob.Make("readme.md", []byte("# README"))
 	f := filepath.Join(tmpDir, "tmp-readme.md")
 	if err := os.WriteFile(f, []byte("# README"), 0600); err != nil {
 		t.Fatal(err)

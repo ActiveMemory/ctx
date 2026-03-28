@@ -35,7 +35,7 @@ import (
 // JSONL file when scanning for the last usage block.
 const MaxTailBytes = 32768
 
-// ReadSessionTokenInfo finds the current session's JSONL file and returns
+// ReadTokenInfo finds the current session's JSONL file and returns
 // the most recent total input token count and model ID from the last
 // assistant message. Returns zero value if the file isn't found or has no
 // usage data.
@@ -46,7 +46,7 @@ const MaxTailBytes = 32768
 // Returns:
 //   - SessionTokenInfo: Token count and model from the last assistant message
 //   - error: Non-nil only on unexpected I/O errors
-func ReadSessionTokenInfo(sessionID string) (entity.TokenInfo, error) {
+func ReadTokenInfo(sessionID string) (entity.TokenInfo, error) {
 	if sessionID == "" || sessionID == session.IDUnknown {
 		return entity.TokenInfo{}, nil
 	}

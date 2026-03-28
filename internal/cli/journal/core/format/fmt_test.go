@@ -27,9 +27,9 @@ func TestFormatSize(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(tt.want, func(t *testing.T) {
-			got := FormatSize(tt.bytes)
+			got := Size(tt.bytes)
 			if got != tt.want {
-				t.Errorf("FormatSize(%d) = %q, want %q", tt.bytes, got, tt.want)
+				t.Errorf("Size(%d) = %q, want %q", tt.bytes, got, tt.want)
 			}
 		})
 	}

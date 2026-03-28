@@ -54,12 +54,12 @@ import (
 // Returns:
 //   - error: Non-nil if generation fails
 func Run(cmd *cobra.Command, output string) error {
-	return BuildObsidianVault(
+	return BuildVault(
 		cmd, filepath.Join(rc.ContextDir(), dir.Journal), output,
 	)
 }
 
-// BuildObsidianVault generates an Obsidian vault from journal entries in
+// BuildVault generates an Obsidian vault from journal entries in
 // journalDir and writes the output to the output directory.
 //
 // Parameters:
@@ -69,7 +69,7 @@ func Run(cmd *cobra.Command, output string) error {
 //
 // Returns:
 //   - error: Non-nil if generation fails
-func BuildObsidianVault(cmd *cobra.Command, journalDir, output string) error {
+func BuildVault(cmd *cobra.Command, journalDir, output string) error {
 	if _, statErr := os.Stat(journalDir); os.IsNotExist(statErr) {
 		return errJournal.NoDir(journalDir)
 	}
@@ -145,9 +145,9 @@ func BuildObsidianVault(cmd *cobra.Command, journalDir, output string) error {
 		}
 
 		// Normalize content (read-only - do NOT write back to source)
-		normalized := wrap.SoftWrapContent(
-			turn.MergeConsecutiveTurns(
-				consolidate.ConsolidateToolRuns(
+		normalized := wrap.Content(
+			turn.MergeConsecutive(
+				consolidate.ToolRuns(
 					reduce.CleanToolOutputJSON(
 						reduce.StripSystemReminders(string(content)),
 					),
@@ -159,7 +159,7 @@ func BuildObsidianVault(cmd *cobra.Command, journalDir, output string) error {
 		sourcePath := filepath.Join(
 			dir.Context, dir.Journal, entry.Filename,
 		)
-		transformed := frontmatter.TransformFrontmatter(normalized, sourcePath)
+		transformed := frontmatter.Transform(normalized, sourcePath)
 		transformed = wikilink.ConvertMarkdownLinks(transformed)
 		transformed += moc.GenerateRelatedFooter(entry, topicIndex, obsidian.MaxRelated)
 
@@ -176,7 +176,7 @@ func BuildObsidianVault(cmd *cobra.Command, journalDir, output string) error {
 		topicsDir := filepath.Join(output, dir.JournTopics)
 		mocPath := filepath.Join(output, obsidian.MOCTopics)
 		if writeErr := os.WriteFile(
-			mocPath, []byte(moc.GenerateObsidianTopicsMOC(topics)),
+			mocPath, []byte(moc.ObsidianTopics(topics)),
 			fs.PermFile,
 		); writeErr != nil {
 			return errFs.FileWrite(mocPath, writeErr)
@@ -201,7 +201,7 @@ func BuildObsidianVault(cmd *cobra.Command, journalDir, output string) error {
 		filesDir := filepath.Join(output, dir.JournalFiles)
 		mocPath := filepath.Join(output, obsidian.MOCFiles)
 		if writeErr := os.WriteFile(
-			mocPath, []byte(moc.GenerateObsidianFilesMOC(keyFiles)),
+			mocPath, []byte(moc.ObsidianFiles(keyFiles)),
 			fs.PermFile,
 		); writeErr != nil {
 			return errFs.FileWrite(mocPath, writeErr)
@@ -227,7 +227,7 @@ func BuildObsidianVault(cmd *cobra.Command, journalDir, output string) error {
 		typesDir := filepath.Join(output, dir.JournalTypes)
 		mocPath := filepath.Join(output, obsidian.MOCTypes)
 		if writeErr := os.WriteFile(
-			mocPath, []byte(moc.GenerateObsidianTypesMOC(sessionTypes)),
+			mocPath, []byte(moc.ObsidianTypes(sessionTypes)),
 			fs.PermFile,
 		); writeErr != nil {
 			return errFs.FileWrite(mocPath, writeErr)
@@ -248,7 +248,7 @@ func BuildObsidianVault(cmd *cobra.Command, journalDir, output string) error {
 	homePath := filepath.Join(output, obsidian.MOCHome)
 	if writeErr := os.WriteFile(
 		homePath,
-		[]byte(moc.GenerateHomeMOC(
+		[]byte(moc.Home(
 			regularEntries,
 			len(topics) > 0, len(keyFiles) > 0, len(sessionTypes) > 0,
 		)),

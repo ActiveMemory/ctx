@@ -41,7 +41,7 @@ func TestGenerateIndex(t *testing.T) {
 		},
 	}
 
-	index := GenerateIndex(entries)
+	index := Index(entries)
 
 	if !strings.Contains(index, "# Session Journal") {
 		t.Error("index missing header")
@@ -155,7 +155,7 @@ func TestGenerateZensicalToml_WithAllNav(t *testing.T) {
 	keyFiles := []entity.KeyFileData{{Path: "f.go", Entries: entries}}
 	sessionTypes := []entity.TypeData{{Name: "feature", Entries: entries}}
 
-	got := GenerateZensicalToml(entries, topics, keyFiles, sessionTypes)
+	got := ZensicalToml(entries, topics, keyFiles, sessionTypes)
 
 	if !strings.Contains(got, "Topics") {
 		t.Error("missing Topics nav")
@@ -171,7 +171,7 @@ func TestGenerateZensicalToml_WithAllNav(t *testing.T) {
 func TestGenerateZensicalToml_NoTopics(t *testing.T) {
 	entries := []entity.JournalEntry{{Filename: "a.md", Title: "A", Date: "2026-01-01"}}
 
-	got := GenerateZensicalToml(entries, nil, nil, nil)
+	got := ZensicalToml(entries, nil, nil, nil)
 
 	if strings.Contains(got, "Topics") {
 		t.Error("should not have Topics nav when empty")

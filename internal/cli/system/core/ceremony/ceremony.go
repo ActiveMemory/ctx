@@ -87,7 +87,7 @@ func ScanJournalsForCeremonies(files []string) (remember, wrapup bool) {
 	return
 }
 
-// EmitCeremonyNudge builds a ceremony nudge message box based on which
+// Emit builds a ceremony nudge message box based on which
 // ceremonies (remember, wrapup) are missing from recent sessions.
 //
 // Parameters:
@@ -97,7 +97,7 @@ func ScanJournalsForCeremonies(files []string) (remember, wrapup bool) {
 // Returns:
 //   - msg: the formatted nudge message, or empty string if no content
 //   - variant: the selected variant string for notifications
-func EmitCeremonyNudge(remember, wrapup bool) (msg, variant string) {
+func Emit(remember, wrapup bool) (msg, variant string) {
 	var boxTitleKey, fallbackKey string
 
 	switch {
@@ -118,7 +118,7 @@ func EmitCeremonyNudge(remember, wrapup bool) (msg, variant string) {
 	boxTitle := desc.Text(boxTitleKey)
 	fallback := desc.Text(fallbackKey)
 
-	content := message.LoadMessage(hook.CheckCeremonies, variant, nil, fallback)
+	content := message.Load(hook.CheckCeremonies, variant, nil, fallback)
 	if content == "" {
 		return "", variant
 	}

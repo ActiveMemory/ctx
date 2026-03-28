@@ -70,7 +70,7 @@ func Run(cmd *cobra.Command, stdin *os.File) error {
 
 	var reason string
 	if variant != "" {
-		reason = message.LoadMessage(hook.BlockNonPathCtx, variant, nil, fallback)
+		reason = message.Load(hook.BlockNonPathCtx, variant, nil, fallback)
 	}
 
 	if reason != "" {

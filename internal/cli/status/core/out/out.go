@@ -56,7 +56,7 @@ func PersistStatusJSON(
 			ModTime: f.ModTime.Format(time.RFC3339),
 		}
 		if verbose && !f.IsEmpty {
-			fs.Preview = preview.ContentPreview(string(f.Content), 5)
+			fs.Preview = preview.Content(string(f.Content), 5)
 		}
 		output.Files = append(output.Files, fs)
 	}
@@ -99,7 +99,7 @@ func PersistStatusText(
 			fi.Status = f.Summary
 		}
 		if verbose && !f.IsEmpty {
-			fi.Preview = preview.ContentPreview(string(f.Content), 3)
+			fi.Preview = preview.Content(string(f.Content), 3)
 		}
 		status.StatusFileItem(cmd, fi, verbose)
 	}

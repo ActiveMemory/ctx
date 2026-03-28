@@ -124,14 +124,14 @@ func MultipartBase(filename string) string {
 // lockedPrefix is the frontmatter key prefix for locked lines.
 var lockedPrefix = session.FrontmatterLocked + token.Colon
 
-// UpdateLockFrontmatter inserts or removes the "locked: true" line in
+// UpdateFrontmatter inserts or removes the "locked: true" line in
 // a journal file's YAML frontmatter. The state file is the source of
 // truth; this is for human visibility only.
 //
 // Parameters:
 //   - path: Absolute path to the journal .md file
 //   - lock: True to insert, false to remove
-func UpdateLockFrontmatter(path string, lock bool) {
+func UpdateFrontmatter(path string, lock bool) {
 	data, readErr := os.ReadFile(filepath.Clean(path))
 	if readErr != nil {
 		return
@@ -180,7 +180,7 @@ func UpdateLockFrontmatter(path string, lock bool) {
 	}
 }
 
-// FrontmatterHasLocked reads a journal file and returns true if its
+// HasLocked reads a journal file and returns true if its
 // YAML frontmatter contains a "locked:" line with a truthy value.
 //
 // Parameters:
@@ -188,7 +188,7 @@ func UpdateLockFrontmatter(path string, lock bool) {
 //
 // Returns:
 //   - bool: True if frontmatter contains "locked: true"
-func FrontmatterHasLocked(path string) bool {
+func HasLocked(path string) bool {
 	data, readErr := os.ReadFile(filepath.Clean(path))
 	if readErr != nil {
 		return false
@@ -225,7 +225,7 @@ func FrontmatterHasLocked(path string) bool {
 	return false
 }
 
-// RunLockUnlock handles both lock and unlock commands.
+// Run handles both lock and unlock commands.
 //
 // Parameters:
 //   - cmd: Cobra command for output
@@ -235,7 +235,7 @@ func FrontmatterHasLocked(path string) bool {
 //
 // Returns:
 //   - error: Non-nil on validation or I/O failure
-func RunLockUnlock(
+func Run(
 	cmd *cobra.Command,
 	args []string,
 	all, lock bool,
@@ -292,7 +292,7 @@ func RunLockUnlock(
 
 		// Update frontmatter for human visibility.
 		path := filepath.Join(journalDir, filename)
-		UpdateLockFrontmatter(path, lock)
+		UpdateFrontmatter(path, lock)
 
 		recall.LockUnlockEntry(cmd, filename, verb)
 		count++

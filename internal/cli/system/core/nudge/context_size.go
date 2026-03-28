@@ -38,7 +38,7 @@ import (
 //   - string: formatted nudge box, or empty string if silenced
 func EmitCheckpoint(logFile, sessionID string, count, tokens, pct, windowSize int) string {
 	fallback := desc.Text(text.DescKeyCheckContextSizeCheckpointFallback)
-	content := message.LoadMessage(hook.CheckContextSize, hook.VariantCheckpoint, nil, fallback)
+	content := message.Load(hook.CheckContextSize, hook.VariantCheckpoint, nil, fallback)
 	if content == "" {
 		log.Message(logFile, sessionID, fmt.Sprintf(desc.Text(text.DescKeyCheckContextSizeSilencedCheckpointLog), count))
 		return ""
@@ -59,7 +59,7 @@ func EmitCheckpoint(logFile, sessionID string, count, tokens, pct, windowSize in
 	checkpointMsg := fmt.Sprintf(desc.Text(text.DescKeyRelayPrefixFormat),
 		hook.CheckContextSize,
 		fmt.Sprintf(desc.Text(text.DescKeyCheckContextSizeCheckpointRelayFormat), count))
-	NudgeAndRelay(checkpointMsg, sessionID, ref)
+	EmitAndRelay(checkpointMsg, sessionID, ref)
 	return box
 }
 
@@ -79,7 +79,7 @@ func EmitWindowWarning(logFile, sessionID string, count, tokens, pct int) string
 		desc.Text(text.DescKeyCheckContextSizeWindowFallback),
 		pct, coreSession.FormatTokenCount(tokens),
 	)
-	content := message.LoadMessage(hook.CheckContextSize, hook.VariantWindow,
+	content := message.Load(hook.CheckContextSize, hook.VariantWindow,
 		map[string]any{
 			stats.VarPercentage: pct,
 			stats.VarTokenCount: coreSession.FormatTokenCount(tokens),
@@ -112,7 +112,7 @@ func EmitWindowWarning(logFile, sessionID string, count, tokens, pct int) string
 	windowMsg := fmt.Sprintf(desc.Text(text.DescKeyRelayPrefixFormat),
 		hook.CheckContextSize,
 		fmt.Sprintf(desc.Text(text.DescKeyCheckContextSizeWindowRelayFormat), pct))
-	NudgeAndRelay(windowMsg, sessionID, ref)
+	EmitAndRelay(windowMsg, sessionID, ref)
 	return box
 }
 
@@ -139,7 +139,7 @@ func EmitBillingWarning(logFile, sessionID string, count, tokens, threshold int)
 
 	fallback := fmt.Sprintf(desc.Text(text.DescKeyCheckContextSizeBillingFallback),
 		coreSession.FormatTokenCount(tokens), coreSession.FormatTokenCount(threshold))
-	content := message.LoadMessage(hook.CheckContextSize, hook.VariantBilling,
+	content := message.Load(hook.CheckContextSize, hook.VariantBilling,
 		map[string]any{
 			stats.VarTokenCount: coreSession.FormatTokenCount(tokens),
 			stats.VarThreshold:  coreSession.FormatTokenCount(threshold),
@@ -181,6 +181,6 @@ func EmitBillingWarning(logFile, sessionID string, count, tokens, threshold int)
 			coreSession.FormatTokenCount(tokens), coreSession.FormatTokenCount(threshold),
 		),
 	)
-	NudgeAndRelay(billingMsg, sessionID, ref)
+	EmitAndRelay(billingMsg, sessionID, ref)
 	return box
 }

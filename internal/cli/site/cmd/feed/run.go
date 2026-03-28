@@ -25,7 +25,7 @@ import (
 // Returns:
 //   - error: Non-nil if scanning or generation fails
 func Run(cmd *cobra.Command, blogDir, outPath, baseURL string) error {
-	posts, report, scanErr := scan.ScanBlogPosts(blogDir)
+	posts, report, scanErr := scan.BlogPosts(blogDir)
 	if scanErr != nil {
 		return scanErr
 	}

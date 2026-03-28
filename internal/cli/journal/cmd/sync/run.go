@@ -49,7 +49,7 @@ func Run(cmd *cobra.Command) error {
 
 	for _, filename := range files {
 		path := filepath.Join(journalDir, filename)
-		fmLocked := lock.FrontmatterHasLocked(path)
+		fmLocked := lock.HasLocked(path)
 		stateLocked := jstate.Locked(filename)
 
 		switch {

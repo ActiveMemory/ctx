@@ -13,7 +13,7 @@ import (
 	"github.com/ActiveMemory/ctx/internal/entity"
 )
 
-// GroupByMonth groups journal entries by their YYYY-MM date prefix,
+// ByMonth groups journal entries by their YYYY-MM date prefix,
 // preserving insertion order of months.
 //
 // Parameters:
@@ -22,7 +22,7 @@ import (
 // Returns:
 //   - map[string][]JournalEntry: Entries keyed by month string
 //   - []string: Month strings in first-seen order
-func GroupByMonth(
+func ByMonth(
 	entries []entity.JournalEntry,
 ) (map[string][]entity.JournalEntry, []string) {
 	months := make(map[string][]entity.JournalEntry)
@@ -41,7 +41,7 @@ func GroupByMonth(
 	return months, monthOrder
 }
 
-// BuildGroupedIndex aggregates entries by keys extracted via extractKeys,
+// GroupedIndex aggregates entries by keys extracted via extractKeys,
 // marks groups with 2+ sessions as popular, and sorts by count descending
 // then alphabetically.
 //
@@ -51,7 +51,7 @@ func GroupByMonth(
 //
 // Returns:
 //   - []GroupedIndex: Sorted groups with popularity flags
-func BuildGroupedIndex(
+func GroupedIndex(
 	entries []entity.JournalEntry, extractKeys func(entity.JournalEntry) []string,
 ) []entity.GroupedIndex {
 	byKey := make(map[string][]entity.JournalEntry)

@@ -17,14 +17,14 @@ import (
 	"github.com/ActiveMemory/ctx/internal/config/token"
 )
 
-// FormatSize formats a file size in human-readable form.
+// Size formats a file size in human-readable form.
 //
 // Parameters:
 //   - bytes: File size in bytes
 //
 // Returns:
 //   - string: Human-readable size (e.g., "512B", "1.5KB", "2.3MB")
-func FormatSize(bytes int64) string {
+func Size(bytes int64) string {
 	if bytes < cfgFmt.IECUnit {
 		return fmt.Sprintf(desc.Text(text.DescKeyWriteFormatBytes), bytes)
 	}
@@ -52,7 +52,7 @@ func KeyFileSlug(path string) string {
 	return slug
 }
 
-// FormatSessionLink formats a Markdown list item linking to a page with a
+// SessionLink formats a Markdown list item linking to a page with a
 // session count.
 //
 // Parameters:
@@ -62,7 +62,7 @@ func KeyFileSlug(path string) string {
 //
 // Returns:
 //   - string: Formatted line (e.g., "- [topic](topic.md) (3 sessions)\n")
-func FormatSessionLink(label, slug string, count int) string {
+func SessionLink(label, slug string, count int) string {
 	return fmt.Sprintf(desc.Text(text.DescKeyJournalMocSessionLink),
 		label, slug, file.ExtMarkdown, count, token.NewlineLF)
 }

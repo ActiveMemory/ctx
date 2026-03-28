@@ -44,7 +44,7 @@ func ScanJournalEntries(journalDir string) ([]entity.JournalEntry, error) {
 		}
 
 		path := filepath.Join(journalDir, f.Name())
-		entry := ParseJournalEntry(path, f.Name())
+		entry := JournalEntry(path, f.Name())
 		entries = append(entries, entry)
 	}
 
@@ -59,7 +59,7 @@ func ScanJournalEntries(journalDir string) ([]entity.JournalEntry, error) {
 	return entries, nil
 }
 
-// ParseJournalEntry extracts metadata from a journal file.
+// JournalEntry extracts metadata from a journal file.
 //
 // Parameters:
 //   - path: Full path to the journal file
@@ -67,7 +67,7 @@ func ScanJournalEntries(journalDir string) ([]entity.JournalEntry, error) {
 //
 // Returns:
 //   - JournalEntry: Parsed entry with title, date, project extracted
-func ParseJournalEntry(path, filename string) entity.JournalEntry {
+func JournalEntry(path, filename string) entity.JournalEntry {
 	entry := entity.JournalEntry{
 		Filename: filename,
 		Path:     path,

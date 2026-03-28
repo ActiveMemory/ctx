@@ -12,7 +12,7 @@ import (
 	"github.com/ActiveMemory/ctx/internal/entity"
 )
 
-// DetectSyncActions scans the codebase and returns suggested sync actions.
+// Detect scans the codebase and returns suggested sync actions.
 //
 // Runs multiple checks to identify discrepancies between the codebase and
 // context documentation:
@@ -25,7 +25,7 @@ import (
 //
 // Returns:
 //   - []Action: List of suggested actions to reconcile context with codebase
-func DetectSyncActions(ctx *entity.Context) []core.Action {
+func Detect(ctx *entity.Context) []core.Action {
 	var actions []core.Action
 
 	// Check for new top-level directories not mentioned in ARCHITECTURE.md

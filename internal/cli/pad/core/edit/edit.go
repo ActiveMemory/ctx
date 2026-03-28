@@ -30,7 +30,7 @@ func Replace(n int, text string) ([]string, error) {
 	if loadErr != nil {
 		return nil, loadErr
 	}
-	if validErr := validate.ValidateIndex(n, entries); validErr != nil {
+	if validErr := validate.Index(n, entries); validErr != nil {
 		return nil, validErr
 	}
 	entries[n-1] = text
@@ -52,10 +52,10 @@ func Append(n int, text string) ([]string, error) {
 	if loadErr != nil {
 		return nil, loadErr
 	}
-	if validErr := validate.ValidateIndex(n, entries); validErr != nil {
+	if validErr := validate.Index(n, entries); validErr != nil {
 		return nil, validErr
 	}
-	if blob.ContainsBlob(entries[n-1]) {
+	if blob.Contains(entries[n-1]) {
 		return nil, errPad.BlobAppendNotAllowed()
 	}
 	entries[n-1] = entries[n-1] + " " + text
@@ -77,10 +77,10 @@ func Prepend(n int, text string) ([]string, error) {
 	if loadErr != nil {
 		return nil, loadErr
 	}
-	if validErr := validate.ValidateIndex(n, entries); validErr != nil {
+	if validErr := validate.Index(n, entries); validErr != nil {
 		return nil, validErr
 	}
-	if blob.ContainsBlob(entries[n-1]) {
+	if blob.Contains(entries[n-1]) {
 		return nil, errPad.BlobPrependNotAllowed()
 	}
 	entries[n-1] = text + " " + entries[n-1]
@@ -103,11 +103,11 @@ func UpdateBlob(n int, filePath, labelText string) ([]string, error) {
 	if loadErr != nil {
 		return nil, loadErr
 	}
-	if validErr := validate.ValidateIndex(n, entries); validErr != nil {
+	if validErr := validate.Index(n, entries); validErr != nil {
 		return nil, validErr
 	}
 
-	oldLabel, oldData, ok := blob.SplitBlob(entries[n-1])
+	oldLabel, oldData, ok := blob.Split(entries[n-1])
 	if !ok {
 		return nil, errPad.NotBlobEntry(n)
 	}
@@ -130,6 +130,6 @@ func UpdateBlob(n int, filePath, labelText string) ([]string, error) {
 		newData = data
 	}
 
-	entries[n-1] = blob.MakeBlob(newLabel, newData)
+	entries[n-1] = blob.Make(newLabel, newData)
 	return entries, nil
 }

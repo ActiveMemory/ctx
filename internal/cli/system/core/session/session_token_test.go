@@ -51,9 +51,9 @@ func TestLatestSessionPct(t *testing.T) {
 	sessionID := "test-session-pct"
 
 	t.Run("no stats file returns 0", func(t *testing.T) {
-		got := LatestSessionPct("nonexistent-session")
+		got := LatestPct("nonexistent-session")
 		if got != 0 {
-			t.Errorf("LatestSessionPct(nonexistent) = %d, want 0", got)
+			t.Errorf("LatestPct(nonexistent) = %d, want 0", got)
 		}
 	})
 
@@ -82,9 +82,9 @@ func TestLatestSessionPct(t *testing.T) {
 			t.Fatal(closeErr)
 		}
 
-		got := LatestSessionPct(sessionID)
+		got := LatestPct(sessionID)
 		if got != 12 {
-			t.Errorf("LatestSessionPct(%q) = %d, want 12", sessionID, got)
+			t.Errorf("LatestPct(%q) = %d, want 12", sessionID, got)
 		}
 	})
 }

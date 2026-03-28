@@ -48,7 +48,7 @@ func TestDetectSyncActions_NoActions(t *testing.T) {
 	}
 
 	_ = tmpDir
-	actions := action.DetectSyncActions(ctx)
+	actions := action.Detect(ctx)
 	// Just verify it runs without error
 	_ = actions
 }
@@ -325,7 +325,7 @@ func TestRunSync_ActionWithEmptySuggestion(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	actions := action.DetectSyncActions(ctx)
+	actions := action.Detect(ctx)
 	for _, a := range actions {
 		// All actions should have a non-empty Description
 		if a.Description == "" {
