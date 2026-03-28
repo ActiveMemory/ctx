@@ -9,7 +9,6 @@ package io
 import (
 	"bytes"
 	"net/http"
-	"net/url"
 	"os"
 	"path/filepath"
 	"strings"
@@ -214,24 +213,4 @@ func SafePost(
 	//nolint:gosec // URL originates from trusted, encrypted storage;
 	// scheme validated above
 	return client.Post(rawURL, contentType, bytes.NewReader(body))
-}
-
-// validateHTTPScheme parses the URL and rejects any scheme other than
-// http or https.
-//
-// Parameters:
-//   - rawURL: URL string to validate
-//
-// Returns:
-//   - error: Non-nil if the URL is unparseable or uses a non-HTTP scheme
-func validateHTTPScheme(rawURL string) error {
-	parsed, parseErr := url.Parse(rawURL)
-	if parseErr != nil {
-		return errHTTP.ParseURL(parseErr)
-	}
-	scheme := strings.ToLower(parsed.Scheme)
-	if scheme != "http" && scheme != "https" {
-		return errHTTP.UnsafeURLScheme(parsed.Scheme)
-	}
-	return nil
 }

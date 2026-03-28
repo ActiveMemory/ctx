@@ -6,13 +6,7 @@
 
 package lookup
 
-import (
-	"strings"
-
-	"github.com/ActiveMemory/ctx/internal/assets"
-	"github.com/ActiveMemory/ctx/internal/config/asset"
-	"github.com/ActiveMemory/ctx/internal/config/token"
-)
+import "github.com/ActiveMemory/ctx/internal/config/asset"
 
 // Init loads all embedded YAML description maps. Call once from main()
 // before building the command tree. Tests that need descriptions must
@@ -25,27 +19,4 @@ func Init() {
 	allowPerms = loadPermissions(asset.PathAllowTxt)
 	denyPerms = loadPermissions(asset.PathDenyTxt)
 	stopWordsMap = loadStopWords()
-}
-
-// loadPermissions reads an embedded permission file and splits it into entries.
-//
-// Parameters:
-//   - path: Embedded filesystem path to the permission file
-//
-// Returns:
-//   - []string: Non-empty, non-comment lines from the file; nil on read failure
-func loadPermissions(path string) []string {
-	data, readErr := assets.FS.ReadFile(path)
-	if readErr != nil {
-		return nil
-	}
-	var result []string
-	for _, line := range strings.Split(string(data), token.NewlineLF) {
-		line = strings.TrimSpace(line)
-		if line == "" || strings.HasPrefix(line, token.PrefixHeading) {
-			continue
-		}
-		result = append(result, line)
-	}
-	return result
 }

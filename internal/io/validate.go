@@ -7,10 +7,12 @@
 package io
 
 import (
+	"net/url"
 	"path/filepath"
 	"strings"
 
 	errFs "github.com/ActiveMemory/ctx/internal/err/fs"
+	errHTTP "github.com/ActiveMemory/ctx/internal/err/http"
 )
 
 // rejectDangerousPath returns an error if the resolved absolute path
@@ -52,4 +54,24 @@ func cleanAndValidate(path string) (string, error) {
 		return "", checkErr
 	}
 	return clean, nil
+}
+
+// validateHTTPScheme parses the URL and rejects any scheme other than
+// http or https.
+//
+// Parameters:
+//   - rawURL: URL string to validate
+//
+// Returns:
+//   - error: Non-nil if the URL is unparseable or uses a non-HTTP scheme
+func validateHTTPScheme(rawURL string) error {
+	parsed, parseErr := url.Parse(rawURL)
+	if parseErr != nil {
+		return errHTTP.ParseURL(parseErr)
+	}
+	scheme := strings.ToLower(parsed.Scheme)
+	if scheme != "http" && scheme != "https" {
+		return errHTTP.UnsafeURLScheme(parsed.Scheme)
+	}
+	return nil
 }
