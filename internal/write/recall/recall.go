@@ -89,7 +89,7 @@ func ImportSummary(
 		cmd.Println(desc.Text(text.DescKeyWriteRecallImportNothing))
 		return
 	}
-	cmd.Println(fmt.Sprintf(desc.Text(text.DescKeyWriteRecallImportSummary), verb, strings.Join(parts, ", ")))
+	cmd.Println(fmt.Sprintf(desc.Text(text.DescKeyWriteRecallImportSummary), verb, strings.Join(parts, token.CommaSpace)))
 }
 
 // NoSessionsForProject prints guidance when no sessions are found.

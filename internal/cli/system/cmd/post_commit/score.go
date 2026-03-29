@@ -80,7 +80,7 @@ func scoreCommitViolations() string {
 	}
 
 	title := fmt.Sprintf(desc.Text(text.DescKeyPostCommitAuditTitle), score, severity)
-	content := fmt.Sprintf(desc.Text(text.DescKeyPostCommitAuditContent), strings.Join(missing, ", "))
+	content := fmt.Sprintf(desc.Text(text.DescKeyPostCommitAuditContent), strings.Join(missing, token.CommaSpace))
 
 	return message.NudgeBox(
 		desc.Text(text.DescKeyPostCommitRelayPrefix),

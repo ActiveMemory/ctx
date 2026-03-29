@@ -76,7 +76,7 @@ func RenderTable(graph map[string][]string) string {
 	keys := SortedKeys(graph)
 	for _, pkg := range keys {
 		deps := graph[pkg]
-		b.WriteString(fmt.Sprintf(tf, pkg, strings.Join(deps, ", ")))
+		b.WriteString(fmt.Sprintf(tf, pkg, strings.Join(deps, token.CommaSpace)))
 	}
 
 	return b.String()

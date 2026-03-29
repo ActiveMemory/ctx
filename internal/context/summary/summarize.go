@@ -15,6 +15,7 @@ import (
 	"github.com/ActiveMemory/ctx/internal/config/embed/text"
 	"github.com/ActiveMemory/ctx/internal/config/marker"
 	"github.com/ActiveMemory/ctx/internal/config/regex"
+	"github.com/ActiveMemory/ctx/internal/config/token"
 )
 
 // summarizeConstitution counts checkbox items (invariants) in CONSTITUTION.md.
@@ -61,7 +62,7 @@ func summarizeTasks(content []byte) string {
 	if completed > 0 {
 		parts = append(parts, fmt.Sprintf(desc.Text(text.DescKeySummaryCompleted), completed))
 	}
-	return strings.Join(parts, ", ")
+	return strings.Join(parts, token.CommaSpace)
 }
 
 // summarizeDecisions counts decision headers (## sections) in DECISIONS.md.
