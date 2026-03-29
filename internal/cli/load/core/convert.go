@@ -10,6 +10,7 @@ import (
 	"strings"
 
 	"github.com/ActiveMemory/ctx/internal/config/file"
+	"github.com/ActiveMemory/ctx/internal/config/token"
 )
 
 // FileNameToTitle converts a context file name to a human-readable title.
@@ -35,5 +36,5 @@ func FileNameToTitle(name string) string {
 			words[i] = strings.ToUpper(w[:1]) + strings.ToLower(w[1:])
 		}
 	}
-	return strings.Join(words, " ")
+	return strings.Join(words, token.Space)
 }

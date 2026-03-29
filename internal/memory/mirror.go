@@ -58,7 +58,9 @@ func Sync(contextDir, sourcePath string) (SyncResult, error) {
 		return SyncResult{}, errMemory.CreateDir(mkErr)
 	}
 
-	if writeErr := os.WriteFile(mirrorPath, sourceData, fs.PermFile); writeErr != nil {
+	if writeErr := os.WriteFile(
+		mirrorPath, sourceData, fs.PermFile,
+	); writeErr != nil {
 		return SyncResult{}, errMemory.WriteMirror(writeErr)
 	}
 
@@ -84,7 +86,8 @@ func Archive(contextDir string) (string, error) {
 	}
 
 	ts := time.Now().Format(cfgTime.CompactTimestamp)
-	archivePath := filepath.Join(archiveDir, memory.PrefixMirror+ts+file.ExtMarkdown)
+	archiveName := memory.PrefixMirror + ts + file.ExtMarkdown
+	archivePath := filepath.Join(archiveDir, archiveName)
 
 	if writeErr := os.WriteFile(archivePath, data, fs.PermFile); writeErr != nil {
 		return "", errMemory.WriteArchive(writeErr)

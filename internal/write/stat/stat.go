@@ -9,7 +9,7 @@ package stat
 import (
 	"github.com/spf13/cobra"
 
-	"github.com/ActiveMemory/ctx/internal/write/io"
+	"github.com/ActiveMemory/ctx/internal/write/line"
 )
 
 // Table prints stats table lines. Nil cmd is a no-op.
@@ -18,5 +18,5 @@ import (
 //   - cmd: Cobra command for output
 //   - lines: pre-formatted stats lines (header, separator, data rows)
 func Table(cmd *cobra.Command, lines []string) {
-	io.Lines(cmd, lines)
+	line.All(cmd, lines)
 }

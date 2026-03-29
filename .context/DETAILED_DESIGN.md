@@ -257,7 +257,7 @@ Consult specific sections when working on a module.
 
 ---
 
-## internal/recall/parser
+## internal/journal/parser
 
 **Purpose**: Parses AI session transcripts (JSONL, Markdown) into structured Go types. Extensible parser registry.
 
@@ -747,7 +747,7 @@ Consult specific sections when working on a module.
 
 **Data flow**: Parse JSONL session files → subcommands: list (sorted by date), show (by ID/slug/--latest), export (to journal with YAML frontmatter), lock/unlock (protect from overwrite), sync (frontmatter-to-state lock reconciliation)
 
-**Dependencies**: `internal/config`, `internal/rc`, `internal/recall/parser`, `internal/journal/state`
+**Dependencies**: `internal/config`, `internal/rc`, `internal/journal/parser`, `internal/journal/state`
 
 ---
 

@@ -8,8 +8,10 @@ package architecture
 
 // Map staleness hook configuration.
 const (
-	// MapStaleDays is the threshold in days before a map refresh is considered stale.
+	// MapStaleDays is the threshold in days before a map
+	// refresh is considered stale.
 	MapStaleDays = 30
-	// MapStalenessThrottleID is the state file name for daily throttle of map staleness checks.
+	// MapStalenessThrottleID is the state file name for daily
+	// throttle of map staleness checks.
 	MapStalenessThrottleID = "check-map-staleness"
 )

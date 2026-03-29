@@ -72,9 +72,15 @@ func AppendEvent(event, message, sessionID string, detail *notify.TemplateRef) {
 	if openErr != nil {
 		return
 	}
-	defer func() { _ = f.Close() }()
+	defer func() {
+		if closeErr := f.Close(); closeErr != nil {
+			Warn("close %s: %v", logPath, closeErr)
+		}
+	}()
 
-	_, _ = f.Write(line)
+	if _, writeErr := f.Write(line); writeErr != nil {
+		Warn("write %s: %v", logPath, writeErr)
+	}
 }
 
 // Query reads events from the log, applying filters.

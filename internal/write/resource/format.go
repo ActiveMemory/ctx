@@ -49,7 +49,8 @@ func statusText(sev sysinfo.Severity) string {
 	}
 }
 
-// formatLine builds a fixed-width table row with label, values, and status columns.
+// formatLine builds a fixed-width table row with label,
+// values, and status columns.
 //
 // Parameters:
 //   - label: Left-aligned resource name
@@ -59,8 +60,9 @@ func statusText(sev sysinfo.Severity) string {
 // Returns:
 //   - string: Padded single-line row
 func formatLine(label, values, status string) string {
-	left := fmt.Sprintf(
-		fmt.Sprintf(desc.Text(text.DescKeyResourcesRowFormat), stats.ResourcesLabelWidth), label, values)
+	left := fmt.Sprintf(fmt.Sprintf(
+		desc.Text(text.DescKeyResourcesRowFormat),
+		stats.ResourcesLabelWidth), label, values)
 	pad := stats.ResourcesStatusCol - len(left)
 	if pad < 1 {
 		pad = 1
@@ -68,7 +70,8 @@ func formatLine(label, values, status string) string {
 	return left + strings.Repeat(" ", pad) + status
 }
 
-// formatText renders the resource snapshot and alerts as a human-readable text table.
+// formatText renders the resource snapshot and alerts as a
+// human-readable text table.
 //
 // Parameters:
 //   - snap: System resource snapshot with memory, disk, and inode data
@@ -76,7 +79,10 @@ func formatLine(label, values, status string) string {
 //
 // Returns:
 //   - []string: Lines of formatted text, including header and separator
-func formatText(snap sysinfo.Snapshot, alerts []sysinfo.ResourceAlert) []string {
+func formatText(
+	snap sysinfo.Snapshot,
+	alerts []sysinfo.ResourceAlert,
+) []string {
 	var lines []string
 	lines = append(lines, desc.Text(text.DescKeyResourcesHeader))
 	lines = append(lines, desc.Text(text.DescKeyResourcesSeparator))
@@ -105,7 +111,8 @@ func formatText(snap sysinfo.Snapshot, alerts []sysinfo.ResourceAlert) []string 
 		values := fmt.Sprintf(valueFmt,
 			sysinfo.FormatGiB(e.used), sysinfo.FormatGiB(e.total), pct)
 		sev := sysinfo.SeverityFor(alerts, e.resource)
-		lines = append(lines, formatLine(desc.Text(e.labelKey), values, statusText(sev)))
+		lines = append(lines, formatLine(
+			desc.Text(e.labelKey), values, statusText(sev)))
 	}
 
 	if snap.Load.Supported {

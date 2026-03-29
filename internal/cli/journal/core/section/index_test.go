@@ -76,8 +76,14 @@ func TestGenerateTopicPage(t *testing.T) {
 	topic := entity.TopicData{
 		Name: "caching",
 		Entries: []entity.JournalEntry{
-			{Filename: "2026-02-14-a.md", Title: "A", Date: "2026-02-14", Time: "10:00:00"},
-			{Filename: "2026-01-20-b.md", Title: "B", Date: "2026-01-20", Time: "09:00:00"},
+			{
+				Filename: "2026-02-14-a.md", Title: "A",
+				Date: "2026-02-14", Time: "10:00:00",
+			},
+			{
+				Filename: "2026-01-20-b.md", Title: "B",
+				Date: "2026-01-20", Time: "09:00:00",
+			},
 		},
 	}
 
@@ -180,7 +186,12 @@ func TestBuildTypeIndex(t *testing.T) {
 
 func TestGenerateTypesIndex(t *testing.T) {
 	types := []entity.TypeData{
-		{Name: "feature", Entries: []entity.JournalEntry{{Filename: "a.md"}, {Filename: "b.md"}}},
+		{
+			Name: "feature",
+			Entries: []entity.JournalEntry{
+				{Filename: "a.md"}, {Filename: "b.md"},
+			},
+		},
 		{Name: "bugfix", Entries: []entity.JournalEntry{{Filename: "c.md"}}},
 	}
 

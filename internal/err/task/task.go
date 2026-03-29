@@ -50,7 +50,8 @@ func FileWrite(cause error) error {
 //   - query: the search string that matched multiple tasks
 //
 // Returns:
-//   - error: "multiple tasks match <query>; be more specific or use task number"
+//   - error: "multiple tasks match <query>;
+//     be more specific or use task number"
 func MultipleMatches(query string) error {
 	return fmt.Errorf(
 		desc.Text(text.DescKeyErrTaskMultipleMatches), query,

@@ -22,7 +22,11 @@ import (
 //   - cmd: Cobra command for output messages
 //   - outPath: Path of the generated feed file
 //   - report: Feed generation report with counts and messages
-func PrintFeedReport(cmd *cobra.Command, outPath string, report siteCore.FeedReport) {
+func PrintFeedReport(
+	cmd *cobra.Command,
+	outPath string,
+	report siteCore.FeedReport,
+) {
 	cmd.Println()
 	cmd.Println(fmt.Sprintf(
 		desc.Text(text.DescKeySiteFeedGenerated), outPath, report.Included))

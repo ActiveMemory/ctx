@@ -18,7 +18,8 @@ import (
 // With writes a prefixed error message to the command's stderr stream.
 //
 // Parameters:
-//   - cmd: Cobra command whose stderr stream receives the message. Nil is a no-op.
+//   - cmd: Cobra command whose stderr stream receives the
+//     message. Nil is a no-op.
 //   - err: the error to display after the "Error: " prefix.
 func With(cmd *cobra.Command, err error) {
 	if cmd == nil {
@@ -30,7 +31,8 @@ func With(cmd *cobra.Command, err error) {
 // WarnFile prints a non-fatal file operation warning to stderr.
 //
 // Parameters:
-//   - cmd: Cobra command whose stderr stream receives the message. Nil is a no-op.
+//   - cmd: Cobra command whose stderr stream receives the
+//     message. Nil is a no-op.
 //   - path: path of the file that caused the warning.
 //   - err: the underlying error.
 func WarnFile(cmd *cobra.Command, path string, err error) {

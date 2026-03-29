@@ -45,5 +45,7 @@ func List() ([]string, error) {
 //   - []byte: SKILL.md content from claude/skills/<name>/
 //   - error: Non-nil if the file not found or read fails
 func Content(name string) ([]byte, error) {
-	return assets.FS.ReadFile(path.Join(asset.DirClaudeSkills, name, asset.FileSKILLMd))
+	return assets.FS.ReadFile(path.Join(
+		asset.DirClaudeSkills, name, asset.FileSKILLMd,
+	))
 }

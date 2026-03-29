@@ -27,11 +27,11 @@ func createTestSessionJSONL(t *testing.T, dir, sessionID, slug, cwd string) {
 	if err := os.MkdirAll(dir, 0750); err != nil {
 		t.Fatalf("mkdir %s: %v", dir, err)
 	}
-	line1 := fmt.Sprintf(
+	line1 := fmt.Sprintf( //nolint:lll // JSON template
 		`{"uuid":"u1","sessionId":"%s","slug":"%s","type":"user","timestamp":"2026-01-20T10:00:00Z","cwd":"%s","version":"2.1.0","message":{"role":"user","content":[{"type":"text","text":"hello from test"}]}}`,
 		sessionID, slug, cwd,
 	)
-	line2 := fmt.Sprintf(
+	line2 := fmt.Sprintf( //nolint:lll // JSON template
 		`{"uuid":"u2","parentUuid":"u1","sessionId":"%s","slug":"%s","type":"assistant","timestamp":"2026-01-20T10:00:30Z","cwd":"%s","version":"2.1.0","message":{"model":"claude-test","role":"assistant","content":[{"type":"text","text":"hi back"}],"usage":{"input_tokens":100,"output_tokens":50}}}`,
 		sessionID, slug, cwd,
 	)
@@ -107,7 +107,10 @@ func TestRunRecallList_WithSessions(t *testing.T) {
 
 	// Create session fixture
 	projDir := filepath.Join(tmpDir, ".claude", "projects", "-home-test-myproject")
-	createTestSessionJSONL(t, projDir, "sess-list-123", "listing-test-session", "/home/test/myproject")
+	createTestSessionJSONL(
+		t, projDir, "sess-list-123",
+		"listing-test-session", "/home/test/myproject",
+	)
 
 	cmd := Cmd()
 	buf := new(bytes.Buffer)
@@ -130,7 +133,10 @@ func TestRunRecallShow_Latest(t *testing.T) {
 	t.Setenv("HOME", tmpDir)
 
 	projDir := filepath.Join(tmpDir, ".claude", "projects", "-home-test-showproj")
-	createTestSessionJSONL(t, projDir, "sess-show-456", "show-test-session", "/home/test/showproj")
+	createTestSessionJSONL(
+		t, projDir, "sess-show-456",
+		"show-test-session", "/home/test/showproj",
+	)
 
 	cmd := Cmd()
 	buf := new(bytes.Buffer)
@@ -157,7 +163,10 @@ func TestRunRecallShow_BySlug(t *testing.T) {
 	t.Setenv("HOME", tmpDir)
 
 	projDir := filepath.Join(tmpDir, ".claude", "projects", "-home-test-slugproj")
-	createTestSessionJSONL(t, projDir, "sess-slug-789", "unique-slug-name", "/home/test/slugproj")
+	createTestSessionJSONL(
+		t, projDir, "sess-slug-789",
+		"unique-slug-name", "/home/test/slugproj",
+	)
 
 	cmd := Cmd()
 	buf := new(bytes.Buffer)
@@ -180,7 +189,10 @@ func TestRunRecallImport_SingleSession(t *testing.T) {
 	t.Setenv("HOME", tmpDir)
 
 	projDir := filepath.Join(tmpDir, ".claude", "projects", "-home-test-expproj")
-	createTestSessionJSONL(t, projDir, "sess-exp-aaa", "export-session", "/home/test/expproj")
+	createTestSessionJSONL(
+		t, projDir, "sess-exp-aaa",
+		"export-session", "/home/test/expproj",
+	)
 
 	// Create .context directory for journal output
 	contextDir := filepath.Join(tmpDir, ".context")
@@ -206,7 +218,9 @@ func TestRunRecallImport_SingleSession(t *testing.T) {
 	}
 
 	output := buf.String()
-	if !strings.Contains(output, "Imported") || !strings.Contains(output, "session") {
+	hasImported := strings.Contains(output, "Imported")
+	hasSession := strings.Contains(output, "session")
+	if !hasImported || !hasSession {
 		t.Errorf("expected export confirmation, got:\n%s", output)
 	}
 
@@ -224,7 +238,8 @@ func TestRunRecallImport_SingleSession(t *testing.T) {
 	// Filename is now title-based (derived from FirstUserMsg "hello from test").
 	for _, e := range entries {
 		if strings.Contains(e.Name(), "hello-from-test") {
-			content, readErr := os.ReadFile(filepath.Join(journalDir, e.Name())) //nolint:gosec // test temp path
+			p := filepath.Join(journalDir, e.Name())
+			content, readErr := os.ReadFile(p) //nolint:gosec // test temp path
 			if readErr != nil {
 				t.Fatalf("read journal file: %v", readErr)
 			}
@@ -237,13 +252,15 @@ func TestRunRecallImport_SingleSession(t *testing.T) {
 			return
 		}
 	}
-	t.Errorf("no journal file found matching hello-from-test slug, got: %v", func() []string {
-		var names []string
-		for _, e := range entries {
-			names = append(names, e.Name())
-		}
-		return names
-	}())
+	t.Errorf(
+		"no journal file found matching hello-from-test slug, got: %v",
+		func() []string {
+			var names []string
+			for _, e := range entries {
+				names = append(names, e.Name())
+			}
+			return names
+		}())
 }
 
 func TestRunRecallImport_DedupRenamesOldFile(t *testing.T) {
@@ -252,7 +269,10 @@ func TestRunRecallImport_DedupRenamesOldFile(t *testing.T) {
 
 	projDir := filepath.Join(tmpDir, ".claude", "projects", "-home-test-dedupproj")
 	sessionID := "dedup123-full-uuid-value"
-	createTestSessionJSONL(t, projDir, sessionID, "random-slug", "/home/test/dedupproj")
+	createTestSessionJSONL(
+		t, projDir, sessionID,
+		"random-slug", "/home/test/dedupproj",
+	)
 
 	// Create .context directory
 	contextDir := filepath.Join(tmpDir, ".context")
@@ -264,8 +284,10 @@ func TestRunRecallImport_DedupRenamesOldFile(t *testing.T) {
 	// Pre-create a legacy file with the old slug-based name (no session_id).
 	// The short ID is the first 8 chars of the session ID: "dedup123".
 	oldFilename := "2026-01-20-random-slug-dedup123.md"
-	oldContent := "---\ndate: \"2026-01-20\"\n---\n\n# random-slug\n\nOld content\n"
-	if err := os.WriteFile(filepath.Join(journalDir, oldFilename), []byte(oldContent), 0600); err != nil {
+	oldContent := "---\ndate: \"2026-01-20\"\n---\n\n" +
+		"# random-slug\n\nOld content\n"
+	oldPath := filepath.Join(journalDir, oldFilename)
+	if err := os.WriteFile(oldPath, []byte(oldContent), 0600); err != nil {
 		t.Fatal(err)
 	}
 
@@ -279,7 +301,10 @@ func TestRunRecallImport_DedupRenamesOldFile(t *testing.T) {
 	buf := new(bytes.Buffer)
 	cmd.SetOut(buf)
 	cmd.SetErr(buf)
-	cmd.SetArgs([]string{"import", "--all", "--all-projects", "--regenerate", "--yes"})
+	cmd.SetArgs([]string{
+		"import", "--all", "--all-projects",
+		"--regenerate", "--yes",
+	})
 
 	if err := cmd.Execute(); err != nil {
 		t.Fatalf("unexpected error: %v", err)
@@ -304,14 +329,17 @@ func TestRunRecallImport_DedupRenamesOldFile(t *testing.T) {
 	}
 
 	// The old file should be gone.
-	if _, statErr := os.Stat(filepath.Join(journalDir, oldFilename)); statErr == nil {
+	oldP := filepath.Join(journalDir, oldFilename)
+	if _, statErr := os.Stat(oldP); statErr == nil {
 		t.Error("old file should have been renamed")
 	}
 
 	// The new file should have the title-based slug.
 	found := false
 	for _, name := range fileNames {
-		if strings.Contains(name, "hello-from-test") && strings.Contains(name, "dedup123") {
+		hasSlug := strings.Contains(name, "hello-from-test")
+		hasID := strings.Contains(name, "dedup123")
+		if hasSlug && hasID {
 			found = true
 		}
 	}
@@ -322,7 +350,9 @@ func TestRunRecallImport_DedupRenamesOldFile(t *testing.T) {
 
 // importHelper runs "recall import --all --all-projects" in a temp dir and
 // returns the journal directory and the name of the first imported .md file.
-func importHelper(t *testing.T, tmpDir string, extraArgs ...string) (journalDir string, mdFile string) {
+func importHelper(
+	t *testing.T, tmpDir string, extraArgs ...string,
+) (journalDir string, mdFile string) {
 	t.Helper()
 
 	cmd := Cmd()
@@ -354,8 +384,13 @@ func TestRunRecallImport_PreservesFrontmatter(t *testing.T) {
 	tmpDir := t.TempDir()
 	t.Setenv("HOME", tmpDir)
 
-	projDir := filepath.Join(tmpDir, ".claude", "projects", "-home-test-fmproj")
-	createTestSessionJSONL(t, projDir, "sess-fm-001", "fm-preserve", "/home/test/fmproj")
+	projDir := filepath.Join(
+		tmpDir, ".claude", "projects", "-home-test-fmproj",
+	)
+	createTestSessionJSONL(
+		t, projDir, "sess-fm-001",
+		"fm-preserve", "/home/test/fmproj",
+	)
 
 	contextDir := filepath.Join(tmpDir, ".context")
 	if err := os.MkdirAll(contextDir, 0750); err != nil {
@@ -380,13 +415,21 @@ func TestRunRecallImport_PreservesFrontmatter(t *testing.T) {
 	origTitle := index.ExtractFrontmatterField(string(origData), "title")
 
 	// Inject enriched frontmatter - keep the same title to avoid rename
-	enrichedFM := fmt.Sprintf("---\ndate: \"2026-01-20\"\ntitle: %q\nsummary: \"A curated summary\"\ntags:\n  - enriched\n---\n", origTitle)
+	enrichedFM := fmt.Sprintf(
+		"---\ndate: \"2026-01-20\"\ntitle: %q\n"+
+			"summary: \"A curated summary\"\n"+
+			"tags:\n  - enriched\n---\n",
+		origTitle,
+	)
 	body := "# hello from test\n\nBody content\n"
-	if writeErr := os.WriteFile(path, []byte(enrichedFM+"\n"+body), 0600); writeErr != nil {
+	if writeErr := os.WriteFile(
+		path, []byte(enrichedFM+"\n"+body), 0600,
+	); writeErr != nil {
 		t.Fatal(writeErr)
 	}
 
-	// Re-import with --regenerate (safe default skips existing; we need regenerate to trigger re-export)
+	// Re-import with --regenerate (safe default skips existing;
+	// we need regenerate to trigger re-export).
 	importHelper(t, tmpDir, "--regenerate", "--yes")
 
 	data, err := os.ReadFile(filepath.Clean(path))
@@ -407,8 +450,14 @@ func TestRunRecallImport_KeepFrontmatterFalseDiscards(t *testing.T) {
 	tmpDir := t.TempDir()
 	t.Setenv("HOME", tmpDir)
 
-	projDir := filepath.Join(tmpDir, ".claude", "projects", "-home-test-forceproj")
-	createTestSessionJSONL(t, projDir, "sess-force-002", "force-discard", "/home/test/forceproj")
+	projDir := filepath.Join(
+		tmpDir, ".claude", "projects",
+		"-home-test-forceproj",
+	)
+	createTestSessionJSONL(
+		t, projDir, "sess-force-002",
+		"force-discard", "/home/test/forceproj",
+	)
 
 	contextDir := filepath.Join(tmpDir, ".context")
 	if err := os.MkdirAll(contextDir, 0750); err != nil {
@@ -433,13 +482,21 @@ func TestRunRecallImport_KeepFrontmatterFalseDiscards(t *testing.T) {
 	origTitle := index.ExtractFrontmatterField(string(origData), "title")
 
 	// Inject enriched frontmatter - keep the same title to avoid rename
-	enrichedFM := fmt.Sprintf("---\ndate: \"2026-01-20\"\ntitle: %q\nsummary: \"A curated summary\"\ntags:\n  - enriched\n---\n", origTitle)
+	enrichedFM := fmt.Sprintf(
+		"---\ndate: \"2026-01-20\"\ntitle: %q\n"+
+			"summary: \"A curated summary\"\n"+
+			"tags:\n  - enriched\n---\n",
+		origTitle,
+	)
 	body := "# hello from test\n\nBody content\n"
-	if writeErr := os.WriteFile(path, []byte(enrichedFM+"\n"+body), 0600); writeErr != nil {
+	if writeErr := os.WriteFile(
+		path, []byte(enrichedFM+"\n"+body), 0600,
+	); writeErr != nil {
 		t.Fatal(writeErr)
 	}
 
-	// Re-import with --keep-frontmatter=false - should discard enriched frontmatter
+	// Re-import with --keep-frontmatter=false:
+	// should discard enriched frontmatter.
 	importHelper(t, tmpDir, "--keep-frontmatter=false", "--yes")
 
 	data, err := os.ReadFile(filepath.Clean(path))
@@ -449,7 +506,10 @@ func TestRunRecallImport_KeepFrontmatterFalseDiscards(t *testing.T) {
 	content := string(data)
 
 	if strings.Contains(content, "A curated summary") {
-		t.Error("--keep-frontmatter=false should discard enriched frontmatter summary")
+		t.Error(
+			"--keep-frontmatter=false should discard" +
+				" enriched frontmatter summary",
+		)
 	}
 	if strings.Contains(content, "tags:") {
 		t.Error("--keep-frontmatter=false should discard enriched frontmatter tags")
@@ -460,12 +520,18 @@ func TestRunRecallImport_KeepFrontmatterFalseDiscards(t *testing.T) {
 	}
 }
 
-func TestRunRecallImport_KeepFrontmatterFalseResetsEnrichmentState(t *testing.T) {
+func TestRunRecallImport_KeepFrontmatterFalseResetsEnrichment(t *testing.T) {
 	tmpDir := t.TempDir()
 	t.Setenv("HOME", tmpDir)
 
-	projDir := filepath.Join(tmpDir, ".claude", "projects", "-home-test-stateproj")
-	createTestSessionJSONL(t, projDir, "sess-state-003", "state-reset", "/home/test/stateproj")
+	projDir := filepath.Join(
+		tmpDir, ".claude", "projects",
+		"-home-test-stateproj",
+	)
+	createTestSessionJSONL(
+		t, projDir, "sess-state-003",
+		"state-reset", "/home/test/stateproj",
+	)
 
 	contextDir := filepath.Join(tmpDir, ".context")
 	if err := os.MkdirAll(contextDir, 0750); err != nil {
@@ -518,8 +584,14 @@ func TestRunRecallImport_AllSkipsExistingByDefault(t *testing.T) {
 	tmpDir := t.TempDir()
 	t.Setenv("HOME", tmpDir)
 
-	projDir := filepath.Join(tmpDir, ".claude", "projects", "-home-test-safeskip")
-	createTestSessionJSONL(t, projDir, "sess-safe-010", "safe-skip", "/home/test/safeskip")
+	projDir := filepath.Join(
+		tmpDir, ".claude", "projects",
+		"-home-test-safeskip",
+	)
+	createTestSessionJSONL(
+		t, projDir, "sess-safe-010",
+		"safe-skip", "/home/test/safeskip",
+	)
 
 	contextDir := filepath.Join(tmpDir, ".context")
 	if err := os.MkdirAll(contextDir, 0750); err != nil {
@@ -550,7 +622,11 @@ func TestRunRecallImport_AllSkipsExistingByDefault(t *testing.T) {
 		t.Fatalf("read: %v", err)
 	}
 	if string(data) != customContent {
-		t.Errorf("--all should skip existing by default\ngot:  %q\nwant: %q", string(data), customContent)
+		t.Errorf(
+			"--all should skip existing by default\n"+
+				"got:  %q\nwant: %q",
+			string(data), customContent,
+		)
 	}
 }
 
@@ -558,8 +634,14 @@ func TestRunRecallImport_RegenerateReExports(t *testing.T) {
 	tmpDir := t.TempDir()
 	t.Setenv("HOME", tmpDir)
 
-	projDir := filepath.Join(tmpDir, ".claude", "projects", "-home-test-regenproj")
-	createTestSessionJSONL(t, projDir, "sess-regen-011", "regen-test", "/home/test/regenproj")
+	projDir := filepath.Join(
+		tmpDir, ".claude", "projects",
+		"-home-test-regenproj",
+	)
+	createTestSessionJSONL(
+		t, projDir, "sess-regen-011",
+		"regen-test", "/home/test/regenproj",
+	)
 
 	contextDir := filepath.Join(tmpDir, ".context")
 	if err := os.MkdirAll(contextDir, 0750); err != nil {
@@ -613,8 +695,14 @@ func TestRunRecallImport_DryRun(t *testing.T) {
 	tmpDir := t.TempDir()
 	t.Setenv("HOME", tmpDir)
 
-	projDir := filepath.Join(tmpDir, ".claude", "projects", "-home-test-dryproj")
-	createTestSessionJSONL(t, projDir, "sess-dry-012", "dry-run-test", "/home/test/dryproj")
+	projDir := filepath.Join(
+		tmpDir, ".claude", "projects",
+		"-home-test-dryproj",
+	)
+	createTestSessionJSONL(
+		t, projDir, "sess-dry-012",
+		"dry-run-test", "/home/test/dryproj",
+	)
 
 	contextDir := filepath.Join(tmpDir, ".context")
 	if err := os.MkdirAll(contextDir, 0750); err != nil {
@@ -660,8 +748,14 @@ func TestRunRecallImport_DryRunRegenerate(t *testing.T) {
 	tmpDir := t.TempDir()
 	t.Setenv("HOME", tmpDir)
 
-	projDir := filepath.Join(tmpDir, ".claude", "projects", "-home-test-dryregen")
-	createTestSessionJSONL(t, projDir, "sess-dryregen-013", "dryregen-test", "/home/test/dryregen")
+	projDir := filepath.Join(
+		tmpDir, ".claude", "projects",
+		"-home-test-dryregen",
+	)
+	createTestSessionJSONL(
+		t, projDir, "sess-dryregen-013",
+		"dryregen-test", "/home/test/dryregen",
+	)
 
 	contextDir := filepath.Join(tmpDir, ".context")
 	if err := os.MkdirAll(contextDir, 0750); err != nil {
@@ -682,7 +776,10 @@ func TestRunRecallImport_DryRunRegenerate(t *testing.T) {
 	buf := new(bytes.Buffer)
 	cmd.SetOut(buf)
 	cmd.SetErr(buf)
-	cmd.SetArgs([]string{"import", "--all", "--all-projects", "--regenerate", "--dry-run"})
+	cmd.SetArgs([]string{
+		"import", "--all", "--all-projects",
+		"--regenerate", "--dry-run",
+	})
 
 	if err := cmd.Execute(); err != nil {
 		t.Fatalf("unexpected error: %v", err)
@@ -690,10 +787,17 @@ func TestRunRecallImport_DryRunRegenerate(t *testing.T) {
 
 	output := buf.String()
 	if !strings.Contains(output, "Would") {
-		t.Errorf("--dry-run should print 'Would' summary, got:\n%s", output)
+		t.Errorf(
+			"--dry-run should print 'Would' summary, got:\n%s",
+			output,
+		)
 	}
 	if !strings.Contains(output, "regenerate") {
-		t.Errorf("--dry-run --regenerate should mention regenerate in summary, got:\n%s", output)
+		t.Errorf(
+			"--dry-run --regenerate should mention"+
+				" regenerate in summary, got:\n%s",
+			output,
+		)
 	}
 }
 
@@ -720,8 +824,14 @@ func TestRunRecallImport_SingleSessionAlwaysWrites(t *testing.T) {
 	tmpDir := t.TempDir()
 	t.Setenv("HOME", tmpDir)
 
-	projDir := filepath.Join(tmpDir, ".claude", "projects", "-home-test-singleproj")
-	createTestSessionJSONL(t, projDir, "sess-single-014", "single-write", "/home/test/singleproj")
+	projDir := filepath.Join(
+		tmpDir, ".claude", "projects",
+		"-home-test-singleproj",
+	)
+	createTestSessionJSONL(
+		t, projDir, "sess-single-014",
+		"single-write", "/home/test/singleproj",
+	)
 
 	contextDir := filepath.Join(tmpDir, ".context")
 	if err := os.MkdirAll(contextDir, 0750); err != nil {
@@ -790,8 +900,14 @@ func TestRunRecallImport_YesBypasses(t *testing.T) {
 	tmpDir := t.TempDir()
 	t.Setenv("HOME", tmpDir)
 
-	projDir := filepath.Join(tmpDir, ".claude", "projects", "-home-test-yesproj")
-	createTestSessionJSONL(t, projDir, "sess-yes-015", "yes-bypass", "/home/test/yesproj")
+	projDir := filepath.Join(
+		tmpDir, ".claude", "projects",
+		"-home-test-yesproj",
+	)
+	createTestSessionJSONL(
+		t, projDir, "sess-yes-015",
+		"yes-bypass", "/home/test/yesproj",
+	)
 
 	contextDir := filepath.Join(tmpDir, ".context")
 	if err := os.MkdirAll(contextDir, 0750); err != nil {
@@ -829,8 +945,14 @@ func TestRunRecallImport_LockedSkippedByDefault(t *testing.T) {
 	tmpDir := t.TempDir()
 	t.Setenv("HOME", tmpDir)
 
-	projDir := filepath.Join(tmpDir, ".claude", "projects", "-home-test-lockskip")
-	createTestSessionJSONL(t, projDir, "sess-lock-016", "lock-skip", "/home/test/lockskip")
+	projDir := filepath.Join(
+		tmpDir, ".claude", "projects",
+		"-home-test-lockskip",
+	)
+	createTestSessionJSONL(
+		t, projDir, "sess-lock-016",
+		"lock-skip", "/home/test/lockskip",
+	)
 
 	contextDir := filepath.Join(tmpDir, ".context")
 	if err := os.MkdirAll(contextDir, 0750); err != nil {
@@ -879,8 +1001,14 @@ func TestRunRecallImport_LockedSkippedByKeepFrontmatterFalse(t *testing.T) {
 	tmpDir := t.TempDir()
 	t.Setenv("HOME", tmpDir)
 
-	projDir := filepath.Join(tmpDir, ".claude", "projects", "-home-test-lockforce")
-	createTestSessionJSONL(t, projDir, "sess-lock-017", "lock-force", "/home/test/lockforce")
+	projDir := filepath.Join(
+		tmpDir, ".claude", "projects",
+		"-home-test-lockforce",
+	)
+	createTestSessionJSONL(
+		t, projDir, "sess-lock-017",
+		"lock-force", "/home/test/lockforce",
+	)
 
 	contextDir := filepath.Join(tmpDir, ".context")
 	if err := os.MkdirAll(contextDir, 0750); err != nil {
@@ -921,7 +1049,10 @@ func TestRunRecallImport_LockedSkippedByKeepFrontmatterFalse(t *testing.T) {
 		t.Fatalf("read: %v", readErr)
 	}
 	if string(data) != custom {
-		t.Error("locked file should not be overwritten even with --keep-frontmatter=false")
+		t.Error(
+			"locked file should not be overwritten" +
+				" even with --keep-frontmatter=false",
+		)
 	}
 }
 
@@ -929,8 +1060,14 @@ func TestRunRecallImport_KeepFrontmatterFalse(t *testing.T) {
 	tmpDir := t.TempDir()
 	t.Setenv("HOME", tmpDir)
 
-	projDir := filepath.Join(tmpDir, ".claude", "projects", "-home-test-keepfm")
-	createTestSessionJSONL(t, projDir, "sess-keepfm-018", "keepfm-test", "/home/test/keepfm")
+	projDir := filepath.Join(
+		tmpDir, ".claude", "projects",
+		"-home-test-keepfm",
+	)
+	createTestSessionJSONL(
+		t, projDir, "sess-keepfm-018",
+		"keepfm-test", "/home/test/keepfm",
+	)
 
 	contextDir := filepath.Join(tmpDir, ".context")
 	if err := os.MkdirAll(contextDir, 0750); err != nil {
@@ -991,8 +1128,14 @@ func TestRunRecallImport_KeepFrontmatterDefault(t *testing.T) {
 	tmpDir := t.TempDir()
 	t.Setenv("HOME", tmpDir)
 
-	projDir := filepath.Join(tmpDir, ".claude", "projects", "-home-test-keepdef")
-	createTestSessionJSONL(t, projDir, "sess-keepdef-019", "keepdef-test", "/home/test/keepdef")
+	projDir := filepath.Join(
+		tmpDir, ".claude", "projects",
+		"-home-test-keepdef",
+	)
+	createTestSessionJSONL(
+		t, projDir, "sess-keepdef-019",
+		"keepdef-test", "/home/test/keepdef",
+	)
 
 	contextDir := filepath.Join(tmpDir, ".context")
 	if err := os.MkdirAll(contextDir, 0750); err != nil {
@@ -1043,8 +1186,14 @@ func TestRunRecallImport_DryRunShowsLocked(t *testing.T) {
 	tmpDir := t.TempDir()
 	t.Setenv("HOME", tmpDir)
 
-	projDir := filepath.Join(tmpDir, ".claude", "projects", "-home-test-drylocked")
-	createTestSessionJSONL(t, projDir, "sess-drylk-020", "drylk-test", "/home/test/drylocked")
+	projDir := filepath.Join(
+		tmpDir, ".claude", "projects",
+		"-home-test-drylocked",
+	)
+	createTestSessionJSONL(
+		t, projDir, "sess-drylk-020",
+		"drylk-test", "/home/test/drylocked",
+	)
 
 	contextDir := filepath.Join(tmpDir, ".context")
 	if err := os.MkdirAll(contextDir, 0750); err != nil {
@@ -1116,12 +1265,18 @@ func TestDiscardFrontmatter(t *testing.T) {
 	}
 }
 
-func TestRunRecallImport_FrontmatterLockedSkipsAndPromotesToState(t *testing.T) {
+func TestRunRecallImport_FrontmatterLockedSkipsPromote(t *testing.T) {
 	tmpDir := t.TempDir()
 	t.Setenv("HOME", tmpDir)
 
-	projDir := filepath.Join(tmpDir, ".claude", "projects", "-home-test-fmlock")
-	createTestSessionJSONL(t, projDir, "sess-fmlock-022", "fmlock-test", "/home/test/fmlock")
+	projDir := filepath.Join(
+		tmpDir, ".claude", "projects",
+		"-home-test-fmlock",
+	)
+	createTestSessionJSONL(
+		t, projDir, "sess-fmlock-022",
+		"fmlock-test", "/home/test/fmlock",
+	)
 
 	contextDir := filepath.Join(tmpDir, ".context")
 	if err := os.MkdirAll(contextDir, 0750); err != nil {
@@ -1185,8 +1340,14 @@ func TestRunRecallImport_KeepFrontmatterFalseImpliesRegenerate(t *testing.T) {
 	tmpDir := t.TempDir()
 	t.Setenv("HOME", tmpDir)
 
-	projDir := filepath.Join(tmpDir, ".claude", "projects", "-home-test-implyregen")
-	createTestSessionJSONL(t, projDir, "sess-implyregen-021", "implyregen-test", "/home/test/implyregen")
+	projDir := filepath.Join(
+		tmpDir, ".claude", "projects",
+		"-home-test-implyregen",
+	)
+	createTestSessionJSONL(
+		t, projDir, "sess-implyregen-021",
+		"implyregen-test", "/home/test/implyregen",
+	)
 
 	contextDir := filepath.Join(tmpDir, ".context")
 	if err := os.MkdirAll(contextDir, 0750); err != nil {
@@ -1225,8 +1386,14 @@ func TestRunRecallImport_MalformedFrontmatterGracefulDegradation(t *testing.T) {
 	tmpDir := t.TempDir()
 	t.Setenv("HOME", tmpDir)
 
-	projDir := filepath.Join(tmpDir, ".claude", "projects", "-home-test-malformed")
-	createTestSessionJSONL(t, projDir, "sess-malformed-030", "malformed-fm", "/home/test/malformed")
+	projDir := filepath.Join(
+		tmpDir, ".claude", "projects",
+		"-home-test-malformed",
+	)
+	createTestSessionJSONL(
+		t, projDir, "sess-malformed-030",
+		"malformed-fm", "/home/test/malformed",
+	)
 
 	contextDir := filepath.Join(tmpDir, ".context")
 	if err := os.MkdirAll(contextDir, 0750); err != nil {
@@ -1243,9 +1410,14 @@ func TestRunRecallImport_MalformedFrontmatterGracefulDegradation(t *testing.T) {
 	journalDir, mdFile := importHelper(t, tmpDir)
 	path := filepath.Join(journalDir, mdFile)
 
-	// Overwrite with malformed YAML frontmatter (unclosed delimiter, invalid YAML).
-	malformedContent := "---\ndate: \"2026-01-20\"\ntitle: \"test\"\nsummary: [invalid yaml\n\n# Body\n\nSome content here\n"
-	if writeErr := os.WriteFile(path, []byte(malformedContent), 0600); writeErr != nil {
+	// Overwrite with malformed YAML frontmatter
+	// (unclosed delimiter, invalid YAML).
+	malformedContent := "---\ndate: \"2026-01-20\"\n" +
+		"title: \"test\"\nsummary: [invalid yaml\n\n" +
+		"# Body\n\nSome content here\n"
+	if writeErr := os.WriteFile(
+		path, []byte(malformedContent), 0600,
+	); writeErr != nil {
 		t.Fatal(writeErr)
 	}
 
@@ -1269,7 +1441,11 @@ func TestRunRecallImport_MalformedFrontmatterGracefulDegradation(t *testing.T) {
 
 // createLargeTestSessionJSONL writes a JSONL file with the specified number of
 // user/assistant message pairs for testing multipart splitting.
-func createLargeTestSessionJSONL(t *testing.T, dir, sessionID, slug, cwd string, pairs int) {
+func createLargeTestSessionJSONL(
+	t *testing.T,
+	dir, sessionID, slug, cwd string,
+	pairs int,
+) {
 	t.Helper()
 	if err := os.MkdirAll(dir, 0750); err != nil {
 		t.Fatalf("mkdir %s: %v", dir, err)
@@ -1280,11 +1456,11 @@ func createLargeTestSessionJSONL(t *testing.T, dir, sessionID, slug, cwd string,
 		assistUUID := fmt.Sprintf("u%d", i*2+2)
 		ts := fmt.Sprintf("2026-01-20T10:%02d:%02dZ", i/60, i%60)
 
-		userLine := fmt.Sprintf(
+		userLine := fmt.Sprintf( //nolint:lll // JSON template
 			`{"uuid":%q,"sessionId":%q,"slug":%q,"type":"user","timestamp":%q,"cwd":%q,"version":"2.1.0","message":{"role":"user","content":[{"type":"text","text":"message %d from user"}]}}`,
 			userUUID, sessionID, slug, ts, cwd, i+1,
 		)
-		assistLine := fmt.Sprintf(
+		assistLine := fmt.Sprintf( //nolint:lll // JSON template
 			`{"uuid":%q,"parentUuid":%q,"sessionId":%q,"slug":%q,"type":"assistant","timestamp":%q,"cwd":%q,"version":"2.1.0","message":{"model":"claude-test","role":"assistant","content":[{"type":"text","text":"reply %d from assistant"}],"usage":{"input_tokens":100,"output_tokens":50}}}`,
 			assistUUID, userUUID, sessionID, slug, ts, cwd, i+1,
 		)
@@ -1301,9 +1477,16 @@ func TestRunRecallImport_MultipartFrontmatterPreservation(t *testing.T) {
 	tmpDir := t.TempDir()
 	t.Setenv("HOME", tmpDir)
 
-	projDir := filepath.Join(tmpDir, ".claude", "projects", "-home-test-multipart")
-	// 110 pairs = 220 messages, exceeding config.MaxMessagesPerPart (200) → 2 parts.
-	createLargeTestSessionJSONL(t, projDir, "sess-multi-031", "multipart-fm", "/home/test/multipart", 110)
+	projDir := filepath.Join(
+		tmpDir, ".claude", "projects",
+		"-home-test-multipart",
+	)
+	// 110 pairs = 220 messages, exceeding
+	// config.MaxMessagesPerPart (200) -> 2 parts.
+	createLargeTestSessionJSONL(
+		t, projDir, "sess-multi-031",
+		"multipart-fm", "/home/test/multipart", 110,
+	)
 
 	contextDir := filepath.Join(tmpDir, ".context")
 	if err := os.MkdirAll(contextDir, 0750); err != nil {
@@ -1330,7 +1513,11 @@ func TestRunRecallImport_MultipartFrontmatterPreservation(t *testing.T) {
 		}
 	}
 	if len(mdFiles) < 2 {
-		t.Fatalf("expected at least 2 .md files for multipart export, got %d: %v", len(mdFiles), mdFiles)
+		t.Fatalf(
+			"expected at least 2 .md files for"+
+				" multipart export, got %d: %v",
+			len(mdFiles), mdFiles,
+		)
 	}
 
 	// Inject enriched frontmatter into part 1 (the base file without -p2 suffix).
@@ -1342,11 +1529,15 @@ func TestRunRecallImport_MultipartFrontmatterPreservation(t *testing.T) {
 	origTitle := index.ExtractFrontmatterField(string(origData), "title")
 
 	enrichedFM := fmt.Sprintf(
-		"---\ndate: \"2026-01-20\"\ntitle: %q\nsummary: \"Multipart curated summary\"\ntags:\n  - multipart-enriched\n---\n",
+		"---\ndate: \"2026-01-20\"\ntitle: %q\n"+
+			"summary: \"Multipart curated summary\"\n"+
+			"tags:\n  - multipart-enriched\n---\n",
 		origTitle,
 	)
 	body := extract.StripFrontmatter(string(origData))
-	if writeErr := os.WriteFile(part1Path, []byte(enrichedFM+"\n"+body), 0600); writeErr != nil {
+	if writeErr := os.WriteFile(
+		part1Path, []byte(enrichedFM+"\n"+body), 0600,
+	); writeErr != nil {
 		t.Fatal(writeErr)
 	}
 
@@ -1361,7 +1552,10 @@ func TestRunRecallImport_MultipartFrontmatterPreservation(t *testing.T) {
 	content := string(data)
 
 	if !strings.Contains(content, "Multipart curated summary") {
-		t.Error("part 1 enriched frontmatter summary should be preserved on re-export")
+		t.Error(
+			"part 1 enriched frontmatter summary" +
+				" should be preserved on re-export",
+		)
 	}
 	if !strings.Contains(content, "multipart-enriched") {
 		t.Error("part 1 enriched frontmatter tags should be preserved on re-export")

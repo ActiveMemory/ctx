@@ -33,16 +33,18 @@ func TestMarkdownSessionParser_Matches(t *testing.T) {
 		want    bool
 	}{
 		{
-			name:    "valid session header",
-			file:    "2026-01-15-fix-api.md",
-			content: "# Session: 2026-01-15 - Fix API\n\n## What Was Done\n- Fixed endpoint\n",
-			want:    true,
+			name: "valid session header",
+			file: "2026-01-15-fix-api.md",
+			content: "# Session: 2026-01-15 - Fix API\n\n" +
+				"## What Was Done\n- Fixed endpoint\n",
+			want: true,
 		},
 		{
-			name:    "valid session header with hyphen separator",
-			file:    "2026-01-15-fix-api.md",
-			content: "# Session: 2026-01-15 - Fix API\n\n## What Was Done\n- Fixed endpoint\n",
-			want:    true,
+			name: "valid session header with hyphen separator",
+			file: "2026-01-15-fix-api.md",
+			content: "# Session: 2026-01-15 - Fix API\n\n" +
+				"## What Was Done\n- Fixed endpoint\n",
+			want: true,
 		},
 		{
 			name:    "valid date-only header",
@@ -137,9 +139,13 @@ func TestMarkdownSessionParser_ParseFile(t *testing.T) {
 		t.Errorf("Tool = %q, want %q", s.Tool, session.ToolMarkdown)
 	}
 	if s.FirstUserMsg != "Fix API Rate Limiting" {
-		t.Errorf("FirstUserMsg = %q, want %q", s.FirstUserMsg, "Fix API Rate Limiting")
+		t.Errorf("FirstUserMsg = %q, want %q",
+			s.FirstUserMsg, "Fix API Rate Limiting")
 	}
-	if s.StartTime.Year() != 2026 || s.StartTime.Month() != 1 || s.StartTime.Day() != 15 {
+	wrongDate := s.StartTime.Year() != 2026 ||
+		s.StartTime.Month() != 1 ||
+		s.StartTime.Day() != 15
+	if wrongDate {
 		t.Errorf("StartTime = %v, want 2026-01-15", s.StartTime)
 	}
 	if s.Project == "" {
@@ -216,7 +222,8 @@ func TestIsSessionHeader_CustomPrefix(t *testing.T) {
 
 	ctxrcDir := t.TempDir()
 	ctxrcContent := "session_prefixes:\n  - \"Session:\"\n  - \"セッション:\"\n"
-	if err := os.WriteFile(filepath.Join(ctxrcDir, ".ctxrc"), []byte(ctxrcContent), 0600); err != nil {
+	rcPath := filepath.Join(ctxrcDir, ".ctxrc")
+	if err := os.WriteFile(rcPath, []byte(ctxrcContent), 0600); err != nil {
 		t.Fatal(err)
 	}
 

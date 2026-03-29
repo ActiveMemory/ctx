@@ -4,5 +4,6 @@
 //   \    Copyright 2026-present Context contributors.
 //                 SPDX-License-Identifier: Apache-2.0
 
-// Package io writes serialized JSON-RPC messages to an io.Writer with mutex-guarded concurrency.
+// Package line writes serialized JSON-RPC messages to a line.Writer
+// with mutex-guarded concurrency.
 package io

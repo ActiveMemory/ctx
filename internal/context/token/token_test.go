@@ -45,7 +45,8 @@ func TestEstimateTokens(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			result := Estimate(tt.content)
 			if result != tt.expected {
-				t.Errorf("Estimate() = %d, want %d (len=%d)", result, tt.expected, len(tt.content))
+				t.Errorf("Estimate() = %d, want %d (len=%d)",
+					result, tt.expected, len(tt.content))
 			}
 		})
 	}

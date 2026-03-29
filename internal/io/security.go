@@ -8,6 +8,7 @@ package io
 
 import (
 	"bytes"
+	"fmt"
 	"net/http"
 	"os"
 	"path/filepath"
@@ -15,6 +16,7 @@ import (
 	"time"
 
 	cfgFs "github.com/ActiveMemory/ctx/internal/config/fs"
+	"github.com/ActiveMemory/ctx/internal/config/token"
 	errFs "github.com/ActiveMemory/ctx/internal/err/fs"
 	errHTTP "github.com/ActiveMemory/ctx/internal/err/http"
 )
@@ -143,7 +145,8 @@ func SafeWriteFile(path string, data []byte, perm os.FileMode) error {
 	if validateErr != nil {
 		return validateErr
 	}
-	return os.WriteFile(clean, data, perm) //nolint:gosec // validated by cleanAndValidate
+	//nolint:gosec // validated by cleanAndValidate
+	return os.WriteFile(clean, data, perm)
 }
 
 // TouchFile creates or updates an empty marker file. Best-effort:
@@ -153,7 +156,14 @@ func SafeWriteFile(path string, data []byte, perm os.FileMode) error {
 // Parameters:
 //   - path: absolute file path to touch
 func TouchFile(path string) {
-	_ = os.WriteFile(path, nil, cfgFs.PermSecret) //nolint:gosec // state marker, path from internal code
+	//nolint:gosec // state marker, path from internal code
+	if writeErr := os.WriteFile(
+		path, nil, cfgFs.PermSecret,
+	); writeErr != nil {
+		fmt.Fprintf(os.Stderr,
+			"ctx: write %s: %v"+token.NewlineLF,
+			path, writeErr)
+	}
 }
 
 // maxRedirects caps the number of HTTP redirects the client will follow.

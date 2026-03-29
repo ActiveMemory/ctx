@@ -16,7 +16,9 @@ import "github.com/ActiveMemory/ctx/internal/entity"
 // Returns:
 //   - popular: Items where IsPopular() is true
 //   - longtail: Items where IsPopular() is false
-func SplitPopular[T entity.PopularSplittable](items []T) (popular, longtail []T) {
+func SplitPopular[T entity.PopularSplittable](
+	items []T,
+) (popular, longtail []T) {
 	for _, item := range items {
 		if item.IsPopular() {
 			popular = append(popular, item)

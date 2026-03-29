@@ -52,13 +52,21 @@ func Header(cmd *cobra.Command, dryRun bool) {
 //   - actionType: Action type label (e.g. "DEPS", "CONFIG").
 //   - description: Action description.
 //   - suggestion: Optional suggestion text (empty string skips).
-func Action(cmd *cobra.Command, index int, actionType, description, suggestion string) {
+func Action(
+	cmd *cobra.Command,
+	index int,
+	actionType, description, suggestion string,
+) {
 	if cmd == nil {
 		return
 	}
-	cmd.Println(fmt.Sprintf(desc.Text(text.DescKeyWriteSyncAction), index, actionType, description))
+	cmd.Println(fmt.Sprintf(
+		desc.Text(text.DescKeyWriteSyncAction),
+		index, actionType, description))
 	if suggestion != "" {
-		cmd.Println(fmt.Sprintf(desc.Text(text.DescKeyWriteSyncSuggestion), suggestion))
+		cmd.Println(fmt.Sprintf(
+			desc.Text(text.DescKeyWriteSyncSuggestion),
+			suggestion))
 	}
 	cmd.Println()
 }

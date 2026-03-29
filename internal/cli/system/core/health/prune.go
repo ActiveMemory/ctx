@@ -42,7 +42,8 @@ func AutoPrune(days int) int {
 		return 0
 	}
 
-	cutoff := time.Now().Add(-time.Duration(days) * cfgTime.HoursPerDay * time.Hour)
+	age := time.Duration(days) * cfgTime.HoursPerDay * time.Hour
+	cutoff := time.Now().Add(-age)
 	var pruned int
 
 	for _, entry := range entries {
@@ -82,10 +83,19 @@ func AutoPrune(days int) int {
 func FormatAge(t time.Time) string {
 	d := time.Since(t)
 	if d < time.Hour {
-		return fmt.Sprintf(desc.Text(text.DescKeyWriteFormatDurationMin), int(d.Minutes()))
+		return fmt.Sprintf(
+			desc.Text(text.DescKeyWriteFormatDurationMin),
+			int(d.Minutes()),
+		)
 	}
 	if d < 24*time.Hour {
-		return fmt.Sprintf(desc.Text(text.DescKeyWriteFormatDurationHour), int(d.Hours()))
+		return fmt.Sprintf(
+			desc.Text(text.DescKeyWriteFormatDurationHour),
+			int(d.Hours()),
+		)
 	}
-	return fmt.Sprintf(desc.Text(text.DescKeyWriteFormatDurationDay), int(d.Hours()/24))
+	return fmt.Sprintf(
+		desc.Text(text.DescKeyWriteFormatDurationDay),
+		int(d.Hours()/24),
+	)
 }

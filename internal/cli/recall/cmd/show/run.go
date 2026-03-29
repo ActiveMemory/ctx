@@ -13,7 +13,7 @@ import (
 
 	"github.com/ActiveMemory/ctx/internal/assets/read/desc"
 	"github.com/ActiveMemory/ctx/internal/cli/journal/core/query"
-	sourceFormat "github.com/ActiveMemory/ctx/internal/cli/journal/core/source/format"
+	srcFmt "github.com/ActiveMemory/ctx/internal/cli/journal/core/source/format"
 	"github.com/ActiveMemory/ctx/internal/config/embed/text"
 	"github.com/ActiveMemory/ctx/internal/config/journal"
 	"github.com/ActiveMemory/ctx/internal/config/time"
@@ -74,7 +74,7 @@ func Run(
 			return errSession.NotFound(args[0])
 		}
 		if len(matches) > 1 {
-			lines := sourceFormat.SessionMatchLines(matches)
+			lines := srcFmt.SessionMatchLines(matches)
 			recall.AmbiguousSessionMatchWithHint(
 				cmd, args[0], lines, matches[0].ID[:journal.SessionIDHintLen],
 			)
@@ -92,7 +92,7 @@ func Run(
 		Branch:    session.GitBranch,
 		Model:     session.Model,
 		Started:   session.StartTime.Format(time.DateTimePreciseFmt),
-		Duration:  sourceFormat.Duration(session.Duration),
+		Duration:  srcFmt.Duration(session.Duration),
 		Turns:     session.TurnCount,
 		Messages:  len(session.Messages),
 		TokensIn:  sharedFmt.Tokens(session.TotalTokensIn),
@@ -136,7 +136,7 @@ func Run(
 			}
 
 			for _, t := range msg.ToolUses {
-				toolInfo := sourceFormat.ToolUse(t)
+				toolInfo := srcFmt.ToolUse(t)
 				recall.SessionDetail(
 					cmd, desc.Text(text.DescKeyLabelInlineTool), toolInfo,
 				)

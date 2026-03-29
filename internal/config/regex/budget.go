@@ -8,7 +8,8 @@ package regex
 
 import "regexp"
 
-// OversizeTokens matches "Injected:  NNNNN tokens" in the injection-oversize flag file.
+// OversizeTokens matches "Injected:  NNNNN tokens" in the
+// injection-oversize flag file.
 //
 // Groups:
 //   - 1: token count digits

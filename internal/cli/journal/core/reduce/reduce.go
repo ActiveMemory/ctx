@@ -67,12 +67,16 @@ func StripFences(content string, fencesVerified bool) string {
 	return strings.Join(out, token.NewlineLF)
 }
 
-// StripSystemReminders removes internal Claude Code blocks from journal content.
+// StripSystemReminders removes internal Claude Code blocks
+// from journal content.
 // Handles:
 //   - XML-style system reminders: <system-reminder>...</system-reminder>
-//   - Bold-style system reminders: **System Reminder**: ... (paragraph until blank line)
-//   - Context compaction summaries: multi-line <summary>...</summary> blocks
-//     (standalone <summary> on its own line - see config.TagCompactionSummaryOpen)
+//   - Bold-style system reminders:
+//     **System Reminder**: ... (paragraph until blank line)
+//   - Context compaction summaries:
+//     multi-line <summary>...</summary> blocks
+//     (standalone <summary> on its own line -
+//     see config.TagCompactionSummaryOpen)
 //   - Compaction continuation boilerplate: "If you need specific details from
 //     before compaction..." paragraph
 //
@@ -199,7 +203,7 @@ func CleanToolOutputJSON(content string) string {
 			}
 			nonEmpty = append(nonEmpty, t)
 		}
-		body := strings.Join(nonEmpty, " ")
+		body := strings.Join(nonEmpty, token.Space)
 
 		if strings.HasPrefix(body, "[{") {
 			var items []struct {

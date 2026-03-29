@@ -331,6 +331,19 @@ func RefuseSystemPath(path string) error {
 	)
 }
 
+// StdinRead wraps a failure to read from standard input.
+//
+// Parameters:
+//   - cause: Underlying error from the stdin read
+//
+// Returns:
+//   - error: "failed to read from stdin: <cause>"
+func StdinRead(cause error) error {
+	return fmt.Errorf(
+		desc.Text(text.DescKeyErrFsStdinRead), cause,
+	)
+}
+
 // WorkingDirectory wraps a failure to determine the working directory.
 //
 // Parameters:

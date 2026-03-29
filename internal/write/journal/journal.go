@@ -21,7 +21,9 @@ import (
 //   - cmd: Cobra command for output
 //   - name: Filename that was removed
 func InfoOrphanRemoved(cmd *cobra.Command, name string) {
-	cmd.Println(fmt.Sprintf(desc.Text(text.DescKeyWriteJournalOrphanRemoved), name))
+	cmd.Println(fmt.Sprintf(
+		desc.Text(text.DescKeyWriteJournalOrphanRemoved),
+		name))
 }
 
 // InfoSiteGenerated reports successful site generation with next steps.

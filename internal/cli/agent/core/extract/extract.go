@@ -90,7 +90,8 @@ func UncheckedTasks(content string) []string {
 	items := make([]string, 0, len(matches))
 	for _, m := range matches {
 		if task.Pending(m) {
-			items = append(items, marker.PrefixTaskUndone+" "+strings.TrimSpace(task.Content(m)))
+			text := strings.TrimSpace(task.Content(m))
+			items = append(items, marker.PrefixTaskUndone+" "+text)
 		}
 	}
 	return items

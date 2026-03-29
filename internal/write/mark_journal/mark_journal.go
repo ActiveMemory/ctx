@@ -26,10 +26,13 @@ func StageChecked(cmd *cobra.Command, filename, stage, val string) {
 	if cmd == nil {
 		return
 	}
-	cmd.Println(fmt.Sprintf(desc.Text(text.DescKeyMarkJournalChecked), filename, stage, val))
+	cmd.Println(fmt.Sprintf(
+		desc.Text(text.DescKeyMarkJournalChecked),
+		filename, stage, val))
 }
 
-// StageMarked prints the confirmation after marking a stage. Nil cmd is a no-op.
+// StageMarked prints the confirmation after marking a stage.
+// Nil cmd is a no-op.
 //
 // Parameters:
 //   - cmd: Cobra command for output
@@ -39,5 +42,7 @@ func StageMarked(cmd *cobra.Command, filename, stage string) {
 	if cmd == nil {
 		return
 	}
-	cmd.Println(fmt.Sprintf(desc.Text(text.DescKeyMarkJournalMarked), filename, stage))
+	cmd.Println(fmt.Sprintf(
+		desc.Text(text.DescKeyMarkJournalMarked),
+		filename, stage))
 }

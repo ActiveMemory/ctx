@@ -28,7 +28,8 @@ import (
 //
 // Parameters:
 //   - prefix: File name prefix (e.g., "tasks", "decisions", "learnings")
-//   - heading: Markdown heading for new archive files (e.g., config.HeadingArchivedTasks)
+//   - heading: Markdown heading for new archive files
+//     (e.g., config.HeadingArchivedTasks)
 //   - content: The content to archive
 //
 // Returns the path to the written archive file.
@@ -47,14 +48,17 @@ func WriteArchive(prefix, heading, content string) (string, error) {
 
 	nl := token.NewlineLF
 	var finalContent string
-	if existing, readErr := os.ReadFile(filepath.Clean(archiveFile)); readErr == nil {
+	cleanPath := filepath.Clean(archiveFile)
+	if existing, readErr := os.ReadFile(cleanPath); readErr == nil {
 		finalContent = string(existing) + nl + content
 	} else {
 		finalContent = heading + archive.DateSep +
 			dateStr + nl + nl + content
 	}
 
-	if writeErr := os.WriteFile(archiveFile, []byte(finalContent), fs.PermFile); writeErr != nil {
+	if writeErr := os.WriteFile(
+		archiveFile, []byte(finalContent), fs.PermFile,
+	); writeErr != nil {
 		return "", errBackup.WriteArchive(writeErr)
 	}
 

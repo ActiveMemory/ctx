@@ -132,7 +132,8 @@ func Summary(cmd *cobra.Command, result entity.ImportResult, dryRun bool) {
 		return
 	}
 
-	total := result.Conventions + result.Decisions + result.Learnings + result.Tasks
+	total := result.Conventions + result.Decisions +
+		result.Learnings + result.Tasks
 
 	var summary string
 	if dryRun {

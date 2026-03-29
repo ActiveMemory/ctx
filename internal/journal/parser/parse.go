@@ -153,7 +153,10 @@ func (p *ClaudeCode) convertMessage(raw claudeRawMessage) entity.Message {
 			if block.Content != nil {
 				// Try to unmarshal as JSON string first (handles escaping)
 				var unescaped string
-				if unmarshalErr := json.Unmarshal(block.Content, &unescaped); unmarshalErr == nil {
+				unmarshalErr := json.Unmarshal(
+					block.Content, &unescaped,
+				)
+				if unmarshalErr == nil {
 					contentStr = unescaped
 				} else {
 					// Fallback to raw bytes

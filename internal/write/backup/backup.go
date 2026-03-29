@@ -24,11 +24,18 @@ import (
 //   - archive: archive file path.
 //   - size: archive size in bytes.
 //   - smbDest: optional SMB destination (empty string skips).
-func ResultLine(cmd *cobra.Command, scope, archive string, size int64, smbDest string) {
+func ResultLine(
+	cmd *cobra.Command,
+	scope, archive string,
+	size int64,
+	smbDest string,
+) {
 	if cmd == nil {
 		return
 	}
-	line := fmt.Sprintf(desc.Text(text.DescKeyWriteBackupResult), scope, archive, format.Bytes(size))
+	line := fmt.Sprintf(
+		desc.Text(text.DescKeyWriteBackupResult),
+		scope, archive, format.Bytes(size))
 	if smbDest != "" {
 		line += fmt.Sprintf(desc.Text(text.DescKeyWriteBackupSMBDest), smbDest)
 	}

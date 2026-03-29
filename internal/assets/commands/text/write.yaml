@@ -5,8 +5,6 @@ write.agent-bullet-item:
   short: "- %s"
 write.agent-numbered-item:
   short: "%d. %s"
-write.add-missing-fields:
-  short: '%s missing required fields: %s'
 write.added-to:
   short: ✓ Added to %s
 write.archived:

@@ -24,6 +24,7 @@ import (
 //   - filename: the config file that failed to parse
 //   - cause: the parse error
 func ParseWarning(filename string, cause error) {
-	_, _ = fmt.Fprintf(os.Stderr, desc.Text(text.DescKeyRcParseWarning)+token.NewlineLF,
+	_, _ = fmt.Fprintf(os.Stderr,
+		desc.Text(text.DescKeyRcParseWarning)+token.NewlineLF,
 		filename, cause)
 }

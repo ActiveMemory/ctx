@@ -14,6 +14,7 @@ import (
 	"time"
 
 	errNotify "github.com/ActiveMemory/ctx/internal/err/notify"
+	ctxLog "github.com/ActiveMemory/ctx/internal/log"
 	"github.com/ActiveMemory/ctx/internal/notify"
 	"github.com/ActiveMemory/ctx/internal/rc"
 )
@@ -56,7 +57,13 @@ func Send() (Result, error) {
 	if postErr != nil {
 		return Result{}, errNotify.SendNotification(postErr)
 	}
-	defer func() { _ = resp.Body.Close() }()
+	defer func() {
+		if closeErr := resp.Body.Close(); closeErr != nil {
+			ctxLog.Warn(
+				"close %s: %v", "response body", closeErr,
+			)
+		}
+	}()
 
 	return Result{
 		Filtered:   filtered,
@@ -72,5 +79,6 @@ func Send() (Result, error) {
 // Returns:
 //   - bool: True if status code is 2xx
 func OK(r Result) bool {
-	return r.StatusCode >= http.StatusOK && r.StatusCode < http.StatusMultipleChoices
+	return r.StatusCode >= http.StatusOK &&
+		r.StatusCode < http.StatusMultipleChoices
 }

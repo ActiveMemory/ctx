@@ -36,7 +36,10 @@ func TestGetRecentFiles(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			got := RecentFiles(files, tt.n)
 			if len(got) != tt.want {
-				t.Errorf("RecentFiles(n=%d) returned %d files, want %d", tt.n, len(got), tt.want)
+				t.Errorf(
+					"RecentFiles(n=%d) returned %d files, want %d",
+					tt.n, len(got), tt.want,
+				)
 			}
 			if tt.first != "" && len(got) > 0 && got[0].Name != tt.first {
 				t.Errorf("first file = %q, want %q", got[0].Name, tt.first)
@@ -73,6 +76,10 @@ func TestSortFilesByPriority(t *testing.T) {
 		}
 	}
 	if constitutionIdx >= tasksIdx {
-		t.Errorf("CONSTITUTION.md (idx=%d) should sort before TASKS.md (idx=%d)", constitutionIdx, tasksIdx)
+		t.Errorf(
+			"CONSTITUTION.md (idx=%d) should sort"+
+				" before TASKS.md (idx=%d)",
+			constitutionIdx, tasksIdx,
+		)
 	}
 }

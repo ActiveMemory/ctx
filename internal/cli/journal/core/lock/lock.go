@@ -24,6 +24,7 @@ import (
 	errSession "github.com/ActiveMemory/ctx/internal/err/session"
 	"github.com/ActiveMemory/ctx/internal/io"
 	"github.com/ActiveMemory/ctx/internal/journal/state"
+	ctxLog "github.com/ActiveMemory/ctx/internal/log"
 	"github.com/ActiveMemory/ctx/internal/rc"
 	"github.com/ActiveMemory/ctx/internal/write/recall"
 )
@@ -160,9 +161,13 @@ func UpdateFrontmatter(path string, lock bool) {
 			return
 		}
 		// Insert before closing ---.
-		updated := content[:fmEnd] + nl + session.FrontmatterLockedLine +
-			content[fmEnd:]
-		_ = io.SafeWriteFile(path, []byte(updated), fs.PermFile)
+		updated := content[:fmEnd] + nl +
+			session.FrontmatterLockedLine + content[fmEnd:]
+		if writeErr := io.SafeWriteFile(
+			path, []byte(updated), fs.PermFile,
+		); writeErr != nil {
+			ctxLog.Warn("write %s: %v", path, writeErr)
+		}
 	} else {
 		// Remove the locked line.
 		lines := strings.Split(fmBlock, nl)
@@ -175,8 +180,13 @@ func UpdateFrontmatter(path string, lock bool) {
 			filtered = append(filtered, line)
 		}
 		newFM := strings.Join(filtered, nl)
-		updated := content[:len(fmOpen)] + newFM + content[fmEnd:]
-		_ = io.SafeWriteFile(path, []byte(updated), fs.PermFile)
+		updated := content[:len(fmOpen)] + newFM +
+			content[fmEnd:]
+		if writeErr := io.SafeWriteFile(
+			path, []byte(updated), fs.PermFile,
+		); writeErr != nil {
+			ctxLog.Warn("write %s: %v", path, writeErr)
+		}
 	}
 }
 

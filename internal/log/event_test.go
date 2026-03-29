@@ -128,8 +128,12 @@ func TestAppend_Rotation(t *testing.T) {
 		t.Fatalf("failed to create state dir: %v", mkErr)
 	}
 
-	bigContent := strings.Repeat(`{"event":"relay","message":"filler"}`+"\n", 40000)
-	if writeErr := os.WriteFile(logPath, []byte(bigContent), fs.PermFile); writeErr != nil {
+	filler := `{"event":"relay","message":"filler"}` +
+		"\n"
+	bigContent := strings.Repeat(filler, 40000)
+	if writeErr := os.WriteFile(
+		logPath, []byte(bigContent), fs.PermFile,
+	); writeErr != nil {
 		t.Fatalf("failed to write big log: %v", writeErr)
 	}
 
@@ -147,7 +151,10 @@ func TestAppend_Rotation(t *testing.T) {
 		t.Fatalf("current log missing after rotation: %v", statErr)
 	}
 	if info.Size() > 1024 {
-		t.Errorf("current log is %d bytes after rotation, expected small", info.Size())
+		t.Errorf(
+			"current log is %d bytes after rotation, expected small",
+			info.Size(),
+		)
 	}
 }
 
@@ -162,19 +169,26 @@ func TestAppend_RotationOverwrite(t *testing.T) {
 	}
 
 	// Create an existing .1 file.
-	if writeErr := os.WriteFile(prevPath, []byte("old rotated content\n"), fs.PermFile); writeErr != nil {
+	if writeErr := os.WriteFile(
+		prevPath, []byte("old rotated content\n"), fs.PermFile,
+	); writeErr != nil {
 		t.Fatalf("failed to write old .1 file: %v", writeErr)
 	}
 
 	// Write oversized current log.
-	bigContent := strings.Repeat(`{"event":"relay","message":"filler"}`+"\n", 40000)
-	if writeErr := os.WriteFile(logPath, []byte(bigContent), fs.PermFile); writeErr != nil {
+	filler := `{"event":"relay","message":"filler"}` +
+		"\n"
+	bigContent := strings.Repeat(filler, 40000)
+	if writeErr := os.WriteFile(
+		logPath, []byte(bigContent), fs.PermFile,
+	); writeErr != nil {
 		t.Fatalf("failed to write big log: %v", writeErr)
 	}
 
 	AppendEvent("relay", "new event", "", nil)
 
-	// The .1 file should now contain the rotated content, not "old rotated content".
+	// The .1 file should now contain the rotated content,
+	// not "old rotated content".
 	data, readErr := os.ReadFile(prevPath) //nolint:gosec // test file
 	if readErr != nil {
 		t.Fatalf("failed to read .1 file: %v", readErr)
@@ -199,9 +213,12 @@ func TestQuery_NoFile(t *testing.T) {
 func TestQuery_FilterHook(t *testing.T) {
 	setupTestDir(t, true)
 
-	AppendEvent("relay", "qa gate", "s1", notify.NewTemplateRef("qa-reminder", "gate", nil))
-	AppendEvent("relay", "context load", "s1", notify.NewTemplateRef("context-load-gate", "inject", nil))
-	AppendEvent("nudge", "ceremonies", "s1", notify.NewTemplateRef("check-ceremonies", "both", nil))
+	AppendEvent("relay", "qa gate", "s1",
+		notify.NewTemplateRef("qa-reminder", "gate", nil))
+	AppendEvent("relay", "context load", "s1",
+		notify.NewTemplateRef("context-load-gate", "inject", nil))
+	AppendEvent("nudge", "ceremonies", "s1",
+		notify.NewTemplateRef("check-ceremonies", "both", nil))
 
 	events, queryErr := Query(QueryOpts{Hook: "qa-reminder"})
 	if queryErr != nil {
@@ -256,8 +273,12 @@ func TestQuery_IncludeRotated(t *testing.T) {
 
 	// Write events to rotated file.
 	prevPath := filepath.Join(stateDir, event.FileLogPrev)
-	prevLine := `{"event":"relay","message":"old event","timestamp":"2026-01-01T00:00:00Z","project":"test"}` + "\n"
-	if writeErr := os.WriteFile(prevPath, []byte(prevLine), fs.PermFile); writeErr != nil {
+	prevLine := `{"event":"relay","message":"old event",` +
+		`"timestamp":"2026-01-01T00:00:00Z",` +
+		`"project":"test"}` + "\n"
+	if writeErr := os.WriteFile(
+		prevPath, []byte(prevLine), fs.PermFile,
+	); writeErr != nil {
 		t.Fatalf("failed to write .1 file: %v", writeErr)
 	}
 
@@ -267,7 +288,10 @@ func TestQuery_IncludeRotated(t *testing.T) {
 	// Without --all, only current events.
 	events, _ := Query(QueryOpts{})
 	if len(events) != 1 {
-		t.Errorf("Query() without IncludeRotated returned %d events, want 1", len(events))
+		t.Errorf(
+			"Query() without IncludeRotated returned %d events, want 1",
+			len(events),
+		)
 	}
 
 	// With --all, both files.
@@ -290,11 +314,16 @@ func TestQuery_CorruptLine(t *testing.T) {
 	}
 
 	logPath := filepath.Join(stateDir, event.FileLog)
-	content := `{"event":"relay","message":"good","timestamp":"2026-01-01T00:00:00Z","project":"test"}
-not valid json
-{"event":"nudge","message":"also good","timestamp":"2026-01-02T00:00:00Z","project":"test"}
-`
-	if writeErr := os.WriteFile(logPath, []byte(content), fs.PermFile); writeErr != nil {
+	content := `{"event":"relay","message":"good",` +
+		`"timestamp":"2026-01-01T00:00:00Z",` +
+		`"project":"test"}` + "\n" +
+		"not valid json\n" +
+		`{"event":"nudge","message":"also good",` +
+		`"timestamp":"2026-01-02T00:00:00Z",` +
+		`"project":"test"}` + "\n"
+	if writeErr := os.WriteFile(
+		logPath, []byte(content), fs.PermFile,
+	); writeErr != nil {
 		t.Fatalf("failed to write log: %v", writeErr)
 	}
 
@@ -303,6 +332,9 @@ not valid json
 		t.Fatalf("Query() error: %v", queryErr)
 	}
 	if len(events) != 2 {
-		t.Errorf("Query() returned %d events, want 2 (corrupt line skipped)", len(events))
+		t.Errorf(
+			"Query() returned %d events, want 2 (corrupt line skipped)",
+			len(events),
+		)
 	}
 }

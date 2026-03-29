@@ -28,7 +28,9 @@ import (
 )
 
 // regInternalPkg matches backtick-quoted paths starting with "internal/".
-var regInternalPkg = regexp.MustCompile("`(" + project.DirInternalSlash + "[^`]+)`")
+var regInternalPkg = regexp.MustCompile(
+	"`(" + project.DirInternalSlash + "[^`]+)`",
+)
 
 // staleAgeExclude lists context files that are expected to be static
 // and should not trigger file-age warnings.
@@ -56,11 +58,15 @@ func checkPathReferences(ctx *entity.Context, report *Report) {
 			for _, m := range matches {
 				path := m[1]
 				// Skip URLs and common non-file patterns
-				if strings.HasPrefix(path, token.PrefixHTTP) || strings.HasPrefix(path, token.PrefixProtocolRelative) {
+				isURL := strings.HasPrefix(path, token.PrefixHTTP) ||
+					strings.HasPrefix(path, token.PrefixProtocolRelative)
+				if isURL {
 					continue
 				}
 				// Skip template patterns
-				if strings.Contains(path, token.TemplateBrace) || strings.Contains(path, token.GlobStar) {
+				isPattern := strings.Contains(path, token.TemplateBrace) ||
+					strings.Contains(path, token.GlobStar)
+				if isPattern {
 					continue
 				}
 				// Skip illustrative examples: bare filenames (no /)
@@ -253,7 +259,8 @@ func checkFileAge(ctx *entity.Context, report *Report) {
 	}
 }
 
-// checkEntryCount warns when LEARNINGS.md or DECISIONS.md have too many entries.
+// checkEntryCount warns when LEARNINGS.md or DECISIONS.md
+// have too many entries.
 //
 // Uses index.ParseEntryBlocks for counting and rc thresholds for limits.
 // A threshold of 0 disables the check for that file.
@@ -360,7 +367,8 @@ func checkMissingPackages(ctx *entity.Context, report *Report) {
 //   - content: Raw file content to scan for an HTML comment
 //
 // Returns:
-//   - string: Trimmed comment including delimiters, or empty string if none found
+//   - string: Trimmed comment including delimiters,
+//     or empty string if none found
 func extractFirstComment(content string) string {
 	start := strings.Index(content, "<!--")
 	if start == -1 {

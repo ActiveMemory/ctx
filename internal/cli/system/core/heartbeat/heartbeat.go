@@ -12,6 +12,7 @@ import (
 	"strings"
 
 	"github.com/ActiveMemory/ctx/internal/io"
+	ctxLog "github.com/ActiveMemory/ctx/internal/log"
 )
 
 // ReadMtime reads a stored mtime value from a file. Returns 0 if the
@@ -41,5 +42,9 @@ func ReadMtime(path string) int64 {
 //   - path: absolute path to the mtime state file
 //   - mtime: the mtime value to store
 func WriteMtime(path string, mtime int64) {
-	_ = os.WriteFile(path, []byte(strconv.FormatInt(mtime, 10)), 0o600)
+	if writeErr := os.WriteFile(
+		path, []byte(strconv.FormatInt(mtime, 10)), 0o600,
+	); writeErr != nil {
+		ctxLog.Warn("write %s: %v", path, writeErr)
+	}
 }

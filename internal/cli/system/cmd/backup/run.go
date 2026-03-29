@@ -39,7 +39,9 @@ func Run(cmd *cobra.Command) error {
 	jsonOut, _ := cmd.Flags().GetBool(cFlag.JSON)
 
 	switch scope {
-	case archive.BackupScopeProject, archive.BackupScopeGlobal, archive.BackupScopeAll:
+	case archive.BackupScopeProject,
+		archive.BackupScopeGlobal,
+		archive.BackupScopeAll:
 	default:
 		return errBackup.InvalidScope(scope)
 	}
@@ -64,7 +66,9 @@ func Run(cmd *cobra.Command) error {
 	var results []entity.BackupResult
 
 	if scope == archive.BackupScopeProject || scope == archive.BackupScopeAll {
-		result, projErr := coreArchive.BackupProject(cmd.ErrOrStderr(), home, timestamp, smb)
+		result, projErr := coreArchive.BackupProject(
+			cmd.ErrOrStderr(), home, timestamp, smb,
+		)
 		if projErr != nil {
 			return errBackup.Project(projErr)
 		}
@@ -72,7 +76,9 @@ func Run(cmd *cobra.Command) error {
 	}
 
 	if scope == archive.BackupScopeGlobal || scope == archive.BackupScopeAll {
-		result, globalErr := coreArchive.BackupGlobal(cmd.ErrOrStderr(), home, timestamp, smb)
+		result, globalErr := coreArchive.BackupGlobal(
+			cmd.ErrOrStderr(), home, timestamp, smb,
+		)
 		if globalErr != nil {
 			return errBackup.Global(globalErr)
 		}

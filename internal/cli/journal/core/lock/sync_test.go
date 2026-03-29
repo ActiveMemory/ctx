@@ -26,7 +26,9 @@ func TestRunSync_LocksFromFrontmatter(t *testing.T) {
 
 	// File with locked: true in frontmatter but not in state.
 	filename := "2026-01-21-test-abc12345.md"
-	content := "---\ndate: \"2026-01-21\"\nlocked: true  # managed by ctx\n---\n\n# Test\n"
+	content := "---\ndate: \"2026-01-21\"\n" +
+		"locked: true  # managed by ctx\n" +
+		"---\n\n# Test\n"
 	if err := os.WriteFile(
 		filepath.Join(journalDir, filename), []byte(content), fs.PermFile,
 	); err != nil {

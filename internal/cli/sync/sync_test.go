@@ -170,7 +170,8 @@ func TestRunSync_DryRunWithSuggestions(t *testing.T) {
 	if err := os.Mkdir(filepath.Join(dir, "lib"), 0750); err != nil {
 		t.Fatal(err)
 	}
-	if err := os.WriteFile(filepath.Join(dir, "go.mod"), []byte("module test\n"), 0600); err != nil {
+	goMod := filepath.Join(dir, "go.mod")
+	if err := os.WriteFile(goMod, []byte("module test\n"), 0600); err != nil {
 		t.Fatal(err)
 	}
 

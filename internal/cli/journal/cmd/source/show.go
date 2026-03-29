@@ -13,7 +13,7 @@ import (
 
 	"github.com/ActiveMemory/ctx/internal/assets/read/desc"
 	"github.com/ActiveMemory/ctx/internal/cli/journal/core/query"
-	sourceFormat "github.com/ActiveMemory/ctx/internal/cli/journal/core/source/format"
+	srcFmt "github.com/ActiveMemory/ctx/internal/cli/journal/core/source/format"
 	"github.com/ActiveMemory/ctx/internal/config/embed/text"
 	"github.com/ActiveMemory/ctx/internal/config/journal"
 	"github.com/ActiveMemory/ctx/internal/config/time"
@@ -76,7 +76,7 @@ func runShow(cmd *cobra.Command, args []string, opts Opts) error {
 			return errSession.NotFound(showArgs[0])
 		}
 		if len(matches) > 1 {
-			lines := sourceFormat.SessionMatchLines(matches)
+			lines := srcFmt.SessionMatchLines(matches)
 			recall.AmbiguousSessionMatchWithHint(
 				cmd, showArgs[0], lines,
 				matches[0].ID[:journal.SessionIDHintLen],
@@ -95,7 +95,7 @@ func runShow(cmd *cobra.Command, args []string, opts Opts) error {
 		Branch:    session.GitBranch,
 		Model:     session.Model,
 		Started:   session.StartTime.Format(time.DateTimePreciseFmt),
-		Duration:  sourceFormat.Duration(session.Duration),
+		Duration:  srcFmt.Duration(session.Duration),
 		Turns:     session.TurnCount,
 		Messages:  len(session.Messages),
 		TokensIn:  sharedFmt.Tokens(session.TotalTokensIn),
@@ -146,7 +146,7 @@ func runShow(cmd *cobra.Command, args []string, opts Opts) error {
 			}
 
 			for _, t := range msg.ToolUses {
-				toolInfo := sourceFormat.ToolUse(t)
+				toolInfo := srcFmt.ToolUse(t)
 				recall.SessionDetail(
 					cmd,
 					desc.Text(text.DescKeyLabelInlineTool),

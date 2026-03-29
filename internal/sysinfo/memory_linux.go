@@ -14,9 +14,12 @@ import (
 	"os"
 	"strconv"
 	"strings"
+
+	ctxLog "github.com/ActiveMemory/ctx/internal/log"
 )
 
-// collectMemory reads physical and swap memory usage from /proc/meminfo on Linux.
+// collectMemory reads physical and swap memory usage
+// from /proc/meminfo on Linux.
 //
 // Returns a MemInfo with Supported=false if /proc/meminfo cannot be opened.
 //
@@ -27,7 +30,13 @@ func collectMemory() MemInfo {
 	if openErr != nil {
 		return MemInfo{Supported: false}
 	}
-	defer func() { _ = f.Close() }()
+	defer func() {
+		if closeErr := f.Close(); closeErr != nil {
+			ctxLog.Warn(
+				"close %s: %v", "/proc/meminfo", closeErr,
+			)
+		}
+	}()
 	return parseMeminfo(f)
 }
 
@@ -52,7 +61,10 @@ func parseMeminfo(r io.Reader) MemInfo {
 		}
 		key := strings.TrimSpace(parts[0])
 		val := strings.TrimSuffix(strings.TrimSpace(parts[1]), " kB")
-		if n, parseErr := strconv.ParseUint(strings.TrimSpace(val), 10, 64); parseErr == nil {
+		n, parseErr := strconv.ParseUint(
+			strings.TrimSpace(val), 10, 64,
+		)
+		if parseErr == nil {
 			vals[key] = n * 1024 // kB → bytes
 		}
 	}

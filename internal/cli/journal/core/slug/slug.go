@@ -26,7 +26,8 @@ import (
 //   - title: Human-readable title string
 //
 // Returns:
-//   - string: Slugified string (may be empty if input is empty or all punctuation)
+//   - string: Slugified string (may be empty if input
+//     is empty or all punctuation)
 func FromTitle(title string) string {
 	// Strip the "..." truncation suffix from FirstUserMsg if present.
 	title = strings.TrimSuffix(title, token.Ellipsis)

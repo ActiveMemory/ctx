@@ -15,7 +15,7 @@ import (
 
 	"github.com/ActiveMemory/ctx/internal/assets/read/desc"
 	"github.com/ActiveMemory/ctx/internal/cli/journal/core/extract"
-	sourceFormat "github.com/ActiveMemory/ctx/internal/cli/journal/core/source/format"
+	srcFmt "github.com/ActiveMemory/ctx/internal/cli/journal/core/source/format"
 	"github.com/ActiveMemory/ctx/internal/config/embed/text"
 	"github.com/ActiveMemory/ctx/internal/config/fs"
 	"github.com/ActiveMemory/ctx/internal/config/session"
@@ -58,7 +58,7 @@ func Import(
 
 		// Generate content, sanitizing any invalid UTF-8.
 		content := strings.ToValidUTF8(
-			sourceFormat.JournalEntryPart(
+			srcFmt.JournalEntryPart(
 				fa.Session, fa.Messages[fa.StartIdx:fa.EndIdx],
 				fa.StartIdx, fa.Part, fa.TotalParts, fa.BaseName, fa.Title,
 			),

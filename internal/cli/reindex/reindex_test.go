@@ -103,7 +103,8 @@ func TestRunReindex_BothFiles(t *testing.T) {
 	}
 
 	// Verify both files were updated
-	updatedDecisions, readErr := os.ReadFile(filepath.Join(ctxDir, ctx.Decision)) //nolint:gosec // test temp path
+	decPath := filepath.Join(ctxDir, ctx.Decision)
+	updatedDecisions, readErr := os.ReadFile(decPath) //nolint:gosec // test path
 	if readErr != nil {
 		t.Fatalf("failed to read updated DECISIONS.md: %v", readErr)
 	}
@@ -111,7 +112,8 @@ func TestRunReindex_BothFiles(t *testing.T) {
 		t.Error("updated DECISIONS.md is empty")
 	}
 
-	updatedLearnings, readErr := os.ReadFile(filepath.Join(ctxDir, ctx.Learning)) //nolint:gosec // test temp path
+	learnPath := filepath.Join(ctxDir, ctx.Learning)
+	updatedLearnings, readErr := os.ReadFile(learnPath) //nolint:gosec // test path
 	if readErr != nil {
 		t.Fatalf("failed to read updated LEARNINGS.md: %v", readErr)
 	}

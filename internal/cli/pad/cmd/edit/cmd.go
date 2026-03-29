@@ -64,7 +64,12 @@ func Cmd() *cobra.Command {
 
 			// Blob edit mode.
 			if hasFile || hasLabel {
-				return Run(cmd, Opts{N: n, FilePath: filePath, LabelText: labelText, Mode: ModeBlob})
+				return Run(cmd, Opts{
+					N:         n,
+					FilePath:  filePath,
+					LabelText: labelText,
+					Mode:      ModeBlob,
+				})
 			}
 
 			// Validate mutual exclusivity of positional/--append/--prepend.

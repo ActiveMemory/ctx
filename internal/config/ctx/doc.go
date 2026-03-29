@@ -4,5 +4,6 @@
 //   \    Copyright 2026-present Context contributors.
 //                 SPDX-License-Identifier: Apache-2.0
 
-// Package ctx defines the canonical context file read order and required file lists.
+// Package ctx defines the canonical context file read order
+// and required file lists.
 package ctx

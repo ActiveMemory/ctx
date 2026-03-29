@@ -202,7 +202,8 @@ func WriteSMB(cause error) error {
 	)
 }
 
-// ContextDirNotFound returns an error when the context directory does not exist.
+// ContextDirNotFound returns an error when the context
+// directory does not exist.
 //
 // Parameters:
 //   - dir: the missing context directory path.

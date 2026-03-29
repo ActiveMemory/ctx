@@ -139,7 +139,8 @@ func TestAddDecisionAndLearning(t *testing.T) {
 			t.Fatalf("failed to read LEARNINGS.md: %v", err)
 		}
 		contentStr := string(content)
-		if !strings.Contains(contentStr, "Always check for nil before dereferencing") {
+		wantTitle := "Always check for nil before dereferencing"
+		if !strings.Contains(contentStr, wantTitle) {
 			t.Error("learning title was not added to LEARNINGS.md")
 		}
 		if !strings.Contains(contentStr, "Got a nil pointer panic in production") {
@@ -148,7 +149,8 @@ func TestAddDecisionAndLearning(t *testing.T) {
 		if !strings.Contains(contentStr, "Always validate pointers before use") {
 			t.Error("learning lesson was not added to LEARNINGS.md")
 		}
-		if !strings.Contains(contentStr, "Add nil checks in all pointer-receiving functions") {
+		wantApp := "Add nil checks in all pointer-receiving functions"
+		if !strings.Contains(contentStr, wantApp) {
 			t.Error("learning application was not added to LEARNINGS.md")
 		}
 	})
@@ -184,7 +186,8 @@ func TestAddDecisionAndLearning(t *testing.T) {
 	})
 }
 
-// TestPrependOrder tests that decisions and learnings are prepended (newest first).
+// TestPrependOrder tests that decisions and learnings
+// are prepended (newest first).
 func TestPrependOrder(t *testing.T) {
 	tmpDir, err := os.MkdirTemp("", "cli-add-prepend-test-*")
 	if err != nil {
@@ -243,7 +246,12 @@ func TestPrependOrder(t *testing.T) {
 			t.Fatal("decisions not found in file")
 		}
 		if secondIdx >= firstIdx {
-			t.Errorf("second decision should appear before first (prepended), but first at %d, second at %d", firstIdx, secondIdx)
+			t.Errorf(
+				"second decision should appear before"+
+					" first (prepended), but first at %d,"+
+					" second at %d",
+				firstIdx, secondIdx,
+			)
 		}
 	})
 
@@ -285,7 +293,12 @@ func TestPrependOrder(t *testing.T) {
 			t.Fatal("learnings not found in file")
 		}
 		if secondIdx >= firstIdx {
-			t.Errorf("second learning should appear before first (prepended), but first at %d, second at %d", firstIdx, secondIdx)
+			t.Errorf(
+				"second learning should appear before"+
+					" first (prepended), but first at %d,"+
+					" second at %d",
+				firstIdx, secondIdx,
+			)
 		}
 	})
 }
@@ -313,7 +326,9 @@ func TestAddFromFile(t *testing.T) {
 
 	// Create a file with content (title)
 	contentFile := filepath.Join(tmpDir, "learning-content.md")
-	if err = os.WriteFile(contentFile, []byte("Content from file test"), 0600); err != nil {
+	if err = os.WriteFile(
+		contentFile, []byte("Content from file test"), 0600,
+	); err != nil {
 		t.Fatalf("failed to create content file: %v", err)
 	}
 

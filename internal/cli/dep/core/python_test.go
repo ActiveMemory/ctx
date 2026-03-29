@@ -57,7 +57,8 @@ gunicorn
 # With extras
 uvicorn[standard]>=0.18.0
 `
-	if writeErr := os.WriteFile(filepath.Join(tmp, "requirements.txt"), []byte(reqs), 0o644); writeErr != nil {
+	reqsPath := filepath.Join(tmp, "requirements.txt")
+	if writeErr := os.WriteFile(reqsPath, []byte(reqs), 0o644); writeErr != nil {
 		t.Fatal(writeErr)
 	}
 
@@ -104,7 +105,8 @@ requests = ">=2.28"
 pytest = ">=7.0"
 mypy = ">=1.0"
 `
-	if writeErr := os.WriteFile(filepath.Join(tmp, "pyproject.toml"), []byte(toml), 0o644); writeErr != nil {
+	tomlPath := filepath.Join(tmp, "pyproject.toml")
+	if writeErr := os.WriteFile(tomlPath, []byte(toml), 0o644); writeErr != nil {
 		t.Fatal(writeErr)
 	}
 
@@ -154,7 +156,8 @@ dependencies = [
     "click>=8.0",
 ]
 `
-	if writeErr := os.WriteFile(filepath.Join(tmp, "pyproject.toml"), []byte(toml), 0o644); writeErr != nil {
+	tomlPath := filepath.Join(tmp, "pyproject.toml")
+	if writeErr := os.WriteFile(tomlPath, []byte(toml), 0o644); writeErr != nil {
 		t.Fatal(writeErr)
 	}
 
@@ -181,7 +184,9 @@ func TestPythonBuilder_DetectPyproject(t *testing.T) {
 		t.Fatal(chdirErr)
 	}
 
-	if writeErr := os.WriteFile(filepath.Join(tmp, "pyproject.toml"), []byte("[project]\nname = \"test\"\n"), 0o644); writeErr != nil {
+	minToml := "[project]\nname = \"test\"\n"
+	minPath := filepath.Join(tmp, "pyproject.toml")
+	if writeErr := os.WriteFile(minPath, []byte(minToml), 0o644); writeErr != nil {
 		t.Fatal(writeErr)
 	}
 

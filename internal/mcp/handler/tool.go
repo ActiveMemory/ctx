@@ -29,10 +29,10 @@ import (
 	"github.com/ActiveMemory/ctx/internal/entity"
 	"github.com/ActiveMemory/ctx/internal/entry"
 	errMcp "github.com/ActiveMemory/ctx/internal/err/mcp"
+	"github.com/ActiveMemory/ctx/internal/journal/parser"
 	"github.com/ActiveMemory/ctx/internal/mcp/handler/task"
 	"github.com/ActiveMemory/ctx/internal/mcp/server/stat"
 	"github.com/ActiveMemory/ctx/internal/mcp/session"
-	"github.com/ActiveMemory/ctx/internal/recall/parser"
 	"github.com/ActiveMemory/ctx/internal/tidy"
 	"github.com/ActiveMemory/ctx/internal/validation"
 )
@@ -284,7 +284,8 @@ func (h *Handler) Recall(limit int, since time.Time) (string, error) {
 func (h *Handler) WatchUpdate(
 	entryType, content string, opts EntryOpts,
 ) (string, error) {
-	if boundaryErr := validation.ValidateBoundary(h.ContextDir); boundaryErr != nil {
+	boundaryErr := validation.ValidateBoundary(h.ContextDir)
+	if boundaryErr != nil {
 		return "", boundaryErr
 	}
 

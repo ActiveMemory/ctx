@@ -28,7 +28,8 @@ func TestTruncateString(t *testing.T) {
 		t.Run(tt.input, func(t *testing.T) {
 			result := TruncateString(tt.input, tt.maxLen)
 			if result != tt.expected {
-				t.Errorf("TruncateString(%q, %d) = %q, want %q", tt.input, tt.maxLen, result, tt.expected)
+				t.Errorf("TruncateString(%q, %d) = %q, want %q",
+					tt.input, tt.maxLen, result, tt.expected)
 			}
 		})
 	}
@@ -72,10 +73,13 @@ func TestRemoveEmptySections(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			result, count := RemoveEmptySections(tt.input)
 			if count != tt.removed {
-				t.Errorf("RemoveEmptySections() removed %d sections, want %d", count, tt.removed)
+				t.Errorf("RemoveEmptySections() removed %d sections, want %d",
+					count, tt.removed)
 			}
 			if result != tt.expected {
-				t.Errorf("RemoveEmptySections() result:\n%q\nwant:\n%q", result, tt.expected)
+				t.Errorf(
+					"RemoveEmptySections() result:\n%q\nwant:\n%q",
+					result, tt.expected)
 			}
 		})
 	}

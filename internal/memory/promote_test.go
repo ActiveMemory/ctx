@@ -37,7 +37,8 @@ func setupContextDir(t *testing.T) (string, func()) {
 		ctx.Learning, ctx.Convention,
 	} {
 		content := "# " + strings.TrimSuffix(f, ".md") + "\n\n"
-		if writeErr := os.WriteFile(filepath.Join(contextDir, f), []byte(content), 0o644); writeErr != nil {
+		fPath := filepath.Join(contextDir, f)
+		if writeErr := os.WriteFile(fPath, []byte(content), 0o644); writeErr != nil {
 			t.Fatal(writeErr)
 		}
 	}
@@ -50,7 +51,10 @@ func TestPromote_Convention(t *testing.T) {
 	defer cleanup()
 
 	e := Entry{Text: "always use bun for this project", Kind: EntryList}
-	classification := Classification{Target: entry.Convention, Keywords: []string{"always use"}}
+	classification := Classification{
+		Target:   entry.Convention,
+		Keywords: []string{"always use"},
+	}
 
 	if promoteErr := Promote(e, classification); promoteErr != nil {
 		t.Fatalf("Promote: %v", promoteErr)
@@ -70,7 +74,10 @@ func TestPromote_Learning(t *testing.T) {
 	defer cleanup()
 
 	e := Entry{Text: "learned that nolint is ignored in v2", Kind: EntryParagraph}
-	classification := Classification{Target: entry.Learning, Keywords: []string{"learned"}}
+	classification := Classification{
+		Target:   entry.Learning,
+		Keywords: []string{"learned"},
+	}
 
 	if promoteErr := Promote(e, classification); promoteErr != nil {
 		t.Fatalf("Promote: %v", promoteErr)
@@ -90,7 +97,10 @@ func TestPromote_Decision(t *testing.T) {
 	defer cleanup()
 
 	e := Entry{Text: "decided to use SQLite over Postgres", Kind: EntryParagraph}
-	classification := Classification{Target: entry.Decision, Keywords: []string{"decided"}}
+	classification := Classification{
+		Target:   entry.Decision,
+		Keywords: []string{"decided"},
+	}
 
 	if promoteErr := Promote(e, classification); promoteErr != nil {
 		t.Fatalf("Promote: %v", promoteErr)
@@ -110,7 +120,10 @@ func TestPromote_Task(t *testing.T) {
 	defer cleanup()
 
 	e := Entry{Text: "need to add tests for import", Kind: EntryList}
-	classification := Classification{Target: entry.Task, Keywords: []string{"need to"}}
+	classification := Classification{
+		Target:   entry.Task,
+		Keywords: []string{"need to"},
+	}
 
 	if promoteErr := Promote(e, classification); promoteErr != nil {
 		t.Fatalf("Promote: %v", promoteErr)

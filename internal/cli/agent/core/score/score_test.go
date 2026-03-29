@@ -65,12 +65,30 @@ func TestRelevanceScore(t *testing.T) {
 		want     float64
 	}{
 		{"no keywords", "some content about hooks", nil, 0.0},
-		{"no matches", "some content about hooks", []string{"database", "cache"}, 0.0},
-		{"one match", "fix the hook edge case", []string{"hook", "cache"}, 1.0 / 3.0},
-		{"two matches", "fix the hook edge case in agent", []string{"hook", "agent", "cache"}, 2.0 / 3.0},
-		{"three matches", "fix hook in agent scoring", []string{"hook", "agent", "scoring"}, 1.0},
-		{"more than three", "hook agent scoring budget", []string{"hook", "agent", "scoring", "budget"}, 1.0},
-		{"case insensitive", "Hook AGENT Scoring", []string{"hook", "agent", "scoring"}, 1.0},
+		{
+			"no matches", "some content about hooks",
+			[]string{"database", "cache"}, 0.0,
+		},
+		{
+			"one match", "fix the hook edge case",
+			[]string{"hook", "cache"}, 1.0 / 3.0,
+		},
+		{
+			"two matches", "fix the hook edge case in agent",
+			[]string{"hook", "agent", "cache"}, 2.0 / 3.0,
+		},
+		{
+			"three matches", "fix hook in agent scoring",
+			[]string{"hook", "agent", "scoring"}, 1.0,
+		},
+		{
+			"more than three", "hook agent scoring budget",
+			[]string{"hook", "agent", "scoring", "budget"}, 1.0,
+		},
+		{
+			"case insensitive", "Hook AGENT Scoring",
+			[]string{"hook", "agent", "scoring"}, 1.0,
+		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
@@ -106,7 +124,10 @@ func TestScoreEntry_Superseded(t *testing.T) {
 func TestScoreEntry_Combined(t *testing.T) {
 	now := time.Date(2026, 2, 19, 12, 0, 0, 0, time.Local)
 	// Recent + relevant = high score
-	eb := makeBlock("2026-02-19", "Hook edge cases", "hooks fail silently in agent mode")
+	eb := makeBlock(
+		"2026-02-19", "Hook edge cases",
+		"hooks fail silently in agent mode",
+	)
 	got := Score(&eb, []string{"hook", "agent", "scoring"}, now)
 	// recency = 1.0, relevance = 2/3 ≈ 1.667
 	if got < 1.66 || got > 1.67 {
@@ -213,7 +234,10 @@ func TestScoreEntries_Empty(t *testing.T) {
 func TestScoreEntries_TokenEstimate(t *testing.T) {
 	now := time.Now()
 	blocks := []index.EntryBlock{
-		makeBlock("2026-02-19", "Test entry", "This is some body content for testing tokens."),
+		makeBlock(
+			"2026-02-19", "Test entry",
+			"This is some body content for testing tokens.",
+		),
 	}
 	scored := All(blocks, nil, now)
 	if scored[0].Tokens <= 0 {

@@ -18,7 +18,7 @@ import (
 	"github.com/ActiveMemory/ctx/internal/cli/journal/core/index"
 	"github.com/ActiveMemory/ctx/internal/cli/journal/core/plan"
 	"github.com/ActiveMemory/ctx/internal/cli/journal/core/query"
-	sourceFormat "github.com/ActiveMemory/ctx/internal/cli/journal/core/source/format"
+	srcFmt "github.com/ActiveMemory/ctx/internal/cli/journal/core/source/format"
 	"github.com/ActiveMemory/ctx/internal/cli/journal/core/validate"
 	"github.com/ActiveMemory/ctx/internal/config/dir"
 	"github.com/ActiveMemory/ctx/internal/config/file"
@@ -87,7 +87,7 @@ func Run(cmd *cobra.Command, args []string, opts entity.ImportOpts) error {
 			return errSession.NotFound(args[0])
 		}
 		if len(toImport) > 1 {
-			lines := sourceFormat.SessionMatchLines(toImport)
+			lines := srcFmt.SessionMatchLines(toImport)
 			recall.AmbiguousSessionMatch(cmd, args[0], lines)
 			return errSession.AmbiguousQuery()
 		}

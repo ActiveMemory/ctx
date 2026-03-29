@@ -4,5 +4,6 @@
 //   \    Copyright 2026-present Context contributors.
 //                 SPDX-License-Identifier: Apache-2.0
 
-// Package parse unmarshals raw JSON bytes into MCP request structs, filtering out notifications.
+// Package parse unmarshals raw JSON bytes into MCP request structs,
+// filtering out notifications.
 package parse

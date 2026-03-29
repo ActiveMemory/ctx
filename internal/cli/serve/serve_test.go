@@ -128,7 +128,8 @@ func TestRunServe_ZensicalNotFound(t *testing.T) {
 }
 
 func TestRunServe_DefaultDir(t *testing.T) {
-	// When no args are given, serveRoot.Run uses the default journal-site directory
+	// When no args are given, serveRoot.Run uses the
+	// default journal-site directory
 	// which won't exist in test, so we expect directory not found
 	err := serveRoot.Run([]string{})
 	if err == nil {
@@ -199,10 +200,12 @@ func TestRunServe_WithMockZensical(t *testing.T) {
 		t.Fatalf("failed to create bin dir: %v", err)
 	}
 	fakeZensical := filepath.Join(binDir, "zensical")
-	if err := os.WriteFile(fakeZensical, []byte("#!/bin/sh\nexit 0\n"), 0600); err != nil {
+	script := []byte("#!/bin/sh\nexit 0\n")
+	if err := os.WriteFile(fakeZensical, script, 0600); err != nil {
 		t.Fatalf("failed to create fake zensical: %v", err)
 	}
-	if err := os.Chmod(fakeZensical, 0755); err != nil { //nolint:gosec // test needs executable
+	//nolint:gosec // test exec
+	if err := os.Chmod(fakeZensical, 0755); err != nil {
 		t.Fatalf("failed to chmod fake zensical: %v", err)
 	}
 

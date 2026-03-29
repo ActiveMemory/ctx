@@ -16,10 +16,12 @@ import (
 	errParser "github.com/ActiveMemory/ctx/internal/err/parser"
 )
 
-// CategoryCustomizable marks messages intended for project-specific customization.
+// CategoryCustomizable marks messages intended for
+// project-specific customization.
 const CategoryCustomizable = "customizable"
 
-// CategoryCtxSpecific marks messages specific to ctx's own development workflow.
+// CategoryCtxSpecific marks messages specific to ctx's
+// own development workflow.
 const CategoryCtxSpecific = "ctx-specific"
 
 var (

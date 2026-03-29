@@ -88,7 +88,9 @@ func InfoTool(cmd *cobra.Command, content string) {
 //   - cmd: Cobra command for output
 //   - targetFile: Path to the existing file
 func InfoCopilotSkipped(cmd *cobra.Command, targetFile string) {
-	cmd.Println(fmt.Sprintf(desc.Text(text.DescKeyWriteHookCopilotSkipped), targetFile))
+	cmd.Println(fmt.Sprintf(
+		desc.Text(text.DescKeyWriteHookCopilotSkipped),
+		targetFile))
 	cmd.Println(desc.Text(text.DescKeyWriteHookCopilotForceHint))
 }
 
@@ -99,7 +101,9 @@ func InfoCopilotSkipped(cmd *cobra.Command, targetFile string) {
 //   - cmd: Cobra command for output
 //   - targetFile: Path to the merged file
 func InfoCopilotMerged(cmd *cobra.Command, targetFile string) {
-	cmd.Println(fmt.Sprintf(desc.Text(text.DescKeyWriteHookCopilotMerged), targetFile))
+	cmd.Println(fmt.Sprintf(
+		desc.Text(text.DescKeyWriteHookCopilotMerged),
+		targetFile))
 }
 
 // InfoCopilotCreated reports that copilot instructions were created.
@@ -108,7 +112,9 @@ func InfoCopilotMerged(cmd *cobra.Command, targetFile string) {
 //   - cmd: Cobra command for output
 //   - targetFile: Path to the created file
 func InfoCopilotCreated(cmd *cobra.Command, targetFile string) {
-	cmd.Println(fmt.Sprintf(desc.Text(text.DescKeyWriteHookCopilotCreated), targetFile))
+	cmd.Println(fmt.Sprintf(
+		desc.Text(text.DescKeyWriteHookCopilotCreated),
+		targetFile))
 }
 
 // InfoCopilotSessionsDir reports that the sessions directory was created.
@@ -117,7 +123,9 @@ func InfoCopilotCreated(cmd *cobra.Command, targetFile string) {
 //   - cmd: Cobra command for output
 //   - sessionsDir: Path to the sessions directory
 func InfoCopilotSessionsDir(cmd *cobra.Command, sessionsDir string) {
-	cmd.Println(fmt.Sprintf(desc.Text(text.DescKeyWriteHookCopilotSessionsDir), sessionsDir))
+	cmd.Println(fmt.Sprintf(
+		desc.Text(text.DescKeyWriteHookCopilotSessionsDir),
+		sessionsDir))
 }
 
 // InfoCopilotSummary prints the post-write summary for copilot.

@@ -19,7 +19,11 @@ import (
 //   - headerTpl: Format string for the section header (receives item count)
 //   - itemTpl: Format string for each item line (receives item name)
 //   - items: Entries to display; skips output entirely when empty
-func printSection(cmd *cobra.Command, headerTpl, itemTpl string, items []string) {
+func printSection(
+	cmd *cobra.Command,
+	headerTpl, itemTpl string,
+	items []string,
+) {
 	if len(items) == 0 {
 		return
 	}

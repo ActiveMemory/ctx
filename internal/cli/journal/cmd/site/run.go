@@ -209,7 +209,10 @@ func Run(
 	// Generate topic pages
 	var topicEntries []entity.JournalEntry
 	for _, e := range entries {
-		if e.Suggestive || section.ContinuesMultipart(e.Filename) || len(e.Topics) == 0 {
+		isSkipped := e.Suggestive ||
+			section.ContinuesMultipart(e.Filename) ||
+			len(e.Topics) == 0
+		if isSkipped {
 			continue
 		}
 		topicEntries = append(topicEntries, e)

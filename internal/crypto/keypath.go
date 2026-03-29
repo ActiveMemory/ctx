@@ -21,7 +21,8 @@ import (
 // Returns an empty string if the home directory cannot be determined.
 //
 // Returns:
-//   - string: Absolute path to the global encryption key, or empty string on failure
+//   - string: Absolute path to the global encryption key,
+//     or empty string on failure
 func GlobalKeyPath() string {
 	home, homeErr := os.UserHomeDir()
 	if homeErr != nil {
@@ -54,7 +55,8 @@ func ExpandHome(path string) string {
 // ResolveKeyPath determines the effective key file path.
 //
 // Resolution order:
-//  1. overridePath if non-empty (explicit .ctxrc key_path, with tilde expansion)
+//  1. overridePath if non-empty (explicit .ctxrc key_path,
+//     with tilde expansion)
 //  2. Project-local path if it exists (<contextDir>/.ctx.key)
 //  3. Global default (~/.ctx/.ctx.key)
 //  4. Project-local path as fallback (when home dir unavailable)

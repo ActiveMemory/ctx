@@ -50,7 +50,8 @@ func ExtractSystemReminders(content string) (string, []string) {
 // NormalizeCodeFences ensures code fences are on their own lines with
 // proper spacing.
 //
-// Users often type "text: ```code" without proper line breaks. Markdown requires
+// Users often type "text: ```code" without proper line
+// breaks. Markdown requires
 // code fences to be on their own lines with blank lines separating them from
 // surrounding content.
 //

@@ -12,13 +12,16 @@ import "time"
 const (
 	// TaskBudgetPct is the fraction of the token budget allocated to tasks.
 	TaskBudgetPct = 0.40
-	// ConventionBudgetPct is the fraction of the token budget allocated to conventions.
+	// ConventionBudgetPct is the fraction of the token budget
+	// allocated to conventions.
 	ConventionBudgetPct = 0.20
 
-	// BulletItemLimit is the maximum number of bullet items to extract from a context file.
+	// BulletItemLimit is the maximum number of bullet items to
+	// extract from a context file.
 	BulletItemLimit = 1000
 
-	// SplitMinPct is the minimum percentage each section gets during budget splitting.
+	// SplitMinPct is the minimum percentage each section gets
+	// during budget splitting.
 	SplitMinPct = 30
 
 	// FullEntryPct is the percentage of section budget allocated to full entries
@@ -28,7 +31,8 @@ const (
 
 // Cooldown configuration.
 const (
-	// DefaultCooldown is the default cooldown between agent context packet emissions.
+	// DefaultCooldown is the default cooldown between agent
+	// context packet emissions.
 	DefaultCooldown = 10 * time.Minute
 	// TombstonePrefix is the filename prefix for agent cooldown tombstone files.
 	TombstonePrefix = "ctx-agent-"
@@ -50,6 +54,7 @@ const (
 	RecencyScoreQuarter = 0.4
 	// RecencyScoreOld is the recency score for entries older than a quarter.
 	RecencyScoreOld = 0.2
-	// RelevanceMatchCap is the keyword match count that yields maximum relevance (1.0).
+	// RelevanceMatchCap is the keyword match count that yields
+	// maximum relevance (1.0).
 	RelevanceMatchCap = 3
 )

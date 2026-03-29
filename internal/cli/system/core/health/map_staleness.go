@@ -43,7 +43,8 @@ func ReadMapTracking() *MapTrackingInfo {
 	return &info
 }
 
-// CountModuleCommits counts git commits touching internal/ since the given date.
+// CountModuleCommits counts git commits touching internal/
+// since the given date.
 //
 // Parameters:
 //   - since: date string in YYYY-MM-DD format
@@ -54,7 +55,10 @@ func CountModuleCommits(since string) int {
 	if _, lookErr := exec.LookPath("git"); lookErr != nil {
 		return 0
 	}
-	out, gitErr := exec.Command("git", "log", "--oneline", "--since="+since, "--", "internal/").Output() //nolint:gosec // date string from JSON
+	out, gitErr := exec.Command( //nolint:gosec // date string from JSON
+		"git", "log", "--oneline",
+		"--since="+since, "--", "internal/",
+	).Output()
 	if gitErr != nil {
 		return 0
 	}
@@ -74,8 +78,13 @@ func CountModuleCommits(since string) int {
 //
 // Returns:
 //   - string: formatted nudge box, or empty string if silenced
-func EmitMapStalenessWarning(sessionID, dateStr string, moduleCommits int) string {
-	fallback := fmt.Sprintf(desc.Text(text.DescKeyCheckMapStalenessFallback), dateStr, moduleCommits)
+func EmitMapStalenessWarning(
+	sessionID, dateStr string, moduleCommits int,
+) string {
+	fallback := fmt.Sprintf(
+		desc.Text(text.DescKeyCheckMapStalenessFallback),
+		dateStr, moduleCommits,
+	)
 	content := message.Load(hook.CheckMapStaleness, hook.VariantStale,
 		map[string]any{
 			architecture.VarLastRefreshDate: dateStr,
@@ -91,7 +100,11 @@ func EmitMapStalenessWarning(sessionID, dateStr string, moduleCommits int) strin
 		content)
 
 	ref := notify.NewTemplateRef(hook.CheckMapStaleness, hook.VariantStale,
-		map[string]any{architecture.VarLastRefreshDate: dateStr, architecture.VarModuleCount: moduleCommits})
+		map[string]any{
+			architecture.VarLastRefreshDate: dateStr,
+			architecture.VarModuleCount:     moduleCommits,
+		},
+	)
 	notifyMsg := fmt.Sprintf(desc.Text(text.DescKeyRelayPrefixFormat),
 		hook.CheckMapStaleness, desc.Text(text.DescKeyCheckMapStalenessRelayMessage))
 	nudge.EmitAndRelay(notifyMsg, sessionID, ref)

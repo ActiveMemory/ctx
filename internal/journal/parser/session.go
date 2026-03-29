@@ -19,7 +19,8 @@ type Session interface {
 
 	// ParseLine parses a single line from a session file.
 	// Returns nil if the line should be skipped (e.g., non-message lines).
-	ParseLine(line []byte) (*entity.Message, string, error) // message, sessionID, error
+	// Returns: message, sessionID, error.
+	ParseLine(line []byte) (*entity.Message, string, error)
 
 	// Matches returns true if this parser can handle the given file.
 	// Implementations may check file extension, peek at content, etc.

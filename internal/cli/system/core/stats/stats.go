@@ -27,6 +27,7 @@ import (
 	"github.com/ActiveMemory/ctx/internal/entity"
 	errRecall "github.com/ActiveMemory/ctx/internal/err/recall"
 	internalIo "github.com/ActiveMemory/ctx/internal/io"
+	ctxLog "github.com/ActiveMemory/ctx/internal/log"
 )
 
 // ReadDir reads all stats JSONL files, optionally filtered by session prefix.
@@ -99,7 +100,10 @@ func ParseFile(path, sid string) ([]Entry, error) {
 	}
 
 	var entries []Entry
-	for _, line := range strings.Split(strings.TrimSpace(string(data)), token.NewlineLF) {
+	lines := strings.Split(
+		strings.TrimSpace(string(data)), token.NewlineLF,
+	)
+	for _, line := range lines {
 		if line == "" {
 			continue
 		}
@@ -112,7 +116,8 @@ func ParseFile(path, sid string) ([]Entry, error) {
 	return entries, nil
 }
 
-// FormatDump formats the last N entries in either JSON or human-readable format.
+// FormatDump formats the last N entries in either JSON or
+// human-readable format.
 //
 // Parameters:
 //   - entries: stats entries to display
@@ -229,7 +234,11 @@ func ReadNewLines(path string, offset int64, sid string) []Entry {
 	if openErr != nil {
 		return nil
 	}
-	defer func() { _ = f.Close() }()
+	defer func() {
+		if closeErr := f.Close(); closeErr != nil {
+			ctxLog.Warn("close %s: %v", path, closeErr)
+		}
+	}()
 
 	if _, seekErr := f.Seek(offset, 0); seekErr != nil {
 		return nil
@@ -242,7 +251,10 @@ func ReadNewLines(path string, offset int64, sid string) []Entry {
 	}
 
 	var entries []Entry
-	for _, line := range strings.Split(strings.TrimSpace(string(buf[:n])), token.NewlineLF) {
+	tailLines := strings.Split(
+		strings.TrimSpace(string(buf[:n])), token.NewlineLF,
+	)
+	for _, line := range tailLines {
 		if line == "" {
 			continue
 		}
@@ -268,7 +280,10 @@ func ReadNewLines(path string, offset int64, sid string) []Entry {
 func Stream(w io.Writer, dir, sessionFilter string, jsonOut bool) error {
 	// Track file sizes to detect new content.
 	offsets := make(map[string]int64)
-	matches, _ := filepath.Glob(filepath.Join(dir, stats.FilePrefix+"*"+file.ExtJSONL))
+	globPat := filepath.Join(
+		dir, stats.FilePrefix+"*"+file.ExtJSONL,
+	)
+	matches, _ := filepath.Glob(globPat)
 	for _, path := range matches {
 		info, statErr := os.Stat(path)
 		if statErr == nil {
@@ -280,7 +295,7 @@ func Stream(w io.Writer, dir, sessionFilter string, jsonOut bool) error {
 	defer ticker.Stop()
 
 	for range ticker.C {
-		matches, _ = filepath.Glob(filepath.Join(dir, stats.FilePrefix+"*"+file.ExtJSONL))
+		matches, _ = filepath.Glob(globPat)
 		for _, path := range matches {
 			sid := ExtractSessionID(filepath.Base(path))
 			if sessionFilter != "" && !strings.HasPrefix(sid, sessionFilter) {

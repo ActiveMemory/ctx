@@ -30,7 +30,8 @@ import (
 	"github.com/ActiveMemory/ctx/internal/rc"
 )
 
-// setupEncrypted creates a temp dir with a .context/ directory and encryption key.
+// setupEncrypted creates a temp dir with a .context/
+// directory and encryption key.
 // It sets HOME to the temp dir so user-level key paths stay isolated,
 // sets the RC context dir override, and returns the temp dir path.
 func setupEncrypted(t *testing.T) string {
@@ -87,7 +88,8 @@ func setupPlaintext(t *testing.T) string {
 
 	// Write .ctxrc with encryption disabled
 	rcContent := "scratchpad_encrypt: false\n"
-	if err := os.WriteFile(filepath.Join(tmpDir, ".ctxrc"), []byte(rcContent), 0600); err != nil {
+	rcPath := filepath.Join(tmpDir, ".ctxrc")
+	if err := os.WriteFile(rcPath, []byte(rcContent), 0600); err != nil {
 		t.Fatal(err)
 	}
 
@@ -163,7 +165,7 @@ func TestAdd_Plaintext(t *testing.T) {
 
 	// Verify the file is plain text
 	path := filepath.Join(dir.Context, pad.Md)
-	data, err := os.ReadFile(path) //nolint:gosec // test reads a known test file path
+	data, err := os.ReadFile(path) //nolint:gosec // test path
 	if err != nil {
 		t.Fatalf("ReadFile() error: %v", err)
 	}
@@ -342,7 +344,11 @@ func TestEdit_AppendAndPrependMutuallyExclusive(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	_, err := runCmd(newPadCmd("edit", "1", "--append", "suffix", "--prepend", "prefix"))
+	_, err := runCmd(newPadCmd(
+		"edit", "1",
+		"--append", "suffix",
+		"--prepend", "prefix",
+	))
 	if err == nil {
 		t.Fatal("expected error for --append + --prepend")
 	}
@@ -649,7 +655,11 @@ func TestCmd_HasSubcommands(t *testing.T) {
 	for _, sub := range cmd.Commands() {
 		names[sub.Use] = true
 	}
-	for _, expected := range []string{"show N", "add TEXT", "rm N", "edit N [TEXT]", "mv N M", "resolve", "import FILE", "export [DIR]"} {
+	for _, expected := range []string{
+		"show N", "add TEXT", "rm N",
+		"edit N [TEXT]", "mv N M", "resolve",
+		"import FILE", "export [DIR]",
+	} {
 		if !names[expected] {
 			t.Errorf("missing subcommand %q", expected)
 		}
@@ -765,7 +775,9 @@ func TestEnsureGitignore_AppendToExisting(t *testing.T) {
 	t.Cleanup(func() { _ = os.Chdir(origDir) })
 
 	// Write file without trailing newline
-	if err := os.WriteFile(".gitignore", []byte("node_modules"), 0600); err != nil {
+	if err := os.WriteFile(
+		".gitignore", []byte("node_modules"), 0600,
+	); err != nil {
 		t.Fatal(err)
 	}
 
@@ -1093,7 +1105,10 @@ func TestAdd_MultiplePlaintext(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	if !strings.Contains(out, "first") || !strings.Contains(out, "second") || !strings.Contains(out, "third") {
+	hasFirst := strings.Contains(out, "first")
+	hasSecond := strings.Contains(out, "second")
+	hasThird := strings.Contains(out, "third")
+	if !hasFirst || !hasSecond || !hasThird {
 		t.Errorf("list output missing entries: %q", out)
 	}
 }
@@ -1119,7 +1134,10 @@ func TestEdit_PrependOutOfRange(t *testing.T) {
 func TestDecryptFile_BadData(t *testing.T) {
 	key, _ := crypto.GenerateKey()
 	tmpDir := t.TempDir()
-	if writeErr := os.WriteFile(filepath.Join(tmpDir, "bad.enc"), []byte("not-encrypted"), 0600); writeErr != nil {
+	badPath := filepath.Join(tmpDir, "bad.enc")
+	writeErr := os.WriteFile(
+		badPath, []byte("not-encrypted"), 0600)
+	if writeErr != nil {
 		t.Fatal(writeErr)
 	}
 
@@ -1151,7 +1169,8 @@ func TestDecryptFile_ValidData(t *testing.T) {
 	if encErr != nil {
 		t.Fatal(encErr)
 	}
-	if writeErr := os.WriteFile(filepath.Join(tmpDir, "good.enc"), ciphertext, 0600); writeErr != nil {
+	goodPath := filepath.Join(tmpDir, "good.enc")
+	if writeErr := os.WriteFile(goodPath, ciphertext, 0600); writeErr != nil {
 		t.Fatal(writeErr)
 	}
 
@@ -1402,7 +1421,9 @@ func TestList_BlobDisplay(t *testing.T) {
 	if err := os.WriteFile(testFile, []byte("file content"), 0600); err != nil {
 		t.Fatal(err)
 	}
-	if _, err := runCmd(newPadCmd("add", "--file", testFile, "my blob")); err != nil {
+	if _, err := runCmd(newPadCmd(
+		"add", "--file", testFile, "my blob",
+	)); err != nil {
 		t.Fatal(err)
 	}
 
@@ -1428,7 +1449,9 @@ func TestShow_BlobAutoDecodes(t *testing.T) {
 	if err := os.WriteFile(testFile, []byte(content), 0600); err != nil {
 		t.Fatal(err)
 	}
-	if _, err := runCmd(newPadCmd("add", "--file", testFile, "my blob")); err != nil {
+	if _, err := runCmd(newPadCmd(
+		"add", "--file", testFile, "my blob",
+	)); err != nil {
 		t.Fatal(err)
 	}
 
@@ -1449,7 +1472,9 @@ func TestShow_BlobOutFlag(t *testing.T) {
 	if err := os.WriteFile(testFile, []byte(content), 0600); err != nil {
 		t.Fatal(err)
 	}
-	if _, err := runCmd(newPadCmd("add", "--file", testFile, "my blob")); err != nil {
+	if _, err := runCmd(newPadCmd(
+		"add", "--file", testFile, "my blob",
+	)); err != nil {
 		t.Fatal(err)
 	}
 
@@ -1587,7 +1612,9 @@ func TestEdit_BlobReplaceBoth(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	out, err := runCmd(newPadCmd("edit", "1", "--file", v2, "--label", "new label"))
+	out, err := runCmd(newPadCmd(
+		"edit", "1", "--file", v2, "--label", "new label",
+	))
 	if err != nil {
 		t.Fatalf("edit --file --label error: %v", err)
 	}
@@ -1619,7 +1646,9 @@ func TestEdit_AppendOnBlobErrors(t *testing.T) {
 	if err := os.WriteFile(testFile, []byte("content"), 0600); err != nil {
 		t.Fatal(err)
 	}
-	if _, err := runCmd(newPadCmd("add", "--file", testFile, "my blob")); err != nil {
+	if _, err := runCmd(newPadCmd(
+		"add", "--file", testFile, "my blob",
+	)); err != nil {
 		t.Fatal(err)
 	}
 
@@ -1639,7 +1668,9 @@ func TestEdit_PrependOnBlobErrors(t *testing.T) {
 	if err := os.WriteFile(testFile, []byte("content"), 0600); err != nil {
 		t.Fatal(err)
 	}
-	if _, err := runCmd(newPadCmd("add", "--file", testFile, "my blob")); err != nil {
+	if _, err := runCmd(newPadCmd(
+		"add", "--file", testFile, "my blob",
+	)); err != nil {
 		t.Fatal(err)
 	}
 
@@ -1675,11 +1706,15 @@ func TestEdit_FileAndPositionalMutuallyExclusive(t *testing.T) {
 	if err := os.WriteFile(testFile, []byte("content"), 0600); err != nil {
 		t.Fatal(err)
 	}
-	if _, err := runCmd(newPadCmd("add", "--file", testFile, "my blob")); err != nil {
+	if _, err := runCmd(newPadCmd(
+		"add", "--file", testFile, "my blob",
+	)); err != nil {
 		t.Fatal(err)
 	}
 
-	_, err := runCmd(newPadCmd("edit", "1", "replacement", "--file", testFile))
+	_, err := runCmd(newPadCmd(
+		"edit", "1", "replacement", "--file", testFile,
+	))
 	if err == nil {
 		t.Fatal("expected error for --file + positional text")
 	}
@@ -1694,7 +1729,9 @@ func TestImport_FromFile(t *testing.T) {
 	tmpDir := setupPlaintext(t)
 
 	importFile := filepath.Join(tmpDir, "notes.txt")
-	if err := os.WriteFile(importFile, []byte("alpha\nbeta\ngamma\n"), 0600); err != nil {
+	if err := os.WriteFile(
+		importFile, []byte("alpha\nbeta\ngamma\n"), 0600,
+	); err != nil {
 		t.Fatal(err)
 	}
 
@@ -1722,7 +1759,9 @@ func TestImport_SkipsEmpty(t *testing.T) {
 	tmpDir := setupPlaintext(t)
 
 	importFile := filepath.Join(tmpDir, "notes.txt")
-	if err := os.WriteFile(importFile, []byte("alpha\n\n\nbeta\n\n"), 0600); err != nil {
+	if err := os.WriteFile(
+		importFile, []byte("alpha\n\n\nbeta\n\n"), 0600,
+	); err != nil {
 		t.Fatal(err)
 	}
 
@@ -1763,7 +1802,9 @@ func TestImport_AppendsToExisting(t *testing.T) {
 	}
 
 	importFile := filepath.Join(tmpDir, "notes.txt")
-	if err := os.WriteFile(importFile, []byte("new1\nnew2\nnew3\n"), 0600); err != nil {
+	if err := os.WriteFile(
+		importFile, []byte("new1\nnew2\nnew3\n"), 0600,
+	); err != nil {
 		t.Fatal(err)
 	}
 
@@ -1831,7 +1872,9 @@ func TestImport_Encrypted(t *testing.T) {
 	tmpDir := setupEncrypted(t)
 
 	importFile := filepath.Join(tmpDir, "notes.txt")
-	if err := os.WriteFile(importFile, []byte("secret1\nsecret2\n"), 0600); err != nil {
+	if err := os.WriteFile(
+		importFile, []byte("secret1\nsecret2\n"), 0600,
+	); err != nil {
 		t.Fatal(err)
 	}
 
@@ -1857,7 +1900,8 @@ func TestImport_WhitespaceOnly(t *testing.T) {
 	tmpDir := setupPlaintext(t)
 
 	importFile := filepath.Join(tmpDir, "blanks.txt")
-	if err := os.WriteFile(importFile, []byte("   \n\t\n  \t  \n"), 0600); err != nil {
+	blanks := []byte("   \n\t\n  \t  \n")
+	if err := os.WriteFile(importFile, blanks, 0600); err != nil {
 		t.Fatal(err)
 	}
 
@@ -2197,7 +2241,9 @@ func TestExport_CollisionTimestamp(t *testing.T) {
 	if err := os.WriteFile(f, []byte("blob data"), 0600); err != nil {
 		t.Fatal(err)
 	}
-	if _, err := runCmd(newPadCmd("add", "--file", f, "existing.txt")); err != nil {
+	if _, err := runCmd(newPadCmd(
+		"add", "--file", f, "existing.txt",
+	)); err != nil {
 		t.Fatal(err)
 	}
 
@@ -2207,7 +2253,8 @@ func TestExport_CollisionTimestamp(t *testing.T) {
 	}
 
 	// Create a file at the expected path to cause collision
-	if err := os.WriteFile(filepath.Join(exportDir, "existing.txt"), []byte("old"), 0600); err != nil {
+	collisionPath := filepath.Join(exportDir, "existing.txt")
+	if err := os.WriteFile(collisionPath, []byte("old"), 0600); err != nil {
 		t.Fatal(err)
 	}
 
@@ -2246,7 +2293,8 @@ func TestExport_Force(t *testing.T) {
 	}
 
 	// Create existing file
-	if err := os.WriteFile(filepath.Join(exportDir, "target.txt"), []byte("old data"), 0600); err != nil {
+	targetPath := filepath.Join(exportDir, "target.txt")
+	if err := os.WriteFile(targetPath, []byte("old data"), 0600); err != nil {
 		t.Fatal(err)
 	}
 
@@ -2386,7 +2434,10 @@ func writePlaintextPad(t *testing.T, path string, entries []string) {
 
 // writeEncryptedPad writes an encrypted scratchpad file at the given path
 // using the provided key.
-func writeEncryptedPad(t *testing.T, path string, key []byte, entries []string) {
+func writeEncryptedPad(
+	t *testing.T, path string,
+	key []byte, entries []string,
+) {
 	t.Helper()
 	content := strings.Join(entries, "\n") + "\n"
 	ciphertext, encErr := crypto.Encrypt(key, []byte(content))
@@ -2696,7 +2747,8 @@ func TestMerge_BinaryWarning(t *testing.T) {
 
 	// Write raw binary data (not valid UTF-8).
 	binFile := filepath.Join(tmpDir, "garbage.bin")
-	if err := os.WriteFile(binFile, []byte{0xff, 0xfe, 0x00, 0x01, 0x80, 0x90}, 0600); err != nil {
+	binData := []byte{0xff, 0xfe, 0x00, 0x01, 0x80, 0x90}
+	if err := os.WriteFile(binFile, binData, 0600); err != nil {
 		t.Fatal(err)
 	}
 

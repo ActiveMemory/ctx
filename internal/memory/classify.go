@@ -21,19 +21,29 @@ type classRule struct {
 	keywords []string
 }
 
-// rules are evaluated in priority order: conventions > decisions > learnings > tasks.
+// rules are evaluated in priority order:
+// conventions > decisions > learnings > tasks.
 var rules = []classRule{
 	{
-		target:   entry.Convention,
-		keywords: []string{"always use", "prefer", "convention", "never use", "standard", "always "},
+		target: entry.Convention,
+		keywords: []string{
+			"always use", "prefer", "convention",
+			"never use", "standard", "always ",
+		},
 	},
 	{
-		target:   entry.Decision,
-		keywords: []string{"decided", "chose", "trade-off", "approach", "over", "instead of"},
+		target: entry.Decision,
+		keywords: []string{
+			"decided", "chose", "trade-off",
+			"approach", "over", "instead of",
+		},
 	},
 	{
-		target:   entry.Learning,
-		keywords: []string{"gotcha", "learned", "watch out", "bug", "caveat", "careful", "turns out"},
+		target: entry.Learning,
+		keywords: []string{
+			"gotcha", "learned", "watch out",
+			"bug", "caveat", "careful", "turns out",
+		},
 	},
 	{
 		target:   entry.Task,

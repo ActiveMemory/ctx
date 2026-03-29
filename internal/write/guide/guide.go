@@ -31,7 +31,9 @@ func InfoSkillsHeader(cmd *cobra.Command) {
 //   - name: Skill name
 //   - description: Truncated skill description
 func InfoSkillLine(cmd *cobra.Command, name, description string) {
-	cmd.Println(fmt.Sprintf(desc.Text(text.DescKeyWriteSkillLine), name, description))
+	cmd.Println(fmt.Sprintf(
+		desc.Text(text.DescKeyWriteSkillLine),
+		name, description))
 }
 
 // CommandsHeader prints the commands list heading.

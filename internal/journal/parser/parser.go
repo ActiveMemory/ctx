@@ -54,7 +54,8 @@ func ParseFile(path string) ([]*entity.Session, error) {
 //   - dir: Root directory to scan recursively
 //
 // Returns:
-//   - []*entity.Session: All sessions found, sorted by start time (newest first)
+//   - []*entity.Session: All sessions found, sorted by
+//     start time (newest first)
 //   - error: Non-nil if directory traversal fails
 func ScanDirectory(dir string) ([]*entity.Session, error) {
 	sessions, _, scanErr := ScanDirectoryWithErrors(dir)
@@ -94,7 +95,9 @@ func ScanDirectoryWithErrors(dir string) ([]*entity.Session, []error, error) {
 		}
 
 		// Skip files in paths containing /subagents/ (defensive check)
-		if strings.Contains(path, string(filepath.Separator)+parser.DirSubagents+string(filepath.Separator)) {
+		sep := string(filepath.Separator)
+		subagentPath := sep + parser.DirSubagents + sep
+		if strings.Contains(path, subagentPath) {
 			return nil
 		}
 
@@ -136,7 +139,8 @@ func ScanDirectoryWithErrors(dir string) ([]*entity.Session, []error, error) {
 //   - additionalDirs: Optional additional directories to scan
 //
 // Returns:
-//   - []*entity.Session: Deduplicated sessions sorted by start time (newest first)
+//   - []*entity.Session: Deduplicated sessions sorted by
+//     start time (newest first)
 //   - error: Non-nil if scanning fails (partial results may still be returned)
 func FindSessions(additionalDirs ...string) ([]*entity.Session, error) {
 	return findSessionsWithFilter(nil, additionalDirs...)

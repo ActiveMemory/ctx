@@ -29,21 +29,29 @@ const (
 
 // Resource threshold constants for health evaluation.
 const (
-	// ThresholdMemoryWarnPct is the memory usage percentage that triggers a warning.
+	// ThresholdMemoryWarnPct is the memory usage percentage
+	// that triggers a warning.
 	ThresholdMemoryWarnPct = 80
-	// ThresholdMemoryDangerPct is the memory usage percentage that triggers a danger alert.
+	// ThresholdMemoryDangerPct is the memory usage percentage
+	// that triggers a danger alert.
 	ThresholdMemoryDangerPct = 90
-	// ThresholdSwapWarnPct is the swap usage percentage that triggers a warning.
+	// ThresholdSwapWarnPct is the swap usage percentage
+	// that triggers a warning.
 	ThresholdSwapWarnPct = 50
-	// ThresholdSwapDangerPct is the swap usage percentage that triggers a danger alert.
+	// ThresholdSwapDangerPct is the swap usage percentage
+	// that triggers a danger alert.
 	ThresholdSwapDangerPct = 75
-	// ThresholdDiskWarnPct is the disk usage percentage that triggers a warning.
+	// ThresholdDiskWarnPct is the disk usage percentage
+	// that triggers a warning.
 	ThresholdDiskWarnPct = 85
-	// ThresholdDiskDangerPct is the disk usage percentage that triggers a danger alert.
+	// ThresholdDiskDangerPct is the disk usage percentage
+	// that triggers a danger alert.
 	ThresholdDiskDangerPct = 95
-	// ThresholdLoadWarnRatio is the load-to-CPU ratio that triggers a warning.
+	// ThresholdLoadWarnRatio is the load-to-CPU ratio
+	// that triggers a warning.
 	ThresholdLoadWarnRatio = 0.8
-	// ThresholdLoadDangerRatio is the load-to-CPU ratio that triggers a danger alert.
+	// ThresholdLoadDangerRatio is the load-to-CPU ratio
+	// that triggers a danger alert.
 	ThresholdLoadDangerRatio = 1.5
 	// ThresholdBytesPerGiB is the number of bytes in one gibibyte.
 	ThresholdBytesPerGiB = 1 << 30

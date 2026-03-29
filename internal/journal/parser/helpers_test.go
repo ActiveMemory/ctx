@@ -20,8 +20,14 @@ func TestMessage_UsesTools(t *testing.T) {
 	}{
 		{"empty message", entity.Message{}, false},
 		{"text only", entity.Message{Text: "hello"}, false},
-		{"with tool uses", entity.Message{ToolUses: []entity.ToolUse{{Name: "Bash"}}}, true},
-		{"multiple tools", entity.Message{ToolUses: []entity.ToolUse{{Name: "Read"}, {Name: "Write"}}}, true},
+		{"with tool uses", entity.Message{
+			ToolUses: []entity.ToolUse{{Name: "Bash"}},
+		}, true},
+		{"multiple tools", entity.Message{
+			ToolUses: []entity.ToolUse{
+				{Name: "Read"}, {Name: "Write"},
+			},
+		}, true},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
@@ -71,7 +77,9 @@ func TestSession_UserMessages(t *testing.T) {
 			{Role: "user"},
 			{Role: "assistant"},
 		}, 2},
-		{"all assistant", []entity.Message{{Role: "assistant"}, {Role: "assistant"}}, 0},
+		{"all assistant", []entity.Message{
+			{Role: "assistant"}, {Role: "assistant"},
+		}, 0},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
@@ -96,7 +104,9 @@ func TestSession_AssistantMessages(t *testing.T) {
 		want     int
 	}{
 		{"empty session", nil, 0},
-		{"all assistant", []entity.Message{{Role: "assistant"}, {Role: "assistant"}}, 2},
+		{"all assistant", []entity.Message{
+			{Role: "assistant"}, {Role: "assistant"},
+		}, 2},
 		{"mixed roles", []entity.Message{
 			{Role: "user"},
 			{Role: "assistant"},

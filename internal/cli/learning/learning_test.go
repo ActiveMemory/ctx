@@ -108,7 +108,8 @@ func TestRunReindex_WithFile(t *testing.T) {
 	}
 
 	// Verify the file was updated
-	updated, err := os.ReadFile(filepath.Join(ctxDir, ctx.Learning)) //nolint:gosec // test temp path
+	learnPath := filepath.Join(ctxDir, ctx.Learning)
+	updated, err := os.ReadFile(learnPath) //nolint:gosec // test path
 	if err != nil {
 		t.Fatalf("failed to read updated file: %v", err)
 	}
@@ -129,7 +130,8 @@ func TestRunReindex_EmptyFile(t *testing.T) {
 	// Create the context directory and empty LEARNINGS.md
 	ctxDir := filepath.Join(tempDir, dir.Context)
 	_ = os.MkdirAll(ctxDir, 0750)
-	_ = os.WriteFile(filepath.Join(ctxDir, ctx.Learning), []byte("# Learnings\n"), 0600)
+	learnFile := filepath.Join(ctxDir, ctx.Learning)
+	_ = os.WriteFile(learnFile, []byte("# Learnings\n"), 0600)
 
 	cmd := Cmd()
 	cmd.SetArgs([]string{"reindex"})

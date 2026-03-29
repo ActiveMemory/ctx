@@ -37,7 +37,8 @@ ctx journal site --serve  # generate and preview
 	JournalIndexStats = "**Sessions**: %d | **Suggestions**: %d"
 
 	// JournalSuggestionsNote is the description under the suggestions heading.
-	JournalSuggestionsNote = "*Auto-generated suggestion prompts from Claude Code.*"
+	JournalSuggestionsNote = "*Auto-generated suggestion" +
+		" prompts from Claude Code.*"
 
 	// JournalMonthHeading formats a month section heading.
 	// Args: month string (YYYY-MM).
@@ -65,7 +66,9 @@ ctx journal site --serve  # generate and preview
 
 	// JournalTopicStats formats the topics index summary line.
 	// Args: topic count, session count, popular count, longtail count.
-	JournalTopicStats = "**%d topics** across **%d sessions** - **%d popular**, **%d long-tail**"
+	JournalTopicStats = "**%d topics** across" +
+		" **%d sessions** - **%d popular**," +
+		" **%d long-tail**"
 
 	// JournalTopicPageStats formats an individual topic page summary.
 	// Args: session count.
@@ -73,7 +76,9 @@ ctx journal site --serve  # generate and preview
 
 	// JournalFileStats formats the key files index summary line.
 	// Args: file count, session count, popular count, longtail count.
-	JournalFileStats = "**%d files** across **%d sessions** - **%d popular**, **%d long-tail**"
+	JournalFileStats = "**%d files** across" +
+		" **%d sessions** - **%d popular**," +
+		" **%d long-tail**"
 
 	// JournalFilePageStats formats an individual key file page summary.
 	// Args: session count.

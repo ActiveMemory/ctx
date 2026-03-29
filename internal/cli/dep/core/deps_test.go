@@ -91,7 +91,9 @@ func TestDetectBuilder(t *testing.T) {
 	}
 
 	// go.mod → Go builder.
-	if writeErr := os.WriteFile(filepath.Join(tmp, "go.mod"), []byte("module test\n"), 0o644); writeErr != nil {
+	goMod := filepath.Join(tmp, "go.mod")
+	writeErr := os.WriteFile(goMod, []byte("module test\n"), 0o644)
+	if writeErr != nil {
 		t.Fatal(writeErr)
 	}
 	if b := DetectBuilder(); b == nil || b.Name() != "go" {
@@ -111,7 +113,10 @@ func TestDetectBuilder_Node(t *testing.T) {
 		t.Fatal(chdirErr)
 	}
 
-	if writeErr := os.WriteFile(filepath.Join(tmp, "package.json"), []byte(`{"name":"test"}`), 0o644); writeErr != nil {
+	pkgJSON := filepath.Join(tmp, "package.json")
+	writeErr := os.WriteFile(
+		pkgJSON, []byte(`{"name":"test"}`), 0o644)
+	if writeErr != nil {
 		t.Fatal(writeErr)
 	}
 	if b := DetectBuilder(); b == nil || b.Name() != "node" {
@@ -131,7 +136,10 @@ func TestDetectBuilder_Python(t *testing.T) {
 		t.Fatal(chdirErr)
 	}
 
-	if writeErr := os.WriteFile(filepath.Join(tmp, "requirements.txt"), []byte("flask\n"), 0o644); writeErr != nil {
+	reqsPath := filepath.Join(tmp, "requirements.txt")
+	writeErr := os.WriteFile(
+		reqsPath, []byte("flask\n"), 0o644)
+	if writeErr != nil {
 		t.Fatal(writeErr)
 	}
 	if b := DetectBuilder(); b == nil || b.Name() != "python" {
@@ -151,7 +159,11 @@ func TestDetectBuilder_Rust(t *testing.T) {
 		t.Fatal(chdirErr)
 	}
 
-	if writeErr := os.WriteFile(filepath.Join(tmp, "Cargo.toml"), []byte("[package]\nname = \"test\"\n"), 0o644); writeErr != nil {
+	cargoPath := filepath.Join(tmp, "Cargo.toml")
+	cargoContent := "[package]\nname = \"test\"\n"
+	writeErr := os.WriteFile(
+		cargoPath, []byte(cargoContent), 0o644)
+	if writeErr != nil {
 		t.Fatal(writeErr)
 	}
 	if b := DetectBuilder(); b == nil || b.Name() != "rust" {
@@ -172,10 +184,15 @@ func TestDetectBuilder_PriorityOrder(t *testing.T) {
 	}
 
 	// Create both go.mod and package.json - Go should win (first in registry).
-	if writeErr := os.WriteFile(filepath.Join(tmp, "go.mod"), []byte("module test\n"), 0o644); writeErr != nil {
+	goMod := filepath.Join(tmp, "go.mod")
+	writeErr := os.WriteFile(goMod, []byte("module test\n"), 0o644)
+	if writeErr != nil {
 		t.Fatal(writeErr)
 	}
-	if writeErr := os.WriteFile(filepath.Join(tmp, "package.json"), []byte(`{"name":"test"}`), 0o644); writeErr != nil {
+	pkgJSON := filepath.Join(tmp, "package.json")
+	writeErr = os.WriteFile(
+		pkgJSON, []byte(`{"name":"test"}`), 0o644)
+	if writeErr != nil {
 		t.Fatal(writeErr)
 	}
 

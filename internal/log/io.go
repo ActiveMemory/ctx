@@ -33,7 +33,11 @@ func readLogFile(path string) ([]notify.Payload, error) {
 		}
 		return nil, openErr
 	}
-	defer func() { _ = f.Close() }()
+	defer func() {
+		if closeErr := f.Close(); closeErr != nil {
+			Warn("close %s: %v", path, closeErr)
+		}
+	}()
 
 	var events []notify.Payload
 	scanner := bufio.NewScanner(f)

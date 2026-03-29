@@ -11,14 +11,15 @@ import (
 
 	"github.com/ActiveMemory/ctx/internal/entity"
 	errFs "github.com/ActiveMemory/ctx/internal/err/fs"
-	"github.com/ActiveMemory/ctx/internal/recall/parser"
+	"github.com/ActiveMemory/ctx/internal/journal/parser"
 )
 
 // FindSessions returns sessions for the current project, or all projects if
 // allProjects is true.
 //
 // Parameters:
-//   - allProjects: when true, scan all projects instead of just the current one.
+//   - allProjects: when true, scan all projects instead
+//     of just the current one.
 //
 // Returns:
 //   - []*entity.Session: matching sessions sorted by start time.

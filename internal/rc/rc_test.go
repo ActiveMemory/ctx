@@ -32,7 +32,10 @@ func TestDefaultRC(t *testing.T) {
 		t.Error("AutoArchive = false, want true")
 	}
 	if rc.ArchiveAfterDays != DefaultArchiveAfterDays {
-		t.Errorf("ArchiveAfterDays = %d, want %d", rc.ArchiveAfterDays, DefaultArchiveAfterDays)
+		t.Errorf(
+			"ArchiveAfterDays = %d, want %d",
+			rc.ArchiveAfterDays, DefaultArchiveAfterDays,
+		)
 	}
 }
 
@@ -115,7 +118,10 @@ token_budget: 4000
 
 	// Env should override file
 	if rc.ContextDir != "env-context" {
-		t.Errorf("ContextDir = %q, want %q (env override)", rc.ContextDir, "env-context")
+		t.Errorf(
+			"ContextDir = %q, want %q (env override)",
+			rc.ContextDir, "env-context",
+		)
 	}
 	if rc.TokenBudget != 2000 {
 		t.Errorf("TokenBudget = %d, want %d (env override)", rc.TokenBudget, 2000)
@@ -169,14 +175,20 @@ func TestGetRC_InvalidYAML(t *testing.T) {
 	defer func() { _ = os.Chdir(origDir) }()
 
 	// Create invalid .ctxrc file
-	_ = os.WriteFile(filepath.Join(tempDir, ".ctxrc"), []byte("invalid: [yaml: content"), 0600)
+	_ = os.WriteFile(
+		filepath.Join(tempDir, ".ctxrc"),
+		[]byte("invalid: [yaml: content"), 0600,
+	)
 
 	Reset()
 
 	// Should return defaults on invalid YAML
 	rc := RC()
 	if rc.TokenBudget != DefaultTokenBudget {
-		t.Errorf("TokenBudget = %d, want %d (defaults on invalid YAML)", rc.TokenBudget, DefaultTokenBudget)
+		t.Errorf(
+			"TokenBudget = %d, want %d (defaults on invalid YAML)",
+			rc.TokenBudget, DefaultTokenBudget,
+		)
 	}
 }
 
@@ -217,7 +229,10 @@ func TestGetRC_InvalidEnvBudget(t *testing.T) {
 	// Invalid env should be ignored, use default
 	rc := RC()
 	if rc.TokenBudget != DefaultTokenBudget {
-		t.Errorf("TokenBudget = %d, want %d (default on invalid env)", rc.TokenBudget, DefaultTokenBudget)
+		t.Errorf(
+			"TokenBudget = %d, want %d (default on invalid env)",
+			rc.TokenBudget, DefaultTokenBudget,
+		)
 	}
 }
 
@@ -590,7 +605,10 @@ notify:
 
 	days := KeyRotationDays()
 	if days != 60 {
-		t.Errorf("KeyRotationDays() = %d, want %d (top-level takes precedence)", days, 60)
+		t.Errorf(
+			"KeyRotationDays() = %d, want %d (top-level takes precedence)",
+			days, 60,
+		)
 	}
 }
 
@@ -614,7 +632,10 @@ func TestSessionPrefixes_Custom(t *testing.T) {
 	_ = os.Chdir(tempDir)
 	defer func() { _ = os.Chdir(origDir) }()
 
-	rcContent := "session_prefixes:\n  - \"Session:\"\n  - \"セッション:\"\n  - \"Sesión:\"\n"
+	rcContent := "session_prefixes:\n" +
+		"  - \"Session:\"\n" +
+		"  - \"セッション:\"\n" +
+		"  - \"Sesión:\"\n"
 	_ = os.WriteFile(filepath.Join(tempDir, ".ctxrc"), []byte(rcContent), 0600)
 
 	Reset()
@@ -647,7 +668,10 @@ func TestSessionPrefixes_EmptyFallsBackToDefault(t *testing.T) {
 
 	prefixes := SessionPrefixes()
 	if len(prefixes) != 1 || prefixes[0] != "Session:" {
-		t.Errorf("SessionPrefixes() with empty config = %v, want defaults [Session:]", prefixes)
+		t.Errorf(
+			"SessionPrefixes() with empty config = %v, want defaults [Session:]",
+			prefixes,
+		)
 	}
 }
 
@@ -664,6 +688,9 @@ func TestGetRC_NegativeEnvBudget(t *testing.T) {
 	// Negative budget should be ignored (budget > 0 check)
 	rc := RC()
 	if rc.TokenBudget != DefaultTokenBudget {
-		t.Errorf("TokenBudget = %d, want %d (default on negative env)", rc.TokenBudget, DefaultTokenBudget)
+		t.Errorf(
+			"TokenBudget = %d, want %d (default on negative env)",
+			rc.TokenBudget, DefaultTokenBudget,
+		)
 	}
 }

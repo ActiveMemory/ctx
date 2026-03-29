@@ -22,7 +22,8 @@ const (
 	IssueStaleAge IssueType = "stale_age"
 	// IssueEntryCount indicates a knowledge file has too many entries.
 	IssueEntryCount IssueType = "entry_count"
-	// IssueMissingPackage indicates an internal package not documented in ARCHITECTURE.md.
+	// IssueMissingPackage indicates an internal package
+	// not documented in ARCHITECTURE.md.
 	IssueMissingPackage IssueType = "missing_package"
 	// IssueStaleHeader indicates a context file whose comment header
 	// doesn't match the embedded template.

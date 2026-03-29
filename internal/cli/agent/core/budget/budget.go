@@ -59,7 +59,8 @@ func Split(total int, a, b []score.Entry) (int, int) {
 	return minA + aFlex, total - (minA + aFlex)
 }
 
-// FillSection selects scored entries to fill a budget, with graceful degradation.
+// FillSection selects scored entries to fill a budget,
+// with graceful degradation.
 //
 // Includes full entries by score order until ~80% of the budget is consumed.
 // Remaining entries get title-only summaries.

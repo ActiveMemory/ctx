@@ -1,56 +1,47 @@
-# Session Handoff — 2026-03-28
+# Session Handoff — 2026-03-28 (session 3)
 
-## What shipped (36 commits, not yet pushed)
+## What shipped (not yet committed)
 
-1. **Hook accountability** — checkpoint nudges gated behind 20% context usage, context window tier reordering (ground truth first), spec enforcement at commit, post-commit bypass detection
-2. **Journal-recall merge completion** — wired journal/core as canonical, moved cmd packages, deleted recall/core (4149 lines), absorbed list/show into source
-3. **Convention enforcement across entire codebase**:
-   - 65 public + 38 private docstring violations fixed
-   - 115 import grouping violations fixed (stdlib — external — ctx)
-   - 231 stuttery symbol renames (5 phases: cli, config, write, tpl, core)
-   - 15 mixed public/private files split into domain-specific files
-   - 21 types.go extractions
-   - 14 plural filenames renamed to singular
-   - 173 generic err variables renamed to semantic names
-   - 8 cmd packages extracted logic to core/
-   - All cmd RunXXX consolidated to single Run entry points
-   - Inline format strings externalized to assets/config
-   - Shared CountLine helper extracted
-   - strings.Title deprecated call replaced
-   - token.CommaSpace used everywhere
+Everything from session 2 plus:
 
-## What's left (JMC.7-8 in TASKS.md)
+6. **JMC.9**: Line-width audit — 1078 violations found, 1005 fixed
+   (93.2%). 73 remain (DescKey constants, JSONL test fixtures,
+   regexp patterns, HTML URLs).
+7. **EH.0**: Created `internal/log/warn.go` with `Warn()` and
+   swappable `Sink` (tests use io.Discard).
+8. **EH.1**: Full catalog of 117 production + 346 test discards.
+9. **EH.2**: Fixed 12 `_ = os.WriteFile` / `f.Write` discards.
+10. **EH.3**: Fixed 18 `defer { _ = f.Close() }` discards.
+11. **EH.4**: Fixed 17 `os.Remove/Rename/MkdirAll` discards + 1
+    `filepath.Walk`.
 
-- **JMC.7.3**: Delete orphaned recall/ package tree
-- **JMC.8.1**: Move write/add/err.go (10 error constructors with inline strings) to internal/err/add/ with asset text keys
-- **JMC.8.2**: Full scan for OTHER write/*/err.go files needing the same migration
-- **JMC.8.3**: Fix scanner scripts — they miss fmt.Errorf inline text, multi-line strings, Join separators. The scripts in hack/ need to evolve
+## Production code remaining discards (5, all acceptable)
 
-## Scanner scripts in hack/
+1. `RegisterFlagCompletionFunc` — Cobra shell completion, non-critical
+2. `load.Do("")` — graceful degradation by design
+3. `json.Unmarshal` — best-effort parse, uses defaults
+4. `filepath.Glob` — nil on error, handled by caller
+5. `mcpIO.WriteJSON` — MCP notification, fire-and-forget
 
-- `lint-docstrings.sh` — checks all functions (public + private) for godoc convention
-- `lint-imports.sh` — checks import grouping (stdlib — external — ctx)
-- `lint-mixed-funcs.sh` — finds files mixing public + private functions
-- `find-thin-wrappers.sh` — finds thin delegation wrappers
+Plus 59 `_, _ = fmt.Fprintf(...)` to stdout/stderr/strings.Builder —
+acceptable per Go convention (write to terminal/builder can't fail
+meaningfully).
 
-These scripts are incomplete — they don't catch:
-- Inline string literals in fmt.Errorf
-- Multi-line raw string literals
-- strings.Join with inline separators
-- Error constructors in wrong packages
+## Test code (EH not yet applied to tests — 346 discards)
 
-## Key decisions made this session
+The user did not request test fixes yet. Catalog is in the EH.1
+section of TASKS.md. Main categories:
+- 218 `_ = os.Chdir` in cleanup — fix with `t.Fatal`
+- 45 `os.Remove/RemoveAll` — fix with `t.Log`
+- 34 `os.WriteFile` — fix with `t.Fatal`
 
-- Spec enforcement lives at commit time, not edit time (trust first, consequence later)
-- CONSTITUTION rule: every commit references a spec
-- /ctx-commit skill is language-agnostic, defers to project's CONSTITUTION
-- journal/core is canonical; recall/core deleted
-- cmd/ packages have single exported Run; dispatch helpers are private
-- All structs consolidated in types.go
-- types.go and errors.go are naming exceptions (plural OK)
+## Build status
 
-## Conventions recorded
+- `make build` — clean
+- `make lint` (golangci-lint) — 0 issues
+- `go test ./...` — all pass, 0 failures
+- gofmt — clean
 
-- Import grouping: stdlib — external — ctx (three groups)
-- All run functions in cmd/ are PascalCase exported Run
-- File names are singular (exceptions: types.go, errors.go)
+## NOT YET COMMITTED
+
+All changes from sessions 2+3 are unstaged. Very large diff.

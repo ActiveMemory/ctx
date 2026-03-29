@@ -78,7 +78,8 @@ func TestForName(t *testing.T) {
 				return
 			}
 			if !strings.Contains(string(content), tt.wantContain) {
-				t.Errorf("ForName(%q) content does not contain %q", tt.template, tt.wantContain)
+				t.Errorf("ForName(%q) content does not contain %q",
+					tt.template, tt.wantContain)
 			}
 		})
 	}

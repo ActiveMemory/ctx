@@ -3,5 +3,6 @@
 // `.,'//   \    Copyright 2026-present Context contributors.
 //                 SPDX-License-Identifier: Apache-2.0
 
-// Package loop provides terminal output functions for the loop and serve commands.
+// Package loop provides terminal output functions for the loop and
+// serve commands.
 package loop

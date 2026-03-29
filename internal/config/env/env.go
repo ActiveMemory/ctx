@@ -14,8 +14,10 @@ const (
 	Home = "HOME"
 	// CtxDir is the environment variable for overriding the context directory.
 	CtxDir = "CTX_DIR"
-	// CtxTokenBudget is the environment variable for overriding the token budget.
-	CtxTokenBudget = "CTX_TOKEN_BUDGET" //nolint:gosec // G101: env var name, not a credential
+	// CtxTokenBudget is the environment variable for overriding
+	// the token budget.
+	//nolint:gosec // G101: env var name, not a credential
+	CtxTokenBudget = "CTX_TOKEN_BUDGET"
 	// BackupSMBURL is the environment variable for the SMB share URL.
 	BackupSMBURL = "CTX_BACKUP_SMB_URL"
 	// BackupSMBSubdir is the environment variable for the SMB share subdirectory.

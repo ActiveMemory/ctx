@@ -18,7 +18,8 @@ import (
 // Cmd returns the memory import subcommand.
 //
 // Returns:
-//   - *cobra.Command: command for importing MEMORY.md entries into .context/ files.
+//   - *cobra.Command: command for importing MEMORY.md
+//     entries into .context/ files.
 func Cmd() *cobra.Command {
 	var dryRun bool
 

@@ -34,8 +34,9 @@ func TestRegExEntryHeader(t *testing.T) {
 			wantTitle: "Title here",
 		},
 		{
-			name:      "entry with long title",
-			input:     "## [2026-12-31-235959] A much longer title with spaces and stuff",
+			name: "entry with long title",
+			input: "## [2026-12-31-235959] " +
+				"A much longer title with spaces and stuff",
 			wantMatch: true,
 			wantDate:  "2026-12-31",
 			wantTime:  "235959",
@@ -213,7 +214,10 @@ func TestRegExPhase(t *testing.T) {
 		t.Run(tt.input, func(t *testing.T) {
 			matched := regex.Phase.MatchString(tt.input)
 			if matched != tt.wantMatch {
-				t.Errorf("Phase.MatchString(%q) = %v, want %v", tt.input, matched, tt.wantMatch)
+				t.Errorf(
+					"Phase.MatchString(%q) = %v, want %v",
+					tt.input, matched, tt.wantMatch,
+				)
 			}
 		})
 	}

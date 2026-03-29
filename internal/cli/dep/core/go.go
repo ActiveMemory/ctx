@@ -51,7 +51,8 @@ type GoPackage struct {
 	} `json:"Module"`
 }
 
-// GoModulePath reads the module path from the first GoPackage with a Module field.
+// GoModulePath reads the module path from the first
+// GoPackage with a Module field.
 //
 // Parameters:
 //   - pkgs: Parsed go list output
@@ -74,7 +75,9 @@ func GoModulePath(pkgs []GoPackage) string {
 //   - []GoPackage: Parsed packages
 //   - error: Non-nil if go list fails or output is malformed
 func ListGoPackages() ([]GoPackage, error) {
-	out, listErr := exec.Command("go", "list", "-json", "./...").Output() //nolint:gosec // fixed args
+	out, listErr := exec.Command( //nolint:gosec // fixed args
+		"go", "list", "-json", "./...",
+	).Output()
 	if listErr != nil {
 		return nil, listErr
 	}
@@ -125,7 +128,8 @@ func ShortPkgName(importPath, modPath string) string {
 	return importPath
 }
 
-// BuildGoInternalGraph returns an adjacency list of internal package dependencies.
+// BuildGoInternalGraph returns an adjacency list of
+// internal package dependencies.
 // Keys and values use shortened names (module prefix stripped).
 //
 // Returns:

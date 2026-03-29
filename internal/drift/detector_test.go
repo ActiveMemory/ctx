@@ -114,7 +114,9 @@ func TestDetect(t *testing.T) {
 
 	// Create the main.go file so the path reference check passes
 	mainGo := filepath.Join(tmpDir, "main.go")
-	if writeErr := os.WriteFile(mainGo, []byte("package main"), 0600); writeErr != nil {
+	if writeErr := os.WriteFile(
+		mainGo, []byte("package main"), 0600,
+	); writeErr != nil {
 		t.Fatalf("failed to write main.go: %v", writeErr)
 	}
 
@@ -177,8 +179,11 @@ func TestCheckPathReferences(t *testing.T) {
 		Dir: ".context",
 		Files: []entity.FileInfo{
 			{
-				Name:    "ARCHITECTURE.md",
-				Content: []byte("# Architecture\n\nSee `internal/nonexistent.go` for details.\n"),
+				Name: "ARCHITECTURE.md",
+				Content: []byte(
+					"# Architecture\n\nSee " +
+						"`internal/nonexistent.go` for details.\n",
+				),
 			},
 		},
 	}
@@ -196,7 +201,10 @@ func TestCheckPathReferences(t *testing.T) {
 		t.Errorf("expected 1 warning, got %d", len(report.Warnings))
 	} else {
 		if report.Warnings[0].Type != "dead_path" {
-			t.Errorf("expected warning type 'dead_path', got %q", report.Warnings[0].Type)
+			t.Errorf(
+				"expected warning type 'dead_path', got %q",
+				report.Warnings[0].Type,
+			)
 		}
 		if report.Warnings[0].Path != "internal/nonexistent.go" {
 			t.Errorf("expected path 'nonexistent.go', got %q", report.Warnings[0].Path)
@@ -216,8 +224,14 @@ func TestCheckStaleness(t *testing.T) {
 			wantWarnings: 0,
 		},
 		{
-			name:         "many completed tasks",
-			tasksContent: "# Tasks\n\n- [x] Done 1\n- [x] Done 2\n- [x] Done 3\n- [x] Done 4\n- [x] Done 5\n- [x] Done 6\n- [x] Done 7\n- [x] Done 8\n- [x] Done 9\n- [x] Done 10\n- [x] Done 11\n",
+			name: "many completed tasks",
+			tasksContent: "# Tasks\n\n" +
+				"- [x] Done 1\n- [x] Done 2\n" +
+				"- [x] Done 3\n- [x] Done 4\n" +
+				"- [x] Done 5\n- [x] Done 6\n" +
+				"- [x] Done 7\n- [x] Done 8\n" +
+				"- [x] Done 9\n- [x] Done 10\n" +
+				"- [x] Done 11\n",
 			wantWarnings: 1,
 		},
 	}
@@ -243,7 +257,10 @@ func TestCheckStaleness(t *testing.T) {
 			checkStaleness(ctx, report)
 
 			if len(report.Warnings) != tt.wantWarnings {
-				t.Errorf("expected %d warnings, got %d", tt.wantWarnings, len(report.Warnings))
+				t.Errorf(
+					"expected %d warnings, got %d",
+					tt.wantWarnings, len(report.Warnings),
+				)
 			}
 		})
 	}
@@ -293,7 +310,10 @@ func TestCheckRequiredFiles(t *testing.T) {
 			checkRequiredFiles(ctx, report)
 
 			if len(report.Warnings) != tt.wantWarnings {
-				t.Errorf("expected %d warnings, got %d", tt.wantWarnings, len(report.Warnings))
+				t.Errorf(
+					"expected %d warnings, got %d",
+					tt.wantWarnings, len(report.Warnings),
+				)
 			}
 		})
 	}
@@ -305,7 +325,11 @@ func TestCheckEntryCount(t *testing.T) {
 		var sb strings.Builder
 		sb.WriteString("# Learnings\n\n")
 		for i := 0; i < n; i++ {
-			sb.WriteString(fmt.Sprintf("## [2026-01-%02d-120000] Entry %d\n\nContent for entry %d.\n\n", (i%28)+1, i+1, i+1))
+			sb.WriteString(fmt.Sprintf(
+				"## [2026-01-%02d-120000] Entry %d\n\n"+
+					"Content for entry %d.\n\n",
+				(i%28)+1, i+1, i+1,
+			))
 		}
 		return sb.String()
 	}
@@ -389,7 +413,10 @@ func TestCheckEntryCount(t *testing.T) {
 			checkEntryCount(ctx, report)
 
 			if len(report.Warnings) != tt.wantWarnings {
-				t.Errorf("expected %d warnings, got %d", tt.wantWarnings, len(report.Warnings))
+				t.Errorf(
+					"expected %d warnings, got %d",
+					tt.wantWarnings, len(report.Warnings),
+				)
 			}
 
 			passedCheck := false
@@ -422,7 +449,11 @@ func TestCheckEntryCountDisabled(t *testing.T) {
 		var sb strings.Builder
 		sb.WriteString("# Learnings\n\n")
 		for i := 0; i < n; i++ {
-			sb.WriteString(fmt.Sprintf("## [2026-01-%02d-120000] Entry %d\n\nContent for entry %d.\n\n", (i%28)+1, i+1, i+1))
+			sb.WriteString(fmt.Sprintf(
+				"## [2026-01-%02d-120000] Entry %d\n\n"+
+					"Content for entry %d.\n\n",
+				(i%28)+1, i+1, i+1,
+			))
 		}
 		return sb.String()
 	}
@@ -481,7 +512,11 @@ func TestCheckMissingPackages(t *testing.T) {
 	}(origDir)
 
 	// Create internal/ subdirectories
-	for _, d := range []string{"internal/config", "internal/cli", "internal/drift", "internal/newpkg"} {
+	dirs := []string{
+		"internal/config", "internal/cli",
+		"internal/drift", "internal/newpkg",
+	}
+	for _, d := range dirs {
 		if mkErr := os.MkdirAll(filepath.Join(tmpDir, d), 0750); mkErr != nil {
 			t.Fatalf("failed to create dir %s: %v", d, mkErr)
 		}
@@ -495,21 +530,32 @@ func TestCheckMissingPackages(t *testing.T) {
 		wantPaths    []string
 	}{
 		{
-			name:         "all packages documented",
-			archContent:  "# Arch\n\n| `internal/config` | ... |\n| `internal/cli` | ... |\n| `internal/drift` | ... |\n| `internal/newpkg` | ... |\n",
+			name: "all packages documented",
+			archContent: "# Arch\n\n" +
+				"| `internal/config` | ... |\n" +
+				"| `internal/cli` | ... |\n" +
+				"| `internal/drift` | ... |\n" +
+				"| `internal/newpkg` | ... |\n",
 			wantWarnings: 0,
 			wantPassed:   true,
 		},
 		{
-			name:         "one package missing",
-			archContent:  "# Arch\n\n| `internal/config` | ... |\n| `internal/cli` | ... |\n| `internal/drift` | ... |\n",
+			name: "one package missing",
+			archContent: "# Arch\n\n" +
+				"| `internal/config` | ... |\n" +
+				"| `internal/cli` | ... |\n" +
+				"| `internal/drift` | ... |\n",
 			wantWarnings: 1,
 			wantPassed:   false,
 			wantPaths:    []string{"internal/newpkg"},
 		},
 		{
-			name:         "nested path normalizes to parent",
-			archContent:  "# Arch\n\n| `internal/config` | ... |\n| `internal/cli/pad` | ... |\n| `internal/drift` | ... |\n| `internal/newpkg` | ... |\n",
+			name: "nested path normalizes to parent",
+			archContent: "# Arch\n\n" +
+				"| `internal/config` | ... |\n" +
+				"| `internal/cli/pad` | ... |\n" +
+				"| `internal/drift` | ... |\n" +
+				"| `internal/newpkg` | ... |\n",
 			wantWarnings: 0,
 			wantPassed:   true,
 		},
@@ -541,7 +587,10 @@ func TestCheckMissingPackages(t *testing.T) {
 			checkMissingPackages(ctx, report)
 
 			if len(report.Warnings) != tt.wantWarnings {
-				t.Errorf("expected %d warnings, got %d", tt.wantWarnings, len(report.Warnings))
+				t.Errorf(
+					"expected %d warnings, got %d",
+					tt.wantWarnings, len(report.Warnings),
+				)
 				for _, w := range report.Warnings {
 					t.Logf("  warning: %s (path=%s)", w.Message, w.Path)
 				}
@@ -586,7 +635,7 @@ func TestNormalizeInternalPkg(t *testing.T) {
 	}{
 		{"internal/config", "internal/config"},
 		{"internal/cli/pad", "internal/cli"},
-		{"internal/recall/parser", "internal/recall"},
+		{"internal/mcp/handler", "internal/mcp"},
 		{"internal/journal/state", "internal/journal"},
 		{"internal", "internal"},
 	}

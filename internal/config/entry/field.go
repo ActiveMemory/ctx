@@ -19,7 +19,8 @@ const (
 	FieldRationale = "rationale"
 	// FieldConsequence is the outcomes field for decisions (what changes).
 	FieldConsequence = "consequence"
-	// FieldApplication is the usage field for learnings (how to apply going forward).
+	// FieldApplication is the usage field for learnings
+	// (how to apply going forward).
 	FieldApplication = "application"
 	// FieldLesson is the insight field for learnings (the key takeaway).
 	FieldLesson = "lesson"

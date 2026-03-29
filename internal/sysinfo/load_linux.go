@@ -13,6 +13,8 @@ import (
 	"io"
 	"os"
 	"runtime"
+
+	ctxLog "github.com/ActiveMemory/ctx/internal/log"
 )
 
 // collectLoad reads system load averages from /proc/loadavg on Linux.
@@ -27,7 +29,13 @@ func collectLoad() LoadInfo {
 	if openErr != nil {
 		return LoadInfo{Supported: false}
 	}
-	defer func() { _ = f.Close() }()
+	defer func() {
+		if closeErr := f.Close(); closeErr != nil {
+			ctxLog.Warn(
+				"close %s: %v", "/proc/loadavg", closeErr,
+			)
+		}
+	}()
 	return parseLoadavg(f)
 }
 

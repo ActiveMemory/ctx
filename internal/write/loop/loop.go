@@ -33,7 +33,9 @@ func InfoGenerated(
 ) {
 	iterLine := desc.Text(text.DescKeyWriteLoopUnlimited)
 	if maxIterations > 0 {
-		iterLine = fmt.Sprintf(desc.Text(text.DescKeyWriteLoopMaxIterations), maxIterations)
+		iterLine = fmt.Sprintf(
+			desc.Text(text.DescKeyWriteLoopMaxIterations),
+			maxIterations)
 	}
 	cmd.Println(fmt.Sprintf(
 		desc.Text(text.DescKeyWriteLoopGeneratedBlock),

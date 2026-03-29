@@ -72,7 +72,8 @@ func TestResolveKeyPath_ProjectLocalBeforeGlobal(t *testing.T) {
 		t.Fatal(err)
 	}
 	localKey := filepath.Join(contextDir, cfgCrypto.ContextKey)
-	if err := os.WriteFile(localKey, []byte("local-key"), fs.PermSecret); err != nil {
+	localData := []byte("local-key")
+	if err := os.WriteFile(localKey, localData, fs.PermSecret); err != nil {
 		t.Fatal(err)
 	}
 
@@ -81,7 +82,8 @@ func TestResolveKeyPath_ProjectLocalBeforeGlobal(t *testing.T) {
 		t.Fatal(err)
 	}
 	globalKey := filepath.Join(globalDir, cfgCrypto.ContextKey)
-	if err := os.WriteFile(globalKey, []byte("global-key"), fs.PermSecret); err != nil {
+	globalData := []byte("global-key")
+	if err := os.WriteFile(globalKey, globalData, fs.PermSecret); err != nil {
 		t.Fatal(err)
 	}
 
@@ -101,7 +103,8 @@ func TestResolveKeyPath_FallbackToGlobal(t *testing.T) {
 		t.Fatal(err)
 	}
 	globalKey := filepath.Join(globalDir, cfgCrypto.ContextKey)
-	if err := os.WriteFile(globalKey, []byte("global-key"), fs.PermSecret); err != nil {
+	gData := []byte("global-key")
+	if err := os.WriteFile(globalKey, gData, fs.PermSecret); err != nil {
 		t.Fatal(err)
 	}
 

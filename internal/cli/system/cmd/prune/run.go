@@ -41,7 +41,8 @@ func Run(cmd *cobra.Command, days int, dryRun bool) error {
 		return errState.ReadingDir(readErr)
 	}
 
-	cutoff := time.Now().Add(-time.Duration(days) * cfgTime.HoursPerDay * time.Hour)
+	age := time.Duration(days) * cfgTime.HoursPerDay * time.Hour
+	cutoff := time.Now().Add(-age)
 	var pruned, skipped, preserved int
 
 	for _, entry := range entries {

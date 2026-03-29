@@ -23,7 +23,8 @@ import (
 //
 // Parameters:
 //   - cmd: Cobra command for output stream
-//   - since: Time reference string (duration like "24h" or date like "2026-03-01")
+//   - since: Time reference string
+//     (duration like "24h" or date like "2026-03-01")
 //
 // Returns:
 //   - error: Non-nil if reference time detection fails

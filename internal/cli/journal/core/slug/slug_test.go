@@ -22,7 +22,11 @@ func TestSlugifyTitle(t *testing.T) {
 	}{
 		{"empty string", "", ""},
 		{"simple title", "Fix Authentication Bug", "fix-authentication-bug"},
-		{"with punctuation", "Hello, World! How's it going?", "hello-world-how-s-it-going"},
+		{
+			"with punctuation",
+			"Hello, World! How's it going?",
+			"hello-world-how-s-it-going",
+		},
 		{"leading/trailing spaces", "  hello world  ", "hello-world"},
 		{"unicode characters", "café résumé naïve", "caf-r-sum-na-ve"},
 		{"unicode CJK", "修复认证错误", ""},
@@ -30,10 +34,17 @@ func TestSlugifyTitle(t *testing.T) {
 		{"numbers", "Add OAuth2 support for v3 API", "add-oauth2-support-for-v3-api"},
 		{"consecutive special chars", "hello---world!!!test", "hello-world-test"},
 		{"all punctuation", "!@#$%^&*()", ""},
-		{"truncated FirstUserMsg suffix", "implement the feature...", "implement-the-feature"},
+		{
+			"truncated FirstUserMsg suffix",
+			"implement the feature...",
+			"implement-the-feature",
+		},
 		{
 			"very long title truncates on word boundary",
-			"This is an extremely long title that should be truncated on a word boundary somewhere around fifty characters",
+			"This is an extremely long title that" +
+				" should be truncated on a word" +
+				" boundary somewhere around" +
+				" fifty characters",
 			"this-is-an-extremely-long-title-that-should-be",
 		},
 		{
@@ -42,7 +53,11 @@ func TestSlugifyTitle(t *testing.T) {
 			strings.Repeat("a", 50),
 		},
 		{"just hey", "hey", "hey"},
-		{"mixed case", "Fix README.md Formatting Issues", "fix-readme-md-formatting-issues"},
+		{
+			"mixed case",
+			"Fix README.md Formatting Issues",
+			"fix-readme-md-formatting-issues",
+		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
@@ -52,7 +67,11 @@ func TestSlugifyTitle(t *testing.T) {
 			}
 			// Slug must not exceed max length.
 			if len(got) > journal.TitleSlugMaxLen {
-				t.Errorf("FromTitle(%q) length %d exceeds max %d", tt.input, len(got), journal.TitleSlugMaxLen)
+				t.Errorf(
+					"FromTitle(%q) length %d exceeds max %d",
+					tt.input, len(got),
+					journal.TitleSlugMaxLen,
+				)
 			}
 		})
 	}
@@ -65,7 +84,11 @@ func TestCleanTitle(t *testing.T) {
 		want  string
 	}{
 		{"simple", "Fix Authentication Bug", "Fix Authentication Bug"},
-		{"with newlines", "Implement plan:\n\n# Title\n\nDetails", "Implement plan: # Title Details"},
+		{
+			"with newlines",
+			"Implement plan:\n\n# Title\n\nDetails",
+			"Implement plan: # Title Details",
+		},
 		{"with tabs", "Hello\tworld", "Hello world"},
 		{"leading/trailing whitespace", "  hello  ", "hello"},
 		{"truncation suffix", "some long text...", "some long text"},
@@ -73,7 +96,10 @@ func TestCleanTitle(t *testing.T) {
 		{"empty", "", ""},
 		{
 			"long title truncated on word boundary",
-			"We are debugging the new journal enrichment and creation flow and the rendering still breaks around line 37",
+			"We are debugging the new journal" +
+				" enrichment and creation flow and" +
+				" the rendering still breaks" +
+				" around line 37",
 			"We are debugging the new journal enrichment and creation flow and the",
 		},
 		{

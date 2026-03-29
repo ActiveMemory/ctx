@@ -57,7 +57,8 @@ func TestDiscoverMemoryPath_Found(t *testing.T) {
 		t.Fatal(mkErr)
 	}
 	memFile := filepath.Join(memDir, "MEMORY.md")
-	if writeErr := os.WriteFile(memFile, []byte("# Memory\n"), 0o644); writeErr != nil {
+	memData := []byte("# Memory\n")
+	if writeErr := os.WriteFile(memFile, memData, 0o644); writeErr != nil {
 		t.Fatal(writeErr)
 	}
 

@@ -95,7 +95,8 @@ func TestParseTaskBlocks_TaskWithMetadata(t *testing.T) {
 		t.Error("task with metadata should be archivable")
 	}
 	if len(block.Lines) != 4 {
-		t.Errorf("expected 4 lines (parent + 3 metadata), got %d: %v", len(block.Lines), block.Lines)
+		t.Errorf("expected 4 lines (parent + 3 metadata), got %d: %v",
+			len(block.Lines), block.Lines)
 	}
 
 	// Verify all lines are captured
@@ -279,7 +280,8 @@ func TestParseTaskBlocks_EmptyLinesInBlock(t *testing.T) {
 	block := blocks[0]
 	// Should include: parent, first line, blank, second paragraph (2 lines)
 	if len(block.Lines) < 4 {
-		t.Errorf("expected at least 4 lines, got %d: %v", len(block.Lines), block.Lines)
+		t.Errorf("expected at least 4 lines, got %d: %v",
+			len(block.Lines), block.Lines)
 	}
 	if !block.IsArchivable {
 		t.Error("should be archivable")
@@ -301,7 +303,10 @@ func TestRemoveBlocksFromLines(t *testing.T) {
 	}
 
 	blocks := []entity.TaskBlock{
-		{StartIndex: 4, EndIndex: 6, Lines: []string{"- [x] First task", "  metadata"}},
+		{
+			StartIndex: 4, EndIndex: 6,
+			Lines: []string{"- [x] First task", "  metadata"},
+		},
 		{StartIndex: 7, EndIndex: 8, Lines: []string{"- [x] Third task"}},
 	}
 
@@ -444,8 +449,10 @@ func TestParseDoneTimestamp(t *testing.T) {
 			wantNil: true,
 		},
 		{
-			name:     "with done timestamp",
-			line:     "- [x] Task with timestamp #added:2026-01-15-100000 #done:2026-01-20-143000",
+			name: "with done timestamp",
+			line: "- [x] Task with timestamp" +
+				" #added:2026-01-15-100000" +
+				" #done:2026-01-20-143000",
 			wantNil:  false,
 			wantYear: 2026,
 		},
@@ -508,10 +515,13 @@ func TestTaskBlockIsOlderThan(t *testing.T) {
 			want:     true,
 		},
 		{
-			name:     "completed exactly 7 days ago",
-			doneTime: func() *time.Time { t := now.AddDate(0, 0, -7).Add(-time.Hour); return &t }(),
-			days:     7,
-			want:     true,
+			name: "completed exactly 7 days ago",
+			doneTime: func() *time.Time {
+				t := now.AddDate(0, 0, -7).Add(-time.Hour)
+				return &t
+			}(),
+			days: 7,
+			want: true,
 		},
 		{
 			name:     "completed 5 days ago with 7 day threshold",

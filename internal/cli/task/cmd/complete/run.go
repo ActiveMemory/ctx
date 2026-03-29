@@ -104,7 +104,9 @@ func Complete(query, contextDir string) (string, error) {
 
 	// Write back
 	newContent := strings.Join(lines, token.NewlineLF)
-	if writeErr := os.WriteFile(filePath, []byte(newContent), fs.PermFile); writeErr != nil {
+	if writeErr := os.WriteFile(
+		filePath, []byte(newContent), fs.PermFile,
+	); writeErr != nil {
 		return "", errTask.FileWrite(writeErr)
 	}
 

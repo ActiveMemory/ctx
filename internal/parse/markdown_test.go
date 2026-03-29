@@ -66,20 +66,25 @@ func TestExtractSystemReminders(t *testing.T) {
 			wantReminders: 0,
 		},
 		{
-			name:          "single reminder",
-			content:       "before <system-reminder>reminder text</system-reminder> after",
+			name: "single reminder",
+			content: "before " +
+				"<system-reminder>reminder text</system-reminder> after",
 			wantClean:     "before  after",
 			wantReminders: 1,
 		},
 		{
-			name:          "multiple reminders",
-			content:       "<system-reminder>first</system-reminder> middle <system-reminder>second</system-reminder>",
+			name: "multiple reminders",
+			content: "<system-reminder>first</system-reminder>" +
+				" middle " +
+				"<system-reminder>second</system-reminder>",
 			wantClean:     " middle ",
 			wantReminders: 2,
 		},
 		{
-			name:          "multiline reminder",
-			content:       "text\n<system-reminder>\nmultiline\nreminder\n</system-reminder>\nmore",
+			name: "multiline reminder",
+			content: "text\n<system-reminder>\n" +
+				"multiline\nreminder\n" +
+				"</system-reminder>\nmore",
 			wantClean:     "text\n\nmore",
 			wantReminders: 1,
 		},

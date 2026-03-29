@@ -60,7 +60,8 @@ func InvalidSelection(input string, max int) error {
 //   - alias: the unrecognized alias
 //
 // Returns:
-//   - error: "unknown document <alias> (available: manifesto, about, invariants)"
+//   - error: "unknown document <alias>
+//     (available: manifesto, about, invariants)"
 func UnknownDocument(alias string) error {
 	return fmt.Errorf(
 		desc.Text(text.DescKeyErrValidateUnknownDocument), alias,

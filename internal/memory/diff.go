@@ -30,7 +30,8 @@ func countLines(data []byte) int {
 	return bytes.Count(data, []byte(token.NewlineLF))
 }
 
-// simpleDiff produces a minimal unified-style diff header with added/removed lines.
+// simpleDiff produces a minimal unified-style diff header
+// with added/removed lines.
 //
 // Parameters:
 //   - oldPath: Label for the old file in the diff header

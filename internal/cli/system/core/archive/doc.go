@@ -4,5 +4,6 @@
 //   \    Copyright 2026-present Context contributors.
 //                 SPDX-License-Identifier: Apache-2.0
 
-// Package archive creates compressed tar archives of context data with optional SMB backup.
+// Package archive creates compressed tar archives of context data
+// with optional SMB backup.
 package archive

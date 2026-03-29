@@ -26,7 +26,8 @@ import (
 //   - nl: Newline string
 //
 // Returns:
-//   - string: Formatted line (e.g., "- 14:30 [title](link.md) (project) `1.2KB`")
+//   - string: Formatted line
+//     (e.g., "- 14:30 [title](link.md) (project) `1.2KB`")
 func formatIndexEntry(e entity.JournalEntry, nl string) string {
 	link := strings.TrimSuffix(e.Filename, file.ExtMarkdown)
 

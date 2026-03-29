@@ -13,6 +13,7 @@ package notify
 
 import (
 	"encoding/json"
+	"fmt"
 	"net/http"
 	"os"
 	"path/filepath"
@@ -20,6 +21,7 @@ import (
 
 	cfgCrypto "github.com/ActiveMemory/ctx/internal/config/crypto"
 	"github.com/ActiveMemory/ctx/internal/config/fs"
+	"github.com/ActiveMemory/ctx/internal/config/token"
 	"github.com/ActiveMemory/ctx/internal/crypto"
 	"github.com/ActiveMemory/ctx/internal/io"
 	"github.com/ActiveMemory/ctx/internal/rc"
@@ -168,7 +170,11 @@ func Send(event, message, sessionID string, detail *TemplateRef) error {
 	if postErr != nil {
 		return nil // fire-and-forget
 	}
-	_ = resp.Body.Close()
+	if closeErr := resp.Body.Close(); closeErr != nil {
+		fmt.Fprintf(os.Stderr,
+			"ctx: close %s: %v"+token.NewlineLF,
+			"response body", closeErr)
+	}
 
 	return nil
 }

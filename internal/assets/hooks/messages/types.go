@@ -20,6 +20,7 @@ type HookMessageInfo struct {
 	// Description is a one-line human description of this message.
 	Description string `yaml:"description"`
 
-	// TemplateVars lists available Go template variables (e.g., "PromptsSinceNudge").
+	// TemplateVars lists available Go template variables
+	// (e.g., "PromptsSinceNudge").
 	TemplateVars []string `yaml:"vars,omitempty"`
 }

@@ -13,6 +13,7 @@ import (
 
 	"github.com/ActiveMemory/ctx/internal/config/agent"
 	"github.com/ActiveMemory/ctx/internal/config/dir"
+	ctxLog "github.com/ActiveMemory/ctx/internal/log"
 	"github.com/ActiveMemory/ctx/internal/rc"
 )
 
@@ -45,7 +46,10 @@ func TouchTombstone(session string) {
 	if session == "" {
 		return
 	}
-	_ = os.WriteFile(TombstonePath(session), nil, 0o600)
+	p := TombstonePath(session)
+	if writeErr := os.WriteFile(p, nil, 0o600); writeErr != nil {
+		ctxLog.Warn("write %s: %v", p, writeErr)
+	}
 }
 
 // TombstonePath returns the filesystem path for a session's tombstone.
@@ -57,6 +61,8 @@ func TouchTombstone(session string) {
 //   - string: absolute path in the system temp directory
 func TombstonePath(session string) string {
 	stateDir := filepath.Join(rc.ContextDir(), dir.State)
-	_ = os.MkdirAll(stateDir, 0o750)
+	if mkdirErr := os.MkdirAll(stateDir, 0o750); mkdirErr != nil {
+		ctxLog.Warn("mkdir %s: %v", stateDir, mkdirErr)
+	}
 	return filepath.Join(stateDir, agent.TombstonePrefix+session)
 }

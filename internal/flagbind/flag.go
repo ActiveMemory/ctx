@@ -45,7 +45,14 @@ func StringFlagP(c *cobra.Command, p *string, name, short, descKey string) {
 //   - lastDefault: Default value for --last
 //   - lastDescKey: YAML DescKey for the --last flag description
 //   - jsonDescKey: YAML DescKey for the --json flag description
-func LastJSON(c *cobra.Command, lastDefault int, lastDescKey, jsonDescKey string) {
-	c.Flags().IntP(cFlag.Last, cFlag.ShortLast, lastDefault, desc.Flag(lastDescKey))
+func LastJSON(
+	c *cobra.Command,
+	lastDefault int,
+	lastDescKey, jsonDescKey string,
+) {
+	c.Flags().IntP(
+		cFlag.Last, cFlag.ShortLast,
+		lastDefault, desc.Flag(lastDescKey),
+	)
 	c.Flags().BoolP(cFlag.JSON, cFlag.ShortJSON, false, desc.Flag(jsonDescKey))
 }

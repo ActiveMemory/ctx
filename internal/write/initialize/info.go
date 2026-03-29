@@ -21,7 +21,9 @@ import (
 //   - cmd: Cobra command for output
 //   - contextDir: path to the existing .context/ directory
 func InfoOverwritePrompt(cmd *cobra.Command, contextDir string) {
-	cmd.Print(fmt.Sprintf(desc.Text(text.DescKeyWriteInitOverwritePrompt), contextDir))
+	cmd.Print(fmt.Sprintf(
+		desc.Text(text.DescKeyWriteInitOverwritePrompt),
+		contextDir))
 }
 
 // InfoAborted reports that the user cancelled the init operation.
@@ -67,7 +69,9 @@ func Initialized(cmd *cobra.Command, contextDir string) {
 //   - label: short description of what failed (e.g. "CLAUDE.md")
 //   - err: the non-fatal error
 func InfoWarnNonFatal(cmd *cobra.Command, label string, err error) {
-	cmd.Println(fmt.Sprintf(desc.Text(text.DescKeyWriteInitWarnNonFatal), label, err))
+	cmd.Println(fmt.Sprintf(
+		desc.Text(text.DescKeyWriteInitWarnNonFatal),
+		label, err))
 }
 
 // InfoScratchpadPlaintext reports a plaintext scratchpad was created.
@@ -76,7 +80,9 @@ func InfoWarnNonFatal(cmd *cobra.Command, label string, err error) {
 //   - cmd: Cobra command for output
 //   - path: the scratchpad file path
 func InfoScratchpadPlaintext(cmd *cobra.Command, path string) {
-	cmd.Println(fmt.Sprintf(desc.Text(text.DescKeyWriteInitScratchpadPlaintext), path))
+	cmd.Println(fmt.Sprintf(
+		desc.Text(text.DescKeyWriteInitScratchpadPlaintext),
+		path))
 }
 
 // InfoScratchpadNoKey warns about a missing key for an encrypted scratchpad.
@@ -85,7 +91,9 @@ func InfoScratchpadPlaintext(cmd *cobra.Command, path string) {
 //   - cmd: Cobra command for output
 //   - keyPath: the expected key path
 func InfoScratchpadNoKey(cmd *cobra.Command, keyPath string) {
-	cmd.Println(fmt.Sprintf(desc.Text(text.DescKeyWriteInitScratchpadNoKey), keyPath))
+	cmd.Println(fmt.Sprintf(
+		desc.Text(text.DescKeyWriteInitScratchpadNoKey),
+		keyPath))
 }
 
 // InfoScratchpadKeyCreated reports a scratchpad key was generated.
@@ -94,7 +102,9 @@ func InfoScratchpadNoKey(cmd *cobra.Command, keyPath string) {
 //   - cmd: Cobra command for output
 //   - keyPath: the path where the key was saved
 func InfoScratchpadKeyCreated(cmd *cobra.Command, keyPath string) {
-	cmd.Println(fmt.Sprintf(desc.Text(text.DescKeyWriteInitScratchpadKeyCreated), keyPath))
+	cmd.Println(fmt.Sprintf(
+		desc.Text(text.DescKeyWriteInitScratchpadKeyCreated),
+		keyPath))
 }
 
 // InfoCreatingRootFiles prints the heading before root file creation.
@@ -121,7 +131,9 @@ func InfoSettingUpPermissions(cmd *cobra.Command) {
 //   - cmd: Cobra command for output
 //   - count: number of entries added
 func InfoGitignoreUpdated(cmd *cobra.Command, count int) {
-	cmd.Println(fmt.Sprintf(desc.Text(text.DescKeyWriteInitGitignoreUpdated), count))
+	cmd.Println(fmt.Sprintf(
+		desc.Text(text.DescKeyWriteInitGitignoreUpdated),
+		count))
 }
 
 // InfoGitignoreReview hints how to review changes.
@@ -149,11 +161,14 @@ func InfoWorkflowTips(cmd *cobra.Command) {
 	cmd.Println(desc.Text(text.DescKeyWriteInitWorkflowTips))
 }
 
-// InfoGettingStartedSaved reports that the quick-start reference file was written.
+// InfoGettingStartedSaved reports that the quick-start reference
+// file was written.
 //
 // Parameters:
 //   - cmd: Cobra command for output
 //   - path: File path that was written
 func InfoGettingStartedSaved(cmd *cobra.Command, path string) {
-	cmd.Println(fmt.Sprintf(desc.Text(text.DescKeyWriteInitGettingStartedSaved), path))
+	cmd.Println(fmt.Sprintf(
+		desc.Text(text.DescKeyWriteInitGettingStartedSaved),
+		path))
 }

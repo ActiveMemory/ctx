@@ -96,9 +96,15 @@ func TestLoad(t *testing.T) {
 
 	// Create some test files
 	files := map[string]string{
-		"CONSTITUTION.md": "# Constitution\n\n- [ ] Never break the build\n- [ ] Always write tests\n",
-		"TASKS.md":        "# Tasks\n\n- [ ] Implement feature A\n- [x] Setup project\n",
-		"DECISIONS.md":    "# Decisions\n\n## 2024-01-15 Use PostgreSQL\n\nWe decided to use PostgreSQL.\n",
+		"CONSTITUTION.md": "# Constitution\n\n" +
+			"- [ ] Never break the build\n" +
+			"- [ ] Always write tests\n",
+		"TASKS.md": "# Tasks\n\n" +
+			"- [ ] Implement feature A\n" +
+			"- [x] Setup project\n",
+		"DECISIONS.md": "# Decisions\n\n" +
+			"## 2024-01-15 Use PostgreSQL\n\n" +
+			"We decided to use PostgreSQL.\n",
 	}
 
 	for name, content := range files {

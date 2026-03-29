@@ -59,7 +59,9 @@ func Result(
 	if archivedTo != "" {
 		cmd.Println(fmt.Sprintf(desc.Text(text.DescKeyWriteArchived), archivedTo))
 	}
-	cmd.Println(fmt.Sprintf(desc.Text(text.DescKeyWriteSynced), sourceLabel, mirrorPath))
+	cmd.Println(fmt.Sprintf(
+		desc.Text(text.DescKeyWriteSynced),
+		sourceLabel, mirrorPath))
 	cmd.Println(fmt.Sprintf(desc.Text(text.DescKeyWriteSource), sourcePath))
 
 	line := desc.Text(text.DescKeyWriteLines)
@@ -70,7 +72,9 @@ func Result(
 		cmd.Println(fmt.Sprintf(line, sourceLines))
 	}
 	if sourceLines > mirrorLines {
-		cmd.Println(fmt.Sprintf(desc.Text(text.DescKeyWriteNewContent), sourceLines-mirrorLines))
+		cmd.Println(fmt.Sprintf(
+			desc.Text(text.DescKeyWriteNewContent),
+			sourceLines-mirrorLines))
 	}
 }
 
@@ -78,7 +82,8 @@ func Result(
 // auto memory discovery fails.
 //
 // Parameters:
-//   - cmd: Cobra command whose stderr stream receives the message. Nil is a no-op.
+//   - cmd: Cobra command whose stderr stream receives the
+//     message. Nil is a no-op.
 //   - cause: the discovery error to display.
 func ErrAutoMemoryNotActive(cmd *cobra.Command, cause error) {
 	if cmd == nil {

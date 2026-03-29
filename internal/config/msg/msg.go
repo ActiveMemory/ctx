@@ -14,11 +14,14 @@ var MessageListFormat = fmt.Sprintf("%%-%ds %%-%ds %%-%ds %%s",
 
 // Message table formatting.
 const (
-	// MessageColHook is the column width for the Hook field in message list output.
+	// MessageColHook is the column width for the Hook field
+	// in message list output.
 	MessageColHook = 24
-	// MessageColVariant is the column width for the Variant field in message list output.
+	// MessageColVariant is the column width for the Variant
+	// field in message list output.
 	MessageColVariant = 20
-	// MessageColCategory is the column width for the Category field in message list output.
+	// MessageColCategory is the column width for the Category
+	// field in message list output.
 	MessageColCategory = 16
 	// MessageSepHook is the separator width for the Hook column underline.
 	MessageSepHook = 22

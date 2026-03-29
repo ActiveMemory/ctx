@@ -113,7 +113,8 @@ func ObsidianTopics(topics []entity.TopicData) string {
 
 	section.WriteFormatted(
 		&sb,
-		text.DescKeyJournalMocHeadingPopular, popular, func(t entity.TopicData) string {
+		text.DescKeyJournalMocHeadingPopular,
+		popular, func(t entity.TopicData) string {
 			return fmt.Sprintf(
 				desc.Text(text.DescKeyJournalMocItemSessions)+nl,
 				wikilink.Format(t.Name, t.Name), len(t.Entries))
@@ -265,7 +266,10 @@ func ObsidianTypes(sessionTypes []entity.TypeData) string {
 func GenerateObsidianTypePage(st entity.TypeData) string {
 	return GenerateObsidianGroupedPage(
 		fmt.Sprintf(desc.Text(text.DescKeyJournalMocPageTitle), st.Name),
-		fmt.Sprintf(desc.Text(text.DescKeyJournalMocTypePageStats), len(st.Entries), st.Name),
+		fmt.Sprintf(
+			desc.Text(text.DescKeyJournalMocTypePageStats),
+			len(st.Entries), st.Name,
+		),
 		st.Entries,
 	)
 }
@@ -291,7 +295,11 @@ func GenerateObsidianGroupedPage(
 
 	months, monthOrder := group.ByMonth(entries)
 	for _, month := range monthOrder {
-		sb.WriteString(fmt.Sprintf(desc.Text(text.DescKeyJournalMocHeadingMonth)+nl+nl, month))
+		heading := fmt.Sprintf(
+			desc.Text(text.DescKeyJournalMocHeadingMonth)+
+				nl+nl, month,
+		)
+		sb.WriteString(heading)
 		for _, e := range months[month] {
 			sb.WriteString(wikilink.FormatEntry(e) + nl)
 		}
@@ -455,10 +463,15 @@ func FilterRegularEntries(entries []entity.JournalEntry) []entity.JournalEntry {
 //
 // Returns:
 //   - []JournalEntry: Entries with topics
-func FilterEntriesWithTopics(entries []entity.JournalEntry) []entity.JournalEntry {
+func FilterEntriesWithTopics(
+	entries []entity.JournalEntry,
+) []entity.JournalEntry {
 	var result []entity.JournalEntry
 	for _, e := range entries {
-		if e.Suggestive || section.ContinuesMultipart(e.Filename) || len(e.Topics) == 0 {
+		skip := e.Suggestive ||
+			section.ContinuesMultipart(e.Filename) ||
+			len(e.Topics) == 0
+		if skip {
 			continue
 		}
 		result = append(result, e)
@@ -474,10 +487,15 @@ func FilterEntriesWithTopics(entries []entity.JournalEntry) []entity.JournalEntr
 //
 // Returns:
 //   - []JournalEntry: Entries with key files
-func FilterEntriesWithKeyFiles(entries []entity.JournalEntry) []entity.JournalEntry {
+func FilterEntriesWithKeyFiles(
+	entries []entity.JournalEntry,
+) []entity.JournalEntry {
 	var result []entity.JournalEntry
 	for _, e := range entries {
-		if e.Suggestive || section.ContinuesMultipart(e.Filename) || len(e.KeyFiles) == 0 {
+		skip := e.Suggestive ||
+			section.ContinuesMultipart(e.Filename) ||
+			len(e.KeyFiles) == 0
+		if skip {
 			continue
 		}
 		result = append(result, e)
@@ -493,7 +511,9 @@ func FilterEntriesWithKeyFiles(entries []entity.JournalEntry) []entity.JournalEn
 //
 // Returns:
 //   - []JournalEntry: Entries with type
-func FilterEntriesWithType(entries []entity.JournalEntry) []entity.JournalEntry {
+func FilterEntriesWithType(
+	entries []entity.JournalEntry,
+) []entity.JournalEntry {
 	var result []entity.JournalEntry
 	for _, e := range entries {
 		if e.Suggestive || section.ContinuesMultipart(e.Filename) || e.Type == "" {
@@ -512,7 +532,9 @@ func FilterEntriesWithType(entries []entity.JournalEntry) []entity.JournalEntry 
 //
 // Returns:
 //   - map[string][]JournalEntry: Topic name -> entries
-func BuildTopicLookup(entries []entity.JournalEntry) map[string][]entity.JournalEntry {
+func BuildTopicLookup(
+	entries []entity.JournalEntry,
+) map[string][]entity.JournalEntry {
 	lookup := make(map[string][]entity.JournalEntry)
 	for _, e := range entries {
 		for _, topic := range e.Topics {

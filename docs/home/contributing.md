@@ -171,13 +171,13 @@ Pattern to follow: `internal/cli/pad/pad.go` (parent with subcommands) or
 The recall system uses a `SessionParser` interface. To add support for a
 new AI tool (e.g. Aider, Cursor):
 
-1. Create `internal/recall/parser/<tool>.go`;
+1. Create `internal/journal/parser/<tool>.go`;
 2. Implement parsing logic that returns `[]*Session`;
 3. Register the parser in `FindSessions()` / `FindSessionsForCWD()`;
 4. Use `config.Tool*` constants for the tool identifier;
 5. Add test fixtures and parser tests.
 
-Pattern to follow: the Claude Code JSONL parser in `internal/recall/parser/`.
+Pattern to follow: the Claude Code JSONL parser in `internal/journal/parser/`.
 
 !!! note "Multilingual session headers"
     The Markdown parser recognizes session header prefixes configured via

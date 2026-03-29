@@ -35,14 +35,16 @@ import (
 //   - convThreshold: max convention lines (0 = disabled)
 //
 // Returns:
-//   - []KnowledgeFinding: files exceeding thresholds, or nil if all within limits
+//   - []KnowledgeFinding: files exceeding thresholds,
+//     or nil if all within limits
 func ScanFiles(
 	contextDir string, decThreshold, lrnThreshold, convThreshold int,
 ) []finding {
 	var findings []finding
 
 	if decThreshold > 0 {
-		if data, readErr := io.SafeReadFile(contextDir, ctx.Decision); readErr == nil {
+		data, readErr := io.SafeReadFile(contextDir, ctx.Decision)
+		if readErr == nil {
 			count := len(index.ParseEntryBlocks(string(data)))
 			if count > decThreshold {
 				findings = append(findings, finding{
@@ -56,7 +58,8 @@ func ScanFiles(
 	}
 
 	if lrnThreshold > 0 {
-		if data, readErr := io.SafeReadFile(contextDir, ctx.Learning); readErr == nil {
+		data, readErr := io.SafeReadFile(contextDir, ctx.Learning)
+		if readErr == nil {
 			count := len(index.ParseEntryBlocks(string(data)))
 			if count > lrnThreshold {
 				findings = append(findings, finding{
@@ -70,7 +73,8 @@ func ScanFiles(
 	}
 
 	if convThreshold > 0 {
-		if data, readErr := io.SafeReadFile(contextDir, ctx.Convention); readErr == nil {
+		data, readErr := io.SafeReadFile(contextDir, ctx.Convention)
+		if readErr == nil {
 			lineCount := bytes.Count(data, []byte(token.NewlineLF))
 			if lineCount > convThreshold {
 				findings = append(findings, finding{

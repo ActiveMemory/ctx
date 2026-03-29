@@ -58,11 +58,17 @@ func templateDir(t *testing.T, root string) string {
 func allGoFiles(t *testing.T, root string) []string {
 	t.Helper()
 	var files []string
-	err := filepath.Walk(root, func(path string, info os.FileInfo, err error) error {
+	err := filepath.Walk(root, func(
+		path string, info os.FileInfo, err error,
+	) error {
 		if err != nil {
 			return err
 		}
-		if info.IsDir() && (info.Name() == "vendor" || info.Name() == ".git" || info.Name() == "dist" || info.Name() == "site") {
+		isSkipped := info.Name() == "vendor" ||
+			info.Name() == ".git" ||
+			info.Name() == "dist" ||
+			info.Name() == "site"
+		if info.IsDir() && isSkipped {
 			return filepath.SkipDir
 		}
 		if !info.IsDir() && strings.HasSuffix(path, ".go") {
@@ -269,7 +275,8 @@ func TestNoCmdPrintf(t *testing.T) {
 }
 
 // ---------------------------------------------------------------------------
-// 6. No magic directory strings ╬ô├ç├╢ use config.Dir* constants (lint-drift rule 3)
+// 6. No magic directory strings — use config.Dir* constants
+// (lint-drift rule 3)
 // ---------------------------------------------------------------------------
 
 // TestNoMagicDirectoryStrings mirrors lint-drift rule 3: magic directory
@@ -322,11 +329,16 @@ func TestNoDirectFmtPrintInCobraHandlers(t *testing.T) {
 		"Printf":  true,
 	}
 
-	err := filepath.Walk(cliDir, func(path string, info os.FileInfo, walkErr error) error {
+	err := filepath.Walk(cliDir, func(
+		path string, info os.FileInfo, walkErr error,
+	) error {
 		if walkErr != nil {
 			return walkErr
 		}
-		if info.IsDir() || !strings.HasSuffix(path, ".go") || strings.HasSuffix(path, "_test.go") {
+		notSource := info.IsDir() ||
+			!strings.HasSuffix(path, ".go") ||
+			strings.HasSuffix(path, "_test.go")
+		if notSource {
 			return nil
 		}
 
@@ -470,7 +482,8 @@ func TestGoVet(t *testing.T) {
 
 // TestGolangciLint runs golangci-lint across the entire project.
 // This catches issues that go vet alone misses (gosec, goconst, unused, etc.).
-// golangci-lint is a required dependency ╬ô├ç├╢ the test fails if it is not installed.
+// golangci-lint is a required dependency — the test fails
+// if it is not installed.
 func TestGolangciLint(t *testing.T) {
 	if testing.Short() {
 		t.Skip("skipping golangci-lint in short mode")
@@ -481,7 +494,8 @@ func TestGolangciLint(t *testing.T) {
 	if _, err := exec.LookPath("golangci-lint"); err != nil {
 		t.Skip("golangci-lint is not installed.\n" +
 			"Install it with:\n" +
-			"  go install github.com/golangci/golangci-lint/v2/cmd/golangci-lint@v2.8.0\n" +
+			"  go install github.com/golangci/" +
+			"golangci-lint/v2/cmd/golangci-lint@v2.8.0\n" +
 			"Or see: https://golangci-lint.run/welcome/install/")
 	}
 
@@ -511,12 +525,15 @@ func TestNoSecretsInTemplates(t *testing.T) {
 		regexp.MustCompile(`(?i)-----BEGIN (RSA |EC )?PRIVATE KEY-----`),
 	}
 
-	err := filepath.Walk(tplDir, func(path string, info os.FileInfo, walkErr error) error {
+	err := filepath.Walk(tplDir, func(
+		path string, info os.FileInfo, walkErr error,
+	) error {
 		if walkErr != nil || info.IsDir() {
 			return walkErr
 		}
 
-		data, readErr := os.ReadFile(filepath.Clean(path)) //nolint:gosec // path comes from filepath.Walk, not user input
+		//nolint:gosec // path comes from filepath.Walk
+		data, readErr := os.ReadFile(filepath.Clean(path))
 		if readErr != nil {
 			t.Errorf("read %s: %v", path, readErr)
 			return nil
@@ -574,7 +591,8 @@ func TestVersionFile(t *testing.T) {
 	root := projectRoot(t)
 	versionPath := filepath.Join(root, "VERSION")
 
-	data, err := os.ReadFile(filepath.Clean(versionPath)) //nolint:gosec // constructed from test constants
+	//nolint:gosec // constructed from test constants
+	data, err := os.ReadFile(filepath.Clean(versionPath))
 	if err != nil {
 		t.Fatalf("cannot read VERSION file: %v", err)
 	}
@@ -599,7 +617,8 @@ func TestGoMod(t *testing.T) {
 	root := projectRoot(t)
 	modPath := filepath.Join(root, "go.mod")
 
-	data, err := os.ReadFile(filepath.Clean(modPath)) //nolint:gosec // constructed from test constants
+	//nolint:gosec // constructed from test constants
+	data, err := os.ReadFile(filepath.Clean(modPath))
 	if err != nil {
 		t.Fatalf("cannot read go.mod: %v", err)
 	}
@@ -624,12 +643,14 @@ func TestGoMod(t *testing.T) {
 // 14. Makefile ╬ô├ç├╢ required targets exist
 // ---------------------------------------------------------------------------
 
-// TestMakefileTargets verifies all expected build targets exist in the Makefile.
+// TestMakefileTargets verifies all expected build targets
+// exist in the Makefile.
 func TestMakefileTargets(t *testing.T) {
 	root := projectRoot(t)
 	makePath := filepath.Join(root, "Makefile")
 
-	data, err := os.ReadFile(filepath.Clean(makePath)) //nolint:gosec // constructed from test constants
+	//nolint:gosec // constructed from test constants
+	data, err := os.ReadFile(filepath.Clean(makePath))
 	if err != nil {
 		t.Fatalf("cannot read Makefile: %v", err)
 	}
@@ -664,7 +685,8 @@ func TestBuildWithoutCGO(t *testing.T) {
 	root := projectRoot(t)
 	makePath := filepath.Join(root, "Makefile")
 
-	data, err := os.ReadFile(filepath.Clean(makePath)) //nolint:gosec // constructed from test constants
+	//nolint:gosec // constructed from test constants
+	data, err := os.ReadFile(filepath.Clean(makePath))
 	if err != nil {
 		t.Fatalf("cannot read Makefile: %v", err)
 	}
@@ -709,7 +731,8 @@ func TestGolangciLintConfig(t *testing.T) {
 	root := projectRoot(t)
 	lintPath := filepath.Join(root, ".golangci.yml")
 
-	data, err := os.ReadFile(filepath.Clean(lintPath)) //nolint:gosec // constructed from test constants
+	//nolint:gosec // constructed from test constants
+	data, err := os.ReadFile(filepath.Clean(lintPath))
 	if err != nil {
 		t.Fatalf("cannot read .golangci.yml: %v", err)
 	}
@@ -733,7 +756,8 @@ func TestGolangciLintConfig(t *testing.T) {
 }
 
 // ---------------------------------------------------------------------------
-// 17. No network calls ╬ô├ç├╢ ctx must be local-only (no net/http imports in core)
+// 17. No network calls — ctx must be local-only
+// (no net/http imports in core)
 // ---------------------------------------------------------------------------
 
 // TestNoNetworkImportsInCore verifies that core packages do not import net or
@@ -793,7 +817,8 @@ func TestGitignoreProtectsSensitiveFiles(t *testing.T) {
 	root := projectRoot(t)
 	giPath := filepath.Join(root, ".gitignore")
 
-	data, err := os.ReadFile(filepath.Clean(giPath)) //nolint:gosec // constructed from test constants
+	//nolint:gosec // constructed from test constants
+	data, err := os.ReadFile(filepath.Clean(giPath))
 	if err != nil {
 		t.Fatalf("cannot read .gitignore: %v", err)
 	}
@@ -845,7 +870,8 @@ func TestPermissionConstants(t *testing.T) {
 	root := projectRoot(t)
 	filePath := filepath.Join(root, "internal", "config", "fs", "perm.go")
 
-	data, err := os.ReadFile(filepath.Clean(filePath)) //nolint:gosec // constructed from test constants
+	//nolint:gosec // constructed from test constants
+	data, err := os.ReadFile(filepath.Clean(filePath))
 	if err != nil {
 		t.Fatalf("read file.go: %v", err)
 	}

@@ -124,9 +124,11 @@ func TestSend_EventFiltered(t *testing.T) {
 
 	// Set up a server that should NOT be called
 	called := false
-	ts := httptest.NewServer(http.HandlerFunc(func(_ http.ResponseWriter, _ *http.Request) {
-		called = true
-	}))
+	ts := httptest.NewServer(
+		http.HandlerFunc(func(_ http.ResponseWriter, _ *http.Request) {
+			called = true
+		}),
+	)
 	defer ts.Close()
 
 	// Configure webhook
@@ -155,9 +157,11 @@ func TestSend_Payload(t *testing.T) {
 	defer cleanup()
 
 	var received map[string]any
-	ts := httptest.NewServer(http.HandlerFunc(func(_ http.ResponseWriter, r *http.Request) {
-		_ = json.NewDecoder(r.Body).Decode(&received)
-	}))
+	ts := httptest.NewServer(
+		http.HandlerFunc(func(_ http.ResponseWriter, r *http.Request) {
+			_ = json.NewDecoder(r.Body).Decode(&received)
+		}),
+	)
 	defer ts.Close()
 
 	if err := SaveWebhook(ts.URL); err != nil {
@@ -180,7 +184,11 @@ func TestSend_Payload(t *testing.T) {
 		t.Errorf("Event = %v, want %q", received["event"], "loop")
 	}
 	if received["message"] != "Loop completed after 5 iterations" {
-		t.Errorf("Message = %v, want %q", received["message"], "Loop completed after 5 iterations")
+		t.Errorf(
+			"Message = %v, want %q",
+			received["message"],
+			"Loop completed after 5 iterations",
+		)
 	}
 	if received["session_id"] != "abc123" {
 		t.Errorf("SessionID = %v, want %q", received["session_id"], "abc123")
@@ -195,7 +203,10 @@ func TestSend_Payload(t *testing.T) {
 	// Assert structured detail
 	detail, ok := received["detail"].(map[string]any)
 	if !ok {
-		t.Fatalf("Detail is not an object: %T = %v", received["detail"], received["detail"])
+		t.Fatalf(
+			"Detail is not an object: %T = %v",
+			received["detail"], received["detail"],
+		)
 	}
 	if detail["hook"] != "check-context-size" {
 		t.Errorf("Detail.hook = %v, want %q", detail["hook"], "check-context-size")
@@ -211,7 +222,10 @@ func TestSend_Payload(t *testing.T) {
 		t.Errorf("Detail.variables.Percentage = %v, want 82", vars["Percentage"])
 	}
 	if vars["TokenCount"] != "164k" {
-		t.Errorf("Detail.variables.TokenCount = %v, want %q", vars["TokenCount"], "164k")
+		t.Errorf(
+			"Detail.variables.TokenCount = %v, want %q",
+			vars["TokenCount"], "164k",
+		)
 	}
 }
 
@@ -220,9 +234,11 @@ func TestSend_NilDetailOmitted(t *testing.T) {
 	defer cleanup()
 
 	var received map[string]any
-	ts := httptest.NewServer(http.HandlerFunc(func(_ http.ResponseWriter, r *http.Request) {
-		_ = json.NewDecoder(r.Body).Decode(&received)
-	}))
+	ts := httptest.NewServer(
+		http.HandlerFunc(func(_ http.ResponseWriter, r *http.Request) {
+			_ = json.NewDecoder(r.Body).Decode(&received)
+		}),
+	)
 	defer ts.Close()
 
 	if err := SaveWebhook(ts.URL); err != nil {
@@ -247,9 +263,11 @@ func TestSend_HTTPErrorIgnored(t *testing.T) {
 	tempDir, cleanup := setupTestDir(t)
 	defer cleanup()
 
-	ts := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, _ *http.Request) {
-		w.WriteHeader(http.StatusInternalServerError)
-	}))
+	ts := httptest.NewServer(
+		http.HandlerFunc(func(w http.ResponseWriter, _ *http.Request) {
+			w.WriteHeader(http.StatusInternalServerError)
+		}),
+	)
 	defer ts.Close()
 
 	if err := SaveWebhook(ts.URL); err != nil {
@@ -298,7 +316,9 @@ func TestLoadWebhook_CorruptedFile(t *testing.T) {
 
 	// Corrupt the encrypted file with garbage bytes.
 	encPath := filepath.Join(tempDir, ".context", crypto.NotifyEnc)
-	if writeErr := os.WriteFile(encPath, []byte("corrupted-garbage-data"), 0o600); writeErr != nil {
+	if writeErr := os.WriteFile(
+		encPath, []byte("corrupted-garbage-data"), 0o600,
+	); writeErr != nil {
 		t.Fatalf("WriteFile() error = %v", writeErr)
 	}
 

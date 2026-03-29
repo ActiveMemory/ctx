@@ -31,7 +31,9 @@ import (
 func File(cmd *cobra.Command, filename string, content []byte) error {
 	timestamp := time.Now().Unix()
 	backupName := fmt.Sprintf(file.BackupFormat, filename, timestamp)
-	if writeErr := os.WriteFile(backupName, content, fs.PermFile); writeErr != nil {
+	if writeErr := os.WriteFile(
+		backupName, content, fs.PermFile,
+	); writeErr != nil {
 		return errBackup.Create(backupName, writeErr)
 	}
 	initialize.Backup(cmd, backupName)

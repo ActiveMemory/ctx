@@ -3,5 +3,6 @@
 // `.,'//   \    Copyright 2026-present Context contributors.
 //                 SPDX-License-Identifier: Apache-2.0
 
-// Package initialize provides terminal output functions for the initialize command.
+// Package initialize provides terminal output functions for the
+// initialize command.
 package initialize

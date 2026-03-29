@@ -30,10 +30,13 @@ find internal/ cmd/ -name '*.go' ! -name '*_test.go' | sort | while read -r file
   while IFS= read -r line; do
     trimmed=$(echo "$line" | sed 's/^[[:space:]]*//' | sed 's/[[:space:]]*$//')
 
-    # Blank line = group separator
+    # Blank line = group separator — reset per-group type flags.
     if [ -z "$trimmed" ]; then
       prev_blank=1
       group_num=$((group_num + 1))
+      has_stdlib=0
+      has_ext=0
+      has_ctx=0
       continue
     fi
 
@@ -76,5 +79,7 @@ find internal/ cmd/ -name '*.go' ! -name '*_test.go' | sort | while read -r file
     prev_blank=0
   done <<< "$import_block"
 
-  [ -n "$violations" ] && printf "%b" "$violations"
+  if [ -n "$violations" ]; then
+    printf "%b" "$violations"
+  fi
 done

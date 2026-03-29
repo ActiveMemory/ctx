@@ -46,7 +46,7 @@ see [DETAILED_DESIGN.md](DETAILED_DESIGN.md).
 Entry point `cmd/ctx` → `bootstrap` (root Cobra command) → 24 CLI
 command packages under `internal/cli/*`. Commands select from shared
 packages: `context`, `drift`, `index`, `task`, `validation`,
-`recall/parser`, `claude`, `notify`, `journal/state`, `memory`,
+`journal/parser`, `claude`, `notify`, `journal/state`, `memory`,
 `crypto`, `sysinfo`. Foundation packages (`config`, `assets`, `crypto`,
 `sysinfo`) have zero internal dependencies — everything else builds
 upward from them. The `rc` package mediates config resolution;
@@ -68,7 +68,7 @@ upward from them. The `rc` package mediates config resolution;
 | `internal/crypto`  | AES-256-GCM encryption (stdlib only)            | `Encrypt()`, `Decrypt()`, `GenerateKey()`         |
 | `internal/sysinfo` | OS metrics with platform build tags             | `Collect()`, `Evaluate()`, `MaxSeverity()`        |
 
-<!-- drift-check: ls -d internal/rc internal/context internal/drift internal/index internal/task internal/validation internal/recall/parser internal/claude internal/notify internal/journal/state internal/mcp 2>/dev/null | wc -l -->
+<!-- drift-check: ls -d internal/rc internal/context internal/drift internal/index internal/task internal/validation internal/journal/parser internal/claude internal/notify internal/journal/state internal/mcp 2>/dev/null | wc -l -->
 ### Core Packages
 
 | Package                  | Purpose                                                | Key Exports                                |
@@ -79,7 +79,7 @@ upward from them. The `rc` package mediates config resolution;
 | `internal/index`         | Markdown index tables for DECISIONS/LEARNINGS          | `Update()`, `ParseEntryBlocks()`           |
 | `internal/task`          | Task checkbox parsing                                  | `Completed()`, `Pending()`, `SubTask()`    |
 | `internal/validation`    | Input sanitization and path boundary checks            | `SanitizeFilename()`, `ValidateBoundary()` |
-| `internal/recall/parser` | Session transcript parsing (JSONL + Markdown)          | `ParseFile()`, `FindSessionsForCWD()`      |
+| `internal/journal/parser` | Session transcript parsing (JSONL + Markdown)         | `ParseFile()`, `FindSessionsForCWD()`      |
 | `internal/claude`        | Claude Code integration types and skill access         | `Skills()`, `SkillContent()`               |
 | `internal/notify`        | Webhook notifications with encrypted URL storage       | `Send()`, `LoadWebhook()`, `SaveWebhook()` |
 | `internal/journal/state` | Journal processing pipeline state (JSON)               | `Load()`, `Save()`, `Mark*()`              |
@@ -272,7 +272,7 @@ Managed by `internal/rc` with sync.Once singleton caching.
 
 ### Extensible Session Parsing
 
-`internal/recall/parser` defines a `SessionParser` interface. Each
+`internal/journal/parser` defines a `SessionParser` interface. Each
 AI tool (Claude Code, potentially Aider, Cursor) registers its own
 parser. Currently Claude Code JSONL and Markdown are implemented.
 Session matching uses git remote URLs, relative paths, and exact
@@ -333,7 +333,7 @@ Top-level: `cmd/ctx/` (entry point), `internal/` (all packages),
 (feature specs). Under `internal/`: `bootstrap/`, `claude/`,
 `cli/` (24 command packages), `config/`, `context/`, `crypto/`,
 `drift/`, `index/`, `journal/state/`, `memory/`, `notify/`, `rc/`,
-`recall/parser/`, `sysinfo/`, `task/`, `assets/` (embedded
+`journal/parser/`, `sysinfo/`, `task/`, `assets/` (embedded
 templates, hooks, skills), `validation/`. Project context lives
 in `.context/` with its own journal, sessions, and archive
 subdirectories. Claude Code integration in `.claude/` with

@@ -15,7 +15,7 @@ import (
 	"github.com/ActiveMemory/ctx/internal/assets/read/desc"
 	"github.com/ActiveMemory/ctx/internal/config/embed/text"
 	"github.com/ActiveMemory/ctx/internal/config/token"
-	writeIo "github.com/ActiveMemory/ctx/internal/write/io"
+	writeIo "github.com/ActiveMemory/ctx/internal/write/line"
 )
 
 // SkipFile prints that a file was skipped during export.
@@ -28,7 +28,9 @@ func SkipFile(cmd *cobra.Command, filename, reason string) {
 	if cmd == nil {
 		return
 	}
-	cmd.Println(fmt.Sprintf(desc.Text(text.DescKeyWriteRecallSkip), filename, reason))
+	cmd.Println(fmt.Sprintf(
+		desc.Text(text.DescKeyWriteRecallSkip),
+		filename, reason))
 }
 
 // ImportedFile prints that a file was imported or updated.
@@ -43,9 +45,13 @@ func ImportedFile(cmd *cobra.Command, filename, suffix string) {
 		return
 	}
 	if suffix != "" {
-		cmd.Println(fmt.Sprintf(desc.Text(text.DescKeyWriteRecallImportedOKSuffix), filename, suffix))
+		cmd.Println(fmt.Sprintf(
+			desc.Text(text.DescKeyWriteRecallImportedOKSuffix),
+			filename, suffix))
 	} else {
-		cmd.Println(fmt.Sprintf(desc.Text(text.DescKeyWriteRecallImportedOK), filename))
+		cmd.Println(fmt.Sprintf(
+			desc.Text(text.DescKeyWriteRecallImportedOK),
+			filename))
 	}
 }
 
@@ -74,29 +80,40 @@ func ImportSummary(
 	}
 	var parts []string
 	if newCount > 0 {
-		parts = append(parts, fmt.Sprintf(desc.Text(text.DescKeyWriteRecallImportPartNew), newCount))
+		parts = append(parts, fmt.Sprintf(
+			desc.Text(text.DescKeyWriteRecallImportPartNew),
+			newCount))
 	}
 	if regenCount > 0 {
-		parts = append(parts, fmt.Sprintf(desc.Text(text.DescKeyWriteRecallImportPartRegen), regenCount))
+		parts = append(parts, fmt.Sprintf(
+			desc.Text(text.DescKeyWriteRecallImportPartRegen),
+			regenCount))
 	}
 	if skipCount > 0 {
-		parts = append(parts, fmt.Sprintf(desc.Text(text.DescKeyWriteRecallImportPartSkip), skipCount))
+		parts = append(parts, fmt.Sprintf(
+			desc.Text(text.DescKeyWriteRecallImportPartSkip),
+			skipCount))
 	}
 	if lockedCount > 0 {
-		parts = append(parts, fmt.Sprintf(desc.Text(text.DescKeyWriteRecallImportPartSkipLock), lockedCount))
+		parts = append(parts, fmt.Sprintf(
+			desc.Text(text.DescKeyWriteRecallImportPartSkipLock),
+			lockedCount))
 	}
 	if len(parts) == 0 {
 		cmd.Println(desc.Text(text.DescKeyWriteRecallImportNothing))
 		return
 	}
-	cmd.Println(fmt.Sprintf(desc.Text(text.DescKeyWriteRecallImportSummary), verb, strings.Join(parts, token.CommaSpace)))
+	cmd.Println(fmt.Sprintf(
+		desc.Text(text.DescKeyWriteRecallImportSummary),
+		verb, strings.Join(parts, token.CommaSpace)))
 }
 
 // NoSessionsForProject prints guidance when no sessions are found.
 //
 // Parameters:
 //   - cmd: Cobra command for output. Nil is a no-op.
-//   - allProjects: if true, show the generic message; otherwise suggest --all-projects.
+//   - allProjects: if true, show the generic message;
+//     otherwise suggest --all-projects.
 func NoSessionsForProject(cmd *cobra.Command, allProjects bool) {
 	if cmd == nil {
 		return
@@ -112,7 +129,8 @@ func NoSessionsForProject(cmd *cobra.Command, allProjects bool) {
 //
 // Parameters:
 //   - cmd: Cobra command for output. Nil is a no-op.
-//   - allProjects: if true, show storage path; otherwise suggest --all-projects.
+//   - allProjects: if true, show storage path; otherwise
+//     suggest --all-projects.
 func NoSessionsWithHint(cmd *cobra.Command, allProjects bool) {
 	if cmd == nil {
 		return
@@ -137,28 +155,42 @@ func AmbiguousSessionMatch(cmd *cobra.Command, query string, lines []string) {
 	if cmd == nil {
 		return
 	}
-	cmd.PrintErrln(fmt.Sprintf(desc.Text(text.DescKeyWriteRecallAmbiguousMatch), query))
+	cmd.PrintErrln(fmt.Sprintf(
+		desc.Text(text.DescKeyWriteRecallAmbiguousMatch),
+		query))
 	for _, line := range lines {
 		cmd.PrintErrln(line)
 	}
 }
 
-// AmbiguousSessionMatchWithHint prints matching sessions with a specific-ID hint.
+// AmbiguousSessionMatchWithHint prints matching sessions with a
+// specific-ID hint.
 //
 // Parameters:
 //   - cmd: Cobra command for output. Nil is a no-op.
 //   - query: the ambiguous query string.
 //   - lines: pre-formatted lines describing each match.
 //   - hint: suggested more-specific ID.
-func AmbiguousSessionMatchWithHint(cmd *cobra.Command, query string, lines []string, hint string) {
+func AmbiguousSessionMatchWithHint(
+	cmd *cobra.Command,
+	query string,
+	lines []string,
+	hint string,
+) {
 	if cmd == nil {
 		return
 	}
-	_, _ = fmt.Fprintf(cmd.ErrOrStderr(), desc.Text(text.DescKeyWriteRecallAmbiguousMatchStderr), query)
+	_, _ = fmt.Fprintf(cmd.ErrOrStderr(),
+		desc.Text(text.DescKeyWriteRecallAmbiguousMatchStderr),
+		query)
 	for _, line := range lines {
-		_, _ = fmt.Fprintf(cmd.ErrOrStderr(), desc.Text(text.DescKeyWriteRecallAmbiguousLine), line)
+		_, _ = fmt.Fprintf(cmd.ErrOrStderr(),
+			desc.Text(text.DescKeyWriteRecallAmbiguousLine),
+			line)
 	}
-	_, _ = fmt.Fprintf(cmd.ErrOrStderr(), desc.Text(text.DescKeyWriteRecallAmbiguousHint), hint)
+	_, _ = fmt.Fprintf(cmd.ErrOrStderr(),
+		desc.Text(text.DescKeyWriteRecallAmbiguousHint),
+		hint)
 }
 
 // Aborted prints that an operation was aborted.
@@ -191,15 +223,18 @@ func ConfirmPrompt(cmd *cobra.Command) {
 //   - updated: number of existing files updated.
 //   - renamed: number of files renamed.
 //   - skipped: number of files skipped.
-func ImportFinalSummary(cmd *cobra.Command, imported, updated, renamed, skipped int) {
+func ImportFinalSummary(
+	cmd *cobra.Command,
+	imported, updated, renamed, skipped int,
+) {
 	if cmd == nil {
 		return
 	}
 	cmd.Println()
-	writeIo.CountLine(cmd, text.DescKeyWriteRecallImportedNew, imported)
-	writeIo.CountLine(cmd, text.DescKeyWriteRecallUpdated, updated)
-	writeIo.CountLine(cmd, text.DescKeyWriteRecallRenamed, renamed)
-	writeIo.CountLine(cmd, text.DescKeyWriteRecallSkipped, skipped)
+	writeIo.Count(cmd, text.DescKeyWriteRecallImportedNew, imported)
+	writeIo.Count(cmd, text.DescKeyWriteRecallUpdated, updated)
+	writeIo.Count(cmd, text.DescKeyWriteRecallRenamed, renamed)
+	writeIo.Count(cmd, text.DescKeyWriteRecallSkipped, skipped)
 }
 
 // NoFiltersMatch prints that no sessions matched the applied filters.
@@ -224,9 +259,13 @@ func SessionListHeader(cmd *cobra.Command, total, shown int) {
 		return
 	}
 	if shown > 0 && shown != total {
-		_, _ = fmt.Fprintf(cmd.OutOrStdout(), desc.Text(text.DescKeyWriteRecallListHeaderFiltered), total, shown)
+		_, _ = fmt.Fprintf(cmd.OutOrStdout(),
+			desc.Text(text.DescKeyWriteRecallListHeaderFiltered),
+			total, shown)
 	} else {
-		_, _ = fmt.Fprintf(cmd.OutOrStdout(), desc.Text(text.DescKeyWriteRecallListHeader), total)
+		_, _ = fmt.Fprintf(cmd.OutOrStdout(),
+			desc.Text(text.DescKeyWriteRecallListHeader),
+			total)
 	}
 }
 
@@ -284,11 +323,17 @@ func SessionMetadata(cmd *cobra.Command, info SessionInfo) {
 	SessionDetail(cmd, desc.Text(text.DescKeyLabelMetadataStarted), info.Started)
 	SessionDetail(cmd, desc.Text(text.DescKeyLabelMetadataDuration), info.Duration)
 	SessionDetailInt(cmd, desc.Text(text.DescKeyLabelMetadataTurns), info.Turns)
-	SessionDetailInt(cmd, desc.Text(text.DescKeyLabelMetadataMessages), info.Messages)
+	SessionDetailInt(cmd,
+		desc.Text(text.DescKeyLabelMetadataMessages),
+		info.Messages)
 	BlankLine(cmd)
 
-	SessionDetail(cmd, desc.Text(text.DescKeyLabelMetadataInputUsage), info.TokensIn)
-	SessionDetail(cmd, desc.Text(text.DescKeyLabelMetadataOutputUsage), info.TokensOut)
+	SessionDetail(cmd,
+		desc.Text(text.DescKeyLabelMetadataInputUsage),
+		info.TokensIn)
+	SessionDetail(cmd,
+		desc.Text(text.DescKeyLabelMetadataOutputUsage),
+		info.TokensOut)
 	SessionDetail(cmd, desc.Text(text.DescKeyLabelMetadataTotal), info.TokensAll)
 	BlankLine(cmd)
 }
@@ -303,7 +348,10 @@ func SessionDetail(cmd *cobra.Command, label, value string) {
 	if cmd == nil {
 		return
 	}
-	_, _ = fmt.Fprintf(cmd.OutOrStdout(), desc.Text(text.DescKeyWriteRecallDetailString)+token.NewlineLF, label, value)
+	_, _ = fmt.Fprintf(cmd.OutOrStdout(),
+		desc.Text(text.DescKeyWriteRecallDetailString)+
+			token.NewlineLF,
+		label, value)
 }
 
 // SessionDetailInt prints a labeled integer metadata line to stdout.
@@ -316,7 +364,10 @@ func SessionDetailInt(cmd *cobra.Command, label string, value int) {
 	if cmd == nil {
 		return
 	}
-	_, _ = fmt.Fprintf(cmd.OutOrStdout(), desc.Text(text.DescKeyWriteRecallDetailInt)+token.NewlineLF, label, value)
+	_, _ = fmt.Fprintf(cmd.OutOrStdout(),
+		desc.Text(text.DescKeyWriteRecallDetailInt)+
+			token.NewlineLF,
+		label, value)
 }
 
 // SectionHeader prints a Markdown section heading to stdout.
@@ -330,7 +381,10 @@ func SectionHeader(cmd *cobra.Command, level int, title string) {
 		return
 	}
 	prefix := strings.Repeat("#", level)
-	_, _ = fmt.Fprintf(cmd.OutOrStdout(), desc.Text(text.DescKeyWriteRecallSectionHeading)+token.NewlineLF, prefix, title)
+	_, _ = fmt.Fprintf(cmd.OutOrStdout(),
+		desc.Text(text.DescKeyWriteRecallSectionHeading)+
+			token.NewlineLF,
+		prefix, title)
 	_, _ = fmt.Fprintln(cmd.OutOrStdout())
 }
 
@@ -356,7 +410,9 @@ func ConversationTurn(cmd *cobra.Command, index int, role, timestamp string) {
 	if cmd == nil {
 		return
 	}
-	_, _ = fmt.Fprintf(cmd.OutOrStdout(), desc.Text(text.DescKeyWriteRecallConversationTurn), index, role, timestamp)
+	_, _ = fmt.Fprintf(cmd.OutOrStdout(),
+		desc.Text(text.DescKeyWriteRecallConversationTurn),
+		index, role, timestamp)
 	_, _ = fmt.Fprintln(cmd.OutOrStdout())
 }
 
@@ -382,7 +438,9 @@ func CodeBlock(cmd *cobra.Command, content string) {
 	if cmd == nil {
 		return
 	}
-	_, _ = fmt.Fprintf(cmd.OutOrStdout(), desc.Text(text.DescKeyWriteRecallCodeBlock), content)
+	_, _ = fmt.Fprintf(cmd.OutOrStdout(),
+		desc.Text(text.DescKeyWriteRecallCodeBlock),
+		content)
 }
 
 // ListItem prints a Markdown list item to stdout.
@@ -395,7 +453,9 @@ func ListItem(cmd *cobra.Command, format string, args ...any) {
 	if cmd == nil {
 		return
 	}
-	_, _ = fmt.Fprintf(cmd.OutOrStdout(), token.PrefixListDash+format+token.NewlineLF, args...)
+	_, _ = fmt.Fprintf(cmd.OutOrStdout(),
+		token.PrefixListDash+format+token.NewlineLF,
+		args...)
 }
 
 // NumberedItem prints a numbered item to stdout.
@@ -408,7 +468,9 @@ func NumberedItem(cmd *cobra.Command, n int, item string) {
 	if cmd == nil {
 		return
 	}
-	_, _ = fmt.Fprintf(cmd.OutOrStdout(), desc.Text(text.DescKeyWriteRecallNumberedItem), n, item)
+	_, _ = fmt.Fprintf(cmd.OutOrStdout(),
+		desc.Text(text.DescKeyWriteRecallNumberedItem),
+		n, item)
 }
 
 // MoreTurns prints the "and N more turns" continuation line.
@@ -420,7 +482,9 @@ func MoreTurns(cmd *cobra.Command, remaining int) {
 	if cmd == nil {
 		return
 	}
-	_, _ = fmt.Fprintf(cmd.OutOrStdout(), desc.Text(text.DescKeyWriteRecallMoreTurns), remaining)
+	_, _ = fmt.Fprintf(cmd.OutOrStdout(),
+		desc.Text(text.DescKeyWriteRecallMoreTurns),
+		remaining)
 }
 
 // Hint prints a usage hint to stdout.
@@ -435,7 +499,8 @@ func Hint(cmd *cobra.Command, text string) {
 	cmd.Println(text)
 }
 
-// LockUnlockNone prints the message when no journal entries are found (lock/unlock context).
+// LockUnlockNone prints the message when no journal entries
+// are found (lock/unlock context).
 //
 // Parameters:
 //   - cmd: Cobra command for output. Nil is a no-op.
@@ -446,7 +511,8 @@ func LockUnlockNone(cmd *cobra.Command) {
 	cmd.Println(desc.Text(text.DescKeyWriteJournalSyncNone))
 }
 
-// LockUnlockEntry prints the confirmation for a single locked/unlocked entry.
+// LockUnlockEntry prints the confirmation for a single
+// locked/unlocked entry.
 //
 // Parameters:
 //   - cmd: Cobra command for output. Nil is a no-op.
@@ -456,7 +522,9 @@ func LockUnlockEntry(cmd *cobra.Command, filename, verb string) {
 	if cmd == nil {
 		return
 	}
-	cmd.Println(fmt.Sprintf(desc.Text(text.DescKeyWriteLockUnlockEntry), filename, verb))
+	cmd.Println(fmt.Sprintf(
+		desc.Text(text.DescKeyWriteLockUnlockEntry),
+		filename, verb))
 }
 
 // LockUnlockSummary prints the lock/unlock summary.
@@ -464,16 +532,21 @@ func LockUnlockEntry(cmd *cobra.Command, filename, verb string) {
 // Parameters:
 //   - cmd: Cobra command for output. Nil is a no-op.
 //   - verb: "locked" or "unlocked".
-//   - count: number of entries changed. Zero prints no-changes message.
+//   - count: number of entries changed. Zero prints
+//     no-changes message.
 func LockUnlockSummary(cmd *cobra.Command, verb string, count int) {
 	if cmd == nil {
 		return
 	}
 	if count == 0 {
-		cmd.Println(fmt.Sprintf(desc.Text(text.DescKeyWriteLockUnlockNoChanges), verb))
+		cmd.Println(fmt.Sprintf(
+			desc.Text(text.DescKeyWriteLockUnlockNoChanges),
+			verb))
 		return
 	}
-	cmd.Println(fmt.Sprintf(desc.Text(text.DescKeyWriteLockUnlockSummary), strings.ToUpper(verb[:1])+verb[1:], count))
+	cmd.Println(fmt.Sprintf(
+		desc.Text(text.DescKeyWriteLockUnlockSummary),
+		strings.ToUpper(verb[:1])+verb[1:], count))
 }
 
 // JournalSyncNone prints the message when no journal entries are found.
@@ -496,7 +569,9 @@ func JournalSyncLocked(cmd *cobra.Command, filename string) {
 	if cmd == nil {
 		return
 	}
-	cmd.Println(fmt.Sprintf(desc.Text(text.DescKeyWriteJournalSyncLocked), filename))
+	cmd.Println(fmt.Sprintf(
+		desc.Text(text.DescKeyWriteJournalSyncLocked),
+		filename))
 }
 
 // JournalSyncUnlocked prints a single unlocked-entry confirmation.
@@ -508,7 +583,9 @@ func JournalSyncUnlocked(cmd *cobra.Command, filename string) {
 	if cmd == nil {
 		return
 	}
-	cmd.Println(fmt.Sprintf(desc.Text(text.DescKeyWriteJournalSyncUnlocked), filename))
+	cmd.Println(fmt.Sprintf(
+		desc.Text(text.DescKeyWriteJournalSyncUnlocked),
+		filename))
 }
 
 // JournalSyncSummary prints the sync summary: match, locked count,
@@ -527,9 +604,13 @@ func JournalSyncSummary(cmd *cobra.Command, locked, unlocked int) {
 		return
 	}
 	if locked > 0 {
-		cmd.Println(fmt.Sprintf(desc.Text(text.DescKeyWriteJournalSyncLockedCount), locked))
+		cmd.Println(fmt.Sprintf(
+			desc.Text(text.DescKeyWriteJournalSyncLockedCount),
+			locked))
 	}
 	if unlocked > 0 {
-		cmd.Println(fmt.Sprintf(desc.Text(text.DescKeyWriteJournalSyncUnlockedCount), unlocked))
+		cmd.Println(fmt.Sprintf(
+			desc.Text(text.DescKeyWriteJournalSyncUnlockedCount),
+			unlocked))
 	}
 }

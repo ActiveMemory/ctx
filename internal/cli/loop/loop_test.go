@@ -29,7 +29,8 @@ func TestLoopCommand(t *testing.T) {
 	if err := os.MkdirAll(".context", 0750); err != nil {
 		t.Fatalf("failed to create context dir: %v", err)
 	}
-	if err := os.WriteFile(".context/loop.md", []byte("# Test Prompt\n"), 0600); err != nil {
+	loopPath := ".context/loop.md"
+	if err := os.WriteFile(loopPath, []byte("# Test Prompt\n"), 0600); err != nil {
 		t.Fatalf("failed to create loop.md: %v", err)
 	}
 

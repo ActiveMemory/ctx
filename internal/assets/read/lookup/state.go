@@ -9,7 +9,8 @@ package lookup
 // stopWordsMap holds words excluded from search indexing.
 var stopWordsMap map[string]bool
 
-// commandEntry is a single YAML-backed description with short and optional long forms.
+// commandEntry is a single YAML-backed description with
+// short and optional long forms.
 type commandEntry struct {
 	Short string `yaml:"short"`
 	Long  string `yaml:"long"`

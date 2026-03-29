@@ -17,7 +17,8 @@ const (
 
 	// RecallTokens formats the token stats line.
 	// Args: total, in, out.
-	RecallTokens = "**Tokens**: %s (in: %s, out: %s)" //nolint:gosec // G101: display template, not a credential
+	//nolint:gosec // G101: display template, not a credential
+	RecallTokens = "**Tokens**: %s (in: %s, out: %s)"
 
 	// RecallPartOf formats the part indicator.
 	// Args: part, totalParts.
