@@ -17,6 +17,7 @@ import (
 	"github.com/ActiveMemory/ctx/internal/config/embed/cmd"
 	"github.com/ActiveMemory/ctx/internal/config/embed/flag"
 	cFlag "github.com/ActiveMemory/ctx/internal/config/flag"
+	"github.com/ActiveMemory/ctx/internal/config/token"
 	errCli "github.com/ActiveMemory/ctx/internal/err/cli"
 	"github.com/ActiveMemory/ctx/internal/flagbind"
 	iNotify "github.com/ActiveMemory/ctx/internal/notify"
@@ -45,7 +46,7 @@ func Cmd() *cobra.Command {
 			if len(args) == 0 {
 				return errCli.ArgRequired(cFlag.Message)
 			}
-			message := strings.Join(args, " ")
+			message := strings.Join(args, token.Space)
 			var ref *iNotify.TemplateRef
 			if hook != "" {
 				ref = iNotify.NewTemplateRef(hook, variant, nil)
@@ -54,8 +55,14 @@ func Cmd() *cobra.Command {
 		},
 	}
 
-	flagbind.StringFlagP(c, &event, cFlag.Event, cFlag.ShortEvent, flag.DescKeyNotifyEvent)
-	flagbind.StringFlagP(c, &sessionID, cFlag.SessionID, cFlag.ShortSessionID, flag.DescKeyNotifySessionId)
+	flagbind.StringFlagP(
+		c, &event, cFlag.Event,
+		cFlag.ShortEvent, flag.DescKeyNotifyEvent,
+	)
+	flagbind.StringFlagP(
+		c, &sessionID, cFlag.SessionID,
+		cFlag.ShortSessionID, flag.DescKeyNotifySessionId,
+	)
 	flagbind.StringFlag(c, &hook, cFlag.Hook, flag.DescKeyNotifyHook)
 	flagbind.StringFlag(c, &variant, cFlag.Variant, flag.DescKeyNotifyVariant)
 

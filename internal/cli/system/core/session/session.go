@@ -22,6 +22,7 @@ import (
 	"github.com/ActiveMemory/ctx/internal/config/token"
 	"github.com/ActiveMemory/ctx/internal/entity"
 	internalIo "github.com/ActiveMemory/ctx/internal/io"
+	ctxLog "github.com/ActiveMemory/ctx/internal/log"
 	"github.com/ActiveMemory/ctx/internal/parse"
 )
 
@@ -62,7 +63,8 @@ func FormatContext(event, context string) string {
 //   - entity.HookInput: Parsed input or zero value
 func ReadInput(r io.Reader) entity.HookInput {
 	if f, ok := r.(*os.File); ok {
-		if fi, readErr := f.Stat(); readErr == nil && fi.Mode()&os.ModeCharDevice != 0 {
+		fi, readErr := f.Stat()
+		if readErr == nil && fi.Mode()&os.ModeCharDevice != 0 {
 			return entity.HookInput{}
 		}
 	}
@@ -162,6 +164,12 @@ func WriteStats(sessionID string, stats entity.Stats) {
 	if openErr != nil {
 		return
 	}
-	defer func() { _ = f.Close() }()
-	_, _ = f.Write(data)
+	defer func() {
+		if closeErr := f.Close(); closeErr != nil {
+			ctxLog.Warn("close %s: %v", path, closeErr)
+		}
+	}()
+	if _, writeErr := f.Write(data); writeErr != nil {
+		ctxLog.Warn("write %s: %v", path, writeErr)
+	}
 }

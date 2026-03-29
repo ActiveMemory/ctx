@@ -10,7 +10,8 @@ import (
 	"testing"
 )
 
-// TestCmd_HasSubcommands verifies the config command includes expected subcommands.
+// TestCmd_HasSubcommands verifies the config command
+// includes expected subcommands.
 func TestCmd_HasSubcommands(t *testing.T) {
 	cmd := Cmd()
 

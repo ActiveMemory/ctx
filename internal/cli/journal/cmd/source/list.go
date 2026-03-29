@@ -15,7 +15,7 @@ import (
 	"github.com/ActiveMemory/ctx/internal/assets/read/desc"
 	"github.com/ActiveMemory/ctx/internal/assets/tpl"
 	"github.com/ActiveMemory/ctx/internal/cli/journal/core/query"
-	sourceFormat "github.com/ActiveMemory/ctx/internal/cli/journal/core/source/format"
+	srcFmt "github.com/ActiveMemory/ctx/internal/cli/journal/core/source/format"
 	"github.com/ActiveMemory/ctx/internal/config/embed/text"
 	"github.com/ActiveMemory/ctx/internal/config/flag"
 	"github.com/ActiveMemory/ctx/internal/config/journal"
@@ -131,7 +131,7 @@ func runList(cmd *cobra.Command, opts Opts) error {
 	for _, s := range filtered {
 		slug := sharedFmt.Truncate(s.Slug, journal.SlugMaxLen)
 		dateStr := s.StartTime.Local().Format(time.DateTimeFmt)
-		dur := sourceFormat.Duration(s.Duration)
+		dur := srcFmt.Duration(s.Duration)
 		turns := fmt.Sprintf("%d", s.TurnCount)
 		tokens := ""
 		if s.TotalTokens > 0 {

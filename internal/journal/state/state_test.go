@@ -71,12 +71,14 @@ func TestCountUnenriched(t *testing.T) {
 
 	// Create some .md files
 	for _, name := range []string{"a.md", "b.md", "c.md"} {
-		if err := os.WriteFile(filepath.Join(dir, name), []byte("content"), fs.PermFile); err != nil {
+		fPath := filepath.Join(dir, name)
+		if err := os.WriteFile(fPath, []byte("content"), fs.PermFile); err != nil {
 			t.Fatal(err)
 		}
 	}
 	// Create a non-md file that should be ignored
-	if err := os.WriteFile(filepath.Join(dir, "state.json"), []byte("{}"), fs.PermFile); err != nil {
+	statePath := filepath.Join(dir, "state.json")
+	if err := os.WriteFile(statePath, []byte("{}"), fs.PermFile); err != nil {
 		t.Fatal(err)
 	}
 

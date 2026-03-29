@@ -17,7 +17,8 @@ import (
 	"testing"
 )
 
-// TestBinaryIntegration is an integration test that builds and runs the actual binary.
+// TestBinaryIntegration is an integration test that
+// builds and runs the actual binary.
 //
 // This test builds the ctx binary and exercises multiple commands to ensure
 // they work correctly end-to-end. It verifies that subcommands execute properly
@@ -35,7 +36,9 @@ func TestBinaryIntegration(t *testing.T) {
 
 	// Build the binary
 	binaryPath := filepath.Join(tmpDir, "ctx-test-binary")
-	buildCmd := exec.Command("go", "build", "-o", binaryPath, "./cmd/ctx") //nolint:gosec // G204: test builds local binary
+	//nolint:gosec // test builds local binary
+	buildCmd := exec.Command(
+		"go", "build", "-o", binaryPath, "./cmd/ctx")
 	buildCmd.Env = append(os.Environ(), "CGO_ENABLED=0")
 
 	// Get the project root (go up from internal/cli)
@@ -57,7 +60,7 @@ func TestBinaryIntegration(t *testing.T) {
 
 	// Subtest: ctx init creates expected files
 	t.Run("init creates expected files", func(t *testing.T) {
-		initCmd := exec.Command(binaryPath, "init") //nolint:gosec // G204: test runs locally-built binary
+		initCmd := exec.Command(binaryPath, "init") //nolint:gosec // test binary
 		initCmd.Dir = testDir
 		if output, err := initCmd.CombinedOutput(); err != nil {
 			t.Fatalf("ctx init failed: %v\n%s", err, output)
@@ -88,7 +91,7 @@ func TestBinaryIntegration(t *testing.T) {
 
 	// Subtest: ctx status returns valid status (not just help text)
 	t.Run("status returns valid status", func(t *testing.T) {
-		statusCmd := exec.Command(binaryPath, "status") //nolint:gosec // G204: test runs locally-built binary
+		statusCmd := exec.Command(binaryPath, "status") //nolint:gosec // test binary
 		statusCmd.Dir = testDir
 		output, err := statusCmd.CombinedOutput()
 		if err != nil {
@@ -97,21 +100,32 @@ func TestBinaryIntegration(t *testing.T) {
 
 		outputStr := string(output)
 		// Verify it's actual status output, not help text
-		if strings.Contains(outputStr, "Usage:") || strings.Contains(outputStr, "Available Commands:") {
+		isHelp := strings.Contains(outputStr, "Usage:") ||
+			strings.Contains(outputStr, "Available Commands:")
+		if isHelp {
 			t.Error("ctx status returned help text instead of status")
 		}
 		// Check for expected status output markers
-		if !strings.Contains(outputStr, "Context Status") && !strings.Contains(outputStr, "Context Directory") {
-			t.Errorf("ctx status did not return expected status output, got:\n%s", outputStr)
+		hasStatus := strings.Contains(outputStr, "Context Status")
+		hasDir := strings.Contains(outputStr, "Context Directory")
+		if !hasStatus && !hasDir {
+			t.Errorf(
+				"ctx status did not return expected"+
+					" status output, got:\n%s",
+				outputStr,
+			)
 		}
 	})
 
 	// Subtest: ctx add learning modifies LEARNINGS.md
 	t.Run("add learning modifies LEARNINGS.md", func(t *testing.T) {
-		addCmd := exec.Command(binaryPath, "add", "learning", "Test learning from integration test", //nolint:gosec // G204: test runs locally-built binary
+		addCmd := exec.Command(binaryPath, //nolint:gosec // test binary
+			"add", "learning",
+			"Test learning from integration test",
 			"--context", "Testing integration",
 			"--lesson", "Integration tests catch bugs",
-			"--application", "Always run integration tests")
+			"--application", "Always run integration tests",
+		)
 		addCmd.Dir = testDir
 		if output, err := addCmd.CombinedOutput(); err != nil {
 			t.Fatalf("ctx add learning failed: %v\n%s", err, output)
@@ -130,7 +144,7 @@ func TestBinaryIntegration(t *testing.T) {
 
 	// Subtest: ctx agent returns context packet
 	t.Run("agent returns context packet", func(t *testing.T) {
-		agentCmd := exec.Command(binaryPath, "agent") //nolint:gosec // G204: test runs locally-built binary
+		agentCmd := exec.Command(binaryPath, "agent") //nolint:gosec // test binary
 		agentCmd.Dir = testDir
 		output, err := agentCmd.CombinedOutput()
 		if err != nil {
@@ -139,18 +153,26 @@ func TestBinaryIntegration(t *testing.T) {
 
 		outputStr := string(output)
 		// Verify it's actual agent output, not help text
-		if strings.Contains(outputStr, "Usage:") || strings.Contains(outputStr, "Available Commands:") {
+		isHelp := strings.Contains(outputStr, "Usage:") ||
+			strings.Contains(outputStr, "Available Commands:")
+		if isHelp {
 			t.Error("ctx agent returned help text instead of context packet")
 		}
 		// Check for expected context packet markers
-		if !strings.Contains(outputStr, "CONSTITUTION") && !strings.Contains(outputStr, "TASKS") {
-			t.Errorf("ctx agent did not return expected context packet, got:\n%s", outputStr)
+		hasConst := strings.Contains(outputStr, "CONSTITUTION")
+		hasTasks := strings.Contains(outputStr, "TASKS")
+		if !hasConst && !hasTasks {
+			t.Errorf(
+				"ctx agent did not return expected"+
+					" context packet, got:\n%s",
+				outputStr,
+			)
 		}
 	})
 
 	// Subtest: ctx drift runs without error
 	t.Run("drift runs without error", func(t *testing.T) {
-		driftCmd := exec.Command(binaryPath, "drift") //nolint:gosec // G204: test runs locally-built binary
+		driftCmd := exec.Command(binaryPath, "drift") //nolint:gosec // test binary
 		driftCmd.Dir = testDir
 		if output, err := driftCmd.CombinedOutput(); err != nil {
 			t.Fatalf("ctx drift failed: %v\n%s", err, output)
@@ -158,7 +180,7 @@ func TestBinaryIntegration(t *testing.T) {
 	})
 
 	// Subtest: verify all subcommands execute (not falling through to root help)
-	t.Run("subcommands execute without falling through to root help", func(t *testing.T) {
+	t.Run("subcommands execute without root help fallthrough", func(t *testing.T) {
 		// Commands that should produce output without "Available Commands:"
 		// (which would indicate they fell through to root help)
 		subcommands := []struct {
@@ -168,13 +190,13 @@ func TestBinaryIntegration(t *testing.T) {
 			{[]string{"status"}, "Context"},
 			{[]string{"agent"}, "Context Packet"},
 			{[]string{"drift"}, "Drift"},
-			{[]string{"load"}, ""},                 // load outputs context, varies by content
-			{[]string{"hook", "cursor"}, "Cursor"}, // hook outputs integration instructions
+			{[]string{"load"}, ""},                 // load: varies
+			{[]string{"hook", "cursor"}, "Cursor"}, // hook: integration
 		}
 
 		for _, tc := range subcommands {
 			t.Run(strings.Join(tc.args, "_"), func(t *testing.T) {
-				cmd := exec.Command(binaryPath, tc.args...) //nolint:gosec // G204: test runs locally-built binary
+				cmd := exec.Command(binaryPath, tc.args...) //nolint:gosec // test binary
 				cmd.Dir = testDir
 				output, err := cmd.CombinedOutput()
 				if err != nil {
@@ -184,11 +206,18 @@ func TestBinaryIntegration(t *testing.T) {
 				outputStr := string(output)
 				// Critical check: should NOT contain root help indicators
 				if strings.Contains(outputStr, "Available Commands:") {
-					t.Errorf("ctx %s fell through to root help:\n%s", strings.Join(tc.args, " "), outputStr)
+					t.Errorf(
+						"ctx %s fell through to root help:\n%s",
+						strings.Join(tc.args, " "), outputStr,
+					)
 				}
 				// If we have an expected marker, check for it
 				if tc.checkFor != "" && !strings.Contains(outputStr, tc.checkFor) {
-					t.Errorf("ctx %s missing expected output %q:\n%s", strings.Join(tc.args, " "), tc.checkFor, outputStr)
+					t.Errorf(
+						"ctx %s missing expected output %q:\n%s",
+						strings.Join(tc.args, " "),
+						tc.checkFor, outputStr,
+					)
 				}
 			})
 		}
@@ -216,13 +245,16 @@ func TestNoDirectFmtPrint(t *testing.T) {
 
 	var violations []string
 
-	err := filepath.Walk(cliDir, func(path string, info os.FileInfo, err error) error {
+	err := filepath.Walk(cliDir, func(
+		path string, info os.FileInfo, err error,
+	) error {
 		if err != nil {
 			return err
 		}
 
 		// Skip non-Go files and test files
-		if info.IsDir() || !strings.HasSuffix(path, ".go") || strings.HasSuffix(path, "_test.go") {
+		isNonGo := info.IsDir() || !strings.HasSuffix(path, ".go")
+		if isNonGo || strings.HasSuffix(path, "_test.go") {
 			return nil
 		}
 
@@ -315,7 +347,12 @@ func TestNoDirectFmtPrint(t *testing.T) {
 	}
 
 	if len(violations) > 0 {
-		t.Errorf("found %d uses of fmt.Print* in functions with *cobra.Command (use cmd.Print* instead):\n  %s",
-			len(violations), strings.Join(violations, "\n  "))
+		t.Errorf(
+			"found %d uses of fmt.Print* in funcs"+
+				" with *cobra.Command"+
+				" (use cmd.Print* instead):\n  %s",
+			len(violations),
+			strings.Join(violations, "\n  "),
+		)
 	}
 }

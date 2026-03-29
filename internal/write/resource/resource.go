@@ -21,7 +21,11 @@ import (
 //   - cmd: Cobra command for output. Nil is a no-op.
 //   - snap: collected system resource snapshot
 //   - alerts: evaluated resource alerts
-func Text(cmd *cobra.Command, snap sysinfo.Snapshot, alerts []sysinfo.ResourceAlert) {
+func Text(
+	cmd *cobra.Command,
+	snap sysinfo.Snapshot,
+	alerts []sysinfo.ResourceAlert,
+) {
 	if cmd == nil {
 		return
 	}
@@ -40,7 +44,11 @@ func Text(cmd *cobra.Command, snap sysinfo.Snapshot, alerts []sysinfo.ResourceAl
 //
 // Returns:
 //   - error: Non-nil on JSON encoding failure
-func JSON(cmd *cobra.Command, snap sysinfo.Snapshot, alerts []sysinfo.ResourceAlert) error {
+func JSON(
+	cmd *cobra.Command,
+	snap sysinfo.Snapshot,
+	alerts []sysinfo.ResourceAlert,
+) error {
 	if cmd == nil {
 		return nil
 	}

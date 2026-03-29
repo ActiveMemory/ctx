@@ -92,7 +92,9 @@ func BuildBlobLabelMap(entries []string) map[string]string {
 // Returns:
 //   - bool: true if a conflict was detected.
 //   - string: the conflicting label (empty if no conflict).
-func HasBlobConflict(entry string, blobLabels map[string]string) (bool, string) {
+func HasBlobConflict(
+	entry string, blobLabels map[string]string,
+) (bool, string) {
 	label, _, ok := blob.Split(entry)
 	if !ok {
 		return false, ""

@@ -24,10 +24,12 @@ import (
 
 // Content sanitizes journal Markdown for static site rendering:
 //   - Strips code fence markers (eliminates nesting conflicts)
-//   - Wraps Tool Output and User sections in <pre><code> with HTML-escaped content
+//   - Wraps Tool Output and User sections in
+//     <pre><code> with HTML-escaped content
 //   - Sanitizes H1 headings (strips Claude tags, truncates to 75 chars)
 //   - Demotes non-turn-header headings to bold (prevents broken page structure)
-//   - Inserts blank lines before list items when missing (Python-Markdown requires them)
+//   - Inserts blank lines before list items when missing
+//     (Python-Markdown requires them)
 //   - Strips bold markers from tool-use lines (**Glob: *.md** -> Glob: *.md)
 //   - Escapes glob-like * characters outside code blocks
 //   - Replaces inline code spans containing angle brackets with quoted entities
@@ -132,12 +134,15 @@ func Content(content string, fencesVerified bool) string {
 		// Replace inline code spans containing angle brackets:
 		// `</com` → "&lt;/com" (quotes preserve visual signal,
 		// entities prevent broken HTML in rendered output).
-		line = regex.InlineCodeAngle.ReplaceAllStringFunc(line, func(m string) string {
+		replacer := func(m string) string {
 			inner := m[1 : len(m)-1] // strip backticks
 			inner = strings.ReplaceAll(inner, "<", "&lt;")
 			inner = strings.ReplaceAll(inner, ">", "&gt;")
 			return `"` + inner + `"`
-		})
+		}
+		line = regex.InlineCodeAngle.ReplaceAllStringFunc(
+			line, replacer,
+		)
 
 		out = append(out, line)
 	}
@@ -264,7 +269,8 @@ func WrapUserTurns(content string) string {
 //   - body: Lines of tool output body to unwrap
 //
 // Returns:
-//   - []string: Raw content lines with wrapper tags removed and entities unescaped
+//   - []string: Raw content lines with wrapper tags
+//     removed and entities unescaped
 func StripPreWrapper(body []string) []string {
 	var inner []string
 	hadPre := false
@@ -328,7 +334,7 @@ func IsBoilerplateToolOutput(raw []string) bool {
 
 	// Join all non-blank lines for multi-line pattern matching.
 	// Content can split single messages across lines.
-	joined := strings.Join(nonBlank, " ")
+	joined := strings.Join(nonBlank, token.Space)
 
 	switch {
 	case joined == journal.BoilerplateNoMatch:

@@ -81,8 +81,16 @@ func Run(cmd *cobra.Command, stdin *os.File) error {
 	// user-configured billing_token_warn. Independent of all other
 	// triggers - fires even during wrap-up suppression because cost
 	// guards are never convenience nudges.
-	if billingThreshold := rc.BillingTokenWarn(); billingThreshold > 0 && tokens >= billingThreshold {
-		writeHook.NudgeBlock(cmd, nudge.EmitBillingWarning(logFile, sessionID, count, tokens, billingThreshold))
+	billingThreshold := rc.BillingTokenWarn()
+	billingHit := billingThreshold > 0 &&
+		tokens >= billingThreshold
+	if billingHit {
+		writeHook.NudgeBlock(cmd,
+			nudge.EmitBillingWarning(
+				logFile, sessionID,
+				count, tokens, billingThreshold,
+			),
+		)
 	}
 
 	// Wrap-up suppression: if the user recently ran /ctx-wrap-up,
@@ -124,10 +132,20 @@ func Run(cmd *cobra.Command, stdin *os.File) error {
 	switch {
 	case counterTriggered:
 		evt = event.Checkpoint
-		writeHook.NudgeBlock(cmd, nudge.EmitCheckpoint(logFile, sessionID, count, tokens, pct, windowSize))
+		writeHook.NudgeBlock(cmd,
+			nudge.EmitCheckpoint(
+				logFile, sessionID,
+				count, tokens, pct, windowSize,
+			),
+		)
 	case windowTrigger:
 		evt = event.WindowWarning
-		writeHook.NudgeBlock(cmd, nudge.EmitWindowWarning(logFile, sessionID, count, tokens, pct))
+		writeHook.NudgeBlock(cmd,
+			nudge.EmitWindowWarning(
+				logFile, sessionID,
+				count, tokens, pct,
+			),
+		)
 	default:
 		log.Message(logFile, sessionID,
 			fmt.Sprintf(desc.Text(

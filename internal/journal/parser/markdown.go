@@ -17,6 +17,7 @@ import (
 	"github.com/ActiveMemory/ctx/internal/config/session"
 	"github.com/ActiveMemory/ctx/internal/entity"
 	errParser "github.com/ActiveMemory/ctx/internal/err/parser"
+	ctxLog "github.com/ActiveMemory/ctx/internal/log"
 )
 
 // MarkdownSession parses Markdown session files written by AI agents.
@@ -83,7 +84,11 @@ func (p *MarkdownSession) Matches(path string) bool {
 	if openErr != nil {
 		return false
 	}
-	defer func() { _ = f.Close() }()
+	defer func() {
+		if closeErr := f.Close(); closeErr != nil {
+			ctxLog.Warn("close %s: %v", path, closeErr)
+		}
+	}()
 
 	scanner := bufio.NewScanner(f)
 	for i := 0; i < parser.LinesToPeek && scanner.Scan(); i++ {

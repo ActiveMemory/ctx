@@ -174,13 +174,19 @@ func TestFormatPartNavigation(t *testing.T) {
 			// Part 2 of 2: prev should link to base.md, not p1
 			if tt.part == 2 && tt.totalParts == 2 {
 				if !strings.Contains(got, tt.baseName+".md") {
-					t.Errorf("part 2 of 2 should link prev to %s.md, got:\n%s", tt.baseName, got)
+					t.Errorf(
+						"part 2 of 2 should link prev to %s.md, got:\n%s",
+						tt.baseName, got,
+					)
 				}
 			}
 			// Part 3 of 3: prev should link to p2
 			if tt.part == 3 && tt.totalParts == 3 {
 				if !strings.Contains(got, tt.baseName+"-p2.md") {
-					t.Errorf("part 3 of 3 should link prev to %s-p2.md, got:\n%s", tt.baseName, got)
+					t.Errorf(
+						"part 3 of 3 should link prev to %s-p2.md, got:\n%s",
+						tt.baseName, got,
+					)
 				}
 			}
 		})
@@ -205,12 +211,25 @@ func TestFormatJournalEntryPart_SinglePart(t *testing.T) {
 		TotalTokensIn:  10000,
 		TotalTokensOut: 5000,
 		Messages: []entity.Message{
-			{Role: "user", Text: "Hello", Timestamp: time.Date(2026, 1, 15, 10, 30, 0, 0, time.UTC)},
-			{Role: "assistant", Text: "Hi there!", Timestamp: time.Date(2026, 1, 15, 10, 30, 5, 0, time.UTC)},
+			{
+				Role: "user", Text: "Hello",
+				Timestamp: time.Date(
+					2026, 1, 15, 10, 30, 0, 0, time.UTC,
+				),
+			},
+			{
+				Role: "assistant", Text: "Hi there!",
+				Timestamp: time.Date(
+					2026, 1, 15, 10, 30, 5, 0, time.UTC,
+				),
+			},
 		},
 	}
 
-	got := JournalEntryPart(s, s.Messages, 0, 1, 1, "2026-01-15-test-slug-abc12345", "")
+	got := JournalEntryPart(
+		s, s.Messages, 0, 1, 1,
+		"2026-01-15-test-slug-abc12345", "",
+	)
 
 	// Verify YAML frontmatter
 	if !strings.Contains(got, "---\ndate: \"2026-01-15\"") {
@@ -272,9 +291,24 @@ func TestFormatJournalEntryPart_MultiPart(t *testing.T) {
 		TotalTokensIn:  3000,
 		TotalTokensOut: 2000,
 		Messages: []entity.Message{
-			{Role: "user", Text: "msg1", Timestamp: time.Date(2026, 2, 1, 9, 0, 0, 0, time.UTC)},
-			{Role: "assistant", Text: "resp1", Timestamp: time.Date(2026, 2, 1, 9, 1, 0, 0, time.UTC)},
-			{Role: "user", Text: "msg2", Timestamp: time.Date(2026, 2, 1, 9, 5, 0, 0, time.UTC)},
+			{
+				Role: "user", Text: "msg1",
+				Timestamp: time.Date(
+					2026, 2, 1, 9, 0, 0, 0, time.UTC,
+				),
+			},
+			{
+				Role: "assistant", Text: "resp1",
+				Timestamp: time.Date(
+					2026, 2, 1, 9, 1, 0, 0, time.UTC,
+				),
+			},
+			{
+				Role: "user", Text: "msg2",
+				Timestamp: time.Date(
+					2026, 2, 1, 9, 5, 0, 0, time.UTC,
+				),
+			},
 		},
 	}
 
@@ -428,11 +462,18 @@ func TestFormatJournalEntryPart_SessionIDInFrontmatter(t *testing.T) {
 		Duration:  30 * time.Minute,
 		TurnCount: 1,
 		Messages: []entity.Message{
-			{Role: "user", Text: "Hello", Timestamp: time.Date(2026, 1, 15, 10, 30, 0, 0, time.UTC)},
+			{
+				Role: "user", Text: "Hello",
+				Timestamp: time.Date(
+					2026, 1, 15, 10, 30, 0, 0, time.UTC,
+				),
+			},
 		},
 	}
 
-	got := JournalEntryPart(s, s.Messages, 0, 1, 1, "base", "")
+	got := JournalEntryPart(
+		s, s.Messages, 0, 1, 1, "base", "",
+	)
 
 	if !strings.Contains(got, `session_id: "abc12345-full-session-uuid"`) {
 		t.Error("missing session_id in frontmatter")
@@ -452,11 +493,19 @@ func TestFormatJournalEntryPart_TitleInFrontmatterAndHeading(t *testing.T) {
 		Duration:  30 * time.Minute,
 		TurnCount: 1,
 		Messages: []entity.Message{
-			{Role: "user", Text: "Hello", Timestamp: time.Date(2026, 1, 15, 10, 30, 0, 0, time.UTC)},
+			{
+				Role: "user", Text: "Hello",
+				Timestamp: time.Date(
+					2026, 1, 15, 10, 30, 0, 0, time.UTC,
+				),
+			},
 		},
 	}
 
-	got := JournalEntryPart(s, s.Messages, 0, 1, 1, "base", "Fix Authentication Bug")
+	got := JournalEntryPart(
+		s, s.Messages, 0, 1, 1,
+		"base", "Fix Authentication Bug",
+	)
 
 	// Title should appear in frontmatter.
 	if !strings.Contains(got, `title: "Fix Authentication Bug"`) {
@@ -485,11 +534,18 @@ func TestFormatJournalEntryPart_NoTitleUsesSlug(t *testing.T) {
 		Duration:  30 * time.Minute,
 		TurnCount: 1,
 		Messages: []entity.Message{
-			{Role: "user", Text: "Hello", Timestamp: time.Date(2026, 1, 15, 10, 30, 0, 0, time.UTC)},
+			{
+				Role: "user", Text: "Hello",
+				Timestamp: time.Date(
+					2026, 1, 15, 10, 30, 0, 0, time.UTC,
+				),
+			},
 		},
 	}
 
-	got := JournalEntryPart(s, s.Messages, 0, 1, 1, "base", "")
+	got := JournalEntryPart(
+		s, s.Messages, 0, 1, 1, "base", "",
+	)
 
 	if !strings.Contains(got, "# gleaming-wobbling-sutherland") {
 		t.Error("H1 heading should fall back to slug when no title")

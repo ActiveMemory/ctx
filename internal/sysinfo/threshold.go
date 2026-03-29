@@ -50,8 +50,12 @@ func Evaluate(snap Snapshot) []ResourceAlert {
 	// Swap
 	if snap.Memory.Supported && snap.Memory.SwapTotalBytes > 0 {
 		pct := percent(snap.Memory.SwapUsedBytes, snap.Memory.SwapTotalBytes)
-		msg := fmt.Sprintf(desc.Text(text.DescKeyResourcesAlertSwap),
-			pct, FormatGiB(snap.Memory.SwapUsedBytes), FormatGiB(snap.Memory.SwapTotalBytes))
+		msg := fmt.Sprintf(
+			desc.Text(text.DescKeyResourcesAlertSwap),
+			pct,
+			FormatGiB(snap.Memory.SwapUsedBytes),
+			FormatGiB(snap.Memory.SwapTotalBytes),
+		)
 		if pct >= stats.ThresholdSwapDangerPct {
 			alerts = append(alerts, ResourceAlert{
 				Severity: SeverityDanger, Resource: ResourceSwap, Message: msg,

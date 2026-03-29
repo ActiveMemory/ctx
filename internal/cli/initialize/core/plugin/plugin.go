@@ -22,7 +22,6 @@ import (
 	errInit "github.com/ActiveMemory/ctx/internal/err/initialize"
 	errParser "github.com/ActiveMemory/ctx/internal/err/parser"
 	"github.com/ActiveMemory/ctx/internal/io"
-	"github.com/ActiveMemory/ctx/internal/write/add"
 	"github.com/ActiveMemory/ctx/internal/write/initialize"
 )
 
@@ -57,7 +56,7 @@ func EnableGlobally(cmd *cobra.Command) error {
 	var settings globalSettings
 	existingData, safeReadErr := io.SafeReadUserFile(settingsPath)
 	if safeReadErr != nil && !os.IsNotExist(safeReadErr) {
-		return add.ErrFileRead(settingsPath, safeReadErr)
+		return errFs.FileRead(settingsPath, safeReadErr)
 	}
 	if safeReadErr == nil {
 		if parseErr := json.Unmarshal(existingData, &settings); parseErr != nil {
@@ -96,7 +95,9 @@ func EnableGlobally(cmd *cobra.Command) error {
 	if encodeErr := encoder.Encode(settings); encodeErr != nil {
 		return config.MarshalSettings(encodeErr)
 	}
-	if writeErr := os.WriteFile(settingsPath, buf.Bytes(), fs.PermFile); writeErr != nil {
+	if writeErr := os.WriteFile(
+		settingsPath, buf.Bytes(), fs.PermFile,
+	); writeErr != nil {
 		return errFs.FileWrite(settingsPath, writeErr)
 	}
 	initialize.PluginEnabled(cmd, settingsPath)

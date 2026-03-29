@@ -21,7 +21,8 @@ import (
 // Parameters:
 //   - existing: Current file content as bytes
 //   - entry: Pre-formatted entry text to insert
-//   - fileType: AppendEntry type (e.g., "task", "decision", "learning", "convention")
+//   - fileType: AppendEntry type
+//     (e.g., "task", "decision", "learning", "convention")
 //   - section: Target section header for tasks; defaults to "## Next Up" if
 //     empty; a "## " prefix is added automatically if missing
 //

@@ -17,7 +17,8 @@ import (
 // Task formats a task entry as a Markdown checkbox item.
 //
 // The output includes a timestamp tag for session correlation and an optional
-// priority tag. Format: "- [ ] content #priority:level #added:YYYY-MM-DD-HHMMSS"
+// priority tag.
+// Format: "- [ ] content #priority:level #added:YYYY-MM-DD-HHMMSS"
 //
 // Parameters:
 //   - content: Task description text

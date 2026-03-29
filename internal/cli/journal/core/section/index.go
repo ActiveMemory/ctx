@@ -36,7 +36,10 @@ func BuildTopicIndex(entries []entity.JournalEntry) []entity.TopicData {
 	)
 	topics := make([]entity.TopicData, len(grouped))
 	for i, g := range grouped {
-		topics[i] = entity.TopicData{Name: g.Key, Entries: g.Entries, Popular: g.Popular}
+		topics[i] = entity.TopicData{
+			Name: g.Key, Entries: g.Entries,
+			Popular: g.Popular,
+		}
 	}
 	return topics
 }
@@ -115,7 +118,10 @@ func BuildKeyFileIndex(entries []entity.JournalEntry) []entity.KeyFileData {
 	)
 	files := make([]entity.KeyFileData, len(grouped))
 	for i, g := range grouped {
-		files[i] = entity.KeyFileData{Path: g.Key, Entries: g.Entries, Popular: g.Popular}
+		files[i] = entity.KeyFileData{
+			Path: g.Key, Entries: g.Entries,
+			Popular: g.Popular,
+		}
 	}
 	return files
 }

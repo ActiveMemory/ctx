@@ -146,7 +146,11 @@ func TestRunDrift_WithFix(t *testing.T) {
 
 	// Write TASKS.md with completed tasks to trigger staleness fix
 	tasksPath := filepath.Join(tmpDir, dir.Context, ctx.Task)
-	tasksContent := "# Tasks\n\n## In Progress\n\n- [ ] Do something\n\n## Completed\n\n- [x] Done thing 1\n- [x] Done thing 2\n- [x] Done thing 3\n- [x] Done thing 4\n- [x] Done thing 5\n- [x] Done thing 6\n"
+	tasksContent := "# Tasks\n\n## In Progress\n\n" +
+		"- [ ] Do something\n\n## Completed\n\n" +
+		"- [x] Done thing 1\n- [x] Done thing 2\n" +
+		"- [x] Done thing 3\n- [x] Done thing 4\n" +
+		"- [x] Done thing 5\n- [x] Done thing 6\n"
 	if err := os.WriteFile(tasksPath, []byte(tasksContent), 0600); err != nil {
 		t.Fatalf("failed to write TASKS.md: %v", err)
 	}
@@ -188,7 +192,8 @@ func TestRunDrift_FixWithStaleness(t *testing.T) {
 	// Create TASKS.md with many completed tasks to trigger staleness
 	tasksPath := filepath.Join(tmpDir, dir.Context, ctx.Task)
 	var sb strings.Builder
-	sb.WriteString("# Tasks\n\n## In Progress\n\n- [ ] Active task\n\n## Completed\n\n")
+	sb.WriteString("# Tasks\n\n## In Progress\n\n" +
+		"- [ ] Active task\n\n## Completed\n\n")
 	for i := 0; i < 10; i++ {
 		sb.WriteString(fmt.Sprintf("- [x] Completed task %d\n", i))
 	}
@@ -251,7 +256,8 @@ func TestRunDrift_GenericError(t *testing.T) {
 	defer rc.Reset()
 
 	// Create .context as a file, not a directory.
-	if err := os.WriteFile(filepath.Join(tmpDir, dir.Context), []byte("not a dir"), 0600); err != nil {
+	fakePath := filepath.Join(tmpDir, dir.Context)
+	if err := os.WriteFile(fakePath, []byte("not a dir"), 0600); err != nil {
 		t.Fatalf("failed to create fake .context: %v", err)
 	}
 

@@ -20,6 +20,7 @@ import (
 	"github.com/ActiveMemory/ctx/internal/config/session"
 	"github.com/ActiveMemory/ctx/internal/entity"
 	errParser "github.com/ActiveMemory/ctx/internal/err/parser"
+	ctxLog "github.com/ActiveMemory/ctx/internal/log"
 )
 
 // ClaudeCode parses Claude Code JSONL session files.
@@ -66,7 +67,11 @@ func (p *ClaudeCode) Matches(path string) bool {
 	if openErr != nil {
 		return false
 	}
-	defer func() { _ = f.Close() }()
+	defer func() {
+		if closeErr := f.Close(); closeErr != nil {
+			ctxLog.Warn("close %s: %v", path, closeErr)
+		}
+	}()
 
 	scanner := bufio.NewScanner(f)
 	// Check the first N lines for Claude Code message structure
@@ -110,7 +115,11 @@ func (p *ClaudeCode) ParseFile(path string) ([]*entity.Session, error) {
 	if openErr != nil {
 		return nil, errParser.OpenFile(openErr)
 	}
-	defer func() { _ = f.Close() }()
+	defer func() {
+		if closeErr := f.Close(); closeErr != nil {
+			ctxLog.Warn("close %s: %v", path, closeErr)
+		}
+	}()
 
 	// Group messages by session ID
 	sessionMsgs := make(map[string][]claudeRawMessage)

@@ -15,23 +15,37 @@ package rc
 //   - AutoArchive: Whether to auto-archive completed tasks (default true)
 //   - ArchiveAfterDays: Days before archiving completed tasks (default 7)
 //   - ScratchpadEncrypt: Whether to encrypt the scratchpad (default true)
-//   - AllowOutsideCwd: Skip boundary validation for external context dirs (default false)
-//   - InjectionTokenWarn: Token threshold for oversize injection warning (default 15000, 0 = disabled)
-//   - ContextWindow: Context window size in tokens for usage reporting (default 200000).
-//     No-op for Claude Code users: auto-detected from ~/.claude/settings.json.
+//   - AllowOutsideCwd: Skip boundary validation for
+//     external context dirs (default false)
+//   - InjectionTokenWarn: Token threshold for oversize
+//     injection warning (default 15000, 0 = disabled)
+//   - ContextWindow: Context window size in tokens for
+//     usage reporting (default 200000). No-op for Claude
+//     Code users: auto-detected from settings.json.
 //     Only needed for non-Claude AI tools.
-//   - BillingTokenWarn: Absolute token threshold for billing nudge (default 0 = disabled).
-//     When set, a one-shot VERBATIM warning fires the first time session tokens
-//     exceed this value. Useful for Claude Pro users with 1M context where tokens
-//     beyond the included allowance incur extra cost.
-//   - EventLog: Whether to log hook events locally (default false)
-//   - KeyRotationDays: Days before encryption key rotation nudge (default 90)
-//   - TaskNudgeInterval: Edit/Write calls between task completion nudges (default 5, 0 = disabled)
-//   - KeyPathOverride: Explicit encryption key file path (default: auto-resolved)
-//   - SessionPrefixes: Recognized session header prefixes for Markdown parser (default: Session:)
-//   - StaleAgeDays: Days before a context file is flagged as stale by drift detection (default 30, 0 = disabled)
-//   - FreshnessFiles: Files to track for technology-dependent constant staleness (opt-in)
-//   - CompanionCheck: Check companion tool availability during /ctx-remember (default true)
+//   - BillingTokenWarn: Absolute token threshold for
+//     billing nudge (default 0 = disabled). When set,
+//     a one-shot VERBATIM warning fires the first time
+//     session tokens exceed this value. Useful for Claude
+//     Pro users with 1M context where tokens beyond the
+//     included allowance incur extra cost.
+//   - EventLog: Whether to log hook events locally
+//     (default false)
+//   - KeyRotationDays: Days before encryption key
+//     rotation nudge (default 90)
+//   - TaskNudgeInterval: Edit/Write calls between task
+//     completion nudges (default 5, 0 = disabled)
+//   - KeyPathOverride: Explicit encryption key file
+//     path (default: auto-resolved)
+//   - SessionPrefixes: Recognized session header
+//     prefixes for Markdown parser (default: Session:)
+//   - StaleAgeDays: Days before a context file is
+//     flagged as stale by drift detection
+//     (default 30, 0 = disabled)
+//   - FreshnessFiles: Files to track for
+//     technology-dependent constant staleness (opt-in)
+//   - CompanionCheck: Check companion tool availability
+//     during /ctx-remember (default true)
 type CtxRC struct {
 	Profile             string          `yaml:"profile"`
 	ContextDir          string          `yaml:"context_dir"`
@@ -64,7 +78,8 @@ type CtxRC struct {
 // Fields:
 //   - Path: File path relative to the project root
 //   - Desc: Summary of what constants live in the file
-//   - ReviewURL: Optional URL to check against when reviewing (e.g., vendor docs)
+//   - ReviewURL: Optional URL to check against when
+//     reviewing (e.g., vendor docs)
 type FreshnessFile struct {
 	Path      string `yaml:"path"`
 	Desc      string `yaml:"desc"`

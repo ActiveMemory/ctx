@@ -61,7 +61,9 @@ func Run(cmd *cobra.Command, stdin *os.File) error {
 		return nil
 	}
 
-	if time.Since(lastRun) < time.Duration(architecture.MapStaleDays)*24*time.Hour {
+	staleAge := time.Duration(architecture.MapStaleDays) *
+		24 * time.Hour
+	if time.Since(lastRun) < staleAge {
 		return nil
 	}
 
@@ -72,7 +74,9 @@ func Run(cmd *cobra.Command, stdin *os.File) error {
 	}
 
 	dateStr := lastRun.Format(cfgTime.DateFormat)
-	writeHook.Nudge(cmd, health.EmitMapStalenessWarning(input.SessionID, dateStr, moduleCommits))
+	writeHook.Nudge(cmd, health.EmitMapStalenessWarning(
+		input.SessionID, dateStr, moduleCommits,
+	))
 
 	internalIo.TouchFile(markerPath)
 

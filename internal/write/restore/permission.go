@@ -53,10 +53,22 @@ func Diff(
 	if cmd == nil {
 		return
 	}
-	printSection(cmd, desc.Text(text.DescKeyWriteRestoreDroppedHeader), desc.Text(text.DescKeyWriteRestoreRemoved), dropped)
-	printSection(cmd, desc.Text(text.DescKeyWriteRestoreRestoredHeader), desc.Text(text.DescKeyWriteRestoreAdded), restored)
-	printSection(cmd, desc.Text(text.DescKeyWriteRestoreDenyDroppedHeader), desc.Text(text.DescKeyWriteRestoreRemoved), denyDropped)
-	printSection(cmd, desc.Text(text.DescKeyWriteRestoreDenyRestoredHeader), desc.Text(text.DescKeyWriteRestoreAdded), denyRestored)
+	printSection(cmd,
+		desc.Text(text.DescKeyWriteRestoreDroppedHeader),
+		desc.Text(text.DescKeyWriteRestoreRemoved),
+		dropped)
+	printSection(cmd,
+		desc.Text(text.DescKeyWriteRestoreRestoredHeader),
+		desc.Text(text.DescKeyWriteRestoreAdded),
+		restored)
+	printSection(cmd,
+		desc.Text(text.DescKeyWriteRestoreDenyDroppedHeader),
+		desc.Text(text.DescKeyWriteRestoreRemoved),
+		denyDropped)
+	printSection(cmd,
+		desc.Text(text.DescKeyWriteRestoreDenyRestoredHeader),
+		desc.Text(text.DescKeyWriteRestoreAdded),
+		denyRestored)
 
 	if len(dropped) == 0 && len(restored) == 0 &&
 		len(denyDropped) == 0 && len(denyRestored) == 0 {

@@ -51,7 +51,9 @@ func FileItem(cmd *cobra.Command, f FileInfo, verbose bool) {
 			cmd.Println(fmt.Sprintf(desc.Text(text.DescKeyWriteStatusPreviewLine), line))
 		}
 	} else {
-		cmd.Println(fmt.Sprintf(desc.Text(text.DescKeyWriteStatusFileCompact), f.Indicator, f.Name, f.Status))
+		cmd.Println(fmt.Sprintf(
+			desc.Text(text.DescKeyWriteStatusFileCompact),
+			f.Indicator, f.Name, f.Status))
 	}
 }
 
@@ -67,6 +69,8 @@ func Activity(cmd *cobra.Command, entries []ActivityInfo) {
 	cmd.Println()
 	cmd.Println(desc.Text(text.DescKeyWriteStatusActivityHeader))
 	for _, e := range entries {
-		cmd.Println(fmt.Sprintf(desc.Text(text.DescKeyWriteStatusActivityItem), e.Name, e.Ago))
+		cmd.Println(fmt.Sprintf(
+			desc.Text(text.DescKeyWriteStatusActivityItem),
+			e.Name, e.Ago))
 	}
 }

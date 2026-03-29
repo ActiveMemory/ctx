@@ -31,7 +31,9 @@ func Created(cmd *cobra.Command, path string) {
 //   - path: created file path
 //   - qualifier: additional info appended after the path
 func CreatedWith(cmd *cobra.Command, path, qualifier string) {
-	cmd.Println(fmt.Sprintf(desc.Text(text.DescKeyWriteInitCreatedWith), path, qualifier))
+	cmd.Println(fmt.Sprintf(
+		desc.Text(text.DescKeyWriteInitCreatedWith),
+		path, qualifier))
 }
 
 // Skipped reports a file skipped because it already exists.
@@ -58,7 +60,9 @@ func SkippedPlain(cmd *cobra.Command, path string) {
 //   - cmd: Cobra command for output
 //   - path: skipped file path
 func CtxContentExists(cmd *cobra.Command, path string) {
-	cmd.Println(fmt.Sprintf(desc.Text(text.DescKeyWriteInitCtxContentExists), path))
+	cmd.Println(fmt.Sprintf(
+		desc.Text(text.DescKeyWriteInitCtxContentExists),
+		path))
 }
 
 // Merged reports a file merged during init.
@@ -113,7 +117,9 @@ func NoChanges(cmd *cobra.Command, path string) {
 //   - cmd: Cobra command for output
 //   - path: settings file path
 func PermsMergedDeduped(cmd *cobra.Command, path string) {
-	cmd.Println(fmt.Sprintf(desc.Text(text.DescKeyWriteInitPermsMergedDeduped), path))
+	cmd.Println(fmt.Sprintf(
+		desc.Text(text.DescKeyWriteInitPermsMergedDeduped),
+		path))
 }
 
 // PermsDeduped reports duplicate permissions removed.
@@ -166,7 +172,9 @@ func MakefileCreated(cmd *cobra.Command) {
 //   - cmd: Cobra command for output
 //   - filename: included filename
 func MakefileIncludes(cmd *cobra.Command, filename string) {
-	cmd.Println(fmt.Sprintf(desc.Text(text.DescKeyWriteInitMakefileIncludes), filename))
+	cmd.Println(fmt.Sprintf(
+		desc.Text(text.DescKeyWriteInitMakefileIncludes),
+		filename))
 }
 
 // MakefileAppended reports an include appended to Makefile.
@@ -175,7 +183,9 @@ func MakefileIncludes(cmd *cobra.Command, filename string) {
 //   - cmd: Cobra command for output
 //   - filename: included filename
 func MakefileAppended(cmd *cobra.Command, filename string) {
-	cmd.Println(fmt.Sprintf(desc.Text(text.DescKeyWriteInitMakefileAppended), filename))
+	cmd.Println(fmt.Sprintf(
+		desc.Text(text.DescKeyWriteInitMakefileAppended),
+		filename))
 }
 
 // PluginSkipped reports plugin enablement was skipped.
@@ -200,7 +210,9 @@ func PluginAlreadyEnabled(cmd *cobra.Command) {
 //   - cmd: Cobra command for output
 //   - settingsPath: path to the settings file
 func PluginEnabled(cmd *cobra.Command, settingsPath string) {
-	cmd.Println(fmt.Sprintf(desc.Text(text.DescKeyWriteInitPluginEnabled), settingsPath))
+	cmd.Println(fmt.Sprintf(
+		desc.Text(text.DescKeyWriteInitPluginEnabled),
+		settingsPath))
 }
 
 // SkippedDir reports a directory skipped because it exists.
@@ -219,6 +231,21 @@ func SkippedDir(cmd *cobra.Command, dir string) {
 //   - dir: directory name
 func CreatedDir(cmd *cobra.Command, dir string) {
 	cmd.Println(fmt.Sprintf(desc.Text(text.DescKeyWriteInitCreatedDir), dir))
+}
+
+// NotInPath prints a multi-line diagnostic to stderr
+// explaining that ctx is not in PATH, with installation
+// instructions.
+//
+// Parameters:
+//   - cmd: Cobra command whose stderr stream receives the output.
+//     Nil is a no-op.
+func NotInPath(cmd *cobra.Command) {
+	if cmd == nil {
+		return
+	}
+
+	cmd.PrintErrln(desc.Text(text.DescKeyErrInitCtxNotInPath))
 }
 
 // MergePrompt prints a merge confirmation prompt with [y/N] suffix.

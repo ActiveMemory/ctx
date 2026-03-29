@@ -1,6 +1,61 @@
 # Error message format strings for ctx CLI.
 # Used by assets.TextDesc() via internal/err subpackages.
 
+err.add.file-not-found:
+  short: "context file %s not found. Run 'ctx init' first"
+err.add.index-update:
+  short: 'failed to update index in %s: %w'
+err.add.missing-decision:
+  short: |-
+    decisions require complete ADR format
+
+    Missing required flags: %s
+
+    Usage:
+      ctx add decision "Decision title" \
+        --context "What prompted this decision" \
+        --rationale "Why this choice over alternatives" \
+        --consequence "What changes as a result"
+
+    Example:
+      ctx add decision "Use PostgreSQL for primary database" \
+        --context "Need a reliable database for production workloads" \
+        --rationale "PostgreSQL offers ACID compliance, JSON support, and team familiarity" \
+        --consequence "Team needs PostgreSQL training; must set up replication"
+err.add.missing-fields:
+  short: '%s missing required fields: %s'
+err.add.missing-learning:
+  short: |-
+    learnings require complete format
+
+    Missing required flags: %s
+
+    Usage:
+      ctx add learning "Learning title" \
+        --context "What prompted this learning" \
+        --lesson "The key insight" \
+        --application "How to apply this going forward"
+
+    Example:
+      ctx add learning "Go embed requires files in same package" \
+        --context "Tried to embed files from parent directory, got compile error" \
+        --lesson "go:embed only works with files in same or child directories" \
+        --application "Keep embedded files in internal/templates/, not project root"
+err.add.no-content:
+  short: no content provided
+err.add.no-content-provided:
+  short: |-
+    no content provided
+
+    Usage:
+      ctx add %s "your content here"
+      ctx add %s --file /path/to/content.md
+      echo "content" | ctx add %s
+
+    Examples:
+    %s
+err.add.unknown-type:
+  short: 'unknown type %q. Valid types: decision, task, learning, convention'
 err.backup.backup-global:
   short: 'global backup: %w'
 err.backup.backup-project:
@@ -141,6 +196,8 @@ err.fs.resolve-path:
   short: 'resolve path: %w'
 err.fs.stat-path:
   short: 'stat %s: %w'
+err.fs.stdin-read:
+  short: 'failed to read from stdin: %w'
 err.fs.write-file-failed:
   short: 'write file: %w'
 err.fs.write-merged:

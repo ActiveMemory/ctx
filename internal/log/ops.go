@@ -29,6 +29,10 @@ func rotate(logPath string) {
 	}
 
 	prevPath := prevLogFilePath()
-	_ = os.Remove(prevPath)
-	_ = os.Rename(logPath, prevPath)
+	if removeErr := os.Remove(prevPath); removeErr != nil {
+		Warn("remove %s: %v", prevPath, removeErr)
+	}
+	if renameErr := os.Rename(logPath, prevPath); renameErr != nil {
+		Warn("rename %s: %v", logPath, renameErr)
+	}
 }

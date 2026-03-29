@@ -19,6 +19,7 @@ import (
 	"github.com/ActiveMemory/ctx/internal/entity"
 	errBackup "github.com/ActiveMemory/ctx/internal/err/backup"
 	internalIo "github.com/ActiveMemory/ctx/internal/io"
+	ctxLog "github.com/ActiveMemory/ctx/internal/log"
 )
 
 // finalizeArchive creates the archive, populates the result with size,
@@ -62,7 +63,8 @@ func finalizeArchive(
 }
 
 // addEntry adds a single ArchiveEntry (file or directory) to the tar writer.
-// Optional entries that are not found emit a diagnostic message and are skipped.
+// Optional entries that are not found emit a diagnostic message
+// and are skipped.
 //
 // Parameters:
 //   - tw: tar writer to add the entry to
@@ -169,7 +171,11 @@ func copyFileToTar(tw *tar.Writer, path string) error {
 	if openErr != nil {
 		return openErr
 	}
-	defer func() { _ = f.Close() }()
+	defer func() {
+		if closeErr := f.Close(); closeErr != nil {
+			ctxLog.Warn("close %s: %v", path, closeErr)
+		}
+	}()
 	_, copyErr := io.Copy(tw, f)
 	return copyErr
 }

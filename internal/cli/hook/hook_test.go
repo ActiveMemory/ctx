@@ -124,7 +124,9 @@ func TestWriteCopilotInstructions_ExistingWithMarker(t *testing.T) {
 	}
 	existingContent := "# Existing\n<!-- ctx:copilot -->\nSome content\n"
 	targetFile := filepath.Join(githubDir, "copilot-instructions.md")
-	if writeErr := os.WriteFile(targetFile, []byte(existingContent), 0o644); writeErr != nil {
+	if writeErr := os.WriteFile(
+		targetFile, []byte(existingContent), 0o644,
+	); writeErr != nil {
 		t.Fatal(writeErr)
 	}
 
@@ -170,7 +172,9 @@ func TestWriteCopilotInstructions_ExistingWithoutMarker(t *testing.T) {
 	}
 	originalContent := "# My Custom Copilot Rules\n\nDo cool things.\n"
 	targetFile := filepath.Join(githubDir, "copilot-instructions.md")
-	if writeErr := os.WriteFile(targetFile, []byte(originalContent), 0o644); writeErr != nil {
+	writeErr := os.WriteFile(
+		targetFile, []byte(originalContent), 0o644)
+	if writeErr != nil {
 		t.Fatal(writeErr)
 	}
 

@@ -177,7 +177,11 @@ func Update(content, fileHeader, columnHeader string) string {
 // Returns:
 //   - string: Updated content with regenerated index
 func UpdateDecisions(content string) string {
-	return Update(content, desc.Text(text.DescKeyHeadingDecisions), desc.Text(text.DescKeyColumnDecision))
+	return Update(
+		content,
+		desc.Text(text.DescKeyHeadingDecisions),
+		desc.Text(text.DescKeyColumnDecision),
+	)
 }
 
 // UpdateLearnings regenerates the learning index in LEARNINGS.md content.
@@ -188,7 +192,11 @@ func UpdateDecisions(content string) string {
 // Returns:
 //   - string: Updated content with regenerated index
 func UpdateLearnings(content string) string {
-	return Update(content, desc.Text(text.DescKeyHeadingLearnings), desc.Text(text.DescKeyColumnLearning))
+	return Update(
+		content,
+		desc.Text(text.DescKeyHeadingLearnings),
+		desc.Text(text.DescKeyColumnLearning),
+	)
 }
 
 // Reindex reads a context file, regenerates its index, and writes it back.
@@ -226,7 +234,9 @@ func Reindex(
 
 	updated := updateFunc(string(content))
 
-	if writeErr := os.WriteFile(filePath, []byte(updated), fs.PermFile); writeErr != nil {
+	if writeErr := os.WriteFile(
+		filePath, []byte(updated), fs.PermFile,
+	); writeErr != nil {
 		return errRecall.ReindexFileWrite(filePath, writeErr)
 	}
 

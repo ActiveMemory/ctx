@@ -58,7 +58,8 @@ import (
 // binaries and are not intended for direct user invocation.
 //
 // Returns:
-//   - *cobra.Command: Parent command with resource display, plumbing, and hook subcommands
+//   - *cobra.Command: Parent command with resource display,
+//     plumbing, and hook subcommands
 func Cmd() *cobra.Command {
 	short, long := desc.Command(cmd.DescKeySystem)
 

@@ -14,7 +14,8 @@ const (
 	Claude = ".claude"
 	// Context is the default context directory name.
 	Context = ".context"
-	// HooksMessages is the subdirectory path for hook message overrides within .context/.
+	// HooksMessages is the subdirectory path for hook message
+	// overrides within .context/.
 	HooksMessages = "hooks/messages"
 	// Ideas is the project-root directory for early-stage ideas and explorations.
 	Ideas = "ideas"

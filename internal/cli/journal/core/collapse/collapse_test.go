@@ -136,6 +136,9 @@ func TestCollapseToolOutputs_NoHeaders(t *testing.T) {
 	got := ToolOutputs(input)
 
 	if got != input {
-		t.Errorf("content without headers should pass through unchanged\ngot:\n%s", got)
+		t.Errorf(
+			"content without headers should pass through"+
+				" unchanged\ngot:\n%s", got,
+		)
 	}
 }

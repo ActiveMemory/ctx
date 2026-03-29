@@ -17,8 +17,14 @@ func TestBuildSessionIndex_WithSessionID(t *testing.T) {
 	dir := t.TempDir()
 
 	// File with session_id in frontmatter.
-	content := "---\ndate: \"2026-01-15\"\nsession_id: \"abc12345-full-uuid\"\n---\n\n# Test\n"
-	if writeErr := os.WriteFile(filepath.Join(dir, "2026-01-15-fix-auth-abc12345.md"), []byte(content), 0600); writeErr != nil {
+	content := "---\ndate: \"2026-01-15\"\n" +
+		"session_id: \"abc12345-full-uuid\"\n" +
+		"---\n\n# Test\n"
+	fname := "2026-01-15-fix-auth-abc12345.md"
+	writeErr := os.WriteFile(
+		filepath.Join(dir, fname), []byte(content), 0600,
+	)
+	if writeErr != nil {
 		t.Fatal(writeErr)
 	}
 
@@ -26,8 +32,11 @@ func TestBuildSessionIndex_WithSessionID(t *testing.T) {
 
 	if got, ok := idx["abc12345-full-uuid"]; !ok {
 		t.Error("expected session_id key in index")
-	} else if got != "2026-01-15-fix-auth-abc12345.md" {
-		t.Errorf("index[session_id] = %q, want %q", got, "2026-01-15-fix-auth-abc12345.md")
+	} else if got != fname {
+		t.Errorf(
+			"index[session_id] = %q, want %q",
+			got, fname,
+		)
 	}
 }
 
@@ -35,8 +44,13 @@ func TestBuildSessionIndex_ShortIDFallback(t *testing.T) {
 	dir := t.TempDir()
 
 	// Legacy file without session_id (no frontmatter with session_id).
-	content := "---\ndate: \"2026-01-15\"\n---\n\n# old-slug\n"
-	if writeErr := os.WriteFile(filepath.Join(dir, "2026-01-15-old-slug-abc12345.md"), []byte(content), 0600); writeErr != nil {
+	content := "---\ndate: \"2026-01-15\"\n" +
+		"---\n\n# old-slug\n"
+	fname := "2026-01-15-old-slug-abc12345.md"
+	writeErr := os.WriteFile(
+		filepath.Join(dir, fname), []byte(content), 0600,
+	)
+	if writeErr != nil {
 		t.Fatal(writeErr)
 	}
 
@@ -44,8 +58,11 @@ func TestBuildSessionIndex_ShortIDFallback(t *testing.T) {
 
 	if got, ok := idx["abc12345"]; !ok {
 		t.Error("expected short ID key in index")
-	} else if got != "2026-01-15-old-slug-abc12345.md" {
-		t.Errorf("index[shortID] = %q, want %q", got, "2026-01-15-old-slug-abc12345.md")
+	} else if got != fname {
+		t.Errorf(
+			"index[shortID] = %q, want %q",
+			got, fname,
+		)
 	}
 }
 
@@ -54,12 +71,20 @@ func TestBuildSessionIndex_SkipsMultipartFiles(t *testing.T) {
 
 	// Base file.
 	base := "---\ndate: \"2026-01-15\"\n---\n\n# test\n"
-	if writeErr := os.WriteFile(filepath.Join(dir, "2026-01-15-test-slug-abc12345.md"), []byte(base), 0600); writeErr != nil {
+	baseFile := "2026-01-15-test-slug-abc12345.md"
+	writeErr := os.WriteFile(
+		filepath.Join(dir, baseFile), []byte(base), 0600,
+	)
+	if writeErr != nil {
 		t.Fatal(writeErr)
 	}
 	// Multipart file (-p2).
 	part := "---\ndate: \"2026-01-15\"\n---\n\n# test part 2\n"
-	if writeErr := os.WriteFile(filepath.Join(dir, "2026-01-15-test-slug-abc12345-p2.md"), []byte(part), 0600); writeErr != nil {
+	partFile := "2026-01-15-test-slug-abc12345-p2.md"
+	writeErr = os.WriteFile(
+		filepath.Join(dir, partFile), []byte(part), 0600,
+	)
+	if writeErr != nil {
 		t.Fatal(writeErr)
 	}
 
@@ -100,7 +125,11 @@ func TestLookupSessionFile(t *testing.T) {
 		want      string
 	}{
 		{"full ID match", "abc12345-full-uuid", "2026-01-15-fix-auth-abc12345.md"},
-		{"short ID fallback", "def67890-some-longer-id", "2026-01-16-old-slug-def67890.md"},
+		{
+			"short ID fallback",
+			"def67890-some-longer-id",
+			"2026-01-16-old-slug-def67890.md",
+		},
 		{"no match", "xxxxxxxx-unknown", ""},
 	}
 	for _, tt := range tests {
@@ -151,7 +180,9 @@ func TestExtractSessionID(t *testing.T) {
 }
 
 func TestExtractFrontmatterField(t *testing.T) {
-	content := "---\ndate: \"2026-01-15\"\ntitle: \"Fix Auth Bug\"\nsession_id: \"abc-123\"\n---\n\n# Test\n"
+	content := "---\ndate: \"2026-01-15\"\n" +
+		"title: \"Fix Auth Bug\"\n" +
+		"session_id: \"abc-123\"\n---\n\n# Test\n"
 
 	tests := []struct {
 		field string
@@ -166,7 +197,10 @@ func TestExtractFrontmatterField(t *testing.T) {
 		t.Run(tt.field, func(t *testing.T) {
 			got := ExtractFrontmatterField(content, tt.field)
 			if got != tt.want {
-				t.Errorf("ExtractFrontmatterField(%q) = %q, want %q", tt.field, got, tt.want)
+				t.Errorf(
+					"ExtractFrontmatterField(%q) = %q, want %q",
+					tt.field, got, tt.want,
+				)
 			}
 		})
 	}
@@ -206,7 +240,9 @@ func TestRenameJournalFiles_Multipart(t *testing.T) {
 
 	// Create base and part files with nav links.
 	baseContent := "# old\n[Next →](" + oldBase + "-p2.md)\n"
-	p2Content := "# old p2\n[← Previous](" + oldBase + ".md)\n[Next →](" + oldBase + "-p3.md)\n"
+	p2Content := "# old p2\n[← Previous](" +
+		oldBase + ".md)\n[Next →](" +
+		oldBase + "-p3.md)\n"
 	p3Content := "# old p3\n[← Previous](" + oldBase + "-p2.md)\n"
 
 	for fname, content := range map[string]string{
@@ -214,7 +250,11 @@ func TestRenameJournalFiles_Multipart(t *testing.T) {
 		oldBase + "-p2.md": p2Content,
 		oldBase + "-p3.md": p3Content,
 	} {
-		if writeErr := os.WriteFile(filepath.Join(dir, fname), []byte(content), 0600); writeErr != nil {
+		writeErr := os.WriteFile(
+			filepath.Join(dir, fname),
+			[]byte(content), 0600,
+		)
+		if writeErr != nil {
 			t.Fatal(writeErr)
 		}
 	}

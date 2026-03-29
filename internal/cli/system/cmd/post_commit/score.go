@@ -29,7 +29,10 @@ import (
 // Returns:
 //   - string: Formatted nudge box, or empty string if no violations detected
 func scoreCommitViolations() string {
-	msgBytes, msgErr := exec.Command("git", "log", "-1", "--format=%B").Output() //nolint:gosec // G204: all args are string literals
+	//nolint:gosec // G204: all args are string literals
+	msgBytes, msgErr := exec.Command(
+		"git", "log", "-1", "--format=%B",
+	).Output()
 	if msgErr != nil {
 		return ""
 	}
@@ -59,7 +62,11 @@ func scoreCommitViolations() string {
 		missing = append(missing, desc.Text(text.DescKeyPostCommitMissingTaskRef))
 	}
 
-	diffBytes, diffErr := exec.Command("git", "diff-tree", "--no-commit-id", "--name-only", "-r", "HEAD").Output() //nolint:gosec // G204: all args are string literals
+	//nolint:gosec // G204: all args are string literals
+	diffBytes, diffErr := exec.Command(
+		"git", "diff-tree", "--no-commit-id",
+		"--name-only", "-r", "HEAD",
+	).Output()
 	if diffErr == nil {
 		diffFiles := string(diffBytes)
 		hasSource := strings.Contains(diffFiles, file.ExtGo)
@@ -79,8 +86,14 @@ func scoreCommitViolations() string {
 		severity = desc.Text(text.DescKeyPostCommitSeveritySkipped)
 	}
 
-	title := fmt.Sprintf(desc.Text(text.DescKeyPostCommitAuditTitle), score, severity)
-	content := fmt.Sprintf(desc.Text(text.DescKeyPostCommitAuditContent), strings.Join(missing, token.CommaSpace))
+	title := fmt.Sprintf(
+		desc.Text(text.DescKeyPostCommitAuditTitle),
+		score, severity,
+	)
+	content := fmt.Sprintf(
+		desc.Text(text.DescKeyPostCommitAuditContent),
+		strings.Join(missing, token.CommaSpace),
+	)
 
 	return message.NudgeBox(
 		desc.Text(text.DescKeyPostCommitRelayPrefix),

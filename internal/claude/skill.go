@@ -13,7 +13,8 @@ import (
 
 // SkillList returns the list of embedded skill directory names.
 //
-// These are Agent SkillList (https://agentskills.io) following the specification
+// These are Agent SkillList (https://agentskills.io)
+// following the specification
 // with SKILL.md files containing frontmatter (name, description) and
 // autonomy-focused instructions. They can be installed to .claude/skills/
 // via "ctx init".
@@ -33,7 +34,8 @@ func SkillList() ([]string, error) {
 // SkillContent returns the content of a skill's SKILL.md file by name.
 //
 // Parameters:
-//   - name: Skill directory name as returned by [SkillList] (e.g., "ctx-status")
+//   - name: Skill directory name as returned by
+//     [SkillList] (e.g., "ctx-status")
 //
 // Returns:
 //   - []byte: Raw bytes of the SKILL.md file

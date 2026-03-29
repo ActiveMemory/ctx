@@ -83,7 +83,8 @@ func ParseSinceFlag(since string) (time.Time, string, error) {
 	return time.Time{}, "", os.ErrInvalid
 }
 
-// ExtractTimestamp extracts a timestamp from a JSON line without full unmarshal.
+// ExtractTimestamp extracts a timestamp from a JSON
+// line without full unmarshal.
 // Looks for "timestamp":"..." and parses as RFC3339.
 //
 // Parameters:

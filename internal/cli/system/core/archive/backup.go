@@ -23,6 +23,7 @@ import (
 	"github.com/ActiveMemory/ctx/internal/entity"
 	errBackup "github.com/ActiveMemory/ctx/internal/err/backup"
 	internalIo "github.com/ActiveMemory/ctx/internal/io"
+	ctxLog "github.com/ActiveMemory/ctx/internal/log"
 )
 
 // Create builds a tar.gz archive from the given entries.
@@ -41,13 +42,27 @@ func Create(
 	if createErr != nil {
 		return errBackup.CreateArchive(createErr)
 	}
-	defer func() { _ = outFile.Close() }()
+	defer func() {
+		if closeErr := outFile.Close(); closeErr != nil {
+			ctxLog.Warn(
+				"close %s: %v", archivePath, closeErr,
+			)
+		}
+	}()
 
 	gzw := gzip.NewWriter(outFile)
-	defer func() { _ = gzw.Close() }()
+	defer func() {
+		if closeErr := gzw.Close(); closeErr != nil {
+			ctxLog.Warn("close %s: %v", "gzip", closeErr)
+		}
+	}()
 
 	tw := tar.NewWriter(gzw)
-	defer func() { _ = tw.Close() }()
+	defer func() {
+		if closeErr := tw.Close(); closeErr != nil {
+			ctxLog.Warn("close %s: %v", "tar", closeErr)
+		}
+	}()
 
 	for _, entry := range entries {
 		if addErr := addEntry(tw, entry, w); addErr != nil {
@@ -80,9 +95,20 @@ func BackupProject(
 	archivePath := filepath.Join(os.TempDir(), archiveName)
 
 	entries := []entity.ArchiveEntry{
-		{SourcePath: filepath.Join(cwd, dir.Context), Prefix: dir.Context, ExcludeDir: dir.JournalSite},
-		{SourcePath: filepath.Join(cwd, dir.Claude), Prefix: dir.Claude},
-		{SourcePath: filepath.Join(cwd, dir.Ideas), Prefix: dir.Ideas, Optional: true},
+		{
+			SourcePath: filepath.Join(cwd, dir.Context),
+			Prefix:     dir.Context,
+			ExcludeDir: dir.JournalSite,
+		},
+		{
+			SourcePath: filepath.Join(cwd, dir.Claude),
+			Prefix:     dir.Claude,
+		},
+		{
+			SourcePath: filepath.Join(cwd, dir.Ideas),
+			Prefix:     dir.Ideas,
+			Optional:   true,
+		},
 		{SourcePath: filepath.Join(home, archive.Bashrc), Prefix: archive.Bashrc},
 	}
 
@@ -95,7 +121,9 @@ func BackupProject(
 
 	// Touch marker file for check-backup-age hook.
 	markerDir := filepath.Join(home, archive.BackupMarkerDir)
-	_ = os.MkdirAll(markerDir, cfgFs.PermExec)
+	if mkdirErr := os.MkdirAll(markerDir, cfgFs.PermExec); mkdirErr != nil {
+		ctxLog.Warn("mkdir %s: %v", markerDir, mkdirErr)
+	}
 	markerPath := filepath.Join(markerDir, archive.BackupMarkerFile)
 	internalIo.TouchFile(markerPath)
 
@@ -120,7 +148,11 @@ func BackupGlobal(
 	archivePath := filepath.Join(os.TempDir(), archiveName)
 
 	entries := []entity.ArchiveEntry{
-		{SourcePath: filepath.Join(home, dir.Claude), Prefix: dir.Claude, ExcludeDir: archive.BackupExcludeTodos},
+		{
+			SourcePath: filepath.Join(home, dir.Claude),
+			Prefix:     dir.Claude,
+			ExcludeDir: archive.BackupExcludeTodos,
+		},
 	}
 
 	return finalizeArchive(

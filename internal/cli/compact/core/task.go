@@ -47,7 +47,8 @@ func CompactTasks(
 		compact.InfoMovingTask(cmd, tidy.TruncateString(taskText, token.TruncateLen))
 	}
 	for _, taskText := range result.TasksSkipped {
-		compact.InfoSkippingTask(cmd, tidy.TruncateString(taskText, token.TruncateLen))
+		truncated := tidy.TruncateString(taskText, token.TruncateLen)
+		compact.InfoSkippingTask(cmd, truncated)
 	}
 
 	if len(result.TasksMoved) == 0 {

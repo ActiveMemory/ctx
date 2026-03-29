@@ -8,6 +8,7 @@ package file
 
 // Session defaults.
 const (
-	// MaxNameLen is the maximum character length for sanitized filename components.
+	// MaxNameLen is the maximum character length for sanitized
+	// filename components.
 	MaxNameLen = 50
 )

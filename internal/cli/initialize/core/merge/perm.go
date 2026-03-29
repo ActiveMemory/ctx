@@ -38,7 +38,8 @@ func SettingsPermissions(cmd *cobra.Command) error {
 	existingContent, readErr := os.ReadFile(cfgClaude.Settings)
 	fileExists := readErr == nil
 	if fileExists {
-		if unmarshalErr := json.Unmarshal(existingContent, &settings); unmarshalErr != nil {
+		unmarshalErr := json.Unmarshal(existingContent, &settings)
+		if unmarshalErr != nil {
 			return errParser.ParseFile(cfgClaude.Settings, unmarshalErr)
 		}
 	}
@@ -139,7 +140,8 @@ func DeduplicatePermissions(slice *[]string) bool {
 			continue
 		}
 		seen[p] = true
-		if name, ok := skillName(p); ok && strings.HasPrefix(name, cfgClaude.PluginScope) {
+		name, ok := skillName(p)
+		if ok && strings.HasPrefix(name, cfgClaude.PluginScope) {
 			bareName := strings.TrimPrefix(name, cfgClaude.PluginScope)
 			bareName = strings.TrimSuffix(bareName, cfgClaude.PluginScopeWildcard)
 			if bareSkills[bareName] {

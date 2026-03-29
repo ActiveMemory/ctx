@@ -38,7 +38,10 @@ func DiscoverPath(projectRoot string) (string, error) {
 	}
 
 	slug := ProjectSlug(abs)
-	memPath := filepath.Join(home, dir.Claude, dir.Projects, slug, dir.Memory, memory.Source)
+	memPath := filepath.Join(
+		home, dir.Claude, dir.Projects,
+		slug, dir.Memory, memory.Source,
+	)
 
 	if _, statErr := os.Stat(memPath); statErr != nil {
 		return "", errMemory.NoDiscovery(memPath)

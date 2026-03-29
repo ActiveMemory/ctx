@@ -95,7 +95,8 @@ func sessions() []registration {
 	}
 }
 
-// runtimeCmds returns command registrations for the runtime configuration group.
+// runtimeCmds returns command registrations for the
+// runtime configuration group.
 //
 // Returns:
 //   - []registration: Config, permission, pause, and resume commands

@@ -277,13 +277,13 @@ Spec: `specs/stuttery-rename.md`. Read the spec before starting any SR task.
 
 - [x] JMC.7.1: Move recall/cmd/list logic into journal/cmd/source/list.go #done:2026-03-28-040000 — source/run.go still delegates list mode to recall/cmd/list.Run. Inline or absorb. #priority:high #added:2026-03-28-030000
 - [x] JMC.7.2: Move recall/cmd/show logic into journal/cmd/source/show.go #done:2026-03-28-040000 — source/run.go delegates show mode to recall/cmd/show.Run. Inline or absorb. #priority:high #added:2026-03-28-030000
-- [ ] JMC.7.3: Delete orphaned recall/ package tree (zero external callers after JMC.7.1-7.2) #added:2026-03-28-030000
+- [x] JMC.7.3: Relocated recall/parser → journal/parser, deleted recall/ #done:2026-03-28-180000 #added:2026-03-28-030000
 
 **JMC.8 — Error constructor migration and string externalization:**
 
-- [ ] JMC.8.1: Move internal/write/add/err.go error constructors (10 functions) to internal/err/add/ — inline strings need text keys in assets #priority:high #added:2026-03-28-050000
-- [ ] JMC.8.2: Full codebase scan for other write/*/err.go files with error constructors that belong in internal/err/ #added:2026-03-28-050000
-- [ ] JMC.8.3: Fix directory walker scripts to catch fmt.Errorf inline text, multi-line string literals, and Join separators #added:2026-03-28-050000
+- [x] JMC.8.1: Moved write/add/err.go constructors to err/add/ + err/fs; 8 text keys added, 2 redirected to existing err/fs #done:2026-03-28-190000 #added:2026-03-28-050000
+- [x] JMC.8.2: Scanned write/*/err.go — found write/initialize/err.go (output fn, not error ctor); merged into init.go, renamed, deleted err.go #done:2026-03-28-193000 #added:2026-03-28-050000
+- [x] JMC.8.3: Added checks 6-8 to lint-drift.sh: inline error strings outside err/, err.go files outside err/, strings.Join with inline separators; fixed lint-imports false positive bug and lint-docstrings exit code bug #done:2026-03-28-200000 #added:2026-03-28-050000
 
 ### Phase CLI-FIX: CLI Infrastructure Fixes
 

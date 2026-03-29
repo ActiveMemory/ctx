@@ -30,7 +30,9 @@ func collectMemory() MemInfo {
 	if memErr != nil {
 		return MemInfo{Supported: false}
 	}
-	totalBytes, parseErr := strconv.ParseUint(strings.TrimSpace(string(out)), 10, 64)
+	totalBytes, parseErr := strconv.ParseUint(
+		strings.TrimSpace(string(out)), 10, 64,
+	)
 	if parseErr != nil {
 		return MemInfo{Supported: false}
 	}
@@ -77,7 +79,8 @@ func parseVMStat(output string, totalBytes uint64) uint64 {
 	for _, line := range strings.Split(output, token.NewlineLF) {
 		if strings.Contains(line, "page size of") {
 			for _, word := range strings.Fields(line) {
-				if n, parseErr := strconv.ParseUint(word, 10, 64); parseErr == nil && n > 0 {
+				n, parseErr := strconv.ParseUint(word, 10, 64)
+				if parseErr == nil && n > 0 {
 					pageSize = n
 					break
 				}
@@ -104,7 +107,10 @@ func parseVMStat(output string, totalBytes uint64) uint64 {
 
 // parseSwapUsage parses sysctl vm.swapusage output.
 //
-// Expected format: "total = 2048.00M  used = 123.45M  free = 1924.55M  (encrypted)"
+// Expected format:
+//
+//	"total = 2048.00M  used = 123.45M  free = 1924.55M"
+//
 // Values are parsed as megabytes and converted to bytes.
 //
 // Parameters:

@@ -57,10 +57,12 @@ func summarizeTasks(content []byte) string {
 
 	var parts []string
 	if active > 0 {
-		parts = append(parts, fmt.Sprintf(desc.Text(text.DescKeySummaryActive), active))
+		activeFmt := desc.Text(text.DescKeySummaryActive)
+		parts = append(parts, fmt.Sprintf(activeFmt, active))
 	}
 	if completed > 0 {
-		parts = append(parts, fmt.Sprintf(desc.Text(text.DescKeySummaryCompleted), completed))
+		completedFmt := desc.Text(text.DescKeySummaryCompleted)
+		parts = append(parts, fmt.Sprintf(completedFmt, completed))
 	}
 	return strings.Join(parts, token.CommaSpace)
 }

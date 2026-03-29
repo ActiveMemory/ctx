@@ -20,7 +20,8 @@ import (
 	"github.com/ActiveMemory/ctx/internal/config/fs"
 )
 
-// setupDir creates a temp dir with .claude/, chdirs into it, and returns cleanup.
+// setupDir creates a temp dir with .claude/, chdirs
+// into it, and returns cleanup.
 func setupDir(t *testing.T) {
 	t.Helper()
 	tmpDir := t.TempDir()
@@ -38,7 +39,9 @@ func setupDir(t *testing.T) {
 // writeSettings writes JSON content to settings.local.json.
 func writeSettings(t *testing.T, content string) {
 	t.Helper()
-	if err := os.WriteFile(claude.Settings, []byte(content), fs.PermFile); err != nil {
+	if err := os.WriteFile(
+		claude.Settings, []byte(content), fs.PermFile,
+	); err != nil {
 		t.Fatal(err)
 	}
 }
@@ -46,7 +49,9 @@ func writeSettings(t *testing.T, content string) {
 // writeGolden writes JSON content to settings.golden.json.
 func writeGolden(t *testing.T, content string) {
 	t.Helper()
-	if err := os.WriteFile(claude.SettingsGolden, []byte(content), fs.PermFile); err != nil {
+	if err := os.WriteFile(
+		claude.SettingsGolden, []byte(content), fs.PermFile,
+	); err != nil {
 		t.Fatal(err)
 	}
 }
@@ -125,7 +130,8 @@ func TestRestoreFromGolden(t *testing.T) {
 	setupDir(t)
 
 	golden := `{"permissions":{"allow":["Bash(ctx:*)","Bash(go test:*)"]}}`
-	local := `{"permissions":{"allow":["Bash(ctx:*)","Bash(go test:*)","Bash(rm -rf:*)"]}}`
+	local := `{"permissions":{"allow":` +
+		`["Bash(ctx:*)","Bash(go test:*)","Bash(rm -rf:*)"]}}`
 	writeGolden(t, golden)
 	writeSettings(t, local)
 
@@ -335,7 +341,8 @@ func settingsJSONWithDeny(t *testing.T, allow, deny []string) string {
 	type settings struct {
 		Permissions perms `json:"permissions"`
 	}
-	b, marshalErr := json.Marshal(settings{Permissions: perms{Allow: allow, Deny: deny}})
+	s := settings{Permissions: perms{Allow: allow, Deny: deny}}
+	b, marshalErr := json.Marshal(s)
 	if marshalErr != nil {
 		t.Fatal(marshalErr)
 	}
@@ -345,8 +352,14 @@ func settingsJSONWithDeny(t *testing.T, allow, deny []string) string {
 func TestRestoreShowsDenyDiff(t *testing.T) {
 	setupDir(t)
 
-	goldenJSON := settingsJSONWithDeny(t, []string{"A"}, []string{"Bash(sudo *)", "Bash(git push *)"})
-	localJSON := settingsJSONWithDeny(t, []string{"A"}, []string{"Bash(sudo *)", "Bash(rm -rf *)"})
+	goldenJSON := settingsJSONWithDeny(
+		t, []string{"A"},
+		[]string{"Bash(sudo *)", "Bash(git push *)"},
+	)
+	localJSON := settingsJSONWithDeny(
+		t, []string{"A"},
+		[]string{"Bash(sudo *)", "Bash(rm -rf *)"},
+	)
 	writeGolden(t, goldenJSON)
 	writeSettings(t, localJSON)
 
@@ -376,7 +389,8 @@ func TestSnapshotPreservesExactBytes(t *testing.T) {
 	setupDir(t)
 
 	// Settings with intentional formatting (trailing newline, specific indent).
-	content := "{\n  \"permissions\": {\n    \"allow\": [\n      \"Bash(ctx:*)\"\n    ]\n  }\n}\n"
+	content := "{\n  \"permissions\": {\n    \"allow\":" +
+		" [\n      \"Bash(ctx:*)\"\n    ]\n  }\n}\n"
 	writeSettings(t, content)
 
 	if _, err := runCmd("snapshot"); err != nil {
@@ -396,7 +410,8 @@ func TestRestorePreservesExactBytes(t *testing.T) {
 	setupDir(t)
 
 	// Golden with specific formatting.
-	goldenContent := "{\n  \"permissions\": {\n    \"allow\": [\n      \"A\"\n    ]\n  }\n}\n"
+	goldenContent := "{\n  \"permissions\": {\n    \"allow\":" +
+		" [\n      \"A\"\n    ]\n  }\n}\n"
 	writeGolden(t, goldenContent)
 	writeSettings(t, `{"permissions":{"allow":["A","B"]}}`)
 
@@ -434,6 +449,9 @@ func TestCmdHasSubcommands(t *testing.T) {
 // Verify golden file path is under .claude/ (not .context/).
 func TestGoldenFilePath(t *testing.T) {
 	if !strings.HasPrefix(claude.SettingsGolden, dir.Claude+"/") {
-		t.Errorf("SettingsGolden = %q, want prefix %q", claude.SettingsGolden, dir.Claude+"/")
+		t.Errorf(
+			"SettingsGolden = %q, want prefix %q",
+			claude.SettingsGolden, dir.Claude+"/",
+		)
 	}
 }

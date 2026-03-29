@@ -12,6 +12,7 @@ import (
 	"strings"
 
 	"github.com/ActiveMemory/ctx/internal/io"
+	ctxLog "github.com/ActiveMemory/ctx/internal/log"
 )
 
 // Read reads an integer counter from a file. Returns 0 if the file
@@ -40,5 +41,9 @@ func Read(path string) int {
 //   - path: Absolute path to the counter file
 //   - n: Counter value to write
 func Write(path string, n int) {
-	_ = os.WriteFile(path, []byte(strconv.Itoa(n)), 0o600)
+	if writeErr := os.WriteFile(
+		path, []byte(strconv.Itoa(n)), 0o600,
+	); writeErr != nil {
+		ctxLog.Warn("write %s: %v", path, writeErr)
+	}
 }

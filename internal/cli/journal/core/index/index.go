@@ -19,6 +19,7 @@ import (
 	"github.com/ActiveMemory/ctx/internal/config/session"
 	"github.com/ActiveMemory/ctx/internal/config/token"
 	"github.com/ActiveMemory/ctx/internal/io"
+	ctxLog "github.com/ActiveMemory/ctx/internal/log"
 )
 
 // SessionIndex scans journal .md files in journalDir and returns a
@@ -27,8 +28,8 @@ import (
 // Two-pass matching:
 //  1. Parse YAML frontmatter for a session_id field (authoritative).
 //  2. For files without session_id, extract the last 8 characters before
-//     config.ExtMarkdown and treat them as a short ID candidate (migration path for
-//     legacy exports).
+//     config.ExtMarkdown and treat them as a short ID
+//     candidate (migration path for legacy exports).
 //
 // Parameters:
 //   - journalDir: Path to the journal directory
@@ -189,7 +190,11 @@ func RenameJournalFiles(journalDir, oldBase, newBase string, numParts int) {
 	oldPath := filepath.Join(journalDir, oldBase+file.ExtMarkdown)
 	newPath := filepath.Join(journalDir, newBase+file.ExtMarkdown)
 	if _, statErr := os.Stat(oldPath); statErr == nil {
-		_ = os.Rename(oldPath, newPath)
+		if renameErr := os.Rename(oldPath, newPath); renameErr != nil {
+			ctxLog.Warn(
+				"rename %s: %v", oldPath, renameErr,
+			)
+		}
 	}
 
 	// Rename multipart files and update nav links.
@@ -201,7 +206,11 @@ func RenameJournalFiles(journalDir, oldBase, newBase string, numParts int) {
 			journalDir, fmt.Sprintf(tpl.RecallPartFilename, newBase, p),
 		)
 		if _, statErr := os.Stat(oldPart); statErr == nil {
-			_ = os.Rename(oldPart, newPart)
+			if renameErr := os.Rename(oldPart, newPart); renameErr != nil {
+				ctxLog.Warn(
+					"rename %s: %v", oldPart, renameErr,
+				)
+			}
 		}
 	}
 
@@ -235,7 +244,11 @@ func UpdateNavLinks(journalDir, newBase, oldBase string, numParts int) {
 		}
 		updated := strings.ReplaceAll(string(data), oldBase, newBase)
 		if updated != string(data) {
-			_ = io.SafeWriteFile(f, []byte(updated), fs.PermFile)
+			if writeErr := io.SafeWriteFile(
+				f, []byte(updated), fs.PermFile,
+			); writeErr != nil {
+				ctxLog.Warn("write %s: %v", f, writeErr)
+			}
 		}
 	}
 }

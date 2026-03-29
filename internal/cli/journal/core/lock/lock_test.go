@@ -137,8 +137,12 @@ func TestMatchJournalFiles_MissingDir(t *testing.T) {
 func TestUpdateLockFrontmatter_Lock(t *testing.T) {
 	dir := t.TempDir()
 	path := filepath.Join(dir, "test.md")
-	content := "---\ndate: \"2026-01-21\"\ntitle: \"Test\"\n---\n\n# Body\n"
-	if writeErr := os.WriteFile(path, []byte(content), fs.PermFile); writeErr != nil {
+	content := "---\ndate: \"2026-01-21\"\n" +
+		"title: \"Test\"\n---\n\n# Body\n"
+	writeErr := os.WriteFile(
+		path, []byte(content), fs.PermFile,
+	)
+	if writeErr != nil {
 		t.Fatal(writeErr)
 	}
 
@@ -160,8 +164,12 @@ func TestUpdateLockFrontmatter_Unlock(t *testing.T) {
 	dir := t.TempDir()
 	path := filepath.Join(dir, "test.md")
 	content := "---\ndate: \"2026-01-21\"\n" +
-		LockedFrontmatterLine + "\ntitle: \"Test\"\n---\n\n# Body\n"
-	if writeErr := os.WriteFile(path, []byte(content), fs.PermFile); writeErr != nil {
+		LockedFrontmatterLine +
+		"\ntitle: \"Test\"\n---\n\n# Body\n"
+	writeErr := os.WriteFile(
+		path, []byte(content), fs.PermFile,
+	)
+	if writeErr != nil {
 		t.Fatal(writeErr)
 	}
 
@@ -183,7 +191,10 @@ func TestUpdateLockFrontmatter_NoFrontmatter(t *testing.T) {
 	dir := t.TempDir()
 	path := filepath.Join(dir, "test.md")
 	content := "# No frontmatter here\n\nJust a body.\n"
-	if writeErr := os.WriteFile(path, []byte(content), fs.PermFile); writeErr != nil {
+	writeErr := os.WriteFile(
+		path, []byte(content), fs.PermFile,
+	)
+	if writeErr != nil {
 		t.Fatal(writeErr)
 	}
 
@@ -203,7 +214,10 @@ func TestUpdateLockFrontmatter_IdempotentLock(t *testing.T) {
 	path := filepath.Join(dir, "test.md")
 	content := "---\ndate: \"2026-01-21\"\n" +
 		LockedFrontmatterLine + "\n---\n\n# Body\n"
-	if writeErr := os.WriteFile(path, []byte(content), fs.PermFile); writeErr != nil {
+	writeErr := os.WriteFile(
+		path, []byte(content), fs.PermFile,
+	)
+	if writeErr != nil {
 		t.Fatal(writeErr)
 	}
 
@@ -232,9 +246,11 @@ func TestFrontmatterHasLocked(t *testing.T) {
 			want:    true,
 		},
 		{
-			name:    "locked true with managed comment",
-			content: "---\ndate: \"2026-01-21\"\nlocked: true  # managed by ctx\n---\n\n# Body\n",
-			want:    true,
+			name: "locked true with managed comment",
+			content: "---\ndate: \"2026-01-21\"\n" +
+				"locked: true  # managed by ctx\n" +
+				"---\n\n# Body\n",
+			want: true,
 		},
 		{
 			name:    "locked false",
@@ -267,7 +283,10 @@ func TestFrontmatterHasLocked(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			dir := t.TempDir()
 			path := filepath.Join(dir, "test.md")
-			if writeErr := os.WriteFile(path, []byte(tt.content), fs.PermFile); writeErr != nil {
+			writeErr := os.WriteFile(
+				path, []byte(tt.content), fs.PermFile,
+			)
+			if writeErr != nil {
 				t.Fatal(writeErr)
 			}
 

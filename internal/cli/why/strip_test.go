@@ -100,7 +100,8 @@ Normal text.
 }
 
 func TestStripMkDocs_RelativeLinks(t *testing.T) {
-	input := "[Getting Started](getting-started.md) and [About](../home/about.md)\n"
+	input := "[Getting Started](getting-started.md)" +
+		" and [About](../home/about.md)\n"
 	got := whyRoot.StripMkDocs(input)
 	if strings.Contains(got, ".md") {
 		t.Errorf("relative .md link not stripped, got:\n%s", got)

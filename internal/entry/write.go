@@ -15,27 +15,30 @@ import (
 	coreAppend "github.com/ActiveMemory/ctx/internal/cli/add/core/insert"
 	"github.com/ActiveMemory/ctx/internal/config/entry"
 	"github.com/ActiveMemory/ctx/internal/config/fs"
+	errAdd "github.com/ActiveMemory/ctx/internal/err/add"
+	errFs "github.com/ActiveMemory/ctx/internal/err/fs"
 	"github.com/ActiveMemory/ctx/internal/index"
 	"github.com/ActiveMemory/ctx/internal/rc"
-	"github.com/ActiveMemory/ctx/internal/write/add"
 )
 
 // Write formats and writes an entry to the appropriate context file.
 //
-// Handles the complete the write cycle: read existing content, format the entry,
+// Handles the complete write cycle: read existing content,
+// format the entry,
 // append it, write back, and update the index if needed.
 //
 // Parameters:
 //   - params: Params containing type, content, and optional fields
 //
 // Returns:
-//   - error: Non-nil if the type is unknown, the file doesn't exist, or write fails
+//   - error: Non-nil if the type is unknown, the file
+//     doesn't exist, or write fails
 func Write(params Params) error {
 	fType := strings.ToLower(params.Type)
 
 	fileName, ok := entry.ToCtxFile[fType]
 	if !ok {
-		return add.ErrUnknownType(fType)
+		return errAdd.UnknownType(fType)
 	}
 
 	contextDir := params.ContextDir
@@ -45,12 +48,12 @@ func Write(params Params) error {
 	filePath := filepath.Join(contextDir, fileName)
 
 	if _, statErr := os.Stat(filePath); os.IsNotExist(statErr) {
-		return add.ErrFileNotFound(filePath)
+		return errAdd.FileNotFound(filePath)
 	}
 
 	existing, readErr := os.ReadFile(filepath.Clean(filePath))
 	if readErr != nil {
-		return add.ErrFileRead(filePath, readErr)
+		return errFs.FileRead(filePath, readErr)
 	}
 
 	var formatted string
@@ -68,15 +71,17 @@ func Write(params Params) error {
 	case entry.Convention:
 		formatted = format.Convention(params.Content)
 	default:
-		return add.ErrUnknownType(fType)
+		return errAdd.UnknownType(fType)
 	}
 
-	newContent := coreAppend.AppendEntry(existing, formatted, fType, params.Section)
+	newContent := coreAppend.AppendEntry(
+		existing, formatted, fType, params.Section,
+	)
 
 	if writeErr := os.WriteFile(
 		filePath, newContent, fs.PermFile,
 	); writeErr != nil {
-		return add.ErrFileWrite(filePath, writeErr)
+		return errFs.FileWrite(filePath, writeErr)
 	}
 
 	switch fType {
@@ -85,14 +90,14 @@ func Write(params Params) error {
 		if indexErr := os.WriteFile(
 			filePath, []byte(indexed), fs.PermFile,
 		); indexErr != nil {
-			return add.ErrIndexUpdate(filePath, indexErr)
+			return errAdd.IndexUpdate(filePath, indexErr)
 		}
 	case entry.Learning:
 		indexed := index.UpdateLearnings(string(newContent))
 		if indexErr := os.WriteFile(
 			filePath, []byte(indexed), fs.PermFile,
 		); indexErr != nil {
-			return add.ErrIndexUpdate(filePath, indexErr)
+			return errAdd.IndexUpdate(filePath, indexErr)
 		}
 		// case entry.Task, entry.Convention:
 		// No index to update for these types

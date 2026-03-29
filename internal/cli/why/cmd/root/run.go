@@ -30,7 +30,8 @@ func Run(cmd *cobra.Command, args []string) error {
 	return showMenu(cmd)
 }
 
-// ShowDoc loads an embedded document by alias, strips MkDocs syntax, and prints it.
+// ShowDoc loads an embedded document by alias, strips
+// MkDocs syntax, and prints it.
 //
 // Parameters:
 //   - cmd: Cobra command for output stream

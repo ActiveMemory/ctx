@@ -16,7 +16,7 @@ import (
 	"github.com/ActiveMemory/ctx/internal/cli/journal/core/index"
 	"github.com/ActiveMemory/ctx/internal/cli/journal/core/lock"
 	"github.com/ActiveMemory/ctx/internal/cli/journal/core/slug"
-	sourceFormat "github.com/ActiveMemory/ctx/internal/cli/journal/core/source/format"
+	srcFmt "github.com/ActiveMemory/ctx/internal/cli/journal/core/source/format"
 	"github.com/ActiveMemory/ctx/internal/cli/journal/core/validate"
 	"github.com/ActiveMemory/ctx/internal/config/file"
 	"github.com/ActiveMemory/ctx/internal/config/journal"
@@ -57,7 +57,9 @@ func Import(
 		}
 
 		totalMsgs := len(nonEmptyMsgs)
-		numParts := (totalMsgs + journal.MaxMessagesPerPart - 1) / journal.MaxMessagesPerPart
+		numParts := (totalMsgs +
+			journal.MaxMessagesPerPart - 1) /
+			journal.MaxMessagesPerPart
 		if numParts < 1 {
 			numParts = 1
 		}
@@ -74,7 +76,7 @@ func Import(
 		}
 		slg, title := slug.ForTitle(s, existingTitle)
 
-		baseFilename := sourceFormat.JournalFilename(s, slg)
+		baseFilename := srcFmt.JournalFilename(s, slg)
 		baseName := strings.TrimSuffix(baseFilename, file.ExtMarkdown)
 
 		// Detect renames (dedup: old slug → new slug).

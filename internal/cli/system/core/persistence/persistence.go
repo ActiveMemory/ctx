@@ -19,6 +19,7 @@ import (
 	"github.com/ActiveMemory/ctx/internal/config/nudge"
 	"github.com/ActiveMemory/ctx/internal/config/token"
 	"github.com/ActiveMemory/ctx/internal/io"
+	ctxLog "github.com/ActiveMemory/ctx/internal/log"
 )
 
 // ReadState reads a persistence state file and returns the
@@ -38,7 +39,10 @@ func ReadState(path string) (State, bool) {
 	}
 
 	var ps State
-	for _, line := range strings.Split(strings.TrimSpace(string(data)), token.NewlineLF) {
+	lines := strings.Split(
+		strings.TrimSpace(string(data)), token.NewlineLF,
+	)
+	for _, line := range lines {
 		parts := strings.SplitN(line, token.KeyValueSep, 2)
 		if len(parts) != 2 {
 			continue
@@ -72,7 +76,11 @@ func ReadState(path string) (State, bool) {
 func WriteState(path string, s State) {
 	content := fmt.Sprintf(desc.Text(text.DescKeyCheckPersistenceStateFormat),
 		s.Count, s.LastNudge, s.LastMtime)
-	_ = os.WriteFile(path, []byte(content), fs.PermSecret)
+	if writeErr := os.WriteFile(
+		path, []byte(content), fs.PermSecret,
+	); writeErr != nil {
+		ctxLog.Warn("write %s: %v", path, writeErr)
+	}
 }
 
 // NudgeNeeded determines whether a persistence nudge should
@@ -85,10 +93,13 @@ func WriteState(path string, s State) {
 // Returns:
 //   - bool: true if a nudge should be emitted
 func NudgeNeeded(count, sinceNudge int) bool {
-	if count >= nudge.PersistenceEarlyMin && count <= nudge.PersistenceEarlyMax && sinceNudge >= nudge.PersistenceEarlyInterval {
+	earlyRange := count >= nudge.PersistenceEarlyMin &&
+		count <= nudge.PersistenceEarlyMax
+	if earlyRange && sinceNudge >= nudge.PersistenceEarlyInterval {
 		return true
 	}
-	if count > nudge.PersistenceEarlyMax && sinceNudge >= nudge.PersistenceLateInterval {
+	lateRange := count > nudge.PersistenceEarlyMax
+	if lateRange && sinceNudge >= nudge.PersistenceLateInterval {
 		return true
 	}
 	return false

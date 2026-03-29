@@ -56,7 +56,9 @@ func Run(cmd *cobra.Command, dir string, force, dryRun bool) error {
 			writeExport.InfoExistsWritingAsAlternative(cmd, item.Label, item.AltName)
 		}
 
-		if writeErr := os.WriteFile(item.OutPath, item.Data, fs.PermSecret); writeErr != nil {
+		if writeErr := os.WriteFile(
+			item.OutPath, item.Data, fs.PermSecret,
+		); writeErr != nil {
 			writePad.ErrExportWrite(cmd, item.Label, writeErr)
 			continue
 		}

@@ -28,6 +28,7 @@ import (
 	"github.com/ActiveMemory/ctx/internal/config/token"
 	"github.com/ActiveMemory/ctx/internal/entity"
 	internalIo "github.com/ActiveMemory/ctx/internal/io"
+	ctxLog "github.com/ActiveMemory/ctx/internal/log"
 	"github.com/ActiveMemory/ctx/internal/rc"
 )
 
@@ -88,7 +89,10 @@ func FindJSONLPath(sessionID string) (string, error) {
 		return "", nil
 	}
 
-	pattern := filepath.Join(home, dir.Claude, dir.Projects, "*", sessionID+file.ExtJSONL)
+	pattern := filepath.Join(
+		home, dir.Claude, dir.Projects,
+		"*", sessionID+file.ExtJSONL,
+	)
 	matches, globErr := filepath.Glob(pattern)
 	if globErr != nil {
 		return "", globErr
@@ -98,8 +102,12 @@ func FindJSONLPath(sessionID string) (string, error) {
 		return "", nil
 	}
 
-	// Cache the result for subsequent calls this session
-	_ = os.WriteFile(cacheFile, []byte(matches[0]), fs.PermSecret)
+	// Cache the result for subsequent calls this session.
+	if writeErr := os.WriteFile(
+		cacheFile, []byte(matches[0]), fs.PermSecret,
+	); writeErr != nil {
+		ctxLog.Warn("write %s: %v", cacheFile, writeErr)
+	}
 	return matches[0], nil
 }
 
@@ -117,7 +125,11 @@ func ParseLastUsageAndModel(path string) (entity.TokenInfo, error) {
 	if openErr != nil {
 		return entity.TokenInfo{}, openErr
 	}
-	defer func() { _ = f.Close() }()
+	defer func() {
+		if closeErr := f.Close(); closeErr != nil {
+			ctxLog.Warn("close %s: %v", path, closeErr)
+		}
+	}()
 
 	info, statErr := f.Stat()
 	if statErr != nil {

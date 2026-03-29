@@ -6,7 +6,8 @@
 
 package dep
 
-// Packages is used by sync to detect projects and suggest dependency documentation.
+// Packages is used by sync to detect projects and suggest
+// dependency documentation.
 var Packages = map[string]string{
 	"package.json":     "Node.js dependencies",
 	"go.mod":           "Go module dependencies",

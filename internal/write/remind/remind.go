@@ -30,7 +30,9 @@ func Added(cmd *cobra.Command, id int, message string, after *string) {
 	if after != nil {
 		suffix = fmt.Sprintf(desc.Text(text.DescKeyWriteReminderAfterSuffix), *after)
 	}
-	cmd.Println(fmt.Sprintf(desc.Text(text.DescKeyWriteReminderAdded), id, message, suffix))
+	cmd.Println(fmt.Sprintf(
+		desc.Text(text.DescKeyWriteReminderAdded),
+		id, message, suffix))
 }
 
 // Item prints a single reminder in the list.
@@ -41,7 +43,13 @@ func Added(cmd *cobra.Command, id int, message string, after *string) {
 //   - message: reminder text.
 //   - after: optional date gate (nil if none).
 //   - today: current date in YYYY-MM-DD format.
-func Item(cmd *cobra.Command, id int, message string, after *string, today string) {
+func Item(
+	cmd *cobra.Command,
+	id int,
+	message string,
+	after *string,
+	today string,
+) {
 	if cmd == nil {
 		return
 	}
@@ -49,7 +57,9 @@ func Item(cmd *cobra.Command, id int, message string, after *string, today strin
 	if after != nil && *after > today {
 		annotation = fmt.Sprintf(desc.Text(text.DescKeyWriteReminderNotDue), *after)
 	}
-	cmd.Println(fmt.Sprintf(desc.Text(text.DescKeyWriteReminderItem), id, message, annotation))
+	cmd.Println(fmt.Sprintf(
+		desc.Text(text.DescKeyWriteReminderItem),
+		id, message, annotation))
 }
 
 // Dismissed prints the confirmation for a dismissed reminder.
@@ -62,7 +72,9 @@ func Dismissed(cmd *cobra.Command, id int, message string) {
 	if cmd == nil {
 		return
 	}
-	cmd.Println(fmt.Sprintf(desc.Text(text.DescKeyWriteReminderDismissed), id, message))
+	cmd.Println(fmt.Sprintf(
+		desc.Text(text.DescKeyWriteReminderDismissed),
+		id, message))
 }
 
 // None prints the message when there are no reminders.
@@ -85,5 +97,7 @@ func DismissedAll(cmd *cobra.Command, count int) {
 	if cmd == nil {
 		return
 	}
-	cmd.Println(fmt.Sprintf(desc.Text(text.DescKeyWriteReminderDismissedAll), count))
+	cmd.Println(fmt.Sprintf(
+		desc.Text(text.DescKeyWriteReminderDismissedAll),
+		count))
 }

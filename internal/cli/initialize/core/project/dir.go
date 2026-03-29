@@ -46,7 +46,9 @@ func CreateDirs(cmd *cobra.Command) error {
 		}
 
 		readmePath := filepath.Join(d, file.Readme)
-		if writeErr := os.WriteFile(readmePath, readme, fs.PermFile); writeErr != nil {
+		if writeErr := os.WriteFile(
+			readmePath, readme, fs.PermFile,
+		); writeErr != nil {
 			return errFs.FileWrite(readmePath, writeErr)
 		}
 

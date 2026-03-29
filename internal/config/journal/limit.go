@@ -34,7 +34,8 @@ const (
 	// DetailsThreshold is the line count above which tool output is
 	// wrapped in a collapsible <details> block.
 	DetailsThreshold = 10
-	// DefaultRecallListLimit is the default number of sessions shown by recall list.
+	// DefaultRecallListLimit is the default number of sessions
+	// shown by recall list.
 	DefaultRecallListLimit = 20
 	// MultipartSuffix is the separator between the base slug and the part
 	// number in multipart journal filenames (e.g. "slug-p2.md").

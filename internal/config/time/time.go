@@ -23,7 +23,8 @@ const (
 	CompactTimestamp = "2006-01-02-150405"
 )
 
-// DateMinLen is the minimum string length for a YYYY-MM-DD date (10 characters).
+// DateMinLen is the minimum string length for a
+// YYYY-MM-DD date (10 characters).
 const DateMinLen = len(DateFormat)
 
 // Byte positions of hyphens in a YYYY-MM-DD date string.
@@ -39,5 +40,6 @@ const (
 const InclusiveUntilOffset = 24*time.Hour - time.Second
 
 // OlderFormat is the Go time layout for dates older than a week.
-// Exported because callers must format the fallback date before calling FormatTimeAgo.
+// Exported because callers must format the fallback date
+// before calling FormatTimeAgo.
 const OlderFormat = "Jan 2, 2006"

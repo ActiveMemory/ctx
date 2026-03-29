@@ -52,8 +52,11 @@ func TestApplyUpdate(t *testing.T) {
 		expectError bool
 	}{
 		{
-			name:      "task update",
-			update:    core.ContextUpdate{Type: entry.Task, Content: "Test task from watch"},
+			name: "task update",
+			update: core.ContextUpdate{
+				Type:    entry.Task,
+				Content: "Test task from watch",
+			},
 			checkFile: ctx.Task,
 			checkFor:  "Test task from watch",
 		},
@@ -82,18 +85,27 @@ func TestApplyUpdate(t *testing.T) {
 			checkFor:  "Test learning from watch",
 		},
 		{
-			name:        "decision without required fields",
-			update:      core.ContextUpdate{Type: entry.Decision, Content: "Missing fields"},
+			name: "decision without required fields",
+			update: core.ContextUpdate{
+				Type:    entry.Decision,
+				Content: "Missing fields",
+			},
 			expectError: true,
 		},
 		{
-			name:        "learning without required fields",
-			update:      core.ContextUpdate{Type: entry.Learning, Content: "Missing fields"},
+			name: "learning without required fields",
+			update: core.ContextUpdate{
+				Type:    entry.Learning,
+				Content: "Missing fields",
+			},
 			expectError: true,
 		},
 		{
-			name:      "convention update",
-			update:    core.ContextUpdate{Type: entry.Convention, Content: "Test convention from watch"},
+			name: "convention update",
+			update: core.ContextUpdate{
+				Type:    entry.Convention,
+				Content: "Test convention from watch",
+			},
 			checkFile: ctx.Convention,
 			checkFor:  "Test convention from watch",
 		},
@@ -162,7 +174,9 @@ func TestApplyCompleteUpdate(t *testing.T) {
 - [ ] Implement authentication
 - [ ] Write tests
 `
-	if writeErr := os.WriteFile(tasksPath, []byte(tasksContent), 0600); writeErr != nil {
+	if writeErr := os.WriteFile(
+		tasksPath, []byte(tasksContent), 0600,
+	); writeErr != nil {
 		t.Fatalf("failed to write tasks: %v", writeErr)
 	}
 
@@ -253,10 +267,13 @@ func TestProcessStreamWithAttributes(t *testing.T) {
 		t.Fatalf("init failed: %v", err)
 	}
 
-	input := `Some AI output
-<context-update type="learning" context="Debugging hooks" lesson="Hooks receive JSON via stdin" application="Use jq to parse input">Hook Input Format</context-update>
-More output
-`
+	input := "Some AI output\n" +
+		`<context-update type="learning"` +
+		` context="Debugging hooks"` +
+		` lesson="Hooks receive JSON via stdin"` +
+		` application="Use jq to parse input"` +
+		`>Hook Input Format</context-update>` +
+		"\nMore output\n"
 	reader := strings.NewReader(input)
 
 	cmd := &cobra.Command{Use: "watch"}
@@ -303,15 +320,26 @@ func TestExtractAttribute(t *testing.T) {
 	}{
 		{`<context-update type="learning"`, "type", "learning"},
 		{`<context-update type="decision" context="test ctx"`, "context", "test ctx"},
-		{`<context-update type="learning" lesson="the lesson"`, "lesson", "the lesson"},
+		{
+			`<context-update type="learning"` +
+				` lesson="the lesson"`,
+			"lesson", "the lesson",
+		},
 		{`<context-update type="learning"`, "missing", ""},
-		{`<context-update type="decision" rationale="why we did it"`, "rationale", "why we did it"},
+		{
+			`<context-update type="decision"` +
+				` rationale="why we did it"`,
+			"rationale", "why we did it",
+		},
 	}
 
 	for _, tt := range tests {
 		result := stream.ExtractAttribute(tt.tag, tt.attr)
 		if result != tt.expected {
-			t.Errorf("ExtractAttribute(%q, %q) = %q, want %q", tt.tag, tt.attr, result, tt.expected)
+			t.Errorf(
+				"ExtractAttribute(%q, %q) = %q, want %q",
+				tt.tag, tt.attr, result, tt.expected,
+			)
 		}
 	}
 }
@@ -489,8 +517,11 @@ func TestProcessStream_DecisionWithAttributes(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	input := `<context-update type="decision" context="Need a DB" rationale="PostgreSQL is mature" consequence="Team needs PG training">Use PostgreSQL</context-update>
-`
+	input := `<context-update type="decision"` +
+		` context="Need a DB"` +
+		` rationale="PostgreSQL is mature"` +
+		` consequence="Team needs PG training"` +
+		`>Use PostgreSQL</context-update>` + "\n"
 	reader := strings.NewReader(input)
 
 	cmd := &cobra.Command{Use: "watch"}
@@ -578,7 +609,11 @@ func TestExtractAttribute_Consequence(t *testing.T) {
 	tag := `<context-update type="decision" consequence="something changes">`
 	result := stream.ExtractAttribute(tag, "consequence")
 	if result != "something changes" {
-		t.Errorf("ExtractAttribute(consequence) = %q, want 'something changes'", result)
+		t.Errorf(
+			"ExtractAttribute(consequence) = %q,"+
+				" want 'something changes'",
+			result,
+		)
 	}
 }
 

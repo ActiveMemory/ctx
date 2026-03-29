@@ -34,7 +34,8 @@ func TestNodeBuilder_SinglePackage(t *testing.T) {
 			"jest": "^29.0.0"
 		}
 	}`
-	if writeErr := os.WriteFile(filepath.Join(tmp, "package.json"), []byte(pkg), 0o644); writeErr != nil {
+	pkgPath := filepath.Join(tmp, "package.json")
+	if writeErr := os.WriteFile(pkgPath, []byte(pkg), 0o644); writeErr != nil {
 		t.Fatal(writeErr)
 	}
 
@@ -80,7 +81,8 @@ func TestNodeBuilder_Workspaces(t *testing.T) {
 		"name": "monorepo",
 		"workspaces": ["packages/*"]
 	}`
-	if writeErr := os.WriteFile(filepath.Join(tmp, "package.json"), []byte(root), 0o644); writeErr != nil {
+	rootPath := filepath.Join(tmp, "package.json")
+	if writeErr := os.WriteFile(rootPath, []byte(root), 0o644); writeErr != nil {
 		t.Fatal(writeErr)
 	}
 
@@ -92,8 +94,12 @@ func TestNodeBuilder_Workspaces(t *testing.T) {
 	if mkErr := os.MkdirAll(pkgADir, 0o755); mkErr != nil {
 		t.Fatal(mkErr)
 	}
-	if writeErr := os.WriteFile(filepath.Join(pkgADir, "package.json"),
-		[]byte(`{"name":"@mono/pkg-a","dependencies":{"lodash":"^4.0.0"}}`), 0o644); writeErr != nil {
+	pkgAJSON := `{"name":"@mono/pkg-a",` +
+		`"dependencies":{"lodash":"^4.0.0"}}`
+	if writeErr := os.WriteFile(
+		filepath.Join(pkgADir, "package.json"),
+		[]byte(pkgAJSON), 0o644,
+	); writeErr != nil {
 		t.Fatal(writeErr)
 	}
 
@@ -102,8 +108,13 @@ func TestNodeBuilder_Workspaces(t *testing.T) {
 	if mkErr := os.MkdirAll(pkgBDir, 0o755); mkErr != nil {
 		t.Fatal(mkErr)
 	}
-	if writeErr := os.WriteFile(filepath.Join(pkgBDir, "package.json"),
-		[]byte(`{"name":"@mono/pkg-b","dependencies":{"@mono/pkg-a":"*","express":"^4.0.0"}}`), 0o644); writeErr != nil {
+	pkgBJSON := `{"name":"@mono/pkg-b",` +
+		`"dependencies":{"@mono/pkg-a":"*",` +
+		`"express":"^4.0.0"}}`
+	if writeErr := os.WriteFile(
+		filepath.Join(pkgBDir, "package.json"),
+		[]byte(pkgBJSON), 0o644,
+	); writeErr != nil {
 		t.Fatal(writeErr)
 	}
 
@@ -144,7 +155,8 @@ func TestNodeBuilder_WorkspacesObject(t *testing.T) {
 		"name": "monorepo",
 		"workspaces": {"packages": ["libs/*"]}
 	}`
-	if writeErr := os.WriteFile(filepath.Join(tmp, "package.json"), []byte(root), 0o644); writeErr != nil {
+	rootPath := filepath.Join(tmp, "package.json")
+	if writeErr := os.WriteFile(rootPath, []byte(root), 0o644); writeErr != nil {
 		t.Fatal(writeErr)
 	}
 
@@ -152,8 +164,12 @@ func TestNodeBuilder_WorkspacesObject(t *testing.T) {
 	if mkErr := os.MkdirAll(libDir, 0o755); mkErr != nil {
 		t.Fatal(mkErr)
 	}
-	if writeErr := os.WriteFile(filepath.Join(libDir, "package.json"),
-		[]byte(`{"name":"@mono/core","dependencies":{"react":"^18.0.0"}}`), 0o644); writeErr != nil {
+	coreJSON := `{"name":"@mono/core",` +
+		`"dependencies":{"react":"^18.0.0"}}`
+	if writeErr := os.WriteFile(
+		filepath.Join(libDir, "package.json"),
+		[]byte(coreJSON), 0o644,
+	); writeErr != nil {
 		t.Fatal(writeErr)
 	}
 

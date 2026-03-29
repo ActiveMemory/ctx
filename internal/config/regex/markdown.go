@@ -40,7 +40,8 @@ var ToolBold = regexp.MustCompile(`🔧\s*\*\*(.+?)\*\*`)
 // angles with HTML entities to prevent broken HTML in rendered output.
 var InlineCodeAngle = regexp.MustCompile("`([^`\n]*[<>][^`\n]*)`")
 
-// Phase matches phase headers at any heading level (e.g., "## Phase 1", "### Phase").
+// Phase matches phase headers at any heading level
+// (e.g., "## Phase 1", "### Phase").
 var Phase = regexp.MustCompile(`^#{1,6}\s+Phase`)
 
 // BulletItem matches any Markdown bullet item (not just tasks).

@@ -290,6 +290,7 @@ func TestMatchConstants(t *testing.T) {
 		t.Errorf("MatchState = %q, want %q", match[MatchState], "x")
 	}
 	if match[MatchContent] != "Task content here" {
-		t.Errorf("MatchContent = %q, want %q", match[MatchContent], "Task content here")
+		t.Errorf("MatchContent = %q, want %q",
+			match[MatchContent], "Task content here")
 	}
 }

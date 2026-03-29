@@ -11,7 +11,7 @@ import (
 
 	"github.com/ActiveMemory/ctx/internal/assets/read/desc"
 	"github.com/ActiveMemory/ctx/internal/config/embed/text"
-	writeIO "github.com/ActiveMemory/ctx/internal/write/io"
+	writeIO "github.com/ActiveMemory/ctx/internal/write/line"
 )
 
 // JSON prints JSONL event lines. Nil cmd is a no-op.
@@ -20,7 +20,7 @@ import (
 //   - cmd: Cobra command for output
 //   - lines: pre-formatted JSON lines
 func JSON(cmd *cobra.Command, lines []string) {
-	writeIO.Lines(cmd, lines)
+	writeIO.All(cmd, lines)
 }
 
 // Human prints formatted event lines. Nil cmd is a no-op.
@@ -29,7 +29,7 @@ func JSON(cmd *cobra.Command, lines []string) {
 //   - cmd: Cobra command for output
 //   - lines: pre-formatted human-readable lines
 func Human(cmd *cobra.Command, lines []string) {
-	writeIO.Lines(cmd, lines)
+	writeIO.All(cmd, lines)
 }
 
 // Empty prints the "no events" message. Nil cmd is a no-op.

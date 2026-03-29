@@ -18,6 +18,7 @@ import (
 	"github.com/ActiveMemory/ctx/internal/config/fs"
 	"github.com/ActiveMemory/ctx/internal/config/journal"
 	cfgTime "github.com/ActiveMemory/ctx/internal/config/time"
+	ctxLog "github.com/ActiveMemory/ctx/internal/log"
 )
 
 // Message appends a timestamped log line to the given file.
@@ -30,7 +31,9 @@ import (
 //   - msg: Log message to append
 func Message(logFile, sessionID, msg string) {
 	d := filepath.Dir(logFile)
-	_ = os.MkdirAll(d, fs.PermRestrictedDir)
+	if mkdirErr := os.MkdirAll(d, fs.PermRestrictedDir); mkdirErr != nil {
+		ctxLog.Warn("mkdir %s: %v", d, mkdirErr)
+	}
 
 	Rotate(logFile)
 
@@ -42,12 +45,21 @@ func Message(logFile, sessionID, msg string) {
 	line := fmt.Sprintf(desc.Text(text.DescKeyWriteLogLineFormat),
 		time.Now().Format(cfgTime.DateTimePreciseFmt), short, msg)
 
-	f, openErr := os.OpenFile(logFile, os.O_APPEND|os.O_CREATE|os.O_WRONLY, fs.PermSecret) //nolint:gosec // logFile is constructed internally
+	f, openErr := os.OpenFile( //nolint:gosec // logFile is constructed internally
+		logFile, os.O_APPEND|os.O_CREATE|os.O_WRONLY,
+		fs.PermSecret,
+	)
 	if openErr != nil {
 		return
 	}
-	defer func() { _ = f.Close() }()
-	_, _ = f.WriteString(line)
+	defer func() {
+		if closeErr := f.Close(); closeErr != nil {
+			ctxLog.Warn("close %s: %v", logFile, closeErr)
+		}
+	}()
+	if _, writeErr := f.WriteString(line); writeErr != nil {
+		ctxLog.Warn("write %s: %v", logFile, writeErr)
+	}
 }
 
 // Rotate checks the log file size and rotates if it exceeds
@@ -64,6 +76,12 @@ func Rotate(logFile string) {
 		return
 	}
 	prev := logFile + event.RotationSuffix
-	_ = os.Remove(prev)
-	_ = os.Rename(logFile, prev)
+	if removeErr := os.Remove(prev); removeErr != nil {
+		ctxLog.Warn("remove %s: %v", prev, removeErr)
+	}
+	if renameErr := os.Rename(logFile, prev); renameErr != nil {
+		ctxLog.Warn(
+			"rename %s: %v", logFile, renameErr,
+		)
+	}
 }

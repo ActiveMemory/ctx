@@ -29,8 +29,12 @@ func TestRustBuilder_Detect(t *testing.T) {
 		t.Error("RustBuilder.Detect() = true in empty dir")
 	}
 
-	if writeErr := os.WriteFile(filepath.Join(tmp, "Cargo.toml"),
-		[]byte("[package]\nname = \"test\"\nversion = \"0.1.0\"\n"), 0o644); writeErr != nil {
+	cargoContent := "[package]\nname = \"test\"\n" +
+		"version = \"0.1.0\"\n"
+	cargoPath := filepath.Join(tmp, "Cargo.toml")
+	if writeErr := os.WriteFile(
+		cargoPath, []byte(cargoContent), 0o644,
+	); writeErr != nil {
 		t.Fatal(writeErr)
 	}
 	if !b.Detect() {

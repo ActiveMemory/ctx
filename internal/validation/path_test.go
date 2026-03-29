@@ -36,7 +36,8 @@ func TestValidateBoundary(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			err := ValidateBoundary(tt.dir)
 			if (err != nil) != tt.wantErr {
-				t.Errorf("ValidateBoundary(%q) error = %v, wantErr %v", tt.dir, err, tt.wantErr)
+				t.Errorf("ValidateBoundary(%q) error = %v, wantErr %v",
+					tt.dir, err, tt.wantErr)
 			}
 		})
 	}
@@ -46,7 +47,8 @@ func TestCheckSymlinks(t *testing.T) {
 	t.Run("regular directory passes", func(t *testing.T) {
 		dir := t.TempDir()
 		// Create a regular file inside.
-		if err := os.WriteFile(filepath.Join(dir, "file.md"), []byte("ok"), 0600); err != nil {
+		fPath := filepath.Join(dir, "file.md")
+		if err := os.WriteFile(fPath, []byte("ok"), 0600); err != nil {
 			t.Fatal(err)
 		}
 

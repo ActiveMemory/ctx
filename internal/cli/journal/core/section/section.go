@@ -64,7 +64,10 @@ func Write(
 //   - headingKey: YAML DescKey for the section heading
 //   - items: Slice of items to render
 //   - formatFn: Function that renders one item as a string
-func WriteFormatted[T any](sb *strings.Builder, headingKey string, items []T, formatFn func(T) string) {
+func WriteFormatted[T any](
+	sb *strings.Builder, headingKey string,
+	items []T, formatFn func(T) string,
+) {
 	if len(items) == 0 {
 		return
 	}
@@ -119,7 +122,10 @@ func WriteMonths(
 //
 // Returns:
 //   - string: Complete Markdown page content
-func GenerateGroupedPage(heading, stats string, entries []entity.JournalEntry) string {
+func GenerateGroupedPage(
+	heading, stats string,
+	entries []entity.JournalEntry,
+) string {
 	var sb strings.Builder
 	nl := token.NewlineLF
 

@@ -29,7 +29,8 @@ func setupCLITest(t *testing.T) (string, func()) {
 	_ = os.MkdirAll(filepath.Join(tempDir, ".context"), 0o750)
 	// Create required files so isInitialized returns true
 	for _, f := range ctx.FilesRequired {
-		_ = os.WriteFile(filepath.Join(tempDir, ".context", f), []byte("# "+f+"\n"), 0o600)
+		p := filepath.Join(tempDir, ".context", f)
+		_ = os.WriteFile(p, []byte("# "+f+"\n"), 0o600)
 	}
 	rc.Reset()
 	return tempDir, func() {
@@ -134,7 +135,10 @@ func TestMaskURL(t *testing.T) {
 		want  string
 	}{
 		{"https://example.com/webhook?key=secret", "https://example.com/***"},
-		{"https://hooks.slack.com/services/T00/B00/xxx", "https://hooks.slack.com/***"},
+		{
+			"https://hooks.slack.com/services/T00/B00/xxx",
+			"https://hooks.slack.com/***",
+		},
 		{"http://localhost:8080", "http://localhost:808***"},
 	}
 
@@ -200,9 +204,10 @@ func TestTest_WebhookSuccess(t *testing.T) {
 	_, cleanup := setupCLITest(t)
 	defer cleanup()
 
-	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, _ *http.Request) {
-		w.WriteHeader(http.StatusOK)
-	}))
+	server := httptest.NewServer(http.HandlerFunc(
+		func(w http.ResponseWriter, _ *http.Request) {
+			w.WriteHeader(http.StatusOK)
+		}))
 	defer server.Close()
 
 	// Save the test server URL as the webhook.
@@ -235,9 +240,10 @@ func TestTest_WebhookServerError(t *testing.T) {
 	_, cleanup := setupCLITest(t)
 	defer cleanup()
 
-	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, _ *http.Request) {
-		w.WriteHeader(http.StatusInternalServerError)
-	}))
+	server := httptest.NewServer(http.HandlerFunc(
+		func(w http.ResponseWriter, _ *http.Request) {
+			w.WriteHeader(http.StatusInternalServerError)
+		}))
 	defer server.Close()
 
 	if saveErr := libNotify.SaveWebhook(server.URL); saveErr != nil {

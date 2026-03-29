@@ -59,7 +59,8 @@ func Run(cmd *cobra.Command) error {
 	}
 
 	var golden, local claude.Settings
-	if goldenParseErr := json.Unmarshal(goldenBytes, &golden); goldenParseErr != nil {
+	goldenParseErr := json.Unmarshal(goldenBytes, &golden)
+	if goldenParseErr != nil {
 		return errParser.ParseFile(cfgClaude.SettingsGolden, goldenParseErr)
 	}
 	if localParseErr := json.Unmarshal(localBytes, &local); localParseErr != nil {

@@ -15,6 +15,7 @@ import (
 	"github.com/ActiveMemory/ctx/internal/assets/hooks/messages"
 	"github.com/ActiveMemory/ctx/internal/cli/system/core/message"
 	errHook "github.com/ActiveMemory/ctx/internal/err/hook"
+	ctxLog "github.com/ActiveMemory/ctx/internal/log"
 	writeMessage "github.com/ActiveMemory/ctx/internal/write/message"
 )
 
@@ -44,9 +45,15 @@ func Run(cmd *cobra.Command, hk, variant string) error {
 	}
 
 	hookDir := filepath.Dir(oPath)
-	_ = os.Remove(hookDir)
+	if removeErr := os.Remove(hookDir); removeErr != nil {
+		ctxLog.Warn("remove %s: %v", hookDir, removeErr)
+	}
 	messagesDir := filepath.Dir(hookDir)
-	_ = os.Remove(messagesDir)
+	if removeErr := os.Remove(messagesDir); removeErr != nil {
+		ctxLog.Warn(
+			"remove %s: %v", messagesDir, removeErr,
+		)
+	}
 
 	writeMessage.OverrideRemoved(cmd, hk, variant)
 	return nil

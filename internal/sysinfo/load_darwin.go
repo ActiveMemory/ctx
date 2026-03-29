@@ -31,7 +31,10 @@ func collectLoad() LoadInfo {
 	// Output: "{ 0.52 0.41 0.38 }"
 	s := strings.Trim(strings.TrimSpace(string(out)), "{ }")
 	var load1, load5, load15 float64
-	if _, scanErr := fmt.Sscanf(s, "%f %f %f", &load1, &load5, &load15); scanErr != nil {
+	_, scanErr := fmt.Sscanf(
+		s, "%f %f %f", &load1, &load5, &load15,
+	)
+	if scanErr != nil {
 		return LoadInfo{Supported: false}
 	}
 	return LoadInfo{

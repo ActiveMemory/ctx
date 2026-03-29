@@ -211,7 +211,9 @@ func TestFeed_SkipsDrafts(t *testing.T) {
 func TestFeed_MissingTitle(t *testing.T) {
 	dir := t.TempDir()
 	writePost(t, dir, "2026-01-01-no-title.md",
-		"---\ndate: 2026-01-01\nreviewed_and_finalized: true\n---\n# Heading\n\nContent.\n")
+		"---\ndate: 2026-01-01\n"+
+			"reviewed_and_finalized: true\n"+
+			"---\n# Heading\n\nContent.\n")
 
 	posts, report, scanErr := scan.BlogPosts(dir)
 	if scanErr != nil {
@@ -233,7 +235,9 @@ func TestFeed_MissingTitle(t *testing.T) {
 func TestFeed_MissingDate(t *testing.T) {
 	dir := t.TempDir()
 	writePost(t, dir, "2026-01-01-no-date.md",
-		"---\ntitle: No Date\nreviewed_and_finalized: true\n---\n# No Date\n\nContent.\n")
+		"---\ntitle: No Date\n"+
+			"reviewed_and_finalized: true\n"+
+			"---\n# No Date\n\nContent.\n")
 
 	posts, report, scanErr := scan.BlogPosts(dir)
 	if scanErr != nil {
@@ -256,7 +260,9 @@ func TestFeed_NoSummary(t *testing.T) {
 	dir := t.TempDir()
 	// Post with heading but no paragraph after it.
 	writePost(t, dir, "2026-01-01-no-summary.md",
-		"---\ntitle: No Summary\ndate: 2026-01-01\nreviewed_and_finalized: true\n---\n# No Summary\n")
+		"---\ntitle: No Summary\ndate: 2026-01-01\n"+
+			"reviewed_and_finalized: true\n"+
+			"---\n# No Summary\n")
 
 	posts, report, scanErr := scan.BlogPosts(dir)
 	if scanErr != nil {

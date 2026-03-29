@@ -15,7 +15,8 @@ import (
 	"github.com/ActiveMemory/ctx/internal/config/embed/text"
 )
 
-// mergeSkipped prints a message indicating how many duplicate entries were skipped.
+// mergeSkipped prints a message indicating how many duplicate
+// entries were skipped.
 //
 // Parameters:
 //   - cmd: Cobra command for output

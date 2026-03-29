@@ -13,7 +13,8 @@ import (
 
 	"github.com/ActiveMemory/ctx/internal/config/token"
 	"github.com/ActiveMemory/ctx/internal/entity"
-	"github.com/ActiveMemory/ctx/internal/write/add"
+	errAdd "github.com/ActiveMemory/ctx/internal/err/add"
+	errFs "github.com/ActiveMemory/ctx/internal/err/fs"
 )
 
 // Content retrieves content from various sources for adding entries.
@@ -35,14 +36,14 @@ func Content(args []string, flags entity.AddConfig) (string, error) {
 		// Read from the file
 		fileContent, readErr := os.ReadFile(flags.FromFile)
 		if readErr != nil {
-			return "", add.ErrFileRead(flags.FromFile, readErr)
+			return "", errFs.FileRead(flags.FromFile, readErr)
 		}
 		return strings.TrimSpace(string(fileContent)), nil
 	}
 
 	if len(args) > 1 {
 		// Content from arguments
-		return strings.Join(args[1:], " "), nil
+		return strings.Join(args[1:], token.Space), nil
 	}
 
 	// Try reading from stdin (check if it's a pipe)
@@ -55,9 +56,9 @@ func Content(args []string, flags entity.AddConfig) (string, error) {
 			lines = append(lines, scanner.Text())
 		}
 		if scanErr := scanner.Err(); scanErr != nil {
-			return "", add.ErrStdinRead(scanErr)
+			return "", errFs.StdinRead(scanErr)
 		}
 		return strings.TrimSpace(strings.Join(lines, token.NewlineLF)), nil
 	}
-	return "", add.ErrNoContent()
+	return "", errAdd.NoContent()
 }

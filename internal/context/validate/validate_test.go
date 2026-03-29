@@ -18,7 +18,8 @@ func TestInitialized_AllFilesPresent(t *testing.T) {
 	tmp := t.TempDir()
 	for _, f := range ctx.FilesRequired {
 		path := filepath.Join(tmp, f)
-		if writeErr := os.WriteFile(path, []byte("# "+f+"\n"), 0o600); writeErr != nil {
+		content := []byte("# " + f + "\n")
+		if writeErr := os.WriteFile(path, content, 0o600); writeErr != nil {
 			t.Fatalf("setup: %v", writeErr)
 		}
 	}
@@ -32,7 +33,8 @@ func TestInitialized_MissingFile(t *testing.T) {
 	// Create all but the last required file.
 	for _, f := range ctx.FilesRequired[:len(ctx.FilesRequired)-1] {
 		path := filepath.Join(tmp, f)
-		if writeErr := os.WriteFile(path, []byte("# "+f+"\n"), 0o600); writeErr != nil {
+		content := []byte("# " + f + "\n")
+		if writeErr := os.WriteFile(path, content, 0o600); writeErr != nil {
 			t.Fatalf("setup: %v", writeErr)
 		}
 	}

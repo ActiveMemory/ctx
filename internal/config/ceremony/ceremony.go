@@ -10,7 +10,8 @@ package ceremony
 const (
 	// ThrottleID is the state file name for daily throttle of ceremony checks.
 	ThrottleID = "ceremony-reminded"
-	// JournalLookback is the number of recent journal files to scan for ceremony usage.
+	// JournalLookback is the number of recent journal files to
+	// scan for ceremony usage.
 	JournalLookback = 3
 	// RememberCmd is the command name scanned in journals for /ctx-remember usage.
 	RememberCmd = "ctx-remember"

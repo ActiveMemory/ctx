@@ -29,8 +29,10 @@
 //   - check-knowledge: Knowledge file growth nudge (daily throttle)
 //   - check-map-staleness: Architecture map staleness nudge (daily throttle)
 //   - block-non-path-ctx: Blocks non-PATH ctx invocations
-//   - block-dangerous-commands: Blocks dangerous command patterns (project-local)
+//   - block-dangerous-commands: Blocks dangerous command patterns
+//     (project-local)
 //   - check-backup-age: Backup staleness check (project-local)
 //   - post-commit: Post-commit context capture nudge
-//   - qa-reminder: Reminds agent to lint/test full project before declaring done
+//   - qa-reminder: Reminds agent to lint/test full project before
+//     declaring done
 package system

@@ -90,7 +90,8 @@ func TrimBlankLines(lines []string) []string {
 //
 // Parameters:
 //   - content: Full document content
-//   - roleKey: YAML DescKey for the role to match (e.g., DescKeyLabelToolOutput)
+//   - roleKey: YAML DescKey for the role to match
+//     (e.g., DescKeyLabelToolOutput)
 //   - processFn: Called with (out, body, atEOF) for each matched turn;
 //     returns updated out slice
 //

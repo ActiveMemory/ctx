@@ -86,7 +86,17 @@ func TestParseJournalEntry_MissingFile(t *testing.T) {
 func TestParseJournalEntry_WithFrontmatter(t *testing.T) {
 	tmpDir := t.TempDir()
 	filename := "2026-02-14-feature-abc12345.md"
-	content := "---\ntitle: \"Feature: Add caching\"\ndate: 2026-02-14\ntime: \"14:30:00\"\nproject: ctx\nsession_id: sess-abc123\nmodel: opus\ntokens_in: 1000\ntokens_out: 2000\ntype: feature\noutcome: completed\ntopics:\n  - caching\n  - performance\nkey_files:\n  - internal/cache/store.go\nsummary: Added a caching layer\n---\n\n# Feature: Add caching\n\nContent.\n"
+	content := "---\ntitle: \"Feature: Add caching\"\n" +
+		"date: 2026-02-14\ntime: \"14:30:00\"\n" +
+		"project: ctx\nsession_id: sess-abc123\n" +
+		"model: opus\ntokens_in: 1000\n" +
+		"tokens_out: 2000\ntype: feature\n" +
+		"outcome: completed\ntopics:\n" +
+		"  - caching\n  - performance\n" +
+		"key_files:\n" +
+		"  - internal/cache/store.go\n" +
+		"summary: Added a caching layer\n" +
+		"---\n\n# Feature: Add caching\n\nContent.\n"
 	path := filepath.Join(tmpDir, filename)
 	if writeErr := os.WriteFile(path, []byte(content), 0600); writeErr != nil {
 		t.Fatal(writeErr)
@@ -135,7 +145,10 @@ func TestParseJournalEntry_WithFrontmatter(t *testing.T) {
 func TestParseJournalEntry_SessionID(t *testing.T) {
 	tmpDir := t.TempDir()
 	filename := "2026-02-20-with-session-abc12345.md"
-	content := "---\ntitle: Session With ID\ndate: 2026-02-20\nsession_id: 01abc-def-456\n---\n\n# Session With ID\n"
+	content := "---\ntitle: Session With ID\n" +
+		"date: 2026-02-20\n" +
+		"session_id: 01abc-def-456\n" +
+		"---\n\n# Session With ID\n"
 	path := filepath.Join(tmpDir, filename)
 	if writeErr := os.WriteFile(path, []byte(content), 0600); writeErr != nil {
 		t.Fatal(writeErr)
@@ -151,7 +164,8 @@ func TestParseJournalEntry_SessionID(t *testing.T) {
 func TestParseJournalEntry_NoSessionID(t *testing.T) {
 	tmpDir := t.TempDir()
 	filename := "2026-02-20-no-session-abc12345.md"
-	content := "---\ntitle: No Session ID\ndate: 2026-02-20\n---\n\n# No Session ID\n"
+	content := "---\ntitle: No Session ID\n" +
+		"date: 2026-02-20\n---\n\n# No Session ID\n"
 	path := filepath.Join(tmpDir, filename)
 	if writeErr := os.WriteFile(path, []byte(content), 0600); writeErr != nil {
 		t.Fatal(writeErr)
@@ -191,7 +205,9 @@ func TestParseJournalEntry_TitleSanitization(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			tmpDir := t.TempDir()
 			filename := "2026-03-01-test-abc12345.md"
-			content := "---\ntitle: \"" + tt.title + "\"\ndate: 2026-03-01\n---\n\n# " + tt.title + "\n"
+			content := "---\ntitle: \"" + tt.title +
+				"\"\ndate: 2026-03-01\n---\n\n# " +
+				tt.title + "\n"
 			path := filepath.Join(tmpDir, filename)
 			if writeErr := os.WriteFile(path, []byte(content), 0600); writeErr != nil {
 				t.Fatal(writeErr)

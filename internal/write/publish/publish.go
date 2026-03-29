@@ -13,7 +13,7 @@ import (
 
 	"github.com/ActiveMemory/ctx/internal/assets/read/desc"
 	"github.com/ActiveMemory/ctx/internal/config/embed/text"
-	writeIo "github.com/ActiveMemory/ctx/internal/write/io"
+	writeIo "github.com/ActiveMemory/ctx/internal/write/line"
 )
 
 // NotFound prints that no published block was found.
@@ -25,7 +25,9 @@ func NotFound(cmd *cobra.Command, filename string) {
 	if cmd == nil {
 		return
 	}
-	cmd.Println(fmt.Sprintf(desc.Text(text.DescKeyWriteUnpublishNotFound), filename))
+	cmd.Println(fmt.Sprintf(
+		desc.Text(text.DescKeyWriteUnpublishNotFound),
+		filename))
 }
 
 // Unpublished prints that the published block was removed.
@@ -64,12 +66,14 @@ func Plan(
 	cmd.Println(fmt.Sprintf(desc.Text(text.DescKeyWritePublishBudget), budget))
 	cmd.Println()
 	cmd.Println(desc.Text(text.DescKeyWritePublishBlock))
-	writeIo.CountLine(cmd, text.DescKeyWritePublishTasks, tasks)
-	writeIo.CountLine(cmd, text.DescKeyWritePublishDecisions, decisions)
-	writeIo.CountLine(cmd, text.DescKeyWritePublishConventions, conventions)
-	writeIo.CountLine(cmd, text.DescKeyWritePublishLearnings, learnings)
+	writeIo.Count(cmd, text.DescKeyWritePublishTasks, tasks)
+	writeIo.Count(cmd, text.DescKeyWritePublishDecisions, decisions)
+	writeIo.Count(cmd, text.DescKeyWritePublishConventions, conventions)
+	writeIo.Count(cmd, text.DescKeyWritePublishLearnings, learnings)
 	cmd.Println()
-	cmd.Println(fmt.Sprintf(desc.Text(text.DescKeyWritePublishTotal), totalLines, budget))
+	cmd.Println(fmt.Sprintf(
+		desc.Text(text.DescKeyWritePublishTotal),
+		totalLines, budget))
 }
 
 // DryRun prints the dry-run notice.

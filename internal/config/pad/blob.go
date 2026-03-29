@@ -10,7 +10,8 @@ package pad
 const (
 	// BlobSep separates the label from the base64-encoded file content.
 	BlobSep = ":::"
-	// MaxBlobSize is the maximum file size (pre-encoding) allowed for blob entries.
+	// MaxBlobSize is the maximum file size (pre-encoding)
+	// allowed for blob entries.
 	MaxBlobSize = 64 * 1024
 	// BlobTag is the display tag appended to blob labels.
 	BlobTag = " [BLOB]"

@@ -35,7 +35,8 @@ func TestEvaluate_MemoryBoundaries(t *testing.T) {
 			alerts := Evaluate(snap)
 			memAlerts := filterByResource(alerts, tt.resource)
 			if len(memAlerts) != tt.wantN {
-				t.Fatalf("expected %d alerts, got %d: %v", tt.wantN, len(memAlerts), memAlerts)
+				t.Fatalf("expected %d alerts, got %d: %v",
+					tt.wantN, len(memAlerts), memAlerts)
 			}
 			if tt.wantN > 0 && memAlerts[0].Severity != tt.wantSev {
 				t.Errorf("severity = %v, want %v", memAlerts[0].Severity, tt.wantSev)
@@ -72,7 +73,8 @@ func TestEvaluate_SwapBoundaries(t *testing.T) {
 			alerts := Evaluate(snap)
 			swapAlerts := filterByResource(alerts, "swap")
 			if len(swapAlerts) != tt.wantN {
-				t.Fatalf("expected %d alerts, got %d: %v", tt.wantN, len(swapAlerts), swapAlerts)
+				t.Fatalf("expected %d alerts, got %d: %v",
+					tt.wantN, len(swapAlerts), swapAlerts)
 			}
 			if tt.wantN > 0 && swapAlerts[0].Severity != tt.wantSev {
 				t.Errorf("severity = %v, want %v", swapAlerts[0].Severity, tt.wantSev)
@@ -107,7 +109,8 @@ func TestEvaluate_DiskBoundaries(t *testing.T) {
 			alerts := Evaluate(snap)
 			diskAlerts := filterByResource(alerts, "disk")
 			if len(diskAlerts) != tt.wantN {
-				t.Fatalf("expected %d alerts, got %d: %v", tt.wantN, len(diskAlerts), diskAlerts)
+				t.Fatalf("expected %d alerts, got %d: %v",
+					tt.wantN, len(diskAlerts), diskAlerts)
 			}
 			if tt.wantN > 0 && diskAlerts[0].Severity != tt.wantSev {
 				t.Errorf("severity = %v, want %v", diskAlerts[0].Severity, tt.wantSev)
@@ -142,7 +145,8 @@ func TestEvaluate_LoadBoundaries(t *testing.T) {
 			alerts := Evaluate(snap)
 			loadAlerts := filterByResource(alerts, "load")
 			if len(loadAlerts) != tt.wantN {
-				t.Fatalf("expected %d alerts, got %d: %v", tt.wantN, len(loadAlerts), loadAlerts)
+				t.Fatalf("expected %d alerts, got %d: %v",
+					tt.wantN, len(loadAlerts), loadAlerts)
 			}
 			if tt.wantN > 0 && loadAlerts[0].Severity != tt.wantSev {
 				t.Errorf("severity = %v, want %v", loadAlerts[0].Severity, tt.wantSev)

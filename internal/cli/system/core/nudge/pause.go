@@ -19,6 +19,7 @@ import (
 	"github.com/ActiveMemory/ctx/internal/config/embed/text"
 	"github.com/ActiveMemory/ctx/internal/config/hook"
 	"github.com/ActiveMemory/ctx/internal/io"
+	ctxLog "github.com/ActiveMemory/ctx/internal/log"
 )
 
 // PauseMarkerPath returns the path to the session pause marker file.
@@ -85,5 +86,8 @@ func Pause(sessionID string) {
 // Parameters:
 //   - sessionID: Session identifier
 func Resume(sessionID string) {
-	_ = os.Remove(PauseMarkerPath(sessionID))
+	p := PauseMarkerPath(sessionID)
+	if removeErr := os.Remove(p); removeErr != nil {
+		ctxLog.Warn("remove %s: %v", p, removeErr)
+	}
 }

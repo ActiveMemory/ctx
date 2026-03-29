@@ -409,7 +409,9 @@ func CheckTaskCompletion(report *Report) {
 		completed, total, ratio,
 	)
 
-	if ratio >= doctor.TaskCompletionWarnPct && completed > doctor.TaskCompletionMinCount {
+	aboveWarn := ratio >= doctor.TaskCompletionWarnPct
+	aboveMin := completed > doctor.TaskCompletionMinCount
+	if aboveWarn && aboveMin {
 		report.Results = append(report.Results, Result{
 			Name:     doctor.CheckTaskCompletion,
 			Category: doctor.CategoryState,
@@ -428,7 +430,8 @@ func CheckTaskCompletion(report *Report) {
 	}
 }
 
-// CheckContextTokenSize estimates context token usage and reports per-file breakdown.
+// CheckContextTokenSize estimates context token usage
+// and reports per-file breakdown.
 //
 // Parameters:
 //   - report: Report to append the result to
@@ -618,7 +621,8 @@ func AddResourceResults(report *Report, snap sysinfo.Snapshot) {
 //   - sev: Severity level from system resource evaluation
 //
 // Returns:
-//   - string: Corresponding status constant (stats.StatusOK, stats.StatusWarning, stats.StatusError)
+//   - string: Corresponding status constant
+//     (stats.StatusOK, stats.StatusWarning, stats.StatusError)
 func SeverityToStatus(sev sysinfo.Severity) string {
 	switch sev {
 	case sysinfo.SeverityWarning:

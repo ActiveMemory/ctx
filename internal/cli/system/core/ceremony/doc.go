@@ -4,5 +4,6 @@
 //   \    Copyright 2026-present Context contributors.
 //                 SPDX-License-Identifier: Apache-2.0
 
-// Package ceremony assembles hook ceremony output from recent journal files and message templates.
+// Package ceremony assembles hook ceremony output from recent
+// journal files and message templates.
 package ceremony

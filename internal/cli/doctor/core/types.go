@@ -11,7 +11,8 @@ package core
 // Fields:
 //   - Name: Machine-readable identifier for the check
 //   - Category: Grouping label (Structure, Quality, Plugin, etc.)
-//   - Status: One of stats.StatusOK, stats.StatusWarning, stats.StatusError, stats.StatusInfo
+//   - Status: One of stats.StatusOK, stats.StatusWarning,
+//     stats.StatusError, stats.StatusInfo
 //   - Message: Human-readable description of the outcome
 type Result struct {
 	Name     string `json:"name"`

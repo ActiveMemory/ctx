@@ -114,7 +114,10 @@ func TestClaudeCodeParser_ParseFile(t *testing.T) {
 
 	// Check first user message preview
 	if session.FirstUserMsg != "What is 2+2?" {
-		t.Errorf("expected first user msg 'What is 2+2?', got '%s'", session.FirstUserMsg)
+		t.Errorf(
+			"expected first user msg 'What is 2+2?', got '%s'",
+			session.FirstUserMsg,
+		)
 	}
 
 	// Check message content
@@ -183,7 +186,10 @@ func TestClaudeCodeParser_ParseFile_WithToolUse(t *testing.T) {
 		t.Fatalf("expected 1 tool result, got %d", len(msg3.ToolResults))
 	}
 	if msg3.ToolResults[0].ToolUseID != "tool1" {
-		t.Errorf("expected tool_use_id 'tool1', got '%s'", msg3.ToolResults[0].ToolUseID)
+		t.Errorf(
+			"expected tool_use_id 'tool1', got '%s'",
+			msg3.ToolResults[0].ToolUseID,
+		)
 	}
 }
 
@@ -369,7 +375,12 @@ func TestFindSessions_Integration(t *testing.T) {
 		if len(preview) > 50 {
 			preview = preview[:50] + "..."
 		}
-		t.Logf("%d. %s | %s | %d turns | %s", i+1, s.Slug, s.StartTime.Format("2006-01-02"), s.TurnCount, preview)
+		t.Logf(
+			"%d. %s | %s | %d turns | %s",
+			i+1, s.Slug,
+			s.StartTime.Format("2006-01-02"),
+			s.TurnCount, preview,
+		)
 	}
 }
 
@@ -386,9 +397,16 @@ func TestDebugSession(t *testing.T) {
 				if i > 5 {
 					break
 				}
-				t.Logf("  %d. %s: text=%d chars, tools=%d", i, m.Role, len(m.Text), len(m.ToolUses))
+				t.Logf(
+					"  %d. %s: text=%d chars, tools=%d",
+					i, m.Role, len(m.Text), len(m.ToolUses),
+				)
 				if len(m.ToolUses) > 0 {
-					t.Logf("      tool: %s, input: %.100s", m.ToolUses[0].Name, m.ToolUses[0].Input)
+					t.Logf(
+						"      tool: %s, input: %.100s",
+						m.ToolUses[0].Name,
+						m.ToolUses[0].Input,
+					)
 				}
 			}
 			break

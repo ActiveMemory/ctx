@@ -23,7 +23,8 @@ import (
 //
 // Returns:
 //   - input: parsed hook input
-//   - sessionID: resolved session identifier (falls back to config.IDSessionUnknown)
+//   - sessionID: resolved session identifier
+//     (falls back to config.IDSessionUnknown)
 //   - paused: true if the session is currently paused
 func Preamble(stdin *os.File) (
 	input entity.HookInput, sessionID string, paused bool,

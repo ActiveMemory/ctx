@@ -129,7 +129,8 @@ func GitLogSince(t time.Time, extraArgs ...string) ([]byte, error) {
 	}
 	args := []string{cfgGit.Log, cfgGit.FlagSince, t.Format(time.RFC3339)}
 	args = append(args, extraArgs...)
-	return exec.Command(cfgGit.Binary, args...).Output() //nolint:gosec // args are literal flags + time.Format output
+	//nolint:gosec // literal flags + time.Format
+	return exec.Command(cfgGit.Binary, args...).Output()
 }
 
 // UniqueTopDirs extracts unique top-level directories from file paths.

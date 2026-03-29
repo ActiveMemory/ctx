@@ -11,7 +11,8 @@ const PercentMultiplier = 100
 
 // Context size hook configuration.
 const (
-	// ContextSizeCounterPrefix is the state file prefix for per-session prompt counters.
+	// ContextSizeCounterPrefix is the state file prefix for
+	// per-session prompt counters.
 	ContextSizeCounterPrefix = "context-check-"
 	// ContextSizeLogFile is the log file name within .context/logs/.
 	ContextSizeLogFile = "check-context-size.log"
@@ -23,13 +24,16 @@ const (
 	// eliminates noise on large context windows (e.g., 1M) where prompt
 	// count is a poor proxy for session depth.
 	ContextCheckpointMinPct = 20
-	// ContextSizeBillingWarnedPrefix is the state file prefix for the one-shot billing warning guard.
+	// ContextSizeBillingWarnedPrefix is the state file prefix
+	// for the one-shot billing warning guard.
 	ContextSizeBillingWarnedPrefix = "billing-warned-"
-	// ContextSizeInjectionOversizeFlag is the state file name for the injection-oversize one-shot flag.
+	// ContextSizeInjectionOversizeFlag is the state file name
+	// for the injection-oversize one-shot flag.
 	ContextSizeInjectionOversizeFlag = "injection-oversize"
 	// JsonlPathCachePrefix is the state file prefix for cached JSONL file paths.
 	JsonlPathCachePrefix = "jsonl-path-"
-	// ContextSizeOversizeSepLen is the separator length for the oversize flag file header.
+	// ContextSizeOversizeSepLen is the separator length for the
+	// oversize flag file header.
 	ContextSizeOversizeSepLen = 35
 
 	// CheckpointLateThreshold is the prompt count above which the late
@@ -53,7 +57,8 @@ const (
 	ViolationTaskRefMissing = 1
 	// ViolationSingleLine is the score for a single-line commit message.
 	ViolationSingleLine = 1
-	// ViolationNoTasksChanged is the score for source changes without TASKS.md update.
+	// ViolationNoTasksChanged is the score for source changes
+	// without TASKS.md update.
 	ViolationNoTasksChanged = 1
 	// ViolationThresholdNudge is the minimum score to emit a nudge.
 	ViolationThresholdNudge = 2

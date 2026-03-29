@@ -54,9 +54,9 @@ the word "recall" now that there's no command name collision.
 
 ### Parser package stays
 
-`internal/recall/parser` stays at its current path. It's a domain
-parser for session files, not tied to the CLI command name. Renaming
-it would churn 3+ consumers for no user-visible benefit.
+`internal/recall/parser` was relocated to `internal/journal/parser`
+during JMC.7.3 cleanup (2026-03-28). The package name stays `parser`;
+only the parent directory changed to reflect the journal-recall merge.
 
 ## Behavior
 

@@ -68,7 +68,8 @@ func Load(hk, variant string, vars map[string]any, fallback string) string {
 //   - string: Box-wrapped content
 func BoxLines(content string) string {
 	var b strings.Builder
-	for _, line := range strings.Split(strings.TrimRight(content, token.NewlineLF), token.NewlineLF) {
+	trimmed := strings.TrimRight(content, token.NewlineLF)
+	for _, line := range strings.Split(trimmed, token.NewlineLF) {
 		b.WriteString(box.LinePrefix)
 		b.WriteString(line)
 		b.WriteString(token.NewlineLF)

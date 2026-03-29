@@ -76,7 +76,11 @@ func TestListTemplates(t *testing.T) {
 		templateSet[e.Name()] = true
 	}
 
-	for _, req := range []string{"CONSTITUTION.md", "TASKS.md", "DECISIONS.md", "LEARNINGS.md"} {
+	required := []string{
+		"CONSTITUTION.md", "TASKS.md",
+		"DECISIONS.md", "LEARNINGS.md",
+	}
+	for _, req := range required {
 		if !templateSet[req] {
 			t.Errorf("missing required template: %s", req)
 		}
@@ -144,7 +148,11 @@ func TestListSkills(t *testing.T) {
 			skillSet[e.Name()] = true
 		}
 	}
-	for _, exp := range []string{"ctx-code-review", "ctx-status", "ctx-recall", "ctx-brainstorm"} {
+	expected := []string{
+		"ctx-code-review", "ctx-status",
+		"ctx-recall", "ctx-brainstorm",
+	}
+	for _, exp := range expected {
 		if !skillSet[exp] {
 			t.Errorf("missing expected skill: %s", exp)
 		}
@@ -152,7 +160,11 @@ func TestListSkills(t *testing.T) {
 }
 
 func TestSkillContent(t *testing.T) {
-	content, err := FS.ReadFile(path.Join(asset.DirClaudeSkills, "ctx-recall", asset.FileSKILLMd))
+	content, err := FS.ReadFile(path.Join(
+		asset.DirClaudeSkills,
+		"ctx-recall",
+		asset.FileSKILLMd,
+	))
 	if err != nil {
 		t.Fatalf("unexpected error: %v", err)
 	}
@@ -165,9 +177,12 @@ func TestSkillContent(t *testing.T) {
 }
 
 func TestSkillReference(t *testing.T) {
-	content, err := FS.ReadFile(path.Join(
-		asset.DirClaudeSkills, "ctx-skill-audit", asset.DirReferences, "anthropic-best-practices.md",
-	))
+	refPath := path.Join(
+		asset.DirClaudeSkills, "ctx-skill-audit",
+		asset.DirReferences,
+		"anthropic-best-practices.md",
+	)
+	content, err := FS.ReadFile(refPath)
 	if err != nil {
 		t.Fatalf("unexpected error: %v", err)
 	}
@@ -177,7 +192,12 @@ func TestSkillReference(t *testing.T) {
 }
 
 func TestListSkillReferences(t *testing.T) {
-	entries, err := FS.ReadDir(path.Join(asset.DirClaudeSkills, "ctx-skill-audit", asset.DirReferences))
+	refDir := path.Join(
+		asset.DirClaudeSkills,
+		"ctx-skill-audit",
+		asset.DirReferences,
+	)
+	entries, err := FS.ReadDir(refDir)
 	if err != nil {
 		t.Fatalf("unexpected error: %v", err)
 	}
@@ -198,7 +218,12 @@ func TestListSkillReferences(t *testing.T) {
 }
 
 func TestListSkillReferencesNonexistent(t *testing.T) {
-	_, err := FS.ReadDir(path.Join(asset.DirClaudeSkills, "ctx-status", asset.DirReferences))
+	noRefDir := path.Join(
+		asset.DirClaudeSkills,
+		"ctx-status",
+		asset.DirReferences,
+	)
+	_, err := FS.ReadDir(noRefDir)
 	if err == nil {
 		t.Error("expected error for skill without references")
 	}
@@ -336,7 +361,12 @@ func TestListHookMessages(t *testing.T) {
 			hookSet[h.Name()] = true
 		}
 	}
-	for _, exp := range []string{"qa-reminder", "check-context-size", "block-dangerous-commands"} {
+	wantHooks := []string{
+		"qa-reminder",
+		"check-context-size",
+		"block-dangerous-commands",
+	}
+	for _, exp := range wantHooks {
 		if !hookSet[exp] {
 			t.Errorf("missing expected hook: %s", exp)
 		}
@@ -344,7 +374,11 @@ func TestListHookMessages(t *testing.T) {
 }
 
 func TestHookMessage_ReadVariant(t *testing.T) {
-	content, readErr := FS.ReadFile(path.Join(asset.DirHooksMessages, "qa-reminder", "gate.txt"))
+	gatePath := path.Join(
+		asset.DirHooksMessages,
+		"qa-reminder", "gate.txt",
+	)
+	content, readErr := FS.ReadFile(gatePath)
 	if readErr != nil {
 		t.Fatalf("unexpected error: %v", readErr)
 	}

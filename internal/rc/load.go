@@ -38,7 +38,8 @@ func loadRC() *CtxRC {
 		cfg.ContextDir = envDir
 	}
 	if envBudget := os.Getenv(env.CtxTokenBudget); envBudget != "" {
-		if budget, parseErr := strconv.Atoi(envBudget); parseErr == nil && budget > 0 {
+		budget, parseErr := strconv.Atoi(envBudget)
+		if parseErr == nil && budget > 0 {
 			cfg.TokenBudget = budget
 		}
 	}

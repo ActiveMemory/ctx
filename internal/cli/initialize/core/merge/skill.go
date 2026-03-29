@@ -12,7 +12,8 @@ import (
 	cfgClaude "github.com/ActiveMemory/ctx/internal/config/claude"
 )
 
-// skillName extracts the skill name from a permission string like "Skill(name)".
+// skillName extracts the skill name from a permission
+// string like "Skill(name)".
 //
 // Parameters:
 //   - perm: Permission string to parse
@@ -25,5 +26,7 @@ func skillName(perm string) (string, bool) {
 		!strings.HasSuffix(perm, cfgClaude.PermSkillSuffix) {
 		return "", false
 	}
-	return perm[len(cfgClaude.PermSkillPrefix) : len(perm)-len(cfgClaude.PermSkillSuffix)], true
+	start := len(cfgClaude.PermSkillPrefix)
+	end := len(perm) - len(cfgClaude.PermSkillSuffix)
+	return perm[start:end], true
 }

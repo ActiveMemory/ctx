@@ -35,7 +35,9 @@ func HandleMakefileCtx(cmd *cobra.Command) error {
 		return errInit.ReadTemplate(project.MakefileCtx, tplErr)
 	}
 
-	if writeErr := os.WriteFile(project.MakefileCtx, content, fs.PermFile); writeErr != nil {
+	if writeErr := os.WriteFile(
+		project.MakefileCtx, content, fs.PermFile,
+	); writeErr != nil {
 		return errFs.FileWrite(project.MakefileCtx, writeErr)
 	}
 

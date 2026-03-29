@@ -57,7 +57,8 @@ func CheckVersion(sessionID string) string {
 		"MarketplaceVersion": marketVer,
 	}
 	fallback := "VERSION (" + fileVer + "), plugin.json (" + pluginVer +
-		"), marketplace.json (" + marketVer + ") are out of sync. Update all three before releasing."
+		"), marketplace.json (" + marketVer +
+		") are out of sync. Update all three before releasing."
 	msg := message.Load(hook.VersionDrift, hook.VariantNudge, vars, fallback)
 	if msg == "" {
 		return ""
@@ -66,7 +67,9 @@ func CheckVersion(sessionID string) string {
 
 	ref := notify.NewTemplateRef(hook.VersionDrift, hook.VariantNudge, vars)
 	nudge.Relay(fmt.Sprintf(desc.Text(text.DescKeyRelayPrefixFormat),
-		hook.VersionDrift, desc.Text(text.DescKeyVersionDriftRelayMessage)), sessionID, ref)
+		hook.VersionDrift,
+		desc.Text(text.DescKeyVersionDriftRelayMessage),
+	), sessionID, ref)
 
 	return response
 }

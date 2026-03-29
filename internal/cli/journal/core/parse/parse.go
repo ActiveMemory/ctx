@@ -168,7 +168,9 @@ func JournalEntry(path, filename string) entity.JournalEntry {
 	}
 
 	// Strip Claude Code internal markup tags from titles
-	entry.Title = strings.TrimSpace(regex.SystemClaudeTag.ReplaceAllString(entry.Title, ""))
+	entry.Title = strings.TrimSpace(
+		regex.SystemClaudeTag.ReplaceAllString(entry.Title, ""),
+	)
 
 	// Sanitize characters that break Markdown link text: angle brackets
 	// become HTML entities; backticks and # are stripped (they add no

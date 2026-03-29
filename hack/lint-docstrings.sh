@@ -68,5 +68,5 @@ find internal/ cmd/ -name '*.go' ! -name '*_test.go' ! -name 'doc.go' | sort | w
         continue
       fi
     fi
-  done
+  done || true
 done 2>/dev/null

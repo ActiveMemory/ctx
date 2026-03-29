@@ -64,7 +64,8 @@ func TestParseEntries_ListItems(t *testing.T) {
 `
 	entries := Entries(content)
 	if len(entries) != 3 {
-		t.Fatalf("expected 3 list entries (one per item), got %d: %+v", len(entries), entries)
+		t.Fatalf("expected 3 list entries (one per item), got %d: %+v",
+			len(entries), entries)
 	}
 	for i, e := range entries {
 		if e.Kind != EntryList {
@@ -110,7 +111,8 @@ Some standalone paragraph.
 		t.Errorf("entry 2: expected EntryList, got %d", entries[2].Kind)
 	}
 
-	// Sub-header "### Key learnings" absorbs all following paragraphs until next header
+	// Sub-header "### Key learnings" absorbs all following
+	// paragraphs until next header
 	if entries[3].Kind != EntryHeader {
 		t.Errorf("entry 3: expected EntryHeader, got %d", entries[3].Kind)
 	}
@@ -151,6 +153,7 @@ func TestParseEntries_IndividualListItems(t *testing.T) {
 `
 	entries := Entries(content)
 	if len(entries) != 2 {
-		t.Fatalf("expected 2 entries (blank line separates lists), got %d: %+v", len(entries), entries)
+		t.Fatalf("expected 2 entries (blank line separates lists), got %d: %+v",
+			len(entries), entries)
 	}
 }

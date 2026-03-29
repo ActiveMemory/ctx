@@ -27,9 +27,21 @@ func TestModelContextWindow(t *testing.T) {
 	}{
 		{name: "empty model", model: "", want: 0},
 		{name: "unknown model", model: "gpt-4", want: 0},
-		{name: "claude 200k", model: "claude-opus-4-6-20260205", want: rc.DefaultContextWindow},
-		{name: "claude with 1m suffix", model: "claude-opus-4-6[1m]", want: ContextWindow1M},
-		{name: "claude with 1M uppercase", model: "claude-sonnet-4-6[1M]", want: ContextWindow1M},
+		{
+			name:  "claude 200k",
+			model: "claude-opus-4-6-20260205",
+			want:  rc.DefaultContextWindow,
+		},
+		{
+			name:  "claude with 1m suffix",
+			model: "claude-opus-4-6[1m]",
+			want:  ContextWindow1M,
+		},
+		{
+			name:  "claude with 1M uppercase",
+			model: "claude-sonnet-4-6[1M]",
+			want:  ContextWindow1M,
+		},
 	}
 
 	for _, tt := range tests {

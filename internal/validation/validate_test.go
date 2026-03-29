@@ -24,7 +24,12 @@ func TestSanitizeFilename(t *testing.T) {
 		{"", "session"},
 		{"   ", "session"},
 		{"---", "session"},
-		{"a very long topic name that exceeds the maximum allowed length of fifty characters", "a-very-long-topic-name-that-exceeds-the-maximum-al"},
+		{
+			"a very long topic name that exceeds" +
+				" the maximum allowed length" +
+				" of fifty characters",
+			"a-very-long-topic-name-that-exceeds-the-maximum-al",
+		},
 		{"trailing---", "trailing"},
 		{"---leading", "leading"},
 	}
@@ -33,7 +38,8 @@ func TestSanitizeFilename(t *testing.T) {
 		t.Run(tt.input, func(t *testing.T) {
 			result := SanitizeFilename(tt.input)
 			if result != tt.expected {
-				t.Errorf("SanitizeFilename(%q) = %q, want %q", tt.input, result, tt.expected)
+				t.Errorf("SanitizeFilename(%q) = %q, want %q",
+					tt.input, result, tt.expected)
 			}
 		})
 	}

@@ -146,7 +146,8 @@ func ConventionLineCount() int {
 	return RC().ConventionLineCount
 }
 
-// InjectionTokenWarn returns the token threshold for oversize injection warning.
+// InjectionTokenWarn returns the token threshold for
+// oversize injection warning.
 //
 // Returns 0 if the check is disabled. Default: 15000.
 //

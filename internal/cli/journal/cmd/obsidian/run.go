@@ -161,7 +161,9 @@ func BuildVault(cmd *cobra.Command, journalDir, output string) error {
 		)
 		transformed := frontmatter.Transform(normalized, sourcePath)
 		transformed = wikilink.ConvertMarkdownLinks(transformed)
-		transformed += moc.GenerateRelatedFooter(entry, topicIndex, obsidian.MaxRelated)
+		transformed += moc.GenerateRelatedFooter(
+			entry, topicIndex, obsidian.MaxRelated,
+		)
 
 		if writeErr := os.WriteFile(
 			dst, []byte(transformed), fs.PermFile,

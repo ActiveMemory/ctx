@@ -30,9 +30,11 @@ const (
 	BackupExcludeTodos = "todos"
 	// BackupMarkerDir is the XDG state directory for the backup marker.
 	BackupMarkerDir = ".local/state"
-	// BackupMaxAgeDays is the threshold in days before a backup is considered stale.
+	// BackupMaxAgeDays is the threshold in days before a backup
+	// is considered stale.
 	BackupMaxAgeDays = 2
-	// BackupThrottleID is the state file name for daily throttle of backup age checks.
+	// BackupThrottleID is the state file name for daily
+	// throttle of backup age checks.
 	BackupThrottleID = "backup-reminded"
 	// Bashrc is the user's bash configuration file.
 	Bashrc = ".bashrc"

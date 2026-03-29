@@ -37,7 +37,10 @@ func FormatTemplateVars(info *messages.HookMessageInfo) string {
 	for i, v := range info.TemplateVars {
 		formatted[i] = "{{." + v + "}}"
 	}
-	return fmt.Sprintf(desc.Text(text.DescKeyMessageTemplateVarsLabel), strings.Join(formatted, token.CommaSpace))
+	return fmt.Sprintf(
+		desc.Text(text.DescKeyMessageTemplateVarsLabel),
+		strings.Join(formatted, token.CommaSpace),
+	)
 }
 
 // OverridePath returns the user override file path for a hook/variant.
@@ -49,7 +52,10 @@ func FormatTemplateVars(info *messages.HookMessageInfo) string {
 // Returns:
 //   - string: full filesystem path to the override file
 func OverridePath(hook, variant string) string {
-	return filepath.Join(rc.ContextDir(), dir.HooksMessages, hook, variant+file.ExtTxt)
+	return filepath.Join(
+		rc.ContextDir(), dir.HooksMessages,
+		hook, variant+file.ExtTxt,
+	)
 }
 
 // HasOverride checks whether a user override file exists.

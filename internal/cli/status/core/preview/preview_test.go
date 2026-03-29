@@ -65,7 +65,10 @@ func TestContentPreview(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			got := Content(tt.content, tt.n)
 			if len(got) != len(tt.want) {
-				t.Fatalf("Content() returned %d lines, want %d\ngot: %v", len(got), len(tt.want), got)
+				t.Fatalf(
+					"Content() returned %d lines, want %d\ngot: %v",
+					len(got), len(tt.want), got,
+				)
 			}
 			for i, line := range got {
 				if line != tt.want[i] {

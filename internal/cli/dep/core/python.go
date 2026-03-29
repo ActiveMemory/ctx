@@ -14,6 +14,7 @@ import (
 
 	"github.com/ActiveMemory/ctx/internal/config/token"
 	"github.com/ActiveMemory/ctx/internal/io"
+	ctxLog "github.com/ActiveMemory/ctx/internal/log"
 )
 
 // PythonEcosystem is the ecosystem label for Python projects.
@@ -86,7 +87,11 @@ func ParseRequirementsTxt(path string) ([]string, error) {
 	if openErr != nil {
 		return nil, openErr
 	}
-	defer func() { _ = f.Close() }()
+	defer func() {
+		if closeErr := f.Close(); closeErr != nil {
+			ctxLog.Warn("close %s: %v", path, closeErr)
+		}
+	}()
 
 	var deps []string
 	scanner := bufio.NewScanner(f)
@@ -222,7 +227,12 @@ func ParsePyprojectDeps(content string, sectionSuffix string) []string {
 		if !inSection {
 			// Also check for inline array: dependencies = [...]
 			if !inArray {
-				for _, key := range []string{sectionSuffix + " = [", sectionSuffix + "= [", sectionSuffix + " =[", sectionSuffix + "=["} {
+				for _, key := range []string{
+					sectionSuffix + " = [",
+					sectionSuffix + "= [",
+					sectionSuffix + " =[",
+					sectionSuffix + "=[",
+				} {
 					if strings.Contains(trimmed, key) {
 						inArray = true
 						// Parse items on this line after the opening bracket.
@@ -254,7 +264,8 @@ func ParsePyprojectDeps(content string, sectionSuffix string) []string {
 			name := strings.TrimSpace(trimmed[:idx])
 			// Skip python itself and metadata keys.
 			lower := strings.ToLower(name)
-			if lower == PythonEcosystem || lower == "name" || lower == "version" || lower == "description" {
+			isMeta := lower == "name" || lower == "version" || lower == "description"
+			if lower == PythonEcosystem || isMeta {
 				continue
 			}
 			deps = append(deps, strings.ToLower(name))

@@ -93,7 +93,10 @@ func Duration(d interface{ Minutes() float64 }) string {
 	if remainMins == 0 {
 		return fmt.Sprintf(desc.Text(text.DescKeyWriteFormatDurationHour), hours)
 	}
-	return fmt.Sprintf(desc.Text(text.DescKeyWriteFormatDurationHourMin), hours, remainMins)
+	return fmt.Sprintf(
+		desc.Text(text.DescKeyWriteFormatDurationHourMin),
+		hours, remainMins,
+	)
 }
 
 // ToolUse formats a tool invocation with its key parameters.

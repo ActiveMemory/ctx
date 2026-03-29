@@ -67,7 +67,9 @@ func TestInjectSourceLink_WithFrontmatter(t *testing.T) {
 	content := "---\ntitle: Test\n---\n\n# Heading\n"
 	result := InjectedSourceLink(content, "/home/user/.context/journal/test.md")
 
-	if !strings.Contains(result, "[View source](file:///home/user/.context/journal/test.md)") {
+	wantLink := "[View source]" +
+		"(file:///home/user/.context/journal/test.md)"
+	if !strings.Contains(result, wantLink) {
 		t.Errorf("missing file:// link:\n%s", result)
 	}
 	if !strings.Contains(result, ".context/journal/test.md") {
@@ -150,7 +152,9 @@ func TestFormatIndexEntry(t *testing.T) {
 }
 
 func TestGenerateZensicalToml_WithAllNav(t *testing.T) {
-	entries := []entity.JournalEntry{{Filename: "a.md", Title: "A", Date: "2026-01-01"}}
+	entries := []entity.JournalEntry{
+		{Filename: "a.md", Title: "A", Date: "2026-01-01"},
+	}
 	topics := []entity.TopicData{{Name: "t", Entries: entries}}
 	keyFiles := []entity.KeyFileData{{Path: "f.go", Entries: entries}}
 	sessionTypes := []entity.TypeData{{Name: "feature", Entries: entries}}
@@ -169,7 +173,9 @@ func TestGenerateZensicalToml_WithAllNav(t *testing.T) {
 }
 
 func TestGenerateZensicalToml_NoTopics(t *testing.T) {
-	entries := []entity.JournalEntry{{Filename: "a.md", Title: "A", Date: "2026-01-01"}}
+	entries := []entity.JournalEntry{
+		{Filename: "a.md", Title: "A", Date: "2026-01-01"},
+	}
 
 	got := ZensicalToml(entries, nil, nil, nil)
 

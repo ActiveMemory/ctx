@@ -25,7 +25,8 @@ import (
 //   - fallback: Returned when parsing or execution fails
 //
 // Returns:
-//   - string: Rendered output, empty string for silent templates, or fallback on error
+//   - string: Rendered output, empty string for silent
+//     templates, or fallback on error
 func renderTemplate(tmpl string, vars map[string]any, fallback string) string {
 	if strings.TrimSpace(tmpl) == "" {
 		return "" // intentional silence
