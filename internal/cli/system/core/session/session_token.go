@@ -208,8 +208,13 @@ func ModelContextWindow(model string) int {
 		return 0
 	}
 
-	// 1M models include "[1m]" in the model ID suffix.
-	if strings.Contains(strings.ToLower(model), claude.ModelSuffix1M) {
+	lower := strings.ToLower(model)
+
+	// 1M models: explicit [1m] suffix OR Opus 4.6+ (always 1M).
+	if strings.Contains(lower, claude.ModelSuffix1M) {
+		return ContextWindow1M
+	}
+	if strings.Contains(lower, "opus") {
 		return ContextWindow1M
 	}
 

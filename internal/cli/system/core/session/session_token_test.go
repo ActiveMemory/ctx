@@ -28,8 +28,13 @@ func TestModelContextWindow(t *testing.T) {
 		{name: "empty model", model: "", want: 0},
 		{name: "unknown model", model: "gpt-4", want: 0},
 		{
-			name:  "claude 200k",
+			name:  "claude opus is always 1M",
 			model: "claude-opus-4-6-20260205",
+			want:  ContextWindow1M,
+		},
+		{
+			name:  "claude sonnet is 200k",
+			model: "claude-sonnet-4-6-20260205",
 			want:  rc.DefaultContextWindow,
 		},
 		{
