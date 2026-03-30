@@ -28,7 +28,7 @@ func FileNameToTitle(name string) string {
 	// Remove .md extension
 	name = strings.TrimSuffix(name, file.ExtMarkdown)
 	// Convert SCREAMING_SNAKE to Title Case
-	name = strings.ReplaceAll(name, "_", " ")
+	name = strings.ReplaceAll(name, token.Underscore, token.Space)
 	// Title case each word
 	words := strings.Fields(name)
 	for i, w := range words {

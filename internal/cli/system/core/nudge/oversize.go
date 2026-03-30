@@ -19,6 +19,7 @@ import (
 	"github.com/ActiveMemory/ctx/internal/config/hook"
 	"github.com/ActiveMemory/ctx/internal/config/regex"
 	"github.com/ActiveMemory/ctx/internal/config/stats"
+	"github.com/ActiveMemory/ctx/internal/config/warn"
 	"github.com/ActiveMemory/ctx/internal/io"
 	ctxLog "github.com/ActiveMemory/ctx/internal/log"
 	"github.com/ActiveMemory/ctx/internal/rc"
@@ -47,13 +48,13 @@ func oversizeNudgeContent() string {
 		map[string]any{stats.VarTokenCount: tokenCount}, fallback)
 	if content == "" {
 		if removeErr := os.Remove(flagPath); removeErr != nil {
-			ctxLog.Warn("remove %s: %v", flagPath, removeErr)
+			ctxLog.Warn(warn.Remove, flagPath, removeErr)
 		}
 		return ""
 	}
 
 	if removeErr := os.Remove(flagPath); removeErr != nil {
-		ctxLog.Warn("remove %s: %v", flagPath, removeErr)
+		ctxLog.Warn(warn.Remove, flagPath, removeErr)
 	}
 	return content
 }

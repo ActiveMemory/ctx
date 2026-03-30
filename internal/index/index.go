@@ -71,21 +71,21 @@ func GenerateTable(entries []Entry, columnHeader string) string {
 
 	nl := token.NewlineLF
 	var sb strings.Builder
-	sb.WriteString("| Date | ")
+	sb.WriteString(marker.TableRowOpen + desc.Text(text.DescKeyLabelColDate) + marker.TablePipePad)
 	sb.WriteString(columnHeader)
-	sb.WriteString(" |" + nl)
-	sb.WriteString("|------|")
+	sb.WriteString(marker.TableRowClose + nl)
+	sb.WriteString(marker.TablePipe + marker.TableSepCell + marker.TablePipe)
 	sb.WriteString(strings.Repeat("-", len(columnHeader)))
-	sb.WriteString("|" + nl)
+	sb.WriteString(marker.TablePipe + nl)
 
 	for _, e := range entries {
 		// Escape pipe characters in title
-		title := strings.ReplaceAll(e.Title, "|", "\\|")
-		sb.WriteString("| ")
+		title := strings.ReplaceAll(e.Title, marker.TablePipe, marker.TablePipeEscaped)
+		sb.WriteString(marker.TableRowOpen)
 		sb.WriteString(e.Date)
-		sb.WriteString(" | ")
+		sb.WriteString(marker.TablePipePad)
 		sb.WriteString(title)
-		sb.WriteString(" |" + nl)
+		sb.WriteString(marker.TableRowClose + nl)
 	}
 
 	return sb.String()

@@ -51,7 +51,7 @@ func ScanFiles(
 					File:      ctx.Decision,
 					Count:     count,
 					Threshold: decThreshold,
-					Unit:      unitEntries,
+					Unit:      desc.Text(text.DescKeyWriteKnowledgeUnitEntries),
 				})
 			}
 		}
@@ -66,7 +66,7 @@ func ScanFiles(
 					File:      ctx.Learning,
 					Count:     count,
 					Threshold: lrnThreshold,
-					Unit:      unitEntries,
+					Unit:      desc.Text(text.DescKeyWriteKnowledgeUnitEntries),
 				})
 			}
 		}
@@ -81,7 +81,7 @@ func ScanFiles(
 					File:      ctx.Convention,
 					Count:     lineCount,
 					Threshold: convThreshold,
-					Unit:      unitLines,
+					Unit:      desc.Text(text.DescKeyWriteKnowledgeUnitLines),
 				})
 			}
 		}

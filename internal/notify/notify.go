@@ -19,9 +19,15 @@ import (
 	"path/filepath"
 	"time"
 
+	"github.com/ActiveMemory/ctx/internal/assets/read/desc"
 	cfgCrypto "github.com/ActiveMemory/ctx/internal/config/crypto"
+	cfgCtx "github.com/ActiveMemory/ctx/internal/config/ctx"
+	"github.com/ActiveMemory/ctx/internal/config/embed/text"
 	"github.com/ActiveMemory/ctx/internal/config/fs"
+	cfgHTTP "github.com/ActiveMemory/ctx/internal/config/http"
+	"github.com/ActiveMemory/ctx/internal/config/project"
 	"github.com/ActiveMemory/ctx/internal/config/token"
+	"github.com/ActiveMemory/ctx/internal/config/warn"
 	"github.com/ActiveMemory/ctx/internal/crypto"
 	"github.com/ActiveMemory/ctx/internal/io"
 	"github.com/ActiveMemory/ctx/internal/rc"
@@ -147,9 +153,12 @@ func Send(event, message, sessionID string, detail *TemplateRef) error {
 		return nil
 	}
 
-	project := "unknown"
+	projectName := project.FallbackName
 	if cwd, cwdErr := os.Getwd(); cwdErr == nil {
-		project = filepath.Base(cwd)
+		projectName = filepath.Base(cwd)
+	} else {
+		fmt.Fprintf(os.Stderr,
+			cfgCtx.StderrPrefix+warn.Getwd+token.NewlineLF, cwdErr)
 	}
 
 	payload := Payload{
@@ -158,7 +167,7 @@ func Send(event, message, sessionID string, detail *TemplateRef) error {
 		Detail:    detail,
 		SessionID: sessionID,
 		Timestamp: time.Now().UTC().Format(time.RFC3339),
-		Project:   project,
+		Project:   projectName,
 	}
 
 	body, marshalErr := json.Marshal(payload)
@@ -172,8 +181,7 @@ func Send(event, message, sessionID string, detail *TemplateRef) error {
 	}
 	if closeErr := resp.Body.Close(); closeErr != nil {
 		fmt.Fprintf(os.Stderr,
-			"ctx: close %s: %v"+token.NewlineLF,
-			"response body", closeErr)
+			desc.Text(text.DescKeyWriteNotifyCloseResponse)+token.NewlineLF, closeErr)
 	}
 
 	return nil
@@ -190,7 +198,7 @@ func Send(event, message, sessionID string, detail *TemplateRef) error {
 //   - *http.Response: the HTTP response (caller must close Body).
 //   - error: on HTTP failure.
 func PostJSON(url string, body []byte) (*http.Response, error) {
-	return io.SafePost(url, "application/json", body, 5*time.Second)
+	return io.SafePost(url, cfgHTTP.MimeJSON, body, cfgHTTP.WebhookTimeout*time.Second)
 }
 
 // MaskURL shows the scheme + host and masks everything after the path start.
@@ -203,15 +211,15 @@ func PostJSON(url string, body []byte) (*http.Response, error) {
 func MaskURL(url string) string {
 	count := 0
 	for i, c := range url {
-		if c == '/' {
+		if c == cfgHTTP.PathSep {
 			count++
-			if count == 3 {
-				return url[:i] + "/***"
+			if count == cfgHTTP.MaskAfterSlash {
+				return url[:i] + cfgHTTP.PathSepStr + cfgHTTP.MaskSuffix
 			}
 		}
 	}
-	if len(url) > 20 {
-		return url[:20] + "***"
+	if len(url) > cfgHTTP.MaskMaxLen {
+		return url[:cfgHTTP.MaskMaxLen] + cfgHTTP.MaskSuffix
 	}
 	return url
 }

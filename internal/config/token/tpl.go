@@ -6,6 +6,14 @@
 
 package token
 
+// Go template syntax constants.
+const (
+	// GoTplFieldOpen is the Go template field access opening delimiter.
+	GoTplFieldOpen = "{{."
+	// GoTplClose is the Go template closing delimiter.
+	GoTplClose = "}}"
+)
+
 // TemplateMarkers are content substrings that indicate a file is a template.
 var TemplateMarkers = []string{
 	"YOUR_",

@@ -5,7 +5,7 @@ recurring workflows. Skills are invoked with `/skill-name` in a Claude Code
 session. This page is for contributors who want to understand what each
 skill does without reading individual `SKILL.md` files.
 
-For ctx plugin skills (`/ctx-status`, `/ctx-recall`, etc.), see the
+For ctx plugin skills (`/ctx-status`, `/ctx-history`, etc.), see the
 [ctx skills documentation](docs/reference/skills.md).
 
 ## Skill Catalog

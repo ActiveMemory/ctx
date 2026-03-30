@@ -6,6 +6,7 @@
 
 // Package bootstrap implements the ctx system bootstrap subcommand.
 //
-// It prints the context directory location for AI agents to discover
-// and load project context on session start.
+// Key exports: [Cmd], [Run].
+// Follows the cmd/root + core taxonomy.
+// Registered by the cmd parent command.
 package bootstrap

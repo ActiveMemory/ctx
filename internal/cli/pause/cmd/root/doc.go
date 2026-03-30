@@ -6,6 +6,7 @@
 
 // Package root implements the ctx pause command.
 //
-// It pauses context hooks for the current session so that ctx hook
-// callbacks are temporarily suppressed.
+// Key exports: [Cmd], [Run].
+// Follows the cmd/root + core taxonomy.
+// Registered by the cmd parent command.
 package root

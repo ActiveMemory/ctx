@@ -283,7 +283,7 @@ frequency (every Nth prompt), or staleness checks (only fire if condition
 persists).
 
 **Include actionable commands**: "You have 12 unimported sessions" is less
-useful than "You have 12 unimported sessions. Run: `ctx recall import --all`."
+useful than "You have 12 unimported sessions. Run: `ctx journal import --all`."
 Give the user (or agent) the exact next step.
 
 **Use box-drawing for visual structure**: The `┌─ ─┐ │ └─ ─┘` pattern

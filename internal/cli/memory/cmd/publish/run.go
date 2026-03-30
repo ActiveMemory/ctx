@@ -18,7 +18,7 @@ import (
 	"github.com/ActiveMemory/ctx/internal/write/sync"
 )
 
-// Run selects high-value context, formats it, and writes a marked block
+// Run selects the high-value context, formats it, and writes a marked block
 // into MEMORY.md. In dry-run mode it reports what would be published.
 //
 // Parameters:

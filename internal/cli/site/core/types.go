@@ -7,6 +7,14 @@
 package core
 
 // BlogPost holds parsed metadata from a single blog post.
+//
+// Fields:
+//   - Filename: Markdown filename
+//   - Title: Post title from frontmatter
+//   - Date: Publication date
+//   - Author: Post author
+//   - Topics: Topic tags
+//   - Summary: Brief description
 type BlogPost struct {
 	Filename string
 	Title    string
@@ -17,6 +25,11 @@ type BlogPost struct {
 }
 
 // FeedReport tracks what happened during feed generation.
+//
+// Fields:
+//   - Included: Number of posts included in feed
+//   - Skipped: Filenames of skipped posts
+//   - Warnings: Non-fatal issues encountered
 type FeedReport struct {
 	Included int
 	Skipped  []string
@@ -24,6 +37,13 @@ type FeedReport struct {
 }
 
 // BlogFrontmatter maps the YAML fields we care about.
+//
+// Fields:
+//   - Title: Post title
+//   - Date: Publication date
+//   - Author: Post author
+//   - Topics: Topic tags
+//   - ReviewedAndFinalized: Nil if not set, false if draft
 type BlogFrontmatter struct {
 	Title                string   `yaml:"title"`
 	Date                 string   `yaml:"date"`

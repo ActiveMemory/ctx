@@ -23,13 +23,13 @@ import (
 func Cmd() *cobra.Command {
 	short, long := desc.Command(cmd.DescKeyComplete)
 
-	cmd := &cobra.Command{
-		Use:   "complete <task-id-or-text>",
+	c := &cobra.Command{
+		Use:   cmd.UseComplete,
 		Short: short,
 		Long:  long,
 		Args:  cobra.ExactArgs(1),
 		RunE:  Run,
 	}
 
-	return cmd
+	return c
 }

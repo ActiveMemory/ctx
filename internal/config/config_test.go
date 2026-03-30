@@ -319,7 +319,7 @@ func TestRegExPath(t *testing.T) {
 }
 
 func TestFileTypeMap(t *testing.T) {
-	// Verify ToCtxFile map contains expected mappings
+	// Verify CtxFile returns expected mappings
 	expected := map[string]string{
 		entry.Decision:   ctx.Decision,
 		entry.Task:       ctx.Task,
@@ -328,8 +328,11 @@ func TestFileTypeMap(t *testing.T) {
 	}
 
 	for ent, ctxFile := range expected {
-		if entry.ToCtxFile[ent] != ctxFile {
-			t.Errorf("ToCtxFile[%q] = %q, want %q", ent, entry.ToCtxFile[ent], ctxFile)
+		got, ok := entry.CtxFile(ent)
+		if !ok {
+			t.Errorf("CtxFile(%q) not found", ent)
+		} else if got != ctxFile {
+			t.Errorf("CtxFile(%q) = %q, want %q", ent, got, ctxFile)
 		}
 	}
 }

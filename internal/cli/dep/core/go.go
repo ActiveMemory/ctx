@@ -42,6 +42,12 @@ func (g *GoBuilder) Build(external bool) (map[string][]string, error) {
 }
 
 // GoPackage represents the subset of `go list -json` output we need.
+//
+// Fields:
+//   - ImportPath: Full import path
+//   - Name: Package name
+//   - Imports: Direct import paths
+//   - Module: Enclosing module (nil for stdlib)
 type GoPackage struct {
 	ImportPath string   `json:"ImportPath"`
 	Name       string   `json:"Name"`

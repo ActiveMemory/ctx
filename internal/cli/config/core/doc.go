@@ -1,11 +1,14 @@
 //   /    ctx:                         https://ctx.ist
 // ,'`./    do you remember?
-// `.,'\
+// `.,'\\
 //   \    Copyright 2026-present Context contributors.
 //                 SPDX-License-Identifier: Apache-2.0
 
-// Package core provides shared helpers for config subcommands.
+// Package core contains configuration management helpers for the
+// config command.
 //
-// It handles profile detection, symlink management, and .ctxrc file
-// resolution used by the config status and switch commands.
+// [DetectProfile] reads the active profile name from .ctxrc.
+// [SwitchTo] copies a named profile over .ctxrc. [CopyProfile]
+// performs the file copy. [GitRoot] resolves the repository root
+// for locating project-level config files.
 package core

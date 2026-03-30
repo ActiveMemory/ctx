@@ -6,6 +6,7 @@
 
 // Package heartbeat implements the ctx system heartbeat subcommand.
 //
-// It sends a heartbeat webhook on every prompt for continuous
-// session-alive visibility, without producing any agent-visible output.
+// Key exports: [Cmd], [Run].
+// Follows the cmd/root + core taxonomy.
+// Registered by the cmd parent command.
 package heartbeat

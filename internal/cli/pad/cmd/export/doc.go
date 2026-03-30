@@ -6,5 +6,7 @@
 
 // Package export implements the ctx pad export subcommand.
 //
-// It exports pad entries to a specified directory on disk.
+// Key exports: [Cmd], [Run].
+// Follows the cmd/root + core taxonomy.
+// Registered by the cmd parent command.
 package export

@@ -74,8 +74,9 @@ func TestFiltered(cmd *cobra.Command) {
 // Parameters:
 //   - cmd: Cobra command for output. Nil is a no-op.
 //   - statusCode: HTTP response status code.
+//   - ok: Whether the status code indicates success (2xx).
 //   - encPath: encrypted file path for the working message.
-func TestResult(cmd *cobra.Command, statusCode int, encPath string) {
+func TestResult(cmd *cobra.Command, statusCode int, ok bool, encPath string) {
 	if cmd == nil {
 		return
 	}
@@ -85,7 +86,7 @@ func TestResult(cmd *cobra.Command, statusCode int, encPath string) {
 			statusCode, http.StatusText(statusCode),
 		),
 	)
-	if statusCode >= http.StatusOK && statusCode < http.StatusMultipleChoices {
+	if ok {
 		cmd.Println(
 			fmt.Sprintf(
 				desc.Text(text.DescKeyWriteTestWorking),

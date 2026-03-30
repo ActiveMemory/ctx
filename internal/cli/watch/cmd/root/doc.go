@@ -6,6 +6,7 @@
 
 // Package root implements the ctx watch command.
 //
-// It watches AI tool output for context-update commands and applies them
-// to the .context/ directory.
+// Key exports: [Cmd], [Run].
+// Follows the cmd/root + core taxonomy.
+// Registered by the cmd parent command.
 package root

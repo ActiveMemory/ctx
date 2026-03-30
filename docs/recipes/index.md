@@ -73,10 +73,9 @@ review the session and persist **learnings**, **decisions**, and **tasks**.
 Export your AI session history to a **browsable journal site**.
 **Enrich** entries with metadata and **search** across months of work.
 
-**Uses**: `ctx recall list/show/import`, `ctx journal site`,
-`ctx journal obsidian`, `ctx serve`, `/ctx-recall`,
-`/ctx-journal-normalize`, `/ctx-journal-enrich`,
-`/ctx-journal-enrich-all`
+**Uses**: `ctx journal source/import`, `ctx journal site`,
+`ctx journal obsidian`, `ctx serve`, `/ctx-history`,
+`/ctx-journal-enrich`, `/ctx-journal-enrich-all`
 
 ---
 
@@ -288,8 +287,8 @@ The output is generic Markdown, but the skills are tuned for the `ctx`-style
 blog artifacts you see on this website.
 
 **Uses**: `ctx journal site`, `ctx journal obsidian`, `ctx serve`,
-`ctx recall import`, `/ctx-blog`, `/ctx-blog-changelog`,
-`/ctx-journal-enrich`, `/ctx-journal-normalize`
+`ctx journal import`, `/ctx-blog`, `/ctx-blog-changelog`,
+`/ctx-journal-enrich`
 
 ---
 

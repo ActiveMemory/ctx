@@ -16,6 +16,14 @@ const (
 	ExtGo = ".go"
 	// ExtJSONL is the JSON Lines file extension.
 	ExtJSONL = ".jsonl"
+	// ExtYAML is the YAML file extension.
+	ExtYAML = ".yaml"
+	// ExtJSON is the JSON file extension.
+	ExtJSON = ".json"
+	// ExtEnc is the encrypted file extension.
+	ExtEnc = ".enc"
+	// ExtTmp is the temporary file suffix for atomic writes.
+	ExtTmp = ".tmp"
 	// ExtExample is the suffix for example/template files that are safe
 	// to have in the working directory (e.g., .env.example).
 	ExtExample = ".example"

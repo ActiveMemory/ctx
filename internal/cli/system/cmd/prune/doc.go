@@ -6,6 +6,7 @@
 
 // Package prune implements the ctx system prune subcommand.
 //
-// It removes stale per-session state files from .context/state/ that
-// exceed the configured age, while preserving global state files.
+// Key exports: [Cmd], [Run].
+// Follows the cmd/root + core taxonomy.
+// Registered by the cmd parent command.
 package prune

@@ -8,6 +8,7 @@ package stream
 
 import (
 	"bufio"
+	"fmt"
 	"io"
 	"regexp"
 	"strings"
@@ -32,7 +33,7 @@ import (
 // Returns:
 //   - string: Attribute value, or empty string if not found
 func ExtractAttribute(tag, attrName string) string {
-	pattern := regexp.MustCompile(attrName + `="([^"]*)"`)
+	pattern := regexp.MustCompile(fmt.Sprintf(watch.AttrExtractFormat, attrName))
 	match := pattern.FindStringSubmatch(tag)
 	if len(match) >= 2 {
 		return match[1]
@@ -67,7 +68,7 @@ func Process(cmd *cobra.Command, reader io.Reader, dryRun bool) error {
 		// Check for context-update commands
 		matches := regex.SystemContextUpdate.FindAllStringSubmatch(line, -1)
 		for _, match := range matches {
-			if len(match) >= 3 {
+			if len(match) >= watch.ContextUpdateMinGroups {
 				openingTag := match[1]
 				update := core.ContextUpdate{
 					Type:        strings.ToLower(ExtractAttribute(openingTag, cli.AttrType)),

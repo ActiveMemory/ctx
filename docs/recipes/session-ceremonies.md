@@ -68,7 +68,7 @@ braces.
 | `/ctx-wrap-up`    | Skill | Gather session signal, propose and persist context |
 | `/ctx-commit`     | Skill | Commit with context capture (offered by wrap-up)   |
 | `ctx agent`       | CLI   | Load token-budgeted context packet                 |
-| `ctx recall list` | CLI   | List recent sessions                               |
+| `ctx journal source` | CLI   | List recent sessions                               |
 | `ctx add`         | CLI   | Persist learnings, decisions, conventions, tasks   |
 
 ## Session Start: /ctx-remember
@@ -83,7 +83,7 @@ The skill silently:
 
 1. Loads the context packet via `ctx agent --budget 4000`
 2. Reads `TASKS.md`, `DECISIONS.md`, `LEARNINGS.md`
-3. Checks recent sessions via `ctx recall list --limit 3`
+3. Checks recent sessions via `ctx journal source --limit 3`
 
 Then presents a **structured readback** with four sections:
 

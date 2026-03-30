@@ -16,6 +16,7 @@ import (
 
 	"github.com/ActiveMemory/ctx/internal/assets/read/desc"
 	"github.com/ActiveMemory/ctx/internal/config/embed/text"
+	"github.com/ActiveMemory/ctx/internal/config/warn"
 	"github.com/ActiveMemory/ctx/internal/entity"
 	errBackup "github.com/ActiveMemory/ctx/internal/err/backup"
 	internalIo "github.com/ActiveMemory/ctx/internal/io"
@@ -173,7 +174,7 @@ func copyFileToTar(tw *tar.Writer, path string) error {
 	}
 	defer func() {
 		if closeErr := f.Close(); closeErr != nil {
-			ctxLog.Warn("close %s: %v", path, closeErr)
+			ctxLog.Warn(warn.Close, path, closeErr)
 		}
 	}()
 	_, copyErr := io.Copy(tw, f)

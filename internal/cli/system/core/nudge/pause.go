@@ -18,6 +18,8 @@ import (
 	"github.com/ActiveMemory/ctx/internal/cli/system/core/state"
 	"github.com/ActiveMemory/ctx/internal/config/embed/text"
 	"github.com/ActiveMemory/ctx/internal/config/hook"
+	cfgNudge "github.com/ActiveMemory/ctx/internal/config/nudge"
+	"github.com/ActiveMemory/ctx/internal/config/warn"
 	"github.com/ActiveMemory/ctx/internal/io"
 	ctxLog "github.com/ActiveMemory/ctx/internal/log"
 )
@@ -65,7 +67,7 @@ func PausedMessage(turns int) string {
 	if turns == 0 {
 		return ""
 	}
-	if turns <= 5 {
+	if turns <= cfgNudge.PauseTurnThreshold {
 		return hook.LabelPaused
 	}
 	return fmt.Sprintf(desc.Text(text.DescKeyWritePausedMessage), turns)
@@ -88,6 +90,6 @@ func Pause(sessionID string) {
 func Resume(sessionID string) {
 	p := PauseMarkerPath(sessionID)
 	if removeErr := os.Remove(p); removeErr != nil {
-		ctxLog.Warn("remove %s: %v", p, removeErr)
+		ctxLog.Warn(warn.Remove, p, removeErr)
 	}
 }

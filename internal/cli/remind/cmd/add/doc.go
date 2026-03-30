@@ -6,6 +6,7 @@
 
 // Package add implements the ctx remind add subcommand.
 //
-// It creates a new reminder with optional deferred scheduling via the
-// --after flag.
+// Key exports: [Cmd], [Run].
+// Follows the cmd/root + core taxonomy.
+// Registered by the cmd parent command.
 package add

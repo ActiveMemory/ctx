@@ -6,6 +6,7 @@
 
 // Package core provides shared helpers for memory subcommands.
 //
-// Exported types and functions used across multiple subcommands live
-// here to avoid circular imports between cmd/* packages.
+// Shared helpers used by sibling cmd/ packages.
+// Exports: [CountFileLines].
+// See package source files for implementation details.
 package core

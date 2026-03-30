@@ -13,3 +13,10 @@ const (
 	// TruncateContentLen is the max display length for pending update content.
 	TruncateContentLen = 60
 )
+
+// Token estimation constants.
+const (
+	// CharsPerToken is the heuristic character-to-token ratio.
+	// Deliberately overestimates (safer for budgeting).
+	CharsPerToken = 4
+)

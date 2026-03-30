@@ -31,17 +31,17 @@ import (
 //
 // Parameters:
 //   - docsDir: Parent docs directory
-//   - subdir: Subdirectory name (e.g., config.JournalDirTopics)
+//   - subDir: Subdirectory name (e.g., config.JournalDirTopics)
 //   - indexContent: Generated Markdown for the index page
 //   - writePages: Callback that writes individual pages into the subdirectory
 //
 // Returns:
 //   - error: Non-nil if directory creation or index write fails
 func Write(
-	docsDir, subdir, indexContent string,
+	docsDir, subDir, indexContent string,
 	writePages func(dir string),
 ) error {
-	dir := filepath.Join(docsDir, subdir)
+	dir := filepath.Join(docsDir, subDir)
 	if mkErr := os.MkdirAll(dir, fs.PermExec); mkErr != nil {
 		return errFs.Mkdir(dir, mkErr)
 	}

@@ -135,7 +135,7 @@ func Task(entry, existingStr, section string) []byte {
 //   - section: Section name (e.g., "Phase 1", "Maintenance")
 //
 // Returns:
-//   - []byte: Modified content with task inserted
+//   - []byte: Modified content with the task inserted
 func TaskAfterSection(entry, content, section string) []byte {
 	header := normalize.TargetSection(section)
 

@@ -20,6 +20,36 @@ const (
 	TagPre = "<pre>"
 	// TagPreClose is the closing tag for preformatted text blocks.
 	TagPreClose = "</pre>"
+	// TagPreCode is the compound opening tag for code within pre blocks.
+	TagPreCode = "<pre><code>"
+	// TagPreCodeClose is the compound closing tag.
+	TagPreCodeClose = "</code></pre>"
+	// TagDetails is the opening tag for collapsible details blocks.
+	TagDetails = "<details>"
+	// TagDetailsClose is the closing tag for details blocks.
+	TagDetailsClose = "</details>"
+	// TagSummaryOpen is the opening tag for summary elements.
+	TagSummaryOpen = "<summary>"
+	// TagSummaryClose is the closing tag for summary elements.
+	TagSummaryClose = "</summary>"
+)
+
+// HTML entity escapes.
+const (
+	// EntityLT is the HTML entity for <.
+	EntityLT = "&lt;"
+	// EntityGT is the HTML entity for >.
+	EntityGT = "&gt;"
+	// AngleLT is the literal < character.
+	AngleLT = "<"
+	// AngleGT is the literal > character.
+	AngleGT = ">"
+)
+
+// Markdown inline formatting.
+const (
+	// BoldWrap is the Markdown bold delimiter.
+	BoldWrap = "**"
 )
 
 // Context block markers for embedding context in files.
@@ -105,4 +135,20 @@ const (
 	// CompactionBoilerplatePrefix starts the continuation prompt after
 	// a compaction summary.
 	CompactionBoilerplatePrefix = "If you need specific details from before compaction"
+)
+
+// Markdown table markers for index generation.
+const (
+	// TablePipe is the cell delimiter in Markdown tables.
+	TablePipe = "|"
+	// TablePipePad is the padded cell delimiter.
+	TablePipePad = " | "
+	// TableRowOpen opens a table row.
+	TableRowOpen = "| "
+	// TableRowClose closes a table row.
+	TableRowClose = " |"
+	// TableSepCell is a header separator cell.
+	TableSepCell = "------"
+	// TablePipeEscaped is an escaped pipe for use inside cells.
+	TablePipeEscaped = "\\|"
 )

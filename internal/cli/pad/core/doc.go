@@ -4,7 +4,9 @@
 //   \    Copyright 2026-present Context contributors.
 //                 SPDX-License-Identifier: Apache-2.0
 
-// Package core provides shared scratchpad operations used by all pad
-// subcommand packages. It owns storage, encryption, blob handling,
-// parsing, and validation; subcommands import core, never each other.
+// Package core provides shared scratchpad operations used by all pad.
+//
+// Shared helpers used by sibling cmd/ packages.
+// Provides constants and definitions for core operations.
+// See package source files for implementation details.
 package core

@@ -20,6 +20,7 @@ import (
 	cfgSession "github.com/ActiveMemory/ctx/internal/config/session"
 	cfgStats "github.com/ActiveMemory/ctx/internal/config/stats"
 	"github.com/ActiveMemory/ctx/internal/config/token"
+	"github.com/ActiveMemory/ctx/internal/config/warn"
 	"github.com/ActiveMemory/ctx/internal/entity"
 	internalIo "github.com/ActiveMemory/ctx/internal/io"
 	ctxLog "github.com/ActiveMemory/ctx/internal/log"
@@ -43,7 +44,11 @@ func FormatContext(event, context string) string {
 			AdditionalContext: context,
 		},
 	}
-	data, _ := json.Marshal(resp)
+	data, marshalErr := json.Marshal(resp)
+	if marshalErr != nil {
+		ctxLog.Warn(warn.Marshal, marshalErr)
+		return ""
+	}
 	return string(data)
 }
 
@@ -166,10 +171,10 @@ func WriteStats(sessionID string, stats entity.Stats) {
 	}
 	defer func() {
 		if closeErr := f.Close(); closeErr != nil {
-			ctxLog.Warn("close %s: %v", path, closeErr)
+			ctxLog.Warn(warn.Close, path, closeErr)
 		}
 	}()
 	if _, writeErr := f.Write(data); writeErr != nil {
-		ctxLog.Warn("write %s: %v", path, writeErr)
+		ctxLog.Warn(warn.Write, path, writeErr)
 	}
 }

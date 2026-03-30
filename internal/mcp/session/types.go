@@ -17,6 +17,12 @@ import "time"
 // Thread-safety: State is only accessed from the main request
 // loop (single goroutine). If future work introduces concurrent access,
 // a mutex should be added here.
+// Fields:
+//   - contextDir: Context directory this state is scoped to
+//   - ToolCalls: Total tool invocations in this session
+//   - AddsPerformed: Entry additions by type (decision, learning, etc.)
+//   - sessionStartedAt: Session start timestamp
+//   - PendingFlush: Updates awaiting human confirmation
 type State struct {
 	contextDir       string
 	ToolCalls        int
@@ -26,6 +32,12 @@ type State struct {
 }
 
 // PendingUpdate represents a context update awaiting human confirmation.
+//
+// Fields:
+//   - Type: Update type (decision, learning, task, convention)
+//   - Content: Entry text
+//   - Attrs: Optional attributes (context, rationale, etc.)
+//   - QueuedAt: When this update was queued
 type PendingUpdate struct {
 	Type     string
 	Content  string

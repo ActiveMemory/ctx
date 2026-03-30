@@ -13,7 +13,9 @@ import (
 	"time"
 
 	"github.com/ActiveMemory/ctx/internal/config/fs"
+	"github.com/ActiveMemory/ctx/internal/config/project"
 	"github.com/ActiveMemory/ctx/internal/config/token"
+	"github.com/ActiveMemory/ctx/internal/config/warn"
 	"github.com/ActiveMemory/ctx/internal/io"
 	"github.com/ActiveMemory/ctx/internal/notify"
 	"github.com/ActiveMemory/ctx/internal/rc"
@@ -47,9 +49,11 @@ func AppendEvent(event, message, sessionID string, detail *notify.TemplateRef) {
 	// Check rotation before appending.
 	rotate(logPath)
 
-	project := "unknown"
+	projectName := project.FallbackName
 	if cwd, cwdErr := os.Getwd(); cwdErr == nil {
-		project = filepath.Base(cwd)
+		projectName = filepath.Base(cwd)
+	} else {
+		Warn(warn.Getwd, cwdErr)
 	}
 
 	payload := notify.Payload{
@@ -58,7 +62,7 @@ func AppendEvent(event, message, sessionID string, detail *notify.TemplateRef) {
 		Detail:    detail,
 		SessionID: sessionID,
 		Timestamp: time.Now().UTC().Format(time.RFC3339),
-		Project:   project,
+		Project:   projectName,
 	}
 
 	line, marshalErr := json.Marshal(payload)
@@ -74,12 +78,12 @@ func AppendEvent(event, message, sessionID string, detail *notify.TemplateRef) {
 	}
 	defer func() {
 		if closeErr := f.Close(); closeErr != nil {
-			Warn("close %s: %v", logPath, closeErr)
+			Warn(warn.Close, logPath, closeErr)
 		}
 	}()
 
 	if _, writeErr := f.Write(line); writeErr != nil {
-		Warn("write %s: %v", logPath, writeErr)
+		Warn(warn.Write, logPath, writeErr)
 	}
 }
 

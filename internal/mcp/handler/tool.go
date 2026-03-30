@@ -34,7 +34,7 @@ import (
 	"github.com/ActiveMemory/ctx/internal/mcp/server/stat"
 	"github.com/ActiveMemory/ctx/internal/mcp/session"
 	"github.com/ActiveMemory/ctx/internal/tidy"
-	"github.com/ActiveMemory/ctx/internal/validation"
+	"github.com/ActiveMemory/ctx/internal/validate"
 )
 
 // Status loads context and returns a status summary.
@@ -89,13 +89,13 @@ func (h *Handler) Status() (string, error) {
 func (h *Handler) Add(
 	entryType, content string, opts EntryOpts,
 ) (string, error) {
-	if boundaryErr := validation.ValidateBoundary(
+	if boundaryErr := validate.Boundary(
 		h.ContextDir,
 	); boundaryErr != nil {
 		return "", boundaryErr
 	}
 
-	fileName, writeErr := entry.ValidateAndWrite(entry.Params{
+	if writeErr := entry.ValidateAndWrite(entry.Params{
 		Type:        entryType,
 		Content:     content,
 		ContextDir:  h.ContextDir,
@@ -105,14 +105,13 @@ func (h *Handler) Add(
 		Consequence: opts.Consequence,
 		Lesson:      opts.Lesson,
 		Application: opts.Application,
-	})
-	if writeErr != nil {
+	}); writeErr != nil {
 		return "", writeErr
 	}
 
 	return fmt.Sprintf(
 		desc.Text(text.DescKeyMCPAddedFormat),
-		entryType, fileName,
+		entryType, cfgEntry.MustCtxFile(entryType),
 	), nil
 }
 
@@ -125,7 +124,7 @@ func (h *Handler) Add(
 //   - string: confirmation message with completed task text
 //   - error: boundary or completion error
 func (h *Handler) Complete(query string) (string, error) {
-	if boundaryErr := validation.ValidateBoundary(
+	if boundaryErr := validate.Boundary(
 		h.ContextDir,
 	); boundaryErr != nil {
 		return "", boundaryErr
@@ -284,7 +283,7 @@ func (h *Handler) Recall(limit int, since time.Time) (string, error) {
 func (h *Handler) WatchUpdate(
 	entryType, content string, opts EntryOpts,
 ) (string, error) {
-	boundaryErr := validation.ValidateBoundary(h.ContextDir)
+	boundaryErr := validate.Boundary(h.ContextDir)
 	if boundaryErr != nil {
 		return "", boundaryErr
 	}
@@ -308,7 +307,7 @@ func (h *Handler) WatchUpdate(
 			desc.Text(text.DescKeyMCPReviewStatus), nil
 	}
 
-	fileName, writeErr := entry.ValidateAndWrite(entry.Params{
+	if writeErr := entry.ValidateAndWrite(entry.Params{
 		Type:        entryType,
 		Content:     content,
 		ContextDir:  h.ContextDir,
@@ -318,8 +317,7 @@ func (h *Handler) WatchUpdate(
 		Consequence: opts.Consequence,
 		Lesson:      opts.Lesson,
 		Application: opts.Application,
-	})
-	if writeErr != nil {
+	}); writeErr != nil {
 		return "", writeErr
 	}
 
@@ -328,14 +326,14 @@ func (h *Handler) WatchUpdate(
 		Type:    entryType,
 		Content: content,
 		Attrs: map[string]string{
-			field.AttrFile: fileName,
+			field.AttrFile: cfgEntry.MustCtxFile(entryType),
 		},
 		QueuedAt: time.Now(),
 	})
 
 	return fmt.Sprintf(
 		desc.Text(text.DescKeyMCPFormatWrote),
-		entryType, fileName,
+		entryType, cfgEntry.MustCtxFile(entryType),
 	) + token.NewlineLF +
 		desc.Text(text.DescKeyMCPReviewStatus), nil
 }
@@ -349,7 +347,7 @@ func (h *Handler) WatchUpdate(
 //   - string: summary of moved tasks and cleaned sections
 //   - error: boundary, context load, or write error
 func (h *Handler) Compact(archive bool) (string, error) {
-	if boundaryErr := validation.ValidateBoundary(
+	if boundaryErr := validate.Boundary(
 		h.ContextDir,
 	); boundaryErr != nil {
 		return "", boundaryErr

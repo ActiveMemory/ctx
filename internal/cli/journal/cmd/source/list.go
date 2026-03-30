@@ -9,6 +9,7 @@ package source
 import (
 	"fmt"
 	"strings"
+	goTime "time"
 
 	"github.com/spf13/cobra"
 
@@ -39,22 +40,26 @@ import (
 // Returns:
 //   - error: non-nil if date parsing or session scanning fails
 func runList(cmd *cobra.Command, opts Opts) error {
-	// Parse date filters
-	sinceTime, sinceErr := parse.Date(opts.Since)
-	if opts.Since != "" && sinceErr != nil {
-		return date.Invalid(
-			flag.PrefixLong+flag.Since, opts.Since, sinceErr,
-		)
+	// Parse date filters (only when flags are set).
+	var sinceTime, untilTime goTime.Time
+	if opts.Since != "" {
+		var sinceErr error
+		sinceTime, sinceErr = parse.Date(opts.Since)
+		if sinceErr != nil {
+			return date.Invalid(
+				flag.PrefixLong+flag.Since, opts.Since, sinceErr,
+			)
+		}
 	}
-	untilTime, untilErr := parse.Date(opts.Until)
-	if opts.Until != "" && untilErr != nil {
-		return date.Invalid(
-			flag.PrefixLong+flag.Until, opts.Until, untilErr,
-		)
-	}
-	// --until is inclusive: advance to the end of the day
 	if opts.Until != "" {
-		untilTime = untilTime.Add(time.InclusiveUntilOffset)
+		parsed, untilErr := parse.Date(opts.Until)
+		if untilErr != nil {
+			return date.Invalid(
+				flag.PrefixLong+flag.Until, opts.Until, untilErr,
+			)
+		}
+		// --until is inclusive: advance to the end of the day
+		untilTime = parsed.Add(time.InclusiveUntilOffset)
 	}
 
 	sessions, scanErr := query.FindSessions(opts.AllProjects)

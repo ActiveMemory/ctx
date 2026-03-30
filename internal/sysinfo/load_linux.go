@@ -14,6 +14,7 @@ import (
 	"os"
 	"runtime"
 
+	"github.com/ActiveMemory/ctx/internal/config/warn"
 	ctxLog "github.com/ActiveMemory/ctx/internal/log"
 )
 
@@ -32,7 +33,7 @@ func collectLoad() LoadInfo {
 	defer func() {
 		if closeErr := f.Close(); closeErr != nil {
 			ctxLog.Warn(
-				"close %s: %v", "/proc/loadavg", closeErr,
+				warn.Close, "/proc/loadavg", closeErr,
 			)
 		}
 	}()

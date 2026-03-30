@@ -5,4 +5,8 @@
 //                 SPDX-License-Identifier: Apache-2.0
 
 // Package reminder defines file constants for the session reminder subsystem.
+//
+// Constants are referenced by domain packages via config/reminder.*.
+// Provides constants and definitions for reminder operations.
+// Constants are referenced by domain packages.
 package reminder

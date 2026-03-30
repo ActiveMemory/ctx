@@ -13,6 +13,7 @@ import (
 	"strings"
 
 	"github.com/ActiveMemory/ctx/internal/config/token"
+	"github.com/ActiveMemory/ctx/internal/config/warn"
 	"github.com/ActiveMemory/ctx/internal/io"
 	ctxLog "github.com/ActiveMemory/ctx/internal/log"
 )
@@ -89,7 +90,7 @@ func ParseRequirementsTxt(path string) ([]string, error) {
 	}
 	defer func() {
 		if closeErr := f.Close(); closeErr != nil {
-			ctxLog.Warn("close %s: %v", path, closeErr)
+			ctxLog.Warn(warn.Close, path, closeErr)
 		}
 	}()
 

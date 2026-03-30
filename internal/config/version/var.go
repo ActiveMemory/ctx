@@ -12,6 +12,10 @@ const (
 	VarBinary = "BinaryVersion"
 	// VarKeyAgeDays is the template variable for API key age in days.
 	VarKeyAgeDays = "KeyAgeDays"
+	// VarFile is the template variable for VERSION file version.
+	VarFile = "FileVersion"
 	// VarPlugin is the template variable for plugin version string.
 	VarPlugin = "PluginVersion"
+	// VarMarketplace is the template variable for marketplace version.
+	VarMarketplace = "MarketplaceVersion"
 )

@@ -6,5 +6,7 @@
 
 // Package dismiss implements the ctx remind dismiss subcommand.
 //
-// It marks one or all pending reminders as dismissed.
+// Key exports: [Cmd], [Run].
+// Follows the cmd/root + core taxonomy.
+// Registered by the cmd parent command.
 package dismiss

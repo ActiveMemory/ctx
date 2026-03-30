@@ -13,3 +13,11 @@ const (
 	// DevBuild is the version string used for development builds.
 	DevBuild = "dev"
 )
+
+// Project-root paths for version checking.
+const (
+	// DirClaudePlugin is the Claude plugin directory at project root.
+	DirClaudePlugin = ".claude-plugin"
+	// FileMarketplace is the marketplace manifest filename.
+	FileMarketplace = "marketplace.json"
+)

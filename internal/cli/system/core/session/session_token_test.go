@@ -13,6 +13,7 @@ import (
 	"testing"
 
 	"github.com/ActiveMemory/ctx/internal/cli/system/core/state"
+	"github.com/ActiveMemory/ctx/internal/config/claude"
 	"github.com/ActiveMemory/ctx/internal/config/file"
 	"github.com/ActiveMemory/ctx/internal/config/stats"
 	"github.com/ActiveMemory/ctx/internal/entity"
@@ -30,7 +31,7 @@ func TestModelContextWindow(t *testing.T) {
 		{
 			name:  "claude opus is always 1M",
 			model: "claude-opus-4-6-20260205",
-			want:  ContextWindow1M,
+			want:  claude.ContextWindow1M,
 		},
 		{
 			name:  "claude sonnet is 200k",
@@ -40,12 +41,12 @@ func TestModelContextWindow(t *testing.T) {
 		{
 			name:  "claude with 1m suffix",
 			model: "claude-opus-4-6[1m]",
-			want:  ContextWindow1M,
+			want:  claude.ContextWindow1M,
 		},
 		{
 			name:  "claude with 1M uppercase",
 			model: "claude-sonnet-4-6[1M]",
-			want:  ContextWindow1M,
+			want:  claude.ContextWindow1M,
 		},
 	}
 

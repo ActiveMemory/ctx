@@ -97,38 +97,38 @@ Pre-built binaries are available from the
 === "Linux (x86_64)"
 
     ```bash
-    curl -LO https://github.com/ActiveMemory/ctx/releases/download/v0.8.0/ctx-0.8.0-linux-amd64
-    chmod +x ctx-0.8.0-linux-amd64
-    sudo mv ctx-0.8.0-linux-amd64 /usr/local/bin/ctx
+    curl -LO https://github.com/ActiveMemory/ctx/releases/download/v0.8.1/ctx-0.8.1-linux-amd64
+    chmod +x ctx-0.8.1-linux-amd64
+    sudo mv ctx-0.8.1-linux-amd64 /usr/local/bin/ctx
     ```
 
 === "Linux (ARM64)"
 
     ```bash
-    curl -LO https://github.com/ActiveMemory/ctx/releases/download/v0.8.0/ctx-0.8.0-linux-arm64
-    chmod +x ctx-0.8.0-linux-arm64
-    sudo mv ctx-0.8.0-linux-arm64 /usr/local/bin/ctx
+    curl -LO https://github.com/ActiveMemory/ctx/releases/download/v0.8.1/ctx-0.8.1-linux-arm64
+    chmod +x ctx-0.8.1-linux-arm64
+    sudo mv ctx-0.8.1-linux-arm64 /usr/local/bin/ctx
     ```
 
 === "macOS (Apple Silicon)"
 
     ```bash
-    curl -LO https://github.com/ActiveMemory/ctx/releases/download/v0.8.0/ctx-0.8.0-darwin-arm64
-    chmod +x ctx-0.8.0-darwin-arm64
-    sudo mv ctx-0.8.0-darwin-arm64 /usr/local/bin/ctx
+    curl -LO https://github.com/ActiveMemory/ctx/releases/download/v0.8.1/ctx-0.8.1-darwin-arm64
+    chmod +x ctx-0.8.1-darwin-arm64
+    sudo mv ctx-0.8.1-darwin-arm64 /usr/local/bin/ctx
     ```
 
 === "macOS (Intel)"
 
     ```bash
-    curl -LO https://github.com/ActiveMemory/ctx/releases/download/v0.8.0/ctx-0.8.0-darwin-amd64
-    chmod +x ctx-0.8.0-darwin-amd64
-    sudo mv ctx-0.8.0-darwin-amd64 /usr/local/bin/ctx
+    curl -LO https://github.com/ActiveMemory/ctx/releases/download/v0.8.1/ctx-0.8.1-darwin-amd64
+    chmod +x ctx-0.8.1-darwin-amd64
+    sudo mv ctx-0.8.1-darwin-amd64 /usr/local/bin/ctx
     ```
 
 === "Windows"
 
-    Download `ctx-0.8.0-windows-amd64.exe` from the releases page and add it to your `PATH`.
+    Download `ctx-0.8.1-windows-amd64.exe` from the releases page and add it to your `PATH`.
 
 **Claude Code users**: install the plugin from the marketplace:
 
@@ -164,10 +164,10 @@ Each binary has a corresponding `.sha256` checksum file. To verify your download
 
 ```bash
 # Download the checksum file
-curl -LO https://github.com/ActiveMemory/ctx/releases/download/v0.8.0/ctx-0.8.0-linux-amd64.sha256
+curl -LO https://github.com/ActiveMemory/ctx/releases/download/v0.8.1/ctx-0.8.1-linux-amd64.sha256
 
 # Verify the binary
-sha256sum -c ctx-0.8.0-linux-amd64.sha256
+sha256sum -c ctx-0.8.1-linux-amd64.sha256
 ```
 
 On macOS, use `shasum -a 256 -c` instead of `sha256sum -c`.
@@ -181,7 +181,7 @@ On macOS, use `shasum -a 256 -c` instead of `sha256sum -c`.
     * **Persistence nudges**: reminders to capture learnings and decisions
     * **Post-commit hooks**: nudge context capture after `git commit`
     * **Context size monitoring**: alerts as sessions grow large
-    * **25+ skills**: `/ctx-status`, `/ctx-add-task`, `/ctx-recall`, and more
+    * **25+ skills**: `/ctx-status`, `/ctx-add-task`, `/ctx-history`, and more
 
     See [Integrations](../operations/integrations.md#claude-code-full-integration) for the
     full hook and skill reference.

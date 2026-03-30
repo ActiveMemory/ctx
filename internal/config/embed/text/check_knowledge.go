@@ -12,4 +12,7 @@ const (
 	DescKeyCheckKnowledgeFindingFormat = "check-knowledge.finding-format"
 	DescKeyCheckKnowledgeRelayMessage  = "check-knowledge.relay-message"
 	DescKeyCheckKnowledgeRelayPrefix   = "check-knowledge.relay-prefix"
+
+	DescKeyWriteKnowledgeUnitEntries = "write.knowledge-unit-entries"
+	DescKeyWriteKnowledgeUnitLines   = "write.knowledge-unit-lines"
 )

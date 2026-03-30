@@ -48,11 +48,12 @@ This analyzes commits since the last tag and writes
 `dist/RELEASE_NOTES.md`. The release script refuses to
 proceed without this file.
 
-### 3. Commit Any Remaining Changes
+### 3. Verify Docs and Commit Any Remaining Changes
 
 ```bash
+/ctx-check-links    # audit docs for dead links
+make audit          # full check: fmt, vet, lint, style, test
 git status          # must be clean
-make audit          # full check: fmt, vet, lint, test
 ```
 
 ### 4. Run the Release

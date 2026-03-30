@@ -2,9 +2,9 @@
 #
 # Common targets for Go developers
 
-.PHONY: build test vet fmt lint lint-drift lint-docs clean all release build-all help \
+.PHONY: build test vet fmt lint lint-style lint-drift clean all release build-all help \
 test-coverage smoke site site-feed site-serve site-serve-lan site-setup audit check plugin-reload \
-journal journal-serve journal-serve-lan gpg-fix gpg-test \
+journal journal-serve journal-serve-lan gpg-fix gpg-test register-mcp reinstall \
 sync-version check-version-sync sync-why check-why gemini-search
 
 # Default binary name and output
@@ -97,13 +97,22 @@ fmt:
 lint:
 	golangci-lint run
 
+## lint-style: Run all cosmetic/style lint scripts (advisory, not fatal)
+lint-style:
+	@echo "==> Checking code drift..."
+	@./hack/lint-drift.sh
+	@echo "==> Checking docstrings..."
+	@./hack/lint-docstrings.sh
+	@echo "==> Checking mixed funcs..."
+	@./hack/lint-mixed-funcs.sh
+	@echo "==> Checking import conventions..."
+	@./hack/lint-imports.sh
+	@echo ""
+	@echo "Style checks passed!"
+
 ## lint-drift: Check for code-level drift (magic strings, literal \n, Printf)
 lint-drift:
 	@./hack/lint-drift.sh
-
-## lint-docs: Check doc.go file listings match actual files
-lint-docs:
-	@./hack/lint-docs.sh
 
 ## audit: Run all CI checks locally (fmt, vet, lint, drift, docs, test)
 audit:
@@ -113,10 +122,8 @@ audit:
 	@CGO_ENABLED=0 go vet ./...
 	@echo "==> Running golangci-lint..."
 	@golangci-lint run --timeout=5m
-	@echo "==> Checking code drift..."
-	@./hack/lint-drift.sh
-	@echo "==> Checking doc.go listings..."
-	@./hack/lint-docs.sh
+	@echo "==> Running style checks..."
+	@$(MAKE) --no-print-directory lint-style
 	@echo "==> Checking version sync..."
 	@$(MAKE) --no-print-directory check-version-sync
 	@echo "==> Checking why docs freshness..."
@@ -125,6 +132,7 @@ audit:
 	@CGO_ENABLED=0 CTX_SKIP_PATH_CHECK=1 go test ./...
 	@echo ""
 	@echo "All checks passed!"
+	@echo "Tip: run /ctx-check-links to verify doc links before committing."
 
 ## check: Build + audit (single entry point for build, fmt, vet, lint, test)
 check: build audit
@@ -155,6 +163,11 @@ install:
 	@test -f $(BINARY) || (echo "Binary not found. Run 'make build' first, then 'sudo make install'" && exit 1)
 	cp $(BINARY) /usr/local/bin/$(BINARY)
 	@echo "Installed ctx to /usr/local/bin/ctx"
+
+## reinstall: Build and install in one step
+reinstall: build
+	cp -f $(BINARY) /usr/local/bin/$(BINARY) 2>/dev/null || sudo cp -f $(BINARY) /usr/local/bin/$(BINARY)
+	@echo "ctx reinstalled to /usr/local/bin/ctx"
 
 ## site-setup: Install zensical via pipx
 site-setup:
@@ -208,9 +221,14 @@ gpg-fix:
 gpg-test:
 	./hack/gpg-fix.sh --test
 
+## register-mcp: Register all MCP servers (gemini-search, gitnexus) with Claude Code
+register-mcp:
+	@./hack/register-gemini-search.sh
+	@./hack/register-gitnexus.sh
+
 ## gemini-search: Register gemini-search MCP server with Claude Code
 gemini-search:
-	@./hack/gemini-search.sh
+	@./hack/register-gemini-search.sh
 
 ## plugin-reload: Clear cached plugin (restart Claude Code to pick up skill/hook changes)
 plugin-reload:

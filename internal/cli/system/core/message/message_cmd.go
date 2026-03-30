@@ -35,7 +35,7 @@ func FormatTemplateVars(info *messages.HookMessageInfo) string {
 	}
 	formatted := make([]string, len(info.TemplateVars))
 	for i, v := range info.TemplateVars {
-		formatted[i] = "{{." + v + "}}"
+		formatted[i] = token.GoTplFieldOpen + v + token.GoTplClose
 	}
 	return fmt.Sprintf(
 		desc.Text(text.DescKeyMessageTemplateVarsLabel),

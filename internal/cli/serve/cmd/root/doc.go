@@ -6,6 +6,7 @@
 
 // Package root implements the ctx serve command.
 //
-// It serves a static site locally by invoking zensical on the specified
-// directory.
+// Key exports: [Cmd], [Run].
+// Follows the cmd/root + core taxonomy.
+// Registered by the cmd parent command.
 package root

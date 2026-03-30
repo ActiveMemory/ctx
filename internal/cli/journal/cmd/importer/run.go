@@ -76,10 +76,10 @@ func Run(cmd *cobra.Command, args []string, opts entity.ImportOpts) error {
 	if opts.All {
 		toImport = sessions
 	} else {
-		query := strings.ToLower(args[0])
+		qry := strings.ToLower(args[0])
 		for _, s := range sessions {
-			if strings.HasPrefix(strings.ToLower(s.ID), query) ||
-				strings.Contains(strings.ToLower(s.Slug), query) {
+			if strings.HasPrefix(strings.ToLower(s.ID), qry) ||
+				strings.Contains(strings.ToLower(s.Slug), qry) {
 				toImport = append(toImport, s)
 			}
 		}
@@ -101,7 +101,7 @@ func Run(cmd *cobra.Command, args []string, opts entity.ImportOpts) error {
 	}
 
 	// 5. Load state + build index.
-	jstate, loadErr := state.Load(journalDir)
+	jState, loadErr := state.Load(journalDir)
 	if loadErr != nil {
 		return errJournal.LoadState(loadErr)
 	}
@@ -109,14 +109,14 @@ func Run(cmd *cobra.Command, args []string, opts entity.ImportOpts) error {
 
 	// 6. Build the plan.
 	importPlan := plan.Import(
-		toImport, journalDir, sessionIndex, jstate, opts, singleSession,
+		toImport, journalDir, sessionIndex, jState, opts, singleSession,
 	)
 
 	// 7. Execute renames.
 	renamed := 0
 	for _, rop := range importPlan.RenameOps {
 		index.RenameJournalFiles(journalDir, rop.OldBase, rop.NewBase, rop.NumParts)
-		jstate.Rename(
+		jState.Rename(
 			rop.OldBase+file.ExtMarkdown, rop.NewBase+file.ExtMarkdown,
 		)
 		renamed++
@@ -144,10 +144,10 @@ func Run(cmd *cobra.Command, args []string, opts entity.ImportOpts) error {
 	}
 
 	// 10. Execute the import.
-	imported, updated, skipped := execute.Import(cmd, importPlan, jstate, opts)
+	imported, updated, skipped := execute.Import(cmd, importPlan, jState, opts)
 
 	// 11. Persist journal state.
-	if saveErr := jstate.Save(journalDir); saveErr != nil {
+	if saveErr := jState.Save(journalDir); saveErr != nil {
 		err.WarnFile(cmd, journal.File, saveErr)
 	}
 

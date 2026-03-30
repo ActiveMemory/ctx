@@ -5,6 +5,10 @@
 //                 SPDX-License-Identifier: Apache-2.0
 
 // Package tpl holds Sprintf-based format string constants that cannot
-// yet be expressed in the YAML text system. These will migrate to Go
-// text/template files when the template rendering pipeline is built.
+// be expressed in the YAML text system (multi-line templates, structured
+// output with conditional sections).
+//
+// Templates cover: Obsidian vault pages, loop script generation, recall
+// session formatting, journal entry scaffolding, and add entry headers.
+// See TASKS.md for the migration plan to Go text/template files.
 package tpl

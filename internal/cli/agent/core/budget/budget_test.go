@@ -241,7 +241,7 @@ func TestEstimateSliceTokens(t *testing.T) {
 }
 
 func TestRenderMarkdownPacket(t *testing.T) {
-	pkt := &assembledPacket{
+	pkt := &AssembledPacket{
 		ReadOrder:    []string{".context/CONSTITUTION.md"},
 		Constitution: []string{"Never violate"},
 		Tasks:        []string{"- [ ] Do something"},
@@ -286,7 +286,7 @@ func TestRenderMarkdownPacket(t *testing.T) {
 }
 
 func TestRenderMarkdownPacket_Empty(t *testing.T) {
-	pkt := &assembledPacket{
+	pkt := &AssembledPacket{
 		Instruction: "Do stuff.",
 		Budget:      100,
 	}

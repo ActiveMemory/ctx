@@ -1,11 +1,13 @@
 //   /    ctx:                         https://ctx.ist
 // ,'`./    do you remember?
-// `.,'\
+// `.,'\\
 //   \    Copyright 2026-present Context contributors.
 //                 SPDX-License-Identifier: Apache-2.0
 
-// Package root implements the ctx change command.
+// Package root implements the ctx change command for detecting
+// context and code changes since a reference time.
 //
-// It shows what changed in context files since the last session or a
-// specified time range.
+// [Cmd] builds the cobra.Command with --since flag. [Run] resolves
+// the reference time (from flag, markers, or event log), scans for
+// context file changes and git history, and renders a summary.
 package root

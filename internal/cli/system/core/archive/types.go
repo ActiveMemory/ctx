@@ -7,6 +7,13 @@
 package archive
 
 // SMBConfig holds parsed SMB share connection details.
+//
+// Fields:
+//   - Host: SMB server hostname
+//   - Share: Share name
+//   - Subdir: Subdirectory within the share
+//   - GVFSPath: GVFS mount path for the share
+//   - SourceURL: Original smb:// URL
 type SMBConfig struct {
 	Host      string
 	Share     string

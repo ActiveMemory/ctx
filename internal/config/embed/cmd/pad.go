@@ -23,7 +23,7 @@ const (
 	DescKeyPadAdd     = "pad.add"
 	DescKeyPadEdit    = "pad.edit"
 	DescKeyPadExport  = "pad.export"
-	DescKeyPadImp     = "pad.imp"
+	DescKeyPadImp     = "pad.root"
 	DescKeyPadMerge   = "pad.merge"
 	DescKeyPadMv      = "pad.mv"
 	DescKeyPadResolve = "pad.resolve"

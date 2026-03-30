@@ -36,6 +36,6 @@ func Run(cmd *cobra.Command) error {
 		writeNotify.TestFiltered(cmd)
 	}
 
-	writeNotify.TestResult(cmd, r.StatusCode, crypto.NotifyEnc)
+	writeNotify.TestResult(cmd, r.StatusCode, coreTest.OK(r), crypto.NotifyEnc)
 	return nil
 }

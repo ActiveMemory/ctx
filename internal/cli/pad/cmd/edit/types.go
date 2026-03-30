@@ -18,6 +18,13 @@ const (
 )
 
 // Opts holds all parameters for an edit operation.
+//
+// Fields:
+//   - N: Entry index (1-based)
+//   - Text: New entry text
+//   - FilePath: Path for blob import
+//   - LabelText: Display label for blob entries
+//   - Mode: Edit mode (replace, append, prepend, blob)
 type Opts struct {
 	N         int
 	Text      string

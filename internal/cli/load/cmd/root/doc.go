@@ -6,6 +6,7 @@
 
 // Package root implements the ctx load command.
 //
-// It outputs assembled context Markdown from .context/ files in the
-// recommended read order within a configurable token budget.
+// Key exports: [Cmd], [Run].
+// Follows the cmd/root + core taxonomy.
+// Registered by the cmd parent command.
 package root

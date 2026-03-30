@@ -14,6 +14,7 @@ import (
 	"gopkg.in/yaml.v3"
 
 	"github.com/ActiveMemory/ctx/internal/assets"
+	"github.com/ActiveMemory/ctx/internal/config/file"
 )
 
 // loadYAML parses an embedded YAML file into a commandEntry map.
@@ -50,7 +51,7 @@ func loadYAMLDir(dir string) map[string]commandEntry {
 		return merged
 	}
 	for _, entry := range entries {
-		if entry.IsDir() || !strings.HasSuffix(entry.Name(), ".yaml") {
+		if entry.IsDir() || !strings.HasSuffix(entry.Name(), file.ExtYAML) {
 			continue
 		}
 		for k, v := range loadYAML(path.Join(dir, entry.Name())) {

@@ -3145,7 +3145,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../cli/recall/" class="md-nav__link">
+      <a href="../../cli/journal/" class="md-nav__link">
         
   
   
@@ -3154,7 +3154,7 @@
   <span class="md-ellipsis">
     
   
-    Recall and Journal
+    Journal
   
 
     
@@ -4683,7 +4683,7 @@ lack metadata for filtering. Both decay in value over time.</p>
 </span><span id="__span-3-3"><a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>│ 5 existing entries need enrichment.
 </span><span id="__span-3-4"><a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>│
 </span><span id="__span-3-5"><a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>│ Export and enrich:
-</span><span id="__span-3-6"><a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>│   ctx recall import --all
+</span><span id="__span-3-6"><a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>│   ctx journal import --all
 </span><span id="__span-3-7"><a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>│   /ctx-journal-enrich-all
 </span><span id="__span-3-8"><a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>└────────────────────────────────────────────────
 </span></code></pre></div>
@@ -5010,7 +5010,7 @@ inactivity.</p>
 you simply haven't used <code>ctx</code>. The correct check needs two inputs:</p>
 <ol>
 <li><strong>Last hook fire time</strong>: from <code>.context/logs/</code> or webhook history</li>
-<li><strong>Last session activity</strong>: from journal entries or <code>ctx recall list</code></li>
+<li><strong>Last session activity</strong>: from journal entries or <code>ctx journal source</code></li>
 </ol>
 <p>If sessions are happening but hooks aren't firing, that's a real
 problem. If neither sessions nor hooks are happening, that's a vacation.</p>

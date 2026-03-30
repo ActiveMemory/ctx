@@ -15,11 +15,11 @@ import (
 	"github.com/ActiveMemory/ctx/internal/cli/pad/cmd/add"
 	"github.com/ActiveMemory/ctx/internal/cli/pad/cmd/edit"
 	"github.com/ActiveMemory/ctx/internal/cli/pad/cmd/export"
-	"github.com/ActiveMemory/ctx/internal/cli/pad/cmd/imp"
 	"github.com/ActiveMemory/ctx/internal/cli/pad/cmd/merge"
 	"github.com/ActiveMemory/ctx/internal/cli/pad/cmd/mv"
 	"github.com/ActiveMemory/ctx/internal/cli/pad/cmd/resolve"
 	"github.com/ActiveMemory/ctx/internal/cli/pad/cmd/rm"
+	"github.com/ActiveMemory/ctx/internal/cli/pad/cmd/root"
 	"github.com/ActiveMemory/ctx/internal/cli/pad/cmd/show"
 	"github.com/ActiveMemory/ctx/internal/cli/pad/core/blob"
 	"github.com/ActiveMemory/ctx/internal/cli/pad/core/store"
@@ -73,7 +73,7 @@ func Cmd() *cobra.Command {
 	c.AddCommand(edit.Cmd())
 	c.AddCommand(mv.Cmd())
 	c.AddCommand(resolve.Cmd())
-	c.AddCommand(imp.Cmd())
+	c.AddCommand(root.Cmd())
 	c.AddCommand(export.Cmd())
 	c.AddCommand(merge.Cmd())
 

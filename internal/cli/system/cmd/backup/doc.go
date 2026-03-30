@@ -6,6 +6,7 @@
 
 // Package backup implements the ctx system backup subcommand.
 //
-// It creates timestamped tar.gz archives of project context and global
-// Claude Code data, with optional SMB share copying.
+// Key exports: [Cmd], [Run].
+// Follows the cmd/root + core taxonomy.
+// Registered by the cmd parent command.
 package backup

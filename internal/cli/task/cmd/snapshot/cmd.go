@@ -27,13 +27,13 @@ import (
 func Cmd() *cobra.Command {
 	short, long := desc.Command(cmd.DescKeyTaskSnapshot)
 
-	cmd := &cobra.Command{
-		Use:   "snapshot [name]",
+	c := &cobra.Command{
+		Use:   cmd.UseTaskSnapshot,
 		Short: short,
 		Long:  long,
 		Args:  cobra.MaximumNArgs(1),
 		RunE:  Run,
 	}
 
-	return cmd
+	return c
 }

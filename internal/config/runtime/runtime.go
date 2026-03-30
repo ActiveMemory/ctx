@@ -32,4 +32,6 @@ const (
 	// DefaultStaleAgeDays is the days before a context file is
 	// flagged as stale by drift detection.
 	DefaultStaleAgeDays = 30
+	// DefaultPruneDays is the default age in days for state file pruning.
+	DefaultPruneDays = 7
 )

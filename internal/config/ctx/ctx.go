@@ -6,6 +6,9 @@
 
 package ctx
 
+// StderrPrefix is prepended to all stderr warning messages.
+const StderrPrefix = "ctx: "
+
 // `ctx` file name constants for the .context/ directory.
 const (
 	// Constitution contains inviolable rules for agents.

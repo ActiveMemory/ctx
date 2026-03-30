@@ -6,6 +6,7 @@
 
 // Package archive implements the ctx task archive subcommand.
 //
-// It moves completed tasks from TASKS.md to a timestamped archive file,
-// leaving pending tasks in place.
+// Key exports: [Cmd], [Run].
+// Follows the cmd/root + core taxonomy.
+// Registered by the cmd parent command.
 package archive

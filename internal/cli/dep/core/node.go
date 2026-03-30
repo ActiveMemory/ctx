@@ -43,6 +43,12 @@ func (n *NodeBuilder) Build(external bool) (map[string][]string, error) {
 }
 
 // PackageJSON represents the fields we need from package.json.
+//
+// Fields:
+//   - Name: Package name
+//   - Dependencies: Production dependencies
+//   - DevDependencies: Development dependencies
+//   - Workspaces: Monorepo workspace configuration
 type PackageJSON struct {
 	Name            string            `json:"name"`
 	Dependencies    map[string]string `json:"dependencies"`

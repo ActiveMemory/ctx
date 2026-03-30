@@ -28,6 +28,10 @@ import (
 //
 // Parameters:
 //   - contextDir: Path to the project context directory
+//
+// Returns:
+//   - State: Sync state, or zero-value if no state file exists
+//   - error: If the file exists but cannot be parsed
 func LoadState(contextDir string) (State, error) {
 	path := statePath(contextDir)
 	data, readErr := io.SafeReadUserFile(path)

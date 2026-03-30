@@ -11,6 +11,7 @@ import (
 	"path/filepath"
 	"strings"
 
+	"github.com/ActiveMemory/ctx/internal/config/warn"
 	"github.com/ActiveMemory/ctx/internal/journal/state"
 	ctxLog "github.com/ActiveMemory/ctx/internal/log"
 )
@@ -75,7 +76,7 @@ func CountNewerFiles(dir, ext string, refTime int64) int {
 			}
 			return nil
 		}); walkErr != nil {
-		ctxLog.Warn("walk %s: %v", dir, walkErr)
+		ctxLog.Warn(warn.Walk, dir, walkErr)
 	}
 	return count
 }
@@ -84,14 +85,14 @@ func CountNewerFiles(dir, ext string, refTime int64) int {
 // in the journal state file.
 //
 // Parameters:
-//   - dir: absolute path to the journal directory
+//   - dir: the absolute path to the journal directory
 //
 // Returns:
 //   - int: number of unenriched journal entries
 func CountUnenriched(dir string) int {
-	jstate, loadErr := state.Load(dir)
+	jState, loadErr := state.Load(dir)
 	if loadErr != nil {
 		return 0
 	}
-	return jstate.CountUnenriched(dir)
+	return jState.CountUnenriched(dir)
 }

@@ -11,6 +11,7 @@ import (
 	"encoding/json"
 	"os"
 
+	"github.com/ActiveMemory/ctx/internal/config/warn"
 	"github.com/ActiveMemory/ctx/internal/io"
 	"github.com/ActiveMemory/ctx/internal/notify"
 )
@@ -35,7 +36,7 @@ func readLogFile(path string) ([]notify.Payload, error) {
 	}
 	defer func() {
 		if closeErr := f.Close(); closeErr != nil {
-			Warn("close %s: %v", path, closeErr)
+			Warn(warn.Close, path, closeErr)
 		}
 	}()
 

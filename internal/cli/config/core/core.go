@@ -93,6 +93,10 @@ func SwitchTo(root, profile string) (string, error) {
 // Returns an error if git is not installed or the current directory is
 // not inside a git repository. Features that depend on git should
 // degrade gracefully when this returns an error.
+//
+// Returns:
+//   - string: Absolute path to the repository root
+//   - error: If git is not found or CWD is not in a repo
 func GitRoot() (string, error) {
 	if _, lookErr := exec.LookPath(cfgGit.Binary); lookErr != nil {
 		return "", errGit.NotFound()

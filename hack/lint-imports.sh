@@ -1,4 +1,11 @@
 #!/bin/bash
+
+#   /    ctx:                         https://ctx.ist
+# ,'`./    do you remember?
+# `.,'\
+#   \    Copyright 2026-present Context contributors.
+#                 SPDX-License-Identifier: Apache-2.0
+
 # lint-imports.sh — scan all Go files for import grouping violations.
 #
 # Convention: stdlib — blank — external (cobra, yaml) — blank — ctx imports.

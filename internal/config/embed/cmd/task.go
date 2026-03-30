@@ -7,6 +7,11 @@
 package cmd
 
 const (
+	UseTaskArchive  = "archive"
+	UseTaskSnapshot = "snapshot [name]"
+)
+
+const (
 	DescKeyTask         = "task"
 	DescKeyTaskArchive  = "task.archive"
 	DescKeyTaskSnapshot = "task.snapshot"

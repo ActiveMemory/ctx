@@ -11,6 +11,7 @@ import (
 	"strconv"
 	"strings"
 
+	"github.com/ActiveMemory/ctx/internal/config/warn"
 	"github.com/ActiveMemory/ctx/internal/io"
 	ctxLog "github.com/ActiveMemory/ctx/internal/log"
 )
@@ -45,6 +46,6 @@ func WriteMtime(path string, mtime int64) {
 	if writeErr := os.WriteFile(
 		path, []byte(strconv.FormatInt(mtime, 10)), 0o600,
 	); writeErr != nil {
-		ctxLog.Warn("write %s: %v", path, writeErr)
+		ctxLog.Warn(warn.Write, path, writeErr)
 	}
 }

@@ -56,7 +56,7 @@ own guards and no-op gracefully.
 | [`ctx reindex`](context.md#ctx-reindex)       | Regenerate indices for `DECISIONS.md` and `LEARNINGS.md` |
 | [`ctx decision`](context.md#ctx-decision)     | Manage `DECISIONS.md` (reindex)                          |
 | [`ctx learning`](context.md#ctx-learning)     | Manage `LEARNINGS.md` (reindex)                          |
-| [`ctx recall`](recall.md#ctx-recall)          | Browse and export AI session history                     |
+| [`ctx journal`](recall.md#ctx-recall)          | Browse and export AI session history                     |
 | [`ctx journal`](recall.md#ctx-journal)        | Generate static site from journal entries                |
 | [`ctx serve`](recall.md#ctx-serve)            | Serve any zensical directory (default: journal site)     |
 | [`ctx watch`](tools.md#ctx-watch)             | Auto-apply context updates from AI output                |

@@ -6,6 +6,7 @@
 
 // Package publish implements the ctx memory publish subcommand.
 //
-// It pushes curated .context/ content into MEMORY.md so the agent
-// sees structured project context on session start.
+// Key exports: [Cmd], [Run].
+// Follows the cmd/root + core taxonomy.
+// Registered by the cmd parent command.
 package publish

@@ -303,9 +303,9 @@ func ensureGitignoreEntries(cmd *cobra.Command) error {
 
 	// Collect missing entries.
 	var missing []string
-	for _, entry := range file.Gitignore {
-		if !existing[entry] {
-			missing = append(missing, entry)
+	for _, e := range file.Gitignore {
+		if !existing[e] {
+			missing = append(missing, e)
 		}
 	}
 
@@ -319,8 +319,8 @@ func ensureGitignoreEntries(cmd *cobra.Command) error {
 		sb.WriteString(token.NewlineLF)
 	}
 	sb.WriteString(token.NewlineLF + file.GitignoreHeader + token.NewlineLF)
-	for _, entry := range missing {
-		sb.WriteString(entry + token.NewlineLF)
+	for _, e := range missing {
+		sb.WriteString(e + token.NewlineLF)
 	}
 
 	if writeErr := os.WriteFile(

@@ -416,7 +416,7 @@ often at phase transitions or after completing a cluster of related tasks.
 It updates `TASKS.md`, `DECISIONS.md`, and `LEARNINGS.md` as it goes.
 
 If the loop crashes at 4 AM, the context files tell you exactly where to
-resume. You can also use `ctx recall list` to review the session transcripts.
+resume. You can also use `ctx journal source` to review the session transcripts.
 
 ### The Persistence Contract
 

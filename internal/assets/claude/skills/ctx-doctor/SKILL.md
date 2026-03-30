@@ -87,14 +87,14 @@ The user decides what to act on.
 
 ## Available Data Sources
 
-| Source | Command | What it reveals |
-|--------|---------|-----------------|
-| Structural health | `ctx doctor --json` | All mechanical checks |
-| Event log | `ctx system events --json --last 100` | Recent hook activity |
-| Event log (filtered) | `ctx system events --hook <name> --json` | Specific hook |
-| Reminders | `ctx remind list` | Pending reminders |
-| Hook messages | `ctx system message list` | Custom vs default |
-| RC config | Read `.ctxrc` | Configuration |
+| Source               | Command                                  | What it reveals       |
+|----------------------|------------------------------------------|-----------------------|
+| Structural health    | `ctx doctor --json`                      | All mechanical checks |
+| Event log            | `ctx system events --json --last 100`    | Recent hook activity  |
+| Event log (filtered) | `ctx system events --hook <name> --json` | Specific hook         |
+| Reminders            | `ctx remind list`                        | Pending reminders     |
+| Hook messages        | `ctx system message list`                | Custom vs default     |
+| RC config            | Read `.ctxrc`                            | Configuration         |
 
 ## Graceful Degradation
 

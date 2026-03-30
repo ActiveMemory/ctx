@@ -7,6 +7,11 @@
 package persistence
 
 // State holds the counter state for persistence nudging.
+//
+// Fields:
+//   - Count: Edit/Write calls since last nudge
+//   - LastNudge: Prompt number of the last nudge
+//   - LastMtime: Unix timestamp of last TASKS.md modification
 type State struct {
 	Count     int
 	LastNudge int

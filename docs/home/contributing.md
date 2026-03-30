@@ -99,7 +99,7 @@ ctx/
 │   ├── memory/         # Memory bridge (discover, mirror, import, publish)
 │   ├── notify/         # Webhook notifications
 │   ├── rc/             # .ctxrc parsing
-│   ├── recall/         # Session history and parsers
+│   ├── journal/        # Session history, parsers, and state
 │   ├── sysinfo/        # System resource monitoring
 │   ├── task/           # Task management
 │   └── validation/     # Input validation
@@ -148,7 +148,7 @@ never distributed to users.
 
 Six skills previously in this list have been promoted to bundled plugin skills
 and are now available to all ctx users: `/ctx-brainstorm`, `/ctx-check-links`,
-`/ctx-sanitize-permissions`, `/ctx-skill-creator`, `/ctx-spec`, `/ctx-verify`.
+`/ctx-sanitize-permissions`, `/ctx-skill-creator`, `/ctx-spec`.
 
 ----
 
@@ -168,7 +168,7 @@ Pattern to follow: `internal/cli/pad/pad.go` (parent with subcommands) or
 
 ### Adding a New Session Parser
 
-The recall system uses a `SessionParser` interface. To add support for a
+The journal system uses a `SessionParser` interface. To add support for a
 new AI tool (e.g. Aider, Cursor):
 
 1. Create `internal/journal/parser/<tool>.go`;

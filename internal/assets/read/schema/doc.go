@@ -1,9 +1,14 @@
 //   /    ctx:                         https://ctx.ist
 // ,'`./    do you remember?
 // `.,'\\
-//   \\    Copyright 2026-present Context contributors.
+//   \    Copyright 2026-present Context contributors.
 //                 SPDX-License-Identifier: Apache-2.0
 
 // Package schema provides access to the embedded JSON Schema for
-// `.ctxrc` validation.
+// .ctxrc validation.
+//
+// [Schema] returns the raw ctxrc.schema.json bytes. The schema
+// documents all configuration fields, their types, defaults, and
+// constraints. It is kept in sync with the CtxRC struct via
+// TestSchemaCoversCtxRC.
 package schema

@@ -11,6 +11,7 @@ import (
 	"strings"
 
 	"github.com/ActiveMemory/ctx/internal/assets/read/desc"
+	"github.com/ActiveMemory/ctx/internal/config/claude"
 	"github.com/ActiveMemory/ctx/internal/config/embed/text"
 	"github.com/ActiveMemory/ctx/internal/config/marker"
 	"github.com/ActiveMemory/ctx/internal/config/regex"
@@ -23,7 +24,7 @@ import (
 //
 // The result is plain text with structural markers preserved (turn headers,
 // tool calls, section breaks). Serves as a readable baseline without AI
-// reconstruction, or as input for the ctx-journal-normalize skill.
+// reconstruction.
 //
 // Parameters:
 //   - content: Raw Markdown content of a journal entry
@@ -205,7 +206,7 @@ func CleanToolOutputJSON(content string) string {
 		}
 		body := strings.Join(nonEmpty, token.Space)
 
-		if strings.HasPrefix(body, "[{") {
+		if strings.HasPrefix(body, claude.ContentBlockArrayPrefix) {
 			var items []struct {
 				Type string `json:"type"`
 				Text string `json:"text"`

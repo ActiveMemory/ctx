@@ -13,3 +13,6 @@ var MultiPart = regexp.MustCompile(`-p\d+\.md$`)
 
 // GlobStar matches glob-like wildcards: *.ext, */, *) etc.
 var GlobStar = regexp.MustCompile(`\*(\.\w+|[/)])`)
+
+// BlogDateFilename matches blog post filenames: YYYY-MM-DD-*.md.
+var BlogDateFilename = regexp.MustCompile(`^\d{4}-\d{2}-\d{2}-.+\.md$`)

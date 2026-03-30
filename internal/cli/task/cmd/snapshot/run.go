@@ -20,7 +20,7 @@ import (
 	"github.com/ActiveMemory/ctx/internal/config/token"
 	"github.com/ActiveMemory/ctx/internal/err/backup"
 	errTask "github.com/ActiveMemory/ctx/internal/err/task"
-	"github.com/ActiveMemory/ctx/internal/validation"
+	"github.com/ActiveMemory/ctx/internal/sanitize"
 	writeArchive "github.com/ActiveMemory/ctx/internal/write/archive"
 )
 
@@ -59,7 +59,7 @@ func Run(cmd *cobra.Command, args []string) error {
 	now := time.Now()
 	name := archive.DefaultSnapshotName
 	if len(args) > 0 {
-		name = validation.SanitizeFilename(args[0])
+		name = sanitize.Filename(args[0])
 	}
 	snapshotFilename := fmt.Sprintf(
 		archive.SnapshotFilenameFormat, name, now.Format(archive.SnapshotTimeFormat),

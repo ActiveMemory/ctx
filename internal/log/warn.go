@@ -11,22 +11,27 @@ import (
 	"io"
 	"os"
 
+	cfgCtx "github.com/ActiveMemory/ctx/internal/config/ctx"
 	"github.com/ActiveMemory/ctx/internal/config/token"
 )
 
-// Sink receives warning messages from best-effort operations
+// sink receives warning messages from best-effort operations
 // whose errors would otherwise be silently discarded. Production
 // code writes to os.Stderr; tests replace it with io.Discard.
-var Sink io.Writer = os.Stderr
+var sink io.Writer = os.Stderr
 
-// Warn formats and writes a warning to Sink. It is intended
+// Warn formats and writes a warning to sink. It is intended
 // for errors that are not actionable by the caller but should
 // not be silently swallowed (file close, remove, state writes).
 //
 // The output is prefixed with "ctx: " and terminated with a
-// newline. Sink write failures are silently dropped — there is
+// newline. sink write failures are silently dropped — there is
 // nowhere else to report them.
+//
+// Parameters:
+//   - format: Printf-style format string
+//   - args: Format arguments
 func Warn(format string, args ...any) {
 	_, _ = fmt.Fprintf(
-		Sink, "ctx: "+format+token.NewlineLF, args...)
+		sink, cfgCtx.StderrPrefix+format+token.NewlineLF, args...)
 }

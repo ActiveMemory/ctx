@@ -6,5 +6,7 @@
 
 // Package feed implements the ctx site feed subcommand.
 //
-// It generates an Atom/RSS feed from journal entries for site publishing.
+// Key exports: [Cmd], [Run].
+// Follows the cmd/root + core taxonomy.
+// Registered by the cmd parent command.
 package feed

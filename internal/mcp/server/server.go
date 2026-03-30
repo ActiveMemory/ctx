@@ -37,12 +37,12 @@ func New(contextDir, version string) *Server {
 	srv := &Server{
 		handler:      handler.New(contextDir, rc.TokenBudget()),
 		version:      version,
-		out:          os.Stdout,
+		out:          mcpIO.NewWriter(os.Stdout),
 		in:           os.Stdin,
 		resourceList: catalog.ToList(),
 	}
 	srv.poller = poll.NewPoller(contextDir, func(n proto.Notification) {
-		_ = mcpIO.WriteJSON(srv.out, &srv.outMu, n)
+		_ = srv.out.WriteJSON(n)
 	})
 	return srv
 }
@@ -68,7 +68,7 @@ func (s *Server) Serve() error {
 
 		req, errResp := parse.Request(line)
 		if errResp != nil {
-			if writeErr := mcpIO.WriteJSON(s.out, &s.outMu, errResp); writeErr != nil {
+			if writeErr := s.out.WriteJSON(errResp); writeErr != nil {
 				return writeErr
 			}
 			continue
@@ -82,13 +82,13 @@ func (s *Server) Serve() error {
 			s.version, s.handler, s.resourceList, s.poller, *req,
 		)
 
-		if writeErr := mcpIO.WriteJSON(s.out, &s.outMu, resp); writeErr != nil {
+		if writeErr := s.out.WriteJSON(resp); writeErr != nil {
 			// Marshal failure: try to report it as an error response.
 			fallback := out.ErrResponse(
 				nil, proto.ErrCodeInternal,
 				desc.Text(text.DescKeyMCPErrFailedMarshal),
 			)
-			if fbErr := mcpIO.WriteJSON(s.out, &s.outMu, fallback); fbErr != nil {
+			if fbErr := s.out.WriteJSON(fallback); fbErr != nil {
 				return fbErr
 			}
 			continue

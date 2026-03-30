@@ -36,15 +36,15 @@ import (
 func Cmd() *cobra.Command {
 	short, long := desc.Command(cmd.DescKeyTask)
 
-	cmd := &cobra.Command{
+	c := &cobra.Command{
 		Use:   cmd.UseTask,
 		Short: short,
 		Long:  long,
 	}
 
-	cmd.AddCommand(archive.Cmd())
-	cmd.AddCommand(complete.Cmd())
-	cmd.AddCommand(snapshot.Cmd())
+	c.AddCommand(archive.Cmd())
+	c.AddCommand(complete.Cmd())
+	c.AddCommand(snapshot.Cmd())
 
-	return cmd
+	return c
 }

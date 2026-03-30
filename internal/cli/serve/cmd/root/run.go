@@ -8,14 +8,13 @@ package root
 
 import (
 	"os"
-	"os/exec"
 	"path/filepath"
 
 	"github.com/ActiveMemory/ctx/internal/config/dir"
 	"github.com/ActiveMemory/ctx/internal/config/zensical"
 	"github.com/ActiveMemory/ctx/internal/err/fs"
 	errSite "github.com/ActiveMemory/ctx/internal/err/site"
-	zensicalBin "github.com/ActiveMemory/ctx/internal/exec/zensical"
+	execZensical "github.com/ActiveMemory/ctx/internal/exec/zensical"
 	"github.com/ActiveMemory/ctx/internal/rc"
 )
 
@@ -51,11 +50,5 @@ func Run(args []string) error {
 		return errSite.NoConfig(d)
 	}
 
-	// Check if zensical is available
-	_, lookErr := exec.LookPath(zensical.Bin)
-	if lookErr != nil {
-		return errSite.ZensicalNotFound()
-	}
-
-	return zensicalBin.Run(d)
+	return execZensical.Run(d, zensical.CmdServe)
 }

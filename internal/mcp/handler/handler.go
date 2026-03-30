@@ -15,6 +15,11 @@ import (
 // It holds the context directory, token budget, and session state
 // needed by tool handlers. The Server package delegates to Handler
 // for all domain work and handles only protocol translation.
+//
+// Fields:
+//   - ContextDir: Path to the .context/ directory
+//   - TokenBudget: Maximum token budget for context assembly
+//   - Session: Per-session advisory state
 type Handler struct {
 	ContextDir  string
 	TokenBudget int

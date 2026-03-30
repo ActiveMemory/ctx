@@ -34,8 +34,8 @@ import (
 //   - Escapes glob-like * characters outside code blocks
 //   - Replaces inline code spans containing angle brackets with quoted entities
 //
-// Heavy formatting (metadata tables, proper fence reconstruction) is left to
-// the ctx-journal-normalize skill which uses AI for context-aware cleanup.
+// Heavy formatting (metadata tables, proper fence reconstruction) is handled
+// programmatically. Edge cases may require parser-level fixes.
 //
 // Parameters:
 //   - content: Raw Markdown content of a journal entry
@@ -78,13 +78,13 @@ func Content(content string, fencesVerified bool) string {
 		// Track <pre> blocks from WrapToolOutputs/WrapUserTurns.
 		// Content inside is HTML-escaped - skip all transforms.
 		trimmed := strings.TrimSpace(line)
-		if trimmed == "<pre><code>" || trimmed == marker.TagPre {
+		if trimmed == marker.TagPreCode || trimmed == marker.TagPre {
 			inPreBlock = true
 			out = append(out, line)
 			continue
 		}
 		if inPreBlock {
-			if trimmed == "</code></pre>" || trimmed == marker.TagPreClose {
+			if trimmed == marker.TagPreCodeClose || trimmed == marker.TagPreClose {
 				inPreBlock = false
 			}
 			out = append(out, line)
@@ -111,8 +111,8 @@ func Content(content string, fencesVerified bool) string {
 		// Demote headings to bold: ## Foo → **Foo**
 		// Preserves turn headers (### N. Role (HH:MM:SS)) and the H1 title.
 		if hm := regex.MarkdownHeading.FindStringSubmatch(line); hm != nil {
-			if hm[1] != "#" && !regex.TurnHeader.MatchString(strings.TrimSpace(line)) {
-				line = "**" + hm[2] + "**"
+			if hm[1] != token.PrefixHeading && !regex.TurnHeader.MatchString(strings.TrimSpace(line)) {
+				line = marker.BoldWrap + hm[2] + marker.BoldWrap
 			}
 		}
 
@@ -136,8 +136,8 @@ func Content(content string, fencesVerified bool) string {
 		// entities prevent broken HTML in rendered output).
 		replacer := func(m string) string {
 			inner := m[1 : len(m)-1] // strip backticks
-			inner = strings.ReplaceAll(inner, "<", "&lt;")
-			inner = strings.ReplaceAll(inner, ">", "&gt;")
+			inner = strings.ReplaceAll(inner, marker.AngleLT, marker.EntityLT)
+			inner = strings.ReplaceAll(inner, marker.AngleGT, marker.EntityGT)
 			return `"` + inner + `"`
 		}
 		line = regex.InlineCodeAngle.ReplaceAllStringFunc(
@@ -200,11 +200,11 @@ func WrapToolOutputs(content string) string {
 			}
 
 			// HTML-escape and wrap in <pre><code>...</code></pre>.
-			out = append(out, "", "<pre><code>")
+			out = append(out, "", marker.TagPreCode)
 			for _, line := range trimmed {
 				out = append(out, html.EscapeString(line))
 			}
-			out = append(out, "</code></pre>", "")
+			out = append(out, marker.TagPreCodeClose, "")
 
 			if len(footer) > 0 {
 				out = append(out, footer...)
@@ -248,11 +248,11 @@ func WrapUserTurns(content string) string {
 			}
 
 			// HTML-escape and wrap in <pre><code>...</code></pre>.
-			out = append(out, "", "<pre><code>")
+			out = append(out, "", marker.TagPreCode)
 			for _, line := range trimmed {
 				out = append(out, html.EscapeString(line))
 			}
-			out = append(out, "</code></pre>", "")
+			out = append(out, marker.TagPreCodeClose, "")
 			return out
 		})
 }
@@ -278,13 +278,13 @@ func StripPreWrapper(body []string) []string {
 	for _, line := range body {
 		trimmed := strings.TrimSpace(line)
 		switch {
-		case trimmed == "<details>" || trimmed == "</details>":
+		case trimmed == marker.TagDetails || trimmed == marker.TagDetailsClose:
 			continue
 		case trimmed == marker.TagPre || trimmed == marker.TagPreClose:
 			hadPre = true
 			continue
-		case strings.HasPrefix(trimmed, "<summary>") &&
-			strings.HasSuffix(trimmed, "</summary>"):
+		case strings.HasPrefix(trimmed, marker.TagSummaryOpen) &&
+			strings.HasSuffix(trimmed, marker.TagSummaryClose):
 			continue
 		default:
 			inner = append(inner, line)
@@ -364,13 +364,13 @@ func PreBlockMask(lines []string) []bool {
 	inPre := false
 	for i, line := range lines {
 		trimmed := strings.TrimSpace(line)
-		if !inPre && (trimmed == marker.TagPre || trimmed == "<pre><code>") {
+		if !inPre && (trimmed == marker.TagPre || trimmed == marker.TagPreCode) {
 			inPre = true
 			continue
 		}
 		if inPre {
-			if trimmed == marker.TagPreClose || trimmed == "</code></pre>" ||
-				trimmed == "</details>" {
+			if trimmed == marker.TagPreClose || trimmed == marker.TagPreCodeClose ||
+				trimmed == marker.TagDetailsClose {
 				inPre = false
 				continue
 			}
@@ -437,6 +437,10 @@ func NextInSequence(sorted []int, n int) int {
 //
 // Parameters:
 //   - body: Lines of tool output body to split
+//
+// Returns:
+//   - []string: Body lines without footer
+//   - []string: Footer lines, or nil if none found
 func SplitTrailingFooter(body []string) ([]string, []string) {
 	// Find the last "---" separator and check if a "**Part " line follows.
 	sepIdx := -1

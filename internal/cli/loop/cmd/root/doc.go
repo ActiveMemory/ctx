@@ -6,6 +6,7 @@
 
 // Package root implements the ctx loop command.
 //
-// It generates a Ralph loop shell script that runs an AI assistant
-// iteratively until a completion signal is detected.
+// Key exports: [Cmd], [Run], [GenerateLoopScript].
+// Follows the cmd/root + core taxonomy.
+// Registered by the cmd parent command.
 package root

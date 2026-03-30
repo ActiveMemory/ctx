@@ -17,6 +17,9 @@ DO NOT UPDATE FOR:
 <!-- INDEX:START -->
 | Date | Learning |
 |------|--------|
+| 2026-03-30 | Python-generated doc.go files need gofmt — formatter strips bare // padding lines |
+| 2026-03-30 | internal/cli/recall/ was dead code — never registered in bootstrap |
+| 2026-03-30 | lint-docstrings.sh greedy sed hid all return-type violations |
 | 2026-03-25 | Machine-generated CLAUDE.md content consumes per-turn budget without proportional value |
 | 2026-03-25 | Dead files accumulate when nothing consumes them |
 | 2026-03-25 | Template improvements don't propagate to existing projects |
@@ -109,6 +112,36 @@ DO NOT UPDATE FOR:
 | 2026-02-19 | Feature can be code-complete but invisible to users |
 | 2026-01-28 | IDE is already the UI |
 <!-- INDEX:END -->
+
+---
+
+## [2026-03-30-003734] Python-generated doc.go files need gofmt — formatter strips bare // padding lines
+
+**Context**: Batch-generated doc.go files used blank // lines for padding, which gofmt removes as unnecessary whitespace
+
+**Lesson**: Programmatic Go file generation must produce substantive content lines, not blank comment padding — gofmt enforces this
+
+**Application**: Always run gofmt after any scripted Go file generation
+
+---
+
+## [2026-03-30-003720] internal/cli/recall/ was dead code — never registered in bootstrap
+
+**Context**: The entire recall CLI package existed with tests but was never wired into the command tree. Journal consumed it but nobody deleted the ghost
+
+**Lesson**: Dead package detection requires checking bootstrap registration, not just build success. A package can build and test green while being completely unreachable
+
+**Application**: Add a compliance test that verifies all cli/ packages are registered in bootstrap
+
+---
+
+## [2026-03-30-003707] lint-docstrings.sh greedy sed hid all return-type violations
+
+**Context**: sed 's/.*) //' consumed return type parens, leaving { — functions with return types were invisible to the script for months
+
+**Lesson**: Greedy regex in shell scripts can silently suppress entire categories of lint violations — test with edge cases, not just happy paths
+
+**Application**: When writing sed-based lint checks, test with multi-paren signatures (func Foo() (string, error))
 
 ---
 

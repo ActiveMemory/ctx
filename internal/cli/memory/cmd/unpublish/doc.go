@@ -6,6 +6,7 @@
 
 // Package unpublish implements the ctx memory unpublish subcommand.
 //
-// It removes the ctx-managed marker block from MEMORY.md, preserving
-// all Claude-owned content outside the markers.
+// Key exports: [Cmd], [Run].
+// Follows the cmd/root + core taxonomy.
+// Registered by the cmd parent command.
 package unpublish

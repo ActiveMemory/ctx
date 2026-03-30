@@ -6,6 +6,7 @@
 
 // Package snapshot implements the ctx task snapshot subcommand.
 //
-// It creates a point-in-time copy of TASKS.md without modifying the
-// original, storing the snapshot in the archive directory.
+// Key exports: [Cmd], [Run].
+// Follows the cmd/root + core taxonomy.
+// Registered by the cmd parent command.
 package snapshot

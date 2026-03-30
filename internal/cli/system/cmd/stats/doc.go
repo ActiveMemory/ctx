@@ -6,5 +6,7 @@
 
 // Package stats implements the ctx system stats subcommand.
 //
-// It displays per-session token usage statistics from stats JSONL files.
+// Key exports: [Cmd], [Run].
+// Follows the cmd/root + core taxonomy.
+// Registered by the cmd parent command.
 package stats

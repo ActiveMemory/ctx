@@ -22,7 +22,7 @@ You want to turn this raw activity into:
 ## TL;DR
 
 ```bash
-ctx recall import --all             # 1. import sessions to markdown
+ctx journal import --all             # 1. import sessions to markdown
 
 /ctx-journal-enrich-all             # 2. add metadata and tags
 
@@ -38,7 +38,7 @@ Read on for details on each stage.
 
 | Tool                      | Type     | Purpose                                                          |
 |---------------------------|----------|------------------------------------------------------------------|
-| `ctx recall import`       | Command  | Import session JSONL to editable markdown                        |
+| `ctx journal import`       | Command  | Import session JSONL to editable markdown                        |
 | `ctx journal site`        | Command  | Generate a static site from journal entries                      |
 | `ctx journal obsidian`    | Command  | Generate an Obsidian vault from journal entries                  |
 | `ctx serve`               | Command  | Serve any zensical directory (default: journal)                  |
@@ -58,14 +58,14 @@ first step is converting these into readable, editable markdown.
 
 ```bash
 # Import all sessions from the current project
-ctx recall import --all
+ctx journal import --all
 
 # Import from all projects (if you work across multiple repos)
-ctx recall import --all --all-projects
+ctx journal import --all --all-projects
 
 # Import a single session by ID or slug
-ctx recall import abc123
-ctx recall import gleaming-wobbling-sutherland
+ctx journal import abc123
+ctx journal import gleaming-wobbling-sutherland
 ```
 
 Imported files land in `.context/journal/` as individual Markdown files with
@@ -154,7 +154,7 @@ Or use the Makefile shortcut that combines export and rebuild:
 make journal
 ```
 
-This runs `ctx recall import --all` followed by `ctx journal site --build`, then
+This runs `ctx journal import --all` followed by `ctx journal site --build`, then
 reminds you to enrich before rebuilding. To serve the built site, use
 `make journal-serve` or `ctx serve` (serve-only, no regeneration).
 
@@ -257,7 +257,7 @@ The full pipeline from raw transcripts to published content:
 
 ```bash
 # 1. Import all sessions
-ctx recall import --all
+ctx journal import --all
 
 # 2. In Claude Code: enrich all entries with metadata
 /ctx-journal-enrich-all
@@ -276,13 +276,13 @@ ctx journal obsidian
 /ctx-blog-changelog v0.1.0 "what's new in v0.2.0"
 ```
 
-The journal pipeline is idempotent at every stage. You can rerun `ctx recall
+The journal pipeline is idempotent at every stage. You can rerun `ctx journal
 import --all` without losing enrichment. You can rebuild the site as many times
 as you want.
 
 ## Tips
 
-* Import regularly. Run `ctx recall import --all` after each session to keep
+* Import regularly. Run `ctx journal import --all` after each session to keep
   your journal current. Only new sessions are imported: Existing files are
   skipped by default.
 * Use batch enrichment. `/ctx-journal-enrich-all` filters noise (suggestion
@@ -308,9 +308,9 @@ keyboard.
 ## See Also
 
 * [Session Journal](../reference/session-journal.md): journal system, enrichment schema
-* [CLI Reference: ctx recall](../cli/recall.md#ctx-recall): export, list, show session history
-* [CLI Reference: ctx journal site](../cli/recall.md#ctx-journal-site): static site generation
-* [CLI Reference: ctx journal obsidian](../cli/recall.md#ctx-journal-obsidian): Obsidian vault export
-* [CLI Reference: ctx serve](../cli/recall.md#ctx-serve): serve-only (no regeneration)
+* [CLI Reference: ctx journal](../cli/journal.md#ctx-journal): import, list, show session history
+* [CLI Reference: ctx journal site](../cli/journal.md#ctx-journal-site): static site generation
+* [CLI Reference: ctx journal obsidian](../cli/journal.md#ctx-journal-obsidian): Obsidian vault export
+* [CLI Reference: ctx serve](../cli/journal.md#ctx-serve): serve-only (no regeneration)
 * [Browsing and Enriching Past Sessions](session-archaeology.md): journal browsing workflow
 * [The Complete Session](session-lifecycle.md): capturing context during a session

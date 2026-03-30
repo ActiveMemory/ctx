@@ -29,6 +29,10 @@ import (
 // Parameters:
 //   - contextDir: Path to the project context directory
 //   - sourcePath: Path to the source MEMORY.md file
+//
+// Returns:
+//   - SyncResult: Summary of what was copied and archived
+//   - error: If reading, writing, or archiving fails
 func Sync(contextDir, sourcePath string) (SyncResult, error) {
 	mirrorDir := filepath.Join(contextDir, dir.Memory)
 	mirrorPath := filepath.Join(mirrorDir, memory.Mirror)
@@ -72,6 +76,10 @@ func Sync(contextDir, sourcePath string) (SyncResult, error) {
 //
 // Parameters:
 //   - contextDir: Path to the project context directory
+//
+// Returns:
+//   - string: Path to the written archive file
+//   - error: If no mirror exists or writing fails
 func Archive(contextDir string) (string, error) {
 	mirrorPath := filepath.Join(contextDir, dir.Memory, memory.Mirror)
 	archiveDir := filepath.Join(contextDir, dir.MemoryArchive)
@@ -102,6 +110,10 @@ func Archive(contextDir string) (string, error) {
 // Parameters:
 //   - contextDir: Path to the project context directory
 //   - sourcePath: Path to the source MEMORY.md file
+//
+// Returns:
+//   - string: Line-based diff, or empty if identical
+//   - error: If either file cannot be read
 func Diff(contextDir, sourcePath string) (string, error) {
 	mirrorPath := filepath.Join(contextDir, dir.Memory, memory.Mirror)
 

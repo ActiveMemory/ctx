@@ -18,6 +18,7 @@ import (
 	"github.com/ActiveMemory/ctx/internal/config/fs"
 	"github.com/ActiveMemory/ctx/internal/config/nudge"
 	"github.com/ActiveMemory/ctx/internal/config/token"
+	"github.com/ActiveMemory/ctx/internal/config/warn"
 	"github.com/ActiveMemory/ctx/internal/io"
 	ctxLog "github.com/ActiveMemory/ctx/internal/log"
 )
@@ -79,7 +80,7 @@ func WriteState(path string, s State) {
 	if writeErr := os.WriteFile(
 		path, []byte(content), fs.PermSecret,
 	); writeErr != nil {
-		ctxLog.Warn("write %s: %v", path, writeErr)
+		ctxLog.Warn(warn.Write, path, writeErr)
 	}
 }
 

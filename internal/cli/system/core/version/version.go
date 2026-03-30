@@ -52,7 +52,7 @@ func ParseMajorMinor(ver string) (major, minor int, ok bool) {
 // configured rotation threshold.
 //
 // Parameters:
-//   - sessionID: current session identifier
+//   - sessionID: the current session identifier
 //
 // Returns:
 //   - string: formatted nudge box (with leading newline), or empty string

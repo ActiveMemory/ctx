@@ -6,6 +6,7 @@
 
 // Package complete implements the ctx task complete command.
 //
-// It marks a task as completed in TASKS.md by number, partial text
-// match, or full text.
+// Key exports: [Cmd], [Complete], [Run].
+// Follows the cmd/root + core taxonomy.
+// Registered by the cmd parent command.
 package complete

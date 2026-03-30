@@ -92,4 +92,17 @@ done
 	LoopNotify = `ctx notify --event loop` +
 		` "Loop completed after $ITERATION iterations"` +
 		` 2>/dev/null || true`
+
+	// LoopCmdClaude is the shell command template for Claude Code.
+	// Args: promptFile.
+	LoopCmdClaude = `claude --print "$(cat %s)"`
+
+	// LoopCmdAider is the shell command template for Aider.
+	// Args: promptFile.
+	LoopCmdAider = `aider --message-file %s`
+
+	// LoopCmdGeneric is the shell command placeholder for custom tools.
+	// Args: promptFile.
+	LoopCmdGeneric = `# Replace with your AI CLI command
+    cat %s | your-ai-cli`
 )

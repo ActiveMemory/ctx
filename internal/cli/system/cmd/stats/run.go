@@ -33,9 +33,9 @@ func Run(cmd *cobra.Command) error {
 	last, _ := cmd.Flags().GetInt(cFlag.Last)
 	jsonOut, _ := cmd.Flags().GetBool(cFlag.JSON)
 
-	dir := filepath.Join(rc.ContextDir(), dir.State)
+	d := filepath.Join(rc.ContextDir(), dir.State)
 
-	entries, readErr := coreStats.ReadDir(dir, session)
+	entries, readErr := coreStats.ReadDir(d, session)
 	if readErr != nil {
 		return readErr
 	}
@@ -48,5 +48,5 @@ func Run(cmd *cobra.Command) error {
 	// Dump existing entries first, then stream.
 	writeStats.Table(cmd, coreStats.FormatDump(entries, last, jsonOut))
 
-	return coreStats.Stream(cmd.OutOrStdout(), dir, session, jsonOut)
+	return coreStats.Stream(cmd.OutOrStdout(), d, session, jsonOut)
 }

@@ -6,5 +6,7 @@
 
 // Package mv implements the ctx pad mv subcommand.
 //
-// It moves a pad entry from one position to another by index.
+// Key exports: [Cmd], [Run].
+// Follows the cmd/root + core taxonomy.
+// Registered by the cmd parent command.
 package mv

@@ -143,18 +143,22 @@ config.switch:
 ctx:
   long: |-
     ctx (Context) - persistent context for AI coding assistants
-    https://ctx.ist - https://github.com/ActiveMemory/ctx
-
-    !  START: /ctx-remember
-    !    END: /ctx-wrap-up
+        Documentation and Source Code:
+            https://ctx.ist 
+            https://github.com/ActiveMemory/ctx
+        Questions, Suggestions, and Feedback:
+            Discord: https://ctx.ist/discord  (fastest)
+              Email: support@ctx.ist
     !
-    !  MAINTENANCE (every 2-3 sessions):
-    !         ctx recall import --all
-    !         /ctx-journal-enrich-all
+    !   ctx is not a skill: ctx is the persistence layer.
+    !   Skip these and you will suffer:
     !
-    !  Skip this, and you will suffer.
+    !           Session Start: /ctx-remember
+    !             Session End: /ctx-wrap-up
+    !         ∀ ~2-3 sessions:
+    !                          ctx recall import --all
+    !                          /ctx-journal-enrich-all
     !
-    !  ctx is not a skill: ctx is the persistence layer.
   short: Context - persistent context for AI coding assistants
 decision:
   long: |-
@@ -587,7 +591,7 @@ pad.export:
       ctx pad export --dry-run
       ctx pad export --force ./backup
   short: Export blob entries to a directory as files
-pad.imp:
+pad.root:
   long: |-
     Import lines from a file into the scratchpad. Each non-empty line
     becomes a separate entry. Use "-" to read from stdin.

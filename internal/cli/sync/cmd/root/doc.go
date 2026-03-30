@@ -6,6 +6,7 @@
 
 // Package root implements the ctx sync command.
 //
-// It reconciles context with the codebase by scanning for changes that
-// should be reflected in context files.
+// Key exports: [Cmd], [Run].
+// Follows the cmd/root + core taxonomy.
+// Registered by the cmd parent command.
 package root

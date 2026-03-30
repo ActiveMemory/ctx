@@ -22,7 +22,7 @@ import (
 	"github.com/ActiveMemory/ctx/internal/err/fs"
 	errInit "github.com/ActiveMemory/ctx/internal/err/initialize"
 	"github.com/ActiveMemory/ctx/internal/rc"
-	"github.com/ActiveMemory/ctx/internal/validation"
+	"github.com/ActiveMemory/ctx/internal/validate"
 )
 
 // version is set at build time via ldflags:
@@ -60,7 +60,7 @@ func RootCmd() *cobra.Command {
 			// Validate that the context directory stays within the project root.
 			// Skip if the CLI flag is set or .ctxrc has allow_outside_cwd: true.
 			if !allowOutsideCwd && !rc.AllowOutsideCwd() {
-				if validateErr := validation.ValidateBoundary(
+				if validateErr := validate.Boundary(
 					rc.ContextDir(),
 				); validateErr != nil {
 					return fs.BoundaryViolation(validateErr)

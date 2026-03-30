@@ -23,7 +23,7 @@ import (
 //
 // Returns:
 //   - string: Formatted Markdown output
-func RenderMarkdownPacket(pkt *assembledPacket) string {
+func RenderMarkdownPacket(pkt *AssembledPacket) string {
 	var sb strings.Builder
 	nl := token.NewlineLF
 

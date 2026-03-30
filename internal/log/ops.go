@@ -10,6 +10,7 @@ import (
 	"os"
 
 	"github.com/ActiveMemory/ctx/internal/config/event"
+	"github.com/ActiveMemory/ctx/internal/config/warn"
 )
 
 // rotate checks the current log file size and renames it to the
@@ -30,9 +31,9 @@ func rotate(logPath string) {
 
 	prevPath := prevLogFilePath()
 	if removeErr := os.Remove(prevPath); removeErr != nil {
-		Warn("remove %s: %v", prevPath, removeErr)
+		Warn(warn.Remove, prevPath, removeErr)
 	}
 	if renameErr := os.Rename(logPath, prevPath); renameErr != nil {
-		Warn("rename %s: %v", logPath, renameErr)
+		Warn(warn.Rename, logPath, renameErr)
 	}
 }

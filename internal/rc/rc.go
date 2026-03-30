@@ -12,6 +12,7 @@ import (
 
 	"github.com/ActiveMemory/ctx/internal/config/ctx"
 	"github.com/ActiveMemory/ctx/internal/config/dir"
+	cfgMemory "github.com/ActiveMemory/ctx/internal/config/memory"
 	"github.com/ActiveMemory/ctx/internal/config/parser"
 	"github.com/ActiveMemory/ctx/internal/crypto"
 )
@@ -265,6 +266,20 @@ func SessionPrefixes() []string {
 	return prefixes
 }
 
+// ClassifyRules returns the keyword rules for memory entry classification.
+// Returns user-configured rules from .ctxrc if set, otherwise the built-in
+// defaults from config/memory.
+//
+// Returns:
+//   - []cfgMemory.ClassifyRule: Classification rules in priority order
+func ClassifyRules() []cfgMemory.ClassifyRule {
+	rules := RC().ClassifyRules
+	if len(rules) == 0 {
+		return cfgMemory.DefaultClassifyRules
+	}
+	return rules
+}
+
 // FreshnessFiles returns the configured list of files to track for
 // freshness. Returns nil if no files are configured: the hook is
 // a no-op when the list is empty.
@@ -289,8 +304,12 @@ func EventLog() bool {
 // should run during /ctx-remember. Returns true (default) unless
 // explicitly set to false in .ctxrc.
 //
+// NOTE: No Go callers yet. The /ctx-remember skill currently reads
+// this via ctx config status. This accessor exists for the planned
+// hook-based companion check (see TASKS.md). Do not delete.
+//
 // Returns:
-//   - bool: True if companion tools should be checked at session start
+//   - bool: True if companion tools should be checked at the session start
 func CompanionCheck() bool {
 	cfg := RC()
 	if cfg.CompanionCheck == nil {
@@ -304,7 +323,7 @@ func CompanionCheck() bool {
 // Returns false (default) when the field is not set in .ctxrc.
 //
 // Returns:
-//   - bool: True if context directory is allowed outside the project root
+//   - bool: True if the context directory is allowed outside the project root
 func AllowOutsideCwd() bool {
 	return RC().AllowOutsideCwd
 }

@@ -56,9 +56,9 @@ func (p *Poller) Subscribe(uri string) {
 
 	// Snapshot current mtime for the resource's file.
 	if fileName := catalog.FileForURI(uri); fileName != "" {
-		fpath := filepath.Join(p.contextDir, fileName)
-		if info, statErr := os.Stat(fpath); statErr == nil {
-			p.mtimes[fpath] = info.ModTime()
+		fPath := filepath.Join(p.contextDir, fileName)
+		if info, statErr := os.Stat(fPath); statErr == nil {
+			p.mtimes[fPath] = info.ModTime()
 		}
 	}
 
@@ -138,16 +138,17 @@ func (p *Poller) CheckChanges() {
 		if fileName == "" {
 			continue
 		}
-		fpath := filepath.Join(p.contextDir, fileName)
-		info, statErr := os.Stat(fpath)
+
+		fPath := filepath.Join(p.contextDir, fileName)
+		info, statErr := os.Stat(fPath)
 		if statErr != nil {
 			continue
 		}
 
 		p.mu.Lock()
-		prev, known := p.mtimes[fpath]
+		prev, known := p.mtimes[fPath]
 		if known && info.ModTime().After(prev) {
-			p.mtimes[fpath] = info.ModTime()
+			p.mtimes[fPath] = info.ModTime()
 			p.mu.Unlock()
 			p.notifyFunc(proto.Notification{
 				JSONRPC: server.JSONRPCVersion,
@@ -156,7 +157,7 @@ func (p *Poller) CheckChanges() {
 			})
 		} else {
 			if !known {
-				p.mtimes[fpath] = info.ModTime()
+				p.mtimes[fPath] = info.ModTime()
 			}
 			p.mu.Unlock()
 		}

@@ -2962,7 +2962,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../cli/recall/" class="md-nav__link">
+      <a href="../../cli/journal/" class="md-nav__link">
         
   
   
@@ -2971,7 +2971,7 @@
   <span class="md-ellipsis">
     
   
-    Recall and Journal
+    Journal
   
 
     
@@ -4231,7 +4231,7 @@ token budgets, context directory, drift thresholds, and more.</p>
 <td>Generate shell autocompletion for bash, zsh, or fish</td>
 </tr>
 <tr>
-<td><code>ctx recall import</code></td>
+<td><code>ctx journal import</code></td>
 <td>Import sessions to editable journal Markdown</td>
 </tr>
 </tbody>
@@ -4338,7 +4338,7 @@ especially useful while learning the CLI.</p>
 </span><span id="__span-11-8"><a id="__codelineno-11-8" name="__codelineno-11-8" href="#__codelineno-11-8"></a>ctx<span class="w"> </span>completion<span class="w"> </span>fish<span class="w"> </span>&gt;<span class="w"> </span>~/.config/fish/completions/ctx.fish
 </span></code></pre></div>
 <p>After sourcing, typing <code>ctx a&lt;TAB&gt;</code> completes to <code>ctx agent</code>, and
-<code>ctx recall &lt;TAB&gt;</code> shows <code>list</code>, <code>show</code>, and <code>export</code>.</p>
+<code>ctx journal &lt;TAB&gt;</code> shows <code>list</code>, <code>show</code>, and <code>export</code>.</p>
 <h3 id="step-4-verify-the-setup-works">Step 4: Verify the Setup Works<a class="headerlink" href="#step-4-verify-the-setup-works" title="Permanent link">&para;</a></h3>
 <p>Start a fresh session in your AI tool and ask:</p>
 <p><strong>"Do you remember?"</strong></p>
@@ -4414,7 +4414,7 @@ them automatically:</p>
 </span></code></pre></div>
 <h3 id="step-6-import-session-transcripts-optional">Step 6: Import Session Transcripts (<em>Optional</em>)<a class="headerlink" href="#step-6-import-session-transcripts-optional" title="Permanent link">&para;</a></h3>
 <p>If you want to browse past session transcripts, import them to the journal:</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-18-1"><a id="__codelineno-18-1" name="__codelineno-18-1" href="#__codelineno-18-1"></a>ctx<span class="w"> </span>recall<span class="w"> </span>import<span class="w"> </span>--all
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-18-1"><a id="__codelineno-18-1" name="__codelineno-18-1" href="#__codelineno-18-1"></a>ctx<span class="w"> </span>journal<span class="w"> </span>import<span class="w"> </span>--all
 </span></code></pre></div>
 <p>This converts raw session data into editable Markdown files in
 <code>.context/journal/</code>. You can then enrich them with metadata using

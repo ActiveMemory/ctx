@@ -35,9 +35,9 @@ var registeredParsers = []Session{
 //   - []*entity.Session: All sessions found in the file
 //   - error: Non-nil if no parser can handle the file or parsing fails
 func ParseFile(path string) ([]*entity.Session, error) {
-	for _, parser := range registeredParsers {
-		if parser.Matches(path) {
-			return parser.ParseFile(path)
+	for _, p := range registeredParsers {
+		if p.Matches(path) {
+			return p.ParseFile(path)
 		}
 	}
 	return nil, errParser.NoMatch(path)
@@ -102,9 +102,9 @@ func ScanDirectoryWithErrors(dir string) ([]*entity.Session, []error, error) {
 		}
 
 		// Try to parse with any registered parser
-		for _, parser := range registeredParsers {
-			if parser.Matches(path) {
-				sessions, err := parser.ParseFile(path)
+		for _, p := range registeredParsers {
+			if p.Matches(path) {
+				sessions, err := p.ParseFile(path)
 				if err != nil {
 					parseErrors = append(parseErrors, errParser.FileError(path, err))
 					break
@@ -201,9 +201,9 @@ func FindSessionsForCWD(
 // Returns:
 //   - Session: The parser for the tool, or nil if not found
 func Parser(tool string) Session {
-	for _, parser := range registeredParsers {
-		if parser.Tool() == tool {
-			return parser
+	for _, p := range registeredParsers {
+		if p.Tool() == tool {
+			return p
 		}
 	}
 	return nil
@@ -215,8 +215,8 @@ func Parser(tool string) Session {
 //   - []string: Tool identifiers for all registered parsers
 func RegisteredTools() []string {
 	tools := make([]string, len(registeredParsers))
-	for i, parser := range registeredParsers {
-		tools[i] = parser.Tool()
+	for i, p := range registeredParsers {
+		tools[i] = p.Tool()
 	}
 	return tools
 }

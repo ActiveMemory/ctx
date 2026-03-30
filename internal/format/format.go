@@ -14,6 +14,7 @@ import (
 	"github.com/ActiveMemory/ctx/internal/assets/read/desc"
 	"github.com/ActiveMemory/ctx/internal/config/embed/text"
 	cfgFmt "github.com/ActiveMemory/ctx/internal/config/format"
+	cfgTime "github.com/ActiveMemory/ctx/internal/config/time"
 	"github.com/ActiveMemory/ctx/internal/config/token"
 )
 
@@ -102,6 +103,14 @@ func DurationAgo(d time.Duration) string {
 		return base
 	}
 	return base + desc.Text(text.DescKeyTimeAgo)
+}
+
+// Today returns today's date as YYYY-MM-DD.
+//
+// Returns:
+//   - string: Current date formatted per cfgTime.DateFormat
+func Today() string {
+	return time.Now().Format(cfgTime.DateFormat)
 }
 
 // TruncateFirstLine returns the first line of s, capped at max characters.

@@ -6,6 +6,8 @@
 
 package token
 
+import cfgToken "github.com/ActiveMemory/ctx/internal/config/token"
+
 // Estimate provides a rough token count estimate for content.
 //
 // Uses a simple heuristic of ~4 characters per token for English text.
@@ -21,9 +23,9 @@ func Estimate(content []byte) int {
 	if len(content) == 0 {
 		return 0
 	}
-	// Rough estimate: 1 token per 4 characters
-	// This tends to slightly overestimate, which is safer for budgeting
-	return (len(content) + 3) / 4
+	// Rough estimate: 1 token per CharsPerToken characters.
+	// Ceiling division ensures slight overestimate, safer for budgeting.
+	return (len(content) + cfgToken.CharsPerToken - 1) / cfgToken.CharsPerToken
 }
 
 // EstimateString estimates tokens for a string.

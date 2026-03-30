@@ -9,6 +9,8 @@ package parser
 import (
 	"path/filepath"
 	"strings"
+
+	"github.com/ActiveMemory/ctx/internal/config/dir"
 )
 
 // getPathRelativeToHome returns the path relative to the user's home directory.
@@ -33,7 +35,7 @@ func getPathRelativeToHome(path string) string {
 	parts := strings.Split(path, string(filepath.Separator))
 
 	for i, part := range parts {
-		if part == "home" || part == "Users" {
+		if part == dir.HomeLinux || part == dir.HomeMacOS {
 			// Next part is username, rest is relative path
 			if i+2 < len(parts) {
 				return filepath.Join(parts[i+2:]...)

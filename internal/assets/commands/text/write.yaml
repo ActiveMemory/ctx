@@ -211,7 +211,6 @@ write.init-workflow-tips:
           /ctx-status               Check context health, token usage, and file summary
           /ctx-next                 Analyze tasks and suggest 1-3 concrete next actions
           /ctx-commit               Commit code, then prompt for decisions worth persisting
-          /ctx-verify               Run verification before claiming a task is done
 
         Planning and design:
           /ctx-brainstorm           Structured design dialogue before implementation
@@ -659,3 +658,19 @@ write.unpublish-not-found:
   short: No published block found in %s.
 write.wikilink-list-item:
   short: "- %s%s"
+
+write.notify-close-response:
+  short: "ctx: close response body: %v"
+
+write.context-dir-label:
+  short: "Context: %s"
+write.context-dir-bracket:
+  short: " [Context: %s]"
+
+write.knowledge-unit-entries:
+  short: "entries"
+write.knowledge-unit-lines:
+  short: "lines"
+
+write.version-drift-fallback:
+  short: "VERSION (%s), plugin.json (%s), marketplace.json (%s) are out of sync. Update all three before releasing."

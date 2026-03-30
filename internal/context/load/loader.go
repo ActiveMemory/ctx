@@ -17,7 +17,7 @@ import (
 	"github.com/ActiveMemory/ctx/internal/entity"
 	errCtx "github.com/ActiveMemory/ctx/internal/err/context"
 	"github.com/ActiveMemory/ctx/internal/rc"
-	"github.com/ActiveMemory/ctx/internal/validation"
+	"github.com/ActiveMemory/ctx/internal/validate"
 )
 
 // Do reads all context files from the specified directory.
@@ -49,7 +49,7 @@ func Do(dir string) (*entity.Context, error) {
 	}
 
 	// Reject context directories that contain symlinks (M-2 defense).
-	if err := validation.CheckSymlinks(dir); err != nil {
+	if err := validate.Symlinks(dir); err != nil {
 		return nil, err
 	}
 

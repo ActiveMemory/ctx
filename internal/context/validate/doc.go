@@ -4,6 +4,9 @@
 //   \    Copyright 2026-present Context contributors.
 //                 SPDX-License-Identifier: Apache-2.0
 
-// Package verify checks whether the .context/ directory exists and
-// contains the required set of context files.
+// Package validate checks whether the .context/ directory exists and.
+//
+// Key exports: [Initialized], [Exists].
+// See source files for implementation details.
+// Part of the context subsystem.
 package validate

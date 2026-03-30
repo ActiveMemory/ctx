@@ -10,7 +10,6 @@ import (
 	"fmt"
 	"os"
 	"path/filepath"
-	"regexp"
 	"sort"
 	"strings"
 
@@ -19,12 +18,9 @@ import (
 	"github.com/ActiveMemory/ctx/internal/assets/read/desc"
 	"github.com/ActiveMemory/ctx/internal/cli/site/core"
 	"github.com/ActiveMemory/ctx/internal/config/embed/text"
+	"github.com/ActiveMemory/ctx/internal/config/regex"
 	"github.com/ActiveMemory/ctx/internal/config/token"
 	errFs "github.com/ActiveMemory/ctx/internal/err/fs"
-)
-
-var regBlogDatePattern = regexp.MustCompile(
-	`^\d{4}-\d{2}-\d{2}-.+\.md$`,
 )
 
 // BlogPosts reads blog posts from blogDir, parses metadata, and
@@ -54,7 +50,7 @@ func BlogPosts(blogDir string) ([]core.BlogPost, core.FeedReport, error) {
 
 	for _, entry := range entries {
 		name := entry.Name()
-		if entry.IsDir() || !regBlogDatePattern.MatchString(name) {
+		if entry.IsDir() || !regex.BlogDateFilename.MatchString(name) {
 			continue
 		}
 

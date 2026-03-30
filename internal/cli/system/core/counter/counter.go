@@ -11,6 +11,7 @@ import (
 	"strconv"
 	"strings"
 
+	"github.com/ActiveMemory/ctx/internal/config/warn"
 	"github.com/ActiveMemory/ctx/internal/io"
 	ctxLog "github.com/ActiveMemory/ctx/internal/log"
 )
@@ -44,6 +45,6 @@ func Write(path string, n int) {
 	if writeErr := os.WriteFile(
 		path, []byte(strconv.Itoa(n)), 0o600,
 	); writeErr != nil {
-		ctxLog.Warn("write %s: %v", path, writeErr)
+		ctxLog.Warn(warn.Write, path, writeErr)
 	}
 }

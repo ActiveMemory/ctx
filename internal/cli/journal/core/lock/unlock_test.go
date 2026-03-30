@@ -12,8 +12,8 @@ import (
 	"strings"
 	"testing"
 
+	"github.com/ActiveMemory/ctx/internal/cli/journal"
 	"github.com/ActiveMemory/ctx/internal/cli/journal/core/lock"
-	"github.com/ActiveMemory/ctx/internal/cli/recall"
 	"github.com/ActiveMemory/ctx/internal/config/fs"
 	"github.com/ActiveMemory/ctx/internal/journal/state"
 )
@@ -42,7 +42,7 @@ func TestRunLockUnlock_LockSingle(t *testing.T) {
 	defer func() { _ = os.Chdir(origDir) }()
 
 	// Lock via CLI.
-	cmd := recall.Cmd()
+	cmd := journal.Cmd()
 	buf := new(strings.Builder)
 	cmd.SetOut(buf)
 	cmd.SetErr(buf)
@@ -103,7 +103,7 @@ func TestRunLockUnlock_UnlockSingle(t *testing.T) {
 	}
 	defer func() { _ = os.Chdir(origDir) }()
 
-	cmd := recall.Cmd()
+	cmd := journal.Cmd()
 	buf := new(strings.Builder)
 	cmd.SetOut(buf)
 	cmd.SetErr(buf)
@@ -154,7 +154,7 @@ func TestRunLockUnlock_LockAll(t *testing.T) {
 	}
 	defer func() { _ = os.Chdir(origDir) }()
 
-	cmd := recall.Cmd()
+	cmd := journal.Cmd()
 	buf := new(strings.Builder)
 	cmd.SetOut(buf)
 	cmd.SetErr(buf)
@@ -207,7 +207,7 @@ func TestRunLockUnlock_AlreadyLocked(t *testing.T) {
 	}
 	defer func() { _ = os.Chdir(origDir) }()
 
-	cmd := recall.Cmd()
+	cmd := journal.Cmd()
 	buf := new(strings.Builder)
 	cmd.SetOut(buf)
 	cmd.SetErr(buf)
@@ -223,7 +223,7 @@ func TestRunLockUnlock_AlreadyLocked(t *testing.T) {
 }
 
 func TestRunLockUnlock_NoArgsNoAll(t *testing.T) {
-	cmd := recall.Cmd()
+	cmd := journal.Cmd()
 	buf := new(strings.Builder)
 	cmd.SetOut(buf)
 	cmd.SetErr(buf)
@@ -236,7 +236,7 @@ func TestRunLockUnlock_NoArgsNoAll(t *testing.T) {
 }
 
 func TestRunLockUnlock_AllWithPattern(t *testing.T) {
-	cmd := recall.Cmd()
+	cmd := journal.Cmd()
 	buf := new(strings.Builder)
 	cmd.SetOut(buf)
 	cmd.SetErr(buf)
@@ -275,7 +275,7 @@ func TestRunLockUnlock_LockMultipart(t *testing.T) {
 	}
 	defer func() { _ = os.Chdir(origDir) }()
 
-	cmd := recall.Cmd()
+	cmd := journal.Cmd()
 	buf := new(strings.Builder)
 	cmd.SetOut(buf)
 	cmd.SetErr(buf)

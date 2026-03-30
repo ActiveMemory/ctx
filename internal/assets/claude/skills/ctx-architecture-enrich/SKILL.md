@@ -409,15 +409,15 @@ Enrichment complete:
 All changes are in-place edits to existing `.context/` files
 plus these standalone files:
 
-| File | Created by | Updated by enrichment |
-|------|-----------|----------------------|
-| `DANGER-ZONES.md` | `/ctx-architecture` (principal) | Blast radius, risk levels |
-| `EXTENSION-POINTS.md` | This skill | Registration inventory |
-| `CONVERGENCE-REPORT.md` | `/ctx-architecture` | Updated scores, enrichment summary |
-| `CHEAT-SHEETS.md` | `/ctx-architecture` | Execution flow index |
-| `ARCHITECTURE-PRINCIPAL.md` | `/ctx-architecture` (principal) | Clustering comparison |
-| `DETAILED_DESIGN.md` | `/ctx-architecture` | Shallow module updates |
-| `map-tracking.json` | `/ctx-architecture` | Confidence bumps, enriched_at |
+| File                        | Created by                      | Updated by enrichment              |
+|-----------------------------|---------------------------------|------------------------------------|
+| `DANGER-ZONES.md`           | `/ctx-architecture` (principal) | Blast radius, risk levels          |
+| `EXTENSION-POINTS.md`       | This skill                      | Registration inventory             |
+| `CONVERGENCE-REPORT.md`     | `/ctx-architecture`             | Updated scores, enrichment summary |
+| `CHEAT-SHEETS.md`           | `/ctx-architecture`             | Execution flow index               |
+| `ARCHITECTURE-PRINCIPAL.md` | `/ctx-architecture` (principal) | Clustering comparison              |
+| `DETAILED_DESIGN.md`        | `/ctx-architecture`             | Shallow module updates             |
+| `map-tracking.json`         | `/ctx-architecture`             | Confidence bumps, enriched_at      |
 
 No new files are created beyond EXTENSION-POINTS.md (which only
 this skill produces).

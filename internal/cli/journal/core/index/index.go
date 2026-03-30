@@ -18,6 +18,7 @@ import (
 	"github.com/ActiveMemory/ctx/internal/config/journal"
 	"github.com/ActiveMemory/ctx/internal/config/session"
 	"github.com/ActiveMemory/ctx/internal/config/token"
+	"github.com/ActiveMemory/ctx/internal/config/warn"
 	"github.com/ActiveMemory/ctx/internal/io"
 	ctxLog "github.com/ActiveMemory/ctx/internal/log"
 )
@@ -192,7 +193,7 @@ func RenameJournalFiles(journalDir, oldBase, newBase string, numParts int) {
 	if _, statErr := os.Stat(oldPath); statErr == nil {
 		if renameErr := os.Rename(oldPath, newPath); renameErr != nil {
 			ctxLog.Warn(
-				"rename %s: %v", oldPath, renameErr,
+				warn.Rename, oldPath, renameErr,
 			)
 		}
 	}
@@ -208,7 +209,7 @@ func RenameJournalFiles(journalDir, oldBase, newBase string, numParts int) {
 		if _, statErr := os.Stat(oldPart); statErr == nil {
 			if renameErr := os.Rename(oldPart, newPart); renameErr != nil {
 				ctxLog.Warn(
-					"rename %s: %v", oldPart, renameErr,
+					warn.Rename, oldPart, renameErr,
 				)
 			}
 		}
@@ -247,7 +248,7 @@ func UpdateNavLinks(journalDir, newBase, oldBase string, numParts int) {
 			if writeErr := io.SafeWriteFile(
 				f, []byte(updated), fs.PermFile,
 			); writeErr != nil {
-				ctxLog.Warn("write %s: %v", f, writeErr)
+				ctxLog.Warn(warn.Write, f, writeErr)
 			}
 		}
 	}
