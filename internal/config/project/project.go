@@ -26,4 +26,6 @@ const (
 	MakefileIncludeDirective = "-include Makefile.ctx"
 	// GettingStarted is the quick-start reference file written during init.
 	GettingStarted = "GETTING_STARTED.md"
+	// FallbackName is the project name used when os.Getwd fails.
+	FallbackName = "unknown"
 )

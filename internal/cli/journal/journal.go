@@ -29,6 +29,7 @@ import (
 //   - *cobra.Command: The journal command with subcommands
 func Cmd() *cobra.Command {
 	short, long := desc.Command(cmd.DescKeyJournal)
+
 	c := &cobra.Command{
 		Use:   cmd.UseJournal,
 		Short: short,

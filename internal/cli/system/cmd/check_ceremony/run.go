@@ -62,13 +62,13 @@ func Run(cmd *cobra.Command, stdin *os.File) error {
 		return nil
 	}
 
-	remember, wrapup := coreCeremony.ScanJournalsForCeremonies(files)
+	remember, wrapUp := coreCeremony.ScanJournalsForCeremonies(files)
 
-	if remember && wrapup {
+	if remember && wrapUp {
 		return nil
 	}
 
-	msg, variant := coreCeremony.Emit(remember, wrapup)
+	msg, variant := coreCeremony.Emit(remember, wrapUp)
 	writeHook.Nudge(cmd, msg)
 	if msg == "" {
 		return nil

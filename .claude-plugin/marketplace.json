@@ -3,14 +3,14 @@
   "owner": {"name": "Context contributors"},
   "metadata": {
     "description": "Official ctx plugins for Claude Code",
-    "version": "0.8.0"
+    "version": "0.8.1"
   },
   "plugins": [
     {
       "name": "ctx",
       "source": "./internal/assets/claude",
       "description": "Persistent context for AI coding assistants",
-      "version": "0.8.0"
+      "version": "0.8.1"
     }
   ]
 }

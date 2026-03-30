@@ -26,6 +26,11 @@ const (
 )
 
 const (
+	// PrefixHomeDir is the Unix home directory shorthand.
+	PrefixHomeDir = "~/"
+)
+
+const (
 	// LinkPrefixParent is the relative link prefix to the parent directory.
 	LinkPrefixParent = "../"
 	// PrefixHTTP is the scheme prefix for HTTP/HTTPS URLs.

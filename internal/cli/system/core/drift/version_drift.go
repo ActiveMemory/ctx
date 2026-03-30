@@ -20,6 +20,7 @@ import (
 	coreSession "github.com/ActiveMemory/ctx/internal/cli/system/core/session"
 	"github.com/ActiveMemory/ctx/internal/config/embed/text"
 	"github.com/ActiveMemory/ctx/internal/config/hook"
+	cfgVersion "github.com/ActiveMemory/ctx/internal/config/version"
 	"github.com/ActiveMemory/ctx/internal/notify"
 )
 
@@ -52,13 +53,14 @@ func CheckVersion(sessionID string) string {
 	}
 
 	vars := map[string]any{
-		"FileVersion":        fileVer,
-		"PluginVersion":      pluginVer,
-		"MarketplaceVersion": marketVer,
+		cfgVersion.VarFile:        fileVer,
+		cfgVersion.VarPlugin:      pluginVer,
+		cfgVersion.VarMarketplace: marketVer,
 	}
-	fallback := "VERSION (" + fileVer + "), plugin.json (" + pluginVer +
-		"), marketplace.json (" + marketVer +
-		") are out of sync. Update all three before releasing."
+	fallback := fmt.Sprintf(
+		desc.Text(text.DescKeyWriteVersionDriftFallback),
+		fileVer, pluginVer, marketVer,
+	)
 	msg := message.Load(hook.VersionDrift, hook.VariantNudge, vars, fallback)
 	if msg == "" {
 		return ""
@@ -92,7 +94,9 @@ func ReadVersionFile() string {
 // Returns:
 //   - string: Version string or empty string
 func ReadMarketplaceVersion() string {
-	path := filepath.Clean(filepath.Join(".claude-plugin", "marketplace.json"))
+	path := filepath.Clean(
+		filepath.Join(cfgVersion.DirClaudePlugin, cfgVersion.FileMarketplace),
+	)
 	data, readErr := os.ReadFile(path)
 	if readErr != nil {
 		return ""

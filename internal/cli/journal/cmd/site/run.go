@@ -8,7 +8,6 @@ package site
 
 import (
 	"os"
-	"os/exec"
 	"path/filepath"
 
 	"github.com/spf13/cobra"
@@ -31,37 +30,12 @@ import (
 	"github.com/ActiveMemory/ctx/internal/entity"
 	errFs "github.com/ActiveMemory/ctx/internal/err/fs"
 	"github.com/ActiveMemory/ctx/internal/err/journal"
-	errSite "github.com/ActiveMemory/ctx/internal/err/site"
+	execZensical "github.com/ActiveMemory/ctx/internal/exec/zensical"
 	"github.com/ActiveMemory/ctx/internal/journal/state"
 	"github.com/ActiveMemory/ctx/internal/rc"
 	"github.com/ActiveMemory/ctx/internal/write/err"
 	writeJournal "github.com/ActiveMemory/ctx/internal/write/journal"
 )
-
-// runZensical executes zensical build or serve in the output directory.
-//
-// Parameters:
-//   - dir: Directory containing the generated site
-//   - command: "build" or "serve"
-//
-// Returns:
-//   - error: Non-nil if zensical is not found or fails
-func runZensical(dir, command string) error {
-	// Check if zensical is available
-	_, lookErr := exec.LookPath(zensical.Bin)
-	if lookErr != nil {
-		return errSite.ZensicalNotFound()
-	}
-
-	// G204: binary is a constant, command is from the caller
-	cmd := exec.Command(zensical.Bin, command) //nolint:gosec
-	cmd.Dir = dir
-	cmd.Stdout = os.Stdout
-	cmd.Stderr = os.Stderr
-	cmd.Stdin = os.Stdin
-
-	return cmd.Run()
-}
 
 // Run handles the journal site command.
 //
@@ -87,7 +61,7 @@ func Run(
 	}
 
 	// Load journal state for per-file processing flags
-	jstate, loadErr := state.Load(journalDir)
+	jState, loadErr := state.Load(journalDir)
 	if loadErr != nil {
 		return journal.LoadStateErr(loadErr)
 	}
@@ -165,7 +139,7 @@ func Run(
 		}
 
 		// Generate site copy with Markdown fixes
-		fv := jstate.FencesVerified(entry.Filename)
+		fv := jState.FencesVerified(entry.Filename)
 		withLinks := generate.InjectedSourceLink(normalized, src)
 		if entry.Summary != "" {
 			withLinks = generate.InjectedSummary(withLinks, entry.Summary)
@@ -324,10 +298,10 @@ func Run(
 
 	if serve {
 		writeJournal.InfoSiteStarting(cmd)
-		return runZensical(output, zensical.CmdServe)
+		return execZensical.Run(output, zensical.CmdServe)
 	} else if build {
 		writeJournal.InfoSiteBuilding(cmd)
-		return runZensical(output, zensical.CmdBuild)
+		return execZensical.Run(output, zensical.CmdBuild)
 	}
 
 	writeJournal.InfoSiteGenerated(cmd, len(entries), output, zensical.Bin)

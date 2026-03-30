@@ -221,7 +221,7 @@ guide.default:
       /ctx-wrap-up          End-of-session persistence ceremony
       /ctx-drift            Detect and fix context drift
       /ctx-remember         Recall project context
-      /ctx-recall           Browse session history
+      /ctx-history           Browse session history
 
     RECIPES
       Start session:      ctx agent --budget 4000
@@ -527,3 +527,10 @@ why.menu-item-format:
   short: '  [%d] %s'
 why.menu-prompt:
   short: "\nSelect a document (1-3): "
+
+write.why-label-manifesto:
+  short: "The ctx Manifesto"
+write.why-label-about:
+  short: "About ctx"
+write.why-label-invariants:
+  short: "Design Invariants"

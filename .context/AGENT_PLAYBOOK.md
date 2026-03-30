@@ -171,11 +171,11 @@ user. These apply unless the user overrides them for the session
 
 - **At design decisions**: always present 2+ approaches with
   trade-offs before committing — don't silently pick one
-- **At completion claims**: run `/ctx-verify` — it maps claims to
-  evidence (e.g., "tests pass" requires 0-failure output, "build
-  succeeds" requires exit 0). At minimum, answer the self-audit
-  questions: What did I assume? What didn't I check? Where am I
-  least confident? What would a reviewer question?
+- **At completion claims**: map claims to evidence (e.g., "tests
+  pass" requires 0-failure output, "build succeeds" requires exit 0).
+  Run commands fresh — never reuse earlier output. At minimum, answer:
+  What did I assume? What didn't I check? Where am I least confident?
+  What would a reviewer question?
 - **At ambiguous moments**: ask the user rather than inferring
   intent — a quick question is cheaper than rework
 - **When producing artifacts**: flag assumptions and uncertainty
@@ -215,15 +215,23 @@ Never assume. If you don't see it in files, you don't know it.
 
 ## Planning Non-Trivial Work
 
-Before implementing a feature or multi-task effort, follow this sequence:
+Before implementing a feature or multi-task effort, follow this sequence.
 
-**1. Spec first** — Write a design document in `specs/` covering: problem,
-solution, storage, CLI surface, error cases, and non-goals. Keep it concise
-but complete enough that another session could implement from it alone.
+**Spec-or-task heuristic**: if the work involves design decisions (hook
+integration, new CLI surface, state management, multi-file coordination),
+it needs a spec via `/ctx-spec` — not a long task description. A task
+description captures *what*; a spec captures *what, why, how, and what not*.
+When in doubt, spec it. Stuffing design into a task description is how
+context evaporates between sessions.
+
+**1. Spec first** — Run `/ctx-spec` to scaffold a design document in
+`specs/`. Cover: problem, solution, storage, CLI surface, error cases,
+and non-goals. Keep it concise but complete enough that another session
+could implement from it alone.
 
 **2. Task it out** — Break the work into individual tasks in TASKS.md under
 a dedicated Phase section. Each task should be independently completable and
-verifiable.
+verifiable. Task descriptions should be short — the spec has the detail.
 
 **3. Cross-reference** — The Phase header in TASKS.md must reference the
 spec: `Spec: \`specs/feature-name.md\``. The first task in the phase should

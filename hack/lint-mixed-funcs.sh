@@ -1,4 +1,11 @@
 #!/bin/bash
+
+#   /    ctx:                         https://ctx.ist
+# ,'`./    do you remember?
+# `.,'\
+#   \    Copyright 2026-present Context contributors.
+#                 SPDX-License-Identifier: Apache-2.0
+
 # lint-mixed-funcs.sh — find files with both exported and private functions.
 #
 # Convention: public API in main file, private helpers in separate files.

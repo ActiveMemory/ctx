@@ -230,7 +230,7 @@ func ZensicalToml(
 			runes := []rune(title)
 			title = string(runes[:journal.MaxNavTitleLen]) + token.Ellipsis
 		}
-		title = strings.ReplaceAll(title, `"`, `\"`)
+		title = strings.ReplaceAll(title, token.DoubleQuote, token.EscapedDoubleQuote)
 		sb.WriteString(fmt.Sprintf(
 			tpl.JournalNavSessionItem+nl, title, e.Filename),
 		)

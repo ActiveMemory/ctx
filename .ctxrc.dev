@@ -19,6 +19,26 @@ profile: dev
 # billing_token_warn: 0   # Absolute token threshold for billing nudge (0 = disabled)
                            # Set to e.g. 180000 if tokens beyond 200k cost extra
 # stale_age_days: 30       # Days before drift flags a context file as stale (0 = disabled)
+# injection_token_warn: 15000  # Token threshold for oversize injection warning (0 = disabled)
+# event_log: false         # Log hook events locally
+# task_nudge_interval: 5   # Edit/Write calls between task completion nudges (0 = disabled)
+# key_path: ""             # Explicit encryption key file path (default: auto-resolved)
+# companion_check: true    # Check companion tool availability at session start
+# session_prefixes:        # Recognized session header prefixes for Markdown parser
+#   - "Session:"
+# classify_rules:          # Custom keyword rules for memory entry classification
+#   - target: convention   # (overrides defaults when set; rules evaluated in order)
+#     keywords: ["always use", "prefer", "convention"]
+#   - target: decision
+#     keywords: ["decided", "chose", "trade-off"]
+#   - target: learning
+#     keywords: ["gotcha", "learned", "watch out"]
+#   - target: task
+#     keywords: ["todo", "need to", "follow up"]
+# freshness_files:         # Files with technology-dependent constants for periodic review
+#   - path: internal/config/version/version.go
+#     desc: "Model-to-window mapping"
+#     review_url: "https://docs.anthropic.com/en/docs/about-claude/models"
 # priority_order:
 #   - CONSTITUTION.md
 #   - TASKS.md

@@ -6,6 +6,7 @@
 
 // Package root implements the ctx reindex command.
 //
-// It regenerates the quick-reference indices at the top of DECISIONS.md
-// and LEARNINGS.md.
+// Key exports: [Cmd], [Run].
+// Follows the cmd/root + core taxonomy.
+// Registered by the cmd parent command.
 package root

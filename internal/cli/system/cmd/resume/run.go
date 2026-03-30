@@ -15,6 +15,7 @@ import (
 	coreSession "github.com/ActiveMemory/ctx/internal/cli/system/core/session"
 	cFlag "github.com/ActiveMemory/ctx/internal/config/flag"
 	"github.com/ActiveMemory/ctx/internal/config/session"
+	"github.com/ActiveMemory/ctx/internal/config/warn"
 	ctxLog "github.com/ActiveMemory/ctx/internal/log"
 	writeSession "github.com/ActiveMemory/ctx/internal/write/session"
 )
@@ -42,7 +43,7 @@ func Run(cmd *cobra.Command, stdin *os.File) error {
 
 	path := nudge.PauseMarkerPath(sessionID)
 	if removeErr := os.Remove(path); removeErr != nil {
-		ctxLog.Warn("remove %s: %v", path, removeErr)
+		ctxLog.Warn(warn.Remove, path, removeErr)
 	}
 	writeSession.Resumed(cmd, sessionID)
 	return nil

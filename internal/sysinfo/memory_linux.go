@@ -15,6 +15,7 @@ import (
 	"strconv"
 	"strings"
 
+	"github.com/ActiveMemory/ctx/internal/config/warn"
 	ctxLog "github.com/ActiveMemory/ctx/internal/log"
 )
 
@@ -33,7 +34,7 @@ func collectMemory() MemInfo {
 	defer func() {
 		if closeErr := f.Close(); closeErr != nil {
 			ctxLog.Warn(
-				"close %s: %v", "/proc/meminfo", closeErr,
+				warn.Close, "/proc/meminfo", closeErr,
 			)
 		}
 	}()

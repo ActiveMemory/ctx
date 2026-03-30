@@ -13,6 +13,7 @@ import (
 
 	"github.com/ActiveMemory/ctx/internal/config/dir"
 	"github.com/ActiveMemory/ctx/internal/config/memory"
+	"github.com/ActiveMemory/ctx/internal/config/token"
 	errMemory "github.com/ActiveMemory/ctx/internal/err/memory"
 )
 
@@ -26,6 +27,10 @@ import (
 //
 // Parameters:
 //   - projectRoot: Project root directory to derive the memory path from
+//
+// Returns:
+//   - string: Resolved path to MEMORY.md
+//   - error: If the file does not exist or path resolution fails
 func DiscoverPath(projectRoot string) (string, error) {
 	abs, absErr := filepath.Abs(projectRoot)
 	if absErr != nil {
@@ -60,6 +65,7 @@ func DiscoverPath(projectRoot string) (string, error) {
 // Returns:
 //   - string: Slug-encoded path with dashes replacing separators
 func ProjectSlug(absPath string) string {
-	// Strip leading "/" then replace remaining "/" with "-", prefix with "-"
-	return "-" + strings.ReplaceAll(absPath[1:], "/", "-")
+	// Strip leading separator, replace remaining separators with dashes,
+	// prefix with a dash. Mirrors Claude Code's project directory naming.
+	return token.Dash + strings.ReplaceAll(absPath[1:], string(filepath.Separator), token.Dash)
 }

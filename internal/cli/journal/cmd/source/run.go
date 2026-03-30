@@ -13,7 +13,7 @@ import (
 // Run dispatches to list or show mode based on flags.
 //
 // Show mode is triggered by --show <id>, --latest, or a positional argument.
-// Otherwise list mode is used.
+// Otherwise, list mode is used.
 //
 // Parameters:
 //   - cmd: Cobra command for output stream

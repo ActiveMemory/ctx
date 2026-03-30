@@ -4,7 +4,8 @@
 # `.,'\
 #   \    Copyright 2026-present Context contributors.
 #                 SPDX-License-Identifier: Apache-2.0
-#
+
+
 # lint-drift.sh — catch code-level drift that static analyzers miss.
 #
 # Checks:

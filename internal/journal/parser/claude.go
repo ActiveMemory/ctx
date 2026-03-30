@@ -18,6 +18,7 @@ import (
 	"github.com/ActiveMemory/ctx/internal/config/file"
 	"github.com/ActiveMemory/ctx/internal/config/parser"
 	"github.com/ActiveMemory/ctx/internal/config/session"
+	"github.com/ActiveMemory/ctx/internal/config/warn"
 	"github.com/ActiveMemory/ctx/internal/entity"
 	errParser "github.com/ActiveMemory/ctx/internal/err/parser"
 	ctxLog "github.com/ActiveMemory/ctx/internal/log"
@@ -29,6 +30,9 @@ import (
 // self-contained JSON object representing a message. Messages are
 // linked via parentUuid and grouped by sessionId.
 type ClaudeCode struct{}
+
+// Ensure ClaudeCode implements Session.
+var _ Session = (*ClaudeCode)(nil)
 
 // NewClaudeCode creates a new Claude Code session parser.
 //
@@ -69,7 +73,7 @@ func (p *ClaudeCode) Matches(path string) bool {
 	}
 	defer func() {
 		if closeErr := f.Close(); closeErr != nil {
-			ctxLog.Warn("close %s: %v", path, closeErr)
+			ctxLog.Warn(warn.Close, path, closeErr)
 		}
 	}()
 
@@ -117,7 +121,7 @@ func (p *ClaudeCode) ParseFile(path string) ([]*entity.Session, error) {
 	}
 	defer func() {
 		if closeErr := f.Close(); closeErr != nil {
-			ctxLog.Warn("close %s: %v", path, closeErr)
+			ctxLog.Warn(warn.Close, path, closeErr)
 		}
 	}()
 
@@ -207,6 +211,3 @@ func (p *ClaudeCode) ParseLine(line []byte) (*entity.Message, string, error) {
 	msg := p.convertMessage(raw)
 	return &msg, raw.SessionID, nil
 }
-
-// Ensure ClaudeCode implements Session.
-var _ Session = (*ClaudeCode)(nil)

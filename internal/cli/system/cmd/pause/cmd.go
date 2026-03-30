@@ -24,7 +24,7 @@ import (
 func Cmd() *cobra.Command {
 	short, long := desc.Command(cmd.DescKeySystemPause)
 
-	cmd := &cobra.Command{
+	c := &cobra.Command{
 		Use:    cmd.UseSystemPause,
 		Short:  short,
 		Long:   long,
@@ -33,8 +33,8 @@ func Cmd() *cobra.Command {
 			return Run(cmd, os.Stdin)
 		},
 	}
-	cmd.Flags().String(cFlag.SessionID, "",
+	c.Flags().String(cFlag.SessionID, "",
 		desc.Flag(flag.DescKeySystemPauseSessionId),
 	)
-	return cmd
+	return c
 }

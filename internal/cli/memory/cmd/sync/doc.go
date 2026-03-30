@@ -6,5 +6,7 @@
 
 // Package sync implements the ctx memory sync subcommand.
 //
-// It synchronizes MEMORY.md content to its configured mirror location.
+// Key exports: [Cmd], [Run].
+// Follows the cmd/root + core taxonomy.
+// Registered by the cmd parent command.
 package sync

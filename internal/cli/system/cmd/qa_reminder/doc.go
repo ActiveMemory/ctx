@@ -6,6 +6,7 @@
 
 // Package qa_reminder implements the ctx system qa-reminder subcommand.
 //
-// It emits a reminder to lint and test the project before committing,
-// firing on Bash tool use when the command contains git operations.
+// Key exports: [Cmd], [Run].
+// Follows the cmd/root + core taxonomy.
+// Registered by the cmd parent command.
 package qa_reminder

@@ -67,7 +67,7 @@ This guide documents prompts that **reliably** produce **good results**.
 ### "*Do you remember?*"
 
 Triggers the AI to silently read `TASKS.md`, `DECISIONS.md`,
-`LEARNINGS.md`, and check recent history via `ctx recall` before
+`LEARNINGS.md`, and check recent history via `ctx journal` before
 responding with a 
 **[structured readback](../recipes/session-lifecycle.md#step-1-load-context)**:
 
@@ -154,7 +154,7 @@ This ensures specific context is loaded before work begins.
 Use this when you know the relevant context exists in a specific file.
 
 ```
-Before you start, check ctx recall for the auth discussion session
+Before you start, check ctx journal source for the auth discussion session
 ```
 
 ### Scope Control
@@ -354,7 +354,7 @@ Use `ctx` skills  by name:
 | `/ctx-agent`            | Load full context packet                       |
 | `/ctx-remember`         | Recall project context and structured readback |
 | `/ctx-wrap-up`          | End-of-session context persistence             |
-| `/ctx-recall`           | Browse session history for past discussions    |
+| `/ctx-history`           | Browse session history for past discussions    |
 | `/ctx-reflect`          | Structured reflection checkpoint               |
 | `/ctx-next`             | Suggest what to work on next                   |
 | `/ctx-commit`           | Commit with context persistence                |
@@ -594,7 +594,7 @@ The AI may complete all subtasks but miss the actual goal. What does
 Good task (**deliverable-focused**):
 ```markdown
 - [ ] T1.1.0: Parser CLI command
-  **Deliverable**: `ctx recall list` command that shows parsed sessions
+  **Deliverable**: `ctx journal source` command that shows parsed sessions
   - [ ] Define data structures
   - [ ] Implement line parser
   - [ ] Implement session grouper

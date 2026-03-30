@@ -24,6 +24,7 @@ import (
 	"github.com/ActiveMemory/ctx/internal/config/stats"
 	cfgTime "github.com/ActiveMemory/ctx/internal/config/time"
 	"github.com/ActiveMemory/ctx/internal/config/token"
+	"github.com/ActiveMemory/ctx/internal/config/warn"
 	"github.com/ActiveMemory/ctx/internal/entity"
 	errRecall "github.com/ActiveMemory/ctx/internal/err/recall"
 	internalIo "github.com/ActiveMemory/ctx/internal/io"
@@ -236,7 +237,7 @@ func ReadNewLines(path string, offset int64, sid string) []Entry {
 	}
 	defer func() {
 		if closeErr := f.Close(); closeErr != nil {
-			ctxLog.Warn("close %s: %v", path, closeErr)
+			ctxLog.Warn(warn.Close, path, closeErr)
 		}
 	}()
 

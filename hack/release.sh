@@ -26,12 +26,15 @@
 # 2. GENERATE RELEASE NOTES using Claude Code:
 #    /_ctx-release-notes
 #
-# 3. UPDATE DOCUMENTATION with new version:
+# 3. AUDIT DOCS for dead links:
+#    /ctx-check-links
+#
+# 4. UPDATE DOCUMENTATION with new version:
 #    - docs/index.md: Update download URLs to new version
 #
-# 4. COMMIT all version-related changes
+# 5. COMMIT all version-related changes
 #
-# 5. ENSURE working tree is clean:
+# 6. ENSURE working tree is clean:
 #    git status (should show "nothing to commit")
 #
 # After running this script:

@@ -29,6 +29,8 @@ const (
 	FlagSince      = "--since"
 	FormatAuthor   = "--format=%aN"
 	FormatEmpty    = "--format="
+	// FlagPathSep is the separator between flags and paths in git commands.
+	FlagPathSep = "--"
 )
 
 // PathSeparator is the separator git uses in file paths (always forward slash).

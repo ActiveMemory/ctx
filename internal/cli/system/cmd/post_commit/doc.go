@@ -6,6 +6,7 @@
 
 // Package post_commit implements the ctx system post-commit subcommand.
 //
-// It detects git commit commands and nudges the agent to capture context
-// (decisions or learnings) and run lints/tests after committing.
+// Key exports: [Cmd], [Run].
+// Follows the cmd/root + core taxonomy.
+// Registered by the cmd parent command.
 package post_commit

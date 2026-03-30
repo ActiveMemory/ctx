@@ -3,6 +3,8 @@
 <!-- INDEX:START -->
 | Date | Decision |
 |------|--------|
+| 2026-03-30 | Journal consumed recall — recall CLI package deleted |
+| 2026-03-30 | Classify rules are user-configurable via .ctxrc |
 | 2026-03-25 | Architecture analysis and enrichment are separate skills — constraint is the feature |
 | 2026-03-25 | Companion tools documented as optional MCP enhancements with runtime check |
 | 2026-03-25 | Prompt templates removed — skills are the single agent instruction mechanism |
@@ -111,6 +113,34 @@ For significant decisions:
 ✗ No real alternatives existed
 
 -->
+
+## [2026-03-30-003756] Journal consumed recall — recall CLI package deleted
+
+**Status**: Accepted
+
+**Context**: ctx recall was never registered in bootstrap; ctx journal had all the same subcommands
+
+**Decision**: Journal consumed recall — recall CLI package deleted
+
+**Rationale**: One dead command group creates confusion in docs and skills. Journal is the canonical command group.
+
+**Consequence**: internal/cli/recall/ deleted, 19 doc files updated, docs/cli/recall.md renamed to journal.md, zensical.toml updated. MCP tool ctx_recall rename tasked separately (API contract)
+
+---
+
+## [2026-03-30-003745] Classify rules are user-configurable via .ctxrc
+
+**Status**: Accepted
+
+**Context**: Memory entry classification used hardcoded keyword rules that could not be customized
+
+**Decision**: Classify rules are user-configurable via .ctxrc
+
+**Rationale**: Users may work in domains where the default keywords do not match (non-English, specialized terminology). Same pattern as session_prefixes.
+
+**Consequence**: classify_rules in .ctxrc overrides defaults; schema updated; rc.ClassifyRules() accessor with fallback to config/memory.DefaultClassifyRules
+
+---
 
 ## [2026-03-25-233646] Architecture analysis and enrichment are separate skills — constraint is the feature
 

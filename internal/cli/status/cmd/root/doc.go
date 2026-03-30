@@ -6,6 +6,7 @@
 
 // Package root implements the ctx status command.
 //
-// It shows a context summary including file presence, token estimates,
-// and task counts.
+// Key exports: [Cmd], [Run].
+// Follows the cmd/root + core taxonomy.
+// Registered by the cmd parent command.
 package root

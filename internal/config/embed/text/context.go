@@ -19,4 +19,8 @@ const (
 	DescKeyContextLoadGateOversizeInjected  = "context-load-gate.oversize-injected"
 	DescKeyContextLoadGateOversizeTimestamp = "context-load-gate.oversize-timestamp"
 	DescKeyContextLoadGateWebhook           = "context-load-gate.webhook"
+
+	// Context directory display labels.
+	DescKeyWriteContextDirLabel   = "write.context-dir-label"
+	DescKeyWriteContextDirBracket = "write.context-dir-bracket"
 )

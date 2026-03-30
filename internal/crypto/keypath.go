@@ -13,6 +13,7 @@ import (
 
 	cfgCrypto "github.com/ActiveMemory/ctx/internal/config/crypto"
 	"github.com/ActiveMemory/ctx/internal/config/dir"
+	"github.com/ActiveMemory/ctx/internal/config/token"
 )
 
 // GlobalKeyPath returns the global encryption key path.
@@ -42,14 +43,14 @@ func GlobalKeyPath() string {
 // Returns:
 //   - string: Path with ~/ expanded to the home directory
 func ExpandHome(path string) string {
-	if !strings.HasPrefix(path, "~/") {
+	if !strings.HasPrefix(path, token.PrefixHomeDir) {
 		return path
 	}
 	home, homeErr := os.UserHomeDir()
 	if homeErr != nil {
 		return path
 	}
-	return filepath.Join(home, path[2:])
+	return filepath.Join(home, path[len(token.PrefixHomeDir):])
 }
 
 // ResolveKeyPath determines the effective key file path.

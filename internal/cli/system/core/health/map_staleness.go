@@ -11,13 +11,17 @@ import (
 	"fmt"
 	"os/exec"
 	"strings"
+	"time"
 
 	"github.com/ActiveMemory/ctx/internal/assets/read/desc"
 	"github.com/ActiveMemory/ctx/internal/cli/system/core/message"
 	"github.com/ActiveMemory/ctx/internal/cli/system/core/nudge"
 	"github.com/ActiveMemory/ctx/internal/config/architecture"
 	"github.com/ActiveMemory/ctx/internal/config/embed/text"
+	cfgGit "github.com/ActiveMemory/ctx/internal/config/git"
 	"github.com/ActiveMemory/ctx/internal/config/hook"
+	"github.com/ActiveMemory/ctx/internal/config/project"
+	cfgTime "github.com/ActiveMemory/ctx/internal/config/time"
 	"github.com/ActiveMemory/ctx/internal/config/token"
 	"github.com/ActiveMemory/ctx/internal/io"
 	"github.com/ActiveMemory/ctx/internal/notify"
@@ -52,12 +56,17 @@ func ReadMapTracking() *MapTrackingInfo {
 // Returns:
 //   - int: number of commits, or 0 on error or if git is unavailable
 func CountModuleCommits(since string) int {
-	if _, lookErr := exec.LookPath("git"); lookErr != nil {
+	if _, lookErr := exec.LookPath(cfgGit.Binary); lookErr != nil {
 		return 0
 	}
-	out, gitErr := exec.Command( //nolint:gosec // date string from JSON
-		"git", "log", "--oneline",
-		"--since="+since, "--", "internal/",
+	// Validate since as a date to prevent command injection.
+	if _, parseErr := time.Parse(cfgTime.DateFormat, since); parseErr != nil {
+		return 0
+	}
+	out, gitErr := exec.Command( //nolint:gosec // since validated by time.Parse above
+		cfgGit.Binary, cfgGit.Log, cfgGit.FlagOneline,
+		cfgGit.FlagSince+token.KeyValueSep+since,
+		cfgGit.FlagPathSep, project.DirInternalSlash,
 	).Output()
 	if gitErr != nil {
 		return 0
@@ -106,7 +115,9 @@ func EmitMapStalenessWarning(
 		},
 	)
 	notifyMsg := fmt.Sprintf(desc.Text(text.DescKeyRelayPrefixFormat),
-		hook.CheckMapStaleness, desc.Text(text.DescKeyCheckMapStalenessRelayMessage))
+		hook.CheckMapStaleness,
+		desc.Text(text.DescKeyCheckMapStalenessRelayMessage),
+	)
 	nudge.EmitAndRelay(notifyMsg, sessionID, ref)
 	return box
 }

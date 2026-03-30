@@ -6,5 +6,7 @@
 
 // Package merge implements the ctx pad merge subcommand.
 //
-// It merges entries from one or more external pad files into the current pad.
+// Key exports: [Cmd], [Run].
+// Follows the cmd/root + core taxonomy.
+// Registered by the cmd parent command.
 package merge

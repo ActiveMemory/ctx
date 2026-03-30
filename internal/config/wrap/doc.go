@@ -5,4 +5,8 @@
 //                 SPDX-License-Identifier: Apache-2.0
 
 // Package wrap defines marker constants for end-of-session wrap-up detection.
+//
+// Constants are referenced by domain packages via config/wrap.*.
+// Provides constants and definitions for wrap operations.
+// Constants are referenced by domain packages.
 package wrap

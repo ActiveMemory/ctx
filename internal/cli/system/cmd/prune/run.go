@@ -15,6 +15,7 @@ import (
 
 	"github.com/ActiveMemory/ctx/internal/cli/system/core/health"
 	"github.com/ActiveMemory/ctx/internal/cli/system/core/state"
+	"github.com/ActiveMemory/ctx/internal/config/regex"
 	cfgTime "github.com/ActiveMemory/ctx/internal/config/time"
 	errState "github.com/ActiveMemory/ctx/internal/err/state"
 	"github.com/ActiveMemory/ctx/internal/write/prune"
@@ -53,7 +54,7 @@ func Run(cmd *cobra.Command, days int, dryRun bool) error {
 		name := entry.Name()
 
 		// Only prune files with UUID session IDs
-		if !health.UUIDPattern.MatchString(name) {
+		if !regex.UUID.MatchString(name) {
 			preserved++
 			continue
 		}

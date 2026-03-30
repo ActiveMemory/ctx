@@ -6,5 +6,7 @@
 
 // Package diff implements the ctx memory diff subcommand.
 //
-// It shows line-level differences between the mirror and current MEMORY.md.
+// Key exports: [Cmd], [Run].
+// Follows the cmd/root + core taxonomy.
+// Registered by the cmd parent command.
 package diff

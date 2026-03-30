@@ -19,6 +19,8 @@ import (
 	"github.com/ActiveMemory/ctx/internal/config/file"
 	"github.com/ActiveMemory/ctx/internal/config/fs"
 	"github.com/ActiveMemory/ctx/internal/config/journal"
+	"github.com/ActiveMemory/ctx/internal/config/token"
+	"github.com/ActiveMemory/ctx/internal/format"
 )
 
 // CurrentVersion is the schema version for the state file.
@@ -71,10 +73,10 @@ func (s *State) Save(journalDir string) error {
 	if marshalErr != nil {
 		return marshalErr
 	}
-	data = append(data, '\n')
+	data = append(data, token.NewlineLF[0])
 
 	path := filepath.Join(journalDir, journal.File)
-	tmp := path + ".tmp"
+	tmp := path + file.ExtTmp
 
 	if writeErr := os.WriteFile(tmp, data, fs.PermFile); writeErr != nil {
 		return writeErr
@@ -88,7 +90,7 @@ func (s *State) Save(journalDir string) error {
 //   - filename: journal entry filename (e.g., "2026-01-21-session.md")
 func (s *State) MarkImported(filename string) {
 	ff := s.Entries[filename]
-	ff.Exported = today()
+	ff.Exported = format.Today()
 	s.Entries[filename] = ff
 }
 
@@ -98,7 +100,7 @@ func (s *State) MarkImported(filename string) {
 //   - filename: journal entry filename
 func (s *State) MarkEnriched(filename string) {
 	ff := s.Entries[filename]
-	ff.Enriched = today()
+	ff.Enriched = format.Today()
 	s.Entries[filename] = ff
 }
 
@@ -108,7 +110,7 @@ func (s *State) MarkEnriched(filename string) {
 //   - filename: journal entry filename
 func (s *State) MarkNormalized(filename string) {
 	ff := s.Entries[filename]
-	ff.Normalized = today()
+	ff.Normalized = format.Today()
 	s.Entries[filename] = ff
 }
 
@@ -118,7 +120,7 @@ func (s *State) MarkNormalized(filename string) {
 //   - filename: journal entry filename
 func (s *State) MarkFencesVerified(filename string) {
 	ff := s.Entries[filename]
-	ff.FencesVerified = today()
+	ff.FencesVerified = format.Today()
 	s.Entries[filename] = ff
 }
 
@@ -135,15 +137,15 @@ func (s *State) Mark(filename, stage string) bool {
 	ff := s.Entries[filename]
 	switch stage {
 	case journal.StageExported:
-		ff.Exported = today()
+		ff.Exported = format.Today()
 	case journal.StageEnriched:
-		ff.Enriched = today()
+		ff.Enriched = format.Today()
 	case journal.StageNormalized:
-		ff.Normalized = today()
+		ff.Normalized = format.Today()
 	case journal.StageFencesVerified:
-		ff.FencesVerified = today()
+		ff.FencesVerified = format.Today()
 	case journal.StageLocked:
-		ff.Locked = today()
+		ff.Locked = format.Today()
 	default:
 		return false
 	}

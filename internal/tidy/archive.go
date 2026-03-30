@@ -32,7 +32,9 @@ import (
 //     (e.g., config.HeadingArchivedTasks)
 //   - content: The content to archive
 //
-// Returns the path to the written archive file.
+// Returns:
+//   - string: Path to the written archive file
+//   - error: If creating the archive directory or writing fails
 func WriteArchive(prefix, heading, content string) (string, error) {
 	archiveDir := filepath.Join(rc.ContextDir(), dir.Archive)
 	if mkErr := os.MkdirAll(archiveDir, fs.PermExec); mkErr != nil {

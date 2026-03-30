@@ -77,7 +77,7 @@ func Run(cmd *cobra.Command, dryRun bool) error {
 		classification := memory.Classify(e)
 		title := format.TruncateFirstLine(e.Text, 60)
 
-		if classification.Target == memory.TargetSkip {
+		if classification.Target == cfgMemory.TargetSkip {
 			result.Skipped++
 			if dryRun {
 				ctximport.EntrySkipped(cmd, title)
@@ -85,7 +85,7 @@ func Run(cmd *cobra.Command, dryRun bool) error {
 			continue
 		}
 
-		targetFile := entry.ToCtxFile[classification.Target]
+		targetFile := entry.MustCtxFile(classification.Target)
 
 		if dryRun {
 			ctximport.EntryClassified(cmd, title, targetFile, classification.Keywords)

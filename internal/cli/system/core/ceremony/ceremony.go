@@ -66,8 +66,8 @@ func RecentJournalFiles(dir string, n int) []string {
 //
 // Returns:
 //   - remember: true if any file contains "ctx-remember"
-//   - wrapup: true if any file contains "ctx-wrap-up"
-func ScanJournalsForCeremonies(files []string) (remember, wrapup bool) {
+//   - wrapUp: true if any file contains "ctx-wrap-up"
+func ScanJournalsForCeremonies(files []string) (remember, wrapUp bool) {
 	for _, path := range files {
 		data, readErr := io.SafeReadUserFile(path)
 		if readErr != nil {
@@ -77,10 +77,10 @@ func ScanJournalsForCeremonies(files []string) (remember, wrapup bool) {
 		if !remember && strings.Contains(content, ceremony.RememberCmd) {
 			remember = true
 		}
-		if !wrapup && strings.Contains(content, ceremony.WrapUpCmd) {
-			wrapup = true
+		if !wrapUp && strings.Contains(content, ceremony.WrapUpCmd) {
+			wrapUp = true
 		}
-		if remember && wrapup {
+		if remember && wrapUp {
 			return
 		}
 	}
@@ -88,20 +88,20 @@ func ScanJournalsForCeremonies(files []string) (remember, wrapup bool) {
 }
 
 // Emit builds a ceremony nudge message box based on which
-// ceremonies (remember, wrapup) are missing from recent sessions.
+// ceremonies (remember, wrapUp) are missing from recent sessions.
 //
 // Parameters:
 //   - remember: whether /ctx-remember was found in recent journals
-//   - wrapup: whether /ctx-wrap-up was found in recent journals
+//   - wrapUp: whether /ctx-wrap-up was found in recent journals
 //
 // Returns:
 //   - msg: the formatted nudge message, or empty string if no content
 //   - variant: the selected variant string for notifications
-func Emit(remember, wrapup bool) (msg, variant string) {
+func Emit(remember, wrapUp bool) (msg, variant string) {
 	var boxTitleKey, fallbackKey string
 
 	switch {
-	case !remember && !wrapup:
+	case !remember && !wrapUp:
 		variant = hook.VariantBoth
 		boxTitleKey = text.DescKeyCeremonyBoxBoth
 		fallbackKey = text.DescKeyCeremonyFallbackBoth
@@ -109,7 +109,7 @@ func Emit(remember, wrapup bool) (msg, variant string) {
 		variant = hook.VariantRemember
 		boxTitleKey = text.DescKeyCeremonyBoxRemember
 		fallbackKey = text.DescKeyCeremonyFallbackRemember
-	case !wrapup:
+	case !wrapUp:
 		variant = hook.VariantWrapup
 		boxTitleKey = text.DescKeyCeremonyBoxWrapup
 		fallbackKey = text.DescKeyCeremonyFallbackWrapup

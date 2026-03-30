@@ -22,16 +22,22 @@ import (
 //   - []string: Non-empty, non-comment lines from the file; nil on read failure
 func loadPermissions(path string) []string {
 	data, readErr := assets.FS.ReadFile(path)
+
 	if readErr != nil {
 		return nil
 	}
+
 	var result []string
+
 	for _, line := range strings.Split(string(data), token.NewlineLF) {
 		line = strings.TrimSpace(line)
+
 		if line == "" || strings.HasPrefix(line, token.PrefixHeading) {
 			continue
 		}
+
 		result = append(result, line)
 	}
+
 	return result
 }

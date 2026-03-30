@@ -26,6 +26,39 @@ const (
 	BlockToolResult = "tool_result"
 )
 
+// JSONL field names for quick-scan filtering.
+const (
+	// FieldUsage is the JSON key for the usage block.
+	FieldUsage = "usage"
+	// FieldInputTokens is the JSON key for input token count.
+	FieldInputTokens = "input_tokens"
+)
+
+// Model family substrings for context window detection.
+const (
+	// ModelOpus is the substring identifying Opus models (always 1M).
+	ModelOpus = "opus"
+)
+
+// Context window sizes.
+const (
+	// ContextWindow1M is the context window for 1M-capable models.
+	ContextWindow1M = 1_000_000
+)
+
+// JSONL file scanning limits.
+const (
+	// MaxTailBytes is the max bytes to read from the end of a JSONL file.
+	MaxTailBytes = 32768
+)
+
+// Content block detection prefixes.
+const (
+	// ContentBlockArrayPrefix is the JSON prefix for Claude's content
+	// block array format ([{type: "text", text: "..."}]).
+	ContentBlockArrayPrefix = "[{"
+)
+
 // Claude API message roles.
 const (
 	// RoleUser is a user message.

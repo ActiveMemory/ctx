@@ -7,6 +7,12 @@
 package imp
 
 // BlobResult holds the outcome of importing a single file as a blob.
+//
+// Fields:
+//   - Name: Source filename
+//   - Err: Import error (nil on success)
+//   - TooLarge: Whether the file exceeded the size limit
+//   - Added: Whether the blob was successfully added
 type BlobResult struct {
 	Name     string
 	Err      error

@@ -6,5 +6,7 @@
 
 // Package list implements the ctx remind list subcommand.
 //
-// It displays all pending reminders.
+// Key exports: [Cmd], [Run].
+// Follows the cmd/root + core taxonomy.
+// Registered by the cmd parent command.
 package list

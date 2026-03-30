@@ -6,6 +6,7 @@
 
 // Package resources implements the ctx system resources subcommand.
 //
-// It displays current system resource usage including memory, swap,
-// disk, and load averages.
+// Key exports: [Cmd], [Run].
+// Follows the cmd/root + core taxonomy.
+// Registered by the cmd parent command.
 package resources

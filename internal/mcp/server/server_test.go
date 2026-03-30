@@ -18,6 +18,7 @@ import (
 
 	"github.com/ActiveMemory/ctx/internal/config/ctx"
 	"github.com/ActiveMemory/ctx/internal/mcp/proto"
+	mcpIO "github.com/ActiveMemory/ctx/internal/mcp/server/io"
 )
 
 func newTestServer(t *testing.T) (*Server, string) {
@@ -84,7 +85,7 @@ func request(
 	}
 	var out bytes.Buffer
 	srv.in = bytes.NewReader(append(line, '\n'))
-	srv.out = &out
+	srv.out = mcpIO.NewWriter(&out)
 	if serveErr := srv.Serve(); serveErr != nil {
 		t.Fatalf("serve: %v", serveErr)
 	}
@@ -458,7 +459,7 @@ func TestNotification(t *testing.T) {
 	line, _ := json.Marshal(req)
 	var out bytes.Buffer
 	srv.in = bytes.NewReader(append(line, '\n'))
-	srv.out = &out
+	srv.out = mcpIO.NewWriter(&out)
 	if err := srv.Serve(); err != nil {
 		t.Fatalf("serve: %v", err)
 	}
@@ -471,7 +472,7 @@ func TestParseError(t *testing.T) {
 	srv, _ := newTestServer(t)
 	var out bytes.Buffer
 	srv.in = bytes.NewReader([]byte("not json\n"))
-	srv.out = &out
+	srv.out = mcpIO.NewWriter(&out)
 	if err := srv.Serve(); err != nil {
 		t.Fatalf("serve: %v", err)
 	}

@@ -6,6 +6,10 @@
   "type": "object",
   "additionalProperties": false,
   "properties": {
+    "profile": {
+      "type": "string",
+      "description": "Active configuration profile name."
+    },
     "context_dir": {
       "type": "string",
       "description": "Name of the context directory.",
@@ -96,10 +100,76 @@
       "type": "string",
       "description": "Explicit encryption key file path."
     },
+    "billing_token_warn": {
+      "type": "integer",
+      "description": "Absolute token threshold for billing nudge. One-shot warning when session tokens exceed this value. 0 disables.",
+      "default": 0,
+      "minimum": 0
+    },
+    "task_nudge_interval": {
+      "type": "integer",
+      "description": "Edit/Write calls between task completion nudges. 0 disables.",
+      "default": 5,
+      "minimum": 0
+    },
+    "session_prefixes": {
+      "type": "array",
+      "description": "Recognized session header prefixes for Markdown parser.",
+      "items": {
+        "type": "string"
+      },
+      "default": ["Session:"]
+    },
+    "freshness_files": {
+      "type": "array",
+      "description": "Source files containing technology-dependent constants for periodic review.",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "path": {
+            "type": "string",
+            "description": "File path relative to the project root."
+          },
+          "desc": {
+            "type": "string",
+            "description": "Summary of what constants live in the file."
+          },
+          "review_url": {
+            "type": "string",
+            "description": "Optional URL to check against when reviewing."
+          }
+        },
+        "required": ["path"]
+      }
+    },
     "companion_check": {
       "type": "boolean",
       "description": "Check companion tool availability (Gemini Search, GitNexus) during /ctx-remember. Set false to suppress.",
       "default": true
+    },
+    "classify_rules": {
+      "type": "array",
+      "description": "Custom keyword rules for memory entry classification. Overrides built-in defaults when set. Rules are evaluated in priority order.",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "target": {
+            "type": "string",
+            "description": "Target entry type (convention, decision, learning, task).",
+            "enum": ["convention", "decision", "learning", "task"]
+          },
+          "keywords": {
+            "type": "array",
+            "description": "Case-insensitive keyword patterns to match.",
+            "items": {
+              "type": "string"
+            }
+          }
+        },
+        "required": ["target", "keywords"]
+      }
     },
     "notify": {
       "type": "object",

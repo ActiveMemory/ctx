@@ -59,7 +59,7 @@ func Run(cmd *cobra.Command, args []string, flags entity.AddConfig) error {
 		return validateErr
 	}
 
-	fName, ok := cfgEntry.ToCtxFile[fType]
+	fName, ok := cfgEntry.CtxFile(fType)
 	if !ok {
 		return errAdd.UnknownType(fType)
 	}

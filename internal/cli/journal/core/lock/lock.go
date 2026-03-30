@@ -20,6 +20,7 @@ import (
 	cfgJournal "github.com/ActiveMemory/ctx/internal/config/journal"
 	"github.com/ActiveMemory/ctx/internal/config/session"
 	"github.com/ActiveMemory/ctx/internal/config/token"
+	"github.com/ActiveMemory/ctx/internal/config/warn"
 	"github.com/ActiveMemory/ctx/internal/err/journal"
 	errSession "github.com/ActiveMemory/ctx/internal/err/session"
 	"github.com/ActiveMemory/ctx/internal/io"
@@ -166,7 +167,7 @@ func UpdateFrontmatter(path string, lock bool) {
 		if writeErr := io.SafeWriteFile(
 			path, []byte(updated), fs.PermFile,
 		); writeErr != nil {
-			ctxLog.Warn("write %s: %v", path, writeErr)
+			ctxLog.Warn(warn.Write, path, writeErr)
 		}
 	} else {
 		// Remove the locked line.
@@ -185,7 +186,7 @@ func UpdateFrontmatter(path string, lock bool) {
 		if writeErr := io.SafeWriteFile(
 			path, []byte(updated), fs.PermFile,
 		); writeErr != nil {
-			ctxLog.Warn("write %s: %v", path, writeErr)
+			ctxLog.Warn(warn.Write, path, writeErr)
 		}
 	}
 }
@@ -259,7 +260,7 @@ func Run(
 
 	journalDir := filepath.Join(rc.ContextDir(), dir.Journal)
 
-	jstate, loadErr := state.Load(journalDir)
+	jState, loadErr := state.Load(journalDir)
 	if loadErr != nil {
 		return journal.LoadState(loadErr)
 	}
@@ -285,7 +286,7 @@ func Run(
 
 	count := 0
 	for _, filename := range files {
-		alreadyLocked := jstate.Locked(filename)
+		alreadyLocked := jState.Locked(filename)
 		if lock && alreadyLocked {
 			continue
 		}
@@ -295,9 +296,9 @@ func Run(
 
 		// Update state.
 		if lock {
-			jstate.Mark(filename, session.FrontmatterLocked)
+			jState.Mark(filename, session.FrontmatterLocked)
 		} else {
-			jstate.Clear(filename, session.FrontmatterLocked)
+			jState.Clear(filename, session.FrontmatterLocked)
 		}
 
 		// Update frontmatter for human visibility.
@@ -308,7 +309,7 @@ func Run(
 		count++
 	}
 
-	if saveErr := jstate.Save(journalDir); saveErr != nil {
+	if saveErr := jState.Save(journalDir); saveErr != nil {
 		return journal.SaveState(saveErr)
 	}
 

@@ -20,6 +20,7 @@ import (
 	"github.com/ActiveMemory/ctx/internal/config/marker"
 	"github.com/ActiveMemory/ctx/internal/config/stats"
 	"github.com/ActiveMemory/ctx/internal/config/token"
+	"github.com/ActiveMemory/ctx/internal/config/warn"
 	"github.com/ActiveMemory/ctx/internal/entity"
 	ctxLog "github.com/ActiveMemory/ctx/internal/log"
 	"github.com/ActiveMemory/ctx/internal/rc"
@@ -62,7 +63,7 @@ func WriteOversizeFlag(
 
 	sd := filepath.Join(contextDir, dir.State)
 	if mkdirErr := os.MkdirAll(sd, fs.PermRestrictedDir); mkdirErr != nil {
-		ctxLog.Warn("mkdir %s: %v", sd, mkdirErr)
+		ctxLog.Warn(warn.Mkdir, sd, mkdirErr)
 	}
 
 	var flag strings.Builder
@@ -90,6 +91,6 @@ func WriteOversizeFlag(
 	if writeErr := os.WriteFile(
 		fp, []byte(flag.String()), fs.PermSecret,
 	); writeErr != nil {
-		ctxLog.Warn("write %s: %v", fp, writeErr)
+		ctxLog.Warn(warn.Write, fp, writeErr)
 	}
 }

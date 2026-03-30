@@ -6,5 +6,7 @@
 
 // Package setup implements the ctx notify setup subcommand.
 //
-// It configures webhook notification endpoints for hook events.
+// Key exports: [Cmd], [Run].
+// Follows the cmd/root + core taxonomy.
+// Registered by the cmd parent command.
 package setup

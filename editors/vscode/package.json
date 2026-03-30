@@ -2,7 +2,7 @@
   "name": "ctx-context",
   "displayName": "ctx — Persistent Context for AI",
   "description": "Chat participant (@ctx) for persistent project context across AI coding sessions",
-  "version": "0.8.0",
+  "version": "0.8.1",
   "publisher": "activememory",
   "license": "Apache-2.0",
   "homepage": "https://github.com/ActiveMemory/ctx",

@@ -28,7 +28,7 @@ tracking, then there will be something to remember."
 - Mid-session when you are actively working on a task and context
   is fresh: don't interrupt flow
 - When the user is asking about a *specific* past session by name
-  or ID: use `/ctx-recall` instead, which has list/show/export
+  or ID: use `/ctx-history` instead, which has list/show/export
   subcommands
 
 ## Process

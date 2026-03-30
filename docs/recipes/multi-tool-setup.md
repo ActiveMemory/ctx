@@ -53,7 +53,7 @@ Then start your AI tool and ask: "**Do you remember?**"
 | `ctx load`          | Output assembled context in read order (for manual pasting)  |
 | `ctx watch`         | Auto-apply context updates from AI output (non-native tools) |
 | `ctx completion`    | Generate shell autocompletion for bash, zsh, or fish         |
-| `ctx recall import` | Import sessions to editable journal Markdown                 |
+| `ctx journal import` | Import sessions to editable journal Markdown                 |
 
 ## The Workflow
 
@@ -200,7 +200,7 @@ ctx completion fish > ~/.config/fish/completions/ctx.fish
 ```
 
 After sourcing, typing `ctx a<TAB>` completes to `ctx agent`, and
-`ctx recall <TAB>` shows `list`, `show`, and `export`.
+`ctx journal <TAB>` shows `list`, `show`, and `export`.
 
 ### Step 4: Verify the Setup Works
 
@@ -293,7 +293,7 @@ ctx watch --dry-run --log /tmp/ai.log
 If you want to browse past session transcripts, import them to the journal:
 
 ```bash
-ctx recall import --all
+ctx journal import --all
 ```
 
 This converts raw session data into editable Markdown files in

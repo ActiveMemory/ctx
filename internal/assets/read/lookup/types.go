@@ -7,6 +7,10 @@
 package lookup
 
 // ConfigPattern pairs a glob pattern with its localizable topic description.
+//
+// Fields:
+//   - Pattern: Glob pattern to match file paths
+//   - Topic: Localized topic description key
 type ConfigPattern struct {
 	Pattern string
 	Topic   string

@@ -1,6 +1,6 @@
 //   /    ctx:                         https://ctx.ist
 // ,'`./    do you remember?
-// `.,'\
+// `.,'\\
 //   \    Copyright 2026-present Context contributors.
 //                 SPDX-License-Identifier: Apache-2.0
 
@@ -36,7 +36,7 @@ import (
 func Write(params Params) error {
 	fType := strings.ToLower(params.Type)
 
-	fileName, ok := entry.ToCtxFile[fType]
+	fileName, ok := entry.CtxFile(fType)
 	if !ok {
 		return errAdd.UnknownType(fType)
 	}
@@ -106,23 +106,16 @@ func Write(params Params) error {
 	return nil
 }
 
-// ValidateAndWrite validates the entry params, writes the entry, and
-// returns the target context file name.
+// ValidateAndWrite validates the entry params and writes the entry.
 //
 // Parameters:
 //   - params: entry parameters with type, content, and optional fields
 //
 // Returns:
-//   - string: the context file name the entry was written to
 //   - error: validation or write error
-func ValidateAndWrite(params Params) (string, error) {
+func ValidateAndWrite(params Params) error {
 	if vErr := Validate(params, nil); vErr != nil {
-		return "", vErr
+		return vErr
 	}
-
-	if wErr := Write(params); wErr != nil {
-		return "", wErr
-	}
-
-	return entry.ToCtxFile[strings.ToLower(params.Type)], nil
+	return Write(params)
 }

@@ -6,6 +6,7 @@
 
 // Package root implements the ctx resume command.
 //
-// It resumes context hooks for the current session after they have been
-// paused.
+// Key exports: [Cmd], [Run].
+// Follows the cmd/root + core taxonomy.
+// Registered by the cmd parent command.
 package root

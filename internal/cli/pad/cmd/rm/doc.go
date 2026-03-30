@@ -6,5 +6,7 @@
 
 // Package rm implements the ctx pad rm subcommand.
 //
-// It removes a pad entry by its 1-based index.
+// Key exports: [Cmd], [Run].
+// Follows the cmd/root + core taxonomy.
+// Registered by the cmd parent command.
 package rm

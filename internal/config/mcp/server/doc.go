@@ -4,7 +4,9 @@
 //   \    Copyright 2026-present Context contributors.
 //                 SPDX-License-Identifier: Apache-2.0
 
-// Package server defines MCP server identity constants
-// (name, URI prefix, JSON-RPC version) reported during the `initialize`
-// handshake.
+// Package server defines MCP server identity constants.
+//
+// Constants are referenced by domain packages via config/server.*.
+// Provides constants and definitions for server operations.
+// Constants are referenced by domain packages.
 package server

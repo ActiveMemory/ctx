@@ -9,19 +9,16 @@ package wikilink
 import (
 	"fmt"
 	"path/filepath"
-	"regexp"
 	"strings"
 
 	"github.com/ActiveMemory/ctx/internal/assets/read/desc"
 	"github.com/ActiveMemory/ctx/internal/config/embed/text"
 	"github.com/ActiveMemory/ctx/internal/config/file"
 	"github.com/ActiveMemory/ctx/internal/config/obsidian"
+	"github.com/ActiveMemory/ctx/internal/config/regex"
 	"github.com/ActiveMemory/ctx/internal/config/token"
 	"github.com/ActiveMemory/ctx/internal/entity"
 )
-
-// RegexMarkdownLink matches Markdown links: [display](target)
-var RegexMarkdownLink = regexp.MustCompile(`\[([^]]+)]\(([^)]+)\)`)
 
 // ConvertMarkdownLinks replaces internal Markdown links with Obsidian
 // wikilinks. External links (http/https) are left unchanged.
@@ -32,9 +29,9 @@ var RegexMarkdownLink = regexp.MustCompile(`\[([^]]+)]\(([^)]+)\)`)
 // Returns:
 //   - string: Content with internal links converted to [[target|display]]
 func ConvertMarkdownLinks(content string) string {
-	return RegexMarkdownLink.ReplaceAllStringFunc(
+	return regex.MarkdownLinkAny.ReplaceAllStringFunc(
 		content, func(match string) string {
-			parts := RegexMarkdownLink.FindStringSubmatch(match)
+			parts := regex.MarkdownLinkAny.FindStringSubmatch(match)
 			if len(parts) != 3 {
 				return match
 			}

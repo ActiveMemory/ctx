@@ -14,6 +14,7 @@ import (
 	"github.com/ActiveMemory/ctx/internal/assets/tpl"
 	"github.com/ActiveMemory/ctx/internal/config/embed/text"
 	"github.com/ActiveMemory/ctx/internal/config/journal"
+	"github.com/ActiveMemory/ctx/internal/config/marker"
 	"github.com/ActiveMemory/ctx/internal/config/regex"
 	"github.com/ActiveMemory/ctx/internal/config/token"
 )
@@ -82,7 +83,7 @@ func ToolOutputs(content string) string {
 		body := strings.TrimSpace(
 			strings.Join(lines[bodyStart:bodyEnd], token.NewlineLF),
 		)
-		alreadyWrapped := strings.HasPrefix(body, "<details>")
+		alreadyWrapped := strings.HasPrefix(body, marker.TagDetails)
 
 		if nonBlank > journal.DetailsThreshold && !alreadyWrapped {
 			summary := fmt.Sprintf(

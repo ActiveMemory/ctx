@@ -6,6 +6,7 @@
 
 // Package edit implements the ctx pad edit subcommand.
 //
-// It modifies an existing pad entry by index, supporting replace, append,
-// and prepend modes as well as blob file and label updates.
+// Key exports: [Cmd], [Run].
+// Follows the cmd/root + core taxonomy.
+// Registered by the cmd parent command.
 package edit

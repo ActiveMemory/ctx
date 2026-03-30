@@ -27,12 +27,12 @@ import (
 //   - error: Non-nil on state load failure, unknown stage, or unset stage
 func CheckStage(filename, stage string) (CheckResult, error) {
 	journalDir := ctxResolve.JournalDir()
-	jstate, loadErr := state.Load(journalDir)
+	jState, loadErr := state.Load(journalDir)
 	if loadErr != nil {
 		return CheckResult{}, errJournal.LoadStateFailed(loadErr)
 	}
 
-	fs := jstate.Entries[filename]
+	fs := jState.Entries[filename]
 	var val string
 	switch stage {
 	case journal.StageExported:
@@ -66,18 +66,18 @@ func CheckStage(filename, stage string) (CheckResult, error) {
 //   - error: Non-nil on unknown stage or state load/save failure
 func MarkStage(filename, stage string) error {
 	journalDir := ctxResolve.JournalDir()
-	jstate, loadErr := state.Load(journalDir)
+	jState, loadErr := state.Load(journalDir)
 	if loadErr != nil {
 		return errJournal.LoadStateFailed(loadErr)
 	}
 
-	if ok := jstate.Mark(filename, stage); !ok {
+	if ok := jState.Mark(filename, stage); !ok {
 		return errJournal.UnknownStage(
 			stage, strings.Join(state.ValidStages, token.CommaSpace),
 		)
 	}
 
-	if saveErr := jstate.Save(journalDir); saveErr != nil {
+	if saveErr := jState.Save(journalDir); saveErr != nil {
 		return errJournal.SaveStateFailed(saveErr)
 	}
 

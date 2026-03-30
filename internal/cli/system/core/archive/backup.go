@@ -20,6 +20,7 @@ import (
 	"github.com/ActiveMemory/ctx/internal/config/dir"
 	"github.com/ActiveMemory/ctx/internal/config/embed/text"
 	cfgFs "github.com/ActiveMemory/ctx/internal/config/fs"
+	"github.com/ActiveMemory/ctx/internal/config/warn"
 	"github.com/ActiveMemory/ctx/internal/entity"
 	errBackup "github.com/ActiveMemory/ctx/internal/err/backup"
 	internalIo "github.com/ActiveMemory/ctx/internal/io"
@@ -45,7 +46,7 @@ func Create(
 	defer func() {
 		if closeErr := outFile.Close(); closeErr != nil {
 			ctxLog.Warn(
-				"close %s: %v", archivePath, closeErr,
+				warn.Close, archivePath, closeErr,
 			)
 		}
 	}()
@@ -53,14 +54,14 @@ func Create(
 	gzw := gzip.NewWriter(outFile)
 	defer func() {
 		if closeErr := gzw.Close(); closeErr != nil {
-			ctxLog.Warn("close %s: %v", "gzip", closeErr)
+			ctxLog.Warn(warn.Close, archive.WriterGzip, closeErr)
 		}
 	}()
 
 	tw := tar.NewWriter(gzw)
 	defer func() {
 		if closeErr := tw.Close(); closeErr != nil {
-			ctxLog.Warn("close %s: %v", "tar", closeErr)
+			ctxLog.Warn(warn.Close, archive.WriterTar, closeErr)
 		}
 	}()
 
@@ -122,7 +123,7 @@ func BackupProject(
 	// Touch marker file for check-backup-age hook.
 	markerDir := filepath.Join(home, archive.BackupMarkerDir)
 	if mkdirErr := os.MkdirAll(markerDir, cfgFs.PermExec); mkdirErr != nil {
-		ctxLog.Warn("mkdir %s: %v", markerDir, mkdirErr)
+		ctxLog.Warn(warn.Mkdir, markerDir, mkdirErr)
 	}
 	markerPath := filepath.Join(markerDir, archive.BackupMarkerFile)
 	internalIo.TouchFile(markerPath)

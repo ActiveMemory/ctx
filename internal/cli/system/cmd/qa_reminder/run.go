@@ -20,6 +20,7 @@ import (
 	coreSession "github.com/ActiveMemory/ctx/internal/cli/system/core/session"
 	"github.com/ActiveMemory/ctx/internal/cli/system/core/state"
 	"github.com/ActiveMemory/ctx/internal/config/embed/text"
+	cfgGit "github.com/ActiveMemory/ctx/internal/config/git"
 	"github.com/ActiveMemory/ctx/internal/config/hook"
 	ctxContext "github.com/ActiveMemory/ctx/internal/context/resolve"
 	"github.com/ActiveMemory/ctx/internal/notify"
@@ -45,7 +46,7 @@ func Run(cmd *cobra.Command, stdin *os.File) error {
 	if paused {
 		return nil
 	}
-	if !strings.Contains(input.ToolInput.Command, "git") {
+	if !strings.Contains(input.ToolInput.Command, cfgGit.Binary) {
 		return nil
 	}
 	fallback := desc.Text(text.DescKeyQaReminderFallback)

@@ -169,7 +169,7 @@ func GenerateKeyFilesIndex(keyFiles []entity.KeyFileData) string {
 	WritePopularAndLongtail(&sb,
 		len(popular), desc.Text(text.DescKeyHeadingFrequentlyTouched),
 		func(i int) (string, string, int) {
-			return "`" + popular[i].Path + "`",
+			return token.Backtick + popular[i].Path + token.Backtick,
 				format.KeyFileSlug(popular[i].Path),
 				len(popular[i].Entries)
 		},

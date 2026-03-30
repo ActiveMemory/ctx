@@ -7,6 +7,10 @@
 package task
 
 // Pending holds the index and content of a Pending top-level task.
+//
+// Fields:
+//   - Index: Zero-based position in the task list
+//   - Content: Full task line text
 type Pending struct {
 	Index   int
 	Content string

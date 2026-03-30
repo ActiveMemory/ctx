@@ -10,6 +10,7 @@ import (
 	"testing"
 
 	"github.com/ActiveMemory/ctx/internal/config/entry"
+	cfgMemory "github.com/ActiveMemory/ctx/internal/config/memory"
 )
 
 func TestClassify(t *testing.T) {
@@ -71,12 +72,12 @@ func TestClassify(t *testing.T) {
 		{
 			name:   "skip: session notes",
 			text:   "Session 2026-03-05: Memory Bridge Design",
-			target: TargetSkip,
+			target: cfgMemory.TargetSkip,
 		},
 		{
 			name:   "skip: generic paragraph",
 			text:   "Worked on the memory bridge today. Made good progress.",
-			target: TargetSkip,
+			target: cfgMemory.TargetSkip,
 		},
 		{
 			name:   "case insensitive",

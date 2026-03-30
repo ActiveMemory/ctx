@@ -26,15 +26,12 @@ import (
 	"github.com/ActiveMemory/ctx/internal/config/session"
 	"github.com/ActiveMemory/ctx/internal/config/stats"
 	"github.com/ActiveMemory/ctx/internal/config/token"
+	"github.com/ActiveMemory/ctx/internal/config/warn"
 	"github.com/ActiveMemory/ctx/internal/entity"
 	internalIo "github.com/ActiveMemory/ctx/internal/io"
 	ctxLog "github.com/ActiveMemory/ctx/internal/log"
 	"github.com/ActiveMemory/ctx/internal/rc"
 )
-
-// MaxTailBytes is the maximum number of bytes to read from the end of a
-// JSONL file when scanning for the last usage block.
-const MaxTailBytes = 32768
 
 // ReadTokenInfo finds the current session's JSONL file and returns
 // the most recent total input token count and model ID from the last
@@ -91,7 +88,7 @@ func FindJSONLPath(sessionID string) (string, error) {
 
 	pattern := filepath.Join(
 		home, dir.Claude, dir.Projects,
-		"*", sessionID+file.ExtJSONL,
+		token.GlobStar, sessionID+file.ExtJSONL,
 	)
 	matches, globErr := filepath.Glob(pattern)
 	if globErr != nil {
@@ -106,7 +103,7 @@ func FindJSONLPath(sessionID string) (string, error) {
 	if writeErr := os.WriteFile(
 		cacheFile, []byte(matches[0]), fs.PermSecret,
 	); writeErr != nil {
-		ctxLog.Warn("write %s: %v", cacheFile, writeErr)
+		ctxLog.Warn(warn.Write, cacheFile, writeErr)
 	}
 	return matches[0], nil
 }
@@ -127,7 +124,7 @@ func ParseLastUsageAndModel(path string) (entity.TokenInfo, error) {
 	}
 	defer func() {
 		if closeErr := f.Close(); closeErr != nil {
-			ctxLog.Warn("close %s: %v", path, closeErr)
+			ctxLog.Warn(warn.Close, path, closeErr)
 		}
 	}()
 
@@ -139,8 +136,8 @@ func ParseLastUsageAndModel(path string) (entity.TokenInfo, error) {
 	// Read the tail of the file
 	size := info.Size()
 	offset := int64(0)
-	if size > MaxTailBytes {
-		offset = size - MaxTailBytes
+	if size > claude.MaxTailBytes {
+		offset = size - claude.MaxTailBytes
 	}
 
 	if _, seekErr := f.Seek(offset, io.SeekStart); seekErr != nil {
@@ -161,10 +158,10 @@ func ParseLastUsageAndModel(path string) (entity.TokenInfo, error) {
 		}
 
 		// Quick check: skip lines that can't contain usage data
-		if !bytes.Contains(line, []byte(`"usage"`)) {
+		if !bytes.Contains(line, []byte(claude.FieldUsage)) {
 			continue
 		}
-		if !bytes.Contains(line, []byte(`"input_tokens"`)) {
+		if !bytes.Contains(line, []byte(claude.FieldInputTokens)) {
 			continue
 		}
 
@@ -212,17 +209,14 @@ func ModelContextWindow(model string) int {
 
 	// 1M models: explicit [1m] suffix OR Opus 4.6+ (always 1M).
 	if strings.Contains(lower, claude.ModelSuffix1M) {
-		return ContextWindow1M
+		return claude.ContextWindow1M
 	}
-	if strings.Contains(lower, "opus") {
-		return ContextWindow1M
+	if strings.Contains(lower, claude.ModelOpus) {
+		return claude.ContextWindow1M
 	}
 
 	return rc.DefaultContextWindow
 }
-
-// ContextWindow1M is the context window size for 1M-capable models.
-const ContextWindow1M = 1_000_000
 
 // EffectiveContextWindow returns the context window size using a four-tier
 // fallback where ground truth outranks configuration:
@@ -244,7 +238,7 @@ func EffectiveContextWindow(model string) int {
 	}
 	// Tier 2: auto-detect from Claude Code settings.
 	if ClaudeSettingsHas1M() {
-		return ContextWindow1M
+		return claude.ContextWindow1M
 	}
 	// Tier 3: explicit .ctxrc override (fallback for non-Claude tools).
 	if w := rc.RC().ContextWindow; w > 0 && w != rc.DefaultContextWindow {

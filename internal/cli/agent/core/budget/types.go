@@ -21,8 +21,20 @@ type packet struct {
 	Instruction  string   `json:"instruction"`
 }
 
-// assembledPacket holds the budget-aware output sections ready for rendering.
-type assembledPacket struct {
+// AssembledPacket holds the budget-aware output sections ready for rendering.
+//
+// Fields:
+//   - ReadOrder: Files in priority order
+//   - Constitution: Inviolable rules
+//   - Tasks: Active task items
+//   - Conventions: Code conventions
+//   - Decisions: Architectural decisions (scored)
+//   - Learnings: Gotchas and tips (scored)
+//   - Summaries: Title-only overflow entries
+//   - Instruction: Behavioral instruction text
+//   - Budget: Token budget limit
+//   - TokensUsed: Estimated tokens consumed
+type AssembledPacket struct {
 	ReadOrder    []string
 	Constitution []string
 	Tasks        []string

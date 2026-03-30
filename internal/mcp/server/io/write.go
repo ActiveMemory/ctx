@@ -1,6 +1,6 @@
 //   /    ctx:                         https://ctx.ist
 // ,'`./    do you remember?
-// `.,'\
+// `.,'\\
 //   \    Copyright 2026-present Context contributors.
 //                 SPDX-License-Identifier: Apache-2.0
 
@@ -14,24 +14,43 @@ import (
 	"github.com/ActiveMemory/ctx/internal/config/token"
 )
 
-// WriteJSON marshals v as JSON and writes it to w, followed by a
-// newline. The mutex serialises concurrent writes.
+// Writer serializes concurrent JSON writes to an underlying io.Writer.
+//
+// Fields:
+//   - w: output stream
+//   - mu: mutex guarding writes
+type Writer struct {
+	w  io.Writer
+	mu sync.Mutex
+}
+
+// NewWriter creates a Writer wrapping the given output stream.
 //
 // Parameters:
-//   - w: output stream
-//   - mu: mutex guarding w
+//   - w: output stream to write to
+//
+// Returns:
+//   - *Writer: thread-safe JSON writer
+func NewWriter(w io.Writer) *Writer {
+	return &Writer{w: w}
+}
+
+// WriteJSON marshals v as JSON and writes it followed by a newline.
+// Concurrent calls are serialized by the internal mutex.
+//
+// Parameters:
 //   - v: value to marshal and write
 //
 // Returns:
 //   - error: non-nil on marshal or write failure
-func WriteJSON(w io.Writer, mu *sync.Mutex, v any) error {
+func (sw *Writer) WriteJSON(v any) error {
 	data, marshalErr := json.Marshal(v)
 	if marshalErr != nil {
 		return marshalErr
 	}
-	mu.Lock()
 	nl := token.NewlineLF[0]
-	_, writeErr := w.Write(append(data, nl))
-	mu.Unlock()
+	sw.mu.Lock()
+	_, writeErr := sw.w.Write(append(data, nl))
+	sw.mu.Unlock()
 	return writeErr
 }

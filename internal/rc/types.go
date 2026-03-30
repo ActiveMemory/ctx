@@ -6,6 +6,8 @@
 
 package rc
 
+import cfgMemory "github.com/ActiveMemory/ctx/internal/config/memory"
+
 // CtxRC represents the configuration from the .ctxrc file.
 //
 // Fields:
@@ -46,30 +48,33 @@ package rc
 //     technology-dependent constant staleness (opt-in)
 //   - CompanionCheck: Check companion tool availability
 //     during /ctx-remember (default true)
+//   - ClassifyRules: Custom keyword rules for memory
+//     entry classification (overrides defaults when set)
 type CtxRC struct {
-	Profile             string          `yaml:"profile"`
-	ContextDir          string          `yaml:"context_dir"`
-	TokenBudget         int             `yaml:"token_budget"`
-	PriorityOrder       []string        `yaml:"priority_order"`
-	AutoArchive         bool            `yaml:"auto_archive"`
-	ArchiveAfterDays    int             `yaml:"archive_after_days"`
-	ScratchpadEncrypt   *bool           `yaml:"scratchpad_encrypt"`
-	AllowOutsideCwd     bool            `yaml:"allow_outside_cwd"`
-	EntryCountLearnings int             `yaml:"entry_count_learnings"`
-	EntryCountDecisions int             `yaml:"entry_count_decisions"`
-	ConventionLineCount int             `yaml:"convention_line_count"`
-	InjectionTokenWarn  int             `yaml:"injection_token_warn"`
-	ContextWindow       int             `yaml:"context_window"`
-	BillingTokenWarn    int             `yaml:"billing_token_warn"`
-	EventLog            bool            `yaml:"event_log"`
-	KeyRotationDays     int             `yaml:"key_rotation_days"`
-	TaskNudgeInterval   int             `yaml:"task_nudge_interval"`
-	KeyPathOverride     string          `yaml:"key_path"`
-	StaleAgeDays        int             `yaml:"stale_age_days"`
-	SessionPrefixes     []string        `yaml:"session_prefixes"`
-	FreshnessFiles      []FreshnessFile `yaml:"freshness_files"`
-	CompanionCheck      *bool           `yaml:"companion_check"`
-	Notify              *NotifyConfig   `yaml:"notify"`
+	Profile             string                   `yaml:"profile"`
+	ContextDir          string                   `yaml:"context_dir"`
+	TokenBudget         int                      `yaml:"token_budget"`
+	PriorityOrder       []string                 `yaml:"priority_order"`
+	AutoArchive         bool                     `yaml:"auto_archive"`
+	ArchiveAfterDays    int                      `yaml:"archive_after_days"`
+	ScratchpadEncrypt   *bool                    `yaml:"scratchpad_encrypt"`
+	AllowOutsideCwd     bool                     `yaml:"allow_outside_cwd"`
+	EntryCountLearnings int                      `yaml:"entry_count_learnings"`
+	EntryCountDecisions int                      `yaml:"entry_count_decisions"`
+	ConventionLineCount int                      `yaml:"convention_line_count"`
+	InjectionTokenWarn  int                      `yaml:"injection_token_warn"`
+	ContextWindow       int                      `yaml:"context_window"`
+	BillingTokenWarn    int                      `yaml:"billing_token_warn"`
+	EventLog            bool                     `yaml:"event_log"`
+	KeyRotationDays     int                      `yaml:"key_rotation_days"`
+	TaskNudgeInterval   int                      `yaml:"task_nudge_interval"`
+	KeyPathOverride     string                   `yaml:"key_path"`
+	StaleAgeDays        int                      `yaml:"stale_age_days"`
+	SessionPrefixes     []string                 `yaml:"session_prefixes"`
+	FreshnessFiles      []FreshnessFile          `yaml:"freshness_files"`
+	CompanionCheck      *bool                    `yaml:"companion_check"`
+	ClassifyRules       []cfgMemory.ClassifyRule `yaml:"classify_rules"`
+	Notify              *NotifyConfig            `yaml:"notify"`
 }
 
 // FreshnessFile describes a source file containing technology-dependent
@@ -91,6 +96,9 @@ type FreshnessFile struct {
 // KeyRotationDays is deprecated here; use the top-level CtxRC.KeyRotationDays
 // instead. This field is retained for backwards compatibility with existing
 // .ctxrc files that have key_rotation_days nested under notify.
+// Fields:
+//   - Events: Event filter list (loop, nudge, relay, heartbeat)
+//   - KeyRotationDays: Deprecated; use top-level CtxRC.KeyRotationDays
 type NotifyConfig struct {
 	Events          []string `yaml:"events"`
 	KeyRotationDays int      `yaml:"key_rotation_days"`

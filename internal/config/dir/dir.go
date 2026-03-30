@@ -45,6 +45,14 @@ const (
 	CtxData = ".ctx"
 )
 
+// Platform-specific home directory path components.
+const (
+	// HomeLinux is the home directory parent on Linux (/home/username).
+	HomeLinux = "home"
+	// HomeMacOS is the home directory parent on macOS (/Users/username).
+	HomeMacOS = "Users"
+)
+
 // Journal site output directories.
 const (
 	// JournalDocs is the docs subdirectory in the generated site.

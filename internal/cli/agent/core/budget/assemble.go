@@ -34,9 +34,9 @@ import (
 //
 // Returns:
 //   - *AssembledPacket: Assembled packet within budget
-func AssemblePacket(ctx *entity.Context, budget int) *assembledPacket {
+func AssemblePacket(ctx *entity.Context, budget int) *AssembledPacket {
 	now := time.Now()
-	pkt := &assembledPacket{
+	pkt := &AssembledPacket{
 		Budget:      budget,
 		Instruction: desc.Text(text.DescKeyAgentInstruction),
 	}

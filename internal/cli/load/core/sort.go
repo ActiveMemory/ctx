@@ -15,8 +15,8 @@ import (
 
 // SortByReadOrder sorts context files according to [config.ReadOrder].
 //
-// Files not in the read-order list are assigned a low priority (100) and
-// will appear at the end. The original slice is not modified; a new sorted
+// Files not in the read-order list are assigned a fallback priority
+// (len(ReadOrder)) and will appear at the end. The original slice is not modified; a new sorted
 // slice is returned.
 //
 // Parameters:
@@ -25,7 +25,9 @@ import (
 // Returns:
 //   - []entity.FileInfo: New slice with files sorted by read priority
 func SortByReadOrder(files []entity.FileInfo) []entity.FileInfo {
-	// Create a map for a quick priority lookup
+	// Create a map for a quick priority lookup.
+	// Unknown files get fallback priority (after all known files).
+	fallback := len(ctx.ReadOrder)
 	priority := make(map[string]int)
 	for i, name := range ctx.ReadOrder {
 		priority[name] = i
@@ -38,11 +40,11 @@ func SortByReadOrder(files []entity.FileInfo) []entity.FileInfo {
 	sort.Slice(sorted, func(i, j int) bool {
 		pi, ok := priority[sorted[i].Name]
 		if !ok {
-			pi = 100
+			pi = fallback
 		}
 		pj, ok := priority[sorted[j].Name]
 		if !ok {
-			pj = 100
+			pj = fallback
 		}
 		return pi < pj
 	})

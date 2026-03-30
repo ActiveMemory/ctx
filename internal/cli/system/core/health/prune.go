@@ -10,18 +10,13 @@ import (
 	"fmt"
 	"os"
 	"path/filepath"
-	"regexp"
 	"time"
 
 	"github.com/ActiveMemory/ctx/internal/assets/read/desc"
 	"github.com/ActiveMemory/ctx/internal/cli/system/core/state"
 	"github.com/ActiveMemory/ctx/internal/config/embed/text"
+	"github.com/ActiveMemory/ctx/internal/config/regex"
 	cfgTime "github.com/ActiveMemory/ctx/internal/config/time"
-)
-
-// UUIDPattern matches a UUID (v4) anywhere in a filename.
-var UUIDPattern = regexp.MustCompile(
-	`[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}`,
 )
 
 // AutoPrune silently removes session-scoped state files older than the
@@ -51,7 +46,7 @@ func AutoPrune(days int) int {
 			continue
 		}
 
-		if !UUIDPattern.MatchString(entry.Name()) {
+		if !regex.UUID.MatchString(entry.Name()) {
 			continue
 		}
 

@@ -12,6 +12,7 @@ import (
 
 	"github.com/ActiveMemory/ctx/internal/config/dir"
 	"github.com/ActiveMemory/ctx/internal/config/fs"
+	"github.com/ActiveMemory/ctx/internal/config/warn"
 	ctxContext "github.com/ActiveMemory/ctx/internal/context/validate"
 	ctxLog "github.com/ActiveMemory/ctx/internal/log"
 	"github.com/ActiveMemory/ctx/internal/rc"
@@ -29,7 +30,7 @@ func Dir() string {
 	}
 	d := filepath.Join(rc.ContextDir(), dir.State)
 	if mkdirErr := os.MkdirAll(d, fs.PermRestrictedDir); mkdirErr != nil {
-		ctxLog.Warn("mkdir %s: %v", d, mkdirErr)
+		ctxLog.Warn(warn.Mkdir, d, mkdirErr)
 	}
 	return d
 }

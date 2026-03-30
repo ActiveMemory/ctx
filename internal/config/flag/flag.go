@@ -60,6 +60,7 @@ const (
 	Check           = "check"
 	Commands        = "commands"
 	Completion      = "completion"
+	Days            = "days"
 	DryRun          = "dry-run"
 	Event           = "event"
 	External        = "external"
@@ -96,6 +97,7 @@ const (
 	Tool            = "tool"
 	Type            = "type"
 	Variant         = "variant"
+	Verbose         = "verbose"
 	Write           = "write"
 	Yes             = "yes"
 )
@@ -121,12 +123,14 @@ const (
 	ShortSessionID     = "s"
 	ShortShow          = "S"
 	ShortTool          = "t"
+	ShortVerbose       = "v"
 	ShortWrite         = "w"
 	ShortYes           = "y"
 )
 
 // CLI flag names used in multiple commands.
 const (
+	Log   = "log"
 	Since = "since"
 	Until = "until"
 )

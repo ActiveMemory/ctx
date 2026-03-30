@@ -46,6 +46,11 @@ func (r *RustBuilder) Build(external bool) (map[string][]string, error) {
 }
 
 // CargoMetadata represents the subset of `cargo metadata` output we need.
+//
+// Fields:
+//   - Packages: All packages in the workspace
+//   - WorkspaceMembers: Package IDs that belong to the workspace
+//   - Resolve: Resolved dependency graph
 type CargoMetadata struct {
 	Packages         []CargoPackage `json:"packages"`
 	WorkspaceMembers []string       `json:"workspace_members"`
@@ -53,6 +58,13 @@ type CargoMetadata struct {
 }
 
 // CargoPackage represents a package in cargo metadata output.
+//
+// Fields:
+//   - ID: Unique package identifier
+//   - Name: Package name
+//   - Source: Registry source (nil for local)
+//   - Dependencies: Declared dependencies
+//   - Targets: Build targets
 type CargoPackage struct {
 	ID           string        `json:"id"`
 	Name         string        `json:"name"`
@@ -62,12 +74,20 @@ type CargoPackage struct {
 }
 
 // CargoDep represents a dependency entry in cargo metadata.
+//
+// Fields:
+//   - Name: Dependency crate name
+//   - Kind: Dependency kind (nil=normal, "dev", "build")
 type CargoDep struct {
 	Name string  `json:"name"`
 	Kind *string `json:"kind"`
 }
 
 // CargoTarget represents a build target in cargo metadata.
+//
+// Fields:
+//   - Name: Target name
+//   - Kind: Target kinds (lib, bin, test, etc.)
 type CargoTarget struct {
 	Name string   `json:"name"`
 	Kind []string `json:"kind"`
@@ -79,6 +99,10 @@ type CargoResolve struct {
 }
 
 // CargoNode represents a node in the resolved dependency graph.
+//
+// Fields:
+//   - ID: Package identifier
+//   - Deps: Resolved dependency IDs
 type CargoNode struct {
 	ID   string   `json:"id"`
 	Deps []string `json:"deps,omitempty"`

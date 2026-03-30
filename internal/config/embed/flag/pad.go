@@ -14,7 +14,7 @@ const (
 	DescKeyPadEditPrepend  = "pad.edit.prepend"
 	DescKeyPadExportDryRun = "pad.export.dry-run"
 	DescKeyPadExportForce  = "pad.export.force"
-	DescKeyPadImpBlob      = "pad.imp.blob"
+	DescKeyPadImpBlob      = "pad.root.blob"
 	DescKeyPadMergeDryRun  = "pad.merge.dry-run"
 	DescKeyPadMergeKey     = "pad.merge.key"
 	DescKeyPadShowOut      = "pad.show.out"

@@ -22,6 +22,7 @@ import (
 	"github.com/ActiveMemory/ctx/internal/config/project"
 	"github.com/ActiveMemory/ctx/internal/config/regex"
 	"github.com/ActiveMemory/ctx/internal/config/token"
+	"github.com/ActiveMemory/ctx/internal/config/warn"
 	"github.com/ActiveMemory/ctx/internal/entity"
 	"github.com/ActiveMemory/ctx/internal/index"
 	"github.com/ActiveMemory/ctx/internal/rc"
@@ -29,7 +30,7 @@ import (
 
 // regInternalPkg matches backtick-quoted paths starting with "internal/".
 var regInternalPkg = regexp.MustCompile(
-	"`(" + project.DirInternalSlash + "[^`]+)`",
+	token.Backtick + "(" + project.DirInternalSlash + "[^" + token.Backtick + "]+)" + token.Backtick,
 )
 
 // staleAgeExclude lists context files that are expected to be static
@@ -144,8 +145,18 @@ func checkConstitution(_ *entity.Context, report *Report) {
 	secretPatterns := token.SecretPatterns
 
 	// Look for common secret file patterns in the working directory
-	entries, readErr := os.ReadDir(".")
+	cwd, cwdErr := os.Getwd()
+	if cwdErr != nil {
+		report.Warnings = append(report.Warnings, Issue{
+			Message: fmt.Sprintf(warn.Getwd, cwdErr),
+		})
+		return
+	}
+	entries, readErr := os.ReadDir(cwd)
 	if readErr != nil {
+		report.Warnings = append(report.Warnings, Issue{
+			Message: fmt.Sprintf(warn.Readdir, cwd, readErr),
+		})
 		return
 	}
 
@@ -361,7 +372,7 @@ func checkMissingPackages(ctx *entity.Context, report *Report) {
 }
 
 // extractFirstComment extracts the first HTML comment block from content.
-// Returns empty string if no comment found.
+// Returns an empty string if no comment found.
 //
 // Parameters:
 //   - content: Raw file content to scan for an HTML comment
@@ -370,15 +381,15 @@ func checkMissingPackages(ctx *entity.Context, report *Report) {
 //   - string: Trimmed comment including delimiters,
 //     or empty string if none found
 func extractFirstComment(content string) string {
-	start := strings.Index(content, "<!--")
+	start := strings.Index(content, marker.CommentOpen)
 	if start == -1 {
 		return ""
 	}
-	end := strings.Index(content[start:], "-->")
+	end := strings.Index(content[start:], marker.CommentClose)
 	if end == -1 {
 		return ""
 	}
-	return strings.TrimSpace(content[start : start+end+3])
+	return strings.TrimSpace(content[start : start+end+len(marker.CommentClose)])
 }
 
 // checkTemplateHeaders compares context file comment headers against

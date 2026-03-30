@@ -32,7 +32,9 @@ func Run(cmd *cobra.Command, opts Opts) error {
 	case ModePrepend:
 		entries, editErr = coreEdit.Prepend(opts.N, opts.Text)
 	case ModeBlob:
-		entries, editErr = coreEdit.UpdateBlob(opts.N, opts.FilePath, opts.LabelText)
+		entries, editErr = coreEdit.UpdateBlob(
+			opts.N, opts.FilePath, opts.LabelText,
+		)
 	default:
 		entries, editErr = coreEdit.Replace(opts.N, opts.Text)
 	}

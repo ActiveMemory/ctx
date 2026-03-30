@@ -1,4 +1,11 @@
 #!/bin/bash
+
+#   /    ctx:                         https://ctx.ist
+# ,'`./    do you remember?
+# `.,'\
+#   \    Copyright 2026-present Context contributors.
+#                 SPDX-License-Identifier: Apache-2.0
+
 # Scan all Go files for exported functions with docstring violations.
 # Convention: // FunctionName does X. (first line starts with function name)
 # Must have Parameters: and Returns: sections if function has params/returns.

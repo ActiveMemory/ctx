@@ -7,9 +7,12 @@
 package resolve
 
 import (
+	"fmt"
 	"path/filepath"
 
+	"github.com/ActiveMemory/ctx/internal/assets/read/desc"
 	"github.com/ActiveMemory/ctx/internal/config/dir"
+	"github.com/ActiveMemory/ctx/internal/config/embed/text"
 	"github.com/ActiveMemory/ctx/internal/rc"
 )
 
@@ -32,7 +35,7 @@ func DirLine() string {
 	if d == "" {
 		return ""
 	}
-	return "Context: " + d
+	return fmt.Sprintf(desc.Text(text.DescKeyWriteContextDirLabel), d)
 }
 
 // AppendDir appends a bracketed context directory footer to msg
@@ -45,7 +48,9 @@ func DirLine() string {
 //   - string: Message with appended "[Context: <path>]", or msg unchanged
 func AppendDir(msg string) string {
 	if line := DirLine(); line != "" {
-		return msg + " [" + line + "]"
+		return msg + fmt.Sprintf(
+			desc.Text(text.DescKeyWriteContextDirBracket), rc.ContextDir(),
+		)
 	}
 	return msg
 }

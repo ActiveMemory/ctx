@@ -13,4 +13,9 @@ const (
 	DescKeyWhyBoldFormat       = "why.bold-format"
 	DescKeyWhyMenuItemFormat   = "why.menu-item-format"
 	DescKeyWhyMenuPrompt       = "why.menu-prompt"
+
+	// Why menu labels.
+	DescKeyWriteWhyLabelManifesto  = "write.why-label-manifesto"
+	DescKeyWriteWhyLabelAbout      = "write.why-label-about"
+	DescKeyWriteWhyLabelInvariants = "write.why-label-invariants"
 )

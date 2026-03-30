@@ -13,6 +13,8 @@ import (
 	"path/filepath"
 	"time"
 
+	"github.com/ActiveMemory/ctx/internal/config/project"
+	"github.com/ActiveMemory/ctx/internal/config/warn"
 	errNotify "github.com/ActiveMemory/ctx/internal/err/notify"
 	ctxLog "github.com/ActiveMemory/ctx/internal/log"
 	"github.com/ActiveMemory/ctx/internal/notify"
@@ -34,16 +36,18 @@ func Send() (Result, error) {
 		return Result{NoWebhook: true}, nil
 	}
 
-	project := "unknown"
+	projectName := project.FallbackName
 	if cwd, cwdErr := os.Getwd(); cwdErr == nil {
-		project = filepath.Base(cwd)
+		projectName = filepath.Base(cwd)
+	} else {
+		ctxLog.Warn(warn.Getwd, cwdErr)
 	}
 
 	payload := notify.Payload{
 		Event:     "test",
 		Message:   "Test notification from ctx",
 		Timestamp: time.Now().UTC().Format(time.RFC3339),
-		Project:   project,
+		Project:   projectName,
 	}
 
 	body, marshalErr := json.Marshal(payload)
@@ -60,7 +64,7 @@ func Send() (Result, error) {
 	defer func() {
 		if closeErr := resp.Body.Close(); closeErr != nil {
 			ctxLog.Warn(
-				"close %s: %v", "response body", closeErr,
+				warn.Close, "response body", closeErr,
 			)
 		}
 	}()

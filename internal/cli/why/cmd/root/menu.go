@@ -14,6 +14,7 @@ import (
 
 	"github.com/spf13/cobra"
 
+	"github.com/ActiveMemory/ctx/internal/config/token"
 	errCli "github.com/ActiveMemory/ctx/internal/err/cli"
 	errFs "github.com/ActiveMemory/ctx/internal/err/fs"
 	"github.com/ActiveMemory/ctx/internal/write/why"
@@ -35,7 +36,7 @@ func showMenu(cmd *cobra.Command) error {
 	why.MenuPrompt(cmd)
 
 	reader := bufio.NewReader(os.Stdin)
-	input, readErr := reader.ReadString('\n')
+	input, readErr := reader.ReadString(token.NewlineLF[0])
 	if readErr != nil {
 		return errFs.ReadInput(readErr)
 	}

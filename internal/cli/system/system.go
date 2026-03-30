@@ -63,13 +63,13 @@ import (
 func Cmd() *cobra.Command {
 	short, long := desc.Command(cmd.DescKeySystem)
 
-	cmd := &cobra.Command{
+	c := &cobra.Command{
 		Use:   cmd.UseSystem,
 		Short: short,
 		Long:  long,
 	}
 
-	cmd.AddCommand(
+	c.AddCommand(
 		backup.Cmd(),
 		block_dangerous_command.Cmd(),
 		block_non_path_ctx.Cmd(),
@@ -103,5 +103,5 @@ func Cmd() *cobra.Command {
 		stats.Cmd(),
 	)
 
-	return cmd
+	return c
 }

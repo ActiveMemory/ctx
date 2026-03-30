@@ -57,15 +57,15 @@ Read on for the full walkthrough with examples.
 |------------------------|-------------|--------------------------------------------------|
 | `ctx status`           | CLI command | Quick health check on context files              |
 | `ctx agent`            | CLI command | Load token-budgeted context packet               |
-| `ctx recall list`      | CLI command | List previous sessions                           |
-| `ctx recall show`      | CLI command | Inspect a specific session in detail             |
+| `ctx journal source`      | CLI command | List previous sessions                           |
+| `ctx journal source --show`      | CLI command | Inspect a specific session in detail             |
 | `/ctx-remember`        | Skill       | Recall project context with structured readback  |
 | `/ctx-agent`           | Skill       | Load full context packet inside the assistant    |
 | `/ctx-status`          | Skill       | Show context summary with commentary             |
 | `/ctx-next`            | Skill       | Suggest what to work on with rationale           |
 | `/ctx-commit`          | Skill       | Commit code and prompt for context capture       |
 | `/ctx-reflect`         | Skill       | Structured reflection checkpoint                 |
-| `/ctx-recall`          | Skill       | Browse session history inside your AI assistant  |
+| `/ctx-history`          | Skill       | Browse session history inside your AI assistant  |
 
 ## The Workflow
 
@@ -91,7 +91,7 @@ Do you remember what we were working on?
 This triggers the `/ctx-remember` skill. Behind the scenes, the assistant
 runs `ctx agent --budget 4000`, reads the files listed in the context packet
 (`TASKS.md`, `DECISIONS.md`, `LEARNINGS.md`, `CONVENTIONS.md`), checks
-`ctx recall list --limit 3` for recent sessions, and then presents a
+`ctx journal source --limit 3` for recent sessions, and then presents a
 structured **readback**.
 
 The **readback** should feel like a **recall**, not a file system tour.
@@ -303,7 +303,7 @@ you select which to keep, it persists them via `ctx add` and offers
 `/ctx-commit` if uncommitted changes remain.
 
 Session transcripts are automatically captured by Claude Code and can be
-browsed later with `ctx recall list` and `ctx recall show`.
+browsed later with `ctx journal source` and `ctx journal source --show`.
 
 ---
 
@@ -467,7 +467,7 @@ you have been working for a while and have unpersisted learnings, persist
 proactively.
 
 **Browse previous sessions by topic**. If you need context from a prior session,
-`ctx recall show auth` will match by keyword. You do not need to remember the
+`ctx journal source --show auth` will match by keyword. You do not need to remember the
 exact date or slug.
 
 **Reflection is optional but valuable**. You can skip `/ctx-reflect` for small

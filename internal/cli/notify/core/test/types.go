@@ -7,6 +7,11 @@
 package test
 
 // Result holds the outcome of a test notification.
+//
+// Fields:
+//   - NoWebhook: No webhook URL is configured
+//   - Filtered: Event was excluded by the filter
+//   - StatusCode: HTTP response status code
 type Result struct {
 	NoWebhook  bool
 	Filtered   bool

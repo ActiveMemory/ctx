@@ -52,6 +52,19 @@ Unless the user says `--skip-qa` or "skip checks":
   identify the build/lint commands, ask the user before proceeding.
 - If the build or lint fails, stop and report: do not commit broken code
 
+**Verify before claiming ready**: map each claim to evidence.
+"Tests pass" requires test output with 0 failures. "Build succeeds"
+requires exit 0. "Lint clean" requires linter output with 0 errors.
+Run commands fresh — never reuse earlier output. Before proceeding
+to stage, answer these self-audit questions:
+
+1. What assumptions did I make?
+2. What did I NOT check?
+3. Where am I least confident?
+4. What would a reviewer question first?
+
+If any answer reveals a gap, address it before staging.
+
 ### 3. Stage and commit
 
 - Review unstaged changes with `git status`

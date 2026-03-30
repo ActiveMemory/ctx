@@ -130,7 +130,7 @@ pad.export.dry-run:
   short: print what would be exported without writing
 pad.export.force:
   short: overwrite existing files instead of timestamping
-pad.imp.blob:
+pad.root.blob:
   short: import first-level files from a directory as blob entries
 pad.merge.dry-run:
   short: print what would be merged without writing

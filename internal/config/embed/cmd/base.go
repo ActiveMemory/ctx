@@ -15,6 +15,7 @@ const (
 	UseDep        = "dep"
 	UseDoctor     = "doctor"
 	UseDrift      = "drift"
+	UseComplete   = "complete <task-id-or-text>"
 	UseGuide      = "guide"
 	UseHook       = "hook <tool>"
 	UseInit       = "init"
