@@ -23,10 +23,10 @@ import (
 func Cmd() *cobra.Command {
 	var opts entity.ImportOpts
 
-	short, long := desc.Command(cmd.DescKeyRecallImport)
+	short, long := desc.Command(cmd.DescKeyJournalImport)
 
 	c := &cobra.Command{
-		Use:   cmd.UseRecallImport,
+		Use:   cmd.UseJournalImport,
 		Short: short,
 		Long:  long,
 		RunE: func(cmd *cobra.Command, args []string) error {
@@ -35,27 +35,27 @@ func Cmd() *cobra.Command {
 	}
 
 	c.Flags().BoolVar(
-		&opts.All, cFlag.All, false, desc.Flag(flag.DescKeyRecallImportAll),
+		&opts.All, cFlag.All, false, desc.Flag(flag.DescKeyJournalImportAll),
 	)
 	c.Flags().BoolVar(
 		&opts.AllProjects, cFlag.AllProjects, false,
-		desc.Flag(flag.DescKeyRecallImportAllProjects),
+		desc.Flag(flag.DescKeyJournalImportAllProjects),
 	)
 	c.Flags().BoolVar(
 		&opts.Regenerate, cFlag.Regenerate, false,
-		desc.Flag(flag.DescKeyRecallImportRegenerate),
+		desc.Flag(flag.DescKeyJournalImportRegenerate),
 	)
 	c.Flags().BoolVar(
 		&opts.KeepFrontmatter, cFlag.KeepFrontmatter, true,
-		desc.Flag(flag.DescKeyRecallImportKeepFrontmatter),
+		desc.Flag(flag.DescKeyJournalImportKeepFrontmatter),
 	)
 	c.Flags().BoolVarP(
 		&opts.Yes, cFlag.Yes, cFlag.ShortYes, false,
-		desc.Flag(flag.DescKeyRecallImportYes),
+		desc.Flag(flag.DescKeyJournalImportYes),
 	)
 	c.Flags().BoolVar(
 		&opts.DryRun, cFlag.DryRun, false,
-		desc.Flag(flag.DescKeyRecallImportDryRun),
+		desc.Flag(flag.DescKeyJournalImportDryRun),
 	)
 
 	return c

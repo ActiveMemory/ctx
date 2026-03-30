@@ -61,8 +61,8 @@ func DispatchCall(
 		return complete(h, req.ID, params.Arguments)
 	case tool.Drift:
 		return out.Call(req.ID, h.Drift)
-	case tool.Recall:
-		return recall(req.ID, params.Arguments, h.Recall)
+	case tool.JournalSource:
+		return journalSource(req.ID, params.Arguments, h.Recall)
 	case tool.WatchUpdate:
 		return watchUpdate(h, req.ID, params.Arguments)
 	case tool.Compact:

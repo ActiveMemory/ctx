@@ -140,39 +140,21 @@ pad.show.out:
   short: write blob content to a file
 pause.session-id:
   short: Session ID (overrides stdin)
-recall.import.all:
+journal.import.all:
   short: Import all sessions from current project
-recall.import.all-projects:
+journal.import.all-projects:
   short: Include sessions from all projects
-recall.import.dry-run:
+journal.import.dry-run:
   short: Show what would be imported without writing files
-recall.import.keep-frontmatter:
+journal.import.keep-frontmatter:
   short: Preserve enriched YAML frontmatter during regeneration
-recall.import.regenerate:
+journal.import.regenerate:
   short: Re-import existing files (preserves YAML frontmatter by default)
-recall.import.yes:
+journal.import.yes:
   short: Skip confirmation prompt
-recall.list.all-projects:
-  short: Include sessions from all projects
-recall.list.limit:
-  short: Maximum sessions to display
-recall.list.project:
-  short: Filter by project name
-recall.list.since:
-  short: Show sessions on or after this date (YYYY-MM-DD)
-recall.list.tool:
-  short: Filter by tool (e.g., claude-code)
-recall.list.until:
-  short: Show sessions on or before this date (YYYY-MM-DD)
-recall.lock.all:
+journal.lock.all:
   short: Lock all journal entries
-recall.show.all-projects:
-  short: Search sessions from all projects
-recall.show.full:
-  short: Show full message content
-recall.show.latest:
-  short: Show the most recent session
-recall.unlock.all:
+journal.unlock.all:
   short: Unlock all journal entries
 remind.add.after:
   short: Don't surface until this date (YYYY-MM-DD)

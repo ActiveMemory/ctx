@@ -67,20 +67,20 @@ func complete(
 	return out.ToolResult(id, t, completeErr)
 }
 
-// recall extracts limit/since and calls the recall function.
+// journalSource extracts limit/since and calls the session query function.
 //
 // Parameters:
 //   - id: JSON-RPC request ID
 //   - args: MCP tool arguments (limit, since)
-//   - fn: recall function accepting limit and since
+//   - fn: session query function accepting limit and since
 //
 // Returns:
 //   - *proto.Response: session list or parse error
-func recall(
+func journalSource(
 	id json.RawMessage, args map[string]interface{},
 	fn func(int, time.Time) (string, error),
 ) *proto.Response {
-	limit := cfg.DefaultRecallLimit
+	limit := cfg.DefaultSourceLimit
 	if v, ok := args[field.Limit].(float64); ok && v > 0 {
 		limit = int(v)
 	}

@@ -22,7 +22,7 @@ import (
 	errSession "github.com/ActiveMemory/ctx/internal/err/session"
 	sharedFmt "github.com/ActiveMemory/ctx/internal/format"
 	"github.com/ActiveMemory/ctx/internal/parse"
-	"github.com/ActiveMemory/ctx/internal/write/recall"
+	writeRecall "github.com/ActiveMemory/ctx/internal/write/journal"
 )
 
 // runShow displays detailed information about a session including metadata,
@@ -77,7 +77,7 @@ func runShow(cmd *cobra.Command, args []string, opts Opts) error {
 		}
 		if len(matches) > 1 {
 			lines := srcFmt.SessionMatchLines(matches)
-			recall.AmbiguousSessionMatchWithHint(
+			writeRecall.AmbiguousSessionMatchWithHint(
 				cmd, showArgs[0], lines,
 				matches[0].ID[:journal.SessionIDHintLen],
 			)
@@ -87,7 +87,7 @@ func runShow(cmd *cobra.Command, args []string, opts Opts) error {
 	}
 
 	// Print session details.
-	recall.SessionMetadata(cmd, recall.SessionInfo{
+	writeRecall.SessionMetadata(cmd, writeRecall.SessionInfo{
 		Slug:      session.Slug,
 		ID:        session.ID,
 		Tool:      session.Tool,
@@ -111,21 +111,21 @@ func runShow(cmd *cobra.Command, args []string, opts Opts) error {
 			toolCounts[t.Name]++
 		}
 
-		recall.SectionHeader(
+		writeRecall.SectionHeader(
 			cmd, 2, desc.Text(text.DescKeyLabelSectionToolUsage),
 		)
 		for name, count := range toolCounts {
-			recall.ListItem(
-				cmd, desc.Text(text.DescKeyRecallToolCountLine),
+			writeRecall.ListItem(
+				cmd, desc.Text(text.DescKeyJournalSourceToolCountLine),
 				name, count,
 			)
 		}
-		recall.BlankLine(cmd)
+		writeRecall.BlankLine(cmd)
 	}
 
 	// Messages
 	if opts.Full {
-		recall.SectionHeader(
+		writeRecall.SectionHeader(
 			cmd, 2, desc.Text(text.DescKeyLabelSectionConversation),
 		)
 
@@ -137,17 +137,17 @@ func runShow(cmd *cobra.Command, args []string, opts Opts) error {
 				role = desc.Text(text.DescKeyLabelToolOutput)
 			}
 
-			recall.ConversationTurn(
+			writeRecall.ConversationTurn(
 				cmd, i+1, role, msg.Timestamp.Format(time.Format),
 			)
 
 			if msg.Text != "" {
-				recall.TextBlock(cmd, msg.Text)
+				writeRecall.TextBlock(cmd, msg.Text)
 			}
 
 			for _, t := range msg.ToolUses {
 				toolInfo := srcFmt.ToolUse(t)
-				recall.SessionDetail(
+				writeRecall.SessionDetail(
 					cmd,
 					desc.Text(text.DescKeyLabelInlineTool),
 					toolInfo,
@@ -156,22 +156,22 @@ func runShow(cmd *cobra.Command, args []string, opts Opts) error {
 
 			for _, tr := range msg.ToolResults {
 				if tr.IsError {
-					recall.Hint(
+					writeRecall.Hint(
 						cmd, desc.Text(text.DescKeyLabelInlineError),
 					)
 				}
 				if tr.Content != "" {
 					content := parse.StripLineNumbers(tr.Content)
-					recall.CodeBlock(cmd, content)
+					writeRecall.CodeBlock(cmd, content)
 				}
 			}
 
 			if len(msg.ToolUses) > 0 || len(msg.ToolResults) > 0 {
-				recall.BlankLine(cmd)
+				writeRecall.BlankLine(cmd)
 			}
 		}
 	} else {
-		recall.SectionHeader(
+		writeRecall.SectionHeader(
 			cmd, 2,
 			desc.Text(text.DescKeyLabelSectionConversationPreview),
 		)
@@ -181,7 +181,7 @@ func runShow(cmd *cobra.Command, args []string, opts Opts) error {
 			if msg.BelongsToUser() && msg.Text != "" {
 				count++
 				if count > journal.PreviewMaxTurns {
-					recall.MoreTurns(
+					writeRecall.MoreTurns(
 						cmd,
 						session.TurnCount-journal.PreviewMaxTurns,
 					)
@@ -191,11 +191,11 @@ func runShow(cmd *cobra.Command, args []string, opts Opts) error {
 				if len(t) > journal.PreviewMaxTextLen {
 					t = t[:journal.PreviewMaxTextLen] + token.Ellipsis
 				}
-				recall.NumberedItem(cmd, count, t)
+				writeRecall.NumberedItem(cmd, count, t)
 			}
 		}
-		recall.BlankLine(cmd)
-		recall.Hint(cmd, desc.Text(text.DescKeyLabelHintUseFull))
+		writeRecall.BlankLine(cmd)
+		writeRecall.Hint(cmd, desc.Text(text.DescKeyLabelHintUseFull))
 	}
 
 	return nil

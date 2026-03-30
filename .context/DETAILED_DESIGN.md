@@ -1018,7 +1018,7 @@ Consult specific sections when working on a module.
 | `check-context-size` | UserPromptSubmit | (all) | Adaptive counter: silent 1–15, every 5th 16–30, every 3rd 30+. Per-session counter in temp file | Per-session |
 | `check-persistence` | UserPromptSubmit | (all) | Track .context/ mtime; silent 1–10, nudge at #20 if no modifications, then every 15 prompts since last mod | Per-session |
 | `check-ceremonies` | UserPromptSubmit | (all) | Scan last 3 journal entries for "ctx-remember" and "ctx-wrap-up" strings; nudge missing ceremonies | Daily |
-| `check-journal` | UserPromptSubmit | (all) | Stage 1: count .jsonl files newer than latest journal export. Stage 2: count unenriched entries via journal/state. Suggest `ctx recall import --all` and `/ctx-journal-enrich-all` | Daily |
+| `check-journal` | UserPromptSubmit | (all) | Stage 1: count .jsonl files newer than latest journal export. Stage 2: count unenriched entries via journal/state. Suggest `ctx journal import --all` and `/ctx-journal-enrich-all` | Daily |
 | `check-reminders` | UserPromptSubmit | (all) | Surface due reminders (After ≤ today) from reminders.json with dismiss commands | None (until dismissed) |
 | `check-version` | UserPromptSubmit | (all) | Compare binary version (ldflags) vs plugin.json major.minor; skip "dev" builds. Piggyback: check encryption key age vs `rc.KeyRotationDays()` | Daily |
 | `check-resources` | UserPromptSubmit | (all) | `sysinfo.Collect()` + `Evaluate()`; output ONLY at DANGER severity (mem≥90%, swap≥75%, disk≥95%, load≥1.5x CPUs) | None |

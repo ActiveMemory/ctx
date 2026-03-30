@@ -4,7 +4,7 @@
 //   \    Copyright 2026-present Context contributors.
 //                 SPDX-License-Identifier: Apache-2.0
 
-package recall
+package journal
 
 // SessionInfo holds pre-formatted session metadata for display.
 //

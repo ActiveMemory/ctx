@@ -114,7 +114,7 @@ upward from them. The `rc` package mediates config resolution;
 | `notify`      | Send fire-and-forget webhook notifications                                      |
 | `pad`         | Encrypted scratchpad CRUD with blob support and merge                           |
 | `permissions` | Permission snapshot/restore (golden images) for Claude Code                     |
-| `recall`      | Browse, import, lock/unlock AI session history                                  |
+| `recall`      | *(merged into `journal`)* Browse, import, lock/unlock AI session history        |
 | `reindex`     | Regenerate indices for DECISIONS.md and LEARNINGS.md                            |
 | `remind`      | Session-scoped reminders surfaced at start                                      |
 | `serve`       | Serve static journal site locally via zensical                                  |
@@ -145,7 +145,7 @@ Five core flows define how data moves through the system:
    constitution compliance, required files, file age, entry count,
    missing packages) → returns report with warnings and violations.
 
-4. **`ctx recall import`**: User invokes with `--all` → `cli/recall`
+4. **`ctx journal import`**: User invokes with `--all` → `cli/journal`
    calls `parser.FindSessionsForCWD()` which scans
    `~/.claude/projects/` → parses JSONL transcripts → loads journal
    state → plans each session (new/regen/skip/locked) → formats as
@@ -178,7 +178,7 @@ Five state machines govern lifecycle transitions:
    pending children remain) → Archived (via `ctx task archive` to
    `.context/archive/`).
 
-3. **Journal pipeline**: Imported (JSONL→MD via `recall import`) →
+3. **Journal pipeline**: Imported (JSONL→MD via `journal import`) →
    Enriched (YAML frontmatter, tags) → Normalized (soft-wrap, clean
    JSON) → Fences Verified (fence balance check) → Locked (prevent
    overwrite). Each stage tracked in `.context/journal/.state.json`;

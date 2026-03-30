@@ -85,7 +85,7 @@ func SaveStateFailed(cause error) error {
 //   - path: absolute path to the missing journal directory.
 //
 // Returns:
-//   - error: includes a hint to run 'ctx recall import --all'
+//   - error: includes a hint to run 'ctx journal import --all'
 func NoDir(path string) error {
 	return fmt.Errorf(
 		desc.Text(text.DescKeyErrJournalNoJournalDir), path,
@@ -111,7 +111,7 @@ func Scan(cause error) error {
 //   - path: path to the empty journal directory.
 //
 // Returns:
-//   - error: includes a hint to run 'ctx recall import --all'
+//   - error: includes a hint to run 'ctx journal import --all'
 func NoEntries(path string) error {
 	return fmt.Errorf(
 		desc.Text(text.DescKeyErrJournalNoJournalEntries), path,

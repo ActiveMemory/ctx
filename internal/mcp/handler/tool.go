@@ -243,24 +243,24 @@ func (h *Handler) Recall(limit int, since time.Time) (string, error) {
 		duration := sess.Duration.Round(time.Second)
 		_, _ = fmt.Fprintf(
 			&sb,
-			desc.Text(text.DescKeyMCPRecallItemFormat),
+			desc.Text(text.DescKeyMCPJournalSourceItemFormat),
 			i+1, sess.StartTime.Format(cfgTime.DateTimeFmt),
 		)
 		if sess.Project != "" {
 			_, _ = fmt.Fprintf(
-				&sb, desc.Text(text.DescKeyMCPRecallProjectFormat),
+				&sb, desc.Text(text.DescKeyMCPJournalSourceProjectFormat),
 				sess.Project,
 			)
 		}
 		_, _ = fmt.Fprintf(
-			&sb, desc.Text(text.DescKeyMCPRecallDurationFormat),
+			&sb, desc.Text(text.DescKeyMCPJournalSourceDurationFormat),
 			duration, sess.TurnCount,
 		)
 		sb.WriteString(token.NewlineLF)
 
 		if sess.FirstUserMsg != "" {
 			_, _ = fmt.Fprintf(
-				&sb, desc.Text(text.DescKeyMCPRecallFirstMsgFormat),
+				&sb, desc.Text(text.DescKeyMCPJournalSourceFirstMsgFormat),
 				sess.FirstUserMsg,
 			)
 			sb.WriteString(token.NewlineLF)

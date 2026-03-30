@@ -4,7 +4,7 @@
 //   \    Copyright 2026-present Context contributors.
 //                 SPDX-License-Identifier: Apache-2.0
 
-package recall
+package journal
 
 import (
 	"fmt"
@@ -29,7 +29,7 @@ func SkipFile(cmd *cobra.Command, filename, reason string) {
 		return
 	}
 	cmd.Println(fmt.Sprintf(
-		desc.Text(text.DescKeyWriteRecallSkip),
+		desc.Text(text.DescKeyWriteJournalSourceSkip),
 		filename, reason))
 }
 
@@ -46,11 +46,11 @@ func ImportedFile(cmd *cobra.Command, filename, suffix string) {
 	}
 	if suffix != "" {
 		cmd.Println(fmt.Sprintf(
-			desc.Text(text.DescKeyWriteRecallImportedOKSuffix),
+			desc.Text(text.DescKeyWriteJournalSourceImportedOKSuffix),
 			filename, suffix))
 	} else {
 		cmd.Println(fmt.Sprintf(
-			desc.Text(text.DescKeyWriteRecallImportedOK),
+			desc.Text(text.DescKeyWriteJournalSourceImportedOK),
 			filename))
 	}
 }
@@ -74,37 +74,37 @@ func ImportSummary(
 		return
 	}
 
-	verb := desc.Text(text.DescKeyWriteRecallImportVerb)
+	verb := desc.Text(text.DescKeyWriteJournalImportVerb)
 	if dryRun {
-		verb = desc.Text(text.DescKeyWriteRecallImportVerbDryRun)
+		verb = desc.Text(text.DescKeyWriteJournalImportVerbDryRun)
 	}
 	var parts []string
 	if newCount > 0 {
 		parts = append(parts, fmt.Sprintf(
-			desc.Text(text.DescKeyWriteRecallImportPartNew),
+			desc.Text(text.DescKeyWriteJournalImportPartNew),
 			newCount))
 	}
 	if regenCount > 0 {
 		parts = append(parts, fmt.Sprintf(
-			desc.Text(text.DescKeyWriteRecallImportPartRegen),
+			desc.Text(text.DescKeyWriteJournalImportPartRegen),
 			regenCount))
 	}
 	if skipCount > 0 {
 		parts = append(parts, fmt.Sprintf(
-			desc.Text(text.DescKeyWriteRecallImportPartSkip),
+			desc.Text(text.DescKeyWriteJournalImportPartSkip),
 			skipCount))
 	}
 	if lockedCount > 0 {
 		parts = append(parts, fmt.Sprintf(
-			desc.Text(text.DescKeyWriteRecallImportPartSkipLock),
+			desc.Text(text.DescKeyWriteJournalImportPartSkipLock),
 			lockedCount))
 	}
 	if len(parts) == 0 {
-		cmd.Println(desc.Text(text.DescKeyWriteRecallImportNothing))
+		cmd.Println(desc.Text(text.DescKeyWriteJournalImportNothing))
 		return
 	}
 	cmd.Println(fmt.Sprintf(
-		desc.Text(text.DescKeyWriteRecallImportSummary),
+		desc.Text(text.DescKeyWriteJournalImportSummary),
 		verb, strings.Join(parts, token.CommaSpace)))
 }
 
@@ -119,9 +119,9 @@ func NoSessionsForProject(cmd *cobra.Command, allProjects bool) {
 		return
 	}
 	if allProjects {
-		cmd.Println(desc.Text(text.DescKeyWriteRecallNoSessions))
+		cmd.Println(desc.Text(text.DescKeyWriteJournalSourceNoSessions))
 	} else {
-		cmd.Println(desc.Text(text.DescKeyWriteRecallNoSessionsProjectHint))
+		cmd.Println(desc.Text(text.DescKeyWriteJournalSourceNoSessionsProjectHint))
 	}
 }
 
@@ -136,12 +136,12 @@ func NoSessionsWithHint(cmd *cobra.Command, allProjects bool) {
 		return
 	}
 	if allProjects {
-		cmd.Println(desc.Text(text.DescKeyWriteRecallNoSessions))
+		cmd.Println(desc.Text(text.DescKeyWriteJournalSourceNoSessions))
 		cmd.Println()
-		cmd.Println(desc.Text(text.DescKeyWriteRecallStorageHint))
+		cmd.Println(desc.Text(text.DescKeyWriteJournalSourceStorageHint))
 	} else {
-		cmd.Println(desc.Text(text.DescKeyWriteRecallNoSessionsProject))
-		cmd.Println(desc.Text(text.DescKeyWriteRecallNoSessionsHintAll))
+		cmd.Println(desc.Text(text.DescKeyWriteJournalSourceNoSessionsProject))
+		cmd.Println(desc.Text(text.DescKeyWriteJournalSourceNoSessionsHintAll))
 	}
 }
 
@@ -156,7 +156,7 @@ func AmbiguousSessionMatch(cmd *cobra.Command, query string, lines []string) {
 		return
 	}
 	cmd.PrintErrln(fmt.Sprintf(
-		desc.Text(text.DescKeyWriteRecallAmbiguousMatch),
+		desc.Text(text.DescKeyWriteJournalSourceAmbiguousMatch),
 		query))
 	for _, line := range lines {
 		cmd.PrintErrln(line)
@@ -181,15 +181,15 @@ func AmbiguousSessionMatchWithHint(
 		return
 	}
 	_, _ = fmt.Fprintf(cmd.ErrOrStderr(),
-		desc.Text(text.DescKeyWriteRecallAmbiguousMatchStderr),
+		desc.Text(text.DescKeyWriteJournalSourceAmbiguousMatchStderr),
 		query)
 	for _, line := range lines {
 		_, _ = fmt.Fprintf(cmd.ErrOrStderr(),
-			desc.Text(text.DescKeyWriteRecallAmbiguousLine),
+			desc.Text(text.DescKeyWriteJournalSourceAmbiguousLine),
 			line)
 	}
 	_, _ = fmt.Fprintf(cmd.ErrOrStderr(),
-		desc.Text(text.DescKeyWriteRecallAmbiguousHint),
+		desc.Text(text.DescKeyWriteJournalSourceAmbiguousHint),
 		hint)
 }
 
@@ -201,7 +201,7 @@ func Aborted(cmd *cobra.Command) {
 	if cmd == nil {
 		return
 	}
-	cmd.Println(desc.Text(text.DescKeyWriteRecallAborted))
+	cmd.Println(desc.Text(text.DescKeyWriteJournalSourceAborted))
 }
 
 // ConfirmPrompt prints the [y/N] confirmation prompt.
@@ -231,10 +231,10 @@ func ImportFinalSummary(
 		return
 	}
 	cmd.Println()
-	writeIo.Count(cmd, text.DescKeyWriteRecallImportedNew, imported)
-	writeIo.Count(cmd, text.DescKeyWriteRecallUpdated, updated)
-	writeIo.Count(cmd, text.DescKeyWriteRecallRenamed, renamed)
-	writeIo.Count(cmd, text.DescKeyWriteRecallSkipped, skipped)
+	writeIo.Count(cmd, text.DescKeyWriteJournalSourceImportedNew, imported)
+	writeIo.Count(cmd, text.DescKeyWriteJournalSourceUpdated, updated)
+	writeIo.Count(cmd, text.DescKeyWriteJournalSourceRenamed, renamed)
+	writeIo.Count(cmd, text.DescKeyWriteJournalSourceSkipped, skipped)
 }
 
 // NoFiltersMatch prints that no sessions matched the applied filters.
@@ -245,7 +245,7 @@ func NoFiltersMatch(cmd *cobra.Command) {
 	if cmd == nil {
 		return
 	}
-	cmd.Println(desc.Text(text.DescKeyWriteRecallNoFiltersMatch))
+	cmd.Println(desc.Text(text.DescKeyWriteJournalSourceNoFiltersMatch))
 }
 
 // SessionListHeader prints the session count header for recall list.
@@ -260,11 +260,11 @@ func SessionListHeader(cmd *cobra.Command, total, shown int) {
 	}
 	if shown > 0 && shown != total {
 		_, _ = fmt.Fprintf(cmd.OutOrStdout(),
-			desc.Text(text.DescKeyWriteRecallListHeaderFiltered),
+			desc.Text(text.DescKeyWriteJournalSourceListHeaderFiltered),
 			total, shown)
 	} else {
 		_, _ = fmt.Fprintf(cmd.OutOrStdout(),
-			desc.Text(text.DescKeyWriteRecallListHeader),
+			desc.Text(text.DescKeyWriteJournalSourceListHeader),
 			total)
 	}
 }
@@ -293,7 +293,7 @@ func SessionListFooter(cmd *cobra.Command, hasMore bool) {
 	}
 	_, _ = fmt.Fprintln(cmd.OutOrStdout())
 	if hasMore {
-		cmd.Println(desc.Text(text.DescKeyWriteRecallFooterLimit))
+		cmd.Println(desc.Text(text.DescKeyWriteJournalSourceFooterLimit))
 	}
 }
 
@@ -349,7 +349,7 @@ func SessionDetail(cmd *cobra.Command, label, value string) {
 		return
 	}
 	_, _ = fmt.Fprintf(cmd.OutOrStdout(),
-		desc.Text(text.DescKeyWriteRecallDetailString)+
+		desc.Text(text.DescKeyWriteJournalSourceDetailString)+
 			token.NewlineLF,
 		label, value)
 }
@@ -365,7 +365,7 @@ func SessionDetailInt(cmd *cobra.Command, label string, value int) {
 		return
 	}
 	_, _ = fmt.Fprintf(cmd.OutOrStdout(),
-		desc.Text(text.DescKeyWriteRecallDetailInt)+
+		desc.Text(text.DescKeyWriteJournalSourceDetailInt)+
 			token.NewlineLF,
 		label, value)
 }
@@ -382,7 +382,7 @@ func SectionHeader(cmd *cobra.Command, level int, title string) {
 	}
 	prefix := strings.Repeat("#", level)
 	_, _ = fmt.Fprintf(cmd.OutOrStdout(),
-		desc.Text(text.DescKeyWriteRecallSectionHeading)+
+		desc.Text(text.DescKeyWriteJournalSourceSectionHeading)+
 			token.NewlineLF,
 		prefix, title)
 	_, _ = fmt.Fprintln(cmd.OutOrStdout())
@@ -411,7 +411,7 @@ func ConversationTurn(cmd *cobra.Command, index int, role, timestamp string) {
 		return
 	}
 	_, _ = fmt.Fprintf(cmd.OutOrStdout(),
-		desc.Text(text.DescKeyWriteRecallConversationTurn),
+		desc.Text(text.DescKeyWriteJournalSourceConversationTurn),
 		index, role, timestamp)
 	_, _ = fmt.Fprintln(cmd.OutOrStdout())
 }
@@ -439,7 +439,7 @@ func CodeBlock(cmd *cobra.Command, content string) {
 		return
 	}
 	_, _ = fmt.Fprintf(cmd.OutOrStdout(),
-		desc.Text(text.DescKeyWriteRecallCodeBlock),
+		desc.Text(text.DescKeyWriteJournalSourceCodeBlock),
 		content)
 }
 
@@ -469,7 +469,7 @@ func NumberedItem(cmd *cobra.Command, n int, item string) {
 		return
 	}
 	_, _ = fmt.Fprintf(cmd.OutOrStdout(),
-		desc.Text(text.DescKeyWriteRecallNumberedItem),
+		desc.Text(text.DescKeyWriteJournalSourceNumberedItem),
 		n, item)
 }
 
@@ -483,7 +483,7 @@ func MoreTurns(cmd *cobra.Command, remaining int) {
 		return
 	}
 	_, _ = fmt.Fprintf(cmd.OutOrStdout(),
-		desc.Text(text.DescKeyWriteRecallMoreTurns),
+		desc.Text(text.DescKeyWriteJournalSourceMoreTurns),
 		remaining)
 }
 

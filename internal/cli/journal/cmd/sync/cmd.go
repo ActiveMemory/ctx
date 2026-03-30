@@ -22,10 +22,10 @@ import (
 // Returns:
 //   - *cobra.Command: Command for syncing lock state from frontmatter
 func Cmd() *cobra.Command {
-	short, long := desc.Command(cmd.DescKeyRecallSync)
+	short, long := desc.Command(cmd.DescKeyJournalSync)
 
 	c := &cobra.Command{
-		Use:   cmd.UseRecallSync,
+		Use:   cmd.UseJournalSync,
 		Short: short,
 		Long:  long,
 		RunE: func(cmd *cobra.Command, _ []string) error {

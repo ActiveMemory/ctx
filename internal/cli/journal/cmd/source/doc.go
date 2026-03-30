@@ -4,7 +4,7 @@
 //   \    Copyright 2026-present Context contributors.
 //                 SPDX-License-Identifier: Apache-2.0
 
-// Package source implements the ctx recall list and show subcommands.
+// Package source implements the ctx journal source subcommand.
 //
 // [Cmd] builds the cobra.Command with --limit, --project, --tool,
 // --latest, --full, and date range flags. [Run] routes to list

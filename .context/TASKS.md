@@ -1009,9 +1009,9 @@ block template.
 Spec: `specs/journal-recall-merge.md`. Read the spec before starting any
 JRM task.
 
-Absorb `ctx recall` into `ctx journal`. `recall list`/`show` become
-`journal source --list`/`--show`. `recall import/lock/unlock/sync` move
-directly under `journal`. Delete `recall` as a top-level command.
+Absorb `ctx recall` into `ctx journal`. `recall list`/`show` became
+`journal source --list`/`--show`. `recall import/lock/unlock/sync` moved
+directly under `journal`. `recall` deleted as a top-level command.
 
 - [x] JRM.1: Create `journal/cmd/source/` — new subcommand combining list+show
   with `--list` (default) / `--show <id>` flag dispatch. Reuse existing list and
@@ -1019,56 +1019,55 @@ directly under `journal`. Delete `recall` as a top-level command.
 - [x] JRM.2: Move import/lock/unlock/sync subcommands from `recall/cmd/` to
   `journal/cmd/`. Update imports in `journal.go` to wire them.
   #added:2026-03-26 #done:2026-03-26
-- [ ] JRM.3: Move `recall/core/*` packages into `journal/core/`. Rename
+- [x] JRM.3: Move `recall/core/*` packages into `journal/core/`. Rename
   colliding packages: `recall/core/format/` → `journal/core/sourceformat/`,
-  `recall/core/frontmatter/` → `journal/core/sourcefm/`. #added:2026-03-26
-- [ ] JRM.4: Merge `internal/write/recall/` functions into
+  `recall/core/frontmatter/` → `journal/core/sourcefm/`. #added:2026-03-26 #done:2026-03-26
+- [x] JRM.4: Merge `internal/write/recall/` functions into
   `internal/write/journal/` (new file `source.go`). Delete
-  `write/recall/`. #added:2026-03-26
-- [ ] JRM.5: Merge `internal/err/recall/` functions into `internal/err/journal/`
-  (new file `source.go`). Delete `err/recall/`. #added:2026-03-26
-- [ ] JRM.6: Update config constants — rename `UseRecall*` / `DescKeyRecall*` to
+  `write/recall/`. #added:2026-03-26 #done:2026-03-26
+- [x] JRM.5: Merge `internal/err/recall/` functions into `internal/err/journal/`
+  (new file `source.go`). Delete `err/recall/`. #added:2026-03-26 #done:2026-03-26
+- [x] JRM.6: Update config constants — rename `UseRecall*` / `DescKeyRecall*` to
   `UseJournalSource*` / `DescKeyJournalSource*` in `config/embed/cmd/`. Remove
-  `UseRecall` from `base.go`. Update `journal.go` constants. #added:2026-03-26
-- [ ] JRM.7: Update flag constants — rename `recall.*` keys in
+  `UseRecall` from `base.go`. Update `journal.go` constants. #added:2026-03-26 #done:2026-03-26
+- [x] JRM.7: Update flag constants — rename `recall.*` keys in
   `config/embed/flag/recall.go` to `journal.source.*` /
-  `journal.import.*`. #added:2026-03-26
-- [ ] JRM.8: Update text constants — rename all `recall.*`, `write.recall-*`,
+  `journal.import.*`. #added:2026-03-26 #done:2026-03-26
+- [x] JRM.8: Update text constants — rename all `recall.*`, `write.recall-*`,
   `err.recall.*`, `mcp.recall-*` keys in `config/embed/text/`. Rename source
-  files (`recall.go` → `journal_source.go`, etc.). #added:2026-03-26
-- [ ] JRM.9: Update YAML files — rename keys in `commands.yaml`, `flags.yaml`,
-  `text/write.yaml`, `text/ui.yaml`. #added:2026-03-26
-- [ ] JRM.10: Update MCP tool — rename `ctx_recall` to `ctx_journal_source` in
+  files (`recall.go` → `journal_source.go`, etc.). #added:2026-03-26 #done:2026-03-26
+- [x] JRM.9: Update YAML files — rename keys in `commands.yaml`, `flags.yaml`,
+  `text/write.yaml`, `text/ui.yaml`. #added:2026-03-26 #done:2026-03-26
+- [x] JRM.10: Update MCP tool — rename `ctx_recall` to `ctx_journal_source` in
   `mcp/server/route/tool/`, `mcp/handler/tool.go`, `mcp/server/server_test.go`,
-  and `config/embed/text/mcp_tool.go`. #added:2026-03-26
+  and `config/embed/text/mcp_tool.go`. #added:2026-03-26 #done:2026-03-26
 - [x] JRM.11: Remove `recall` from bootstrap — delete `recall.Cmd` registration
   in `bootstrap.go`, remove import. #added:2026-03-26 #done:2026-03-26
-- [ ] JRM.12: Delete `internal/cli/recall/` entirely after all code is
-  moved. #added:2026-03-26
-- [ ] JRM.13: Update skills — rename `ctx-recall/` skill dir to
-  `ctx-journal-browse/`, update all `ctx recall` commands to `ctx journal`
+- [x] JRM.12: Delete `internal/cli/recall/` entirely after all code is
+  moved. #added:2026-03-26 #done:2026-03-26
+- [x] JRM.13: Update skills — rename `ctx-recall/` skill dir to
+  `ctx-history/`, update all `ctx recall` commands to `ctx journal`
   equivalents. Update `ctx-remember` skill to use `ctx journal source` instead
   of `ctx recall list`. Check journal-enrich, journal-enrich-all,
   journal-normalize for stale recall refs. Delete
-  `.claude/skills/generated/recall/`. #added:2026-03-26
-- [ ] JRM.14: Update CLAUDE.md files — `ctx recall list` → `ctx journal source`
-  in both `CLAUDE.md` and `internal/assets/claude/CLAUDE.md`. #added:2026-03-26
-- [ ] JRM.15: Update docs — rewrite `docs/cli/recall.md` as unified journal
+  `.claude/skills/generated/recall/`. #added:2026-03-26 #done:2026-03-26
+- [x] JRM.14: Update CLAUDE.md files — `ctx recall list` → `ctx journal source`
+  in both `CLAUDE.md` and `internal/assets/claude/CLAUDE.md`. Already done in
+  a prior pass. #added:2026-03-26 #done:2026-03-26
+- [x] JRM.15: Update docs — rewrite `docs/cli/recall.md` as unified journal
   reference (rename to `docs/cli/journal.md`). Update `docs/cli/index.md`
-  nav. #added:2026-03-26
-- [ ] JRM.16: Update recipes — find/replace `ctx recall` → `ctx journal`
-  equivalents across all 12 recipe files that reference
-  recall. #added:2026-03-26
-- [ ] JRM.17: Update context files — `.context/ARCHITECTURE.md`,
+  nav. #added:2026-03-26 #done:2026-03-26
+- [x] JRM.16: Update recipes — find/replace `ctx recall` → `ctx journal`
+  equivalents across recipe files that reference recall. #added:2026-03-26 #done:2026-03-26
+- [x] JRM.17: Update context files — `.context/ARCHITECTURE.md`,
   `.context/AGENT_PLAYBOOK.md`, `.context/architecture-dia-*.md`,
   `specs/future-complete/recall-sync.md`,
-  `specs/future-complete/recall-export-safety.md`. #added:2026-03-26
-- [ ] JRM.18: Update other TASKS.md references — grep TASKS.md for `recall` and
-  update task descriptions that reference the old command names (e.g., P0.9.2
-  cli-recall, PM.7 recall architecture, F.2 recall import). #added:2026-03-26
-- [ ] JRM.19: Run `make lint && make test` — full green. #added:2026-03-26
-- [ ] JRM.20: Rebuild site — `make docs` or equivalent to regenerate
-  `site/`. #added:2026-03-26
+  `specs/future-complete/recall-export-safety.md`. #added:2026-03-26 #done:2026-03-26
+- [-] JRM.18: Update other TASKS.md references — historical task descriptions
+  stay as-is (they document what the command was called at the time). #added:2026-03-26
+- [x] JRM.19: Run `make lint && make test` — full green. #added:2026-03-26 #done:2026-03-26
+- [x] JRM.20: Rebuild site — `make docs` or equivalent to regenerate
+  `site/`. #added:2026-03-26 #done:2026-03-26
 
 ## MCP-related
 
@@ -1135,7 +1134,7 @@ age-based — prune files older than N days (default 7).
   ctx-wrapped-up all have the same cross-session suppression bug as
   memory-drift-nudged #added:2026-03-05-205425
 
-- [ ] F.2: ctx recall import — import Claude Code session JSONLs from local or
+- [ ] F.2: ctx journal import (remote) — import Claude Code session JSONLs from local or
   remote (~/.claude/projects/) into local ~/.claude/projects/. Pure Go: local
   copy with os.CopyFS-style walk, remote via os/exec ssh+scp (no rsync
   dependency). --source flag accepts local path or user@host. --dry-run shows

@@ -35,14 +35,14 @@ md_count=$(ls "$JOURNAL_DIR"/*.md 2>/dev/null | wc -l)
 
 if [ "$md_count" -eq 0 ]; then
   echo "No journal entries found: importing all sessions."
-  ctx recall import --all --yes
+  ctx journal import --all --yes
 else
   # Compare newest .md mtime against .jsonl files
   newest_md=$(stat -c %Y $(ls -t "$JOURNAL_DIR"/*.md | head -1))
   unimported=$(find ~/.claude/projects -name "*.jsonl" -newermt @${newest_md} 2>/dev/null | wc -l)
   if [ "$unimported" -gt 0 ]; then
     echo "$unimported unimported session(s) found: importing first."
-    ctx recall import --all --yes
+    ctx journal import --all --yes
   fi
 fi
 ```

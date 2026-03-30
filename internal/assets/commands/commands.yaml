@@ -156,7 +156,7 @@ ctx:
     !           Session Start: /ctx-remember
     !             Session End: /ctx-wrap-up
     !         ∀ ~2-3 sessions:
-    !                          ctx recall import --all
+    !                          ctx journal import --all
     !                          /ctx-journal-enrich-all
     !
   short: Context - persistent context for AI coding assistants
@@ -684,32 +684,7 @@ permission.snapshot:
 
     Overwrites any existing golden file.
   short: Save settings.local.json as golden image
-recall:
-  long: |-
-    Browse and search AI session history from Claude Code and other tools.
-
-    The recall system parses JSONL session files and provides commands to
-    list sessions, view details, and search across your conversation history.
-
-    Subcommands:
-      list    List all parsed sessions
-      show    Show details of a specific session
-      export  Export sessions to editable journal files
-      lock    Protect journal entries from export regeneration
-      unlock  Remove lock protection from journal entries
-      sync    Sync lock state from journal frontmatter to state file
-
-    Examples:
-      ctx recall list
-      ctx recall list --limit 5
-      ctx recall show abc123
-      ctx recall show --latest
-      ctx recall import --all
-      ctx recall lock 2026-01-21-session-abc12345.md
-      ctx recall unlock --all
-      ctx recall sync
-  short: Browse and search AI session history
-recall.import:
+journal.import:
   long: |-
     Import AI sessions to .context/journal/ as editable Markdown files.
 
@@ -725,110 +700,65 @@ recall.import:
     frontmatter by default). Use --keep-frontmatter=false to discard
     enriched frontmatter during regeneration.
 
-    Locked entries (via "ctx recall lock") are always skipped, regardless
+    Locked entries (via "ctx journal lock") are always skipped, regardless
     of flags.
 
     Examples:
-      ctx recall import abc123                              # Import one session
-      ctx recall import --all                               # Import only new
-      ctx recall import --all --dry-run                     # Preview changes
-      ctx recall import --all --regenerate                  # Re-import (prompts)
-      ctx recall import --all --regenerate -y               # Re-import, no prompt
-      ctx recall import --all --regenerate --keep-frontmatter=false -y  # Discard frontmatter
+      ctx journal import abc123                              # Import one session
+      ctx journal import --all                               # Import only new
+      ctx journal import --all --dry-run                     # Preview changes
+      ctx journal import --all --regenerate                  # Re-import (prompts)
+      ctx journal import --all --regenerate -y               # Re-import, no prompt
+      ctx journal import --all --regenerate --keep-frontmatter=false -y  # Discard frontmatter
   short: Import sessions to editable journal files
-recall.list:
+journal.lock:
   long: |-
-    List AI sessions from the current project.
+    Lock journal entries to prevent import --regenerate from overwriting them.
 
-    Sessions are sorted by date (newest first) and display:
-      - Session slug (human-friendly name)
-      - Project name
-      - Start time and duration
-      - Turn count (user messages)
-      - Token usage
-
-    By default, only sessions from the current project are shown.
-    Use --all-projects to see sessions from all projects.
-
-    Date filtering: --since and --until accept YYYY-MM-DD format.
-    Both are inclusive.
-
-    Examples:
-      ctx recall list
-      ctx recall list --limit 5
-      ctx recall list --all-projects
-      ctx recall list --project ctx
-      ctx recall list --tool claude-code
-      ctx recall list --since 2026-03-01
-      ctx recall list --since 2026-03-01 --until 2026-03-05
-  short: List all parsed sessions
-recall.lock:
-  long: |-
-    Lock journal entries to prevent export --regenerate from overwriting them.
-
-    Locked entries are skipped during export regardless of --regenerate or --force.
-    Use "ctx recall unlock" to remove the protection.
+    Locked entries are skipped during import regardless of --regenerate or --force.
+    Use "ctx journal unlock" to remove the protection.
 
     The pattern matches against filenames by slug, date, or short ID (same
-    matching as export). Locking a multi-part entry locks all parts.
+    matching as import). Locking a multi-part entry locks all parts.
 
     The lock is recorded in .context/journal/.state.json (source of truth) and
     a "locked: true" line is added to the file's YAML frontmatter for visibility.
 
     Examples:
-      ctx recall lock 2026-01-21-session-abc12345.md
-      ctx recall lock abc12345
-      ctx recall lock --all
-  short: Protect journal entries from export regeneration
-recall.show:
-  long: |-
-    Show detailed information about a specific session.
-
-    The session ID can be:
-      - Full session UUID
-      - Partial match (first few characters)
-      - Session slug name
-
-    Use --latest to show the most recent session.
-    By default, only searches sessions from the current project.
-
-    Examples:
-      ctx recall show abc123
-      ctx recall show gleaming-wobbling-sutherland
-      ctx recall show --latest
-      ctx recall show --latest --full
-      ctx recall show abc123 --all-projects
-  short: Show details of a specific session
-recall.sync:
+      ctx journal lock 2026-01-21-session-abc12345.md
+      ctx journal lock abc12345
+      ctx journal lock --all
+  short: Protect journal entries from import regeneration
+journal.sync:
   long: |-
     Scan journal markdowns and sync their lock state to .state.json.
 
-    This is the sister command to "ctx recall lock". Instead of marking files
+    This is the sister command to "ctx journal lock". Instead of marking files
     locked in state and updating frontmatter, it reads "locked: true" from
     each file's YAML frontmatter and updates .state.json to match.
 
     Typical workflow:
       1. Enrich journal entries (add "locked: true" to frontmatter)
-      2. Run "ctx recall sync" to propagate lock state to .state.json
+      2. Run "ctx journal sync" to propagate lock state to .state.json
 
     Files with "locked: true" in frontmatter will be marked locked in state.
     Files without a "locked:" line (or with "locked: false") will have their
     lock cleared if one exists in state.
 
     Examples:
-      ctx recall sync
+      ctx journal sync
   short: Sync lock state from journal frontmatter to state file
-recall.unlock:
+journal.unlock:
   long: |-
-    Unlock journal entries to allow export --regenerate to overwrite them.
+    Unlock journal entries to allow import --regenerate to overwrite them.
 
     The pattern matches against filenames by slug, date, or short ID (same
-    matching as export). Unlocking a multi-part entry unlocks all parts.
+    matching as import). Unlocking a multi-part entry unlocks all parts.
 
     Examples:
-      ctx recall unlock 2026-01-21-session-abc12345.md
-      ctx recall unlock abc12345
-      ctx recall unlock --all
+      ctx journal unlock 2026-01-21-session-abc12345.md
+      ctx journal unlock abc12345
+      ctx journal unlock --all
   short: Remove lock protection from journal entries
 reindex:
   long: |-

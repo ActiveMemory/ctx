@@ -51,21 +51,21 @@ write.dry-run:
   short: Dry run - no files will be written.
 write.exists-writing-as-alternative:
   short: '  ! %s exists, writing as %s'
-write.recall-import-nothing:
+write.journal-import-nothing:
   short: Nothing to import.
-write.recall-import-part-new:
+write.journal-import-part-new:
   short: import %d new
-write.recall-import-part-regen:
+write.journal-import-part-regen:
   short: regenerate %d existing
-write.recall-import-part-skip:
+write.journal-import-part-skip:
   short: skip %d existing
-write.recall-import-part-skip-locked:
+write.journal-import-part-skip-locked:
   short: skip %d locked
-write.recall-import-summary:
+write.journal-import-summary:
   short: '%s %s.'
-write.recall-import-verb:
+write.journal-import-verb:
   short: Will
-write.recall-import-verb-dry-run:
+write.journal-import-verb-dry-run:
   short: Would
 write.format-bytes:
   short: "%dB"
@@ -223,7 +223,7 @@ write.init-workflow-tips:
           /ctx-drift                Detect stale paths, broken references, and outdated context
 
         Journal pipeline (every few sessions):
-          ctx recall import --all   Import session transcripts to .context/journal/
+          ctx journal import --all   Import session transcripts to .context/journal/
           /ctx-journal-enrich-all   Add frontmatter, tags, and summaries to imported entries
 
         Run 'ctx guide' for the full command reference.
@@ -596,63 +596,63 @@ write.time-minutes-ago:
   short: '%d minutes ago'
 write.unpublish-done:
   short: Removed published block from %s.
-write.recall-aborted:
+write.journal-source-aborted:
   short: Aborted.
-write.recall-ambiguous-hint:
-  short: "\nUse a more specific ID (e.g., ctx recall show %s)\n"
-write.recall-ambiguous-line:
+write.journal-source-ambiguous-hint:
+  short: "\nUse a more specific ID (e.g., ctx journal source --show %s)\n"
+write.journal-source-ambiguous-line:
   short: "  %s\n"
-write.recall-ambiguous-match:
+write.journal-source-ambiguous-match:
   short: "Multiple sessions match '%s':"
-write.recall-ambiguous-match-stderr:
+write.journal-source-ambiguous-match-stderr:
   short: "Multiple sessions match '%s':\n"
-write.recall-code-block:
+write.journal-source-code-block:
   short: "```\n%s\n```\n"
-write.recall-conversation-turn:
+write.journal-source-conversation-turn:
   short: "### %d. [%s] (%s)\n"
-write.recall-imported-new:
+write.journal-source-imported-new:
   short: Imported %d new session(s)
-write.recall-imported-ok:
+write.journal-source-imported-ok:
   short: "  ok %s"
-write.recall-imported-ok-suffix:
+write.journal-source-imported-ok-suffix:
   short: "  ok %s (%s)"
-write.recall-footer-limit:
+write.journal-source-footer-limit:
   short: Use --limit to see more sessions
-write.recall-list-header:
+write.journal-source-list-header:
   short: "Found %d sessions\n\n"
-write.recall-list-header-filtered:
+write.journal-source-list-header-filtered:
   short: "Found %d sessions (%d shown)\n\n"
-write.recall-more-turns:
+write.journal-source-more-turns:
   short: "... and %d more turns\n"
-write.recall-no-filters-match:
+write.journal-source-no-filters-match:
   short: No sessions match the filters.
-write.recall-no-sessions:
+write.journal-source-no-sessions:
   short: No sessions found.
-write.recall-no-sessions-hint-all:
+write.journal-source-no-sessions-hint-all:
   short: Use --all-projects to see sessions from all projects.
-write.recall-no-sessions-project:
+write.journal-source-no-sessions-project:
   short: No sessions found for this project.
-write.recall-no-sessions-project-hint:
+write.journal-source-no-sessions-project-hint:
   short: No sessions found for this project. Use --all-projects to see all.
-write.recall-numbered-item:
+write.journal-source-numbered-item:
   short: "%d. %s\n"
-write.recall-renamed:
+write.journal-source-renamed:
   short: Renamed %d session(s) to title-based filenames
-write.recall-skip:
+write.journal-source-skip:
   short: "  skip %s (%s)"
-write.recall-skipped:
+write.journal-source-skipped:
   short: Skipped %d existing file(s).
-write.recall-storage-hint:
+write.journal-source-storage-hint:
   short: Sessions are stored in ~/.claude/projects/
-write.recall-updated:
+write.journal-source-updated:
   short: Updated %d existing session(s) (YAML frontmatter preserved)
-write.recall-detail-string:
+write.journal-source-detail-string:
   short: '%s %s'
-write.recall-detail-int:
+write.journal-source-detail-int:
   short: '%s %d'
-write.recall-section-heading:
+write.journal-source-section-heading:
   short: '%s %s'
-write.recall-bullet-item:
+write.journal-source-bullet-item:
   short: '- %s'
 write.unpublish-not-found:
   short: No published block found in %s.

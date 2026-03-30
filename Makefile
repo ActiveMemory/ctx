@@ -77,8 +77,8 @@ smoke: build
 	$(CURDIR)/$(BINARY) drift > /dev/null && \
 	echo "  Testing: ctx add task 'smoke test task'" && \
 	$(CURDIR)/$(BINARY) add task "smoke test task" > /dev/null && \
-	echo "  Testing: ctx recall list" && \
-	$(CURDIR)/$(BINARY) recall list > /dev/null && \
+	echo "  Testing: ctx journal source" && \
+	$(CURDIR)/$(BINARY) journal source > /dev/null && \
 	echo "  Testing: ctx why manifesto" && \
 	$(CURDIR)/$(BINARY) why manifesto > /dev/null && \
 	rm -rf $$TMPDIR && \
@@ -193,7 +193,7 @@ site-serve-lan:
 ## journal: Import sessions and regenerate journal site
 journal:
 	@echo "==> Importing sessions to journal..."
-	@ctx recall import --all
+	@ctx journal import --all
 	@echo "==> Generating journal site..."
 	@ctx journal site --build
 	@echo ""

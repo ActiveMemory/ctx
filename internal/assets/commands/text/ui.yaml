@@ -199,8 +199,8 @@ guide.default:
       ctx decision reindex  Rebuild the DECISIONS.md index table
 
     BROWSING HISTORY
-      ctx recall list       List imported session transcripts
-      ctx recall show ID    Read a specific session transcript
+      ctx journal source    List imported session transcripts
+      ctx journal source --show ID  Read a specific session transcript
       ctx journal site      Generate a browsable journal site
 
     AI CONTEXT
@@ -386,11 +386,11 @@ summary.term:
   short: 1 term
 summary.terms:
   short: '%d terms'
-recall.meta-summary:
+journal.source.meta-summary:
   short: '%s · %s · %s'
-recall.token-summary:
+journal.source.token-summary:
   short: '%s (in: %s, out: %s)'
-recall.tool-count-line:
+journal.source.tool-count-line:
   short: '%s: %d'
 site.feed-generated:
   short: 'Generated %s (%d entries)'

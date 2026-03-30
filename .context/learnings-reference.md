@@ -95,7 +95,7 @@ to keep the main file within token budget. All entries preserved verbatim.
 > **Historical**: `.context/sessions/` was removed in v0.4.0. These learnings are superseded but preserved for context.
 
 - SessionEnd hook fires on all exits including Ctrl+C — hook behavior still accurate for Claude Code, but ctx no longer uses it
-- Session filenames used YYYY-MM-DD-HHMMSS-topic.md — journal entries now use `ctx recall import` naming
+- Session filenames used YYYY-MM-DD-HHMMSS-topic.md — journal entries now use `ctx journal import` naming
 - Two tiers remain: curated (`.context/*.md`) and full dump (`~/.claude/projects/` + `.context/journal/`); middle `.context/sessions/` tier eliminated
 - Auto-load via PreToolUse worked; auto-save via SessionEnd removed because Claude Code retains transcripts natively
 
@@ -110,7 +110,7 @@ to keep the main file within token budget. All entries preserved verbatim.
 
 ---
 
-## [2026-02-27-002831] Journal and recall parsing edge cases (consolidated)
+## [2026-02-27-002831] Journal and source parsing edge cases (consolidated)
 
 **Consolidated from**: 4 entries (2026-02-03 to 2026-02-24)
 

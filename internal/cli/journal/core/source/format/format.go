@@ -242,7 +242,7 @@ func JournalEntryPart(
 		// Session metadata as collapsible HTML table
 		// (Markdown tables don't render inside <details> in Zensical)
 		summaryText := fmt.Sprintf(
-			desc.Text(text.DescKeyRecallMetaSummary), dateStr, durationStr, s.Model,
+			desc.Text(text.DescKeyJournalSourceMetaSummary), dateStr, durationStr, s.Model,
 		)
 		sb.WriteString(fmt.Sprintf(tpl.MetaDetailsOpen, summaryText))
 		sb.WriteString(fmt.Sprintf(
@@ -296,7 +296,7 @@ func JournalEntryPart(
 				tpl.MetaRow+nl, desc.Text(text.DescKeyLabelMetaTurns), turnStr,
 			),
 		)
-		tokenSummary := fmt.Sprintf(desc.Text(text.DescKeyRecallTokenSummary),
+		tokenSummary := fmt.Sprintf(desc.Text(text.DescKeyJournalSourceTokenSummary),
 			sharedFmt.Tokens(s.TotalTokens),
 			sharedFmt.Tokens(s.TotalTokensIn),
 			sharedFmt.Tokens(s.TotalTokensOut))

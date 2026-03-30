@@ -19,7 +19,7 @@ import (
 	"github.com/ActiveMemory/ctx/internal/config/marker"
 	"github.com/ActiveMemory/ctx/internal/config/regex"
 	"github.com/ActiveMemory/ctx/internal/config/token"
-	errRecall "github.com/ActiveMemory/ctx/internal/err/recall"
+	errJournal "github.com/ActiveMemory/ctx/internal/err/journal"
 	internalIo "github.com/ActiveMemory/ctx/internal/io"
 )
 
@@ -224,12 +224,12 @@ func Reindex(
 	entryType string,
 ) error {
 	if _, statErr := os.Stat(filePath); os.IsNotExist(statErr) {
-		return errRecall.ReindexFileNotFound(fileName)
+		return errJournal.ReindexFileNotFound(fileName)
 	}
 
 	content, readErr := internalIo.SafeReadUserFile(filePath)
 	if readErr != nil {
-		return errRecall.ReindexFileRead(filePath, readErr)
+		return errJournal.ReindexFileRead(filePath, readErr)
 	}
 
 	updated := updateFunc(string(content))
@@ -237,7 +237,7 @@ func Reindex(
 	if writeErr := os.WriteFile(
 		filePath, []byte(updated), fs.PermFile,
 	); writeErr != nil {
-		return errRecall.ReindexFileWrite(filePath, writeErr)
+		return errJournal.ReindexFileWrite(filePath, writeErr)
 	}
 
 	entries := ParseHeaders(string(content))

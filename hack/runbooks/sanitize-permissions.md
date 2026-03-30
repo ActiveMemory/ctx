@@ -66,11 +66,11 @@ A narrow entry that's already covered by a broader one:
 
 ```
 # Narrow (redundant):
-Bash(ctx recall list)
+Bash(ctx journal source)
 Bash(git -C /home/jose/WORKSPACE/ctx log --oneline -5)
 
 # Broad (already covers the above):
-Bash(ctx recall list:*)
+Bash(ctx journal source:*)
 Bash(git -C:*)
 ```
 

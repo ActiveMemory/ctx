@@ -20,8 +20,8 @@ Browse, inspect, and import AI session history.
   or `/ctx-agent` instead)
 - When session data is already loaded in context (no need to
   re-fetch)
-- For modifying session content (recall is read-only; edit
-  journal files directly)
+- For modifying session content (source browsing is read-only;
+  edit journal files directly)
 
 ## Usage Examples
 
@@ -34,7 +34,7 @@ Browse, inspect, and import AI session history.
 
 ## Subcommands
 
-### `ctx recall list`
+### `ctx journal source`
 
 List recent sessions, newest first.
 
@@ -44,27 +44,21 @@ List recent sessions, newest first.
 | `--project`      | `-p`  | ""      | Filter by project name               |
 | `--tool`         | `-t`  | ""      | Filter by tool (e.g., "claude-code") |
 | `--all-projects` |       | false   | Include all projects                 |
+| `--show`         |       | ""      | Show details of a specific session   |
+| `--latest`       |       | false   | Show the most recent session         |
+| `--full`         |       | false   | Full conversation (not preview)      |
 
 Output per session: slug, short ID, project, branch, time,
 duration, turn count, token count, first message preview.
 
-### `ctx recall show`
-
-Show details of a specific session.
-
-| Flag              | Default | Purpose                          |
-|-------------------|---------|----------------------------------|
-| `--latest`        | false   | Show the most recent session     |
-| `--full`          | false   | Full conversation (not preview)  |
-| `--all-projects`  | false   | Search across all projects       |
-
-Accepts a session identifier: full UUID, partial UUID prefix,
-or slug name. Use `--latest` if no ID is given.
+Use `--show <id>` to inspect a specific session. Accepts a
+full UUID, partial UUID prefix, or slug name. Use `--latest`
+if no ID is given.
 
 Default output shows metadata and the first 5 user messages.
 Use `--full` for the complete conversation.
 
-### `ctx recall import`
+### `ctx journal import`
 
 Import sessions to the journal directory as markdown.
 
@@ -83,41 +77,41 @@ files skipped). Use `--regenerate` with `--all` to re-import
 existing files; YAML frontmatter is preserved by default.
 Use `--keep-frontmatter=false` to discard enriched frontmatter.
 
-Locked entries (via `ctx recall lock`) are always skipped.
+Locked entries (via `ctx journal lock`) are always skipped.
 
 Large sessions (>200 messages) are automatically split into
 parts with navigation links between them.
 
-### `ctx recall lock`
+### `ctx journal lock`
 
 Protect journal entries from import regeneration.
 
 ```bash
-ctx recall lock <pattern>     # Lock matching entries
-ctx recall lock --all         # Lock all entries
+ctx journal lock <pattern>     # Lock matching entries
+ctx journal lock --all         # Lock all entries
 ```
 
-### `ctx recall unlock`
+### `ctx journal unlock`
 
 Remove lock protection from journal entries.
 
 ```bash
-ctx recall unlock <pattern>   # Unlock matching entries
-ctx recall unlock --all       # Unlock all entries
+ctx journal unlock <pattern>   # Unlock matching entries
+ctx journal unlock --all       # Unlock all entries
 ```
 
-### `ctx recall sync`
+### `ctx journal sync`
 
 Sync lock state from journal frontmatter to `.state.json`.
 
 ```bash
-ctx recall sync
+ctx journal sync
 ```
 
 Scans all journal markdowns and updates `.state.json` to match
 each file's frontmatter. Files with `locked: true` in frontmatter
 are marked locked in state; files without a `locked:` line have
-their lock cleared. This is the inverse of `ctx recall lock`:
+their lock cleared. This is the inverse of `ctx journal lock`:
 frontmatter drives state instead of state driving frontmatter.
 Useful after batch enrichment where you add `locked: true` to
 frontmatter manually.
@@ -141,19 +135,19 @@ only the current project's sessions are shown by default.
 
 **"What did we work on recently?"**
 ```bash
-ctx recall list --limit 5
+ctx journal source --limit 5
 ```
 
 **"Show me that session about authentication"**
 ```bash
-ctx recall list --project auth
+ctx journal source --project auth
 # then with the slug or ID from the list:
-ctx recall show <slug>
+ctx journal source --show <slug>
 ```
 
 **"Import everything to the journal"**
 ```bash
-ctx recall import --all
+ctx journal import --all
 ```
 This only imports new sessions: existing files are skipped.
 If the user asks what to do next, mention that `/ctx-journal-enrich-all`
@@ -161,7 +155,7 @@ can enrich the imported journals.
 
 **"Re-import sessions after a format improvement"**
 ```bash
-ctx recall import --all --regenerate -y
+ctx journal import --all --regenerate -y
 ```
 
 ## Quality Checklist

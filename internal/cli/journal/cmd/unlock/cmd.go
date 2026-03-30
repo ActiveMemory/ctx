@@ -25,10 +25,10 @@ import (
 func Cmd() *cobra.Command {
 	var all bool
 
-	short, long := desc.Command(cmd.DescKeyRecallUnlock)
+	short, long := desc.Command(cmd.DescKeyJournalUnlock)
 
 	c := &cobra.Command{
-		Use:   cmd.UseRecallUnlock,
+		Use:   cmd.UseJournalUnlock,
 		Short: short,
 		Long:  long,
 		RunE: func(cmd *cobra.Command, args []string) error {
@@ -37,7 +37,7 @@ func Cmd() *cobra.Command {
 	}
 
 	c.Flags().BoolVar(&all, cFlag.All, false,
-		desc.Flag(flag.DescKeyRecallUnlockAll),
+		desc.Flag(flag.DescKeyJournalUnlockAll),
 	)
 
 	return c

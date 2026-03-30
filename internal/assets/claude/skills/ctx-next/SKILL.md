@@ -36,7 +36,7 @@ Do all of this **silently**: do not narrate the steps:
 2. **Check recent sessions** to understand what was just worked
    on and avoid suggesting already-completed work:
    ```bash
-   ctx recall list --limit 3
+   ctx journal source --limit 3
    ```
 3. **Read the most recent session file** (if any) to understand
    what was accomplished and what follow-up items were noted

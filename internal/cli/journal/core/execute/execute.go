@@ -23,7 +23,7 @@ import (
 	"github.com/ActiveMemory/ctx/internal/entity"
 	"github.com/ActiveMemory/ctx/internal/journal/state"
 	"github.com/ActiveMemory/ctx/internal/write/err"
-	"github.com/ActiveMemory/ctx/internal/write/recall"
+	writeRecall "github.com/ActiveMemory/ctx/internal/write/journal"
 )
 
 // Import writes files according to the plan.
@@ -47,12 +47,12 @@ func Import(
 	for _, fa := range plan.Actions {
 		if fa.Action == entity.ActionLocked {
 			skipped++
-			recall.SkipFile(cmd, fa.Filename, session.FrontmatterLocked)
+			writeRecall.SkipFile(cmd, fa.Filename, session.FrontmatterLocked)
 			continue
 		}
 		if fa.Action == entity.ActionSkip {
 			skipped++
-			recall.SkipFile(cmd, fa.Filename, desc.Text(text.DescKeyLabelReasonExists))
+			writeRecall.SkipFile(cmd, fa.Filename, desc.Text(text.DescKeyLabelReasonExists))
 			continue
 		}
 
@@ -97,11 +97,11 @@ func Import(
 		jstate.MarkImported(fa.Filename)
 
 		if fileExists && !discard {
-			recall.ImportedFile(
+			writeRecall.ImportedFile(
 				cmd, fa.Filename, desc.Text(text.DescKeyLabelReasonUpdated),
 			)
 		} else {
-			recall.ImportedFile(cmd, fa.Filename, "")
+			writeRecall.ImportedFile(cmd, fa.Filename, "")
 		}
 	}
 

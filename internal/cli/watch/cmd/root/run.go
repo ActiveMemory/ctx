@@ -15,7 +15,7 @@ import (
 	"github.com/ActiveMemory/ctx/internal/cli/watch/core/stream"
 	"github.com/ActiveMemory/ctx/internal/context/validate"
 	"github.com/ActiveMemory/ctx/internal/err/initialize"
-	errRecall "github.com/ActiveMemory/ctx/internal/err/recall"
+	errJournal "github.com/ActiveMemory/ctx/internal/err/journal"
 	internalIo "github.com/ActiveMemory/ctx/internal/io"
 	"github.com/ActiveMemory/ctx/internal/write/watch"
 )
@@ -50,7 +50,7 @@ func Run(cmd *cobra.Command, logPath string, dryRun bool) error {
 	if logPath != "" {
 		file, err := internalIo.SafeOpenUserFile(logPath)
 		if err != nil {
-			return errRecall.OpenLogFile(err)
+			return errJournal.OpenLogFile(err)
 		}
 		defer func(file *os.File) {
 			if closeErr := file.Close(); closeErr != nil {

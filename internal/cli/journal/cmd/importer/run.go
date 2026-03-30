@@ -31,7 +31,7 @@ import (
 	"github.com/ActiveMemory/ctx/internal/journal/state"
 	"github.com/ActiveMemory/ctx/internal/rc"
 	"github.com/ActiveMemory/ctx/internal/write/err"
-	"github.com/ActiveMemory/ctx/internal/write/recall"
+	writeRecall "github.com/ActiveMemory/ctx/internal/write/journal"
 )
 
 // Run handles the journal import command.
@@ -67,7 +67,7 @@ func Run(cmd *cobra.Command, args []string, opts entity.ImportOpts) error {
 	}
 
 	if len(sessions) == 0 {
-		recall.NoSessionsForProject(cmd, opts.AllProjects)
+		writeRecall.NoSessionsForProject(cmd, opts.AllProjects)
 		return nil
 	}
 
@@ -88,7 +88,7 @@ func Run(cmd *cobra.Command, args []string, opts entity.ImportOpts) error {
 		}
 		if len(toImport) > 1 {
 			lines := srcFmt.SessionMatchLines(toImport)
-			recall.AmbiguousSessionMatch(cmd, args[0], lines)
+			writeRecall.AmbiguousSessionMatch(cmd, args[0], lines)
 			return errSession.AmbiguousQuery()
 		}
 		singleSession = true
@@ -124,7 +124,7 @@ func Run(cmd *cobra.Command, args []string, opts entity.ImportOpts) error {
 
 	// 8. Dry-run → print summary and return.
 	if opts.DryRun {
-		recall.ImportSummary(
+		writeRecall.ImportSummary(
 			cmd, importPlan.NewCount, importPlan.RegenCount,
 			importPlan.SkipCount, importPlan.LockedCount, true,
 		)
@@ -138,7 +138,7 @@ func Run(cmd *cobra.Command, args []string, opts entity.ImportOpts) error {
 			return promptErr
 		}
 		if !ok {
-			recall.Aborted(cmd)
+			writeRecall.Aborted(cmd)
 			return nil
 		}
 	}
@@ -152,7 +152,7 @@ func Run(cmd *cobra.Command, args []string, opts entity.ImportOpts) error {
 	}
 
 	// 12. Print final summary.
-	recall.ImportFinalSummary(cmd, imported, updated, renamed, skipped)
+	writeRecall.ImportFinalSummary(cmd, imported, updated, renamed, skipped)
 
 	return nil
 }

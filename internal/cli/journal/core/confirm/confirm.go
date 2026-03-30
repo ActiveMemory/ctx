@@ -17,7 +17,7 @@ import (
 	"github.com/ActiveMemory/ctx/internal/config/token"
 	"github.com/ActiveMemory/ctx/internal/entity"
 	errFs "github.com/ActiveMemory/ctx/internal/err/fs"
-	"github.com/ActiveMemory/ctx/internal/write/recall"
+	writeRecall "github.com/ActiveMemory/ctx/internal/write/journal"
 )
 
 // Import prints the plan summary and prompts for confirmation.
@@ -30,11 +30,11 @@ import (
 //   - bool: true if the user confirms.
 //   - error: non-nil if reading input fails.
 func Import(cmd *cobra.Command, plan entity.ImportPlan) (bool, error) {
-	recall.ImportSummary(
+	writeRecall.ImportSummary(
 		cmd,
 		plan.NewCount, plan.RegenCount, plan.SkipCount, plan.LockedCount, false,
 	)
-	recall.ConfirmPrompt(cmd)
+	writeRecall.ConfirmPrompt(cmd)
 	reader := bufio.NewReader(os.Stdin)
 	response, readErr := reader.ReadString(token.NewlineLF[0])
 	if readErr != nil {

@@ -30,12 +30,12 @@ const (
 )
 
 const (
-	DescKeyWriteRecallImportNothing      = "write.recall-import-nothing"
-	DescKeyWriteRecallImportPartNew      = "write.recall-import-part-new"
-	DescKeyWriteRecallImportPartRegen    = "write.recall-import-part-regen"
-	DescKeyWriteRecallImportPartSkip     = "write.recall-import-part-skip"
-	DescKeyWriteRecallImportPartSkipLock = "write.recall-import-part-skip-locked"
-	DescKeyWriteRecallImportSummary      = "write.recall-import-summary"
-	DescKeyWriteRecallImportVerb         = "write.recall-import-verb"
-	DescKeyWriteRecallImportVerbDryRun   = "write.recall-import-verb-dry-run"
+	DescKeyWriteJournalImportNothing      = "write.journal-import-nothing"
+	DescKeyWriteJournalImportPartNew      = "write.journal-import-part-new"
+	DescKeyWriteJournalImportPartRegen    = "write.journal-import-part-regen"
+	DescKeyWriteJournalImportPartSkip     = "write.journal-import-part-skip"
+	DescKeyWriteJournalImportPartSkipLock = "write.journal-import-part-skip-locked"
+	DescKeyWriteJournalImportSummary      = "write.journal-import-summary"
+	DescKeyWriteJournalImportVerb         = "write.journal-import-verb"
+	DescKeyWriteJournalImportVerbDryRun   = "write.journal-import-verb-dry-run"
 )

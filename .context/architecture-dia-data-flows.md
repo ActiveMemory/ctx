@@ -91,12 +91,12 @@ User              cli/drift            context           drift.Detect           
   │  Formatted report│                    │                    │                  │
 ```
 
-## 4. `ctx recall import` — Session Import Pipeline
+## 4. `ctx journal import` — Session Import Pipeline
 
 ```
-User           cli/recall        recall/parser        journal/state          FS
+User           cli/journal       journal/parser       journal/state          FS
   │                │                    │                    │                 │
-  │  ctx recall    │                    │                    │                 │
+  │  ctx journal   │                    │                    │                 │
   │  import --all  │                    │                    │                 │
   │ ─────────────► │                    │                    │                 │
   │                │  FindSessionsFor   │                    │                 │

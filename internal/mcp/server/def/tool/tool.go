@@ -84,9 +84,9 @@ var Defs = []proto.Tool{
 		Annotations: &proto.ToolAnnotations{ReadOnlyHint: true},
 	},
 	{
-		Name: cfgMcpTool.Recall,
+		Name: cfgMcpTool.JournalSource,
 		Description: desc.Text(
-			text.DescKeyMCPToolRecallDesc),
+			text.DescKeyMCPToolJournalSourceDesc),
 		InputSchema: proto.InputSchema{
 			Type: schema.Object,
 			Properties: map[string]proto.Property{

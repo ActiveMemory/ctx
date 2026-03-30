@@ -7,7 +7,7 @@
 ## journal: Import sessions and regenerate journal site
 journal:
 	@echo "==> Importing sessions to journal..."
-	@ctx recall import --all
+	@ctx journal import --all
 	@echo "==> Generating journal site..."
 	@ctx journal site --build
 	@echo ""

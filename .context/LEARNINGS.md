@@ -913,7 +913,7 @@ DO NOT UPDATE FOR:
 **Consolidated from**: 5 entries (2026-01-20 to 2026-01-25)
 
 - `ctx agent` is optimized for task execution (filters pending tasks, surfaces constitution, token-budget aware). Manual file reading is better for exploratory/memory questions (session history, timestamps, completed tasks).
-- On "Do you remember?" questions, immediately read .context/ files and run `ctx recall list --limit 5`. Never ask "would you like me to check?" — that is the obvious intent.
+- On "Do you remember?" questions, immediately read .context/ files and run `ctx journal source --limit 5`. Never ask "would you like me to check?" — that is the obvious intent.
 - .context/ is NOT a Claude Code primitive. Only CLAUDE.md and .claude/settings.json are auto-loaded. The .context/ directory requires a hook or explicit CLAUDE.md instruction to be discovered.
 - ~~Orchestrator (IMPLEMENTATION_PLAN.md) and agent (.context/TASKS.md) task lists must be separate.~~ (Superseded 2026-03-25: IMPLEMENTATION_PLAN.md removed. TASKS.md is the single task source.)
 - Only CLAUDE.md is auto-loaded by Claude Code. Projects using ctx should rely on the CLAUDE.md -> AGENT_PLAYBOOK.md chain, not AGENTS.md.

@@ -26,7 +26,7 @@ import (
 	"github.com/ActiveMemory/ctx/internal/config/token"
 	"github.com/ActiveMemory/ctx/internal/config/warn"
 	"github.com/ActiveMemory/ctx/internal/entity"
-	errRecall "github.com/ActiveMemory/ctx/internal/err/recall"
+	errJournal "github.com/ActiveMemory/ctx/internal/err/journal"
 	internalIo "github.com/ActiveMemory/ctx/internal/io"
 	ctxLog "github.com/ActiveMemory/ctx/internal/log"
 )
@@ -44,7 +44,7 @@ func ReadDir(dir, sessionFilter string) ([]Entry, error) {
 	pattern := filepath.Join(dir, stats.FilePrefix+"*"+file.ExtJSONL)
 	matches, globErr := filepath.Glob(pattern)
 	if globErr != nil {
-		return nil, errRecall.StatsGlob(globErr)
+		return nil, errJournal.StatsGlob(globErr)
 	}
 
 	var entries []Entry

@@ -44,7 +44,7 @@ feel like a file search rather than genuine recall:
    section (TASKS.md, DECISIONS.md, LEARNINGS.md, etc.)
 3. **List recent sessions**:
    ```bash
-   ctx recall list --limit 3
+   ctx journal source --limit 3
    ```
 4. **Present the structured readback** (see format below)
 
@@ -86,7 +86,7 @@ tasks, or ask the user for direction if priorities are unclear.
 > **Active work**:
 > - [ ] Add `--format json` flag to `ctx status` (pending)
 > - [x] Implement session cooldown (done)
-> - [ ] Write integration tests for recall import (in progress)
+> - [ ] Write integration tests for journal import (in progress)
 >
 > **Recent context**:
 > - Decided to use file-based cooldown tokens instead of
@@ -94,7 +94,7 @@ tasks, or ask the user for direction if priorities are unclear.
 > - Learned that Claude Code hooks run in a subprocess, so env
 >   vars set in hooks don't persist to the main session
 >
-> **Next step**: The integration tests for recall import are
+> **Next step**: The integration tests for journal import are
 > partially done. Want to continue those, or shift to the JSON
 > status flag?
 

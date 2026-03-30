@@ -26,7 +26,7 @@ import (
 	errSession "github.com/ActiveMemory/ctx/internal/err/session"
 	sharedFmt "github.com/ActiveMemory/ctx/internal/format"
 	"github.com/ActiveMemory/ctx/internal/parse"
-	"github.com/ActiveMemory/ctx/internal/write/recall"
+	writeRecall "github.com/ActiveMemory/ctx/internal/write/journal"
 )
 
 // runList finds all sessions, applies optional filters, and displays them
@@ -68,7 +68,7 @@ func runList(cmd *cobra.Command, opts Opts) error {
 	}
 
 	if len(sessions) == 0 {
-		recall.NoSessionsWithHint(cmd, opts.AllProjects)
+		writeRecall.NoSessionsWithHint(cmd, opts.AllProjects)
 		return nil
 	}
 
@@ -93,7 +93,7 @@ func runList(cmd *cobra.Command, opts Opts) error {
 	}
 
 	if len(filtered) == 0 {
-		recall.NoFiltersMatch(cmd)
+		writeRecall.NoFiltersMatch(cmd)
 		return nil
 	}
 
@@ -106,7 +106,7 @@ func runList(cmd *cobra.Command, opts Opts) error {
 	if opts.Project != "" || opts.Tool != "" {
 		shown = len(filtered)
 	}
-	recall.SessionListHeader(cmd, len(sessions), shown)
+	writeRecall.SessionListHeader(cmd, len(sessions), shown)
 
 	// Compute dynamic column widths from data.
 	slugW, projW := len(desc.Text(text.DescKeyLabelColSlug)),
@@ -123,7 +123,7 @@ func runList(cmd *cobra.Command, opts Opts) error {
 
 	// Print column header.
 	rowFmt := fmt.Sprintf(tpl.RecallListRow, slugW, projW)
-	recall.SessionListRow(cmd, rowFmt,
+	writeRecall.SessionListRow(cmd, rowFmt,
 		desc.Text(text.DescKeyLabelColSlug),
 		desc.Text(text.DescKeyLabelColProject),
 		desc.Text(text.DescKeyLabelColDate),
@@ -142,11 +142,11 @@ func runList(cmd *cobra.Command, opts Opts) error {
 		if s.TotalTokens > 0 {
 			tokens = sharedFmt.Tokens(s.TotalTokens)
 		}
-		recall.SessionListRow(cmd, rowFmt,
+		writeRecall.SessionListRow(cmd, rowFmt,
 			slug, s.Project, dateStr, dur, turns, tokens)
 	}
 
-	recall.SessionListFooter(cmd, len(sessions) > len(filtered))
+	writeRecall.SessionListFooter(cmd, len(sessions) > len(filtered))
 
 	return nil
 }

@@ -249,7 +249,7 @@ func TestToolsList(t *testing.T) {
 	}
 	for _, want := range []string{
 		"ctx_status", "ctx_add", "ctx_complete", "ctx_drift",
-		"ctx_recall", "ctx_watch_update", "ctx_compact",
+		"ctx_journal_source", "ctx_watch_update", "ctx_compact",
 		"ctx_next", "ctx_check_task_completion",
 		"ctx_session_event", "ctx_remind",
 	} {
@@ -490,7 +490,7 @@ func TestParseError(t *testing.T) {
 func TestToolRecall(t *testing.T) {
 	srv, _ := newTestServer(t)
 	resp := request(t, srv, "tools/call", proto.CallToolParams{
-		Name:      "ctx_recall",
+		Name:      "ctx_journal_source",
 		Arguments: map[string]interface{}{"limit": float64(3)},
 	})
 	if resp.Error != nil {
@@ -513,7 +513,7 @@ func TestToolRecall(t *testing.T) {
 func TestToolRecallInvalidDate(t *testing.T) {
 	srv, _ := newTestServer(t)
 	resp := request(t, srv, "tools/call", proto.CallToolParams{
-		Name:      "ctx_recall",
+		Name:      "ctx_journal_source",
 		Arguments: map[string]interface{}{"since": "not-a-date"},
 	})
 	if resp.Error != nil {

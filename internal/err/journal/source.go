@@ -4,7 +4,7 @@
 //   \    Copyright 2026-present Context contributors.
 //                 SPDX-License-Identifier: Apache-2.0
 
-package recall
+package journal
 
 import (
 	"fmt"
@@ -22,7 +22,7 @@ import (
 //   - error: "reading event log: <cause>"
 func EventLogRead(cause error) error {
 	return fmt.Errorf(
-		desc.Text(text.DescKeyErrRecallEventLogRead), cause,
+		desc.Text(text.DescKeyErrJournalSourceEventLogRead), cause,
 	)
 }
 
@@ -35,7 +35,7 @@ func EventLogRead(cause error) error {
 //   - error: "globbing stats files: <cause>"
 func StatsGlob(cause error) error {
 	return fmt.Errorf(
-		desc.Text(text.DescKeyErrRecallStatsGlob), cause,
+		desc.Text(text.DescKeyErrJournalSourceStatsGlob), cause,
 	)
 }
 
@@ -48,7 +48,7 @@ func StatsGlob(cause error) error {
 //   - error: "<fileName> not found. Run 'ctx init' first"
 func ReindexFileNotFound(fileName string) error {
 	return fmt.Errorf(
-		desc.Text(text.DescKeyErrRecallReindexFileNotFound), fileName,
+		desc.Text(text.DescKeyErrJournalSourceReindexFileNotFound), fileName,
 	)
 }
 
@@ -62,7 +62,7 @@ func ReindexFileNotFound(fileName string) error {
 //   - error: "failed to read <filePath>: <cause>"
 func ReindexFileRead(filePath string, cause error) error {
 	return fmt.Errorf(
-		desc.Text(text.DescKeyErrRecallReindexFileRead),
+		desc.Text(text.DescKeyErrJournalSourceReindexFileRead),
 		filePath, cause,
 	)
 }
@@ -77,7 +77,7 @@ func ReindexFileRead(filePath string, cause error) error {
 //   - error: "failed to write <filePath>: <cause>"
 func ReindexFileWrite(filePath string, cause error) error {
 	return fmt.Errorf(
-		desc.Text(text.DescKeyErrRecallReindexFileWrite),
+		desc.Text(text.DescKeyErrJournalSourceReindexFileWrite),
 		filePath, cause,
 	)
 }
@@ -91,6 +91,6 @@ func ReindexFileWrite(filePath string, cause error) error {
 //   - error: "failed to open log file: <cause>"
 func OpenLogFile(cause error) error {
 	return fmt.Errorf(
-		desc.Text(text.DescKeyErrRecallOpenLogFile), cause,
+		desc.Text(text.DescKeyErrJournalSourceOpenLogFile), cause,
 	)
 }

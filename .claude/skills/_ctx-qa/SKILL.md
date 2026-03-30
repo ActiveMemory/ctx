@@ -34,7 +34,7 @@ they hit CI.
 
 ```text
 /_ctx-qa
-/_ctx-qa (after refactoring the recall command)
+/_ctx-qa (after refactoring the journal command)
 ```
 
 ## What to Run
@@ -77,7 +77,7 @@ make smoke
 
 Builds the binary and exercises `ctx init`, `ctx status`,
 `ctx agent`, `ctx drift`, `ctx add task`, and
-`ctx recall list` in a temp directory.
+`ctx journal source` in a temporary directory.
 
 ## Shortcut
 

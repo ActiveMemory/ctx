@@ -255,9 +255,9 @@ err.journal.load-journal-state:
 err.journal.no-entries-match:
   short: 'no journal entries match: %s'
 err.journal.no-journal-dir:
-  short: "no journal directory found at %s\nRun 'ctx recall import --all' first"
+  short: "no journal directory found at %s\nRun 'ctx journal import --all' first"
 err.journal.no-journal-entries:
-  short: "no journal entries found in %s\nRun 'ctx recall import --all' first"
+  short: "no journal entries found in %s\nRun 'ctx journal import --all' first"
 err.journal.read-journal-dir:
   short: 'read journal directory: %w'
 err.journal.regenerate-requires-all:
@@ -380,17 +380,17 @@ err.prompt.read-template:
   short: 'failed to read template %s: %w'
 err.prompt.template-missing-markers:
   short: template missing %s markers
-err.recall.event-log-read:
+err.journal.source.event-log-read:
   short: 'reading event log: %w'
-err.recall.open-log-file:
+err.journal.source.open-log-file:
   short: 'failed to open log file: %w'
-err.recall.reindex-file-not-found:
+err.journal.source.reindex-file-not-found:
   short: "%s not found. Run 'ctx init' first"
-err.recall.reindex-file-read:
+err.journal.source.reindex-file-read:
   short: 'failed to read %s: %w'
-err.recall.reindex-file-write:
+err.journal.source.reindex-file-write:
   short: 'failed to write %s: %w'
-err.recall.stats-glob:
+err.journal.source.stats-glob:
   short: 'globbing stats files: %w'
 err.reminder.invalid-id:
   short: invalid ID %q

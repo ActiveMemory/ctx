@@ -27,7 +27,6 @@ const (
 	UsePad        = "pad"
 	UsePause      = "pause"
 	UsePermission = "permission"
-	UseRecall     = "recall"
 	UseReindex    = "reindex"
 	UseRemind     = "remind [TEXT]"
 	UseResume     = "resume"

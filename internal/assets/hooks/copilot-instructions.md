@@ -100,7 +100,7 @@ If `ctx` is installed, use these commands:
 ctx status        # Context summary and health check
 ctx agent         # AI-ready context packet
 ctx drift         # Check for stale context
-ctx recall list   # Recent session history
+ctx journal source   # Recent session history
 ```
 
 <!-- ctx:copilot:end -->

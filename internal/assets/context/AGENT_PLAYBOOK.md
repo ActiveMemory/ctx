@@ -171,7 +171,7 @@ a problem as "pre-existing" or "not related to my changes."
 Never assume. If you don't see it in files, you don't know it.
 
 - Don't claim "we discussed X" without file evidence
-- Don't invent history: check context files and `ctx recall`
+- Don't invent history: check context files and `ctx journal source`
 - If uncertain, say "I don't see this documented"
 - Trust files over intuition
 
@@ -263,7 +263,7 @@ re-discovering it. 5 minutes reading saves 50 minutes of wasted work.
 ### Quick Check (Every Session)
 - [ ] TASKS.md reflects current priorities
 - [ ] No obvious staleness in files you'll reference
-- [ ] Recent history reviewed via `ctx recall list`
+- [ ] Recent history reviewed via `ctx journal source`
 
 ### Deep Check (Weekly or Before Major Work)
 - [ ] CONSTITUTION.md rules still apply
