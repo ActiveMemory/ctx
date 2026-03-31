@@ -7,7 +7,6 @@
 // Package nudge emits checkpoint, pause, and oversize nudge.
 //
 // Key exports: [EmitCheckpoint], [EmitWindowWarning],
-// [EmitBillingWarning], [PauseMarkerPath], [Paused].
+// [EmitBillingWarning], [EvaluateTrigger], [PauseMarkerPath], [Paused].
 // Shared helpers used by sibling cmd/ packages.
-// Used by core cmd/ packages.
 package nudge

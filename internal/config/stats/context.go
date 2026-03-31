@@ -16,14 +16,17 @@ const (
 	ContextSizeCounterPrefix = "context-check-"
 	// ContextSizeLogFile is the log file name within .context/logs/.
 	ContextSizeLogFile = "check-context-size.log"
-	// ContextWindowThresholdPct is the percentage of context window usage
-	// that triggers an independent warning, regardless of prompt count.
-	ContextWindowThresholdPct = 80
-	// ContextCheckpointMinPct is the minimum context window usage percentage
-	// below which counter-based checkpoint nudges are suppressed. This
-	// eliminates noise on large context windows (e.g., 1M) where prompt
-	// count is a poor proxy for session depth.
-	ContextCheckpointMinPct = 20
+	// ContextCheckpointPct is the context window usage percentage that
+	// triggers a one-shot checkpoint nudge. Fires once per session to
+	// encourage persisting progress (decisions, learnings, task updates).
+	ContextCheckpointPct = 60
+	// ContextWindowWarnPct is the context window usage percentage that
+	// triggers a recurring urgent warning. Fires on every prompt at or
+	// above this threshold to signal imminent context compaction.
+	ContextWindowWarnPct = 90
+	// ContextCheckpointNudgedPrefix is the state file prefix for the
+	// one-shot checkpoint guard. Prevents the 60% nudge from repeating.
+	ContextCheckpointNudgedPrefix = "checkpoint-nudged-"
 	// ContextSizeBillingWarnedPrefix is the state file prefix
 	// for the one-shot billing warning guard.
 	ContextSizeBillingWarnedPrefix = "billing-warned-"
@@ -35,19 +38,6 @@ const (
 	// ContextSizeOversizeSepLen is the separator length for the
 	// oversize flag file header.
 	ContextSizeOversizeSepLen = 35
-
-	// CheckpointLateThreshold is the prompt count above which the late
-	// checkpoint frequency kicks in.
-	CheckpointLateThreshold = 30
-	// CheckpointLateInterval is how often (in prompts) checkpoints fire
-	// after the late threshold.
-	CheckpointLateInterval = 3
-	// CheckpointEarlyThreshold is the prompt count above which the early
-	// checkpoint frequency kicks in.
-	CheckpointEarlyThreshold = 15
-	// CheckpointEarlyInterval is how often (in prompts) checkpoints fire
-	// during the early window (between early and late thresholds).
-	CheckpointEarlyInterval = 5
 
 	// ViolationSpecMissing is the score for a missing Spec: trailer.
 	ViolationSpecMissing = 3

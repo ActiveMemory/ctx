@@ -27,6 +27,7 @@ import (
 	"github.com/ActiveMemory/ctx/internal/config/session"
 	"github.com/ActiveMemory/ctx/internal/config/stats"
 	"github.com/ActiveMemory/ctx/internal/entity"
+	"github.com/ActiveMemory/ctx/internal/io"
 	"github.com/ActiveMemory/ctx/internal/rc"
 	writeHook "github.com/ActiveMemory/ctx/internal/write/hook"
 )
@@ -115,35 +116,33 @@ func Run(cmd *cobra.Command, stdin *os.File) error {
 		return nil
 	}
 
-	// Adaptive frequency (prompt counter), gated behind minimum context
-	// window usage to eliminate noise on large windows (e.g., 1M).
-	counterTriggered := false
-	if pct >= stats.ContextCheckpointMinPct {
-		if count > stats.CheckpointLateThreshold {
-			counterTriggered = count%stats.CheckpointLateInterval == 0
-		} else if count > stats.CheckpointEarlyThreshold {
-			counterTriggered = count%stats.CheckpointEarlyInterval == 0
-		}
+	// Percentage-based triggers: checkpoint at 60% (one-shot),
+	// warning at 90% (recurring).
+	guardFile := filepath.Join(
+		tmpDir, stats.ContextCheckpointNudgedPrefix+sessionID,
+	)
+	_, guardErr := os.Stat(guardFile)
+	checkpointFired := guardErr == nil
+	trigger := nudge.EvaluateTrigger(pct, checkpointFired)
+
+	if trigger.Checkpoint {
+		io.TouchFile(guardFile)
 	}
 
-	windowTrigger := pct >= stats.ContextWindowThresholdPct
-
-	evt := event.Silent
+	evt := trigger.Event
 	switch {
-	case counterTriggered:
-		evt = event.Checkpoint
-		writeHook.NudgeBlock(cmd,
-			nudge.EmitCheckpoint(
-				logFile, sessionID,
-				count, tokens, pct, windowSize,
-			),
-		)
-	case windowTrigger:
-		evt = event.WindowWarning
+	case trigger.Window:
 		writeHook.NudgeBlock(cmd,
 			nudge.EmitWindowWarning(
 				logFile, sessionID,
 				count, tokens, pct,
+			),
+		)
+	case trigger.Checkpoint:
+		writeHook.NudgeBlock(cmd,
+			nudge.EmitCheckpoint(
+				logFile, sessionID,
+				count, tokens, pct, windowSize,
 			),
 		)
 	default:

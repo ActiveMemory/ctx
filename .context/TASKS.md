@@ -43,91 +43,32 @@ relocate loop.md, delete `ctx prompt` CLI and `/ctx-prompt` skill.
 
 ### Code Cleanup Findings
 
-- [ ] Explore context checkpoint nudge calibration for variable context window sizes — current nudge fires at fixed prompt count (20/25) regardless of window size, which is premature at 1M (29% used = 700k remaining). Options to evaluate: (1) percentage-based (fire at 60% used), (2) remaining-tokens-based (fire when <100k remaining), (3) hybrid (scale prompt threshold by window size). The hook is check-context-size in hooks.json. #priority:medium #added:2026-03-30-183839
-
 - [ ] Collect all exec.Commands under a single internal/exec package.
   msgBytes, msgErr := exec.Command(
   "git", "log", "-1", "--format=%B",
   ).Output()
 
-- [ ] Rename MCP tool ctx_recall to ctx_journal — API contract
-  change, requires coordinated update of tool name constant,
-  handler dispatch, tests, and MCP tool docs.
-  #priority:low #added:2026-03-29-232631
+- [ ] Rename MCP tool ctx_recall to ctx_journal — API contract change, requires coordinated update of tool name constant, handler dispatch, tests, and MCP tool docs. #priority:low #added:2026-03-29-232631
 
-- [ ] Extract shared Cmd() boilerplate: desc.Command() +
-  cobra.Command{Use,Short,Long} + AddCommand() repeated across
-  33 parent commands. Consider a helper in bootstrap or a shared
-  cmdutil package that takes a DescKey, Use constant, and a slice
-  of subcommand Cmd() funcs. The 4 shared subcommands between
-  recall and journal (importer, lock, unlock, sync) should also
-  be deduplicated — separate packages under different parents but
-  same registration structure.
-  #priority:medium #added:2026-03-29-230235
+- [ ] Extract shared Cmd() boilerplate: desc.Command() + cobra.Command{Use,Short,Long} + AddCommand() is repeated across 33 parent commands. Consider a helper in bootstrap or a shared cmdutil package that takes a DescKey, Use constant, and a slice of subcommand Cmd() funcs. The 4 shared subcommands between recall and journal (importer, lock, unlock, sync) should also be deduplicated — they are separate packages under different parents but share the same registration structure. #priority:medium #added:2026-03-29-230235
 
-- [ ] Audit all config/ constants for ctxrc promotion: trace
-  every hardcoded threshold, interval, and limit across config/
-  packages and determine which should be user-configurable via
-  .ctxrc. Update schema, CtxRC struct, and rc accessors for
-  promoted values.
-  #priority:medium #added:2026-03-29-221155
+- [ ] Audit all config/ constants for ctxrc promotion: trace every hardcoded threshold, interval, and limit across config/ packages and determine which should be user-configurable via .ctxrc. Update schema, CtxRC struct, and rc accessors for promoted values. #priority:medium #added:2026-03-29-221155
 
-- [ ] AST-based doc.go subcommand drift detector: verify that
-  doc.go subcommand lists match actual cmd/ subdirectories. Go
-  AST can parse doc comments via go/doc; alternatively scan
-  doc.go for "- name:" lines and compare against fs.ReadDir of
-  the cmd/ directory. Add as a lint-docstrings.sh check or a
-  standalone Go test in compliance/.
-  #priority:medium #added:2026-03-29-215832
+- [ ] AST-based doc.go subcommand drift detector: verify that doc.go subcommand lists match actual cmd/ subdirectories. Go AST can parse doc comments via go/doc; alternatively scan doc.go for "- name:" lines and compare against fs.ReadDir of the cmd/ directory. Add as a lint-docstrings.sh check or a standalone Go test in compliance/. #priority:medium #added:2026-03-29-215832
 
-- [ ] Refactor entry.WriteEntry to return only error — the file
-  path mapping (entry.ToCtxFile) is a side effect. MCP server
-  should use the mapping directly. Access to ToCtxFile should be
-  protected by a mutex if used concurrently.
-  #priority:medium #added:2026-03-29-203220
+- [ ] Refactor entry.WriteEntry to return only error — the file path mapping (entry.ToCtxFile) is a side effect. MCP server should use the mapping directly. Access to ToCtxFile should be protected by a mutex if used concurrently. #priority:medium #added:2026-03-29-203220
 
-- [ ] Wire rc.CompanionCheck() to a Go caller — either the
-  planned hook-based companion smoke test or MCP server companion
-  status. Currently the accessor has no Go callers; the skill
-  reads .ctxrc via ctx config status instead.
-  #priority:low #added:2026-03-29-161505
+- [ ] Wire rc.CompanionCheck() to a Go caller — either the planned hook-based companion smoke test or MCP server companion status. Currently the accessor has no Go callers; the skill reads .ctxrc via ctx config status instead. #priority:low #added:2026-03-29-161505
 
-- [ ] Fix 99 MISSING_FIELDS violations — exported structs with
-  2+ fields need Fields: section in docstring. Run make
-  lint-style to get the full list. Mechanical but important for
-  convention compliance.
-  #priority:medium #added:2026-03-29-113308
+- [ ] Fix 99 MISSING_FIELDS violations — exported structs with 2+ fields need Fields: section in docstring. Run make lint-style to get the full list. Mechanical but important for convention compliance. #priority:medium #added:2026-03-29-113308
 
-- [ ] Fix 22 SHALLOW_DOC violations in internal/write/*/doc.go
-  — all are lazy one-liners. Each needs substantive package docs:
-  what the package does, key exported functions, usage pattern.
-  Reference internal/cli/agent/doc.go as the gold standard.
-  #priority:medium #added:2026-03-29-113302
+- [ ] Fix 22 SHALLOW_DOC violations in internal/write/*/doc.go — all are lazy one-liners. Each needs substantive package docs: what the package does, key exported functions, usage pattern. Reference internal/cli/agent/doc.go as the gold standard. #priority:medium #added:2026-03-29-113302
 
-- [ ] Add spec nudge to ctx add task output: when task
-  description contains design-signal words (hook, CLI surface,
-  state, integration, pipeline, architecture) or exceeds 150
-  chars, append a tip line: "Tip: this task may benefit from a
-  spec. Run /ctx-spec to scaffold one." Implement in the add/task
-  command output, not as a hook.
-  #priority:medium #added:2026-03-29-091002
+- [ ] Add spec nudge to ctx add task output: when task description contains design-signal words (hook, CLI surface, state, integration, pipeline, architecture) or exceeds 150 chars, append a tip line: "Tip: this task may benefit from a spec. Run /ctx-spec to scaffold one." Implement in the add/task command output, not as a hook. #priority:medium #added:2026-03-29-091002
 
-- [ ] One-shot skill discovery nudge: UserPromptSubmit hook fires
-  once at ~25 turns, relays a compact block of easy-to-forget
-  skills that have positive impact mid-session. Skills:
-  /ctx-reflect (checkpoint progress), /ctx-prompt-audit (improve
-  communication), /ctx-add-learning (capture gotchas),
-  /ctx-add-decision (record trade-offs). One-shot per session,
-  not repeated. Contextual not ceremonial — these are the skills
-  that get buried when both user and agent are focused on
-  implementation.
-  #priority:medium #added:2026-03-29-090113
+- [ ] One-shot skill discovery nudge: UserPromptSubmit hook fires once at ~25 turns, relays a compact block of easy-to-forget skills that have positive impact mid-session. Skills: /ctx-reflect (checkpoint progress), /ctx-prompt-audit (improve communication), /ctx-add-learning (capture gotchas), /ctx-add-decision (record trade-offs). One-shot per session, not repeated. Contextual not ceremonial — these are the skills that get buried when both user and agent are focused on implementation. #priority:medium #added:2026-03-29-090113
 
-- [ ] Rewrite lint-style scripts in Go as ctxctl subcommands —
-  Go gives proper type hierarchy, less fragile than bash, arguably
-  faster. Covers: lint-drift, lint-docstrings, lint-mixed-funcs,
-  lint-imports. Prerequisite: ctxctl exists.
-  #added:2026-03-29-082958
+- [ ] Rewrite lint-style scripts in Go as ctxctl subcommands — Go gives proper type hierarchy, less fragile than bash, arguably faster. Covers: lint-drift, lint-docstrings, lint-mixed-funcs, lint-imports. Prerequisite: ctxctl exists. #added:2026-03-29-082958
 
 - [ ] PD.4.5: Update AGENT_PLAYBOOK.md — add generic "check available skills"
   instruction #priority:medium #added:2026-03-25-203340
@@ -376,6 +317,63 @@ Gate checkpoint noise, fix context window detection, enforce spec-at-commit.
 - [x] HA.4.2: Unit tests for post-commit violation scoring — deferred, function
   uses exec.Command for git calls making it integration-test territory
   #done:2026-03-27-104000 #added:2026-03-27-100000
+
+### Phase PCN: Percentage-based Checkpoint Nudge
+
+Spec: `specs/percentage-based-checkpoint-nudge.md`. Read the spec before
+starting any PCN task.
+
+Replace counter-based checkpoint triggers with two percentage thresholds
+(60% checkpoint, 90% warning). Eliminates prompt-count noise, makes nudges
+proportional to actual context window usage.
+
+**PCN.1 — Constants and cleanup (`config/stats/context.go`):**
+
+- [x] PCN.1.1: Delete counter constants (`CheckpointEarlyThreshold`,
+  `CheckpointEarlyInterval`, `CheckpointLateThreshold`,
+  `CheckpointLateInterval`, `ContextCheckpointMinPct`,
+  `ContextWindowThresholdPct`). Add `ContextCheckpointPct = 60` and
+  `ContextWindowWarnPct = 90` #priority:high #added:2026-03-30-150000
+  #done:2026-03-30-160000
+
+**PCN.2 — Rewrite `check_context_size/run.go` trigger logic:**
+
+- [x] PCN.2.1: Replace counter-based `counterTriggered` branching with
+  percentage checks: one-shot at 60% (guard file in state dir), recurring
+  at 90%. Extracted `evaluateTrigger()` into `trigger.go` for testability
+  #priority:high #added:2026-03-30-150000 #done:2026-03-30-160000
+- [x] PCN.2.2: Add one-shot guard file (`checkpoint-nudged-{sessionID}`)
+  creation/check for the 60% threshold #added:2026-03-30-150000
+  #done:2026-03-30-160000
+
+**PCN.3 — Update dependent code:**
+
+- [x] PCN.3.1: Update `nudge/token.go:TokenUsageLine` — replace
+  `ContextWindowThresholdPct` reference with `ContextWindowWarnPct`
+  #added:2026-03-30-150000 #done:2026-03-30-160000
+- [x] PCN.3.2: Update `check_persistence/run.go` — change gate from
+  `ContextCheckpointMinPct` to `ContextCheckpointPct`
+  #added:2026-03-30-150000 #done:2026-03-30-160000
+
+**PCN.4 — Tests:**
+
+- [x] PCN.4.1: Unit test: no nudge fires below 60%
+  #added:2026-03-30-150000 #done:2026-03-30-160000
+- [x] PCN.4.2: Unit test: checkpoint fires at 60%, one-shot (not again at
+  65%) #added:2026-03-30-150000 #done:2026-03-30-160000
+- [x] PCN.4.3: Unit test: warning fires at 90%, repeats on subsequent
+  prompts #added:2026-03-30-150000 #done:2026-03-30-160000
+- [x] PCN.4.4: Unit test: pct=0 produces no nudges
+  #added:2026-03-30-150000 #done:2026-03-30-160000
+- [x] PCN.4.5: Update/delete existing tests that reference removed
+  constants — no existing tests referenced them #added:2026-03-30-150000
+  #done:2026-03-30-160000
+
+**PCN.5 — Documentation:**
+
+- [x] PCN.5.1: Update AGENT_PLAYBOOK.md — change "80% usage" references to
+  reflect new 60%/90% thresholds #added:2026-03-30-150000
+  #done:2026-03-30-160000
 
 ### Phase JMC: Journal Merge Completion
 

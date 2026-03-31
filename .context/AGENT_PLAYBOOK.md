@@ -52,8 +52,8 @@ verifiable chunks. After each chunk:
 Track progress via TASKS.md checkboxes. If context runs low mid-task,
 persist a progress note (what's done, what's next, what assumptions
 remain) before continuing in a new window. The `check-context-size`
-hook warns at 80% usage — treat that as a signal to checkpoint, not
-to rush.
+hook nudges at 60% usage (checkpoint) and warns at 90% (urgent) —
+treat these as signals to persist progress, not to rush.
 
 ## Session Lifecycle
 
@@ -91,8 +91,9 @@ One sentence is enough — don't turn startup into a maintenance session.
 ### Context Window Limits
 
 The `check-context-size` hook (`ctx system check-context-size`) monitors
-context window usage and warns when it exceeds 80%. When you see this
-warning or sense context is running long:
+context window usage. It nudges at 60% (one-shot checkpoint) and warns
+at 90% (recurring urgent). When you see either signal or sense context
+is running long:
 
 - **Persist progress**: write what's done and what's left to TASKS.md
   or a progress note
