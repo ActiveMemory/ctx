@@ -67,7 +67,12 @@ func Run(cmd *cobra.Command, stdin *os.File) error {
 
 	pluginVer, pluginErr := claude.PluginVersion()
 	if pluginErr != nil {
-		return nil // embedded plugin.json missing - nothing to compare
+		internalIo.TouchFile(markerFile)
+		msg := fmt.Sprintf(
+			desc.Text(text.DescKeyCheckVersionPluginReadError), pluginErr,
+		)
+		writeHook.Nudge(cmd, msg)
+		return nil
 	}
 
 	bMajor, bMinor, bOK := coreVersion.ParseMajorMinor(binaryVer)

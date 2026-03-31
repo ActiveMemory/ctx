@@ -308,6 +308,8 @@ check-version.key-relay-format:
   short: Encryption key is %d days old
 check-version.key-relay-prefix:
   short: 'IMPORTANT: Relay this security reminder to the user VERBATIM.'
+check-version.plugin-read-error:
+  short: 'Warning: could not read embedded plugin version (%v). Version check skipped.'
 check-version.mismatch-relay-format:
   short: Binary v%s vs plugin v%s
 check-version.relay-prefix:
