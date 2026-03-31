@@ -35,6 +35,8 @@ relocate loop.md, delete `ctx prompt` CLI and `/ctx-prompt` skill.
 
 ### Code Cleanup Findings
 
+- [ ] Implement journal compaction: Elastic-style tiered storage with tar.gz backup. Spec: specs/journal-compact.md #added:2026-03-31-110005
+
 - [ ] Refactor 28 grandfathered cmd/ purity violations found by TestCmdDirPurity: move unexported helpers, exported non-Cmd/Run functions, and types from cmd/ directories to core/. See grandfathered map in compliance_test.go for the full list. #priority:medium #added:2026-03-31-005115
 
 - [ ] Collect all exec.Commands under internal/exec. See

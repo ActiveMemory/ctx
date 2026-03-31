@@ -17,6 +17,7 @@ DO NOT UPDATE FOR:
 <!-- INDEX:START -->
 | Date | Learning |
 |------|--------|
+| 2026-03-31 | Legacy key directory cleanup was specified but not automated |
 | 2026-03-31 | Convention audits must check cmd/ purity, not just types and docstrings |
 | 2026-03-31 | JSON Schema default fields cause linter errors with some validators |
 | 2026-03-30 | Architecture diagrams drift silently during feature additions |
@@ -115,6 +116,16 @@ DO NOT UPDATE FOR:
 | 2026-02-19 | Feature can be code-complete but invisible to users |
 | 2026-01-28 | IDE is already the UI |
 <!-- INDEX:END -->
+
+---
+
+## [2026-03-31-112534] Legacy key directory cleanup was specified but not automated
+
+**Context**: ~/.local/ctx/keys/ accumulated 584 orphan keys from test runs before the v0.8.0 migration to ~/.ctx/.ctx.key
+
+**Lesson**: Migration specs that call for manual cleanup of old paths should include an automated step — either in the migration code itself or as a post-release cleanup task. Tests that write to global paths must isolate HOME.
+
+**Application**: When writing migration specs, always include automated cleanup of the old path. When writing tests that touch user-level directories, verify HOME is isolated via t.Setenv.
 
 ---
 

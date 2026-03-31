@@ -154,6 +154,11 @@ func BackupGlobal(
 			Prefix:     dir.Claude,
 			ExcludeDir: archive.BackupExcludeTodos,
 		},
+		{
+			SourcePath: filepath.Join(home, dir.CtxData),
+			Prefix:     dir.CtxData,
+			Optional:   true,
+		},
 	}
 
 	return finalizeArchive(
