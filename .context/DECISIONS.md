@@ -3,6 +3,7 @@
 <!-- INDEX:START -->
 | Date | Decision |
 |------|--------|
+| 2026-03-30 | Deep semantic enrichment is the standard for journal entries — heuristic enrichment is a fallback |
 | 2026-03-30 | Journal consumed recall — recall CLI package deleted |
 | 2026-03-30 | Classify rules are user-configurable via .ctxrc |
 | 2026-03-25 | Architecture analysis and enrichment are separate skills — constraint is the feature |
@@ -113,6 +114,20 @@ For significant decisions:
 ✗ No real alternatives existed
 
 -->
+
+## [2026-03-30-190859] Deep semantic enrichment is the standard for journal entries — heuristic enrichment is a fallback
+
+**Status**: Accepted
+
+**Context**: Rewrote the /ctx-journal-enrich-all skill to require semantic analysis (reading conversation content, extracting decisions/learnings/tasks, adding key_files and libraries). The old skill produced the same shallow output as the heuristic filename-based script.
+
+**Decision**: Deep semantic enrichment is the standard for journal entries — heuristic enrichment is a fallback
+
+**Rationale**: The whole point of having an agent do enrichment is semantic understanding. If the output could have been produced by a regex, the skill is not doing its job. The catalog-first approach (Phase 2) ensures consistent type/topic usage across entries.
+
+**Consequence**: The enrichment skill now requires a two-phase process: catalog pass (read-only survey) then enrichment pass (write with full metadata). The heuristic script remains as a fallback for backlogs over 50 entries.
+
+---
 
 ## [2026-03-30-003756] Journal consumed recall — recall CLI package deleted
 

@@ -105,8 +105,18 @@ key_files:
 | `bugfix`        | Fixing broken behavior                |
 | `refactor`      | Restructuring without behavior change |
 | `exploration`   | Research, learning, experimentation   |
-| `debugging`     | Investigating issues                  |
-| `documentation` | Writing docs, comments, README        |
+| `debugging`     | Investigating issues (not yet fixed)  |
+| `documentation` | Writing docs, comments, blog posts    |
+| `maintenance`   | Cleanup, audits, dependency updates   |
+| `planning`      | Design, spec writing, brainstorming   |
+| `review`        | Code review, PR review, audit review  |
+| `migration`     | Moving between systems or patterns    |
+| `release`       | Release prep, versioning, changelogs  |
+| `configuration` | Settings, hooks, CI/CD, tooling setup |
+| `onboarding`    | Session start, context loading        |
+
+These are a starting point. If a session does not fit any type,
+create a descriptive new one rather than forcing a bad fit.
 
 **Outcome values:**
 
@@ -116,6 +126,13 @@ key_files:
 | `partial`   | Some progress, work continues      |
 | `abandoned` | Stopped pursuing this approach     |
 | `blocked`   | Waiting on external dependency     |
+
+**No angle brackets in YAML values.** Literal `<` and `>` in
+frontmatter strings break HTML rendering on the journal site.
+Replace with parentheses: `<pre>` → `(pre)`,
+`<slug>` → `(slug)`. Do NOT use HTML entities or square
+brackets — entities get double-escaped, brackets become
+Markdown links.
 
 ### 2. Summary
 

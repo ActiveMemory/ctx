@@ -17,6 +17,7 @@ DO NOT UPDATE FOR:
 <!-- INDEX:START -->
 | Date | Learning |
 |------|--------|
+| 2026-03-30 | Parallel agent enrichment hits rate limits at ~40 concurrent agents |
 | 2026-03-30 | Python-generated doc.go files need gofmt — formatter strips bare // padding lines |
 | 2026-03-30 | internal/cli/recall/ was dead code — never registered in bootstrap |
 | 2026-03-30 | lint-docstrings.sh greedy sed hid all return-type violations |
@@ -112,6 +113,16 @@ DO NOT UPDATE FOR:
 | 2026-02-19 | Feature can be code-complete but invisible to users |
 | 2026-01-28 | IDE is already the UI |
 <!-- INDEX:END -->
+
+---
+
+## [2026-03-30-190617] Parallel agent enrichment hits rate limits at ~40 concurrent agents
+
+**Context**: Launched ~80 background agents for journal enrichment across 398 entries. The first ~60 agents completed successfully but the last ~15 batches hit API rate limits. The rate-limited agents returned zero work.
+
+**Lesson**: Cap parallel agent launches at ~30 concurrent to stay under rate limits. Stagger launches in waves of 10 with brief delays between waves rather than launching all at once.
+
+**Application**: For future bulk enrichment runs, use 3 waves of 10 agents with a brief pause between waves rather than launching all batches simultaneously.
 
 ---
 
