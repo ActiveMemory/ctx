@@ -16,6 +16,32 @@ var Packages = map[string]string{
 	"Gemfile":          "Ruby dependencies",
 }
 
+// Go toolchain command constants.
+const (
+	// GoBinary is the Go executable name.
+	GoBinary = "go"
+	// GoList is the go list subcommand.
+	GoList = "list"
+	// GoFlagJSON is the JSON output flag for go list.
+	GoFlagJSON = "-json"
+	// GoAllPackages is the recursive package pattern.
+	GoAllPackages = "./..."
+)
+
+// Cargo toolchain command constants.
+const (
+	// CargoBinary is the Cargo executable name.
+	CargoBinary = "cargo"
+	// CargoMetadataCmd is the cargo metadata subcommand.
+	CargoMetadataCmd = "metadata"
+	// CargoFlagFormatVersion is the format version flag.
+	CargoFlagFormatVersion = "--format-version"
+	// CargoFormatVersion1 is the format version value.
+	CargoFormatVersion1 = "1"
+	// CargoFlagNoDeps skips dependency resolution.
+	CargoFlagNoDeps = "--no-deps"
+)
+
 // Table formatting constants for dependency output.
 const (
 	// TableColPackage is the column width for package names in table output.

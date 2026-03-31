@@ -361,6 +361,8 @@ func TestSchemaCoversCtxRC(t *testing.T) {
 		SessionPrefixes     []int  `yaml:"session_prefixes"`
 		CompanionCheck      *bool  `yaml:"companion_check"`
 		ClassifyRules       []int  `yaml:"classify_rules"`
+		SpecSignalWords     []int  `yaml:"spec_signal_words"`
+		SpecNudgeMinLen     int    `yaml:"spec_nudge_min_len"`
 		Notify              *int   `yaml:"notify"`
 		FreshnessFiles      []int  `yaml:"freshness_files"`
 	}

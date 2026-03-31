@@ -25,3 +25,11 @@ func Added(cmd *cobra.Command, filename string) {
 		fmt.Sprintf(desc.Text(text.DescKeyWriteAddedTo), filename),
 	)
 }
+
+// SpecNudge prints a tip suggesting a spec when appropriate.
+//
+// Parameters:
+//   - cmd: Cobra command for output
+func SpecNudge(cmd *cobra.Command) {
+	cmd.Println(desc.Text(text.DescKeyWriteSpecNudgeTip))
+}

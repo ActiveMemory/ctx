@@ -8,7 +8,6 @@ package post_commit
 
 import (
 	"fmt"
-	"os/exec"
 	"strings"
 
 	"github.com/ActiveMemory/ctx/internal/assets/read/desc"
@@ -20,6 +19,7 @@ import (
 	"github.com/ActiveMemory/ctx/internal/config/regex"
 	"github.com/ActiveMemory/ctx/internal/config/stats"
 	"github.com/ActiveMemory/ctx/internal/config/token"
+	execGit "github.com/ActiveMemory/ctx/internal/exec/git"
 )
 
 // scoreCommitViolations reads the last commit and scores it for signs that
@@ -29,10 +29,7 @@ import (
 // Returns:
 //   - string: Formatted nudge box, or empty string if no violations detected
 func scoreCommitViolations() string {
-	//nolint:gosec // G204: all args are string literals
-	msgBytes, msgErr := exec.Command(
-		"git", "log", "-1", "--format=%B",
-	).Output()
+	msgBytes, msgErr := execGit.LastCommitMessage()
 	if msgErr != nil {
 		return ""
 	}
@@ -62,11 +59,7 @@ func scoreCommitViolations() string {
 		missing = append(missing, desc.Text(text.DescKeyPostCommitMissingTaskRef))
 	}
 
-	//nolint:gosec // G204: all args are string literals
-	diffBytes, diffErr := exec.Command(
-		"git", "diff-tree", "--no-commit-id",
-		"--name-only", "-r", "HEAD",
-	).Output()
+	diffBytes, diffErr := execGit.DiffTreeHead()
 	if diffErr == nil {
 		diffFiles := string(diffBytes)
 		hasSource := strings.Contains(diffFiles, file.ExtGo)

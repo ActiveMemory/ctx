@@ -87,6 +87,23 @@ ceremony.relay-message:
   short: Session ceremony nudge
 ceremony.relay-prefix:
   short: 'IMPORTANT: Relay this session tip to the user VERBATIM before answering their question.'
+skill-discovery.box-title:
+  short: Mid-Session Skills
+skill-discovery.content:
+  short: |-
+    These skills are easy to forget mid-session:
+
+    /ctx-reflect       — checkpoint progress and learnings
+    /ctx-add-learning  — capture gotchas before moving on
+    /ctx-add-decision  — record trade-offs while fresh
+    /ctx-prompt-audit  — improve prompt clarity
+
+    Use them when you hit a milestone, make a design
+    choice, or discover something surprising.
+skill-discovery.relay-prefix:
+  short: 'Session tip: skills available for mid-session use.'
+skill-discovery.relay-message:
+  short: Skill discovery nudge
 check-context-size.billing-box-title:
   short: Billing Threshold
 check-context-size.billing-fallback:

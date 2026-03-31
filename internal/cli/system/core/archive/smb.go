@@ -10,7 +10,6 @@ import (
 	"fmt"
 	"net/url"
 	"os"
-	"os/exec"
 	"path/filepath"
 
 	"github.com/ActiveMemory/ctx/internal/assets/read/desc"
@@ -19,6 +18,7 @@ import (
 	"github.com/ActiveMemory/ctx/internal/config/fs"
 	errBackup "github.com/ActiveMemory/ctx/internal/err/backup"
 	errFs "github.com/ActiveMemory/ctx/internal/err/fs"
+	execGio "github.com/ActiveMemory/ctx/internal/exec/gio"
 	"github.com/ActiveMemory/ctx/internal/io"
 )
 
@@ -75,9 +75,7 @@ func EnsureSMBMount(cfg *SMBConfig) error {
 		return nil
 	}
 
-	//nolint:gosec // G204: smbURL is from user env, not untrusted input
-	mountCmd := exec.Command("gio", "mount", cfg.SourceURL)
-	if mountErr := mountCmd.Run(); mountErr != nil {
+	if mountErr := execGio.Mount(cfg.SourceURL); mountErr != nil {
 		return errBackup.MountFailed(cfg.SourceURL, mountErr)
 	}
 

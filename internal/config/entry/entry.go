@@ -45,6 +45,19 @@ const (
 // Priorities lists all valid priority levels for shell completion.
 var Priorities = []string{PriorityHigh, PriorityMedium, PriorityLow}
 
+// DefaultSpecSignalWords are terms in task descriptions that
+// suggest the task would benefit from a design spec. User-
+// configurable via spec_signal_words in .ctxrc.
+var DefaultSpecSignalWords = []string{
+	"hook", "cli surface", "state", "integration",
+	"pipeline", "architecture", "migration", "protocol",
+}
+
+// SpecNudgeMinLen is the default task content length above which
+// a spec nudge fires regardless of signal words. User-
+// configurable via spec_nudge_min_len in .ctxrc.
+const SpecNudgeMinLen = 150
+
 // FromUserInput normalizes user input to a canonical entry type.
 //
 // Accepts singular and plural forms, case-insensitive.

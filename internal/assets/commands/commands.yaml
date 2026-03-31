@@ -1048,6 +1048,17 @@ system.checkpersistence:
     Output: agent directive (when triggered), silent otherwise
     Silent when: context files were recently modified
   short: Persistence nudge hook
+system.checkskilldiscovery:
+  long: |-
+    One-shot nudge that fires once per session at ~25 prompts.
+    Surfaces easy-to-forget skills that have positive impact
+    mid-session: /ctx-reflect, /ctx-prompt-audit,
+    /ctx-add-learning, /ctx-add-decision.
+
+    Hook event: UserPromptSubmit
+    Output: skill tip block (once), silent thereafter
+    Silent when: guard file exists for this session
+  short: Skill discovery nudge hook
 system.checkreminders:
   short: Surface pending reminders at session start
 system.checkresources:

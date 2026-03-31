@@ -9,7 +9,6 @@ package journal
 import (
 	"github.com/spf13/cobra"
 
-	"github.com/ActiveMemory/ctx/internal/assets/read/desc"
 	"github.com/ActiveMemory/ctx/internal/cli/journal/cmd/importer"
 	"github.com/ActiveMemory/ctx/internal/cli/journal/cmd/lock"
 	"github.com/ActiveMemory/ctx/internal/cli/journal/cmd/obsidian"
@@ -17,32 +16,26 @@ import (
 	"github.com/ActiveMemory/ctx/internal/cli/journal/cmd/source"
 	journalSync "github.com/ActiveMemory/ctx/internal/cli/journal/cmd/sync"
 	"github.com/ActiveMemory/ctx/internal/cli/journal/cmd/unlock"
+	"github.com/ActiveMemory/ctx/internal/cli/parent"
 	"github.com/ActiveMemory/ctx/internal/config/embed/cmd"
 )
 
 // Cmd returns the journal command with subcommands.
 //
-// The journal system provides tools for importing, analyzing, enriching, and
-// publishing AI session history in .context/journal/.
+// The journal system provides tools for importing, analyzing,
+// enriching, and publishing AI session history in
+// .context/journal/.
 //
 // Returns:
 //   - *cobra.Command: The journal command with subcommands
 func Cmd() *cobra.Command {
-	short, long := desc.Command(cmd.DescKeyJournal)
-
-	c := &cobra.Command{
-		Use:   cmd.UseJournal,
-		Short: short,
-		Long:  long,
-	}
-
-	c.AddCommand(source.Cmd())
-	c.AddCommand(importer.Cmd())
-	c.AddCommand(lock.Cmd())
-	c.AddCommand(unlock.Cmd())
-	c.AddCommand(journalSync.Cmd())
-	c.AddCommand(site.Cmd())
-	c.AddCommand(obsidian.Cmd())
-
-	return c
+	return parent.Cmd(cmd.DescKeyJournal, cmd.UseJournal,
+		source.Cmd(),
+		importer.Cmd(),
+		lock.Cmd(),
+		unlock.Cmd(),
+		journalSync.Cmd(),
+		site.Cmd(),
+		obsidian.Cmd(),
+	)
 }

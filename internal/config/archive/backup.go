@@ -39,3 +39,11 @@ const (
 	// Bashrc is the user's bash configuration file.
 	Bashrc = ".bashrc"
 )
+
+// GIO mount command constants.
+const (
+	// GioBinary is the GIO executable name.
+	GioBinary = "gio"
+	// GioMount is the gio mount subcommand.
+	GioMount = "mount"
+)

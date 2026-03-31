@@ -223,6 +223,29 @@ func CheckDrift(report *Report) {
 	})
 }
 
+// CheckCompanionConfig reports whether companion tool checks
+// are enabled or suppressed in .ctxrc.
+//
+// Parameters:
+//   - report: Report to append the result to
+func CheckCompanionConfig(report *Report) {
+	if rc.CompanionCheck() {
+		report.Results = append(report.Results, Result{
+			Name:     doctor.CheckCompanionConfig,
+			Category: doctor.CategoryPlugin,
+			Status:   stats.StatusOK,
+			Message:  desc.Text(text.DescKeyDoctorCompanionConfigOk),
+		})
+	} else {
+		report.Results = append(report.Results, Result{
+			Name:     doctor.CheckCompanionConfig,
+			Category: doctor.CategoryPlugin,
+			Status:   stats.StatusInfo,
+			Message:  desc.Text(text.DescKeyDoctorCompanionConfigInfo),
+		})
+	}
+}
+
 // CheckPluginEnablement checks whether the ctx plugin is installed and enabled.
 //
 // Parameters:
@@ -556,47 +579,47 @@ func AddResourceResults(report *Report, snap sysinfo.Snapshot) {
 		sevMap[a.Resource] = a.Severity
 	}
 
-	// Memory.
-	if snap.Memory.Supported && snap.Memory.TotalBytes > 0 {
-		pct := ResourcePct(snap.Memory.UsedBytes, snap.Memory.TotalBytes)
-		msg := fmt.Sprintf(desc.Text(text.DescKeyDoctorResourceMemoryFormat),
-			pct,
-			sysinfo.FormatGiB(snap.Memory.UsedBytes),
-			sysinfo.FormatGiB(snap.Memory.TotalBytes))
-		report.Results = append(report.Results, Result{
-			Name:     doctor.CheckResourceMemory,
-			Category: doctor.CategoryResources,
-			Status:   SeverityToStatus(sevMap[sysinfo.ResourceMemory]),
-			Message:  msg,
-		})
+	// Memory, swap, disk — same structure: pct + used/total GiB.
+	byteChecks := []struct {
+		supported bool
+		used      uint64
+		total     uint64
+		fmtKey    string
+		checkName string
+		resource  string
+	}{
+		{
+			snap.Memory.Supported, snap.Memory.UsedBytes,
+			snap.Memory.TotalBytes,
+			text.DescKeyDoctorResourceMemoryFormat,
+			doctor.CheckResourceMemory, sysinfo.ResourceMemory,
+		},
+		{
+			snap.Memory.Supported, snap.Memory.SwapUsedBytes,
+			snap.Memory.SwapTotalBytes,
+			text.DescKeyDoctorResourceSwapFormat,
+			doctor.CheckResourceSwap, sysinfo.ResourceSwap,
+		},
+		{
+			snap.Disk.Supported, snap.Disk.UsedBytes,
+			snap.Disk.TotalBytes,
+			text.DescKeyDoctorResourceDiskFormat,
+			doctor.CheckResourceDisk, sysinfo.ResourceDisk,
+		},
 	}
-
-	// Swap (only when swap is configured).
-	if snap.Memory.Supported && snap.Memory.SwapTotalBytes > 0 {
-		pct := ResourcePct(snap.Memory.SwapUsedBytes, snap.Memory.SwapTotalBytes)
-		msg := fmt.Sprintf(desc.Text(text.DescKeyDoctorResourceSwapFormat),
+	for _, bc := range byteChecks {
+		if !bc.supported || bc.total == 0 {
+			continue
+		}
+		pct := ResourcePct(bc.used, bc.total)
+		msg := fmt.Sprintf(desc.Text(bc.fmtKey),
 			pct,
-			sysinfo.FormatGiB(snap.Memory.SwapUsedBytes),
-			sysinfo.FormatGiB(snap.Memory.SwapTotalBytes))
+			sysinfo.FormatGiB(bc.used),
+			sysinfo.FormatGiB(bc.total))
 		report.Results = append(report.Results, Result{
-			Name:     doctor.CheckResourceSwap,
+			Name:     bc.checkName,
 			Category: doctor.CategoryResources,
-			Status:   SeverityToStatus(sevMap[sysinfo.ResourceSwap]),
-			Message:  msg,
-		})
-	}
-
-	// Disk.
-	if snap.Disk.Supported && snap.Disk.TotalBytes > 0 {
-		pct := ResourcePct(snap.Disk.UsedBytes, snap.Disk.TotalBytes)
-		msg := fmt.Sprintf(desc.Text(text.DescKeyDoctorResourceDiskFormat),
-			pct,
-			sysinfo.FormatGiB(snap.Disk.UsedBytes),
-			sysinfo.FormatGiB(snap.Disk.TotalBytes))
-		report.Results = append(report.Results, Result{
-			Name:     doctor.CheckResourceDisk,
-			Category: doctor.CategoryResources,
-			Status:   SeverityToStatus(sevMap[sysinfo.ResourceDisk]),
+			Status:   SeverityToStatus(sevMap[bc.resource]),
 			Message:  msg,
 		})
 	}

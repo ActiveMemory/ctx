@@ -890,3 +890,252 @@ func TestPermissionConstants(t *testing.T) {
 		}
 	})
 }
+
+// ---------------------------------------------------------------------------
+// 21. doc.go subcommand drift — listed names match cmd/ dirs
+// ---------------------------------------------------------------------------
+
+// TestDocGoSubcommandDrift walks internal/cli/ looking for doc.go files that
+// list subcommands via "//   - name:" bullet patterns under a section header
+// containing "subcommand" or "hook". For each listed name, it checks that a
+// corresponding cmd/<name>/ directory exists (normalizing hyphens to
+// underscores). Missing directories indicate the doc.go is out of date.
+func TestDocGoSubcommandDrift(t *testing.T) {
+	root := projectRoot(t)
+	cliDir := filepath.Join(root, "internal", "cli")
+
+	// sectionRe detects section headers that introduce subcommand lists.
+	sectionRe := regexp.MustCompile(
+		`(?i)(subcommand|hook)`,
+	)
+	// bulletRe matches "//   - name:" or "//   - name/other:" patterns.
+	// The captured group may contain "/" for combined entries (pause/resume).
+	bulletRe := regexp.MustCompile(
+		`^//\s+-\s+([\w/-]+)\s*[:/]`,
+	)
+
+	// Known name mappings: doc name → dir name.
+	knownAliases := map[string]string{
+		"switch": "switchcmd",
+		"import": "importer",
+	}
+
+	// Directories to skip in the undocumented check.
+	skipDirs := map[string]bool{
+		"root": true,
+	}
+
+	err := filepath.Walk(cliDir, func(path string, info os.FileInfo, walkErr error) error {
+		if walkErr != nil {
+			return walkErr
+		}
+		if info.Name() != "doc.go" || info.IsDir() {
+			return nil
+		}
+
+		pkgDir := filepath.Dir(path)
+		cmdDir := filepath.Join(pkgDir, "cmd")
+
+		// Only check doc.go files that have a cmd/ directory.
+		if _, statErr := os.Stat(cmdDir); statErr != nil {
+			return nil
+		}
+
+		//nolint:gosec // constructed from test constants
+		data, readErr := os.ReadFile(filepath.Clean(path))
+		if readErr != nil {
+			t.Errorf("read %s: %v", path, readErr)
+			return nil
+		}
+
+		// Read actual cmd/ subdirectories.
+		entries, dirErr := os.ReadDir(cmdDir)
+		if dirErr != nil {
+			return nil
+		}
+		actualDirs := make(map[string]bool)
+		for _, e := range entries {
+			if e.IsDir() {
+				actualDirs[e.Name()] = true
+			}
+		}
+
+		// Extract subcommand names from doc.go. Only process files
+		// whose doc comment mentions "subcommand" or "hook" (proving
+		// the bullets are subcommand listings, not entry types).
+		content := string(data)
+		if !sectionRe.MatchString(content) {
+			return nil
+		}
+
+		var documented []string
+		scanner := bufio.NewScanner(bytes.NewReader(data))
+		for scanner.Scan() {
+			if m := bulletRe.FindStringSubmatch(scanner.Text()); m != nil {
+				documented = append(documented, m[1])
+			}
+		}
+
+		if len(documented) == 0 {
+			return nil
+		}
+
+		rel, _ := filepath.Rel(root, path)
+
+		// Normalize: hyphens → underscores, apply aliases.
+		normalize := func(name string) string {
+			if alias, ok := knownAliases[name]; ok {
+				return alias
+			}
+			return strings.ReplaceAll(name, "-", "_")
+		}
+
+		// Expand combined entries (e.g., "pause/resume") and check
+		// each documented name has a cmd/ directory.
+		docSet := make(map[string]bool)
+		for _, raw := range documented {
+			parts := strings.Split(raw, "/")
+			for _, name := range parts {
+				dirName := normalize(name)
+				docSet[dirName] = true
+				if !actualDirs[dirName] {
+					t.Errorf(
+						"%s lists subcommand %q but cmd/%s/ does not exist",
+						rel, name, dirName,
+					)
+				}
+			}
+		}
+
+		// Check for cmd/ directories not documented.
+		for dir := range actualDirs {
+			if skipDirs[dir] || docSet[dir] {
+				continue
+			}
+			t.Errorf(
+				"%s does not document cmd/%s/ subcommand",
+				rel, dir,
+			)
+		}
+
+		return nil
+	})
+	if err != nil {
+		t.Fatalf("walk: %v", err)
+	}
+}
+
+// ---------------------------------------------------------------------------
+// 22. cmd/ purity — cmd dirs contain only Cmd/Run, no helpers or types
+// ---------------------------------------------------------------------------
+
+// TestCmdDirPurity walks internal/cli/**/cmd/*/ and verifies that .go files
+// (excluding tests and doc.go) only declare exported functions matching
+// Cmd or Run*. Unexported functions and type declarations belong in core/.
+func TestCmdDirPurity(t *testing.T) {
+	root := projectRoot(t)
+	cliDir := filepath.Join(root, "internal", "cli")
+
+	// Allowed exported function name patterns in cmd/ files.
+	allowedFunc := func(name string) bool {
+		if name == "Cmd" {
+			return true
+		}
+		return strings.HasPrefix(name, "Run")
+	}
+
+	// Pre-existing violations grandfathered until refactored.
+	// Key: relative path from cli/, value: set of allowed names.
+	grandfathered := map[string]map[string]bool{
+		"guide/cmd/root/command.go":       {"listCommands": true},
+		"guide/cmd/root/skill.go":         {"parseSkillFrontmatter": true, "truncateDescription": true, "listSkills": true},
+		"guide/cmd/root/types.go":         {"skillMeta": true},
+		"hook/cmd/root/run.go":            {"WriteCopilotInstructions": true},
+		"initialize/cmd/root/run.go":      {"initScratchpad": true, "hasEssentialFiles": true, "ensureGitignoreEntries": true, "writeGettingStarted": true},
+		"journal/cmd/obsidian/run.go":     {"BuildVault": true},
+		"journal/cmd/source/list.go":      {"runList": true},
+		"journal/cmd/source/show.go":      {"runShow": true},
+		"journal/cmd/source/types.go":     {"Opts": true},
+		"loop/cmd/root/script.go":         {"GenerateLoopScript": true},
+		"pad/cmd/edit/types.go":           {"Mode": true, "Opts": true},
+		"pad/cmd/resolve/display.go":      {"displayAll": true},
+		"remind/cmd/dismiss/run.go":       {"dismissOne": true, "dismissAll": true},
+		"system/cmd/post_commit/score.go": {"scoreCommitViolations": true},
+		"task/cmd/complete/run.go":        {"Complete": true},
+		"why/cmd/root/data.go":            {"DocEntry": true},
+		"why/cmd/root/menu.go":            {"showMenu": true},
+		"why/cmd/root/run.go":             {"ShowDoc": true},
+		"why/cmd/root/strip.go":           {"StripMkDocs": true, "ExtractAdmonitionTitle": true, "ExtractTabTitle": true},
+	}
+
+	err := filepath.Walk(cliDir, func(path string, info os.FileInfo, walkErr error) error {
+		if walkErr != nil {
+			return walkErr
+		}
+		if info.IsDir() || !strings.HasSuffix(info.Name(), ".go") {
+			return nil
+		}
+		if strings.HasSuffix(info.Name(), "_test.go") || info.Name() == "doc.go" {
+			return nil
+		}
+
+		// Only check files inside a cmd/ directory.
+		rel, _ := filepath.Rel(cliDir, path)
+		if !strings.Contains(rel, "/cmd/") {
+			return nil
+		}
+
+		fset := token.NewFileSet()
+		node, parseErr := parser.ParseFile(fset, path, nil, 0)
+		if parseErr != nil {
+			t.Errorf("parse %s: %v", rel, parseErr)
+			return nil
+		}
+
+		allowed := grandfathered[rel]
+
+		for _, decl := range node.Decls {
+			switch d := decl.(type) {
+			case *ast.FuncDecl:
+				name := d.Name.Name
+				if d.Recv != nil {
+					continue
+				}
+				if allowed[name] {
+					continue
+				}
+				if !d.Name.IsExported() {
+					t.Errorf(
+						"%s: unexported function %q belongs in core/, not cmd/",
+						rel, name,
+					)
+				} else if !allowedFunc(name) {
+					t.Errorf(
+						"%s: exported function %q is not Cmd or Run* — move to core/",
+						rel, name,
+					)
+				}
+			case *ast.GenDecl:
+				if d.Tok == token.TYPE {
+					for _, spec := range d.Specs {
+						ts, ok := spec.(*ast.TypeSpec)
+						if !ok {
+							continue
+						}
+						if allowed[ts.Name.Name] {
+							continue
+						}
+						t.Errorf(
+							"%s: type %q belongs in core/types.go, not cmd/",
+							rel, ts.Name.Name,
+						)
+					}
+				}
+			}
+		}
+		return nil
+	})
+	if err != nil {
+		t.Fatalf("walk: %v", err)
+	}
+}

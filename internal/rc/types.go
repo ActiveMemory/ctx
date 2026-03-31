@@ -50,6 +50,10 @@ import cfgMemory "github.com/ActiveMemory/ctx/internal/config/memory"
 //     during /ctx-remember (default true)
 //   - ClassifyRules: Custom keyword rules for memory
 //     entry classification (overrides defaults when set)
+//   - SpecSignalWords: Terms that trigger a spec nudge
+//     when adding tasks (overrides defaults when set)
+//   - SpecNudgeMinLen: Task content length threshold
+//     for spec nudge (default 150)
 type CtxRC struct {
 	Profile             string                   `yaml:"profile"`
 	ContextDir          string                   `yaml:"context_dir"`
@@ -74,6 +78,8 @@ type CtxRC struct {
 	FreshnessFiles      []FreshnessFile          `yaml:"freshness_files"`
 	CompanionCheck      *bool                    `yaml:"companion_check"`
 	ClassifyRules       []cfgMemory.ClassifyRule `yaml:"classify_rules"`
+	SpecSignalWords     []string                 `yaml:"spec_signal_words"`
+	SpecNudgeMinLen     int                      `yaml:"spec_nudge_min_len"`
 	Notify              *NotifyConfig            `yaml:"notify"`
 }
 

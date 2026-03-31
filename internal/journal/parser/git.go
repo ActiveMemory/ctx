@@ -8,8 +8,8 @@ package parser
 
 import (
 	"os"
-	"os/exec"
-	"strings"
+
+	execGit "github.com/ActiveMemory/ctx/internal/exec/git"
 )
 
 // gitRemote returns the git remote origin URL for a directory.
@@ -35,15 +35,5 @@ func gitRemote(dir string) string {
 		return ""
 	}
 
-	if _, lookErr := exec.LookPath("git"); lookErr != nil {
-		return ""
-	}
-
-	cmd := exec.Command("git", "-C", dir, "remote", "get-url", "origin")
-	output, cmdErr := cmd.Output()
-	if cmdErr != nil {
-		return ""
-	}
-
-	return strings.TrimSpace(string(output))
+	return execGit.RemoteURL(dir)
 }

@@ -7,6 +7,8 @@ write.agent-numbered-item:
   short: "%d. %s"
 write.added-to:
   short: ✓ Added to %s
+write.spec-nudge-tip:
+  short: 'Tip: this task may benefit from a spec. Run /ctx-spec to scaffold one.'
 write.archived:
   short: Archived previous mirror to %s
 write.backup-result:

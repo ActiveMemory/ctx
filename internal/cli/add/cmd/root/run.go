@@ -11,6 +11,7 @@ import (
 
 	"github.com/spf13/cobra"
 
+	coreEntry "github.com/ActiveMemory/ctx/internal/cli/add/core/entry"
 	"github.com/ActiveMemory/ctx/internal/cli/add/core/example"
 	"github.com/ActiveMemory/ctx/internal/cli/add/core/extract"
 	cfgEntry "github.com/ActiveMemory/ctx/internal/config/entry"
@@ -69,6 +70,10 @@ func Run(cmd *cobra.Command, args []string, flags entity.AddConfig) error {
 	}
 
 	writeAdd.Added(cmd, fName)
+
+	if fType == cfgEntry.Task && coreEntry.NeedsSpec(content) {
+		writeAdd.SpecNudge(cmd)
+	}
 
 	return nil
 }

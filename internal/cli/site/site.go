@@ -9,7 +9,7 @@ package site
 import (
 	"github.com/spf13/cobra"
 
-	"github.com/ActiveMemory/ctx/internal/assets/read/desc"
+	"github.com/ActiveMemory/ctx/internal/cli/parent"
 	"github.com/ActiveMemory/ctx/internal/cli/site/cmd/feed"
 	"github.com/ActiveMemory/ctx/internal/config/embed/cmd"
 )
@@ -20,17 +20,9 @@ import (
 //   - feed: Generate an Atom 1.0 feed from blog posts
 //
 // Returns:
-//   - *cobra.Command: Parent command with site management subcommands
+//   - *cobra.Command: Parent command with site subcommands
 func Cmd() *cobra.Command {
-	short, long := desc.Command(cmd.DescKeySite)
-
-	c := &cobra.Command{
-		Use:   cmd.UseSite,
-		Short: short,
-		Long:  long,
-	}
-
-	c.AddCommand(feed.Cmd())
-
-	return c
+	return parent.Cmd(cmd.DescKeySite, cmd.UseSite,
+		feed.Cmd(),
+	)
 }

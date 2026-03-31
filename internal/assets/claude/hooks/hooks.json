@@ -50,6 +50,7 @@
           {"type": "command", "command": "ctx system check-map-staleness"},
           {"type": "command", "command": "ctx system check-memory-drift"},
           {"type": "command", "command": "ctx system check-freshness"},
+          {"type": "command", "command": "ctx system check-skill-discovery"},
           {"type": "command", "command": "ctx system heartbeat"}
         ]
       }

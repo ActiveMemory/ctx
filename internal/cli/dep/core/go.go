@@ -10,8 +10,9 @@ import (
 	"encoding/json"
 	"io"
 	"os"
-	"os/exec"
 	"strings"
+
+	execDep "github.com/ActiveMemory/ctx/internal/exec/dep"
 )
 
 // GoBuilder implements GraphBuilder for Go projects.
@@ -41,22 +42,6 @@ func (g *GoBuilder) Build(external bool) (map[string][]string, error) {
 	return BuildGoInternalGraph()
 }
 
-// GoPackage represents the subset of `go list -json` output we need.
-//
-// Fields:
-//   - ImportPath: Full import path
-//   - Name: Package name
-//   - Imports: Direct import paths
-//   - Module: Enclosing module (nil for stdlib)
-type GoPackage struct {
-	ImportPath string   `json:"ImportPath"`
-	Name       string   `json:"Name"`
-	Imports    []string `json:"Imports"`
-	Module     *struct {
-		Path string `json:"Path"`
-	} `json:"Module"`
-}
-
 // GoModulePath reads the module path from the first
 // GoPackage with a Module field.
 //
@@ -81,9 +66,7 @@ func GoModulePath(pkgs []GoPackage) string {
 //   - []GoPackage: Parsed packages
 //   - error: Non-nil if go list fails or output is malformed
 func ListGoPackages() ([]GoPackage, error) {
-	out, listErr := exec.Command( //nolint:gosec // fixed args
-		"go", "list", "-json", "./...",
-	).Output()
+	out, listErr := execDep.GoListPackages()
 	if listErr != nil {
 		return nil, listErr
 	}

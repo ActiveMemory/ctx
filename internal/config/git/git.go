@@ -11,7 +11,9 @@ const Binary = "git"
 
 // Git subcommands.
 const (
+	DiffTree = "diff-tree"
 	Log      = "log"
+	Remote   = "remote"
 	RevParse = "rev-parse"
 )
 
@@ -21,16 +23,26 @@ const (
 	FlagShowToplevel = "--show-toplevel"
 )
 
-// Git log flags.
+// Git flags.
 const (
+	FlagChangeDir  = "-C"
+	FlagLast       = "-1"
 	FlagNoCommitID = "--no-commit-id"
 	FlagNameOnly   = "--name-only"
 	FlagOneline    = "--oneline"
+	FlagRecursive  = "-r"
 	FlagSince      = "--since"
 	FormatAuthor   = "--format=%aN"
+	FormatBody     = "--format=%B"
 	FormatEmpty    = "--format="
-	// FlagPathSep is the separator between flags and paths in git commands.
+	// FlagPathSep is the separator between flags and paths.
 	FlagPathSep = "--"
+)
+
+// Git remote subcommands and arguments.
+const (
+	RemoteGetURL = "get-url"
+	RemoteOrigin = "origin"
 )
 
 // PathSeparator is the separator git uses in file paths (always forward slash).

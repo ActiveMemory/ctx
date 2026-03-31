@@ -9,7 +9,6 @@ package health
 import (
 	"encoding/json"
 	"fmt"
-	"os/exec"
 	"strings"
 	"time"
 
@@ -23,6 +22,7 @@ import (
 	"github.com/ActiveMemory/ctx/internal/config/project"
 	cfgTime "github.com/ActiveMemory/ctx/internal/config/time"
 	"github.com/ActiveMemory/ctx/internal/config/token"
+	execGit "github.com/ActiveMemory/ctx/internal/exec/git"
 	"github.com/ActiveMemory/ctx/internal/io"
 	"github.com/ActiveMemory/ctx/internal/notify"
 	"github.com/ActiveMemory/ctx/internal/rc"
@@ -56,18 +56,15 @@ func ReadMapTracking() *MapTrackingInfo {
 // Returns:
 //   - int: number of commits, or 0 on error or if git is unavailable
 func CountModuleCommits(since string) int {
-	if _, lookErr := exec.LookPath(cfgGit.Binary); lookErr != nil {
-		return 0
-	}
 	// Validate since as a date to prevent command injection.
-	if _, parseErr := time.Parse(cfgTime.DateFormat, since); parseErr != nil {
+	t, parseErr := time.Parse(cfgTime.DateFormat, since)
+	if parseErr != nil {
 		return 0
 	}
-	out, gitErr := exec.Command( //nolint:gosec // since validated by time.Parse above
-		cfgGit.Binary, cfgGit.Log, cfgGit.FlagOneline,
-		cfgGit.FlagSince+token.KeyValueSep+since,
+	out, gitErr := execGit.LogSince(t,
+		cfgGit.FlagOneline,
 		cfgGit.FlagPathSep, project.DirInternalSlash,
-	).Output()
+	)
 	if gitErr != nil {
 		return 0
 	}

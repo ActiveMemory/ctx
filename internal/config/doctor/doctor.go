@@ -25,6 +25,9 @@ const (
 	// CheckPluginEnabled identifies the plugin enablement check
 	// (when neither scope is active).
 	CheckPluginEnabled = "plugin_enabled"
+	// CheckCompanionConfig identifies the companion tool check
+	// configuration status.
+	CheckCompanionConfig = "companion_config"
 	// CheckEventLogging identifies the event logging check.
 	CheckEventLogging = "event_logging"
 	// CheckWebhook identifies the webhook configuration check.

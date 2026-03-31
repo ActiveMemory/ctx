@@ -17,6 +17,8 @@ DO NOT UPDATE FOR:
 <!-- INDEX:START -->
 | Date | Learning |
 |------|--------|
+| 2026-03-31 | Convention audits must check cmd/ purity, not just types and docstrings |
+| 2026-03-31 | JSON Schema default fields cause linter errors with some validators |
 | 2026-03-30 | Architecture diagrams drift silently during feature additions |
 | 2026-03-30 | Python-generated doc.go files need gofmt — formatter strips bare // padding lines |
 | 2026-03-30 | internal/cli/recall/ was dead code — never registered in bootstrap |
@@ -113,6 +115,26 @@ DO NOT UPDATE FOR:
 | 2026-02-19 | Feature can be code-complete but invisible to users |
 | 2026-01-28 | IDE is already the UI |
 <!-- INDEX:END -->
+
+---
+
+## [2026-03-31-005112] Convention audits must check cmd/ purity, not just types and docstrings
+
+**Context**: Placed needsSpec helper in cmd/root/run.go instead of core/entry/predicate.go. Missed it because the audit checklist only covered types and docstrings
+
+**Lesson**: cmd/ directories must contain only Cmd() and Run*() — all helper functions, unexported logic, and types belong in core/. Added TestCmdDirPurity compliance test to enforce this mechanically
+
+**Application**: The compliance test now catches this automatically. 28 pre-existing violations grandfathered in the allowlist
+
+---
+
+## [2026-03-31-005110] JSON Schema default fields cause linter errors with some validators
+
+**Context**: ctxrc.schema.json had default: values on 16 fields that triggered incompatible type errors in the user's linter
+
+**Lesson**: Move default values into the description string instead of using the default keyword — Go rc.*() accessors handle the actual defaults
+
+**Application**: When adding new .ctxrc fields, document defaults in the description, never use default: in the schema
 
 ---
 

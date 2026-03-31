@@ -41,6 +41,10 @@ doctor.output.separator:
   short: ==========
 doctor.output.summary:
   short: 'Summary: %d warnings, %d errors'
+doctor.companion-config.ok:
+  short: Companion tool checks enabled
+doctor.companion-config.info:
+  short: 'Companion tool checks suppressed (companion_check: false)'
 doctor.plugin-enabled-global.ok:
   short: Plugin enabled globally (~/.claude/settings.json)
 doctor.plugin-enabled-local.ok:

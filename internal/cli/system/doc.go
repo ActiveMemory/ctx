@@ -37,11 +37,12 @@
 //   - check-reminder: Session reminder surfacing
 //   - check-freshness: Technology-dependent constant staleness check
 //   - check-backup-age: Backup staleness check (project-local)
+//   - check-skill-discovery: One-shot mid-session skill tip nudge
 //   - heartbeat: Token telemetry and billing threshold check
 //
 // PreToolUse hooks (hidden):
 //   - block-non-path-ctx: Blocks non-PATH ctx invocations
-//   - block-dangerous-commands: Blocks dangerous command patterns
+//   - block-dangerous-command: Blocks dangerous command patterns
 //   - context-load-gate: Context injection on tool use with cooldown
 //   - qa-reminder: Reminds agent to lint/test before declaring done
 //   - specs-nudge: Reminds agent to save plans to specs/

@@ -3,6 +3,7 @@
 <!-- INDEX:START -->
 | Date | Decision |
 |------|--------|
+| 2026-03-31 | Spec signal words and nudge threshold are user-configurable via .ctxrc |
 | 2026-03-30 | Flags-not-subcommands for journal source: list and show are view modes on a noun, not independent entities |
 | 2026-03-30 | Journal consumed recall — recall CLI package deleted |
 | 2026-03-30 | Classify rules are user-configurable via .ctxrc |
@@ -114,6 +115,20 @@ For significant decisions:
 ✗ No real alternatives existed
 
 -->
+
+## [2026-03-31-005113] Spec signal words and nudge threshold are user-configurable via .ctxrc
+
+**Status**: Accepted
+
+**Context**: Initially hardcoded signal words and 150-char threshold in run.go. User pointed out these are localizable vocabulary, following the session_prefixes / classify_rules pattern
+
+**Decision**: Spec signal words and nudge threshold are user-configurable via .ctxrc
+
+**Rationale**: Signal words are language-dependent and project-dependent — a Spanish-speaking user or a non-Go project would have different signal terms
+
+**Consequence**: Added spec_signal_words and spec_nudge_min_len to CtxRC struct, rc accessors with defaults in config/entry, JSON schema updated
+
+---
 
 ## [2026-03-30-075927] Flags-not-subcommands for journal source: list and show are view modes on a noun, not independent entities
 

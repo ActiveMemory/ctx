@@ -33,42 +33,79 @@ Remove the prompt template system (`.context/prompts/`). Skills are the
 single concept for agent instructions. Promote bundled prompts to skills,
 relocate loop.md, delete `ctx prompt` CLI and `/ctx-prompt` skill.
 
-**PD.1 — Create new skills:** *(archived)*
-
-**PD.2 — Relocate loop.md:** *(archived)*
-
-**PD.3 — Remove prompt system:** *(archived)*
-
-**PD.4 — Update docs and context:**
-
 ### Code Cleanup Findings
 
-- [ ] Collect all exec.Commands under a single internal/exec package.
-  msgBytes, msgErr := exec.Command(
-  "git", "log", "-1", "--format=%B",
-  ).Output()
+- [ ] Refactor 28 grandfathered cmd/ purity violations found by TestCmdDirPurity: move unexported helpers, exported non-Cmd/Run functions, and types from cmd/ directories to core/. See grandfathered map in compliance_test.go for the full list. #priority:medium #added:2026-03-31-005115
 
-- [ ] Rename MCP tool ctx_recall to ctx_journal — API contract change, requires coordinated update of tool name constant, handler dispatch, tests, and MCP tool docs. #priority:low #added:2026-03-29-232631
+- [ ] Collect all exec.Commands under internal/exec. See
+  Phase EXEC below for breakdown.
 
-- [ ] Extract shared Cmd() boilerplate: desc.Command() + cobra.Command{Use,Short,Long} + AddCommand() is repeated across 33 parent commands. Consider a helper in bootstrap or a shared cmdutil package that takes a DescKey, Use constant, and a slice of subcommand Cmd() funcs. The 4 shared subcommands between recall and journal (importer, lock, unlock, sync) should also be deduplicated — they are separate packages under different parents but share the same registration structure. #priority:medium #added:2026-03-29-230235
+- [x] Rename MCP tool ctx_recall to ctx_journal — API contract
+  change, requires coordinated update of tool name constant,
+  handler dispatch, tests, and MCP tool docs. Go code already
+  renamed in JRM phase; docs and site updated.
+  #priority:low #added:2026-03-29-232631 #done:2026-03-30
 
-- [ ] Audit all config/ constants for ctxrc promotion: trace every hardcoded threshold, interval, and limit across config/ packages and determine which should be user-configurable via .ctxrc. Update schema, CtxRC struct, and rc accessors for promoted values. #priority:medium #added:2026-03-29-221155
+- [x] Extract shared Cmd() boilerplate: created
+  `internal/cli/parent` with `Cmd(descKey, use, subs...)`.
+  Migrated 12 pure parent commands (config, decision, journal,
+  learning, mcp, memory, permission, site, system, task,
+  message/root). 17 delegators already minimal. 4 custom
+  commands (notify, pad, remind + mcp/serve) unchanged.
+  #priority:medium #added:2026-03-29-230235 #done:2026-03-30
 
-- [ ] AST-based doc.go subcommand drift detector: verify that doc.go subcommand lists match actual cmd/ subdirectories. Go AST can parse doc comments via go/doc; alternatively scan doc.go for "- name:" lines and compare against fs.ReadDir of the cmd/ directory. Add as a lint-docstrings.sh check or a standalone Go test in compliance/. #priority:medium #added:2026-03-29-215832
+- [x] Audit all config/ constants for ctxrc promotion: 125
+  constants cataloged, 12 Tier 1 candidates identified for
+  promotion (checkpoint/warn pct, map stale days, webhook
+  timeout, nudge intervals, publish settings). Spec:
+  `specs/ctxrc-constant-promotion.md`. Promotion is separate
+  work. #priority:medium #added:2026-03-29-221155
+  #done:2026-03-30
 
-- [ ] Refactor entry.WriteEntry to return only error — the file path mapping (entry.ToCtxFile) is a side effect. MCP server should use the mapping directly. Access to ToCtxFile should be protected by a mutex if used concurrently. #priority:medium #added:2026-03-29-203220
+- [x] doc.go subcommand drift detector: added
+  TestDocGoSubcommandDrift to compliance_test.go. Scans doc.go
+  bullets against cmd/ dirs, normalizes hyphens/underscores,
+  handles aliases (switch→switchcmd, import→importer) and
+  combined entries (pause/resume). Fixed 5 real drift issues
+  found: pad missing edit/mv/resolve, system plural typo.
+  #priority:medium #added:2026-03-29-215832 #done:2026-03-30
 
-- [ ] Wire rc.CompanionCheck() to a Go caller — either the planned hook-based companion smoke test or MCP server companion status. Currently the accessor has no Go callers; the skill reads .ctxrc via ctx config status instead. #priority:low #added:2026-03-29-161505
+- [-] Refactor entry.WriteEntry to return only error — already
+  done. entry.Write() returns only error, entry.CtxFile() is a
+  pure lookup, MCP server calls entry.ValidateAndWrite()
+  directly. No ToCtxFile function exists.
+  #priority:medium #added:2026-03-29-203220
 
-- [ ] Fix 99 MISSING_FIELDS violations — exported structs with 2+ fields need Fields: section in docstring. Run make lint-style to get the full list. Mechanical but important for convention compliance. #priority:medium #added:2026-03-29-113308
+- [x] Wire rc.CompanionCheck() to a Go caller — wired to
+  ctx doctor as CheckCompanionConfig under Plugin category.
+  Reports enabled/suppressed status.
+  #priority:low #added:2026-03-29-161505 #done:2026-03-30
 
-- [ ] Fix 22 SHALLOW_DOC violations in internal/write/*/doc.go — all are lazy one-liners. Each needs substantive package docs: what the package does, key exported functions, usage pattern. Reference internal/cli/agent/doc.go as the gold standard. #priority:medium #added:2026-03-29-113302
+- [-] Fix 99 MISSING_FIELDS violations — lint-docstrings.sh
+  now reports 0 violations. Already fixed in prior sessions.
+  #priority:medium #added:2026-03-29-113308
 
-- [ ] Add spec nudge to ctx add task output: when task description contains design-signal words (hook, CLI surface, state, integration, pipeline, architecture) or exceeds 150 chars, append a tip line: "Tip: this task may benefit from a spec. Run /ctx-spec to scaffold one." Implement in the add/task command output, not as a hook. #priority:medium #added:2026-03-29-091002
+- [x] Fix SHALLOW_DOC violations — original 22 fixed in prior
+  sessions. 3 new violations from exec/dep, exec/gio, and
+  mcp/server/resource fixed this session.
+  #priority:medium #added:2026-03-29-113302 #done:2026-03-30
 
-- [ ] One-shot skill discovery nudge: UserPromptSubmit hook fires once at ~25 turns, relays a compact block of easy-to-forget skills that have positive impact mid-session. Skills: /ctx-reflect (checkpoint progress), /ctx-prompt-audit (improve communication), /ctx-add-learning (capture gotchas), /ctx-add-decision (record trade-offs). One-shot per session, not repeated. Contextual not ceremonial — these are the skills that get buried when both user and agent are focused on implementation. #priority:medium #added:2026-03-29-090113
+- [x] Add spec nudge to ctx add task output: fires when task
+  content contains design-signal words (hook, cli surface,
+  state, integration, pipeline, architecture, migration,
+  protocol) or exceeds 150 chars. Tip line via write/add.
+  #priority:medium #added:2026-03-29-091002 #done:2026-03-30
 
-- [ ] Rewrite lint-style scripts in Go as ctxctl subcommands — Go gives proper type hierarchy, less fragile than bash, arguably faster. Covers: lint-drift, lint-docstrings, lint-mixed-funcs, lint-imports. Prerequisite: ctxctl exists. #added:2026-03-29-082958
+- [x] One-shot skill discovery nudge: check-skill-discovery
+  hook fires once at prompt 25, surfaces /ctx-reflect,
+  /ctx-add-learning, /ctx-add-decision, /ctx-prompt-audit.
+  Uses shared context-size counter, one-shot guard file.
+  Registered in hooks.json.
+  #priority:medium #added:2026-03-29-090113 #done:2026-03-30
+
+- [-] Rewrite lint-style scripts in Go as ctxctl subcommands —
+  blocked: prerequisite ctxctl does not exist yet. Deferred.
+  #added:2026-03-29-082958
 
 - [ ] PD.4.5: Update AGENT_PLAYBOOK.md — add generic "check available skills"
   instruction #priority:medium #added:2026-03-25-203340
@@ -81,10 +118,11 @@ relocate loop.md, delete `ctx prompt` CLI and `/ctx-prompt` skill.
 
 ### Phase -3: DevEx
 
-- [ ] Plugin enablement gap: Ref: `ideas/plugin-enablement-gap.md`. 
-Local-installed plugins get registered in `installed_plugins.json` but not 
-auto-added to `enabledPlugins`, so slash commands are invisible in non-ctx 
-projects.
+- [ ] Plugin enablement gap: Ref:
+  `ideas/plugin-enablement-gap.md`. Local-installed plugins get
+  registered in `installed_plugins.json` but not auto-added to
+  `enabledPlugins`, so slash commands are invisible in non-ctx
+  projects.
 
 - [ ] Add cobra Example fields to CLI commands via
   examples.yaml #added:2026-03-20-163413
@@ -93,176 +131,176 @@ projects.
   try gemini-grounding, document in multi-tool-setup recipe if useful.
   See ideas/gemini-search-mcp.md #added:2026-03-20-141022 #done:2026-03-26
 
-- [ ] Create ctx-docstrings skill: audit and fix docstrings against 
-  CONVENTIONS.md Documentation section. Skill loads CONVENTIONS.md, scans 
-  functions in scope for missing/incomplete docstring sections 
-  (Parameters, Returns), reports violations, and optionally fixes them. 
-  Language-agnostic design with Go as first implementation. Deterministic 
-  enforcement via linter is tracked separately in 
-  ideas/spec-convention-enforcement.md #added:2026-03-16-114445
+- [ ] Create ctx-docstrings skill: audit and fix docstrings
+  against CONVENTIONS.md Documentation section. Skill loads
+  CONVENTIONS.md, scans functions in scope for
+  missing/incomplete docstring sections (Parameters, Returns),
+  reports violations, and optionally fixes them.
+  Language-agnostic design with Go as first implementation.
+  Deterministic enforcement via linter is tracked separately
+  in ideas/spec-convention-enforcement.md
+  #added:2026-03-16-114445
 
 ### Phase -2: Task completion nudge:
 
-- [ ] Design UserPromptSubmit hook that runs `make audit` at session start and 
-  surfaces failures as a consolidation-debt warning before the agent acts on 
-  stale assumptions. Project-level hook (not bundled in ctx), configurable 
-  via .ctxrc or settings.json. 
-  Related: consolidation nudge hook spec. #added:2026-03-23-223500
+- [ ] Design UserPromptSubmit hook that runs `make audit` at
+  session start and surfaces failures as a consolidation-debt
+  warning before the agent acts on stale assumptions.
+  Project-level hook (not bundled in ctx), configurable via
+  .ctxrc or settings.json. Related: consolidation nudge hook
+  spec. #added:2026-03-23-223500
 
-- [ ] Bug: check-version hook missing throttle touch on plugin version
-  read error
-  (run.go:70). When claude.PluginVersion() fails, the hook returns without 
-  touching the daily throttle marker, causing repeated checks on days when 
-  plugin.json is missing or corrupted. Fix: add 
-  internalIo.TouchFile(markerFile) before the early return. 
-  See docs/recipes/hook-sequence-diagrams.md check-version diagram 
-  which documents the expected behavior. #added:2026-03-23-162802
+- [ ] Bug: check-version hook missing throttle touch on plugin
+  version read error (run.go:70). When claude.PluginVersion()
+  fails, the hook returns without touching the daily throttle
+  marker, causing repeated checks on days when plugin.json is
+  missing or corrupted. Fix: add
+  internalIo.TouchFile(markerFile) before the early return.
+  See docs/recipes/hook-sequence-diagrams.md check-version
+  diagram which documents the expected behavior.
+  #added:2026-03-23-162802
 
-- [ ] Design UserPromptSubmit hook that runs go build and surfaces compilation 
-  errors before the agent acts on stale assumptions #added:2026-03-23-120136
+- [ ] Design UserPromptSubmit hook that runs go build and
+  surfaces compilation errors before the agent acts on stale
+  assumptions #added:2026-03-23-120136
 
 - [x]: Architecture mapping skill refactoring:
-  - [x] Update ctx-architecture skill based on the following findings; remove
-    gitnexus from the template and the actual skill; have a separate
-    follow-up enrichment
-    skill (see the next task where it also has a spec) #done:2026-03-26
-        - [2026-03-25-021557] Code intelligence tools trade depth for breadth in
-        architecture analysis
-          - **Context**: Compared three sessions analyzing a large codebase 
-          (~34k symbols): Session 1 (broken MCP) produced 5,866 lines of 
-          DETAILED_DESIGN with per-controller data flows, scale math, 
-          startup sequences. Session 2 (full MCP + same skill) produced
-          1,124 lines
-          (5.2x less). Session 3 (enrichment) added verified graph data
-          but couldn't
-          recover the intimate code knowledge.
-          - **Lesson**: When graph query tools are available, agents satisfice 
-          instead of maximize. They get structural answers without reading code,
-          missing operational details (defaults, timeouts, scale math,
-          edge cases)
-          that only emerge from line-by-line reading. The tool answers
-          the question
-          asked but prevents discovery of answers to questions never asked.
-          - **Application**: Architecture analysis skills should NOT offer
-            MCP tools:
-          force code reading first. Use a separate enrichment skill to
-          verify and
-          extend with tools afterward. Constraint is the feature.
+  - [x] Update ctx-architecture skill based on the following
+    findings; remove gitnexus from the template and the actual
+    skill; have a separate follow-up enrichment skill (see the
+    next task where it also has a spec) #done:2026-03-26
+        - [2026-03-25-021557] Code intelligence tools trade
+        depth for breadth in architecture analysis
+          - **Context**: Compared three sessions analyzing a
+          large codebase (~34k symbols): Session 1 (broken MCP)
+          produced 5,866 lines of DETAILED_DESIGN with
+          per-controller data flows, scale math, startup
+          sequences. Session 2 (full MCP + same skill) produced
+          1,124 lines (5.2x less). Session 3 (enrichment) added
+          verified graph data but couldn't recover the intimate
+          code knowledge.
+          - **Lesson**: When graph query tools are available,
+          agents satisfice instead of maximize. They get
+          structural answers without reading code, missing
+          operational details (defaults, timeouts, scale math,
+          edge cases) that only emerge from line-by-line reading.
+          The tool answers the question asked but prevents
+          discovery of answers to questions never asked.
+          - **Application**: Architecture analysis skills should
+          NOT offer MCP tools: force code reading first. Use a
+          separate enrichment skill to verify and extend with
+          tools afterward. Constraint is the feature.
 
 - [ ] Architecture Mapping (Enrichment):
-  **Context**: Skill that incrementally builds and maintains ARCHITECTURE.md
-  and DETAILED_DESIGN.md. Coverage tracked in map-tracking.json.
-  Spec: `specs/ctx-architecture.md`
-  - [x] Create ctx-architecture-enrich skill: takes existing /ctx-architecture
-  principal-mode artifacts as baseline, runs comprehensive enrichment pass via
-  GitNexus MCP (blast radius verification, registration site discovery,
-  execution flow tracing, domain clustering comparison, shallow module
-  deep-dive). Spec: `ideas/spec-architecture-enrich.md`. Reference
-  implementation: kubernetes-service enrichment pass 2026-03-25.
-  #added:2026-03-25-120000 #done:2026-03-26
+  **Context**: Skill that incrementally builds and maintains
+  ARCHITECTURE.md and DETAILED_DESIGN.md. Coverage tracked in
+  map-tracking.json. Spec: `specs/ctx-architecture.md`
+  - [x] Create ctx-architecture-enrich skill: takes existing
+  /ctx-architecture principal-mode artifacts as baseline, runs
+  comprehensive enrichment pass via GitNexus MCP (blast radius
+  verification, registration site discovery, execution flow
+  tracing, domain clustering comparison, shallow module
+  deep-dive). Spec: `ideas/spec-architecture-enrich.md`.
+  Reference implementation: kubernetes-service enrichment pass
+  2026-03-25. #added:2026-03-25-120000 #done:2026-03-26
 
 - [ ]: ctx-architecture-failure-analysis
-      **Context**: Adversarial analysis skill that identifies where a
-      codebase will
-      silently betray you. Requires `ctx-architecture` artifacts as
-      input (ARCHITECTURE.md,
-      DETAILED_DESIGN*.md, map-tracking.json). Does its own targeted deep
-      reads focusing
-      on mutation points, shared mutable state, error swallowing,
-      concurrency, implicit
-      ordering, missing enforcement, and scaling cliffs. Uses available
-      tooling (GitNexus,
-      Gemini Search) to cross-reference patterns.
+  **Context**: Adversarial analysis skill that identifies where
+  a codebase will silently betray you. Requires
+  `ctx-architecture` artifacts as input (ARCHITECTURE.md,
+  DETAILED_DESIGN*.md, map-tracking.json). Does its own
+  targeted deep reads focusing on mutation points, shared
+  mutable state, error swallowing, concurrency, implicit
+  ordering, missing enforcement, and scaling cliffs. Uses
+  available tooling (GitNexus, Gemini Search) to
+  cross-reference patterns.
 
-      Produces `DANGER-ZONES.md` — a ranked inventory of silent failure
-      points with:
-      location, failure mode, blast radius, detection gap, and suggested fix.
-      Two tiers:
-      "most likely to cause production incidents" and "less likely but
-      equally dangerous."
+  Produces `DANGER-ZONES.md` — a ranked inventory of silent
+  failure points with: location, failure mode, blast radius,
+  detection gap, and suggested fix. Two tiers: "most likely to
+  cause production incidents" and "less likely but equally
+  dangerous."
 
-      Distinct from a security threat model (which would be `ctx-threat-model`
-      — a
-      separate skill for auth bypass, injection, privilege escalation,
-      supply chain).
-      This skill focuses on correctness: race conditions, ordering
-      assumptions, cache
-      staleness, fan-out amplification, non-atomic ownership, inverted logic,
-      force-delete orphans, global state mutation.
+  Distinct from a security threat model (which would be
+  `ctx-threat-model` — a separate skill for auth bypass,
+  injection, privilege escalation, supply chain). This skill
+  focuses on correctness: race conditions, ordering
+  assumptions, cache staleness, fan-out amplification,
+  non-atomic ownership, inverted logic, force-delete orphans,
+  global state mutation.
 
-      - [ ] Design SKILL.md for ctx-architecture-failure-analysis: inputs 
-      (architecture artifacts), analysis phases, output
-      format (DANGER-ZONES.md),
-      quality checklist #added:2026-03-25-060000
-      - [ ] Define the adversarial analysis framework: categories of silent 
-      failure (concurrency, ordering, cache, amplification, ownership, error 
-      swallowing, global state) with heuristics for
-      each #added:2026-03-25-060000
-      - [ ] Implement skill with GitNexus integration: use impact analysis for 
-      blast radius estimation, use context for shared-state
-      detection #added:2026-03-25-060000
-      - [ ] Add Gemini Search integration: cross-reference discovered patterns 
-      against known failure modes in similar systems. #added:2026-03-25-060000
+  - [ ] Design SKILL.md for ctx-architecture-failure-analysis:
+    inputs (architecture artifacts), analysis phases, output
+    format (DANGER-ZONES.md), quality checklist
+    #added:2026-03-25-060000
+  - [ ] Define the adversarial analysis framework: categories
+    of silent failure (concurrency, ordering, cache,
+    amplification, ownership, error swallowing, global state)
+    with heuristics for each #added:2026-03-25-060000
+  - [ ] Implement skill with GitNexus integration: use impact
+    analysis for blast radius estimation, use context for
+    shared-state detection #added:2026-03-25-060000
+  - [ ] Add Gemini Search integration: cross-reference
+    discovered patterns against known failure modes in similar
+    systems. #added:2026-03-25-060000
 
-- [x] dependency sanity check: on session start; I should be able to know
-  gitnexus mcp is up; gemini mcp is up. maybe a status report
-  during ctx-remember.
-  Core check shipped in /ctx-remember companion tool smoke tests.
-  Follow-up tasks
-  added for ctx self-check, configurable companion registry, and
-  granular suppression.
-  #done:2026-03-26
+- [x] dependency sanity check: on session start; I should be
+  able to know gitnexus mcp is up; gemini mcp is up. maybe a
+  status report during ctx-remember. Core check shipped in
+  /ctx-remember companion tool smoke tests. Follow-up tasks
+  added for ctx self-check, configurable companion registry,
+  and granular suppression. #done:2026-03-26
 
 - [ ] ctx-architecture-extend
   **Context**: Companion to `ctx-architecture` and
-  `ctx-failure-analysis`, completing
-  a trilogy: how does it work → where will it break → where does it grow.
-      Reads architecture artifacts → identifies registration patterns
-      (interfaces, factory
-      functions, plugin systems, ordered slices, scheme registrations) →
-      traces recent
-      additions via git log to confirm which extension points are actually used
-      → produces
-      `EXTENSION-POINTS.md` ranked by frequency, with exact file
-      locations, function
-      signatures, and the typical feature pattern (e.g., "most features require
-      a variable
-      + a mutator + a machine-agent task").
+  `ctx-failure-analysis`, completing a trilogy: how does it
+  work → where will it break → where does it grow. Reads
+  architecture artifacts → identifies registration patterns
+  (interfaces, factory functions, plugin systems, ordered
+  slices, scheme registrations) → traces recent additions via
+  git log to confirm which extension points are actually used
+  → produces `EXTENSION-POINTS.md` ranked by frequency, with
+  exact file locations, function signatures, and the typical
+  feature pattern (e.g., "most features require a variable +
+  a mutator + a machine-agent task").
 
-      Valuable for onboarding ("I need to add feature X, where do I start?") and
-      architecture review ("are we adding features in the right places?").
+  Valuable for onboarding ("I need to add feature X, where do
+  I start?") and architecture review ("are we adding features
+  in the right places?").
 
-      - [ ] Design SKILL.md for ctx-extension-map: inputs (architecture
-        artifacts +
-      git log), analysis phases, output format (EXTENSION-POINTS.md), 
-      quality checklist #added:2026-03-25-062000
-      - [ ] Define extension point detection heuristics:
-        interface registrations,
-      factory patterns, ordered slices, scheme init blocks,
-      //go:embed directories,
-      feature flag structs with tags #added:2026-03-25-062000
-      - [ ] Add git log frequency analysis: trace recent commits to confirm 
-     which extension points are actively used vs.
-     dormant #added:2026-03-25-062000
-      - [ ] Integrate with GitNexus: use cluster/process data to identify 
-      registration call sites and their callers #added:2026-03-25-062000
+  - [ ] Design SKILL.md for ctx-extension-map: inputs
+    (architecture artifacts + git log), analysis phases,
+    output format (EXTENSION-POINTS.md), quality checklist
+    #added:2026-03-25-062000
+  - [ ] Define extension point detection heuristics: interface
+    registrations, factory patterns, ordered slices, scheme
+    init blocks, //go:embed directories, feature flag structs
+    with tags #added:2026-03-25-062000
+  - [ ] Add git log frequency analysis: trace recent commits
+    to confirm which extension points are actively used vs.
+    dormant #added:2026-03-25-062000
+  - [ ] Integrate with GitNexus: use cluster/process data to
+    identify registration call sites and their callers
+    #added:2026-03-25-062000
 
 ### Phase CT: Companion Tool Integration
 
 Session-start checks, suppressibility, and registry for companion MCP tools.
 
-- [ ] ctx-remember preflight: verify ctx binary in PATH, plugin installed and
-  enabled, binary version matches plugin version
-  #priority:medium #added:2026-03-25-234514
+- [ ] ctx-remember preflight: verify ctx binary in PATH,
+  plugin installed and enabled, binary version matches plugin
+  version #priority:medium #added:2026-03-25-234514
 
-- [ ] Design suppressible companion check system: .ctxrc configures which
-  companion tools to check (one search MCP, one graph MCP), smoke tests only run
-  for configured tools, not auto-discovered. Keeps bootstrap fast and
-  predictable. #priority:medium #added:2026-03-25-234516
+- [ ] Design suppressible companion check system: .ctxrc
+  configures which companion tools to check (one search MCP,
+  one graph MCP), smoke tests only run for configured tools,
+  not auto-discovered. Keeps bootstrap fast and predictable.
+  #priority:medium #added:2026-03-25-234516
 
-- [ ] Add per-tool suppression for ctx-remember checks: allow suppressing
-  individual preflight checks (ctx binary, plugin, search MCP, graph MCP) via
-  .ctxrc fields, not just companion_check: false blanket toggle
+- [ ] Add per-tool suppression for ctx-remember checks: allow
+  suppressing individual preflight checks (ctx binary, plugin,
+  search MCP, graph MCP) via .ctxrc fields, not just
+  companion_check: false blanket toggle
   #priority:low #added:2026-03-25-234518
 
 ### Phase HA: Hook Accountability
@@ -496,6 +534,57 @@ Spec: `specs/stuttery-rename.md`. Read the spec before starting any SR task.
   err/, err.go files outside err/, strings.Join with inline separators; fixed
   lint-imports false positive bug and lint-docstrings exit code bug
   #done:2026-03-28-200000 #added:2026-03-28-050000
+
+### Phase EXEC: Centralize exec.Command
+
+Spec: `specs/exec-package.md`. Read the spec before starting
+any EXEC task.
+
+Consolidate scattered exec.Command calls into `internal/exec/`
+subpackages. Eliminates duplicated LookPath checks, scattered
+gosec nolint markers, and inconsistent error handling.
+
+**EXEC.1 — exec/git (6 call sites):**
+
+- [x] EXEC.1.1: Create `internal/exec/git/` with `Run()`,
+  `Root()`, `RemoteURL()`, `LogSince()`,
+  `LastCommitMessage()`, `DiffTreeHead()`. Single LookPath,
+  single gosec nolint. #priority:high #added:2026-03-30
+  #done:2026-03-30
+- [x] EXEC.1.2: Migrate `config/core/core.go:GitRoot` to use
+  `exec/git.Root()` #added:2026-03-30 #done:2026-03-30
+- [x] EXEC.1.3: Migrate `change/core/scan/scan.go:GitLogSince`
+  to use `exec/git.LogSince()` #added:2026-03-30
+  #done:2026-03-30
+- [x] EXEC.1.4: Migrate `post_commit/score.go` (2 calls) to
+  use `exec/git.LastCommitMessage()` and
+  `exec/git.DiffTreeHead()` #added:2026-03-30 #done:2026-03-30
+- [x] EXEC.1.5: Migrate `health/map_staleness.go` to use
+  `exec/git.LogSince()` #added:2026-03-30 #done:2026-03-30
+- [x] EXEC.1.6: Migrate `journal/parser/git.go` to use
+  `exec/git.RemoteURL()` #added:2026-03-30 #done:2026-03-30
+
+**EXEC.2 — exec/dep (3 call sites):**
+
+- [x] EXEC.2.1: Create `internal/exec/dep/` with
+  `GoListPackages()` and `CargoMetadata()` #added:2026-03-30
+  #done:2026-03-30
+- [x] EXEC.2.2: Migrate `dep/core/go.go` and
+  `dep/core/rust.go` to use exec/dep #added:2026-03-30
+  #done:2026-03-30
+
+**EXEC.3 — exec/gio (1 call site):**
+
+- [x] EXEC.3.1: Create `internal/exec/gio/` with `Mount()`
+  and migrate `system/core/archive/smb.go` #added:2026-03-30
+  #done:2026-03-30
+
+**EXEC.4 — Verify:**
+
+- [x] EXEC.4.1: `grep -rn 'os/exec' internal/` returns only
+  `exec/`, `sysinfo/`, test files, and `validate/`. All
+  non-exec gosec G204 nolint markers removed.
+  #added:2026-03-30 #done:2026-03-30
 
 ### Phase CLI-FIX: CLI Infrastructure Fixes
 
@@ -1122,8 +1211,9 @@ directly under `journal`. `recall` deleted as a top-level command.
   `.context/AGENT_PLAYBOOK.md`, `.context/architecture-dia-*.md`,
   `specs/future-complete/recall-sync.md`,
   `specs/future-complete/recall-export-safety.md`. #added:2026-03-26 #done:2026-03-26
-- [-] JRM.18: Update other TASKS.md references — historical task descriptions
-  stay as-is (they document what the command was called at the time). #added:2026-03-26
+- [-] JRM.18: Update other TASKS.md references — historical
+  task descriptions stay as-is (they document what the command
+  was called at the time). #added:2026-03-26
 - [x] JRM.19: Run `make lint && make test` — full green. #added:2026-03-26 #done:2026-03-26
 - [x] JRM.20: Rebuild site — `make docs` or equivalent to regenerate
   `site/`. #added:2026-03-26 #done:2026-03-26
@@ -1188,27 +1278,30 @@ age-based — prune files older than N days (default 7).
   (docs/recipes/state-maintenance.md added but site not
   rebuilt) #added:2026-03-05-205425
 
-- [ ] Audit remaining global tombstones for session-scoping: backup-reminded,
-  ceremony-reminded, check-knowledge, journal-reminded, version-checked,
-  ctx-wrapped-up all have the same cross-session suppression bug as
+- [ ] Audit remaining global tombstones for session-scoping:
+  backup-reminded, ceremony-reminded, check-knowledge,
+  journal-reminded, version-checked, ctx-wrapped-up all have
+  the same cross-session suppression bug as
   memory-drift-nudged #added:2026-03-05-205425
 
-- [ ] F.2: ctx journal import (remote) — import Claude Code session JSONLs from local or
-  remote (~/.claude/projects/) into local ~/.claude/projects/. Pure Go: local
-  copy with os.CopyFS-style walk, remote via os/exec ssh+scp (no rsync
-  dependency). --source flag accepts local path or user@host. --dry-run shows
-  what would be copied. Skips existing files (content-addressed by UUID
-  filenames). Enables journal export from sessions that ran on other
-  machines. #added:2026-03-05-141912
+- [ ] F.2: ctx journal import (remote) — import Claude Code
+  session JSONLs from local or remote (~/.claude/projects/)
+  into local ~/.claude/projects/. Pure Go: local copy with
+  os.CopyFS-style walk, remote via os/exec ssh+scp (no rsync
+  dependency). --source flag accepts local path or user@host.
+  --dry-run shows what would be copied. Skips existing files
+  (content-addressed by UUID filenames). Enables journal export
+  from sessions that ran on other machines.
+  #added:2026-03-05-141912
 
-- [ ] P0.5: Blog: "Building a Claude Code Marketplace Plugin" — narrative
-  from session
-      history, journals, and git diff of feat/plugin-conversion branch.
-      Covers: motivation (shell hooks to Go subcommands), plugin directory
-      layout, marketplace.json, eliminating make plugin, bugs found during
-      dogfooding (hooks creating partial .context/), and the fix. Use
-      /ctx-blog-changelog with branch diff as source
-      material. #added:2026-02-16-111948
+- [ ] P0.5: Blog: "Building a Claude Code Marketplace Plugin"
+  — narrative from session history, journals, and git diff of
+  feat/plugin-conversion branch. Covers: motivation (shell
+  hooks to Go subcommands), plugin directory layout,
+  marketplace.json, eliminating make plugin, bugs found during
+  dogfooding (hooks creating partial .context/), and the fix.
+  Use /ctx-blog-changelog with branch diff as source material.
+  #added:2026-02-16-111948
 - [ ] P9.2: Test manually on this project's LEARNINGS.md (20+ entries).
       #priority:medium #added:2026-02-19
 - [ ] P0.8.1: Install golangci-lint on the integration server #for-human

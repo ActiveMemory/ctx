@@ -9,7 +9,7 @@ package system
 import (
 	"github.com/spf13/cobra"
 
-	"github.com/ActiveMemory/ctx/internal/assets/read/desc"
+	"github.com/ActiveMemory/ctx/internal/cli/parent"
 	"github.com/ActiveMemory/ctx/internal/cli/system/cmd/backup"
 	"github.com/ActiveMemory/ctx/internal/cli/system/cmd/block_dangerous_command"
 	"github.com/ActiveMemory/ctx/internal/cli/system/cmd/block_non_path_ctx"
@@ -25,6 +25,7 @@ import (
 	"github.com/ActiveMemory/ctx/internal/cli/system/cmd/check_persistence"
 	"github.com/ActiveMemory/ctx/internal/cli/system/cmd/check_reminder"
 	"github.com/ActiveMemory/ctx/internal/cli/system/cmd/check_resources"
+	"github.com/ActiveMemory/ctx/internal/cli/system/cmd/check_skill_discovery"
 	"github.com/ActiveMemory/ctx/internal/cli/system/cmd/check_task_completion"
 	"github.com/ActiveMemory/ctx/internal/cli/system/cmd/check_version"
 	"github.com/ActiveMemory/ctx/internal/cli/system/cmd/context_load_gate"
@@ -61,15 +62,7 @@ import (
 //   - *cobra.Command: Parent command with resource display,
 //     plumbing, and hook subcommands
 func Cmd() *cobra.Command {
-	short, long := desc.Command(cmd.DescKeySystem)
-
-	c := &cobra.Command{
-		Use:   cmd.UseSystem,
-		Short: short,
-		Long:  long,
-	}
-
-	c.AddCommand(
+	return parent.Cmd(cmd.DescKeySystem, cmd.UseSystem,
 		backup.Cmd(),
 		block_dangerous_command.Cmd(),
 		block_non_path_ctx.Cmd(),
@@ -83,6 +76,7 @@ func Cmd() *cobra.Command {
 		check_map_staleness.Cmd(),
 		check_memory_drift.Cmd(),
 		check_persistence.Cmd(),
+		check_skill_discovery.Cmd(),
 		check_reminder.Cmd(),
 		check_resources.Cmd(),
 		check_task_completion.Cmd(),
@@ -102,6 +96,4 @@ func Cmd() *cobra.Command {
 		specs_nudge.Cmd(),
 		stats.Cmd(),
 	)
-
-	return c
 }

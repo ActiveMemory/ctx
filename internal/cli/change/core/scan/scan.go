@@ -8,7 +8,6 @@ package scan
 
 import (
 	"os"
-	"os/exec"
 	"sort"
 	"strings"
 	"time"
@@ -17,7 +16,7 @@ import (
 	cfgGit "github.com/ActiveMemory/ctx/internal/config/git"
 	"github.com/ActiveMemory/ctx/internal/config/token"
 	"github.com/ActiveMemory/ctx/internal/entity"
-	ctxErr "github.com/ActiveMemory/ctx/internal/err/git"
+	execGit "github.com/ActiveMemory/ctx/internal/exec/git"
 	"github.com/ActiveMemory/ctx/internal/rc"
 )
 
@@ -124,13 +123,7 @@ func SummarizeCodeChanges(refTime time.Time) (entity.CodeSummary, error) {
 //   - []byte: Raw git output
 //   - error: Non-nil if git fails
 func GitLogSince(t time.Time, extraArgs ...string) ([]byte, error) {
-	if _, lookErr := exec.LookPath(cfgGit.Binary); lookErr != nil {
-		return nil, ctxErr.NotFound()
-	}
-	args := []string{cfgGit.Log, cfgGit.FlagSince, t.Format(time.RFC3339)}
-	args = append(args, extraArgs...)
-	//nolint:gosec // literal flags + time.Format
-	return exec.Command(cfgGit.Binary, args...).Output()
+	return execGit.LogSince(t, extraArgs...)
 }
 
 // UniqueTopDirs extracts unique top-level directories from file paths.
