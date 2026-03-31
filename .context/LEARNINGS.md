@@ -17,7 +17,7 @@ DO NOT UPDATE FOR:
 <!-- INDEX:START -->
 | Date | Learning |
 |------|--------|
-| 2026-03-30 | Parallel agent enrichment hits rate limits at ~40 concurrent agents |
+| 2026-03-30 | Architecture diagrams drift silently during feature additions |
 | 2026-03-30 | Python-generated doc.go files need gofmt — formatter strips bare // padding lines |
 | 2026-03-30 | internal/cli/recall/ was dead code — never registered in bootstrap |
 | 2026-03-30 | lint-docstrings.sh greedy sed hid all return-type violations |
@@ -116,13 +116,13 @@ DO NOT UPDATE FOR:
 
 ---
 
-## [2026-03-30-190617] Parallel agent enrichment hits rate limits at ~40 concurrent agents
+## [2026-03-30-075941] Architecture diagrams drift silently during feature additions
 
-**Context**: Launched ~80 background agents for journal enrichment across 398 entries. The first ~60 agents completed successfully but the last ~15 batches hit API rate limits. The rate-limited agents returned zero work.
+**Context**: During the journal-recall merge, architecture-dia-build.md listed 23 CLI packages but 31 existed. 8 packages added over months without updating the diagram.
 
-**Lesson**: Cap parallel agent launches at ~30 concurrent to stay under rate limits. Stagger launches in waves of 10 with brief delays between waves rather than launching all at once.
+**Lesson**: Exhaustive lists and counts in architecture docs go stale every time a package is added. The drift is invisible because nobody re-counts.
 
-**Application**: For future bulk enrichment runs, use 3 waves of 10 agents with a brief pause between waves rather than launching all batches simultaneously.
+**Application**: After adding a new CLI package, grep architecture diagrams for package counts and directory listings. Consider adding a drift-check comment that validates the count programmatically.
 
 ---
 

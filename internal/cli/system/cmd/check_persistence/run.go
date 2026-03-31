@@ -90,13 +90,13 @@ func Run(cmd *cobra.Command, stdin *os.File) error {
 
 	sinceNudge := ps.Count - ps.LastNudge
 
-	// Gate persistence nudges behind minimum context window usage.
-	// Below the threshold, prompt count is a poor proxy for session depth.
+	// Gate persistence nudges behind checkpoint percentage threshold.
+	// Below 60%, the session is not deep enough to warrant nudging.
 	pct := coreSession.LatestPct(sessionID)
-	if pct > 0 && pct < stats.ContextCheckpointMinPct {
+	if pct > 0 && pct < stats.ContextCheckpointPct {
 		log.Message(logFile, sessionID, fmt.Sprintf(
 			desc.Text(text.DescKeyCheckPersistenceSuppressedLogFormat),
-			pct, stats.ContextCheckpointMinPct, ps.Count))
+			pct, stats.ContextCheckpointPct, ps.Count))
 		persistence.WriteState(stateFile, ps)
 		return nil
 	}
