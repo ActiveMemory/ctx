@@ -24,6 +24,21 @@ import (
 	writeDrift "github.com/ActiveMemory/ctx/internal/write/drift"
 )
 
+// Index block format strings for inserting/appending index content.
+var (
+	// indexBlockFmt formats an index block between existing content.
+	// Args: content-before, index-content, content-after.
+	indexBlockFmt = "%s" + token.NewlineLF +
+		marker.IndexStart + token.NewlineLF +
+		"%s" + marker.IndexEnd + token.NewlineLF + "%s"
+
+	// indexBlockAppendFmt appends an index block at end of file.
+	// Args: content, index-content.
+	indexBlockAppendFmt = "%s" + token.NewlineLF + token.NewlineLF +
+		marker.IndexStart + token.NewlineLF +
+		"%s" + marker.IndexEnd + token.NewlineLF
+)
+
 // ParseHeaders extracts all entries from file content.
 //
 // It scans for headers matching the pattern "## [YYYY-MM-DD-HHMMSS] Title"
@@ -74,7 +89,7 @@ func GenerateTable(entries []Entry, columnHeader string) string {
 	fmt.Fprintf(&sb, marker.TableRowFmt+token.NewlineLF,
 		desc.Text(text.DescKeyLabelColDate), columnHeader)
 	fmt.Fprintf(&sb, marker.TableSepFmt+token.NewlineLF,
-		strings.Repeat(token.Dash, 6),
+		strings.Repeat(token.Dash, len(desc.Text(text.DescKeyLabelColDate))),
 		strings.Repeat(token.Dash, len(columnHeader)))
 
 	for _, e := range entries {
@@ -145,24 +160,15 @@ func Update(content, fileHeader, columnHeader string) string {
 	lineEnd := strings.Index(content[headerIdx:], nl)
 	if lineEnd == -1 {
 		// Header is at the end of the file
-		return fmt.Sprintf("%s%s%s%s%s%s%s",
-			content, nl, nl,
-			marker.IndexStart, nl, indexContent,
-			marker.IndexEnd+nl)
+		return fmt.Sprintf(indexBlockAppendFmt,
+			content, indexContent)
 	}
 
 	insertPoint := headerIdx + lineEnd + 1
 
 	// Build new content with the index
-	var sb strings.Builder
-	fmt.Fprintf(&sb, "%s%s%s%s%s%s%s%s",
-		content[:insertPoint], nl,
-		marker.IndexStart, nl,
-		indexContent,
-		marker.IndexEnd, nl,
-		content[insertPoint:])
-
-	return sb.String()
+	return fmt.Sprintf(indexBlockFmt,
+		content[:insertPoint], indexContent, content[insertPoint:])
 }
 
 // UpdateDecisions regenerates the decision index in DECISIONS.md content.

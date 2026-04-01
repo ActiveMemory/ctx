@@ -167,7 +167,7 @@ func ExtractFrontmatterField(content, field string) string {
 		line = strings.TrimSpace(line)
 		if strings.HasPrefix(line, prefix) {
 			val := strings.TrimSpace(strings.TrimPrefix(line, prefix))
-			val = strings.Trim(val, `"'`)
+			val = strings.Trim(val, token.Quotes)
 			return val
 		}
 	}

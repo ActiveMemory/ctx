@@ -155,7 +155,7 @@ func TestGenerateTable(t *testing.T) {
 			},
 			columnHeader: "Decision",
 			expected: `| Date | Decision |
-|------|--------|
+|----|--------|
 | 2026-01-28 | First decision |
 `,
 		},
@@ -167,7 +167,7 @@ func TestGenerateTable(t *testing.T) {
 			},
 			columnHeader: "Decision",
 			expected: `| Date | Decision |
-|------|--------|
+|----|--------|
 | 2026-01-28 | First |
 | 2026-01-27 | Second |
 `,
@@ -183,7 +183,7 @@ func TestGenerateTable(t *testing.T) {
 			},
 			columnHeader: "Decision",
 			expected: `| Date | Decision |
-|------|--------|
+|----|--------|
 | 2026-01-28 | Use A \| B format |
 `,
 		},
@@ -194,7 +194,7 @@ func TestGenerateTable(t *testing.T) {
 			},
 			columnHeader: "Learning",
 			expected: `| Date | Learning |
-|------|--------|
+|----|--------|
 | 2026-01-28 | Test entry |
 `,
 		},
@@ -244,7 +244,7 @@ func TestUpdateDecisions(t *testing.T) {
 
 <!-- INDEX:START -->
 | Date | Decision |
-|------|----------|
+|----|----------|
 | 2026-01-28 | Old entry |
 <!-- INDEX:END -->
 
@@ -267,7 +267,7 @@ func TestUpdateDecisions(t *testing.T) {
 
 <!-- INDEX:START -->
 | Date | Decision |
-|------|----------|
+|----|----------|
 | 2026-01-28 | Old entry |
 <!-- INDEX:END -->
 

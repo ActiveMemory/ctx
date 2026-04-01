@@ -42,7 +42,7 @@ import (
 //   - []Entry: sorted stats entries
 //   - error: non-nil on glob failure
 func ReadDir(dir, sessionFilter string) ([]Entry, error) {
-	pattern := filepath.Join(dir, stats.FilePrefix+"*"+file.ExtJSONL)
+	pattern := filepath.Join(dir, stats.FilePrefix+token.GlobStar+file.ExtJSONL)
 	matches, globErr := filepath.Glob(pattern)
 	if globErr != nil {
 		return nil, errJournal.StatsGlob(globErr)

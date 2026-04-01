@@ -42,6 +42,53 @@ const (
 	CargoFlagNoDeps = "--no-deps"
 )
 
+// Python manifest files.
+const (
+	// FileRequirements is the requirements.txt manifest.
+	FileRequirements = "requirements.txt"
+	// FilePyproject is the pyproject.toml manifest.
+	FilePyproject = "pyproject.toml"
+)
+
+// Python dependency section keys for pyproject.toml parsing.
+const (
+	// PyDeps is the main dependencies section suffix.
+	PyDeps = "dependencies"
+	// PyDevDeps is the dev-dependencies section suffix.
+	PyDevDeps = "dev-dependencies"
+	// PyDev is the short dev section suffix.
+	PyDev = "dev"
+	// PyGraphRoot is the root node label in Python dependency graphs.
+	PyGraphRoot = "project"
+)
+
+// Python metadata keys to skip when parsing Poetry-style deps.
+var PyMetaKeys = map[string]bool{
+	"name":        true,
+	"version":     true,
+	"description": true,
+}
+
+// Python version specifier characters.
+const PyVersionSpecChars = "><=!~["
+
+// TOML parsing tokens.
+const (
+	// TomlComment is the inline comment prefix.
+	TomlComment = " #"
+	// TomlOptionPrefix is the prefix for pip options in requirements.txt.
+	TomlOptionPrefix = "-"
+	// TomlSectionOpen is the opening bracket for TOML sections.
+	TomlSectionOpen = "["
+	// TomlArrayAssign variants for matching inline arrays.
+	TomlArrayAssign1 = " = ["
+	TomlArrayAssign2 = "= ["
+	TomlArrayAssign3 = " =["
+	TomlArrayAssign4 = "=["
+	// TomlSemicolon is the environment marker separator.
+	TomlSemicolon = ";"
+)
+
 // Table formatting constants for dependency output.
 const (
 	// TableColPackage is the column width for package names in table output.
