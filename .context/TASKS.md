@@ -35,8 +35,10 @@ TASK STATUS LABELS:
   and types from cmd/ directories to core/. See grandfathered map in 
   compliance_test.go for the full list. #priority:medium #added:2026-03-31-005115
 
-- [ ] Collect all exec.Commands under internal/exec. See
-  Phase EXEC below for breakdown.
+- [x] Collect all exec.Commands under internal/exec. See
+  Phase EXEC below for breakdown. — done, exec/{git,dep,gio,zensical}
+  exist, no exec.Command calls remain outside internal/exec
+  #done:2026-03-31
 
 - [ ] PD.4.5: Update AGENT_PLAYBOOK.md — add generic "check available skills"
   instruction #priority:medium #added:2026-03-25-203340
@@ -304,8 +306,9 @@ P0.4.10 task.
 - [ ] Systematic audit: extract all magic flag name strings across CLI commands
   into config/flag constants #added:2026-03-20-175155
 
-- [ ] Move generic string helpers from cli/add/core/strings.go to
-  internal/format #added:2026-03-20-175046
+- [-] Move generic string helpers from cli/add/core/strings.go to
+  internal/format — file no longer exists, helpers already moved or deleted
+  #added:2026-03-20-175046
 
 - [ ] Add missing flag name constants (priority, section, file) and priority
   level constants (high, medium, low) to config/flag #added:2026-03-20-170842
@@ -573,33 +576,42 @@ Taxonomy (from prefix analysis):
   user-provided YAML that overlays or replaces built-in text. This enables i18n
   without forking. #priority:low #added:2026-03-07-233756
 
-- [ ] Cleanup internal/cli/system/core/persistence.go: move 10 (base for
-  ParseInt) to config constant #priority:low #added:2026-03-07-220825
+- [-] Cleanup internal/cli/system/core/persistence.go: move 10 (base for
+  ParseInt) to config constant — not actionable, 10 is stdlib decimal base
+  convention, not a magic number #priority:low #added:2026-03-07-220825
 
-- [ ] Cleanup internal/cli/system/core/session_tokens.go: move SessionStats from
-  state.go to types.go #priority:low #added:2026-03-07-220825
-
-- [ ] Cleanup internal/cli/system/core/wrapup.go: line 18 constant should go to
-  config; make WrappedUpExpiry configurable via ctxrc
+- [-] Cleanup internal/cli/system/core/session_tokens.go: move SessionStats from
+  state.go to types.go — file and type no longer exist, refactored away
   #priority:low #added:2026-03-07-220825
 
-- [ ] Cleanup internal/cli/system/core/version.go: line 81 newline should come
-  from config #priority:low #added:2026-03-07-220819
+- [x] Cleanup internal/cli/system/core/wrapup.go: line 18 constant should go to
+  config; make WrappedUpExpiry configurable via ctxrc — already done,
+  wrap.ExpiryHours and wrap.Marker exist in config/wrap
+  #priority:low #added:2026-03-07-220825 #done:2026-03-31
 
-- [ ] Add taxonomy to internal/cli/system/core/ — currently an unstructured bag
+- [x] Cleanup internal/cli/system/core/version.go: line 81 newline should come
+  from config — already done, uses token.NewlineLF
+  #priority:low #added:2026-03-07-220819 #done:2026-03-31
+
+- [x] Add taxonomy to internal/cli/system/core/ — currently an unstructured bag
   of files; group by domain (backup, hooks, session, knowledge, etc.)
-  #priority:medium #added:2026-03-07-220819
+  — already done, 20 domain subdirectories exist
+  #priority:medium #added:2026-03-07-220819 #done:2026-03-31
 
-- [ ] Cleanup internal/cli/system/core/version_drift.go: line 53 string
-  formatting should use assets #priority:medium #added:2026-03-07-220819
+- [x] Cleanup internal/cli/system/core/version_drift.go: line 53 string
+  formatting should use assets — file moved to core/drift/, now uses
+  desc.Text and assets throughout
+  #priority:medium #added:2026-03-07-220819 #done:2026-03-31
 
-- [ ] Cleanup internal/cli/system/core/state.go: magic permissions (0o750),
-  magic strings ('Context: ' prefix, etc.)
-  #priority:medium #added:2026-03-07-220819
+- [x] Cleanup internal/cli/system/core/state.go: magic permissions (0o750),
+  magic strings ('Context: ' prefix, etc.) — file moved to core/state/,
+  magic values extracted to config
+  #priority:medium #added:2026-03-07-220819 #done:2026-03-31
 
-- [ ] Cleanup internal/cli/system/core/smb.go: errors should come from
-  internal/err; lines 101, 116, 111 need assets text
-  #priority:medium #added:2026-03-07-220819
+- [x] Cleanup internal/cli/system/core/smb.go: errors should come from
+  internal/err; lines 101, 116, 111 need assets text — file moved to
+  core/archive/, errors routed through err package
+  #priority:medium #added:2026-03-07-220819 #done:2026-03-31
 
 - [ ] Make AutoPruneStaleDays configurable via ctxrc. Currently hardcoded to 7
   days in config.AutoPruneStaleDays; add a ctxrc key (e.g., auto_prune_days) and
@@ -690,17 +702,19 @@ Taxonomy (from prefix analysis):
   tables) #added:2026-03-06-190225
 
 
-- [ ] Remove FlagNoColor and fatih/color dependency — replace with stdlib
-  terminal coloring or plain output #added:2026-03-06-182831
+- [x] Remove FlagNoColor and fatih/color dependency — replaced with plain
+  output, dependency removed from go.mod
+  #added:2026-03-06-182831 #done:2026-03-31
 
 - [ ] Validate .ctxrc against ctxrc.schema.json at load time — schema is
   embedded but never enforced, doctor does field-level checks without using
   it #added:2026-03-06-174851
 
-- [ ] Fix 3 CI compliance issues from PR #27 after merge: missing copyright
+- [x] Fix 3 CI compliance issues from PR #27 after merge: missing copyright
   header on internal/mcp/server_test.go, missing doc.go for internal/cli/mcp/,
   literal newlines in internal/mcp/resources.go and
-  tools.go #added:2026-03-06-141508
+  tools.go — all fixed, files moved to mcp/server/ with copyright
+  #added:2026-03-06-141508 #done:2026-03-31
 
 - [ ] Add PostToolUse session event capture. Append lightweight event records
   (tool name, files touched, timestamp) to .context/state/session-events.jsonl
