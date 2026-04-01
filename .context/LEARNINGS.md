@@ -17,6 +17,7 @@ DO NOT UPDATE FOR:
 <!-- INDEX:START -->
 | Date | Learning |
 |------|--------|
+| 2026-03-31 | Force-loaded behavioral prose gets ignored — action-gating hooks don't |
 | 2026-03-31 | Legacy key directory cleanup was specified but not automated |
 | 2026-03-31 | Convention audits must check cmd/ purity, not just types and docstrings |
 | 2026-03-31 | JSON Schema default fields cause linter errors with some validators |
@@ -116,6 +117,16 @@ DO NOT UPDATE FOR:
 | 2026-02-19 | Feature can be code-complete but invisible to users |
 | 2026-01-28 | IDE is already the UI |
 <!-- INDEX:END -->
+
+---
+
+## [2026-03-31-182054] Force-loaded behavioral prose gets ignored — action-gating hooks don't
+
+**Context**: AGENT_PLAYBOOK was force-injected at ~14k tokens every session. Agent routinely skipped its Context Readback directive when the user's first message was a concrete task. Meanwhile, hooks that gate actions (qa-reminder, specs-nudge, block-dangerous-commands) were consistently followed because they fire at the moment of violation.
+
+**Lesson**: Prose instructions compete with the user's immediate request and lose. Hooks that intercept actions at execution time are enforceable. More injected content means less attention per token — slim injection to only what must be internalized before any action.
+
+**Application**: When adding agent directives, prefer action-gating hooks over injected prose. If it must be injected, keep it small and directive-only. Reserve force-injection for hard rules (CONSTITUTION) and distilled actionable checklists (gate file).
 
 ---
 

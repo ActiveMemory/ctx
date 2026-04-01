@@ -3,6 +3,7 @@
 <!-- INDEX:START -->
 | Date | Decision |
 |------|--------|
+| 2026-03-31 | Context-load-gate injects only CONSTITUTION and AGENT_PLAYBOOK_GATE, not full ReadOrder |
 | 2026-03-31 | Spec signal words and nudge threshold are user-configurable via .ctxrc |
 | 2026-03-30 | Flags-not-subcommands for journal source: list and show are view modes on a noun, not independent entities |
 | 2026-03-30 | Journal consumed recall — recall CLI package deleted |
@@ -115,6 +116,20 @@ For significant decisions:
 ✗ No real alternatives existed
 
 -->
+
+## [2026-03-31-182003] Context-load-gate injects only CONSTITUTION and AGENT_PLAYBOOK_GATE, not full ReadOrder
+
+**Status**: Accepted
+
+**Context**: Force-loading ~14k tokens of context files (8 files) every session diluted attention without proportional value. CLAUDE.md already instructs agents to read full context files on-demand. Behavioral prose in force-loaded content was routinely skipped.
+
+**Decision**: Context-load-gate injects only CONSTITUTION and AGENT_PLAYBOOK_GATE, not full ReadOrder
+
+**Rationale**: Hard rules (CONSTITUTION) must be present before any action. Distilled directives (gate file) provide actionable session-start guidance in ~2k tokens. Full playbook, conventions, architecture, decisions, learnings are pulled on-demand when task context requires them.
+
+**Consequence**: New AGENT_PLAYBOOK_GATE.md file must stay in sync with AGENT_PLAYBOOK.md. HTML comment cross-reference added to playbook header for contributor discoverability.
+
+---
 
 ## [2026-03-31-005113] Spec signal words and nudge threshold are user-configurable via .ctxrc
 
