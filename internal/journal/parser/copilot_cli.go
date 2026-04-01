@@ -15,6 +15,7 @@ import (
 	"strings"
 
 	"github.com/ActiveMemory/ctx/internal/config/claude"
+	cfgCopilot "github.com/ActiveMemory/ctx/internal/config/copilot"
 	"github.com/ActiveMemory/ctx/internal/config/env"
 	"github.com/ActiveMemory/ctx/internal/config/file"
 	cfgHook "github.com/ActiveMemory/ctx/internal/config/hook"
@@ -66,7 +67,7 @@ func (p *CopilotCLI) Matches(path string) bool {
 
 	// Must be under a .copilot directory (not chatSessions, which is VS Code)
 	dir := filepath.Dir(path)
-	if strings.Contains(dir, copilotDirChatSessions) {
+	if strings.Contains(dir, cfgCopilot.DirChatSessions) {
 		return false
 	}
 
@@ -83,8 +84,8 @@ func (p *CopilotCLI) Matches(path string) bool {
 	defer func() { _ = f.Close() }()
 
 	scanner := bufio.NewScanner(f)
-	buf := make([]byte, 0, copilotScanBufInit)
-	scanner.Buffer(buf, copilotScanBufMatchMax)
+	buf := make([]byte, 0, cfgCopilot.ScanBufInit)
+	scanner.Buffer(buf, cfgCopilot.ScanBufMatchMax)
 
 	if !scanner.Scan() {
 		return false
@@ -122,8 +123,8 @@ func (p *CopilotCLI) ParseFile(path string) ([]*entity.Session, error) {
 	}()
 
 	scanner := bufio.NewScanner(f)
-	buf := make([]byte, 0, copilotScanBufInit)
-	scanner.Buffer(buf, copilotScanBufMax)
+	buf := make([]byte, 0, cfgCopilot.ScanBufInit)
+	scanner.Buffer(buf, cfgCopilot.ScanBufMax)
 
 	var messages []copilotCLIRawMessage
 
@@ -267,7 +268,7 @@ func CopilotCLISessionDirs() []string {
 	}
 
 	// Check common session subdirectories
-	candidates := []string{"sessions", "history"}
+	candidates := []string{cfgCopilot.DirSessions, cfgCopilot.DirHistory}
 	for _, sub := range candidates {
 		dir := filepath.Join(copilotHome, sub)
 		if info, err := os.Stat(dir); err == nil && info.IsDir() {
@@ -280,7 +281,7 @@ func CopilotCLISessionDirs() []string {
 		localAppData := os.Getenv("LOCALAPPDATA")
 		if localAppData != "" {
 			for _, sub := range candidates {
-				dir := filepath.Join(localAppData, copilotCLIAppName, sub)
+				dir := filepath.Join(localAppData, cfgCopilot.CLIAppName, sub)
 				if info, err := os.Stat(dir); err == nil && info.IsDir() {
 					dirs = append(dirs, dir)
 				}

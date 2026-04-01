@@ -13,6 +13,7 @@ import (
 	"time"
 
 	"github.com/ActiveMemory/ctx/internal/config/claude"
+	cfgCopilot "github.com/ActiveMemory/ctx/internal/config/copilot"
 	"github.com/ActiveMemory/ctx/internal/config/session"
 	"github.com/ActiveMemory/ctx/internal/config/token"
 	"github.com/ActiveMemory/ctx/internal/entity"
@@ -120,7 +121,7 @@ func (p *Copilot) buildAssistantMessage(
 	}
 
 	msg := &entity.Message{
-		ID:        req.RequestID + copilotResponseSuffix,
+		ID:        req.RequestID + cfgCopilot.ResponseSuffix,
 		Timestamp: time.UnixMilli(req.Timestamp),
 		Role:      claude.RoleAssistant,
 	}
@@ -131,7 +132,7 @@ func (p *Copilot) buildAssistantMessage(
 
 	for _, item := range req.Response {
 		switch item.Kind {
-		case copilotRespKindThinking:
+		case cfgCopilot.RespKindThinking:
 			var text string
 			if err := json.Unmarshal(item.Value, &text); err == nil {
 				if msg.Thinking != "" {
@@ -140,7 +141,7 @@ func (p *Copilot) buildAssistantMessage(
 				msg.Thinking += text
 			}
 
-		case copilotRespKindToolInvoke:
+		case cfgCopilot.RespKindToolInvoke:
 			tu := p.parseToolInvocation(item)
 			if tu != nil {
 				msg.ToolUses = append(msg.ToolUses, *tu)
@@ -189,7 +190,7 @@ func (p *Copilot) parseToolInvocation(item copilotRawRespItem) *entity.ToolUse {
 
 	// Extract the tool name from toolId (e.g., "copilot_readFile" -> "readFile")
 	name := toolID
-	if idx := strings.LastIndex(toolID, copilotToolIDSeparator); idx >= 0 {
+	if idx := strings.LastIndex(toolID, cfgCopilot.ToolIDSeparator); idx >= 0 {
 		name = toolID[idx+1:]
 	}
 

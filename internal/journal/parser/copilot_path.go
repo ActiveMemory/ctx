@@ -13,6 +13,7 @@ import (
 	"path/filepath"
 	"runtime"
 
+	cfgCopilot "github.com/ActiveMemory/ctx/internal/config/copilot"
 	"github.com/ActiveMemory/ctx/internal/config/env"
 )
 
@@ -29,7 +30,7 @@ func (p *Copilot) resolveWorkspaceCWD(sessionPath string) string {
 	// workspace.json is at: .../workspaceStorage/<hash>/workspace.json
 	chatDir := filepath.Dir(sessionPath) // chatSessions/
 	storageDir := filepath.Dir(chatDir)  // <hash>/
-	wsFile := filepath.Join(storageDir, copilotFileWorkspace)
+	wsFile := filepath.Join(storageDir, cfgCopilot.FileWorkspace)
 
 	data, err := os.ReadFile(filepath.Clean(wsFile))
 	if err != nil {
@@ -61,7 +62,7 @@ func fileURIToPath(uri string) string {
 		return ""
 	}
 
-	if parsed.Scheme != copilotSchemeFile {
+	if parsed.Scheme != cfgCopilot.SchemeFile {
 		return ""
 	}
 
