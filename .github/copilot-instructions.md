@@ -12,14 +12,14 @@ management. Your memory is NOT ephemeral — it lives in `.context/` files.
 
 Read these files **in order** before starting any work:
 
-1. `.context/CONSTITUTION.md` — Hard rules, NEVER violate
-2. `.context/TASKS.md` — Current work items
-3. `.context/CONVENTIONS.md` — Code patterns and standards
-4. `.context/ARCHITECTURE.md` — System structure
-5. `.context/DECISIONS.md` — Architectural decisions with rationale
-6. `.context/LEARNINGS.md` — Gotchas, tips, lessons learned
-7. `.context/GLOSSARY.md` — Domain terms and abbreviations
-8. `.context/AGENT_PLAYBOOK.md` — How to use this context system
+1. `.context/CONSTITUTION.md`: Hard rules, NEVER violate
+2. `.context/TASKS.md`: Current work items
+3. `.context/CONVENTIONS.md`: Code patterns and standards
+4. `.context/ARCHITECTURE.md`: System structure
+5. `.context/DECISIONS.md`: Architectural decisions with rationale
+6. `.context/LEARNINGS.md`: Gotchas, tips, lessons learned
+7. `.context/GLOSSARY.md`: Domain terms and abbreviations
+8. `.context/AGENT_PLAYBOOK.md`: How to use this context system
 
 After reading, confirm: "I have read the required context files and I'm
 following project conventions."
