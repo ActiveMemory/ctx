@@ -11,7 +11,6 @@ import (
 	"path/filepath"
 	"strings"
 
-	ctxLog "github.com/ActiveMemory/ctx/internal/log/warn"
 	"github.com/spf13/cobra"
 
 	"github.com/ActiveMemory/ctx/internal/config/cli"
@@ -26,6 +25,7 @@ import (
 	errSession "github.com/ActiveMemory/ctx/internal/err/session"
 	"github.com/ActiveMemory/ctx/internal/io"
 	"github.com/ActiveMemory/ctx/internal/journal/state"
+	ctxLog "github.com/ActiveMemory/ctx/internal/log/warn"
 	"github.com/ActiveMemory/ctx/internal/rc"
 	writeRecall "github.com/ActiveMemory/ctx/internal/write/journal"
 )

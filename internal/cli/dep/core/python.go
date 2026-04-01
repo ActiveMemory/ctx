@@ -181,7 +181,7 @@ func BuildPyprojectGraph(includeDevDeps bool) (map[string][]string, error) {
 	graph := make(map[string][]string)
 	if len(unique) > 0 {
 		sort.Strings(unique)
-		graph["project"] = unique
+		graph[cfgDep.PyGraphRoot] = unique
 	}
 	return graph, nil
 }
@@ -202,8 +202,8 @@ func ParsePyprojectDeps(content string, sectionSuffix string) []string {
 	inArray := false
 
 	targets := []string{
-		cfgDep.TomlSectionOpen + "project." + sectionSuffix + token.CloseBracket,
-		cfgDep.TomlSectionOpen + "tool.poetry." + sectionSuffix + token.CloseBracket,
+		cfgDep.TomlSectionOpen + cfgDep.TomlProjectPrefix + sectionSuffix + token.CloseBracket,
+		cfgDep.TomlSectionOpen + cfgDep.TomlPoetryPrefix + sectionSuffix + token.CloseBracket,
 	}
 
 	for _, line := range lines {
