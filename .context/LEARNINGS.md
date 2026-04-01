@@ -17,6 +17,7 @@ DO NOT UPDATE FOR:
 <!-- INDEX:START -->
 | Date | Learning |
 |------|--------|
+| 2026-03-31 | Magic string cleanup compounds: each pass reveals the next layer |
 | 2026-03-31 | Force-loaded behavioral prose gets ignored — action-gating hooks don't |
 | 2026-03-31 | Legacy key directory cleanup was specified but not automated |
 | 2026-03-31 | Convention audits must check cmd/ purity, not just types and docstrings |
@@ -117,6 +118,16 @@ DO NOT UPDATE FOR:
 | 2026-02-19 | Feature can be code-complete but invisible to users |
 | 2026-01-28 | IDE is already the UI |
 <!-- INDEX:END -->
+
+---
+
+## [2026-03-31-224247] Magic string cleanup compounds: each pass reveals the next layer
+
+**Context**: What started as fix 4 fmt.Fprintf(os.Stderr) calls expanded to over-tokenized format strings, magic hex perms, unstandardized TOML parsing tokens, missing docstrings on new constants — each fix exposed adjacent violations
+
+**Lesson**: Mechanical cleanup is fractal. The first sweep finds the obvious violations, but fixing them puts adjacent code under scrutiny. Budget for 2-3x the initial estimate
+
+**Application**: When scoping cleanup tasks, do not commit to done in one pass. Commit after each layer and let the user decide when to stop
 
 ---
 

@@ -443,8 +443,8 @@ Many call sites use `_ =` or `_, _ =` to discard errors without
 any feedback. Some are legitimate (best-effort cleanup), most are
 lazy escapes that hide failures.
 
-- [ ] EH.0: Create central warning sink — `internal/log/warn.go` with
-      `var Sink io.Writer = os.Stderr` and `func Warn(format string,
+- [x] EH.0: Create central warning sink — `internal/log/warn/warn.go` with
+      `var sink io.Writer = os.Stderr` and `func Warn(format string,
       args ...any)`.
       All stderr warnings (`fmt.Fprintf(os.Stderr, ...)`) route through this
       function. The `fmt.Fprintf` return error is handled once, centrally.
