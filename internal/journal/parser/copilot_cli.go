@@ -16,6 +16,7 @@ import (
 	"strings"
 
 	"github.com/ActiveMemory/ctx/internal/config/claude"
+	"github.com/ActiveMemory/ctx/internal/config/env"
 	"github.com/ActiveMemory/ctx/internal/config/file"
 	cfgHook "github.com/ActiveMemory/ctx/internal/config/hook"
 	"github.com/ActiveMemory/ctx/internal/config/session"
@@ -226,7 +227,7 @@ func CopilotCLISessionDirs() []string {
 	}
 
 	// On Windows, also check under LOCALAPPDATA
-	if runtime.GOOS == osWindows {
+	if runtime.GOOS == env.OSWindows {
 		localAppData := os.Getenv("LOCALAPPDATA")
 		if localAppData != "" {
 			for _, sub := range candidates {

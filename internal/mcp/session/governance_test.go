@@ -15,6 +15,8 @@ import (
 	"time"
 
 	"github.com/ActiveMemory/ctx/internal/config/dir"
+	"github.com/ActiveMemory/ctx/internal/config/file"
+	cfgGov "github.com/ActiveMemory/ctx/internal/config/mcp/governance"
 )
 
 func newTestState() *State {
@@ -108,7 +110,7 @@ func TestCheckGovernance_PersistNudge_AtThreshold(t *testing.T) {
 	ss.RecordSessionStart()
 	ss.RecordContextLoaded()
 	ss.RecordDriftCheck()
-	ss.callsSinceWrite = PersistNudgeAfter // exactly at threshold
+	ss.callsSinceWrite = cfgGov.PersistNudgeAfter // exactly at threshold
 
 	got := ss.CheckGovernance("ctx_status")
 	if !strings.Contains(got, "tool calls since last context write") {
@@ -121,7 +123,7 @@ func TestCheckGovernance_PersistNudge_BelowThreshold(t *testing.T) {
 	ss.RecordSessionStart()
 	ss.RecordContextLoaded()
 	ss.RecordDriftCheck()
-	ss.callsSinceWrite = PersistNudgeAfter - 1
+	ss.callsSinceWrite = cfgGov.PersistNudgeAfter - 1
 
 	got := ss.CheckGovernance("ctx_status")
 	if strings.Contains(got, "tool calls since last context write") {
@@ -134,7 +136,7 @@ func TestCheckGovernance_PersistNudge_Repeat(t *testing.T) {
 	ss.RecordSessionStart()
 	ss.RecordContextLoaded()
 	ss.RecordDriftCheck()
-	ss.callsSinceWrite = PersistNudgeAfter + PersistNudgeRepeat
+	ss.callsSinceWrite = cfgGov.PersistNudgeAfter + cfgGov.PersistNudgeRepeat
 
 	got := ss.CheckGovernance("ctx_status")
 	if !strings.Contains(got, "tool calls since last context write") {
@@ -145,7 +147,7 @@ func TestCheckGovernance_PersistNudge_Repeat(t *testing.T) {
 func TestCheckGovernance_PersistNudge_SuppressedForWriteTools(t *testing.T) {
 	ss := newTestState()
 	ss.RecordSessionStart()
-	ss.callsSinceWrite = PersistNudgeAfter
+	ss.callsSinceWrite = cfgGov.PersistNudgeAfter
 
 	for _, tool := range []string{"ctx_add", "ctx_complete", "ctx_watch_update", "ctx_compact"} {
 		got := ss.CheckGovernance(tool)
@@ -221,7 +223,7 @@ func writeViolations(t *testing.T, contextDir string, entries []violation) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	p := filepath.Join(contextDir, dir.State, violationsFile)
+	p := filepath.Join(contextDir, dir.State, file.Violations)
 	if err := os.WriteFile(p, data, 0o644); err != nil {
 		t.Fatal(err)
 	}
@@ -253,7 +255,7 @@ func TestCheckGovernance_ViolationsFileRemovedAfterRead(t *testing.T) {
 		{Kind: "sensitive_file_read", Detail: ".env", Timestamp: "2026-03-17T10:00:00Z"},
 	})
 
-	p := filepath.Join(ss.contextDir, dir.State, violationsFile)
+	p := filepath.Join(ss.contextDir, dir.State, file.Violations)
 	if _, err := os.Stat(p); err != nil {
 		t.Fatal("violations file should exist before read")
 	}
@@ -328,7 +330,7 @@ func TestReadAndClearViolations_EmptyContextDir(t *testing.T) {
 
 func TestReadAndClearViolations_CorruptFile(t *testing.T) {
 	ss := newTestStateWithDir(t)
-	p := filepath.Join(ss.contextDir, dir.State, violationsFile)
+	p := filepath.Join(ss.contextDir, dir.State, file.Violations)
 	if err := os.WriteFile(p, []byte("not json"), 0o644); err != nil {
 		t.Fatal(err)
 	}

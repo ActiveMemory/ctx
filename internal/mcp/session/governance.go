@@ -15,28 +15,11 @@ import (
 	"time"
 
 	"github.com/ActiveMemory/ctx/internal/config/dir"
+	"github.com/ActiveMemory/ctx/internal/config/file"
+	"github.com/ActiveMemory/ctx/internal/config/mcp/governance"
+	"github.com/ActiveMemory/ctx/internal/config/mcp/tool"
 	"github.com/ActiveMemory/ctx/internal/config/token"
 	ctxio "github.com/ActiveMemory/ctx/internal/io"
-)
-
-// Governance thresholds — tuned to match Claude Code hook intervals.
-const (
-	// DriftCheckInterval is the minimum time between drift reminders.
-	DriftCheckInterval = 15 * time.Minute
-
-	// PersistNudgeAfter is the tool call count after which a persist
-	// reminder fires if no context writes have occurred.
-	PersistNudgeAfter = 10
-
-	// PersistNudgeRepeat is how often the persist nudge repeats after
-	// the initial threshold.
-	PersistNudgeRepeat = 8
-
-	// toolSessionEvent is the MCP tool name for session lifecycle events.
-	toolSessionEvent = "ctx_session_event"
-
-	// violationsFile is the name of the violations file within .context/state/.
-	violationsFile = "violations.json"
 )
 
 // violation represents a single governance violation recorded by the
@@ -60,12 +43,12 @@ func (ss *State) readAndClearViolations() []violation {
 		return nil
 	}
 	stateDir := filepath.Join(ss.contextDir, dir.State)
-	data, err := ctxio.SafeReadFile(stateDir, violationsFile)
+	data, err := ctxio.SafeReadFile(stateDir, file.Violations)
 	if err != nil {
 		return nil
 	}
 	// Remove the file immediately to prevent duplicate alerts.
-	_ = os.Remove(filepath.Join(stateDir, violationsFile))
+	_ = os.Remove(filepath.Join(stateDir, file.Violations))
 
 	var vd violationsData
 	if err := json.Unmarshal(data, &vd); err != nil {
@@ -112,7 +95,7 @@ func (ss *State) CheckGovernance(toolName string) string {
 	var warnings []string
 
 	// 1. Session not started
-	if !ss.sessionStarted && toolName != toolSessionEvent {
+	if !ss.sessionStarted && toolName != tool.SessionEvent {
 		warnings = append(warnings,
 			"⚠ Session not started. "+
 				"Call ctx_session_event(type=\"start\") to enable tracking.")
@@ -120,7 +103,7 @@ func (ss *State) CheckGovernance(toolName string) string {
 
 	// 2. Context not loaded
 	if !ss.contextLoaded && toolName != "ctx_status" &&
-		toolName != toolSessionEvent {
+		toolName != tool.SessionEvent {
 		warnings = append(warnings,
 			"⚠ Context not loaded. "+
 				"Call ctx_status() to load context before proceeding.")
@@ -128,9 +111,9 @@ func (ss *State) CheckGovernance(toolName string) string {
 
 	// 3. Drift not checked recently
 	if ss.sessionStarted && toolName != "ctx_drift" &&
-		toolName != toolSessionEvent {
+		toolName != tool.SessionEvent {
 		if !ss.lastDriftCheck.IsZero() {
-			if time.Since(ss.lastDriftCheck) > DriftCheckInterval {
+			if time.Since(ss.lastDriftCheck) > governance.DriftCheckInterval {
 				warnings = append(warnings, fmt.Sprintf(
 					"⚠ Drift not checked in %d minutes. Consider calling ctx_drift().",
 					int(time.Since(ss.lastDriftCheck).Minutes())))
@@ -143,13 +126,13 @@ func (ss *State) CheckGovernance(toolName string) string {
 	}
 
 	// 4. Persist nudge — no context writes in a while
-	if ss.sessionStarted && ss.callsSinceWrite >= PersistNudgeAfter &&
+	if ss.sessionStarted && ss.callsSinceWrite >= governance.PersistNudgeAfter &&
 		toolName != "ctx_add" && toolName != "ctx_watch_update" &&
 		toolName != "ctx_complete" && toolName != "ctx_compact" &&
-		toolName != toolSessionEvent {
-		// Fire at threshold, then every PersistNudgeRepeat calls after
-		if ss.callsSinceWrite == PersistNudgeAfter ||
-			(ss.callsSinceWrite-PersistNudgeAfter)%PersistNudgeRepeat == 0 {
+		toolName != tool.SessionEvent {
+		// Fire at threshold, then every governance.PersistNudgeRepeat calls after
+		if ss.callsSinceWrite == governance.PersistNudgeAfter ||
+			(ss.callsSinceWrite-governance.PersistNudgeAfter)%governance.PersistNudgeRepeat == 0 {
 			warnings = append(warnings, fmt.Sprintf(
 				"⚠ %d tool calls since last context write. "+
 					"Persist decisions, learnings, or completed tasks with ctx_add() or ctx_complete().",

@@ -1066,7 +1066,6 @@ func TestCmdDirPurity(t *testing.T) {
 		"why/cmd/root/menu.go":            {"showMenu": true},
 		"why/cmd/root/run.go":             {"ShowDoc": true},
 		"why/cmd/root/strip.go":           {"StripMkDocs": true, "ExtractAdmonitionTitle": true, "ExtractTabTitle": true},
-		"system/cmd/sessionevent/cmd.go":  {"runSessionEvent": true},
 	}
 
 	err := filepath.Walk(cliDir, func(path string, info os.FileInfo, walkErr error) error {

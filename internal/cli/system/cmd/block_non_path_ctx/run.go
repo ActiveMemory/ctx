@@ -23,7 +23,7 @@ import (
 	"github.com/ActiveMemory/ctx/internal/config/token"
 	"github.com/ActiveMemory/ctx/internal/entity"
 	"github.com/ActiveMemory/ctx/internal/notify"
-	writeHook "github.com/ActiveMemory/ctx/internal/write/hook"
+	writeSetup "github.com/ActiveMemory/ctx/internal/write/setup"
 )
 
 // Run executes the block-non-path-ctx hook logic.
@@ -80,7 +80,7 @@ func Run(cmd *cobra.Command, stdin *os.File) error {
 				desc.Text(text.DescKeyBlockConstitutionSuffix),
 		}
 		data, _ := json.Marshal(resp)
-		writeHook.BlockResponse(cmd, string(data))
+		writeSetup.BlockResponse(cmd, string(data))
 		blockRef := notify.NewTemplateRef(hook.BlockNonPathCtx, variant, nil)
 		nudge.Relay(fmt.Sprintf(desc.Text(text.DescKeyRelayPrefixFormat),
 			hook.BlockNonPathCtx, desc.Text(text.DescKeyBlockNonPathRelayMessage)),

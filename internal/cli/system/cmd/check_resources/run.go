@@ -22,7 +22,7 @@ import (
 	"github.com/ActiveMemory/ctx/internal/config/token"
 	"github.com/ActiveMemory/ctx/internal/notify"
 	"github.com/ActiveMemory/ctx/internal/sysinfo"
-	writeHook "github.com/ActiveMemory/ctx/internal/write/hook"
+	writeSetup "github.com/ActiveMemory/ctx/internal/write/setup"
 )
 
 // Run executes the check-resources hook logic.
@@ -74,7 +74,7 @@ func Run(cmd *cobra.Command, stdin *os.File) error {
 		return nil
 	}
 
-	writeHook.Nudge(cmd, message.NudgeBox(
+	writeSetup.Nudge(cmd, message.NudgeBox(
 		desc.Text(text.DescKeyCheckResourcesRelayPrefix),
 		desc.Text(text.DescKeyCheckResourcesBoxTitle),
 		content))

@@ -25,7 +25,7 @@ import (
 	"github.com/ActiveMemory/ctx/internal/config/nudge"
 	"github.com/ActiveMemory/ctx/internal/notify"
 	"github.com/ActiveMemory/ctx/internal/rc"
-	writeHook "github.com/ActiveMemory/ctx/internal/write/hook"
+	writeSetup "github.com/ActiveMemory/ctx/internal/write/setup"
 )
 
 // Run executes the check-task-completion hook logic.
@@ -73,7 +73,7 @@ func Run(cmd *cobra.Command, stdin *os.File) error {
 	if msg == "" {
 		return nil
 	}
-	writeHook.Context(
+	writeSetup.Context(
 		cmd, coreSession.FormatContext(hook.EventPostToolUse, msg),
 	)
 

@@ -12,4 +12,6 @@ const (
 	Readme = "README.md"
 	// Index is the standard index filename for generated sites.
 	Index = "index.md"
+	// Violations is the governance violations file in .context/state/.
+	Violations = "violations.json"
 )

@@ -19,7 +19,7 @@ import (
 	"github.com/ActiveMemory/ctx/internal/config/architecture"
 	cfgTime "github.com/ActiveMemory/ctx/internal/config/time"
 	internalIo "github.com/ActiveMemory/ctx/internal/io"
-	writeHook "github.com/ActiveMemory/ctx/internal/write/hook"
+	writeSetup "github.com/ActiveMemory/ctx/internal/write/setup"
 )
 
 // Run executes the check-map-staleness hook logic.
@@ -74,7 +74,7 @@ func Run(cmd *cobra.Command, stdin *os.File) error {
 	}
 
 	dateStr := lastRun.Format(cfgTime.DateFormat)
-	writeHook.Nudge(cmd, health.EmitMapStalenessWarning(
+	writeSetup.Nudge(cmd, health.EmitMapStalenessWarning(
 		input.SessionID, dateStr, moduleCommits,
 	))
 

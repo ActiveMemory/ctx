@@ -19,17 +19,6 @@ import (
 	writeVscode "github.com/ActiveMemory/ctx/internal/write/vscode"
 )
 
-// vsMCPServer is a typed MCP server entry.
-type vsMCPServer struct {
-	Command string   `json:"command"`
-	Args    []string `json:"args"`
-}
-
-// vsMCPFile is the top-level .vscode/mcp.json structure.
-type vsMCPFile struct {
-	Servers map[string]vsMCPServer `json:"servers"`
-}
-
 // writeMCPJSON creates .vscode/mcp.json with the ctx MCP server
 // registration. Skips if the file already exists.
 func writeMCPJSON(cmd *cobra.Command) error {

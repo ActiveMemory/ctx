@@ -4,10 +4,10 @@
 //   \    Copyright 2026-present Context contributors.
 //                 SPDX-License-Identifier: Apache-2.0
 
-// Package hook provides terminal output for the setup generation
+// Package setup provides terminal output for the setup generation
 // command (ctx setup) and hook lifecycle output.
 //
-// Functions cover hook deployment output ([InfoCopilotCreated],
+// Functions cover setup deployment output ([InfoCopilotCreated],
 // [InfoCopilotMerged], [InfoCopilotSkipped], [InfoCopilotSummary]),
 // hook runtime output ([Nudge], [NudgeBlock], [BlockResponse],
 // [Context]), and general-purpose hook helpers ([Content],
@@ -16,4 +16,4 @@
 // Nudge vs NudgeBlock: [Nudge] emits a single-line relay,
 // [NudgeBlock] emits a multi-line boxed message. Both are
 // consumed by the agent as VERBATIM relay directives.
-package hook
+package setup
