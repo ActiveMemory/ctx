@@ -9,5 +9,5 @@
 //
 // [Cmd] builds the cobra.Command with --write flag. [Run] generates
 // integration configurations for Claude Code, Cursor, Copilot, and others.
-// [WriteCopilotInstructions] deploys the embedded copilot template.
+// Deployment logic lives in the core/ sub-packages.
 package root
