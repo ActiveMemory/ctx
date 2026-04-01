@@ -15,6 +15,8 @@ import (
 	"strconv"
 	"strings"
 
+	cfgSysinfo "github.com/ActiveMemory/ctx/internal/config/sysinfo"
+	"github.com/ActiveMemory/ctx/internal/config/token"
 	"github.com/ActiveMemory/ctx/internal/config/warn"
 	ctxLog "github.com/ActiveMemory/ctx/internal/log/warn"
 )
@@ -27,14 +29,14 @@ import (
 // Returns:
 //   - MemInfo: Physical and swap memory statistics
 func collectMemory() MemInfo {
-	f, openErr := os.Open("/proc/meminfo")
+	f, openErr := os.Open(cfgSysinfo.ProcMeminfo)
 	if openErr != nil {
 		return MemInfo{Supported: false}
 	}
 	defer func() {
 		if closeErr := f.Close(); closeErr != nil {
 			ctxLog.Warn(
-				warn.Close, "/proc/meminfo", closeErr,
+				warn.Close, cfgSysinfo.ProcMeminfo, closeErr,
 			)
 		}
 	}()
@@ -56,25 +58,26 @@ func parseMeminfo(r io.Reader) MemInfo {
 	vals := make(map[string]uint64)
 	scanner := bufio.NewScanner(r)
 	for scanner.Scan() {
-		parts := strings.SplitN(scanner.Text(), ":", 2)
+		parts := strings.SplitN(scanner.Text(), token.Colon, 2)
 		if len(parts) != 2 {
 			continue
 		}
 		key := strings.TrimSpace(parts[0])
-		val := strings.TrimSuffix(strings.TrimSpace(parts[1]), " kB")
+		val := strings.TrimSuffix(strings.TrimSpace(parts[1]), cfgSysinfo.MemInfoSuffix)
 		n, parseErr := strconv.ParseUint(
 			strings.TrimSpace(val), 10, 64,
 		)
 		if parseErr == nil {
-			vals[key] = n * 1024 // kB → bytes
+			vals[key] = n * cfgSysinfo.BytesPerKB
 		}
 	}
 
-	total := vals["MemTotal"]
-	available := vals["MemAvailable"]
+	total := vals[cfgSysinfo.FieldMemTotal]
+	available := vals[cfgSysinfo.FieldMemAvailable]
 	if available == 0 {
 		// Fallback for kernels without MemAvailable (< 3.14)
-		available = vals["MemFree"] + vals["Buffers"] + vals["Cached"]
+		available = vals[cfgSysinfo.FieldMemFree] +
+			vals[cfgSysinfo.FieldBuffers] + vals[cfgSysinfo.FieldCached]
 	}
 
 	var used uint64
@@ -82,8 +85,8 @@ func parseMeminfo(r io.Reader) MemInfo {
 		used = total - available
 	}
 
-	swapTotal := vals["SwapTotal"]
-	swapFree := vals["SwapFree"]
+	swapTotal := vals[cfgSysinfo.FieldSwapTotal]
+	swapFree := vals[cfgSysinfo.FieldSwapFree]
 	var swapUsed uint64
 	if swapTotal > swapFree {
 		swapUsed = swapTotal - swapFree

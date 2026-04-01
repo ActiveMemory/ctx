@@ -61,10 +61,10 @@ func TestAppend_Disabled(t *testing.T) {
 	tmpDir := setupTestDir(t, false)
 	logPath := filepath.Join(tmpDir, dir.Context, dir.State, event.FileLog)
 
-	AppendEvent("relay", "test message", "session-1", nil)
+	Append("relay", "test message", "session-1", nil)
 
 	if _, statErr := os.Stat(logPath); !os.IsNotExist(statErr) {
-		t.Error("AppendEvent() created log file when event_log is disabled")
+		t.Error("Append() created log file when event_log is disabled")
 	}
 }
 
@@ -73,7 +73,7 @@ func TestAppend_Basic(t *testing.T) {
 	logPath := filepath.Join(tmpDir, dir.Context, dir.State, event.FileLog)
 
 	detail := notify.NewTemplateRef("qa-reminder", "gate", nil)
-	AppendEvent("relay", "QA gate reminder", "session-1", detail)
+	Append("relay", "QA gate reminder", "session-1", detail)
 
 	data, readErr := os.ReadFile(logPath) //nolint:gosec // test file
 	if readErr != nil {
@@ -111,10 +111,10 @@ func TestAppend_CreatesStateDir(t *testing.T) {
 		t.Fatal("state dir should not exist before AppendEvent")
 	}
 
-	AppendEvent("nudge", "test", "", nil)
+	Append("nudge", "test", "", nil)
 
 	if _, statErr := os.Stat(stateDir); os.IsNotExist(statErr) {
-		t.Error("AppendEvent() did not create state directory")
+		t.Error("Append() did not create state directory")
 	}
 }
 
@@ -139,7 +139,7 @@ func TestAppend_Rotation(t *testing.T) {
 	}
 
 	// AppendEvent should trigger rotation.
-	AppendEvent("relay", "after rotation", "", nil)
+	Append("relay", "after rotation", "", nil)
 
 	// Previous file should exist with the big content.
 	if _, statErr := os.Stat(prevPath); os.IsNotExist(statErr) {
@@ -186,7 +186,7 @@ func TestAppend_RotationOverwrite(t *testing.T) {
 		t.Fatalf("failed to write big log: %v", writeErr)
 	}
 
-	AppendEvent("relay", "new event", "", nil)
+	Append("relay", "new event", "", nil)
 
 	// The .1 file should now contain the rotated content,
 	// not "old rotated content".
@@ -214,11 +214,11 @@ func TestQuery_NoFile(t *testing.T) {
 func TestQuery_FilterHook(t *testing.T) {
 	setupTestDir(t, true)
 
-	AppendEvent("relay", "qa gate", "s1",
+	Append("relay", "qa gate", "s1",
 		notify.NewTemplateRef("qa-reminder", "gate", nil))
-	AppendEvent("relay", "context load", "s1",
+	Append("relay", "context load", "s1",
 		notify.NewTemplateRef("context-load-gate", "inject", nil))
-	AppendEvent("nudge", "ceremonies", "s1",
+	Append("nudge", "ceremonies", "s1",
 		notify.NewTemplateRef("check-ceremonies", "both", nil))
 
 	events, queryErr := Query(entity.EventQueryOpts{Hook: "qa-reminder"})
@@ -236,9 +236,9 @@ func TestQuery_FilterHook(t *testing.T) {
 func TestQuery_FilterSession(t *testing.T) {
 	setupTestDir(t, true)
 
-	AppendEvent("relay", "session one", "s1", nil)
-	AppendEvent("relay", "session two", "s2", nil)
-	AppendEvent("relay", "session one again", "s1", nil)
+	Append("relay", "session one", "s1", nil)
+	Append("relay", "session two", "s2", nil)
+	Append("relay", "session one again", "s1", nil)
 
 	events, queryErr := Query(entity.EventQueryOpts{Session: "s1"})
 	if queryErr != nil {
@@ -253,7 +253,7 @@ func TestQuery_Last(t *testing.T) {
 	setupTestDir(t, true)
 
 	for i := 0; i < 20; i++ {
-		AppendEvent("relay", "event", "", nil)
+		Append("relay", "event", "", nil)
 	}
 
 	events, queryErr := Query(entity.EventQueryOpts{Last: 5})
@@ -284,7 +284,7 @@ func TestQuery_IncludeRotated(t *testing.T) {
 	}
 
 	// Write event to current file.
-	AppendEvent("relay", "new event", "", nil)
+	Append("relay", "new event", "", nil)
 
 	// Without --all, only current events.
 	events, _ := Query(entity.EventQueryOpts{})

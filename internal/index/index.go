@@ -8,6 +8,7 @@
 package index
 
 import (
+	"fmt"
 	"io"
 	"os"
 	"strings"
@@ -69,23 +70,19 @@ func GenerateTable(entries []Entry, columnHeader string) string {
 		return ""
 	}
 
-	nl := token.NewlineLF
 	var sb strings.Builder
-	sb.WriteString(marker.TableRowOpen + desc.Text(text.DescKeyLabelColDate) + marker.TablePipePad)
-	sb.WriteString(columnHeader)
-	sb.WriteString(marker.TableRowClose + nl)
-	sb.WriteString(marker.TablePipe + marker.TableSepCell + marker.TablePipe)
-	sb.WriteString(strings.Repeat("-", len(columnHeader)))
-	sb.WriteString(marker.TablePipe + nl)
+	fmt.Fprintf(&sb, marker.TableRowFmt+token.NewlineLF,
+		desc.Text(text.DescKeyLabelColDate), columnHeader)
+	fmt.Fprintf(&sb, marker.TableSepFmt+token.NewlineLF,
+		strings.Repeat(token.Dash, 6),
+		strings.Repeat(token.Dash, len(columnHeader)))
 
 	for _, e := range entries {
-		// Escape pipe characters in title
-		title := strings.ReplaceAll(e.Title, marker.TablePipe, marker.TablePipeEscaped)
-		sb.WriteString(marker.TableRowOpen)
-		sb.WriteString(e.Date)
-		sb.WriteString(marker.TablePipePad)
-		sb.WriteString(title)
-		sb.WriteString(marker.TableRowClose + nl)
+		title := strings.ReplaceAll(
+			e.Title, marker.TablePipe, marker.TablePipeEscaped,
+		)
+		fmt.Fprintf(&sb, marker.TableRowFmt+token.NewlineLF,
+			e.Date, title)
 	}
 
 	return sb.String()
@@ -148,23 +145,22 @@ func Update(content, fileHeader, columnHeader string) string {
 	lineEnd := strings.Index(content[headerIdx:], nl)
 	if lineEnd == -1 {
 		// Header is at the end of the file
-		return content + nl + nl +
-			marker.IndexStart + nl + indexContent +
-			marker.IndexEnd + nl
+		return fmt.Sprintf("%s%s%s%s%s%s%s",
+			content, nl, nl,
+			marker.IndexStart, nl, indexContent,
+			marker.IndexEnd+nl)
 	}
 
 	insertPoint := headerIdx + lineEnd + 1
 
 	// Build new content with the index
 	var sb strings.Builder
-	sb.WriteString(content[:insertPoint])
-	sb.WriteString(nl)
-	sb.WriteString(marker.IndexStart)
-	sb.WriteString(nl)
-	sb.WriteString(indexContent)
-	sb.WriteString(marker.IndexEnd)
-	sb.WriteString(nl)
-	sb.WriteString(content[insertPoint:])
+	fmt.Fprintf(&sb, "%s%s%s%s%s%s%s%s",
+		content[:insertPoint], nl,
+		marker.IndexStart, nl,
+		indexContent,
+		marker.IndexEnd, nl,
+		content[insertPoint:])
 
 	return sb.String()
 }

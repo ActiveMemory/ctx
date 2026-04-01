@@ -18,12 +18,12 @@ import (
 	"github.com/ActiveMemory/ctx/internal/config/warn"
 	"github.com/ActiveMemory/ctx/internal/entity"
 	"github.com/ActiveMemory/ctx/internal/io"
-	warn2 "github.com/ActiveMemory/ctx/internal/log/warn"
+	logWarn "github.com/ActiveMemory/ctx/internal/log/warn"
 	"github.com/ActiveMemory/ctx/internal/notify"
 	"github.com/ActiveMemory/ctx/internal/rc"
 )
 
-// AppendEvent writes a single event to the log file.
+// Append writes a single event to the log file.
 //
 // Noop when event logging is disabled in .ctxrc. Creates the state
 // directory if it does not exist. Rotates the log when it exceeds
@@ -35,7 +35,7 @@ import (
 //   - message: Human-readable description
 //   - sessionID: Claude session ID (may be empty)
 //   - detail: Optional template reference (may be nil)
-func AppendEvent(event, message, sessionID string, detail *notify.TemplateRef) {
+func Append(event, message, sessionID string, detail *notify.TemplateRef) {
 	if !rc.EventLog() {
 		return
 	}
@@ -55,7 +55,7 @@ func AppendEvent(event, message, sessionID string, detail *notify.TemplateRef) {
 	if cwd, cwdErr := os.Getwd(); cwdErr == nil {
 		projectName = filepath.Base(cwd)
 	} else {
-		warn2.Warn(warn.Getwd, cwdErr)
+		logWarn.Warn(warn.Getwd, cwdErr)
 	}
 
 	payload := notify.Payload{
