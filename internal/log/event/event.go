@@ -4,7 +4,7 @@
 //   \    Copyright 2026-present Context contributors.
 //                 SPDX-License-Identifier: Apache-2.0
 
-package log
+package event
 
 import (
 	"encoding/json"
@@ -16,7 +16,9 @@ import (
 	"github.com/ActiveMemory/ctx/internal/config/project"
 	"github.com/ActiveMemory/ctx/internal/config/token"
 	"github.com/ActiveMemory/ctx/internal/config/warn"
+	"github.com/ActiveMemory/ctx/internal/entity"
 	"github.com/ActiveMemory/ctx/internal/io"
+	warn2 "github.com/ActiveMemory/ctx/internal/log/warn"
 	"github.com/ActiveMemory/ctx/internal/notify"
 	"github.com/ActiveMemory/ctx/internal/rc"
 )
@@ -53,7 +55,7 @@ func AppendEvent(event, message, sessionID string, detail *notify.TemplateRef) {
 	if cwd, cwdErr := os.Getwd(); cwdErr == nil {
 		projectName = filepath.Base(cwd)
 	} else {
-		Warn(warn.Getwd, cwdErr)
+		warn2.Warn(warn.Getwd, cwdErr)
 	}
 
 	payload := notify.Payload{
@@ -78,12 +80,12 @@ func AppendEvent(event, message, sessionID string, detail *notify.TemplateRef) {
 	}
 	defer func() {
 		if closeErr := f.Close(); closeErr != nil {
-			Warn(warn.Close, logPath, closeErr)
+			warn2.Warn(warn.Close, logPath, closeErr)
 		}
 	}()
 
 	if _, writeErr := f.Write(line); writeErr != nil {
-		Warn(warn.Write, logPath, writeErr)
+		warn2.Warn(warn.Write, logPath, writeErr)
 	}
 }
 
@@ -98,7 +100,7 @@ func AppendEvent(event, message, sessionID string, detail *notify.TemplateRef) {
 // Returns:
 //   - []notify.Payload: Matching events (newest last)
 //   - error: Non-nil only if the log file exists but cannot be opened
-func Query(opts QueryOpts) ([]notify.Payload, error) {
+func Query(opts entity.EventQueryOpts) ([]notify.Payload, error) {
 	var allEvents []notify.Payload
 
 	// Read the rotated file first (older events) if requested.

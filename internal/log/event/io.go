@@ -4,7 +4,7 @@
 //   \    Copyright 2026-present Context contributors.
 //                 SPDX-License-Identifier: Apache-2.0
 
-package log
+package event
 
 import (
 	"bufio"
@@ -13,6 +13,7 @@ import (
 
 	"github.com/ActiveMemory/ctx/internal/config/warn"
 	"github.com/ActiveMemory/ctx/internal/io"
+	warn2 "github.com/ActiveMemory/ctx/internal/log/warn"
 	"github.com/ActiveMemory/ctx/internal/notify"
 )
 
@@ -36,7 +37,7 @@ func readLogFile(path string) ([]notify.Payload, error) {
 	}
 	defer func() {
 		if closeErr := f.Close(); closeErr != nil {
-			Warn(warn.Close, path, closeErr)
+			warn2.Warn(warn.Close, path, closeErr)
 		}
 	}()
 

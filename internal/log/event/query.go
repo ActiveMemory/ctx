@@ -4,9 +4,10 @@
 //   \    Copyright 2026-present Context contributors.
 //                 SPDX-License-Identifier: Apache-2.0
 
-package log
+package event
 
 import (
+	"github.com/ActiveMemory/ctx/internal/entity"
 	"github.com/ActiveMemory/ctx/internal/notify"
 )
 
@@ -19,7 +20,7 @@ import (
 //
 // Returns:
 //   - bool: true if the event matches all non-empty filters
-func matchesFilter(e notify.Payload, opts QueryOpts) bool {
+func matchesFilter(e notify.Payload, opts entity.EventQueryOpts) bool {
 	if opts.Event != "" && e.Event != opts.Event {
 		return false
 	}

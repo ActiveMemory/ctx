@@ -4,13 +4,14 @@
 //   \    Copyright 2026-present Context contributors.
 //                 SPDX-License-Identifier: Apache-2.0
 
-package log
+package event
 
 import (
 	"os"
 
 	"github.com/ActiveMemory/ctx/internal/config/event"
 	"github.com/ActiveMemory/ctx/internal/config/warn"
+	warn2 "github.com/ActiveMemory/ctx/internal/log/warn"
 )
 
 // rotate checks the current log file size and renames it to the
@@ -31,9 +32,9 @@ func rotate(logPath string) {
 
 	prevPath := prevLogFilePath()
 	if removeErr := os.Remove(prevPath); removeErr != nil {
-		Warn(warn.Remove, prevPath, removeErr)
+		warn2.Warn(warn.Remove, prevPath, removeErr)
 	}
 	if renameErr := os.Rename(logPath, prevPath); renameErr != nil {
-		Warn(warn.Rename, logPath, renameErr)
+		warn2.Warn(warn.Rename, logPath, renameErr)
 	}
 }

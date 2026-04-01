@@ -30,8 +30,9 @@ import (
 	"github.com/ActiveMemory/ctx/internal/context/token"
 	"github.com/ActiveMemory/ctx/internal/context/validate"
 	"github.com/ActiveMemory/ctx/internal/drift"
+	"github.com/ActiveMemory/ctx/internal/entity"
 	"github.com/ActiveMemory/ctx/internal/io"
-	"github.com/ActiveMemory/ctx/internal/log"
+	"github.com/ActiveMemory/ctx/internal/log/event"
 	"github.com/ActiveMemory/ctx/internal/rc"
 	"github.com/ActiveMemory/ctx/internal/sysinfo"
 )
@@ -533,7 +534,7 @@ func CheckRecentEventActivity(report *Report) {
 		return // skip if logging disabled
 	}
 
-	events, queryErr := log.Query(log.QueryOpts{Last: 1})
+	events, queryErr := event.Query(entity.EventQueryOpts{Last: 1})
 	if queryErr != nil || len(events) == 0 {
 		report.Results = append(report.Results, Result{
 			Name:     doctor.CheckRecentEvents,

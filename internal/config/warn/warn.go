@@ -40,4 +40,10 @@ const (
 
 	// Readdir is the format for directory read failures.
 	Readdir = "readdir %s: %v"
+
+	// CloseResponse is the format for HTTP response body close failures.
+	CloseResponse = "close response body: %v"
+
+	// ParseConfig is the format for config file parse failures.
+	ParseConfig = "warning: failed to parse %s: %v (using defaults)"
 )

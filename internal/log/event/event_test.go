@@ -4,7 +4,7 @@
 //   \    Copyright 2026-present Context contributors.
 //                 SPDX-License-Identifier: Apache-2.0
 
-package log
+package event
 
 import (
 	"encoding/json"
@@ -17,6 +17,7 @@ import (
 	"github.com/ActiveMemory/ctx/internal/config/event"
 	"github.com/ActiveMemory/ctx/internal/config/file"
 	"github.com/ActiveMemory/ctx/internal/config/fs"
+	"github.com/ActiveMemory/ctx/internal/entity"
 	"github.com/ActiveMemory/ctx/internal/notify"
 	"github.com/ActiveMemory/ctx/internal/rc"
 )
@@ -201,7 +202,7 @@ func TestAppend_RotationOverwrite(t *testing.T) {
 func TestQuery_NoFile(t *testing.T) {
 	setupTestDir(t, true)
 
-	events, queryErr := Query(QueryOpts{})
+	events, queryErr := Query(entity.EventQueryOpts{})
 	if queryErr != nil {
 		t.Fatalf("Query() error: %v", queryErr)
 	}
@@ -220,7 +221,7 @@ func TestQuery_FilterHook(t *testing.T) {
 	AppendEvent("nudge", "ceremonies", "s1",
 		notify.NewTemplateRef("check-ceremonies", "both", nil))
 
-	events, queryErr := Query(QueryOpts{Hook: "qa-reminder"})
+	events, queryErr := Query(entity.EventQueryOpts{Hook: "qa-reminder"})
 	if queryErr != nil {
 		t.Fatalf("Query() error: %v", queryErr)
 	}
@@ -239,7 +240,7 @@ func TestQuery_FilterSession(t *testing.T) {
 	AppendEvent("relay", "session two", "s2", nil)
 	AppendEvent("relay", "session one again", "s1", nil)
 
-	events, queryErr := Query(QueryOpts{Session: "s1"})
+	events, queryErr := Query(entity.EventQueryOpts{Session: "s1"})
 	if queryErr != nil {
 		t.Fatalf("Query() error: %v", queryErr)
 	}
@@ -255,7 +256,7 @@ func TestQuery_Last(t *testing.T) {
 		AppendEvent("relay", "event", "", nil)
 	}
 
-	events, queryErr := Query(QueryOpts{Last: 5})
+	events, queryErr := Query(entity.EventQueryOpts{Last: 5})
 	if queryErr != nil {
 		t.Fatalf("Query() error: %v", queryErr)
 	}
@@ -286,7 +287,7 @@ func TestQuery_IncludeRotated(t *testing.T) {
 	AppendEvent("relay", "new event", "", nil)
 
 	// Without --all, only current events.
-	events, _ := Query(QueryOpts{})
+	events, _ := Query(entity.EventQueryOpts{})
 	if len(events) != 1 {
 		t.Errorf(
 			"Query() without IncludeRotated returned %d events, want 1",
@@ -295,7 +296,7 @@ func TestQuery_IncludeRotated(t *testing.T) {
 	}
 
 	// With --all, both files.
-	events, _ = Query(QueryOpts{IncludeRotated: true})
+	events, _ = Query(entity.EventQueryOpts{IncludeRotated: true})
 	if len(events) != 2 {
 		t.Errorf("Query(IncludeRotated=true) returned %d events, want 2", len(events))
 	}
@@ -327,7 +328,7 @@ func TestQuery_CorruptLine(t *testing.T) {
 		t.Fatalf("failed to write log: %v", writeErr)
 	}
 
-	events, queryErr := Query(QueryOpts{})
+	events, queryErr := Query(entity.EventQueryOpts{})
 	if queryErr != nil {
 		t.Fatalf("Query() error: %v", queryErr)
 	}

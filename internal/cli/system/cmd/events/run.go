@@ -11,8 +11,9 @@ import (
 
 	coreEvent "github.com/ActiveMemory/ctx/internal/cli/system/core/event"
 	cFlag "github.com/ActiveMemory/ctx/internal/config/flag"
+	"github.com/ActiveMemory/ctx/internal/entity"
 	errJournal "github.com/ActiveMemory/ctx/internal/err/journal"
-	"github.com/ActiveMemory/ctx/internal/log"
+	logEvent "github.com/ActiveMemory/ctx/internal/log/event"
 	writeEvents "github.com/ActiveMemory/ctx/internal/write/events"
 )
 
@@ -32,7 +33,7 @@ func Run(cmd *cobra.Command) error {
 	jsonOut, _ := cmd.Flags().GetBool(cFlag.JSON)
 	includeAll, _ := cmd.Flags().GetBool(cFlag.All)
 
-	opts := log.QueryOpts{
+	opts := entity.EventQueryOpts{
 		Hook:           hook,
 		Session:        session,
 		Event:          event,
@@ -40,7 +41,7 @@ func Run(cmd *cobra.Command) error {
 		IncludeRotated: includeAll,
 	}
 
-	evts, queryErr := log.Query(opts)
+	evts, queryErr := logEvent.Query(opts)
 	if queryErr != nil {
 		return errJournal.EventLogRead(queryErr)
 	}

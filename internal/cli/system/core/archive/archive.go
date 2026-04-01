@@ -8,19 +8,17 @@ package archive
 
 import (
 	"archive/tar"
-	"fmt"
 	"io"
 	"io/fs"
 	"os"
 	"path/filepath"
 
-	"github.com/ActiveMemory/ctx/internal/assets/read/desc"
-	"github.com/ActiveMemory/ctx/internal/config/embed/text"
 	"github.com/ActiveMemory/ctx/internal/config/warn"
 	"github.com/ActiveMemory/ctx/internal/entity"
 	errBackup "github.com/ActiveMemory/ctx/internal/err/backup"
 	internalIo "github.com/ActiveMemory/ctx/internal/io"
-	ctxLog "github.com/ActiveMemory/ctx/internal/log"
+	ctxLog "github.com/ActiveMemory/ctx/internal/log/warn"
+	writeBackup "github.com/ActiveMemory/ctx/internal/write/backup"
 )
 
 // finalizeArchive creates the archive, populates the result with size,
@@ -78,9 +76,7 @@ func addEntry(tw *tar.Writer, entry entity.ArchiveEntry, w io.Writer) error {
 	info, statErr := os.Stat(entry.SourcePath)
 	if os.IsNotExist(statErr) {
 		if entry.Optional {
-			_, _ = fmt.Fprintf(
-				w, desc.Text(text.DescKeyWriteBackupSkipEntry), entry.Prefix,
-			)
+			writeBackup.SkipEntry(w, entry.Prefix)
 			return nil
 		}
 		return errBackup.SourceNotFound(entry.SourcePath)

@@ -13,7 +13,7 @@ import (
 
 	"github.com/ActiveMemory/ctx/internal/config/warn"
 	"github.com/ActiveMemory/ctx/internal/journal/state"
-	ctxLog "github.com/ActiveMemory/ctx/internal/log"
+	ctxLog "github.com/ActiveMemory/ctx/internal/log/warn"
 )
 
 // NewestMtime returns the most recent mtime (as Unix timestamp) of files

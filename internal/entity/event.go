@@ -4,10 +4,10 @@
 //   \    Copyright 2026-present Context contributors.
 //                 SPDX-License-Identifier: Apache-2.0
 
-package log
+package entity
 
-// QueryOpts controls event filtering and pagination.
-type QueryOpts struct {
+// EventQueryOpts controls event filtering and pagination.
+type EventQueryOpts struct {
 	Hook           string // filter by hook name (from detail)
 	Session        string // filter by session ID
 	Event          string // filter by event type

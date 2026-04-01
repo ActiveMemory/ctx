@@ -16,7 +16,7 @@ import (
 	"strings"
 
 	"github.com/ActiveMemory/ctx/internal/config/warn"
-	ctxLog "github.com/ActiveMemory/ctx/internal/log"
+	ctxLog "github.com/ActiveMemory/ctx/internal/log/warn"
 )
 
 // collectMemory reads physical and swap memory usage

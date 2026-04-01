@@ -10,13 +10,13 @@ import (
 	"os"
 	"path/filepath"
 
+	ctxLog "github.com/ActiveMemory/ctx/internal/log/warn"
 	"github.com/spf13/cobra"
 
 	"github.com/ActiveMemory/ctx/internal/assets/hooks/messages"
 	"github.com/ActiveMemory/ctx/internal/cli/system/core/message"
 	"github.com/ActiveMemory/ctx/internal/config/warn"
 	errHook "github.com/ActiveMemory/ctx/internal/err/hook"
-	ctxLog "github.com/ActiveMemory/ctx/internal/log"
 	writeMessage "github.com/ActiveMemory/ctx/internal/write/message"
 )
 
