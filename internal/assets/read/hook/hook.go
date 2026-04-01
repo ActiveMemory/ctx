@@ -20,10 +20,10 @@ import (
 //   - filename: Template filename (e.g., "gate.txt")
 //
 // Returns:
-//   - []byte: Template content from hooks/messages/<hook>/
+//   - []byte: Template content from integrations/messages/<hook>/
 //   - error: Non-nil if the file is not found or read fails
 func Message(hook, filename string) ([]byte, error) {
-	return assets.FS.ReadFile(path.Join(asset.DirHooksMessages, hook, filename))
+	return assets.FS.ReadFile(path.Join(asset.DirIntegrationsMessages, hook, filename))
 }
 
 // MessageRegistry reads the embedded registry.yaml that describes
@@ -33,19 +33,19 @@ func Message(hook, filename string) ([]byte, error) {
 //   - []byte: Raw YAML content
 //   - error: Non-nil if the file is not found or read fails
 func MessageRegistry() ([]byte, error) {
-	return assets.FS.ReadFile(asset.PathHookRegistry)
+	return assets.FS.ReadFile(asset.PathMessageRegistry)
 }
 
 // MessageList returns available hook message directory names.
 //
-// Each hook is a directory under hooks/messages/ containing one or
+// Each hook is a directory under integrations/messages/ containing one or
 // more variant .txt template files.
 //
 // Returns:
 //   - []string: List of hook directory names
 //   - error: Non-nil if directory read fails
 func MessageList() ([]string, error) {
-	entries, readErr := assets.FS.ReadDir(asset.DirHooksMessages)
+	entries, readErr := assets.FS.ReadDir(asset.DirIntegrationsMessages)
 	if readErr != nil {
 		return nil, readErr
 	}
@@ -68,7 +68,7 @@ func MessageList() ([]string, error) {
 //   - []string: List of variant filenames (e.g., "gate.txt")
 //   - error: Non-nil if the hook directory is not found or read fails
 func VariantList(hook string) ([]string, error) {
-	entries, readErr := assets.FS.ReadDir(path.Join(asset.DirHooksMessages, hook))
+	entries, readErr := assets.FS.ReadDir(path.Join(asset.DirIntegrationsMessages, hook))
 	if readErr != nil {
 		return nil, readErr
 	}

@@ -12,10 +12,10 @@ import (
 
 //go:embed claude/.claude-plugin/plugin.json claude/CLAUDE.md
 //go:embed claude/skills/*/references/*.md claude/skills/*/SKILL.md
-//go:embed context/*.md project/* entry-templates/*.md hooks/*.md
-//go:embed hooks/copilot-cli/*.json hooks/copilot-cli/*.md hooks/copilot-cli/scripts/*.sh hooks/copilot-cli/scripts/*.ps1
-//go:embed hooks/copilot-cli/skills/*/SKILL.md
-//go:embed hooks/messages/*/*.txt hooks/messages/registry.yaml
+//go:embed context/*.md project/* entry-templates/*.md integrations/*.md
+//go:embed integrations/copilot-cli/*.json integrations/copilot-cli/*.md integrations/copilot-cli/scripts/*.sh integrations/copilot-cli/scripts/*.ps1
+//go:embed integrations/copilot-cli/skills/*/SKILL.md
+//go:embed integrations/messages/*/*.txt integrations/messages/registry.yaml
 //go:embed schema/*.json why/*.md
 //go:embed permissions/*.txt commands/*.yaml commands/text/*.yaml journal/*.css
 var FS embed.FS

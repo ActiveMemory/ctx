@@ -391,7 +391,7 @@ func TestSchemaCoversCtxRC(t *testing.T) {
 }
 
 func TestHookMessageRegistry(t *testing.T) {
-	data, readErr := FS.ReadFile(asset.PathHookRegistry)
+	data, readErr := FS.ReadFile(asset.PathMessageRegistry)
 	if readErr != nil {
 		t.Fatalf("unexpected error: %v", readErr)
 	}
@@ -414,7 +414,7 @@ func TestHookMessageRegistry(t *testing.T) {
 }
 
 func TestListHookMessages(t *testing.T) {
-	entries, listErr := FS.ReadDir(asset.DirHooksMessages)
+	entries, listErr := FS.ReadDir(asset.DirIntegrationsMessages)
 	if listErr != nil {
 		t.Fatalf("unexpected error: %v", listErr)
 	}
@@ -442,7 +442,7 @@ func TestListHookMessages(t *testing.T) {
 
 func TestHookMessage_ReadVariant(t *testing.T) {
 	gatePath := path.Join(
-		asset.DirHooksMessages,
+		asset.DirIntegrationsMessages,
 		"qa-reminder", "gate.txt",
 	)
 	content, readErr := FS.ReadFile(gatePath)

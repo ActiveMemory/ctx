@@ -1,8 +1,15 @@
 #!/usr/bin/env bash
+
+#   /    ctx:                         https://ctx.ist
+# ,'`./    do you remember?
+# `.,'\
+#   \    Copyright 2026-present Context contributors.
+#                 SPDX-License-Identifier: Apache-2.0
+
 # sync-copilot-skills.sh — sync Copilot CLI skills from canonical ctx skills.
 #
 # ctx skills (internal/assets/claude/skills/) are the source of truth.
-# Copilot CLI skills (internal/assets/hooks/copilot-cli/skills/) are
+# Copilot CLI skills (internal/assets/integrations/copilot-cli/skills/) are
 # generated from them with the `allowed-tools` frontmatter key stripped
 # (Claude Code-specific, not applicable to Copilot).
 #
@@ -12,7 +19,7 @@
 set -euo pipefail
 
 CTX_SKILLS="internal/assets/claude/skills"
-COPILOT_SKILLS="internal/assets/hooks/copilot-cli/skills"
+COPILOT_SKILLS="internal/assets/integrations/copilot-cli/skills"
 
 synced=0
 skipped=0
