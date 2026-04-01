@@ -10,5 +10,6 @@ const (
 	DescKeyWritePaused        = "write.paused"
 	DescKeyWritePausedMessage = "write.paused-message"
 	DescKeyWriteResumed       = "write.resumed"
+	DescKeyWriteSessionEvent  = "write.session-event"
 	DescKeyPauseConfirmed     = "pause.confirmed"
 )

@@ -7,10 +7,11 @@
 package flag
 
 const (
-	DescKeyAllowOutsideCwd = "allow-outside-cwd"
-	DescKeyChangesSince    = "changes.since"
-	DescKeyCompactArchive  = "compact.archive"
-	DescKeyContextDir      = "context-dir"
-	DescKeyDoctorJson      = "doctor.json"
-	DescKeyHookWrite       = "hook.write"
+	DescKeyAllowOutsideCwd  = "allow-outside-cwd"
+	DescKeyChangesSince     = "changes.since"
+	DescKeyCompactArchive   = "compact.archive"
+	DescKeyContextDir       = "context-dir"
+	DescKeyDoctorJson       = "doctor.json"
+	DescKeyInitializeCaller = "initialize.caller"
+	DescKeySetupWrite       = "setup.write"
 )

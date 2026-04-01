@@ -68,6 +68,14 @@ const (
 	CopilotEnd = "<!-- ctx:copilot:end -->"
 )
 
+// Agents block markers for AGENTS.md.
+const (
+	// AgentsStart marks the beginning of ctx-managed AGENTS.md content.
+	AgentsStart = "<!-- ctx:agents -->"
+	// AgentsEnd marks the end of ctx-managed AGENTS.md content.
+	AgentsEnd = "<!-- ctx:agents:end -->"
+)
+
 // Index markers for auto-generated table of contents sections.
 const (
 	// IndexStart marks the beginning of an auto-generated index.

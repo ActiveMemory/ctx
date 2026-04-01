@@ -22,6 +22,10 @@ const (
 	ExtJSON = ".json"
 	// ExtEnc is the encrypted file extension.
 	ExtEnc = ".enc"
+	// ExtSh is the shell script file extension.
+	ExtSh = ".sh"
+	// ExtPs1 is the PowerShell script file extension.
+	ExtPs1 = ".ps1"
 	// ExtTmp is the temporary file suffix for atomic writes.
 	ExtTmp = ".tmp"
 	// ExtExample is the suffix for example/template files that are safe

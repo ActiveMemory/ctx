@@ -13,4 +13,13 @@ const (
 	JSONRPCVersion = "2.0"
 	// Name is the server name reported during initialization.
 	Name = "ctx"
+	// Command is the binary name used to launch the MCP server.
+	Command = "ctx"
+	// SubcommandServe is the serve subcommand under mcp.
+	SubcommandServe = "serve"
 )
+
+// Args returns the CLI arguments to launch the ctx MCP server.
+func Args() []string {
+	return []string{"mcp", SubcommandServe}
+}

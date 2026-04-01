@@ -34,6 +34,8 @@ compact.archive:
   short: Create .context/archive/ for old content
 context-dir:
   short: 'Override context directory path (default: .context)'
+initialize.caller:
+  short: Identify the calling tool (e.g. vscode) to tailor output
 deps.external:
   short: Include external module dependencies
 deps.format:
@@ -50,7 +52,7 @@ guide.commands:
   short: List all CLI commands
 guide.skills:
   short: List all available skills
-hook.write:
+setup.write:
   short: Write the configuration file instead of printing
 initialize.force:
   short: Overwrite existing context files
@@ -208,6 +210,10 @@ system.resources.json:
   short: Output in JSON format
 system.resume.session-id:
   short: Session ID (overrides stdin)
+system.sessionevent.caller:
+  short: Calling editor (e.g., vscode)
+system.sessionevent.type:
+  short: 'Event type: start or end'
 system.stats.follow:
   short: Stream new entries as they arrive
 system.stats.json:

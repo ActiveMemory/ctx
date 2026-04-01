@@ -127,7 +127,7 @@ via hooks, but the explicit ceremony gives you a **readback** to verify.
     With **VS Code Copilot Chat** (*and the
     [ctx extension](../operations/integrations.md#vs-code-chat-extension-ctx)*), 
     type `@ctx /agent` in chat to load your context packet, or `@ctx /status`
-    to check your project context. Run `ctx hook copilot --write` once
+    to check your project context. Run `ctx setup copilot --write` once
     to generate `.github/copilot-instructions.md` for automatic context loading.
 
 If you are not using Claude Code, generate a 

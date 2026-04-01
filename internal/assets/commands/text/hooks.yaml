@@ -378,6 +378,20 @@ heartbeat.notify-plain:
   short: 'heartbeat: prompt #%d (context_modified=%t)'
 heartbeat.notify-tokens:
   short: 'heartbeat: prompt #%d (context_modified=%t tokens=%s pct=%d%%)'
+hook.agents:
+  short: |
+    AGENTS.md (Universal Agent Instructions)
+    =========================================
+
+    Generate AGENTS.md in the project root with universal
+    agent instructions that work across all AI coding tools.
+
+    AGENTS.md is read natively by: Codex, Gemini CLI, OpenCode,
+    Claude Code, and GitHub Copilot CLI.
+
+    Run with --write to generate:
+
+      ctx setup agents --write
 hook.aider:
   short: |
     Aider Integration
@@ -420,7 +434,23 @@ hook.copilot:
     Add the following to .github/copilot-instructions.md,
     or run with --write to generate the file directly:
 
-      ctx hook copilot --write
+      ctx setup copilot --write
+hook.copilot-cli:
+  short: |
+    GitHub Copilot CLI Integration
+    ==============================
+
+    Generate .github/hooks/ with ctx lifecycle hooks
+    for the GitHub Copilot CLI agent (cross-platform).
+
+    This creates:
+      .github/hooks/ctx-hooks.json    Hook configuration
+      .github/hooks/scripts/*.sh      Bash scripts (Linux/macOS/WSL)
+      .github/hooks/scripts/*.ps1     PowerShell scripts (Windows)
+
+    Run with --write to generate all files:
+
+      ctx setup copilot-cli --write
 hook.cursor:
   short: |
     Cursor IDE Integration
@@ -443,10 +473,12 @@ hook.cursor:
 hook.supported-tools:
   short: |
     Supported tools:
+      agents       - AGENTS.md (universal agent instructions)
       claude-code  - Anthropic's Claude Code CLI (use plugin instead)
       cursor       - Cursor IDE
       aider        - Aider AI coding assistant
-      copilot      - GitHub Copilot
+      copilot      - GitHub Copilot (VS Code extension)
+      copilot-cli  - GitHub Copilot CLI (terminal agent)
       windsurf     - Windsurf IDE
 hook.windsurf:
   short: |

@@ -521,6 +521,7 @@ func (h *Handler) SessionEvent(
 	switch eventType {
 	case event.Start:
 		h.Session = session.NewState(h.ContextDir)
+		h.Session.RecordSessionStart()
 		if caller != "" {
 			return fmt.Sprintf(
 				desc.Text(

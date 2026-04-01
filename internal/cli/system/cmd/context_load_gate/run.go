@@ -32,7 +32,7 @@ import (
 	"github.com/ActiveMemory/ctx/internal/entity"
 	internalIo "github.com/ActiveMemory/ctx/internal/io"
 	"github.com/ActiveMemory/ctx/internal/rc"
-	writeHook "github.com/ActiveMemory/ctx/internal/write/hook"
+	writeSetup "github.com/ActiveMemory/ctx/internal/write/setup"
 )
 
 // Run executes the context-load-gate hook logic.
@@ -131,7 +131,7 @@ func Run(cmd *cobra.Command, stdin *os.File) error {
 		desc.Text(text.DescKeyContextLoadGateFooter),
 		filesLoaded, totalTokens))
 
-	writeHook.Context(
+	writeSetup.Context(
 		cmd, coreSession.FormatContext(hook.EventPreToolUse, content.String()),
 	)
 

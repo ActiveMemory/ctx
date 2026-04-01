@@ -33,7 +33,7 @@ func Message(hook, filename string) ([]byte, error) {
 //   - []byte: Raw YAML content
 //   - error: Non-nil if the file is not found or read fails
 func MessageRegistry() ([]byte, error) {
-	return assets.FS.ReadFile(asset.PathHookRegistry)
+	return assets.FS.ReadFile(asset.PathMessageRegistry)
 }
 
 // MessageList returns available hook message directory names.

@@ -21,7 +21,7 @@ import (
 	cfgHook "github.com/ActiveMemory/ctx/internal/config/hook"
 	"github.com/ActiveMemory/ctx/internal/config/stats"
 	internalIo "github.com/ActiveMemory/ctx/internal/io"
-	writeHook "github.com/ActiveMemory/ctx/internal/write/hook"
+	writeSetup "github.com/ActiveMemory/ctx/internal/write/setup"
 )
 
 // Run executes the skill discovery nudge hook logic.
@@ -84,7 +84,7 @@ func Run(cmd *cobra.Command, stdin *os.File) error {
 		desc.Text(text.DescKeySkillDiscoveryBoxTitle),
 		content,
 	)
-	writeHook.NudgeBlock(cmd, box)
+	writeSetup.NudgeBlock(cmd, box)
 	internalIo.TouchFile(guardFile)
 
 	return nil

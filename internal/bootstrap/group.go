@@ -17,7 +17,6 @@ import (
 	"github.com/ActiveMemory/ctx/internal/cli/doctor"
 	"github.com/ActiveMemory/ctx/internal/cli/drift"
 	"github.com/ActiveMemory/ctx/internal/cli/guide"
-	"github.com/ActiveMemory/ctx/internal/cli/hook"
 	"github.com/ActiveMemory/ctx/internal/cli/initialize"
 	"github.com/ActiveMemory/ctx/internal/cli/journal"
 	"github.com/ActiveMemory/ctx/internal/cli/learning"
@@ -33,6 +32,7 @@ import (
 	"github.com/ActiveMemory/ctx/internal/cli/remind"
 	"github.com/ActiveMemory/ctx/internal/cli/resume"
 	"github.com/ActiveMemory/ctx/internal/cli/serve"
+	"github.com/ActiveMemory/ctx/internal/cli/setup"
 	"github.com/ActiveMemory/ctx/internal/cli/site"
 	"github.com/ActiveMemory/ctx/internal/cli/status"
 	"github.com/ActiveMemory/ctx/internal/cli/sync"
@@ -115,7 +115,7 @@ func runtimeCmds() []registration {
 //   - []registration: Hook, mcp, watch, notify, and loop commands
 func integrations() []registration {
 	return []registration{
-		{hook.Cmd, embedCmd.GroupIntegration},
+		{setup.Cmd, embedCmd.GroupIntegration},
 		{mcp.Cmd, embedCmd.GroupIntegration},
 		{watch.Cmd, embedCmd.GroupIntegration},
 		{notify.Cmd, embedCmd.GroupIntegration},

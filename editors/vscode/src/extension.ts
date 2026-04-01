@@ -324,15 +324,15 @@ async function handleInit(
     // project context automatically.
     stream.progress("Generating Copilot instructions...");
     try {
-      const hookResult = await runCtx(
-        ["hook", "copilot", "--write", "--no-color"],
+      const setupResult = await runCtx(
+        ["setup", "copilot", "--write", "--no-color"],
         cwd,
         token
       );
-      const hookOutput = (hookResult.stdout + hookResult.stderr).trim();
-      if (hookOutput) {
+      const setupOutput = (setupResult.stdout + setupResult.stderr).trim();
+      if (setupOutput) {
         stream.markdown(
-          "\n**Copilot integration:**\n```\n" + hookOutput + "\n```"
+          "\n**Copilot integration:**\n```\n" + setupOutput + "\n```"
         );
       } else {
         stream.markdown(
@@ -340,10 +340,10 @@ async function handleInit(
         );
       }
     } catch {
-      // Non-fatal — init succeeded, hook is a bonus
+      // Non-fatal — init succeeded, setup is a bonus
       stream.markdown(
         "\n> **Note:** Could not generate `.github/copilot-instructions.md`. " +
-          "Run `@ctx /hook copilot` manually."
+          "Run `@ctx /setup copilot` manually."
       );
     }
 
@@ -441,7 +441,7 @@ async function handleRecall(
   return { metadata: { command: "recall" } };
 }
 
-async function handleHook(
+async function handleSetup(
   stream: vscode.ChatResponseStream,
   prompt: string,
   cwd: string,
@@ -451,7 +451,7 @@ async function handleHook(
   const tool = parts[0] || "copilot";
   const preview = parts.includes("preview") || parts.includes("--preview");
 
-  const args = ["hook", tool];
+  const args = ["setup", tool];
   if (!preview) {
     args.push("--write");
   }
@@ -479,7 +479,7 @@ async function handleHook(
       `**Error:** Failed to generate hook.\n\n\`\`\`\n${err instanceof Error ? err.message : String(err)}\n\`\`\``
     );
   }
-  return { metadata: { command: "hook" } };
+  return { metadata: { command: "setup" } };
 }
 
 async function handleAdd(
@@ -1555,7 +1555,7 @@ async function handleFreeform(
       "| `/agent` | Print AI-ready context packet |\n" +
       "| `/drift` | Detect stale or invalid context |\n" +
       "| `/recall` | Browse session history |\n" +
-      "| `/hook` | Generate tool integration configs |\n" +
+      "| `/setup` | Generate tool integration configs |\n" +
       "| `/add` | Add task, decision, or learning |\n" +
       "| `/load` | Output assembled context |\n" +
       "| `/compact` | Archive completed tasks |\n" +
@@ -1624,8 +1624,8 @@ const handler: vscode.ChatRequestHandler = async (
       return handleDrift(stream, cwd, token);
     case "recall":
       return handleRecall(stream, request.prompt, cwd, token);
-    case "hook":
-      return handleHook(stream, request.prompt, cwd, token);
+    case "setup":
+      return handleSetup(stream, request.prompt, cwd, token);
     case "add":
       return handleAdd(stream, request.prompt, cwd, token);
     case "load":
@@ -1711,7 +1711,7 @@ export function activate(extensionContext: vscode.ExtensionContext) {
             { prompt: "Show my context status", command: "status" },
             {
               prompt: "Generate copilot integration",
-              command: "hook",
+              command: "setup",
             }
           );
           break;

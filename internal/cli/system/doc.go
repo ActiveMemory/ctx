@@ -20,6 +20,7 @@
 // Plumbing subcommands (hidden, used by skills and automation):
 //   - mark-journal: Update journal processing state (.state.json)
 //   - mark-wrapped-up: Record wrap-up ceremony timestamp
+//   - session-event: Record session lifecycle events (start, end)
 //
 // Hook subcommands read JSON from stdin (Claude Code hook contract), perform
 // their logic, and exit 0. Block commands output JSON with a "decision" field.

@@ -86,6 +86,23 @@ func AllWithID() error {
 	)
 }
 
+// EventInvalidType returns a validation error when --type receives an
+// unrecognized session event type.
+//
+// Parameters:
+//   - start: the accepted start value (e.g. "start").
+//   - end: the accepted end value (e.g. "end").
+//   - got: the value that was actually provided.
+//
+// Returns:
+//   - error: "--type must be '<start>' or '<end>', got \"<got>\""
+func EventInvalidType(start, end, got string) error {
+	return fmt.Errorf(
+		desc.Text(text.DescKeyErrSessionEventInvalidType),
+		start, end, got,
+	)
+}
+
 // AllWithPattern returns a validation error when --all is used with a pattern.
 //
 // Returns:

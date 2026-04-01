@@ -350,3 +350,16 @@ mcp.format-watch-completed:
   short: 'Completed: %s'
 mcp.format-wrote:
   short: Wrote %s to .context/%s.
+
+mcp.gov-session-not-started:
+  short: '⚠ Session not started. Call ctx_session_event(type="start") to enable tracking.'
+mcp.gov-context-not-loaded:
+  short: '⚠ Context not loaded. Call ctx_status() to load context before proceeding.'
+mcp.gov-drift-not-checked:
+  short: '⚠ Drift not checked in %d minutes. Consider calling ctx_drift().'
+mcp.gov-drift-never-checked:
+  short: '⚠ Drift has not been checked this session. Consider calling ctx_drift().'
+mcp.gov-persist-nudge:
+  short: '⚠ %d tool calls since last context write. Persist decisions, learnings, or completed tasks with ctx_add() or ctx_complete().'
+mcp.gov-violation-critical:
+  short: '🚨 CRITICAL: %s — %s (at %s). Review this action immediately. If unintended, revert it.'

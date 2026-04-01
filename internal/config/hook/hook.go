@@ -47,18 +47,22 @@ const (
 	PostCommit = "post-commit"
 	// QAReminder is the hook name for QA reminder gates.
 	QAReminder = "qa-reminder"
+	// SessionEvent is the hook name for session lifecycle events.
+	SessionEvent = "session-event"
 	// SpecsNudge is the hook name for specs directory nudges.
 	SpecsNudge = "specs-nudge"
 	// VersionDrift is the hook name for version drift nudges.
 	VersionDrift = "version-drift"
 )
 
-// Supported integration tool names for ctx hook command.
+// Supported integration tool names for ctx setup command.
 const (
+	ToolAgents     = "agents"
 	ToolAider      = "aider"
 	ToolClaude     = "claude"
 	ToolClaudeCode = "claude-code"
 	ToolCopilot    = "copilot"
+	ToolCopilotCLI = "copilot-cli"
 	ToolCursor     = "cursor"
 	ToolWindsurf   = "windsurf"
 )
@@ -66,7 +70,41 @@ const (
 // Copilot integration paths.
 const (
 	DirGitHub               = ".github"
+	DirGitHubAgents         = "agents"
+	DirGitHubHooks          = "hooks"
+	DirGitHubHooksScripts   = "scripts"
+	DirGitHubInstructions   = "instructions"
+	DirGitHubSkills         = "skills"
+	FileAgentsMd            = "AGENTS.md"
+	FileAgentsCtxMd         = "ctx.md"
 	FileCopilotInstructions = "copilot-instructions.md"
+	FileCopilotCLIHooksJSON = "ctx-hooks.json"
+	FileInstructionsCtxMd   = "context.instructions.md"
+	FileSKILLMd             = "SKILL.md"
+)
+
+// Copilot CLI home directory and MCP config.
+const (
+	// DirCopilotHome is the default Copilot CLI config directory name.
+	DirCopilotHome = ".copilot"
+	// EnvCopilotHome is the environment variable to override the config dir.
+	EnvCopilotHome = "COPILOT_HOME"
+	// FileMCPConfigJSON is the MCP server configuration file name.
+	FileMCPConfigJSON = "mcp-config.json"
+	// KeyMCPServers is the top-level JSON key in mcp-config.json.
+	KeyMCPServers = "mcpServers"
+	// MCPServerType is the server type value for local MCP servers.
+	MCPServerType = "local"
+	// KeyType is the JSON key for MCP server type.
+	KeyType = "type"
+	// KeyCommand is the JSON key for MCP server command.
+	KeyCommand = "command"
+	// KeyArgs is the JSON key for MCP server args.
+	KeyArgs = "args"
+	// KeyTools is the JSON key for MCP server tools filter.
+	KeyTools = "tools"
+	// ToolsWildcard is the wildcard value for MCP tools access.
+	ToolsWildcard = "*"
 )
 
 // Prefixes
@@ -96,4 +134,12 @@ const (
 	EventPreToolUse = "PreToolUse"
 	// EventPostToolUse is the hook event for post-tool-use hooks.
 	EventPostToolUse = "PostToolUse"
+)
+
+// Copilot CLI hook event names (GitHub Copilot CLI lifecycle stages).
+const (
+	CLIEventSessionStart = "sessionStart"
+	CLIEventSessionEnd   = "sessionEnd"
+	CLIEventPreToolUse   = "preToolUse"
+	CLIEventPostToolUse  = "postToolUse"
 )

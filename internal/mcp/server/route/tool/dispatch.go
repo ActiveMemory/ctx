@@ -31,14 +31,16 @@ func DispatchList(req proto.Request) *proto.Response {
 }
 
 // DispatchCall unmarshals tool call params and dispatches to the
-// appropriate handler function.
+// appropriate handler function. After dispatch, per-tool governance
+// state is recorded and advisory warnings are appended to the
+// response text.
 //
 // Parameters:
 //   - h: handler for domain logic and session tracking
 //   - req: the MCP request containing tool name and arguments
 //
 // Returns:
-//   - *proto.Response: tool result or error
+//   - *proto.Response: tool result or error (with governance warnings)
 func DispatchCall(
 	h *handler.Handler, req proto.Request,
 ) *proto.Response {
@@ -51,32 +53,41 @@ func DispatchCall(
 	}
 
 	h.Session.RecordToolCall()
+	h.Session.IncrementCallsSinceWrite()
+
+	var resp *proto.Response
 
 	switch params.Name {
 	case tool.Status:
-		return out.Call(req.ID, h.Status)
+		resp = out.Call(req.ID, h.Status)
+		h.Session.RecordContextLoaded()
 	case tool.Add:
-		return add(h, req.ID, params.Arguments)
+		resp = add(h, req.ID, params.Arguments)
+		h.Session.RecordContextWrite()
 	case tool.Complete:
-		return complete(h, req.ID, params.Arguments)
+		resp = complete(h, req.ID, params.Arguments)
+		h.Session.RecordContextWrite()
 	case tool.Drift:
-		return out.Call(req.ID, h.Drift)
+		resp = out.Call(req.ID, h.Drift)
+		h.Session.RecordDriftCheck()
 	case tool.JournalSource:
-		return journalSource(req.ID, params.Arguments, h.Recall)
+		resp = journalSource(req.ID, params.Arguments, h.Recall)
 	case tool.WatchUpdate:
-		return watchUpdate(h, req.ID, params.Arguments)
+		resp = watchUpdate(h, req.ID, params.Arguments)
+		h.Session.RecordContextWrite()
 	case tool.Compact:
-		return compact(req.ID, params.Arguments, h.Compact)
+		resp = compact(req.ID, params.Arguments, h.Compact)
+		h.Session.RecordContextWrite()
 	case tool.Next:
-		return out.Call(req.ID, h.Next)
+		resp = out.Call(req.ID, h.Next)
 	case tool.CheckTaskCompletion:
-		return checkTaskCompletion(
+		resp = checkTaskCompletion(
 			req.ID, params.Arguments, h.CheckTaskCompletion,
 		)
 	case tool.SessionEvent:
-		return sessionEvent(req.ID, params.Arguments, h.SessionEvent)
+		resp = sessionEvent(req.ID, params.Arguments, h.SessionEvent)
 	case tool.Remind:
-		return out.Call(req.ID, h.Remind)
+		resp = out.Call(req.ID, h.Remind)
 	default:
 		return out.ErrResponse(
 			req.ID, proto.ErrCodeNotFound,
@@ -86,4 +97,8 @@ func DispatchCall(
 			),
 		)
 	}
+
+	appendGovernance(resp, params.Name, h)
+
+	return resp
 }

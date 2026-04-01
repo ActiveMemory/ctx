@@ -57,6 +57,7 @@ const (
 	BaseURL         = "base-url"
 	Blob            = "blob"
 	Build           = "build"
+	Caller          = "caller"
 	Check           = "check"
 	Commands        = "commands"
 	Completion      = "completion"

@@ -57,6 +57,16 @@ func findSessionsWithFilter(
 		scanOnce(filepath.Join(home, dir.Claude, dir.Projects))
 	}
 
+	// Check Copilot Chat session directories (Code + Code Insiders)
+	for _, dir := range CopilotSessionDirs() {
+		scanOnce(dir)
+	}
+
+	// Check Copilot CLI session directories (~/.copilot/ or $COPILOT_HOME)
+	for _, dir := range CopilotCLISessionDirs() {
+		scanOnce(dir)
+	}
+
 	// Check .context/sessions/ in the current working directory
 	if cwd, cwdErr := os.Getwd(); cwdErr == nil {
 		scanOnce(filepath.Join(cwd, dir.Context, dir.Sessions))

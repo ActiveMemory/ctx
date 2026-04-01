@@ -29,6 +29,14 @@ type State struct {
 	AddsPerformed    map[string]int
 	sessionStartedAt time.Time
 	PendingFlush     []PendingUpdate
+
+	// Governance tracking — used by CheckGovernance() to emit
+	// contextual warnings in MCP tool responses.
+	sessionStarted   bool
+	contextLoaded    bool
+	lastDriftCheck   time.Time
+	lastContextWrite time.Time
+	callsSinceWrite  int
 }
 
 // PendingUpdate represents a context update awaiting human confirmation.
@@ -43,4 +51,25 @@ type PendingUpdate struct {
 	Content  string
 	Attrs    map[string]string
 	QueuedAt time.Time
+}
+
+// violation represents a single governance violation recorded by the
+// VS Code extension's detection ring.
+//
+// Fields:
+//   - Kind: violation category identifier
+//   - Detail: human-readable description of what was violated
+//   - Timestamp: ISO-8601 timestamp of when the violation occurred
+type violation struct {
+	Kind      string `json:"kind"`
+	Detail    string `json:"detail"`
+	Timestamp string `json:"timestamp"`
+}
+
+// violationsData is the JSON structure of the violations file.
+//
+// Fields:
+//   - Entries: list of recorded violations
+type violationsData struct {
+	Entries []violation `json:"entries"`
 }

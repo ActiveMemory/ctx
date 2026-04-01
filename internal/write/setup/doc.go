@@ -1,0 +1,19 @@
+//   /    ctx:                         https://ctx.ist
+// ,'`./    do you remember?
+// `.,'\\
+//   \    Copyright 2026-present Context contributors.
+//                 SPDX-License-Identifier: Apache-2.0
+
+// Package setup provides terminal output for the setup generation
+// command (ctx setup) and hook lifecycle output.
+//
+// Functions cover setup deployment output ([InfoCopilotCreated],
+// [InfoCopilotMerged], [InfoCopilotSkipped], [InfoCopilotSummary]),
+// hook runtime output ([Nudge], [NudgeBlock], [BlockResponse],
+// [Context]), and general-purpose hook helpers ([Content],
+// [Separator], [InfoTool], [InfoUnknownTool]).
+//
+// Nudge vs NudgeBlock: [Nudge] emits a single-line relay,
+// [NudgeBlock] emits a multi-line boxed message. Both are
+// consumed by the agent as VERBATIM relay directives.
+package setup

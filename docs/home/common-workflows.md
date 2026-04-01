@@ -331,7 +331,7 @@ These are infrastructure: used in scripts, CI, or one-time setup.
 | `ctx task complete`             | Mark a task done by substring match             |
 | `ctx sync`                 | Reconcile context with codebase state           |
 | `ctx compact`              | Consolidate and clean up context files          |
-| `ctx hook`                 | Generate AI tool integration config             |
+| `ctx setup`                 | Generate AI tool integration config             |
 | `ctx watch`                | Watch AI output and auto-apply context updates  |
 | `ctx serve`                | Serve any zensical directory (default: journal) |
 | `ctx permission snapshot` | Save settings as a golden image                 |

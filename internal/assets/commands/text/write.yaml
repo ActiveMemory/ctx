@@ -103,6 +103,31 @@ write.format-si-mega-upper:
   short: "%.1fM"
 write.format-thousands:
   short: "%d,%03d"
+write.hook-agents-created:
+  short: '  ✓ %s'
+write.hook-agents-merged:
+  short: '  ✓ %s (merged ctx section)'
+write.hook-agents-skipped:
+  short: '  ○ %s (ctx markers exist, skipped)'
+write.hook-agents-summary:
+  short: |-
+    AGENTS.md is now available for all AI coding tools.
+    Tools that read AGENTS.md natively: Codex, Gemini CLI, OpenCode,
+    Claude Code, GitHub Copilot CLI.
+write.hook-copilot-cli-created:
+  short: '  ✓ %s'
+write.hook-copilot-cli-skipped:
+  short: '  ○ %s (ctx hooks exist, skipped)'
+write.hook-copilot-cli-summary:
+  short: |-
+    GitHub Copilot CLI will now:
+      1. Record session start/end via ctx
+      2. Block dangerous commands (preToolUse)
+      3. Audit tool invocations to .context/state/
+
+    Hooks work on all platforms:
+      Linux/macOS/WSL  →  .sh scripts
+      Windows          →  .ps1 scripts
 write.hook-copilot-created:
   short: '  ✓ %s'
 write.hook-copilot-force-hint:
@@ -512,6 +537,8 @@ write.restore-restored-header:
   short: 'Restored %d allow permission(s):'
 write.resumed:
   short: Context hooks resumed for session %s
+write.session-event:
+  short: 'session-%s: %s'
 write.setup-done:
   short: |-
     Webhook configured: %s
@@ -676,3 +703,14 @@ write.knowledge-unit-lines:
 
 write.version-drift-fallback:
   short: "VERSION (%s), plugin.json (%s), marketplace.json (%s) are out of sync. Update all three before releasing."
+
+write.vscode-created:
+  short: "  ✓ %s"
+write.vscode-exists-skipped:
+  short: "  ○ %s (exists, skipped)"
+write.vscode-recommendation-exists:
+  short: "  ○ %s (recommendation exists)"
+write.vscode-add-manually:
+  short: "  ○ %s (exists, add %s manually)"
+write.vscode-warn-non-fatal:
+  short: "  ⚠ %s: %v"

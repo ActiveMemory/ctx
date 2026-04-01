@@ -17,7 +17,7 @@ import (
 	"github.com/ActiveMemory/ctx/internal/cli/system/core/state"
 	"github.com/ActiveMemory/ctx/internal/config/knowledge"
 	internalIo "github.com/ActiveMemory/ctx/internal/io"
-	writeHook "github.com/ActiveMemory/ctx/internal/write/hook"
+	writeSetup "github.com/ActiveMemory/ctx/internal/write/setup"
 )
 
 // Run executes the check-knowledge hook logic.
@@ -49,7 +49,7 @@ func Run(cmd *cobra.Command, stdin *os.File) error {
 	}
 
 	if box, warned := coreKnowledge.CheckHealth(sessionID); warned {
-		writeHook.Nudge(cmd, box)
+		writeSetup.Nudge(cmd, box)
 		internalIo.TouchFile(markerPath)
 	}
 

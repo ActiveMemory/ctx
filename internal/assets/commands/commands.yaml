@@ -243,7 +243,7 @@ guide:
     Use --skills to list all available slash-command skills.
     Use --commands to list all CLI commands.
   short: Quick-reference cheat sheet for ctx
-hook:
+setup:
   long: |-
     Generate configuration and instructions
     for integrating Context with AI tools.
@@ -256,10 +256,10 @@ hook:
       windsurf     - Windsurf IDE
 
     Use --write to generate the configuration file directly:
-      ctx hook copilot --write    # Creates .github/copilot-instructions.md
+      ctx setup copilot --write    # Creates .github/copilot-instructions.md
 
     Example:
-      ctx hook cursor
+      ctx setup cursor
   short: Generate AI tool integration configs
 initialize:
   long: |-
@@ -1236,6 +1236,15 @@ system.resume:
 
     The session ID is read from stdin JSON (same as hooks) or --session-id flag.
   short: Resume context hooks for this session
+system.sessionevent:
+  long: |-
+    Records a session lifecycle event (start or end) to the event log.
+    Called by editor integrations when a workspace is opened or closed.
+
+    Examples:
+      ctx system session-event --type start --caller vscode
+      ctx system session-event --type end --caller vscode
+  short: Record session start or end
 system.specsnudge:
   long: |-
     Emits a directive reminding the agent to save plans to specs/

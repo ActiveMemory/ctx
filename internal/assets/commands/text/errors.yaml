@@ -418,6 +418,8 @@ err.session.session-id-required:
   short: please provide a session ID or use --latest
 err.session.session-not-found:
   short: 'session not found: %s'
+err.session.event-invalid-type:
+  short: "--type must be '%s' or '%s', got %q"
 err.site.marshal-feed:
   short: 'cannot marshal feed: %w'
 err.site.no-site-config:

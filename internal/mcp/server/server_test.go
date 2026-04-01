@@ -795,6 +795,16 @@ func TestToolCheckTaskCompletion(t *testing.T) {
 
 func TestToolCheckTaskCompletionNoMatch(t *testing.T) {
 	srv, _ := newTestServer(t)
+
+	// Prime session state to avoid governance warnings in response.
+	request(t, srv, "tools/call", proto.CallToolParams{
+		Name:      "ctx_session_event",
+		Arguments: map[string]interface{}{"type": "start"},
+	})
+	request(t, srv, "tools/call", proto.CallToolParams{
+		Name: "ctx_status",
+	})
+
 	resp := request(t, srv, "tools/call", proto.CallToolParams{
 		Name: "ctx_check_task_completion",
 		Arguments: map[string]interface{}{

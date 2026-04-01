@@ -34,7 +34,13 @@
     "copilot",
     "chat"
   ],
-  "activationEvents": [],
+  "pricing": "Free",
+  "extensionDependencies": [
+    "github.copilot-chat"
+  ],
+  "activationEvents": [
+    "onStartupFinished"
+  ],
   "main": "./dist/extension.js",
   "contributes": {
     "chatParticipants": [
@@ -164,6 +170,10 @@
           {
             "name": "reindex",
             "description": "Rebuild context file indices"
+          },
+          {
+            "name": "diag",
+            "description": "Diagnose extension issues — times each step to find hangs"
           }
         ],
         "disambiguation": [
@@ -182,6 +192,7 @@
           }
         ]
       }
+    ],
     ],
     "configuration": {
       "title": "ctx",

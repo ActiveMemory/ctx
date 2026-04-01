@@ -33,7 +33,7 @@ created by `ctx init`. Running a command without one produces:
 ctx: not initialized - run "ctx init" first
 ```
 
-Commands that work before initialization: `ctx init`, `ctx hook`,
+Commands that work before initialization: `ctx init`, `ctx setup`,
 `ctx doctor`, and grouping commands that only show help (e.g. `ctx`
 with no subcommand, `ctx system`). Hidden hook commands have their
 own guards and no-op gracefully.
@@ -60,7 +60,7 @@ own guards and no-op gracefully.
 | [`ctx journal`](recall.md#ctx-journal)        | Generate static site from journal entries                |
 | [`ctx serve`](recall.md#ctx-serve)            | Serve any zensical directory (default: journal site)     |
 | [`ctx watch`](tools.md#ctx-watch)             | Auto-apply context updates from AI output                |
-| [`ctx hook`](tools.md#ctx-hook)               | Generate AI tool integration configs                     |
+| [`ctx setup`](tools.md#ctx-hook)               | Generate AI tool integration configs                     |
 | [`ctx loop`](tools.md#ctx-loop)               | Generate autonomous loop script                          |
 | [`ctx memory`](tools.md#ctx-memory)           | Bridge Claude Code auto memory into .context/            |
 | [`ctx notify`](tools.md#ctx-notify)           | Send webhook notifications                               |

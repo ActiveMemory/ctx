@@ -391,7 +391,7 @@ func TestSchemaCoversCtxRC(t *testing.T) {
 }
 
 func TestHookMessageRegistry(t *testing.T) {
-	data, readErr := FS.ReadFile(asset.PathHookRegistry)
+	data, readErr := FS.ReadFile(asset.PathMessageRegistry)
 	if readErr != nil {
 		t.Fatalf("unexpected error: %v", readErr)
 	}

@@ -25,7 +25,7 @@ Initialize `ctx` and configure hooks for Claude Code, Cursor,
 Aider, Copilot, or Windsurf. Includes **shell completion**,
 **watch mode** for non-native tools, and **verification**.
 
-**Uses**: `ctx init`, `ctx hook`, `ctx agent`, `ctx completion`,
+**Uses**: `ctx init`, `ctx setup`, `ctx agent`, `ctx completion`,
 `ctx watch`
 
 ---

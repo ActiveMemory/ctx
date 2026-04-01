@@ -5,7 +5,7 @@
 .PHONY: build test vet fmt lint lint-style lint-drift clean all release build-all help \
 test-coverage smoke site site-feed site-serve site-serve-lan site-setup audit check plugin-reload \
 journal journal-serve journal-serve-lan gpg-fix gpg-test register-mcp reinstall \
-sync-version check-version-sync sync-why check-why gemini-search
+sync-version check-version-sync sync-why check-why sync-copilot-skills check-copilot-skills gemini-search
 
 # Default binary name and output
 BINARY := ctx
@@ -21,8 +21,8 @@ sync-version:
 	mv internal/assets/claude/.claude-plugin/plugin.json.tmp internal/assets/claude/.claude-plugin/plugin.json; \
 	echo "Plugin version synced to $$V"
 
-## build: Build for current platform (syncs version + embedded docs first)
-build: sync-version sync-why
+## build: Build for current platform (syncs version + embedded docs + copilot skills first)
+build: sync-version sync-why sync-copilot-skills
 	CGO_ENABLED=0 go build -ldflags="-X github.com/ActiveMemory/ctx/internal/bootstrap.version=$$(cat VERSION | tr -d '[:space:]')" -o $(OUTPUT) ./cmd/ctx
 
 ## test: Run tests with coverage summary
@@ -128,6 +128,8 @@ audit:
 	@$(MAKE) --no-print-directory check-version-sync
 	@echo "==> Checking why docs freshness..."
 	@$(MAKE) --no-print-directory check-why
+	@echo "==> Checking Copilot skills freshness..."
+	@$(MAKE) --no-print-directory check-copilot-skills
 	@echo "==> Running tests..."
 	@CGO_ENABLED=0 CTX_SKIP_PATH_CHECK=1 go test ./...
 	@echo ""
@@ -250,6 +252,25 @@ check-version-sync:
 		exit 1; \
 	fi; \
 	echo "Version sync OK ($$V)."
+
+## sync-copilot-skills: Sync Copilot CLI skills from canonical ctx skills
+sync-copilot-skills:
+	@./hack/sync-copilot-skills.sh
+
+## check-copilot-skills: Verify Copilot CLI skills match ctx source skills
+check-copilot-skills:
+	@TMPDIR=$$(mktemp -d) && \
+	cp -r internal/assets/integrations/copilot-cli/skills/ "$$TMPDIR/before" && \
+	./hack/sync-copilot-skills.sh > /dev/null && \
+	if ! diff -rq "$$TMPDIR/before" internal/assets/integrations/copilot-cli/skills/ > /dev/null 2>&1; then \
+		echo "FAIL: Copilot CLI skills are stale — run 'make sync-copilot-skills'"; \
+		diff -rq "$$TMPDIR/before" internal/assets/integrations/copilot-cli/skills/ || true; \
+		cp -r "$$TMPDIR/before/"* internal/assets/integrations/copilot-cli/skills/; \
+		rm -rf "$$TMPDIR"; \
+		exit 1; \
+	fi; \
+	rm -rf "$$TMPDIR"; \
+	echo "Copilot CLI skills are in sync."
 
 ## check-why: Verify embedded why docs match source docs
 check-why:

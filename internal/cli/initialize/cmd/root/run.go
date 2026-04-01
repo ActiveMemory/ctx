@@ -52,15 +52,19 @@ import (
 //   - minimal: If true, only create essential files
 //   - merge: If true, auto-merge ctx content into existing files
 //   - noPluginEnable: If true, skip auto-enabling the plugin globally
+//   - caller: Identifies the calling tool (e.g. "vscode") for template overrides
 //
 // Returns:
 //   - error: Non-nil if directory creation or file operations fail
 func Run(
-	cmd *cobra.Command, force, minimal, merge, noPluginEnable bool,
+	cmd *cobra.Command, force, minimal, merge, noPluginEnable bool, caller string,
 ) error {
-	// Check if ctx is in PATH (required for hooks to work)
-	if pathErr := validate.CheckCtxInPath(cmd); pathErr != nil {
-		return pathErr
+	// Check if ctx is in PATH (required for hooks to work).
+	// Skip when a caller is set — the caller manages its own binary path.
+	if caller == "" {
+		if pathErr := validate.CheckCtxInPath(cmd); pathErr != nil {
+			return pathErr
+		}
 	}
 
 	contextDir := rc.ContextDir()
@@ -70,6 +74,12 @@ func Run(
 	// treated as uninitialized - no overwrite prompt needed.
 	if _, statErr := os.Stat(contextDir); statErr == nil {
 		if !force && hasEssentialFiles(contextDir) {
+			// When called from an editor (--caller), stdin is unavailable.
+			// Skip the interactive prompt to prevent hanging.
+			if caller != "" {
+				initialize.InfoAborted(cmd)
+				return nil
+			}
 			// Prompt for confirmation
 			initialize.InfoOverwritePrompt(cmd, contextDir)
 			reader := bufio.NewReader(os.Stdin)
