@@ -24,7 +24,7 @@ import (
 	"github.com/ActiveMemory/ctx/internal/entity"
 	errBackup "github.com/ActiveMemory/ctx/internal/err/backup"
 	internalIo "github.com/ActiveMemory/ctx/internal/io"
-	ctxLog "github.com/ActiveMemory/ctx/internal/log"
+	logWarn "github.com/ActiveMemory/ctx/internal/log/warn"
 )
 
 // Create builds a tar.gz archive from the given entries.
@@ -45,7 +45,7 @@ func Create(
 	}
 	defer func() {
 		if closeErr := outFile.Close(); closeErr != nil {
-			ctxLog.Warn(
+			logWarn.Warn(
 				warn.Close, archivePath, closeErr,
 			)
 		}
@@ -54,14 +54,14 @@ func Create(
 	gzw := gzip.NewWriter(outFile)
 	defer func() {
 		if closeErr := gzw.Close(); closeErr != nil {
-			ctxLog.Warn(warn.Close, archive.WriterGzip, closeErr)
+			logWarn.Warn(warn.Close, archive.WriterGzip, closeErr)
 		}
 	}()
 
 	tw := tar.NewWriter(gzw)
 	defer func() {
 		if closeErr := tw.Close(); closeErr != nil {
-			ctxLog.Warn(warn.Close, archive.WriterTar, closeErr)
+			logWarn.Warn(warn.Close, archive.WriterTar, closeErr)
 		}
 	}()
 
@@ -123,7 +123,7 @@ func BackupProject(
 	// Touch marker file for check-backup-age hook.
 	markerDir := filepath.Join(home, archive.BackupMarkerDir)
 	if mkdirErr := os.MkdirAll(markerDir, cfgFs.PermExec); mkdirErr != nil {
-		ctxLog.Warn(warn.Mkdir, markerDir, mkdirErr)
+		logWarn.Warn(warn.Mkdir, markerDir, mkdirErr)
 	}
 	markerPath := filepath.Join(markerDir, archive.BackupMarkerFile)
 	internalIo.TouchFile(markerPath)

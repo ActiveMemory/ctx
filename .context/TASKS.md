@@ -295,7 +295,9 @@ P0.4.10 task.
   one file; types need to go to types.go per convention etc etc)
 * Human: split err package into sub packages.
 
-- [ ] Add Use* constants for all system subcommands #added:2026-03-21-092550
+- [x] Add Use* constants for all system subcommands — all 30 system
+  subcommands already use cmd.UseSystem* constants
+  #added:2026-03-21-092550 #done:2026-03-31
 
 - [ ] Refactor site/cmd/feed: extract helpers and types to core/, make Run
   public #added:2026-03-21-074859

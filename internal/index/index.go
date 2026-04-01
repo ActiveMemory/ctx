@@ -8,7 +8,6 @@
 package index
 
 import (
-	"fmt"
 	"io"
 	"os"
 	"strings"
@@ -21,6 +20,7 @@ import (
 	"github.com/ActiveMemory/ctx/internal/config/token"
 	errJournal "github.com/ActiveMemory/ctx/internal/err/journal"
 	internalIo "github.com/ActiveMemory/ctx/internal/io"
+	writeDrift "github.com/ActiveMemory/ctx/internal/write/drift"
 )
 
 // ParseHeaders extracts all entries from file content.
@@ -242,17 +242,11 @@ func Reindex(
 
 	entries := ParseHeaders(string(content))
 	if len(entries) == 0 {
-		_, printErr := fmt.Fprintf(
-			w, desc.Text(text.DescKeyDriftCleared)+token.NewlineLF, entryType)
-		if printErr != nil {
+		if printErr := writeDrift.IndexCleared(w, entryType); printErr != nil {
 			return printErr
 		}
 	} else {
-		_, printErr := fmt.Fprintf(
-			w,
-			desc.Text(text.DescKeyDriftRegenerated)+token.NewlineLF, len(entries),
-		)
-		if printErr != nil {
+		if printErr := writeDrift.IndexRegenerated(w, len(entries)); printErr != nil {
 			return printErr
 		}
 	}

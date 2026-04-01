@@ -14,7 +14,7 @@ import (
 	"github.com/ActiveMemory/ctx/internal/config/agent"
 	"github.com/ActiveMemory/ctx/internal/config/dir"
 	"github.com/ActiveMemory/ctx/internal/config/warn"
-	ctxLog "github.com/ActiveMemory/ctx/internal/log"
+	ctxLog "github.com/ActiveMemory/ctx/internal/log/warn"
 	"github.com/ActiveMemory/ctx/internal/rc"
 )
 

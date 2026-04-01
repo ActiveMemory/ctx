@@ -20,7 +20,7 @@ import (
 	cfgTime "github.com/ActiveMemory/ctx/internal/config/time"
 	"github.com/ActiveMemory/ctx/internal/config/warn"
 	internalIo "github.com/ActiveMemory/ctx/internal/io"
-	ctxLog "github.com/ActiveMemory/ctx/internal/log"
+	ctxLog "github.com/ActiveMemory/ctx/internal/log/warn"
 )
 
 // Message appends a timestamped log line to the given file.

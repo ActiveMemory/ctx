@@ -11,6 +11,7 @@ import (
 	"os"
 	"path/filepath"
 
+	"github.com/ActiveMemory/ctx/internal/log/event"
 	"github.com/spf13/cobra"
 
 	"github.com/ActiveMemory/ctx/internal/assets/read/desc"
@@ -26,7 +27,6 @@ import (
 	"github.com/ActiveMemory/ctx/internal/config/heartbeat"
 	"github.com/ActiveMemory/ctx/internal/config/hook"
 	"github.com/ActiveMemory/ctx/internal/config/stats"
-	"github.com/ActiveMemory/ctx/internal/log"
 	"github.com/ActiveMemory/ctx/internal/notify"
 	"github.com/ActiveMemory/ctx/internal/rc"
 )
@@ -102,7 +102,7 @@ func Run(_ *cobra.Command, stdin *os.File) error {
 			count, contextModified)
 	}
 	_ = notify.Send(hook.NotifyChannelHeartbeat, msg, sessionID, ref)
-	log.AppendEvent(hook.NotifyChannelHeartbeat, msg, sessionID, ref)
+	event.AppendEvent(hook.NotifyChannelHeartbeat, msg, sessionID, ref)
 
 	var logLine string
 	if tokens > 0 {

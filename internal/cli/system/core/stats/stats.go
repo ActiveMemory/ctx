@@ -28,7 +28,8 @@ import (
 	"github.com/ActiveMemory/ctx/internal/entity"
 	errJournal "github.com/ActiveMemory/ctx/internal/err/journal"
 	internalIo "github.com/ActiveMemory/ctx/internal/io"
-	ctxLog "github.com/ActiveMemory/ctx/internal/log"
+	ctxLog "github.com/ActiveMemory/ctx/internal/log/warn"
+	writeStat "github.com/ActiveMemory/ctx/internal/write/stat"
 )
 
 // ReadDir reads all stats JSONL files, optionally filtered by session prefix.
@@ -317,10 +318,10 @@ func Stream(w io.Writer, dir, sessionFilter string, jsonOut bool) error {
 				if jsonOut {
 					line, marshalErr := json.Marshal(newEntries[i])
 					if marshalErr == nil {
-						_, _ = fmt.Fprintln(w, string(line))
+						writeStat.StreamLine(w, string(line))
 					}
 				} else {
-					_, _ = fmt.Fprintln(w, FormatLine(&newEntries[i]))
+					writeStat.StreamLine(w, FormatLine(&newEntries[i]))
 				}
 			}
 			offsets[path] = info.Size()

@@ -13,23 +13,19 @@ package notify
 
 import (
 	"encoding/json"
-	"fmt"
 	"net/http"
 	"os"
 	"path/filepath"
 	"time"
 
-	"github.com/ActiveMemory/ctx/internal/assets/read/desc"
 	cfgCrypto "github.com/ActiveMemory/ctx/internal/config/crypto"
-	cfgCtx "github.com/ActiveMemory/ctx/internal/config/ctx"
-	"github.com/ActiveMemory/ctx/internal/config/embed/text"
 	"github.com/ActiveMemory/ctx/internal/config/fs"
 	cfgHTTP "github.com/ActiveMemory/ctx/internal/config/http"
 	"github.com/ActiveMemory/ctx/internal/config/project"
-	"github.com/ActiveMemory/ctx/internal/config/token"
-	"github.com/ActiveMemory/ctx/internal/config/warn"
+	cfgWarn "github.com/ActiveMemory/ctx/internal/config/warn"
 	"github.com/ActiveMemory/ctx/internal/crypto"
 	"github.com/ActiveMemory/ctx/internal/io"
+	logWarn "github.com/ActiveMemory/ctx/internal/log/warn"
 	"github.com/ActiveMemory/ctx/internal/rc"
 )
 
@@ -157,8 +153,7 @@ func Send(event, message, sessionID string, detail *TemplateRef) error {
 	if cwd, cwdErr := os.Getwd(); cwdErr == nil {
 		projectName = filepath.Base(cwd)
 	} else {
-		fmt.Fprintf(os.Stderr,
-			cfgCtx.StderrPrefix+warn.Getwd+token.NewlineLF, cwdErr)
+		logWarn.Warn(cfgWarn.Getwd, cwdErr)
 	}
 
 	payload := Payload{
@@ -180,8 +175,7 @@ func Send(event, message, sessionID string, detail *TemplateRef) error {
 		return nil // fire-and-forget
 	}
 	if closeErr := resp.Body.Close(); closeErr != nil {
-		fmt.Fprintf(os.Stderr,
-			desc.Text(text.DescKeyWriteNotifyCloseResponse)+token.NewlineLF, closeErr)
+		logWarn.Warn(cfgWarn.CloseResponse, closeErr)
 	}
 
 	return nil

@@ -21,7 +21,7 @@ import (
 	cfgNudge "github.com/ActiveMemory/ctx/internal/config/nudge"
 	"github.com/ActiveMemory/ctx/internal/config/warn"
 	"github.com/ActiveMemory/ctx/internal/io"
-	ctxLog "github.com/ActiveMemory/ctx/internal/log"
+	ctxLog "github.com/ActiveMemory/ctx/internal/log/warn"
 )
 
 // PauseMarkerPath returns the path to the session pause marker file.

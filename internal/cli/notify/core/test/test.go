@@ -16,7 +16,7 @@ import (
 	"github.com/ActiveMemory/ctx/internal/config/project"
 	"github.com/ActiveMemory/ctx/internal/config/warn"
 	errNotify "github.com/ActiveMemory/ctx/internal/err/notify"
-	ctxLog "github.com/ActiveMemory/ctx/internal/log"
+	ctxLog "github.com/ActiveMemory/ctx/internal/log/warn"
 	"github.com/ActiveMemory/ctx/internal/notify"
 	"github.com/ActiveMemory/ctx/internal/rc"
 )

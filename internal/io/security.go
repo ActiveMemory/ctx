@@ -8,7 +8,6 @@ package io
 
 import (
 	"bytes"
-	"fmt"
 	"net/http"
 	"os"
 	"path/filepath"
@@ -16,9 +15,10 @@ import (
 	"time"
 
 	cfgFs "github.com/ActiveMemory/ctx/internal/config/fs"
-	"github.com/ActiveMemory/ctx/internal/config/token"
+	cfgWarn "github.com/ActiveMemory/ctx/internal/config/warn"
 	errFs "github.com/ActiveMemory/ctx/internal/err/fs"
 	errHTTP "github.com/ActiveMemory/ctx/internal/err/http"
+	logWarn "github.com/ActiveMemory/ctx/internal/log/warn"
 )
 
 // SafeReadFile resolves filename within baseDir, verifies the result
@@ -160,9 +160,7 @@ func TouchFile(path string) {
 	if writeErr := os.WriteFile(
 		path, nil, cfgFs.PermSecret,
 	); writeErr != nil {
-		fmt.Fprintf(os.Stderr,
-			"ctx: write %s: %v"+token.NewlineLF,
-			path, writeErr)
+		logWarn.Warn(cfgWarn.Write, path, writeErr)
 	}
 }
 

@@ -20,7 +20,7 @@ import (
 	"github.com/ActiveMemory/ctx/internal/config/token"
 	"github.com/ActiveMemory/ctx/internal/config/warn"
 	"github.com/ActiveMemory/ctx/internal/io"
-	ctxLog "github.com/ActiveMemory/ctx/internal/log"
+	ctxLog "github.com/ActiveMemory/ctx/internal/log/warn"
 )
 
 // ReadState reads a persistence state file and returns the
