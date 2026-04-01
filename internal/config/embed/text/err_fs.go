@@ -30,6 +30,7 @@ const (
 	DescKeyErrFsResolvePath          = "err.fs.resolve-path"
 	DescKeyErrFsStatPath             = "err.fs.stat-path"
 	DescKeyErrFsStdinRead            = "err.fs.stdin-read"
+	DescKeyErrFsWriteBuffer          = "err.fs.write-buffer"
 	DescKeyErrFsWriteFileFailed      = "err.fs.write-file-failed"
 	DescKeyErrFsWriteMerged          = "err.fs.write-merged"
 )

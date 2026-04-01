@@ -13,11 +13,8 @@ import (
 	"time"
 
 	cfgFs "github.com/ActiveMemory/ctx/internal/config/fs"
+	cfgTrace "github.com/ActiveMemory/ctx/internal/config/trace"
 )
-
-// pendingFile is the name of the JSONL file that accumulates context
-// references waiting to be attached to the next git commit.
-const pendingFile = "pending-context.jsonl"
 
 // Record appends a single pending context reference to the pending file
 // in stateDir. The operation is best-effort: directory creation and
@@ -36,7 +33,7 @@ func Record(ref, stateDir string) error {
 		Timestamp: time.Now().UTC(),
 	}
 
-	return appendJSONL(stateDir, pendingFile, entry)
+	return appendJSONL(stateDir, cfgTrace.FilePending, entry)
 }
 
 // ReadPending reads all pending context reference entries from the
@@ -50,7 +47,7 @@ func Record(ref, stateDir string) error {
 //   - []PendingEntry: entries in file order
 //   - error: non-nil only if the file exists but cannot be opened
 func ReadPending(stateDir string) ([]PendingEntry, error) {
-	path := filepath.Join(stateDir, pendingFile)
+	path := filepath.Join(stateDir, cfgTrace.FilePending)
 	return readJSONL[PendingEntry](path)
 }
 
@@ -63,7 +60,7 @@ func ReadPending(stateDir string) ([]PendingEntry, error) {
 // Returns:
 //   - error: non-nil if the file exists but cannot be truncated
 func TruncatePending(stateDir string) error {
-	path := filepath.Join(stateDir, pendingFile)
+	path := filepath.Join(stateDir, cfgTrace.FilePending)
 	//nolint:gosec // path built from trusted stateDir + constant filename
 	f, openErr := os.OpenFile(
 		filepath.Clean(path),

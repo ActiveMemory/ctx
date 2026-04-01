@@ -599,6 +599,40 @@ write.sync-summary:
   short: Found %d items. Review and update context files manually.
 write.synced:
   short: Synced %s -> %s
+write.trace-hooks-enabled:
+  short: ctx trace hooks enabled (prepare-commit-msg, post-commit)
+write.trace-hooks-disabled:
+  short: ctx trace hooks disabled
+write.trace-detail-date:
+  short: 'Date: %s'
+write.trace-detail-status:
+  short: 'Status: %s'
+write.trace-commit-header:
+  short: 'Commit:  %s'
+write.trace-commit-message:
+  short: 'Message: %s'
+write.trace-commit-date:
+  short: 'Date:    %s'
+write.trace-commit-context:
+  short: 'Context:'
+write.trace-commit-no-context:
+  short: 'Context: (none)'
+write.trace-last-entry:
+  short: '%s  %s  [%s]'
+write.trace-resolved-full:
+  short: '  [%s] %s — %s (%s)'
+write.trace-resolved-title:
+  short: '  [%s] %s — %s'
+write.trace-resolved-raw:
+  short: '  [%s] %s'
+write.trace-file-entry:
+  short: '%s  %s  %s  [%s]'
+write.trace-no-refs:
+  short: (none)
+write.trace-refs-prefix:
+  short: '→ '
+write.trace-tagged:
+  short: 'Tagged %s with: %s'
 write.test-filtered:
   short: |-
     Note: event "test" is filtered by your .ctxrc notify.events config.

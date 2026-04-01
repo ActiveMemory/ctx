@@ -6,7 +6,7 @@
 
 // Package apply routes context updates to the appropriate handler.
 //
-// Key exports: [Update], [RunAddSilent], [RunCompleteSilent].
+// Key exports: [Update].
 // Shared helpers used by sibling cmd/ packages.
 // Used by core cmd/ packages.
 package apply

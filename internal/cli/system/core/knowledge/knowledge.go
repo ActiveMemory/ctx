@@ -102,7 +102,7 @@ func FormatWarnings(findings []finding) string {
 	var b strings.Builder
 	findingFmt := desc.Text(text.DescKeyCheckKnowledgeFindingFormat)
 	for _, f := range findings {
-		fmt.Fprintf(&b, findingFmt, f.File, f.Count, f.Unit, f.Threshold)
+		io.SafeFprintf(&b, findingFmt, f.File, f.Count, f.Unit, f.Threshold)
 	}
 	return b.String()
 }

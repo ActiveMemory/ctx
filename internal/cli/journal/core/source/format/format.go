@@ -25,6 +25,7 @@ import (
 	"github.com/ActiveMemory/ctx/internal/config/token"
 	"github.com/ActiveMemory/ctx/internal/entity"
 	sharedFmt "github.com/ActiveMemory/ctx/internal/format"
+	"github.com/ActiveMemory/ctx/internal/io"
 	"github.com/ActiveMemory/ctx/internal/parse"
 )
 
@@ -43,7 +44,7 @@ func PartNavigation(part, totalParts int, baseName string) string {
 	var sb strings.Builder
 	nl := token.NewlineLF
 
-	fmt.Fprintf(&sb, tpl.RecallPartOf, part, totalParts)
+	io.SafeFprintf(&sb, tpl.RecallPartOf, part, totalParts)
 
 	if part > 1 || part < totalParts {
 		sb.WriteString(box.PipeSeparator)
@@ -55,7 +56,7 @@ func PartNavigation(part, totalParts int, baseName string) string {
 		if part > 2 {
 			prevFile = fmt.Sprintf(tpl.RecallPartFilename, baseName, part-1)
 		}
-		fmt.Fprintf(&sb, tpl.RecallNavPrev, prevFile)
+		io.SafeFprintf(&sb, tpl.RecallNavPrev, prevFile)
 	}
 
 	// Separator between prev and next
@@ -66,7 +67,7 @@ func PartNavigation(part, totalParts int, baseName string) string {
 	// Next link
 	if part < totalParts {
 		nextFile := fmt.Sprintf(tpl.RecallPartFilename, baseName, part+1)
-		fmt.Fprintf(&sb, tpl.RecallNavNext, nextFile)
+		io.SafeFprintf(&sb, tpl.RecallNavNext, nextFile)
 	}
 
 	sb.WriteString(nl)
@@ -231,7 +232,7 @@ func JournalEntryPart(
 
 		// Header: prefer title, fall back to slug, then baseName.
 		heading := frontmatter.ResolveHeading(title, s.Slug, baseName)
-		fmt.Fprintf(&sb, tpl.JournalPageHeading+nl+nl, heading)
+		io.SafeFprintf(&sb, tpl.JournalPageHeading+nl+nl, heading)
 
 		// Navigation header for multipart sessions
 		if totalParts > 1 {
@@ -244,42 +245,42 @@ func JournalEntryPart(
 		summaryText := fmt.Sprintf(
 			desc.Text(text.DescKeyJournalSourceMetaSummary), dateStr, durationStr, s.Model,
 		)
-		fmt.Fprintf(&sb, tpl.MetaDetailsOpen, summaryText)
-		fmt.Fprintf(&sb,
+		io.SafeFprintf(&sb, tpl.MetaDetailsOpen, summaryText)
+		io.SafeFprintf(&sb,
 			tpl.MetaRow+nl, desc.Text(text.DescKeyLabelMetaID), s.ID)
-		fmt.Fprintf(&sb,
+		io.SafeFprintf(&sb,
 			tpl.MetaRow+nl, desc.Text(text.DescKeyLabelMetaDate), dateStr)
-		fmt.Fprintf(&sb,
+		io.SafeFprintf(&sb,
 			tpl.MetaRow+nl, desc.Text(text.DescKeyLabelMetaTime), timeStr)
-		fmt.Fprintf(&sb,
+		io.SafeFprintf(&sb,
 			tpl.MetaRow+nl, desc.Text(text.DescKeyLabelMetaDuration), durationStr)
-		fmt.Fprintf(&sb,
+		io.SafeFprintf(&sb,
 			tpl.MetaRow+nl, desc.Text(text.DescKeyLabelMetaTool), s.Tool)
-		fmt.Fprintf(&sb,
+		io.SafeFprintf(&sb,
 			tpl.MetaRow+nl, desc.Text(text.DescKeyLabelMetaProject), s.Project)
 		if s.GitBranch != "" {
-			fmt.Fprintf(&sb,
+			io.SafeFprintf(&sb,
 				tpl.MetaRow+nl, desc.Text(text.DescKeyLabelMetaBranch), s.GitBranch)
 		}
 		if s.Model != "" {
-			fmt.Fprintf(&sb,
+			io.SafeFprintf(&sb,
 				tpl.MetaRow+nl, desc.Text(text.DescKeyLabelMetaModel), s.Model)
 		}
 		sb.WriteString(tpl.MetaDetailsClose + nl + nl)
 
 		// Token stats as collapsible HTML table
 		turnStr := fmt.Sprintf("%d", s.TurnCount)
-		fmt.Fprintf(&sb, tpl.MetaDetailsOpen, turnStr)
-		fmt.Fprintf(&sb,
+		io.SafeFprintf(&sb, tpl.MetaDetailsOpen, turnStr)
+		io.SafeFprintf(&sb,
 			tpl.MetaRow+nl, desc.Text(text.DescKeyLabelMetaTurns), turnStr)
 		tokenSummary := fmt.Sprintf(desc.Text(text.DescKeyJournalSourceTokenSummary),
 			sharedFmt.Tokens(s.TotalTokens),
 			sharedFmt.Tokens(s.TotalTokensIn),
 			sharedFmt.Tokens(s.TotalTokensOut))
-		fmt.Fprintf(&sb,
+		io.SafeFprintf(&sb,
 			tpl.MetaRow+nl, desc.Text(text.DescKeyLabelMetaTokens), tokenSummary)
 		if totalParts > 1 {
-			fmt.Fprintf(&sb, tpl.MetaRow+nl, desc.Text(text.DescKeyLabelMetaParts),
+			io.SafeFprintf(&sb, tpl.MetaRow+nl, desc.Text(text.DescKeyLabelMetaParts),
 				fmt.Sprintf("%d", totalParts))
 		}
 		sb.WriteString(tpl.MetaDetailsClose + nl + nl)
@@ -295,7 +296,7 @@ func JournalEntryPart(
 				toolCounts[t.Name]++
 			}
 			for name, count := range toolCounts {
-				fmt.Fprintf(&sb,
+				io.SafeFprintf(&sb,
 					tpl.RecallToolCount+nl, name, count)
 			}
 			sb.WriteString(nl + sep + nl + nl)
@@ -303,7 +304,7 @@ func JournalEntryPart(
 	} else {
 		// Header (non-part-1) - the same fallback as part 1.
 		heading := frontmatter.ResolveHeading(title, s.Slug, baseName)
-		fmt.Fprintf(&sb, tpl.JournalPageHeading+nl+nl, heading)
+		io.SafeFprintf(&sb, tpl.JournalPageHeading+nl+nl, heading)
 
 		// Navigation header for multipart sessions
 		if totalParts > 1 {
@@ -316,7 +317,7 @@ func JournalEntryPart(
 	if part == 1 {
 		sb.WriteString(desc.Text(text.DescKeyHeadingConversation) + nl + nl)
 	} else {
-		fmt.Fprintf(&sb,
+		io.SafeFprintf(&sb,
 			tpl.RecallConversationContinued+nl+nl, part-1)
 	}
 
@@ -330,7 +331,7 @@ func JournalEntryPart(
 		}
 
 		localTime := msg.Timestamp.Local()
-		fmt.Fprintf(&sb, tpl.RecallTurnHeader+nl+nl,
+		io.SafeFprintf(&sb, tpl.RecallTurnHeader+nl+nl,
 			msgNum, role, localTime.Format(time.Format))
 
 		if msg.Text != "" {
@@ -345,7 +346,7 @@ func JournalEntryPart(
 
 		// Tool uses
 		for _, t := range msg.ToolUses {
-			fmt.Fprintf(&sb, tpl.RecallToolUse+nl, ToolUse(t))
+			io.SafeFprintf(&sb, tpl.RecallToolUse+nl, ToolUse(t))
 		}
 
 		// Tool results
@@ -361,20 +362,20 @@ func JournalEntryPart(
 
 				if lines > journal.DetailsThreshold {
 					summary := fmt.Sprintf(tpl.RecallDetailsSummary, lines)
-					fmt.Fprintf(&sb, tpl.RecallDetailsOpen+nl+nl, summary)
+					io.SafeFprintf(&sb, tpl.RecallDetailsOpen+nl+nl, summary)
 					sb.WriteString(marker.TagPre + nl)
 					sb.WriteString(html.EscapeString(content) + nl)
 					sb.WriteString(marker.TagPreClose + nl)
 					sb.WriteString(tpl.RecallDetailsClose + nl)
 				} else {
-					fmt.Fprintf(&sb,
+					io.SafeFprintf(&sb,
 						tpl.RecallFencedBlock+nl, fence, content, fence)
 				}
 
 				// Render system reminders as Markdown outside the code fence
 				for _, reminder := range reminders {
-					fmt.Fprintf(&sb,
-						nl+desc.Text(text.DescKeyLabelBoldReminder)+" %s"+nl,
+					io.SafeFprintf(&sb,
+						nl+desc.Text(text.DescKeyLabelBoldReminderFmt)+nl,
 						reminder)
 				}
 			}

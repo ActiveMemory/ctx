@@ -17,24 +17,42 @@ const (
 	RevParse = "rev-parse"
 )
 
+// Git hook names.
+const (
+	HookPrepareCommitMsg = "prepare-commit-msg"
+	HookPostCommit       = "post-commit"
+	HooksDir             = "hooks"
+)
+
+// Git subcommands (additional).
+const (
+	Diff = "diff"
+)
+
 // Git rev-parse flags.
 const (
-	// FlagShowToplevel is a git flag.
 	FlagShowToplevel = "--show-toplevel"
+	FlagGitDir       = "--git-dir"
 )
 
 // Git flags.
 const (
-	FlagChangeDir  = "-C"
-	FlagLast       = "-1"
-	FlagNoCommitID = "--no-commit-id"
-	FlagNameOnly   = "--name-only"
-	FlagOneline    = "--oneline"
-	FlagRecursive  = "-r"
-	FlagSince      = "--since"
-	FormatAuthor   = "--format=%aN"
-	FormatBody     = "--format=%B"
-	FormatEmpty    = "--format="
+	FlagCached         = "--cached"
+	FlagChangeDir      = "-C"
+	FlagLast           = "-1"
+	FlagNoCommitID     = "--no-commit-id"
+	FlagNameOnly       = "--name-only"
+	FlagOneline        = "--oneline"
+	FlagRecursive      = "-r"
+	FlagSince          = "--since"
+	FormatAuthor       = "--format=%aN"
+	FormatBody         = "--format=%B"
+	FormatEmpty        = "--format="
+	FormatDateISO      = "--format=%ci"
+	FormatHashDateSubj = "--format=%H %ci %s"
+	FormatHashSubj     = "--format=%H %s"
+	FormatSubject      = "--format=%s"
+	FormatTrailerValue = "--format=%%(trailers:key=%s,valueonly)"
 	// FlagPathSep is the separator between flags and paths.
 	FlagPathSep = "--"
 )

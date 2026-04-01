@@ -10,6 +10,8 @@ import (
 	"os"
 	"path/filepath"
 	"testing"
+
+	"github.com/ActiveMemory/ctx/internal/config/env"
 )
 
 func TestWorkingRefsInProgressTasks(t *testing.T) {
@@ -46,7 +48,7 @@ func TestWorkingRefsInProgressTasks(t *testing.T) {
 func TestWorkingRefsSessionEnv(t *testing.T) {
 	contextDir := t.TempDir()
 
-	t.Setenv("CTX_SESSION_ID", "test-session-42")
+	t.Setenv(env.SessionID, "test-session-42")
 
 	refs := WorkingRefs(contextDir)
 

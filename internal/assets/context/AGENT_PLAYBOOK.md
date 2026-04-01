@@ -22,6 +22,7 @@ Always use `ctx` from PATH:
 ctx status        # ✓ correct
 ctx agent         # ✓ correct
 ./dist/ctx        # ✗ avoid hardcoded paths
+go run ./cmd/ctx  # ✗ avoid unless developing ctx itself
 ```
 
 Check with `which ctx` if unsure whether it's installed.
@@ -31,6 +32,17 @@ Check with `which ctx` if unsure whether it's installed.
 Before starting any work, read the required context files and confirm to the
 user: "I have read the required context files and I'm following project
 conventions." Do not begin implementation until you have done so.
+
+## Supplementary Files
+
+These files live in `.context/` alongside the core context files.
+Read them when the task at hand warrants it — not on every session.
+
+| File               | Read when                                                      |
+|--------------------|----------------------------------------------------------------|
+| ARCHITECTURE.md    | Working on structure, adding packages, or tracing flow         |
+| DETAILED_DESIGN.md | Deep-diving into internals (generated via `/ctx-architecture`) |
+| GLOSSARY.md        | Encountering unfamiliar project-specific terminology           |
 
 ## Reason Before Acting
 
@@ -45,6 +57,21 @@ This applies to debugging too: reason through the cause before reaching
 for a fix. Rushing to code before reasoning is the most common source of
 wasted work.
 
+### Chunk and Checkpoint Large Tasks
+
+For work spanning many files or steps, break it into independently
+verifiable chunks. After each chunk:
+
+1. **Commit**: save progress to git so nothing is lost
+2. **Persist**: record learnings or decisions discovered during the chunk
+3. **Verify**: run tests or `make lint` before moving on
+
+Track progress via TASKS.md checkboxes. If context runs low mid-task,
+persist a progress note (what's done, what's next, what assumptions
+remain) before continuing in a new window. The `check-context-size`
+hook nudges at 60% usage (checkpoint) and warns at 90% (urgent):
+treat these as signals to persist progress, not to rush.
+
 ## Session Lifecycle
 
 A session follows this arc:
@@ -54,6 +81,7 @@ A session follows this arc:
 Not every session uses every step: a quick bugfix skips reflection, a
 research session skips committing: but the full flow is:
 
+<!-- drift-check: ls internal/assets/claude/skills/ctx-remember internal/assets/claude/skills/ctx-status internal/assets/claude/skills/ctx-next internal/assets/claude/skills/ctx-implement internal/assets/claude/skills/ctx-commit internal/assets/claude/skills/ctx-reflect 2>&1 | grep -c skills/ -->
 | Step        | What Happens                                       | Skill / Command  |
 |-------------|----------------------------------------------------|------------------|
 | **Load**    | Recall context, present structured readback        | `/ctx-remember`  |
@@ -77,10 +105,28 @@ Surface problems worth mentioning:
 
 One sentence is enough: don't turn startup into a maintenance session.
 
+### Context Window Limits
+
+The `check-context-size` hook (`ctx system check-context-size`) monitors
+context window usage. It nudges at 60% (one-shot checkpoint) and warns
+at 90% (recurring urgent). When you see either signal or sense context
+is running long:
+
+- **Persist progress**: write what's done and what's left to TASKS.md
+  or a progress note
+- **Checkpoint state**: commit work-in-progress so a fresh session can
+  pick up cleanly
+- **Summarize**: leave a breadcrumb for the next window: the current
+  task, open questions, and next step
+
+Context compaction happens automatically, but the next window loses
+nuance. Explicit persistence is cheaper than re-discovery.
+
 ### Conversational Triggers
 
 Users rarely invoke skills explicitly. Recognize natural language:
 
+<!-- drift-check: ls internal/assets/claude/skills/ctx-remember internal/assets/claude/skills/ctx-status internal/assets/claude/skills/ctx-next internal/assets/claude/skills/ctx-commit internal/assets/claude/skills/ctx-reflect internal/assets/claude/skills/ctx-add-decision internal/assets/claude/skills/ctx-add-learning internal/assets/claude/skills/ctx-add-convention internal/assets/claude/skills/ctx-add-task 2>&1 | grep -c skills/ -->
 | User Says                                       | Action                                                 |
 |-------------------------------------------------|--------------------------------------------------------|
 | "Do you remember?" / "What were we working on?" | `/ctx-remember`                                        |
@@ -93,6 +139,8 @@ Users rarely invoke skills explicitly. Recognize natural language:
 | "That's worth remembering" / "Any gotchas?"     | `/ctx-add-learning`                                    |
 | "Record that convention"                        | `/ctx-add-convention`                                  |
 | "Add a task for that"                           | `/ctx-add-task`                                        |
+| "Sync memory" / "What's in auto memory?"        | `ctx memory sync` / `ctx memory status`                |
+| "Import from memory"                            | `ctx memory import --dry-run` then `ctx memory import` |
 | "Let's wrap up"                                 | Reflect → persist outstanding items → present together |
 
 ## Proactive Persistence
@@ -141,9 +189,11 @@ user. These apply unless the user overrides them for the session
 
 - **At design decisions**: always present 2+ approaches with
   trade-offs before committing: don't silently pick one
-- **At completion claims**: run self-audit questions (What did I
-  assume? What didn't I check? Where am I least confident? What
-  would a reviewer question?) before reporting done
+- **At completion claims**: map claims to evidence (e.g., "tests
+  pass" requires 0-failure output, "build succeeds" requires exit 0).
+  Run commands fresh: never reuse earlier output. At minimum, answer:
+  What did I assume? What didn't I check? Where am I least confident?
+  What would a reviewer question?
 - **At ambiguous moments**: ask the user rather than inferring
   intent: a quick question is cheaper than rework
 - **When producing artifacts**: flag assumptions and uncertainty

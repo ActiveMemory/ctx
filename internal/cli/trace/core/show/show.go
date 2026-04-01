@@ -9,33 +9,21 @@ package show
 import (
 	"encoding/json"
 	"fmt"
-	"os/exec"
 	"strings"
 
 	"github.com/spf13/cobra"
 
+	"github.com/ActiveMemory/ctx/internal/assets/read/desc"
+	"github.com/ActiveMemory/ctx/internal/config/embed/text"
+	cfgGit "github.com/ActiveMemory/ctx/internal/config/git"
 	"github.com/ActiveMemory/ctx/internal/config/token"
+	errTrace "github.com/ActiveMemory/ctx/internal/err/trace"
+	"github.com/ActiveMemory/ctx/internal/exec/git"
 	"github.com/ActiveMemory/ctx/internal/trace"
+	writeTrace "github.com/ActiveMemory/ctx/internal/write/trace"
 )
 
-// JSONRef is the JSON representation of a resolved context reference.
-type JSONRef struct {
-	Raw    string `json:"raw"`
-	Type   string `json:"type"`
-	Number int    `json:"number,omitempty"`
-	Title  string `json:"title,omitempty"`
-	Detail string `json:"detail,omitempty"`
-	Found  bool   `json:"found"`
-}
-
-// JSONCommit is the JSON representation of a commit with its context refs.
-type JSONCommit struct {
-	Commit  string    `json:"commit"`
-	Message string    `json:"message"`
-	Refs    []JSONRef `json:"refs"`
-}
-
-// ShowCommit displays the context refs for a single commit.
+// Commit displays the context refs for a single commit.
 //
 // Parameters:
 //   - cmd: Cobra command for output stream
@@ -46,7 +34,9 @@ type JSONCommit struct {
 //
 // Returns:
 //   - error: non-nil on execution failure
-func ShowCommit(cmd *cobra.Command, hash, contextDir, traceDir string, jsonOutput bool) error {
+func Commit(
+	cmd *cobra.Command, hash, contextDir, traceDir string, jsonOutput bool,
+) error {
 	fullHash, err := trace.ResolveCommitHash(hash)
 	if err != nil {
 		fullHash = hash
@@ -68,25 +58,23 @@ func ShowCommit(cmd *cobra.Command, hash, contextDir, traceDir string, jsonOutpu
 
 	msg, _ := trace.CommitMessage(fullHash)
 	date := trace.CommitDate(fullHash)
-	cmd.Println(fmt.Sprintf("Commit:  %s", trace.ShortHash(fullHash)))
-	cmd.Println(fmt.Sprintf("Message: %s", msg))
-	cmd.Println(fmt.Sprintf("Date:    %s", date))
+	writeTrace.CommitHeader(cmd, trace.ShortHash(fullHash), msg, date)
 
 	if len(refs) == 0 {
-		cmd.Println("Context: (none)")
+		writeTrace.CommitNoContext(cmd)
 		return nil
 	}
 
-	cmd.Println("Context:")
+	writeTrace.CommitContext(cmd)
 	for _, r := range refs {
 		rr := trace.Resolve(r, contextDir)
-		PrintResolved(cmd, rr)
+		writeTrace.Resolved(cmd, rr)
 	}
 
 	return nil
 }
 
-// ShowLast displays context refs for the last N commits.
+// Last displays context refs for the last N commits.
 //
 // Parameters:
 //   - cmd: Cobra command for output stream
@@ -97,15 +85,21 @@ func ShowCommit(cmd *cobra.Command, hash, contextDir, traceDir string, jsonOutpu
 //
 // Returns:
 //   - error: non-nil on execution failure
-func ShowLast(cmd *cobra.Command, n int, contextDir, traceDir string, jsonOutput bool) error {
-	//nolint:gosec // n is a user-supplied integer flag, not arbitrary input
-	out, err := exec.Command("git", "log", fmt.Sprintf("-%d", n), "--format=%H %s").Output()
+func Last(
+	cmd *cobra.Command, n int, contextDir, traceDir string, jsonOutput bool,
+) error {
+	out, err := git.Run(
+		cfgGit.Log, fmt.Sprintf("-%d", n), cfgGit.FormatHashSubj,
+	)
 	if err != nil {
-		return fmt.Errorf("git log: %w", err)
+		return errTrace.GitLog(err)
 	}
 
 	lines := strings.Split(strings.TrimSpace(string(out)), token.NewlineLF)
 
+	// Bulk listing uses includeTrailers=false: history.jsonl already
+	// contains the same refs the post-commit hook read from the trailer,
+	// so re-reading trailers would spawn N extra git processes for no gain.
 	if jsonOutput {
 		commits := make([]JSONCommit, 0, len(lines))
 		for _, line := range lines {
@@ -140,12 +134,12 @@ func ShowLast(cmd *cobra.Command, n int, contextDir, traceDir string, jsonOutput
 		if len(parts) > 1 {
 			msg = parts[1]
 		}
-		refs := trace.CollectRefsForCommit(hash, traceDir, true)
-		refSummary := "(none)"
+		refs := trace.CollectRefsForCommit(hash, traceDir, false)
+		refSummary := desc.Text(text.DescKeyWriteTraceNoRefs)
 		if len(refs) > 0 {
-			refSummary = strings.Join(refs, ", ")
+			refSummary = strings.Join(refs, token.CommaSpace)
 		}
-		cmd.Println(fmt.Sprintf("%s  %s  [%s]", trace.ShortHash(hash), msg, refSummary))
+		writeTrace.LastEntry(cmd, trace.ShortHash(hash), msg, refSummary)
 	}
 
 	return nil
@@ -173,22 +167,4 @@ func ResolveToJSON(refs []string, contextDir string) []JSONRef {
 		})
 	}
 	return resolved
-}
-
-// PrintResolved formats a single resolved ref for display.
-//
-// Parameters:
-//   - cmd: Cobra command for output stream
-//   - rr: resolved reference to display
-func PrintResolved(cmd *cobra.Command, rr trace.ResolvedRef) {
-	typeLabel := strings.ToUpper(rr.Type[0:1]) + rr.Type[1:]
-	if rr.Found && rr.Title != "" {
-		if rr.Detail != "" {
-			cmd.Println(fmt.Sprintf("  [%s] %s — %s (%s)", typeLabel, rr.Raw, rr.Title, rr.Detail))
-		} else {
-			cmd.Println(fmt.Sprintf("  [%s] %s — %s", typeLabel, rr.Raw, rr.Title))
-		}
-	} else {
-		cmd.Println(fmt.Sprintf("  [%s] %s", typeLabel, rr.Raw))
-	}
 }

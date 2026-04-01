@@ -11,6 +11,9 @@ import (
 
 	"github.com/ActiveMemory/ctx/internal/assets/read/desc"
 	"github.com/ActiveMemory/ctx/internal/config/embed/cmd"
+	"github.com/ActiveMemory/ctx/internal/config/embed/flag"
+	cFlag "github.com/ActiveMemory/ctx/internal/config/flag"
+	"github.com/ActiveMemory/ctx/internal/flagbind"
 )
 
 // Cmd returns the trace tag subcommand.
@@ -29,7 +32,7 @@ func Cmd() *cobra.Command {
 			return Run(cobraCmd, args[0], note)
 		},
 	}
-	c.Flags().StringVar(&note, "note", "", "Context note to attach to the commit (required)")
-	_ = c.MarkFlagRequired("note")
+	flagbind.StringFlag(c, &note, cFlag.Note, flag.DescKeyTraceTagNote)
+	_ = c.MarkFlagRequired(cFlag.Note)
 	return c
 }

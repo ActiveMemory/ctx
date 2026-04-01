@@ -23,6 +23,7 @@ import (
 	"github.com/ActiveMemory/ctx/internal/config/token"
 	"github.com/ActiveMemory/ctx/internal/config/zensical"
 	"github.com/ActiveMemory/ctx/internal/entity"
+	"github.com/ActiveMemory/ctx/internal/io"
 )
 
 // SiteReadme creates a README for the journal-site directory.
@@ -63,14 +64,14 @@ func Index(entries []entity.JournalEntry) string {
 
 	sb.WriteString(desc.Text(text.DescKeyHeadingSessionJournal) + nl + nl)
 	sb.WriteString(tpl.JournalIndexIntro + nl + nl)
-	fmt.Fprintf(&sb, tpl.JournalIndexStats+
+	io.SafeFprintf(&sb, tpl.JournalIndexStats+
 		nl+nl, len(regular), len(suggestions))
 
 	// Group regular sessions by month
 	months, monthOrder := group.ByMonth(regular)
 
 	for _, month := range monthOrder {
-		fmt.Fprintf(&sb, tpl.JournalMonthHeading+nl+nl, month)
+		io.SafeFprintf(&sb, tpl.JournalMonthHeading+nl+nl, month)
 
 		for _, e := range months[month] {
 			sb.WriteString(formatIndexEntry(e, nl))
@@ -182,21 +183,21 @@ func ZensicalToml(
 
 	// Build navigation
 	sb.WriteString(zensical.TomlNavOpen + nl)
-	fmt.Fprintf(&sb, tpl.JournalNavItem+nl,
+	io.SafeFprintf(&sb, tpl.JournalNavItem+nl,
 		desc.Text(text.DescKeyLabelHome), file.Index)
 	if len(topics) > 0 {
-		fmt.Fprintf(&sb, tpl.JournalNavItem+nl,
+		io.SafeFprintf(&sb, tpl.JournalNavItem+nl,
 			desc.Text(text.DescKeyLabelTopics),
 			filepath.Join(dir.JournTopics, file.Index),
 		)
 	}
 	if len(keyFiles) > 0 {
-		fmt.Fprintf(&sb, tpl.JournalNavItem+nl,
+		io.SafeFprintf(&sb, tpl.JournalNavItem+nl,
 			desc.Text(text.DescKeyLabelFiles),
 			filepath.Join(dir.JournalFiles, file.Index))
 	}
 	if len(sessionTypes) > 0 {
-		fmt.Fprintf(&sb, tpl.JournalNavItem+nl,
+		io.SafeFprintf(&sb, tpl.JournalNavItem+nl,
 			desc.Text(text.DescKeyLabelTypes),
 			filepath.Join(dir.JournalTypes, file.Index))
 	}
@@ -219,7 +220,7 @@ func ZensicalToml(
 		recent = recent[:journal.MaxRecentSessions]
 	}
 
-	fmt.Fprintf(&sb,
+	io.SafeFprintf(&sb,
 		tpl.JournalNavSection+nl, desc.Text(text.DescKeyHeadingRecentSessions))
 	for _, e := range recent {
 		title := e.Title
@@ -227,8 +228,10 @@ func ZensicalToml(
 			runes := []rune(title)
 			title = string(runes[:journal.MaxNavTitleLen]) + token.Ellipsis
 		}
-		title = strings.ReplaceAll(title, token.DoubleQuote, token.EscapedDoubleQuote)
-		fmt.Fprintf(&sb,
+		title = strings.ReplaceAll(
+			title, token.DoubleQuote, token.EscapedDoubleQuote,
+		)
+		io.SafeFprintf(&sb,
 			tpl.JournalNavSessionItem+nl, title, e.Filename)
 	}
 	sb.WriteString(zensical.TomlNavSectionClose + nl)

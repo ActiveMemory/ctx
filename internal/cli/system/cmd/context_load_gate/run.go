@@ -103,7 +103,7 @@ func Run(cmd *cobra.Command, stdin *os.File) error {
 			continue // file missing - skip gracefully
 		}
 
-		fmt.Fprintf(&content, desc.Text(
+		internalIo.SafeFprintf(&content, desc.Text(
 			text.DescKeyContextLoadGateFileHeader,
 		), f, string(data))
 		tokens := ctxToken.Estimate(data)
@@ -126,7 +126,7 @@ func Run(cmd *cobra.Command, stdin *os.File) error {
 		strings.Repeat(
 			load_gate.ContextLoadSeparatorChar, load_gate.ContextLoadSeparatorWidth,
 		) + token.NewlineLF)
-	fmt.Fprintf(&content, desc.Text(text.DescKeyContextLoadGateFooter),
+	internalIo.SafeFprintf(&content, desc.Text(text.DescKeyContextLoadGateFooter),
 		filesLoaded, totalTokens)
 
 	writeSetup.Context(

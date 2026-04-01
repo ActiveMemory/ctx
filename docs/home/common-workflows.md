@@ -370,18 +370,18 @@ These are infrastructure: used in scripts, CI, or one-time setup.
 | `ctx serve`                | Serve any zensical directory (default: journal) |
 | `ctx permission snapshot` | Save settings as a golden image                 |
 | `ctx permission restore`  | Restore settings from golden image              |
-| `ctx journal site`         | Generate browsable journal from exports         |
-| `ctx notify setup`         | Configure webhook notifications                 |
+| `ctx journal site`        | Generate browsable journal from exports         |
+| `ctx notify setup`        | Configure webhook notifications                 |
 | `ctx decision`            | List and filter decisions                       |
 | `ctx learning`            | List and filter learnings                       |
 | `ctx task`                | List tasks, manage archival and snapshots       |
-| `ctx why`                  | Read the philosophy behind ctx                  |
-| `ctx guide`                | Quick-reference cheat sheet                     |
-| `ctx site`                 | Site management commands                        |
-| `ctx config`               | Manage runtime configuration profiles           |
-| `ctx system`               | System diagnostics and hook commands            |
-| `ctx system backup`        | Back up context and Claude data to tar.gz / SMB |
-| `ctx completion`           | Generate shell autocompletion scripts           |
+| `ctx why`                 | Read the philosophy behind ctx                  |
+| `ctx guide`               | Quick-reference cheat sheet                     |
+| `ctx site`                | Site management commands                        |
+| `ctx config`              | Manage runtime configuration profiles           |
+| `ctx system`              | System diagnostics and hook commands            |
+| `ctx system backup`       | Back up context and Claude data to tar.gz / SMB |
+| `ctx completion`          | Generate shell autocompletion scripts           |
 
 !!! tip "Rule of Thumb"
     **Quick check?** Use the CLI. 

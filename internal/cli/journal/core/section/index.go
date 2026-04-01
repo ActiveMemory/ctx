@@ -18,6 +18,7 @@ import (
 	"github.com/ActiveMemory/ctx/internal/config/embed/text"
 	"github.com/ActiveMemory/ctx/internal/config/token"
 	"github.com/ActiveMemory/ctx/internal/entity"
+	"github.com/ActiveMemory/ctx/internal/io"
 )
 
 // BuildTopicIndex aggregates entries by topic and returns sorted topic data.
@@ -67,7 +68,7 @@ func GenerateTopicsIndex(topics []entity.TopicData) string {
 	}
 
 	sb.WriteString(desc.Text(text.DescKeyHeadingTopics) + nl + nl)
-	fmt.Fprintf(&sb,
+	io.SafeFprintf(&sb,
 		tpl.JournalTopicStats+nl+nl,
 		len(topics), session.CountUnique(topics), len(popular), len(longtail))
 
@@ -161,7 +162,7 @@ func GenerateKeyFilesIndex(keyFiles []entity.KeyFileData) string {
 	}
 
 	sb.WriteString(desc.Text(text.DescKeyHeadingKeyFiles) + nl + nl)
-	fmt.Fprintf(&sb,
+	io.SafeFprintf(&sb,
 		tpl.JournalFileStats+nl+nl,
 		len(keyFiles), totalSessions, len(popular), len(longtail))
 
@@ -236,7 +237,7 @@ func GenerateTypesIndex(sessionTypes []entity.TypeData) string {
 	}
 
 	sb.WriteString(desc.Text(text.DescKeyHeadingSessionTypes) + nl + nl)
-	fmt.Fprintf(&sb,
+	io.SafeFprintf(&sb,
 		tpl.JournalTypeStats+nl+nl, len(sessionTypes), totalSessions)
 
 	for _, st := range sessionTypes {

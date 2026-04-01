@@ -6,7 +6,9 @@
 
 // Package flagbind provides helpers for cobra flag registration.
 //
-// Key exports: [StringFlag], [StringFlagP], [LastJSON].
+// Key exports: [BoolFlag], [BoolFlagP], [IntFlagP],
+// [StringFlag], [StringFlagP], [StringFlagPDefault], [LastJSON].
+//
 // See source files for implementation details.
 // Part of the internal subsystem.
 package flagbind

@@ -11,7 +11,9 @@ import (
 
 	"github.com/ActiveMemory/ctx/internal/assets/read/desc"
 	"github.com/ActiveMemory/ctx/internal/config/embed/cmd"
+	"github.com/ActiveMemory/ctx/internal/config/embed/flag"
 	cFlag "github.com/ActiveMemory/ctx/internal/config/flag"
+	"github.com/ActiveMemory/ctx/internal/flagbind"
 )
 
 // Cmd returns the trace command.
@@ -36,8 +38,8 @@ func Cmd() *cobra.Command {
 		},
 	}
 
-	c.Flags().IntVarP(&last, cFlag.Last, cFlag.ShortLast, 0, "Show context for last N commits")
-	c.Flags().BoolVar(&jsonOutput, cFlag.JSON, false, "Output as JSON")
+	flagbind.IntFlagP(c, &last, cFlag.Last, cFlag.ShortLast, 0, flag.DescKeyTraceLast)
+	flagbind.BoolFlag(c, &jsonOutput, cFlag.JSON, flag.DescKeyTraceJSON)
 
 	return c
 }

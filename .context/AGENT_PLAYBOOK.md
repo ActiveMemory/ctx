@@ -11,7 +11,7 @@ directives here, check whether the gate file needs a corresponding update.
 Each session is a fresh execution in a shared workshop. Work
 continuity comes from artifacts left on the bench. Follow the
 cycle: **Work → Reflect → Persist**. After completing a task,
-making a decision, learning something, or hitting a milestone —
+making a decision, learning something, or hitting a milestone:
 persist before continuing. Don't wait for session end; it may
 never come cleanly.
 
@@ -33,6 +33,17 @@ Before starting any work, read the required context files and confirm to the
 user: "I have read the required context files and I'm following project
 conventions." Do not begin implementation until you have done so.
 
+## Supplementary Files
+
+These files live in `.context/` alongside the core context files.
+Read them when the task at hand warrants it — not on every session.
+
+| File               | Read when                                                      |
+|--------------------|----------------------------------------------------------------|
+| ARCHITECTURE.md    | Working on structure, adding packages, or tracing flow         |
+| DETAILED_DESIGN.md | Deep-diving into internals (generated via `/ctx-architecture`) |
+| GLOSSARY.md        | Encountering unfamiliar project-specific terminology           |
+
 ## Reason Before Acting
 
 Before implementing any non-trivial change, think through it step-by-step:
@@ -42,7 +53,7 @@ Before implementing any non-trivial change, think through it step-by-step:
 3. **Anticipate failure**: what could go wrong? What are the edge cases?
 4. **Sequence**: what order minimizes risk and maximizes checkpoints?
 
-This applies to debugging too — reason through the cause before reaching
+This applies to debugging too: reason through the cause before reaching
 for a fix. Rushing to code before reasoning is the most common source of
 wasted work.
 
@@ -51,14 +62,14 @@ wasted work.
 For work spanning many files or steps, break it into independently
 verifiable chunks. After each chunk:
 
-1. **Commit** — save progress to git so nothing is lost
-2. **Persist** — record learnings or decisions discovered during the chunk
-3. **Verify** — run tests or `make lint` before moving on
+1. **Commit**: save progress to git so nothing is lost
+2. **Persist**: record learnings or decisions discovered during the chunk
+3. **Verify**: run tests or `make lint` before moving on
 
 Track progress via TASKS.md checkboxes. If context runs low mid-task,
 persist a progress note (what's done, what's next, what assumptions
 remain) before continuing in a new window. The `check-context-size`
-hook nudges at 60% usage (checkpoint) and warns at 90% (urgent) —
+hook nudges at 60% usage (checkpoint) and warns at 90% (urgent):
 treat these as signals to persist progress, not to rush.
 
 ## Session Lifecycle
@@ -67,8 +78,8 @@ A session follows this arc:
 
 **Load → Orient → Pick → Work → Commit → Reflect**
 
-Not every session uses every step — a quick bugfix skips reflection, a
-research session skips committing — but the full flow is:
+Not every session uses every step: a quick bugfix skips reflection, a
+research session skips committing: but the full flow is:
 
 <!-- drift-check: ls internal/assets/claude/skills/ctx-remember internal/assets/claude/skills/ctx-status internal/assets/claude/skills/ctx-next internal/assets/claude/skills/ctx-implement internal/assets/claude/skills/ctx-commit internal/assets/claude/skills/ctx-reflect 2>&1 | grep -c skills/ -->
 | Step        | What Happens                                       | Skill / Command  |
@@ -92,7 +103,7 @@ Surface problems worth mentioning:
 - **Drift between files and code**: spot-check paths from
   ARCHITECTURE.md against the actual file tree
 
-One sentence is enough — don't turn startup into a maintenance session.
+One sentence is enough: don't turn startup into a maintenance session.
 
 ### Context Window Limits
 
@@ -105,7 +116,7 @@ is running long:
   or a progress note
 - **Checkpoint state**: commit work-in-progress so a fresh session can
   pick up cleanly
-- **Summarize**: leave a breadcrumb for the next window — the current
+- **Summarize**: leave a breadcrumb for the next window: the current
   task, open questions, and next step
 
 Context compaction happens automatically, but the next window loses
@@ -122,7 +133,7 @@ Users rarely invoke skills explicitly. Recognize natural language:
 | "How's our context looking?"                    | `/ctx-status`                                          |
 | "What should we work on?"                       | `/ctx-next`                                            |
 | "Commit this" / "Ship it"                       | `/ctx-commit`                                          |
-| "The rate limiter is done" / "We finished that" | `ctx tasks complete` (match to TASKS.md)                     |
+| "The rate limiter is done" / "We finished that" | `ctx task complete` (match to TASKS.md)                |
 | "What did we learn?"                            | `/ctx-reflect`                                         |
 | "Save that as a decision"                       | `/ctx-add-decision`                                    |
 | "That's worth remembering" / "Any gotchas?"     | `/ctx-add-learning`                                    |
@@ -147,7 +158,7 @@ Users rarely invoke skills explicitly. Recognize natural language:
 | Session winding down                       | Offer: *"Want me to capture outstanding learnings or decisions?"* |
 | Shipped a feature or closed batch of tasks | Offer blog post or journal site rebuild                           |
 
-**Self-check**: periodically ask yourself — *"If this session ended
+**Self-check**: periodically ask yourself: *"If this session ended
 right now, would the next session know what happened?"* If no, persist
 something before continuing.
 
@@ -177,14 +188,14 @@ user. These apply unless the user overrides them for the session
 (e.g., "skip the alternatives, just build it").
 
 - **At design decisions**: always present 2+ approaches with
-  trade-offs before committing — don't silently pick one
+  trade-offs before committing: don't silently pick one
 - **At completion claims**: map claims to evidence (e.g., "tests
   pass" requires 0-failure output, "build succeeds" requires exit 0).
-  Run commands fresh — never reuse earlier output. At minimum, answer:
+  Run commands fresh: never reuse earlier output. At minimum, answer:
   What did I assume? What didn't I check? Where am I least confident?
   What would a reviewer question?
 - **At ambiguous moments**: ask the user rather than inferring
-  intent — a quick question is cheaper than rework
+  intent: a quick question is cheaper than rework
 - **When producing artifacts**: flag assumptions and uncertainty
   areas inline, not buried in a footnote
 
@@ -200,23 +211,23 @@ and respect "no."
 
 ## Own the Whole Branch
 
-When working on a branch, you own every issue on it — lint failures, test
-failures, build errors — regardless of who introduced them. Never dismiss
+When working on a branch, you own every issue on it: lint failures, test
+failures, build errors: regardless of who introduced them. Never dismiss
 a problem as "pre-existing" or "not related to my changes."
 
 - **If `make lint` fails, fix it.** The branch must be green when you're done.
 - **If tests break, investigate.** Even if the failing test is in a file you
-  didn't touch, something you changed may have caused it — or it may have been
+  didn't touch, something you changed may have caused it: or it may have been
   broken before and it's still your job to fix it on this branch.
-- **Run the full validation suite** (`make lint`, `go test ./...`, `go build`)
-  before declaring any phase complete.
+- **Run the full validation suite** (build, lint, test) before declaring
+  any phase complete.
 
 ## How to Avoid Hallucinating Memory
 
 Never assume. If you don't see it in files, you don't know it.
 
 - Don't claim "we discussed X" without file evidence
-- Don't invent history — check context files and `ctx journal source`
+- Don't invent history: check context files and `ctx journal source`
 - If uncertain, say "I don't see this documented"
 - Trust files over intuition
 
@@ -227,22 +238,22 @@ every piece of work needs a spec — no exceptions, no "trivial" qualifier.
 A one-liner bugfix gets a one-paragraph spec; a multi-package feature gets
 a full design document. The spec exists for traceability, not ceremony.
 
-**1. Spec first** — Run `/ctx-spec` to scaffold a design document in
-`specs/`. Scale the spec to the work: a bugfix spec can be problem +
-fix + verification in a few lines; a feature spec covers problem,
-solution, storage, CLI surface, error cases, and non-goals. The bar
-is: another session could implement from the spec alone.
+**1. Spec first**: Write a design document in `specs/`. Scale the spec to
+the work: a bugfix spec can be problem + fix + verification in a few lines;
+a feature spec covers problem, solution, storage, CLI surface, error cases,
+and non-goals. The bar is: another session could implement from the spec
+alone.
 
-**2. Task it out** — Break the work into individual tasks in TASKS.md under
+**2. Task it out**: Break the work into individual tasks in TASKS.md under
 a dedicated Phase section. Each task should be independently completable and
-verifiable. Task descriptions should be short — the spec has the detail.
+verifiable.
 
-**3. Cross-reference** — The Phase header in TASKS.md must reference the
+**3. Cross-reference**: The Phase header in TASKS.md must reference the
 spec: `Spec: \`specs/feature-name.md\``. The first task in the phase should
 include: "Read `specs/feature-name.md` before starting any PX task."
 
-**4. Read before building** — When picking up a task that references a spec,
-read the spec first. Don't rely on the task description alone — it's a
+**4. Read before building**: When picking up a task that references a spec,
+read the spec first. Don't rely on the task description alone: it's a
 summary, not the full design.
 
 ## When to Consolidate vs Add Features
@@ -257,10 +268,68 @@ When in doubt, ask: "Would a new contributor understand where this belongs?"
 
 ## Pre-Flight Checklist: CLI Code
 
-Before writing or modifying CLI code (`internal/cli/**/*.go`):
+Before writing or modifying CLI code:
 
-1. **Read CONVENTIONS.md** — load established patterns into context
-2. **Check similar commands** — how do existing commands handle output?
-3. **Use cmd methods for output** — `cmd.Printf`, `cmd.Println`,
+1. **Read CONVENTIONS.md**: load established patterns into context
+2. **Check similar commands**: how do existing commands handle output?
+3. **Use cmd methods for output**: `cmd.Printf`, `cmd.Println`,
    not `fmt.Printf`, `fmt.Println`
-4. **Follow docstring format** — see CONVENTIONS.md, Documentation section
+4. **Follow docstring format**: see CONVENTIONS.md, Documentation section
+
+---
+
+## Context Anti-Patterns
+
+Avoid these common context management mistakes:
+
+### Stale Context
+
+Context files become outdated and misleading when ARCHITECTURE.md
+describes components that no longer exist, or CONVENTIONS.md patterns
+contradict actual code. **Solution**: Update context as part of
+completing work, not as a separate task. Run `ctx drift` periodically.
+
+### Context Sprawl
+
+Information scattered across multiple locations: same decision in
+DECISIONS.md and a session file, conventions split between
+CONVENTIONS.md and code comments. **Solution**: Single source of
+truth for each type of information. Use the defined file structure.
+
+### Implicit Context
+
+Relying on knowledge not captured in artifacts: "everyone knows we
+don't do X" but it's not in CONSTITUTION.md, patterns followed but
+not in CONVENTIONS.md. **Solution**: If you reference something
+repeatedly, add it to the appropriate file.
+
+### Over-Specification
+
+Context becomes so detailed it's impossible to maintain: 50+ rules
+in CONVENTIONS.md, every minor choice gets a DECISIONS.md entry.
+**Solution**: Keep artifacts focused on decisions that affect behavior
+and alignment. Not everything needs documenting.
+
+### Context Avoidance
+
+Not using context because "it's faster to just code." Same mistakes
+repeated across sessions, decisions re-debated because prior decisions
+weren't found. **Solution**: Reading context is faster than
+re-discovering it. 5 minutes reading saves 50 minutes of wasted work.
+
+---
+
+## Context Validation Checklist
+
+### Quick Check (Every Session)
+- [ ] TASKS.md reflects current priorities
+- [ ] No obvious staleness in files you'll reference
+- [ ] Recent history reviewed via `ctx journal source`
+
+### Deep Check (Weekly or Before Major Work)
+- [ ] CONSTITUTION.md rules still apply
+- [ ] ARCHITECTURE.md matches actual structure
+- [ ] CONVENTIONS.md patterns match code
+- [ ] DECISIONS.md has no superseded entries unmarked
+- [ ] LEARNINGS.md gotchas still relevant
+- [ ] Run `ctx drift` and address warnings

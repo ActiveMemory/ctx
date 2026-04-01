@@ -14,7 +14,8 @@ const (
 )
 
 const (
-	DescKeyLabelBoldReminder   = "label.bold-reminder"
-	DescKeyLabelToolOutput     = "label.tool-output"
-	DescKeyLabelSuggestionMode = "label.suggestion-mode"
+	DescKeyLabelBoldReminder    = "label.bold-reminder"
+	DescKeyLabelBoldReminderFmt = "label.bold-reminder-fmt"
+	DescKeyLabelToolOutput      = "label.tool-output"
+	DescKeyLabelSuggestionMode  = "label.suggestion-mode"
 )

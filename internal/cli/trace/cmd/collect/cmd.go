@@ -12,6 +12,9 @@ import (
 	"github.com/ActiveMemory/ctx/internal/assets/read/desc"
 	coreCollect "github.com/ActiveMemory/ctx/internal/cli/trace/core/collect"
 	"github.com/ActiveMemory/ctx/internal/config/embed/cmd"
+	"github.com/ActiveMemory/ctx/internal/config/embed/flag"
+	cFlag "github.com/ActiveMemory/ctx/internal/config/flag"
+	"github.com/ActiveMemory/ctx/internal/flagbind"
 )
 
 // Cmd returns the trace collect subcommand.
@@ -34,6 +37,6 @@ func Cmd() *cobra.Command {
 			return Run(cobraCmd)
 		},
 	}
-	c.Flags().StringVar(&record, "record", "", "Record context refs for a post-commit hash")
+	flagbind.StringFlag(c, &record, cFlag.Record, flag.DescKeyTraceCollectRecord)
 	return c
 }

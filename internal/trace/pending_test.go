@@ -11,6 +11,8 @@ import (
 	"path/filepath"
 	"testing"
 	"time"
+
+	cfgTrace "github.com/ActiveMemory/ctx/internal/config/trace"
 )
 
 func TestRecord(t *testing.T) {
@@ -46,7 +48,7 @@ func TestRecordMultiple(t *testing.T) {
 		}
 	}
 
-	pendingPath := filepath.Join(stateDir, pendingFile)
+	pendingPath := filepath.Join(stateDir, cfgTrace.FilePending)
 	data, readErr := os.ReadFile(pendingPath) //nolint:gosec // test file
 	if readErr != nil {
 		t.Fatalf("ReadFile() error: %v", readErr)

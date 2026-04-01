@@ -7,11 +7,11 @@
 package hook
 
 import (
-	"fmt"
-
 	"github.com/spf13/cobra"
 
 	coreHook "github.com/ActiveMemory/ctx/internal/cli/trace/core/hook"
+	cfgTrace "github.com/ActiveMemory/ctx/internal/config/trace"
+	errTrace "github.com/ActiveMemory/ctx/internal/err/trace"
 )
 
 // Run executes the hook enable or disable action.
@@ -24,11 +24,11 @@ import (
 //   - error: non-nil on unknown action or execution failure
 func Run(cmd *cobra.Command, action string) error {
 	switch action {
-	case "enable":
+	case cfgTrace.ActionEnable:
 		return coreHook.Enable(cmd)
-	case "disable":
+	case cfgTrace.ActionDisable:
 		return coreHook.Disable(cmd)
 	default:
-		return fmt.Errorf("unknown action %q: use enable or disable", action)
+		return errTrace.UnknownAction(action)
 	}
 }
