@@ -105,7 +105,7 @@ func Import(
 				endIdx = totalMsgs
 			}
 
-			_, statErr := os.Stat(path)
+			_, statErr := os.Stat(path) //nolint:gosec // path built from output dir + session slug
 			fileExists := statErr == nil
 
 			var action entity.ImportAction

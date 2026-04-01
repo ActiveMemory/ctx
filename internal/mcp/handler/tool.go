@@ -130,7 +130,7 @@ func (h *Handler) Complete(query string) (string, error) {
 		return "", boundaryErr
 	}
 
-	completedTask, completeErr := taskComplete.Complete(
+	completedTask, _, completeErr := taskComplete.Complete(
 		query, h.ContextDir,
 	)
 	if completeErr != nil {
@@ -290,7 +290,7 @@ func (h *Handler) WatchUpdate(
 
 	// Handle the "complete" type as a special case.
 	if entryType == cfgEntry.Complete {
-		completedTask, completeErr := taskComplete.Complete(
+		completedTask, _, completeErr := taskComplete.Complete(
 			content, h.ContextDir)
 		if completeErr != nil {
 			return "", completeErr

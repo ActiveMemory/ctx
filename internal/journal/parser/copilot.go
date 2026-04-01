@@ -222,7 +222,7 @@ func CopilotSessionDirs() []string {
 	variants := []string{cfgCopilot.AppCode, cfgCopilot.AppCodeInsiders}
 	for _, variant := range variants {
 		wsDir := filepath.Join(appData, variant, cfgCopilot.DirUser, cfgCopilot.DirWorkspace)
-		if info, err := os.Stat(wsDir); err == nil && info.IsDir() {
+		if info, err := os.Stat(wsDir); err == nil && info.IsDir() { //nolint:gosec // wsDir built from appData + known constants
 			// Scan each workspace for chatSessions/ subdirectory
 			entries, err := os.ReadDir(wsDir)
 			if err != nil {
@@ -233,7 +233,7 @@ func CopilotSessionDirs() []string {
 					continue
 				}
 				chatDir := filepath.Join(wsDir, entry.Name(), cfgCopilot.DirChatSessions)
-				if info, err := os.Stat(chatDir); err == nil && info.IsDir() {
+				if info, err := os.Stat(chatDir); err == nil && info.IsDir() { //nolint:gosec // chatDir built from known constants
 					dirs = append(dirs, chatDir)
 				}
 			}

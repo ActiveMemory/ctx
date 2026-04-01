@@ -67,7 +67,7 @@ func Run(cmd *cobra.Command, stdin *os.File) error {
 	if _, statErr := os.Stat(jDir); os.IsNotExist(statErr) {
 		return nil
 	}
-	if _, statErr := os.Stat(claudeProjectsDir); os.IsNotExist(statErr) {
+	if _, statErr := os.Stat(claudeProjectsDir); os.IsNotExist(statErr) { //nolint:gosec // path derived from os.UserHomeDir
 		return nil
 	}
 

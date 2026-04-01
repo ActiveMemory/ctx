@@ -71,17 +71,17 @@ func WriteOversizeFlag(
 	flag.WriteString(desc.Text(text.DescKeyContextLoadGateOversizeHeader))
 	sep := strings.Repeat(load_gate.ContextLoadSeparatorChar, stats.ContextSizeOversizeSepLen)
 	flag.WriteString(sep + token.NewlineLF)
-	flag.WriteString(fmt.Sprintf(
+	fmt.Fprintf(&flag,
 		desc.Text(text.DescKeyContextLoadGateOversizeTimestamp),
-		time.Now().UTC().Format(time.RFC3339)))
-	flag.WriteString(fmt.Sprintf(
+		time.Now().UTC().Format(time.RFC3339))
+	fmt.Fprintf(&flag,
 		desc.Text(text.DescKeyContextLoadGateOversizeInjected),
-		totalTokens, threshold))
+		totalTokens, threshold)
 	flag.WriteString(desc.Text(text.DescKeyContextLoadGateOversizeBreakdown))
 	for _, entry := range perFile {
-		flag.WriteString(fmt.Sprintf(
+		fmt.Fprintf(&flag,
 			desc.Text(text.DescKeyContextLoadGateOversizeFileEntry),
-			entry.Name, entry.Tokens))
+			entry.Name, entry.Tokens)
 	}
 	flag.WriteString(token.NewlineLF)
 	flag.WriteString(desc.Text(text.DescKeyContextLoadGateOversizeAction))

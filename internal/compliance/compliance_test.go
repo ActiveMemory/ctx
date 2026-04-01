@@ -784,7 +784,7 @@ func TestNoNetworkImportsInCore(t *testing.T) {
 
 		t.Run(pkg, func(t *testing.T) {
 			fset := token.NewFileSet()
-			pkgs, parseErr := parser.ParseDir(fset, pkgDir, func(info os.FileInfo) bool {
+			pkgs, parseErr := parser.ParseDir(fset, pkgDir, func(info os.FileInfo) bool { //nolint:staticcheck // migration to go/packages tracked separately
 				return !strings.HasSuffix(info.Name(), "_test.go")
 			}, parser.ImportsOnly)
 			if parseErr != nil {

@@ -73,7 +73,7 @@ func ensureMCPConfig(cmd *cobra.Command) error {
 	existing[cfgHook.KeyMCPServers] = servers
 
 	// Create directory if needed
-	if mkdirErr := os.MkdirAll(copilotHome, fs.PermExec); mkdirErr != nil {
+	if mkdirErr := os.MkdirAll(copilotHome, fs.PermExec); mkdirErr != nil { //nolint:gosec // copilotHome from user home dir
 		return mkdirErr
 	}
 
@@ -83,7 +83,7 @@ func ensureMCPConfig(cmd *cobra.Command) error {
 	}
 	data = append(data, token.NewlineLF...)
 
-	if writeFileErr := os.WriteFile(target, data, fs.PermFile); writeFileErr != nil {
+	if writeFileErr := os.WriteFile(target, data, fs.PermFile); writeFileErr != nil { //nolint:gosec // target from user home dir
 		return writeFileErr
 	}
 	writeSetup.InfoCopilotCLICreated(cmd, target)

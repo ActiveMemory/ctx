@@ -42,7 +42,7 @@ func Run(cmd *cobra.Command) error {
 	localBytes, localReadErr := os.ReadFile(cfgClaude.Settings)
 	if localReadErr != nil {
 		if os.IsNotExist(localReadErr) {
-			if writeErr := os.WriteFile(
+			if writeErr := os.WriteFile( //nolint:gosec // path is a constant from cfgClaude
 				cfgClaude.Settings, goldenBytes, fs.PermFile,
 			); writeErr != nil {
 				return errFs.FileWrite(cfgClaude.Settings, writeErr)
@@ -76,7 +76,7 @@ func Run(cmd *cobra.Command) error {
 
 	restore.Diff(cmd, dropped, restored, denyDropped, denyRestored)
 
-	if writeErr := os.WriteFile(
+	if writeErr := os.WriteFile( //nolint:gosec // path is a constant from cfgClaude
 		cfgClaude.Settings, goldenBytes, fs.PermFile,
 	); writeErr != nil {
 		return errFs.FileWrite(cfgClaude.Settings, writeErr)

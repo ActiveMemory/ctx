@@ -94,7 +94,7 @@ func OrCreate(cmd *cobra.Command, p entity.MergeParams) (bool, error) {
 			string(p.TemplateContent) + token.NewlineLF + existingStr[insertPos:]
 	}
 
-	if writeErr := os.WriteFile(
+	if writeErr := os.WriteFile( //nolint:gosec // p.Filename from init template config
 		p.Filename, []byte(mergedContent), fs.PermFile,
 	); writeErr != nil {
 		return false, errFs.WriteMerged(p.Filename, writeErr)
@@ -150,7 +150,7 @@ func UpdateMarkedSection(
 		return bkErr
 	}
 
-	if writeErr := os.WriteFile(
+	if writeErr := os.WriteFile( //nolint:gosec // filename from init template config
 		filename, []byte(newContent), fs.PermFile,
 	); writeErr != nil {
 		return errFs.FileUpdate(filename, writeErr)

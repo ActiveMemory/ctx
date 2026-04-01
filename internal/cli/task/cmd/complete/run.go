@@ -7,6 +7,7 @@
 package complete
 
 import (
+	"fmt"
 	"os"
 	"path/filepath"
 	"strconv"
@@ -14,6 +15,7 @@ import (
 
 	"github.com/spf13/cobra"
 
+	"github.com/ActiveMemory/ctx/internal/cli/system/core/state"
 	"github.com/ActiveMemory/ctx/internal/config/ctx"
 	"github.com/ActiveMemory/ctx/internal/config/fs"
 	"github.com/ActiveMemory/ctx/internal/config/regex"
@@ -21,11 +23,15 @@ import (
 	errTask "github.com/ActiveMemory/ctx/internal/err/task"
 	"github.com/ActiveMemory/ctx/internal/rc"
 	"github.com/ActiveMemory/ctx/internal/task"
+	"github.com/ActiveMemory/ctx/internal/trace"
 	"github.com/ActiveMemory/ctx/internal/write/complete"
 )
 
 // Complete finds a task in TASKS.md by number or text match and marks
 // it complete by changing "- [ ]" to "- [x]".
+//
+// NOTE: This is an internal function. The return signature includes the
+// matched task number (used by trace.Record for commit context linking).
 //
 // Parameters:
 //   - query: Task number (e.g. "1") or search text to match
@@ -33,9 +39,10 @@ import (
 //
 // Returns:
 //   - string: The text of the completed task
+//   - int: The task number that was matched (1-based)
 //   - error: Non-nil if the task is not found, multiple matches, or file
 //     operations fail
-func Complete(query, contextDir string) (string, error) {
+func Complete(query, contextDir string) (string, int, error) {
 	if contextDir == "" {
 		contextDir = rc.ContextDir()
 	}
@@ -44,13 +51,13 @@ func Complete(query, contextDir string) (string, error) {
 
 	// Check if the file exists
 	if _, statErr := os.Stat(filePath); os.IsNotExist(statErr) {
-		return "", errTask.FileNotFound()
+		return "", 0, errTask.FileNotFound()
 	}
 
 	// Read existing content
 	content, readErr := os.ReadFile(filepath.Clean(filePath))
 	if readErr != nil {
-		return "", errTask.FileRead(readErr)
+		return "", 0, errTask.FileRead(readErr)
 	}
 
 	// Parse tasks and find matching one
@@ -66,6 +73,7 @@ func Complete(query, contextDir string) (string, error) {
 	currentTaskNum := 0
 	matchedLine := -1
 	matchedTask := ""
+	matchedNum := 0
 
 	for i, line := range lines {
 		match := regex.Task.FindStringSubmatch(line)
@@ -77,6 +85,7 @@ func Complete(query, contextDir string) (string, error) {
 			if isNumber && currentTaskNum == taskNumber {
 				matchedLine = i
 				matchedTask = taskText
+				matchedNum = currentTaskNum
 				break
 			}
 
@@ -85,16 +94,17 @@ func Complete(query, contextDir string) (string, error) {
 				strings.ToLower(taskText), strings.ToLower(query),
 			) {
 				if matchedLine != -1 {
-					return "", errTask.MultipleMatches(query)
+					return "", 0, errTask.MultipleMatches(query)
 				}
 				matchedLine = i
 				matchedTask = taskText
+				matchedNum = currentTaskNum
 			}
 		}
 	}
 
 	if matchedLine == -1 {
-		return "", errTask.NotFound(query)
+		return "", 0, errTask.NotFound(query)
 	}
 
 	// Mark the task as complete
@@ -104,13 +114,13 @@ func Complete(query, contextDir string) (string, error) {
 
 	// Write back
 	newContent := strings.Join(lines, token.NewlineLF)
-	if writeErr := os.WriteFile(
+	if writeErr := os.WriteFile( //nolint:gosec // path from rc.ContextDir, trusted
 		filePath, []byte(newContent), fs.PermFile,
 	); writeErr != nil {
-		return "", errTask.FileWrite(writeErr)
+		return "", 0, errTask.FileWrite(writeErr)
 	}
 
-	return matchedTask, nil
+	return matchedTask, matchedNum, nil
 }
 
 // Run executes the complete command logic.
@@ -122,12 +132,15 @@ func Complete(query, contextDir string) (string, error) {
 // Returns:
 //   - error: Non-nil on task match or write failure
 func Run(cmd *cobra.Command, args []string) error {
-	matchedTask, completeErr := Complete(args[0], "")
+	matchedTask, matchedNum, completeErr := Complete(args[0], "")
 	if completeErr != nil {
 		return completeErr
 	}
 
 	complete.Completed(cmd, matchedTask)
+
+	// Best-effort: record pending context for commit tracing.
+	_ = trace.Record(fmt.Sprintf("task:%d", matchedNum), state.Dir())
 
 	return nil
 }

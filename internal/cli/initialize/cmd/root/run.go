@@ -333,7 +333,7 @@ func ensureGitignoreEntries(cmd *cobra.Command) error {
 		sb.WriteString(e + token.NewlineLF)
 	}
 
-	if writeErr := os.WriteFile(
+	if writeErr := os.WriteFile( //nolint:gosec // FileGitignore is a project-relative constant, not user-controlled
 		file.FileGitignore, append(content, []byte(sb.String())...),
 		fs.PermFile,
 	); writeErr != nil {

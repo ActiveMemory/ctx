@@ -58,7 +58,7 @@ func WriteArchive(prefix, heading, content string) (string, error) {
 			dateStr + nl + nl + content
 	}
 
-	if writeErr := os.WriteFile(
+	if writeErr := os.WriteFile( //nolint:gosec // path from context directory, trusted
 		archiveFile, []byte(finalContent), fs.PermFile,
 	); writeErr != nil {
 		return "", errBackup.WriteArchive(writeErr)

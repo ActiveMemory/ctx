@@ -73,6 +73,7 @@ own guards and no-op gracefully.
 | [`ctx guide`](tools.md#ctx-guide)             | Quick-reference cheat sheet                              |
 | [`ctx why`](tools.md#ctx-why)                 | Read the philosophy behind ctx                           |
 | [`ctx site`](tools.md#ctx-site)               | Site management (feed generation)                        |
+| [`ctx trace`](trace.md#ctx-trace)             | Show context behind git commits                          |
 | [`ctx doctor`](doctor.md#ctx-doctor)          | Structural health check (hooks, drift, config)           |
 | [`ctx mcp`](mcp.md#ctx-mcp)                   | MCP server for AI tool integration (stdin/stdout)        |
 | [`ctx config`](config.md#ctx-config)          | Manage runtime configuration profiles                    |
@@ -98,6 +99,7 @@ own guards and no-op gracefully.
 | `CTX_TOKEN_BUDGET`      | Override default token budget                       |
 | `CTX_BACKUP_SMB_URL`    | SMB share URL for backups (e.g. `smb://host/share`) |
 | `CTX_BACKUP_SMB_SUBDIR` | Subdirectory on SMB share (default: `ctx-sessions`) |
+| `CTX_SESSION_ID`        | Active AI session ID (used by `ctx trace` for context linking) |
 
 <!-- drift-check: diff <(grep 'yaml:' internal/rc/types.go | grep -oP '"[a-z_]+"' | tr -d '"' | sort) <(sed -n '/Configuration File/,/^##[^#]/p' docs/cli/index.md | grep -oP '`[a-z_]+`' | tr -d '`' | sort -u) -->
 ## Configuration File

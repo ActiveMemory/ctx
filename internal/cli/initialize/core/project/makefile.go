@@ -66,7 +66,7 @@ func HandleMakefileCtx(cmd *cobra.Command) error {
 	}
 
 	amended += token.NewlineLF + project.MakefileIncludeDirective + token.NewlineLF
-	if writeErr := os.WriteFile(
+	if writeErr := os.WriteFile( //nolint:gosec // path built from trusted project root
 		project.Makefile, []byte(amended), fs.PermFile,
 	); writeErr != nil {
 		return errFs.FileAmend(project.Makefile, writeErr)

@@ -55,7 +55,7 @@ func Deploy(cmd *cobra.Command) error {
 
 		// File exists without ctx markers: append ctx content
 		merged := existingStr + token.NewlineLF + string(agentsContent)
-		if wErr := os.WriteFile(targetFile, []byte(merged), fs.PermFile); wErr != nil {
+		if wErr := os.WriteFile(targetFile, []byte(merged), fs.PermFile); wErr != nil { //nolint:gosec // targetFile from known tool config path
 			return errFs.FileWrite(targetFile, wErr)
 		}
 		writeSetup.InfoAgentsMerged(cmd, targetFile)

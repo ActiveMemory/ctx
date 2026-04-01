@@ -68,15 +68,15 @@ func RenderMermaid(graph map[string][]string) string {
 func RenderTable(graph map[string][]string) string {
 	tf := fmt.Sprintf(dep.TableRowFormat, dep.TableColPackage)
 	var b strings.Builder
-	b.WriteString(fmt.Sprintf(tf, dep.TableHeaderPackage, dep.TableHeaderImports))
-	b.WriteString(fmt.Sprintf(tf,
+	fmt.Fprintf(&b, tf, dep.TableHeaderPackage, dep.TableHeaderImports)
+	fmt.Fprintf(&b, tf,
 		strings.Repeat("-", dep.TableColPackage),
-		strings.Repeat("-", dep.TableColImports)))
+		strings.Repeat("-", dep.TableColImports))
 
 	keys := SortedKeys(graph)
 	for _, pkg := range keys {
 		deps := graph[pkg]
-		b.WriteString(fmt.Sprintf(tf, pkg, strings.Join(deps, token.CommaSpace)))
+		fmt.Fprintf(&b, tf, pkg, strings.Join(deps, token.CommaSpace))
 	}
 
 	return b.String()

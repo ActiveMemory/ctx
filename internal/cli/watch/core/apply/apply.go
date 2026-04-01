@@ -138,5 +138,5 @@ func RunCompleteSilent(args []string) error {
 	lines[matchedLine] = regex.Task.ReplaceAllString(
 		lines[matchedLine], regex.TaskCompleteReplace,
 	)
-	return os.WriteFile(filePath, []byte(strings.Join(lines, nl)), fs.PermFile)
+	return os.WriteFile(filePath, []byte(strings.Join(lines, nl)), fs.PermFile) //nolint:gosec // filePath from rc.ContextDir
 }

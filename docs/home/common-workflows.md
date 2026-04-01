@@ -204,6 +204,38 @@ chmod +x loop.sh
 See [Autonomous Loops](../operations/autonomous-loop.md) for configuration
 and advanced usage.
 
+## Trace Commit Context
+
+Link your git commits back to the decisions, tasks, and learnings
+that motivated them. Enable the hook once:
+
+```bash
+# Install the git hook (one-time setup)
+ctx trace hook enable
+```
+
+From now on, every `git commit` automatically gets a `ctx-context`
+trailer linking it to relevant context. No extra steps needed —
+just use `ctx add`, `ctx task complete`, and commit as usual.
+
+```bash
+# Later: why was this commit made?
+ctx trace abc123
+
+# Recent commits with their context
+ctx trace --last 10
+
+# Context trail for a specific file
+ctx trace file src/auth.go
+
+# Manually tag a commit after the fact
+ctx trace tag HEAD --note "Hotfix for production outage"
+```
+
+To stop: `ctx trace hook disable`.
+
+See [CLI Reference: trace](../cli/trace.md) for details.
+
 ## Agent Session Start
 
 The first thing an AI agent should do at session start is discover where
@@ -331,7 +363,9 @@ These are infrastructure: used in scripts, CI, or one-time setup.
 | `ctx task complete`             | Mark a task done by substring match             |
 | `ctx sync`                 | Reconcile context with codebase state           |
 | `ctx compact`              | Consolidate and clean up context files          |
-| `ctx setup`                 | Generate AI tool integration config             |
+| `ctx trace`                | Show context behind git commits                 |
+| `ctx trace hook`           | Enable/disable commit context tracing hook      |
+| `ctx setup`                | Generate AI tool integration config             |
 | `ctx watch`                | Watch AI output and auto-apply context updates  |
 | `ctx serve`                | Serve any zensical directory (default: journal) |
 | `ctx permission snapshot` | Save settings as a golden image                 |

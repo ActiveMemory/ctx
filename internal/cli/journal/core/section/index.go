@@ -67,9 +67,9 @@ func GenerateTopicsIndex(topics []entity.TopicData) string {
 	}
 
 	sb.WriteString(desc.Text(text.DescKeyHeadingTopics) + nl + nl)
-	sb.WriteString(fmt.Sprintf(
+	fmt.Fprintf(&sb,
 		tpl.JournalTopicStats+nl+nl,
-		len(topics), session.CountUnique(topics), len(popular), len(longtail)))
+		len(topics), session.CountUnique(topics), len(popular), len(longtail))
 
 	WritePopularAndLongtail(&sb,
 		len(popular), desc.Text(text.DescKeyHeadingPopularTopics),
@@ -161,10 +161,9 @@ func GenerateKeyFilesIndex(keyFiles []entity.KeyFileData) string {
 	}
 
 	sb.WriteString(desc.Text(text.DescKeyHeadingKeyFiles) + nl + nl)
-	sb.WriteString(fmt.Sprintf(
+	fmt.Fprintf(&sb,
 		tpl.JournalFileStats+nl+nl,
-		len(keyFiles), totalSessions, len(popular), len(longtail)),
-	)
+		len(keyFiles), totalSessions, len(popular), len(longtail))
 
 	WritePopularAndLongtail(&sb,
 		len(popular), desc.Text(text.DescKeyHeadingFrequentlyTouched),
@@ -237,9 +236,8 @@ func GenerateTypesIndex(sessionTypes []entity.TypeData) string {
 	}
 
 	sb.WriteString(desc.Text(text.DescKeyHeadingSessionTypes) + nl + nl)
-	sb.WriteString(fmt.Sprintf(
-		tpl.JournalTypeStats+nl+nl, len(sessionTypes), totalSessions),
-	)
+	fmt.Fprintf(&sb,
+		tpl.JournalTypeStats+nl+nl, len(sessionTypes), totalSessions)
 
 	for _, st := range sessionTypes {
 		sb.WriteString(format.SessionLink(st.Name, st.Name, len(st.Entries)))

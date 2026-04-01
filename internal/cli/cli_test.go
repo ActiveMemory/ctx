@@ -28,11 +28,18 @@ func TestBinaryIntegration(t *testing.T) {
 		t.Skip("skipping integration test in short mode")
 	}
 
-	tmpDir, err := os.MkdirTemp("", "cli-binary-test-*")
+	rawTmpDir, err := os.MkdirTemp("", "cli-binary-test-*")
 	if err != nil {
 		t.Fatalf("failed to create temp dir: %v", err)
 	}
-	defer func() { _ = os.RemoveAll(tmpDir) }()
+	defer func() { _ = os.RemoveAll(rawTmpDir) }()
+
+	// Resolve symlinks so the boundary check (which uses EvalSymlinks)
+	// sees the same path as the test. On macOS /var → /private/var.
+	tmpDir, err := filepath.EvalSymlinks(rawTmpDir)
+	if err != nil {
+		t.Fatalf("failed to resolve symlinks: %v", err)
+	}
 
 	// Build the binary
 	binaryPath := filepath.Join(tmpDir, "ctx-test-binary")

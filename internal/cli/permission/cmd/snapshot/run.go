@@ -39,7 +39,7 @@ func Run(cmd *cobra.Command) error {
 		updated = true
 	}
 
-	if writeErr := os.WriteFile(
+	if writeErr := os.WriteFile( //nolint:gosec // path is a known config constant
 		claude.SettingsGolden, content, fs.PermFile,
 	); writeErr != nil {
 		return errFs.FileWrite(claude.SettingsGolden, writeErr)

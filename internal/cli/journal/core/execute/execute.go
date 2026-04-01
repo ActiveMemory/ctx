@@ -87,7 +87,7 @@ func Import(
 		}
 
 		// Write file.
-		if writeErr := os.WriteFile(
+		if writeErr := os.WriteFile( //nolint:gosec // path from journal directory, trusted
 			fa.Path, []byte(content), fs.PermFile,
 		); writeErr != nil {
 			err.WarnFile(cmd, fa.Filename, writeErr)

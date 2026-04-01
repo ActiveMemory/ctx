@@ -73,7 +73,7 @@ func Run(cmd *cobra.Command, args []string) error {
 	)
 
 	// Write snapshot
-	if writeErr := os.WriteFile(
+	if writeErr := os.WriteFile( //nolint:gosec // path built from rc.ContextDir + archive dir
 		snapshotPath, []byte(snapshotContent), fs.PermFile,
 	); writeErr != nil {
 		return errTask.SnapshotWrite(writeErr)

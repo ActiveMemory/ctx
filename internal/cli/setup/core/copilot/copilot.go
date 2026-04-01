@@ -63,7 +63,7 @@ func DeployInstructions(cmd *cobra.Command) error {
 
 		// File exists without ctx markers: append ctx content
 		merged := existingStr + token.NewlineLF + string(instructions)
-		if wErr := os.WriteFile(
+		if wErr := os.WriteFile( //nolint:gosec // targetFile from known tool config path
 			targetFile, []byte(merged), fs.PermFile,
 		); wErr != nil {
 			return errFs.FileWrite(targetFile, wErr)

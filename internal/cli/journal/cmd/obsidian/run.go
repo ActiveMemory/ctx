@@ -165,7 +165,7 @@ func BuildVault(cmd *cobra.Command, journalDir, output string) error {
 			entry, topicIndex, obsidian.MaxRelated,
 		)
 
-		if writeErr := os.WriteFile(
+		if writeErr := os.WriteFile( //nolint:gosec // dst built from output dir + filename
 			dst, []byte(transformed), fs.PermFile,
 		); writeErr != nil {
 			err.WarnFile(cmd, entry.Filename, writeErr)

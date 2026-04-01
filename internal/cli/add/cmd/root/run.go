@@ -14,10 +14,12 @@ import (
 	coreEntry "github.com/ActiveMemory/ctx/internal/cli/add/core/entry"
 	"github.com/ActiveMemory/ctx/internal/cli/add/core/example"
 	"github.com/ActiveMemory/ctx/internal/cli/add/core/extract"
+	"github.com/ActiveMemory/ctx/internal/cli/system/core/state"
 	cfgEntry "github.com/ActiveMemory/ctx/internal/config/entry"
 	"github.com/ActiveMemory/ctx/internal/entity"
 	"github.com/ActiveMemory/ctx/internal/entry"
 	errAdd "github.com/ActiveMemory/ctx/internal/err/add"
+	"github.com/ActiveMemory/ctx/internal/trace"
 	writeAdd "github.com/ActiveMemory/ctx/internal/write/add"
 )
 
@@ -73,6 +75,14 @@ func Run(cmd *cobra.Command, args []string, flags entity.AddConfig) error {
 
 	if fType == cfgEntry.Task && coreEntry.NeedsSpec(content) {
 		writeAdd.SpecNudge(cmd)
+	}
+
+	// Best-effort: record pending context for commit tracing.
+	// Decisions and learnings are prepended (see insert.AppendEntry),
+	// so the new entry is always #1 in file order. This coupling is
+	// intentional: if the prepend logic changes, this must be updated.
+	if fType == cfgEntry.Decision || fType == cfgEntry.Learning {
+		_ = trace.Record(fType+":1", state.Dir())
 	}
 
 	return nil

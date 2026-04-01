@@ -35,10 +35,8 @@ func List(
 		desc.Text(text.DescKeyChangesHeading) +
 			token.NewlineLF + token.NewlineLF,
 	)
-	b.WriteString(fmt.Sprintf(
-		desc.Text(text.DescKeyChangesRefPoint)+
-			token.NewlineLF+token.NewlineLF, refLabel,
-	),
+	fmt.Fprintf(&b, desc.Text(text.DescKeyChangesRefPoint)+
+		token.NewlineLF+token.NewlineLF, refLabel,
 	)
 
 	if len(ctxChanges) > 0 {
@@ -46,9 +44,9 @@ func List(
 			desc.Text(text.DescKeyChangesCtxHeading) + token.NewlineLF,
 		)
 		for _, c := range ctxChanges {
-			b.WriteString(fmt.Sprintf(
+			fmt.Fprintf(&b,
 				desc.Text(text.DescKeyChangesCtxLine)+token.NewlineLF,
-				c.Name, c.ModTime.Format(cfgTime.DateTimeFmt)))
+				c.Name, c.ModTime.Format(cfgTime.DateTimeFmt))
 		}
 		b.WriteString(token.NewlineLF)
 	}
@@ -57,25 +55,24 @@ func List(
 		b.WriteString(
 			desc.Text(text.DescKeyChangesCodeHeading) + token.NewlineLF,
 		)
-		b.WriteString(fmt.Sprintf(
+		fmt.Fprintf(&b,
 			desc.Text(text.DescKeyChangesCodeCommits)+token.NewlineLF,
-			commitCount(code.CommitCount)))
+			commitCount(code.CommitCount))
 		if code.LatestMsg != "" {
-			b.WriteString(fmt.Sprintf(
+			fmt.Fprintf(&b,
 				desc.Text(
 					text.DescKeyChangesCodeLatest)+token.NewlineLF, code.LatestMsg,
-			),
 			)
 		}
 		if len(code.Dirs) > 0 {
-			b.WriteString(fmt.Sprintf(
+			fmt.Fprintf(&b,
 				desc.Text(text.DescKeyChangesCodeDirs)+token.NewlineLF,
-				strings.Join(code.Dirs, token.CommaSpace)))
+				strings.Join(code.Dirs, token.CommaSpace))
 		}
 		if len(code.Authors) > 0 {
-			b.WriteString(fmt.Sprintf(
+			fmt.Fprintf(&b,
 				desc.Text(text.DescKeyChangesCodeAuthors)+token.NewlineLF,
-				strings.Join(code.Authors, token.CommaSpace)))
+				strings.Join(code.Authors, token.CommaSpace))
 		}
 		b.WriteString(token.NewlineLF)
 	}

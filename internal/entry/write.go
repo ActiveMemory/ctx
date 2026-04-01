@@ -78,7 +78,7 @@ func Write(params Params) error {
 		existing, formatted, fType, params.Section,
 	)
 
-	if writeErr := os.WriteFile(
+	if writeErr := os.WriteFile( //nolint:gosec // path from rc.ContextDir, trusted
 		filePath, newContent, fs.PermFile,
 	); writeErr != nil {
 		return errFs.FileWrite(filePath, writeErr)
@@ -87,14 +87,14 @@ func Write(params Params) error {
 	switch fType {
 	case entry.Decision:
 		indexed := index.UpdateDecisions(string(newContent))
-		if indexErr := os.WriteFile(
+		if indexErr := os.WriteFile( //nolint:gosec // path from rc.ContextDir, trusted
 			filePath, []byte(indexed), fs.PermFile,
 		); indexErr != nil {
 			return errAdd.IndexUpdate(filePath, indexErr)
 		}
 	case entry.Learning:
 		indexed := index.UpdateLearnings(string(newContent))
-		if indexErr := os.WriteFile(
+		if indexErr := os.WriteFile( //nolint:gosec // path from rc.ContextDir, trusted
 			filePath, []byte(indexed), fs.PermFile,
 		); indexErr != nil {
 			return errAdd.IndexUpdate(filePath, indexErr)
