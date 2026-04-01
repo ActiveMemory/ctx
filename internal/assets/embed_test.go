@@ -414,7 +414,7 @@ func TestHookMessageRegistry(t *testing.T) {
 }
 
 func TestListHookMessages(t *testing.T) {
-	entries, listErr := FS.ReadDir(asset.DirIntegrationsMessages)
+	entries, listErr := FS.ReadDir(asset.DirHooksMessages)
 	if listErr != nil {
 		t.Fatalf("unexpected error: %v", listErr)
 	}
@@ -442,7 +442,7 @@ func TestListHookMessages(t *testing.T) {
 
 func TestHookMessage_ReadVariant(t *testing.T) {
 	gatePath := path.Join(
-		asset.DirIntegrationsMessages,
+		asset.DirHooksMessages,
 		"qa-reminder", "gate.txt",
 	)
 	content, readErr := FS.ReadFile(gatePath)

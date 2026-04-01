@@ -21,7 +21,7 @@ const (
 	DirIntegrationsCopilotCLI   = "integrations/copilot-cli"
 	DirIntegrationsCopilotScrp  = "integrations/copilot-cli/scripts"
 	DirIntegrationsCopilotSkill = "integrations/copilot-cli/skills"
-	DirIntegrationsMessages     = "integrations/messages"
+	DirHooksMessages            = "hooks/messages"
 	DirJournal                  = "journal"
 	DirPermissions              = "permissions"
 	DirProject                  = "project"
@@ -79,7 +79,7 @@ var (
 	PathCopilotCLIHooksJSON = path.Join(DirIntegrationsCopilotCLI, FileCopilotCLIHooksJSON)
 	PathCopilotInstructions = path.Join(DirIntegrations, FileCopilotInstructionsMd)
 	PathInstructionsCtxMd   = path.Join(DirIntegrationsCopilotCLI, FileInstructionsCtxMd)
-	PathMessageRegistry     = path.Join(DirIntegrationsMessages, FileRegistryYAML)
+	PathMessageRegistry     = path.Join(DirHooksMessages, FileRegistryYAML)
 	PathExtraCSS            = path.Join(DirJournal, FileExtraCSS)
 	PathMakefileCtx         = path.Join(DirProject, FileMakefileCtx)
 	PathAllowTxt            = path.Join(DirPermissions, FileAllowTxt)
