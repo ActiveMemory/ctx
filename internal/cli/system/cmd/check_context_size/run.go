@@ -29,7 +29,7 @@ import (
 	"github.com/ActiveMemory/ctx/internal/entity"
 	"github.com/ActiveMemory/ctx/internal/io"
 	"github.com/ActiveMemory/ctx/internal/rc"
-	writeHook "github.com/ActiveMemory/ctx/internal/write/hook"
+	writeSetup "github.com/ActiveMemory/ctx/internal/write/setup"
 )
 
 // Run executes the check-context-size hook logic.
@@ -57,7 +57,7 @@ func Run(cmd *cobra.Command, stdin *os.File) error {
 
 	// Pause check: this hook is the designated single emitter
 	if turns := nudge.Paused(sessionID); turns > 0 {
-		writeHook.Nudge(cmd, nudge.PausedMessage(turns))
+		writeSetup.Nudge(cmd, nudge.PausedMessage(turns))
 		return nil
 	}
 
@@ -86,7 +86,7 @@ func Run(cmd *cobra.Command, stdin *os.File) error {
 	billingHit := billingThreshold > 0 &&
 		tokens >= billingThreshold
 	if billingHit {
-		writeHook.NudgeBlock(cmd,
+		writeSetup.NudgeBlock(cmd,
 			nudge.EmitBillingWarning(
 				logFile, sessionID,
 				count, tokens, billingThreshold,
@@ -132,14 +132,14 @@ func Run(cmd *cobra.Command, stdin *os.File) error {
 	evt := trigger.Event
 	switch {
 	case trigger.Window:
-		writeHook.NudgeBlock(cmd,
+		writeSetup.NudgeBlock(cmd,
 			nudge.EmitWindowWarning(
 				logFile, sessionID,
 				count, tokens, pct,
 			),
 		)
 	case trigger.Checkpoint:
-		writeHook.NudgeBlock(cmd,
+		writeSetup.NudgeBlock(cmd,
 			nudge.EmitCheckpoint(
 				logFile, sessionID,
 				count, tokens, pct, windowSize,

@@ -15,6 +15,7 @@ const (
 	DescKeyErrSessionNoSessionsFoundHint = "err.session.no-sessions-found-hint"
 	DescKeyErrSessionIDRequired          = "err.session.session-id-required"
 	DescKeyErrSessionNotFound            = "err.session.session-not-found"
+	DescKeyErrSessionEventInvalidType    = "err.session.event-invalid-type"
 	DescKeyErrSiteMarshalFeed            = "err.site.marshal-feed"
 	DescKeyErrSiteNoSiteConfig           = "err.site.no-site-config"
 )

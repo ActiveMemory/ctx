@@ -25,7 +25,7 @@ import (
 	"github.com/ActiveMemory/ctx/internal/err/config"
 	errFs "github.com/ActiveMemory/ctx/internal/err/fs"
 	writeErr "github.com/ActiveMemory/ctx/internal/write/err"
-	"github.com/ActiveMemory/ctx/internal/write/hook"
+	writeSetup "github.com/ActiveMemory/ctx/internal/write/setup"
 )
 
 // Run executes the hook command logic.
@@ -49,47 +49,47 @@ func Run(cmd *cobra.Command, args []string, writeFile bool) error {
 		if writeFile {
 			return WriteAgentsMd(cmd)
 		}
-		hook.InfoTool(cmd, desc.Text(text.DescKeyHookAgents))
-		hook.Separator(cmd)
+		writeSetup.InfoTool(cmd, desc.Text(text.DescKeyHookAgents))
+		writeSetup.Separator(cmd)
 		content, readErr := agent.AgentsMd()
 		if readErr != nil {
 			return readErr
 		}
-		hook.Content(cmd, string(content))
+		writeSetup.Content(cmd, string(content))
 
 	case cfgHook.ToolClaudeCode, cfgHook.ToolClaude:
-		hook.InfoTool(cmd, desc.Text(text.DescKeyHookClaude))
+		writeSetup.InfoTool(cmd, desc.Text(text.DescKeyHookClaude))
 
 	case cfgHook.ToolCursor:
-		hook.InfoTool(cmd, desc.Text(text.DescKeyHookCursor))
+		writeSetup.InfoTool(cmd, desc.Text(text.DescKeyHookCursor))
 
 	case cfgHook.ToolAider:
-		hook.InfoTool(cmd, desc.Text(text.DescKeyHookAider))
+		writeSetup.InfoTool(cmd, desc.Text(text.DescKeyHookAider))
 
 	case cfgHook.ToolCopilot:
 		if writeFile {
 			return WriteCopilotInstructions(cmd)
 		}
-		hook.InfoTool(cmd, desc.Text(text.DescKeyHookCopilot))
-		hook.Separator(cmd)
+		writeSetup.InfoTool(cmd, desc.Text(text.DescKeyHookCopilot))
+		writeSetup.Separator(cmd)
 		content, readErr := agent.CopilotInstructions()
 		if readErr != nil {
 			return readErr
 		}
-		hook.Content(cmd, string(content))
+		writeSetup.Content(cmd, string(content))
 
 	case cfgHook.ToolCopilotCLI:
 		if writeFile {
 			return WriteCopilotCLIHooks(cmd)
 		}
-		hook.InfoTool(cmd, desc.Text(text.DescKeyHookCopilotCLI))
+		writeSetup.InfoTool(cmd, desc.Text(text.DescKeyHookCopilotCLI))
 
 	case cfgHook.ToolWindsurf:
-		hook.InfoTool(cmd, desc.Text(text.DescKeyHookWindsurf))
+		writeSetup.InfoTool(cmd, desc.Text(text.DescKeyHookWindsurf))
 
 	default:
-		hook.InfoUnknownTool(cmd, tool)
-		hook.InfoTool(cmd, desc.Text(text.DescKeyHookSupportedTools))
+		writeSetup.InfoUnknownTool(cmd, tool)
+		writeSetup.InfoTool(cmd, desc.Text(text.DescKeyHookSupportedTools))
 		return config.UnsupportedTool(tool)
 	}
 
@@ -128,7 +128,7 @@ func WriteCopilotInstructions(cmd *cobra.Command) error {
 	if fileExists {
 		existingStr := string(existingContent)
 		if strings.Contains(existingStr, marker.CopilotStart) {
-			hook.InfoCopilotSkipped(cmd, targetFile)
+			writeSetup.InfoCopilotSkipped(cmd, targetFile)
 			return nil
 		}
 
@@ -139,7 +139,7 @@ func WriteCopilotInstructions(cmd *cobra.Command) error {
 		); wErr != nil {
 			return errFs.FileWrite(targetFile, wErr)
 		}
-		hook.InfoCopilotMerged(cmd, targetFile)
+		writeSetup.InfoCopilotMerged(cmd, targetFile)
 		return nil
 	}
 
@@ -149,17 +149,17 @@ func WriteCopilotInstructions(cmd *cobra.Command) error {
 	); wErr != nil {
 		return errFs.FileWrite(targetFile, wErr)
 	}
-	hook.InfoCopilotCreated(cmd, targetFile)
+	writeSetup.InfoCopilotCreated(cmd, targetFile)
 
 	// Also create .context/sessions/ if it doesn't exist
 	sessionsDir := filepath.Join(dir.Context, dir.Sessions)
 	if mkErr := os.MkdirAll(sessionsDir, fs.PermExec); mkErr != nil {
 		writeErr.WarnFile(cmd, sessionsDir, mkErr)
 	} else {
-		hook.InfoCopilotSessionsDir(cmd, sessionsDir)
+		writeSetup.InfoCopilotSessionsDir(cmd, sessionsDir)
 	}
 
-	hook.InfoCopilotSummary(cmd)
+	writeSetup.InfoCopilotSummary(cmd)
 
 	// Also create .vscode/mcp.json if it doesn't exist
 	if err := ensureVSCodeMCPJSON(cmd); err != nil {
@@ -190,7 +190,7 @@ func WriteCopilotCLIHooks(cmd *cobra.Command) error {
 
 	// Check if ctx-hooks.json already exists
 	if _, err := os.Stat(targetJSON); err == nil {
-		hook.InfoCopilotCLISkipped(cmd, targetJSON)
+		writeSetup.InfoCopilotCLISkipped(cmd, targetJSON)
 		return nil
 	}
 
@@ -207,7 +207,7 @@ func WriteCopilotCLIHooks(cmd *cobra.Command) error {
 	if wErr := os.WriteFile(targetJSON, jsonContent, fs.PermFile); wErr != nil {
 		return errFs.FileWrite(targetJSON, wErr)
 	}
-	hook.InfoCopilotCLICreated(cmd, targetJSON)
+	writeSetup.InfoCopilotCLICreated(cmd, targetJSON)
 
 	// Write all hook scripts
 	scripts, scrErr := agent.CopilotCLIScripts()
@@ -219,7 +219,7 @@ func WriteCopilotCLIHooks(cmd *cobra.Command) error {
 		if wErr := os.WriteFile(target, content, fs.PermExec); wErr != nil {
 			return errFs.FileWrite(target, wErr)
 		}
-		hook.InfoCopilotCLICreated(cmd, target)
+		writeSetup.InfoCopilotCLICreated(cmd, target)
 	}
 
 	// Write .github/agents/ctx.md
@@ -242,7 +242,7 @@ func WriteCopilotCLIHooks(cmd *cobra.Command) error {
 		writeErr.WarnFile(cmd, cfgHook.DirGitHubSkills, err)
 	}
 
-	hook.InfoCopilotCLISummary(cmd)
+	writeSetup.InfoCopilotCLISummary(cmd)
 	return nil
 }
 
@@ -253,7 +253,7 @@ func writeCopilotCLIAgent(cmd *cobra.Command) error {
 	target := filepath.Join(agentsDir, cfgHook.FileAgentsCtxMd)
 
 	if _, err := os.Stat(target); err == nil {
-		hook.InfoCopilotCLICreated(cmd, target+" (exists, skipped)")
+		writeSetup.InfoCopilotCLICreated(cmd, target+" (exists, skipped)")
 		return nil
 	}
 
@@ -268,7 +268,7 @@ func writeCopilotCLIAgent(cmd *cobra.Command) error {
 	if wErr := os.WriteFile(target, content, fs.PermFile); wErr != nil {
 		return wErr
 	}
-	hook.InfoCopilotCLICreated(cmd, target)
+	writeSetup.InfoCopilotCLICreated(cmd, target)
 	return nil
 }
 
@@ -280,7 +280,7 @@ func writeCopilotCLIInstructions(cmd *cobra.Command) error {
 	target := filepath.Join(instrDir, cfgHook.FileInstructionsCtxMd)
 
 	if _, err := os.Stat(target); err == nil {
-		hook.InfoCopilotCLICreated(cmd, target+" (exists, skipped)")
+		writeSetup.InfoCopilotCLICreated(cmd, target+" (exists, skipped)")
 		return nil
 	}
 
@@ -295,7 +295,7 @@ func writeCopilotCLIInstructions(cmd *cobra.Command) error {
 	if wErr := os.WriteFile(target, content, fs.PermFile); wErr != nil {
 		return wErr
 	}
-	hook.InfoCopilotCLICreated(cmd, target)
+	writeSetup.InfoCopilotCLICreated(cmd, target)
 	return nil
 }
 
@@ -313,7 +313,7 @@ func writeCopilotCLISkills(cmd *cobra.Command) error {
 		target := filepath.Join(skillDir, cfgHook.FileSKILLMd)
 
 		if _, err := os.Stat(target); err == nil {
-			hook.InfoCopilotCLICreated(cmd, target+" (exists, skipped)")
+			writeSetup.InfoCopilotCLICreated(cmd, target+" (exists, skipped)")
 			continue
 		}
 
@@ -323,7 +323,7 @@ func writeCopilotCLISkills(cmd *cobra.Command) error {
 		if wErr := os.WriteFile(target, content, fs.PermFile); wErr != nil {
 			return wErr
 		}
-		hook.InfoCopilotCLICreated(cmd, target)
+		writeSetup.InfoCopilotCLICreated(cmd, target)
 	}
 	return nil
 }
@@ -355,7 +355,7 @@ func WriteAgentsMd(cmd *cobra.Command) error {
 	if fileExists {
 		existingStr := string(existingContent)
 		if strings.Contains(existingStr, marker.AgentsStart) {
-			hook.InfoAgentsSkipped(cmd, targetFile)
+			writeSetup.InfoAgentsSkipped(cmd, targetFile)
 			return nil
 		}
 
@@ -364,7 +364,7 @@ func WriteAgentsMd(cmd *cobra.Command) error {
 		if wErr := os.WriteFile(targetFile, []byte(merged), fs.PermFile); wErr != nil {
 			return errFs.FileWrite(targetFile, wErr)
 		}
-		hook.InfoAgentsMerged(cmd, targetFile)
+		writeSetup.InfoAgentsMerged(cmd, targetFile)
 		return nil
 	}
 
@@ -372,9 +372,9 @@ func WriteAgentsMd(cmd *cobra.Command) error {
 	if wErr := os.WriteFile(targetFile, agentsContent, fs.PermFile); wErr != nil {
 		return errFs.FileWrite(targetFile, wErr)
 	}
-	hook.InfoAgentsCreated(cmd, targetFile)
+	writeSetup.InfoAgentsCreated(cmd, targetFile)
 
-	hook.InfoAgentsSummary(cmd)
+	writeSetup.InfoAgentsSummary(cmd)
 	return nil
 }
 

@@ -19,14 +19,12 @@ import (
 	"time"
 
 	"github.com/ActiveMemory/ctx/internal/config/claude"
+	"github.com/ActiveMemory/ctx/internal/config/env"
 	"github.com/ActiveMemory/ctx/internal/config/file"
 	"github.com/ActiveMemory/ctx/internal/config/session"
 	"github.com/ActiveMemory/ctx/internal/config/token"
 	"github.com/ActiveMemory/ctx/internal/entity"
 )
-
-// osWindows is the runtime.GOOS value for Windows.
-const osWindows = "windows"
 
 // copilotKeyRequests is the key path segment for request arrays.
 const copilotKeyRequests = "requests"
@@ -469,7 +467,7 @@ func fileURIToPath(uri string) string {
 	}
 
 	// On Windows, file URIs have /G:/... — strip the leading slash
-	if runtime.GOOS == osWindows && len(decoded) > 2 && decoded[0] == '/' {
+	if runtime.GOOS == env.OSWindows && len(decoded) > 2 && decoded[0] == '/' {
 		decoded = decoded[1:]
 	}
 
@@ -482,7 +480,7 @@ func CopilotSessionDirs() []string {
 	var dirs []string
 
 	appData := os.Getenv("APPDATA")
-	if runtime.GOOS != osWindows {
+	if runtime.GOOS != env.OSWindows {
 		// On macOS/Linux, VS Code stores data in different locations
 		home, err := os.UserHomeDir()
 		if err != nil {

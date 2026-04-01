@@ -6,6 +6,20 @@
 
 package event
 
+// Session lifecycle event types.
+const (
+	// TypeStart is the session start event.
+	TypeStart = "start"
+	// TypeEnd is the session end event.
+	TypeEnd = "end"
+)
+
+// Event categories for log grouping.
+const (
+	// CategorySession groups session lifecycle events.
+	CategorySession = "session"
+)
+
 // Events display configuration.
 const (
 	// MessageMaxLen is the maximum character length for event messages

@@ -14,4 +14,6 @@ const (
 	NotifyChannelNudge = "nudge"
 	// NotifyChannelRelay is the notification channel for relay messages.
 	NotifyChannelRelay = "relay"
+	// NotifyChannelSession is the notification channel for session events.
+	NotifyChannelSession = "session"
 )

@@ -14,7 +14,7 @@ import (
 	internalIo "github.com/ActiveMemory/ctx/internal/io"
 	"github.com/ActiveMemory/ctx/internal/log/event"
 	"github.com/ActiveMemory/ctx/internal/notify"
-	writeHook "github.com/ActiveMemory/ctx/internal/write/hook"
+	writeSetup "github.com/ActiveMemory/ctx/internal/write/setup"
 )
 
 // Relay sends a relay notification and appends the same event to the
@@ -95,7 +95,7 @@ func Emit(
 	vars map[string]any,
 	markerPath string,
 ) {
-	writeHook.Nudge(cmd, message.NudgeBox(relayPrefix, boxTitle, content))
+	writeSetup.Nudge(cmd, message.NudgeBox(relayPrefix, boxTitle, content))
 	ref := notify.NewTemplateRef(hookName, variant, vars)
 	Relay(hookName+": "+relayMessage, sessionID, ref)
 	if markerPath != "" {

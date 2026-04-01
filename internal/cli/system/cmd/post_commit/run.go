@@ -24,7 +24,7 @@ import (
 	"github.com/ActiveMemory/ctx/internal/config/regex"
 	ctxContext "github.com/ActiveMemory/ctx/internal/context/resolve"
 	"github.com/ActiveMemory/ctx/internal/notify"
-	writeHook "github.com/ActiveMemory/ctx/internal/write/hook"
+	writeSetup "github.com/ActiveMemory/ctx/internal/write/setup"
 )
 
 // Run executes the post-commit hook logic.
@@ -66,7 +66,7 @@ func Run(cmd *cobra.Command, stdin *os.File) error {
 		return nil
 	}
 	msg = ctxContext.AppendDir(msg)
-	writeHook.Context(cmd, coreSession.FormatContext(hook.EventPostToolUse, msg))
+	writeSetup.Context(cmd, coreSession.FormatContext(hook.EventPostToolUse, msg))
 
 	ref := notify.NewTemplateRef(hookName, variant, nil)
 	nudge.Relay(
@@ -79,11 +79,11 @@ func Run(cmd *cobra.Command, stdin *os.File) error {
 	)
 
 	if driftResponse := drift.CheckVersion(sessionID); driftResponse != "" {
-		writeHook.Context(cmd, driftResponse)
+		writeSetup.Context(cmd, driftResponse)
 	}
 
 	if violations := scoreCommitViolations(); violations != "" {
-		writeHook.NudgeBlock(cmd, violations)
+		writeSetup.NudgeBlock(cmd, violations)
 	}
 
 	return nil

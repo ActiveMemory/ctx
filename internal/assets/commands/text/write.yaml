@@ -701,3 +701,14 @@ write.knowledge-unit-lines:
 
 write.version-drift-fallback:
   short: "VERSION (%s), plugin.json (%s), marketplace.json (%s) are out of sync. Update all three before releasing."
+
+write.vscode-created:
+  short: "  ✓ %s"
+write.vscode-exists-skipped:
+  short: "  ○ %s (exists, skipped)"
+write.vscode-recommendation-exists:
+  short: "  ○ %s (recommendation exists)"
+write.vscode-add-manually:
+  short: "  ○ %s (exists, add %s manually)"
+write.vscode-warn-non-fatal:
+  short: "  ⚠ %s: %v"

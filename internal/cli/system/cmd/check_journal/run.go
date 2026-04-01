@@ -27,7 +27,7 @@ import (
 	ctxResolve "github.com/ActiveMemory/ctx/internal/context/resolve"
 	internalIo "github.com/ActiveMemory/ctx/internal/io"
 	"github.com/ActiveMemory/ctx/internal/notify"
-	writeHook "github.com/ActiveMemory/ctx/internal/write/hook"
+	writeSetup "github.com/ActiveMemory/ctx/internal/write/setup"
 )
 
 // Run executes the check-journal hook logic.
@@ -116,7 +116,7 @@ func Run(cmd *cobra.Command, stdin *os.File) error {
 	boxTitle := desc.Text(text.DescKeyCheckJournalBoxTitle)
 	relayPrefix := desc.Text(text.DescKeyCheckJournalRelayPrefix)
 
-	writeHook.Nudge(cmd, message.NudgeBox(relayPrefix, boxTitle, content))
+	writeSetup.Nudge(cmd, message.NudgeBox(relayPrefix, boxTitle, content))
 
 	ref := notify.NewTemplateRef(hook.CheckJournal, variant, vars)
 	journalMsg := hook.CheckJournal + ": " + fmt.Sprintf(

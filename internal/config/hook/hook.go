@@ -47,6 +47,8 @@ const (
 	PostCommit = "post-commit"
 	// QAReminder is the hook name for QA reminder gates.
 	QAReminder = "qa-reminder"
+	// SessionEvent is the hook name for session lifecycle events.
+	SessionEvent = "session-event"
 	// SpecsNudge is the hook name for specs directory nudges.
 	SpecsNudge = "specs-nudge"
 	// VersionDrift is the hook name for version drift nudges.

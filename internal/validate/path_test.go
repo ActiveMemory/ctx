@@ -12,6 +12,8 @@ import (
 	"runtime"
 	"strings"
 	"testing"
+
+	"github.com/ActiveMemory/ctx/internal/config/env"
 )
 
 func TestBoundary(t *testing.T) {
@@ -46,7 +48,7 @@ func TestBoundary(t *testing.T) {
 }
 
 func TestBoundaryCaseInsensitive(t *testing.T) {
-	if runtime.GOOS != osWindows {
+	if runtime.GOOS != env.OSWindows {
 		t.Skip("case-insensitive path test only applies to Windows")
 	}
 
@@ -136,7 +138,7 @@ func TestCheckSymlinks(t *testing.T) {
 }
 
 func TestBoundary_WindowsCaseInsensitive(t *testing.T) {
-	if runtime.GOOS != osWindows {
+	if runtime.GOOS != env.OSWindows {
 		t.Skip("Windows-only test")
 	}
 

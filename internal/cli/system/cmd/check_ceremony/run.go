@@ -23,7 +23,7 @@ import (
 	ctxResolve "github.com/ActiveMemory/ctx/internal/context/resolve"
 	internalIo "github.com/ActiveMemory/ctx/internal/io"
 	"github.com/ActiveMemory/ctx/internal/notify"
-	writeHook "github.com/ActiveMemory/ctx/internal/write/hook"
+	writeSetup "github.com/ActiveMemory/ctx/internal/write/setup"
 )
 
 // Run executes the check-ceremonies hook logic.
@@ -69,7 +69,7 @@ func Run(cmd *cobra.Command, stdin *os.File) error {
 	}
 
 	msg, variant := coreCeremony.Emit(remember, wrapUp)
-	writeHook.Nudge(cmd, msg)
+	writeSetup.Nudge(cmd, msg)
 	if msg == "" {
 		return nil
 	}

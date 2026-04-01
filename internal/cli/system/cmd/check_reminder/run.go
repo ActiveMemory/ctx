@@ -25,7 +25,7 @@ import (
 	cfgTime "github.com/ActiveMemory/ctx/internal/config/time"
 	"github.com/ActiveMemory/ctx/internal/config/token"
 	"github.com/ActiveMemory/ctx/internal/notify"
-	writeHook "github.com/ActiveMemory/ctx/internal/write/hook"
+	writeSetup "github.com/ActiveMemory/ctx/internal/write/setup"
 )
 
 // Run executes the check-reminders hook logic.
@@ -88,7 +88,7 @@ func Run(cmd *cobra.Command, stdin *os.File) error {
 		return nil
 	}
 
-	writeHook.Nudge(cmd, message.NudgeBox(
+	writeSetup.Nudge(cmd, message.NudgeBox(
 		desc.Text(text.DescKeyCheckRemindersRelayPrefix),
 		desc.Text(text.DescKeyCheckRemindersBoxTitle),
 		content))

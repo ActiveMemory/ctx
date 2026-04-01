@@ -41,6 +41,7 @@ const (
 	UseSystemQaReminder             = "qa-reminder"
 	UseSystemResources              = "resources"
 	UseSystemResume                 = "resume"
+	UseSystemSessionEvent           = "session-event"
 	UseSystemSpecsNudge             = "specs-nudge"
 	UseSystemStats                  = "stats"
 )
@@ -81,6 +82,7 @@ const (
 	DescKeySystemQaReminder             = "system.qareminder"
 	DescKeySystemResources              = "system.resources"
 	DescKeySystemResume                 = "system.resume"
+	DescKeySystemSessionEvent           = "system.sessionevent"
 	DescKeySystemSpecsNudge             = "system.specsnudge"
 	DescKeySystemStats                  = "system.stats"
 )

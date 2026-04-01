@@ -12,12 +12,10 @@ import (
 	"runtime"
 	"strings"
 
+	"github.com/ActiveMemory/ctx/internal/config/env"
 	errCtx "github.com/ActiveMemory/ctx/internal/err/context"
 	errFs "github.com/ActiveMemory/ctx/internal/err/fs"
 )
-
-// osWindows is the GOOS value for Windows, extracted to satisfy goconst.
-const osWindows = "windows"
 
 // Boundary checks that dir resolves to a path within the current
 // working directory. Returns an error if the resolved path escapes the
@@ -59,7 +57,7 @@ func Boundary(dir string) error {
 	// passes a lowercase drive letter via fsPath).
 	equal := func(a, b string) bool { return a == b }
 	hasPrefix := strings.HasPrefix
-	if runtime.GOOS == osWindows {
+	if runtime.GOOS == env.OSWindows {
 		equal = strings.EqualFold
 		hasPrefix = func(s, prefix string) bool {
 			return len(s) >= len(prefix) && strings.EqualFold(s[:len(prefix)], prefix)
