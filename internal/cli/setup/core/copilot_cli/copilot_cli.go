@@ -85,7 +85,7 @@ func Deploy(cmd *cobra.Command) error {
 
 	// Register ctx MCP server in ~/.copilot/mcp-config.json
 	if err := ensureMCPConfig(cmd); err != nil {
-		cmd.Println("  ⚠ mcp-config.json: " + err.Error())
+		writeErr.WarnFile(cmd, cfgHook.FileMCPConfigJSON, err)
 	}
 
 	// Write .github/skills/<name>/SKILL.md for Copilot CLI skills
