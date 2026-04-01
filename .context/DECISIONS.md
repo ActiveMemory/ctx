@@ -3,6 +3,7 @@
 <!-- INDEX:START -->
 | Date | Decision |
 |------|--------|
+| 2026-03-31 | Split log into log/event and log/warn to break import cycles |
 | 2026-03-31 | Context-load-gate injects only CONSTITUTION and AGENT_PLAYBOOK_GATE, not full ReadOrder |
 | 2026-03-31 | Spec signal words and nudge threshold are user-configurable via .ctxrc |
 | 2026-03-30 | Flags-not-subcommands for journal source: list and show are view modes on a noun, not independent entities |
@@ -116,6 +117,20 @@ For significant decisions:
 ✗ No real alternatives existed
 
 -->
+
+## [2026-03-31-224245] Split log into log/event and log/warn to break import cycles
+
+**Status**: Accepted
+
+**Context**: io and notify could not import log.Warn because log imported both of them for event logging, creating circular dependencies
+
+**Decision**: Split log into log/event and log/warn to break import cycles
+
+**Rationale**: Separating concerns (stderr sink vs JSONL event log) into subpackages eliminated the cycle. Warn sink is foundation-level with only config imports, event logging is higher-level
+
+**Consequence**: All stderr warnings now route through logWarn.Warn(). New code importing log/warn has no cycle risk. Event types moved to internal/entity
+
+---
 
 ## [2026-03-31-182003] Context-load-gate injects only CONSTITUTION and AGENT_PLAYBOOK_GATE, not full ReadOrder
 
