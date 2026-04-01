@@ -47,18 +47,7 @@ func Message(logFile, sessionID, msg string) {
 	line := fmt.Sprintf(desc.Text(text.DescKeyWriteLogLineFormat),
 		time.Now().Format(cfgTime.DateTimePreciseFmt), short, msg)
 
-	f, openErr := internalIo.SafeAppendFile(logFile, fs.PermSecret)
-	if openErr != nil {
-		return
-	}
-	defer func() {
-		if closeErr := f.Close(); closeErr != nil {
-			ctxLog.Warn(warn.Close, logFile, closeErr)
-		}
-	}()
-	if _, writeErr := f.WriteString(line); writeErr != nil {
-		ctxLog.Warn(warn.Write, logFile, writeErr)
-	}
+	internalIo.AppendBytes(logFile, []byte(line), fs.PermSecret)
 }
 
 // Rotate checks the log file size and rotates if it exceeds
