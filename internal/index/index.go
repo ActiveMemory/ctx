@@ -19,24 +19,11 @@ import (
 	"github.com/ActiveMemory/ctx/internal/config/marker"
 	"github.com/ActiveMemory/ctx/internal/config/regex"
 	"github.com/ActiveMemory/ctx/internal/config/token"
+	cfgWarn "github.com/ActiveMemory/ctx/internal/config/warn"
 	errJournal "github.com/ActiveMemory/ctx/internal/err/journal"
 	internalIo "github.com/ActiveMemory/ctx/internal/io"
+	logWarn "github.com/ActiveMemory/ctx/internal/log/warn"
 	writeDrift "github.com/ActiveMemory/ctx/internal/write/drift"
-)
-
-// Index block format strings for inserting/appending index content.
-var (
-	// indexBlockFmt formats an index block between existing content.
-	// Args: content-before, index-content, content-after.
-	indexBlockFmt = "%s" + token.NewlineLF +
-		marker.IndexStart + token.NewlineLF +
-		"%s" + marker.IndexEnd + token.NewlineLF + "%s"
-
-	// indexBlockAppendFmt appends an index block at end of file.
-	// Args: content, index-content.
-	indexBlockAppendFmt = "%s" + token.NewlineLF + token.NewlineLF +
-		marker.IndexStart + token.NewlineLF +
-		"%s" + marker.IndexEnd + token.NewlineLF
 )
 
 // ParseHeaders extracts all entries from file content.
@@ -86,18 +73,24 @@ func GenerateTable(entries []Entry, columnHeader string) string {
 	}
 
 	var sb strings.Builder
-	fmt.Fprintf(&sb, marker.TableRowFmt+token.NewlineLF,
-		desc.Text(text.DescKeyLabelColDate), columnHeader)
-	fmt.Fprintf(&sb, marker.TableSepFmt+token.NewlineLF,
+	if _, writeErr := fmt.Fprintf(&sb, marker.TableRowFmt+token.NewlineLF,
+		desc.Text(text.DescKeyLabelColDate), columnHeader); writeErr != nil {
+		logWarn.Warn(cfgWarn.Write, "index-header", writeErr)
+	}
+	if _, writeErr := fmt.Fprintf(&sb, marker.TableSepFmt+token.NewlineLF,
 		strings.Repeat(token.Dash, len(desc.Text(text.DescKeyLabelColDate))),
-		strings.Repeat(token.Dash, len(columnHeader)))
+		strings.Repeat(token.Dash, len(columnHeader))); writeErr != nil {
+		logWarn.Warn(cfgWarn.Write, "index-separator", writeErr)
+	}
 
 	for _, e := range entries {
 		title := strings.ReplaceAll(
 			e.Title, marker.TablePipe, marker.TablePipeEscaped,
 		)
-		fmt.Fprintf(&sb, marker.TableRowFmt+token.NewlineLF,
-			e.Date, title)
+		if _, writeErr := fmt.Fprintf(&sb, marker.TableRowFmt+token.NewlineLF,
+			e.Date, title); writeErr != nil {
+			logWarn.Warn(cfgWarn.Write, "index-row", writeErr)
+		}
 	}
 
 	return sb.String()
@@ -160,14 +153,14 @@ func Update(content, fileHeader, columnHeader string) string {
 	lineEnd := strings.Index(content[headerIdx:], nl)
 	if lineEnd == -1 {
 		// Header is at the end of the file
-		return fmt.Sprintf(indexBlockAppendFmt,
+		return fmt.Sprintf(marker.IndexBlockAppendFmt,
 			content, indexContent)
 	}
 
 	insertPoint := headerIdx + lineEnd + 1
 
 	// Build new content with the index
-	return fmt.Sprintf(indexBlockFmt,
+	return fmt.Sprintf(marker.IndexBlockFmt,
 		content[:insertPoint], indexContent, content[insertPoint:])
 }
 

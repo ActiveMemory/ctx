@@ -87,6 +87,10 @@ const (
 	TomlArrayAssign4 = "=["
 	// TomlSemicolon is the environment marker separator.
 	TomlSemicolon = ";"
+	// TomlProjectPrefix is the TOML section path for project tables.
+	TomlProjectPrefix = "project."
+	// TomlPoetryPrefix is the TOML section path for Poetry tables.
+	TomlPoetryPrefix = "tool.poetry."
 )
 
 // Table formatting constants for dependency output.
