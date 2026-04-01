@@ -34,6 +34,8 @@ compact.archive:
   short: Create .context/archive/ for old content
 context-dir:
   short: 'Override context directory path (default: .context)'
+initialize.caller:
+  short: Identify the calling tool (e.g. vscode) to tailor output
 deps.external:
   short: Include external module dependencies
 deps.format:

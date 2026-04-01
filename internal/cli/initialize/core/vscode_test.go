@@ -14,6 +14,8 @@ import (
 	"testing"
 
 	"github.com/spf13/cobra"
+
+	cfgVscode "github.com/ActiveMemory/ctx/internal/config/vscode"
 )
 
 // testCmd returns a cobra.Command that captures output.
@@ -32,7 +34,7 @@ func TestWriteMCPJSON_CreatesFile(t *testing.T) {
 	}
 	defer func() { _ = os.Chdir(origDir) }()
 
-	if err := os.MkdirAll(vscodeDirName, 0o755); err != nil {
+	if err := os.MkdirAll(cfgVscode.Dir, 0o755); err != nil {
 		t.Fatalf("mkdir: %v", err)
 	}
 
@@ -43,7 +45,7 @@ func TestWriteMCPJSON_CreatesFile(t *testing.T) {
 		t.Fatalf("writeMCPJSON() error = %v", err)
 	}
 
-	target := filepath.Join(vscodeDirName, "mcp.json")
+	target := filepath.Join(cfgVscode.Dir, "mcp.json")
 	data, err := os.ReadFile(target)
 	if err != nil {
 		t.Fatalf("failed to read mcp.json: %v", err)
@@ -83,8 +85,8 @@ func TestWriteMCPJSON_SkipsExisting(t *testing.T) {
 	}
 	defer func() { _ = os.Chdir(origDir) }()
 
-	target := filepath.Join(vscodeDirName, "mcp.json")
-	if err := os.MkdirAll(vscodeDirName, 0o755); err != nil {
+	target := filepath.Join(cfgVscode.Dir, "mcp.json")
+	if err := os.MkdirAll(cfgVscode.Dir, 0o755); err != nil {
 		t.Fatalf("mkdir: %v", err)
 	}
 	existing := []byte(`{"servers":{"other":{}}}`)
@@ -128,19 +130,19 @@ func TestCreateVSCodeArtifacts_CreatesMCPJSON(t *testing.T) {
 	}
 
 	// Verify mcp.json was created as part of the artifacts
-	target := filepath.Join(vscodeDirName, "mcp.json")
+	target := filepath.Join(cfgVscode.Dir, "mcp.json")
 	if _, err := os.Stat(target); os.IsNotExist(err) {
 		t.Error("CreateVSCodeArtifacts did not create mcp.json")
 	}
 
 	// Verify extensions.json was also created
-	extTarget := filepath.Join(vscodeDirName, "extensions.json")
+	extTarget := filepath.Join(cfgVscode.Dir, "extensions.json")
 	if _, err := os.Stat(extTarget); os.IsNotExist(err) {
 		t.Error("CreateVSCodeArtifacts did not create extensions.json")
 	}
 
 	// Verify tasks.json was also created
-	taskTarget := filepath.Join(vscodeDirName, "tasks.json")
+	taskTarget := filepath.Join(cfgVscode.Dir, "tasks.json")
 	if _, err := os.Stat(taskTarget); os.IsNotExist(err) {
 		t.Error("CreateVSCodeArtifacts did not create tasks.json")
 	}

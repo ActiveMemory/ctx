@@ -1,0 +1,57 @@
+//   /    ctx:                         https://ctx.ist
+// ,'`./    do you remember?
+// `.,'\
+//   \    Copyright 2026-present Context contributors.
+//                 SPDX-License-Identifier: Apache-2.0
+
+package core
+
+import (
+	"encoding/json"
+	"os"
+	"path/filepath"
+
+	"github.com/spf13/cobra"
+
+	"github.com/ActiveMemory/ctx/internal/config/fs"
+	cfgVscode "github.com/ActiveMemory/ctx/internal/config/vscode"
+	"github.com/ActiveMemory/ctx/internal/io"
+	writeVscode "github.com/ActiveMemory/ctx/internal/write/vscode"
+)
+
+// writeExtensionsJSON creates .vscode/extensions.json with the ctx
+// extension recommendation. Skips if the file already contains it;
+// leaves existing files without the recommendation untouched.
+func writeExtensionsJSON(cmd *cobra.Command) error {
+	target := filepath.Join(cfgVscode.Dir, cfgVscode.FileExtensionsJSON)
+
+	if _, statErr := os.Stat(target); statErr == nil {
+		data, readErr := io.SafeReadUserFile(target)
+		if readErr != nil {
+			return readErr
+		}
+		var existing map[string][]string
+		if json.Unmarshal(data, &existing) == nil {
+			for _, r := range existing[cfgVscode.KeyRecommendations] {
+				if r == cfgVscode.ExtensionID {
+					writeVscode.InfoRecommendationExists(cmd, target)
+					return nil
+				}
+			}
+		}
+		writeVscode.InfoAddManually(cmd, target, cfgVscode.ExtensionID)
+		return nil
+	}
+
+	content := map[string][]string{
+		cfgVscode.KeyRecommendations: {cfgVscode.ExtensionID},
+	}
+	data, _ := json.MarshalIndent(content, "", "  ")
+	data = append(data, '\n')
+
+	if writeErr := os.WriteFile(target, data, fs.PermFile); writeErr != nil {
+		return writeErr
+	}
+	writeVscode.InfoCreated(cmd, target)
+	return nil
+}

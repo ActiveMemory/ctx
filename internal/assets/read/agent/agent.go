@@ -15,6 +15,7 @@ import (
 
 	"github.com/ActiveMemory/ctx/internal/assets"
 	"github.com/ActiveMemory/ctx/internal/config/asset"
+	"github.com/ActiveMemory/ctx/internal/config/file"
 )
 
 // CopilotInstructions reads the embedded Copilot instructions template.
@@ -80,7 +81,7 @@ func CopilotCLIScripts() (map[string][]byte, error) {
 			continue
 		}
 		name := entry.Name()
-		if !strings.HasSuffix(name, ".sh") && !strings.HasSuffix(name, ".ps1") {
+		if !strings.HasSuffix(name, file.ExtSh) && !strings.HasSuffix(name, file.ExtPs1) {
 			continue
 		}
 		content, readErr := assets.FS.ReadFile(path.Join(asset.DirIntegrationsCopilotScrp, name))
