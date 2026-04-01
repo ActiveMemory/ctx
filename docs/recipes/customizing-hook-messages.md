@@ -54,11 +54,11 @@ decides to speak.
 The default templates live in the ctx source tree at:
 
 ```
-internal/assets/integrations/messages/{hook}/{variant}.txt
+internal/assets/hooks/messages/{hook}/{variant}.txt
 ```
 
 You can also browse them on GitHub:
-[`internal/assets/integrations/messages/`](https://github.com/ActiveMemory/ctx/tree/main/internal/assets/integrations/messages)
+[`internal/assets/hooks/messages/`](https://github.com/ActiveMemory/ctx/tree/main/internal/assets/hooks/messages)
 
 Or use `ctx system message show` to print any template without digging
 through source code:

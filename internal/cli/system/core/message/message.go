@@ -24,7 +24,7 @@ import (
 //
 // Priority:
 //  1. .context/hooks/messages/{hook}/{variant}.txt (user override)
-//  2. internal/assets/integrations/messages/{hook}/{variant}.txt (embedded default)
+//  2. internal/assets/hooks/messages/{hook}/{variant}.txt (embedded default)
 //  3. fallback string (hardcoded, belt and suspenders)
 //
 // Returns empty string if the resolved template is empty or whitespace-only
