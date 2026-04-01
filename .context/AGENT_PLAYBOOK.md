@@ -1,5 +1,11 @@
 # Agent Playbook
 
+<!--
+RELATED: AGENT_PLAYBOOK_GATE.md is a distilled subset of this file,
+injected at session start by the context-load-gate hook. If you change
+directives here, check whether the gate file needs a corresponding update.
+-->
+
 ## Mental Model
 
 Each session is a fresh execution in a shared workshop. Work
@@ -214,21 +220,18 @@ Never assume. If you don't see it in files, you don't know it.
 - If uncertain, say "I don't see this documented"
 - Trust files over intuition
 
-## Planning Non-Trivial Work
+## Planning Work
 
-Before implementing a feature or multi-task effort, follow this sequence.
-
-**Spec-or-task heuristic**: if the work involves design decisions (hook
-integration, new CLI surface, state management, multi-file coordination),
-it needs a spec via `/ctx-spec` — not a long task description. A task
-description captures *what*; a spec captures *what, why, how, and what not*.
-When in doubt, spec it. Stuffing design into a task description is how
-context evaporates between sessions.
+Every commit requires a `Spec:` trailer (CONSTITUTION rule). This means
+every piece of work needs a spec — no exceptions, no "trivial" qualifier.
+A one-liner bugfix gets a one-paragraph spec; a multi-package feature gets
+a full design document. The spec exists for traceability, not ceremony.
 
 **1. Spec first** — Run `/ctx-spec` to scaffold a design document in
-`specs/`. Cover: problem, solution, storage, CLI surface, error cases,
-and non-goals. Keep it concise but complete enough that another session
-could implement from it alone.
+`specs/`. Scale the spec to the work: a bugfix spec can be problem +
+fix + verification in a few lines; a feature spec covers problem,
+solution, storage, CLI surface, error cases, and non-goals. The bar
+is: another session could implement from the spec alone.
 
 **2. Task it out** — Break the work into individual tasks in TASKS.md under
 a dedicated Phase section. Each task should be independently completable and

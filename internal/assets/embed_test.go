@@ -38,6 +38,7 @@ func TestGetTemplate(t *testing.T) {
 		{"CONVENTIONS.md exists", "CONVENTIONS.md", "Conventions", false},
 		{"ARCHITECTURE.md exists", "ARCHITECTURE.md", "Architecture", false},
 		{"AGENT_PLAYBOOK.md exists", "AGENT_PLAYBOOK.md", "Agent Playbook", false},
+		{"AGENT_PLAYBOOK_GATE.md exists", "AGENT_PLAYBOOK_GATE.md", "Agent Playbook (Gate)", false},
 		{"GLOSSARY.md exists", "GLOSSARY.md", "Glossary", false},
 		{"nonexistent template returns error", "NONEXISTENT.md", "", true},
 	}

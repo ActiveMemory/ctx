@@ -43,9 +43,11 @@ TASK STATUS LABELS:
 
 **PD.5 — Validate:**
 
-- [ ] PD.5.2: Run `ctx init` on a clean directory — verify no
-  `.context/prompts/` created, `.context/loop.md` exists, new skills deployed
-  #priority:high #added:2026-03-25-203340
+- [x] PD.5.2: Run `ctx init` on a clean directory — verify no
+  `.context/prompts/` created. loop.md and skills checks are stale:
+  loop.md was never a ctx init artifact (ctx loop generates on demand),
+  skills deploy via plugin install, not ctx init.
+  #priority:high #added:2026-03-25-203340 #done:2026-03-31
 
 ### Phase -3: DevEx
 
@@ -78,7 +80,7 @@ TASK STATUS LABELS:
   .ctxrc or settings.json. Related: consolidation nudge hook
   spec. #added:2026-03-23-223500
 
-- [ ] Bug: check-version hook missing throttle touch on plugin
+- [x] Bug: check-version hook missing throttle touch on plugin
   version read error (run.go:70). When claude.PluginVersion()
   fails, the hook returns without touching the daily throttle
   marker, causing repeated checks on days when plugin.json is
@@ -86,7 +88,7 @@ TASK STATUS LABELS:
   internalIo.TouchFile(markerFile) before the early return.
   See docs/recipes/hook-sequence-diagrams.md check-version
   diagram which documents the expected behavior.
-  #added:2026-03-23-162802
+  #added:2026-03-23-162802 #done:2026-03-31
 
 - [ ] Design UserPromptSubmit hook that runs go build and
   surfaces compilation errors before the agent acts on stale

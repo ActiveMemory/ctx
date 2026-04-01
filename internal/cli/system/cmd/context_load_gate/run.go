@@ -37,11 +37,12 @@ import (
 
 // Run executes the context-load-gate hook logic.
 //
-// Injects project context files into the agent's context window on the
-// first tool call of each session. Reads context files in priority order,
-// extracts indexes for large files, appends a changes summary, and emits
-// a webhook notification with token counts. Writes an oversize flag when
-// total injected tokens exceed the configured threshold.
+// Injects CONSTITUTION and distilled AGENT_PLAYBOOK_GATE into the
+// agent's context window on the first tool call of each session.
+// Appends a changes summary, emits a webhook notification with token
+// counts, and writes an oversize flag when total injected tokens
+// exceed the configured threshold. Full context files are loaded
+// on-demand via CLAUDE.md instructions.
 //
 // Parameters:
 //   - cmd: Cobra command for output
@@ -92,46 +93,24 @@ func Run(cmd *cobra.Command, stdin *os.File) error {
 			token.NewlineLF + token.NewlineLF,
 	)
 
-	for _, f := range ctx.ReadOrder {
-		if f == ctx.Glossary {
-			continue
-		}
+	// Inject only hard rules and distilled directives. Full context
+	// files are loaded on-demand via CLAUDE.md instructions.
+	gateFiles := []string{ctx.Constitution, ctx.AgentPlaybookGate}
 
+	for _, f := range gateFiles {
 		data, readErr := internalIo.SafeReadFile(dir, f)
 		if readErr != nil {
 			continue // file missing - skip gracefully
 		}
 
-		switch f {
-		case ctx.Task:
-			// One-liner mention in footer, don't inject content
-			continue
-
-		case ctx.Decision, ctx.Learning:
-			idx := load.ExtractIndex(string(data))
-			if idx == "" {
-				idx = desc.Text(text.DescKeyContextLoadGateIndexFallback)
-			}
-			content.WriteString(fmt.Sprintf(
-				desc.Text(text.DescKeyContextLoadGateIndexHeader), f, idx))
-			tokens := ctxToken.EstimateString(idx)
-			totalTokens += tokens
-			perFile = append(perFile, entity.FileTokenEntry{
-				Name:   f + load_gate.ContextLoadIndexSuffix,
-				Tokens: tokens,
-			})
-			filesLoaded++
-
-		default:
-			content.WriteString(fmt.Sprintf(
-				desc.Text(
-					text.DescKeyContextLoadGateFileHeader,
-				), f, string(data)))
-			tokens := ctxToken.Estimate(data)
-			totalTokens += tokens
-			perFile = append(perFile, entity.FileTokenEntry{Name: f, Tokens: tokens})
-			filesLoaded++
-		}
+		content.WriteString(fmt.Sprintf(
+			desc.Text(
+				text.DescKeyContextLoadGateFileHeader,
+			), f, string(data)))
+		tokens := ctxToken.Estimate(data)
+		totalTokens += tokens
+		perFile = append(perFile, entity.FileTokenEntry{Name: f, Tokens: tokens})
+		filesLoaded++
 	}
 
 	// Best-effort changes summary - never blocks injection
