@@ -9,11 +9,12 @@ package pause
 import (
 	"os"
 
+	"github.com/spf13/cobra"
+
 	"github.com/ActiveMemory/ctx/internal/assets/read/desc"
 	"github.com/ActiveMemory/ctx/internal/config/embed/cmd"
 	"github.com/ActiveMemory/ctx/internal/config/embed/flag"
 	cFlag "github.com/ActiveMemory/ctx/internal/config/flag"
-	"github.com/spf13/cobra"
 )
 
 // Cmd returns the "ctx system pause" plumbing command.
@@ -23,7 +24,7 @@ import (
 func Cmd() *cobra.Command {
 	short, long := desc.Command(cmd.DescKeySystemPause)
 
-	cmd := &cobra.Command{
+	c := &cobra.Command{
 		Use:    cmd.UseSystemPause,
 		Short:  short,
 		Long:   long,
@@ -32,8 +33,8 @@ func Cmd() *cobra.Command {
 			return Run(cmd, os.Stdin)
 		},
 	}
-	cmd.Flags().String(cFlag.SessionID, "",
+	c.Flags().String(cFlag.SessionID, "",
 		desc.Flag(flag.DescKeySystemPauseSessionId),
 	)
-	return cmd
+	return c
 }

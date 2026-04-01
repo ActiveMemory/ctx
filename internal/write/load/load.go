@@ -10,13 +10,13 @@ import (
 	"fmt"
 	"strings"
 
+	"github.com/spf13/cobra"
+
 	"github.com/ActiveMemory/ctx/internal/assets/read/desc"
 	"github.com/ActiveMemory/ctx/internal/assets/tpl"
 	"github.com/ActiveMemory/ctx/internal/config/embed/text"
 	"github.com/ActiveMemory/ctx/internal/config/token"
 	ctxToken "github.com/ActiveMemory/ctx/internal/context/token"
-	"github.com/spf13/cobra"
-
 	"github.com/ActiveMemory/ctx/internal/entity"
 )
 
@@ -70,7 +70,7 @@ func Assembled(
 	_, _ = fmt.Fprintf(&sb, tpl.LoadBudget+nl+nl, budget, totalTokens)
 	sb.WriteString(sep + nl + nl)
 
-	tokensUsed := ctxToken.EstimateTokensString(sb.String())
+	tokensUsed := ctxToken.EstimateString(sb.String())
 
 	for _, f := range files {
 		if f.IsEmpty {

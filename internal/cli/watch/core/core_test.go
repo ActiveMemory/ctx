@@ -23,7 +23,7 @@ import (
 	"github.com/spf13/cobra"
 )
 
-// TestApplyUpdate tests the ApplyUpdate function routing.
+// TestApplyUpdate tests the Update function routing.
 func TestApplyUpdate(t *testing.T) {
 	tmpDir, err := os.MkdirTemp("", "watch-apply-test-*")
 	if err != nil {
@@ -52,8 +52,11 @@ func TestApplyUpdate(t *testing.T) {
 		expectError bool
 	}{
 		{
-			name:      "task update",
-			update:    core.ContextUpdate{Type: entry.Task, Content: "Test task from watch"},
+			name: "task update",
+			update: core.ContextUpdate{
+				Type:    entry.Task,
+				Content: "Test task from watch",
+			},
 			checkFile: ctx.Task,
 			checkFor:  "Test task from watch",
 		},
@@ -82,18 +85,27 @@ func TestApplyUpdate(t *testing.T) {
 			checkFor:  "Test learning from watch",
 		},
 		{
-			name:        "decision without required fields",
-			update:      core.ContextUpdate{Type: entry.Decision, Content: "Missing fields"},
+			name: "decision without required fields",
+			update: core.ContextUpdate{
+				Type:    entry.Decision,
+				Content: "Missing fields",
+			},
 			expectError: true,
 		},
 		{
-			name:        "learning without required fields",
-			update:      core.ContextUpdate{Type: entry.Learning, Content: "Missing fields"},
+			name: "learning without required fields",
+			update: core.ContextUpdate{
+				Type:    entry.Learning,
+				Content: "Missing fields",
+			},
 			expectError: true,
 		},
 		{
-			name:      "convention update",
-			update:    core.ContextUpdate{Type: entry.Convention, Content: "Test convention from watch"},
+			name: "convention update",
+			update: core.ContextUpdate{
+				Type:    entry.Convention,
+				Content: "Test convention from watch",
+			},
 			checkFile: ctx.Convention,
 			checkFor:  "Test convention from watch",
 		},
@@ -106,7 +118,7 @@ func TestApplyUpdate(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			err := apply.ApplyUpdate(tt.update)
+			err := apply.Update(tt.update)
 
 			if tt.expectError {
 				if err == nil {
@@ -116,7 +128,7 @@ func TestApplyUpdate(t *testing.T) {
 			}
 
 			if err != nil {
-				t.Fatalf("ApplyUpdate failed: %v", err)
+				t.Fatalf("Update failed: %v", err)
 			}
 
 			// Verify content was added
@@ -162,14 +174,16 @@ func TestApplyCompleteUpdate(t *testing.T) {
 - [ ] Implement authentication
 - [ ] Write tests
 `
-	if writeErr := os.WriteFile(tasksPath, []byte(tasksContent), 0600); writeErr != nil {
+	if writeErr := os.WriteFile(
+		tasksPath, []byte(tasksContent), 0600,
+	); writeErr != nil {
 		t.Fatalf("failed to write tasks: %v", writeErr)
 	}
 
 	// Complete the task
 	update := core.ContextUpdate{Type: entry.Complete, Content: "authentication"}
-	if err = apply.ApplyUpdate(update); err != nil {
-		t.Fatalf("ApplyUpdate failed: %v", err)
+	if err = apply.Update(update); err != nil {
+		t.Fatalf("Update failed: %v", err)
 	}
 
 	// Verify task was marked complete
@@ -216,9 +230,9 @@ More output
 	var output bytes.Buffer
 	cmd.SetOut(&output)
 
-	err = stream.ProcessStream(cmd, reader, false)
+	err = stream.Process(cmd, reader, false)
 	if err != nil {
-		t.Fatalf("ProcessStream failed: %v", err)
+		t.Fatalf("Process failed: %v", err)
 	}
 
 	// Verify task was written
@@ -253,19 +267,22 @@ func TestProcessStreamWithAttributes(t *testing.T) {
 		t.Fatalf("init failed: %v", err)
 	}
 
-	input := `Some AI output
-<context-update type="learning" context="Debugging hooks" lesson="Hooks receive JSON via stdin" application="Use jq to parse input">Hook Input Format</context-update>
-More output
-`
+	input := "Some AI output\n" +
+		`<context-update type="learning"` +
+		` context="Debugging hooks"` +
+		` lesson="Hooks receive JSON via stdin"` +
+		` application="Use jq to parse input"` +
+		`>Hook Input Format</context-update>` +
+		"\nMore output\n"
 	reader := strings.NewReader(input)
 
 	cmd := &cobra.Command{Use: "watch"}
 	var output bytes.Buffer
 	cmd.SetOut(&output)
 
-	err = stream.ProcessStream(cmd, reader, false)
+	err = stream.Process(cmd, reader, false)
 	if err != nil {
-		t.Fatalf("ProcessStream failed: %v", err)
+		t.Fatalf("Process failed: %v", err)
 	}
 
 	// Verify learning was written with structured fields
@@ -303,15 +320,26 @@ func TestExtractAttribute(t *testing.T) {
 	}{
 		{`<context-update type="learning"`, "type", "learning"},
 		{`<context-update type="decision" context="test ctx"`, "context", "test ctx"},
-		{`<context-update type="learning" lesson="the lesson"`, "lesson", "the lesson"},
+		{
+			`<context-update type="learning"` +
+				` lesson="the lesson"`,
+			"lesson", "the lesson",
+		},
 		{`<context-update type="learning"`, "missing", ""},
-		{`<context-update type="decision" rationale="why we did it"`, "rationale", "why we did it"},
+		{
+			`<context-update type="decision"` +
+				` rationale="why we did it"`,
+			"rationale", "why we did it",
+		},
 	}
 
 	for _, tt := range tests {
 		result := stream.ExtractAttribute(tt.tag, tt.attr)
 		if result != tt.expected {
-			t.Errorf("ExtractAttribute(%q, %q) = %q, want %q", tt.tag, tt.attr, result, tt.expected)
+			t.Errorf(
+				"ExtractAttribute(%q, %q) = %q, want %q",
+				tt.tag, tt.attr, result, tt.expected,
+			)
 		}
 	}
 }
@@ -385,9 +413,9 @@ func TestProcessStream_DryRunMode(t *testing.T) {
 	var buf bytes.Buffer
 	cmd.SetOut(&buf)
 
-	err := stream.ProcessStream(cmd, reader, true)
+	err := stream.Process(cmd, reader, true)
 	if err != nil {
-		t.Fatalf("ProcessStream error: %v", err)
+		t.Fatalf("Process error: %v", err)
 	}
 
 	out := buf.String()
@@ -425,9 +453,9 @@ func TestProcessStream_FailedApply(t *testing.T) {
 	var buf bytes.Buffer
 	cmd.SetOut(&buf)
 
-	err := stream.ProcessStream(cmd, reader, false)
+	err := stream.Process(cmd, reader, false)
 	if err != nil {
-		t.Fatalf("ProcessStream should not return error for failed apply: %v", err)
+		t.Fatalf("Process should not return error for failed apply: %v", err)
 	}
 
 	out := buf.String()
@@ -462,7 +490,7 @@ func TestProcessStream_MultipleUpdates(t *testing.T) {
 	var buf bytes.Buffer
 	cmd.SetOut(&buf)
 
-	err := stream.ProcessStream(cmd, reader, false)
+	err := stream.Process(cmd, reader, false)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -489,15 +517,18 @@ func TestProcessStream_DecisionWithAttributes(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	input := `<context-update type="decision" context="Need a DB" rationale="PostgreSQL is mature" consequence="Team needs PG training">Use PostgreSQL</context-update>
-`
+	input := `<context-update type="decision"` +
+		` context="Need a DB"` +
+		` rationale="PostgreSQL is mature"` +
+		` consequence="Team needs PG training"` +
+		`>Use PostgreSQL</context-update>` + "\n"
 	reader := strings.NewReader(input)
 
 	cmd := &cobra.Command{Use: "watch"}
 	var buf bytes.Buffer
 	cmd.SetOut(&buf)
 
-	err := stream.ProcessStream(cmd, reader, false)
+	err := stream.Process(cmd, reader, false)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -542,7 +573,7 @@ Another line of normal output.
 	var buf bytes.Buffer
 	cmd.SetOut(&buf)
 
-	err := stream.ProcessStream(cmd, reader, false)
+	err := stream.Process(cmd, reader, false)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -578,7 +609,11 @@ func TestExtractAttribute_Consequence(t *testing.T) {
 	tag := `<context-update type="decision" consequence="something changes">`
 	result := stream.ExtractAttribute(tag, "consequence")
 	if result != "something changes" {
-		t.Errorf("ExtractAttribute(consequence) = %q, want 'something changes'", result)
+		t.Errorf(
+			"ExtractAttribute(consequence) = %q,"+
+				" want 'something changes'",
+			result,
+		)
 	}
 }
 
@@ -621,7 +656,7 @@ func TestProcessStream_CompleteUpdate(t *testing.T) {
 	var buf bytes.Buffer
 	cmd.SetOut(&buf)
 
-	err := stream.ProcessStream(cmd, reader, false)
+	err := stream.Process(cmd, reader, false)
 	if err != nil {
 		t.Fatal(err)
 	}

@@ -47,7 +47,7 @@ conventions for consistency.
 | `internal/config/`                 | `docs/home/context-files.md`, `docs/home/configuration.md`    |
 | `internal/context/`                | `docs/home/context-files.md`, `docs/home/prompting-guide.md`  |
 | `internal/drift/`                  | `docs/recipes/context-health.md`                              |
-| `internal/recall/`                 | `docs/reference/session-journal.md`, `docs/cli/recall.md`     |
+| `internal/journal/`                | `docs/reference/session-journal.md`, `docs/cli/journal.md`    |
 | `internal/bootstrap/`              | `docs/home/getting-started.md`                                |
 | `internal/claude/`, `internal/rc/` | `docs/operations/integrations.md`, `docs/home/configuration.md` |
 | `internal/assets/`                 | `docs/home/context-files.md` (templates)                      |

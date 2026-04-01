@@ -18,6 +18,9 @@ import (
 	"github.com/ActiveMemory/ctx/internal/config/fs"
 	"github.com/ActiveMemory/ctx/internal/config/journal"
 	cfgTime "github.com/ActiveMemory/ctx/internal/config/time"
+	"github.com/ActiveMemory/ctx/internal/config/warn"
+	internalIo "github.com/ActiveMemory/ctx/internal/io"
+	ctxLog "github.com/ActiveMemory/ctx/internal/log/warn"
 )
 
 // Message appends a timestamped log line to the given file.
@@ -30,9 +33,11 @@ import (
 //   - msg: Log message to append
 func Message(logFile, sessionID, msg string) {
 	d := filepath.Dir(logFile)
-	_ = os.MkdirAll(d, fs.PermRestrictedDir)
+	if mkdirErr := os.MkdirAll(d, fs.PermRestrictedDir); mkdirErr != nil {
+		ctxLog.Warn(warn.Mkdir, d, mkdirErr)
+	}
 
-	RotateLog(logFile)
+	Rotate(logFile)
 
 	short := sessionID
 	if len(short) > journal.SessionIDShortLen {
@@ -40,22 +45,17 @@ func Message(logFile, sessionID, msg string) {
 	}
 
 	line := fmt.Sprintf(desc.Text(text.DescKeyWriteLogLineFormat),
-		time.Now().Format(cfgTime.DateTimePreciseFormat), short, msg)
+		time.Now().Format(cfgTime.DateTimePreciseFmt), short, msg)
 
-	f, openErr := os.OpenFile(logFile, os.O_APPEND|os.O_CREATE|os.O_WRONLY, fs.PermSecret) //nolint:gosec // logFile is constructed internally
-	if openErr != nil {
-		return
-	}
-	defer func() { _ = f.Close() }()
-	_, _ = f.WriteString(line)
+	internalIo.AppendBytes(logFile, []byte(line), fs.PermSecret)
 }
 
-// RotateLog checks the log file size and rotates if it exceeds
+// Rotate checks the log file size and rotates if it exceeds
 // config.HookLogMaxBytes. The previous generation is replaced.
 //
 // Parameters:
 //   - logFile: Absolute path to the log file
-func RotateLog(logFile string) {
+func Rotate(logFile string) {
 	info, statErr := os.Stat(logFile)
 	if statErr != nil {
 		return
@@ -64,6 +64,12 @@ func RotateLog(logFile string) {
 		return
 	}
 	prev := logFile + event.RotationSuffix
-	_ = os.Remove(prev)
-	_ = os.Rename(logFile, prev)
+	if removeErr := os.Remove(prev); removeErr != nil {
+		ctxLog.Warn(warn.Remove, prev, removeErr)
+	}
+	if renameErr := os.Rename(logFile, prev); renameErr != nil {
+		ctxLog.Warn(
+			warn.Rename, logFile, renameErr,
+		)
+	}
 }

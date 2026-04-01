@@ -10,7 +10,6 @@ import (
 	"fmt"
 	"net/url"
 	"os"
-	"os/exec"
 	"path/filepath"
 
 	"github.com/ActiveMemory/ctx/internal/assets/read/desc"
@@ -19,17 +18,9 @@ import (
 	"github.com/ActiveMemory/ctx/internal/config/fs"
 	errBackup "github.com/ActiveMemory/ctx/internal/err/backup"
 	errFs "github.com/ActiveMemory/ctx/internal/err/fs"
+	execGio "github.com/ActiveMemory/ctx/internal/exec/gio"
 	"github.com/ActiveMemory/ctx/internal/io"
 )
-
-// SMBConfig holds parsed SMB share connection details.
-type SMBConfig struct {
-	Host      string
-	Share     string
-	Subdir    string
-	GVFSPath  string
-	SourceURL string
-}
 
 // ParseSMBConfig parses an SMB URL and subdirectory into a config struct
 // with the derived GVFS mount path.
@@ -84,9 +75,7 @@ func EnsureSMBMount(cfg *SMBConfig) error {
 		return nil
 	}
 
-	//nolint:gosec // G204: smbURL is from user env, not untrusted input
-	mountCmd := exec.Command("gio", "mount", cfg.SourceURL)
-	if mountErr := mountCmd.Run(); mountErr != nil {
+	if mountErr := execGio.Mount(cfg.SourceURL); mountErr != nil {
 		return errBackup.MountFailed(cfg.SourceURL, mountErr)
 	}
 

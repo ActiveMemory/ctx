@@ -24,7 +24,7 @@ import (
 //   - bool: true if every required context file exists
 func Initialized(contextDir string) bool {
 	for _, f := range ctx.FilesRequired {
-		if _, err := os.Stat(filepath.Join(contextDir, f)); err != nil {
+		if _, statErr := os.Stat(filepath.Join(contextDir, f)); statErr != nil {
 			return false
 		}
 	}
@@ -44,6 +44,6 @@ func Exists(dir string) bool {
 	if dir == "" {
 		dir = rc.ContextDir()
 	}
-	info, err := os.Stat(dir)
-	return err == nil && info.IsDir()
+	info, statErr := os.Stat(dir)
+	return statErr == nil && info.IsDir()
 }

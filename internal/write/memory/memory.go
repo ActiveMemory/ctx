@@ -9,9 +9,10 @@ package memory
 import (
 	"fmt"
 
+	"github.com/spf13/cobra"
+
 	"github.com/ActiveMemory/ctx/internal/assets/read/desc"
 	"github.com/ActiveMemory/ctx/internal/config/embed/text"
-	"github.com/spf13/cobra"
 )
 
 // NoChanges prints that no changes exist since last sync.
@@ -68,7 +69,9 @@ func Mirror(cmd *cobra.Command, relativePath string) {
 	if cmd == nil {
 		return
 	}
-	cmd.Println(fmt.Sprintf(desc.Text(text.DescKeyWriteMemoryMirror), relativePath))
+	cmd.Println(fmt.Sprintf(
+		desc.Text(text.DescKeyWriteMemoryMirror),
+		relativePath))
 }
 
 // LastSync prints the last sync timestamp with age.
@@ -81,7 +84,9 @@ func LastSync(cmd *cobra.Command, formatted, ago string) {
 	if cmd == nil {
 		return
 	}
-	cmd.Println(fmt.Sprintf(desc.Text(text.DescKeyWriteMemoryLastSync), formatted, ago))
+	cmd.Println(fmt.Sprintf(
+		desc.Text(text.DescKeyWriteMemoryLastSync),
+		formatted, ago))
 }
 
 // LastSyncNever prints that no sync has occurred.
@@ -106,7 +111,9 @@ func SourceLines(cmd *cobra.Command, count int, drifted bool) {
 		return
 	}
 	if drifted {
-		cmd.Println(fmt.Sprintf(desc.Text(text.DescKeyWriteMemorySourceLinesDrift), count))
+		cmd.Println(fmt.Sprintf(
+			desc.Text(text.DescKeyWriteMemorySourceLinesDrift),
+			count))
 		return
 	}
 	cmd.Println(fmt.Sprintf(desc.Text(text.DescKeyWriteMemorySourceLines), count))
@@ -167,7 +174,9 @@ func Archives(cmd *cobra.Command, count int, dir string) {
 	if cmd == nil {
 		return
 	}
-	cmd.Println(fmt.Sprintf(desc.Text(text.DescKeyWriteMemoryArchives), count, dir))
+	cmd.Println(fmt.Sprintf(
+		desc.Text(text.DescKeyWriteMemoryArchives),
+		count, dir))
 }
 
 // DiffOutput prints diff content to stdout.

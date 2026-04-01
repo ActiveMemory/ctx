@@ -9,10 +9,10 @@ package root
 import (
 	"path/filepath"
 
-	"github.com/ActiveMemory/ctx/internal/config/ctx"
-	"github.com/ActiveMemory/ctx/internal/config/entry"
 	"github.com/spf13/cobra"
 
+	"github.com/ActiveMemory/ctx/internal/config/ctx"
+	"github.com/ActiveMemory/ctx/internal/config/entry"
 	"github.com/ActiveMemory/ctx/internal/index"
 	"github.com/ActiveMemory/ctx/internal/rc"
 )
@@ -30,7 +30,7 @@ func Run(cmd *cobra.Command, _ []string) error {
 	ctxDir := rc.ContextDir()
 
 	decisionsPath := filepath.Join(ctxDir, ctx.Decision)
-	decisionsErr := index.ReindexFile(
+	decisionsErr := index.Reindex(
 		w,
 		decisionsPath,
 		ctx.Decision,
@@ -42,7 +42,7 @@ func Run(cmd *cobra.Command, _ []string) error {
 	}
 
 	learningsPath := filepath.Join(ctxDir, ctx.Learning)
-	return index.ReindexFile(
+	return index.Reindex(
 		w,
 		learningsPath,
 		ctx.Learning,

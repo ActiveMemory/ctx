@@ -11,12 +11,14 @@ import (
 	"path/filepath"
 	"time"
 
+	"github.com/spf13/cobra"
+
 	"github.com/ActiveMemory/ctx/internal/cli/system/core/health"
 	"github.com/ActiveMemory/ctx/internal/cli/system/core/state"
+	"github.com/ActiveMemory/ctx/internal/config/regex"
 	cfgTime "github.com/ActiveMemory/ctx/internal/config/time"
 	errState "github.com/ActiveMemory/ctx/internal/err/state"
 	"github.com/ActiveMemory/ctx/internal/write/prune"
-	"github.com/spf13/cobra"
 )
 
 // Run executes the prune logic.
@@ -33,14 +35,15 @@ import (
 // Returns:
 //   - error: Non-nil on state directory read failure
 func Run(cmd *cobra.Command, days int, dryRun bool) error {
-	dir := state.StateDir()
+	dir := state.Dir()
 
 	entries, readErr := os.ReadDir(dir)
 	if readErr != nil {
 		return errState.ReadingDir(readErr)
 	}
 
-	cutoff := time.Now().Add(-time.Duration(days) * cfgTime.HoursPerDay * time.Hour)
+	age := time.Duration(days) * cfgTime.HoursPerDay * time.Hour
+	cutoff := time.Now().Add(-age)
 	var pruned, skipped, preserved int
 
 	for _, entry := range entries {
@@ -51,7 +54,7 @@ func Run(cmd *cobra.Command, days int, dryRun bool) error {
 		name := entry.Name()
 
 		// Only prune files with UUID session IDs
-		if !health.UUIDPattern.MatchString(name) {
+		if !regex.UUID.MatchString(name) {
 			preserved++
 			continue
 		}
@@ -67,20 +70,20 @@ func Run(cmd *cobra.Command, days int, dryRun bool) error {
 		}
 
 		if dryRun {
-			prune.PruneDryRunLine(cmd, name, health.FormatAge(info.ModTime()))
+			prune.DryRunLine(cmd, name, health.FormatAge(info.ModTime()))
 			pruned++
 			continue
 		}
 
 		path := filepath.Join(dir, name)
 		if rmErr := os.Remove(path); rmErr != nil {
-			prune.PruneErrorLine(cmd, name, rmErr)
+			prune.ErrorLine(cmd, name, rmErr)
 			continue
 		}
 		pruned++
 	}
 
-	prune.PruneSummary(cmd, dryRun, pruned, skipped, preserved)
+	prune.Summary(cmd, dryRun, pruned, skipped, preserved)
 
 	return nil
 }

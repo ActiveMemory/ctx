@@ -38,9 +38,17 @@ func TestFitItemsInBudget(t *testing.T) {
 		want   int
 	}{
 		{"all fit", []string{"short", "words"}, 1000, 2},
-		{"none fit but one forced", []string{"a very long item that exceeds budget"}, 1, 1},
+		{
+			"none fit but one forced",
+			[]string{"a very long item that exceeds budget"},
+			1, 1,
+		},
 		{"empty items", nil, 1000, 0},
-		{"partial fit", []string{"a]longer item here", "another longer one", "third longer item"}, 6, 1},
+		{
+			"partial fit",
+			[]string{"a]longer item here", "another longer one", "third longer item"},
+			6, 1,
+		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
@@ -140,9 +148,12 @@ func TestSplitBudget(t *testing.T) {
 func TestFillSection(t *testing.T) {
 	entries := []score.Entry{
 		{
-			EntryBlock: makeBlock("2026-02-19", "High score", "important body content here"),
-			Score:      1.8,
-			Tokens:     10,
+			EntryBlock: makeBlock(
+				"2026-02-19", "High score",
+				"important body content here",
+			),
+			Score:  1.8,
+			Tokens: 10,
 		},
 		{
 			EntryBlock: makeBlock("2026-02-10", "Medium score", "less important body"),
@@ -230,17 +241,19 @@ func TestEstimateSliceTokens(t *testing.T) {
 }
 
 func TestRenderMarkdownPacket(t *testing.T) {
-	pkt := &assembledPacket{
+	pkt := &AssembledPacket{
 		ReadOrder:    []string{".context/CONSTITUTION.md"},
 		Constitution: []string{"Never violate"},
 		Tasks:        []string{"- [ ] Do something"},
 		Conventions:  []string{"Use gofmt"},
 		Decisions:    []string{"## [2026-02-19-120000] Use JWT\n\nFor auth."},
-		Learnings:    []string{"## [2026-02-19-130000] Hooks fail silently\n\nCheck stderr."},
-		Summaries:    []string{"Old learning about paths"},
-		Instruction:  "Confirm context reading.",
-		Budget:       8000,
-		TokensUsed:   2000,
+		Learnings: []string{
+			"## [2026-02-19-130000] Hooks fail silently\n\nCheck stderr.",
+		},
+		Summaries:   []string{"Old learning about paths"},
+		Instruction: "Confirm context reading.",
+		Budget:      8000,
+		TokensUsed:  2000,
 	}
 
 	output := RenderMarkdownPacket(pkt)
@@ -273,7 +286,7 @@ func TestRenderMarkdownPacket(t *testing.T) {
 }
 
 func TestRenderMarkdownPacket_Empty(t *testing.T) {
-	pkt := &assembledPacket{
+	pkt := &AssembledPacket{
 		Instruction: "Do stuff.",
 		Budget:      100,
 	}

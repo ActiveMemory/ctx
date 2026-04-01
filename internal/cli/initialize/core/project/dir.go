@@ -20,7 +20,7 @@ import (
 	"github.com/ActiveMemory/ctx/internal/write/initialize"
 )
 
-// CreateProjectDirs creates project-root directories (specs/, ideas/) with
+// CreateDirs creates project-root directories (specs/, ideas/) with
 // README.md files. Skips directories that already exist. Creates the README
 // inside new directories only.
 //
@@ -29,7 +29,7 @@ import (
 //
 // Returns:
 //   - error: Non-nil if directory creation or file write fails
-func CreateProjectDirs(cmd *cobra.Command) error {
+func CreateDirs(cmd *cobra.Command) error {
 	for _, d := range dirs {
 		if _, statErr := os.Stat(d); statErr == nil {
 			initialize.SkippedDir(cmd, d)
@@ -46,7 +46,9 @@ func CreateProjectDirs(cmd *cobra.Command) error {
 		}
 
 		readmePath := filepath.Join(d, file.Readme)
-		if writeErr := os.WriteFile(readmePath, readme, fs.PermFile); writeErr != nil {
+		if writeErr := os.WriteFile(
+			readmePath, readme, fs.PermFile,
+		); writeErr != nil {
 			return errFs.FileWrite(readmePath, writeErr)
 		}
 

@@ -20,11 +20,11 @@ import (
 	coreSession "github.com/ActiveMemory/ctx/internal/cli/system/core/session"
 	"github.com/ActiveMemory/ctx/internal/config/embed/text"
 	"github.com/ActiveMemory/ctx/internal/config/hook"
-
+	cfgVersion "github.com/ActiveMemory/ctx/internal/config/version"
 	"github.com/ActiveMemory/ctx/internal/notify"
 )
 
-// CheckVersionDrift compares VERSION, plugin.json, and marketplace.json.
+// CheckVersion compares VERSION, plugin.json, and marketplace.json.
 // If any differ, it emits a relay box listing the drift. Silent when all match.
 //
 // Parameters:
@@ -32,7 +32,7 @@ import (
 //
 // Returns:
 //   - string: JSON hook response to print, or empty string if no drift
-func CheckVersionDrift(sessionID string) string {
+func CheckVersion(sessionID string) string {
 	fileVer := ReadVersionFile()
 	if fileVer == "" {
 		return ""
@@ -53,13 +53,15 @@ func CheckVersionDrift(sessionID string) string {
 	}
 
 	vars := map[string]any{
-		"FileVersion":        fileVer,
-		"PluginVersion":      pluginVer,
-		"MarketplaceVersion": marketVer,
+		cfgVersion.VarFile:        fileVer,
+		cfgVersion.VarPlugin:      pluginVer,
+		cfgVersion.VarMarketplace: marketVer,
 	}
-	fallback := "VERSION (" + fileVer + "), plugin.json (" + pluginVer +
-		"), marketplace.json (" + marketVer + ") are out of sync. Update all three before releasing."
-	msg := message.LoadMessage(hook.VersionDrift, hook.VariantNudge, vars, fallback)
+	fallback := fmt.Sprintf(
+		desc.Text(text.DescKeyWriteVersionDriftFallback),
+		fileVer, pluginVer, marketVer,
+	)
+	msg := message.Load(hook.VersionDrift, hook.VariantNudge, vars, fallback)
 	if msg == "" {
 		return ""
 	}
@@ -67,7 +69,9 @@ func CheckVersionDrift(sessionID string) string {
 
 	ref := notify.NewTemplateRef(hook.VersionDrift, hook.VariantNudge, vars)
 	nudge.Relay(fmt.Sprintf(desc.Text(text.DescKeyRelayPrefixFormat),
-		hook.VersionDrift, desc.Text(text.DescKeyVersionDriftRelayMessage)), sessionID, ref)
+		hook.VersionDrift,
+		desc.Text(text.DescKeyVersionDriftRelayMessage),
+	), sessionID, ref)
 
 	return response
 }
@@ -84,20 +88,15 @@ func ReadVersionFile() string {
 	return strings.TrimSpace(string(data))
 }
 
-// MarketplaceManifest is the structure of .claude-plugin/marketplace.json.
-type MarketplaceManifest struct {
-	Plugins []struct {
-		Version string `json:"version"`
-	} `json:"plugins"`
-}
-
 // ReadMarketplaceVersion parses .claude-plugin/marketplace.json and returns
 // plugins[0].version, or empty string if the file is missing or malformed.
 //
 // Returns:
 //   - string: Version string or empty string
 func ReadMarketplaceVersion() string {
-	path := filepath.Clean(filepath.Join(".claude-plugin", "marketplace.json"))
+	path := filepath.Clean(
+		filepath.Join(cfgVersion.DirClaudePlugin, cfgVersion.FileMarketplace),
+	)
 	data, readErr := os.ReadFile(path)
 	if readErr != nil {
 		return ""

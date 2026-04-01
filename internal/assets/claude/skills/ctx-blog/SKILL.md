@@ -57,7 +57,7 @@ ctx status --verbose  # or read LEARNINGS.md directly
 ctx status  # shows active and completed task counts
 
 # Journal entries (if available)
-ctx recall list --limit 10
+ctx journal source --limit 10
 ```
 
 ## Blog Post Structure

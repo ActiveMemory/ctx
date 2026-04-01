@@ -29,7 +29,7 @@ heading.context:
 heading.loop-start:
   short: 'To start the loop:'
 
-# Recall/export headings
+# Recall/import headings
 heading.tool-usage:
   short: '## Tool Usage'
 heading.conversation:

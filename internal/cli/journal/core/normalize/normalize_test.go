@@ -62,11 +62,14 @@ func TestNormalizeContent(t *testing.T) {
 		},
 		{
 			"does not wrap (site output is read-only)",
-			"This is a very long line that exceeds eighty characters and should not be wrapped since the site output is read-only.",
+			"This is a very long line that exceeds" +
+				" eighty characters and should not be" +
+				" wrapped since the site output is" +
+				" read-only.",
 			false,
 			func(t *testing.T, got string) {
 				if strings.Contains(got, "\n") {
-					t.Error("NormalizeContent should not wrap lines")
+					t.Error("Content should not wrap lines")
 				}
 			},
 		},
@@ -85,7 +88,10 @@ func TestNormalizeContent(t *testing.T) {
 		},
 		{
 			"tool output wrapped in pre/code",
-			"### 5. Tool Output (10:30:00)\n\n# this is not a heading\n---\n<details>bad\n\n### 6. Assistant (10:30:01)\n\nhi",
+			"### 5. Tool Output (10:30:00)\n\n" +
+				"# this is not a heading\n---\n" +
+				"<details>bad\n\n" +
+				"### 6. Assistant (10:30:01)\n\nhi",
 			false,
 			func(t *testing.T, got string) {
 				if !strings.Contains(got, "<pre><code>") {
@@ -117,7 +123,9 @@ func TestNormalizeContent(t *testing.T) {
 		},
 		{
 			"boilerplate tool output stripped - no matches found",
-			"### 5. Tool Output (10:30:00)\n\nNo matches found\n\n### 6. Assistant (10:30:01)\n\nhi",
+			"### 5. Tool Output (10:30:00)\n\n" +
+				"No matches found\n\n" +
+				"### 6. Assistant (10:30:01)\n\nhi",
 			false,
 			func(t *testing.T, got string) {
 				if strings.Contains(got, "Tool Output") {
@@ -127,7 +135,9 @@ func TestNormalizeContent(t *testing.T) {
 		},
 		{
 			"non-boilerplate tool output preserved",
-			"### 5. Tool Output (10:30:00)\n\nactual useful content here\n\n### 6. Assistant (10:30:01)\n\nhi",
+			"### 5. Tool Output (10:30:00)\n\n" +
+				"actual useful content here\n\n" +
+				"### 6. Assistant (10:30:01)\n\nhi",
 			false,
 			func(t *testing.T, got string) {
 				if !strings.Contains(got, "actual useful content here") {
@@ -142,7 +152,7 @@ func TestNormalizeContent(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			got := NormalizeContent(tt.input, tt.fencesVerified)
+			got := Content(tt.input, tt.fencesVerified)
 			tt.check(t, got)
 		})
 	}
@@ -204,7 +214,9 @@ func TestWrapUserTurns(t *testing.T) {
 		},
 		{
 			"HTML-escapes user content",
-			"### 1. User (10:00:00)\n\n<script>alert('xss')</script>\n\n### 2. Assistant (10:00:01)\n\nhi",
+			"### 1. User (10:00:00)\n\n" +
+				"<script>alert('xss')</script>\n\n" +
+				"### 2. Assistant (10:00:01)\n\nhi",
 			func(t *testing.T, got string) {
 				if strings.Contains(got, "<script>") {
 					t.Error("HTML should be escaped in user turn")
@@ -216,7 +228,9 @@ func TestWrapUserTurns(t *testing.T) {
 		},
 		{
 			"does not wrap assistant turns",
-			"### 1. Assistant (10:00:00)\n\nAssistant text\n\n### 2. User (10:00:01)\n\nuser text",
+			"### 1. Assistant (10:00:00)\n\n" +
+				"Assistant text\n\n" +
+				"### 2. User (10:00:01)\n\nuser text",
 			func(t *testing.T, got string) {
 				if !strings.Contains(got, "Assistant text") {
 					t.Error("assistant content should be preserved")

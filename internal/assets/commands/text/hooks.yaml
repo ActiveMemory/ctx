@@ -87,6 +87,23 @@ ceremony.relay-message:
   short: Session ceremony nudge
 ceremony.relay-prefix:
   short: 'IMPORTANT: Relay this session tip to the user VERBATIM before answering their question.'
+skill-discovery.box-title:
+  short: Mid-Session Skills
+skill-discovery.content:
+  short: |-
+    These skills are easy to forget mid-session:
+
+    /ctx-reflect       — checkpoint progress and learnings
+    /ctx-add-learning  — capture gotchas before moving on
+    /ctx-add-decision  — record trade-offs while fresh
+    /ctx-prompt-audit  — improve prompt clarity
+
+    Use them when you hit a milestone, make a design
+    choice, or discover something surprising.
+skill-discovery.relay-prefix:
+  short: 'Session tip: skills available for mid-session use.'
+skill-discovery.relay-message:
+  short: Skill discovery nudge
 check-context-size.billing-box-title:
   short: Billing Threshold
 check-context-size.billing-fallback:
@@ -152,10 +169,10 @@ check-journal.box-title:
   short: Journal Reminder
 check-journal.fallback-both:
   short: |-
-    You have %d new session(s) not yet exported.
+    You have %d new session(s) not yet imported.
     %d existing entries need enrichment.
 
-    Process journal (exports and enriches):
+    Process journal (imports and enriches):
       /ctx-journal-enrich-all
 check-journal.fallback-unenriched:
   short: |-
@@ -163,14 +180,14 @@ check-journal.fallback-unenriched:
 
     Enrich:
       /ctx-journal-enrich-all
-check-journal.fallback-unexported:
+check-journal.fallback-unimported:
   short: |-
-    You have %d new session(s) not yet exported.
+    You have %d new session(s) not yet imported.
 
-    Process journal (exports and enriches):
+    Process journal (imports and enriches):
       /ctx-journal-enrich-all
 check-journal.relay-format:
-  short: '%d unexported, %d unenriched'
+  short: '%d unimported, %d unenriched'
 check-journal.relay-prefix:
   short: 'IMPORTANT: Relay this journal reminder to the user VERBATIM before answering their question.'
 check-knowledge.box-title:
@@ -243,6 +260,8 @@ check-persistence.state-format:
     count=%d
     last_nudge=%d
     last_mtime=%d
+check-persistence.suppressed-log-format:
+  short: 'persistence: suppressed (pct=%d%% < %d%% min), count=%d'
 check-reminders.box-title:
   short: Reminders
 check-reminders.dismiss-all-hint:
@@ -289,6 +308,8 @@ check-version.key-relay-format:
   short: Encryption key is %d days old
 check-version.key-relay-prefix:
   short: 'IMPORTANT: Relay this security reminder to the user VERBATIM.'
+check-version.plugin-read-error:
+  short: 'Warning: could not read embedded plugin version (%v). Version check skipped.'
 check-version.mismatch-relay-format:
   short: Binary v%s vs plugin v%s
 check-version.relay-prefix:
@@ -520,6 +541,26 @@ post-commit.fallback:
   short: 'Commit succeeded. 1. Offer context capture to the user: Decision (design choice?), Learning (gotcha?), or Neither. 2. Ask the user: "Want me to run lints and tests before you push?" Do NOT push. The user pushes manually.'
 post-commit.relay-message:
   short: Commit succeeded, context capture offered
+post-commit.relay-prefix:
+  short: 'IMPORTANT: Relay this commit audit to the user VERBATIM before answering their question.'
+post-commit.missing-spec:
+  short: 'Spec: trailer'
+post-commit.missing-signoff:
+  short: 'Signed-off-by: trailer'
+post-commit.missing-body:
+  short: commit body
+post-commit.missing-task-ref:
+  short: task reference
+post-commit.missing-task-update:
+  short: TASKS.md update
+post-commit.severity-informal:
+  short: informal
+post-commit.severity-bypassed:
+  short: bypassed /ctx-commit
+post-commit.audit-title:
+  short: 'Commit Audit (score: %d - %s)'
+post-commit.audit-content:
+  short: 'Missing: %s'
 qa-reminder.fallback:
   short: 'HARD GATE - DO NOT COMMIT without completing ALL of these steps first: (1) lint the ENTIRE project, (2) test the ENTIRE project, (3) verify a clean working tree (no modified or untracked files left behind). Not just the files you changed - the whole branch. If unrelated modified files remain, offer to commit them separately, stash them, or get explicit confirmation to leave them. Do NOT say ''I''ll do that at the end'' or ''I''ll handle that after committing.'' Run lint and tests BEFORE every git commit, every time, no exceptions.'
 qa-reminder.relay-message:
@@ -562,6 +603,8 @@ resources.status-ok:
   short: ✓ ok
 resources.status-warn:
   short: ⚠ WARNING
+resources.row-format:
+  short: '%%-%ds  %%s'
 specs-nudge.fallback:
   short: Save your plan to specs/ - these documents track what was designed for the current release. Use specs/feature-name.md naming. If this is a quick fix that doesn't need a spec, proceed without one.
 specs-nudge.nudge-message:

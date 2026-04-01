@@ -10,11 +10,11 @@ import (
 	"os"
 	"path/filepath"
 
-	"github.com/ActiveMemory/ctx/internal/cli/system/core/message"
 	"github.com/spf13/cobra"
 
 	"github.com/ActiveMemory/ctx/internal/assets/hooks/messages"
 	"github.com/ActiveMemory/ctx/internal/assets/read/hook"
+	"github.com/ActiveMemory/ctx/internal/cli/system/core/message"
 	"github.com/ActiveMemory/ctx/internal/config/file"
 	"github.com/ActiveMemory/ctx/internal/err/fs"
 	errHook "github.com/ActiveMemory/ctx/internal/err/hook"

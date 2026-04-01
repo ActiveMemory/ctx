@@ -2580,16 +2580,14 @@
   
   
     <li class="md-nav__item">
-      <a href="../../recipes/prompt-templates/" class="md-nav__link">
+      <a href="../../recipes/prompt-templates.md" class="md-nav__link">
         
   
-  
-    <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-message-square-text" viewBox="0 0 24 24"><path d="M22 17a2 2 0 0 1-2 2H6.828a2 2 0 0 0-1.414.586l-2.202 2.202A.71.71 0 0 1 2 21.286V5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2zM7 11h10M7 15h6M7 7h8"/></svg>
   
   <span class="md-ellipsis">
     
   
-    Reusable Prompt Templates
+    none
   
 
     
@@ -2770,7 +2768,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../cli/recall/" class="md-nav__link">
+      <a href="../../cli/journal/" class="md-nav__link">
         
   
   
@@ -2779,7 +2777,7 @@
   <span class="md-ellipsis">
     
   
-    Recall and Journal
+    Journal
   
 
     
@@ -3853,10 +3851,10 @@ so you can update or remove them before they mislead the next session.</p>
 <p>Regular drift checks - weekly, or after major refactors - keep your
 context files honest the same way tests keep your code honest.</p>
 <h2 id="the-verification-loop">The Verification Loop<a class="headerlink" href="#the-verification-loop" title="Permanent link">&para;</a></h2>
-<p>The <code>/ctx-verify</code> skill provides an end-to-end check: it reads all
-context files, cross-references them with the current codebase, and
-reports inconsistencies. Think of it as a health check for your
-project's memory.</p>
+<p>The <code>/ctx-commit</code> skill includes a built-in verification step: before
+staging, it maps claims to evidence and runs self-audit questions to
+surface gaps. This catches inconsistencies at the point where they
+matter most — right before code is committed.</p>
 <p>This closes the loop. You write context. The AI reads context. The
 verification step confirms that context still matches reality. When
 it does not, you fix it - and the next session starts from truth,

@@ -51,7 +51,7 @@ Context consolidation skill. `golangci-lint` v2 migration.
 
 ### `v0.2.0`: The Archaeology Release
 
-Session journal system: `ctx recall export` converts Claude Code JSONL
+Session journal system: `ctx journal import` converts Claude Code JSONL
 transcripts to browsable Markdown. Constants refactor with semantic
 prefixes (`Dir*`, `File*`, `Filename*`). CRLF handling for Windows
 compatibility.

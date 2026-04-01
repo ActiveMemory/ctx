@@ -11,11 +11,12 @@ import (
 	"os"
 	"time"
 
+	"github.com/spf13/cobra"
+
 	"github.com/ActiveMemory/ctx/internal/config/file"
 	"github.com/ActiveMemory/ctx/internal/config/fs"
 	errBackup "github.com/ActiveMemory/ctx/internal/err/backup"
 	"github.com/ActiveMemory/ctx/internal/write/initialize"
-	"github.com/spf13/cobra"
 )
 
 // File creates a timestamped .bak copy and reports it.
@@ -30,7 +31,9 @@ import (
 func File(cmd *cobra.Command, filename string, content []byte) error {
 	timestamp := time.Now().Unix()
 	backupName := fmt.Sprintf(file.BackupFormat, filename, timestamp)
-	if writeErr := os.WriteFile(backupName, content, fs.PermFile); writeErr != nil {
+	if writeErr := os.WriteFile(
+		backupName, content, fs.PermFile,
+	); writeErr != nil {
 		return errBackup.Create(backupName, writeErr)
 	}
 	initialize.Backup(cmd, backupName)

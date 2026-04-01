@@ -70,8 +70,8 @@ func DispatchCall(
 	case tool.Drift:
 		resp = out.Call(req.ID, h.Drift)
 		h.Session.RecordDriftCheck()
-	case tool.Recall:
-		resp = recall(req.ID, params.Arguments, h.Recall)
+	case tool.JournalSource:
+		resp = journalSource(req.ID, params.Arguments, h.Recall)
 	case tool.WatchUpdate:
 		resp = watchUpdate(h, req.ID, params.Arguments)
 		h.Session.RecordContextWrite()

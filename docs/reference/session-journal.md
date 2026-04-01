@@ -34,8 +34,8 @@ After using `ctx` for a couple of sessions, you can generate a
 journal site with:
 
 ```bash
-# Export all sessions to markdown
-ctx recall export --all
+# Import all sessions to markdown
+ctx journal import --all
 
 # Generate and serve the journal site
 ctx journal site --serve
@@ -64,29 +64,29 @@ Each session page includes the following sections:
 
 ## The Workflow
 
-### 1. Export Sessions
+### 1. Import Sessions
 
 ```bash
-# Export all sessions from current project (only new files)
-ctx recall export --all
+# Import all sessions from current project (only new files)
+ctx journal import --all
 
-# Export sessions from all projects
-ctx recall export --all --all-projects
+# Import sessions from all projects
+ctx journal import --all --all-projects
 
-# Export a specific session by ID (always writes)
-ctx recall export abc123
+# Import a specific session by ID (always writes)
+ctx journal import abc123
 
-# Preview what would be exported
-ctx recall export --all --dry-run
+# Preview what would be imported
+ctx journal import --all --dry-run
 
-# Re-export existing (regenerates conversation, preserves YAML frontmatter)
-ctx recall export --all --regenerate
+# Re-import existing (regenerates conversation, preserves YAML frontmatter)
+ctx journal import --all --regenerate
 
 # Discard frontmatter during regeneration
-ctx recall export --all --regenerate --keep-frontmatter=false -y
+ctx journal import --all --regenerate --keep-frontmatter=false -y
 ```
 
-Exported sessions go to `.context/journal/` as editable Markdown files.
+Imported sessions go to `.context/journal/` as editable Markdown files.
 
 ### 2. Generate the Site
 
@@ -116,7 +116,7 @@ Open [http://localhost:8000](http://localhost:8000) after running `--serve`.
 
 ## Editing Sessions
 
-Exported sessions are plain Markdown in `.context/journal/`. You can:
+Imported sessions are plain Markdown in `.context/journal/`. You can:
 
 * **Add summaries**: Fill in the `## Summary` section
 * **Add notes**: Insert your own commentary anywhere
@@ -130,10 +130,10 @@ ctx journal site --serve
 ```
 
 ??? info "Safe by Default"
-    Running `ctx recall export --all` **only exports new sessions**. Existing
+    Running `ctx journal import --all` **only imports new sessions**. Existing
     files are skipped entirely (*your edits and enrichments are never touched*).
 
-    Use `--regenerate` to re-export existing files. Conversation content is
+    Use `--regenerate` to re-import existing files. Conversation content is
     regenerated, but YAML frontmatter (*topics, type, outcome, etc.*) is
     preserved. You'll be prompted before any existing files are overwritten;
     add `-y` to skip the prompt.
@@ -141,9 +141,9 @@ ctx journal site --serve
     Use `--keep-frontmatter=false` to discard enriched frontmatter during
     regeneration.
 
-    Locked entries (via `ctx recall lock`) are always skipped, regardless
+    Locked entries (via `ctx journal lock`) are always skipped, regardless
     of flags. If you prefer to add `locked: true` to frontmatter during
-    enrichment, run `ctx recall sync` to propagate the lock state to
+    enrichment, run `ctx journal sync` to propagate the lock state to
     `.state.json`.
 
 ## Large Sessions
@@ -165,7 +165,7 @@ session list focused.
 
 ## Enriching Journal Entries
 
-Raw exported sessions contain basic metadata (date, time, project) but lack the
+Raw imported sessions contain basic metadata (date, time, project) but lack the
 structured information needed for effective search, filtering, and analysis.
 **Journal enrichment** adds semantic metadata that transforms a flat archive into
 a searchable knowledge base.
@@ -387,19 +387,19 @@ The complete journal workflow has four stages. Each is idempotent: safe to
 re-run, and stages skip already-processed entries.
 
 ```
-export → enrich → rebuild
+import → enrich → rebuild
 ```
 
 | Stage        | Command / Skill            | What it does                            | Skips if                           |
 |--------------|----------------------------|-----------------------------------------|------------------------------------|
-| **Export**   | `ctx recall export --all`  | Converts session JSONL to Markdown      | File already exists (safe default) |
+| **Import**   | `ctx journal import --all`  | Converts session JSONL to Markdown      | File already exists (safe default) |
 | **Enrich**   | `/ctx-journal-enrich`      | Adds frontmatter, summaries, topics     | Frontmatter already present        |
 | **Rebuild**  | `ctx journal site --build` | Generates static HTML site              | --                                 |
 | **Obsidian** | `ctx journal obsidian`     | Generates Obsidian vault with wikilinks | --                                 |
 
 !!! tip "One-command pipeline"
-    `/ctx-journal-enrich-all` handles export automatically - it detects
-    unexported sessions and exports them before enriching. You only need
+    `/ctx-journal-enrich-all` handles import automatically - it detects
+    unimported sessions and imports them before enriching. You only need
     to run `ctx journal site --build` afterward.
 
 ### Using `make journal`
@@ -408,36 +408,36 @@ If your project includes `Makefile.ctx` (deployed by `ctx init`), the first
 and last stages are combined:
 
 ```bash
-make journal           # export + rebuild
+make journal           # import + rebuild
 ```
 
 After it runs, it reminds you to enrich in Claude Code:
 
 ```
 Next steps (in Claude Code):
-  /ctx-journal-enrich-all # exports if needed + adds metadata per entry
+  /ctx-journal-enrich-all # imports if needed + adds metadata per entry
 
 Then re-run: make journal
 ```
 
 !!! tip "Rendering Issues?"
     If individual entries have rendering problems (*broken fences, malformed
-    lists*), use `/ctx-journal-normalize` on the affected file. This is rarely
-    needed as programmatic normalization during export handles **most** cases.
+    lists*), check the programmatic normalization in the import pipeline.
+    Most cases are handled automatically during `ctx journal import`.
 
 ## Tips
 
 **Daily workflow:**
 ```bash
-# Export, browse, then enrich in Claude Code
+# Import, browse, then enrich in Claude Code
 make journal && make journal-serve
 # Then in Claude Code: /ctx-journal-enrich <session>
 ```
 
 **After a productive session:**
 ```bash
-# Export just that session and add notes
-ctx recall export <session-id>
+# Import just that session and add notes
+ctx journal import <session-id>
 # Edit .context/journal/<session>.md
 # Regenerate: ctx journal site
 ```
@@ -468,7 +468,7 @@ pipx install zensical
 
 ## See Also
 
-* [`ctx recall`](../cli/recall.md#ctx-recall): Session discovery and listing
-* [`ctx journal site`](../cli/recall.md#ctx-journal-site): Static site generation
-* [`ctx journal obsidian`](../cli/recall.md#ctx-journal-obsidian): Obsidian vault export
+* [`ctx journal`](../cli/journal.md#ctx-journal): Session discovery and listing
+* [`ctx journal site`](../cli/journal.md#ctx-journal-site): Static site generation
+* [`ctx journal obsidian`](../cli/journal.md#ctx-journal-obsidian): Obsidian vault export
 * [Context Files](../home/context-files.md): The `.context/` directory structure

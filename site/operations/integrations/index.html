@@ -2441,16 +2441,14 @@
   
   
     <li class="md-nav__item">
-      <a href="../../recipes/prompt-templates/" class="md-nav__link">
+      <a href="../../recipes/prompt-templates.md" class="md-nav__link">
         
   
-  
-    <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-message-square-text" viewBox="0 0 24 24"><path d="M22 17a2 2 0 0 1-2 2H6.828a2 2 0 0 0-1.414.586l-2.202 2.202A.71.71 0 0 1 2 21.286V5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2zM7 11h10M7 15h6M7 7h8"/></svg>
   
   <span class="md-ellipsis">
     
   
-    Reusable Prompt Templates
+    none
   
 
     
@@ -2631,7 +2629,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../cli/recall/" class="md-nav__link">
+      <a href="../../cli/journal/" class="md-nav__link">
         
   
   
@@ -2640,7 +2638,7 @@
   <span class="md-ellipsis">
     
   
-    Recall and Journal
+    Journal
   
 
     
@@ -5113,7 +5111,7 @@ The default cooldown is 10 minutes; use <code>--cooldown 0</code> to disable it.
 <li>Claude should cite specific context:<ul>
 <li>Current tasks from <code>.context/TASKS.md</code>;</li>
 <li>Recent <strong>decisions</strong> or <strong>learnings</strong>;</li>
-<li>Recent <strong>session history</strong> from <code>ctx recall</code>.</li>
+<li>Recent <strong>session history</strong> from <code>ctx journal</code>.</li>
 </ul>
 </li>
 </ol>
@@ -5292,7 +5290,7 @@ both together.</p>
 </thead>
 <tbody>
 <tr>
-<td><code>/ctx-recall</code></td>
+<td><code>/ctx-history</code></td>
 <td>Browse AI session history</td>
 </tr>
 <tr>
@@ -5302,10 +5300,6 @@ both together.</p>
 <tr>
 <td><code>/ctx-journal-enrich-all</code></td>
 <td>Full journal pipeline: export if needed, then batch-enrich</td>
-</tr>
-<tr>
-<td><code>/ctx-journal-normalize</code></td>
-<td>Fix markdown rendering issues in journal</td>
 </tr>
 </tbody>
 </table>
@@ -5507,7 +5501,7 @@ from within the editor.</p>
 <ol>
 <li>Install the <code>.vsix</code> file:</li>
 </ol>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-16-1"><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a>code<span class="w"> </span>--install-extension<span class="w"> </span>ctx-context-0.8.0.vsix
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-16-1"><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a>code<span class="w"> </span>--install-extension<span class="w"> </span>ctx-context-0.8.1.vsix
 </span></code></pre></div>
 <ol>
 <li>Reload VS Code. Type <code>@ctx</code> in Copilot Chat to verify.</li>
@@ -5538,7 +5532,7 @@ from within the editor.</p>
 <td>Detect stale or invalid context</td>
 </tr>
 <tr>
-<td><code>@ctx /recall</code></td>
+<td><code>@ctx /journal</code></td>
 <td>Browse and search AI session history</td>
 </tr>
 <tr>
@@ -5569,7 +5563,7 @@ from within the editor.</p>
 </span><span id="__span-17-3"><a id="__codelineno-17-3" name="__codelineno-17-3" href="#__codelineno-17-3"></a>@ctx /add task Implement user authentication
 </span><span id="__span-17-4"><a id="__codelineno-17-4" name="__codelineno-17-4" href="#__codelineno-17-4"></a>@ctx /drift
 </span><span id="__span-17-5"><a id="__codelineno-17-5" name="__codelineno-17-5" href="#__codelineno-17-5"></a>@ctx /hook copilot
-</span><span id="__span-17-6"><a id="__codelineno-17-6" name="__codelineno-17-6" href="#__codelineno-17-6"></a>@ctx /recall
+</span><span id="__span-17-6"><a id="__codelineno-17-6" name="__codelineno-17-6" href="#__codelineno-17-6"></a>@ctx /journal
 </span></code></pre></div>
 <p>Typing <code>@ctx</code> without a command shows help with all available commands.
 The extension also supports natural language: asking <code>@ctx</code> about
@@ -5598,7 +5592,7 @@ example, after <code>/init</code> it suggests <code>/status</code> and <code>/ho
 <h3 id="session-persistence">Session Persistence<a class="headerlink" href="#session-persistence" title="Permanent link">&para;</a></h3>
 <p><code>ctx init</code> creates a <code>.context/sessions/</code> directory for storing
 session data from non-Claude tools. The Markdown session parser scans
-this directory during <code>ctx recall</code>, enabling session history for
+this directory during <code>ctx journal</code>, enabling session history for
 Copilot and other tools.</p>
 <h3 id="manual-patterns">Manual Patterns<a class="headerlink" href="#manual-patterns" title="Permanent link">&para;</a></h3>
 <p>These patterns work without the extension, using Copilot's built-in

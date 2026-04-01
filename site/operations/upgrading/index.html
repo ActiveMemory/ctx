@@ -2441,16 +2441,14 @@
   
   
     <li class="md-nav__item">
-      <a href="../../recipes/prompt-templates/" class="md-nav__link">
+      <a href="../../recipes/prompt-templates.md" class="md-nav__link">
         
   
-  
-    <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-message-square-text" viewBox="0 0 24 24"><path d="M22 17a2 2 0 0 1-2 2H6.828a2 2 0 0 0-1.414.586l-2.202 2.202A.71.71 0 0 1 2 21.286V5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2zM7 11h10M7 15h6M7 7h8"/></svg>
   
   <span class="md-ellipsis">
     
   
-    Reusable Prompt Templates
+    none
   
 
     
@@ -2631,7 +2629,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../cli/recall/" class="md-nav__link">
+      <a href="../../cli/journal/" class="md-nav__link">
         
   
   
@@ -2640,7 +2638,7 @@
   <span class="md-ellipsis">
     
   
-    Recall and Journal
+    Journal
   
 
     
@@ -3890,7 +3888,7 @@ Knowledge files are preserved automatically.</p>
 <tbody>
 <tr>
 <td><strong>Infrastructure</strong></td>
-<td><code>.claude/settings.local.json</code> (permissions), ctx-managed sections in <code>CLAUDE.md</code> and <code>PROMPT.md</code>, <strong>ctx plugin</strong> (hooks + skills)</td>
+<td><code>.claude/settings.local.json</code> (permissions), ctx-managed sections in <code>CLAUDE.md</code>, <strong>ctx plugin</strong> (hooks + skills)</td>
 <td>Yes</td>
 </tr>
 <tr>
@@ -3916,7 +3914,7 @@ Knowledge files are yours and should never be overwritten.</p>
 </span></code></pre></div>
 <ul>
 <li><code>--force</code> regenerates infrastructure files (permissions, ctx-managed
-  sections in <code>CLAUDE.md</code> and <code>PROMPT.md</code>).</li>
+  sections in <code>CLAUDE.md</code>).</li>
 <li><code>--merge</code> preserves your content outside <code>ctx</code> markers.</li>
 </ul>
 <p>Knowledge files (<code>.context/TASKS.md</code>, <code>DECISIONS.md</code>, etc.) are <strong>preserved
@@ -3947,7 +3945,7 @@ what <code>ctx init</code> provides, diff and merge:</p>
 </span></code></pre></div>
 <h3 id="6-clean-up">6. Clean Up<a class="headerlink" href="#6-clean-up" title="Permanent link">&para;</a></h3>
 <p>If you made manual backups, remove them once satisfied:</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-5-1"><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>rm<span class="w"> </span>-rf<span class="w"> </span>.context.bak<span class="w"> </span>.claude.bak<span class="w"> </span>CLAUDE.md.bak<span class="w"> </span>PROMPT.md.bak
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-5-1"><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>rm<span class="w"> </span>-rf<span class="w"> </span>.context.bak<span class="w"> </span>.claude.bak<span class="w"> </span>CLAUDE.md.bak
 </span></code></pre></div>
 <h2 id="what-if-i-skip-the-upgrade">What If I Skip the Upgrade?<a class="headerlink" href="#what-if-i-skip-the-upgrade" title="Permanent link">&para;</a></h2>
 <p>The old binary still works with your existing <code>.context/</code> files. But you

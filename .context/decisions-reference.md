@@ -137,11 +137,11 @@ preserved verbatim.
 
 **Consolidated from**: 4 decisions (2026-01-28 to 2026-02-20)
 
-**Context**: The recall system parses AI session history from JSONL files and exports enriched markdown to the journal.
+**Context**: The recall system parses AI session history from JSONL files and imports enriched markdown to the journal.
 
 **Decision**: Claude-first with tool-agnostic types; default export preserves enrichment (no `--update` flag needed); spec-driven development supersedes ad-hoc bug-fix tasks.
 
-**Rationale**: Claude Code is primary audience; parser updates follow its releases. Tool-agnostic `SessionParser` interface enables future parsers. Default export already preserved frontmatter — the real fix was `--force` behavior. `specs/recall-export-safety.md` replaced 4 narrow tasks with 7 comprehensive spec-aligned tasks.
+**Rationale**: Claude Code is primary audience; parser updates follow its releases. Tool-agnostic `SessionParser` interface enables future parsers. Default import already preserved frontmatter — the real fix was `--force` behavior. `specs/recall-export-safety.md` replaced 4 narrow tasks with 7 comprehensive spec-aligned tasks.
 
 **Consequence**: Features assume Claude Code conventions. Parser registry auto-detects format. Export has safe defaults with `--regenerate` opt-in. Aider/Cursor parsers are community-contributed, best-effort.
 
@@ -246,7 +246,7 @@ preserved verbatim.
 
 **Status**: Accepted
 
-**Context**: The session/recall/journal system had three overlapping storage layers: `~/.claude/projects/` (raw JSONL transcripts, owned by Claude Code), `.context/sessions/` (JSONL copies + context snapshots), and `.context/journal/` (enriched markdown from `ctx recall export`). The recall pipeline reads directly from `~/.claude/projects/`, making `.context/sessions/` a dead-end write sink that nothing reads from. The auto-save hook copied transcripts to a directory nobody consumed. The `ctx session save` command created context snapshots that git already provides through version history. This was ~15 Go source files, a shell hook, ~20 config constants, and 30+ doc references supporting infrastructure with no consumers.
+**Context**: The session/recall/journal system had three overlapping storage layers: `~/.claude/projects/` (raw JSONL transcripts, owned by Claude Code), `.context/sessions/` (JSONL copies + context snapshots), and `.context/journal/` (enriched markdown from `ctx recall import`). The recall pipeline reads directly from `~/.claude/projects/`, making `.context/sessions/` a dead-end write sink that nothing reads from. The auto-save hook copied transcripts to a directory nobody consumed. The `ctx session save` command created context snapshots that git already provides through version history. This was ~15 Go source files, a shell hook, ~20 config constants, and 30+ doc references supporting infrastructure with no consumers.
 
 **Decision**: Remove `.context/sessions/` entirely. Two stores remain: raw transcripts (global, tool-owned in `~/.claude/projects/`) and enriched journal (project-local in `.context/journal/`).
 

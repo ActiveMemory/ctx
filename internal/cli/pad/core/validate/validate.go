@@ -10,7 +10,7 @@ import (
 	errPad "github.com/ActiveMemory/ctx/internal/err/pad"
 )
 
-// ValidateIndex checks that n is a valid 1-based index into entries.
+// Index checks that n is a valid 1-based index into entries.
 //
 // Parameters:
 //   - n: 1-based entry index
@@ -18,7 +18,7 @@ import (
 //
 // Returns:
 //   - error: Non-nil if n is out of range
-func ValidateIndex(n int, entries []string) error {
+func Index(n int, entries []string) error {
 	if n < 1 || n > len(entries) {
 		return errPad.EntryRange(n, len(entries))
 	}

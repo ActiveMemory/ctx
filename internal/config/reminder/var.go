@@ -8,6 +8,6 @@ package reminder
 
 // Template variable keys for reminder hooks.
 const (
-	// VarReminderList is the template variable for formatted reminder list.
-	VarReminderList = "ReminderList"
+	// VarList is the template variable for formatted reminder list.
+	VarList = "ReminderList"
 )

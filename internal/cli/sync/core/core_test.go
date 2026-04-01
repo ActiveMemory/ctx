@@ -48,7 +48,7 @@ func TestDetectSyncActions_NoActions(t *testing.T) {
 	}
 
 	_ = tmpDir
-	actions := action.DetectSyncActions(ctx)
+	actions := action.Detect(ctx)
 	// Just verify it runs without error
 	_ = actions
 }
@@ -96,7 +96,9 @@ func TestCheckNewDirectories_SkipsHiddenAndVendor(t *testing.T) {
 
 	actions := validate.CheckNewDirectories(ctx)
 	for _, a := range actions {
-		for _, skip := range []string{".git", "node_modules", "vendor", "dist", "build"} {
+		for _, skip := range []string{
+			".git", "node_modules", "vendor", "dist", "build",
+		} {
 			if strings.Contains(a.Description, skip) {
 				t.Errorf("should skip %q but got action: %s", skip, a.Description)
 			}
@@ -109,7 +111,8 @@ func TestCheckNewDirectories_DocumentedDirsIgnored(t *testing.T) {
 
 	// Write ARCHITECTURE.md that mentions "src"
 	archPath := filepath.Join(tmpDir, dir.Context, ctx.Architecture)
-	if err := os.WriteFile(archPath, []byte("# Architecture\n\nThe src directory contains...\n"), 0600); err != nil {
+	archContent := "# Architecture\n\nThe src directory contains...\n"
+	if err := os.WriteFile(archPath, []byte(archContent), 0600); err != nil {
 		t.Fatal(err)
 	}
 
@@ -154,7 +157,8 @@ func TestCheckPackageFiles_WithPackageFile(t *testing.T) {
 	_ = os.Remove(depsPath)
 
 	// Create a package.json
-	if err := os.WriteFile(filepath.Join(tmpDir, "package.json"), []byte(`{"name":"test"}`), 0600); err != nil {
+	pkgPath := filepath.Join(tmpDir, "package.json")
+	if err := os.WriteFile(pkgPath, []byte(`{"name":"test"}`), 0600); err != nil {
 		t.Fatal(err)
 	}
 
@@ -180,11 +184,13 @@ func TestCheckPackageFiles_WithDepsDoc(t *testing.T) {
 	tmpDir := setupSyncDir(t)
 
 	// Create a package.json and DEPENDENCIES.md
-	if err := os.WriteFile(filepath.Join(tmpDir, "package.json"), []byte(`{"name":"test"}`), 0600); err != nil {
+	pkgPath := filepath.Join(tmpDir, "package.json")
+	if err := os.WriteFile(pkgPath, []byte(`{"name":"test"}`), 0600); err != nil {
 		t.Fatal(err)
 	}
 	depsPath := filepath.Join(tmpDir, dir.Context, ctx.Dependency)
-	if err := os.WriteFile(depsPath, []byte("# Dependencies\n\nAll documented.\n"), 0600); err != nil {
+	depsContent := "# Dependencies\n\nAll documented.\n"
+	if err := os.WriteFile(depsPath, []byte(depsContent), 0600); err != nil {
 		t.Fatal(err)
 	}
 
@@ -224,7 +230,8 @@ func TestCheckConfigFiles_WithConfigFile(t *testing.T) {
 	tmpDir := setupSyncDir(t)
 
 	// Create a tsconfig.json
-	if err := os.WriteFile(filepath.Join(tmpDir, "tsconfig.json"), []byte(`{}`), 0600); err != nil {
+	tsPath := filepath.Join(tmpDir, "tsconfig.json")
+	if err := os.WriteFile(tsPath, []byte(`{}`), 0600); err != nil {
 		t.Fatal(err)
 	}
 
@@ -250,13 +257,16 @@ func TestCheckConfigFiles_DocumentedInConventions(t *testing.T) {
 	tmpDir := setupSyncDir(t)
 
 	// Create tsconfig.json
-	if err := os.WriteFile(filepath.Join(tmpDir, "tsconfig.json"), []byte(`{}`), 0600); err != nil {
+	tsPath := filepath.Join(tmpDir, "tsconfig.json")
+	if err := os.WriteFile(tsPath, []byte(`{}`), 0600); err != nil {
 		t.Fatal(err)
 	}
 
 	// Write CONVENTIONS.md mentioning tsconfig
 	convPath := filepath.Join(tmpDir, dir.Context, ctx.Convention)
-	if err := os.WriteFile(convPath, []byte("# Conventions\n\ntsconfig.json is configured for strict mode.\n"), 0600); err != nil {
+	convContent := "# Conventions\n\n" +
+		"tsconfig.json is configured for strict mode.\n"
+	if err := os.WriteFile(convPath, []byte(convContent), 0600); err != nil {
 		t.Fatal(err)
 	}
 
@@ -268,7 +278,10 @@ func TestCheckConfigFiles_DocumentedInConventions(t *testing.T) {
 	actions := validate.CheckConfigFiles(ctx)
 	for _, a := range actions {
 		if a.Type == "CONFIG" && strings.Contains(a.Description, "tsconfig") {
-			t.Error("tsconfig should not produce an action when documented in CONVENTIONS.md")
+			t.Error(
+				"tsconfig should not produce an action" +
+					" when documented in CONVENTIONS.md",
+			)
 		}
 	}
 }
@@ -277,13 +290,16 @@ func TestCheckPackageFiles_ArchContainsDependencies(t *testing.T) {
 	tmpDir := setupSyncDir(t)
 
 	// Create a go.mod
-	if err := os.WriteFile(filepath.Join(tmpDir, "go.mod"), []byte("module test\n"), 0600); err != nil {
+	goModPath := filepath.Join(tmpDir, "go.mod")
+	if err := os.WriteFile(goModPath, []byte("module test\n"), 0600); err != nil {
 		t.Fatal(err)
 	}
 
 	// Write ARCHITECTURE.md that mentions "dependencies"
 	archPath := filepath.Join(tmpDir, dir.Context, ctx.Architecture)
-	if err := os.WriteFile(archPath, []byte("# Architecture\n\nProject dependencies are managed via go.mod.\n"), 0600); err != nil {
+	archContent := "# Architecture\n\n" +
+		"Project dependencies are managed via go.mod.\n"
+	if err := os.WriteFile(archPath, []byte(archContent), 0600); err != nil {
 		t.Fatal(err)
 	}
 
@@ -295,7 +311,10 @@ func TestCheckPackageFiles_ArchContainsDependencies(t *testing.T) {
 	actions := validate.CheckPackageFiles(ctx)
 	for _, a := range actions {
 		if a.Type == "DEPS" && strings.Contains(a.Description, "go.mod") {
-			t.Error("should not produce DEPS action when ARCHITECTURE.md mentions dependencies")
+			t.Error(
+				"should not produce DEPS action when" +
+					" ARCHITECTURE.md mentions dependencies",
+			)
 		}
 	}
 }
@@ -325,7 +344,7 @@ func TestRunSync_ActionWithEmptySuggestion(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	actions := action.DetectSyncActions(ctx)
+	actions := action.Detect(ctx)
 	for _, a := range actions {
 		// All actions should have a non-empty Description
 		if a.Description == "" {

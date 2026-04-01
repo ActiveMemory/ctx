@@ -110,27 +110,3 @@ func DispatchUnsubscribe(
 ) *proto.Response {
 	return applySubscription(req, fn)
 }
-
-// applySubscription handles the shared parse-validate-apply logic
-// for subscribe and unsubscribe requests.
-func applySubscription(
-	req proto.Request, fn func(string),
-) *proto.Response {
-	var params proto.SubscribeParams
-	if unmarshalErr := json.Unmarshal(
-		req.Params, &params,
-	); unmarshalErr != nil {
-		return out.ErrResponse(
-			req.ID, proto.ErrCodeInvalidArg,
-			desc.Text(text.DescKeyMCPErrInvalidParams),
-		)
-	}
-	if params.URI == "" {
-		return out.ErrResponse(
-			req.ID, proto.ErrCodeInvalidArg,
-			desc.Text(text.DescKeyMCPErrURIRequired),
-		)
-	}
-	fn(params.URI)
-	return out.OkResponse(req.ID, struct{}{})
-}

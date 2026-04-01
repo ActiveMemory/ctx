@@ -6,6 +6,9 @@
 
 package ctx
 
+// StderrPrefix is prepended to all stderr warning messages.
+const StderrPrefix = "ctx: "
+
 // `ctx` file name constants for the .context/ directory.
 const (
 	// Constitution contains inviolable rules for agents.
@@ -25,6 +28,9 @@ const (
 	// AgentPlaybook contains the meta-instructions for using the
 	// context system.
 	AgentPlaybook = "AGENT_PLAYBOOK.md"
+	// AgentPlaybookGate contains distilled directives injected at
+	// session start by the context-load-gate hook.
+	AgentPlaybookGate = "AGENT_PLAYBOOK_GATE.md"
 	// Dependency contains project dependency documentation.
 	Dependency = "DEPENDENCIES.md"
 )

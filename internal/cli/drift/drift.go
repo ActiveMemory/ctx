@@ -13,6 +13,9 @@ import (
 )
 
 // Cmd returns the "ctx drift" command for detecting stale context.
+//
+// Returns:
+//   - *cobra.Command: The drift command with subcommands registered
 func Cmd() *cobra.Command {
 	return driftRoot.Cmd()
 }

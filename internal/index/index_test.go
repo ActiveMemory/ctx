@@ -38,7 +38,11 @@ func TestParseHeaders(t *testing.T) {
 **Status**: Accepted
 `,
 			expected: []Entry{
-				{Timestamp: "2026-01-28-051426", Date: "2026-01-28", Title: "No custom UI - IDE is the interface"},
+				{
+					Timestamp: "2026-01-28-051426",
+					Date:      "2026-01-28",
+					Title:     "No custom UI - IDE is the interface",
+				},
 			},
 		},
 		{
@@ -56,8 +60,16 @@ func TestParseHeaders(t *testing.T) {
 **Status**: Accepted
 `,
 			expected: []Entry{
-				{Timestamp: "2026-01-28-051426", Date: "2026-01-28", Title: "First decision"},
-				{Timestamp: "2026-01-27-123456", Date: "2026-01-27", Title: "Second decision"},
+				{
+					Timestamp: "2026-01-28-051426",
+					Date:      "2026-01-28",
+					Title:     "First decision",
+				},
+				{
+					Timestamp: "2026-01-27-123456",
+					Date:      "2026-01-27",
+					Title:     "Second decision",
+				},
 			},
 		},
 		{
@@ -69,7 +81,11 @@ func TestParseHeaders(t *testing.T) {
 **Status**: Accepted
 `,
 			expected: []Entry{
-				{Timestamp: "2026-01-28-051426", Date: "2026-01-28", Title: "Use tool-agnostic Session type | with pipe"},
+				{
+					Timestamp: "2026-01-28-051426",
+					Date:      "2026-01-28",
+					Title:     "Use tool-agnostic Session type | with pipe",
+				},
 			},
 		},
 	}
@@ -78,18 +94,31 @@ func TestParseHeaders(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			got := ParseHeaders(tt.content)
 			if len(got) != len(tt.expected) {
-				t.Errorf("ParseHeaders() got %d entries, want %d", len(got), len(tt.expected))
+				t.Errorf(
+					"ParseHeaders() got %d entries, want %d",
+					len(got), len(tt.expected),
+				)
 				return
 			}
 			for i, entry := range got {
 				if entry.Timestamp != tt.expected[i].Timestamp {
-					t.Errorf("entry[%d].Timestamp = %q, want %q", i, entry.Timestamp, tt.expected[i].Timestamp)
+					t.Errorf(
+						"entry[%d].Timestamp = %q, want %q",
+						i, entry.Timestamp,
+						tt.expected[i].Timestamp,
+					)
 				}
 				if entry.Date != tt.expected[i].Date {
-					t.Errorf("entry[%d].Date = %q, want %q", i, entry.Date, tt.expected[i].Date)
+					t.Errorf(
+						"entry[%d].Date = %q, want %q",
+						i, entry.Date, tt.expected[i].Date,
+					)
 				}
 				if entry.Title != tt.expected[i].Title {
-					t.Errorf("entry[%d].Title = %q, want %q", i, entry.Title, tt.expected[i].Title)
+					t.Errorf(
+						"entry[%d].Title = %q, want %q",
+						i, entry.Title, tt.expected[i].Title,
+					)
 				}
 			}
 		})
@@ -118,11 +147,15 @@ func TestGenerateTable(t *testing.T) {
 		{
 			name: "single entry",
 			entries: []Entry{
-				{Timestamp: "2026-01-28-051426", Date: "2026-01-28", Title: "First decision"},
+				{
+					Timestamp: "2026-01-28-051426",
+					Date:      "2026-01-28",
+					Title:     "First decision",
+				},
 			},
 			columnHeader: "Decision",
 			expected: `| Date | Decision |
-|------|--------|
+|----|--------|
 | 2026-01-28 | First decision |
 `,
 		},
@@ -134,7 +167,7 @@ func TestGenerateTable(t *testing.T) {
 			},
 			columnHeader: "Decision",
 			expected: `| Date | Decision |
-|------|--------|
+|----|--------|
 | 2026-01-28 | First |
 | 2026-01-27 | Second |
 `,
@@ -142,11 +175,15 @@ func TestGenerateTable(t *testing.T) {
 		{
 			name: "entry with pipe character",
 			entries: []Entry{
-				{Timestamp: "2026-01-28-051426", Date: "2026-01-28", Title: "Use A | B format"},
+				{
+					Timestamp: "2026-01-28-051426",
+					Date:      "2026-01-28",
+					Title:     "Use A | B format",
+				},
 			},
 			columnHeader: "Decision",
 			expected: `| Date | Decision |
-|------|--------|
+|----|--------|
 | 2026-01-28 | Use A \| B format |
 `,
 		},
@@ -157,7 +194,7 @@ func TestGenerateTable(t *testing.T) {
 			},
 			columnHeader: "Learning",
 			expected: `| Date | Learning |
-|------|--------|
+|----|--------|
 | 2026-01-28 | Test entry |
 `,
 		},
@@ -207,7 +244,7 @@ func TestUpdateDecisions(t *testing.T) {
 
 <!-- INDEX:START -->
 | Date | Decision |
-|------|----------|
+|----|----------|
 | 2026-01-28 | Old entry |
 <!-- INDEX:END -->
 
@@ -230,7 +267,7 @@ func TestUpdateDecisions(t *testing.T) {
 
 <!-- INDEX:START -->
 | Date | Decision |
-|------|----------|
+|----|----------|
 | 2026-01-28 | Old entry |
 <!-- INDEX:END -->
 
@@ -258,7 +295,10 @@ Some other content.
 			}
 			for _, notWant := range tt.wantNot {
 				if strings.Contains(got, notWant) {
-					t.Errorf("UpdateDecisions() result should not contain %q\nGot:\n%s", notWant, got)
+					t.Errorf(
+						"UpdateDecisions() result should not contain %q\nGot:\n%s",
+						notWant, got,
+					)
 				}
 			}
 		})
@@ -331,7 +371,10 @@ func TestUpdateDecisions_Idempotent(t *testing.T) {
 	second := UpdateDecisions(first)
 
 	if first != second {
-		t.Errorf("UpdateDecisions is not idempotent\nFirst:\n%s\nSecond:\n%s", first, second)
+		t.Errorf(
+			"UpdateDecisions is not idempotent\nFirst:\n%s\nSecond:\n%s",
+			first, second,
+		)
 	}
 }
 
@@ -405,7 +448,10 @@ func TestUpdateLearnings(t *testing.T) {
 			}
 			for _, notWant := range tt.wantNot {
 				if strings.Contains(got, notWant) {
-					t.Errorf("UpdateLearnings() result should not contain %q\nGot:\n%s", notWant, got)
+					t.Errorf(
+						"UpdateLearnings() result should not contain %q\nGot:\n%s",
+						notWant, got,
+					)
 				}
 			}
 		})
@@ -428,6 +474,9 @@ func TestUpdateLearnings_Idempotent(t *testing.T) {
 	second := UpdateLearnings(first)
 
 	if first != second {
-		t.Errorf("UpdateLearnings is not idempotent\nFirst:\n%s\nSecond:\n%s", first, second)
+		t.Errorf(
+			"UpdateLearnings is not idempotent\nFirst:\n%s\nSecond:\n%s",
+			first, second,
+		)
 	}
 }

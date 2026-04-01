@@ -34,9 +34,9 @@ import (
 //
 // Returns:
 //   - *AssembledPacket: Assembled packet within budget
-func AssemblePacket(ctx *entity.Context, budget int) *assembledPacket {
+func AssemblePacket(ctx *entity.Context, budget int) *AssembledPacket {
 	now := time.Now()
-	pkt := &assembledPacket{
+	pkt := &AssembledPacket{
 		Budget:      budget,
 		Instruction: desc.Text(text.DescKeyAgentInstruction),
 	}
@@ -49,7 +49,7 @@ func AssemblePacket(ctx *entity.Context, budget int) *assembledPacket {
 
 	tier1Tokens := EstimateSliceTokens(pkt.ReadOrder) +
 		EstimateSliceTokens(pkt.Constitution) +
-		ctxToken.EstimateTokensString(pkt.Instruction)
+		ctxToken.EstimateString(pkt.Instruction)
 	remaining -= tier1Tokens
 
 	if remaining <= 0 {
@@ -88,8 +88,8 @@ func AssemblePacket(ctx *entity.Context, budget int) *assembledPacket {
 	decisionBlocks := ParseEntryBlocks(ctx, cfgCtx.Decision)
 	learningBlocks := ParseEntryBlocks(ctx, cfgCtx.Learning)
 
-	scoredDecisions := score.ScoreEntries(decisionBlocks, keywords, now)
-	scoredLearnings := score.ScoreEntries(learningBlocks, keywords, now)
+	scoredDecisions := score.All(decisionBlocks, keywords, now)
+	scoredLearnings := score.All(learningBlocks, keywords, now)
 
 	// Split the remaining budget: proportional to content size, minimum 30% each
 	decTokens, learnTokens := Split(

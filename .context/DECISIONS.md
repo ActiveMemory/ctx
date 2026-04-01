@@ -3,6 +3,15 @@
 <!-- INDEX:START -->
 | Date | Decision |
 |------|--------|
+| 2026-03-31 | Split log into log/event and log/warn to break import cycles |
+| 2026-03-31 | Context-load-gate injects only CONSTITUTION and AGENT_PLAYBOOK_GATE, not full ReadOrder |
+| 2026-03-31 | Spec signal words and nudge threshold are user-configurable via .ctxrc |
+| 2026-03-30 | Flags-not-subcommands for journal source: list and show are view modes on a noun, not independent entities |
+| 2026-03-30 | Journal consumed recall — recall CLI package deleted |
+| 2026-03-30 | Classify rules are user-configurable via .ctxrc |
+| 2026-03-25 | Architecture analysis and enrichment are separate skills — constraint is the feature |
+| 2026-03-25 | Companion tools documented as optional MCP enhancements with runtime check |
+| 2026-03-25 | Prompt templates removed — skills are the single agent instruction mechanism |
 | 2026-03-24 | Write-once baseline with explicit end-consolidation for consolidation lifecycle |
 | 2026-03-23 | Pre/pre HTML tags promoted to shared constants in config/marker |
 | 2026-03-23 | Pure-data param structs in entity — replace function pointers with text keys |
@@ -63,6 +72,177 @@
 | 2026-02-26 | Security and permissions (consolidated) |
 | 2026-02-27 | Webhook and notification design (consolidated) |
 <!-- INDEX:END -->
+
+<!-- DECISION FORMATS
+
+## Quick Format (Y-Statement)
+
+For lightweight decisions, a single statement suffices:
+
+> "In the context of [situation], facing [constraint], we decided for [choice]
+> and against [alternatives], to achieve [benefit], accepting that [trade-off]."
+
+## Full Format
+
+For significant decisions:
+
+## [YYYY-MM-DD] Decision Title
+
+**Status**: Accepted | Superseded | Deprecated
+
+**Context**: What situation prompted this decision? What constraints exist?
+
+**Alternatives Considered**:
+- Option A: [Pros] / [Cons]
+- Option B: [Pros] / [Cons]
+
+**Decision**: What was decided?
+
+**Rationale**: Why this choice over the alternatives?
+
+**Consequence**: What are the implications? (Include both positive and negative)
+
+**Related**: See also [other decision] | Supersedes [old decision]
+
+## When to Record a Decision
+
+✓ Trade-offs between alternatives
+✓ Non-obvious design choices
+✓ Choices that affect architecture
+✓ "Why" that needs preservation
+
+✗ Minor implementation details
+✗ Routine maintenance
+✗ Configuration changes
+✗ No real alternatives existed
+
+-->
+
+## [2026-03-31-224245] Split log into log/event and log/warn to break import cycles
+
+**Status**: Accepted
+
+**Context**: io and notify could not import log.Warn because log imported both of them for event logging, creating circular dependencies
+
+**Decision**: Split log into log/event and log/warn to break import cycles
+
+**Rationale**: Separating concerns (stderr sink vs JSONL event log) into subpackages eliminated the cycle. Warn sink is foundation-level with only config imports, event logging is higher-level
+
+**Consequence**: All stderr warnings now route through logWarn.Warn(). New code importing log/warn has no cycle risk. Event types moved to internal/entity
+
+---
+
+## [2026-03-31-182003] Context-load-gate injects only CONSTITUTION and AGENT_PLAYBOOK_GATE, not full ReadOrder
+
+**Status**: Accepted
+
+**Context**: Force-loading ~14k tokens of context files (8 files) every session diluted attention without proportional value. CLAUDE.md already instructs agents to read full context files on-demand. Behavioral prose in force-loaded content was routinely skipped.
+
+**Decision**: Context-load-gate injects only CONSTITUTION and AGENT_PLAYBOOK_GATE, not full ReadOrder
+
+**Rationale**: Hard rules (CONSTITUTION) must be present before any action. Distilled directives (gate file) provide actionable session-start guidance in ~2k tokens. Full playbook, conventions, architecture, decisions, learnings are pulled on-demand when task context requires them.
+
+**Consequence**: New AGENT_PLAYBOOK_GATE.md file must stay in sync with AGENT_PLAYBOOK.md. HTML comment cross-reference added to playbook header for contributor discoverability.
+
+---
+
+## [2026-03-31-005113] Spec signal words and nudge threshold are user-configurable via .ctxrc
+
+**Status**: Accepted
+
+**Context**: Initially hardcoded signal words and 150-char threshold in run.go. User pointed out these are localizable vocabulary, following the session_prefixes / classify_rules pattern
+
+**Decision**: Spec signal words and nudge threshold are user-configurable via .ctxrc
+
+**Rationale**: Signal words are language-dependent and project-dependent — a Spanish-speaking user or a non-Go project would have different signal terms
+
+**Consequence**: Added spec_signal_words and spec_nudge_min_len to CtxRC struct, rc accessors with defaults in config/entry, JSON schema updated
+
+---
+
+## [2026-03-30-075927] Flags-not-subcommands for journal source: list and show are view modes on a noun, not independent entities
+
+**Status**: Accepted
+
+**Context**: During the journal-recall merge, recall had separate list and show subcommands. Merging them into journal created a design choice: source list + source show (three levels) vs source --show (two levels).
+
+**Decision**: Flags-not-subcommands for journal source: list and show are view modes on a noun, not independent entities
+
+**Rationale**: Keeps CLI nesting to two levels max. Default behavior (bare source) lists sessions; --show switches to inspect mode. When two operations differ only in how they view the same data, make them flags on one command.
+
+**Consequence**: journal source dispatches via --show flag rather than positional subcommand. Future view-mode toggles should follow this pattern.
+
+---
+
+## [2026-03-30-003756] Journal consumed recall — recall CLI package deleted
+
+**Status**: Accepted
+
+**Context**: ctx recall was never registered in bootstrap; ctx journal had all the same subcommands
+
+**Decision**: Journal consumed recall — recall CLI package deleted
+
+**Rationale**: One dead command group creates confusion in docs and skills. Journal is the canonical command group.
+
+**Consequence**: internal/cli/recall/ deleted, 19 doc files updated, docs/cli/recall.md renamed to journal.md, zensical.toml updated. MCP tool ctx_recall rename tasked separately (API contract)
+
+---
+
+## [2026-03-30-003745] Classify rules are user-configurable via .ctxrc
+
+**Status**: Accepted
+
+**Context**: Memory entry classification used hardcoded keyword rules that could not be customized
+
+**Decision**: Classify rules are user-configurable via .ctxrc
+
+**Rationale**: Users may work in domains where the default keywords do not match (non-English, specialized terminology). Same pattern as session_prefixes.
+
+**Consequence**: classify_rules in .ctxrc overrides defaults; schema updated; rc.ClassifyRules() accessor with fallback to config/memory.DefaultClassifyRules
+
+---
+
+## [2026-03-25-233646] Architecture analysis and enrichment are separate skills — constraint is the feature
+
+**Status**: Accepted
+
+**Context**: Observed that agents take shortcuts when code intelligence tools are available during architecture analysis. A 5.2x depth reduction was measured (5866 vs 1124 lines) when GitNexus was available during reading. Mentioning unavailable tools by name in a skill plants the idea for the agent to use them.
+
+**Decision**: Architecture analysis and enrichment are separate skills — constraint is the feature
+
+**Rationale**: Discovery requires forced reading without shortcuts. Validation and quantification are a separate pass. Two-pass compiler analogy: semantic parsing (human-style reading) then static analysis (graph enrichment). Never mention tools you want the agent to avoid — absence is the only reliable constraint.
+
+**Consequence**: ctx-architecture deliberately excludes code intelligence tools from allowed-tools and never mentions them. ctx-architecture-enrich is a separate skill that runs after, using the deep artifacts as baseline. Gemini is allowed in both for upstream/external lookups only.
+
+---
+
+## [2026-03-25-173337] Companion tools documented as optional MCP enhancements with runtime check
+
+**Status**: Accepted
+
+**Context**: Gemini Search and GitNexus improve skills but no docs mentioned them and no code checked their availability
+
+**Decision**: Companion tools documented as optional MCP enhancements with runtime check
+
+**Rationale**: Users should know what tools enhance their workflow without being forced to install them. Suppressible via .ctxrc for users who don't want them.
+
+**Consequence**: /ctx-remember smoke-tests MCPs at session start. companion_check: false suppresses.
+
+---
+
+## [2026-03-25-173336] Prompt templates removed — skills are the single agent instruction mechanism
+
+**Status**: Accepted
+
+**Context**: Prompt templates (.context/prompts/) overlapped with skills but had no discoverability — even the project creator didn't know they existed
+
+**Decision**: Prompt templates removed — skills are the single agent instruction mechanism
+
+**Rationale**: Adding metadata to prompts to fix discoverability would recreate the skill system. One concept is better than two.
+
+**Consequence**: code-review, explain, refactor promoted to proper skills. ctx prompt CLI removed. loop.md retained as ctx loop config file at .context/loop.md.
+
+---
 
 ## [2026-03-24-001001] Write-once baseline with explicit end-consolidation for consolidation lifecycle
 
@@ -847,7 +1027,7 @@ See: `specs/injection-oversize-nudge.md`.
 **Consolidated from**: 3 decisions (2026-01-21 to 2026-01-28)
 
 - Removed AGENTS.md from project root. Consolidated on CLAUDE.md (auto-loaded) + .context/AGENT_PLAYBOOK.md as the canonical agent instruction path. Projects using ctx should not create AGENTS.md.
-- Separate orchestrator directive from agent tasks: `.context/TASKS.md` is the agent's mind (tasks the agent owns); `IMPLEMENTATION_PLAN.md` is the orchestrator's thin directive layer ("check your tasks"). Prevents task list drift.
+- ~~Separate orchestrator directive from agent tasks~~ (superseded 2026-03-25: IMPLEMENTATION_PLAN.md removed — TASKS.md is the single source of truth for work items, AGENT_PLAYBOOK.md covers agent behavior).
 - No custom UI -- IDE is the interface. UI is a liability; IDEs already excel at file browsing, search, markdown editing, and git integration. Focus CLI efforts on good markdown output.
 
 ---
@@ -881,13 +1061,13 @@ See: `specs/injection-oversize-nudge.md`.
 
 **Status**: Accepted
 
-**Context**: The session/recall/journal system had three overlapping storage layers: `~/.claude/projects/` (raw JSONL transcripts, owned by Claude Code), `.context/sessions/` (JSONL copies + context snapshots), and `.context/journal/` (enriched markdown from `ctx recall export`). The recall pipeline reads directly from `~/.claude/projects/`, making `.context/sessions/` a dead-end write sink that nothing reads from. The auto-save hook copied transcripts to a directory nobody consumed. The `ctx session save` command created context snapshots that git already provides through version history. This was ~15 Go source files, a shell hook, ~20 config constants, and 30+ doc references supporting infrastructure with no consumers.
+**Context**: The session/recall/journal system had three overlapping storage layers: `~/.claude/projects/` (raw JSONL transcripts, owned by Claude Code), `.context/sessions/` (JSONL copies + context snapshots), and `.context/journal/` (enriched markdown from `ctx recall import`). The recall pipeline reads directly from `~/.claude/projects/`, making `.context/sessions/` a dead-end write sink that nothing reads from. The auto-save hook copied transcripts to a directory nobody consumed. The `ctx session save` command created context snapshots that git already provides through version history. This was ~15 Go source files, a shell hook, ~20 config constants, and 30+ doc references supporting infrastructure with no consumers.
 
 **Decision**: Remove `.context/sessions/` entirely. Two stores remain: raw transcripts (global, tool-owned in `~/.claude/projects/`) and enriched journal (project-local in `.context/journal/`).
 
 **Rationale**: Dead-end write sinks waste code surface, maintenance effort, and user attention. The recall pipeline already proved that reading directly from `~/.claude/projects/` is sufficient. Context snapshots are redundant with git history. Removing the middle layer simplifies the architecture from three stores to two, eliminates an entire CLI command tree (`ctx session`), and removes a shell hook that fired on every session end.
 
-**Consequence**: Deleted `internal/cli/session/` (15 files), removed auto-save hook, removed `--auto-save` from watch, removed pre-compact auto-save from compact, removed `/ctx-save` skill, updated ~45 documentation files. Four earlier decisions superseded (SessionEnd hook, Auto-Save Before Compact, Session Filename Format, Two-Tier Persistence Model). Users who want session history use `ctx recall list/export` instead.
+**Consequence**: Deleted `internal/cli/session/` (15 files), removed auto-save hook, removed `--auto-save` from watch, removed pre-compact auto-save from compact, removed `/ctx-save` skill, updated ~45 documentation files. Four earlier decisions superseded (SessionEnd hook, Auto-Save Before Compact, Session Filename Format, Two-Tier Persistence Model). Users who want session history use `ctx journal source`/`ctx journal import` instead.
 
 ---
 

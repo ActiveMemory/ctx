@@ -17,8 +17,6 @@ const (
 
 // Project-root file constants (not inside .context/).
 const (
-	// ImplementationPlan is the high-level project direction file.
-	ImplementationPlan = "IMPLEMENTATION_PLAN.md"
 	// Makefile is the user's project Makefile.
 	Makefile = "Makefile"
 	// MakefileCtx is the ctx-owned Makefile include for project root.
@@ -28,4 +26,6 @@ const (
 	MakefileIncludeDirective = "-include Makefile.ctx"
 	// GettingStarted is the quick-start reference file written during init.
 	GettingStarted = "GETTING_STARTED.md"
+	// FallbackName is the project name used when os.Getwd fails.
+	FallbackName = "unknown"
 )

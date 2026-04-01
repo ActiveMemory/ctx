@@ -2768,16 +2768,14 @@
   
   
     <li class="md-nav__item">
-      <a href="../prompt-templates/" class="md-nav__link">
+      <a href="../prompt-templates.md" class="md-nav__link">
         
   
-  
-    <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-message-square-text" viewBox="0 0 24 24"><path d="M22 17a2 2 0 0 1-2 2H6.828a2 2 0 0 0-1.414.586l-2.202 2.202A.71.71 0 0 1 2 21.286V5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2zM7 11h10M7 15h6M7 7h8"/></svg>
   
   <span class="md-ellipsis">
     
   
-    Reusable Prompt Templates
+    none
   
 
     
@@ -2958,7 +2956,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../cli/recall/" class="md-nav__link">
+      <a href="../../cli/journal/" class="md-nav__link">
         
   
   
@@ -2967,7 +2965,7 @@
   <span class="md-ellipsis">
     
   
-    Recall and Journal
+    Journal
   
 
     
@@ -4248,7 +4246,7 @@ overcomes the agent's tendency to silently absorb context.</p>
 </span><span id="__span-1-5"><a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;└────────────────────────────────────────────────&quot;</span>
 </span></code></pre></div>
 <p><strong>When to use</strong>: Actionable reminders the user needs to see regardless of
-what they asked: Stale backups, unexported sessions, resource warnings.</p>
+what they asked: Stale backups, unimported sessions, resource warnings.</p>
 <p><strong>Hook type</strong>: <code>UserPromptSubmit</code> (<em>runs before the agent sees the prompt</em>).</p>
 <p><strong>Examples in <code>ctx</code></strong>:</p>
 <ul>
@@ -4389,8 +4387,8 @@ tiers. Without a shared protocol, the prefixes are just text.</p>
 ignored or resented. Use once-per-day markers (<code>touch $REMINDED</code>), adaptive
 frequency (every Nth prompt), or staleness checks (only fire if condition
 persists).</p>
-<p><strong>Include actionable commands</strong>: "You have 12 unexported sessions" is less
-useful than "You have 12 unexported sessions. Run: <code>ctx recall export --all</code>."
+<p><strong>Include actionable commands</strong>: "You have 12 unimported sessions" is less
+useful than "You have 12 unimported sessions. Run: <code>ctx journal import --all</code>."
 Give the user (or agent) the exact next step.</p>
 <p><strong>Use box-drawing for visual structure</strong>: The <code>┌─ ─┐ │ └─ ─┘</code> pattern
 makes hook output visually distinct from agent prose. It also signals

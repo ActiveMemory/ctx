@@ -28,3 +28,14 @@ const (
 	DescKeyWriteImportSummary        = "write.import-summary"
 	DescKeyWriteImportSummaryDryRun  = "write.import-summary-dry-run"
 )
+
+const (
+	DescKeyWriteJournalImportNothing      = "write.journal-import-nothing"
+	DescKeyWriteJournalImportPartNew      = "write.journal-import-part-new"
+	DescKeyWriteJournalImportPartRegen    = "write.journal-import-part-regen"
+	DescKeyWriteJournalImportPartSkip     = "write.journal-import-part-skip"
+	DescKeyWriteJournalImportPartSkipLock = "write.journal-import-part-skip-locked"
+	DescKeyWriteJournalImportSummary      = "write.journal-import-summary"
+	DescKeyWriteJournalImportVerb         = "write.journal-import-verb"
+	DescKeyWriteJournalImportVerbDryRun   = "write.journal-import-verb-dry-run"
+)

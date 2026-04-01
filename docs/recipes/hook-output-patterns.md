@@ -89,7 +89,7 @@ echo "└───────────────────────�
 ```
 
 **When to use**: Actionable reminders the user needs to see regardless of
-what they asked: Stale backups, unexported sessions, resource warnings.
+what they asked: Stale backups, unimported sessions, resource warnings.
 
 **Hook type**: `UserPromptSubmit` (*runs before the agent sees the prompt*).
 
@@ -282,8 +282,8 @@ ignored or resented. Use once-per-day markers (`touch $REMINDED`), adaptive
 frequency (every Nth prompt), or staleness checks (only fire if condition
 persists).
 
-**Include actionable commands**: "You have 12 unexported sessions" is less
-useful than "You have 12 unexported sessions. Run: `ctx recall export --all`."
+**Include actionable commands**: "You have 12 unimported sessions" is less
+useful than "You have 12 unimported sessions. Run: `ctx journal import --all`."
 Give the user (or agent) the exact next step.
 
 **Use box-drawing for visual structure**: The `┌─ ─┐ │ └─ ─┘` pattern

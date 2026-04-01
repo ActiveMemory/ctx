@@ -4,5 +4,9 @@
 //   \    Copyright 2026-present Context contributors.
 //                 SPDX-License-Identifier: Apache-2.0
 
-// Package reset provides the ctx system message reset subcommand for restoring default hook templates.
+// Package reset provides the ctx system message reset subcommand.
+//
+// Key exports: [Cmd], [Run].
+// Follows the cmd/root + core taxonomy.
+// Registered by the cmd parent command.
 package reset

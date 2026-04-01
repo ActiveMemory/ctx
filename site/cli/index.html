@@ -15,7 +15,7 @@
         <link rel="canonical" href="https://ctx.ist/cli/">
       
       
-        <link rel="prev" href="../recipes/prompt-templates/">
+        <link rel="prev" href="../recipes/prompt-templates.md">
       
       
         <link rel="next" href="init-status/">
@@ -2441,16 +2441,14 @@
   
   
     <li class="md-nav__item">
-      <a href="../recipes/prompt-templates/" class="md-nav__link">
+      <a href="../recipes/prompt-templates.md" class="md-nav__link">
         
   
-  
-    <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-message-square-text" viewBox="0 0 24 24"><path d="M22 17a2 2 0 0 1-2 2H6.828a2 2 0 0 0-1.414.586l-2.202 2.202A.71.71 0 0 1 2 21.286V5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2zM7 11h10M7 15h6M7 7h8"/></svg>
   
   <span class="md-ellipsis">
     
   
-    Reusable Prompt Templates
+    none
   
 
     
@@ -2636,7 +2634,7 @@
   
   
     <li class="md-nav__item">
-      <a href="recall/" class="md-nav__link">
+      <a href="journal/" class="md-nav__link">
         
   
   
@@ -2645,7 +2643,7 @@
   <span class="md-ellipsis">
     
   
-    Recall and Journal
+    Journal
   
 
     
@@ -3721,7 +3719,7 @@ own guards and no-op gracefully.</p>
 <td>Manage <code>LEARNINGS.md</code> (reindex)</td>
 </tr>
 <tr>
-<td><a href="recall/#ctx-recall"><code>ctx recall</code></a></td>
+<td><a href="recall/#ctx-recall"><code>ctx journal</code></a></td>
 <td>Browse and export AI session history</td>
 </tr>
 <tr>
@@ -3764,48 +3762,17 @@ own guards and no-op gracefully.</p>
 <td><a href="tools/#ctx-pad"><code>ctx pad</code></a></td>
 <td>Encrypted scratchpad for sensitive one-liners</td>
 </tr>
-<tr>
-<td><a href="tools/#ctx-prompt"><code>ctx prompt</code></a></td>
-<td>Manage reusable prompt templates</td>
-</tr>
-<tr>
-<td><a href="tools/#ctx-remind"><code>ctx remind</code></a></td>
-<td>Session-scoped reminders that surface at session start</td>
-</tr>
-<tr>
-<td><a href="tools/#ctx-completion"><code>ctx completion</code></a></td>
-<td>Generate shell autocompletion scripts</td>
-</tr>
-<tr>
-<td><a href="tools/#ctx-guide"><code>ctx guide</code></a></td>
-<td>Quick-reference cheat sheet</td>
-</tr>
-<tr>
-<td><a href="tools/#ctx-why"><code>ctx why</code></a></td>
-<td>Read the philosophy behind ctx</td>
-</tr>
-<tr>
-<td><a href="tools/#ctx-site"><code>ctx site</code></a></td>
-<td>Site management (feed generation)</td>
-</tr>
-<tr>
-<td><a href="doctor/#ctx-doctor"><code>ctx doctor</code></a></td>
-<td>Structural health check (hooks, drift, config)</td>
-</tr>
-<tr>
-<td><a href="mcp/#ctx-mcp"><code>ctx mcp</code></a></td>
-<td>MCP server for AI tool integration (stdin/stdout)</td>
-</tr>
-<tr>
-<td><a href="config/#ctx-config"><code>ctx config</code></a></td>
-<td>Manage runtime configuration profiles</td>
-</tr>
-<tr>
-<td><a href="system/#ctx-system"><code>ctx system</code></a></td>
-<td>System diagnostics and hook commands</td>
-</tr>
 </tbody>
 </table>
+<p>| <a href="tools/#ctx-remind"><code>ctx remind</code></a>           | Session-scoped reminders that surface at session start   |
+| <a href="tools/#ctx-completion"><code>ctx completion</code></a>   | Generate shell autocompletion scripts                    |
+| <a href="tools/#ctx-guide"><code>ctx guide</code></a>             | Quick-reference cheat sheet                              |
+| <a href="tools/#ctx-why"><code>ctx why</code></a>                 | Read the philosophy behind ctx                           |
+| <a href="tools/#ctx-site"><code>ctx site</code></a>               | Site management (feed generation)                        |
+| <a href="doctor/#ctx-doctor"><code>ctx doctor</code></a>          | Structural health check (hooks, drift, config)           |
+| <a href="mcp/#ctx-mcp"><code>ctx mcp</code></a>                   | MCP server for AI tool integration (stdin/stdout)        |
+| <a href="config/#ctx-config"><code>ctx config</code></a>          | Manage runtime configuration profiles                    |
+| <a href="system/#ctx-system"><code>ctx system</code></a>          | System diagnostics and hook commands                     |</p>
 <hr />
 <h2 id="exit-codes">Exit Codes<a class="headerlink" href="#exit-codes" title="Permanent link">&para;</a></h2>
 <table>
@@ -3880,27 +3847,28 @@ own guards and no-op gracefully.</p>
 </span><span id="__span-1-10"><a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a><span class="nt">scratchpad_encrypt</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span><span class="w">     </span><span class="c1"># Encrypt scratchpad (default: true)</span>
 </span><span id="__span-1-11"><a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a><span class="nt">allow_outside_cwd</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">false</span><span class="w">     </span><span class="c1"># Skip boundary check (default: false)</span>
 </span><span id="__span-1-12"><a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a><span class="nt">event_log</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">false</span><span class="w">             </span><span class="c1"># Enable local hook event logging</span>
-</span><span id="__span-1-13"><a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a><span class="nt">entry_count_learnings</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">30</span><span class="w">    </span><span class="c1"># Drift warning threshold (0 = disable)</span>
-</span><span id="__span-1-14"><a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a><span class="nt">entry_count_decisions</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">20</span><span class="w">    </span><span class="c1"># Drift warning threshold (0 = disable)</span>
-</span><span id="__span-1-15"><a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a><span class="nt">convention_line_count</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">200</span><span class="w">   </span><span class="c1"># Line count warning for CONVENTIONS.md (0 = disable)</span>
-</span><span id="__span-1-16"><a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a><span class="nt">injection_token_warn</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">15000</span><span class="w">  </span><span class="c1"># Oversize injection warning (0 = disable)</span>
-</span><span id="__span-1-17"><a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a><span class="nt">context_window</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">200000</span><span class="w">       </span><span class="c1"># Auto-detected for Claude Code; override for other tools</span>
-</span><span id="__span-1-18"><a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a><span class="nt">billing_token_warn</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0</span><span class="w">        </span><span class="c1"># One-shot billing warning at this token count (0 = disabled)</span>
-</span><span id="__span-1-19"><a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a><span class="nt">key_rotation_days</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">90</span><span class="w">        </span><span class="c1"># Days before key rotation nudge</span>
-</span><span id="__span-1-20"><a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a><span class="nt">session_prefixes</span><span class="p">:</span><span class="w">            </span><span class="c1"># Recognized session header prefixes (extend for i18n)</span>
-</span><span id="__span-1-21"><a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a><span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;Session:&quot;</span><span class="w">               </span><span class="c1"># English (default)</span>
-</span><span id="__span-1-22"><a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a><span class="w">  </span><span class="c1"># - &quot;Oturum:&quot;              # Turkish (add as needed)</span>
-</span><span id="__span-1-23"><a id="__codelineno-1-23" name="__codelineno-1-23" href="#__codelineno-1-23"></a><span class="w">  </span><span class="c1"># - &quot;セッション:&quot;             # Japanese (add as needed)</span>
-</span><span id="__span-1-24"><a id="__codelineno-1-24" name="__codelineno-1-24" href="#__codelineno-1-24"></a><span class="nt">freshness_files</span><span class="p">:</span><span class="w">             </span><span class="c1"># Files with technology-dependent constants (opt-in)</span>
-</span><span id="__span-1-25"><a id="__codelineno-1-25" name="__codelineno-1-25" href="#__codelineno-1-25"></a><span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">path</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">config/thresholds.yaml</span>
-</span><span id="__span-1-26"><a id="__codelineno-1-26" name="__codelineno-1-26" href="#__codelineno-1-26"></a><span class="w">    </span><span class="nt">desc</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Model token limits and batch sizes</span>
-</span><span id="__span-1-27"><a id="__codelineno-1-27" name="__codelineno-1-27" href="#__codelineno-1-27"></a><span class="w">    </span><span class="nt">review_url</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">https://docs.example.com/limits</span><span class="w">  </span><span class="c1"># Optional</span>
-</span><span id="__span-1-28"><a id="__codelineno-1-28" name="__codelineno-1-28" href="#__codelineno-1-28"></a><span class="nt">notify</span><span class="p">:</span><span class="w">                      </span><span class="c1"># Webhook notification settings</span>
-</span><span id="__span-1-29"><a id="__codelineno-1-29" name="__codelineno-1-29" href="#__codelineno-1-29"></a><span class="w">  </span><span class="nt">events</span><span class="p">:</span><span class="w">                    </span><span class="c1"># Required: only listed events fire</span>
-</span><span id="__span-1-30"><a id="__codelineno-1-30" name="__codelineno-1-30" href="#__codelineno-1-30"></a><span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">loop</span>
-</span><span id="__span-1-31"><a id="__codelineno-1-31" name="__codelineno-1-31" href="#__codelineno-1-31"></a><span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">nudge</span>
-</span><span id="__span-1-32"><a id="__codelineno-1-32" name="__codelineno-1-32" href="#__codelineno-1-32"></a><span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">relay</span>
-</span><span id="__span-1-33"><a id="__codelineno-1-33" name="__codelineno-1-33" href="#__codelineno-1-33"></a><span class="w">    </span><span class="c1"># - heartbeat            # Every-prompt session-alive signal</span>
+</span><span id="__span-1-13"><a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a><span class="nt">companion_check</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span><span class="w">        </span><span class="c1"># Check companion tools at session start</span>
+</span><span id="__span-1-14"><a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a><span class="nt">entry_count_learnings</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">30</span><span class="w">    </span><span class="c1"># Drift warning threshold (0 = disable)</span>
+</span><span id="__span-1-15"><a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a><span class="nt">entry_count_decisions</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">20</span><span class="w">    </span><span class="c1"># Drift warning threshold (0 = disable)</span>
+</span><span id="__span-1-16"><a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a><span class="nt">convention_line_count</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">200</span><span class="w">   </span><span class="c1"># Line count warning for CONVENTIONS.md (0 = disable)</span>
+</span><span id="__span-1-17"><a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a><span class="nt">injection_token_warn</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">15000</span><span class="w">  </span><span class="c1"># Oversize injection warning (0 = disable)</span>
+</span><span id="__span-1-18"><a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a><span class="nt">context_window</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">200000</span><span class="w">       </span><span class="c1"># Auto-detected for Claude Code; override for other tools</span>
+</span><span id="__span-1-19"><a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a><span class="nt">billing_token_warn</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0</span><span class="w">        </span><span class="c1"># One-shot billing warning at this token count (0 = disabled)</span>
+</span><span id="__span-1-20"><a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a><span class="nt">key_rotation_days</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">90</span><span class="w">        </span><span class="c1"># Days before key rotation nudge</span>
+</span><span id="__span-1-21"><a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a><span class="nt">session_prefixes</span><span class="p">:</span><span class="w">            </span><span class="c1"># Recognized session header prefixes (extend for i18n)</span>
+</span><span id="__span-1-22"><a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a><span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;Session:&quot;</span><span class="w">               </span><span class="c1"># English (default)</span>
+</span><span id="__span-1-23"><a id="__codelineno-1-23" name="__codelineno-1-23" href="#__codelineno-1-23"></a><span class="w">  </span><span class="c1"># - &quot;Oturum:&quot;              # Turkish (add as needed)</span>
+</span><span id="__span-1-24"><a id="__codelineno-1-24" name="__codelineno-1-24" href="#__codelineno-1-24"></a><span class="w">  </span><span class="c1"># - &quot;セッション:&quot;             # Japanese (add as needed)</span>
+</span><span id="__span-1-25"><a id="__codelineno-1-25" name="__codelineno-1-25" href="#__codelineno-1-25"></a><span class="nt">freshness_files</span><span class="p">:</span><span class="w">             </span><span class="c1"># Files with technology-dependent constants (opt-in)</span>
+</span><span id="__span-1-26"><a id="__codelineno-1-26" name="__codelineno-1-26" href="#__codelineno-1-26"></a><span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">path</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">config/thresholds.yaml</span>
+</span><span id="__span-1-27"><a id="__codelineno-1-27" name="__codelineno-1-27" href="#__codelineno-1-27"></a><span class="w">    </span><span class="nt">desc</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Model token limits and batch sizes</span>
+</span><span id="__span-1-28"><a id="__codelineno-1-28" name="__codelineno-1-28" href="#__codelineno-1-28"></a><span class="w">    </span><span class="nt">review_url</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">https://docs.example.com/limits</span><span class="w">  </span><span class="c1"># Optional</span>
+</span><span id="__span-1-29"><a id="__codelineno-1-29" name="__codelineno-1-29" href="#__codelineno-1-29"></a><span class="nt">notify</span><span class="p">:</span><span class="w">                      </span><span class="c1"># Webhook notification settings</span>
+</span><span id="__span-1-30"><a id="__codelineno-1-30" name="__codelineno-1-30" href="#__codelineno-1-30"></a><span class="w">  </span><span class="nt">events</span><span class="p">:</span><span class="w">                    </span><span class="c1"># Required: only listed events fire</span>
+</span><span id="__span-1-31"><a id="__codelineno-1-31" name="__codelineno-1-31" href="#__codelineno-1-31"></a><span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">loop</span>
+</span><span id="__span-1-32"><a id="__codelineno-1-32" name="__codelineno-1-32" href="#__codelineno-1-32"></a><span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">nudge</span>
+</span><span id="__span-1-33"><a id="__codelineno-1-33" name="__codelineno-1-33" href="#__codelineno-1-33"></a><span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">relay</span>
+</span><span id="__span-1-34"><a id="__codelineno-1-34" name="__codelineno-1-34" href="#__codelineno-1-34"></a><span class="w">    </span><span class="c1"># - heartbeat            # Every-prompt session-alive signal</span>
 </span></code></pre></div>
 <table>
 <thead>
@@ -3959,6 +3927,12 @@ own guards and no-op gracefully.</p>
 <td><code>bool</code></td>
 <td><code>false</code></td>
 <td>Enable local hook event logging to <code>.context/state/events.jsonl</code></td>
+</tr>
+<tr>
+<td><code>companion_check</code></td>
+<td><code>bool</code></td>
+<td><code>true</code></td>
+<td>Check companion tool availability (Gemini Search, GitNexus) during <code>/ctx-remember</code></td>
 </tr>
 <tr>
 <td><code>entry_count_learnings</code></td>
@@ -4066,7 +4040,7 @@ own guards and no-op gracefully.</p>
       <nav class="md-footer__inner md-grid" aria-label="Footer" >
         
           
-          <a href="../recipes/prompt-templates/" class="md-footer__link md-footer__link--prev" aria-label="Previous: Reusable Prompt Templates">
+          <a href="../recipes/prompt-templates.md" class="md-footer__link md-footer__link--prev" aria-label="Previous: none">
             <div class="md-footer__button md-icon">
               
               <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-arrow-left" viewBox="0 0 24 24"><path d="m12 19-7-7 7-7M19 12H5"/></svg>
@@ -4076,7 +4050,7 @@ own guards and no-op gracefully.</p>
                 Previous
               </span>
               <div class="md-ellipsis">
-                Reusable Prompt Templates
+                none
               </div>
             </div>
           </a>

@@ -13,6 +13,9 @@ import (
 )
 
 // Cmd returns the serve command.
+//
+// Returns:
+//   - *cobra.Command: The serve command with subcommands registered
 func Cmd() *cobra.Command {
 	return serveRoot.Cmd()
 }

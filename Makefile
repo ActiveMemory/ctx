@@ -2,10 +2,10 @@
 #
 # Common targets for Go developers
 
-.PHONY: build test vet fmt lint lint-drift lint-docs clean all release build-all help \
+.PHONY: build test vet fmt lint lint-style lint-drift clean all release build-all help \
 test-coverage smoke site site-feed site-serve site-serve-lan site-setup audit check plugin-reload \
-journal journal-serve journal-serve-lan gpg-fix gpg-test \
-sync-why check-why gemini-search
+journal journal-serve journal-serve-lan gpg-fix gpg-test register-mcp reinstall \
+sync-version check-version-sync sync-why check-why gemini-search
 
 # Default binary name and output
 BINARY := ctx
@@ -14,8 +14,15 @@ OUTPUT := $(BINARY)
 # Default target
 all: build
 
-## build: Build for current platform (syncs embedded docs first)
-build: sync-why
+## sync-version: Stamp VERSION into embedded plugin.json
+sync-version:
+	@V=$$(cat VERSION | tr -d '[:space:]'); \
+	jq --arg v "$$V" '.version = $$v' internal/assets/claude/.claude-plugin/plugin.json > internal/assets/claude/.claude-plugin/plugin.json.tmp && \
+	mv internal/assets/claude/.claude-plugin/plugin.json.tmp internal/assets/claude/.claude-plugin/plugin.json; \
+	echo "Plugin version synced to $$V"
+
+## build: Build for current platform (syncs version + embedded docs first)
+build: sync-version sync-why
 	CGO_ENABLED=0 go build -ldflags="-X github.com/ActiveMemory/ctx/internal/bootstrap.version=$$(cat VERSION | tr -d '[:space:]')" -o $(OUTPUT) ./cmd/ctx
 
 ## test: Run tests with coverage summary
@@ -70,8 +77,8 @@ smoke: build
 	$(CURDIR)/$(BINARY) drift > /dev/null && \
 	echo "  Testing: ctx add task 'smoke test task'" && \
 	$(CURDIR)/$(BINARY) add task "smoke test task" > /dev/null && \
-	echo "  Testing: ctx recall list" && \
-	$(CURDIR)/$(BINARY) recall list > /dev/null && \
+	echo "  Testing: ctx journal source" && \
+	$(CURDIR)/$(BINARY) journal source > /dev/null && \
 	echo "  Testing: ctx why manifesto" && \
 	$(CURDIR)/$(BINARY) why manifesto > /dev/null && \
 	rm -rf $$TMPDIR && \
@@ -90,13 +97,22 @@ fmt:
 lint:
 	golangci-lint run
 
+## lint-style: Run all cosmetic/style lint scripts (advisory, not fatal)
+lint-style:
+	@echo "==> Checking code drift..."
+	@./hack/lint-drift.sh
+	@echo "==> Checking docstrings..."
+	@./hack/lint-docstrings.sh
+	@echo "==> Checking mixed funcs..."
+	@./hack/lint-mixed-funcs.sh
+	@echo "==> Checking import conventions..."
+	@./hack/lint-imports.sh
+	@echo ""
+	@echo "Style checks passed!"
+
 ## lint-drift: Check for code-level drift (magic strings, literal \n, Printf)
 lint-drift:
 	@./hack/lint-drift.sh
-
-## lint-docs: Check doc.go file listings match actual files
-lint-docs:
-	@./hack/lint-docs.sh
 
 ## audit: Run all CI checks locally (fmt, vet, lint, drift, docs, test)
 audit:
@@ -106,16 +122,17 @@ audit:
 	@CGO_ENABLED=0 go vet ./...
 	@echo "==> Running golangci-lint..."
 	@golangci-lint run --timeout=5m
-	@echo "==> Checking code drift..."
-	@./hack/lint-drift.sh
-	@echo "==> Checking doc.go listings..."
-	@./hack/lint-docs.sh
+	@echo "==> Running style checks..."
+	@$(MAKE) --no-print-directory lint-style
+	@echo "==> Checking version sync..."
+	@$(MAKE) --no-print-directory check-version-sync
 	@echo "==> Checking why docs freshness..."
 	@$(MAKE) --no-print-directory check-why
 	@echo "==> Running tests..."
 	@CGO_ENABLED=0 CTX_SKIP_PATH_CHECK=1 go test ./...
 	@echo ""
 	@echo "All checks passed!"
+	@echo "Tip: run /ctx-check-links to verify doc links before committing."
 
 ## check: Build + audit (single entry point for build, fmt, vet, lint, test)
 check: build audit
@@ -147,6 +164,11 @@ install:
 	cp $(BINARY) /usr/local/bin/$(BINARY)
 	@echo "Installed ctx to /usr/local/bin/ctx"
 
+## reinstall: Build and install in one step
+reinstall: build
+	cp -f $(BINARY) /usr/local/bin/$(BINARY) 2>/dev/null || sudo cp -f $(BINARY) /usr/local/bin/$(BINARY)
+	@echo "ctx reinstalled to /usr/local/bin/ctx"
+
 ## site-setup: Install zensical via pipx
 site-setup:
 	pipx install zensical
@@ -168,10 +190,10 @@ site-serve:
 site-serve-lan:
 	zensical serve -a 0.0.0.0:8000
 
-## journal: Export sessions and regenerate journal site
+## journal: Import sessions and regenerate journal site
 journal:
-	@echo "==> Exporting sessions to journal..."
-	@ctx recall export --all
+	@echo "==> Importing sessions to journal..."
+	@ctx journal import --all
 	@echo "==> Generating journal site..."
 	@ctx journal site --build
 	@echo ""
@@ -199,9 +221,14 @@ gpg-fix:
 gpg-test:
 	./hack/gpg-fix.sh --test
 
+## register-mcp: Register all MCP servers (gemini-search, gitnexus) with Claude Code
+register-mcp:
+	@./hack/register-gemini-search.sh
+	@./hack/register-gitnexus.sh
+
 ## gemini-search: Register gemini-search MCP server with Claude Code
 gemini-search:
-	@./hack/gemini-search.sh
+	@./hack/register-gemini-search.sh
 
 ## plugin-reload: Clear cached plugin (restart Claude Code to pick up skill/hook changes)
 plugin-reload:
@@ -213,6 +240,16 @@ sync-why:
 	cp docs/home/about.md internal/assets/why/about.md
 	cp docs/reference/design-invariants.md internal/assets/why/design-invariants.md
 	@echo "Why docs synced."
+
+## check-version-sync: Verify VERSION file matches embedded plugin.json
+check-version-sync:
+	@V=$$(cat VERSION | tr -d '[:space:]'); \
+	PV=$$(jq -r '.version' internal/assets/claude/.claude-plugin/plugin.json); \
+	if [ "$$V" != "$$PV" ]; then \
+		echo "FAIL: VERSION ($$V) != plugin.json ($$PV) — run 'make sync-version'"; \
+		exit 1; \
+	fi; \
+	echo "Version sync OK ($$V)."
 
 ## check-why: Verify embedded why docs match source docs
 check-why:

@@ -7,11 +7,11 @@
 package merge
 
 import (
+	"github.com/spf13/cobra"
+
 	"github.com/ActiveMemory/ctx/internal/cli/pad/core/blob"
 	"github.com/ActiveMemory/ctx/internal/cli/pad/core/merge"
 	"github.com/ActiveMemory/ctx/internal/cli/pad/core/store"
-	"github.com/spf13/cobra"
-
 	errFs "github.com/ActiveMemory/ctx/internal/err/fs"
 	"github.com/ActiveMemory/ctx/internal/write/pad"
 )
@@ -38,7 +38,7 @@ func Run(
 		return readErr
 	}
 
-	key := merge.LoadMergeKey(keyFile)
+	key := merge.LoadKey(keyFile)
 
 	seen := make(map[string]bool, len(current))
 	for _, e := range current {

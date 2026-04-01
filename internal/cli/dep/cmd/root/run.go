@@ -22,14 +22,18 @@ import (
 //
 // Parameters:
 //   - cmd: Cobra command for output stream
-//   - format: Output format (config.FormatMermaid, config.FormatTable, or config.FormatJSON)
+//   - format: Output format (config.FormatMermaid,
+//     config.FormatTable, or config.FormatJSON)
 //   - external: If true, include external module dependencies
 //   - projType: Force project type override; empty for auto-detect
 //
 // Returns:
 //   - error: Non-nil if format is invalid, project type unknown,
 //     or graph building fails
-func Run(cmd *cobra.Command, format string, external bool, projType string) error {
+func Run(
+	cmd *cobra.Command, format string,
+	external bool, projType string,
+) error {
 	supportedFormats := strings.Join([]string{
 		fmt.FormatMermaid, fmt.FormatTable, fmt.FormatJSON,
 	}, token.CommaSpace)
@@ -44,7 +48,8 @@ func Run(cmd *cobra.Command, format string, external bool, projType string) erro
 	if projType != "" {
 		builder = core.FindBuilder(projType)
 		if builder == nil {
-			return errConfig.UnknownProjectType(projType, strings.Join(core.BuilderNames(), token.CommaSpace))
+			names := strings.Join(core.BuilderNames(), token.CommaSpace)
+			return errConfig.UnknownProjectType(projType, names)
 		}
 	} else {
 		builder = core.DetectBuilder()
@@ -60,7 +65,7 @@ func Run(cmd *cobra.Command, format string, external bool, projType string) erro
 	}
 
 	if len(graph) == 0 {
-		deps.InfoNoDeps(cmd)
+		deps.NoDeps(cmd)
 		return nil
 	}
 

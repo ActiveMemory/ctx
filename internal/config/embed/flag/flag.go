@@ -13,5 +13,4 @@ const (
 	DescKeyContextDir      = "context-dir"
 	DescKeyDoctorJson      = "doctor.json"
 	DescKeyHookWrite       = "hook.write"
-	DescKeyPromptAddStdin  = "prompt.add.stdin"
 )

@@ -23,11 +23,13 @@ These rules are INVIOLABLE. If a task requires violating these, the task is wron
 
 - [ ] All code must pass tests before commit
 - [ ] No TODO comments in main branch (move to TASKS.md)
-- [ ] Path construction uses language-standard path joining — no string concatenation (security: prevents path traversal)
+- [ ] Path construction uses stdlib — no string concatenation (security: prevents path traversal)
 
 ## Process Invariants
 
 - [ ] All architectural changes require a decision record
+- [ ] Context loading is not a detour from your task. It IS the first step of every session. A 30-second read delay is always cheaper than a decision made without context.
+- [ ] Every commit references a spec (`Spec: specs/<name>.md` trailer) — no exceptions, no "non-trivial" qualifier. Even one-liner fixes need a spec for traceability. Use `/ctx-commit` instead of raw `git commit`.
 
 ## TASKS.md Structure Invariants
 

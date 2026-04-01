@@ -12,7 +12,7 @@ import (
 	"github.com/spf13/cobra"
 
 	coreState "github.com/ActiveMemory/ctx/internal/cli/system/core/state"
-	"github.com/ActiveMemory/ctx/internal/log"
+	"github.com/ActiveMemory/ctx/internal/log/event"
 	"github.com/ActiveMemory/ctx/internal/notify"
 )
 
@@ -60,7 +60,7 @@ func runSessionEvent(cmd *cobra.Command, eventType, caller string) error {
 	ref := notify.NewTemplateRef("session-event", eventType,
 		map[string]any{"Caller": caller})
 
-	log.AppendEvent("session", msg, "", ref)
+	event.Append("session", msg, "", ref)
 	_ = notify.Send("session", msg, "", ref)
 
 	cmd.Println(msg)

@@ -11,14 +11,14 @@ import (
 	"os"
 	"path/filepath"
 
+	"github.com/spf13/cobra"
+
+	"github.com/ActiveMemory/ctx/internal/assets/read/desc"
 	coreCheck "github.com/ActiveMemory/ctx/internal/cli/system/core/check"
 	coreJournal "github.com/ActiveMemory/ctx/internal/cli/system/core/journal"
 	"github.com/ActiveMemory/ctx/internal/cli/system/core/message"
 	"github.com/ActiveMemory/ctx/internal/cli/system/core/nudge"
 	"github.com/ActiveMemory/ctx/internal/cli/system/core/state"
-	"github.com/spf13/cobra"
-
-	"github.com/ActiveMemory/ctx/internal/assets/read/desc"
 	"github.com/ActiveMemory/ctx/internal/config/embed/text"
 	"github.com/ActiveMemory/ctx/internal/config/env"
 	"github.com/ActiveMemory/ctx/internal/config/file"
@@ -32,7 +32,7 @@ import (
 
 // Run executes the check-journal hook logic.
 //
-// Checks for unexported Claude Code sessions and unenriched journal
+// Checks for unimported Claude Code sessions and unenriched journal
 // entries, then emits a journal reminder nudge if either is found.
 // Throttled to once per day.
 //
@@ -51,10 +51,10 @@ func Run(cmd *cobra.Command, stdin *os.File) error {
 		return nil
 	}
 
-	tmpDir := state.StateDir()
-	remindedFile := filepath.Join(tmpDir, journal.CheckJournalThrottleID)
+	tmpDir := state.Dir()
+	remindedFile := filepath.Join(tmpDir, journal.ThrottleID)
 	claudeProjectsDir := filepath.Join(
-		os.Getenv(env.Home), journal.CheckJournalClaudeProjectsSubdir,
+		os.Getenv(env.Home), journal.ClaudeProjectsSubdir,
 	)
 
 	// Only remind once per day
@@ -63,7 +63,7 @@ func Run(cmd *cobra.Command, stdin *os.File) error {
 	}
 
 	// Bail out if journal or Claude projects directories don't exist
-	jDir := ctxResolve.ResolvedJournalDir()
+	jDir := ctxResolve.JournalDir()
 	if _, statErr := os.Stat(jDir); os.IsNotExist(statErr) {
 		return nil
 	}
@@ -71,35 +71,35 @@ func Run(cmd *cobra.Command, stdin *os.File) error {
 		return nil
 	}
 
-	// Stage 1: Unexported sessions
+	// Stage 1: Unimported sessions
 	newestJournal := coreJournal.NewestMtime(jDir, file.ExtMarkdown)
-	unexported := coreJournal.CountNewerFiles(
+	unimported := coreJournal.CountNewerFiles(
 		claudeProjectsDir, file.ExtJSONL, newestJournal,
 	)
 
 	// Stage 2: Unenriched entries
 	unenriched := coreJournal.CountUnenriched(jDir)
 
-	if unexported == 0 && unenriched == 0 {
+	if unimported == 0 && unenriched == 0 {
 		return nil
 	}
 
 	vars := map[string]any{
-		journal.VarUnexportedCount: unexported,
+		journal.VarUnimportedCount: unimported,
 		journal.VarUnenrichedCount: unenriched,
 	}
 
 	var variant, fallback string
 	switch {
-	case unexported > 0 && unenriched > 0:
+	case unimported > 0 && unenriched > 0:
 		variant = hook.VariantBoth
 		fallback = fmt.Sprintf(desc.Text(
-			text.DescKeyCheckJournalFallbackBoth), unexported, unenriched,
+			text.DescKeyCheckJournalFallbackBoth), unimported, unenriched,
 		)
-	case unexported > 0:
-		variant = hook.VariantUnexported
+	case unimported > 0:
+		variant = hook.VariantUnimported
 		fallback = fmt.Sprintf(desc.Text(
-			text.DescKeyCheckJournalFallbackUnexported), unexported,
+			text.DescKeyCheckJournalFallbackUnimported), unimported,
 		)
 	default:
 		variant = hook.VariantUnenriched
@@ -108,7 +108,7 @@ func Run(cmd *cobra.Command, stdin *os.File) error {
 		)
 	}
 
-	content := message.LoadMessage(hook.CheckJournal, variant, vars, fallback)
+	content := message.Load(hook.CheckJournal, variant, vars, fallback)
 	if content == "" {
 		return nil
 	}
@@ -121,9 +121,9 @@ func Run(cmd *cobra.Command, stdin *os.File) error {
 	ref := notify.NewTemplateRef(hook.CheckJournal, variant, vars)
 	journalMsg := hook.CheckJournal + ": " + fmt.Sprintf(
 		desc.Text(text.DescKeyCheckJournalRelayFormat),
-		unexported, unenriched,
+		unimported, unenriched,
 	)
-	nudge.NudgeAndRelay(journalMsg, input.SessionID, ref)
+	nudge.EmitAndRelay(journalMsg, input.SessionID, ref)
 
 	internalIo.TouchFile(remindedFile)
 	return nil

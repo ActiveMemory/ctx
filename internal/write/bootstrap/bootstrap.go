@@ -10,10 +10,11 @@ import (
 	"encoding/json"
 	"fmt"
 
+	"github.com/spf13/cobra"
+
 	"github.com/ActiveMemory/ctx/internal/assets/read/desc"
 	"github.com/ActiveMemory/ctx/internal/config/embed/text"
 	"github.com/ActiveMemory/ctx/internal/entity"
-	"github.com/spf13/cobra"
 )
 
 // Dir prints the context directory path (quiet mode). Nil cmd is a no-op.

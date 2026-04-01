@@ -50,7 +50,7 @@ func Run(cmd *cobra.Command, stdin *os.File) error {
 		return nil
 	}
 
-	tmpDir := state.StateDir()
+	tmpDir := state.Dir()
 	markerFile := filepath.Join(tmpDir, version.ThrottleID)
 
 	if coreCheck.DailyThrottled(markerFile) {
@@ -67,7 +67,12 @@ func Run(cmd *cobra.Command, stdin *os.File) error {
 
 	pluginVer, pluginErr := claude.PluginVersion()
 	if pluginErr != nil {
-		return nil // embedded plugin.json missing - nothing to compare
+		internalIo.TouchFile(markerFile)
+		msg := fmt.Sprintf(
+			desc.Text(text.DescKeyCheckVersionPluginReadError), pluginErr,
+		)
+		writeHook.Nudge(cmd, msg)
+		return nil
 	}
 
 	bMajor, bMinor, bOK := coreVersion.ParseMajorMinor(binaryVer)
@@ -87,10 +92,10 @@ func Run(cmd *cobra.Command, stdin *os.File) error {
 	fallback := fmt.Sprintf(desc.Text(
 		text.DescKeyCheckVersionFallback), binaryVer, pluginVer,
 	)
-	content := message.LoadMessage(hook.CheckVersion, hook.VariantMismatch,
+	content := message.Load(hook.CheckVersion, hook.VariantMismatch,
 		map[string]any{
-			version.VarBinaryVersion: binaryVer,
-			version.VarPluginVersion: pluginVer,
+			version.VarBinary: binaryVer,
+			version.VarPlugin: pluginVer,
 		}, fallback)
 	if content == "" {
 		internalIo.TouchFile(markerFile)
@@ -104,14 +109,14 @@ func Run(cmd *cobra.Command, stdin *os.File) error {
 
 	ref := notify.NewTemplateRef(hook.CheckVersion, hook.VariantMismatch,
 		map[string]any{
-			version.VarBinaryVersion: binaryVer,
-			version.VarPluginVersion: pluginVer,
+			version.VarBinary: binaryVer,
+			version.VarPlugin: pluginVer,
 		})
 	versionMsg := fmt.Sprintf(desc.Text(text.DescKeyRelayPrefixFormat),
 		hook.CheckVersion, fmt.Sprintf(
 			desc.Text(text.DescKeyCheckVersionMismatchRelayFormat),
 			binaryVer, pluginVer))
-	nudge.NudgeAndRelay(versionMsg, input.SessionID, ref)
+	nudge.EmitAndRelay(versionMsg, input.SessionID, ref)
 
 	internalIo.TouchFile(markerFile)
 

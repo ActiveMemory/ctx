@@ -7,14 +7,15 @@
 package archive
 
 import (
+	"github.com/spf13/cobra"
+
 	"github.com/ActiveMemory/ctx/internal/assets/read/desc"
 	"github.com/ActiveMemory/ctx/internal/config/embed/cmd"
 	"github.com/ActiveMemory/ctx/internal/config/embed/flag"
 	cFlag "github.com/ActiveMemory/ctx/internal/config/flag"
-	"github.com/spf13/cobra"
 )
 
-// Cmd returns the tasks archive subcommand.
+// Cmd returns the `task archive` subcommand.
 //
 // The archive command moves completed tasks (marked with [x]) from TASKS.md
 // to a timestamped archive file in .context/archive/. Pending tasks ([ ])
@@ -30,21 +31,21 @@ func Cmd() *cobra.Command {
 
 	short, long := desc.Command(cmd.DescKeyTaskArchive)
 
-	cmd := &cobra.Command{
-		Use:   "archive",
+	c := &cobra.Command{
+		Use:   cmd.UseTaskArchive,
 		Short: short,
 		Long:  long,
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return runArchive(cmd, dryRun)
+			return Run(cmd, dryRun)
 		},
 	}
 
-	cmd.Flags().BoolVar(
+	c.Flags().BoolVar(
 		&dryRun,
 		cFlag.DryRun,
 		false,
 		desc.Flag(flag.DescKeyTaskArchiveDryRun),
 	)
 
-	return cmd
+	return c
 }

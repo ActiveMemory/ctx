@@ -18,7 +18,10 @@ import (
 	"github.com/ActiveMemory/ctx/internal/cli/system/core/state"
 	"github.com/ActiveMemory/ctx/internal/config/embed/text"
 	"github.com/ActiveMemory/ctx/internal/config/hook"
+	cfgNudge "github.com/ActiveMemory/ctx/internal/config/nudge"
+	"github.com/ActiveMemory/ctx/internal/config/warn"
 	"github.com/ActiveMemory/ctx/internal/io"
+	ctxLog "github.com/ActiveMemory/ctx/internal/log/warn"
 )
 
 // PauseMarkerPath returns the path to the session pause marker file.
@@ -29,7 +32,7 @@ import (
 // Returns:
 //   - string: Absolute path to the pause marker file
 func PauseMarkerPath(sessionID string) string {
-	return filepath.Join(state.StateDir(), hook.PrefixPauseMarker+sessionID)
+	return filepath.Join(state.Dir(), hook.PrefixPauseMarker+sessionID)
 }
 
 // Paused checks if the session is paused. If paused, increments the
@@ -64,7 +67,7 @@ func PausedMessage(turns int) string {
 	if turns == 0 {
 		return ""
 	}
-	if turns <= 5 {
+	if turns <= cfgNudge.PauseTurnThreshold {
 		return hook.LabelPaused
 	}
 	return fmt.Sprintf(desc.Text(text.DescKeyWritePausedMessage), turns)
@@ -85,5 +88,8 @@ func Pause(sessionID string) {
 // Parameters:
 //   - sessionID: Session identifier
 func Resume(sessionID string) {
-	_ = os.Remove(PauseMarkerPath(sessionID))
+	p := PauseMarkerPath(sessionID)
+	if removeErr := os.Remove(p); removeErr != nil {
+		ctxLog.Warn(warn.Remove, p, removeErr)
+	}
 }

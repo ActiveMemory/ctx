@@ -13,6 +13,7 @@ import (
 	"testing"
 
 	"github.com/ActiveMemory/ctx/internal/config/ctx"
+	cfgMemory "github.com/ActiveMemory/ctx/internal/config/memory"
 )
 
 const fixtureMemory = `# Auto Memory
@@ -34,7 +35,7 @@ func TestIntegration_ParseClassifyPromote(t *testing.T) {
 	defer cleanup()
 
 	// Parse
-	entries := ParseEntries(fixtureMemory)
+	entries := Entries(fixtureMemory)
 	if len(entries) == 0 {
 		t.Fatal("expected entries from fixture")
 	}
@@ -50,7 +51,7 @@ func TestIntegration_ParseClassifyPromote(t *testing.T) {
 		}
 
 		classification := Classify(entry)
-		if classification.Target == TargetSkip {
+		if classification.Target == cfgMemory.TargetSkip {
 			skipped++
 			continue
 		}
@@ -98,7 +99,7 @@ func TestIntegration_ParseClassifyPromote(t *testing.T) {
 			continue
 		}
 		classification := Classify(entry)
-		if classification.Target == TargetSkip {
+		if classification.Target == cfgMemory.TargetSkip {
 			continue
 		}
 		reimported++

@@ -19,8 +19,11 @@ import (
 	"github.com/ActiveMemory/ctx/internal/config/marker"
 	"github.com/ActiveMemory/ctx/internal/config/regex"
 	"github.com/ActiveMemory/ctx/internal/config/token"
-	errRecall "github.com/ActiveMemory/ctx/internal/err/recall"
+	cfgWarn "github.com/ActiveMemory/ctx/internal/config/warn"
+	errJournal "github.com/ActiveMemory/ctx/internal/err/journal"
 	internalIo "github.com/ActiveMemory/ctx/internal/io"
+	logWarn "github.com/ActiveMemory/ctx/internal/log/warn"
+	writeDrift "github.com/ActiveMemory/ctx/internal/write/drift"
 )
 
 // ParseHeaders extracts all entries from file content.
@@ -69,23 +72,25 @@ func GenerateTable(entries []Entry, columnHeader string) string {
 		return ""
 	}
 
-	nl := token.NewlineLF
 	var sb strings.Builder
-	sb.WriteString("| Date | ")
-	sb.WriteString(columnHeader)
-	sb.WriteString(" |" + nl)
-	sb.WriteString("|------|")
-	sb.WriteString(strings.Repeat("-", len(columnHeader)))
-	sb.WriteString("|" + nl)
+	if _, writeErr := fmt.Fprintf(&sb, marker.TableRowFmt+token.NewlineLF,
+		desc.Text(text.DescKeyLabelColDate), columnHeader); writeErr != nil {
+		logWarn.Warn(cfgWarn.Write, "index-header", writeErr)
+	}
+	if _, writeErr := fmt.Fprintf(&sb, marker.TableSepFmt+token.NewlineLF,
+		strings.Repeat(token.Dash, len(desc.Text(text.DescKeyLabelColDate))),
+		strings.Repeat(token.Dash, len(columnHeader))); writeErr != nil {
+		logWarn.Warn(cfgWarn.Write, "index-separator", writeErr)
+	}
 
 	for _, e := range entries {
-		// Escape pipe characters in title
-		title := strings.ReplaceAll(e.Title, "|", "\\|")
-		sb.WriteString("| ")
-		sb.WriteString(e.Date)
-		sb.WriteString(" | ")
-		sb.WriteString(title)
-		sb.WriteString(" |" + nl)
+		title := strings.ReplaceAll(
+			e.Title, marker.TablePipe, marker.TablePipeEscaped,
+		)
+		if _, writeErr := fmt.Fprintf(&sb, marker.TableRowFmt+token.NewlineLF,
+			e.Date, title); writeErr != nil {
+			logWarn.Warn(cfgWarn.Write, "index-row", writeErr)
+		}
 	}
 
 	return sb.String()
@@ -148,25 +153,15 @@ func Update(content, fileHeader, columnHeader string) string {
 	lineEnd := strings.Index(content[headerIdx:], nl)
 	if lineEnd == -1 {
 		// Header is at the end of the file
-		return content + nl + nl +
-			marker.IndexStart + nl + indexContent +
-			marker.IndexEnd + nl
+		return fmt.Sprintf(marker.IndexBlockAppendFmt,
+			content, indexContent)
 	}
 
 	insertPoint := headerIdx + lineEnd + 1
 
 	// Build new content with the index
-	var sb strings.Builder
-	sb.WriteString(content[:insertPoint])
-	sb.WriteString(nl)
-	sb.WriteString(marker.IndexStart)
-	sb.WriteString(nl)
-	sb.WriteString(indexContent)
-	sb.WriteString(marker.IndexEnd)
-	sb.WriteString(nl)
-	sb.WriteString(content[insertPoint:])
-
-	return sb.String()
+	return fmt.Sprintf(marker.IndexBlockFmt,
+		content[:insertPoint], indexContent, content[insertPoint:])
 }
 
 // UpdateDecisions regenerates the decision index in DECISIONS.md content.
@@ -177,7 +172,11 @@ func Update(content, fileHeader, columnHeader string) string {
 // Returns:
 //   - string: Updated content with regenerated index
 func UpdateDecisions(content string) string {
-	return Update(content, desc.Text(text.DescKeyHeadingDecisions), desc.Text(text.DescKeyColumnDecision))
+	return Update(
+		content,
+		desc.Text(text.DescKeyHeadingDecisions),
+		desc.Text(text.DescKeyColumnDecision),
+	)
 }
 
 // UpdateLearnings regenerates the learning index in LEARNINGS.md content.
@@ -188,10 +187,14 @@ func UpdateDecisions(content string) string {
 // Returns:
 //   - string: Updated content with regenerated index
 func UpdateLearnings(content string) string {
-	return Update(content, desc.Text(text.DescKeyHeadingLearnings), desc.Text(text.DescKeyColumnLearning))
+	return Update(
+		content,
+		desc.Text(text.DescKeyHeadingLearnings),
+		desc.Text(text.DescKeyColumnLearning),
+	)
 }
 
-// ReindexFile reads a context file, regenerates its index, and writes it back.
+// Reindex reads a context file, regenerates its index, and writes it back.
 //
 // This is a convenience function that handles the common reindex workflow:
 // check the file exists, read content, apply update function, write back,
@@ -210,40 +213,36 @@ func UpdateLearnings(content string) string {
 //
 // Returns:
 //   - error: Non-nil if file operations fail
-func ReindexFile(
+func Reindex(
 	w io.Writer, filePath, fileName string,
 	updateFunc func(string) string,
 	entryType string,
 ) error {
-	if _, err := os.Stat(filePath); os.IsNotExist(err) {
-		return errRecall.ReindexFileNotFound(fileName)
+	if _, statErr := os.Stat(filePath); os.IsNotExist(statErr) {
+		return errJournal.ReindexFileNotFound(fileName)
 	}
 
-	content, err := internalIo.SafeReadUserFile(filePath)
-	if err != nil {
-		return errRecall.ReindexFileRead(filePath, err)
+	content, readErr := internalIo.SafeReadUserFile(filePath)
+	if readErr != nil {
+		return errJournal.ReindexFileRead(filePath, readErr)
 	}
 
 	updated := updateFunc(string(content))
 
-	if err := os.WriteFile(filePath, []byte(updated), fs.PermFile); err != nil {
-		return errRecall.ReindexFileWrite(filePath, err)
+	if writeErr := os.WriteFile(
+		filePath, []byte(updated), fs.PermFile,
+	); writeErr != nil {
+		return errJournal.ReindexFileWrite(filePath, writeErr)
 	}
 
 	entries := ParseHeaders(string(content))
 	if len(entries) == 0 {
-		_, err := fmt.Fprintf(
-			w, desc.Text(text.DescKeyDriftCleared)+token.NewlineLF, entryType)
-		if err != nil {
-			return err
+		if printErr := writeDrift.IndexCleared(w, entryType); printErr != nil {
+			return printErr
 		}
 	} else {
-		_, err := fmt.Fprintf(
-			w,
-			desc.Text(text.DescKeyDriftRegenerated)+token.NewlineLF, len(entries),
-		)
-		if err != nil {
-			return err
+		if printErr := writeDrift.IndexRegenerated(w, len(entries)); printErr != nil {
+			return printErr
 		}
 	}
 

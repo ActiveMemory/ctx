@@ -9,16 +9,17 @@ package watch
 import (
 	"fmt"
 
+	"github.com/spf13/cobra"
+
 	"github.com/ActiveMemory/ctx/internal/assets/read/desc"
 	"github.com/ActiveMemory/ctx/internal/config/embed/text"
-	"github.com/spf13/cobra"
 )
 
-// Watching prints the initial "watching" status line.
+// Started prints the initial "watching" status line.
 //
 // Parameters:
 //   - cmd: Cobra command for output. Nil is a no-op.
-func Watching(cmd *cobra.Command) {
+func Started(cmd *cobra.Command) {
 	if cmd == nil {
 		return
 	}

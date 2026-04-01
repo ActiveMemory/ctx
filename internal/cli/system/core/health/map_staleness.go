@@ -9,27 +9,24 @@ package health
 import (
 	"encoding/json"
 	"fmt"
-	"os/exec"
 	"strings"
+	"time"
 
 	"github.com/ActiveMemory/ctx/internal/assets/read/desc"
 	"github.com/ActiveMemory/ctx/internal/cli/system/core/message"
 	"github.com/ActiveMemory/ctx/internal/cli/system/core/nudge"
 	"github.com/ActiveMemory/ctx/internal/config/architecture"
 	"github.com/ActiveMemory/ctx/internal/config/embed/text"
+	cfgGit "github.com/ActiveMemory/ctx/internal/config/git"
 	"github.com/ActiveMemory/ctx/internal/config/hook"
+	"github.com/ActiveMemory/ctx/internal/config/project"
+	cfgTime "github.com/ActiveMemory/ctx/internal/config/time"
 	"github.com/ActiveMemory/ctx/internal/config/token"
+	execGit "github.com/ActiveMemory/ctx/internal/exec/git"
 	"github.com/ActiveMemory/ctx/internal/io"
-
 	"github.com/ActiveMemory/ctx/internal/notify"
 	"github.com/ActiveMemory/ctx/internal/rc"
 )
-
-// MapTrackingInfo holds the minimal fields needed from map-tracking.json.
-type MapTrackingInfo struct {
-	OptedOut bool   `json:"opted_out"`
-	LastRun  string `json:"last_run"`
-}
 
 // ReadMapTracking reads and parses the map-tracking.json file from the
 // context directory.
@@ -50,7 +47,8 @@ func ReadMapTracking() *MapTrackingInfo {
 	return &info
 }
 
-// CountModuleCommits counts git commits touching internal/ since the given date.
+// CountModuleCommits counts git commits touching internal/
+// since the given date.
 //
 // Parameters:
 //   - since: date string in YYYY-MM-DD format
@@ -58,10 +56,15 @@ func ReadMapTracking() *MapTrackingInfo {
 // Returns:
 //   - int: number of commits, or 0 on error or if git is unavailable
 func CountModuleCommits(since string) int {
-	if _, lookErr := exec.LookPath("git"); lookErr != nil {
+	// Validate since as a date to prevent command injection.
+	t, parseErr := time.Parse(cfgTime.DateFormat, since)
+	if parseErr != nil {
 		return 0
 	}
-	out, gitErr := exec.Command("git", "log", "--oneline", "--since="+since, "--", "internal/").Output() //nolint:gosec // date string from JSON
+	out, gitErr := execGit.LogSince(t,
+		cfgGit.FlagOneline,
+		cfgGit.FlagPathSep, project.DirInternalSlash,
+	)
 	if gitErr != nil {
 		return 0
 	}
@@ -81,9 +84,14 @@ func CountModuleCommits(since string) int {
 //
 // Returns:
 //   - string: formatted nudge box, or empty string if silenced
-func EmitMapStalenessWarning(sessionID, dateStr string, moduleCommits int) string {
-	fallback := fmt.Sprintf(desc.Text(text.DescKeyCheckMapStalenessFallback), dateStr, moduleCommits)
-	content := message.LoadMessage(hook.CheckMapStaleness, hook.VariantStale,
+func EmitMapStalenessWarning(
+	sessionID, dateStr string, moduleCommits int,
+) string {
+	fallback := fmt.Sprintf(
+		desc.Text(text.DescKeyCheckMapStalenessFallback),
+		dateStr, moduleCommits,
+	)
+	content := message.Load(hook.CheckMapStaleness, hook.VariantStale,
 		map[string]any{
 			architecture.VarLastRefreshDate: dateStr,
 			architecture.VarModuleCount:     moduleCommits,
@@ -98,9 +106,15 @@ func EmitMapStalenessWarning(sessionID, dateStr string, moduleCommits int) strin
 		content)
 
 	ref := notify.NewTemplateRef(hook.CheckMapStaleness, hook.VariantStale,
-		map[string]any{architecture.VarLastRefreshDate: dateStr, architecture.VarModuleCount: moduleCommits})
+		map[string]any{
+			architecture.VarLastRefreshDate: dateStr,
+			architecture.VarModuleCount:     moduleCommits,
+		},
+	)
 	notifyMsg := fmt.Sprintf(desc.Text(text.DescKeyRelayPrefixFormat),
-		hook.CheckMapStaleness, desc.Text(text.DescKeyCheckMapStalenessRelayMessage))
-	nudge.NudgeAndRelay(notifyMsg, sessionID, ref)
+		hook.CheckMapStaleness,
+		desc.Text(text.DescKeyCheckMapStalenessRelayMessage),
+	)
+	nudge.EmitAndRelay(notifyMsg, sessionID, ref)
 	return box
 }

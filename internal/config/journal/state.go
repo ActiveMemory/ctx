@@ -8,6 +8,6 @@ package journal
 
 // Journal state file.
 const (
-	// FileState is the processing state file in .context/journal/.
-	FileState = ".state.json"
+	// File is the processing state file in .context/journal/.
+	File = ".state.json"
 )

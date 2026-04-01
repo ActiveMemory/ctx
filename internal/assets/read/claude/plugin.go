@@ -14,6 +14,10 @@ import (
 )
 
 // PluginVersion returns the version string from the embedded plugin.json.
+//
+// Returns:
+//   - string: Semver version (e.g. "0.8.1")
+//   - error: If the embedded file cannot be read or parsed
 func PluginVersion() (string, error) {
 	data, readErr := assets.FS.ReadFile(asset.PathPluginJSON)
 	if readErr != nil {

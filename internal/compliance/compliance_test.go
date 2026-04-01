@@ -58,11 +58,17 @@ func templateDir(t *testing.T, root string) string {
 func allGoFiles(t *testing.T, root string) []string {
 	t.Helper()
 	var files []string
-	err := filepath.Walk(root, func(path string, info os.FileInfo, err error) error {
+	err := filepath.Walk(root, func(
+		path string, info os.FileInfo, err error,
+	) error {
 		if err != nil {
 			return err
 		}
-		if info.IsDir() && (info.Name() == "vendor" || info.Name() == ".git" || info.Name() == "dist" || info.Name() == "site") {
+		isSkipped := info.Name() == "vendor" ||
+			info.Name() == ".git" ||
+			info.Name() == "dist" ||
+			info.Name() == "site"
+		if info.IsDir() && isSkipped {
 			return filepath.SkipDir
 		}
 		if !info.IsDir() && strings.HasSuffix(path, ".go") {
@@ -269,7 +275,8 @@ func TestNoCmdPrintf(t *testing.T) {
 }
 
 // ---------------------------------------------------------------------------
-// 6. No magic directory strings ╬ô├ç├╢ use config.Dir* constants (lint-drift rule 3)
+// 6. No magic directory strings — use config.Dir* constants
+// (lint-drift rule 3)
 // ---------------------------------------------------------------------------
 
 // TestNoMagicDirectoryStrings mirrors lint-drift rule 3: magic directory
@@ -322,11 +329,16 @@ func TestNoDirectFmtPrintInCobraHandlers(t *testing.T) {
 		"Printf":  true,
 	}
 
-	err := filepath.Walk(cliDir, func(path string, info os.FileInfo, walkErr error) error {
+	err := filepath.Walk(cliDir, func(
+		path string, info os.FileInfo, walkErr error,
+	) error {
 		if walkErr != nil {
 			return walkErr
 		}
-		if info.IsDir() || !strings.HasSuffix(path, ".go") || strings.HasSuffix(path, "_test.go") {
+		notSource := info.IsDir() ||
+			!strings.HasSuffix(path, ".go") ||
+			strings.HasSuffix(path, "_test.go")
+		if notSource {
 			return nil
 		}
 
@@ -470,7 +482,8 @@ func TestGoVet(t *testing.T) {
 
 // TestGolangciLint runs golangci-lint across the entire project.
 // This catches issues that go vet alone misses (gosec, goconst, unused, etc.).
-// golangci-lint is a required dependency ╬ô├ç├╢ the test fails if it is not installed.
+// golangci-lint is a required dependency — the test fails
+// if it is not installed.
 func TestGolangciLint(t *testing.T) {
 	if testing.Short() {
 		t.Skip("skipping golangci-lint in short mode")
@@ -481,7 +494,8 @@ func TestGolangciLint(t *testing.T) {
 	if _, err := exec.LookPath("golangci-lint"); err != nil {
 		t.Skip("golangci-lint is not installed.\n" +
 			"Install it with:\n" +
-			"  go install github.com/golangci/golangci-lint/v2/cmd/golangci-lint@v2.8.0\n" +
+			"  go install github.com/golangci/" +
+			"golangci-lint/v2/cmd/golangci-lint@v2.8.0\n" +
 			"Or see: https://golangci-lint.run/welcome/install/")
 	}
 
@@ -511,12 +525,15 @@ func TestNoSecretsInTemplates(t *testing.T) {
 		regexp.MustCompile(`(?i)-----BEGIN (RSA |EC )?PRIVATE KEY-----`),
 	}
 
-	err := filepath.Walk(tplDir, func(path string, info os.FileInfo, walkErr error) error {
+	err := filepath.Walk(tplDir, func(
+		path string, info os.FileInfo, walkErr error,
+	) error {
 		if walkErr != nil || info.IsDir() {
 			return walkErr
 		}
 
-		data, readErr := os.ReadFile(filepath.Clean(path)) //nolint:gosec // path comes from filepath.Walk, not user input
+		//nolint:gosec // path comes from filepath.Walk
+		data, readErr := os.ReadFile(filepath.Clean(path))
 		if readErr != nil {
 			t.Errorf("read %s: %v", path, readErr)
 			return nil
@@ -574,7 +591,8 @@ func TestVersionFile(t *testing.T) {
 	root := projectRoot(t)
 	versionPath := filepath.Join(root, "VERSION")
 
-	data, err := os.ReadFile(filepath.Clean(versionPath)) //nolint:gosec // constructed from test constants
+	//nolint:gosec // constructed from test constants
+	data, err := os.ReadFile(filepath.Clean(versionPath))
 	if err != nil {
 		t.Fatalf("cannot read VERSION file: %v", err)
 	}
@@ -599,7 +617,8 @@ func TestGoMod(t *testing.T) {
 	root := projectRoot(t)
 	modPath := filepath.Join(root, "go.mod")
 
-	data, err := os.ReadFile(filepath.Clean(modPath)) //nolint:gosec // constructed from test constants
+	//nolint:gosec // constructed from test constants
+	data, err := os.ReadFile(filepath.Clean(modPath))
 	if err != nil {
 		t.Fatalf("cannot read go.mod: %v", err)
 	}
@@ -624,12 +643,14 @@ func TestGoMod(t *testing.T) {
 // 14. Makefile ╬ô├ç├╢ required targets exist
 // ---------------------------------------------------------------------------
 
-// TestMakefileTargets verifies all expected build targets exist in the Makefile.
+// TestMakefileTargets verifies all expected build targets
+// exist in the Makefile.
 func TestMakefileTargets(t *testing.T) {
 	root := projectRoot(t)
 	makePath := filepath.Join(root, "Makefile")
 
-	data, err := os.ReadFile(filepath.Clean(makePath)) //nolint:gosec // constructed from test constants
+	//nolint:gosec // constructed from test constants
+	data, err := os.ReadFile(filepath.Clean(makePath))
 	if err != nil {
 		t.Fatalf("cannot read Makefile: %v", err)
 	}
@@ -664,7 +685,8 @@ func TestBuildWithoutCGO(t *testing.T) {
 	root := projectRoot(t)
 	makePath := filepath.Join(root, "Makefile")
 
-	data, err := os.ReadFile(filepath.Clean(makePath)) //nolint:gosec // constructed from test constants
+	//nolint:gosec // constructed from test constants
+	data, err := os.ReadFile(filepath.Clean(makePath))
 	if err != nil {
 		t.Fatalf("cannot read Makefile: %v", err)
 	}
@@ -709,7 +731,8 @@ func TestGolangciLintConfig(t *testing.T) {
 	root := projectRoot(t)
 	lintPath := filepath.Join(root, ".golangci.yml")
 
-	data, err := os.ReadFile(filepath.Clean(lintPath)) //nolint:gosec // constructed from test constants
+	//nolint:gosec // constructed from test constants
+	data, err := os.ReadFile(filepath.Clean(lintPath))
 	if err != nil {
 		t.Fatalf("cannot read .golangci.yml: %v", err)
 	}
@@ -733,7 +756,8 @@ func TestGolangciLintConfig(t *testing.T) {
 }
 
 // ---------------------------------------------------------------------------
-// 17. No network calls ╬ô├ç├╢ ctx must be local-only (no net/http imports in core)
+// 17. No network calls — ctx must be local-only
+// (no net/http imports in core)
 // ---------------------------------------------------------------------------
 
 // TestNoNetworkImportsInCore verifies that core packages do not import net or
@@ -793,7 +817,8 @@ func TestGitignoreProtectsSensitiveFiles(t *testing.T) {
 	root := projectRoot(t)
 	giPath := filepath.Join(root, ".gitignore")
 
-	data, err := os.ReadFile(filepath.Clean(giPath)) //nolint:gosec // constructed from test constants
+	//nolint:gosec // constructed from test constants
+	data, err := os.ReadFile(filepath.Clean(giPath))
 	if err != nil {
 		t.Fatalf("cannot read .gitignore: %v", err)
 	}
@@ -845,7 +870,8 @@ func TestPermissionConstants(t *testing.T) {
 	root := projectRoot(t)
 	filePath := filepath.Join(root, "internal", "config", "fs", "perm.go")
 
-	data, err := os.ReadFile(filepath.Clean(filePath)) //nolint:gosec // constructed from test constants
+	//nolint:gosec // constructed from test constants
+	data, err := os.ReadFile(filepath.Clean(filePath))
 	if err != nil {
 		t.Fatalf("read file.go: %v", err)
 	}
@@ -865,6 +891,256 @@ func TestPermissionConstants(t *testing.T) {
 	})
 }
 
+// ---------------------------------------------------------------------------
+// 21. doc.go subcommand drift — listed names match cmd/ dirs
+// ---------------------------------------------------------------------------
+
+// TestDocGoSubcommandDrift walks internal/cli/ looking for doc.go files that
+// list subcommands via "//   - name:" bullet patterns under a section header
+// containing "subcommand" or "hook". For each listed name, it checks that a
+// corresponding cmd/<name>/ directory exists (normalizing hyphens to
+// underscores). Missing directories indicate the doc.go is out of date.
+func TestDocGoSubcommandDrift(t *testing.T) {
+	root := projectRoot(t)
+	cliDir := filepath.Join(root, "internal", "cli")
+
+	// sectionRe detects section headers that introduce subcommand lists.
+	sectionRe := regexp.MustCompile(
+		`(?i)(subcommand|hook)`,
+	)
+	// bulletRe matches "//   - name:" or "//   - name/other:" patterns.
+	// The captured group may contain "/" for combined entries (pause/resume).
+	bulletRe := regexp.MustCompile(
+		`^//\s+-\s+([\w/-]+)\s*[:/]`,
+	)
+
+	// Known name mappings: doc name → dir name.
+	knownAliases := map[string]string{
+		"switch": "switchcmd",
+		"import": "importer",
+	}
+
+	// Directories to skip in the undocumented check.
+	skipDirs := map[string]bool{
+		"root": true,
+	}
+
+	err := filepath.Walk(cliDir, func(path string, info os.FileInfo, walkErr error) error {
+		if walkErr != nil {
+			return walkErr
+		}
+		if info.Name() != "doc.go" || info.IsDir() {
+			return nil
+		}
+
+		pkgDir := filepath.Dir(path)
+		cmdDir := filepath.Join(pkgDir, "cmd")
+
+		// Only check doc.go files that have a cmd/ directory.
+		if _, statErr := os.Stat(cmdDir); statErr != nil {
+			return nil
+		}
+
+		//nolint:gosec // constructed from test constants
+		data, readErr := os.ReadFile(filepath.Clean(path))
+		if readErr != nil {
+			t.Errorf("read %s: %v", path, readErr)
+			return nil
+		}
+
+		// Read actual cmd/ subdirectories.
+		entries, dirErr := os.ReadDir(cmdDir)
+		if dirErr != nil {
+			return nil
+		}
+		actualDirs := make(map[string]bool)
+		for _, e := range entries {
+			if e.IsDir() {
+				actualDirs[e.Name()] = true
+			}
+		}
+
+		// Extract subcommand names from doc.go. Only process files
+		// whose doc comment mentions "subcommand" or "hook" (proving
+		// the bullets are subcommand listings, not entry types).
+		content := string(data)
+		if !sectionRe.MatchString(content) {
+			return nil
+		}
+
+		var documented []string
+		scanner := bufio.NewScanner(bytes.NewReader(data))
+		for scanner.Scan() {
+			if m := bulletRe.FindStringSubmatch(scanner.Text()); m != nil {
+				documented = append(documented, m[1])
+			}
+		}
+
+		if len(documented) == 0 {
+			return nil
+		}
+
+		rel, _ := filepath.Rel(root, path)
+
+		// Normalize: hyphens → underscores, apply aliases.
+		normalize := func(name string) string {
+			if alias, ok := knownAliases[name]; ok {
+				return alias
+			}
+			return strings.ReplaceAll(name, "-", "_")
+		}
+
+		// Expand combined entries (e.g., "pause/resume") and check
+		// each documented name has a cmd/ directory.
+		docSet := make(map[string]bool)
+		for _, raw := range documented {
+			parts := strings.Split(raw, "/")
+			for _, name := range parts {
+				dirName := normalize(name)
+				docSet[dirName] = true
+				if !actualDirs[dirName] {
+					t.Errorf(
+						"%s lists subcommand %q but cmd/%s/ does not exist",
+						rel, name, dirName,
+					)
+				}
+			}
+		}
+
+		// Check for cmd/ directories not documented.
+		for dir := range actualDirs {
+			if skipDirs[dir] || docSet[dir] {
+				continue
+			}
+			t.Errorf(
+				"%s does not document cmd/%s/ subcommand",
+				rel, dir,
+			)
+		}
+
+		return nil
+	})
+	if err != nil {
+		t.Fatalf("walk: %v", err)
+	}
+}
+
+// ---------------------------------------------------------------------------
+// 22. cmd/ purity — cmd dirs contain only Cmd/Run, no helpers or types
+// ---------------------------------------------------------------------------
+
+// TestCmdDirPurity walks internal/cli/**/cmd/*/ and verifies that .go files
+// (excluding tests and doc.go) only declare exported functions matching
+// Cmd or Run*. Unexported functions and type declarations belong in core/.
+func TestCmdDirPurity(t *testing.T) {
+	root := projectRoot(t)
+	cliDir := filepath.Join(root, "internal", "cli")
+
+	// Allowed exported function name patterns in cmd/ files.
+	allowedFunc := func(name string) bool {
+		if name == "Cmd" {
+			return true
+		}
+		return strings.HasPrefix(name, "Run")
+	}
+
+	// Pre-existing violations grandfathered until refactored.
+	// Key: relative path from cli/, value: set of allowed names.
+	grandfathered := map[string]map[string]bool{
+		"guide/cmd/root/command.go":       {"listCommands": true},
+		"guide/cmd/root/skill.go":         {"parseSkillFrontmatter": true, "truncateDescription": true, "listSkills": true},
+		"guide/cmd/root/types.go":         {"skillMeta": true},
+		"hook/cmd/root/run.go":            {"WriteCopilotInstructions": true, "WriteAgentsMd": true, "WriteCopilotCLIHooks": true, "writeCopilotCLIHooks": true, "writeCopilotCLIAgent": true, "writeCopilotCLIInstructions": true, "writeCopilotCLISkills": true, "ensureVSCodeMCPJSON": true, "ensureCopilotCLIMCPConfig": true},
+		"initialize/cmd/root/run.go":      {"initScratchpad": true, "hasEssentialFiles": true, "ensureGitignoreEntries": true, "writeGettingStarted": true},
+		"journal/cmd/obsidian/run.go":     {"BuildVault": true},
+		"journal/cmd/source/list.go":      {"runList": true},
+		"journal/cmd/source/show.go":      {"runShow": true},
+		"journal/cmd/source/types.go":     {"Opts": true},
+		"loop/cmd/root/script.go":         {"GenerateLoopScript": true},
+		"pad/cmd/edit/types.go":           {"Mode": true, "Opts": true},
+		"pad/cmd/resolve/display.go":      {"displayAll": true},
+		"remind/cmd/dismiss/run.go":       {"dismissOne": true, "dismissAll": true},
+		"system/cmd/post_commit/score.go": {"scoreCommitViolations": true},
+		"task/cmd/complete/run.go":        {"Complete": true},
+		"why/cmd/root/data.go":            {"DocEntry": true},
+		"why/cmd/root/menu.go":            {"showMenu": true},
+		"why/cmd/root/run.go":             {"ShowDoc": true},
+		"why/cmd/root/strip.go":           {"StripMkDocs": true, "ExtractAdmonitionTitle": true, "ExtractTabTitle": true},
+		"system/cmd/sessionevent/cmd.go":  {"runSessionEvent": true},
+	}
+
+	err := filepath.Walk(cliDir, func(path string, info os.FileInfo, walkErr error) error {
+		if walkErr != nil {
+			return walkErr
+		}
+		if info.IsDir() || !strings.HasSuffix(info.Name(), ".go") {
+			return nil
+		}
+		if strings.HasSuffix(info.Name(), "_test.go") || info.Name() == "doc.go" {
+			return nil
+		}
+
+		// Only check files inside a cmd/ directory.
+		rel, _ := filepath.Rel(cliDir, path)
+		if !strings.Contains(rel, "/cmd/") {
+			return nil
+		}
+
+		fset := token.NewFileSet()
+		node, parseErr := parser.ParseFile(fset, path, nil, 0)
+		if parseErr != nil {
+			t.Errorf("parse %s: %v", rel, parseErr)
+			return nil
+		}
+
+		allowed := grandfathered[rel]
+
+		for _, decl := range node.Decls {
+			switch d := decl.(type) {
+			case *ast.FuncDecl:
+				name := d.Name.Name
+				if d.Recv != nil {
+					continue
+				}
+				if allowed[name] {
+					continue
+				}
+				if !d.Name.IsExported() {
+					t.Errorf(
+						"%s: unexported function %q belongs in core/, not cmd/",
+						rel, name,
+					)
+				} else if !allowedFunc(name) {
+					t.Errorf(
+						"%s: exported function %q is not Cmd or Run* — move to core/",
+						rel, name,
+					)
+				}
+			case *ast.GenDecl:
+				if d.Tok == token.TYPE {
+					for _, spec := range d.Specs {
+						ts, ok := spec.(*ast.TypeSpec)
+						if !ok {
+							continue
+						}
+						if allowed[ts.Name.Name] {
+							continue
+						}
+						t.Errorf(
+							"%s: type %q belongs in core/types.go, not cmd/",
+							rel, ts.Name.Name,
+						)
+					}
+				}
+			}
+		}
+		return nil
+	})
+	if err != nil {
+		t.Fatalf("walk: %v", err)
+	}
+}
+
 // allSourceFiles returns all source files (.go, .ts, .js) under the project
 // root, excluding vendor/, node_modules/, dist/, site/, and .git/.
 func allSourceFiles(t *testing.T, root string) []string {
@@ -875,9 +1151,9 @@ func allSourceFiles(t *testing.T, root string) []string {
 		".js": true,
 	}
 	var files []string
-	err := filepath.Walk(root, func(path string, info os.FileInfo, err error) error {
-		if err != nil {
-			return err
+	err := filepath.Walk(root, func(path string, info os.FileInfo, walkErr error) error {
+		if walkErr != nil {
+			return walkErr
 		}
 		if info.IsDir() && (info.Name() == "vendor" || info.Name() == ".git" ||
 			info.Name() == "dist" || info.Name() == "site" || info.Name() == "node_modules") {
@@ -895,7 +1171,7 @@ func allSourceFiles(t *testing.T, root string) []string {
 }
 
 // ---------------------------------------------------------------------------
-// 21. No UTF-8 BOM — source files must not start with a byte-order mark
+// 23. No UTF-8 BOM — source files must not start with a byte-order mark
 // ---------------------------------------------------------------------------
 
 // TestNoUTF8BOM detects the UTF-8 BOM (0xEF 0xBB 0xBF) that Windows editors
@@ -908,9 +1184,9 @@ func TestNoUTF8BOM(t *testing.T) {
 	for _, p := range allSourceFiles(t, root) {
 		rel, _ := filepath.Rel(root, p)
 		t.Run(rel, func(t *testing.T) {
-			data, err := os.ReadFile(filepath.Clean(p))
-			if err != nil {
-				t.Fatalf("read: %v", err)
+			data, readErr := os.ReadFile(filepath.Clean(p))
+			if readErr != nil {
+				t.Fatalf("read: %v", readErr)
 			}
 			if bytes.HasPrefix(data, bom) {
 				t.Errorf("file starts with UTF-8 BOM (0xEF 0xBB 0xBF); remove it")
@@ -920,7 +1196,7 @@ func TestNoUTF8BOM(t *testing.T) {
 }
 
 // ---------------------------------------------------------------------------
-// 22. No mojibake — detect double-encoded UTF-8 (encoding corruption)
+// 24. No mojibake — detect double-encoded UTF-8 (encoding corruption)
 // ---------------------------------------------------------------------------
 
 // TestNoMojibake catches the classic Windows encoding corruption where UTF-8
@@ -938,9 +1214,9 @@ func TestNoMojibake(t *testing.T) {
 	for _, p := range allSourceFiles(t, root) {
 		rel, _ := filepath.Rel(root, p)
 		t.Run(rel, func(t *testing.T) {
-			data, err := os.ReadFile(filepath.Clean(p))
-			if err != nil {
-				t.Fatalf("read: %v", err)
+			data, readErr := os.ReadFile(filepath.Clean(p))
+			if readErr != nil {
+				t.Fatalf("read: %v", readErr)
 			}
 			if idx := bytes.Index(data, mojibakePattern); idx >= 0 {
 				// Show context around the corruption

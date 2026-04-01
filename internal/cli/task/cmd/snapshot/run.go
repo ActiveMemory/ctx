@@ -12,15 +12,15 @@ import (
 	"path/filepath"
 	"time"
 
-	"github.com/ActiveMemory/ctx/internal/cli/task/core/path"
 	"github.com/spf13/cobra"
 
+	"github.com/ActiveMemory/ctx/internal/cli/task/core/path"
 	"github.com/ActiveMemory/ctx/internal/config/archive"
 	"github.com/ActiveMemory/ctx/internal/config/fs"
 	"github.com/ActiveMemory/ctx/internal/config/token"
 	"github.com/ActiveMemory/ctx/internal/err/backup"
 	errTask "github.com/ActiveMemory/ctx/internal/err/task"
-	"github.com/ActiveMemory/ctx/internal/validation"
+	"github.com/ActiveMemory/ctx/internal/sanitize"
 	writeArchive "github.com/ActiveMemory/ctx/internal/write/archive"
 )
 
@@ -36,8 +36,8 @@ import (
 // Returns:
 //   - error: Non-nil if TASKS.md doesn't exist or file operations fail
 func Run(cmd *cobra.Command, args []string) error {
-	tasksPath := path.TasksFilePath()
-	archivePath := path.ArchiveDirPath()
+	tasksPath := path.FilePath()
+	archivePath := path.ArchiveDir()
 
 	// Check if TASKS.md exists
 	if _, statErr := os.Stat(tasksPath); os.IsNotExist(statErr) {
@@ -59,7 +59,7 @@ func Run(cmd *cobra.Command, args []string) error {
 	now := time.Now()
 	name := archive.DefaultSnapshotName
 	if len(args) > 0 {
-		name = validation.SanitizeFilename(args[0])
+		name = sanitize.Filename(args[0])
 	}
 	snapshotFilename := fmt.Sprintf(
 		archive.SnapshotFilenameFormat, name, now.Format(archive.SnapshotTimeFormat),

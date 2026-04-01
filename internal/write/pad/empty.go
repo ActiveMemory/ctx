@@ -37,11 +37,3 @@ func KeyCreated(cmd *cobra.Command, path string) {
 	}
 	cmd.PrintErrln(fmt.Sprintf(desc.Text(text.DescKeyWritePadKeyCreated), path))
 }
-
-func mergeSkipped(cmd *cobra.Command, dupes int) {
-	if dupes == 1 {
-		cmd.Println(desc.Text(text.DescKeyWritePadMergeSkipped1))
-	} else {
-		cmd.Println(fmt.Sprintf(desc.Text(text.DescKeyWritePadMergeSkippedN), dupes))
-	}
-}

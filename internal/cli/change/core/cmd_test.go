@@ -47,7 +47,9 @@ func TestHumanAgo(t *testing.T) {
 }
 
 func TestExtractTimestamp(t *testing.T) {
-	line := `{"event":"context-load-gate","timestamp":"2026-03-03T08:00:00Z","session":"abc"}`
+	line := `{"event":"context-load-gate",` +
+		`"timestamp":"2026-03-03T08:00:00Z",` +
+		`"session":"abc"}`
 	ts, ok := detect.ExtractTimestamp(line)
 	if !ok {
 		t.Fatal("ExtractTimestamp returned false")
@@ -96,7 +98,9 @@ func TestParseSinceFlag(t *testing.T) {
 }
 
 func TestUniqueTopDirs(t *testing.T) {
-	input := "internal/cli/dep/deps.go\ninternal/cli/change/changes.go\ndocs/index.md\nREADME.md\n"
+	input := "internal/cli/dep/deps.go\n" +
+		"internal/cli/change/changes.go\n" +
+		"docs/index.md\nREADME.md\n"
 	got := scan.UniqueTopDirs(input)
 	want := []string{"README.md", "docs", "internal"}
 	if len(got) != len(want) {
@@ -134,7 +138,7 @@ func TestRenderChanges(t *testing.T) {
 		Authors:     []string{"Volkan"},
 	}
 
-	out := coreRender.Changes("6 hours ago", ctxChanges, code)
+	out := coreRender.List("6 hours ago", ctxChanges, code)
 	if !strings.Contains(out, "## Changes Since Last Session") {
 		t.Error("missing header")
 	}
@@ -171,7 +175,7 @@ func TestRenderChangesForHook(t *testing.T) {
 }
 
 func TestRenderChanges_NoChanges(t *testing.T) {
-	out := coreRender.Changes("1 hour ago", nil, entity.CodeSummary{})
+	out := coreRender.List("1 hour ago", nil, entity.CodeSummary{})
 	if !strings.Contains(out, "No changes detected") {
 		t.Error("expected 'No changes detected' message")
 	}

@@ -22,7 +22,8 @@ func setupStateDir(t *testing.T) string {
 	tmpDir := t.TempDir()
 	t.Setenv("CTX_DIR", tmpDir)
 	rc.Reset()
-	if mkErr := os.MkdirAll(filepath.Join(tmpDir, dir.State), 0o750); mkErr != nil {
+	stateDir := filepath.Join(tmpDir, dir.State)
+	if mkErr := os.MkdirAll(stateDir, 0o750); mkErr != nil {
 		t.Fatal(mkErr)
 	}
 	return tmpDir

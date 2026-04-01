@@ -61,41 +61,52 @@ ctx/
 ├── internal/
 │   ├── bootstrap/               # CLI initialization, command registration
 │   ├── claude/                  # Claude Code hooks, skills, settings types
-│   ├── cli/                     # 23 command packages
+│   ├── cli/                     # 31 command packages
 │   │   ├── add/                 #   ctx add
 │   │   ├── agent/               #   ctx agent
+│   │   ├── change/              #   ctx change
 │   │   ├── compact/             #   ctx compact
-│   │   ├── complete/            #   ctx complete
+│   │   ├── config/              #   ctx config
 │   │   ├── decision/            #   ctx decision
+│   │   ├── dep/                 #   ctx dep
+│   │   ├── doctor/              #   ctx doctor
 │   │   ├── drift/               #   ctx drift
+│   │   ├── guide/               #   ctx guide
 │   │   ├── hook/                #   ctx hook
 │   │   ├── initialize/          #   ctx init
 │   │   ├── journal/             #   ctx journal
-│   │   ├── learnings/           #   ctx learnings
+│   │   ├── learning/            #   ctx learning
 │   │   ├── load/                #   ctx load
 │   │   ├── loop/                #   ctx loop
+│   │   ├── mcp/                 #   ctx mcp
+│   │   ├── memory/              #   ctx memory
 │   │   ├── notify/              #   ctx notify
 │   │   ├── pad/                 #   ctx pad
-│   │   ├── permissions/         #   ctx permissions
-│   │   ├── recall/              #   ctx recall
+│   │   ├── pause/               #   ctx pause
+│   │   ├── permission/          #   ctx permission
+│   │   ├── reindex/             #   ctx reindex
 │   │   ├── remind/              #   ctx remind
+│   │   ├── resume/              #   ctx resume
 │   │   ├── serve/               #   ctx serve
+│   │   ├── site/                #   ctx site
 │   │   ├── status/              #   ctx status
 │   │   ├── sync/                #   ctx sync
 │   │   ├── system/              #   ctx system
 │   │   ├── task/                #   ctx task
-│   │   └── watch/               #   ctx watch
+│   │   ├── watch/               #   ctx watch
+│   │   └── why/                 #   ctx why
 │   ├── config/                  # Constants, regex, file names, read order
 │   ├── context/                 # Context loading, token estimation
 │   ├── crypto/                  # AES-256-GCM encryption, key management
 │   ├── drift/                   # Drift detection engine (7 checks)
 │   ├── index/                   # Index table generation for DECISIONS/LEARNINGS
 │   ├── journal/
+│   │   ├── parser/              # Session transcript parsing (JSONL, Markdown)
 │   │   └── state/               # Journal processing pipeline state
 │   ├── notify/                  # Webhook notifications, encrypted URL storage
 │   ├── rc/                      # Runtime config (.ctxrc, env, CLI flags)
-│   ├── recall/
-│   │   └── parser/              # Session transcript parsing (JSONL, Markdown)
+│   ├── memory/                  # Claude Code auto memory bridge
+│   ├── mcp/                     # MCP server (JSON-RPC 2.0 over stdin/stdout)
 │   ├── sysinfo/                 # OS resource metrics (memory, disk, load)
 │   ├── task/                    # Task checkbox parsing
 │   ├── assets/                  # Embedded templates (go:embed)

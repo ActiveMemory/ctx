@@ -41,7 +41,7 @@
 //	ctx_add                   → Add a task, decision, learning, or convention
 //	ctx_complete              → Mark a task as done
 //	ctx_drift                 → Detect stale or invalid context
-//	ctx_recall                → Query past session history
+//	ctx_journal_source        → Query past session history
 //	ctx_watch_update          → Apply structured context updates to files
 //	ctx_compact               → Move completed tasks to archive
 //	ctx_next                  → Get the next pending task
@@ -61,7 +61,7 @@
 //
 // # Usage
 //
-//	server := mcp.NewServer(contextDir, version)
+//	server := mcp.New(contextDir, version)
 //	server.Serve()  // blocks, reads stdin, writes stdout
 //
 // # Design Invariants

@@ -12,6 +12,8 @@ import (
 
 	"github.com/ActiveMemory/ctx/internal/config/ctx"
 	"github.com/ActiveMemory/ctx/internal/config/dir"
+	cfgEntry "github.com/ActiveMemory/ctx/internal/config/entry"
+	cfgMemory "github.com/ActiveMemory/ctx/internal/config/memory"
 	"github.com/ActiveMemory/ctx/internal/config/parser"
 	"github.com/ActiveMemory/ctx/internal/crypto"
 )
@@ -146,7 +148,8 @@ func ConventionLineCount() int {
 	return RC().ConventionLineCount
 }
 
-// InjectionTokenWarn returns the token threshold for oversize injection warning.
+// InjectionTokenWarn returns the token threshold for
+// oversize injection warning.
 //
 // Returns 0 if the check is disabled. Default: 15000.
 //
@@ -264,6 +267,48 @@ func SessionPrefixes() []string {
 	return prefixes
 }
 
+// ClassifyRules returns the keyword rules for memory entry classification.
+// Returns user-configured rules from .ctxrc if set, otherwise the built-in
+// defaults from config/memory.
+//
+// Returns:
+//   - []cfgMemory.ClassifyRule: Classification rules in priority order
+func ClassifyRules() []cfgMemory.ClassifyRule {
+	rules := RC().ClassifyRules
+	if len(rules) == 0 {
+		return cfgMemory.DefaultClassifyRules
+	}
+	return rules
+}
+
+// SpecSignalWords returns the terms that trigger a spec nudge
+// when adding tasks. Returns user-configured words from .ctxrc
+// if set, otherwise the built-in defaults from config/entry.
+//
+// Returns:
+//   - []string: Signal words in lowercase
+func SpecSignalWords() []string {
+	words := RC().SpecSignalWords
+	if len(words) == 0 {
+		return cfgEntry.DefaultSpecSignalWords
+	}
+	return words
+}
+
+// SpecNudgeMinLen returns the task content length threshold for
+// spec nudges. Returns user-configured value from .ctxrc if set,
+// otherwise the built-in default from config/entry.
+//
+// Returns:
+//   - int: Minimum content length to trigger a spec nudge
+func SpecNudgeMinLen() int {
+	n := RC().SpecNudgeMinLen
+	if n == 0 {
+		return cfgEntry.SpecNudgeMinLen
+	}
+	return n
+}
+
 // FreshnessFiles returns the configured list of files to track for
 // freshness. Returns nil if no files are configured: the hook is
 // a no-op when the list is empty.
@@ -284,12 +329,30 @@ func EventLog() bool {
 	return RC().EventLog
 }
 
+// CompanionCheck returns whether the companion tool availability check
+// should run during /ctx-remember. Returns true (default) unless
+// explicitly set to false in .ctxrc.
+//
+// NOTE: No Go callers yet. The /ctx-remember skill currently reads
+// this via ctx config status. This accessor exists for the planned
+// hook-based companion check (see TASKS.md). Do not delete.
+//
+// Returns:
+//   - bool: True if companion tools should be checked at the session start
+func CompanionCheck() bool {
+	cfg := RC()
+	if cfg.CompanionCheck == nil {
+		return true
+	}
+	return *cfg.CompanionCheck
+}
+
 // AllowOutsideCwd returns whether boundary validation should be skipped.
 //
 // Returns false (default) when the field is not set in .ctxrc.
 //
 // Returns:
-//   - bool: True if context directory is allowed outside the project root
+//   - bool: True if the context directory is allowed outside the project root
 func AllowOutsideCwd() bool {
 	return RC().AllowOutsideCwd
 }

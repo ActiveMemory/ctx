@@ -9,9 +9,10 @@ package guide
 import (
 	"fmt"
 
+	"github.com/spf13/cobra"
+
 	"github.com/ActiveMemory/ctx/internal/assets/read/desc"
 	"github.com/ActiveMemory/ctx/internal/config/embed/text"
-	"github.com/spf13/cobra"
 )
 
 // InfoSkillsHeader prints the skills list heading.
@@ -30,7 +31,9 @@ func InfoSkillsHeader(cmd *cobra.Command) {
 //   - name: Skill name
 //   - description: Truncated skill description
 func InfoSkillLine(cmd *cobra.Command, name, description string) {
-	cmd.Println(fmt.Sprintf(desc.Text(text.DescKeyWriteSkillLine), name, description))
+	cmd.Println(fmt.Sprintf(
+		desc.Text(text.DescKeyWriteSkillLine),
+		name, description))
 }
 
 // CommandsHeader prints the commands list heading.

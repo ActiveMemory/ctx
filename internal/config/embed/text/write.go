@@ -7,9 +7,9 @@
 package text
 
 const (
-	DescKeyWriteAddMissingFields = "write.add-missing-fields"
-	DescKeyWriteAddedTo          = "write.added-to"
-	DescKeyWriteArchived         = "write.archived"
+	DescKeyWriteAddedTo      = "write.added-to"
+	DescKeyWriteArchived     = "write.archived"
+	DescKeyWriteSpecNudgeTip = "write.spec-nudge-tip"
 )
 
 const (

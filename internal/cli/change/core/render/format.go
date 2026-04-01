@@ -10,15 +10,14 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/ActiveMemory/ctx/internal/entity"
-
 	"github.com/ActiveMemory/ctx/internal/assets/read/desc"
 	"github.com/ActiveMemory/ctx/internal/config/embed/text"
 	cfgTime "github.com/ActiveMemory/ctx/internal/config/time"
 	"github.com/ActiveMemory/ctx/internal/config/token"
+	"github.com/ActiveMemory/ctx/internal/entity"
 )
 
-// Changes renders the full CLI output for `ctx changes`.
+// List renders the full CLI output for `ctx changes`.
 //
 // Parameters:
 //   - refLabel: Human-readable reference time label
@@ -27,7 +26,7 @@ import (
 //
 // Returns:
 //   - string: Formatted Markdown output
-func Changes(
+func List(
 	refLabel string, ctxChanges []entity.ContextChange, code entity.CodeSummary,
 ) string {
 	var b strings.Builder
@@ -49,7 +48,7 @@ func Changes(
 		for _, c := range ctxChanges {
 			b.WriteString(fmt.Sprintf(
 				desc.Text(text.DescKeyChangesCtxLine)+token.NewlineLF,
-				c.Name, c.ModTime.Format(cfgTime.DateTimeFormat)))
+				c.Name, c.ModTime.Format(cfgTime.DateTimeFmt)))
 		}
 		b.WriteString(token.NewlineLF)
 	}

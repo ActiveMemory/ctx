@@ -54,7 +54,9 @@ func TestStripSystemReminders(t *testing.T) {
 }
 
 func TestStripSystemReminders_BoldStyle(t *testing.T) {
-	content := "Before\n**System Reminder**: Some reminder text\nContinued on next line\n\nAfter"
+	content := "Before\n" +
+		"**System Reminder**: Some reminder text\n" +
+		"Continued on next line\n\nAfter"
 	got := StripSystemReminders(content)
 
 	if strings.Contains(got, "System Reminder") {
@@ -66,7 +68,9 @@ func TestStripSystemReminders_BoldStyle(t *testing.T) {
 }
 
 func TestStripSystemReminders_CompactionSummary(t *testing.T) {
-	content := "Before\n<summary>\nCompaction summary content\nMore summary\n</summary>\nAfter"
+	content := "Before\n<summary>\n" +
+		"Compaction summary content\n" +
+		"More summary\n</summary>\nAfter"
 	got := StripSystemReminders(content)
 
 	if strings.Contains(got, "Compaction summary content") {
@@ -87,7 +91,9 @@ func TestStripSystemReminders_SingleLineSummaryPreserved(t *testing.T) {
 }
 
 func TestCleanToolOutputJSON(t *testing.T) {
-	content := "### 1. Tool Output (10:00:00)\n\n[{\"type\":\"text\",\"text\":\"hello world\"}]\n\n### 2. Assistant (10:00:01)\n\nhi"
+	content := "### 1. Tool Output (10:00:00)\n\n" +
+		"[{\"type\":\"text\",\"text\":\"hello world\"}]\n\n" +
+		"### 2. Assistant (10:00:01)\n\nhi"
 	got := CleanToolOutputJSON(content)
 
 	if strings.Contains(got, `"type"`) {
@@ -102,7 +108,9 @@ func TestCleanToolOutputJSON(t *testing.T) {
 }
 
 func TestCleanToolOutputJSON_NonJSON(t *testing.T) {
-	content := "### 1. Tool Output (10:00:00)\n\njust plain text\n\n### 2. Assistant (10:00:01)\n\nhi"
+	content := "### 1. Tool Output (10:00:00)\n\n" +
+		"just plain text\n\n" +
+		"### 2. Assistant (10:00:01)\n\nhi"
 	got := CleanToolOutputJSON(content)
 
 	if !strings.Contains(got, "just plain text") {

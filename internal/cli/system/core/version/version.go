@@ -19,7 +19,6 @@ import (
 	"github.com/ActiveMemory/ctx/internal/config/hook"
 	"github.com/ActiveMemory/ctx/internal/config/token"
 	"github.com/ActiveMemory/ctx/internal/config/version"
-
 	"github.com/ActiveMemory/ctx/internal/notify"
 	"github.com/ActiveMemory/ctx/internal/rc"
 )
@@ -53,7 +52,7 @@ func ParseMajorMinor(ver string) (major, minor int, ok bool) {
 // configured rotation threshold.
 //
 // Parameters:
-//   - sessionID: current session identifier
+//   - sessionID: the current session identifier
 //
 // Returns:
 //   - string: formatted nudge box (with leading newline), or empty string
@@ -74,7 +73,7 @@ func CheckKeyAge(sessionID string) string {
 	keyFallback := fmt.Sprintf(
 		desc.Text(text.DescKeyCheckVersionKeyFallback), ageDays,
 	)
-	keyContent := message.LoadMessage(hook.CheckVersion, hook.VariantKeyRotation,
+	keyContent := message.Load(hook.CheckVersion, hook.VariantKeyRotation,
 		map[string]any{version.VarKeyAgeDays: ageDays}, keyFallback)
 	if keyContent == "" {
 		return ""
@@ -94,6 +93,6 @@ func CheckKeyAge(sessionID string) string {
 			desc.Text(text.DescKeyCheckVersionKeyRelayFormat), ageDays,
 		),
 	)
-	nudge.NudgeAndRelay(keyNotifyMsg, sessionID, keyRef)
+	nudge.EmitAndRelay(keyNotifyMsg, sessionID, keyRef)
 	return box
 }

@@ -26,16 +26,14 @@ import (
 	"github.com/ActiveMemory/ctx/internal/config/session"
 	"github.com/ActiveMemory/ctx/internal/config/stats"
 	"github.com/ActiveMemory/ctx/internal/config/token"
+	"github.com/ActiveMemory/ctx/internal/config/warn"
 	"github.com/ActiveMemory/ctx/internal/entity"
 	internalIo "github.com/ActiveMemory/ctx/internal/io"
+	ctxLog "github.com/ActiveMemory/ctx/internal/log/warn"
 	"github.com/ActiveMemory/ctx/internal/rc"
 )
 
-// MaxTailBytes is the maximum number of bytes to read from the end of a
-// JSONL file when scanning for the last usage block.
-const MaxTailBytes = 32768
-
-// ReadSessionTokenInfo finds the current session's JSONL file and returns
+// ReadTokenInfo finds the current session's JSONL file and returns
 // the most recent total input token count and model ID from the last
 // assistant message. Returns zero value if the file isn't found or has no
 // usage data.
@@ -46,7 +44,7 @@ const MaxTailBytes = 32768
 // Returns:
 //   - SessionTokenInfo: Token count and model from the last assistant message
 //   - error: Non-nil only on unexpected I/O errors
-func ReadSessionTokenInfo(sessionID string) (entity.TokenInfo, error) {
+func ReadTokenInfo(sessionID string) (entity.TokenInfo, error) {
 	if sessionID == "" || sessionID == session.IDUnknown {
 		return entity.TokenInfo{}, nil
 	}
@@ -73,7 +71,7 @@ func ReadSessionTokenInfo(sessionID string) (entity.TokenInfo, error) {
 //   - error: Non-nil only on unexpected errors
 func FindJSONLPath(sessionID string) (string, error) {
 	// Check cache first
-	cacheFile := filepath.Join(state.StateDir(), stats.JsonlPathCachePrefix+sessionID)
+	cacheFile := filepath.Join(state.Dir(), stats.JsonlPathCachePrefix+sessionID)
 	if data, readErr := internalIo.SafeReadUserFile(cacheFile); readErr == nil {
 		cached := strings.TrimSpace(string(data))
 		if cached != "" {
@@ -88,7 +86,10 @@ func FindJSONLPath(sessionID string) (string, error) {
 		return "", nil
 	}
 
-	pattern := filepath.Join(home, dir.Claude, dir.Projects, "*", sessionID+file.ExtJSONL)
+	pattern := filepath.Join(
+		home, dir.Claude, dir.Projects,
+		token.GlobStar, sessionID+file.ExtJSONL,
+	)
 	matches, globErr := filepath.Glob(pattern)
 	if globErr != nil {
 		return "", globErr
@@ -98,8 +99,12 @@ func FindJSONLPath(sessionID string) (string, error) {
 		return "", nil
 	}
 
-	// Cache the result for subsequent calls this session
-	_ = os.WriteFile(cacheFile, []byte(matches[0]), fs.PermSecret)
+	// Cache the result for subsequent calls this session.
+	if writeErr := os.WriteFile(
+		cacheFile, []byte(matches[0]), fs.PermSecret,
+	); writeErr != nil {
+		ctxLog.Warn(warn.Write, cacheFile, writeErr)
+	}
 	return matches[0], nil
 }
 
@@ -117,7 +122,11 @@ func ParseLastUsageAndModel(path string) (entity.TokenInfo, error) {
 	if openErr != nil {
 		return entity.TokenInfo{}, openErr
 	}
-	defer func() { _ = f.Close() }()
+	defer func() {
+		if closeErr := f.Close(); closeErr != nil {
+			ctxLog.Warn(warn.Close, path, closeErr)
+		}
+	}()
 
 	info, statErr := f.Stat()
 	if statErr != nil {
@@ -127,8 +136,8 @@ func ParseLastUsageAndModel(path string) (entity.TokenInfo, error) {
 	// Read the tail of the file
 	size := info.Size()
 	offset := int64(0)
-	if size > MaxTailBytes {
-		offset = size - MaxTailBytes
+	if size > claude.MaxTailBytes {
+		offset = size - claude.MaxTailBytes
 	}
 
 	if _, seekErr := f.Seek(offset, io.SeekStart); seekErr != nil {
@@ -149,10 +158,10 @@ func ParseLastUsageAndModel(path string) (entity.TokenInfo, error) {
 		}
 
 		// Quick check: skip lines that can't contain usage data
-		if !bytes.Contains(line, []byte(`"usage"`)) {
+		if !bytes.Contains(line, []byte(claude.FieldUsage)) {
 			continue
 		}
-		if !bytes.Contains(line, []byte(`"input_tokens"`)) {
+		if !bytes.Contains(line, []byte(claude.FieldInputTokens)) {
 			continue
 		}
 
@@ -180,7 +189,7 @@ func ParseLastUsageAndModel(path string) (entity.TokenInfo, error) {
 
 // ModelContextWindow returns the context window size for a known model ID.
 // Returns 0 if the model is not recognized, signaling callers to fall back
-// to rc.ContextWindow() or the default.
+// to other detection tiers.
 //
 // Parameters:
 //   - model: Model ID string from the JSONL (e.g., "claude-opus-4-6-20260205")
@@ -192,22 +201,29 @@ func ModelContextWindow(model string) int {
 		return 0
 	}
 
-	if strings.HasPrefix(model, "claude-") {
-		return rc.DefaultContextWindow
+	if !strings.HasPrefix(model, claude.ModelPrefix) {
+		return 0
 	}
 
-	return 0
+	lower := strings.ToLower(model)
+
+	// 1M models: explicit [1m] suffix OR Opus 4.6+ (always 1M).
+	if strings.Contains(lower, claude.ModelSuffix1M) {
+		return claude.ContextWindow1M
+	}
+	if strings.Contains(lower, claude.ModelOpus) {
+		return claude.ContextWindow1M
+	}
+
+	return rc.DefaultContextWindow
 }
 
-// ContextWindow1M is the context window size for 1M-capable models.
-const ContextWindow1M = 1_000_000
-
 // EffectiveContextWindow returns the context window size using a four-tier
-// fallback:
+// fallback where ground truth outranks configuration:
 //
-//  1. Explicit .ctxrc context_window (non-default value wins)
-//  2. Claude Code ~/.claude/settings.json model selection ([1m] suffix → 1M)
-//  3. JSONL model ID prefix (all claude-* → 200k)
+//  1. JSONL model ID: actual model running the session (ground truth)
+//  2. Claude Code ~/.claude/settings.json: configured model selection
+//  3. Explicit .ctxrc context_window: manual override / escape hatch
 //  4. rc.ContextWindow() default (200k)
 //
 // Parameters:
@@ -216,16 +232,16 @@ const ContextWindow1M = 1_000_000
 // Returns:
 //   - int: Effective context window size in tokens
 func EffectiveContextWindow(model string) int {
-	// Tier 1: explicit .ctxrc override (non-default value wins).
-	if w := rc.RC().ContextWindow; w > 0 && w != rc.DefaultContextWindow {
+	// Tier 1: model-based detection (ground truth from session JSONL).
+	if w := ModelContextWindow(model); w > 0 {
 		return w
 	}
 	// Tier 2: auto-detect from Claude Code settings.
 	if ClaudeSettingsHas1M() {
-		return ContextWindow1M
+		return claude.ContextWindow1M
 	}
-	// Tier 3: model-based detection (all Claude models → 200k).
-	if w := ModelContextWindow(model); w > 0 {
+	// Tier 3: explicit .ctxrc override (fallback for non-Claude tools).
+	if w := rc.RC().ContextWindow; w > 0 && w != rc.DefaultContextWindow {
 		return w
 	}
 	// Tier 4: default.
@@ -243,7 +259,9 @@ func ClaudeSettingsHas1M() bool {
 	if homeErr != nil {
 		return false
 	}
-	data, readErr := internalIo.SafeReadUserFile(filepath.Join(home, dir.Claude, claude.GlobalSettings))
+	data, readErr := internalIo.SafeReadUserFile(
+		filepath.Join(home, dir.Claude, claude.GlobalSettings),
+	)
 	if readErr != nil {
 		return false
 	}
@@ -253,7 +271,7 @@ func ClaudeSettingsHas1M() bool {
 	if jsonErr := json.Unmarshal(data, &settings); jsonErr != nil {
 		return false
 	}
-	return strings.Contains(strings.ToLower(settings.Model), "[1m]")
+	return strings.Contains(strings.ToLower(settings.Model), claude.ModelSuffix1M)
 }
 
 // FormatTokenCount formats a token count as a human-readable abbreviated
@@ -287,5 +305,7 @@ func FormatWindowSize(size int) string {
 	if size < cfgFmt.SIThreshold {
 		return fmt.Sprintf(desc.Text(text.DescKeyWriteFormatSIInteger), size)
 	}
-	return fmt.Sprintf(desc.Text(text.DescKeyWriteFormatSIKiloInt), size/cfgFmt.SIThreshold)
+	return fmt.Sprintf(
+		desc.Text(text.DescKeyWriteFormatSIKiloInt), size/cfgFmt.SIThreshold,
+	)
 }

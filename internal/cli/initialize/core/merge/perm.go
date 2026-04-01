@@ -12,7 +12,10 @@ import (
 	"os"
 	"strings"
 
+	"github.com/spf13/cobra"
+
 	"github.com/ActiveMemory/ctx/internal/assets/read/lookup"
+	"github.com/ActiveMemory/ctx/internal/claude"
 	cfgClaude "github.com/ActiveMemory/ctx/internal/config/claude"
 	"github.com/ActiveMemory/ctx/internal/config/dir"
 	"github.com/ActiveMemory/ctx/internal/config/fs"
@@ -21,9 +24,6 @@ import (
 	errFs "github.com/ActiveMemory/ctx/internal/err/fs"
 	errParser "github.com/ActiveMemory/ctx/internal/err/parser"
 	"github.com/ActiveMemory/ctx/internal/write/initialize"
-	"github.com/spf13/cobra"
-
-	"github.com/ActiveMemory/ctx/internal/claude"
 )
 
 // SettingsPermissions merges ctx permissions into settings.local.json.
@@ -35,11 +35,12 @@ import (
 //   - error: Non-nil if file operations fail
 func SettingsPermissions(cmd *cobra.Command) error {
 	var settings claude.Settings
-	existingContent, err := os.ReadFile(cfgClaude.Settings)
-	fileExists := err == nil
+	existingContent, readErr := os.ReadFile(cfgClaude.Settings)
+	fileExists := readErr == nil
 	if fileExists {
-		if err := json.Unmarshal(existingContent, &settings); err != nil {
-			return errParser.ParseFile(cfgClaude.Settings, err)
+		unmarshalErr := json.Unmarshal(existingContent, &settings)
+		if unmarshalErr != nil {
+			return errParser.ParseFile(cfgClaude.Settings, unmarshalErr)
 		}
 	}
 	allowModified := Permissions(
@@ -54,20 +55,20 @@ func SettingsPermissions(cmd *cobra.Command) error {
 		initialize.NoChanges(cmd, cfgClaude.Settings)
 		return nil
 	}
-	if err := os.MkdirAll(dir.Claude, fs.PermExec); err != nil {
-		return errFs.Mkdir(dir.Claude, err)
+	if mkdirErr := os.MkdirAll(dir.Claude, fs.PermExec); mkdirErr != nil {
+		return errFs.Mkdir(dir.Claude, mkdirErr)
 	}
 	var buf bytes.Buffer
 	encoder := json.NewEncoder(&buf)
 	encoder.SetEscapeHTML(false)
 	encoder.SetIndent("", "  ")
-	if err := encoder.Encode(settings); err != nil {
-		return config.MarshalSettings(err)
+	if encodeErr := encoder.Encode(settings); encodeErr != nil {
+		return config.MarshalSettings(encodeErr)
 	}
-	if err := os.WriteFile(
+	if writeErr := os.WriteFile(
 		cfgClaude.Settings, buf.Bytes(), fs.PermFile,
-	); err != nil {
-		return errFs.FileWrite(cfgClaude.Settings, err)
+	); writeErr != nil {
+		return errFs.FileWrite(cfgClaude.Settings, writeErr)
 	}
 	if fileExists {
 		deduped := allowDeduped || denyDeduped
@@ -139,7 +140,8 @@ func DeduplicatePermissions(slice *[]string) bool {
 			continue
 		}
 		seen[p] = true
-		if name, ok := skillName(p); ok && strings.HasPrefix(name, cfgClaude.PluginScope) {
+		name, ok := skillName(p)
+		if ok && strings.HasPrefix(name, cfgClaude.PluginScope) {
 			bareName := strings.TrimPrefix(name, cfgClaude.PluginScope)
 			bareName = strings.TrimSuffix(bareName, cfgClaude.PluginScopeWildcard)
 			if bareSkills[bareName] {

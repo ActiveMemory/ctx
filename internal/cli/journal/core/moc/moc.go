@@ -24,7 +24,7 @@ import (
 	"github.com/ActiveMemory/ctx/internal/entity"
 )
 
-// GenerateHomeMOC creates the root navigation hub for the Obsidian vault.
+// Home creates the root navigation hub for the Obsidian vault.
 //
 // The Home MOC links to all section MOCs and lists recent sessions.
 //
@@ -36,7 +36,7 @@ import (
 //
 // Returns:
 //   - string: Markdown content for Home.md
-func GenerateHomeMOC(
+func Home(
 	entries []entity.JournalEntry,
 	hasTopics, hasFiles, hasTypes bool,
 ) string {
@@ -54,19 +54,19 @@ func GenerateHomeMOC(
 	if hasTopics {
 		sb.WriteString(fmt.Sprintf(
 			browseItem+nl,
-			wikilink.FormatWikilink(topicsLink, topicsLink[1:]),
+			wikilink.Format(topicsLink, topicsLink[1:]),
 			desc.Text(text.DescKeyJournalMocTopicsDesc)))
 	}
 	if hasFiles {
 		sb.WriteString(fmt.Sprintf(
 			browseItem+nl,
-			wikilink.FormatWikilink(filesLink, filesLink[1:]),
+			wikilink.Format(filesLink, filesLink[1:]),
 			desc.Text(text.DescKeyJournalMocFilesDesc)))
 	}
 	if hasTypes {
 		sb.WriteString(fmt.Sprintf(
 			browseItem+nl,
-			wikilink.FormatWikilink(typesLink, typesLink[1:]),
+			wikilink.Format(typesLink, typesLink[1:]),
 			desc.Text(text.DescKeyJournalMocTypesDesc)))
 	}
 	sb.WriteString(nl)
@@ -82,14 +82,14 @@ func GenerateHomeMOC(
 			desc.Text(text.DescKeyHeadingRecentSessions) + nl + nl,
 	)
 	for _, e := range recent {
-		sb.WriteString(wikilink.FormatWikilinkEntry(e) + nl)
+		sb.WriteString(wikilink.FormatEntry(e) + nl)
 	}
 	sb.WriteString(nl)
 
 	return sb.String()
 }
 
-// GenerateObsidianTopicsMOC creates the topics index page with wikilinks.
+// ObsidianTopics creates the topics index page with wikilinks.
 //
 // Popular topics link to dedicated pages; long-tail topics link inline
 // to the first matching session.
@@ -99,7 +99,7 @@ func GenerateHomeMOC(
 //
 // Returns:
 //   - string: Markdown content for _Topics.md
-func GenerateObsidianTopicsMOC(topics []entity.TopicData) string {
+func ObsidianTopics(topics []entity.TopicData) string {
 	var sb strings.Builder
 	nl := token.NewlineLF
 
@@ -108,17 +108,18 @@ func GenerateObsidianTopicsMOC(topics []entity.TopicData) string {
 	sb.WriteString(desc.Text(text.DescKeyJournalMocHeadingTopics) + nl + nl)
 	sb.WriteString(fmt.Sprintf(
 		desc.Text(text.DescKeyJournalMocTopicStats)+nl+nl,
-		len(topics), session.CountUniqueSessions(topics),
+		len(topics), session.CountUnique(topics),
 		len(popular), len(longtail)))
 
-	section.WriteFormattedSection(
+	section.WriteFormatted(
 		&sb,
-		text.DescKeyJournalMocHeadingPopular, popular, func(t entity.TopicData) string {
+		text.DescKeyJournalMocHeadingPopular,
+		popular, func(t entity.TopicData) string {
 			return fmt.Sprintf(
 				desc.Text(text.DescKeyJournalMocItemSessions)+nl,
-				wikilink.FormatWikilink(t.Name, t.Name), len(t.Entries))
+				wikilink.Format(t.Name, t.Name), len(t.Entries))
 		})
-	section.WriteFormattedSection(
+	section.WriteFormatted(
 		&sb,
 		text.DescKeyJournalMocHeadingLongtail,
 		longtail, func(t entity.TopicData) string {
@@ -126,7 +127,7 @@ func GenerateObsidianTopicsMOC(topics []entity.TopicData) string {
 			link := strings.TrimSuffix(e.Filename, file.ExtMarkdown)
 			return fmt.Sprintf(
 				desc.Text(text.DescKeyJournalMocItemNamed)+nl,
-				t.Name, wikilink.FormatWikilink(link, e.Title))
+				t.Name, wikilink.Format(link, e.Title))
 		})
 
 	return sb.String()
@@ -151,14 +152,14 @@ func GenerateObsidianTopicPage(topic entity.TopicData) string {
 	)
 }
 
-// GenerateObsidianFilesMOC creates the key files index page with wikilinks.
+// ObsidianFiles creates the key files index page with wikilinks.
 //
 // Parameters:
 //   - keyFiles: Sorted key file data from BuildKeyFileIndex
 //
 // Returns:
 //   - string: Markdown content for _Key Files.md
-func GenerateObsidianFilesMOC(keyFiles []entity.KeyFileData) string {
+func ObsidianFiles(keyFiles []entity.KeyFileData) string {
 	var sb strings.Builder
 	nl := token.NewlineLF
 
@@ -180,17 +181,17 @@ func GenerateObsidianFilesMOC(keyFiles []entity.KeyFileData) string {
 		desc.Text(text.DescKeyJournalMocFileStats)+nl+nl,
 		len(keyFiles), totalSessions, len(popular), len(longtail)))
 
-	section.WriteFormattedSection(
+	section.WriteFormatted(
 		&sb,
 		text.DescKeyJournalMocHeadingFreq, popular,
 		func(kf entity.KeyFileData) string {
 			slug := format.KeyFileSlug(kf.Path)
 			return fmt.Sprintf(
 				desc.Text(text.DescKeyJournalMocItemFileSess)+nl,
-				wikilink.FormatWikilink(slug, "`"+kf.Path+"`"),
+				wikilink.Format(slug, "`"+kf.Path+"`"),
 				len(kf.Entries))
 		})
-	section.WriteFormattedSection(
+	section.WriteFormatted(
 		&sb,
 		text.DescKeyJournalMocHeadingSingle,
 		longtail, func(kf entity.KeyFileData) string {
@@ -198,7 +199,7 @@ func GenerateObsidianFilesMOC(keyFiles []entity.KeyFileData) string {
 			link := strings.TrimSuffix(e.Filename, file.ExtMarkdown)
 			return fmt.Sprintf(
 				desc.Text(text.DescKeyJournalMocItemFileNamed)+nl,
-				kf.Path, wikilink.FormatWikilink(link, e.Title))
+				kf.Path, wikilink.Format(link, e.Title))
 		})
 
 	return sb.String()
@@ -222,7 +223,7 @@ func GenerateObsidianFilePage(kf entity.KeyFileData) string {
 	)
 }
 
-// GenerateObsidianTypesMOC creates the session types index page with
+// ObsidianTypes creates the session types index page with
 // wikilinks.
 //
 // Parameters:
@@ -230,7 +231,7 @@ func GenerateObsidianFilePage(kf entity.KeyFileData) string {
 //
 // Returns:
 //   - string: Markdown content for _Session Types.md
-func GenerateObsidianTypesMOC(sessionTypes []entity.TypeData) string {
+func ObsidianTypes(sessionTypes []entity.TypeData) string {
 	var sb strings.Builder
 	nl := token.NewlineLF
 
@@ -247,7 +248,7 @@ func GenerateObsidianTypesMOC(sessionTypes []entity.TypeData) string {
 	for _, st := range sessionTypes {
 		sb.WriteString(fmt.Sprintf(
 			desc.Text(text.DescKeyJournalMocItemSessions)+nl,
-			wikilink.FormatWikilink(st.Name, st.Name), len(st.Entries)))
+			wikilink.Format(st.Name, st.Name), len(st.Entries)))
 	}
 	sb.WriteString(nl)
 
@@ -265,7 +266,10 @@ func GenerateObsidianTypesMOC(sessionTypes []entity.TypeData) string {
 func GenerateObsidianTypePage(st entity.TypeData) string {
 	return GenerateObsidianGroupedPage(
 		fmt.Sprintf(desc.Text(text.DescKeyJournalMocPageTitle), st.Name),
-		fmt.Sprintf(desc.Text(text.DescKeyJournalMocTypePageStats), len(st.Entries), st.Name),
+		fmt.Sprintf(
+			desc.Text(text.DescKeyJournalMocTypePageStats),
+			len(st.Entries), st.Name,
+		),
 		st.Entries,
 	)
 }
@@ -289,11 +293,15 @@ func GenerateObsidianGroupedPage(
 	sb.WriteString(heading + nl + nl)
 	sb.WriteString(stats + nl + nl)
 
-	months, monthOrder := group.GroupByMonth(entries)
+	months, monthOrder := group.ByMonth(entries)
 	for _, month := range monthOrder {
-		sb.WriteString(fmt.Sprintf(desc.Text(text.DescKeyJournalMocHeadingMonth)+nl+nl, month))
+		heading := fmt.Sprintf(
+			desc.Text(text.DescKeyJournalMocHeadingMonth)+
+				nl+nl, month,
+		)
+		sb.WriteString(heading)
 		for _, e := range months[month] {
-			sb.WriteString(wikilink.FormatWikilinkEntry(e) + nl)
+			sb.WriteString(wikilink.FormatEntry(e) + nl)
 		}
 		sb.WriteString(nl)
 	}
@@ -331,7 +339,7 @@ func GenerateRelatedFooter(
 	if len(entry.Topics) > 0 {
 		topicLinks := make([]string, 0, len(entry.Topics)+1)
 		topicLinks = append(topicLinks,
-			wikilink.FormatWikilink(
+			wikilink.Format(
 				strings.TrimSuffix(obsidian.MOCTopics, file.ExtMarkdown),
 				desc.Text(text.DescKeyJournalMocTopicsMocLink)))
 		for _, t := range entry.Topics {
@@ -358,7 +366,7 @@ func GenerateRelatedFooter(
 			link := strings.TrimSuffix(rel.Filename, file.ExtMarkdown)
 			sb.WriteString(fmt.Sprintf(
 				desc.Text(text.DescKeyJournalMocItemListed)+nl,
-				wikilink.FormatWikilink(link, rel.Title)))
+				wikilink.Format(link, rel.Title)))
 		}
 		sb.WriteString(nl)
 	}
@@ -455,10 +463,15 @@ func FilterRegularEntries(entries []entity.JournalEntry) []entity.JournalEntry {
 //
 // Returns:
 //   - []JournalEntry: Entries with topics
-func FilterEntriesWithTopics(entries []entity.JournalEntry) []entity.JournalEntry {
+func FilterEntriesWithTopics(
+	entries []entity.JournalEntry,
+) []entity.JournalEntry {
 	var result []entity.JournalEntry
 	for _, e := range entries {
-		if e.Suggestive || section.ContinuesMultipart(e.Filename) || len(e.Topics) == 0 {
+		skip := e.Suggestive ||
+			section.ContinuesMultipart(e.Filename) ||
+			len(e.Topics) == 0
+		if skip {
 			continue
 		}
 		result = append(result, e)
@@ -474,10 +487,15 @@ func FilterEntriesWithTopics(entries []entity.JournalEntry) []entity.JournalEntr
 //
 // Returns:
 //   - []JournalEntry: Entries with key files
-func FilterEntriesWithKeyFiles(entries []entity.JournalEntry) []entity.JournalEntry {
+func FilterEntriesWithKeyFiles(
+	entries []entity.JournalEntry,
+) []entity.JournalEntry {
 	var result []entity.JournalEntry
 	for _, e := range entries {
-		if e.Suggestive || section.ContinuesMultipart(e.Filename) || len(e.KeyFiles) == 0 {
+		skip := e.Suggestive ||
+			section.ContinuesMultipart(e.Filename) ||
+			len(e.KeyFiles) == 0
+		if skip {
 			continue
 		}
 		result = append(result, e)
@@ -493,7 +511,9 @@ func FilterEntriesWithKeyFiles(entries []entity.JournalEntry) []entity.JournalEn
 //
 // Returns:
 //   - []JournalEntry: Entries with type
-func FilterEntriesWithType(entries []entity.JournalEntry) []entity.JournalEntry {
+func FilterEntriesWithType(
+	entries []entity.JournalEntry,
+) []entity.JournalEntry {
 	var result []entity.JournalEntry
 	for _, e := range entries {
 		if e.Suggestive || section.ContinuesMultipart(e.Filename) || e.Type == "" {
@@ -512,7 +532,9 @@ func FilterEntriesWithType(entries []entity.JournalEntry) []entity.JournalEntry 
 //
 // Returns:
 //   - map[string][]JournalEntry: Topic name -> entries
-func BuildTopicLookup(entries []entity.JournalEntry) map[string][]entity.JournalEntry {
+func BuildTopicLookup(
+	entries []entity.JournalEntry,
+) map[string][]entity.JournalEntry {
 	lookup := make(map[string][]entity.JournalEntry)
 	for _, e := range entries {
 		for _, topic := range e.Topics {

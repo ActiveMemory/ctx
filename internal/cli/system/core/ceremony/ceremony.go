@@ -66,42 +66,42 @@ func RecentJournalFiles(dir string, n int) []string {
 //
 // Returns:
 //   - remember: true if any file contains "ctx-remember"
-//   - wrapup: true if any file contains "ctx-wrap-up"
-func ScanJournalsForCeremonies(files []string) (remember, wrapup bool) {
+//   - wrapUp: true if any file contains "ctx-wrap-up"
+func ScanJournalsForCeremonies(files []string) (remember, wrapUp bool) {
 	for _, path := range files {
 		data, readErr := io.SafeReadUserFile(path)
 		if readErr != nil {
 			continue
 		}
 		content := string(data)
-		if !remember && strings.Contains(content, ceremony.CeremonyRememberCmd) {
+		if !remember && strings.Contains(content, ceremony.RememberCmd) {
 			remember = true
 		}
-		if !wrapup && strings.Contains(content, ceremony.CeremonyWrapUpCmd) {
-			wrapup = true
+		if !wrapUp && strings.Contains(content, ceremony.WrapUpCmd) {
+			wrapUp = true
 		}
-		if remember && wrapup {
+		if remember && wrapUp {
 			return
 		}
 	}
 	return
 }
 
-// EmitCeremonyNudge builds a ceremony nudge message box based on which
-// ceremonies (remember, wrapup) are missing from recent sessions.
+// Emit builds a ceremony nudge message box based on which
+// ceremonies (remember, wrapUp) are missing from recent sessions.
 //
 // Parameters:
 //   - remember: whether /ctx-remember was found in recent journals
-//   - wrapup: whether /ctx-wrap-up was found in recent journals
+//   - wrapUp: whether /ctx-wrap-up was found in recent journals
 //
 // Returns:
 //   - msg: the formatted nudge message, or empty string if no content
 //   - variant: the selected variant string for notifications
-func EmitCeremonyNudge(remember, wrapup bool) (msg, variant string) {
+func Emit(remember, wrapUp bool) (msg, variant string) {
 	var boxTitleKey, fallbackKey string
 
 	switch {
-	case !remember && !wrapup:
+	case !remember && !wrapUp:
 		variant = hook.VariantBoth
 		boxTitleKey = text.DescKeyCeremonyBoxBoth
 		fallbackKey = text.DescKeyCeremonyFallbackBoth
@@ -109,7 +109,7 @@ func EmitCeremonyNudge(remember, wrapup bool) (msg, variant string) {
 		variant = hook.VariantRemember
 		boxTitleKey = text.DescKeyCeremonyBoxRemember
 		fallbackKey = text.DescKeyCeremonyFallbackRemember
-	case !wrapup:
+	case !wrapUp:
 		variant = hook.VariantWrapup
 		boxTitleKey = text.DescKeyCeremonyBoxWrapup
 		fallbackKey = text.DescKeyCeremonyFallbackWrapup
@@ -118,7 +118,7 @@ func EmitCeremonyNudge(remember, wrapup bool) (msg, variant string) {
 	boxTitle := desc.Text(boxTitleKey)
 	fallback := desc.Text(fallbackKey)
 
-	content := message.LoadMessage(hook.CheckCeremonies, variant, nil, fallback)
+	content := message.Load(hook.CheckCeremonies, variant, nil, fallback)
 	if content == "" {
 		return "", variant
 	}

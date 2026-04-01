@@ -192,7 +192,7 @@ The default cooldown is 10 minutes; use `--cooldown 0` to disable it.
 3. Claude should cite specific context:
      * Current tasks from `.context/TASKS.md`;
      * Recent **decisions** or **learnings**;
-     * Recent **session history** from `ctx recall`.
+     * Recent **session history** from `ctx journal`.
 
 ### Local Plugin Development
 
@@ -283,10 +283,9 @@ These are invoked in Claude Code with `/skill-name`.
 
 | Skill                     | Description                                  |
 |---------------------------|----------------------------------------------|
-| `/ctx-recall`             | Browse AI session history                    |
+| `/ctx-history`             | Browse AI session history                    |
 | `/ctx-journal-enrich`     | Enrich a journal entry with frontmatter/tags |
 | `/ctx-journal-enrich-all` | Full journal pipeline: export if needed, then batch-enrich |
-| `/ctx-journal-normalize`  | Fix markdown rendering issues in journal     |
 
 #### Blogging Skills
 
@@ -477,7 +476,7 @@ npx @vscode/vsce package
 2. Install the `.vsix` file:
 
 ```bash
-code --install-extension ctx-context-0.8.0.vsix
+code --install-extension ctx-context-0.8.1.vsix
 ```
 
 3. Reload VS Code. Type `@ctx` in Copilot Chat to verify.
@@ -490,7 +489,7 @@ code --install-extension ctx-context-0.8.0.vsix
 | `@ctx /status`  | Show context summary with token estimate             |
 | `@ctx /agent`   | Print AI-ready context packet                        |
 | `@ctx /drift`   | Detect stale or invalid context                      |
-| `@ctx /recall`  | Browse and search AI session history                 |
+| `@ctx /journal` | Browse and search AI session history                 |
 | `@ctx /hook`    | Generate AI tool integration configs                 |
 | `@ctx /add`     | Add a task, decision, or learning                    |
 | `@ctx /load`    | Output assembled context Markdown                    |
@@ -505,7 +504,7 @@ code --install-extension ctx-context-0.8.0.vsix
 @ctx /add task Implement user authentication
 @ctx /drift
 @ctx /hook copilot
-@ctx /recall
+@ctx /journal
 ```
 
 Typing `@ctx` without a command shows help with all available commands.
@@ -528,7 +527,7 @@ example, after `/init` it suggests `/status` and `/hook`; after
 
 `ctx init` creates a `.context/sessions/` directory for storing
 session data from non-Claude tools. The Markdown session parser scans
-this directory during `ctx recall`, enabling session history for
+this directory during `ctx journal`, enabling session history for
 Copilot and other tools.
 
 ### Manual Patterns

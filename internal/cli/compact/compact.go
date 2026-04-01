@@ -13,6 +13,9 @@ import (
 )
 
 // Cmd returns the "ctx compact" command for cleaning up context files.
+//
+// Returns:
+//   - *cobra.Command: The compact command with subcommands registered
 func Cmd() *cobra.Command {
 	return compactRoot.Cmd()
 }

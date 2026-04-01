@@ -14,6 +14,7 @@ import (
 	"github.com/ActiveMemory/ctx/internal/assets/read/desc"
 	"github.com/ActiveMemory/ctx/internal/config/embed/text"
 	cfgFmt "github.com/ActiveMemory/ctx/internal/config/format"
+	cfgTime "github.com/ActiveMemory/ctx/internal/config/time"
 	"github.com/ActiveMemory/ctx/internal/config/token"
 )
 
@@ -62,7 +63,8 @@ func TimeAgo(hours float64, mins int, fallbackDate string) string {
 //   - d: duration to format
 //
 // Returns:
-//   - string: human-readable representation (e.g., "3 hours", "1 day", "just now")
+//   - string: human-readable representation
+//     (e.g., "3 hours", "1 day", "just now")
 func Duration(d time.Duration) string {
 	switch {
 	case d < time.Minute:
@@ -101,6 +103,14 @@ func DurationAgo(d time.Duration) string {
 		return base
 	}
 	return base + desc.Text(text.DescKeyTimeAgo)
+}
+
+// Today returns today's date as YYYY-MM-DD.
+//
+// Returns:
+//   - string: Current date formatted per cfgTime.DateFormat
+func Today() string {
+	return time.Now().Format(cfgTime.DateFormat)
 }
 
 // TruncateFirstLine returns the first line of s, capped at max characters.
@@ -156,5 +166,8 @@ func Bytes(b int64) string {
 		div *= cfgFmt.IECUnit
 		exp++
 	}
-	return fmt.Sprintf(desc.Text(text.DescKeyWriteFormatBytesUnit), float64(b)/float64(div), "KMGTPE"[exp])
+	return fmt.Sprintf(
+		desc.Text(text.DescKeyWriteFormatBytesUnit),
+		float64(b)/float64(div), "KMGTPE"[exp],
+	)
 }

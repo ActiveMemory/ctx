@@ -23,12 +23,12 @@ import (
 // Returns:
 //   - bool: True if wrap-up marker is fresh
 func WrappedUpRecently() bool {
-	markerPath := filepath.Join(state.StateDir(), wrap.WrappedUpMarker)
+	markerPath := filepath.Join(state.Dir(), wrap.Marker)
 
 	info, statErr := os.Stat(markerPath)
 	if statErr != nil {
 		return false
 	}
 
-	return time.Since(info.ModTime()) < wrap.WrappedUpExpiryHours*time.Hour
+	return time.Since(info.ModTime()) < wrap.ExpiryHours*time.Hour
 }

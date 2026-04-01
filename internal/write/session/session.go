@@ -9,40 +9,41 @@ package session
 import (
 	"fmt"
 
+	"github.com/spf13/cobra"
+
 	"github.com/ActiveMemory/ctx/internal/assets/read/desc"
 	"github.com/ActiveMemory/ctx/internal/config/embed/text"
-	"github.com/spf13/cobra"
 )
 
-// SessionPaused prints confirmation that hooks were paused.
+// Paused prints confirmation that hooks were paused.
 //
 // Parameters:
 //   - cmd: Cobra command for output. Nil is a no-op.
 //   - sessionID: the session identifier.
-func SessionPaused(cmd *cobra.Command, sessionID string) {
+func Paused(cmd *cobra.Command, sessionID string) {
 	if cmd == nil {
 		return
 	}
 	cmd.Println(fmt.Sprintf(desc.Text(text.DescKeyWritePaused), sessionID))
 }
 
-// SessionResumed prints confirmation that hooks were resumed.
+// Resumed prints confirmation that hooks were resumed.
 //
 // Parameters:
 //   - cmd: Cobra command for output. Nil is a no-op.
 //   - sessionID: the session identifier.
-func SessionResumed(cmd *cobra.Command, sessionID string) {
+func Resumed(cmd *cobra.Command, sessionID string) {
 	if cmd == nil {
 		return
 	}
 	cmd.Println(fmt.Sprintf(desc.Text(text.DescKeyWriteResumed), sessionID))
 }
 
-// SessionWrappedUp prints confirmation that the wrap-up marker was written.
+// WrappedUp prints confirmation that the wrap-up marker was written.
 //
 // Parameters:
 //   - cmd: Cobra command for output. Nil is a no-op.
-func SessionWrappedUp(cmd *cobra.Command) {
+func WrappedUp(cmd *cobra.Command) {
 	if cmd == nil {
 		return
 	}

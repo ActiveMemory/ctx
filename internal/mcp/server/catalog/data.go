@@ -23,14 +23,18 @@ type mapping struct {
 
 // table defines all individual context file resources.
 var table = []mapping{
-	{cfgCtx.Constitution, resource.Constitution, desc.Text(text.DescKeyMCPResConstitution)},
+	{cfgCtx.Constitution, resource.Constitution,
+		desc.Text(text.DescKeyMCPResConstitution)},
 	{cfgCtx.Task, resource.Tasks, desc.Text(text.DescKeyMCPResTasks)},
-	{cfgCtx.Convention, resource.Conventions, desc.Text(text.DescKeyMCPResConventions)},
-	{cfgCtx.Architecture, resource.Architecture, desc.Text(text.DescKeyMCPResArchitecture)},
+	{cfgCtx.Convention, resource.Conventions,
+		desc.Text(text.DescKeyMCPResConventions)},
+	{cfgCtx.Architecture, resource.Architecture,
+		desc.Text(text.DescKeyMCPResArchitecture)},
 	{cfgCtx.Decision, resource.Decisions, desc.Text(text.DescKeyMCPResDecisions)},
 	{cfgCtx.Learning, resource.Learnings, desc.Text(text.DescKeyMCPResLearnings)},
 	{cfgCtx.Glossary, resource.Glossary, desc.Text(text.DescKeyMCPResGlossary)},
-	{cfgCtx.AgentPlaybook, resource.Playbook, desc.Text(text.DescKeyMCPResPlaybook)},
+	{cfgCtx.AgentPlaybook, resource.Playbook,
+		desc.Text(text.DescKeyMCPResPlaybook)},
 }
 
 // uriLookup maps full resource URIs to context file names. Populated

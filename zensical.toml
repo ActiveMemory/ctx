@@ -91,7 +91,7 @@ nav = [
     "cli/index.md",
     "cli/init-status.md",
     "cli/context.md",
-    "cli/recall.md",
+    "cli/journal.md",
     "cli/tools.md",
     "cli/config.md",
     "cli/doctor.md",

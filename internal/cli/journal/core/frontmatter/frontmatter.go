@@ -15,9 +15,9 @@ import (
 	"github.com/ActiveMemory/ctx/internal/config/token"
 )
 
-// TransformFrontmatter converts journal frontmatter to Obsidian format.
+// Transform converts journal frontmatter to Obsidian format.
 //
-// Changes applied:
+// List applied:
 //   - topics -> tags (Obsidian-recognized key)
 //   - aliases added from title (makes entries findable by name)
 //   - source_file added with the relative path to the source entry
@@ -29,7 +29,7 @@ import (
 //
 // Returns:
 //   - string: Content with transformed frontmatter
-func TransformFrontmatter(content, sourcePath string) string {
+func Transform(content, sourcePath string) string {
 	nl := token.NewlineLF
 	fmOpen := len(token.Separator + nl)
 
@@ -53,7 +53,7 @@ func TransformFrontmatter(content, sourcePath string) string {
 	}
 
 	// Build the Obsidian frontmatter
-	ofm := ObsidianFrontmatter{}
+	ofm := Obsidian{}
 
 	if v, ok := raw[session.FrontmatterTitle].(string); ok {
 		ofm.Title = v

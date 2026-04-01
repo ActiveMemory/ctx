@@ -75,7 +75,6 @@ func TestInitialize(t *testing.T) {
 		"learning",
 		"task",
 		"loop",
-		"recall",
 		"journal",
 		"serve",
 		"guide",
@@ -128,7 +127,10 @@ func TestRootCmdPersistentPreRun_ContextDir(t *testing.T) {
 		Run:         func(cmd *cobra.Command, args []string) {},
 	}
 	cmd.AddCommand(dummy)
-	cmd.SetArgs([]string{"--context-dir", "/tmp/test-ctx", "--allow-outside-cwd", "dummy"})
+	cmd.SetArgs([]string{
+		"--context-dir", "/tmp/test-ctx",
+		"--allow-outside-cwd", "dummy",
+	})
 
 	err := cmd.Execute()
 	if err != nil {
@@ -213,7 +215,8 @@ func TestInitGuard_BlocksUninitializedCommand(t *testing.T) {
 	if execErr == nil {
 		t.Fatal("expected error for uninitialized context directory")
 	}
-	if got := execErr.Error(); got != `ctx: not initialized - run "ctx init" first` {
+	want := `ctx: not initialized - run "ctx init" first`
+	if got := execErr.Error(); got != want {
 		t.Errorf("unexpected error: %s", got)
 	}
 }
@@ -301,7 +304,8 @@ func TestInitGuard_AllowsInitializedCommand(t *testing.T) {
 	// Create required context files so Initialized() returns true.
 	for _, f := range ctx.FilesRequired {
 		path := filepath.Join(tmp, f)
-		if writeErr := os.WriteFile(path, []byte("# "+f+"\n"), 0o600); writeErr != nil {
+		content := []byte("# " + f + "\n")
+		if writeErr := os.WriteFile(path, content, 0o600); writeErr != nil {
 			t.Fatalf("setup: %v", writeErr)
 		}
 	}

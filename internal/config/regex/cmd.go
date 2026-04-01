@@ -19,3 +19,12 @@ var CpMvToBin = regexp.MustCompile(`(cp|mv)\s+\S+\s+(/usr/local/bin|/usr/bin|~/g
 
 // InstallToLocalBin matches cp/install to ~/.local/bin.
 var InstallToLocalBin = regexp.MustCompile(`(cp|install)\s.*~/\.local/bin`)
+
+// GitCommit matches git commit commands.
+var GitCommit = regexp.MustCompile(`git\s+commit`)
+
+// GitAmend matches the --amend flag.
+var GitAmend = regexp.MustCompile(`--amend`)
+
+// TaskRef matches Phase-style task references like HA.1, P-2.5, PD.3, CT.1.
+var TaskRef = regexp.MustCompile(`\b[A-Z]+-?\d+\.?\d*\b`)

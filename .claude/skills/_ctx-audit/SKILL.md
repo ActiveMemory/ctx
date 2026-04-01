@@ -401,7 +401,6 @@ After running checks, report:
 | Skill          | Scope                                     |
 |----------------|-------------------------------------------|
 | `/_ctx-qa`          | Build/test/lint; this checks conventions   |
-| `/ctx-verify`       | Confirms claims; use after fixing findings |
 | `/_ctx-update-docs` | Syncs docs with code; run after changes    |
 | `ctx drift`         | Checks `.context/` files; this checks `.go`|
 | `/ctx-check-links`  | Dead doc links; run as check #12           |

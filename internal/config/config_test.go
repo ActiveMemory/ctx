@@ -34,8 +34,9 @@ func TestRegExEntryHeader(t *testing.T) {
 			wantTitle: "Title here",
 		},
 		{
-			name:      "entry with long title",
-			input:     "## [2026-12-31-235959] A much longer title with spaces and stuff",
+			name: "entry with long title",
+			input: "## [2026-12-31-235959] " +
+				"A much longer title with spaces and stuff",
 			wantMatch: true,
 			wantDate:  "2026-12-31",
 			wantTime:  "235959",
@@ -213,7 +214,10 @@ func TestRegExPhase(t *testing.T) {
 		t.Run(tt.input, func(t *testing.T) {
 			matched := regex.Phase.MatchString(tt.input)
 			if matched != tt.wantMatch {
-				t.Errorf("Phase.MatchString(%q) = %v, want %v", tt.input, matched, tt.wantMatch)
+				t.Errorf(
+					"Phase.MatchString(%q) = %v, want %v",
+					tt.input, matched, tt.wantMatch,
+				)
 			}
 		})
 	}
@@ -315,7 +319,7 @@ func TestRegExPath(t *testing.T) {
 }
 
 func TestFileTypeMap(t *testing.T) {
-	// Verify ToCtxFile map contains expected mappings
+	// Verify CtxFile returns expected mappings
 	expected := map[string]string{
 		entry.Decision:   ctx.Decision,
 		entry.Task:       ctx.Task,
@@ -324,8 +328,11 @@ func TestFileTypeMap(t *testing.T) {
 	}
 
 	for ent, ctxFile := range expected {
-		if entry.ToCtxFile[ent] != ctxFile {
-			t.Errorf("ToCtxFile[%q] = %q, want %q", ent, entry.ToCtxFile[ent], ctxFile)
+		got, ok := entry.CtxFile(ent)
+		if !ok {
+			t.Errorf("CtxFile(%q) not found", ent)
+		} else if got != ctxFile {
+			t.Errorf("CtxFile(%q) = %q, want %q", ent, got, ctxFile)
 		}
 	}
 }

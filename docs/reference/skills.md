@@ -52,10 +52,9 @@ opinionated behavior on top.
 | [`/ctx-add-convention`](#ctx-add-convention)             | Record coding convention for consistency                        | user-invocable |
 | [`/ctx-archive`](#ctx-archive)                           | Archive completed tasks from TASKS.md                           | user-invocable |
 | [`/ctx-pad`](#ctx-pad)                                   | Manage encrypted scratchpad entries                             | user-invocable |
-| [`/ctx-recall`](#ctx-recall)                             | Browse and export AI session history                            | user-invocable |
+| [`/ctx-history`](#ctx-history)                            | Browse and import AI session history                            | user-invocable |
 | [`/ctx-journal-enrich`](#ctx-journal-enrich)             | Enrich single journal entry with metadata                       | user-invocable |
 | [`/ctx-journal-enrich-all`](#ctx-journal-enrich-all)     | Full journal pipeline: export if needed, then batch-enrich      | user-invocable |
-| [`/ctx-journal-normalize`](#ctx-journal-normalize)       | Normalize journal markdown for clean rendering                  | user-invocable |
 | [`/ctx-blog`](#ctx-blog)                                 | Generate blog post draft from project activity                  | user-invocable |
 | [`/ctx-blog-changelog`](#ctx-blog-changelog)             | Generate themed blog post from a commit range                   | user-invocable |
 | [`/ctx-consolidate`](#ctx-consolidate)                   | Consolidate redundant learnings or decisions                    | user-invocable |
@@ -64,7 +63,6 @@ opinionated behavior on top.
 | [`/ctx-prompt-audit`](#ctx-prompt-audit)                 | Analyze prompting patterns for improvement                      | user-invocable |
 | [`/ctx-check-links`](#ctx-check-links)                   | Audit docs for dead internal and external links                 | user-invocable |
 | [`/ctx-sanitize-permissions`](#ctx-sanitize-permissions) | Audit Claude Code permissions for security risks                | user-invocable |
-| [`/ctx-verify`](#ctx-verify)                             | Verify claims before reporting completion                       | user-invocable |
 | [`/ctx-brainstorm`](#ctx-brainstorm)                     | Structured design dialogue before implementation                | user-invocable |
 | [`/ctx-spec`](#ctx-spec)                                 | Scaffold a feature spec from a project template                 | user-invocable |
 | [`/ctx-import-plans`](#ctx-import-plans)                 | Import Claude Code plan files into project specs                | user-invocable |
@@ -96,7 +94,7 @@ Skills for starting, running, and ending a productive session.
 Recall project context and present a structured readback.
 **Ceremony skill**: invoke explicitly at session start.
 
-**Wraps**: `ctx agent --budget 4000`, `ctx recall list --limit 3`,
+**Wraps**: `ctx agent --budget 4000`, `ctx journal source --limit 3`,
 reads TASKS.md, DECISIONS.md, LEARNINGS.md
 
 **See also**: [Session Ceremonies](../recipes/session-ceremonies.md),
@@ -133,7 +131,7 @@ Also runs automatically via the PreToolUse hook with cooldown.
 Suggest 1-3 concrete next actions ranked by priority, momentum,
 and unblocked status.
 
-**Wraps**: reads TASKS.md, `ctx recall list --limit 3`
+**Wraps**: reads TASKS.md, `ctx journal source --limit 3`
 
 **See also**: [The Complete Session](../recipes/session-lifecycle.md),
 [Tracking Work Across Sessions](../recipes/task-management.md)
@@ -269,12 +267,12 @@ one-liner notes. Encrypted at rest with AES-256-GCM.
 Skills for browsing, exporting, and enriching your AI session history
 into a structured journal.
 
-### `/ctx-recall`
+### `/ctx-history`
 
-Browse, inspect, and export AI session history. List recent sessions,
-show details by slug or ID, and export to `.context/journal/`.
+Browse, inspect, and import AI session history. List recent sessions,
+show details by slug or ID, and import to `.context/journal/`.
 
-**Wraps**: `ctx recall list`, `ctx recall show`, `ctx recall export`
+**Wraps**: `ctx journal source`, `ctx journal source --show`, `ctx journal import`
 
 **See also**:
 [Browsing and Enriching Past Sessions](../recipes/session-archaeology.md)
@@ -296,27 +294,14 @@ outcome, topics, technologies, and summary. Shows diff before writing.
 
 ### `/ctx-journal-enrich-all`
 
-Full journal pipeline: exports unexported sessions first, then
+Full journal pipeline: imports unimported sessions first, then
 batch-enriches all unenriched entries. Filters out short sessions
 and continuations. Can spawn subagents for large backlogs.
 
-**Wraps**: `ctx recall export --all` + iterates `/ctx-journal-enrich`
+**Wraps**: `ctx journal import --all` + iterates `/ctx-journal-enrich`
 
 **See also**:
 [Browsing and Enriching Past Sessions](../recipes/session-archaeology.md)
-
----
-
-### `/ctx-journal-normalize`
-
-Normalize journal markdown for clean rendering: fix fence nesting,
-metadata formatting, list indentation, and collapse large tool outputs.
-
-**Wraps**: reads and edits `.context/journal/*.md` files
-
-**See also**:
-[Browsing and Enriching Past Sessions](../recipes/session-archaeology.md),
-[Turning Activity into Content](../recipes/publishing.md)
 
 ---
 
@@ -380,22 +365,6 @@ templates.
 
 **See also**:
 [Detecting and Fixing Drift](../recipes/context-health.md)
-
----
-
-### `/ctx-prompt`
-
-Apply, list, and manage saved prompt templates from `.context/prompts/`.
-Prompt templates are plain Markdown files for common patterns like code
-review, refactoring, or explaining code.
-
-**Wraps**: `ctx prompt list`, `ctx prompt show`, `ctx prompt apply`,
-`ctx prompt create`
-
-**Trigger phrases**: "use the code-review prompt", "list my prompts",
-"apply the refactor template", "create a prompt template"
-
-**See also**: [Prompt Templates](../recipes/prompt-templates.md)
 
 ---
 
@@ -468,24 +437,6 @@ with user confirmation.
 
 **See also**:
 [Claude Code Permission Hygiene](../recipes/claude-code-permissions.md)
-
----
-
-### `/ctx-verify`
-
-Run the relevant verification command before claiming a result. Maps
-claims to required evidence (*"tests pass" needs test output, "build
-succeeds" needs exit 0*) and includes self-audit questions to surface
-gaps before reporting done.
-
-**Wraps**: runs the verification command appropriate to the claim
-(`go test`, `make audit`, `go build`, `diff`, etc.)
-
-**Trigger phrases**: "verify this", "does it work?", "prove it passes",
-"is it done?"
-
-**See also**:
-[Detecting and Fixing Drift](../recipes/context-health.md)
 
 ---
 

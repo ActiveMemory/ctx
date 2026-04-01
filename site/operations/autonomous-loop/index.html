@@ -2441,16 +2441,14 @@
   
   
     <li class="md-nav__item">
-      <a href="../../recipes/prompt-templates/" class="md-nav__link">
+      <a href="../../recipes/prompt-templates.md" class="md-nav__link">
         
   
-  
-    <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-message-square-text" viewBox="0 0 24 24"><path d="M22 17a2 2 0 0 1-2 2H6.828a2 2 0 0 0-1.414.586l-2.202 2.202A.71.71 0 0 1 2 21.286V5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2zM7 11h10M7 15h6M7 7h8"/></svg>
   
   <span class="md-ellipsis">
     
   
-    Reusable Prompt Templates
+    none
   
 
     
@@ -2631,7 +2629,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../cli/recall/" class="md-nav__link">
+      <a href="../../cli/journal/" class="md-nav__link">
         
   
   
@@ -2640,7 +2638,7 @@
   <span class="md-ellipsis">
     
   
-    Recall and Journal
+    Journal
   
 
     
@@ -3412,10 +3410,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#the-promptmd-file" class="md-nav__link">
+  <a href="#the-contextloopmd-file" class="md-nav__link">
     <span class="md-ellipsis">
       
-        The PROMPT.md File
+        The .context/loop.md File
       
     </span>
   </a>
@@ -3854,10 +3852,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#the-promptmd-file" class="md-nav__link">
+  <a href="#the-contextloopmd-file" class="md-nav__link">
     <span class="md-ellipsis">
       
-        The PROMPT.md File
+        The .context/loop.md File
       
     </span>
   </a>
@@ -4140,7 +4138,7 @@ everything across iterations.</p>
 </div>
 <h2 id="how-it-works">How It Works<a class="headerlink" href="#how-it-works" title="Permanent link">&para;</a></h2>
 <pre class="mermaid"><code>graph TD
-    A[Start Loop] --&gt; B[Load PROMPT.md]
+    A[Start Loop] --&gt; B[Load .context/loop.md]
     B --&gt; C[AI reads .context/]
     C --&gt; D[AI picks task from TASKS.md]
     D --&gt; E[AI completes task]
@@ -4151,7 +4149,7 @@ everything across iterations.</p>
     H --&gt;|SYSTEM_BLOCKED| J[Done - needs human input]
     H --&gt;|Continue| B</code></pre>
 <ol>
-<li>Loop reads <code>PROMPT.md</code> and invokes AI</li>
+<li>Loop reads <code>.context/loop.md</code> and invokes AI</li>
 <li>AI loads context from <code>.context/</code></li>
 <li>AI picks one task and completes it</li>
 <li>AI updates context files (mark task done, add learnings)</li>
@@ -4169,7 +4167,7 @@ tokens, no hidden state.</p>
 <div class="language-bash highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="ch">#!/bin/bash</span>
 </span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="c1"># loop.sh: an autonomous iteration loop</span>
 </span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>
-</span><span id="__span-0-4"><a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="nv">PROMPT_FILE</span><span class="o">=</span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">1</span><span class="k">:-</span><span class="nv">PROMPT</span><span class="p">.md</span><span class="si">}</span><span class="s2">&quot;</span>
+</span><span id="__span-0-4"><a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="nv">PROMPT_FILE</span><span class="o">=</span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">1</span><span class="k">:-</span><span class="p">.context/loop.md</span><span class="si">}</span><span class="s2">&quot;</span>
 </span><span id="__span-0-5"><a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="nv">MAX_ITERATIONS</span><span class="o">=</span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">2</span><span class="k">:-</span><span class="nv">10</span><span class="si">}</span><span class="s2">&quot;</span>
 </span><span id="__span-0-6"><a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a><span class="nv">OUTPUT_FILE</span><span class="o">=</span><span class="s2">&quot;/tmp/loop_output.txt&quot;</span>
 </span><span id="__span-0-7"><a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>
@@ -4232,7 +4230,7 @@ This means:</p>
 works fine. For overnight unattended runs or anything where iteration
 independence matters, use the shell while loop instead.</p>
 </div>
-<h2 id="the-promptmd-file">The <code>PROMPT.md</code> File<a class="headerlink" href="#the-promptmd-file" title="Permanent link">&para;</a></h2>
+<h2 id="the-contextloopmd-file">The <code>.context/loop.md</code> File<a class="headerlink" href="#the-contextloopmd-file" title="Permanent link">&para;</a></h2>
 <p>The prompt file instructs the AI on how to work autonomously. Here's a template:</p>
 <div class="language-markdown highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="gh"># Autonomous Development Prompt</span>
 </span><span id="__span-3-2"><a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>
@@ -4397,17 +4395,15 @@ independence matters, use the shell while loop instead.</p>
 real time.</p>
 <h2 id="project-setup">Project Setup<a class="headerlink" href="#project-setup" title="Permanent link">&para;</a></h2>
 <p>Initialize a project for autonomous loop operation:</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-12-1"><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a><span class="c1"># Initialize with autonomous agent behavior</span>
-</span><span id="__span-12-2"><a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a>ctx<span class="w"> </span>init<span class="w"> </span>--ralph
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-12-1"><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a>ctx<span class="w"> </span>init
 </span></code></pre></div>
-<p>The <code>--ralph</code> flag creates a <code>PROMPT.md</code> where the agent:</p>
+<p>The loop prompt template is deployed to <code>.context/loop.md</code> during
+initialization. It instructs the agent to:</p>
 <ul>
-<li>Works autonomously without asking clarifying questions;</li>
-<li>Follows one-task-per-iteration discipline;</li>
-<li>Uses <code>SYSTEM_CONVERGED</code> / <code>SYSTEM_BLOCKED</code> signals;</li>
+<li>Work autonomously without asking clarifying questions;</li>
+<li>Follow one-task-per-iteration discipline;</li>
+<li>Use <code>SYSTEM_CONVERGED</code> / <code>SYSTEM_BLOCKED</code> signals;</li>
 </ul>
-<p>Without <code>--ralph</code>, the agent is encouraged to ask questions when requirements
-are unclear: Better for collaborative human-agent sessions.</p>
 <h2 id="example-project-structure">Example Project Structure<a class="headerlink" href="#example-project-structure" title="Permanent link">&para;</a></h2>
 <div class="language-text highlight"><pre><span></span><code><span id="__span-13-1"><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a>my-project/
 </span><span id="__span-13-2"><a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a>├── .context/
@@ -4417,10 +4413,8 @@ are unclear: Better for collaborative human-agent sessions.</p>
 </span><span id="__span-13-6"><a id="__codelineno-13-6" name="__codelineno-13-6" href="#__codelineno-13-6"></a>│   ├── LEARNINGS.md
 </span><span id="__span-13-7"><a id="__codelineno-13-7" name="__codelineno-13-7" href="#__codelineno-13-7"></a>│   ├── CONVENTIONS.md
 </span><span id="__span-13-8"><a id="__codelineno-13-8" name="__codelineno-13-8" href="#__codelineno-13-8"></a>│   └── sessions/         # Loop iteration history
-</span><span id="__span-13-9"><a id="__codelineno-13-9" name="__codelineno-13-9" href="#__codelineno-13-9"></a>├── PROMPT.md             # Instructions for the AI
-</span><span id="__span-13-10"><a id="__codelineno-13-10" name="__codelineno-13-10" href="#__codelineno-13-10"></a>├── IMPLEMENTATION_PLAN.md # High-level project direction
-</span><span id="__span-13-11"><a id="__codelineno-13-11" name="__codelineno-13-11" href="#__codelineno-13-11"></a>├── loop.sh               # Loop script (if not using Claude Code)
-</span><span id="__span-13-12"><a id="__codelineno-13-12" name="__codelineno-13-12" href="#__codelineno-13-12"></a>└── src/                  # Your code
+</span><span id="__span-13-9"><a id="__codelineno-13-9" name="__codelineno-13-9" href="#__codelineno-13-9"></a>├── loop.sh               # Loop script (if not using Claude Code)
+</span><span id="__span-13-10"><a id="__codelineno-13-10" name="__codelineno-13-10" href="#__codelineno-13-10"></a>└── src/                  # Your code
 </span></code></pre></div>
 <h3 id="sample-tasksmd-for-autonomous-loops">Sample TASKS.md for Autonomous Loops<a class="headerlink" href="#sample-tasksmd-for-autonomous-loops" title="Permanent link">&para;</a></h3>
 <div class="language-markdown highlight"><pre><span></span><code><span id="__span-14-1"><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a><span class="gh"># Tasks</span>
@@ -4445,14 +4439,14 @@ are unclear: Better for collaborative human-agent sessions.</p>
 <h2 id="troubleshooting">Troubleshooting<a class="headerlink" href="#troubleshooting" title="Permanent link">&para;</a></h2>
 <h3 id="loop-runs-forever">Loop Runs Forever<a class="headerlink" href="#loop-runs-forever" title="Permanent link">&para;</a></h3>
 <p><strong>Cause:</strong> AI not emitting completion signals</p>
-<p><strong>Fix:</strong> Ensure PROMPT.md explicitly instructs signaling:
+<p><strong>Fix:</strong> Ensure .context/loop.md explicitly instructs signaling:
 <div class="language-markdown highlight"><pre><span></span><code><span id="__span-15-1"><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a>End EVERY response with one of:
 </span><span id="__span-15-2"><a id="__codelineno-15-2" name="__codelineno-15-2" href="#__codelineno-15-2"></a><span class="k">-</span><span class="w"> </span>SYSTEM_CONVERGED (if all tasks done)
 </span><span id="__span-15-3"><a id="__codelineno-15-3" name="__codelineno-15-3" href="#__codelineno-15-3"></a><span class="k">-</span><span class="w"> </span>SYSTEM_BLOCKED (if stuck)
 </span></code></pre></div></p>
 <h3 id="context-not-persisting">Context Not Persisting<a class="headerlink" href="#context-not-persisting" title="Permanent link">&para;</a></h3>
 <p><strong>Cause</strong>: AI not updating context files</p>
-<p><strong>Fix</strong>: Add explicit instructions to PROMPT.md:
+<p><strong>Fix</strong>: Add explicit instructions to .context/loop.md:
 <div class="language-markdown highlight"><pre><span></span><code><span id="__span-16-1"><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a>After completing a task, you MUST:
 </span><span id="__span-16-2"><a id="__codelineno-16-2" name="__codelineno-16-2" href="#__codelineno-16-2"></a><span class="k">1.</span> Run: ctx task complete &quot;&lt;task&gt;&quot;
 </span><span id="__span-16-3"><a id="__codelineno-16-3" name="__codelineno-16-3" href="#__codelineno-16-3"></a><span class="k">2.</span> Add learnings: ctx add learning &quot;...&quot;
@@ -4468,7 +4462,7 @@ are unclear: Better for collaborative human-agent sessions.</p>
 </span></code></pre></div>
 <h3 id="ai-violating-constitution">AI Violating Constitution<a class="headerlink" href="#ai-violating-constitution" title="Permanent link">&para;</a></h3>
 <p><strong>Cause</strong>: Constitution not read first</p>
-<p><strong>Fix</strong>: Make constitution check explicit in <code>PROMPT.md</code>:</p>
+<p><strong>Fix</strong>: Make constitution check explicit in <code>.context/loop.md</code>:</p>
 <div class="language-markdown highlight"><pre><span></span><code><span id="__span-18-1"><a id="__codelineno-18-1" name="__codelineno-18-1" href="#__codelineno-18-1"></a>BEFORE any work:
 </span><span id="__span-18-2"><a id="__codelineno-18-2" name="__codelineno-18-2" href="#__codelineno-18-2"></a><span class="k">1.</span> Read .context/CONSTITUTION.md
 </span><span id="__span-18-3"><a id="__codelineno-18-3" name="__codelineno-18-3" href="#__codelineno-18-3"></a><span class="k">2.</span> If task would violate ANY rule, emit SYSTEM_BLOCKED

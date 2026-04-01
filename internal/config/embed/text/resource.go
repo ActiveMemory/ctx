@@ -26,4 +26,5 @@ const (
 	DescKeyResourcesStatusDanger = "resources.status-danger"
 	DescKeyResourcesStatusOk     = "resources.status-ok"
 	DescKeyResourcesStatusWarn   = "resources.status-warn"
+	DescKeyResourcesRowFormat    = "resources.row-format"
 )

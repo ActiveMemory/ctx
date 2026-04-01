@@ -9,7 +9,7 @@ package root
 import (
 	"github.com/spf13/cobra"
 
-	"github.com/ActiveMemory/ctx/internal/assets/read/desc"
+	"github.com/ActiveMemory/ctx/internal/cli/parent"
 	"github.com/ActiveMemory/ctx/internal/cli/system/cmd/message/cmd/edit"
 	"github.com/ActiveMemory/ctx/internal/cli/system/cmd/message/cmd/list"
 	"github.com/ActiveMemory/ctx/internal/cli/system/cmd/message/cmd/reset"
@@ -20,22 +20,12 @@ import (
 // Cmd returns the "ctx system message" subcommand.
 //
 // Returns:
-//   - *cobra.Command: Configured message subcommand with sub-subcommands
+//   - *cobra.Command: Configured message command
 func Cmd() *cobra.Command {
-	short, long := desc.Command(cmd.DescKeySystemMessage)
-
-	c := &cobra.Command{
-		Use:   cmd.UseSystemMessage,
-		Short: short,
-		Long:  long,
-	}
-
-	c.AddCommand(
+	return parent.Cmd(cmd.DescKeySystemMessage, cmd.UseSystemMessage,
 		list.Cmd(),
 		show.Cmd(),
 		edit.Cmd(),
 		reset.Cmd(),
 	)
-
-	return c
 }

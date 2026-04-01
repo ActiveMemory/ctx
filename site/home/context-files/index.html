@@ -1308,22 +1308,22 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#prompts" class="md-nav__link">
+  <a href="#templates" class="md-nav__link">
     <span class="md-ellipsis">
       
-        prompts/
+        templates/
       
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="prompts&#x2f;">
+    <nav class="md-nav" aria-label="templates&#x2f;">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#how-it-works" class="md-nav__link">
+  <a href="#customizing" class="md-nav__link">
     <span class="md-ellipsis">
       
-        How It Works
+        Customizing
       
     </span>
   </a>
@@ -2931,16 +2931,14 @@
   
   
     <li class="md-nav__item">
-      <a href="../../recipes/prompt-templates/" class="md-nav__link">
+      <a href="../../recipes/prompt-templates.md" class="md-nav__link">
         
   
-  
-    <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-message-square-text" viewBox="0 0 24 24"><path d="M22 17a2 2 0 0 1-2 2H6.828a2 2 0 0 0-1.414.586l-2.202 2.202A.71.71 0 0 1 2 21.286V5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2zM7 11h10M7 15h6M7 7h8"/></svg>
   
   <span class="md-ellipsis">
     
   
-    Reusable Prompt Templates
+    none
   
 
     
@@ -3121,7 +3119,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../cli/recall/" class="md-nav__link">
+      <a href="../../cli/journal/" class="md-nav__link">
         
   
   
@@ -3130,7 +3128,7 @@
   <span class="md-ellipsis">
     
   
-    Recall and Journal
+    Journal
   
 
     
@@ -4349,22 +4347,22 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#prompts" class="md-nav__link">
+  <a href="#templates" class="md-nav__link">
     <span class="md-ellipsis">
       
-        prompts/
+        templates/
       
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="prompts&#x2f;">
+    <nav class="md-nav" aria-label="templates&#x2f;">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#how-it-works" class="md-nav__link">
+  <a href="#customizing" class="md-nav__link">
     <span class="md-ellipsis">
       
-        How It Works
+        Customizing
       
     </span>
   </a>
@@ -4532,8 +4530,8 @@
 <td>8 (lowest)</td>
 </tr>
 <tr>
-<td><code>prompts/</code></td>
-<td>Reusable prompt templates</td>
+<td><code>templates/</code></td>
+<td>Entry format templates for <code>ctx add</code></td>
 <td>(optional)</td>
 </tr>
 </tbody>
@@ -4958,21 +4956,21 @@ and update context.</p>
 <p>See <a href="../../operations/integrations/#context-update-commands">Integrations</a> 
 for full documentation.</p>
 <hr />
-<h2 id="prompts"><code>prompts/</code><a class="headerlink" href="#prompts" title="Permanent link">&para;</a></h2>
-<p><strong>Purpose</strong>: Store reusable prompt templates - plain markdown files with
-no frontmatter that provide lightweight, named instructions for common
-tasks like code review, refactoring, or explaining code.</p>
-<h3 id="how-it-works">How It Works<a class="headerlink" href="#how-it-works" title="Permanent link">&para;</a></h3>
+<h2 id="templates"><code>templates/</code><a class="headerlink" href="#templates" title="Permanent link">&para;</a></h2>
+<p><strong>Purpose</strong>: Format templates for <code>ctx add decision</code> and <code>ctx add learning</code>.
+These control the structure of new entries appended to DECISIONS.md and
+LEARNINGS.md.</p>
+<p><code>ctx init</code> deploys two starter templates:</p>
 <ul>
-<li><code>ctx init</code> stamps starter templates: <code>code-review.md</code>, <code>refactor.md</code>,
-  <code>explain.md</code></li>
-<li>Manage via <code>ctx prompt list</code>, <code>ctx prompt show</code>, <code>ctx prompt add</code>,
-  <code>ctx prompt rm</code></li>
-<li>Invoke in AI sessions with <code>/ctx-prompt &lt;name&gt;</code></li>
-<li>Committed to git by default for team sharing</li>
+<li><code>decision.md</code> — sections: Context, Rationale, Consequence</li>
+<li><code>learning.md</code> — sections: Context, Lesson, Application</li>
 </ul>
-<p>See the <a href="../../recipes/prompt-templates/">Prompt Templates recipe</a> for
-the full workflow.</p>
+<h3 id="customizing">Customizing<a class="headerlink" href="#customizing" title="Permanent link">&para;</a></h3>
+<p>Edit the templates directly. Changes take effect immediately on the
+next <code>ctx add</code> command. For example, to add a "References" section to
+all new decisions, edit <code>.context/templates/decision.md</code>.</p>
+<p>Templates are committed to git, so customizations are shared with the
+team.</p>
 <hr />
 <h2 id="parsing-rules">Parsing Rules<a class="headerlink" href="#parsing-rules" title="Permanent link">&para;</a></h2>
 <p>All context files follow these conventions:</p>

@@ -6,6 +6,7 @@
 
 // Package status implements the ctx memory status subcommand.
 //
-// It displays the current state of the memory bridge, showing sync
-// status between MEMORY.md and its mirror.
+// Key exports: [Cmd], [Run].
+// Follows the cmd/root + core taxonomy.
+// Registered by the cmd parent command.
 package status

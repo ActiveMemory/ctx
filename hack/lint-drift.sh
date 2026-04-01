@@ -4,7 +4,8 @@
 # `.,'\
 #   \    Copyright 2026-present Context contributors.
 #                 SPDX-License-Identifier: Apache-2.0
-#
+
+
 # lint-drift.sh — catch code-level drift that static analyzers miss.
 #
 # Checks:
@@ -14,6 +15,9 @@
 #   4. Literal ".md" (should use config.ExtMarkdown)
 #   5. Go DescKey ↔ YAML key linkage (embed/{cmd,flag,text} vs commands/)
 #      Only DescKey* constants are checked — Use* and ExampleKey* are excluded.
+#   6. Inline error strings outside internal/err/ (should use err/ constructors)
+#   7. err.go files outside internal/err/ (broken-window magnet)
+#   8. strings.Join with inline separator (should use token.* constants)
 #
 # Exit code: number of issues found (0 = clean).
 
@@ -87,6 +91,63 @@ hits=$(drift_grep '"\.md"' 'ext.go')
 count=$(drift_count "$hits")
 if [ "$count" -gt 0 ]; then
   echo "==> Literal \".md\" found ($count occurrences, use config.ExtMarkdown):"
+  echo "$hits"
+  echo ""
+  issues=$((issues + count))
+fi
+
+# ── 6. Inline error strings outside internal/err/ ─────────────────────
+# fmt.Errorf("literal") and errors.New("literal") should live in
+# internal/err/ with YAML-backed text keys, not inline in core/cmd/.
+# Exclude internal/err/ (that's where constructors belong) and lines
+# that already use desc.Text/lookup.TextDesc (already externalized).
+hits=$(grep -rn --include='*.go' --exclude='*_test.go' \
+  -E 'fmt\.Errorf\s*\(\s*["`]' internal/ 2>/dev/null \
+  | grep -v 'internal/err/' \
+  || true)
+count=$(drift_count "$hits")
+if [ "$count" -gt 0 ]; then
+  echo "==> Inline fmt.Errorf strings outside internal/err/ ($count, use err/ constructors):"
+  echo "$hits"
+  echo ""
+  issues=$((issues + count))
+fi
+
+hits=$(grep -rn --include='*.go' --exclude='*_test.go' \
+  -E 'errors\.New\s*\(\s*"' internal/ 2>/dev/null \
+  | grep -v 'internal/err/' \
+  || true)
+count=$(drift_count "$hits")
+if [ "$count" -gt 0 ]; then
+  echo "==> Inline errors.New strings outside internal/err/ ($count, use err/ constructors):"
+  echo "$hits"
+  echo ""
+  issues=$((issues + count))
+fi
+
+# ── 7. err.go files outside internal/err/ ─────────────────────────────
+# Convention: error constructors belong in internal/err/, never in
+# per-package err.go files. An err.go outside err/ is a broken-window
+# magnet that invites agents to add local error constructors.
+hits=$(find internal/ -name 'err.go' -not -path 'internal/err/*' 2>/dev/null || true)
+count=$(drift_count "$hits")
+if [ "$count" -gt 0 ]; then
+  echo "==> err.go files outside internal/err/ ($count, move to internal/err/):"
+  echo "$hits" | sed 's/^/    /'
+  echo ""
+  issues=$((issues + count))
+fi
+
+# ── 8. strings.Join with inline separator ─────────────────────────────
+# Separators like ", " should use token.CommaSpace and friends.
+# Skip token/ where the constants are defined.
+hits=$(grep -rn --include='*.go' --exclude='*_test.go' \
+  -E 'strings\.Join\([^)]+,\s*"' internal/ 2>/dev/null \
+  | grep -v 'internal/config/token/' \
+  || true)
+count=$(drift_count "$hits")
+if [ "$count" -gt 0 ]; then
+  echo "==> strings.Join with inline separator ($count, use token.* constants):"
   echo "$hits"
   echo ""
   issues=$((issues + count))

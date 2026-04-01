@@ -204,7 +204,7 @@ The **journal system** includes:
 
 | Component                | Purpose                                            |
 |--------------------------|----------------------------------------------------|
-| `ctx recall export`      | Export sessions to markdown in `.context/journal/` |
+| `ctx recall import`      | Import sessions to markdown in `.context/journal/` |
 | `ctx journal site`       | Generate static site from journal entries          |
 | `ctx serve`              | Convenience wrapper for the static site server     |
 | `/ctx-journal-enrich`    | Slash command to add frontmatter and tags          |
@@ -327,7 +327,7 @@ Opening files no longer triggered the familiar
 
 This post was written using the tools built during this refactoring window:
 
-1. Session history exported via `ctx recall export`;
+1. Session history imported via `ctx recall import`;
 2. Journal entries enriched via `/ctx-journal-enrich`;
 3. Blog draft generated via `/ctx-blog`;
 4. Final editing done (*by yours truly*), with full project context loaded.

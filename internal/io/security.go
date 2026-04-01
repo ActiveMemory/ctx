@@ -9,15 +9,16 @@ package io
 import (
 	"bytes"
 	"net/http"
-	"net/url"
 	"os"
 	"path/filepath"
 	"strings"
 	"time"
 
 	cfgFs "github.com/ActiveMemory/ctx/internal/config/fs"
+	cfgWarn "github.com/ActiveMemory/ctx/internal/config/warn"
 	errFs "github.com/ActiveMemory/ctx/internal/err/fs"
 	errHTTP "github.com/ActiveMemory/ctx/internal/err/http"
+	logWarn "github.com/ActiveMemory/ctx/internal/log/warn"
 )
 
 // SafeReadFile resolves filename within baseDir, verifies the result
@@ -144,7 +145,8 @@ func SafeWriteFile(path string, data []byte, perm os.FileMode) error {
 	if validateErr != nil {
 		return validateErr
 	}
-	return os.WriteFile(clean, data, perm) //nolint:gosec // validated by cleanAndValidate
+	//nolint:gosec // validated by cleanAndValidate
+	return os.WriteFile(clean, data, perm)
 }
 
 // TouchFile creates or updates an empty marker file. Best-effort:
@@ -154,7 +156,12 @@ func SafeWriteFile(path string, data []byte, perm os.FileMode) error {
 // Parameters:
 //   - path: absolute file path to touch
 func TouchFile(path string) {
-	_ = os.WriteFile(path, nil, cfgFs.PermSecret) //nolint:gosec // state marker, path from internal code
+	//nolint:gosec // state marker, path from internal code
+	if writeErr := os.WriteFile(
+		path, nil, cfgFs.PermSecret,
+	); writeErr != nil {
+		logWarn.Warn(cfgWarn.Write, path, writeErr)
+	}
 }
 
 // maxRedirects caps the number of HTTP redirects the client will follow.
@@ -214,18 +221,4 @@ func SafePost(
 	//nolint:gosec // URL originates from trusted, encrypted storage;
 	// scheme validated above
 	return client.Post(rawURL, contentType, bytes.NewReader(body))
-}
-
-// validateHTTPScheme parses the URL and rejects any scheme other than
-// http or https.
-func validateHTTPScheme(rawURL string) error {
-	parsed, parseErr := url.Parse(rawURL)
-	if parseErr != nil {
-		return errHTTP.ParseURL(parseErr)
-	}
-	scheme := strings.ToLower(parsed.Scheme)
-	if scheme != "http" && scheme != "https" {
-		return errHTTP.UnsafeURLScheme(parsed.Scheme)
-	}
-	return nil
 }

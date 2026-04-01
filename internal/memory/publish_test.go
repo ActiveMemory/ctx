@@ -23,13 +23,14 @@ import (
 )
 
 func TestMergePublished_EmptyFile(t *testing.T) {
-	published := "# Project Context (managed by ctx)\n\n## Pending Tasks\n- [ ] task one\n"
+	published := "# Project Context (managed by ctx)\n\n" +
+		"## Pending Tasks\n- [ ] task one\n"
 	merged, missing := MergePublished("", published)
 
-	if !strings.Contains(merged, marker.PublishMarkerStart) {
+	if !strings.Contains(merged, marker.PublishStart) {
 		t.Error("expected marker start in output")
 	}
-	if !strings.Contains(merged, marker.PublishMarkerEnd) {
+	if !strings.Contains(merged, marker.PublishEnd) {
 		t.Error("expected marker end in output")
 	}
 	if !strings.Contains(merged, "task one") {
@@ -42,7 +43,8 @@ func TestMergePublished_EmptyFile(t *testing.T) {
 
 func TestMergePublished_ReplaceExisting(t *testing.T) {
 	existing := "# Auto Memory\n\nClaude notes here.\n\n" +
-		marker.PublishMarkerStart + "\nold content\n" + marker.PublishMarkerEnd + "\n\nMore Claude notes.\n"
+		marker.PublishStart + "\nold content\n" +
+		marker.PublishEnd + "\n\nMore Claude notes.\n"
 	published := "# Project Context (managed by ctx)\n\nnew content\n"
 
 	merged, missing := MergePublished(existing, published)
@@ -83,7 +85,8 @@ func TestMergePublished_MarkersStripped(t *testing.T) {
 
 func TestRemovePublished(t *testing.T) {
 	content := "# Auto Memory\n\nNotes.\n\n" +
-		marker.PublishMarkerStart + "\npublished stuff\n" + marker.PublishMarkerEnd + "\n\nMore notes.\n"
+		marker.PublishStart + "\npublished stuff\n" +
+		marker.PublishEnd + "\n\nMore notes.\n"
 
 	cleaned, found := RemovePublished(content)
 
@@ -145,26 +148,43 @@ func TestSelectContent(t *testing.T) {
 	}
 
 	// Create TASKS.md with pending items
-	tasks := "# Tasks\n\n- [x] done task\n- [ ] pending task one\n- [ ] pending task two\n"
-	if writeErr := os.WriteFile(filepath.Join(contextDir, ctx.Task), []byte(tasks), 0o644); writeErr != nil {
+	tasks := "# Tasks\n\n- [x] done task\n" +
+		"- [ ] pending task one\n- [ ] pending task two\n"
+	taskPath := filepath.Join(contextDir, ctx.Task)
+	if writeErr := os.WriteFile(
+		taskPath, []byte(tasks), 0o644,
+	); writeErr != nil {
 		t.Fatal(writeErr)
 	}
 
 	// Create DECISIONS.md with a recent entry
-	ts := time.Now().Format(cfgTime.TimestampCompact)
-	decisions := fmt.Sprintf("# Decisions\n\n## [%s] Use SQLite\n\nContext: testing\n", ts)
-	if writeErr := os.WriteFile(filepath.Join(contextDir, ctx.Decision), []byte(decisions), 0o644); writeErr != nil {
+	ts := time.Now().Format(cfgTime.CompactTimestamp)
+	decisions := fmt.Sprintf(
+		"# Decisions\n\n## [%s] Use SQLite\n\nContext: testing\n",
+		ts,
+	)
+	decPath := filepath.Join(contextDir, ctx.Decision)
+	if writeErr := os.WriteFile(
+		decPath, []byte(decisions), 0o644,
+	); writeErr != nil {
 		t.Fatal(writeErr)
 	}
 
 	// Create CONVENTIONS.md
-	conventions := "# Conventions\n\n- Always use ctx from PATH\n- Prefer filepath.Join\n"
-	if writeErr := os.WriteFile(filepath.Join(contextDir, ctx.Convention), []byte(conventions), 0o644); writeErr != nil {
+	conventions := "# Conventions\n\n" +
+		"- Always use ctx from PATH\n- Prefer filepath.Join\n"
+	convPath := filepath.Join(contextDir, ctx.Convention)
+	if writeErr := os.WriteFile(
+		convPath, []byte(conventions), 0o644,
+	); writeErr != nil {
 		t.Fatal(writeErr)
 	}
 
 	// Create empty LEARNINGS.md
-	if writeErr := os.WriteFile(filepath.Join(contextDir, ctx.Learning), []byte("# Learnings\n"), 0o644); writeErr != nil {
+	learnPath := filepath.Join(contextDir, ctx.Learning)
+	if writeErr := os.WriteFile(
+		learnPath, []byte("# Learnings\n"), 0o644,
+	); writeErr != nil {
 		t.Fatal(writeErr)
 	}
 

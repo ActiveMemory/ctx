@@ -2864,16 +2864,14 @@
   
   
     <li class="md-nav__item">
-      <a href="../../recipes/prompt-templates/" class="md-nav__link">
+      <a href="../../recipes/prompt-templates.md" class="md-nav__link">
         
   
-  
-    <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-message-square-text" viewBox="0 0 24 24"><path d="M22 17a2 2 0 0 1-2 2H6.828a2 2 0 0 0-1.414.586l-2.202 2.202A.71.71 0 0 1 2 21.286V5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2zM7 11h10M7 15h6M7 7h8"/></svg>
   
   <span class="md-ellipsis">
     
   
-    Reusable Prompt Templates
+    none
   
 
     
@@ -3054,7 +3052,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../cli/recall/" class="md-nav__link">
+      <a href="../../cli/journal/" class="md-nav__link">
         
   
   
@@ -3063,7 +3061,7 @@
   <span class="md-ellipsis">
     
   
-    Recall and Journal
+    Journal
   
 
     
@@ -4414,7 +4412,7 @@ your working tree: no reinstall needed after edits:</p>
 </span><span id="__span-4-14"><a id="__codelineno-4-14" name="__codelineno-4-14" href="#__codelineno-4-14"></a>│   ├── memory/         # Memory bridge (discover, mirror, import, publish)
 </span><span id="__span-4-15"><a id="__codelineno-4-15" name="__codelineno-4-15" href="#__codelineno-4-15"></a>│   ├── notify/         # Webhook notifications
 </span><span id="__span-4-16"><a id="__codelineno-4-16" name="__codelineno-4-16" href="#__codelineno-4-16"></a>│   ├── rc/             # .ctxrc parsing
-</span><span id="__span-4-17"><a id="__codelineno-4-17" name="__codelineno-4-17" href="#__codelineno-4-17"></a>│   ├── recall/         # Session history and parsers
+</span><span id="__span-4-17"><a id="__codelineno-4-17" name="__codelineno-4-17" href="#__codelineno-4-17"></a>│   ├── journal/        # Session history, parsers, and state
 </span><span id="__span-4-18"><a id="__codelineno-4-18" name="__codelineno-4-18" href="#__codelineno-4-18"></a>│   ├── sysinfo/        # System resource monitoring
 </span><span id="__span-4-19"><a id="__codelineno-4-19" name="__codelineno-4-19" href="#__codelineno-4-19"></a>│   ├── task/           # Task management
 </span><span id="__span-4-20"><a id="__codelineno-4-20" name="__codelineno-4-20" href="#__codelineno-4-20"></a>│   └── validation/     # Input validation
@@ -4505,7 +4503,7 @@ never distributed to users.</p>
 </table>
 <p>Six skills previously in this list have been promoted to bundled plugin skills
 and are now available to all ctx users: <code>/ctx-brainstorm</code>, <code>/ctx-check-links</code>,
-<code>/ctx-sanitize-permissions</code>, <code>/ctx-skill-creator</code>, <code>/ctx-spec</code>, <code>/ctx-verify</code>.</p>
+<code>/ctx-sanitize-permissions</code>, <code>/ctx-skill-creator</code>, <code>/ctx-spec</code>.</p>
 <hr />
 <h2 id="how-to-add-things">How To Add Things<a class="headerlink" href="#how-to-add-things" title="Permanent link">&para;</a></h2>
 <h3 id="adding-a-new-cli-command">Adding a New CLI Command<a class="headerlink" href="#adding-a-new-cli-command" title="Permanent link">&para;</a></h3>
@@ -4520,16 +4518,16 @@ and are now available to all ctx users: <code>/ctx-brainstorm</code>, <code>/ctx
 <p>Pattern to follow: <code>internal/cli/pad/pad.go</code> (parent with subcommands) or
 <code>internal/cli/drift/drift.go</code> (single command).</p>
 <h3 id="adding-a-new-session-parser">Adding a New Session Parser<a class="headerlink" href="#adding-a-new-session-parser" title="Permanent link">&para;</a></h3>
-<p>The recall system uses a <code>SessionParser</code> interface. To add support for a
+<p>The journal system uses a <code>SessionParser</code> interface. To add support for a
 new AI tool (e.g. Aider, Cursor):</p>
 <ol>
-<li>Create <code>internal/recall/parser/&lt;tool&gt;.go</code>;</li>
+<li>Create <code>internal/journal/parser/&lt;tool&gt;.go</code>;</li>
 <li>Implement parsing logic that returns <code>[]*Session</code>;</li>
 <li>Register the parser in <code>FindSessions()</code> / <code>FindSessionsForCWD()</code>;</li>
 <li>Use <code>config.Tool*</code> constants for the tool identifier;</li>
 <li>Add test fixtures and parser tests.</li>
 </ol>
-<p>Pattern to follow: the Claude Code JSONL parser in <code>internal/recall/parser/</code>.</p>
+<p>Pattern to follow: the Claude Code JSONL parser in <code>internal/journal/parser/</code>.</p>
 <div class="admonition note">
 <p class="admonition-title">Multilingual session headers</p>
 <p>The Markdown parser recognizes session header prefixes configured via

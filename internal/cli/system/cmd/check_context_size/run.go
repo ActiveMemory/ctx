@@ -12,21 +12,22 @@ import (
 	"path/filepath"
 	"time"
 
+	"github.com/spf13/cobra"
+
+	"github.com/ActiveMemory/ctx/internal/assets/read/desc"
 	"github.com/ActiveMemory/ctx/internal/cli/system/core/check"
 	"github.com/ActiveMemory/ctx/internal/cli/system/core/counter"
 	"github.com/ActiveMemory/ctx/internal/cli/system/core/log"
 	"github.com/ActiveMemory/ctx/internal/cli/system/core/nudge"
 	coreSession "github.com/ActiveMemory/ctx/internal/cli/system/core/session"
 	"github.com/ActiveMemory/ctx/internal/cli/system/core/state"
-	"github.com/ActiveMemory/ctx/internal/entity"
-	"github.com/spf13/cobra"
-
-	"github.com/ActiveMemory/ctx/internal/assets/read/desc"
 	"github.com/ActiveMemory/ctx/internal/config/dir"
 	"github.com/ActiveMemory/ctx/internal/config/embed/text"
 	"github.com/ActiveMemory/ctx/internal/config/event"
 	"github.com/ActiveMemory/ctx/internal/config/session"
 	"github.com/ActiveMemory/ctx/internal/config/stats"
+	"github.com/ActiveMemory/ctx/internal/entity"
+	"github.com/ActiveMemory/ctx/internal/io"
 	"github.com/ActiveMemory/ctx/internal/rc"
 	writeHook "github.com/ActiveMemory/ctx/internal/write/hook"
 )
@@ -60,7 +61,7 @@ func Run(cmd *cobra.Command, stdin *os.File) error {
 		return nil
 	}
 
-	tmpDir := state.StateDir()
+	tmpDir := state.Dir()
 	counterFile := filepath.Join(tmpDir, stats.ContextSizeCounterPrefix+sessionID)
 	logFile := filepath.Join(rc.ContextDir(), dir.Logs, stats.ContextSizeLogFile)
 
@@ -69,7 +70,7 @@ func Run(cmd *cobra.Command, stdin *os.File) error {
 	counter.Write(counterFile, count)
 
 	// Read actual context window usage from session JSONL
-	info, _ := coreSession.ReadSessionTokenInfo(sessionID)
+	info, _ := coreSession.ReadTokenInfo(sessionID)
 	tokens := info.Tokens
 	windowSize := coreSession.EffectiveContextWindow(info.Model)
 	pct := 0
@@ -81,8 +82,16 @@ func Run(cmd *cobra.Command, stdin *os.File) error {
 	// user-configured billing_token_warn. Independent of all other
 	// triggers - fires even during wrap-up suppression because cost
 	// guards are never convenience nudges.
-	if billingThreshold := rc.BillingTokenWarn(); billingThreshold > 0 && tokens >= billingThreshold {
-		writeHook.NudgeBlock(cmd, nudge.EmitBillingWarning(logFile, sessionID, count, tokens, billingThreshold))
+	billingThreshold := rc.BillingTokenWarn()
+	billingHit := billingThreshold > 0 &&
+		tokens >= billingThreshold
+	if billingHit {
+		writeHook.NudgeBlock(cmd,
+			nudge.EmitBillingWarning(
+				logFile, sessionID,
+				count, tokens, billingThreshold,
+			),
+		)
 	}
 
 	// Wrap-up suppression: if the user recently ran /ctx-wrap-up,
@@ -95,36 +104,47 @@ func Run(cmd *cobra.Command, stdin *os.File) error {
 			fmt.Sprintf(
 				desc.Text(text.DescKeyCheckContextSizeSuppressedLogFormat), count),
 		)
-		coreSession.WriteSessionStats(sessionID, entity.Stats{
+		coreSession.WriteStats(sessionID, entity.Stats{
 			Timestamp:  time.Now().Format(time.RFC3339),
 			Prompt:     count,
 			Tokens:     tokens,
 			Pct:        pct,
 			WindowSize: windowSize,
 			Model:      info.Model,
-			Event:      event.EventSuppressed,
+			Event:      event.Suppressed,
 		})
 		return nil
 	}
 
-	// Adaptive frequency (prompt counter)
-	counterTriggered := false
-	if count > 30 {
-		counterTriggered = count%3 == 0
-	} else if count > 15 {
-		counterTriggered = count%5 == 0
+	// Percentage-based triggers: checkpoint at 60% (one-shot),
+	// warning at 90% (recurring).
+	guardFile := filepath.Join(
+		tmpDir, stats.ContextCheckpointNudgedPrefix+sessionID,
+	)
+	_, guardErr := os.Stat(guardFile)
+	checkpointFired := guardErr == nil
+	trigger := nudge.EvaluateTrigger(pct, checkpointFired)
+
+	if trigger.Checkpoint {
+		io.TouchFile(guardFile)
 	}
 
-	windowTrigger := pct >= stats.ContextWindowThresholdPct
-
-	evt := event.EventSilent
+	evt := trigger.Event
 	switch {
-	case counterTriggered:
-		evt = event.EventCheckpoint
-		writeHook.NudgeBlock(cmd, nudge.EmitCheckpoint(logFile, sessionID, count, tokens, pct, windowSize))
-	case windowTrigger:
-		evt = event.EventWindowWarning
-		writeHook.NudgeBlock(cmd, nudge.EmitWindowWarning(logFile, sessionID, count, tokens, pct))
+	case trigger.Window:
+		writeHook.NudgeBlock(cmd,
+			nudge.EmitWindowWarning(
+				logFile, sessionID,
+				count, tokens, pct,
+			),
+		)
+	case trigger.Checkpoint:
+		writeHook.NudgeBlock(cmd,
+			nudge.EmitCheckpoint(
+				logFile, sessionID,
+				count, tokens, pct, windowSize,
+			),
+		)
 	default:
 		log.Message(logFile, sessionID,
 			fmt.Sprintf(desc.Text(
@@ -132,7 +152,7 @@ func Run(cmd *cobra.Command, stdin *os.File) error {
 		)
 	}
 
-	coreSession.WriteSessionStats(sessionID, entity.Stats{
+	coreSession.WriteStats(sessionID, entity.Stats{
 		Timestamp:  time.Now().Format(time.RFC3339),
 		Prompt:     count,
 		Tokens:     tokens,

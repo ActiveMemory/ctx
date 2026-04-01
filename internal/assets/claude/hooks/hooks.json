@@ -19,7 +19,7 @@
       },
       {
         "matcher": ".*",
-        "hooks": [{"type": "command", "command": "ctx agent --budget 4000 2>/dev/null || true"}]
+        "hooks": [{"type": "command", "command": "ctx agent --budget 8000 2>/dev/null || true"}]
       }
     ],
     "PostToolUse": [
@@ -50,6 +50,7 @@
           {"type": "command", "command": "ctx system check-map-staleness"},
           {"type": "command", "command": "ctx system check-memory-drift"},
           {"type": "command", "command": "ctx system check-freshness"},
+          {"type": "command", "command": "ctx system check-skill-discovery"},
           {"type": "command", "command": "ctx system heartbeat"}
         ]
       }

@@ -100,7 +100,7 @@ ctx loop [flags]
 | Flag                     | Short | Description                              | Default            |
 |--------------------------|-------|------------------------------------------|--------------------|
 | `--tool <tool>`          | `-t`  | AI tool: `claude`, `aider`, or `generic` | `claude`           |
-| `--prompt <file>`        | `-p`  | Prompt file to use                       | `PROMPT.md`        |
+| `--prompt <file>`        | `-p`  | Prompt file to use                       | `.context/loop.md` |
 | `--max-iterations <n>`   | `-n`  | Maximum iterations (0 = unlimited)       | `0`                |
 | `--completion <signal>`  | `-c`  | Completion signal to detect              | `SYSTEM_CONVERGED` |
 | `--output <file>`        | `-o`  | Output script filename                   | `loop.sh`          |
@@ -744,84 +744,6 @@ ctx pad merge notes.md backup.enc
 ctx pad merge --key /path/to/other.key foreign.enc
 ctx pad merge --dry-run pad-a.enc pad-b.md
 ```
-
----
-
-### `ctx prompt`
-
-Manage reusable prompt templates stored in `.context/prompts/`.
-
-Templates are Markdown files that can be applied via the `/ctx-prompt`
-skill or listed and shown from the CLI.
-
-```bash
-ctx prompt <subcommand>
-```
-
-#### `ctx prompt list`
-
-List all available prompt templates.
-
-```bash
-ctx prompt list
-```
-
-**Aliases**: `ls`
-
-#### `ctx prompt show`
-
-Print a prompt template to stdout.
-
-```bash
-ctx prompt show <name>
-```
-
-**Arguments**:
-
-- `name`: Template name (without `.md` extension)
-
-#### `ctx prompt add`
-
-Create a new prompt template. Reads from stdin when `--stdin` is set,
-otherwise creates from the embedded starter template.
-
-```bash
-ctx prompt add <name> [flags]
-```
-
-**Arguments**:
-
-- `name`: Template name (without `.md` extension)
-
-**Flags**:
-
-| Flag      | Description                         |
-|-----------|-------------------------------------|
-| `--stdin` | Read template content from stdin    |
-
-**Examples**:
-
-```bash
-# Create from starter template
-ctx prompt add code-review
-
-# Create from stdin
-echo "Review this PR for security issues" | ctx prompt add security-review --stdin
-```
-
-#### `ctx prompt rm`
-
-Delete a prompt template.
-
-```bash
-ctx prompt rm <name>
-```
-
-**Arguments**:
-
-- `name`: Template name (without `.md` extension)
-
-**See also**: [Prompt Templates](../recipes/prompt-templates.md)
 
 ---
 

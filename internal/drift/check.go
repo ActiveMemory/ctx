@@ -14,6 +14,7 @@ import (
 	"time"
 
 	"github.com/ActiveMemory/ctx/internal/assets/read/desc"
+	readTpl "github.com/ActiveMemory/ctx/internal/assets/read/template"
 	cfgCtx "github.com/ActiveMemory/ctx/internal/config/ctx"
 	"github.com/ActiveMemory/ctx/internal/config/embed/text"
 	"github.com/ActiveMemory/ctx/internal/config/file"
@@ -21,13 +22,16 @@ import (
 	"github.com/ActiveMemory/ctx/internal/config/project"
 	"github.com/ActiveMemory/ctx/internal/config/regex"
 	"github.com/ActiveMemory/ctx/internal/config/token"
+	"github.com/ActiveMemory/ctx/internal/config/warn"
 	"github.com/ActiveMemory/ctx/internal/entity"
 	"github.com/ActiveMemory/ctx/internal/index"
 	"github.com/ActiveMemory/ctx/internal/rc"
 )
 
 // regInternalPkg matches backtick-quoted paths starting with "internal/".
-var regInternalPkg = regexp.MustCompile("`(" + project.DirInternalSlash + "[^`]+)`")
+var regInternalPkg = regexp.MustCompile(
+	token.Backtick + "(" + project.DirInternalSlash + "[^" + token.Backtick + "]+)" + token.Backtick,
+)
 
 // staleAgeExclude lists context files that are expected to be static
 // and should not trigger file-age warnings.
@@ -55,11 +59,15 @@ func checkPathReferences(ctx *entity.Context, report *Report) {
 			for _, m := range matches {
 				path := m[1]
 				// Skip URLs and common non-file patterns
-				if strings.HasPrefix(path, token.PrefixHTTP) || strings.HasPrefix(path, token.PrefixProtocolRelative) {
+				isURL := strings.HasPrefix(path, token.PrefixHTTP) ||
+					strings.HasPrefix(path, token.PrefixProtocolRelative)
+				if isURL {
 					continue
 				}
 				// Skip template patterns
-				if strings.Contains(path, token.TemplateBrace) || strings.Contains(path, token.GlobStar) {
+				isPattern := strings.Contains(path, token.TemplateBrace) ||
+					strings.Contains(path, token.GlobStar)
+				if isPattern {
 					continue
 				}
 				// Skip illustrative examples: bare filenames (no /)
@@ -73,7 +81,7 @@ func checkPathReferences(ctx *entity.Context, report *Report) {
 					continue
 				}
 				// Check if the file exists
-				if _, err := os.Stat(path); os.IsNotExist(err) {
+				if _, statErr := os.Stat(path); os.IsNotExist(statErr) {
 					report.Warnings = append(report.Warnings, Issue{
 						File:    f.Name,
 						Line:    lineNum + 1,
@@ -137,8 +145,18 @@ func checkConstitution(_ *entity.Context, report *Report) {
 	secretPatterns := token.SecretPatterns
 
 	// Look for common secret file patterns in the working directory
-	entries, readErr := os.ReadDir(".")
+	cwd, cwdErr := os.Getwd()
+	if cwdErr != nil {
+		report.Warnings = append(report.Warnings, Issue{
+			Message: fmt.Sprintf(warn.Getwd, cwdErr),
+		})
+		return
+	}
+	entries, readErr := os.ReadDir(cwd)
 	if readErr != nil {
+		report.Warnings = append(report.Warnings, Issue{
+			Message: fmt.Sprintf(warn.Readdir, cwd, readErr),
+		})
 		return
 	}
 
@@ -252,7 +270,8 @@ func checkFileAge(ctx *entity.Context, report *Report) {
 	}
 }
 
-// checkEntryCount warns when LEARNINGS.md or DECISIONS.md have too many entries.
+// checkEntryCount warns when LEARNINGS.md or DECISIONS.md
+// have too many entries.
 //
 // Uses index.ParseEntryBlocks for counting and rc thresholds for limits.
 // A threshold of 0 disables the check for that file.
@@ -323,8 +342,8 @@ func checkMissingPackages(ctx *entity.Context, report *Report) {
 	}
 
 	// Scan actual internal/ subdirectories (one level deep, directories only).
-	entries, err := os.ReadDir(project.DirInternal)
-	if err != nil {
+	entries, readErr := os.ReadDir(project.DirInternal)
+	if readErr != nil {
 		return
 	}
 
@@ -349,5 +368,67 @@ func checkMissingPackages(ctx *entity.Context, report *Report) {
 
 	if !found {
 		report.Passed = append(report.Passed, CheckMissingPackages)
+	}
+}
+
+// extractFirstComment extracts the first HTML comment block from content.
+// Returns an empty string if no comment found.
+//
+// Parameters:
+//   - content: Raw file content to scan for an HTML comment
+//
+// Returns:
+//   - string: Trimmed comment including delimiters,
+//     or empty string if none found
+func extractFirstComment(content string) string {
+	start := strings.Index(content, marker.CommentOpen)
+	if start == -1 {
+		return ""
+	}
+	end := strings.Index(content[start:], marker.CommentClose)
+	if end == -1 {
+		return ""
+	}
+	return strings.TrimSpace(content[start : start+end+len(marker.CommentClose)])
+}
+
+// checkTemplateHeaders compares context file comment headers against
+// the embedded templates. Warns when a file's header is missing or
+// doesn't match the template.
+//
+// Parameters:
+//   - ctx: Loaded context containing files to check
+//   - report: Report to append warnings to (modified in place)
+func checkTemplateHeaders(ctx *entity.Context, report *Report) {
+	found := false
+
+	for _, f := range ctx.Files {
+		tplContent, tplErr := readTpl.Template(f.Name)
+		if tplErr != nil {
+			continue // no template for this file
+		}
+
+		tplComment := extractFirstComment(string(tplContent))
+		if tplComment == "" {
+			continue // template has no comment header
+		}
+
+		liveComment := extractFirstComment(string(f.Content))
+		if liveComment == tplComment {
+			continue
+		}
+
+		report.Warnings = append(report.Warnings, Issue{
+			File: f.Name,
+			Type: IssueStaleHeader,
+			Message: fmt.Sprintf(
+				desc.Text(text.DescKeyDriftStaleHeader), f.Name,
+			),
+		})
+		found = true
+	}
+
+	if !found {
+		report.Passed = append(report.Passed, CheckTemplateHeaders)
 	}
 }

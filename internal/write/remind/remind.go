@@ -9,19 +9,20 @@ package remind
 import (
 	"fmt"
 
+	"github.com/spf13/cobra"
+
 	"github.com/ActiveMemory/ctx/internal/assets/read/desc"
 	"github.com/ActiveMemory/ctx/internal/config/embed/text"
-	"github.com/spf13/cobra"
 )
 
-// ReminderAdded prints the confirmation for a newly added reminder.
+// Added prints the confirmation for a newly added reminder.
 //
 // Parameters:
 //   - cmd: Cobra command for output. Nil is a no-op.
 //   - id: reminder ID.
 //   - message: reminder text.
 //   - after: optional date gate (nil if none).
-func ReminderAdded(cmd *cobra.Command, id int, message string, after *string) {
+func Added(cmd *cobra.Command, id int, message string, after *string) {
 	if cmd == nil {
 		return
 	}
@@ -29,10 +30,12 @@ func ReminderAdded(cmd *cobra.Command, id int, message string, after *string) {
 	if after != nil {
 		suffix = fmt.Sprintf(desc.Text(text.DescKeyWriteReminderAfterSuffix), *after)
 	}
-	cmd.Println(fmt.Sprintf(desc.Text(text.DescKeyWriteReminderAdded), id, message, suffix))
+	cmd.Println(fmt.Sprintf(
+		desc.Text(text.DescKeyWriteReminderAdded),
+		id, message, suffix))
 }
 
-// ReminderItem prints a single reminder in the list.
+// Item prints a single reminder in the list.
 //
 // Parameters:
 //   - cmd: Cobra command for output. Nil is a no-op.
@@ -40,7 +43,13 @@ func ReminderAdded(cmd *cobra.Command, id int, message string, after *string) {
 //   - message: reminder text.
 //   - after: optional date gate (nil if none).
 //   - today: current date in YYYY-MM-DD format.
-func ReminderItem(cmd *cobra.Command, id int, message string, after *string, today string) {
+func Item(
+	cmd *cobra.Command,
+	id int,
+	message string,
+	after *string,
+	today string,
+) {
 	if cmd == nil {
 		return
 	}
@@ -48,41 +57,47 @@ func ReminderItem(cmd *cobra.Command, id int, message string, after *string, tod
 	if after != nil && *after > today {
 		annotation = fmt.Sprintf(desc.Text(text.DescKeyWriteReminderNotDue), *after)
 	}
-	cmd.Println(fmt.Sprintf(desc.Text(text.DescKeyWriteReminderItem), id, message, annotation))
+	cmd.Println(fmt.Sprintf(
+		desc.Text(text.DescKeyWriteReminderItem),
+		id, message, annotation))
 }
 
-// ReminderDismissed prints the confirmation for a dismissed reminder.
+// Dismissed prints the confirmation for a dismissed reminder.
 //
 // Parameters:
 //   - cmd: Cobra command for output. Nil is a no-op.
 //   - id: reminder ID.
 //   - message: reminder text.
-func ReminderDismissed(cmd *cobra.Command, id int, message string) {
+func Dismissed(cmd *cobra.Command, id int, message string) {
 	if cmd == nil {
 		return
 	}
-	cmd.Println(fmt.Sprintf(desc.Text(text.DescKeyWriteReminderDismissed), id, message))
+	cmd.Println(fmt.Sprintf(
+		desc.Text(text.DescKeyWriteReminderDismissed),
+		id, message))
 }
 
-// ReminderNone prints the message when there are no reminders.
+// None prints the message when there are no reminders.
 //
 // Parameters:
 //   - cmd: Cobra command for output. Nil is a no-op.
-func ReminderNone(cmd *cobra.Command) {
+func None(cmd *cobra.Command) {
 	if cmd == nil {
 		return
 	}
 	cmd.Println(desc.Text(text.DescKeyWriteReminderNone))
 }
 
-// ReminderDismissedAll prints the summary after dismissing all reminders.
+// DismissedAll prints the summary after dismissing all reminders.
 //
 // Parameters:
 //   - cmd: Cobra command for output. Nil is a no-op.
 //   - count: number of dismissed reminders.
-func ReminderDismissedAll(cmd *cobra.Command, count int) {
+func DismissedAll(cmd *cobra.Command, count int) {
 	if cmd == nil {
 		return
 	}
-	cmd.Println(fmt.Sprintf(desc.Text(text.DescKeyWriteReminderDismissedAll), count))
+	cmd.Println(fmt.Sprintf(
+		desc.Text(text.DescKeyWriteReminderDismissedAll),
+		count))
 }

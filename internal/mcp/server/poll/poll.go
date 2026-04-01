@@ -9,7 +9,6 @@ package poll
 import (
 	"os"
 	"path/filepath"
-	"sync"
 	"time"
 
 	"github.com/ActiveMemory/ctx/internal/config/mcp/notify"
@@ -22,29 +21,18 @@ import (
 // polling.
 const defaultPollInterval = 5 * time.Second
 
-// ResourcePoller tracks subscribed resources and polls for file
-// changes.
-type ResourcePoller struct {
-	mu         sync.Mutex
-	subs       map[string]bool      // URI → subscribed
-	mtimes     map[string]time.Time // file path → last known mtime
-	contextDir string
-	pollStop   chan struct{}
-	notifyFunc func(proto.Notification) // callback to emit notifications
-}
-
-// NewResourcePoller creates a poller for the given context directory.
+// NewPoller creates a poller for the given context directory.
 //
 // Parameters:
 //   - contextDir: path to the .context/ directory
 //   - notifyFn: callback to emit resource change notifications
 //
 // Returns:
-//   - *ResourcePoller: initialized poller (not yet polling)
-func NewResourcePoller(
+//   - *Poller: initialized poller (not yet polling)
+func NewPoller(
 	contextDir string, notifyFn func(proto.Notification),
-) *ResourcePoller {
-	return &ResourcePoller{
+) *Poller {
+	return &Poller{
 		subs:       make(map[string]bool),
 		mtimes:     make(map[string]time.Time),
 		contextDir: contextDir,
@@ -60,7 +48,7 @@ func NewResourcePoller(
 //
 // Parameters:
 //   - uri: resource URI to watch for changes
-func (p *ResourcePoller) Subscribe(uri string) {
+func (p *Poller) Subscribe(uri string) {
 	p.mu.Lock()
 	defer p.mu.Unlock()
 
@@ -68,9 +56,9 @@ func (p *ResourcePoller) Subscribe(uri string) {
 
 	// Snapshot current mtime for the resource's file.
 	if fileName := catalog.FileForURI(uri); fileName != "" {
-		fpath := filepath.Join(p.contextDir, fileName)
-		if info, statErr := os.Stat(fpath); statErr == nil {
-			p.mtimes[fpath] = info.ModTime()
+		fPath := filepath.Join(p.contextDir, fileName)
+		if info, statErr := os.Stat(fPath); statErr == nil {
+			p.mtimes[fPath] = info.ModTime()
 		}
 	}
 
@@ -86,7 +74,7 @@ func (p *ResourcePoller) Subscribe(uri string) {
 //
 // Parameters:
 //   - uri: resource URI to stop watching
-func (p *ResourcePoller) Unsubscribe(uri string) {
+func (p *Poller) Unsubscribe(uri string) {
 	p.mu.Lock()
 	defer p.mu.Unlock()
 
@@ -99,7 +87,7 @@ func (p *ResourcePoller) Unsubscribe(uri string) {
 }
 
 // Stop shuts down the poller goroutine.
-func (p *ResourcePoller) Stop() {
+func (p *Poller) Stop() {
 	p.mu.Lock()
 	defer p.mu.Unlock()
 
@@ -111,7 +99,7 @@ func (p *ResourcePoller) Stop() {
 
 // poll checks subscribed resources for mtime changes on a fixed
 // interval.
-func (p *ResourcePoller) poll() {
+func (p *Poller) poll() {
 	ticker := time.NewTicker(defaultPollInterval)
 	defer ticker.Stop()
 
@@ -130,14 +118,14 @@ func (p *ResourcePoller) poll() {
 //
 // Parameters:
 //   - fn: replacement notification callback
-func (p *ResourcePoller) SetNotifyFunc(fn func(proto.Notification)) {
+func (p *Poller) SetNotifyFunc(fn func(proto.Notification)) {
 	p.notifyFunc = fn
 }
 
 // CheckChanges compares current mtimes to snapshots and emits
 // notifications. Exported for tests that need to trigger a poll
 // cycle without waiting for the timer.
-func (p *ResourcePoller) CheckChanges() {
+func (p *Poller) CheckChanges() {
 	p.mu.Lock()
 	uris := make([]string, 0, len(p.subs))
 	for uri := range p.subs {
@@ -150,16 +138,17 @@ func (p *ResourcePoller) CheckChanges() {
 		if fileName == "" {
 			continue
 		}
-		fpath := filepath.Join(p.contextDir, fileName)
-		info, statErr := os.Stat(fpath)
+
+		fPath := filepath.Join(p.contextDir, fileName)
+		info, statErr := os.Stat(fPath)
 		if statErr != nil {
 			continue
 		}
 
 		p.mu.Lock()
-		prev, known := p.mtimes[fpath]
+		prev, known := p.mtimes[fPath]
 		if known && info.ModTime().After(prev) {
-			p.mtimes[fpath] = info.ModTime()
+			p.mtimes[fPath] = info.ModTime()
 			p.mu.Unlock()
 			p.notifyFunc(proto.Notification{
 				JSONRPC: server.JSONRPCVersion,
@@ -168,7 +157,7 @@ func (p *ResourcePoller) CheckChanges() {
 			})
 		} else {
 			if !known {
-				p.mtimes[fpath] = info.ModTime()
+				p.mtimes[fPath] = info.ModTime()
 			}
 			p.mu.Unlock()
 		}

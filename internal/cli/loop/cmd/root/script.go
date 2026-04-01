@@ -38,12 +38,11 @@ func GenerateLoopScript(
 	var aiCommand string
 	switch tool {
 	case cfgLoop.DefaultTool:
-		aiCommand = fmt.Sprintf(`claude --print "$(cat %s)"`, absPrompt)
+		aiCommand = fmt.Sprintf(tpl.LoopCmdClaude, absPrompt)
 	case cfgLoop.ToolAider:
-		aiCommand = fmt.Sprintf(`aider --message-file %s`, absPrompt)
+		aiCommand = fmt.Sprintf(tpl.LoopCmdAider, absPrompt)
 	case cfgLoop.ToolGeneric:
-		aiCommand = fmt.Sprintf(`# Replace with your AI CLI command
-    cat %s | your-ai-cli`, absPrompt)
+		aiCommand = fmt.Sprintf(tpl.LoopCmdGeneric, absPrompt)
 	}
 
 	maxIterCheck := ""

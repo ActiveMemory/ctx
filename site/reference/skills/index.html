@@ -2441,16 +2441,14 @@
   
   
     <li class="md-nav__item">
-      <a href="../../recipes/prompt-templates/" class="md-nav__link">
+      <a href="../../recipes/prompt-templates.md" class="md-nav__link">
         
   
-  
-    <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-message-square-text" viewBox="0 0 24 24"><path d="M22 17a2 2 0 0 1-2 2H6.828a2 2 0 0 0-1.414.586l-2.202 2.202A.71.71 0 0 1 2 21.286V5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2zM7 11h10M7 15h6M7 7h8"/></svg>
   
   <span class="md-ellipsis">
     
   
-    Reusable Prompt Templates
+    none
   
 
     
@@ -2631,7 +2629,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../cli/recall/" class="md-nav__link">
+      <a href="../../cli/journal/" class="md-nav__link">
         
   
   
@@ -2640,7 +2638,7 @@
   <span class="md-ellipsis">
     
   
-    Recall and Journal
+    Journal
   
 
     
@@ -3223,10 +3221,10 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#ctx-recall" class="md-nav__link">
+  <a href="#ctx-history" class="md-nav__link">
     <span class="md-ellipsis">
       
-        /ctx-recall
+        /ctx-history
       
     </span>
   </a>
@@ -3249,17 +3247,6 @@
     <span class="md-ellipsis">
       
         /ctx-journal-enrich-all
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#ctx-journal-normalize" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        /ctx-journal-normalize
       
     </span>
   </a>
@@ -3345,17 +3332,6 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#ctx-prompt" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        /ctx-prompt
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
   <a href="#ctx-prompt-audit" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -3393,17 +3369,6 @@
     <span class="md-ellipsis">
       
         /ctx-sanitize-permissions
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#ctx-verify" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        /ctx-verify
       
     </span>
   </a>
@@ -4375,10 +4340,10 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#ctx-recall" class="md-nav__link">
+  <a href="#ctx-history" class="md-nav__link">
     <span class="md-ellipsis">
       
-        /ctx-recall
+        /ctx-history
       
     </span>
   </a>
@@ -4401,17 +4366,6 @@
     <span class="md-ellipsis">
       
         /ctx-journal-enrich-all
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#ctx-journal-normalize" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        /ctx-journal-normalize
       
     </span>
   </a>
@@ -4497,17 +4451,6 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#ctx-prompt" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        /ctx-prompt
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
   <a href="#ctx-prompt-audit" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -4545,17 +4488,6 @@
     <span class="md-ellipsis">
       
         /ctx-sanitize-permissions
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#ctx-verify" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        /ctx-verify
       
     </span>
   </a>
@@ -4926,8 +4858,8 @@ to invoke the relevant skills directly.</p>
 <td>user-invocable</td>
 </tr>
 <tr>
-<td><a href="#ctx-recall"><code>/ctx-recall</code></a></td>
-<td>Browse and export AI session history</td>
+<td><a href="#ctx-history"><code>/ctx-history</code></a></td>
+<td>Browse and import AI session history</td>
 <td>user-invocable</td>
 </tr>
 <tr>
@@ -4938,11 +4870,6 @@ to invoke the relevant skills directly.</p>
 <tr>
 <td><a href="#ctx-journal-enrich-all"><code>/ctx-journal-enrich-all</code></a></td>
 <td>Full journal pipeline: export if needed, then batch-enrich</td>
-<td>user-invocable</td>
-</tr>
-<tr>
-<td><a href="#ctx-journal-normalize"><code>/ctx-journal-normalize</code></a></td>
-<td>Normalize journal markdown for clean rendering</td>
 <td>user-invocable</td>
 </tr>
 <tr>
@@ -4983,11 +4910,6 @@ to invoke the relevant skills directly.</p>
 <tr>
 <td><a href="#ctx-sanitize-permissions"><code>/ctx-sanitize-permissions</code></a></td>
 <td>Audit Claude Code permissions for security risks</td>
-<td>user-invocable</td>
-</tr>
-<tr>
-<td><a href="#ctx-verify"><code>/ctx-verify</code></a></td>
-<td>Verify claims before reporting completion</td>
 <td>user-invocable</td>
 </tr>
 <tr>
@@ -5070,7 +4992,7 @@ for completeness. See <a href="../../recipes/session-ceremonies/">Session Ceremo
 <h3 id="ctx-remember"><code>/ctx-remember</code><a class="headerlink" href="#ctx-remember" title="Permanent link">&para;</a></h3>
 <p>Recall project context and present a structured readback.
 <strong>Ceremony skill</strong>: invoke explicitly at session start.</p>
-<p><strong>Wraps</strong>: <code>ctx agent --budget 4000</code>, <code>ctx recall list --limit 3</code>,
+<p><strong>Wraps</strong>: <code>ctx agent --budget 4000</code>, <code>ctx journal source --limit 3</code>,
 reads TASKS.md, DECISIONS.md, LEARNINGS.md</p>
 <p><strong>See also</strong>: <a href="../../recipes/session-ceremonies/">Session Ceremonies</a>,
 <a href="../../recipes/session-lifecycle/">The Complete Session</a></p>
@@ -5092,7 +5014,7 @@ Also runs automatically via the PreToolUse hook with cooldown.</p>
 <h3 id="ctx-next"><code>/ctx-next</code><a class="headerlink" href="#ctx-next" title="Permanent link">&para;</a></h3>
 <p>Suggest 1-3 concrete next actions ranked by priority, momentum,
 and unblocked status.</p>
-<p><strong>Wraps</strong>: reads TASKS.md, <code>ctx recall list --limit 3</code></p>
+<p><strong>Wraps</strong>: reads TASKS.md, <code>ctx journal source --limit 3</code></p>
 <p><strong>See also</strong>: <a href="../../recipes/session-lifecycle/">The Complete Session</a>,
 <a href="../../recipes/task-management/">Tracking Work Across Sessions</a></p>
 <hr />
@@ -5175,10 +5097,10 @@ one-liner notes. Encrypted at rest with AES-256-GCM.</p>
 <h2 id="journal-history">Journal &amp; History<a class="headerlink" href="#journal-history" title="Permanent link">&para;</a></h2>
 <p>Skills for browsing, exporting, and enriching your AI session history
 into a structured journal.</p>
-<h3 id="ctx-recall"><code>/ctx-recall</code><a class="headerlink" href="#ctx-recall" title="Permanent link">&para;</a></h3>
-<p>Browse, inspect, and export AI session history. List recent sessions,
-show details by slug or ID, and export to <code>.context/journal/</code>.</p>
-<p><strong>Wraps</strong>: <code>ctx recall list</code>, <code>ctx recall show</code>, <code>ctx recall export</code></p>
+<h3 id="ctx-history"><code>/ctx-history</code><a class="headerlink" href="#ctx-history" title="Permanent link">&para;</a></h3>
+<p>Browse, inspect, and import AI session history. List recent sessions,
+show details by slug or ID, and import to <code>.context/journal/</code>.</p>
+<p><strong>Wraps</strong>: <code>ctx journal source</code>, <code>ctx journal source --show</code>, <code>ctx journal import</code></p>
 <p><strong>See also</strong>:
 <a href="../../recipes/session-archaeology/">Browsing and Enriching Past Sessions</a></p>
 <hr />
@@ -5191,20 +5113,12 @@ outcome, topics, technologies, and summary. Shows diff before writing.</p>
 <a href="../../recipes/publishing/">Turning Activity into Content</a></p>
 <hr />
 <h3 id="ctx-journal-enrich-all"><code>/ctx-journal-enrich-all</code><a class="headerlink" href="#ctx-journal-enrich-all" title="Permanent link">&para;</a></h3>
-<p>Full journal pipeline: exports unexported sessions first, then
+<p>Full journal pipeline: imports unimported sessions first, then
 batch-enriches all unenriched entries. Filters out short sessions
 and continuations. Can spawn subagents for large backlogs.</p>
-<p><strong>Wraps</strong>: <code>ctx recall export --all</code> + iterates <code>/ctx-journal-enrich</code></p>
+<p><strong>Wraps</strong>: <code>ctx journal import --all</code> + iterates <code>/ctx-journal-enrich</code></p>
 <p><strong>See also</strong>:
 <a href="../../recipes/session-archaeology/">Browsing and Enriching Past Sessions</a></p>
-<hr />
-<h3 id="ctx-journal-normalize"><code>/ctx-journal-normalize</code><a class="headerlink" href="#ctx-journal-normalize" title="Permanent link">&para;</a></h3>
-<p>Normalize journal markdown for clean rendering: fix fence nesting,
-metadata formatting, list indentation, and collapse large tool outputs.</p>
-<p><strong>Wraps</strong>: reads and edits <code>.context/journal/*.md</code> files</p>
-<p><strong>See also</strong>:
-<a href="../../recipes/session-archaeology/">Browsing and Enriching Past Sessions</a>,
-<a href="../../recipes/publishing/">Turning Activity into Content</a></p>
 <hr />
 <h2 id="content-creation">Content Creation<a class="headerlink" href="#content-creation" title="Permanent link">&para;</a></h2>
 <p>Skills for turning project activity into publishable content.</p>
@@ -5244,16 +5158,6 @@ templates.</p>
 <p><strong>Wraps</strong>: <code>ctx drift [--fix]</code></p>
 <p><strong>See also</strong>:
 <a href="../../recipes/context-health/">Detecting and Fixing Drift</a></p>
-<hr />
-<h3 id="ctx-prompt"><code>/ctx-prompt</code><a class="headerlink" href="#ctx-prompt" title="Permanent link">&para;</a></h3>
-<p>Apply, list, and manage saved prompt templates from <code>.context/prompts/</code>.
-Prompt templates are plain Markdown files for common patterns like code
-review, refactoring, or explaining code.</p>
-<p><strong>Wraps</strong>: <code>ctx prompt list</code>, <code>ctx prompt show</code>, <code>ctx prompt apply</code>,
-<code>ctx prompt create</code></p>
-<p><strong>Trigger phrases</strong>: "use the code-review prompt", "list my prompts",
-"apply the refactor template", "create a prompt template"</p>
-<p><strong>See also</strong>: <a href="../../recipes/prompt-templates/">Prompt Templates</a></p>
 <hr />
 <h3 id="ctx-prompt-audit"><code>/ctx-prompt-audit</code><a class="headerlink" href="#ctx-prompt-audit" title="Permanent link">&para;</a></h3>
 <p>Analyze recent prompting patterns to identify vague or ineffective
@@ -5302,18 +5206,6 @@ with user confirmation.</p>
 "sanitize permissions", "check settings"</p>
 <p><strong>See also</strong>:
 <a href="../../recipes/claude-code-permissions/">Claude Code Permission Hygiene</a></p>
-<hr />
-<h3 id="ctx-verify"><code>/ctx-verify</code><a class="headerlink" href="#ctx-verify" title="Permanent link">&para;</a></h3>
-<p>Run the relevant verification command before claiming a result. Maps
-claims to required evidence (<em>"tests pass" needs test output, "build
-succeeds" needs exit 0</em>) and includes self-audit questions to surface
-gaps before reporting done.</p>
-<p><strong>Wraps</strong>: runs the verification command appropriate to the claim
-(<code>go test</code>, <code>make audit</code>, <code>go build</code>, <code>diff</code>, etc.)</p>
-<p><strong>Trigger phrases</strong>: "verify this", "does it work?", "prove it passes",
-"is it done?"</p>
-<p><strong>See also</strong>:
-<a href="../../recipes/context-health/">Detecting and Fixing Drift</a></p>
 <hr />
 <h2 id="planning-execution">Planning &amp; Execution<a class="headerlink" href="#planning-execution" title="Permanent link">&para;</a></h2>
 <p>Skills for structured design, implementation, and parallel agent

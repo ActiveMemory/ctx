@@ -40,29 +40,35 @@ func DeployTemplates(
 	read func(string) ([]byte, error),
 ) error {
 	targetDir := filepath.Join(contextDir, p.SubDir)
-	if err := os.MkdirAll(targetDir, fs.PermExec); err != nil {
-		return errFs.Mkdir(targetDir, err)
+	if mkdirErr := os.MkdirAll(targetDir, fs.PermExec); mkdirErr != nil {
+		return errFs.Mkdir(targetDir, mkdirErr)
 	}
+
 	names, listErr := list()
 	if listErr != nil {
 		return fmt.Errorf(desc.Text(p.ListErrKey), listErr)
 	}
+
 	for _, name := range names {
 		targetPath := filepath.Join(targetDir, name)
-		if _, err := os.Stat(targetPath); err == nil && !force {
+		if _, statErr := os.Stat(targetPath); statErr == nil && !force {
 			initialize.Skipped(cmd, filepath.Join(p.SubDir, name))
 			continue
 		}
+
 		content, readErr := read(name)
 		if readErr != nil {
 			return fmt.Errorf(desc.Text(p.ReadErrKey), name, readErr)
 		}
+
 		if writeErr := os.WriteFile(
 			targetPath, content, fs.PermFile,
 		); writeErr != nil {
 			return errFs.FileWrite(targetPath, writeErr)
 		}
+
 		initialize.Created(cmd, filepath.Join(p.SubDir, name))
 	}
+
 	return nil
 }

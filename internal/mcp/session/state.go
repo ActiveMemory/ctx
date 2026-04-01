@@ -8,40 +8,13 @@ package session
 
 import "time"
 
-// State tracks per-context-dir advisory state.
-//
-// Session state is keyed by contextDir on the Server struct. It tracks
-// tool call counts, entry additions, and pending context updates that
-// need human review before persisting.
-//
-// Thread-safety: State is only accessed from the main request
-// loop (single goroutine). If future work introduces concurrent access,
-// a mutex should be added here.
-type State struct {
-	contextDir       string
-	ToolCalls        int
-	AddsPerformed    map[string]int
-	sessionStartedAt time.Time
-	PendingFlush     []PendingUpdate
-
-	// Governance tracking — used by CheckGovernance() to emit
-	// contextual warnings in MCP tool responses.
-	sessionStarted   bool
-	contextLoaded    bool
-	lastDriftCheck   time.Time
-	lastContextWrite time.Time
-	callsSinceWrite  int
-}
-
-// PendingUpdate represents a context update awaiting human confirmation.
-type PendingUpdate struct {
-	Type     string
-	Content  string
-	Attrs    map[string]string
-	QueuedAt time.Time
-}
-
 // NewState creates a new session state for the given context directory.
+//
+// Parameters:
+//   - contextDir: Path to the project context directory
+//
+// Returns:
+//   - *State: Initialized session state with empty counters
 func NewState(contextDir string) *State {
 	return &State{
 		contextDir:       contextDir,

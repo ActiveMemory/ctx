@@ -6,6 +6,7 @@
 
 // Package importer implements the ctx memory import subcommand.
 //
-// It classifies and promotes MEMORY.md entries into structured
-// .context/ files using heuristic keyword matching.
+// Key exports: [Cmd], [Run].
+// Follows the cmd/root + core taxonomy.
+// Registered by the cmd parent command.
 package importer

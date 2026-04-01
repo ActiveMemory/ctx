@@ -113,10 +113,10 @@ context files honest the same way tests keep your code honest.
 
 ## The Verification Loop
 
-The `/ctx-verify` skill provides an end-to-end check: it reads all
-context files, cross-references them with the current codebase, and
-reports inconsistencies. Think of it as a health check for your
-project's memory.
+The `/ctx-commit` skill includes a built-in verification step: before
+staging, it maps claims to evidence and runs self-audit questions to
+surface gaps. This catches inconsistencies at the point where they
+matter most — right before code is committed.
 
 This closes the loop. You write context. The AI reads context. The
 verification step confirms that context still matches reality. When

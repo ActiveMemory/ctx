@@ -76,7 +76,9 @@ func TestInitMergeInsertsAfterH1(t *testing.T) {
 	}
 	defer func() { _ = os.Chdir(origDir) }()
 
-	existingContent := "# My Amazing Project\n\nThis is the project description.\n\n## Build Instructions\n\nRun make build.\n"
+	existingContent := "# My Amazing Project\n\n" +
+		"This is the project description.\n\n" +
+		"## Build Instructions\n\nRun make build.\n"
 	if err = os.WriteFile("CLAUDE.md", []byte(existingContent), 0600); err != nil {
 		t.Fatalf("failed to create CLAUDE.md: %v", err)
 	}
@@ -125,7 +127,8 @@ func TestInitMergeInsertsAtTopWhenNoH1(t *testing.T) {
 	}
 	defer func() { _ = os.Chdir(origDir) }()
 
-	existingContent := "## Build Instructions\n\nRun make build.\n\n## Testing\n\nRun make test.\n"
+	existingContent := "## Build Instructions\n\nRun make build.\n\n" +
+		"## Testing\n\nRun make test.\n"
 	if err = os.WriteFile("CLAUDE.md", []byte(existingContent), 0600); err != nil {
 		t.Fatalf("failed to create CLAUDE.md: %v", err)
 	}
@@ -192,7 +195,10 @@ func TestInitCreatesPermissions(t *testing.T) {
 	for _, p := range settings.Permissions.Allow {
 		permSet[p] = true
 	}
-	requiredPerms := []string{"Bash(ctx:*)", "Skill(ctx-agent)", "Skill(ctx-add-learning)"}
+	requiredPerms := []string{
+		"Bash(ctx:*)", "Skill(ctx-agent)",
+		"Skill(ctx-add-learning)",
+	}
 	for _, p := range requiredPerms {
 		if !permSet[p] {
 			t.Errorf("missing required permission: %s", p)
@@ -235,7 +241,8 @@ func TestInitMergesPermissions(t *testing.T) {
 		},
 	}
 	existingJSON, _ := json.MarshalIndent(existingSettings, "", "  ")
-	if err = os.WriteFile(".claude/settings.local.json", existingJSON, 0600); err != nil {
+	settingsPath := ".claude/settings.local.json"
+	if err = os.WriteFile(settingsPath, existingJSON, 0600); err != nil {
 		t.Fatalf("failed to write settings: %v", err)
 	}
 
@@ -291,7 +298,11 @@ func TestInitWithExistingClaudeMdWithCtxMarker(t *testing.T) {
 	}
 	defer func() { _ = os.Chdir(origDir) }()
 
-	existingContent := "# My Project\n\nThis is my existing CLAUDE.md content.\n\n<!-- ctx:context -->\nOld ctx content here\n<!-- ctx:end -->\n\n## Custom Section\n\nSome custom content here.\n"
+	existingContent := "# My Project\n\n" +
+		"This is my existing CLAUDE.md content.\n\n" +
+		"<!-- ctx:context -->\nOld ctx content here\n" +
+		"<!-- ctx:end -->\n\n## Custom Section\n\n" +
+		"Some custom content here.\n"
 	if err = os.WriteFile("CLAUDE.md", []byte(existingContent), 0600); err != nil {
 		t.Fatalf("failed to create CLAUDE.md: %v", err)
 	}
@@ -322,7 +333,7 @@ func TestCmd_Flags(t *testing.T) {
 	if cmd.Use != "init" {
 		t.Errorf("Cmd().Use = %q, want %q", cmd.Use, "init")
 	}
-	flags := []string{"force", "minimal", "merge", "ralph"}
+	flags := []string{"force", "minimal", "merge"}
 	for _, f := range flags {
 		if cmd.Flags().Lookup(f) == nil {
 			t.Errorf("missing --%s flag", f)
@@ -417,7 +428,8 @@ func TestRunInit_Merge(t *testing.T) {
 	t.Setenv("HOME", tmpDir)
 	t.Setenv(env.SkipPathCheck, env.True)
 
-	if err = os.WriteFile(cfgClaude.Md, []byte("# My Project\n\nExisting.\n"), 0600); err != nil {
+	mdContent := "# My Project\n\nExisting.\n"
+	if err = os.WriteFile(cfgClaude.Md, []byte(mdContent), 0600); err != nil {
 		t.Fatal(err)
 	}
 

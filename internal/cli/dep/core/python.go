@@ -8,12 +8,16 @@ package core
 
 import (
 	"bufio"
+	"fmt"
 	"os"
 	"sort"
 	"strings"
 
+	cfgDep "github.com/ActiveMemory/ctx/internal/config/dep"
 	"github.com/ActiveMemory/ctx/internal/config/token"
+	"github.com/ActiveMemory/ctx/internal/config/warn"
 	"github.com/ActiveMemory/ctx/internal/io"
+	ctxLog "github.com/ActiveMemory/ctx/internal/log/warn"
 )
 
 // PythonEcosystem is the ecosystem label for Python projects.
@@ -27,7 +31,9 @@ func (p *PythonBuilder) Name() string { return PythonEcosystem }
 
 // Detect returns true if requirements.txt or pyproject.toml exists.
 func (p *PythonBuilder) Detect() bool {
-	for _, manifest := range []string{"requirements.txt", "pyproject.toml"} {
+	for _, manifest := range []string{
+		cfgDep.FileRequirements, cfgDep.FilePyproject,
+	} {
 		if _, err := os.Stat(manifest); err == nil {
 			return true
 		}
@@ -47,7 +53,7 @@ func (p *PythonBuilder) Build(external bool) (map[string][]string, error) {
 	// Python builder always shows external deps - there's no internal
 	// package graph without import tracing. The external flag controls
 	// whether we include dev dependencies from pyproject.toml.
-	if _, statErr := os.Stat("pyproject.toml"); statErr == nil {
+	if _, statErr := os.Stat(cfgDep.FilePyproject); statErr == nil {
 		return BuildPyprojectGraph(external)
 	}
 	return BuildRequirementsGraph()
@@ -59,7 +65,7 @@ func (p *PythonBuilder) Build(external bool) (map[string][]string, error) {
 //   - map[string][]string: Dependency graph with "project" key
 //   - error: Non-nil if requirements.txt cannot be read
 func BuildRequirementsGraph() (map[string][]string, error) {
-	deps, parseErr := ParseRequirementsTxt("requirements.txt")
+	deps, parseErr := ParseRequirementsTxt(cfgDep.FileRequirements)
 	if parseErr != nil {
 		return nil, parseErr
 	}
@@ -67,7 +73,7 @@ func BuildRequirementsGraph() (map[string][]string, error) {
 	graph := make(map[string][]string)
 	if len(deps) > 0 {
 		sort.Strings(deps)
-		graph["project"] = deps
+		graph[cfgDep.PyGraphRoot] = deps
 	}
 	return graph, nil
 }
@@ -86,17 +92,21 @@ func ParseRequirementsTxt(path string) ([]string, error) {
 	if openErr != nil {
 		return nil, openErr
 	}
-	defer func() { _ = f.Close() }()
+	defer func() {
+		if closeErr := f.Close(); closeErr != nil {
+			ctxLog.Warn(warn.Close, path, closeErr)
+		}
+	}()
 
 	var deps []string
 	scanner := bufio.NewScanner(f)
 	for scanner.Scan() {
 		line := strings.TrimSpace(scanner.Text())
-		if line == "" || strings.HasPrefix(line, "#") {
+		if line == "" || strings.HasPrefix(line, token.PrefixComment) {
 			continue
 		}
 		// Skip options like -r, -e, --index-url, etc.
-		if strings.HasPrefix(line, "-") {
+		if strings.HasPrefix(line, cfgDep.TomlOptionPrefix) {
 			continue
 		}
 		// Extract package name before any version specifier.
@@ -121,22 +131,18 @@ func ParseRequirementsTxt(path string) ([]string, error) {
 //   - string: Lowercase package name
 func ExtractPythonPkgName(line string) string {
 	// Strip inline comments.
-	if idx := strings.Index(line, " #"); idx >= 0 {
+	if idx := strings.Index(line, cfgDep.TomlComment); idx >= 0 {
 		line = line[:idx]
 	}
 	// Strip environment markers.
-	if idx := strings.Index(line, ";"); idx >= 0 {
+	if idx := strings.Index(line, cfgDep.TomlSemicolon); idx >= 0 {
 		line = line[:idx]
 	}
 	line = strings.TrimSpace(line)
 
 	// Find first version specifier character.
-	for i, ch := range line {
-		switch ch {
-		case '>', '<', '=', '!', '~', '[':
-			name := strings.TrimSpace(line[:i])
-			return strings.ToLower(name)
-		}
+	if idx := strings.IndexAny(line, cfgDep.PyVersionSpecChars); idx >= 0 {
+		return strings.ToLower(strings.TrimSpace(line[:idx]))
 	}
 	return strings.ToLower(strings.TrimSpace(line))
 }
@@ -151,17 +157,17 @@ func ExtractPythonPkgName(line string) string {
 //   - map[string][]string: Dependency graph with "project" key
 //   - error: Non-nil if pyproject.toml cannot be read
 func BuildPyprojectGraph(includeDevDeps bool) (map[string][]string, error) {
-	data, readErr := os.ReadFile("pyproject.toml")
+	data, readErr := os.ReadFile(cfgDep.FilePyproject)
 	if readErr != nil {
 		return nil, readErr
 	}
 
 	content := string(data)
-	deps := ParsePyprojectDeps(content, "dependencies")
+	deps := ParsePyprojectDeps(content, cfgDep.PyDeps)
 
 	if includeDevDeps {
-		devDeps := ParsePyprojectDeps(content, "dev-dependencies")
-		devDeps = append(devDeps, ParsePyprojectDeps(content, "dev")...)
+		devDeps := ParsePyprojectDeps(content, cfgDep.PyDevDeps)
+		devDeps = append(devDeps, ParsePyprojectDeps(content, cfgDep.PyDev)...)
 		deps = append(deps, devDeps...)
 	}
 
@@ -178,7 +184,7 @@ func BuildPyprojectGraph(includeDevDeps bool) (map[string][]string, error) {
 	graph := make(map[string][]string)
 	if len(unique) > 0 {
 		sort.Strings(unique)
-		graph["project"] = unique
+		graph[cfgDep.PyGraphRoot] = unique
 	}
 	return graph, nil
 }
@@ -199,15 +205,15 @@ func ParsePyprojectDeps(content string, sectionSuffix string) []string {
 	inArray := false
 
 	targets := []string{
-		"[project." + sectionSuffix + "]",
-		"[tool.poetry." + sectionSuffix + "]",
+		fmt.Sprintf(cfgDep.TomlSectionFmt, cfgDep.TomlProjectPrefix, sectionSuffix),
+		fmt.Sprintf(cfgDep.TomlSectionFmt, cfgDep.TomlPoetryPrefix, sectionSuffix),
 	}
 
 	for _, line := range lines {
 		trimmed := strings.TrimSpace(line)
 
 		// Check for section headers.
-		if strings.HasPrefix(trimmed, "[") {
+		if strings.HasPrefix(trimmed, cfgDep.TomlSectionOpen) {
 			inSection = false
 			inArray = false
 			for _, target := range targets {
@@ -222,14 +228,19 @@ func ParsePyprojectDeps(content string, sectionSuffix string) []string {
 		if !inSection {
 			// Also check for inline array: dependencies = [...]
 			if !inArray {
-				for _, key := range []string{sectionSuffix + " = [", sectionSuffix + "= [", sectionSuffix + " =[", sectionSuffix + "=["} {
+				for _, key := range []string{
+					sectionSuffix + cfgDep.TomlArrayAssign1,
+					sectionSuffix + cfgDep.TomlArrayAssign2,
+					sectionSuffix + cfgDep.TomlArrayAssign3,
+					sectionSuffix + cfgDep.TomlArrayAssign4,
+				} {
 					if strings.Contains(trimmed, key) {
 						inArray = true
 						// Parse items on this line after the opening bracket.
-						idx := strings.Index(trimmed, "[")
+						idx := strings.Index(trimmed, cfgDep.TomlSectionOpen)
 						rest := trimmed[idx+1:]
 						deps = append(deps, ParsePyprojectArrayItems(rest)...)
-						if strings.Contains(rest, "]") {
+						if strings.Contains(rest, token.CloseBracket) {
 							inArray = false
 						}
 						break
@@ -237,7 +248,7 @@ func ParsePyprojectDeps(content string, sectionSuffix string) []string {
 				}
 			} else {
 				deps = append(deps, ParsePyprojectArrayItems(trimmed)...)
-				if strings.Contains(trimmed, "]") {
+				if strings.Contains(trimmed, token.CloseBracket) {
 					inArray = false
 				}
 			}
@@ -245,16 +256,16 @@ func ParsePyprojectDeps(content string, sectionSuffix string) []string {
 		}
 
 		// Inside a section - look for key = "version" (Poetry style).
-		if trimmed == "" || strings.HasPrefix(trimmed, "#") {
+		if trimmed == "" || strings.HasPrefix(trimmed, token.PrefixComment) {
 			continue
 		}
 
 		// Poetry style: package-name = "^1.0"
-		if idx := strings.Index(trimmed, "="); idx > 0 {
+		if idx := strings.Index(trimmed, token.KeyValueSep); idx > 0 {
 			name := strings.TrimSpace(trimmed[:idx])
 			// Skip python itself and metadata keys.
 			lower := strings.ToLower(name)
-			if lower == PythonEcosystem || lower == "name" || lower == "version" || lower == "description" {
+			if lower == PythonEcosystem || cfgDep.PyMetaKeys[lower] {
 				continue
 			}
 			deps = append(deps, strings.ToLower(name))
@@ -273,17 +284,17 @@ func ParsePyprojectDeps(content string, sectionSuffix string) []string {
 //   - []string: Extracted package names
 func ParsePyprojectArrayItems(line string) []string {
 	// Strip closing bracket.
-	line = strings.ReplaceAll(line, "]", "")
+	line = strings.ReplaceAll(line, token.CloseBracket, "")
 	line = strings.TrimSpace(line)
 	if line == "" {
 		return nil
 	}
 
 	var deps []string
-	for _, item := range strings.Split(line, ",") {
+	for _, item := range strings.Split(line, token.Comma) {
 		item = strings.TrimSpace(item)
 		// Strip quotes.
-		item = strings.Trim(item, `"'`)
+		item = strings.Trim(item, token.Quotes)
 		item = strings.TrimSpace(item)
 		if item == "" {
 			continue

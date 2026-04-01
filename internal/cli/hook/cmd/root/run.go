@@ -111,8 +111,8 @@ func WriteCopilotInstructions(cmd *cobra.Command) error {
 	targetFile := filepath.Join(cfgHook.DirGitHub, cfgHook.FileCopilotInstructions)
 
 	// Create .github/ directory if needed
-	if err := os.MkdirAll(cfgHook.DirGitHub, fs.PermExec); err != nil {
-		return errFs.Mkdir(cfgHook.DirGitHub, err)
+	if mkdirErr := os.MkdirAll(cfgHook.DirGitHub, fs.PermExec); mkdirErr != nil {
+		return errFs.Mkdir(cfgHook.DirGitHub, mkdirErr)
 	}
 
 	// Load the copilot instructions from embedded assets
@@ -122,19 +122,21 @@ func WriteCopilotInstructions(cmd *cobra.Command) error {
 	}
 
 	// Check if the file exists
-	existingContent, err := os.ReadFile(filepath.Clean(targetFile))
-	fileExists := err == nil
+	existingContent, readErr := os.ReadFile(filepath.Clean(targetFile))
+	fileExists := readErr == nil
 
 	if fileExists {
 		existingStr := string(existingContent)
-		if strings.Contains(existingStr, marker.CopilotMarkerStart) {
+		if strings.Contains(existingStr, marker.CopilotStart) {
 			hook.InfoCopilotSkipped(cmd, targetFile)
 			return nil
 		}
 
 		// File exists without ctx markers: append ctx content
 		merged := existingStr + token.NewlineLF + string(instructions)
-		if wErr := os.WriteFile(targetFile, []byte(merged), fs.PermFile); wErr != nil {
+		if wErr := os.WriteFile(
+			targetFile, []byte(merged), fs.PermFile,
+		); wErr != nil {
 			return errFs.FileWrite(targetFile, wErr)
 		}
 		hook.InfoCopilotMerged(cmd, targetFile)
@@ -352,7 +354,7 @@ func WriteAgentsMd(cmd *cobra.Command) error {
 
 	if fileExists {
 		existingStr := string(existingContent)
-		if strings.Contains(existingStr, marker.AgentsMarkerStart) {
+		if strings.Contains(existingStr, marker.AgentsStart) {
 			hook.InfoAgentsSkipped(cmd, targetFile)
 			return nil
 		}

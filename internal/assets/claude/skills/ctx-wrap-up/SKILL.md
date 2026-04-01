@@ -100,13 +100,13 @@ belongs in their context.
 
 For each approved candidate, run the appropriate command:
 
-| Type        | Command                                                                           |
-|-------------|-----------------------------------------------------------------------------------|
-| Learning    | `ctx add learning "Title" --context "..." --lesson "..." --application "..."`     |
+| Type        | Command                                                                          |
+|-------------|----------------------------------------------------------------------------------|
+| Learning    | `ctx add learning "Title" --context "..." --lesson "..." --application "..."`    |
 | Decision    | `ctx add decision "Title" --context "..." --rationale "..." --consequence "..."` |
-| Convention  | `ctx add convention "Description"`                                                |
-| Task (new)  | `ctx add task "Description"`                                                      |
-| Task (done) | Edit TASKS.md to mark complete                                                    |
+| Convention  | `ctx add convention "Description"`                                               |
+| Task (new)  | `ctx add task "Description"`                                                     |
+| Task (done) | Edit TASKS.md to mark complete                                                   |
 
 Report the result of each command. If any fail, report the error
 and continue with the remaining items.

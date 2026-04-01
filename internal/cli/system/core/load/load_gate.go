@@ -17,10 +17,13 @@ import (
 	"github.com/ActiveMemory/ctx/internal/config/dir"
 	"github.com/ActiveMemory/ctx/internal/config/embed/text"
 	"github.com/ActiveMemory/ctx/internal/config/fs"
+	"github.com/ActiveMemory/ctx/internal/config/load_gate"
 	"github.com/ActiveMemory/ctx/internal/config/marker"
 	"github.com/ActiveMemory/ctx/internal/config/stats"
 	"github.com/ActiveMemory/ctx/internal/config/token"
+	"github.com/ActiveMemory/ctx/internal/config/warn"
 	"github.com/ActiveMemory/ctx/internal/entity"
+	ctxLog "github.com/ActiveMemory/ctx/internal/log/warn"
 	"github.com/ActiveMemory/ctx/internal/rc"
 )
 
@@ -60,11 +63,14 @@ func WriteOversizeFlag(
 	}
 
 	sd := filepath.Join(contextDir, dir.State)
-	_ = os.MkdirAll(sd, fs.PermRestrictedDir)
+	if mkdirErr := os.MkdirAll(sd, fs.PermRestrictedDir); mkdirErr != nil {
+		ctxLog.Warn(warn.Mkdir, sd, mkdirErr)
+	}
 
 	var flag strings.Builder
 	flag.WriteString(desc.Text(text.DescKeyContextLoadGateOversizeHeader))
-	flag.WriteString(strings.Repeat("=", stats.ContextSizeOversizeSepLen) + token.NewlineLF)
+	sep := strings.Repeat(load_gate.ContextLoadSeparatorChar, stats.ContextSizeOversizeSepLen)
+	flag.WriteString(sep + token.NewlineLF)
 	flag.WriteString(fmt.Sprintf(
 		desc.Text(text.DescKeyContextLoadGateOversizeTimestamp),
 		time.Now().UTC().Format(time.RFC3339)))
@@ -80,7 +86,12 @@ func WriteOversizeFlag(
 	flag.WriteString(token.NewlineLF)
 	flag.WriteString(desc.Text(text.DescKeyContextLoadGateOversizeAction))
 
-	_ = os.WriteFile(
-		filepath.Join(sd, stats.ContextSizeInjectionOversizeFlag),
-		[]byte(flag.String()), fs.PermSecret)
+	fp := filepath.Join(
+		sd, stats.ContextSizeInjectionOversizeFlag,
+	)
+	if writeErr := os.WriteFile(
+		fp, []byte(flag.String()), fs.PermSecret,
+	); writeErr != nil {
+		ctxLog.Warn(warn.Write, fp, writeErr)
+	}
 }

@@ -9,10 +9,10 @@ package stats
 import (
 	"path/filepath"
 
-	coreStats "github.com/ActiveMemory/ctx/internal/cli/system/core/stats"
-	"github.com/ActiveMemory/ctx/internal/config/dir"
 	"github.com/spf13/cobra"
 
+	coreStats "github.com/ActiveMemory/ctx/internal/cli/system/core/stats"
+	"github.com/ActiveMemory/ctx/internal/config/dir"
 	cFlag "github.com/ActiveMemory/ctx/internal/config/flag"
 	"github.com/ActiveMemory/ctx/internal/rc"
 	writeStats "github.com/ActiveMemory/ctx/internal/write/stat"
@@ -33,20 +33,20 @@ func Run(cmd *cobra.Command) error {
 	last, _ := cmd.Flags().GetInt(cFlag.Last)
 	jsonOut, _ := cmd.Flags().GetBool(cFlag.JSON)
 
-	dir := filepath.Join(rc.ContextDir(), dir.State)
+	d := filepath.Join(rc.ContextDir(), dir.State)
 
-	entries, readErr := coreStats.ReadStatsDir(dir, session)
+	entries, readErr := coreStats.ReadDir(d, session)
 	if readErr != nil {
 		return readErr
 	}
 
 	if !follow {
-		writeStats.Table(cmd, coreStats.FormatDumpStats(entries, last, jsonOut))
+		writeStats.Table(cmd, coreStats.FormatDump(entries, last, jsonOut))
 		return nil
 	}
 
 	// Dump existing entries first, then stream.
-	writeStats.Table(cmd, coreStats.FormatDumpStats(entries, last, jsonOut))
+	writeStats.Table(cmd, coreStats.FormatDump(entries, last, jsonOut))
 
-	return coreStats.StreamStats(cmd.OutOrStdout(), dir, session, jsonOut)
+	return coreStats.Stream(cmd.OutOrStdout(), d, session, jsonOut)
 }

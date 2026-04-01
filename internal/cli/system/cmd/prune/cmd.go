@@ -7,11 +7,13 @@
 package prune
 
 import (
+	"github.com/spf13/cobra"
+
 	"github.com/ActiveMemory/ctx/internal/assets/read/desc"
 	"github.com/ActiveMemory/ctx/internal/config/embed/cmd"
 	"github.com/ActiveMemory/ctx/internal/config/embed/flag"
 	cFlag "github.com/ActiveMemory/ctx/internal/config/flag"
-	"github.com/spf13/cobra"
+	"github.com/ActiveMemory/ctx/internal/config/runtime"
 )
 
 // Cmd returns the "ctx system prune" subcommand.
@@ -24,7 +26,7 @@ func Cmd() *cobra.Command {
 
 	short, long := desc.Command(cmd.DescKeySystemPrune)
 
-	cmd := &cobra.Command{
+	c := &cobra.Command{
 		Use:   cmd.UseSystemPrune,
 		Short: short,
 		Long:  long,
@@ -33,12 +35,12 @@ func Cmd() *cobra.Command {
 		},
 	}
 
-	cmd.Flags().IntVar(&days, "days", 7,
+	c.Flags().IntVar(&days, cFlag.Days, runtime.DefaultPruneDays,
 		desc.Flag(flag.DescKeySystemPruneDays),
 	)
-	cmd.Flags().BoolVar(&dryRun, cFlag.DryRun, false,
+	c.Flags().BoolVar(&dryRun, cFlag.DryRun, false,
 		desc.Flag(flag.DescKeySystemPruneDryRun),
 	)
 
-	return cmd
+	return c
 }

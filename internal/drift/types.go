@@ -22,8 +22,12 @@ const (
 	IssueStaleAge IssueType = "stale_age"
 	// IssueEntryCount indicates a knowledge file has too many entries.
 	IssueEntryCount IssueType = "entry_count"
-	// IssueMissingPackage indicates an internal package not documented in ARCHITECTURE.md.
+	// IssueMissingPackage indicates an internal package
+	// not documented in ARCHITECTURE.md.
 	IssueMissingPackage IssueType = "missing_package"
+	// IssueStaleHeader indicates a context file whose comment header
+	// doesn't match the embedded template.
+	IssueStaleHeader IssueType = "stale_header"
 )
 
 // StatusType represents the overall status of a drift report.
@@ -56,6 +60,8 @@ const (
 	CheckEntryCount CheckName = "entry_count_check"
 	// CheckMissingPackages checks for undocumented internal packages.
 	CheckMissingPackages CheckName = "missing_packages"
+	// CheckTemplateHeaders checks context file comment headers against templates.
+	CheckTemplateHeaders CheckName = "template_headers"
 )
 
 // Constitution rule names referenced in drift violations.

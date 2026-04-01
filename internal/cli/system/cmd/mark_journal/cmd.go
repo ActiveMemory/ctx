@@ -34,7 +34,7 @@ func Cmd() *cobra.Command {
 		Hidden: true,
 		Args:   cobra.ExactArgs(2), //nolint:mnd // 2 positional args: filename, stage
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return runMarkJournal(cmd, args[0], args[1])
+			return Run(cmd, args[0], args[1])
 		},
 	}
 

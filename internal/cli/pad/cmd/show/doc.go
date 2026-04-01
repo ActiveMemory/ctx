@@ -6,6 +6,7 @@
 
 // Package show implements the ctx pad show subcommand.
 //
-// It outputs the raw text of a pad entry by index, designed for pipe
-// composability with other pad commands.
+// Key exports: [Cmd], [Run].
+// Follows the cmd/root + core taxonomy.
+// Registered by the cmd parent command.
 package show

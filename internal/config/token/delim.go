@@ -37,10 +37,18 @@ const (
 	Ellipsis = "..."
 	// DoubleQuote is the ASCII double-quote character.
 	DoubleQuote = `"`
+	// EscapedDoubleQuote is a backslash-escaped double quote for TOML/JSON.
+	EscapedDoubleQuote = `\"`
+	// CloseBracket is the closing square bracket.
+	CloseBracket = "]"
 	// PeriodSpace is a period-space separator for joining sentences.
 	PeriodSpace = ". "
+	// Quotes is the set of quote characters to trim from TOML/JSON values.
+	Quotes = `"'`
 	// SemicolonSpace is a semicolon-space separator for joining clauses.
 	SemicolonSpace = "; "
+	// Underscore is the underscore character used as a word separator.
+	Underscore = "_"
 )
 
 // TopicSeparators are the delimiters between a date and topic in session

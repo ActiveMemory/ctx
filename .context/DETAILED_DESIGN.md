@@ -5,27 +5,36 @@ Consult specific sections when working on a module.
 
 ## internal/config
 
-**Purpose**: Centralized constants, regex patterns, file names, read order, and permissions used across the codebase.
+**Purpose**: Centralized constants, regex patterns, file names, read order, and
+  permissions used across the codebase.
 
 **Key types**: `Pattern` (glob-to-topic mapping)
 
 **Exported API**:
-- Constants: file permissions (`PermFile`, `PermExec`, `PermSecret`), file extensions, context file names (`FileConstitution`, `FileTask`, etc.), Claude API block types and field keys, directory names, heading/label/marker constants, limits/thresholds
+- Constants: file permissions (`PermFile`, `PermExec`, `PermSecret`), file
+  extensions, context file names (`FileConstitution`, `FileTask`, etc.), Claude
+  API block types and field keys, directory names, heading/label/marker
+  constants, limits/thresholds
 - `FileType` map — maps entry type strings to filenames
 - `FileReadOrder` slice — priority-ordered file loading sequence
 - `FilesRequired` slice — essential files for drift detection
 - `DefaultClaudePermissions` / `DefaultClaudeDenyPermissions` — permission lists
 - `Packages` map — dependency manifest files to descriptions
-- `UserInputToEntry(s string) string` — normalizes user input to canonical entry types
-- `RegExFromAttrName(name string) *regexp.Regexp` — creates XML attribute extraction regex
-- Pre-compiled regex patterns: `RegExEntryHeader`, `RegExTask`, `RegExDecision`, `RegExLearning`, `RegExPath`, `RegExCodeFenceInline`, etc.
+- `UserInputToEntry(s string) string` — normalizes user input to canonical entry
+  types
+- `RegExFromAttrName(name string) *regexp.Regexp` — creates XML attribute
+  extraction regex
+- Pre-compiled regex patterns: `RegExEntryHeader`, `RegExTask`, `RegExDecision`,
+  `RegExLearning`, `RegExPath`, `RegExCodeFenceInline`, etc.
 
-**Data flow**: Pure constants package. Consumers import to access patterns, file names, and configuration values. Regex patterns compiled at init time.
+**Data flow**: Pure constants package. Consumers import to access patterns, file
+  names, and configuration values. Regex patterns compiled at init time.
 
 **Edge cases**:
 - Custom priority orders via `.ctxrc` override `FileReadOrder` defaults
 - Obsidian vault output paths coexist with JSON site output
-- Migration support for legacy key files (`.context.key`, `.scratchpad.key`) → `.ctx.key`
+- Migration support for legacy key files (`.context.key`, `.scratchpad.key`) →
+  `.ctx.key`
 
 **Dependencies**: None — foundation package with zero internal dependencies
 
@@ -33,7 +42,8 @@ Consult specific sections when working on a module.
 
 ## internal/assets
 
-**Purpose**: Embedded templates, skills, tools, and configuration via Go's `//go:embed` directive.
+**Purpose**: Embedded templates, skills, tools, and configuration via Go's
+  `//go:embed` directive.
 
 **Key types**: `embed.FS` (embedded filesystem)
 
@@ -50,7 +60,8 @@ Consult specific sections when working on a module.
 - `Tool(name string) ([]byte, error)` — reads tool script
 - `PluginVersion() (string, error)` — extracts version from embedded plugin.json
 
-**Data flow**: Assets embedded at build time → callers request by name → raw bytes returned or error if not found
+**Data flow**: Assets embedded at build time → callers request by name → raw
+  bytes returned or error if not found
 
 **Edge cases**:
 - Directory read failures return nil slice with error
@@ -62,12 +73,15 @@ Consult specific sections when working on a module.
 
 ## internal/rc
 
-**Purpose**: Runtime configuration loading from `.ctxrc` (YAML) with environment variable overrides and CLI flag precedence.
+**Purpose**: Runtime configuration loading from `.ctxrc` (YAML) with environment
+  variable overrides and CLI flag precedence.
 
-**Key types**: `CtxRC` (configuration container with ContextDir, TokenBudget, PriorityOrder, AutoArchive, etc.), `NotifyConfig` (webhook settings)
+**Key types**: `CtxRC` (configuration container with ContextDir, TokenBudget,
+  PriorityOrder, AutoArchive, etc.), `NotifyConfig` (webhook settings)
 
 **Exported API**:
-- `RC() *CtxRC` — returns cached configuration (lazy-loaded singleton via sync.Once)
+- `RC() *CtxRC` — returns cached configuration (lazy-loaded singleton via
+  sync.Once)
 - `ContextDir() string` — resolution: CLI override > env > .ctxrc > default
 - `TokenBudget() int` — env > .ctxrc > 8000
 - `PriorityOrder() []string` — custom file priority or nil
@@ -81,7 +95,9 @@ Consult specific sections when working on a module.
 - `OverrideContextDir(dir string)` — sets CLI override
 - `Reset()` — clears cache (testing only)
 
-**Data flow**: First call triggers `loadRC()` via sync.Once → reads `.ctxrc` YAML → environment variables override → result cached → CLI overrides stored separately with RWMutex
+**Data flow**: First call triggers `loadRC()` via sync.Once → reads `.ctxrc`
+  YAML → environment variables override → result cached → CLI overrides stored
+  separately with RWMutex
 
 **Edge cases**:
 - Missing `.ctxrc` → uses defaults (not an error)
@@ -94,9 +110,11 @@ Consult specific sections when working on a module.
 
 ## internal/context
 
-**Purpose**: Loads `.context/` directory contents with file metadata, token estimation, and content summarization.
+**Purpose**: Loads `.context/` directory contents with file metadata, token
+  estimation, and content summarization.
 
-**Key types**: `FileInfo` (Name, Path, Size, ModTime, Content, IsEmpty, Tokens, Summary), `Context` (Dir, Files, TotalTokens, TotalSize), `NotFoundError`
+**Key types**: `FileInfo` (Name, Path, Size, ModTime, Content, IsEmpty, Tokens,
+  Summary), `Context` (Dir, Files, TotalTokens, TotalSize), `NotFoundError`
 
 **Exported API**:
 - `Load(dir string) (*Context, error)` — loads all .md files from directory
@@ -105,7 +123,9 @@ Consult specific sections when working on a module.
 - `EstimateTokensString(s string) int` — convenience wrapper
 - `(*Context).File(name string) *FileInfo` — retrieves file by name
 
-**Data flow**: `Load()` → validate directory (exists, no symlinks) → read all .md files → for each: estimate tokens, generate summary, check emptiness → aggregate totals → return `Context`
+**Data flow**: `Load()` → validate directory (exists, no symlinks) → read all
+  .md files → for each: estimate tokens, generate summary, check emptiness →
+  aggregate totals → return `Context`
 
 **Edge cases**:
 - Empty directory → Context with empty Files slice
@@ -122,16 +142,22 @@ Consult specific sections when working on a module.
 
 **Purpose**: AES-256-GCM encryption for scratchpad files with key management.
 
-**Key types**: None (functions only). Constants: `KeySize` = 32, `NonceSize` = 12
+**Key types**: None (functions only). Constants: `KeySize` = 32, `NonceSize` =
+  12
 
 **Exported API**:
 - `GenerateKey() ([]byte, error)` — generates 32 random bytes
-- `LoadKey(path string) ([]byte, error)` — reads and validates key file (must be 32 bytes)
+- `LoadKey(path string) ([]byte, error)` — reads and validates key file (must be
+  32 bytes)
 - `SaveKey(path string, key []byte) error` — writes key file with mode 0600
-- `Encrypt(key, plaintext []byte) ([]byte, error)` — AES-256-GCM, returns [nonce][ciphertext+tag]
-- `Decrypt(key, ciphertext []byte) ([]byte, error)` — extracts nonce, decrypts, authenticates
+- `Encrypt(key, plaintext []byte) ([]byte, error)` — AES-256-GCM, returns
+  [nonce][ciphertext+tag]
+- `Decrypt(key, ciphertext []byte) ([]byte, error)` — extracts nonce, decrypts,
+  authenticates
 
-**Data flow**: `GenerateKey()` → crypto/rand → `SaveKey()` → disk (0600). `Encrypt()`: random nonce → GCM seal → [12-byte nonce + ciphertext + 16-byte tag]. `Decrypt()`: extract nonce → GCM open → plaintext.
+**Data flow**: `GenerateKey()` → crypto/rand → `SaveKey()` → disk (0600).
+  `Encrypt()`: random nonce → GCM seal → [12-byte nonce + ciphertext + 16-byte
+  tag]. `Decrypt()`: extract nonce → GCM open → plaintext.
 
 **Edge cases**:
 - Key size validation before any operation
@@ -139,44 +165,59 @@ Consult specific sections when working on a module.
 - GCM tag automatically authenticated during decryption
 - Random source failure propagated
 
-**Dependencies**: `crypto/aes`, `crypto/cipher`, `crypto/rand` (standard library only)
+**Dependencies**: `crypto/aes`, `crypto/cipher`, `crypto/rand` (standard library
+  only)
 
 ---
 
 ## internal/sysinfo
 
-**Purpose**: OS resource metrics (memory, swap, disk, load) with threshold-based alerting. Platform-specific via build tags.
+**Purpose**: OS resource metrics (memory, swap, disk, load) with threshold-based
+  alerting. Platform-specific via build tags.
 
-**Key types**: `Severity` (OK/Warning/Danger), `MemInfo`, `DiskInfo`, `LoadInfo`, `Snapshot`, `ResourceAlert`
+**Key types**: `Severity` (OK/Warning/Danger), `MemInfo`, `DiskInfo`,
+  `LoadInfo`, `Snapshot`, `ResourceAlert`
 
 **Exported API**:
-- `Collect(path string) Snapshot` — gathers metrics (path selects filesystem for disk)
-- `Evaluate(snap Snapshot) []ResourceAlert` — checks thresholds (mem ≥80%/90%, swap ≥50%/75%, disk ≥85%/95%, load ≥0.8x/1.5x CPUs)
+- `Collect(path string) Snapshot` — gathers metrics (path selects filesystem for
+  disk)
+- `Evaluate(snap Snapshot) []ResourceAlert` — checks thresholds (mem ≥80%/90%,
+  swap ≥50%/75%, disk ≥85%/95%, load ≥0.8x/1.5x CPUs)
 - `MaxSeverity(alerts []ResourceAlert) Severity` — highest severity in list
 - `FormatGiB(bytes uint64) string` — formats bytes as GiB
 
-**Data flow**: `Collect()` → platform-specific collectors (Linux: /proc/meminfo, /proc/loadavg, statfs; macOS: sysctl, vm_stat, statfs; Windows: syscall) → `Evaluate()` → alerts
+**Data flow**: `Collect()` → platform-specific collectors (Linux: /proc/meminfo,
+  /proc/loadavg, statfs; macOS: sysctl, vm_stat, statfs; Windows: syscall) →
+  `Evaluate()` → alerts
 
 **Edge cases**:
 - Unsupported platform → `Supported=false` (graceful degradation)
 - Zero total resources → skipped in Evaluate (prevents divide by zero)
 - macOS uses command parsing (shell output errors → Supported=false)
 
-**Dependencies**: Standard library only (platform-specific: `os`, `syscall`, `runtime`, `bufio`)
+**Dependencies**: Standard library only (platform-specific: `os`, `syscall`,
+  `runtime`, `bufio`)
 
 ---
 
 ## internal/drift
 
-**Purpose**: Context drift detection — identifies stale paths, completed-task buildup, potential secrets, missing required files, file age, and entry count growth.
+**Purpose**: Context drift detection — identifies stale paths, completed-task
+  buildup, potential secrets, missing required files, file age, and entry count
+  growth.
 
-**Key types**: `IssueType` (dead_path, staleness, potential_secret, missing_file, stale_age, entry_count), `StatusType` (ok, warning, violation), `CheckName`, `Issue`, `Report`
+**Key types**: `IssueType` (dead_path, staleness, potential_secret,
+  missing_file, stale_age, entry_count), `StatusType` (ok, warning, violation),
+  `CheckName`, `Issue`, `Report`
 
 **Exported API**:
 - `Detect(ctx *context.Context) *Report` — runs all six checks
-- `(*Report).Status() StatusType` — computes overall status from violations/warnings
+- `(*Report).Status() StatusType` — computes overall status from
+  violations/warnings
 
-**Data flow**: Context files loaded → six sequential checks (path refs, staleness, constitution, required files, age, entry counts) → issues collected → Report returned
+**Data flow**: Context files loaded → six sequential checks (path refs,
+  staleness, constitution, required files, age, entry counts) → issues collected
+  → Report returned
 
 **Edge cases**:
 - Path checks skip URLs, glob patterns, templates
@@ -184,26 +225,36 @@ Consult specific sections when working on a module.
 - File age check excludes CONSTITUTION.md (expected to be static)
 - Entry count thresholds configurable via rc (0 disables)
 
-**Dependencies**: `internal/config`, `internal/context`, `internal/index`, `internal/rc`
+**Dependencies**: `internal/config`, `internal/context`, `internal/index`,
+  `internal/rc`
 
 ---
 
 ## internal/index
 
-**Purpose**: Parse entry headers and manage index tables in DECISIONS.md and LEARNINGS.md.
+**Purpose**: Parse entry headers and manage index tables in DECISIONS.md and
+  LEARNINGS.md.
 
-**Key types**: `Entry` (timestamp, date, title), `EntryBlock` (lines, start/end indices, superseded status)
+**Key types**: `Entry` (timestamp, date, title), `EntryBlock` (lines, start/end
+  indices, superseded status)
 
 **Exported API**:
-- `ParseHeaders(content string) []Entry` — extracts `## [YYYY-MM-DD-HHMMSS] Title` headers
-- `GenerateTable(entries []Entry, columnHeader string) string` — creates markdown index table
-- `Update(content, fileHeader, columnHeader string) string` — regenerates index between markers
-- `UpdateDecisions(content string) string` / `UpdateLearnings(content string) string` — file-specific wrappers
-- `ReindexFile(w io.Writer, filePath, fileName string, updateFunc, entryType string) error` — full reindex workflow
-- `ParseEntryBlocks(content string) []EntryBlock` — splits into self-contained entry blocks
+- `ParseHeaders(content string) []Entry` — extracts `## [YYYY-MM-DD-HHMMSS]
+  Title` headers
+- `GenerateTable(entries []Entry, columnHeader string) string` — creates
+  markdown index table
+- `Update(content, fileHeader, columnHeader string) string` — regenerates index
+  between markers
+- `UpdateDecisions(content string) string` / `UpdateLearnings(content string)
+  string` — file-specific wrappers
+- `ReindexFile(w io.Writer, filePath, fileName string, updateFunc, entryType
+  string) error` — full reindex workflow
+- `ParseEntryBlocks(content string) []EntryBlock` — splits into self-contained
+  entry blocks
 - `(*EntryBlock).IsSuperseded() bool` — checks for superseded marker
 
-**Data flow**: Content → regex parse headers → generate table between INDEX:START/END markers → preserve non-entry content
+**Data flow**: Content → regex parse headers → generate table between
+  INDEX:START/END markers → preserve non-entry content
 
 **Edge cases**:
 - Pipe characters in titles escaped in table output
@@ -216,9 +267,11 @@ Consult specific sections when working on a module.
 
 ## internal/task
 
-**Purpose**: Domain logic for parsing task checkboxes independent of markdown representation.
+**Purpose**: Domain logic for parsing task checkboxes independent of markdown
+  representation.
 
-**Key types**: Match index constants (`MatchFull`, `MatchIndent`, `MatchState`, `MatchContent`)
+**Key types**: Match index constants (`MatchFull`, `MatchIndent`, `MatchState`,
+  `MatchContent`)
 
 **Exported API**:
 - `Completed(match []string) bool` — checks if `[x]`
@@ -227,9 +280,11 @@ Consult specific sections when working on a module.
 - `Content(match []string) string` — extracts task text
 - `SubTask(match []string) bool` — true if indent ≥ 2 spaces
 
-**Data flow**: Uses `config.ItemPattern` regex for matching → capture groups → helper functions extract state/content/indent
+**Data flow**: Uses `config.ItemPattern` regex for matching → capture groups →
+  helper functions extract state/content/indent
 
-**Edge cases**: Handles invalid matches gracefully (boundary checks on slice length)
+**Edge cases**: Handles invalid matches gracefully (boundary checks on slice
+  length)
 
 **Dependencies**: `internal/config`
 
@@ -242,11 +297,15 @@ Consult specific sections when working on a module.
 **Key types**: None (utility functions only)
 
 **Exported API**:
-- `SanitizeFilename(s string) string` — converts topic to safe filename (lowercase, hyphenated, max 50 chars)
+- `SanitizeFilename(s string) string` — converts topic to safe filename
+  (lowercase, hyphenated, max 50 chars)
 - `ValidateBoundary(dir string) error` — ensures resolved path stays within cwd
-- `CheckSymlinks(dir string) error` — detects symlinks in directory or immediate children
+- `CheckSymlinks(dir string) error` — detects symlinks in directory or immediate
+  children
 
-**Data flow**: Sanitize: regex replace → trim → lowercase → limit length. Boundary: resolve symlinks → prefix check. Symlinks: lstat checks for ModeSymlink.
+**Data flow**: Sanitize: regex replace → trim → lowercase → limit length.
+  Boundary: resolve symlinks → prefix check. Symlinks: lstat checks for
+  ModeSymlink.
 
 **Edge cases**:
 - Non-existent targets fall back to absolute path for prefix check
@@ -257,26 +316,37 @@ Consult specific sections when working on a module.
 
 ---
 
-## internal/recall/parser
+## internal/journal/parser
 
-**Purpose**: Parses AI session transcripts (JSONL, Markdown) into structured Go types. Extensible parser registry.
+**Purpose**: Parses AI session transcripts (JSONL, Markdown) into structured Go
+  types. Extensible parser registry.
 
-**Key types**: `SessionParser` (interface: ParseFile, ParseLine, Matches, Tool), `ToolUse`, `ToolResult`, `Message`, `Session` (ID, Slug, Tool, SourceFile, CWD, Project, Messages, TurnCount, TokenStats, etc.)
+**Key types**: `SessionParser` (interface: ParseFile, ParseLine, Matches, Tool),
+  `ToolUse`, `ToolResult`, `Message`, `Session` (ID, Slug, Tool, SourceFile,
+  CWD, Project, Messages, TurnCount, TokenStats, etc.)
 
 **Exported API**:
 - `ParseFile(path string) ([]*Session, error)` — auto-detects format and parses
-- `ScanDirectory(dir string) ([]*Session, error)` — recursively finds sessions, sorted newest first
-- `ScanDirectoryWithErrors(dir string) ([]*Session, []error, error)` — returns sessions and parse errors
-- `FindSessions(additionalDirs ...string) ([]*Session, error)` — searches default + custom locations
-- `FindSessionsForCWD(cwd string, additionalDirs ...string) ([]*Session, error)` — filters by CWD (git remote, home path, exact match)
+- `ScanDirectory(dir string) ([]*Session, error)` — recursively finds sessions,
+  sorted newest first
+- `ScanDirectoryWithErrors(dir string) ([]*Session, []error, error)` — returns
+  sessions and parse errors
+- `FindSessions(additionalDirs ...string) ([]*Session, error)` — searches
+  default + custom locations
+- `FindSessionsForCWD(cwd string, additionalDirs ...string) ([]*Session, error)`
+  — filters by CWD (git remote, home path, exact match)
 - `Parser(tool string) SessionParser` — gets parser for tool
 - `RegisteredTools() []string` — lists supported tools
-- `(*Session).UserMessages()`, `(*Session).AssistantMessages()`, `(*Session).AllToolUses()` — message filters
+- `(*Session).UserMessages()`, `(*Session).AssistantMessages()`,
+  `(*Session).AllToolUses()` — message filters
 - `(*Message).Preview(maxLen int) string` — truncated text preview
 
-**Data flow** (Claude Code): JSONL line-by-line → parse JSON → group by sessionId → sort by timestamp → convert to Session. Each message's content parsed as text or array of blocks.
+**Data flow** (Claude Code): JSONL line-by-line → parse JSON → group by
+  sessionId → sort by timestamp → convert to Session. Each message's content
+  parsed as text or array of blocks.
 
-**Data flow** (Markdown): Scan for H1 session header → extract H2 sections → build messages → infer project from path pattern.
+**Data flow** (Markdown): Scan for H1 session header → extract H2 sections →
+  build messages → infer project from path pattern.
 
 **Edge cases**:
 - Malformed JSONL lines skipped (doesn't fail entire file)
@@ -290,15 +360,18 @@ Consult specific sections when working on a module.
 
 ## internal/claude
 
-**Purpose**: Claude Code integration — permissions, hooks, and embedded skill management.
+**Purpose**: Claude Code integration — permissions, hooks, and embedded skill
+  management.
 
-**Key types**: `HookConfig`, `HookMatcher`, `Hook`, `HookType`, `Matcher`, `PermissionsConfig`, `Settings`
+**Key types**: `HookConfig`, `HookMatcher`, `Hook`, `HookType`, `Matcher`,
+  `PermissionsConfig`, `Settings`
 
 **Exported API**:
 - `Skills() ([]string, error)` — lists embedded skill directory names
 - `SkillContent(name string) ([]byte, error)` — reads SKILL.md for a skill
 
-**Data flow**: Thin wrapper over `internal/assets` — lists skills, retrieves content, wraps errors.
+**Data flow**: Thin wrapper over `internal/assets` — lists skills, retrieves
+  content, wraps errors.
 
 **Dependencies**: `internal/assets`
 
@@ -311,12 +384,16 @@ Consult specific sections when working on a module.
 **Key types**: `Payload` (Event, Message, SessionID, Timestamp, Project)
 
 **Exported API**:
-- `LoadWebhook() (string, error)` — reads/decrypts webhook URL from `.context/.notify.enc`
+- `LoadWebhook() (string, error)` — reads/decrypts webhook URL from
+  `.context/.notify.enc`
 - `SaveWebhook(url string) error` — encrypts/writes webhook URL
 - `EventAllowed(event string, allowed []string) bool` — checks event filter
-- `Send(event, message, sessionID string) error` — fires webhook (silent noop on failure)
+- `Send(event, message, sessionID string) error` — fires webhook (silent noop on
+  failure)
 
-**Data flow**: Load: context dir → key file (migrate if needed) → decrypt `.notify.enc` → return URL. Send: check event filter → load URL → build payload → POST with 5s timeout → silent on error.
+**Data flow**: Load: context dir → key file (migrate if needed) → decrypt
+  `.notify.enc` → return URL. Send: check event filter → load URL → build
+  payload → POST with 5s timeout → silent on error.
 
 **Edge cases**:
 - Missing key/encrypted file returns ("", nil) — silent noop
@@ -329,21 +406,29 @@ Consult specific sections when working on a module.
 
 ## internal/journal/state
 
-**Purpose**: Journal processing state via external JSON file tracking export/enrichment/normalization pipeline.
+**Purpose**: Journal processing state via external JSON file tracking
+  export/enrichment/normalization pipeline.
 
-**Key types**: `JournalState` (Version, Entries map), `FileState` (Exported, Enriched, Normalized, FencesVerified, Locked as date strings)
+**Key types**: `JournalState` (Version, Entries map), `FileState` (Exported,
+  Enriched, Normalized, FencesVerified, Locked as date strings)
 
 **Exported API**:
-- `Load(journalDir string) (*JournalState, error)` — reads `.state.json` (returns empty if missing)
+- `Load(journalDir string) (*JournalState, error)` — reads `.state.json`
+  (returns empty if missing)
 - `(*JournalState).Save(journalDir string) error` — atomically writes state file
-- `(*JournalState).MarkExported/Enriched/Normalized/FencesVerified(filename string)` — sets stage to today
-- `(*JournalState).Mark(filename, stage string) bool` / `Clear(filename, stage string) bool` — generic stage ops
+- `(*JournalState).MarkExported/Enriched/Normalized/FencesVerified(filename
+  string)` — sets stage to today
+- `(*JournalState).Mark(filename, stage string) bool` / `Clear(filename, stage
+  string) bool` — generic stage ops
 - `(*JournalState).Locked(filename string) bool` — checks lock status
 - `(*JournalState).Rename(oldName, newName string)` — moves entry state
-- `(*JournalState).IsExported/Enriched/Normalized/FencesVerified(filename string) bool` — stage checkers
-- `(*JournalState).CountUnenriched(journalDir string) int` — counts .md files without enriched date
+- `(*JournalState).IsExported/Enriched/Normalized/FencesVerified(filename
+  string) bool` — stage checkers
+- `(*JournalState).CountUnenriched(journalDir string) int` — counts .md files
+  without enriched date
 
-**Data flow**: JSON file read/write via atomic temp+rename → stages track processing pipeline → dates as YYYY-MM-DD strings
+**Data flow**: JSON file read/write via atomic temp+rename → stages track
+  processing pipeline → dates as YYYY-MM-DD strings
 
 **Edge cases**:
 - Missing file returns empty state (not error)
@@ -356,26 +441,40 @@ Consult specific sections when working on a module.
 
 ## internal/memory
 
-**Purpose**: Bridge Claude Code's auto memory (MEMORY.md) into .context/ with discovery, mirroring, archival, and drift detection.
+**Purpose**: Bridge Claude Code's auto memory (MEMORY.md) into .context/ with
+  discovery, mirroring, archival, and drift detection.
 
-**Key types**: `State` (sync/import tracking with timestamps), `SyncResult` (outcome of a mirror operation)
+**Key types**: `State` (sync/import tracking with timestamps), `SyncResult`
+  (outcome of a mirror operation)
 
 **Exported API**:
-- `DiscoverMemoryPath(projectRoot string) (string, error)` — locates MEMORY.md via Claude Code's slug encoding
-- `ProjectSlug(absPath string) string` — encodes absolute path to Claude Code project slug
-- `Sync(contextDir, sourcePath string) (SyncResult, error)` — copies source to mirror, archives previous
-- `Archive(contextDir string) (string, error)` — snapshots current mirror to timestamped archive
-- `Diff(contextDir, sourcePath string) (string, error)` — line-based diff between mirror and source
-- `HasDrift(contextDir, sourcePath string) bool` — mtime comparison for drift detection
+- `DiscoverMemoryPath(projectRoot string) (string, error)` — locates MEMORY.md
+  via Claude Code's slug encoding
+- `ProjectSlug(absPath string) string` — encodes absolute path to Claude Code
+  project slug
+- `Sync(contextDir, sourcePath string) (SyncResult, error)` — copies source to
+  mirror, archives previous
+- `Archive(contextDir string) (string, error)` — snapshots current mirror to
+  timestamped archive
+- `Diff(contextDir, sourcePath string) (string, error)` — line-based diff
+  between mirror and source
+- `HasDrift(contextDir, sourcePath string) bool` — mtime comparison for drift
+  detection
 - `ArchiveCount(contextDir string) int` — counts archived mirror snapshots
-- `LoadState(contextDir string) (State, error)` — reads sync state (returns zero-value if missing)
+- `LoadState(contextDir string) (State, error)` — reads sync state (returns
+  zero-value if missing)
 - `SaveState(contextDir string, s State) error` — writes sync state as JSON
 - `(*State).MarkSynced()` — updates LastSync to now
 
-**Data flow**: Project root → slug encoding → `~/.claude/projects/<slug>/memory/MEMORY.md` → copy to `.context/memory/mirror.md` → archive previous to `.context/memory/archive/mirror-<ts>.md` → update state in `.context/state/memory-import.json`
+**Data flow**: Project root → slug encoding →
+  `~/.claude/projects/<slug>/memory/MEMORY.md` → copy to
+  `.context/memory/mirror.md` → archive previous to
+  `.context/memory/archive/mirror-<ts>.md` → update state in
+  `.context/state/memory-import.json`
 
 **Edge cases**:
-- MEMORY.md may not exist (auto memory not triggered) — DiscoverMemoryPath returns error
+- MEMORY.md may not exist (auto memory not triggered) — DiscoverMemoryPath
+  returns error
 - First sync has no prior mirror — no archive created
 - Empty MEMORY.md syncs to empty mirror (valid)
 - Symlinks in project path may produce different slugs across machines
@@ -386,18 +485,23 @@ Consult specific sections when working on a module.
 
 ## internal/bootstrap
 
-**Purpose**: Create root Cobra command, register global flags, attach all subcommands.
+**Purpose**: Create root Cobra command, register global flags, attach all
+  subcommands.
 
 **Key types**: None
 
 **Exported API**:
-- `RootCmd() *cobra.Command` — creates root command with global flags (--context-dir, --no-color, --allow-outside-cwd) and version
+- `RootCmd() *cobra.Command` — creates root command with global flags
+  (--context-dir, --no-color, --allow-outside-cwd) and version
 - `Initialize(cmd *cobra.Command) *cobra.Command` — registers all subcommands
 
-**Data flow**: `RootCmd()` creates root → `Initialize()` attaches all CLI packages → `PersistentPreRun` applies global flags and validates context directory boundary
+**Data flow**: `RootCmd()` creates root → `Initialize()` attaches all CLI
+  packages → `PersistentPreRun` applies global flags and validates context
+  directory boundary
 
 **Edge cases**:
-- Context directory boundary validation can be overridden with `--allow-outside-cwd`
+- Context directory boundary validation can be overridden with
+  `--allow-outside-cwd`
 - Version injected at build time via ldflags
 
 **Dependencies**: All `internal/cli/*` packages, `internal/rc`
@@ -406,20 +510,25 @@ Consult specific sections when working on a module.
 
 ## internal/cli/add
 
-**Purpose**: Append entries (decisions, tasks, learnings, conventions) to context files.
+**Purpose**: Append entries (decisions, tasks, learnings, conventions) to
+  context files.
 
-**Key types**: `EntryParams` (type, content, Context, Rationale, Consequence, Lesson, Application)
+**Key types**: `EntryParams` (type, content, Context, Rationale, Consequence,
+  Lesson, Application)
 
 **Exported API**:
 - `Cmd() *cobra.Command` — returns "ctx add" command
 - `ValidateEntry(params EntryParams) error` — validates required fields
 - `WriteEntry(params EntryParams) error` — formats and writes entry
 
-**Data flow**: Parse args → extract content from arg/--file/stdin → validate required fields → format entry → insert at correct location → update index for decisions/learnings
+**Data flow**: Parse args → extract content from arg/--file/stdin → validate
+  required fields → format entry → insert at correct location → update index for
+  decisions/learnings
 
 **Edge cases**:
 - Tasks insert before first unchecked item or under --section
-- Decisions require context+rationale+consequences; learnings require context+lesson+application
+- Decisions require context+rationale+consequences; learnings require
+  context+lesson+application
 
 **Dependencies**: `internal/config`, `internal/index`, `internal/rc`
 
@@ -430,12 +539,16 @@ Consult specific sections when working on a module.
 **Purpose**: Generate AI-ready context packets with token budgeting.
 
 **Exported API**:
-- `Cmd() *cobra.Command` — flags: --budget, --format (md/json), --cooldown, --session
+- `Cmd() *cobra.Command` — flags: --budget, --format (md/json), --cooldown,
+  --session
 
-**Data flow**: Read context files → prioritize by recency/relevance → budget-cap → entries that don't fit get title-only summaries in "Also Noted" section → output markdown or JSON
+**Data flow**: Read context files → prioritize by recency/relevance → budget-cap
+  → entries that don't fit get title-only summaries in "Also Noted" section →
+  output markdown or JSON
 
 **Edge cases**:
-- Cooldown mechanism suppresses repeated output within specified duration per session
+- Cooldown mechanism suppresses repeated output within specified duration per
+  session
 - Budget cap is approximate (token estimation)
 
 **Dependencies**: `internal/config`, `internal/rc`
@@ -449,9 +562,11 @@ Consult specific sections when working on a module.
 **Exported API**:
 - `Cmd() *cobra.Command` — flags: --archive
 
-**Data flow**: Read TASKS.md → move completed [x] tasks to "Completed (Recent)" section → if --archive: move to .context/archive/ → remove empty sections
+**Data flow**: Read TASKS.md → move completed [x] tasks to "Completed (Recent)"
+  section → if --archive: move to .context/archive/ → remove empty sections
 
-**Dependencies**: `internal/config`, `internal/rc`, `internal/context`, `internal/task`
+**Dependencies**: `internal/config`, `internal/rc`, `internal/context`,
+  `internal/task`
 
 ---
 
@@ -460,9 +575,11 @@ Consult specific sections when working on a module.
 **Purpose**: Mark tasks as completed in TASKS.md.
 
 **Exported API**:
-- `Cmd() *cobra.Command` — args: task-id-or-text (by number, partial text, or full text)
+- `Cmd() *cobra.Command` — args: task-id-or-text (by number, partial text, or
+  full text)
 
-**Data flow**: Accept identifier → read TASKS.md → find matching task → change `- [ ]` to `- [x]` → write back
+**Data flow**: Accept identifier → read TASKS.md → find matching task → change
+  `- [ ]` to `- [x]` → write back
 
 **Edge cases**: Ambiguous partial matches require clarification
 
@@ -477,7 +594,8 @@ Consult specific sections when working on a module.
 **Exported API**:
 - `Cmd() *cobra.Command` — subcommand: reindex
 
-**Data flow**: Read DECISIONS.md → parse entries → generate compact index table → write back
+**Data flow**: Read DECISIONS.md → parse entries → generate compact index table
+  → write back
 
 **Dependencies**: `internal/config`, `internal/rc`, `internal/index`
 
@@ -492,22 +610,26 @@ Consult specific sections when working on a module.
 **Exported API**:
 - `Cmd() *cobra.Command` — flags: --json, --fix
 
-**Data flow**: Load context → run `drift.Detect()` → output report (human-readable or JSON) → if --fix: auto-fix supported issues
+**Data flow**: Load context → run `drift.Detect()` → output report
+  (human-readable or JSON) → if --fix: auto-fix supported issues
 
 **Edge cases**: Auto-fix supports staleness and missing_file issues
 
-**Dependencies**: `internal/config`, `internal/rc`, `internal/context`, `internal/drift`, `internal/task`
+**Dependencies**: `internal/config`, `internal/rc`, `internal/context`,
+  `internal/drift`, `internal/task`
 
 ---
 
 ## internal/cli/hook
 
-**Purpose**: Generate AI tool integration configurations (Claude Code, Cursor, Aider, Copilot, Windsurf).
+**Purpose**: Generate AI tool integration configurations (Claude Code, Cursor,
+  Aider, Copilot, Windsurf).
 
 **Exported API**:
 - `Cmd() *cobra.Command` — flags: --write; args: tool name
 
-**Data flow**: Accept tool name → generate tool-specific config snippet → if --write: write to config file, else print to stdout
+**Data flow**: Accept tool name → generate tool-specific config snippet → if
+  --write: write to config file, else print to stdout
 
 **Dependencies**: Cobra only
 
@@ -515,12 +637,16 @@ Consult specific sections when working on a module.
 
 ## internal/cli/initialize
 
-**Purpose**: Initialize `.context/` directory with templates, hooks, skills, and project configuration.
+**Purpose**: Initialize `.context/` directory with templates, hooks, skills, and
+  project configuration.
 
 **Exported API**:
 - `Cmd() *cobra.Command` — flags: --force, --minimal, --merge, --ralph
 
-**Data flow**: Check PATH → create .context/ → prompt if exists → load templates → write files → create entry templates + tools + sessions dir → init scratchpad → create/merge PROMPT.md + IMPLEMENTATION_PLAN.md → merge settings.local.json → handle CLAUDE.md → deploy Makefile.ctx → update .gitignore
+**Data flow**: Check PATH → create .context/ → prompt if exists → load templates
+  → write files → create entry templates + tools + sessions dir → init
+  scratchpad → merge settings.local.json → handle CLAUDE.md → deploy
+  Makefile.ctx → update .gitignore
 
 **Edge cases**:
 - Idempotent: existing files skipped unless --force
@@ -528,21 +654,28 @@ Consult specific sections when working on a module.
 - --merge auto-merges ctx content into existing CLAUDE.md and PROMPT.md
 - --minimal only creates essential files
 
-**Dependencies**: `internal/assets`, `internal/config`, `internal/crypto`, `internal/rc`
+**Dependencies**: `internal/assets`, `internal/config`, `internal/crypto`,
+  `internal/rc`
 
 ---
 
 ## internal/cli/journal
 
-**Purpose**: Analyze and publish exported AI session files to static sites or Obsidian vaults. Largest package in the codebase (24 source files).
+**Purpose**: Analyze and publish imported AI session files to static sites or
+  Obsidian vaults. Largest package in the codebase (24 source files).
 
-**Key types**: `journalFrontmatter` (YAML: title, date, time, project, session_id, model, tokens, type, outcome, topics, key_files, summary), `journalEntry` (parsed file metadata), `groupedIndex` (aggregated entries by key with popularity flag), `topicData`, `keyFileData`, `typeData` (index structures)
+**Key types**: `journalFrontmatter` (YAML: title, date, time, project,
+  session_id, model, tokens, type, outcome, topics, key_files, summary),
+  `journalEntry` (parsed file metadata), `groupedIndex` (aggregated entries by
+  key with popularity flag), `topicData`, `keyFileData`, `typeData` (index
+  structures)
 
 **Exported API**:
 - `Cmd() *cobra.Command` — subcommands: `site`, `obsidian`
 
 **Subcommands**:
-- `site [--output DIR] [--build] [--serve]` — generate zensical-compatible static site
+- `site [--output DIR] [--build] [--serve]` — generate zensical-compatible
+  static site
 - `obsidian [--output DIR]` — generate Obsidian vault with wikilinks and MOC
 
 **File organization** (24 files by responsibility):
@@ -618,21 +751,29 @@ Consult specific sections when working on a module.
 ```
 
 **Key design decisions**:
-- Turn boundary detection uses last-match-wins for embedded turn headers in tool output
-- Fence verification flag from journal state skips stripping for AI-verified files
-- HTML escaping inside `<pre><code>` disables all markdown interpretation (safety over formatting)
+- Turn boundary detection uses last-match-wins for embedded turn headers in tool
+  output
+- Fence verification flag from journal state skips stripping for AI-verified
+  files
+- HTML escaping inside `<pre><code>` disables all markdown interpretation
+  (safety over formatting)
 - Popularity threshold = 2 sessions (popular topics/files get dedicated pages)
-- Multipart continuations (p2, p3...) excluded from navigation, reachable from part 1
-- Boilerplate tool outputs filtered ("No matches found", edit confirmations, hook denials)
+- Multipart continuations (p2, p3...) excluded from navigation, reachable from
+  part 1
+- Boilerplate tool outputs filtered ("No matches found", edit confirmations,
+  hook denials)
 
 **Edge cases**:
-- Quoted journal files inside tool outputs contain false turn headers → last-match-wins solves
-- Old export format (HTML-escaped in `<pre>`) vs new format (raw) → `stripPreWrapper()` detects and adapts
+- Quoted journal files inside tool outputs contain false turn headers →
+  last-match-wins solves
+- Old export format (HTML-escaped in `<pre>`) vs new format (raw) →
+  `stripPreWrapper()` detects and adapts
 - Python-Markdown requires blank line before first list item → auto-inserted
 - Title sanitization strips Claude Code markup tags and truncates to 75 chars
 - Multipart footer at EOF not swallowed by tool output boundary detection
 
-**Dependencies**: `internal/config`, `internal/rc`, `internal/journal/state`, external: `zensical`
+**Dependencies**: `internal/config`, `internal/rc`, `internal/journal/state`,
+  external: `zensical`
 
 ---
 
@@ -654,7 +795,8 @@ Consult specific sections when working on a module.
 **Exported API**:
 - `Cmd() *cobra.Command` — flags: --budget, --raw
 
-**Data flow**: Load context files → sort by FileReadOrder → truncate to budget → output markdown with assembly headers (or raw if --raw)
+**Data flow**: Load context files → sort by FileReadOrder → truncate to budget →
+  output markdown with assembly headers (or raw if --raw)
 
 **Dependencies**: `internal/config`, `internal/rc`, `internal/context`
 
@@ -665,9 +807,11 @@ Consult specific sections when working on a module.
 **Purpose**: Generate Ralph loop scripts for iterative autonomous development.
 
 **Exported API**:
-- `Cmd() *cobra.Command` — flags: --prompt, --tool (claude/aider/generic), --max-iterations, --completion, --output
+- `Cmd() *cobra.Command` — flags: --prompt, --tool (claude/aider/generic),
+  --max-iterations, --completion, --output
 
-**Data flow**: Read prompt file → generate shell script with tool-specific invocation + completion signal check → write to output file
+**Data flow**: Read prompt file → generate shell script with tool-specific
+  invocation + completion signal check → write to output file
 
 **Dependencies**: `internal/config`
 
@@ -681,12 +825,15 @@ Consult specific sections when working on a module.
 - `Cmd() *cobra.Command` — subcommands: sync, status, diff
 
 **Data flow**:
-- `sync`: Discover MEMORY.md → archive existing mirror → copy source to mirror → update sync state → report line counts
-- `status`: Discover source → read mirror → compare mtimes → show drift indicator, line counts, archive count, last sync time
+- `sync`: Discover MEMORY.md → archive existing mirror → copy source to mirror →
+  update sync state → report line counts
+- `status`: Discover source → read mirror → compare mtimes → show drift
+  indicator, line counts, archive count, last sync time
 - `diff`: Discover source → compare mirror vs source → output line-based diff
 
 **Edge cases**:
-- MEMORY.md not found: sync exits 1, status reports "not active", diff returns error
+- MEMORY.md not found: sync exits 1, status reports "not active", diff returns
+  error
 - `--dry-run` on sync: reports plan without writing files
 - status exit code 2 for drift detected (spec-defined)
 
@@ -699,9 +846,11 @@ Consult specific sections when working on a module.
 **Purpose**: Send fire-and-forget webhook notifications via CLI.
 
 **Exported API**:
-- `Cmd() *cobra.Command` — flags: --event, --session-id; subcommands: setup, test
+- `Cmd() *cobra.Command` — flags: --event, --session-id; subcommands: setup,
+  test
 
-**Data flow**: Accept event + message → call notify.Send() → silent noop if unconfigured or filtered
+**Data flow**: Accept event + message → call notify.Send() → silent noop if
+  unconfigured or filtered
 
 **Dependencies**: `internal/notify`
 
@@ -712,9 +861,12 @@ Consult specific sections when working on a module.
 **Purpose**: Manage encrypted scratchpad for sensitive one-liners.
 
 **Exported API**:
-- `Cmd() *cobra.Command` — subcommands: show, add, rm, edit, mv, resolve, import, export, merge
+- `Cmd() *cobra.Command` — subcommands: show, add, rm, edit, mv, resolve,
+  import, export, merge
 
-**Data flow**: Entries encrypted with AES-256-GCM via .context/.ctx.key. File blobs stored as "label:::base64data". Subcommands: CRUD operations, merge with dedup, import/export for file blobs.
+**Data flow**: Entries encrypted with AES-256-GCM via .context/.ctx.key. File
+  blobs stored as "label:::base64data". Subcommands: CRUD operations, merge with
+  dedup, import/export for file blobs.
 
 **Edge cases**:
 - Blobs limited to 64KB pre-encoding
@@ -732,7 +884,8 @@ Consult specific sections when working on a module.
 **Exported API**:
 - `Cmd() *cobra.Command` — subcommands: snapshot, restore
 
-**Data flow**: Snapshot: copy settings.local.json → settings.golden.json. Restore: restore from golden, print diff of dropped permissions.
+**Data flow**: Snapshot: copy settings.local.json → settings.golden.json.
+  Restore: restore from golden, print diff of dropped permissions.
 
 **Dependencies**: `internal/config`
 
@@ -743,11 +896,16 @@ Consult specific sections when working on a module.
 **Purpose**: Browse, search, export, and manage AI session history.
 
 **Exported API**:
-- `Cmd() *cobra.Command` — subcommands: list, show, export, lock, unlock, sync; flags: --limit, --project, --tool, --all-projects, --latest, --full
+- `Cmd() *cobra.Command` — subcommands: list, show, export, lock, unlock, sync;
+  flags: --limit, --project, --tool, --all-projects, --latest, --full
 
-**Data flow**: Parse JSONL session files → subcommands: list (sorted by date), show (by ID/slug/--latest), export (to journal with YAML frontmatter), lock/unlock (protect from overwrite), sync (frontmatter-to-state lock reconciliation)
+**Data flow**: Parse JSONL session files → subcommands: list (sorted by date),
+  show (by ID/slug/--latest), export (to journal with YAML frontmatter),
+  lock/unlock (protect from overwrite), sync (frontmatter-to-state lock
+  reconciliation)
 
-**Dependencies**: `internal/config`, `internal/rc`, `internal/recall/parser`, `internal/journal/state`
+**Dependencies**: `internal/config`, `internal/rc`, `internal/journal/parser`,
+  `internal/journal/state`
 
 ---
 
@@ -773,7 +931,8 @@ Consult specific sections when working on a module.
 **Exported API**:
 - `Cmd() *cobra.Command` — flags: --json, --verbose
 
-**Data flow**: Scan .context/ → estimate tokens, check emptiness, generate summaries → output human-readable or JSON
+**Data flow**: Scan .context/ → estimate tokens, check emptiness, generate
+  summaries → output human-readable or JSON
 
 **Dependencies**: `internal/config`, `internal/rc`, `internal/context`
 
@@ -795,7 +954,10 @@ Consult specific sections when working on a module.
 - `dismiss ID` / `rm ID` — dismiss specific reminder
 - `dismiss --all` — dismiss all active reminders
 
-**Data flow**: Reminders stored in `.context/reminders.json` as JSON array. On `ctx remind` (no args): load reminders → filter by After date → display due reminders. Hooks call `ctx system check-reminders` to surface reminders at session start.
+**Data flow**: Reminders stored in `.context/reminders.json` as JSON array. On
+  `ctx remind` (no args): load reminders → filter by After date → display due
+  reminders. Hooks call `ctx system check-reminders` to surface reminders at
+  session start.
 
 **Edge cases**:
 - After date in the future → reminder suppressed until date
@@ -813,7 +975,8 @@ Consult specific sections when working on a module.
 **Exported API**:
 - `Cmd() *cobra.Command` — flags: --dry-run
 
-**Data flow**: Scan codebase for undocumented changes (new dirs, manifest changes, config files) → identify stale references → suggest or apply updates
+**Data flow**: Scan codebase for undocumented changes (new dirs, manifest
+  changes, config files) → identify stale references → suggest or apply updates
 
 **Dependencies**: `internal/config`, `internal/context`
 
@@ -821,16 +984,20 @@ Consult specific sections when working on a module.
 
 ## internal/cli/system
 
-**Purpose**: System diagnostics, resource monitoring, and Claude Code hook plumbing commands. Second-largest package (22 source files).
+**Purpose**: System diagnostics, resource monitoring, and Claude Code hook
+  plumbing commands. Second-largest package (22 source files).
 
-**Key types**: `HookInput` (SessionID, ToolInput.Command — JSON from stdin), `HookResponse` (HookSpecificOutput with HookEventName and AdditionalContext)
+**Key types**: `HookInput` (SessionID, ToolInput.Command — JSON from stdin),
+  `HookResponse` (HookSpecificOutput with HookEventName and AdditionalContext)
 
 **Exported API**:
 - `Cmd() *cobra.Command`
 
 **Visible subcommands**:
-- `resources [--json]` — display OS metrics (memory, swap, disk, load) with threshold-colored output
-- `bootstrap [--json]` — print context directory location, file list, and 6 agent rules
+- `resources [--json]` — display OS metrics (memory, swap, disk, load) with
+  threshold-colored output
+- `bootstrap [--json]` — print context directory location, file list, and 6
+  agent rules
 
 **Core infrastructure** (3 files):
 
@@ -851,20 +1018,22 @@ Consult specific sections when working on a module.
 | `check-context-size` | UserPromptSubmit | (all) | Adaptive counter: silent 1–15, every 5th 16–30, every 3rd 30+. Per-session counter in temp file | Per-session |
 | `check-persistence` | UserPromptSubmit | (all) | Track .context/ mtime; silent 1–10, nudge at #20 if no modifications, then every 15 prompts since last mod | Per-session |
 | `check-ceremonies` | UserPromptSubmit | (all) | Scan last 3 journal entries for "ctx-remember" and "ctx-wrap-up" strings; nudge missing ceremonies | Daily |
-| `check-journal` | UserPromptSubmit | (all) | Stage 1: count .jsonl files newer than latest journal export. Stage 2: count unenriched entries via journal/state. Suggest `ctx recall export --all` and `/ctx-journal-enrich-all` | Daily |
+| `check-journal` | UserPromptSubmit | (all) | Stage 1: count .jsonl files newer than latest journal export. Stage 2: count unenriched entries via journal/state. Suggest `ctx journal import --all` and `/ctx-journal-enrich-all` | Daily |
 | `check-reminders` | UserPromptSubmit | (all) | Surface due reminders (After ≤ today) from reminders.json with dismiss commands | None (until dismissed) |
 | `check-version` | UserPromptSubmit | (all) | Compare binary version (ldflags) vs plugin.json major.minor; skip "dev" builds. Piggyback: check encryption key age vs `rc.KeyRotationDays()` | Daily |
 | `check-resources` | UserPromptSubmit | (all) | `sysinfo.Collect()` + `Evaluate()`; output ONLY at DANGER severity (mem≥90%, swap≥75%, disk≥95%, load≥1.5x CPUs) | None |
 | `check-knowledge` | UserPromptSubmit | (all) | DECISIONS entry count vs `rc.EntryCountDecisions()` (default 20), LEARNINGS vs `rc.EntryCountLearnings()` (default 30), CONVENTIONS lines vs `rc.ConventionLineCount()` (default 200). Suggest /ctx-consolidate | Daily |
 | `check-map-staleness` | UserPromptSubmit | (all) | Two conditions (both required): map-tracking.json `last_run` >30 days AND `git log --since=<last_run> -- internal/` has commits. Suggest /ctx-architecture | Daily |
 | `check-backup-age` | UserPromptSubmit | (all) | Check SMB mount (via GVFS path from `CTX_BACKUP_SMB_URL` env) + backup marker mtime (>2 days). Suggest `ctx system backup` | Daily |
-| `mark-journal` | (plumbing) | — | `ctx system mark-journal <file> <stage> [--check]`. Valid stages: exported, enriched, normalized, fences_verified, locked | N/A |
+| `mark-journal` | (plumbing) | — | `ctx system mark-journal <file> <stage> [--check]`. Valid stages: imported, enriched, normalized, fences_verified, locked | N/A |
 | `cleanup-tmp` | SessionEnd | (all) | Remove files >15 days old from `secureTempDir()`. Silent side-effect, no output | N/A |
 
 **Hook output protocol**:
-- **Block**: `{"decision":"block","reason":"..."}` — Claude Code vetoes the tool call
+- **Block**: `{"decision":"block","reason":"..."}` — Claude Code vetoes the tool
+  call
 - **VERBATIM relay**: Plain text box — Claude Code renders to agent as context
-- **Hook directive**: `{"hookSpecificOutput":{...}}` — structured agent instruction
+- **Hook directive**: `{"hookSpecificOutput":{...}}` — structured agent
+  instruction
 - **Silent**: No output, exit 0 — check passed
 
 **Adaptive prompt counter algorithm** (check-context-size):
@@ -882,18 +1051,23 @@ prompt 25+:    nudge every 15 prompts since last modification
 reset:         any .context/*.md mtime change resets the counter
 ```
 
-**Daily throttle mechanism**: Marker files in temp dir; `isDailyThrottled()` checks if marker file's date components match today.
+**Daily throttle mechanism**: Marker files in temp dir; `isDailyThrottled()`
+  checks if marker file's date components match today.
 
 **Edge cases**:
-- `readInput()` detects terminal (character device) and returns immediately without blocking
-- Block commands: regex patterns handle command separators (&&, ||, ;, |) for mid-command detection
+- `readInput()` detects terminal (character device) and returns immediately
+  without blocking
+- Block commands: regex patterns handle command separators (&&, ||, ;, |) for
+  mid-command detection
 - check-resources: WARNING severity suppressed to avoid noise; only DANGER emits
 - check-version: "dev" builds skip version comparison entirely
 - check-map-staleness: respects `opted_out: true` in map-tracking.json
 - cleanup-tmp: graceful nil return if temp dir doesn't exist
 - All hooks exit 0 (never block initialization, even on errors)
 
-**Dependencies**: `internal/config`, `internal/rc`, `internal/sysinfo`, `internal/notify`, `internal/journal/state`, `internal/cli/remind` (for check-reminders), `internal/index` (for check-knowledge entry counting)
+**Dependencies**: `internal/config`, `internal/rc`, `internal/sysinfo`,
+  `internal/notify`, `internal/journal/state`, `internal/cli/remind` (for
+  check-reminders), `internal/index` (for check-knowledge entry counting)
 
 ---
 
@@ -904,9 +1078,12 @@ reset:         any .context/*.md mtime change resets the counter
 **Exported API**:
 - `Cmd() *cobra.Command` — subcommands: archive, snapshot
 
-**Data flow**: Archive: read TASKS.md → move completed [x] to timestamped archive in .context/archive/ → preserve Phase structure. Snapshot: create point-in-time copy.
+**Data flow**: Archive: read TASKS.md → move completed [x] to timestamped
+  archive in .context/archive/ → preserve Phase structure. Snapshot: create
+  point-in-time copy.
 
-**Dependencies**: `internal/config`, `internal/rc`, `internal/task`, `internal/validation`
+**Dependencies**: `internal/config`, `internal/rc`, `internal/task`,
+  `internal/validation`
 
 ---
 
@@ -917,11 +1094,14 @@ reset:         any .context/*.md mtime change resets the counter
 **Exported API**:
 - `Cmd() *cobra.Command` — flags: --log, --dry-run
 
-**Data flow**: Watch stdin/file for `<context-update type="...">` tags → parse attributes → validate required fields → apply updates (add entry, mark complete, etc.)
+**Data flow**: Watch stdin/file for `<context-update type="...">` tags → parse
+  attributes → validate required fields → apply updates (add entry, mark
+  complete, etc.)
 
 **Edge cases**:
 - Learnings require: context, lesson, application attributes
 - Decisions require: context, rationale, consequences attributes
 - Simple types (task, convention, complete) need no attributes
 
-**Dependencies**: `internal/config`, `internal/rc`, `internal/context`, `internal/task`
+**Dependencies**: `internal/config`, `internal/rc`, `internal/context`,
+  `internal/task`

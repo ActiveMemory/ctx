@@ -24,7 +24,7 @@ import (
 	"github.com/ActiveMemory/ctx/internal/task"
 )
 
-// ApplyUpdate routes a context update to the appropriate handler.
+// Update routes a context update to the appropriate handler.
 //
 // Dispatches based on the update type to add entries to context files
 // or mark tasks complete. For learnings and decisions, uses structured
@@ -36,7 +36,7 @@ import (
 //
 // Returns:
 //   - error: Non-nil if type is unknown or the handler fails
-func ApplyUpdate(update core.ContextUpdate) error {
+func Update(update core.ContextUpdate) error {
 	switch update.Type {
 	case cfgEntry.Task:
 		return RunAddSilent(update)
@@ -79,8 +79,8 @@ func RunAddSilent(update core.ContextUpdate) error {
 	}
 
 	// Validate required fields (same as ctx add)
-	if err := entry.Validate(params, nil); err != nil {
-		return err
+	if validateErr := entry.Validate(params, nil); validateErr != nil {
+		return validateErr
 	}
 
 	// Write using the shared function
@@ -110,9 +110,9 @@ func RunCompleteSilent(args []string) error {
 	filePath := filepath.Join(rc.ContextDir(), ctx.Task)
 	nl := token.NewlineLF
 
-	content, err := os.ReadFile(filepath.Clean(filePath))
-	if err != nil {
-		return err
+	content, readErr := os.ReadFile(filepath.Clean(filePath))
+	if readErr != nil {
+		return readErr
 	}
 
 	lines := strings.Split(string(content), nl)

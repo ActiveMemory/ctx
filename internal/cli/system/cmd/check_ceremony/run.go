@@ -48,33 +48,33 @@ func Run(cmd *cobra.Command, stdin *os.File) error {
 		return nil
 	}
 
-	remindedFile := filepath.Join(state.StateDir(), ceremony.CeremonyThrottleID)
+	remindedFile := filepath.Join(state.Dir(), ceremony.ThrottleID)
 
 	if coreCheck.DailyThrottled(remindedFile) {
 		return nil
 	}
 
 	files := coreCeremony.RecentJournalFiles(
-		ctxResolve.ResolvedJournalDir(), ceremony.CeremonyJournalLookback,
+		ctxResolve.JournalDir(), ceremony.JournalLookback,
 	)
 
 	if len(files) == 0 {
 		return nil
 	}
 
-	remember, wrapup := coreCeremony.ScanJournalsForCeremonies(files)
+	remember, wrapUp := coreCeremony.ScanJournalsForCeremonies(files)
 
-	if remember && wrapup {
+	if remember && wrapUp {
 		return nil
 	}
 
-	msg, variant := coreCeremony.EmitCeremonyNudge(remember, wrapup)
+	msg, variant := coreCeremony.Emit(remember, wrapUp)
 	writeHook.Nudge(cmd, msg)
 	if msg == "" {
 		return nil
 	}
 	ref := notify.NewTemplateRef(hook.CheckCeremonies, variant, nil)
-	nudge.NudgeAndRelay(hook.CheckCeremonies+": "+
+	nudge.EmitAndRelay(hook.CheckCeremonies+": "+
 		desc.Text(text.DescKeyCeremonyRelayMessage),
 		input.SessionID, ref,
 	)

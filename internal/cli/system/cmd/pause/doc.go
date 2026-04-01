@@ -6,6 +6,7 @@
 
 // Package pause implements the ctx system pause subcommand.
 //
-// It creates a session-scoped pause marker that suppresses nudge and
-// reminder hooks while allowing security hooks to continue firing.
+// Key exports: [Cmd], [Run].
+// Follows the cmd/root + core taxonomy.
+// Registered by the cmd parent command.
 package pause

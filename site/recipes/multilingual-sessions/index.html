@@ -2630,16 +2630,14 @@
   
   
     <li class="md-nav__item">
-      <a href="../prompt-templates/" class="md-nav__link">
+      <a href="../prompt-templates.md" class="md-nav__link">
         
   
-  
-    <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-message-square-text" viewBox="0 0 24 24"><path d="M22 17a2 2 0 0 1-2 2H6.828a2 2 0 0 0-1.414.586l-2.202 2.202A.71.71 0 0 1 2 21.286V5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2zM7 11h10M7 15h6M7 7h8"/></svg>
   
   <span class="md-ellipsis">
     
   
-    Reusable Prompt Templates
+    none
   
 
     
@@ -2820,7 +2818,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../cli/recall/" class="md-nav__link">
+      <a href="../../cli/journal/" class="md-nav__link">
         
   
   
@@ -2829,7 +2827,7 @@
   <span class="md-ellipsis">
     
   
-    Recall and Journal
+    Journal
   
 
     
@@ -3886,7 +3884,7 @@ might use headers like <code># Oturum: 2026-01-15 - API Düzeltme</code> (Turkis
 or <code># セッション: 2026-01-15 - テスト</code> (Japanese) instead of
 <code># Session: 2026-01-15 - Fix API</code>.</p>
 <p>By default, ctx only recognizes <code>Session:</code> as a session header prefix.
-Files with other prefixes are silently skipped during recall export and
+Files with other prefixes are silently skipped during journal import and
 journal generation: They look like regular Markdown, not sessions.</p>
 <h2 id="tldr">TL;DR<a class="headerlink" href="#tldr" title="Permanent link">&para;</a></h2>
 <p>Add recognized prefixes to <code>.ctxrc</code>:</p>
@@ -3923,7 +3921,7 @@ not extended. If you still want English headers recognized, include
 </div>
 <h3 id="team-setup">Team setup<a class="headerlink" href="#team-setup" title="Permanent link">&para;</a></h3>
 <p>Commit <code>.ctxrc</code> to the repo so all team members share the same prefix
-list. This ensures <code>ctx recall export</code> and journal generation pick up
+list. This ensures <code>ctx journal import</code> and journal generation pick up
 sessions from all team members regardless of language.</p>
 <h3 id="common-prefixes">Common prefixes<a class="headerlink" href="#common-prefixes" title="Permanent link">&para;</a></h3>
 <table>
@@ -3973,7 +3971,7 @@ sessions from all team members regardless of language.</p>
 </tbody>
 </table>
 <h3 id="verifying">Verifying<a class="headerlink" href="#verifying" title="Permanent link">&para;</a></h3>
-<p>After configuring, test with <code>ctx recall list</code>. Sessions with the new
+<p>After configuring, test with <code>ctx journal source</code>. Sessions with the new
 prefixes should appear in the output.</p>
 <h2 id="what-this-does-not-do">What This Does NOT Do<a class="headerlink" href="#what-this-does-not-do" title="Permanent link">&para;</a></h2>
 <ul>

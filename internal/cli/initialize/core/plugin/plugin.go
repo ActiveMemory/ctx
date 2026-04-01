@@ -15,29 +15,29 @@ import (
 	"github.com/spf13/cobra"
 
 	"github.com/ActiveMemory/ctx/internal/config/claude"
+	"github.com/ActiveMemory/ctx/internal/config/dir"
 	"github.com/ActiveMemory/ctx/internal/config/fs"
 	"github.com/ActiveMemory/ctx/internal/err/config"
 	errFs "github.com/ActiveMemory/ctx/internal/err/fs"
 	errInit "github.com/ActiveMemory/ctx/internal/err/initialize"
 	errParser "github.com/ActiveMemory/ctx/internal/err/parser"
 	"github.com/ActiveMemory/ctx/internal/io"
-	"github.com/ActiveMemory/ctx/internal/write/add"
 	"github.com/ActiveMemory/ctx/internal/write/initialize"
 )
 
-// EnablePluginGlobally enables the ctx plugin in ~/.claude/settings.json.
+// EnableGlobally enables the ctx plugin in ~/.claude/settings.json.
 //
 // Parameters:
 //   - cmd: Cobra command for output
 //
 // Returns:
 //   - error: Non-nil if file operations fail
-func EnablePluginGlobally(cmd *cobra.Command) error {
+func EnableGlobally(cmd *cobra.Command) error {
 	homeDir, homeErr := os.UserHomeDir()
 	if homeErr != nil {
 		return errInit.HomeDir(homeErr)
 	}
-	claudeDir := filepath.Join(homeDir, ".claude")
+	claudeDir := filepath.Join(homeDir, dir.Claude)
 	installedPath := filepath.Join(claudeDir, claude.InstalledPlugins)
 	installedData, readErr := io.SafeReadUserFile(installedPath)
 	if readErr != nil {
@@ -56,7 +56,7 @@ func EnablePluginGlobally(cmd *cobra.Command) error {
 	var settings globalSettings
 	existingData, safeReadErr := io.SafeReadUserFile(settingsPath)
 	if safeReadErr != nil && !os.IsNotExist(safeReadErr) {
-		return add.ErrFileRead(settingsPath, safeReadErr)
+		return errFs.FileRead(settingsPath, safeReadErr)
 	}
 	if safeReadErr == nil {
 		if parseErr := json.Unmarshal(existingData, &settings); parseErr != nil {
@@ -95,7 +95,9 @@ func EnablePluginGlobally(cmd *cobra.Command) error {
 	if encodeErr := encoder.Encode(settings); encodeErr != nil {
 		return config.MarshalSettings(encodeErr)
 	}
-	if writeErr := os.WriteFile(settingsPath, buf.Bytes(), fs.PermFile); writeErr != nil {
+	if writeErr := os.WriteFile(
+		settingsPath, buf.Bytes(), fs.PermFile,
+	); writeErr != nil {
 		return errFs.FileWrite(settingsPath, writeErr)
 	}
 	initialize.PluginEnabled(cmd, settingsPath)
@@ -112,7 +114,7 @@ func Installed() bool {
 	if homeErr != nil {
 		return false
 	}
-	installedPath := filepath.Join(homeDir, ".claude", claude.InstalledPlugins)
+	installedPath := filepath.Join(homeDir, dir.Claude, claude.InstalledPlugins)
 	data, readErr := io.SafeReadUserFile(installedPath)
 	if readErr != nil {
 		return false
@@ -135,7 +137,7 @@ func EnabledGlobally() bool {
 	if homeErr != nil {
 		return false
 	}
-	settingsPath := filepath.Join(homeDir, ".claude", claude.GlobalSettings)
+	settingsPath := filepath.Join(homeDir, dir.Claude, claude.GlobalSettings)
 	data, readErr := io.SafeReadUserFile(settingsPath)
 	if readErr != nil {
 		return false

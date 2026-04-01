@@ -2435,16 +2435,14 @@
   
   
     <li class="md-nav__item">
-      <a href="../prompt-templates/" class="md-nav__link">
+      <a href="../prompt-templates.md" class="md-nav__link">
         
   
-  
-    <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-message-square-text" viewBox="0 0 24 24"><path d="M22 17a2 2 0 0 1-2 2H6.828a2 2 0 0 0-1.414.586l-2.202 2.202A.71.71 0 0 1 2 21.286V5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2zM7 11h10M7 15h6M7 7h8"/></svg>
   
   <span class="md-ellipsis">
     
   
-    Reusable Prompt Templates
+    none
   
 
     
@@ -2625,7 +2623,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../cli/recall/" class="md-nav__link">
+      <a href="../../cli/journal/" class="md-nav__link">
         
   
   
@@ -2634,7 +2632,7 @@
   <span class="md-ellipsis">
     
   
-    Recall and Journal
+    Journal
   
 
     
@@ -4125,7 +4123,7 @@ recent journal entries.</p>
     Hook-&gt;&gt;Hook: NudgeAndRelay(message)
     Hook-&gt;&gt;State: Touch throttle marker</code></pre>
 <h3 id="check-journal">check-journal<a class="headerlink" href="#check-journal" title="Permanent link">&para;</a></h3>
-<p>Daily check for unexported sessions and unenriched journal entries.</p>
+<p>Daily check for unimported sessions and unenriched journal entries.</p>
 <pre class="mermaid"><code>sequenceDiagram
     participant CC as Claude Code
     participant Hook as check-journal
@@ -4151,11 +4149,11 @@ recent journal entries.</p>
     Hook-&gt;&gt;Journal: Get newest entry mtime
     Hook-&gt;&gt;Claude: Count .jsonl files newer than journal
     Hook-&gt;&gt;Journal: Count unenriched entries
-    alt unexported == 0 and unenriched == 0
+    alt unimported == 0 and unenriched == 0
         Hook--&gt;&gt;CC: (silent exit)
     end
     Hook-&gt;&gt;Tpl: LoadMessage(hook, variant, {counts})
-    Note over Hook: variant: both | unexported | unenriched
+    Note over Hook: variant: both | unimported | unenriched
     Hook--&gt;&gt;CC: Nudge box (counts)
     Hook-&gt;&gt;Hook: NudgeAndRelay(message)
     Hook-&gt;&gt;State: Touch throttle marker</code></pre>

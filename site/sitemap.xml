@@ -142,9 +142,6 @@
         <loc>https://ctx.ist/recipes/parallel-worktrees/</loc>
       </url>
       <url>
-        <loc>https://ctx.ist/recipes/prompt-templates/</loc>
-      </url>
-      <url>
         <loc>https://ctx.ist/cli/</loc>
       </url>
       <url>
@@ -154,7 +151,7 @@
         <loc>https://ctx.ist/cli/context/</loc>
       </url>
       <url>
-        <loc>https://ctx.ist/cli/recall/</loc>
+        <loc>https://ctx.ist/cli/journal/</loc>
       </url>
       <url>
         <loc>https://ctx.ist/cli/tools/</loc>

@@ -18,7 +18,7 @@ import (
 	"github.com/ActiveMemory/ctx/internal/write/sync"
 )
 
-// Run selects high-value context, formats it, and writes a marked block
+// Run selects the high-value context, formats it, and writes a marked block
 // into MEMORY.md. In dry-run mode it reports what would be published.
 //
 // Parameters:
@@ -32,7 +32,7 @@ func Run(cmd *cobra.Command, budget int, dryRun bool) error {
 	contextDir := rc.ContextDir()
 	projectRoot := filepath.Dir(contextDir)
 
-	memoryPath, discoverErr := mem.DiscoverMemoryPath(projectRoot)
+	memoryPath, discoverErr := mem.DiscoverPath(projectRoot)
 	if discoverErr != nil {
 		sync.ErrAutoMemoryNotActive(cmd, discoverErr)
 		return errMemory.NotFound()
@@ -43,14 +43,14 @@ func Run(cmd *cobra.Command, budget int, dryRun bool) error {
 		return errMemory.SelectContentFailed(selectErr)
 	}
 
-	publish.PublishPlan(cmd, budget,
+	publish.Plan(cmd, budget,
 		len(result.Tasks), len(result.Decisions),
 		len(result.Conventions), len(result.Learnings),
 		result.TotalLines,
 	)
 
 	if dryRun {
-		publish.PublishDryRun(cmd)
+		publish.DryRun(cmd)
 		return nil
 	}
 
@@ -60,7 +60,7 @@ func Run(cmd *cobra.Command, budget int, dryRun bool) error {
 		return errMemory.PublishFailed(publishErr)
 	}
 
-	publish.PublishDone(cmd)
+	publish.Done(cmd)
 
 	return nil
 }

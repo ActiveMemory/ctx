@@ -13,20 +13,20 @@ import (
 	"github.com/ActiveMemory/ctx/internal/config/embed/text"
 )
 
-// InvalidDateValue returns an error for an invalid date string.
+// InvalidValue returns an error for an invalid date string.
 //
 // Parameters:
 //   - value: the invalid date string.
 //
 // Returns:
 //   - error: "invalid date <value> (expected YYYY-MM-DD)"
-func InvalidDateValue(value string) error {
+func InvalidValue(value string) error {
 	return fmt.Errorf(
 		desc.Text(text.DescKeyErrDateInvalidDateValue), value,
 	)
 }
 
-// InvalidDate returns an error for an invalid date flag value.
+// Invalid returns an error for an invalid date flag value.
 //
 // Parameters:
 //   - flag: the flag name (e.g. "--since", "--until").
@@ -35,7 +35,7 @@ func InvalidDateValue(value string) error {
 //
 // Returns:
 //   - error: "invalid <flag> date <value> (expected YYYY-MM-DD): <cause>"
-func InvalidDate(flag, value string, cause error) error {
+func Invalid(flag, value string, cause error) error {
 	return fmt.Errorf(
 		desc.Text(text.DescKeyErrDateInvalidDate), flag, value, cause,
 	)

@@ -9,34 +9,19 @@ package messages
 import (
 	"sync"
 
+	"gopkg.in/yaml.v3"
+
 	"github.com/ActiveMemory/ctx/internal/assets/read/hook"
 	errFs "github.com/ActiveMemory/ctx/internal/err/fs"
 	errParser "github.com/ActiveMemory/ctx/internal/err/parser"
-	"gopkg.in/yaml.v3"
 )
 
-// HookMessageInfo describes a single hook message template entry.
-type HookMessageInfo struct {
-	// Hook is the hook directory name (e.g., "qa-reminder").
-	Hook string `yaml:"hook"`
-
-	// Variant is the template file stem (e.g., "gate").
-	Variant string `yaml:"variant"`
-
-	// Category is "customizable" or "ctx-specific".
-	Category string `yaml:"category"`
-
-	// Description is a one-line human description of this message.
-	Description string `yaml:"description"`
-
-	// TemplateVars lists available Go template variables (e.g., "PromptsSinceNudge").
-	TemplateVars []string `yaml:"vars,omitempty"`
-}
-
-// CategoryCustomizable marks messages intended for project-specific customization.
+// CategoryCustomizable marks messages intended for
+// project-specific customization.
 const CategoryCustomizable = "customizable"
 
-// CategoryCtxSpecific marks messages specific to ctx's own development workflow.
+// CategoryCtxSpecific marks messages specific to ctx's
+// own development workflow.
 const CategoryCtxSpecific = "ctx-specific"
 
 var (
@@ -72,6 +57,9 @@ func Registry() []HookMessageInfo {
 
 // RegistryError returns any error encountered while parsing the
 // embedded registry.yaml. Nil on success.
+//
+// Returns:
+//   - error: Parse error from registry.yaml, or nil on success
 func RegistryError() error {
 	Registry() // ensure sync.Once has run
 	return registryErr

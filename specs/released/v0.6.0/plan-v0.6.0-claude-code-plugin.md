@@ -271,7 +271,7 @@ internal/cli/system/
 ├── check_context_size_test.go
 ├── check_persistence.go       # Context file mtime watcher
 ├── check_persistence_test.go
-├── check_journal.go           # Unexported sessions + unenriched entries
+├── check_journal.go           # Unimported sessions + unenriched entries
 ├── check_journal_test.go
 ├── block_non_path_ctx.go      # Command pattern blocker
 ├── block_non_path_ctx_test.go

@@ -14,5 +14,6 @@ const (
 	DescKeyCheckVersionKeyRelayFormat      = "check-version.key-relay-format"
 	DescKeyCheckVersionKeyRelayPrefix      = "check-version.key-relay-prefix"
 	DescKeyCheckVersionMismatchRelayFormat = "check-version.mismatch-relay-format"
+	DescKeyCheckVersionPluginReadError     = "check-version.plugin-read-error"
 	DescKeyCheckVersionRelayPrefix         = "check-version.relay-prefix"
 )

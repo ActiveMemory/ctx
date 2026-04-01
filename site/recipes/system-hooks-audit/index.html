@@ -2180,10 +2180,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#check-journal-unexported-session-reminder" class="md-nav__link">
+  <a href="#check-journal-unimported-session-reminder" class="md-nav__link">
     <span class="md-ellipsis">
       
-        check-journal: Unexported Session Reminder
+        check-journal: Unimported Session Reminder
       
     </span>
   </a>
@@ -2957,16 +2957,14 @@
   
   
     <li class="md-nav__item">
-      <a href="../prompt-templates/" class="md-nav__link">
+      <a href="../prompt-templates.md" class="md-nav__link">
         
   
-  
-    <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-message-square-text" viewBox="0 0 24 24"><path d="M22 17a2 2 0 0 1-2 2H6.828a2 2 0 0 0-1.414.586l-2.202 2.202A.71.71 0 0 1 2 21.286V5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2zM7 11h10M7 15h6M7 7h8"/></svg>
   
   <span class="md-ellipsis">
     
   
-    Reusable Prompt Templates
+    none
   
 
     
@@ -3147,7 +3145,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../cli/recall/" class="md-nav__link">
+      <a href="../../cli/journal/" class="md-nav__link">
         
   
   
@@ -3156,7 +3154,7 @@
   <span class="md-ellipsis">
     
   
-    Recall and Journal
+    Journal
   
 
     
@@ -4098,10 +4096,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#check-journal-unexported-session-reminder" class="md-nav__link">
+  <a href="#check-journal-unimported-session-reminder" class="md-nav__link">
     <span class="md-ellipsis">
       
-        check-journal: Unexported Session Reminder
+        check-journal: Unimported Session Reminder
       
     </span>
   </a>
@@ -4674,8 +4672,8 @@ catches the "<em>we talked about it but never wrote it down</em>" failure mode.<
 hook bootstraps the habit until it becomes automatic.</p>
 <p><strong>Output</strong>: Tailored nudge depending on which ceremony is missing.</p>
 <hr />
-<h4 id="check-journal-unexported-session-reminder"><code>check-journal</code>: Unexported Session Reminder<a class="headerlink" href="#check-journal-unexported-session-reminder" title="Permanent link">&para;</a></h4>
-<p><strong>What</strong>: Detects unexported Claude Code sessions and unenriched journal
+<h4 id="check-journal-unimported-session-reminder"><code>check-journal</code>: Unimported Session Reminder<a class="headerlink" href="#check-journal-unimported-session-reminder" title="Permanent link">&para;</a></h4>
+<p><strong>What</strong>: Detects unimported Claude Code sessions and unenriched journal
 entries. Fires once per day.</p>
 <p><strong>Why</strong>: Exported sessions become searchable history. Unenriched entries
 lack metadata for filtering. Both decay in value over time.</p>
@@ -4685,7 +4683,7 @@ lack metadata for filtering. Both decay in value over time.</p>
 </span><span id="__span-3-3"><a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>│ 5 existing entries need enrichment.
 </span><span id="__span-3-4"><a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>│
 </span><span id="__span-3-5"><a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>│ Export and enrich:
-</span><span id="__span-3-6"><a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>│   ctx recall export --all
+</span><span id="__span-3-6"><a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>│   ctx journal import --all
 </span><span id="__span-3-7"><a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>│   /ctx-journal-enrich-all
 </span><span id="__span-3-8"><a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>└────────────────────────────────────────────────
 </span></code></pre></div>
@@ -5012,7 +5010,7 @@ inactivity.</p>
 you simply haven't used <code>ctx</code>. The correct check needs two inputs:</p>
 <ol>
 <li><strong>Last hook fire time</strong>: from <code>.context/logs/</code> or webhook history</li>
-<li><strong>Last session activity</strong>: from journal entries or <code>ctx recall list</code></li>
+<li><strong>Last session activity</strong>: from journal entries or <code>ctx journal source</code></li>
 </ol>
 <p>If sessions are happening but hooks aren't firing, that's a real
 problem. If neither sessions nor hooks are happening, that's a vacation.</p>

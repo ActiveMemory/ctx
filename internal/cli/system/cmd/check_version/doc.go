@@ -6,6 +6,7 @@
 
 // Package check_version implements the ctx system check-version subcommand.
 //
-// It compares the ctx binary version against the embedded plugin version
-// and warns when the binary is older than the plugin expects.
+// Key exports: [Cmd], [Run].
+// Follows the cmd/root + core taxonomy.
+// Registered by the cmd parent command.
 package check_version

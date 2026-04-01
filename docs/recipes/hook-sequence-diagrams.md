@@ -374,7 +374,7 @@ sequenceDiagram
 
 ### check-journal
 
-Daily check for unexported sessions and unenriched journal entries.
+Daily check for unimported sessions and unenriched journal entries.
 
 ```mermaid
 sequenceDiagram
@@ -402,11 +402,11 @@ sequenceDiagram
     Hook->>Journal: Get newest entry mtime
     Hook->>Claude: Count .jsonl files newer than journal
     Hook->>Journal: Count unenriched entries
-    alt unexported == 0 and unenriched == 0
+    alt unimported == 0 and unenriched == 0
         Hook-->>CC: (silent exit)
     end
     Hook->>Tpl: LoadMessage(hook, variant, {counts})
-    Note over Hook: variant: both | unexported | unenriched
+    Note over Hook: variant: both | unimported | unenriched
     Hook-->>CC: Nudge box (counts)
     Hook->>Hook: NudgeAndRelay(message)
     Hook->>State: Touch throttle marker

@@ -132,16 +132,16 @@ Show context health: file count, token estimate, and per-file summary.
 
 Add a task, decision, learning, or convention to the context.
 
-| Argument       | Type   | Required | Description                              |
-|----------------|--------|----------|------------------------------------------|
-| `type`         | string | Yes      | Entry type: task, decision, learning, convention |
-| `content`      | string | Yes      | Title or main content                    |
-| `priority`     | string | No       | Priority level (tasks only): high, medium, low |
-| `context`      | string | Conditional | Context field (decisions and learnings) |
-| `rationale`    | string | Conditional | Rationale (decisions only)             |
-| `consequence`  | string | Conditional | Consequence (decisions only)           |
-| `lesson`       | string | Conditional | Lesson learned (learnings only)        |
-| `application`  | string | Conditional | How to apply (learnings only)          |
+| Argument      | Type   | Required    | Description                                      |
+|---------------|--------|-------------|--------------------------------------------------|
+| `type`        | string | Yes         | Entry type: task, decision, learning, convention |
+| `content`     | string | Yes         | Title or main content                            |
+| `priority`    | string | No          | Priority level (tasks only): high, medium, low   |
+| `context`     | string | Conditional | Context field (decisions and learnings)          |
+| `rationale`   | string | Conditional | Rationale (decisions only)                       |
+| `consequence` | string | Conditional | Consequence (decisions only)                     |
+| `lesson`      | string | Conditional | Lesson learned (learnings only)                  |
+| `application` | string | Conditional | How to apply (learnings only)                    |
 
 ### `ctx_complete`
 
@@ -158,7 +158,7 @@ passed checks.
 
 **Arguments:** None. **Read-only.**
 
-### `ctx_recall`
+### `ctx_journal_source`
 
 Query recent AI session history (summaries, decisions, topics).
 

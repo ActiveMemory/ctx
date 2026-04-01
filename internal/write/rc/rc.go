@@ -7,12 +7,8 @@
 package rc
 
 import (
-	"fmt"
-	"os"
-
-	"github.com/ActiveMemory/ctx/internal/assets/read/desc"
-	"github.com/ActiveMemory/ctx/internal/config/embed/text"
-	"github.com/ActiveMemory/ctx/internal/config/token"
+	cfgWarn "github.com/ActiveMemory/ctx/internal/config/warn"
+	logWarn "github.com/ActiveMemory/ctx/internal/log/warn"
 )
 
 // ParseWarning prints a YAML parse warning to stderr.
@@ -24,6 +20,5 @@ import (
 //   - filename: the config file that failed to parse
 //   - cause: the parse error
 func ParseWarning(filename string, cause error) {
-	_, _ = fmt.Fprintf(os.Stderr, desc.Text(text.DescKeyRcParseWarning)+token.NewlineLF,
-		filename, cause)
+	logWarn.Warn(cfgWarn.ParseConfig, filename, cause)
 }

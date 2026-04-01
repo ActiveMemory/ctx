@@ -20,46 +20,60 @@ const (
 	TagPre = "<pre>"
 	// TagPreClose is the closing tag for preformatted text blocks.
 	TagPreClose = "</pre>"
+	// TagPreCode is the compound opening tag for code within pre blocks.
+	TagPreCode = "<pre><code>"
+	// TagPreCodeClose is the compound closing tag.
+	TagPreCodeClose = "</code></pre>"
+	// TagDetails is the opening tag for collapsible details blocks.
+	TagDetails = "<details>"
+	// TagDetailsClose is the closing tag for details blocks.
+	TagDetailsClose = "</details>"
+	// TagSummaryOpen is the opening tag for summary elements.
+	TagSummaryOpen = "<summary>"
+	// TagSummaryClose is the closing tag for summary elements.
+	TagSummaryClose = "</summary>"
+)
+
+// HTML entity escapes.
+const (
+	// EntityLT is the HTML entity for <.
+	EntityLT = "&lt;"
+	// EntityGT is the HTML entity for >.
+	EntityGT = "&gt;"
+	// AngleLT is the literal < character.
+	AngleLT = "<"
+	// AngleGT is the literal > character.
+	AngleGT = ">"
+)
+
+// Markdown inline formatting.
+const (
+	// BoldWrap is the Markdown bold delimiter.
+	BoldWrap = "**"
 )
 
 // Context block markers for embedding context in files.
 const (
-	// CtxMarkerStart marks the beginning of an embedded context block.
-	CtxMarkerStart = "<!-- ctx:context -->"
-	// CtxMarkerEnd marks the end of an embedded context block.
-	CtxMarkerEnd = "<!-- ctx:end -->"
-)
-
-// Prompt block markers for PROMPT.md.
-const (
-	// PromptMarkerStart marks the beginning of the prompt block.
-	PromptMarkerStart = "<!-- ctx:prompt -->"
-	// PromptMarkerEnd marks the end of the prompt block.
-	PromptMarkerEnd = "<!-- ctx:prompt:end -->"
+	// CtxStart marks the beginning of an embedded context block.
+	CtxStart = "<!-- ctx:context -->"
+	// CtxEnd marks the end of an embedded context block.
+	CtxEnd = "<!-- ctx:end -->"
 )
 
 // Copilot block markers for .github/copilot-instructions.md.
 const (
-	// CopilotMarkerStart marks the beginning of ctx-managed Copilot content.
-	CopilotMarkerStart = "<!-- ctx:copilot -->"
-	// CopilotMarkerEnd marks the end of ctx-managed Copilot content.
-	CopilotMarkerEnd = "<!-- ctx:copilot:end -->"
+	// CopilotStart marks the beginning of ctx-managed Copilot content.
+	CopilotStart = "<!-- ctx:copilot -->"
+	// CopilotEnd marks the end of ctx-managed Copilot content.
+	CopilotEnd = "<!-- ctx:copilot:end -->"
 )
 
 // Agents block markers for AGENTS.md.
 const (
-	// AgentsMarkerStart marks the beginning of ctx-managed AGENTS.md content.
-	AgentsMarkerStart = "<!-- ctx:agents -->"
-	// AgentsMarkerEnd marks the end of ctx-managed AGENTS.md content.
-	AgentsMarkerEnd = "<!-- ctx:agents:end -->"
-)
-
-// Plan block markers for IMPLEMENTATION_PLAN.md.
-const (
-	// PlanMarkerStart marks the beginning of the plan block.
-	PlanMarkerStart = "<!-- ctx:plan -->"
-	// PlanMarkerEnd marks the end of the plan block.
-	PlanMarkerEnd = "<!-- ctx:plan:end -->"
+	// AgentsStart marks the beginning of ctx-managed AGENTS.md content.
+	AgentsStart = "<!-- ctx:agents -->"
+	// AgentsEnd marks the end of ctx-managed AGENTS.md content.
+	AgentsEnd = "<!-- ctx:agents:end -->"
 )
 
 // Index markers for auto-generated table of contents sections.
@@ -85,10 +99,10 @@ const (
 
 // Published block markers for MEMORY.md.
 const (
-	// PublishMarkerStart begins the ctx-published block in MEMORY.md.
-	PublishMarkerStart = "<!-- ctx:published -->"
-	// PublishMarkerEnd ends the ctx-published block in MEMORY.md.
-	PublishMarkerEnd = "<!-- ctx:end -->"
+	// PublishStart begins the ctx-published block in MEMORY.md.
+	PublishStart = "<!-- ctx:published -->"
+	// PublishEnd ends the ctx-published block in MEMORY.md.
+	PublishEnd = "<!-- ctx:end -->"
 )
 
 // Entry status markers for knowledge files.
@@ -129,4 +143,24 @@ const (
 	// CompactionBoilerplatePrefix starts the continuation prompt after
 	// a compaction summary.
 	CompactionBoilerplatePrefix = "If you need specific details from before compaction"
+)
+
+// Markdown table markers for index generation.
+const (
+	// TablePipe is the cell delimiter in Markdown tables.
+	TablePipe = "|"
+	// TablePipePad is the padded cell delimiter.
+	TablePipePad = " | "
+	// TableRowOpen opens a table row.
+	TableRowOpen = "| "
+	// TableRowClose closes a table row.
+	TableRowClose = " |"
+	// TableSepCell is a header separator cell.
+	TableSepCell = "------"
+	// TablePipeEscaped is an escaped pipe for use inside cells.
+	TablePipeEscaped = "\\|"
+	// TableRowFmt is the Printf format for a two-column table row.
+	TableRowFmt = "| %s | %s |"
+	// TableSepFmt is the Printf format for a two-column separator row.
+	TableSepFmt = "|%s|%s|"
 )

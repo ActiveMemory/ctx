@@ -21,7 +21,7 @@ Worked on the memory bridge foundation.
 
 Decided to use heuristic classification.
 `
-	entries := ParseEntries(content)
+	entries := Entries(content)
 	if len(entries) != 2 {
 		t.Fatalf("expected 2 entries, got %d: %+v", len(entries), entries)
 	}
@@ -43,7 +43,7 @@ First paragraph about something.
 
 Second paragraph about something else.
 `
-	entries := ParseEntries(content)
+	entries := Entries(content)
 	if len(entries) != 2 {
 		t.Fatalf("expected 2 entries, got %d: %+v", len(entries), entries)
 	}
@@ -62,9 +62,10 @@ func TestParseEntries_ListItems(t *testing.T) {
 - prefer filepath.Join over string concat
 - never use global state
 `
-	entries := ParseEntries(content)
+	entries := Entries(content)
 	if len(entries) != 3 {
-		t.Fatalf("expected 3 list entries (one per item), got %d: %+v", len(entries), entries)
+		t.Fatalf("expected 3 list entries (one per item), got %d: %+v",
+			len(entries), entries)
 	}
 	for i, e := range entries {
 		if e.Kind != EntryList {
@@ -92,7 +93,7 @@ Learned that golangci-lint v2 ignores inline nolint.
 
 Some standalone paragraph.
 `
-	entries := ParseEntries(content)
+	entries := Entries(content)
 	if len(entries) != 4 {
 		t.Fatalf("expected 4 entries, got %d", len(entries))
 	}
@@ -110,19 +111,20 @@ Some standalone paragraph.
 		t.Errorf("entry 2: expected EntryList, got %d", entries[2].Kind)
 	}
 
-	// Sub-header "### Key learnings" absorbs all following paragraphs until next header
+	// Sub-header "### Key learnings" absorbs all following
+	// paragraphs until next header
 	if entries[3].Kind != EntryHeader {
 		t.Errorf("entry 3: expected EntryHeader, got %d", entries[3].Kind)
 	}
 }
 
 func TestParseEntries_Empty(t *testing.T) {
-	entries := ParseEntries("")
+	entries := Entries("")
 	if len(entries) != 0 {
 		t.Errorf("expected 0 entries for empty input, got %d", len(entries))
 	}
 
-	entries = ParseEntries("   \n\n  ")
+	entries = Entries("   \n\n  ")
 	if len(entries) != 0 {
 		t.Errorf("expected 0 entries for whitespace-only input, got %d", len(entries))
 	}
@@ -133,7 +135,7 @@ func TestParseEntries_TopLevelHeadingSkipped(t *testing.T) {
 
 Just a paragraph.
 `
-	entries := ParseEntries(content)
+	entries := Entries(content)
 	if len(entries) != 1 {
 		t.Fatalf("expected 1 entry (top-level heading skipped), got %d", len(entries))
 	}
@@ -149,8 +151,9 @@ func TestParseEntries_IndividualListItems(t *testing.T) {
 
 - second item after blank line
 `
-	entries := ParseEntries(content)
+	entries := Entries(content)
 	if len(entries) != 2 {
-		t.Fatalf("expected 2 entries (blank line separates lists), got %d: %+v", len(entries), entries)
+		t.Fatalf("expected 2 entries (blank line separates lists), got %d: %+v",
+			len(entries), entries)
 	}
 }

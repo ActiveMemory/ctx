@@ -5,4 +5,8 @@
 //                 SPDX-License-Identifier: Apache-2.0
 
 // Package mcp defines constants for the MCP server protocol integration.
+//
+// Constants are referenced by domain packages via config/mcp.*.
+// Provides constants and definitions for mcp operations.
+// Constants are referenced by domain packages.
 package mcp

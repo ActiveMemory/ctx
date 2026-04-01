@@ -9,17 +9,13 @@ recording the context behind it.
 
 ## When to Use
 
-- When committing after meaningful work (feature, bugfix,
-  refactor)
-- When the commit involves a design choice or trade-off that
-  future sessions should know about
-- When the user says "commit" or "commit this": prefer this
-  over raw git commit to capture context
+- For ALL commits. This is the only way to commit in this project.
+  Raw `git commit` bypasses spec enforcement and violates CONSTITUTION.
+- When the user says "commit", "commit this", "ship it", "let's commit":
+  always use this skill, never raw git commit.
 
 ## When NOT to Use
 
-- For trivial commits (typo, formatting): just commit normally
-- When the user explicitly says "just commit, no context"
 - When nothing has changed (no staged or unstaged modifications)
 
 ## Usage Examples
@@ -32,16 +28,44 @@ recording the context behind it.
 
 ## Process
 
-### 1. Pre-commit checks
+### 1. Check CONSTITUTION for commit rules
+
+Read `.context/CONSTITUTION.md` (if it exists) for commit-specific
+rules. Common project rules to look for and enforce:
+
+- **Spec-per-commit**: Add a `Spec:` trailer, verify a spec file exists in
+  `specs/` before proceeding. If no spec exists, stop and offer to run
+  `/ctx-spec` to scaffold one.
+- **Sign-off**: `Signed-off-by:`, include it.
+- **Other trailers**: Honor any project-specific trailer requirements.
+
+Read CONSTITUTION fully and apply all relevant rules before
+proceeding to pre-commit checks.
+
+### 2. Pre-commit checks
 
 Unless the user says `--skip-qa` or "skip checks":
 
 - Run `git diff --name-only` to see what changed
-- If Go files changed, run `CGO_ENABLED=0 go build -o /dev/null ./cmd/ctx`
-  to verify the build
-- If build fails, stop and report: do not commit broken code
+- Run the project's build and lint commands to verify nothing is broken.
+  Check for a Makefile, package.json, or equivalent. If you cannot
+  identify the build/lint commands, ask the user before proceeding.
+- If the build or lint fails, stop and report: do not commit broken code
 
-### 2. Stage and commit
+**Verify before claiming ready**: map each claim to evidence.
+"Tests pass" requires test output with 0 failures. "Build succeeds"
+requires exit 0. "Lint clean" requires linter output with 0 errors.
+Run commands fresh — never reuse earlier output. Before proceeding
+to stage, answer these self-audit questions:
+
+1. What assumptions did I make?
+2. What did I NOT check?
+3. Where am I least confident?
+4. What would a reviewer question first?
+
+If any answer reveals a gap, address it before staging.
+
+### 3. Stage and commit
 
 - Review unstaged changes with `git status`
 - Stage relevant files (prefer specific files over `git add -A`)
@@ -49,101 +73,110 @@ Unless the user says `--skip-qa` or "skip checks":
   - If the user provided a message, use it
   - If not, draft one based on the changes (1-2 sentences,
     "why" not "what")
-- Commit with the standard Co-Authored-By trailer
+- Include the `Spec:` and `Signed-off-by:` trailers (see format below)
 
-### 3. Context prompt
+### 4. Context prompt
 
 After a successful commit, ask the user:
 
 > **Any context to capture?**
 >
 > - **Decision**: Did you make a design choice or trade-off?
->   (I'll record it with `ctx add decision`)
 > - **Learning**: Did you hit a gotcha or discover something?
->   (I'll record it with `ctx add learning`)
 > - **Neither**: No context to capture: we're done.
 
 Wait for the user's response. If they provide a decision or
 learning, record it using the appropriate command:
 
 ```bash
-ctx add decision "..."
+ctx add decision "Use PostgreSQL" \
+  --context "Need a reliable database" \
+  --rationale "ACID compliance and JSON support" \
+  --consequence "Team needs training"
 ```
 
 ```bash
-ctx add learning --context "..." --lesson "..." --application "..."
+ctx add learning "Go embed requires files in same package" \
+  --context "..." --lesson "..." --application "..."
 ```
 
-### 4. Doc drift check (conditional)
+### 5. Reflect
 
-If the committed files include source code that could affect
-documentation (Go files in `internal/cli/`, `internal/config/`,
-`internal/assets/`, `cmd/`), remind the user:
+After every commit, run `/ctx-reflect` to capture the bigger
+picture before moving on. This is mandatory: Skipping reflection
+is how context gets lost between sessions.
 
-> Source files changed - want me to run `/_ctx-update-docs` to check
-> for doc drift?
-
-Skip this prompt if:
-- Only non-code files changed (markdown, config, scripts)
-- Only test files changed
-- The user already ran `/update-docs` this session
-
-### 5. Reflect (optional)
-
-If the commit represents a significant milestone (completing a
-feature, finishing a multi-session effort, resolving a complex
-bug), suggest a reflection:
-
-> This looks like a good checkpoint. Want me to run a quick
-> `/ctx-reflect` to capture the bigger picture?
-
-Only suggest this for substantial commits: not every commit
-needs reflection. Signs a reflection is warranted:
-- Multiple files changed across different packages
-- The commit closes out a task from TASKS.md
-- The work spanned discussion of trade-offs or alternatives
-
-## Commit Message Style
+## Commit Message Format
 
 Follow the repository's existing commit style. Draft messages
 that:
 - Focus on **why**, not what (the diff shows what)
-- Are concise (1-2 sentences)
 - Use lowercase, no period at the end
-- End with the Co-Authored-By trailer
+- Scale detail to match scope: a one-file fix gets 1-2 sentences;
+  a multi-package change gets a summary paragraph plus a bulleted
+  list of what changed and why
+- Include any trailers required by CONSTITUTION (e.g., `Spec:`,
+  `Signed-off-by:`)
 
 Example:
 ```
-add reasoning nudges to agent playbook and skills
+complete journal-recall merge wiring and cross-cutting cleanup
 
-Chain-of-thought prompting dramatically improves accuracy.
-Added step-by-step reasoning instructions to 7 skills and
-the playbook template.
+Wire journal commands through journal/core packages instead of
+recall/core. Move importer, lock, unlock, sync cmd packages from
+recall/cmd to journal/cmd.
 
-Co-Authored-By: Claude <noreply@anthropic.com>
+Changes:
+- journal/core/{plan,execute,query} are now canonical
+- sourcefm/sourceformat renamed to source/frontmatter, source/format
+- Magic numbers extracted to config/stats constants
+- state.StateDir renamed to state.Dir across 26 callers
+- splitLines moved to parse.ByteLines
+- /ctx-commit skill generalized to be language-agnostic
+
+Spec: specs/journal-merge-completion.md
+Signed-off-by: Jane Doe <jane@example.com>
 ```
 
 ## Commit Discipline
 
+- **Spec trailer is mandatory**: identify the spec that covers
+  this work and include `Spec:` in the commit message. If
+  CONSTITUTION also requires it, this is non-negotiable.
 - **Confirm the message** with the user before committing (or use
   their provided message)
 - **Always present the context prompt**: this is the whole point
-  of the skill; without it, use raw git commit
-- **Suggest reflection only when warranted**: and accept "no"
-  gracefully
+  of the skill
+- **Always reflect**: even a one-sentence reflection prevents
+  context loss
 - **Check for secrets** (`.env`, credentials, tokens) in the diff
   before staging
 
 ## Quality Checklist
 
 Before committing, verify:
-- [ ] Build passes (if Go files changed)
+- [ ] Spec exists and is referenced in the commit message
+- [ ] Build and lint pass
 - [ ] Commit message is concise and explains the why
+- [ ] `Spec:` and `Signed-off-by:` trailers are present
 - [ ] No secrets or sensitive files in the staged changes
 - [ ] Specific files staged (not blind `git add -A`)
 
 After committing, verify:
 - [ ] Context prompt was presented to the user
 - [ ] Any decisions/learnings provided were recorded
-- [ ] Doc drift check was offered (if source code changed)
-- [ ] Reflection was suggested if the commit was substantial
+- [ ] Reflection was completed
+
+## Human Relay
+
+After every successful commit, relay a structured summary to the
+human verbatim:
+
+```
+┌─ Commit Summary ─────────────────────────
+│ Spec: specs/<name>.md
+│ Tasks closed: <list or "none">
+│ Files changed: <count>
+│ Message: <first line of commit message>
+└──────────────────────────────────────────
+```

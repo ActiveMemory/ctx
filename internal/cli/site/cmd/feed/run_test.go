@@ -142,7 +142,7 @@ func TestFeed_Basic(t *testing.T) {
 	writePost(t, dir, "2026-01-03-third.md",
 		finalizedPost("Third", "2026-01-03", "Carol", nil))
 
-	posts, report, scanErr := scan.ScanBlogPosts(dir)
+	posts, report, scanErr := scan.BlogPosts(dir)
 	if scanErr != nil {
 		t.Fatal(scanErr)
 	}
@@ -151,7 +151,7 @@ func TestFeed_Basic(t *testing.T) {
 		t.Fatalf("expected 3 posts, got %d", len(posts))
 	}
 	if report.Included != 0 {
-		// included is set by runFeed, not core.ScanBlogPosts
+		// included is set by runFeed, not core.BlogPosts
 	}
 	if len(report.Skipped) != 0 {
 		t.Errorf("expected 0 skipped, got %d", len(report.Skipped))
@@ -189,7 +189,7 @@ func TestFeed_SkipsDrafts(t *testing.T) {
 	writePost(t, dir, "2026-01-03-implicit-draft.md",
 		"---\ntitle: Implicit\ndate: 2026-01-03\n---\n# Implicit\n\nContent.\n")
 
-	posts, report, scanErr := scan.ScanBlogPosts(dir)
+	posts, report, scanErr := scan.BlogPosts(dir)
 	if scanErr != nil {
 		t.Fatal(scanErr)
 	}
@@ -211,9 +211,11 @@ func TestFeed_SkipsDrafts(t *testing.T) {
 func TestFeed_MissingTitle(t *testing.T) {
 	dir := t.TempDir()
 	writePost(t, dir, "2026-01-01-no-title.md",
-		"---\ndate: 2026-01-01\nreviewed_and_finalized: true\n---\n# Heading\n\nContent.\n")
+		"---\ndate: 2026-01-01\n"+
+			"reviewed_and_finalized: true\n"+
+			"---\n# Heading\n\nContent.\n")
 
-	posts, report, scanErr := scan.ScanBlogPosts(dir)
+	posts, report, scanErr := scan.BlogPosts(dir)
 	if scanErr != nil {
 		t.Fatal(scanErr)
 	}
@@ -233,9 +235,11 @@ func TestFeed_MissingTitle(t *testing.T) {
 func TestFeed_MissingDate(t *testing.T) {
 	dir := t.TempDir()
 	writePost(t, dir, "2026-01-01-no-date.md",
-		"---\ntitle: No Date\nreviewed_and_finalized: true\n---\n# No Date\n\nContent.\n")
+		"---\ntitle: No Date\n"+
+			"reviewed_and_finalized: true\n"+
+			"---\n# No Date\n\nContent.\n")
 
-	posts, report, scanErr := scan.ScanBlogPosts(dir)
+	posts, report, scanErr := scan.BlogPosts(dir)
 	if scanErr != nil {
 		t.Fatal(scanErr)
 	}
@@ -256,9 +260,11 @@ func TestFeed_NoSummary(t *testing.T) {
 	dir := t.TempDir()
 	// Post with heading but no paragraph after it.
 	writePost(t, dir, "2026-01-01-no-summary.md",
-		"---\ntitle: No Summary\ndate: 2026-01-01\nreviewed_and_finalized: true\n---\n# No Summary\n")
+		"---\ntitle: No Summary\ndate: 2026-01-01\n"+
+			"reviewed_and_finalized: true\n"+
+			"---\n# No Summary\n")
 
-	posts, report, scanErr := scan.ScanBlogPosts(dir)
+	posts, report, scanErr := scan.BlogPosts(dir)
 	if scanErr != nil {
 		t.Fatal(scanErr)
 	}
@@ -292,7 +298,7 @@ func TestFeed_NoSummary(t *testing.T) {
 func TestFeed_EmptyBlog(t *testing.T) {
 	dir := t.TempDir()
 
-	posts, _, scanErr := scan.ScanBlogPosts(dir)
+	posts, _, scanErr := scan.BlogPosts(dir)
 	if scanErr != nil {
 		t.Fatal(scanErr)
 	}
@@ -327,7 +333,7 @@ func TestFeed_SortOrder(t *testing.T) {
 	writePost(t, dir, "2026-01-30-newest.md",
 		finalizedPost("Newest", "2026-01-30", "A", nil))
 
-	posts, _, scanErr := scan.ScanBlogPosts(dir)
+	posts, _, scanErr := scan.BlogPosts(dir)
 	if scanErr != nil {
 		t.Fatal(scanErr)
 	}
@@ -352,7 +358,7 @@ func TestFeed_MalformedFrontmatter(t *testing.T) {
 	writePost(t, dir, "2026-01-01-bad.md",
 		"---\n: invalid: yaml: [[\n---\n# Bad\n\nContent.\n")
 
-	posts, report, scanErr := scan.ScanBlogPosts(dir)
+	posts, report, scanErr := scan.BlogPosts(dir)
 	if scanErr != nil {
 		t.Fatal(scanErr)
 	}
@@ -373,14 +379,14 @@ func TestFeed_Idempotent(t *testing.T) {
 	outDir := t.TempDir()
 	outPath := filepath.Join(outDir, "feed.xml")
 
-	posts1, _, _ := scan.ScanBlogPosts(dir)
+	posts1, _, _ := scan.BlogPosts(dir)
 	genErr1 := rss.Atom(posts1, outPath, "https://example.com")
 	if genErr1 != nil {
 		t.Fatal(genErr1)
 	}
 	data1, _ := os.ReadFile(outPath)
 
-	posts2, _, _ := scan.ScanBlogPosts(dir)
+	posts2, _, _ := scan.BlogPosts(dir)
 	genErr2 := rss.Atom(posts2, outPath, "https://example.com")
 	if genErr2 != nil {
 		t.Fatal(genErr2)
@@ -398,7 +404,7 @@ func TestFeed_Categories(t *testing.T) {
 	writePost(t, dir, "2026-01-01-topics.md",
 		finalizedPost("Topics", "2026-01-01", "Alice", topics))
 
-	posts, _, scanErr := scan.ScanBlogPosts(dir)
+	posts, _, scanErr := scan.BlogPosts(dir)
 	if scanErr != nil {
 		t.Fatal(scanErr)
 	}
@@ -437,7 +443,7 @@ func TestFeed_CustomBaseURL(t *testing.T) {
 	writePost(t, dir, "2026-01-01-post.md",
 		finalizedPost("Post", "2026-01-01", "Alice", nil))
 
-	posts, _, _ := scan.ScanBlogPosts(dir)
+	posts, _, _ := scan.BlogPosts(dir)
 	outPath := filepath.Join(t.TempDir(), "feed.xml")
 	genErr := rss.Atom(
 		posts, outPath, "https://custom.example.com",
@@ -473,7 +479,7 @@ func TestFeed_FilenameFilter(t *testing.T) {
 	writePost(t, dir, "draft-ideas.md", "# Ideas\n")
 	writePost(t, dir, "README.md", "# README\n")
 
-	posts, _, scanErr := scan.ScanBlogPosts(dir)
+	posts, _, scanErr := scan.BlogPosts(dir)
 	if scanErr != nil {
 		t.Fatal(scanErr)
 	}

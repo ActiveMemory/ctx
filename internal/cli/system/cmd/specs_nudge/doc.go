@@ -6,6 +6,7 @@
 
 // Package specs_nudge implements the ctx system specs-nudge subcommand.
 //
-// It reminds the agent to save plans to the specs/ directory for release
-// tracking when entering plan mode.
+// Key exports: [Cmd], [Run].
+// Follows the cmd/root + core taxonomy.
+// Registered by the cmd parent command.
 package specs_nudge

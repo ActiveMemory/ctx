@@ -9,34 +9,29 @@ package post_commit
 import (
 	"fmt"
 	"os"
-	"regexp"
 
+	"github.com/spf13/cobra"
+
+	"github.com/ActiveMemory/ctx/internal/assets/read/desc"
 	coreCheck "github.com/ActiveMemory/ctx/internal/cli/system/core/check"
 	"github.com/ActiveMemory/ctx/internal/cli/system/core/drift"
 	"github.com/ActiveMemory/ctx/internal/cli/system/core/message"
 	"github.com/ActiveMemory/ctx/internal/cli/system/core/nudge"
 	coreSession "github.com/ActiveMemory/ctx/internal/cli/system/core/session"
 	"github.com/ActiveMemory/ctx/internal/cli/system/core/state"
-	"github.com/spf13/cobra"
-
-	"github.com/ActiveMemory/ctx/internal/assets/read/desc"
 	"github.com/ActiveMemory/ctx/internal/config/embed/text"
 	"github.com/ActiveMemory/ctx/internal/config/hook"
+	"github.com/ActiveMemory/ctx/internal/config/regex"
 	ctxContext "github.com/ActiveMemory/ctx/internal/context/resolve"
 	"github.com/ActiveMemory/ctx/internal/notify"
 	writeHook "github.com/ActiveMemory/ctx/internal/write/hook"
-)
-
-var (
-	reGitCommit = regexp.MustCompile(`git\s+commit`)
-	reAmend     = regexp.MustCompile(`--amend`)
 )
 
 // Run executes the post-commit hook logic.
 //
 // After a successful git commit (non-amend), nudges the agent to offer
 // context capture (decision or learning) and to run lints/tests before
-// pushing. Also checks for version drift.
+// pushing. Also checks for version drift and spec enforcement.
 //
 // Parameters:
 //   - cmd: Cobra command for output
@@ -55,31 +50,40 @@ func Run(cmd *cobra.Command, stdin *os.File) error {
 
 	command := input.ToolInput.Command
 
-	// Only trigger on git commit commands
-	if !reGitCommit.MatchString(command) {
+	if !regex.GitCommit.MatchString(command) {
 		return nil
 	}
 
-	// Skip amend commits
-	if reAmend.MatchString(command) {
+	if regex.GitAmend.MatchString(command) {
 		return nil
 	}
 
 	hookName, variant := hook.PostCommit, hook.VariantNudge
 
 	fallback := desc.Text(text.DescKeyPostCommitFallback)
-	msg := message.LoadMessage(hookName, variant, nil, fallback)
+	msg := message.Load(hookName, variant, nil, fallback)
 	if msg == "" {
 		return nil
 	}
 	msg = ctxContext.AppendDir(msg)
-	writeHook.HookContext(cmd, coreSession.FormatContext(hook.EventPostToolUse, msg))
+	writeHook.Context(cmd, coreSession.FormatContext(hook.EventPostToolUse, msg))
 
 	ref := notify.NewTemplateRef(hookName, variant, nil)
-	nudge.Relay(fmt.Sprintf(desc.Text(text.DescKeyRelayPrefixFormat), hookName, desc.Text(text.DescKeyPostCommitRelayMessage)), input.SessionID, ref)
+	nudge.Relay(
+		fmt.Sprintf(
+			desc.Text(text.DescKeyRelayPrefixFormat),
+			hookName,
+			desc.Text(text.DescKeyPostCommitRelayMessage),
+		),
+		input.SessionID, ref,
+	)
 
-	if driftResponse := drift.CheckVersionDrift(sessionID); driftResponse != "" {
-		writeHook.HookContext(cmd, driftResponse)
+	if driftResponse := drift.CheckVersion(sessionID); driftResponse != "" {
+		writeHook.Context(cmd, driftResponse)
+	}
+
+	if violations := scoreCommitViolations(); violations != "" {
+		writeHook.NudgeBlock(cmd, violations)
 	}
 
 	return nil

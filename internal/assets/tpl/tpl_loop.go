@@ -14,14 +14,16 @@ const (
 
 	// LoadTruncated formats the truncation notice for budget-limited output.
 	// Args: fileName.
-	LoadTruncated = "*[Truncated: %s and remaining files excluded due to token budget]*"
+	LoadTruncated = "*[Truncated: %s and remaining" +
+		" files excluded due to token budget]*"
 
 	// LoadSectionHeading formats a file section heading in assembled output.
 	// Args: title.
 	LoadSectionHeading = "## %s"
 
 	// LoopScript is the bash script template for the Ralph Loop.
-	// Args: promptFile, completionMsg, maxIterCheck, aiCommand, loopComplete, notifyCmd.
+	// Args: promptFile, completionMsg, maxIterCheck,
+	// aiCommand, loopComplete, notifyCmd.
 	LoopScript = `#!/bin/bash
 #
 # Context: Ralph Loop Script
@@ -87,5 +89,20 @@ done
     fi`
 
 	// LoopNotify is the ctx notify call appended to loop completion points.
-	LoopNotify = `ctx notify --event loop "Loop completed after $ITERATION iterations" 2>/dev/null || true`
+	LoopNotify = `ctx notify --event loop` +
+		` "Loop completed after $ITERATION iterations"` +
+		` 2>/dev/null || true`
+
+	// LoopCmdClaude is the shell command template for Claude Code.
+	// Args: promptFile.
+	LoopCmdClaude = `claude --print "$(cat %s)"`
+
+	// LoopCmdAider is the shell command template for Aider.
+	// Args: promptFile.
+	LoopCmdAider = `aider --message-file %s`
+
+	// LoopCmdGeneric is the shell command placeholder for custom tools.
+	// Args: promptFile.
+	LoopCmdGeneric = `# Replace with your AI CLI command
+    cat %s | your-ai-cli`
 )

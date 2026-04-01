@@ -2441,16 +2441,14 @@
   
   
     <li class="md-nav__item">
-      <a href="../../recipes/prompt-templates/" class="md-nav__link">
+      <a href="../../recipes/prompt-templates.md" class="md-nav__link">
         
   
-  
-    <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-message-square-text" viewBox="0 0 24 24"><path d="M22 17a2 2 0 0 1-2 2H6.828a2 2 0 0 0-1.414.586l-2.202 2.202A.71.71 0 0 1 2 21.286V5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2zM7 11h10M7 15h6M7 7h8"/></svg>
   
   <span class="md-ellipsis">
     
   
-    Reusable Prompt Templates
+    none
   
 
     
@@ -2631,7 +2629,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../cli/recall/" class="md-nav__link">
+      <a href="../../cli/journal/" class="md-nav__link">
         
   
   
@@ -2640,7 +2638,7 @@
   <span class="md-ellipsis">
     
   
-    Recall and Journal
+    Journal
   
 
     
@@ -3100,10 +3098,10 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#1-export-sessions" class="md-nav__link">
+  <a href="#1-import-sessions" class="md-nav__link">
     <span class="md-ellipsis">
       
-        1. Export Sessions
+        1. Import Sessions
       
     </span>
   </a>
@@ -3848,10 +3846,10 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#1-export-sessions" class="md-nav__link">
+  <a href="#1-import-sessions" class="md-nav__link">
     <span class="md-ellipsis">
       
-        1. Export Sessions
+        1. Import Sessions
       
     </span>
   </a>
@@ -4160,8 +4158,8 @@ directories <strong>MUST</strong> be <code>.gitignore</code>d.</p>
 <h2 id="quick-start">Quick Start<a class="headerlink" href="#quick-start" title="Permanent link">&para;</a></h2>
 <p>After using <code>ctx</code> for a couple of sessions, you can generate a 
 journal site with:</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># Export all sessions to markdown</span>
-</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>ctx<span class="w"> </span>recall<span class="w"> </span><span class="nb">export</span><span class="w"> </span>--all
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># Import all sessions to markdown</span>
+</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>ctx<span class="w"> </span>journal<span class="w"> </span>import<span class="w"> </span>--all
 </span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>
 </span><span id="__span-0-4"><a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="c1"># Generate and serve the journal site</span>
 </span><span id="__span-0-5"><a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>ctx<span class="w"> </span>journal<span class="w"> </span>site<span class="w"> </span>--serve
@@ -4204,26 +4202,26 @@ journal site with:</p>
 </tbody>
 </table>
 <h2 id="the-workflow">The Workflow<a class="headerlink" href="#the-workflow" title="Permanent link">&para;</a></h2>
-<h3 id="1-export-sessions">1. Export Sessions<a class="headerlink" href="#1-export-sessions" title="Permanent link">&para;</a></h3>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Export all sessions from current project (only new files)</span>
-</span><span id="__span-1-2"><a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>ctx<span class="w"> </span>recall<span class="w"> </span><span class="nb">export</span><span class="w"> </span>--all
+<h3 id="1-import-sessions">1. Import Sessions<a class="headerlink" href="#1-import-sessions" title="Permanent link">&para;</a></h3>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Import all sessions from current project (only new files)</span>
+</span><span id="__span-1-2"><a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>ctx<span class="w"> </span>journal<span class="w"> </span>import<span class="w"> </span>--all
 </span><span id="__span-1-3"><a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>
-</span><span id="__span-1-4"><a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="c1"># Export sessions from all projects</span>
-</span><span id="__span-1-5"><a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>ctx<span class="w"> </span>recall<span class="w"> </span><span class="nb">export</span><span class="w"> </span>--all<span class="w"> </span>--all-projects
+</span><span id="__span-1-4"><a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="c1"># Import sessions from all projects</span>
+</span><span id="__span-1-5"><a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>ctx<span class="w"> </span>journal<span class="w"> </span>import<span class="w"> </span>--all<span class="w"> </span>--all-projects
 </span><span id="__span-1-6"><a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>
-</span><span id="__span-1-7"><a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="c1"># Export a specific session by ID (always writes)</span>
-</span><span id="__span-1-8"><a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>ctx<span class="w"> </span>recall<span class="w"> </span><span class="nb">export</span><span class="w"> </span>abc123
+</span><span id="__span-1-7"><a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="c1"># Import a specific session by ID (always writes)</span>
+</span><span id="__span-1-8"><a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>ctx<span class="w"> </span>journal<span class="w"> </span>import<span class="w"> </span>abc123
 </span><span id="__span-1-9"><a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>
-</span><span id="__span-1-10"><a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a><span class="c1"># Preview what would be exported</span>
-</span><span id="__span-1-11"><a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>ctx<span class="w"> </span>recall<span class="w"> </span><span class="nb">export</span><span class="w"> </span>--all<span class="w"> </span>--dry-run
+</span><span id="__span-1-10"><a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a><span class="c1"># Preview what would be imported</span>
+</span><span id="__span-1-11"><a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>ctx<span class="w"> </span>journal<span class="w"> </span>import<span class="w"> </span>--all<span class="w"> </span>--dry-run
 </span><span id="__span-1-12"><a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>
-</span><span id="__span-1-13"><a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a><span class="c1"># Re-export existing (regenerates conversation, preserves YAML frontmatter)</span>
-</span><span id="__span-1-14"><a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>ctx<span class="w"> </span>recall<span class="w"> </span><span class="nb">export</span><span class="w"> </span>--all<span class="w"> </span>--regenerate
+</span><span id="__span-1-13"><a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a><span class="c1"># Re-import existing (regenerates conversation, preserves YAML frontmatter)</span>
+</span><span id="__span-1-14"><a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>ctx<span class="w"> </span>journal<span class="w"> </span>import<span class="w"> </span>--all<span class="w"> </span>--regenerate
 </span><span id="__span-1-15"><a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>
 </span><span id="__span-1-16"><a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a><span class="c1"># Discard frontmatter during regeneration</span>
-</span><span id="__span-1-17"><a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>ctx<span class="w"> </span>recall<span class="w"> </span><span class="nb">export</span><span class="w"> </span>--all<span class="w"> </span>--regenerate<span class="w"> </span>--keep-frontmatter<span class="o">=</span><span class="nb">false</span><span class="w"> </span>-y
+</span><span id="__span-1-17"><a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>ctx<span class="w"> </span>journal<span class="w"> </span>import<span class="w"> </span>--all<span class="w"> </span>--regenerate<span class="w"> </span>--keep-frontmatter<span class="o">=</span><span class="nb">false</span><span class="w"> </span>-y
 </span></code></pre></div>
-<p>Exported sessions go to <code>.context/journal/</code> as editable Markdown files.</p>
+<p>Imported sessions go to <code>.context/journal/</code> as editable Markdown files.</p>
 <h3 id="2-generate-the-site">2. Generate the Site<a class="headerlink" href="#2-generate-the-site" title="Permanent link">&para;</a></h3>
 <div class="language-bash highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Generate site structure</span>
 </span><span id="__span-2-2"><a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>ctx<span class="w"> </span>journal<span class="w"> </span>site
@@ -4246,7 +4244,7 @@ journal site with:</p>
 <li>Click any session to see the full conversation</li>
 </ul>
 <h2 id="editing-sessions">Editing Sessions<a class="headerlink" href="#editing-sessions" title="Permanent link">&para;</a></h2>
-<p>Exported sessions are plain Markdown in <code>.context/journal/</code>. You can:</p>
+<p>Imported sessions are plain Markdown in <code>.context/journal/</code>. You can:</p>
 <ul>
 <li><strong>Add summaries</strong>: Fill in the <code>## Summary</code> section</li>
 <li><strong>Add notes</strong>: Insert your own commentary anywhere</li>
@@ -4258,17 +4256,17 @@ journal site with:</p>
 </span></code></pre></div>
 <details class="info">
 <summary>Safe by Default</summary>
-<p>Running <code>ctx recall export --all</code> <strong>only exports new sessions</strong>. Existing
+<p>Running <code>ctx journal import --all</code> <strong>only imports new sessions</strong>. Existing
 files are skipped entirely (<em>your edits and enrichments are never touched</em>).</p>
-<p>Use <code>--regenerate</code> to re-export existing files. Conversation content is
+<p>Use <code>--regenerate</code> to re-import existing files. Conversation content is
 regenerated, but YAML frontmatter (<em>topics, type, outcome, etc.</em>) is
 preserved. You'll be prompted before any existing files are overwritten;
 add <code>-y</code> to skip the prompt.</p>
 <p>Use <code>--keep-frontmatter=false</code> to discard enriched frontmatter during
 regeneration.</p>
-<p>Locked entries (via <code>ctx recall lock</code>) are always skipped, regardless
+<p>Locked entries (via <code>ctx journal lock</code>) are always skipped, regardless
 of flags. If you prefer to add <code>locked: true</code> to frontmatter during
-enrichment, run <code>ctx recall sync</code> to propagate the lock state to
+enrichment, run <code>ctx journal sync</code> to propagate the lock state to
 <code>.state.json</code>.</p>
 </details>
 <h2 id="large-sessions">Large Sessions<a class="headerlink" href="#large-sessions" title="Permanent link">&para;</a></h2>
@@ -4283,7 +4281,7 @@ for better browser performance. Navigation links connect the parts:</p>
 are separated in the index under a "<em>Suggestions</em>" section to keep your main 
 session list focused.</p>
 <h2 id="enriching-journal-entries">Enriching Journal Entries<a class="headerlink" href="#enriching-journal-entries" title="Permanent link">&para;</a></h2>
-<p>Raw exported sessions contain basic metadata (date, time, project) but lack the
+<p>Raw imported sessions contain basic metadata (date, time, project) but lack the
 structured information needed for effective search, filtering, and analysis.
 <strong>Journal enrichment</strong> adds semantic metadata that transforms a flat archive into
 a searchable knowledge base.</p>
@@ -4553,7 +4551,7 @@ same enriched source entries: you can generate both.</p>
 <h2 id="full-pipeline">Full Pipeline<a class="headerlink" href="#full-pipeline" title="Permanent link">&para;</a></h2>
 <p>The complete journal workflow has four stages. Each is idempotent: safe to
 re-run, and stages skip already-processed entries.</p>
-<div class="language-text highlight"><pre><span></span><code><span id="__span-12-1"><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a>export → enrich → rebuild
+<div class="language-text highlight"><pre><span></span><code><span id="__span-12-1"><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a>import → enrich → rebuild
 </span></code></pre></div>
 <table>
 <thead>
@@ -4566,8 +4564,8 @@ re-run, and stages skip already-processed entries.</p>
 </thead>
 <tbody>
 <tr>
-<td><strong>Export</strong></td>
-<td><code>ctx recall export --all</code></td>
+<td><strong>Import</strong></td>
+<td><code>ctx journal import --all</code></td>
 <td>Converts session JSONL to Markdown</td>
 <td>File already exists (safe default)</td>
 </tr>
@@ -4593,36 +4591,36 @@ re-run, and stages skip already-processed entries.</p>
 </table>
 <div class="admonition tip">
 <p class="admonition-title">One-command pipeline</p>
-<p><code>/ctx-journal-enrich-all</code> handles export automatically - it detects
-unexported sessions and exports them before enriching. You only need
+<p><code>/ctx-journal-enrich-all</code> handles import automatically - it detects
+unimported sessions and imports them before enriching. You only need
 to run <code>ctx journal site --build</code> afterward.</p>
 </div>
 <h3 id="using-make-journal">Using <code>make journal</code><a class="headerlink" href="#using-make-journal" title="Permanent link">&para;</a></h3>
 <p>If your project includes <code>Makefile.ctx</code> (deployed by <code>ctx init</code>), the first
 and last stages are combined:</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-13-1"><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a>make<span class="w"> </span>journal<span class="w">           </span><span class="c1"># export + rebuild</span>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-13-1"><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a>make<span class="w"> </span>journal<span class="w">           </span><span class="c1"># import + rebuild</span>
 </span></code></pre></div>
 <p>After it runs, it reminds you to enrich in Claude Code:</p>
 <div class="language-text highlight"><pre><span></span><code><span id="__span-14-1"><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a>Next steps (in Claude Code):
-</span><span id="__span-14-2"><a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a>  /ctx-journal-enrich-all # exports if needed + adds metadata per entry
+</span><span id="__span-14-2"><a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a>  /ctx-journal-enrich-all # imports if needed + adds metadata per entry
 </span><span id="__span-14-3"><a id="__codelineno-14-3" name="__codelineno-14-3" href="#__codelineno-14-3"></a>
 </span><span id="__span-14-4"><a id="__codelineno-14-4" name="__codelineno-14-4" href="#__codelineno-14-4"></a>Then re-run: make journal
 </span></code></pre></div>
 <div class="admonition tip">
 <p class="admonition-title">Rendering Issues?</p>
 <p>If individual entries have rendering problems (<em>broken fences, malformed
-lists</em>), use <code>/ctx-journal-normalize</code> on the affected file. This is rarely
-needed as programmatic normalization during export handles <strong>most</strong> cases.</p>
+lists</em>), check the programmatic normalization in the import pipeline.
+Most cases are handled automatically during <code>ctx journal import</code>.</p>
 </div>
 <h2 id="tips">Tips<a class="headerlink" href="#tips" title="Permanent link">&para;</a></h2>
 <p><strong>Daily workflow:</strong>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-15-1"><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a><span class="c1"># Export, browse, then enrich in Claude Code</span>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-15-1"><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a><span class="c1"># Import, browse, then enrich in Claude Code</span>
 </span><span id="__span-15-2"><a id="__codelineno-15-2" name="__codelineno-15-2" href="#__codelineno-15-2"></a>make<span class="w"> </span>journal<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span>make<span class="w"> </span>journal-serve
 </span><span id="__span-15-3"><a id="__codelineno-15-3" name="__codelineno-15-3" href="#__codelineno-15-3"></a><span class="c1"># Then in Claude Code: /ctx-journal-enrich &lt;session&gt;</span>
 </span></code></pre></div></p>
 <p><strong>After a productive session:</strong>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-16-1"><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a><span class="c1"># Export just that session and add notes</span>
-</span><span id="__span-16-2"><a id="__codelineno-16-2" name="__codelineno-16-2" href="#__codelineno-16-2"></a>ctx<span class="w"> </span>recall<span class="w"> </span><span class="nb">export</span><span class="w"> </span>&lt;session-id&gt;
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-16-1"><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a><span class="c1"># Import just that session and add notes</span>
+</span><span id="__span-16-2"><a id="__codelineno-16-2" name="__codelineno-16-2" href="#__codelineno-16-2"></a>ctx<span class="w"> </span>journal<span class="w"> </span>import<span class="w"> </span>&lt;session-id&gt;
 </span><span id="__span-16-3"><a id="__codelineno-16-3" name="__codelineno-16-3" href="#__codelineno-16-3"></a><span class="c1"># Edit .context/journal/&lt;session&gt;.md</span>
 </span><span id="__span-16-4"><a id="__codelineno-16-4" name="__codelineno-16-4" href="#__codelineno-16-4"></a><span class="c1"># Regenerate: ctx journal site</span>
 </span></code></pre></div></p>
@@ -4644,9 +4642,9 @@ isolated environment and handles Python version management automatically.</p>
 </span></code></pre></div>
 <h2 id="see-also">See Also<a class="headerlink" href="#see-also" title="Permanent link">&para;</a></h2>
 <ul>
-<li><a href="../../cli/recall/#ctx-recall"><code>ctx recall</code></a>: Session discovery and listing</li>
-<li><a href="../../cli/recall/#ctx-journal-site"><code>ctx journal site</code></a>: Static site generation</li>
-<li><a href="../../cli/recall/#ctx-journal-obsidian"><code>ctx journal obsidian</code></a>: Obsidian vault export</li>
+<li><a href="../../cli/journal/#ctx-journal"><code>ctx journal</code></a>: Session discovery and listing</li>
+<li><a href="../../cli/journal/#ctx-journal-site"><code>ctx journal site</code></a>: Static site generation</li>
+<li><a href="../../cli/journal/#ctx-journal-obsidian"><code>ctx journal obsidian</code></a>: Obsidian vault export</li>
 <li><a href="../../home/context-files/">Context Files</a>: The <code>.context/</code> directory structure</li>
 </ul>
 

@@ -9,9 +9,9 @@ package archive
 import "github.com/ActiveMemory/ctx/internal/config/file"
 
 const (
-	// TplArchiveFilename is the format for dated archive filenames.
+	// TplFilename is the format for dated archive filenames.
 	// Args: prefix, date.
-	TplArchiveFilename = "%s-%s" + file.ExtMarkdown
-	// ArchiveDateSep is the separator between heading and date in archive headers.
-	ArchiveDateSep = " - "
+	TplFilename = "%s-%s" + file.ExtMarkdown
+	// DateSep is the separator between heading and date in archive headers.
+	DateSep = " - "
 )

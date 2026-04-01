@@ -7,9 +7,10 @@
 package complete
 
 import (
+	"github.com/spf13/cobra"
+
 	"github.com/ActiveMemory/ctx/internal/assets/read/desc"
 	"github.com/ActiveMemory/ctx/internal/config/embed/cmd"
-	"github.com/spf13/cobra"
 )
 
 // Cmd returns the "ctx complete" command for marking tasks as done.
@@ -22,13 +23,13 @@ import (
 func Cmd() *cobra.Command {
 	short, long := desc.Command(cmd.DescKeyComplete)
 
-	cmd := &cobra.Command{
-		Use:   "complete <task-id-or-text>",
+	c := &cobra.Command{
+		Use:   cmd.UseComplete,
 		Short: short,
 		Long:  long,
 		Args:  cobra.ExactArgs(1),
 		RunE:  Run,
 	}
 
-	return cmd
+	return c
 }

@@ -40,8 +40,8 @@ func add(
 	if extractErr != nil {
 		return out.ToolError(id, extractErr.Error())
 	}
-	text, err := h.Add(entryType, content, extract.Opts(args))
-	return out.ToolResult(id, text, err)
+	t, addErr := h.Add(entryType, content, extract.Opts(args))
+	return out.ToolResult(id, t, addErr)
 }
 
 // complete extracts the query and delegates to handler.Complete.
@@ -63,24 +63,24 @@ func complete(
 			id, desc.Text(text.DescKeyMCPErrQueryRequired),
 		)
 	}
-	text, err := h.Complete(query)
-	return out.ToolResult(id, text, err)
+	t, completeErr := h.Complete(query)
+	return out.ToolResult(id, t, completeErr)
 }
 
-// recall extracts limit/since and calls the recall function.
+// journalSource extracts limit/since and calls the session query function.
 //
 // Parameters:
 //   - id: JSON-RPC request ID
 //   - args: MCP tool arguments (limit, since)
-//   - fn: recall function accepting limit and since
+//   - fn: session query function accepting limit and since
 //
 // Returns:
 //   - *proto.Response: session list or parse error
-func recall(
+func journalSource(
 	id json.RawMessage, args map[string]interface{},
 	fn func(int, time.Time) (string, error),
 ) *proto.Response {
-	limit := cfg.DefaultRecallLimit
+	limit := cfg.DefaultSourceLimit
 	if v, ok := args[field.Limit].(float64); ok && v > 0 {
 		limit = int(v)
 	}
@@ -99,8 +99,8 @@ func recall(
 		}
 	}
 
-	text, err := fn(limit, since)
-	return out.ToolResult(id, text, err)
+	t, recallErr := fn(limit, since)
+	return out.ToolResult(id, t, recallErr)
 }
 
 // watchUpdate extracts MCP args and delegates to
@@ -121,10 +121,10 @@ func watchUpdate(
 	if extractErr != nil {
 		return out.ToolError(id, extractErr.Error())
 	}
-	text, err := h.WatchUpdate(
+	t, updateErr := h.WatchUpdate(
 		entryType, content, extract.Opts(args),
 	)
-	return out.ToolResult(id, text, err)
+	return out.ToolResult(id, t, updateErr)
 }
 
 // compact extracts the archive flag and calls the compact
@@ -141,12 +141,12 @@ func compact(
 	id json.RawMessage, args map[string]interface{},
 	fn func(bool) (string, error),
 ) *proto.Response {
-	archive := false
+	doArchive := false
 	if v, ok := args[field.Archive].(bool); ok {
-		archive = v
+		doArchive = v
 	}
-	text, err := fn(archive)
-	return out.ToolResult(id, text, err)
+	t, compactErr := fn(doArchive)
+	return out.ToolResult(id, t, compactErr)
 }
 
 // checkTaskCompletion extracts recent_action and calls the
@@ -164,8 +164,8 @@ func checkTaskCompletion(
 	fn func(string) (string, error),
 ) *proto.Response {
 	recentAction, _ := args[field.RecentAction].(string)
-	text, err := fn(recentAction)
-	return out.ToolResult(id, text, err)
+	t, checkErr := fn(recentAction)
+	return out.ToolResult(id, t, checkErr)
 }
 
 // sessionEvent extracts the event type/caller and calls the
@@ -189,6 +189,6 @@ func sessionEvent(
 		)
 	}
 	caller, _ := args[field.Caller].(string)
-	text, err := fn(eventType, caller)
-	return out.ToolResult(id, text, err)
+	t, eventErr := fn(eventType, caller)
+	return out.ToolResult(id, t, eventErr)
 }

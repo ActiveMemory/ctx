@@ -11,13 +11,13 @@ import (
 	"os"
 	"time"
 
-	coreArchive "github.com/ActiveMemory/ctx/internal/cli/system/core/archive"
-	"github.com/ActiveMemory/ctx/internal/entity"
 	"github.com/spf13/cobra"
 
+	coreArchive "github.com/ActiveMemory/ctx/internal/cli/system/core/archive"
 	"github.com/ActiveMemory/ctx/internal/config/archive"
 	"github.com/ActiveMemory/ctx/internal/config/env"
 	cFlag "github.com/ActiveMemory/ctx/internal/config/flag"
+	"github.com/ActiveMemory/ctx/internal/entity"
 	errBackup "github.com/ActiveMemory/ctx/internal/err/backup"
 	errInit "github.com/ActiveMemory/ctx/internal/err/initialize"
 	"github.com/ActiveMemory/ctx/internal/write/backup"
@@ -39,9 +39,11 @@ func Run(cmd *cobra.Command) error {
 	jsonOut, _ := cmd.Flags().GetBool(cFlag.JSON)
 
 	switch scope {
-	case archive.BackupScopeProject, archive.BackupScopeGlobal, archive.BackupScopeAll:
+	case archive.BackupScopeProject,
+		archive.BackupScopeGlobal,
+		archive.BackupScopeAll:
 	default:
-		return errBackup.InvalidBackupScope(scope)
+		return errBackup.InvalidScope(scope)
 	}
 
 	home, homeErr := os.UserHomeDir()
@@ -64,7 +66,9 @@ func Run(cmd *cobra.Command) error {
 	var results []entity.BackupResult
 
 	if scope == archive.BackupScopeProject || scope == archive.BackupScopeAll {
-		result, projErr := coreArchive.BackupProject(cmd.ErrOrStderr(), home, timestamp, smb)
+		result, projErr := coreArchive.BackupProject(
+			cmd.ErrOrStderr(), home, timestamp, smb,
+		)
 		if projErr != nil {
 			return errBackup.Project(projErr)
 		}
@@ -72,7 +76,9 @@ func Run(cmd *cobra.Command) error {
 	}
 
 	if scope == archive.BackupScopeGlobal || scope == archive.BackupScopeAll {
-		result, globalErr := coreArchive.BackupGlobal(cmd.ErrOrStderr(), home, timestamp, smb)
+		result, globalErr := coreArchive.BackupGlobal(
+			cmd.ErrOrStderr(), home, timestamp, smb,
+		)
 		if globalErr != nil {
 			return errBackup.Global(globalErr)
 		}

@@ -63,7 +63,7 @@ lost if not captured.
 
 ## [2026-01-20-140000] Session Filename Format: YYYY-MM-DD-HHMMSS-topic.md
 
-**Status**: Superseded (removed in v0.4.0 — `.context/sessions/` eliminated; journal entries use `ctx recall export` naming)
+**Status**: Superseded (removed in v0.4.0 — `.context/sessions/` eliminated; journal entries use `ctx recall import` naming)
 
 **Context**: Multiple sessions per day would overwrite each other.
 Also, multiple compacts in the same minute could collide.
@@ -302,7 +302,7 @@ what can be loaded. But nothing should be truly lost.
 
 **Status**: Accepted
 
-**Context**: T2.1 requested ctx recall export --update to preserve enrichments during re-export
+**Context**: T2.1 requested ctx recall import --update to preserve enrichments during re-import
 
 **Decision**: No --update flag needed for export — default is the update mode
 

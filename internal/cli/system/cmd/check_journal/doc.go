@@ -6,6 +6,7 @@
 
 // Package check_journal implements the ctx system check-journal subcommand.
 //
-// It detects unexported sessions and unenriched journal entries, then
-// prints actionable commands to address them.
+// Key exports: [Cmd], [Run].
+// Follows the cmd/root + core taxonomy.
+// Registered by the cmd parent command.
 package check_journal

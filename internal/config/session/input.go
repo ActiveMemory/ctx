@@ -18,6 +18,7 @@ const (
 
 // Tool display limits.
 const (
-	// ToolDisplayMaxLen is the max length for tool parameter display before truncation.
+	// ToolDisplayMaxLen is the max length for tool parameter
+	// display before truncation.
 	ToolDisplayMaxLen = 100
 )

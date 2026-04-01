@@ -6,5 +6,7 @@
 
 // Package add implements the ctx pad add subcommand.
 //
-// It appends a new text entry to the scratch pad.
+// Key exports: [Cmd], [Run].
+// Follows the cmd/root + core taxonomy.
+// Registered by the cmd parent command.
 package add

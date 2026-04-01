@@ -13,6 +13,10 @@ import (
 	"io"
 	"os"
 	"runtime"
+
+	cfgSysinfo "github.com/ActiveMemory/ctx/internal/config/sysinfo"
+	"github.com/ActiveMemory/ctx/internal/config/warn"
+	ctxLog "github.com/ActiveMemory/ctx/internal/log/warn"
 )
 
 // collectLoad reads system load averages from /proc/loadavg on Linux.
@@ -23,11 +27,17 @@ import (
 // Returns:
 //   - LoadInfo: System load averages and CPU count
 func collectLoad() LoadInfo {
-	f, err := os.Open("/proc/loadavg")
-	if err != nil {
+	f, openErr := os.Open(cfgSysinfo.ProcLoadavg)
+	if openErr != nil {
 		return LoadInfo{Supported: false}
 	}
-	defer func() { _ = f.Close() }()
+	defer func() {
+		if closeErr := f.Close(); closeErr != nil {
+			ctxLog.Warn(
+				warn.Close, cfgSysinfo.ProcLoadavg, closeErr,
+			)
+		}
+	}()
 	return parseLoadavg(f)
 }
 
@@ -43,8 +53,8 @@ func collectLoad() LoadInfo {
 //   - LoadInfo: Parsed load averages and CPU count
 func parseLoadavg(r io.Reader) LoadInfo {
 	var load1, load5, load15 float64
-	_, err := fmt.Fscanf(r, "%f %f %f", &load1, &load5, &load15)
-	if err != nil {
+	_, scanErr := fmt.Fscanf(r, cfgSysinfo.LoadavgFmt, &load1, &load5, &load15)
+	if scanErr != nil {
 		return LoadInfo{Supported: false}
 	}
 	return LoadInfo{

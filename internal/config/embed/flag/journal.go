@@ -12,3 +12,15 @@ const (
 	DescKeyJournalSiteOutput     = "journal.site.output"
 	DescKeyJournalSiteServe      = "journal.site.serve"
 )
+
+const (
+	DescKeyJournalSourceAllProjects = "journal.source.all-projects"
+	DescKeyJournalSourceFull        = "journal.source.full"
+	DescKeyJournalSourceLatest      = "journal.source.latest"
+	DescKeyJournalSourceLimit       = "journal.source.limit"
+	DescKeyJournalSourceProject     = "journal.source.project"
+	DescKeyJournalSourceShow        = "journal.source.show"
+	DescKeyJournalSourceSince       = "journal.source.since"
+	DescKeyJournalSourceTool        = "journal.source.tool"
+	DescKeyJournalSourceUntil       = "journal.source.until"
+)

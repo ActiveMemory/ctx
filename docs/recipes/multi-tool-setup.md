@@ -32,6 +32,10 @@ claude /plugin install ctx@activememory-ctx
 
 # ## Cursor / Aider / Copilot / Windsurf ##
 ctx hook cursor # or: aider, copilot, windsurf
+
+# ## Companion tools (highly recommended) ##
+npx gitnexus analyze          # code knowledge graph
+# Add Gemini Search MCP server for grounded web search
 ```
 
 Create a [`.ctxrc`](../home/configuration.md) in your project root to configure
@@ -49,7 +53,7 @@ Then start your AI tool and ask: "**Do you remember?**"
 | `ctx load`          | Output assembled context in read order (for manual pasting)  |
 | `ctx watch`         | Auto-apply context updates from AI output (non-native tools) |
 | `ctx completion`    | Generate shell autocompletion for bash, zsh, or fish         |
-| `ctx recall export` | Export sessions to editable journal Markdown                 |
+| `ctx journal import` | Import sessions to editable journal Markdown                 |
 
 ## The Workflow
 
@@ -196,7 +200,7 @@ ctx completion fish > ~/.config/fish/completions/ctx.fish
 ```
 
 After sourcing, typing `ctx a<TAB>` completes to `ctx agent`, and
-`ctx recall <TAB>` shows `list`, `show`, and `export`.
+`ctx journal <TAB>` shows `list`, `show`, and `export`.
 
 ### Step 4: Verify the Setup Works
 
@@ -284,12 +288,12 @@ To preview changes without modifying files:
 ctx watch --dry-run --log /tmp/ai.log
 ```
 
-### Step 6: Export Session Transcripts (*Optional*)
+### Step 6: Import Session Transcripts (*Optional*)
 
-If you want to browse past session transcripts, export them to the journal:
+If you want to browse past session transcripts, import them to the journal:
 
 ```bash
-ctx recall export --all
+ctx journal import --all
 ```
 
 This converts raw session data into editable Markdown files in
@@ -343,6 +347,67 @@ ctx hook aider
   milestones** (*completed tasks, decisions, gotchas*). In practice, this
   works best when you reinforce the habit: a quick "*anything worth saving?*"
   after a debugging session goes a long way.
+
+## Companion Tools (Highly Recommended)
+
+ctx skills can leverage external MCP servers for web search and code
+intelligence. ctx works without them, but they significantly improve
+agent behavior across sessions — the investment is small and the
+benefits compound. Skills like `/ctx-code-review`, `/ctx-explain`,
+and `/ctx-refactor` all become noticeably better with these tools
+connected.
+
+### Gemini Search
+
+Provides grounded web search with citations. Used by skills and the
+agent playbook as the preferred search backend (faster and more accurate
+than built-in web search).
+
+**Setup**: Add the Gemini Search MCP server to your Claude Code settings.
+See the [Gemini Search MCP documentation](https://github.com/nicobailon/gemini-code-search-mcp)
+for installation.
+
+**Verification**:
+```bash
+# The agent checks this automatically during /ctx-remember
+# Manual test: ask the agent to search for something
+```
+
+### GitNexus
+
+Provides a code knowledge graph with symbol resolution, blast radius
+analysis, and domain clustering. Used by skills like `/ctx-refactor`
+(impact analysis) and `/ctx-code-review` (dependency awareness).
+
+**Setup**: Add the GitNexus MCP server to your Claude Code settings,
+then index your project:
+
+```bash
+npx gitnexus analyze
+```
+
+**Verification**:
+```bash
+# The agent checks this automatically during /ctx-remember
+# If the index is stale, it will suggest rehydrating
+```
+
+### Suppressing the Check
+
+If you don't use companion tools and want to skip the availability
+check at session start, add to `.ctxrc`:
+
+```yaml
+companion_check: false
+```
+
+### Future Direction
+
+The companion tool integration is evolving toward a pluggable model:
+bring your own search engine, bring your own code intelligence. The
+current integration is MCP-based and limited to Gemini Search and
+GitNexus. If you use a different search or code intelligence tool,
+skills will degrade gracefully to built-in capabilities.
 
 ## Next Up
 

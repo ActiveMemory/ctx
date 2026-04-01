@@ -1,10 +1,18 @@
 {
   "name": "ctx",
-  "version": "0.8.0",
+  "version": "0.8.1",
   "description": "Persistent context for AI coding assistants",
-  "author": {"name": "Context contributors"},
+  "author": {
+    "name": "Context contributors"
+  },
   "homepage": "https://ctx.ist",
   "repository": "https://github.com/ActiveMemory/ctx",
   "license": "Apache-2.0",
-  "keywords": ["context", "memory", "persistence", "decisions", "learnings"]
+  "keywords": [
+    "context",
+    "memory",
+    "persistence",
+    "decisions",
+    "learnings"
+  ]
 }

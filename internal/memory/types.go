@@ -34,6 +34,13 @@ type Classification struct {
 }
 
 // PublishResult holds what was selected for publishing.
+//
+// Fields:
+//   - Tasks: Task entries selected for MEMORY.md
+//   - Decisions: Decision entries selected
+//   - Conventions: Convention entries selected
+//   - Learnings: Learning entries selected
+//   - TotalLines: Total lines across all selections
 type PublishResult struct {
 	Tasks       []string
 	Decisions   []string
@@ -43,6 +50,12 @@ type PublishResult struct {
 }
 
 // State tracks memory bridge sync timestamps and import/publish progress.
+//
+// Fields:
+//   - LastSync: When mirror was last updated
+//   - LastImport: When entries were last imported from MEMORY.md
+//   - LastPublish: When context was last published to MEMORY.md
+//   - ImportedHashes: Content hashes of already-imported entries
 type State struct {
 	LastSync       *time.Time `json:"last_sync"`
 	LastImport     *time.Time `json:"last_import"`
@@ -51,6 +64,13 @@ type State struct {
 }
 
 // SyncResult holds the outcome of a Sync operation.
+//
+// Fields:
+//   - SourcePath: Path to the source MEMORY.md
+//   - MirrorPath: Path to the mirror copy
+//   - ArchivedTo: Archive path (empty if no prior mirror)
+//   - SourceLines: Line count of the source file
+//   - MirrorLines: Line count of the previous mirror (0 if first sync)
 type SyncResult struct {
 	SourcePath  string
 	MirrorPath  string

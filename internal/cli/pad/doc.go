@@ -20,11 +20,12 @@
 //
 // Subcommands:
 //
-//   - add:    append a text entry or file blob to the scratchpad
-//   - show:   display all entries (auto-decodes blobs)
-//   - rm:     remove an entry by line number
-//   - import: bulk-import lines from a file (or directory blobs with --blobs)
-//   - export: export blob entries as files to a directory
-//   - merge:  merge entries from one or more external scratchpad files
-//     with content-based deduplication and encrypted/plaintext auto-detection
+//   - add:     append a text entry or file blob
+//   - show:    display all entries (auto-decodes blobs)
+//   - edit:    edit an entry by line number
+//   - rm:      remove an entry by line number
+//   - mv:      move an entry to a different position
+//   - export:  export blob entries as files to a directory
+//   - merge:   merge entries from external scratchpad files
+//   - resolve: resolve merge conflicts in scratchpad
 package pad

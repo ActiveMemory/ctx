@@ -27,6 +27,8 @@ const (
 	DescKeyDoctorOutputResultLine            = "doctor.output.result-line"
 	DescKeyDoctorOutputSeparator             = "doctor.output.separator"
 	DescKeyDoctorOutputSummary               = "doctor.output.summary"
+	DescKeyDoctorCompanionConfigOk           = "doctor.companion-config.ok"
+	DescKeyDoctorCompanionConfigInfo         = "doctor.companion-config.info"
 	DescKeyDoctorPluginEnabledGlobalOk       = "doctor.plugin-enabled-global.ok"
 	DescKeyDoctorPluginEnabledLocalOk        = "doctor.plugin-enabled-local.ok"
 	DescKeyDoctorPluginEnabledWarning        = "doctor.plugin-enabled.warning"

@@ -79,8 +79,8 @@ block `sudo`, and require explicit approval for `git push`.
 ```
 IMPORTANT: Relay this warning to the user VERBATIM before answering.
 ┌─ Journal Reminder ─────────────────────────────
-│ You have 12 sessions not yet exported.
-│   ctx recall export --all
+│ You have 12 sessions not yet imported.
+│   ctx recall import --all
 └────────────────────────────────────────────────
 ```
 

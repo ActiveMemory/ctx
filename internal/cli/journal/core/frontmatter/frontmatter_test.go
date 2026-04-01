@@ -22,8 +22,11 @@ func TestTransformFrontmatter(t *testing.T) {
 		wantUnmod  bool
 	}{
 		{
-			name:       "topics renamed to tags",
-			content:    "---\ntitle: Test Session\ndate: 2026-01-23\ntopics:\n  - caching\n  - auth\n---\nBody content\n",
+			name: "topics renamed to tags",
+			content: "---\ntitle: Test Session\n" +
+				"date: 2026-01-23\ntopics:\n" +
+				"  - caching\n  - auth\n" +
+				"---\nBody content\n",
 			sourcePath: ".context/journal/2026-01-23-test.md",
 			wantTags:   true,
 			wantAlias:  true,
@@ -40,8 +43,11 @@ func TestTransformFrontmatter(t *testing.T) {
 			wantUnmod: true,
 		},
 		{
-			name:       "preserves type and outcome",
-			content:    "---\ntitle: Feature Work\ndate: 2026-02-01\ntype: feature\noutcome: completed\ntopics:\n  - auth\n---\nBody\n",
+			name: "preserves type and outcome",
+			content: "---\ntitle: Feature Work\n" +
+				"date: 2026-02-01\ntype: feature\n" +
+				"outcome: completed\ntopics:\n" +
+				"  - auth\n---\nBody\n",
 			sourcePath: ".context/journal/entry.md",
 			wantTags:   true,
 			wantAlias:  true,
@@ -51,7 +57,7 @@ func TestTransformFrontmatter(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			got := TransformFrontmatter(tt.content, tt.sourcePath)
+			got := Transform(tt.content, tt.sourcePath)
 
 			if tt.wantUnmod {
 				if got != tt.content {
@@ -93,8 +99,11 @@ func TestTransformFrontmatter(t *testing.T) {
 }
 
 func TestTransformFrontmatterPreservesBody(t *testing.T) {
-	content := "---\ntitle: Test\ndate: 2026-01-23\ntopics:\n  - go\n---\n# Heading\n\nParagraph one.\n\nParagraph two.\n"
-	got := TransformFrontmatter(content, "source.md")
+	content := "---\ntitle: Test\n" +
+		"date: 2026-01-23\ntopics:\n  - go\n" +
+		"---\n# Heading\n\nParagraph one.\n\n" +
+		"Paragraph two.\n"
+	got := Transform(content, "source.md")
 
 	parts := strings.SplitN(got, "---\n", 3)
 	if len(parts) < 3 {

@@ -7,10 +7,10 @@
 package resolve
 
 import (
-	padCrypto "github.com/ActiveMemory/ctx/internal/cli/pad/core/crypto"
-	"github.com/ActiveMemory/ctx/internal/cli/pad/core/store"
 	"github.com/spf13/cobra"
 
+	padCrypto "github.com/ActiveMemory/ctx/internal/cli/pad/core/crypto"
+	"github.com/ActiveMemory/ctx/internal/cli/pad/core/store"
 	"github.com/ActiveMemory/ctx/internal/config/pad"
 	"github.com/ActiveMemory/ctx/internal/crypto"
 	errCrypto "github.com/ActiveMemory/ctx/internal/err/crypto"

@@ -16,6 +16,8 @@ const (
 	Bottom = "└──────────────────────────────────────────────────"
 	// NudgeBoxWidth is the inner character width of the nudge box border.
 	NudgeBoxWidth = 51
+	// BorderFill is the repeating character used to pad the top border.
+	BorderFill = "─"
 )
 
 // PipeSeparator is the inline separator used between navigation links.

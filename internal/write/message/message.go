@@ -121,7 +121,9 @@ func NoOverride(cmd *cobra.Command, hook, variant string) {
 	if cmd == nil {
 		return
 	}
-	cmd.Println(fmt.Sprintf(desc.Text(text.DescKeyMessageNoOverride), hook, variant))
+	cmd.Println(fmt.Sprintf(
+		desc.Text(text.DescKeyMessageNoOverride),
+		hook, variant))
 }
 
 // OverrideRemoved prints the override removal confirmation.
@@ -135,7 +137,9 @@ func OverrideRemoved(cmd *cobra.Command, hook, variant string) {
 	if cmd == nil {
 		return
 	}
-	cmd.Println(fmt.Sprintf(desc.Text(text.DescKeyMessageOverrideRemoved), hook, variant))
+	cmd.Println(fmt.Sprintf(
+		desc.Text(text.DescKeyMessageOverrideRemoved),
+		hook, variant))
 }
 
 // ListHeader prints the message list table header and separator.
@@ -167,7 +171,11 @@ func ListHeader(cmd *cobra.Command) {
 //   - variant: variant name
 //   - category: message category
 //   - hasOverride: whether a custom override exists
-func ListRow(cmd *cobra.Command, hook, variant, category string, hasOverride bool) {
+func ListRow(
+	cmd *cobra.Command,
+	hook, variant, category string,
+	hasOverride bool,
+) {
 	if cmd == nil {
 		return
 	}
@@ -175,5 +183,7 @@ func ListRow(cmd *cobra.Command, hook, variant, category string, hasOverride boo
 	if hasOverride {
 		override = desc.Text(text.DescKeyMessageOverrideLabel)
 	}
-	cmd.Println(fmt.Sprintf(msg.MessageListFormat, hook, variant, category, override))
+	cmd.Println(fmt.Sprintf(
+		msg.MessageListFormat,
+		hook, variant, category, override))
 }

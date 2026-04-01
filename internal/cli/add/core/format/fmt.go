@@ -17,7 +17,8 @@ import (
 // Task formats a task entry as a Markdown checkbox item.
 //
 // The output includes a timestamp tag for session correlation and an optional
-// priority tag. Format: "- [ ] content #priority:level #added:YYYY-MM-DD-HHMMSS"
+// priority tag.
+// Format: "- [ ] content #priority:level #added:YYYY-MM-DD-HHMMSS"
 //
 // Parameters:
 //   - content: Task description text
@@ -27,7 +28,7 @@ import (
 //   - string: Formatted task line with trailing newline
 func Task(content string, priority string) string {
 	// Use YYYY-MM-DD-HHMMSS timestamp for session correlation
-	timestamp := time.Now().Format(cfgTime.TimestampCompact)
+	timestamp := time.Now().Format(cfgTime.CompactTimestamp)
 	var priorityTag string
 	if priority != "" {
 		priorityTag = fmt.Sprintf(tpl.TaskPriority, priority)
@@ -49,7 +50,7 @@ func Task(content string, priority string) string {
 // Returns:
 //   - string: Formatted learning section with all fields
 func Learning(title, context, lesson, application string) string {
-	timestamp := time.Now().Format(cfgTime.TimestampCompact)
+	timestamp := time.Now().Format(cfgTime.CompactTimestamp)
 	return fmt.Sprintf(
 		tpl.Learning, timestamp, title, context, lesson, application,
 	)
@@ -82,7 +83,7 @@ func Convention(content string) string {
 // Returns:
 //   - string: Formatted decision section with all ADR fields
 func Decision(title, context, rationale, consequence string) string {
-	timestamp := time.Now().Format(cfgTime.TimestampCompact)
+	timestamp := time.Now().Format(cfgTime.CompactTimestamp)
 	return fmt.Sprintf(
 		tpl.Decision,
 		timestamp, title, context, title, rationale, consequence,

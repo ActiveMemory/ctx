@@ -32,7 +32,9 @@ func setupContextDir(t *testing.T) string {
 	// Create required files.
 	for _, f := range ctx.FilesRequired {
 		path := filepath.Join(dir, f)
-		if writeErr := os.WriteFile(path, []byte("# "+f+"\n"), 0o600); writeErr != nil {
+		if writeErr := os.WriteFile(
+			path, []byte("# "+f+"\n"), 0o600,
+		); writeErr != nil {
 			t.Fatal(writeErr)
 		}
 	}
@@ -113,7 +115,10 @@ func TestDoctor_JSON(t *testing.T) {
 
 	var report core.Report
 	if unmarshalErr := json.Unmarshal(out.Bytes(), &report); unmarshalErr != nil {
-		t.Fatalf("output is not valid JSON: %v\noutput: %s", unmarshalErr, out.String())
+		t.Fatalf(
+			"output is not valid JSON: %v\noutput: %s",
+			unmarshalErr, out.String(),
+		)
 	}
 	if len(report.Results) == 0 {
 		t.Error("expected at least one result")
@@ -151,11 +156,17 @@ func TestDoctor_ContextSizeBreakdown(t *testing.T) {
 
 	// Write enough content to some files to verify per-file breakdown appears.
 	archPath := filepath.Join(dir, "ARCHITECTURE.md")
-	if writeErr := os.WriteFile(archPath, []byte(strings.Repeat("word ", 500)), 0o600); writeErr != nil {
+	archContent := strings.Repeat("word ", 500)
+	writeErr := os.WriteFile(
+		archPath, []byte(archContent), 0o600)
+	if writeErr != nil {
 		t.Fatal(writeErr)
 	}
 	tasksPath := filepath.Join(dir, ctx.Task)
-	if writeErr := os.WriteFile(tasksPath, []byte(strings.Repeat("task ", 200)), 0o600); writeErr != nil {
+	taskContent := strings.Repeat("task ", 200)
+	writeErr = os.WriteFile(
+		tasksPath, []byte(taskContent), 0o600)
+	if writeErr != nil {
 		t.Fatal(writeErr)
 	}
 
@@ -251,12 +262,13 @@ func TestDoctor_PluginInstalledNotEnabled(t *testing.T) {
 		"version": 2,
 		"plugins": map[string]any{
 			claude.PluginID: []map[string]string{
-				{"scope": "user", "version": "0.7.2"},
+				{"scope": "user", "version": "0.8.1"}, // TODO: this cannot be hardcoded!
 			},
 		},
 	}
 	data, _ := json.Marshal(pluginsData)
-	if writeErr := os.WriteFile(filepath.Join(pluginsDir, "installed_plugins.json"), data, 0o600); writeErr != nil {
+	pluginsFile := filepath.Join(pluginsDir, "installed_plugins.json")
+	if writeErr := os.WriteFile(pluginsFile, data, 0o600); writeErr != nil {
 		t.Fatal(writeErr)
 	}
 
@@ -279,7 +291,9 @@ func TestDoctor_DriftWarnings(t *testing.T) {
 	archPath := filepath.Join(dir, "ARCHITECTURE.md")
 	archContent := "# Architecture\n\n" +
 		"See `internal/nonexistent/fake.go` for details.\n"
-	if writeErr := os.WriteFile(archPath, []byte(archContent), 0o600); writeErr != nil {
+	if writeErr := os.WriteFile(
+		archPath, []byte(archContent), 0o600,
+	); writeErr != nil {
 		t.Fatal(writeErr)
 	}
 
@@ -325,14 +339,20 @@ func TestAddResourceResults_AllHealthy(t *testing.T) {
 	core.AddResourceResults(report, snap)
 
 	if len(report.Results) != 4 {
-		t.Fatalf("expected 4 results (memory, swap, disk, load), got %d", len(report.Results))
+		t.Fatalf(
+			"expected 4 results (memory, swap, disk, load), got %d",
+			len(report.Results),
+		)
 	}
 	for _, r := range report.Results {
 		if r.Status != stats.StatusOK {
 			t.Errorf("result %s: expected ok, got %s", r.Name, r.Status)
 		}
 		if r.Category != doctor.CategoryResources {
-			t.Errorf("result %s: expected Resources category, got %s", r.Name, r.Category)
+			t.Errorf(
+				"result %s: expected Resources category, got %s",
+				r.Name, r.Category,
+			)
 		}
 	}
 }
@@ -391,7 +411,10 @@ func TestAddResourceResults_DangerMapsToError(t *testing.T) {
 	}
 	for _, r := range report.Results {
 		if r.Status != stats.StatusError {
-			t.Errorf("result %s: expected error for danger severity, got %s", r.Name, r.Status)
+			t.Errorf(
+				"result %s: expected error for danger severity, got %s",
+				r.Name, r.Status,
+			)
 		}
 	}
 }
@@ -407,7 +430,10 @@ func TestAddResourceResults_UnsupportedSkipped(t *testing.T) {
 	core.AddResourceResults(report, snap)
 
 	if len(report.Results) != 0 {
-		t.Errorf("expected 0 results for unsupported metrics, got %d", len(report.Results))
+		t.Errorf(
+			"expected 0 results for unsupported metrics, got %d",
+			len(report.Results),
+		)
 	}
 }
 
@@ -428,7 +454,10 @@ func TestAddResourceResults_NoSwapWhenZeroTotal(t *testing.T) {
 	core.AddResourceResults(report, snap)
 
 	if len(report.Results) != 1 {
-		t.Fatalf("expected 1 result (memory only, no swap), got %d", len(report.Results))
+		t.Fatalf(
+			"expected 1 result (memory only, no swap), got %d",
+			len(report.Results),
+		)
 	}
 	if report.Results[0].Name != "resource_memory" {
 		t.Errorf("expected resource_memory, got %s", report.Results[0].Name)
@@ -456,11 +485,15 @@ func TestAddResourceResults_MessageFormat(t *testing.T) {
 	for _, r := range report.Results {
 		switch r.Name {
 		case "resource_memory":
-			if !strings.Contains(r.Message, "Memory") || !strings.Contains(r.Message, "GB") {
+			hasMem := strings.Contains(r.Message, "Memory")
+			hasGB := strings.Contains(r.Message, "GB")
+			if !hasMem || !hasGB {
 				t.Errorf("memory message missing expected format: %s", r.Message)
 			}
 		case "resource_load":
-			if !strings.Contains(r.Message, "Load") || !strings.Contains(r.Message, "CPUs") {
+			hasLoad := strings.Contains(r.Message, "Load")
+			hasCPUs := strings.Contains(r.Message, "CPUs")
+			if !hasLoad || !hasCPUs {
 				t.Errorf("load message missing expected format: %s", r.Message)
 			}
 		}

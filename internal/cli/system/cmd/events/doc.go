@@ -6,5 +6,7 @@
 
 // Package events implements the ctx system events subcommand.
 //
-// It queries and displays entries from the local hook event log.
+// Key exports: [Cmd], [Run].
+// Follows the cmd/root + core taxonomy.
+// Registered by the cmd parent command.
 package events

@@ -15,6 +15,7 @@ const (
 	ContextLoadSeparatorChar = "="
 	// ContextLoadSeparatorWidth is the width of header/footer separator lines.
 	ContextLoadSeparatorWidth = 80
-	// ContextLoadIndexSuffix is the suffix appended to filenames for index entries.
+	// ContextLoadIndexSuffix is the suffix appended to filenames
+	// for index entries.
 	ContextLoadIndexSuffix = " (idx)"
 )

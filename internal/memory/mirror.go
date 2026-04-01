@@ -8,15 +8,12 @@ package memory
 
 import (
 	"bytes"
-	"fmt"
 	"os"
 	"path/filepath"
 	"strings"
 	"time"
 
-	"github.com/ActiveMemory/ctx/internal/assets/read/desc"
 	"github.com/ActiveMemory/ctx/internal/config/dir"
-	"github.com/ActiveMemory/ctx/internal/config/embed/text"
 	"github.com/ActiveMemory/ctx/internal/config/file"
 	"github.com/ActiveMemory/ctx/internal/config/fs"
 	"github.com/ActiveMemory/ctx/internal/config/memory"
@@ -28,9 +25,17 @@ import (
 
 // Sync copies sourcePath to .context/memory/mirror.md, archiving the
 // previous mirror if one exists. Creates directories as needed.
+//
+// Parameters:
+//   - contextDir: Path to the project context directory
+//   - sourcePath: Path to the source MEMORY.md file
+//
+// Returns:
+//   - SyncResult: Summary of what was copied and archived
+//   - error: If reading, writing, or archiving fails
 func Sync(contextDir, sourcePath string) (SyncResult, error) {
 	mirrorDir := filepath.Join(contextDir, dir.Memory)
-	mirrorPath := filepath.Join(mirrorDir, memory.MemoryMirror)
+	mirrorPath := filepath.Join(mirrorDir, memory.Mirror)
 
 	sourceData, readErr := io.SafeReadUserFile(sourcePath)
 	if readErr != nil {
@@ -57,7 +62,9 @@ func Sync(contextDir, sourcePath string) (SyncResult, error) {
 		return SyncResult{}, errMemory.CreateDir(mkErr)
 	}
 
-	if writeErr := os.WriteFile(mirrorPath, sourceData, fs.PermFile); writeErr != nil {
+	if writeErr := os.WriteFile(
+		mirrorPath, sourceData, fs.PermFile,
+	); writeErr != nil {
 		return SyncResult{}, errMemory.WriteMirror(writeErr)
 	}
 
@@ -66,8 +73,15 @@ func Sync(contextDir, sourcePath string) (SyncResult, error) {
 
 // Archive copies the current mirror.md to archive/mirror-<timestamp>.md.
 // Returns the archive path. Returns an error if no mirror exists.
+//
+// Parameters:
+//   - contextDir: Path to the project context directory
+//
+// Returns:
+//   - string: Path to the written archive file
+//   - error: If no mirror exists or writing fails
 func Archive(contextDir string) (string, error) {
-	mirrorPath := filepath.Join(contextDir, dir.Memory, memory.MemoryMirror)
+	mirrorPath := filepath.Join(contextDir, dir.Memory, memory.Mirror)
 	archiveDir := filepath.Join(contextDir, dir.MemoryArchive)
 
 	data, readErr := io.SafeReadUserFile(mirrorPath)
@@ -79,8 +93,9 @@ func Archive(contextDir string) (string, error) {
 		return "", errMemory.CreateArchiveDir(mkErr)
 	}
 
-	ts := time.Now().Format(cfgTime.TimestampCompact)
-	archivePath := filepath.Join(archiveDir, memory.PrefixMirror+ts+file.ExtMarkdown)
+	ts := time.Now().Format(cfgTime.CompactTimestamp)
+	archiveName := memory.PrefixMirror + ts + file.ExtMarkdown
+	archivePath := filepath.Join(archiveDir, archiveName)
 
 	if writeErr := os.WriteFile(archivePath, data, fs.PermFile); writeErr != nil {
 		return "", errMemory.WriteArchive(writeErr)
@@ -91,8 +106,16 @@ func Archive(contextDir string) (string, error) {
 
 // Diff returns a simple line-based diff between the mirror and the source.
 // Returns empty string when files are identical.
+//
+// Parameters:
+//   - contextDir: Path to the project context directory
+//   - sourcePath: Path to the source MEMORY.md file
+//
+// Returns:
+//   - string: Line-based diff, or empty if identical
+//   - error: If either file cannot be read
 func Diff(contextDir, sourcePath string) (string, error) {
-	mirrorPath := filepath.Join(contextDir, dir.Memory, memory.MemoryMirror)
+	mirrorPath := filepath.Join(contextDir, dir.Memory, memory.Mirror)
 
 	mirrorData, mirrorErr := io.SafeReadUserFile(mirrorPath)
 	if mirrorErr != nil {
@@ -116,8 +139,15 @@ func Diff(contextDir, sourcePath string) (string, error) {
 
 // HasDrift checks whether MEMORY.md has been modified since the last sync.
 // Returns false if either file is missing (no drift to report).
+//
+// Parameters:
+//   - contextDir: Path to the project context directory
+//   - sourcePath: Path to the source MEMORY.md file
+//
+// Returns:
+//   - bool: True if MEMORY.md has been modified since the last sync
 func HasDrift(contextDir, sourcePath string) bool {
-	mirrorPath := filepath.Join(contextDir, dir.Memory, memory.MemoryMirror)
+	mirrorPath := filepath.Join(contextDir, dir.Memory, memory.Mirror)
 
 	sourceInfo, sourceErr := os.Stat(sourcePath)
 	if sourceErr != nil {
@@ -133,6 +163,12 @@ func HasDrift(contextDir, sourcePath string) bool {
 }
 
 // ArchiveCount returns the number of archived mirror snapshots.
+//
+// Parameters:
+//   - contextDir: Path to the project context directory
+//
+// Returns:
+//   - int: Number of archived mirror snapshot files
 func ArchiveCount(contextDir string) int {
 	archiveDir := filepath.Join(contextDir, dir.MemoryArchive)
 	entries, readErr := os.ReadDir(archiveDir)
@@ -146,40 +182,4 @@ func ArchiveCount(contextDir string) int {
 		}
 	}
 	return count
-}
-
-func countLines(data []byte) int {
-	if len(data) == 0 {
-		return 0
-	}
-	return bytes.Count(data, []byte(token.NewlineLF))
-}
-
-// simpleDiff produces a minimal unified-style diff header with added/removed lines.
-func simpleDiff(oldPath, newPath string, oldLines, newLines []string) string {
-	var buf strings.Builder
-	_, _ = fmt.Fprintf(&buf, desc.Text(text.DescKeyMemoryDiffOldFormat), oldPath)
-	_, _ = fmt.Fprintf(&buf, desc.Text(text.DescKeyMemoryDiffNewFormat), newPath)
-
-	oldSet := make(map[string]bool, len(oldLines))
-	for _, l := range oldLines {
-		oldSet[l] = true
-	}
-	newSet := make(map[string]bool, len(newLines))
-	for _, l := range newLines {
-		newSet[l] = true
-	}
-
-	for _, l := range oldLines {
-		if !newSet[l] {
-			buf.WriteString("-" + l + token.NewlineLF)
-		}
-	}
-	for _, l := range newLines {
-		if !oldSet[l] {
-			buf.WriteString("+" + l + token.NewlineLF)
-		}
-	}
-
-	return buf.String()
 }

@@ -71,10 +71,12 @@ Body of second.
 	}
 
 	if blocks[0].Entry.Title != "First decision" {
-		t.Errorf("blocks[0].Title = %q, want %q", blocks[0].Entry.Title, "First decision")
+		t.Errorf("blocks[0].Title = %q, want %q",
+			blocks[0].Entry.Title, "First decision")
 	}
 	if blocks[1].Entry.Title != "Second decision" {
-		t.Errorf("blocks[1].Title = %q, want %q", blocks[1].Entry.Title, "Second decision")
+		t.Errorf("blocks[1].Title = %q, want %q",
+			blocks[1].Entry.Title, "Second decision")
 	}
 }
 
@@ -112,9 +114,12 @@ func TestEntryBlock_IsSuperseded(t *testing.T) {
 			want:  false,
 		},
 		{
-			name:  "superseded",
-			lines: []string{"## [2026-01-15-120000] Test", "~~Superseded by newer decision~~"},
-			want:  true,
+			name: "superseded",
+			lines: []string{
+				"## [2026-01-15-120000] Test",
+				"~~Superseded by newer decision~~",
+			},
+			want: true,
 		},
 		{
 			name:  "superseded with leading space",

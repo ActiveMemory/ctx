@@ -2506,10 +2506,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#step-3-configure-promptmd" class="md-nav__link">
+  <a href="#step-3-configure-the-loop-prompt" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Step 3: Configure PROMPT.md
+        Step 3: Configure the Loop Prompt
       
     </span>
   </a>
@@ -2807,16 +2807,14 @@
   
   
     <li class="md-nav__item">
-      <a href="../prompt-templates/" class="md-nav__link">
+      <a href="../prompt-templates.md" class="md-nav__link">
         
   
-  
-    <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-message-square-text" viewBox="0 0 24 24"><path d="M22 17a2 2 0 0 1-2 2H6.828a2 2 0 0 0-1.414.586l-2.202 2.202A.71.71 0 0 1 2 21.286V5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2zM7 11h10M7 15h6M7 7h8"/></svg>
   
   <span class="md-ellipsis">
     
   
-    Reusable Prompt Templates
+    none
   
 
     
@@ -2997,7 +2995,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../cli/recall/" class="md-nav__link">
+      <a href="../../cli/journal/" class="md-nav__link">
         
   
   
@@ -3006,7 +3004,7 @@
   <span class="md-ellipsis">
     
   
-    Recall and Journal
+    Journal
   
 
     
@@ -3914,10 +3912,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#step-3-configure-promptmd" class="md-nav__link">
+  <a href="#step-3-configure-the-loop-prompt" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Step 3: Configure PROMPT.md
+        Step 3: Configure the Loop Prompt
       
     </span>
   </a>
@@ -4246,7 +4244,7 @@ the agent persists its context as part of the work.</p>
 <p>Unattended operation works because the agent treats
 context persistence as a <strong>first-class deliverable</strong>, not an <em>afterthought</em>.</p>
 <h2 id="tldr">TL;DR<a class="headerlink" href="#tldr" title="Permanent link">&para;</a></h2>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>ctx<span class="w"> </span>init<span class="w"> </span>--ralph<span class="w">                            </span><span class="c1"># 1. init for unattended mode</span>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>ctx<span class="w"> </span>init<span class="w">                                    </span><span class="c1"># 1. init context</span>
 </span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="c1"># Edit TASKS.md with phased work items</span>
 </span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>ctx<span class="w"> </span>loop<span class="w"> </span>--tool<span class="w"> </span>claude<span class="w"> </span>--max-iterations<span class="w"> </span><span class="m">10</span><span class="w">  </span><span class="c1"># 2. generate loop.sh</span>
 </span><span id="__span-0-4"><a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>./loop.sh<span class="w"> </span><span class="m">2</span>&gt;<span class="p">&amp;</span><span class="m">1</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>tee<span class="w"> </span>/tmp/loop.log<span class="w"> </span><span class="p">&amp;</span><span class="w">        </span><span class="c1"># 3. run the loop</span>
@@ -4266,9 +4264,9 @@ context persistence as a <strong>first-class deliverable</strong>, not an <em>af
 </thead>
 <tbody>
 <tr>
-<td><code>ctx init --ralph</code></td>
+<td><code>ctx init</code></td>
 <td>Command</td>
-<td>Initialize project for unattended operation (no human in the loop)</td>
+<td>Initialize project context and prompt templates</td>
 </tr>
 <tr>
 <td><code>ctx loop</code></td>
@@ -4300,16 +4298,12 @@ context persistence as a <strong>first-class deliverable</strong>, not an <em>af
 <h2 id="the-workflow">The Workflow<a class="headerlink" href="#the-workflow" title="Permanent link">&para;</a></h2>
 <h3 id="step-1-initialize-for-unattended-operation">Step 1: Initialize for Unattended Operation<a class="headerlink" href="#step-1-initialize-for-unattended-operation" title="Permanent link">&para;</a></h3>
 <p>Start by creating a <code>.context/</code> directory configured so the agent can work
-without human input. The <code>--ralph</code> flag sets up <code>PROMPT.md</code> so the agent makes
-reasonable choices instead of asking clarifying questions.</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>ctx<span class="w"> </span>init<span class="w"> </span>--ralph
+without human input.</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>ctx<span class="w"> </span>init
 </span></code></pre></div>
-<p>This creates <code>.context/</code> with the template files, a <code>PROMPT.md</code> configured for
-autonomous iteration, and seeds Claude Code permissions in
+<p>This creates <code>.context/</code> with the template files (including a loop prompt at
+<code>.context/loop.md</code>), and seeds Claude Code permissions in
 <code>.claude/settings.local.json</code>. Install the <code>ctx</code> plugin for hooks and skills.</p>
-<p>Without <code>--ralph</code>, the agent will often pause when requirements are unclear.
-For unattended runs, you want it to choose a default and document the trade-off
-in <code>DECISIONS.md</code> instead.</p>
 <h3 id="step-2-populate-tasksmd-with-phased-work">Step 2: Populate <code>TASKS.md</code> with Phased Work<a class="headerlink" href="#step-2-populate-tasksmd-with-phased-work" title="Permanent link">&para;</a></h3>
 <p>Open <code>.context/TASKS.md</code> and organize your work into phases. The agent works
 through these systematically, top to bottom, using priority tags to break ties.</p>
@@ -4335,8 +4329,8 @@ through these systematically, top to bottom, using priority tags to break ties.<
 </span></code></pre></div>
 <p>Phased organization matters because it gives the agent natural boundaries.
 Phase 1 tasks should be completable without Phase 2 code existing yet.</p>
-<h3 id="step-3-configure-promptmd">Step 3: Configure PROMPT.md<a class="headerlink" href="#step-3-configure-promptmd" title="Permanent link">&para;</a></h3>
-<p>The <code>--ralph</code> flag generates a <code>PROMPT.md</code> that instructs the agent to operate
+<h3 id="step-3-configure-the-loop-prompt">Step 3: Configure the Loop Prompt<a class="headerlink" href="#step-3-configure-the-loop-prompt" title="Permanent link">&para;</a></h3>
+<p>The loop prompt at <code>.context/loop.md</code> instructs the agent to operate
 autonomously:</p>
 <ol>
 <li>Read <code>.context/CONSTITUTION.md</code> first (hard rules, never violated)</li>
@@ -4346,9 +4340,9 @@ autonomously:</p>
 <li>Commit changes (including <code>.context/</code>)</li>
 <li>Signal status with a completion signal</li>
 </ol>
-<p>You can customize <code>PROMPT.md</code> for your project. The critical parts are the
-one-task-per-iteration discipline, proactive context persistence, and completion
-signals at the end:</p>
+<p>You can customize <code>.context/loop.md</code> for your project. The critical
+parts are the one-task-per-iteration discipline, proactive context persistence,
+and completion signals at the end:</p>
 <div class="language-markdown highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="gu">## Signal Status</span>
 </span><span id="__span-3-2"><a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>
 </span><span id="__span-3-3"><a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>End your response with exactly ONE of:
@@ -4389,7 +4383,7 @@ radius.</p>
 <h4 id="option-b-skip-all-permission-checks">Option B: Skip All Permission Checks<a class="headerlink" href="#option-b-skip-all-permission-checks" title="Permanent link">&para;</a></h4>
 <p>Claude Code supports a <code>--dangerously-skip-permissions</code> flag that disables all
 permission prompts:</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-5-1"><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>claude<span class="w"> </span>--dangerously-skip-permissions<span class="w"> </span>-p<span class="w"> </span><span class="s2">&quot;</span><span class="k">$(</span>cat<span class="w"> </span>.context/PROMPT.md<span class="k">)</span><span class="s2">&quot;</span>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-5-1"><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>claude<span class="w"> </span>--dangerously-skip-permissions<span class="w"> </span>-p<span class="w"> </span><span class="s2">&quot;</span><span class="k">$(</span>cat<span class="w"> </span>.context/loop.md<span class="k">)</span><span class="s2">&quot;</span>
 </span></code></pre></div>
 <div class="admonition danger">
 <p class="admonition-title">This Flag Means What It Says</p>
@@ -4478,10 +4472,10 @@ common case</em>).</p>
 </span><span id="__span-7-4"><a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a><span class="c1"># Generate for Aider</span>
 </span><span id="__span-7-5"><a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a>ctx<span class="w"> </span>loop<span class="w"> </span>--tool<span class="w"> </span>aider<span class="w"> </span>--max-iterations<span class="w"> </span><span class="m">10</span>
 </span><span id="__span-7-6"><a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a>
-</span><span id="__span-7-7"><a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a><span class="c1"># Custom prompt file and output filename (default prompt is PROMPT.md in project root)</span>
+</span><span id="__span-7-7"><a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a><span class="c1"># Custom prompt file and output filename</span>
 </span><span id="__span-7-8"><a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a>ctx<span class="w"> </span>loop<span class="w"> </span>--tool<span class="w"> </span>claude<span class="w"> </span>--prompt<span class="w"> </span>my-prompt.md<span class="w"> </span>--output<span class="w"> </span>my-loop.sh
 </span></code></pre></div>
-<p>The generated script reads <code>PROMPT.md</code>, runs the tool, checks for completion
+<p>The generated script reads <code>.context/loop.md</code>, runs the tool, checks for completion
 signals, and loops until done or the cap is reached.</p>
 <p>You can also use the <code>/ctx-loop</code> skill from inside Claude Code.</p>
 <div class="admonition tip">
@@ -4521,7 +4515,7 @@ default this is <code>SYSTEM_CONVERGED</code>. You can change it with the
 <code>--completion</code> flag:</p>
 <div class="language-bash highlight"><pre><span></span><code><span id="__span-10-1"><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a>ctx<span class="w"> </span>loop<span class="w"> </span>--tool<span class="w"> </span>claude<span class="w"> </span>--completion<span class="w"> </span>BOOTSTRAP_COMPLETE<span class="w"> </span>--max-iterations<span class="w"> </span><span class="m">5</span>
 </span></code></pre></div>
-<p>The following signals are conventions used in <code>PROMPT.md</code>:</p>
+<p>The following signals are conventions used in <code>.context/loop.md</code>:</p>
 <table>
 <thead>
 <tr>
@@ -4573,8 +4567,8 @@ touch multiple files.</p>
 <p>Each step is verified (build, test, syntax check) before moving to the next.</p>
 <h2 id="putting-it-all-together">Putting It All Together<a class="headerlink" href="#putting-it-all-together" title="Permanent link">&para;</a></h2>
 <p>A typical overnight run:</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-13-1"><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a>ctx<span class="w"> </span>init<span class="w"> </span>--ralph
-</span><span id="__span-13-2"><a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a><span class="c1"># Edit TASKS.md and PROMPT.md</span>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-13-1"><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a>ctx<span class="w"> </span>init
+</span><span id="__span-13-2"><a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a><span class="c1"># Edit TASKS.md and .context/loop.md</span>
 </span><span id="__span-13-3"><a id="__codelineno-13-3" name="__codelineno-13-3" href="#__codelineno-13-3"></a>
 </span><span id="__span-13-4"><a id="__codelineno-13-4" name="__codelineno-13-4" href="#__codelineno-13-4"></a>ctx<span class="w"> </span>loop<span class="w"> </span>--tool<span class="w"> </span>claude<span class="w"> </span>--max-iterations<span class="w"> </span><span class="m">20</span>
 </span><span id="__span-13-5"><a id="__codelineno-13-5" name="__codelineno-13-5" href="#__codelineno-13-5"></a>
@@ -4654,7 +4648,7 @@ instructions:</p>
 often at phase transitions or after completing a cluster of related tasks.
 It updates <code>TASKS.md</code>, <code>DECISIONS.md</code>, and <code>LEARNINGS.md</code> as it goes.</p>
 <p>If the loop crashes at 4 AM, the context files tell you exactly where to
-resume. You can also use <code>ctx recall list</code> to review the session transcripts.</p>
+resume. You can also use <code>ctx journal source</code> to review the session transcripts.</p>
 <h3 id="the-persistence-contract">The Persistence Contract<a class="headerlink" href="#the-persistence-contract" title="Permanent link">&para;</a></h3>
 <p>The autonomous loop has an implicit contract:</p>
 <ol>
@@ -4677,7 +4671,7 @@ resume. You can also use <code>ctx recall list</code> to review the session tran
 <li>Keep tasks atomic. Each task should be completable in a single iteration.</li>
 <li>Check signal discipline. If the loop runs forever, the agent is not emitting
   <code>SYSTEM_CONVERGED</code> or <code>SYSTEM_BLOCKED</code>. Make the signal requirement explicit
-  in <code>PROMPT.md</code>.</li>
+  in <code>.context/loop.md</code>.</li>
 <li>Commit after context updates. Finish code, update <code>.context/</code>, commit including
   <code>.context/</code>, then signal.</li>
 <li>Set up <a href="../webhook-notifications/">webhook notifications</a> to get notified
@@ -4690,10 +4684,10 @@ Decision framework for choosing between a single agent, parallel
 worktrees, and a full agent team.</p>
 <h2 id="see-also">See Also<a class="headerlink" href="#see-also" title="Permanent link">&para;</a></h2>
 <ul>
-<li><a href="../../operations/autonomous-loop/">Autonomous Loops</a>: loop pattern, PROMPT.md templates, troubleshooting</li>
+<li><a href="../../operations/autonomous-loop/">Autonomous Loops</a>: loop pattern, prompt templates, troubleshooting</li>
 <li><a href="../../cli/tools/#ctx-loop">CLI Reference: ctx loop</a>: flags and options</li>
 <li><a href="../../cli/tools/#ctx-watch">CLI Reference: ctx watch</a>: watch mode details</li>
-<li><a href="../../cli/init-status/#ctx-init">CLI Reference: ctx init</a>: init flags including <code>--ralph</code></li>
+<li><a href="../../cli/init-status/#ctx-init">CLI Reference: ctx init</a>: init flags</li>
 <li><a href="../session-lifecycle/">The Complete Session</a>: interactive workflow</li>
 <li><a href="../task-management/">Tracking Work Across Sessions</a>: structuring TASKS.md</li>
 </ul>

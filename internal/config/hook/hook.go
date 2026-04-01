@@ -6,7 +6,7 @@
 
 package hook
 
-// Hook name constants: used for LoadMessage, NewTemplateRef, notify.Send,
+// Hook name constants: used for Load, NewTemplateRef, notify.Send,
 // and log.Append to avoid magic strings.
 const (
 	// BlockDangerousCommands is the hook name for blocking dangerous commands.
@@ -39,6 +39,8 @@ const (
 	CheckTaskCompletion = "check-task-completion"
 	// CheckVersion is the hook name for version mismatch checks.
 	CheckVersion = "check-version"
+	// CheckSkillDiscovery is the hook name for skill discovery nudges.
+	CheckSkillDiscovery = "check-skill-discovery"
 	// Heartbeat is the hook name for session heartbeat events.
 	Heartbeat = "heartbeat"
 	// PostCommit is the hook name for post-commit nudges.
@@ -98,6 +100,12 @@ const (
 	// PrefixMemoryDriftThrottle is the state file prefix for per-session
 	// memory drift nudge tombstones.
 	PrefixMemoryDriftThrottle = "memory-drift-nudged-"
+	// PrefixSkillDiscoveryGuard is the state file prefix for
+	// the one-shot skill discovery nudge guard.
+	PrefixSkillDiscoveryGuard = "skill-discovery-"
+	// SkillDiscoveryThreshold is the prompt count at which the
+	// skill discovery nudge fires.
+	SkillDiscoveryThreshold = 25
 	// PrefixPauseMarker is the state file prefix for session pause markers.
 	PrefixPauseMarker = "ctx-paused-"
 	// LabelPaused is the short status label emitted while hooks are paused.

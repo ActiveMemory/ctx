@@ -22,7 +22,9 @@ func TestSync_FirstRun(t *testing.T) {
 	sourcePath := filepath.Join(sourceDir, "MEMORY.md")
 
 	content := "# Memory\n\n## Session notes\n- discovered a bug\n"
-	if writeErr := os.WriteFile(sourcePath, []byte(content), 0o644); writeErr != nil {
+	if writeErr := os.WriteFile(
+		sourcePath, []byte(content), 0o644,
+	); writeErr != nil {
 		t.Fatal(writeErr)
 	}
 
@@ -38,13 +40,16 @@ func TestSync_FirstRun(t *testing.T) {
 		t.Errorf("SourceLines = %d, want 4", result.SourceLines)
 	}
 
-	mirrorPath := filepath.Join(contextDir, dir.Memory, memory.MemoryMirror)
+	mirrorPath := filepath.Join(contextDir, dir.Memory, memory.Mirror)
 	mirrorData, readErr := os.ReadFile(mirrorPath)
 	if readErr != nil {
 		t.Fatalf("reading mirror: %v", readErr)
 	}
 	if string(mirrorData) != content {
-		t.Errorf("mirror content mismatch:\ngot:  %q\nwant: %q", string(mirrorData), content)
+		t.Errorf(
+			"mirror content mismatch:\ngot:  %q\nwant: %q",
+			string(mirrorData), content,
+		)
 	}
 }
 
@@ -58,15 +63,19 @@ func TestSync_WithArchive(t *testing.T) {
 	if mkErr := os.MkdirAll(mirrorDir, 0o755); mkErr != nil {
 		t.Fatal(mkErr)
 	}
-	mirrorPath := filepath.Join(mirrorDir, memory.MemoryMirror)
+	mirrorPath := filepath.Join(mirrorDir, memory.Mirror)
 	oldContent := "# Memory v1\n"
-	if writeErr := os.WriteFile(mirrorPath, []byte(oldContent), 0o644); writeErr != nil {
+	if writeErr := os.WriteFile(
+		mirrorPath, []byte(oldContent), 0o644,
+	); writeErr != nil {
 		t.Fatal(writeErr)
 	}
 
 	// Write updated source
 	newContent := "# Memory v2\n\n## New stuff\n"
-	if writeErr := os.WriteFile(sourcePath, []byte(newContent), 0o644); writeErr != nil {
+	if writeErr := os.WriteFile(
+		sourcePath, []byte(newContent), 0o644,
+	); writeErr != nil {
 		t.Fatal(writeErr)
 	}
 
@@ -91,7 +100,10 @@ func TestSync_WithArchive(t *testing.T) {
 		t.Fatalf("reading archive: %v", readErr)
 	}
 	if string(archiveData) != oldContent {
-		t.Errorf("archive content mismatch:\ngot:  %q\nwant: %q", string(archiveData), oldContent)
+		t.Errorf(
+			"archive content mismatch:\ngot:  %q\nwant: %q",
+			string(archiveData), oldContent,
+		)
 	}
 
 	// Verify mirror updated
@@ -114,13 +126,17 @@ func TestDiff_Identical(t *testing.T) {
 	if mkErr := os.MkdirAll(mirrorDir, 0o755); mkErr != nil {
 		t.Fatal(mkErr)
 	}
-	mirrorPath := filepath.Join(mirrorDir, memory.MemoryMirror)
-	if writeErr := os.WriteFile(mirrorPath, []byte(content), 0o644); writeErr != nil {
+	mirrorPath := filepath.Join(mirrorDir, memory.Mirror)
+	if writeErr := os.WriteFile(
+		mirrorPath, []byte(content), 0o644,
+	); writeErr != nil {
 		t.Fatal(writeErr)
 	}
 
 	sourcePath := filepath.Join(sourceDir, "MEMORY.md")
-	if writeErr := os.WriteFile(sourcePath, []byte(content), 0o644); writeErr != nil {
+	if writeErr := os.WriteFile(
+		sourcePath, []byte(content), 0o644,
+	); writeErr != nil {
 		t.Fatal(writeErr)
 	}
 
@@ -141,13 +157,17 @@ func TestDiff_WithChanges(t *testing.T) {
 	if mkErr := os.MkdirAll(mirrorDir, 0o755); mkErr != nil {
 		t.Fatal(mkErr)
 	}
-	mirrorPath := filepath.Join(mirrorDir, memory.MemoryMirror)
-	if writeErr := os.WriteFile(mirrorPath, []byte("# Memory\nold line\n"), 0o644); writeErr != nil {
+	mirrorPath := filepath.Join(mirrorDir, memory.Mirror)
+	if writeErr := os.WriteFile(
+		mirrorPath, []byte("# Memory\nold line\n"), 0o644,
+	); writeErr != nil {
 		t.Fatal(writeErr)
 	}
 
 	sourcePath := filepath.Join(sourceDir, "MEMORY.md")
-	if writeErr := os.WriteFile(sourcePath, []byte("# Memory\nnew line\n"), 0o644); writeErr != nil {
+	if writeErr := os.WriteFile(
+		sourcePath, []byte("# Memory\nnew line\n"), 0o644,
+	); writeErr != nil {
 		t.Fatal(writeErr)
 	}
 
@@ -194,8 +214,15 @@ func TestArchiveCount(t *testing.T) {
 	}
 
 	// Create two archives
-	for _, name := range []string{"mirror-2026-03-01-120000.md", "mirror-2026-03-02-120000.md"} {
-		if writeErr := os.WriteFile(filepath.Join(archiveDir, name), []byte("x"), 0o644); writeErr != nil {
+	archives := []string{
+		"mirror-2026-03-01-120000.md",
+		"mirror-2026-03-02-120000.md",
+	}
+	for _, name := range archives {
+		p := filepath.Join(archiveDir, name)
+		if writeErr := os.WriteFile(
+			p, []byte("x"), 0o644,
+		); writeErr != nil {
 			t.Fatal(writeErr)
 		}
 	}

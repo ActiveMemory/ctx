@@ -7,11 +7,11 @@
 package root
 
 import (
+	"github.com/spf13/cobra"
+
 	"github.com/ActiveMemory/ctx/internal/cli/change/core/detect"
 	"github.com/ActiveMemory/ctx/internal/cli/change/core/render"
 	"github.com/ActiveMemory/ctx/internal/cli/change/core/scan"
-	"github.com/spf13/cobra"
-
 	errInit "github.com/ActiveMemory/ctx/internal/err/initialize"
 	writeChange "github.com/ActiveMemory/ctx/internal/write/change"
 )
@@ -23,7 +23,8 @@ import (
 //
 // Parameters:
 //   - cmd: Cobra command for output stream
-//   - since: Time reference string (duration like "24h" or date like "2026-03-01")
+//   - since: Time reference string
+//     (duration like "24h" or date like "2026-03-01")
 //
 // Returns:
 //   - error: Non-nil if reference time detection fails
@@ -36,6 +37,6 @@ func Run(cmd *cobra.Command, since string) error {
 	ctxChanges, _ := scan.FindContextChanges(refTime)
 	codeChanges, _ := scan.SummarizeCodeChanges(refTime)
 
-	writeChange.Changes(cmd, render.Changes(refLabel, ctxChanges, codeChanges))
+	writeChange.List(cmd, render.List(refLabel, ctxChanges, codeChanges))
 	return nil
 }

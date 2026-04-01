@@ -118,9 +118,9 @@ This is separate from but complementary to ctx:
 
 ## Session History
 
-Past sessions can be browsed with `ctx recall list` and inspected with
-`ctx recall show`. Session transcripts are automatically captured by
-Claude Code and can be exported to a journal with `ctx recall export`.
+Past sessions can be browsed with `ctx journal source` and inspected with
+`ctx journal source --show <id>`. Session transcripts are automatically captured by
+Claude Code and can be imported to a journal with `ctx journal import`.
 
 This allows future sessions to understand past context without relying on
 conversation memory.

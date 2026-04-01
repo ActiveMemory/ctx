@@ -2441,16 +2441,14 @@
   
   
     <li class="md-nav__item">
-      <a href="../../recipes/prompt-templates/" class="md-nav__link">
+      <a href="../../recipes/prompt-templates.md" class="md-nav__link">
         
   
-  
-    <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-message-square-text" viewBox="0 0 24 24"><path d="M22 17a2 2 0 0 1-2 2H6.828a2 2 0 0 0-1.414.586l-2.202 2.202A.71.71 0 0 1 2 21.286V5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2zM7 11h10M7 15h6M7 7h8"/></svg>
   
   <span class="md-ellipsis">
     
   
-    Reusable Prompt Templates
+    none
   
 
     
@@ -2631,7 +2629,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../cli/recall/" class="md-nav__link">
+      <a href="../../cli/journal/" class="md-nav__link">
         
   
   
@@ -2640,7 +2638,7 @@
   <span class="md-ellipsis">
     
   
-    Recall and Journal
+    Journal
   
 
     
@@ -3366,10 +3364,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#3-commit-any-remaining-changes" class="md-nav__link">
+  <a href="#3-verify-docs-and-commit-any-remaining-changes" class="md-nav__link">
     <span class="md-ellipsis">
       
-        3. Commit Any Remaining Changes
+        3. Verify Docs and Commit Any Remaining Changes
       
     </span>
   </a>
@@ -3754,10 +3752,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#3-commit-any-remaining-changes" class="md-nav__link">
+  <a href="#3-verify-docs-and-commit-any-remaining-changes" class="md-nav__link">
     <span class="md-ellipsis">
       
-        3. Commit Any Remaining Changes
+        3. Verify Docs and Commit Any Remaining Changes
       
     </span>
   </a>
@@ -3979,9 +3977,10 @@ The release script adds the <code>v</code> prefix for git tags.</p>
 <p>This analyzes commits since the last tag and writes
 <code>dist/RELEASE_NOTES.md</code>. The release script refuses to
 proceed without this file.</p>
-<h3 id="3-commit-any-remaining-changes">3. Commit Any Remaining Changes<a class="headerlink" href="#3-commit-any-remaining-changes" title="Permanent link">&para;</a></h3>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>git<span class="w"> </span>status<span class="w">          </span><span class="c1"># must be clean</span>
-</span><span id="__span-2-2"><a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>make<span class="w"> </span>audit<span class="w">          </span><span class="c1"># full check: fmt, vet, lint, test</span>
+<h3 id="3-verify-docs-and-commit-any-remaining-changes">3. Verify Docs and Commit Any Remaining Changes<a class="headerlink" href="#3-verify-docs-and-commit-any-remaining-changes" title="Permanent link">&para;</a></h3>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>/ctx-check-links<span class="w">    </span><span class="c1"># audit docs for dead links</span>
+</span><span id="__span-2-2"><a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>make<span class="w"> </span>audit<span class="w">          </span><span class="c1"># full check: fmt, vet, lint, style, test</span>
+</span><span id="__span-2-3"><a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>git<span class="w"> </span>status<span class="w">          </span><span class="c1"># must be clean</span>
 </span></code></pre></div>
 <h3 id="4-run-the-release">4. Run the Release<a class="headerlink" href="#4-run-the-release" title="Permanent link">&para;</a></h3>
 <div class="language-bash highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>make<span class="w"> </span>release

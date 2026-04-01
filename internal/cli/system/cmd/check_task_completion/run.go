@@ -54,7 +54,7 @@ func Run(cmd *cobra.Command, stdin *os.File) error {
 		return nil
 	}
 
-	counterPath := filepath.Join(state.StateDir(), nudge.PrefixTask+sessionID)
+	counterPath := filepath.Join(state.Dir(), nudge.PrefixTask+sessionID)
 	count := counter.Read(counterPath)
 	count++
 
@@ -67,13 +67,13 @@ func Run(cmd *cobra.Command, stdin *os.File) error {
 	counter.Write(counterPath, 0)
 
 	fallback := desc.Text(text.DescKeyCheckTaskCompletionFallback)
-	msg := message.LoadMessage(
+	msg := message.Load(
 		hook.CheckTaskCompletion, hook.VariantNudge, nil, fallback,
 	)
 	if msg == "" {
 		return nil
 	}
-	writeHook.HookContext(
+	writeHook.Context(
 		cmd, coreSession.FormatContext(hook.EventPostToolUse, msg),
 	)
 

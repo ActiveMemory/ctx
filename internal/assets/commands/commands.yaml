@@ -142,12 +142,23 @@ config.switch:
   short: Switch .ctxrc profile
 ctx:
   long: |-
-    ctx (Context) maintains persistent context files that help
-      AI coding assistants understand your project's architecture, conventions,
-      decisions, and current tasks.
-
-      Use 'ctx init' to create a .context/ directory in your project,
-      then use 'ctx status', 'ctx load', and 'ctx agent' to work with context.
+    ctx (Context) - persistent context for AI coding assistants
+        Documentation and Source Code:
+            https://ctx.ist 
+            https://github.com/ActiveMemory/ctx
+        Questions, Suggestions, and Feedback:
+            Discord: https://ctx.ist/discord  (fastest)
+              Email: support@ctx.ist
+    !
+    !   ctx is not a skill: ctx is the persistence layer.
+    !   Skip these and you will suffer:
+    !
+    !           Session Start: /ctx-remember
+    !             Session End: /ctx-wrap-up
+    !         ∀ ~2-3 sessions:
+    !                          ctx journal import --all
+    !                          /ctx-journal-enrich-all
+    !
   short: Context - persistent context for AI coding assistants
 decision:
   long: |-
@@ -266,8 +277,6 @@ initialize:
       - AGENT_PLAYBOOK.md: How AI agents should use this system
 
     Additionally, in the project root:
-      - PROMPT.md              : Session prompt for AI agents
-      - IMPLEMENTATION_PLAN.md : High-level project direction
       - CLAUDE.md              : Claude Code configuration
 
     Use --minimal to only create essential files
@@ -293,21 +302,27 @@ initialize:
   short: Initialize a new .context/ directory with template files
 journal:
   long: |-
-    Work with exported session files in .context/journal/.
+    Manage AI session history: import, inspect, protect, and publish.
 
-    The journal system provides tools for analyzing, enriching, and
-    publishing your AI session history.
+    The journal system provides the full lifecycle for session history in
+    .context/journal/ - from raw session files through to published sites.
 
     Subcommands:
+      source    List and inspect raw session files
+      import    Import sessions to editable journal files
+      lock      Protect journal entries from regeneration
+      unlock    Remove lock protection from journal entries
+      sync      Sync lock state from frontmatter to state file
       site      Generate a static site from journal entries
       obsidian  Generate an Obsidian vault from journal entries
 
     Examples:
-      ctx journal site                    # Generate site in .context/journal-site/
-      ctx journal site --output ~/public  # Custom output directory
-      ctx journal site --serve            # Generate and serve locally
-      ctx journal obsidian                # Generate Obsidian vault
-  short: Analyze and synthesize exported sessions
+      ctx journal source                    # List available sessions
+      ctx journal source --show abc123      # Inspect a session
+      ctx journal import --all              # Import all new sessions
+      ctx journal lock --all                # Protect all entries
+      ctx journal site --serve              # Generate and serve locally
+  short: Manage session history and journal
 journal.obsidian:
   long: |-
     Generate an Obsidian-compatible vault from .context/journal/ entries.
@@ -340,6 +355,20 @@ journal.site:
       ctx journal site --build            # Generate and build HTML
       ctx journal site --serve            # Generate and serve locally
   short: Generate a static site from journal entries
+journal.source:
+  long: |-
+    List and inspect raw AI session files available for journal import.
+
+    Default behavior lists all available sessions. Use --show to inspect
+    a specific session by slug or ID before importing.
+
+    Examples:
+      ctx journal source                         # List available sessions
+      ctx journal source --limit 5               # Show last 5 sessions
+      ctx journal source --show abc123           # Inspect a session
+      ctx journal source --latest --full         # Show full latest session
+      ctx journal source --project myapp         # Filter by project
+  short: List and inspect session sources
 learning:
   long: |-
     Manage the LEARNINGS.md file and its quick-reference index.
@@ -562,7 +591,7 @@ pad.export:
       ctx pad export --dry-run
       ctx pad export --force ./backup
   short: Export blob entries to a directory as files
-pad.imp:
+pad.root:
   long: |-
     Import lines from a file into the scratchpad. Each non-empty line
     becomes a separate entry. Use "-" to read from stdin.
@@ -655,184 +684,81 @@ permission.snapshot:
 
     Overwrites any existing golden file.
   short: Save settings.local.json as golden image
-prompt:
+journal.import:
   long: |-
-    Manage prompt templates stored in .context/prompts/.
+    Import AI sessions to .context/journal/ as editable Markdown files.
 
-    Prompt templates are plain markdown files - no frontmatter, no build step.
-    Use them as lightweight, reusable instructions for common tasks like
-    code reviews, refactoring, or explaining code.
-
-    When invoked without a subcommand, lists all available prompts.
-
-    Subcommands:
-      list     List available prompt templates
-      show     Print a prompt template to stdout
-      add      Create a new prompt from embedded template or stdin
-      rm       Remove a prompt template
-  short: Manage reusable prompt templates
-prompt.add:
-  long: |-
-    Create a new prompt template in .context/prompts/.
-
-    By default, creates from an embedded starter template if one exists
-    with the given name. Use --stdin to read content from standard input.
-
-    Examples:
-      ctx prompt add code-review
-      echo "# My Prompt" | ctx prompt add my-prompt --stdin
-  short: Create a new prompt from embedded template or stdin
-prompt.list:
-  short: List available prompt templates
-prompt.rm:
-  short: Remove a prompt template
-prompt.show:
-  short: Print a prompt template to stdout
-recall:
-  long: |-
-    Browse and search AI session history from Claude Code and other tools.
-
-    The recall system parses JSONL session files and provides commands to
-    list sessions, view details, and search across your conversation history.
-
-    Subcommands:
-      list    List all parsed sessions
-      show    Show details of a specific session
-      export  Export sessions to editable journal files
-      lock    Protect journal entries from export regeneration
-      unlock  Remove lock protection from journal entries
-      sync    Sync lock state from journal frontmatter to state file
-
-    Examples:
-      ctx recall list
-      ctx recall list --limit 5
-      ctx recall show abc123
-      ctx recall show --latest
-      ctx recall export --all
-      ctx recall lock 2026-01-21-session-abc12345.md
-      ctx recall unlock --all
-      ctx recall sync
-  short: Browse and search AI session history
-recall.export:
-  long: |-
-    Export AI sessions to .context/journal/ as editable Markdown files.
-
-    Exported files include session metadata, tool usage summary, and the full
+    Imported files include session metadata, tool usage summary, and the full
     conversation. You can edit these files to add notes, highlight key moments,
     or clean up the transcript.
 
-    By default, only sessions from the current project are exported. Use
+    By default, only sessions from the current project are imported. Use
     --all-projects to include sessions from all projects.
 
-    Safe by default: --all only exports new sessions. Existing files are
-    skipped. Use --regenerate to re-export existing files (preserves YAML
+    Safe by default: --all only imports new sessions. Existing files are
+    skipped. Use --regenerate to re-import existing files (preserves YAML
     frontmatter by default). Use --keep-frontmatter=false to discard
     enriched frontmatter during regeneration.
 
-    Locked entries (via "ctx recall lock") are always skipped, regardless
+    Locked entries (via "ctx journal lock") are always skipped, regardless
     of flags.
 
     Examples:
-      ctx recall export abc123                              # Export one session
-      ctx recall export --all                               # Export only new
-      ctx recall export --all --dry-run                     # Preview changes
-      ctx recall export --all --regenerate                  # Re-export (prompts)
-      ctx recall export --all --regenerate -y               # Re-export, no prompt
-      ctx recall export --all --regenerate --keep-frontmatter=false -y  # Discard frontmatter
-  short: Export sessions to editable journal files
-recall.list:
+      ctx journal import abc123                              # Import one session
+      ctx journal import --all                               # Import only new
+      ctx journal import --all --dry-run                     # Preview changes
+      ctx journal import --all --regenerate                  # Re-import (prompts)
+      ctx journal import --all --regenerate -y               # Re-import, no prompt
+      ctx journal import --all --regenerate --keep-frontmatter=false -y  # Discard frontmatter
+  short: Import sessions to editable journal files
+journal.lock:
   long: |-
-    List AI sessions from the current project.
+    Lock journal entries to prevent import --regenerate from overwriting them.
 
-    Sessions are sorted by date (newest first) and display:
-      - Session slug (human-friendly name)
-      - Project name
-      - Start time and duration
-      - Turn count (user messages)
-      - Token usage
-
-    By default, only sessions from the current project are shown.
-    Use --all-projects to see sessions from all projects.
-
-    Date filtering: --since and --until accept YYYY-MM-DD format.
-    Both are inclusive.
-
-    Examples:
-      ctx recall list
-      ctx recall list --limit 5
-      ctx recall list --all-projects
-      ctx recall list --project ctx
-      ctx recall list --tool claude-code
-      ctx recall list --since 2026-03-01
-      ctx recall list --since 2026-03-01 --until 2026-03-05
-  short: List all parsed sessions
-recall.lock:
-  long: |-
-    Lock journal entries to prevent export --regenerate from overwriting them.
-
-    Locked entries are skipped during export regardless of --regenerate or --force.
-    Use "ctx recall unlock" to remove the protection.
+    Locked entries are skipped during import regardless of --regenerate or --force.
+    Use "ctx journal unlock" to remove the protection.
 
     The pattern matches against filenames by slug, date, or short ID (same
-    matching as export). Locking a multi-part entry locks all parts.
+    matching as import). Locking a multi-part entry locks all parts.
 
     The lock is recorded in .context/journal/.state.json (source of truth) and
     a "locked: true" line is added to the file's YAML frontmatter for visibility.
 
     Examples:
-      ctx recall lock 2026-01-21-session-abc12345.md
-      ctx recall lock abc12345
-      ctx recall lock --all
-  short: Protect journal entries from export regeneration
-recall.show:
-  long: |-
-    Show detailed information about a specific session.
-
-    The session ID can be:
-      - Full session UUID
-      - Partial match (first few characters)
-      - Session slug name
-
-    Use --latest to show the most recent session.
-    By default, only searches sessions from the current project.
-
-    Examples:
-      ctx recall show abc123
-      ctx recall show gleaming-wobbling-sutherland
-      ctx recall show --latest
-      ctx recall show --latest --full
-      ctx recall show abc123 --all-projects
-  short: Show details of a specific session
-recall.sync:
+      ctx journal lock 2026-01-21-session-abc12345.md
+      ctx journal lock abc12345
+      ctx journal lock --all
+  short: Protect journal entries from import regeneration
+journal.sync:
   long: |-
     Scan journal markdowns and sync their lock state to .state.json.
 
-    This is the sister command to "ctx recall lock". Instead of marking files
+    This is the sister command to "ctx journal lock". Instead of marking files
     locked in state and updating frontmatter, it reads "locked: true" from
     each file's YAML frontmatter and updates .state.json to match.
 
     Typical workflow:
       1. Enrich journal entries (add "locked: true" to frontmatter)
-      2. Run "ctx recall sync" to propagate lock state to .state.json
+      2. Run "ctx journal sync" to propagate lock state to .state.json
 
     Files with "locked: true" in frontmatter will be marked locked in state.
     Files without a "locked:" line (or with "locked: false") will have their
     lock cleared if one exists in state.
 
     Examples:
-      ctx recall sync
+      ctx journal sync
   short: Sync lock state from journal frontmatter to state file
-recall.unlock:
+journal.unlock:
   long: |-
-    Unlock journal entries to allow export --regenerate to overwrite them.
+    Unlock journal entries to allow import --regenerate to overwrite them.
 
     The pattern matches against filenames by slug, date, or short ID (same
-    matching as export). Unlocking a multi-part entry unlocks all parts.
+    matching as import). Unlocking a multi-part entry unlocks all parts.
 
     Examples:
-      ctx recall unlock 2026-01-21-session-abc12345.md
-      ctx recall unlock abc12345
-      ctx recall unlock --all
+      ctx journal unlock 2026-01-21-session-abc12345.md
+      ctx journal unlock abc12345
+      ctx journal unlock --all
   short: Remove lock protection from journal entries
 reindex:
   long: |-
@@ -1075,13 +1001,13 @@ system.checkcontextsize:
   short: Context size checkpoint hook
 system.checkjournal:
   long: |-
-    Detects unexported Claude Code sessions and unenriched journal entries,
+    Detects unimported Claude Code sessions and unenriched journal entries,
     then prints actionable commands. Throttled to once per day.
 
     Hook event: UserPromptSubmit
-    Output: VERBATIM relay with export/enrich commands, silent otherwise
-    Silent when: no unexported sessions and no unenriched entries
-  short: Journal export/enrich reminder hook
+    Output: VERBATIM relay with import/enrich commands, silent otherwise
+    Silent when: no unimported sessions and no unenriched entries
+  short: Journal import/enrich reminder hook
 system.checkknowledge:
   long: |-
     Counts entries in DECISIONS.md and LEARNINGS.md and lines in
@@ -1122,6 +1048,17 @@ system.checkpersistence:
     Output: agent directive (when triggered), silent otherwise
     Silent when: context files were recently modified
   short: Persistence nudge hook
+system.checkskilldiscovery:
+  long: |-
+    One-shot nudge that fires once per session at ~25 prompts.
+    Surfaces easy-to-forget skills that have positive impact
+    mid-session: /ctx-reflect, /ctx-prompt-audit,
+    /ctx-add-learning, /ctx-add-decision.
+
+    Hook event: UserPromptSubmit
+    Output: skill tip block (once), silent thereafter
+    Silent when: guard file exists for this session
+  short: Skill discovery nudge hook
 system.checkreminders:
   short: Surface pending reminders at session start
 system.checkresources:

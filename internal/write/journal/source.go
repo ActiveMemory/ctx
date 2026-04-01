@@ -1,0 +1,616 @@
+//   /    ctx:                         https://ctx.ist
+// ,'`./    do you remember?
+// `.,'\
+//   \    Copyright 2026-present Context contributors.
+//                 SPDX-License-Identifier: Apache-2.0
+
+package journal
+
+import (
+	"fmt"
+	"strings"
+
+	"github.com/spf13/cobra"
+
+	"github.com/ActiveMemory/ctx/internal/assets/read/desc"
+	"github.com/ActiveMemory/ctx/internal/config/embed/text"
+	"github.com/ActiveMemory/ctx/internal/config/token"
+	writeIo "github.com/ActiveMemory/ctx/internal/write/line"
+)
+
+// SkipFile prints that a file was skipped during export.
+//
+// Parameters:
+//   - cmd: Cobra command for output. Nil is a no-op.
+//   - filename: the skipped file name.
+//   - reason: why it was skipped (e.g. "locked", "exists").
+func SkipFile(cmd *cobra.Command, filename, reason string) {
+	if cmd == nil {
+		return
+	}
+	cmd.Println(fmt.Sprintf(
+		desc.Text(text.DescKeyWriteJournalSourceSkip),
+		filename, reason))
+}
+
+// ImportedFile prints that a file was imported or updated.
+//
+// Parameters:
+//   - cmd: Cobra command for output. Nil is a no-op.
+//   - filename: the imported file name.
+//   - suffix: optional annotation (e.g. "updated, frontmatter preserved").
+//     Empty string omits the parenthetical.
+func ImportedFile(cmd *cobra.Command, filename, suffix string) {
+	if cmd == nil {
+		return
+	}
+	if suffix != "" {
+		cmd.Println(fmt.Sprintf(
+			desc.Text(text.DescKeyWriteJournalSourceImportedOKSuffix),
+			filename, suffix))
+	} else {
+		cmd.Println(fmt.Sprintf(
+			desc.Text(text.DescKeyWriteJournalSourceImportedOK),
+			filename))
+	}
+}
+
+// ImportSummary prints what an import will (or would) do based on
+// aggregate counters.
+//
+// Parameters:
+//   - cmd: Cobra command for output. Nil is a no-op.
+//   - newCount: number of new files to import.
+//   - regenCount: number of existing files to regenerate.
+//   - skipCount: number of existing files to skip.
+//   - lockedCount: number of locked files to skip.
+//   - dryRun: when true, uses "Would" instead of "Will".
+func ImportSummary(
+	cmd *cobra.Command,
+	newCount, regenCount, skipCount, lockedCount int,
+	dryRun bool,
+) {
+	if cmd == nil {
+		return
+	}
+
+	verb := desc.Text(text.DescKeyWriteJournalImportVerb)
+	if dryRun {
+		verb = desc.Text(text.DescKeyWriteJournalImportVerbDryRun)
+	}
+	var parts []string
+	if newCount > 0 {
+		parts = append(parts, fmt.Sprintf(
+			desc.Text(text.DescKeyWriteJournalImportPartNew),
+			newCount))
+	}
+	if regenCount > 0 {
+		parts = append(parts, fmt.Sprintf(
+			desc.Text(text.DescKeyWriteJournalImportPartRegen),
+			regenCount))
+	}
+	if skipCount > 0 {
+		parts = append(parts, fmt.Sprintf(
+			desc.Text(text.DescKeyWriteJournalImportPartSkip),
+			skipCount))
+	}
+	if lockedCount > 0 {
+		parts = append(parts, fmt.Sprintf(
+			desc.Text(text.DescKeyWriteJournalImportPartSkipLock),
+			lockedCount))
+	}
+	if len(parts) == 0 {
+		cmd.Println(desc.Text(text.DescKeyWriteJournalImportNothing))
+		return
+	}
+	cmd.Println(fmt.Sprintf(
+		desc.Text(text.DescKeyWriteJournalImportSummary),
+		verb, strings.Join(parts, token.CommaSpace)))
+}
+
+// NoSessionsForProject prints guidance when no sessions are found.
+//
+// Parameters:
+//   - cmd: Cobra command for output. Nil is a no-op.
+//   - allProjects: if true, show the generic message;
+//     otherwise suggest --all-projects.
+func NoSessionsForProject(cmd *cobra.Command, allProjects bool) {
+	if cmd == nil {
+		return
+	}
+	if allProjects {
+		cmd.Println(desc.Text(text.DescKeyWriteJournalSourceNoSessions))
+	} else {
+		cmd.Println(desc.Text(text.DescKeyWriteJournalSourceNoSessionsProjectHint))
+	}
+}
+
+// NoSessionsWithHint prints that no sessions were found with storage hint.
+//
+// Parameters:
+//   - cmd: Cobra command for output. Nil is a no-op.
+//   - allProjects: if true, show storage path; otherwise
+//     suggest --all-projects.
+func NoSessionsWithHint(cmd *cobra.Command, allProjects bool) {
+	if cmd == nil {
+		return
+	}
+	if allProjects {
+		cmd.Println(desc.Text(text.DescKeyWriteJournalSourceNoSessions))
+		cmd.Println()
+		cmd.Println(desc.Text(text.DescKeyWriteJournalSourceStorageHint))
+	} else {
+		cmd.Println(desc.Text(text.DescKeyWriteJournalSourceNoSessionsProject))
+		cmd.Println(desc.Text(text.DescKeyWriteJournalSourceNoSessionsHintAll))
+	}
+}
+
+// AmbiguousSessionMatch prints a list of matching sessions to stderr.
+//
+// Parameters:
+//   - cmd: Cobra command for output. Nil is a no-op.
+//   - query: the ambiguous query string.
+//   - lines: pre-formatted lines describing each match.
+func AmbiguousSessionMatch(cmd *cobra.Command, query string, lines []string) {
+	if cmd == nil {
+		return
+	}
+	cmd.PrintErrln(fmt.Sprintf(
+		desc.Text(text.DescKeyWriteJournalSourceAmbiguousMatch),
+		query))
+	for _, line := range lines {
+		cmd.PrintErrln(line)
+	}
+}
+
+// AmbiguousSessionMatchWithHint prints matching sessions with a
+// specific-ID hint.
+//
+// Parameters:
+//   - cmd: Cobra command for output. Nil is a no-op.
+//   - query: the ambiguous query string.
+//   - lines: pre-formatted lines describing each match.
+//   - hint: suggested more-specific ID.
+func AmbiguousSessionMatchWithHint(
+	cmd *cobra.Command,
+	query string,
+	lines []string,
+	hint string,
+) {
+	if cmd == nil {
+		return
+	}
+	_, _ = fmt.Fprintf(cmd.ErrOrStderr(),
+		desc.Text(text.DescKeyWriteJournalSourceAmbiguousMatchStderr),
+		query)
+	for _, line := range lines {
+		_, _ = fmt.Fprintf(cmd.ErrOrStderr(),
+			desc.Text(text.DescKeyWriteJournalSourceAmbiguousLine),
+			line)
+	}
+	_, _ = fmt.Fprintf(cmd.ErrOrStderr(),
+		desc.Text(text.DescKeyWriteJournalSourceAmbiguousHint),
+		hint)
+}
+
+// Aborted prints that an operation was aborted.
+//
+// Parameters:
+//   - cmd: Cobra command for output. Nil is a no-op.
+func Aborted(cmd *cobra.Command) {
+	if cmd == nil {
+		return
+	}
+	cmd.Println(desc.Text(text.DescKeyWriteJournalSourceAborted))
+}
+
+// ConfirmPrompt prints the [y/N] confirmation prompt.
+//
+// Parameters:
+//   - cmd: Cobra command for output. Nil is a no-op.
+func ConfirmPrompt(cmd *cobra.Command) {
+	if cmd == nil {
+		return
+	}
+	cmd.Print(desc.Text(text.DescKeyConfirmProceed))
+}
+
+// ImportFinalSummary prints the final import summary with counts.
+//
+// Parameters:
+//   - cmd: Cobra command for output. Nil is a no-op.
+//   - imported: number of new files written.
+//   - updated: number of existing files updated.
+//   - renamed: number of files renamed.
+//   - skipped: number of files skipped.
+func ImportFinalSummary(
+	cmd *cobra.Command,
+	imported, updated, renamed, skipped int,
+) {
+	if cmd == nil {
+		return
+	}
+	cmd.Println()
+	writeIo.Count(cmd, text.DescKeyWriteJournalSourceImportedNew, imported)
+	writeIo.Count(cmd, text.DescKeyWriteJournalSourceUpdated, updated)
+	writeIo.Count(cmd, text.DescKeyWriteJournalSourceRenamed, renamed)
+	writeIo.Count(cmd, text.DescKeyWriteJournalSourceSkipped, skipped)
+}
+
+// NoFiltersMatch prints that no sessions matched the applied filters.
+//
+// Parameters:
+//   - cmd: Cobra command for output. Nil is a no-op.
+func NoFiltersMatch(cmd *cobra.Command) {
+	if cmd == nil {
+		return
+	}
+	cmd.Println(desc.Text(text.DescKeyWriteJournalSourceNoFiltersMatch))
+}
+
+// SessionListHeader prints the session count header for recall list.
+//
+// Parameters:
+//   - cmd: Cobra command for output. Nil is a no-op.
+//   - total: total sessions found.
+//   - shown: filtered count (0 to omit the parenthetical).
+func SessionListHeader(cmd *cobra.Command, total, shown int) {
+	if cmd == nil {
+		return
+	}
+	if shown > 0 && shown != total {
+		_, _ = fmt.Fprintf(cmd.OutOrStdout(),
+			desc.Text(text.DescKeyWriteJournalSourceListHeaderFiltered),
+			total, shown)
+	} else {
+		_, _ = fmt.Fprintf(cmd.OutOrStdout(),
+			desc.Text(text.DescKeyWriteJournalSourceListHeader),
+			total)
+	}
+}
+
+// SessionListRow prints a formatted row in the session list table.
+//
+// Parameters:
+//   - cmd: Cobra command for output. Nil is a no-op.
+//   - format: printf format string for the row.
+//   - values: column values.
+func SessionListRow(cmd *cobra.Command, format string, values ...any) {
+	if cmd == nil {
+		return
+	}
+	_, _ = fmt.Fprintf(cmd.OutOrStdout(), format, values...)
+}
+
+// SessionListFooter prints the footer hint for recall list.
+//
+// Parameters:
+//   - cmd: Cobra command for output. Nil is a no-op.
+//   - hasMore: if true, show the --limit hint.
+func SessionListFooter(cmd *cobra.Command, hasMore bool) {
+	if cmd == nil {
+		return
+	}
+	_, _ = fmt.Fprintln(cmd.OutOrStdout())
+	if hasMore {
+		cmd.Println(desc.Text(text.DescKeyWriteJournalSourceFooterLimit))
+	}
+}
+
+// SessionMetadata prints the full session metadata block: identity,
+// timing, and token usage sections separated by blank lines.
+//
+// Parameters:
+//   - cmd: Cobra command for output. Nil is a no-op.
+//   - info: pre-formatted session metadata.
+func SessionMetadata(cmd *cobra.Command, info SessionInfo) {
+	if cmd == nil {
+		return
+	}
+	SectionHeader(cmd, 1, info.Slug)
+
+	SessionDetail(cmd, desc.Text(text.DescKeyLabelMetadataID), info.ID)
+	SessionDetail(cmd, desc.Text(text.DescKeyLabelMetadataTool), info.Tool)
+	SessionDetail(cmd, desc.Text(text.DescKeyLabelMetadataProject), info.Project)
+	if info.Branch != "" {
+		SessionDetail(cmd, desc.Text(text.DescKeyLabelMetadataBranch), info.Branch)
+	}
+	if info.Model != "" {
+		SessionDetail(cmd, desc.Text(text.DescKeyLabelMetadataModel), info.Model)
+	}
+	BlankLine(cmd)
+
+	SessionDetail(cmd, desc.Text(text.DescKeyLabelMetadataStarted), info.Started)
+	SessionDetail(cmd, desc.Text(text.DescKeyLabelMetadataDuration), info.Duration)
+	SessionDetailInt(cmd, desc.Text(text.DescKeyLabelMetadataTurns), info.Turns)
+	SessionDetailInt(cmd,
+		desc.Text(text.DescKeyLabelMetadataMessages),
+		info.Messages)
+	BlankLine(cmd)
+
+	SessionDetail(cmd,
+		desc.Text(text.DescKeyLabelMetadataInputUsage),
+		info.TokensIn)
+	SessionDetail(cmd,
+		desc.Text(text.DescKeyLabelMetadataOutputUsage),
+		info.TokensOut)
+	SessionDetail(cmd, desc.Text(text.DescKeyLabelMetadataTotal), info.TokensAll)
+	BlankLine(cmd)
+}
+
+// SessionDetail prints a labeled metadata line to stdout.
+//
+// Parameters:
+//   - cmd: Cobra command for output. Nil is a no-op.
+//   - label: bold metadata prefix (e.g. "**ID**:").
+//   - value: the value to display.
+func SessionDetail(cmd *cobra.Command, label, value string) {
+	if cmd == nil {
+		return
+	}
+	_, _ = fmt.Fprintf(cmd.OutOrStdout(),
+		desc.Text(text.DescKeyWriteJournalSourceDetailString)+
+			token.NewlineLF,
+		label, value)
+}
+
+// SessionDetailInt prints a labeled integer metadata line to stdout.
+//
+// Parameters:
+//   - cmd: Cobra command for output. Nil is a no-op.
+//   - label: bold metadata prefix.
+//   - value: the integer value.
+func SessionDetailInt(cmd *cobra.Command, label string, value int) {
+	if cmd == nil {
+		return
+	}
+	_, _ = fmt.Fprintf(cmd.OutOrStdout(),
+		desc.Text(text.DescKeyWriteJournalSourceDetailInt)+
+			token.NewlineLF,
+		label, value)
+}
+
+// SectionHeader prints a Markdown section heading to stdout.
+//
+// Parameters:
+//   - cmd: Cobra command for output. Nil is a no-op.
+//   - level: heading level (e.g. 1 for "#", 2 for "##").
+//   - title: the heading text.
+func SectionHeader(cmd *cobra.Command, level int, title string) {
+	if cmd == nil {
+		return
+	}
+	prefix := strings.Repeat("#", level)
+	_, _ = fmt.Fprintf(cmd.OutOrStdout(),
+		desc.Text(text.DescKeyWriteJournalSourceSectionHeading)+
+			token.NewlineLF,
+		prefix, title)
+	_, _ = fmt.Fprintln(cmd.OutOrStdout())
+}
+
+// BlankLine prints an empty line to stdout.
+//
+// Parameters:
+//   - cmd: Cobra command for output. Nil is a no-op.
+func BlankLine(cmd *cobra.Command) {
+	if cmd == nil {
+		return
+	}
+	_, _ = fmt.Fprintln(cmd.OutOrStdout())
+}
+
+// ConversationTurn prints a conversation turn header.
+//
+// Parameters:
+//   - cmd: Cobra command for output. Nil is a no-op.
+//   - index: 1-based turn number.
+//   - role: display role label (e.g. "User", "Assistant").
+//   - timestamp: formatted time string.
+func ConversationTurn(cmd *cobra.Command, index int, role, timestamp string) {
+	if cmd == nil {
+		return
+	}
+	_, _ = fmt.Fprintf(cmd.OutOrStdout(),
+		desc.Text(text.DescKeyWriteJournalSourceConversationTurn),
+		index, role, timestamp)
+	_, _ = fmt.Fprintln(cmd.OutOrStdout())
+}
+
+// TextBlock prints a text block followed by a blank line.
+//
+// Parameters:
+//   - cmd: Cobra command for output. Nil is a no-op.
+//   - text: the text content to print.
+func TextBlock(cmd *cobra.Command, text string) {
+	if cmd == nil {
+		return
+	}
+	_, _ = fmt.Fprintln(cmd.OutOrStdout(), text)
+	_, _ = fmt.Fprintln(cmd.OutOrStdout())
+}
+
+// CodeBlock prints content wrapped in a fenced code block.
+//
+// Parameters:
+//   - cmd: Cobra command for output. Nil is a no-op.
+//   - content: the code content.
+func CodeBlock(cmd *cobra.Command, content string) {
+	if cmd == nil {
+		return
+	}
+	_, _ = fmt.Fprintf(cmd.OutOrStdout(),
+		desc.Text(text.DescKeyWriteJournalSourceCodeBlock),
+		content)
+}
+
+// ListItem prints a Markdown list item to stdout.
+//
+// Parameters:
+//   - cmd: Cobra command for output. Nil is a no-op.
+//   - format: printf format string for the item text.
+//   - args: format arguments.
+func ListItem(cmd *cobra.Command, format string, args ...any) {
+	if cmd == nil {
+		return
+	}
+	_, _ = fmt.Fprintf(cmd.OutOrStdout(),
+		token.PrefixListDash+format+token.NewlineLF,
+		args...)
+}
+
+// NumberedItem prints a numbered item to stdout.
+//
+// Parameters:
+//   - cmd: Cobra command for output. Nil is a no-op.
+//   - n: the item number.
+//   - item: the item text.
+func NumberedItem(cmd *cobra.Command, n int, item string) {
+	if cmd == nil {
+		return
+	}
+	_, _ = fmt.Fprintf(cmd.OutOrStdout(),
+		desc.Text(text.DescKeyWriteJournalSourceNumberedItem),
+		n, item)
+}
+
+// MoreTurns prints the "and N more turns" continuation line.
+//
+// Parameters:
+//   - cmd: Cobra command for output. Nil is a no-op.
+//   - remaining: number of remaining turns.
+func MoreTurns(cmd *cobra.Command, remaining int) {
+	if cmd == nil {
+		return
+	}
+	_, _ = fmt.Fprintf(cmd.OutOrStdout(),
+		desc.Text(text.DescKeyWriteJournalSourceMoreTurns),
+		remaining)
+}
+
+// Hint prints a usage hint to stdout.
+//
+// Parameters:
+//   - cmd: Cobra command for output. Nil is a no-op.
+//   - text: the hint text.
+func Hint(cmd *cobra.Command, text string) {
+	if cmd == nil {
+		return
+	}
+	cmd.Println(text)
+}
+
+// LockUnlockNone prints the message when no journal entries
+// are found (lock/unlock context).
+//
+// Parameters:
+//   - cmd: Cobra command for output. Nil is a no-op.
+func LockUnlockNone(cmd *cobra.Command) {
+	if cmd == nil {
+		return
+	}
+	cmd.Println(desc.Text(text.DescKeyWriteJournalSyncNone))
+}
+
+// LockUnlockEntry prints the confirmation for a single
+// locked/unlocked entry.
+//
+// Parameters:
+//   - cmd: Cobra command for output. Nil is a no-op.
+//   - filename: journal filename.
+//   - verb: "locked" or "unlocked".
+func LockUnlockEntry(cmd *cobra.Command, filename, verb string) {
+	if cmd == nil {
+		return
+	}
+	cmd.Println(fmt.Sprintf(
+		desc.Text(text.DescKeyWriteLockUnlockEntry),
+		filename, verb))
+}
+
+// LockUnlockSummary prints the lock/unlock summary.
+//
+// Parameters:
+//   - cmd: Cobra command for output. Nil is a no-op.
+//   - verb: "locked" or "unlocked".
+//   - count: number of entries changed. Zero prints
+//     no-changes message.
+func LockUnlockSummary(cmd *cobra.Command, verb string, count int) {
+	if cmd == nil {
+		return
+	}
+	if count == 0 {
+		cmd.Println(fmt.Sprintf(
+			desc.Text(text.DescKeyWriteLockUnlockNoChanges),
+			verb))
+		return
+	}
+	cmd.Println(fmt.Sprintf(
+		desc.Text(text.DescKeyWriteLockUnlockSummary),
+		strings.ToUpper(verb[:1])+verb[1:], count))
+}
+
+// JournalSyncNone prints the message when no journal entries are found.
+//
+// Parameters:
+//   - cmd: Cobra command for output. Nil is a no-op.
+func JournalSyncNone(cmd *cobra.Command) {
+	if cmd == nil {
+		return
+	}
+	cmd.Println(desc.Text(text.DescKeyWriteJournalSyncNone))
+}
+
+// JournalSyncLocked prints a single locked-entry confirmation.
+//
+// Parameters:
+//   - cmd: Cobra command for output. Nil is a no-op.
+//   - filename: the journal filename that was locked.
+func JournalSyncLocked(cmd *cobra.Command, filename string) {
+	if cmd == nil {
+		return
+	}
+	cmd.Println(fmt.Sprintf(
+		desc.Text(text.DescKeyWriteJournalSyncLocked),
+		filename))
+}
+
+// JournalSyncUnlocked prints a single unlocked-entry confirmation.
+//
+// Parameters:
+//   - cmd: Cobra command for output. Nil is a no-op.
+//   - filename: the journal filename that was unlocked.
+func JournalSyncUnlocked(cmd *cobra.Command, filename string) {
+	if cmd == nil {
+		return
+	}
+	cmd.Println(fmt.Sprintf(
+		desc.Text(text.DescKeyWriteJournalSyncUnlocked),
+		filename))
+}
+
+// JournalSyncSummary prints the sync summary: match, locked count,
+// and/or unlocked count.
+//
+// Parameters:
+//   - cmd: Cobra command for output. Nil is a no-op.
+//   - locked: number of newly locked entries.
+//   - unlocked: number of newly unlocked entries.
+func JournalSyncSummary(cmd *cobra.Command, locked, unlocked int) {
+	if cmd == nil {
+		return
+	}
+	if locked == 0 && unlocked == 0 {
+		cmd.Println(desc.Text(text.DescKeyWriteJournalSyncMatch))
+		return
+	}
+	if locked > 0 {
+		cmd.Println(fmt.Sprintf(
+			desc.Text(text.DescKeyWriteJournalSyncLockedCount),
+			locked))
+	}
+	if unlocked > 0 {
+		cmd.Println(fmt.Sprintf(
+			desc.Text(text.DescKeyWriteJournalSyncUnlockedCount),
+			unlocked))
+	}
+}

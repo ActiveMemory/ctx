@@ -95,8 +95,8 @@
 - hook: check-journal
   variant: both
   category: customizable
-  description: Unexported sessions and unenriched entries
-  vars: [UnexportedCount, UnenrichedCount]
+  description: Unimported sessions and unenriched entries
+  vars: [UnimportedCount, UnenrichedCount]
 
 - hook: check-journal
   variant: unenriched
@@ -105,10 +105,10 @@
   vars: [UnenrichedCount]
 
 - hook: check-journal
-  variant: unexported
+  variant: unimported
   category: customizable
-  description: Unexported sessions reminder
-  vars: [UnexportedCount]
+  description: Unimported sessions reminder
+  vars: [UnimportedCount]
 
 - hook: check-knowledge
   variant: warning

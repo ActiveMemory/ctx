@@ -9,9 +9,10 @@ package journal
 import (
 	"fmt"
 
+	"github.com/spf13/cobra"
+
 	"github.com/ActiveMemory/ctx/internal/assets/read/desc"
 	"github.com/ActiveMemory/ctx/internal/config/embed/text"
-	"github.com/spf13/cobra"
 )
 
 // InfoOrphanRemoved reports a removed orphan file.
@@ -20,7 +21,9 @@ import (
 //   - cmd: Cobra command for output
 //   - name: Filename that was removed
 func InfoOrphanRemoved(cmd *cobra.Command, name string) {
-	cmd.Println(fmt.Sprintf(desc.Text(text.DescKeyWriteJournalOrphanRemoved), name))
+	cmd.Println(fmt.Sprintf(
+		desc.Text(text.DescKeyWriteJournalOrphanRemoved),
+		name))
 }
 
 // InfoSiteGenerated reports successful site generation with next steps.

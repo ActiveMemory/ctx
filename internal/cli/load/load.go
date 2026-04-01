@@ -13,6 +13,9 @@ import (
 )
 
 // Cmd returns the "ctx load" command for outputting assembled context.
+//
+// Returns:
+//   - *cobra.Command: The load command with subcommands registered
 func Cmd() *cobra.Command {
 	return loadRoot.Cmd()
 }

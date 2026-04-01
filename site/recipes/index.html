@@ -2435,16 +2435,14 @@
   
   
     <li class="md-nav__item">
-      <a href="prompt-templates/" class="md-nav__link">
+      <a href="prompt-templates.md" class="md-nav__link">
         
   
-  
-    <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-message-square-text" viewBox="0 0 24 24"><path d="M22 17a2 2 0 0 1-2 2H6.828a2 2 0 0 0-1.414.586l-2.202 2.202A.71.71 0 0 1 2 21.286V5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2zM7 11h10M7 15h6M7 7h8"/></svg>
   
   <span class="md-ellipsis">
     
   
-    Reusable Prompt Templates
+    none
   
 
     
@@ -2625,7 +2623,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../cli/recall/" class="md-nav__link">
+      <a href="../cli/journal/" class="md-nav__link">
         
   
   
@@ -2634,7 +2632,7 @@
   <span class="md-ellipsis">
     
   
-    Recall and Journal
+    Journal
   
 
     
@@ -3923,17 +3921,6 @@
   
 </li>
         
-          <li class="md-nav__item">
-  <a href="#reusable-prompt-templates" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Reusable Prompt Templates
-      
-    </span>
-  </a>
-  
-</li>
-        
       </ul>
     </nav>
   
@@ -4012,10 +3999,9 @@ review the session and persist <strong>learnings</strong>, <strong>decisions</st
 <h3 id="browsing-and-enriching-past-sessions"><a href="session-archaeology/">Browsing and Enriching Past Sessions</a><a class="headerlink" href="#browsing-and-enriching-past-sessions" title="Permanent link">&para;</a></h3>
 <p>Export your AI session history to a <strong>browsable journal site</strong>.
 <strong>Enrich</strong> entries with metadata and <strong>search</strong> across months of work.</p>
-<p><strong>Uses</strong>: <code>ctx recall list/show/export</code>, <code>ctx journal site</code>,
-<code>ctx journal obsidian</code>, <code>ctx serve</code>, <code>/ctx-recall</code>,
-<code>/ctx-journal-normalize</code>, <code>/ctx-journal-enrich</code>,
-<code>/ctx-journal-enrich-all</code></p>
+<p><strong>Uses</strong>: <code>ctx journal source/import</code>, <code>ctx journal site</code>,
+<code>ctx journal obsidian</code>, <code>ctx serve</code>, <code>/ctx-history</code>,
+<code>/ctx-journal-enrich</code>, <code>/ctx-journal-enrich-all</code></p>
 <hr />
 <h3 id="session-reminders"><a href="session-reminders/">Session Reminders</a><a class="headerlink" href="#session-reminders" title="Permanent link">&para;</a></h3>
 <p>Leave a <strong>message for your next session</strong>. Reminders surface
@@ -4147,8 +4133,8 @@ site from your <strong>session history</strong>.</p>
 <p>The output is generic Markdown, but the skills are tuned for the <code>ctx</code>-style
 blog artifacts you see on this website.</p>
 <p><strong>Uses</strong>: <code>ctx journal site</code>, <code>ctx journal obsidian</code>, <code>ctx serve</code>,
-<code>ctx recall export</code>, <code>/ctx-blog</code>, <code>/ctx-blog-changelog</code>,
-<code>/ctx-journal-enrich</code>, <code>/ctx-journal-normalize</code></p>
+<code>ctx journal import</code>, <code>/ctx-blog</code>, <code>/ctx-blog-changelog</code>,
+<code>/ctx-journal-enrich</code></p>
 <hr />
 <h3 id="importing-claude-code-plans"><a href="import-plans/">Importing Claude Code Plans</a><a class="headerlink" href="#importing-claude-code-plans" title="Permanent link">&para;</a></h3>
 <p>Import Claude Code <strong>plan files</strong> (<code>~/.claude/plans/*.md</code>) into <code>specs/</code>
@@ -4177,7 +4163,7 @@ without you at the keyboard, using <code>ctx</code> for <strong>persistent memor
 between iterations.</p>
 <p>This recipe shows how <code>ctx</code> supports long-running agent loops
 without losing context or intent.</p>
-<p><strong>Uses</strong>: <code>ctx init --ralph</code>, <code>ctx loop</code>, <code>ctx watch</code>, <code>ctx load</code>,
+<p><strong>Uses</strong>: <code>ctx init</code>, <code>ctx loop</code>, <code>ctx watch</code>, <code>ctx load</code>,
 <code>/ctx-loop</code>, <code>/ctx-implement</code></p>
 <hr />
 <h3 id="when-to-use-a-team-of-agents"><a href="when-to-use-agent-teams/">When to Use a Team of Agents</a><a class="headerlink" href="#when-to-use-a-team-of-agents" title="Permanent link">&para;</a></h3>
@@ -4199,12 +4185,6 @@ file overlap, work in parallel, merge back.</p>
 Auto-detects Go, Node.js, Python, and Rust. Output as Mermaid,
 table, or JSON.</p>
 <p><strong>Uses</strong>: <code>ctx dep</code>, <code>ctx drift</code></p>
-<hr />
-<h3 id="reusable-prompt-templates"><a href="prompt-templates/">Reusable Prompt Templates</a><a class="headerlink" href="#reusable-prompt-templates" title="Permanent link">&para;</a></h3>
-<p>Store and reuse <strong>prompt templates</strong> in <code>.context/prompts/</code> for
-repeating tasks. Manage templates via CLI, reference them in skills
-and loop scripts.</p>
-<p><strong>Uses</strong>: <code>ctx prompt</code>, <code>ctx prompt list</code>, <code>ctx prompt show</code></p>
 
 
 

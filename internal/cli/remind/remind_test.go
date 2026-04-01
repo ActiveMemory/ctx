@@ -88,7 +88,11 @@ func TestAdd_Basic(t *testing.T) {
 		t.Errorf("ID = %d, want 1", reminders[0].ID)
 	}
 	if reminders[0].Message != "refactor the swagger definitions" {
-		t.Errorf("Message = %q, want %q", reminders[0].Message, "refactor the swagger definitions")
+		t.Errorf(
+			"Message = %q, want %q",
+			reminders[0].Message,
+			"refactor the swagger definitions",
+		)
 	}
 	if reminders[0].After != nil {
 		t.Errorf("After = %v, want nil", reminders[0].After)

@@ -19,7 +19,7 @@ or `# セッション: 2026-01-15 - テスト` (Japanese) instead of
 `# Session: 2026-01-15 - Fix API`.
 
 By default, ctx only recognizes `Session:` as a session header prefix.
-Files with other prefixes are silently skipped during recall export and
+Files with other prefixes are silently skipped during journal import and
 journal generation: They look like regular Markdown, not sessions.
 
 ## TL;DR
@@ -73,7 +73,7 @@ session_prefixes:
 ### Team setup
 
 Commit `.ctxrc` to the repo so all team members share the same prefix
-list. This ensures `ctx recall export` and journal generation pick up
+list. This ensures `ctx journal import` and journal generation pick up
 sessions from all team members regardless of language.
 
 ### Common prefixes
@@ -92,7 +92,7 @@ sessions from all team members regardless of language.
 
 ### Verifying
 
-After configuring, test with `ctx recall list`. Sessions with the new
+After configuring, test with `ctx journal source`. Sessions with the new
 prefixes should appear in the output.
 
 ## What This Does NOT Do

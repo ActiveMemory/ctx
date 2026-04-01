@@ -91,13 +91,13 @@ User              cli/drift            context           drift.Detect           
   │  Formatted report│                    │                    │                  │
 ```
 
-## 4. `ctx recall export` — Session Export Pipeline
+## 4. `ctx journal import` — Session Import Pipeline
 
 ```
-User           cli/recall        recall/parser        journal/state          FS
+User           cli/journal       journal/parser       journal/state          FS
   │                │                    │                    │                 │
-  │  ctx recall    │                    │                    │                 │
-  │  export --all  │                    │                    │                 │
+  │  ctx journal   │                    │                    │                 │
+  │  import --all  │                    │                    │                 │
   │ ─────────────► │                    │                    │                 │
   │                │  FindSessionsFor   │                    │                 │
   │                │  CWD(cwd)          │                    │                 │
@@ -120,10 +120,10 @@ User           cli/recall        recall/parser        journal/state          FS
   │                │  Format as Markdown                      │                 │
   │                │  Write to .context/journal/              │                 │
   │                │ ──────────────────────────────────────────────────────────►│
-  │                │  MarkExported()                          │                 │
+  │                │  MarkImported()                          │                 │
   │                │ ──────────────────────────────────────► │                 │
   │  ◄────────────                                           │                 │
-  │  "Exported N"  │                    │                    │                 │
+  │  "Imported N"  │                    │                    │                 │
 ```
 
 ## 5. Hook Lifecycle (Claude Code Plugin)

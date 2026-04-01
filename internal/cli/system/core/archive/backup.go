@@ -20,12 +20,14 @@ import (
 	"github.com/ActiveMemory/ctx/internal/config/dir"
 	"github.com/ActiveMemory/ctx/internal/config/embed/text"
 	cfgFs "github.com/ActiveMemory/ctx/internal/config/fs"
+	"github.com/ActiveMemory/ctx/internal/config/warn"
 	"github.com/ActiveMemory/ctx/internal/entity"
 	errBackup "github.com/ActiveMemory/ctx/internal/err/backup"
 	internalIo "github.com/ActiveMemory/ctx/internal/io"
+	logWarn "github.com/ActiveMemory/ctx/internal/log/warn"
 )
 
-// CreateArchive builds a tar.gz archive from the given entries.
+// Create builds a tar.gz archive from the given entries.
 //
 // Parameters:
 //   - archivePath: output file path for the archive
@@ -34,20 +36,34 @@ import (
 //
 // Returns:
 //   - error: non-nil on file creation or tar writing failure
-func CreateArchive(
+func Create(
 	archivePath string, entries []entity.ArchiveEntry, w io.Writer,
 ) error {
 	outFile, createErr := internalIo.SafeCreateFile(archivePath, cfgFs.PermFile)
 	if createErr != nil {
 		return errBackup.CreateArchive(createErr)
 	}
-	defer func() { _ = outFile.Close() }()
+	defer func() {
+		if closeErr := outFile.Close(); closeErr != nil {
+			logWarn.Warn(
+				warn.Close, archivePath, closeErr,
+			)
+		}
+	}()
 
 	gzw := gzip.NewWriter(outFile)
-	defer func() { _ = gzw.Close() }()
+	defer func() {
+		if closeErr := gzw.Close(); closeErr != nil {
+			logWarn.Warn(warn.Close, archive.WriterGzip, closeErr)
+		}
+	}()
 
 	tw := tar.NewWriter(gzw)
-	defer func() { _ = tw.Close() }()
+	defer func() {
+		if closeErr := tw.Close(); closeErr != nil {
+			logWarn.Warn(warn.Close, archive.WriterTar, closeErr)
+		}
+	}()
 
 	for _, entry := range entries {
 		if addErr := addEntry(tw, entry, w); addErr != nil {
@@ -76,13 +92,24 @@ func BackupProject(
 		return entity.BackupResult{}, cwdErr
 	}
 
-	archiveName := fmt.Sprintf(archive.BackupTplProjectArchive, timestamp)
+	archiveName := fmt.Sprintf(archive.TplProjectArchive, timestamp)
 	archivePath := filepath.Join(os.TempDir(), archiveName)
 
 	entries := []entity.ArchiveEntry{
-		{SourcePath: filepath.Join(cwd, dir.Context), Prefix: dir.Context, ExcludeDir: dir.JournalSite},
-		{SourcePath: filepath.Join(cwd, dir.Claude), Prefix: dir.Claude},
-		{SourcePath: filepath.Join(cwd, dir.Ideas), Prefix: dir.Ideas, Optional: true},
+		{
+			SourcePath: filepath.Join(cwd, dir.Context),
+			Prefix:     dir.Context,
+			ExcludeDir: dir.JournalSite,
+		},
+		{
+			SourcePath: filepath.Join(cwd, dir.Claude),
+			Prefix:     dir.Claude,
+		},
+		{
+			SourcePath: filepath.Join(cwd, dir.Ideas),
+			Prefix:     dir.Ideas,
+			Optional:   true,
+		},
 		{SourcePath: filepath.Join(home, archive.Bashrc), Prefix: archive.Bashrc},
 	}
 
@@ -95,7 +122,9 @@ func BackupProject(
 
 	// Touch marker file for check-backup-age hook.
 	markerDir := filepath.Join(home, archive.BackupMarkerDir)
-	_ = os.MkdirAll(markerDir, cfgFs.PermExec)
+	if mkdirErr := os.MkdirAll(markerDir, cfgFs.PermExec); mkdirErr != nil {
+		logWarn.Warn(warn.Mkdir, markerDir, mkdirErr)
+	}
 	markerPath := filepath.Join(markerDir, archive.BackupMarkerFile)
 	internalIo.TouchFile(markerPath)
 
@@ -116,11 +145,20 @@ func BackupProject(
 func BackupGlobal(
 	w io.Writer, home, timestamp string, smb *SMBConfig,
 ) (entity.BackupResult, error) {
-	archiveName := fmt.Sprintf(archive.BackupTplGlobalArchive, timestamp)
+	archiveName := fmt.Sprintf(archive.TplGlobalArchive, timestamp)
 	archivePath := filepath.Join(os.TempDir(), archiveName)
 
 	entries := []entity.ArchiveEntry{
-		{SourcePath: filepath.Join(home, dir.Claude), Prefix: dir.Claude, ExcludeDir: archive.BackupExcludeTodos},
+		{
+			SourcePath: filepath.Join(home, dir.Claude),
+			Prefix:     dir.Claude,
+			ExcludeDir: archive.BackupExcludeTodos,
+		},
+		{
+			SourcePath: filepath.Join(home, dir.CtxData),
+			Prefix:     dir.CtxData,
+			Optional:   true,
+		},
 	}
 
 	return finalizeArchive(

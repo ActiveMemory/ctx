@@ -29,7 +29,7 @@ Files are designed to be human-readable, AI-parseable, and token-efficient.
 | `LEARNINGS.md`      | Lessons learned, gotchas, tips             | 6           |
 | `GLOSSARY.md`       | Domain terms and abbreviations             | 7           |
 | `AGENT_PLAYBOOK.md` | Instructions for AI tools                  | 8 (lowest)  |
-| `prompts/`          | Reusable prompt templates                  | (optional)  |
+| `templates/`        | Entry format templates for `ctx add`       | (optional)  |
 
 ## Read Order Rationale
 
@@ -445,23 +445,25 @@ for full documentation.
 
 ---
 
-## `prompts/`
+## `templates/`
 
-**Purpose**: Store reusable prompt templates - plain markdown files with
-no frontmatter that provide lightweight, named instructions for common
-tasks like code review, refactoring, or explaining code.
+**Purpose**: Format templates for `ctx add decision` and `ctx add learning`.
+These control the structure of new entries appended to DECISIONS.md and
+LEARNINGS.md.
 
-### How It Works
+`ctx init` deploys two starter templates:
 
-- `ctx init` stamps starter templates: `code-review.md`, `refactor.md`,
-  `explain.md`
-- Manage via `ctx prompt list`, `ctx prompt show`, `ctx prompt add`,
-  `ctx prompt rm`
-- Invoke in AI sessions with `/ctx-prompt <name>`
-- Committed to git by default for team sharing
+- `decision.md` — sections: Context, Rationale, Consequence
+- `learning.md` — sections: Context, Lesson, Application
 
-See the [Prompt Templates recipe](../recipes/prompt-templates.md) for
-the full workflow.
+### Customizing
+
+Edit the templates directly. Changes take effect immediately on the
+next `ctx add` command. For example, to add a "References" section to
+all new decisions, edit `.context/templates/decision.md`.
+
+Templates are committed to git, so customizations are shared with the
+team.
 
 ---
 

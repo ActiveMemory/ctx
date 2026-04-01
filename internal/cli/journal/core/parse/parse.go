@@ -12,7 +12,6 @@ import (
 	"sort"
 	"strings"
 
-	"github.com/ActiveMemory/ctx/internal/entity"
 	"gopkg.in/yaml.v3"
 
 	"github.com/ActiveMemory/ctx/internal/assets/read/desc"
@@ -21,6 +20,7 @@ import (
 	"github.com/ActiveMemory/ctx/internal/config/journal"
 	"github.com/ActiveMemory/ctx/internal/config/regex"
 	"github.com/ActiveMemory/ctx/internal/config/token"
+	"github.com/ActiveMemory/ctx/internal/entity"
 )
 
 // ScanJournalEntries reads all journal Markdown files and extracts metadata.
@@ -44,7 +44,7 @@ func ScanJournalEntries(journalDir string) ([]entity.JournalEntry, error) {
 		}
 
 		path := filepath.Join(journalDir, f.Name())
-		entry := ParseJournalEntry(path, f.Name())
+		entry := JournalEntry(path, f.Name())
 		entries = append(entries, entry)
 	}
 
@@ -59,7 +59,7 @@ func ScanJournalEntries(journalDir string) ([]entity.JournalEntry, error) {
 	return entries, nil
 }
 
-// ParseJournalEntry extracts metadata from a journal file.
+// JournalEntry extracts metadata from a journal file.
 //
 // Parameters:
 //   - path: Full path to the journal file
@@ -67,7 +67,7 @@ func ScanJournalEntries(journalDir string) ([]entity.JournalEntry, error) {
 //
 // Returns:
 //   - JournalEntry: Parsed entry with title, date, project extracted
-func ParseJournalEntry(path, filename string) entity.JournalEntry {
+func JournalEntry(path, filename string) entity.JournalEntry {
 	entry := entity.JournalEntry{
 		Filename: filename,
 		Path:     path,
@@ -168,7 +168,9 @@ func ParseJournalEntry(path, filename string) entity.JournalEntry {
 	}
 
 	// Strip Claude Code internal markup tags from titles
-	entry.Title = strings.TrimSpace(regex.SystemClaudeTag.ReplaceAllString(entry.Title, ""))
+	entry.Title = strings.TrimSpace(
+		regex.SystemClaudeTag.ReplaceAllString(entry.Title, ""),
+	)
 
 	// Sanitize characters that break Markdown link text: angle brackets
 	// become HTML entities; backticks and # are stripped (they add no

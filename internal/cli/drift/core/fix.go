@@ -155,7 +155,7 @@ func FixStaleness(cmd *cobra.Command, ctx *entity.Context) error {
 	}
 
 	archiveFile, writeErr := tidy.WriteArchive(
-		archive.ArchiveScopeTasks,
+		archive.ScopeTasks,
 		desc.Text(text.DescKeyHeadingArchivedTasks), archiveContent,
 	)
 	if writeErr != nil {

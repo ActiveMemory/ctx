@@ -20,8 +20,12 @@ import (
 
 	cfgCrypto "github.com/ActiveMemory/ctx/internal/config/crypto"
 	"github.com/ActiveMemory/ctx/internal/config/fs"
+	cfgHTTP "github.com/ActiveMemory/ctx/internal/config/http"
+	"github.com/ActiveMemory/ctx/internal/config/project"
+	cfgWarn "github.com/ActiveMemory/ctx/internal/config/warn"
 	"github.com/ActiveMemory/ctx/internal/crypto"
 	"github.com/ActiveMemory/ctx/internal/io"
+	logWarn "github.com/ActiveMemory/ctx/internal/log/warn"
 	"github.com/ActiveMemory/ctx/internal/rc"
 )
 
@@ -37,25 +41,25 @@ func LoadWebhook() (string, error) {
 	kp := rc.KeyPath()
 	encPath := filepath.Join(rc.ContextDir(), cfgCrypto.NotifyEnc)
 
-	key, err := crypto.LoadKey(kp)
-	if err != nil {
-		if os.IsNotExist(err) {
+	key, loadErr := crypto.LoadKey(kp)
+	if loadErr != nil {
+		if os.IsNotExist(loadErr) {
 			return "", nil
 		}
 		return "", nil
 	}
 
-	ciphertext, err := io.SafeReadUserFile(encPath)
-	if err != nil {
-		if os.IsNotExist(err) {
+	ciphertext, readErr := io.SafeReadUserFile(encPath)
+	if readErr != nil {
+		if os.IsNotExist(readErr) {
 			return "", nil
 		}
 		return "", nil
 	}
 
-	plaintext, err := crypto.Decrypt(key, ciphertext)
-	if err != nil {
-		return "", err
+	plaintext, decryptErr := crypto.Decrypt(key, ciphertext)
+	if decryptErr != nil {
+		return "", decryptErr
 	}
 
 	return string(plaintext), nil
@@ -74,12 +78,13 @@ func SaveWebhook(url string) error {
 	kp := rc.KeyPath()
 	encPath := filepath.Join(rc.ContextDir(), cfgCrypto.NotifyEnc)
 
-	key, err := crypto.LoadKey(kp)
-	if err != nil {
+	key, loadErr := crypto.LoadKey(kp)
+	if loadErr != nil {
 		// Key doesn't exist: generate one.
-		key, err = crypto.GenerateKey()
-		if err != nil {
-			return err
+		var genErr error
+		key, genErr = crypto.GenerateKey()
+		if genErr != nil {
+			return genErr
 		}
 		if mkdirErr := os.MkdirAll(
 			filepath.Dir(kp), fs.PermKeyDir,
@@ -91,9 +96,9 @@ func SaveWebhook(url string) error {
 		}
 	}
 
-	ciphertext, err := crypto.Encrypt(key, []byte(url))
-	if err != nil {
-		return err
+	ciphertext, encryptErr := crypto.Encrypt(key, []byte(url))
+	if encryptErr != nil {
+		return encryptErr
 	}
 
 	return os.WriteFile(encPath, ciphertext, fs.PermSecret)
@@ -131,19 +136,24 @@ func EventAllowed(event string, allowed []string) bool {
 //   - message: short human-readable summary
 //   - sessionID: Claude Code session ID (may be empty)
 //   - detail: structured template reference (nil omits the field)
+//
+// Returns:
+//   - error: Delivery error, or nil if sent successfully or silently skipped
 func Send(event, message, sessionID string, detail *TemplateRef) error {
 	if !EventAllowed(event, rc.NotifyEvents()) {
 		return nil
 	}
 
-	url, err := LoadWebhook()
-	if err != nil || url == "" {
+	url, webhookErr := LoadWebhook()
+	if webhookErr != nil || url == "" {
 		return nil
 	}
 
-	project := "unknown"
+	projectName := project.FallbackName
 	if cwd, cwdErr := os.Getwd(); cwdErr == nil {
-		project = filepath.Base(cwd)
+		projectName = filepath.Base(cwd)
+	} else {
+		logWarn.Warn(cfgWarn.Getwd, cwdErr)
 	}
 
 	payload := Payload{
@@ -152,19 +162,21 @@ func Send(event, message, sessionID string, detail *TemplateRef) error {
 		Detail:    detail,
 		SessionID: sessionID,
 		Timestamp: time.Now().UTC().Format(time.RFC3339),
-		Project:   project,
+		Project:   projectName,
 	}
 
-	body, err := json.Marshal(payload)
-	if err != nil {
+	body, marshalErr := json.Marshal(payload)
+	if marshalErr != nil {
 		return nil
 	}
 
-	resp, err := PostJSON(url, body)
-	if err != nil {
+	resp, postErr := PostJSON(url, body)
+	if postErr != nil {
 		return nil // fire-and-forget
 	}
-	_ = resp.Body.Close()
+	if closeErr := resp.Body.Close(); closeErr != nil {
+		logWarn.Warn(cfgWarn.CloseResponse, closeErr)
+	}
 
 	return nil
 }
@@ -180,7 +192,7 @@ func Send(event, message, sessionID string, detail *TemplateRef) error {
 //   - *http.Response: the HTTP response (caller must close Body).
 //   - error: on HTTP failure.
 func PostJSON(url string, body []byte) (*http.Response, error) {
-	return io.SafePost(url, "application/json", body, 5*time.Second)
+	return io.SafePost(url, cfgHTTP.MimeJSON, body, cfgHTTP.WebhookTimeout*time.Second)
 }
 
 // MaskURL shows the scheme + host and masks everything after the path start.
@@ -193,15 +205,15 @@ func PostJSON(url string, body []byte) (*http.Response, error) {
 func MaskURL(url string) string {
 	count := 0
 	for i, c := range url {
-		if c == '/' {
+		if c == cfgHTTP.PathSep {
 			count++
-			if count == 3 {
-				return url[:i] + "/***"
+			if count == cfgHTTP.MaskAfterSlash {
+				return url[:i] + cfgHTTP.PathSepStr + cfgHTTP.MaskSuffix
 			}
 		}
 	}
-	if len(url) > 20 {
-		return url[:20] + "***"
+	if len(url) > cfgHTTP.MaskMaxLen {
+		return url[:cfgHTTP.MaskMaxLen] + cfgHTTP.MaskSuffix
 	}
 	return url
 }

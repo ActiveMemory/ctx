@@ -1,5 +1,11 @@
 # Agent Playbook
 
+<!--
+RELATED: AGENT_PLAYBOOK_GATE.md is a distilled subset of this file,
+injected at session start by the context-load-gate hook. If you change
+directives here, check whether the gate file needs a corresponding update.
+-->
+
 ## Mental Model
 
 Each session is a fresh execution in a shared workshop. Work
@@ -171,17 +177,22 @@ a problem as "pre-existing" or "not related to my changes."
 Never assume. If you don't see it in files, you don't know it.
 
 - Don't claim "we discussed X" without file evidence
-- Don't invent history: check context files and `ctx recall`
+- Don't invent history: check context files and `ctx journal source`
 - If uncertain, say "I don't see this documented"
 - Trust files over intuition
 
-## Planning Non-Trivial Work
+## Planning Work
 
-Before implementing a feature or multi-task effort, follow this sequence:
+Every commit requires a `Spec:` trailer (CONSTITUTION rule). This means
+every piece of work needs a spec — no exceptions, no "trivial" qualifier.
+A one-liner bugfix gets a one-paragraph spec; a multi-package feature gets
+a full design document. The spec exists for traceability, not ceremony.
 
-**1. Spec first**: Write a design document in `specs/` covering: problem,
-solution, storage, CLI surface, error cases, and non-goals. Keep it concise
-but complete enough that another session could implement from it alone.
+**1. Spec first**: Write a design document in `specs/`. Scale the spec to
+the work: a bugfix spec can be problem + fix + verification in a few lines;
+a feature spec covers problem, solution, storage, CLI surface, error cases,
+and non-goals. The bar is: another session could implement from the spec
+alone.
 
 **2. Task it out**: Break the work into individual tasks in TASKS.md under
 a dedicated Phase section. Each task should be independently completable and
@@ -263,7 +274,7 @@ re-discovering it. 5 minutes reading saves 50 minutes of wasted work.
 ### Quick Check (Every Session)
 - [ ] TASKS.md reflects current priorities
 - [ ] No obvious staleness in files you'll reference
-- [ ] Recent history reviewed via `ctx recall list`
+- [ ] Recent history reviewed via `ctx journal source`
 
 ### Deep Check (Weekly or Before Major Work)
 - [ ] CONSTITUTION.md rules still apply

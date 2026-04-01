@@ -9,14 +9,16 @@ package root
 import (
 	"strings"
 
-	"github.com/ActiveMemory/ctx/internal/cli/add/core/example"
-	"github.com/ActiveMemory/ctx/internal/cli/add/core/extract"
 	"github.com/spf13/cobra"
 
+	coreEntry "github.com/ActiveMemory/ctx/internal/cli/add/core/entry"
+	"github.com/ActiveMemory/ctx/internal/cli/add/core/example"
+	"github.com/ActiveMemory/ctx/internal/cli/add/core/extract"
 	cfgEntry "github.com/ActiveMemory/ctx/internal/config/entry"
 	"github.com/ActiveMemory/ctx/internal/entity"
 	"github.com/ActiveMemory/ctx/internal/entry"
-	"github.com/ActiveMemory/ctx/internal/write/add"
+	errAdd "github.com/ActiveMemory/ctx/internal/err/add"
+	writeAdd "github.com/ActiveMemory/ctx/internal/write/add"
 )
 
 // Run executes the add command logic.
@@ -37,7 +39,7 @@ func Run(cmd *cobra.Command, args []string, flags entity.AddConfig) error {
 
 	content, extractErr := extract.Content(args, flags)
 	if extractErr != nil || content == "" {
-		return add.ErrNoContentProvided(fType, example.ForType(fType))
+		return errAdd.NoContentProvided(fType, example.ForType(fType))
 	}
 
 	params := entry.Params{
@@ -58,16 +60,20 @@ func Run(cmd *cobra.Command, args []string, flags entity.AddConfig) error {
 		return validateErr
 	}
 
-	fName, ok := cfgEntry.ToCtxFile[fType]
+	fName, ok := cfgEntry.CtxFile(fType)
 	if !ok {
-		return add.ErrUnknownType(fType)
+		return errAdd.UnknownType(fType)
 	}
 
 	if writeErr := entry.Write(params); writeErr != nil {
 		return writeErr
 	}
 
-	add.InfoAddedTo(cmd, fName)
+	writeAdd.Added(cmd, fName)
+
+	if fType == cfgEntry.Task && coreEntry.NeedsSpec(content) {
+		writeAdd.SpecNudge(cmd)
+	}
 
 	return nil
 }

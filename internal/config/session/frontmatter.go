@@ -18,7 +18,8 @@ const (
 	FrontmatterOutcome = "outcome"
 	// FrontmatterTopics is the YAML frontmatter key for the topics list.
 	FrontmatterTopics = "topics"
-	// FrontmatterTechnologies is the YAML frontmatter key for the technologies list.
+	// FrontmatterTechnologies is the YAML frontmatter key for
+	// the technologies list.
 	FrontmatterTechnologies = "technologies"
 	// FrontmatterKeyFiles is the YAML frontmatter key for the key files list.
 	FrontmatterKeyFiles = "key_files"
@@ -40,5 +41,5 @@ const (
 	FmKeyModel     = "model"
 	FmKeyTokensIn  = "tokens_in"
 	FmKeyTokensOut = "tokens_out"
-	FmKeySessionID = "session_id"
+	FmKeyID        = "session_id"
 )

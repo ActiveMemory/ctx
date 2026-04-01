@@ -9,12 +9,12 @@ package root
 import (
 	"errors"
 
-	"github.com/ActiveMemory/ctx/internal/cli/status/core/out"
-	"github.com/ActiveMemory/ctx/internal/context/load"
-	errInit "github.com/ActiveMemory/ctx/internal/err/initialize"
 	"github.com/spf13/cobra"
 
+	"github.com/ActiveMemory/ctx/internal/cli/status/core/out"
+	"github.com/ActiveMemory/ctx/internal/context/load"
 	errCtx "github.com/ActiveMemory/ctx/internal/err/context"
+	errInit "github.com/ActiveMemory/ctx/internal/err/initialize"
 )
 
 // Run executes the status command logic.

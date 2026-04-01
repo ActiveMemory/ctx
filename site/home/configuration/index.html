@@ -2736,16 +2736,14 @@
   
   
     <li class="md-nav__item">
-      <a href="../../recipes/prompt-templates/" class="md-nav__link">
+      <a href="../../recipes/prompt-templates.md" class="md-nav__link">
         
   
-  
-    <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-message-square-text" viewBox="0 0 24 24"><path d="M22 17a2 2 0 0 1-2 2H6.828a2 2 0 0 0-1.414.586l-2.202 2.202A.71.71 0 0 1 2 21.286V5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2zM7 11h10M7 15h6M7 7h8"/></svg>
   
   <span class="md-ellipsis">
     
   
-    Reusable Prompt Templates
+    none
   
 
     
@@ -2926,7 +2924,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../cli/recall/" class="md-nav__link">
+      <a href="../../cli/journal/" class="md-nav__link">
         
   
   
@@ -2935,7 +2933,7 @@
   <span class="md-ellipsis">
     
   
-    Recall and Journal
+    Journal
   
 
     
@@ -4130,7 +4128,7 @@ See <a href="../contributing/#configuration-profiles">Contributing: Configuratio
 <p>See <a href="#environment-variables">Environment Variables</a>
 and <a href="#cli-global-flags">CLI Global Flags</a> below for details.</p>
 </div>
-<!-- drift-check: diff <(grep 'yaml:' internal/rc/types.go | grep -oP '"[a-z_]+"' | tr -d '"' | sort -u | grep -v 'desc\|events\|path\|review_url\|profile\|key_path') <(sed -n '/^# \.ctxrc:/,/^```$/p' docs/home/configuration.md | grep -oP '^# ([a-z_]+):' | sed 's/^# //;s/://' | sort -u) -->
+<!-- drift-check: diff <(grep 'yaml:' internal/rc/event.go | grep -oP '"[a-z_]+"' | tr -d '"' | sort -u | grep -v 'desc\|events\|path\|review_url\|profile\|key_path') <(sed -n '/^# \.ctxrc:/,/^```$/p' docs/home/configuration.md | grep -oP '^# ([a-z_]+):' | sed 's/^# //;s/://' | sort -u) -->
 <h3 id="full-reference">Full Reference<a class="headerlink" href="#full-reference" title="Permanent link">&para;</a></h3>
 <p>A commented <code>.ctxrc</code> showing all options and their defaults:</p>
 <div class="language-yaml highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># .ctxrc: ctx runtime configuration</span>
@@ -4173,7 +4171,7 @@ and <a href="#cli-global-flags">CLI Global Flags</a> below for details.</p>
 </span><span id="__span-1-38"><a id="__codelineno-1-38" name="__codelineno-1-38" href="#__codelineno-1-38"></a><span class="c1">#   - GLOSSARY.md</span>
 </span><span id="__span-1-39"><a id="__codelineno-1-39" name="__codelineno-1-39" href="#__codelineno-1-39"></a><span class="c1">#   - AGENT_PLAYBOOK.md</span>
 </span></code></pre></div>
-<!-- drift-check: diff <(grep 'yaml:' internal/rc/types.go | grep -oP '"[a-z_]+"' | tr -d '"' | sort -u | grep -v 'desc\|events\|path\|review_url\|profile\|key_path') <(sed -n '/Option Reference/,/^\*\*Default/p' docs/home/configuration.md | grep -oP '`([a-z_.]+)`' | tr -d '`' | sed 's/notify\.events/notify/' | sort -u | grep -v 'string\|int\|bool\|\[\]') -->
+<!-- drift-check: diff <(grep 'yaml:' internal/rc/event.go | grep -oP '"[a-z_]+"' | tr -d '"' | sort -u | grep -v 'desc\|events\|path\|review_url\|profile\|key_path') <(sed -n '/Option Reference/,/^\*\*Default/p' docs/home/configuration.md | grep -oP '`([a-z_.]+)`' | tr -d '`' | sed 's/notify\.events/notify/' | sort -u | grep -v 'string\|int\|bool\|\[\]') -->
 <h3 id="option-reference">Option Reference<a class="headerlink" href="#option-reference" title="Permanent link">&para;</a></h3>
 <table>
 <thead>

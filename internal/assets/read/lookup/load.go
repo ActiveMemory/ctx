@@ -6,9 +6,7 @@
 
 package lookup
 
-import (
-	"github.com/ActiveMemory/ctx/internal/config/asset"
-)
+import "github.com/ActiveMemory/ctx/internal/config/asset"
 
 // Init loads all embedded YAML description maps. Call once from main()
 // before building the command tree. Tests that need descriptions must

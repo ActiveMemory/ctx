@@ -22,18 +22,20 @@ import (
 	"github.com/ActiveMemory/ctx/internal/config/token"
 )
 
-// NormalizeContent sanitizes journal Markdown for static site rendering:
+// Content sanitizes journal Markdown for static site rendering:
 //   - Strips code fence markers (eliminates nesting conflicts)
-//   - Wraps Tool Output and User sections in <pre><code> with HTML-escaped content
+//   - Wraps Tool Output and User sections in
+//     <pre><code> with HTML-escaped content
 //   - Sanitizes H1 headings (strips Claude tags, truncates to 75 chars)
 //   - Demotes non-turn-header headings to bold (prevents broken page structure)
-//   - Inserts blank lines before list items when missing (Python-Markdown requires them)
+//   - Inserts blank lines before list items when missing
+//     (Python-Markdown requires them)
 //   - Strips bold markers from tool-use lines (**Glob: *.md** -> Glob: *.md)
 //   - Escapes glob-like * characters outside code blocks
 //   - Replaces inline code spans containing angle brackets with quoted entities
 //
-// Heavy formatting (metadata tables, proper fence reconstruction) is left to
-// the ctx-journal-normalize skill which uses AI for context-aware cleanup.
+// Heavy formatting (metadata tables, proper fence reconstruction) is handled
+// programmatically. Edge cases may require parser-level fixes.
 //
 // Parameters:
 //   - content: Raw Markdown content of a journal entry
@@ -41,7 +43,7 @@ import (
 //
 // Returns:
 //   - string: Sanitized content ready for static site rendering
-func NormalizeContent(content string, fencesVerified bool) string {
+func Content(content string, fencesVerified bool) string {
 	// Strip fences first - eliminates all nesting conflicts
 	content = reduce.StripFences(content, fencesVerified)
 
@@ -76,13 +78,13 @@ func NormalizeContent(content string, fencesVerified bool) string {
 		// Track <pre> blocks from WrapToolOutputs/WrapUserTurns.
 		// Content inside is HTML-escaped - skip all transforms.
 		trimmed := strings.TrimSpace(line)
-		if trimmed == "<pre><code>" || trimmed == marker.TagPre {
+		if trimmed == marker.TagPreCode || trimmed == marker.TagPre {
 			inPreBlock = true
 			out = append(out, line)
 			continue
 		}
 		if inPreBlock {
-			if trimmed == "</code></pre>" || trimmed == marker.TagPreClose {
+			if trimmed == marker.TagPreCodeClose || trimmed == marker.TagPreClose {
 				inPreBlock = false
 			}
 			out = append(out, line)
@@ -109,8 +111,8 @@ func NormalizeContent(content string, fencesVerified bool) string {
 		// Demote headings to bold: ## Foo → **Foo**
 		// Preserves turn headers (### N. Role (HH:MM:SS)) and the H1 title.
 		if hm := regex.MarkdownHeading.FindStringSubmatch(line); hm != nil {
-			if hm[1] != "#" && !regex.TurnHeader.MatchString(strings.TrimSpace(line)) {
-				line = "**" + hm[2] + "**"
+			if hm[1] != token.PrefixHeading && !regex.TurnHeader.MatchString(strings.TrimSpace(line)) {
+				line = marker.BoldWrap + hm[2] + marker.BoldWrap
 			}
 		}
 
@@ -132,12 +134,15 @@ func NormalizeContent(content string, fencesVerified bool) string {
 		// Replace inline code spans containing angle brackets:
 		// `</com` → "&lt;/com" (quotes preserve visual signal,
 		// entities prevent broken HTML in rendered output).
-		line = regex.InlineCodeAngle.ReplaceAllStringFunc(line, func(m string) string {
+		replacer := func(m string) string {
 			inner := m[1 : len(m)-1] // strip backticks
-			inner = strings.ReplaceAll(inner, "<", "&lt;")
-			inner = strings.ReplaceAll(inner, ">", "&gt;")
+			inner = strings.ReplaceAll(inner, marker.AngleLT, marker.EntityLT)
+			inner = strings.ReplaceAll(inner, marker.AngleGT, marker.EntityGT)
 			return `"` + inner + `"`
-		})
+		}
+		line = regex.InlineCodeAngle.ReplaceAllStringFunc(
+			line, replacer,
+		)
 
 		out = append(out, line)
 	}
@@ -151,7 +156,7 @@ func NormalizeContent(content string, fencesVerified bool) string {
 // become inert entities.
 //
 // Requires pymdownx.highlight with use_pygments=false in the zensical
-// config (set in TplZensicalTheme) to prevent the highlight extension
+// config (set in ZensicalTheme) to prevent the highlight extension
 // from hijacking <pre><code> blocks.
 //
 // Tool outputs already wrapped in <details><pre> by the export pipeline
@@ -163,6 +168,12 @@ func NormalizeContent(content string, fencesVerified bool) string {
 // journal files (e.g., ### 802. Assistant inside a tool output that read
 // another session's file) because the real next turn (### 42.) is always
 // the smallest number > N.
+//
+// Parameters:
+//   - content: Raw markdown content containing tool output sections
+//
+// Returns:
+//   - string: Transformed markdown with tool outputs wrapped in pre/code blocks
 func WrapToolOutputs(content string) string {
 	return ProcessTurns(content, desc.Text(text.DescKeyLabelToolOutput),
 		func(out, body []string, atEOF bool) []string {
@@ -189,11 +200,11 @@ func WrapToolOutputs(content string) string {
 			}
 
 			// HTML-escape and wrap in <pre><code>...</code></pre>.
-			out = append(out, "", "<pre><code>")
+			out = append(out, "", marker.TagPreCode)
 			for _, line := range trimmed {
 				out = append(out, html.EscapeString(line))
 			}
-			out = append(out, "</code></pre>", "")
+			out = append(out, marker.TagPreCodeClose, "")
 
 			if len(footer) > 0 {
 				out = append(out, footer...)
@@ -208,7 +219,7 @@ func WrapToolOutputs(content string) string {
 // of rendering bugs caused by stray/unclosed fence markers in user messages.
 //
 // Requires pymdownx.highlight with use_pygments=false in the zensical
-// config (set in TplZensicalTheme). With Pygments enabled, the highlight
+// config (set in ZensicalTheme). With Pygments enabled, the highlight
 // extension hijacks <pre><code> and transforms block boundaries.
 //
 // Type 1 HTML block (<pre>) survives blank lines (ends at </pre>, not at a
@@ -221,6 +232,12 @@ func WrapToolOutputs(content string) string {
 //
 // Boundary detection reuses the same pre-scan + last-match-wins approach
 // as WrapToolOutputs.
+//
+// Parameters:
+//   - content: Raw markdown content containing user turn sections
+//
+// Returns:
+//   - string: Transformed markdown with user turns wrapped in pre/code blocks
 func WrapUserTurns(content string) string {
 	return ProcessTurns(content, desc.Text(text.DescKeyLabelRoleUser),
 		func(out, body []string, _ bool) []string {
@@ -231,11 +248,11 @@ func WrapUserTurns(content string) string {
 			}
 
 			// HTML-escape and wrap in <pre><code>...</code></pre>.
-			out = append(out, "", "<pre><code>")
+			out = append(out, "", marker.TagPreCode)
 			for _, line := range trimmed {
 				out = append(out, html.EscapeString(line))
 			}
-			out = append(out, "</code></pre>", "")
+			out = append(out, marker.TagPreCodeClose, "")
 			return out
 		})
 }
@@ -243,10 +260,17 @@ func WrapUserTurns(content string) string {
 // StripPreWrapper removes <details>, <summary>, <pre>, </pre>, </details>
 // wrapper lines from tool output body. When <pre> tags are found (the old
 // export format that HTML-escapes content), entities are unescaped. When
-// only <details>/<summary> are found (CollapseToolOutputs format), inner
+// only <details>/<summary> are found (ToolOutputs format), inner
 // content is returned as-is since it was never HTML-escaped.
 //
 // Returns raw content lines ready for wrapping.
+//
+// Parameters:
+//   - body: Lines of tool output body to unwrap
+//
+// Returns:
+//   - []string: Raw content lines with wrapper tags
+//     removed and entities unescaped
 func StripPreWrapper(body []string) []string {
 	var inner []string
 	hadPre := false
@@ -254,13 +278,13 @@ func StripPreWrapper(body []string) []string {
 	for _, line := range body {
 		trimmed := strings.TrimSpace(line)
 		switch {
-		case trimmed == "<details>" || trimmed == "</details>":
+		case trimmed == marker.TagDetails || trimmed == marker.TagDetailsClose:
 			continue
 		case trimmed == marker.TagPre || trimmed == marker.TagPreClose:
 			hadPre = true
 			continue
-		case strings.HasPrefix(trimmed, "<summary>") &&
-			strings.HasSuffix(trimmed, "</summary>"):
+		case strings.HasPrefix(trimmed, marker.TagSummaryOpen) &&
+			strings.HasSuffix(trimmed, marker.TagSummaryClose):
 			continue
 		default:
 			inner = append(inner, line)
@@ -268,7 +292,7 @@ func StripPreWrapper(body []string) []string {
 	}
 
 	// Only unescape when <pre> was found: the old export format
-	// HTML-escapes content inside <pre> blocks. The CollapseToolOutputs
+	// HTML-escapes content inside <pre> blocks. The ToolOutputs
 	// format (just <details>/<summary>) does not escape content.
 	if hadPre {
 		for j, line := range inner {
@@ -288,6 +312,12 @@ func StripPreWrapper(body []string) []string {
 //   - "No matches found" (grep/glob with zero results)
 //   - Edit confirmations ("The file ... has been updated successfully.")
 //   - Hook denials ("Hook PreToolUse:... denied this tool")
+//
+// Parameters:
+//   - raw: Lines of raw tool output content to check
+//
+// Returns:
+//   - bool: True if the output is empty or matches a boilerplate pattern
 func IsBoilerplateToolOutput(raw []string) bool {
 	// Collect non-blank lines.
 	var nonBlank []string
@@ -303,8 +333,8 @@ func IsBoilerplateToolOutput(raw []string) bool {
 	}
 
 	// Join all non-blank lines for multi-line pattern matching.
-	// SoftWrapContent can split single messages across lines.
-	joined := strings.Join(nonBlank, " ")
+	// Content can split single messages across lines.
+	joined := strings.Join(nonBlank, token.Space)
 
 	switch {
 	case joined == journal.BoilerplateNoMatch:
@@ -323,18 +353,24 @@ func IsBoilerplateToolOutput(raw []string) bool {
 // inside a <pre> block (between <pre>/<pre><code> and </pre>/</code></pre>).
 // This allows turn-header scanning to skip embedded headers from tool outputs
 // that quote other journal files.
+//
+// Parameters:
+//   - lines: Document lines to scan for pre block regions
+//
+// Returns:
+//   - []bool: Boolean slice where true indicates the line is inside a pre block
 func PreBlockMask(lines []string) []bool {
 	mask := make([]bool, len(lines))
 	inPre := false
 	for i, line := range lines {
 		trimmed := strings.TrimSpace(line)
-		if !inPre && (trimmed == marker.TagPre || trimmed == "<pre><code>") {
+		if !inPre && (trimmed == marker.TagPre || trimmed == marker.TagPreCode) {
 			inPre = true
 			continue
 		}
 		if inPre {
-			if trimmed == marker.TagPreClose || trimmed == "</code></pre>" ||
-				trimmed == "</details>" {
+			if trimmed == marker.TagPreClose || trimmed == marker.TagPreCodeClose ||
+				trimmed == marker.TagDetailsClose {
 				inPre = false
 				continue
 			}
@@ -348,6 +384,12 @@ func PreBlockMask(lines []string) []bool {
 // document, returning them sorted and deduplicated. Headers inside <pre>
 // blocks are skipped: they are embedded content from tool outputs that
 // read other journal files.
+//
+// Parameters:
+//   - lines: Document lines to extract turn numbers from
+//
+// Returns:
+//   - []int: Sorted, deduplicated turn numbers found in the document
 func CollectTurnNumbers(lines []string) []int {
 	mask := PreBlockMask(lines)
 	seen := make(map[int]bool)
@@ -372,6 +414,13 @@ func CollectTurnNumbers(lines []string) []int {
 
 // NextInSequence returns the smallest number in the sorted slice that is
 // strictly greater than n. Returns -1 if no such number exists.
+//
+// Parameters:
+//   - sorted: Sorted slice of turn numbers
+//   - n: Reference number to search after
+//
+// Returns:
+//   - int: Smallest number greater than n, or -1 if none exists
 func NextInSequence(sorted []int, n int) int {
 	idx := sort.SearchInts(sorted, n+1)
 	if idx < len(sorted) {
@@ -385,6 +434,13 @@ func NextInSequence(sorted []int, n int) int {
 // (possibly across multiple lines) by a "**Part N of M**" label with
 // navigation links. Returns (body without footer, footer lines). If no
 // footer is found, returns the original body and nil.
+//
+// Parameters:
+//   - body: Lines of tool output body to split
+//
+// Returns:
+//   - []string: Body lines without footer
+//   - []string: Footer lines, or nil if none found
 func SplitTrailingFooter(body []string) ([]string, []string) {
 	// Find the last "---" separator and check if a "**Part " line follows.
 	sepIdx := -1

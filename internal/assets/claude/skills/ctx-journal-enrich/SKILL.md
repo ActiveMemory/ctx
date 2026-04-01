@@ -19,7 +19,7 @@ Enrich a session journal entry with structured metadata.
 ## When to Use
 
 - When journal entries lack metadata for future reference
-- After exporting sessions that need categorization
+- After importing sessions that need categorization
 - When building a searchable session archive
 
 ## When NOT to Use
@@ -74,9 +74,9 @@ Read the journal entry and extract:
 ---
 title: "Session title"
 date: 2026-01-27
-model: claude-opus-4-6  # auto-populated at export
-tokens_in: 234000       # auto-populated at export
-tokens_out: 89000       # auto-populated at export
+model: claude-opus-4-6  # auto-populated at import
+tokens_in: 234000       # auto-populated at import
+tokens_out: 89000       # auto-populated at import
 type: feature
 outcome: completed
 topics:
@@ -94,7 +94,7 @@ key_files:
 ---
 ```
 
-**Auto-populated fields** (set during `ctx journal export`, do NOT overwrite):
+**Auto-populated fields** (set during `ctx journal import`, do NOT overwrite):
 `date`, `time`, `project`, `session_id`, `model`, `tokens_in`, `tokens_out`, `branch`
 
 **Type values:**

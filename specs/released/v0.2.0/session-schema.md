@@ -1,4 +1,4 @@
-> **Note**: The `.context/sessions/` storage layer described in this spec was removed in v0.4.0. The recall pipeline (`ctx recall export`) reads directly from `~/.claude/projects/` JSONL transcripts, making the intermediate session copy redundant. See DECISIONS.md for the full rationale. The spec is preserved here as a historical record.
+> **Note**: The `.context/sessions/` storage layer described in this spec was removed in v0.4.0. The recall pipeline (`ctx recall import`) reads directly from `~/.claude/projects/` JSONL transcripts, making the intermediate session copy redundant. See DECISIONS.md for the full rationale. The spec is preserved here as a historical record.
 
 # Session Schema Specification
 

@@ -7,6 +7,18 @@
 package entity
 
 // EntryParams contains all parameters needed to add an entry to a context file.
+//
+// Fields:
+//   - Type: Entry type (decision, learning, convention, task)
+//   - Content: Main entry text
+//   - Section: Target section within the file
+//   - Priority: Priority label (high, medium, low)
+//   - Context: Context field for decisions/learnings
+//   - Rationale: Rationale field for decisions
+//   - Consequence: Consequence field for decisions
+//   - Lesson: Lesson field for learnings
+//   - Application: Application field for learnings
+//   - ContextDir: Path to the context directory
 type EntryParams struct {
 	Type        string
 	Content     string
@@ -21,6 +33,16 @@ type EntryParams struct {
 }
 
 // AddConfig holds all flags for the add command.
+//
+// Fields:
+//   - Priority: Priority label flag
+//   - Section: Target section flag
+//   - FromFile: Path to read content from a file
+//   - Context: Context flag for decisions/learnings
+//   - Rationale: Rationale flag for decisions
+//   - Consequence: Consequence flag for decisions
+//   - Lesson: Lesson flag for learnings
+//   - Application: Application flag for learnings
 type AddConfig struct {
 	Priority    string
 	Section     string

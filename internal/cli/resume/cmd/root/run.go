@@ -9,10 +9,10 @@ package root
 import (
 	"os"
 
-	"github.com/ActiveMemory/ctx/internal/cli/system/core/nudge"
-	coreSession "github.com/ActiveMemory/ctx/internal/cli/system/core/session"
 	"github.com/spf13/cobra"
 
+	"github.com/ActiveMemory/ctx/internal/cli/system/core/nudge"
+	coreSession "github.com/ActiveMemory/ctx/internal/cli/system/core/session"
 	"github.com/ActiveMemory/ctx/internal/write/session"
 )
 
@@ -26,9 +26,9 @@ import (
 //   - error: Always nil
 func Run(cmd *cobra.Command, sessionID string) error {
 	if sessionID == "" {
-		sessionID = coreSession.ReadSessionID(os.Stdin)
+		sessionID = coreSession.ReadID(os.Stdin)
 	}
 	nudge.Resume(sessionID)
-	session.SessionResumed(cmd, sessionID)
+	session.Resumed(cmd, sessionID)
 	return nil
 }

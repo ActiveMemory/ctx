@@ -13,7 +13,8 @@ import (
 
 // SkillList returns the list of embedded skill directory names.
 //
-// These are Agent SkillList (https://agentskills.io) following the specification
+// These are Agent SkillList (https://agentskills.io)
+// following the specification
 // with SKILL.md files containing frontmatter (name, description) and
 // autonomy-focused instructions. They can be installed to .claude/skills/
 // via "ctx init".
@@ -23,9 +24,9 @@ import (
 //     (e.g., "ctx-status", "ctx-reflect")
 //   - error: Non-nil if the skills directory cannot be read
 func SkillList() ([]string, error) {
-	names, err := skill.List()
-	if err != nil {
-		return nil, errSkill.List(err)
+	names, listErr := skill.List()
+	if listErr != nil {
+		return nil, errSkill.List(listErr)
 	}
 	return names, nil
 }
@@ -33,15 +34,16 @@ func SkillList() ([]string, error) {
 // SkillContent returns the content of a skill's SKILL.md file by name.
 //
 // Parameters:
-//   - name: Skill directory name as returned by [SkillList] (e.g., "ctx-status")
+//   - name: Skill directory name as returned by
+//     [SkillList] (e.g., "ctx-status")
 //
 // Returns:
 //   - []byte: Raw bytes of the SKILL.md file
 //   - error: Non-nil if the skill does not exist or cannot be read
 func SkillContent(name string) ([]byte, error) {
-	content, err := skill.Content(name)
-	if err != nil {
-		return nil, errSkill.Read(name, err)
+	content, readErr := skill.Content(name)
+	if readErr != nil {
+		return nil, errSkill.Read(name, readErr)
 	}
 	return content, nil
 }

@@ -17,7 +17,7 @@ import (
 	"github.com/ActiveMemory/ctx/internal/index"
 )
 
-// RecencyScore returns a score based on the entry's age.
+// Recency returns a score based on the entry's age.
 //
 // Scoring brackets:
 //   - 0-7 days: 1.0
@@ -31,7 +31,7 @@ import (
 //
 // Returns:
 //   - float64: Recency score between 0.2 and 1.0
-func RecencyScore(eb *index.EntryBlock, now time.Time) float64 {
+func Recency(eb *index.EntryBlock, now time.Time) float64 {
 	entryDate, err := time.ParseInLocation(
 		cfgTime.DateFormat, eb.Entry.Date, time.Local,
 	)
@@ -51,7 +51,7 @@ func RecencyScore(eb *index.EntryBlock, now time.Time) float64 {
 	}
 }
 
-// RelevanceScore computes keyword overlap between an entry and active tasks.
+// Relevance computes keyword overlap between an entry and active tasks.
 //
 // Counts how many task keywords appear in the entry's title and body.
 // Normalized to 1.0 at 3+ matches.
@@ -62,7 +62,7 @@ func RecencyScore(eb *index.EntryBlock, now time.Time) float64 {
 //
 // Returns:
 //   - float64: Relevance score between 0.0 and 1.0
-func RelevanceScore(eb *index.EntryBlock, keywords []string) float64 {
+func Relevance(eb *index.EntryBlock, keywords []string) float64 {
 	if len(keywords) == 0 {
 		return 0.0
 	}
@@ -79,7 +79,7 @@ func RelevanceScore(eb *index.EntryBlock, keywords []string) float64 {
 	return float64(matches) / float64(agent.RelevanceMatchCap)
 }
 
-// ScoreEntry computes the combined relevance score for an entry block.
+// Score computes the combined relevance score for an entry block.
 //
 // Superseded entries always get score 0.0.
 // All other entries get recency and task relevance (range 0.0-2.0).
@@ -91,16 +91,11 @@ func RelevanceScore(eb *index.EntryBlock, keywords []string) float64 {
 //
 // Returns:
 //   - float64: Combined score (0.0-2.0), or 0.0 if superseded
-func ScoreEntry(eb *index.EntryBlock, keywords []string, now time.Time) float64 {
+func Score(eb *index.EntryBlock, keywords []string, now time.Time) float64 {
 	if eb.IsSuperseded() {
 		return 0.0
 	}
-	return RecencyScore(eb, now) + RelevanceScore(eb, keywords)
-}
-
-// stopWords returns the set of stop words from assets.
-func stopWords() map[string]bool {
-	return lookup.StopWords()
+	return Recency(eb, now) + Relevance(eb, keywords)
 }
 
 // ExtractTaskKeywords extracts meaningful keywords from task text.
@@ -123,7 +118,7 @@ func ExtractTaskKeywords(tasks []string) []string {
 			return !alnum && r != '-' && r != '_'
 		})
 		for _, w := range words {
-			if len(w) < 3 || stopWords()[w] || seen[w] {
+			if len(w) < 3 || lookup.StopWords()[w] || seen[w] {
 				continue
 			}
 			seen[w] = true
@@ -133,7 +128,7 @@ func ExtractTaskKeywords(tasks []string) []string {
 	return keywords
 }
 
-// ScoreEntries scores and sorts entry blocks by relevance.
+// All scores and sorts entry blocks by relevance.
 //
 // Parameters:
 //   - blocks: Parsed entry blocks from a knowledge file
@@ -142,20 +137,20 @@ func ExtractTaskKeywords(tasks []string) []string {
 //
 // Returns:
 //   - []ScoredEntry: Entries sorted by score descending, with token estimates
-func ScoreEntries(
+func All(
 	blocks []index.EntryBlock, keywords []string, now time.Time,
 ) []Entry {
 	scored := make([]Entry, 0, len(blocks))
 	for i := range blocks {
-		s := ScoreEntry(&blocks[i], keywords, now)
-		tokens := token.EstimateTokensString(blocks[i].BlockContent())
+		s := Score(&blocks[i], keywords, now)
+		tokens := token.EstimateString(blocks[i].BlockContent())
 		scored = append(scored, Entry{
 			EntryBlock: blocks[i],
 			Score:      s,
 			Tokens:     tokens,
 		})
 	}
-	// Sort by score descending (stable for equal scores — preserves file order)
+	// Sort by score descending (stable for equal scores: preserves file order)
 	for i := 1; i < len(scored); i++ {
 		for j := i; j > 0 && scored[j].Score > scored[j-1].Score; j-- {
 			scored[j], scored[j-1] = scored[j-1], scored[j]

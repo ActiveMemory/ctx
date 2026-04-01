@@ -41,7 +41,7 @@ func Run(cmd *cobra.Command, message, after string) error {
 	}
 	if after != "" {
 		if _, parseErr := time.Parse(cfgTime.DateFormat, after); parseErr != nil {
-			return errDate.InvalidDateValue(after)
+			return errDate.InvalidValue(after)
 		}
 		r.After = &after
 	}
@@ -51,6 +51,6 @@ func Run(cmd *cobra.Command, message, after string) error {
 		return writeErr
 	}
 
-	remind.ReminderAdded(cmd, r.ID, r.Message, r.After)
+	remind.Added(cmd, r.ID, r.Message, r.After)
 	return nil
 }

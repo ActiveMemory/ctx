@@ -25,7 +25,7 @@ import (
 	"github.com/ActiveMemory/ctx/internal/rc"
 )
 
-// ScanKnowledgeFiles checks knowledge files against their configured
+// ScanFiles checks knowledge files against their configured
 // thresholds and returns any that exceed the limits.
 //
 // Parameters:
@@ -35,49 +35,53 @@ import (
 //   - convThreshold: max convention lines (0 = disabled)
 //
 // Returns:
-//   - []KnowledgeFinding: files exceeding thresholds, or nil if all within limits
-func ScanKnowledgeFiles(
+//   - []KnowledgeFinding: files exceeding thresholds,
+//     or nil if all within limits
+func ScanFiles(
 	contextDir string, decThreshold, lrnThreshold, convThreshold int,
 ) []finding {
 	var findings []finding
 
 	if decThreshold > 0 {
-		if data, readErr := io.SafeReadFile(contextDir, ctx.Decision); readErr == nil {
+		data, readErr := io.SafeReadFile(contextDir, ctx.Decision)
+		if readErr == nil {
 			count := len(index.ParseEntryBlocks(string(data)))
 			if count > decThreshold {
 				findings = append(findings, finding{
 					File:      ctx.Decision,
 					Count:     count,
 					Threshold: decThreshold,
-					Unit:      unitEntries,
+					Unit:      desc.Text(text.DescKeyWriteKnowledgeUnitEntries),
 				})
 			}
 		}
 	}
 
 	if lrnThreshold > 0 {
-		if data, readErr := io.SafeReadFile(contextDir, ctx.Learning); readErr == nil {
+		data, readErr := io.SafeReadFile(contextDir, ctx.Learning)
+		if readErr == nil {
 			count := len(index.ParseEntryBlocks(string(data)))
 			if count > lrnThreshold {
 				findings = append(findings, finding{
 					File:      ctx.Learning,
 					Count:     count,
 					Threshold: lrnThreshold,
-					Unit:      unitEntries,
+					Unit:      desc.Text(text.DescKeyWriteKnowledgeUnitEntries),
 				})
 			}
 		}
 	}
 
 	if convThreshold > 0 {
-		if data, readErr := io.SafeReadFile(contextDir, ctx.Convention); readErr == nil {
+		data, readErr := io.SafeReadFile(contextDir, ctx.Convention)
+		if readErr == nil {
 			lineCount := bytes.Count(data, []byte(token.NewlineLF))
 			if lineCount > convThreshold {
 				findings = append(findings, finding{
 					File:      ctx.Convention,
 					Count:     lineCount,
 					Threshold: convThreshold,
-					Unit:      unitLines,
+					Unit:      desc.Text(text.DescKeyWriteKnowledgeUnitLines),
 				})
 			}
 		}
@@ -86,7 +90,7 @@ func ScanKnowledgeFiles(
 	return findings
 }
 
-// FormatKnowledgeWarnings builds a pre-formatted findings list string
+// FormatWarnings builds a pre-formatted findings list string
 // from the given findings.
 //
 // Parameters:
@@ -94,7 +98,7 @@ func ScanKnowledgeFiles(
 //
 // Returns:
 //   - string: formatted warning lines for template injection
-func FormatKnowledgeWarnings(findings []finding) string {
+func FormatWarnings(findings []finding) string {
 	var b strings.Builder
 	findingFmt := desc.Text(text.DescKeyCheckKnowledgeFindingFormat)
 	for _, f := range findings {
@@ -103,7 +107,7 @@ func FormatKnowledgeWarnings(findings []finding) string {
 	return b.String()
 }
 
-// EmitKnowledgeWarning builds the knowledge file growth warning box.
+// EmitWarning builds the knowledge file growth warning box.
 //
 // Parameters:
 //   - sessionID: session identifier for notifications
@@ -111,11 +115,11 @@ func FormatKnowledgeWarnings(findings []finding) string {
 //
 // Returns:
 //   - string: formatted nudge box, or empty string if silenced
-func EmitKnowledgeWarning(sessionID, fileWarnings string) string {
+func EmitWarning(sessionID, fileWarnings string) string {
 	fallback := fileWarnings + token.NewlineLF + desc.Text(
 		text.DescKeyCheckKnowledgeFallback,
 	)
-	content := message.LoadMessage(hook.CheckKnowledge, hook.VariantWarning,
+	content := message.Load(hook.CheckKnowledge, hook.VariantWarning,
 		map[string]any{knowledge.VarFileWarnings: fileWarnings}, fallback)
 	if content == "" {
 		return ""
@@ -130,11 +134,11 @@ func EmitKnowledgeWarning(sessionID, fileWarnings string) string {
 		map[string]any{knowledge.VarFileWarnings: fileWarnings})
 	notifyMsg := fmt.Sprintf(desc.Text(text.DescKeyRelayPrefixFormat),
 		hook.CheckKnowledge, desc.Text(text.DescKeyCheckKnowledgeRelayMessage))
-	nudge.NudgeAndRelay(notifyMsg, sessionID, ref)
+	nudge.EmitAndRelay(notifyMsg, sessionID, ref)
 	return box
 }
 
-// CheckKnowledgeHealth runs the full knowledge health check: scans files,
+// CheckHealth runs the full knowledge health check: scans files,
 // formats warnings, and builds output if any thresholds are exceeded.
 //
 // Parameters:
@@ -143,7 +147,7 @@ func EmitKnowledgeWarning(sessionID, fileWarnings string) string {
 // Returns:
 //   - string: formatted nudge box, or empty string if no warnings
 //   - bool: true if warnings were found
-func CheckKnowledgeHealth(sessionID string) (string, bool) {
+func CheckHealth(sessionID string) (string, bool) {
 	lrnThreshold := rc.EntryCountLearnings()
 	decThreshold := rc.EntryCountDecisions()
 	convThreshold := rc.ConventionLineCount()
@@ -153,14 +157,14 @@ func CheckKnowledgeHealth(sessionID string) (string, bool) {
 		return "", false
 	}
 
-	findings := ScanKnowledgeFiles(
+	findings := ScanFiles(
 		rc.ContextDir(), decThreshold, lrnThreshold, convThreshold,
 	)
 	if len(findings) == 0 {
 		return "", false
 	}
 
-	fileWarnings := FormatKnowledgeWarnings(findings)
-	box := EmitKnowledgeWarning(sessionID, fileWarnings)
+	fileWarnings := FormatWarnings(findings)
+	box := EmitWarning(sessionID, fileWarnings)
 	return box, true
 }

@@ -5,4 +5,8 @@
 //                 SPDX-License-Identifier: Apache-2.0
 
 // Package git provides constants for git binary invocation.
+//
+// Constants are referenced by domain packages via config/git.*.
+// Provides constants and definitions for git operations.
+// Constants are referenced by domain packages.
 package git

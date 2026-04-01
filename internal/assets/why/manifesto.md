@@ -49,7 +49,7 @@ And creation does **not** happen in a vacuum.
 
 Human bandwidth is no longer the constraint.
 
-`ctx` is.
+Context is:
 
 * **Without** durable context, intelligence resets.
 * **Without** memory, reasoning decays.
@@ -91,7 +91,7 @@ Vision, goals, and direction are **human responsibilities**.
 * **What** success means;
 * **What** world we are building.
 
-`ctx` encodes **the intent** so it
+`ctx` encodes **the intent** so it...
 
 * **survives** time,
 * **survives** handoffs,

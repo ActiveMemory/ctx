@@ -6,5 +6,7 @@
 
 // Package mark_journal implements the ctx system mark-journal subcommand.
 //
-// It updates the processing stage of a journal entry in the state file.
+// Key exports: [Cmd], [Run].
+// Follows the cmd/root + core taxonomy.
+// Registered by the cmd parent command.
 package mark_journal

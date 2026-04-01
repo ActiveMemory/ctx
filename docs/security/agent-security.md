@@ -334,4 +334,4 @@ Before running an unattended AI agent:
 * [Security](reporting.md): `ctx`'s own trust model and vulnerability
   reporting
 * [Autonomous Loops](../operations/autonomous-loop.md): full documentation of the
-  loop pattern, `PROMPT.md` templates, and troubleshooting
+  loop pattern, prompt templates, and troubleshooting

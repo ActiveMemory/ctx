@@ -13,6 +13,9 @@ import (
 )
 
 // Cmd returns the reindex convenience command.
+//
+// Returns:
+//   - *cobra.Command: The reindex command with subcommands registered
 func Cmd() *cobra.Command {
 	return reindexRoot.Cmd()
 }

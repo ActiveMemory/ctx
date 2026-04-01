@@ -30,7 +30,9 @@ func TestRegistryYAMLParses(t *testing.T) {
 		if entry.Variant == "" {
 			t.Errorf("entry %d: empty variant", i)
 		}
-		if entry.Category != CategoryCustomizable && entry.Category != CategoryCtxSpecific {
+		validCategory := entry.Category == CategoryCustomizable ||
+			entry.Category == CategoryCtxSpecific
+		if !validCategory {
 			t.Errorf("entry %d (%s/%s): invalid category %q",
 				i, entry.Hook, entry.Variant, entry.Category)
 		}
@@ -50,7 +52,9 @@ func TestLookupKnownEntry(t *testing.T) {
 		t.Errorf("category = %q, want %q", info.Category, CategoryCustomizable)
 	}
 	if info.Description != "Context persistence nudge" {
-		t.Errorf("description = %q, want %q", info.Description, "Context persistence nudge")
+		t.Errorf("description = %q, want %q",
+			info.Description,
+			"Context persistence nudge")
 	}
 	if len(info.TemplateVars) != 1 || info.TemplateVars[0] != "PromptsSinceNudge" {
 		t.Errorf("vars = %v, want [PromptsSinceNudge]", info.TemplateVars)

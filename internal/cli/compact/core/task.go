@@ -47,7 +47,8 @@ func CompactTasks(
 		compact.InfoMovingTask(cmd, tidy.TruncateString(taskText, token.TruncateLen))
 	}
 	for _, taskText := range result.TasksSkipped {
-		compact.InfoSkippingTask(cmd, tidy.TruncateString(taskText, token.TruncateLen))
+		truncated := tidy.TruncateString(taskText, token.TruncateLen)
+		compact.InfoSkippingTask(cmd, truncated)
 	}
 
 	if len(result.TasksMoved) == 0 {
@@ -82,7 +83,7 @@ func CompactTasks(
 				archiveContent += block.BlockContent() + nl + nl
 			}
 			if archiveFile, archiveErr := tidy.WriteArchive(
-				cfgArchive.ArchiveScopeTasks,
+				cfgArchive.ScopeTasks,
 				desc.Text(text.DescKeyHeadingArchivedTasks),
 				archiveContent,
 			); archiveErr == nil {

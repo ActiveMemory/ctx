@@ -36,7 +36,7 @@ func TestCollapseToolOutputs_LongOutputWrapped(t *testing.T) {
 	body := bodyLines(12)
 	input := header + "\n\n" + body + "\n"
 
-	got := CollapseToolOutputs(input)
+	got := ToolOutputs(input)
 
 	if !strings.Contains(got, "<details>") {
 		t.Error("expected <details> tag for long tool output")
@@ -60,7 +60,7 @@ func TestCollapseToolOutputs_ShortOutputUnchanged(t *testing.T) {
 	body := bodyLines(5)
 	input := header + "\n\n" + body + "\n"
 
-	got := CollapseToolOutputs(input)
+	got := ToolOutputs(input)
 
 	if strings.Contains(got, "<details>") {
 		t.Error("short tool output should not be wrapped in <details>")
@@ -75,7 +75,7 @@ func TestCollapseToolOutputs_ExactThresholdUnchanged(t *testing.T) {
 	body := bodyLines(journal.DetailsThreshold)
 	input := header + "\n\n" + body + "\n"
 
-	got := CollapseToolOutputs(input)
+	got := ToolOutputs(input)
 
 	if strings.Contains(got, "<details>") {
 		t.Error("output at exactly the threshold should not be wrapped")
@@ -88,7 +88,7 @@ func TestCollapseToolOutputs_AlreadyWrappedNotDoubled(t *testing.T) {
 		bodyLines(15) + "\n</details>"
 	input := header + "\n\n" + body + "\n"
 
-	got := CollapseToolOutputs(input)
+	got := ToolOutputs(input)
 
 	count := strings.Count(got, "<details>")
 	if count != 1 {
@@ -102,7 +102,7 @@ func TestCollapseToolOutputs_NonToolTurnsUntouched(t *testing.T) {
 		bodyLines(15) + "\n"
 	input := user + "\n" + assistant
 
-	got := CollapseToolOutputs(input)
+	got := ToolOutputs(input)
 
 	if strings.Contains(got, "<details>") {
 		t.Error("non-tool-output turns should never be collapsed")
@@ -119,7 +119,7 @@ func TestCollapseToolOutputs_MixedTurns(t *testing.T) {
 
 	input := short + "\n" + long + "\n" + user
 
-	got := CollapseToolOutputs(input)
+	got := ToolOutputs(input)
 
 	count := strings.Count(got, "<details>")
 	if count != 1 {
@@ -133,9 +133,12 @@ func TestCollapseToolOutputs_MixedTurns(t *testing.T) {
 func TestCollapseToolOutputs_NoHeaders(t *testing.T) {
 	input := "Just some text\nwithout any turn headers\n"
 
-	got := CollapseToolOutputs(input)
+	got := ToolOutputs(input)
 
 	if got != input {
-		t.Errorf("content without headers should pass through unchanged\ngot:\n%s", got)
+		t.Errorf(
+			"content without headers should pass through"+
+				" unchanged\ngot:\n%s", got,
+		)
 	}
 }

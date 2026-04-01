@@ -8,17 +8,15 @@ package scan
 
 import (
 	"os"
-	"os/exec"
 	"sort"
 	"strings"
 	"time"
 
-	"github.com/ActiveMemory/ctx/internal/entity"
-
 	"github.com/ActiveMemory/ctx/internal/config/file"
 	cfgGit "github.com/ActiveMemory/ctx/internal/config/git"
 	"github.com/ActiveMemory/ctx/internal/config/token"
-	ctxErr "github.com/ActiveMemory/ctx/internal/err/git"
+	"github.com/ActiveMemory/ctx/internal/entity"
+	execGit "github.com/ActiveMemory/ctx/internal/exec/git"
 	"github.com/ActiveMemory/ctx/internal/rc"
 )
 
@@ -32,9 +30,9 @@ import (
 //   - error: Non-nil if the context directory cannot be read
 func FindContextChanges(refTime time.Time) ([]entity.ContextChange, error) {
 	dir := rc.ContextDir()
-	entries, err := os.ReadDir(dir)
-	if err != nil {
-		return nil, err
+	entries, readDirErr := os.ReadDir(dir)
+	if readDirErr != nil {
+		return nil, readDirErr
 	}
 
 	var changes []entity.ContextChange
@@ -76,8 +74,8 @@ func SummarizeCodeChanges(refTime time.Time) (entity.CodeSummary, error) {
 	var summary entity.CodeSummary
 
 	// Count commits.
-	out, err := GitLogSince(refTime, cfgGit.FlagOneline)
-	if err != nil {
+	out, logErr := GitLogSince(refTime, cfgGit.FlagOneline)
+	if logErr != nil {
 		return summary, nil
 	}
 	lines := strings.TrimSpace(string(out))
@@ -125,12 +123,7 @@ func SummarizeCodeChanges(refTime time.Time) (entity.CodeSummary, error) {
 //   - []byte: Raw git output
 //   - error: Non-nil if git fails
 func GitLogSince(t time.Time, extraArgs ...string) ([]byte, error) {
-	if _, lookErr := exec.LookPath(cfgGit.Binary); lookErr != nil {
-		return nil, ctxErr.NotFound()
-	}
-	args := []string{cfgGit.Log, cfgGit.FlagSince, t.Format(time.RFC3339)}
-	args = append(args, extraArgs...)
-	return exec.Command(cfgGit.Binary, args...).Output() //nolint:gosec // args are literal flags + time.Format output
+	return execGit.LogSince(t, extraArgs...)
 }
 
 // UniqueTopDirs extracts unique top-level directories from file paths.

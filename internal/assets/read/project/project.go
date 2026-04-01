@@ -19,7 +19,7 @@ import (
 // handlers during initialization.
 //
 // Parameters:
-//   - name: Filename (e.g., "IMPLEMENTATION_PLAN.md")
+//   - name: Filename (e.g., "Makefile.ctx")
 //
 // Returns:
 //   - []byte: File content

@@ -7,23 +7,20 @@
 package message
 
 import (
-	"bytes"
 	"path/filepath"
 	"strings"
-	"text/template"
 
 	"github.com/ActiveMemory/ctx/internal/assets/read/hook"
 	"github.com/ActiveMemory/ctx/internal/config/box"
 	"github.com/ActiveMemory/ctx/internal/config/dir"
 	"github.com/ActiveMemory/ctx/internal/config/file"
-	"github.com/ActiveMemory/ctx/internal/config/session"
 	"github.com/ActiveMemory/ctx/internal/config/token"
 	ctxContext "github.com/ActiveMemory/ctx/internal/context/resolve"
 	"github.com/ActiveMemory/ctx/internal/io"
 	"github.com/ActiveMemory/ctx/internal/rc"
 )
 
-// LoadMessage loads a hook message template by hook name and variant.
+// Load loads a hook message template by hook name and variant.
 //
 // Priority:
 //  1. .context/hooks/messages/{hook}/{variant}.txt (user override)
@@ -42,7 +39,7 @@ import (
 //
 // Returns:
 //   - string: Rendered message or empty string for intentional silence
-func LoadMessage(hk, variant string, vars map[string]any, fallback string) string {
+func Load(hk, variant string, vars map[string]any, fallback string) string {
 	filename := variant + file.ExtTxt
 
 	// 1. User override in .context/
@@ -60,27 +57,6 @@ func LoadMessage(hk, variant string, vars map[string]any, fallback string) strin
 	return renderTemplate(fallback, vars, fallback)
 }
 
-// renderTemplate executes a Go text/template with the given vars.
-// Returns the fallback on any parse or execution error. Returns empty
-// string if the template content is empty or whitespace-only
-// (intentional silence).
-func renderTemplate(tmpl string, vars map[string]any, fallback string) string {
-	if strings.TrimSpace(tmpl) == "" {
-		return "" // intentional silence
-	}
-
-	t, parseErr := template.New(session.TemplateName).Parse(tmpl)
-	if parseErr != nil {
-		return fallback
-	}
-
-	var buf bytes.Buffer
-	if execErr := t.Execute(&buf, vars); execErr != nil {
-		return fallback
-	}
-	return buf.String()
-}
-
 // BoxLines wraps each line of content with the │ box-drawing prefix.
 // Trailing newlines on content are trimmed before splitting to avoid
 // an empty trailing box line.
@@ -92,7 +68,8 @@ func renderTemplate(tmpl string, vars map[string]any, fallback string) string {
 //   - string: Box-wrapped content
 func BoxLines(content string) string {
 	var b strings.Builder
-	for _, line := range strings.Split(strings.TrimRight(content, token.NewlineLF), token.NewlineLF) {
+	trimmed := strings.TrimRight(content, token.NewlineLF)
+	for _, line := range strings.Split(trimmed, token.NewlineLF) {
 		b.WriteString(box.LinePrefix)
 		b.WriteString(line)
 		b.WriteString(token.NewlineLF)
@@ -117,7 +94,7 @@ func NudgeBox(relayPrefix, title, content string) string {
 		pad = 0
 	}
 	msg := relayPrefix + token.NewlineLF + token.NewlineLF +
-		box.Top + title + " " + strings.Repeat("─", pad) + token.NewlineLF
+		box.Top + title + " " + strings.Repeat(box.BorderFill, pad) + token.NewlineLF
 	msg += BoxLines(content)
 	if line := ctxContext.DirLine(); line != "" {
 		msg += box.LinePrefix + line + token.NewlineLF

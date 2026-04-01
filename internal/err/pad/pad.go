@@ -128,14 +128,14 @@ func OutFlagRequiresBlob() error {
 	)
 }
 
-// ReadScratchpad wraps a scratchpad read failure.
+// ReadPad wraps a scratchpad read failure.
 //
 // Parameters:
 //   - cause: the underlying read error.
 //
 // Returns:
 //   - error: "read scratchpad: <cause>"
-func ReadScratchpad(cause error) error {
+func ReadPad(cause error) error {
 	return fmt.Errorf(
 		desc.Text(text.DescKeyErrPadReadScratchpad), cause,
 	)

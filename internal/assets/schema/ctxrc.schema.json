@@ -6,15 +6,17 @@
   "type": "object",
   "additionalProperties": false,
   "properties": {
+    "profile": {
+      "type": "string",
+      "description": "Active configuration profile name."
+    },
     "context_dir": {
       "type": "string",
-      "description": "Name of the context directory.",
-      "default": ".context"
+      "description": "Name of the context directory. Default: .context."
     },
     "token_budget": {
       "type": "integer",
-      "description": "Default token budget for context assembly.",
-      "default": 8000,
+      "description": "Default token budget for context assembly. Default: 8000.",
       "minimum": 1
     },
     "priority_order": {
@@ -26,75 +28,142 @@
     },
     "auto_archive": {
       "type": "boolean",
-      "description": "Whether to auto-archive completed tasks.",
-      "default": true
+      "description": "Whether to auto-archive completed tasks. Default: true."
     },
     "archive_after_days": {
       "type": "integer",
-      "description": "Days before archiving completed tasks.",
-      "default": 7,
+      "description": "Days before archiving completed tasks. Default: 7.",
       "minimum": 0
     },
     "scratchpad_encrypt": {
       "type": "boolean",
-      "description": "Whether to encrypt the scratchpad.",
-      "default": true
+      "description": "Whether to encrypt the scratchpad. Default: true."
     },
     "allow_outside_cwd": {
       "type": "boolean",
-      "description": "Skip boundary validation for external context dirs.",
-      "default": false
+      "description": "Skip boundary validation for external context dirs. Default: false."
     },
     "entry_count_learnings": {
       "type": "integer",
-      "description": "Entry count threshold for LEARNINGS.md drift warning. 0 disables.",
-      "default": 30,
+      "description": "Entry count threshold for LEARNINGS.md drift warning. Default: 30. 0 disables.",
       "minimum": 0
     },
     "entry_count_decisions": {
       "type": "integer",
-      "description": "Entry count threshold for DECISIONS.md drift warning. 0 disables.",
-      "default": 20,
+      "description": "Entry count threshold for DECISIONS.md drift warning. Default: 20. 0 disables.",
       "minimum": 0
     },
     "convention_line_count": {
       "type": "integer",
-      "description": "Line count threshold for CONVENTIONS.md drift warning. 0 disables.",
-      "default": 200,
+      "description": "Line count threshold for CONVENTIONS.md drift warning. Default: 200. 0 disables.",
       "minimum": 0
     },
     "injection_token_warn": {
       "type": "integer",
-      "description": "Token threshold for oversize injection warning. 0 disables.",
-      "default": 15000,
+      "description": "Token threshold for oversize injection warning. Default: 15000. 0 disables.",
       "minimum": 0
     },
     "context_window": {
       "type": "integer",
-      "description": "Context window size in tokens. Auto-detected for Claude Code users.",
-      "default": 200000,
+      "description": "Context window size in tokens. Auto-detected for Claude Code users. Default: 200000.",
       "minimum": 1
     },
     "event_log": {
       "type": "boolean",
-      "description": "Whether to log hook events locally.",
-      "default": false
+      "description": "Whether to log hook events locally. Default: false."
     },
     "key_rotation_days": {
       "type": "integer",
-      "description": "Days before encryption key rotation nudge.",
-      "default": 90,
+      "description": "Days before encryption key rotation nudge. Default: 90.",
       "minimum": 0
     },
     "stale_age_days": {
       "type": "integer",
-      "description": "Days before a context file is flagged as stale by drift detection. 0 disables.",
-      "default": 30,
+      "description": "Days before a context file is flagged as stale by drift detection. Default: 30. 0 disables.",
       "minimum": 0
     },
     "key_path": {
       "type": "string",
       "description": "Explicit encryption key file path."
+    },
+    "billing_token_warn": {
+      "type": "integer",
+      "description": "Absolute token threshold for billing nudge. One-shot warning when session tokens exceed this value. Default: 0 (disabled).",
+      "minimum": 0
+    },
+    "task_nudge_interval": {
+      "type": "integer",
+      "description": "Edit/Write calls between task completion nudges. Default: 5. 0 disables.",
+      "minimum": 0
+    },
+    "session_prefixes": {
+      "type": "array",
+      "description": "Recognized session header prefixes for Markdown parser. Default: [\"Session:\"].",
+      "items": {
+        "type": "string"
+      }
+    },
+    "freshness_files": {
+      "type": "array",
+      "description": "Source files containing technology-dependent constants for periodic review.",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "path": {
+            "type": "string",
+            "description": "File path relative to the project root."
+          },
+          "desc": {
+            "type": "string",
+            "description": "Summary of what constants live in the file."
+          },
+          "review_url": {
+            "type": "string",
+            "description": "Optional URL to check against when reviewing."
+          }
+        },
+        "required": ["path"]
+      }
+    },
+    "companion_check": {
+      "type": "boolean",
+      "description": "Check companion tool availability (Gemini Search, GitNexus) during /ctx-remember. Default: true. Set false to suppress."
+    },
+    "classify_rules": {
+      "type": "array",
+      "description": "Custom keyword rules for memory entry classification. Overrides built-in defaults when set. Rules are evaluated in priority order.",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "target": {
+            "type": "string",
+            "description": "Target entry type (convention, decision, learning, task).",
+            "enum": ["convention", "decision", "learning", "task"]
+          },
+          "keywords": {
+            "type": "array",
+            "description": "Case-insensitive keyword patterns to match.",
+            "items": {
+              "type": "string"
+            }
+          }
+        },
+        "required": ["target", "keywords"]
+      }
+    },
+    "spec_signal_words": {
+      "type": "array",
+      "description": "Terms in task descriptions that suggest the task needs a design spec. Overrides built-in defaults when set.",
+      "items": {
+        "type": "string"
+      }
+    },
+    "spec_nudge_min_len": {
+      "type": "integer",
+      "description": "Task content length above which a spec nudge fires regardless of signal words. Default: 150.",
+      "minimum": 0
     },
     "notify": {
       "type": "object",

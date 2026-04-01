@@ -33,7 +33,7 @@ func Cmd() *cobra.Command {
 			if len(args) > 0 {
 				dir = args[0]
 			}
-			return runExport(cmd, dir, force, dryRun)
+			return Run(cmd, dir, force, dryRun)
 		},
 	}
 

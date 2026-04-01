@@ -24,11 +24,12 @@ import (
 //   - windowSize: total context window size
 //
 // Returns:
-//   - string: formatted usage line (e.g., "⏱ Context window: ~12k tokens (~60% of 200k)")
+//   - string: formatted usage line
+//     (e.g., "Context window: ~12k tokens (~60% of 200k)")
 func TokenUsageLine(tokens, pct, windowSize int) string {
 	icon := desc.Text(text.DescKeyCheckContextSizeTokenNormal)
 	suffix := ""
-	if pct >= stats.ContextWindowThresholdPct {
+	if pct >= stats.ContextWindowWarnPct {
 		icon = desc.Text(text.DescKeyCheckContextSizeTokenLow)
 		suffix = desc.Text(text.DescKeyCheckContextSizeRunningLowSuffix)
 	}

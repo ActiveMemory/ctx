@@ -29,14 +29,16 @@ import (
 // Returns:
 //   - error: Non-nil if file operations fail
 func HandleMakefileCtx(cmd *cobra.Command) error {
-	content, err := makefile.Ctx()
+	content, tplErr := makefile.Ctx()
 
-	if err != nil {
-		return errInit.ReadTemplate(project.MakefileCtx, err)
+	if tplErr != nil {
+		return errInit.ReadTemplate(project.MakefileCtx, tplErr)
 	}
 
-	if err = os.WriteFile(project.MakefileCtx, content, fs.PermFile); err != nil {
-		return errFs.FileWrite(project.MakefileCtx, err)
+	if writeErr := os.WriteFile(
+		project.MakefileCtx, content, fs.PermFile,
+	); writeErr != nil {
+		return errFs.FileWrite(project.MakefileCtx, writeErr)
 	}
 
 	initialize.Created(cmd, project.MakefileCtx)
@@ -44,10 +46,10 @@ func HandleMakefileCtx(cmd *cobra.Command) error {
 	existing, readErr := os.ReadFile(project.Makefile)
 	if readErr != nil {
 		minimal := project.MakefileIncludeDirective + token.NewlineLF
-		if err := os.WriteFile(
+		if writeErr := os.WriteFile(
 			project.Makefile, []byte(minimal), fs.PermFile,
-		); err != nil {
-			return errInit.CreateMakefile(err)
+		); writeErr != nil {
+			return errInit.CreateMakefile(writeErr)
 		}
 		initialize.MakefileCreated(cmd)
 		return nil
@@ -64,10 +66,10 @@ func HandleMakefileCtx(cmd *cobra.Command) error {
 	}
 
 	amended += token.NewlineLF + project.MakefileIncludeDirective + token.NewlineLF
-	if err := os.WriteFile(
+	if writeErr := os.WriteFile(
 		project.Makefile, []byte(amended), fs.PermFile,
-	); err != nil {
-		return errFs.FileAmend(project.Makefile, err)
+	); writeErr != nil {
+		return errFs.FileAmend(project.Makefile, writeErr)
 	}
 
 	initialize.MakefileAppended(cmd, project.MakefileCtx)

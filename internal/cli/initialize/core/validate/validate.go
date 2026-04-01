@@ -31,7 +31,7 @@ func CheckCtxInPath(cmd *cobra.Command) error {
 	}
 	_, err := exec.LookPath(cli.Binary)
 	if err != nil {
-		writeInit.ErrCtxNotInPath(cmd)
+		writeInit.NotInPath(cmd)
 		return initialize.CtxNotInPath()
 	}
 	return nil

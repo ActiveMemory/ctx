@@ -9,12 +9,14 @@ package resume
 import (
 	"os"
 
-	"github.com/ActiveMemory/ctx/internal/cli/system/core/nudge"
 	"github.com/spf13/cobra"
 
+	"github.com/ActiveMemory/ctx/internal/cli/system/core/nudge"
 	coreSession "github.com/ActiveMemory/ctx/internal/cli/system/core/session"
 	cFlag "github.com/ActiveMemory/ctx/internal/config/flag"
 	"github.com/ActiveMemory/ctx/internal/config/session"
+	"github.com/ActiveMemory/ctx/internal/config/warn"
+	ctxLog "github.com/ActiveMemory/ctx/internal/log/warn"
 	writeSession "github.com/ActiveMemory/ctx/internal/write/session"
 )
 
@@ -40,7 +42,9 @@ func Run(cmd *cobra.Command, stdin *os.File) error {
 	}
 
 	path := nudge.PauseMarkerPath(sessionID)
-	_ = os.Remove(path)
-	writeSession.SessionResumed(cmd, sessionID)
+	if removeErr := os.Remove(path); removeErr != nil {
+		ctxLog.Warn(warn.Remove, path, removeErr)
+	}
+	writeSession.Resumed(cmd, sessionID)
 	return nil
 }

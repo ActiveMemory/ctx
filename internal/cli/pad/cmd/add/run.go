@@ -7,66 +7,37 @@
 package add
 
 import (
-	"github.com/ActiveMemory/ctx/internal/cli/pad/core/blob"
-	"github.com/ActiveMemory/ctx/internal/cli/pad/core/store"
 	"github.com/spf13/cobra"
 
-	"github.com/ActiveMemory/ctx/internal/config/pad"
-	"github.com/ActiveMemory/ctx/internal/err/fs"
-	errPad "github.com/ActiveMemory/ctx/internal/err/pad"
-	"github.com/ActiveMemory/ctx/internal/io"
+	coreAdd "github.com/ActiveMemory/ctx/internal/cli/pad/core/add"
+	"github.com/ActiveMemory/ctx/internal/cli/pad/core/store"
 	writePad "github.com/ActiveMemory/ctx/internal/write/pad"
 )
 
-// runAdd appends a new entry and prints confirmation.
+// Run appends a new text or blob entry to the scratchpad.
+//
+// When filePath is non-empty, the entry is imported as a blob with text
+// as the label. Otherwise text is added as a plain entry.
 //
 // Parameters:
 //   - cmd: Cobra command for output
-//   - text: Entry text to add
-//
-// Returns:
-//   - error: Non-nil on read/write failure
-func runAdd(cmd *cobra.Command, text string) error {
-	entries, err := store.ReadEntries()
-	if err != nil {
-		return err
-	}
-
-	entries = append(entries, text)
-
-	if writeErr := store.WriteEntries(cmd, entries); writeErr != nil {
-		return writeErr
-	}
-
-	writePad.EntryAdded(cmd, len(entries))
-	return nil
-}
-
-// runAddBlob reads a file, encodes it as a blob entry, and appends it.
-//
-// Parameters:
-//   - cmd: Cobra command for output
-//   - label: Blob label (filename)
-//   - filePath: Path to the file to ingest
+//   - text: Entry text or blob label
+//   - filePath: Blob file path (empty for plain text entry)
 //
 // Returns:
 //   - error: Non-nil on read/write failure or file too large
-func runAddBlob(cmd *cobra.Command, label, filePath string) error {
-	data, err := io.SafeReadUserFile(filePath)
-	if err != nil {
-		return fs.ReadFile(err)
-	}
+func Run(cmd *cobra.Command, text, filePath string) error {
+	var entries []string
+	var addErr error
 
-	if len(data) > pad.MaxBlobSize {
-		return errPad.FileTooLarge(len(data), pad.MaxBlobSize)
+	if filePath != "" {
+		entries, addErr = coreAdd.Blob(text, filePath)
+	} else {
+		entries, addErr = coreAdd.Entry(text)
 	}
-
-	entries, readErr := store.ReadEntries()
-	if readErr != nil {
-		return readErr
+	if addErr != nil {
+		return addErr
 	}
-
-	entries = append(entries, blob.MakeBlob(label, data))
 
 	if writeErr := store.WriteEntries(cmd, entries); writeErr != nil {
 		return writeErr

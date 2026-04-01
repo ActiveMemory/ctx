@@ -6,6 +6,7 @@
 
 // Package test implements the ctx notify test subcommand.
 //
-// It sends a test notification to the configured webhook endpoint to
-// verify connectivity.
+// Key exports: [Cmd], [Run].
+// Follows the cmd/root + core taxonomy.
+// Registered by the cmd parent command.
 package test

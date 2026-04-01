@@ -381,7 +381,7 @@ and an agentId field.
 
 ## [2026-02-03-063337] Claude Code JSONL format changed: slug field removed in v2.1.29+
 
-**Context**: ctx recall export --all --force was skipping February 2026 sessions. 
+**Context**: ctx recall import --all --force was skipping February 2026 sessions. 
 Investigation revealed sessions like c9f12373 had 0 slug fields but 19 
 sessionId fields.
 
@@ -502,13 +502,13 @@ passes command args.
 
 **Lesson**: Use `YYYY-MM-DD-HHMM-<topic>.md` format to prevent overwrites.
 
-**Application**: Historical reference only. Journal entries now use `ctx recall export` naming.
+**Application**: Historical reference only. Journal entries now use `ctx recall import` naming.
 
 ---
 
 ## [2026-01-20-120000] Two Tiers of Persistence
 
-> **Note**: `.context/sessions/` removed in v0.4.0. Two tiers remain but the full-dump tier is now `~/.claude/projects/` (raw JSONL) + `.context/journal/` (enriched markdown via `ctx recall export`).
+> **Note**: `.context/sessions/` removed in v0.4.0. Two tiers remain but the full-dump tier is now `~/.claude/projects/` (raw JSONL) + `.context/journal/` (enriched markdown via `ctx recall import`).
 
 **Context**: User wanted to ensure nothing is lost when session ends.
 
@@ -533,7 +533,7 @@ passes command args.
 - **Auto-load**: Works via `PreToolUse` hook running `ctx agent`
 - **Auto-save**: Did NOT exist
 
-**Original solution**: `SessionEnd` hook that copies transcript to `.context/sessions/`. Removed in v0.4.0 because Claude Code already retains transcripts and `ctx recall export` reads them directly.
+**Original solution**: `SessionEnd` hook that copies transcript to `.context/sessions/`. Removed in v0.4.0 because Claude Code already retains transcripts and `ctx recall import` reads them directly.
 
 ---
 

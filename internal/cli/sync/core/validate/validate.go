@@ -19,7 +19,10 @@ import (
 	"github.com/ActiveMemory/ctx/internal/config/dep"
 	"github.com/ActiveMemory/ctx/internal/config/embed/text"
 	cfgSync "github.com/ActiveMemory/ctx/internal/config/sync"
+	"github.com/ActiveMemory/ctx/internal/config/token"
+	"github.com/ActiveMemory/ctx/internal/config/warn"
 	"github.com/ActiveMemory/ctx/internal/entity"
+	ctxLog "github.com/ActiveMemory/ctx/internal/log/warn"
 )
 
 // CheckPackageFiles detects package manager files without dependency
@@ -38,7 +41,7 @@ func CheckPackageFiles(ctx *entity.Context) []core.Action {
 	var actions []core.Action
 
 	for f, d := range dep.Packages {
-		if _, err := os.Stat(f); err == nil {
+		if _, statErr := os.Stat(f); statErr == nil {
 			// File exists, check if we have DEPENDENCIES.md or similar
 			hasDepsDoc := false
 			if f := ctx.File(cfgCtx.Dependency); f != nil {
@@ -97,8 +100,8 @@ func CheckConfigFiles(ctx *entity.Context) []core.Action {
 				convContent = strings.ToLower(string(f.Content))
 			}
 
-			keyword := strings.ToLower(strings.TrimPrefix(cfg.Pattern, "."))
-			keyword = strings.TrimSuffix(keyword, "*")
+			keyword := strings.ToLower(strings.TrimPrefix(cfg.Pattern, token.PrefixDot))
+			keyword = strings.TrimSuffix(keyword, token.GlobStar)
 			if convContent == "" || !strings.Contains(convContent, keyword) {
 				actions = append(actions, core.Action{
 					Type: cfgSync.ActionConfig,
@@ -141,8 +144,14 @@ func CheckNewDirectories(ctx *entity.Context) []core.Action {
 	}
 
 	// Scan top-level directories
-	entries, err := os.ReadDir(".")
-	if err != nil {
+	cwd, cwdErr := os.Getwd()
+	if cwdErr != nil {
+		ctxLog.Warn(warn.Getwd, cwdErr)
+		return actions
+	}
+	entries, readDirErr := os.ReadDir(cwd)
+	if readDirErr != nil {
+		ctxLog.Warn(warn.Readdir, cwd, readDirErr)
 		return actions
 	}
 
@@ -151,7 +160,7 @@ func CheckNewDirectories(ctx *entity.Context) []core.Action {
 			continue
 		}
 		name := entry.Name()
-		if strings.HasPrefix(name, ".") || cfgSync.SkipDirs[name] {
+		if strings.HasPrefix(name, token.PrefixDot) || cfgSync.SkipDirs[name] {
 			continue
 		}
 

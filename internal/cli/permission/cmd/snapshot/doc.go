@@ -6,6 +6,7 @@
 
 // Package snapshot implements the ctx permission snapshot subcommand.
 //
-// It captures a point-in-time snapshot of file permissions for later
-// restoration.
+// Key exports: [Cmd], [Run].
+// Follows the cmd/root + core taxonomy.
+// Registered by the cmd parent command.
 package snapshot

@@ -1,6 +1,6 @@
 //   /    ctx:                         https://ctx.ist
 // ,'`./    do you remember?
-// `.,'\
+// `.,'\\
 //   \    Copyright 2026-present Context contributors.
 //                 SPDX-License-Identifier: Apache-2.0
 
@@ -15,27 +15,30 @@ import (
 	coreAppend "github.com/ActiveMemory/ctx/internal/cli/add/core/insert"
 	"github.com/ActiveMemory/ctx/internal/config/entry"
 	"github.com/ActiveMemory/ctx/internal/config/fs"
+	errAdd "github.com/ActiveMemory/ctx/internal/err/add"
+	errFs "github.com/ActiveMemory/ctx/internal/err/fs"
 	"github.com/ActiveMemory/ctx/internal/index"
 	"github.com/ActiveMemory/ctx/internal/rc"
-	"github.com/ActiveMemory/ctx/internal/write/add"
 )
 
 // Write formats and writes an entry to the appropriate context file.
 //
-// Handles the complete the write cycle: read existing content, format the entry,
+// Handles the complete write cycle: read existing content,
+// format the entry,
 // append it, write back, and update the index if needed.
 //
 // Parameters:
 //   - params: Params containing type, content, and optional fields
 //
 // Returns:
-//   - error: Non-nil if the type is unknown, the file doesn't exist, or write fails
+//   - error: Non-nil if the type is unknown, the file
+//     doesn't exist, or write fails
 func Write(params Params) error {
 	fType := strings.ToLower(params.Type)
 
-	fileName, ok := entry.ToCtxFile[fType]
+	fileName, ok := entry.CtxFile(fType)
 	if !ok {
-		return add.ErrUnknownType(fType)
+		return errAdd.UnknownType(fType)
 	}
 
 	contextDir := params.ContextDir
@@ -45,12 +48,12 @@ func Write(params Params) error {
 	filePath := filepath.Join(contextDir, fileName)
 
 	if _, statErr := os.Stat(filePath); os.IsNotExist(statErr) {
-		return add.ErrFileNotFound(filePath)
+		return errAdd.FileNotFound(filePath)
 	}
 
 	existing, readErr := os.ReadFile(filepath.Clean(filePath))
 	if readErr != nil {
-		return add.ErrFileRead(filePath, readErr)
+		return errFs.FileRead(filePath, readErr)
 	}
 
 	var formatted string
@@ -68,15 +71,17 @@ func Write(params Params) error {
 	case entry.Convention:
 		formatted = format.Convention(params.Content)
 	default:
-		return add.ErrUnknownType(fType)
+		return errAdd.UnknownType(fType)
 	}
 
-	newContent := coreAppend.AppendEntry(existing, formatted, fType, params.Section)
+	newContent := coreAppend.AppendEntry(
+		existing, formatted, fType, params.Section,
+	)
 
 	if writeErr := os.WriteFile(
 		filePath, newContent, fs.PermFile,
 	); writeErr != nil {
-		return add.ErrFileWriteAdd(filePath, writeErr)
+		return errFs.FileWrite(filePath, writeErr)
 	}
 
 	switch fType {
@@ -85,14 +90,14 @@ func Write(params Params) error {
 		if indexErr := os.WriteFile(
 			filePath, []byte(indexed), fs.PermFile,
 		); indexErr != nil {
-			return add.ErrIndexUpdate(filePath, indexErr)
+			return errAdd.IndexUpdate(filePath, indexErr)
 		}
 	case entry.Learning:
 		indexed := index.UpdateLearnings(string(newContent))
 		if indexErr := os.WriteFile(
 			filePath, []byte(indexed), fs.PermFile,
 		); indexErr != nil {
-			return add.ErrIndexUpdate(filePath, indexErr)
+			return errAdd.IndexUpdate(filePath, indexErr)
 		}
 		// case entry.Task, entry.Convention:
 		// No index to update for these types
@@ -101,23 +106,16 @@ func Write(params Params) error {
 	return nil
 }
 
-// ValidateAndWrite validates the entry params, writes the entry, and
-// returns the target context file name.
+// ValidateAndWrite validates the entry params and writes the entry.
 //
 // Parameters:
 //   - params: entry parameters with type, content, and optional fields
 //
 // Returns:
-//   - string: the context file name the entry was written to
 //   - error: validation or write error
-func ValidateAndWrite(params Params) (string, error) {
+func ValidateAndWrite(params Params) error {
 	if vErr := Validate(params, nil); vErr != nil {
-		return "", vErr
+		return vErr
 	}
-
-	if wErr := Write(params); wErr != nil {
-		return "", wErr
-	}
-
-	return entry.ToCtxFile[strings.ToLower(params.Type)], nil
+	return Write(params)
 }

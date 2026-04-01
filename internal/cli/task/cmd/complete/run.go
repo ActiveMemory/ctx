@@ -12,19 +12,19 @@ import (
 	"strconv"
 	"strings"
 
+	"github.com/spf13/cobra"
+
 	"github.com/ActiveMemory/ctx/internal/config/ctx"
 	"github.com/ActiveMemory/ctx/internal/config/fs"
 	"github.com/ActiveMemory/ctx/internal/config/regex"
 	"github.com/ActiveMemory/ctx/internal/config/token"
 	errTask "github.com/ActiveMemory/ctx/internal/err/task"
-	"github.com/ActiveMemory/ctx/internal/write/complete"
-	"github.com/spf13/cobra"
-
 	"github.com/ActiveMemory/ctx/internal/rc"
 	"github.com/ActiveMemory/ctx/internal/task"
+	"github.com/ActiveMemory/ctx/internal/write/complete"
 )
 
-// CompleteTask finds a task in TASKS.md by number or text match and marks
+// Complete finds a task in TASKS.md by number or text match and marks
 // it complete by changing "- [ ]" to "- [x]".
 //
 // Parameters:
@@ -35,7 +35,7 @@ import (
 //   - string: The text of the completed task
 //   - error: Non-nil if the task is not found, multiple matches, or file
 //     operations fail
-func CompleteTask(query, contextDir string) (string, error) {
+func Complete(query, contextDir string) (string, error) {
 	if contextDir == "" {
 		contextDir = rc.ContextDir()
 	}
@@ -104,7 +104,9 @@ func CompleteTask(query, contextDir string) (string, error) {
 
 	// Write back
 	newContent := strings.Join(lines, token.NewlineLF)
-	if writeErr := os.WriteFile(filePath, []byte(newContent), fs.PermFile); writeErr != nil {
+	if writeErr := os.WriteFile(
+		filePath, []byte(newContent), fs.PermFile,
+	); writeErr != nil {
 		return "", errTask.FileWrite(writeErr)
 	}
 
@@ -120,12 +122,12 @@ func CompleteTask(query, contextDir string) (string, error) {
 // Returns:
 //   - error: Non-nil on task match or write failure
 func Run(cmd *cobra.Command, args []string) error {
-	matchedTask, completeErr := CompleteTask(args[0], "")
+	matchedTask, completeErr := Complete(args[0], "")
 	if completeErr != nil {
 		return completeErr
 	}
 
-	complete.InfoCompletedTask(cmd, matchedTask)
+	complete.Completed(cmd, matchedTask)
 
 	return nil
 }

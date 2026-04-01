@@ -8,17 +8,17 @@ package archive
 
 import (
 	"archive/tar"
-	"fmt"
 	"io"
 	"io/fs"
 	"os"
 	"path/filepath"
 
-	"github.com/ActiveMemory/ctx/internal/assets/read/desc"
-	"github.com/ActiveMemory/ctx/internal/config/embed/text"
+	"github.com/ActiveMemory/ctx/internal/config/warn"
 	"github.com/ActiveMemory/ctx/internal/entity"
 	errBackup "github.com/ActiveMemory/ctx/internal/err/backup"
 	internalIo "github.com/ActiveMemory/ctx/internal/io"
+	ctxLog "github.com/ActiveMemory/ctx/internal/log/warn"
+	writeBackup "github.com/ActiveMemory/ctx/internal/write/backup"
 )
 
 // finalizeArchive creates the archive, populates the result with size,
@@ -39,7 +39,7 @@ func finalizeArchive(
 	w io.Writer, archivePath, archiveName, scope string,
 	entries []entity.ArchiveEntry, smb *SMBConfig,
 ) (entity.BackupResult, error) {
-	if archiveErr := CreateArchive(archivePath, entries, w); archiveErr != nil {
+	if archiveErr := Create(archivePath, entries, w); archiveErr != nil {
 		return entity.BackupResult{}, archiveErr
 	}
 
@@ -62,7 +62,8 @@ func finalizeArchive(
 }
 
 // addEntry adds a single ArchiveEntry (file or directory) to the tar writer.
-// Optional entries that are not found emit a diagnostic message and are skipped.
+// Optional entries that are not found emit a diagnostic message
+// and are skipped.
 //
 // Parameters:
 //   - tw: tar writer to add the entry to
@@ -75,9 +76,7 @@ func addEntry(tw *tar.Writer, entry entity.ArchiveEntry, w io.Writer) error {
 	info, statErr := os.Stat(entry.SourcePath)
 	if os.IsNotExist(statErr) {
 		if entry.Optional {
-			_, _ = fmt.Fprintf(
-				w, desc.Text(text.DescKeyWriteBackupSkipEntry), entry.Prefix,
-			)
+			writeBackup.SkipEntry(w, entry.Prefix)
 			return nil
 		}
 		return errBackup.SourceNotFound(entry.SourcePath)
@@ -169,7 +168,11 @@ func copyFileToTar(tw *tar.Writer, path string) error {
 	if openErr != nil {
 		return openErr
 	}
-	defer func() { _ = f.Close() }()
+	defer func() {
+		if closeErr := f.Close(); closeErr != nil {
+			ctxLog.Warn(warn.Close, path, closeErr)
+		}
+	}()
 	_, copyErr := io.Copy(tw, f)
 	return copyErr
 }

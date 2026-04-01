@@ -16,35 +16,28 @@
 package task
 
 import (
-	"github.com/ActiveMemory/ctx/internal/assets/read/desc"
-	"github.com/ActiveMemory/ctx/internal/config/embed/cmd"
 	"github.com/spf13/cobra"
 
+	"github.com/ActiveMemory/ctx/internal/cli/parent"
 	"github.com/ActiveMemory/ctx/internal/cli/task/cmd/archive"
 	"github.com/ActiveMemory/ctx/internal/cli/task/cmd/complete"
 	"github.com/ActiveMemory/ctx/internal/cli/task/cmd/snapshot"
+	"github.com/ActiveMemory/ctx/internal/config/embed/cmd"
 )
 
 // Cmd returns the task command with subcommands.
 //
-// The task command provides utilities for managing the task lifecycle:
+// The task command provides utilities for managing the task
+// lifecycle:
 //   - archive: Move completed tasks out of TASKS.md
-//   - snapshot: Create point-in-time backup without modification
+//   - snapshot: Create point-in-time backup
 //
 // Returns:
 //   - *cobra.Command: Configured task command with subcommands
 func Cmd() *cobra.Command {
-	short, long := desc.Command(cmd.DescKeyTask)
-
-	cmd := &cobra.Command{
-		Use:   cmd.UseTask,
-		Short: short,
-		Long:  long,
-	}
-
-	cmd.AddCommand(archive.Cmd())
-	cmd.AddCommand(complete.Cmd())
-	cmd.AddCommand(snapshot.Cmd())
-
-	return cmd
+	return parent.Cmd(cmd.DescKeyTask, cmd.UseTask,
+		archive.Cmd(),
+		complete.Cmd(),
+		snapshot.Cmd(),
+	)
 }

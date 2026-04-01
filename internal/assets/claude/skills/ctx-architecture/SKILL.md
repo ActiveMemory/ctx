@@ -1,7 +1,7 @@
 ---
 name: ctx-architecture
 description: "Build and maintain architecture maps. Use to create or refresh ARCHITECTURE.md and DETAILED_DESIGN.md. Supports principal mode for deeper analysis: vision, future direction, bottlenecks, implementation alternatives, gaps, upstream proposals, and intervention points."
-allowed-tools: Bash(ctx:*), Bash(git:*), Bash(go:*), Read, Write, Edit, Glob, Grep
+allowed-tools: Bash(ctx:*), Bash(git:*), Bash(go:*), Read, Write, Edit, Glob, Grep, mcp__gemini-search__*
 ---
 
 Build and maintain two architecture documents incrementally:
@@ -15,13 +15,13 @@ extends the map rather than re-analyzing everything.
 When time or context budget runs short, execute in this order.
 Never skip a tier to do a lower one:
 
-1. **Authoritative truth first** — ARCHITECTURE.md + DETAILED_DESIGN.md
+1. **Authoritative truth first**: ARCHITECTURE.md + DETAILED_DESIGN.md
    must be accurate and honest. Incomplete is fine; wrong is not.
-2. **Surface uncertainty honestly** — partial coverage with correct
+2. **Surface uncertainty honestly**: partial coverage with correct
    confidence scores beats inflated scores. Mark what you don't know.
-3. **Offer judgment only where grounded** — danger zones, extension
+3. **Offer judgment only where grounded**: danger zones, extension
    points, improvement ideas only for modules you actually analyzed.
-4. **Prefer fewer sharp insights over many shallow sections** — a
+4. **Prefer fewer sharp insights over many shallow sections**: a
    CHEAT-SHEETS.md with one excellent cheat sheet beats five thin ones.
    An ARCHITECTURE-PRINCIPAL.md with three concrete risks beats ten
    vague ones.
@@ -30,8 +30,8 @@ Never skip a tier to do a lower one:
 
 Read the invocation for a mode keyword:
 
-- **No keyword** (or `default`) → run **Default mode** (Phases 0–5 below)
-- `principal` → run **Principal mode** (Phases 0–5 + Principal phases P1–P3)
+- **No keyword** (or `default`) → run **Default mode** (Phases 0-5 below)
+- `principal` → run **Principal mode** (Phases 0-5 + Principal phases P1-P3)
 
 Examples:
 ```text
@@ -65,7 +65,7 @@ Examples:
 
 ---
 
-## Default Mode (Phases 0–5)
+## Default Mode (Phases 0-5)
 
 ### Phase 0: Check Opt-Out
 
@@ -77,13 +77,40 @@ Read `.context/map-tracking.json`. If it exists and
 
 Then stop.
 
+### Phase 0.25: Companion Tool Check
+
+Check if **Gemini Search** MCP is available by attempting a
+simple query. Gemini is used for upstream documentation, design
+rationale, KEPs, peer-project patterns - anything outside the
+local codebase that helps understand *why* the code is shaped
+the way it is.
+
+**If available**: note it silently. Use Gemini throughout the
+analysis for upstream lookups. Prefer it over built-in web search.
+
+**If not available**: ask the user once:
+
+```
+Gemini Search is not connected. It helps me look up upstream
+design docs, KEPs, and peer-project patterns during analysis.
+
+Want to set it up now, or proceed without it?
+```
+
+Respect the answer and continue either way.
+
+**Important**: Gemini is for *upstream* and *external* context
+only. Do not use it to understand the local codebase - read the
+code directly. The depth of analysis comes from forced reading,
+not from search shortcuts.
+
 ### Phase 0.5: Quick Structure Scan + Focus Areas
 
 Before any deep analysis, do a lightweight structural survey to
 discover what the project actually contains. This takes seconds
 and makes the focus-area question concrete instead of open-ended.
 
-**Scan steps** (no file reads — structure only):
+**Scan steps** (no file reads - structure only):
 
 ```bash
 # Detect ecosystem
@@ -150,30 +177,6 @@ git log --oneline --since="<last_analyzed>" \
    `last_analyzed`) + low-confidence modules (confidence < 0.7)
 
 ### Phase 2: Survey (First Run) or Analyze Frontier (Subsequent Run)
-
-**Optional: GitNexus MCP enrichment**
-
-If GitNexus resources are available in the environment (the
-`list_repos` MCP tool responds), use them first for clustering
-and symbol context before the manual survey. Otherwise continue
-with the manual survey below — no need to ask. GitNexus provides pre-built knowledge graph data
-that significantly speeds up and deepens the survey phase:
-
-| GitNexus tool/resource             | Use for                                                                                                                             |
-|------------------------------------|-------------------------------------------------------------------------------------------------------------------------------------|
-| `gitnexus://repo/{name}/clusters`  | Domain groupings for DETAILED_DESIGN splitting — use these as the starting domain boundaries instead of inferring manually          |
-| `gitnexus://repo/{name}/processes` | Seed CHEAT-SHEETS.md lifecycle flows — these are execution flows extracted from the graph                                           |
-| `context({symbol})`                | Per-symbol 360° view — enriches Exported API and Dependencies sections; catches cross-package references manual reading misses      |
-| `impact({symbol})`                 | Blast radius per symbol — use as raw input for Danger zones (high blast radius = high modification risk); still add the *reasoning* |
-| `generate_map` prompt              | Seed ARCHITECTURE.md mermaid diagrams; verify and annotate before using                                                             |
-
-When GitNexus is available: run the graph queries first, then use
-manual file reading to add judgment, rationale, and "why" context
-that the graph alone can't provide. Do not copy graph output
-verbatim — synthesize it.
-
-When GitNexus is not available: proceed with full manual survey
-below. The skill works without it.
 
 **First run: full survey:**
 
@@ -257,7 +260,7 @@ error()---------|    |--stop()-->[ Stopped]
 [Failed]
 ```
 
-Use plain ASCII (not mermaid) for DETAILED_DESIGN.md — it renders
+Use plain ASCII (not mermaid) for DETAILED_DESIGN.md - it renders
 in any terminal, editor, or raw file view without a renderer.
 Reserve mermaid for ARCHITECTURE.md only.
 
@@ -272,7 +275,7 @@ Reserve mermaid for ARCHITECTURE.md only.
 - What breaks first under load
 
 **Danger zones** (top 3 riskiest modification points):
-1. `<symbol or area>` — why it's dangerous (hidden coupling,
+1. `<symbol or area>` - why it's dangerous (hidden coupling,
    ordering assumption, shared mutable state, etc.)
 2. ...
 3. ...
@@ -284,10 +287,10 @@ reconciliation or state management):
 - What triggers re-reconciliation?
 
 **Extension points** (where features would naturally attach):
-- `<symbol or pattern>` — what kind of extension fits here
+- `<symbol or pattern>` - what kind of extension fits here
 
-**Improvement ideas** (1–3 concrete suggestions, not generic):
-- `<specific change>` — what it fixes and why it's feasible
+**Improvement ideas** (1-3 concrete suggestions, not generic):
+- `<specific change>` - what it fixes and why it's feasible
 
 **Dependencies**: list of internal packages used
 ```
@@ -297,9 +300,9 @@ reconciliation or state management):
 When DETAILED_DESIGN.md exceeds ~600 lines or covers 3+ natural
 domains, split into domain files and keep a shallow index:
 
-- `DETAILED_DESIGN.md` — index only (domain name, file pointer,
+- `DETAILED_DESIGN.md` - index only (domain name, file pointer,
   module list, one-line domain purpose)
-- `DETAILED_DESIGN-<domain>.md` — full module sections for that
+- `DETAILED_DESIGN-<domain>.md` - full module sections for that
   domain
 
 Domains are natural groupings, not arbitrary splits. Examples:
@@ -348,7 +351,7 @@ Key invariants:
 Common failure modes:
 - <condition> → <outcome>
 
-Flow (ASCII — include when sequence or state is non-obvious):
+Flow (ASCII - include when sequence or state is non-obvious):
 
   [Trigger] --> [Step A] --> [Step B] --> [Done]
                                |
@@ -389,8 +392,14 @@ Write `.context/map-tracking.json` with:
 
 ### Phase 5: Convergence Report + Search Prompts
 
-Print a structured convergence report. This is the primary output
-the user reads — make it clear and actionable.
+Print a structured convergence report AND write it to
+`.context/CONVERGENCE-REPORT.md`. The printed version is the
+primary output the user reads. The file version is the artifact
+that `/ctx-architecture-enrich` and future sessions consume.
+
+The source of truth for confidence scores is `map-tracking.json`.
+`CONVERGENCE-REPORT.md` is a human-readable view of that data -
+if they ever conflict, `map-tracking.json` wins.
 
 **Format:**
 
@@ -401,7 +410,7 @@ the user reads — make it clear and actionable.
 
 | Module | Confidence | Status | Blocker |
 |--------|------------|--------|---------|
-| pkg/foo | 0.9 | ✅ Converged | — |
+| pkg/foo | 0.9 | ✅ Converged | - |
 | pkg/bar | 0.6 | 🔶 Shallow | Internal flow unclear |
 | pkg/baz | 0.2 | 🔴 Stubbed | Not analyzed |
 
@@ -414,34 +423,34 @@ Group related modules and show aggregate coverage:
 
 - Total modules: N
 - Converged (≥ 0.9): N  ✅
-- Solid (0.7–0.89): N   🟡
-- Shallow (0.4–0.69): N 🔶
+- Solid (0.7-0.89): N   🟡
+- Shallow (0.4-0.69): N 🔶
 - Stubbed (< 0.4): N    🔴
 
 ### What Would Help Next
 
 For each non-converged module, print a specific suggestion:
 
-🔶 pkg/bar (0.6) — Shallow
+🔶 pkg/bar (0.6) - Shallow
   → Read the test files to understand expected behavior under
     edge cases: `pkg/bar/*_test.go`
   → Trace the internal flow through <specific function identified>
   → Ask: "walk me through what happens when X"
 
-🔴 pkg/baz (0.2) — Not analyzed
+🔴 pkg/baz (0.2) - Not analyzed
   → Run /ctx-architecture with focus area: pkg/baz
   → Or: open pkg/baz/README.md if present
 
 ### Convergence Verdict
 
 One of:
-- ✅ CONVERGED — all modules ≥ 0.9, frontier empty. Further runs
+- ✅ CONVERGED - all modules ≥ 0.9, frontier empty. Further runs
   without code changes won't improve coverage.
-- 🟡 MOSTLY CONVERGED — core modules ≥ 0.9, peripheral modules
+- 🟡 MOSTLY CONVERGED - core modules ≥ 0.9, peripheral modules
   shallow. Diminishing returns on full re-run; use focus areas.
-- 🔶 PARTIAL — significant modules below 0.7. Re-run with focus
+- 🔶 PARTIAL - significant modules below 0.7. Re-run with focus
   areas or read tests.
-- 🔴 INCOMPLETE — substantial portions unanalyzed. Run again.
+- 🔴 INCOMPLETE - substantial portions unanalyzed. Run again.
 ```
 
 **Convergence thresholds:**
@@ -452,17 +461,17 @@ One of:
   vendor)
 
 **Blocker vocabulary** (use these consistently in the table):
-- `Internal flow unclear` — exports known, internals not traced
-- `Not analyzed` — directory listed only
-- `Tests not read` — implementation known, behavior under edge
+- `Internal flow unclear` - exports known, internals not traced
+- `Not analyzed` - directory listed only
+- `Tests not read` - implementation known, behavior under edge
   cases unknown
-- `Design rationale unknown` — code understood, "why" is unclear
-- `Converged` — nothing left to learn from static reading
+- `Design rationale unknown` - code understood, "why" is unclear
+- `Converged` - nothing left to learn from static reading
 
 ---
 
 After printing the convergence verdict, append a **Search Prompts**
-section. The skill has just read the codebase and knows its jargon —
+section. The skill has just read the codebase and knows its jargon -
 this is the most useful thing it can hand back to someone who is
 not blocked by intelligence but by not knowing the right words.
 
@@ -472,33 +481,33 @@ not blocked by intelligence but by not knowing the right words.
 ## Search Prompts
 
 The right keyword changes everything. Based on what I found in
-the codebase, here are targeted searches worth running — in your
+the codebase, here are targeted searches worth running - in your
 internal docs, Confluence, Notion, Slack, or publicly:
 
 ### Fill the gaps (ranked by how much they'd help)
 
 For modules/areas still below 0.9:
 
-🔶 pkg/bar — Internal flow unclear
+🔶 pkg/bar - Internal flow unclear
   Try searching:
   - "<SpecificTypeName> design" or "<SpecificTypeName> internals"
   - "<pattern observed, e.g. 'leader election'>  <project name>"
   - "why does <ProjectName> use <pattern>" (ADR or design doc)
 
-🔴 pkg/baz — Not analyzed
+🔴 pkg/baz - Not analyzed
   Try searching:
   - "<package name> <project name> explained"
   - "<key interface or type found> behavior"
 
 ### Concepts worth understanding deeply
 
-List 3–5 technical concepts the codebase clearly depends on but
+List 3-5 technical concepts the codebase clearly depends on but
 that can't be learned from the code alone. Give the exact search
 phrase, not a topic:
 
-- "<ExactConceptName> explained" — e.g. "etcd watch semantics
+- "<ExactConceptName> explained" - e.g. "etcd watch semantics
   explained", "CRDT merge strategies", "OIDC token refresh flow"
-- "<pattern name> tradeoffs" — e.g. "saga pattern vs 2PC tradeoffs"
+- "<pattern name> tradeoffs" - e.g. "saga pattern vs 2PC tradeoffs"
 
 ### Architecture decision records (if relevant)
 
@@ -510,47 +519,50 @@ structure), suggest:
   - "why <ProjectName> doesn't use <obvious alternative>"
 
 ---
-Note: I won't run these searches for you — you may have internal
+Note: I won't run these searches for you - you may have internal
 docs where these are more useful than public results, and you know
 which sources to trust. Pick the phrases that match what's blocking
 you.
 ```
 
 **Rules for this section:**
-- Always generate search prompts, even for converged modules —
+- Always generate search prompts, even for converged modules -
   there's always design rationale that code can't express
 - Phrases must be concrete and use actual names/types from the
-  codebase — no generic "learn more about X" fluff
+  codebase - no generic "learn more about X" fluff
 - Rank by usefulness: gaps in shallow modules first, concepts
   second, ADRs third
 - Maximum ~10 phrases total; fewer sharp ones beat many vague ones
 - Default: do NOT run the searches yourself
-- Exception: if the user requested principal-mode depth AND no
-  internal search tools are available, you may run public searches
-  for upstream ADRs, peer-project design docs, or KEPs — but only
-  for concepts the codebase shows clear dependency on; note what
-  you searched and what you found
+- Exception: if Gemini Search is available, you MAY run upstream
+  searches for KEPs, design docs, peer-project patterns, and ADRs
+  - but only for concepts the codebase shows clear dependency on.
+  Note what you searched and what you found. This applies in any
+  mode, not just principal mode.
+- If Gemini is not available and the user requested principal-mode
+  depth, you may fall back to built-in web search for the same
+  purpose
 
 ---
 
-## Principal Mode (Phases 0–5 + P1–P3)
+## Principal Mode (Phases 0-5 + P1-P3)
 
-Run all default mode phases first (0–5), then continue below.
-Principal mode is for strategic thinking — beyond "what is" to
+Run all default mode phases first (0-5), then continue below.
+Principal mode is for strategic thinking - beyond "what is" to
 "what could be" and "what should concern us."
 
 ### Phase P1: Extended Context Gathering
 
 In addition to the default phase sources, read:
 
-- `.context/TASKS.md` — outstanding work, future plans
-- `CHANGELOG.md` or `docs/changelog.md` — trajectory of decisions
-- `docs/` — any design rationale in user-facing docs
+- `.context/TASKS.md` - outstanding work, future plans
+- `CHANGELOG.md` or `docs/changelog.md` - trajectory of decisions
+- `docs/` - any design rationale in user-facing docs
 - Recent git log: `git log --oneline -30`
 
 ### Phase P2: Gather Strategic Context
 
-Two-tier behavior — do not stall:
+Two-tier behavior - do not stall:
 
 **If answers are available** (user provided them in the prompt,
 or they exist in `.context/TASKS.md` / `DECISIONS.md`): use them.
@@ -562,15 +574,15 @@ provisional principal analysis with assumptions explicitly labeled
 Would Sharpen This" section at the end of ARCHITECTURE-PRINCIPAL.md.
 
 When asking the user, present all questions at once as a numbered
-list — do not ask one-at-a-time:
+list - do not ask one-at-a-time:
 
 ```
-Before I write the principal analysis, a few questions — skip
+Before I write the principal analysis, a few questions - skip
 or say "unsure" on anything you don't know:
 
 0. **Focus areas** (if not already set in Phase 0.5)
 
-1. **Vision**: What is this project trying to become in 12–24 months?
+1. **Vision**: What is this project trying to become in 12-24 months?
 
 2. **Future direction**: Any architectural pivots being considered?
    (plugin system, multi-tenant, cloud sync, daemon model, etc.)
@@ -588,16 +600,16 @@ or say "unsure" on anything you don't know:
 ### Phase P3: Write Principal Analysis
 
 After collecting answers, write `.context/ARCHITECTURE-PRINCIPAL.md`
-(separate from `ARCHITECTURE.md` — speculation must not pollute
+(separate from `ARCHITECTURE.md` - speculation must not pollute
 the authoritative doc).
 
 ```markdown
-# Architecture — Principal Analysis
+# Architecture - Principal Analysis
 _Generated <date>. Strategic analysis only; see ARCHITECTURE.md
 for the authoritative architecture reference._
 
 ## Current State Summary
-[Condensed narrative of the current architecture — ~1 page max]
+[Condensed narrative of the current architecture - ~1 page max]
 
 ## Vision Alignment
 [How does the current architecture support or constrain the stated
@@ -612,7 +624,7 @@ What would need to change if [feature X] were added?]
 points identified in the codebase or raised by the user]
 
 ## Implementation Alternatives
-[For 2–3 key design decisions: current approach, alternatives,
+[For 2-3 key design decisions: current approach, alternatives,
 tradeoffs]
 
 ## Gaps
@@ -632,21 +644,21 @@ requirements evolve]
 ## Intervention Points
 Top 5 highest-leverage places to implement new features or
 improvements, ranked by impact/effort:
-1. `<symbol or subsystem>` — what kind of change fits here and why
+1. `<symbol or subsystem>` - what kind of change fits here and why
 2. ...
 
-(These are concrete locations — package paths, interface names,
-function boundaries — not vague subsystem labels.)
+(These are concrete locations - package paths, interface names,
+function boundaries - not vague subsystem labels.)
 
 ## Upstream Proposals
-2–3 changes worth proposing to the project upstream (KEP / RFC /
+2-3 changes worth proposing to the project upstream (KEP / RFC /
 issue style thinking). For each:
 - **What**: one-sentence description of the change
 - **Why**: what problem it solves that the current design can't
 - **Where**: which abstraction boundary it touches
 - **Risk**: what it breaks or complicates
 
-Each proposal must cross an abstraction boundary — it must affect
+Each proposal must cross an abstraction boundary - it must affect
 how modules interact, not just refactor internals. If it doesn't
 change an interface, a contract, or an ownership boundary, it's
 not upstream-worthy; it's a local improvement (put it in
@@ -665,7 +677,7 @@ silently vs. loudly? What would cause a cascade? What does the
 system assume about its environment that may not hold?]
 
 ## Onboarding Friction
-[Practical, not theoretical — this is what a new engineer actually
+[Practical, not theoretical - this is what a new engineer actually
 hits in week one:]
 - What makes this system hard to understand quickly?
 - Which modules require tribal knowledge to use safely?
@@ -673,13 +685,13 @@ hits in week one:]
 - What isn't written down anywhere?
 ```
 
-**Boundary hygiene** — ARCHITECTURE-PRINCIPAL.md is for synthesis,
+**Boundary hygiene** - ARCHITECTURE-PRINCIPAL.md is for synthesis,
 leverage, risk, direction, and judgment. Do NOT restate module
 details that already exist in DETAILED_DESIGN.md. Reference module
 paths only where needed to ground an argument. If you find yourself
-summarizing what a module does, stop — link to it instead.
+summarizing what a module does, stop - link to it instead.
 
-**Principal mode fallback** — if Phase P2 answers were not provided,
+**Principal mode fallback** - if Phase P2 answers were not provided,
 label speculative sections clearly and add at the end:
 
 ```markdown
@@ -687,14 +699,14 @@ label speculative sections clearly and add at the end:
 
 Answering any of these would move speculative sections to grounded ones:
 
-1. **Vision** — What is this project trying to become in 12–24 months?
-2. **Future direction** — Any architectural pivots being considered?
-3. **Known bottlenecks** — Where does the current design hurt?
-4. **Assumptions marked** — These sections are labeled [inferred]:
+1. **Vision** - What is this project trying to become in 12-24 months?
+2. **Future direction** - Any architectural pivots being considered?
+3. **Known bottlenecks** - Where does the current design hurt?
+4. **Assumptions marked** - These sections are labeled [inferred]:
    [list them]
 ```
 
-**Autonomous inferences** — principal mode must also answer the
+**Autonomous inferences** - principal mode must also answer the
 following from the codebase alone, without waiting for user input.
 These are things the code is silently deciding. Surface them:
 
@@ -707,9 +719,9 @@ These are things the code is silently deciding. Surface them:
   the likely future?
 
 These go in a dedicated "Silent Choices" section in
-ARCHITECTURE-PRINCIPAL.md. The code is making bets — name them.
+ARCHITECTURE-PRINCIPAL.md. The code is making bets - name them.
 
-**Opinion floor** — ARCHITECTURE-PRINCIPAL.md must contain at minimum:
+**Opinion floor** - ARCHITECTURE-PRINCIPAL.md must contain at minimum:
 - 3 risks (specific, not "this could be slow")
 - 3 improvement ideas (concrete, not "add more tests")
 - 2 upstream opportunities (actionable, not "contribute more")
@@ -744,6 +756,48 @@ Skip if no meaningful peer exists. Do not force comparisons.
 
 Be direct. This document is for engineering judgment, not external
 audiences.
+
+### Phase P4: Write DANGER-ZONES.md
+
+Extract danger zones from all DETAILED_DESIGN.md module sections
+and compile them into a standalone `.context/DANGER-ZONES.md`.
+This is the consolidated view - one document a reviewer or new
+engineer can read to know where the dragons live.
+
+```markdown
+# Danger Zones
+
+_Generated <date> from DETAILED_DESIGN.md danger zone sections.
+Run `/ctx-architecture-enrich` to add verified blast radius data._
+
+## Summary
+
+| Module | Zone | Risk | Why |
+|--------|------|------|-----|
+| <path> | <symbol/area> | HIGH/MEDIUM/LOW | one-line reason |
+
+## By Module
+
+### <module_path>
+
+1. **<symbol or area>** - <why it's dangerous>
+   - Hidden coupling / ordering assumption / shared mutable state
+   - Modification advice: <what to check before changing>
+
+2. ...
+```
+
+**Rules:**
+- Only include danger zones from modules actually analyzed
+  (confidence ≥ 0.4)
+- Risk level is the skill's judgment based on code reading:
+  HIGH (will break things), MEDIUM (likely to cause subtle bugs),
+  LOW (worth knowing but manageable)
+- `/ctx-architecture-enrich` can later add verified blast radius
+  numbers - leave room for that (don't claim precision you don't
+  have from reading alone)
+- If no danger zones were identified, skip the file entirely
+  rather than writing an empty one
 
 ---
 
@@ -825,7 +879,10 @@ After running, verify:
 - [ ] Phrases ranked: shallow-module gaps first, concepts second,
   ADRs third
 - [ ] No more than ~10 phrases total
-- [ ] Skill did NOT run the searches itself
+- [ ] Skill did NOT run local-code searches itself (upstream
+  searches via Gemini are allowed)
+- [ ] CONVERGENCE-REPORT.md written to .context/ (not just printed)
+- [ ] Phase 0.25 Gemini check completed (available or user declined)
 - [ ] Phase 0.5 structure scan was run before any deep analysis
 - [ ] Focus areas question was asked with actual package names (not
   open-ended)
@@ -838,26 +895,30 @@ After running, verify:
 - [ ] Principal mode: output written to `ARCHITECTURE-PRINCIPAL.md`,
   not overwriting `ARCHITECTURE.md`
 - [ ] Principal mode: "Silent Choices" section present (autonomous
-  inferences from code — abstraction calcification, accidental
+  inferences from code - abstraction calcification, accidental
   contracts, scale costs, strategic bets)
 - [ ] Principal mode: ARCHITECTURE-PRINCIPAL.md does not restate
-  DETAILED_DESIGN.md content — links to module paths instead
+  DETAILED_DESIGN.md content - links to module paths instead
 - [ ] CHEAT-SHEETS.md written with at least one lifecycle flow
 - [ ] Each cheat sheet fits ~one screen; long flows are split
 - [ ] Danger zones section present in each DETAILED_DESIGN module
-  (top 3, with reasoning — not just "this is complex")
+  (top 3, with reasoning - not just "this is complex")
 - [ ] Extension points section present in each module
 - [ ] Principal mode: Failure-First Analysis section written
 - [ ] Principal mode: Onboarding Friction section present (practical,
-  week-one concerns — not generic "hard to understand")
+  week-one concerns - not generic "hard to understand")
 - [ ] Principal mode: Upstream Proposals cross abstraction boundaries
   (not internal refactors)
 - [ ] Principal mode: Intervention Points section present (concrete
   locations, not vague labels)
-- [ ] Principal mode: Upstream Proposals section present (2–3 items
+- [ ] Principal mode: Upstream Proposals section present (2-3 items
   with what/why/where/risk)
 - [ ] Principal mode: Productization Gaps section present
 - [ ] Principal mode: opinion floor met (≥3 risks, ≥3 improvements,
-  ≥2 upstream opportunities — specific, not generic)
+  ≥2 upstream opportunities - specific, not generic)
 - [ ] Principal mode: cross-project comparisons included where
   meaningful peers exist (not forced)
+- [ ] Principal mode: DANGER-ZONES.md written with consolidated
+  danger zones from all analyzed modules (skip if none found)
+- [ ] Principal mode: DANGER-ZONES.md includes summary table and
+  per-module breakdown with risk levels and modification advice

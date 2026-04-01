@@ -126,9 +126,9 @@ hook bootstraps the habit until it becomes automatic.
 
 ---
 
-#### `check-journal`: Unexported Session Reminder
+#### `check-journal`: Unimported Session Reminder
 
-**What**: Detects unexported Claude Code sessions and unenriched journal
+**What**: Detects unimported Claude Code sessions and unenriched journal
 entries. Fires once per day.
 
 **Why**: Exported sessions become searchable history. Unenriched entries
@@ -142,7 +142,7 @@ lack metadata for filtering. Both decay in value over time.
 │ 5 existing entries need enrichment.
 │
 │ Export and enrich:
-│   ctx recall export --all
+│   ctx journal import --all
 │   /ctx-journal-enrich-all
 └────────────────────────────────────────────────
 ```
@@ -538,7 +538,7 @@ A naive "*hooks haven't fired in N days*" alert fires incorrectly when
 you simply haven't used `ctx`. The correct check needs two inputs:
 
 1. **Last hook fire time**: from `.context/logs/` or webhook history
-2. **Last session activity**: from journal entries or `ctx recall list`
+2. **Last session activity**: from journal entries or `ctx journal source`
 
 If sessions are happening but hooks aren't firing, that's a real
 problem. If neither sessions nor hooks are happening, that's a vacation.

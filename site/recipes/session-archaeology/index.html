@@ -1604,10 +1604,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#step-3-export-sessions-to-the-journal" class="md-nav__link">
+  <a href="#step-3-import-sessions-to-the-journal" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Step 3: Export Sessions to the Journal
+        Step 3: Import Sessions to the Journal
       
     </span>
   </a>
@@ -1698,10 +1698,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#why-journal-export-matters" class="md-nav__link">
+  <a href="#why-journal-import-matters" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Why Journal Export Matters
+        Why Journal Import Matters
       
     </span>
   </a>
@@ -2735,16 +2735,14 @@
   
   
     <li class="md-nav__item">
-      <a href="../prompt-templates/" class="md-nav__link">
+      <a href="../prompt-templates.md" class="md-nav__link">
         
   
-  
-    <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-message-square-text" viewBox="0 0 24 24"><path d="M22 17a2 2 0 0 1-2 2H6.828a2 2 0 0 0-1.414.586l-2.202 2.202A.71.71 0 0 1 2 21.286V5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2zM7 11h10M7 15h6M7 7h8"/></svg>
   
   <span class="md-ellipsis">
     
   
-    Reusable Prompt Templates
+    none
   
 
     
@@ -2925,7 +2923,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../cli/recall/" class="md-nav__link">
+      <a href="../../cli/journal/" class="md-nav__link">
         
   
   
@@ -2934,7 +2932,7 @@
   <span class="md-ellipsis">
     
   
-    Recall and Journal
+    Journal
   
 
     
@@ -3842,10 +3840,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#step-3-export-sessions-to-the-journal" class="md-nav__link">
+  <a href="#step-3-import-sessions-to-the-journal" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Step 3: Export Sessions to the Journal
+        Step 3: Import Sessions to the Journal
       
     </span>
   </a>
@@ -3936,10 +3934,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#why-journal-export-matters" class="md-nav__link">
+  <a href="#why-journal-import-matters" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Why Journal Export Matters
+        Why Journal Import Matters
       
     </span>
   </a>
@@ -4101,7 +4099,7 @@ caching strategy three Tuesdays ago, often means grepping raw JSON.</p>
 <strong>in your browser</strong>.</p>
 <h2 id="tldr">TL;DR<a class="headerlink" href="#tldr" title="Permanent link">&para;</a></h2>
 <p><strong>Export and Generate</strong></p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>ctx<span class="w"> </span>recall<span class="w"> </span><span class="nb">export</span><span class="w"> </span>--all
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>ctx<span class="w"> </span>journal<span class="w"> </span>import<span class="w"> </span>--all
 </span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>ctx<span class="w"> </span>journal<span class="w"> </span>site<span class="w"> </span>--serve
 </span></code></pre></div>
 <p><strong>Enrich</strong></p>
@@ -4122,19 +4120,19 @@ caching strategy three Tuesdays ago, often means grepping raw JSON.</p>
 </thead>
 <tbody>
 <tr>
-<td><code>ctx recall list</code></td>
+<td><code>ctx journal source</code></td>
 <td>Command</td>
 <td>List parsed sessions with metadata</td>
 </tr>
 <tr>
-<td><code>ctx recall show</code></td>
+<td><code>ctx journal source --show</code></td>
 <td>Command</td>
 <td>Inspect a specific session in detail</td>
 </tr>
 <tr>
-<td><code>ctx recall export</code></td>
+<td><code>ctx journal import</code></td>
 <td>Command</td>
-<td>Export sessions to editable journal Markdown</td>
+<td>Import sessions to editable journal Markdown</td>
 </tr>
 <tr>
 <td><code>ctx journal site</code></td>
@@ -4152,7 +4150,7 @@ caching strategy three Tuesdays ago, often means grepping raw JSON.</p>
 <td>Serve any zensical directory (default: journal)</td>
 </tr>
 <tr>
-<td><code>/ctx-recall</code></td>
+<td><code>/ctx-history</code></td>
 <td>Skill</td>
 <td>Browse sessions inside your AI assistant</td>
 </tr>
@@ -4164,7 +4162,7 @@ caching strategy three Tuesdays ago, often means grepping raw JSON.</p>
 <tr>
 <td><code>/ctx-journal-enrich-all</code></td>
 <td>Skill</td>
-<td>Full pipeline: export if needed, then batch-enrich</td>
+<td>Full pipeline: import if needed, then batch-enrich</td>
 </tr>
 </tbody>
 </table>
@@ -4172,7 +4170,7 @@ caching strategy three Tuesdays ago, often means grepping raw JSON.</p>
 <p>The session journal follows a four-stage pipeline.</p>
 <p>Each stage is <strong>idempotent</strong> and <strong>safe to re-run</strong>:</p>
 <p>By default, each stage <strong>skips</strong> entries that have already been processed.</p>
-<div class="language-text highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>export -&gt; enrich -&gt; rebuild
+<div class="language-text highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>import -&gt; enrich -&gt; rebuild
 </span></code></pre></div>
 <table>
 <thead>
@@ -4186,8 +4184,8 @@ caching strategy three Tuesdays ago, often means grepping raw JSON.</p>
 </thead>
 <tbody>
 <tr>
-<td>Export</td>
-<td><code>ctx recall export --all</code></td>
+<td>Import</td>
+<td><code>ctx journal import --all</code></td>
 <td>Converts session JSONL to Markdown</td>
 <td>File already exists (safe default)</td>
 <td>CLI or agent</td>
@@ -4217,8 +4215,8 @@ caching strategy three Tuesdays ago, often means grepping raw JSON.</p>
 </table>
 <div class="admonition tip">
 <p class="admonition-title">Where Do You Run Each Stage?</p>
-<p><strong>Export</strong> (<em>Steps 1 to 3</em>) works equally well from the terminal or inside your
-AI assistant via <code>/ctx-recall</code>. The CLI is fine here: the agent adds no
+<p><strong>Import</strong> (<em>Steps 1 to 3</em>) works equally well from the terminal or inside your
+AI assistant via <code>/ctx-history</code>. The CLI is fine here: the agent adds no
 special intelligence, it just runs the same command.</p>
 <p><strong>Enrich</strong> (<em>Step 4</em>) requires the agent: it reads conversation content and
 produces structured metadata.</p>
@@ -4227,7 +4225,7 @@ long-running server.</p>
 </div>
 <h3 id="step-1-list-your-sessions">Step 1: List Your Sessions<a class="headerlink" href="#step-1-list-your-sessions" title="Permanent link">&para;</a></h3>
 <p>Start by seeing what sessions exist for the current project:</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>ctx<span class="w"> </span>recall<span class="w"> </span>list
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>ctx<span class="w"> </span>journal<span class="w"> </span><span class="nb">source</span>
 </span></code></pre></div>
 <p>Sample output:</p>
 <div class="language-text highlight"><pre><span></span><code><span id="__span-5-1"><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>Sessions (newest first)
@@ -4248,36 +4246,36 @@ recognize later.</p>
 summaries to exported journal entries, making them easier to find.</p>
 </div>
 <p>Filter by project or tool if you work across multiple codebases:</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-6-1"><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>ctx<span class="w"> </span>recall<span class="w"> </span>list<span class="w"> </span>--project<span class="w"> </span>ctx<span class="w"> </span>--limit<span class="w"> </span><span class="m">10</span>
-</span><span id="__span-6-2"><a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>ctx<span class="w"> </span>recall<span class="w"> </span>list<span class="w"> </span>--tool<span class="w"> </span>claude-code
-</span><span id="__span-6-3"><a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>ctx<span class="w"> </span>recall<span class="w"> </span>list<span class="w"> </span>--all-projects
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-6-1"><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>ctx<span class="w"> </span>journal<span class="w"> </span><span class="nb">source</span><span class="w"> </span>--project<span class="w"> </span>ctx<span class="w"> </span>--limit<span class="w"> </span><span class="m">10</span>
+</span><span id="__span-6-2"><a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>ctx<span class="w"> </span>journal<span class="w"> </span><span class="nb">source</span><span class="w"> </span>--tool<span class="w"> </span>claude-code
+</span><span id="__span-6-3"><a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>ctx<span class="w"> </span>journal<span class="w"> </span><span class="nb">source</span><span class="w"> </span>--all-projects
 </span></code></pre></div>
 <h3 id="step-2-inspect-a-specific-session">Step 2: Inspect a Specific Session<a class="headerlink" href="#step-2-inspect-a-specific-session" title="Permanent link">&para;</a></h3>
 <p>Before exporting everything, inspect a single session to see its metadata and
 conversation summary:</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-7-1"><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>ctx<span class="w"> </span>recall<span class="w"> </span>show<span class="w"> </span>--latest
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-7-1"><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>ctx<span class="w"> </span>journal<span class="w"> </span><span class="nb">source</span><span class="w"> </span>--show<span class="w"> </span>--latest
 </span></code></pre></div>
 <p>Or look up a specific session by its slug, partial ID, or UUID:</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-8-1"><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>ctx<span class="w"> </span>recall<span class="w"> </span>show<span class="w"> </span>gleaming-wobbling-sutherland
-</span><span id="__span-8-2"><a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>ctx<span class="w"> </span>recall<span class="w"> </span>show<span class="w"> </span>twinkly
-</span><span id="__span-8-3"><a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>ctx<span class="w"> </span>recall<span class="w"> </span>show<span class="w"> </span>abc123
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-8-1"><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>ctx<span class="w"> </span>journal<span class="w"> </span><span class="nb">source</span><span class="w"> </span>--show<span class="w"> </span>gleaming-wobbling-sutherland
+</span><span id="__span-8-2"><a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>ctx<span class="w"> </span>journal<span class="w"> </span><span class="nb">source</span><span class="w"> </span>--show<span class="w"> </span>twinkly
+</span><span id="__span-8-3"><a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>ctx<span class="w"> </span>journal<span class="w"> </span><span class="nb">source</span><span class="w"> </span>--show<span class="w"> </span>abc123
 </span></code></pre></div>
 <p>Add <code>--full</code> to see the complete message content instead of the summary view:</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-9-1"><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>ctx<span class="w"> </span>recall<span class="w"> </span>show<span class="w"> </span>--latest<span class="w"> </span>--full
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-9-1"><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>ctx<span class="w"> </span>journal<span class="w"> </span><span class="nb">source</span><span class="w"> </span>--show<span class="w"> </span>--latest<span class="w"> </span>--full
 </span></code></pre></div>
 <p>This is useful for checking what happened before deciding whether to export and
 enrich it.</p>
-<h3 id="step-3-export-sessions-to-the-journal">Step 3: Export Sessions to the Journal<a class="headerlink" href="#step-3-export-sessions-to-the-journal" title="Permanent link">&para;</a></h3>
-<p>Export converts raw session data into editable Markdown files in
+<h3 id="step-3-import-sessions-to-the-journal">Step 3: Import Sessions to the Journal<a class="headerlink" href="#step-3-import-sessions-to-the-journal" title="Permanent link">&para;</a></h3>
+<p>Import converts raw session data into editable Markdown files in
 <code>.context/journal/</code>:</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-10-1"><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="c1"># Export all sessions from the current project</span>
-</span><span id="__span-10-2"><a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>ctx<span class="w"> </span>recall<span class="w"> </span><span class="nb">export</span><span class="w"> </span>--all
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-10-1"><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="c1"># Import all sessions from the current project</span>
+</span><span id="__span-10-2"><a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>ctx<span class="w"> </span>journal<span class="w"> </span>import<span class="w"> </span>--all
 </span><span id="__span-10-3"><a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a>
-</span><span id="__span-10-4"><a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a><span class="c1"># Export a single session</span>
-</span><span id="__span-10-5"><a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a>ctx<span class="w"> </span>recall<span class="w"> </span><span class="nb">export</span><span class="w"> </span>gleaming-wobbling-sutherland
+</span><span id="__span-10-4"><a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a><span class="c1"># Import a single session</span>
+</span><span id="__span-10-5"><a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a>ctx<span class="w"> </span>journal<span class="w"> </span>import<span class="w"> </span>gleaming-wobbling-sutherland
 </span><span id="__span-10-6"><a id="__codelineno-10-6" name="__codelineno-10-6" href="#__codelineno-10-6"></a>
 </span><span id="__span-10-7"><a id="__codelineno-10-7" name="__codelineno-10-7" href="#__codelineno-10-7"></a><span class="c1"># Include sessions from all projects</span>
-</span><span id="__span-10-8"><a id="__codelineno-10-8" name="__codelineno-10-8" href="#__codelineno-10-8"></a>ctx<span class="w"> </span>recall<span class="w"> </span><span class="nb">export</span><span class="w"> </span>--all<span class="w"> </span>--all-projects
+</span><span id="__span-10-8"><a id="__codelineno-10-8" name="__codelineno-10-8" href="#__codelineno-10-8"></a>ctx<span class="w"> </span>journal<span class="w"> </span>import<span class="w"> </span>--all<span class="w"> </span>--all-projects
 </span></code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">--keep-frontmatter=false Discards Enrichments</p>
@@ -4285,12 +4283,12 @@ enrich it.</p>
 regeneration.</p>
 <p><strong>Back up your journal before using this flag</strong>.</p>
 </div>
-<p>Each exported file contains session metadata (<em>date, time, duration, model,
+<p>Each imported file contains session metadata (<em>date, time, duration, model,
 project, git branch</em>), a tool usage summary, and the full conversation transcript.</p>
-<p>Re-exporting is safe. Running <code>ctx recall export --all</code> only exports <strong>new</strong>
+<p>Re-importing is safe. Running <code>ctx journal import --all</code> only imports <strong>new</strong>
 sessions: Existing files are never touched. Use <code>--dry-run</code> to preview what
-would be exported without writing anything.</p>
-<p>To re-export existing files (<em>e.g., after a format improvement</em>), use
+would be imported without writing anything.</p>
+<p>To re-import existing files (<em>e.g., after a format improvement</em>), use
 <code>--regenerate</code>: Conversation content is regenerated while <strong>preserving</strong> any
 YAML frontmatter you or the <strong>enrichment</strong> skill has added. You'll be prompted
 before any files are overwritten.</p>
@@ -4303,21 +4301,21 @@ redacted sensitive content, restructured sections</em>), those edits
 will be <strong>lost</strong>.</p>
 <p><strong>BACK UP YOUR JOURNAL FIRST</strong>.</p>
 <p>To protect entries you've hand-edited, you can explicitly lock them:</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-11-1"><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a>ctx<span class="w"> </span>recall<span class="w"> </span>lock<span class="w"> </span>&lt;pattern&gt;
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-11-1"><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a>ctx<span class="w"> </span>journal<span class="w"> </span>lock<span class="w"> </span>&lt;pattern&gt;
 </span></code></pre></div>
 <p>Locked entries are always skipped, regardless of flags.</p>
 <p>If you prefer to add <code>locked: true</code> directly in frontmatter during
-enrichment, run <code>ctx recall sync</code> to propagate the lock state to
+enrichment, run <code>ctx journal sync</code> to propagate the lock state to
 <code>.state.json</code>:</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-12-1"><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a>ctx<span class="w"> </span>recall<span class="w"> </span>sync
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-12-1"><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a>ctx<span class="w"> </span>journal<span class="w"> </span>sync
 </span></code></pre></div>
-<p>See <code>ctx recall lock --help</code> and <code>ctx recall sync --help</code> for details.</p>
+<p>See <code>ctx journal lock --help</code> and <code>ctx journal sync --help</code> for details.</p>
 </div>
 <h3 id="step-4-enrich-with-metadata">Step 4: Enrich with Metadata<a class="headerlink" href="#step-4-enrich-with-metadata" title="Permanent link">&para;</a></h3>
-<p>Raw exports have timestamps and transcripts but lack the semantic metadata that
+<p>Raw imports have timestamps and transcripts but lack the semantic metadata that
 makes sessions searchable: topics, technology tags, outcome status, and
 summaries. The <code>/ctx-journal-enrich*</code> skills add this structured frontmatter.</p>
-<p>Locked entries are skipped by enrichment skills, just as they are by export.
+<p>Locked entries are skipped by enrichment skills, just as they are by import.
 Lock entries you want to protect before running batch enrichment.</p>
 <p>Batch enrichment (<em>recommended</em>):</p>
 <div class="language-text highlight"><pre><span></span><code><span id="__span-13-1"><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a>/ctx-journal-enrich-all
@@ -4356,7 +4354,7 @@ entries in parallel.</p>
 <p>The skill also generates a summary and can extract <strong>decisions</strong>, 
 <strong>learnings</strong>, and <strong>tasks</strong> mentioned during the session.</p>
 <h3 id="step-5-generate-and-serve-the-site">Step 5: Generate and Serve the Site<a class="headerlink" href="#step-5-generate-and-serve-the-site" title="Permanent link">&para;</a></h3>
-<p>With exported and enriched journal files, generate the static site:</p>
+<p>With imported and enriched journal files, generate the static site:</p>
 <div class="language-bash highlight"><pre><span></span><code><span id="__span-16-1"><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a><span class="c1"># Generate site structure only</span>
 </span><span id="__span-16-2"><a id="__codelineno-16-2" name="__codelineno-16-2" href="#__codelineno-16-2"></a>ctx<span class="w"> </span>journal<span class="w"> </span>site
 </span><span id="__span-16-3"><a id="__codelineno-16-3" name="__codelineno-16-3" href="#__codelineno-16-3"></a>
@@ -4384,9 +4382,9 @@ understands what happened, and produces structured metadata.
 remembering flags:</p>
 <div class="language-text highlight"><pre><span></span><code><span id="__span-17-1"><a id="__codelineno-17-1" name="__codelineno-17-1" href="#__codelineno-17-1"></a>What did we work on last week?
 </span><span id="__span-17-2"><a id="__codelineno-17-2" name="__codelineno-17-2" href="#__codelineno-17-2"></a>Show me the session about Redis.
-</span><span id="__span-17-3"><a id="__codelineno-17-3" name="__codelineno-17-3" href="#__codelineno-17-3"></a>Export everything to the journal.
+</span><span id="__span-17-3"><a id="__codelineno-17-3" name="__codelineno-17-3" href="#__codelineno-17-3"></a>Import everything to the journal.
 </span></code></pre></div>
-<p>This is convenient but not required: <code>ctx recall list</code> gives you the same
+<p>This is convenient but not required: <code>ctx journal source</code> gives you the same
 inventory.</p>
 <p>Where the agent genuinely helps is chaining the pipeline:</p>
 <div class="language-text highlight"><pre><span></span><code><span id="__span-18-1"><a id="__codelineno-18-1" name="__codelineno-18-1" href="#__codelineno-18-1"></a>You:   What happened last Tuesday?
@@ -4399,12 +4397,12 @@ inventory.</p>
 </span><span id="__span-18-8"><a id="__codelineno-18-8" name="__codelineno-18-8" href="#__codelineno-18-8"></a>You:   Yes, do it.
 </span><span id="__span-18-9"><a id="__codelineno-18-9" name="__codelineno-18-9" href="#__codelineno-18-9"></a>Agent: Exports both, enriches, then proposes frontmatter.
 </span></code></pre></div>
-<p>The value is staying in one context while the agent runs export -&gt; enrich
+<p>The value is staying in one context while the agent runs import -&gt; enrich
 without you manually switching tools.</p>
 <h2 id="putting-it-all-together">Putting It All Together<a class="headerlink" href="#putting-it-all-together" title="Permanent link">&para;</a></h2>
 <p>A typical pipeline from raw sessions to a browsable site:</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-19-1"><a id="__codelineno-19-1" name="__codelineno-19-1" href="#__codelineno-19-1"></a><span class="c1"># Terminal: export and generate</span>
-</span><span id="__span-19-2"><a id="__codelineno-19-2" name="__codelineno-19-2" href="#__codelineno-19-2"></a>ctx<span class="w"> </span>recall<span class="w"> </span><span class="nb">export</span><span class="w"> </span>--all
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-19-1"><a id="__codelineno-19-1" name="__codelineno-19-1" href="#__codelineno-19-1"></a><span class="c1"># Terminal: import and generate</span>
+</span><span id="__span-19-2"><a id="__codelineno-19-2" name="__codelineno-19-2" href="#__codelineno-19-2"></a>ctx<span class="w"> </span>journal<span class="w"> </span>import<span class="w"> </span>--all
 </span><span id="__span-19-3"><a id="__codelineno-19-3" name="__codelineno-19-3" href="#__codelineno-19-3"></a>ctx<span class="w"> </span>journal<span class="w"> </span>site<span class="w"> </span>--serve
 </span></code></pre></div>
 <div class="language-text highlight"><pre><span></span><code><span id="__span-20-1"><a id="__codelineno-20-1" name="__codelineno-20-1" href="#__codelineno-20-1"></a># AI assistant: enrich
@@ -4414,7 +4412,7 @@ without you manually switching tools.</p>
 </span><span id="__span-21-2"><a id="__codelineno-21-2" name="__codelineno-21-2" href="#__codelineno-21-2"></a>ctx<span class="w"> </span>journal<span class="w"> </span>site<span class="w"> </span>--serve
 </span></code></pre></div>
 <p>If your project includes <code>Makefile.ctx</code> (deployed by <code>ctx init</code>), use
-<code>make journal</code> to combine export and rebuild stages. Then enrich inside
+<code>make journal</code> to combine import and rebuild stages. Then enrich inside
 Claude Code, then <code>make journal</code> again to pick up enrichments.</p>
 <h2 id="session-retention-and-cleanup">Session Retention and Cleanup<a class="headerlink" href="#session-retention-and-cleanup" title="Permanent link">&para;</a></h2>
 <p>Claude Code does not keep JSONL transcripts forever. Understanding its
@@ -4422,7 +4420,7 @@ cleanup behavior helps you avoid losing session history.</p>
 <h3 id="default-behavior">Default Behavior<a class="headerlink" href="#default-behavior" title="Permanent link">&para;</a></h3>
 <p>Claude Code retains session transcripts for approximately <strong>30 days</strong>.
 After that, JSONL files are automatically deleted during cleanup. Once
-deleted, <code>ctx recall</code> can no longer see those sessions - the data is
+deleted, <code>ctx journal</code> can no longer see those sessions - the data is
 gone.</p>
 <h3 id="the-cleanupperioddays-setting">The <code>cleanupPeriodDays</code> Setting<a class="headerlink" href="#the-cleanupperioddays-setting" title="Permanent link">&para;</a></h3>
 <p>Claude Code exposes a <code>cleanupPeriodDays</code> setting in its configuration
@@ -4453,30 +4451,30 @@ gone.</p>
 <p class="admonition-title">Setting <code>cleanupPeriodDays</code> to 0</p>
 <p>Setting this to <code>0</code> does <strong>not</strong> mean "never delete." It disables
 transcript creation altogether. No new JSONL files are written, which
-means <code>ctx recall</code> sees nothing new. This is rarely what you want.</p>
+means <code>ctx journal</code> sees nothing new. This is rarely what you want.</p>
 </div>
-<h3 id="why-journal-export-matters">Why Journal Export Matters<a class="headerlink" href="#why-journal-export-matters" title="Permanent link">&para;</a></h3>
-<p>The journal export pipeline (<em>Steps 1-4 above</em>) is your <strong>archival
-mechanism</strong>. Exported Markdown files in <code>.context/journal/</code> persist
+<h3 id="why-journal-import-matters">Why Journal Import Matters<a class="headerlink" href="#why-journal-import-matters" title="Permanent link">&para;</a></h3>
+<p>The journal import pipeline (<em>Steps 1-4 above</em>) is your <strong>archival
+mechanism</strong>. Imported Markdown files in <code>.context/journal/</code> persist
 independently of Claude Code's cleanup cycle. Even after the source
 JSONL files are deleted, your journal entries remain.</p>
-<p><strong>Recommendation</strong>: export regularly - weekly, or after any session worth
-revisiting. A quick <code>ctx recall export --all</code> takes seconds and ensures
+<p><strong>Recommendation</strong>: import regularly - weekly, or after any session worth
+revisiting. A quick <code>ctx journal import --all</code> takes seconds and ensures
 nothing falls through the 30-day window.</p>
 <h3 id="quick-archival-checklist">Quick Archival Checklist<a class="headerlink" href="#quick-archival-checklist" title="Permanent link">&para;</a></h3>
 <ol>
-<li>Run <code>ctx recall export --all</code> at least weekly</li>
+<li>Run <code>ctx journal import --all</code> at least weekly</li>
 <li>Enrich high-value sessions with <code>/ctx-journal-enrich</code> before the
    details fade from your own memory</li>
-<li>Lock enriched entries (<code>ctx recall lock &lt;pattern&gt;</code>) to protect them
+<li>Lock enriched entries (<code>ctx journal lock &lt;pattern&gt;</code>) to protect them
    from accidental regeneration</li>
 <li>Rebuild the journal site periodically to keep it current</li>
 </ol>
 <h2 id="tips">Tips<a class="headerlink" href="#tips" title="Permanent link">&para;</a></h2>
 <ul>
-<li>Start with <code>/ctx-recall</code> inside your AI assistant. If you want to quickly check
-what happened in a recent session without leaving your editor, <code>/ctx-recall</code>
-lets you browse interactively without exporting.</li>
+<li>Start with <code>/ctx-history</code> inside your AI assistant. If you want to quickly check
+what happened in a recent session without leaving your editor, <code>/ctx-history</code>
+lets you browse interactively without importing.</li>
 <li>Large sessions may be split automatically. Sessions with 200+ messages can be
 split into multiple parts (<code>session-abc123.md</code>, <code>session-abc123-p2.md</code>,
 <code>session-abc123-p3.md</code>) with navigation links between them. The site generator
@@ -4505,9 +4503,8 @@ sessions.</p>
 <li><a href="../session-lifecycle/">The Complete Session</a>: where session saving fits in the daily workflow</li>
 <li><a href="../publishing/">Turning Activity into Content</a>: generating blog posts from session history</li>
 <li><a href="../../reference/session-journal/">Session Journal</a>: full documentation of the journal system</li>
-<li><a href="../../cli/recall/#ctx-recall">CLI Reference: ctx recall</a>: all recall subcommands and flags</li>
-<li><a href="../../cli/recall/#ctx-journal">CLI Reference: ctx journal</a>: site generation options</li>
-<li><a href="../../cli/recall/#ctx-serve">CLI Reference: ctx serve</a>: serve-only (no regeneration)</li>
+<li><a href="../../cli/journal/#ctx-journal">CLI Reference: ctx journal</a>: all journal subcommands and flags</li>
+<li><a href="../../cli/journal/#ctx-serve">CLI Reference: ctx serve</a>: serve-only (no regeneration)</li>
 <li><a href="../../home/context-files/">Context Files</a>: the <code>.context/</code> directory structure</li>
 </ul>
 

@@ -12,8 +12,10 @@ import (
 )
 
 func TestSoftWrap(t *testing.T) {
-	line := "This is a test line that is much longer than eighty characters and should be wrapped at word boundaries."
-	result := SoftWrap(line, 40)
+	line := "This is a test line that is much longer" +
+		" than eighty characters and should be" +
+		" wrapped at word boundaries."
+	result := Soft(line, 40)
 
 	if len(result) < 2 {
 		t.Errorf("expected multiple lines, got %d", len(result))
@@ -32,8 +34,14 @@ func TestSoftWrap(t *testing.T) {
 }
 
 func TestSoftWrapContent(t *testing.T) {
-	content := "---\ntitle: test with a very long value that should not be wrapped because it is inside frontmatter block\n---\nShort line\nThis is a very long line that exceeds eighty characters and should be wrapped at word boundaries properly.\n"
-	got := SoftWrapContent(content)
+	content := "---\ntitle: test with a very long value" +
+		" that should not be wrapped because it" +
+		" is inside frontmatter block\n---\n" +
+		"Short line\nThis is a very long line" +
+		" that exceeds eighty characters and" +
+		" should be wrapped at word boundaries" +
+		" properly.\n"
+	got := Content(content)
 
 	if !strings.Contains(got, "title: test with a very long value") {
 		t.Error("frontmatter should not be wrapped")

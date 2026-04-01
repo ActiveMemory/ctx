@@ -310,7 +310,7 @@ mcp.tool-prop-recent-action:
   short: Brief description of what was just done
 mcp.tool-prop-since:
   short: 'ISO date filter: sessions after this date (YYYY-MM-DD)'
-mcp.tool-recall-desc:
+mcp.tool-journal-source-desc:
   short: Query recent AI session history (summaries, decisions, topics)
 mcp.tool-remind-desc:
   short: List pending session-scoped reminders
@@ -320,13 +320,13 @@ mcp.tool-session-desc:
 mcp.tool-watch-update-desc:
   short: Apply a structured context-update to .context/ files (learning, decision,
     task, convention, complete). Human confirmation required before calling.
-mcp.recall-item-format:
+mcp.journal-source-item-format:
   short: '%d. %s'
-mcp.recall-project-format:
+mcp.journal-source-project-format:
   short: ' [%s]'
-mcp.recall-duration-format:
+mcp.journal-source-duration-format:
   short: ' (%s, %d turns)'
-mcp.recall-first-msg-format:
+mcp.journal-source-first-msg-format:
   short: '   %s'
 mcp.compact-moved-format:
   short: 'Moved: %s'

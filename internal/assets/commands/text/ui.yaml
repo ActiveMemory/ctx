@@ -1,6 +1,23 @@
 # General UI text strings for ctx CLI.
 # Used by assets.TextDesc() for prompts, labels, and status output.
 
+group.getting-started:
+  short: "Getting Started:"
+group.context:
+  short: "Context (source of truth):"
+group.artifacts:
+  short: "Artifacts (.context/ files):"
+group.sessions:
+  short: "Sessions:"
+group.runtime:
+  short: "Runtime:"
+group.integration:
+  short: "Integration:"
+group.diagnostics:
+  short: "Diagnostics:"
+group.utilities:
+  short: "Utilities:"
+
 agent.instruction:
   short: 'Before starting work, confirm to the user: "I have read the required context files and I''m following project conventions."'
 agent.packet-meta:
@@ -163,6 +180,10 @@ drift.check-required:
   short: All required files present
 drift.check-file-age:
   short: No stale files by age
+drift.stale-header:
+  short: 'comment header in %s does not match template: run ctx init --force to sync'
+drift.check-template-header:
+  short: All context file headers match templates
 guide.default:
   short: |
     ctx - persistent AI context
@@ -178,8 +199,8 @@ guide.default:
       ctx decision reindex  Rebuild the DECISIONS.md index table
 
     BROWSING HISTORY
-      ctx recall list       List exported session transcripts
-      ctx recall show ID    Read a specific session transcript
+      ctx journal source    List imported session transcripts
+      ctx journal source --show ID  Read a specific session transcript
       ctx journal site      Generate a browsable journal site
 
     AI CONTEXT
@@ -200,7 +221,7 @@ guide.default:
       /ctx-wrap-up          End-of-session persistence ceremony
       /ctx-drift            Detect and fix context drift
       /ctx-remember         Recall project context
-      /ctx-recall           Browse session history
+      /ctx-history           Browse session history
 
     RECIPES
       Start session:      ctx agent --budget 4000
@@ -215,8 +236,6 @@ guide.command-line:
   short: '  %-14s %s'
 init.label-entry-templates:
   short: Entry templates
-init.label-prompt-templates:
-  short: Prompt templates
 init.label-scratchpad:
   short: Scratchpad
 init.label-project-dirs:
@@ -227,10 +246,6 @@ init.label-plugin-enable:
   short: Plugin enablement
 init.confirm-claude:
   short: Would you like to append ctx context management instructions?
-init.confirm-prompt:
-  short: Would you like to merge ctx prompt instructions?
-init.ralph-mode:
-  short: ' (ralph mode)'
 events.empty:
   short: No events logged.
 events.human-format:
@@ -371,11 +386,11 @@ summary.term:
   short: 1 term
 summary.terms:
   short: '%d terms'
-recall.meta-summary:
+journal.source.meta-summary:
   short: '%s · %s · %s'
-recall.token-summary:
+journal.source.token-summary:
   short: '%s (in: %s, out: %s)'
-recall.tool-count-line:
+journal.source.tool-count-line:
   short: '%s: %d'
 site.feed-generated:
   short: 'Generated %s (%d entries)'
@@ -512,3 +527,10 @@ why.menu-item-format:
   short: '  [%d] %s'
 why.menu-prompt:
   short: "\nSelect a document (1-3): "
+
+write.why-label-manifesto:
+  short: "The ctx Manifesto"
+write.why-label-about:
+  short: "About ctx"
+write.why-label-invariants:
+  short: "Design Invariants"

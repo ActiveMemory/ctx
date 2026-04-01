@@ -7,11 +7,11 @@
 package show
 
 import (
-	"github.com/ActiveMemory/ctx/internal/cli/system/core/message"
 	"github.com/spf13/cobra"
 
 	"github.com/ActiveMemory/ctx/internal/assets/hooks/messages"
 	readHook "github.com/ActiveMemory/ctx/internal/assets/read/hook"
+	"github.com/ActiveMemory/ctx/internal/cli/system/core/message"
 	"github.com/ActiveMemory/ctx/internal/config/file"
 	errHook "github.com/ActiveMemory/ctx/internal/err/hook"
 	"github.com/ActiveMemory/ctx/internal/io"

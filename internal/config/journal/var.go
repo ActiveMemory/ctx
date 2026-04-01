@@ -10,6 +10,6 @@ package journal
 const (
 	// VarUnenrichedCount is the template variable for unenriched entry count.
 	VarUnenrichedCount = "UnenrichedCount"
-	// VarUnexportedCount is the template variable for unexported session count.
-	VarUnexportedCount = "UnexportedCount"
+	// VarUnimportedCount is the template variable for unimported session count.
+	VarUnimportedCount = "UnimportedCount"
 )

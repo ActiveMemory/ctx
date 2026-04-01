@@ -25,9 +25,13 @@ func TestLoopCommand(t *testing.T) {
 	}
 	defer func() { _ = os.Chdir(origDir) }()
 
-	// Create a PROMPT.md file
-	if err := os.WriteFile("PROMPT.md", []byte("# Test Prompt\n"), 0600); err != nil {
-		t.Fatalf("failed to create PROMPT.md: %v", err)
+	// Create the default prompt file at .context/loop.md
+	if err := os.MkdirAll(".context", 0750); err != nil {
+		t.Fatalf("failed to create context dir: %v", err)
+	}
+	loopPath := ".context/loop.md"
+	if err := os.WriteFile(loopPath, []byte("# Test Prompt\n"), 0600); err != nil {
+		t.Fatalf("failed to create loop.md: %v", err)
 	}
 
 	// Test loop command

@@ -3074,16 +3074,14 @@
   
   
     <li class="md-nav__item">
-      <a href="../../recipes/prompt-templates/" class="md-nav__link">
+      <a href="../../recipes/prompt-templates.md" class="md-nav__link">
         
   
-  
-    <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-message-square-text" viewBox="0 0 24 24"><path d="M22 17a2 2 0 0 1-2 2H6.828a2 2 0 0 0-1.414.586l-2.202 2.202A.71.71 0 0 1 2 21.286V5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2zM7 11h10M7 15h6M7 7h8"/></svg>
   
   <span class="md-ellipsis">
     
   
-    Reusable Prompt Templates
+    none
   
 
     
@@ -3264,7 +3262,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../cli/recall/" class="md-nav__link">
+      <a href="../../cli/journal/" class="md-nav__link">
         
   
   
@@ -3273,7 +3271,7 @@
   <span class="md-ellipsis">
     
   
-    Recall and Journal
+    Journal
   
 
     
@@ -4872,7 +4870,7 @@ apply to other AI systems, too.</p>
 <h2 id="session-start">Session Start<a class="headerlink" href="#session-start" title="Permanent link">&para;</a></h2>
 <h3 id="do-you-remember">"<em>Do you remember?</em>"<a class="headerlink" href="#do-you-remember" title="Permanent link">&para;</a></h3>
 <p>Triggers the AI to silently read <code>TASKS.md</code>, <code>DECISIONS.md</code>,
-<code>LEARNINGS.md</code>, and check recent history via <code>ctx recall</code> before
+<code>LEARNINGS.md</code>, and check recent history via <code>ctx journal</code> before
 responding with a 
 <strong><a href="../../recipes/session-lifecycle/#step-1-load-context">structured readback</a></strong>:</p>
 <ol>
@@ -4932,7 +4930,7 @@ in <code>settings.local.json</code> bootstrapping.</p>
 <h3 id="before-you-start-read-x">"<em>Before you start, read X</em>"<a class="headerlink" href="#before-you-start-read-x" title="Permanent link">&para;</a></h3>
 <p>This ensures specific context is loaded before work begins.</p>
 <p>Use this when you know the relevant context exists in a specific file.</p>
-<div class="language-text highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>Before you start, check ctx recall for the auth discussion session
+<div class="language-text highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>Before you start, check ctx journal source for the auth discussion session
 </span></code></pre></div>
 <h3 id="scope-control">Scope Control<a class="headerlink" href="#scope-control" title="Permanent link">&para;</a></h3>
 <p>Constrain the AI to prevent sprawl. These are some of the most
@@ -5120,7 +5118,7 @@ load context or trigger specific behaviors:</p>
 <td>End-of-session context persistence</td>
 </tr>
 <tr>
-<td><code>/ctx-recall</code></td>
+<td><code>/ctx-history</code></td>
 <td>Browse session history for past discussions</td>
 </tr>
 <tr>
@@ -5368,7 +5366,7 @@ point. Motivation turns a one-off task into a <em>directional</em> task.</p>
 "Parser system" deliver to the user?</p>
 <p>Good task (<strong>deliverable-focused</strong>):
 <div class="language-markdown highlight"><pre><span></span><code><span id="__span-17-1"><a id="__codelineno-17-1" name="__codelineno-17-1" href="#__codelineno-17-1"></a><span class="k">- [ ]</span> T1.1.0: Parser CLI command
-</span><span id="__span-17-2"><a id="__codelineno-17-2" name="__codelineno-17-2" href="#__codelineno-17-2"></a>  <span class="gs">**Deliverable**</span>: <span class="sb">`ctx recall list`</span> command that shows parsed sessions
+</span><span id="__span-17-2"><a id="__codelineno-17-2" name="__codelineno-17-2" href="#__codelineno-17-2"></a>  <span class="gs">**Deliverable**</span>: <span class="sb">`ctx journal source`</span> command that shows parsed sessions
 </span><span id="__span-17-3"><a id="__codelineno-17-3" name="__codelineno-17-3" href="#__codelineno-17-3"></a><span class="w">  </span><span class="k">- [ ]</span> Define data structures
 </span><span id="__span-17-4"><a id="__codelineno-17-4" name="__codelineno-17-4" href="#__codelineno-17-4"></a><span class="w">  </span><span class="k">- [ ]</span> Implement line parser
 </span><span id="__span-17-5"><a id="__codelineno-17-5" name="__codelineno-17-5" href="#__codelineno-17-5"></a><span class="w">  </span><span class="k">- [ ]</span> Implement session grouper

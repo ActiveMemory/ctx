@@ -11,7 +11,9 @@ import (
 	"path/filepath"
 	"strings"
 
+	"github.com/ActiveMemory/ctx/internal/config/warn"
 	"github.com/ActiveMemory/ctx/internal/journal/state"
+	ctxLog "github.com/ActiveMemory/ctx/internal/log/warn"
 )
 
 // NewestMtime returns the most recent mtime (as Unix timestamp) of files
@@ -58,21 +60,24 @@ func NewestMtime(dir, ext string) int64 {
 //   - int: number of matching files newer than refTime
 func CountNewerFiles(dir, ext string, refTime int64) int {
 	count := 0
-	_ = filepath.Walk(dir, func(_ string, info os.FileInfo, walkErr error) error {
-		if walkErr != nil {
-			return nil // skip errors
-		}
-		if info.IsDir() {
+	if walkErr := filepath.Walk(dir,
+		func(_ string, info os.FileInfo, err error) error {
+			if err != nil {
+				return nil // skip per-file errors
+			}
+			if info.IsDir() {
+				return nil
+			}
+			if !strings.HasSuffix(info.Name(), ext) {
+				return nil
+			}
+			if info.ModTime().Unix() > refTime {
+				count++
+			}
 			return nil
-		}
-		if !strings.HasSuffix(info.Name(), ext) {
-			return nil
-		}
-		if info.ModTime().Unix() > refTime {
-			count++
-		}
-		return nil
-	})
+		}); walkErr != nil {
+		ctxLog.Warn(warn.Walk, dir, walkErr)
+	}
 	return count
 }
 
@@ -80,14 +85,14 @@ func CountNewerFiles(dir, ext string, refTime int64) int {
 // in the journal state file.
 //
 // Parameters:
-//   - dir: absolute path to the journal directory
+//   - dir: the absolute path to the journal directory
 //
 // Returns:
 //   - int: number of unenriched journal entries
 func CountUnenriched(dir string) int {
-	jstate, loadErr := state.Load(dir)
+	jState, loadErr := state.Load(dir)
 	if loadErr != nil {
 		return 0
 	}
-	return jstate.CountUnenriched(dir)
+	return jState.CountUnenriched(dir)
 }

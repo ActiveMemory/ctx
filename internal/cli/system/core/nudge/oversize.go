@@ -19,7 +19,9 @@ import (
 	"github.com/ActiveMemory/ctx/internal/config/hook"
 	"github.com/ActiveMemory/ctx/internal/config/regex"
 	"github.com/ActiveMemory/ctx/internal/config/stats"
+	"github.com/ActiveMemory/ctx/internal/config/warn"
 	"github.com/ActiveMemory/ctx/internal/io"
+	ctxLog "github.com/ActiveMemory/ctx/internal/log/warn"
 	"github.com/ActiveMemory/ctx/internal/rc"
 )
 
@@ -42,14 +44,18 @@ func oversizeNudgeContent() string {
 	fallback := fmt.Sprintf(
 		desc.Text(text.DescKeyCheckContextSizeOversizeFallback), tokenCount,
 	)
-	content := message.LoadMessage(hook.CheckContextSize, hook.VariantOversize,
+	content := message.Load(hook.CheckContextSize, hook.VariantOversize,
 		map[string]any{stats.VarTokenCount: tokenCount}, fallback)
 	if content == "" {
-		_ = os.Remove(flagPath) // silenced, still consume the flag
+		if removeErr := os.Remove(flagPath); removeErr != nil {
+			ctxLog.Warn(warn.Remove, flagPath, removeErr)
+		}
 		return ""
 	}
 
-	_ = os.Remove(flagPath) // one-shot: consumed
+	if removeErr := os.Remove(flagPath); removeErr != nil {
+		ctxLog.Warn(warn.Remove, flagPath, removeErr)
+	}
 	return content
 }
 

@@ -20,7 +20,7 @@ import (
 	"github.com/ActiveMemory/ctx/internal/write/initialize"
 )
 
-// HandleClaudeMd creates or merges CLAUDE.md with ctx content.
+// HandleMd creates or merges CLAUDE.md with ctx content.
 //
 // Parameters:
 //   - cmd: Cobra command for output
@@ -29,16 +29,16 @@ import (
 //
 // Returns:
 //   - error: Non-nil if file operations fail
-func HandleClaudeMd(cmd *cobra.Command, force, autoMerge bool) error {
+func HandleMd(cmd *cobra.Command, force, autoMerge bool) error {
 	templateContent, err := readClaude.Md()
 	if err != nil {
 		return errInit.ReadTemplate(claude.Md, err)
 	}
 
-	created, mergeErr := merge.CreateOrMerge(cmd, entity.MergeParams{
+	created, mergeErr := merge.OrCreate(cmd, entity.MergeParams{
 		Filename:        claude.Md,
-		MarkerStart:     marker.CtxMarkerStart,
-		MarkerEnd:       marker.CtxMarkerEnd,
+		MarkerStart:     marker.CtxStart,
+		MarkerEnd:       marker.CtxEnd,
 		TemplateContent: templateContent,
 		Force:           force,
 		AutoMerge:       autoMerge,

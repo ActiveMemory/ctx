@@ -38,6 +38,7 @@ func TestGetTemplate(t *testing.T) {
 		{"CONVENTIONS.md exists", "CONVENTIONS.md", "Conventions", false},
 		{"ARCHITECTURE.md exists", "ARCHITECTURE.md", "Architecture", false},
 		{"AGENT_PLAYBOOK.md exists", "AGENT_PLAYBOOK.md", "Agent Playbook", false},
+		{"AGENT_PLAYBOOK_GATE.md exists", "AGENT_PLAYBOOK_GATE.md", "Agent Playbook (Gate)", false},
 		{"GLOSSARY.md exists", "GLOSSARY.md", "Glossary", false},
 		{"nonexistent template returns error", "NONEXISTENT.md", "", true},
 	}
@@ -76,12 +77,16 @@ func TestListTemplates(t *testing.T) {
 		templateSet[e.Name()] = true
 	}
 
-	for _, req := range []string{"CONSTITUTION.md", "TASKS.md", "DECISIONS.md", "LEARNINGS.md"} {
+	required := []string{
+		"CONSTITUTION.md", "TASKS.md",
+		"DECISIONS.md", "LEARNINGS.md",
+	}
+	for _, req := range required {
 		if !templateSet[req] {
 			t.Errorf("missing required template: %s", req)
 		}
 	}
-	for _, ex := range []string{"CLAUDE.md", "IMPLEMENTATION_PLAN.md", "Makefile.ctx"} {
+	for _, ex := range []string{"CLAUDE.md", "Makefile.ctx"} {
 		if templateSet[ex] {
 			t.Errorf("should not contain project-root file: %s", ex)
 		}
@@ -105,7 +110,6 @@ func TestProjectFile(t *testing.T) {
 		wantContain string
 		wantErr     bool
 	}{
-		{"IMPLEMENTATION_PLAN.md exists", "IMPLEMENTATION_PLAN.md", "Implementation", false},
 		{"Makefile.ctx exists", "Makefile.ctx", "ctx", false},
 		{"nonexistent returns error", "NONEXISTENT.md", "", true},
 	}
@@ -130,59 +134,6 @@ func TestProjectFile(t *testing.T) {
 	}
 }
 
-func TestListPromptTemplates(t *testing.T) {
-	entries, err := FS.ReadDir(asset.DirPromptTemplates)
-	if err != nil {
-		t.Fatalf("unexpected error: %v", err)
-	}
-	if len(entries) == 0 {
-		t.Error("returned empty list")
-	}
-
-	nameSet := make(map[string]bool)
-	for _, e := range entries {
-		nameSet[e.Name()] = true
-	}
-	for _, exp := range []string{"code-review.md", "refactor.md", "explain.md"} {
-		if !nameSet[exp] {
-			t.Errorf("missing expected template: %s", exp)
-		}
-	}
-}
-
-func TestGetPromptTemplate(t *testing.T) {
-	tests := []struct {
-		name        string
-		template    string
-		wantContain string
-		wantErr     bool
-	}{
-		{"code-review.md exists", "code-review.md", "Review", false},
-		{"refactor.md exists", "refactor.md", "Refactor", false},
-		{"explain.md exists", "explain.md", "Explain", false},
-		{"nonexistent returns error", "nonexistent.md", "", true},
-	}
-
-	for _, tt := range tests {
-		t.Run(tt.name, func(t *testing.T) {
-			content, err := FS.ReadFile(path.Join(asset.DirPromptTemplates, tt.template))
-			if tt.wantErr {
-				if err == nil {
-					t.Errorf("expected error for %q", tt.template)
-				}
-				return
-			}
-			if err != nil {
-				t.Errorf("unexpected error for %q: %v", tt.template, err)
-				return
-			}
-			if !strings.Contains(string(content), tt.wantContain) {
-				t.Errorf("content of %q does not contain %q", tt.template, tt.wantContain)
-			}
-		})
-	}
-}
-
 func TestListSkills(t *testing.T) {
 	entries, err := FS.ReadDir(asset.DirClaudeSkills)
 	if err != nil {
@@ -198,7 +149,11 @@ func TestListSkills(t *testing.T) {
 			skillSet[e.Name()] = true
 		}
 	}
-	for _, exp := range []string{"ctx-prompt", "ctx-status", "ctx-recall", "ctx-brainstorm"} {
+	expected := []string{
+		"ctx-code-review", "ctx-status",
+		"ctx-history", "ctx-brainstorm",
+	}
+	for _, exp := range expected {
 		if !skillSet[exp] {
 			t.Errorf("missing expected skill: %s", exp)
 		}
@@ -206,22 +161,29 @@ func TestListSkills(t *testing.T) {
 }
 
 func TestSkillContent(t *testing.T) {
-	content, err := FS.ReadFile(path.Join(asset.DirClaudeSkills, "ctx-recall", asset.FileSKILLMd))
+	content, err := FS.ReadFile(path.Join(
+		asset.DirClaudeSkills,
+		"ctx-history",
+		asset.FileSKILLMd,
+	))
 	if err != nil {
 		t.Fatalf("unexpected error: %v", err)
 	}
-	if !strings.Contains(string(content), "recall") {
-		t.Error("ctx-recall SKILL.md does not contain 'recall'")
+	if !strings.Contains(string(content), "history") {
+		t.Error("ctx-history SKILL.md does not contain 'history'")
 	}
 	if !strings.HasPrefix(string(content), "---") {
-		t.Error("ctx-recall SKILL.md missing frontmatter")
+		t.Error("ctx-history SKILL.md missing frontmatter")
 	}
 }
 
 func TestSkillReference(t *testing.T) {
-	content, err := FS.ReadFile(path.Join(
-		asset.DirClaudeSkills, "ctx-skill-audit", asset.DirReferences, "anthropic-best-practices.md",
-	))
+	refPath := path.Join(
+		asset.DirClaudeSkills, "ctx-skill-audit",
+		asset.DirReferences,
+		"anthropic-best-practices.md",
+	)
+	content, err := FS.ReadFile(refPath)
 	if err != nil {
 		t.Fatalf("unexpected error: %v", err)
 	}
@@ -231,7 +193,12 @@ func TestSkillReference(t *testing.T) {
 }
 
 func TestListSkillReferences(t *testing.T) {
-	entries, err := FS.ReadDir(path.Join(asset.DirClaudeSkills, "ctx-skill-audit", asset.DirReferences))
+	refDir := path.Join(
+		asset.DirClaudeSkills,
+		"ctx-skill-audit",
+		asset.DirReferences,
+	)
+	entries, err := FS.ReadDir(refDir)
 	if err != nil {
 		t.Fatalf("unexpected error: %v", err)
 	}
@@ -252,7 +219,12 @@ func TestListSkillReferences(t *testing.T) {
 }
 
 func TestListSkillReferencesNonexistent(t *testing.T) {
-	_, err := FS.ReadDir(path.Join(asset.DirClaudeSkills, "ctx-status", asset.DirReferences))
+	noRefDir := path.Join(
+		asset.DirClaudeSkills,
+		"ctx-status",
+		asset.DirReferences,
+	)
+	_, err := FS.ReadDir(noRefDir)
 	if err == nil {
 		t.Error("expected error for skill without references")
 	}
@@ -352,6 +324,72 @@ func TestSchema(t *testing.T) {
 	}
 }
 
+func TestSchemaCoversCtxRC(t *testing.T) {
+	// Parse the schema to get its property keys.
+	schemaData, readErr := FS.ReadFile(asset.PathCtxrcSchema)
+	if readErr != nil {
+		t.Fatalf("read schema: %v", readErr)
+	}
+	var schema struct {
+		Properties map[string]json.RawMessage `json:"properties"`
+	}
+	if parseErr := json.Unmarshal(schemaData, &schema); parseErr != nil {
+		t.Fatalf("parse schema: %v", parseErr)
+	}
+
+	// Parse a zero-value CtxRC to YAML then back to a map to get yaml tags.
+	// We marshal a struct with all fields set to get every key emitted.
+	type ctxRC struct {
+		Profile             string `yaml:"profile"`
+		ContextDir          string `yaml:"context_dir"`
+		TokenBudget         int    `yaml:"token_budget"`
+		PriorityOrder       []int  `yaml:"priority_order"`
+		AutoArchive         bool   `yaml:"auto_archive"`
+		ArchiveAfterDays    int    `yaml:"archive_after_days"`
+		ScratchpadEncrypt   *bool  `yaml:"scratchpad_encrypt"`
+		AllowOutsideCwd     bool   `yaml:"allow_outside_cwd"`
+		EntryCountLearnings int    `yaml:"entry_count_learnings"`
+		EntryCountDecisions int    `yaml:"entry_count_decisions"`
+		ConventionLineCount int    `yaml:"convention_line_count"`
+		InjectionTokenWarn  int    `yaml:"injection_token_warn"`
+		ContextWindow       int    `yaml:"context_window"`
+		BillingTokenWarn    int    `yaml:"billing_token_warn"`
+		EventLog            bool   `yaml:"event_log"`
+		KeyRotationDays     int    `yaml:"key_rotation_days"`
+		TaskNudgeInterval   int    `yaml:"task_nudge_interval"`
+		KeyPathOverride     string `yaml:"key_path"`
+		StaleAgeDays        int    `yaml:"stale_age_days"`
+		SessionPrefixes     []int  `yaml:"session_prefixes"`
+		CompanionCheck      *bool  `yaml:"companion_check"`
+		ClassifyRules       []int  `yaml:"classify_rules"`
+		SpecSignalWords     []int  `yaml:"spec_signal_words"`
+		SpecNudgeMinLen     int    `yaml:"spec_nudge_min_len"`
+		Notify              *int   `yaml:"notify"`
+		FreshnessFiles      []int  `yaml:"freshness_files"`
+	}
+	yamlBytes, marshalErr := yaml.Marshal(ctxRC{})
+	if marshalErr != nil {
+		t.Fatalf("marshal: %v", marshalErr)
+	}
+	var structKeys map[string]any
+	if unmarshalErr := yaml.Unmarshal(yamlBytes, &structKeys); unmarshalErr != nil {
+		t.Fatalf("unmarshal: %v", unmarshalErr)
+	}
+
+	// Every struct field must appear in schema.
+	for key := range structKeys {
+		if _, ok := schema.Properties[key]; !ok {
+			t.Errorf("CtxRC field %q has no schema property", key)
+		}
+	}
+	// Every schema property must appear in struct.
+	for key := range schema.Properties {
+		if _, ok := structKeys[key]; !ok {
+			t.Errorf("schema property %q has no CtxRC field", key)
+		}
+	}
+}
+
 func TestHookMessageRegistry(t *testing.T) {
 	data, readErr := FS.ReadFile(asset.PathHookRegistry)
 	if readErr != nil {
@@ -390,7 +428,12 @@ func TestListHookMessages(t *testing.T) {
 			hookSet[h.Name()] = true
 		}
 	}
-	for _, exp := range []string{"qa-reminder", "check-context-size", "block-dangerous-commands"} {
+	wantHooks := []string{
+		"qa-reminder",
+		"check-context-size",
+		"block-dangerous-commands",
+	}
+	for _, exp := range wantHooks {
 		if !hookSet[exp] {
 			t.Errorf("missing expected hook: %s", exp)
 		}
@@ -398,17 +441,11 @@ func TestListHookMessages(t *testing.T) {
 }
 
 func TestHookMessage_ReadVariant(t *testing.T) {
-	content, readErr := FS.ReadFile(path.Join(asset.DirHooksMessages, "qa-reminder", "gate.txt"))
-	if readErr != nil {
-		t.Fatalf("unexpected error: %v", readErr)
-	}
-	if len(content) == 0 {
-		t.Fatal("returned empty content")
-	}
-}
-
-func TestRalphTemplate(t *testing.T) {
-	content, readErr := FS.ReadFile(path.Join(asset.DirRalph, "PROMPT.md"))
+	gatePath := path.Join(
+		asset.DirHooksMessages,
+		"qa-reminder", "gate.txt",
+	)
+	content, readErr := FS.ReadFile(gatePath)
 	if readErr != nil {
 		t.Fatalf("unexpected error: %v", readErr)
 	}

@@ -59,7 +59,7 @@ conventions." Do not begin implementation until you have done so.
 When asked "Do you remember?" or similar:
 
 1. **Read silently first**: TASKS.md, DECISIONS.md, LEARNINGS.md, and
-   run `ctx recall list --limit 5` for recent history. Do this BEFORE composing a response.
+   run `ctx journal source --limit 5` for recent history. Do this BEFORE composing a response.
 2. **Respond with a structured readback**:
    - **Last session**: most recent session topic and date
    - **Active work**: pending or in-progress tasks
@@ -131,7 +131,7 @@ Track task progress with timestamps for session correlation:
 Never assume. If you don't see it in files, you don't know it.
 
 - Don't claim "we discussed X" without file evidence
-- Don't invent history - check context files and `ctx recall` for actual discussions
+- Don't invent history - check context files and `ctx journal source` for actual discussions
 - If uncertain, say "I don't see this documented"
 - Trust files over intuition
 
@@ -169,7 +169,7 @@ Before starting significant work, validate context is current:
 ### Quick Check (Every Session)
 - [ ] TASKS.md reflects current priorities
 - [ ] No obvious staleness in files you'll reference
-- [ ] Recent history reviewed for relevant context (via `ctx recall list`)
+- [ ] Recent history reviewed for relevant context (via `ctx journal source`)
 
 ### Deep Check (Weekly or Before Major Work)
 - [ ] CONSTITUTION.md rules still apply

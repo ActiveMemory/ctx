@@ -7,11 +7,12 @@
 package root
 
 import (
+	"github.com/spf13/cobra"
+
 	"github.com/ActiveMemory/ctx/internal/assets/read/desc"
 	"github.com/ActiveMemory/ctx/internal/config/embed/cmd"
 	"github.com/ActiveMemory/ctx/internal/config/embed/flag"
 	cFlag "github.com/ActiveMemory/ctx/internal/config/flag"
-	"github.com/spf13/cobra"
 )
 
 // Cmd returns the watch command.
@@ -30,7 +31,7 @@ func Cmd() *cobra.Command {
 
 	short, long := desc.Command(cmd.DescKeyWatch)
 
-	cmd := &cobra.Command{
+	c := &cobra.Command{
 		Use:   cmd.UseWatch,
 		Short: short,
 		Long:  long,
@@ -39,12 +40,12 @@ func Cmd() *cobra.Command {
 		},
 	}
 
-	cmd.Flags().StringVar(
-		&logPath, "log", "", desc.Flag(flag.DescKeyWatchLog),
+	c.Flags().StringVar(
+		&logPath, cFlag.Log, "", desc.Flag(flag.DescKeyWatchLog),
 	)
-	cmd.Flags().BoolVar(
+	c.Flags().BoolVar(
 		&dryRun, cFlag.DryRun, false, desc.Flag(flag.DescKeyWatchDryRun),
 	)
 
-	return cmd
+	return c
 }

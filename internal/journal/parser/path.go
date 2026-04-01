@@ -1,0 +1,48 @@
+//   /    ctx:                         https://ctx.ist
+// ,'`./    do you remember?
+// `.,'\\
+//   \    Copyright 2026-present Context contributors.
+//                 SPDX-License-Identifier: Apache-2.0
+
+package parser
+
+import (
+	"path/filepath"
+	"strings"
+
+	"github.com/ActiveMemory/ctx/internal/config/dir"
+)
+
+// getPathRelativeToHome returns the path relative to the user's home directory.
+//
+// Handles both Linux (/home/username/...) and macOS (/Users/username/...)
+// home directory patterns. Returns an empty string if the path is empty
+// or not under a recognized home directory root.
+//
+// Parameters:
+//   - path: Absolute file path to make relative
+//
+// Returns:
+//   - string: Path relative to the home directory, or empty string
+func getPathRelativeToHome(path string) string {
+	if path == "" {
+		return ""
+	}
+
+	// Handle common home directory patterns
+	// /home/username/... -> strip /home/username
+	// /Users/username/... -> strip /Users/username (macOS)
+	parts := strings.Split(path, string(filepath.Separator))
+
+	for i, part := range parts {
+		if part == dir.HomeLinux || part == dir.HomeMacOS {
+			// Next part is username, rest is relative path
+			if i+2 < len(parts) {
+				return filepath.Join(parts[i+2:]...)
+			}
+			return ""
+		}
+	}
+
+	return ""
+}

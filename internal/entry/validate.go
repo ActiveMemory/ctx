@@ -7,9 +7,10 @@
 package entry
 
 import (
+	errAdd "github.com/ActiveMemory/ctx/internal/err/add"
+
 	"github.com/ActiveMemory/ctx/internal/config/entry"
 	"github.com/ActiveMemory/ctx/internal/config/flag"
-	"github.com/ActiveMemory/ctx/internal/write/add"
 )
 
 // Validate checks that required fields are present for the given entry type.
@@ -27,7 +28,7 @@ func Validate(params Params, examplesFn func(string) string) error {
 		if examplesFn != nil {
 			examples = examplesFn(params.Type)
 		}
-		return add.ErrNoContentProvided(params.Type, examples)
+		return errAdd.NoContentProvided(params.Type, examples)
 	}
 
 	switch params.Type {
@@ -37,7 +38,7 @@ func Validate(params Params, examplesFn func(string) string) error {
 			{flag.PrefixLong + flag.Rationale, params.Rationale},
 			{flag.PrefixLong + flag.Consequence, params.Consequence},
 		}); len(m) > 0 {
-			return add.ErrMissingFields(entry.Decision, m)
+			return errAdd.MissingFields(entry.Decision, m)
 		}
 
 	case entry.Learning:
@@ -46,20 +47,9 @@ func Validate(params Params, examplesFn func(string) string) error {
 			{flag.PrefixLong + flag.Lesson, params.Lesson},
 			{flag.PrefixLong + flag.Application, params.Application},
 		}); len(m) > 0 {
-			return add.ErrMissingFields(entry.Learning, m)
+			return errAdd.MissingFields(entry.Learning, m)
 		}
 	}
 
 	return nil
-}
-
-// checkRequired returns the names of any fields whose values are empty.
-func checkRequired(fields [][2]string) []string {
-	var missing []string
-	for _, f := range fields {
-		if f[1] == "" {
-			missing = append(missing, f[0])
-		}
-	}
-	return missing
 }

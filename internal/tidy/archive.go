@@ -28,10 +28,13 @@ import (
 //
 // Parameters:
 //   - prefix: File name prefix (e.g., "tasks", "decisions", "learnings")
-//   - heading: Markdown heading for new archive files (e.g., config.HeadingArchivedTasks)
+//   - heading: Markdown heading for new archive files
+//     (e.g., config.HeadingArchivedTasks)
 //   - content: The content to archive
 //
-// Returns the path to the written archive file.
+// Returns:
+//   - string: Path to the written archive file
+//   - error: If creating the archive directory or writing fails
 func WriteArchive(prefix, heading, content string) (string, error) {
 	archiveDir := filepath.Join(rc.ContextDir(), dir.Archive)
 	if mkErr := os.MkdirAll(archiveDir, fs.PermExec); mkErr != nil {
@@ -42,19 +45,22 @@ func WriteArchive(prefix, heading, content string) (string, error) {
 	dateStr := now.Format(cfgTime.DateFormat)
 	archiveFile := filepath.Join(
 		archiveDir,
-		fmt.Sprintf(archive.TplArchiveFilename, prefix, dateStr),
+		fmt.Sprintf(archive.TplFilename, prefix, dateStr),
 	)
 
 	nl := token.NewlineLF
 	var finalContent string
-	if existing, readErr := os.ReadFile(filepath.Clean(archiveFile)); readErr == nil {
+	cleanPath := filepath.Clean(archiveFile)
+	if existing, readErr := os.ReadFile(cleanPath); readErr == nil {
 		finalContent = string(existing) + nl + content
 	} else {
-		finalContent = heading + archive.ArchiveDateSep +
+		finalContent = heading + archive.DateSep +
 			dateStr + nl + nl + content
 	}
 
-	if writeErr := os.WriteFile(archiveFile, []byte(finalContent), fs.PermFile); writeErr != nil {
+	if writeErr := os.WriteFile(
+		archiveFile, []byte(finalContent), fs.PermFile,
+	); writeErr != nil {
 		return "", errBackup.WriteArchive(writeErr)
 	}
 

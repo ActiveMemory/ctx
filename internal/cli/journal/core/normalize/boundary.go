@@ -14,13 +14,6 @@ import (
 	"github.com/ActiveMemory/ctx/internal/config/token"
 )
 
-// TurnMatch holds the result of matching a turn header line.
-type TurnMatch struct {
-	Num  int
-	Role string
-	Time string
-}
-
 // MatchTurnHeader attempts to parse a turn header from a line.
 //
 // Parameters:
@@ -97,7 +90,8 @@ func TrimBlankLines(lines []string) []string {
 //
 // Parameters:
 //   - content: Full document content
-//   - roleKey: YAML DescKey for the role to match (e.g., DescKeyLabelToolOutput)
+//   - roleKey: YAML DescKey for the role to match
+//     (e.g., DescKeyLabelToolOutput)
 //   - processFn: Called with (out, body, atEOF) for each matched turn;
 //     returns updated out slice
 //

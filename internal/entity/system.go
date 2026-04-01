@@ -19,6 +19,12 @@ type ArchiveEntry struct {
 }
 
 // BackupResult holds the outcome of a single archive creation.
+//
+// Fields:
+//   - Scope: Backup scope (project, global)
+//   - Archive: Local archive file path
+//   - Size: Archive file size in bytes
+//   - SMBDest: SMB destination path (empty if not copied)
 type BackupResult struct {
 	Scope   string `json:"scope"`
 	Archive string `json:"archive"`
@@ -27,12 +33,24 @@ type BackupResult struct {
 }
 
 // FileTokenEntry tracks per-file token counts during context injection.
+//
+// Fields:
+//   - Name: Context file name
+//   - Tokens: Estimated token count
 type FileTokenEntry struct {
 	Name   string
 	Tokens int
 }
 
 // MessageListEntry holds the data for a single row in the message list output.
+//
+// Fields:
+//   - Hook: Hook lifecycle event name
+//   - Variant: Message variant within the hook
+//   - Category: Message category (nudge, relay, block, etc.)
+//   - Description: Human-readable description
+//   - TemplateVars: Variable names used in the template
+//   - HasOverride: Whether a user override exists
 type MessageListEntry struct {
 	Hook         string   `json:"hook"`
 	Variant      string   `json:"variant"`

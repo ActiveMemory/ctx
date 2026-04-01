@@ -1,17 +1,17 @@
 ---
 name: ctx-journal-enrich-all
-description: "Full journal pipeline: export unexported sessions, then batch-enrich all unenriched entries. Use when the user says 'process the journal' or to catch up on the backlog."
+description: "Full journal pipeline: import unimported sessions, then batch-enrich all unenriched entries. Use when the user says 'process the journal' or to catch up on the backlog."
 allowed-tools: Bash(ctx:*), Read, Glob, Grep, Edit, Write, Task
 ---
 
-Full journal pipeline: export if needed, then batch-enrich.
+Full journal pipeline: import if needed, then batch-enrich.
 
 ## When to Use
 
 - When the user says "enrich everything" or "process the journal"
-- When there is a backlog of unenriched or unexported sessions
+- When there is a backlog of unenriched or unimported sessions
 - Periodically to catch up on recent sessions
-- After the `check-journal` hook reports unexported or unenriched entries
+- After the `check-journal` hook reports unimported or unenriched entries
 
 ## When NOT to Use
 
@@ -19,11 +19,11 @@ Full journal pipeline: export if needed, then batch-enrich.
 
 ## Process
 
-### Step 0: Export If Needed
+### Step 0: Import If Needed
 
-Before enriching, check whether there are unexported sessions. If
+Before enriching, check whether there are unimported sessions. If
 the journal directory has no `.md` files at all, or if there are
-`.jsonl` session files newer than the newest journal entry, export
+`.jsonl` session files newer than the newest journal entry, import
 them first.
 
 ```bash
@@ -34,20 +34,20 @@ JOURNAL_DIR="$CTX_DIR/journal"
 md_count=$(ls "$JOURNAL_DIR"/*.md 2>/dev/null | wc -l)
 
 if [ "$md_count" -eq 0 ]; then
-  echo "No journal entries found: exporting all sessions."
-  ctx recall export --all --yes
+  echo "No journal entries found: importing all sessions."
+  ctx journal import --all --yes
 else
   # Compare newest .md mtime against .jsonl files
   newest_md=$(stat -c %Y $(ls -t "$JOURNAL_DIR"/*.md | head -1))
-  unexported=$(find ~/.claude/projects -name "*.jsonl" -newermt @${newest_md} 2>/dev/null | wc -l)
-  if [ "$unexported" -gt 0 ]; then
-    echo "$unexported unexported session(s) found: exporting first."
-    ctx recall export --all --yes
+  unimported=$(find ~/.claude/projects -name "*.jsonl" -newermt @${newest_md} 2>/dev/null | wc -l)
+  if [ "$unimported" -gt 0 ]; then
+    echo "$unimported unimported session(s) found: importing first."
+    ctx journal import --all --yes
   fi
 fi
 ```
 
-Report how many sessions were exported (or "none needed") before
+Report how many sessions were imported (or "none needed") before
 moving to enrichment.
 
 ### Step 1: Find Unenriched Entries
@@ -72,21 +72,21 @@ If `mark-journal --check` is unavailable (no state file, command
 fails), fall back to frontmatter inspection. An entry is considered
 **already enriched** if its YAML frontmatter contains **both** `type`
 and `outcome` fields: these are set exclusively by enrichment, never
-by export.
+by import.
 
 Do NOT use `title` or `date` to detect enrichment: those are always
-present from export. The enrichment-only fields are:
+present from import. The enrichment-only fields are:
 
 | Field          | Set by         |
 |----------------|----------------|
-| `title`        | Export         |
-| `date`         | Export         |
-| `time`         | Export         |
-| `model`        | Export         |
-| `tokens_in`    | Export         |
-| `tokens_out`   | Export         |
-| `session_id`   | Export         |
-| `project`      | Export         |
+| `title`        | Import         |
+| `date`         | Import         |
+| `time`         | Import         |
+| `model`        | Import         |
+| `tokens_in`    | Import         |
+| `tokens_out`   | Import         |
+| `session_id`   | Import         |
+| `project`      | Import         |
 | `type`         | **Enrichment** |
 | `outcome`      | **Enrichment** |
 | `topics`       | **Enrichment** |
@@ -157,7 +157,7 @@ ctx system mark-journal <filename> enriched
 
 After processing, report:
 
-- How many sessions were exported (or "none needed")
+- How many sessions were imported (or "none needed")
 - How many entries were enriched
 - How many were skipped (already enriched, too short, etc.)
 - Remind the user to rebuild: `ctx journal site --build`
@@ -226,7 +226,7 @@ and more reliable.
 
 ## Quality Checklist
 
-- [ ] Unexported sessions detected and exported before enrichment
+- [ ] Unimported sessions detected and imported before enrichment
 - [ ] Suggestion sessions and multi-part continuations filtered
 - [ ] Each enriched entry has all required frontmatter fields
 - [ ] Summary is specific to the session, not generic

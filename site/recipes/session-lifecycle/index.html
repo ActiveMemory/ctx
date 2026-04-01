@@ -2696,16 +2696,14 @@
   
   
     <li class="md-nav__item">
-      <a href="../prompt-templates/" class="md-nav__link">
+      <a href="../prompt-templates.md" class="md-nav__link">
         
   
-  
-    <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-message-square-text" viewBox="0 0 24 24"><path d="M22 17a2 2 0 0 1-2 2H6.828a2 2 0 0 0-1.414.586l-2.202 2.202A.71.71 0 0 1 2 21.286V5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2zM7 11h10M7 15h6M7 7h8"/></svg>
   
   <span class="md-ellipsis">
     
   
-    Reusable Prompt Templates
+    none
   
 
     
@@ -2886,7 +2884,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../cli/recall/" class="md-nav__link">
+      <a href="../../cli/journal/" class="md-nav__link">
         
   
   
@@ -2895,7 +2893,7 @@
   <span class="md-ellipsis">
     
   
-    Recall and Journal
+    Journal
   
 
     
@@ -4073,12 +4071,12 @@ begins.</p>
 <td>Load token-budgeted context packet</td>
 </tr>
 <tr>
-<td><code>ctx recall list</code></td>
+<td><code>ctx journal source</code></td>
 <td>CLI command</td>
 <td>List previous sessions</td>
 </tr>
 <tr>
-<td><code>ctx recall show</code></td>
+<td><code>ctx journal source --show</code></td>
 <td>CLI command</td>
 <td>Inspect a specific session in detail</td>
 </tr>
@@ -4113,7 +4111,7 @@ begins.</p>
 <td>Structured reflection checkpoint</td>
 </tr>
 <tr>
-<td><code>/ctx-recall</code></td>
+<td><code>/ctx-history</code></td>
 <td>Skill</td>
 <td>Browse session history inside your AI assistant</td>
 </tr>
@@ -4133,7 +4131,7 @@ might skip committing</em>), but the full arc looks like this:</p>
 <p>This triggers the <code>/ctx-remember</code> skill. Behind the scenes, the assistant
 runs <code>ctx agent --budget 4000</code>, reads the files listed in the context packet
 (<code>TASKS.md</code>, <code>DECISIONS.md</code>, <code>LEARNINGS.md</code>, <code>CONVENTIONS.md</code>), checks
-<code>ctx recall list --limit 3</code> for recent sessions, and then presents a
+<code>ctx journal source --limit 3</code> for recent sessions, and then presents a
 structured <strong>readback</strong>.</p>
 <p>The <strong>readback</strong> should feel like a <strong>recall</strong>, not a file system tour.
 If you see "<em>Let me check if there are files...</em>" instead of a confident
@@ -4279,7 +4277,7 @@ conversation, then proposes structured candidates for your approval. After
 you select which to keep, it persists them via <code>ctx add</code> and offers
 <code>/ctx-commit</code> if uncommitted changes remain.</p>
 <p>Session transcripts are automatically captured by Claude Code and can be
-browsed later with <code>ctx recall list</code> and <code>ctx recall show</code>.</p>
+browsed later with <code>ctx journal source</code> and <code>ctx journal source --show</code>.</p>
 <hr />
 <h2 id="conversational-session-flow">Conversational Session Flow<a class="headerlink" href="#conversational-session-flow" title="Permanent link">&para;</a></h2>
 <p>The steps above describe the mechanics. In practice, a session with a
@@ -4434,7 +4432,7 @@ and notifies you when it gets high, but do not wait for the notification. If
 you have been working for a while and have unpersisted learnings, persist
 proactively.</p>
 <p><strong>Browse previous sessions by topic</strong>. If you need context from a prior session,
-<code>ctx recall show auth</code> will match by keyword. You do not need to remember the
+<code>ctx journal source --show auth</code> will match by keyword. You do not need to remember the
 exact date or slug.</p>
 <p><strong>Reflection is optional but valuable</strong>. You can skip <code>/ctx-reflect</code> for small
 changes, but always persist learnings and decisions before ending a session

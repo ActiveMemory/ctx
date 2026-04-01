@@ -4,17 +4,17 @@
 
 .PHONY: journal journal-serve
 
-## journal: Export sessions and regenerate journal site
+## journal: Import sessions and regenerate journal site
 journal:
-	@echo "==> Exporting sessions to journal..."
-	@ctx recall export --all
+	@echo "==> Importing sessions to journal..."
+	@ctx journal import --all
 	@echo "==> Generating journal site..."
 	@ctx journal site --build
 	@echo ""
 	@echo "Journal site updated!"
 	@echo ""
 	@echo "Next steps (in Claude Code):"
-	@echo "  /ctx-journal-enrich-all  — exports if needed + adds metadata per entry"
+	@echo "  /ctx-journal-enrich-all  — imports if needed + adds metadata per entry"
 	@echo ""
 	@echo "Then re-run: make journal"
 

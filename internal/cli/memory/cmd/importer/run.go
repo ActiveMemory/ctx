@@ -38,7 +38,7 @@ func Run(cmd *cobra.Command, dryRun bool) error {
 	contextDir := rc.ContextDir()
 	projectRoot := filepath.Dir(contextDir)
 
-	sourcePath, discoverErr := memory.DiscoverMemoryPath(projectRoot)
+	sourcePath, discoverErr := memory.DiscoverPath(projectRoot)
 	if discoverErr != nil {
 		sync.ErrAutoMemoryNotActive(cmd, discoverErr)
 		return errMemory.NotFound()
@@ -51,9 +51,9 @@ func Run(cmd *cobra.Command, dryRun bool) error {
 		return errMemory.Read(readErr)
 	}
 
-	entries := memory.ParseEntries(string(sourceData))
+	entries := memory.Entries(string(sourceData))
 	if len(entries) == 0 {
-		ctximport.NoEntries(cmd, cfgMemory.MemorySource)
+		ctximport.NoEntries(cmd, cfgMemory.Source)
 		return nil
 	}
 
@@ -62,7 +62,7 @@ func Run(cmd *cobra.Command, dryRun bool) error {
 		return errState.Load(loadErr)
 	}
 
-	ctximport.ScanHeader(cmd, cfgMemory.MemorySource, len(entries))
+	ctximport.ScanHeader(cmd, cfgMemory.Source, len(entries))
 
 	var result entity.ImportResult
 
@@ -77,7 +77,7 @@ func Run(cmd *cobra.Command, dryRun bool) error {
 		classification := memory.Classify(e)
 		title := format.TruncateFirstLine(e.Text, 60)
 
-		if classification.Target == memory.TargetSkip {
+		if classification.Target == cfgMemory.TargetSkip {
 			result.Skipped++
 			if dryRun {
 				ctximport.EntrySkipped(cmd, title)
@@ -85,7 +85,7 @@ func Run(cmd *cobra.Command, dryRun bool) error {
 			continue
 		}
 
-		targetFile := entry.ToCtxFile[classification.Target]
+		targetFile := entry.MustCtxFile(classification.Target)
 
 		if dryRun {
 			ctximport.EntryClassified(cmd, title, targetFile, classification.Keywords)

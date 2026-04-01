@@ -47,19 +47,20 @@ func Run(cmd *cobra.Command) error {
 			); writeErr != nil {
 				return errFs.FileWrite(cfgClaude.Settings, writeErr)
 			}
-			restore.RestoreNoLocal(cmd)
+			restore.NoLocal(cmd)
 			return nil
 		}
 		return errFs.FileRead(cfgClaude.Settings, localReadErr)
 	}
 
 	if bytes.Equal(goldenBytes, localBytes) {
-		restore.RestoreMatch(cmd)
+		restore.Match(cmd)
 		return nil
 	}
 
 	var golden, local claude.Settings
-	if goldenParseErr := json.Unmarshal(goldenBytes, &golden); goldenParseErr != nil {
+	goldenParseErr := json.Unmarshal(goldenBytes, &golden)
+	if goldenParseErr != nil {
 		return errParser.ParseFile(cfgClaude.SettingsGolden, goldenParseErr)
 	}
 	if localParseErr := json.Unmarshal(localBytes, &local); localParseErr != nil {
@@ -73,7 +74,7 @@ func Run(cmd *cobra.Command) error {
 		golden.Permissions.Deny, local.Permissions.Deny,
 	)
 
-	restore.RestoreDiff(cmd, dropped, restored, denyDropped, denyRestored)
+	restore.Diff(cmd, dropped, restored, denyDropped, denyRestored)
 
 	if writeErr := os.WriteFile(
 		cfgClaude.Settings, goldenBytes, fs.PermFile,
@@ -81,6 +82,6 @@ func Run(cmd *cobra.Command) error {
 		return errFs.FileWrite(cfgClaude.Settings, writeErr)
 	}
 
-	restore.RestoreDone(cmd)
+	restore.Done(cmd)
 	return nil
 }

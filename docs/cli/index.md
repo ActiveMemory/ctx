@@ -56,7 +56,7 @@ own guards and no-op gracefully.
 | [`ctx reindex`](context.md#ctx-reindex)       | Regenerate indices for `DECISIONS.md` and `LEARNINGS.md` |
 | [`ctx decision`](context.md#ctx-decision)     | Manage `DECISIONS.md` (reindex)                          |
 | [`ctx learning`](context.md#ctx-learning)     | Manage `LEARNINGS.md` (reindex)                          |
-| [`ctx recall`](recall.md#ctx-recall)          | Browse and export AI session history                     |
+| [`ctx journal`](recall.md#ctx-recall)          | Browse and export AI session history                     |
 | [`ctx journal`](recall.md#ctx-journal)        | Generate static site from journal entries                |
 | [`ctx serve`](recall.md#ctx-serve)            | Serve any zensical directory (default: journal site)     |
 | [`ctx watch`](tools.md#ctx-watch)             | Auto-apply context updates from AI output                |
@@ -67,7 +67,7 @@ own guards and no-op gracefully.
 | [`ctx change`](tools.md#ctx-change)           | Show what changed since last session                     |
 | [`ctx dep`](tools.md#ctx-dep)                 | Show package dependency graph                            |
 | [`ctx pad`](tools.md#ctx-pad)                 | Encrypted scratchpad for sensitive one-liners            |
-| [`ctx prompt`](tools.md#ctx-prompt)           | Manage reusable prompt templates                         |
+
 | [`ctx remind`](tools.md#ctx-remind)           | Session-scoped reminders that surface at session start   |
 | [`ctx completion`](tools.md#ctx-completion)   | Generate shell autocompletion scripts                    |
 | [`ctx guide`](tools.md#ctx-guide)             | Quick-reference cheat sheet                              |
@@ -117,6 +117,7 @@ archive_after_days: 7        # Days before archiving tasks
 scratchpad_encrypt: true     # Encrypt scratchpad (default: true)
 allow_outside_cwd: false     # Skip boundary check (default: false)
 event_log: false             # Enable local hook event logging
+companion_check: true        # Check companion tools at session start
 entry_count_learnings: 30    # Drift warning threshold (0 = disable)
 entry_count_decisions: 20    # Drift warning threshold (0 = disable)
 convention_line_count: 200   # Line count warning for CONVENTIONS.md (0 = disable)
@@ -150,6 +151,7 @@ notify:                      # Webhook notification settings
 | `scratchpad_encrypt`    | `bool`     | `true`         | Encrypt scratchpad with AES-256-GCM                                                                            |
 | `allow_outside_cwd`     | `bool`     | `false`        | Skip boundary check for external context dirs                                                                  |
 | `event_log`             | `bool`     | `false`        | Enable local hook event logging to `.context/state/events.jsonl`                                               |
+| `companion_check`       | `bool`     | `true`         | Check companion tool availability (Gemini Search, GitNexus) during `/ctx-remember`                             |
 | `entry_count_learnings` | `int`      | `30`           | Drift warning when `LEARNINGS.md` exceeds this count                                                           |
 | `entry_count_decisions` | `int`      | `20`           | Drift warning when `DECISIONS.md` exceeds this count                                                           |
 | `convention_line_count` | `int`      | `200`          | Line count warning for `CONVENTIONS.md`                                                                        |

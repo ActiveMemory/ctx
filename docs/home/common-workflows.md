@@ -82,12 +82,12 @@ ctx status
 List and search past AI sessions from the terminal:
 
 ```bash
-ctx recall list --limit 5
+ctx journal source --limit 5
 ```
 
 ### Journal Site
 
-Export session transcripts to a browsable static site with search,
+Import session transcripts to a browsable static site with search,
 navigation, and topic indices.
 
 !!! info ""
@@ -115,13 +115,13 @@ pipx install zensical
     `pipx` creates an **isolated environment** with the
     **correct Python version** automatically.
 
-### Export and Serve
+### Import and Serve
 
-Then, **export and serve**:
+Then, **import and serve**:
 
 ```bash
-# Export all sessions to .context/journal/ (only new files)
-ctx recall export --all
+# Import all sessions to .context/journal/ (only new files)
+ctx journal import --all
 
 # Generate and serve the journal site
 ctx journal site --serve
@@ -133,22 +133,22 @@ To update after new sessions, run the same two commands again.
 
 ### Safe By Default
 
-`ctx recall export --all` is **safe by default**: 
+`ctx journal import --all` is **safe by default**:
 
-* It only exports new sessions and **skips existing files**.
-* Locked entries (*via `ctx recall lock`*) are **always skipped** by
-  both export and enrichment skills.
+* It only imports new sessions and **skips existing files**.
+* Locked entries (*via `ctx journal lock`*) are **always skipped** by
+  both import and enrichment skills.
 * If you add `locked: true` to frontmatter during enrichment, run
-  `ctx recall sync` to propagate the lock state to `.state.json`.
+  `ctx journal sync` to propagate the lock state to `.state.json`.
 
-### Re-Exporting Existing Files
+### Re-Importing Existing Files
 
-Here is how you regenerate existing files. 
+Here is how you regenerate existing files.
 
-**Backup your `.context` folder** before regeneration, as this is a 
+**Backup your `.context` folder** before regeneration, as this is a
 potentially destructive action.
 
-To re-export journal files, you need to explicitly opt-in using the 
+To re-import journal files, you need to explicitly opt-in using the
 `--regenerate` flag:
 
 
@@ -160,11 +160,11 @@ To re-export journal files, you need to explicitly opt-in using the
 !!! danger "Regeneration Overwrites Body Edits"
     `--regenerate` preserves your YAML frontmatter (*tags, summary,
     enrichment metadata*) but it **replaces the Markdown body** with a
-    fresh export. 
+    fresh import.
 
     **Any manual edits you made to the transcript will be lost**.
 
-    **Lock entries you want to protect first**: `ctx recall lock <session-id>`.
+    **Lock entries you want to protect first**: `ctx journal lock <session-id>`.
 
 See [Session Journal](../reference/session-journal.md) for the full pipeline
 including **normalization** and **enrichment**.
@@ -290,7 +290,7 @@ agent's judgment.
 | `ctx add convention` | `/ctx-add-convention` | Agent observes a repeated pattern and codifies it          |
 | `ctx task archive`  | `/ctx-archive`        | Agent reviews which tasks are truly done                   |
 | `ctx pad`            | `/ctx-pad`            | Agent reads/writes scratchpad entries in conversation flow |
-| `ctx recall`         | `/ctx-recall`         | Agent searches session history with semantic understanding |
+| `ctx journal`         | `/ctx-history`         | Agent searches session history with semantic understanding |
 | `ctx agent`          | `/ctx-agent`          | Agent loads and acts on the context packet                 |
 | `ctx loop`           | `/ctx-loop`           | Agent tailors the loop script to your project              |
 | `ctx doctor`         | `/ctx-doctor`         | Agent adds semantic analysis to structural checks          |
@@ -314,7 +314,6 @@ These have no CLI equivalent. They require the agent's reasoning.
 | `/ctx-import-plans`       | Import Claude Code plan files into project specs                                        |
 | `/ctx-implement`          | Execute a plan step-by-step with verification                                           |
 | `/ctx-worktree`           | Manage parallel agent worktrees                                                         |
-| `/ctx-journal-normalize`  | Fix markdown rendering issues in journal entries                                        |
 | `/ctx-journal-enrich`     | Add metadata, tags, and summaries to journal entries                                    |
 | `/ctx-journal-enrich-all` | Full journal pipeline: export if needed, then batch-enrich                               |
 | `/ctx-blog`               | Generate a blog post ([zensical](https://pypi.org/project/zensical/)-flavored Markdown) |

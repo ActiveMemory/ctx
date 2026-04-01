@@ -10,12 +10,12 @@ import (
 	"os"
 	"path/filepath"
 
-	coreCheck "github.com/ActiveMemory/ctx/internal/cli/system/core/check"
-	"github.com/ActiveMemory/ctx/internal/cli/system/core/nudge"
-	"github.com/ActiveMemory/ctx/internal/cli/system/core/state"
 	"github.com/spf13/cobra"
 
 	"github.com/ActiveMemory/ctx/internal/assets/read/desc"
+	coreCheck "github.com/ActiveMemory/ctx/internal/cli/system/core/check"
+	"github.com/ActiveMemory/ctx/internal/cli/system/core/nudge"
+	"github.com/ActiveMemory/ctx/internal/cli/system/core/state"
 	"github.com/ActiveMemory/ctx/internal/config/embed/text"
 	"github.com/ActiveMemory/ctx/internal/config/hook"
 	"github.com/ActiveMemory/ctx/internal/memory"
@@ -23,6 +23,13 @@ import (
 )
 
 // Run executes the check-memory-drift hook logic.
+//
+// Parameters:
+//   - cmd: Cobra command instance
+//   - stdin: Standard input for reading hook payload
+//
+// Returns:
+//   - error: Non-nil if the drift check encounters an unrecoverable error
 func Run(cmd *cobra.Command, stdin *os.File) error {
 	if !state.Initialized() {
 		return nil
@@ -35,7 +42,7 @@ func Run(cmd *cobra.Command, stdin *os.File) error {
 
 	// Session tombstone: nudge once per session, per session ID
 	tombstone := filepath.Join(
-		state.StateDir(), hook.PrefixMemoryDriftThrottle+sessionID,
+		state.Dir(), hook.PrefixMemoryDriftThrottle+sessionID,
 	)
 	if _, statErr := os.Stat(tombstone); statErr == nil {
 		return nil
@@ -44,7 +51,7 @@ func Run(cmd *cobra.Command, stdin *os.File) error {
 	contextDir := rc.ContextDir()
 	projectRoot := filepath.Dir(contextDir)
 
-	sourcePath, discoverErr := memory.DiscoverMemoryPath(projectRoot)
+	sourcePath, discoverErr := memory.DiscoverPath(projectRoot)
 	if discoverErr != nil {
 		// Auto memory not active - skip silently
 		return nil

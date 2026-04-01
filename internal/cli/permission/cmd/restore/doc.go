@@ -6,5 +6,7 @@
 
 // Package restore implements the ctx permission restore subcommand.
 //
-// It restores file permissions from a previously saved snapshot.
+// Key exports: [Cmd], [Run].
+// Follows the cmd/root + core taxonomy.
+// Registered by the cmd parent command.
 package restore

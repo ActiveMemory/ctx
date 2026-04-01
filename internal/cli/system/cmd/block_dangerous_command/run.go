@@ -11,16 +11,16 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/ActiveMemory/ctx/internal/cli/system/core/message"
-	"github.com/ActiveMemory/ctx/internal/cli/system/core/nudge"
-	coreSession "github.com/ActiveMemory/ctx/internal/cli/system/core/session"
-	"github.com/ActiveMemory/ctx/internal/entity"
 	"github.com/spf13/cobra"
 
 	"github.com/ActiveMemory/ctx/internal/assets/read/desc"
+	"github.com/ActiveMemory/ctx/internal/cli/system/core/message"
+	"github.com/ActiveMemory/ctx/internal/cli/system/core/nudge"
+	coreSession "github.com/ActiveMemory/ctx/internal/cli/system/core/session"
 	"github.com/ActiveMemory/ctx/internal/config/embed/text"
 	"github.com/ActiveMemory/ctx/internal/config/hook"
 	"github.com/ActiveMemory/ctx/internal/config/regex"
+	"github.com/ActiveMemory/ctx/internal/entity"
 	"github.com/ActiveMemory/ctx/internal/notify"
 	writeHook "github.com/ActiveMemory/ctx/internal/write/hook"
 )
@@ -69,7 +69,7 @@ func Run(cmd *cobra.Command, stdin *os.File) error {
 
 	var reason string
 	if variant != "" {
-		reason = message.LoadMessage(
+		reason = message.Load(
 			hook.BlockDangerousCommands, variant, nil, fallback,
 		)
 	}

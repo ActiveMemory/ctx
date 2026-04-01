@@ -7,17 +7,12 @@
 package root
 
 import (
-	"bufio"
-	"os"
-	"strconv"
-	"strings"
-
-	"github.com/ActiveMemory/ctx/internal/assets/read/philosophy"
-	"github.com/ActiveMemory/ctx/internal/write/why"
 	"github.com/spf13/cobra"
 
+	"github.com/ActiveMemory/ctx/internal/assets/read/philosophy"
 	errCli "github.com/ActiveMemory/ctx/internal/err/cli"
 	errFs "github.com/ActiveMemory/ctx/internal/err/fs"
+	"github.com/ActiveMemory/ctx/internal/write/why"
 )
 
 // Run dispatches to the interactive menu or direct document display.
@@ -35,32 +30,8 @@ func Run(cmd *cobra.Command, args []string) error {
 	return showMenu(cmd)
 }
 
-// showMenu presents a numbered menu and reads user selection from stdin.
-func showMenu(cmd *cobra.Command) error {
-	why.Banner(cmd)
-	why.Separator(cmd)
-	for i, doc := range DocOrder {
-		why.MenuItem(cmd, i+1, doc.Label)
-	}
-	why.MenuPrompt(cmd)
-
-	reader := bufio.NewReader(os.Stdin)
-	input, readErr := reader.ReadString('\n')
-	if readErr != nil {
-		return errFs.ReadInput(readErr)
-	}
-
-	input = strings.TrimSpace(input)
-	choice, parseErr := strconv.Atoi(input)
-	if parseErr != nil || choice < 1 || choice > len(DocOrder) {
-		return errCli.InvalidSelection(input, len(DocOrder))
-	}
-
-	why.Separator(cmd)
-	return ShowDoc(cmd, DocOrder[choice-1].Alias)
-}
-
-// ShowDoc loads an embedded document by alias, strips MkDocs syntax, and prints it.
+// ShowDoc loads an embedded document by alias, strips
+// MkDocs syntax, and prints it.
 //
 // Parameters:
 //   - cmd: Cobra command for output stream

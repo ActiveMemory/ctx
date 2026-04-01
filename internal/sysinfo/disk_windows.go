@@ -10,6 +10,11 @@ package sysinfo
 
 import "os"
 
+// collectDisk returns disk usage information for the current working directory.
+// On Windows this is a stub that always reports Supported as false.
+//
+// Returns:
+//   - DiskInfo: Disk info with Supported set to false
 func collectDisk() DiskInfo {
 	cwd, cwdErr := os.Getwd()
 	if cwdErr != nil {

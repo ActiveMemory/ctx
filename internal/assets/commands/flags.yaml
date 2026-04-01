@@ -55,13 +55,11 @@ hook.write:
 initialize.force:
   short: Overwrite existing context files
 initialize.merge:
-  short: Auto-merge ctx content into existing CLAUDE.md and PROMPT.md
+  short: Auto-merge ctx content into existing CLAUDE.md
 initialize.minimal:
   short: Only create essential files (TASKS.md, DECISIONS.md, CONSTITUTION.md)
 initialize.no-plugin-enable:
   short: Skip auto-enabling the ctx plugin in global Claude Code settings
-initialize.ralph:
-  short: Agent works autonomously without asking questions
 journal.obsidian.output:
   short: Output directory for vault
 journal.site.build:
@@ -70,6 +68,24 @@ journal.site.output:
   short: Output directory for site
 journal.site.serve:
   short: Run zensical serve after generating
+journal.source.all-projects:
+  short: Include sessions from all projects
+journal.source.full:
+  short: Show full message content (with --show or --latest)
+journal.source.latest:
+  short: Show the most recent session
+journal.source.limit:
+  short: Maximum sessions to display
+journal.source.project:
+  short: Filter by project name
+journal.source.show:
+  short: Show details of a specific session by slug or ID
+journal.source.since:
+  short: Show sessions on or after this date (YYYY-MM-DD)
+journal.source.tool:
+  short: Filter by tool (e.g., claude-code)
+journal.source.until:
+  short: Show sessions on or before this date (YYYY-MM-DD)
 load.budget:
   short: Token budget for assembly
 load.raw:
@@ -114,7 +130,7 @@ pad.export.dry-run:
   short: print what would be exported without writing
 pad.export.force:
   short: overwrite existing files instead of timestamping
-pad.imp.blob:
+pad.root.blob:
   short: import first-level files from a directory as blob entries
 pad.merge.dry-run:
   short: print what would be merged without writing
@@ -124,41 +140,21 @@ pad.show.out:
   short: write blob content to a file
 pause.session-id:
   short: Session ID (overrides stdin)
-prompt.add.stdin:
-  short: read prompt content from stdin
-recall.export.all:
-  short: Export all sessions from current project
-recall.export.all-projects:
+journal.import.all:
+  short: Import all sessions from current project
+journal.import.all-projects:
   short: Include sessions from all projects
-recall.export.dry-run:
-  short: Show what would be exported without writing files
-recall.export.keep-frontmatter:
+journal.import.dry-run:
+  short: Show what would be imported without writing files
+journal.import.keep-frontmatter:
   short: Preserve enriched YAML frontmatter during regeneration
-recall.export.regenerate:
-  short: Re-export existing files (preserves YAML frontmatter by default)
-recall.export.yes:
+journal.import.regenerate:
+  short: Re-import existing files (preserves YAML frontmatter by default)
+journal.import.yes:
   short: Skip confirmation prompt
-recall.list.all-projects:
-  short: Include sessions from all projects
-recall.list.limit:
-  short: Maximum sessions to display
-recall.list.project:
-  short: Filter by project name
-recall.list.since:
-  short: Show sessions on or after this date (YYYY-MM-DD)
-recall.list.tool:
-  short: Filter by tool (e.g., claude-code)
-recall.list.until:
-  short: Show sessions on or before this date (YYYY-MM-DD)
-recall.lock.all:
+journal.lock.all:
   short: Lock all journal entries
-recall.show.all-projects:
-  short: Search sessions from all projects
-recall.show.full:
-  short: Show full message content
-recall.show.latest:
-  short: Show the most recent session
-recall.unlock.all:
+journal.unlock.all:
   short: Unlock all journal entries
 remind.add.after:
   short: Don't surface until this date (YYYY-MM-DD)

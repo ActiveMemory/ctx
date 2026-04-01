@@ -9,6 +9,11 @@ package notify
 // TemplateRef identifies the hook template and variables that produced a
 // notification, allowing receivers to filter, re-render, or aggregate
 // without parsing opaque rendered text.
+//
+// Fields:
+//   - Hook: Hook name that produced this notification
+//   - Variant: Template variant within the hook
+//   - Variables: Template variables used for rendering
 type TemplateRef struct {
 	Hook      string         `json:"hook"`
 	Variant   string         `json:"variant"`

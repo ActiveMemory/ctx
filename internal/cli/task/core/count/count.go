@@ -11,18 +11,18 @@ import (
 	"github.com/ActiveMemory/ctx/internal/task"
 )
 
-// CountPendingTasks counts top-level unchecked tasks in the lines.
+// Pending counts top-level unchecked tasks in the lines.
 //
 // Parameters:
 //   - lines: Lines from TASKS.md to scan
 //
 // Returns:
 //   - int: Number of top-level unchecked tasks
-func CountPendingTasks(lines []string) int {
+func Pending(lines []string) int {
 	count := 0
 	for _, line := range lines {
 		match := regex.Task.FindStringSubmatch(line)
-		if match != nil && task.Pending(match) && !task.SubTask(match) {
+		if match != nil && task.Pending(match) && !task.Sub(match) {
 			count++
 		}
 	}

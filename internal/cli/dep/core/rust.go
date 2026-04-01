@@ -9,10 +9,10 @@ package core
 import (
 	"encoding/json"
 	"os"
-	"os/exec"
 	"sort"
 
 	errDeps "github.com/ActiveMemory/ctx/internal/err/dep"
+	execDep "github.com/ActiveMemory/ctx/internal/exec/dep"
 )
 
 // RustEcosystem is the ecosystem label for Rust projects.
@@ -45,59 +45,13 @@ func (r *RustBuilder) Build(external bool) (map[string][]string, error) {
 	return BuildRustInternalGraph()
 }
 
-// CargoMetadata represents the subset of `cargo metadata` output we need.
-type CargoMetadata struct {
-	Packages         []CargoPackage `json:"packages"`
-	WorkspaceMembers []string       `json:"workspace_members"`
-	Resolve          *CargoResolve  `json:"resolve"`
-}
-
-// CargoPackage represents a package in cargo metadata output.
-type CargoPackage struct {
-	ID           string        `json:"id"`
-	Name         string        `json:"name"`
-	Source       *string       `json:"source"`
-	Dependencies []CargoDep    `json:"dependencies"`
-	Targets      []CargoTarget `json:"targets"`
-}
-
-// CargoDep represents a dependency entry in cargo metadata.
-type CargoDep struct {
-	Name string  `json:"name"`
-	Kind *string `json:"kind"`
-}
-
-// CargoTarget represents a build target in cargo metadata.
-type CargoTarget struct {
-	Name string   `json:"name"`
-	Kind []string `json:"kind"`
-}
-
-// CargoResolve represents the resolved dependency graph.
-type CargoResolve struct {
-	Nodes []CargoNode `json:"nodes"`
-}
-
-// CargoNode represents a node in the resolved dependency graph.
-type CargoNode struct {
-	ID   string   `json:"id"`
-	Deps []string `json:"deps,omitempty"`
-}
-
 // RunCargoMetadata runs `cargo metadata` and parses the output.
 //
 // Returns:
 //   - *CargoMetadata: Parsed metadata
 //   - error: Non-nil if cargo is not found or output is malformed
 func RunCargoMetadata() (*CargoMetadata, error) {
-	_, lookErr := exec.LookPath("cargo")
-	if lookErr != nil {
-		return nil, errDeps.CargoNotFound()
-	}
-
-	out, cmdErr := exec.Command(
-		"cargo", "metadata", "--format-version", "1", "--no-deps",
-	).Output() //nolint:gosec // fixed args
+	out, cmdErr := execDep.CargoMetadata(true)
 	if cmdErr != nil {
 		return nil, errDeps.CargoMetadataFailed(cmdErr)
 	}
@@ -115,14 +69,7 @@ func RunCargoMetadata() (*CargoMetadata, error) {
 //   - *CargoMetadata: Parsed metadata with full resolution
 //   - error: Non-nil if cargo is not found or output is malformed
 func RunCargoMetadataFull() (*CargoMetadata, error) {
-	_, lookErr := exec.LookPath("cargo")
-	if lookErr != nil {
-		return nil, errDeps.CargoNotFound()
-	}
-
-	out, cmdErr := exec.Command(
-		"cargo", "metadata", "--format-version", "1",
-	).Output() //nolint:gosec // fixed args
+	out, cmdErr := execDep.CargoMetadata(false)
 	if cmdErr != nil {
 		return nil, errDeps.CargoMetadataFailed(cmdErr)
 	}

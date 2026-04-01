@@ -88,13 +88,13 @@ func Content(match []string) string {
 	return match[MatchContent]
 }
 
-// SubTask reports whether a match represents a subtask (indented).
+// Sub reports whether a match represents a subtask (indented).
 //
 // Parameters:
 //   - match: Result from ItemPattern.FindStringSubmatch
 //
 // Returns:
 //   - bool: True if indent is 2+ spaces
-func SubTask(match []string) bool {
+func Sub(match []string) bool {
 	return len(Indent(match)) >= archive.SubTaskMinIndent
 }

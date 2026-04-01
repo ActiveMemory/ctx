@@ -11,6 +11,9 @@ import (
 	"os"
 	"path/filepath"
 
+	"github.com/spf13/cobra"
+
+	"github.com/ActiveMemory/ctx/internal/assets/read/desc"
 	coreCheck "github.com/ActiveMemory/ctx/internal/cli/system/core/check"
 	"github.com/ActiveMemory/ctx/internal/cli/system/core/counter"
 	coreHeartbeat "github.com/ActiveMemory/ctx/internal/cli/system/core/heartbeat"
@@ -18,15 +21,12 @@ import (
 	"github.com/ActiveMemory/ctx/internal/cli/system/core/session"
 	"github.com/ActiveMemory/ctx/internal/cli/system/core/state"
 	"github.com/ActiveMemory/ctx/internal/cli/system/core/time"
-	"github.com/spf13/cobra"
-
-	"github.com/ActiveMemory/ctx/internal/assets/read/desc"
 	"github.com/ActiveMemory/ctx/internal/config/dir"
 	"github.com/ActiveMemory/ctx/internal/config/embed/text"
 	"github.com/ActiveMemory/ctx/internal/config/heartbeat"
 	"github.com/ActiveMemory/ctx/internal/config/hook"
 	"github.com/ActiveMemory/ctx/internal/config/stats"
-	"github.com/ActiveMemory/ctx/internal/log"
+	"github.com/ActiveMemory/ctx/internal/log/event"
 	"github.com/ActiveMemory/ctx/internal/notify"
 	"github.com/ActiveMemory/ctx/internal/rc"
 )
@@ -53,28 +53,28 @@ func Run(_ *cobra.Command, stdin *os.File) error {
 		return nil
 	}
 
-	tmpDir := state.StateDir()
+	tmpDir := state.Dir()
 	counterFile := filepath.Join(
-		tmpDir, heartbeat.HeartbeatCounterPrefix+sessionID,
+		tmpDir, heartbeat.CounterPrefix+sessionID,
 	)
 	mtimeFile := filepath.Join(
-		tmpDir, heartbeat.HeartbeatMtimePrefix+sessionID,
+		tmpDir, heartbeat.MtimePrefix+sessionID,
 	)
 	contextDir := rc.ContextDir()
-	logFile := filepath.Join(contextDir, dir.Logs, heartbeat.HeartbeatLogFile)
+	logFile := filepath.Join(contextDir, dir.Logs, heartbeat.LogFile)
 
 	// Increment prompt counter.
 	count := counter.Read(counterFile) + 1
 	counter.Write(counterFile, count)
 
 	// Detect context modification since the last heartbeat.
-	currentMtime := time.GetLatestContextMtime(contextDir)
+	currentMtime := time.GetLatestMtime(contextDir)
 	lastMtime := coreHeartbeat.ReadMtime(mtimeFile)
 	contextModified := currentMtime > lastMtime
 	coreHeartbeat.WriteMtime(mtimeFile, currentMtime)
 
 	// Read token usage for this session.
-	info, _ := session.ReadSessionTokenInfo(sessionID)
+	info, _ := session.ReadTokenInfo(sessionID)
 	tokens := info.Tokens
 	window := session.EffectiveContextWindow(info.Model)
 
@@ -102,7 +102,7 @@ func Run(_ *cobra.Command, stdin *os.File) error {
 			count, contextModified)
 	}
 	_ = notify.Send(hook.NotifyChannelHeartbeat, msg, sessionID, ref)
-	log.AppendEvent(hook.NotifyChannelHeartbeat, msg, sessionID, ref)
+	event.Append(hook.NotifyChannelHeartbeat, msg, sessionID, ref)
 
 	var logLine string
 	if tokens > 0 {

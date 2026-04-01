@@ -6,6 +6,7 @@
 
 // Package root implements the ctx why command.
 //
-// It displays the philosophy and design rationale behind ctx, including
-// the manifesto and project invariants.
+// Key exports: [Cmd], [DocAliases], [DocOrder], [Run], [ShowDoc].
+// Follows the cmd/root + core taxonomy.
+// Registered by the cmd parent command.
 package root

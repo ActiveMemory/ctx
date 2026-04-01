@@ -5,10 +5,10 @@ write.agent-bullet-item:
   short: "- %s"
 write.agent-numbered-item:
   short: "%d. %s"
-write.add-missing-fields:
-  short: '%s missing required fields: %s'
 write.added-to:
   short: ✓ Added to %s
+write.spec-nudge-tip:
+  short: 'Tip: this task may benefit from a spec. Run /ctx-spec to scaffold one.'
 write.archived:
   short: Archived previous mirror to %s
 write.backup-result:
@@ -53,21 +53,21 @@ write.dry-run:
   short: Dry run - no files will be written.
 write.exists-writing-as-alternative:
   short: '  ! %s exists, writing as %s'
-write.export-nothing:
-  short: Nothing to export.
-write.export-part-new:
-  short: export %d new
-write.export-part-regen:
+write.journal-import-nothing:
+  short: Nothing to import.
+write.journal-import-part-new:
+  short: import %d new
+write.journal-import-part-regen:
   short: regenerate %d existing
-write.export-part-skip:
+write.journal-import-part-skip:
   short: skip %d existing
-write.export-part-skip-locked:
+write.journal-import-part-skip-locked:
   short: skip %d locked
-write.export-summary:
+write.journal-import-summary:
   short: '%s %s.'
-write.export-verb:
+write.journal-import-verb:
   short: Will
-write.export-verb-dry-run:
+write.journal-import-verb-dry-run:
   short: Would
 write.format-bytes:
   short: "%dB"
@@ -219,6 +219,12 @@ write.init-next-steps-block:
       Run 'ctx init' again after installing the plugin to enable it,
       or manually add to ~/.claude/settings.json:
         {"enabledPlugins": {"ctx@activememory-ctx": true}}
+
+      Companion tools (highly recommended):
+        Set up Gemini Search and GitNexus MCP servers for grounded
+        web search and code intelligence. Skills degrade gracefully
+        without them, but work noticeably better with them connected.
+        See: https://ctx.ist/recipes/multi-tool-setup/#companion-tools
 write.init-workflow-tips:
   short: |4-
 
@@ -232,7 +238,6 @@ write.init-workflow-tips:
           /ctx-status               Check context health, token usage, and file summary
           /ctx-next                 Analyze tasks and suggest 1-3 concrete next actions
           /ctx-commit               Commit code, then prompt for decisions worth persisting
-          /ctx-verify               Run verification before claiming a task is done
 
         Planning and design:
           /ctx-brainstorm           Structured design dialogue before implementation
@@ -245,8 +250,8 @@ write.init-workflow-tips:
           /ctx-drift                Detect stale paths, broken references, and outdated context
 
         Journal pipeline (every few sessions):
-          ctx recall export --all   Export session transcripts to .context/journal/
-          /ctx-journal-enrich-all   Add frontmatter, tags, and summaries to exported entries
+          ctx journal import --all   Import session transcripts to .context/journal/
+          /ctx-journal-enrich-all   Add frontmatter, tags, and summaries to imported entries
 
         Run 'ctx guide' for the full command reference.
 write.init-getting-started-saved:
@@ -255,10 +260,6 @@ write.init-no-changes:
   short: '  ○ %s (no changes needed)'
 write.init-overwrite-prompt:
   short: '%s already exists. Overwrite? [y/N] '
-write.init-plan-merge-prompt:
-  short: Would you like to merge ctx implementation plan template?
-write.init-plan-merge-confirm:
-  short: '[y/N] '
 write.init-perms-allow:
   short: '  ✓ %s (added ctx permissions)'
 write.init-perms-allow-deny:
@@ -289,10 +290,6 @@ write.init-skipped-plain:
   short: '  ○ %s (skipped)'
 write.init-updated-ctx-section:
   short: '  ✓ %s (updated ctx section)'
-write.init-updated-plan-section:
-  short: '  ✓ %s (updated plan section)'
-write.init-updated-prompt-section:
-  short: '  ✓ %s (updated prompt section)'
 write.init-warn-non-fatal:
   short: '  ⚠ %s: %v'
 write.initialized:
@@ -482,14 +479,6 @@ write.prefix-error:
   short: 'Error: '
 write.prefix-warn:
   short: '  ! %s: %v'
-write.prompt-created:
-  short: Created prompt %q.
-write.prompt-item:
-  short: '  %s'
-write.prompt-none:
-  short: No prompts found. Run 'ctx init' or 'ctx prompt add' to create prompts.
-write.prompt-removed:
-  short: Removed prompt %q.
 write.publish-block:
   short: '  Published block:'
 write.publish-budget:
@@ -634,57 +623,81 @@ write.time-minutes-ago:
   short: '%d minutes ago'
 write.unpublish-done:
   short: Removed published block from %s.
-write.recall-aborted:
+write.journal-source-aborted:
   short: Aborted.
-write.recall-ambiguous-hint:
-  short: "\nUse a more specific ID (e.g., ctx recall show %s)\n"
-write.recall-ambiguous-line:
+write.journal-source-ambiguous-hint:
+  short: "\nUse a more specific ID (e.g., ctx journal source --show %s)\n"
+write.journal-source-ambiguous-line:
   short: "  %s\n"
-write.recall-ambiguous-match:
+write.journal-source-ambiguous-match:
   short: "Multiple sessions match '%s':"
-write.recall-ambiguous-match-stderr:
+write.journal-source-ambiguous-match-stderr:
   short: "Multiple sessions match '%s':\n"
-write.recall-code-block:
+write.journal-source-code-block:
   short: "```\n%s\n```\n"
-write.recall-conversation-turn:
+write.journal-source-conversation-turn:
   short: "### %d. [%s] (%s)\n"
-write.recall-exported-new:
-  short: Exported %d new session(s)
-write.recall-exported-ok:
+write.journal-source-imported-new:
+  short: Imported %d new session(s)
+write.journal-source-imported-ok:
   short: "  ok %s"
-write.recall-exported-ok-suffix:
+write.journal-source-imported-ok-suffix:
   short: "  ok %s (%s)"
-write.recall-footer-limit:
+write.journal-source-footer-limit:
   short: Use --limit to see more sessions
-write.recall-list-header:
+write.journal-source-list-header:
   short: "Found %d sessions\n\n"
-write.recall-list-header-filtered:
+write.journal-source-list-header-filtered:
   short: "Found %d sessions (%d shown)\n\n"
-write.recall-more-turns:
+write.journal-source-more-turns:
   short: "... and %d more turns\n"
-write.recall-no-filters-match:
+write.journal-source-no-filters-match:
   short: No sessions match the filters.
-write.recall-no-sessions:
+write.journal-source-no-sessions:
   short: No sessions found.
-write.recall-no-sessions-hint-all:
+write.journal-source-no-sessions-hint-all:
   short: Use --all-projects to see sessions from all projects.
-write.recall-no-sessions-project:
+write.journal-source-no-sessions-project:
   short: No sessions found for this project.
-write.recall-no-sessions-project-hint:
+write.journal-source-no-sessions-project-hint:
   short: No sessions found for this project. Use --all-projects to see all.
-write.recall-numbered-item:
+write.journal-source-numbered-item:
   short: "%d. %s\n"
-write.recall-renamed:
+write.journal-source-renamed:
   short: Renamed %d session(s) to title-based filenames
-write.recall-skip:
+write.journal-source-skip:
   short: "  skip %s (%s)"
-write.recall-skipped:
+write.journal-source-skipped:
   short: Skipped %d existing file(s).
-write.recall-storage-hint:
+write.journal-source-storage-hint:
   short: Sessions are stored in ~/.claude/projects/
-write.recall-updated:
+write.journal-source-updated:
   short: Updated %d existing session(s) (YAML frontmatter preserved)
+write.journal-source-detail-string:
+  short: '%s %s'
+write.journal-source-detail-int:
+  short: '%s %d'
+write.journal-source-section-heading:
+  short: '%s %s'
+write.journal-source-bullet-item:
+  short: '- %s'
 write.unpublish-not-found:
   short: No published block found in %s.
 write.wikilink-list-item:
   short: "- %s%s"
+
+write.notify-close-response:
+  short: "ctx: close response body: %v"
+
+write.context-dir-label:
+  short: "Context: %s"
+write.context-dir-bracket:
+  short: " [Context: %s]"
+
+write.knowledge-unit-entries:
+  short: "entries"
+write.knowledge-unit-lines:
+  short: "lines"
+
+write.version-drift-fallback:
+  short: "VERSION (%s), plugin.json (%s), marketplace.json (%s) are out of sync. Update all three before releasing."

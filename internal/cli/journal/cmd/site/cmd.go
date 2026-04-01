@@ -36,7 +36,7 @@ func Cmd() *cobra.Command {
 		Short: short,
 		Long:  long,
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return runJournalSite(cmd, output, build, serve)
+			return Run(cmd, output, build, serve)
 		},
 	}
 

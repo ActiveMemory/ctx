@@ -18,17 +18,12 @@ import (
 	"github.com/ActiveMemory/ctx/internal/config/fs"
 	"github.com/ActiveMemory/ctx/internal/config/nudge"
 	"github.com/ActiveMemory/ctx/internal/config/token"
+	"github.com/ActiveMemory/ctx/internal/config/warn"
 	"github.com/ActiveMemory/ctx/internal/io"
+	ctxLog "github.com/ActiveMemory/ctx/internal/log/warn"
 )
 
-// State holds the counter state for persistence nudging.
-type State struct {
-	Count     int
-	LastNudge int
-	LastMtime int64
-}
-
-// ReadPersistenceState reads a persistence state file and returns the
+// ReadState reads a persistence state file and returns the
 // parsed state. Returns ok=false if the file does not exist or cannot
 // be read.
 //
@@ -38,14 +33,17 @@ type State struct {
 // Returns:
 //   - PersistenceState: parsed counter state
 //   - bool: true if the file was read successfully
-func ReadPersistenceState(path string) (State, bool) {
+func ReadState(path string) (State, bool) {
 	data, readErr := io.SafeReadFile(filepath.Dir(path), filepath.Base(path))
 	if readErr != nil {
 		return State{}, false
 	}
 
 	var ps State
-	for _, line := range strings.Split(strings.TrimSpace(string(data)), token.NewlineLF) {
+	lines := strings.Split(
+		strings.TrimSpace(string(data)), token.NewlineLF,
+	)
+	for _, line := range lines {
 		parts := strings.SplitN(line, token.KeyValueSep, 2)
 		if len(parts) != 2 {
 			continue
@@ -56,7 +54,7 @@ func ReadPersistenceState(path string) (State, bool) {
 			if parseErr == nil {
 				ps.Count = n
 			}
-		case nudge.PersistenceKeyLastNudge:
+		case nudge.KeyLastNudge:
 			n, parseErr := strconv.Atoi(parts[1])
 			if parseErr == nil {
 				ps.LastNudge = n
@@ -71,18 +69,22 @@ func ReadPersistenceState(path string) (State, bool) {
 	return ps, true
 }
 
-// WritePersistenceState writes the persistence state to the given file.
+// WriteState writes the persistence state to the given file.
 //
 // Parameters:
 //   - path: absolute path to the state file
 //   - s: state to persist
-func WritePersistenceState(path string, s State) {
+func WriteState(path string, s State) {
 	content := fmt.Sprintf(desc.Text(text.DescKeyCheckPersistenceStateFormat),
 		s.Count, s.LastNudge, s.LastMtime)
-	_ = os.WriteFile(path, []byte(content), fs.PermSecret)
+	if writeErr := os.WriteFile(
+		path, []byte(content), fs.PermSecret,
+	); writeErr != nil {
+		ctxLog.Warn(warn.Write, path, writeErr)
+	}
 }
 
-// PersistenceNudgeNeeded determines whether a persistence nudge should
+// NudgeNeeded determines whether a persistence nudge should
 // fire based on prompt count and the number of prompts since the last nudge.
 //
 // Parameters:
@@ -91,11 +93,14 @@ func WritePersistenceState(path string, s State) {
 //
 // Returns:
 //   - bool: true if a nudge should be emitted
-func PersistenceNudgeNeeded(count, sinceNudge int) bool {
-	if count >= nudge.PersistenceEarlyMin && count <= nudge.PersistenceEarlyMax && sinceNudge >= nudge.PersistenceEarlyInterval {
+func NudgeNeeded(count, sinceNudge int) bool {
+	earlyRange := count >= nudge.PersistenceEarlyMin &&
+		count <= nudge.PersistenceEarlyMax
+	if earlyRange && sinceNudge >= nudge.PersistenceEarlyInterval {
 		return true
 	}
-	if count > nudge.PersistenceEarlyMax && sinceNudge >= nudge.PersistenceLateInterval {
+	lateRange := count > nudge.PersistenceEarlyMax
+	if lateRange && sinceNudge >= nudge.PersistenceLateInterval {
 		return true
 	}
 	return false

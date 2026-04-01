@@ -22,8 +22,9 @@ import (
 	"github.com/ActiveMemory/ctx/internal/cli/add/core/normalize"
 	"github.com/ActiveMemory/ctx/internal/config/embed/text"
 	"github.com/ActiveMemory/ctx/internal/config/marker"
+	errAdd "github.com/ActiveMemory/ctx/internal/err/add"
+	errFs "github.com/ActiveMemory/ctx/internal/err/fs"
 	"github.com/ActiveMemory/ctx/internal/inspect"
-	"github.com/ActiveMemory/ctx/internal/write/add"
 	"github.com/spf13/cobra"
 
 	"github.com/ActiveMemory/ctx/internal/cli/initialize"
@@ -37,16 +38,20 @@ import (
 // ---------------------------------------------------------------------------
 
 func TestErrNoContent(t *testing.T) {
-	err := add.ErrNoContent()
+	err := errAdd.NoContent()
 	if err == nil || err.Error() != "no content provided" {
-		t.Errorf("ErrNoContent() = %v, want 'no content provided'", err)
+		t.Errorf("NoContent() = %v, want 'no content provided'", err)
 	}
 }
 
 func TestErrNoContentProvided(t *testing.T) {
-	for _, fType := range []string{entryType.Decision, entryType.Task, entryType.Learning, entryType.Convention, entryType.Unknown} {
+	for _, fType := range []string{
+		entryType.Decision, entryType.Task,
+		entryType.Learning, entryType.Convention,
+		entryType.Unknown,
+	} {
 		t.Run(fType, func(t *testing.T) {
-			err := add.ErrNoContentProvided(fType, example.ForType(fType))
+			err := errAdd.NoContentProvided(fType, example.ForType(fType))
 			if err == nil {
 				t.Fatal("expected non-nil error")
 			}
@@ -62,7 +67,7 @@ func TestErrNoContentProvided(t *testing.T) {
 }
 
 func TestErrFileRead(t *testing.T) {
-	err := add.ErrFileRead("/some/path", os.ErrNotExist)
+	err := errFs.FileRead("/some/path", os.ErrNotExist)
 	if err == nil {
 		t.Fatal("expected non-nil error")
 	}
@@ -72,7 +77,7 @@ func TestErrFileRead(t *testing.T) {
 }
 
 func TestErrFileWrite(t *testing.T) {
-	err := add.ErrFileWriteAdd("/some/path", os.ErrPermission)
+	err := errFs.FileWrite("/some/path", os.ErrPermission)
 	if err == nil {
 		t.Fatal("expected non-nil error")
 	}
@@ -82,7 +87,7 @@ func TestErrFileWrite(t *testing.T) {
 }
 
 func TestErrStdinRead(t *testing.T) {
-	err := add.ErrStdinRead(os.ErrClosed)
+	err := errFs.StdinRead(os.ErrClosed)
 	if err == nil {
 		t.Fatal("expected non-nil error")
 	}
@@ -92,7 +97,7 @@ func TestErrStdinRead(t *testing.T) {
 }
 
 func TestErrIndexUpdate(t *testing.T) {
-	err := add.ErrIndexUpdate("/some/file", os.ErrPermission)
+	err := errAdd.IndexUpdate("/some/file", os.ErrPermission)
 	if err == nil {
 		t.Fatal("expected non-nil error")
 	}
@@ -102,7 +107,7 @@ func TestErrIndexUpdate(t *testing.T) {
 }
 
 func TestErrUnknownType(t *testing.T) {
-	err := add.ErrUnknownType("foobar")
+	err := errAdd.UnknownType("foobar")
 	if err == nil {
 		t.Fatal("expected non-nil error")
 	}
@@ -116,7 +121,7 @@ func TestErrUnknownType(t *testing.T) {
 }
 
 func TestErrFileNotFound(t *testing.T) {
-	err := add.ErrFileNotFound("/missing/file")
+	err := errAdd.FileNotFound("/missing/file")
 	if err == nil {
 		t.Fatal("expected non-nil error")
 	}
@@ -130,7 +135,7 @@ func TestErrFileNotFound(t *testing.T) {
 }
 
 func TestErrMissingFields(t *testing.T) {
-	err := add.ErrMissingFields("decision", []string{"context", "rationale"})
+	err := errAdd.MissingFields("decision", []string{"context", "rationale"})
 	if err == nil {
 		t.Fatal("expected non-nil error")
 	}
@@ -162,7 +167,10 @@ func TestExamplesForType(t *testing.T) {
 		t.Run(tt.fType, func(t *testing.T) {
 			result := example.ForType(tt.fType)
 			if !strings.Contains(result, tt.contains) {
-				t.Errorf("ForType(%q) should contain %q, got: %s", tt.fType, tt.contains, result)
+				t.Errorf(
+					"ForType(%q) should contain %q, got: %s",
+					tt.fType, tt.contains, result,
+				)
 			}
 		})
 	}
@@ -175,7 +183,10 @@ func TestExamplesForType(t *testing.T) {
 func TestFormatTaskWithPriority(t *testing.T) {
 	result := format.Task("My task", "high")
 	if !strings.Contains(result, "#priority:high") {
-		t.Errorf("Task with priority should contain '#priority:high', got: %s", result)
+		t.Errorf(
+			"Task with priority should contain"+
+				" '#priority:high', got: %s", result,
+		)
 	}
 	if !strings.Contains(result, "My task") {
 		t.Errorf("Task should contain task content, got: %s", result)
@@ -188,7 +199,10 @@ func TestFormatTaskWithPriority(t *testing.T) {
 func TestFormatTaskWithoutPriority(t *testing.T) {
 	result := format.Task("Simple task", "")
 	if strings.Contains(result, "#priority:") {
-		t.Errorf("Task without priority should not contain '#priority:', got: %s", result)
+		t.Errorf(
+			"Task without priority should not"+
+				" contain '#priority:', got: %s", result,
+		)
 	}
 	if !strings.Contains(result, "Simple task") {
 		t.Errorf("Task should contain task content, got: %s", result)
@@ -346,12 +360,13 @@ func TestInsertAfterHeader_HeaderAtEndOfFile(t *testing.T) {
 
 func TestInsertAfterHeader_WithCtxMarkers(t *testing.T) {
 	content := "# Learnings\n" +
-		marker.CtxMarkerStart + "\nsome context\n" + marker.CommentClose + "\n\n" +
+		marker.CtxStart + "\nsome context\n" + marker.CommentClose + "\n\n" +
 		"## [2026-01-01] Existing\n"
 	entry := "## [2026-01-02] New\n"
 
 	// The header "# Learnings" is found, then markers are skipped
-	result := insert.AfterHeader(content, entry, desc.Text(text.DescKeyHeadingLearnings))
+	heading := desc.Text(text.DescKeyHeadingLearnings)
+	result := insert.AfterHeader(content, entry, heading)
 	resultStr := string(result)
 
 	if !strings.Contains(resultStr, "New") {
@@ -361,10 +376,13 @@ func TestInsertAfterHeader_WithCtxMarkers(t *testing.T) {
 
 func TestInsertAfterHeader_CtxMarkerWithoutClose(t *testing.T) {
 	// ctx marker start present but no close marker
-	content := "# Learnings\n" + marker.CtxMarkerStart + "\nunclosed marker content\nExisting\n"
+	content := "# Learnings\n" +
+		marker.CtxStart +
+		"\nunclosed marker content\nExisting\n"
 	entry := "## New entry\n"
 
-	result := insert.AfterHeader(content, entry, desc.Text(text.DescKeyHeadingLearnings))
+	heading := desc.Text(text.DescKeyHeadingLearnings)
+	result := insert.AfterHeader(content, entry, heading)
 	resultStr := string(result)
 
 	if !strings.Contains(resultStr, "New entry") {
@@ -453,7 +471,8 @@ func TestExtractContent_FromFile(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	content, err := extract.Content([]string{"task"}, entity.AddConfig{FromFile: tmpFile})
+	cfg := entity.AddConfig{FromFile: tmpFile}
+	content, err := extract.Content([]string{"task"}, cfg)
 	if err != nil {
 		t.Fatalf("unexpected error: %v", err)
 	}
@@ -463,14 +482,18 @@ func TestExtractContent_FromFile(t *testing.T) {
 }
 
 func TestExtractContent_FromFileMissing(t *testing.T) {
-	_, err := extract.Content([]string{"task"}, entity.AddConfig{FromFile: "/nonexistent/file"})
+	cfg := entity.AddConfig{FromFile: "/nonexistent/file"}
+	_, err := extract.Content([]string{"task"}, cfg)
 	if err == nil {
 		t.Fatal("expected error for missing file")
 	}
 }
 
 func TestExtractContent_FromArgs(t *testing.T) {
-	content, err := extract.Content([]string{"task", "hello", "world"}, entity.AddConfig{})
+	content, err := extract.Content(
+		[]string{"task", "hello", "world"},
+		entity.AddConfig{},
+	)
 	if err != nil {
 		t.Fatalf("unexpected error: %v", err)
 	}
@@ -503,14 +526,16 @@ func TestValidateEntry(t *testing.T) {
 	})
 
 	t.Run("valid task", func(t *testing.T) {
-		err := entry.Validate(entry.Params{Type: "task", Content: "Do something"}, nil)
+		p := entry.Params{Type: "task", Content: "Do something"}
+		err := entry.Validate(p, nil)
 		if err != nil {
 			t.Errorf("unexpected error: %v", err)
 		}
 	})
 
 	t.Run("valid convention", func(t *testing.T) {
-		err := entry.Validate(entry.Params{Type: "convention", Content: "Use camelCase"}, nil)
+		p := entry.Params{Type: "convention", Content: "Use camelCase"}
+		err := entry.Validate(p, nil)
 		if err != nil {
 			t.Errorf("unexpected error: %v", err)
 		}
@@ -630,7 +655,11 @@ func TestRun_UnknownType(t *testing.T) {
 	addCmd := &cobra.Command{}
 	addCmd.SetOut(&strings.Builder{})
 	addCmd.SetErr(&strings.Builder{})
-	err := root.Run(addCmd, []string{"invalidtype", "Some content"}, entity.AddConfig{})
+	err := root.Run(
+		addCmd,
+		[]string{"invalidtype", "Some content"},
+		entity.AddConfig{},
+	)
 	if err == nil {
 		t.Fatal("expected error for unknown type")
 	}
@@ -687,7 +716,11 @@ func TestRun_TaskWithPriority(t *testing.T) {
 	addCmd := &cobra.Command{}
 	addCmd.SetOut(&strings.Builder{})
 	addCmd.SetErr(&strings.Builder{})
-	err := root.Run(addCmd, []string{"task", "High priority task"}, entity.AddConfig{Priority: "high"})
+	err := root.Run(
+		addCmd,
+		[]string{"task", "High priority task"},
+		entity.AddConfig{Priority: "high"},
+	)
 	if err != nil {
 		t.Fatalf("Run task with priority failed: %v", err)
 	}
@@ -722,7 +755,11 @@ func TestRun_TaskWithSection(t *testing.T) {
 	addCmd := &cobra.Command{}
 	addCmd.SetOut(&strings.Builder{})
 	addCmd.SetErr(&strings.Builder{})
-	err := root.Run(addCmd, []string{"task", "Sectioned task"}, entity.AddConfig{Section: "Next Up"})
+	err := root.Run(
+		addCmd,
+		[]string{"task", "Sectioned task"},
+		entity.AddConfig{Section: "Next Up"},
+	)
 	if err != nil {
 		t.Fatalf("Run task with section failed: %v", err)
 	}
@@ -819,11 +856,11 @@ func TestContainsNewLine(t *testing.T) {
 }
 
 func TestStartsWithCtxMarker(t *testing.T) {
-	if !inspect.StartsWithCtxMarker(marker.CtxMarkerStart + " rest") {
-		t.Error("should detect CtxMarkerStart")
+	if !inspect.StartsWithCtxMarker(marker.CtxStart + " rest") {
+		t.Error("should detect CtxStart")
 	}
-	if !inspect.StartsWithCtxMarker(marker.CtxMarkerEnd + " rest") {
-		t.Error("should detect CtxMarkerEnd")
+	if !inspect.StartsWithCtxMarker(marker.CtxEnd + " rest") {
+		t.Error("should detect CtxEnd")
 	}
 	if inspect.StartsWithCtxMarker("no marker here") {
 		t.Error("should not detect marker in plain text")

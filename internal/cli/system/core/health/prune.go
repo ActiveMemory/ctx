@@ -10,18 +10,13 @@ import (
 	"fmt"
 	"os"
 	"path/filepath"
-	"regexp"
 	"time"
 
 	"github.com/ActiveMemory/ctx/internal/assets/read/desc"
 	"github.com/ActiveMemory/ctx/internal/cli/system/core/state"
 	"github.com/ActiveMemory/ctx/internal/config/embed/text"
+	"github.com/ActiveMemory/ctx/internal/config/regex"
 	cfgTime "github.com/ActiveMemory/ctx/internal/config/time"
-)
-
-// UUIDPattern matches a UUID (v4) anywhere in a filename.
-var UUIDPattern = regexp.MustCompile(
-	`[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}`,
 )
 
 // AutoPrune silently removes session-scoped state files older than the
@@ -35,14 +30,15 @@ var UUIDPattern = regexp.MustCompile(
 // Returns:
 //   - int: Number of files pruned
 func AutoPrune(days int) int {
-	dir := state.StateDir()
+	dir := state.Dir()
 
 	entries, readErr := os.ReadDir(dir)
 	if readErr != nil {
 		return 0
 	}
 
-	cutoff := time.Now().Add(-time.Duration(days) * cfgTime.HoursPerDay * time.Hour)
+	age := time.Duration(days) * cfgTime.HoursPerDay * time.Hour
+	cutoff := time.Now().Add(-age)
 	var pruned int
 
 	for _, entry := range entries {
@@ -50,7 +46,7 @@ func AutoPrune(days int) int {
 			continue
 		}
 
-		if !UUIDPattern.MatchString(entry.Name()) {
+		if !regex.UUID.MatchString(entry.Name()) {
 			continue
 		}
 
@@ -82,10 +78,19 @@ func AutoPrune(days int) int {
 func FormatAge(t time.Time) string {
 	d := time.Since(t)
 	if d < time.Hour {
-		return fmt.Sprintf(desc.Text(text.DescKeyWriteFormatDurationMin), int(d.Minutes()))
+		return fmt.Sprintf(
+			desc.Text(text.DescKeyWriteFormatDurationMin),
+			int(d.Minutes()),
+		)
 	}
 	if d < 24*time.Hour {
-		return fmt.Sprintf(desc.Text(text.DescKeyWriteFormatDurationHour), int(d.Hours()))
+		return fmt.Sprintf(
+			desc.Text(text.DescKeyWriteFormatDurationHour),
+			int(d.Hours()),
+		)
 	}
-	return fmt.Sprintf(desc.Text(text.DescKeyWriteFormatDurationDay), int(d.Hours()/24))
+	return fmt.Sprintf(
+		desc.Text(text.DescKeyWriteFormatDurationDay),
+		int(d.Hours()/24),
+	)
 }

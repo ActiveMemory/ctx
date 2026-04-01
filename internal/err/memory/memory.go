@@ -142,14 +142,14 @@ func DiscoverResolveHome(cause error) error {
 	)
 }
 
-// DiscoverNoMemory returns an error when no auto memory file exists.
+// NoDiscovery returns an error when no auto memory file exists.
 //
 // Parameters:
 //   - path: the path that was checked
 //
 // Returns:
 //   - error: "no auto memory at <path>"
-func DiscoverNoMemory(path string) error {
+func NoDiscovery(path string) error {
 	return fmt.Errorf(
 		desc.Text(text.DescKeyErrMemoryDiscoverNoMemory), path,
 	)

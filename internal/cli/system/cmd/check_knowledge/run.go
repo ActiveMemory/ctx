@@ -10,11 +10,11 @@ import (
 	"os"
 	"path/filepath"
 
+	"github.com/spf13/cobra"
+
 	"github.com/ActiveMemory/ctx/internal/cli/system/core/check"
 	coreKnowledge "github.com/ActiveMemory/ctx/internal/cli/system/core/knowledge"
 	"github.com/ActiveMemory/ctx/internal/cli/system/core/state"
-	"github.com/spf13/cobra"
-
 	"github.com/ActiveMemory/ctx/internal/config/knowledge"
 	internalIo "github.com/ActiveMemory/ctx/internal/io"
 	writeHook "github.com/ActiveMemory/ctx/internal/write/hook"
@@ -43,12 +43,12 @@ func Run(cmd *cobra.Command, stdin *os.File) error {
 		return nil
 	}
 
-	markerPath := filepath.Join(state.StateDir(), knowledge.KnowledgeThrottleID)
+	markerPath := filepath.Join(state.Dir(), knowledge.ThrottleID)
 	if check.DailyThrottled(markerPath) {
 		return nil
 	}
 
-	if box, warned := coreKnowledge.CheckKnowledgeHealth(sessionID); warned {
+	if box, warned := coreKnowledge.CheckHealth(sessionID); warned {
 		writeHook.Nudge(cmd, box)
 		internalIo.TouchFile(markerPath)
 	}

@@ -8,9 +8,7 @@ package server
 
 import (
 	"bufio"
-	"io"
 	"os"
-	"sync"
 
 	"github.com/ActiveMemory/ctx/internal/assets/read/desc"
 	"github.com/ActiveMemory/ctx/internal/config/embed/text"
@@ -26,25 +24,7 @@ import (
 	"github.com/ActiveMemory/ctx/internal/rc"
 )
 
-// Server is an MCP server that exposes ctx context over JSON-RPC 2.0.
-//
-// It reads JSON-RPC requests from stdin and writes responses to stdout,
-// following the Model Context Protocol specification.
-//
-// Thread-safety: outMu serialises all writes to out (main loop and poller
-// goroutine). The main loop itself is single-threaded, so request
-// dispatch and session mutations need no additional locking.
-type Server struct {
-	handler      *handler.Handler
-	version      string
-	out          io.Writer
-	outMu        sync.Mutex // guards all writes to out
-	in           io.Reader
-	poller       *poll.ResourcePoller
-	resourceList proto.ResourceListResult // pre-built, immutable after init
-}
-
-// NewServer creates a new MCP server for the given context directory.
+// New creates a new MCP server for the given context directory.
 //
 // Parameters:
 //   - contextDir: path to the .context/ directory
@@ -52,17 +32,17 @@ type Server struct {
 //
 // Returns:
 //   - *Server: a configured MCP server ready to serve
-func NewServer(contextDir, version string) *Server {
+func New(contextDir, version string) *Server {
 	catalog.Init()
 	srv := &Server{
 		handler:      handler.New(contextDir, rc.TokenBudget()),
 		version:      version,
-		out:          os.Stdout,
+		out:          mcpIO.NewWriter(os.Stdout),
 		in:           os.Stdin,
 		resourceList: catalog.ToList(),
 	}
-	srv.poller = poll.NewResourcePoller(contextDir, func(n proto.Notification) {
-		_ = mcpIO.WriteJSON(srv.out, &srv.outMu, n)
+	srv.poller = poll.NewPoller(contextDir, func(n proto.Notification) {
+		_ = srv.out.WriteJSON(n)
 	})
 	return srv
 }
@@ -88,7 +68,7 @@ func (s *Server) Serve() error {
 
 		req, errResp := parse.Request(line)
 		if errResp != nil {
-			if writeErr := mcpIO.WriteJSON(s.out, &s.outMu, errResp); writeErr != nil {
+			if writeErr := s.out.WriteJSON(errResp); writeErr != nil {
 				return writeErr
 			}
 			continue
@@ -102,13 +82,13 @@ func (s *Server) Serve() error {
 			s.version, s.handler, s.resourceList, s.poller, *req,
 		)
 
-		if writeErr := mcpIO.WriteJSON(s.out, &s.outMu, resp); writeErr != nil {
+		if writeErr := s.out.WriteJSON(resp); writeErr != nil {
 			// Marshal failure: try to report it as an error response.
 			fallback := out.ErrResponse(
 				nil, proto.ErrCodeInternal,
 				desc.Text(text.DescKeyMCPErrFailedMarshal),
 			)
-			if fbErr := mcpIO.WriteJSON(s.out, &s.outMu, fallback); fbErr != nil {
+			if fbErr := s.out.WriteJSON(fallback); fbErr != nil {
 				return fbErr
 			}
 			continue

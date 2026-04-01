@@ -65,25 +65,26 @@ func ReferenceTime(since string) (time.Time, string, error) {
 //   - error: Non-nil if parsing fails
 func ParseSinceFlag(since string) (time.Time, string, error) {
 	// Try duration first.
-	if d, err := time.ParseDuration(since); err == nil {
+	if d, durationErr := time.ParseDuration(since); durationErr == nil {
 		t := time.Now().Add(-d)
 		return t, format.DurationAgo(d), nil
 	}
 
 	// Try date.
-	if t, err := time.Parse(cfgTime.DateFormat, since); err == nil {
+	if t, dateErr := time.Parse(cfgTime.DateFormat, since); dateErr == nil {
 		return t, desc.Text(text.DescKeyChangesSincePrefix) + since, nil
 	}
 
 	// Try RFC3339.
-	if t, err := time.Parse(time.RFC3339, since); err == nil {
+	if t, rfcErr := time.Parse(time.RFC3339, since); rfcErr == nil {
 		return t, format.DurationAgo(time.Since(t)), nil
 	}
 
 	return time.Time{}, "", os.ErrInvalid
 }
 
-// ExtractTimestamp extracts a timestamp from a JSON line without full unmarshal.
+// ExtractTimestamp extracts a timestamp from a JSON
+// line without full unmarshal.
 // Looks for "timestamp":"..." and parses as RFC3339.
 //
 // Parameters:
@@ -103,8 +104,8 @@ func ExtractTimestamp(jsonLine string) (time.Time, bool) {
 	if end < 0 {
 		return time.Time{}, false
 	}
-	t, err := time.Parse(time.RFC3339, jsonLine[start:start+end])
-	if err != nil {
+	t, parseErr := time.Parse(time.RFC3339, jsonLine[start:start+end])
+	if parseErr != nil {
 		return time.Time{}, false
 	}
 	return t, true

@@ -6,6 +6,7 @@
 
 // Package resume implements the ctx system resume subcommand.
 //
-// It removes the session-scoped pause marker so that hooks resume
-// normal behavior.
+// Key exports: [Cmd], [Run].
+// Follows the cmd/root + core taxonomy.
+// Registered by the cmd parent command.
 package resume

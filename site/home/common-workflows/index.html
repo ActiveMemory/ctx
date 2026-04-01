@@ -956,10 +956,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#export-and-serve" class="md-nav__link">
+  <a href="#import-and-serve" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Export and Serve
+        Import and Serve
       
     </span>
   </a>
@@ -978,10 +978,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#re-exporting-existing-files" class="md-nav__link">
+  <a href="#re-importing-existing-files" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Re-Exporting Existing Files
+        Re-Importing Existing Files
       
     </span>
   </a>
@@ -2680,16 +2680,14 @@
   
   
     <li class="md-nav__item">
-      <a href="../../recipes/prompt-templates/" class="md-nav__link">
+      <a href="../../recipes/prompt-templates.md" class="md-nav__link">
         
   
-  
-    <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-message-square-text" viewBox="0 0 24 24"><path d="M22 17a2 2 0 0 1-2 2H6.828a2 2 0 0 0-1.414.586l-2.202 2.202A.71.71 0 0 1 2 21.286V5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2zM7 11h10M7 15h6M7 7h8"/></svg>
   
   <span class="md-ellipsis">
     
   
-    Reusable Prompt Templates
+    none
   
 
     
@@ -2870,7 +2868,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../cli/recall/" class="md-nav__link">
+      <a href="../../cli/journal/" class="md-nav__link">
         
   
   
@@ -2879,7 +2877,7 @@
   <span class="md-ellipsis">
     
   
-    Recall and Journal
+    Journal
   
 
     
@@ -3776,10 +3774,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#export-and-serve" class="md-nav__link">
+  <a href="#import-and-serve" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Export and Serve
+        Import and Serve
       
     </span>
   </a>
@@ -3798,10 +3796,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#re-exporting-existing-files" class="md-nav__link">
+  <a href="#re-importing-existing-files" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Re-Exporting Existing Files
+        Re-Importing Existing Files
       
     </span>
   </a>
@@ -4030,10 +4028,10 @@ and repeat every session until you dismiss them.</p>
 </span></code></pre></div>
 <h2 id="browse-session-history">Browse Session History<a class="headerlink" href="#browse-session-history" title="Permanent link">&para;</a></h2>
 <p>List and search past AI sessions from the terminal:</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>ctx<span class="w"> </span>recall<span class="w"> </span>list<span class="w"> </span>--limit<span class="w"> </span><span class="m">5</span>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>ctx<span class="w"> </span>journal<span class="w"> </span><span class="nb">source</span><span class="w"> </span>--limit<span class="w"> </span><span class="m">5</span>
 </span></code></pre></div>
 <h3 id="journal-site">Journal Site<a class="headerlink" href="#journal-site" title="Permanent link">&para;</a></h3>
-<p>Export session transcripts to a browsable static site with search,
+<p>Import session transcripts to a browsable static site with search,
 navigation, and topic indices.</p>
 <div class="admonition info">
 <p>The <code>ctx journal</code> command requires
@@ -4055,10 +4053,10 @@ Homebrew Python blocks system-wide installs (<code>PEP 668</code>).</p>
 <p><code>pipx</code> creates an <strong>isolated environment</strong> with the
 <strong>correct Python version</strong> automatically.</p>
 </div>
-<h3 id="export-and-serve">Export and Serve<a class="headerlink" href="#export-and-serve" title="Permanent link">&para;</a></h3>
-<p>Then, <strong>export and serve</strong>:</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-5-1"><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># Export all sessions to .context/journal/ (only new files)</span>
-</span><span id="__span-5-2"><a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>ctx<span class="w"> </span>recall<span class="w"> </span><span class="nb">export</span><span class="w"> </span>--all
+<h3 id="import-and-serve">Import and Serve<a class="headerlink" href="#import-and-serve" title="Permanent link">&para;</a></h3>
+<p>Then, <strong>import and serve</strong>:</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-5-1"><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># Import all sessions to .context/journal/ (only new files)</span>
+</span><span id="__span-5-2"><a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>ctx<span class="w"> </span>journal<span class="w"> </span>import<span class="w"> </span>--all
 </span><span id="__span-5-3"><a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>
 </span><span id="__span-5-4"><a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="c1"># Generate and serve the journal site</span>
 </span><span id="__span-5-5"><a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>ctx<span class="w"> </span>journal<span class="w"> </span>site<span class="w"> </span>--serve
@@ -4066,19 +4064,19 @@ Homebrew Python blocks system-wide installs (<code>PEP 668</code>).</p>
 <p>Open <a href="http://localhost:8000">http://localhost:8000</a> to browse.</p>
 <p>To update after new sessions, run the same two commands again.</p>
 <h3 id="safe-by-default">Safe By Default<a class="headerlink" href="#safe-by-default" title="Permanent link">&para;</a></h3>
-<p><code>ctx recall export --all</code> is <strong>safe by default</strong>: </p>
+<p><code>ctx journal import --all</code> is <strong>safe by default</strong>:</p>
 <ul>
-<li>It only exports new sessions and <strong>skips existing files</strong>.</li>
-<li>Locked entries (<em>via <code>ctx recall lock</code></em>) are <strong>always skipped</strong> by
-  both export and enrichment skills.</li>
+<li>It only imports new sessions and <strong>skips existing files</strong>.</li>
+<li>Locked entries (<em>via <code>ctx journal lock</code></em>) are <strong>always skipped</strong> by
+  both import and enrichment skills.</li>
 <li>If you add <code>locked: true</code> to frontmatter during enrichment, run
-  <code>ctx recall sync</code> to propagate the lock state to <code>.state.json</code>.</li>
+  <code>ctx journal sync</code> to propagate the lock state to <code>.state.json</code>.</li>
 </ul>
-<h3 id="re-exporting-existing-files">Re-Exporting Existing Files<a class="headerlink" href="#re-exporting-existing-files" title="Permanent link">&para;</a></h3>
-<p>Here is how you regenerate existing files. </p>
-<p><strong>Backup your <code>.context</code> folder</strong> before regeneration, as this is a 
+<h3 id="re-importing-existing-files">Re-Importing Existing Files<a class="headerlink" href="#re-importing-existing-files" title="Permanent link">&para;</a></h3>
+<p>Here is how you regenerate existing files.</p>
+<p><strong>Backup your <code>.context</code> folder</strong> before regeneration, as this is a
 potentially destructive action.</p>
-<p>To re-export journal files, you need to explicitly opt-in using the 
+<p>To re-import journal files, you need to explicitly opt-in using the
 <code>--regenerate</code> flag:</p>
 <table>
 <thead>
@@ -4105,9 +4103,9 @@ potentially destructive action.</p>
 <p class="admonition-title">Regeneration Overwrites Body Edits</p>
 <p><code>--regenerate</code> preserves your YAML frontmatter (<em>tags, summary,
 enrichment metadata</em>) but it <strong>replaces the Markdown body</strong> with a
-fresh export. </p>
+fresh import.</p>
 <p><strong>Any manual edits you made to the transcript will be lost</strong>.</p>
-<p><strong>Lock entries you want to protect first</strong>: <code>ctx recall lock &lt;session-id&gt;</code>.</p>
+<p><strong>Lock entries you want to protect first</strong>: <code>ctx journal lock &lt;session-id&gt;</code>.</p>
 </div>
 <p>See <a href="../../reference/session-journal/">Session Journal</a> for the full pipeline
 including <strong>normalization</strong> and <strong>enrichment</strong>.</p>
@@ -4269,8 +4267,8 @@ agent's judgment.</p>
 <td>Agent reads/writes scratchpad entries in conversation flow</td>
 </tr>
 <tr>
-<td><code>ctx recall</code></td>
-<td><code>/ctx-recall</code></td>
+<td><code>ctx journal</code></td>
+<td><code>/ctx-history</code></td>
 <td>Agent searches session history with semantic understanding</td>
 </tr>
 <tr>
@@ -4354,10 +4352,6 @@ agent's judgment.</p>
 <tr>
 <td><code>/ctx-worktree</code></td>
 <td>Manage parallel agent worktrees</td>
-</tr>
-<tr>
-<td><code>/ctx-journal-normalize</code></td>
-<td>Fix markdown rendering issues in journal entries</td>
 </tr>
 <tr>
 <td><code>/ctx-journal-enrich</code></td>

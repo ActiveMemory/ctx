@@ -21,7 +21,9 @@ import (
 	"github.com/ActiveMemory/ctx/internal/config/embed/text"
 	"github.com/ActiveMemory/ctx/internal/config/freshness"
 	"github.com/ActiveMemory/ctx/internal/config/hook"
+	"github.com/ActiveMemory/ctx/internal/config/warn"
 	"github.com/ActiveMemory/ctx/internal/entity"
+	ctxLog "github.com/ActiveMemory/ctx/internal/log/warn"
 	"github.com/ActiveMemory/ctx/internal/rc"
 )
 
@@ -50,7 +52,7 @@ func Run(cmd *cobra.Command, stdin *os.File) error {
 		return nil
 	}
 
-	tmpDir := state.StateDir()
+	tmpDir := state.Dir()
 	throttleFile := filepath.Join(tmpDir, freshness.ThrottleID)
 
 	if coreCheck.DailyThrottled(throttleFile) {
@@ -59,6 +61,7 @@ func Run(cmd *cobra.Command, stdin *os.File) error {
 
 	cwd, cwdErr := os.Getwd()
 	if cwdErr != nil {
+		ctxLog.Warn(warn.Getwd, cwdErr)
 		return nil
 	}
 

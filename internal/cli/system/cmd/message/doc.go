@@ -5,4 +5,8 @@
 //                 SPDX-License-Identifier: Apache-2.0
 
 // Package message provides the parent command for ctx system message.
+//
+// Key exports: [Cmd].
+// Follows the cmd/root + core taxonomy.
+// Registered by the cmd parent command.
 package message

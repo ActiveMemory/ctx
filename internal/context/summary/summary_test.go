@@ -18,7 +18,8 @@ func TestGenerateSummary(t *testing.T) {
 		{
 			name:     "constitution with invariants",
 			filename: "CONSTITUTION.md",
-			content:  []byte("# Constitution\n\n- [ ] Rule 1\n- [ ] Rule 2\n- [x] Rule 3\n"),
+			content: []byte("# Constitution\n\n" +
+				"- [ ] Rule 1\n- [ ] Rule 2\n- [x] Rule 3\n"),
 			expected: "3 invariants",
 		},
 		{
@@ -54,13 +55,16 @@ func TestGenerateSummary(t *testing.T) {
 		{
 			name:     "decisions multiple",
 			filename: "DECISIONS.md",
-			content:  []byte("# Decisions\n\n## [2024-01-15-120000] First\n\nContent\n\n## [2024-01-16-120000] Second\n\nContent\n"),
+			content: []byte("# Decisions\n\n" +
+				"## [2024-01-15-120000] First\n\nContent\n\n" +
+				"## [2024-01-16-120000] Second\n\nContent\n"),
 			expected: "2 decisions",
 		},
 		{
 			name:     "decisions single",
 			filename: "DECISIONS.md",
-			content:  []byte("# Decisions\n\n## [2024-01-15-120000] One decision\n\nContent\n"),
+			content: []byte("# Decisions\n\n" +
+				"## [2024-01-15-120000] One decision\n\nContent\n"),
 			expected: "1 decision",
 		},
 		{
@@ -72,7 +76,9 @@ func TestGenerateSummary(t *testing.T) {
 		{
 			name:     "glossary multiple",
 			filename: "GLOSSARY.md",
-			content:  []byte("# Glossary\n\n- **Term1** - Definition 1\n- **Term2** - Definition 2\n"),
+			content: []byte("# Glossary\n\n" +
+				"- **Term1** - Definition 1\n" +
+				"- **Term2** - Definition 2\n"),
 			expected: "2 terms",
 		},
 		{
@@ -103,9 +109,10 @@ func TestGenerateSummary(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			result := GenerateSummary(tt.filename, tt.content)
+			result := Generate(tt.filename, tt.content)
 			if result != tt.expected {
-				t.Errorf("generateSummary(%q) = %q, want %q", tt.filename, result, tt.expected)
+				t.Errorf("generateSummary(%q) = %q, want %q",
+					tt.filename, result, tt.expected)
 			}
 		})
 	}
@@ -194,8 +201,11 @@ func TestSummarizeDecisions(t *testing.T) {
 			expected: "1 decision",
 		},
 		{
-			name:     "multiple decisions",
-			content:  []byte("## [2024-01-15-120000] First\n\n## [2024-01-16-120000] Second\n\n## [2024-01-17-120000] Third\n"),
+			name: "multiple decisions",
+			content: []byte(
+				"## [2024-01-15-120000] First\n\n" +
+					"## [2024-01-16-120000] Second\n\n" +
+					"## [2024-01-17-120000] Third\n"),
 			expected: "3 decisions",
 		},
 	}

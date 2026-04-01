@@ -18,6 +18,7 @@ import (
 
 	"github.com/ActiveMemory/ctx/internal/config/ctx"
 	"github.com/ActiveMemory/ctx/internal/mcp/proto"
+	mcpIO "github.com/ActiveMemory/ctx/internal/mcp/server/io"
 )
 
 func newTestServer(t *testing.T) (*Server, string) {
@@ -54,11 +55,14 @@ func newTestServer(t *testing.T) (*Server, string) {
 			t.Fatalf("write %s: %v", name, err)
 		}
 	}
-	srv := NewServer(contextDir, "test")
+	srv := New(contextDir, "test")
 	return srv, contextDir
 }
 
-func request(t *testing.T, srv *Server, method string, params interface{}) *proto.Response {
+func request(
+	t *testing.T, srv *Server,
+	method string, params interface{},
+) *proto.Response {
 	t.Helper()
 	var rawParams json.RawMessage
 	if params != nil {
@@ -81,7 +85,7 @@ func request(t *testing.T, srv *Server, method string, params interface{}) *prot
 	}
 	var out bytes.Buffer
 	srv.in = bytes.NewReader(append(line, '\n'))
-	srv.out = &out
+	srv.out = mcpIO.NewWriter(&out)
 	if serveErr := srv.Serve(); serveErr != nil {
 		t.Fatalf("serve: %v", serveErr)
 	}
@@ -107,7 +111,10 @@ func TestInitialize(t *testing.T) {
 		t.Fatalf("unmarshal result: %v", err)
 	}
 	if result.ProtocolVersion != proto.ProtocolVersion {
-		t.Errorf("protocol version = %q, want %q", result.ProtocolVersion, proto.ProtocolVersion)
+		t.Errorf(
+			"protocol version = %q, want %q",
+			result.ProtocolVersion, proto.ProtocolVersion,
+		)
 	}
 	if result.ServerInfo.Name != "ctx" {
 		t.Errorf("server name = %q, want %q", result.ServerInfo.Name, "ctx")
@@ -115,7 +122,8 @@ func TestInitialize(t *testing.T) {
 	if result.Capabilities.Resources == nil {
 		t.Error("expected resources capability")
 	}
-	if result.Capabilities.Resources != nil && !result.Capabilities.Resources.Subscribe {
+	hasRes := result.Capabilities.Resources != nil
+	if hasRes && !result.Capabilities.Resources.Subscribe {
 		t.Error("expected resources subscribe capability")
 	}
 	if result.Capabilities.Tools == nil {
@@ -241,7 +249,7 @@ func TestToolsList(t *testing.T) {
 	}
 	for _, want := range []string{
 		"ctx_status", "ctx_add", "ctx_complete", "ctx_drift",
-		"ctx_recall", "ctx_watch_update", "ctx_compact",
+		"ctx_journal_source", "ctx_watch_update", "ctx_compact",
 		"ctx_next", "ctx_check_task_completion",
 		"ctx_session_event", "ctx_remind",
 	} {
@@ -338,8 +346,10 @@ func TestToolAdd(t *testing.T) {
 			wantContains: "Test task",
 		},
 		{
-			name:         "add convention",
-			args:         map[string]interface{}{"type": "convention", "content": "Use tabs"},
+			name: "add convention",
+			args: map[string]interface{}{
+				"type": "convention", "content": "Use tabs",
+			},
 			wantFile:     ctx.Convention,
 			wantContains: "Use tabs",
 		},
@@ -368,13 +378,17 @@ func TestToolAdd(t *testing.T) {
 			wantContains: "Go embed",
 		},
 		{
-			name:    "decision missing rationale",
-			args:    map[string]interface{}{"type": "decision", "content": "X", "context": "Y"},
+			name: "decision missing rationale",
+			args: map[string]interface{}{
+				"type": "decision", "content": "X", "context": "Y",
+			},
 			wantErr: true,
 		},
 		{
-			name:    "learning missing lesson",
-			args:    map[string]interface{}{"type": "learning", "content": "X", "context": "Y"},
+			name: "learning missing lesson",
+			args: map[string]interface{}{
+				"type": "learning", "content": "X", "context": "Y",
+			},
 			wantErr: true,
 		},
 		{
@@ -416,7 +430,11 @@ func TestToolAdd(t *testing.T) {
 				t.Fatalf("read %s: %v", tt.wantFile, err)
 			}
 			if !strings.Contains(string(content), tt.wantContains) {
-				t.Errorf("expected %q in %s, got: %s", tt.wantContains, tt.wantFile, string(content))
+				t.Errorf(
+					"expected %q in %s, got: %s",
+					tt.wantContains, tt.wantFile,
+					string(content),
+				)
 			}
 		})
 	}
@@ -441,7 +459,7 @@ func TestNotification(t *testing.T) {
 	line, _ := json.Marshal(req)
 	var out bytes.Buffer
 	srv.in = bytes.NewReader(append(line, '\n'))
-	srv.out = &out
+	srv.out = mcpIO.NewWriter(&out)
 	if err := srv.Serve(); err != nil {
 		t.Fatalf("serve: %v", err)
 	}
@@ -454,7 +472,7 @@ func TestParseError(t *testing.T) {
 	srv, _ := newTestServer(t)
 	var out bytes.Buffer
 	srv.in = bytes.NewReader([]byte("not json\n"))
-	srv.out = &out
+	srv.out = mcpIO.NewWriter(&out)
 	if err := srv.Serve(); err != nil {
 		t.Fatalf("serve: %v", err)
 	}
@@ -472,7 +490,7 @@ func TestParseError(t *testing.T) {
 func TestToolRecall(t *testing.T) {
 	srv, _ := newTestServer(t)
 	resp := request(t, srv, "tools/call", proto.CallToolParams{
-		Name:      "ctx_recall",
+		Name:      "ctx_journal_source",
 		Arguments: map[string]interface{}{"limit": float64(3)},
 	})
 	if resp.Error != nil {
@@ -495,7 +513,7 @@ func TestToolRecall(t *testing.T) {
 func TestToolRecallInvalidDate(t *testing.T) {
 	srv, _ := newTestServer(t)
 	resp := request(t, srv, "tools/call", proto.CallToolParams{
-		Name:      "ctx_recall",
+		Name:      "ctx_journal_source",
 		Arguments: map[string]interface{}{"since": "not-a-date"},
 	})
 	if resp.Error != nil {
@@ -639,7 +657,9 @@ func TestToolCompact(t *testing.T) {
 	srv, contextDir := newTestServer(t)
 
 	// Set up TASKS.md with a completed task and a Completed section.
-	tasksContent := "# Tasks\n\n- [x] Done task\n- [ ] Pending task\n\n## Completed\n\n"
+	tasksContent := "# Tasks\n\n" +
+		"- [x] Done task\n- [ ] Pending task\n\n" +
+		"## Completed\n\n"
 	if err := os.WriteFile(
 		filepath.Join(contextDir, ctx.Task),
 		[]byte(tasksContent), 0o644,
@@ -801,7 +821,10 @@ func TestToolCheckTaskCompletionNoMatch(t *testing.T) {
 	}
 	// Should not match.
 	if result.Content[0].Text != "" {
-		t.Errorf("expected empty response for no match, got: %s", result.Content[0].Text)
+		t.Errorf(
+			"expected empty response for no match, got: %s",
+			result.Content[0].Text,
+		)
 	}
 }
 
@@ -1058,7 +1081,8 @@ func TestSessionStateTracking(t *testing.T) {
 		t.Fatalf("unmarshal: %v", err)
 	}
 	text := result.Content[0].Text
-	// After start, status, next, end = 4 calls (start resets, so status + next + end = 3)
+	// After start, status, next, end = 4 calls
+	// (start resets, so status + next + end = 3)
 	if !strings.Contains(text, "tool calls") {
 		t.Errorf("expected tool call stats, got: %s", text)
 	}
@@ -1111,7 +1135,11 @@ func TestResourcePollerNotification(t *testing.T) {
 	// Modify the tasks file.
 	time.Sleep(10 * time.Millisecond) // Ensure mtime differs.
 	taskFile := filepath.Join(contextDir, ctx.Task)
-	if err := os.WriteFile(taskFile, []byte("# Tasks\n\n- [ ] Modified task\n"), 0o644); err != nil {
+	if err := os.WriteFile(
+		taskFile,
+		[]byte("# Tasks\n\n- [ ] Modified task\n"),
+		0o644,
+	); err != nil {
 		t.Fatalf("write: %v", err)
 	}
 

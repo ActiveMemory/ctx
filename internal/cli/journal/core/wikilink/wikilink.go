@@ -9,19 +9,16 @@ package wikilink
 import (
 	"fmt"
 	"path/filepath"
-	"regexp"
 	"strings"
 
 	"github.com/ActiveMemory/ctx/internal/assets/read/desc"
 	"github.com/ActiveMemory/ctx/internal/config/embed/text"
 	"github.com/ActiveMemory/ctx/internal/config/file"
 	"github.com/ActiveMemory/ctx/internal/config/obsidian"
+	"github.com/ActiveMemory/ctx/internal/config/regex"
 	"github.com/ActiveMemory/ctx/internal/config/token"
 	"github.com/ActiveMemory/ctx/internal/entity"
 )
-
-// RegexMarkdownLink matches Markdown links: [display](target)
-var RegexMarkdownLink = regexp.MustCompile(`\[([^]]+)]\(([^)]+)\)`)
 
 // ConvertMarkdownLinks replaces internal Markdown links with Obsidian
 // wikilinks. External links (http/https) are left unchanged.
@@ -32,9 +29,9 @@ var RegexMarkdownLink = regexp.MustCompile(`\[([^]]+)]\(([^)]+)\)`)
 // Returns:
 //   - string: Content with internal links converted to [[target|display]]
 func ConvertMarkdownLinks(content string) string {
-	return RegexMarkdownLink.ReplaceAllStringFunc(
+	return regex.MarkdownLinkAny.ReplaceAllStringFunc(
 		content, func(match string) string {
-			parts := RegexMarkdownLink.FindStringSubmatch(match)
+			parts := regex.MarkdownLinkAny.FindStringSubmatch(match)
 			if len(parts) != 3 {
 				return match
 			}
@@ -53,11 +50,11 @@ func ConvertMarkdownLinks(content string) string {
 			target = filepath.Base(target)
 			target = strings.TrimSuffix(target, file.ExtMarkdown)
 
-			return FormatWikilink(target, display)
+			return Format(target, display)
 		})
 }
 
-// FormatWikilink formats a wikilink with optional display text.
+// Format formats a wikilink with optional display text.
 //
 // If display equals target, a plain wikilink is returned: [[target]]
 // Otherwise: [[target|display]]
@@ -68,14 +65,14 @@ func ConvertMarkdownLinks(content string) string {
 //
 // Returns:
 //   - string: Formatted wikilink
-func FormatWikilink(target, display string) string {
+func Format(target, display string) string {
 	if target == display {
 		return fmt.Sprintf(obsidian.WikilinkPlain, target)
 	}
 	return fmt.Sprintf(obsidian.WikilinkFmt, target, display)
 }
 
-// FormatWikilinkEntry formats a journal entry as a wikilink list item.
+// FormatEntry formats a journal entry as a wikilink list item.
 //
 // Output: - [[filename|title]] - `type` · `outcome`
 //
@@ -84,7 +81,7 @@ func FormatWikilink(target, display string) string {
 //
 // Returns:
 //   - string: Formatted list item with wikilink
-func FormatWikilinkEntry(e entity.JournalEntry) string {
+func FormatEntry(e entity.JournalEntry) string {
 	link := strings.TrimSuffix(e.Filename, file.ExtMarkdown)
 
 	var meta []string
@@ -102,7 +99,7 @@ func FormatWikilinkEntry(e entity.JournalEntry) string {
 
 	return fmt.Sprintf(
 		desc.Text(text.DescKeyWriteWikilinkListItem),
-		FormatWikilink(link, e.Title),
+		Format(link, e.Title),
 		suffix,
 	)
 }

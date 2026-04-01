@@ -9,9 +9,10 @@ package loop
 import (
 	"fmt"
 
+	"github.com/spf13/cobra"
+
 	"github.com/ActiveMemory/ctx/internal/assets/read/desc"
 	"github.com/ActiveMemory/ctx/internal/config/embed/text"
-	"github.com/spf13/cobra"
 )
 
 // InfoGenerated reports successful loop script generation with details.
@@ -32,7 +33,9 @@ func InfoGenerated(
 ) {
 	iterLine := desc.Text(text.DescKeyWriteLoopUnlimited)
 	if maxIterations > 0 {
-		iterLine = fmt.Sprintf(desc.Text(text.DescKeyWriteLoopMaxIterations), maxIterations)
+		iterLine = fmt.Sprintf(
+			desc.Text(text.DescKeyWriteLoopMaxIterations),
+			maxIterations)
 	}
 	cmd.Println(fmt.Sprintf(
 		desc.Text(text.DescKeyWriteLoopGeneratedBlock),

@@ -1,5 +1,5 @@
-You have {{.UnexportedCount}} new session(s) not yet exported.
+You have {{.UnimportedCount}} new session(s) not yet imported.
 {{.UnenrichedCount}} existing entries need enrichment.
 
-Process journal (exports and enriches):
+Process journal (imports and enriches):
   /ctx-journal-enrich-all

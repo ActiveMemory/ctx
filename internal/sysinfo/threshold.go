@@ -50,8 +50,12 @@ func Evaluate(snap Snapshot) []ResourceAlert {
 	// Swap
 	if snap.Memory.Supported && snap.Memory.SwapTotalBytes > 0 {
 		pct := percent(snap.Memory.SwapUsedBytes, snap.Memory.SwapTotalBytes)
-		msg := fmt.Sprintf(desc.Text(text.DescKeyResourcesAlertSwap),
-			pct, FormatGiB(snap.Memory.SwapUsedBytes), FormatGiB(snap.Memory.SwapTotalBytes))
+		msg := fmt.Sprintf(
+			desc.Text(text.DescKeyResourcesAlertSwap),
+			pct,
+			FormatGiB(snap.Memory.SwapUsedBytes),
+			FormatGiB(snap.Memory.SwapTotalBytes),
+		)
 		if pct >= stats.ThresholdSwapDangerPct {
 			alerts = append(alerts, ResourceAlert{
 				Severity: SeverityDanger, Resource: ResourceSwap, Message: msg,
@@ -107,21 +111,4 @@ func Evaluate(snap Snapshot) []ResourceAlert {
 func FormatGiB(bytes uint64) string {
 	gib := float64(bytes) / stats.ThresholdBytesPerGiB
 	return fmt.Sprintf(stats.FormatGiB, gib)
-}
-
-// percent computes the percentage of used relative to total.
-//
-// Returns 0 when total is zero to avoid division by zero.
-//
-// Parameters:
-//   - used: Numerator value
-//   - total: Denominator value
-//
-// Returns:
-//   - float64: Percentage (0-100)
-func percent(used, total uint64) float64 {
-	if total == 0 {
-		return 0
-	}
-	return float64(used) / float64(total) * stats.PercentMultiplier
 }

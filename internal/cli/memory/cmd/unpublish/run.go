@@ -34,7 +34,7 @@ func Run(cmd *cobra.Command) error {
 	contextDir := rc.ContextDir()
 	projectRoot := filepath.Dir(contextDir)
 
-	memoryPath, discoverErr := memory.DiscoverMemoryPath(projectRoot)
+	memoryPath, discoverErr := memory.DiscoverPath(projectRoot)
 	if discoverErr != nil {
 		sync.ErrAutoMemoryNotActive(cmd, discoverErr)
 		return ctxErr.NotFound()
@@ -49,7 +49,7 @@ func Run(cmd *cobra.Command) error {
 
 	cleaned, found := memory.RemovePublished(string(data))
 	if !found {
-		publish.UnpublishNotFound(cmd, cfgMem.MemorySource)
+		publish.NotFound(cmd, cfgMem.Source)
 		return nil
 	}
 
@@ -59,6 +59,6 @@ func Run(cmd *cobra.Command) error {
 		return ctxErr.Write(writeErr)
 	}
 
-	publish.UnpublishDone(cmd, cfgMem.MemorySource)
+	publish.Unpublished(cmd, cfgMem.Source)
 	return nil
 }

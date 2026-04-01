@@ -8,12 +8,12 @@ package event
 
 // Events display configuration.
 const (
-	// EventsMessageMaxLen is the maximum character length for event messages
+	// MessageMaxLen is the maximum character length for event messages
 	// in human-readable output before truncation.
-	EventsMessageMaxLen = 60
-	// EventsHookFallback is the placeholder displayed when no hook name
+	MessageMaxLen = 60
+	// HookFallback is the placeholder displayed when no hook name
 	// can be determined from an event payload.
-	EventsHookFallback = "-"
-	// EventsTruncationSuffix is appended to truncated event messages.
-	EventsTruncationSuffix = "..."
+	HookFallback = "-"
+	// TruncationSuffix is appended to truncated event messages.
+	TruncationSuffix = "..."
 )

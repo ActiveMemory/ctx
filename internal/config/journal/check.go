@@ -8,9 +8,9 @@ package journal
 
 // Check-journal configuration.
 const (
-	// CheckJournalThrottleID is the state file name for daily throttle of journal checks.
-	CheckJournalThrottleID = "journal-reminded"
-	// CheckJournalClaudeProjectsSubdir is the relative path under $HOME to
-	// the Claude Code projects directory scanned for unexported sessions.
-	CheckJournalClaudeProjectsSubdir = ".claude/projects"
+	// ThrottleID is the state file name for daily throttle of journal checks.
+	ThrottleID = "journal-reminded"
+	// ClaudeProjectsSubdir is the relative path under $HOME to
+	// the Claude Code projects directory scanned for unimported sessions.
+	ClaudeProjectsSubdir = ".claude/projects"
 )

@@ -49,9 +49,9 @@ func TestRecencyScore(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			eb := makeBlock(tt.date, "Test", "")
-			got := RecencyScore(&eb, now)
+			got := Recency(&eb, now)
 			if got != tt.want {
-				t.Errorf("RecencyScore(%s) = %v, want %v", tt.date, got, tt.want)
+				t.Errorf("Recency(%s) = %v, want %v", tt.date, got, tt.want)
 			}
 		})
 	}
@@ -65,19 +65,37 @@ func TestRelevanceScore(t *testing.T) {
 		want     float64
 	}{
 		{"no keywords", "some content about hooks", nil, 0.0},
-		{"no matches", "some content about hooks", []string{"database", "cache"}, 0.0},
-		{"one match", "fix the hook edge case", []string{"hook", "cache"}, 1.0 / 3.0},
-		{"two matches", "fix the hook edge case in agent", []string{"hook", "agent", "cache"}, 2.0 / 3.0},
-		{"three matches", "fix hook in agent scoring", []string{"hook", "agent", "scoring"}, 1.0},
-		{"more than three", "hook agent scoring budget", []string{"hook", "agent", "scoring", "budget"}, 1.0},
-		{"case insensitive", "Hook AGENT Scoring", []string{"hook", "agent", "scoring"}, 1.0},
+		{
+			"no matches", "some content about hooks",
+			[]string{"database", "cache"}, 0.0,
+		},
+		{
+			"one match", "fix the hook edge case",
+			[]string{"hook", "cache"}, 1.0 / 3.0,
+		},
+		{
+			"two matches", "fix the hook edge case in agent",
+			[]string{"hook", "agent", "cache"}, 2.0 / 3.0,
+		},
+		{
+			"three matches", "fix hook in agent scoring",
+			[]string{"hook", "agent", "scoring"}, 1.0,
+		},
+		{
+			"more than three", "hook agent scoring budget",
+			[]string{"hook", "agent", "scoring", "budget"}, 1.0,
+		},
+		{
+			"case insensitive", "Hook AGENT Scoring",
+			[]string{"hook", "agent", "scoring"}, 1.0,
+		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			eb := makeBlock("2026-02-19", "Test", tt.body)
-			got := RelevanceScore(&eb, tt.keywords)
+			got := Relevance(&eb, tt.keywords)
 			if got != tt.want {
-				t.Errorf("RelevanceScore() = %v, want %v", got, tt.want)
+				t.Errorf("Relevance() = %v, want %v", got, tt.want)
 			}
 		})
 	}
@@ -97,7 +115,7 @@ func TestScoreEntry_Superseded(t *testing.T) {
 			"~~Superseded by [2026-02-19-130000] New decision~~",
 		},
 	}
-	got := ScoreEntry(&eb, []string{"decision"}, now)
+	got := Score(&eb, []string{"decision"}, now)
 	if got != 0.0 {
 		t.Errorf("superseded entry score = %v, want 0.0", got)
 	}
@@ -106,11 +124,14 @@ func TestScoreEntry_Superseded(t *testing.T) {
 func TestScoreEntry_Combined(t *testing.T) {
 	now := time.Date(2026, 2, 19, 12, 0, 0, 0, time.Local)
 	// Recent + relevant = high score
-	eb := makeBlock("2026-02-19", "Hook edge cases", "hooks fail silently in agent mode")
-	got := ScoreEntry(&eb, []string{"hook", "agent", "scoring"}, now)
+	eb := makeBlock(
+		"2026-02-19", "Hook edge cases",
+		"hooks fail silently in agent mode",
+	)
+	got := Score(&eb, []string{"hook", "agent", "scoring"}, now)
 	// recency = 1.0, relevance = 2/3 ≈ 1.667
 	if got < 1.66 || got > 1.67 {
-		t.Errorf("ScoreEntry() = %v, want ~1.667", got)
+		t.Errorf("Entry() = %v, want ~1.667", got)
 	}
 }
 
@@ -184,7 +205,7 @@ func TestScoreEntries_Ordering(t *testing.T) {
 		makeBlock("2026-02-10", "Medium age", "hook configuration"),
 	}
 	keywords := []string{"hook", "scoring", "agent"}
-	scored := ScoreEntries(blocks, keywords, now)
+	scored := All(blocks, keywords, now)
 
 	if len(scored) != 3 {
 		t.Fatalf("expected 3 scored entries, got %d", len(scored))
@@ -204,7 +225,7 @@ func TestScoreEntries_Ordering(t *testing.T) {
 
 func TestScoreEntries_Empty(t *testing.T) {
 	now := time.Now()
-	scored := ScoreEntries(nil, nil, now)
+	scored := All(nil, nil, now)
 	if len(scored) != 0 {
 		t.Errorf("expected empty scored entries, got %d", len(scored))
 	}
@@ -213,9 +234,12 @@ func TestScoreEntries_Empty(t *testing.T) {
 func TestScoreEntries_TokenEstimate(t *testing.T) {
 	now := time.Now()
 	blocks := []index.EntryBlock{
-		makeBlock("2026-02-19", "Test entry", "This is some body content for testing tokens."),
+		makeBlock(
+			"2026-02-19", "Test entry",
+			"This is some body content for testing tokens.",
+		),
 	}
-	scored := ScoreEntries(blocks, nil, now)
+	scored := All(blocks, nil, now)
 	if scored[0].Tokens <= 0 {
 		t.Error("expected positive token estimate")
 	}

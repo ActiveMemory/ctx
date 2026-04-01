@@ -16,6 +16,6 @@ import (
 //go:embed hooks/copilot-cli/*.json hooks/copilot-cli/*.md hooks/copilot-cli/scripts/*.sh hooks/copilot-cli/scripts/*.ps1
 //go:embed hooks/copilot-cli/skills/*/SKILL.md
 //go:embed hooks/messages/*/*.txt hooks/messages/registry.yaml
-//go:embed prompt-templates/*.md ralph/*.md schema/*.json why/*.md
+//go:embed schema/*.json why/*.md
 //go:embed permissions/*.txt commands/*.yaml commands/text/*.yaml journal/*.css
 var FS embed.FS

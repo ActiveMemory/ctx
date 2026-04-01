@@ -23,15 +23,12 @@ ctx init [flags]
 |-------------|-------|-----------------------------------------------------------------------------|
 | `--force`   | `-f`  | Overwrite existing context files                                            |
 | `--minimal` | `-m`  | Only create essential files (`TASKS.md`, `DECISIONS.md`, `CONSTITUTION.md`) |
-| `--merge`   |       | Auto-merge `ctx` content into existing `CLAUDE.md` and `PROMPT.md`          |
-| `--ralph`   |       | Agent works autonomously without asking questions                           |
+| `--merge`   |       | Auto-merge `ctx` content into existing `CLAUDE.md`                          |
 
 **Creates**:
 
 - `.context/` directory with all template files
 - `.claude/settings.local.json` with pre-approved ctx permissions
-- `PROMPT.md` with session prompt (autonomous mode with `--ralph`)
-- `IMPLEMENTATION_PLAN.md` with high-level project direction
 - `CLAUDE.md` with bootstrap instructions (or merges into existing)
 
 Claude Code hooks and skills are provided by the **`ctx` plugin**
@@ -40,11 +37,8 @@ Claude Code hooks and skills are provided by the **`ctx` plugin**
 **Example**:
 
 ```bash
-# Collaborative mode (agent asks questions when unclear)
+# Standard init
 ctx init
-
-# Autonomous mode (agent works independently)
-ctx init --ralph
 
 # Minimal setup (just core files)
 ctx init --minimal

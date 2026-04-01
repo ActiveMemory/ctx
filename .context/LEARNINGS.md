@@ -1,13 +1,34 @@
 # Learnings
 
+<!--
+UPDATE WHEN:
+- Discover a gotcha, bug, or unexpected behavior
+- Debugging reveals non-obvious root cause
+- External dependency has quirks worth documenting
+- "I wish I knew this earlier" moments
+- Production incidents reveal gaps
+
+DO NOT UPDATE FOR:
+- Well-documented behavior (link to docs instead)
+- Temporary workarounds (use TASKS.md for follow-up)
+- Opinions without evidence
+-->
+
 <!-- INDEX:START -->
 | Date | Learning |
 |------|--------|
-| 2026-03-25 | v0.8.0 rebase: entity package absorbed Session/Message/ToolUse types — all parsers must use entity. prefix |
-| 2026-03-25 | v0.8.0 rebase: core packages split into subpackages — core.Initialized() moved to core/state |
-| 2026-03-25 | v0.8.0 rebase: cmd variable renamed to c in bootstrap/cmd.go — caller flag must use c.Flags() |
-| 2026-03-25 | v0.8.0 rebase: config/embed/embeds.go deleted, constants split into cmd/, flag/, text/ subdirectories |
-| 2026-03-25 | v0.8.0 rebase: 106 upstream commits in one cycle — rebase more frequently to avoid compound conflicts |
+| 2026-03-31 | Magic string cleanup compounds: each pass reveals the next layer |
+| 2026-03-31 | Force-loaded behavioral prose gets ignored — action-gating hooks don't |
+| 2026-03-31 | Legacy key directory cleanup was specified but not automated |
+| 2026-03-31 | Convention audits must check cmd/ purity, not just types and docstrings |
+| 2026-03-31 | JSON Schema default fields cause linter errors with some validators |
+| 2026-03-30 | Architecture diagrams drift silently during feature additions |
+| 2026-03-30 | Python-generated doc.go files need gofmt — formatter strips bare // padding lines |
+| 2026-03-30 | internal/cli/recall/ was dead code — never registered in bootstrap |
+| 2026-03-30 | lint-docstrings.sh greedy sed hid all return-type violations |
+| 2026-03-25 | Machine-generated CLAUDE.md content consumes per-turn budget without proportional value |
+| 2026-03-25 | Dead files accumulate when nothing consumes them |
+| 2026-03-25 | Template improvements don't propagate to existing projects |
 | 2026-03-24 | lint-drift false positives from conflating constant namespaces |
 | 2026-03-24 | git describe --tags follows ancestry, not global tag list |
 | 2026-03-23 | Typography detection script needs exclusion lists for intentional uses |
@@ -97,6 +118,126 @@
 | 2026-02-19 | Feature can be code-complete but invisible to users |
 | 2026-01-28 | IDE is already the UI |
 <!-- INDEX:END -->
+
+---
+
+## [2026-03-31-224247] Magic string cleanup compounds: each pass reveals the next layer
+
+**Context**: What started as fix 4 fmt.Fprintf(os.Stderr) calls expanded to over-tokenized format strings, magic hex perms, unstandardized TOML parsing tokens, missing docstrings on new constants — each fix exposed adjacent violations
+
+**Lesson**: Mechanical cleanup is fractal. The first sweep finds the obvious violations, but fixing them puts adjacent code under scrutiny. Budget for 2-3x the initial estimate
+
+**Application**: When scoping cleanup tasks, do not commit to done in one pass. Commit after each layer and let the user decide when to stop
+
+---
+
+## [2026-03-31-182054] Force-loaded behavioral prose gets ignored — action-gating hooks don't
+
+**Context**: AGENT_PLAYBOOK was force-injected at ~14k tokens every session. Agent routinely skipped its Context Readback directive when the user's first message was a concrete task. Meanwhile, hooks that gate actions (qa-reminder, specs-nudge, block-dangerous-commands) were consistently followed because they fire at the moment of violation.
+
+**Lesson**: Prose instructions compete with the user's immediate request and lose. Hooks that intercept actions at execution time are enforceable. More injected content means less attention per token — slim injection to only what must be internalized before any action.
+
+**Application**: When adding agent directives, prefer action-gating hooks over injected prose. If it must be injected, keep it small and directive-only. Reserve force-injection for hard rules (CONSTITUTION) and distilled actionable checklists (gate file).
+
+---
+
+## [2026-03-31-112534] Legacy key directory cleanup was specified but not automated
+
+**Context**: ~/.local/ctx/keys/ accumulated 584 orphan keys from test runs before the v0.8.0 migration to ~/.ctx/.ctx.key
+
+**Lesson**: Migration specs that call for manual cleanup of old paths should include an automated step — either in the migration code itself or as a post-release cleanup task. Tests that write to global paths must isolate HOME.
+
+**Application**: When writing migration specs, always include automated cleanup of the old path. When writing tests that touch user-level directories, verify HOME is isolated via t.Setenv.
+
+---
+
+## [2026-03-31-005112] Convention audits must check cmd/ purity, not just types and docstrings
+
+**Context**: Placed needsSpec helper in cmd/root/run.go instead of core/entry/predicate.go. Missed it because the audit checklist only covered types and docstrings
+
+**Lesson**: cmd/ directories must contain only Cmd() and Run*() — all helper functions, unexported logic, and types belong in core/. Added TestCmdDirPurity compliance test to enforce this mechanically
+
+**Application**: The compliance test now catches this automatically. 28 pre-existing violations grandfathered in the allowlist
+
+---
+
+## [2026-03-31-005110] JSON Schema default fields cause linter errors with some validators
+
+**Context**: ctxrc.schema.json had default: values on 16 fields that triggered incompatible type errors in the user's linter
+
+**Lesson**: Move default values into the description string instead of using the default keyword — Go rc.*() accessors handle the actual defaults
+
+**Application**: When adding new .ctxrc fields, document defaults in the description, never use default: in the schema
+
+---
+
+## [2026-03-30-075941] Architecture diagrams drift silently during feature additions
+
+**Context**: During the journal-recall merge, architecture-dia-build.md listed 23 CLI packages but 31 existed. 8 packages added over months without updating the diagram.
+
+**Lesson**: Exhaustive lists and counts in architecture docs go stale every time a package is added. The drift is invisible because nobody re-counts.
+
+**Application**: After adding a new CLI package, grep architecture diagrams for package counts and directory listings. Consider adding a drift-check comment that validates the count programmatically.
+
+---
+
+## [2026-03-30-003734] Python-generated doc.go files need gofmt — formatter strips bare // padding lines
+
+**Context**: Batch-generated doc.go files used blank // lines for padding, which gofmt removes as unnecessary whitespace
+
+**Lesson**: Programmatic Go file generation must produce substantive content lines, not blank comment padding — gofmt enforces this
+
+**Application**: Always run gofmt after any scripted Go file generation
+
+---
+
+## [2026-03-30-003720] internal/cli/recall/ was dead code — never registered in bootstrap
+
+**Context**: The entire recall CLI package existed with tests but was never wired into the command tree. Journal consumed it but nobody deleted the ghost
+
+**Lesson**: Dead package detection requires checking bootstrap registration, not just build success. A package can build and test green while being completely unreachable
+
+**Application**: Add a compliance test that verifies all cli/ packages are registered in bootstrap
+
+---
+
+## [2026-03-30-003707] lint-docstrings.sh greedy sed hid all return-type violations
+
+**Context**: sed 's/.*) //' consumed return type parens, leaving { — functions with return types were invisible to the script for months
+
+**Lesson**: Greedy regex in shell scripts can silently suppress entire categories of lint violations — test with edge cases, not just happy paths
+
+**Application**: When writing sed-based lint checks, test with multi-paren signatures (func Foo() (string, error))
+
+---
+
+## [2026-03-25-234039] Machine-generated CLAUDE.md content consumes per-turn budget without proportional value
+
+**Context**: GitNexus injected 121 lines (61% of CLAUDE.md) with auto-generated skill pointers like 'Work in the Watch area (39 symbols)' — generic index data loaded on every conversation turn
+
+**Lesson**: CLAUDE.md is prime real estate — every token competes with project-specific instructions. Auto-generated content belongs in on-demand skills, not in always-loaded files
+
+**Application**: Audit CLAUDE.md periodically for content that could be delivered via skills instead. Prefer a one-line pointer over inline content for companion tools
+
+---
+
+## [2026-03-25-173339] Dead files accumulate when nothing consumes them
+
+**Context**: IMPLEMENTATION_PLAN.md and PROMPT.md were created by ctx init but no agent, hook, or skill ever read them
+
+**Lesson**: Before adding a file to init scaffolding, verify there is at least one consumer. Periodically audit what init creates vs what the system reads.
+
+**Application**: The prompt deprecation spec documents the reasoning as a papertrail for future removals.
+
+---
+
+## [2026-03-25-173338] Template improvements don't propagate to existing projects
+
+**Context**: 5 of 8 context files in the ctx project itself had stale/missing comment headers — templates evolved but non-destructive init never re-synced them
+
+**Lesson**: Any template change is invisible to existing users until they run ctx init --force
+
+**Application**: Added drift detection (checkTemplateHeaders) to ctx drift. Consider surfacing this during ctx status too.
 
 ---
 
@@ -412,9 +553,9 @@
 
 ## [2026-03-12-133008] Project-root files vs context files are distinct categories
 
-**Context**: Tried moving ImplementationPlan constant to config/ctx assuming it was a context file
+**Context**: Tried moving ImplementationPlan constant to config/ctx assuming it was a context file. (Note: IMPLEMENTATION_PLAN.md was removed in 2026-03-25 as a dead file — no agent consumer.)
 
-**Lesson**: Files created by ctx init in the project root (Makefile, IMPLEMENTATION_PLAN.md) are scaffolding, not context files loaded via ReadOrder. They belong in config/file, not config/ctx
+**Lesson**: Files created by ctx init in the project root (Makefile) are scaffolding, not context files loaded via ReadOrder. They belong in config/file, not config/ctx
 
 **Application**: Before moving a file constant, check whether it is in ReadOrder (context) or created by init (project-root)
 
@@ -838,9 +979,9 @@
 **Consolidated from**: 5 entries (2026-01-20 to 2026-01-25)
 
 - `ctx agent` is optimized for task execution (filters pending tasks, surfaces constitution, token-budget aware). Manual file reading is better for exploratory/memory questions (session history, timestamps, completed tasks).
-- On "Do you remember?" questions, immediately read .context/ files and run `ctx recall list --limit 5`. Never ask "would you like me to check?" — that is the obvious intent.
+- On "Do you remember?" questions, immediately read .context/ files and run `ctx journal source --limit 5`. Never ask "would you like me to check?" — that is the obvious intent.
 - .context/ is NOT a Claude Code primitive. Only CLAUDE.md and .claude/settings.json are auto-loaded. The .context/ directory requires a hook or explicit CLAUDE.md instruction to be discovered.
-- Orchestrator (IMPLEMENTATION_PLAN.md) and agent (.context/TASKS.md) task lists must be separate. The orchestrator says "check your mind" — it doesn't maintain a parallel ledger.
+- ~~Orchestrator (IMPLEMENTATION_PLAN.md) and agent (.context/TASKS.md) task lists must be separate.~~ (Superseded 2026-03-25: IMPLEMENTATION_PLAN.md removed. TASKS.md is the single task source.)
 - Only CLAUDE.md is auto-loaded by Claude Code. Projects using ctx should rely on the CLAUDE.md -> AGENT_PLAYBOOK.md chain, not AGENTS.md.
 
 ---

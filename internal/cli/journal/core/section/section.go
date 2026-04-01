@@ -25,23 +25,23 @@ import (
 	errFs "github.com/ActiveMemory/ctx/internal/err/fs"
 )
 
-// WriteSection creates a subdirectory, writes its index page, and calls
+// Write creates a subdirectory, writes its index page, and calls
 // writePages to emit individual pages. All three index sections (topics,
 // files, types) follow this identical structure.
 //
 // Parameters:
 //   - docsDir: Parent docs directory
-//   - subdir: Subdirectory name (e.g., config.JournalDirTopics)
+//   - subDir: Subdirectory name (e.g., config.JournalDirTopics)
 //   - indexContent: Generated Markdown for the index page
 //   - writePages: Callback that writes individual pages into the subdirectory
 //
 // Returns:
 //   - error: Non-nil if directory creation or index write fails
-func WriteSection(
-	docsDir, subdir, indexContent string,
+func Write(
+	docsDir, subDir, indexContent string,
 	writePages func(dir string),
 ) error {
-	dir := filepath.Join(docsDir, subdir)
+	dir := filepath.Join(docsDir, subDir)
 	if mkErr := os.MkdirAll(dir, fs.PermExec); mkErr != nil {
 		return errFs.Mkdir(dir, mkErr)
 	}
@@ -57,14 +57,17 @@ func WriteSection(
 	return nil
 }
 
-// WriteFormattedSection writes a headed list section to sb if items is non-empty.
+// WriteFormatted writes a headed list section to sb if items is non-empty.
 //
 // Parameters:
 //   - sb: String builder to write to
 //   - headingKey: YAML DescKey for the section heading
 //   - items: Slice of items to render
 //   - formatFn: Function that renders one item as a string
-func WriteFormattedSection[T any](sb *strings.Builder, headingKey string, items []T, formatFn func(T) string) {
+func WriteFormatted[T any](
+	sb *strings.Builder, headingKey string,
+	items []T, formatFn func(T) string,
+) {
 	if len(items) == 0 {
 		return
 	}
@@ -76,7 +79,7 @@ func WriteFormattedSection[T any](sb *strings.Builder, headingKey string, items 
 	sb.WriteString(nl)
 }
 
-// WriteMonthSections writes month-grouped entry links to a string builder.
+// WriteMonths writes month-grouped entry links to a string builder.
 //
 // Parameters:
 //   - sb: String builder to write to
@@ -84,14 +87,14 @@ func WriteFormattedSection[T any](sb *strings.Builder, headingKey string, items 
 //   - monthOrder: Month strings in display order
 //   - linkPrefix: Path prefix for links (e.g., config.LinkPrefixParent for
 //     subpages, "" for index)
-func WriteMonthSections(
+func WriteMonths(
 	sb *strings.Builder,
 	months map[string][]entity.JournalEntry,
 	monthOrder []string, linkPrefix string,
 ) {
 	nl := token.NewlineLF
 	for _, month := range monthOrder {
-		_, _ = fmt.Fprintf(sb, tpl.TplJournalMonthHeading+nl+nl, month)
+		_, _ = fmt.Fprintf(sb, tpl.JournalMonthHeading+nl+nl, month)
 		for _, e := range months[month] {
 			link := strings.TrimSuffix(e.Filename, file.ExtMarkdown)
 			timeStr := ""
@@ -99,10 +102,10 @@ func WriteMonthSections(
 				timeStr = e.Time[:journal.TimePrefixLen] + " "
 			}
 			_, _ = fmt.Fprintf(sb,
-				tpl.TplJournalSubpageEntry+nl,
+				tpl.JournalSubpageEntry+nl,
 				timeStr, e.Title, linkPrefix, link)
 			if e.Summary != "" {
-				_, _ = fmt.Fprintf(sb, tpl.TplJournalIndexSummary+nl, e.Summary)
+				_, _ = fmt.Fprintf(sb, tpl.JournalIndexSummary+nl, e.Summary)
 			}
 		}
 		sb.WriteString(nl)
@@ -119,15 +122,18 @@ func WriteMonthSections(
 //
 // Returns:
 //   - string: Complete Markdown page content
-func GenerateGroupedPage(heading, stats string, entries []entity.JournalEntry) string {
+func GenerateGroupedPage(
+	heading, stats string,
+	entries []entity.JournalEntry,
+) string {
 	var sb strings.Builder
 	nl := token.NewlineLF
 
 	sb.WriteString(heading + nl + nl)
 	sb.WriteString(stats + nl + nl)
 
-	months, monthOrder := group.GroupByMonth(entries)
-	WriteMonthSections(&sb, months, monthOrder, token.LinkPrefixParent)
+	months, monthOrder := group.ByMonth(entries)
+	WriteMonths(&sb, months, monthOrder, token.LinkPrefixParent)
 
 	return sb.String()
 }
@@ -158,7 +164,7 @@ func WritePopularAndLongtail(
 		sb.WriteString(popHeading + nl + nl)
 		for i := range popCount {
 			label, slug, count := popItem(i)
-			sb.WriteString(format.FormatSessionLink(label, slug, count))
+			sb.WriteString(format.SessionLink(label, slug, count))
 		}
 		sb.WriteString(nl)
 	}

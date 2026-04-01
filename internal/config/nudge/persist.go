@@ -8,9 +8,9 @@ package nudge
 
 // Check-persistence configuration.
 const (
-	// PersistenceNudgePrefix is the state file prefix for per-session
+	// PersistencePrefix is the state file prefix for per-session
 	// persistence nudge counters.
-	PersistenceNudgePrefix = "persistence-nudge-"
+	PersistencePrefix = "persistence-nudge-"
 	// PersistenceEarlyMin is the minimum prompt count before nudging begins.
 	PersistenceEarlyMin = 11
 	// PersistenceEarlyMax is the upper bound for the early nudge window.
@@ -25,8 +25,8 @@ const (
 	PersistenceLogFile = "check-persistence.log"
 	// PersistenceKeyCount is the state file key for prompt count.
 	PersistenceKeyCount = "count"
-	// PersistenceKeyLastNudge is the state file key for last nudge prompt number.
-	PersistenceKeyLastNudge = "last_nudge"
+	// KeyLastNudge is the state file key for last nudge prompt number.
+	KeyLastNudge = "last_nudge"
 	// PersistenceKeyLastMtime is the state file key for last modification time.
 	PersistenceKeyLastMtime = "last_mtime"
 )

@@ -6,7 +6,9 @@
 
 package token
 
-// EstimateTokens provides a rough token count estimate for content.
+import cfgToken "github.com/ActiveMemory/ctx/internal/config/token"
+
+// Estimate provides a rough token count estimate for content.
 //
 // Uses a simple heuristic of ~4 characters per token for English text.
 // This is a conservative estimate for Claude/GPT-style tokenizers that
@@ -17,24 +19,24 @@ package token
 //
 // Returns:
 //   - int: Estimated token count (0 for empty content)
-func EstimateTokens(content []byte) int {
+func Estimate(content []byte) int {
 	if len(content) == 0 {
 		return 0
 	}
-	// Rough estimate: 1 token per 4 characters
-	// This tends to slightly overestimate, which is safer for budgeting
-	return (len(content) + 3) / 4
+	// Rough estimate: 1 token per CharsPerToken characters.
+	// Ceiling division ensures slight overestimate, safer for budgeting.
+	return (len(content) + cfgToken.CharsPerToken - 1) / cfgToken.CharsPerToken
 }
 
-// EstimateTokensString estimates tokens for a string.
+// EstimateString estimates tokens for a string.
 //
-// Convenience wrapper around EstimateTokens for string input.
+// Convenience wrapper around Estimate for string input.
 //
 // Parameters:
 //   - s: String to estimate tokens for
 //
 // Returns:
 //   - int: Estimated token count
-func EstimateTokensString(s string) int {
-	return EstimateTokens([]byte(s))
+func EstimateString(s string) int {
+	return Estimate([]byte(s))
 }

@@ -109,9 +109,9 @@ func TestFormatWikilink(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			got := FormatWikilink(tt.target, tt.display)
+			got := Format(tt.target, tt.display)
 			if got != tt.want {
-				t.Errorf("FormatWikilink(%q, %q) = %q, want %q",
+				t.Errorf("Format(%q, %q) = %q, want %q",
 					tt.target, tt.display, got, tt.want)
 			}
 		})
@@ -155,9 +155,9 @@ func TestFormatWikilinkEntry(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			got := FormatWikilinkEntry(tt.entry)
+			got := FormatEntry(tt.entry)
 			if got != tt.want {
-				t.Errorf("FormatWikilinkEntry()\n  got:  %q\n  want: %q",
+				t.Errorf("FormatEntry()\n  got:  %q\n  want: %q",
 					got, tt.want)
 			}
 		})

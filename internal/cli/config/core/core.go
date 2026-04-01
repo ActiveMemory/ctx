@@ -10,17 +10,14 @@ package core
 import (
 	"fmt"
 	"os"
-	"os/exec"
 	"path/filepath"
-	"strings"
 
 	"github.com/ActiveMemory/ctx/internal/assets/read/desc"
 	"github.com/ActiveMemory/ctx/internal/config/embed/text"
 	"github.com/ActiveMemory/ctx/internal/config/file"
 	"github.com/ActiveMemory/ctx/internal/config/fs"
-	cfgGit "github.com/ActiveMemory/ctx/internal/config/git"
 	"github.com/ActiveMemory/ctx/internal/err/config"
-	errGit "github.com/ActiveMemory/ctx/internal/err/git"
+	execGit "github.com/ActiveMemory/ctx/internal/exec/git"
 	"github.com/ActiveMemory/ctx/internal/io"
 	"github.com/ActiveMemory/ctx/internal/rc"
 )
@@ -93,16 +90,10 @@ func SwitchTo(root, profile string) (string, error) {
 // Returns an error if git is not installed or the current directory is
 // not inside a git repository. Features that depend on git should
 // degrade gracefully when this returns an error.
+//
+// Returns:
+//   - string: Absolute path to the repository root
+//   - error: If git is not found or CWD is not in a repo
 func GitRoot() (string, error) {
-	if _, lookErr := exec.LookPath(cfgGit.Binary); lookErr != nil {
-		return "", errGit.NotFound()
-	}
-
-	out, execErr := exec.Command( //nolint:gosec // args are literal constants
-		cfgGit.Binary, cfgGit.RevParse, cfgGit.FlagShowToplevel,
-	).Output()
-	if execErr != nil {
-		return "", errGit.NotInRepo(execErr)
-	}
-	return strings.TrimSpace(string(out)), nil
+	return execGit.Root()
 }

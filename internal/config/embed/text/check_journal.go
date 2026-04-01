@@ -10,7 +10,7 @@ const (
 	DescKeyCheckJournalBoxTitle           = "check-journal.box-title"
 	DescKeyCheckJournalFallbackBoth       = "check-journal.fallback-both"
 	DescKeyCheckJournalFallbackUnenriched = "check-journal.fallback-unenriched"
-	DescKeyCheckJournalFallbackUnexported = "check-journal.fallback-unexported"
+	DescKeyCheckJournalFallbackUnimported = "check-journal.fallback-unimported"
 	DescKeyCheckJournalRelayFormat        = "check-journal.relay-format"
 	DescKeyCheckJournalRelayPrefix        = "check-journal.relay-prefix"
 )

@@ -264,9 +264,9 @@ func TestIsSubTask(t *testing.T) {
 			if match == nil {
 				t.Fatalf("line did not match task pattern: %q", tt.line)
 			}
-			got := SubTask(match)
+			got := Sub(match)
 			if got != tt.want {
-				t.Errorf("SubTask() = %v, want %v", got, tt.want)
+				t.Errorf("Sub() = %v, want %v", got, tt.want)
 			}
 		})
 	}
@@ -290,6 +290,7 @@ func TestMatchConstants(t *testing.T) {
 		t.Errorf("MatchState = %q, want %q", match[MatchState], "x")
 	}
 	if match[MatchContent] != "Task content here" {
-		t.Errorf("MatchContent = %q, want %q", match[MatchContent], "Task content here")
+		t.Errorf("MatchContent = %q, want %q",
+			match[MatchContent], "Task content here")
 	}
 }

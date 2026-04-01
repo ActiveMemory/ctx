@@ -1,6 +1,61 @@
 # Error message format strings for ctx CLI.
 # Used by assets.TextDesc() via internal/err subpackages.
 
+err.add.file-not-found:
+  short: "context file %s not found. Run 'ctx init' first"
+err.add.index-update:
+  short: 'failed to update index in %s: %w'
+err.add.missing-decision:
+  short: |-
+    decisions require complete ADR format
+
+    Missing required flags: %s
+
+    Usage:
+      ctx add decision "Decision title" \
+        --context "What prompted this decision" \
+        --rationale "Why this choice over alternatives" \
+        --consequence "What changes as a result"
+
+    Example:
+      ctx add decision "Use PostgreSQL for primary database" \
+        --context "Need a reliable database for production workloads" \
+        --rationale "PostgreSQL offers ACID compliance, JSON support, and team familiarity" \
+        --consequence "Team needs PostgreSQL training; must set up replication"
+err.add.missing-fields:
+  short: '%s missing required fields: %s'
+err.add.missing-learning:
+  short: |-
+    learnings require complete format
+
+    Missing required flags: %s
+
+    Usage:
+      ctx add learning "Learning title" \
+        --context "What prompted this learning" \
+        --lesson "The key insight" \
+        --application "How to apply this going forward"
+
+    Example:
+      ctx add learning "Go embed requires files in same package" \
+        --context "Tried to embed files from parent directory, got compile error" \
+        --lesson "go:embed only works with files in same or child directories" \
+        --application "Keep embedded files in internal/templates/, not project root"
+err.add.no-content:
+  short: no content provided
+err.add.no-content-provided:
+  short: |-
+    no content provided
+
+    Usage:
+      ctx add %s "your content here"
+      ctx add %s --file /path/to/content.md
+      echo "content" | ctx add %s
+
+    Examples:
+    %s
+err.add.unknown-type:
+  short: 'unknown type %q. Valid types: decision, task, learning, convention'
 err.backup.backup-global:
   short: 'global backup: %w'
 err.backup.backup-project:
@@ -141,6 +196,8 @@ err.fs.resolve-path:
   short: 'resolve path: %w'
 err.fs.stat-path:
   short: 'stat %s: %w'
+err.fs.stdin-read:
+  short: 'failed to read from stdin: %w'
 err.fs.write-file-failed:
   short: 'write file: %w'
 err.fs.write-merged:
@@ -198,13 +255,13 @@ err.journal.load-journal-state:
 err.journal.no-entries-match:
   short: 'no journal entries match: %s'
 err.journal.no-journal-dir:
-  short: "no journal directory found at %s\nRun 'ctx recall export --all' first"
+  short: "no journal directory found at %s\nRun 'ctx journal import --all' first"
 err.journal.no-journal-entries:
-  short: "no journal entries found in %s\nRun 'ctx recall export --all' first"
+  short: "no journal entries found in %s\nRun 'ctx journal import --all' first"
 err.journal.read-journal-dir:
   short: 'read journal directory: %w'
 err.journal.regenerate-requires-all:
-  short: --regenerate requires --all (single-session export always writes)
+  short: --regenerate requires --all (single-session import always writes)
 err.journal.save-journal-state:
   short: 'save journal state: %w'
 err.journal.scan-journal:
@@ -309,43 +366,31 @@ err.parser.walk-dir:
   short: 'walk directory: %w'
 err.parser.git-not-found:
   short: git not found in PATH; install git to enable remote URL enrichment
-err.prompt.exists:
-  short: prompt %q already exists
 err.prompt.list-entry-templates:
   short: 'failed to list entry templates: %w'
-err.prompt.list-prompt-templates:
-  short: 'failed to list prompt templates: %w'
 err.prompt.list-templates:
   short: 'failed to list templates: %w'
 err.prompt.marker-not-found:
   short: '%s start marker not found'
-err.prompt.no-prompt-template:
-  short: "no embedded template %q - use --stdin to provide content"
 err.prompt.no-template:
   short: 'no template available for %s: %w'
-err.prompt.not-found:
-  short: prompt %q not found
 err.prompt.read-entry-template:
   short: 'failed to read entry template %s: %w'
-err.prompt.read-prompt-template:
-  short: 'failed to read prompt template %s: %w'
 err.prompt.read-template:
   short: 'failed to read template %s: %w'
-err.prompt.remove-prompt:
-  short: 'remove prompt: %w'
 err.prompt.template-missing-markers:
   short: template missing %s markers
-err.recall.event-log-read:
+err.journal.source.event-log-read:
   short: 'reading event log: %w'
-err.recall.open-log-file:
+err.journal.source.open-log-file:
   short: 'failed to open log file: %w'
-err.recall.reindex-file-not-found:
+err.journal.source.reindex-file-not-found:
   short: "%s not found. Run 'ctx init' first"
-err.recall.reindex-file-read:
+err.journal.source.reindex-file-read:
   short: 'failed to read %s: %w'
-err.recall.reindex-file-write:
+err.journal.source.reindex-file-write:
   short: 'failed to write %s: %w'
-err.recall.stats-glob:
+err.journal.source.stats-glob:
   short: 'globbing stats files: %w'
 err.reminder.invalid-id:
   short: invalid ID %q

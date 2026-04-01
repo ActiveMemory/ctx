@@ -9,7 +9,7 @@ to keep the main file within token budget. All entries preserved verbatim.
 
 **Consolidated from**: 4 entries (2026-01-20 to 2026-02-14)
 
-- ctx init is non-destructive: only creates .context/, CLAUDE.md, .claude/, PROMPT.md, and IMPLEMENTATION_PLAN.md. Zero awareness of .cursorrules, .aider.conf.yml, or other tools' configs.
+- ctx init is non-destructive: only creates .context/, CLAUDE.md, and .claude/. Zero awareness of .cursorrules, .aider.conf.yml, or other tools' configs.
 - CLAUDE.md merge insertion is position-aware: findInsertionPoint() finds the first H1, skips trailing blank lines, and inserts there. Never appends to end.
 - CLAUDE.md handling is a 3-state machine: no file (create), file without ctx markers (merge/prompt), file with `<!-- ctx:context -->` / `<!-- ctx:end -->` markers (skip or force-replace).
 - Always backup before modifying user files: file.bak before modification, marker comments for idempotency, offer merge not overwrite, provide `--merge` escape hatch.
@@ -95,7 +95,7 @@ to keep the main file within token budget. All entries preserved verbatim.
 > **Historical**: `.context/sessions/` was removed in v0.4.0. These learnings are superseded but preserved for context.
 
 - SessionEnd hook fires on all exits including Ctrl+C — hook behavior still accurate for Claude Code, but ctx no longer uses it
-- Session filenames used YYYY-MM-DD-HHMMSS-topic.md — journal entries now use `ctx recall export` naming
+- Session filenames used YYYY-MM-DD-HHMMSS-topic.md — journal entries now use `ctx journal import` naming
 - Two tiers remain: curated (`.context/*.md`) and full dump (`~/.claude/projects/` + `.context/journal/`); middle `.context/sessions/` tier eliminated
 - Auto-load via PreToolUse worked; auto-save via SessionEnd removed because Claude Code retains transcripts natively
 
@@ -110,7 +110,7 @@ to keep the main file within token budget. All entries preserved verbatim.
 
 ---
 
-## [2026-02-27-002831] Journal and recall parsing edge cases (consolidated)
+## [2026-02-27-002831] Journal and source parsing edge cases (consolidated)
 
 **Consolidated from**: 4 entries (2026-02-03 to 2026-02-24)
 
@@ -127,7 +127,7 @@ to keep the main file within token budget. All entries preserved verbatim.
 
 - PROMPT.md is a Ralph loop iteration prompt ("what to do next, how to know when done"), not a project briefing. When it drifts into duplicating CLAUDE.md, delete it. Re-introduce only when actively using Ralph loops.
 - Only `internal/assets/` (formerly `internal/templates/`) matters for embedded templates — it's where Go embeds files into the binary. A root `templates/` directory is spec baggage. One source of truth: `internal/assets/ ──[ctx init]──> .context/`.
-- ctx and Ralph Loop are separate systems: `ctx init` creates `.context/` for context management; Ralph Loop uses PROMPT.md, IMPLEMENTATION_PLAN.md, and specs/ for iterative AI development. ctx does NOT create Ralph Loop infrastructure.
+- ctx and Ralph Loop are separate systems: `ctx init` creates `.context/` for context management; Ralph Loop uses `.context/loop.md` and specs/ for iterative AI development.
 
 ---
 
@@ -151,9 +151,9 @@ to keep the main file within token budget. All entries preserved verbatim.
 
 ---
 
-## [2026-02-20-142442] Default export already preserves enrichment — T2.1 was partially stale
+## [2026-02-20-142442] Default import already preserves enrichment — T2.1 was partially stale
 
-**Context**: Investigated ctx recall export --update and found the default behavior already preserves YAML frontmatter during re-export. The --force flag has a bug where it claims to discard frontmatter but does not.
+**Context**: Investigated ctx recall import --update and found the default behavior already preserves YAML frontmatter during re-import. The --force flag has a bug where it claims to discard frontmatter but does not.
 
 **Lesson**: Always read the current code before speccing a feature — the need may already be met, and the real work may be a bug fix rather than a new feature.
 

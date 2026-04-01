@@ -30,6 +30,7 @@ func Run(cmd *cobra.Command, jsonOutput bool) error {
 	core.CheckCtxrcValidation(report)
 	core.CheckDrift(report)
 	core.CheckPluginEnablement(report)
+	core.CheckCompanionConfig(report)
 	core.CheckEventLogging(report)
 	core.CheckWebhook(report)
 	core.CheckReminders(report)

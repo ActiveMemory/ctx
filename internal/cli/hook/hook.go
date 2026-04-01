@@ -13,6 +13,9 @@ import (
 )
 
 // Cmd returns the "ctx hook" command for generating AI tool integrations.
+//
+// Returns:
+//   - *cobra.Command: The hook command with subcommands registered
 func Cmd() *cobra.Command {
 	return hookRoot.Cmd()
 }

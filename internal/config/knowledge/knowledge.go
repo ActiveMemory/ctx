@@ -8,6 +8,6 @@ package knowledge
 
 // Knowledge hook configuration.
 const (
-	// KnowledgeThrottleID is the state file name for daily throttle of knowledge checks.
-	KnowledgeThrottleID = "check-knowledge"
+	// ThrottleID is the state file name for daily throttle of knowledge checks.
+	ThrottleID = "check-knowledge"
 )
