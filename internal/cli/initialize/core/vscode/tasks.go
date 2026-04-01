@@ -4,7 +4,7 @@
 //   \    Copyright 2026-present Context contributors.
 //                 SPDX-License-Identifier: Apache-2.0
 
-package core
+package vscode
 
 import (
 	"encoding/json"
@@ -14,6 +14,7 @@ import (
 	"github.com/spf13/cobra"
 
 	"github.com/ActiveMemory/ctx/internal/config/fs"
+	"github.com/ActiveMemory/ctx/internal/config/token"
 	cfgVscode "github.com/ActiveMemory/ctx/internal/config/vscode"
 	writeVscode "github.com/ActiveMemory/ctx/internal/write/vscode"
 )
@@ -70,7 +71,7 @@ func writeTasksJSON(cmd *cobra.Command) error {
 		Tasks:   tasks,
 	}
 	data, _ := json.MarshalIndent(file, "", "  ")
-	data = append(data, '\n')
+	data = append(data, token.NewlineLF...)
 
 	if writeErr := os.WriteFile(target, data, fs.PermFile); writeErr != nil {
 		return writeErr
