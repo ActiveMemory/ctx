@@ -10,23 +10,23 @@ import "path"
 
 // Embedded asset directory names.
 const (
-	DirClaude                = "claude"
-	DirClaudePlugin          = "claude/.claude-plugin"
-	DirClaudeSkills          = "claude/skills"
-	DirCommands              = "commands"
-	DirCommandsText          = "commands/text"
-	DirContext               = "context"
-	DirEntryTemplates        = "entry-templates"
-	DirHooks                 = "hooks"
-	DirHooksCopilotCLI       = "hooks/copilot-cli"
-	DirHooksCopilotCLIScrp   = "hooks/copilot-cli/scripts"
-	DirHooksCopilotCLISkills = "hooks/copilot-cli/skills"
-	DirHooksMessages         = "hooks/messages"
-	DirJournal               = "journal"
-	DirPermissions           = "permissions"
-	DirProject               = "project"
-	DirSchema                = "schema"
-	DirWhy                   = "why"
+	DirClaude                   = "claude"
+	DirClaudePlugin             = "claude/.claude-plugin"
+	DirClaudeSkills             = "claude/skills"
+	DirCommands                 = "commands"
+	DirCommandsText             = "commands/text"
+	DirContext                  = "context"
+	DirEntryTemplates           = "entry-templates"
+	DirIntegrations             = "integrations"
+	DirIntegrationsCopilotCLI   = "integrations/copilot-cli"
+	DirIntegrationsCopilotScrp  = "integrations/copilot-cli/scripts"
+	DirIntegrationsCopilotSkill = "integrations/copilot-cli/skills"
+	DirIntegrationsMessages     = "integrations/messages"
+	DirJournal                  = "journal"
+	DirPermissions              = "permissions"
+	DirProject                  = "project"
+	DirSchema                   = "schema"
+	DirWhy                      = "why"
 )
 
 // JSON field keys used when parsing embedded asset files.
@@ -74,12 +74,12 @@ var (
 	PathCommandsYAML        = path.Join(DirCommands, FileCommandsYAML)
 	PathFlagsYAML           = path.Join(DirCommands, FileFlagsYAML)
 	PathExamplesYAML        = path.Join(DirCommands, FileExamplesYAML)
-	PathAgentsMd            = path.Join(DirHooks, FileAgentsMd)
-	PathAgentsCtxMd         = path.Join(DirHooksCopilotCLI, FileAgentsCtxMd)
-	PathCopilotCLIHooksJSON = path.Join(DirHooksCopilotCLI, FileCopilotCLIHooksJSON)
-	PathCopilotInstructions = path.Join(DirHooks, FileCopilotInstructionsMd)
-	PathInstructionsCtxMd   = path.Join(DirHooksCopilotCLI, FileInstructionsCtxMd)
-	PathHookRegistry        = path.Join(DirHooksMessages, FileRegistryYAML)
+	PathAgentsMd            = path.Join(DirIntegrations, FileAgentsMd)
+	PathAgentsCtxMd         = path.Join(DirIntegrationsCopilotCLI, FileAgentsCtxMd)
+	PathCopilotCLIHooksJSON = path.Join(DirIntegrationsCopilotCLI, FileCopilotCLIHooksJSON)
+	PathCopilotInstructions = path.Join(DirIntegrations, FileCopilotInstructionsMd)
+	PathInstructionsCtxMd   = path.Join(DirIntegrationsCopilotCLI, FileInstructionsCtxMd)
+	PathMessageRegistry     = path.Join(DirIntegrationsMessages, FileRegistryYAML)
 	PathExtraCSS            = path.Join(DirJournal, FileExtraCSS)
 	PathMakefileCtx         = path.Join(DirProject, FileMakefileCtx)
 	PathAllowTxt            = path.Join(DirPermissions, FileAllowTxt)

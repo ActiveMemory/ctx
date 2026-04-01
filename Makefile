@@ -260,12 +260,12 @@ sync-copilot-skills:
 ## check-copilot-skills: Verify Copilot CLI skills match ctx source skills
 check-copilot-skills:
 	@TMPDIR=$$(mktemp -d) && \
-	cp -r internal/assets/hooks/copilot-cli/skills/ "$$TMPDIR/before" && \
+	cp -r internal/assets/integrations/copilot-cli/skills/ "$$TMPDIR/before" && \
 	./hack/sync-copilot-skills.sh > /dev/null && \
-	if ! diff -rq "$$TMPDIR/before" internal/assets/hooks/copilot-cli/skills/ > /dev/null 2>&1; then \
+	if ! diff -rq "$$TMPDIR/before" internal/assets/integrations/copilot-cli/skills/ > /dev/null 2>&1; then \
 		echo "FAIL: Copilot CLI skills are stale — run 'make sync-copilot-skills'"; \
-		diff -rq "$$TMPDIR/before" internal/assets/hooks/copilot-cli/skills/ || true; \
-		cp -r "$$TMPDIR/before/"* internal/assets/hooks/copilot-cli/skills/; \
+		diff -rq "$$TMPDIR/before" internal/assets/integrations/copilot-cli/skills/ || true; \
+		cp -r "$$TMPDIR/before/"* internal/assets/integrations/copilot-cli/skills/; \
 		rm -rf "$$TMPDIR"; \
 		exit 1; \
 	fi; \

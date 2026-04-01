@@ -12,7 +12,7 @@ import (
 
 	"github.com/spf13/cobra"
 
-	"github.com/ActiveMemory/ctx/internal/assets/hooks/messages"
+	"github.com/ActiveMemory/ctx/internal/assets/integrations/messages"
 	"github.com/ActiveMemory/ctx/internal/assets/read/hook"
 	"github.com/ActiveMemory/ctx/internal/cli/system/core/message"
 	"github.com/ActiveMemory/ctx/internal/config/file"

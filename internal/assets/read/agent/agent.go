@@ -10,6 +10,7 @@ package agent
 
 import (
 	"io/fs"
+	"path"
 	"strings"
 
 	"github.com/ActiveMemory/ctx/internal/assets"
@@ -19,7 +20,7 @@ import (
 // CopilotInstructions reads the embedded Copilot instructions template.
 //
 // Returns:
-//   - []byte: Template content from hooks/copilot-instructions.md
+//   - []byte: Template content from integrations/copilot-instructions.md
 //   - error: Non-nil if the file is not found or read fails
 func CopilotInstructions() ([]byte, error) {
 	return assets.FS.ReadFile(asset.PathCopilotInstructions)
@@ -28,7 +29,7 @@ func CopilotInstructions() ([]byte, error) {
 // CopilotCLIHooksJSON reads the embedded Copilot CLI hooks config.
 //
 // Returns:
-//   - []byte: JSON content from hooks/copilot-cli/ctx-hooks.json
+//   - []byte: JSON content from integrations/copilot-cli/ctx-hooks.json
 //   - error: Non-nil if the file is not found or read fails
 func CopilotCLIHooksJSON() ([]byte, error) {
 	return assets.FS.ReadFile(asset.PathCopilotCLIHooksJSON)
@@ -37,7 +38,7 @@ func CopilotCLIHooksJSON() ([]byte, error) {
 // AgentsMd reads the embedded AGENTS.md template.
 //
 // Returns:
-//   - []byte: Template content from hooks/agents.md
+//   - []byte: Template content from integrations/agents.md
 //   - error: Non-nil if the file is not found or read fails
 func AgentsMd() ([]byte, error) {
 	return assets.FS.ReadFile(asset.PathAgentsMd)
@@ -46,7 +47,7 @@ func AgentsMd() ([]byte, error) {
 // AgentsCtxMd reads the embedded .github/agents/ctx.md template.
 //
 // Returns:
-//   - []byte: Template content from hooks/copilot-cli/agents-ctx.md
+//   - []byte: Template content from integrations/copilot-cli/agents-ctx.md
 //   - error: Non-nil if the file is not found or read fails
 func AgentsCtxMd() ([]byte, error) {
 	return assets.FS.ReadFile(asset.PathAgentsCtxMd)
@@ -55,7 +56,7 @@ func AgentsCtxMd() ([]byte, error) {
 // InstructionsCtxMd reads the embedded path-specific instructions.
 //
 // Returns:
-//   - []byte: Template content from hooks/copilot-cli/instructions-context.md
+//   - []byte: Template content from integrations/copilot-cli/instructions-context.md
 //   - error: Non-nil if the file is not found or read fails
 func InstructionsCtxMd() ([]byte, error) {
 	return assets.FS.ReadFile(asset.PathInstructionsCtxMd)
@@ -63,14 +64,14 @@ func InstructionsCtxMd() ([]byte, error) {
 
 // CopilotCLIScripts reads all embedded Copilot CLI hook scripts.
 // Returns a map of filename to content for scripts in
-// hooks/copilot-cli/scripts/.
+// integrations/copilot-cli/scripts/.
 //
 // Returns:
 //   - map[string][]byte: Filename -> content for each script
 //   - error: Non-nil if the directory read fails
 func CopilotCLIScripts() (map[string][]byte, error) {
 	scripts := make(map[string][]byte)
-	entries, dirErr := fs.ReadDir(assets.FS, asset.DirHooksCopilotCLIScrp)
+	entries, dirErr := fs.ReadDir(assets.FS, asset.DirIntegrationsCopilotScrp)
 	if dirErr != nil {
 		return nil, dirErr
 	}
@@ -82,7 +83,7 @@ func CopilotCLIScripts() (map[string][]byte, error) {
 		if !strings.HasSuffix(name, ".sh") && !strings.HasSuffix(name, ".ps1") {
 			continue
 		}
-		content, readErr := assets.FS.ReadFile(asset.DirHooksCopilotCLIScrp + "/" + name)
+		content, readErr := assets.FS.ReadFile(path.Join(asset.DirIntegrationsCopilotScrp, name))
 		if readErr != nil {
 			return nil, readErr
 		}
@@ -93,14 +94,14 @@ func CopilotCLIScripts() (map[string][]byte, error) {
 
 // CopilotCLISkills reads all embedded Copilot CLI skill templates.
 // Returns a map of skill directory name to SKILL.md content for skills
-// in hooks/copilot-cli/skills/.
+// in integrations/copilot-cli/skills/.
 //
 // Returns:
 //   - map[string][]byte: Skill name -> SKILL.md content
 //   - error: Non-nil if the directory read fails
 func CopilotCLISkills() (map[string][]byte, error) {
 	skills := make(map[string][]byte)
-	entries, dirErr := fs.ReadDir(assets.FS, asset.DirHooksCopilotCLISkills)
+	entries, dirErr := fs.ReadDir(assets.FS, asset.DirIntegrationsCopilotSkill)
 	if dirErr != nil {
 		return nil, dirErr
 	}
@@ -109,7 +110,7 @@ func CopilotCLISkills() (map[string][]byte, error) {
 			continue
 		}
 		name := entry.Name()
-		skillPath := asset.DirHooksCopilotCLISkills + "/" + name + "/" + asset.FileSKILLMd
+		skillPath := path.Join(asset.DirIntegrationsCopilotSkill, name, asset.FileSKILLMd)
 		content, readErr := assets.FS.ReadFile(skillPath)
 		if readErr != nil {
 			return nil, readErr
