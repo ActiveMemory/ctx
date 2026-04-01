@@ -2,7 +2,9 @@
 
 <!-- INDEX:START -->
 | Date | Decision |
-|------|--------|
+|----|--------|
+| 2026-04-01 | Split assets/hooks/ into assets/integrations/ + assets/hooks/messages/ |
+| 2026-04-01 | Rename ctx hook → ctx setup to disambiguate from the hook system |
 | 2026-03-31 | Split log into log/event and log/warn to break import cycles |
 | 2026-03-31 | Context-load-gate injects only CONSTITUTION and AGENT_PLAYBOOK_GATE, not full ReadOrder |
 | 2026-03-31 | Spec signal words and nudge threshold are user-configurable via .ctxrc |
@@ -117,6 +119,34 @@ For significant decisions:
 ✗ No real alternatives existed
 
 -->
+
+## [2026-04-01-074417] Split assets/hooks/ into assets/integrations/ + assets/hooks/messages/
+
+**Status**: Accepted
+
+**Context**: The directory mixed Copilot integration templates with hook message templates
+
+**Decision**: Split assets/hooks/ into assets/integrations/ + assets/hooks/messages/
+
+**Rationale**: Integration assets (Copilot instructions, AGENTS.md, CLI scripts/skills) are not hooks. Hook messages ARE the hook system templates.
+
+**Consequence**: integrations/ for tool integration assets, hooks/messages/ for hook system templates. Embed directives and all config constants updated.
+
+---
+
+## [2026-04-01-074416] Rename ctx hook → ctx setup to disambiguate from the hook system
+
+**Status**: Accepted
+
+**Context**: PR #45 contributor assumed hook meant the setup command, causing naming collisions with the PreToolUse/PostToolUse hook system
+
+**Decision**: Rename ctx hook → ctx setup to disambiguate from the hook system
+
+**Rationale**: hook has a specific meaning in ctx; setup accurately describes generating AI tool integration configs
+
+**Consequence**: CLI breaking change. All docs, specs, TypeScript extension, and YAML assets updated. Released specs left as historical.
+
+---
 
 ## [2026-03-31-224245] Split log into log/event and log/warn to break import cycles
 

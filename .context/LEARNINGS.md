@@ -16,7 +16,9 @@ DO NOT UPDATE FOR:
 
 <!-- INDEX:START -->
 | Date | Learning |
-|------|--------|
+|----|--------|
+| 2026-04-01 | Copilot CLI skills need a sync mechanism to prevent drift from ctx skills |
+| 2026-04-01 | Contributor PRs based on older code reintroduce removed features |
 | 2026-03-31 | Magic string cleanup compounds: each pass reveals the next layer |
 | 2026-03-31 | Force-loaded behavioral prose gets ignored — action-gating hooks don't |
 | 2026-03-31 | Legacy key directory cleanup was specified but not automated |
@@ -118,6 +120,26 @@ DO NOT UPDATE FOR:
 | 2026-02-19 | Feature can be code-complete but invisible to users |
 | 2026-01-28 | IDE is already the UI |
 <!-- INDEX:END -->
+
+---
+
+## [2026-04-01-074419] Copilot CLI skills need a sync mechanism to prevent drift from ctx skills
+
+**Context**: 5 Copilot CLI skills were condensed versions of ctx skills, independently maintained with no drift detection
+
+**Lesson**: Any time the same content exists in two locations without a sync mechanism, it will drift silently
+
+**Application**: make sync-copilot-skills added to build deps, make check-copilot-skills added to audit target
+
+---
+
+## [2026-04-01-074418] Contributor PRs based on older code reintroduce removed features
+
+**Context**: PR #45 brought back prompt templates, PROMPT.md, and IMPLEMENTATION_PLAN.md that were explicitly removed in March
+
+**Lesson**: When resolving contributor merge conflicts, check decisions history for intentional removals — do not assume the PR content is additive
+
+**Application**: Cross-reference DECISIONS.md before accepting PR content that adds files or features
 
 ---
 
