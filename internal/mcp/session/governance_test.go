@@ -322,7 +322,7 @@ func TestCheckGovernance_MultipleViolations(t *testing.T) {
 
 func TestReadAndClearViolations_EmptyContextDir(t *testing.T) {
 	ss := &State{contextDir: ""}
-	violations := ss.readAndClearViolations()
+	violations := readAndClearViolations(ss.contextDir)
 	if violations != nil {
 		t.Errorf("expected nil for empty contextDir, got: %v", violations)
 	}
@@ -334,7 +334,7 @@ func TestReadAndClearViolations_CorruptFile(t *testing.T) {
 	if err := os.WriteFile(p, []byte("not json"), 0o644); err != nil {
 		t.Fatal(err)
 	}
-	violations := ss.readAndClearViolations()
+	violations := readAndClearViolations(ss.contextDir)
 	if violations != nil {
 		t.Errorf("expected nil for corrupt file, got: %v", violations)
 	}
