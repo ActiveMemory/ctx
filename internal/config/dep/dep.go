@@ -91,6 +91,9 @@ const (
 	TomlProjectPrefix = "project."
 	// TomlPoetryPrefix is the TOML section path for Poetry tables.
 	TomlPoetryPrefix = "tool.poetry."
+	// TomlSectionFmt is the Printf format for a TOML section header.
+	// Args: prefix (e.g. "project."), suffix (e.g. "dependencies").
+	TomlSectionFmt = "[%s%s]"
 )
 
 // Table formatting constants for dependency output.

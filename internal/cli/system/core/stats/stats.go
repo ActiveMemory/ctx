@@ -283,7 +283,7 @@ func Stream(w io.Writer, dir, sessionFilter string, jsonOut bool) error {
 	// Track file sizes to detect new content.
 	offsets := make(map[string]int64)
 	globPat := filepath.Join(
-		dir, stats.FilePrefix+"*"+file.ExtJSONL,
+		dir, stats.FilePrefix+token.GlobStar+file.ExtJSONL,
 	)
 	matches, _ := filepath.Glob(globPat)
 	for _, path := range matches {

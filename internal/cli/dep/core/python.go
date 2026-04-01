@@ -8,6 +8,7 @@ package core
 
 import (
 	"bufio"
+	"fmt"
 	"os"
 	"sort"
 	"strings"
@@ -30,7 +31,9 @@ func (p *PythonBuilder) Name() string { return PythonEcosystem }
 
 // Detect returns true if requirements.txt or pyproject.toml exists.
 func (p *PythonBuilder) Detect() bool {
-	for _, manifest := range []string{cfgDep.FileRequirements, cfgDep.FilePyproject} {
+	for _, manifest := range []string{
+		cfgDep.FileRequirements, cfgDep.FilePyproject,
+	} {
 		if _, err := os.Stat(manifest); err == nil {
 			return true
 		}
@@ -202,8 +205,8 @@ func ParsePyprojectDeps(content string, sectionSuffix string) []string {
 	inArray := false
 
 	targets := []string{
-		cfgDep.TomlSectionOpen + cfgDep.TomlProjectPrefix + sectionSuffix + token.CloseBracket,
-		cfgDep.TomlSectionOpen + cfgDep.TomlPoetryPrefix + sectionSuffix + token.CloseBracket,
+		fmt.Sprintf(cfgDep.TomlSectionFmt, cfgDep.TomlProjectPrefix, sectionSuffix),
+		fmt.Sprintf(cfgDep.TomlSectionFmt, cfgDep.TomlPoetryPrefix, sectionSuffix),
 	}
 
 	for _, line := range lines {
@@ -245,7 +248,7 @@ func ParsePyprojectDeps(content string, sectionSuffix string) []string {
 				}
 			} else {
 				deps = append(deps, ParsePyprojectArrayItems(trimmed)...)
-				if strings.Contains(trimmed, "]") {
+				if strings.Contains(trimmed, token.CloseBracket) {
 					inArray = false
 				}
 			}
