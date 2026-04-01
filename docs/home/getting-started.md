@@ -217,7 +217,7 @@ via hooks.
 With **VS Code Copilot Chat**, install the
 [ctx extension](../operations/integrations.md#vs-code-chat-extension-ctx) and use
 `@ctx /status`, `@ctx /agent`, and other slash commands directly in chat.
-Run `ctx hook copilot --write` to generate `.github/copilot-instructions.md`
+Run `ctx setup copilot --write` to generate `.github/copilot-instructions.md`
 for automatic context loading.
 
 For other tools, paste the output of:

@@ -16,7 +16,7 @@ import (
 	cFlag "github.com/ActiveMemory/ctx/internal/config/flag"
 )
 
-// Cmd returns the "ctx hook" command for generating AI tool integrations.
+// Cmd returns the "ctx setup" command for generating AI tool integrations.
 //
 // The command outputs configuration snippets and instructions for integrating
 // Context with various AI coding tools like Claude Code, Cursor, Aider, etc.
@@ -25,13 +25,13 @@ import (
 //   - --write, -w: Write the configuration file instead of printing
 //
 // Returns:
-//   - *cobra.Command: Configured hook command that accepts a tool name argument
+//   - *cobra.Command: Configured setup command that accepts a tool name argument
 func Cmd() *cobra.Command {
 	var write bool
 
-	short, long := desc.Command(cmd.DescKeyHook)
+	short, long := desc.Command(cmd.DescKeySetup)
 	c := &cobra.Command{
-		Use:         cmd.UseHook,
+		Use:         cmd.UseSetup,
 		Short:       short,
 		Annotations: map[string]string{cli.AnnotationSkipInit: cli.AnnotationTrue},
 		Long:        long,
@@ -43,7 +43,7 @@ func Cmd() *cobra.Command {
 
 	c.Flags().BoolVarP(
 		&write, cFlag.Write, cFlag.ShortWrite, false,
-		desc.Flag(flag.DescKeyHookWrite),
+		desc.Flag(flag.DescKeySetupWrite),
 	)
 
 	return c

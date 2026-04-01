@@ -4,8 +4,8 @@
 //   \    Copyright 2026-present Context contributors.
 //                 SPDX-License-Identifier: Apache-2.0
 
-// Package hook provides terminal output for the hook generation
-// command (ctx hook) and hook lifecycle output.
+// Package hook provides terminal output for the setup generation
+// command (ctx setup) and hook lifecycle output.
 //
 // Functions cover hook deployment output ([InfoCopilotCreated],
 // [InfoCopilotMerged], [InfoCopilotSkipped], [InfoCopilotSummary]),

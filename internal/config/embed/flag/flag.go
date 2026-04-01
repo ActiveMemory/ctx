@@ -12,5 +12,5 @@ const (
 	DescKeyCompactArchive  = "compact.archive"
 	DescKeyContextDir      = "context-dir"
 	DescKeyDoctorJson      = "doctor.json"
-	DescKeyHookWrite       = "hook.write"
+	DescKeySetupWrite      = "setup.write"
 )

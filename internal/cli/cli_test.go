@@ -190,8 +190,8 @@ func TestBinaryIntegration(t *testing.T) {
 			{[]string{"status"}, "Context"},
 			{[]string{"agent"}, "Context Packet"},
 			{[]string{"drift"}, "Drift"},
-			{[]string{"load"}, ""},                 // load: varies
-			{[]string{"hook", "cursor"}, "Cursor"}, // hook: integration
+			{[]string{"load"}, ""},                  // load: varies
+			{[]string{"setup", "cursor"}, "Cursor"}, // setup: integration
 		}
 
 		for _, tc := range subcommands {

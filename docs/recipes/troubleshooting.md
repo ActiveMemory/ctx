@@ -153,7 +153,7 @@ ctx init          # create .context/ with template files
 ctx init --minimal  # or just the essentials (CONSTITUTION, TASKS, DECISIONS)
 ```
 
-**Commands that work without initialization**: `ctx init`, `ctx hook`,
+**Commands that work without initialization**: `ctx init`, `ctx setup`,
 `ctx doctor`, and help-only grouping commands (`ctx`, `ctx system`).
 
 ### "My hook isn't firing"

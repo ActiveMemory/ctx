@@ -50,7 +50,7 @@ guide.commands:
   short: List all CLI commands
 guide.skills:
   short: List all available skills
-hook.write:
+setup.write:
   short: Write the configuration file instead of printing
 initialize.force:
   short: Overwrite existing context files

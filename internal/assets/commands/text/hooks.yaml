@@ -391,7 +391,7 @@ hook.agents:
 
     Run with --write to generate:
 
-      ctx hook agents --write
+      ctx setup agents --write
 hook.aider:
   short: |
     Aider Integration
@@ -434,7 +434,7 @@ hook.copilot:
     Add the following to .github/copilot-instructions.md,
     or run with --write to generate the file directly:
 
-      ctx hook copilot --write
+      ctx setup copilot --write
 hook.copilot-cli:
   short: |
     GitHub Copilot CLI Integration
@@ -450,7 +450,7 @@ hook.copilot-cli:
 
     Run with --write to generate all files:
 
-      ctx hook copilot-cli --write
+      ctx setup copilot-cli --write
 hook.cursor:
   short: |
     Cursor IDE Integration

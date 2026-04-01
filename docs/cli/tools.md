@@ -42,12 +42,12 @@ ctx watch --dry-run
 
 ---
 
-### `ctx hook`
+### `ctx setup`
 
 Generate AI tool integration configuration.
 
 ```bash
-ctx hook <tool> [flags]
+ctx setup <tool> [flags]
 ```
 
 **Flags**:
@@ -68,17 +68,17 @@ ctx hook <tool> [flags]
 
 !!! note "Claude Code Uses the Plugin system"
     Claude Code integration is now provided via the `ctx` plugin.
-    Running `ctx hook claude-code` prints plugin install instructions.
+    Running `ctx setup claude-code` prints plugin install instructions.
 
 **Example**:
 
 ```bash
 # Print hook instructions to stdout
-ctx hook cursor
-ctx hook aider
+ctx setup cursor
+ctx setup aider
 
 # Generate and write .github/copilot-instructions.md
-ctx hook copilot --write
+ctx setup copilot --write
 ```
 
 ---

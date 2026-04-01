@@ -342,7 +342,7 @@ files directly.
 
 ```bash
 # Generate Cursor configuration
-ctx hook cursor
+ctx setup cursor
 
 # Initialize context
 ctx init --minimal
@@ -390,7 +390,7 @@ Aider works well with context files through its `--read` flag.
 
 ```bash
 # Generate Aider configuration
-ctx hook aider
+ctx setup aider
 
 # Initialize context
 ctx init
@@ -444,7 +444,7 @@ instructions file, a VS Code Chat extension, and manual patterns.
 ctx init
 
 # Generate .github/copilot-instructions.md
-ctx hook copilot --write
+ctx setup copilot --write
 ```
 
 The `--write` flag creates `.github/copilot-instructions.md`, which
@@ -453,7 +453,7 @@ contains your project's constitution rules, current tasks, conventions,
 and architecture: giving Copilot persistent context without manual
 copy-paste.
 
-Re-run `ctx hook copilot --write` after updating your `.context/` files
+Re-run `ctx setup copilot --write` after updating your `.context/` files
 to regenerate the instructions.
 
 ### VS Code Chat Extension (`@ctx`)
@@ -568,7 +568,7 @@ Windsurf supports custom instructions and file-based context.
 
 ```bash
 # Generate Windsurf configuration
-ctx hook windsurf
+ctx setup windsurf
 
 # Initialize context
 ctx init

@@ -1050,7 +1050,7 @@ func TestCmdDirPurity(t *testing.T) {
 		"guide/cmd/root/command.go":       {"listCommands": true},
 		"guide/cmd/root/skill.go":         {"parseSkillFrontmatter": true, "truncateDescription": true, "listSkills": true},
 		"guide/cmd/root/types.go":         {"skillMeta": true},
-		"hook/cmd/root/run.go":            {"WriteCopilotInstructions": true, "WriteAgentsMd": true, "WriteCopilotCLIHooks": true, "writeCopilotCLIHooks": true, "writeCopilotCLIAgent": true, "writeCopilotCLIInstructions": true, "writeCopilotCLISkills": true, "ensureVSCodeMCPJSON": true, "ensureCopilotCLIMCPConfig": true},
+		"setup/cmd/root/run.go":           {"WriteCopilotInstructions": true, "WriteAgentsMd": true, "WriteCopilotCLIHooks": true, "writeCopilotCLIHooks": true, "writeCopilotCLIAgent": true, "writeCopilotCLIInstructions": true, "writeCopilotCLISkills": true, "ensureVSCodeMCPJSON": true, "ensureCopilotCLIMCPConfig": true},
 		"initialize/cmd/root/run.go":      {"initScratchpad": true, "hasEssentialFiles": true, "ensureGitignoreEntries": true, "writeGettingStarted": true},
 		"journal/cmd/obsidian/run.go":     {"BuildVault": true},
 		"journal/cmd/source/list.go":      {"runList": true},

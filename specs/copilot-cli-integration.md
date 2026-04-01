@@ -157,7 +157,7 @@
 | `ctx recall` | ✅ CLI | ✅ `@ctx /recall` | 📋 CLI (same binary) |
 | `ctx add` | ✅ CLI | ✅ `@ctx /add` | 📋 CLI (same binary) |
 | `ctx compact` | ✅ CLI | ✅ `@ctx /compact` | 📋 CLI (same binary) |
-| `ctx hook <tool>` | ✅ `ctx hook claude` | ✅ `ctx hook copilot` | 📋 `ctx hook copilot-cli` |
+| `ctx setup <tool>` | ✅ `ctx setup claude` | ✅ `ctx setup copilot` | 📋 `ctx setup copilot-cli` |
 | Session persistence | ✅ `.context/sessions/` | ✅ `.context/sessions/` | 📋 `.context/sessions/` |
 
 ---
@@ -166,7 +166,7 @@
 
 ### Phase 1 — Hook Generation (cross-platform)
 
-**Goal:** `ctx hook copilot-cli --write` generates:
+**Goal:** `ctx setup copilot-cli --write` generates:
 
 1. `.github/hooks/ctx-hooks.json` — Hook configuration with dual bash/powershell
 2. `.github/hooks/scripts/ctx-preToolUse.sh` — Bash pre-tool gate

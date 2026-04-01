@@ -71,7 +71,7 @@ func TestInitialize(t *testing.T) {
 		"compact",
 		"decision",
 		"watch",
-		"hook",
+		"setup",
 		"learning",
 		"task",
 		"loop",

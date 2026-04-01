@@ -198,10 +198,10 @@ to it:
 You can generate a tool-specific configuration with:
 
 ```bash
-ctx hook cursor    # Generate Cursor config snippet
-ctx hook aider     # Generate .aider.conf.yml
-ctx hook copilot   # Generate Copilot tips
-ctx hook windsurf  # Generate Windsurf config
+ctx setup cursor    # Generate Cursor config snippet
+ctx setup aider     # Generate .aider.conf.yml
+ctx setup copilot   # Generate Copilot tips
+ctx setup windsurf  # Generate Windsurf config
 ```
 
 ### Migrating Content Into `.context/`
@@ -296,7 +296,7 @@ You don't need the whole team to switch at once:
 
 1. One person runs `ctx init --merge` and commits;
 2. `CLAUDE.md` instructions work immediately for Claude Code users;
-3. Other tool users can adopt at their own pace using `ctx hook <tool>`;
+3. Other tool users can adopt at their own pace using `ctx setup <tool>`;
 4. Context files benefit everyone who reads them, even without tool integration.
 
 ---

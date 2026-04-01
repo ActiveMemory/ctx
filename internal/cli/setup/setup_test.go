@@ -4,7 +4,7 @@
 //   \    Copyright 2026-present Context contributors.
 //                 SPDX-License-Identifier: Apache-2.0
 
-package hook
+package setup
 
 import (
 	"bytes"
@@ -13,12 +13,12 @@ import (
 	"strings"
 	"testing"
 
-	hookRoot "github.com/ActiveMemory/ctx/internal/cli/hook/cmd/root"
+	setupRoot "github.com/ActiveMemory/ctx/internal/cli/setup/cmd/root"
 	"github.com/spf13/cobra"
 )
 
-// TestHookCommand tests the hook command.
-func TestHookCommand(t *testing.T) {
+// TestSetupCommand tests the setup command.
+func TestSetupCommand(t *testing.T) {
 	tests := []struct {
 		tool     string
 		contains string
@@ -32,24 +32,24 @@ func TestHookCommand(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(tt.tool, func(t *testing.T) {
-			hookCmd := Cmd()
-			hookCmd.SetArgs([]string{tt.tool})
+			setupCmd := Cmd()
+			setupCmd.SetArgs([]string{tt.tool})
 
-			if err := hookCmd.Execute(); err != nil {
-				t.Fatalf("hook %s command failed: %v", tt.tool, err)
+			if err := setupCmd.Execute(); err != nil {
+				t.Fatalf("setup %s command failed: %v", tt.tool, err)
 			}
 		})
 	}
 }
 
-// TestHookCommandUnknownTool tests hook command with unknown tool.
-func TestHookCommandUnknownTool(t *testing.T) {
-	hookCmd := Cmd()
-	hookCmd.SetArgs([]string{"unknown-tool"})
+// TestSetupCommandUnknownTool tests setup command with unknown tool.
+func TestSetupCommandUnknownTool(t *testing.T) {
+	setupCmd := Cmd()
+	setupCmd.SetArgs([]string{"unknown-tool"})
 
-	err := hookCmd.Execute()
+	err := setupCmd.Execute()
 	if err == nil {
-		t.Error("hook command should fail for unknown tool")
+		t.Error("setup command should fail for unknown tool")
 	}
 }
 
@@ -61,8 +61,8 @@ func newHookTestCmd() *cobra.Command {
 	return cmd
 }
 
-// hookCmdOutput returns the captured output from a test command.
-func hookCmdOutput(cmd *cobra.Command) string {
+// setupCmdOutput returns the captured output from a test command.
+func setupCmdOutput(cmd *cobra.Command) string {
 	return cmd.OutOrStdout().(*bytes.Buffer).String()
 }
 
@@ -70,7 +70,7 @@ func hookCmdOutput(cmd *cobra.Command) string {
 func TestWriteCopilotInstructions_NewFile(t *testing.T) {
 	tmpDir := t.TempDir()
 
-	// hookRoot.WriteCopilotInstructions uses relative paths, so chdir.
+	// setupRoot.WriteCopilotInstructions uses relative paths, so chdir.
 	origDir, wdErr := os.Getwd()
 	if wdErr != nil {
 		t.Fatal(wdErr)
@@ -83,8 +83,8 @@ func TestWriteCopilotInstructions_NewFile(t *testing.T) {
 	})
 
 	cmd := newHookTestCmd()
-	if runErr := hookRoot.WriteCopilotInstructions(cmd); runErr != nil {
-		t.Fatalf("hookRoot.WriteCopilotInstructions failed: %v", runErr)
+	if runErr := setupRoot.WriteCopilotInstructions(cmd); runErr != nil {
+		t.Fatalf("setupRoot.WriteCopilotInstructions failed: %v", runErr)
 	}
 
 	targetFile := filepath.Join(tmpDir, ".github", "copilot-instructions.md")
@@ -131,8 +131,8 @@ func TestWriteCopilotInstructions_ExistingWithMarker(t *testing.T) {
 	}
 
 	cmd := newHookTestCmd()
-	if runErr := hookRoot.WriteCopilotInstructions(cmd); runErr != nil {
-		t.Fatalf("hookRoot.WriteCopilotInstructions failed: %v", runErr)
+	if runErr := setupRoot.WriteCopilotInstructions(cmd); runErr != nil {
+		t.Fatalf("setupRoot.WriteCopilotInstructions failed: %v", runErr)
 	}
 
 	// File should be unchanged (skipped).
@@ -144,7 +144,7 @@ func TestWriteCopilotInstructions_ExistingWithMarker(t *testing.T) {
 		t.Error("file with existing ctx marker should not be modified")
 	}
 
-	out := hookCmdOutput(cmd)
+	out := setupCmdOutput(cmd)
 	if !strings.Contains(out, "skipped") {
 		t.Errorf("output should mention skipped, got: %s", out)
 	}
@@ -179,8 +179,8 @@ func TestWriteCopilotInstructions_ExistingWithoutMarker(t *testing.T) {
 	}
 
 	cmd := newHookTestCmd()
-	if runErr := hookRoot.WriteCopilotInstructions(cmd); runErr != nil {
-		t.Fatalf("hookRoot.WriteCopilotInstructions failed: %v", runErr)
+	if runErr := setupRoot.WriteCopilotInstructions(cmd); runErr != nil {
+		t.Fatalf("setupRoot.WriteCopilotInstructions failed: %v", runErr)
 	}
 
 	data, readErr := os.ReadFile(targetFile)
@@ -197,7 +197,7 @@ func TestWriteCopilotInstructions_ExistingWithoutMarker(t *testing.T) {
 		t.Error("merged file should contain the ctx marker")
 	}
 
-	out := hookCmdOutput(cmd)
+	out := setupCmdOutput(cmd)
 	if !strings.Contains(out, "merged") {
 		t.Errorf("output should mention merged, got: %s", out)
 	}

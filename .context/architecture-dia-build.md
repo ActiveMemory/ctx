@@ -72,7 +72,7 @@ ctx/
 │   │   ├── doctor/              #   ctx doctor
 │   │   ├── drift/               #   ctx drift
 │   │   ├── guide/               #   ctx guide
-│   │   ├── hook/                #   ctx hook
+│   │   ├── setup/               #   ctx setup
 │   │   ├── initialize/          #   ctx init
 │   │   ├── journal/             #   ctx journal
 │   │   ├── learning/            #   ctx learning

@@ -31,7 +31,7 @@ claude /plugin marketplace add ActiveMemory/ctx
 claude /plugin install ctx@activememory-ctx
 
 # ## Cursor / Aider / Copilot / Windsurf ##
-ctx hook cursor # or: aider, copilot, windsurf
+ctx setup cursor # or: aider, copilot, windsurf
 
 # ## Companion tools (highly recommended) ##
 npx gitnexus analyze          # code knowledge graph
@@ -48,7 +48,7 @@ Then start your AI tool and ask: "**Do you remember?**"
 | Command/Skill       | Role in this workflow                                        |
 |---------------------|--------------------------------------------------------------|
 | `ctx init`          | Create `.context/` directory, templates, and permissions     |
-| `ctx hook`          | Generate integration configuration for a specific AI tool    |
+| `ctx setup`          | Generate integration configuration for a specific AI tool    |
 | `ctx agent`         | Print a token-budgeted context packet for AI consumption     |
 | `ctx load`          | Output assembled context in read order (for manual pasting)  |
 | `ctx watch`         | Auto-apply context updates from AI output (non-native tools) |
@@ -114,16 +114,16 @@ automatically by `ctx init`*), generate its integration configuration:
 
 ```bash
 # For Cursor
-ctx hook cursor
+ctx setup cursor
 
 # For Aider
-ctx hook aider
+ctx setup aider
 
 # For GitHub Copilot
-ctx hook copilot
+ctx setup copilot
 
 # For Windsurf
-ctx hook windsurf
+ctx setup windsurf
 ```
 
 Each command prints the configuration you need. How you apply it depends on the
@@ -314,12 +314,12 @@ source <(ctx completion zsh)       # or bash/fish
 # Start Claude Code, then ask: "Do you remember?"
 
 # ## Cursor ##
-ctx hook cursor
+ctx setup cursor
 # Add the system prompt to .cursor/settings.json
 # Paste context: ctx agent --budget 4000 | pbcopy
 
 # ## Aider ##
-ctx hook aider
+ctx setup aider
 # Create .aider.conf.yml with read: paths
 # Run watch mode alongside: ctx watch --log /tmp/aider.log
 

@@ -53,7 +53,7 @@ const (
 	VersionDrift = "version-drift"
 )
 
-// Supported integration tool names for ctx hook command.
+// Supported integration tool names for ctx setup command.
 const (
 	ToolAgents     = "agents"
 	ToolAider      = "aider"

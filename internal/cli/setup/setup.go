@@ -4,18 +4,18 @@
 //   \    Copyright 2026-present Context contributors.
 //                 SPDX-License-Identifier: Apache-2.0
 
-package hook
+package setup
 
 import (
 	"github.com/spf13/cobra"
 
-	hookRoot "github.com/ActiveMemory/ctx/internal/cli/hook/cmd/root"
+	setupRoot "github.com/ActiveMemory/ctx/internal/cli/setup/cmd/root"
 )
 
-// Cmd returns the "ctx hook" command for generating AI tool integrations.
+// Cmd returns the "ctx setup" command for generating AI tool integrations.
 //
 // Returns:
-//   - *cobra.Command: The hook command with subcommands registered
+//   - *cobra.Command: The setup command with subcommands registered
 func Cmd() *cobra.Command {
-	return hookRoot.Cmd()
+	return setupRoot.Cmd()
 }

@@ -243,7 +243,7 @@ guide:
     Use --skills to list all available slash-command skills.
     Use --commands to list all CLI commands.
   short: Quick-reference cheat sheet for ctx
-hook:
+setup:
   long: |-
     Generate configuration and instructions
     for integrating Context with AI tools.
@@ -256,10 +256,10 @@ hook:
       windsurf     - Windsurf IDE
 
     Use --write to generate the configuration file directly:
-      ctx hook copilot --write    # Creates .github/copilot-instructions.md
+      ctx setup copilot --write    # Creates .github/copilot-instructions.md
 
     Example:
-      ctx hook cursor
+      ctx setup cursor
   short: Generate AI tool integration configs
 initialize:
   long: |-
