@@ -23,6 +23,7 @@ import (
 	"github.com/ActiveMemory/ctx/internal/config/token"
 	"github.com/ActiveMemory/ctx/internal/entity"
 	errParser "github.com/ActiveMemory/ctx/internal/err/parser"
+	"github.com/ActiveMemory/ctx/internal/io"
 	"github.com/ActiveMemory/ctx/internal/log/warn"
 )
 
@@ -271,7 +272,7 @@ func CopilotCLISessionDirs() []string {
 	candidates := []string{cfgCopilot.DirSessions, cfgCopilot.DirHistory}
 	for _, sub := range candidates {
 		dir := filepath.Join(copilotHome, sub)
-		if info, err := os.Stat(dir); err == nil && info.IsDir() {
+		if info, err := io.SafeStat(dir); err == nil && info.IsDir() {
 			dirs = append(dirs, dir)
 		}
 	}
@@ -282,7 +283,7 @@ func CopilotCLISessionDirs() []string {
 		if localAppData != "" {
 			for _, sub := range candidates {
 				dir := filepath.Join(localAppData, cfgCopilot.CLIAppName, sub)
-				if info, err := os.Stat(dir); err == nil && info.IsDir() {
+				if info, err := io.SafeStat(dir); err == nil && info.IsDir() {
 					dirs = append(dirs, dir)
 				}
 			}

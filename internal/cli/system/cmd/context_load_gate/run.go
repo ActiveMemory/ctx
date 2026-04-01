@@ -103,10 +103,9 @@ func Run(cmd *cobra.Command, stdin *os.File) error {
 			continue // file missing - skip gracefully
 		}
 
-		content.WriteString(fmt.Sprintf(
-			desc.Text(
-				text.DescKeyContextLoadGateFileHeader,
-			), f, string(data)))
+		internalIo.SafeFprintf(&content, desc.Text(
+			text.DescKeyContextLoadGateFileHeader,
+		), f, string(data))
 		tokens := ctxToken.Estimate(data)
 		totalTokens += tokens
 		perFile = append(perFile, entity.FileTokenEntry{Name: f, Tokens: tokens})
@@ -127,9 +126,8 @@ func Run(cmd *cobra.Command, stdin *os.File) error {
 		strings.Repeat(
 			load_gate.ContextLoadSeparatorChar, load_gate.ContextLoadSeparatorWidth,
 		) + token.NewlineLF)
-	content.WriteString(fmt.Sprintf(
-		desc.Text(text.DescKeyContextLoadGateFooter),
-		filesLoaded, totalTokens))
+	internalIo.SafeFprintf(&content, desc.Text(text.DescKeyContextLoadGateFooter),
+		filesLoaded, totalTokens)
 
 	writeSetup.Context(
 		cmd, coreSession.FormatContext(hook.EventPreToolUse, content.String()),

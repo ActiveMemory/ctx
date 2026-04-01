@@ -222,6 +222,16 @@ system.stats.last:
   short: Show last N entries
 system.stats.session:
   short: Filter by session ID (prefix match)
+trace.collect.record:
+  short: Record context refs for a post-commit hash
+trace.file.last:
+  short: Maximum commits to show
+trace.json:
+  short: Output as JSON
+trace.last:
+  short: Show context for last N commits
+trace.tag.note:
+  short: Context note to attach to the commit
 task.archive.dry-run:
   short: Preview changes without modifying files
 watch.dry-run:

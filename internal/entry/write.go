@@ -18,6 +18,7 @@ import (
 	errAdd "github.com/ActiveMemory/ctx/internal/err/add"
 	errFs "github.com/ActiveMemory/ctx/internal/err/fs"
 	"github.com/ActiveMemory/ctx/internal/index"
+	"github.com/ActiveMemory/ctx/internal/io"
 	"github.com/ActiveMemory/ctx/internal/rc"
 )
 
@@ -78,7 +79,7 @@ func Write(params Params) error {
 		existing, formatted, fType, params.Section,
 	)
 
-	if writeErr := os.WriteFile(
+	if writeErr := io.SafeWriteFile(
 		filePath, newContent, fs.PermFile,
 	); writeErr != nil {
 		return errFs.FileWrite(filePath, writeErr)
@@ -87,14 +88,14 @@ func Write(params Params) error {
 	switch fType {
 	case entry.Decision:
 		indexed := index.UpdateDecisions(string(newContent))
-		if indexErr := os.WriteFile(
+		if indexErr := io.SafeWriteFile(
 			filePath, []byte(indexed), fs.PermFile,
 		); indexErr != nil {
 			return errAdd.IndexUpdate(filePath, indexErr)
 		}
 	case entry.Learning:
 		indexed := index.UpdateLearnings(string(newContent))
-		if indexErr := os.WriteFile(
+		if indexErr := io.SafeWriteFile(
 			filePath, []byte(indexed), fs.PermFile,
 		); indexErr != nil {
 			return errAdd.IndexUpdate(filePath, indexErr)

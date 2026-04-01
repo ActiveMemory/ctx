@@ -22,6 +22,7 @@ import (
 	"github.com/ActiveMemory/ctx/internal/config/obsidian"
 	"github.com/ActiveMemory/ctx/internal/config/token"
 	"github.com/ActiveMemory/ctx/internal/entity"
+	"github.com/ActiveMemory/ctx/internal/io"
 )
 
 // Home creates the root navigation hub for the Obsidian vault.
@@ -52,22 +53,22 @@ func Home(
 	filesLink := strings.TrimSuffix(obsidian.MOCFiles, file.ExtMarkdown)
 	typesLink := strings.TrimSuffix(obsidian.MOCTypes, file.ExtMarkdown)
 	if hasTopics {
-		sb.WriteString(fmt.Sprintf(
+		io.SafeFprintf(&sb,
 			browseItem+nl,
 			wikilink.Format(topicsLink, topicsLink[1:]),
-			desc.Text(text.DescKeyJournalMocTopicsDesc)))
+			desc.Text(text.DescKeyJournalMocTopicsDesc))
 	}
 	if hasFiles {
-		sb.WriteString(fmt.Sprintf(
+		io.SafeFprintf(&sb,
 			browseItem+nl,
 			wikilink.Format(filesLink, filesLink[1:]),
-			desc.Text(text.DescKeyJournalMocFilesDesc)))
+			desc.Text(text.DescKeyJournalMocFilesDesc))
 	}
 	if hasTypes {
-		sb.WriteString(fmt.Sprintf(
+		io.SafeFprintf(&sb,
 			browseItem+nl,
 			wikilink.Format(typesLink, typesLink[1:]),
-			desc.Text(text.DescKeyJournalMocTypesDesc)))
+			desc.Text(text.DescKeyJournalMocTypesDesc))
 	}
 	sb.WriteString(nl)
 
@@ -106,10 +107,10 @@ func ObsidianTopics(topics []entity.TopicData) string {
 	popular, longtail := SplitPopular(topics)
 
 	sb.WriteString(desc.Text(text.DescKeyJournalMocHeadingTopics) + nl + nl)
-	sb.WriteString(fmt.Sprintf(
+	io.SafeFprintf(&sb,
 		desc.Text(text.DescKeyJournalMocTopicStats)+nl+nl,
 		len(topics), session.CountUnique(topics),
-		len(popular), len(longtail)))
+		len(popular), len(longtail))
 
 	section.WriteFormatted(
 		&sb,
@@ -177,9 +178,9 @@ func ObsidianFiles(keyFiles []entity.KeyFileData) string {
 	}
 
 	sb.WriteString(desc.Text(text.DescKeyJournalMocHeadingFiles) + nl + nl)
-	sb.WriteString(fmt.Sprintf(
+	io.SafeFprintf(&sb,
 		desc.Text(text.DescKeyJournalMocFileStats)+nl+nl,
-		len(keyFiles), totalSessions, len(popular), len(longtail)))
+		len(keyFiles), totalSessions, len(popular), len(longtail))
 
 	section.WriteFormatted(
 		&sb,
@@ -241,14 +242,14 @@ func ObsidianTypes(sessionTypes []entity.TypeData) string {
 	}
 
 	sb.WriteString(desc.Text(text.DescKeyJournalMocHeadingTypes) + nl + nl)
-	sb.WriteString(fmt.Sprintf(
+	io.SafeFprintf(&sb,
 		desc.Text(text.DescKeyJournalMocTypeStats)+nl+nl,
-		len(sessionTypes), totalSessions))
+		len(sessionTypes), totalSessions)
 
 	for _, st := range sessionTypes {
-		sb.WriteString(fmt.Sprintf(
+		io.SafeFprintf(&sb,
 			desc.Text(text.DescKeyJournalMocItemSessions)+nl,
-			wikilink.Format(st.Name, st.Name), len(st.Entries)))
+			wikilink.Format(st.Name, st.Name), len(st.Entries))
 	}
 	sb.WriteString(nl)
 
@@ -346,16 +347,16 @@ func GenerateRelatedFooter(
 			topicLinks = append(topicLinks,
 				fmt.Sprintf(obsidian.WikilinkPlain, t))
 		}
-		sb.WriteString(fmt.Sprintf(
+		io.SafeFprintf(&sb,
 			desc.Text(text.DescKeyJournalMocTopicsLabel)+nl+nl,
-			strings.Join(topicLinks, desc.Text(text.DescKeyJournalMocTopicSep))))
+			strings.Join(topicLinks, desc.Text(text.DescKeyJournalMocTopicSep)))
 	}
 
 	// Type link
 	if entry.Type != "" {
-		sb.WriteString(fmt.Sprintf(
+		io.SafeFprintf(&sb,
 			desc.Text(text.DescKeyJournalMocTypeLabel)+nl+nl,
-			fmt.Sprintf(obsidian.WikilinkPlain, entry.Type)))
+			fmt.Sprintf(obsidian.WikilinkPlain, entry.Type))
 	}
 
 	// See also: other entries sharing topics
@@ -364,9 +365,9 @@ func GenerateRelatedFooter(
 		sb.WriteString(desc.Text(text.DescKeyLabelObsidianSeeAlso) + nl)
 		for _, rel := range related {
 			link := strings.TrimSuffix(rel.Filename, file.ExtMarkdown)
-			sb.WriteString(fmt.Sprintf(
+			io.SafeFprintf(&sb,
 				desc.Text(text.DescKeyJournalMocItemListed)+nl,
-				wikilink.Format(link, rel.Title)))
+				wikilink.Format(link, rel.Title))
 		}
 		sb.WriteString(nl)
 	}

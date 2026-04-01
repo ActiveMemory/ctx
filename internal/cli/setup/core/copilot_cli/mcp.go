@@ -17,6 +17,7 @@ import (
 	cfgHook "github.com/ActiveMemory/ctx/internal/config/hook"
 	mcpServer "github.com/ActiveMemory/ctx/internal/config/mcp/server"
 	"github.com/ActiveMemory/ctx/internal/config/token"
+	"github.com/ActiveMemory/ctx/internal/io"
 	writeSetup "github.com/ActiveMemory/ctx/internal/write/setup"
 )
 
@@ -73,7 +74,7 @@ func ensureMCPConfig(cmd *cobra.Command) error {
 	existing[cfgHook.KeyMCPServers] = servers
 
 	// Create directory if needed
-	if mkdirErr := os.MkdirAll(copilotHome, fs.PermExec); mkdirErr != nil {
+	if mkdirErr := io.SafeMkdirAll(copilotHome, fs.PermExec); mkdirErr != nil {
 		return mkdirErr
 	}
 
@@ -83,7 +84,7 @@ func ensureMCPConfig(cmd *cobra.Command) error {
 	}
 	data = append(data, token.NewlineLF...)
 
-	if writeFileErr := os.WriteFile(target, data, fs.PermFile); writeFileErr != nil {
+	if writeFileErr := io.SafeWriteFile(target, data, fs.PermFile); writeFileErr != nil {
 		return writeFileErr
 	}
 	writeSetup.InfoCopilotCLICreated(cmd, target)

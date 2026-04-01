@@ -18,6 +18,7 @@ import (
 	"github.com/ActiveMemory/ctx/internal/config/token"
 	errFs "github.com/ActiveMemory/ctx/internal/err/fs"
 	errInit "github.com/ActiveMemory/ctx/internal/err/initialize"
+	"github.com/ActiveMemory/ctx/internal/io"
 	"github.com/ActiveMemory/ctx/internal/write/initialize"
 )
 
@@ -66,7 +67,7 @@ func HandleMakefileCtx(cmd *cobra.Command) error {
 	}
 
 	amended += token.NewlineLF + project.MakefileIncludeDirective + token.NewlineLF
-	if writeErr := os.WriteFile(
+	if writeErr := io.SafeWriteFile(
 		project.Makefile, []byte(amended), fs.PermFile,
 	); writeErr != nil {
 		return errFs.FileAmend(project.Makefile, writeErr)

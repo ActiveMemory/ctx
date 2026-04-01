@@ -14,6 +14,7 @@ import (
 
 	"github.com/ActiveMemory/ctx/internal/config/dep"
 	"github.com/ActiveMemory/ctx/internal/config/token"
+	"github.com/ActiveMemory/ctx/internal/io"
 )
 
 // MermaidID converts a package path to a valid Mermaid node ID.
@@ -48,10 +49,7 @@ func RenderMermaid(graph map[string][]string) string {
 		src := MermaidID(pkg)
 		for _, d := range deps {
 			dst := MermaidID(d)
-			_, err := fmt.Fprintf(&b, edgeFmt, src, pkg, dst, d)
-			if err != nil {
-				return ""
-			}
+			io.SafeFprintf(&b, edgeFmt, src, pkg, dst, d)
 		}
 	}
 
@@ -68,15 +66,15 @@ func RenderMermaid(graph map[string][]string) string {
 func RenderTable(graph map[string][]string) string {
 	tf := fmt.Sprintf(dep.TableRowFormat, dep.TableColPackage)
 	var b strings.Builder
-	b.WriteString(fmt.Sprintf(tf, dep.TableHeaderPackage, dep.TableHeaderImports))
-	b.WriteString(fmt.Sprintf(tf,
+	io.SafeFprintf(&b, tf, dep.TableHeaderPackage, dep.TableHeaderImports)
+	io.SafeFprintf(&b, tf,
 		strings.Repeat("-", dep.TableColPackage),
-		strings.Repeat("-", dep.TableColImports)))
+		strings.Repeat("-", dep.TableColImports))
 
 	keys := SortedKeys(graph)
 	for _, pkg := range keys {
 		deps := graph[pkg]
-		b.WriteString(fmt.Sprintf(tf, pkg, strings.Join(deps, token.CommaSpace)))
+		io.SafeFprintf(&b, tf, pkg, strings.Join(deps, token.CommaSpace))
 	}
 
 	return b.String()

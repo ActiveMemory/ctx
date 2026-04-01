@@ -15,6 +15,7 @@ import (
 
 	"github.com/ActiveMemory/ctx/internal/context/load"
 	"github.com/ActiveMemory/ctx/internal/entity"
+	"github.com/ActiveMemory/ctx/internal/io"
 	"github.com/ActiveMemory/ctx/internal/rc"
 )
 
@@ -325,11 +326,11 @@ func TestCheckEntryCount(t *testing.T) {
 		var sb strings.Builder
 		sb.WriteString("# Learnings\n\n")
 		for i := 0; i < n; i++ {
-			sb.WriteString(fmt.Sprintf(
+			io.SafeFprintf(&sb,
 				"## [2026-01-%02d-120000] Entry %d\n\n"+
 					"Content for entry %d.\n\n",
 				(i%28)+1, i+1, i+1,
-			))
+			)
 		}
 		return sb.String()
 	}
@@ -449,11 +450,11 @@ func TestCheckEntryCountDisabled(t *testing.T) {
 		var sb strings.Builder
 		sb.WriteString("# Learnings\n\n")
 		for i := 0; i < n; i++ {
-			sb.WriteString(fmt.Sprintf(
+			io.SafeFprintf(&sb,
 				"## [2026-01-%02d-120000] Entry %d\n\n"+
 					"Content for entry %d.\n\n",
 				(i%28)+1, i+1, i+1,
-			))
+			)
 		}
 		return sb.String()
 	}

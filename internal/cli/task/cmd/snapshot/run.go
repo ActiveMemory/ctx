@@ -20,6 +20,7 @@ import (
 	"github.com/ActiveMemory/ctx/internal/config/token"
 	"github.com/ActiveMemory/ctx/internal/err/backup"
 	errTask "github.com/ActiveMemory/ctx/internal/err/task"
+	"github.com/ActiveMemory/ctx/internal/io"
 	"github.com/ActiveMemory/ctx/internal/sanitize"
 	writeArchive "github.com/ActiveMemory/ctx/internal/write/archive"
 )
@@ -73,7 +74,7 @@ func Run(cmd *cobra.Command, args []string) error {
 	)
 
 	// Write snapshot
-	if writeErr := os.WriteFile(
+	if writeErr := io.SafeWriteFile(
 		snapshotPath, []byte(snapshotContent), fs.PermFile,
 	); writeErr != nil {
 		return errTask.SnapshotWrite(writeErr)

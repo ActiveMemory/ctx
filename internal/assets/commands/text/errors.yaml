@@ -198,6 +198,8 @@ err.fs.stat-path:
   short: 'stat %s: %w'
 err.fs.stdin-read:
   short: 'failed to read from stdin: %w'
+err.fs.write-buffer:
+  short: 'buffer write: %v'
 err.fs.write-file-failed:
   short: 'write file: %w'
 err.fs.write-merged:
@@ -436,6 +438,24 @@ err.state.reading-state-dir:
   short: 'reading state directory: %w'
 err.state.save-state:
   short: 'saving state: %w'
+err.trace.git-dir:
+  short: 'git rev-parse --git-dir: %w'
+err.trace.git-log:
+  short: 'git log: %w'
+err.trace.hook-exists:
+  short: '%s hook already exists at %s (not installed by ctx); remove it manually first'
+err.trace.hook-write:
+  short: 'write %s hook: %w'
+err.trace.note-required:
+  short: --note is required
+err.trace.resolve-commit:
+  short: 'resolve commit %q: %w'
+err.trace.unknown-action:
+  short: 'unknown action %q: use enable or disable'
+err.trace.write-history:
+  short: 'write history: %w'
+err.trace.write-override:
+  short: 'write override: %w'
 err.task.no-completed-tasks:
   short: no completed tasks to archive
 err.task.no-task-match:

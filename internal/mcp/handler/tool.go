@@ -14,7 +14,7 @@ import (
 
 	"github.com/ActiveMemory/ctx/internal/assets/read/desc"
 	remindCore "github.com/ActiveMemory/ctx/internal/cli/remind/core"
-	taskComplete "github.com/ActiveMemory/ctx/internal/cli/task/cmd/complete"
+	taskComplete "github.com/ActiveMemory/ctx/internal/cli/task/core/complete"
 	cfgArchive "github.com/ActiveMemory/ctx/internal/config/archive"
 	cfgCtx "github.com/ActiveMemory/ctx/internal/config/ctx"
 	"github.com/ActiveMemory/ctx/internal/config/embed/text"
@@ -29,6 +29,7 @@ import (
 	"github.com/ActiveMemory/ctx/internal/entity"
 	"github.com/ActiveMemory/ctx/internal/entry"
 	errMcp "github.com/ActiveMemory/ctx/internal/err/mcp"
+	"github.com/ActiveMemory/ctx/internal/io"
 	"github.com/ActiveMemory/ctx/internal/journal/parser"
 	"github.com/ActiveMemory/ctx/internal/mcp/handler/task"
 	"github.com/ActiveMemory/ctx/internal/mcp/server/stat"
@@ -49,15 +50,15 @@ func (h *Handler) Status() (string, error) {
 	}
 
 	var sb strings.Builder
-	_, _ = fmt.Fprintf(
+	io.SafeFprintf(
 		&sb,
 		desc.Text(text.DescKeyMCPStatusContextFormat), ctx.Dir,
 	)
-	_, _ = fmt.Fprintf(
+	io.SafeFprintf(
 		&sb,
 		desc.Text(text.DescKeyMCPStatusFilesFormat), len(ctx.Files),
 	)
-	_, _ = fmt.Fprintf(
+	io.SafeFprintf(
 		&sb,
 		desc.Text(text.DescKeyMCPStatusUsageFormat), ctx.TotalTokens,
 	)
@@ -130,7 +131,7 @@ func (h *Handler) Complete(query string) (string, error) {
 		return "", boundaryErr
 	}
 
-	completedTask, completeErr := taskComplete.Complete(
+	completedTask, _, completeErr := taskComplete.Complete(
 		query, h.ContextDir,
 	)
 	if completeErr != nil {
@@ -157,7 +158,7 @@ func (h *Handler) Drift() (string, error) {
 	report := drift.Detect(ctx)
 
 	var sb strings.Builder
-	_, _ = fmt.Fprintf(
+	io.SafeFprintf(
 		&sb,
 		desc.Text(text.DescKeyMCPDriftStatusFormat),
 		report.Status(),
@@ -234,7 +235,7 @@ func (h *Handler) Recall(limit int, since time.Time) (string, error) {
 	}
 
 	var sb strings.Builder
-	_, _ = fmt.Fprintf(&sb,
+	io.SafeFprintf(&sb,
 		desc.Text(text.DescKeyMCPSessionsFoundFormat),
 		len(sessions),
 	)
@@ -290,7 +291,7 @@ func (h *Handler) WatchUpdate(
 
 	// Handle the "complete" type as a special case.
 	if entryType == cfgEntry.Complete {
-		completedTask, completeErr := taskComplete.Complete(
+		completedTask, _, completeErr := taskComplete.Complete(
 			content, h.ContextDir)
 		if completeErr != nil {
 			return "", completeErr
@@ -404,7 +405,7 @@ func (h *Handler) Compact(archive bool) (string, error) {
 
 	// Build response text.
 	for _, taskText := range result.TasksMoved {
-		_, _ = fmt.Fprintf(&sb,
+		io.SafeFprintf(&sb,
 			desc.Text(
 				text.DescKeyMCPCompactMovedFormat)+token.NewlineLF,
 			tidy.TruncateString(taskText, token.TruncateLen),
@@ -423,7 +424,7 @@ func (h *Handler) Compact(archive bool) (string, error) {
 		return desc.Text(text.DescKeyMCPCompactClean), nil
 	}
 
-	_, _ = fmt.Fprintf(
+	io.SafeFprintf(
 		&sb,
 		desc.Text(text.DescKeyMCPFormatCompacted),
 		result.TotalChanges(),
@@ -563,7 +564,7 @@ func (h *Handler) SessionEvent(
 			sb.WriteString(desc.Text(text.DescKeyMCPNoPending))
 		}
 
-		_, _ = fmt.Fprintf(&sb,
+		io.SafeFprintf(&sb,
 			desc.Text(text.DescKeyMCPFormatSessionStats),
 			h.Session.ToolCalls,
 			stat.TotalAdds(h.Session.AddsPerformed),
@@ -593,7 +594,7 @@ func (h *Handler) Remind() (string, error) {
 
 	today := time.Now().Format(cfgTime.DateFormat)
 	var sb strings.Builder
-	_, _ = fmt.Fprintf(
+	io.SafeFprintf(
 		&sb,
 		desc.Text(text.DescKeyMCPRemindersFormat),
 		len(reminders),
@@ -610,7 +611,7 @@ func (h *Handler) Remind() (string, error) {
 				)
 			}
 		}
-		_, _ = fmt.Fprintf(&sb, desc.Text(
+		io.SafeFprintf(&sb, desc.Text(
 			text.DescKeyMCPFormatReminderItem)+token.NewlineLF,
 			r.ID, r.Message, annotation)
 	}

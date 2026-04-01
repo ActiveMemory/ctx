@@ -784,7 +784,7 @@ func TestNoNetworkImportsInCore(t *testing.T) {
 
 		t.Run(pkg, func(t *testing.T) {
 			fset := token.NewFileSet()
-			pkgs, parseErr := parser.ParseDir(fset, pkgDir, func(info os.FileInfo) bool {
+			pkgs, parseErr := parser.ParseDir(fset, pkgDir, func(info os.FileInfo) bool { //nolint:staticcheck // migration to go/packages tracked separately
 				return !strings.HasSuffix(info.Name(), "_test.go")
 			}, parser.ImportsOnly)
 			if parseErr != nil {
@@ -1050,7 +1050,6 @@ func TestCmdDirPurity(t *testing.T) {
 		"guide/cmd/root/command.go":       {"listCommands": true},
 		"guide/cmd/root/skill.go":         {"parseSkillFrontmatter": true, "truncateDescription": true, "listSkills": true},
 		"guide/cmd/root/types.go":         {"skillMeta": true},
-		"initialize/cmd/root/run.go":      {"initScratchpad": true, "hasEssentialFiles": true, "ensureGitignoreEntries": true, "writeGettingStarted": true},
 		"journal/cmd/obsidian/run.go":     {"BuildVault": true},
 		"journal/cmd/source/list.go":      {"runList": true},
 		"journal/cmd/source/show.go":      {"runShow": true},
@@ -1060,7 +1059,6 @@ func TestCmdDirPurity(t *testing.T) {
 		"pad/cmd/resolve/display.go":      {"displayAll": true},
 		"remind/cmd/dismiss/run.go":       {"dismissOne": true, "dismissAll": true},
 		"system/cmd/post_commit/score.go": {"scoreCommitViolations": true},
-		"task/cmd/complete/run.go":        {"Complete": true},
 		"why/cmd/root/data.go":            {"DocEntry": true},
 		"why/cmd/root/menu.go":            {"showMenu": true},
 		"why/cmd/root/run.go":             {"ShowDoc": true},

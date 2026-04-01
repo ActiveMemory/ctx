@@ -21,6 +21,7 @@ import (
 	"github.com/ActiveMemory/ctx/internal/config/token"
 	cfgVscode "github.com/ActiveMemory/ctx/internal/config/vscode"
 	errFs "github.com/ActiveMemory/ctx/internal/err/fs"
+	"github.com/ActiveMemory/ctx/internal/io"
 	writeErr "github.com/ActiveMemory/ctx/internal/write/err"
 	writeSetup "github.com/ActiveMemory/ctx/internal/write/setup"
 )
@@ -51,8 +52,8 @@ func DeployInstructions(cmd *cobra.Command) error {
 	}
 
 	// Check if the file exists
-	existingContent, readErr := os.ReadFile(filepath.Clean(targetFile))
-	fileExists := readErr == nil
+	existingContent, existErr := os.ReadFile(filepath.Clean(targetFile))
+	fileExists := existErr == nil
 
 	if fileExists {
 		existingStr := string(existingContent)
@@ -63,7 +64,7 @@ func DeployInstructions(cmd *cobra.Command) error {
 
 		// File exists without ctx markers: append ctx content
 		merged := existingStr + token.NewlineLF + string(instructions)
-		if wErr := os.WriteFile(
+		if wErr := io.SafeWriteFile(
 			targetFile, []byte(merged), fs.PermFile,
 		); wErr != nil {
 			return errFs.FileWrite(targetFile, wErr)
@@ -73,7 +74,7 @@ func DeployInstructions(cmd *cobra.Command) error {
 	}
 
 	// File doesn't exist: create it
-	if wErr := os.WriteFile(
+	if wErr := io.SafeWriteFile(
 		targetFile, instructions, fs.PermFile,
 	); wErr != nil {
 		return errFs.FileWrite(targetFile, wErr)

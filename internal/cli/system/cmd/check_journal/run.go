@@ -67,7 +67,9 @@ func Run(cmd *cobra.Command, stdin *os.File) error {
 	if _, statErr := os.Stat(jDir); os.IsNotExist(statErr) {
 		return nil
 	}
-	if _, statErr := os.Stat(claudeProjectsDir); os.IsNotExist(statErr) {
+	if _, statErr := internalIo.SafeStat(
+		claudeProjectsDir,
+	); os.IsNotExist(statErr) {
 		return nil
 	}
 
@@ -119,10 +121,11 @@ func Run(cmd *cobra.Command, stdin *os.File) error {
 	writeSetup.Nudge(cmd, message.NudgeBox(relayPrefix, boxTitle, content))
 
 	ref := notify.NewTemplateRef(hook.CheckJournal, variant, vars)
-	journalMsg := hook.CheckJournal + ": " + fmt.Sprintf(
-		desc.Text(text.DescKeyCheckJournalRelayFormat),
-		unimported, unenriched,
-	)
+	journalMsg := fmt.Sprintf(desc.Text(text.DescKeyRelayPrefixFormat),
+		hook.CheckJournal, fmt.Sprintf(
+			desc.Text(text.DescKeyCheckJournalRelayFormat),
+			unimported, unenriched,
+		))
 	nudge.EmitAndRelay(journalMsg, input.SessionID, ref)
 
 	internalIo.TouchFile(remindedFile)

@@ -22,6 +22,7 @@ import (
 	"github.com/ActiveMemory/ctx/internal/config/journal"
 	"github.com/ActiveMemory/ctx/internal/config/session"
 	"github.com/ActiveMemory/ctx/internal/entity"
+	"github.com/ActiveMemory/ctx/internal/io"
 	"github.com/ActiveMemory/ctx/internal/journal/state"
 )
 
@@ -105,7 +106,7 @@ func Import(
 				endIdx = totalMsgs
 			}
 
-			_, statErr := os.Stat(path)
+			_, statErr := io.SafeStat(path)
 			fileExists := statErr == nil
 
 			var action entity.ImportAction

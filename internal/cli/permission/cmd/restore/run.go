@@ -20,6 +20,7 @@ import (
 	"github.com/ActiveMemory/ctx/internal/err/config"
 	errFs "github.com/ActiveMemory/ctx/internal/err/fs"
 	errParser "github.com/ActiveMemory/ctx/internal/err/parser"
+	"github.com/ActiveMemory/ctx/internal/io"
 	"github.com/ActiveMemory/ctx/internal/write/restore"
 )
 
@@ -42,7 +43,7 @@ func Run(cmd *cobra.Command) error {
 	localBytes, localReadErr := os.ReadFile(cfgClaude.Settings)
 	if localReadErr != nil {
 		if os.IsNotExist(localReadErr) {
-			if writeErr := os.WriteFile(
+			if writeErr := io.SafeWriteFile(
 				cfgClaude.Settings, goldenBytes, fs.PermFile,
 			); writeErr != nil {
 				return errFs.FileWrite(cfgClaude.Settings, writeErr)
@@ -76,7 +77,7 @@ func Run(cmd *cobra.Command) error {
 
 	restore.Diff(cmd, dropped, restored, denyDropped, denyRestored)
 
-	if writeErr := os.WriteFile(
+	if writeErr := io.SafeWriteFile(
 		cfgClaude.Settings, goldenBytes, fs.PermFile,
 	); writeErr != nil {
 		return errFs.FileWrite(cfgClaude.Settings, writeErr)

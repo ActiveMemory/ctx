@@ -1300,6 +1300,35 @@ task.snapshot:
 
     Unlike archive, snapshot copies the entire file as-is.
   short: Create point-in-time snapshot of TASKS.md
+trace:
+  long: |-
+    Show the context behind git commits.
+
+    ctx trace links commits back to the decisions, tasks, learnings,
+    and sessions that motivated them.
+
+    Usage:
+      ctx trace <commit>         Show context for a specific commit
+      ctx trace --last 5         Show context for last N commits
+      ctx trace file <path>      Show context trail for a file
+      ctx trace tag <commit>     Manually tag a commit with context
+      ctx trace collect          Collect context refs (used by hook)
+      ctx trace hook enable      Install prepare-commit-msg hook
+
+    Examples:
+      ctx trace abc123
+      ctx trace --last 10
+      ctx trace file src/auth.go
+      ctx trace tag HEAD --note "Hotfix for production outage"
+  short: Show context behind git commits
+trace.file:
+  short: Show context trail for a file
+trace.tag:
+  short: Manually tag a commit with context
+trace.collect:
+  short: Collect context refs for hook
+trace.hook:
+  short: Manage prepare-commit-msg hook
 watch:
   long: |-
     Watch stdin or a log file for <context-update>

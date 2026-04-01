@@ -39,6 +39,8 @@ const (
 	Specs = "specs"
 	// State is the subdirectory for project-scoped runtime state within .context/.
 	State = "state"
+	// Trace is the subdirectory for commit context trace data within .context/.
+	Trace = "trace"
 	// Templates is the subdirectory for entry templates within .context/.
 	Templates = "templates"
 	// CtxData is the user-level ctx data directory (~/.ctx/).

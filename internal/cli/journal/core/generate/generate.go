@@ -23,6 +23,7 @@ import (
 	"github.com/ActiveMemory/ctx/internal/config/token"
 	"github.com/ActiveMemory/ctx/internal/config/zensical"
 	"github.com/ActiveMemory/ctx/internal/entity"
+	"github.com/ActiveMemory/ctx/internal/io"
 )
 
 // SiteReadme creates a README for the journal-site directory.
@@ -63,14 +64,14 @@ func Index(entries []entity.JournalEntry) string {
 
 	sb.WriteString(desc.Text(text.DescKeyHeadingSessionJournal) + nl + nl)
 	sb.WriteString(tpl.JournalIndexIntro + nl + nl)
-	sb.WriteString(fmt.Sprintf(tpl.JournalIndexStats+
-		nl+nl, len(regular), len(suggestions)))
+	io.SafeFprintf(&sb, tpl.JournalIndexStats+
+		nl+nl, len(regular), len(suggestions))
 
 	// Group regular sessions by month
 	months, monthOrder := group.ByMonth(regular)
 
 	for _, month := range monthOrder {
-		sb.WriteString(fmt.Sprintf(tpl.JournalMonthHeading+nl+nl, month))
+		io.SafeFprintf(&sb, tpl.JournalMonthHeading+nl+nl, month)
 
 		for _, e := range months[month] {
 			sb.WriteString(formatIndexEntry(e, nl))
@@ -182,25 +183,23 @@ func ZensicalToml(
 
 	// Build navigation
 	sb.WriteString(zensical.TomlNavOpen + nl)
-	sb.WriteString(fmt.Sprintf(tpl.JournalNavItem+nl,
-		desc.Text(text.DescKeyLabelHome), file.Index))
+	io.SafeFprintf(&sb, tpl.JournalNavItem+nl,
+		desc.Text(text.DescKeyLabelHome), file.Index)
 	if len(topics) > 0 {
-		sb.WriteString(fmt.Sprintf(tpl.JournalNavItem+nl,
+		io.SafeFprintf(&sb, tpl.JournalNavItem+nl,
 			desc.Text(text.DescKeyLabelTopics),
-			filepath.Join(dir.JournTopics, file.Index)),
+			filepath.Join(dir.JournTopics, file.Index),
 		)
 	}
 	if len(keyFiles) > 0 {
-		sb.WriteString(fmt.Sprintf(tpl.JournalNavItem+nl,
+		io.SafeFprintf(&sb, tpl.JournalNavItem+nl,
 			desc.Text(text.DescKeyLabelFiles),
-			filepath.Join(dir.JournalFiles, file.Index)),
-		)
+			filepath.Join(dir.JournalFiles, file.Index))
 	}
 	if len(sessionTypes) > 0 {
-		sb.WriteString(fmt.Sprintf(tpl.JournalNavItem+nl,
+		io.SafeFprintf(&sb, tpl.JournalNavItem+nl,
 			desc.Text(text.DescKeyLabelTypes),
-			filepath.Join(dir.JournalTypes, file.Index)),
-		)
+			filepath.Join(dir.JournalTypes, file.Index))
 	}
 
 	// Filter out suggestion sessions and multi-part continuations from navigation
@@ -221,19 +220,19 @@ func ZensicalToml(
 		recent = recent[:journal.MaxRecentSessions]
 	}
 
-	sb.WriteString(fmt.Sprintf(
-		tpl.JournalNavSection+nl, desc.Text(text.DescKeyHeadingRecentSessions)),
-	)
+	io.SafeFprintf(&sb,
+		tpl.JournalNavSection+nl, desc.Text(text.DescKeyHeadingRecentSessions))
 	for _, e := range recent {
 		title := e.Title
 		if utf8.RuneCountInString(title) > journal.MaxNavTitleLen {
 			runes := []rune(title)
 			title = string(runes[:journal.MaxNavTitleLen]) + token.Ellipsis
 		}
-		title = strings.ReplaceAll(title, token.DoubleQuote, token.EscapedDoubleQuote)
-		sb.WriteString(fmt.Sprintf(
-			tpl.JournalNavSessionItem+nl, title, e.Filename),
+		title = strings.ReplaceAll(
+			title, token.DoubleQuote, token.EscapedDoubleQuote,
 		)
+		io.SafeFprintf(&sb,
+			tpl.JournalNavSessionItem+nl, title, e.Filename)
 	}
 	sb.WriteString(zensical.TomlNavSectionClose + nl)
 	sb.WriteString(zensical.TomlNavClose + nl + nl)

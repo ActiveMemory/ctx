@@ -15,6 +15,7 @@ import (
 	"github.com/ActiveMemory/ctx/internal/config/fs"
 	"github.com/ActiveMemory/ctx/internal/err/config"
 	errFs "github.com/ActiveMemory/ctx/internal/err/fs"
+	"github.com/ActiveMemory/ctx/internal/io"
 	"github.com/ActiveMemory/ctx/internal/write/restore"
 )
 
@@ -39,7 +40,7 @@ func Run(cmd *cobra.Command) error {
 		updated = true
 	}
 
-	if writeErr := os.WriteFile(
+	if writeErr := io.SafeWriteFile(
 		claude.SettingsGolden, content, fs.PermFile,
 	); writeErr != nil {
 		return errFs.FileWrite(claude.SettingsGolden, writeErr)

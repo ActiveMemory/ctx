@@ -7,7 +7,6 @@
 package load
 
 import (
-	"fmt"
 	"os"
 	"path/filepath"
 	"strings"
@@ -18,33 +17,14 @@ import (
 	"github.com/ActiveMemory/ctx/internal/config/embed/text"
 	"github.com/ActiveMemory/ctx/internal/config/fs"
 	"github.com/ActiveMemory/ctx/internal/config/load_gate"
-	"github.com/ActiveMemory/ctx/internal/config/marker"
 	"github.com/ActiveMemory/ctx/internal/config/stats"
 	"github.com/ActiveMemory/ctx/internal/config/token"
 	"github.com/ActiveMemory/ctx/internal/config/warn"
 	"github.com/ActiveMemory/ctx/internal/entity"
+	"github.com/ActiveMemory/ctx/internal/io"
 	ctxLog "github.com/ActiveMemory/ctx/internal/log/warn"
 	"github.com/ActiveMemory/ctx/internal/rc"
 )
-
-// ExtractIndex returns the content between INDEX:START and INDEX:END
-// markers within a context file.
-//
-// Parameters:
-//   - content: full file content to search
-//
-// Returns:
-//   - string: trimmed index content, or empty string if markers are
-//     not found or improperly ordered
-func ExtractIndex(content string) string {
-	start := strings.Index(content, marker.IndexStart)
-	end := strings.Index(content, marker.IndexEnd)
-	if start < 0 || end < 0 || end <= start {
-		return ""
-	}
-	startPos := start + len(marker.IndexStart)
-	return strings.TrimSpace(content[startPos:end])
-}
 
 // WriteOversizeFlag writes an injection-oversize flag file when the total
 // injected tokens exceed the configured threshold. The flag file is read
@@ -71,17 +51,17 @@ func WriteOversizeFlag(
 	flag.WriteString(desc.Text(text.DescKeyContextLoadGateOversizeHeader))
 	sep := strings.Repeat(load_gate.ContextLoadSeparatorChar, stats.ContextSizeOversizeSepLen)
 	flag.WriteString(sep + token.NewlineLF)
-	flag.WriteString(fmt.Sprintf(
+	io.SafeFprintf(&flag,
 		desc.Text(text.DescKeyContextLoadGateOversizeTimestamp),
-		time.Now().UTC().Format(time.RFC3339)))
-	flag.WriteString(fmt.Sprintf(
+		time.Now().UTC().Format(time.RFC3339))
+	io.SafeFprintf(&flag,
 		desc.Text(text.DescKeyContextLoadGateOversizeInjected),
-		totalTokens, threshold))
+		totalTokens, threshold)
 	flag.WriteString(desc.Text(text.DescKeyContextLoadGateOversizeBreakdown))
 	for _, entry := range perFile {
-		flag.WriteString(fmt.Sprintf(
+		io.SafeFprintf(&flag,
 			desc.Text(text.DescKeyContextLoadGateOversizeFileEntry),
-			entry.Name, entry.Tokens))
+			entry.Name, entry.Tokens)
 	}
 	flag.WriteString(token.NewlineLF)
 	flag.WriteString(desc.Text(text.DescKeyContextLoadGateOversizeAction))

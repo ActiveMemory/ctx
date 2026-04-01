@@ -8,7 +8,6 @@ package drift
 
 import (
 	"bytes"
-	"fmt"
 	"os"
 	"path/filepath"
 	"strings"
@@ -17,6 +16,7 @@ import (
 	"github.com/ActiveMemory/ctx/internal/cli/initialize"
 	"github.com/ActiveMemory/ctx/internal/config/ctx"
 	"github.com/ActiveMemory/ctx/internal/config/dir"
+	"github.com/ActiveMemory/ctx/internal/io"
 	"github.com/ActiveMemory/ctx/internal/rc"
 )
 
@@ -195,7 +195,7 @@ func TestRunDrift_FixWithStaleness(t *testing.T) {
 	sb.WriteString("# Tasks\n\n## In Progress\n\n" +
 		"- [ ] Active task\n\n## Completed\n\n")
 	for i := 0; i < 10; i++ {
-		sb.WriteString(fmt.Sprintf("- [x] Completed task %d\n", i))
+		io.SafeFprintf(&sb, "- [x] Completed task %d\n", i)
 	}
 	if err := os.WriteFile(tasksPath, []byte(sb.String()), 0600); err != nil {
 		t.Fatalf("failed to write TASKS.md: %v", err)

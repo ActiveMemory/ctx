@@ -14,6 +14,7 @@ import (
 	"github.com/ActiveMemory/ctx/internal/config/embed/cmd"
 	"github.com/ActiveMemory/ctx/internal/config/embed/flag"
 	cFlag "github.com/ActiveMemory/ctx/internal/config/flag"
+	"github.com/ActiveMemory/ctx/internal/flagbind"
 )
 
 // Cmd returns the "ctx init" command for initializing a .context/ directory.
@@ -52,28 +53,11 @@ func Cmd() *cobra.Command {
 		},
 	}
 
-	c.Flags().BoolVarP(
-		&force,
-		cFlag.Force, cFlag.ShortForce, false,
-		desc.Flag(flag.DescKeyInitializeForce),
-	)
-	c.Flags().BoolVarP(
-		&minimal,
-		cFlag.Minimal, cFlag.ShortMinimal, false,
-		desc.Flag(flag.DescKeyInitializeMinimal),
-	)
-	c.Flags().BoolVar(
-		&merge, cFlag.Merge, false,
-		desc.Flag(flag.DescKeyInitializeMerge),
-	)
-	c.Flags().BoolVar(
-		&noPluginEnable, cFlag.NoPluginEnable, false,
-		desc.Flag(flag.DescKeyInitializeNoPluginEnable),
-	)
-	c.Flags().StringVar(
-		&caller, cFlag.Caller, "",
-		desc.Flag(flag.DescKeyInitializeCaller),
-	)
+	flagbind.BoolFlagP(c, &force, cFlag.Force, cFlag.ShortForce, flag.DescKeyInitializeForce)
+	flagbind.BoolFlagP(c, &minimal, cFlag.Minimal, cFlag.ShortMinimal, flag.DescKeyInitializeMinimal)
+	flagbind.BoolFlag(c, &merge, cFlag.Merge, flag.DescKeyInitializeMerge)
+	flagbind.BoolFlag(c, &noPluginEnable, cFlag.NoPluginEnable, flag.DescKeyInitializeNoPluginEnable)
+	flagbind.StringFlag(c, &caller, cFlag.Caller, flag.DescKeyInitializeCaller)
 
 	return c
 }

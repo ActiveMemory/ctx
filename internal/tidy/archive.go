@@ -18,6 +18,7 @@ import (
 	cfgTime "github.com/ActiveMemory/ctx/internal/config/time"
 	"github.com/ActiveMemory/ctx/internal/config/token"
 	errBackup "github.com/ActiveMemory/ctx/internal/err/backup"
+	"github.com/ActiveMemory/ctx/internal/io"
 	"github.com/ActiveMemory/ctx/internal/rc"
 )
 
@@ -58,7 +59,7 @@ func WriteArchive(prefix, heading, content string) (string, error) {
 			dateStr + nl + nl + content
 	}
 
-	if writeErr := os.WriteFile(
+	if writeErr := io.SafeWriteFile(
 		archiveFile, []byte(finalContent), fs.PermFile,
 	); writeErr != nil {
 		return "", errBackup.WriteArchive(writeErr)

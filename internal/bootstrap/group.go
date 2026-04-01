@@ -38,6 +38,7 @@ import (
 	"github.com/ActiveMemory/ctx/internal/cli/sync"
 	"github.com/ActiveMemory/ctx/internal/cli/system"
 	"github.com/ActiveMemory/ctx/internal/cli/task"
+	"github.com/ActiveMemory/ctx/internal/cli/trace"
 	"github.com/ActiveMemory/ctx/internal/cli/watch"
 	"github.com/ActiveMemory/ctx/internal/cli/why"
 	embedCmd "github.com/ActiveMemory/ctx/internal/config/embed/cmd"
@@ -126,13 +127,14 @@ func integrations() []registration {
 // diagnostics returns command registrations for the diagnostics group.
 //
 // Returns:
-//   - []registration: Doctor, change, dep, and why commands
+//   - []registration: Doctor, change, dep, why, and trace commands
 func diagnostics() []registration {
 	return []registration{
 		{doctor.Cmd, embedCmd.GroupDiagnostics},
 		{change.Cmd, embedCmd.GroupDiagnostics},
 		{dep.Cmd, embedCmd.GroupDiagnostics},
 		{why.Cmd, embedCmd.GroupDiagnostics},
+		{trace.Cmd, embedCmd.GroupDiagnostics},
 	}
 }
 

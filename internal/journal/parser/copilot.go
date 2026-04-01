@@ -20,6 +20,7 @@ import (
 	"github.com/ActiveMemory/ctx/internal/config/session"
 	"github.com/ActiveMemory/ctx/internal/entity"
 	errParser "github.com/ActiveMemory/ctx/internal/err/parser"
+	"github.com/ActiveMemory/ctx/internal/io"
 )
 
 // Ensure Copilot implements Session.
@@ -222,7 +223,7 @@ func CopilotSessionDirs() []string {
 	variants := []string{cfgCopilot.AppCode, cfgCopilot.AppCodeInsiders}
 	for _, variant := range variants {
 		wsDir := filepath.Join(appData, variant, cfgCopilot.DirUser, cfgCopilot.DirWorkspace)
-		if info, err := os.Stat(wsDir); err == nil && info.IsDir() {
+		if info, err := io.SafeStat(wsDir); err == nil && info.IsDir() {
 			// Scan each workspace for chatSessions/ subdirectory
 			entries, err := os.ReadDir(wsDir)
 			if err != nil {
@@ -233,7 +234,7 @@ func CopilotSessionDirs() []string {
 					continue
 				}
 				chatDir := filepath.Join(wsDir, entry.Name(), cfgCopilot.DirChatSessions)
-				if info, err := os.Stat(chatDir); err == nil && info.IsDir() {
+				if info, err := io.SafeStat(chatDir); err == nil && info.IsDir() {
 					dirs = append(dirs, chatDir)
 				}
 			}

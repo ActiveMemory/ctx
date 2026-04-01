@@ -130,6 +130,23 @@ func SafeCreateFile(path string, perm os.FileMode) (*os.File, error) {
 	return os.OpenFile(clean, os.O_CREATE|os.O_TRUNC|os.O_WRONLY, perm)
 }
 
+// SafeMkdirAll creates a directory tree after cleaning the path and
+// rejecting system directory prefixes.
+//
+// Parameters:
+//   - path: directory path to create
+//   - perm: directory permission bits
+//
+// Returns:
+//   - error: non-nil on validation or mkdir failure
+func SafeMkdirAll(path string, perm os.FileMode) error {
+	clean, validateErr := cleanAndValidate(path)
+	if validateErr != nil {
+		return validateErr
+	}
+	return os.MkdirAll(clean, perm)
+}
+
 // SafeWriteFile writes data to a file after cleaning the path and
 // rejecting system directory prefixes.
 //
@@ -147,6 +164,23 @@ func SafeWriteFile(path string, data []byte, perm os.FileMode) error {
 	}
 	//nolint:gosec // validated by cleanAndValidate
 	return os.WriteFile(clean, data, perm)
+}
+
+// SafeStat returns file info after cleaning the path and rejecting
+// system directory prefixes.
+//
+// Parameters:
+//   - path: file path to stat
+//
+// Returns:
+//   - os.FileInfo: file metadata on success
+//   - error: non-nil on validation or stat failure
+func SafeStat(path string) (os.FileInfo, error) {
+	clean, validateErr := cleanAndValidate(path)
+	if validateErr != nil {
+		return nil, validateErr
+	}
+	return os.Stat(clean)
 }
 
 // TouchFile creates or updates an empty marker file. Best-effort:

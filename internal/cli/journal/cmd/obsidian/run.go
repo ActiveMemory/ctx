@@ -30,6 +30,7 @@ import (
 	"github.com/ActiveMemory/ctx/internal/config/obsidian"
 	errFs "github.com/ActiveMemory/ctx/internal/err/fs"
 	errJournal "github.com/ActiveMemory/ctx/internal/err/journal"
+	"github.com/ActiveMemory/ctx/internal/io"
 	"github.com/ActiveMemory/ctx/internal/rc"
 	"github.com/ActiveMemory/ctx/internal/write/err"
 	writeObsidian "github.com/ActiveMemory/ctx/internal/write/obsidian"
@@ -165,7 +166,7 @@ func BuildVault(cmd *cobra.Command, journalDir, output string) error {
 			entry, topicIndex, obsidian.MaxRelated,
 		)
 
-		if writeErr := os.WriteFile(
+		if writeErr := io.SafeWriteFile(
 			dst, []byte(transformed), fs.PermFile,
 		); writeErr != nil {
 			err.WarnFile(cmd, entry.Filename, writeErr)

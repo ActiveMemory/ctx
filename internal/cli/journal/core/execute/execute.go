@@ -21,6 +21,7 @@ import (
 	"github.com/ActiveMemory/ctx/internal/config/session"
 	"github.com/ActiveMemory/ctx/internal/config/token"
 	"github.com/ActiveMemory/ctx/internal/entity"
+	"github.com/ActiveMemory/ctx/internal/io"
 	"github.com/ActiveMemory/ctx/internal/journal/state"
 	"github.com/ActiveMemory/ctx/internal/write/err"
 	writeRecall "github.com/ActiveMemory/ctx/internal/write/journal"
@@ -87,7 +88,7 @@ func Import(
 		}
 
 		// Write file.
-		if writeErr := os.WriteFile(
+		if writeErr := io.SafeWriteFile(
 			fa.Path, []byte(content), fs.PermFile,
 		); writeErr != nil {
 			err.WarnFile(cmd, fa.Filename, writeErr)

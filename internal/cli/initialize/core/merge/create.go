@@ -21,6 +21,7 @@ import (
 	"github.com/ActiveMemory/ctx/internal/entity"
 	errFs "github.com/ActiveMemory/ctx/internal/err/fs"
 	errPrompt "github.com/ActiveMemory/ctx/internal/err/prompt"
+	"github.com/ActiveMemory/ctx/internal/io"
 	"github.com/ActiveMemory/ctx/internal/write/initialize"
 )
 
@@ -94,7 +95,7 @@ func OrCreate(cmd *cobra.Command, p entity.MergeParams) (bool, error) {
 			string(p.TemplateContent) + token.NewlineLF + existingStr[insertPos:]
 	}
 
-	if writeErr := os.WriteFile(
+	if writeErr := io.SafeWriteFile(
 		p.Filename, []byte(mergedContent), fs.PermFile,
 	); writeErr != nil {
 		return false, errFs.WriteMerged(p.Filename, writeErr)
@@ -150,7 +151,7 @@ func UpdateMarkedSection(
 		return bkErr
 	}
 
-	if writeErr := os.WriteFile(
+	if writeErr := io.SafeWriteFile(
 		filename, []byte(newContent), fs.PermFile,
 	); writeErr != nil {
 		return errFs.FileUpdate(filename, writeErr)

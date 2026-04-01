@@ -19,6 +19,7 @@ import (
 	"github.com/ActiveMemory/ctx/internal/config/marker"
 	"github.com/ActiveMemory/ctx/internal/config/token"
 	errFs "github.com/ActiveMemory/ctx/internal/err/fs"
+	"github.com/ActiveMemory/ctx/internal/io"
 	writeSetup "github.com/ActiveMemory/ctx/internal/write/setup"
 )
 
@@ -55,7 +56,7 @@ func Deploy(cmd *cobra.Command) error {
 
 		// File exists without ctx markers: append ctx content
 		merged := existingStr + token.NewlineLF + string(agentsContent)
-		if wErr := os.WriteFile(targetFile, []byte(merged), fs.PermFile); wErr != nil {
+		if wErr := io.SafeWriteFile(targetFile, []byte(merged), fs.PermFile); wErr != nil {
 			return errFs.FileWrite(targetFile, wErr)
 		}
 		writeSetup.InfoAgentsMerged(cmd, targetFile)
@@ -63,7 +64,7 @@ func Deploy(cmd *cobra.Command) error {
 	}
 
 	// File doesn't exist: create it
-	if wErr := os.WriteFile(targetFile, agentsContent, fs.PermFile); wErr != nil {
+	if wErr := io.SafeWriteFile(targetFile, agentsContent, fs.PermFile); wErr != nil {
 		return errFs.FileWrite(targetFile, wErr)
 	}
 	writeSetup.InfoAgentsCreated(cmd, targetFile)

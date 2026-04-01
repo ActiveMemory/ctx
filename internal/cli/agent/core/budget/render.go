@@ -7,13 +7,13 @@
 package budget
 
 import (
-	"fmt"
 	"strings"
 	"time"
 
 	"github.com/ActiveMemory/ctx/internal/assets/read/desc"
 	"github.com/ActiveMemory/ctx/internal/config/embed/text"
 	"github.com/ActiveMemory/ctx/internal/config/token"
+	"github.com/ActiveMemory/ctx/internal/io"
 )
 
 // RenderMarkdownPacket renders an assembled packet as Markdown.
@@ -28,21 +28,17 @@ func RenderMarkdownPacket(pkt *AssembledPacket) string {
 	nl := token.NewlineLF
 
 	sb.WriteString(desc.Text(text.DescKeyAgentPacketTitle) + nl)
-	sb.WriteString(
-		fmt.Sprintf(
-			desc.Text(text.DescKeyAgentPacketMeta),
-			time.Now().UTC().Format(time.RFC3339), pkt.Budget, pkt.TokensUsed,
-		) + nl + nl,
-	)
+	io.SafeFprintf(&sb,
+		desc.Text(text.DescKeyAgentPacketMeta),
+		time.Now().UTC().Format(time.RFC3339), pkt.Budget, pkt.TokensUsed)
+	sb.WriteString(nl + nl)
 
 	// Read order
 	sb.WriteString(desc.Text(text.DescKeyAgentSectionReadOrder) + nl)
 	for i, path := range pkt.ReadOrder {
-		sb.WriteString(
-			fmt.Sprintf(
-				desc.Text(text.DescKeyWriteAgentNumberedItem), i+1, path,
-			) + nl,
-		)
+		io.SafeFprintf(&sb,
+			desc.Text(text.DescKeyWriteAgentNumberedItem), i+1, path)
+		sb.WriteString(nl)
 	}
 	sb.WriteString(nl)
 
@@ -50,9 +46,9 @@ func RenderMarkdownPacket(pkt *AssembledPacket) string {
 	if len(pkt.Constitution) > 0 {
 		sb.WriteString(desc.Text(text.DescKeyAgentSectionConstitution) + nl)
 		for _, rule := range pkt.Constitution {
-			sb.WriteString(
-				fmt.Sprintf(desc.Text(text.DescKeyWriteAgentBulletItem), rule) + nl,
-			)
+			io.SafeFprintf(&sb,
+				desc.Text(text.DescKeyWriteAgentBulletItem), rule)
+			sb.WriteString(nl)
 		}
 		sb.WriteString(nl)
 	}
@@ -70,9 +66,9 @@ func RenderMarkdownPacket(pkt *AssembledPacket) string {
 	if len(pkt.Conventions) > 0 {
 		sb.WriteString(desc.Text(text.DescKeyAgentSectionConventions) + nl)
 		for _, conv := range pkt.Conventions {
-			sb.WriteString(
-				fmt.Sprintf(desc.Text(text.DescKeyWriteAgentBulletItem), conv) + nl,
-			)
+			io.SafeFprintf(&sb,
+				desc.Text(text.DescKeyWriteAgentBulletItem), conv)
+			sb.WriteString(nl)
 		}
 		sb.WriteString(nl)
 	}
@@ -97,9 +93,9 @@ func RenderMarkdownPacket(pkt *AssembledPacket) string {
 	if len(pkt.Summaries) > 0 {
 		sb.WriteString(desc.Text(text.DescKeyAgentSectionSummaries) + nl)
 		for _, s := range pkt.Summaries {
-			sb.WriteString(
-				fmt.Sprintf(desc.Text(text.DescKeyWriteAgentBulletItem), s) + nl,
-			)
+			io.SafeFprintf(&sb,
+				desc.Text(text.DescKeyWriteAgentBulletItem), s)
+			sb.WriteString(nl)
 		}
 		sb.WriteString(nl)
 	}

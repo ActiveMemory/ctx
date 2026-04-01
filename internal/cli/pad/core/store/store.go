@@ -117,7 +117,7 @@ func EnsureGitignore(contextDir, filename string) error {
 	if len(content) > 0 && !strings.HasSuffix(string(content), token.NewlineLF) {
 		sep = token.NewlineLF
 	}
-	return os.WriteFile(
+	return io.SafeWriteFile(
 		file.FileGitignore,
 		[]byte(string(content)+sep+entry+token.NewlineLF), fs.PermFile,
 	)
