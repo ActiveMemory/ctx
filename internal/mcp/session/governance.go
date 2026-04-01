@@ -71,7 +71,8 @@ func (ss *State) readAndClearViolations() []violation {
 	return vd.Entries
 }
 
-// RecordSessionStart marks the session as explicitly started.
+// RecordSessionStart marks the session as explicitly started and
+// resets the session start timestamp.
 func (ss *State) RecordSessionStart() {
 	ss.sessionStarted = true
 	ss.sessionStartedAt = time.Now()
@@ -88,14 +89,15 @@ func (ss *State) RecordDriftCheck() {
 }
 
 // RecordContextWrite records that a .context/ write occurred (add,
-// complete, watch_update, compact).
+// complete, watch_update, compact) and resets the calls-since-write
+// counter used for persist nudges.
 func (ss *State) RecordContextWrite() {
 	ss.lastContextWrite = time.Now()
 	ss.callsSinceWrite = 0
 }
 
-// IncrementCallsSinceWrite bumps the counter used for persist
-// nudges.
+// IncrementCallsSinceWrite bumps the counter used for persist nudges.
+// Called after every tool dispatch regardless of tool type.
 func (ss *State) IncrementCallsSinceWrite() {
 	ss.callsSinceWrite++
 }
