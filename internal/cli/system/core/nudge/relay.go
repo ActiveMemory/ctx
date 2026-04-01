@@ -7,12 +7,12 @@
 package nudge
 
 import (
-	"github.com/ActiveMemory/ctx/internal/log/event"
 	"github.com/spf13/cobra"
 
 	"github.com/ActiveMemory/ctx/internal/cli/system/core/message"
 	"github.com/ActiveMemory/ctx/internal/config/hook"
 	internalIo "github.com/ActiveMemory/ctx/internal/io"
+	"github.com/ActiveMemory/ctx/internal/log/event"
 	"github.com/ActiveMemory/ctx/internal/notify"
 	writeHook "github.com/ActiveMemory/ctx/internal/write/hook"
 )
@@ -27,7 +27,7 @@ import (
 //   - ref: template reference for filtering/aggregation (may be nil)
 func Relay(message, sessionID string, ref *notify.TemplateRef) {
 	_ = notify.Send(hook.NotifyChannelRelay, message, sessionID, ref)
-	event.AppendEvent(hook.NotifyChannelRelay, message, sessionID, ref)
+	event.Append(hook.NotifyChannelRelay, message, sessionID, ref)
 }
 
 // EmitAndRelay sends both a nudge and a relay notification, then

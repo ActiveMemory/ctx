@@ -285,17 +285,17 @@ func ParsePyprojectDeps(content string, sectionSuffix string) []string {
 //   - []string: Extracted package names
 func ParsePyprojectArrayItems(line string) []string {
 	// Strip closing bracket.
-	line = strings.ReplaceAll(line, "]", "")
+	line = strings.ReplaceAll(line, token.CloseBracket, "")
 	line = strings.TrimSpace(line)
 	if line == "" {
 		return nil
 	}
 
 	var deps []string
-	for _, item := range strings.Split(line, ",") {
+	for _, item := range strings.Split(line, token.Comma) {
 		item = strings.TrimSpace(item)
 		// Strip quotes.
-		item = strings.Trim(item, `"'`)
+		item = strings.Trim(item, token.Quotes)
 		item = strings.TrimSpace(item)
 		if item == "" {
 			continue

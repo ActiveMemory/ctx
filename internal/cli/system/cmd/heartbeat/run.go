@@ -102,7 +102,7 @@ func Run(_ *cobra.Command, stdin *os.File) error {
 			count, contextModified)
 	}
 	_ = notify.Send(hook.NotifyChannelHeartbeat, msg, sessionID, ref)
-	event.AppendEvent(hook.NotifyChannelHeartbeat, msg, sessionID, ref)
+	event.Append(hook.NotifyChannelHeartbeat, msg, sessionID, ref)
 
 	var logLine string
 	if tokens > 0 {

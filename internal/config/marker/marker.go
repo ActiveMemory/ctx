@@ -151,4 +151,8 @@ const (
 	TableSepCell = "------"
 	// TablePipeEscaped is an escaped pipe for use inside cells.
 	TablePipeEscaped = "\\|"
+	// TableRowFmt is the Printf format for a two-column table row.
+	TableRowFmt = "| %s | %s |"
+	// TableSepFmt is the Printf format for a two-column separator row.
+	TableSepFmt = "|%s|%s|"
 )
