@@ -67,7 +67,6 @@ own guards and no-op gracefully.
 | [`ctx change`](tools.md#ctx-change)           | Show what changed since last session                     |
 | [`ctx dep`](tools.md#ctx-dep)                 | Show package dependency graph                            |
 | [`ctx pad`](tools.md#ctx-pad)                 | Encrypted scratchpad for sensitive one-liners            |
-
 | [`ctx remind`](tools.md#ctx-remind)           | Session-scoped reminders that surface at session start   |
 | [`ctx completion`](tools.md#ctx-completion)   | Generate shell autocompletion scripts                    |
 | [`ctx guide`](tools.md#ctx-guide)             | Quick-reference cheat sheet                              |

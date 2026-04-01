@@ -22,6 +22,9 @@ const (
 	BackupSMBURL = "CTX_BACKUP_SMB_URL"
 	// BackupSMBSubdir is the environment variable for the SMB share subdirectory.
 	BackupSMBSubdir = "CTX_BACKUP_SMB_SUBDIR"
+	// SessionID is the environment variable for the active AI session ID.
+	// Used by ctx trace for context linking.
+	SessionID = "CTX_SESSION_ID"
 	// SkipPathCheck is the environment variable that skips the PATH
 	// validation during init. Set to True in tests.
 	SkipPathCheck = "CTX_SKIP_PATH_CHECK"

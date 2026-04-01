@@ -7,56 +7,21 @@
 package hook
 
 import (
-	"fmt"
 	"os"
-	"os/exec"
 	"path/filepath"
 	"strings"
 
 	"github.com/spf13/cobra"
 
+	readHook "github.com/ActiveMemory/ctx/internal/assets/read/hook"
 	cfgFs "github.com/ActiveMemory/ctx/internal/config/fs"
+	cfgGit "github.com/ActiveMemory/ctx/internal/config/git"
+	cfgTrace "github.com/ActiveMemory/ctx/internal/config/trace"
+	errTrace "github.com/ActiveMemory/ctx/internal/err/trace"
+	"github.com/ActiveMemory/ctx/internal/exec/git"
+	"github.com/ActiveMemory/ctx/internal/io"
+	writeTrace "github.com/ActiveMemory/ctx/internal/write/trace"
 )
-
-// HookScript is the prepare-commit-msg hook content installed by ctx.
-const HookScript = `#!/bin/sh
-# ctx: prepare-commit-msg hook for commit context tracing.
-# Installed by: ctx trace hook enable
-# Remove with:  ctx trace hook disable
-
-COMMIT_MSG_FILE="$1"
-COMMIT_SOURCE="$2"
-
-# Only inject on normal commits (not merges, squashes, or amends)
-case "$COMMIT_SOURCE" in
-  merge|squash) exit 0 ;;
-esac
-
-# Ensure ctx is available
-command -v ctx >/dev/null 2>&1 || exit 0
-
-# Collect context refs
-TRAILER=$(ctx trace collect 2>/dev/null)
-
-if [ -n "$TRAILER" ]; then
-  # Append trailer with a blank line separator
-  echo "" >> "$COMMIT_MSG_FILE"
-  echo "$TRAILER" >> "$COMMIT_MSG_FILE"
-fi
-`
-
-// PostCommitScript is the post-commit hook content installed by ctx.
-const PostCommitScript = `#!/bin/sh
-# ctx: post-commit hook for recording commit context history.
-# Installed by: ctx trace hook enable
-# Remove with:  ctx trace hook disable
-
-# Ensure ctx is available
-command -v ctx >/dev/null 2>&1 || exit 0
-
-COMMIT_HASH=$(git rev-parse HEAD)
-ctx trace collect --record "$COMMIT_HASH" 2>/dev/null || true
-`
 
 // Enable installs both the prepare-commit-msg and post-commit hooks.
 //
@@ -66,23 +31,35 @@ ctx trace collect --record "$COMMIT_HASH" 2>/dev/null || true
 // Returns:
 //   - error: non-nil on installation failure
 func Enable(cmd *cobra.Command) error {
-	prepPath, prepErr := HookFilePath("prepare-commit-msg")
+	prepScript, prepReadErr := readHook.TraceScript(cfgTrace.ScriptPrepareCommitMsg)
+	if prepReadErr != nil {
+		return prepReadErr
+	}
+	prepPath, prepErr := FilePath(cfgGit.HookPrepareCommitMsg)
 	if prepErr != nil {
 		return prepErr
 	}
-	if installErr := InstallHook(prepPath, HookScript, "prepare-commit-msg"); installErr != nil {
+	if installErr := Install(
+		prepPath, prepScript, cfgGit.HookPrepareCommitMsg,
+	); installErr != nil {
 		return installErr
 	}
 
-	postPath, postErr := HookFilePath("post-commit")
+	postScript, postReadErr := readHook.TraceScript(cfgTrace.ScriptPostCommit)
+	if postReadErr != nil {
+		return postReadErr
+	}
+	postPath, postErr := FilePath(cfgGit.HookPostCommit)
 	if postErr != nil {
 		return postErr
 	}
-	if installErr := InstallHook(postPath, PostCommitScript, "post-commit"); installErr != nil {
+	if installErr := Install(
+		postPath, postScript, cfgGit.HookPostCommit,
+	); installErr != nil {
 		return installErr
 	}
 
-	cmd.Println("ctx trace hooks enabled (prepare-commit-msg, post-commit)")
+	writeTrace.HooksEnabled(cmd)
 	return nil
 }
 
@@ -95,23 +72,23 @@ func Enable(cmd *cobra.Command) error {
 // Returns:
 //   - error: non-nil on removal failure
 func Disable(cmd *cobra.Command) error {
-	prepPath, err := HookFilePath("prepare-commit-msg")
+	prepPath, err := FilePath(cfgGit.HookPrepareCommitMsg)
 	if err != nil {
 		return err
 	}
-	RemoveHook(prepPath)
+	Remove(prepPath)
 
-	postPath, err := HookFilePath("post-commit")
+	postPath, err := FilePath(cfgGit.HookPostCommit)
 	if err != nil {
 		return err
 	}
-	RemoveHook(postPath)
+	Remove(postPath)
 
-	cmd.Println("ctx trace hooks disabled")
+	writeTrace.HooksDisabled(cmd)
 	return nil
 }
 
-// InstallHook writes the hook script to path, checking for existing non-ctx hooks.
+// Install writes the hook script to path, checking for existing non-ctx hooks.
 //
 // Parameters:
 //   - path: absolute path to the hook file
@@ -120,36 +97,38 @@ func Disable(cmd *cobra.Command) error {
 //
 // Returns:
 //   - error: non-nil if a non-ctx hook already exists or write fails
-func InstallHook(path, script, name string) error {
-	if _, err := os.Stat(path); err == nil {
-		//nolint:gosec // path from HookFilePath which calls git rev-parse
-		existing, readErr := os.ReadFile(path)
-		if readErr == nil && !strings.Contains(string(existing), "ctx trace") {
-			return fmt.Errorf("%s hook already exists at %s (not installed by ctx); remove it manually first", name, path)
+func Install(path, script, name string) error {
+	if _, err := io.SafeStat(path); err == nil {
+		existing, readErr := io.SafeReadUserFile(path)
+		if readErr == nil && !strings.Contains(
+			string(existing), cfgTrace.CtxTraceMarker,
+		) {
+			return errTrace.HookExists(name, path)
 		}
 	}
-	if err := os.WriteFile(path, []byte(script), cfgFs.PermExec); err != nil {
-		return fmt.Errorf("write %s hook: %w", name, err)
+	if err := io.SafeWriteFile(
+		path, []byte(script), cfgFs.PermExec,
+	); err != nil {
+		return errTrace.HookWrite(name, err)
 	}
 	return nil
 }
 
-// RemoveHook removes the hook at path if it was installed by ctx.
+// Remove removes the hook at path if it was installed by ctx.
 //
 // Parameters:
 //   - path: absolute path to the hook file
-func RemoveHook(path string) {
-	//nolint:gosec // path from HookFilePath which calls git rev-parse
-	existing, err := os.ReadFile(path)
+func Remove(path string) {
+	existing, err := io.SafeReadUserFile(path)
 	if err != nil {
 		return
 	}
-	if strings.Contains(string(existing), "ctx trace") {
+	if strings.Contains(string(existing), cfgTrace.CtxTraceMarker) {
 		_ = os.Remove(path)
 	}
 }
 
-// HookFilePath returns the absolute path to a git hook by name.
+// FilePath returns the absolute path to a git hook by name.
 //
 // Parameters:
 //   - hookName: name of the git hook (e.g. "prepare-commit-msg")
@@ -157,11 +136,11 @@ func RemoveHook(path string) {
 // Returns:
 //   - string: absolute path to the hook file
 //   - error: non-nil if git rev-parse fails
-func HookFilePath(hookName string) (string, error) {
-	out, err := exec.Command("git", "rev-parse", "--git-dir").Output()
+func FilePath(hookName string) (string, error) {
+	out, err := git.Run(cfgGit.RevParse, cfgGit.FlagGitDir)
 	if err != nil {
-		return "", fmt.Errorf("git rev-parse --git-dir: %w", err)
+		return "", errTrace.GitDir(err)
 	}
 	gitDir := strings.TrimSpace(string(out))
-	return filepath.Join(gitDir, "hooks", hookName), nil
+	return filepath.Join(gitDir, cfgGit.HooksDir, hookName), nil
 }

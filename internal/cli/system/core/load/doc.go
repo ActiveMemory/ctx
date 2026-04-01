@@ -4,9 +4,9 @@
 //   \    Copyright 2026-present Context contributors.
 //                 SPDX-License-Identifier: Apache-2.0
 
-// Package load extracts index content from context files and.
+// Package load provides context injection helpers for the load gate.
 //
-// Key exports: [ExtractIndex], [WriteOversizeFlag].
+// Key exports: [WriteOversizeFlag].
 // Shared helpers used by sibling cmd/ packages.
 // Used by core cmd/ packages.
 package load

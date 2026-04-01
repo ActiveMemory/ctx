@@ -23,6 +23,7 @@ const (
 	DirIntegrationsCopilotScrp  = "integrations/copilot-cli/scripts"
 	DirIntegrationsCopilotSkill = "integrations/copilot-cli/skills"
 	DirHooksMessages            = "hooks/messages"
+	DirHooksTrace               = "hooks/trace"
 	DirJournal                  = "journal"
 	DirPermissions              = "permissions"
 	DirProject                  = "project"

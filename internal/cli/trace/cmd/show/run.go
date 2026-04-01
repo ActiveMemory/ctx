@@ -13,13 +13,14 @@ import (
 
 	coreShow "github.com/ActiveMemory/ctx/internal/cli/trace/core/show"
 	"github.com/ActiveMemory/ctx/internal/config/dir"
+	cfgTrace "github.com/ActiveMemory/ctx/internal/config/trace"
 	"github.com/ActiveMemory/ctx/internal/rc"
 )
 
 // Run executes the trace command logic.
 //
 // If last > 0, shows context for the last N commits.
-// If no args are given, defaults to showing the last 10 commits.
+// If no args are given, defaults to showing the last DefaultLastShow commits.
 // Otherwise shows context for the specific commit hash in args[0].
 //
 // Parameters:
@@ -35,12 +36,14 @@ func Run(cmd *cobra.Command, args []string, last int, jsonOutput bool) error {
 	traceDir := filepath.Join(contextDir, dir.Trace)
 
 	if last > 0 {
-		return coreShow.ShowLast(cmd, last, contextDir, traceDir, jsonOutput)
+		return coreShow.Last(cmd, last, contextDir, traceDir, jsonOutput)
 	}
 
 	if len(args) == 0 {
-		return coreShow.ShowLast(cmd, 10, contextDir, traceDir, jsonOutput)
+		return coreShow.Last(cmd,
+			cfgTrace.DefaultLastShow, contextDir, traceDir, jsonOutput,
+		)
 	}
 
-	return coreShow.ShowCommit(cmd, args[0], contextDir, traceDir, jsonOutput)
+	return coreShow.Commit(cmd, args[0], contextDir, traceDir, jsonOutput)
 }

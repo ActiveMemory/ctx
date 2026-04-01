@@ -16,6 +16,7 @@ import (
 	"github.com/ActiveMemory/ctx/internal/config/embed/cmd"
 	"github.com/ActiveMemory/ctx/internal/config/embed/flag"
 	cFlag "github.com/ActiveMemory/ctx/internal/config/flag"
+	"github.com/ActiveMemory/ctx/internal/flagbind"
 	"github.com/ActiveMemory/ctx/internal/rc"
 )
 
@@ -41,18 +42,12 @@ func Cmd() *cobra.Command {
 	}
 
 	defaultOutput := filepath.Join(rc.ContextDir(), dir.JournalSite)
-	c.Flags().StringVarP(
-		&output, cFlag.Output, cFlag.ShortOutput, defaultOutput,
-		desc.Flag(flag.DescKeyJournalSiteOutput),
+	flagbind.StringFlagPDefault(
+		c, &output, cFlag.Output, cFlag.ShortOutput,
+		defaultOutput, flag.DescKeyJournalSiteOutput,
 	)
-	c.Flags().BoolVar(
-		&build, cFlag.Build, false,
-		desc.Flag(flag.DescKeyJournalSiteBuild),
-	)
-	c.Flags().BoolVar(
-		&serve, cFlag.Serve, false,
-		desc.Flag(flag.DescKeyJournalSiteServe),
-	)
+	flagbind.BoolFlag(c, &build, cFlag.Build, flag.DescKeyJournalSiteBuild)
+	flagbind.BoolFlag(c, &serve, cFlag.Serve, flag.DescKeyJournalSiteServe)
 
 	return c
 }

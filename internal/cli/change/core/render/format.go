@@ -15,6 +15,7 @@ import (
 	cfgTime "github.com/ActiveMemory/ctx/internal/config/time"
 	"github.com/ActiveMemory/ctx/internal/config/token"
 	"github.com/ActiveMemory/ctx/internal/entity"
+	"github.com/ActiveMemory/ctx/internal/io"
 )
 
 // List renders the full CLI output for `ctx changes`.
@@ -35,7 +36,7 @@ func List(
 		desc.Text(text.DescKeyChangesHeading) +
 			token.NewlineLF + token.NewlineLF,
 	)
-	fmt.Fprintf(&b, desc.Text(text.DescKeyChangesRefPoint)+
+	io.SafeFprintf(&b, desc.Text(text.DescKeyChangesRefPoint)+
 		token.NewlineLF+token.NewlineLF, refLabel,
 	)
 
@@ -44,7 +45,7 @@ func List(
 			desc.Text(text.DescKeyChangesCtxHeading) + token.NewlineLF,
 		)
 		for _, c := range ctxChanges {
-			fmt.Fprintf(&b,
+			io.SafeFprintf(&b,
 				desc.Text(text.DescKeyChangesCtxLine)+token.NewlineLF,
 				c.Name, c.ModTime.Format(cfgTime.DateTimeFmt))
 		}
@@ -55,22 +56,22 @@ func List(
 		b.WriteString(
 			desc.Text(text.DescKeyChangesCodeHeading) + token.NewlineLF,
 		)
-		fmt.Fprintf(&b,
+		io.SafeFprintf(&b,
 			desc.Text(text.DescKeyChangesCodeCommits)+token.NewlineLF,
 			commitCount(code.CommitCount))
 		if code.LatestMsg != "" {
-			fmt.Fprintf(&b,
+			io.SafeFprintf(&b,
 				desc.Text(
 					text.DescKeyChangesCodeLatest)+token.NewlineLF, code.LatestMsg,
 			)
 		}
 		if len(code.Dirs) > 0 {
-			fmt.Fprintf(&b,
+			io.SafeFprintf(&b,
 				desc.Text(text.DescKeyChangesCodeDirs)+token.NewlineLF,
 				strings.Join(code.Dirs, token.CommaSpace))
 		}
 		if len(code.Authors) > 0 {
-			fmt.Fprintf(&b,
+			io.SafeFprintf(&b,
 				desc.Text(text.DescKeyChangesCodeAuthors)+token.NewlineLF,
 				strings.Join(code.Authors, token.CommaSpace))
 		}

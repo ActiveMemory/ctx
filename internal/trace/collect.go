@@ -7,14 +7,14 @@
 package trace
 
 import (
+	"fmt"
 	"path/filepath"
 	"strings"
 
 	cfgDir "github.com/ActiveMemory/ctx/internal/config/dir"
+	"github.com/ActiveMemory/ctx/internal/config/token"
+	cfgTrace "github.com/ActiveMemory/ctx/internal/config/trace"
 )
-
-// TrailerKey is the git trailer key used to embed context refs in commit messages.
-const TrailerKey = "ctx-context"
 
 // Collect gathers context refs from all three sources — pending records,
 // staged file diffs, and current working state — then deduplicates them.
@@ -57,7 +57,7 @@ func FormatTrailer(refs []string) string {
 	if len(refs) == 0 {
 		return ""
 	}
-	return TrailerKey + ": " + strings.Join(refs, ", ")
+	return fmt.Sprintf(cfgTrace.TrailerFormat, strings.Join(refs, token.CommaSpace))
 }
 
 // Deduplicate returns a new slice with duplicate entries removed.

@@ -7,15 +7,16 @@
 package tag
 
 import (
-	"errors"
 	"fmt"
 	"path/filepath"
 
 	"github.com/spf13/cobra"
 
 	"github.com/ActiveMemory/ctx/internal/config/dir"
+	errTrace "github.com/ActiveMemory/ctx/internal/err/trace"
 	"github.com/ActiveMemory/ctx/internal/rc"
 	"github.com/ActiveMemory/ctx/internal/trace"
+	writeTrace "github.com/ActiveMemory/ctx/internal/write/trace"
 )
 
 // Run executes the trace tag command logic.
@@ -32,12 +33,12 @@ import (
 //   - error: non-nil on execution failure or empty note
 func Run(cmd *cobra.Command, commitRef, note string) error {
 	if note == "" {
-		return errors.New("--note is required")
+		return errTrace.NoteRequired()
 	}
 
 	hash, err := trace.ResolveCommitHash(commitRef)
 	if err != nil {
-		return fmt.Errorf("resolve commit %q: %w", commitRef, err)
+		return errTrace.ResolveCommit(commitRef, err)
 	}
 
 	traceDir := filepath.Join(rc.ContextDir(), dir.Trace)
@@ -48,9 +49,9 @@ func Run(cmd *cobra.Command, commitRef, note string) error {
 	}
 
 	if err := trace.WriteOverride(entry, traceDir); err != nil {
-		return fmt.Errorf("write override: %w", err)
+		return errTrace.WriteOverride(err)
 	}
 
-	cmd.Println(fmt.Sprintf("Tagged %s with: %s", trace.ShortHash(hash), note))
+	writeTrace.Tagged(cmd, trace.ShortHash(hash), note)
 	return nil
 }

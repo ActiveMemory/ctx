@@ -124,6 +124,10 @@ tasks, learnings, and sessions.
 ctx trace hook <enable|disable>
 ```
 
+**Prerequisites**: `ctx` must be on your `$PATH`. If you installed
+via `go install`, ensure `$GOPATH/bin` (or `$HOME/go/bin`) is in
+your shell's `$PATH`.
+
 **What the hook does**:
 
 1. Before each commit, collects context from three sources:

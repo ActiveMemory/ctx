@@ -7,10 +7,10 @@
 package collect
 
 import (
-	"fmt"
 	"path/filepath"
 
 	"github.com/ActiveMemory/ctx/internal/config/dir"
+	errTrace "github.com/ActiveMemory/ctx/internal/err/trace"
 	"github.com/ActiveMemory/ctx/internal/rc"
 	"github.com/ActiveMemory/ctx/internal/trace"
 )
@@ -37,7 +37,11 @@ func RecordCommit(commitHash string) error {
 	// This matches exactly what was injected by the prepare-commit-msg hook.
 	refs := trace.ReadTrailerRefs(commitHash)
 	if len(refs) == 0 {
-		// No trailer injected — truncate pending and exit.
+		// No trailer found — the commit was made without the
+		// prepare-commit-msg hook (e.g. --no-verify, external tool,
+		// or hook not installed). Pending refs are still truncated
+		// because they were accumulated for *this* commit window;
+		// keeping them would attach stale context to the next commit.
 		stateDir := filepath.Join(contextDir, dir.State)
 		_ = trace.TruncatePending(stateDir)
 		return nil
@@ -45,7 +49,7 @@ func RecordCommit(commitHash string) error {
 
 	message, err := trace.CommitMessage(commitHash)
 	if err != nil {
-		return fmt.Errorf("git log: %w", err)
+		return errTrace.GitLog(err)
 	}
 
 	traceDir := filepath.Join(contextDir, dir.Trace)
@@ -55,7 +59,7 @@ func RecordCommit(commitHash string) error {
 		Message: message,
 	}
 	if err := trace.WriteHistory(entry, traceDir); err != nil {
-		return fmt.Errorf("write history: %w", err)
+		return errTrace.WriteHistory(err)
 	}
 
 	stateDir := filepath.Join(contextDir, dir.State)

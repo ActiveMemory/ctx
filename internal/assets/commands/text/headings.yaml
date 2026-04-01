@@ -158,6 +158,8 @@ label.inline-error:
   short: 'Error:'
 label.bold-reminder:
   short: '**System Reminder**:'
+label.bold-reminder-fmt:
+  short: '**System Reminder**: %s'
 label.tool-output:
   short: Tool Output
 label.suggestion-mode:

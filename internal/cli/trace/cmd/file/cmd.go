@@ -11,7 +11,10 @@ import (
 
 	"github.com/ActiveMemory/ctx/internal/assets/read/desc"
 	"github.com/ActiveMemory/ctx/internal/config/embed/cmd"
+	"github.com/ActiveMemory/ctx/internal/config/embed/flag"
 	cFlag "github.com/ActiveMemory/ctx/internal/config/flag"
+	cfgTrace "github.com/ActiveMemory/ctx/internal/config/trace"
+	"github.com/ActiveMemory/ctx/internal/flagbind"
 )
 
 // Cmd returns the trace file subcommand.
@@ -30,6 +33,10 @@ func Cmd() *cobra.Command {
 			return Run(cobraCmd, args[0], last)
 		},
 	}
-	c.Flags().IntVarP(&last, cFlag.Last, cFlag.ShortLast, 20, "Max commits to show")
+	flagbind.IntFlagP(
+		c, &last,
+		cFlag.Last, cFlag.ShortLast,
+		cfgTrace.DefaultLastFile, flag.DescKeyTraceFileLast,
+	)
 	return c
 }

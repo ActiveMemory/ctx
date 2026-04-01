@@ -14,14 +14,15 @@ import (
 	"path/filepath"
 
 	cfgFs "github.com/ActiveMemory/ctx/internal/config/fs"
+	"github.com/ActiveMemory/ctx/internal/config/token"
+	"github.com/ActiveMemory/ctx/internal/io"
 )
 
 // readJSONL is a generic helper that opens the file at path and decodes each
 // line as a JSON value of type T. Malformed lines are silently skipped.
 // Returns an empty (non-nil) slice when the file does not exist.
 func readJSONL[T any](path string) ([]T, error) {
-	//nolint:gosec // path built from trusted directory + constant filename by callers
-	f, openErr := os.Open(filepath.Clean(path))
+	f, openErr := io.SafeOpenUserFile(path)
 	if openErr != nil {
 		if errors.Is(openErr, os.ErrNotExist) {
 			return []T{}, nil
@@ -62,15 +63,10 @@ func appendJSONL[T any](dir, filename string, entry T) error {
 	if marshalErr != nil {
 		return marshalErr
 	}
-	line = append(line, '\n')
+	line = append(line, token.NewlineLF...)
 
 	path := filepath.Join(dir, filename)
-	//nolint:gosec // path built from trusted dir + constant filename by callers
-	f, openErr := os.OpenFile(
-		filepath.Clean(path),
-		os.O_APPEND|os.O_CREATE|os.O_WRONLY,
-		cfgFs.PermFile,
-	)
+	f, openErr := io.SafeAppendFile(path, cfgFs.PermFile)
 	if openErr != nil {
 		return openErr
 	}

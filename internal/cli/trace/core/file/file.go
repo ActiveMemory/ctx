@@ -8,13 +8,18 @@ package file
 
 import (
 	"fmt"
-	"os/exec"
 	"strings"
 
 	"github.com/spf13/cobra"
 
+	"github.com/ActiveMemory/ctx/internal/assets/read/desc"
+	"github.com/ActiveMemory/ctx/internal/config/embed/text"
+	cfgGit "github.com/ActiveMemory/ctx/internal/config/git"
 	"github.com/ActiveMemory/ctx/internal/config/token"
+	errTrace "github.com/ActiveMemory/ctx/internal/err/trace"
+	"github.com/ActiveMemory/ctx/internal/exec/git"
 	"github.com/ActiveMemory/ctx/internal/trace"
+	writeTrace "github.com/ActiveMemory/ctx/internal/write/trace"
 )
 
 // ParsePathArg strips an optional :line-range suffix from a path argument
@@ -65,12 +70,13 @@ func ParsePathArg(arg string) string {
 // Returns:
 //   - error: non-nil on execution failure
 func TraceFile(cmd *cobra.Command, filePath string, last int, traceDir string) error {
-	gitArgs := []string{"log", fmt.Sprintf("-%d", last), "--format=%H %ci %s", "--", filePath}
-
-	//nolint:gosec // gitArgs built from integer flag + user file path, standard git usage
-	out, err := exec.Command("git", gitArgs...).Output()
+	out, err := git.Run(
+		cfgGit.Log, fmt.Sprintf("-%d", last),
+		cfgGit.FormatHashDateSubj,
+		cfgGit.FlagPathSep, filePath,
+	)
 	if err != nil {
-		return fmt.Errorf("git log: %w", err)
+		return errTrace.GitLog(err)
 	}
 
 	lines := strings.Split(strings.TrimSpace(string(out)), token.NewlineLF)
@@ -95,12 +101,13 @@ func TraceFile(cmd *cobra.Command, filePath string, last int, traceDir string) e
 		}
 
 		refs := trace.CollectRefsForCommit(hash, traceDir, false)
-		refStr := "(none)"
+		refStr := desc.Text(text.DescKeyWriteTraceNoRefs)
 		if len(refs) > 0 {
-			refStr = "\u2192 " + strings.Join(refs, ", ")
+			refStr = desc.Text(text.DescKeyWriteTraceRefsPrefix) +
+				strings.Join(refs, token.CommaSpace)
 		}
 
-		cmd.Println(fmt.Sprintf("%s  %s  %s  [%s]", trace.ShortHash(hash), date, subject, refStr))
+		writeTrace.FileEntry(cmd, trace.ShortHash(hash), date, subject, refStr)
 	}
 
 	return nil

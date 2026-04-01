@@ -8,35 +8,52 @@ package trace
 
 import (
 	"fmt"
-	"os/exec"
 	"strings"
 
+	cfgGit "github.com/ActiveMemory/ctx/internal/config/git"
 	"github.com/ActiveMemory/ctx/internal/config/token"
+	cfgTrace "github.com/ActiveMemory/ctx/internal/config/trace"
+	"github.com/ActiveMemory/ctx/internal/exec/git"
 )
 
-// ShortHash returns the first 7 characters of a commit hash.
+// ShortHash returns the first ShortHashLen characters of a commit hash.
+//
+// Parameters:
+//   - hash: full or abbreviated commit hash
+//
+// Returns:
+//   - string: abbreviated hash, or the original if already short
 func ShortHash(hash string) string {
-	if len(hash) <= 7 {
+	if len(hash) <= cfgTrace.ShortHashLen {
 		return hash
 	}
-	return hash[:7]
+	return hash[:cfgTrace.ShortHashLen]
 }
 
-// ReadTrailerRefs reads ctx-context trailer refs from a commit.
+// ReadTrailerRefs reads ctx-context trailer refs from a commit message.
+//
+// Parameters:
+//   - commitHash: full commit hash to read trailers from
+//
+// Returns:
+//   - []string: parsed context refs, or empty slice on error
 func ReadTrailerRefs(commitHash string) []string {
-	//nolint:gosec // TrailerKey is a package constant, commitHash from git rev-parse
-	out, err := exec.Command(
-		"git", "log", "-1",
-		fmt.Sprintf("--format=%%(trailers:key=%s,valueonly)", TrailerKey),
+	out, err := git.Run(
+		cfgGit.Log, cfgGit.FlagLast,
+		fmt.Sprintf(cfgGit.FormatTrailerValue, cfgTrace.TrailerKey),
 		commitHash,
-	).Output()
+	)
 	if err != nil {
 		return []string{}
 	}
 
 	var refs []string
-	for _, line := range strings.Split(strings.TrimSpace(string(out)), token.NewlineLF) {
-		for _, ref := range strings.Split(strings.TrimSpace(line), ", ") {
+	for _, line := range strings.Split(
+		strings.TrimSpace(string(out)), token.NewlineLF,
+	) {
+		for _, ref := range strings.Split(
+			strings.TrimSpace(line), token.CommaSpace,
+		) {
 			ref = strings.TrimSpace(ref)
 			if ref != "" {
 				refs = append(refs, ref)
@@ -48,9 +65,15 @@ func ReadTrailerRefs(commitHash string) []string {
 }
 
 // ResolveCommitHash resolves a short ref to a full commit hash.
+//
+// Parameters:
+//   - ref: git commit reference (e.g. "HEAD", "abc1234")
+//
+// Returns:
+//   - string: full commit hash
+//   - error: non-nil if git rev-parse fails
 func ResolveCommitHash(ref string) (string, error) {
-	//nolint:gosec // ref is a git commit reference from user input, standard git usage
-	out, err := exec.Command("git", "rev-parse", ref).Output()
+	out, err := git.Run(cfgGit.RevParse, ref)
 	if err != nil {
 		return "", err
 	}
@@ -58,19 +81,34 @@ func ResolveCommitHash(ref string) (string, error) {
 }
 
 // CommitMessage returns the subject line of a commit.
+//
+// Parameters:
+//   - hash: full commit hash
+//
+// Returns:
+//   - string: commit subject line
+//   - error: non-nil if git log fails
 func CommitMessage(hash string) (string, error) {
-	//nolint:gosec // hash is a git commit hash, standard git usage
-	out, err := exec.Command("git", "log", "-1", "--format=%s", hash).Output()
+	out, err := git.Run(
+		cfgGit.Log, cfgGit.FlagLast, cfgGit.FormatSubject, hash,
+	)
 	if err != nil {
 		return "", err
 	}
 	return strings.TrimSpace(string(out)), nil
 }
 
-// CommitDate returns the commit date string.
+// CommitDate returns the commit date string in ISO format.
+//
+// Parameters:
+//   - hash: full commit hash
+//
+// Returns:
+//   - string: commit date, or empty string on error
 func CommitDate(hash string) string {
-	//nolint:gosec // hash is a git commit hash, standard git usage
-	out, err := exec.Command("git", "log", "-1", "--format=%ci", hash).Output()
+	out, err := git.Run(
+		cfgGit.Log, cfgGit.FlagLast, cfgGit.FormatDateISO, hash,
+	)
 	if err != nil {
 		return ""
 	}
@@ -79,7 +117,17 @@ func CommitDate(hash string) string {
 
 // CollectRefsForCommit gathers context refs for a commit from
 // history, overrides, and optionally git trailers.
-func CollectRefsForCommit(commitHash, traceDir string, includeTrailers bool) []string {
+//
+// Parameters:
+//   - commitHash: full or abbreviated commit hash
+//   - traceDir: absolute path to the trace directory
+//   - includeTrailers: whether to read git trailers (slow for bulk)
+//
+// Returns:
+//   - []string: deduplicated refs from all sources
+func CollectRefsForCommit(
+	commitHash, traceDir string, includeTrailers bool,
+) []string {
 	var all []string
 
 	// Source 1: history.jsonl

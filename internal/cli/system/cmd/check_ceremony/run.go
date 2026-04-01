@@ -7,6 +7,7 @@
 package check_ceremony
 
 import (
+	"fmt"
 	"os"
 	"path/filepath"
 
@@ -74,8 +75,8 @@ func Run(cmd *cobra.Command, stdin *os.File) error {
 		return nil
 	}
 	ref := notify.NewTemplateRef(hook.CheckCeremonies, variant, nil)
-	nudge.EmitAndRelay(hook.CheckCeremonies+": "+
-		desc.Text(text.DescKeyCeremonyRelayMessage),
+	nudge.EmitAndRelay(fmt.Sprintf(desc.Text(text.DescKeyRelayPrefixFormat),
+		hook.CheckCeremonies, desc.Text(text.DescKeyCeremonyRelayMessage)),
 		input.SessionID, ref,
 	)
 	internalIo.TouchFile(remindedFile)

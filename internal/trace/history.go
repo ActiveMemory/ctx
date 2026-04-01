@@ -10,13 +10,9 @@ import (
 	"path/filepath"
 	"strings"
 	"time"
+
+	cfgTrace "github.com/ActiveMemory/ctx/internal/config/trace"
 )
-
-// historyFile is the name of the JSONL file that stores commit history entries.
-const historyFile = "history.jsonl"
-
-// overrideFile is the name of the JSONL file that stores override entries.
-const overrideFile = "overrides.jsonl"
 
 // WriteHistory appends a HistoryEntry to history.jsonl in traceDir.
 // If entry.Timestamp is zero it is set to the current UTC time.
@@ -33,7 +29,7 @@ func WriteHistory(entry HistoryEntry, traceDir string) error {
 		entry.Timestamp = time.Now().UTC()
 	}
 
-	return appendJSONL(traceDir, historyFile, entry)
+	return appendJSONL(traceDir, cfgTrace.FileHistory, entry)
 }
 
 // ReadHistory reads all HistoryEntry records from history.jsonl in traceDir.
@@ -47,7 +43,7 @@ func WriteHistory(entry HistoryEntry, traceDir string) error {
 //   - []HistoryEntry: entries in file order
 //   - error: non-nil only if the file exists but cannot be read
 func ReadHistory(traceDir string) ([]HistoryEntry, error) {
-	path := filepath.Join(traceDir, historyFile)
+	path := filepath.Join(traceDir, cfgTrace.FileHistory)
 	return readJSONL[HistoryEntry](path)
 }
 
@@ -99,7 +95,7 @@ func WriteOverride(entry OverrideEntry, traceDir string) error {
 		entry.Timestamp = time.Now().UTC()
 	}
 
-	return appendJSONL(traceDir, overrideFile, entry)
+	return appendJSONL(traceDir, cfgTrace.FileOverrides, entry)
 }
 
 // ReadOverrides reads all OverrideEntry records from overrides.jsonl in traceDir.
@@ -113,7 +109,7 @@ func WriteOverride(entry OverrideEntry, traceDir string) error {
 //   - []OverrideEntry: entries in file order
 //   - error: non-nil only if the file exists but cannot be read
 func ReadOverrides(traceDir string) ([]OverrideEntry, error) {
-	path := filepath.Join(traceDir, overrideFile)
+	path := filepath.Join(traceDir, cfgTrace.FileOverrides)
 	return readJSONL[OverrideEntry](path)
 }
 

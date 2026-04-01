@@ -7,13 +7,13 @@
 package budget
 
 import (
-	"fmt"
 	"strings"
 	"time"
 
 	"github.com/ActiveMemory/ctx/internal/assets/read/desc"
 	"github.com/ActiveMemory/ctx/internal/config/embed/text"
 	"github.com/ActiveMemory/ctx/internal/config/token"
+	"github.com/ActiveMemory/ctx/internal/io"
 )
 
 // RenderMarkdownPacket renders an assembled packet as Markdown.
@@ -28,7 +28,7 @@ func RenderMarkdownPacket(pkt *AssembledPacket) string {
 	nl := token.NewlineLF
 
 	sb.WriteString(desc.Text(text.DescKeyAgentPacketTitle) + nl)
-	fmt.Fprintf(&sb,
+	io.SafeFprintf(&sb,
 		desc.Text(text.DescKeyAgentPacketMeta),
 		time.Now().UTC().Format(time.RFC3339), pkt.Budget, pkt.TokensUsed)
 	sb.WriteString(nl + nl)
@@ -36,7 +36,7 @@ func RenderMarkdownPacket(pkt *AssembledPacket) string {
 	// Read order
 	sb.WriteString(desc.Text(text.DescKeyAgentSectionReadOrder) + nl)
 	for i, path := range pkt.ReadOrder {
-		fmt.Fprintf(&sb,
+		io.SafeFprintf(&sb,
 			desc.Text(text.DescKeyWriteAgentNumberedItem), i+1, path)
 		sb.WriteString(nl)
 	}
@@ -46,7 +46,7 @@ func RenderMarkdownPacket(pkt *AssembledPacket) string {
 	if len(pkt.Constitution) > 0 {
 		sb.WriteString(desc.Text(text.DescKeyAgentSectionConstitution) + nl)
 		for _, rule := range pkt.Constitution {
-			fmt.Fprintf(&sb,
+			io.SafeFprintf(&sb,
 				desc.Text(text.DescKeyWriteAgentBulletItem), rule)
 			sb.WriteString(nl)
 		}
@@ -66,7 +66,7 @@ func RenderMarkdownPacket(pkt *AssembledPacket) string {
 	if len(pkt.Conventions) > 0 {
 		sb.WriteString(desc.Text(text.DescKeyAgentSectionConventions) + nl)
 		for _, conv := range pkt.Conventions {
-			fmt.Fprintf(&sb,
+			io.SafeFprintf(&sb,
 				desc.Text(text.DescKeyWriteAgentBulletItem), conv)
 			sb.WriteString(nl)
 		}
@@ -93,7 +93,7 @@ func RenderMarkdownPacket(pkt *AssembledPacket) string {
 	if len(pkt.Summaries) > 0 {
 		sb.WriteString(desc.Text(text.DescKeyAgentSectionSummaries) + nl)
 		for _, s := range pkt.Summaries {
-			fmt.Fprintf(&sb,
+			io.SafeFprintf(&sb,
 				desc.Text(text.DescKeyWriteAgentBulletItem), s)
 			sb.WriteString(nl)
 		}

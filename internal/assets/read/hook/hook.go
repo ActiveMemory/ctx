@@ -13,6 +13,22 @@ import (
 	"github.com/ActiveMemory/ctx/internal/config/asset"
 )
 
+// TraceScript reads an embedded trace git hook script by filename.
+//
+// Parameters:
+//   - filename: Script filename (e.g., "prepare-commit-msg.sh")
+//
+// Returns:
+//   - string: Script content
+//   - error: Non-nil if the file is not found or read fails
+func TraceScript(filename string) (string, error) {
+	data, err := assets.FS.ReadFile(path.Join(asset.DirHooksTrace, filename))
+	if err != nil {
+		return "", err
+	}
+	return string(data), nil
+}
+
 // Message reads a hook message template by hook name and filename.
 //
 // Parameters:
