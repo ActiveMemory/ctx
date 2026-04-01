@@ -21,11 +21,18 @@ const (
 
 // Meminfo field keys from /proc/meminfo.
 const (
-	FieldMemTotal     = "MemTotal"
+	// FieldMemTotal is the total physical memory field.
+	FieldMemTotal = "MemTotal"
+	// FieldMemAvailable is the available memory field (kernel 3.14+).
 	FieldMemAvailable = "MemAvailable"
-	FieldMemFree      = "MemFree"
-	FieldBuffers      = "Buffers"
-	FieldCached       = "Cached"
-	FieldSwapTotal    = "SwapTotal"
-	FieldSwapFree     = "SwapFree"
+	// FieldMemFree is the free memory field (fallback for older kernels).
+	FieldMemFree = "MemFree"
+	// FieldBuffers is the kernel buffer memory field.
+	FieldBuffers = "Buffers"
+	// FieldCached is the page cache memory field.
+	FieldCached = "Cached"
+	// FieldSwapTotal is the total swap space field.
+	FieldSwapTotal = "SwapTotal"
+	// FieldSwapFree is the free swap space field.
+	FieldSwapFree = "SwapFree"
 )

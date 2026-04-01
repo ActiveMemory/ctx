@@ -6,8 +6,8 @@
 
 package dep
 
-// Packages is used by sync to detect projects and suggest
-// dependency documentation.
+// Packages maps manifest filenames to their ecosystem descriptions.
+// Used by sync to detect projects and suggest dependency documentation.
 var Packages = map[string]string{
 	"package.json":     "Node.js dependencies",
 	"go.mod":           "Go module dependencies",
@@ -62,14 +62,16 @@ const (
 	PyGraphRoot = "project"
 )
 
-// Python metadata keys to skip when parsing Poetry-style deps.
+// PyMetaKeys lists pyproject.toml keys that are metadata, not dependencies.
+// Entries matching these keys are skipped during Poetry-style parsing.
 var PyMetaKeys = map[string]bool{
 	"name":        true,
 	"version":     true,
 	"description": true,
 }
 
-// Python version specifier characters.
+// PyVersionSpecChars contains the characters that begin a version
+// specifier or extras bracket in Python dependency lines.
 const PyVersionSpecChars = "><=!~["
 
 // TOML parsing tokens.
