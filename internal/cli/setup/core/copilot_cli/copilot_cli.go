@@ -20,7 +20,7 @@ import (
 	writeSetup "github.com/ActiveMemory/ctx/internal/write/setup"
 )
 
-// DeployHooks generates .github/hooks/ctx-hooks.json and the
+// Deploy generates .github/hooks/ctx-hooks.json and the
 // accompanying hook scripts for GitHub Copilot CLI integration.
 //
 // Creates the .github/hooks/ and .github/hooks/scripts/ directories if
@@ -34,7 +34,7 @@ import (
 //
 // Returns:
 //   - error: Non-nil if directory creation or file write fails
-func DeployHooks(cmd *cobra.Command) error {
+func Deploy(cmd *cobra.Command) error {
 	hooksDir := filepath.Join(cfgHook.DirGitHub, cfgHook.DirGitHubHooks)
 	scriptsDir := filepath.Join(hooksDir, cfgHook.DirGitHubHooksScripts)
 	targetJSON := filepath.Join(hooksDir, cfgHook.FileCopilotCLIHooksJSON)

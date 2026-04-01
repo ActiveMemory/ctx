@@ -74,7 +74,7 @@ func Run(cmd *cobra.Command, args []string, writeFile bool) error {
 
 	case cfgHook.ToolCopilotCLI:
 		if writeFile {
-			return coreCopilotCLI.DeployHooks(cmd)
+			return coreCopilotCLI.Deploy(cmd)
 		}
 		writeSetup.InfoTool(cmd, desc.Text(text.DescKeyHookCopilotCLI))
 
