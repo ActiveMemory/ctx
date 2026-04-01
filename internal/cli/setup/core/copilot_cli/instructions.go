@@ -32,7 +32,7 @@ func deployInstructions(cmd *cobra.Command) error {
 	target := filepath.Join(instrDir, cfgHook.FileInstructionsCtxMd)
 
 	if _, err := os.Stat(target); err == nil {
-		writeSetup.InfoCopilotCLICreated(cmd, target+" (exists, skipped)")
+		writeSetup.InfoCopilotCLISkipped(cmd, target)
 		return nil
 	}
 

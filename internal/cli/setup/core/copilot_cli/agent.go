@@ -31,7 +31,7 @@ func deployAgent(cmd *cobra.Command) error {
 	target := filepath.Join(agentsDir, cfgHook.FileAgentsCtxMd)
 
 	if _, err := os.Stat(target); err == nil {
-		writeSetup.InfoCopilotCLICreated(cmd, target+" (exists, skipped)")
+		writeSetup.InfoCopilotCLISkipped(cmd, target)
 		return nil
 	}
 

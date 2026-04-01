@@ -38,7 +38,7 @@ func deploySkills(cmd *cobra.Command) error {
 		target := filepath.Join(skillDir, cfgHook.FileSKILLMd)
 
 		if _, err := os.Stat(target); err == nil {
-			writeSetup.InfoCopilotCLICreated(cmd, target+" (exists, skipped)")
+			writeSetup.InfoCopilotCLISkipped(cmd, target)
 			continue
 		}
 
