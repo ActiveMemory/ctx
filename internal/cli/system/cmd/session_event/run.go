@@ -14,8 +14,13 @@ import (
 	coreState "github.com/ActiveMemory/ctx/internal/cli/system/core/state"
 	cfgEvent "github.com/ActiveMemory/ctx/internal/config/event"
 	cfgHook "github.com/ActiveMemory/ctx/internal/config/hook"
+	errSession "github.com/ActiveMemory/ctx/internal/err/session"
 	"github.com/ActiveMemory/ctx/internal/log/event"
 	"github.com/ActiveMemory/ctx/internal/notify"
+	wSession "github.com/ActiveMemory/ctx/internal/write/session"
+
+	"github.com/ActiveMemory/ctx/internal/assets/read/desc"
+	"github.com/ActiveMemory/ctx/internal/config/embed/text"
 )
 
 // Run executes the session-event command logic.
@@ -37,17 +42,17 @@ func Run(cmd *cobra.Command, eventType, caller string) error {
 	}
 
 	if eventType != cfgEvent.TypeStart && eventType != cfgEvent.TypeEnd {
-		return fmt.Errorf("--type must be '%s' or '%s', got %q",
+		return errSession.EventInvalidType(
 			cfgEvent.TypeStart, cfgEvent.TypeEnd, eventType)
 	}
 
-	msg := fmt.Sprintf("session-%s: %s", eventType, caller)
+	msg := fmt.Sprintf(desc.Text(text.DescKeyWriteSessionEvent), eventType, caller)
 	ref := notify.NewTemplateRef(cfgHook.SessionEvent, eventType,
 		map[string]any{"Caller": caller})
 
 	event.Append(cfgEvent.CategorySession, msg, "", ref)
 	_ = notify.Send(cfgEvent.CategorySession, msg, "", ref)
 
-	cmd.Println(msg)
+	wSession.Event(cmd, eventType, caller)
 	return nil
 }

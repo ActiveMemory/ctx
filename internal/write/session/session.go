@@ -15,6 +15,19 @@ import (
 	"github.com/ActiveMemory/ctx/internal/config/embed/text"
 )
 
+// Event prints a session lifecycle event confirmation.
+//
+// Parameters:
+//   - cmd: Cobra command for output. Nil is a no-op.
+//   - eventType: the event type (e.g. "start" or "end").
+//   - caller: the calling editor identifier (e.g. "vscode").
+func Event(cmd *cobra.Command, eventType, caller string) {
+	if cmd == nil {
+		return
+	}
+	cmd.Println(fmt.Sprintf(desc.Text(text.DescKeyWriteSessionEvent), eventType, caller))
+}
+
 // Paused prints confirmation that hooks were paused.
 //
 // Parameters:

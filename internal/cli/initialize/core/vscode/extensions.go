@@ -20,10 +20,19 @@ import (
 	writeVscode "github.com/ActiveMemory/ctx/internal/write/vscode"
 )
 
-// writeExtensionsJSON creates .vscode/extensions.json with the ctx
-// extension recommendation. Skips if the file already contains it;
-// leaves existing files without the recommendation untouched.
-func writeExtensionsJSON(cmd *cobra.Command) error {
+// createExtensionsJSON creates .vscode/extensions.json with the ctx
+// extension recommendation.
+//
+// If the file exists and already contains the recommendation, it is
+// skipped. If the file exists without the recommendation, the user
+// is prompted to add it manually.
+//
+// Parameters:
+//   - cmd: Cobra command for output messages
+//
+// Returns:
+//   - error: Non-nil if reading or writing the file fails
+func createExtensionsJSON(cmd *cobra.Command) error {
 	target := filepath.Join(cfgVscode.Dir, cfgVscode.FileExtensionsJSON)
 
 	if _, statErr := os.Stat(target); statErr == nil {

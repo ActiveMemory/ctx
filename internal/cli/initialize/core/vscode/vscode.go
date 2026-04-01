@@ -16,29 +16,32 @@ import (
 	writeVscode "github.com/ActiveMemory/ctx/internal/write/vscode"
 )
 
-// CreateVSCodeArtifacts generates VS Code-native configuration files
-// as the editor-specific counterpart to Claude Code's settings and hooks.
+// CreateVSCodeArtifacts generates VS Code workspace configuration files
+// (.vscode/) during ctx init.
+//
+// Creates extensions.json, tasks.json, and mcp.json as the
+// editor-specific counterpart to Claude Code's settings and hooks.
+// Individual file errors are non-fatal and reported inline.
 //
 // Parameters:
 //   - cmd: Cobra command for output messages
 //
 // Returns:
-//   - error: Non-nil if directory creation fails (file-level errors
-//     are non-fatal and reported inline)
+//   - error: Non-nil if directory creation fails
 func CreateVSCodeArtifacts(cmd *cobra.Command) error {
 	if mkdirErr := os.MkdirAll(cfgVscode.Dir, fs.PermExec); mkdirErr != nil {
 		return mkdirErr
 	}
 
-	if extErr := writeExtensionsJSON(cmd); extErr != nil {
+	if extErr := createExtensionsJSON(cmd); extErr != nil {
 		writeVscode.InfoWarnNonFatal(cmd, cfgVscode.FileExtensionsJSON, extErr)
 	}
 
-	if taskErr := writeTasksJSON(cmd); taskErr != nil {
+	if taskErr := createTasksJSON(cmd); taskErr != nil {
 		writeVscode.InfoWarnNonFatal(cmd, cfgVscode.FileTasksJSON, taskErr)
 	}
 
-	if mcpErr := writeMCPJSON(cmd); mcpErr != nil {
+	if mcpErr := createMCPJSON(cmd); mcpErr != nil {
 		writeVscode.InfoWarnNonFatal(cmd, cfgVscode.FileMCPJSON, mcpErr)
 	}
 

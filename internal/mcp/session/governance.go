@@ -14,7 +14,9 @@ import (
 	"strings"
 	"time"
 
+	"github.com/ActiveMemory/ctx/internal/assets/read/desc"
 	"github.com/ActiveMemory/ctx/internal/config/dir"
+	"github.com/ActiveMemory/ctx/internal/config/embed/text"
 	"github.com/ActiveMemory/ctx/internal/config/file"
 	"github.com/ActiveMemory/ctx/internal/config/mcp/governance"
 	"github.com/ActiveMemory/ctx/internal/config/mcp/tool"
@@ -24,6 +26,11 @@ import (
 
 // violation represents a single governance violation recorded by the
 // VS Code extension's detection ring.
+//
+// Fields:
+//   - Kind: violation category identifier
+//   - Detail: human-readable description of what was violated
+//   - Timestamp: ISO-8601 timestamp of when the violation occurred
 type violation struct {
 	Kind      string `json:"kind"`
 	Detail    string `json:"detail"`
@@ -31,27 +38,34 @@ type violation struct {
 }
 
 // violationsData is the JSON structure of the violations file.
+//
+// Fields:
+//   - Entries: list of recorded violations
 type violationsData struct {
 	Entries []violation `json:"entries"`
 }
 
-// readAndClearViolations reads violations from .context/state/violations.json
-// and removes the file to prevent repeated escalation. Returns nil if
-// no file exists or on read error.
+// readAndClearViolations reads violations from
+// .context/state/violations.json and removes the file to prevent
+// repeated escalation.
+//
+// Returns:
+//   - []violation: parsed violations, or nil if no file exists or
+//     on read error
 func (ss *State) readAndClearViolations() []violation {
 	if ss.contextDir == "" {
 		return nil
 	}
 	stateDir := filepath.Join(ss.contextDir, dir.State)
-	data, err := ctxio.SafeReadFile(stateDir, file.Violations)
-	if err != nil {
+	data, readErr := ctxio.SafeReadFile(stateDir, file.Violations)
+	if readErr != nil {
 		return nil
 	}
 	// Remove the file immediately to prevent duplicate alerts.
 	_ = os.Remove(filepath.Join(stateDir, file.Violations))
 
 	var vd violationsData
-	if err := json.Unmarshal(data, &vd); err != nil {
+	if unmarshalErr := json.Unmarshal(data, &vd); unmarshalErr != nil {
 		return nil
 	}
 	return vd.Entries
@@ -80,62 +94,67 @@ func (ss *State) RecordContextWrite() {
 	ss.callsSinceWrite = 0
 }
 
-// IncrementCallsSinceWrite bumps the counter used for persist nudges.
+// IncrementCallsSinceWrite bumps the counter used for persist
+// nudges.
 func (ss *State) IncrementCallsSinceWrite() {
 	ss.callsSinceWrite++
 }
 
-// CheckGovernance returns governance warnings that should be appended
-// to the current tool response. Returns an empty string when no action
-// is warranted.
+// CheckGovernance returns governance warnings that should be
+// appended to the current tool response. Returns an empty string
+// when no action is warranted.
 //
-// The caller (toolName) is used to suppress redundant warnings — for
-// example, a drift warning is not appended to a ctx_drift response.
+// Parameters:
+//   - toolName: the MCP tool that was just called, used to
+//     suppress redundant warnings (e.g. drift warning is not
+//     appended to a ctx_drift response)
+//
+// Returns:
+//   - string: newline-separated warnings preceded by a separator,
+//     or empty string when no warnings apply
 func (ss *State) CheckGovernance(toolName string) string {
 	var warnings []string
 
 	// 1. Session not started
 	if !ss.sessionStarted && toolName != tool.SessionEvent {
 		warnings = append(warnings,
-			"⚠ Session not started. "+
-				"Call ctx_session_event(type=\"start\") to enable tracking.")
+			desc.Text(text.DescKeyGovSessionNotStarted))
 	}
 
 	// 2. Context not loaded
-	if !ss.contextLoaded && toolName != "ctx_status" &&
+	if !ss.contextLoaded && toolName != tool.Status &&
 		toolName != tool.SessionEvent {
 		warnings = append(warnings,
-			"⚠ Context not loaded. "+
-				"Call ctx_status() to load context before proceeding.")
+			desc.Text(text.DescKeyGovContextNotLoaded))
 	}
 
 	// 3. Drift not checked recently
-	if ss.sessionStarted && toolName != "ctx_drift" &&
+	if ss.sessionStarted && toolName != tool.Drift &&
 		toolName != tool.SessionEvent {
 		if !ss.lastDriftCheck.IsZero() {
 			if time.Since(ss.lastDriftCheck) > governance.DriftCheckInterval {
 				warnings = append(warnings, fmt.Sprintf(
-					"⚠ Drift not checked in %d minutes. Consider calling ctx_drift().",
+					desc.Text(text.DescKeyGovDriftNotChecked),
 					int(time.Since(ss.lastDriftCheck).Minutes())))
 			}
 		} else if ss.ToolCalls > 5 {
 			// Never checked drift and already 5+ calls in
 			warnings = append(warnings,
-				"⚠ Drift has not been checked this session. Consider calling ctx_drift().")
+				desc.Text(text.DescKeyGovDriftNeverChecked))
 		}
 	}
 
 	// 4. Persist nudge — no context writes in a while
 	if ss.sessionStarted && ss.callsSinceWrite >= governance.PersistNudgeAfter &&
-		toolName != "ctx_add" && toolName != "ctx_watch_update" &&
-		toolName != "ctx_complete" && toolName != "ctx_compact" &&
+		toolName != tool.Add && toolName != tool.WatchUpdate &&
+		toolName != tool.Complete && toolName != tool.Compact &&
 		toolName != tool.SessionEvent {
-		// Fire at threshold, then every governance.PersistNudgeRepeat calls after
+		// Fire at threshold, then every governance.PersistNudgeRepeat
+		// calls after.
 		if ss.callsSinceWrite == governance.PersistNudgeAfter ||
 			(ss.callsSinceWrite-governance.PersistNudgeAfter)%governance.PersistNudgeRepeat == 0 {
 			warnings = append(warnings, fmt.Sprintf(
-				"⚠ %d tool calls since last context write. "+
-					"Persist decisions, learnings, or completed tasks with ctx_add() or ctx_complete().",
+				desc.Text(text.DescKeyGovPersistNudge),
 				ss.callsSinceWrite))
 		}
 	}
@@ -145,11 +164,10 @@ func (ss *State) CheckGovernance(toolName string) string {
 		for _, v := range violations {
 			detail := v.Detail
 			if len(detail) > 120 {
-				detail = detail[:120] + "..."
+				detail = detail[:120] + token.Ellipsis
 			}
 			warnings = append(warnings, fmt.Sprintf(
-				"🚨 CRITICAL: %s — %s (at %s). "+
-					"Review this action immediately. If unintended, revert it.",
+				desc.Text(text.DescKeyGovViolationCritical),
 				v.Kind, detail, v.Timestamp))
 		}
 	}
@@ -159,5 +177,5 @@ func (ss *State) CheckGovernance(toolName string) string {
 	}
 
 	nl := token.NewlineLF
-	return nl + nl + "---" + nl + strings.Join(warnings, nl)
+	return nl + nl + token.Separator + nl + strings.Join(warnings, nl)
 }

@@ -9,7 +9,6 @@ package parser
 import (
 	"bufio"
 	"encoding/json"
-	"fmt"
 	"os"
 	"path/filepath"
 	"runtime"
@@ -21,6 +20,7 @@ import (
 	cfgHook "github.com/ActiveMemory/ctx/internal/config/hook"
 	"github.com/ActiveMemory/ctx/internal/config/session"
 	"github.com/ActiveMemory/ctx/internal/entity"
+	errParser "github.com/ActiveMemory/ctx/internal/err/parser"
 )
 
 // CopilotCLI parses GitHub Copilot CLI session files.
@@ -51,7 +51,7 @@ func (p *CopilotCLI) Matches(path string) bool {
 
 	// Must be under a .copilot directory (not chatSessions, which is VS Code)
 	dir := filepath.Dir(path)
-	if strings.Contains(dir, "chatSessions") {
+	if strings.Contains(dir, copilotDirChatSessions) {
 		return false
 	}
 
@@ -90,7 +90,7 @@ func (p *CopilotCLI) Matches(path string) bool {
 func (p *CopilotCLI) ParseFile(path string) ([]*entity.Session, error) {
 	f, err := os.Open(filepath.Clean(path))
 	if err != nil {
-		return nil, fmt.Errorf("open file: %w", err)
+		return nil, errParser.OpenFile(err)
 	}
 	defer func() { _ = f.Close() }()
 
@@ -114,7 +114,7 @@ func (p *CopilotCLI) ParseFile(path string) ([]*entity.Session, error) {
 	}
 
 	if scanErr := scanner.Err(); scanErr != nil {
-		return nil, fmt.Errorf("scan file: %w", scanErr)
+		return nil, errParser.ScanFile(scanErr)
 	}
 
 	if len(messages) == 0 {

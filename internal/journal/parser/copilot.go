@@ -9,7 +9,6 @@ package parser
 import (
 	"bufio"
 	"encoding/json"
-	"fmt"
 	"net/url"
 	"os"
 	"path/filepath"
@@ -24,10 +23,32 @@ import (
 	"github.com/ActiveMemory/ctx/internal/config/session"
 	"github.com/ActiveMemory/ctx/internal/config/token"
 	"github.com/ActiveMemory/ctx/internal/entity"
+	errParser "github.com/ActiveMemory/ctx/internal/err/parser"
 )
 
-// copilotKeyRequests is the key path segment for request arrays.
-const copilotKeyRequests = "requests"
+// Copilot JSONL line Kind values.
+const (
+	// copilotKindSnapshot is a full session snapshot (kind=0).
+	copilotKindSnapshot = 0
+	// copilotKindScalarPatch is a scalar field replacement (kind=1).
+	copilotKindScalarPatch = 1
+	// copilotKindObjectPatch is an array/object replacement (kind=2).
+	copilotKindObjectPatch = 2
+)
+
+// Copilot JSON key paths and response item kinds.
+const (
+	copilotKeyRequests = "requests"
+	copilotKeyResult   = "result"
+	copilotKeyResponse = "response"
+
+	copilotRespKindThinking   = "thinking"
+	copilotRespKindToolInvoke = "toolInvocationSerialized"
+
+	copilotDirChatSessions = "chatSessions"
+	copilotFileWorkspace   = "workspace.json"
+	copilotResponseSuffix  = "-response"
+)
 
 // Copilot parses VS Code Copilot Chat JSONL session files.
 //
@@ -56,7 +77,7 @@ func (p *Copilot) Matches(path string) bool {
 	}
 
 	// Copilot sessions live in chatSessions/ directories
-	if !strings.Contains(filepath.Dir(path), "chatSessions") {
+	if !strings.Contains(filepath.Dir(path), copilotDirChatSessions) {
 		return false
 	}
 
@@ -80,7 +101,7 @@ func (p *Copilot) Matches(path string) bool {
 	}
 
 	// kind=0 is the full session snapshot
-	if line.Kind != 0 {
+	if line.Kind != copilotKindSnapshot {
 		return false
 	}
 
@@ -99,7 +120,7 @@ func (p *Copilot) Matches(path string) bool {
 func (p *Copilot) ParseFile(path string) ([]*entity.Session, error) {
 	file, openErr := os.Open(filepath.Clean(path))
 	if openErr != nil {
-		return nil, fmt.Errorf("open file: %w", openErr)
+		return nil, errParser.OpenFile(openErr)
 	}
 	defer func() { _ = file.Close() }()
 
@@ -121,21 +142,21 @@ func (p *Copilot) ParseFile(path string) ([]*entity.Session, error) {
 		}
 
 		switch line.Kind {
-		case 0:
+		case copilotKindSnapshot:
 			// Full session snapshot
 			var s copilotRawSession
 			if err := json.Unmarshal(line.V, &s); err != nil {
-				return nil, fmt.Errorf("parse session snapshot: %w", err)
+				return nil, errParser.Unmarshal(err)
 			}
 			session = &s
 
-		case 1:
+		case copilotKindScalarPatch:
 			// Scalar property patch — apply to session
 			if session != nil {
 				p.applyScalarPatch(session, line.K, line.V)
 			}
 
-		case 2:
+		case copilotKindObjectPatch:
 			// Array/object patch — apply to session
 			if session != nil {
 				p.applyPatch(session, line.K, line.V)
@@ -144,7 +165,7 @@ func (p *Copilot) ParseFile(path string) ([]*entity.Session, error) {
 	}
 
 	if scanErr := scanner.Err(); scanErr != nil {
-		return nil, fmt.Errorf("scan file: %w", scanErr)
+		return nil, errParser.ScanFile(scanErr)
 	}
 
 	if session == nil {
@@ -179,7 +200,7 @@ func (p *Copilot) applyScalarPatch(
 	}
 
 	// Handle requests.<N>.result patches — these contain token counts
-	if path[0] == copilotKeyRequests && len(path) == 3 && path[2] == "result" {
+	if path[0] == copilotKeyRequests && len(path) == 3 && path[2] == copilotKeyResult {
 		idx, err := strconv.Atoi(path[1])
 		if err != nil || idx < 0 || idx >= len(session.Requests) {
 			return
@@ -208,7 +229,7 @@ func (p *Copilot) applyPatch(
 			session.Requests = append(session.Requests, requests...)
 		}
 
-	case len(path) == 3 && path[0] == copilotKeyRequests && path[2] == "response":
+	case len(path) == 3 && path[0] == copilotKeyRequests && path[2] == copilotKeyResponse:
 		// Response update for a specific request
 		idx, err := strconv.Atoi(path[1])
 		if err != nil || idx < 0 || idx >= len(session.Requests) {
@@ -327,7 +348,7 @@ func (p *Copilot) buildAssistantMessage(
 	}
 
 	msg := &entity.Message{
-		ID:        req.RequestID + "-response",
+		ID:        req.RequestID + copilotResponseSuffix,
 		Timestamp: time.UnixMilli(req.Timestamp),
 		Role:      claude.RoleAssistant,
 	}
@@ -338,7 +359,7 @@ func (p *Copilot) buildAssistantMessage(
 
 	for _, item := range req.Response {
 		switch item.Kind {
-		case "thinking":
+		case copilotRespKindThinking:
 			var text string
 			if err := json.Unmarshal(item.Value, &text); err == nil {
 				if msg.Thinking != "" {
@@ -347,7 +368,7 @@ func (p *Copilot) buildAssistantMessage(
 				msg.Thinking += text
 			}
 
-		case "toolInvocationSerialized":
+		case copilotRespKindToolInvoke:
 			tu := p.parseToolInvocation(item)
 			if tu != nil {
 				msg.ToolUses = append(msg.ToolUses, *tu)
@@ -425,7 +446,7 @@ func (p *Copilot) resolveWorkspaceCWD(sessionPath string) string {
 	// workspace.json is at: .../workspaceStorage/<hash>/workspace.json
 	chatDir := filepath.Dir(sessionPath) // chatSessions/
 	storageDir := filepath.Dir(chatDir)  // <hash>/
-	wsFile := filepath.Join(storageDir, "workspace.json")
+	wsFile := filepath.Join(storageDir, copilotFileWorkspace)
 
 	data, err := os.ReadFile(filepath.Clean(wsFile))
 	if err != nil {
@@ -512,7 +533,7 @@ func CopilotSessionDirs() []string {
 				if !entry.IsDir() {
 					continue
 				}
-				chatDir := filepath.Join(wsDir, entry.Name(), "chatSessions")
+				chatDir := filepath.Join(wsDir, entry.Name(), copilotDirChatSessions)
 				if info, err := os.Stat(chatDir); err == nil && info.IsDir() {
 					dirs = append(dirs, chatDir)
 				}

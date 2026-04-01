@@ -27,15 +27,22 @@ type copilotRawLine struct {
 	V    json.RawMessage   `json:"v"`
 }
 
-// copilotRawSession is the full session snapshot from a kind=0 line.
+// copilotRawSession is the full session snapshot from a copilotKindSnapshot line.
 type copilotRawSession struct {
-	Version           int                 `json:"version"`
-	CreationDate      int64               `json:"creationDate"`
-	CustomTitle       string              `json:"customTitle,omitempty"`
-	SessionID         string              `json:"sessionId"`
-	ResponderUsername string              `json:"responderUsername,omitempty"`
-	InitialLocation   string              `json:"initialLocation,omitempty"`
-	Requests          []copilotRawRequest `json:"requests"`
+	// Version is the schema version of the session format.
+	Version int `json:"version"`
+	// CreationDate is the session creation time as Unix milliseconds.
+	CreationDate int64 `json:"creationDate"`
+	// CustomTitle is the user-set session title, if any.
+	CustomTitle string `json:"customTitle,omitempty"`
+	// SessionID is the unique identifier for this session.
+	SessionID string `json:"sessionId"`
+	// ResponderUsername is the Copilot responder identity.
+	ResponderUsername string `json:"responderUsername,omitempty"`
+	// InitialLocation is the VS Code view that started the session.
+	InitialLocation string `json:"initialLocation,omitempty"`
+	// Requests holds the ordered request-response pairs.
+	Requests []copilotRawRequest `json:"requests"`
 }
 
 // copilotRawRequest represents a single request-response pair.

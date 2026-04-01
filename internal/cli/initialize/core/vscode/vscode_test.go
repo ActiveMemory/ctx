@@ -41,8 +41,8 @@ func TestWriteMCPJSON_CreatesFile(t *testing.T) {
 	var buf bytes.Buffer
 	cmd := testCmd(&buf)
 
-	if err := writeMCPJSON(cmd); err != nil {
-		t.Fatalf("writeMCPJSON() error = %v", err)
+	if err := createMCPJSON(cmd); err != nil {
+		t.Fatalf("createMCPJSON() error = %v", err)
 	}
 
 	target := filepath.Join(cfgVscode.Dir, "mcp.json")
@@ -97,14 +97,14 @@ func TestWriteMCPJSON_SkipsExisting(t *testing.T) {
 	var buf bytes.Buffer
 	cmd := testCmd(&buf)
 
-	if err := writeMCPJSON(cmd); err != nil {
-		t.Fatalf("writeMCPJSON() error = %v", err)
+	if err := createMCPJSON(cmd); err != nil {
+		t.Fatalf("createMCPJSON() error = %v", err)
 	}
 
 	// File should not be overwritten
 	data, _ := os.ReadFile(target)
 	if string(data) != string(existing) {
-		t.Error("writeMCPJSON overwrote existing file")
+		t.Error("createMCPJSON overwrote existing file")
 	}
 
 	output := buf.String()

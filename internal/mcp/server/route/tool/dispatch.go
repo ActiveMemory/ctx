@@ -102,21 +102,3 @@ func DispatchCall(
 
 	return resp
 }
-
-// appendGovernance appends governance advisory warnings to a tool
-// response. It modifies the response in-place by appending warning
-// text to the first content item.
-func appendGovernance(
-	resp *proto.Response, toolName string, h *handler.Handler,
-) {
-	warning := h.Session.CheckGovernance(toolName)
-	if warning == "" {
-		return
-	}
-	result, ok := resp.Result.(proto.CallToolResult)
-	if !ok || len(result.Content) == 0 {
-		return
-	}
-	result.Content[0].Text += warning
-	resp.Result = result
-}

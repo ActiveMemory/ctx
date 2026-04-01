@@ -537,6 +537,8 @@ write.restore-restored-header:
   short: 'Restored %d allow permission(s):'
 write.resumed:
   short: Context hooks resumed for session %s
+write.session-event:
+  short: 'session-%s: %s'
 write.setup-done:
   short: |-
     Webhook configured: %s

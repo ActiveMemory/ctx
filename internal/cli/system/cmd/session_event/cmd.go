@@ -9,6 +9,9 @@ package sessionevent
 import (
 	"github.com/spf13/cobra"
 
+	"github.com/ActiveMemory/ctx/internal/assets/read/desc"
+	"github.com/ActiveMemory/ctx/internal/config/embed/cmd"
+	embFlag "github.com/ActiveMemory/ctx/internal/config/embed/flag"
 	cFlag "github.com/ActiveMemory/ctx/internal/config/flag"
 )
 
@@ -20,25 +23,24 @@ func Cmd() *cobra.Command {
 	var eventType string
 	var caller string
 
-	cmd := &cobra.Command{
-		Use:   "session-event",
-		Short: "Record session start or end",
-		Long: `Records a session lifecycle event (start or end) to the event log.
-Called by editor integrations when a workspace is opened or closed.
+	short, long := desc.Command(cmd.DescKeySystemSessionEvent)
 
-Examples:
-  ctx system session-event --type start --caller vscode
-  ctx system session-event --type end --caller vscode`,
+	c := &cobra.Command{
+		Use:    cmd.UseSystemSessionEvent,
+		Short:  short,
+		Long:   long,
 		Hidden: true,
 		RunE: func(cmd *cobra.Command, _ []string) error {
 			return Run(cmd, eventType, caller)
 		},
 	}
 
-	cmd.Flags().StringVar(&eventType, cFlag.Type, "", "Event type: start or end")
-	cmd.Flags().StringVar(&caller, cFlag.Caller, "", "Calling editor (e.g., vscode)")
-	_ = cmd.MarkFlagRequired(cFlag.Type)
-	_ = cmd.MarkFlagRequired(cFlag.Caller)
+	c.Flags().StringVar(&eventType, cFlag.Type, "",
+		desc.Flag(embFlag.DescKeySystemSessionEventType))
+	c.Flags().StringVar(&caller, cFlag.Caller, "",
+		desc.Flag(embFlag.DescKeySystemSessionEventCaller))
+	_ = c.MarkFlagRequired(cFlag.Type)
+	_ = c.MarkFlagRequired(cFlag.Caller)
 
-	return cmd
+	return c
 }

@@ -19,9 +19,16 @@ import (
 	writeVscode "github.com/ActiveMemory/ctx/internal/write/vscode"
 )
 
-// writeTasksJSON creates .vscode/tasks.json with ctx command tasks.
-// Skips if the file already exists.
-func writeTasksJSON(cmd *cobra.Command) error {
+// createTasksJSON creates .vscode/tasks.json with ctx command tasks.
+//
+// Skips if the file already exists to preserve user customizations.
+//
+// Parameters:
+//   - cmd: Cobra command for output messages
+//
+// Returns:
+//   - error: Non-nil if writing the file fails
+func createTasksJSON(cmd *cobra.Command) error {
 	target := filepath.Join(cfgVscode.Dir, cfgVscode.FileTasksJSON)
 
 	if _, statErr := os.Stat(target); statErr == nil {

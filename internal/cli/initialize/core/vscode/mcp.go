@@ -19,9 +19,17 @@ import (
 	writeVscode "github.com/ActiveMemory/ctx/internal/write/vscode"
 )
 
-// writeMCPJSON creates .vscode/mcp.json with the ctx MCP server
-// registration. Skips if the file already exists.
-func writeMCPJSON(cmd *cobra.Command) error {
+// createMCPJSON creates .vscode/mcp.json with the ctx MCP server
+// registration.
+//
+// Skips if the file already exists to preserve user customizations.
+//
+// Parameters:
+//   - cmd: Cobra command for output messages
+//
+// Returns:
+//   - error: Non-nil if writing the file fails
+func createMCPJSON(cmd *cobra.Command) error {
 	target := filepath.Join(cfgVscode.Dir, cfgVscode.FileMCPJSON)
 
 	if _, statErr := os.Stat(target); statErr == nil {
