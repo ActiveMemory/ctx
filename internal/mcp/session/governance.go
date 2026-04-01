@@ -7,69 +7,16 @@
 package session
 
 import (
-	"encoding/json"
 	"fmt"
-	"os"
-	"path/filepath"
 	"strings"
 	"time"
 
 	"github.com/ActiveMemory/ctx/internal/assets/read/desc"
-	"github.com/ActiveMemory/ctx/internal/config/dir"
 	"github.com/ActiveMemory/ctx/internal/config/embed/text"
-	"github.com/ActiveMemory/ctx/internal/config/file"
 	"github.com/ActiveMemory/ctx/internal/config/mcp/governance"
 	"github.com/ActiveMemory/ctx/internal/config/mcp/tool"
 	"github.com/ActiveMemory/ctx/internal/config/token"
-	ctxio "github.com/ActiveMemory/ctx/internal/io"
 )
-
-// violation represents a single governance violation recorded by the
-// VS Code extension's detection ring.
-//
-// Fields:
-//   - Kind: violation category identifier
-//   - Detail: human-readable description of what was violated
-//   - Timestamp: ISO-8601 timestamp of when the violation occurred
-type violation struct {
-	Kind      string `json:"kind"`
-	Detail    string `json:"detail"`
-	Timestamp string `json:"timestamp"`
-}
-
-// violationsData is the JSON structure of the violations file.
-//
-// Fields:
-//   - Entries: list of recorded violations
-type violationsData struct {
-	Entries []violation `json:"entries"`
-}
-
-// readAndClearViolations reads violations from
-// .context/state/violations.json and removes the file to prevent
-// repeated escalation.
-//
-// Returns:
-//   - []violation: parsed violations, or nil if no file exists or
-//     on read error
-func (ss *State) readAndClearViolations() []violation {
-	if ss.contextDir == "" {
-		return nil
-	}
-	stateDir := filepath.Join(ss.contextDir, dir.State)
-	data, readErr := ctxio.SafeReadFile(stateDir, file.Violations)
-	if readErr != nil {
-		return nil
-	}
-	// Remove the file immediately to prevent duplicate alerts.
-	_ = os.Remove(filepath.Join(stateDir, file.Violations))
-
-	var vd violationsData
-	if unmarshalErr := json.Unmarshal(data, &vd); unmarshalErr != nil {
-		return nil
-	}
-	return vd.Entries
-}
 
 // RecordSessionStart marks the session as explicitly started and
 // resets the session start timestamp.
@@ -180,7 +127,7 @@ func (ss *State) CheckGovernance(toolName string) string {
 	}
 
 	// 5. Violations from extension detection ring
-	if violations := ss.readAndClearViolations(); len(violations) > 0 {
+	if violations := readAndClearViolations(ss.contextDir); len(violations) > 0 {
 		for _, v := range violations {
 			detail := v.Detail
 			if len(detail) > 120 {
