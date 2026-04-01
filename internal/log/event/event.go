@@ -74,19 +74,7 @@ func AppendEvent(event, message, sessionID string, detail *notify.TemplateRef) {
 	newline := token.NewlineLF[0]
 	line = append(line, newline)
 
-	f, openErr := io.SafeAppendFile(logPath, fs.PermFile)
-	if openErr != nil {
-		return
-	}
-	defer func() {
-		if closeErr := f.Close(); closeErr != nil {
-			warn2.Warn(warn.Close, logPath, closeErr)
-		}
-	}()
-
-	if _, writeErr := f.Write(line); writeErr != nil {
-		warn2.Warn(warn.Write, logPath, writeErr)
-	}
+	io.AppendBytes(logPath, line, fs.PermFile)
 }
 
 // Query reads events from the log, applying filters.

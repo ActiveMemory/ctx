@@ -9,7 +9,6 @@ package resume
 import (
 	"os"
 
-	ctxLog "github.com/ActiveMemory/ctx/internal/log/warn"
 	"github.com/spf13/cobra"
 
 	"github.com/ActiveMemory/ctx/internal/cli/system/core/nudge"
@@ -17,6 +16,7 @@ import (
 	cFlag "github.com/ActiveMemory/ctx/internal/config/flag"
 	"github.com/ActiveMemory/ctx/internal/config/session"
 	"github.com/ActiveMemory/ctx/internal/config/warn"
+	ctxLog "github.com/ActiveMemory/ctx/internal/log/warn"
 	writeSession "github.com/ActiveMemory/ctx/internal/write/session"
 )
 

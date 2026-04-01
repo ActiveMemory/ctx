@@ -165,16 +165,5 @@ func WriteStats(sessionID string, stats entity.Stats) {
 	}
 	data = append(data, token.NewlineLF[0])
 
-	f, openErr := internalIo.SafeAppendFile(path, fs.PermSecret)
-	if openErr != nil {
-		return
-	}
-	defer func() {
-		if closeErr := f.Close(); closeErr != nil {
-			ctxLog.Warn(warn.Close, path, closeErr)
-		}
-	}()
-	if _, writeErr := f.Write(data); writeErr != nil {
-		ctxLog.Warn(warn.Write, path, writeErr)
-	}
+	internalIo.AppendBytes(path, data, fs.PermSecret)
 }
