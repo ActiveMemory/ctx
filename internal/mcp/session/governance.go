@@ -73,31 +73,49 @@ func (ss *State) readAndClearViolations() []violation {
 
 // RecordSessionStart marks the session as explicitly started and
 // resets the session start timestamp.
+//
+// Called by the session_event tool when the agent reports a "start"
+// event. Sets sessionStarted to true and captures the current wall
+// time so governance checks can measure elapsed time.
 func (ss *State) RecordSessionStart() {
 	ss.sessionStarted = true
 	ss.sessionStartedAt = time.Now()
 }
 
 // RecordContextLoaded marks context as loaded for this session.
+//
+// Called after the agent successfully loads context files (TASKS.md,
+// DECISIONS.md, etc.). Suppresses the "context not loaded" governance
+// warning that would otherwise appear on every tool response.
 func (ss *State) RecordContextLoaded() {
 	ss.contextLoaded = true
 }
 
 // RecordDriftCheck records that a drift check was performed.
+//
+// Called after the agent runs ctx_drift. Updates the last-drift-check
+// timestamp so CheckGovernance can determine whether a follow-up drift
+// check is overdue based on governance.DriftCheckInterval.
 func (ss *State) RecordDriftCheck() {
 	ss.lastDriftCheck = time.Now()
 }
 
-// RecordContextWrite records that a .context/ write occurred (add,
-// complete, watch_update, compact) and resets the calls-since-write
-// counter used for persist nudges.
+// RecordContextWrite records that a .context/ write occurred.
+//
+// Called after successful ctx_add, ctx_complete, ctx_watch_update, or
+// ctx_compact invocations. Captures the current wall time and resets
+// the calls-since-write counter to zero, which suppresses persist
+// nudges until governance.PersistNudgeAfter more tool calls elapse.
 func (ss *State) RecordContextWrite() {
 	ss.lastContextWrite = time.Now()
 	ss.callsSinceWrite = 0
 }
 
 // IncrementCallsSinceWrite bumps the counter used for persist nudges.
-// Called after every tool dispatch regardless of tool type.
+//
+// Called by the MCP server after every tool dispatch regardless of tool
+// type. When the counter reaches governance.PersistNudgeAfter,
+// CheckGovernance begins emitting persist nudge warnings.
 func (ss *State) IncrementCallsSinceWrite() {
 	ss.callsSinceWrite++
 }

@@ -19,8 +19,10 @@ import (
 	"github.com/ActiveMemory/ctx/internal/config/file"
 	cfgHook "github.com/ActiveMemory/ctx/internal/config/hook"
 	"github.com/ActiveMemory/ctx/internal/config/session"
+	"github.com/ActiveMemory/ctx/internal/config/token"
 	"github.com/ActiveMemory/ctx/internal/entity"
 	errParser "github.com/ActiveMemory/ctx/internal/err/parser"
+	"github.com/ActiveMemory/ctx/internal/log/warn"
 )
 
 // CopilotCLI parses GitHub Copilot CLI session files.
@@ -31,11 +33,17 @@ import (
 type CopilotCLI struct{}
 
 // NewCopilotCLI creates a new Copilot CLI session parser.
+//
+// Returns:
+//   - *CopilotCLI: a new parser instance
 func NewCopilotCLI() *CopilotCLI {
 	return &CopilotCLI{}
 }
 
 // Tool returns the tool identifier for this parser.
+//
+// Returns:
+//   - string: the Copilot CLI tool identifier
 func (p *CopilotCLI) Tool() string {
 	return session.ToolCopilotCLI
 }
@@ -43,7 +51,14 @@ func (p *CopilotCLI) Tool() string {
 // Matches returns true if the file appears to be a Copilot CLI session file.
 //
 // Checks if the file has a .jsonl extension and lives in a Copilot CLI
-// session directory (under ~/.copilot/ or $COPILOT_HOME).
+// session directory (under ~/.copilot/ or $COPILOT_HOME), and the first
+// line contains a valid Copilot CLI message with a role or type field.
+//
+// Parameters:
+//   - path: file path to check
+//
+// Returns:
+//   - bool: true if the file is a Copilot CLI session
 func (p *CopilotCLI) Matches(path string) bool {
 	if !strings.HasSuffix(path, file.ExtJSONL) {
 		return false
@@ -68,8 +83,8 @@ func (p *CopilotCLI) Matches(path string) bool {
 	defer func() { _ = f.Close() }()
 
 	scanner := bufio.NewScanner(f)
-	buf := make([]byte, 0, 64*1024)
-	scanner.Buffer(buf, 1024*1024)
+	buf := make([]byte, 0, copilotScanBufInit)
+	scanner.Buffer(buf, copilotScanBufMatchMax)
 
 	if !scanner.Scan() {
 		return false
@@ -86,17 +101,29 @@ func (p *CopilotCLI) Matches(path string) bool {
 
 // ParseFile reads a Copilot CLI JSONL session file and returns sessions.
 //
-// Each file represents one session. Messages are parsed line by line.
+// Each file represents one session. Messages are parsed line by line from
+// the JSONL file and assembled into a single Session entity.
+//
+// Parameters:
+//   - path: path to the JSONL session file
+//
+// Returns:
+//   - []*entity.Session: the parsed sessions (at most one for Copilot CLI)
+//   - error: any error encountered during parsing
 func (p *CopilotCLI) ParseFile(path string) ([]*entity.Session, error) {
 	f, err := os.Open(filepath.Clean(path))
 	if err != nil {
 		return nil, errParser.OpenFile(err)
 	}
-	defer func() { _ = f.Close() }()
+	defer func() {
+		if closeErr := f.Close(); closeErr != nil {
+			warn.Warn("copilot-cli: close %s: %v", path, closeErr)
+		}
+	}()
 
 	scanner := bufio.NewScanner(f)
-	buf := make([]byte, 0, 64*1024)
-	scanner.Buffer(buf, 4*1024*1024) // 4MB per line
+	buf := make([]byte, 0, copilotScanBufInit)
+	scanner.Buffer(buf, copilotScanBufMax)
 
 	var messages []copilotCLIRawMessage
 
@@ -129,13 +156,31 @@ func (p *CopilotCLI) ParseFile(path string) ([]*entity.Session, error) {
 	return []*entity.Session{result}, nil
 }
 
-// ParseLine is not used for Copilot CLI sessions since each file
-// represents a complete session. Returns nil.
+// ParseLine is not meaningful for Copilot CLI sessions since each file
+// represents a complete session. Returns nil for all lines.
+//
+// Parameters:
+//   - line: the raw line bytes (unused)
+//
+// Returns:
+//   - *entity.Message: always nil
+//   - string: always empty
+//   - error: always nil
 func (p *CopilotCLI) ParseLine(_ []byte) (*entity.Message, string, error) {
 	return nil, "", nil
 }
 
-// buildSession converts raw messages into a Session entity.
+// buildSession converts raw Copilot CLI messages into a Session entity.
+//
+// Iterates through all messages to extract metadata (CWD, model, timestamps)
+// and assemble a complete session with turn counts and preview text.
+//
+// Parameters:
+//   - msgs: raw messages parsed from the JSONL file
+//   - sourcePath: path to the JSONL source file
+//
+// Returns:
+//   - *entity.Session: the built session, or nil if msgs is empty
 func (p *CopilotCLI) buildSession(
 	msgs []copilotCLIRawMessage, sourcePath string,
 ) *entity.Session {
@@ -186,8 +231,8 @@ func (p *CopilotCLI) buildSession(
 			sess.TurnCount++
 			if sess.FirstUserMsg == "" && msg.Text != "" {
 				preview := msg.Text
-				if len(preview) > 100 {
-					preview = preview[:100] + "..."
+				if len(preview) > session.PreviewMaxLen {
+					preview = preview[:session.PreviewMaxLen] + token.Ellipsis
 				}
 				sess.FirstUserMsg = preview
 			}
@@ -204,7 +249,11 @@ func (p *CopilotCLI) buildSession(
 }
 
 // CopilotCLISessionDirs returns the directories where Copilot CLI sessions
-// may be stored. Respects $COPILOT_HOME env var.
+// may be stored. Checks ~/.copilot/sessions and ~/.copilot/history, and
+// on Windows also checks LOCALAPPDATA. Respects $COPILOT_HOME env var.
+//
+// Returns:
+//   - []string: paths to session directories found on the system
 func CopilotCLISessionDirs() []string {
 	var dirs []string
 
@@ -231,7 +280,7 @@ func CopilotCLISessionDirs() []string {
 		localAppData := os.Getenv("LOCALAPPDATA")
 		if localAppData != "" {
 			for _, sub := range candidates {
-				dir := filepath.Join(localAppData, "GitHub Copilot CLI", sub)
+				dir := filepath.Join(localAppData, copilotCLIAppName, sub)
 				if info, err := os.Stat(dir); err == nil && info.IsDir() {
 					dirs = append(dirs, dir)
 				}

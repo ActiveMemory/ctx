@@ -74,8 +74,8 @@ func (p *Copilot) Matches(path string) bool {
 	defer func() { _ = file.Close() }()
 
 	scanner := bufio.NewScanner(file)
-	buf := make([]byte, 0, 64*1024)
-	scanner.Buffer(buf, 1024*1024)
+	buf := make([]byte, 0, copilotScanBufInit)
+	scanner.Buffer(buf, copilotScanBufMatchMax)
 
 	if !scanner.Scan() {
 		return false
@@ -118,8 +118,8 @@ func (p *Copilot) ParseFile(path string) ([]*entity.Session, error) {
 	defer func() { _ = file.Close() }()
 
 	scanner := bufio.NewScanner(file)
-	buf := make([]byte, 0, 64*1024)
-	scanner.Buffer(buf, 4*1024*1024) // 4MB — Copilot lines can be very large
+	buf := make([]byte, 0, copilotScanBufInit)
+	scanner.Buffer(buf, copilotScanBufMax)
 
 	var session *copilotRawSession
 

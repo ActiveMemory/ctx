@@ -65,8 +65,8 @@ func (p *Copilot) buildSession(
 
 		if sess.FirstUserMsg == "" && userMsg.Text != "" {
 			preview := userMsg.Text
-			if len(preview) > 100 {
-				preview = preview[:100] + "..."
+			if len(preview) > session.PreviewMaxLen {
+				preview = preview[:session.PreviewMaxLen] + token.Ellipsis
 			}
 			sess.FirstUserMsg = preview
 		}
@@ -189,7 +189,7 @@ func (p *Copilot) parseToolInvocation(item copilotRawRespItem) *entity.ToolUse {
 
 	// Extract the tool name from toolId (e.g., "copilot_readFile" -> "readFile")
 	name := toolID
-	if idx := strings.LastIndex(toolID, "_"); idx >= 0 {
+	if idx := strings.LastIndex(toolID, copilotToolIDSeparator); idx >= 0 {
 		name = toolID[idx+1:]
 	}
 
