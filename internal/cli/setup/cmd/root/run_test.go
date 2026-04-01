@@ -108,8 +108,8 @@ func TestEnsureVSCodeMCPJSON_SkipsExisting(t *testing.T) {
 	}
 
 	output := buf.String()
-	if !bytes.Contains([]byte(output), []byte("exists")) {
-		t.Errorf("expected 'exists' in output, got %q", output)
+	if !bytes.Contains([]byte(output), []byte("skipped")) {
+		t.Errorf("expected 'skipped' in output, got %q", output)
 	}
 }
 

@@ -91,6 +91,20 @@ const (
 	EnvCopilotHome = "COPILOT_HOME"
 	// FileMCPConfigJSON is the MCP server configuration file name.
 	FileMCPConfigJSON = "mcp-config.json"
+	// KeyMCPServers is the top-level JSON key in mcp-config.json.
+	KeyMCPServers = "mcpServers"
+	// MCPServerType is the server type value for local MCP servers.
+	MCPServerType = "local"
+	// KeyType is the JSON key for MCP server type.
+	KeyType = "type"
+	// KeyCommand is the JSON key for MCP server command.
+	KeyCommand = "command"
+	// KeyArgs is the JSON key for MCP server args.
+	KeyArgs = "args"
+	// KeyTools is the JSON key for MCP server tools filter.
+	KeyTools = "tools"
+	// ToolsWildcard is the wildcard value for MCP tools access.
+	ToolsWildcard = "*"
 )
 
 // Prefixes

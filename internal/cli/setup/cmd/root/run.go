@@ -21,14 +21,16 @@ import (
 	"github.com/ActiveMemory/ctx/internal/config/fs"
 	cfgHook "github.com/ActiveMemory/ctx/internal/config/hook"
 	"github.com/ActiveMemory/ctx/internal/config/marker"
+	mcpServer "github.com/ActiveMemory/ctx/internal/config/mcp/server"
 	"github.com/ActiveMemory/ctx/internal/config/token"
+	cfgVscode "github.com/ActiveMemory/ctx/internal/config/vscode"
 	"github.com/ActiveMemory/ctx/internal/err/config"
 	errFs "github.com/ActiveMemory/ctx/internal/err/fs"
 	writeErr "github.com/ActiveMemory/ctx/internal/write/err"
 	writeSetup "github.com/ActiveMemory/ctx/internal/write/setup"
 )
 
-// Run executes the hook command logic.
+// Run executes the setup command logic.
 //
 // Outputs integration instructions and configuration snippets for the
 // specified AI tool. With --write, generates the configuration file
@@ -163,7 +165,7 @@ func WriteCopilotInstructions(cmd *cobra.Command) error {
 
 	// Also create .vscode/mcp.json if it doesn't exist
 	if err := ensureVSCodeMCPJSON(cmd); err != nil {
-		cmd.Println("  ⚠ .vscode/mcp.json: " + err.Error())
+		writeErr.WarnFile(cmd, cfgVscode.FileMCPJSON, err)
 	}
 
 	return nil
@@ -248,6 +250,12 @@ func WriteCopilotCLIHooks(cmd *cobra.Command) error {
 
 // writeCopilotCLIAgent creates .github/agents/ctx.md for Copilot CLI
 // custom agent delegation. Skips if the file already exists.
+//
+// Parameters:
+//   - cmd: Cobra command for output messages
+//
+// Returns:
+//   - error: Non-nil if directory creation or file write fails
 func writeCopilotCLIAgent(cmd *cobra.Command) error {
 	agentsDir := filepath.Join(cfgHook.DirGitHub, cfgHook.DirGitHubAgents)
 	target := filepath.Join(agentsDir, cfgHook.FileAgentsCtxMd)
@@ -275,6 +283,12 @@ func writeCopilotCLIAgent(cmd *cobra.Command) error {
 // writeCopilotCLIInstructions creates
 // .github/instructions/context.instructions.md for path-specific
 // context file instructions. Skips if the file already exists.
+//
+// Parameters:
+//   - cmd: Cobra command for output messages
+//
+// Returns:
+//   - error: Non-nil if directory creation or file write fails
 func writeCopilotCLIInstructions(cmd *cobra.Command) error {
 	instrDir := filepath.Join(cfgHook.DirGitHub, cfgHook.DirGitHubInstructions)
 	target := filepath.Join(instrDir, cfgHook.FileInstructionsCtxMd)
@@ -301,6 +315,12 @@ func writeCopilotCLIInstructions(cmd *cobra.Command) error {
 
 // writeCopilotCLISkills creates .github/skills/<name>/SKILL.md for each
 // embedded Copilot CLI skill template. Skips skills that already exist.
+//
+// Parameters:
+//   - cmd: Cobra command for output messages
+//
+// Returns:
+//   - error: Non-nil if skill reading or file write fails
 func writeCopilotCLISkills(cmd *cobra.Command) error {
 	skills, readErr := agent.CopilotCLISkills()
 	if readErr != nil {
@@ -379,48 +399,62 @@ func WriteAgentsMd(cmd *cobra.Command) error {
 }
 
 // ensureVSCodeMCPJSON creates .vscode/mcp.json to register the ctx MCP
-// server for VS Code Copilot. Skips if the file already exists.
+// server for VS Code Copilot.
+//
+// Skips if the file already exists to preserve user customizations.
+//
+// Parameters:
+//   - cmd: Cobra command for output messages
+//
+// Returns:
+//   - error: Non-nil if directory creation or file write fails
 func ensureVSCodeMCPJSON(cmd *cobra.Command) error {
-	vsDir := ".vscode"
-	target := filepath.Join(vsDir, "mcp.json")
+	target := filepath.Join(cfgVscode.Dir, cfgVscode.FileMCPJSON)
 
-	if _, err := os.Stat(target); err == nil {
-		cmd.Println("  ○ " + target + " (exists, skipped)")
+	if _, statErr := os.Stat(target); statErr == nil {
+		writeSetup.InfoCopilotCLISkipped(cmd, target)
 		return nil
 	}
 
-	if err := os.MkdirAll(vsDir, fs.PermExec); err != nil {
-		return err
+	if mkdirErr := os.MkdirAll(cfgVscode.Dir, fs.PermExec); mkdirErr != nil {
+		return mkdirErr
 	}
 
 	mcpCfg := map[string]interface{}{
-		"servers": map[string]interface{}{
-			"ctx": map[string]interface{}{
-				"command": "ctx",
-				"args":    []string{"mcp", "serve"},
+		cfgVscode.KeyServers: map[string]interface{}{
+			mcpServer.Name: map[string]interface{}{
+				cfgVscode.KeyCommand: mcpServer.Command,
+				cfgVscode.KeyArgs:    mcpServer.Args(),
 			},
 		},
 	}
 	data, _ := json.MarshalIndent(mcpCfg, "", "  ")
-	data = append(data, '\n')
+	data = append(data, token.NewlineLF...)
 
-	if err := os.WriteFile(target, data, fs.PermFile); err != nil {
-		return err
+	if writeFileErr := os.WriteFile(target, data, fs.PermFile); writeFileErr != nil {
+		return writeFileErr
 	}
-	cmd.Println("  ✓ " + target)
+	writeSetup.InfoCopilotCLICreated(cmd, target)
 	return nil
 }
 
 // ensureCopilotCLIMCPConfig registers the ctx MCP server in
 // ~/.copilot/mcp-config.json (or $COPILOT_HOME/mcp-config.json).
+//
 // Merge-safe: reads existing config, adds ctx server, writes back.
 // Skips if ctx server is already registered.
+//
+// Parameters:
+//   - cmd: Cobra command for output messages
+//
+// Returns:
+//   - error: Non-nil if file read/write fails
 func ensureCopilotCLIMCPConfig(cmd *cobra.Command) error {
 	copilotHome := os.Getenv(cfgHook.EnvCopilotHome)
 	if copilotHome == "" {
-		home, err := os.UserHomeDir()
-		if err != nil {
-			return err
+		home, homeErr := os.UserHomeDir()
+		if homeErr != nil {
+			return homeErr
 		}
 		copilotHome = filepath.Join(home, cfgHook.DirCopilotHome)
 	}
@@ -429,47 +463,47 @@ func ensureCopilotCLIMCPConfig(cmd *cobra.Command) error {
 
 	// Read existing config if it exists
 	existing := make(map[string]interface{})
-	if data, err := os.ReadFile(filepath.Clean(target)); err == nil {
+	if data, readErr := os.ReadFile(filepath.Clean(target)); readErr == nil {
 		if jErr := json.Unmarshal(data, &existing); jErr != nil {
 			return jErr
 		}
 	}
 
 	// Get or create mcpServers map
-	servers, _ := existing["mcpServers"].(map[string]interface{})
+	servers, _ := existing[cfgHook.KeyMCPServers].(map[string]interface{})
 	if servers == nil {
 		servers = make(map[string]interface{})
 	}
 
 	// Check if ctx is already registered
-	if _, ok := servers["ctx"]; ok {
-		cmd.Println("  ○ " + target + " (ctx server exists, skipped)")
+	if _, ok := servers[mcpServer.Name]; ok {
+		writeSetup.InfoCopilotCLISkipped(cmd, target)
 		return nil
 	}
 
 	// Add ctx MCP server
-	servers["ctx"] = map[string]interface{}{
-		"type":    "local",
-		"command": "ctx",
-		"args":    []string{"mcp", "serve"},
-		"tools":   []string{"*"},
+	servers[mcpServer.Name] = map[string]interface{}{
+		cfgHook.KeyType:    cfgHook.MCPServerType,
+		cfgHook.KeyCommand: mcpServer.Command,
+		cfgHook.KeyArgs:    mcpServer.Args(),
+		cfgHook.KeyTools:   []string{cfgHook.ToolsWildcard},
 	}
-	existing["mcpServers"] = servers
+	existing[cfgHook.KeyMCPServers] = servers
 
 	// Create directory if needed
-	if err := os.MkdirAll(copilotHome, fs.PermExec); err != nil {
-		return err
+	if mkdirErr := os.MkdirAll(copilotHome, fs.PermExec); mkdirErr != nil {
+		return mkdirErr
 	}
 
-	data, err := json.MarshalIndent(existing, "", "  ")
-	if err != nil {
-		return err
+	data, marshalErr := json.MarshalIndent(existing, "", "  ")
+	if marshalErr != nil {
+		return marshalErr
 	}
-	data = append(data, '\n')
+	data = append(data, token.NewlineLF...)
 
-	if wErr := os.WriteFile(target, data, fs.PermFile); wErr != nil {
-		return wErr
+	if writeFileErr := os.WriteFile(target, data, fs.PermFile); writeFileErr != nil {
+		return writeFileErr
 	}
-	cmd.Println("  ✓ " + target)
+	writeSetup.InfoCopilotCLICreated(cmd, target)
 	return nil
 }

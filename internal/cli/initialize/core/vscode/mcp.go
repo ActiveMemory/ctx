@@ -14,6 +14,7 @@ import (
 	"github.com/spf13/cobra"
 
 	"github.com/ActiveMemory/ctx/internal/config/fs"
+	mcpServer "github.com/ActiveMemory/ctx/internal/config/mcp/server"
 	"github.com/ActiveMemory/ctx/internal/config/token"
 	cfgVscode "github.com/ActiveMemory/ctx/internal/config/vscode"
 	writeVscode "github.com/ActiveMemory/ctx/internal/write/vscode"
@@ -39,9 +40,9 @@ func createMCPJSON(cmd *cobra.Command) error {
 
 	file := vsMCPFile{
 		Servers: map[string]vsMCPServer{
-			"ctx": {
-				Command: "ctx",
-				Args:    []string{"mcp", "serve"},
+			mcpServer.Name: {
+				Command: mcpServer.Command,
+				Args:    mcpServer.Args(),
 			},
 		},
 	}
