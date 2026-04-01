@@ -9,6 +9,8 @@ package parser
 import (
 	"encoding/json"
 	"strconv"
+
+	cfgCopilot "github.com/ActiveMemory/ctx/internal/config/copilot"
 )
 
 // applyScalarPatch applies a kind=1 scalar patch to the session.
@@ -27,7 +29,7 @@ func (p *Copilot) applyScalarPatch(
 	}
 
 	// Handle requests.<N>.result patches — these contain token counts
-	if path[0] == copilotKeyRequests && len(path) == 3 && path[2] == copilotKeyResult {
+	if path[0] == cfgCopilot.KeyRequests && len(path) == 3 && path[2] == cfgCopilot.KeyResult {
 		idx, err := strconv.Atoi(path[1])
 		if err != nil || idx < 0 || idx >= len(session.Requests) {
 			return
@@ -54,14 +56,14 @@ func (p *Copilot) applyPatch(
 	}
 
 	switch {
-	case len(path) == 1 && path[0] == copilotKeyRequests:
+	case len(path) == 1 && path[0] == cfgCopilot.KeyRequests:
 		// New request(s) appended
 		var requests []copilotRawRequest
 		if err := json.Unmarshal(value, &requests); err == nil {
 			session.Requests = append(session.Requests, requests...)
 		}
 
-	case len(path) == 3 && path[0] == copilotKeyRequests && path[2] == copilotKeyResponse:
+	case len(path) == 3 && path[0] == cfgCopilot.KeyRequests && path[2] == cfgCopilot.KeyResponse:
 		// Response update for a specific request
 		idx, err := strconv.Atoi(path[1])
 		if err != nil || idx < 0 || idx >= len(session.Requests) {

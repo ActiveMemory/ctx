@@ -14,6 +14,7 @@ import (
 	"runtime"
 	"strings"
 
+	cfgCopilot "github.com/ActiveMemory/ctx/internal/config/copilot"
 	"github.com/ActiveMemory/ctx/internal/config/env"
 	"github.com/ActiveMemory/ctx/internal/config/file"
 	"github.com/ActiveMemory/ctx/internal/config/session"
@@ -63,7 +64,7 @@ func (p *Copilot) Matches(path string) bool {
 	}
 
 	// Copilot sessions live in chatSessions/ directories
-	if !strings.Contains(filepath.Dir(path), copilotDirChatSessions) {
+	if !strings.Contains(filepath.Dir(path), cfgCopilot.DirChatSessions) {
 		return false
 	}
 
@@ -74,8 +75,8 @@ func (p *Copilot) Matches(path string) bool {
 	defer func() { _ = file.Close() }()
 
 	scanner := bufio.NewScanner(file)
-	buf := make([]byte, 0, copilotScanBufInit)
-	scanner.Buffer(buf, copilotScanBufMatchMax)
+	buf := make([]byte, 0, cfgCopilot.ScanBufInit)
+	scanner.Buffer(buf, cfgCopilot.ScanBufMatchMax)
 
 	if !scanner.Scan() {
 		return false
@@ -118,8 +119,8 @@ func (p *Copilot) ParseFile(path string) ([]*entity.Session, error) {
 	defer func() { _ = file.Close() }()
 
 	scanner := bufio.NewScanner(file)
-	buf := make([]byte, 0, copilotScanBufInit)
-	scanner.Buffer(buf, copilotScanBufMax)
+	buf := make([]byte, 0, cfgCopilot.ScanBufInit)
+	scanner.Buffer(buf, cfgCopilot.ScanBufMax)
 
 	var session *copilotRawSession
 
@@ -198,7 +199,7 @@ func (p *Copilot) ParseLine(_ []byte) (*entity.Message, string, error) {
 func CopilotSessionDirs() []string {
 	var dirs []string
 
-	appData := os.Getenv(copilotEnvAppData)
+	appData := os.Getenv(cfgCopilot.EnvAppData)
 	if runtime.GOOS != env.OSWindows {
 		// On macOS/Linux, VS Code stores data in different locations
 		home, err := os.UserHomeDir()
@@ -206,10 +207,10 @@ func CopilotSessionDirs() []string {
 			return nil
 		}
 		switch runtime.GOOS {
-		case copilotOSDarwin:
-			appData = filepath.Join(home, copilotDirLibrary, copilotDirAppSupport)
+		case cfgCopilot.OSDarwin:
+			appData = filepath.Join(home, cfgCopilot.DirLibrary, cfgCopilot.DirAppSupport)
 		default: // Linux
-			appData = filepath.Join(home, copilotDirDotConfig)
+			appData = filepath.Join(home, cfgCopilot.DirDotConfig)
 		}
 	}
 
@@ -218,9 +219,9 @@ func CopilotSessionDirs() []string {
 	}
 
 	// Check both Code stable and Code Insiders
-	variants := []string{copilotAppCode, copilotAppCodeInsiders}
+	variants := []string{cfgCopilot.AppCode, cfgCopilot.AppCodeInsiders}
 	for _, variant := range variants {
-		wsDir := filepath.Join(appData, variant, copilotDirUser, copilotDirWorkspace)
+		wsDir := filepath.Join(appData, variant, cfgCopilot.DirUser, cfgCopilot.DirWorkspace)
 		if info, err := os.Stat(wsDir); err == nil && info.IsDir() {
 			// Scan each workspace for chatSessions/ subdirectory
 			entries, err := os.ReadDir(wsDir)
@@ -231,7 +232,7 @@ func CopilotSessionDirs() []string {
 				if !entry.IsDir() {
 					continue
 				}
-				chatDir := filepath.Join(wsDir, entry.Name(), copilotDirChatSessions)
+				chatDir := filepath.Join(wsDir, entry.Name(), cfgCopilot.DirChatSessions)
 				if info, err := os.Stat(chatDir); err == nil && info.IsDir() {
 					dirs = append(dirs, chatDir)
 				}
