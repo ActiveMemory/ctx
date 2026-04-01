@@ -13,7 +13,7 @@ import (
 	"strings"
 	"testing"
 
-	setupRoot "github.com/ActiveMemory/ctx/internal/cli/setup/cmd/root"
+	coreCopilot "github.com/ActiveMemory/ctx/internal/cli/setup/core/copilot"
 	"github.com/spf13/cobra"
 )
 
@@ -66,11 +66,11 @@ func setupCmdOutput(cmd *cobra.Command) string {
 	return cmd.OutOrStdout().(*bytes.Buffer).String()
 }
 
-// TestWriteCopilotInstructions_NewFile creates the file from scratch.
-func TestWriteCopilotInstructions_NewFile(t *testing.T) {
+// TestDeployInstructions_NewFile creates the file from scratch.
+func TestDeployInstructions_NewFile(t *testing.T) {
 	tmpDir := t.TempDir()
 
-	// setupRoot.WriteCopilotInstructions uses relative paths, so chdir.
+	// coreCopilot.DeployInstructions uses relative paths, so chdir.
 	origDir, wdErr := os.Getwd()
 	if wdErr != nil {
 		t.Fatal(wdErr)
@@ -83,8 +83,8 @@ func TestWriteCopilotInstructions_NewFile(t *testing.T) {
 	})
 
 	cmd := newHookTestCmd()
-	if runErr := setupRoot.WriteCopilotInstructions(cmd); runErr != nil {
-		t.Fatalf("setupRoot.WriteCopilotInstructions failed: %v", runErr)
+	if runErr := coreCopilot.DeployInstructions(cmd); runErr != nil {
+		t.Fatalf("coreCopilot.DeployInstructions failed: %v", runErr)
 	}
 
 	targetFile := filepath.Join(tmpDir, ".github", "copilot-instructions.md")
@@ -102,8 +102,8 @@ func TestWriteCopilotInstructions_NewFile(t *testing.T) {
 	}
 }
 
-// TestWriteCopilotInstructions_ExistingWithMarker skips when marker exists.
-func TestWriteCopilotInstructions_ExistingWithMarker(t *testing.T) {
+// TestDeployInstructions_ExistingWithMarker skips when marker exists.
+func TestDeployInstructions_ExistingWithMarker(t *testing.T) {
 	tmpDir := t.TempDir()
 
 	origDir, wdErr := os.Getwd()
@@ -131,8 +131,8 @@ func TestWriteCopilotInstructions_ExistingWithMarker(t *testing.T) {
 	}
 
 	cmd := newHookTestCmd()
-	if runErr := setupRoot.WriteCopilotInstructions(cmd); runErr != nil {
-		t.Fatalf("setupRoot.WriteCopilotInstructions failed: %v", runErr)
+	if runErr := coreCopilot.DeployInstructions(cmd); runErr != nil {
+		t.Fatalf("coreCopilot.DeployInstructions failed: %v", runErr)
 	}
 
 	// File should be unchanged (skipped).
@@ -150,8 +150,8 @@ func TestWriteCopilotInstructions_ExistingWithMarker(t *testing.T) {
 	}
 }
 
-// TestWriteCopilotInstructions_ExistingWithoutMarker merges content.
-func TestWriteCopilotInstructions_ExistingWithoutMarker(t *testing.T) {
+// TestDeployInstructions_ExistingWithoutMarker merges content.
+func TestDeployInstructions_ExistingWithoutMarker(t *testing.T) {
 	tmpDir := t.TempDir()
 
 	origDir, wdErr := os.Getwd()
@@ -179,8 +179,8 @@ func TestWriteCopilotInstructions_ExistingWithoutMarker(t *testing.T) {
 	}
 
 	cmd := newHookTestCmd()
-	if runErr := setupRoot.WriteCopilotInstructions(cmd); runErr != nil {
-		t.Fatalf("setupRoot.WriteCopilotInstructions failed: %v", runErr)
+	if runErr := coreCopilot.DeployInstructions(cmd); runErr != nil {
+		t.Fatalf("coreCopilot.DeployInstructions failed: %v", runErr)
 	}
 
 	data, readErr := os.ReadFile(targetFile)

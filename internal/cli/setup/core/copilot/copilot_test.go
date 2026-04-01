@@ -4,7 +4,7 @@
 //   \    Copyright 2026-present Context contributors.
 //                 SPDX-License-Identifier: Apache-2.0
 
-package root
+package copilot
 
 import (
 	"bytes"
@@ -23,7 +23,7 @@ func testCmd(buf *bytes.Buffer) *cobra.Command {
 	return cmd
 }
 
-func TestEnsureVSCodeMCPJSON_CreatesFile(t *testing.T) {
+func TestEnsureVSCodeMCP_CreatesFile(t *testing.T) {
 	tmp := t.TempDir()
 
 	origDir, _ := os.Getwd()
@@ -35,8 +35,8 @@ func TestEnsureVSCodeMCPJSON_CreatesFile(t *testing.T) {
 	var buf bytes.Buffer
 	cmd := testCmd(&buf)
 
-	if err := ensureVSCodeMCPJSON(cmd); err != nil {
-		t.Fatalf("ensureVSCodeMCPJSON() error = %v", err)
+	if err := ensureVSCodeMCP(cmd); err != nil {
+		t.Fatalf("ensureVSCodeMCP() error = %v", err)
 	}
 
 	target := filepath.Join(".vscode", "mcp.json")
@@ -70,12 +70,12 @@ func TestEnsureVSCodeMCPJSON_CreatesFile(t *testing.T) {
 	}
 
 	output := buf.String()
-	if !bytes.Contains([]byte(output), []byte("✓")) {
+	if !bytes.Contains([]byte(output), []byte("\u2713")) {
 		t.Errorf("expected success marker in output, got %q", output)
 	}
 }
 
-func TestEnsureVSCodeMCPJSON_SkipsExisting(t *testing.T) {
+func TestEnsureVSCodeMCP_SkipsExisting(t *testing.T) {
 	tmp := t.TempDir()
 
 	origDir, _ := os.Getwd()
@@ -97,14 +97,14 @@ func TestEnsureVSCodeMCPJSON_SkipsExisting(t *testing.T) {
 	var buf bytes.Buffer
 	cmd := testCmd(&buf)
 
-	if err := ensureVSCodeMCPJSON(cmd); err != nil {
-		t.Fatalf("ensureVSCodeMCPJSON() error = %v", err)
+	if err := ensureVSCodeMCP(cmd); err != nil {
+		t.Fatalf("ensureVSCodeMCP() error = %v", err)
 	}
 
 	// File should not be overwritten
 	data, _ := os.ReadFile(target)
 	if string(data) != string(existing) {
-		t.Error("ensureVSCodeMCPJSON overwrote existing file")
+		t.Error("ensureVSCodeMCP overwrote existing file")
 	}
 
 	output := buf.String()
@@ -113,7 +113,7 @@ func TestEnsureVSCodeMCPJSON_SkipsExisting(t *testing.T) {
 	}
 }
 
-func TestEnsureVSCodeMCPJSON_CreatesVSCodeDir(t *testing.T) {
+func TestEnsureVSCodeMCP_CreatesVSCodeDir(t *testing.T) {
 	tmp := t.TempDir()
 
 	origDir, _ := os.Getwd()
@@ -131,8 +131,8 @@ func TestEnsureVSCodeMCPJSON_CreatesVSCodeDir(t *testing.T) {
 	var buf bytes.Buffer
 	cmd := testCmd(&buf)
 
-	if err := ensureVSCodeMCPJSON(cmd); err != nil {
-		t.Fatalf("ensureVSCodeMCPJSON() error = %v", err)
+	if err := ensureVSCodeMCP(cmd); err != nil {
+		t.Fatalf("ensureVSCodeMCP() error = %v", err)
 	}
 
 	// .vscode/ should now exist
