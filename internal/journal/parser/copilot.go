@@ -9,46 +9,20 @@ package parser
 import (
 	"bufio"
 	"encoding/json"
-	"net/url"
 	"os"
 	"path/filepath"
 	"runtime"
-	"strconv"
 	"strings"
-	"time"
 
-	"github.com/ActiveMemory/ctx/internal/config/claude"
 	"github.com/ActiveMemory/ctx/internal/config/env"
 	"github.com/ActiveMemory/ctx/internal/config/file"
 	"github.com/ActiveMemory/ctx/internal/config/session"
-	"github.com/ActiveMemory/ctx/internal/config/token"
 	"github.com/ActiveMemory/ctx/internal/entity"
 	errParser "github.com/ActiveMemory/ctx/internal/err/parser"
 )
 
-// Copilot JSONL line Kind values.
-const (
-	// copilotKindSnapshot is a full session snapshot (kind=0).
-	copilotKindSnapshot = 0
-	// copilotKindScalarPatch is a scalar field replacement (kind=1).
-	copilotKindScalarPatch = 1
-	// copilotKindObjectPatch is an array/object replacement (kind=2).
-	copilotKindObjectPatch = 2
-)
-
-// Copilot JSON key paths and response item kinds.
-const (
-	copilotKeyRequests = "requests"
-	copilotKeyResult   = "result"
-	copilotKeyResponse = "response"
-
-	copilotRespKindThinking   = "thinking"
-	copilotRespKindToolInvoke = "toolInvocationSerialized"
-
-	copilotDirChatSessions = "chatSessions"
-	copilotFileWorkspace   = "workspace.json"
-	copilotResponseSuffix  = "-response"
-)
+// Ensure Copilot implements Session.
+var _ Session = (*Copilot)(nil)
 
 // Copilot parses VS Code Copilot Chat JSONL session files.
 //
@@ -58,11 +32,17 @@ const (
 type Copilot struct{}
 
 // NewCopilot creates a new Copilot Chat session parser.
+//
+// Returns:
+//   - *Copilot: a new parser instance
 func NewCopilot() *Copilot {
 	return &Copilot{}
 }
 
 // Tool returns the tool identifier for this parser.
+//
+// Returns:
+//   - string: the Copilot tool identifier
 func (p *Copilot) Tool() string {
 	return session.ToolCopilot
 }
@@ -71,6 +51,12 @@ func (p *Copilot) Tool() string {
 //
 // Checks if the file has a .jsonl extension and lives in a chatSessions
 // directory, and the first line contains a Copilot session snapshot.
+//
+// Parameters:
+//   - path: file path to check
+//
+// Returns:
+//   - bool: true if the file is a Copilot Chat session
 func (p *Copilot) Matches(path string) bool {
 	if !strings.HasSuffix(path, file.ExtJSONL) {
 		return false
@@ -117,6 +103,13 @@ func (p *Copilot) Matches(path string) bool {
 //
 // Reconstructs the session by reading the initial snapshot (kind=0) and
 // applying incremental patches (kind=1 for scalar, kind=2 for array/object).
+//
+// Parameters:
+//   - path: path to the JSONL session file
+//
+// Returns:
+//   - []*entity.Session: the parsed sessions (at most one for Copilot)
+//   - error: any error encountered during parsing
 func (p *Copilot) ParseFile(path string) ([]*entity.Session, error) {
 	file, openErr := os.Open(filepath.Clean(path))
 	if openErr != nil {
@@ -185,322 +178,27 @@ func (p *Copilot) ParseFile(path string) ([]*entity.Session, error) {
 
 // ParseLine is not meaningful for Copilot sessions since they use patches.
 // Returns nil for all lines.
+//
+// Parameters:
+//   - line: the raw line bytes (unused)
+//
+// Returns:
+//   - *entity.Message: always nil
+//   - string: always empty
+//   - error: always nil
 func (p *Copilot) ParseLine(_ []byte) (*entity.Message, string, error) {
 	return nil, "", nil
 }
 
-// applyScalarPatch applies a kind=1 scalar patch to the session.
-// These update individual properties like result, modelState, followups.
-func (p *Copilot) applyScalarPatch(
-	session *copilotRawSession, keys []json.RawMessage, value json.RawMessage,
-) {
-	path := p.parseKeyPath(keys)
-	if len(path) < 2 {
-		return
-	}
-
-	// Handle requests.<N>.result patches — these contain token counts
-	if path[0] == copilotKeyRequests && len(path) == 3 && path[2] == copilotKeyResult {
-		idx, err := strconv.Atoi(path[1])
-		if err != nil || idx < 0 || idx >= len(session.Requests) {
-			return
-		}
-		var result copilotRawResult
-		if err := json.Unmarshal(value, &result); err == nil {
-			session.Requests[idx].Result = &result
-		}
-	}
-}
-
-// applyPatch applies a kind=2 array/object patch to the session.
-func (p *Copilot) applyPatch(
-	session *copilotRawSession, keys []json.RawMessage, value json.RawMessage,
-) {
-	path := p.parseKeyPath(keys)
-	if len(path) == 0 {
-		return
-	}
-
-	switch {
-	case len(path) == 1 && path[0] == copilotKeyRequests:
-		// New request(s) appended
-		var requests []copilotRawRequest
-		if err := json.Unmarshal(value, &requests); err == nil {
-			session.Requests = append(session.Requests, requests...)
-		}
-
-	case len(path) == 3 && path[0] == copilotKeyRequests && path[2] == copilotKeyResponse:
-		// Response update for a specific request
-		idx, err := strconv.Atoi(path[1])
-		if err != nil || idx < 0 || idx >= len(session.Requests) {
-			return
-		}
-		var items []copilotRawRespItem
-		if err := json.Unmarshal(value, &items); err == nil {
-			session.Requests[idx].Response = items
-		}
-	}
-}
-
-// parseKeyPath converts the K array from JSONL into string path segments.
-func (p *Copilot) parseKeyPath(keys []json.RawMessage) []string {
-	path := make([]string, 0, len(keys))
-	for _, k := range keys {
-		var s string
-		if err := json.Unmarshal(k, &s); err == nil {
-			path = append(path, s)
-			continue
-		}
-		var n int
-		if err := json.Unmarshal(k, &n); err == nil {
-			path = append(path, strconv.Itoa(n))
-			continue
-		}
-	}
-	return path
-}
-
-// buildSession converts a reconstructed copilotRawSession into a Session.
-func (p *Copilot) buildSession(
-	raw *copilotRawSession, sourcePath string, cwd string,
-) *entity.Session {
-	if len(raw.Requests) == 0 {
-		return nil
-	}
-
-	session := &entity.Session{
-		ID:         raw.SessionID,
-		Tool:       session.ToolCopilot,
-		SourceFile: sourcePath,
-		CWD:        cwd,
-		Project:    filepath.Base(cwd),
-		StartTime:  time.UnixMilli(raw.CreationDate),
-	}
-
-	if raw.CustomTitle != "" {
-		session.Slug = raw.CustomTitle
-	}
-
-	for _, req := range raw.Requests {
-		// User message
-		userMsg := entity.Message{
-			ID:        req.RequestID,
-			Timestamp: time.UnixMilli(req.Timestamp),
-			Role:      claude.RoleUser,
-			Text:      req.Message.Text,
-		}
-
-		if req.Result != nil {
-			userMsg.TokensIn = req.Result.Metadata.PromptTokens
-		}
-
-		session.Messages = append(session.Messages, userMsg)
-		session.TurnCount++
-
-		if session.FirstUserMsg == "" && userMsg.Text != "" {
-			preview := userMsg.Text
-			if len(preview) > 100 {
-				preview = preview[:100] + "..."
-			}
-			session.FirstUserMsg = preview
-		}
-
-		// Assistant response
-		assistantMsg := p.buildAssistantMessage(req)
-		if assistantMsg != nil {
-			session.Messages = append(session.Messages, *assistantMsg)
-
-			if session.Model == "" && req.ModelID != "" {
-				session.Model = req.ModelID
-			}
-		}
-
-		// Accumulate tokens
-		if req.Result != nil {
-			session.TotalTokensIn += req.Result.Metadata.PromptTokens
-			session.TotalTokensOut += req.Result.Metadata.OutputTokens
-		}
-	}
-
-	session.TotalTokens = session.TotalTokensIn + session.TotalTokensOut
-
-	// Set end time from last request
-	if last := raw.Requests[len(raw.Requests)-1]; last.Result != nil {
-		session.EndTime = time.UnixMilli(last.Timestamp).Add(
-			time.Duration(last.Result.Timings.TotalElapsed) * time.Millisecond,
-		)
-	} else {
-		session.EndTime = time.UnixMilli(
-			raw.Requests[len(raw.Requests)-1].Timestamp,
-		)
-	}
-	session.Duration = session.EndTime.Sub(session.StartTime)
-
-	return session
-}
-
-// buildAssistantMessage extracts the assistant response from a request.
-func (p *Copilot) buildAssistantMessage(
-	req copilotRawRequest,
-) *entity.Message {
-	if len(req.Response) == 0 {
-		return nil
-	}
-
-	msg := &entity.Message{
-		ID:        req.RequestID + copilotResponseSuffix,
-		Timestamp: time.UnixMilli(req.Timestamp),
-		Role:      claude.RoleAssistant,
-	}
-
-	if req.Result != nil {
-		msg.TokensOut = req.Result.Metadata.OutputTokens
-	}
-
-	for _, item := range req.Response {
-		switch item.Kind {
-		case copilotRespKindThinking:
-			var text string
-			if err := json.Unmarshal(item.Value, &text); err == nil {
-				if msg.Thinking != "" {
-					msg.Thinking += token.NewlineLF
-				}
-				msg.Thinking += text
-			}
-
-		case copilotRespKindToolInvoke:
-			tu := p.parseToolInvocation(item)
-			if tu != nil {
-				msg.ToolUses = append(msg.ToolUses, *tu)
-			}
-
-		case "":
-			// Plain markdown text (no kind field)
-			var text string
-			if err := json.Unmarshal(item.Value, &text); err == nil {
-				text = strings.TrimSpace(text)
-				if text != "" {
-					if msg.Text != "" {
-						msg.Text += token.NewlineLF
-					}
-					msg.Text += text
-				}
-			}
-
-			// Skip: codeblockUri, inlineReference, progressTaskSerialized,
-			//        textEditGroup, undoStop, mcpServersStarting
-		}
-	}
-
-	// Check for tool errors
-	for _, tr := range msg.ToolResults {
-		if tr.IsError {
-			return msg // HasErrors is set at session level
-		}
-	}
-
-	return msg
-}
-
-// parseToolInvocation extracts a ToolUse from a toolInvocationSerialized item.
-func (p *Copilot) parseToolInvocation(item copilotRawRespItem) *entity.ToolUse {
-	toolID := item.ToolID
-	if toolID == "" {
-		return nil
-	}
-
-	// Extract the tool name from toolId (e.g., "copilot_readFile" -> "readFile")
-	name := toolID
-	if idx := strings.LastIndex(toolID, "_"); idx >= 0 {
-		name = toolID[idx+1:]
-	}
-
-	// Use invocationMessage as the input description
-	inputStr := ""
-	if item.InvocationMessage != nil {
-		// InvocationMessage can be a string or object with value field
-		var simple string
-		if err := json.Unmarshal(item.InvocationMessage, &simple); err == nil {
-			inputStr = simple
-		} else {
-			var obj struct {
-				Value string `json:"value"`
-			}
-			if err := json.Unmarshal(item.InvocationMessage, &obj); err == nil {
-				inputStr = obj.Value
-			}
-		}
-	}
-
-	return &entity.ToolUse{
-		ID:    item.ToolCallID,
-		Name:  name,
-		Input: inputStr,
-	}
-}
-
-// resolveWorkspaceCWD reads workspace.json from the workspaceStorage
-// directory to determine the workspace folder path.
-func (p *Copilot) resolveWorkspaceCWD(sessionPath string) string {
-	// sessionPath is like: .../workspaceStorage/<hash>/chatSessions/<id>.jsonl
-	// workspace.json is at: .../workspaceStorage/<hash>/workspace.json
-	chatDir := filepath.Dir(sessionPath) // chatSessions/
-	storageDir := filepath.Dir(chatDir)  // <hash>/
-	wsFile := filepath.Join(storageDir, copilotFileWorkspace)
-
-	data, err := os.ReadFile(filepath.Clean(wsFile))
-	if err != nil {
-		return ""
-	}
-
-	var ws copilotRawWorkspace
-	if err := json.Unmarshal(data, &ws); err != nil {
-		return ""
-	}
-
-	return fileURIToPath(ws.Folder)
-}
-
-// fileURIToPath converts a file:// URI to a local file path.
-// Example: "file:///g%3A/GitProjects/ctx" -> "G:\GitProjects\ctx" (Windows)
-//
-//	"file:///home/user/project" -> "/home/user/project" (Unix)
-func fileURIToPath(uri string) string {
-	if uri == "" {
-		return ""
-	}
-
-	parsed, err := url.Parse(uri)
-	if err != nil {
-		return ""
-	}
-
-	if parsed.Scheme != "file" {
-		return ""
-	}
-
-	path := parsed.Path
-
-	// URL-decode the path (e.g., %3A -> :)
-	decoded, err := url.PathUnescape(path)
-	if err != nil {
-		decoded = path
-	}
-
-	// On Windows, file URIs have /G:/... — strip the leading slash
-	if runtime.GOOS == env.OSWindows && len(decoded) > 2 && decoded[0] == '/' {
-		decoded = decoded[1:]
-	}
-
-	return filepath.FromSlash(decoded)
-}
-
 // CopilotSessionDirs returns the directories where Copilot Chat sessions
 // are stored. Checks both VS Code stable and Insiders paths.
+//
+// Returns:
+//   - []string: paths to chatSessions directories found on the system
 func CopilotSessionDirs() []string {
 	var dirs []string
 
-	appData := os.Getenv("APPDATA")
+	appData := os.Getenv(copilotEnvAppData)
 	if runtime.GOOS != env.OSWindows {
 		// On macOS/Linux, VS Code stores data in different locations
 		home, err := os.UserHomeDir()
@@ -508,10 +206,10 @@ func CopilotSessionDirs() []string {
 			return nil
 		}
 		switch runtime.GOOS {
-		case "darwin":
-			appData = filepath.Join(home, "Library", "Application Support")
+		case copilotOSDarwin:
+			appData = filepath.Join(home, copilotDirLibrary, copilotDirAppSupport)
 		default: // Linux
-			appData = filepath.Join(home, ".config")
+			appData = filepath.Join(home, copilotDirDotConfig)
 		}
 	}
 
@@ -520,9 +218,9 @@ func CopilotSessionDirs() []string {
 	}
 
 	// Check both Code stable and Code Insiders
-	variants := []string{"Code", "Code - Insiders"}
+	variants := []string{copilotAppCode, copilotAppCodeInsiders}
 	for _, variant := range variants {
-		wsDir := filepath.Join(appData, variant, "User", "workspaceStorage")
+		wsDir := filepath.Join(appData, variant, copilotDirUser, copilotDirWorkspace)
 		if info, err := os.Stat(wsDir); err == nil && info.IsDir() {
 			// Scan each workspace for chatSessions/ subdirectory
 			entries, err := os.ReadDir(wsDir)
@@ -543,6 +241,3 @@ func CopilotSessionDirs() []string {
 
 	return dirs
 }
-
-// Ensure Copilot implements Session.
-var _ Session = (*Copilot)(nil)
