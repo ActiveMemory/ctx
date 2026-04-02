@@ -51,8 +51,7 @@ func Run(
 
 	ctx, err := load.Do("")
 	if err != nil {
-		var notFoundError *errCtx.NotFoundError
-		if errors.As(err, &notFoundError) {
+		if _, ok := errors.AsType[*errCtx.NotFoundError](err); ok {
 			return errInit.NotInitialized()
 		}
 		return err

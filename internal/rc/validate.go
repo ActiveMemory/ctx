@@ -37,8 +37,7 @@ func Validate(data []byte) (warnings []string, err error) {
 		}
 
 		// yaml.v3 returns *yaml.TypeError for unknown fields.
-		var te *yaml.TypeError
-		if errors.As(decErr, &te) {
+		if te, ok := errors.AsType[*yaml.TypeError](decErr); ok {
 			return te.Errors, nil
 		}
 
