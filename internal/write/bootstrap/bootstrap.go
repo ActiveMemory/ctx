@@ -17,6 +17,14 @@ import (
 	"github.com/ActiveMemory/ctx/internal/entity"
 )
 
+// CommunityFooter prints the community/Discord link footer for help output.
+//
+// Parameters:
+//   - cmd: Cobra command for output
+func CommunityFooter(cmd *cobra.Command) {
+	cmd.Print(desc.Text(text.DescKeyHelpCommunityFooter))
+}
+
 // Dir prints the context directory path (quiet mode). Nil cmd is a no-op.
 //
 // Parameters:

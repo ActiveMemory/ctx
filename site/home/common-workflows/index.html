@@ -1016,6 +1016,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#trace-commit-context" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Trace Commit Context
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#agent-session-start" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -3834,6 +3845,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#trace-commit-context" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Trace Commit Context
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#agent-session-start" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -4133,10 +4155,33 @@ signal is detected:</p>
 </span></code></pre></div>
 <p>See <a href="../../operations/autonomous-loop/">Autonomous Loops</a> for configuration
 and advanced usage.</p>
+<h2 id="trace-commit-context">Trace Commit Context<a class="headerlink" href="#trace-commit-context" title="Permanent link">&para;</a></h2>
+<p>Link your git commits back to the decisions, tasks, and learnings
+that motivated them. Enable the hook once:</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-8-1"><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c1"># Install the git hook (one-time setup)</span>
+</span><span id="__span-8-2"><a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>ctx<span class="w"> </span>trace<span class="w"> </span>hook<span class="w"> </span><span class="nb">enable</span>
+</span></code></pre></div>
+<p>From now on, every <code>git commit</code> automatically gets a <code>ctx-context</code>
+trailer linking it to relevant context. No extra steps needed —
+just use <code>ctx add</code>, <code>ctx task complete</code>, and commit as usual.</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-9-1"><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="c1"># Later: why was this commit made?</span>
+</span><span id="__span-9-2"><a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>ctx<span class="w"> </span>trace<span class="w"> </span>abc123
+</span><span id="__span-9-3"><a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>
+</span><span id="__span-9-4"><a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a><span class="c1"># Recent commits with their context</span>
+</span><span id="__span-9-5"><a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a>ctx<span class="w"> </span>trace<span class="w"> </span>--last<span class="w"> </span><span class="m">10</span>
+</span><span id="__span-9-6"><a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a>
+</span><span id="__span-9-7"><a id="__codelineno-9-7" name="__codelineno-9-7" href="#__codelineno-9-7"></a><span class="c1"># Context trail for a specific file</span>
+</span><span id="__span-9-8"><a id="__codelineno-9-8" name="__codelineno-9-8" href="#__codelineno-9-8"></a>ctx<span class="w"> </span>trace<span class="w"> </span>file<span class="w"> </span>src/auth.go
+</span><span id="__span-9-9"><a id="__codelineno-9-9" name="__codelineno-9-9" href="#__codelineno-9-9"></a>
+</span><span id="__span-9-10"><a id="__codelineno-9-10" name="__codelineno-9-10" href="#__codelineno-9-10"></a><span class="c1"># Manually tag a commit after the fact</span>
+</span><span id="__span-9-11"><a id="__codelineno-9-11" name="__codelineno-9-11" href="#__codelineno-9-11"></a>ctx<span class="w"> </span>trace<span class="w"> </span>tag<span class="w"> </span>HEAD<span class="w"> </span>--note<span class="w"> </span><span class="s2">&quot;Hotfix for production outage&quot;</span>
+</span></code></pre></div>
+<p>To stop: <code>ctx trace hook disable</code>.</p>
+<p>See <a href="../../cli/trace/">CLI Reference: trace</a> for details.</p>
 <h2 id="agent-session-start">Agent Session Start<a class="headerlink" href="#agent-session-start" title="Permanent link">&para;</a></h2>
 <p>The first thing an AI agent should do at session start is discover where
 context lives:</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-8-1"><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>ctx<span class="w"> </span>system<span class="w"> </span>bootstrap
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-10-1"><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a>ctx<span class="w"> </span>system<span class="w"> </span>bootstrap
 </span></code></pre></div>
 <p>This prints the resolved context directory, the files in it, and the
 operating rules. The <code>CLAUDE.md</code> template instructs the agent to run this
@@ -4144,11 +4189,11 @@ automatically. See <a href="../../cli/system/#ctx-system-bootstrap">CLI Referenc
 <h2 id="the-two-skills-you-should-always-use">The Two Skills You Should Always Use<a class="headerlink" href="#the-two-skills-you-should-always-use" title="Permanent link">&para;</a></h2>
 <p>Using <strong><code>/ctx-remember</code></strong> at session start and <strong><code>/ctx-wrap-up</code></strong> at
 session end are the <strong>highest-value skills</strong> in the entire catalog:</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-9-1"><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="c1"># session begins:</span>
-</span><span id="__span-9-2"><a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>/ctx-remember
-</span><span id="__span-9-3"><a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>...<span class="w"> </span><span class="k">do</span><span class="w"> </span>work<span class="w"> </span>...
-</span><span id="__span-9-4"><a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a><span class="c1"># before closing the session:</span>
-</span><span id="__span-9-5"><a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a>/ctx-wrap-up
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-11-1"><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a><span class="c1"># session begins:</span>
+</span><span id="__span-11-2"><a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a>/ctx-remember
+</span><span id="__span-11-3"><a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a>...<span class="w"> </span><span class="k">do</span><span class="w"> </span>work<span class="w"> </span>...
+</span><span id="__span-11-4"><a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a><span class="c1"># before closing the session:</span>
+</span><span id="__span-11-5"><a id="__codelineno-11-5" name="__codelineno-11-5" href="#__codelineno-11-5"></a>/ctx-wrap-up
 </span></code></pre></div>
 <p>Let's provide some <strong>context</strong>, because this is <strong>important</strong>:</p>
 <p>Although the agent <em>will</em> <strong>eventually</strong> discover your context through
@@ -4406,7 +4451,15 @@ agent's judgment.</p>
 <td>Consolidate and clean up context files</td>
 </tr>
 <tr>
-<td><code>ctx hook</code></td>
+<td><code>ctx trace</code></td>
+<td>Show context behind git commits</td>
+</tr>
+<tr>
+<td><code>ctx trace hook</code></td>
+<td>Enable/disable commit context tracing hook</td>
+</tr>
+<tr>
+<td><code>ctx setup</code></td>
 <td>Generate AI tool integration config</td>
 </tr>
 <tr>
@@ -4606,8 +4659,8 @@ The documentation on this website is distributed under
       
       
     
-    <a href="https://web.libera.chat/#ctx" target="_blank" rel="noopener" title="web.libera.chat" class="md-social__link">
-      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path fill="currentColor" d="M18.1 332.3h412.7v22c0 37.7-29.3 68-65.3 68h-19L259.7 512v-89.7H83.4c-36 0-65.3-30.3-65.3-68zm0-23.6h412.7v-85H18.1zm0-109.4h412.7v-85H18.1zM365.4 0h-282c-36 0-65.3 30.3-65.3 67.7V90h412.7V67.7C430.7 30.3 401.4 0 365.4 0"/></svg>
+    <a href="https://ctx.ist/discord" target="_blank" rel="noopener" title="ctx.ist" class="md-social__link">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path fill="currentColor" d="M492.5 69.8c-.2-.3-.4-.6-.8-.7-38.1-17.5-78.4-30-119.7-37.1-.4-.1-.8 0-1.1.1s-.6.4-.8.8c-5.5 9.9-10.5 20.2-14.9 30.6-44.6-6.8-89.9-6.8-134.4 0-4.5-10.5-9.5-20.7-15.1-30.6-.2-.3-.5-.6-.8-.8s-.7-.2-1.1-.2C162.5 39 122.2 51.5 84.1 69c-.3.1-.6.4-.8.7C7.1 183.5-13.8 294.6-3.6 404.2c0 .3.1.5.2.8s.3.4.5.6c44.4 32.9 94 58 146.8 74.2.4.1.8.1 1.1 0s.7-.4.9-.7c11.3-15.4 21.4-31.8 30-48.8.1-.2.2-.5.2-.8s0-.5-.1-.8-.2-.5-.4-.6-.4-.3-.7-.4c-15.8-6.1-31.2-13.4-45.9-21.9-.3-.2-.5-.4-.7-.6s-.3-.6-.3-.9 0-.6.2-.9.3-.5.6-.7c3.1-2.3 6.2-4.7 9.1-7.1.3-.2.6-.4.9-.4s.7 0 1 .1c96.2 43.9 200.4 43.9 295.5 0 .3-.1.7-.2 1-.2s.7.2.9.4c2.9 2.4 6 4.9 9.1 7.2.2.2.4.4.6.7s.2.6.2.9-.1.6-.3.9-.4.5-.6.6c-14.7 8.6-30 15.9-45.9 21.8-.2.1-.5.2-.7.4s-.3.4-.4.7-.1.5-.1.8.1.5.2.8c8.8 17 18.8 33.3 30 48.8.2.3.6.6.9.7s.8.1 1.1 0c52.9-16.2 102.6-41.3 147.1-74.2.2-.2.4-.4.5-.6s.2-.5.2-.8c12.3-126.8-20.5-236.9-86.9-334.5zm-302 267.7c-29 0-52.8-26.6-52.8-59.2s23.4-59.2 52.8-59.2c29.7 0 53.3 26.8 52.8 59.2 0 32.7-23.4 59.2-52.8 59.2m195.4 0c-29 0-52.8-26.6-52.8-59.2s23.4-59.2 52.8-59.2c29.7 0 53.3 26.8 52.8 59.2 0 32.7-23.2 59.2-52.8 59.2"/></svg>
     </a>
   
     

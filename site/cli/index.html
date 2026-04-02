@@ -3652,7 +3652,7 @@
 created by <code>ctx init</code>. Running a command without one produces:</p>
 <div class="language-text highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>ctx: not initialized - run &quot;ctx init&quot; first
 </span></code></pre></div>
-<p>Commands that work before initialization: <code>ctx init</code>, <code>ctx hook</code>,
+<p>Commands that work before initialization: <code>ctx init</code>, <code>ctx setup</code>,
 <code>ctx doctor</code>, and grouping commands that only show help (e.g. <code>ctx</code>
 with no subcommand, <code>ctx system</code>). Hidden hook commands have their
 own guards and no-op gracefully.</p>
@@ -3735,7 +3735,7 @@ own guards and no-op gracefully.</p>
 <td>Auto-apply context updates from AI output</td>
 </tr>
 <tr>
-<td><a href="tools/#ctx-hook"><code>ctx hook</code></a></td>
+<td><a href="tools/#ctx-hook"><code>ctx setup</code></a></td>
 <td>Generate AI tool integration configs</td>
 </tr>
 <tr>
@@ -3762,17 +3762,48 @@ own guards and no-op gracefully.</p>
 <td><a href="tools/#ctx-pad"><code>ctx pad</code></a></td>
 <td>Encrypted scratchpad for sensitive one-liners</td>
 </tr>
+<tr>
+<td><a href="tools/#ctx-remind"><code>ctx remind</code></a></td>
+<td>Session-scoped reminders that surface at session start</td>
+</tr>
+<tr>
+<td><a href="tools/#ctx-completion"><code>ctx completion</code></a></td>
+<td>Generate shell autocompletion scripts</td>
+</tr>
+<tr>
+<td><a href="tools/#ctx-guide"><code>ctx guide</code></a></td>
+<td>Quick-reference cheat sheet</td>
+</tr>
+<tr>
+<td><a href="tools/#ctx-why"><code>ctx why</code></a></td>
+<td>Read the philosophy behind ctx</td>
+</tr>
+<tr>
+<td><a href="tools/#ctx-site"><code>ctx site</code></a></td>
+<td>Site management (feed generation)</td>
+</tr>
+<tr>
+<td><a href="trace/#ctx-trace"><code>ctx trace</code></a></td>
+<td>Show context behind git commits</td>
+</tr>
+<tr>
+<td><a href="doctor/#ctx-doctor"><code>ctx doctor</code></a></td>
+<td>Structural health check (hooks, drift, config)</td>
+</tr>
+<tr>
+<td><a href="mcp/#ctx-mcp"><code>ctx mcp</code></a></td>
+<td>MCP server for AI tool integration (stdin/stdout)</td>
+</tr>
+<tr>
+<td><a href="config/#ctx-config"><code>ctx config</code></a></td>
+<td>Manage runtime configuration profiles</td>
+</tr>
+<tr>
+<td><a href="system/#ctx-system"><code>ctx system</code></a></td>
+<td>System diagnostics and hook commands</td>
+</tr>
 </tbody>
 </table>
-<p>| <a href="tools/#ctx-remind"><code>ctx remind</code></a>           | Session-scoped reminders that surface at session start   |
-| <a href="tools/#ctx-completion"><code>ctx completion</code></a>   | Generate shell autocompletion scripts                    |
-| <a href="tools/#ctx-guide"><code>ctx guide</code></a>             | Quick-reference cheat sheet                              |
-| <a href="tools/#ctx-why"><code>ctx why</code></a>                 | Read the philosophy behind ctx                           |
-| <a href="tools/#ctx-site"><code>ctx site</code></a>               | Site management (feed generation)                        |
-| <a href="doctor/#ctx-doctor"><code>ctx doctor</code></a>          | Structural health check (hooks, drift, config)           |
-| <a href="mcp/#ctx-mcp"><code>ctx mcp</code></a>                   | MCP server for AI tool integration (stdin/stdout)        |
-| <a href="config/#ctx-config"><code>ctx config</code></a>          | Manage runtime configuration profiles                    |
-| <a href="system/#ctx-system"><code>ctx system</code></a>          | System diagnostics and hook commands                     |</p>
 <hr />
 <h2 id="exit-codes">Exit Codes<a class="headerlink" href="#exit-codes" title="Permanent link">&para;</a></h2>
 <table>
@@ -3829,6 +3860,10 @@ own guards and no-op gracefully.</p>
 <tr>
 <td><code>CTX_BACKUP_SMB_SUBDIR</code></td>
 <td>Subdirectory on SMB share (default: <code>ctx-sessions</code>)</td>
+</tr>
+<tr>
+<td><code>CTX_SESSION_ID</code></td>
+<td>Active AI session ID (used by <code>ctx trace</code> for context linking)</td>
 </tr>
 </tbody>
 </table>
@@ -4112,8 +4147,8 @@ The documentation on this website is distributed under
       
       
     
-    <a href="https://web.libera.chat/#ctx" target="_blank" rel="noopener" title="web.libera.chat" class="md-social__link">
-      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path fill="currentColor" d="M18.1 332.3h412.7v22c0 37.7-29.3 68-65.3 68h-19L259.7 512v-89.7H83.4c-36 0-65.3-30.3-65.3-68zm0-23.6h412.7v-85H18.1zm0-109.4h412.7v-85H18.1zM365.4 0h-282c-36 0-65.3 30.3-65.3 67.7V90h412.7V67.7C430.7 30.3 401.4 0 365.4 0"/></svg>
+    <a href="https://ctx.ist/discord" target="_blank" rel="noopener" title="ctx.ist" class="md-social__link">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path fill="currentColor" d="M492.5 69.8c-.2-.3-.4-.6-.8-.7-38.1-17.5-78.4-30-119.7-37.1-.4-.1-.8 0-1.1.1s-.6.4-.8.8c-5.5 9.9-10.5 20.2-14.9 30.6-44.6-6.8-89.9-6.8-134.4 0-4.5-10.5-9.5-20.7-15.1-30.6-.2-.3-.5-.6-.8-.8s-.7-.2-1.1-.2C162.5 39 122.2 51.5 84.1 69c-.3.1-.6.4-.8.7C7.1 183.5-13.8 294.6-3.6 404.2c0 .3.1.5.2.8s.3.4.5.6c44.4 32.9 94 58 146.8 74.2.4.1.8.1 1.1 0s.7-.4.9-.7c11.3-15.4 21.4-31.8 30-48.8.1-.2.2-.5.2-.8s0-.5-.1-.8-.2-.5-.4-.6-.4-.3-.7-.4c-15.8-6.1-31.2-13.4-45.9-21.9-.3-.2-.5-.4-.7-.6s-.3-.6-.3-.9 0-.6.2-.9.3-.5.6-.7c3.1-2.3 6.2-4.7 9.1-7.1.3-.2.6-.4.9-.4s.7 0 1 .1c96.2 43.9 200.4 43.9 295.5 0 .3-.1.7-.2 1-.2s.7.2.9.4c2.9 2.4 6 4.9 9.1 7.2.2.2.4.4.6.7s.2.6.2.9-.1.6-.3.9-.4.5-.6.6c-14.7 8.6-30 15.9-45.9 21.8-.2.1-.5.2-.7.4s-.3.4-.4.7-.1.5-.1.8.1.5.2.8c8.8 17 18.8 33.3 30 48.8.2.3.6.6.9.7s.8.1 1.1 0c52.9-16.2 102.6-41.3 147.1-74.2.2-.2.4-.4.5-.6s.2-.5.2-.8c12.3-126.8-20.5-236.9-86.9-334.5zm-302 267.7c-29 0-52.8-26.6-52.8-59.2s23.4-59.2 52.8-59.2c29.7 0 53.3 26.8 52.8 59.2 0 32.7-23.4 59.2-52.8 59.2m195.4 0c-29 0-52.8-26.6-52.8-59.2s23.4-59.2 52.8-59.2c29.7 0 53.3 26.8 52.8 59.2 0 32.7-23.2 59.2-52.8 59.2"/></svg>
     </a>
   
     

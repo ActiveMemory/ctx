@@ -534,3 +534,5 @@ write.why-label-about:
   short: "About ctx"
 write.why-label-invariants:
   short: "Design Invariants"
+help.community-footer:
+  short: "\nHave a question, bug, or feature request? Join us on Discord:\n  https://ctx.ist/discord\n"

@@ -249,6 +249,9 @@ write.init-workflow-tips:
           /ctx-consolidate          Merge overlapping entries in DECISIONS.md and LEARNINGS.md
           /ctx-drift                Detect stale paths, broken references, and outdated context
 
+      Have a question, bug, or feature request? Join us on Discord:
+        https://ctx.ist/discord
+
         Journal pipeline (every few sessions):
           ctx journal import --all   Import session transcripts to .context/journal/
           /ctx-journal-enrich-all   Add frontmatter, tags, and summaries to imported entries

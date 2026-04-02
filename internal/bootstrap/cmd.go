@@ -23,6 +23,7 @@ import (
 	errInit "github.com/ActiveMemory/ctx/internal/err/initialize"
 	"github.com/ActiveMemory/ctx/internal/rc"
 	"github.com/ActiveMemory/ctx/internal/validate"
+	writeBootstrap "github.com/ActiveMemory/ctx/internal/write/bootstrap"
 )
 
 // version is set at build time via ldflags:
@@ -100,6 +101,15 @@ func RootCmd() *cobra.Command {
 	// explicitly so all subcommands inherit the correct output, and shell
 	// redirection (>) works as expected.
 	c.SetOut(os.Stdout)
+
+	// Append a community footer to the root help output only.
+	defaultHelp := c.HelpFunc()
+	c.SetHelpFunc(func(helpCmd *cobra.Command, args []string) {
+		defaultHelp(helpCmd, args)
+		if helpCmd == c {
+			writeBootstrap.CommunityFooter(helpCmd)
+		}
+	})
 
 	// Global flags available to all subcommands
 	c.PersistentFlags().StringVar(

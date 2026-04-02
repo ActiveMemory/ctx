@@ -17,3 +17,8 @@ const (
 	DescKeyGroupDiagnostics    = "group.diagnostics"
 	DescKeyGroupUtilities      = "group.utilities"
 )
+
+// Help text keys for CLI-wide output elements.
+const (
+	DescKeyHelpCommunityFooter = "help.community-footer"
+)

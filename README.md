@@ -139,7 +139,7 @@ All commits must be signed off (`git commit -s`) to certify the
 Join the community to ask questions, share feedback, and connect with
 other users:
 
-[Join `#ctx` on `irc.libera.chat`](https://web.libera.chat/#ctx)
+[Join the `ctx` Discord](https://ctx.ist/discord)
 
 ## License
 
