@@ -17,6 +17,8 @@ DO NOT UPDATE FOR:
 <!-- INDEX:START -->
 | Date | Learning |
 |----|--------|
+| 2026-04-01 | Raw I/O migration unlocks downstream checks for free |
+| 2026-04-01 | go/packages respects build tags — darwin-only violations invisible on Linux |
 | 2026-04-01 | Copilot CLI skills need a sync mechanism to prevent drift from ctx skills |
 | 2026-04-01 | Contributor PRs based on older code reintroduce removed features |
 | 2026-03-31 | Magic string cleanup compounds: each pass reveals the next layer |
@@ -120,6 +122,26 @@ DO NOT UPDATE FOR:
 | 2026-02-19 | Feature can be code-complete but invisible to users |
 | 2026-01-28 | IDE is already the UI |
 <!-- INDEX:END -->
+
+---
+
+## [2026-04-01-233250] Raw I/O migration unlocks downstream checks for free
+
+**Context**: TestNoRawPermissions had zero violations because the raw I/O migration moved all octal literals into internal/io/ which already used config/fs constants
+
+**Lesson**: Chokepoint migrations have cascading benefits — centralizing one concern (file I/O) automatically resolves other drift (raw permissions)
+
+**Application**: Prioritize chokepoint migrations (io, exec, write, err) before smaller checks that depend on them
+
+---
+
+## [2026-04-01-233248] go/packages respects build tags — darwin-only violations invisible on Linux
+
+**Context**: TestNoExecOutsideExecPkg could not detect violations in _darwin.go files when running on Linux
+
+**Lesson**: AST checks using go/packages only see files matching the current GOOS. Cross-platform violations need either multi-GOOS CI or a go/parser fallback
+
+**Application**: When writing audit checks for code with build tags, fix the violations regardless (code correctness) but note that test coverage is platform-dependent
 
 ---
 

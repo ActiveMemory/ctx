@@ -27,6 +27,8 @@ TASK STATUS LABELS:
 
 ### Code Cleanup Findings
 
+- [ ] Extend flagbind helpers (IntFlag, DurationFlag, DurationFlagP, StringP, BoolP) and migrate ~50 call sites to unblock TestNoFlagBindOutsideFlagbind #added:2026-04-01-233250
+
 - [ ] Implement journal compaction: Elastic-style tiered storage with tar.gz 
   backup. Spec: specs/journal-compact.md #added:2026-03-31-110005
 

@@ -105,7 +105,7 @@ func ContentBlock(cmd *cobra.Command, data []byte) {
 	}
 	cmd.Println()
 	cmd.Print(string(data))
-	if len(data) > 0 && data[len(data)-1] != '\n' {
+	if len(data) > 0 && data[len(data)-1] != token.NewlineLF[0] {
 		cmd.Println()
 	}
 }

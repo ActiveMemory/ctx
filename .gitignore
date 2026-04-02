@@ -53,6 +53,9 @@ dist/
 # Runtime state (flags, markers — ephemeral, not committed)
 .context/state/
 
+# Personal reminders (machine-specific, ephemeral)
+.context/reminders.json
+
 # Memory mirror and archives (may contain strategic content)
 .context/memory/
 
