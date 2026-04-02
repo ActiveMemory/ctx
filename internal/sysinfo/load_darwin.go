@@ -10,9 +10,10 @@ package sysinfo
 
 import (
 	"fmt"
-	"os/exec"
 	"runtime"
 	"strings"
+
+	execSysinfo "github.com/ActiveMemory/ctx/internal/exec/sysinfo"
 )
 
 // collectLoad queries system load averages on macOS via sysctl.
@@ -24,7 +25,7 @@ import (
 // Returns:
 //   - LoadInfo: System load averages and CPU count
 func collectLoad() LoadInfo {
-	out, cmdErr := exec.Command("sysctl", "-n", "vm.loadavg").Output()
+	out, cmdErr := execSysinfo.Sysctl("-n", "vm.loadavg")
 	if cmdErr != nil {
 		return LoadInfo{Supported: false}
 	}

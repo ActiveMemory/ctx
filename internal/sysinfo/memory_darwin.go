@@ -9,11 +9,11 @@
 package sysinfo
 
 import (
-	"os/exec"
 	"strconv"
 	"strings"
 
 	"github.com/ActiveMemory/ctx/internal/config/token"
+	execSysinfo "github.com/ActiveMemory/ctx/internal/exec/sysinfo"
 )
 
 // collectMemory queries physical and swap memory usage on macOS.
@@ -26,7 +26,7 @@ import (
 //   - MemInfo: Physical and swap memory statistics
 func collectMemory() MemInfo {
 	// Total physical memory
-	out, memErr := exec.Command("sysctl", "-n", "hw.memsize").Output()
+	out, memErr := execSysinfo.Sysctl("-n", "hw.memsize")
 	if memErr != nil {
 		return MemInfo{Supported: false}
 	}
@@ -39,14 +39,14 @@ func collectMemory() MemInfo {
 
 	// Memory page stats via vm_stat
 	var usedBytes uint64
-	out, vmStatErr := exec.Command("vm_stat").Output()
+	out, vmStatErr := execSysinfo.VMStat()
 	if vmStatErr == nil {
 		usedBytes = parseVMStat(string(out), totalBytes)
 	}
 
 	// Swap via sysctl
 	var swapTotal, swapUsed uint64
-	out, swapErr := exec.Command("sysctl", "-n", "vm.swapusage").Output()
+	out, swapErr := execSysinfo.Sysctl("-n", "vm.swapusage")
 	if swapErr == nil {
 		swapTotal, swapUsed = parseSwapUsage(string(out))
 	}
