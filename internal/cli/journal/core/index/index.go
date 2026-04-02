@@ -23,7 +23,7 @@ import (
 	ctxLog "github.com/ActiveMemory/ctx/internal/log/warn"
 )
 
-// SessionIndex scans journal .md files in journalDir and returns a
+// Session scans journal .md files in journalDir and returns a
 // map of session_id → filename.
 //
 // Two-pass matching:
@@ -37,7 +37,7 @@ import (
 //
 // Returns:
 //   - map[string]string: session ID → filename mapping
-func SessionIndex(journalDir string) map[string]string {
+func Session(journalDir string) map[string]string {
 	sessionMap := make(map[string]string)
 
 	entries, readErr := os.ReadDir(journalDir)
@@ -122,7 +122,7 @@ func ExtractSessionID(content string) string {
 // back to the short ID (filename-based legacy match).
 //
 // Parameters:
-//   - index: Session index from SessionIndex
+//   - index: Session index from Session
 //   - sessionID: Full session UUID
 //
 // Returns:

@@ -37,7 +37,7 @@ import (
 // Returns:
 //   - error: Non-nil if TASKS.md doesn't exist or file operations fail
 func Run(cmd *cobra.Command, args []string) error {
-	tasksPath := path.FilePath()
+	tasksPath := path.File()
 	archivePath := path.ArchiveDir()
 
 	// Check if TASKS.md exists

@@ -7,6 +7,6 @@
 // Package sync provides formatted output helpers for the sync command.
 //
 // All functions take *cobra.Command for output routing.
-// Exports: [InSync], [Header], [Action], [Summary], [DryRun], and 2 more.
-// Exports: [InSync], [Header], [Action], [Summary], [DryRun], [Result].
+// Exports: [AllClear], [Header], [Action], [Summary], [DryRun], and 2 more.
+// Exports: [AllClear], [Header], [Action], [Summary], [DryRun], [Result].
 package sync

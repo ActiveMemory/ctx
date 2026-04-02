@@ -65,7 +65,7 @@ func Run(
 	}
 
 	if len(graph) == 0 {
-		deps.NoDeps(cmd)
+		deps.None(cmd)
 		return nil
 	}
 

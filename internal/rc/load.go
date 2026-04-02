@@ -18,12 +18,12 @@ import (
 	writeRC "github.com/ActiveMemory/ctx/internal/write/rc"
 )
 
-// loadRC loads configuration from the .ctxrc file and applies env
+// load loads configuration from the .ctxrc file and applies env
 // overrides.
 //
 // Returns:
 //   - *CtxRC: Configuration with file values and env overrides applied
-func loadRC() *CtxRC {
+func load() *CtxRC {
 	cfg := Default()
 
 	// Try to load .ctxrc from the current directory

@@ -113,7 +113,7 @@ func BackupProject(
 		{SourcePath: filepath.Join(home, archive.Bashrc), Prefix: archive.Bashrc},
 	}
 
-	result, finalizeErr := finalizeArchive(
+	result, finalizeErr := finalize(
 		w, archivePath, archiveName, archive.BackupScopeProject, entries, smb,
 	)
 	if finalizeErr != nil {
@@ -161,7 +161,7 @@ func BackupGlobal(
 		},
 	}
 
-	return finalizeArchive(
+	return finalize(
 		w, archivePath, archiveName, archive.BackupScopeGlobal, entries, smb,
 	)
 }

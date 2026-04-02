@@ -13,7 +13,7 @@ import (
 	"testing"
 )
 
-func TestBuildSessionIndex_WithSessionID(t *testing.T) {
+func TestBuildSession_WithSessionID(t *testing.T) {
 	dir := t.TempDir()
 
 	// File with session_id in frontmatter.
@@ -28,7 +28,7 @@ func TestBuildSessionIndex_WithSessionID(t *testing.T) {
 		t.Fatal(writeErr)
 	}
 
-	idx := SessionIndex(dir)
+	idx := Session(dir)
 
 	if got, ok := idx["abc12345-full-uuid"]; !ok {
 		t.Error("expected session_id key in index")
@@ -40,7 +40,7 @@ func TestBuildSessionIndex_WithSessionID(t *testing.T) {
 	}
 }
 
-func TestBuildSessionIndex_ShortIDFallback(t *testing.T) {
+func TestBuildSession_ShortIDFallback(t *testing.T) {
 	dir := t.TempDir()
 
 	// Legacy file without session_id (no frontmatter with session_id).
@@ -54,7 +54,7 @@ func TestBuildSessionIndex_ShortIDFallback(t *testing.T) {
 		t.Fatal(writeErr)
 	}
 
-	idx := SessionIndex(dir)
+	idx := Session(dir)
 
 	if got, ok := idx["abc12345"]; !ok {
 		t.Error("expected short ID key in index")
@@ -66,7 +66,7 @@ func TestBuildSessionIndex_ShortIDFallback(t *testing.T) {
 	}
 }
 
-func TestBuildSessionIndex_SkipsMultipartFiles(t *testing.T) {
+func TestBuildSession_SkipsMultipartFiles(t *testing.T) {
 	dir := t.TempDir()
 
 	// Base file.
@@ -88,7 +88,7 @@ func TestBuildSessionIndex_SkipsMultipartFiles(t *testing.T) {
 		t.Fatal(writeErr)
 	}
 
-	idx := SessionIndex(dir)
+	idx := Session(dir)
 
 	// Should only have one entry for the short ID.
 	if got, ok := idx["abc12345"]; !ok {
@@ -98,16 +98,16 @@ func TestBuildSessionIndex_SkipsMultipartFiles(t *testing.T) {
 	}
 }
 
-func TestBuildSessionIndex_EmptyDir(t *testing.T) {
+func TestBuildSession_EmptyDir(t *testing.T) {
 	dir := t.TempDir()
-	idx := SessionIndex(dir)
+	idx := Session(dir)
 	if len(idx) != 0 {
 		t.Errorf("expected empty index, got %d entries", len(idx))
 	}
 }
 
-func TestBuildSessionIndex_NonexistentDir(t *testing.T) {
-	idx := SessionIndex("/nonexistent/path/to/journal")
+func TestBuildSession_NonexistentDir(t *testing.T) {
+	idx := Session("/nonexistent/path/to/journal")
 	if len(idx) != 0 {
 		t.Errorf("expected empty index for nonexistent dir, got %d entries", len(idx))
 	}

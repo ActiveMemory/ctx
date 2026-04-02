@@ -6,7 +6,7 @@
 
 // Package path resolves file paths for TASKS.md and the task archive directory.
 //
-// Key exports: [FilePath], [ArchiveDir].
+// Key exports: [File], [ArchiveDir].
 // Shared helpers used by sibling cmd/ packages.
 // Used by core cmd/ packages.
 package path

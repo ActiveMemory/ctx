@@ -26,11 +26,11 @@ func InfoNoProject(cmd *cobra.Command, builderNames string) {
 	cmd.Println(fmt.Sprintf(desc.Text(text.DescKeyWriteDepsUseType), builderNames))
 }
 
-// NoDeps reports that no dependencies were found.
+// None reports that no dependencies were found.
 //
 // Parameters:
 //   - cmd: Cobra command for output
-func NoDeps(cmd *cobra.Command) {
+func None(cmd *cobra.Command) {
 	cmd.Println(desc.Text(text.DescKeyWriteDepsNoDeps))
 }
 

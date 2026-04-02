@@ -172,7 +172,7 @@ func Publish(contextDir, memoryPath string, budget int) (PublishResult, error) {
 	if writeErr := io.SafeWriteFile(
 		memoryPath, []byte(merged), fs.PermFile,
 	); writeErr != nil {
-		return PublishResult{}, errMemory.WriteMemory(writeErr)
+		return PublishResult{}, errMemory.WriteFile(writeErr)
 	}
 
 	return result, nil

@@ -25,12 +25,12 @@ import (
 	"github.com/ActiveMemory/ctx/internal/rc"
 )
 
-// oversizeNudgeContent checks for an injection-oversize flag file and returns
+// oversizeContent checks for an injection-oversize flag file and returns
 // the raw nudge content if present. Deletes the flag after reading (one-shot).
 //
 // Returns:
 //   - string: raw oversize nudge content, or empty string if no flag
-func oversizeNudgeContent() string {
+func oversizeContent() string {
 	baseDir := filepath.Join(rc.ContextDir(), dir.State)
 	flagPath := filepath.Join(baseDir, stats.ContextSizeInjectionOversizeFlag)
 	data, readErr := io.SafeReadFile(

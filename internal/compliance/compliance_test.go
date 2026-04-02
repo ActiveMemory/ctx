@@ -1057,7 +1057,7 @@ func TestCmdDirPurity(t *testing.T) {
 		"loop/cmd/root/script.go":         {"GenerateLoopScript": true},
 		"pad/cmd/edit/types.go":           {"Mode": true, "Opts": true},
 		"pad/cmd/resolve/display.go":      {"displayAll": true},
-		"remind/cmd/dismiss/run.go":       {"dismissOne": true, "dismissAll": true},
+		"remind/cmd/dismiss/run.go":       {"one": true, "every": true},
 		"system/cmd/post_commit/score.go": {"scoreCommitViolations": true},
 		"why/cmd/root/data.go":            {"DocEntry": true},
 		"why/cmd/root/menu.go":            {"showMenu": true},

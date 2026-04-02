@@ -14,11 +14,11 @@ import (
 	"github.com/ActiveMemory/ctx/internal/rc"
 )
 
-// FilePath returns the path to TASKS.md.
+// File returns the path to TASKS.md.
 //
 // Returns:
 //   - string: Full path to .context/TASKS.md
-func FilePath() string {
+func File() string {
 	return filepath.Join(rc.ContextDir(), ctx.Task)
 }
 

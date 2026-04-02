@@ -15,11 +15,11 @@ import (
 	"github.com/ActiveMemory/ctx/internal/config/embed/text"
 )
 
-// InSync prints the all-clear message when context is in sync.
+// AllClear prints the all-clear message when context is in sync.
 //
 // Parameters:
 //   - cmd: Cobra command for output. Nil is a no-op.
-func InSync(cmd *cobra.Command) {
+func AllClear(cmd *cobra.Command) {
 	if cmd == nil {
 		return
 	}

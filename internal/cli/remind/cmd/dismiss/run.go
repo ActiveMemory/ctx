@@ -30,12 +30,12 @@ import (
 //   - error: Non-nil on invalid ID, missing reminder, or write failure
 func Run(cmd *cobra.Command, idStr string, all bool) error {
 	if all {
-		return dismissAll(cmd)
+		return every(cmd)
 	}
-	return dismissOne(cmd, idStr)
+	return one(cmd, idStr)
 }
 
-// dismissOne removes a single reminder by its numeric ID.
+// one removes a single reminder by its numeric ID.
 //
 // Parameters:
 //   - cmd: Cobra command for status output
@@ -43,7 +43,7 @@ func Run(cmd *cobra.Command, idStr string, all bool) error {
 //
 // Returns:
 //   - error: Non-nil on invalid ID, missing reminder, or write failure
-func dismissOne(cmd *cobra.Command, idStr string) error {
+func one(cmd *cobra.Command, idStr string) error {
 	id, parseErr := strconv.Atoi(idStr)
 	if parseErr != nil {
 		return errReminder.InvalidID(idStr)
@@ -71,14 +71,14 @@ func dismissOne(cmd *cobra.Command, idStr string) error {
 	return core.WriteReminders(reminders)
 }
 
-// dismissAll removes every active reminder.
+// every removes every active reminder.
 //
 // Parameters:
 //   - cmd: Cobra command for status output
 //
 // Returns:
 //   - error: Non-nil on read or write failure
-func dismissAll(cmd *cobra.Command) error {
+func every(cmd *cobra.Command) error {
 	reminders, readErr := core.ReadReminders()
 	if readErr != nil {
 		return readErr

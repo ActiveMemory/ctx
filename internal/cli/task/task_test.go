@@ -163,9 +163,9 @@ func TestCountPendingTasks(t *testing.T) {
 func TestTasksFilePath(t *testing.T) {
 	setupTaskDir(t)
 
-	path := path.FilePath()
+	path := path.File()
 	if !strings.Contains(path, ctx.Task) {
-		t.Errorf("FilePath() = %q, want to contain %q", path, ctx.Task)
+		t.Errorf("File() = %q, want to contain %q", path, ctx.Task)
 	}
 }
 
