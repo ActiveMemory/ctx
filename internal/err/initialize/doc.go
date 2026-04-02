@@ -8,5 +8,5 @@
 //
 // Error constructors return structured errors with context for
 // user-facing messages routed through internal/assets text lookups.
-// Exports: [NotInitialized], [ContextNotInitialized], [DetectReferenceTime], [HomeDir], [ReadProjectReadme], [ReadTemplate].
+// Exports: [NotInitialized], [ContextNotInitialized], [DetectReferenceTime], [DeployList], [DeployRead], [HomeDir], [ReadProjectReadme], [ReadTemplate].
 package initialize

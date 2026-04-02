@@ -99,6 +99,31 @@ func CreateMakefile(cause error) error {
 	)
 }
 
+// DeployList wraps a failure to list embedded templates during deployment.
+//
+// Parameters:
+//   - descKey: error text key from DeployParams.ListErrKey
+//   - cause: the underlying list error
+//
+// Returns:
+//   - error: "<desc text>: <cause>"
+func DeployList(descKey string, cause error) error {
+	return fmt.Errorf(desc.Text(descKey), cause)
+}
+
+// DeployRead wraps a failure to read a template during deployment.
+//
+// Parameters:
+//   - descKey: error text key from DeployParams.ReadErrKey
+//   - name: template filename that failed to read
+//   - cause: the underlying read error
+//
+// Returns:
+//   - error: "<desc text>: <name>: <cause>"
+func DeployRead(descKey string, name string, cause error) error {
+	return fmt.Errorf(desc.Text(descKey), name, cause)
+}
+
 // CtxNotInPath returns an error indicating that ctx was not found in
 // PATH.
 //

@@ -7,16 +7,15 @@
 package tpl
 
 import (
-	"fmt"
 	"os"
 	"path/filepath"
 
 	"github.com/spf13/cobra"
 
-	"github.com/ActiveMemory/ctx/internal/assets/read/desc"
 	"github.com/ActiveMemory/ctx/internal/config/fs"
 	"github.com/ActiveMemory/ctx/internal/entity"
 	errFs "github.com/ActiveMemory/ctx/internal/err/fs"
+	errInit "github.com/ActiveMemory/ctx/internal/err/initialize"
 	ctxIo "github.com/ActiveMemory/ctx/internal/io"
 	"github.com/ActiveMemory/ctx/internal/write/initialize"
 )
@@ -47,7 +46,7 @@ func DeployTemplates(
 
 	names, listErr := list()
 	if listErr != nil {
-		return fmt.Errorf(desc.Text(p.ListErrKey), listErr)
+		return errInit.DeployList(p.ListErrKey, listErr)
 	}
 
 	for _, name := range names {
@@ -59,7 +58,7 @@ func DeployTemplates(
 
 		content, readErr := read(name)
 		if readErr != nil {
-			return fmt.Errorf(desc.Text(p.ReadErrKey), name, readErr)
+			return errInit.DeployRead(p.ReadErrKey, name, readErr)
 		}
 
 		if writeErr := ctxIo.SafeWriteFile(
