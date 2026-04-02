@@ -6,6 +6,8 @@
 
 package lookup
 
+// allowPerms and denyPerms cache the parsed permission lists loaded
+// from embedded allow.txt and deny.txt files.
 var (
 	allowPerms []string
 	denyPerms  []string

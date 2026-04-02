@@ -43,6 +43,8 @@ func Setup(cmd *cobra.Command, contextDir string) error {
 	return setupEncrypted(cmd, contextDir)
 }
 
+// setupPlaintext creates the plaintext scratchpad file if it does not
+// already exist.
 func setupPlaintext(cmd *cobra.Command, contextDir string) error {
 	mdPath := filepath.Join(contextDir, cfgPad.Md)
 	if _, statErr := os.Stat(mdPath); statErr != nil {
@@ -56,6 +58,8 @@ func setupPlaintext(cmd *cobra.Command, contextDir string) error {
 	return nil
 }
 
+// setupEncrypted creates the encryption key and encrypted scratchpad
+// file if they do not already exist.
 func setupEncrypted(cmd *cobra.Command, contextDir string) error {
 	kPath := rc.KeyPath()
 	encPath := filepath.Join(contextDir, cfgPad.Enc)
