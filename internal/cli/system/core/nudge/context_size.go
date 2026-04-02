@@ -58,7 +58,7 @@ func EmitCheckpoint(
 	if tokens > 0 {
 		content += token.NewlineLF + TokenUsageLine(tokens, pct, windowSize)
 	}
-	if extra := oversizeNudgeContent(); extra != "" {
+	if extra := oversizeContent(); extra != "" {
 		content += token.NewlineLF + extra
 	}
 	box := message.NudgeBox(

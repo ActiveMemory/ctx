@@ -285,14 +285,14 @@ func SelectContent(cause error) error {
 	)
 }
 
-// WriteMemory wraps a failure to write MEMORY.md.
+// WriteFile wraps a failure to write MEMORY.md.
 //
 // Parameters:
 //   - cause: the underlying write error
 //
 // Returns:
 //   - error: "writing MEMORY.md: <cause>"
-func WriteMemory(cause error) error {
+func WriteFile(cause error) error {
 	return fmt.Errorf(
 		desc.Text(text.DescKeyErrMemoryWriteMemory), cause,
 	)

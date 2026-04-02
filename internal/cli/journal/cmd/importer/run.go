@@ -105,7 +105,7 @@ func Run(cmd *cobra.Command, args []string, opts entity.ImportOpts) error {
 	if loadErr != nil {
 		return errJournal.LoadState(loadErr)
 	}
-	sessionIndex := index.SessionIndex(journalDir)
+	sessionIndex := index.Session(journalDir)
 
 	// 6. Build the plan.
 	importPlan := plan.Import(

@@ -69,7 +69,7 @@ func ParsePathArg(arg string) string {
 //
 // Returns:
 //   - error: non-nil on execution failure
-func TraceFile(cmd *cobra.Command, filePath string, last int, traceDir string) error {
+func Trace(cmd *cobra.Command, filePath string, last int, traceDir string) error {
 	out, err := git.Run(
 		cfgGit.Log, fmt.Sprintf("-%d", last),
 		cfgGit.FormatHashDateSubj,

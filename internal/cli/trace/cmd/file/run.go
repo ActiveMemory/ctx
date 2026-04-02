@@ -36,5 +36,5 @@ func Run(cmd *cobra.Command, pathArg string, last int) error {
 
 	filePath := coreFile.ParsePathArg(pathArg)
 
-	return coreFile.TraceFile(cmd, filePath, last, traceDir)
+	return coreFile.Trace(cmd, filePath, last, traceDir)
 }

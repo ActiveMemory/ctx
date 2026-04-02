@@ -49,7 +49,7 @@ func Default() *CtxRC {
 //   - *CtxRC: The loaded and cached configuration
 func RC() *CtxRC {
 	rcOnce.Do(func() {
-		rc = loadRC()
+		rc = load()
 	})
 	return rc
 }

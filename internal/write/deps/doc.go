@@ -10,7 +10,7 @@
 // Output functions handle multiple rendering formats:
 // [Table] for human-readable tabular output, [Mermaid] for
 // diagram-ready graph notation, and [JSON] for machine-readable
-// output. [InfoNoProject] and [NoDeps] handle the empty cases.
+// output. [InfoNoProject] and [None] handle the empty cases.
 //
 // Example:
 //

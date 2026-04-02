@@ -198,7 +198,7 @@ func ExistsInsideHTMLComment(content string, idx int) bool {
 // Returns:
 //   - []byte: Modified content with entry inserted
 func Decision(content, entry, header string) []byte {
-	return insertBeforeFirstEntry(content, entry, header)
+	return beforeFirstEntry(content, entry, header)
 }
 
 // Learning inserts a learning entry before existing entries.
@@ -214,7 +214,7 @@ func Decision(content, entry, header string) []byte {
 // Returns:
 //   - []byte: Modified content with entry inserted
 func Learning(content, entry string) []byte {
-	return insertBeforeFirstEntry(
+	return beforeFirstEntry(
 		content, entry, desc.Text(text.DescKeyHeadingLearnings),
 	)
 }

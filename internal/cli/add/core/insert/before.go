@@ -14,7 +14,7 @@ import (
 	"github.com/ActiveMemory/ctx/internal/config/token"
 )
 
-// insertBeforeFirstEntry scans for the first "## [" marker not inside an
+// beforeFirstEntry scans for the first "## [" marker not inside an
 // HTML comment and inserts the entry before it. Falls back to
 // AfterHeader when no real entries exist yet.
 //
@@ -25,7 +25,7 @@ import (
 //
 // Returns:
 //   - []byte: Modified content with entry inserted
-func insertBeforeFirstEntry(content, entry, header string) []byte {
+func beforeFirstEntry(content, entry, header string) []byte {
 	search := content
 	offset := 0
 	for {

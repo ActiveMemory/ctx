@@ -41,7 +41,7 @@ func Run(cmd *cobra.Command) error {
 		return matchErr
 	}
 	if len(files) == 0 {
-		writeRecall.JournalSyncNone(cmd)
+		writeRecall.SyncNone(cmd)
 		return nil
 	}
 
@@ -55,11 +55,11 @@ func Run(cmd *cobra.Command) error {
 		switch {
 		case fmLocked && !stateLocked:
 			jstate.Mark(filename, journal.StageLocked)
-			writeRecall.JournalSyncLocked(cmd, filename)
+			writeRecall.SyncLocked(cmd, filename)
 			locked++
 		case !fmLocked && stateLocked:
 			jstate.Clear(filename, journal.StageLocked)
-			writeRecall.JournalSyncUnlocked(cmd, filename)
+			writeRecall.SyncUnlocked(cmd, filename)
 			unlocked++
 		}
 	}
@@ -68,7 +68,7 @@ func Run(cmd *cobra.Command) error {
 		return errJournal.SaveState(saveErr)
 	}
 
-	writeRecall.JournalSyncSummary(cmd, locked, unlocked)
+	writeRecall.SyncSummary(cmd, locked, unlocked)
 
 	return nil
 }

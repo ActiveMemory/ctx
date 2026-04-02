@@ -42,7 +42,7 @@ func Run(cmd *cobra.Command, dryRun bool) error {
 	actions := action.Detect(ctx)
 
 	if len(actions) == 0 {
-		sync.InSync(cmd)
+		sync.AllClear(cmd)
 		return nil
 	}
 

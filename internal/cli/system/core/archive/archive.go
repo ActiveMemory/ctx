@@ -21,7 +21,7 @@ import (
 	writeBackup "github.com/ActiveMemory/ctx/internal/write/backup"
 )
 
-// finalizeArchive creates the archive, populates the result with size,
+// finalize creates the archive, populates the result with size,
 // and optionally copies to an SMB share.
 //
 // Parameters:
@@ -35,7 +35,7 @@ import (
 // Returns:
 //   - BackupResult: archive path, size, and optional SMB destination
 //   - error: non-nil on archive creation or SMB failure
-func finalizeArchive(
+func finalize(
 	w io.Writer, archivePath, archiveName, scope string,
 	entries []entity.ArchiveEntry, smb *SMBConfig,
 ) (entity.BackupResult, error) {

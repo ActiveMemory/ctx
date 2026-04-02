@@ -6,7 +6,7 @@
 
 // Package index provides session ID indexing for journal files.
 //
-// [SessionIndex] builds a map from session IDs to filenames by
+// [Session] builds a map from session IDs to filenames by
 // scanning journal markdown frontmatter. [ExtractSessionID] pulls
 // the session_id from a single file. [LookupSessionFile] resolves
 // a session ID to its filename.

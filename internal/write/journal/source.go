@@ -549,23 +549,23 @@ func LockUnlockSummary(cmd *cobra.Command, verb string, count int) {
 		strings.ToUpper(verb[:1])+verb[1:], count))
 }
 
-// JournalSyncNone prints the message when no journal entries are found.
+// SyncNone prints the message when no journal entries are found.
 //
 // Parameters:
 //   - cmd: Cobra command for output. Nil is a no-op.
-func JournalSyncNone(cmd *cobra.Command) {
+func SyncNone(cmd *cobra.Command) {
 	if cmd == nil {
 		return
 	}
 	cmd.Println(desc.Text(text.DescKeyWriteJournalSyncNone))
 }
 
-// JournalSyncLocked prints a single locked-entry confirmation.
+// SyncLocked prints a single locked-entry confirmation.
 //
 // Parameters:
 //   - cmd: Cobra command for output. Nil is a no-op.
 //   - filename: the journal filename that was locked.
-func JournalSyncLocked(cmd *cobra.Command, filename string) {
+func SyncLocked(cmd *cobra.Command, filename string) {
 	if cmd == nil {
 		return
 	}
@@ -574,12 +574,12 @@ func JournalSyncLocked(cmd *cobra.Command, filename string) {
 		filename))
 }
 
-// JournalSyncUnlocked prints a single unlocked-entry confirmation.
+// SyncUnlocked prints a single unlocked-entry confirmation.
 //
 // Parameters:
 //   - cmd: Cobra command for output. Nil is a no-op.
 //   - filename: the journal filename that was unlocked.
-func JournalSyncUnlocked(cmd *cobra.Command, filename string) {
+func SyncUnlocked(cmd *cobra.Command, filename string) {
 	if cmd == nil {
 		return
 	}
@@ -588,14 +588,14 @@ func JournalSyncUnlocked(cmd *cobra.Command, filename string) {
 		filename))
 }
 
-// JournalSyncSummary prints the sync summary: match, locked count,
+// SyncSummary prints the sync summary: match, locked count,
 // and/or unlocked count.
 //
 // Parameters:
 //   - cmd: Cobra command for output. Nil is a no-op.
 //   - locked: number of newly locked entries.
 //   - unlocked: number of newly unlocked entries.
-func JournalSyncSummary(cmd *cobra.Command, locked, unlocked int) {
+func SyncSummary(cmd *cobra.Command, locked, unlocked int) {
 	if cmd == nil {
 		return
 	}
