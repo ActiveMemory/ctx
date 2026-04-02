@@ -11,6 +11,7 @@ import (
 
 	"github.com/ActiveMemory/ctx/internal/rc"
 	"github.com/ActiveMemory/ctx/internal/trace"
+	writeTrace "github.com/ActiveMemory/ctx/internal/write/trace"
 )
 
 // Run collects context refs from all sources and outputs the trailer to stdout.
@@ -24,8 +25,6 @@ func Run(cmd *cobra.Command) error {
 	contextDir := rc.ContextDir()
 	refs := trace.Collect(contextDir)
 	trailer := trace.FormatTrailer(refs)
-	if trailer != "" {
-		cmd.Println(trailer)
-	}
+	writeTrace.Trailer(cmd, trailer)
 	return nil
 }

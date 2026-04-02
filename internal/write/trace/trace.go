@@ -17,6 +17,17 @@ import (
 	internalTrace "github.com/ActiveMemory/ctx/internal/trace"
 )
 
+// Trailer prints the collected context trailer line to stdout.
+//
+// Parameters:
+//   - cmd: Cobra command for output
+//   - trailer: formatted trailer string (empty means no output)
+func Trailer(cmd *cobra.Command, trailer string) {
+	if trailer != "" {
+		cmd.Println(trailer)
+	}
+}
+
 // CommitHeader prints the commit hash, message, and date for a single commit.
 //
 // Parameters:
