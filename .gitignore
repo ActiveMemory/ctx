@@ -71,6 +71,7 @@ editors/vscode/*.vsix
 ideas
 .context/.ctx.key
 .context/.scratchpad.key
+.context/scratchpad.enc
 .DS_Store
 .gitnexus
 
