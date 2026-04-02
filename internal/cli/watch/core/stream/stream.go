@@ -8,9 +8,7 @@ package stream
 
 import (
 	"bufio"
-	"fmt"
 	"io"
-	"regexp"
 	"strings"
 
 	"github.com/spf13/cobra"
@@ -33,12 +31,19 @@ import (
 // Returns:
 //   - string: Attribute value, or empty string if not found
 func ExtractAttribute(tag, attrName string) string {
-	pattern := regexp.MustCompile(fmt.Sprintf(watch.AttrExtractFormat, attrName))
-	match := pattern.FindStringSubmatch(tag)
-	if len(match) >= 2 {
-		return match[1]
+	// Use simple string search — the attribute names are fixed XML
+	// attributes, no regex needed.
+	prefix := attrName + `="`
+	idx := strings.Index(tag, prefix)
+	if idx == -1 {
+		return ""
 	}
-	return ""
+	start := idx + len(prefix)
+	end := strings.Index(tag[start:], `"`)
+	if end == -1 {
+		return ""
+	}
+	return tag[start : start+end]
 }
 
 // Process reads from a stream and applies context updates.
