@@ -8,6 +8,8 @@ package rc
 
 import "sync"
 
+// rc, rcOnce, rcOverrideDir, and rcMu hold the singleton runtime
+// configuration loaded once from .ctxrc via sync.Once.
 var (
 	rc            *CtxRC
 	rcOnce        sync.Once

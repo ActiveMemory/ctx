@@ -24,6 +24,8 @@ const CategoryCustomizable = "customizable"
 // own development workflow.
 const CategoryCtxSpecific = "ctx-specific"
 
+// registryOnce, registryData, and registryErr cache the parsed hook
+// message registry loaded once via sync.Once.
 var (
 	registryOnce sync.Once
 	registryData []HookMessageInfo

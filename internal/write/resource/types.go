@@ -6,12 +6,14 @@
 
 package resource
 
+// jsonAlert is the JSON wire format for a single resource alert.
 type jsonAlert struct {
 	Severity string `json:"severity"`
 	Resource string `json:"resource"`
 	Message  string `json:"message"`
 }
 
+// jsonOutput is the JSON wire format for the resource check response.
 type jsonOutput struct {
 	Memory struct {
 		TotalBytes uint64 `json:"total_bytes"`
