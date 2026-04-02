@@ -18,6 +18,7 @@ import (
 	"github.com/ActiveMemory/ctx/internal/config/file"
 	"github.com/ActiveMemory/ctx/internal/err/fs"
 	errHook "github.com/ActiveMemory/ctx/internal/err/hook"
+	ctxIo "github.com/ActiveMemory/ctx/internal/io"
 	writeMessage "github.com/ActiveMemory/ctx/internal/write/message"
 )
 
@@ -53,11 +54,11 @@ func Run(cmd *cobra.Command, hk, variant string) error {
 	}
 
 	dir := filepath.Dir(oPath)
-	if mkdirErr := os.MkdirAll(dir, 0o750); mkdirErr != nil {
+	if mkdirErr := ctxIo.SafeMkdirAll(dir, 0o750); mkdirErr != nil {
 		return fs.CreateDir(dir, mkdirErr)
 	}
 
-	if writeErr := os.WriteFile(oPath, data, 0o600); writeErr != nil {
+	if writeErr := ctxIo.SafeWriteFile(oPath, data, 0o600); writeErr != nil {
 		return errHook.WriteOverride(oPath, writeErr)
 	}
 

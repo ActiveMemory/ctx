@@ -8,7 +8,6 @@ package section
 
 import (
 	"fmt"
-	"os"
 	"path/filepath"
 	"strings"
 
@@ -23,6 +22,7 @@ import (
 	"github.com/ActiveMemory/ctx/internal/config/token"
 	"github.com/ActiveMemory/ctx/internal/entity"
 	errFs "github.com/ActiveMemory/ctx/internal/err/fs"
+	ctxIo "github.com/ActiveMemory/ctx/internal/io"
 )
 
 // Write creates a subdirectory, writes its index page, and calls
@@ -42,12 +42,12 @@ func Write(
 	writePages func(dir string),
 ) error {
 	dir := filepath.Join(docsDir, subDir)
-	if mkErr := os.MkdirAll(dir, fs.PermExec); mkErr != nil {
+	if mkErr := ctxIo.SafeMkdirAll(dir, fs.PermExec); mkErr != nil {
 		return errFs.Mkdir(dir, mkErr)
 	}
 
 	indexPath := filepath.Join(dir, file.Index)
-	if writeErr := os.WriteFile(
+	if writeErr := ctxIo.SafeWriteFile(
 		indexPath, []byte(indexContent), fs.PermFile,
 	); writeErr != nil {
 		return errFs.FileWrite(indexPath, writeErr)

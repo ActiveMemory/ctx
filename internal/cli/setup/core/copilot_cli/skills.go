@@ -15,6 +15,7 @@ import (
 	"github.com/ActiveMemory/ctx/internal/assets/read/agent"
 	"github.com/ActiveMemory/ctx/internal/config/fs"
 	cfgHook "github.com/ActiveMemory/ctx/internal/config/hook"
+	ctxIo "github.com/ActiveMemory/ctx/internal/io"
 	writeSetup "github.com/ActiveMemory/ctx/internal/write/setup"
 )
 
@@ -42,10 +43,10 @@ func deploySkills(cmd *cobra.Command) error {
 			continue
 		}
 
-		if err := os.MkdirAll(skillDir, fs.PermExec); err != nil {
+		if err := ctxIo.SafeMkdirAll(skillDir, fs.PermExec); err != nil {
 			return err
 		}
-		if wErr := os.WriteFile(target, content, fs.PermFile); wErr != nil {
+		if wErr := ctxIo.SafeWriteFile(target, content, fs.PermFile); wErr != nil {
 			return wErr
 		}
 		writeSetup.InfoCopilotCLICreated(cmd, target)

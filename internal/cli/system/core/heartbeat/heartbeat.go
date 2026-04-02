@@ -7,7 +7,6 @@
 package heartbeat
 
 import (
-	"os"
 	"strconv"
 	"strings"
 
@@ -44,7 +43,7 @@ func ReadMtime(path string) int64 {
 //   - path: absolute path to the mtime state file
 //   - mtime: the mtime value to store
 func WriteMtime(path string, mtime int64) {
-	if writeErr := os.WriteFile(
+	if writeErr := io.SafeWriteFile(
 		path, []byte(strconv.FormatInt(mtime, 10)), fs.PermSecret,
 	); writeErr != nil {
 		ctxLog.Warn(warn.Write, path, writeErr)

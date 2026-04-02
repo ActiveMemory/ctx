@@ -80,7 +80,7 @@ func EnsureKey(cmd *cobra.Command) error {
 		return errCrypto.GenerateKey(genErr)
 	}
 
-	if mkErr := os.MkdirAll(filepath.Dir(kp), fs.PermKeyDir); mkErr != nil {
+	if mkErr := io.SafeMkdirAll(filepath.Dir(kp), fs.PermKeyDir); mkErr != nil {
 		return errCrypto.MkdirKeyDir(mkErr)
 	}
 
@@ -102,7 +102,7 @@ func EnsureKey(cmd *cobra.Command) error {
 //   - error: Non-nil on read/write failure
 func EnsureGitignore(contextDir, filename string) error {
 	entry := filepath.Join(contextDir, filename)
-	content, readErr := os.ReadFile(file.FileGitignore)
+	content, readErr := io.SafeReadUserFile(file.FileGitignore)
 	if readErr != nil && !errors.Is(readErr, os.ErrNotExist) {
 		return readErr
 	}
@@ -178,7 +178,7 @@ func WriteEntries(cmd *cobra.Command, entries []string) error {
 	plaintext := parse.FormatEntries(entries)
 
 	if !rc.ScratchpadEncrypt() {
-		return os.WriteFile(path, plaintext, fs.PermFile)
+		return io.SafeWriteFile(path, plaintext, fs.PermFile)
 	}
 
 	if ensureErr := EnsureKey(cmd); ensureErr != nil {
@@ -196,5 +196,5 @@ func WriteEntries(cmd *cobra.Command, entries []string) error {
 		return errCrypto.EncryptFailed(encErr)
 	}
 
-	return os.WriteFile(path, ciphertext, fs.PermFile)
+	return io.SafeWriteFile(path, ciphertext, fs.PermFile)
 }

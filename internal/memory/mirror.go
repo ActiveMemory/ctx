@@ -58,11 +58,11 @@ func Sync(contextDir, sourcePath string) (SyncResult, error) {
 		result.ArchivedTo = archivePath
 	}
 
-	if mkErr := os.MkdirAll(mirrorDir, fs.PermExec); mkErr != nil {
+	if mkErr := io.SafeMkdirAll(mirrorDir, fs.PermExec); mkErr != nil {
 		return SyncResult{}, errMemory.CreateDir(mkErr)
 	}
 
-	if writeErr := os.WriteFile(
+	if writeErr := io.SafeWriteFile(
 		mirrorPath, sourceData, fs.PermFile,
 	); writeErr != nil {
 		return SyncResult{}, errMemory.WriteMirror(writeErr)
@@ -89,7 +89,7 @@ func Archive(contextDir string) (string, error) {
 		return "", errMemory.ReadMirrorArchive(readErr)
 	}
 
-	if mkErr := os.MkdirAll(archiveDir, fs.PermExec); mkErr != nil {
+	if mkErr := io.SafeMkdirAll(archiveDir, fs.PermExec); mkErr != nil {
 		return "", errMemory.CreateArchiveDir(mkErr)
 	}
 
@@ -97,7 +97,7 @@ func Archive(contextDir string) (string, error) {
 	archiveName := memory.PrefixMirror + ts + file.ExtMarkdown
 	archivePath := filepath.Join(archiveDir, archiveName)
 
-	if writeErr := os.WriteFile(archivePath, data, fs.PermFile); writeErr != nil {
+	if writeErr := io.SafeWriteFile(archivePath, data, fs.PermFile); writeErr != nil {
 		return "", errMemory.WriteArchive(writeErr)
 	}
 

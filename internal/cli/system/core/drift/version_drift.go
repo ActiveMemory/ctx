@@ -9,7 +9,6 @@ package drift
 import (
 	"encoding/json"
 	"fmt"
-	"os"
 	"path/filepath"
 	"strings"
 
@@ -21,6 +20,7 @@ import (
 	"github.com/ActiveMemory/ctx/internal/config/embed/text"
 	"github.com/ActiveMemory/ctx/internal/config/hook"
 	cfgVersion "github.com/ActiveMemory/ctx/internal/config/version"
+	ctxIo "github.com/ActiveMemory/ctx/internal/io"
 	"github.com/ActiveMemory/ctx/internal/notify"
 )
 
@@ -81,7 +81,7 @@ func CheckVersion(sessionID string) string {
 // Returns:
 //   - string: Version string or empty string
 func ReadVersionFile() string {
-	data, readErr := os.ReadFile("VERSION")
+	data, readErr := ctxIo.SafeReadUserFile("VERSION")
 	if readErr != nil {
 		return ""
 	}
@@ -97,7 +97,7 @@ func ReadMarketplaceVersion() string {
 	path := filepath.Clean(
 		filepath.Join(cfgVersion.DirClaudePlugin, cfgVersion.FileMarketplace),
 	)
-	data, readErr := os.ReadFile(path)
+	data, readErr := ctxIo.SafeReadUserFile(path)
 	if readErr != nil {
 		return ""
 	}

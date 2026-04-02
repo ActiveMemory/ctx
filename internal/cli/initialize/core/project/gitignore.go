@@ -28,7 +28,7 @@ import (
 // Returns:
 //   - error: Non-nil on read or write failure
 func EnsureGitignoreEntries(cmd *cobra.Command) error {
-	content, readErr := os.ReadFile(file.FileGitignore)
+	content, readErr := io.SafeReadUserFile(file.FileGitignore)
 	if readErr != nil && !os.IsNotExist(readErr) {
 		return readErr
 	}

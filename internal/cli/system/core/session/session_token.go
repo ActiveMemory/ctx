@@ -100,7 +100,7 @@ func FindJSONLPath(sessionID string) (string, error) {
 	}
 
 	// Cache the result for subsequent calls this session.
-	if writeErr := os.WriteFile(
+	if writeErr := internalIo.SafeWriteFile(
 		cacheFile, []byte(matches[0]), fs.PermSecret,
 	); writeErr != nil {
 		ctxLog.Warn(warn.Write, cacheFile, writeErr)

@@ -25,6 +25,7 @@ import (
 	"github.com/ActiveMemory/ctx/internal/config/warn"
 	"github.com/ActiveMemory/ctx/internal/entity"
 	"github.com/ActiveMemory/ctx/internal/index"
+	ctxIo "github.com/ActiveMemory/ctx/internal/io"
 	"github.com/ActiveMemory/ctx/internal/rc"
 )
 
@@ -171,7 +172,7 @@ func checkConstitution(_ *entity.Context, report *Report) {
 				!strings.HasSuffix(name, file.ExtExample) &&
 				!strings.HasSuffix(name, file.ExtSample) {
 				// Check if it contains actual content (not just template)
-				content, readFileErr := os.ReadFile(entry.Name())
+				content, readFileErr := ctxIo.SafeReadUserFile(entry.Name())
 				if readFileErr != nil {
 					continue
 				}

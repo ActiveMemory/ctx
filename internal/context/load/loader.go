@@ -16,6 +16,7 @@ import (
 	"github.com/ActiveMemory/ctx/internal/context/token"
 	"github.com/ActiveMemory/ctx/internal/entity"
 	errCtx "github.com/ActiveMemory/ctx/internal/err/context"
+	ctxIo "github.com/ActiveMemory/ctx/internal/io"
 	"github.com/ActiveMemory/ctx/internal/rc"
 	"github.com/ActiveMemory/ctx/internal/validate"
 )
@@ -75,7 +76,7 @@ func Do(dir string) (*entity.Context, error) {
 		}
 
 		filePath := filepath.Clean(filepath.Join(dir, name))
-		content, readFileErr := os.ReadFile(filePath)
+		content, readFileErr := ctxIo.SafeReadUserFile(filePath)
 		if readFileErr != nil {
 			continue
 		}

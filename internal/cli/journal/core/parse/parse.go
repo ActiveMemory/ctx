@@ -21,6 +21,7 @@ import (
 	"github.com/ActiveMemory/ctx/internal/config/regex"
 	"github.com/ActiveMemory/ctx/internal/config/token"
 	"github.com/ActiveMemory/ctx/internal/entity"
+	ctxIo "github.com/ActiveMemory/ctx/internal/io"
 )
 
 // ScanJournalEntries reads all journal Markdown files and extracts metadata.
@@ -79,7 +80,7 @@ func JournalEntry(path, filename string) entity.JournalEntry {
 	}
 
 	// Read the file to extract metadata
-	content, readErr := os.ReadFile(filepath.Clean(path))
+	content, readErr := ctxIo.SafeReadUserFile(filepath.Clean(path))
 	if readErr != nil {
 		entry.Title = strings.TrimSuffix(filename, file.ExtMarkdown)
 		return entry

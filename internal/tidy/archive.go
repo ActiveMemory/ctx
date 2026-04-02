@@ -8,7 +8,6 @@ package tidy
 
 import (
 	"fmt"
-	"os"
 	"path/filepath"
 	"time"
 
@@ -38,7 +37,7 @@ import (
 //   - error: If creating the archive directory or writing fails
 func WriteArchive(prefix, heading, content string) (string, error) {
 	archiveDir := filepath.Join(rc.ContextDir(), dir.Archive)
-	if mkErr := os.MkdirAll(archiveDir, fs.PermExec); mkErr != nil {
+	if mkErr := io.SafeMkdirAll(archiveDir, fs.PermExec); mkErr != nil {
 		return "", errBackup.CreateArchiveDir(mkErr)
 	}
 
@@ -52,7 +51,7 @@ func WriteArchive(prefix, heading, content string) (string, error) {
 	nl := token.NewlineLF
 	var finalContent string
 	cleanPath := filepath.Clean(archiveFile)
-	if existing, readErr := os.ReadFile(cleanPath); readErr == nil {
+	if existing, readErr := io.SafeReadUserFile(cleanPath); readErr == nil {
 		finalContent = string(existing) + nl + content
 	} else {
 		finalContent = heading + archive.DateSep +

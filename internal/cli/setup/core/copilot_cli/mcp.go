@@ -46,7 +46,7 @@ func ensureMCPConfig(cmd *cobra.Command) error {
 
 	// Read existing config if it exists
 	existing := make(map[string]interface{})
-	if data, readErr := os.ReadFile(filepath.Clean(target)); readErr == nil {
+	if data, readErr := io.SafeReadUserFile(filepath.Clean(target)); readErr == nil {
 		if jErr := json.Unmarshal(data, &existing); jErr != nil {
 			return jErr
 		}

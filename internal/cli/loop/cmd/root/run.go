@@ -7,8 +7,6 @@
 package root
 
 import (
-	"os"
-
 	"github.com/spf13/cobra"
 
 	"github.com/ActiveMemory/ctx/internal/assets/read/desc"
@@ -17,6 +15,7 @@ import (
 	cfgLoop "github.com/ActiveMemory/ctx/internal/config/loop"
 	"github.com/ActiveMemory/ctx/internal/err/config"
 	errFs "github.com/ActiveMemory/ctx/internal/err/fs"
+	ctxIo "github.com/ActiveMemory/ctx/internal/io"
 	"github.com/ActiveMemory/ctx/internal/write/loop"
 )
 
@@ -47,7 +46,7 @@ func Run(
 
 	script := GenerateLoopScript(promptFile, tool, maxIterations, completionMsg)
 
-	if writeErr := os.WriteFile(
+	if writeErr := ctxIo.SafeWriteFile(
 		outputFile, []byte(script), fs.PermExec,
 	); writeErr != nil {
 		return errFs.FileWrite(outputFile, writeErr)

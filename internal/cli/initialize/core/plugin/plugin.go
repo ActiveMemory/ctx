@@ -95,7 +95,7 @@ func EnableGlobally(cmd *cobra.Command) error {
 	if encodeErr := encoder.Encode(settings); encodeErr != nil {
 		return config.MarshalSettings(encodeErr)
 	}
-	if writeErr := os.WriteFile(
+	if writeErr := io.SafeWriteFile(
 		settingsPath, buf.Bytes(), fs.PermFile,
 	); writeErr != nil {
 		return errFs.FileWrite(settingsPath, writeErr)
@@ -163,7 +163,7 @@ func EnabledGlobally() bool {
 // Returns:
 //   - bool: True if the plugin is listed under enabledPlugins locally
 func EnabledLocally() bool {
-	data, readErr := os.ReadFile(claude.Settings)
+	data, readErr := io.SafeReadUserFile(claude.Settings)
 	if readErr != nil {
 		return false
 	}

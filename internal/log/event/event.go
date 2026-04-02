@@ -44,7 +44,7 @@ func Append(event, message, sessionID string, detail *notify.TemplateRef) {
 
 	// Ensure state directory exists.
 	stateDir := filepath.Dir(logPath)
-	if mkErr := os.MkdirAll(stateDir, fs.PermExec); mkErr != nil {
+	if mkErr := io.SafeMkdirAll(stateDir, fs.PermExec); mkErr != nil {
 		return
 	}
 

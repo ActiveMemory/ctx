@@ -229,7 +229,7 @@ func Reindex(
 
 	updated := updateFunc(string(content))
 
-	if writeErr := os.WriteFile(
+	if writeErr := internalIo.SafeWriteFile(
 		filePath, []byte(updated), fs.PermFile,
 	); writeErr != nil {
 		return errJournal.ReindexFileWrite(filePath, writeErr)

@@ -63,7 +63,7 @@ func LoadState(contextDir string) (State, error) {
 func SaveState(contextDir string, s State) error {
 	path := statePath(contextDir)
 	dir := filepath.Dir(path)
-	if mkErr := os.MkdirAll(dir, fs.PermExec); mkErr != nil {
+	if mkErr := io.SafeMkdirAll(dir, fs.PermExec); mkErr != nil {
 		return mkErr
 	}
 
@@ -72,7 +72,7 @@ func SaveState(contextDir string, s State) error {
 		return marshalErr
 	}
 	data = append(data, token.NewlineLF[0])
-	return os.WriteFile(path, data, fs.PermFile)
+	return io.SafeWriteFile(path, data, fs.PermFile)
 }
 
 // MarkSynced updates the state with the current timestamp.

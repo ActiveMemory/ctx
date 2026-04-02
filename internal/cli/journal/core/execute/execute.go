@@ -7,7 +7,6 @@
 package execute
 
 import (
-	"os"
 	"path/filepath"
 	"strings"
 
@@ -71,7 +70,7 @@ func Import(
 		// Preserve enriched YAML frontmatter from the existing file.
 		discard := opts.DiscardFrontmatter()
 		if fileExists && !discard {
-			existing, readErr := os.ReadFile(filepath.Clean(fa.Path))
+			existing, readErr := io.SafeReadUserFile(filepath.Clean(fa.Path))
 			if readErr == nil {
 				if fm := extract.Frontmatter(string(existing)); fm != "" {
 					content = fm + token.NewlineLF + extract.StripFrontmatter(content)

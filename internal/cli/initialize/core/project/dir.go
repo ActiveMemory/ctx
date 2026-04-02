@@ -17,6 +17,7 @@ import (
 	"github.com/ActiveMemory/ctx/internal/config/fs"
 	errFs "github.com/ActiveMemory/ctx/internal/err/fs"
 	errInit "github.com/ActiveMemory/ctx/internal/err/initialize"
+	ctxIo "github.com/ActiveMemory/ctx/internal/io"
 	"github.com/ActiveMemory/ctx/internal/write/initialize"
 )
 
@@ -36,7 +37,7 @@ func CreateDirs(cmd *cobra.Command) error {
 			continue
 		}
 
-		if mkdirErr := os.MkdirAll(d, fs.PermExec); mkdirErr != nil {
+		if mkdirErr := ctxIo.SafeMkdirAll(d, fs.PermExec); mkdirErr != nil {
 			return errFs.Mkdir(d, mkdirErr)
 		}
 
@@ -46,7 +47,7 @@ func CreateDirs(cmd *cobra.Command) error {
 		}
 
 		readmePath := filepath.Join(d, file.Readme)
-		if writeErr := os.WriteFile(
+		if writeErr := ctxIo.SafeWriteFile(
 			readmePath, readme, fs.PermFile,
 		); writeErr != nil {
 			return errFs.FileWrite(readmePath, writeErr)

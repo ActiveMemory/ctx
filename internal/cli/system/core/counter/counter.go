@@ -7,7 +7,6 @@
 package counter
 
 import (
-	"os"
 	"strconv"
 	"strings"
 
@@ -43,7 +42,7 @@ func Read(path string) int {
 //   - path: Absolute path to the counter file
 //   - n: Counter value to write
 func Write(path string, n int) {
-	if writeErr := os.WriteFile(
+	if writeErr := io.SafeWriteFile(
 		path, []byte(strconv.Itoa(n)), fs.PermSecret,
 	); writeErr != nil {
 		ctxLog.Warn(warn.Write, path, writeErr)

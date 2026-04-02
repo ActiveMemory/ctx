@@ -21,6 +21,7 @@ import (
 	"github.com/ActiveMemory/ctx/internal/config/regex"
 	"github.com/ActiveMemory/ctx/internal/config/token"
 	errFs "github.com/ActiveMemory/ctx/internal/err/fs"
+	ctxIo "github.com/ActiveMemory/ctx/internal/io"
 )
 
 // BlogPosts reads blog posts from blogDir, parses metadata, and
@@ -87,7 +88,7 @@ func BlogPosts(blogDir string) ([]core.BlogPost, core.FeedReport, error) {
 //   - BlogPost: Parsed blog post metadata
 //   - PostStatus: Whether the post was included, skipped, or warned
 func ParsePost(path, filename string) (core.BlogPost, core.PostStatus) {
-	data, readErr := os.ReadFile(path)
+	data, readErr := ctxIo.SafeReadUserFile(path)
 	if readErr != nil {
 		return core.BlogPost{
 			Filename: filename,

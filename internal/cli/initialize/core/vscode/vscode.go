@@ -7,12 +7,11 @@
 package vscode
 
 import (
-	"os"
-
 	"github.com/spf13/cobra"
 
 	"github.com/ActiveMemory/ctx/internal/config/fs"
 	cfgVscode "github.com/ActiveMemory/ctx/internal/config/vscode"
+	ctxIo "github.com/ActiveMemory/ctx/internal/io"
 	writeVscode "github.com/ActiveMemory/ctx/internal/write/vscode"
 )
 
@@ -29,7 +28,7 @@ import (
 // Returns:
 //   - error: Non-nil if directory creation fails
 func CreateVSCodeArtifacts(cmd *cobra.Command) error {
-	if mkdirErr := os.MkdirAll(cfgVscode.Dir, fs.PermExec); mkdirErr != nil {
+	if mkdirErr := ctxIo.SafeMkdirAll(cfgVscode.Dir, fs.PermExec); mkdirErr != nil {
 		return mkdirErr
 	}
 

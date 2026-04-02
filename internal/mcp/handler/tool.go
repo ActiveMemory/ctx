@@ -8,7 +8,6 @@ package handler
 
 import (
 	"fmt"
-	"os"
 	"strings"
 	"time"
 
@@ -363,7 +362,7 @@ func (h *Handler) Compact(archive bool) (string, error) {
 
 	// Write TASKS.md changes.
 	if result.TasksFileUpdate != nil {
-		if writeErr := os.WriteFile(
+		if writeErr := io.SafeWriteFile(
 			result.TasksFileUpdate.Path,
 			result.TasksFileUpdate.Content,
 			cfgFs.PermFile,
@@ -374,7 +373,7 @@ func (h *Handler) Compact(archive bool) (string, error) {
 
 	// Write section-cleaned files.
 	for _, fu := range result.SectionFileUpdates {
-		if writeErr := os.WriteFile(
+		if writeErr := io.SafeWriteFile(
 			fu.Path, fu.Content, cfgFs.PermFile,
 		); writeErr != nil {
 			return "", writeErr

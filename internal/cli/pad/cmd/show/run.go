@@ -7,8 +7,6 @@
 package show
 
 import (
-	"os"
-
 	"github.com/spf13/cobra"
 
 	"github.com/ActiveMemory/ctx/internal/cli/pad/core/blob"
@@ -17,6 +15,7 @@ import (
 	"github.com/ActiveMemory/ctx/internal/config/fs"
 	errFs "github.com/ActiveMemory/ctx/internal/err/fs"
 	errPad "github.com/ActiveMemory/ctx/internal/err/pad"
+	ctxIo "github.com/ActiveMemory/ctx/internal/io"
 	"github.com/ActiveMemory/ctx/internal/write/pad"
 )
 
@@ -47,7 +46,7 @@ func Run(cmd *cobra.Command, n int, outPath string) error {
 
 	if _, data, ok := blob.Split(entry); ok {
 		if outPath != "" {
-			if writeErr := os.WriteFile(
+			if writeErr := ctxIo.SafeWriteFile(
 				outPath, data, fs.PermSecret,
 			); writeErr != nil {
 				return errFs.WriteFileFailed(writeErr)

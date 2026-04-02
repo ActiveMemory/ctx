@@ -88,7 +88,7 @@ func Execute(r Result) (string, error) {
 	}
 
 	tasksPath := path.FilePath()
-	if updateErr := os.WriteFile(
+	if updateErr := io.SafeWriteFile(
 		tasksPath, []byte(r.NewTasksBody), fs.PermFile,
 	); updateErr != nil {
 		return "", errTask.FileWrite(updateErr)

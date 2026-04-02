@@ -7,7 +7,6 @@
 package memory
 
 import (
-	"os"
 	"strings"
 
 	"github.com/ActiveMemory/ctx/internal/assets/read/desc"
@@ -170,7 +169,7 @@ func Publish(contextDir, memoryPath string, budget int) (PublishResult, error) {
 
 	merged, _ := MergePublished(string(existing), formatted)
 
-	if writeErr := os.WriteFile(
+	if writeErr := io.SafeWriteFile(
 		memoryPath, []byte(merged), fs.PermFile,
 	); writeErr != nil {
 		return PublishResult{}, errMemory.WriteMemory(writeErr)

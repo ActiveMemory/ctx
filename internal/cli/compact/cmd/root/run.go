@@ -8,7 +8,6 @@ package root
 
 import (
 	"errors"
-	"os"
 
 	"github.com/spf13/cobra"
 
@@ -17,6 +16,7 @@ import (
 	"github.com/ActiveMemory/ctx/internal/context/load"
 	errCtx "github.com/ActiveMemory/ctx/internal/err/context"
 	errInit "github.com/ActiveMemory/ctx/internal/err/initialize"
+	ctxIo "github.com/ActiveMemory/ctx/internal/io"
 	"github.com/ActiveMemory/ctx/internal/rc"
 	"github.com/ActiveMemory/ctx/internal/tidy"
 	writeCompact "github.com/ActiveMemory/ctx/internal/write/compact"
@@ -64,7 +64,7 @@ func Run(cmd *cobra.Command, archive bool) error {
 	if err == nil {
 		result := tidy.CompactContext(ctx)
 		for i, sc := range result.SectionsCleaned {
-			if writeErr := os.WriteFile(
+			if writeErr := ctxIo.SafeWriteFile(
 				result.SectionFileUpdates[i].Path,
 				result.SectionFileUpdates[i].Content,
 				fs.PermFile,

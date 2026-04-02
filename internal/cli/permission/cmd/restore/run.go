@@ -32,7 +32,7 @@ import (
 // Returns:
 //   - error: Non-nil on read/write/parse failure or missing golden file
 func Run(cmd *cobra.Command) error {
-	goldenBytes, goldenReadErr := os.ReadFile(cfgClaude.SettingsGolden)
+	goldenBytes, goldenReadErr := io.SafeReadUserFile(cfgClaude.SettingsGolden)
 	if goldenReadErr != nil {
 		if os.IsNotExist(goldenReadErr) {
 			return config.GoldenNotFound()
@@ -40,7 +40,7 @@ func Run(cmd *cobra.Command) error {
 		return errFs.FileRead(cfgClaude.SettingsGolden, goldenReadErr)
 	}
 
-	localBytes, localReadErr := os.ReadFile(cfgClaude.Settings)
+	localBytes, localReadErr := io.SafeReadUserFile(cfgClaude.Settings)
 	if localReadErr != nil {
 		if os.IsNotExist(localReadErr) {
 			if writeErr := io.SafeWriteFile(

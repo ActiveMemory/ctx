@@ -134,7 +134,7 @@ var lockedPrefix = session.FrontmatterLocked + token.Colon
 //   - path: Absolute path to the journal .md file
 //   - lock: True to insert, false to remove
 func UpdateFrontmatter(path string, lock bool) {
-	data, readErr := os.ReadFile(filepath.Clean(path))
+	data, readErr := io.SafeReadUserFile(filepath.Clean(path))
 	if readErr != nil {
 		return
 	}
@@ -200,7 +200,7 @@ func UpdateFrontmatter(path string, lock bool) {
 // Returns:
 //   - bool: True if frontmatter contains "locked: true"
 func HasLocked(path string) bool {
-	data, readErr := os.ReadFile(filepath.Clean(path))
+	data, readErr := io.SafeReadUserFile(filepath.Clean(path))
 	if readErr != nil {
 		return false
 	}

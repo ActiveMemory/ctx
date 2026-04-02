@@ -34,6 +34,7 @@ import (
 	"github.com/ActiveMemory/ctx/internal/config/token"
 	errFs "github.com/ActiveMemory/ctx/internal/err/fs"
 	errPrompt "github.com/ActiveMemory/ctx/internal/err/prompt"
+	ctxIo "github.com/ActiveMemory/ctx/internal/io"
 	"github.com/ActiveMemory/ctx/internal/rc"
 	"github.com/ActiveMemory/ctx/internal/write/initialize"
 )
@@ -93,7 +94,7 @@ func Run(
 	}
 
 	// Create .context/ directory
-	if mkdirErr := os.MkdirAll(contextDir, fs.PermExec); mkdirErr != nil {
+	if mkdirErr := ctxIo.SafeMkdirAll(contextDir, fs.PermExec); mkdirErr != nil {
 		return errFs.Mkdir(contextDir, mkdirErr)
 	}
 
@@ -124,7 +125,7 @@ func Run(
 			return errPrompt.ReadTemplate(name, tplErr)
 		}
 
-		if writeErr := os.WriteFile(
+		if writeErr := ctxIo.SafeWriteFile(
 			targetPath, content, fs.PermFile,
 		); writeErr != nil {
 			return errFs.FileWrite(targetPath, writeErr)

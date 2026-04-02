@@ -55,7 +55,7 @@ func readJSONL[T any](path string) ([]T, error) {
 // appendJSONL marshals entry as JSON and appends it as a line to dir/filename.
 // Creates the directory if needed.
 func appendJSONL[T any](dir, filename string, entry T) error {
-	if mkErr := os.MkdirAll(dir, cfgFs.PermRestrictedDir); mkErr != nil {
+	if mkErr := io.SafeMkdirAll(dir, cfgFs.PermRestrictedDir); mkErr != nil {
 		return mkErr
 	}
 

@@ -92,7 +92,7 @@ func EnsureSMBMount(cfg *SMBConfig) error {
 //   - error: Non-nil on copy failure
 func CopyToSMB(cfg *SMBConfig, localPath string) error {
 	dest := filepath.Join(cfg.GVFSPath, cfg.Subdir)
-	if mkdirErr := os.MkdirAll(dest, fs.PermExec); mkdirErr != nil {
+	if mkdirErr := io.SafeMkdirAll(dest, fs.PermExec); mkdirErr != nil {
 		return errFs.CreateDir(dest, mkdirErr)
 	}
 
@@ -102,7 +102,7 @@ func CopyToSMB(cfg *SMBConfig, localPath string) error {
 	}
 
 	destFile := filepath.Join(dest, filepath.Base(localPath))
-	if writeErr := os.WriteFile(destFile, data, fs.PermFile); writeErr != nil {
+	if writeErr := io.SafeWriteFile(destFile, data, fs.PermFile); writeErr != nil {
 		return errBackup.WriteSMB(writeErr)
 	}
 

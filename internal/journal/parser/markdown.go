@@ -8,7 +8,6 @@ package parser
 
 import (
 	"bufio"
-	"os"
 	"path/filepath"
 	"strings"
 
@@ -18,6 +17,7 @@ import (
 	"github.com/ActiveMemory/ctx/internal/config/warn"
 	"github.com/ActiveMemory/ctx/internal/entity"
 	errParser "github.com/ActiveMemory/ctx/internal/err/parser"
+	ctxIo "github.com/ActiveMemory/ctx/internal/io"
 	ctxLog "github.com/ActiveMemory/ctx/internal/log/warn"
 )
 
@@ -81,7 +81,7 @@ func (p *MarkdownSession) Matches(path string) bool {
 		return false
 	}
 
-	f, openErr := os.Open(filepath.Clean(path))
+	f, openErr := ctxIo.SafeOpenUserFile(path)
 	if openErr != nil {
 		return false
 	}
@@ -114,7 +114,7 @@ func (p *MarkdownSession) Matches(path string) bool {
 //   - []*entity.Session: A single-element slice with the parsed session
 //   - error: Non-nil if the file cannot be opened or read
 func (p *MarkdownSession) ParseFile(path string) ([]*entity.Session, error) {
-	content, readErr := os.ReadFile(filepath.Clean(path))
+	content, readErr := ctxIo.SafeReadUserFile(filepath.Clean(path))
 	if readErr != nil {
 		return nil, errParser.ReadFile(readErr)
 	}

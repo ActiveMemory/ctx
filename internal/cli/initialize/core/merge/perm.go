@@ -9,7 +9,6 @@ package merge
 import (
 	"bytes"
 	"encoding/json"
-	"os"
 	"strings"
 
 	"github.com/spf13/cobra"
@@ -23,6 +22,7 @@ import (
 	"github.com/ActiveMemory/ctx/internal/err/config"
 	errFs "github.com/ActiveMemory/ctx/internal/err/fs"
 	errParser "github.com/ActiveMemory/ctx/internal/err/parser"
+	ctxIo "github.com/ActiveMemory/ctx/internal/io"
 	"github.com/ActiveMemory/ctx/internal/write/initialize"
 )
 
@@ -35,7 +35,7 @@ import (
 //   - error: Non-nil if file operations fail
 func SettingsPermissions(cmd *cobra.Command) error {
 	var settings claude.Settings
-	existingContent, readErr := os.ReadFile(cfgClaude.Settings)
+	existingContent, readErr := ctxIo.SafeReadUserFile(cfgClaude.Settings)
 	fileExists := readErr == nil
 	if fileExists {
 		unmarshalErr := json.Unmarshal(existingContent, &settings)
@@ -55,7 +55,7 @@ func SettingsPermissions(cmd *cobra.Command) error {
 		initialize.NoChanges(cmd, cfgClaude.Settings)
 		return nil
 	}
-	if mkdirErr := os.MkdirAll(dir.Claude, fs.PermExec); mkdirErr != nil {
+	if mkdirErr := ctxIo.SafeMkdirAll(dir.Claude, fs.PermExec); mkdirErr != nil {
 		return errFs.Mkdir(dir.Claude, mkdirErr)
 	}
 	var buf bytes.Buffer
@@ -65,7 +65,7 @@ func SettingsPermissions(cmd *cobra.Command) error {
 	if encodeErr := encoder.Encode(settings); encodeErr != nil {
 		return config.MarshalSettings(encodeErr)
 	}
-	if writeErr := os.WriteFile(
+	if writeErr := ctxIo.SafeWriteFile(
 		cfgClaude.Settings, buf.Bytes(), fs.PermFile,
 	); writeErr != nil {
 		return errFs.FileWrite(cfgClaude.Settings, writeErr)

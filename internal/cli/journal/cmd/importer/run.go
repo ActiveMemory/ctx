@@ -7,7 +7,6 @@
 package importer
 
 import (
-	"os"
 	"path/filepath"
 	"strings"
 
@@ -28,6 +27,7 @@ import (
 	errFs "github.com/ActiveMemory/ctx/internal/err/fs"
 	errJournal "github.com/ActiveMemory/ctx/internal/err/journal"
 	errSession "github.com/ActiveMemory/ctx/internal/err/session"
+	ctxIo "github.com/ActiveMemory/ctx/internal/io"
 	"github.com/ActiveMemory/ctx/internal/journal/state"
 	"github.com/ActiveMemory/ctx/internal/rc"
 	"github.com/ActiveMemory/ctx/internal/write/err"
@@ -96,7 +96,7 @@ func Run(cmd *cobra.Command, args []string, opts entity.ImportOpts) error {
 
 	// 4. Ensure journal directory exists.
 	journalDir := filepath.Join(rc.ContextDir(), dir.Journal)
-	if mkErr := os.MkdirAll(journalDir, fs.PermExec); mkErr != nil {
+	if mkErr := ctxIo.SafeMkdirAll(journalDir, fs.PermExec); mkErr != nil {
 		return errFs.Mkdir(dir.Journal, mkErr)
 	}
 

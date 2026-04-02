@@ -8,7 +8,6 @@ package persistence
 
 import (
 	"fmt"
-	"os"
 	"path/filepath"
 	"strconv"
 	"strings"
@@ -77,7 +76,7 @@ func ReadState(path string) (State, bool) {
 func WriteState(path string, s State) {
 	content := fmt.Sprintf(desc.Text(text.DescKeyCheckPersistenceStateFormat),
 		s.Count, s.LastNudge, s.LastMtime)
-	if writeErr := os.WriteFile(
+	if writeErr := io.SafeWriteFile(
 		path, []byte(content), fs.PermSecret,
 	); writeErr != nil {
 		ctxLog.Warn(warn.Write, path, writeErr)

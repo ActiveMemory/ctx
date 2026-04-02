@@ -7,7 +7,6 @@
 package mark_wrapped_up
 
 import (
-	"os"
 	"path/filepath"
 
 	"github.com/spf13/cobra"
@@ -15,6 +14,7 @@ import (
 	"github.com/ActiveMemory/ctx/internal/cli/system/core/state"
 	"github.com/ActiveMemory/ctx/internal/config/fs"
 	"github.com/ActiveMemory/ctx/internal/config/wrap"
+	ctxIo "github.com/ActiveMemory/ctx/internal/io"
 	"github.com/ActiveMemory/ctx/internal/write/session"
 )
 
@@ -31,7 +31,7 @@ import (
 func Run(cmd *cobra.Command) error {
 	markerPath := filepath.Join(state.Dir(), wrap.Marker)
 
-	if writeErr := os.WriteFile(
+	if writeErr := ctxIo.SafeWriteFile(
 		markerPath, []byte(wrap.Content), fs.PermSecret,
 	); writeErr != nil {
 		return writeErr

@@ -7,13 +7,13 @@
 package state
 
 import (
-	"os"
 	"path/filepath"
 
 	"github.com/ActiveMemory/ctx/internal/config/dir"
 	"github.com/ActiveMemory/ctx/internal/config/fs"
 	"github.com/ActiveMemory/ctx/internal/config/warn"
 	ctxContext "github.com/ActiveMemory/ctx/internal/context/validate"
+	ctxIo "github.com/ActiveMemory/ctx/internal/io"
 	ctxLog "github.com/ActiveMemory/ctx/internal/log/warn"
 	"github.com/ActiveMemory/ctx/internal/rc"
 )
@@ -29,7 +29,7 @@ func Dir() string {
 		return dirOverride
 	}
 	d := filepath.Join(rc.ContextDir(), dir.State)
-	if mkdirErr := os.MkdirAll(d, fs.PermRestrictedDir); mkdirErr != nil {
+	if mkdirErr := ctxIo.SafeMkdirAll(d, fs.PermRestrictedDir); mkdirErr != nil {
 		ctxLog.Warn(warn.Mkdir, d, mkdirErr)
 	}
 	return d

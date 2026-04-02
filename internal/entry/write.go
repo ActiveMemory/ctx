@@ -52,7 +52,7 @@ func Write(params Params) error {
 		return errAdd.FileNotFound(filePath)
 	}
 
-	existing, readErr := os.ReadFile(filepath.Clean(filePath))
+	existing, readErr := io.SafeReadUserFile(filepath.Clean(filePath))
 	if readErr != nil {
 		return errFs.FileRead(filePath, readErr)
 	}

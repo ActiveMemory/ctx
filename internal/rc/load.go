@@ -14,6 +14,7 @@ import (
 
 	"github.com/ActiveMemory/ctx/internal/config/env"
 	"github.com/ActiveMemory/ctx/internal/config/file"
+	ctxIo "github.com/ActiveMemory/ctx/internal/io"
 	writeRC "github.com/ActiveMemory/ctx/internal/write/rc"
 )
 
@@ -26,7 +27,7 @@ func loadRC() *CtxRC {
 	cfg := Default()
 
 	// Try to load .ctxrc from the current directory
-	data, readErr := os.ReadFile(file.CtxRC)
+	data, readErr := ctxIo.SafeReadUserFile(file.CtxRC)
 	if readErr == nil {
 		if yamlErr := yaml.Unmarshal(data, cfg); yamlErr != nil {
 			writeRC.ParseWarning(file.CtxRC, yamlErr)

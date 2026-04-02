@@ -11,11 +11,11 @@ package sysinfo
 import (
 	"fmt"
 	"io"
-	"os"
 	"runtime"
 
 	cfgSysinfo "github.com/ActiveMemory/ctx/internal/config/sysinfo"
 	"github.com/ActiveMemory/ctx/internal/config/warn"
+	ctxIo "github.com/ActiveMemory/ctx/internal/io"
 	ctxLog "github.com/ActiveMemory/ctx/internal/log/warn"
 )
 
@@ -27,7 +27,7 @@ import (
 // Returns:
 //   - LoadInfo: System load averages and CPU count
 func collectLoad() LoadInfo {
-	f, openErr := os.Open(cfgSysinfo.ProcLoadavg)
+	f, openErr := ctxIo.SafeOpenUserFile(cfgSysinfo.ProcLoadavg)
 	if openErr != nil {
 		return LoadInfo{Supported: false}
 	}

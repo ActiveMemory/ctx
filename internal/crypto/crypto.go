@@ -16,7 +16,6 @@ import (
 	"crypto/cipher"
 	"crypto/rand"
 	"io"
-	"os"
 
 	"github.com/ActiveMemory/ctx/internal/config/crypto"
 	"github.com/ActiveMemory/ctx/internal/config/fs"
@@ -134,7 +133,7 @@ func LoadKey(path string) ([]byte, error) {
 // Returns:
 //   - error: Non-nil if the file cannot be written
 func SaveKey(path string, key []byte) error {
-	if writeErr := os.WriteFile(path, key, fs.PermSecret); writeErr != nil {
+	if writeErr := internalIo.SafeWriteFile(path, key, fs.PermSecret); writeErr != nil {
 		return errCrypto.WriteKey(writeErr)
 	}
 	return nil

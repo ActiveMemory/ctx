@@ -7,7 +7,6 @@
 package unpublish
 
 import (
-	"os"
 	"path/filepath"
 
 	"github.com/spf13/cobra"
@@ -53,7 +52,7 @@ func Run(cmd *cobra.Command) error {
 		return nil
 	}
 
-	if writeErr := os.WriteFile(
+	if writeErr := io.SafeWriteFile(
 		memoryPath, []byte(cleaned), fs.PermFile,
 	); writeErr != nil {
 		return ctxErr.Write(writeErr)

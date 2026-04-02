@@ -14,6 +14,7 @@ import (
 
 	cfgFs "github.com/ActiveMemory/ctx/internal/config/fs"
 	cfgTrace "github.com/ActiveMemory/ctx/internal/config/trace"
+	ctxIo "github.com/ActiveMemory/ctx/internal/io"
 )
 
 // Record appends a single pending context reference to the pending file
@@ -61,16 +62,11 @@ func ReadPending(stateDir string) ([]PendingEntry, error) {
 //   - error: non-nil if the file exists but cannot be truncated
 func TruncatePending(stateDir string) error {
 	path := filepath.Join(stateDir, cfgTrace.FilePending)
-	//nolint:gosec // path built from trusted stateDir + constant filename
-	f, openErr := os.OpenFile(
-		filepath.Clean(path),
-		os.O_TRUNC|os.O_WRONLY,
-		cfgFs.PermFile,
-	)
+	if _, statErr := os.Stat(path); errors.Is(statErr, os.ErrNotExist) {
+		return nil
+	}
+	f, openErr := ctxIo.SafeCreateFile(path, cfgFs.PermFile)
 	if openErr != nil {
-		if errors.Is(openErr, os.ErrNotExist) {
-			return nil
-		}
 		return openErr
 	}
 	return f.Close()

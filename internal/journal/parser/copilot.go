@@ -69,7 +69,7 @@ func (p *Copilot) Matches(path string) bool {
 		return false
 	}
 
-	file, openErr := os.Open(filepath.Clean(path))
+	file, openErr := io.SafeOpenUserFile(path)
 	if openErr != nil {
 		return false
 	}
@@ -113,7 +113,7 @@ func (p *Copilot) Matches(path string) bool {
 //   - []*entity.Session: the parsed sessions (at most one for Copilot)
 //   - error: any error encountered during parsing
 func (p *Copilot) ParseFile(path string) ([]*entity.Session, error) {
-	file, openErr := os.Open(filepath.Clean(path))
+	file, openErr := io.SafeOpenUserFile(path)
 	if openErr != nil {
 		return nil, errParser.OpenFile(openErr)
 	}

@@ -11,13 +11,13 @@ package sysinfo
 import (
 	"bufio"
 	"io"
-	"os"
 	"strconv"
 	"strings"
 
 	cfgSysinfo "github.com/ActiveMemory/ctx/internal/config/sysinfo"
 	"github.com/ActiveMemory/ctx/internal/config/token"
 	"github.com/ActiveMemory/ctx/internal/config/warn"
+	ctxIo "github.com/ActiveMemory/ctx/internal/io"
 	ctxLog "github.com/ActiveMemory/ctx/internal/log/warn"
 )
 
@@ -29,7 +29,7 @@ import (
 // Returns:
 //   - MemInfo: Physical and swap memory statistics
 func collectMemory() MemInfo {
-	f, openErr := os.Open(cfgSysinfo.ProcMeminfo)
+	f, openErr := ctxIo.SafeOpenUserFile(cfgSysinfo.ProcMeminfo)
 	if openErr != nil {
 		return MemInfo{Supported: false}
 	}

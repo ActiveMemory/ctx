@@ -16,6 +16,7 @@ import (
 	cfgPad "github.com/ActiveMemory/ctx/internal/config/pad"
 	"github.com/ActiveMemory/ctx/internal/crypto"
 	errCrypto "github.com/ActiveMemory/ctx/internal/err/crypto"
+	ctxIo "github.com/ActiveMemory/ctx/internal/io"
 	"github.com/ActiveMemory/ctx/internal/rc"
 	"github.com/ActiveMemory/ctx/internal/write/initialize"
 )
@@ -45,7 +46,7 @@ func Setup(cmd *cobra.Command, contextDir string) error {
 func setupPlaintext(cmd *cobra.Command, contextDir string) error {
 	mdPath := filepath.Join(contextDir, cfgPad.Md)
 	if _, statErr := os.Stat(mdPath); statErr != nil {
-		if writeErr := os.WriteFile(mdPath, nil, cfgFs.PermFile); writeErr != nil {
+		if writeErr := ctxIo.SafeWriteFile(mdPath, nil, cfgFs.PermFile); writeErr != nil {
 			return writeErr
 		}
 		initialize.InfoScratchpadPlaintext(cmd, mdPath)
@@ -72,7 +73,7 @@ func setupEncrypted(cmd *cobra.Command, contextDir string) error {
 	}
 
 	// Ensure the key directory exists.
-	if mkdirErr := os.MkdirAll(
+	if mkdirErr := ctxIo.SafeMkdirAll(
 		filepath.Dir(kPath), cfgFs.PermKeyDir,
 	); mkdirErr != nil {
 		return errCrypto.MkdirKeyDir(mkdirErr)

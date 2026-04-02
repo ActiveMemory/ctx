@@ -7,7 +7,6 @@
 package copilot
 
 import (
-	"os"
 	"path/filepath"
 	"strings"
 
@@ -41,7 +40,7 @@ func DeployInstructions(cmd *cobra.Command) error {
 	targetFile := filepath.Join(cfgHook.DirGitHub, cfgHook.FileCopilotInstructions)
 
 	// Create .github/ directory if needed
-	if mkdirErr := os.MkdirAll(cfgHook.DirGitHub, fs.PermExec); mkdirErr != nil {
+	if mkdirErr := io.SafeMkdirAll(cfgHook.DirGitHub, fs.PermExec); mkdirErr != nil {
 		return errFs.Mkdir(cfgHook.DirGitHub, mkdirErr)
 	}
 
@@ -52,7 +51,7 @@ func DeployInstructions(cmd *cobra.Command) error {
 	}
 
 	// Check if the file exists
-	existingContent, existErr := os.ReadFile(filepath.Clean(targetFile))
+	existingContent, existErr := io.SafeReadUserFile(filepath.Clean(targetFile))
 	fileExists := existErr == nil
 
 	if fileExists {
@@ -83,7 +82,7 @@ func DeployInstructions(cmd *cobra.Command) error {
 
 	// Also create .context/sessions/ if it doesn't exist
 	sessionsDir := filepath.Join(dir.Context, dir.Sessions)
-	if mkErr := os.MkdirAll(sessionsDir, fs.PermExec); mkErr != nil {
+	if mkErr := io.SafeMkdirAll(sessionsDir, fs.PermExec); mkErr != nil {
 		writeErr.WarnFile(cmd, sessionsDir, mkErr)
 	} else {
 		writeSetup.InfoCopilotSessionsDir(cmd, sessionsDir)

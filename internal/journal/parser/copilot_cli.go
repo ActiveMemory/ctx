@@ -78,7 +78,7 @@ func (p *CopilotCLI) Matches(path string) bool {
 	}
 
 	// Verify the first line looks like a Copilot CLI session
-	f, err := os.Open(filepath.Clean(path))
+	f, err := io.SafeOpenUserFile(path)
 	if err != nil {
 		return false
 	}
@@ -113,7 +113,7 @@ func (p *CopilotCLI) Matches(path string) bool {
 //   - []*entity.Session: the parsed sessions (at most one for Copilot CLI)
 //   - error: any error encountered during parsing
 func (p *CopilotCLI) ParseFile(path string) ([]*entity.Session, error) {
-	f, err := os.Open(filepath.Clean(path))
+	f, err := io.SafeOpenUserFile(path)
 	if err != nil {
 		return nil, errParser.OpenFile(err)
 	}

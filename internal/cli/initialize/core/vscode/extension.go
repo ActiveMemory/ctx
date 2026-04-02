@@ -59,7 +59,7 @@ func createExtensionsJSON(cmd *cobra.Command) error {
 	data, _ := json.MarshalIndent(content, "", "  ")
 	data = append(data, token.NewlineLF...)
 
-	if writeErr := os.WriteFile(target, data, fs.PermFile); writeErr != nil {
+	if writeErr := io.SafeWriteFile(target, data, fs.PermFile); writeErr != nil {
 		return writeErr
 	}
 	writeVscode.InfoCreated(cmd, target)

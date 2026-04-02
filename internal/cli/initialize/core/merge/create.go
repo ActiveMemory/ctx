@@ -36,11 +36,11 @@ import (
 //   - created: True if the file was created fresh (no existing file)
 //   - error: Non-nil if file operations fail
 func OrCreate(cmd *cobra.Command, p entity.MergeParams) (bool, error) {
-	existingContent, readErr := os.ReadFile(p.Filename)
+	existingContent, readErr := io.SafeReadUserFile(p.Filename)
 	fileExists := readErr == nil
 
 	if !fileExists {
-		if writeErr := os.WriteFile(
+		if writeErr := io.SafeWriteFile(
 			p.Filename, p.TemplateContent, fs.PermFile,
 		); writeErr != nil {
 			return false, errFs.FileWrite(p.Filename, writeErr)

@@ -27,7 +27,7 @@ import (
 // Returns:
 //   - error: Non-nil on read/write failure or missing settings file
 func Run(cmd *cobra.Command) error {
-	content, readErr := os.ReadFile(claude.Settings)
+	content, readErr := io.SafeReadUserFile(claude.Settings)
 	if readErr != nil {
 		if os.IsNotExist(readErr) {
 			return config.SettingsNotFound()

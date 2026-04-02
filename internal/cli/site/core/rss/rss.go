@@ -8,7 +8,6 @@ package rss
 
 import (
 	"encoding/xml"
-	"os"
 	"path/filepath"
 	"strings"
 
@@ -18,6 +17,7 @@ import (
 	"github.com/ActiveMemory/ctx/internal/config/token"
 	errFs "github.com/ActiveMemory/ctx/internal/err/fs"
 	errSite "github.com/ActiveMemory/ctx/internal/err/site"
+	ctxIo "github.com/ActiveMemory/ctx/internal/io"
 )
 
 // Atom builds the Atom XML and writes it to outPath.
@@ -80,7 +80,7 @@ func Atom(posts []core.BlogPost, outPath, baseURL string) error {
 	}
 
 	outDir := filepath.Dir(outPath)
-	if mkErr := os.MkdirAll(outDir, 0o755); mkErr != nil {
+	if mkErr := ctxIo.SafeMkdirAll(outDir, 0o755); mkErr != nil {
 		return errFs.Mkdir(outDir, mkErr)
 	}
 
@@ -93,7 +93,7 @@ func Atom(posts []core.BlogPost, outPath, baseURL string) error {
 	output = append(output, xmlData...)
 	output = append(output, token.NewlineLF[0])
 
-	if writeErr := os.WriteFile(outPath, output, 0o644); writeErr != nil {
+	if writeErr := ctxIo.SafeWriteFile(outPath, output, 0o644); writeErr != nil {
 		return errFs.FileWrite(outPath, writeErr)
 	}
 

@@ -31,6 +31,7 @@ import (
 	errFs "github.com/ActiveMemory/ctx/internal/err/fs"
 	"github.com/ActiveMemory/ctx/internal/err/journal"
 	execZensical "github.com/ActiveMemory/ctx/internal/exec/zensical"
+	ctxIo "github.com/ActiveMemory/ctx/internal/io"
 	"github.com/ActiveMemory/ctx/internal/journal/state"
 	"github.com/ActiveMemory/ctx/internal/rc"
 	"github.com/ActiveMemory/ctx/internal/write/err"
@@ -78,13 +79,13 @@ func Run(
 
 	// Create output directory structure
 	docsDir := filepath.Join(output, dir.JournalDocs)
-	if mkErr := os.MkdirAll(docsDir, fs.PermExec); mkErr != nil {
+	if mkErr := ctxIo.SafeMkdirAll(docsDir, fs.PermExec); mkErr != nil {
 		return errFs.Mkdir(docsDir, mkErr)
 	}
 
 	// Write the stylesheet for <pre> overflow control
 	stylesDir := filepath.Join(docsDir, zensical.Stylesheets)
-	if mkErr := os.MkdirAll(stylesDir, fs.PermExec); mkErr != nil {
+	if mkErr := ctxIo.SafeMkdirAll(stylesDir, fs.PermExec); mkErr != nil {
 		return errFs.Mkdir(stylesDir, mkErr)
 	}
 	cssPath := filepath.Join(stylesDir, zensical.ExtraCSS)
@@ -92,7 +93,7 @@ func Run(
 	if cssReadErr != nil {
 		return cssReadErr
 	}
-	if writeErr := os.WriteFile(
+	if writeErr := ctxIo.SafeWriteFile(
 		cssPath, cssData, fs.PermFile,
 	); writeErr != nil {
 		return errFs.FileWrite(cssPath, writeErr)
@@ -100,7 +101,7 @@ func Run(
 
 	// Write README
 	readmePath := filepath.Join(output, file.Readme)
-	if writeErr := os.WriteFile(
+	if writeErr := ctxIo.SafeWriteFile(
 		readmePath,
 		[]byte(generate.SiteReadme(journalDir)), fs.PermFile,
 	); writeErr != nil {
@@ -112,7 +113,7 @@ func Run(
 		src := entry.Path
 		dst := filepath.Join(docsDir, entry.Filename)
 
-		content, readErr := os.ReadFile(filepath.Clean(src))
+		content, readErr := ctxIo.SafeReadUserFile(filepath.Clean(src))
 		if readErr != nil {
 			err.WarnFile(cmd, entry.Filename, readErr)
 			continue
@@ -131,7 +132,7 @@ func Run(
 			),
 		)
 		if normalized != string(content) {
-			if writeErr := os.WriteFile(
+			if writeErr := ctxIo.SafeWriteFile(
 				src, []byte(normalized), fs.PermFile,
 			); writeErr != nil {
 				err.WarnFile(cmd, entry.Filename, writeErr)
@@ -145,7 +146,7 @@ func Run(
 			withLinks = generate.InjectedSummary(withLinks, entry.Summary)
 		}
 		siteContent := normalize.Content(withLinks, fv)
-		if writeErr := os.WriteFile(
+		if writeErr := ctxIo.SafeWriteFile(
 			dst, []byte(siteContent), fs.PermFile,
 		); writeErr != nil {
 			err.WarnFile(cmd, entry.Filename, writeErr)
@@ -174,7 +175,7 @@ func Run(
 	// Generate index.md
 	indexContent := generate.Index(entries)
 	indexPath := filepath.Join(docsDir, file.Index)
-	if writeErr := os.WriteFile(
+	if writeErr := ctxIo.SafeWriteFile(
 		indexPath, []byte(indexContent), fs.PermFile,
 	); writeErr != nil {
 		return errFs.FileWrite(indexPath, writeErr)
@@ -204,7 +205,7 @@ func Run(
 						continue
 					}
 					pagePath := filepath.Join(dir, t.Name+file.ExtMarkdown)
-					if pageErr := os.WriteFile(
+					if pageErr := ctxIo.SafeWriteFile(
 						pagePath, []byte(section.GenerateTopicPage(t)),
 						fs.PermFile,
 					); pageErr != nil {
@@ -240,7 +241,7 @@ func Run(
 					}
 					slug := format.KeyFileSlug(kf.Path)
 					pagePath := filepath.Join(dir, slug+file.ExtMarkdown)
-					if pageErr := os.WriteFile(
+					if pageErr := ctxIo.SafeWriteFile(
 						pagePath, []byte(
 							section.GenerateKeyFilePage(kf)),
 						fs.PermFile,
@@ -272,7 +273,7 @@ func Run(
 			func(dir string) {
 				for _, st := range sessionTypes {
 					pagePath := filepath.Join(dir, st.Name+file.ExtMarkdown)
-					if pageErr := os.WriteFile(
+					if pageErr := ctxIo.SafeWriteFile(
 						pagePath,
 						[]byte(section.GenerateTypePage(st)), fs.PermFile,
 					); pageErr != nil {
@@ -289,7 +290,7 @@ func Run(
 		entries, topics, keyFiles, sessionTypes,
 	)
 	tomlPath := filepath.Join(output, zensical.Toml)
-	if writeErr := os.WriteFile(
+	if writeErr := ctxIo.SafeWriteFile(
 		tomlPath,
 		[]byte(tomlContent), fs.PermFile,
 	); writeErr != nil {

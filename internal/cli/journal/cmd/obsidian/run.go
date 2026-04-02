@@ -94,7 +94,7 @@ func BuildVault(cmd *cobra.Command, journalDir, output string) error {
 		filepath.Join(output, dir.JournalTypes),
 	}
 	for _, d := range dirs {
-		if mkErr := os.MkdirAll(d, fs.PermExec); mkErr != nil {
+		if mkErr := io.SafeMkdirAll(d, fs.PermExec); mkErr != nil {
 			return errFs.Mkdir(d, mkErr)
 		}
 	}
@@ -103,7 +103,7 @@ func BuildVault(cmd *cobra.Command, journalDir, output string) error {
 	appConfigPath := filepath.Join(
 		output, obsidian.DirConfig, obsidian.AppConfigFile,
 	)
-	if writeErr := os.WriteFile(
+	if writeErr := io.SafeWriteFile(
 		appConfigPath, []byte(obsidian.AppConfig), fs.PermFile,
 	); writeErr != nil {
 		return errFs.FileWrite(appConfigPath, writeErr)
@@ -111,7 +111,7 @@ func BuildVault(cmd *cobra.Command, journalDir, output string) error {
 
 	// Write README
 	readmePath := filepath.Join(output, file.Readme)
-	if writeErr := os.WriteFile(
+	if writeErr := io.SafeWriteFile(
 		readmePath,
 		[]byte(fmt.Sprintf(tpl.ObsidianReadme, journalDir)),
 		fs.PermFile,
@@ -139,7 +139,7 @@ func BuildVault(cmd *cobra.Command, journalDir, output string) error {
 		src := entry.Path
 		dst := filepath.Join(output, obsidian.DirEntries, entry.Filename)
 
-		content, readErr := os.ReadFile(filepath.Clean(src))
+		content, readErr := io.SafeReadUserFile(filepath.Clean(src))
 		if readErr != nil {
 			err.WarnFile(cmd, entry.Filename, readErr)
 			continue
@@ -178,7 +178,7 @@ func BuildVault(cmd *cobra.Command, journalDir, output string) error {
 	if len(topics) > 0 {
 		topicsDir := filepath.Join(output, dir.JournTopics)
 		mocPath := filepath.Join(output, obsidian.MOCTopics)
-		if writeErr := os.WriteFile(
+		if writeErr := io.SafeWriteFile(
 			mocPath, []byte(moc.ObsidianTopics(topics)),
 			fs.PermFile,
 		); writeErr != nil {
@@ -190,7 +190,7 @@ func BuildVault(cmd *cobra.Command, journalDir, output string) error {
 				continue
 			}
 			pagePath := filepath.Join(topicsDir, t.Name+file.ExtMarkdown)
-			if writeErr := os.WriteFile(
+			if writeErr := io.SafeWriteFile(
 				pagePath, []byte(moc.GenerateObsidianTopicPage(t)),
 				fs.PermFile,
 			); writeErr != nil {
@@ -203,7 +203,7 @@ func BuildVault(cmd *cobra.Command, journalDir, output string) error {
 	if len(keyFiles) > 0 {
 		filesDir := filepath.Join(output, dir.JournalFiles)
 		mocPath := filepath.Join(output, obsidian.MOCFiles)
-		if writeErr := os.WriteFile(
+		if writeErr := io.SafeWriteFile(
 			mocPath, []byte(moc.ObsidianFiles(keyFiles)),
 			fs.PermFile,
 		); writeErr != nil {
@@ -216,7 +216,7 @@ func BuildVault(cmd *cobra.Command, journalDir, output string) error {
 			}
 			slug := format.KeyFileSlug(kf.Path)
 			pagePath := filepath.Join(filesDir, slug+file.ExtMarkdown)
-			if writeErr := os.WriteFile(
+			if writeErr := io.SafeWriteFile(
 				pagePath, []byte(moc.GenerateObsidianFilePage(kf)),
 				fs.PermFile,
 			); writeErr != nil {
@@ -229,7 +229,7 @@ func BuildVault(cmd *cobra.Command, journalDir, output string) error {
 	if len(sessionTypes) > 0 {
 		typesDir := filepath.Join(output, dir.JournalTypes)
 		mocPath := filepath.Join(output, obsidian.MOCTypes)
-		if writeErr := os.WriteFile(
+		if writeErr := io.SafeWriteFile(
 			mocPath, []byte(moc.ObsidianTypes(sessionTypes)),
 			fs.PermFile,
 		); writeErr != nil {
@@ -238,7 +238,7 @@ func BuildVault(cmd *cobra.Command, journalDir, output string) error {
 
 		for _, st := range sessionTypes {
 			pagePath := filepath.Join(typesDir, st.Name+file.ExtMarkdown)
-			if writeErr := os.WriteFile(
+			if writeErr := io.SafeWriteFile(
 				pagePath,
 				[]byte(moc.GenerateObsidianTypePage(st)), fs.PermFile,
 			); writeErr != nil {
@@ -249,7 +249,7 @@ func BuildVault(cmd *cobra.Command, journalDir, output string) error {
 
 	// Write Home.md
 	homePath := filepath.Join(output, obsidian.MOCHome)
-	if writeErr := os.WriteFile(
+	if writeErr := io.SafeWriteFile(
 		homePath,
 		[]byte(moc.Home(
 			regularEntries,

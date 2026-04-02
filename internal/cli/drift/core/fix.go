@@ -8,7 +8,6 @@ package core
 
 import (
 	"fmt"
-	"os"
 	"path/filepath"
 	"strings"
 
@@ -28,6 +27,7 @@ import (
 	errFs "github.com/ActiveMemory/ctx/internal/err/fs"
 	"github.com/ActiveMemory/ctx/internal/err/prompt"
 	errTask "github.com/ActiveMemory/ctx/internal/err/task"
+	ctxIo "github.com/ActiveMemory/ctx/internal/io"
 	"github.com/ActiveMemory/ctx/internal/rc"
 	"github.com/ActiveMemory/ctx/internal/task"
 	"github.com/ActiveMemory/ctx/internal/tidy"
@@ -164,7 +164,7 @@ func FixStaleness(cmd *cobra.Command, ctx *entity.Context) error {
 
 	// Write updated TASKS.md
 	newContent := strings.Join(newLines, nl)
-	if writeErr := os.WriteFile(
+	if writeErr := ctxIo.SafeWriteFile(
 		tasksFile.Path, []byte(newContent), fs.PermFile,
 	); writeErr != nil {
 		return errTask.FileWrite(writeErr)
@@ -191,11 +191,11 @@ func FixMissingFile(filename string) error {
 	targetPath := filepath.Join(rc.ContextDir(), filename)
 
 	// Ensure .context/ directory exists
-	if mkErr := os.MkdirAll(rc.ContextDir(), fs.PermExec); mkErr != nil {
+	if mkErr := ctxIo.SafeMkdirAll(rc.ContextDir(), fs.PermExec); mkErr != nil {
 		return errFs.Mkdir(rc.ContextDir(), mkErr)
 	}
 
-	if writeErr := os.WriteFile(
+	if writeErr := ctxIo.SafeWriteFile(
 		targetPath, content, fs.PermFile,
 	); writeErr != nil {
 		return errFs.FileWrite(targetPath, writeErr)

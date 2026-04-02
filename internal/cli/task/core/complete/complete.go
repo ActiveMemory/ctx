@@ -47,7 +47,7 @@ func Complete(query, contextDir string) (string, int, error) {
 	}
 
 	// Read existing content
-	content, readErr := os.ReadFile(filepath.Clean(filePath))
+	content, readErr := io.SafeReadUserFile(filepath.Clean(filePath))
 	if readErr != nil {
 		return "", 0, errTask.FileRead(readErr)
 	}

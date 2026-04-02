@@ -9,7 +9,6 @@ package core
 
 import (
 	"fmt"
-	"os"
 	"path/filepath"
 
 	"github.com/ActiveMemory/ctx/internal/assets/read/desc"
@@ -46,7 +45,7 @@ func CopyProfile(root, srcFile string) error {
 	}
 
 	dst := filepath.Join(root, file.CtxRC)
-	return os.WriteFile(dst, data, fs.PermFile)
+	return io.SafeWriteFile(dst, data, fs.PermFile)
 }
 
 // SwitchTo copies the requested profile to .ctxrc and returns a status message.

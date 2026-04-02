@@ -9,12 +9,12 @@ package parser
 import (
 	"encoding/json"
 	"net/url"
-	"os"
 	"path/filepath"
 	"runtime"
 
 	cfgCopilot "github.com/ActiveMemory/ctx/internal/config/copilot"
 	"github.com/ActiveMemory/ctx/internal/config/env"
+	ctxIo "github.com/ActiveMemory/ctx/internal/io"
 )
 
 // resolveWorkspaceCWD reads workspace.json from the workspaceStorage
@@ -32,7 +32,7 @@ func (p *Copilot) resolveWorkspaceCWD(sessionPath string) string {
 	storageDir := filepath.Dir(chatDir)  // <hash>/
 	wsFile := filepath.Join(storageDir, cfgCopilot.FileWorkspace)
 
-	data, err := os.ReadFile(filepath.Clean(wsFile))
+	data, err := ctxIo.SafeReadUserFile(filepath.Clean(wsFile))
 	if err != nil {
 		return ""
 	}

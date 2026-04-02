@@ -16,6 +16,7 @@ import (
 	"github.com/ActiveMemory/ctx/internal/config/fs"
 	cfgHook "github.com/ActiveMemory/ctx/internal/config/hook"
 	errFs "github.com/ActiveMemory/ctx/internal/err/fs"
+	ctxIo "github.com/ActiveMemory/ctx/internal/io"
 	writeErr "github.com/ActiveMemory/ctx/internal/write/err"
 	writeSetup "github.com/ActiveMemory/ctx/internal/write/setup"
 )
@@ -46,7 +47,7 @@ func Deploy(cmd *cobra.Command) error {
 	}
 
 	// Create directories
-	if err := os.MkdirAll(scriptsDir, fs.PermExec); err != nil {
+	if err := ctxIo.SafeMkdirAll(scriptsDir, fs.PermExec); err != nil {
 		return errFs.Mkdir(scriptsDir, err)
 	}
 
@@ -55,7 +56,7 @@ func Deploy(cmd *cobra.Command) error {
 	if readErr != nil {
 		return readErr
 	}
-	if wErr := os.WriteFile(targetJSON, jsonContent, fs.PermFile); wErr != nil {
+	if wErr := ctxIo.SafeWriteFile(targetJSON, jsonContent, fs.PermFile); wErr != nil {
 		return errFs.FileWrite(targetJSON, wErr)
 	}
 	writeSetup.InfoCopilotCLICreated(cmd, targetJSON)
@@ -67,7 +68,7 @@ func Deploy(cmd *cobra.Command) error {
 	}
 	for name, content := range scripts {
 		target := filepath.Join(scriptsDir, name)
-		if wErr := os.WriteFile(target, content, fs.PermExec); wErr != nil {
+		if wErr := ctxIo.SafeWriteFile(target, content, fs.PermExec); wErr != nil {
 			return errFs.FileWrite(target, wErr)
 		}
 		writeSetup.InfoCopilotCLICreated(cmd, target)

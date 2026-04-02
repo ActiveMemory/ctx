@@ -7,8 +7,6 @@
 package core
 
 import (
-	"os"
-
 	"github.com/spf13/cobra"
 
 	"github.com/ActiveMemory/ctx/internal/assets/read/desc"
@@ -17,6 +15,7 @@ import (
 	"github.com/ActiveMemory/ctx/internal/config/fs"
 	"github.com/ActiveMemory/ctx/internal/config/token"
 	"github.com/ActiveMemory/ctx/internal/entity"
+	ctxIo "github.com/ActiveMemory/ctx/internal/io"
 	"github.com/ActiveMemory/ctx/internal/rc"
 	"github.com/ActiveMemory/ctx/internal/tidy"
 	"github.com/ActiveMemory/ctx/internal/write/compact"
@@ -57,7 +56,7 @@ func CompactTasks(
 
 	// Write TASKS.md.
 	if result.TasksFileUpdate != nil {
-		if writeErr := os.WriteFile(
+		if writeErr := ctxIo.SafeWriteFile(
 			result.TasksFileUpdate.Path,
 			result.TasksFileUpdate.Content,
 			fs.PermFile,

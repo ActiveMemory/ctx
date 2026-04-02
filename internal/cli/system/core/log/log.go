@@ -33,7 +33,7 @@ import (
 //   - msg: Log message to append
 func Message(logFile, sessionID, msg string) {
 	d := filepath.Dir(logFile)
-	if mkdirErr := os.MkdirAll(d, fs.PermRestrictedDir); mkdirErr != nil {
+	if mkdirErr := internalIo.SafeMkdirAll(d, fs.PermRestrictedDir); mkdirErr != nil {
 		ctxLog.Warn(warn.Mkdir, d, mkdirErr)
 	}
 

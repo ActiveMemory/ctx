@@ -7,13 +7,12 @@
 package export
 
 import (
-	"os"
-
 	"github.com/spf13/cobra"
 
 	coreExport "github.com/ActiveMemory/ctx/internal/cli/pad/core/export"
 	"github.com/ActiveMemory/ctx/internal/config/fs"
 	errFs "github.com/ActiveMemory/ctx/internal/err/fs"
+	ctxIo "github.com/ActiveMemory/ctx/internal/io"
 	writeExport "github.com/ActiveMemory/ctx/internal/write/export"
 	writePad "github.com/ActiveMemory/ctx/internal/write/pad"
 )
@@ -30,7 +29,7 @@ import (
 //   - error: On directory creation or scratchpad read failure
 func Run(cmd *cobra.Command, dir string, force, dryRun bool) error {
 	if !dryRun {
-		if mkErr := os.MkdirAll(dir, fs.PermExec); mkErr != nil {
+		if mkErr := ctxIo.SafeMkdirAll(dir, fs.PermExec); mkErr != nil {
 			return errFs.Mkdir(dir, mkErr)
 		}
 	}
@@ -56,7 +55,7 @@ func Run(cmd *cobra.Command, dir string, force, dryRun bool) error {
 			writeExport.InfoExistsWritingAsAlternative(cmd, item.Label, item.AltName)
 		}
 
-		if writeErr := os.WriteFile(
+		if writeErr := ctxIo.SafeWriteFile(
 			item.OutPath, item.Data, fs.PermSecret,
 		); writeErr != nil {
 			writePad.ErrExportWrite(cmd, item.Label, writeErr)

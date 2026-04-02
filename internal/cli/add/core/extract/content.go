@@ -15,6 +15,7 @@ import (
 	"github.com/ActiveMemory/ctx/internal/entity"
 	errAdd "github.com/ActiveMemory/ctx/internal/err/add"
 	errFs "github.com/ActiveMemory/ctx/internal/err/fs"
+	ctxIo "github.com/ActiveMemory/ctx/internal/io"
 )
 
 // Content retrieves content from various sources for adding entries.
@@ -34,7 +35,7 @@ import (
 func Content(args []string, flags entity.AddConfig) (string, error) {
 	if flags.FromFile != "" {
 		// Read from the file
-		fileContent, readErr := os.ReadFile(flags.FromFile)
+		fileContent, readErr := ctxIo.SafeReadUserFile(flags.FromFile)
 		if readErr != nil {
 			return "", errFs.FileRead(flags.FromFile, readErr)
 		}

@@ -46,13 +46,13 @@ func Run(cmd *cobra.Command, args []string) error {
 	}
 
 	// Read TASKS.md
-	content, readErr := os.ReadFile(filepath.Clean(tasksPath))
+	content, readErr := io.SafeReadUserFile(filepath.Clean(tasksPath))
 	if readErr != nil {
 		return errTask.FileRead(readErr)
 	}
 
 	// Ensure the archive directory exists
-	if mkdirErr := os.MkdirAll(archivePath, fs.PermExec); mkdirErr != nil {
+	if mkdirErr := io.SafeMkdirAll(archivePath, fs.PermExec); mkdirErr != nil {
 		return backup.CreateArchiveDir(mkdirErr)
 	}
 

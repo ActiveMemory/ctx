@@ -7,7 +7,6 @@
 package agents
 
 import (
-	"os"
 	"path/filepath"
 	"strings"
 
@@ -44,7 +43,7 @@ func Deploy(cmd *cobra.Command) error {
 	}
 
 	// Check if the file exists
-	existingContent, err := os.ReadFile(filepath.Clean(targetFile))
+	existingContent, err := io.SafeReadUserFile(filepath.Clean(targetFile))
 	fileExists := err == nil
 
 	if fileExists {

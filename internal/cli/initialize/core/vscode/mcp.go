@@ -17,6 +17,7 @@ import (
 	mcpServer "github.com/ActiveMemory/ctx/internal/config/mcp/server"
 	"github.com/ActiveMemory/ctx/internal/config/token"
 	cfgVscode "github.com/ActiveMemory/ctx/internal/config/vscode"
+	ctxIo "github.com/ActiveMemory/ctx/internal/io"
 	writeVscode "github.com/ActiveMemory/ctx/internal/write/vscode"
 )
 
@@ -49,7 +50,7 @@ func createMCPJSON(cmd *cobra.Command) error {
 	data, _ := json.MarshalIndent(file, "", "  ")
 	data = append(data, token.NewlineLF...)
 
-	if writeErr := os.WriteFile(target, data, fs.PermFile); writeErr != nil {
+	if writeErr := ctxIo.SafeWriteFile(target, data, fs.PermFile); writeErr != nil {
 		return writeErr
 	}
 	writeVscode.InfoCreated(cmd, target)

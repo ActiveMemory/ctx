@@ -7,7 +7,6 @@
 package load
 
 import (
-	"os"
 	"path/filepath"
 	"strings"
 	"time"
@@ -43,7 +42,7 @@ func WriteOversizeFlag(
 	}
 
 	sd := filepath.Join(contextDir, dir.State)
-	if mkdirErr := os.MkdirAll(sd, fs.PermRestrictedDir); mkdirErr != nil {
+	if mkdirErr := io.SafeMkdirAll(sd, fs.PermRestrictedDir); mkdirErr != nil {
 		ctxLog.Warn(warn.Mkdir, sd, mkdirErr)
 	}
 
@@ -69,7 +68,7 @@ func WriteOversizeFlag(
 	fp := filepath.Join(
 		sd, stats.ContextSizeInjectionOversizeFlag,
 	)
-	if writeErr := os.WriteFile(
+	if writeErr := io.SafeWriteFile(
 		fp, []byte(flag.String()), fs.PermSecret,
 	); writeErr != nil {
 		ctxLog.Warn(warn.Write, fp, writeErr)

@@ -9,8 +9,6 @@ package parser
 import (
 	"bufio"
 	"encoding/json"
-	"os"
-	"path/filepath"
 	"sort"
 	"strings"
 
@@ -21,6 +19,7 @@ import (
 	"github.com/ActiveMemory/ctx/internal/config/warn"
 	"github.com/ActiveMemory/ctx/internal/entity"
 	errParser "github.com/ActiveMemory/ctx/internal/err/parser"
+	ctxIo "github.com/ActiveMemory/ctx/internal/io"
 	ctxLog "github.com/ActiveMemory/ctx/internal/log/warn"
 )
 
@@ -67,7 +66,7 @@ func (p *ClaudeCode) Matches(path string) bool {
 	}
 
 	// Peek at the first few lines to detect the Claude Code format
-	f, openErr := os.Open(filepath.Clean(path))
+	f, openErr := ctxIo.SafeOpenUserFile(path)
 	if openErr != nil {
 		return false
 	}
@@ -115,7 +114,7 @@ func (p *ClaudeCode) Matches(path string) bool {
 //   - []*entity.Session: All sessions found in the file, sorted by start time
 //   - error: Non-nil if the file cannot be opened or read
 func (p *ClaudeCode) ParseFile(path string) ([]*entity.Session, error) {
-	f, openErr := os.Open(filepath.Clean(path))
+	f, openErr := ctxIo.SafeOpenUserFile(path)
 	if openErr != nil {
 		return nil, errParser.OpenFile(openErr)
 	}

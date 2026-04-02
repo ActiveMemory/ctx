@@ -86,7 +86,7 @@ func SaveWebhook(url string) error {
 		if genErr != nil {
 			return genErr
 		}
-		if mkdirErr := os.MkdirAll(
+		if mkdirErr := io.SafeMkdirAll(
 			filepath.Dir(kp), fs.PermKeyDir,
 		); mkdirErr != nil {
 			return mkdirErr
@@ -101,7 +101,7 @@ func SaveWebhook(url string) error {
 		return encryptErr
 	}
 
-	return os.WriteFile(encPath, ciphertext, fs.PermSecret)
+	return io.SafeWriteFile(encPath, ciphertext, fs.PermSecret)
 }
 
 // EventAllowed reports whether the given event passes the filter.

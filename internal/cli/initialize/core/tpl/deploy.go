@@ -17,6 +17,7 @@ import (
 	"github.com/ActiveMemory/ctx/internal/config/fs"
 	"github.com/ActiveMemory/ctx/internal/entity"
 	errFs "github.com/ActiveMemory/ctx/internal/err/fs"
+	ctxIo "github.com/ActiveMemory/ctx/internal/io"
 	"github.com/ActiveMemory/ctx/internal/write/initialize"
 )
 
@@ -40,7 +41,7 @@ func DeployTemplates(
 	read func(string) ([]byte, error),
 ) error {
 	targetDir := filepath.Join(contextDir, p.SubDir)
-	if mkdirErr := os.MkdirAll(targetDir, fs.PermExec); mkdirErr != nil {
+	if mkdirErr := ctxIo.SafeMkdirAll(targetDir, fs.PermExec); mkdirErr != nil {
 		return errFs.Mkdir(targetDir, mkdirErr)
 	}
 
@@ -61,7 +62,7 @@ func DeployTemplates(
 			return fmt.Errorf(desc.Text(p.ReadErrKey), name, readErr)
 		}
 
-		if writeErr := os.WriteFile(
+		if writeErr := ctxIo.SafeWriteFile(
 			targetPath, content, fs.PermFile,
 		); writeErr != nil {
 			return errFs.FileWrite(targetPath, writeErr)

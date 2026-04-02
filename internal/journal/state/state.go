@@ -21,6 +21,7 @@ import (
 	"github.com/ActiveMemory/ctx/internal/config/journal"
 	"github.com/ActiveMemory/ctx/internal/config/token"
 	"github.com/ActiveMemory/ctx/internal/format"
+	ctxIo "github.com/ActiveMemory/ctx/internal/io"
 )
 
 // CurrentVersion is the schema version for the state file.
@@ -39,7 +40,7 @@ const CurrentVersion = 1
 func Load(journalDir string) (*State, error) {
 	path := filepath.Join(journalDir, journal.File)
 
-	data, readErr := os.ReadFile(filepath.Clean(path))
+	data, readErr := ctxIo.SafeReadUserFile(filepath.Clean(path))
 	if os.IsNotExist(readErr) {
 		return &State{
 			Version: CurrentVersion,
@@ -78,7 +79,7 @@ func (s *State) Save(journalDir string) error {
 	path := filepath.Join(journalDir, journal.File)
 	tmp := path + file.ExtTmp
 
-	if writeErr := os.WriteFile(tmp, data, fs.PermFile); writeErr != nil {
+	if writeErr := ctxIo.SafeWriteFile(tmp, data, fs.PermFile); writeErr != nil {
 		return writeErr
 	}
 	return os.Rename(tmp, path)

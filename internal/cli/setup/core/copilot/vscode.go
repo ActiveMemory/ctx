@@ -17,6 +17,7 @@ import (
 	mcpServer "github.com/ActiveMemory/ctx/internal/config/mcp/server"
 	"github.com/ActiveMemory/ctx/internal/config/token"
 	cfgVscode "github.com/ActiveMemory/ctx/internal/config/vscode"
+	ctxIo "github.com/ActiveMemory/ctx/internal/io"
 	writeSetup "github.com/ActiveMemory/ctx/internal/write/setup"
 )
 
@@ -38,7 +39,7 @@ func ensureVSCodeMCP(cmd *cobra.Command) error {
 		return nil
 	}
 
-	if mkdirErr := os.MkdirAll(cfgVscode.Dir, fs.PermExec); mkdirErr != nil {
+	if mkdirErr := ctxIo.SafeMkdirAll(cfgVscode.Dir, fs.PermExec); mkdirErr != nil {
 		return mkdirErr
 	}
 
@@ -53,7 +54,7 @@ func ensureVSCodeMCP(cmd *cobra.Command) error {
 	data, _ := json.MarshalIndent(mcpCfg, "", "  ")
 	data = append(data, token.NewlineLF...)
 
-	if writeFileErr := os.WriteFile(target, data, fs.PermFile); writeFileErr != nil {
+	if writeFileErr := ctxIo.SafeWriteFile(target, data, fs.PermFile); writeFileErr != nil {
 		return writeFileErr
 	}
 	writeSetup.InfoCopilotCLICreated(cmd, target)

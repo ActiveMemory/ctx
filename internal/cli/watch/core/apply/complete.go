@@ -7,7 +7,6 @@
 package apply
 
 import (
-	"os"
 	"path/filepath"
 	"strings"
 
@@ -42,7 +41,7 @@ func completeTask(query string) error {
 	filePath := filepath.Join(rc.ContextDir(), ctx.Task)
 	nl := token.NewlineLF
 
-	content, readErr := os.ReadFile(filepath.Clean(filePath))
+	content, readErr := io.SafeReadUserFile(filepath.Clean(filePath))
 	if readErr != nil {
 		return readErr
 	}

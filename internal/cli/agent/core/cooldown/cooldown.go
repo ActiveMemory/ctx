@@ -15,6 +15,7 @@ import (
 	"github.com/ActiveMemory/ctx/internal/config/dir"
 	"github.com/ActiveMemory/ctx/internal/config/fs"
 	"github.com/ActiveMemory/ctx/internal/config/warn"
+	ctxIo "github.com/ActiveMemory/ctx/internal/io"
 	ctxLog "github.com/ActiveMemory/ctx/internal/log/warn"
 	"github.com/ActiveMemory/ctx/internal/rc"
 )
@@ -49,7 +50,7 @@ func TouchTombstone(session string) {
 		return
 	}
 	p := TombstonePath(session)
-	if writeErr := os.WriteFile(p, nil, fs.PermSecret); writeErr != nil {
+	if writeErr := ctxIo.SafeWriteFile(p, nil, fs.PermSecret); writeErr != nil {
 		ctxLog.Warn(warn.Write, p, writeErr)
 	}
 }
@@ -63,7 +64,7 @@ func TouchTombstone(session string) {
 //   - string: absolute path in the system temp directory
 func TombstonePath(session string) string {
 	stateDir := filepath.Join(rc.ContextDir(), dir.State)
-	if mkdirErr := os.MkdirAll(stateDir, fs.PermRestrictedDir); mkdirErr != nil {
+	if mkdirErr := ctxIo.SafeMkdirAll(stateDir, fs.PermRestrictedDir); mkdirErr != nil {
 		ctxLog.Warn(warn.Mkdir, stateDir, mkdirErr)
 	}
 	return filepath.Join(stateDir, agent.TombstonePrefix+session)

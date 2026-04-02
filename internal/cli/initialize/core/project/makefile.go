@@ -7,7 +7,6 @@
 package project
 
 import (
-	"os"
 	"strings"
 
 	"github.com/spf13/cobra"
@@ -36,7 +35,7 @@ func HandleMakefileCtx(cmd *cobra.Command) error {
 		return errInit.ReadTemplate(project.MakefileCtx, tplErr)
 	}
 
-	if writeErr := os.WriteFile(
+	if writeErr := io.SafeWriteFile(
 		project.MakefileCtx, content, fs.PermFile,
 	); writeErr != nil {
 		return errFs.FileWrite(project.MakefileCtx, writeErr)
@@ -44,10 +43,10 @@ func HandleMakefileCtx(cmd *cobra.Command) error {
 
 	initialize.Created(cmd, project.MakefileCtx)
 
-	existing, readErr := os.ReadFile(project.Makefile)
+	existing, readErr := io.SafeReadUserFile(project.Makefile)
 	if readErr != nil {
 		minimal := project.MakefileIncludeDirective + token.NewlineLF
-		if writeErr := os.WriteFile(
+		if writeErr := io.SafeWriteFile(
 			project.Makefile, []byte(minimal), fs.PermFile,
 		); writeErr != nil {
 			return errInit.CreateMakefile(writeErr)

@@ -157,7 +157,7 @@ func ExtractPythonPkgName(line string) string {
 //   - map[string][]string: Dependency graph with "project" key
 //   - error: Non-nil if pyproject.toml cannot be read
 func BuildPyprojectGraph(includeDevDeps bool) (map[string][]string, error) {
-	data, readErr := os.ReadFile(cfgDep.FilePyproject)
+	data, readErr := io.SafeReadUserFile(cfgDep.FilePyproject)
 	if readErr != nil {
 		return nil, readErr
 	}

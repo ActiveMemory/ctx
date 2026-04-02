@@ -51,7 +51,7 @@ func SessionIndex(journalDir string) map[string]string {
 		}
 
 		path := filepath.Join(journalDir, e.Name())
-		content, fileErr := os.ReadFile(filepath.Clean(path))
+		content, fileErr := io.SafeReadUserFile(filepath.Clean(path))
 		if fileErr != nil {
 			continue
 		}
@@ -239,7 +239,7 @@ func UpdateNavLinks(journalDir, newBase, oldBase string, numParts int) {
 	}
 
 	for _, f := range files {
-		data, readErr := os.ReadFile(filepath.Clean(f))
+		data, readErr := io.SafeReadUserFile(filepath.Clean(f))
 		if readErr != nil {
 			continue
 		}

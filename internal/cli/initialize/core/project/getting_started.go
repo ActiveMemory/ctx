@@ -7,8 +7,6 @@
 package project
 
 import (
-	"os"
-
 	"github.com/spf13/cobra"
 
 	"github.com/ActiveMemory/ctx/internal/assets/read/desc"
@@ -16,6 +14,7 @@ import (
 	"github.com/ActiveMemory/ctx/internal/config/fs"
 	cfgProject "github.com/ActiveMemory/ctx/internal/config/project"
 	"github.com/ActiveMemory/ctx/internal/config/token"
+	ctxIo "github.com/ActiveMemory/ctx/internal/io"
 	"github.com/ActiveMemory/ctx/internal/write/initialize"
 )
 
@@ -30,7 +29,7 @@ func WriteGettingStarted(cmd *cobra.Command) {
 		token.NewlineLF +
 		desc.Text(text.DescKeyWriteInitWorkflowTips) +
 		token.NewlineLF
-	if writeErr := os.WriteFile(
+	if writeErr := ctxIo.SafeWriteFile(
 		cfgProject.GettingStarted, []byte(content), fs.PermFile,
 	); writeErr != nil {
 		return

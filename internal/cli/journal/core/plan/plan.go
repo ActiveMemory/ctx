@@ -8,7 +8,6 @@ package plan
 
 import (
 	"fmt"
-	"os"
 	"path/filepath"
 	"strings"
 
@@ -69,7 +68,7 @@ func Import(
 		var existingTitle string
 		if oldFile := index.LookupSessionFile(sessionIndex, s.ID); oldFile != "" {
 			oldPath := filepath.Join(journalDir, oldFile)
-			if data, readErr := os.ReadFile(filepath.Clean(oldPath)); readErr == nil {
+			if data, readErr := io.SafeReadUserFile(filepath.Clean(oldPath)); readErr == nil {
 				existingTitle = index.ExtractFrontmatterField(
 					string(data), session.FrontmatterTitle,
 				)
