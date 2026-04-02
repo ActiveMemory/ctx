@@ -3,6 +3,8 @@
 <!-- INDEX:START -->
 | Date | Decision |
 |----|--------|
+| 2026-04-01 | IRC to Discord as primary community channel |
+| 2026-04-01 | AST audit tests live in internal/audit/, one file per check |
 | 2026-04-01 | Split assets/hooks/ into assets/integrations/ + assets/hooks/messages/ |
 | 2026-04-01 | Rename ctx hook → ctx setup to disambiguate from the hook system |
 | 2026-03-31 | Split log into log/event and log/warn to break import cycles |
@@ -119,6 +121,34 @@ For significant decisions:
 ✗ No real alternatives existed
 
 -->
+
+## [2026-04-01-233247] IRC to Discord as primary community channel
+
+**Status**: Accepted
+
+**Context**: Discord server exists at https://ctx.ist/discord; IRC/libera.chat references were stale
+
+**Decision**: IRC to Discord as primary community channel
+
+**Rationale**: Discord is faster for async community support; IRC was historical
+
+**Consequence**: Updated zensical.toml, README, community docs, journal template. Added community footer to ctx help and ctx init output via YAML assets pipeline
+
+---
+
+## [2026-04-01-233246] AST audit tests live in internal/audit/, one file per check
+
+**Status**: Accepted
+
+**Context**: Needed a home for AST-based codebase invariant tests separate from the existing compliance_test.go monolith
+
+**Decision**: AST audit tests live in internal/audit/, one file per check
+
+**Rationale**: One test per file prevents the 1200+ line monster pattern. Shared helpers in helpers_test.go with sync.Once caching. Package is all _test.go except doc.go — produces no binary, not importable
+
+**Consequence**: New checks are added as individual *_test.go files; the pattern (loadPackages, walk AST, collect violations, t.Error) is established and repeatable
+
+---
 
 ## [2026-04-01-074417] Split assets/hooks/ into assets/integrations/ + assets/hooks/messages/
 
