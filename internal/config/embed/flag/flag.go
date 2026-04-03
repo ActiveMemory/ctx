@@ -13,6 +13,10 @@ const (
 	DescKeyCompactArchive   = "compact.archive"
 	DescKeyContextDir       = "context-dir"
 	DescKeyDoctorJson       = "doctor.json"
+	DescKeyTriggerTestPath  = "trigger.test.path"
+	DescKeyTriggerTestTool  = "trigger.test.tool"
 	DescKeyInitializeCaller = "initialize.caller"
 	DescKeySetupWrite       = "setup.write"
+	DescKeySteeringSyncAll  = "steering.sync.all"
+	DescKeyTool             = "tool"
 )

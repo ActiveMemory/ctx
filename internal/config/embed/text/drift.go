@@ -55,6 +55,9 @@ const (
 	DescKeyDriftCheckFileAge         = "drift.check-file-age"
 	DescKeyDriftStaleHeader          = "drift.stale-header"
 	DescKeyDriftCheckTemplateHeader  = "drift.check-template-header"
+	DescKeyDriftInvalidTool          = "drift.invalid-tool"
+	DescKeyDriftHookNoExec           = "drift.hook-no-exec"
+	DescKeyDriftStaleSyncFile        = "drift.stale-sync-file"
 	DescKeyVersionDriftRelayMessage  = "version-drift.relay-message"
 	DescKeyWriteVersionDriftFallback = "write.version-drift-fallback"
 )

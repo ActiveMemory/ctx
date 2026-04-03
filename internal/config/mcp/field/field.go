@@ -27,4 +27,8 @@ const (
 	// AttrFile is the metadata key on PendingUpdate recording which
 	// context file was written to (e.g., "DECISIONS.md").
 	AttrFile = "file"
+	// Prompt is the optional prompt text for steering file matching.
+	Prompt = "prompt"
+	// Summary is the optional session summary for session-end hooks.
+	Summary = "summary"
 )

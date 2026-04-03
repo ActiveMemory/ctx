@@ -226,6 +226,36 @@ For other tools, paste the output of:
 ctx agent --budget 8000
 ```
 
+### 3b. Set Up for Your AI Tool
+
+If you use an MCP-compatible tool, generate the integration config
+with `ctx setup`:
+
+=== "Kiro"
+
+    ```bash
+    ctx setup kiro --write
+    # Creates .kiro/settings/mcp.json and syncs steering files
+    ```
+
+=== "Cursor"
+
+    ```bash
+    ctx setup cursor --write
+    # Creates .cursor/mcp.json and syncs steering files
+    ```
+
+=== "Cline"
+
+    ```bash
+    ctx setup cline --write
+    # Creates .vscode/mcp.json and syncs steering files
+    ```
+
+This registers the ctx MCP server and syncs any
+[steering files](../cli/tools.md#ctx-steering) into the tool's
+native format. Re-run after adding or changing steering files.
+
 ### 4. Verify It Works
 
 Ask your AI: **"Do you remember?"**

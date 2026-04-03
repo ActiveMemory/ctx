@@ -122,6 +122,11 @@ func RootCmd() *cobra.Command {
 		flag.AllowOutsideCwd,
 		embedFlag.DescKeyAllowOutsideCwd,
 	)
+	c.PersistentFlags().String(
+		flag.Tool,
+		"",
+		desc.Flag(embedFlag.DescKeyTool),
+	)
 
 	return c
 }

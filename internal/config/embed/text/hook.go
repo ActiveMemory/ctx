@@ -13,7 +13,6 @@ const (
 	DescKeyHookClaude         = "hook.claude"
 	DescKeyHookCopilot        = "hook.copilot"
 	DescKeyHookCopilotCLI     = "hook.copilot-cli"
-	DescKeyHookCursor         = "hook.cursor"
 	DescKeyHookSupportedTools = "hook.supported-tools"
 	DescKeyHookWindsurf       = "hook.windsurf"
 )

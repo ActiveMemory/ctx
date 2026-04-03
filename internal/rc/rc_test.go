@@ -694,3 +694,169 @@ func TestGetRC_NegativeEnvBudget(t *testing.T) {
 		)
 	}
 }
+
+// --- Hooks & Steering RC field tests ---
+// Validates: Requirements 19.8
+
+func TestTool_Default(t *testing.T) {
+	tempDir := t.TempDir()
+	origDir, _ := os.Getwd()
+	_ = os.Chdir(tempDir)
+	defer func() { _ = os.Chdir(origDir) }()
+
+	Reset()
+
+	// Default is empty string when not configured
+	tool := Tool()
+	if tool != "" {
+		t.Errorf("Tool() = %q, want %q", tool, "")
+	}
+}
+
+func TestTool_Configured(t *testing.T) {
+	tempDir := t.TempDir()
+	origDir, _ := os.Getwd()
+	_ = os.Chdir(tempDir)
+	defer func() { _ = os.Chdir(origDir) }()
+
+	rcContent := `tool: kiro`
+	_ = os.WriteFile(filepath.Join(tempDir, ".ctxrc"), []byte(rcContent), 0600)
+
+	Reset()
+
+	tool := Tool()
+	if tool != "kiro" {
+		t.Errorf("Tool() = %q, want %q", tool, "kiro")
+	}
+}
+
+func TestSteeringDir_Default(t *testing.T) {
+	tempDir := t.TempDir()
+	origDir, _ := os.Getwd()
+	_ = os.Chdir(tempDir)
+	defer func() { _ = os.Chdir(origDir) }()
+
+	Reset()
+
+	dir := SteeringDir()
+	if dir != DefaultSteeringDir {
+		t.Errorf("SteeringDir() = %q, want %q", dir, DefaultSteeringDir)
+	}
+}
+
+func TestSteeringDir_Configured(t *testing.T) {
+	tempDir := t.TempDir()
+	origDir, _ := os.Getwd()
+	_ = os.Chdir(tempDir)
+	defer func() { _ = os.Chdir(origDir) }()
+
+	rcContent := `steering:
+  dir: custom/steering
+`
+	_ = os.WriteFile(filepath.Join(tempDir, ".ctxrc"), []byte(rcContent), 0600)
+
+	Reset()
+
+	dir := SteeringDir()
+	if dir != "custom/steering" {
+		t.Errorf("SteeringDir() = %q, want %q", dir, "custom/steering")
+	}
+}
+
+func TestHooksDir_Default(t *testing.T) {
+	tempDir := t.TempDir()
+	origDir, _ := os.Getwd()
+	_ = os.Chdir(tempDir)
+	defer func() { _ = os.Chdir(origDir) }()
+
+	Reset()
+
+	dir := HooksDir()
+	if dir != DefaultHooksDir {
+		t.Errorf("HooksDir() = %q, want %q", dir, DefaultHooksDir)
+	}
+}
+
+func TestHooksDir_Configured(t *testing.T) {
+	tempDir := t.TempDir()
+	origDir, _ := os.Getwd()
+	_ = os.Chdir(tempDir)
+	defer func() { _ = os.Chdir(origDir) }()
+
+	rcContent := `hooks:
+  dir: custom/hooks
+`
+	_ = os.WriteFile(filepath.Join(tempDir, ".ctxrc"), []byte(rcContent), 0600)
+
+	Reset()
+
+	dir := HooksDir()
+	if dir != "custom/hooks" {
+		t.Errorf("HooksDir() = %q, want %q", dir, "custom/hooks")
+	}
+}
+
+func TestHookTimeout_Default(t *testing.T) {
+	tempDir := t.TempDir()
+	origDir, _ := os.Getwd()
+	_ = os.Chdir(tempDir)
+	defer func() { _ = os.Chdir(origDir) }()
+
+	Reset()
+
+	timeout := HookTimeout()
+	if timeout != DefaultHookTimeout {
+		t.Errorf("HookTimeout() = %d, want %d", timeout, DefaultHookTimeout)
+	}
+}
+
+func TestHookTimeout_Configured(t *testing.T) {
+	tempDir := t.TempDir()
+	origDir, _ := os.Getwd()
+	_ = os.Chdir(tempDir)
+	defer func() { _ = os.Chdir(origDir) }()
+
+	rcContent := `hooks:
+  timeout: 30
+`
+	_ = os.WriteFile(filepath.Join(tempDir, ".ctxrc"), []byte(rcContent), 0600)
+
+	Reset()
+
+	timeout := HookTimeout()
+	if timeout != 30 {
+		t.Errorf("HookTimeout() = %d, want %d", timeout, 30)
+	}
+}
+
+func TestHooksEnabled_Default(t *testing.T) {
+	tempDir := t.TempDir()
+	origDir, _ := os.Getwd()
+	_ = os.Chdir(tempDir)
+	defer func() { _ = os.Chdir(origDir) }()
+
+	Reset()
+
+	// Default (nil Hooks pointer) should return true
+	if !HooksEnabled() {
+		t.Error("HooksEnabled() = false, want true (default)")
+	}
+}
+
+func TestHooksEnabled_ExplicitFalse(t *testing.T) {
+	tempDir := t.TempDir()
+	origDir, _ := os.Getwd()
+	_ = os.Chdir(tempDir)
+	defer func() { _ = os.Chdir(origDir) }()
+
+	rcContent := `hooks:
+  enabled: false
+`
+	_ = os.WriteFile(filepath.Join(tempDir, ".ctxrc"), []byte(rcContent), 0600)
+
+	Reset()
+
+	if HooksEnabled() {
+		t.Error("HooksEnabled() = true, want false")
+	}
+}

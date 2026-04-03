@@ -28,6 +28,15 @@ const (
 	// IssueStaleHeader indicates a context file whose comment header
 	// doesn't match the embedded template.
 	IssueStaleHeader IssueType = "stale_header"
+	// IssueInvalidTool indicates an unsupported tool identifier in a
+	// steering file or .ctxrc configuration.
+	IssueInvalidTool IssueType = "invalid_tool"
+	// IssueHookNoExec indicates a hook script missing the executable
+	// permission bit.
+	IssueHookNoExec IssueType = "hook_no_exec"
+	// IssueStaleSyncFile indicates a synced tool-native file that is
+	// out of date compared to its source steering file.
+	IssueStaleSyncFile IssueType = "stale_sync_file"
 )
 
 // StatusType represents the overall status of a drift report.
@@ -62,6 +71,15 @@ const (
 	CheckMissingPackages CheckName = "missing_packages"
 	// CheckTemplateHeaders checks context file comment headers against templates.
 	CheckTemplateHeaders CheckName = "template_headers"
+	// CheckSteeringTools validates tool identifiers in steering files.
+	CheckSteeringTools CheckName = "steering_tools"
+	// CheckHookPerms checks hook scripts for executable permission bits.
+	CheckHookPerms CheckName = "hook_permissions"
+	// CheckSyncStaleness compares synced tool-native files
+	// against source steering files.
+	CheckSyncStaleness CheckName = "sync_staleness"
+	// CheckRCTool validates the .ctxrc tool field against supported identifiers.
+	CheckRCTool CheckName = "rc_tool_field"
 )
 
 // Constitution rule names referenced in drift violations.

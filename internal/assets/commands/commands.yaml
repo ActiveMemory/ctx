@@ -1374,3 +1374,173 @@ why:
       ctx why about        Show the about page
       ctx why invariants   Show the design invariants
   short: Read the philosophy behind ctx
+
+trigger:
+  long: |-
+    Manage lifecycle triggers that fire at specific events during AI sessions.
+
+    Triggers are executable scripts in .context/hooks/<trigger-type>/ that
+    receive JSON via stdin and return JSON via stdout. They enable blocking,
+    context injection, and automation at lifecycle events.
+
+    Valid trigger types: pre-tool-use, post-tool-use, session-start,
+    session-end, file-save, context-add.
+
+    Subcommands:
+      add      Create a new trigger script
+      list     List all triggers by type
+      test     Test triggers for a given type
+      enable   Enable a trigger (add executable bit)
+      disable  Disable a trigger (remove executable bit)
+  short: Manage lifecycle triggers for AI sessions
+trigger.add:
+  long: |-
+    Create a new trigger script with a template.
+
+    The script is created at .context/hooks/<trigger-type>/<name>.sh with
+    a bash shebang, JSON input reading via jq, and JSON output structure.
+
+    Valid trigger types: pre-tool-use, post-tool-use, session-start,
+    session-end, file-save, context-add.
+
+    Examples:
+      ctx trigger add session-start inject-context
+      ctx trigger add pre-tool-use block-legacy
+  short: Create a new trigger script
+trigger.list:
+  short: List all triggers grouped by type
+trigger.test:
+  long: |-
+    Test triggers for a given trigger type by constructing a mock input
+    and executing all enabled triggers.
+
+    Use --tool and --path to customize the mock input.
+
+    Examples:
+      ctx trigger test session-start
+      ctx trigger test pre-tool-use --tool write_file --path src/main.go
+  short: Test triggers for a given trigger type
+trigger.enable:
+  long: |-
+    Enable a trigger by adding the executable permission bit.
+
+    Searches all trigger type directories for a trigger matching the given
+    name.
+
+    Examples:
+      ctx trigger enable inject-context
+  short: Enable a trigger (add executable bit)
+trigger.disable:
+  long: |-
+    Disable a trigger by removing the executable permission bit.
+
+    Searches all trigger type directories for a trigger matching the given
+    name.
+
+    Examples:
+      ctx trigger disable inject-context
+  short: Disable a trigger (remove executable bit)
+steering:
+  long: |-
+    Manage steering files that define persistent behavioral rules
+    for AI coding assistants.
+
+    Steering files are markdown files with YAML frontmatter stored in
+    .context/steering/. They control how AI tools behave by injecting
+    rules into prompts based on inclusion modes (always, auto, manual).
+
+    Subcommands:
+      add      Create a new steering file
+      list     List all steering files
+      preview  Preview which files match a prompt
+      init     Generate foundation steering files
+      sync     Sync to tool-native formats
+  short: Manage steering files for AI behavioral rules
+steering.add:
+  long: |-
+    Create a new steering file with default frontmatter.
+
+    The file is created at .context/steering/<name>.md with default
+    frontmatter (inclusion: manual, priority: 50) and an empty body.
+
+    Examples:
+      ctx steering add api-standards
+      ctx steering add code-review
+  short: Create a new steering file
+steering.list:
+  short: List all steering files with inclusion mode and priority
+steering.preview:
+  long: |-
+    Show which steering files would be included for a given prompt.
+
+    Respects inclusion mode rules: always files are always shown,
+    auto files match on description substring, manual files are excluded.
+
+    Examples:
+      ctx steering preview "create a REST API endpoint"
+      ctx steering preview "refactor the database layer"
+  short: Preview which steering files match a prompt
+steering.init:
+  long: |-
+    Generate foundation steering files in .context/steering/.
+
+    Creates the following files if they don't already exist:
+      product.md    Product context and goals
+      tech.md       Technology stack and constraints
+      structure.md  Project structure conventions
+      workflow.md   Development workflow rules
+
+    Existing files are skipped and reported.
+
+    Examples:
+      ctx steering init
+  short: Generate foundation steering files
+steering.sync:
+  long: |-
+    Sync steering files to tool-native formats.
+
+    Without flags, reads the tool from .ctxrc and syncs to that format.
+    Use --tool to specify a target tool, or --all for all supported tools.
+
+    Supported tools: cursor, cline, kiro.
+
+    Examples:
+      ctx steering sync                  # Sync to .ctxrc tool
+      ctx steering sync --tool cursor    # Sync to Cursor format
+      ctx steering sync --all            # Sync to all tools
+  short: Sync steering files to tool-native formats
+skill:
+  long: |-
+    Manage reusable instruction bundles (skills) for AI coding assistants.
+
+    Skills are directories in .context/skills/<name>/ containing a SKILL.md
+    file with YAML frontmatter and markdown instructions. They can be
+    installed from local paths, listed, and removed.
+
+    Subcommands:
+      install  Install a skill from a source directory
+      list     List all installed skills
+      remove   Remove an installed skill
+  short: Manage reusable instruction bundles
+skill.install:
+  long: |-
+    Install a skill from a source directory.
+
+    The source must contain a valid SKILL.md file with YAML frontmatter
+    including a name field. The skill is copied into .context/skills/<name>/.
+
+    Examples:
+      ctx skill install ./my-skill
+      ctx skill install /path/to/react-patterns
+  short: Install a skill from a source directory
+skill.list:
+  short: List all installed skills
+skill.remove:
+  long: |-
+    Remove an installed skill by name.
+
+    Deletes the .context/skills/<name>/ directory and all its contents.
+
+    Examples:
+      ctx skill remove react-patterns
+  short: Remove an installed skill

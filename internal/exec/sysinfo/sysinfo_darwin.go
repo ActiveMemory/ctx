@@ -10,6 +10,14 @@ package sysinfo
 
 import "os/exec"
 
+// Command names for macOS system information queries.
+const (
+	// cmdSysctl is the sysctl command name.
+	cmdSysctl = "sysctl"
+	// cmdVMStat is the vm_stat command name.
+	cmdVMStat = "vm_stat"
+)
+
 // Sysctl runs sysctl with the given arguments and returns stdout.
 //
 // Parameters:
@@ -20,7 +28,7 @@ import "os/exec"
 //   - error: non-nil if the command fails
 func Sysctl(args ...string) ([]byte, error) {
 	//nolint:gosec // fixed command, no user input
-	return exec.Command("sysctl", args...).Output()
+	return exec.Command(cmdSysctl, args...).Output()
 }
 
 // VMStat runs vm_stat and returns stdout.
@@ -29,5 +37,5 @@ func Sysctl(args ...string) ([]byte, error) {
 //   - []byte: raw stdout output
 //   - error: non-nil if the command fails
 func VMStat() ([]byte, error) {
-	return exec.Command("vm_stat").Output()
+	return exec.Command(cmdVMStat).Output()
 }

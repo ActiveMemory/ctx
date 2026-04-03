@@ -21,3 +21,10 @@ const (
 	// directory (owner rwx only).
 	PermKeyDir = 0700
 )
+
+// Permission bit masks.
+const (
+	// ExecBitMask is the Unix permission bitmask for any
+	// executable bit (owner, group, other).
+	ExecBitMask = 0111
+)

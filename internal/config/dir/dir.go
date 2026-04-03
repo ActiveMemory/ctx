@@ -14,6 +14,8 @@ const (
 	Claude = ".claude"
 	// Context is the default context directory name.
 	Context = ".context"
+	// Hooks is the subdirectory for lifecycle hook scripts within .context/.
+	Hooks = "hooks"
 	// HooksMessages is the subdirectory path for hook message
 	// overrides within .context/.
 	HooksMessages = "hooks/messages"
@@ -35,6 +37,10 @@ const (
 	Projects = "projects"
 	// Sessions is the subdirectory for session summaries within .context/.
 	Sessions = "sessions"
+	// Skills is the subdirectory for skill definitions within .context/.
+	Skills = "skills"
+	// Steering is the subdirectory for steering files within .context/.
+	Steering = "steering"
 	// Specs is the project-root directory for formalized plans and feature specs.
 	Specs = "specs"
 	// State is the subdirectory for project-scoped runtime state within .context/.

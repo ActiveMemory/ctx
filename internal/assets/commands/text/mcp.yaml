@@ -50,6 +50,8 @@ mcp.err-parse:
   short: parse error
 mcp.err-query-required:
   short: query is required
+mcp.err-search-read:
+  short: 'search: read %s: %w'
 mcp.res-agent:
   short: All context files assembled in priority read order
 mcp.res-architecture:
@@ -363,3 +365,18 @@ mcp.gov-persist-nudge:
   short: '⚠ %d tool calls since last context write. Persist decisions, learnings, or completed tasks with ctx_add() or ctx_complete().'
 mcp.gov-violation-critical:
   short: '🚨 CRITICAL: %s — %s (at %s). Review this action immediately. If unintended, revert it.'
+
+mcp.tool-steering-get-desc:
+  short: Retrieve applicable steering files for a prompt. Without a prompt, returns always-included files only.
+mcp.tool-search-desc:
+  short: Search across .context/ files for a query string. Returns matching lines with file paths and line numbers.
+mcp.tool-session-start-desc:
+  short: Execute session-start hooks and return aggregated context from hook outputs.
+mcp.tool-session-end-desc:
+  short: Execute session-end hooks with an optional summary. Returns aggregated context from hook outputs.
+mcp.tool-prop-prompt:
+  short: Optional prompt text for steering file inclusion matching
+mcp.tool-prop-search-query:
+  short: Text to search for across context files
+mcp.tool-prop-summary:
+  short: Optional session summary passed to session-end hooks
