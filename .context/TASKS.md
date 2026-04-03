@@ -27,6 +27,8 @@ TASK STATUS LABELS:
 
 ### Code Cleanup Findings
 
+- [ ] Add TestTypeFileConvention audit check: type definitions must live in types.go, not mixed into function files. Scan all non-test .go files for ast.TypeSpec declarations; flag any that appear in files not named types.go. Migrate violations. #priority:medium #added:2026-04-03-030033
+
 - [ ] Extend flagbind helpers (IntFlag, DurationFlag, DurationFlagP, StringP, BoolP) and migrate ~50 call sites to unblock TestNoFlagBindOutsideFlagbind #added:2026-04-01-233250
 
 - [ ] Implement journal compaction: Elastic-style tiered storage with tar.gz 
