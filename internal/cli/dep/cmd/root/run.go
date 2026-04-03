@@ -12,6 +12,7 @@ import (
 	"github.com/spf13/cobra"
 
 	"github.com/ActiveMemory/ctx/internal/cli/dep/core"
+	"github.com/ActiveMemory/ctx/internal/cli/dep/core/render"
 	"github.com/ActiveMemory/ctx/internal/config/fmt"
 	"github.com/ActiveMemory/ctx/internal/config/token"
 	errConfig "github.com/ActiveMemory/ctx/internal/err/config"
@@ -71,11 +72,11 @@ func Run(
 
 	switch format {
 	case fmt.FormatMermaid:
-		deps.Mermaid(cmd, core.RenderMermaid(graph))
+		deps.Mermaid(cmd, render.Mermaid(graph))
 	case fmt.FormatTable:
-		deps.Table(cmd, core.RenderTable(graph))
+		deps.Table(cmd, render.Table(graph))
 	default:
-		deps.JSON(cmd, core.RenderJSON(graph))
+		deps.JSON(cmd, render.JSON(graph))
 	}
 
 	return nil

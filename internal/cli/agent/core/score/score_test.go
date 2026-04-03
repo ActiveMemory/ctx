@@ -10,6 +10,7 @@ import (
 	"testing"
 	"time"
 
+	"github.com/ActiveMemory/ctx/internal/entity"
 	"github.com/ActiveMemory/ctx/internal/index"
 )
 
@@ -20,7 +21,7 @@ func makeBlock(date, title, body string) index.EntryBlock {
 		lines = append(lines, "", body)
 	}
 	return index.EntryBlock{
-		Entry: index.Entry{
+		Entry: entity.IndexEntry{
 			Timestamp: date + "-120000",
 			Date:      date,
 			Title:     title,
@@ -104,7 +105,7 @@ func TestRelevanceScore(t *testing.T) {
 func TestScoreEntry_Superseded(t *testing.T) {
 	now := time.Date(2026, 2, 19, 12, 0, 0, 0, time.Local)
 	eb := index.EntryBlock{
-		Entry: index.Entry{
+		Entry: entity.IndexEntry{
 			Timestamp: "2026-02-19-120000",
 			Date:      "2026-02-19",
 			Title:     "Old decision",

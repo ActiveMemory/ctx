@@ -10,7 +10,7 @@ import (
 	"github.com/spf13/cobra"
 
 	"github.com/ActiveMemory/ctx/internal/assets/read/desc"
-	"github.com/ActiveMemory/ctx/internal/cli/config/core"
+	"github.com/ActiveMemory/ctx/internal/cli/config/core/profile"
 	cfgCli "github.com/ActiveMemory/ctx/internal/config/cli"
 	"github.com/ActiveMemory/ctx/internal/config/embed/cmd"
 )
@@ -28,7 +28,7 @@ func Cmd() *cobra.Command {
 		Annotations: map[string]string{cfgCli.AnnotationSkipInit: ""},
 		Args:        cobra.NoArgs,
 		RunE: func(cmd *cobra.Command, _ []string) error {
-			root, rootErr := core.GitRoot()
+			root, rootErr := profile.GitRoot()
 			if rootErr != nil {
 				return rootErr
 			}

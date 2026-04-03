@@ -24,6 +24,7 @@ import (
 	"github.com/ActiveMemory/ctx/internal/config/project"
 	cfgWarn "github.com/ActiveMemory/ctx/internal/config/warn"
 	"github.com/ActiveMemory/ctx/internal/crypto"
+	"github.com/ActiveMemory/ctx/internal/entity"
 	"github.com/ActiveMemory/ctx/internal/io"
 	logWarn "github.com/ActiveMemory/ctx/internal/log/warn"
 	"github.com/ActiveMemory/ctx/internal/rc"
@@ -139,7 +140,7 @@ func EventAllowed(event string, allowed []string) bool {
 //
 // Returns:
 //   - error: Delivery error, or nil if sent successfully or silently skipped
-func Send(event, message, sessionID string, detail *TemplateRef) error {
+func Send(event, message, sessionID string, detail *entity.TemplateRef) error {
 	if !EventAllowed(event, rc.NotifyEvents()) {
 		return nil
 	}
@@ -156,7 +157,7 @@ func Send(event, message, sessionID string, detail *TemplateRef) error {
 		logWarn.Warn(cfgWarn.Getwd, cwdErr)
 	}
 
-	payload := Payload{
+	payload := entity.NotifyPayload{
 		Event:     event,
 		Message:   message,
 		Detail:    detail,

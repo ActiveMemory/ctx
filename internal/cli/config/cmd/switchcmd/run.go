@@ -9,7 +9,7 @@ package switchcmd
 import (
 	"github.com/spf13/cobra"
 
-	"github.com/ActiveMemory/ctx/internal/cli/config/core"
+	"github.com/ActiveMemory/ctx/internal/cli/config/core/profile"
 	"github.com/ActiveMemory/ctx/internal/config/file"
 	errConfig "github.com/ActiveMemory/ctx/internal/err/config"
 	writeConfig "github.com/ActiveMemory/ctx/internal/write/config"
@@ -35,25 +35,25 @@ func Run(cmd *cobra.Command, root string, args []string) error {
 		target = file.ProfileBase
 	}
 
-	var profile string
+	var p string
 	switch target {
 	case file.ProfileDev:
-		profile = file.ProfileDev
+		p = file.ProfileDev
 	case file.ProfileBase:
-		profile = file.ProfileBase
+		p = file.ProfileBase
 	case "":
 		// Toggle.
-		current := core.DetectProfile()
+		current := profile.Detect()
 		if current == file.ProfileDev {
-			profile = file.ProfileBase
+			p = file.ProfileBase
 		} else {
-			profile = file.ProfileDev
+			p = file.ProfileDev
 		}
 	default:
 		return errConfig.UnknownProfile(target)
 	}
 
-	msg, switchErr := core.SwitchTo(root, profile)
+	msg, switchErr := profile.SwitchTo(root, p)
 	if switchErr != nil {
 		return switchErr
 	}

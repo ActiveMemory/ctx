@@ -45,7 +45,7 @@ func Run(cmd *cobra.Command, args []string, flags entity.AddConfig) error {
 		return errAdd.NoContentProvided(fType, example.ForType(fType))
 	}
 
-	params := entry.Params{
+	params := entity.EntryParams{
 		Type:        fType,
 		Content:     content,
 		Section:     flags.Section,

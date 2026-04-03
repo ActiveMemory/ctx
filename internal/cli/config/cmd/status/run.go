@@ -9,7 +9,7 @@ package status
 import (
 	"github.com/spf13/cobra"
 
-	"github.com/ActiveMemory/ctx/internal/cli/config/core"
+	"github.com/ActiveMemory/ctx/internal/cli/config/core/profile"
 	writeConfig "github.com/ActiveMemory/ctx/internal/write/config"
 )
 
@@ -22,6 +22,6 @@ import (
 // Returns:
 //   - error: Always nil (included for RunE compatibility)
 func Run(cmd *cobra.Command, root string) error {
-	writeConfig.ProfileStatus(cmd, core.DetectProfile())
+	writeConfig.ProfileStatus(cmd, profile.Detect())
 	return nil
 }

@@ -16,7 +16,6 @@ import (
 	"gopkg.in/yaml.v3"
 
 	"github.com/ActiveMemory/ctx/internal/assets/read/desc"
-	"github.com/ActiveMemory/ctx/internal/cli/site/core"
 	"github.com/ActiveMemory/ctx/internal/config/embed/text"
 	"github.com/ActiveMemory/ctx/internal/config/regex"
 	"github.com/ActiveMemory/ctx/internal/config/token"
@@ -34,8 +33,8 @@ import (
 //   - []BlogPost: Parsed blog posts sorted by date descending
 //   - FeedReport: Report of skipped and warned entries
 //   - error: Non-nil if directory access fails
-func BlogPosts(blogDir string) ([]core.BlogPost, core.FeedReport, error) {
-	var report core.FeedReport
+func BlogPosts(blogDir string) ([]BlogPost, FeedReport, error) {
+	var report FeedReport
 
 	info, statErr := os.Stat(blogDir)
 	if statErr != nil || !info.IsDir() {
@@ -47,7 +46,7 @@ func BlogPosts(blogDir string) ([]core.BlogPost, core.FeedReport, error) {
 		return nil, report, errFs.ReadDir(blogDir, readErr)
 	}
 
-	var posts []core.BlogPost
+	var posts []BlogPost
 
 	for _, entry := range entries {
 		name := entry.Name()
@@ -58,11 +57,11 @@ func BlogPosts(blogDir string) ([]core.BlogPost, core.FeedReport, error) {
 		post, status := ParsePost(filepath.Join(blogDir, name), name)
 
 		switch status {
-		case core.PostIncluded:
+		case PostIncluded:
 			posts = append(posts, post)
-		case core.PostSkipped:
+		case PostSkipped:
 			report.Skipped = append(report.Skipped, post.Summary)
-		case core.PostWarn:
+		case PostWarn:
 			posts = append(posts, post)
 			report.Warnings = append(report.Warnings, post.Summary)
 		}
@@ -87,14 +86,14 @@ func BlogPosts(blogDir string) ([]core.BlogPost, core.FeedReport, error) {
 // Returns:
 //   - BlogPost: Parsed blog post metadata
 //   - PostStatus: Whether the post was included, skipped, or warned
-func ParsePost(path, filename string) (core.BlogPost, core.PostStatus) {
+func ParsePost(path, filename string) (BlogPost, PostStatus) {
 	data, readErr := ctxIo.SafeReadUserFile(path)
 	if readErr != nil {
-		return core.BlogPost{
+		return BlogPost{
 			Filename: filename,
 			Summary: fmt.Sprintf(
 				desc.Text(text.DescKeySiteSkipCannotRead), filename),
-		}, core.PostSkipped
+		}, PostSkipped
 	}
 
 	content := string(data)
@@ -102,70 +101,70 @@ func ParsePost(path, filename string) (core.BlogPost, core.PostStatus) {
 	sep := token.Separator
 
 	if !strings.HasPrefix(content, sep+nl) {
-		return core.BlogPost{
+		return BlogPost{
 			Filename: filename,
 			Summary: fmt.Sprintf(
 				desc.Text(text.DescKeySiteSkipNoFrontmatter), filename),
-		}, core.PostSkipped
+		}, PostSkipped
 	}
 
 	fmStart := len(sep + nl)
 	endIdx := strings.Index(content[fmStart:], nl+sep+nl)
 	if endIdx < 0 {
-		return core.BlogPost{
+		return BlogPost{
 			Filename: filename,
 			Summary:  fmt.Sprintf(desc.Text(text.DescKeySiteSkipMalformed), filename),
-		}, core.PostSkipped
+		}, PostSkipped
 	}
 
 	fmRaw := content[fmStart : fmStart+endIdx]
 	body := content[fmStart+endIdx+len(nl+sep+nl):]
 
-	var fm core.BlogFrontmatter
+	var fm BlogFrontmatter
 	if unmarshalErr := yaml.Unmarshal([]byte(fmRaw), &fm); unmarshalErr != nil {
-		return core.BlogPost{
+		return BlogPost{
 			Filename: filename,
 			Summary: fmt.Sprintf(desc.Text(text.DescKeySiteSkipParseError),
 				filename, unmarshalErr),
-		}, core.PostSkipped
+		}, PostSkipped
 	}
 
 	if fm.ReviewedAndFinalized == nil || !*fm.ReviewedAndFinalized {
-		return core.BlogPost{
+		return BlogPost{
 			Filename: filename,
 			Summary: fmt.Sprintf(
 				desc.Text(text.DescKeySiteSkipNotFinalized), filename),
-		}, core.PostSkipped
+		}, PostSkipped
 	}
 	if fm.Title == "" {
-		return core.BlogPost{
+		return BlogPost{
 			Filename: filename,
 			Summary: fmt.Sprintf(desc.Text(text.DescKeySiteSkipMissingTitle),
 				filename),
-		}, core.PostSkipped
+		}, PostSkipped
 	}
 	if fm.Date == "" {
-		return core.BlogPost{
+		return BlogPost{
 			Filename: filename,
 			Summary: fmt.Sprintf(desc.Text(text.DescKeySiteSkipMissingDate),
 				filename),
-		}, core.PostSkipped
+		}, PostSkipped
 	}
 
 	summary := ExtractSummary(body)
 
 	if summary == "" {
-		return core.BlogPost{
+		return BlogPost{
 			Filename: filename, Title: fm.Title, Date: fm.Date,
 			Author: fm.Author, Topics: fm.Topics,
 			Summary: fmt.Sprintf(desc.Text(text.DescKeySiteWarnNoSummary), filename),
-		}, core.PostWarn
+		}, PostWarn
 	}
 
-	return core.BlogPost{
+	return BlogPost{
 		Filename: filename, Title: fm.Title, Date: fm.Date,
 		Author: fm.Author, Topics: fm.Topics, Summary: summary,
-	}, core.PostIncluded
+	}, PostIncluded
 }
 
 // ExtractSummary finds the first non-empty paragraph after a heading line.

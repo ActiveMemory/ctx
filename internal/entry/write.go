@@ -15,6 +15,7 @@ import (
 	coreAppend "github.com/ActiveMemory/ctx/internal/cli/add/core/insert"
 	"github.com/ActiveMemory/ctx/internal/config/entry"
 	"github.com/ActiveMemory/ctx/internal/config/fs"
+	"github.com/ActiveMemory/ctx/internal/entity"
 	errAdd "github.com/ActiveMemory/ctx/internal/err/add"
 	errFs "github.com/ActiveMemory/ctx/internal/err/fs"
 	"github.com/ActiveMemory/ctx/internal/index"
@@ -34,7 +35,7 @@ import (
 // Returns:
 //   - error: Non-nil if the type is unknown, the file
 //     doesn't exist, or write fails
-func Write(params Params) error {
+func Write(params entity.EntryParams) error {
 	fType := strings.ToLower(params.Type)
 
 	fileName, ok := entry.CtxFile(fType)
@@ -114,7 +115,7 @@ func Write(params Params) error {
 //
 // Returns:
 //   - error: validation or write error
-func ValidateAndWrite(params Params) error {
+func ValidateAndWrite(params entity.EntryParams) error {
 	if vErr := Validate(params, nil); vErr != nil {
 		return vErr
 	}

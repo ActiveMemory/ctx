@@ -516,7 +516,7 @@ func TestExtractContent_NoContent(t *testing.T) {
 
 func TestValidateEntry(t *testing.T) {
 	t.Run("empty content", func(t *testing.T) {
-		err := entry.Validate(entry.Params{Type: "task", Content: ""}, nil)
+		err := entry.Validate(entity.EntryParams{Type: "task", Content: ""}, nil)
 		if err == nil {
 			t.Fatal("expected error for empty content")
 		}
@@ -526,7 +526,7 @@ func TestValidateEntry(t *testing.T) {
 	})
 
 	t.Run("valid task", func(t *testing.T) {
-		p := entry.Params{Type: "task", Content: "Do something"}
+		p := entity.EntryParams{Type: "task", Content: "Do something"}
 		err := entry.Validate(p, nil)
 		if err != nil {
 			t.Errorf("unexpected error: %v", err)
@@ -534,7 +534,7 @@ func TestValidateEntry(t *testing.T) {
 	})
 
 	t.Run("valid convention", func(t *testing.T) {
-		p := entry.Params{Type: "convention", Content: "Use camelCase"}
+		p := entity.EntryParams{Type: "convention", Content: "Use camelCase"}
 		err := entry.Validate(p, nil)
 		if err != nil {
 			t.Errorf("unexpected error: %v", err)
@@ -542,7 +542,7 @@ func TestValidateEntry(t *testing.T) {
 	})
 
 	t.Run("decision missing fields", func(t *testing.T) {
-		err := entry.Validate(entry.Params{
+		err := entry.Validate(entity.EntryParams{
 			Type:    "decision",
 			Content: "Some decision",
 		}, nil)
@@ -556,7 +556,7 @@ func TestValidateEntry(t *testing.T) {
 	})
 
 	t.Run("decision valid", func(t *testing.T) {
-		err := entry.Validate(entry.Params{
+		err := entry.Validate(entity.EntryParams{
 			Type:        "decision",
 			Content:     "Use Go",
 			Context:     "Need a language",
@@ -569,7 +569,7 @@ func TestValidateEntry(t *testing.T) {
 	})
 
 	t.Run("learning missing fields", func(t *testing.T) {
-		err := entry.Validate(entry.Params{
+		err := entry.Validate(entity.EntryParams{
 			Type:    "learning",
 			Content: "Some learning",
 		}, nil)
@@ -583,7 +583,7 @@ func TestValidateEntry(t *testing.T) {
 	})
 
 	t.Run("learning valid", func(t *testing.T) {
-		err := entry.Validate(entry.Params{
+		err := entry.Validate(entity.EntryParams{
 			Type:        "learning",
 			Content:     "Go embed",
 			Context:     "Tried embedding",
@@ -601,7 +601,7 @@ func TestValidateEntry(t *testing.T) {
 // ---------------------------------------------------------------------------
 
 func TestWriteEntry_UnknownType(t *testing.T) {
-	err := entry.Write(entry.Params{
+	err := entry.Write(entity.EntryParams{
 		Type:    "foobar",
 		Content: "something",
 	})
@@ -622,7 +622,7 @@ func TestWriteEntry_FileNotFound(t *testing.T) {
 	defer func() { _ = os.Chdir(origDir) }()
 
 	// No .context/ directory, so files won't exist
-	err := entry.Write(entry.Params{
+	err := entry.Write(entity.EntryParams{
 		Type:    "task",
 		Content: "something",
 	})

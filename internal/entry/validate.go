@@ -7,10 +7,10 @@
 package entry
 
 import (
-	errAdd "github.com/ActiveMemory/ctx/internal/err/add"
-
 	"github.com/ActiveMemory/ctx/internal/config/entry"
 	"github.com/ActiveMemory/ctx/internal/config/flag"
+	"github.com/ActiveMemory/ctx/internal/entity"
+	errAdd "github.com/ActiveMemory/ctx/internal/err/add"
 )
 
 // Validate checks that required fields are present for the given entry type.
@@ -22,7 +22,7 @@ import (
 //
 // Returns:
 //   - error: Non-nil with details about missing fields, nil if valid
-func Validate(params Params, examplesFn func(string) string) error {
+func Validate(params entity.EntryParams, examplesFn func(string) string) error {
 	if params.Content == "" {
 		examples := ""
 		if examplesFn != nil {

@@ -6,19 +6,7 @@
 
 package notify
 
-// TemplateRef identifies the hook template and variables that produced a
-// notification, allowing receivers to filter, re-render, or aggregate
-// without parsing opaque rendered text.
-//
-// Fields:
-//   - Hook: Hook name that produced this notification
-//   - Variant: Template variant within the hook
-//   - Variables: Template variables used for rendering
-type TemplateRef struct {
-	Hook      string         `json:"hook"`
-	Variant   string         `json:"variant"`
-	Variables map[string]any `json:"variables,omitempty"`
-}
+import "github.com/ActiveMemory/ctx/internal/entity"
 
 // NewTemplateRef constructs a TemplateRef.
 //
@@ -30,7 +18,9 @@ type TemplateRef struct {
 //   - vars: Template variables; nil is omitted from JSON
 //
 // Returns:
-//   - *TemplateRef: Populated reference
-func NewTemplateRef(hook, variant string, vars map[string]any) *TemplateRef {
-	return &TemplateRef{Hook: hook, Variant: variant, Variables: vars}
+//   - *entity.TemplateRef: Populated reference
+func NewTemplateRef(
+	hook, variant string, vars map[string]any,
+) *entity.TemplateRef {
+	return entity.NewTemplateRef(hook, variant, vars)
 }

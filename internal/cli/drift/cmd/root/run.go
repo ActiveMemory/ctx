@@ -11,7 +11,8 @@ import (
 
 	"github.com/spf13/cobra"
 
-	"github.com/ActiveMemory/ctx/internal/cli/drift/core"
+	"github.com/ActiveMemory/ctx/internal/cli/drift/core/fix"
+	"github.com/ActiveMemory/ctx/internal/cli/drift/core/out"
 	"github.com/ActiveMemory/ctx/internal/context/load"
 	"github.com/ActiveMemory/ctx/internal/drift"
 	errCtx "github.com/ActiveMemory/ctx/internal/err/context"
@@ -21,18 +22,20 @@ import (
 
 // Run executes the drift command logic.
 //
-// Loads context, runs drift detection, and outputs results in the
-// specified format. When `fix` is true, attempts to auto-fix supported
-// issue types (staleness, missing_file).
+// Loads context, runs drift detection, and outputs results
+// in the specified format. When `doFix` is true, attempts
+// to auto-fix supported issue types.
 //
 // Parameters:
 //   - cmd: Cobra command for output stream
-//   - jsonOutput: If true, output as JSON; otherwise output as text
-//   - fix: If true, attempt to auto-fix supported issues
+//   - jsonOutput: If true, output as JSON
+//   - doFix: If true, attempt to auto-fix supported issues
 //
 // Returns:
-//   - error: Non-nil if context loading fails or .context/ is not found
-func Run(cmd *cobra.Command, jsonOutput, fix bool) error {
+//   - error: Non-nil if context loading fails
+func Run(
+	cmd *cobra.Command, jsonOutput, doFix bool,
+) error {
 	ctx, err := load.Do("")
 	if err != nil {
 		if _, ok := errors.AsType[*errCtx.NotFoundError](err); ok {
@@ -44,10 +47,11 @@ func Run(cmd *cobra.Command, jsonOutput, fix bool) error {
 	report := drift.Detect(ctx)
 
 	// Apply fixes if requested
-	if fix && (len(report.Warnings) > 0 || len(report.Violations) > 0) {
+	if doFix && (len(report.Warnings) > 0 ||
+		len(report.Violations) > 0) {
 		writeDrift.FixHeader(cmd)
 
-		result := core.ApplyFixes(cmd, ctx, report)
+		result := fix.Apply(cmd, ctx, report)
 
 		writeDrift.BlankLine(cmd)
 		if result.Fixed > 0 {
@@ -69,8 +73,8 @@ func Run(cmd *cobra.Command, jsonOutput, fix bool) error {
 	}
 
 	if jsonOutput {
-		return core.OutputDriftJSON(cmd, report)
+		return out.DriftJSON(cmd, report)
 	}
 
-	return core.OutputDriftText(cmd, report)
+	return out.DriftText(cmd, report)
 }

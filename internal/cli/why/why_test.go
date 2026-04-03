@@ -11,7 +11,8 @@ import (
 	"strings"
 	"testing"
 
-	whyCore "github.com/ActiveMemory/ctx/internal/cli/why/core"
+	"github.com/ActiveMemory/ctx/internal/cli/why/core/show"
+	"github.com/ActiveMemory/ctx/internal/cli/why/core/strip"
 	"github.com/spf13/cobra"
 )
 
@@ -24,27 +25,27 @@ func newTestCmd() (*cobra.Command, *bytes.Buffer) {
 	return cmd, &buf
 }
 
-func TestShowDoc_Manifesto(t *testing.T) {
+func TestDoc_Manifesto(t *testing.T) {
 	cmd, buf := newTestCmd()
 
-	showErr := whyCore.ShowDoc(cmd, "manifesto")
+	showErr := show.Doc(cmd, "manifesto")
 	if showErr != nil {
-		t.Fatalf("ShowDoc(manifesto) error = %v", showErr)
+		t.Fatalf("Doc(manifesto) error = %v", showErr)
 	}
 
 	output := buf.String()
 	if len(output) == 0 {
-		t.Fatal("ShowDoc(manifesto) produced empty output")
+		t.Fatal("Doc(manifesto) produced empty output")
 	}
 	if !strings.Contains(output, "Manifesto") {
 		t.Errorf("output missing 'Manifesto', got %d bytes", len(output))
 	}
 }
 
-func TestShowDoc_UnknownAlias(t *testing.T) {
+func TestDoc_UnknownAlias(t *testing.T) {
 	cmd, _ := newTestCmd()
 
-	showErr := whyCore.ShowDoc(cmd, "nonexistent")
+	showErr := show.Doc(cmd, "nonexistent")
 	if showErr == nil {
 		t.Fatal("expected error for unknown document alias")
 	}
@@ -106,7 +107,7 @@ func TestExtractAdmonitionTitle(t *testing.T) {
 
 	for _, tc := range tests {
 		t.Run(tc.name, func(t *testing.T) {
-			got := whyCore.ExtractAdmonitionTitle(tc.input)
+			got := strip.ExtractAdmonitionTitle(tc.input)
 			if got != tc.want {
 				t.Errorf("ExtractAdmonitionTitle(%q) = %q, want %q", tc.input, got, tc.want)
 			}
@@ -139,7 +140,7 @@ func TestExtractTabTitle(t *testing.T) {
 
 	for _, tc := range tests {
 		t.Run(tc.name, func(t *testing.T) {
-			got := whyCore.ExtractTabTitle(tc.input)
+			got := strip.ExtractTabTitle(tc.input)
 			if got != tc.want {
 				t.Errorf("ExtractTabTitle(%q) = %q, want %q", tc.input, got, tc.want)
 			}

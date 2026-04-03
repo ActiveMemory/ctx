@@ -18,7 +18,6 @@ import (
 	"github.com/ActiveMemory/ctx/internal/config/file"
 	"github.com/ActiveMemory/ctx/internal/config/fs"
 	"github.com/ActiveMemory/ctx/internal/entity"
-	"github.com/ActiveMemory/ctx/internal/notify"
 	"github.com/ActiveMemory/ctx/internal/rc"
 )
 
@@ -72,7 +71,7 @@ func TestAppend_Basic(t *testing.T) {
 	tmpDir := setupTestDir(t, true)
 	logPath := filepath.Join(tmpDir, dir.Context, dir.State, event.FileLog)
 
-	detail := notify.NewTemplateRef("qa-reminder", "gate", nil)
+	detail := entity.NewTemplateRef("qa-reminder", "gate", nil)
 	Append("relay", "QA gate reminder", "session-1", detail)
 
 	data, readErr := os.ReadFile(logPath) //nolint:gosec // test file
@@ -80,7 +79,7 @@ func TestAppend_Basic(t *testing.T) {
 		t.Fatalf("failed to read log: %v", readErr)
 	}
 
-	var p notify.Payload
+	var p entity.NotifyPayload
 	if unmarshalErr := json.Unmarshal(data, &p); unmarshalErr != nil {
 		t.Fatalf("failed to parse log line: %v", unmarshalErr)
 	}
@@ -215,11 +214,11 @@ func TestQuery_FilterHook(t *testing.T) {
 	setupTestDir(t, true)
 
 	Append("relay", "qa gate", "s1",
-		notify.NewTemplateRef("qa-reminder", "gate", nil))
+		entity.NewTemplateRef("qa-reminder", "gate", nil))
 	Append("relay", "context load", "s1",
-		notify.NewTemplateRef("context-load-gate", "inject", nil))
+		entity.NewTemplateRef("context-load-gate", "inject", nil))
 	Append("nudge", "ceremonies", "s1",
-		notify.NewTemplateRef("check-ceremonies", "both", nil))
+		entity.NewTemplateRef("check-ceremonies", "both", nil))
 
 	events, queryErr := Query(entity.EventQueryOpts{Hook: "qa-reminder"})
 	if queryErr != nil {

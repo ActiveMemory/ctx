@@ -17,7 +17,7 @@ import (
 	"github.com/ActiveMemory/ctx/internal/config/event"
 	cfgTime "github.com/ActiveMemory/ctx/internal/config/time"
 	"github.com/ActiveMemory/ctx/internal/config/token"
-	"github.com/ActiveMemory/ctx/internal/notify"
+	"github.com/ActiveMemory/ctx/internal/entity"
 )
 
 // FormatTimestamp converts an RFC3339 timestamp to local time display
@@ -45,7 +45,7 @@ func FormatTimestamp(ts string) string {
 //
 // Returns:
 //   - string: hook name, or HookFallback if undetermined
-func ExtractHookName(e notify.Payload) string {
+func ExtractHookName(e entity.NotifyPayload) string {
 	if e.Detail != nil && e.Detail.Hook != "" {
 		return e.Detail.Hook
 	}
@@ -80,7 +80,7 @@ func TruncateMessage(msg string, maxLen int) string {
 //
 // Returns:
 //   - []string: JSON lines (marshal errors are silently skipped)
-func FormatJSON(evts []notify.Payload) []string {
+func FormatJSON(evts []entity.NotifyPayload) []string {
 	var lines []string
 	for _, e := range evts {
 		line, marshalErr := json.Marshal(e)
@@ -99,7 +99,7 @@ func FormatJSON(evts []notify.Payload) []string {
 //
 // Returns:
 //   - []string: formatted event lines
-func FormatHuman(evts []notify.Payload) []string {
+func FormatHuman(evts []entity.NotifyPayload) []string {
 	fmtStr := desc.Text(text.DescKeyEventsHumanFormat)
 	lines := make([]string, 0, len(evts))
 	for _, e := range evts {

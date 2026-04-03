@@ -12,7 +12,7 @@ import (
 	"github.com/spf13/cobra"
 
 	"github.com/ActiveMemory/ctx/internal/assets/read/desc"
-	siteCore "github.com/ActiveMemory/ctx/internal/cli/site/core"
+	"github.com/ActiveMemory/ctx/internal/cli/site/core/scan"
 	"github.com/ActiveMemory/ctx/internal/config/embed/text"
 )
 
@@ -25,7 +25,7 @@ import (
 func PrintFeedReport(
 	cmd *cobra.Command,
 	outPath string,
-	report siteCore.FeedReport,
+	report scan.FeedReport,
 ) {
 	cmd.Println()
 	cmd.Println(fmt.Sprintf(

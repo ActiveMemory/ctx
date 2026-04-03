@@ -11,7 +11,7 @@ import (
 	"path/filepath"
 	"strings"
 
-	"github.com/ActiveMemory/ctx/internal/cli/site/core"
+	"github.com/ActiveMemory/ctx/internal/cli/site/core/scan"
 	"github.com/ActiveMemory/ctx/internal/config/file"
 	"github.com/ActiveMemory/ctx/internal/config/rss"
 	"github.com/ActiveMemory/ctx/internal/config/token"
@@ -29,7 +29,7 @@ import (
 //
 // Returns:
 //   - error: Non-nil if marshalling or writing fails
-func Atom(posts []core.BlogPost, outPath, baseURL string) error {
+func Atom(posts []scan.BlogPost, outPath, baseURL string) error {
 	baseURL = strings.TrimRight(baseURL, rss.URLSlash)
 
 	feedURL := baseURL + rss.FeedPath

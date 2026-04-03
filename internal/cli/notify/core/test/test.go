@@ -16,6 +16,7 @@ import (
 	cfgEvent "github.com/ActiveMemory/ctx/internal/config/event"
 	"github.com/ActiveMemory/ctx/internal/config/project"
 	"github.com/ActiveMemory/ctx/internal/config/warn"
+	"github.com/ActiveMemory/ctx/internal/entity"
 	errNotify "github.com/ActiveMemory/ctx/internal/err/notify"
 	ctxLog "github.com/ActiveMemory/ctx/internal/log/warn"
 	"github.com/ActiveMemory/ctx/internal/notify"
@@ -44,7 +45,7 @@ func Send() (Result, error) {
 		ctxLog.Warn(warn.Getwd, cwdErr)
 	}
 
-	payload := notify.Payload{
+	payload := entity.NotifyPayload{
 		Event:     cfgEvent.TypeTest,
 		Message:   cfgEvent.TestMessage,
 		Timestamp: time.Now().UTC().Format(time.RFC3339),

@@ -6,10 +6,7 @@
 
 package event
 
-import (
-	"github.com/ActiveMemory/ctx/internal/entity"
-	"github.com/ActiveMemory/ctx/internal/notify"
-)
+import "github.com/ActiveMemory/ctx/internal/entity"
 
 // matchesFilter reports whether an event passes all non-empty query
 // filters. Empty filter fields are treated as wildcards.
@@ -20,7 +17,7 @@ import (
 //
 // Returns:
 //   - bool: true if the event matches all non-empty filters
-func matchesFilter(e notify.Payload, opts entity.EventQueryOpts) bool {
+func matchesFilter(e entity.NotifyPayload, opts entity.EventQueryOpts) bool {
 	if opts.Event != "" && e.Event != opts.Event {
 		return false
 	}

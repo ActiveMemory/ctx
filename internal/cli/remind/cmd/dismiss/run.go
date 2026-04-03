@@ -9,7 +9,7 @@ package dismiss
 import (
 	"github.com/spf13/cobra"
 
-	"github.com/ActiveMemory/ctx/internal/cli/remind/core"
+	coreDismiss "github.com/ActiveMemory/ctx/internal/cli/remind/core/dismiss"
 )
 
 // Run dismisses one or all reminders based on the
@@ -31,7 +31,7 @@ func Run(
 	cmd *cobra.Command, idStr string, all bool,
 ) error {
 	if all {
-		return core.DismissAll(cmd)
+		return coreDismiss.All(cmd)
 	}
-	return core.DismissOne(cmd, idStr)
+	return coreDismiss.One(cmd, idStr)
 }

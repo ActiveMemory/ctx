@@ -18,6 +18,7 @@ import (
 	"github.com/ActiveMemory/ctx/internal/config/embed/flag"
 	cFlag "github.com/ActiveMemory/ctx/internal/config/flag"
 	"github.com/ActiveMemory/ctx/internal/config/token"
+	"github.com/ActiveMemory/ctx/internal/entity"
 	errCli "github.com/ActiveMemory/ctx/internal/err/cli"
 	"github.com/ActiveMemory/ctx/internal/flagbind"
 	iNotify "github.com/ActiveMemory/ctx/internal/notify"
@@ -47,9 +48,9 @@ func Cmd() *cobra.Command {
 				return errCli.ArgRequired(cFlag.Message)
 			}
 			message := strings.Join(args, token.Space)
-			var ref *iNotify.TemplateRef
+			var ref *entity.TemplateRef
 			if hook != "" {
-				ref = iNotify.NewTemplateRef(hook, variant, nil)
+				ref = entity.NewTemplateRef(hook, variant, nil)
 			}
 			return iNotify.Send(event, message, sessionID, ref)
 		},

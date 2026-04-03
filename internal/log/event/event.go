@@ -19,7 +19,6 @@ import (
 	"github.com/ActiveMemory/ctx/internal/entity"
 	"github.com/ActiveMemory/ctx/internal/io"
 	logWarn "github.com/ActiveMemory/ctx/internal/log/warn"
-	"github.com/ActiveMemory/ctx/internal/notify"
 	"github.com/ActiveMemory/ctx/internal/rc"
 )
 
@@ -35,7 +34,7 @@ import (
 //   - message: Human-readable description
 //   - sessionID: Claude session ID (may be empty)
 //   - detail: Optional template reference (may be nil)
-func Append(event, message, sessionID string, detail *notify.TemplateRef) {
+func Append(event, message, sessionID string, detail *entity.TemplateRef) {
 	if !rc.EventLog() {
 		return
 	}
@@ -58,7 +57,7 @@ func Append(event, message, sessionID string, detail *notify.TemplateRef) {
 		logWarn.Warn(warn.Getwd, cwdErr)
 	}
 
-	payload := notify.Payload{
+	payload := entity.NotifyPayload{
 		Event:     event,
 		Message:   message,
 		Detail:    detail,
@@ -86,10 +85,10 @@ func Append(event, message, sessionID string, detail *notify.TemplateRef) {
 //   - opts: Filter and limit options
 //
 // Returns:
-//   - []notify.Payload: Matching events (newest last)
+//   - []entity.NotifyPayload: Matching events (newest last)
 //   - error: Non-nil only if the log file exists but cannot be opened
-func Query(opts entity.EventQueryOpts) ([]notify.Payload, error) {
-	var allEvents []notify.Payload
+func Query(opts entity.EventQueryOpts) ([]entity.NotifyPayload, error) {
+	var allEvents []entity.NotifyPayload
 
 	// Read the rotated file first (older events) if requested.
 	if opts.IncludeRotated {
@@ -110,7 +109,7 @@ func Query(opts entity.EventQueryOpts) ([]notify.Payload, error) {
 	allEvents = append(allEvents, events...)
 
 	// Apply filters.
-	var filtered []notify.Payload
+	var filtered []entity.NotifyPayload
 	for _, e := range allEvents {
 		if !matchesFilter(e, opts) {
 			continue
@@ -124,7 +123,7 @@ func Query(opts entity.EventQueryOpts) ([]notify.Payload, error) {
 	}
 
 	if filtered == nil {
-		filtered = []notify.Payload{}
+		filtered = []entity.NotifyPayload{}
 	}
 
 	return filtered, nil

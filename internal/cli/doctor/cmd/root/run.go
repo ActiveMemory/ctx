@@ -9,12 +9,13 @@ package root
 import (
 	"github.com/spf13/cobra"
 
-	"github.com/ActiveMemory/ctx/internal/cli/doctor/core"
+	"github.com/ActiveMemory/ctx/internal/cli/doctor/core/check"
+	"github.com/ActiveMemory/ctx/internal/cli/doctor/core/output"
 	"github.com/ActiveMemory/ctx/internal/config/stats"
 )
 
-// Run executes the doctor command logic, running all health checks and
-// producing either JSON or human-readable output.
+// Run executes the doctor command logic, running all health
+// checks and producing either JSON or human-readable output.
 //
 // Parameters:
 //   - cmd: Cobra command for output stream
@@ -23,21 +24,21 @@ import (
 // Returns:
 //   - error: Non-nil if output formatting fails
 func Run(cmd *cobra.Command, jsonOutput bool) error {
-	report := &core.Report{}
+	report := &check.Report{}
 
-	core.CheckContextInitialized(report)
-	core.CheckRequiredFiles(report)
-	core.CheckCtxrcValidation(report)
-	core.CheckDrift(report)
-	core.CheckPluginEnablement(report)
-	core.CheckCompanionConfig(report)
-	core.CheckEventLogging(report)
-	core.CheckWebhook(report)
-	core.CheckReminders(report)
-	core.CheckTaskCompletion(report)
-	core.CheckContextTokenSize(report)
-	core.CheckSystemResources(report)
-	core.CheckRecentEventActivity(report)
+	check.ContextInitialized(report)
+	check.RequiredFiles(report)
+	check.CtxrcValidation(report)
+	check.Drift(report)
+	check.PluginEnablement(report)
+	check.CompanionConfig(report)
+	check.EventLogging(report)
+	check.Webhook(report)
+	check.Reminders(report)
+	check.TaskCompletion(report)
+	check.ContextTokenSize(report)
+	check.SystemResources(report)
+	check.RecentEventActivity(report)
 
 	// Count warnings and errors.
 	for _, r := range report.Results {
@@ -50,7 +51,7 @@ func Run(cmd *cobra.Command, jsonOutput bool) error {
 	}
 
 	if jsonOutput {
-		return core.OutputJSON(cmd, report)
+		return output.JSON(cmd, report)
 	}
-	return core.OutputHuman(cmd, report)
+	return output.Human(cmd, report)
 }

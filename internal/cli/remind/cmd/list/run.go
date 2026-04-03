@@ -11,7 +11,7 @@ import (
 
 	"github.com/spf13/cobra"
 
-	"github.com/ActiveMemory/ctx/internal/cli/remind/core"
+	"github.com/ActiveMemory/ctx/internal/cli/remind/core/store"
 	cfgTime "github.com/ActiveMemory/ctx/internal/config/time"
 	"github.com/ActiveMemory/ctx/internal/write/remind"
 )
@@ -26,7 +26,7 @@ import (
 // Returns:
 //   - error: Non-nil on read failure
 func Run(cmd *cobra.Command) error {
-	reminders, readErr := core.ReadReminders()
+	reminders, readErr := store.Read()
 	if readErr != nil {
 		return readErr
 	}

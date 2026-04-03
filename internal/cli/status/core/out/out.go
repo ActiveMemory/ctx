@@ -13,7 +13,6 @@ import (
 	"github.com/spf13/cobra"
 
 	"github.com/ActiveMemory/ctx/internal/assets/read/desc"
-	"github.com/ActiveMemory/ctx/internal/cli/status/core"
 	"github.com/ActiveMemory/ctx/internal/cli/status/core/preview"
 	"github.com/ActiveMemory/ctx/internal/cli/status/core/sort"
 	"github.com/ActiveMemory/ctx/internal/config/embed/text"
@@ -39,16 +38,16 @@ import (
 func PersistStatusJSON(
 	cmd *cobra.Command, ctx *entity.Context, verbose bool,
 ) error {
-	output := core.Output{
+	output := Output{
 		ContextDir:  ctx.Dir,
 		TotalFiles:  len(ctx.Files),
 		TotalTokens: ctx.TotalTokens,
 		TotalSize:   ctx.TotalSize,
-		Files:       make([]core.FileStatus, 0, len(ctx.Files)),
+		Files:       make([]FileStatus, 0, len(ctx.Files)),
 	}
 
 	for _, f := range ctx.Files {
-		fs := core.FileStatus{
+		fs := FileStatus{
 			Name:    f.Name,
 			Tokens:  f.Tokens,
 			Size:    f.Size,

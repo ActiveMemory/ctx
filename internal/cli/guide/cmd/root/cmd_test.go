@@ -11,7 +11,7 @@ import (
 	"testing"
 
 	"github.com/ActiveMemory/ctx/internal/assets/read/desc"
-	"github.com/ActiveMemory/ctx/internal/cli/guide/core"
+	"github.com/ActiveMemory/ctx/internal/cli/guide/core/skill"
 	"github.com/ActiveMemory/ctx/internal/config/embed/text"
 )
 
@@ -19,24 +19,24 @@ func TestParseSkillFrontmatter(t *testing.T) {
 	tests := []struct {
 		name    string
 		input   string
-		want    core.SkillMeta
+		want    skill.Meta
 		wantErr bool
 	}{
 		{
 			name: "valid frontmatter",
 			input: "---\nname: ctx-test\n" +
 				"description: \"A test skill.\"\n---\nBody text.",
-			want: core.SkillMeta{Name: "ctx-test", Description: "A test skill."},
+			want: skill.Meta{Name: "ctx-test", Description: "A test skill."},
 		},
 		{
 			name:  "missing frontmatter",
 			input: "No frontmatter here.",
-			want:  core.SkillMeta{},
+			want:  skill.Meta{},
 		},
 		{
 			name:  "unterminated frontmatter",
 			input: "---\nname: ctx-test\nno closing delimiter",
-			want:  core.SkillMeta{},
+			want:  skill.Meta{},
 		},
 		{
 			name:    "invalid YAML",
@@ -47,7 +47,7 @@ func TestParseSkillFrontmatter(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			got, err := core.ParseSkillFrontmatter([]byte(tt.input))
+			got, err := skill.ParseFrontmatter([]byte(tt.input))
 			if (err != nil) != tt.wantErr {
 				t.Errorf("ParseSkillFrontmatter() error = %v, wantErr %v", err, tt.wantErr)
 				return

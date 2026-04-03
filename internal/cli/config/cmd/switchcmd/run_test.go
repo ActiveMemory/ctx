@@ -15,7 +15,7 @@ import (
 
 	"github.com/spf13/cobra"
 
-	"github.com/ActiveMemory/ctx/internal/cli/config/core"
+	"github.com/ActiveMemory/ctx/internal/cli/config/core/profile"
 	"github.com/ActiveMemory/ctx/internal/config/file"
 	"github.com/ActiveMemory/ctx/internal/rc"
 )
@@ -81,7 +81,7 @@ func TestSwitch_DevToBase(t *testing.T) {
 	}
 
 	rc.Reset()
-	if got := core.DetectProfile(); got != file.ProfileBase {
+	if got := profile.Detect(); got != file.ProfileBase {
 		t.Errorf("profile should be base after switch, got %q", got)
 	}
 }
@@ -105,7 +105,7 @@ func TestSwitch_BaseToDev(t *testing.T) {
 	}
 
 	rc.Reset()
-	if got := core.DetectProfile(); got != file.ProfileDev {
+	if got := profile.Detect(); got != file.ProfileDev {
 		t.Errorf("profile should be dev after switch, got %q", got)
 	}
 }
@@ -162,7 +162,7 @@ func TestSwitch_Toggle_DevToBase(t *testing.T) {
 	}
 
 	rc.Reset()
-	if got := core.DetectProfile(); got != file.ProfileBase {
+	if got := profile.Detect(); got != file.ProfileBase {
 		t.Errorf("toggle from dev should go to base, got %q", got)
 	}
 }
@@ -181,7 +181,7 @@ func TestSwitch_Toggle_BaseToDev(t *testing.T) {
 	}
 
 	rc.Reset()
-	if got := core.DetectProfile(); got != file.ProfileDev {
+	if got := profile.Detect(); got != file.ProfileDev {
 		t.Errorf("toggle from base should go to dev, got %q", got)
 	}
 }
@@ -195,7 +195,7 @@ func TestSwitch_Toggle_MissingCtxrc(t *testing.T) {
 	}
 
 	rc.Reset()
-	if got := core.DetectProfile(); got != file.ProfileDev {
+	if got := profile.Detect(); got != file.ProfileDev {
 		t.Errorf("toggle from missing should go to dev, got %q", got)
 	}
 }

@@ -20,8 +20,8 @@ import (
 	"github.com/ActiveMemory/ctx/internal/config/hook"
 	"github.com/ActiveMemory/ctx/internal/config/stats"
 	"github.com/ActiveMemory/ctx/internal/config/token"
+	"github.com/ActiveMemory/ctx/internal/entity"
 	"github.com/ActiveMemory/ctx/internal/io"
-	"github.com/ActiveMemory/ctx/internal/notify"
 )
 
 // EmitCheckpoint builds the standard checkpoint box with optional token usage.
@@ -71,7 +71,7 @@ func EmitCheckpoint(
 			count, tokens, pct,
 		),
 	)
-	ref := notify.NewTemplateRef(
+	ref := entity.NewTemplateRef(
 		hook.CheckContextSize, hook.VariantCheckpoint, nil,
 	)
 	checkpointMsg := fmt.Sprintf(
@@ -129,7 +129,7 @@ func EmitWindowWarning(
 			count, tokens, pct,
 		),
 	)
-	ref := notify.NewTemplateRef(hook.CheckContextSize, hook.VariantWindow,
+	ref := entity.NewTemplateRef(hook.CheckContextSize, hook.VariantWindow,
 		map[string]any{
 			stats.VarPercentage: pct,
 			stats.VarTokenCount: coreSession.FormatTokenCount(tokens),
@@ -196,7 +196,7 @@ func EmitBillingWarning(
 			desc.Text(text.DescKeyCheckContextSizeBillingLogFormat),
 			count, tokens, threshold),
 	)
-	ref := notify.NewTemplateRef(
+	ref := entity.NewTemplateRef(
 		hook.CheckContextSize, hook.VariantBilling,
 		map[string]any{
 			stats.VarTokenCount: coreSession.FormatTokenCount(tokens),

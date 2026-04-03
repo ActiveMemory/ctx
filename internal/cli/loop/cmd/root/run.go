@@ -10,7 +10,7 @@ import (
 	"github.com/spf13/cobra"
 
 	"github.com/ActiveMemory/ctx/internal/assets/read/desc"
-	"github.com/ActiveMemory/ctx/internal/cli/loop/core"
+	"github.com/ActiveMemory/ctx/internal/cli/loop/core/script"
 	"github.com/ActiveMemory/ctx/internal/config/embed/text"
 	"github.com/ActiveMemory/ctx/internal/config/fs"
 	cfgLoop "github.com/ActiveMemory/ctx/internal/config/loop"
@@ -46,12 +46,12 @@ func Run(
 		return config.InvalidTool(tool)
 	}
 
-	script := core.GenerateLoopScript(
+	s := script.Generate(
 		promptFile, tool, maxIterations, completionMsg,
 	)
 
 	if writeErr := ctxIo.SafeWriteFile(
-		outputFile, []byte(script), fs.PermExec,
+		outputFile, []byte(s), fs.PermExec,
 	); writeErr != nil {
 		return errFs.FileWrite(outputFile, writeErr)
 	}

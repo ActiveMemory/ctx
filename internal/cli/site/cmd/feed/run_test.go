@@ -18,7 +18,6 @@ import (
 	"github.com/ActiveMemory/ctx/internal/cli/site/core/scan"
 	"github.com/spf13/cobra"
 
-	"github.com/ActiveMemory/ctx/internal/cli/site/core"
 	writeSite "github.com/ActiveMemory/ctx/internal/write/site"
 )
 
@@ -84,7 +83,7 @@ func draftPost(title, date string) string {
 // TestPrintReport_NoSkipped verifies clean output with no issues.
 func TestPrintReport_NoSkipped(t *testing.T) {
 	cmd := newTestCmd()
-	report := core.FeedReport{
+	report := scan.FeedReport{
 		Included: 3,
 	}
 
@@ -105,7 +104,7 @@ func TestPrintReport_NoSkipped(t *testing.T) {
 // TestPrintReport_WithWarnings verifies warnings section appears.
 func TestPrintReport_WithWarnings(t *testing.T) {
 	cmd := newTestCmd()
-	report := core.FeedReport{
+	report := scan.FeedReport{
 		Included: 2,
 		Warnings: []string{"post.md - no summary paragraph found"},
 	}

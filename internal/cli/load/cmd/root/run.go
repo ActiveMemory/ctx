@@ -11,7 +11,8 @@ import (
 
 	"github.com/spf13/cobra"
 
-	"github.com/ActiveMemory/ctx/internal/cli/load/core"
+	"github.com/ActiveMemory/ctx/internal/cli/load/core/convert"
+	loadSort "github.com/ActiveMemory/ctx/internal/cli/load/core/sort"
 	"github.com/ActiveMemory/ctx/internal/context/load"
 	errCtx "github.com/ActiveMemory/ctx/internal/err/context"
 	errInit "github.com/ActiveMemory/ctx/internal/err/initialize"
@@ -39,13 +40,13 @@ func Run(cmd *cobra.Command, budget int, raw bool) error {
 		return err
 	}
 
-	files := core.SortByReadOrder(ctx.Files)
+	files := loadSort.ByReadOrder(ctx.Files)
 
 	if raw {
 		return writeLoad.Raw(cmd, files)
 	}
 
 	return writeLoad.Assembled(
-		cmd, files, budget, ctx.TotalTokens, core.FileNameToTitle,
+		cmd, files, budget, ctx.TotalTokens, convert.FileNameToTitle,
 	)
 }

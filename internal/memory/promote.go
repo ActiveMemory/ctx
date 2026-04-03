@@ -10,6 +10,7 @@ import (
 	"github.com/ActiveMemory/ctx/internal/assets/read/desc"
 	"github.com/ActiveMemory/ctx/internal/config/embed/text"
 	"github.com/ActiveMemory/ctx/internal/config/entry"
+	"github.com/ActiveMemory/ctx/internal/entity"
 	ctxEntry "github.com/ActiveMemory/ctx/internal/entry"
 )
 
@@ -28,7 +29,7 @@ func Promote(e Entry, classification Classification) error {
 	// (first line, trimmed of Markdown markers)
 	title := extractTitle(e.Text)
 
-	params := ctxEntry.Params{
+	params := entity.EntryParams{
 		Type:    classification.Target,
 		Content: title,
 	}

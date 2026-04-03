@@ -11,7 +11,7 @@ import (
 
 	"github.com/spf13/cobra"
 
-	"github.com/ActiveMemory/ctx/internal/cli/compact/core"
+	"github.com/ActiveMemory/ctx/internal/cli/compact/core/task"
 	"github.com/ActiveMemory/ctx/internal/config/fs"
 	"github.com/ActiveMemory/ctx/internal/context/load"
 	errCtx "github.com/ActiveMemory/ctx/internal/err/context"
@@ -52,7 +52,7 @@ func Run(cmd *cobra.Command, archive bool) error {
 	changes := 0
 
 	// Process TASKS.md
-	tasksChanges, compactErr := core.CompactTasks(cmd, ctx, archive)
+	tasksChanges, compactErr := task.CompactTasks(cmd, ctx, archive)
 	if compactErr != nil {
 		writeCompact.TaskError(cmd, compactErr)
 	} else {

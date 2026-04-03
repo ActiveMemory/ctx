@@ -12,6 +12,7 @@ import (
 	"github.com/ActiveMemory/ctx/internal/config/marker"
 	"github.com/ActiveMemory/ctx/internal/config/regex"
 	"github.com/ActiveMemory/ctx/internal/config/token"
+	"github.com/ActiveMemory/ctx/internal/entity"
 )
 
 // ParseEntryBlocks splits file content into discrete entry blocks.
@@ -35,7 +36,7 @@ func ParseEntryBlocks(content string) []EntryBlock {
 	// Find all entry header positions
 	type headerPos struct {
 		lineIdx int
-		entry   Entry
+		entry   entity.IndexEntry
 	}
 	var headers []headerPos
 
@@ -44,7 +45,7 @@ func ParseEntryBlocks(content string) []EntryBlock {
 		if len(matches) == regex.EntryHeaderGroups {
 			headers = append(headers, headerPos{
 				lineIdx: i,
-				entry: Entry{
+				entry: entity.IndexEntry{
 					Timestamp: matches[1] + token.Dash + matches[2],
 					Date:      matches[1],
 					Title:     matches[3],

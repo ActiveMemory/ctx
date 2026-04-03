@@ -13,7 +13,7 @@ import (
 
 	"github.com/spf13/cobra"
 
-	"github.com/ActiveMemory/ctx/internal/cli/memory/core"
+	"github.com/ActiveMemory/ctx/internal/cli/memory/core/count"
 	"github.com/ActiveMemory/ctx/internal/config/dir"
 	"github.com/ActiveMemory/ctx/internal/config/memory"
 	cfgTime "github.com/ActiveMemory/ctx/internal/config/time"
@@ -66,7 +66,7 @@ func Run(cmd *cobra.Command) error {
 	if sourceData, readErr := io.SafeReadFile(
 		filepath.Dir(sourcePath), filepath.Base(sourcePath),
 	); readErr == nil {
-		writeMem.SourceLines(cmd, core.CountFileLines(sourceData), hasDrift)
+		writeMem.SourceLines(cmd, count.FileLines(sourceData), hasDrift)
 	}
 
 	// Mirror line count
@@ -74,7 +74,7 @@ func Run(cmd *cobra.Command) error {
 	if mirrorData, readErr := io.SafeReadFile(
 		memoryDir, memory.Mirror,
 	); readErr == nil {
-		writeMem.MirrorLines(cmd, core.CountFileLines(mirrorData))
+		writeMem.MirrorLines(cmd, count.FileLines(mirrorData))
 	} else {
 		writeMem.MirrorNotSynced(cmd)
 	}
@@ -87,8 +87,8 @@ func Run(cmd *cobra.Command) error {
 	}
 
 	// Archives
-	count := mem.ArchiveCount(contextDir)
-	writeMem.Archives(cmd, count, dir.MemoryArchive)
+	archiveCount := mem.ArchiveCount(contextDir)
+	writeMem.Archives(cmd, archiveCount, dir.MemoryArchive)
 
 	if hasDrift {
 		// Exit code 2 for drift

@@ -20,6 +20,7 @@ import (
 	"github.com/ActiveMemory/ctx/internal/config/regex"
 	"github.com/ActiveMemory/ctx/internal/config/token"
 	cfgWarn "github.com/ActiveMemory/ctx/internal/config/warn"
+	"github.com/ActiveMemory/ctx/internal/entity"
 	errJournal "github.com/ActiveMemory/ctx/internal/err/journal"
 	internalIo "github.com/ActiveMemory/ctx/internal/io"
 	logWarn "github.com/ActiveMemory/ctx/internal/log/warn"
@@ -35,9 +36,9 @@ import (
 //   - content: The full content of a context file
 //
 // Returns:
-//   - []Entry: Slice of parsed entries (it may be empty)
-func ParseHeaders(content string) []Entry {
-	var entries []Entry
+//   - []entity.IndexEntry: Slice of parsed entries (it may be empty)
+func ParseHeaders(content string) []entity.IndexEntry {
+	var entries []entity.IndexEntry
 
 	matches := regex.EntryHeader.FindAllStringSubmatch(content, -1)
 	for _, match := range matches {
@@ -45,7 +46,7 @@ func ParseHeaders(content string) []Entry {
 			date := match[1]
 			time := match[2]
 			title := match[3]
-			entries = append(entries, Entry{
+			entries = append(entries, entity.IndexEntry{
 				Timestamp: date + token.Dash + time,
 				Date:      date,
 				Title:     title,
@@ -67,7 +68,7 @@ func ParseHeaders(content string) []Entry {
 //
 // Returns:
 //   - string: Markdown table (without markers) or empty string
-func GenerateTable(entries []Entry, columnHeader string) string {
+func GenerateTable(entries []entity.IndexEntry, columnHeader string) string {
 	if len(entries) == 0 {
 		return ""
 	}

@@ -14,6 +14,7 @@ import (
 	coreState "github.com/ActiveMemory/ctx/internal/cli/system/core/state"
 	cfgEvent "github.com/ActiveMemory/ctx/internal/config/event"
 	cfgHook "github.com/ActiveMemory/ctx/internal/config/hook"
+	"github.com/ActiveMemory/ctx/internal/entity"
 	errSession "github.com/ActiveMemory/ctx/internal/err/session"
 	"github.com/ActiveMemory/ctx/internal/log/event"
 	"github.com/ActiveMemory/ctx/internal/notify"
@@ -47,7 +48,7 @@ func Run(cmd *cobra.Command, eventType, caller string) error {
 	}
 
 	msg := fmt.Sprintf(desc.Text(text.DescKeyWriteSessionEvent), eventType, caller)
-	ref := notify.NewTemplateRef(cfgHook.SessionEvent, eventType,
+	ref := entity.NewTemplateRef(cfgHook.SessionEvent, eventType,
 		map[string]any{cfgEvent.VarCaller: caller})
 
 	event.Append(cfgEvent.CategorySession, msg, "", ref)

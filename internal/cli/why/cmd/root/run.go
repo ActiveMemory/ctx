@@ -9,7 +9,8 @@ package root
 import (
 	"github.com/spf13/cobra"
 
-	whyCore "github.com/ActiveMemory/ctx/internal/cli/why/core"
+	"github.com/ActiveMemory/ctx/internal/cli/why/core/menu"
+	"github.com/ActiveMemory/ctx/internal/cli/why/core/show"
 )
 
 // Run dispatches to the interactive menu or direct document
@@ -25,7 +26,7 @@ func Run(
 	cmd *cobra.Command, args []string,
 ) error {
 	if len(args) == 1 {
-		return whyCore.ShowDoc(cmd, args[0])
+		return show.Doc(cmd, args[0])
 	}
-	return whyCore.ShowMenu(cmd)
+	return menu.Show(cmd)
 }

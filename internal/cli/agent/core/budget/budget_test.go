@@ -11,6 +11,7 @@ import (
 	"testing"
 
 	"github.com/ActiveMemory/ctx/internal/cli/agent/core/score"
+	"github.com/ActiveMemory/ctx/internal/entity"
 	"github.com/ActiveMemory/ctx/internal/index"
 )
 
@@ -21,7 +22,7 @@ func makeBlock(date, title, body string) index.EntryBlock {
 		lines = append(lines, "", body)
 	}
 	return index.EntryBlock{
-		Entry: index.Entry{
+		Entry: entity.IndexEntry{
 			Timestamp: date + "-120000",
 			Date:      date,
 			Title:     title,
@@ -207,7 +208,7 @@ func TestFillSection(t *testing.T) {
 		superseded := []score.Entry{
 			{
 				EntryBlock: index.EntryBlock{
-					Entry: index.Entry{
+					Entry: entity.IndexEntry{
 						Timestamp: "2026-02-19-120000",
 						Date:      "2026-02-19",
 						Title:     "Old decision",

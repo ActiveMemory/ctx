@@ -11,12 +11,12 @@ import (
 	"testing"
 
 	"github.com/ActiveMemory/ctx/internal/assets/read/philosophy"
-	whyCore "github.com/ActiveMemory/ctx/internal/cli/why/core"
+	"github.com/ActiveMemory/ctx/internal/cli/why/core/strip"
 )
 
-func TestStripMkDocs_Frontmatter(t *testing.T) {
+func TestMkDocs_Frontmatter(t *testing.T) {
 	input := "---\ntitle: Test\nicon: lucide/flame\n---\n\n# Hello\n"
-	got := whyCore.StripMkDocs(input)
+	got := strip.MkDocs(input)
 	if strings.Contains(got, "title: Test") {
 		t.Error("frontmatter was not stripped")
 	}
@@ -25,9 +25,9 @@ func TestStripMkDocs_Frontmatter(t *testing.T) {
 	}
 }
 
-func TestStripMkDocs_Images(t *testing.T) {
+func TestMkDocs_Images(t *testing.T) {
 	input := "# Title\n\n![banner](images/banner.png)\n\nSome text.\n"
-	got := whyCore.StripMkDocs(input)
+	got := strip.MkDocs(input)
 	if strings.Contains(got, "![banner]") {
 		t.Error("image line was not stripped")
 	}
@@ -36,14 +36,14 @@ func TestStripMkDocs_Images(t *testing.T) {
 	}
 }
 
-func TestStripMkDocs_Admonitions(t *testing.T) {
+func TestMkDocs_Admonitions(t *testing.T) {
 	input := `!!! note "Important Note"
     This is the body.
     Second line.
 
 Normal text.
 `
-	got := whyCore.StripMkDocs(input)
+	got := strip.MkDocs(input)
 	if !strings.Contains(got, `> **Important Note**`) {
 		t.Errorf("admonition title not converted, got:\n%s", got)
 	}
@@ -58,9 +58,9 @@ Normal text.
 	}
 }
 
-func TestStripMkDocs_AdmonitionNoTitle(t *testing.T) {
+func TestMkDocs_AdmonitionNoTitle(t *testing.T) {
 	input := "!!! warning\n    Body here.\n"
-	got := whyCore.StripMkDocs(input)
+	got := strip.MkDocs(input)
 	if strings.Contains(got, "!!!") {
 		t.Error("admonition marker was not stripped")
 	}
@@ -69,7 +69,7 @@ func TestStripMkDocs_AdmonitionNoTitle(t *testing.T) {
 	}
 }
 
-func TestStripMkDocs_Tabs(t *testing.T) {
+func TestMkDocs_Tabs(t *testing.T) {
 	input := `=== "Without ctx"
 
     Some content here.
@@ -81,7 +81,7 @@ func TestStripMkDocs_Tabs(t *testing.T) {
 
 Normal text.
 `
-	got := whyCore.StripMkDocs(input)
+	got := strip.MkDocs(input)
 	if !strings.Contains(got, "**Without ctx**") {
 		t.Errorf("tab title not converted, got:\n%s", got)
 	}
@@ -99,10 +99,10 @@ Normal text.
 	}
 }
 
-func TestStripMkDocs_RelativeLinks(t *testing.T) {
+func TestMkDocs_RelativeLinks(t *testing.T) {
 	input := "[Getting Started](getting-started.md)" +
 		" and [About](../home/about.md)\n"
-	got := whyCore.StripMkDocs(input)
+	got := strip.MkDocs(input)
 	if strings.Contains(got, ".md") {
 		t.Errorf("relative .md link not stripped, got:\n%s", got)
 	}
@@ -114,29 +114,29 @@ func TestStripMkDocs_RelativeLinks(t *testing.T) {
 	}
 }
 
-func TestStripMkDocs_PreservesExternalLinks(t *testing.T) {
+func TestMkDocs_PreservesExternalLinks(t *testing.T) {
 	input := "[ctx site](https://ctx.ist) stays.\n"
-	got := whyCore.StripMkDocs(input)
+	got := strip.MkDocs(input)
 	if !strings.Contains(got, "[ctx site](https://ctx.ist)") {
 		t.Errorf("external link was modified, got:\n%s", got)
 	}
 }
 
-func TestStripMkDocs_PreservesCodeBlocks(t *testing.T) {
+func TestMkDocs_PreservesCodeBlocks(t *testing.T) {
 	input := "```text\n{} --> what\nctx --> why\n```\n"
-	got := whyCore.StripMkDocs(input)
+	got := strip.MkDocs(input)
 	if !strings.Contains(got, "ctx --> why") {
 		t.Errorf("code block content was lost, got:\n%s", got)
 	}
 }
 
-func TestStripMkDocs_EmbeddedManifesto(t *testing.T) {
+func TestMkDocs_EmbeddedManifesto(t *testing.T) {
 	content, loadErr := philosophy.WhyDoc("manifesto")
 	if loadErr != nil {
 		t.Fatalf("failed to load embedded manifesto: %v", loadErr)
 	}
 
-	got := whyCore.StripMkDocs(string(content))
+	got := strip.MkDocs(string(content))
 
 	// Should not contain MkDocs artifacts.
 	if strings.Contains(got, "---\ntitle:") {

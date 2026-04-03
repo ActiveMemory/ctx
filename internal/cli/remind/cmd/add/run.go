@@ -11,7 +11,7 @@ import (
 
 	"github.com/spf13/cobra"
 
-	"github.com/ActiveMemory/ctx/internal/cli/remind/core"
+	"github.com/ActiveMemory/ctx/internal/cli/remind/core/store"
 	cfgTime "github.com/ActiveMemory/ctx/internal/config/time"
 	errDate "github.com/ActiveMemory/ctx/internal/err/date"
 	"github.com/ActiveMemory/ctx/internal/write/remind"
@@ -29,13 +29,13 @@ import (
 // Returns:
 //   - error: Non-nil on read/write failure or invalid date
 func Run(cmd *cobra.Command, message, after string) error {
-	reminders, readErr := core.ReadReminders()
+	reminders, readErr := store.Read()
 	if readErr != nil {
 		return readErr
 	}
 
-	r := core.Reminder{
-		ID:      core.NextID(reminders),
+	r := store.Reminder{
+		ID:      store.NextID(reminders),
 		Message: message,
 		Created: time.Now().UTC().Format(time.RFC3339),
 	}
@@ -47,7 +47,7 @@ func Run(cmd *cobra.Command, message, after string) error {
 	}
 
 	reminders = append(reminders, r)
-	if writeErr := core.WriteReminders(reminders); writeErr != nil {
+	if writeErr := store.Write(reminders); writeErr != nil {
 		return writeErr
 	}
 

@@ -11,6 +11,7 @@ import (
 
 	"github.com/ActiveMemory/ctx/internal/cli/system/core/message"
 	"github.com/ActiveMemory/ctx/internal/config/hook"
+	"github.com/ActiveMemory/ctx/internal/entity"
 	internalIo "github.com/ActiveMemory/ctx/internal/io"
 	"github.com/ActiveMemory/ctx/internal/log/event"
 	"github.com/ActiveMemory/ctx/internal/notify"
@@ -25,7 +26,7 @@ import (
 //   - msg: human-readable event description
 //   - sessionID: current session identifier
 //   - ref: template reference for filtering/aggregation (may be nil)
-func Relay(msg, sessionID string, ref *notify.TemplateRef) {
+func Relay(msg, sessionID string, ref *entity.TemplateRef) {
 	_ = notify.Send(hook.NotifyChannelRelay, msg, sessionID, ref)
 	event.Append(hook.NotifyChannelRelay, msg, sessionID, ref)
 }
@@ -38,7 +39,7 @@ func Relay(msg, sessionID string, ref *notify.TemplateRef) {
 //   - msg: human-readable event description
 //   - sessionID: current session identifier
 //   - ref: template reference for filtering/aggregation (may be nil)
-func EmitAndRelay(msg, sessionID string, ref *notify.TemplateRef) {
+func EmitAndRelay(msg, sessionID string, ref *entity.TemplateRef) {
 	_ = notify.Send(hook.NotifyChannelNudge, msg, sessionID, ref)
 	Relay(msg, sessionID, ref)
 }
@@ -96,7 +97,7 @@ func Emit(
 	markerPath string,
 ) {
 	writeSetup.Nudge(cmd, message.NudgeBox(relayPrefix, boxTitle, content))
-	ref := notify.NewTemplateRef(hookName, variant, vars)
+	ref := entity.NewTemplateRef(hookName, variant, vars)
 	Relay(hookName+": "+relayMessage, sessionID, ref)
 	if markerPath != "" {
 		internalIo.TouchFile(markerPath)

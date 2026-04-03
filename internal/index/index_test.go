@@ -11,13 +11,14 @@ import (
 	"testing"
 
 	"github.com/ActiveMemory/ctx/internal/config/marker"
+	"github.com/ActiveMemory/ctx/internal/entity"
 )
 
 func TestParseHeaders(t *testing.T) {
 	tests := []struct {
 		name     string
 		content  string
-		expected []Entry
+		expected []entity.IndexEntry
 	}{
 		{
 			name:     "empty content",
@@ -37,7 +38,7 @@ func TestParseHeaders(t *testing.T) {
 
 **Status**: Accepted
 `,
-			expected: []Entry{
+			expected: []entity.IndexEntry{
 				{
 					Timestamp: "2026-01-28-051426",
 					Date:      "2026-01-28",
@@ -59,7 +60,7 @@ func TestParseHeaders(t *testing.T) {
 
 **Status**: Accepted
 `,
-			expected: []Entry{
+			expected: []entity.IndexEntry{
 				{
 					Timestamp: "2026-01-28-051426",
 					Date:      "2026-01-28",
@@ -80,7 +81,7 @@ func TestParseHeaders(t *testing.T) {
 
 **Status**: Accepted
 `,
-			expected: []Entry{
+			expected: []entity.IndexEntry{
 				{
 					Timestamp: "2026-01-28-051426",
 					Date:      "2026-01-28",
@@ -128,7 +129,7 @@ func TestParseHeaders(t *testing.T) {
 func TestGenerateTable(t *testing.T) {
 	tests := []struct {
 		name         string
-		entries      []Entry
+		entries      []entity.IndexEntry
 		columnHeader string
 		expected     string
 	}{
@@ -140,13 +141,13 @@ func TestGenerateTable(t *testing.T) {
 		},
 		{
 			name:         "empty slice",
-			entries:      []Entry{},
+			entries:      []entity.IndexEntry{},
 			columnHeader: "Decision",
 			expected:     "",
 		},
 		{
 			name: "single entry",
-			entries: []Entry{
+			entries: []entity.IndexEntry{
 				{
 					Timestamp: "2026-01-28-051426",
 					Date:      "2026-01-28",
@@ -161,7 +162,7 @@ func TestGenerateTable(t *testing.T) {
 		},
 		{
 			name: "multiple entries",
-			entries: []Entry{
+			entries: []entity.IndexEntry{
 				{Timestamp: "2026-01-28-051426", Date: "2026-01-28", Title: "First"},
 				{Timestamp: "2026-01-27-123456", Date: "2026-01-27", Title: "Second"},
 			},
@@ -174,7 +175,7 @@ func TestGenerateTable(t *testing.T) {
 		},
 		{
 			name: "entry with pipe character",
-			entries: []Entry{
+			entries: []entity.IndexEntry{
 				{
 					Timestamp: "2026-01-28-051426",
 					Date:      "2026-01-28",
@@ -189,7 +190,7 @@ func TestGenerateTable(t *testing.T) {
 		},
 		{
 			name: "learning column header",
-			entries: []Entry{
+			entries: []entity.IndexEntry{
 				{Timestamp: "2026-01-28-051426", Date: "2026-01-28", Title: "Test entry"},
 			},
 			columnHeader: "Learning",

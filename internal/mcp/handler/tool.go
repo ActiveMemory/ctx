@@ -12,7 +12,7 @@ import (
 	"time"
 
 	"github.com/ActiveMemory/ctx/internal/assets/read/desc"
-	remindCore "github.com/ActiveMemory/ctx/internal/cli/remind/core"
+	remindStore "github.com/ActiveMemory/ctx/internal/cli/remind/core/store"
 	taskComplete "github.com/ActiveMemory/ctx/internal/cli/task/core/complete"
 	cfgArchive "github.com/ActiveMemory/ctx/internal/config/archive"
 	cfgCtx "github.com/ActiveMemory/ctx/internal/config/ctx"
@@ -95,7 +95,7 @@ func (h *Handler) Add(
 		return "", boundaryErr
 	}
 
-	if writeErr := entry.ValidateAndWrite(entry.Params{
+	if writeErr := entry.ValidateAndWrite(entity.EntryParams{
 		Type:        entryType,
 		Content:     content,
 		ContextDir:  h.ContextDir,
@@ -307,7 +307,7 @@ func (h *Handler) WatchUpdate(
 			desc.Text(text.DescKeyMCPReviewStatus), nil
 	}
 
-	if writeErr := entry.ValidateAndWrite(entry.Params{
+	if writeErr := entry.ValidateAndWrite(entity.EntryParams{
 		Type:        entryType,
 		Content:     content,
 		ContextDir:  h.ContextDir,
@@ -582,7 +582,7 @@ func (h *Handler) SessionEvent(
 //   - string: formatted reminder list or no-reminders message
 //   - error: reminder read error
 func (h *Handler) Remind() (string, error) {
-	reminders, readErr := remindCore.ReadReminders()
+	reminders, readErr := remindStore.Read()
 	if readErr != nil {
 		return "", readErr
 	}

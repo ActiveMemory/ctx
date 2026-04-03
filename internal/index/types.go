@@ -6,17 +6,7 @@
 
 package index
 
-// Entry represents a parsed entry header from a context file.
-//
-// Fields:
-//   - Timestamp: Full timestamp (YYYY-MM-DD-HHMMSS)
-//   - Date: Date only (YYYY-MM-DD)
-//   - Title: Entry title
-type Entry struct {
-	Timestamp string
-	Date      string
-	Title     string
-}
+import "github.com/ActiveMemory/ctx/internal/entity"
 
 // EntryBlock represents a parsed entry block from a knowledge file
 // (DECISIONS.md or LEARNINGS.md).
@@ -27,7 +17,7 @@ type Entry struct {
 //   - StartIndex: Zero-based line index where this entry starts
 //   - EndIndex: Zero-based line index where this entry ends (exclusive)
 type EntryBlock struct {
-	Entry      Entry
+	Entry      entity.IndexEntry
 	Lines      []string
 	StartIndex int
 	EndIndex   int

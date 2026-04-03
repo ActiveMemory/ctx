@@ -14,7 +14,7 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/ActiveMemory/ctx/internal/cli/permission/core"
+	"github.com/ActiveMemory/ctx/internal/cli/permission/core/diff"
 	"github.com/ActiveMemory/ctx/internal/config/claude"
 	"github.com/ActiveMemory/ctx/internal/config/dir"
 	"github.com/ActiveMemory/ctx/internal/config/fs"
@@ -304,7 +304,7 @@ func TestDiffStringSlices(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			restored, dropped := core.DiffStringSlices(tt.golden, tt.local)
+			restored, dropped := diff.StringSlices(tt.golden, tt.local)
 			if !reflect.DeepEqual(restored, tt.wantRestored) {
 				t.Errorf("restored = %v, want %v", restored, tt.wantRestored)
 			}

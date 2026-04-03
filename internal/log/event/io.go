@@ -12,9 +12,9 @@ import (
 	"os"
 
 	"github.com/ActiveMemory/ctx/internal/config/warn"
+	"github.com/ActiveMemory/ctx/internal/entity"
 	"github.com/ActiveMemory/ctx/internal/io"
 	logWarn "github.com/ActiveMemory/ctx/internal/log/warn"
-	"github.com/ActiveMemory/ctx/internal/notify"
 )
 
 // readLogFile reads and parses all events from a JSONL log file.
@@ -24,10 +24,10 @@ import (
 //   - path: absolute path to the JSONL event log
 //
 // Returns:
-//   - []notify.Payload: parsed events in file order; nil when file
+//   - []entity.NotifyPayload: parsed events in file order; nil when file
 //     does not exist
 //   - error: non-nil only when the file exists but cannot be opened
-func readLogFile(path string) ([]notify.Payload, error) {
+func readLogFile(path string) ([]entity.NotifyPayload, error) {
 	f, openErr := io.SafeOpenUserFile(path)
 	if openErr != nil {
 		if os.IsNotExist(openErr) {
@@ -41,10 +41,10 @@ func readLogFile(path string) ([]notify.Payload, error) {
 		}
 	}()
 
-	var events []notify.Payload
+	var events []entity.NotifyPayload
 	scanner := bufio.NewScanner(f)
 	for scanner.Scan() {
-		var p notify.Payload
+		var p entity.NotifyPayload
 		if unmarshalErr := json.Unmarshal(
 			scanner.Bytes(), &p,
 		); unmarshalErr != nil {

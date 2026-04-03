@@ -14,7 +14,7 @@ import (
 	"github.com/spf13/cobra"
 
 	"github.com/ActiveMemory/ctx/internal/claude"
-	"github.com/ActiveMemory/ctx/internal/cli/permission/core"
+	"github.com/ActiveMemory/ctx/internal/cli/permission/core/diff"
 	cfgClaude "github.com/ActiveMemory/ctx/internal/config/claude"
 	"github.com/ActiveMemory/ctx/internal/config/fs"
 	"github.com/ActiveMemory/ctx/internal/err/config"
@@ -68,10 +68,10 @@ func Run(cmd *cobra.Command) error {
 		return errParser.ParseFile(cfgClaude.Settings, localParseErr)
 	}
 
-	restored, dropped := core.DiffStringSlices(
+	restored, dropped := diff.StringSlices(
 		golden.Permissions.Allow, local.Permissions.Allow,
 	)
-	denyRestored, denyDropped := core.DiffStringSlices(
+	denyRestored, denyDropped := diff.StringSlices(
 		golden.Permissions.Deny, local.Permissions.Deny,
 	)
 

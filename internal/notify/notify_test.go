@@ -15,6 +15,7 @@ import (
 	"testing"
 
 	"github.com/ActiveMemory/ctx/internal/config/crypto"
+	"github.com/ActiveMemory/ctx/internal/entity"
 	"github.com/ActiveMemory/ctx/internal/rc"
 )
 
@@ -173,7 +174,7 @@ func TestSend_Payload(t *testing.T) {
 	_ = os.WriteFile(filepath.Join(tempDir, ".ctxrc"), []byte(rcContent), 0o600)
 	rc.Reset()
 
-	ref := NewTemplateRef("check-context-size", "window",
+	ref := entity.NewTemplateRef("check-context-size", "window",
 		map[string]any{"Percentage": 82, "TokenCount": "164k"})
 	sendErr := Send("loop", "Loop completed after 5 iterations", "abc123", ref)
 	if sendErr != nil {
@@ -330,7 +331,7 @@ func TestLoadWebhook_CorruptedFile(t *testing.T) {
 }
 
 func TestNewTemplateRef(t *testing.T) {
-	ref := NewTemplateRef("check-context-size", "window", nil)
+	ref := entity.NewTemplateRef("check-context-size", "window", nil)
 
 	if ref.Hook != "check-context-size" {
 		t.Errorf("Hook = %q, want %q", ref.Hook, "check-context-size")
@@ -344,13 +345,13 @@ func TestNewTemplateRef(t *testing.T) {
 }
 
 func TestPayload_JSONMarshal(t *testing.T) {
-	original := Payload{
+	original := entity.NotifyPayload{
 		Event:     "loop",
 		Message:   "Loop completed",
 		SessionID: "sess-42",
 		Timestamp: "2026-01-01T00:00:00Z",
 		Project:   "myproject",
-		Detail: &TemplateRef{
+		Detail: &entity.TemplateRef{
 			Hook:      "check-context-size",
 			Variant:   "window",
 			Variables: map[string]any{"Percentage": 85},
@@ -362,7 +363,7 @@ func TestPayload_JSONMarshal(t *testing.T) {
 		t.Fatalf("json.Marshal() error = %v", marshalErr)
 	}
 
-	var restored Payload
+	var restored entity.NotifyPayload
 	if unmarshalErr := json.Unmarshal(data, &restored); unmarshalErr != nil {
 		t.Fatalf("json.Unmarshal() error = %v", unmarshalErr)
 	}

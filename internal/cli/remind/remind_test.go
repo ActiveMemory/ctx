@@ -17,7 +17,7 @@ import (
 	"github.com/ActiveMemory/ctx/internal/config/dir"
 	"github.com/spf13/cobra"
 
-	"github.com/ActiveMemory/ctx/internal/cli/remind/core"
+	"github.com/ActiveMemory/ctx/internal/cli/remind/core/store"
 	"github.com/ActiveMemory/ctx/internal/rc"
 )
 
@@ -73,11 +73,11 @@ func TestAdd_Basic(t *testing.T) {
 	}
 
 	// Verify JSON file content.
-	data, readErr := os.ReadFile(core.RemindersPath())
+	data, readErr := os.ReadFile(store.Path())
 	if readErr != nil {
 		t.Fatalf("read reminders file: %v", readErr)
 	}
-	var reminders []core.Reminder
+	var reminders []store.Reminder
 	if parseErr := json.Unmarshal(data, &reminders); parseErr != nil {
 		t.Fatalf("parse reminders: %v", parseErr)
 	}
@@ -110,7 +110,7 @@ func TestAdd_WithAfter(t *testing.T) {
 		t.Errorf("output = %q, want date annotation", out)
 	}
 
-	reminders, readErr := core.ReadReminders()
+	reminders, readErr := store.Read()
 	if readErr != nil {
 		t.Fatalf("read reminders: %v", readErr)
 	}
@@ -216,7 +216,7 @@ func TestDismiss_ByID(t *testing.T) {
 	}
 
 	// Verify only one remains.
-	reminders, readErr := core.ReadReminders()
+	reminders, readErr := store.Read()
 	if readErr != nil {
 		t.Fatalf("read reminders: %v", readErr)
 	}
@@ -255,7 +255,7 @@ func TestDismiss_All(t *testing.T) {
 	}
 
 	// Verify file is empty array.
-	reminders, readErr := core.ReadReminders()
+	reminders, readErr := store.Read()
 	if readErr != nil {
 		t.Fatalf("read reminders: %v", readErr)
 	}

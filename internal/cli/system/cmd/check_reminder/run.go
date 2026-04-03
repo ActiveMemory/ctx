@@ -14,7 +14,7 @@ import (
 	"github.com/spf13/cobra"
 
 	"github.com/ActiveMemory/ctx/internal/assets/read/desc"
-	remindCore "github.com/ActiveMemory/ctx/internal/cli/remind/core"
+	remindStore "github.com/ActiveMemory/ctx/internal/cli/remind/core/store"
 	coreCheck "github.com/ActiveMemory/ctx/internal/cli/system/core/check"
 	"github.com/ActiveMemory/ctx/internal/cli/system/core/message"
 	"github.com/ActiveMemory/ctx/internal/cli/system/core/nudge"
@@ -50,13 +50,13 @@ func Run(cmd *cobra.Command, stdin *os.File) error {
 		return nil
 	}
 
-	reminders, readErr := remindCore.ReadReminders()
+	reminders, readErr := remindStore.Read()
 	if readErr != nil {
 		return nil // non-fatal: don't break session start
 	}
 
 	today := time.Now().Format(cfgTime.DateFormat)
-	var due []remindCore.Reminder
+	var due []remindStore.Reminder
 	for _, r := range reminders {
 		if r.After == nil || *r.After <= today {
 			due = append(due, r)

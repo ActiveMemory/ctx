@@ -14,7 +14,7 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/ActiveMemory/ctx/internal/cli/doctor/core"
+	"github.com/ActiveMemory/ctx/internal/cli/doctor/core/check"
 	"github.com/ActiveMemory/ctx/internal/config/claude"
 	"github.com/ActiveMemory/ctx/internal/config/ctx"
 	"github.com/ActiveMemory/ctx/internal/config/doctor"
@@ -113,7 +113,7 @@ func TestDoctor_JSON(t *testing.T) {
 		t.Fatalf("doctor --json failed: %v", runErr)
 	}
 
-	var report core.Report
+	var report check.Report
 	if unmarshalErr := json.Unmarshal(out.Bytes(), &report); unmarshalErr != nil {
 		t.Fatalf(
 			"output is not valid JSON: %v\noutput: %s",
@@ -209,7 +209,7 @@ func TestDoctor_ContextSizeJSON(t *testing.T) {
 		t.Fatalf("doctor --json failed: %v", runErr)
 	}
 
-	var report core.Report
+	var report check.Report
 	if unmarshalErr := json.Unmarshal(out.Bytes(), &report); unmarshalErr != nil {
 		t.Fatalf("output is not valid JSON: %v", unmarshalErr)
 	}
@@ -335,8 +335,8 @@ func TestAddResourceResults_AllHealthy(t *testing.T) {
 		},
 	}
 
-	report := &core.Report{}
-	core.AddResourceResults(report, snap)
+	report := &check.Report{}
+	check.AddResourceResults(report, snap)
 
 	if len(report.Results) != 4 {
 		t.Fatalf(
@@ -368,8 +368,8 @@ func TestAddResourceResults_MemoryWarning(t *testing.T) {
 		Load: sysinfo.LoadInfo{Supported: false},
 	}
 
-	report := &core.Report{}
-	core.AddResourceResults(report, snap)
+	report := &check.Report{}
+	check.AddResourceResults(report, snap)
 
 	if len(report.Results) != 1 {
 		t.Fatalf("expected 1 result (memory only), got %d", len(report.Results))
@@ -403,8 +403,8 @@ func TestAddResourceResults_DangerMapsToError(t *testing.T) {
 		},
 	}
 
-	report := &core.Report{}
-	core.AddResourceResults(report, snap)
+	report := &check.Report{}
+	check.AddResourceResults(report, snap)
 
 	if len(report.Results) != 4 {
 		t.Fatalf("expected 4 results, got %d", len(report.Results))
@@ -426,8 +426,8 @@ func TestAddResourceResults_UnsupportedSkipped(t *testing.T) {
 		Load:   sysinfo.LoadInfo{Supported: false},
 	}
 
-	report := &core.Report{}
-	core.AddResourceResults(report, snap)
+	report := &check.Report{}
+	check.AddResourceResults(report, snap)
 
 	if len(report.Results) != 0 {
 		t.Errorf(
@@ -450,8 +450,8 @@ func TestAddResourceResults_NoSwapWhenZeroTotal(t *testing.T) {
 		Load: sysinfo.LoadInfo{Supported: false},
 	}
 
-	report := &core.Report{}
-	core.AddResourceResults(report, snap)
+	report := &check.Report{}
+	check.AddResourceResults(report, snap)
 
 	if len(report.Results) != 1 {
 		t.Fatalf(
@@ -479,8 +479,8 @@ func TestAddResourceResults_MessageFormat(t *testing.T) {
 		},
 	}
 
-	report := &core.Report{}
-	core.AddResourceResults(report, snap)
+	report := &check.Report{}
+	check.AddResourceResults(report, snap)
 
 	for _, r := range report.Results {
 		switch r.Name {
@@ -534,8 +534,8 @@ func TestCheckCtxrcValidation_NoFile(t *testing.T) {
 	}
 	t.Cleanup(func() { _ = os.Chdir(orig) })
 
-	report := &core.Report{}
-	core.CheckCtxrcValidation(report)
+	report := &check.Report{}
+	check.CtxrcValidation(report)
 
 	if len(report.Results) != 1 {
 		t.Fatalf("expected 1 result, got %d", len(report.Results))
@@ -567,8 +567,8 @@ func TestCheckCtxrcValidation_ValidFile(t *testing.T) {
 	}
 	t.Cleanup(func() { _ = os.Chdir(orig) })
 
-	report := &core.Report{}
-	core.CheckCtxrcValidation(report)
+	report := &check.Report{}
+	check.CtxrcValidation(report)
 
 	if len(report.Results) != 1 {
 		t.Fatalf("expected 1 result, got %d", len(report.Results))
@@ -600,8 +600,8 @@ func TestCheckCtxrcValidation_Typo(t *testing.T) {
 	}
 	t.Cleanup(func() { _ = os.Chdir(orig) })
 
-	report := &core.Report{}
-	core.CheckCtxrcValidation(report)
+	report := &check.Report{}
+	check.CtxrcValidation(report)
 
 	if len(report.Results) != 1 {
 		t.Fatalf("expected 1 result, got %d", len(report.Results))
