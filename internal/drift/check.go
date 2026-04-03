@@ -9,7 +9,6 @@ package drift
 import (
 	"fmt"
 	"os"
-	"regexp"
 	"strings"
 	"time"
 
@@ -28,14 +27,6 @@ import (
 	"github.com/ActiveMemory/ctx/internal/index"
 	ctxIo "github.com/ActiveMemory/ctx/internal/io"
 	"github.com/ActiveMemory/ctx/internal/rc"
-)
-
-// regInternalPkg matches backtick-quoted paths starting with "internal/".
-var regInternalPkg = regexp.MustCompile(
-	token.Backtick +
-		"(" + project.DirInternalSlash +
-		"[^" + token.Backtick + "]+)" +
-		token.Backtick,
 )
 
 // staleAgeExclude lists context files that are expected to be static
@@ -340,7 +331,7 @@ func checkMissingPackages(ctx *entity.Context, report *Report) {
 
 	// Extract referenced internal/ paths and normalize to top-level packages.
 	referenced := make(map[string]bool)
-	matches := regInternalPkg.FindAllStringSubmatch(string(f.Content), -1)
+	matches := regex.InternalPkg.FindAllStringSubmatch(string(f.Content), -1)
 	for _, m := range matches {
 		pkg := normalizeInternalPkg(m[1])
 		referenced[pkg] = true
