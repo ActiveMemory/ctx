@@ -10,8 +10,3 @@ package journal
 type CheckResult struct {
 	Value string
 }
-
-// MarkResult holds the outcome of marking a stage.
-type MarkResult struct {
-	Marked bool
-}

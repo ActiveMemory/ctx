@@ -96,7 +96,6 @@ const (
 	Show            = "show"
 	SessionID       = "session-id"
 	Skills          = "skills"
-	Stdin           = "stdin"
 	Tool            = "tool"
 	Type            = "type"
 	Variant         = "variant"

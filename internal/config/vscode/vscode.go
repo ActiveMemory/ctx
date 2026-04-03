@@ -28,16 +28,7 @@ const (
 
 // JSON keys for tasks.json.
 const (
-	KeyVersion        = "version"
-	KeyTasks          = "tasks"
-	KeyLabel          = "label"
-	KeyType           = "type"
-	KeyCommand        = "command"
-	KeyGroup          = "group"
-	KeyPresentation   = "presentation"
-	KeyReveal         = "reveal"
-	KeyPanel          = "panel"
-	KeyProblemMatcher = "problemMatcher"
+	KeyCommand = "command"
 )
 
 // Task configuration values.

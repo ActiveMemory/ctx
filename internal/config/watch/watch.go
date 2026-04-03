@@ -16,9 +16,6 @@ const (
 
 // XML attribute extraction constants.
 const (
-	// AttrExtractFormat is the regex format for extracting an XML
-	// attribute value by name. Use with fmt.Sprintf(AttrExtractFormat, attrName).
-	AttrExtractFormat = `%s="([^"]*)"`
 	// ContextUpdateMinGroups is the minimum number of regex capture
 	// groups expected from a context-update match (full match + tag + content).
 	ContextUpdateMinGroups = 3

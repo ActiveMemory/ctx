@@ -12,8 +12,6 @@ const (
 	PrefixHeading = "#"
 	// PrefixDot is the dot prefix for hidden files and directories.
 	PrefixDot = "."
-	// PrefixBracket is the opening bracket used for placeholder checks.
-	PrefixBracket = "["
 	// PrefixListDash is the prefix for a dash list item.
 	PrefixListDash = "- "
 	// PrefixListStar is the prefix for a star list item.

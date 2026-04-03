@@ -27,20 +27,6 @@ func Create(name string, cause error) error {
 	)
 }
 
-// CreateGeneric wraps a generic backup creation failure.
-//
-// Parameters:
-//   - cause: the underlying OS error
-//
-// Returns:
-//   - error: "failed to create backup: <cause>"
-func CreateGeneric(cause error) error {
-	return fmt.Errorf(
-		desc.Text(text.DescKeyErrBackupCreateBackupGeneric),
-		cause,
-	)
-}
-
 // CreateArchive wraps an archive creation failure.
 //
 // Parameters:

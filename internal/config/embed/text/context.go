@@ -11,8 +11,6 @@ const (
 	DescKeyContextLoadGateFileHeader        = "context-load-gate.file-header"
 	DescKeyContextLoadGateFooter            = "context-load-gate.footer"
 	DescKeyContextLoadGateHeader            = "context-load-gate.header"
-	DescKeyContextLoadGateIndexFallback     = "context-load-gate.index-fallback"
-	DescKeyContextLoadGateIndexHeader       = "context-load-gate.index-header"
 	DescKeyContextLoadGateOversizeAction    = "context-load-gate.oversize-action"
 	DescKeyContextLoadGateOversizeBreakdown = "context-load-gate.oversize-breakdown"
 	DescKeyContextLoadGateOversizeFileEntry = "context-load-gate.oversize-file-entry"

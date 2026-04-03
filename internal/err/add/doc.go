@@ -8,6 +8,6 @@
 //
 // Error constructors return structured errors with context for
 // user-facing messages routed through internal/assets text lookups.
-// Exports: [NoContent], [MissingDecision], [MissingLearning],
-// [NoContentProvided], [IndexUpdate], [UnknownType].
+// Exports: [NoContent], [NoContentProvided], [IndexUpdate],
+// [UnknownType], [FileNotFound], [MissingFields].
 package add

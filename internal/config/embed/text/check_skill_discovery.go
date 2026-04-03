@@ -11,5 +11,4 @@ const (
 	DescKeySkillDiscoveryBoxTitle = "skill-discovery.box-title"
 	DescKeySkillDiscoveryContent  = "skill-discovery.content"
 	DescKeySkillDiscoveryPrefix   = "skill-discovery.relay-prefix"
-	DescKeySkillDiscoveryRelay    = "skill-discovery.relay-message"
 )

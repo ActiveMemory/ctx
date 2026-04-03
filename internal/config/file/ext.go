@@ -18,10 +18,6 @@ const (
 	ExtJSONL = ".jsonl"
 	// ExtYAML is the YAML file extension.
 	ExtYAML = ".yaml"
-	// ExtJSON is the JSON file extension.
-	ExtJSON = ".json"
-	// ExtEnc is the encrypted file extension.
-	ExtEnc = ".enc"
 	// ExtSh is the shell script file extension.
 	ExtSh = ".sh"
 	// ExtPs1 is the PowerShell script file extension.

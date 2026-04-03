@@ -135,11 +135,3 @@ const (
 	// EventPostToolUse is the hook event for post-tool-use hooks.
 	EventPostToolUse = "PostToolUse"
 )
-
-// Copilot CLI hook event names (GitHub Copilot CLI lifecycle stages).
-const (
-	CLIEventSessionStart = "sessionStart"
-	CLIEventSessionEnd   = "sessionEnd"
-	CLIEventPreToolUse   = "preToolUse"
-	CLIEventPostToolUse  = "postToolUse"
-)

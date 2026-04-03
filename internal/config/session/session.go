@@ -6,14 +6,6 @@
 
 package session
 
-// Event type constants for session lifecycle events.
-const (
-	// EventStart marks the beginning of a workspace session.
-	EventStart = "start"
-	// EventEnd marks the end of a workspace session.
-	EventEnd = "end"
-)
-
 // Session and template constants.
 const (
 	// IDUnknown is the fallback session ID when input lacks one.

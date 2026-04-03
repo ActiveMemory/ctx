@@ -29,10 +29,8 @@ const (
 
 // Plural forms used as labels and resource identifiers.
 const (
-	Decisions   = "decisions"
-	Learnings   = "learnings"
-	Conventions = "conventions"
-	Tasks       = "tasks"
+	Decisions = "decisions"
+	Learnings = "learnings"
 )
 
 // Priority levels for task entries.

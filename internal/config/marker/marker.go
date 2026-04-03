@@ -72,16 +72,12 @@ const (
 const (
 	// CopilotStart marks the beginning of ctx-managed Copilot content.
 	CopilotStart = "<!-- ctx:copilot -->"
-	// CopilotEnd marks the end of ctx-managed Copilot content.
-	CopilotEnd = "<!-- ctx:copilot:end -->"
 )
 
 // Agents block markers for AGENTS.md.
 const (
 	// AgentsStart marks the beginning of ctx-managed AGENTS.md content.
 	AgentsStart = "<!-- ctx:agents -->"
-	// AgentsEnd marks the end of ctx-managed AGENTS.md content.
-	AgentsEnd = "<!-- ctx:agents:end -->"
 )
 
 // Index markers for auto-generated table of contents sections.
@@ -159,14 +155,6 @@ const (
 const (
 	// TablePipe is the cell delimiter in Markdown tables.
 	TablePipe = "|"
-	// TablePipePad is the padded cell delimiter.
-	TablePipePad = " | "
-	// TableRowOpen opens a table row.
-	TableRowOpen = "| "
-	// TableRowClose closes a table row.
-	TableRowClose = " |"
-	// TableSepCell is a header separator cell.
-	TableSepCell = "------"
 	// TablePipeEscaped is an escaped pipe for use inside cells.
 	TablePipeEscaped = "\\|"
 	// TableRowFmt is the Printf format for a two-column table row.

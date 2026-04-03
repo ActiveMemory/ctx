@@ -11,7 +11,6 @@ const (
 	DescKeyWriteInitAborted           = "write.init-aborted"
 	DescKeyWriteInitBackup            = "write.init-backup"
 	DescKeyWriteInitCreatedDir        = "write.init-created-dir"
-	DescKeyWriteInitCreatedWith       = "write.init-created-with"
 	DescKeyWriteInitCreatingRootFiles = "write.init-creating-root-files"
 	DescKeyWriteInitCtxContentExists  = "write.init-ctx-content-exists"
 	DescKeyWriteInitExistsSkipped     = "write.init-exists-skipped"
@@ -99,9 +98,4 @@ const (
 // Init confirmation prompts and mode labels.
 const (
 	DescKeyInitConfirmClaude = "init.confirm-claude"
-)
-
-// DescKeys for rc file parse warnings.
-const (
-	DescKeyRcParseWarning = "rc.parse_warning"
 )

@@ -8,8 +8,7 @@
 //
 // The embedded registry.yaml maps each hook+variant pair to a
 // category and description. [Registry] returns all entries,
-// [Lookup] finds a specific one, and [Hooks]/[Variants] enumerate
-// the available names. Categories are [CategoryCustomizable]
-// (user can override the template) or [CategoryCtxSpecific]
-// (internal to ctx).
+// [Lookup] finds a specific one, and [Variants] enumerates
+// the available names. [CategoryCtxSpecific] marks entries
+// internal to ctx.
 package messages

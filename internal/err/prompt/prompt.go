@@ -27,33 +27,6 @@ func NoTemplate(filename string, cause error) error {
 	)
 }
 
-// ListEntryTemplates wraps a failure to list entry templates.
-//
-// Parameters:
-//   - cause: the underlying error
-//
-// Returns:
-//   - error: "failed to list entry templates: <cause>"
-func ListEntryTemplates(cause error) error {
-	return fmt.Errorf(
-		desc.Text(text.DescKeyErrPromptListEntryTemplates), cause,
-	)
-}
-
-// ReadEntryTemplate wraps a failure to read an entry template.
-//
-// Parameters:
-//   - name: template name that failed to read
-//   - cause: the underlying error
-//
-// Returns:
-//   - error: "failed to read entry template <name>: <cause>"
-func ReadEntryTemplate(name string, cause error) error {
-	return fmt.Errorf(
-		desc.Text(text.DescKeyErrPromptReadEntryTemplate), name, cause,
-	)
-}
-
 // ListTemplates wraps a failure to list embedded templates.
 //
 // Parameters:

@@ -9,6 +9,5 @@
 //
 // [Message] reads a specific template file by hook name and
 // filename. [MessageRegistry] returns the raw registry.yaml.
-// [MessageList] and [VariantList] enumerate available hooks
-// and their template variants for discovery and testing.
+// [TraceScript] reads an embedded trace git hook script.
 package hook

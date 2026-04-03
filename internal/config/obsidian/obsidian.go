@@ -51,9 +51,6 @@ const MaxRelated = 5
 
 // Obsidian MOC (Map of Content) page filenames.
 const (
-	// MOCPrefix is prepended to MOC filenames so they sort first
-	// in the Obsidian file explorer.
-	MOCPrefix = "_"
 	// MOCHome is the root navigation hub filename.
 	MOCHome = "Home.md"
 	// MOCTopics is the topics index MOC filename.

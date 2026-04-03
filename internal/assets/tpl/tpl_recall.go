@@ -15,11 +15,6 @@ const (
 	// Args: date, slug, shortID.
 	RecallFilename = "%s-%s-%s.md"
 
-	// RecallTokens formats the token stats line.
-	// Args: total, in, out.
-	//nolint:gosec // G101: display template, not a credential
-	RecallTokens = "**Tokens**: %s (in: %s, out: %s)"
-
 	// RecallPartOf formats the part indicator.
 	// Args: part, totalParts.
 	RecallPartOf = "**Part %d of %d**"
@@ -39,9 +34,6 @@ const (
 	// RecallToolCount formats a tool usage count line.
 	// Args: name, count.
 	RecallToolCount = "- %s: %d"
-
-	// RecallSummaryPlaceholder is the placeholder text in the summary section.
-	RecallSummaryPlaceholder = "[Add your summary of this session]"
 
 	// RecallErrorMarker is the error indicator for tool results.
 	RecallErrorMarker = "❌ Error"

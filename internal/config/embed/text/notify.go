@@ -5,8 +5,3 @@
 //                 SPDX-License-Identifier: Apache-2.0
 
 package text
-
-// Notify output text keys (write.yaml).
-const (
-	DescKeyWriteNotifyCloseResponse = "write.notify-close-response"
-)

@@ -24,18 +24,6 @@ func Created(cmd *cobra.Command, path string) {
 	cmd.Println(fmt.Sprintf(desc.Text(text.DescKeyWriteInitFileCreated), path))
 }
 
-// CreatedWith reports a file created with a qualifier (e.g. " (ralph mode)").
-//
-// Parameters:
-//   - cmd: Cobra command for output
-//   - path: created file path
-//   - qualifier: additional info appended after the path
-func CreatedWith(cmd *cobra.Command, path, qualifier string) {
-	cmd.Println(fmt.Sprintf(
-		desc.Text(text.DescKeyWriteInitCreatedWith),
-		path, qualifier))
-}
-
 // Skipped reports a file skipped because it already exists.
 //
 // Parameters:

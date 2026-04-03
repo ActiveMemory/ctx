@@ -26,7 +26,6 @@ const (
 	DescKeyWriteHookAgentsSummary      = "write.hook-agents-summary"
 	DescKeyWriteHookCopilotCLICreated  = "write.hook-copilot-cli-created"
 	DescKeyWriteHookCopilotCLISkipped  = "write.hook-copilot-cli-skipped"
-	DescKeyWriteHookCopilotCLISkills   = "write.hook-copilot-cli-skills"
 	DescKeyWriteHookCopilotCLISummary  = "write.hook-copilot-cli-summary"
 	DescKeyWriteHookCopilotCreated     = "write.hook-copilot-created"
 	DescKeyWriteHookCopilotForceHint   = "write.hook-copilot-force-hint"

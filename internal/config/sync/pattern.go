@@ -38,18 +38,3 @@ var ImportantDirs = map[string]bool{
 var SkipDirs = map[string]bool{
 	"build": true, "dist": true, "node_modules": true, "vendor": true,
 }
-
-// Patterns returns all config file glob patterns in detection order.
-//
-// Returns:
-//   - []string: Glob patterns for all supported config file types
-func Patterns() []string {
-	return []string{
-		PatternEslint,
-		PatternPrettier,
-		PatternTSConfig,
-		PatternEditorConf,
-		PatternMakefile,
-		PatternDockerfile,
-	}
-}

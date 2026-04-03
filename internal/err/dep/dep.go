@@ -7,20 +7,11 @@
 package dep
 
 import (
-	"errors"
 	"fmt"
 
 	"github.com/ActiveMemory/ctx/internal/assets/read/desc"
 	"github.com/ActiveMemory/ctx/internal/config/embed/text"
 )
-
-// CargoNotFound returns an error when cargo is not in PATH.
-//
-// Returns:
-//   - error: advises installing the Rust toolchain
-func CargoNotFound() error {
-	return errors.New(desc.Text(text.DescKeyErrDepsCargoNotFound))
-}
 
 // CargoMetadataFailed wraps a cargo metadata command failure.
 //

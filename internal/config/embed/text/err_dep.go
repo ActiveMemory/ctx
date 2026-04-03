@@ -9,6 +9,5 @@ package text
 // DescKeys for dependency tracking errors.
 const (
 	DescKeyErrDepsCargoMetadataFailed = "err.deps.cargo-metadata-failed"
-	DescKeyErrDepsCargoNotFound       = "err.deps.cargo-not-found"
 	DescKeyErrDepsParseCargoMetadata  = "err.deps.parse-cargo-metadata"
 )

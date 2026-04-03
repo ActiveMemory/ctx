@@ -43,5 +43,4 @@ const (
 	DescKeyWriteJournalSourceDetailString          = "write.journal-source-detail-string"
 	DescKeyWriteJournalSourceDetailInt             = "write.journal-source-detail-int"
 	DescKeyWriteJournalSourceSectionHeading        = "write.journal-source-section-heading"
-	DescKeyWriteJournalSourceBulletItem            = "write.journal-source-bullet-item"
 )

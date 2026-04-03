@@ -24,34 +24,6 @@ func NoContent() error {
 	return errors.New(desc.Text(text.DescKeyErrAddNoContent))
 }
 
-// MissingDecision returns an error with usage help for incomplete decisions.
-//
-// Parameters:
-//   - missing: List of missing required flag names (e.g., "--context")
-//
-// Returns:
-//   - error: Formatted error with ADR format requirements and example
-func MissingDecision(missing []string) error {
-	return fmt.Errorf(
-		desc.Text(text.DescKeyErrAddMissingDecision),
-		strings.Join(missing, token.CommaSpace),
-	)
-}
-
-// MissingLearning returns an error with usage help for incomplete learnings.
-//
-// Parameters:
-//   - missing: List of missing required flag names (e.g., "--lesson")
-//
-// Returns:
-//   - error: Formatted error with learning format requirements and example
-func MissingLearning(missing []string) error {
-	return fmt.Errorf(
-		desc.Text(text.DescKeyErrAddMissingLearning),
-		strings.Join(missing, token.CommaSpace),
-	)
-}
-
 // NoContentProvided returns an error with usage help when content is missing.
 //
 // Parameters:

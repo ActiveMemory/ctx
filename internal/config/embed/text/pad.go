@@ -69,5 +69,4 @@ const (
 // DescKeys for scratchpad operations.
 const (
 	DescKeyWritePadKeyCreated = "write.pad-key-created"
-	DescKeyPadKeyCreated      = "pad.key-created"
 )

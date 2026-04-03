@@ -62,9 +62,6 @@ const (
 	DiffHeaderPrefix = "++"
 )
 
-// TaskCompletedMarker is the checkbox state for completed tasks in diffs.
-const TaskCompletedMarker = "x"
-
 // CtxTraceMarker is the string used to identify ctx-installed git hooks.
 const CtxTraceMarker = "ctx trace"
 
