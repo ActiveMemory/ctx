@@ -14,6 +14,7 @@ import (
 	"github.com/ActiveMemory/ctx/internal/config/embed/cmd"
 	"github.com/ActiveMemory/ctx/internal/config/embed/flag"
 	cFlag "github.com/ActiveMemory/ctx/internal/config/flag"
+	"github.com/ActiveMemory/ctx/internal/flagbind"
 )
 
 // Cmd returns the "ctx guide" cobra command.
@@ -37,17 +38,13 @@ func Cmd() *cobra.Command {
 		},
 	}
 
-	c.Flags().BoolVar(
-		&showSkills,
-		cFlag.Skills,
-		false,
-		desc.Flag(flag.DescKeyGuideSkills),
+	flagbind.BoolFlag(
+		c, &showSkills,
+		cFlag.Skills, flag.DescKeyGuideSkills,
 	)
-	c.Flags().BoolVar(
-		&showCommands,
-		cFlag.Commands,
-		false,
-		desc.Flag(flag.DescKeyGuideCommands),
+	flagbind.BoolFlag(
+		c, &showCommands,
+		cFlag.Commands, flag.DescKeyGuideCommands,
 	)
 
 	return c

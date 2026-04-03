@@ -75,10 +75,10 @@ func Cmd() *cobra.Command {
 		},
 	}
 
-	c.Flags().StringVarP(
-		&priority,
-		cFlag.Priority, cFlag.ShortPriority, "",
-		desc.Flag(flag.DescKeyAddPriority),
+	flagbind.StringFlagP(
+		c, &priority,
+		cFlag.Priority, cFlag.ShortPriority,
+		flag.DescKeyAddPriority,
 	)
 	_ = c.RegisterFlagCompletionFunc(
 		cFlag.Priority, func(_ *cobra.Command, _ []string, _ string) (
@@ -86,15 +86,15 @@ func Cmd() *cobra.Command {
 		) {
 			return entry.Priorities, cobra.ShellCompDirectiveNoFileComp
 		})
-	c.Flags().StringVarP(
-		&section,
-		cFlag.Section, cFlag.ShortSection, "",
-		desc.Flag(flag.DescKeyAddSection),
+	flagbind.StringFlagP(
+		c, &section,
+		cFlag.Section, cFlag.ShortSection,
+		flag.DescKeyAddSection,
 	)
-	c.Flags().StringVarP(
-		&fromFile,
-		cFlag.File, cFlag.ShortFile, "",
-		desc.Flag(flag.DescKeyAddFile),
+	flagbind.StringFlagP(
+		c, &fromFile,
+		cFlag.File, cFlag.ShortFile,
+		flag.DescKeyAddFile,
 	)
 	flagbind.StringFlagP(
 		c, &context,

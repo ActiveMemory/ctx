@@ -13,6 +13,7 @@ import (
 	"github.com/ActiveMemory/ctx/internal/config/embed/cmd"
 	"github.com/ActiveMemory/ctx/internal/config/embed/flag"
 	cFlag "github.com/ActiveMemory/ctx/internal/config/flag"
+	"github.com/ActiveMemory/ctx/internal/flagbind"
 )
 
 // Cmd returns the "ctx journal lock" subcommand.
@@ -36,8 +37,9 @@ func Cmd() *cobra.Command {
 		},
 	}
 
-	c.Flags().BoolVar(&all, cFlag.All, false,
-		desc.Flag(flag.DescKeyJournalLockAll),
+	flagbind.BoolFlag(
+		c, &all,
+		cFlag.All, flag.DescKeyJournalLockAll,
 	)
 
 	return c

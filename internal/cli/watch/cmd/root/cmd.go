@@ -13,6 +13,7 @@ import (
 	"github.com/ActiveMemory/ctx/internal/config/embed/cmd"
 	"github.com/ActiveMemory/ctx/internal/config/embed/flag"
 	cFlag "github.com/ActiveMemory/ctx/internal/config/flag"
+	"github.com/ActiveMemory/ctx/internal/flagbind"
 )
 
 // Cmd returns the watch command.
@@ -40,11 +41,11 @@ func Cmd() *cobra.Command {
 		},
 	}
 
-	c.Flags().StringVar(
-		&logPath, cFlag.Log, "", desc.Flag(flag.DescKeyWatchLog),
+	flagbind.StringFlag(c, &logPath,
+		cFlag.Log, flag.DescKeyWatchLog,
 	)
-	c.Flags().BoolVar(
-		&dryRun, cFlag.DryRun, false, desc.Flag(flag.DescKeyWatchDryRun),
+	flagbind.BoolFlag(c, &dryRun,
+		cFlag.DryRun, flag.DescKeyWatchDryRun,
 	)
 
 	return c

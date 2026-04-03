@@ -13,6 +13,7 @@ import (
 	"github.com/ActiveMemory/ctx/internal/config/embed/cmd"
 	"github.com/ActiveMemory/ctx/internal/config/embed/flag"
 	cFlag "github.com/ActiveMemory/ctx/internal/config/flag"
+	"github.com/ActiveMemory/ctx/internal/flagbind"
 )
 
 // Cmd returns the "ctx drift" command for detecting stale context.
@@ -42,11 +43,13 @@ func Cmd() *cobra.Command {
 		},
 	}
 
-	c.Flags().BoolVar(
-		&jsonOutput, cFlag.JSON, false, desc.Flag(flag.DescKeyDriftJson),
+	flagbind.BoolFlag(
+		c, &jsonOutput,
+		cFlag.JSON, flag.DescKeyDriftJson,
 	)
-	c.Flags().BoolVar(&fix,
-		cFlag.Fix, false, desc.Flag(flag.DescKeyDriftFix),
+	flagbind.BoolFlag(
+		c, &fix,
+		cFlag.Fix, flag.DescKeyDriftFix,
 	)
 
 	return c

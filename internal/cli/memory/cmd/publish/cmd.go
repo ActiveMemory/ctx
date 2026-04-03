@@ -14,6 +14,7 @@ import (
 	"github.com/ActiveMemory/ctx/internal/config/embed/flag"
 	cFlag "github.com/ActiveMemory/ctx/internal/config/flag"
 	"github.com/ActiveMemory/ctx/internal/config/memory"
+	"github.com/ActiveMemory/ctx/internal/flagbind"
 )
 
 // Cmd returns the memory publish subcommand.
@@ -34,13 +35,14 @@ func Cmd() *cobra.Command {
 		},
 	}
 
-	c.Flags().IntVar(&budget,
+	flagbind.IntFlag(
+		c, &budget,
 		cFlag.Budget, memory.DefaultPublishBudget,
-		desc.Flag(flag.DescKeyMemoryPublishBudget),
+		flag.DescKeyMemoryPublishBudget,
 	)
-	c.Flags().BoolVar(&dryRun,
-		cFlag.DryRun, false,
-		desc.Flag(flag.DescKeyMemoryPublishDryRun),
+	flagbind.BoolFlag(
+		c, &dryRun,
+		cFlag.DryRun, flag.DescKeyMemoryPublishDryRun,
 	)
 
 	return c

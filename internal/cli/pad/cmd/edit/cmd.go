@@ -16,6 +16,7 @@ import (
 	"github.com/ActiveMemory/ctx/internal/config/embed/flag"
 	cFlag "github.com/ActiveMemory/ctx/internal/config/flag"
 	errPad "github.com/ActiveMemory/ctx/internal/err/pad"
+	"github.com/ActiveMemory/ctx/internal/flagbind"
 )
 
 // Cmd returns the pad edit subcommand.
@@ -102,17 +103,18 @@ func Cmd() *cobra.Command {
 		},
 	}
 
-	c.Flags().StringVar(&appendText,
-		cFlag.Append, "", desc.Flag(flag.DescKeyPadEditAppend),
+	flagbind.StringFlag(c, &appendText,
+		cFlag.Append, flag.DescKeyPadEditAppend,
 	)
-	c.Flags().StringVar(&prependText,
-		cFlag.Prepend, "", desc.Flag(flag.DescKeyPadEditPrepend),
+	flagbind.StringFlag(c, &prependText,
+		cFlag.Prepend, flag.DescKeyPadEditPrepend,
 	)
-	c.Flags().StringVarP(&filePath,
-		cFlag.File, cFlag.ShortFile, "", desc.Flag(flag.DescKeyPadEditFile),
+	flagbind.StringFlagP(c, &filePath,
+		cFlag.File, cFlag.ShortFile,
+		flag.DescKeyPadEditFile,
 	)
-	c.Flags().StringVar(&labelText,
-		cFlag.Label, "", desc.Flag(flag.DescKeyPadEditLabel),
+	flagbind.StringFlag(c, &labelText,
+		cFlag.Label, flag.DescKeyPadEditLabel,
 	)
 
 	return c

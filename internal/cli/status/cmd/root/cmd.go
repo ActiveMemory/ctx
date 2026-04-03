@@ -13,6 +13,7 @@ import (
 	"github.com/ActiveMemory/ctx/internal/config/embed/cmd"
 	"github.com/ActiveMemory/ctx/internal/config/embed/flag"
 	cFlag "github.com/ActiveMemory/ctx/internal/config/flag"
+	"github.com/ActiveMemory/ctx/internal/flagbind"
 )
 
 // Cmd returns the status command.
@@ -40,13 +41,12 @@ func Cmd() *cobra.Command {
 		},
 	}
 
-	c.Flags().BoolVar(
-		&jsonOutput,
-		cFlag.JSON, false, desc.Flag(flag.DescKeyStatusJson),
+	flagbind.BoolFlag(c, &jsonOutput,
+		cFlag.JSON, flag.DescKeyStatusJson,
 	)
-	c.Flags().BoolVarP(
-		&verbose, cFlag.Verbose, cFlag.ShortVerbose, false,
-		desc.Flag(flag.DescKeyStatusVerbose),
+	flagbind.BoolFlagP(c, &verbose,
+		cFlag.Verbose, cFlag.ShortVerbose,
+		flag.DescKeyStatusVerbose,
 	)
 
 	return c

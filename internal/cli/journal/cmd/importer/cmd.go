@@ -14,6 +14,7 @@ import (
 	"github.com/ActiveMemory/ctx/internal/config/embed/flag"
 	cFlag "github.com/ActiveMemory/ctx/internal/config/flag"
 	"github.com/ActiveMemory/ctx/internal/entity"
+	"github.com/ActiveMemory/ctx/internal/flagbind"
 )
 
 // Cmd returns the journal import subcommand.
@@ -34,28 +35,33 @@ func Cmd() *cobra.Command {
 		},
 	}
 
-	c.Flags().BoolVar(
-		&opts.All, cFlag.All, false, desc.Flag(flag.DescKeyJournalImportAll),
+	flagbind.BoolFlag(
+		c, &opts.All,
+		cFlag.All, flag.DescKeyJournalImportAll,
 	)
-	c.Flags().BoolVar(
-		&opts.AllProjects, cFlag.AllProjects, false,
-		desc.Flag(flag.DescKeyJournalImportAllProjects),
+	flagbind.BoolFlag(
+		c, &opts.AllProjects,
+		cFlag.AllProjects,
+		flag.DescKeyJournalImportAllProjects,
 	)
-	c.Flags().BoolVar(
-		&opts.Regenerate, cFlag.Regenerate, false,
-		desc.Flag(flag.DescKeyJournalImportRegenerate),
+	flagbind.BoolFlag(
+		c, &opts.Regenerate,
+		cFlag.Regenerate,
+		flag.DescKeyJournalImportRegenerate,
 	)
-	c.Flags().BoolVar(
-		&opts.KeepFrontmatter, cFlag.KeepFrontmatter, true,
-		desc.Flag(flag.DescKeyJournalImportKeepFrontmatter),
+	flagbind.BoolFlagDefault(
+		c, &opts.KeepFrontmatter,
+		cFlag.KeepFrontmatter, true,
+		flag.DescKeyJournalImportKeepFrontmatter,
 	)
-	c.Flags().BoolVarP(
-		&opts.Yes, cFlag.Yes, cFlag.ShortYes, false,
-		desc.Flag(flag.DescKeyJournalImportYes),
+	flagbind.BoolFlagP(
+		c, &opts.Yes,
+		cFlag.Yes, cFlag.ShortYes,
+		flag.DescKeyJournalImportYes,
 	)
-	c.Flags().BoolVar(
-		&opts.DryRun, cFlag.DryRun, false,
-		desc.Flag(flag.DescKeyJournalImportDryRun),
+	flagbind.BoolFlag(
+		c, &opts.DryRun,
+		cFlag.DryRun, flag.DescKeyJournalImportDryRun,
 	)
 
 	return c

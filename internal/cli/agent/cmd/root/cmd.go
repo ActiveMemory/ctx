@@ -17,6 +17,7 @@ import (
 	"github.com/ActiveMemory/ctx/internal/config/embed/flag"
 	cFlag "github.com/ActiveMemory/ctx/internal/config/flag"
 	"github.com/ActiveMemory/ctx/internal/config/fmt"
+	"github.com/ActiveMemory/ctx/internal/flagbind"
 	"github.com/ActiveMemory/ctx/internal/rc"
 )
 
@@ -56,22 +57,24 @@ func Cmd() *cobra.Command {
 		},
 	}
 
-	c.Flags().IntVar(
-		&budget,
+	flagbind.IntFlag(
+		c, &budget,
 		cFlag.Budget, rc.DefaultTokenBudget,
-		desc.Flag(flag.DescKeyAgentBudget),
+		flag.DescKeyAgentBudget,
 	)
-	c.Flags().StringVar(
-		&format, cFlag.Format, fmt.FormatMarkdown,
-		desc.Flag(flag.DescKeyAgentFormat),
+	flagbind.StringFlagDefault(
+		c, &format,
+		cFlag.Format, fmt.FormatMarkdown,
+		flag.DescKeyAgentFormat,
 	)
-	c.Flags().DurationVar(
-		&cooldown, cFlag.Cooldown, agent.DefaultCooldown,
-		desc.Flag(flag.DescKeyAgentCooldown),
+	flagbind.DurationFlag(
+		c, &cooldown,
+		cFlag.Cooldown, agent.DefaultCooldown,
+		flag.DescKeyAgentCooldown,
 	)
-	c.Flags().StringVar(
-		&session, cFlag.Session, "",
-		desc.Flag(flag.DescKeyAgentSession),
+	flagbind.StringFlag(
+		c, &session,
+		cFlag.Session, flag.DescKeyAgentSession,
 	)
 
 	return c

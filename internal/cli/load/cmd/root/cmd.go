@@ -13,6 +13,7 @@ import (
 	"github.com/ActiveMemory/ctx/internal/config/embed/cmd"
 	"github.com/ActiveMemory/ctx/internal/config/embed/flag"
 	cFlag "github.com/ActiveMemory/ctx/internal/config/flag"
+	"github.com/ActiveMemory/ctx/internal/flagbind"
 	"github.com/ActiveMemory/ctx/internal/rc"
 )
 
@@ -47,13 +48,14 @@ func Cmd() *cobra.Command {
 		},
 	}
 
-	c.Flags().IntVar(
-		&budget, cFlag.Budget,
-		rc.DefaultTokenBudget,
-		desc.Flag(flag.DescKeyLoadBudget),
+	flagbind.IntFlag(
+		c, &budget,
+		cFlag.Budget, rc.DefaultTokenBudget,
+		flag.DescKeyLoadBudget,
 	)
-	c.Flags().BoolVar(
-		&raw, cFlag.Raw, false, desc.Flag(flag.DescKeyLoadRaw),
+	flagbind.BoolFlag(
+		c, &raw,
+		cFlag.Raw, flag.DescKeyLoadRaw,
 	)
 
 	return c

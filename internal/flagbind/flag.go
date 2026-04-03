@@ -7,6 +7,8 @@
 package flagbind
 
 import (
+	"time"
+
 	"github.com/spf13/cobra"
 
 	"github.com/ActiveMemory/ctx/internal/assets/read/desc"
@@ -89,6 +91,160 @@ func StringFlagPDefault(
 	c *cobra.Command, p *string, name, short, defaultVal, descKey string,
 ) {
 	c.Flags().StringVarP(p, name, short, defaultVal, desc.Flag(descKey))
+}
+
+// StringFlagDefault registers a string flag with no shorthand
+// and a non-empty default value.
+//
+// Parameters:
+//   - c: Cobra command to register on
+//   - p: Pointer to the string variable
+//   - name: Flag name constant
+//   - defaultVal: Default value for the flag
+//   - descKey: YAML DescKey for the flag description
+func StringFlagDefault(
+	c *cobra.Command, p *string,
+	name, defaultVal, descKey string,
+) {
+	c.Flags().StringVar(
+		p, name, defaultVal, desc.Flag(descKey),
+	)
+}
+
+// BoolFlagDefault registers a boolean flag with no
+// shorthand and a non-false default value.
+//
+// Parameters:
+//   - c: Cobra command to register on
+//   - p: Pointer to the bool variable
+//   - name: Flag name constant
+//   - defaultVal: Default value for the flag
+//   - descKey: YAML DescKey for the flag description
+func BoolFlagDefault(
+	c *cobra.Command, p *bool,
+	name string, defaultVal bool, descKey string,
+) {
+	c.Flags().BoolVar(
+		p, name, defaultVal, desc.Flag(descKey),
+	)
+}
+
+// IntFlag registers an integer flag with no shorthand.
+//
+// Parameters:
+//   - c: Cobra command to register on
+//   - p: Pointer to the int variable
+//   - name: Flag name constant
+//   - defaultVal: Default value for the flag
+//   - descKey: YAML DescKey for the flag description
+func IntFlag(
+	c *cobra.Command, p *int,
+	name string, defaultVal int, descKey string,
+) {
+	c.Flags().IntVar(
+		p, name, defaultVal, desc.Flag(descKey),
+	)
+}
+
+// DurationFlag registers a duration flag with no shorthand.
+//
+// Parameters:
+//   - c: Cobra command to register on
+//   - p: Pointer to the time.Duration variable
+//   - name: Flag name constant
+//   - defaultVal: Default value for the flag
+//   - descKey: YAML DescKey for the flag description
+func DurationFlag(
+	c *cobra.Command, p *time.Duration,
+	name string, defaultVal time.Duration,
+	descKey string,
+) {
+	c.Flags().DurationVar(
+		p, name, defaultVal, desc.Flag(descKey),
+	)
+}
+
+// PersistentBoolFlag registers a persistent boolean
+// flag with no shorthand, defaulting to false.
+//
+// Parameters:
+//   - c: Cobra command to register on
+//   - p: Pointer to the bool variable
+//   - name: Flag name constant
+//   - descKey: YAML DescKey for the flag description
+func PersistentBoolFlag(
+	c *cobra.Command, p *bool, name, descKey string,
+) {
+	c.PersistentFlags().BoolVar(
+		p, name, false, desc.Flag(descKey),
+	)
+}
+
+// PersistentStringFlag registers a persistent string
+// flag with no shorthand, defaulting to empty string.
+//
+// Parameters:
+//   - c: Cobra command to register on
+//   - p: Pointer to the string variable
+//   - name: Flag name constant
+//   - descKey: YAML DescKey for the flag description
+func PersistentStringFlag(
+	c *cobra.Command, p *string, name, descKey string,
+) {
+	c.PersistentFlags().StringVar(
+		p, name, "", desc.Flag(descKey),
+	)
+}
+
+// BoolFlagNoPtr registers a boolean flag with no
+// shorthand and no pointer, defaulting to false.
+// Use when the value is retrieved via
+// cmd.Flags().GetBool().
+//
+// Parameters:
+//   - c: Cobra command to register on
+//   - name: Flag name constant
+//   - descKey: YAML DescKey for the flag description
+func BoolFlagNoPtr(
+	c *cobra.Command, name, descKey string,
+) {
+	c.Flags().Bool(
+		name, false, desc.Flag(descKey),
+	)
+}
+
+// BoolFlagShort registers a boolean flag with a
+// shorthand, returning a pointer. Use when the value
+// is retrieved via cmd.Flags().GetBool().
+//
+// Parameters:
+//   - c: Cobra command to register on
+//   - name: Flag name constant
+//   - short: Shorthand letter
+//   - descKey: YAML DescKey for the flag description
+func BoolFlagShort(
+	c *cobra.Command, name, short, descKey string,
+) {
+	c.Flags().BoolP(
+		name, short, false, desc.Flag(descKey),
+	)
+}
+
+// StringFlagShort registers a string flag with a
+// shorthand, returning a pointer. Use when the value
+// is retrieved via cmd.Flags().GetString().
+//
+// Parameters:
+//   - c: Cobra command to register on
+//   - name: Flag name constant
+//   - short: Shorthand letter
+//   - descKey: YAML DescKey for the flag description
+func StringFlagShort(
+	c *cobra.Command, name, short, descKey string,
+) {
+	c.Flags().StringP(
+		name, short, "", desc.Flag(descKey),
+	)
 }
 
 // LastJSON registers the --last (int) and --json (bool) flag pair used by

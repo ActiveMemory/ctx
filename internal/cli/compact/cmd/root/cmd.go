@@ -13,6 +13,7 @@ import (
 	"github.com/ActiveMemory/ctx/internal/config/embed/cmd"
 	"github.com/ActiveMemory/ctx/internal/config/embed/flag"
 	cFlag "github.com/ActiveMemory/ctx/internal/config/flag"
+	"github.com/ActiveMemory/ctx/internal/flagbind"
 )
 
 // Cmd returns the "ctx compact" command for cleaning up context files.
@@ -40,11 +41,9 @@ func Cmd() *cobra.Command {
 		},
 	}
 
-	c.Flags().BoolVar(
-		&archive,
-		cFlag.Archive,
-		false,
-		desc.Flag(flag.DescKeyCompactArchive),
+	flagbind.BoolFlag(
+		c, &archive,
+		cFlag.Archive, flag.DescKeyCompactArchive,
 	)
 
 	return c

@@ -14,6 +14,7 @@ import (
 	"github.com/ActiveMemory/ctx/internal/config/embed/cmd"
 	"github.com/ActiveMemory/ctx/internal/config/embed/flag"
 	cFlag "github.com/ActiveMemory/ctx/internal/config/flag"
+	"github.com/ActiveMemory/ctx/internal/flagbind"
 )
 
 // Cmd returns the "ctx doctor" command.
@@ -35,9 +36,9 @@ func Cmd() *cobra.Command {
 			return Run(cmd, jsonOut)
 		},
 	}
-	c.Flags().BoolP(
-		cFlag.JSON, cFlag.ShortJSON, false,
-		desc.Flag(flag.DescKeyDoctorJson),
+	flagbind.BoolFlagShort(
+		c, cFlag.JSON, cFlag.ShortJSON,
+		flag.DescKeyDoctorJson,
 	)
 	return c
 }

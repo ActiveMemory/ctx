@@ -14,6 +14,7 @@ import (
 	"github.com/ActiveMemory/ctx/internal/config/embed/flag"
 	cFlag "github.com/ActiveMemory/ctx/internal/config/flag"
 	"github.com/ActiveMemory/ctx/internal/config/loop"
+	"github.com/ActiveMemory/ctx/internal/flagbind"
 )
 
 // Cmd returns the "ctx loop" command for generating Ralph loop scripts.
@@ -53,29 +54,31 @@ func Cmd() *cobra.Command {
 		},
 	}
 
-	c.Flags().StringVarP(&promptFile,
+	flagbind.StringFlagPDefault(
+		c, &promptFile,
 		cFlag.Prompt, cFlag.ShortPrompt,
-		loop.PromptMd, desc.Flag(flag.DescKeyLoopPrompt),
+		loop.PromptMd, flag.DescKeyLoopPrompt,
 	)
-	c.Flags().StringVarP(
-		&tool, cFlag.Tool, cFlag.ShortTool,
-		loop.DefaultTool, desc.Flag(flag.DescKeyLoopTool),
+	flagbind.StringFlagPDefault(
+		c, &tool,
+		cFlag.Tool, cFlag.ShortTool,
+		loop.DefaultTool, flag.DescKeyLoopTool,
 	)
-	c.Flags().IntVarP(
-		&maxIterations,
+	flagbind.IntFlagP(
+		c, &maxIterations,
 		cFlag.MaxIterations, cFlag.ShortMaxIterations,
-		0, desc.Flag(flag.DescKeyLoopMaxIterations),
+		0, flag.DescKeyLoopMaxIterations,
 	)
-	c.Flags().StringVarP(
-		&completionMsg,
+	flagbind.StringFlagPDefault(
+		c, &completionMsg,
 		cFlag.Completion, cFlag.ShortCompletion,
 		loop.DefaultCompletionSignal,
-		desc.Flag(flag.DescKeyLoopCompletion),
+		flag.DescKeyLoopCompletion,
 	)
-	c.Flags().StringVarP(
-		&outputFile,
+	flagbind.StringFlagPDefault(
+		c, &outputFile,
 		cFlag.Output, cFlag.ShortOutput,
-		loop.DefaultOutput, desc.Flag(flag.DescKeyLoopOutput),
+		loop.DefaultOutput, flag.DescKeyLoopOutput,
 	)
 
 	return c

@@ -14,6 +14,7 @@ import (
 	"github.com/ActiveMemory/ctx/internal/config/embed/flag"
 	cFlag "github.com/ActiveMemory/ctx/internal/config/flag"
 	"github.com/ActiveMemory/ctx/internal/config/token"
+	"github.com/ActiveMemory/ctx/internal/flagbind"
 )
 
 // Cmd returns the pad export subcommand.
@@ -38,13 +39,12 @@ func Cmd() *cobra.Command {
 		},
 	}
 
-	c.Flags().BoolVarP(
-		&force, cFlag.Force, cFlag.ShortForce, false,
-		desc.Flag(flag.DescKeyPadExportForce),
+	flagbind.BoolFlagP(c, &force,
+		cFlag.Force, cFlag.ShortForce,
+		flag.DescKeyPadExportForce,
 	)
-	c.Flags().BoolVar(
-		&dryRun, cFlag.DryRun, false,
-		desc.Flag(flag.DescKeyPadExportDryRun),
+	flagbind.BoolFlag(c, &dryRun,
+		cFlag.DryRun, flag.DescKeyPadExportDryRun,
 	)
 
 	return c

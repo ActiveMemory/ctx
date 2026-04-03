@@ -21,6 +21,7 @@ import (
 	ctxContext "github.com/ActiveMemory/ctx/internal/context/validate"
 	"github.com/ActiveMemory/ctx/internal/err/fs"
 	errInit "github.com/ActiveMemory/ctx/internal/err/initialize"
+	"github.com/ActiveMemory/ctx/internal/flagbind"
 	"github.com/ActiveMemory/ctx/internal/rc"
 	"github.com/ActiveMemory/ctx/internal/validate"
 	writeBootstrap "github.com/ActiveMemory/ctx/internal/write/bootstrap"
@@ -112,17 +113,14 @@ func RootCmd() *cobra.Command {
 	})
 
 	// Global flags available to all subcommands
-	c.PersistentFlags().StringVar(
-		&contextDir,
-		flag.ContextDir,
-		"",
-		desc.Flag(embedFlag.DescKeyContextDir),
+	flagbind.PersistentStringFlag(
+		c, &contextDir,
+		flag.ContextDir, embedFlag.DescKeyContextDir,
 	)
-	c.PersistentFlags().BoolVar(
-		&allowOutsideCwd,
+	flagbind.PersistentBoolFlag(
+		c, &allowOutsideCwd,
 		flag.AllowOutsideCwd,
-		false,
-		desc.Flag(embedFlag.DescKeyAllowOutsideCwd),
+		embedFlag.DescKeyAllowOutsideCwd,
 	)
 
 	return c

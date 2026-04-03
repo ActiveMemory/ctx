@@ -13,6 +13,7 @@ import (
 	"github.com/ActiveMemory/ctx/internal/config/embed/cmd"
 	embFlag "github.com/ActiveMemory/ctx/internal/config/embed/flag"
 	cFlag "github.com/ActiveMemory/ctx/internal/config/flag"
+	"github.com/ActiveMemory/ctx/internal/flagbind"
 )
 
 // Cmd returns the "ctx system session-event" subcommand.
@@ -35,10 +36,12 @@ func Cmd() *cobra.Command {
 		},
 	}
 
-	c.Flags().StringVar(&eventType, cFlag.Type, "",
-		desc.Flag(embFlag.DescKeySystemSessionEventType))
-	c.Flags().StringVar(&caller, cFlag.Caller, "",
-		desc.Flag(embFlag.DescKeySystemSessionEventCaller))
+	flagbind.StringFlag(c, &eventType,
+		cFlag.Type, embFlag.DescKeySystemSessionEventType,
+	)
+	flagbind.StringFlag(c, &caller,
+		cFlag.Caller, embFlag.DescKeySystemSessionEventCaller,
+	)
 	_ = c.MarkFlagRequired(cFlag.Type)
 	_ = c.MarkFlagRequired(cFlag.Caller)
 

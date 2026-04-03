@@ -14,6 +14,7 @@ import (
 	"github.com/ActiveMemory/ctx/internal/config/embed/flag"
 	cFlag "github.com/ActiveMemory/ctx/internal/config/flag"
 	errReminder "github.com/ActiveMemory/ctx/internal/err/reminder"
+	"github.com/ActiveMemory/ctx/internal/flagbind"
 )
 
 // Cmd returns the remind dismiss subcommand.
@@ -40,8 +41,8 @@ func Cmd() *cobra.Command {
 		},
 	}
 
-	c.Flags().BoolVar(&allFlag, cFlag.All, false,
-		desc.Flag(flag.DescKeyRemindDismissAll),
+	flagbind.BoolFlag(c, &allFlag,
+		cFlag.All, flag.DescKeyRemindDismissAll,
 	)
 
 	return c

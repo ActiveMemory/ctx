@@ -14,6 +14,7 @@ import (
 	"github.com/ActiveMemory/ctx/internal/config/embed/flag"
 	cFlag "github.com/ActiveMemory/ctx/internal/config/flag"
 	"github.com/ActiveMemory/ctx/internal/config/fmt"
+	"github.com/ActiveMemory/ctx/internal/flagbind"
 )
 
 // Cmd returns the dep command.
@@ -42,16 +43,18 @@ func Cmd() *cobra.Command {
 		},
 	}
 
-	c.Flags().StringVar(
-		&format,
-		cFlag.Format, fmt.FormatMermaid, desc.Flag(flag.DescKeyDepsFormat),
+	flagbind.StringFlagDefault(
+		c, &format,
+		cFlag.Format, fmt.FormatMermaid,
+		flag.DescKeyDepsFormat,
 	)
-	c.Flags().BoolVar(
-		&external,
-		cFlag.External, false, desc.Flag(flag.DescKeyDepsExternal),
+	flagbind.BoolFlag(
+		c, &external,
+		cFlag.External, flag.DescKeyDepsExternal,
 	)
-	c.Flags().StringVar(
-		&projType, cFlag.Type, "", desc.Flag(flag.DescKeyDepsType),
+	flagbind.StringFlag(
+		c, &projType,
+		cFlag.Type, flag.DescKeyDepsType,
 	)
 
 	return c
