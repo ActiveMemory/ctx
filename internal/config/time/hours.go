@@ -11,4 +11,6 @@ const (
 	HoursPerDay = 24
 	// MinutesPerHour is the number of minutes in an hour.
 	MinutesPerHour = 60
+	// DaysPerWeek is the number of days in a week.
+	DaysPerWeek = 7
 )

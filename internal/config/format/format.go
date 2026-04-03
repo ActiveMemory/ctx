@@ -30,4 +30,8 @@ const (
 	// TruncateDescription is the max character width for description
 	// text in skill listings and similar compact displays.
 	TruncateDescription = 70
+
+	// PreviewLines is the number of content lines shown in status
+	// previews and similar compact displays.
+	PreviewLines = 5
 )
