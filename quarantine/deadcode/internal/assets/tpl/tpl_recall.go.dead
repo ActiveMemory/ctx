@@ -1,0 +1,14 @@
+// Dead exports quarantined from internal/assets/tpl/tpl_recall.go
+// Quarantined: 2026-04-02
+// Restore from git history if needed.
+
+package tpl
+
+// RecallTokens formats the token stats line.
+// Args: total, in, out.
+//
+//nolint:gosec // G101: display template, not a credential
+const RecallTokens = "**Tokens**: %s (in: %s, out: %s)"
+
+// RecallSummaryPlaceholder is the placeholder text in the summary section.
+const RecallSummaryPlaceholder = "[Add your summary of this session]"

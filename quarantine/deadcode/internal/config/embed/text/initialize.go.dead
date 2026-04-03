@@ -1,0 +1,8 @@
+// Dead exports quarantined from internal/config/embed/text/initialize.go
+// Quarantined: 2026-04-02
+// Restore from git history if needed.
+
+package text
+
+// DescKeyRcParseWarning is the rc parse warning text key.
+const DescKeyRcParseWarning = "rc.parse_warning"

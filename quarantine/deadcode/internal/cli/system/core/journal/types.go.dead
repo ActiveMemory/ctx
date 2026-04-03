@@ -1,0 +1,10 @@
+// Dead exports quarantined from internal/cli/system/core/journal/types.go
+// Quarantined: 2026-04-02
+// Restore from git history if needed.
+
+package journal
+
+// MarkResult holds the outcome of marking a stage.
+type MarkResult struct {
+	Marked bool
+}

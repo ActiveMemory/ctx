@@ -1,0 +1,19 @@
+// Dead exports quarantined from internal/err/backup/backup.go
+// Quarantined: 2026-04-02
+// Restore from git history if needed.
+
+package backup
+
+// CreateGeneric wraps a generic backup creation failure.
+//
+// Parameters:
+//   - cause: the underlying OS error
+//
+// Returns:
+//   - error: "failed to create backup: <cause>"
+func CreateGeneric(cause error) error {
+	return fmt.Errorf(
+		desc.Text(text.DescKeyErrBackupCreateBackupGeneric),
+		cause,
+	)
+}

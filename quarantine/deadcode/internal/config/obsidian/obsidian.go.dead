@@ -1,0 +1,9 @@
+// Dead exports quarantined from internal/config/obsidian/obsidian.go
+// Quarantined: 2026-04-02
+// Restore from git history if needed.
+
+package obsidian
+
+// MOCPrefix is prepended to MOC filenames so they sort first
+// in the Obsidian file explorer.
+const MOCPrefix = "_"

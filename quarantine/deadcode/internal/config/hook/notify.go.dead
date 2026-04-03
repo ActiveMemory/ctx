@@ -1,0 +1,8 @@
+// Dead exports quarantined from internal/config/hook/notify.go
+// Quarantined: 2026-04-02
+// Restore from git history if needed.
+
+package hook
+
+// NotifyChannelSession is the notification channel for session events.
+const NotifyChannelSession = "session"

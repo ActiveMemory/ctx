@@ -1,0 +1,17 @@
+// Dead exports quarantined from internal/write/initialize/init.go
+// Quarantined: 2026-04-02
+// Restore from git history if needed.
+
+package initialize
+
+// CreatedWith reports a file created with a qualifier (e.g. " (ralph mode)").
+//
+// Parameters:
+//   - cmd: Cobra command for output
+//   - path: created file path
+//   - qualifier: additional info appended after the path
+func CreatedWith(cmd *cobra.Command, path, qualifier string) {
+	cmd.Println(fmt.Sprintf(
+		desc.Text(text.DescKeyWriteInitCreatedWith),
+		path, qualifier))
+}

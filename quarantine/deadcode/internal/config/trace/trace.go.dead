@@ -1,0 +1,8 @@
+// Dead exports quarantined from internal/config/trace/trace.go
+// Quarantined: 2026-04-02
+// Restore from git history if needed.
+
+package trace
+
+// TaskCompletedMarker is the checkbox state for completed tasks in diffs.
+const TaskCompletedMarker = "x"

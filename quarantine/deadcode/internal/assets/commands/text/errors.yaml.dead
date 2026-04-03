@@ -1,0 +1,41 @@
+# Orphan YAML entries removed from errors.yaml — no corresponding DescKey constant in Go code.
+# Quarantined: 2026-04-02
+
+err.add.missing-decision:
+  short: |-
+    decisions require complete ADR format
+
+    Missing required flags: %s
+
+    Usage:
+      ctx add decision "Decision title" \
+        --context "What prompted this decision" \
+        --rationale "Why this choice over alternatives" \
+        --consequence "What changes as a result"
+
+    Example:
+      ctx add decision "Use PostgreSQL for primary database" \
+        --context "Need a reliable database for production workloads" \
+        --rationale "PostgreSQL offers ACID compliance, JSON support, and team familiarity" \
+        --consequence "Team needs PostgreSQL training; must set up replication"
+err.add.missing-learning:
+  short: |-
+    learnings require complete format
+
+    Missing required flags: %s
+
+    Usage:
+      ctx add learning "Learning title" \
+        --context "What prompted this learning" \
+        --lesson "The key insight" \
+        --application "How to apply this going forward"
+
+    Example:
+      ctx add learning "Go embed requires files in same package" \
+        --context "Tried to embed files from parent directory, got compile error" \
+        --lesson "go:embed only works with files in same or child directories" \
+        --application "Keep embedded files in internal/templates/, not project root"
+err.backup.create-backup-generic:
+  short: 'failed to create backup: %w'
+err.deps.cargo-not-found:
+  short: 'cargo not found in PATH: install Rust toolchain to analyze Cargo projects'

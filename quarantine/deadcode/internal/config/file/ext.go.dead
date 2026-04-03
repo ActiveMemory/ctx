@@ -1,0 +1,12 @@
+// Dead exports quarantined from internal/config/file/ext.go
+// Quarantined: 2026-04-02
+// Restore from git history if needed.
+
+package file
+
+const (
+	// ExtJSON is the JSON file extension.
+	ExtJSON = ".json"
+	// ExtEnc is the encrypted file extension.
+	ExtEnc = ".enc"
+)

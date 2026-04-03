@@ -1,0 +1,11 @@
+// Dead exports quarantined from internal/config/entry/entry.go
+// Quarantined: 2026-04-02
+// Restore from git history if needed.
+
+package entry
+
+// Conventions is the plural form used as a label and resource identifier.
+const Conventions = "conventions"
+
+// Tasks is the plural form used as a label and resource identifier.
+const Tasks = "tasks"

@@ -1,0 +1,19 @@
+// Dead exports quarantined from internal/config/entry/field.go
+// Quarantined: 2026-04-02
+// Restore from git history if needed.
+
+package entry
+
+const (
+	// FieldContext is the background/situation field for decisions and learnings.
+	FieldContext = "context"
+	// FieldRationale is the reasoning field for decisions (why this choice).
+	FieldRationale = "rationale"
+	// FieldConsequence is the outcomes field for decisions (what changes).
+	FieldConsequence = "consequence"
+	// FieldApplication is the usage field for learnings
+	// (how to apply going forward).
+	FieldApplication = "application"
+	// FieldLesson is the insight field for learnings (the key takeaway).
+	FieldLesson = "lesson"
+)

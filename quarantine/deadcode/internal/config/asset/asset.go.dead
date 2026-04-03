@@ -1,0 +1,9 @@
+// Dead exports quarantined from internal/config/asset/asset.go
+// Quarantined: 2026-04-02
+// Restore from git history if needed.
+
+package asset
+
+// FileInstructionsCtxMd is the embedded asset filename for
+// instructions-context.md.
+const FileInstructionsCtxMd = "instructions-context.md"

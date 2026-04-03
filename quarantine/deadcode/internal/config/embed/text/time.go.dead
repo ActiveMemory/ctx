@@ -1,0 +1,16 @@
+// Dead exports quarantined from internal/config/embed/text/time.go
+// Quarantined: 2026-04-02
+// Restore from git history if needed.
+
+package text
+
+const (
+	DescKeyTimeCommit  = "time.commit"
+	DescKeyTimeCommits = "time.commits"
+	DescKeyTimeDay     = "time.day"
+	DescKeyTimeDays    = "time.days"
+	DescKeyTimeHour    = "time.hour"
+	DescKeyTimeHours   = "time.hours"
+	DescKeyTimeMinute  = "time.minute"
+	DescKeyTimeMinutes = "time.minutes"
+)

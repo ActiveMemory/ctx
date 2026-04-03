@@ -1,0 +1,9 @@
+# Orphan YAML entries removed from write.yaml — no corresponding DescKey constant in Go code.
+# Quarantined: 2026-04-02
+
+write.init-created-with:
+  short: '  ✓ %s%s'
+write.journal-source-bullet-item:
+  short: '- %s'
+write.notify-close-response:
+  short: "ctx: close response body: %v"

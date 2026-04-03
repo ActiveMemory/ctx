@@ -1,0 +1,9 @@
+// Dead exports quarantined from internal/config/watch/watch.go
+// Quarantined: 2026-04-02
+// Restore from git history if needed.
+
+package watch
+
+// AttrExtractFormat is the regex format for extracting an XML
+// attribute value by name.
+const AttrExtractFormat = `%s="([^"]*)"`

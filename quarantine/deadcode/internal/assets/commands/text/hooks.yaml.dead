@@ -1,0 +1,12 @@
+# Orphan YAML entries removed from hooks.yaml — no corresponding DescKey constant in Go code.
+# Quarantined: 2026-04-02
+
+skill-discovery.relay-message:
+  short: Skill discovery nudge
+context-load-gate.index-fallback:
+  short: (no index entries)
+context-load-gate.index-header:
+  short: |+
+    --- %s (index - read full entries by date when relevant) ---
+    %s
+

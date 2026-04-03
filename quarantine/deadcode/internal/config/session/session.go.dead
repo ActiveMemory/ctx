@@ -1,0 +1,11 @@
+// Dead exports quarantined from internal/config/session/session.go
+// Quarantined: 2026-04-02
+// Restore from git history if needed.
+
+package session
+
+// EventStart marks the beginning of a workspace session.
+const EventStart = "start"
+
+// EventEnd marks the end of a workspace session.
+const EventEnd = "end"

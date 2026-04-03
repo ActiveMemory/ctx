@@ -81,6 +81,3 @@ ideas
 # Generated skills
 .claude/skills/generated
 .claude/skills/gitnexus
-
-# Dead code quarantine
-quarantine/

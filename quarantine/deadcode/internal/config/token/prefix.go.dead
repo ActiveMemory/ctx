@@ -1,0 +1,8 @@
+// Dead exports quarantined from internal/config/token/prefix.go
+// Quarantined: 2026-04-02
+// Restore from git history if needed.
+
+package token
+
+// PrefixBracket is the opening bracket used for placeholder checks.
+const PrefixBracket = "["

@@ -1,0 +1,20 @@
+// Dead exports quarantined from internal/config/sync/pattern.go
+// Quarantined: 2026-04-02
+// Restore from git history if needed.
+
+package sync
+
+// Patterns returns all config file glob patterns in detection order.
+//
+// Returns:
+//   - []string: Glob patterns for all supported config file types
+func Patterns() []string {
+	return []string{
+		PatternEslint,
+		PatternPrettier,
+		PatternTSConfig,
+		PatternEditorConf,
+		PatternMakefile,
+		PatternDockerfile,
+	}
+}

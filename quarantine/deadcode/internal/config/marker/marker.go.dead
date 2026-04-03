@@ -1,0 +1,20 @@
+// Dead exports quarantined from internal/config/marker/marker.go
+// Quarantined: 2026-04-02
+// Restore from git history if needed.
+
+package marker
+
+const (
+	// CopilotEnd marks the end of ctx-managed Copilot content.
+	CopilotEnd = "<!-- ctx:copilot:end -->"
+	// AgentsEnd marks the end of ctx-managed AGENTS.md content.
+	AgentsEnd = "<!-- ctx:agents:end -->"
+	// TablePipePad is the padded cell delimiter.
+	TablePipePad = " | "
+	// TableRowOpen opens a table row.
+	TableRowOpen = "| "
+	// TableRowClose closes a table row.
+	TableRowClose = " |"
+	// TableSepCell is a header separator cell.
+	TableSepCell = "------"
+)

@@ -1,0 +1,8 @@
+// Dead exports quarantined from internal/config/embed/text/hook.go
+// Quarantined: 2026-04-02
+// Restore from git history if needed.
+
+package text
+
+// DescKeyWriteHookCopilotCLISkills is the hook write output text key.
+const DescKeyWriteHookCopilotCLISkills = "write.hook-copilot-cli-skills"

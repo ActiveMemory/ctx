@@ -1,0 +1,17 @@
+// Dead exports quarantined from internal/config/vscode/vscode.go
+// Quarantined: 2026-04-02
+// Restore from git history if needed.
+
+package vscode
+
+const (
+	KeyVersion        = "version"
+	KeyTasks          = "tasks"
+	KeyLabel          = "label"
+	KeyType           = "type"
+	KeyGroup          = "group"
+	KeyPresentation   = "presentation"
+	KeyReveal         = "reveal"
+	KeyPanel          = "panel"
+	KeyProblemMatcher = "problemMatcher"
+)

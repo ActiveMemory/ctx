@@ -1,0 +1,13 @@
+// Dead exports quarantined from internal/err/dep/dep.go
+// Quarantined: 2026-04-02
+// Restore from git history if needed.
+
+package dep
+
+// CargoNotFound returns an error when cargo is not in PATH.
+//
+// Returns:
+//   - error: advises installing the Rust toolchain
+func CargoNotFound() error {
+	return errors.New(desc.Text(text.DescKeyErrDepsCargoNotFound))
+}

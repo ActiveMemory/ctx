@@ -1,0 +1,13 @@
+// Dead exports quarantined from internal/config/hook/hook.go
+// Quarantined: 2026-04-02
+// Restore from git history if needed.
+
+package hook
+
+// Copilot CLI hook event names (GitHub Copilot CLI lifecycle stages).
+const (
+	CLIEventSessionStart = "sessionStart"
+	CLIEventSessionEnd   = "sessionEnd"
+	CLIEventPreToolUse   = "preToolUse"
+	CLIEventPostToolUse  = "postToolUse"
+)

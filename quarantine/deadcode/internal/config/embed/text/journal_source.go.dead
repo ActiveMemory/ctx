@@ -1,0 +1,8 @@
+// Dead exports quarantined from internal/config/embed/text/journal_source.go
+// Quarantined: 2026-04-02
+// Restore from git history if needed.
+
+package text
+
+// DescKeyWriteJournalSourceBulletItem is the bullet item text key.
+const DescKeyWriteJournalSourceBulletItem = "write.journal-source-bullet-item"

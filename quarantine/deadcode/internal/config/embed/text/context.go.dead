@@ -1,0 +1,12 @@
+// Dead exports quarantined from internal/config/embed/text/context.go
+// Quarantined: 2026-04-02
+// Restore from git history if needed.
+
+package text
+
+const (
+	// DescKeyContextLoadGateIndexFallback is the index fallback text key.
+	DescKeyContextLoadGateIndexFallback = "context-load-gate.index-fallback"
+	// DescKeyContextLoadGateIndexHeader is the index header text key.
+	DescKeyContextLoadGateIndexHeader = "context-load-gate.index-header"
+)

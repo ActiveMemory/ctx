@@ -1,0 +1,9 @@
+// Dead exports quarantined from internal/config/load_gate/load_gate.go
+// Quarantined: 2026-04-02
+// Restore from git history if needed.
+
+package load_gate
+
+// ContextLoadIndexSuffix is the suffix appended to filenames
+// for index entries.
+const ContextLoadIndexSuffix = " (idx)"

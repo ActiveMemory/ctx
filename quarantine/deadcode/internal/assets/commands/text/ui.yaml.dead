@@ -1,0 +1,23 @@
+# Orphan YAML entries removed from ui.yaml — no corresponding DescKey constant in Go code.
+# Quarantined: 2026-04-02
+
+pad.key-created:
+  short: Scratchpad key created at %s
+rc.parse_warning:
+  short: 'ctx: warning: failed to parse %s: %v (using defaults)'
+time.commit:
+  short: commit
+time.commits:
+  short: commits
+time.day:
+  short: day
+time.days:
+  short: days
+time.hour:
+  short: hour
+time.hours:
+  short: hours
+time.minute:
+  short: minute
+time.minutes:
+  short: minutes
