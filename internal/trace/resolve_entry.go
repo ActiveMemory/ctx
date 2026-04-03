@@ -32,7 +32,11 @@ import (
 //
 // Returns:
 //   - ResolvedRef: populated with Title and Detail if found
-func resolveEntry(resolved ResolvedRef, contextDir, fileName string, number int) ResolvedRef {
+func resolveEntry(
+	resolved ResolvedRef,
+	contextDir, fileName string,
+	number int,
+) ResolvedRef {
 	path := filepath.Clean(filepath.Join(contextDir, fileName))
 
 	content, err := io.SafeReadUserFile(path)
@@ -49,7 +53,9 @@ func resolveEntry(resolved ResolvedRef, contextDir, fileName string, number int)
 
 	entry := entries[number-1]
 	resolved.Title = entry.Title
-	resolved.Detail = fmt.Sprintf(desc.Text(text.DescKeyWriteTraceDetailDate), entry.Date)
+	resolved.Detail = fmt.Sprintf(
+		desc.Text(text.DescKeyWriteTraceDetailDate),
+		entry.Date)
 	resolved.Found = true
 
 	return resolved
@@ -65,7 +71,11 @@ func resolveEntry(resolved ResolvedRef, contextDir, fileName string, number int)
 //
 // Returns:
 //   - ResolvedRef: populated with Title and Detail if found
-func resolveTask(resolved ResolvedRef, contextDir string, number int) ResolvedRef {
+func resolveTask(
+	resolved ResolvedRef,
+	contextDir string,
+	number int,
+) ResolvedRef {
 	path := filepath.Clean(filepath.Join(contextDir, cfgCtx.Task))
 
 	f, err := io.SafeOpenUserFile(path)

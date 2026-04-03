@@ -7,6 +7,10 @@
 // Package ctximport provides terminal output functions for memory.
 //
 // All functions take *cobra.Command for output routing.
-// Exports: [NoEntries], [ScanHeader], [EntrySkipped], [EntryClassified], [EntryAdded], and 2 more.
-// Exports: [NoEntries], [ScanHeader], [EntrySkipped], [EntryClassified], [EntryAdded], [ErrPromote].
+// Exports: [NoEntries], [ScanHeader],
+// [EntrySkipped], [EntryClassified],
+// [EntryAdded], and 2 more.
+// Exports: [NoEntries], [ScanHeader],
+// [EntrySkipped], [EntryClassified],
+// [EntryAdded], [ErrPromote].
 package ctximport

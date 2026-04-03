@@ -192,7 +192,9 @@ func Send(event, message, sessionID string, detail *TemplateRef) error {
 //   - *http.Response: the HTTP response (caller must close Body).
 //   - error: on HTTP failure.
 func PostJSON(url string, body []byte) (*http.Response, error) {
-	return io.SafePost(url, cfgHTTP.MimeJSON, body, cfgHTTP.WebhookTimeout*time.Second)
+	return io.SafePost(
+		url, cfgHTTP.MimeJSON, body,
+		cfgHTTP.WebhookTimeout*time.Second)
 }
 
 // MaskURL shows the scheme + host and masks everything after the path start.

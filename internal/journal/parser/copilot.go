@@ -209,7 +209,9 @@ func CopilotSessionDirs() []string {
 		}
 		switch runtime.GOOS {
 		case cfgCopilot.OSDarwin:
-			appData = filepath.Join(home, cfgCopilot.DirLibrary, cfgCopilot.DirAppSupport)
+			appData = filepath.Join(
+				home, cfgCopilot.DirLibrary,
+				cfgCopilot.DirAppSupport)
 		default: // Linux
 			appData = filepath.Join(home, cfgCopilot.DirDotConfig)
 		}
@@ -222,7 +224,9 @@ func CopilotSessionDirs() []string {
 	// Check both Code stable and Code Insiders
 	variants := []string{cfgCopilot.AppCode, cfgCopilot.AppCodeInsiders}
 	for _, variant := range variants {
-		wsDir := filepath.Join(appData, variant, cfgCopilot.DirUser, cfgCopilot.DirWorkspace)
+		wsDir := filepath.Join(
+			appData, variant,
+			cfgCopilot.DirUser, cfgCopilot.DirWorkspace)
 		if info, err := io.SafeStat(wsDir); err == nil && info.IsDir() {
 			// Scan each workspace for chatSessions/ subdirectory
 			entries, err := os.ReadDir(wsDir)

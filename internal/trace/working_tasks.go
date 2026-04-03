@@ -54,7 +54,8 @@ func inProgressTaskRefs(contextDir string) []string {
 			continue
 		}
 		count++
-		refs = append(refs, fmt.Sprintf(cfgTrace.RefFormat, cfgTrace.RefTypeTask, count))
+		refs = append(refs, fmt.Sprintf(
+			cfgTrace.RefFormat, cfgTrace.RefTypeTask, count))
 	}
 
 	return refs

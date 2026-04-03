@@ -28,7 +28,10 @@ import (
 // Returns:
 //   - error: Non-nil if directory creation fails
 func CreateVSCodeArtifacts(cmd *cobra.Command) error {
-	if mkdirErr := ctxIo.SafeMkdirAll(cfgVscode.Dir, fs.PermExec); mkdirErr != nil {
+	mkdirErr := ctxIo.SafeMkdirAll(
+		cfgVscode.Dir, fs.PermExec,
+	)
+	if mkdirErr != nil {
 		return mkdirErr
 	}
 

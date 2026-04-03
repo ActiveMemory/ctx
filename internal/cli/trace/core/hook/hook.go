@@ -31,7 +31,8 @@ import (
 // Returns:
 //   - error: non-nil on installation failure
 func Enable(cmd *cobra.Command) error {
-	prepScript, prepReadErr := readHook.TraceScript(cfgTrace.ScriptPrepareCommitMsg)
+	prepScript, prepReadErr := readHook.TraceScript(
+		cfgTrace.ScriptPrepareCommitMsg)
 	if prepReadErr != nil {
 		return prepReadErr
 	}

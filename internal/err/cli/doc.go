@@ -8,5 +8,6 @@
 //
 // Error constructors return structured errors with context for
 // user-facing messages routed through internal/assets text lookups.
-// Exports: [FlagRequired], [ArgRequired], [InvalidSelection], [UnknownDocument].
+// Exports: [FlagRequired], [ArgRequired],
+// [InvalidSelection], [UnknownDocument].
 package cli

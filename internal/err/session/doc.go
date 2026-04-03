@@ -8,5 +8,6 @@
 //
 // Error constructors return structured errors with context for
 // user-facing messages routed through internal/assets text lookups.
-// Exports: [Find], [NotFound], [NoneFound], [AmbiguousQuery], [IDRequired], [AllWithID].
+// Exports: [Find], [NotFound], [NoneFound],
+// [AmbiguousQuery], [IDRequired], [AllWithID].
 package session

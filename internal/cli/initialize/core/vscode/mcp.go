@@ -50,7 +50,10 @@ func createMCPJSON(cmd *cobra.Command) error {
 	data, _ := json.MarshalIndent(file, "", "  ")
 	data = append(data, token.NewlineLF...)
 
-	if writeErr := ctxIo.SafeWriteFile(target, data, fs.PermFile); writeErr != nil {
+	writeErr := ctxIo.SafeWriteFile(
+		target, data, fs.PermFile,
+	)
+	if writeErr != nil {
 		return writeErr
 	}
 	writeVscode.InfoCreated(cmd, target)

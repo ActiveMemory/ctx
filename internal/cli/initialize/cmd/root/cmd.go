@@ -53,10 +53,17 @@ func Cmd() *cobra.Command {
 		},
 	}
 
-	flagbind.BoolFlagP(c, &force, cFlag.Force, cFlag.ShortForce, flag.DescKeyInitializeForce)
-	flagbind.BoolFlagP(c, &minimal, cFlag.Minimal, cFlag.ShortMinimal, flag.DescKeyInitializeMinimal)
-	flagbind.BoolFlag(c, &merge, cFlag.Merge, flag.DescKeyInitializeMerge)
-	flagbind.BoolFlag(c, &noPluginEnable, cFlag.NoPluginEnable, flag.DescKeyInitializeNoPluginEnable)
+	flagbind.BoolFlagP(c, &force,
+		cFlag.Force, cFlag.ShortForce,
+		flag.DescKeyInitializeForce)
+	flagbind.BoolFlagP(c, &minimal,
+		cFlag.Minimal, cFlag.ShortMinimal,
+		flag.DescKeyInitializeMinimal)
+	flagbind.BoolFlag(c, &merge,
+		cFlag.Merge, flag.DescKeyInitializeMerge)
+	flagbind.BoolFlag(c, &noPluginEnable,
+		cFlag.NoPluginEnable,
+		flag.DescKeyInitializeNoPluginEnable)
 	flagbind.StringFlag(c, &caller, cFlag.Caller, flag.DescKeyInitializeCaller)
 
 	return c

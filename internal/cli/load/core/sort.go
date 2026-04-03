@@ -16,7 +16,8 @@ import (
 // SortByReadOrder sorts context files according to [config.ReadOrder].
 //
 // Files not in the read-order list are assigned a fallback priority
-// (len(ReadOrder)) and will appear at the end. The original slice is not modified; a new sorted
+// (len(ReadOrder)) and will appear at the end. The original
+// slice is not modified; a new sorted
 // slice is returned.
 //
 // Parameters:

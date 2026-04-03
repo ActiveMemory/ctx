@@ -8,5 +8,6 @@
 //
 // Error constructors return structured errors with context for
 // user-facing messages routed through internal/assets text lookups.
-// Exports: [ReadFile], [OpenFile], [NoMatch], [WalkDir], [FileError], [ScanFile].
+// Exports: [ReadFile], [OpenFile], [NoMatch],
+// [WalkDir], [FileError], [ScanFile].
 package parser

@@ -6,7 +6,9 @@
 
 // Package tidy provides shared helpers for context file maintenance:.
 //
-// Key exports: [WriteArchive], [ParseTaskBlocks], [RemoveBlocksFromLines], [CompactContext], [RemoveEmptySections].
+// Key exports: [WriteArchive], [ParseTaskBlocks],
+// [RemoveBlocksFromLines], [CompactContext],
+// [RemoveEmptySections].
 // See source files for implementation details.
 // Part of the internal subsystem.
 package tidy

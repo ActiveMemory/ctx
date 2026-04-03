@@ -39,7 +39,10 @@ func ensureVSCodeMCP(cmd *cobra.Command) error {
 		return nil
 	}
 
-	if mkdirErr := ctxIo.SafeMkdirAll(cfgVscode.Dir, fs.PermExec); mkdirErr != nil {
+	mkdirErr := ctxIo.SafeMkdirAll(
+		cfgVscode.Dir, fs.PermExec,
+	)
+	if mkdirErr != nil {
 		return mkdirErr
 	}
 
@@ -54,7 +57,10 @@ func ensureVSCodeMCP(cmd *cobra.Command) error {
 	data, _ := json.MarshalIndent(mcpCfg, "", "  ")
 	data = append(data, token.NewlineLF...)
 
-	if writeFileErr := ctxIo.SafeWriteFile(target, data, fs.PermFile); writeFileErr != nil {
+	writeFileErr := ctxIo.SafeWriteFile(
+		target, data, fs.PermFile,
+	)
+	if writeFileErr != nil {
 		return writeFileErr
 	}
 	writeSetup.InfoCopilotCLICreated(cmd, target)

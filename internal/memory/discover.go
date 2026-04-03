@@ -67,5 +67,6 @@ func DiscoverPath(projectRoot string) (string, error) {
 func ProjectSlug(absPath string) string {
 	// Strip leading separator, replace remaining separators with dashes,
 	// prefix with a dash. Mirrors Claude Code's project directory naming.
-	return token.Dash + strings.ReplaceAll(absPath[1:], string(filepath.Separator), token.Dash)
+	return token.Dash + strings.ReplaceAll(
+		absPath[1:], string(filepath.Separator), token.Dash)
 }

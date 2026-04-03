@@ -17,7 +17,8 @@ import (
 //
 // Rules are loaded from .ctxrc (classify_rules) with fallback to built-in
 // defaults. Matching is case-insensitive. The first rule with a keyword
-// match wins (default priority: conventions > decisions > learnings > tasks > skip).
+// match wins (default priority: conventions > decisions >
+// learnings > tasks > skip).
 //
 // Parameters:
 //   - entry: Parsed memory entry to classify

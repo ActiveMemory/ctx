@@ -52,7 +52,10 @@ func Import(
 		}
 		if fa.Action == entity.ActionSkip {
 			skipped++
-			writeRecall.SkipFile(cmd, fa.Filename, desc.Text(text.DescKeyLabelReasonExists))
+			writeRecall.SkipFile(
+				cmd, fa.Filename,
+				desc.Text(text.DescKeyLabelReasonExists),
+			)
 			continue
 		}
 

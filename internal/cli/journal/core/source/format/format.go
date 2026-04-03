@@ -243,7 +243,8 @@ func JournalEntryPart(
 		// Session metadata as collapsible HTML table
 		// (Markdown tables don't render inside <details> in Zensical)
 		summaryText := fmt.Sprintf(
-			desc.Text(text.DescKeyJournalSourceMetaSummary), dateStr, durationStr, s.Model,
+			desc.Text(text.DescKeyJournalSourceMetaSummary),
+			dateStr, durationStr, s.Model,
 		)
 		io.SafeFprintf(&sb, tpl.MetaDetailsOpen, summaryText)
 		io.SafeFprintf(&sb,

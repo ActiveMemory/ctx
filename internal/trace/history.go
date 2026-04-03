@@ -23,7 +23,8 @@ import (
 //   - traceDir: absolute path to the trace directory
 //
 // Returns:
-//   - error: non-nil if the directory cannot be created or the entry cannot be written
+//   - error: non-nil if the directory cannot be created
+//     or the entry cannot be written
 func WriteHistory(entry HistoryEntry, traceDir string) error {
 	if entry.Timestamp.IsZero() {
 		entry.Timestamp = time.Now().UTC()
@@ -89,7 +90,8 @@ func matchesCommit(stored, query string) bool {
 //   - traceDir: absolute path to the trace directory
 //
 // Returns:
-//   - error: non-nil if the directory cannot be created or the entry cannot be written
+//   - error: non-nil if the directory cannot be created
+//     or the entry cannot be written
 func WriteOverride(entry OverrideEntry, traceDir string) error {
 	if entry.Timestamp.IsZero() {
 		entry.Timestamp = time.Now().UTC()
@@ -98,7 +100,8 @@ func WriteOverride(entry OverrideEntry, traceDir string) error {
 	return appendJSONL(traceDir, cfgTrace.FileOverrides, entry)
 }
 
-// ReadOverrides reads all OverrideEntry records from overrides.jsonl in traceDir.
+// ReadOverrides reads all OverrideEntry records from
+// overrides.jsonl in traceDir.
 // Malformed JSONL lines are silently skipped.
 // Returns an empty (non-nil) slice when the file does not exist.
 //

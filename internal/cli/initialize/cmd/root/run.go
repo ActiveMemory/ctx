@@ -50,7 +50,8 @@ import (
 //   - minimal: If true, only create essential files
 //   - merge: If true, auto-merge ctx content into existing files
 //   - noPluginEnable: If true, skip auto-enabling the plugin globally
-//   - caller: Identifies the calling tool (e.g. "vscode") for template overrides
+//   - caller: Identifies the calling tool
+//     (e.g. "vscode") for template overrides
 //
 // Returns:
 //   - error: Non-nil if directory creation or file operations fail

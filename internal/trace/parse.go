@@ -27,12 +27,14 @@ import (
 //   - ref: raw reference string
 //
 // Returns:
-//   - refType: type keyword (decision, learning, convention, task, session, note)
+//   - refType: type keyword (decision, learning,
+//     convention, task, session, note)
 //   - number: numeric value, 0 when not applicable
 //   - text: text value, empty when not applicable
 func parseRef(ref string) (refType string, number int, text string) {
 	// Quoted strings are free-form notes.
-	if strings.HasPrefix(ref, token.DoubleQuote) && strings.HasSuffix(ref, token.DoubleQuote) {
+	if strings.HasPrefix(ref, token.DoubleQuote) &&
+		strings.HasSuffix(ref, token.DoubleQuote) {
 		return cfgTrace.RefTypeNote, 0, strings.Trim(ref, token.DoubleQuote)
 	}
 

@@ -8,5 +8,7 @@
 //
 // Error constructors return structured errors with context for
 // user-facing messages routed through internal/assets text lookups.
-// Exports: [EmbeddedTemplateNotFound], [OverrideExists], [WriteOverride], [RemoveOverride], [Unknown], [UnknownVariant].
+// Exports: [EmbeddedTemplateNotFound], [OverrideExists],
+// [WriteOverride], [RemoveOverride], [Unknown],
+// [UnknownVariant].
 package hook

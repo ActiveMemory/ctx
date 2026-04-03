@@ -8,5 +8,6 @@
 //
 // Error constructors return structured errors with context for
 // user-facing messages routed through internal/assets text lookups.
-// Exports: [LoadState], [SaveState], [LoadStateErr], [LoadStateFailed], [SaveStateFailed], [NoDir].
+// Exports: [LoadState], [SaveState], [LoadStateErr],
+// [LoadStateFailed], [SaveStateFailed], [NoDir].
 package journal

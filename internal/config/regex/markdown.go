@@ -21,7 +21,8 @@ var MarkdownHeading = regexp.MustCompile(`^(#{1,6}) (.+)$`)
 //   - 1: turn number
 //   - 2: role (e.g. "Assistant", "Tool Output")
 //   - 3: timestamp (HH:MM:SS)
-var TurnHeader = regexp.MustCompile(`^### (\d+)\. (.+?) \((\d{2}:\d{2}:\d{2})\)$`)
+var TurnHeader = regexp.MustCompile(
+	`^### (\d+)\. (.+?) \((\d{2}:\d{2}:\d{2})\)$`)
 
 // ListStart matches lines that begin an ordered or unordered list item.
 var ListStart = regexp.MustCompile(`^(\d+\.|[-*]) `)

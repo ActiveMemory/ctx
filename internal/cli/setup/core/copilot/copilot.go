@@ -40,7 +40,10 @@ func DeployInstructions(cmd *cobra.Command) error {
 	targetFile := filepath.Join(cfgHook.DirGitHub, cfgHook.FileCopilotInstructions)
 
 	// Create .github/ directory if needed
-	if mkdirErr := io.SafeMkdirAll(cfgHook.DirGitHub, fs.PermExec); mkdirErr != nil {
+	mkdirErr := io.SafeMkdirAll(
+		cfgHook.DirGitHub, fs.PermExec,
+	)
+	if mkdirErr != nil {
 		return errFs.Mkdir(cfgHook.DirGitHub, mkdirErr)
 	}
 

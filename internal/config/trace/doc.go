@@ -6,7 +6,8 @@
 
 // Package trace provides configuration constants for commit context tracing.
 //
-// Key exports: [TrailerKey], [ShortHashLen], [DefaultLastFile], [DefaultLastShow].
+// Key exports: [TrailerKey], [ShortHashLen],
+// [DefaultLastFile], [DefaultLastShow].
 // See source files for implementation details.
 // Part of the config subsystem.
 package trace

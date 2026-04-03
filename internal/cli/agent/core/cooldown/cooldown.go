@@ -64,7 +64,10 @@ func TouchTombstone(session string) {
 //   - string: absolute path in the system temp directory
 func TombstonePath(session string) string {
 	stateDir := filepath.Join(rc.ContextDir(), dir.State)
-	if mkdirErr := ctxIo.SafeMkdirAll(stateDir, fs.PermRestrictedDir); mkdirErr != nil {
+	mkdirErr := ctxIo.SafeMkdirAll(
+		stateDir, fs.PermRestrictedDir,
+	)
+	if mkdirErr != nil {
 		ctxLog.Warn(warn.Mkdir, stateDir, mkdirErr)
 	}
 	return filepath.Join(stateDir, agent.TombstonePrefix+session)

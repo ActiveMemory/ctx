@@ -6,7 +6,8 @@
 
 // Package bootstrap checks plugin installation status and emits.
 //
-// Key exports: [PluginWarning], [ListContextFiles], [WrapFileList], [ParseNumberedLines].
+// Key exports: [PluginWarning], [ListContextFiles],
+// [WrapFileList], [ParseNumberedLines].
 // Shared helpers used by sibling cmd/ packages.
 // Used by core cmd/ packages.
 package bootstrap

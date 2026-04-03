@@ -48,7 +48,10 @@ func Setup(cmd *cobra.Command, contextDir string) error {
 func setupPlaintext(cmd *cobra.Command, contextDir string) error {
 	mdPath := filepath.Join(contextDir, cfgPad.Md)
 	if _, statErr := os.Stat(mdPath); statErr != nil {
-		if writeErr := ctxIo.SafeWriteFile(mdPath, nil, cfgFs.PermFile); writeErr != nil {
+		writeErr := ctxIo.SafeWriteFile(
+			mdPath, nil, cfgFs.PermFile,
+		)
+		if writeErr != nil {
 			return writeErr
 		}
 		initialize.InfoScratchpadPlaintext(cmd, mdPath)

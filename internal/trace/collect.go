@@ -57,7 +57,9 @@ func FormatTrailer(refs []string) string {
 	if len(refs) == 0 {
 		return ""
 	}
-	return fmt.Sprintf(cfgTrace.TrailerFormat, strings.Join(refs, token.CommaSpace))
+	return fmt.Sprintf(
+		cfgTrace.TrailerFormat,
+		strings.Join(refs, token.CommaSpace))
 }
 
 // Deduplicate returns a new slice with duplicate entries removed.

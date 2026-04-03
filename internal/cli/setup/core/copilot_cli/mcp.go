@@ -46,7 +46,10 @@ func ensureMCPConfig(cmd *cobra.Command) error {
 
 	// Read existing config if it exists
 	existing := make(map[string]interface{})
-	if data, readErr := io.SafeReadUserFile(filepath.Clean(target)); readErr == nil {
+	data, readErr := io.SafeReadUserFile(
+		filepath.Clean(target),
+	)
+	if readErr == nil {
 		if jErr := json.Unmarshal(data, &existing); jErr != nil {
 			return jErr
 		}
@@ -84,7 +87,10 @@ func ensureMCPConfig(cmd *cobra.Command) error {
 	}
 	data = append(data, token.NewlineLF...)
 
-	if writeFileErr := io.SafeWriteFile(target, data, fs.PermFile); writeFileErr != nil {
+	writeFileErr := io.SafeWriteFile(
+		target, data, fs.PermFile,
+	)
+	if writeFileErr != nil {
 		return writeFileErr
 	}
 	writeSetup.InfoCopilotCLICreated(cmd, target)

@@ -7,6 +7,6 @@
 // Package out builds JSON-RPC response structs for success, error,.
 //
 // Part of the MCP server (JSON-RPC 2.0 over stdin/stdout).
-// Exports: [OkResponse], [ErrResponse], [ToolOK], [ToolError], [ToolResult], and 1 more.
-// Exports: [OkResponse], [ErrResponse], [ToolOK], [ToolError], [ToolResult], [Call].
+// Exports: [OkResponse], [ErrResponse], [ToolOK],
+// [ToolError], [ToolResult], [Call].
 package out

@@ -32,7 +32,10 @@ import (
 
 // regInternalPkg matches backtick-quoted paths starting with "internal/".
 var regInternalPkg = regexp.MustCompile(
-	token.Backtick + "(" + project.DirInternalSlash + "[^" + token.Backtick + "]+)" + token.Backtick,
+	token.Backtick +
+		"(" + project.DirInternalSlash +
+		"[^" + token.Backtick + "]+)" +
+		token.Backtick,
 )
 
 // staleAgeExclude lists context files that are expected to be static
