@@ -9,6 +9,7 @@ package audit
 import (
 	"go/ast"
 	"go/token"
+	"regexp"
 	"strconv"
 	"strings"
 	"testing"
@@ -164,51 +165,22 @@ func isExemptStringPackage(pkgPath string) bool {
 	return false
 }
 
-// isFormatString reports whether s looks like a printf
-// format string (contains % followed by a verb char).
+// fmtVerb matches a printf format directive.
+var fmtVerb = regexp.MustCompile(
+	`%[-+#0 ]*\d*\.?\d*[sdvqwfegxXobctpT]`,
+)
+
+// isFormatString reports whether s contains a printf
+// format directive.
 func isFormatString(s string) bool {
-	if !strings.Contains(s, "%") {
-		return false
-	}
-	// Any string containing a % verb is likely a format
-	// string. Accept any string with at least one
-	// standard format directive.
-	for i := 0; i < len(s)-1; i++ {
-		if s[i] != '%' {
-			continue
-		}
-		next := s[i+1]
-		if next == '%' {
-			i++ // skip %%
-			continue
-		}
-		// Skip flags/width/precision chars.
-		j := i + 1
-		for j < len(s) &&
-			(s[j] == '+' || s[j] == '-' ||
-				s[j] == '#' || s[j] == '0' ||
-				s[j] == ' ' ||
-				(s[j] >= '1' && s[j] <= '9') ||
-				s[j] == '.') {
-			j++
-		}
-		if j < len(s) {
-			verb := s[j]
-			if strings.ContainsRune(
-				"sdvqwfegxXobctpT", rune(verb),
-			) {
-				return true
-			}
-		}
-	}
-	return false
+	return fmtVerb.MatchString(s)
 }
+
+// regexRef matches regex capture group references.
+var regexRef = regexp.MustCompile(`\$\d|\$\{`)
 
 // isRegexRef reports whether s contains regex capture
 // group references ($1, $2, etc.).
 func isRegexRef(s string) bool {
-	return strings.Contains(s, "$1") ||
-		strings.Contains(s, "$2") ||
-		strings.Contains(s, "$3") ||
-		strings.Contains(s, "${")
+	return regexRef.MatchString(s)
 }
