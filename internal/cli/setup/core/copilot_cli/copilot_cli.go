@@ -41,14 +41,14 @@ func Deploy(cmd *cobra.Command) error {
 	targetJSON := filepath.Join(hooksDir, cfgHook.FileCopilotCLIHooksJSON)
 
 	// Check if ctx-hooks.json already exists
-	if _, err := os.Stat(targetJSON); err == nil {
+	if _, statErr := os.Stat(targetJSON); statErr == nil {
 		writeSetup.InfoCopilotCLISkipped(cmd, targetJSON)
 		return nil
 	}
 
 	// Create directories
-	if err := ctxIo.SafeMkdirAll(scriptsDir, fs.PermExec); err != nil {
-		return errFs.Mkdir(scriptsDir, err)
+	if mkErr := ctxIo.SafeMkdirAll(scriptsDir, fs.PermExec); mkErr != nil {
+		return errFs.Mkdir(scriptsDir, mkErr)
 	}
 
 	// Write ctx-hooks.json
@@ -76,23 +76,27 @@ func Deploy(cmd *cobra.Command) error {
 	}
 
 	// Write .github/agents/ctx.md
-	if err := deployAgent(cmd); err != nil {
-		writeErr.WarnFile(cmd, cfgHook.DirGitHubAgents, err)
+	if agentErr := deployAgent(cmd); agentErr != nil {
+		writeErr.WarnFile(cmd, cfgHook.DirGitHubAgents, agentErr)
 	}
 
 	// Write .github/instructions/context.instructions.md
-	if err := deployInstructions(cmd); err != nil {
-		writeErr.WarnFile(cmd, cfgHook.DirGitHubInstructions, err)
+	if instrErr := deployInstructions(cmd); instrErr != nil {
+		writeErr.WarnFile(
+			cmd, cfgHook.DirGitHubInstructions, instrErr,
+		)
 	}
 
 	// Register ctx MCP server in ~/.copilot/mcp-config.json
-	if err := ensureMCPConfig(cmd); err != nil {
-		writeErr.WarnFile(cmd, cfgHook.FileMCPConfigJSON, err)
+	if mcpErr := ensureMCPConfig(cmd); mcpErr != nil {
+		writeErr.WarnFile(
+			cmd, cfgHook.FileMCPConfigJSON, mcpErr,
+		)
 	}
 
 	// Write .github/skills/<name>/SKILL.md for Copilot CLI skills
-	if err := deploySkills(cmd); err != nil {
-		writeErr.WarnFile(cmd, cfgHook.DirGitHubSkills, err)
+	if skillErr := deploySkills(cmd); skillErr != nil {
+		writeErr.WarnFile(cmd, cfgHook.DirGitHubSkills, skillErr)
 	}
 
 	writeSetup.InfoCopilotCLISummary(cmd)

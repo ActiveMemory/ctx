@@ -32,13 +32,13 @@ func deployInstructions(cmd *cobra.Command) error {
 	instrDir := filepath.Join(cfgHook.DirGitHub, cfgHook.DirGitHubInstructions)
 	target := filepath.Join(instrDir, cfgHook.FileInstructionsCtxMd)
 
-	if _, err := os.Stat(target); err == nil {
+	if _, statErr := os.Stat(target); statErr == nil {
 		writeSetup.InfoCopilotCLISkipped(cmd, target)
 		return nil
 	}
 
-	if err := ctxIo.SafeMkdirAll(instrDir, fs.PermExec); err != nil {
-		return err
+	if mkErr := ctxIo.SafeMkdirAll(instrDir, fs.PermExec); mkErr != nil {
+		return mkErr
 	}
 
 	content, readErr := agent.InstructionsCtxMd()

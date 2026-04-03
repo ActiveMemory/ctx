@@ -31,12 +31,14 @@ func (p *Copilot) applyScalarPatch(
 	// Handle requests.<N>.result patches — these contain token counts
 	if path[0] == cfgCopilot.KeyRequests &&
 		len(path) == 3 && path[2] == cfgCopilot.KeyResult {
-		idx, err := strconv.Atoi(path[1])
-		if err != nil || idx < 0 || idx >= len(session.Requests) {
+		idx, parseErr := strconv.Atoi(path[1])
+		if parseErr != nil || idx < 0 || idx >= len(session.Requests) {
 			return
 		}
 		var result copilotRawResult
-		if err := json.Unmarshal(value, &result); err == nil {
+		if unmarshalErr := json.Unmarshal(
+			value, &result,
+		); unmarshalErr == nil {
 			session.Requests[idx].Result = &result
 		}
 	}
@@ -60,20 +62,26 @@ func (p *Copilot) applyPatch(
 	case len(path) == 1 && path[0] == cfgCopilot.KeyRequests:
 		// New request(s) appended
 		var requests []copilotRawRequest
-		if err := json.Unmarshal(value, &requests); err == nil {
-			session.Requests = append(session.Requests, requests...)
+		if unmarshalReqErr := json.Unmarshal(
+			value, &requests,
+		); unmarshalReqErr == nil {
+			session.Requests = append(
+				session.Requests, requests...,
+			)
 		}
 
 	case len(path) == 3 &&
 		path[0] == cfgCopilot.KeyRequests &&
 		path[2] == cfgCopilot.KeyResponse:
 		// Response update for a specific request
-		idx, err := strconv.Atoi(path[1])
-		if err != nil || idx < 0 || idx >= len(session.Requests) {
+		idx, parseErr := strconv.Atoi(path[1])
+		if parseErr != nil || idx < 0 || idx >= len(session.Requests) {
 			return
 		}
 		var items []copilotRawRespItem
-		if err := json.Unmarshal(value, &items); err == nil {
+		if unmarshalItemsErr := json.Unmarshal(
+			value, &items,
+		); unmarshalItemsErr == nil {
 			session.Requests[idx].Response = items
 		}
 	}
@@ -90,12 +98,16 @@ func (p *Copilot) parseKeyPath(keys []json.RawMessage) []string {
 	path := make([]string, 0, len(keys))
 	for _, k := range keys {
 		var s string
-		if err := json.Unmarshal(k, &s); err == nil {
+		if unmarshalStrErr := json.Unmarshal(
+			k, &s,
+		); unmarshalStrErr == nil {
 			path = append(path, s)
 			continue
 		}
 		var n int
-		if err := json.Unmarshal(k, &n); err == nil {
+		if unmarshalIntErr := json.Unmarshal(
+			k, &n,
+		); unmarshalIntErr == nil {
 			path = append(path, strconv.Itoa(n))
 			continue
 		}

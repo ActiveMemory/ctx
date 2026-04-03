@@ -38,13 +38,13 @@ func deploySkills(cmd *cobra.Command) error {
 		skillDir := filepath.Join(skillsBase, name)
 		target := filepath.Join(skillDir, cfgHook.FileSKILLMd)
 
-		if _, err := os.Stat(target); err == nil {
+		if _, statErr := os.Stat(target); statErr == nil {
 			writeSetup.InfoCopilotCLISkipped(cmd, target)
 			continue
 		}
 
-		if err := ctxIo.SafeMkdirAll(skillDir, fs.PermExec); err != nil {
-			return err
+		if mkErr := ctxIo.SafeMkdirAll(skillDir, fs.PermExec); mkErr != nil {
+			return mkErr
 		}
 		if wErr := ctxIo.SafeWriteFile(target, content, fs.PermFile); wErr != nil {
 			return wErr

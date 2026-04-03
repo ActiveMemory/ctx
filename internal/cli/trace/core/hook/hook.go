@@ -73,15 +73,15 @@ func Enable(cmd *cobra.Command) error {
 // Returns:
 //   - error: non-nil on removal failure
 func Disable(cmd *cobra.Command) error {
-	prepPath, err := FilePath(cfgGit.HookPrepareCommitMsg)
-	if err != nil {
-		return err
+	prepPath, prepErr := FilePath(cfgGit.HookPrepareCommitMsg)
+	if prepErr != nil {
+		return prepErr
 	}
 	Remove(prepPath)
 
-	postPath, err := FilePath(cfgGit.HookPostCommit)
-	if err != nil {
-		return err
+	postPath, postErr := FilePath(cfgGit.HookPostCommit)
+	if postErr != nil {
+		return postErr
 	}
 	Remove(postPath)
 
@@ -99,7 +99,7 @@ func Disable(cmd *cobra.Command) error {
 // Returns:
 //   - error: non-nil if a non-ctx hook already exists or write fails
 func Install(path, script, name string) error {
-	if _, err := io.SafeStat(path); err == nil {
+	if _, statErr := io.SafeStat(path); statErr == nil {
 		existing, readErr := io.SafeReadUserFile(path)
 		if readErr == nil && !strings.Contains(
 			string(existing), cfgTrace.CtxTraceMarker,
@@ -107,10 +107,10 @@ func Install(path, script, name string) error {
 			return errTrace.HookExists(name, path)
 		}
 	}
-	if err := io.SafeWriteFile(
+	if writeErr := io.SafeWriteFile(
 		path, []byte(script), cfgFs.PermExec,
-	); err != nil {
-		return errTrace.HookWrite(name, err)
+	); writeErr != nil {
+		return errTrace.HookWrite(name, writeErr)
 	}
 	return nil
 }

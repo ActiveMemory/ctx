@@ -36,9 +36,9 @@ func Run(cmd *cobra.Command, commitRef, note string) error {
 		return errTrace.NoteRequired()
 	}
 
-	hash, err := trace.ResolveCommitHash(commitRef)
-	if err != nil {
-		return errTrace.ResolveCommit(commitRef, err)
+	hash, resolveErr := trace.ResolveCommitHash(commitRef)
+	if resolveErr != nil {
+		return errTrace.ResolveCommit(commitRef, resolveErr)
 	}
 
 	traceDir := filepath.Join(rc.ContextDir(), dir.Trace)
@@ -48,8 +48,8 @@ func Run(cmd *cobra.Command, commitRef, note string) error {
 		Refs:   []string{fmt.Sprintf("%q", note)},
 	}
 
-	if err := trace.WriteOverride(entry, traceDir); err != nil {
-		return errTrace.WriteOverride(err)
+	if writeErr := trace.WriteOverride(entry, traceDir); writeErr != nil {
+		return errTrace.WriteOverride(writeErr)
 	}
 
 	writeTrace.Tagged(cmd, trace.ShortHash(hash), note)

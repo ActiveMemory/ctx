@@ -135,7 +135,9 @@ func (p *Copilot) buildAssistantMessage(
 		switch item.Kind {
 		case cfgCopilot.RespKindThinking:
 			var text string
-			if err := json.Unmarshal(item.Value, &text); err == nil {
+			if unmarshalThinkErr := json.Unmarshal(
+				item.Value, &text,
+			); unmarshalThinkErr == nil {
 				if msg.Thinking != "" {
 					msg.Thinking += token.NewlineLF
 				}
@@ -151,7 +153,9 @@ func (p *Copilot) buildAssistantMessage(
 		case "":
 			// Plain markdown text (no kind field)
 			var text string
-			if err := json.Unmarshal(item.Value, &text); err == nil {
+			if unmarshalTextErr := json.Unmarshal(
+				item.Value, &text,
+			); unmarshalTextErr == nil {
 				text = strings.TrimSpace(text)
 				if text != "" {
 					if msg.Text != "" {
@@ -200,13 +204,17 @@ func (p *Copilot) parseToolInvocation(item copilotRawRespItem) *entity.ToolUse {
 	if item.InvocationMessage != nil {
 		// InvocationMessage can be a string or object with value field
 		var simple string
-		if err := json.Unmarshal(item.InvocationMessage, &simple); err == nil {
+		if unmarshalStrErr := json.Unmarshal(
+			item.InvocationMessage, &simple,
+		); unmarshalStrErr == nil {
 			inputStr = simple
 		} else {
 			var obj struct {
 				Value string `json:"value"`
 			}
-			if err := json.Unmarshal(item.InvocationMessage, &obj); err == nil {
+			if unmarshalObjErr := json.Unmarshal(
+				item.InvocationMessage, &obj,
+			); unmarshalObjErr == nil {
 				inputStr = obj.Value
 			}
 		}

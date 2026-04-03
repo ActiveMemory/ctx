@@ -84,7 +84,9 @@ func (p *Copilot) Matches(path string) bool {
 	}
 
 	var line copilotRawLine
-	if err := json.Unmarshal(scanner.Bytes(), &line); err != nil {
+	if unmarshalLineErr := json.Unmarshal(
+		scanner.Bytes(), &line,
+	); unmarshalLineErr != nil {
 		return false
 	}
 
@@ -94,7 +96,9 @@ func (p *Copilot) Matches(path string) bool {
 	}
 
 	var session copilotRawSession
-	if err := json.Unmarshal(line.V, &session); err != nil {
+	if unmarshalSessionErr := json.Unmarshal(
+		line.V, &session,
+	); unmarshalSessionErr != nil {
 		return false
 	}
 
@@ -132,7 +136,9 @@ func (p *Copilot) ParseFile(path string) ([]*entity.Session, error) {
 		}
 
 		var line copilotRawLine
-		if err := json.Unmarshal(lineBytes, &line); err != nil {
+		if unmarshalLineErr := json.Unmarshal(
+			lineBytes, &line,
+		); unmarshalLineErr != nil {
 			continue
 		}
 
@@ -140,8 +146,10 @@ func (p *Copilot) ParseFile(path string) ([]*entity.Session, error) {
 		case copilotKindSnapshot:
 			// Full session snapshot
 			var s copilotRawSession
-			if err := json.Unmarshal(line.V, &s); err != nil {
-				return nil, errParser.Unmarshal(err)
+			if unmarshalSnapErr := json.Unmarshal(
+				line.V, &s,
+			); unmarshalSnapErr != nil {
+				return nil, errParser.Unmarshal(unmarshalSnapErr)
 			}
 			session = &s
 
@@ -203,8 +211,8 @@ func CopilotSessionDirs() []string {
 	appData := os.Getenv(cfgCopilot.EnvAppData)
 	if runtime.GOOS != env.OSWindows {
 		// On macOS/Linux, VS Code stores data in different locations
-		home, err := os.UserHomeDir()
-		if err != nil {
+		home, homeErr := os.UserHomeDir()
+		if homeErr != nil {
 			return nil
 		}
 		switch runtime.GOOS {
@@ -227,18 +235,22 @@ func CopilotSessionDirs() []string {
 		wsDir := filepath.Join(
 			appData, variant,
 			cfgCopilot.DirUser, cfgCopilot.DirWorkspace)
-		if info, err := io.SafeStat(wsDir); err == nil && info.IsDir() {
+		if info, statErr := io.SafeStat(wsDir); statErr == nil && info.IsDir() {
 			// Scan each workspace for chatSessions/ subdirectory
-			entries, err := os.ReadDir(wsDir)
-			if err != nil {
+			entries, readDirErr := os.ReadDir(wsDir)
+			if readDirErr != nil {
 				continue
 			}
 			for _, entry := range entries {
 				if !entry.IsDir() {
 					continue
 				}
-				chatDir := filepath.Join(wsDir, entry.Name(), cfgCopilot.DirChatSessions)
-				if info, err := io.SafeStat(chatDir); err == nil && info.IsDir() {
+				chatDir := filepath.Join(
+					wsDir, entry.Name(),
+					cfgCopilot.DirChatSessions,
+				)
+				info, statChatErr := io.SafeStat(chatDir)
+				if statChatErr == nil && info.IsDir() {
 					dirs = append(dirs, chatDir)
 				}
 			}

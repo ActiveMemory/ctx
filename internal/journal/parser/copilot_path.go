@@ -32,13 +32,17 @@ func (p *Copilot) resolveWorkspaceCWD(sessionPath string) string {
 	storageDir := filepath.Dir(chatDir)  // <hash>/
 	wsFile := filepath.Join(storageDir, cfgCopilot.FileWorkspace)
 
-	data, err := ctxIo.SafeReadUserFile(filepath.Clean(wsFile))
-	if err != nil {
+	data, readErr := ctxIo.SafeReadUserFile(
+		filepath.Clean(wsFile),
+	)
+	if readErr != nil {
 		return ""
 	}
 
 	var ws copilotRawWorkspace
-	if err := json.Unmarshal(data, &ws); err != nil {
+	if unmarshalErr := json.Unmarshal(
+		data, &ws,
+	); unmarshalErr != nil {
 		return ""
 	}
 
@@ -57,8 +61,8 @@ func fileURIToPath(uri string) string {
 		return ""
 	}
 
-	parsed, err := url.Parse(uri)
-	if err != nil {
+	parsed, parseErr := url.Parse(uri)
+	if parseErr != nil {
 		return ""
 	}
 
@@ -69,8 +73,8 @@ func fileURIToPath(uri string) string {
 	path := parsed.Path
 
 	// URL-decode the path (e.g., %3A -> :)
-	decoded, err := url.PathUnescape(path)
-	if err != nil {
+	decoded, unescapeErr := url.PathUnescape(path)
+	if unescapeErr != nil {
 		decoded = path
 	}
 

@@ -31,13 +31,13 @@ func deployAgent(cmd *cobra.Command) error {
 	agentsDir := filepath.Join(cfgHook.DirGitHub, cfgHook.DirGitHubAgents)
 	target := filepath.Join(agentsDir, cfgHook.FileAgentsCtxMd)
 
-	if _, err := os.Stat(target); err == nil {
+	if _, statErr := os.Stat(target); statErr == nil {
 		writeSetup.InfoCopilotCLISkipped(cmd, target)
 		return nil
 	}
 
-	if err := ctxIo.SafeMkdirAll(agentsDir, fs.PermExec); err != nil {
-		return err
+	if mkErr := ctxIo.SafeMkdirAll(agentsDir, fs.PermExec); mkErr != nil {
+		return mkErr
 	}
 
 	content, readErr := agent.AgentsCtxMd()

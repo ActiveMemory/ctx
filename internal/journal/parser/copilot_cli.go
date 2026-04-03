@@ -78,8 +78,8 @@ func (p *CopilotCLI) Matches(path string) bool {
 	}
 
 	// Verify the first line looks like a Copilot CLI session
-	f, err := io.SafeOpenUserFile(path)
-	if err != nil {
+	f, openErr := io.SafeOpenUserFile(path)
+	if openErr != nil {
 		return false
 	}
 	defer func() { _ = f.Close() }()
@@ -93,7 +93,9 @@ func (p *CopilotCLI) Matches(path string) bool {
 	}
 
 	var msg copilotCLIRawMessage
-	if err := json.Unmarshal(scanner.Bytes(), &msg); err != nil {
+	if unmarshalErr := json.Unmarshal(
+		scanner.Bytes(), &msg,
+	); unmarshalErr != nil {
 		return false
 	}
 
@@ -113,13 +115,16 @@ func (p *CopilotCLI) Matches(path string) bool {
 //   - []*entity.Session: the parsed sessions (at most one for Copilot CLI)
 //   - error: any error encountered during parsing
 func (p *CopilotCLI) ParseFile(path string) ([]*entity.Session, error) {
-	f, err := io.SafeOpenUserFile(path)
-	if err != nil {
-		return nil, errParser.OpenFile(err)
+	f, openErr := io.SafeOpenUserFile(path)
+	if openErr != nil {
+		return nil, errParser.OpenFile(openErr)
 	}
 	defer func() {
 		if closeErr := f.Close(); closeErr != nil {
-			warn.Warn("copilot-cli: close %s: %v", path, closeErr)
+			warn.Warn(
+				"copilot-cli: close %s: %v",
+				path, closeErr,
+			)
 		}
 	}()
 
@@ -136,7 +141,9 @@ func (p *CopilotCLI) ParseFile(path string) ([]*entity.Session, error) {
 		}
 
 		var msg copilotCLIRawMessage
-		if err := json.Unmarshal(lineBytes, &msg); err != nil {
+		if unmarshalErr := json.Unmarshal(
+			lineBytes, &msg,
+		); unmarshalErr != nil {
 			continue
 		}
 		messages = append(messages, msg)
@@ -261,8 +268,8 @@ func CopilotCLISessionDirs() []string {
 
 	copilotHome := os.Getenv(cfgHook.EnvCopilotHome)
 	if copilotHome == "" {
-		home, err := os.UserHomeDir()
-		if err != nil {
+		home, homeErr := os.UserHomeDir()
+		if homeErr != nil {
 			return nil
 		}
 		copilotHome = filepath.Join(home, cfgHook.DirCopilotHome)
@@ -272,7 +279,7 @@ func CopilotCLISessionDirs() []string {
 	candidates := []string{cfgCopilot.DirSessions, cfgCopilot.DirHistory}
 	for _, sub := range candidates {
 		dir := filepath.Join(copilotHome, sub)
-		if info, err := io.SafeStat(dir); err == nil && info.IsDir() {
+		if info, statErr := io.SafeStat(dir); statErr == nil && info.IsDir() {
 			dirs = append(dirs, dir)
 		}
 	}
@@ -282,8 +289,11 @@ func CopilotCLISessionDirs() []string {
 		localAppData := os.Getenv(env.LocalAppData)
 		if localAppData != "" {
 			for _, sub := range candidates {
-				dir := filepath.Join(localAppData, cfgCopilot.CLIAppName, sub)
-				if info, err := io.SafeStat(dir); err == nil && info.IsDir() {
+				dir := filepath.Join(
+					localAppData,
+					cfgCopilot.CLIAppName, sub,
+				)
+				if info, statErr := io.SafeStat(dir); statErr == nil && info.IsDir() {
 					dirs = append(dirs, dir)
 				}
 			}

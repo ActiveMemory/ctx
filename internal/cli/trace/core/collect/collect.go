@@ -47,9 +47,9 @@ func RecordCommit(commitHash string) error {
 		return nil
 	}
 
-	message, err := trace.CommitMessage(commitHash)
-	if err != nil {
-		return errTrace.GitLog(err)
+	message, msgErr := trace.CommitMessage(commitHash)
+	if msgErr != nil {
+		return errTrace.GitLog(msgErr)
 	}
 
 	traceDir := filepath.Join(contextDir, dir.Trace)
@@ -58,8 +58,8 @@ func RecordCommit(commitHash string) error {
 		Refs:    refs,
 		Message: message,
 	}
-	if err := trace.WriteHistory(entry, traceDir); err != nil {
-		return errTrace.WriteHistory(err)
+	if histErr := trace.WriteHistory(entry, traceDir); histErr != nil {
+		return errTrace.WriteHistory(histErr)
 	}
 
 	stateDir := filepath.Join(contextDir, dir.State)
