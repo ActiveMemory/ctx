@@ -6,6 +6,7 @@
 
 package text
 
+// DescKeys for backup operations errors.
 const (
 	DescKeyErrBackupBackupGlobal        = "err.backup.backup-global"
 	DescKeyErrBackupBackupProject       = "err.backup.backup-project"

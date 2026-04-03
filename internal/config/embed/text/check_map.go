@@ -6,6 +6,7 @@
 
 package text
 
+// DescKeys for map staleness checks.
 const (
 	DescKeyCheckMapStalenessBoxTitle     = "check-map-staleness.box-title"
 	DescKeyCheckMapStalenessFallback     = "check-map-staleness.fallback"

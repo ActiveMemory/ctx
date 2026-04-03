@@ -6,6 +6,7 @@
 
 package text
 
+// DescKeys for MCP validation output.
 const (
 	DescKeyMCPInvalidSinceDate    = "mcp.invalid-since-date"
 	DescKeyMCPNoSessions          = "mcp.no-sessions"

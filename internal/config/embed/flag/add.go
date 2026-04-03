@@ -6,6 +6,7 @@
 
 package flag
 
+// DescKeys for add command flags.
 const (
 	DescKeyAddApplication = "add.application"
 	DescKeyAddConsequence = "add.consequence"

@@ -6,6 +6,7 @@
 
 package text
 
+// DescKeys for prompt handling errors.
 const (
 	DescKeyErrPromptListEntryTemplates     = "err.prompt.list-entry-templates"
 	DescKeyErrPromptListTemplates          = "err.prompt.list-templates"

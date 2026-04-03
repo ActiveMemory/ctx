@@ -12,6 +12,7 @@ const (
 	DescKeyLabelObsidianSeeAlso   = "label.obsidian-see-also"
 )
 
+// DescKeys for Obsidian vault write output.
 const (
 	DescKeyWriteObsidianGenerated        = "write.obsidian-generated"
 	DescKeyWriteObsidianNextStepsHeading = "write.obsidian-next-steps-heading"

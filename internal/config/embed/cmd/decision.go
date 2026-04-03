@@ -6,8 +6,10 @@
 
 package cmd
 
+// UseDecision is the cobra use string for the decision command.
 const UseDecision = "decision"
 
+// DescKeys for decision subcommands.
 const (
 	DescKeyDecision        = "decision"
 	DescKeyDecisionReindex = "decision.reindex"

@@ -6,6 +6,7 @@
 
 package text
 
+// DescKeys for task operations errors.
 const (
 	DescKeyErrTaskNoCompletedTasks = "err.task.no-completed-tasks"
 	DescKeyErrTaskNoTaskMatch      = "err.task.no-task-match"

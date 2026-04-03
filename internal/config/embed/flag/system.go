@@ -6,6 +6,7 @@
 
 package flag
 
+// DescKeys for system command flags.
 const (
 	DescKeySystemBackupJson         = "system.backup.json"
 	DescKeySystemBackupScope        = "system.backup.scope"

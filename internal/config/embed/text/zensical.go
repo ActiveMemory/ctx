@@ -6,6 +6,7 @@
 
 package text
 
+// DescKeys for zensical site output.
 const (
 	DescKeyErrSiteZensicalNotFound = "err.site.zensical-not-found"
 )

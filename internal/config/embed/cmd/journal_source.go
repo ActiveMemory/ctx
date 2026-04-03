@@ -6,6 +6,7 @@
 
 package cmd
 
+// Use strings for journal source subcommands.
 const (
 	UseJournalImport = "import [session-id]"
 	UseJournalLock   = "lock <pattern>"
@@ -13,6 +14,7 @@ const (
 	UseJournalUnlock = "unlock <pattern>"
 )
 
+// DescKeys for journal source subcommands.
 const (
 	DescKeyJournalImport = "journal.import"
 	DescKeyJournalLock   = "journal.lock"

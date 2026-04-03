@@ -6,6 +6,7 @@
 
 package flag
 
+// DescKeys for shared flag descriptions.
 const (
 	DescKeyAllowOutsideCwd  = "allow-outside-cwd"
 	DescKeyChangesSince     = "changes.since"

@@ -6,6 +6,7 @@
 
 package text
 
+// DescKeys for HTTP operations errors.
 const (
 	DescKeyErrHttpParseURL         = "err.http.parse-url"
 	DescKeyErrHttpTooManyRedirects = "err.http.too-many-redirects"

@@ -6,6 +6,7 @@
 
 package text
 
+// DescKeys for restore operations write output.
 const (
 	DescKeyWriteRestoreAdded              = "write.restore-added"
 	DescKeyWriteRestoreDenyDroppedHeader  = "write.restore-deny-dropped-header"

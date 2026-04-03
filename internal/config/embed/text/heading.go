@@ -6,6 +6,7 @@
 
 package text
 
+// DescKeys for section headings.
 const (
 	DescKeyHeadingCompleted         = "heading.completed"
 	DescKeyHeadingArchivedTasks     = "heading.archived-tasks"

@@ -6,6 +6,7 @@
 
 package text
 
+// DescKeys for reminder display write output.
 const (
 	DescKeyWriteReminderAdded        = "write.reminder-added"
 	DescKeyWriteReminderAfterSuffix  = "write.reminder-after-suffix"

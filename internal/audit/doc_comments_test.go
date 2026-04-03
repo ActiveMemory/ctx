@@ -9,6 +9,7 @@ package audit
 import (
 	"go/ast"
 	"go/token"
+	"strings"
 	"testing"
 )
 
@@ -18,6 +19,14 @@ import (
 // Test files are exempt.
 //
 // See specs/ast-audit-tests.md for rationale.
+// configPackage reports whether pkgPath is a config-style
+// package where group doc comments are sufficient for
+// const blocks.
+func configPackage(pkgPath string) bool {
+	return strings.Contains(pkgPath, "internal/config/") ||
+		strings.HasSuffix(pkgPath, "internal/config")
+}
+
 func TestDocComments(t *testing.T) {
 	pkgs := loadPackages(t)
 	var violations []string
@@ -40,47 +49,72 @@ func TestDocComments(t *testing.T) {
 					}
 
 				case *ast.GenDecl:
-					// Only check type and var declarations, not
-					// import or const.
-					if d.Tok != token.TYPE && d.Tok != token.VAR {
+					// Skip import declarations.
+					if d.Tok == token.IMPORT {
+						continue
+					}
+
+					// Singleton declarations (no parens) use
+					// the GenDecl doc for the single spec.
+					singleton := !d.Lparen.IsValid()
+					isCfg := configPackage(pkg.PkgPath)
+
+					// Config const/var blocks: group doc covers
+					// all specs. Report once per undocumented
+					// block, not per constant.
+					if isCfg && d.Lparen.IsValid() &&
+						(d.Tok == token.CONST ||
+							d.Tok == token.VAR) {
+						if d.Doc == nil {
+							violations = append(violations,
+								posString(pkg.Fset, d.Pos())+
+									": const/var block"+
+									" missing group doc",
+							)
+						}
 						continue
 					}
 
 					for _, spec := range d.Specs {
 						switch s := spec.(type) {
 						case *ast.TypeSpec:
-							// Use the GenDecl doc if the TypeSpec
-							// has none (common with grouped decls).
 							doc := s.Doc
-							if doc == nil {
+							if doc == nil && singleton {
 								doc = d.Doc
 							}
 							if doc == nil {
 								violations = append(violations,
 									posString(pkg.Fset, s.Pos())+
-										": type "+s.Name.Name+" missing doc comment",
+										": type "+s.Name.Name+
+										" missing doc comment",
 								)
 							}
 
 						case *ast.ValueSpec:
-							// Package-level var. Use GenDecl doc if
-							// the ValueSpec has none.
+							// Skip blank identifiers.
+							if len(s.Names) > 0 &&
+								s.Names[0].Name == "_" {
+								continue
+							}
+
 							doc := s.Doc
-							if doc == nil {
+							if doc == nil && singleton {
 								doc = d.Doc
 							}
 							if doc == nil {
-								name := "var"
-								if len(s.Names) > 0 {
-									name = "var " + s.Names[0].Name
+								tok := "var"
+								if d.Tok == token.CONST {
+									tok = "const"
 								}
-								// Skip blank identifiers.
-								if len(s.Names) > 0 && s.Names[0].Name == "_" {
-									continue
+								name := tok
+								if len(s.Names) > 0 {
+									name = tok + " " +
+										s.Names[0].Name
 								}
 								violations = append(violations,
 									posString(pkg.Fset, s.Pos())+
-										": "+name+" missing doc comment",
+										": "+name+
+										" missing doc comment",
 								)
 							}
 						}
@@ -103,8 +137,9 @@ func TestDocComments(t *testing.T) {
 		t.Error(v)
 	}
 	if len(violations) > 20 {
-		remaining := len(violations) - 20
-		_ = remaining
-		t.Errorf("... and %d more", len(violations)-20)
+		t.Errorf(
+			"... and %d more",
+			len(violations)-20,
+		)
 	}
 }

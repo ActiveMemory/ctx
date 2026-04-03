@@ -6,6 +6,7 @@
 
 package text
 
+// DescKeys for context rendering.
 const (
 	DescKeyContextLoadGateFileHeader        = "context-load-gate.file-header"
 	DescKeyContextLoadGateFooter            = "context-load-gate.footer"

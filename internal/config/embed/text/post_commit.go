@@ -6,6 +6,7 @@
 
 package text
 
+// DescKeys for post-commit hooks.
 const (
 	DescKeyPostCommitFallback          = "post-commit.fallback"
 	DescKeyPostCommitRelayMessage      = "post-commit.relay-message"

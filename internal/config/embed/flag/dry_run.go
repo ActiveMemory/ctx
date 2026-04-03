@@ -6,6 +6,7 @@
 
 package flag
 
+// DescKeys for dry-run mode flags.
 const (
 	DescKeySyncDryRun        = "sync.dry-run"
 	DescKeyTaskArchiveDryRun = "task.archive.dry-run"

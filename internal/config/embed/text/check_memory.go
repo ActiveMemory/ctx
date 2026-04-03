@@ -6,6 +6,7 @@
 
 package text
 
+// DescKeys for memory drift checks.
 const (
 	DescKeyCheckMemoryDriftBoxTitle     = "check-memory-drift.box-title"
 	DescKeyCheckMemoryDriftContent      = "check-memory-drift.content"

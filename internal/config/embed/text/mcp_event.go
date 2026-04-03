@@ -6,6 +6,7 @@
 
 package text
 
+// DescKeys for MCP event output.
 const (
 	DescKeyMCPEventTypeRequired = "mcp.event-type-required"
 	DescKeyMCPUnknownEventType  = "mcp.unknown-event-type"

@@ -6,6 +6,7 @@
 
 package text
 
+// DescKeys for loop display labels.
 const (
 	DescKeyLabelLoopComplete = "label.loop-complete"
 )

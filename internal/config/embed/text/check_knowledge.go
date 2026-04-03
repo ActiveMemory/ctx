@@ -6,6 +6,7 @@
 
 package text
 
+// DescKeys for knowledge checks.
 const (
 	DescKeyCheckKnowledgeBoxTitle      = "check-knowledge.box-title"
 	DescKeyCheckKnowledgeFallback      = "check-knowledge.fallback"

@@ -6,6 +6,7 @@
 
 package sysinfo
 
+// Linux procfs path constants.
 const (
 	// ProcLoadavg is the Linux procfs path for load averages.
 	ProcLoadavg = "/proc/loadavg"

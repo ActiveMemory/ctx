@@ -6,6 +6,7 @@
 
 package text
 
+// DescKeys for reason labels.
 const (
 	DescKeyLabelReasonExists  = "label.reason-exists"
 	DescKeyLabelReasonUpdated = "label.reason-updated"

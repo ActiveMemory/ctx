@@ -6,6 +6,7 @@
 
 package text
 
+// DescKeys for hook execution errors.
 const (
 	DescKeyErrHookEmbeddedTemplateNotFound = "err.hook.embedded-template-not-found"
 	DescKeyErrHookOverrideExists           = "err.hook.override-exists"

@@ -6,6 +6,7 @@
 
 package text
 
+// DescKeys for configuration errors.
 const (
 	DescKeyErrConfigGoldenNotFound     = "err.config.golden-not-found"
 	DescKeyErrConfigInvalidTool        = "err.config.invalid-tool"

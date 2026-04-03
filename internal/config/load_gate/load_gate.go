@@ -6,6 +6,7 @@
 
 package load_gate
 
+// Context load gate constants.
 const (
 	// PrefixCtxLoaded is the filename prefix for session-loaded marker files.
 	PrefixCtxLoaded = "ctx-loaded-"

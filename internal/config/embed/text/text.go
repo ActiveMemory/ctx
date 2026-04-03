@@ -6,6 +6,7 @@
 
 package text
 
+// DescKeys for text processing.
 const (
 	DescKeyStopwords = "stopwords"
 )

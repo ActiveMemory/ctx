@@ -26,10 +26,14 @@ import (
 //	    content := match[task.MatchContent]
 //	}
 const (
-	MatchFull    = iota // Full match
-	MatchIndent         // Leading whitespace
-	MatchState          // "x" or " " or ""
-	MatchContent        // Task text
+	// MatchFull is the index of the full regex match.
+	MatchFull = iota
+	// MatchIndent is the index of leading whitespace.
+	MatchIndent
+	// MatchState is the index of the checkbox state.
+	MatchState
+	// MatchContent is the index of the task text.
+	MatchContent
 )
 
 // Completed reports whether a match represents a completed task.

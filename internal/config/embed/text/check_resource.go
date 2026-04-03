@@ -6,6 +6,7 @@
 
 package text
 
+// DescKeys for resource checks.
 const (
 	DescKeyCheckResourcesBoxTitle        = "check-resources.box-title"
 	DescKeyCheckResourcesFallbackLow     = "check-resources.fallback-low"

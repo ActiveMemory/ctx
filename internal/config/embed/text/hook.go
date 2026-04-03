@@ -6,6 +6,7 @@
 
 package text
 
+// DescKeys for hook messages.
 const (
 	DescKeyHookAider          = "hook.aider"
 	DescKeyHookAgents         = "hook.agents"
@@ -17,6 +18,7 @@ const (
 	DescKeyHookWindsurf       = "hook.windsurf"
 )
 
+// DescKeys for hook write output.
 const (
 	DescKeyWriteHookAgentsCreated      = "write.hook-agents-created"
 	DescKeyWriteHookAgentsMerged       = "write.hook-agents-merged"

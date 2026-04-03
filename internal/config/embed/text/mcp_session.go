@@ -6,6 +6,7 @@
 
 package text
 
+// DescKeys for MCP session output.
 const (
 	DescKeyMCPSessionStartedCallerFormat = "mcp.session-started-caller-format"
 	DescKeyMCPSessionStartedFormat       = "mcp.session-started-format"

@@ -6,6 +6,7 @@
 
 package text
 
+// DescKeys for MCP context rendering.
 const (
 	DescKeyMCPLoadContext = "mcp.load-context"
 )

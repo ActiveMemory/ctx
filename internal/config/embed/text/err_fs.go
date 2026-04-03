@@ -6,6 +6,7 @@
 
 package text
 
+// DescKeys for filesystem operations errors.
 const (
 	DescKeyErrFsBoundaryViolation    = "err.fs.boundary-violation"
 	DescKeyErrFsCreateDir            = "err.fs.create-dir"
@@ -35,10 +36,12 @@ const (
 	DescKeyErrFsWriteMerged          = "err.fs.write-merged"
 )
 
+// DescKeys for context directory errors.
 const (
 	DescKeyErrContextDirNotFound = "err.context.dir-not-found"
 )
 
+// DescKeys for filesystem write output.
 const (
 	DescKeyWritePathExists = "write.path-exists"
 )

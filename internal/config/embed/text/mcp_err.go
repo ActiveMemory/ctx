@@ -6,6 +6,7 @@
 
 package text
 
+// DescKeys for MCP error messages.
 const (
 	DescKeyMCPErrMethodNotFound      = "mcp.err-method-not-found"
 	DescKeyMCPErrParse               = "mcp.err-parse"

@@ -6,6 +6,7 @@
 
 package cmd
 
+// Use strings for journal subcommands.
 const (
 	UseJournal         = "journal"
 	UseJournalObsidian = "obsidian"
@@ -13,6 +14,7 @@ const (
 	UseJournalSource   = "source"
 )
 
+// DescKeys for journal subcommands.
 const (
 	DescKeyJournal         = "journal"
 	DescKeyJournalObsidian = "journal.obsidian"

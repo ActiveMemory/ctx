@@ -6,6 +6,7 @@
 
 package text
 
+// DescKeys for heartbeat output.
 const (
 	DescKeyHeartbeatLogTokens    = "heartbeat.log-tokens"
 	DescKeyHeartbeatLogPlain     = "heartbeat.log-plain"

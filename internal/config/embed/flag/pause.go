@@ -6,6 +6,7 @@
 
 package flag
 
+// DescKeys for pause command flags.
 const (
 	DescKeyPauseSessionId  = "pause.session-id"
 	DescKeyResumeSessionId = "resume.session-id"

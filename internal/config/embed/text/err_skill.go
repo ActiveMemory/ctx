@@ -6,6 +6,7 @@
 
 package text
 
+// DescKeys for skill operations errors.
 const (
 	DescKeyErrSkillList = "err.skill.skill-list"
 	DescKeyErrSkillRead = "err.skill.skill-read"

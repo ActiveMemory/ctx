@@ -6,6 +6,7 @@
 
 package flag
 
+// DescKeys for drift command flags.
 const (
 	DescKeyDriftFix  = "drift.fix"
 	DescKeyDriftJson = "drift.json"

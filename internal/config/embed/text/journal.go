@@ -6,6 +6,7 @@
 
 package text
 
+// DescKeys for journal output.
 const (
 	DescKeyJournalConsolidateCount   = "journal.consolidate-count"
 	DescKeyJournalProjectLabel       = "journal.project-label"
@@ -43,6 +44,7 @@ const (
 	DescKeyJournalMocTopicSep        = "journal.moc.topic-separator"
 )
 
+// DescKeys for journal write output.
 const (
 	DescKeyWriteJournalOrphanRemoved      = "write.journal-orphan-removed"
 	DescKeyWriteJournalSiteBuilding       = "write.journal-site-building"

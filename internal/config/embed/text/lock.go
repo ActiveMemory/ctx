@@ -6,6 +6,7 @@
 
 package text
 
+// DescKeys for lock management write output.
 const (
 	DescKeyWriteLockUnlockEntry     = "write.lock-unlock-entry"
 	DescKeyWriteLockUnlockNoChanges = "write.lock-unlock-no-changes"

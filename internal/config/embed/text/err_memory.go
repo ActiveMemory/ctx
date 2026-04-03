@@ -6,6 +6,7 @@
 
 package text
 
+// DescKeys for memory operations errors.
 const (
 	DescKeyErrMemoryDiscoverNoMemory    = "err.memory.discover-no-memory"
 	DescKeyErrMemoryDiscoverResolveHome = "err.memory.discover-resolve-home"

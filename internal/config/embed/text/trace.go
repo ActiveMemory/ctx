@@ -6,6 +6,7 @@
 
 package text
 
+// DescKeys for trace write output.
 const (
 	DescKeyWriteTraceDetailDate      = "write.trace-detail-date"
 	DescKeyWriteTraceDetailStatus    = "write.trace-detail-status"

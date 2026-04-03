@@ -6,6 +6,7 @@
 
 package text
 
+// DescKeys for MCP I/O messages.
 const (
 	DescKeyRelayPrefixFormat = "relay.prefix-format"
 	DescKeyMCPPacketHeader   = "mcp.packet-header"

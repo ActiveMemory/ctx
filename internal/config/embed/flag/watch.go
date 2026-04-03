@@ -6,6 +6,7 @@
 
 package flag
 
+// DescKeys for watch command flags.
 const (
 	DescKeyWatchDryRun = "watch.dry-run"
 	DescKeyWatchLog    = "watch.log"

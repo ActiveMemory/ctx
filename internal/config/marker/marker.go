@@ -100,6 +100,7 @@ const (
 	PrefixTaskDone = "- [x]"
 )
 
+// Task completion marker constants.
 const (
 	// MarkTaskComplete is the unchecked task marker.
 	MarkTaskComplete = "x"

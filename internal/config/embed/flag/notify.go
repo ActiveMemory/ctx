@@ -6,6 +6,7 @@
 
 package flag
 
+// DescKeys for notify command flags.
 const (
 	DescKeyNotifyEvent     = "notify.event"
 	DescKeyNotifyHook      = "notify.hook"

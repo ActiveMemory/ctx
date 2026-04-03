@@ -8,6 +8,7 @@ package freshness
 
 import "time"
 
+// Freshness check threshold constants.
 const (
 	// StaleThreshold is the duration after which a tracked file is
 	// considered stale and should be reviewed. ~6 months.

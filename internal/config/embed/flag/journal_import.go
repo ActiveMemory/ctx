@@ -6,6 +6,7 @@
 
 package flag
 
+// DescKeys for journal import flags.
 const (
 	DescKeyJournalImportAll             = "journal.import.all"
 	DescKeyJournalImportAllProjects     = "journal.import.all-projects"

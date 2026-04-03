@@ -6,6 +6,7 @@
 
 package text
 
+// DescKeys for MCP tool output.
 const (
 	DescKeyMCPToolStatusDesc        = "mcp.tool-status-desc"
 	DescKeyMCPToolAddDesc           = "mcp.tool-add-desc"

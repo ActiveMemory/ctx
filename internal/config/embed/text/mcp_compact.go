@@ -6,6 +6,7 @@
 
 package text
 
+// DescKeys for MCP compact output.
 const (
 	DescKeyMCPCompactMovedFormat    = "mcp.compact-moved-format"
 	DescKeyMCPCompactArchiveWarning = "mcp.compact-archive-warning"

@@ -6,6 +6,7 @@
 
 package text
 
+// DescKeys for add operations errors.
 const (
 	DescKeyErrAddFileNotFound      = "err.add.file-not-found"
 	DescKeyErrAddIndexUpdate       = "err.add.index-update"

@@ -6,6 +6,7 @@
 
 package token
 
+// Constants for code fence tokens.
 const (
 	// CodeFence is the standard Markdown code fence delimiter.
 	CodeFence = "```"

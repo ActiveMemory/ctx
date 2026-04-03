@@ -6,6 +6,7 @@
 
 package text
 
+// DescKeys for drift detection.
 const (
 	DescKeyDriftDeadPath             = "drift.dead-path"
 	DescKeyDriftEntryCount           = "drift.entry-count"

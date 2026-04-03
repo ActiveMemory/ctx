@@ -6,6 +6,7 @@
 
 package text
 
+// DescKeys for MCP resource output.
 const (
 	DescKeyMCPResConstitution = "mcp.res-constitution"
 	DescKeyMCPResTasks        = "mcp.res-tasks"

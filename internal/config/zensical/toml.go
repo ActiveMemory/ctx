@@ -6,6 +6,7 @@
 
 package zensical
 
+// TOML nav-array formatting constants.
 const (
 	// TomlNavOpen is the opening bracket for the TOML nav array.
 	TomlNavOpen = "nav = ["

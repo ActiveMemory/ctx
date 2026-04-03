@@ -6,6 +6,7 @@
 
 package text
 
+// DescKeys for reminder checks.
 const (
 	DescKeyCheckRemindersBoxTitle       = "check-reminders.box-title"
 	DescKeyCheckRemindersDismissHint    = "check-reminders.dismiss-hint"

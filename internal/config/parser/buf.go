@@ -6,6 +6,7 @@
 
 package parser
 
+// Scanner buffer size constants.
 const (
 	// BufInitSize is the initial scanner buffer size for session parsing (64 KB).
 	BufInitSize = 64 * 1024

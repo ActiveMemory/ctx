@@ -6,6 +6,7 @@
 
 package text
 
+// DescKeys for inline display labels.
 const (
 	DescKeyLabelInlineTool  = "label.inline-tool"
 	DescKeyLabelInlineError = "label.inline-error"

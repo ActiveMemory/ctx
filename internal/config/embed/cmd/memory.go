@@ -6,6 +6,7 @@
 
 package cmd
 
+// Use strings for memory subcommands.
 const (
 	UseMemoryDiff      = "diff"
 	UseMemoryImport    = "import"
@@ -15,6 +16,7 @@ const (
 	UseMemoryUnpublish = "unpublish"
 )
 
+// DescKeys for memory subcommands.
 const (
 	DescKeyMemory          = "memory"
 	DescKeyMemoryDiff      = "memory.diff"

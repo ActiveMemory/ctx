@@ -6,6 +6,7 @@
 
 package text
 
+// DescKeys for skill display write output.
 const (
 	DescKeyWriteSkillLine    = "write.skill-line"
 	DescKeyWriteSkillsHeader = "write.skills-header"

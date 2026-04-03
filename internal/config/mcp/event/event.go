@@ -6,6 +6,7 @@
 
 package event
 
+// MCP lifecycle event constants.
 const (
 	// Start is MCP event start
 	Start = "start"

@@ -6,6 +6,7 @@
 
 package flag
 
+// DescKeys for pad command flags.
 const (
 	DescKeyPadAddFile      = "pad.add.file"
 	DescKeyPadEditAppend   = "pad.edit.append"

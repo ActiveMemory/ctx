@@ -6,6 +6,7 @@
 
 package cmd
 
+// DescKeys for philosophy subcommands.
 const (
 	DescKeyGuide = "guide"
 	DescKeyWhy   = "why"

@@ -6,6 +6,7 @@
 
 package flag
 
+// DescKeys for journal output flags.
 const (
 	DescKeyJournalObsidianOutput = "journal.obsidian.output"
 	DescKeyJournalSiteBuild      = "journal.site.build"
@@ -13,6 +14,7 @@ const (
 	DescKeyJournalSiteServe      = "journal.site.serve"
 )
 
+// DescKeys for journal source flags.
 const (
 	DescKeyJournalSourceAllProjects = "journal.source.all-projects"
 	DescKeyJournalSourceFull        = "journal.source.full"

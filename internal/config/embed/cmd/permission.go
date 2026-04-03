@@ -6,11 +6,13 @@
 
 package cmd
 
+// Use strings for permission subcommands.
 const (
 	UsePermissionRestore  = "restore"
 	UsePermissionSnapshot = "snapshot"
 )
 
+// DescKeys for permission subcommands.
 const (
 	DescKeyPermission         = "permission"
 	DescKeyPermissionRestore  = "permission.restore"

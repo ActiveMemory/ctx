@@ -6,6 +6,7 @@
 
 package text
 
+// DescKeys for cryptography errors.
 const (
 	DescKeyErrCryptoCiphertextTooShort = "err.crypto.ciphertext-too-short"
 	DescKeyErrCryptoCreateCipher       = "err.crypto.create-cipher"

@@ -6,6 +6,7 @@
 
 package cmd
 
+// DescKeys for pause subcommands.
 const (
 	DescKeyPause  = "pause"
 	DescKeyResume = "resume"

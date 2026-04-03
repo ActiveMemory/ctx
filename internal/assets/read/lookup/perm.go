@@ -9,8 +9,10 @@ package lookup
 // allowPerms and denyPerms cache the parsed permission lists loaded
 // from embedded allow.txt and deny.txt files.
 var (
+	// allowPerms caches parsed allow permission patterns.
 	allowPerms []string
-	denyPerms  []string
+	// denyPerms caches parsed deny permission patterns.
+	denyPerms []string
 )
 
 // PermAllowListDefault returns the default allow permissions for ctx

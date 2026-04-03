@@ -6,6 +6,7 @@
 
 package server
 
+// MCP server identity constants.
 const (
 	// ResourceURIPrefix is the URI scheme prefix for MCP context resources.
 	ResourceURIPrefix = "ctx://context/"

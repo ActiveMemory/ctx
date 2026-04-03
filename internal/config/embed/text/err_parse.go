@@ -6,6 +6,7 @@
 
 package text
 
+// DescKeys for parsing errors.
 const (
 	DescKeyErrParserFileError = "err.parser.file-error"
 	DescKeyErrParserNoMatch   = "err.parser.no-match"

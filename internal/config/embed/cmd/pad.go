@@ -6,6 +6,7 @@
 
 package cmd
 
+// Use strings for pad subcommands.
 const (
 	UsePadAdd     = "add TEXT"
 	UsePadEdit    = "edit N [TEXT]"
@@ -18,6 +19,7 @@ const (
 	UsePadShow    = "show N"
 )
 
+// DescKeys for pad subcommands.
 const (
 	DescKeyPad        = "pad"
 	DescKeyPadAdd     = "pad.add"

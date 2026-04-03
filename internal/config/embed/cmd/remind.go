@@ -6,6 +6,7 @@
 
 package cmd
 
+// Use strings for remind subcommands.
 const (
 	UseRemindAdd          = "add TEXT"
 	UseRemindDismiss      = "dismiss [ID]"
@@ -14,6 +15,7 @@ const (
 	UseRemindListAlias    = "ls"
 )
 
+// DescKeys for remind subcommands.
 const (
 	DescKeyRemind        = "remind"
 	DescKeyRemindAdd     = "remind.add"

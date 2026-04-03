@@ -6,12 +6,14 @@
 
 package text
 
+// DescKeys for memory diff and import.
 const (
 	DescKeyMemoryDiffOldFormat = "memory.diff-old-format"
 	DescKeyMemoryDiffNewFormat = "memory.diff-new-format"
 	DescKeyMemoryImportSource  = "memory.import-source"
 )
 
+// DescKeys for memory publish sections.
 const (
 	DescKeyMemoryPublishTitle = "memory.publish-title"
 	DescKeyMemoryPublishTasks = "memory.publish-tasks"
@@ -20,10 +22,12 @@ const (
 	DescKeyMemoryPublishLrn   = "memory.publish-learnings"
 )
 
+// DescKeys for memory import review.
 const (
 	DescKeyMemoryImportReview = "memory.import-review"
 )
 
+// DescKeys for memory operations write output.
 const (
 	DescKeyWriteMemoryArchives           = "write.memory-archives"
 	DescKeyWriteMemoryBridgeHeader       = "write.memory-bridge-header"

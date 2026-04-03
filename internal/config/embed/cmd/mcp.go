@@ -6,8 +6,10 @@
 
 package cmd
 
+// UseMcpServe is the cobra use string for the mcp serve command.
 const UseMcpServe = "serve"
 
+// DescKeys for MCP subcommands.
 const (
 	DescKeyMcp      = "mcp"
 	DescKeyMcpServe = "mcp.serve"

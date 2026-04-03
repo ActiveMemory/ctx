@@ -6,6 +6,7 @@
 
 package text
 
+// DescKeys for publish write output.
 const (
 	DescKeyWritePublishBlock       = "write.publish-block"
 	DescKeyWritePublishBudget      = "write.publish-budget"
@@ -20,6 +21,7 @@ const (
 	DescKeyWritePublishTotal       = "write.publish-total"
 )
 
+// DescKeys for unpublish write output.
 const (
 	DescKeyWriteUnpublishDone     = "write.unpublish-done"
 	DescKeyWriteUnpublishNotFound = "write.unpublish-not-found"

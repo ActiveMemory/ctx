@@ -28,9 +28,12 @@ const CategoryCtxSpecific = "ctx-specific"
 // registryOnce, registryData, and registryErr cache the parsed hook
 // message registry loaded once via sync.Once.
 var (
+	// registryOnce guards one-time registry loading.
 	registryOnce sync.Once
+	// registryData holds the parsed hook message entries.
 	registryData []HookMessageInfo
-	registryErr  error
+	// registryErr stores any error from registry loading.
+	registryErr error
 )
 
 // Registry returns the list of all hook message entries parsed from

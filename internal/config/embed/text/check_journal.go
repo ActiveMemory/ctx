@@ -6,6 +6,7 @@
 
 package text
 
+// DescKeys for journal checks.
 const (
 	DescKeyCheckJournalBoxTitle           = "check-journal.box-title"
 	DescKeyCheckJournalFallbackBoth       = "check-journal.fallback-both"

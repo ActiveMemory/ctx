@@ -6,6 +6,7 @@
 
 package prompt
 
+// MCP prompt name constants.
 const (
 	// SessionStart is the MCP prompt name for session initialization.
 	SessionStart = "ctx-session-start"

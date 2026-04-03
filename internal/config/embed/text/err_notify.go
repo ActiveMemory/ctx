@@ -6,6 +6,7 @@
 
 package text
 
+// DescKeys for notifications errors.
 const (
 	DescKeyErrNotifyLoadWebhook      = "err.notify.load-webhook"
 	DescKeyErrNotifyMarshalPayload   = "err.notify.marshal-payload"

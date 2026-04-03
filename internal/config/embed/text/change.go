@@ -6,11 +6,13 @@
 
 package text
 
+// DescKeys for change tracking labels.
 const (
 	DescKeyChangesFallbackLabel = "changes.fallback-label"
 	DescKeyChangesSincePrefix   = "changes.since-prefix"
 )
 
+// DescKeys for change tracking headings and output.
 const (
 	DescKeyChangesHeading          = "changes.heading"
 	DescKeyChangesRefPoint         = "changes.ref-point"

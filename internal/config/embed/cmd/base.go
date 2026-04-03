@@ -39,6 +39,7 @@ const (
 	UseWhy        = "why [DOCUMENT]"
 )
 
+// DescKeys for base commands.
 const (
 	DescKeyAdd        = "add"
 	DescKeyAgent      = "agent"

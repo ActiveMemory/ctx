@@ -6,6 +6,7 @@
 
 package text
 
+// DescKeys for test write output.
 const (
 	DescKeyWriteTestFiltered  = "write.test-filtered"
 	DescKeyWriteTestNoWebhook = "write.test-no-webhook"

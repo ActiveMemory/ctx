@@ -8,6 +8,7 @@ package archive
 
 import "github.com/ActiveMemory/ctx/internal/config/file"
 
+// Archive template constants.
 const (
 	// TplFilename is the format for dated archive filenames.
 	// Args: prefix, date.

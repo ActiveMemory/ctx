@@ -6,6 +6,7 @@
 
 package token
 
+// Constants for Markdown heading tokens.
 const (
 	// HeadingLevelOneStart is the Markdown heading for the first section.
 	HeadingLevelOneStart = "# "

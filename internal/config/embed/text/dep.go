@@ -6,6 +6,7 @@
 
 package text
 
+// DescKeys for dependency tracking write output.
 const (
 	DescKeyWriteDepsLookingFor = "write.deps-looking-for"
 	DescKeyWriteDepsNoDeps     = "write.deps-no-deps"

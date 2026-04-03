@@ -6,6 +6,7 @@
 
 package session
 
+// Session filename constants.
 const (
 	// DefaultFilename is the fallback filename component when
 	// sanitization produces an empty string.

@@ -6,6 +6,7 @@
 
 package flag
 
+// DescKeys for memory command flags.
 const (
 	DescKeyMemoryImportDryRun  = "memory.import.dry-run"
 	DescKeyMemoryPublishBudget = "memory.publish.budget"

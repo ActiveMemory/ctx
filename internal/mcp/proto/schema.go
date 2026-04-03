@@ -66,11 +66,16 @@ type RPCError struct {
 
 // Standard JSON-RPC error codes.
 const (
-	ErrCodeParse      = -32700
+	// ErrCodeParse indicates malformed JSON was received.
+	ErrCodeParse = -32700
+	// ErrCodeInvalidReq indicates the request is not valid.
 	ErrCodeInvalidReq = -32600
-	ErrCodeNotFound   = -32601
+	// ErrCodeNotFound indicates the method was not found.
+	ErrCodeNotFound = -32601
+	// ErrCodeInvalidArg indicates invalid method parameters.
 	ErrCodeInvalidArg = -32602
-	ErrCodeInternal   = -32603
+	// ErrCodeInternal indicates an internal JSON-RPC error.
+	ErrCodeInternal = -32603
 )
 
 // ProtocolVersion is the MCP protocol version.
