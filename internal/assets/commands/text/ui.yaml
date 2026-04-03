@@ -348,8 +348,6 @@ memory.publish-title:
   short: |+
     # Project Context (managed by ctx)
 
-pad.key-created:
-  short: Scratchpad key created at %s
 prune.dry-run-line:
   short: '  would prune: %s (age: %s)'
 prune.dry-run-summary:
@@ -358,8 +356,6 @@ prune.error-line:
   short: '  error removing %s: %v'
 prune.summary:
   short: Pruned %d files (skipped %d recent, preserved %d global)
-rc.parse_warning:
-  short: 'ctx: warning: failed to parse %s: %v (using defaults)'
 stats.empty:
   short: No stats recorded yet.
 stats.header-format:
@@ -457,38 +453,22 @@ task-snapshot.saved:
   short: ✓ Snapshot saved to %s
 time.ago:
   short: ' ago'
-time.commit:
-  short: commit
 time.commit-count:
   short: 1 commit
-time.commits:
-  short: commits
 time.commits-count:
   short: '%d commits'
-time.day:
-  short: day
 time.day-count:
   short: 1 day
-time.days:
-  short: days
 time.days-count:
   short: '%d days'
-time.hour:
-  short: hour
 time.hour-count:
   short: 1 hour
-time.hours:
-  short: hours
 time.hours-count:
   short: '%d hours'
 time.just-now:
   short: just now
-time.minute:
-  short: minute
 time.minute-count:
   short: 1 minute
-time.minutes:
-  short: minutes
 time.minutes-count:
   short: '%d minutes'
 watch.apply-failed:

@@ -179,8 +179,6 @@ write.init-backup:
   short: '  ✓ %s (backup)'
 write.init-created-dir:
   short: '  ✓ %s/'
-write.init-created-with:
-  short: '  ✓ %s%s'
 write.init-creating-root-files:
   short: Creating project root files...
 write.init-ctx-content-exists:
@@ -718,15 +716,10 @@ write.journal-source-detail-int:
   short: '%s %d'
 write.journal-source-section-heading:
   short: '%s %s'
-write.journal-source-bullet-item:
-  short: '- %s'
 write.unpublish-not-found:
   short: No published block found in %s.
 write.wikilink-list-item:
   short: "- %s%s"
-
-write.notify-close-response:
-  short: "ctx: close response body: %v"
 
 write.context-dir-label:
   short: "Context: %s"
