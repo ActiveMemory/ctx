@@ -18,26 +18,26 @@ import (
 // Mkdir wraps a directory creation failure.
 //
 // Parameters:
-//   - desc: human description of the directory (e.g. "journal directory").
+//   - key: human description of the directory (e.g. "journal directory").
 //   - cause: the underlying OS error.
 //
 // Returns:
-//   - error: "failed to create <desc>: <cause>"
-func Mkdir(desc string, cause error) error {
-	return fmt.Errorf(lookup.TextDesc(text.DescKeyErrFsMkdir), desc, cause)
+//   - error: "failed to create <key>: <cause>"
+func Mkdir(key string, cause error) error {
+	return fmt.Errorf(lookup.TextDesc(text.DescKeyErrFsMkdir), key, cause)
 }
 
 // ReadDir wraps a directory read failure.
 //
 // Parameters:
-//   - desc: human description of the directory (e.g. "journal directory").
+//   - key: human description of the directory (e.g. "journal directory").
 //   - cause: the underlying OS error.
 //
 // Returns:
-//   - error: "read <desc>: <cause>"
-func ReadDir(desc string, cause error) error {
+//   - error: "read <key>: <cause>"
+func ReadDir(key string, cause error) error {
 	return fmt.Errorf(
-		lookup.TextDesc(text.DescKeyErrFsReadDir), desc, cause,
+		lookup.TextDesc(text.DescKeyErrFsReadDir), key, cause,
 	)
 }
 

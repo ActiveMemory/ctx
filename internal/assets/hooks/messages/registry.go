@@ -75,14 +75,14 @@ func RegistryError() error {
 // or nil if not found.
 //
 // Parameters:
-//   - hook: Hook directory name (e.g., "qa-reminder")
+//   - hookName: Hook directory name (e.g., "qa-reminder")
 //   - variant: Template file stem (e.g., "gate")
 //
 // Returns:
 //   - *HookMessageInfo: The matching entry, or nil
-func Lookup(hook, variant string) *HookMessageInfo {
+func Lookup(hookName, variant string) *HookMessageInfo {
 	for _, info := range Registry() {
-		if info.Hook == hook && info.Variant == variant {
+		if info.Hook == hookName && info.Variant == variant {
 			return &info
 		}
 	}
@@ -108,14 +108,14 @@ func Hooks() []string {
 // Variants returns the variant names for a given hook.
 //
 // Parameters:
-//   - hook: Hook directory name
+//   - hookName: Hook directory name
 //
 // Returns:
-//   - []string: Variant names for the hook, or nil if hook not found
-func Variants(hook string) []string {
+//   - []string: Variant names for the hook, or nil if not found
+func Variants(hookName string) []string {
 	var variants []string
 	for _, info := range Registry() {
-		if info.Hook == hook {
+		if info.Hook == hookName {
 			variants = append(variants, info.Variant)
 		}
 	}

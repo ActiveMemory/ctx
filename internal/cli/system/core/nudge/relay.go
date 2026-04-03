@@ -22,12 +22,12 @@ import (
 // hooks after emitting output.
 //
 // Parameters:
-//   - message: human-readable event description
+//   - msg: human-readable event description
 //   - sessionID: current session identifier
 //   - ref: template reference for filtering/aggregation (may be nil)
-func Relay(message, sessionID string, ref *notify.TemplateRef) {
-	_ = notify.Send(hook.NotifyChannelRelay, message, sessionID, ref)
-	event.Append(hook.NotifyChannelRelay, message, sessionID, ref)
+func Relay(msg, sessionID string, ref *notify.TemplateRef) {
+	_ = notify.Send(hook.NotifyChannelRelay, msg, sessionID, ref)
+	event.Append(hook.NotifyChannelRelay, msg, sessionID, ref)
 }
 
 // EmitAndRelay sends both a nudge and a relay notification, then
@@ -35,12 +35,12 @@ func Relay(message, sessionID string, ref *notify.TemplateRef) {
 // emit both notification types with the same message.
 //
 // Parameters:
-//   - message: human-readable event description
+//   - msg: human-readable event description
 //   - sessionID: current session identifier
 //   - ref: template reference for filtering/aggregation (may be nil)
-func EmitAndRelay(message, sessionID string, ref *notify.TemplateRef) {
-	_ = notify.Send(hook.NotifyChannelNudge, message, sessionID, ref)
-	Relay(message, sessionID, ref)
+func EmitAndRelay(msg, sessionID string, ref *notify.TemplateRef) {
+	_ = notify.Send(hook.NotifyChannelNudge, msg, sessionID, ref)
+	Relay(msg, sessionID, ref)
 }
 
 // LoadAndEmit loads a hook message template and, if non-empty, emits the

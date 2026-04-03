@@ -24,19 +24,19 @@ import (
 func Cmd() *cobra.Command {
 	short, long := desc.Command(cmd.DescKeySystemResume)
 
-	cmd := &cobra.Command{
+	c := &cobra.Command{
 		Use:    cmd.UseSystemResume,
 		Short:  short,
 		Long:   long,
 		Hidden: true,
-		RunE: func(cmd *cobra.Command, _ []string) error {
-			return Run(cmd, os.Stdin)
+		RunE: func(c *cobra.Command, _ []string) error {
+			return Run(c, os.Stdin)
 		},
 	}
 
-	cmd.Flags().String(cFlag.SessionID, "",
+	c.Flags().String(cFlag.SessionID, "",
 		desc.Flag(flag.DescKeySystemResumeSessionId),
 	)
 
-	return cmd
+	return c
 }

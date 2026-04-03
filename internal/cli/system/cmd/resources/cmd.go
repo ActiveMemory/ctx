@@ -22,16 +22,16 @@ import (
 func Cmd() *cobra.Command {
 	short, long := desc.Command(cmd.DescKeySystemResources)
 
-	cmd := &cobra.Command{
+	c := &cobra.Command{
 		Use:   cmd.UseSystemResources,
 		Short: short,
 		Long:  long,
-		RunE: func(cmd *cobra.Command, _ []string) error {
-			return Run(cmd)
+		RunE: func(c *cobra.Command, _ []string) error {
+			return Run(c)
 		},
 	}
-	cmd.Flags().Bool(cFlag.JSON, false,
+	c.Flags().Bool(cFlag.JSON, false,
 		desc.Flag(flag.DescKeySystemResourcesJson),
 	)
-	return cmd
+	return c
 }

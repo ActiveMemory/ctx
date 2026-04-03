@@ -36,10 +36,10 @@ func findSessionsWithFilter(
 	scannedDirs := make(map[string]bool)
 
 	// scanOnce scans a directory only if it hasn't been scanned yet.
-	scanOnce := func(dir string) {
-		resolved, symlinkErr := filepath.EvalSymlinks(dir)
+	scanOnce := func(dirPath string) {
+		resolved, symlinkErr := filepath.EvalSymlinks(dirPath)
 		if symlinkErr != nil {
-			resolved = filepath.Clean(dir)
+			resolved = filepath.Clean(dirPath)
 		}
 		if scannedDirs[resolved] {
 			return
@@ -58,13 +58,13 @@ func findSessionsWithFilter(
 	}
 
 	// Check Copilot Chat session directories (Code + Code Insiders)
-	for _, dir := range CopilotSessionDirs() {
-		scanOnce(dir)
+	for _, sessionDir := range CopilotSessionDirs() {
+		scanOnce(sessionDir)
 	}
 
 	// Check Copilot CLI session directories (~/.copilot/ or $COPILOT_HOME)
-	for _, dir := range CopilotCLISessionDirs() {
-		scanOnce(dir)
+	for _, sessionDir := range CopilotCLISessionDirs() {
+		scanOnce(sessionDir)
 	}
 
 	// Check .context/sessions/ in the current working directory
@@ -73,8 +73,8 @@ func findSessionsWithFilter(
 	}
 
 	// Check additional directories
-	for _, dir := range additionalDirs {
-		scanOnce(dir)
+	for _, sessionDir := range additionalDirs {
+		scanOnce(sessionDir)
 	}
 
 	// Apply filter if provided

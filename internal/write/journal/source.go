@@ -420,12 +420,12 @@ func ConversationTurn(cmd *cobra.Command, index int, role, timestamp string) {
 //
 // Parameters:
 //   - cmd: Cobra command for output. Nil is a no-op.
-//   - text: the text content to print.
-func TextBlock(cmd *cobra.Command, text string) {
+//   - body: the text content to print.
+func TextBlock(cmd *cobra.Command, body string) {
 	if cmd == nil {
 		return
 	}
-	_, _ = fmt.Fprintln(cmd.OutOrStdout(), text)
+	_, _ = fmt.Fprintln(cmd.OutOrStdout(), body)
 	_, _ = fmt.Fprintln(cmd.OutOrStdout())
 }
 
@@ -491,12 +491,12 @@ func MoreTurns(cmd *cobra.Command, remaining int) {
 //
 // Parameters:
 //   - cmd: Cobra command for output. Nil is a no-op.
-//   - text: the hint text.
-func Hint(cmd *cobra.Command, text string) {
+//   - body: the hint text.
+func Hint(cmd *cobra.Command, body string) {
 	if cmd == nil {
 		return
 	}
-	cmd.Println(text)
+	cmd.Println(body)
 }
 
 // LockUnlockNone prints the message when no journal entries

@@ -108,12 +108,12 @@ func WrapFileList(files []string, maxWidth int, indent string) string {
 // are skipped.
 //
 // Parameters:
-//   - text: multiline string with "1. ...\n2. ..." formatting
+//   - body: multiline string with "1. ...\n2. ..." formatting
 //
 // Returns:
 //   - []string: list of items with number prefixes removed
-func ParseNumberedLines(text string) []string {
-	lines := strings.Split(text, token.NewlineLF)
+func ParseNumberedLines(body string) []string {
+	lines := strings.Split(body, token.NewlineLF)
 	items := make([]string, 0, len(lines))
 	for _, line := range lines {
 		line = strings.TrimSpace(line)

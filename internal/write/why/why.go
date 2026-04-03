@@ -69,10 +69,10 @@ func Separator(cmd *cobra.Command) {
 //
 // Parameters:
 //   - cmd: Cobra command for output. Nil is a no-op.
-//   - text: Pre-processed document text.
-func Content(cmd *cobra.Command, text string) {
+//   - body: Pre-processed document text.
+func Content(cmd *cobra.Command, body string) {
 	if cmd == nil {
 		return
 	}
-	cmd.Print(text)
+	cmd.Print(body)
 }

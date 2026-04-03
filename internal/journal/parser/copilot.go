@@ -69,13 +69,13 @@ func (p *Copilot) Matches(path string) bool {
 		return false
 	}
 
-	file, openErr := io.SafeOpenUserFile(path)
+	f, openErr := io.SafeOpenUserFile(path)
 	if openErr != nil {
 		return false
 	}
-	defer func() { _ = file.Close() }()
+	defer func() { _ = f.Close() }()
 
-	scanner := bufio.NewScanner(file)
+	scanner := bufio.NewScanner(f)
 	buf := make([]byte, 0, cfgCopilot.ScanBufInit)
 	scanner.Buffer(buf, cfgCopilot.ScanBufMatchMax)
 
@@ -117,13 +117,13 @@ func (p *Copilot) Matches(path string) bool {
 //   - []*entity.Session: the parsed sessions (at most one for Copilot)
 //   - error: any error encountered during parsing
 func (p *Copilot) ParseFile(path string) ([]*entity.Session, error) {
-	file, openErr := io.SafeOpenUserFile(path)
+	f, openErr := io.SafeOpenUserFile(path)
 	if openErr != nil {
 		return nil, errParser.OpenFile(openErr)
 	}
-	defer func() { _ = file.Close() }()
+	defer func() { _ = f.Close() }()
 
-	scanner := bufio.NewScanner(file)
+	scanner := bufio.NewScanner(f)
 	buf := make([]byte, 0, cfgCopilot.ScanBufInit)
 	scanner.Buffer(buf, cfgCopilot.ScanBufMax)
 

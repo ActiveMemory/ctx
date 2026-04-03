@@ -362,11 +362,11 @@ func AllowOutsideCwd() bool {
 // This takes precedence over all other configuration sources.
 //
 // Parameters:
-//   - dir: Directory path to use as an override
-func OverrideContextDir(dir string) {
+//   - ctxDir: Directory path to use as an override
+func OverrideContextDir(ctxDir string) {
 	rcMu.Lock()
 	defer rcMu.Unlock()
-	rcOverrideDir = dir
+	rcOverrideDir = ctxDir
 }
 
 // Reset clears the cached configuration, forcing reload on the next access.
