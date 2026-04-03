@@ -51,6 +51,14 @@ const (
 	SemicolonSpace = "; "
 	// Underscore is the underscore character used as a word separator.
 	Underscore = "_"
+	// Slash is the forward slash character.
+	Slash = "/"
+	// Dot is the period character.
+	Dot = "."
+	// Plus is the plus sign character.
+	Plus = "+"
+	// Hash is the hash/pound character.
+	Hash = "#"
 )
 
 // TopicSeparators are the delimiters between a date and topic in session

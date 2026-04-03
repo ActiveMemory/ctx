@@ -13,6 +13,7 @@ import (
 	"strings"
 
 	cfgDep "github.com/ActiveMemory/ctx/internal/config/dep"
+	"github.com/ActiveMemory/ctx/internal/config/token"
 	execDep "github.com/ActiveMemory/ctx/internal/exec/dep"
 )
 
@@ -97,10 +98,10 @@ func ListGoPackages() ([]GoPackage, error) {
 //   - bool: True if the path is a stdlib package
 func IsStdlib(path string) bool {
 	first := path
-	if i := strings.Index(path, "/"); i >= 0 {
+	if i := strings.Index(path, token.Slash); i >= 0 {
 		first = path[:i]
 	}
-	return !strings.Contains(first, ".")
+	return !strings.Contains(first, token.Dot)
 }
 
 // ShortPkgName strips the module prefix for readability.
@@ -112,7 +113,7 @@ func IsStdlib(path string) bool {
 // Returns:
 //   - string: Shortened path, or original if prefix doesn't match
 func ShortPkgName(importPath, modPath string) string {
-	if modPath != "" && strings.HasPrefix(importPath, modPath+"/") {
+	if modPath != "" && strings.HasPrefix(importPath, modPath+token.Slash) {
 		return importPath[len(modPath)+1:]
 	}
 	return importPath

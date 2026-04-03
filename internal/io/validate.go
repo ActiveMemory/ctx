@@ -12,6 +12,7 @@ import (
 	"strings"
 
 	cfgHTTP "github.com/ActiveMemory/ctx/internal/config/http"
+	"github.com/ActiveMemory/ctx/internal/config/token"
 	errFs "github.com/ActiveMemory/ctx/internal/err/fs"
 	errHTTP "github.com/ActiveMemory/ctx/internal/err/http"
 )
@@ -25,7 +26,7 @@ import (
 // Returns:
 //   - error: Non-nil if the path is root or under a dangerous prefix
 func rejectDangerousPath(absPath string) error {
-	if absPath == "/" {
+	if absPath == token.Slash {
 		return errFs.RefuseSystemPathRoot()
 	}
 	for _, prefix := range dangerousPrefixes {

@@ -35,7 +35,7 @@ import (
 //   - minor: minor version number
 //   - ok: true if parsing succeeded
 func ParseMajorMinor(ver string) (major, minor int, ok bool) {
-	parts := strings.SplitN(ver, ".", 3)
+	parts := strings.SplitN(ver, token.Dot, 3)
 	if len(parts) < 2 {
 		return 0, 0, false
 	}

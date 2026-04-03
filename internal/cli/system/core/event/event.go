@@ -16,6 +16,7 @@ import (
 	"github.com/ActiveMemory/ctx/internal/config/embed/text"
 	"github.com/ActiveMemory/ctx/internal/config/event"
 	cfgTime "github.com/ActiveMemory/ctx/internal/config/time"
+	"github.com/ActiveMemory/ctx/internal/config/token"
 	"github.com/ActiveMemory/ctx/internal/notify"
 )
 
@@ -49,7 +50,7 @@ func ExtractHookName(e notify.Payload) string {
 		return e.Detail.Hook
 	}
 	// Fall back to extracting from message prefix (e.g., "qa-reminder: ...")
-	if idx := strings.Index(e.Message, ":"); idx > 0 {
+	if idx := strings.Index(e.Message, token.Colon); idx > 0 {
 		return e.Message[:idx]
 	}
 	return event.HookFallback

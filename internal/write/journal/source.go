@@ -380,7 +380,7 @@ func SectionHeader(cmd *cobra.Command, level int, title string) {
 	if cmd == nil {
 		return
 	}
-	prefix := strings.Repeat("#", level)
+	prefix := strings.Repeat(token.Hash, level)
 	_, _ = fmt.Fprintf(cmd.OutOrStdout(),
 		desc.Text(text.DescKeyWriteJournalSourceSectionHeading)+
 			token.NewlineLF,

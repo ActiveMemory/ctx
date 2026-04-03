@@ -10,6 +10,7 @@ import (
 	"strings"
 
 	"github.com/ActiveMemory/ctx/internal/config/journal"
+	"github.com/ActiveMemory/ctx/internal/config/marker"
 	"github.com/ActiveMemory/ctx/internal/config/token"
 )
 
@@ -45,7 +46,7 @@ func Content(content string) string {
 
 		// Wrap long lines (skip tables)
 		if len(line) > journal.LineWrapWidth &&
-			!strings.HasPrefix(strings.TrimSpace(line), "|") {
+			!strings.HasPrefix(strings.TrimSpace(line), marker.TablePipe) {
 			out = append(out, Soft(line, journal.LineWrapWidth)...)
 		} else {
 			out = append(out, line)

@@ -62,7 +62,7 @@ func simpleDiff(oldPath, newPath string, oldLines, newLines []string) string {
 	}
 	for _, l := range newLines {
 		if !oldSet[l] {
-			buf.WriteString("+" + l + token.NewlineLF)
+			buf.WriteString(token.Plus + l + token.NewlineLF)
 		}
 	}
 

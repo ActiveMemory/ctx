@@ -46,9 +46,9 @@ func Size(bytes int64) string {
 // Returns:
 //   - string: Safe slug (e.g., "internal_config_x_go")
 func KeyFileSlug(path string) string {
-	slug := strings.ReplaceAll(path, "/", "_")
-	slug = strings.ReplaceAll(slug, ".", "_")
-	slug = strings.ReplaceAll(slug, "*", token.GlobReplace)
+	slug := strings.ReplaceAll(path, token.Slash, token.Underscore)
+	slug = strings.ReplaceAll(slug, token.Dot, token.Underscore)
+	slug = strings.ReplaceAll(slug, token.GlobStar, token.GlobReplace)
 	return slug
 }
 

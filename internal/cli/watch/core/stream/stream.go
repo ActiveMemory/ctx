@@ -18,6 +18,7 @@ import (
 	"github.com/ActiveMemory/ctx/internal/config/cli"
 	"github.com/ActiveMemory/ctx/internal/config/marker"
 	"github.com/ActiveMemory/ctx/internal/config/regex"
+	"github.com/ActiveMemory/ctx/internal/config/token"
 	"github.com/ActiveMemory/ctx/internal/config/watch"
 	errFs "github.com/ActiveMemory/ctx/internal/err/fs"
 	writeWatch "github.com/ActiveMemory/ctx/internal/write/watch"
@@ -40,7 +41,7 @@ func ExtractAttribute(tag, attrName string) string {
 		return ""
 	}
 	start := idx + len(prefix)
-	end := strings.Index(tag[start:], `"`)
+	end := strings.Index(tag[start:], token.DoubleQuote)
 	if end == -1 {
 		return ""
 	}

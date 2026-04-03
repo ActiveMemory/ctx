@@ -18,6 +18,7 @@ import (
 	"github.com/ActiveMemory/ctx/internal/config/embed/text"
 	"github.com/ActiveMemory/ctx/internal/config/file"
 	"github.com/ActiveMemory/ctx/internal/config/journal"
+	"github.com/ActiveMemory/ctx/internal/config/marker"
 	"github.com/ActiveMemory/ctx/internal/config/regex"
 	"github.com/ActiveMemory/ctx/internal/config/token"
 	"github.com/ActiveMemory/ctx/internal/entity"
@@ -177,8 +178,10 @@ func JournalEntry(path, filename string) entity.JournalEntry {
 	// become HTML entities; backticks and # are stripped (they add no
 	// meaning inside [...] link labels).
 	entry.Title = strings.NewReplacer(
-		"<", "&lt;", ">", "&gt;",
-		token.Backtick, "", "#", "",
+		marker.AngleLT, marker.EntityLT,
+		marker.AngleGT, marker.EntityGT,
+		token.Backtick, "",
+		token.Hash, "",
 	).Replace(entry.Title)
 	entry.Title = strings.TrimSpace(entry.Title)
 

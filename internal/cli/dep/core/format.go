@@ -26,7 +26,9 @@ import (
 //   - string: Safe Mermaid node identifier
 func MermaidID(pkg string) string {
 	r := strings.NewReplacer(
-		"/", "_", ".", "_", token.Dash, "_",
+		token.Slash, token.Underscore,
+		token.Dot, token.Underscore,
+		token.Dash, token.Underscore,
 	)
 	return r.Replace(pkg)
 }

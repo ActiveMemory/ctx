@@ -13,6 +13,7 @@ import (
 	"github.com/ActiveMemory/ctx/internal/config/embed/cmd"
 	"github.com/ActiveMemory/ctx/internal/config/embed/flag"
 	cFlag "github.com/ActiveMemory/ctx/internal/config/flag"
+	"github.com/ActiveMemory/ctx/internal/config/token"
 )
 
 // Cmd returns the pad export subcommand.
@@ -29,7 +30,7 @@ func Cmd() *cobra.Command {
 		Long:  long,
 		Args:  cobra.MaximumNArgs(1),
 		RunE: func(cmd *cobra.Command, args []string) error {
-			dir := "."
+			dir := token.Dot
 			if len(args) > 0 {
 				dir = args[0]
 			}

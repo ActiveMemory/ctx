@@ -142,7 +142,7 @@ func Content(content string, fencesVerified bool) string {
 			inner := m[1 : len(m)-1] // strip backticks
 			inner = strings.ReplaceAll(inner, marker.AngleLT, marker.EntityLT)
 			inner = strings.ReplaceAll(inner, marker.AngleGT, marker.EntityGT)
-			return `"` + inner + `"`
+			return token.DoubleQuote + inner + token.DoubleQuote
 		}
 		line = regex.InlineCodeAngle.ReplaceAllStringFunc(
 			line, replacer,

@@ -72,7 +72,7 @@ func checkPathReferences(ctx *entity.Context, report *Report) {
 				// into actual directories (internal/, cmd/, docs/).
 				// Forward slash is intentional: paths are extracted from
 				// Markdown content, which always uses "/" regardless of OS.
-				topDir := strings.SplitN(path, "/", 2)[0]
+				topDir := strings.SplitN(path, token.Slash, 2)[0]
 				if _, dirErr := os.Stat(topDir); os.IsNotExist(dirErr) {
 					continue
 				}

@@ -38,7 +38,7 @@ import (
 // Returns:
 //   - string: file path with line range stripped
 func ParsePathArg(arg string) string {
-	idx := strings.LastIndex(arg, ":")
+	idx := strings.LastIndex(arg, token.Colon)
 	if idx < 0 {
 		return arg
 	}
