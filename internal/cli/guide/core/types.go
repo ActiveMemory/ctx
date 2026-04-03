@@ -4,9 +4,11 @@
 //   \    Copyright 2026-present Context contributors.
 //                 SPDX-License-Identifier: Apache-2.0
 
-// Package root implements the ctx loop command.
-//
-// Key exports: [Cmd], [Run].
-// Follows the cmd/root + core taxonomy.
-// Registered by the cmd parent command.
-package root
+package core
+
+// SkillMeta holds the frontmatter fields extracted from a
+// SKILL.md file.
+type SkillMeta struct {
+	Name        string `yaml:"name"`
+	Description string `yaml:"description"`
+}

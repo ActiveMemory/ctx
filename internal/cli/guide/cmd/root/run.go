@@ -9,10 +9,12 @@ package root
 import (
 	"github.com/spf13/cobra"
 
+	"github.com/ActiveMemory/ctx/internal/cli/guide/core"
 	"github.com/ActiveMemory/ctx/internal/write/guide"
 )
 
-// Run dispatches to the appropriate guide output based on flags.
+// Run dispatches to the appropriate guide output based on
+// flags.
 //
 // Parameters:
 //   - cmd: Cobra command for output stream and root traversal
@@ -21,12 +23,14 @@ import (
 //
 // Returns:
 //   - error: Non-nil if skill listing fails
-func Run(cmd *cobra.Command, showSkills, showCommands bool) error {
+func Run(
+	cmd *cobra.Command, showSkills, showCommands bool,
+) error {
 	switch {
 	case showSkills:
-		return listSkills(cmd)
+		return core.ListSkills(cmd)
 	case showCommands:
-		return listCommands(cmd)
+		return core.ListCommands(cmd)
 	default:
 		guide.Default(cmd)
 		return nil

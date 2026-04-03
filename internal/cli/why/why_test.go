@@ -11,7 +11,7 @@ import (
 	"strings"
 	"testing"
 
-	whyRoot "github.com/ActiveMemory/ctx/internal/cli/why/cmd/root"
+	whyCore "github.com/ActiveMemory/ctx/internal/cli/why/core"
 	"github.com/spf13/cobra"
 )
 
@@ -27,7 +27,7 @@ func newTestCmd() (*cobra.Command, *bytes.Buffer) {
 func TestShowDoc_Manifesto(t *testing.T) {
 	cmd, buf := newTestCmd()
 
-	showErr := whyRoot.ShowDoc(cmd, "manifesto")
+	showErr := whyCore.ShowDoc(cmd, "manifesto")
 	if showErr != nil {
 		t.Fatalf("ShowDoc(manifesto) error = %v", showErr)
 	}
@@ -44,7 +44,7 @@ func TestShowDoc_Manifesto(t *testing.T) {
 func TestShowDoc_UnknownAlias(t *testing.T) {
 	cmd, _ := newTestCmd()
 
-	showErr := whyRoot.ShowDoc(cmd, "nonexistent")
+	showErr := whyCore.ShowDoc(cmd, "nonexistent")
 	if showErr == nil {
 		t.Fatal("expected error for unknown document alias")
 	}
@@ -106,7 +106,7 @@ func TestExtractAdmonitionTitle(t *testing.T) {
 
 	for _, tc := range tests {
 		t.Run(tc.name, func(t *testing.T) {
-			got := whyRoot.ExtractAdmonitionTitle(tc.input)
+			got := whyCore.ExtractAdmonitionTitle(tc.input)
 			if got != tc.want {
 				t.Errorf("ExtractAdmonitionTitle(%q) = %q, want %q", tc.input, got, tc.want)
 			}
@@ -139,7 +139,7 @@ func TestExtractTabTitle(t *testing.T) {
 
 	for _, tc := range tests {
 		t.Run(tc.name, func(t *testing.T) {
-			got := whyRoot.ExtractTabTitle(tc.input)
+			got := whyCore.ExtractTabTitle(tc.input)
 			if got != tc.want {
 				t.Errorf("ExtractTabTitle(%q) = %q, want %q", tc.input, got, tc.want)
 			}

@@ -4,7 +4,7 @@
 //   \    Copyright 2026-present Context contributors.
 //                 SPDX-License-Identifier: Apache-2.0
 
-package root
+package core
 
 import (
 	"bufio"
@@ -20,14 +20,15 @@ import (
 	"github.com/ActiveMemory/ctx/internal/write/why"
 )
 
-// showMenu presents a numbered menu and reads user selection from stdin.
+// ShowMenu presents a numbered menu and reads user selection
+// from stdin.
 //
 // Parameters:
 //   - cmd: Cobra command for output and context
 //
 // Returns:
 //   - error: Non-nil on read failure or invalid selection
-func showMenu(cmd *cobra.Command) error {
+func ShowMenu(cmd *cobra.Command) error {
 	why.Banner(cmd)
 	why.Separator(cmd)
 	for i, doc := range DocOrder {
@@ -43,8 +44,11 @@ func showMenu(cmd *cobra.Command) error {
 
 	input = strings.TrimSpace(input)
 	choice, parseErr := strconv.Atoi(input)
-	if parseErr != nil || choice < 1 || choice > len(DocOrder) {
-		return errCli.InvalidSelection(input, len(DocOrder))
+	if parseErr != nil ||
+		choice < 1 || choice > len(DocOrder) {
+		return errCli.InvalidSelection(
+			input, len(DocOrder),
+		)
 	}
 
 	why.Separator(cmd)

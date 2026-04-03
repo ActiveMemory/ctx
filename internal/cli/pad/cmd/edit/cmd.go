@@ -12,6 +12,7 @@ import (
 	"github.com/spf13/cobra"
 
 	"github.com/ActiveMemory/ctx/internal/assets/read/desc"
+	coreEdit "github.com/ActiveMemory/ctx/internal/cli/pad/core/edit"
 	"github.com/ActiveMemory/ctx/internal/config/embed/cmd"
 	"github.com/ActiveMemory/ctx/internal/config/embed/flag"
 	cFlag "github.com/ActiveMemory/ctx/internal/config/flag"
@@ -28,9 +29,10 @@ import (
 //   - Blob file: ctx pad edit N --file ./v2.md
 //   - Blob label: ctx pad edit N --label "new label"
 //
-// The --append and --prepend flags are mutually exclusive with each other
-// and with the positional replacement text argument.
-// The --file and --label flags conflict with positional/--append/--prepend.
+// The --append and --prepend flags are mutually exclusive
+// with each other and with the positional replacement text.
+// The --file and --label flags conflict with
+// positional/--append/--prepend.
 //
 // Returns:
 //   - *cobra.Command: Configured edit subcommand
@@ -46,7 +48,9 @@ func Cmd() *cobra.Command {
 		Short: short,
 		Long:  long,
 		Args:  cobra.RangeArgs(1, 2),
-		RunE: func(cmd *cobra.Command, args []string) error {
+		RunE: func(
+			cmd *cobra.Command, args []string,
+		) error {
 			n, err := strconv.Atoi(args[0])
 			if err != nil {
 				return errPad.InvalidIndex(args[0])
@@ -58,22 +62,23 @@ func Cmd() *cobra.Command {
 			hasFile := filePath != ""
 			hasLabel := labelText != ""
 
-			// --file/--label conflict with positional/--append/--prepend.
-			if (hasFile || hasLabel) && (hasPositional || hasAppend || hasPrepend) {
+			// --file/--label conflict with text modes.
+			if (hasFile || hasLabel) &&
+				(hasPositional || hasAppend || hasPrepend) {
 				return errPad.EditBlobTextConflict()
 			}
 
 			// Blob edit mode.
 			if hasFile || hasLabel {
-				return Run(cmd, Opts{
+				return Run(cmd, coreEdit.Opts{
 					N:         n,
 					FilePath:  filePath,
 					LabelText: labelText,
-					Mode:      ModeBlob,
+					Mode:      coreEdit.ModeBlob,
 				})
 			}
 
-			// Validate mutual exclusivity of positional/--append/--prepend.
+			// Validate mutual exclusivity.
 			flagCount := 0
 			if hasPositional {
 				flagCount++
@@ -94,11 +99,23 @@ func Cmd() *cobra.Command {
 
 			switch {
 			case hasAppend:
-				return Run(cmd, Opts{N: n, Text: appendText, Mode: ModeAppend})
+				return Run(cmd, coreEdit.Opts{
+					N:    n,
+					Text: appendText,
+					Mode: coreEdit.ModeAppend,
+				})
 			case hasPrepend:
-				return Run(cmd, Opts{N: n, Text: prependText, Mode: ModePrepend})
+				return Run(cmd, coreEdit.Opts{
+					N:    n,
+					Text: prependText,
+					Mode: coreEdit.ModePrepend,
+				})
 			default:
-				return Run(cmd, Opts{N: n, Text: args[1], Mode: ModeReplace})
+				return Run(cmd, coreEdit.Opts{
+					N:    n,
+					Text: args[1],
+					Mode: coreEdit.ModeReplace,
+				})
 			}
 		},
 	}

@@ -29,17 +29,18 @@ import (
 	writeRecall "github.com/ActiveMemory/ctx/internal/write/journal"
 )
 
-// runList finds all sessions, applies optional filters, and displays them
-// in a formatted list with project, time, turn count, and preview.
+// RunList finds all sessions, applies optional filters, and
+// displays them in a formatted list with project, time, turn
+// count, and preview.
 //
 // Parameters:
 //   - cmd: Cobra command for output stream
-//   - opts: combined flags including limit, project, tool, since, until,
-//     and allProjects
+//   - opts: combined flags including limit, project, tool,
+//     since, until, and allProjects
 //
 // Returns:
-//   - error: non-nil if date parsing or session scanning fails
-func runList(cmd *cobra.Command, opts Opts) error {
+//   - error: non-nil if date parsing or scanning fails
+func RunList(cmd *cobra.Command, opts Opts) error {
 	// Parse date filters (only when flags are set).
 	var sinceTime, untilTime goTime.Time
 	if opts.Since != "" {
@@ -47,7 +48,8 @@ func runList(cmd *cobra.Command, opts Opts) error {
 		sinceTime, sinceErr = parse.Date(opts.Since)
 		if sinceErr != nil {
 			return date.Invalid(
-				flag.PrefixLong+flag.Since, opts.Since, sinceErr,
+				flag.PrefixLong+flag.Since,
+				opts.Since, sinceErr,
 			)
 		}
 	}
@@ -55,20 +57,25 @@ func runList(cmd *cobra.Command, opts Opts) error {
 		parsed, untilErr := parse.Date(opts.Until)
 		if untilErr != nil {
 			return date.Invalid(
-				flag.PrefixLong+flag.Until, opts.Until, untilErr,
+				flag.PrefixLong+flag.Until,
+				opts.Until, untilErr,
 			)
 		}
-		// --until is inclusive: advance to the end of the day
+		// --until is inclusive: advance to end of day
 		untilTime = parsed.Add(time.InclusiveUntilOffset)
 	}
 
-	sessions, scanErr := query.FindSessions(opts.AllProjects)
+	sessions, scanErr := query.FindSessions(
+		opts.AllProjects,
+	)
 	if scanErr != nil {
 		return errSession.Find(scanErr)
 	}
 
 	if len(sessions) == 0 {
-		writeRecall.NoSessionsWithHint(cmd, opts.AllProjects)
+		writeRecall.NoSessionsWithHint(
+			cmd, opts.AllProjects,
+		)
 		return nil
 	}
 
@@ -76,17 +83,20 @@ func runList(cmd *cobra.Command, opts Opts) error {
 	var filtered []*entity.Session
 	for _, s := range sessions {
 		if opts.Project != "" && !strings.Contains(
-			strings.ToLower(s.Project), strings.ToLower(opts.Project),
+			strings.ToLower(s.Project),
+			strings.ToLower(opts.Project),
 		) {
 			continue
 		}
 		if opts.Tool != "" && s.Tool != opts.Tool {
 			continue
 		}
-		if opts.Since != "" && s.StartTime.Before(sinceTime) {
+		if opts.Since != "" &&
+			s.StartTime.Before(sinceTime) {
 			continue
 		}
-		if opts.Until != "" && s.StartTime.After(untilTime) {
+		if opts.Until != "" &&
+			s.StartTime.After(untilTime) {
 			continue
 		}
 		filtered = append(filtered, s)
@@ -109,10 +119,13 @@ func runList(cmd *cobra.Command, opts Opts) error {
 	writeRecall.SessionListHeader(cmd, len(sessions), shown)
 
 	// Compute dynamic column widths from data.
-	slugW, projW := len(desc.Text(text.DescKeyLabelColSlug)),
-		len(desc.Text(text.DescKeyLabelColProject))
+	slugW, projW := len(
+		desc.Text(text.DescKeyLabelColSlug),
+	), len(desc.Text(text.DescKeyLabelColProject))
 	for _, s := range filtered {
-		slug := sharedFmt.Truncate(s.Slug, journal.SlugMaxLen)
+		slug := sharedFmt.Truncate(
+			s.Slug, journal.SlugMaxLen,
+		)
 		if len(slug) > slugW {
 			slugW = len(slug)
 		}
@@ -134,8 +147,12 @@ func runList(cmd *cobra.Command, opts Opts) error {
 
 	// Print sessions.
 	for _, s := range filtered {
-		slug := sharedFmt.Truncate(s.Slug, journal.SlugMaxLen)
-		dateStr := s.StartTime.Local().Format(time.DateTimeFmt)
+		slug := sharedFmt.Truncate(
+			s.Slug, journal.SlugMaxLen,
+		)
+		dateStr := s.StartTime.Local().Format(
+			time.DateTimeFmt,
+		)
 		dur := srcFmt.Duration(s.Duration)
 		turns := fmt.Sprintf("%d", s.TurnCount)
 		tokens := ""
@@ -143,10 +160,13 @@ func runList(cmd *cobra.Command, opts Opts) error {
 			tokens = sharedFmt.Tokens(s.TotalTokens)
 		}
 		writeRecall.SessionListRow(cmd, rowFmt,
-			slug, s.Project, dateStr, dur, turns, tokens)
+			slug, s.Project, dateStr, dur, turns, tokens,
+		)
 	}
 
-	writeRecall.SessionListFooter(cmd, len(sessions) > len(filtered))
+	writeRecall.SessionListFooter(
+		cmd, len(sessions) > len(filtered),
+	)
 
 	return nil
 }

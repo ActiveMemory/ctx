@@ -7,7 +7,6 @@
 package parser
 
 import (
-	"bufio"
 	"encoding/json"
 	"os"
 	"path/filepath"
@@ -47,21 +46,6 @@ func NewCopilot() *Copilot {
 //   - string: the Copilot tool identifier
 func (p *Copilot) Tool() string {
 	return session.ToolCopilot
-}
-
-// openScanner opens a JSONL file and returns a buffered
-// scanner. The caller must close the returned file.
-func openScanner(
-	path string, bufMax int,
-) (*os.File, *bufio.Scanner, error) {
-	f, openErr := io.SafeOpenUserFile(path)
-	if openErr != nil {
-		return nil, nil, openErr
-	}
-	scanner := bufio.NewScanner(f)
-	buf := make([]byte, 0, cfgCopilot.ScanBufInit)
-	scanner.Buffer(buf, bufMax)
-	return f, scanner, nil
 }
 
 // Matches returns true if the file appears to be a Copilot Chat session file.

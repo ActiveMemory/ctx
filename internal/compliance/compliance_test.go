@@ -1047,22 +1047,8 @@ func TestCmdDirPurity(t *testing.T) {
 	// Pre-existing violations grandfathered until refactored.
 	// Key: relative path from cli/, value: set of allowed names.
 	grandfathered := map[string]map[string]bool{
-		"guide/cmd/root/command.go":       {"listCommands": true},
-		"guide/cmd/root/skill.go":         {"parseSkillFrontmatter": true, "truncateDescription": true, "listSkills": true},
-		"guide/cmd/root/types.go":         {"skillMeta": true},
-		"journal/cmd/obsidian/run.go":     {"BuildVault": true},
-		"journal/cmd/source/list.go":      {"runList": true},
-		"journal/cmd/source/show.go":      {"runShow": true},
-		"journal/cmd/source/types.go":     {"Opts": true},
-		"loop/cmd/root/script.go":         {"GenerateLoopScript": true},
-		"pad/cmd/edit/types.go":           {"Mode": true, "Opts": true},
-		"pad/cmd/resolve/display.go":      {"displayAll": true},
-		"remind/cmd/dismiss/run.go":       {"one": true, "every": true},
-		"system/cmd/post_commit/score.go": {"scoreCommitViolations": true},
-		"why/cmd/root/data.go":            {"DocEntry": true},
-		"why/cmd/root/menu.go":            {"showMenu": true},
-		"why/cmd/root/run.go":             {"ShowDoc": true},
-		"why/cmd/root/strip.go":           {"StripMkDocs": true, "ExtractAdmonitionTitle": true, "ExtractTabTitle": true},
+		"journal/cmd/obsidian/run.go": {"BuildVault": true},
+		"remind/cmd/dismiss/run.go":   {"one": true, "every": true},
 	}
 
 	err := filepath.Walk(cliDir, func(path string, info os.FileInfo, walkErr error) error {

@@ -21,19 +21,11 @@ var allowedCmdFiles = map[string]bool{
 	"doc.go": true,
 }
 
-// cmdSubdirAllowlist lists known cmd/ subdirectories
-// that have extra files pending migration to core/.
-// Each entry should have a tracking task. Remove
-// entries as files are migrated.
+// cmdSubdirAllowlist lists cmd/ subdirectories with
+// stray files that cannot be moved to core/ due to
+// circular import constraints.
 var cmdSubdirAllowlist = map[string]bool{
-	"guide/cmd/root":         true,
-	"journal/cmd/source":     true,
-	"loop/cmd/root":          true,
-	"pad/cmd/edit":           true,
-	"pad/cmd/resolve":        true,
-	"system/cmd/message":     true,
-	"system/cmd/post_commit": true,
-	"why/cmd/root":           true,
+	"system/cmd/message": true,
 }
 
 // TestCLICmdStructure enforces the cmd/ directory

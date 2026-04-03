@@ -97,22 +97,6 @@ func (p *Poller) Stop() {
 	}
 }
 
-// poll checks subscribed resources for mtime changes on a fixed
-// interval.
-func (p *Poller) poll() {
-	ticker := time.NewTicker(defaultPollInterval)
-	defer ticker.Stop()
-
-	for {
-		select {
-		case <-p.pollStop:
-			return
-		case <-ticker.C:
-			p.CheckChanges()
-		}
-	}
-}
-
 // SetNotifyFunc replaces the notification callback. Intended for
 // tests that need to capture emitted notifications.
 //

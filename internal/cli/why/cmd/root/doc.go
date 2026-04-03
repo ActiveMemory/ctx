@@ -6,7 +6,7 @@
 
 // Package root implements the ctx why command.
 //
-// Key exports: [Cmd], [DocAliases], [DocOrder], [Run], [ShowDoc].
+// Key exports: [Cmd], [Run].
 // Follows the cmd/root + core taxonomy.
 // Registered by the cmd parent command.
 package root

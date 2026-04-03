@@ -4,7 +4,7 @@
 //   \    Copyright 2026-present Context contributors.
 //                 SPDX-License-Identifier: Apache-2.0
 
-package root
+package core
 
 import (
 	"github.com/ActiveMemory/ctx/internal/assets/read/desc"
@@ -29,9 +29,19 @@ type DocEntry struct {
 	Label string
 }
 
-// DocOrder defines the display order for the interactive menu.
+// DocOrder defines the display order for the interactive
+// menu.
 var DocOrder = []DocEntry{
-	{cfgWhy.DocManifesto, desc.Text(text.DescKeyWriteWhyLabelManifesto)},
-	{cfgWhy.DocAbout, desc.Text(text.DescKeyWriteWhyLabelAbout)},
-	{cfgWhy.DocInvariants, desc.Text(text.DescKeyWriteWhyLabelInvariants)},
+	{
+		cfgWhy.DocManifesto,
+		desc.Text(text.DescKeyWriteWhyLabelManifesto),
+	},
+	{
+		cfgWhy.DocAbout,
+		desc.Text(text.DescKeyWriteWhyLabelAbout),
+	},
+	{
+		cfgWhy.DocInvariants,
+		desc.Text(text.DescKeyWriteWhyLabelInvariants),
+	},
 }

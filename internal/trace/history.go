@@ -8,7 +8,6 @@ package trace
 
 import (
 	"path/filepath"
-	"strings"
 	"time"
 
 	cfgTrace "github.com/ActiveMemory/ctx/internal/config/trace"
@@ -72,13 +71,6 @@ func ReadHistoryForCommit(commitHash, traceDir string) (HistoryEntry, bool) {
 	}
 
 	return HistoryEntry{}, false
-}
-
-// matchesCommit checks whether stored and query commit hashes match.
-// Supports short hashes by checking whether either string is a prefix
-// of the other.
-func matchesCommit(stored, query string) bool {
-	return strings.HasPrefix(stored, query) || strings.HasPrefix(query, stored)
 }
 
 // WriteOverride appends an OverrideEntry to overrides.jsonl in traceDir.

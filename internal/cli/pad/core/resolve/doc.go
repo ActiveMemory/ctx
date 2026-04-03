@@ -4,10 +4,9 @@
 //   \    Copyright 2026-present Context contributors.
 //                 SPDX-License-Identifier: Apache-2.0
 
-package root
-
-// skillMeta holds the frontmatter fields extracted from a SKILL.md file.
-type skillMeta struct {
-	Name        string `yaml:"name"`
-	Description string `yaml:"description"`
-}
+// Package resolve provides scratchpad conflict resolution helpers.
+//
+// Key exports: [DisplayAll].
+// Shared helpers used by sibling cmd/ packages.
+// Used by core cmd/ packages.
+package resolve
