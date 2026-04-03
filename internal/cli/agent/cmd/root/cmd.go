@@ -12,6 +12,7 @@ import (
 	"github.com/spf13/cobra"
 
 	"github.com/ActiveMemory/ctx/internal/assets/read/desc"
+	coreSteering "github.com/ActiveMemory/ctx/internal/cli/agent/core/steering"
 	"github.com/ActiveMemory/ctx/internal/config/agent"
 	"github.com/ActiveMemory/ctx/internal/config/embed/cmd"
 	"github.com/ActiveMemory/ctx/internal/config/embed/flag"
@@ -25,22 +26,24 @@ import (
 //
 // The command reads context files from .context/ and outputs a concise packet
 // optimized for AI consumption, including constitution rules, active tasks,
-// conventions, and recent decisions.
+// conventions, recent decisions, steering files, and optional skill content.
 //
 // Flags:
 //   - --budget: Token budget for the context packet (default 8000)
 //   - --format: Output format, "md" for Markdown or "json" (default "md")
 //   - --cooldown: Suppress repeated output within this duration (default 10m)
 //   - --session: Session identifier for cooldown tombstone isolation
+//   - --skill: Include named skill content in context packet
 //
 // Returns:
 //   - *cobra.Command: Configured agent command with flags registered
 func Cmd() *cobra.Command {
 	var (
-		budget   int
-		format   string
-		cooldown time.Duration
-		session  string
+		budget    int
+		format    string
+		cooldown  time.Duration
+		session   string
+		skillName string
 	)
 
 	short, long := desc.Command(cmd.DescKeyAgent)
@@ -53,7 +56,24 @@ func Cmd() *cobra.Command {
 			if !cmd.Flags().Changed(cFlag.Budget) {
 				budget = rc.TokenBudget()
 			}
-			return Run(cmd, budget, format, cooldown, session)
+
+			// Tier 6: Load applicable steering files.
+			steeringBodies := coreSteering.LoadBodies()
+
+			// Tier 7: Load skill content if --skill is provided.
+			var skillBody string
+			if skillName != "" {
+				sk, loadErr := coreSteering.LoadSkill(skillName)
+				if loadErr != nil {
+					return loadErr
+				}
+				skillBody = sk
+			}
+
+			return Run(
+				cmd, budget, format, cooldown, session,
+				steeringBodies, skillBody,
+			)
 		},
 	}
 
@@ -75,6 +95,10 @@ func Cmd() *cobra.Command {
 	flagbind.StringFlag(
 		c, &session,
 		cFlag.Session, flag.DescKeyAgentSession,
+	)
+	flagbind.StringFlag(
+		c, &skillName,
+		cFlag.Skill, flag.DescKeyAgentSkill,
 	)
 
 	return c

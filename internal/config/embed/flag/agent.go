@@ -12,4 +12,5 @@ const (
 	DescKeyAgentCooldown = "agent.cooldown"
 	DescKeyAgentFormat   = "agent.format"
 	DescKeyAgentSession  = "agent.session"
+	DescKeyAgentSkill    = "agent.skill"
 )

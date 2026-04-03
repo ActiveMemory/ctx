@@ -30,4 +30,12 @@ const (
 	SessionEvent = "ctx_session_event"
 	// Remind is the MCP tool name for listing reminders.
 	Remind = "ctx_remind"
+	// SteeringGet is the MCP tool name for retrieving steering files.
+	SteeringGet = "ctx_steering_get"
+	// Search is the MCP tool name for searching context files.
+	Search = "ctx_search"
+	// SessionStart is the MCP tool name for session start hooks.
+	SessionStart = "ctx_session_start"
+	// SessionEnd is the MCP tool name for session end hooks.
+	SessionEnd = "ctx_session_end"
 )

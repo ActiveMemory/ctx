@@ -25,6 +25,7 @@ All commands support these flags:
 | `--version`            | Show version                                              |
 | `--context-dir <path>` | Override context directory (default: `.context/`)         |
 | `--allow-outside-cwd`  | Allow context directory outside current working directory |
+| `--tool <name>`        | Override active AI tool identifier (e.g. `kiro`, `cursor`) |
 
 **Initialization required.** Most commands require a `.context/` directory
 created by `ctx init`. Running a command without one produces:
@@ -75,6 +76,9 @@ own guards and no-op gracefully.
 | [`ctx trace`](trace.md#ctx-trace)             | Show context behind git commits                          |
 | [`ctx doctor`](doctor.md#ctx-doctor)          | Structural health check (hooks, drift, config)           |
 | [`ctx mcp`](mcp.md#ctx-mcp)                   | MCP server for AI tool integration (stdin/stdout)        |
+| [`ctx steering`](tools.md#ctx-steering)       | Manage steering files (behavioral rules for AI tools)    |
+| [`ctx hook`](tools.md#ctx-hook)               | Manage lifecycle hooks (shell scripts for automation)    |
+| [`ctx skill`](tools.md#ctx-skill)             | Manage reusable instruction bundles                      |
 | [`ctx config`](config.md#ctx-config)          | Manage runtime configuration profiles                    |
 | [`ctx system`](system.md#ctx-system)          | System diagnostics and hook commands                     |
 
@@ -140,6 +144,15 @@ notify:                      # Webhook notification settings
     - nudge
     - relay
     # - heartbeat            # Every-prompt session-alive signal
+tool: ""                     # Active AI tool: claude, cursor, cline, kiro, codex
+steering:                    # Steering layer configuration
+  dir: .context/steering     # Steering files directory
+  default_inclusion: manual  # Default inclusion mode (always, auto, manual)
+  default_tools: []          # Default tool filter for new steering files
+hooks:                       # Hook system configuration
+  dir: .context/hooks        # Hook scripts directory
+  timeout: 10                # Per-hook execution timeout in seconds
+  enabled: true              # Whether hook execution is enabled
 ```
 
 | Field                   | Type       | Default        | Description                                                                                                    |
@@ -163,6 +176,13 @@ notify:                      # Webhook notification settings
 | `session_prefixes`      | `[]string` | `["Session:"]` | Recognized Markdown session header prefixes. Extend to parse sessions written in other languages               |
 | `freshness_files`       | `[]object` | *(none)*       | Files to track for staleness (path, desc, optional review_url). Hook warns after 6 months without modification |
 | `notify.events`         | `[]string` | *(all)*        | Event filter for webhook notifications (empty = all)                                                           |
+| `tool`                  | `string`   | *(empty)*      | Active AI tool identifier (`claude`, `cursor`, `cline`, `kiro`, `codex`)                                       |
+| `steering.dir`          | `string`   | `.context/steering` | Steering files directory                                                                                  |
+| `steering.default_inclusion` | `string` | `manual`    | Default inclusion mode for new steering files (`always`, `auto`, `manual`)                                     |
+| `steering.default_tools` | `[]string` | *(all)*       | Default tool filter for new steering files (empty = all tools)                                                 |
+| `hooks.dir`             | `string`   | `.context/hooks` | Hook scripts directory                                                                                      |
+| `hooks.timeout`         | `int`      | `10`           | Per-hook execution timeout in seconds                                                                          |
+| `hooks.enabled`         | `bool`     | `true`         | Whether hook execution is enabled                                                                              |
 
 **Priority order:** CLI flags > Environment variables > `.ctxrc` > Defaults
 

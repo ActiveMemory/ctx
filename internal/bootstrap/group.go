@@ -34,11 +34,14 @@ import (
 	"github.com/ActiveMemory/ctx/internal/cli/serve"
 	"github.com/ActiveMemory/ctx/internal/cli/setup"
 	"github.com/ActiveMemory/ctx/internal/cli/site"
+	"github.com/ActiveMemory/ctx/internal/cli/skill"
 	"github.com/ActiveMemory/ctx/internal/cli/status"
+	"github.com/ActiveMemory/ctx/internal/cli/steering"
 	"github.com/ActiveMemory/ctx/internal/cli/sync"
 	"github.com/ActiveMemory/ctx/internal/cli/system"
 	"github.com/ActiveMemory/ctx/internal/cli/task"
 	"github.com/ActiveMemory/ctx/internal/cli/trace"
+	"github.com/ActiveMemory/ctx/internal/cli/trigger"
 	"github.com/ActiveMemory/ctx/internal/cli/watch"
 	"github.com/ActiveMemory/ctx/internal/cli/why"
 	embedCmd "github.com/ActiveMemory/ctx/internal/config/embed/cmd"
@@ -65,6 +68,7 @@ func contextCmds() []registration {
 		{add.Cmd, embedCmd.GroupContext},
 		{load.Cmd, embedCmd.GroupContext},
 		{agent.Cmd, embedCmd.GroupContext},
+		{skill.Cmd, embedCmd.GroupContext},
 		{sync.Cmd, embedCmd.GroupContext},
 		{drift.Cmd, embedCmd.GroupContext},
 		{compact.Cmd, embedCmd.GroupContext},
@@ -117,6 +121,8 @@ func runtimeCmds() []registration {
 func integrations() []registration {
 	return []registration{
 		{setup.Cmd, embedCmd.GroupIntegration},
+		{steering.Cmd, embedCmd.GroupIntegration},
+		{trigger.Cmd, embedCmd.GroupIntegration},
 		{mcp.Cmd, embedCmd.GroupIntegration},
 		{watch.Cmd, embedCmd.GroupIntegration},
 		{notify.Cmd, embedCmd.GroupIntegration},

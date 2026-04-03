@@ -35,6 +35,8 @@ import (
 //   - cooldown: duration to suppress repeated output (0 to disable)
 //   - session: session identifier for tombstone isolation (empty to
 //     disable cooldown)
+//   - steeringBodies: pre-loaded steering file bodies (may be nil)
+//   - skillBody: pre-loaded skill content (empty to omit)
 //
 // Returns:
 //   - error: Non-nil if context loading fails or .context/ is not found
@@ -44,6 +46,8 @@ func Run(
 	format string,
 	cooldown time.Duration,
 	session string,
+	steeringBodies []string,
+	skillBody string,
 ) error {
 	if coreCooldown.Active(session, cooldown) {
 		return nil
@@ -59,9 +63,15 @@ func Run(
 
 	var outputErr error
 	if format == fmt.FormatJSON {
-		outputErr = coreBudget.OutputAgentJSON(cmd, ctx, budget)
+		outputErr = coreBudget.OutputAgentJSON(
+			cmd, ctx, budget,
+			steeringBodies, skillBody,
+		)
 	} else {
-		outputErr = coreBudget.OutputAgentMarkdown(cmd, ctx, budget)
+		outputErr = coreBudget.OutputAgentMarkdown(
+			cmd, ctx, budget,
+			steeringBodies, skillBody,
+		)
 	}
 
 	if outputErr == nil {

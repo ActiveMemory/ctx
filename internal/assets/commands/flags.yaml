@@ -26,6 +26,8 @@ agent.format:
   short: 'Output format: md or json'
 agent.session:
   short: Session identifier for cooldown isolation (e.g., $PPID)
+agent.skill:
+  short: Include named skill content in context packet
 allow-outside-cwd:
   short: Allow context directory outside current working directory
 changes.since:
@@ -52,6 +54,10 @@ guide.commands:
   short: List all CLI commands
 guide.skills:
   short: List all available skills
+trigger.test.path:
+  short: File path for mock input
+trigger.test.tool:
+  short: Tool name for mock input
 setup.write:
   short: Write the configuration file instead of printing
 initialize.force:
@@ -174,6 +180,8 @@ status.json:
   short: Output as JSON
 status.verbose:
   short: Include file content previews
+steering.sync.all:
+  short: Sync to all supported tool formats
 sync.dry-run:
   short: Show what would change without modifying
 system.backup.json:
@@ -234,6 +242,8 @@ trace.tag.note:
   short: Context note to attach to the commit
 task.archive.dry-run:
   short: Preview changes without modifying files
+tool:
+  short: 'Override active AI tool (e.g., claude, cursor, cline, kiro, codex)'
 watch.dry-run:
   short: Show updates without applying
 watch.log:

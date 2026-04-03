@@ -27,6 +27,7 @@ import (
 	"github.com/ActiveMemory/ctx/internal/config/claude"
 	"github.com/ActiveMemory/ctx/internal/config/cli"
 	"github.com/ActiveMemory/ctx/internal/config/ctx"
+	"github.com/ActiveMemory/ctx/internal/config/dir"
 	"github.com/ActiveMemory/ctx/internal/config/embed/text"
 	"github.com/ActiveMemory/ctx/internal/config/file"
 	"github.com/ActiveMemory/ctx/internal/config/fs"
@@ -97,6 +98,15 @@ func Run(
 	// Create .context/ directory
 	if mkdirErr := ctxIo.SafeMkdirAll(contextDir, fs.PermExec); mkdirErr != nil {
 		return errFs.Mkdir(contextDir, mkdirErr)
+	}
+
+	// Create .context/ subdirectories for steering, hooks, and skills.
+	// Uses SafeMkdirAll which is a no-op when the directory already exists.
+	for _, sub := range []string{dir.Steering, dir.Hooks, dir.Skills} {
+		subDir := filepath.Join(contextDir, sub)
+		if mkdirErr := ctxIo.SafeMkdirAll(subDir, fs.PermExec); mkdirErr != nil {
+			return errFs.Mkdir(subDir, mkdirErr)
+		}
 	}
 
 	// Get the list of templates to create

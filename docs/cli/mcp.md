@@ -221,6 +221,44 @@ persistence ceremony - human confirmation required.
 | `type`   | string | Yes      | Event type: start, end                                       |
 | `caller` | string | No       | Caller identifier (cursor, windsurf, vscode, claude-desktop) |
 
+### `ctx_steering_get`
+
+Retrieve applicable steering files for a prompt. Without a prompt,
+returns always-included files only.
+
+| Argument | Type   | Required | Description                                                |
+|----------|--------|----------|------------------------------------------------------------|
+| `prompt` | string | No       | Prompt text to match against steering file descriptions    |
+
+**Read-only.**
+
+### `ctx_search`
+
+Search across `.context/` files for a query string. Returns matching
+lines with file paths and line numbers.
+
+| Argument | Type   | Required | Description                    |
+|----------|--------|----------|--------------------------------|
+| `query`  | string | Yes      | Search string to match against |
+
+**Read-only.**
+
+### `ctx_session_start`
+
+Execute session-start hooks and return aggregated context from hook
+outputs.
+
+**Arguments:** None.
+
+### `ctx_session_end`
+
+Execute session-end hooks with an optional summary. Returns aggregated
+context from hook outputs.
+
+| Argument  | Type   | Required | Description                          |
+|-----------|--------|----------|--------------------------------------|
+| `summary` | string | No       | Session summary passed to hook scripts |
+
 ### `ctx_remind`
 
 List pending session-scoped reminders.

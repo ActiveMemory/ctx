@@ -31,3 +31,13 @@ const (
 	// DefaultStaleAgeDays is the default stale entry age.
 	DefaultStaleAgeDays = runtime.DefaultStaleAgeDays
 )
+
+// Hooks & Steering defaults.
+const (
+	// DefaultSteeringDir is the default steering directory path.
+	DefaultSteeringDir = ".context/steering"
+	// DefaultHooksDir is the default hooks directory path.
+	DefaultHooksDir = ".context/hooks"
+	// DefaultHookTimeout is the default per-hook execution timeout in seconds.
+	DefaultHookTimeout = 10
+)

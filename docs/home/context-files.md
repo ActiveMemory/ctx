@@ -30,6 +30,9 @@ Files are designed to be human-readable, AI-parseable, and token-efficient.
 | `GLOSSARY.md`       | Domain terms and abbreviations             | 7           |
 | `AGENT_PLAYBOOK.md` | Instructions for AI tools                  | 8 (lowest)  |
 | `templates/`        | Entry format templates for `ctx add`       | (optional)  |
+| `steering/`         | Behavioral rules with YAML frontmatter     | (optional)  |
+| `hooks/`            | Lifecycle hook scripts                     | (optional)  |
+| `skills/`           | Reusable instruction bundles               | (optional)  |
 
 ## Read Order Rationale
 

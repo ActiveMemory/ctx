@@ -6,7 +6,9 @@
 
 package sysinfo
 
-// Linux procfs path constants.
+// Linux procfs path constants. These constants are consumed
+// by Linux-specific source files (memory_linux.go,
+// load_linux.go) and are not visible on non-Linux builds.
 const (
 	// ProcLoadavg is the Linux procfs path for load averages.
 	ProcLoadavg = "/proc/loadavg"
@@ -20,7 +22,9 @@ const (
 	BytesPerKB = 1024
 )
 
-// Meminfo field keys from /proc/meminfo.
+// Meminfo field keys from /proc/meminfo. These constants are
+// consumed by Linux-specific source files and are not visible
+// on non-Linux builds.
 const (
 	// FieldMemTotal is the total physical memory field.
 	FieldMemTotal = "MemTotal"

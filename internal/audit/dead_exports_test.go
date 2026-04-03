@@ -51,6 +51,25 @@ var testOnlyExports = map[string]bool{
 	"github.com/ActiveMemory/ctx/internal/task.MatchFull":                                   true,
 }
 
+// linuxOnlyExports lists exported symbols used only from
+// _linux.go source files. These appear dead on non-Linux
+// builds because go/packages loads only the current
+// platform's file set.
+var linuxOnlyExports = map[string]bool{
+	"github.com/ActiveMemory/ctx/internal/config/sysinfo.ProcLoadavg":       true,
+	"github.com/ActiveMemory/ctx/internal/config/sysinfo.ProcMeminfo":       true,
+	"github.com/ActiveMemory/ctx/internal/config/sysinfo.LoadavgFmt":        true,
+	"github.com/ActiveMemory/ctx/internal/config/sysinfo.MemInfoSuffix":     true,
+	"github.com/ActiveMemory/ctx/internal/config/sysinfo.BytesPerKB":        true,
+	"github.com/ActiveMemory/ctx/internal/config/sysinfo.FieldMemTotal":     true,
+	"github.com/ActiveMemory/ctx/internal/config/sysinfo.FieldMemAvailable": true,
+	"github.com/ActiveMemory/ctx/internal/config/sysinfo.FieldMemFree":      true,
+	"github.com/ActiveMemory/ctx/internal/config/sysinfo.FieldBuffers":      true,
+	"github.com/ActiveMemory/ctx/internal/config/sysinfo.FieldCached":       true,
+	"github.com/ActiveMemory/ctx/internal/config/sysinfo.FieldSwapTotal":    true,
+	"github.com/ActiveMemory/ctx/internal/config/sysinfo.FieldSwapFree":     true,
+}
+
 func TestNoDeadExports(t *testing.T) {
 	pkgs := loadPackages(t)
 
@@ -129,6 +148,12 @@ func TestNoDeadExports(t *testing.T) {
 
 	// Phase 3: remove test-only allowlist entries.
 	for key := range testOnlyExports {
+		delete(defs, key)
+	}
+
+	// Phase 3b: remove Linux-only exports (used from
+	// _linux.go files not loaded on this platform).
+	for key := range linuxOnlyExports {
 		delete(defs, key)
 	}
 

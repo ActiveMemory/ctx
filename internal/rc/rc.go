@@ -347,6 +347,78 @@ func CompanionCheck() bool {
 	return *cfg.CompanionCheck
 }
 
+// Tool returns the configured AI tool identifier (e.g., "claude", "cursor",
+// "cline", "kiro", "codex").
+//
+// Returns an empty string when no tool is configured in .ctxrc.
+//
+// Returns:
+//   - string: The tool identifier, or "" if not set
+func Tool() string {
+	return RC().Tool
+}
+
+// SteeringDir returns the configured steering directory path.
+//
+// Returns the value from .ctxrc steering.dir, or the default
+// ".context/steering" when not configured.
+//
+// Returns:
+//   - string: The steering directory path
+func SteeringDir() string {
+	cfg := RC()
+	if cfg.Steering != nil && cfg.Steering.Dir != "" {
+		return cfg.Steering.Dir
+	}
+	return DefaultSteeringDir
+}
+
+// HooksDir returns the configured hooks directory path.
+//
+// Returns the value from .ctxrc hooks.dir, or the default
+// ".context/hooks" when not configured.
+//
+// Returns:
+//   - string: The hooks directory path
+func HooksDir() string {
+	cfg := RC()
+	if cfg.Hooks != nil && cfg.Hooks.Dir != "" {
+		return cfg.Hooks.Dir
+	}
+	return DefaultHooksDir
+}
+
+// HookTimeout returns the configured per-hook execution timeout in seconds.
+//
+// Returns the value from .ctxrc hooks.timeout, or the default 10 seconds
+// when not configured or set to zero.
+//
+// Returns:
+//   - int: Timeout in seconds
+func HookTimeout() int {
+	cfg := RC()
+	if cfg.Hooks != nil && cfg.Hooks.Timeout > 0 {
+		return cfg.Hooks.Timeout
+	}
+	return DefaultHookTimeout
+}
+
+// HooksEnabled returns whether hook execution is enabled.
+//
+// Returns true (default) when the hooks section is not configured or
+// when the enabled field is not explicitly set. Returns false only when
+// hooks.enabled is explicitly set to false in .ctxrc.
+//
+// Returns:
+//   - bool: True if hooks are enabled
+func HooksEnabled() bool {
+	cfg := RC()
+	if cfg.Hooks != nil && cfg.Hooks.Enabled != nil {
+		return *cfg.Hooks.Enabled
+	}
+	return true
+}
+
 // AllowOutsideCwd returns whether boundary validation should be skipped.
 //
 // Returns false (default) when the field is not set in .ctxrc.

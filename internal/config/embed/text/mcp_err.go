@@ -17,6 +17,7 @@ const (
 	DescKeyMCPErrFailedMarshal       = "mcp.err-failed-marshal"
 	DescKeyMCPErrTypeContentRequired = "mcp.err-type-content-required"
 	DescKeyMCPErrQueryRequired       = "mcp.err-query-required"
+	DescKeyMCPErrSearchRead          = "mcp.err-search-read"
 	DescKeyMCPErrUnknownPrompt       = "mcp.err-unknown-prompt"
 	DescKeyMCPErrURIRequired         = "mcp.err-uri-required"
 )
