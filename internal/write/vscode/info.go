@@ -31,7 +31,9 @@ func InfoCreated(cmd *cobra.Command, target string) {
 //   - cmd: Cobra command for output
 //   - target: path to the existing file
 func InfoExistsSkipped(cmd *cobra.Command, target string) {
-	cmd.Println(fmt.Sprintf(desc.Text(text.DescKeyWriteVscodeExistsSkipped), target))
+	cmd.Println(fmt.Sprintf(
+		desc.Text(text.DescKeyWriteVscodeExistsSkipped),
+		target))
 }
 
 // InfoRecommendationExists reports the extension recommendation already exists.
@@ -40,7 +42,9 @@ func InfoExistsSkipped(cmd *cobra.Command, target string) {
 //   - cmd: Cobra command for output
 //   - target: path to the extensions.json file
 func InfoRecommendationExists(cmd *cobra.Command, target string) {
-	cmd.Println(fmt.Sprintf(desc.Text(text.DescKeyWriteVscodeRecommendationExists), target))
+	cmd.Println(fmt.Sprintf(
+		desc.Text(text.DescKeyWriteVscodeRecommendationExists),
+		target))
 }
 
 // InfoAddManually reports the file exists but lacks the ctx recommendation.
@@ -50,7 +54,9 @@ func InfoRecommendationExists(cmd *cobra.Command, target string) {
 //   - target: path to the extensions.json file
 //   - extensionID: the extension identifier to add
 func InfoAddManually(cmd *cobra.Command, target, extensionID string) {
-	cmd.Println(fmt.Sprintf(desc.Text(text.DescKeyWriteVscodeAddManually), target, extensionID))
+	cmd.Println(fmt.Sprintf(
+		desc.Text(text.DescKeyWriteVscodeAddManually),
+		target, extensionID))
 }
 
 // InfoWarnNonFatal reports a non-fatal error during artifact creation.
@@ -60,5 +66,7 @@ func InfoAddManually(cmd *cobra.Command, target, extensionID string) {
 //   - name: short description of what failed
 //   - err: the non-fatal error
 func InfoWarnNonFatal(cmd *cobra.Command, name string, err error) {
-	cmd.Println(fmt.Sprintf(desc.Text(text.DescKeyWriteVscodeWarnNonFatal), name, err))
+	cmd.Println(fmt.Sprintf(
+		desc.Text(text.DescKeyWriteVscodeWarnNonFatal),
+		name, err))
 }

@@ -27,7 +27,8 @@ type copilotRawLine struct {
 	V    json.RawMessage   `json:"v"`
 }
 
-// copilotRawSession is the full session snapshot from a copilotKindSnapshot line.
+// copilotRawSession is the full session snapshot from a
+// copilotKindSnapshot line.
 type copilotRawSession struct {
 	// Version is the schema version of the session format.
 	Version int `json:"version"`

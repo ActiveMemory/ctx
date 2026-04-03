@@ -6,7 +6,8 @@
 
 // Package session builds hook JSON responses and manages session.
 //
-// Key exports: [FormatContext], [ReadInput], [ReadID], [LatestPct], [WriteStats].
+// Key exports: [FormatContext], [ReadInput], [ReadID],
+// [LatestPct], [WriteStats].
 // Shared helpers used by sibling cmd/ packages.
 // Used by core cmd/ packages.
 package session

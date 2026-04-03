@@ -143,7 +143,9 @@ func InfoCopilotSummary(cmd *cobra.Command) {
 //   - cmd: Cobra command for output
 //   - targetFile: Path to the created file
 func InfoCopilotCLICreated(cmd *cobra.Command, targetFile string) {
-	cmd.Println(fmt.Sprintf(desc.Text(text.DescKeyWriteHookCopilotCLICreated), targetFile))
+	cmd.Println(fmt.Sprintf(
+		desc.Text(text.DescKeyWriteHookCopilotCLICreated),
+		targetFile))
 }
 
 // InfoAgentsCreated reports that AGENTS.md was created.
@@ -152,7 +154,9 @@ func InfoCopilotCLICreated(cmd *cobra.Command, targetFile string) {
 //   - cmd: Cobra command for output
 //   - targetFile: Path to the created file
 func InfoAgentsCreated(cmd *cobra.Command, targetFile string) {
-	cmd.Println(fmt.Sprintf(desc.Text(text.DescKeyWriteHookAgentsCreated), targetFile))
+	cmd.Println(fmt.Sprintf(
+		desc.Text(text.DescKeyWriteHookAgentsCreated),
+		targetFile))
 }
 
 // InfoAgentsMerged reports that ctx content was merged into AGENTS.md.
@@ -161,7 +165,9 @@ func InfoAgentsCreated(cmd *cobra.Command, targetFile string) {
 //   - cmd: Cobra command for output
 //   - targetFile: Path to the merged file
 func InfoAgentsMerged(cmd *cobra.Command, targetFile string) {
-	cmd.Println(fmt.Sprintf(desc.Text(text.DescKeyWriteHookAgentsMerged), targetFile))
+	cmd.Println(fmt.Sprintf(
+		desc.Text(text.DescKeyWriteHookAgentsMerged),
+		targetFile))
 }
 
 // InfoAgentsSkipped reports that AGENTS.md was skipped because
@@ -171,7 +177,9 @@ func InfoAgentsMerged(cmd *cobra.Command, targetFile string) {
 //   - cmd: Cobra command for output
 //   - targetFile: Path to the existing file
 func InfoAgentsSkipped(cmd *cobra.Command, targetFile string) {
-	cmd.Println(fmt.Sprintf(desc.Text(text.DescKeyWriteHookAgentsSkipped), targetFile))
+	cmd.Println(fmt.Sprintf(
+		desc.Text(text.DescKeyWriteHookAgentsSkipped),
+		targetFile))
 }
 
 // InfoAgentsSummary prints the post-write summary for AGENTS.md.
@@ -190,7 +198,9 @@ func InfoAgentsSummary(cmd *cobra.Command) {
 //   - cmd: Cobra command for output
 //   - targetFile: Path to the existing file
 func InfoCopilotCLISkipped(cmd *cobra.Command, targetFile string) {
-	cmd.Println(fmt.Sprintf(desc.Text(text.DescKeyWriteHookCopilotCLISkipped), targetFile))
+	cmd.Println(fmt.Sprintf(
+		desc.Text(text.DescKeyWriteHookCopilotCLISkipped),
+		targetFile))
 }
 
 // InfoCopilotCLISummary prints the post-write summary for copilot-cli.

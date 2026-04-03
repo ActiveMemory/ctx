@@ -25,7 +25,8 @@ import (
 //
 // Parameters:
 //   - cmd: Cobra command for output stream
-//   - pathArg: file path with optional line range suffix (e.g. "src/auth.go:42-60")
+//   - pathArg: file path with optional line range suffix
+//     (e.g. "src/auth.go:42-60")
 //   - last: maximum number of commits to show
 //
 // Returns:

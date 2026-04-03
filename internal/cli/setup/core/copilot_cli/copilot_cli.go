@@ -56,7 +56,8 @@ func Deploy(cmd *cobra.Command) error {
 	if readErr != nil {
 		return readErr
 	}
-	if wErr := ctxIo.SafeWriteFile(targetJSON, jsonContent, fs.PermFile); wErr != nil {
+	wErr := ctxIo.SafeWriteFile(targetJSON, jsonContent, fs.PermFile)
+	if wErr != nil {
 		return errFs.FileWrite(targetJSON, wErr)
 	}
 	writeSetup.InfoCopilotCLICreated(cmd, targetJSON)

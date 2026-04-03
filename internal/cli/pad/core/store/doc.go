@@ -6,7 +6,8 @@
 
 // Package store manages scratchpad file persistence including.
 //
-// Key exports: [ScratchpadPath], [KeyPath], [EnsureKey], [EnsureGitignore], [ReadEntries].
+// Key exports: [ScratchpadPath], [KeyPath],
+// [EnsureKey], [EnsureGitignore], [ReadEntries].
 // Shared helpers used by sibling cmd/ packages.
 // Used by core cmd/ packages.
 package store

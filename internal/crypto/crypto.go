@@ -133,7 +133,8 @@ func LoadKey(path string) ([]byte, error) {
 // Returns:
 //   - error: Non-nil if the file cannot be written
 func SaveKey(path string, key []byte) error {
-	if writeErr := internalIo.SafeWriteFile(path, key, fs.PermSecret); writeErr != nil {
+	writeErr := internalIo.SafeWriteFile(path, key, fs.PermSecret)
+	if writeErr != nil {
 		return errCrypto.WriteKey(writeErr)
 	}
 	return nil

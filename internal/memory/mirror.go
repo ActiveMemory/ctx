@@ -97,7 +97,8 @@ func Archive(contextDir string) (string, error) {
 	archiveName := memory.PrefixMirror + ts + file.ExtMarkdown
 	archivePath := filepath.Join(archiveDir, archiveName)
 
-	if writeErr := io.SafeWriteFile(archivePath, data, fs.PermFile); writeErr != nil {
+	writeErr := io.SafeWriteFile(archivePath, data, fs.PermFile)
+	if writeErr != nil {
 		return "", errMemory.WriteArchive(writeErr)
 	}
 

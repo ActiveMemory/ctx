@@ -112,7 +112,8 @@ func (p *Copilot) buildSession(
 //   - req: the raw request containing response items
 //
 // Returns:
-//   - *entity.Message: the assistant message, or nil if the request has no response
+//   - *entity.Message: the assistant message, or nil if
+//     the request has no response
 func (p *Copilot) buildAssistantMessage(
 	req copilotRawRequest,
 ) *entity.Message {

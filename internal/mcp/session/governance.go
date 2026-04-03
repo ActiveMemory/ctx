@@ -120,7 +120,8 @@ func (ss *State) CheckGovernance(toolName string) string {
 		// Fire at threshold, then every governance.PersistNudgeRepeat
 		// calls after.
 		if ss.callsSinceWrite == governance.PersistNudgeAfter ||
-			(ss.callsSinceWrite-governance.PersistNudgeAfter)%governance.PersistNudgeRepeat == 0 {
+			(ss.callsSinceWrite-governance.PersistNudgeAfter)%
+				governance.PersistNudgeRepeat == 0 {
 			warnings = append(warnings, fmt.Sprintf(
 				desc.Text(text.DescKeyGovPersistNudge),
 				ss.callsSinceWrite))

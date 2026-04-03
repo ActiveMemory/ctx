@@ -6,7 +6,8 @@
 
 // Package message loads and renders hook message templates with.
 //
-// Key exports: [Load], [BoxLines], [NudgeBox], [FormatTemplateVars], [OverridePath].
+// Key exports: [Load], [BoxLines], [NudgeBox],
+// [FormatTemplateVars], [OverridePath].
 // Shared helpers used by sibling cmd/ packages.
 // Used by core cmd/ packages.
 package message

@@ -142,7 +142,8 @@ const (
 	TagCompactionSummaryClose = "</summary>"
 	// CompactionBoilerplatePrefix starts the continuation prompt after
 	// a compaction summary.
-	CompactionBoilerplatePrefix = "If you need specific details from before compaction"
+	CompactionBoilerplatePrefix = "If you need specific details" +
+		" from before compaction"
 )
 
 // Markdown table markers for index generation.

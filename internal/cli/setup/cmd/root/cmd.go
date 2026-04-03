@@ -25,7 +25,8 @@ import (
 //   - --write, -w: Write the configuration file instead of printing
 //
 // Returns:
-//   - *cobra.Command: Configured setup command that accepts a tool name argument
+//   - *cobra.Command: Configured setup command that
+//     accepts a tool name argument
 func Cmd() *cobra.Command {
 	var write bool
 

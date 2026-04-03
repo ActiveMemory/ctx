@@ -8,5 +8,6 @@
 //
 // Error constructors return structured errors with context for
 // user-facing messages routed through internal/assets text lookups.
-// Exports: [WebhookEmpty], [SaveWebhook], [LoadWebhook], [MarshalPayload], [SendNotification].
+// Exports: [WebhookEmpty], [SaveWebhook],
+// [LoadWebhook], [MarshalPayload], [SendNotification].
 package notify

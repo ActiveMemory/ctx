@@ -29,7 +29,8 @@ func (p *Copilot) applyScalarPatch(
 	}
 
 	// Handle requests.<N>.result patches — these contain token counts
-	if path[0] == cfgCopilot.KeyRequests && len(path) == 3 && path[2] == cfgCopilot.KeyResult {
+	if path[0] == cfgCopilot.KeyRequests &&
+		len(path) == 3 && path[2] == cfgCopilot.KeyResult {
 		idx, err := strconv.Atoi(path[1])
 		if err != nil || idx < 0 || idx >= len(session.Requests) {
 			return
@@ -63,7 +64,9 @@ func (p *Copilot) applyPatch(
 			session.Requests = append(session.Requests, requests...)
 		}
 
-	case len(path) == 3 && path[0] == cfgCopilot.KeyRequests && path[2] == cfgCopilot.KeyResponse:
+	case len(path) == 3 &&
+		path[0] == cfgCopilot.KeyRequests &&
+		path[2] == cfgCopilot.KeyResponse:
 		// Response update for a specific request
 		idx, err := strconv.Atoi(path[1])
 		if err != nil || idx < 0 || idx >= len(session.Requests) {

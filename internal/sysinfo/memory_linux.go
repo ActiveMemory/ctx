@@ -63,7 +63,10 @@ func parseMeminfo(r io.Reader) MemInfo {
 			continue
 		}
 		key := strings.TrimSpace(parts[0])
-		val := strings.TrimSuffix(strings.TrimSpace(parts[1]), cfgSysinfo.MemInfoSuffix)
+		val := strings.TrimSuffix(
+			strings.TrimSpace(parts[1]),
+			cfgSysinfo.MemInfoSuffix,
+		)
 		n, parseErr := strconv.ParseUint(
 			strings.TrimSpace(val), 10, 64,
 		)

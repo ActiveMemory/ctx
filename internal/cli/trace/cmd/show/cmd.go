@@ -38,7 +38,9 @@ func Cmd() *cobra.Command {
 		},
 	}
 
-	flagbind.IntFlagP(c, &last, cFlag.Last, cFlag.ShortLast, 0, flag.DescKeyTraceLast)
+	flagbind.IntFlagP(
+		c, &last, cFlag.Last, cFlag.ShortLast,
+		0, flag.DescKeyTraceLast)
 	flagbind.BoolFlag(c, &jsonOutput, cFlag.JSON, flag.DescKeyTraceJSON)
 
 	return c

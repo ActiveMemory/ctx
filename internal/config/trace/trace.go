@@ -23,7 +23,8 @@ const (
 	ActionDisable = "disable"
 )
 
-// TrailerKey is the git trailer key used to embed context refs in commit messages.
+// TrailerKey is the git trailer key used to embed context
+// refs in commit messages.
 const TrailerKey = "ctx-context"
 
 // TrailerFormat is the format string for the git trailer line: "key: refs".
@@ -48,7 +49,8 @@ const (
 // RefFormat is the format string for numbered refs (e.g. "decision:1").
 const RefFormat = "%s:%d"
 
-// SessionRefFormat is the format string for session refs (e.g. "session:abc123").
+// SessionRefFormat is the format string for session refs
+// (e.g. "session:abc123").
 const SessionRefFormat = "session:%s"
 
 // Diff line prefix constants for parsing git diff output.

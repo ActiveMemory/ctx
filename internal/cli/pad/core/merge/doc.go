@@ -6,7 +6,9 @@
 
 // Package merge reads scratchpad files with automatic decryption.
 //
-// Key exports: [ReadFileEntries], [LoadKey], [BuildBlobLabelMap], [HasBlobConflict], [HasBinaryEntries].
+// Key exports: [ReadFileEntries], [LoadKey],
+// [BuildBlobLabelMap], [HasBlobConflict],
+// [HasBinaryEntries].
 // Shared helpers used by sibling cmd/ packages.
 // Used by core cmd/ packages.
 package merge

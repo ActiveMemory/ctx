@@ -8,5 +8,6 @@
 //
 // Error constructors return structured errors with context for
 // user-facing messages routed through internal/assets text lookups.
-// Exports: [LoadKey], [EncryptFailed], [DecryptFailed], [NoKeyAt], [SaveKey], [MkdirKeyDir].
+// Exports: [LoadKey], [EncryptFailed], [DecryptFailed],
+// [NoKeyAt], [SaveKey], [MkdirKeyDir].
 package crypto

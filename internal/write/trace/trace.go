@@ -36,8 +36,12 @@ func Trailer(cmd *cobra.Command, trailer string) {
 //   - message: commit subject line
 //   - date: commit date string
 func CommitHeader(cmd *cobra.Command, shortHash, message, date string) {
-	cmd.Println(fmt.Sprintf(desc.Text(text.DescKeyWriteTraceCommitHeader), shortHash))
-	cmd.Println(fmt.Sprintf(desc.Text(text.DescKeyWriteTraceCommitMessage), message))
+	cmd.Println(fmt.Sprintf(
+		desc.Text(text.DescKeyWriteTraceCommitHeader),
+		shortHash))
+	cmd.Println(fmt.Sprintf(
+		desc.Text(text.DescKeyWriteTraceCommitMessage),
+		message))
 	cmd.Println(fmt.Sprintf(desc.Text(text.DescKeyWriteTraceCommitDate), date))
 }
 
@@ -136,5 +140,7 @@ func Resolved(cmd *cobra.Command, rr internalTrace.ResolvedRef) {
 //   - shortHash: abbreviated commit hash
 //   - note: the context note that was attached
 func Tagged(cmd *cobra.Command, shortHash, note string) {
-	cmd.Println(fmt.Sprintf(desc.Text(text.DescKeyWriteTraceTagged), shortHash, note))
+	cmd.Println(fmt.Sprintf(
+		desc.Text(text.DescKeyWriteTraceTagged),
+		shortHash, note))
 }

@@ -8,5 +8,6 @@
 //
 // Constants are referenced by domain packages via config/regex.*.
 // Provides constants and definitions for regex operations.
-// Exports: [OversizeTokens], [LineNumber], [MidSudo], [MidGitPush], [CpMvToBin], [InstallToLocalBin].
+// Exports: [OversizeTokens], [LineNumber], [MidSudo],
+// [MidGitPush], [CpMvToBin], [InstallToLocalBin].
 package regex

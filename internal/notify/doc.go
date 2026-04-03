@@ -6,7 +6,8 @@
 
 // Package notify provides fire-and-forget webhook notifications with.
 //
-// Key exports: [LoadWebhook], [SaveWebhook], [EventAllowed], [Send], [PostJSON].
+// Key exports: [LoadWebhook], [SaveWebhook],
+// [EventAllowed], [Send], [PostJSON].
 // See source files for implementation details.
 // Part of the internal subsystem.
 package notify

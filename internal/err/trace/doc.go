@@ -6,5 +6,6 @@
 
 // Package trace provides error constructors for the trace command.
 //
-// Key exports: [GitLog], [NoteRequired], [ResolveCommit], [UnknownAction], [WriteHistory], [WriteOverride].
+// Key exports: [GitLog], [NoteRequired], [ResolveCommit],
+// [UnknownAction], [WriteHistory], [WriteOverride].
 package trace

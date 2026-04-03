@@ -15,7 +15,7 @@ import (
 	"github.com/ActiveMemory/ctx/internal/assets/read/desc"
 	coreAgents "github.com/ActiveMemory/ctx/internal/cli/setup/core/agents"
 	coreCopilot "github.com/ActiveMemory/ctx/internal/cli/setup/core/copilot"
-	coreCopilotCLI "github.com/ActiveMemory/ctx/internal/cli/setup/core/copilot_cli"
+	coreCopCLI "github.com/ActiveMemory/ctx/internal/cli/setup/core/copilot_cli"
 	"github.com/ActiveMemory/ctx/internal/config/embed/text"
 	cfgHook "github.com/ActiveMemory/ctx/internal/config/hook"
 	"github.com/ActiveMemory/ctx/internal/err/config"
@@ -74,7 +74,7 @@ func Run(cmd *cobra.Command, args []string, writeFile bool) error {
 
 	case cfgHook.ToolCopilotCLI:
 		if writeFile {
-			return coreCopilotCLI.Deploy(cmd)
+			return coreCopCLI.Deploy(cmd)
 		}
 		writeSetup.InfoTool(cmd, desc.Text(text.DescKeyHookCopilotCLI))
 

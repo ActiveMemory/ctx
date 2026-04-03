@@ -8,5 +8,7 @@
 //
 // Error constructors return structured errors with context for
 // user-facing messages routed through internal/assets text lookups.
-// Exports: [NoTemplate], [ListEntryTemplates], [ReadEntryTemplate], [ListTemplates], [ReadTemplate], [TemplateMissingMarkers].
+// Exports: [NoTemplate], [ListEntryTemplates],
+// [ReadEntryTemplate], [ListTemplates],
+// [ReadTemplate], [TemplateMissingMarkers].
 package prompt

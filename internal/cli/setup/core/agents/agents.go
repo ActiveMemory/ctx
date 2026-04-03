@@ -55,7 +55,10 @@ func Deploy(cmd *cobra.Command) error {
 
 		// File exists without ctx markers: append ctx content
 		merged := existingStr + token.NewlineLF + string(agentsContent)
-		if wErr := io.SafeWriteFile(targetFile, []byte(merged), fs.PermFile); wErr != nil {
+		wErr := io.SafeWriteFile(
+			targetFile, []byte(merged), fs.PermFile,
+		)
+		if wErr != nil {
 			return errFs.FileWrite(targetFile, wErr)
 		}
 		writeSetup.InfoAgentsMerged(cmd, targetFile)
@@ -63,7 +66,10 @@ func Deploy(cmd *cobra.Command) error {
 	}
 
 	// File doesn't exist: create it
-	if wErr := io.SafeWriteFile(targetFile, agentsContent, fs.PermFile); wErr != nil {
+	wErr := io.SafeWriteFile(
+		targetFile, agentsContent, fs.PermFile,
+	)
+	if wErr != nil {
 		return errFs.FileWrite(targetFile, wErr)
 	}
 	writeSetup.InfoAgentsCreated(cmd, targetFile)

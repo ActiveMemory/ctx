@@ -25,7 +25,9 @@ func Event(cmd *cobra.Command, eventType, caller string) {
 	if cmd == nil {
 		return
 	}
-	cmd.Println(fmt.Sprintf(desc.Text(text.DescKeyWriteSessionEvent), eventType, caller))
+	cmd.Println(fmt.Sprintf(
+		desc.Text(text.DescKeyWriteSessionEvent),
+		eventType, caller))
 }
 
 // Paused prints confirmation that hooks were paused.

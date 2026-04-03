@@ -8,5 +8,6 @@
 //
 // Error constructors return structured errors with context for
 // user-facing messages routed through internal/assets text lookups.
-// Exports: [Mkdir], [ReadDir], [DirNotFound], [FileWrite], [FileRead], [FileAmend].
+// Exports: [Mkdir], [ReadDir], [DirNotFound],
+// [FileWrite], [FileRead], [FileAmend].
 package fs

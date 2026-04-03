@@ -111,7 +111,11 @@ func Content(content string, fencesVerified bool) string {
 		// Demote headings to bold: ## Foo → **Foo**
 		// Preserves turn headers (### N. Role (HH:MM:SS)) and the H1 title.
 		if hm := regex.MarkdownHeading.FindStringSubmatch(line); hm != nil {
-			if hm[1] != token.PrefixHeading && !regex.TurnHeader.MatchString(strings.TrimSpace(line)) {
+			headingMatch := hm[1] != token.PrefixHeading
+			turnMatch := regex.TurnHeader.MatchString(
+				strings.TrimSpace(line),
+			)
+			if headingMatch && !turnMatch {
 				line = marker.BoldWrap + hm[2] + marker.BoldWrap
 			}
 		}

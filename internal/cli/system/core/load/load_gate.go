@@ -48,7 +48,9 @@ func WriteOversizeFlag(
 
 	var flag strings.Builder
 	flag.WriteString(desc.Text(text.DescKeyContextLoadGateOversizeHeader))
-	sep := strings.Repeat(load_gate.ContextLoadSeparatorChar, stats.ContextSizeOversizeSepLen)
+	sep := strings.Repeat(
+		load_gate.ContextLoadSeparatorChar,
+		stats.ContextSizeOversizeSepLen)
 	flag.WriteString(sep + token.NewlineLF)
 	io.SafeFprintf(&flag,
 		desc.Text(text.DescKeyContextLoadGateOversizeTimestamp),

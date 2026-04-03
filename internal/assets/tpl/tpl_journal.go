@@ -61,7 +61,8 @@ ctx journal site --serve  # generate and preview
 	// Args: absPath, relPath, relPath.
 	JournalSourceLink = `*[View source](file://%s) · <code>%s</code>*` +
 		` <button onclick="navigator.clipboard.writeText('%s')" title="Copy path"` +
-		` style="cursor:pointer;border:none;background:none;font-size:0.8em;vertical-align:middle">` +
+		` style="cursor:pointer;border:none;background:none;` +
+		`font-size:0.8em;vertical-align:middle">` +
 		`&#x2398;</button>`
 
 	// JournalTopicStats formats the topics index summary line.
