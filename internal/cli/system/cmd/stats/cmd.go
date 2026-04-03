@@ -33,14 +33,17 @@ func Cmd() *cobra.Command {
 		},
 	}
 
-	c.Flags().BoolP(cFlag.Follow, cFlag.ShortFollow, false,
-		desc.Flag(flag.DescKeySystemStatsFollow),
+	flagbind.BoolFlagShort(c,
+		cFlag.Follow, cFlag.ShortFollow,
+		flag.DescKeySystemStatsFollow,
 	)
-	c.Flags().StringP(cFlag.Session, cFlag.ShortSessionID, "",
-		desc.Flag(flag.DescKeySystemStatsSession),
+	flagbind.StringFlagShort(c,
+		cFlag.Session, cFlag.ShortSessionID,
+		flag.DescKeySystemStatsSession,
 	)
 	flagbind.LastJSON(c, stats.DefaultLast,
-		flag.DescKeySystemStatsLast, flag.DescKeySystemStatsJson,
+		flag.DescKeySystemStatsLast,
+		flag.DescKeySystemStatsJson,
 	)
 
 	return c

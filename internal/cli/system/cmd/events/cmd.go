@@ -33,24 +33,25 @@ func Cmd() *cobra.Command {
 		},
 	}
 
-	c.Flags().StringP(
-		cFlag.Hook, cFlag.ShortHook, "",
-		desc.Flag(flag.DescKeySystemEventsHook),
+	flagbind.StringFlagShort(c,
+		cFlag.Hook, cFlag.ShortHook,
+		flag.DescKeySystemEventsHook,
 	)
-	c.Flags().StringP(
-		cFlag.Session, cFlag.ShortSessionID, "",
-		desc.Flag(flag.DescKeySystemEventsSession),
+	flagbind.StringFlagShort(c,
+		cFlag.Session, cFlag.ShortSessionID,
+		flag.DescKeySystemEventsSession,
 	)
-	c.Flags().StringP(
-		cFlag.Event, cFlag.ShortEvent, "",
-		desc.Flag(flag.DescKeySystemEventsEvent),
+	flagbind.StringFlagShort(c,
+		cFlag.Event, cFlag.ShortEvent,
+		flag.DescKeySystemEventsEvent,
 	)
 	flagbind.LastJSON(c, event.DefaultLast,
-		flag.DescKeySystemEventsLast, flag.DescKeySystemEventsJson,
+		flag.DescKeySystemEventsLast,
+		flag.DescKeySystemEventsJson,
 	)
-	c.Flags().BoolP(
-		cFlag.All, cFlag.ShortAll, false,
-		desc.Flag(flag.DescKeySystemEventsAll),
+	flagbind.BoolFlagShort(c,
+		cFlag.All, cFlag.ShortAll,
+		flag.DescKeySystemEventsAll,
 	)
 
 	return c

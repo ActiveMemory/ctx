@@ -14,6 +14,7 @@ import (
 	"github.com/ActiveMemory/ctx/internal/config/embed/flag"
 	cFlag "github.com/ActiveMemory/ctx/internal/config/flag"
 	"github.com/ActiveMemory/ctx/internal/config/journal"
+	"github.com/ActiveMemory/ctx/internal/flagbind"
 )
 
 // Cmd returns the journal source subcommand.
@@ -58,34 +59,47 @@ func Cmd() *cobra.Command {
 		},
 	}
 
-	c.Flags().StringVarP(&showID, cFlag.Show, cFlag.ShortShow, "",
-		desc.Flag(flag.DescKeyJournalSourceShow),
+	flagbind.StringFlagP(
+		c, &showID,
+		cFlag.Show, cFlag.ShortShow,
+		flag.DescKeyJournalSourceShow,
 	)
-	c.Flags().BoolVar(&latest, cFlag.Latest, false,
-		desc.Flag(flag.DescKeyJournalSourceLatest),
+	flagbind.BoolFlag(
+		c, &latest,
+		cFlag.Latest, flag.DescKeyJournalSourceLatest,
 	)
-	c.Flags().BoolVar(&full, cFlag.Full, false,
-		desc.Flag(flag.DescKeyJournalSourceFull),
+	flagbind.BoolFlag(
+		c, &full,
+		cFlag.Full, flag.DescKeyJournalSourceFull,
 	)
-	c.Flags().IntVarP(
-		&limit, cFlag.Limit,
-		cFlag.ShortMaxIterations, journal.DefaultRecallListLimit,
-		desc.Flag(flag.DescKeyJournalSourceLimit),
+	flagbind.IntFlagP(
+		c, &limit,
+		cFlag.Limit, cFlag.ShortMaxIterations,
+		journal.DefaultRecallListLimit,
+		flag.DescKeyJournalSourceLimit,
 	)
-	c.Flags().StringVarP(&project, cFlag.Project, cFlag.ShortProject, "",
-		desc.Flag(flag.DescKeyJournalSourceProject),
+	flagbind.StringFlagP(
+		c, &project,
+		cFlag.Project, cFlag.ShortProject,
+		flag.DescKeyJournalSourceProject,
 	)
-	c.Flags().StringVarP(&tool, cFlag.Tool, cFlag.ShortTool, "",
-		desc.Flag(flag.DescKeyJournalSourceTool),
+	flagbind.StringFlagP(
+		c, &tool,
+		cFlag.Tool, cFlag.ShortTool,
+		flag.DescKeyJournalSourceTool,
 	)
-	c.Flags().StringVar(&since, cFlag.Since, "",
-		desc.Flag(flag.DescKeyJournalSourceSince),
+	flagbind.StringFlag(
+		c, &since,
+		cFlag.Since, flag.DescKeyJournalSourceSince,
 	)
-	c.Flags().StringVar(&until, cFlag.Until, "",
-		desc.Flag(flag.DescKeyJournalSourceUntil),
+	flagbind.StringFlag(
+		c, &until,
+		cFlag.Until, flag.DescKeyJournalSourceUntil,
 	)
-	c.Flags().BoolVar(&allProjects, cFlag.AllProjects, false,
-		desc.Flag(flag.DescKeyJournalSourceAllProjects),
+	flagbind.BoolFlag(
+		c, &allProjects,
+		cFlag.AllProjects,
+		flag.DescKeyJournalSourceAllProjects,
 	)
 
 	return c

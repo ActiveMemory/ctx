@@ -13,6 +13,7 @@ import (
 	"github.com/ActiveMemory/ctx/internal/config/embed/cmd"
 	"github.com/ActiveMemory/ctx/internal/config/embed/flag"
 	cFlag "github.com/ActiveMemory/ctx/internal/config/flag"
+	"github.com/ActiveMemory/ctx/internal/flagbind"
 )
 
 // Cmd returns the "ctx sync" command for reconciling context with the codebase.
@@ -40,9 +41,8 @@ func Cmd() *cobra.Command {
 		},
 	}
 
-	c.Flags().BoolVar(
-		&dryRun,
-		cFlag.DryRun, false, desc.Flag(flag.DescKeySyncDryRun),
+	flagbind.BoolFlag(c, &dryRun,
+		cFlag.DryRun, flag.DescKeySyncDryRun,
 	)
 
 	return c

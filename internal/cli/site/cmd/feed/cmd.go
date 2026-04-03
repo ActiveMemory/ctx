@@ -15,6 +15,7 @@ import (
 	"github.com/ActiveMemory/ctx/internal/config/embed/flag"
 	cFlag "github.com/ActiveMemory/ctx/internal/config/flag"
 	"github.com/ActiveMemory/ctx/internal/config/rss"
+	"github.com/ActiveMemory/ctx/internal/flagbind"
 )
 
 // Cmd returns the "ctx site feed" subcommand.
@@ -38,13 +39,14 @@ func Cmd() *cobra.Command {
 		},
 	}
 
-	c.Flags().StringVarP(
-		&out, cFlag.Out, cFlag.ShortOutput, rss.DefaultFeedOutPath,
-		desc.Flag(flag.DescKeySiteFeedOut),
+	flagbind.StringFlagPDefault(c, &out,
+		cFlag.Out, cFlag.ShortOutput,
+		rss.DefaultFeedOutPath,
+		flag.DescKeySiteFeedOut,
 	)
-	c.Flags().StringVar(
-		&baseURL, cFlag.BaseURL, rss.DefaultFeedBaseURL,
-		desc.Flag(flag.DescKeySiteFeedBaseUrl),
+	flagbind.StringFlagDefault(c, &baseURL,
+		cFlag.BaseURL, rss.DefaultFeedBaseURL,
+		flag.DescKeySiteFeedBaseUrl,
 	)
 
 	return c

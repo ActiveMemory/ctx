@@ -13,6 +13,7 @@ import (
 	"github.com/ActiveMemory/ctx/internal/config/embed/cmd"
 	"github.com/ActiveMemory/ctx/internal/config/embed/flag"
 	cFlag "github.com/ActiveMemory/ctx/internal/config/flag"
+	"github.com/ActiveMemory/ctx/internal/flagbind"
 )
 
 // Cmd returns the `task archive` subcommand.
@@ -40,11 +41,8 @@ func Cmd() *cobra.Command {
 		},
 	}
 
-	c.Flags().BoolVar(
-		&dryRun,
-		cFlag.DryRun,
-		false,
-		desc.Flag(flag.DescKeyTaskArchiveDryRun),
+	flagbind.BoolFlag(c, &dryRun,
+		cFlag.DryRun, flag.DescKeyTaskArchiveDryRun,
 	)
 
 	return c

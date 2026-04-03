@@ -16,6 +16,7 @@ import (
 	"github.com/ActiveMemory/ctx/internal/config/embed/flag"
 	cFlag "github.com/ActiveMemory/ctx/internal/config/flag"
 	errPad "github.com/ActiveMemory/ctx/internal/err/pad"
+	"github.com/ActiveMemory/ctx/internal/flagbind"
 )
 
 // Cmd returns the pad show subcommand.
@@ -45,8 +46,8 @@ func Cmd() *cobra.Command {
 		},
 	}
 
-	c.Flags().StringVar(&outPath,
-		cFlag.Out, "", desc.Flag(flag.DescKeyPadShowOut),
+	flagbind.StringFlag(c, &outPath,
+		cFlag.Out, flag.DescKeyPadShowOut,
 	)
 
 	return c

@@ -14,6 +14,7 @@ import (
 	"github.com/ActiveMemory/ctx/internal/config/embed/flag"
 	cFlag "github.com/ActiveMemory/ctx/internal/config/flag"
 	"github.com/ActiveMemory/ctx/internal/config/runtime"
+	"github.com/ActiveMemory/ctx/internal/flagbind"
 )
 
 // Cmd returns the "ctx system prune" subcommand.
@@ -35,11 +36,12 @@ func Cmd() *cobra.Command {
 		},
 	}
 
-	c.Flags().IntVar(&days, cFlag.Days, runtime.DefaultPruneDays,
-		desc.Flag(flag.DescKeySystemPruneDays),
+	flagbind.IntFlag(c, &days,
+		cFlag.Days, runtime.DefaultPruneDays,
+		flag.DescKeySystemPruneDays,
 	)
-	c.Flags().BoolVar(&dryRun, cFlag.DryRun, false,
-		desc.Flag(flag.DescKeySystemPruneDryRun),
+	flagbind.BoolFlag(c, &dryRun,
+		cFlag.DryRun, flag.DescKeySystemPruneDryRun,
 	)
 
 	return c
