@@ -6,4 +6,13 @@
 
 // Package vscode provides terminal output for VS Code artifact generation
 // during ctx init.
+//
+// [InfoCreated] and [InfoExistsSkipped] report file creation results.
+// [InfoRecommendationExists] and [InfoAddManually] guide users through
+// manual extension setup. [InfoWarnNonFatal] reports non-fatal errors
+// without aborting the init flow.
+//
+// Key exports: [InfoCreated], [InfoExistsSkipped],
+// [InfoRecommendationExists], [InfoAddManually], [InfoWarnNonFatal].
+// Used by the setup core packages when deploying VS Code integration.
 package vscode

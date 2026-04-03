@@ -6,5 +6,12 @@
 
 // Package sync defines constants for the ctx sync command.
 //
-// Constants are referenced by domain packages via config/sync.*.
+// Glob patterns ([PatternTSConfig], [PatternMakefile], etc.) identify
+// config files to check for drift. Action constants ([ActionDeps],
+// [ActionConfig], [ActionNewDir]) classify sync check results.
+// [ImportantDirs] and [SkipDirs] control directory scanning scope.
+//
+// Key exports: [ImportantDirs], [SkipDirs], [KeywordDependencies].
+// Used by the sync core logic to detect project changes that need
+// documentation updates.
 package sync
