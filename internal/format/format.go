@@ -46,7 +46,7 @@ func TimeAgo(hours float64, mins int, fallbackDate string) string {
 			return desc.Text(text.DescKeyWriteTimeHourAgo)
 		}
 		return fmt.Sprintf(desc.Text(text.DescKeyWriteTimeHoursAgo), h)
-	case hours < 7*cfgTime.HoursPerDay:
+	case hours < cfgTime.DaysPerWeek*cfgTime.HoursPerDay:
 		days := int(hours / cfgTime.HoursPerDay)
 		if days == 1 {
 			return desc.Text(text.DescKeyWriteTimeDayAgo)

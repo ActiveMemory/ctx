@@ -105,8 +105,8 @@ func (ss *State) CheckGovernance(toolName string) string {
 					desc.Text(text.DescKeyGovDriftNotChecked),
 					int(time.Since(ss.lastDriftCheck).Minutes())))
 			}
-		} else if ss.ToolCalls > 5 {
-			// Never checked drift and already 5+ calls in
+		} else if ss.ToolCalls > governance.DriftCheckMinCalls {
+			// Never checked drift and already past threshold
 			warnings = append(warnings,
 				desc.Text(text.DescKeyGovDriftNeverChecked))
 		}

@@ -17,6 +17,7 @@ import (
 	"github.com/ActiveMemory/ctx/internal/cli/status/core/preview"
 	"github.com/ActiveMemory/ctx/internal/cli/status/core/sort"
 	"github.com/ActiveMemory/ctx/internal/config/embed/text"
+	cfgFmt "github.com/ActiveMemory/ctx/internal/config/format"
 	cfgTime "github.com/ActiveMemory/ctx/internal/config/time"
 	"github.com/ActiveMemory/ctx/internal/config/token"
 	"github.com/ActiveMemory/ctx/internal/entity"
@@ -56,7 +57,7 @@ func PersistStatusJSON(
 			ModTime: f.ModTime.Format(time.RFC3339),
 		}
 		if verbose && !f.IsEmpty {
-			fs.Preview = preview.Content(string(f.Content), 5)
+			fs.Preview = preview.Content(string(f.Content), cfgFmt.PreviewLines)
 		}
 		output.Files = append(output.Files, fs)
 	}

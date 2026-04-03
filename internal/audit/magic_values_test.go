@@ -9,16 +9,21 @@ package audit
 import (
 	"go/ast"
 	"go/token"
-	"strconv"
 	"strings"
 	"testing"
 )
 
 // exemptIntLiterals lists integer values that are always acceptable.
+// 0, 1, -1: universal identity/sentinel values.
+// 2, 3: structural constants (split counts, field indices, ternary).
+// 10: decimal radix.
 var exemptIntLiterals = map[string]bool{
 	"0":  true,
 	"1":  true,
 	"-1": true,
+	"2":  true,
+	"3":  true,
+	"10": true,
 }
 
 // strconvRadixBitsize lists numeric literals acceptable as strconv
@@ -94,13 +99,6 @@ func TestNoMagicValues(t *testing.T) {
 				}
 
 				if exemptIntLiterals[lit.Value] {
-					return true
-				}
-
-				// Small integers 2-10 are generally acceptable (arg
-				// counts, field indices, slice bounds, arithmetic).
-				if val, err := strconv.Atoi(lit.Value); err == nil &&
-					val >= 2 && val <= 10 {
 					return true
 				}
 

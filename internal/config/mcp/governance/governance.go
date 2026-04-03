@@ -20,4 +20,8 @@ const (
 	// PersistNudgeRepeat is how often the persist nudge repeats after
 	// the initial threshold.
 	PersistNudgeRepeat = 8
+
+	// DriftCheckMinCalls is the minimum tool call count before
+	// flagging that drift has never been checked.
+	DriftCheckMinCalls = 5
 )

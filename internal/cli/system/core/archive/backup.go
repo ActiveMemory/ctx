@@ -123,7 +123,9 @@ func BackupProject(
 
 	// Touch marker file for check-backup-age hook.
 	markerDir := filepath.Join(home, archive.BackupMarkerDir)
-	if mkdirErr := internalIo.SafeMkdirAll(markerDir, cfgFs.PermExec); mkdirErr != nil {
+	if mkdirErr := internalIo.SafeMkdirAll(
+		markerDir, cfgFs.PermExec,
+	); mkdirErr != nil {
 		logWarn.Warn(warn.Mkdir, markerDir, mkdirErr)
 	}
 	markerPath := filepath.Join(markerDir, archive.BackupMarkerFile)
