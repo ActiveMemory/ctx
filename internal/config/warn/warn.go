@@ -47,3 +47,17 @@ const (
 	// ParseConfig is the format for config file parse failures.
 	ParseConfig = "warning: failed to parse %s: %v (using defaults)"
 )
+
+// Warn context identifiers for index generation.
+const (
+	// IndexHeader is the context label for index header write errors.
+	IndexHeader = "index-header"
+	// IndexSeparator is the context label for index separator write
+	// errors.
+	IndexSeparator = "index-separator"
+	// IndexRow is the context label for index row write errors.
+	IndexRow = "index-row"
+	// ResponseBody is the context label for HTTP response body
+	// close errors.
+	ResponseBody = "response body"
+)

@@ -50,6 +50,14 @@ const (
 const (
 	// BoldWrap is the Markdown bold delimiter.
 	BoldWrap = "**"
+	// CodeFence is the Markdown code fence delimiter.
+	CodeFence = "```"
+)
+
+// XML attribute parsing tokens.
+const (
+	// AttrEquals is the attribute value opener in XML tags.
+	AttrEquals = `="`
 )
 
 // Context block markers for embedding context in files.

@@ -279,7 +279,7 @@ func CopilotCLISessionDirs() []string {
 
 	// On Windows, also check under LOCALAPPDATA
 	if runtime.GOOS == env.OSWindows {
-		localAppData := os.Getenv("LOCALAPPDATA")
+		localAppData := os.Getenv(env.LocalAppData)
 		if localAppData != "" {
 			for _, sub := range candidates {
 				dir := filepath.Join(localAppData, cfgCopilot.CLIAppName, sub)

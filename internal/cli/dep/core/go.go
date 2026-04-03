@@ -12,6 +12,7 @@ import (
 	"os"
 	"strings"
 
+	cfgDep "github.com/ActiveMemory/ctx/internal/config/dep"
 	execDep "github.com/ActiveMemory/ctx/internal/exec/dep"
 )
 
@@ -19,11 +20,11 @@ import (
 type GoBuilder struct{}
 
 // Name returns the ecosystem label.
-func (g *GoBuilder) Name() string { return "go" }
+func (g *GoBuilder) Name() string { return cfgDep.GoBinary }
 
 // Detect returns true if go.mod exists in the current directory.
 func (g *GoBuilder) Detect() bool {
-	_, err := os.Stat("go.mod")
+	_, err := os.Stat(cfgDep.GoMod)
 	return err == nil
 }
 

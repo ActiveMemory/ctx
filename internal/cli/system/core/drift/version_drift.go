@@ -81,7 +81,7 @@ func CheckVersion(sessionID string) string {
 // Returns:
 //   - string: Version string or empty string
 func ReadVersionFile() string {
-	data, readErr := ctxIo.SafeReadUserFile("VERSION")
+	data, readErr := ctxIo.SafeReadUserFile(cfgVersion.FileVersion)
 	if readErr != nil {
 		return ""
 	}

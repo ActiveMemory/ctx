@@ -199,7 +199,7 @@ func CleanToolOutputJSON(content string) string {
 		var nonEmpty []string
 		for _, l := range bodyLines {
 			t := strings.TrimSpace(l)
-			if t == "" || strings.HasPrefix(t, "```") {
+			if t == "" || strings.HasPrefix(t, marker.CodeFence) {
 				continue
 			}
 			nonEmpty = append(nonEmpty, t)

@@ -11,6 +11,7 @@ import (
 	"path/filepath"
 	"strings"
 
+	cfgHTTP "github.com/ActiveMemory/ctx/internal/config/http"
 	errFs "github.com/ActiveMemory/ctx/internal/err/fs"
 	errHTTP "github.com/ActiveMemory/ctx/internal/err/http"
 )
@@ -70,7 +71,7 @@ func validateHTTPScheme(rawURL string) error {
 		return errHTTP.ParseURL(parseErr)
 	}
 	scheme := strings.ToLower(parsed.Scheme)
-	if scheme != "http" && scheme != "https" {
+	if scheme != cfgHTTP.SchemeHTTP && scheme != cfgHTTP.SchemeHTTPS {
 		return errHTTP.UnsafeURLScheme(parsed.Scheme)
 	}
 	return nil

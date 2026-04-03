@@ -105,6 +105,6 @@ func LastCommitMessage() ([]byte, error) {
 func DiffTreeHead() ([]byte, error) {
 	return Run(
 		cfgGit.DiffTree, cfgGit.FlagNoCommitID,
-		cfgGit.FlagNameOnly, cfgGit.FlagRecursive, "HEAD",
+		cfgGit.FlagNameOnly, cfgGit.FlagRecursive, cfgGit.RefHead,
 	)
 }

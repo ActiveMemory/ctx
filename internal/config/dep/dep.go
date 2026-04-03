@@ -26,6 +26,24 @@ const (
 	GoFlagJSON = "-json"
 	// GoAllPackages is the recursive package pattern.
 	GoAllPackages = "./..."
+	// GoMod is the Go module manifest filename.
+	GoMod = "go.mod"
+)
+
+// Node.js ecosystem constants.
+const (
+	// BuilderNode is the ecosystem label for Node.js projects.
+	BuilderNode = "node"
+	// PackageJSON is the Node.js manifest filename.
+	PackageJSON = "package.json"
+	// WorkspaceRoot is the fallback name for unnamed packages.
+	WorkspaceRoot = "root"
+)
+
+// Rust ecosystem constants.
+const (
+	// CargoToml is the Rust manifest filename.
+	CargoToml = "Cargo.toml"
 )
 
 // Cargo toolchain command constants.
@@ -112,4 +130,6 @@ const (
 	TableRowFormat = "%%-%ds %%s\n"
 	// MermaidEdgeFormat is the Mermaid graph edge format string.
 	MermaidEdgeFormat = "    %s[\"%s\"] --> %s[\"%s\"]\n"
+	// MermaidHeader is the Mermaid graph direction header.
+	MermaidHeader = "graph TD\n"
 )

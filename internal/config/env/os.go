@@ -11,3 +11,9 @@ const (
 	// OSWindows is the runtime.GOOS value for Windows.
 	OSWindows = "windows"
 )
+
+// Windows-specific environment variable names.
+const (
+	// LocalAppData is the Windows LOCALAPPDATA environment variable.
+	LocalAppData = "LOCALAPPDATA"
+)

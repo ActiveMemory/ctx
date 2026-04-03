@@ -16,6 +16,7 @@ import (
 	"github.com/ActiveMemory/ctx/internal/cli/watch/core"
 	"github.com/ActiveMemory/ctx/internal/cli/watch/core/apply"
 	"github.com/ActiveMemory/ctx/internal/config/cli"
+	"github.com/ActiveMemory/ctx/internal/config/marker"
 	"github.com/ActiveMemory/ctx/internal/config/regex"
 	"github.com/ActiveMemory/ctx/internal/config/watch"
 	errFs "github.com/ActiveMemory/ctx/internal/err/fs"
@@ -33,7 +34,7 @@ import (
 func ExtractAttribute(tag, attrName string) string {
 	// Use simple string search — the attribute names are fixed XML
 	// attributes, no regex needed.
-	prefix := attrName + `="`
+	prefix := attrName + marker.AttrEquals
 	idx := strings.Index(tag, prefix)
 	if idx == -1 {
 		return ""

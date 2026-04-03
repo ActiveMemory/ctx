@@ -38,7 +38,7 @@ func MermaidID(pkg string) string {
 //   - string: Mermaid graph markup
 func RenderMermaid(graph map[string][]string) string {
 	var b strings.Builder
-	b.WriteString("graph TD\n")
+	b.WriteString(dep.MermaidHeader)
 
 	// Sort keys for deterministic output.
 	keys := SortedKeys(graph)

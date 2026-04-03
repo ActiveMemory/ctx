@@ -16,6 +16,7 @@ import (
 	"github.com/ActiveMemory/ctx/internal/cli/add/core/extract"
 	"github.com/ActiveMemory/ctx/internal/cli/system/core/state"
 	cfgEntry "github.com/ActiveMemory/ctx/internal/config/entry"
+	cfgTrace "github.com/ActiveMemory/ctx/internal/config/trace"
 	"github.com/ActiveMemory/ctx/internal/entity"
 	"github.com/ActiveMemory/ctx/internal/entry"
 	errAdd "github.com/ActiveMemory/ctx/internal/err/add"
@@ -82,7 +83,7 @@ func Run(cmd *cobra.Command, args []string, flags entity.AddConfig) error {
 	// so the new entry is always #1 in file order. This coupling is
 	// intentional: if the prepend logic changes, this must be updated.
 	if fType == cfgEntry.Decision || fType == cfgEntry.Learning {
-		_ = trace.Record(fType+":1", state.Dir())
+		_ = trace.Record(fType+cfgTrace.RefFirstEntry, state.Dir())
 	}
 
 	return nil

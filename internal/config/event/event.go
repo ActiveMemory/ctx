@@ -14,10 +14,24 @@ const (
 	TypeEnd = "end"
 )
 
+// Notify event type constants.
+const (
+	// TypeTest is the event type for test notifications.
+	TypeTest = "test"
+	// TestMessage is the payload message for test notifications.
+	TestMessage = "Test notification from ctx"
+)
+
 // Event categories for log grouping.
 const (
 	// CategorySession groups session lifecycle events.
 	CategorySession = "session"
+)
+
+// Template variable keys for session events.
+const (
+	// VarCaller is the template variable for the calling editor.
+	VarCaller = "Caller"
 )
 
 // Events display configuration.

@@ -46,6 +46,9 @@ const (
 	StatusCompleted = "completed"
 )
 
+// RefFirstEntry is the suffix for the first entry in a context file.
+const RefFirstEntry = ":1"
+
 // RefFormat is the format string for numbered refs (e.g. "decision:1").
 const RefFormat = "%s:%d"
 

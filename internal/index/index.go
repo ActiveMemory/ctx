@@ -75,12 +75,12 @@ func GenerateTable(entries []Entry, columnHeader string) string {
 	var sb strings.Builder
 	if _, writeErr := fmt.Fprintf(&sb, marker.TableRowFmt+token.NewlineLF,
 		desc.Text(text.DescKeyLabelColDate), columnHeader); writeErr != nil {
-		logWarn.Warn(cfgWarn.Write, "index-header", writeErr)
+		logWarn.Warn(cfgWarn.Write, cfgWarn.IndexHeader, writeErr)
 	}
 	if _, writeErr := fmt.Fprintf(&sb, marker.TableSepFmt+token.NewlineLF,
 		strings.Repeat(token.Dash, len(desc.Text(text.DescKeyLabelColDate))),
 		strings.Repeat(token.Dash, len(columnHeader))); writeErr != nil {
-		logWarn.Warn(cfgWarn.Write, "index-separator", writeErr)
+		logWarn.Warn(cfgWarn.Write, cfgWarn.IndexSeparator, writeErr)
 	}
 
 	for _, e := range entries {
@@ -89,7 +89,7 @@ func GenerateTable(entries []Entry, columnHeader string) string {
 		)
 		if _, writeErr := fmt.Fprintf(&sb, marker.TableRowFmt+token.NewlineLF,
 			e.Date, title); writeErr != nil {
-			logWarn.Warn(cfgWarn.Write, "index-row", writeErr)
+			logWarn.Warn(cfgWarn.Write, cfgWarn.IndexRow, writeErr)
 		}
 	}
 

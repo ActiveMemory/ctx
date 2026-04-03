@@ -13,6 +13,7 @@ import (
 	"path/filepath"
 	"time"
 
+	cfgEvent "github.com/ActiveMemory/ctx/internal/config/event"
 	"github.com/ActiveMemory/ctx/internal/config/project"
 	"github.com/ActiveMemory/ctx/internal/config/warn"
 	errNotify "github.com/ActiveMemory/ctx/internal/err/notify"
@@ -44,8 +45,8 @@ func Send() (Result, error) {
 	}
 
 	payload := notify.Payload{
-		Event:     "test",
-		Message:   "Test notification from ctx",
+		Event:     cfgEvent.TypeTest,
+		Message:   cfgEvent.TestMessage,
 		Timestamp: time.Now().UTC().Format(time.RFC3339),
 		Project:   projectName,
 	}
@@ -55,7 +56,7 @@ func Send() (Result, error) {
 		return Result{}, errNotify.MarshalPayload(marshalErr)
 	}
 
-	filtered := !notify.EventAllowed("test", rc.NotifyEvents())
+	filtered := !notify.EventAllowed(cfgEvent.TypeTest, rc.NotifyEvents())
 
 	resp, postErr := notify.PostJSON(url, body)
 	if postErr != nil {
@@ -64,7 +65,7 @@ func Send() (Result, error) {
 	defer func() {
 		if closeErr := resp.Body.Close(); closeErr != nil {
 			ctxLog.Warn(
-				warn.Close, "response body", closeErr,
+				warn.Close, warn.ResponseBody, closeErr,
 			)
 		}
 	}()

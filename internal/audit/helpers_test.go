@@ -7,6 +7,7 @@
 package audit
 
 import (
+	"go/ast"
 	"go/token"
 	"strings"
 	"sync"
@@ -75,4 +76,50 @@ func isTestFile(filename string) bool {
 func posString(fset *token.FileSet, pos token.Pos) string {
 	p := fset.Position(pos)
 	return p.String()
+}
+
+// importLitPositions returns the token positions of all
+// string literals in import declarations.
+func importLitPositions(
+	file *ast.File,
+) map[token.Pos]bool {
+	positions := make(map[token.Pos]bool)
+	for _, decl := range file.Decls {
+		gd, ok := decl.(*ast.GenDecl)
+		if !ok || gd.Tok != token.IMPORT {
+			continue
+		}
+		for _, spec := range gd.Specs {
+			imp, ok := spec.(*ast.ImportSpec)
+			if ok && imp.Path != nil {
+				positions[imp.Path.Pos()] = true
+			}
+		}
+	}
+	return positions
+}
+
+// isStructTag reports whether lit is a struct field tag.
+func isStructTag(
+	file *ast.File, lit *ast.BasicLit,
+) bool {
+	if lit.Kind != token.STRING {
+		return false
+	}
+	found := false
+	ast.Inspect(file, func(n ast.Node) bool {
+		if found {
+			return false
+		}
+		field, ok := n.(*ast.Field)
+		if !ok {
+			return true
+		}
+		if field.Tag == lit {
+			found = true
+			return false
+		}
+		return true
+	})
+	return found
 }

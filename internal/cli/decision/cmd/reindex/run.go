@@ -12,6 +12,7 @@ import (
 	"github.com/spf13/cobra"
 
 	"github.com/ActiveMemory/ctx/internal/config/ctx"
+	cfgEntry "github.com/ActiveMemory/ctx/internal/config/entry"
 	"github.com/ActiveMemory/ctx/internal/index"
 	"github.com/ActiveMemory/ctx/internal/rc"
 )
@@ -31,6 +32,6 @@ func Run(cmd *cobra.Command, _ []string) error {
 		filePath,
 		ctx.Decision,
 		index.UpdateDecisions,
-		"decision",
+		cfgEntry.Decision,
 	)
 }
