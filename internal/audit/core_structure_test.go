@@ -15,17 +15,8 @@ import (
 
 // allowedCoreFiles lists the files permitted directly
 // in a core/ directory (not in subdirectories).
-// builder.go: dep/core houses the interface + registry
-//
-//	that imports language subpackages.
-//
-// types.go: shared types used by multiple subpackages
-//
-//	where moving would create circular imports.
 var allowedCoreFiles = map[string]bool{
-	"doc.go":     true,
-	"builder.go": true,
-	"types.go":   true,
+	"doc.go": true,
 }
 
 // TestCoreStructure ensures core/ directories contain

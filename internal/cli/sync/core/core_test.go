@@ -13,7 +13,6 @@ import (
 	"testing"
 
 	"github.com/ActiveMemory/ctx/internal/cli/initialize"
-	"github.com/ActiveMemory/ctx/internal/cli/sync/core"
 	"github.com/ActiveMemory/ctx/internal/cli/sync/core/action"
 	"github.com/ActiveMemory/ctx/internal/cli/sync/core/validate"
 	"github.com/ActiveMemory/ctx/internal/config/ctx"
@@ -320,7 +319,7 @@ func TestCheckPackageFiles_ArchContainsDependencies(t *testing.T) {
 }
 
 func TestAction_Fields(t *testing.T) {
-	a := core.Action{
+	a := validate.Action{
 		Type:        "NEW_DIR",
 		File:        ctx.Architecture,
 		Description: "test description",

@@ -14,7 +14,6 @@ import (
 
 	"github.com/ActiveMemory/ctx/internal/assets/read/desc"
 	"github.com/ActiveMemory/ctx/internal/assets/read/lookup"
-	"github.com/ActiveMemory/ctx/internal/cli/sync/core"
 	cfgCtx "github.com/ActiveMemory/ctx/internal/config/ctx"
 	"github.com/ActiveMemory/ctx/internal/config/dep"
 	"github.com/ActiveMemory/ctx/internal/config/embed/text"
@@ -37,8 +36,8 @@ import (
 //
 // Returns:
 //   - []Action: Suggested actions for undocumented dependencies
-func CheckPackageFiles(ctx *entity.Context) []core.Action {
-	var actions []core.Action
+func CheckPackageFiles(ctx *entity.Context) []Action {
+	var actions []Action
 
 	for f, d := range dep.Packages {
 		if _, statErr := os.Stat(f); statErr == nil {
@@ -58,7 +57,7 @@ func CheckPackageFiles(ctx *entity.Context) []core.Action {
 			}
 
 			if !hasDepsDoc {
-				actions = append(actions, core.Action{
+				actions = append(actions, Action{
 					Type: cfgSync.ActionDeps,
 					File: cfgCtx.Architecture,
 					Description: fmt.Sprintf(
@@ -88,8 +87,8 @@ func CheckPackageFiles(ctx *entity.Context) []core.Action {
 //
 // Returns:
 //   - []Action: Suggested actions for undocumented configurations
-func CheckConfigFiles(ctx *entity.Context) []core.Action {
-	var actions []core.Action
+func CheckConfigFiles(ctx *entity.Context) []Action {
+	var actions []Action
 
 	for _, cfg := range lookup.ConfigPatterns() {
 		matches, _ := filepath.Glob(cfg.Pattern)
@@ -103,7 +102,7 @@ func CheckConfigFiles(ctx *entity.Context) []core.Action {
 			keyword := strings.ToLower(strings.TrimPrefix(cfg.Pattern, token.PrefixDot))
 			keyword = strings.TrimSuffix(keyword, token.GlobStar)
 			if convContent == "" || !strings.Contains(convContent, keyword) {
-				actions = append(actions, core.Action{
+				actions = append(actions, Action{
 					Type: cfgSync.ActionConfig,
 					File: cfgCtx.Convention,
 					Description: fmt.Sprintf(
@@ -134,8 +133,8 @@ func CheckConfigFiles(ctx *entity.Context) []core.Action {
 //
 // Returns:
 //   - []Action: Suggested actions for undocumented directories
-func CheckNewDirectories(ctx *entity.Context) []core.Action {
-	var actions []core.Action
+func CheckNewDirectories(ctx *entity.Context) []Action {
+	var actions []Action
 
 	// Get ARCHITECTURE.md content
 	var archContent string
@@ -165,7 +164,7 @@ func CheckNewDirectories(ctx *entity.Context) []core.Action {
 		}
 
 		if cfgSync.ImportantDirs[name] && !strings.Contains(archContent, name) {
-			actions = append(actions, core.Action{
+			actions = append(actions, Action{
 				Type: cfgSync.ActionNewDir,
 				File: cfgCtx.Architecture,
 				Description: fmt.Sprintf(

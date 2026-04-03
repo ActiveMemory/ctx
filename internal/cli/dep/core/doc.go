@@ -7,8 +7,8 @@
 // Package core contains dependency graph building and rendering
 // for Go, Node.js, and Rust ecosystems.
 //
-// [DetectBuilder] auto-selects the right builder based on project
-// files. [FindBuilder] looks up by name. Each ecosystem has a
+// [builder.Detect] auto-selects the right builder based on project
+// files. [builder.Find] looks up by name. Each ecosystem has a
 // GraphBuilder implementation that produces a directed graph.
 // [MermaidID] sanitizes package names for Mermaid diagram syntax.
 package core

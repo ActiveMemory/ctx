@@ -14,7 +14,6 @@ import (
 	"testing"
 
 	"github.com/ActiveMemory/ctx/internal/cli/initialize"
-	"github.com/ActiveMemory/ctx/internal/cli/watch/core"
 	"github.com/ActiveMemory/ctx/internal/cli/watch/core/apply"
 	"github.com/ActiveMemory/ctx/internal/cli/watch/core/stream"
 	"github.com/ActiveMemory/ctx/internal/config/ctx"
@@ -46,14 +45,14 @@ func TestApplyUpdate(t *testing.T) {
 
 	tests := []struct {
 		name        string
-		update      core.ContextUpdate
+		update      apply.ContextUpdate
 		checkFile   string
 		checkFor    string
 		expectError bool
 	}{
 		{
 			name: "task update",
-			update: core.ContextUpdate{
+			update: apply.ContextUpdate{
 				Type:    entry.Task,
 				Content: "Test task from watch",
 			},
@@ -62,7 +61,7 @@ func TestApplyUpdate(t *testing.T) {
 		},
 		{
 			name: "decision update",
-			update: core.ContextUpdate{
+			update: apply.ContextUpdate{
 				Type:        entry.Decision,
 				Content:     "Test decision from watch",
 				Context:     "Testing watch functionality",
@@ -74,7 +73,7 @@ func TestApplyUpdate(t *testing.T) {
 		},
 		{
 			name: "learning update",
-			update: core.ContextUpdate{
+			update: apply.ContextUpdate{
 				Type:        entry.Learning,
 				Content:     "Test learning from watch",
 				Context:     "Testing watch functionality",
@@ -86,7 +85,7 @@ func TestApplyUpdate(t *testing.T) {
 		},
 		{
 			name: "decision without required fields",
-			update: core.ContextUpdate{
+			update: apply.ContextUpdate{
 				Type:    entry.Decision,
 				Content: "Missing fields",
 			},
@@ -94,7 +93,7 @@ func TestApplyUpdate(t *testing.T) {
 		},
 		{
 			name: "learning without required fields",
-			update: core.ContextUpdate{
+			update: apply.ContextUpdate{
 				Type:    entry.Learning,
 				Content: "Missing fields",
 			},
@@ -102,7 +101,7 @@ func TestApplyUpdate(t *testing.T) {
 		},
 		{
 			name: "convention update",
-			update: core.ContextUpdate{
+			update: apply.ContextUpdate{
 				Type:    entry.Convention,
 				Content: "Test convention from watch",
 			},
@@ -111,7 +110,7 @@ func TestApplyUpdate(t *testing.T) {
 		},
 		{
 			name:        "unknown type",
-			update:      core.ContextUpdate{Type: "invalid", Content: "Should fail"},
+			update:      apply.ContextUpdate{Type: "invalid", Content: "Should fail"},
 			expectError: true,
 		},
 	}
@@ -181,7 +180,7 @@ func TestApplyCompleteUpdate(t *testing.T) {
 	}
 
 	// Complete the task
-	update := core.ContextUpdate{Type: entry.Complete, Content: "authentication"}
+	update := apply.ContextUpdate{Type: entry.Complete, Content: "authentication"}
 	if err = apply.Update(update); err != nil {
 		t.Fatalf("Update failed: %v", err)
 	}
@@ -544,7 +543,7 @@ Another line of normal output.
 }
 
 func TestContextUpdate_Fields(t *testing.T) {
-	u := core.ContextUpdate{
+	u := apply.ContextUpdate{
 		Type:        "learning",
 		Content:     "Title",
 		Context:     "ctx",

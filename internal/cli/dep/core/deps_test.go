@@ -10,9 +10,11 @@ import (
 	"os"
 	"path/filepath"
 	"testing"
+
+	"github.com/ActiveMemory/ctx/internal/cli/dep/core/builder"
 )
 
-func TestDetectBuilder(t *testing.T) {
+func TestDetect(t *testing.T) {
 	orig, getErr := os.Getwd()
 	if getErr != nil {
 		t.Fatal(getErr)
@@ -24,9 +26,9 @@ func TestDetectBuilder(t *testing.T) {
 	if chdirErr := os.Chdir(tmp); chdirErr != nil {
 		t.Fatal(chdirErr)
 	}
-	if b := DetectBuilder(); b != nil {
+	if b := builder.Detect(); b != nil {
 		t.Errorf(
-			"DetectBuilder() = %q in empty dir, want nil",
+			"Detect() = %q in empty dir, want nil",
 			b.Name(),
 		)
 	}
@@ -39,16 +41,16 @@ func TestDetectBuilder(t *testing.T) {
 	if writeErr != nil {
 		t.Fatal(writeErr)
 	}
-	if b := DetectBuilder(); b == nil ||
+	if b := builder.Detect(); b == nil ||
 		b.Name() != "go" {
 		t.Errorf(
-			"DetectBuilder() with go.mod: want 'go', got %v",
+			"Detect() with go.mod: want 'go', got %v",
 			b,
 		)
 	}
 }
 
-func TestDetectBuilder_Node(t *testing.T) {
+func TestDetect_Node(t *testing.T) {
 	orig, getErr := os.Getwd()
 	if getErr != nil {
 		t.Fatal(getErr)
@@ -67,16 +69,16 @@ func TestDetectBuilder_Node(t *testing.T) {
 	if writeErr != nil {
 		t.Fatal(writeErr)
 	}
-	if b := DetectBuilder(); b == nil ||
+	if b := builder.Detect(); b == nil ||
 		b.Name() != "node" {
 		t.Errorf(
-			"DetectBuilder() with package.json: want 'node', got %v",
+			"Detect() with package.json: want 'node', got %v",
 			b,
 		)
 	}
 }
 
-func TestDetectBuilder_Python(t *testing.T) {
+func TestDetect_Python(t *testing.T) {
 	orig, getErr := os.Getwd()
 	if getErr != nil {
 		t.Fatal(getErr)
@@ -95,16 +97,16 @@ func TestDetectBuilder_Python(t *testing.T) {
 	if writeErr != nil {
 		t.Fatal(writeErr)
 	}
-	if b := DetectBuilder(); b == nil ||
+	if b := builder.Detect(); b == nil ||
 		b.Name() != "python" {
 		t.Errorf(
-			"DetectBuilder() with requirements.txt: want 'python', got %v",
+			"Detect() with requirements.txt: want 'python', got %v",
 			b,
 		)
 	}
 }
 
-func TestDetectBuilder_Rust(t *testing.T) {
+func TestDetect_Rust(t *testing.T) {
 	orig, getErr := os.Getwd()
 	if getErr != nil {
 		t.Fatal(getErr)
@@ -124,16 +126,16 @@ func TestDetectBuilder_Rust(t *testing.T) {
 	if writeErr != nil {
 		t.Fatal(writeErr)
 	}
-	if b := DetectBuilder(); b == nil ||
+	if b := builder.Detect(); b == nil ||
 		b.Name() != "rust" {
 		t.Errorf(
-			"DetectBuilder() with Cargo.toml: want 'rust', got %v",
+			"Detect() with Cargo.toml: want 'rust', got %v",
 			b,
 		)
 	}
 }
 
-func TestDetectBuilder_PriorityOrder(t *testing.T) {
+func TestDetect_PriorityOrder(t *testing.T) {
 	orig, getErr := os.Getwd()
 	if getErr != nil {
 		t.Fatal(getErr)
@@ -160,37 +162,37 @@ func TestDetectBuilder_PriorityOrder(t *testing.T) {
 		t.Fatal(writeErr)
 	}
 
-	if b := DetectBuilder(); b == nil ||
+	if b := builder.Detect(); b == nil ||
 		b.Name() != "go" {
 		t.Errorf(
-			"DetectBuilder() with go.mod+package.json: want 'go', got %v",
+			"Detect() with go.mod+package.json: want 'go', got %v",
 			b,
 		)
 	}
 }
 
-func TestFindBuilder(t *testing.T) {
+func TestFind(t *testing.T) {
 	for _, name := range []string{
 		"go", "node", "python", "rust",
 	} {
-		if b := FindBuilder(name); b == nil {
+		if b := builder.Find(name); b == nil {
 			t.Errorf(
-				"FindBuilder(%q) = nil, want builder", name,
+				"Find(%q) = nil, want builder", name,
 			)
 		}
 	}
-	if b := FindBuilder("java"); b != nil {
+	if b := builder.Find("java"); b != nil {
 		t.Errorf(
-			"FindBuilder('java') = %v, want nil", b,
+			"Find('java') = %v, want nil", b,
 		)
 	}
 }
 
-func TestBuilderNames(t *testing.T) {
-	names := BuilderNames()
+func TestNames(t *testing.T) {
+	names := builder.Names()
 	if len(names) != 4 {
 		t.Fatalf(
-			"BuilderNames() returned %d names, want 4",
+			"Names() returned %d names, want 4",
 			len(names),
 		)
 	}
@@ -200,7 +202,7 @@ func TestBuilderNames(t *testing.T) {
 	for i, want := range expected {
 		if names[i] != want {
 			t.Errorf(
-				"BuilderNames()[%d] = %q, want %q",
+				"Names()[%d] = %q, want %q",
 				i, names[i], want,
 			)
 		}

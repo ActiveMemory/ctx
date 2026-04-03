@@ -7,7 +7,6 @@
 package apply
 
 import (
-	"github.com/ActiveMemory/ctx/internal/cli/watch/core"
 	"github.com/ActiveMemory/ctx/internal/entity"
 	"github.com/ActiveMemory/ctx/internal/entry"
 )
@@ -26,7 +25,7 @@ import (
 // Returns:
 //   - error: Non-nil if validation fails, type is unknown,
 //     or file operations fail
-func addEntry(update core.ContextUpdate) error {
+func addEntry(update ContextUpdate) error {
 	params := entity.EntryParams{
 		Type:        update.Type,
 		Content:     update.Content,

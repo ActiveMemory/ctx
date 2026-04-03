@@ -4,7 +4,7 @@
 //   \    Copyright 2026-present Context contributors.
 //                 SPDX-License-Identifier: Apache-2.0
 
-package core
+package builder
 
 import (
 	"github.com/ActiveMemory/ctx/internal/cli/dep/core/golang"
@@ -39,12 +39,12 @@ var Builders = []GraphBuilder{
 	&rust.Builder{},
 }
 
-// DetectBuilder returns the first builder whose Detect()
+// Detect returns the first builder whose Detect()
 // returns true, or nil if no ecosystem is detected.
 //
 // Returns:
 //   - GraphBuilder: The detected builder, or nil
-func DetectBuilder() GraphBuilder {
+func Detect() GraphBuilder {
 	for _, b := range Builders {
 		if b.Detect() {
 			return b
@@ -53,7 +53,7 @@ func DetectBuilder() GraphBuilder {
 	return nil
 }
 
-// FindBuilder returns the builder matching the given name,
+// Find returns the builder matching the given name,
 // or nil.
 //
 // Parameters:
@@ -61,7 +61,7 @@ func DetectBuilder() GraphBuilder {
 //
 // Returns:
 //   - GraphBuilder: The matching builder, or nil
-func FindBuilder(name string) GraphBuilder {
+func Find(name string) GraphBuilder {
 	for _, b := range Builders {
 		if b.Name() == name {
 			return b
@@ -70,12 +70,12 @@ func FindBuilder(name string) GraphBuilder {
 	return nil
 }
 
-// BuilderNames returns all registered builder names for
+// Names returns all registered builder names for
 // help text.
 //
 // Returns:
 //   - []string: Ordered list of ecosystem names
-func BuilderNames() []string {
+func Names() []string {
 	names := make([]string, len(Builders))
 	for i, b := range Builders {
 		names[i] = b.Name()

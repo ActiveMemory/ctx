@@ -7,7 +7,6 @@
 package action
 
 import (
-	"github.com/ActiveMemory/ctx/internal/cli/sync/core"
 	"github.com/ActiveMemory/ctx/internal/cli/sync/core/validate"
 	"github.com/ActiveMemory/ctx/internal/entity"
 )
@@ -25,8 +24,8 @@ import (
 //
 // Returns:
 //   - []Action: List of suggested actions to reconcile context with codebase
-func Detect(ctx *entity.Context) []core.Action {
-	var actions []core.Action
+func Detect(ctx *entity.Context) []validate.Action {
+	var actions []validate.Action
 
 	// Check for new top-level directories not mentioned in ARCHITECTURE.md
 	actions = append(actions, validate.CheckNewDirectories(ctx)...)

@@ -9,9 +9,9 @@ package root
 import (
 	"strings"
 
+	"github.com/ActiveMemory/ctx/internal/cli/dep/core/builder"
 	"github.com/spf13/cobra"
 
-	"github.com/ActiveMemory/ctx/internal/cli/dep/core"
 	"github.com/ActiveMemory/ctx/internal/cli/dep/core/render"
 	"github.com/ActiveMemory/ctx/internal/config/fmt"
 	"github.com/ActiveMemory/ctx/internal/config/token"
@@ -45,22 +45,25 @@ func Run(
 		return errConfig.UnknownFormat(format, supportedFormats)
 	}
 
-	var builder core.GraphBuilder
+	var b builder.GraphBuilder
 	if projType != "" {
-		builder = core.FindBuilder(projType)
-		if builder == nil {
-			names := strings.Join(core.BuilderNames(), token.CommaSpace)
+		b = builder.Find(projType)
+		if b == nil {
+			names := strings.Join(builder.Names(), token.CommaSpace)
 			return errConfig.UnknownProjectType(projType, names)
 		}
 	} else {
-		builder = core.DetectBuilder()
-		if builder == nil {
-			deps.InfoNoProject(cmd, strings.Join(core.BuilderNames(), token.CommaSpace))
+		b = builder.Detect()
+		if b == nil {
+			names := strings.Join(
+				builder.Names(), token.CommaSpace,
+			)
+			deps.InfoNoProject(cmd, names)
 			return nil
 		}
 	}
 
-	graph, buildErr := builder.Build(external)
+	graph, buildErr := b.Build(external)
 	if buildErr != nil {
 		return buildErr
 	}

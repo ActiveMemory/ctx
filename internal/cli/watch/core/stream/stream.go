@@ -13,7 +13,6 @@ import (
 
 	"github.com/spf13/cobra"
 
-	"github.com/ActiveMemory/ctx/internal/cli/watch/core"
 	"github.com/ActiveMemory/ctx/internal/cli/watch/core/apply"
 	"github.com/ActiveMemory/ctx/internal/config/cli"
 	"github.com/ActiveMemory/ctx/internal/config/marker"
@@ -77,7 +76,7 @@ func Process(cmd *cobra.Command, reader io.Reader, dryRun bool) error {
 		for _, match := range matches {
 			if len(match) >= watch.ContextUpdateMinGroups {
 				openingTag := match[1]
-				update := core.ContextUpdate{
+				update := apply.ContextUpdate{
 					Type:        strings.ToLower(ExtractAttribute(openingTag, cli.AttrType)),
 					Content:     strings.TrimSpace(match[2]),
 					Context:     ExtractAttribute(openingTag, cli.AttrContext),

@@ -7,7 +7,6 @@
 package apply
 
 import (
-	"github.com/ActiveMemory/ctx/internal/cli/watch/core"
 	cfgEntry "github.com/ActiveMemory/ctx/internal/config/entry"
 	"github.com/ActiveMemory/ctx/internal/err/config"
 )
@@ -24,7 +23,7 @@ import (
 //
 // Returns:
 //   - error: Non-nil if type is unknown or the handler fails
-func Update(update core.ContextUpdate) error {
+func Update(update ContextUpdate) error {
 	switch update.Type {
 	case cfgEntry.Task:
 		return addEntry(update)
