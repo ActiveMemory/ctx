@@ -95,14 +95,14 @@ func (p *Copilot) Matches(path string) bool {
 		return false
 	}
 
-	var session copilotRawSession
+	var sess copilotRawSession
 	if unmarshalSessionErr := json.Unmarshal(
-		line.V, &session,
+		line.V, &sess,
 	); unmarshalSessionErr != nil {
 		return false
 	}
 
-	return session.SessionID != "" && session.Version > 0
+	return sess.SessionID != "" && sess.Version > 0
 }
 
 // ParseFile reads a Copilot Chat JSONL file and returns the session.
@@ -127,7 +127,7 @@ func (p *Copilot) ParseFile(path string) ([]*entity.Session, error) {
 	buf := make([]byte, 0, cfgCopilot.ScanBufInit)
 	scanner.Buffer(buf, cfgCopilot.ScanBufMax)
 
-	var session *copilotRawSession
+	var sess *copilotRawSession
 
 	for scanner.Scan() {
 		lineBytes := scanner.Bytes()
@@ -151,18 +151,18 @@ func (p *Copilot) ParseFile(path string) ([]*entity.Session, error) {
 			); unmarshalSnapErr != nil {
 				return nil, errParser.Unmarshal(unmarshalSnapErr)
 			}
-			session = &s
+			sess = &s
 
 		case copilotKindScalarPatch:
 			// Scalar property patch — apply to session
-			if session != nil {
-				p.applyScalarPatch(session, line.K, line.V)
+			if sess != nil {
+				p.applyScalarPatch(sess, line.K, line.V)
 			}
 
 		case copilotKindObjectPatch:
 			// Array/object patch — apply to session
-			if session != nil {
-				p.applyPatch(session, line.K, line.V)
+			if sess != nil {
+				p.applyPatch(sess, line.K, line.V)
 			}
 		}
 	}
@@ -171,14 +171,14 @@ func (p *Copilot) ParseFile(path string) ([]*entity.Session, error) {
 		return nil, errParser.ScanFile(scanErr)
 	}
 
-	if session == nil {
+	if sess == nil {
 		return nil, nil
 	}
 
 	// Resolve workspace folder from workspace.json next to chatSessions/
 	cwd := p.resolveWorkspaceCWD(path)
 
-	result := p.buildSession(session, path, cwd)
+	result := p.buildSession(sess, path, cwd)
 	if result == nil {
 		return nil, nil
 	}

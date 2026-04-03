@@ -68,6 +68,27 @@ func TestNoImportNameShadowing(t *testing.T) {
 						)
 					}
 
+				case *ast.DeclStmt:
+					// var declarations inside
+					// function bodies.
+					gd, ok := v.Decl.(*ast.GenDecl)
+					if !ok || gd.Tok != token.VAR {
+						break
+					}
+					for _, spec := range gd.Specs {
+						vs, ok :=
+							spec.(*ast.ValueSpec)
+						if !ok {
+							continue
+						}
+						for _, name := range vs.Names {
+							checkIdent(
+								pkg, importNames,
+								name, &violations,
+							)
+						}
+					}
+
 				case *ast.FuncDecl:
 					checkFuncParams(
 						pkg, importNames,
