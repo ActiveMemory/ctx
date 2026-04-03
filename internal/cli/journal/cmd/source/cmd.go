@@ -10,6 +10,7 @@ import (
 	"github.com/spf13/cobra"
 
 	"github.com/ActiveMemory/ctx/internal/assets/read/desc"
+	coreSrc "github.com/ActiveMemory/ctx/internal/cli/journal/core/source"
 	"github.com/ActiveMemory/ctx/internal/config/embed/cmd"
 	"github.com/ActiveMemory/ctx/internal/config/embed/flag"
 	cFlag "github.com/ActiveMemory/ctx/internal/config/flag"
@@ -19,12 +20,13 @@ import (
 
 // Cmd returns the journal source subcommand.
 //
-// Combines session listing and inspection into a single entry point.
-// Default behavior (no flags) lists available sessions. Use --show to
-// inspect a specific session by slug or ID.
+// Combines session listing and inspection into a single entry
+// point. Default behavior (no flags) lists available sessions.
+// Use --show to inspect a specific session by slug or ID.
 //
 // Returns:
-//   - *cobra.Command: Command for listing and inspecting session sources
+//   - *cobra.Command: Command for listing and inspecting
+//     session sources
 func Cmd() *cobra.Command {
 	var (
 		showID      string
@@ -44,8 +46,10 @@ func Cmd() *cobra.Command {
 		Use:   cmd.UseJournalSource,
 		Short: short,
 		Long:  long,
-		RunE: func(cmd *cobra.Command, args []string) error {
-			return Run(cmd, args, Opts{
+		RunE: func(
+			cmd *cobra.Command, args []string,
+		) error {
+			return Run(cmd, args, coreSrc.Opts{
 				ShowID:      showID,
 				Latest:      latest,
 				Full:        full,

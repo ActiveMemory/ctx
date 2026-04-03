@@ -4,7 +4,7 @@
 //   \    Copyright 2026-present Context contributors.
 //                 SPDX-License-Identifier: Apache-2.0
 
-package root
+package core
 
 import (
 	"github.com/spf13/cobra"
@@ -12,14 +12,14 @@ import (
 	"github.com/ActiveMemory/ctx/internal/write/guide"
 )
 
-// listCommands prints all non-hidden subcommands from the root.
+// ListCommands prints all non-hidden subcommands from the root.
 //
 // Parameters:
 //   - cmd: Cobra command for output stream and root traversal
 //
 // Returns:
 //   - error: Always nil
-func listCommands(cmd *cobra.Command) error {
+func ListCommands(cmd *cobra.Command) error {
 	root := cmd.Root()
 	guide.CommandsHeader(cmd)
 	for _, c := range root.Commands() {

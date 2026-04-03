@@ -22,13 +22,14 @@ import (
 	execGit "github.com/ActiveMemory/ctx/internal/exec/git"
 )
 
-// scoreCommitViolations reads the last commit and scores it for signs that
-// the agent bypassed /ctx-commit. Returns a formatted nudge box for the
-// human, or empty string if the commit looks clean.
+// ScoreCommitViolations reads the last commit and scores it
+// for signs that the agent bypassed /ctx-commit. Returns a
+// formatted nudge box for the human, or empty string if the
+// commit looks clean.
 //
 // Returns:
-//   - string: Formatted nudge box, or empty string if no violations detected
-func scoreCommitViolations() string {
+//   - string: Formatted nudge box, or empty if no violations
+func ScoreCommitViolations() string {
 	msgBytes, msgErr := execGit.LastCommitMessage()
 	if msgErr != nil {
 		return ""
@@ -40,23 +41,39 @@ func scoreCommitViolations() string {
 
 	if !strings.Contains(commitMsg, cfgGit.TrailerSpec) {
 		score += stats.ViolationSpecMissing
-		missing = append(missing, desc.Text(text.DescKeyPostCommitMissingSpec))
+		missing = append(
+			missing,
+			desc.Text(text.DescKeyPostCommitMissingSpec),
+		)
 	}
 
-	if !strings.Contains(commitMsg, cfgGit.TrailerSignedOffBy) {
+	if !strings.Contains(
+		commitMsg, cfgGit.TrailerSignedOffBy,
+	) {
 		score += stats.ViolationSignoffMissing
-		missing = append(missing, desc.Text(text.DescKeyPostCommitMissingSignoff))
+		missing = append(
+			missing,
+			desc.Text(text.DescKeyPostCommitMissingSignoff),
+		)
 	}
 
-	lines := strings.Split(strings.TrimSpace(commitMsg), token.NewlineLF)
+	lines := strings.Split(
+		strings.TrimSpace(commitMsg), token.NewlineLF,
+	)
 	if len(lines) <= 1 {
 		score += stats.ViolationSingleLine
-		missing = append(missing, desc.Text(text.DescKeyPostCommitMissingBody))
+		missing = append(
+			missing,
+			desc.Text(text.DescKeyPostCommitMissingBody),
+		)
 	}
 
 	if !regex.TaskRef.MatchString(commitMsg) {
 		score += stats.ViolationTaskRefMissing
-		missing = append(missing, desc.Text(text.DescKeyPostCommitMissingTaskRef))
+		missing = append(
+			missing,
+			desc.Text(text.DescKeyPostCommitMissingTaskRef),
+		)
 	}
 
 	diffBytes, diffErr := execGit.DiffTreeHead()
@@ -66,7 +83,12 @@ func scoreCommitViolations() string {
 		hasTasks := strings.Contains(diffFiles, cfgCtx.Task)
 		if hasSource && !hasTasks {
 			score += stats.ViolationNoTasksChanged
-			missing = append(missing, desc.Text(text.DescKeyPostCommitMissingTaskUpdate))
+			missing = append(
+				missing,
+				desc.Text(
+					text.DescKeyPostCommitMissingTaskUpdate,
+				),
+			)
 		}
 	}
 
@@ -74,9 +96,13 @@ func scoreCommitViolations() string {
 		return ""
 	}
 
-	severity := desc.Text(text.DescKeyPostCommitSeverityInformal)
+	severity := desc.Text(
+		text.DescKeyPostCommitSeverityInformal,
+	)
 	if score >= stats.ViolationThresholdWarn {
-		severity = desc.Text(text.DescKeyPostCommitSeveritySkipped)
+		severity = desc.Text(
+			text.DescKeyPostCommitSeveritySkipped,
+		)
 	}
 
 	title := fmt.Sprintf(

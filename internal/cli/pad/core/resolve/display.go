@@ -10,14 +10,15 @@ import (
 	"github.com/ActiveMemory/ctx/internal/cli/pad/core/blob"
 )
 
-// displayAll converts raw scratchpad entries to their display form.
+// DisplayAll converts raw scratchpad entries to their display
+// form.
 //
 // Parameters:
 //   - entries: Raw entry strings from decryption
 //
 // Returns:
 //   - []string: Human-readable display representations
-func displayAll(entries []string) []string {
+func DisplayAll(entries []string) []string {
 	out := make([]string, len(entries))
 	for i, e := range entries {
 		out[i] = blob.DisplayEntry(e)

@@ -21,28 +21,37 @@ import (
 //   - opts: Edit operation parameters
 //
 // Returns:
-//   - error: Non-nil on invalid index, type mismatch, or read/write failure
-func Run(cmd *cobra.Command, opts Opts) error {
+//   - error: Non-nil on invalid index, type mismatch,
+//     or read/write failure
+func Run(cmd *cobra.Command, opts coreEdit.Opts) error {
 	var entries []string
 	var editErr error
 
 	switch opts.Mode {
-	case ModeAppend:
-		entries, editErr = coreEdit.Append(opts.N, opts.Text)
-	case ModePrepend:
-		entries, editErr = coreEdit.Prepend(opts.N, opts.Text)
-	case ModeBlob:
+	case coreEdit.ModeAppend:
+		entries, editErr = coreEdit.Append(
+			opts.N, opts.Text,
+		)
+	case coreEdit.ModePrepend:
+		entries, editErr = coreEdit.Prepend(
+			opts.N, opts.Text,
+		)
+	case coreEdit.ModeBlob:
 		entries, editErr = coreEdit.UpdateBlob(
 			opts.N, opts.FilePath, opts.LabelText,
 		)
 	default:
-		entries, editErr = coreEdit.Replace(opts.N, opts.Text)
+		entries, editErr = coreEdit.Replace(
+			opts.N, opts.Text,
+		)
 	}
 	if editErr != nil {
 		return editErr
 	}
 
-	if writeErr := store.WriteEntries(cmd, entries); writeErr != nil {
+	if writeErr := store.WriteEntries(
+		cmd, entries,
+	); writeErr != nil {
 		return writeErr
 	}
 

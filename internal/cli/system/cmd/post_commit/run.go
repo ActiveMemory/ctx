@@ -17,6 +17,7 @@ import (
 	"github.com/ActiveMemory/ctx/internal/cli/system/core/drift"
 	"github.com/ActiveMemory/ctx/internal/cli/system/core/message"
 	"github.com/ActiveMemory/ctx/internal/cli/system/core/nudge"
+	corePC "github.com/ActiveMemory/ctx/internal/cli/system/core/post_commit"
 	coreSession "github.com/ActiveMemory/ctx/internal/cli/system/core/session"
 	"github.com/ActiveMemory/ctx/internal/cli/system/core/state"
 	"github.com/ActiveMemory/ctx/internal/config/embed/text"
@@ -29,9 +30,10 @@ import (
 
 // Run executes the post-commit hook logic.
 //
-// After a successful git commit (non-amend), nudges the agent to offer
-// context capture (decision or learning) and to run lints/tests before
-// pushing. Also checks for version drift and spec enforcement.
+// After a successful git commit (non-amend), nudges the agent
+// to offer context capture (decision or learning) and to run
+// lints/tests before pushing. Also checks for version drift
+// and spec enforcement.
 //
 // Parameters:
 //   - cmd: Cobra command for output
@@ -58,7 +60,8 @@ func Run(cmd *cobra.Command, stdin *os.File) error {
 		return nil
 	}
 
-	hookName, variant := hook.PostCommit, hook.VariantNudge
+	hookName := hook.PostCommit
+	variant := hook.VariantNudge
 
 	fallback := desc.Text(text.DescKeyPostCommitFallback)
 	msg := message.Load(hookName, variant, nil, fallback)
@@ -66,7 +69,10 @@ func Run(cmd *cobra.Command, stdin *os.File) error {
 		return nil
 	}
 	msg = ctxContext.AppendDir(msg)
-	writeSetup.Context(cmd, coreSession.FormatContext(hook.EventPostToolUse, msg))
+	writeSetup.Context(
+		cmd,
+		coreSession.FormatContext(hook.EventPostToolUse, msg),
+	)
 
 	ref := notify.NewTemplateRef(hookName, variant, nil)
 	nudge.Relay(
@@ -78,11 +84,13 @@ func Run(cmd *cobra.Command, stdin *os.File) error {
 		input.SessionID, ref,
 	)
 
-	if driftResponse := drift.CheckVersion(sessionID); driftResponse != "" {
+	if driftResponse := drift.CheckVersion(
+		sessionID,
+	); driftResponse != "" {
 		writeSetup.Context(cmd, driftResponse)
 	}
 
-	if violations := scoreCommitViolations(); violations != "" {
+	if violations := corePC.ScoreCommitViolations(); violations != "" {
 		writeSetup.NudgeBlock(cmd, violations)
 	}
 

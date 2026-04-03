@@ -10,6 +10,7 @@ import (
 	"github.com/spf13/cobra"
 
 	"github.com/ActiveMemory/ctx/internal/assets/read/desc"
+	"github.com/ActiveMemory/ctx/internal/cli/loop/core"
 	"github.com/ActiveMemory/ctx/internal/config/embed/text"
 	"github.com/ActiveMemory/ctx/internal/config/fs"
 	cfgLoop "github.com/ActiveMemory/ctx/internal/config/loop"
@@ -21,19 +22,20 @@ import (
 
 // Run executes the loop command logic.
 //
-// Validates the tool selection, generates the loop script, and writes it
-// to the output file. Prints usage instructions after generation.
+// Validates the tool selection, generates the loop script,
+// and writes it to the output file. Prints usage instructions
+// after generation.
 //
 // Parameters:
 //   - cmd: Cobra command for output stream
 //   - promptFile: Path to the prompt file for the AI
 //   - tool: AI tool to use (claude, aider, or generic)
-//   - maxIterations: Maximum loop iterations (0 for unlimited)
-//   - completionMsg: Signal string that indicates loop completion
+//   - maxIterations: Maximum loop iterations (0=unlimited)
+//   - completionMsg: Signal string for loop completion
 //   - outputFile: Path for the generated script
 //
 // Returns:
-//   - error: Non-nil if the tool is invalid or file write fails
+//   - error: Non-nil if tool invalid or file write fails
 func Run(
 	cmd *cobra.Command,
 	promptFile, tool string,
@@ -44,7 +46,9 @@ func Run(
 		return config.InvalidTool(tool)
 	}
 
-	script := GenerateLoopScript(promptFile, tool, maxIterations, completionMsg)
+	script := core.GenerateLoopScript(
+		promptFile, tool, maxIterations, completionMsg,
+	)
 
 	if writeErr := ctxIo.SafeWriteFile(
 		outputFile, []byte(script), fs.PermExec,
@@ -53,7 +57,8 @@ func Run(
 	}
 
 	loop.InfoGenerated(
-		cmd, outputFile, desc.Text(text.DescKeyHeadingLoopStart),
+		cmd, outputFile,
+		desc.Text(text.DescKeyHeadingLoopStart),
 		tool, promptFile, maxIterations, completionMsg,
 	)
 

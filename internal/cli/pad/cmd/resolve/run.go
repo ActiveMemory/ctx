@@ -10,6 +10,7 @@ import (
 	"github.com/spf13/cobra"
 
 	padCrypto "github.com/ActiveMemory/ctx/internal/cli/pad/core/crypto"
+	coreResolve "github.com/ActiveMemory/ctx/internal/cli/pad/core/resolve"
 	"github.com/ActiveMemory/ctx/internal/cli/pad/core/store"
 	"github.com/ActiveMemory/ctx/internal/config/pad"
 	"github.com/ActiveMemory/ctx/internal/crypto"
@@ -25,7 +26,8 @@ import (
 //   - cmd: Cobra command for output
 //
 // Returns:
-//   - error: Non-nil if no conflict files found or decryption fails
+//   - error: Non-nil if no conflict files found or
+//     decryption fails
 func Run(cmd *cobra.Command) error {
 	if !rc.ScratchpadEncrypt() {
 		return errPad.ResolveNotEncrypted()
@@ -39,19 +41,29 @@ func Run(cmd *cobra.Command) error {
 
 	dir := rc.ContextDir()
 
-	ours, errOurs := padCrypto.DecryptFile(key, dir, pad.EncOurs)
-	theirs, errTheirs := padCrypto.DecryptFile(key, dir, pad.EncTheirs)
+	ours, errOurs := padCrypto.DecryptFile(
+		key, dir, pad.EncOurs,
+	)
+	theirs, errTheirs := padCrypto.DecryptFile(
+		key, dir, pad.EncTheirs,
+	)
 
 	if errOurs != nil && errTheirs != nil {
 		return errPad.NoConflictFiles(pad.Enc)
 	}
 
 	if errOurs == nil {
-		writePad.ResolveSide(cmd, pad.SideOurs, displayAll(ours))
+		writePad.ResolveSide(
+			cmd, pad.SideOurs,
+			coreResolve.DisplayAll(ours),
+		)
 	}
 
 	if errTheirs == nil {
-		writePad.ResolveSide(cmd, pad.SideTheirs, displayAll(theirs))
+		writePad.ResolveSide(
+			cmd, pad.SideTheirs,
+			coreResolve.DisplayAll(theirs),
+		)
 	}
 
 	return nil

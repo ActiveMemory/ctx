@@ -4,7 +4,7 @@
 //   \    Copyright 2026-present Context contributors.
 //                 SPDX-License-Identifier: Apache-2.0
 
-package root
+package core
 
 import (
 	"strings"
@@ -18,36 +18,42 @@ import (
 	"github.com/ActiveMemory/ctx/internal/write/guide"
 )
 
-// parseSkillFrontmatter extracts YAML frontmatter from a SKILL.md file.
+// ParseSkillFrontmatter extracts YAML frontmatter from a
+// SKILL.md file.
 //
 // Parameters:
 //   - content: Raw SKILL.md content
 //
 // Returns:
-//   - skillMeta: Parsed name and description (zero value if no frontmatter)
+//   - SkillMeta: Parsed name and description (zero if none)
 //   - error: Non-nil if YAML parsing fails
-func parseSkillFrontmatter(content []byte) (skillMeta, error) {
+func ParseSkillFrontmatter(
+	content []byte,
+) (SkillMeta, error) {
 	text := string(content)
 	prefix := token.Separator + token.NewlineLF
 	if !strings.HasPrefix(text, prefix) {
-		return skillMeta{}, nil
+		return SkillMeta{}, nil
 	}
 
 	offset := len(prefix)
-	end := strings.Index(text[offset:], token.NewlineLF+token.Separator)
+	end := strings.Index(
+		text[offset:], token.NewlineLF+token.Separator,
+	)
 	if end < 0 {
-		return skillMeta{}, nil
+		return SkillMeta{}, nil
 	}
 
 	block := []byte(text[offset : offset+end])
-	var meta skillMeta
+	var meta SkillMeta
 	if yamlErr := yaml.Unmarshal(block, &meta); yamlErr != nil {
-		return skillMeta{}, yamlErr
+		return SkillMeta{}, yamlErr
 	}
 	return meta, nil
 }
 
-// truncateDescription returns the first sentence or up to maxLen characters.
+// TruncateDescription returns the first sentence or up to
+// maxLen characters.
 //
 // Parameters:
 //   - desc: Full description text
@@ -55,8 +61,9 @@ func parseSkillFrontmatter(content []byte) (skillMeta, error) {
 //
 // Returns:
 //   - string: Truncated description
-func truncateDescription(desc string, maxLen int) string {
-	if idx := strings.Index(desc, ". "); idx >= 0 && idx < maxLen {
+func TruncateDescription(desc string, maxLen int) string {
+	if idx := strings.Index(desc, ". "); idx >= 0 &&
+		idx < maxLen {
 		return desc[:idx+1]
 	}
 	if len(desc) <= maxLen {
@@ -65,14 +72,15 @@ func truncateDescription(desc string, maxLen int) string {
 	return desc[:maxLen] + token.Ellipsis
 }
 
-// listSkills prints all available skills with their descriptions.
+// ListSkills prints all available skills with their
+// descriptions.
 //
 // Parameters:
 //   - cmd: Cobra command for output
 //
 // Returns:
 //   - error: Non-nil if skill listing fails
-func listSkills(cmd *cobra.Command) error {
+func ListSkills(cmd *cobra.Command) error {
 	names, skillsErr := claude.SkillList()
 	if skillsErr != nil {
 		return skillsErr
@@ -86,12 +94,14 @@ func listSkills(cmd *cobra.Command) error {
 			continue
 		}
 
-		meta, parseErr := parseSkillFrontmatter(content)
+		meta, parseErr := ParseSkillFrontmatter(content)
 		if parseErr != nil {
 			continue
 		}
 
-		desc := truncateDescription(meta.Description, cfgFmt.TruncateDescription)
+		desc := TruncateDescription(
+			meta.Description, cfgFmt.TruncateDescription,
+		)
 		guide.InfoSkillLine(cmd, name, desc)
 	}
 	return nil

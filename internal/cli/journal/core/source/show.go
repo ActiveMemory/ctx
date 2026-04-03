@@ -25,24 +25,30 @@ import (
 	writeRecall "github.com/ActiveMemory/ctx/internal/write/journal"
 )
 
-// runShow displays detailed information about a session including metadata,
-// token usage, tool usage summary, and optionally the full conversation.
+// RunShow displays detailed information about a session
+// including metadata, token usage, tool usage summary, and
+// optionally the full conversation.
 //
 // Parameters:
 //   - cmd: Cobra command for output stream
-//   - args: positional arguments (session ID triggers show mode)
-//   - opts: combined flags including ShowID, Latest, Full, and AllProjects
+//   - args: positional arguments (session ID for show mode)
+//   - opts: combined flags including ShowID, Latest, Full,
+//     and AllProjects
 //
 // Returns:
 //   - error: non-nil if session not found or scanning fails
-func runShow(cmd *cobra.Command, args []string, opts Opts) error {
-	// If --show <id> was used, pass the ID as a positional arg.
+func RunShow(
+	cmd *cobra.Command, args []string, opts Opts,
+) error {
+	// If --show <id> was used, pass as positional arg.
 	showArgs := args
 	if opts.ShowID != "" {
 		showArgs = []string{opts.ShowID}
 	}
 
-	sessions, scanErr := query.FindSessions(opts.AllProjects)
+	sessions, scanErr := query.FindSessions(
+		opts.AllProjects,
+	)
 	if scanErr != nil {
 		return errSession.Find(scanErr)
 	}
@@ -52,7 +58,9 @@ func runShow(cmd *cobra.Command, args []string, opts Opts) error {
 			return errSession.NoneFound("")
 		}
 		return errSession.NoneFound(
-			desc.Text(text.DescKeyLabelHintUseAllProjects),
+			desc.Text(
+				text.DescKeyLabelHintUseAllProjects,
+			),
 		)
 	}
 
@@ -67,8 +75,11 @@ func runShow(cmd *cobra.Command, args []string, opts Opts) error {
 		q := strings.ToLower(showArgs[0])
 		var matches []*entity.Session
 		for _, s := range sessions {
-			if strings.HasPrefix(strings.ToLower(s.ID), q) ||
-				strings.Contains(strings.ToLower(s.Slug), q) {
+			if strings.HasPrefix(
+				strings.ToLower(s.ID), q,
+			) || strings.Contains(
+				strings.ToLower(s.Slug), q,
+			) {
 				matches = append(matches, s)
 			}
 		}
@@ -112,11 +123,15 @@ func runShow(cmd *cobra.Command, args []string, opts Opts) error {
 		}
 
 		writeRecall.SectionHeader(
-			cmd, 2, desc.Text(text.DescKeyLabelSectionToolUsage),
+			cmd, 2,
+			desc.Text(text.DescKeyLabelSectionToolUsage),
 		)
 		for name, count := range toolCounts {
 			writeRecall.ListItem(
-				cmd, desc.Text(text.DescKeyJournalSourceToolCountLine),
+				cmd,
+				desc.Text(
+					text.DescKeyJournalSourceToolCountLine,
+				),
 				name, count,
 			)
 		}
@@ -126,19 +141,28 @@ func runShow(cmd *cobra.Command, args []string, opts Opts) error {
 	// Messages
 	if opts.Full {
 		writeRecall.SectionHeader(
-			cmd, 2, desc.Text(text.DescKeyLabelSectionConversation),
+			cmd, 2,
+			desc.Text(
+				text.DescKeyLabelSectionConversation,
+			),
 		)
 
 		for i, msg := range session.Messages {
 			role := desc.Text(text.DescKeyLabelRoleUser)
 			if msg.BelongsToAssistant() {
-				role = desc.Text(text.DescKeyLabelRoleAssistant)
-			} else if len(msg.ToolResults) > 0 && msg.Text == "" {
-				role = desc.Text(text.DescKeyLabelToolOutput)
+				role = desc.Text(
+					text.DescKeyLabelRoleAssistant,
+				)
+			} else if len(msg.ToolResults) > 0 &&
+				msg.Text == "" {
+				role = desc.Text(
+					text.DescKeyLabelToolOutput,
+				)
 			}
 
 			writeRecall.ConversationTurn(
-				cmd, i+1, role, msg.Timestamp.Format(time.Format),
+				cmd, i+1, role,
+				msg.Timestamp.Format(time.Format),
 			)
 
 			if msg.Text != "" {
@@ -149,7 +173,9 @@ func runShow(cmd *cobra.Command, args []string, opts Opts) error {
 				toolInfo := srcFmt.ToolUse(t)
 				writeRecall.SessionDetail(
 					cmd,
-					desc.Text(text.DescKeyLabelInlineTool),
+					desc.Text(
+						text.DescKeyLabelInlineTool,
+					),
 					toolInfo,
 				)
 			}
@@ -157,23 +183,31 @@ func runShow(cmd *cobra.Command, args []string, opts Opts) error {
 			for _, tr := range msg.ToolResults {
 				if tr.IsError {
 					writeRecall.Hint(
-						cmd, desc.Text(text.DescKeyLabelInlineError),
+						cmd,
+						desc.Text(
+							text.DescKeyLabelInlineError,
+						),
 					)
 				}
 				if tr.Content != "" {
-					content := parse.StripLineNumbers(tr.Content)
+					content := parse.StripLineNumbers(
+						tr.Content,
+					)
 					writeRecall.CodeBlock(cmd, content)
 				}
 			}
 
-			if len(msg.ToolUses) > 0 || len(msg.ToolResults) > 0 {
+			if len(msg.ToolUses) > 0 ||
+				len(msg.ToolResults) > 0 {
 				writeRecall.BlankLine(cmd)
 			}
 		}
 	} else {
 		writeRecall.SectionHeader(
 			cmd, 2,
-			desc.Text(text.DescKeyLabelSectionConversationPreview),
+			desc.Text(
+				text.DescKeyLabelSectionConversationPreview,
+			),
 		)
 
 		count := 0
@@ -183,19 +217,24 @@ func runShow(cmd *cobra.Command, args []string, opts Opts) error {
 				if count > journal.PreviewMaxTurns {
 					writeRecall.MoreTurns(
 						cmd,
-						session.TurnCount-journal.PreviewMaxTurns,
+						session.TurnCount-
+							journal.PreviewMaxTurns,
 					)
 					break
 				}
 				t := msg.Text
 				if len(t) > journal.PreviewMaxTextLen {
-					t = t[:journal.PreviewMaxTextLen] + token.Ellipsis
+					t = t[:journal.PreviewMaxTextLen] +
+						token.Ellipsis
 				}
 				writeRecall.NumberedItem(cmd, count, t)
 			}
 		}
 		writeRecall.BlankLine(cmd)
-		writeRecall.Hint(cmd, desc.Text(text.DescKeyLabelHintUseFull))
+		writeRecall.Hint(
+			cmd,
+			desc.Text(text.DescKeyLabelHintUseFull),
+		)
 	}
 
 	return nil
