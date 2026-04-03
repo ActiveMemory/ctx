@@ -49,6 +49,21 @@ func (p *Copilot) Tool() string {
 	return session.ToolCopilot
 }
 
+// openScanner opens a JSONL file and returns a buffered
+// scanner. The caller must close the returned file.
+func openScanner(
+	path string, bufMax int,
+) (*os.File, *bufio.Scanner, error) {
+	f, openErr := io.SafeOpenUserFile(path)
+	if openErr != nil {
+		return nil, nil, openErr
+	}
+	scanner := bufio.NewScanner(f)
+	buf := make([]byte, 0, cfgCopilot.ScanBufInit)
+	scanner.Buffer(buf, bufMax)
+	return f, scanner, nil
+}
+
 // Matches returns true if the file appears to be a Copilot Chat session file.
 //
 // Checks if the file has a .jsonl extension and lives in a chatSessions
@@ -69,15 +84,13 @@ func (p *Copilot) Matches(path string) bool {
 		return false
 	}
 
-	f, openErr := io.SafeOpenUserFile(path)
-	if openErr != nil {
+	f, scanner, scanErr := openScanner(
+		path, cfgCopilot.ScanBufMatchMax,
+	)
+	if scanErr != nil {
 		return false
 	}
 	defer func() { _ = f.Close() }()
-
-	scanner := bufio.NewScanner(f)
-	buf := make([]byte, 0, cfgCopilot.ScanBufInit)
-	scanner.Buffer(buf, cfgCopilot.ScanBufMatchMax)
 
 	if !scanner.Scan() {
 		return false
@@ -90,7 +103,6 @@ func (p *Copilot) Matches(path string) bool {
 		return false
 	}
 
-	// kind=0 is the full session snapshot
 	if line.Kind != copilotKindSnapshot {
 		return false
 	}
@@ -117,15 +129,13 @@ func (p *Copilot) Matches(path string) bool {
 //   - []*entity.Session: the parsed sessions (at most one for Copilot)
 //   - error: any error encountered during parsing
 func (p *Copilot) ParseFile(path string) ([]*entity.Session, error) {
-	f, openErr := io.SafeOpenUserFile(path)
-	if openErr != nil {
-		return nil, errParser.OpenFile(openErr)
+	f, scanner, scanErr := openScanner(
+		path, cfgCopilot.ScanBufMax,
+	)
+	if scanErr != nil {
+		return nil, errParser.OpenFile(scanErr)
 	}
 	defer func() { _ = f.Close() }()
-
-	scanner := bufio.NewScanner(f)
-	buf := make([]byte, 0, cfgCopilot.ScanBufInit)
-	scanner.Buffer(buf, cfgCopilot.ScanBufMax)
 
 	var sess *copilotRawSession
 
