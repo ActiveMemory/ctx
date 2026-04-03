@@ -102,8 +102,6 @@ skill-discovery.content:
     choice, or discover something surprising.
 skill-discovery.relay-prefix:
   short: 'Session tip: skills available for mid-session use.'
-skill-discovery.relay-message:
-  short: Skill discovery nudge
 check-context-size.billing-box-title:
   short: Billing Threshold
 check-context-size.billing-fallback:
@@ -329,13 +327,6 @@ context-load-gate.footer:
 context-load-gate.header:
   short: |
     PROJECT CONTEXT (auto-loaded by system hook - already in your context window)
-context-load-gate.index-fallback:
-  short: (no index entries)
-context-load-gate.index-header:
-  short: |+
-    --- %s (index - read full entries by date when relevant) ---
-    %s
-
 context-load-gate.oversize-action:
   short: |
     Action: Run /ctx-consolidate to distill context files.
