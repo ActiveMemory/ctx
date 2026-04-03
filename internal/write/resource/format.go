@@ -28,7 +28,7 @@ func pctOf(used, total uint64) int {
 	if total == 0 {
 		return 0
 	}
-	return int(float64(used) / float64(total) * 100)
+	return int(float64(used) / float64(total) * stats.PercentMultiplier)
 }
 
 // statusText returns a human-readable label for a severity level.

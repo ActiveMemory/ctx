@@ -75,7 +75,8 @@ func Run(cmd *cobra.Command, dryRun bool) error {
 		}
 
 		classification := memory.Classify(e)
-		title := format.TruncateFirstLine(e.Text, 60)
+		const titleMaxWidth = 60
+		title := format.TruncateFirstLine(e.Text, titleMaxWidth)
 
 		if classification.Target == cfgMemory.TargetSkip {
 			result.Skipped++

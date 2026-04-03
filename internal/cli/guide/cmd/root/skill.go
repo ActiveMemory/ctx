@@ -90,7 +90,8 @@ func listSkills(cmd *cobra.Command) error {
 			continue
 		}
 
-		desc := truncateDescription(meta.Description, 70)
+		const descMaxWidth = 70
+		desc := truncateDescription(meta.Description, descMaxWidth)
 		guide.InfoSkillLine(cmd, name, desc)
 	}
 	return nil

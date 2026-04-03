@@ -50,7 +50,7 @@ func ReferenceTime(since string) (time.Time, string, error) {
 	}
 
 	// Fallback: 24h ago.
-	t := time.Now().Add(-24 * time.Hour)
+	t := time.Now().Add(-cfgTime.HoursPerDay * time.Hour)
 	return t, desc.Text(text.DescKeyChangesFallbackLabel), nil
 }
 

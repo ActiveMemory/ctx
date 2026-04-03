@@ -21,6 +21,7 @@ import (
 	"github.com/ActiveMemory/ctx/internal/config/marker"
 	"github.com/ActiveMemory/ctx/internal/config/project"
 	"github.com/ActiveMemory/ctx/internal/config/regex"
+	cfgTime "github.com/ActiveMemory/ctx/internal/config/time"
 	"github.com/ActiveMemory/ctx/internal/config/token"
 	"github.com/ActiveMemory/ctx/internal/config/warn"
 	"github.com/ActiveMemory/ctx/internal/entity"
@@ -256,7 +257,7 @@ func checkFileAge(ctx *entity.Context, report *Report) {
 		}
 
 		if f.ModTime.Before(cutoff) {
-			days := int(time.Since(f.ModTime).Hours() / 24)
+			days := int(time.Since(f.ModTime).Hours() / cfgTime.HoursPerDay)
 			report.Warnings = append(report.Warnings, Issue{
 				File:    f.Name,
 				Type:    IssueStaleAge,

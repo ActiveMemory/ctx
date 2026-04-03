@@ -17,6 +17,7 @@ import (
 	"github.com/ActiveMemory/ctx/internal/cli/system/core/nudge"
 	"github.com/ActiveMemory/ctx/internal/config/embed/text"
 	"github.com/ActiveMemory/ctx/internal/config/hook"
+	cfgTime "github.com/ActiveMemory/ctx/internal/config/time"
 	"github.com/ActiveMemory/ctx/internal/config/token"
 	"github.com/ActiveMemory/ctx/internal/config/version"
 	"github.com/ActiveMemory/ctx/internal/notify"
@@ -63,7 +64,7 @@ func CheckKeyAge(sessionID string) string {
 		return "" // no key: nothing to check
 	}
 
-	ageDays := int(time.Since(info.ModTime()).Hours() / 24)
+	ageDays := int(time.Since(info.ModTime()).Hours() / cfgTime.HoursPerDay)
 	threshold := rc.KeyRotationDays()
 
 	if ageDays < threshold {

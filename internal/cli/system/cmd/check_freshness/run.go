@@ -21,6 +21,7 @@ import (
 	"github.com/ActiveMemory/ctx/internal/config/embed/text"
 	"github.com/ActiveMemory/ctx/internal/config/freshness"
 	"github.com/ActiveMemory/ctx/internal/config/hook"
+	cfgTime "github.com/ActiveMemory/ctx/internal/config/time"
 	"github.com/ActiveMemory/ctx/internal/config/warn"
 	"github.com/ActiveMemory/ctx/internal/entity"
 	ctxLog "github.com/ActiveMemory/ctx/internal/log/warn"
@@ -85,7 +86,7 @@ func Run(cmd *cobra.Command, stdin *os.File) error {
 			Path:      tf.Path,
 			Desc:      tf.Desc,
 			ReviewURL: tf.ReviewURL,
-			Days:      int(age.Hours() / 24),
+			Days:      int(age.Hours() / cfgTime.HoursPerDay),
 		})
 	}
 

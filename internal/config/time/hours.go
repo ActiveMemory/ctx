@@ -9,4 +9,6 @@ package time
 const (
 	// HoursPerDay is the number of hours in a day for duration calculations.
 	HoursPerDay = 24
+	// MinutesPerHour is the number of minutes in an hour.
+	MinutesPerHour = 60
 )

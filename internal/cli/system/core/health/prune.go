@@ -83,7 +83,7 @@ func FormatAge(t time.Time) string {
 			int(d.Minutes()),
 		)
 	}
-	if d < 24*time.Hour {
+	if d < cfgTime.HoursPerDay*time.Hour {
 		return fmt.Sprintf(
 			desc.Text(text.DescKeyWriteFormatDurationHour),
 			int(d.Hours()),
@@ -91,6 +91,6 @@ func FormatAge(t time.Time) string {
 	}
 	return fmt.Sprintf(
 		desc.Text(text.DescKeyWriteFormatDurationDay),
-		int(d.Hours()/24),
+		int(d.Hours()/cfgTime.HoursPerDay),
 	)
 }

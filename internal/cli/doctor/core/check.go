@@ -427,7 +427,7 @@ func CheckTaskCompletion(report *Report) {
 		return // no tasks to report on
 	}
 
-	ratio := completed * 100 / total
+	ratio := completed * stats.PercentMultiplier / total
 	msg := fmt.Sprintf(desc.Text(
 		text.DescKeyDoctorTaskCompletionFormat),
 		completed, total, ratio,
@@ -495,7 +495,7 @@ func CheckContextTokenSize(report *Report) {
 		totalTokens, window,
 	)
 
-	warnThreshold := window * doctor.ContextSizeWarnPct / 100
+	warnThreshold := window * doctor.ContextSizeWarnPct / stats.PercentMultiplier
 	if totalTokens > warnThreshold {
 		report.Results = append(report.Results, Result{
 			Name:     doctor.CheckContextSize,
@@ -670,5 +670,5 @@ func ResourcePct(used, total uint64) int {
 	if total == 0 {
 		return 0
 	}
-	return int(float64(used) / float64(total) * 100)
+	return int(float64(used) / float64(total) * stats.PercentMultiplier)
 }

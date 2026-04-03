@@ -20,6 +20,7 @@ import (
 	"github.com/ActiveMemory/ctx/internal/config/dir"
 	"github.com/ActiveMemory/ctx/internal/config/embed/text"
 	cfgFs "github.com/ActiveMemory/ctx/internal/config/fs"
+	cfgTime "github.com/ActiveMemory/ctx/internal/config/time"
 	"github.com/ActiveMemory/ctx/internal/config/warn"
 	"github.com/ActiveMemory/ctx/internal/entity"
 	errBackup "github.com/ActiveMemory/ctx/internal/err/backup"
@@ -212,7 +213,7 @@ func CheckBackupMarker(markerPath string, warnings []string) []string {
 		return warnings
 	}
 
-	ageDays := int(time.Since(info.ModTime()).Hours() / 24)
+	ageDays := int(time.Since(info.ModTime()).Hours() / cfgTime.HoursPerDay)
 	if ageDays >= archive.BackupMaxAgeDays {
 		return append(warnings,
 			fmt.Sprintf(desc.Text(text.DescKeyBackupStale), ageDays),

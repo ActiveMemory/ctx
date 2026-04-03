@@ -33,21 +33,21 @@ import (
 //   - string: human-readable relative time
 func TimeAgo(hours float64, mins int, fallbackDate string) string {
 	switch {
-	case hours < 1.0/60: // less than a minute
+	case hours < 1.0/cfgTime.MinutesPerHour: // less than a minute
 		return desc.Text(text.DescKeyWriteTimeJustNow)
 	case hours < 1:
 		if mins == 1 {
 			return desc.Text(text.DescKeyWriteTimeMinuteAgo)
 		}
 		return fmt.Sprintf(desc.Text(text.DescKeyWriteTimeMinutesAgo), mins)
-	case hours < 24:
+	case hours < cfgTime.HoursPerDay:
 		h := int(hours)
 		if h == 1 {
 			return desc.Text(text.DescKeyWriteTimeHourAgo)
 		}
 		return fmt.Sprintf(desc.Text(text.DescKeyWriteTimeHoursAgo), h)
-	case hours < 7*24:
-		days := int(hours / 24)
+	case hours < 7*cfgTime.HoursPerDay:
+		days := int(hours / cfgTime.HoursPerDay)
 		if days == 1 {
 			return desc.Text(text.DescKeyWriteTimeDayAgo)
 		}
@@ -75,14 +75,14 @@ func Duration(d time.Duration) string {
 			return desc.Text(text.DescKeyTimeMinuteCount)
 		}
 		return fmt.Sprintf(desc.Text(text.DescKeyTimeMinutesCount), n)
-	case d < 24*time.Hour:
+	case d < cfgTime.HoursPerDay*time.Hour:
 		n := int(d.Hours())
 		if n == 1 {
 			return desc.Text(text.DescKeyTimeHourCount)
 		}
 		return fmt.Sprintf(desc.Text(text.DescKeyTimeHoursCount), n)
 	default:
-		n := int(d.Hours() / 24)
+		n := int(d.Hours() / cfgTime.HoursPerDay)
 		if n == 1 {
 			return desc.Text(text.DescKeyTimeDayCount)
 		}

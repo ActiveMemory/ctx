@@ -86,11 +86,11 @@ func Duration(d interface{ Minutes() float64 }) string {
 	if mins < 1 {
 		return desc.Text(text.DescKeyWriteFormatDurationLTMin)
 	}
-	if mins < 60 {
+	if mins < time.MinutesPerHour {
 		return fmt.Sprintf(desc.Text(text.DescKeyWriteFormatDurationMin), int(mins))
 	}
-	hours := int(mins) / 60
-	remainMins := int(mins) % 60
+	hours := int(mins) / time.MinutesPerHour
+	remainMins := int(mins) % time.MinutesPerHour
 	if remainMins == 0 {
 		return fmt.Sprintf(desc.Text(text.DescKeyWriteFormatDurationHour), hours)
 	}

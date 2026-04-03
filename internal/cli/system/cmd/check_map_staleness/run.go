@@ -62,7 +62,7 @@ func Run(cmd *cobra.Command, stdin *os.File) error {
 	}
 
 	staleAge := time.Duration(architecture.MapStaleDays) *
-		24 * time.Hour
+		cfgTime.HoursPerDay * time.Hour
 	if time.Since(lastRun) < staleAge {
 		return nil
 	}

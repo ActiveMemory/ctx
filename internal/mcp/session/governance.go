@@ -129,9 +129,10 @@ func (ss *State) CheckGovernance(toolName string) string {
 	// 5. Violations from extension detection ring
 	if violations := readAndClearViolations(ss.contextDir); len(violations) > 0 {
 		for _, v := range violations {
+			const detailMaxLen = 120
 			detail := v.Detail
-			if len(detail) > 120 {
-				detail = detail[:120] + token.Ellipsis
+			if len(detail) > detailMaxLen {
+				detail = detail[:detailMaxLen] + token.Ellipsis
 			}
 			warnings = append(warnings, fmt.Sprintf(
 				desc.Text(text.DescKeyGovViolationCritical),

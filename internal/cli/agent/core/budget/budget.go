@@ -9,6 +9,7 @@ package budget
 import (
 	"github.com/ActiveMemory/ctx/internal/cli/agent/core/score"
 	"github.com/ActiveMemory/ctx/internal/config/agent"
+	"github.com/ActiveMemory/ctx/internal/config/stats"
 )
 
 // Split divides a token budget between two scored sections.
@@ -49,8 +50,8 @@ func Split(total int, a, b []score.Entry) (int, int) {
 	}
 
 	// Minimum 30% each, proportional split of the rest
-	minA := total * agent.SplitMinPct / 100
-	minB := total * agent.SplitMinPct / 100
+	minA := total * agent.SplitMinPct / stats.PercentMultiplier
+	minB := total * agent.SplitMinPct / stats.PercentMultiplier
 	flex := total - minA - minB
 
 	aProportion := float64(aTokens) / float64(totalContent)
@@ -77,7 +78,7 @@ func FillSection(entries []score.Entry, budget int) ([]string, []string) {
 		return nil, nil
 	}
 
-	fullBudget := budget * agent.FullEntryPct / 100
+	fullBudget := budget * agent.FullEntryPct / stats.PercentMultiplier
 	used := 0
 	var full []string
 	var summaries []string

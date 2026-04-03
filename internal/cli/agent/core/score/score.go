@@ -38,7 +38,7 @@ func Recency(eb *index.EntryBlock, now time.Time) float64 {
 	if err != nil {
 		return agent.RecencyScoreOld
 	}
-	days := int(now.Sub(entryDate).Hours() / 24)
+	days := int(now.Sub(entryDate).Hours() / cfgTime.HoursPerDay)
 	switch {
 	case days <= agent.RecencyDaysWeek:
 		return agent.RecencyScoreWeek
