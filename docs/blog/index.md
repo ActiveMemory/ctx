@@ -25,6 +25,19 @@ auto-memory to `.context/`.
 
 ## Field Notes
 
+### [Code Structure as an Agent Interface: What 19 AST Tests Taught Us](2026-04-02-code-structure-as-an-agent-interface.md)
+
+*April 2, 2026*: We built 19 AST-based audit tests in a single session,
+touching 300+ files. In the process we discovered that "old-school" code
+quality constraints (*no magic numbers, centralized error handling,
+80-char lines, documentation*) are exactly the constraints that make code
+readable to AI agents. If an agent interacts with your codebase, your
+codebase already is an interface. You just have not designed it as one.
+
+**Topics**: ast, code quality, agent readability, conventions, field notes
+
+---
+
 ### [We Broke the 3:1 Rule](2026-03-23-we-broke-the-3-1-rule.md)
 
 *March 23, 2026*: After v0.6.0, we ran 198 feature commits across 17 days

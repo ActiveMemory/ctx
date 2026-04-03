@@ -9,39 +9,35 @@
         <meta name="description" content="ctx provides temporal continuity across sessions">
       
       
-        <meta name="author" content="Jose Alekhinne <alekhinejose@gmail.com>">
+        <meta name="author" content="Jose Alekhinne">
       
       
-        <link rel="canonical" href="https://ctx.ist/blog/">
+        <link rel="canonical" href="https://ctx.ist/blog/2026-04-02-code-structure-as-an-agent-interface/">
       
       
-        <link rel="prev" href="../thesis/">
-      
-      
-        <link rel="next" href="../home/">
       
       
         
       
       
-      <link rel="icon" href="../images/favicon-32.png">
+      <link rel="icon" href="../../images/favicon-32.png">
       <meta name="generator" content="zensical-0.0.20">
     
     
       
-        <title>Blog - ctx: do you remember?</title>
+        <title>Code Structure as an Agent Interface: What 19 AST Tests Taught Us About Agent-Readable Code - ctx: do you remember?</title>
       
     
     
       
         
       
-      <link rel="stylesheet" href="../assets/stylesheets/modern/main.d4922b3c.min.css">
+      <link rel="stylesheet" href="../../assets/stylesheets/modern/main.d4922b3c.min.css">
       
         
           
         
-        <link rel="stylesheet" href="../assets/stylesheets/modern/palette.dfe2e883.min.css">
+        <link rel="stylesheet" href="../../assets/stylesheets/modern/palette.dfe2e883.min.css">
       
       
 
@@ -60,9 +56,9 @@
       
     
     
-      <link rel="stylesheet" href="../stylesheets/extra.css">
+      <link rel="stylesheet" href="../../stylesheets/extra.css">
     
-    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce(((e,t)=>(e<<5)-e+t.charCodeAt(0)),0),__md_get=(e,t=localStorage,a=__md_scope)=>JSON.parse(t.getItem(a.pathname+"."+e)),__md_set=(e,t,a=localStorage,_=__md_scope)=>{try{a.setItem(_.pathname+"."+e,JSON.stringify(t))}catch(e){}},document.documentElement.setAttribute("data-platform",navigator.platform)</script>
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,t)=>(e<<5)-e+t.charCodeAt(0)),0),__md_get=(e,t=localStorage,a=__md_scope)=>JSON.parse(t.getItem(a.pathname+"."+e)),__md_set=(e,t,a=localStorage,_=__md_scope)=>{try{a.setItem(_.pathname+"."+e,JSON.stringify(t))}catch(e){}},document.documentElement.setAttribute("data-platform",navigator.platform)</script>
     
       
 
@@ -87,7 +83,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#releases" class="md-skip">
+        <a href="#code-structure-as-an-agent-interface" class="md-skip">
           Skip to content
         </a>
       
@@ -103,9 +99,9 @@
 
 <header class="md-header md-header--shadow md-header--lifted" data-md-component="header">
   <nav class="md-header__inner md-grid" aria-label="Header">
-    <a href=".." title="ctx: do you remember?" class="md-header__button md-logo" aria-label="ctx: do you remember?" data-md-component="logo">
+    <a href="../.." title="ctx: do you remember?" class="md-header__button md-logo" aria-label="ctx: do you remember?" data-md-component="logo">
       
-  <img src="../images/ctx-favicon-32.png" alt="logo">
+  <img src="../../images/ctx-favicon-32.png" alt="logo">
 
     </a>
     <label class="md-header__button md-icon" for="__drawer">
@@ -122,7 +118,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Blog
+              Code Structure as an Agent Interface: What 19 AST Tests Taught Us About Agent-Readable Code
             
           </span>
         </div>
@@ -200,7 +196,7 @@
   
   
     <li class="md-tabs__item">
-      <a href=".." class="md-tabs__link">
+      <a href="../.." class="md-tabs__link">
         
   
   Manifesto
@@ -216,7 +212,7 @@
   
   
     <li class="md-tabs__item">
-      <a href="../thesis/" class="md-tabs__link">
+      <a href="../../thesis/" class="md-tabs__link">
         
   
   The Thesis
@@ -230,13 +226,11 @@
   
   
   
-    
-  
   
     
     
-      <li class="md-tabs__item md-tabs__item--active">
-        <a href="./" class="md-tabs__link">
+      <li class="md-tabs__item">
+        <a href="../" class="md-tabs__link">
           
   
   Blog
@@ -255,7 +249,7 @@
     
     
       <li class="md-tabs__item">
-        <a href="../home/" class="md-tabs__link">
+        <a href="../../home/" class="md-tabs__link">
           
   
   Home
@@ -281,7 +275,7 @@
     
     
       <li class="md-tabs__item">
-        <a href="../recipes/guide-your-agent/" class="md-tabs__link">
+        <a href="../../recipes/guide-your-agent/" class="md-tabs__link">
           
   
   Recipes
@@ -303,7 +297,7 @@
     
     
       <li class="md-tabs__item">
-        <a href="../cli/" class="md-tabs__link">
+        <a href="../../cli/" class="md-tabs__link">
           
   
   CLI
@@ -322,7 +316,7 @@
     
     
       <li class="md-tabs__item">
-        <a href="../reference/" class="md-tabs__link">
+        <a href="../../reference/" class="md-tabs__link">
           
   
   Reference
@@ -341,7 +335,7 @@
     
     
       <li class="md-tabs__item">
-        <a href="../operations/" class="md-tabs__link">
+        <a href="../../operations/" class="md-tabs__link">
           
   
   Operations
@@ -360,7 +354,7 @@
     
     
       <li class="md-tabs__item">
-        <a href="../security/" class="md-tabs__link">
+        <a href="../../security/" class="md-tabs__link">
           
   
   Security
@@ -399,9 +393,9 @@
 
 <nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0">
   <label class="md-nav__title" for="__drawer">
-    <a href=".." title="ctx: do you remember?" class="md-nav__button md-logo" aria-label="ctx: do you remember?" data-md-component="logo">
+    <a href="../.." title="ctx: do you remember?" class="md-nav__button md-logo" aria-label="ctx: do you remember?" data-md-component="logo">
       
-  <img src="../images/ctx-favicon-32.png" alt="logo">
+  <img src="../../images/ctx-favicon-32.png" alt="logo">
 
     </a>
     ctx: do you remember?
@@ -428,7 +422,7 @@
   
   
     <li class="md-nav__item">
-      <a href=".." class="md-nav__link">
+      <a href="../.." class="md-nav__link">
         
   
   
@@ -457,7 +451,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../thesis/" class="md-nav__link">
+      <a href="../../thesis/" class="md-nav__link">
         
   
   
@@ -483,8 +477,6 @@
       
   
   
-    
-  
   
   
     
@@ -498,23 +490,20 @@
     
     
       
-        
-        
-      
       
         
       
     
     
-    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+    <li class="md-nav__item md-nav__item--nested">
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" checked>
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" >
         
           
           <div class="md-nav__link md-nav__container">
-            <a href="./" class="md-nav__link md-nav__link--active">
+            <a href="../" class="md-nav__link ">
               
   
   
@@ -535,7 +524,7 @@
             
           </div>
         
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="true">
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_3">
             <span class="md-nav__icon md-icon"></span>
             
@@ -613,7 +602,7 @@
         
           
           <div class="md-nav__link md-nav__container">
-            <a href="../home/" class="md-nav__link ">
+            <a href="../../home/" class="md-nav__link ">
               
   
   
@@ -659,7 +648,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../home/about/" class="md-nav__link">
+      <a href="../../home/about/" class="md-nav__link">
         
   
   
@@ -689,7 +678,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../home/is-ctx-right/" class="md-nav__link">
+      <a href="../../home/is-ctx-right/" class="md-nav__link">
         
   
   
@@ -719,7 +708,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../home/community/" class="md-nav__link">
+      <a href="../../home/community/" class="md-nav__link">
         
   
   
@@ -749,7 +738,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../home/contributing/" class="md-nav__link">
+      <a href="../../home/contributing/" class="md-nav__link">
         
   
   
@@ -779,7 +768,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../home/getting-started/" class="md-nav__link">
+      <a href="../../home/getting-started/" class="md-nav__link">
         
   
   
@@ -809,7 +798,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../home/first-session/" class="md-nav__link">
+      <a href="../../home/first-session/" class="md-nav__link">
         
   
   
@@ -839,7 +828,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../home/common-workflows/" class="md-nav__link">
+      <a href="../../home/common-workflows/" class="md-nav__link">
         
   
   
@@ -869,7 +858,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../home/context-files/" class="md-nav__link">
+      <a href="../../home/context-files/" class="md-nav__link">
         
   
   
@@ -899,7 +888,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../home/configuration/" class="md-nav__link">
+      <a href="../../home/configuration/" class="md-nav__link">
         
   
   
@@ -929,7 +918,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../home/prompting-guide/" class="md-nav__link">
+      <a href="../../home/prompting-guide/" class="md-nav__link">
         
   
   
@@ -959,7 +948,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../home/repeated-mistakes/" class="md-nav__link">
+      <a href="../../home/repeated-mistakes/" class="md-nav__link">
         
   
   
@@ -989,7 +978,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../home/joining-a-project/" class="md-nav__link">
+      <a href="../../home/joining-a-project/" class="md-nav__link">
         
   
   
@@ -1019,7 +1008,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../home/keeping-ai-honest/" class="md-nav__link">
+      <a href="../../home/keeping-ai-honest/" class="md-nav__link">
         
   
   
@@ -1049,7 +1038,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../home/faq/" class="md-nav__link">
+      <a href="../../home/faq/" class="md-nav__link">
         
   
   
@@ -1214,7 +1203,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../recipes/guide-your-agent/" class="md-nav__link">
+      <a href="../../recipes/guide-your-agent/" class="md-nav__link">
         
   
   
@@ -1244,7 +1233,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../recipes/multi-tool-setup/" class="md-nav__link">
+      <a href="../../recipes/multi-tool-setup/" class="md-nav__link">
         
   
   
@@ -1274,7 +1263,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../recipes/multilingual-sessions/" class="md-nav__link">
+      <a href="../../recipes/multilingual-sessions/" class="md-nav__link">
         
   
   
@@ -1304,7 +1293,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../recipes/external-context/" class="md-nav__link">
+      <a href="../../recipes/external-context/" class="md-nav__link">
         
   
   
@@ -1406,7 +1395,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../recipes/session-lifecycle/" class="md-nav__link">
+      <a href="../../recipes/session-lifecycle/" class="md-nav__link">
         
   
   
@@ -1436,7 +1425,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../recipes/session-ceremonies/" class="md-nav__link">
+      <a href="../../recipes/session-ceremonies/" class="md-nav__link">
         
   
   
@@ -1466,7 +1455,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../recipes/session-archaeology/" class="md-nav__link">
+      <a href="../../recipes/session-archaeology/" class="md-nav__link">
         
   
   
@@ -1496,7 +1485,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../recipes/session-reminders/" class="md-nav__link">
+      <a href="../../recipes/session-reminders/" class="md-nav__link">
         
   
   
@@ -1526,7 +1515,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../recipes/session-pause/" class="md-nav__link">
+      <a href="../../recipes/session-pause/" class="md-nav__link">
         
   
   
@@ -1632,7 +1621,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../recipes/knowledge-capture/" class="md-nav__link">
+      <a href="../../recipes/knowledge-capture/" class="md-nav__link">
         
   
   
@@ -1662,7 +1651,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../recipes/task-management/" class="md-nav__link">
+      <a href="../../recipes/task-management/" class="md-nav__link">
         
   
   
@@ -1692,7 +1681,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../recipes/import-plans/" class="md-nav__link">
+      <a href="../../recipes/import-plans/" class="md-nav__link">
         
   
   
@@ -1722,7 +1711,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../recipes/design-before-coding/" class="md-nav__link">
+      <a href="../../recipes/design-before-coding/" class="md-nav__link">
         
   
   
@@ -1752,7 +1741,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../recipes/scratchpad-with-claude/" class="md-nav__link">
+      <a href="../../recipes/scratchpad-with-claude/" class="md-nav__link">
         
   
   
@@ -1782,7 +1771,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../recipes/scratchpad-sync/" class="md-nav__link">
+      <a href="../../recipes/scratchpad-sync/" class="md-nav__link">
         
   
   
@@ -1812,7 +1801,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../recipes/memory-bridge/" class="md-nav__link">
+      <a href="../../recipes/memory-bridge/" class="md-nav__link">
         
   
   
@@ -1912,7 +1901,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../recipes/hook-output-patterns/" class="md-nav__link">
+      <a href="../../recipes/hook-output-patterns/" class="md-nav__link">
         
   
   
@@ -1942,7 +1931,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../recipes/customizing-hook-messages/" class="md-nav__link">
+      <a href="../../recipes/customizing-hook-messages/" class="md-nav__link">
         
   
   
@@ -1972,7 +1961,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../recipes/webhook-notifications/" class="md-nav__link">
+      <a href="../../recipes/webhook-notifications/" class="md-nav__link">
         
   
   
@@ -2002,7 +1991,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../recipes/system-hooks-audit/" class="md-nav__link">
+      <a href="../../recipes/system-hooks-audit/" class="md-nav__link">
         
   
   
@@ -2104,7 +2093,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../recipes/context-health/" class="md-nav__link">
+      <a href="../../recipes/context-health/" class="md-nav__link">
         
   
   
@@ -2134,7 +2123,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../recipes/troubleshooting/" class="md-nav__link">
+      <a href="../../recipes/troubleshooting/" class="md-nav__link">
         
   
   
@@ -2164,7 +2153,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../recipes/claude-code-permissions/" class="md-nav__link">
+      <a href="../../recipes/claude-code-permissions/" class="md-nav__link">
         
   
   
@@ -2194,7 +2183,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../recipes/permission-snapshots/" class="md-nav__link">
+      <a href="../../recipes/permission-snapshots/" class="md-nav__link">
         
   
   
@@ -2224,7 +2213,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../recipes/publishing/" class="md-nav__link">
+      <a href="../../recipes/publishing/" class="md-nav__link">
         
   
   
@@ -2326,7 +2315,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../recipes/building-skills/" class="md-nav__link">
+      <a href="../../recipes/building-skills/" class="md-nav__link">
         
   
   
@@ -2356,7 +2345,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../recipes/autonomous-loops/" class="md-nav__link">
+      <a href="../../recipes/autonomous-loops/" class="md-nav__link">
         
   
   
@@ -2386,7 +2375,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../recipes/when-to-use-agent-teams/" class="md-nav__link">
+      <a href="../../recipes/when-to-use-agent-teams/" class="md-nav__link">
         
   
   
@@ -2416,7 +2405,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../recipes/parallel-worktrees/" class="md-nav__link">
+      <a href="../../recipes/parallel-worktrees/" class="md-nav__link">
         
   
   
@@ -2446,7 +2435,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../recipes/prompt-templates.md" class="md-nav__link">
+      <a href="../../recipes/prompt-templates.md" class="md-nav__link">
         
   
   
@@ -2528,7 +2517,7 @@
         
           
           <div class="md-nav__link md-nav__container">
-            <a href="../cli/" class="md-nav__link ">
+            <a href="../../cli/" class="md-nav__link ">
               
   
   
@@ -2574,7 +2563,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../cli/init-status/" class="md-nav__link">
+      <a href="../../cli/init-status/" class="md-nav__link">
         
   
   
@@ -2604,7 +2593,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../cli/context/" class="md-nav__link">
+      <a href="../../cli/context/" class="md-nav__link">
         
   
   
@@ -2634,7 +2623,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../cli/journal/" class="md-nav__link">
+      <a href="../../cli/journal/" class="md-nav__link">
         
   
   
@@ -2664,7 +2653,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../cli/tools/" class="md-nav__link">
+      <a href="../../cli/tools/" class="md-nav__link">
         
   
   
@@ -2694,7 +2683,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../cli/config/" class="md-nav__link">
+      <a href="../../cli/config/" class="md-nav__link">
         
   
   
@@ -2724,7 +2713,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../cli/doctor/" class="md-nav__link">
+      <a href="../../cli/doctor/" class="md-nav__link">
         
   
   
@@ -2754,7 +2743,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../cli/mcp/" class="md-nav__link">
+      <a href="../../cli/mcp/" class="md-nav__link">
         
   
   
@@ -2784,7 +2773,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../cli/system/" class="md-nav__link">
+      <a href="../../cli/system/" class="md-nav__link">
         
   
   
@@ -2856,7 +2845,7 @@
         
           
           <div class="md-nav__link md-nav__container">
-            <a href="../reference/" class="md-nav__link ">
+            <a href="../../reference/" class="md-nav__link ">
               
   
   
@@ -2902,7 +2891,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../reference/design-invariants/" class="md-nav__link">
+      <a href="../../reference/design-invariants/" class="md-nav__link">
         
   
   
@@ -2932,7 +2921,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../reference/skills/" class="md-nav__link">
+      <a href="../../reference/skills/" class="md-nav__link">
         
   
   
@@ -2962,7 +2951,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../reference/comparison/" class="md-nav__link">
+      <a href="../../reference/comparison/" class="md-nav__link">
         
   
   
@@ -2992,7 +2981,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../reference/session-journal/" class="md-nav__link">
+      <a href="../../reference/session-journal/" class="md-nav__link">
         
   
   
@@ -3022,7 +3011,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../reference/scratchpad/" class="md-nav__link">
+      <a href="../../reference/scratchpad/" class="md-nav__link">
         
   
   
@@ -3052,7 +3041,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../reference/versions/" class="md-nav__link">
+      <a href="../../reference/versions/" class="md-nav__link">
         
   
   
@@ -3122,7 +3111,7 @@
         
           
           <div class="md-nav__link md-nav__container">
-            <a href="../operations/" class="md-nav__link ">
+            <a href="../../operations/" class="md-nav__link ">
               
   
   
@@ -3168,7 +3157,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../operations/migration/" class="md-nav__link">
+      <a href="../../operations/migration/" class="md-nav__link">
         
   
   
@@ -3198,7 +3187,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../operations/upgrading/" class="md-nav__link">
+      <a href="../../operations/upgrading/" class="md-nav__link">
         
   
   
@@ -3228,7 +3217,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../operations/integrations/" class="md-nav__link">
+      <a href="../../operations/integrations/" class="md-nav__link">
         
   
   
@@ -3258,7 +3247,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../operations/release/" class="md-nav__link">
+      <a href="../../operations/release/" class="md-nav__link">
         
   
   
@@ -3288,7 +3277,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../operations/autonomous-loop/" class="md-nav__link">
+      <a href="../../operations/autonomous-loop/" class="md-nav__link">
         
   
   
@@ -3352,7 +3341,7 @@
         
           
           <div class="md-nav__link md-nav__container">
-            <a href="../security/" class="md-nav__link ">
+            <a href="../../security/" class="md-nav__link ">
               
   
   
@@ -3398,7 +3387,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../security/agent-security/" class="md-nav__link">
+      <a href="../../security/agent-security/" class="md-nav__link">
         
   
   
@@ -3428,7 +3417,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../security/reporting/" class="md-nav__link">
+      <a href="../../security/reporting/" class="md-nav__link">
         
   
   
@@ -3476,6 +3465,8 @@
   
   
   
+    
+  
   
     <label class="md-nav__title" for="__toc">
       <span class="md-nav__icon md-icon"></span>
@@ -3484,22 +3475,77 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#releases" class="md-nav__link">
+  <a href="#what-19-ast-tests-taught-us-about-agent-readable-code" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Releases
+        What 19 AST Tests Taught Us About Agent-Readable Code
       
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="Releases">
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#the-shell-script-problem" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The Shell Script Problem
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#the-ast-migration" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The AST Migration
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#the-tightening-loop" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The Tightening Loop
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="The Tightening Loop">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#ctx-v080-the-architecture-release" class="md-nav__link">
+  <a href="#example-1-the-local-const-loophole" class="md-nav__link">
     <span class="md-ellipsis">
       
-        ctx v0.8.0: The Architecture Release
+        Example 1: The Local Const Loophole
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#example-2-the-single-character-dodge" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Example 2: The Single-Character Dodge
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#example-3-the-replacer-versus-regex" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Example 3: The Replacer versus Regex
       
     </span>
   </a>
@@ -3512,22 +3558,33 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#field-notes" class="md-nav__link">
+  <a href="#a-before-and-after" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Field Notes
+        A Before-and-After
       
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="Field Notes">
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#the-principles" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The Principles
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="The Principles">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#code-structure-as-an-agent-interface-what-19-ast-tests-taught-us" class="md-nav__link">
+  <a href="#cognitive-constraints" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Code Structure as an Agent Interface: What 19 AST Tests Taught Us
+        Cognitive Constraints
       
     </span>
   </a>
@@ -3535,10 +3592,21 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#we-broke-the-31-rule" class="md-nav__link">
+  <a href="#structural-constraints" class="md-nav__link">
     <span class="md-ellipsis">
       
-        We Broke the 3:1 Rule
+        Structural Constraints
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#operational-benefits" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Operational Benefits
       
     </span>
   </a>
@@ -3551,357 +3619,35 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#context-engineering" class="md-nav__link">
+  <a href="#the-numbers" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Context Engineering
+        The Numbers
       
     </span>
   </a>
-  
-    <nav class="md-nav" aria-label="Context Engineering">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#agent-memory-is-infrastructure" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Agent Memory Is Infrastructure
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#context-as-infrastructure" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Context as Infrastructure
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#the-attention-budget-why-your-ai-forgets-what-you-just-told-it" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        The Attention Budget: Why Your AI Forgets What You Just Told It
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#before-context-windows-we-had-bouncers" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Before Context Windows, We Had Bouncers
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#the-last-question" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        The Last Question
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#agent-behavior-and-design" class="md-nav__link">
+  <a href="#the-uncomfortable-implication" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Agent Behavior and Design
+        The Uncomfortable Implication
       
     </span>
   </a>
-  
-    <nav class="md-nav" aria-label="Agent Behavior and Design">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#the-dog-ate-my-homework-teaching-ai-agents-to-read-before-they-write" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        The Dog Ate My Homework: Teaching AI Agents to Read Before They Write
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#skills-that-fight-the-platform" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Skills That Fight the Platform
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#the-anatomy-of-a-skill-that-works" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        The Anatomy of a Skill That Works
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#you-cant-import-expertise" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        You Can't Import Expertise
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#not-everything-is-a-skill" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Not Everything Is a Skill
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#defense-in-depth-securing-ai-agents" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Defense in Depth: Securing AI Agents
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#development-practice" class="md-nav__link">
+  <a href="#whats-next" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Development Practice
+        What's Next
       
     </span>
   </a>
-  
-    <nav class="md-nav" aria-label="Development Practice">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#code-is-cheap-judgment-is-not" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Code Is Cheap. Judgment Is Not.
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#the-31-ratio" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        The 3:1 Ratio
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#refactoring-with-intent-human-guided-sessions-in-ai-development" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Refactoring with Intent: Human-Guided Sessions in AI Development
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#how-deep-is-too-deep" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        How Deep Is Too Deep?
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#agent-workflows" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Agent Workflows
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Agent Workflows">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#parallel-agents-merge-debt-and-the-myth-of-overnight-progress" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Parallel Agents, Merge Debt, and the Myth of Overnight Progress
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#parallel-agents-with-git-worktrees" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Parallel Agents with Git Worktrees
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#field-notes-and-signals" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Field Notes and Signals
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Field Notes and Signals">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#when-a-system-starts-explaining-itself" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        When a System Starts Explaining Itself
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#why-zensical" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Why Zensical
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#releases_1" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Releases
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Releases">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#ctx-v060-the-integration-release" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        ctx v0.6.0: The Integration Release
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#ctx-v030-the-discipline-release" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        ctx v0.3.0: The Discipline Release
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#ctx-v020-the-archaeology-release" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        ctx v0.2.0: The Archaeology Release
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#building-ctx-using-ctx-a-meta-experiment-in-ai-assisted-development" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Building ctx Using ctx: A Meta-Experiment in AI-Assisted Development
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
   
 </li>
       
@@ -3923,46 +3669,6 @@
   
 
 
-  <nav class="md-path" aria-label="Navigation" >
-    <ol class="md-path__list">
-      
-        
-  
-  
-    <li class="md-path__item">
-      <a href=".." class="md-path__link">
-        
-  <span class="md-ellipsis">
-    Manifesto
-  </span>
-
-      </a>
-    </li>
-  
-
-      
-      
-        
-  
-  
-    
-    
-      <li class="md-path__item">
-        <a href="./" class="md-path__link">
-          
-  <span class="md-ellipsis">
-    Blog
-  </span>
-
-        </a>
-      </li>
-    
-  
-
-      
-    </ol>
-  </nav>
-
               
               <article class="md-content__inner md-typeset">
                 
@@ -3971,215 +3677,476 @@
   
 
 
-  <h1>Blog</h1>
-
-<p><img alt="ctx" src="../images/ctx-banner.png" /></p>
-<p>Stories, insights, and lessons learned from <strong>building</strong> and <strong>using</strong> <code>ctx</code>.</p>
+<h1 id="code-structure-as-an-agent-interface">Code Structure as an Agent Interface<a class="headerlink" href="#code-structure-as-an-agent-interface" title="Permanent link">&para;</a></h1>
+<h2 id="what-19-ast-tests-taught-us-about-agent-readable-code">What 19 AST Tests Taught Us About Agent-Readable Code<a class="headerlink" href="#what-19-ast-tests-taught-us-about-agent-readable-code" title="Permanent link">&para;</a></h2>
+<p><img alt="ctx" src="../../images/ctx-banner.png" /></p>
+<p><strong>When an agent sees <code>token.Slash</code> instead of <code>"/"</code>, it cannot pattern-match 
+against the millions of <code>strings.Split(s, "/")</code> calls in its training data
+and coast on statistical inference. It has to actually look up what 
+<code>token.Slash</code> is.</strong></p>
+<p><em>Jose Alekhinne / April 2, 2026</em></p>
+<p>We set out to replace a shell script with Go tests.</p>
+<p>We ended up discovering that "<strong>code quality</strong>" and
+"<strong>agent readability</strong>" are the <strong>same thing</strong>.</p>
+<p>This is not about linting. This is about controlling
+how an agent <strong>perceives</strong> your system.</p>
+<p>One term will recur throughout this post, so let me pin it down:</p>
+<div class="admonition tip">
+<p class="admonition-title">Agent Readability</p>
+<p><strong>Agent Readability</strong> is the degree to which a codebase
+can be understood through structured traversal, not 
+statistical pattern matching.</p>
+</div>
+<p>This is the story of <strong>19 AST-based audit tests</strong>, a
+single-day session that touched <strong>300+ files</strong>, and what
+happens when you treat your codebase's structure as
+an interface for the machines that read it.</p>
 <hr />
-<h2 id="releases">Releases<a class="headerlink" href="#releases" title="Permanent link">&para;</a></h2>
-<h3 id="ctx-v080-the-architecture-release"><a href="2026-03-23-ctx-v0.8.0-the-architecture-release/">ctx v0.8.0: The Architecture Release</a><a class="headerlink" href="#ctx-v080-the-architecture-release" title="Permanent link">&para;</a></h3>
-<p><em>March 23, 2026</em>: 374 commits, 1,708 Go files touched, and a near-complete
-architectural overhaul. Every CLI package restructured into <code>cmd/ + core/</code>
-taxonomy, all user-facing strings externalized to YAML, MCP server for
-tool-agnostic AI integration, and the memory bridge connecting Claude Code's
-auto-memory to <code>.context/</code>.</p>
-<p><strong>Topics</strong>: release, architecture, refactoring, MCP, localization</p>
+<h2 id="the-shell-script-problem">The Shell Script Problem<a class="headerlink" href="#the-shell-script-problem" title="Permanent link">&para;</a></h2>
+<p><code>ctx</code> had a file called <code>hack/lint-drift.sh</code>. It ran
+five checks using <code>grep</code> and <code>awk</code>: literal <code>"\n"</code>
+strings, <code>cmd.Printf</code> calls outside the write package,
+magic directory strings in <code>filepath.Join</code>, hardcoded
+<code>.md</code> extensions, and DescKey-to-YAML linkage.</p>
+<p>It worked. <strong>Until it didn't</strong>.</p>
+<p>The script had three structural weaknesses that kept biting us:</p>
+<ol>
+<li><strong>No type awareness.</strong> It could not distinguish a
+   <code>Use*</code> constant from a <code>DescKey*</code> constant, causing
+   71 false positives in one run.</li>
+<li><strong>Fragile exclusions.</strong> When a constant moved from
+   <code>token.go</code> to <code>whitespace.go</code>, the exclusion glob
+   broke silently.</li>
+<li><strong>Ceiling on detection.</strong> Checks that require
+   understanding call sites, import graphs, or type
+   relationships are impossible in shell.</li>
+</ol>
+<p>We wrote a <em>spec</em> to replace all five checks
+with Go tests using <code>go/ast</code> and <code>go/packages</code>. The
+tests would run as part of <code>go test ./...</code>: no separate
+script, no separate CI step.</p>
+<p>What we did not expect was where the work would lead.</p>
+<h2 id="the-ast-migration">The AST Migration<a class="headerlink" href="#the-ast-migration" title="Permanent link">&para;</a></h2>
+<p>The pattern for each test is identical:</p>
+<div class="language-go highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="kd">func</span><span class="w"> </span><span class="nx">TestNoLiteralWhitespace</span><span class="p">(</span><span class="nx">t</span><span class="w"> </span><span class="o">*</span><span class="nx">testing</span><span class="p">.</span><span class="nx">T</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="w">    </span><span class="nx">pkgs</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="nx">loadPackages</span><span class="p">(</span><span class="nx">t</span><span class="p">)</span>
+</span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="w">    </span><span class="kd">var</span><span class="w"> </span><span class="nx">violations</span><span class="w"> </span><span class="p">[]</span><span class="kt">string</span>
+</span><span id="__span-0-4"><a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="w">    </span><span class="k">for</span><span class="w"> </span><span class="nx">_</span><span class="p">,</span><span class="w"> </span><span class="nx">pkg</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="k">range</span><span class="w"> </span><span class="nx">pkgs</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-0-5"><a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="w">        </span><span class="k">for</span><span class="w"> </span><span class="nx">_</span><span class="p">,</span><span class="w"> </span><span class="nx">file</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="k">range</span><span class="w"> </span><span class="nx">pkg</span><span class="p">.</span><span class="nx">Syntax</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-0-6"><a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a><span class="w">            </span><span class="nx">ast</span><span class="p">.</span><span class="nx">Inspect</span><span class="p">(</span><span class="nx">file</span><span class="p">,</span><span class="w"> </span><span class="kd">func</span><span class="p">(</span><span class="nx">n</span><span class="w"> </span><span class="nx">ast</span><span class="p">.</span><span class="nx">Node</span><span class="p">)</span><span class="w"> </span><span class="kt">bool</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-0-7"><a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="w">                </span><span class="c1">// check node, append to violations</span>
+</span><span id="__span-0-8"><a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a><span class="w">                </span><span class="k">return</span><span class="w"> </span><span class="kc">true</span>
+</span><span id="__span-0-9"><a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a><span class="w">            </span><span class="p">})</span>
+</span><span id="__span-0-10"><a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a><span class="w">        </span><span class="p">}</span>
+</span><span id="__span-0-11"><a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a><span class="w">    </span><span class="p">}</span>
+</span><span id="__span-0-12"><a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a><span class="w">    </span><span class="k">for</span><span class="w"> </span><span class="nx">_</span><span class="p">,</span><span class="w"> </span><span class="nx">v</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="k">range</span><span class="w"> </span><span class="nx">violations</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-0-13"><a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a><span class="w">        </span><span class="nx">t</span><span class="p">.</span><span class="nx">Error</span><span class="p">(</span><span class="nx">v</span><span class="p">)</span>
+</span><span id="__span-0-14"><a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a><span class="w">    </span><span class="p">}</span>
+</span><span id="__span-0-15"><a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a><span class="p">}</span>
+</span></code></pre></div>
+<p>Load packages once via <code>sync.Once</code>, walk every syntax
+tree, collect violations, report. The shared helpers
+(<code>loadPackages</code>, <code>isTestFile</code>, <code>posString</code>) live in
+<code>helpers_test.go</code>. Each test is a <code>_test.go</code> file in
+<code>internal/audit/</code>, producing no binary output and not
+importable by production code.</p>
+<p>In a single session, we built 13 new tests on top of
+6 that already existed, bringing the total to 19:</p>
+<table>
+<thead>
+<tr>
+<th>Test</th>
+<th>What it catches</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>TestNoLiteralWhitespace</code></td>
+<td><code>"\n"</code>, <code>"\t"</code>, <code>'\r'</code> outside <code>config/token/</code></td>
+</tr>
+<tr>
+<td><code>TestNoNakedErrors</code></td>
+<td><code>fmt.Errorf</code>/<code>errors.New</code> outside <code>internal/err/</code></td>
+</tr>
+<tr>
+<td><code>TestNoStrayErrFiles</code></td>
+<td><code>err.go</code> files outside <code>internal/err/</code></td>
+</tr>
+<tr>
+<td><code>TestNoRawLogging</code></td>
+<td><code>fmt.Fprint*(os.Stderr)</code>, <code>log.Print*</code> outside <code>internal/log/</code></td>
+</tr>
+<tr>
+<td><code>TestNoInlineSeparators</code></td>
+<td><code>strings.Join</code> with literal separator arg</td>
+</tr>
+<tr>
+<td><code>TestNoStringConcatPaths</code></td>
+<td>Path-like variables built with <code>+</code></td>
+</tr>
+<tr>
+<td><code>TestNoStutteryFunctions</code></td>
+<td><code>write.WriteJournal</code> repeats package name</td>
+</tr>
+<tr>
+<td><code>TestDocComments</code></td>
+<td>Missing doc comments on any declaration</td>
+</tr>
+<tr>
+<td><code>TestNoMagicValues</code></td>
+<td>Numeric literals outside const definitions</td>
+</tr>
+<tr>
+<td><code>TestNoMagicStrings</code></td>
+<td>String literals outside const definitions</td>
+</tr>
+<tr>
+<td><code>TestLineLength</code></td>
+<td>Lines exceeding 80 characters</td>
+</tr>
+<tr>
+<td><code>TestNoRegexpOutsideRegexPkg</code></td>
+<td><code>regexp.MustCompile</code> outside <code>config/regex/</code></td>
+</tr>
+</tbody>
+</table>
+<p>Plus the six that preceded the session:
+<code>TestNoErrorsAs</code>, <code>TestNoCmdPrintOutsideWrite</code>,
+<code>TestNoExecOutsideExecPkg</code>, <code>TestNoInlineRegexpCompile</code>,
+<code>TestNoRawFileIO</code>, <code>TestNoRawPermissions</code>.</p>
+<p>The migration touched <strong>300+ files across 25 commits</strong>.</p>
+<p><strong>Not</strong> because the tests were hard to write, <strong>but</strong> because
+every test we wrote revealed violations that needed fixing.</p>
+<h2 id="the-tightening-loop">The Tightening Loop<a class="headerlink" href="#the-tightening-loop" title="Permanent link">&para;</a></h2>
+<p>The most instructive part was not writing the tests.
+It was the iterative tightening.</p>
+<p>The following process was repeated for every test:</p>
+<ol>
+<li>Write the test with reasonable exemptions</li>
+<li>Run it, see violations</li>
+<li>Fix the violations (<em>migrate to config constants</em>)</li>
+<li>The human reviews the result</li>
+<li>The human spots something the test missed</li>
+<li>Fix the test first, verify it catches the issue</li>
+<li>Fix the newly caught violations</li>
+<li>Repeat from step 4</li>
+</ol>
+<p>This loop drove the tests from "<em>basically correct</em>" to
+"<strong>actually useful</strong>". </p>
+<p>Three examples:</p>
+<h3 id="example-1-the-local-const-loophole">Example 1: The Local Const Loophole<a class="headerlink" href="#example-1-the-local-const-loophole" title="Permanent link">&para;</a></h3>
+<p><code>TestNoMagicValues</code> initially exempted local constants
+inside function bodies. This let code like this pass:</p>
+<div class="language-go highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="kd">const</span><span class="w"> </span><span class="nx">descMaxWidth</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="mi">70</span>
+</span><span id="__span-1-2"><a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="nx">desc</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="nx">truncateDescription</span><span class="p">(</span>
+</span><span id="__span-1-3"><a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="w">    </span><span class="nx">meta</span><span class="p">.</span><span class="nx">Description</span><span class="p">,</span><span class="w"> </span><span class="nx">descMaxWidth</span><span class="p">,</span>
+</span><span id="__span-1-4"><a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="p">)</span>
+</span></code></pre></div>
+<p>The test saw a <code>const</code> definition and moved on. But
+<code>const descMaxWidth = 70</code> on the line before its only
+use is just renaming a magic number. The <code>70</code> should
+live in <code>config/format/TruncateDescription</code> where it is
+discoverable, reusable, and auditable.</p>
+<p>We removed the local const exemption. The test caught
+it. The value moved to config.</p>
+<h3 id="example-2-the-single-character-dodge">Example 2: The Single-Character Dodge<a class="headerlink" href="#example-2-the-single-character-dodge" title="Permanent link">&para;</a></h3>
+<p><code>TestNoMagicStrings</code> initially exempted all single-character strings as 
+"<em>structural punctuation</em>". </p>
+<p>This  let <code>"/"</code>, <code>"-"</code>, and <code>"."</code> pass everywhere.</p>
+<p>But <code>"/"</code> is a <strong>directory separator</strong>. It is <strong>OS-specific</strong>
+and a <strong>security surface</strong>. </p>
+<p><code>"-"</code> used in <code>strings.Repeat("-", width)</code> is creating visual output,
+not acting as a delimiter. </p>
+<p><code>"."</code> in <code>strings.SplitN(ver, ".", 3)</code> is a version separator.</p>
+<p>None of these are "<em>just punctuation</em>": 
+They are <strong>domain values with specific meanings</strong>.</p>
+<p>We removed the blanket exemption: 
+30 violations surfaced. </p>
+<p>Every one was a real magic value that should have been 
+<code>token.Slash</code>, <code>token.Dash</code>, or <code>token.Dot</code>.</p>
+<h3 id="example-3-the-replacer-versus-regex">Example 3: The Replacer versus Regex<a class="headerlink" href="#example-3-the-replacer-versus-regex" title="Permanent link">&para;</a></h3>
+<p>After migrating magic strings, we had this:</p>
+<div class="language-go highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="kd">func</span><span class="w"> </span><span class="nx">MermaidID</span><span class="p">(</span><span class="nx">pkg</span><span class="w"> </span><span class="kt">string</span><span class="p">)</span><span class="w"> </span><span class="kt">string</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-2-2"><a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="w">    </span><span class="nx">r</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="nx">strings</span><span class="p">.</span><span class="nx">NewReplacer</span><span class="p">(</span>
+</span><span id="__span-2-3"><a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="w">        </span><span class="nx">token</span><span class="p">.</span><span class="nx">Slash</span><span class="p">,</span><span class="w"> </span><span class="nx">token</span><span class="p">.</span><span class="nx">Underscore</span><span class="p">,</span>
+</span><span id="__span-2-4"><a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="w">        </span><span class="nx">token</span><span class="p">.</span><span class="nx">Dot</span><span class="p">,</span><span class="w"> </span><span class="nx">token</span><span class="p">.</span><span class="nx">Underscore</span><span class="p">,</span>
+</span><span id="__span-2-5"><a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="w">        </span><span class="nx">token</span><span class="p">.</span><span class="nx">Dash</span><span class="p">,</span><span class="w"> </span><span class="nx">token</span><span class="p">.</span><span class="nx">Underscore</span><span class="p">,</span>
+</span><span id="__span-2-6"><a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="w">    </span><span class="p">)</span>
+</span><span id="__span-2-7"><a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="nx">r</span><span class="p">.</span><span class="nx">Replace</span><span class="p">(</span><span class="nx">pkg</span><span class="p">)</span>
+</span><span id="__span-2-8"><a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a><span class="p">}</span>
+</span></code></pre></div>
+<p>Six token references and a <code>NewReplacer</code> allocation.
+The magic values were gone, but we had replaced them
+with token soup: <strong>structure without abstraction.</strong> </p>
+<p>The correct tool was a regex:</p>
+<div class="language-go highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1">// In config/regex/file.go:</span>
+</span><span id="__span-3-2"><a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="kd">var</span><span class="w"> </span><span class="nx">MermaidUnsafe</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nx">regexp</span><span class="p">.</span><span class="nx">MustCompile</span><span class="p">(</span><span class="s">`[/.\-]`</span><span class="p">)</span>
+</span><span id="__span-3-3"><a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>
+</span><span id="__span-3-4"><a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="c1">// In the caller:</span>
+</span><span id="__span-3-5"><a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="kd">func</span><span class="w"> </span><span class="nx">MermaidID</span><span class="p">(</span><span class="nx">pkg</span><span class="w"> </span><span class="kt">string</span><span class="p">)</span><span class="w"> </span><span class="kt">string</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-3-6"><a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a><span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="nx">regex</span><span class="p">.</span><span class="nx">MermaidUnsafe</span><span class="p">.</span><span class="nx">ReplaceAllString</span><span class="p">(</span>
+</span><span id="__span-3-7"><a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="w">        </span><span class="nx">pkg</span><span class="p">,</span><span class="w"> </span><span class="nx">token</span><span class="p">.</span><span class="nx">Underscore</span><span class="p">,</span>
+</span><span id="__span-3-8"><a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a><span class="w">    </span><span class="p">)</span>
+</span><span id="__span-3-9"><a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a><span class="p">}</span>
+</span></code></pre></div>
+<p>One config regex, one call. The regex lives in
+<code>config/regex/file.go</code> where every other compiled
+pattern lives. An agent reading the code sees
+<code>regex.MermaidUnsafe</code> and immediately knows: this is a
+sanitization pattern, it lives in the regex registry,
+and it has a name that explains its purpose.</p>
+<p><strong>Clean is better than clever</strong>.</p>
 <hr />
-<h2 id="field-notes">Field Notes<a class="headerlink" href="#field-notes" title="Permanent link">&para;</a></h2>
-<h3 id="code-structure-as-an-agent-interface-what-19-ast-tests-taught-us"><a href="2026-04-02-code-structure-as-an-agent-interface/">Code Structure as an Agent Interface: What 19 AST Tests Taught Us</a><a class="headerlink" href="#code-structure-as-an-agent-interface-what-19-ast-tests-taught-us" title="Permanent link">&para;</a></h3>
-<p><em>April 2, 2026</em>: We built 19 AST-based audit tests in a single session,
-touching 300+ files. In the process we discovered that "old-school" code
-quality constraints (<em>no magic numbers, centralized error handling,
-80-char lines, documentation</em>) are exactly the constraints that make code
-readable to AI agents. If an agent interacts with your codebase, your
-codebase already is an interface. You just have not designed it as one.</p>
-<p><strong>Topics</strong>: ast, code quality, agent readability, conventions, field notes</p>
+<h2 id="a-before-and-after">A Before-and-After<a class="headerlink" href="#a-before-and-after" title="Permanent link">&para;</a></h2>
+<p>To make the agent-readability claim concrete, consider
+one function through the full transformation.</p>
+<p><strong>Before</strong> (the code we started with):</p>
+<div class="language-go highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="kd">func</span><span class="w"> </span><span class="nx">MermaidID</span><span class="p">(</span><span class="nx">pkg</span><span class="w"> </span><span class="kt">string</span><span class="p">)</span><span class="w"> </span><span class="kt">string</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-4-2"><a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="w">    </span><span class="nx">r</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="nx">strings</span><span class="p">.</span><span class="nx">NewReplacer</span><span class="p">(</span>
+</span><span id="__span-4-3"><a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="w">        </span><span class="s">&quot;/&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;_&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;.&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;_&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;-&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;_&quot;</span><span class="p">,</span>
+</span><span id="__span-4-4"><a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="w">    </span><span class="p">)</span>
+</span><span id="__span-4-5"><a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="nx">r</span><span class="p">.</span><span class="nx">Replace</span><span class="p">(</span><span class="nx">pkg</span><span class="p">)</span>
+</span><span id="__span-4-6"><a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a><span class="p">}</span>
+</span></code></pre></div>
+<p>An agent reading this sees six string literals. To
+understand what the function does, it must: (1) parse
+the <code>NewReplacer</code> pair semantics, (2) infer that <code>/</code>,
+<code>.</code>, <code>-</code> are being replaced, (3) guess why, (4) hope
+the guess is right.</p>
+<p>There is nothing to follow. No import to trace. No
+name to search. <strong>The meaning is locked inside the
+function body</strong>.</p>
+<p><strong>After</strong> (<em>the code we ended with</em>):</p>
+<div class="language-go highlight"><pre><span></span><code><span id="__span-5-1"><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="kd">func</span><span class="w"> </span><span class="nx">MermaidID</span><span class="p">(</span><span class="nx">pkg</span><span class="w"> </span><span class="kt">string</span><span class="p">)</span><span class="w"> </span><span class="kt">string</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-5-2"><a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="nx">regex</span><span class="p">.</span><span class="nx">MermaidUnsafe</span><span class="p">.</span><span class="nx">ReplaceAllString</span><span class="p">(</span>
+</span><span id="__span-5-3"><a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="w">        </span><span class="nx">pkg</span><span class="p">,</span><span class="w"> </span><span class="nx">token</span><span class="p">.</span><span class="nx">Underscore</span><span class="p">,</span>
+</span><span id="__span-5-4"><a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="w">    </span><span class="p">)</span>
+</span><span id="__span-5-5"><a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a><span class="p">}</span>
+</span></code></pre></div>
+<p>An agent reading this sees two named references:
+<code>regex.MermaidUnsafe</code> and <code>token.Underscore</code>. </p>
+<p>To understand the function, it can: (1) look up
+<code>MermaidUnsafe</code> in <code>config/regex/file.go</code> and see the
+pattern <code>[/.\-]</code> with a doc comment explaining it
+matches invalid Mermaid characters, (2) look up
+<code>Underscore</code> in <code>config/token/delim.go</code> and see it is
+the replacement character.</p>
+<p>The agent now has: a named pattern, a named
+replacement, a package location, documentation, and
+neighboring context (<em>other regex patterns, other
+delimiters</em>). </p>
+<p>It got all of this <strong>for free</strong> by following just two references.</p>
+<p>The indirection is not an overhead. It is the <strong>retrieval query</strong>.</p>
 <hr />
-<h3 id="we-broke-the-31-rule"><a href="2026-03-23-we-broke-the-3-1-rule/">We Broke the 3:1 Rule</a><a class="headerlink" href="#we-broke-the-31-rule" title="Permanent link">&para;</a></h3>
-<p><em>March 23, 2026</em>: After v0.6.0, we ran 198 feature commits across 17 days
-before consolidating. The 3:1 rule says consolidate every 4<sup>th</sup> session. We
-did it after the 66<sup>th</sup>. The result: an 18-day, 181-commit cleanup marathon
-that took longer than the feature run itself. A follow-up to
-<a href="2026-02-17-the-3-1-ratio/">The 3:1 Ratio</a> with empirical evidence from
-the v0.8.0 cycle.</p>
-<p><strong>Topics</strong>: consolidation, technical debt, development workflow, convention
-drift, field notes</p>
+<h2 id="the-principles">The Principles<a class="headerlink" href="#the-principles" title="Permanent link">&para;</a></h2>
+<p>You are not just improving code quality. You are
+shaping the <strong>input space</strong> that determines how an LLM
+can reason about your system.</p>
+<p>Every structural constraint we enforce converts
+implicit semantics into explicit structure. </p>
+<p><strong>LLMs struggle when meaning is implicit and patterns are
+statistical</strong>. </p>
+<p>They thrive when <strong>meaning is explicit</strong> and <strong>structure is navigable</strong>.</p>
+<p>Here is what we learned, organized into three
+categories.</p>
+<h3 id="cognitive-constraints">Cognitive Constraints<a class="headerlink" href="#cognitive-constraints" title="Permanent link">&para;</a></h3>
+<p>These force agents (<em>and humans</em>) to <strong>think harder</strong>.</p>
+<p><strong>Indirection acts as a built-in retrieval mechanism</strong>:</p>
+<p>Moving magic values to config forces the agent to
+follow the reference. <code>errMemory.WriteFile(cause)</code>
+tells the agent "there is a memory error package, go
+look." <code>fmt.Errorf("writing MEMORY.md: %w", cause)</code>
+inlines everything and makes the call graph invisible.
+The indirection IS the retrieval query.</p>
+<p><strong>Unfamiliar patterns force reasoning</strong>:</p>
+<p>When an agent sees <code>token.Slash</code> instead of <code>"/"</code>, it
+cannot coast on corpus frequency. It has to actually
+look up what <code>token.Slash</code> is, which forces it through
+the dependency graph, which means it encounters
+documentation and neighboring constants, which gives
+it richer context. You are exploiting the agent's
+weakness (over-reliance on training data) to make it
+behave more carefully.</p>
+<p><strong>Documentation helps everyone</strong>:</p>
+<p>Extensive documentation helps humans reading the code,
+agents reasoning about it, and RAG systems indexing it.</p>
+<p>Our <code>TestDocComments</code> check added 308 doc comments in
+one commit. Every function, every type, every constant
+block now has a doc comment. </p>
+<p>This is not busywork: it is the content that agents and embeddings consume.</p>
+<h3 id="structural-constraints">Structural Constraints<a class="headerlink" href="#structural-constraints" title="Permanent link">&para;</a></h3>
+<p>These shape the codebase into a navigable graph.</p>
+<p><strong>Shorter files save tokens</strong>:</p>
+<p>Forcing private helper functions out of main files
+makes the main file shorter. An agent loading a file
+spends fewer tokens on boilerplate and more on the
+logic that matters.</p>
+<p><strong>Fixed-width constraints force decomposition</strong>:</p>
+<p>A function that cannot be expressed in 80 columns is
+either too deeply nested (<em>extract a helper</em>), has too
+many parameters (<em>introduce a struct)</em>, or has a variable
+name that is too long (<em>rethink the abstraction</em>). </p>
+<p>The constraint forces structural improvements that happen
+to also make the code more parseable.</p>
+<p><strong>Chunk-friendly structure helps RAG</strong></p>
+<p>Code intelligence tools chunk files for embedding and
+retrieval. Short, well-documented, single-responsibility
+files produce better chunks than monolithic files with
+mixed concerns. </p>
+<p>The structural constraints create files
+that RAG systems can index effectively.</p>
+<p><strong>Centralization creates debuggable seams</strong>:</p>
+<p>All error handling in <code>internal/err/</code>, all logging in
+<code>internal/log/</code>, all file operations in <code>internal/io/</code>.
+One place to debug, one place to test, one place to see
+patterns. An agent analyzing "how does this project
+handle errors" gets one answer from one package, not
+200 scattered <code>fmt.Errorf</code> calls.</p>
+<p><strong>Private functions become public patterns</strong>:</p>
+<p>When you extract a private function to satisfy a
+constraint, it often ends up as a semi-public function
+in a <code>core/</code> package. Then you realize it is generic
+enough to be factored into a purpose-specific module.</p>
+<p>The constraint drives discovery of reusable
+abstractions hiding inside monolithic functions.</p>
+<h3 id="operational-benefits">Operational Benefits<a class="headerlink" href="#operational-benefits" title="Permanent link">&para;</a></h3>
+<p>These pay dividends in daily development.</p>
+<p><strong>Single-edit renames</strong>:</p>
+<p>Renaming a flag is one edit to a config constant
+instead of find-and-replace across 30,000 lines with
+possible misses. <code>grep token.Slash</code> gives you every
+place that uses a forward slash semantically.</p>
+<p><code>grep "/"</code> gives you noise.</p>
+<p><strong>Blast radius containment</strong>:</p>
+<p>When every magic value is a config constant, a search
+is one result. This matters for impact analysis,
+security audits, and agents trying to understand "<em>what
+uses this</em>".</p>
+<p><strong>Compile-time contract enforcement</strong>:</p>
+<p>When <code>err/memory.WriteFile</code> exists, the compiler
+guarantees the error message exists and the call
+signature is correct. An inline <code>fmt.Errorf</code> can have
+a typo in the format string and nothing catches it
+until runtime. Centralization turns runtime failures
+into compile errors.</p>
+<p><strong>Semantic <code>git blame</code></strong>:</p>
+<p>When <code>token.Slash</code> is used everywhere and someone
+changes its value, <code>git blame</code> on the config file
+shows exactly when and why. </p>
+<p>With inline <code>"/"</code> scattered  across 30 files, the history is invisible.</p>
+<p><strong>Test surface reduction</strong>:</p>
+<p>Centralizing into <code>internal/err/</code>, <code>internal/io/</code>,
+<code>internal/config/</code> means you test behavior once at
+the boundary and trust the callers. </p>
+<p>You do not need 30 tests for 30 <code>fmt.Errorf</code> calls. You need 1 test for
+<code>errMemory.WriteFile</code> and 30 trivial call-site audits,
+which is exactly what these AST tests provide.</p>
+<h2 id="the-numbers">The Numbers<a class="headerlink" href="#the-numbers" title="Permanent link">&para;</a></h2>
+<p>One session. 25 commits. The raw stats:</p>
+<table>
+<thead>
+<tr>
+<th>Metric</th>
+<th>Count</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>New audit tests</td>
+<td>13</td>
+</tr>
+<tr>
+<td>Total audit tests</td>
+<td>19</td>
+</tr>
+<tr>
+<td>Files touched</td>
+<td>300+</td>
+</tr>
+<tr>
+<td>Magic values migrated</td>
+<td>90+</td>
+</tr>
+<tr>
+<td>Functions renamed</td>
+<td>17</td>
+</tr>
+<tr>
+<td>Doc comments added</td>
+<td>323</td>
+</tr>
+<tr>
+<td>Lines rewrapped to 80 chars</td>
+<td>190</td>
+</tr>
+<tr>
+<td>Config constants created</td>
+<td>40+</td>
+</tr>
+<tr>
+<td>Config regexes created</td>
+<td>3</td>
+</tr>
+</tbody>
+</table>
+<p>Every number represents a violation that existed
+before the test caught it. The tests did not create
+work: they revealed work that was already needed.</p>
+<h2 id="the-uncomfortable-implication">The Uncomfortable Implication<a class="headerlink" href="#the-uncomfortable-implication" title="Permanent link">&para;</a></h2>
+<p>None of this is Go-specific.</p>
+<p>If an AI agent interacts with your codebase, your
+codebase <em>already is</em> an interface. You just have not
+designed it as one.</p>
+<p>If your error messages are scattered across 200 files,
+an agent cannot reason about error handling as a
+concept. If your magic values are inlined, an agent
+cannot distinguish "this is a path separator" from
+"this is a division operator." If your functions are
+named <code>write.WriteJournal</code>, the agent wastes tokens
+on redundant information.</p>
+<p>What we discovered, through the unglamorous work of
+writing lint tests and migrating string literals, is
+that the structural constraints software engineering
+has valued for decades are exactly the constraints
+that make code readable to machines.</p>
+<p><strong>This is not a coincidence</strong>: These constraints exist
+because they <strong>reduce the cognitive load of
+understanding code</strong>. </p>
+<p><strong>Agents have cognitive load too</strong>: It is called <strong>the context window</strong>.</p>
+<p>You are not converting code to a new paradigm.</p>
+<p>You are <strong>making the latent graph visible</strong>.</p>
+<p>You are converting implicit semantics into explicit
+structure that both humans and machines can traverse.</p>
+<h2 id="whats-next">What's Next<a class="headerlink" href="#whats-next" title="Permanent link">&para;</a></h2>
+<p>The spec lists 8 more tests we have not built yet,
+including <code>TestDescKeyYAMLLinkage</code> (verifying that
+every DescKey constant has a corresponding YAML entry),
+<code>TestCLICmdStructure</code> (enforcing the <code>cmd.go</code> /
+<code>run.go</code> / <code>doc.go</code> file convention), and
+<code>TestNoFlagBindOutsideFlagbind</code> (which requires
+migrating ~50 flag registration sites first).</p>
+<p>The broader question: should these principles be
+codified as a reusable linting framework? The patterns
+(<code>loadPackages</code> + <code>ast.Inspect</code> + violation collection)
+are generic. </p>
+<p>The specific checks are project-specific.
+But the <em>categories</em> of checks (<em>centralization
+enforcement, magic value detection, naming conventions,
+documentation requirements</em>) are universal.</p>
+<p>For now, 19 tests in <code>internal/audit/</code> is enough.
+They run in 2 seconds as part of <code>go test ./...</code>. They
+catch real issues. </p>
+<p>And they encode a theory of code quality that serves
+both humans and the agents that work alongside them.</p>
 <hr />
-<h2 id="context-engineering">Context Engineering<a class="headerlink" href="#context-engineering" title="Permanent link">&para;</a></h2>
-<h3 id="agent-memory-is-infrastructure"><a href="2026-03-04-agent-memory-is-infrastructure/">Agent Memory Is Infrastructure</a><a class="headerlink" href="#agent-memory-is-infrastructure" title="Permanent link">&para;</a></h3>
-<p><em>March 4, 2026</em>: Every AI coding agent starts fresh. The obvious fix is
-"<em>memory.</em>" But there's a different problem memory doesn't touch: the project
-itself <strong>accumulates knowledge</strong> that has nothing to do with any single session.
-This post argues that agent memory is L2 (runtime cache); what's missing is
-L3 (project infrastructure).</p>
-<p><strong>Topics</strong>: context engineering, agent memory, infrastructure, persistence,
-team knowledge</p>
-<hr />
-<h3 id="context-as-infrastructure"><a href="2026-02-17-context-as-infrastructure/">Context as Infrastructure</a><a class="headerlink" href="#context-as-infrastructure" title="Permanent link">&para;</a></h3>
-<p><em>February 17, 2026</em>: Where does your AI's knowledge live between sessions?
-If the answer is "<em>in a prompt I paste at the start,</em>" you are treating context
-as a consumable. This post argues for treating it as infrastructure instead:
-persistent files, separation of concerns, two-tier storage, <strong>progressive
-disclosure</strong>, and the filesystem as the most mature interface available.</p>
-<p><strong>Topics</strong>: context engineering, infrastructure, progressive disclosure,
-persistence, design philosophy</p>
-<hr />
-<h3 id="the-attention-budget-why-your-ai-forgets-what-you-just-told-it"><a href="2026-02-03-the-attention-budget/">The Attention Budget: Why Your AI Forgets What You Just Told It</a><a class="headerlink" href="#the-attention-budget-why-your-ai-forgets-what-you-just-told-it" title="Permanent link">&para;</a></h3>
-<p><em>February 3, 2026</em>: Every token you send to an AI consumes a finite
-resource: the <strong>attention budget</strong>. Understanding this constraint shaped every
-design decision in ctx: hierarchical file structure, explicit budgets,
-progressive disclosure, and filesystem-as-index.</p>
-<p><strong>Topics</strong>: attention mechanics, context engineering, progressive disclosure,
-ctx primitives, token budgets</p>
-<hr />
-<h3 id="before-context-windows-we-had-bouncers"><a href="2026-02-14-irc-as-context/">Before Context Windows, We Had Bouncers</a><a class="headerlink" href="#before-context-windows-we-had-bouncers" title="Permanent link">&para;</a></h3>
-<p><em>February 14, 2026</em>: IRC is stateless. You disconnect, you vanish. Modern
-systems are not much different. This post traces the line from IRC bouncers
-to <strong>context engineering</strong>: stateless protocols require stateful wrappers,
-volatile interfaces require durable memory.</p>
-<p><strong>Topics</strong>: context engineering, infrastructure, IRC, persistence,
-state continuity</p>
-<hr />
-<h3 id="the-last-question"><a href="2026-02-28-the-last-question/">The Last Question</a><a class="headerlink" href="#the-last-question" title="Permanent link">&para;</a></h3>
-<p><em>February 28, 2026</em>: In 1956, Asimov wrote a story about a question that
-spans the entire future of the universe. A reading of "<em>The Last Question</em>"
-through the lens of persistence, substrate migration, and what it means to
-build systems where <strong>sessions don't reset</strong>.</p>
-<p><strong>Topics</strong>: context continuity, long-lived systems, persistence,
-intelligence over time, field notes</p>
-<hr />
-<h2 id="agent-behavior-and-design">Agent Behavior and Design<a class="headerlink" href="#agent-behavior-and-design" title="Permanent link">&para;</a></h2>
-<h3 id="the-dog-ate-my-homework-teaching-ai-agents-to-read-before-they-write"><a href="2026-02-25-the-homework-problem/">The Dog Ate My Homework: Teaching AI Agents to Read Before They Write</a><a class="headerlink" href="#the-dog-ate-my-homework-teaching-ai-agents-to-read-before-they-write" title="Permanent link">&para;</a></h3>
-<p><em>February 25, 2026</em>: You wrote the playbook. The agent skipped all of it.
-Five sessions, five failure modes, and the discovery that <strong>observable
-compliance</strong> beats perfect compliance.</p>
-<p><strong>Topics</strong>: hooks, agent behavior, context engineering, behavioral design,
-testing methodology, compliance monitoring</p>
-<hr />
-<h3 id="skills-that-fight-the-platform"><a href="2026-02-04-skills-that-fight-the-platform/">Skills That Fight the Platform</a><a class="headerlink" href="#skills-that-fight-the-platform" title="Permanent link">&para;</a></h3>
-<p><em>February 4, 2026</em>: When custom skills conflict with system prompt defaults,
-the AI has to reconcile contradictory instructions. Five <strong>conflict patterns</strong>
-discovered while building <code>ctx</code>.</p>
-<p><strong>Topics</strong>: context engineering, skill design, system prompts, antipatterns,
-AI safety primitives</p>
-<hr />
-<h3 id="the-anatomy-of-a-skill-that-works"><a href="2026-02-07-the-anatomy-of-a-skill-that-works/">The Anatomy of a Skill That Works</a><a class="headerlink" href="#the-anatomy-of-a-skill-that-works" title="Permanent link">&para;</a></h3>
-<p><em>February 7, 2026</em>: I had 20 skills. Most were well-intentioned stubs. Then
-I rewrote all of them. Seven lessons emerged: quality gates prevent premature
-execution, negative triggers are load-bearing, <strong>examples set boundaries better
-than rules</strong>.</p>
-<p><strong>Topics</strong>: skill design, context engineering, quality gates, E/A/R framework,
-practical patterns</p>
-<hr />
-<h3 id="you-cant-import-expertise"><a href="2026-02-05-you-cant-import-expertise/">You Can't Import Expertise</a><a class="headerlink" href="#you-cant-import-expertise" title="Permanent link">&para;</a></h3>
-<p><em>February 5, 2026</em>: I found a well-crafted consolidation skill. Applied my
-own E/A/R framework: 70% was noise. This post is about why <strong>good skills can't
-be copy-pasted</strong>, and how to grow them from your project's own drift history.</p>
-<p><strong>Topics</strong>: skill adaptation, E/A/R framework, convention drift, consolidation,
-project-specific expertise</p>
-<hr />
-<h3 id="not-everything-is-a-skill"><a href="2026-02-08-not-everything-is-a-skill/">Not Everything Is a Skill</a><a class="headerlink" href="#not-everything-is-a-skill" title="Permanent link">&para;</a></h3>
-<p><em>February 8, 2026</em>: I ran an 8-agent codebase audit and got actionable
-results. The natural instinct was to wrap the prompt as a skill. Then I
-applied my own criteria: it <strong>failed</strong> all three tests.</p>
-<p><strong>Topics</strong>: skill design, context engineering, automation discipline,
-recipes, agent teams</p>
-<hr />
-<h3 id="defense-in-depth-securing-ai-agents"><a href="2026-02-09-defense-in-depth-securing-ai-agents/">Defense in Depth: Securing AI Agents</a><a class="headerlink" href="#defense-in-depth-securing-ai-agents" title="Permanent link">&para;</a></h3>
-<p><em>February 9, 2026</em>: The security advice was "<em>use CONSTITUTION.md for
-guardrails.</em>" That is wishful thinking. <strong>Five defense layers</strong> for unattended
-AI agents, each with a bypass, and why the strength is in the combination.</p>
-<p><strong>Topics</strong>: agent security, defense in depth, prompt injection,
-autonomous loops, container isolation</p>
-<hr />
-<h2 id="development-practice">Development Practice<a class="headerlink" href="#development-practice" title="Permanent link">&para;</a></h2>
-<h3 id="code-is-cheap-judgment-is-not"><a href="2026-02-17-code-is-cheap-judgment-is-not/">Code Is Cheap. Judgment Is Not.</a><a class="headerlink" href="#code-is-cheap-judgment-is-not" title="Permanent link">&para;</a></h3>
-<p><em>February 17, 2026</em>: AI does not replace workers. It replaces unstructured
-effort. Three weeks of building <code>ctx</code> with an AI agent proved it: YOLO mode
-showed production is cheap, <strong>the 3:1 ratio</strong> showed judgment has a cadence.</p>
-<p><strong>Topics</strong>: AI and expertise, context engineering, judgment vs production,
-human-AI collaboration, automation discipline</p>
-<hr />
-<h3 id="the-31-ratio"><a href="2026-02-17-the-3-1-ratio/">The 3:1 Ratio</a><a class="headerlink" href="#the-31-ratio" title="Permanent link">&para;</a></h3>
-<p><em>February 17, 2026</em>: AI makes technical debt worse: not because it writes
-bad code, but because it writes code so fast that <strong>drift accumulates</strong> before
-you notice. Three feature sessions, one consolidation session.</p>
-<p><strong>Topics</strong>: consolidation, technical debt, development workflow, convention
-drift, code quality</p>
-<hr />
-<h3 id="refactoring-with-intent-human-guided-sessions-in-ai-development"><a href="2026-02-01-refactoring-with-intent/">Refactoring with Intent: Human-Guided Sessions in AI Development</a><a class="headerlink" href="#refactoring-with-intent-human-guided-sessions-in-ai-development" title="Permanent link">&para;</a></h3>
-<p><em>February 1, 2026</em>: The YOLO mode shipped 14 commands in a week. But
-technical debt doesn't send invoices. This is the story of what happened
-when we started guiding the AI with <strong>intent</strong>.</p>
-<p><strong>Topics</strong>: refactoring, code quality, documentation standards, module
-decomposition, YOLO versus intentional development</p>
-<hr />
-<h3 id="how-deep-is-too-deep"><a href="2026-02-12-how-deep-is-too-deep/">How Deep Is Too Deep?</a><a class="headerlink" href="#how-deep-is-too-deep" title="Permanent link">&para;</a></h3>
-<p><em>February 12, 2026</em>: I kept feeling like I should go deeper into ML theory.
-Then I spent a week debugging an agent failure that had nothing to do with
-model architecture. When <strong>depth compounds</strong> and when it <strong>doesn't</strong>.</p>
-<p><strong>Topics</strong>: AI foundations, abstraction boundaries, agentic systems,
-context engineering, failure modes</p>
-<hr />
-<h2 id="agent-workflows">Agent Workflows<a class="headerlink" href="#agent-workflows" title="Permanent link">&para;</a></h2>
-<h3 id="parallel-agents-merge-debt-and-the-myth-of-overnight-progress"><a href="2026-02-17-parallel-agents-merge-debt-and-the-myth-of-overnight-progress/">Parallel Agents, Merge Debt, and the Myth of Overnight Progress</a><a class="headerlink" href="#parallel-agents-merge-debt-and-the-myth-of-overnight-progress" title="Permanent link">&para;</a></h3>
-<p><em>February 17, 2026</em>: You discover agents can run in parallel. So you open
-ten terminals. It is not progress: it is merge debt being manufactured in
-real time. The <strong>five-agent ceiling</strong> and why role separation beats file locking.</p>
-<p><strong>Topics</strong>: agent workflows, parallelism, verification, context
-engineering, engineering practice</p>
-<hr />
-<h3 id="parallel-agents-with-git-worktrees"><a href="2026-02-14-parallel-agents-with-worktrees/">Parallel Agents with Git Worktrees</a><a class="headerlink" href="#parallel-agents-with-git-worktrees" title="Permanent link">&para;</a></h3>
-<p><em>February 14, 2026</em>: I had 30 open tasks that didn't touch the same files.
-Using <strong>git worktrees</strong> to partition a backlog by file overlap, run 3-4 agents
-simultaneously, and merge the results.</p>
-<p><strong>Topics</strong>: agent teams, parallelism, git worktrees, context engineering,
-task management</p>
-<hr />
-<h2 id="field-notes-and-signals">Field Notes and Signals<a class="headerlink" href="#field-notes-and-signals" title="Permanent link">&para;</a></h2>
-<h3 id="when-a-system-starts-explaining-itself"><a href="2026-02-17-when-a-system-starts-explaining-itself/">When a System Starts Explaining Itself</a><a class="headerlink" href="#when-a-system-starts-explaining-itself" title="Permanent link">&para;</a></h3>
-<p><em>February 17, 2026</em>: Every new substrate begins as a private advantage.
-Reality begins when other people start describing it in their own language.
-"<em>Better than Adderall</em>" is not praise; it is a <strong>diagnostic</strong>.</p>
-<p><strong>Topics</strong>: field notes, adoption signals, infrastructure vs tools,
-context engineering, substrates</p>
-<hr />
-<h3 id="why-zensical"><a href="2026-02-15-why-zensical/">Why Zensical</a><a class="headerlink" href="#why-zensical" title="Permanent link">&para;</a></h3>
-<p><em>February 15, 2026</em>: I needed a static site generator for the journal
-system. The instinct was Hugo. But <strong>instinct is not analysis</strong>. Why zensical
-was the right choice: thin dependencies, MkDocs-compatible config, and
-zero lock-in.</p>
-<p><strong>Topics</strong>: tooling, static site generators, journal system,
-infrastructure decisions, context engineering</p>
-<hr />
-<h2 id="releases_1">Releases<a class="headerlink" href="#releases_1" title="Permanent link">&para;</a></h2>
-<h3 id="ctx-v060-the-integration-release"><a href="2026-02-16-ctx-v0.6.0-the-integration-release/">ctx v0.6.0: The Integration Release</a><a class="headerlink" href="#ctx-v060-the-integration-release" title="Permanent link">&para;</a></h3>
-<p><em>February 16, 2026</em>: ctx is now a Claude Marketplace plugin. Two commands,
-no build step, no shell scripts. v0.6.0 replaces six Bash hook scripts with
-compiled Go subcommands and ships 25+ Skills as a <strong>plugin</strong>.</p>
-<p><strong>Topics</strong>: release, plugin system, Claude Marketplace, distribution,
-security hardening</p>
-<hr />
-<h3 id="ctx-v030-the-discipline-release"><a href="2026-02-15-ctx-v0.3.0-the-discipline-release/">ctx v0.3.0: The Discipline Release</a><a class="headerlink" href="#ctx-v030-the-discipline-release" title="Permanent link">&para;</a></h3>
-<p><em>February 15, 2026</em>: No new headline feature. Just 35+ documentation and
-quality commits against ~15 feature commits. What a release looks like when
-<strong>the ratio of polish to features</strong> is 3:1.</p>
-<p><strong>Topics</strong>: release, skills migration, consolidation, code quality,
-E/A/R framework</p>
-<hr />
-<h3 id="ctx-v020-the-archaeology-release"><a href="2026-02-01-ctx-v0.2.0-the-archaeology-release/">ctx v0.2.0: The Archaeology Release</a><a class="headerlink" href="#ctx-v020-the-archaeology-release" title="Permanent link">&para;</a></h3>
-<p><em>February 1, 2026</em>: What if your AI could remember everything? Not just
-the current session, but every session. <code>ctx</code> v0.2.0 introduces the recall
-and <strong>journal systems</strong>.</p>
-<p><strong>Topics</strong>: session recall, journal system, structured entries, token budgets,
-meta-tools</p>
-<hr />
-<h3 id="building-ctx-using-ctx-a-meta-experiment-in-ai-assisted-development"><a href="2026-01-27-building-ctx-using-ctx/">Building ctx Using ctx: A Meta-Experiment in AI-Assisted Development</a><a class="headerlink" href="#building-ctx-using-ctx-a-meta-experiment-in-ai-assisted-development" title="Permanent link">&para;</a></h3>
-<p><em>January 27, 2026</em>: What happens when you build a tool designed to give AI
-memory, using that very same tool to remember what you're building? This is
-the <strong>story</strong> of <code>ctx</code>.</p>
-<p><strong>Topics</strong>: dogfooding, AI-assisted development, Ralph Loop, session
-persistence, architectural decisions</p>
+<p>Agents are not going away. They are reading your code
+right now, forming representations of your system in
+context windows that forget everything between sessions.</p>
+<p>The codebases that structure themselves for that
+reality will compound. The ones that do not will slowly
+become illegible to the tools they depend on.</p>
+<p>Structure is no longer just for maintainability. It is
+for <strong>reasonability</strong>.</p>
 
 
 
@@ -4217,44 +4184,6 @@ persistence, architectural decisions</p>
       
         <footer class="md-footer">
   
-    
-      
-      <nav class="md-footer__inner md-grid" aria-label="Footer" >
-        
-          
-          <a href="../thesis/" class="md-footer__link md-footer__link--prev" aria-label="Previous: The Thesis">
-            <div class="md-footer__button md-icon">
-              
-              <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-arrow-left" viewBox="0 0 24 24"><path d="m12 19-7-7 7-7M19 12H5"/></svg>
-            </div>
-            <div class="md-footer__title">
-              <span class="md-footer__direction">
-                Previous
-              </span>
-              <div class="md-ellipsis">
-                The Thesis
-              </div>
-            </div>
-          </a>
-        
-        
-          
-          <a href="../home/" class="md-footer__link md-footer__link--next" aria-label="Next: Home">
-            <div class="md-footer__title">
-              <span class="md-footer__direction">
-                Next
-              </span>
-              <div class="md-ellipsis">
-                Home
-              </div>
-            </div>
-            <div class="md-footer__button md-icon">
-              
-              <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-arrow-right" viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
-            </div>
-          </a>
-        
-      </nav>
     
   
   <div class="md-footer-meta md-typeset">
@@ -4325,10 +4254,10 @@ The documentation on this website is distributed under
       
       
       
-      <script id="__config" type="application/json">{"annotate":null,"base":"..","features":["announce.dismiss","content.code.annotate","content.code.copy","content.code.select","content.footnote.tooltips","content.tabs.link","content.tooltips","navigation.footer","navigation.indexes","navigation.instant","navigation.instant.prefetch","navigation.path","navigation.sections","navigation.tabs","navigation.tabs.sticky","navigation.top","navigation.tracking","search.highlight"],"search":"../assets/javascripts/workers/search.e2d2d235.min.js","tags":null,"translations":{"clipboard.copied":"Copied to clipboard","clipboard.copy":"Copy to clipboard","search.result.more.one":"1 more on this page","search.result.more.other":"# more on this page","search.result.none":"No matching documents","search.result.one":"1 matching document","search.result.other":"# matching documents","search.result.placeholder":"Type to start searching","search.result.term.missing":"Missing","select.version":"Select version"},"version":null}</script>
+      <script id="__config" type="application/json">{"annotate":null,"base":"../..","features":["announce.dismiss","content.code.annotate","content.code.copy","content.code.select","content.footnote.tooltips","content.tabs.link","content.tooltips","navigation.footer","navigation.indexes","navigation.instant","navigation.instant.prefetch","navigation.path","navigation.sections","navigation.tabs","navigation.tabs.sticky","navigation.top","navigation.tracking","search.highlight"],"search":"../../assets/javascripts/workers/search.e2d2d235.min.js","tags":null,"translations":{"clipboard.copied":"Copied to clipboard","clipboard.copy":"Copy to clipboard","search.result.more.one":"1 more on this page","search.result.more.other":"# more on this page","search.result.none":"No matching documents","search.result.one":"1 matching document","search.result.other":"# matching documents","search.result.placeholder":"Type to start searching","search.result.term.missing":"Missing","select.version":"Select version"},"version":null}</script>
     
     
-      <script src="../assets/javascripts/bundle.8ffeb9c9.min.js"></script>
+      <script src="../../assets/javascripts/bundle.8ffeb9c9.min.js"></script>
       
     
   </body>

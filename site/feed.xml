@@ -4,7 +4,22 @@
   <link href="https://ctx.ist/blog/"></link>
   <link href="https://ctx.ist/feed.xml" rel="self"></link>
   <id>https://ctx.ist/feed.xml</id>
-  <updated>2026-03-23T00:00:00Z</updated>
+  <updated>2026-04-02T00:00:00Z</updated>
+  <entry>
+    <title>Code Structure as an Agent Interface: What 19 AST Tests Taught Us About Agent-Readable Code</title>
+    <link href="https://ctx.ist/blog/2026-04-02-code-structure-as-an-agent-interface/"></link>
+    <id>https://ctx.ist/blog/2026-04-02-code-structure-as-an-agent-interface/</id>
+    <updated>2026-04-02T00:00:00Z</updated>
+    <summary>against the millions of `strings.Split(s, &#34;/&#34;)` calls in its training data</summary>
+    <author>
+      <name>Jose Alekhinne</name>
+    </author>
+    <category term="ast"></category>
+    <category term="code quality"></category>
+    <category term="agent readability"></category>
+    <category term="conventions"></category>
+    <category term="field notes"></category>
+  </entry>
   <entry>
     <title>We Broke the 3:1 Rule</title>
     <link href="https://ctx.ist/blog/2026-03-23-we-broke-the-3-1-rule/"></link>
