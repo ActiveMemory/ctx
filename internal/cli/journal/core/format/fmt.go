@@ -14,6 +14,7 @@ import (
 	"github.com/ActiveMemory/ctx/internal/config/embed/text"
 	"github.com/ActiveMemory/ctx/internal/config/file"
 	cfgFmt "github.com/ActiveMemory/ctx/internal/config/format"
+	"github.com/ActiveMemory/ctx/internal/config/regex"
 	"github.com/ActiveMemory/ctx/internal/config/token"
 )
 
@@ -46,10 +47,12 @@ func Size(bytes int64) string {
 // Returns:
 //   - string: Safe slug (e.g., "internal_config_x_go")
 func KeyFileSlug(path string) string {
-	slug := strings.ReplaceAll(path, token.Slash, token.Underscore)
-	slug = strings.ReplaceAll(slug, token.Dot, token.Underscore)
-	slug = strings.ReplaceAll(slug, token.GlobStar, token.GlobReplace)
-	return slug
+	slug := regex.SlugUnsafe.ReplaceAllString(
+		path, token.Underscore,
+	)
+	return strings.ReplaceAll(
+		slug, token.GlobStar, token.GlobReplace,
+	)
 }
 
 // SessionLink formats a Markdown list item linking to a page with a
