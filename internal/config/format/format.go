@@ -18,4 +18,16 @@ const (
 
 	// HashPrefixLen is the number of bytes used for truncated hex hashes.
 	HashPrefixLen = 8
+
+	// TruncateDetail is the max character width for detail strings in
+	// governance violation reports and similar summaries.
+	TruncateDetail = 120
+
+	// TruncateTitle is the max character width for title/summary lines
+	// in import previews and list views.
+	TruncateTitle = 60
+
+	// TruncateDescription is the max character width for description
+	// text in skill listings and similar compact displays.
+	TruncateDescription = 70
 )

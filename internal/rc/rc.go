@@ -393,8 +393,6 @@ func Reset() {
 // Returns:
 //   - int: Priority value (1-9 for known files, 100 for unknown)
 func FilePriority(name string) int {
-	const lowestPriority = 100
-
 	// Check for .ctxrc override first
 	if order := PriorityOrder(); order != nil {
 		for i, fName := range order {
@@ -403,7 +401,7 @@ func FilePriority(name string) int {
 			}
 		}
 		// File not in custom order gets the lowest priority
-		return lowestPriority
+		return ctx.UnknownFilePriority
 	}
 
 	// Use the default priority from config.ReadOrder
@@ -412,5 +410,5 @@ func FilePriority(name string) int {
 			return i + 1
 		}
 	}
-	return lowestPriority
+	return ctx.UnknownFilePriority
 }

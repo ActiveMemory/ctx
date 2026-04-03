@@ -86,10 +86,10 @@ func TestNoMagicValues(t *testing.T) {
 					return true
 				}
 
-				// Skip const/var definition sites (file-level and
-				// function-level).
-				if isConstDef(file, lit) || isVarDef(file, lit) ||
-					isLocalConstDef(file, lit) {
+				// Skip file-level const/var definition sites only.
+				// Local consts inside function bodies are NOT exempt —
+				// they are just renamed magic numbers.
+				if isConstDef(file, lit) || isVarDef(file, lit) {
 					return true
 				}
 
@@ -149,39 +149,6 @@ func isExemptPackage(pkgPath string) bool {
 		}
 	}
 	return false
-}
-
-// isLocalConstDef reports whether lit appears inside a const or var
-// declaration within a function body (at any nesting depth).
-func isLocalConstDef(file *ast.File, lit *ast.BasicLit) bool {
-	found := false
-	ast.Inspect(file, func(n ast.Node) bool {
-		if found {
-			return false
-		}
-		ds, ok := n.(*ast.DeclStmt)
-		if !ok {
-			return true
-		}
-		gd, ok := ds.Decl.(*ast.GenDecl)
-		if !ok || (gd.Tok != token.CONST && gd.Tok != token.VAR) {
-			return true
-		}
-		for _, spec := range gd.Specs {
-			vs, ok := spec.(*ast.ValueSpec)
-			if !ok {
-				continue
-			}
-			for _, val := range vs.Values {
-				if containsNode(val, lit) {
-					found = true
-					return false
-				}
-			}
-		}
-		return true
-	})
-	return found
 }
 
 // isVarDef reports whether lit appears inside a var declaration.

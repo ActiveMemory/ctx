@@ -12,6 +12,7 @@ import (
 	"github.com/spf13/cobra"
 
 	"github.com/ActiveMemory/ctx/internal/config/entry"
+	cfgFmt "github.com/ActiveMemory/ctx/internal/config/format"
 	cfgMemory "github.com/ActiveMemory/ctx/internal/config/memory"
 	"github.com/ActiveMemory/ctx/internal/entity"
 	errMemory "github.com/ActiveMemory/ctx/internal/err/memory"
@@ -75,8 +76,7 @@ func Run(cmd *cobra.Command, dryRun bool) error {
 		}
 
 		classification := memory.Classify(e)
-		const titleMaxWidth = 60
-		title := format.TruncateFirstLine(e.Text, titleMaxWidth)
+		title := format.TruncateFirstLine(e.Text, cfgFmt.TruncateTitle)
 
 		if classification.Target == cfgMemory.TargetSkip {
 			result.Skipped++

@@ -35,6 +35,10 @@ const (
 	Dependency = "DEPENDENCIES.md"
 )
 
+// UnknownFilePriority is the priority assigned to context files not
+// found in the configured or default read order.
+const UnknownFilePriority = 100
+
 // ReadOrder defines the priority order for reading context files.
 //
 // The order follows a logical progression for AI agents:
