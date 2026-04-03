@@ -6,6 +6,7 @@
 
 package text
 
+// DescKeys for MCP formatting.
 const (
 	DescKeyMCPFormatSection        = "mcp.format-section"
 	DescKeyMCPFormatWatchCompleted = "mcp.format-watch-completed"

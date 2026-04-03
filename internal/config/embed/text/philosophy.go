@@ -6,6 +6,7 @@
 
 package text
 
+// DescKeys for philosophy display.
 const (
 	DescKeyWhyAdmonitionFormat = "why.admonition-format"
 	DescKeyWhyBanner           = "why.banner"

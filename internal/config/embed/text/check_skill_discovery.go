@@ -6,6 +6,7 @@
 
 package text
 
+// DescKeys for skill discovery checks.
 const (
 	DescKeySkillDiscoveryBoxTitle = "skill-discovery.box-title"
 	DescKeySkillDiscoveryContent  = "skill-discovery.content"

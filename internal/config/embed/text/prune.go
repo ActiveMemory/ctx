@@ -6,6 +6,7 @@
 
 package text
 
+// DescKeys for prune operations.
 const (
 	DescKeyPruneDryRunLine    = "prune.dry-run-line"
 	DescKeyPruneDryRunSummary = "prune.dry-run-summary"

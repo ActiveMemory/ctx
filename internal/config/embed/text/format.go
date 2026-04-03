@@ -6,6 +6,7 @@
 
 package text
 
+// DescKeys for format write output.
 const (
 	DescKeyWriteFormatBytesRaw        = "write.format-bytes-raw"
 	DescKeyWriteFormatBytesUnit       = "write.format-bytes-unit"
@@ -26,6 +27,7 @@ const (
 	DescKeyWriteFormatThousands       = "write.format-thousands"
 )
 
+// DescKeys for miscellaneous format write output.
 const (
 	DescKeyWriteBackupSkipEntry  = "write.backup-skip-entry"
 	DescKeyWriteWikilinkListItem = "write.wikilink-list-item"

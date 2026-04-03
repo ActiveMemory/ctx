@@ -6,6 +6,7 @@
 
 package flag
 
+// DescKeys for site command flags.
 const (
 	DescKeySiteFeedBaseUrl = "site.feed.base-url"
 	DescKeySiteFeedOut     = "site.feed.out"

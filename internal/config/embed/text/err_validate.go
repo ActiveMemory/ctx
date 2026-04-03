@@ -6,6 +6,7 @@
 
 package text
 
+// DescKeys for validation errors.
 const (
 	DescKeyErrValidateContextDirSymlink  = "err.validate.context-dir-symlink"
 	DescKeyErrValidateContextFileSymlink = "err.validate.context-file-symlink"

@@ -6,6 +6,7 @@
 
 package text
 
+// DescKeys for setup wizard write output.
 const (
 	DescKeyWriteSetupDone   = "write.setup-done"
 	DescKeyWriteSetupPrompt = "write.setup-prompt"

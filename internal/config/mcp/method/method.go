@@ -6,6 +6,7 @@
 
 package method
 
+// MCP JSON-RPC method constants.
 const (
 	// Initialize is the MCP initialize handshake method.
 	Initialize = "initialize"

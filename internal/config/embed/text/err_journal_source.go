@@ -6,6 +6,7 @@
 
 package text
 
+// DescKeys for journal source errors.
 const (
 	DescKeyErrJournalSourceEventLogRead        = "err.journal.source.event-log-read"
 	DescKeyErrJournalSourceOpenLogFile         = "err.journal.source.open-log-file"

@@ -6,6 +6,7 @@
 
 package text
 
+// DescKeys for pause/resume output.
 const (
 	DescKeyWritePaused        = "write.paused"
 	DescKeyWritePausedMessage = "write.paused-message"

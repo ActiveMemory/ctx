@@ -6,6 +6,7 @@
 
 package text
 
+// DescKeys for journal operations errors.
 const (
 	DescKeyErrJournalLoadJournalState      = "err.journal.load-journal-state"
 	DescKeyErrJournalNoEntriesMatch        = "err.journal.no-entries-match"

@@ -6,6 +6,7 @@
 
 package text
 
+// DescKeys for governance checks.
 const (
 	DescKeyGovSessionNotStarted = "mcp.gov-session-not-started"
 	DescKeyGovContextNotLoaded  = "mcp.gov-context-not-loaded"

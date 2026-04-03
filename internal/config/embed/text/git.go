@@ -8,6 +8,7 @@
 
 package text
 
+// DescKeys for git integration.
 const (
 	DescKeyErrGitNotInGitRepo   = "err.git.not-in-git-repo"
 	DescKeyErrParserGitNotFound = "err.parser.git-not-found"

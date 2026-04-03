@@ -6,11 +6,13 @@
 
 package cmd
 
+// Use strings for notify subcommands.
 const (
 	UseNotifySetup = "setup"
 	UseNotifyTest  = "test"
 )
 
+// DescKeys for notify subcommands.
 const (
 	DescKeyNotify      = "notify"
 	DescKeyNotifySetup = "notify.setup"

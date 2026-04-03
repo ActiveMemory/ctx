@@ -6,6 +6,7 @@
 
 package text
 
+// DescKeys for loop write output.
 const (
 	DescKeyWriteLoopGeneratedBlock = "write.loop-generated-block"
 	DescKeyWriteLoopMaxIterations  = "write.loop-max-iterations"

@@ -6,6 +6,7 @@
 
 package load_gate
 
+// JSON timestamp extraction constants.
 const (
 	// JSONKeyTimestamp is the JSON key for timestamp extraction in event logs.
 	JSONKeyTimestamp = `"timestamp":"`

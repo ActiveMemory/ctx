@@ -6,6 +6,7 @@
 
 package text
 
+// DescKeys for context size checks.
 const (
 	DescKeyCheckContextSizeBillingBoxTitle       = "check-context-size.billing-box-title"
 	DescKeyCheckContextSizeBillingFallback       = "check-context-size.billing-fallback"

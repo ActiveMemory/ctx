@@ -6,6 +6,7 @@
 
 package text
 
+// DescKeys for site feed generation.
 const (
 	DescKeySiteFeedGenerated = "site.feed-generated"
 	DescKeySiteFeedSkipped   = "site.feed-skipped"
@@ -13,6 +14,7 @@ const (
 	DescKeySiteFeedItem      = "site.feed-item"
 )
 
+// DescKeys for site generation skip reasons.
 const (
 	DescKeySiteSkipCannotRead    = "site.skip-cannot-read"
 	DescKeySiteSkipNoFrontmatter = "site.skip-no-frontmatter"

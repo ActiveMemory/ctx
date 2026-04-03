@@ -6,6 +6,7 @@
 
 package text
 
+// DescKeys for marker operations.
 const (
 	DescKeyMarkJournalChecked     = "mark-journal.checked"
 	DescKeyMarkJournalMarked      = "mark-journal.marked"

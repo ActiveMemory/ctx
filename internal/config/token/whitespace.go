@@ -6,6 +6,7 @@
 
 package token
 
+// Constants for whitespace tokens.
 const (
 	// NewlineCRLF is the Windows new line.
 	//

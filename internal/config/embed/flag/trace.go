@@ -6,6 +6,7 @@
 
 package flag
 
+// DescKeys for trace command flags.
 const (
 	DescKeyTraceLast          = "trace.last"
 	DescKeyTraceJSON          = "trace.json"

@@ -6,6 +6,7 @@
 
 package text
 
+// DescKeys for doctor diagnostics.
 const (
 	DescKeyDoctorContextFileFormat           = "doctor.context-file.format"
 	DescKeyDoctorContextInitializedError     = "doctor.context-initialized.error"

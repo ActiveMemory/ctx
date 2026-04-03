@@ -6,6 +6,7 @@
 
 package text
 
+// DescKeys for navigation display labels.
 const (
 	DescKeyLabelHome   = "label.home"
 	DescKeyLabelTopics = "label.topics"
@@ -13,6 +14,7 @@ const (
 	DescKeyLabelTypes  = "label.types"
 )
 
+// DescKeys for UI emphasis labels.
 const (
 	DescKeyLabelBoldReminder    = "label.bold-reminder"
 	DescKeyLabelBoldReminderFmt = "label.bold-reminder-fmt"

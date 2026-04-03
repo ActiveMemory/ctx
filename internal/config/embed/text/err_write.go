@@ -6,6 +6,7 @@
 
 package text
 
+// DescKeys for write operations errors.
 const (
 	DescKeyWritePrefixError = "write.prefix-error"
 	DescKeyWritePrefixWarn  = "write.prefix-warn"

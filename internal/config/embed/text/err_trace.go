@@ -6,6 +6,7 @@
 
 package text
 
+// DescKeys for trace operations errors.
 const (
 	DescKeyErrTraceGitDir        = "err.trace.git-dir"
 	DescKeyErrTraceGitLog        = "err.trace.git-log"

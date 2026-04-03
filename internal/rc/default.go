@@ -10,14 +10,24 @@ import "github.com/ActiveMemory/ctx/internal/config/runtime"
 
 // Aliases re-exported from config/runtime for use within rc.
 const (
-	DefaultTokenBudget         = runtime.DefaultTokenBudget
-	DefaultArchiveAfterDays    = runtime.DefaultArchiveAfterDays
+	// DefaultTokenBudget is the default agent token budget.
+	DefaultTokenBudget = runtime.DefaultTokenBudget
+	// DefaultArchiveAfterDays is the default task archive age.
+	DefaultArchiveAfterDays = runtime.DefaultArchiveAfterDays
+	// DefaultEntryCountLearnings is the max learnings shown.
 	DefaultEntryCountLearnings = runtime.DefaultEntryCountLearnings
+	// DefaultEntryCountDecisions is the max decisions shown.
 	DefaultEntryCountDecisions = runtime.DefaultEntryCountDecisions
+	// DefaultConventionLineCount is the max convention lines.
 	DefaultConventionLineCount = runtime.DefaultConventionLineCount
-	DefaultInjectionTokenWarn  = runtime.DefaultInjectionTokenWarn
-	DefaultContextWindow       = runtime.DefaultContextWindow
-	DefaultTaskNudgeInterval   = runtime.DefaultTaskNudgeInterval
-	DefaultKeyRotationDays     = runtime.DefaultKeyRotationDays
-	DefaultStaleAgeDays        = runtime.DefaultStaleAgeDays
+	// DefaultInjectionTokenWarn is the injection warn threshold.
+	DefaultInjectionTokenWarn = runtime.DefaultInjectionTokenWarn
+	// DefaultContextWindow is the default context window size.
+	DefaultContextWindow = runtime.DefaultContextWindow
+	// DefaultTaskNudgeInterval is the default nudge interval.
+	DefaultTaskNudgeInterval = runtime.DefaultTaskNudgeInterval
+	// DefaultKeyRotationDays is the default key rotation age.
+	DefaultKeyRotationDays = runtime.DefaultKeyRotationDays
+	// DefaultStaleAgeDays is the default stale entry age.
+	DefaultStaleAgeDays = runtime.DefaultStaleAgeDays
 )

@@ -6,6 +6,7 @@
 
 package text
 
+// DescKeys for freshness tracking.
 const (
 	DescKeyFreshnessBoxTitle     = "freshness.box-title"
 	DescKeyFreshnessFileEntry    = "freshness.file-entry"

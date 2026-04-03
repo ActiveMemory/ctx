@@ -6,6 +6,7 @@
 
 package text
 
+// DescKeys for time formatting write output.
 const (
 	DescKeyWriteTimeDayAgo     = "write.time-day-ago"
 	DescKeyWriteTimeDaysAgo    = "write.time-days-ago"
@@ -16,6 +17,7 @@ const (
 	DescKeyWriteTimeMinutesAgo = "write.time-minutes-ago"
 )
 
+// DescKeys for time formatting.
 const (
 	DescKeyTimeAgo          = "time.ago"
 	DescKeyTimeCommit       = "time.commit"

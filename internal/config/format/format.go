@@ -6,6 +6,7 @@
 
 package format
 
+// SI display threshold constants.
 const (
 	// SIThreshold is the boundary between raw and abbreviated SI display (1000).
 	SIThreshold = 1000

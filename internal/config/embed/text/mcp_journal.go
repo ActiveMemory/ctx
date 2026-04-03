@@ -6,6 +6,7 @@
 
 package text
 
+// DescKeys for MCP journal output.
 const (
 	DescKeyMCPJournalSourceItemFormat     = "mcp.journal-source-item-format"
 	DescKeyMCPJournalSourceProjectFormat  = "mcp.journal-source-project-format"

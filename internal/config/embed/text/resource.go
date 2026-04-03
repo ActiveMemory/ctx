@@ -6,6 +6,7 @@
 
 package text
 
+// DescKeys for resource display.
 const (
 	DescKeyResourcesAlertDisk    = "resources.alert-disk"
 	DescKeyResourcesAlertLoad    = "resources.alert-load"

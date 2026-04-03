@@ -6,6 +6,7 @@
 
 package text
 
+// DescKeys for reminder operations errors.
 const (
 	DescKeyErrReminderInvalidID      = "err.reminder.invalid-id"
 	DescKeyErrReminderParseReminders = "err.reminder.parse-reminders"

@@ -6,6 +6,7 @@
 
 package cmd
 
+// Use strings for trace subcommands.
 const (
 	UseTrace        = "trace [commit]"
 	UseTraceFile    = "file <path[:line-range]>"
@@ -14,6 +15,7 @@ const (
 	UseTraceHook    = "hook <enable|disable>"
 )
 
+// DescKeys for trace subcommands.
 const (
 	DescKeyTrace        = "trace"
 	DescKeyTraceFile    = "trace.file"

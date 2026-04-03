@@ -6,11 +6,13 @@
 
 package cmd
 
+// Use strings for site subcommands.
 const (
 	UseSite     = "site"
 	UseSiteFeed = "feed"
 )
 
+// DescKeys for site subcommands.
 const (
 	DescKeySite     = "site"
 	DescKeySiteFeed = "site.feed"

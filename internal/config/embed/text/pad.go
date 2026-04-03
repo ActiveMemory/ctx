@@ -6,6 +6,7 @@
 
 package text
 
+// DescKeys for scratchpad merge output.
 const (
 	DescKeyWritePadMergeAdded          = "write.pad-merge-added"
 	DescKeyWritePadMergeBinaryWarning  = "write.pad-merge-binary-warning"
@@ -21,6 +22,7 @@ const (
 	DescKeyWritePadMergeSkippedN       = "write.pad-merge-skipped-n"
 )
 
+// DescKeys for scratchpad blob import output.
 const (
 	DescKeyWritePadImportBlobAdded    = "write.pad-import-blob-added"
 	DescKeyWritePadImportBlobNone     = "write.pad-import-blob-none"
@@ -32,6 +34,7 @@ const (
 	DescKeyWritePadImportNone         = "write.pad-import-none"
 )
 
+// DescKeys for scratchpad entry mutation output.
 const (
 	DescKeyWritePadEntryAdded   = "write.pad-entry-added"
 	DescKeyWritePadEntryMoved   = "write.pad-entry-moved"
@@ -39,6 +42,7 @@ const (
 	DescKeyWritePadEntryUpdated = "write.pad-entry-updated"
 )
 
+// DescKeys for scratchpad export output.
 const (
 	DescKeyWritePadExportDone        = "write.pad-export-done"
 	DescKeyWritePadExportNone        = "write.pad-export-none"
@@ -49,17 +53,20 @@ const (
 	DescKeyWritePadExportWriteFailed = "write.pad-export-write-failed"
 )
 
+// DescKeys for scratchpad list and blob output.
 const (
 	DescKeyWritePadBlobWritten = "write.pad-blob-written"
 	DescKeyWritePadEmpty       = "write.pad-empty"
 	DescKeyWritePadListItem    = "write.pad-list-item"
 )
 
+// DescKeys for scratchpad conflict resolution.
 const (
 	DescKeyWritePadResolveEntry  = "write.pad-resolve-entry"
 	DescKeyWritePadResolveHeader = "write.pad-resolve-header"
 )
 
+// DescKeys for scratchpad operations.
 const (
 	DescKeyWritePadKeyCreated = "write.pad-key-created"
 	DescKeyPadKeyCreated      = "pad.key-created"

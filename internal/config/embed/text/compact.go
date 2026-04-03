@@ -6,6 +6,7 @@
 
 package text
 
+// DescKeys for compact output.
 const (
 	DescKeyCompactHeading         = "compact.heading"
 	DescKeyCompactSeparator       = "compact.separator"

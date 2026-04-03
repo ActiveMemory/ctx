@@ -6,6 +6,7 @@
 
 package text
 
+// DescKeys for MCP task output.
 const (
 	DescKeyMCPNoTasks          = "mcp.no-tasks"
 	DescKeyMCPNextTaskFormat   = "mcp.next-task-format"

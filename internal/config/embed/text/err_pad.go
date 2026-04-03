@@ -6,6 +6,7 @@
 
 package text
 
+// DescKeys for scratchpad operations errors.
 const (
 	DescKeyErrPadBlobAppendNotAllowed  = "err.pad.blob-append-not-allowed"
 	DescKeyErrPadBlobPrependNotAllowed = "err.pad.blob-prepend-not-allowed"

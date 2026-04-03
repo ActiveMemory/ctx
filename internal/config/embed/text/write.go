@@ -6,12 +6,14 @@
 
 package text
 
+// DescKeys for common write confirmations.
 const (
 	DescKeyWriteAddedTo      = "write.added-to"
 	DescKeyWriteArchived     = "write.archived"
 	DescKeyWriteSpecNudgeTip = "write.spec-nudge-tip"
 )
 
+// DescKeys for general write formatting.
 const (
 	DescKeyWriteDryRun                     = "write.dry-run"
 	DescKeyWriteExistsWritingAsAlternative = "write.exists-writing-as-alternative"

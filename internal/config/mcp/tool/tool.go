@@ -6,6 +6,7 @@
 
 package tool
 
+// MCP tool name constants.
 const (
 	// Status is the MCP tool name for context status.
 	Status = "ctx_status"

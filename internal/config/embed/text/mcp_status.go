@@ -6,6 +6,7 @@
 
 package text
 
+// DescKeys for MCP status format strings.
 const (
 	DescKeyMCPAddedFormat         = "mcp.added-format"
 	DescKeyMCPCompletedFormat     = "mcp.completed-format"
@@ -15,11 +16,13 @@ const (
 	DescKeyMCPStatusFileFormat    = "mcp.status-file-format"
 )
 
+// DescKeys for MCP status state labels.
 const (
 	DescKeyMCPStatusOK    = "mcp.status-ok"
 	DescKeyMCPStatusEmpty = "mcp.status-empty"
 )
 
+// DescKeys for MCP review and omission output.
 const (
 	DescKeyMCPAlsoNoted     = "mcp.also-noted"
 	DescKeyMCPOmittedFormat = "mcp.omitted-format"
@@ -27,6 +30,7 @@ const (
 	DescKeyMCPCompactClean  = "mcp.compact-clean"
 )
 
+// DescKeys for MCP confirmation prompts.
 const (
 	DescKeyConfirmProceed = "confirm.proceed"
 )

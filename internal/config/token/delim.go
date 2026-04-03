@@ -9,6 +9,7 @@ package token
 // EmDash is the em dash character used as a metadata separator.
 const EmDash = "—"
 
+// enDash is the en dash character used in topic separators.
 const enDash = "-"
 
 // MiddleDot is the middle dot character used as a metadata item separator.
@@ -20,6 +21,7 @@ const MetaSeparator = " " + EmDash + " "
 // MetaJoin is the middle dot separator with surrounding spaces.
 const MetaJoin = " " + MiddleDot + " "
 
+// Constants for delimiter and separator tokens.
 const (
 	// Colon is the colon character used as a key-value separator.
 	Colon = ":"

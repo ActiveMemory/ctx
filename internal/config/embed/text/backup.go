@@ -6,6 +6,7 @@
 
 package text
 
+// DescKeys for backup operations.
 const (
 	DescKeyBackupBoxTitle       = "backup.box-title"
 	DescKeyBackupNoMarker       = "backup.no-marker"
@@ -17,11 +18,13 @@ const (
 	DescKeyBackupStale          = "backup.stale"
 )
 
+// DescKeys for backup result write output.
 const (
 	DescKeyWriteBackupResult  = "write.backup-result"
 	DescKeyWriteBackupSMBDest = "write.backup-smb-dest"
 )
 
+// DescKeys for snapshot write output.
 const (
 	DescKeyWriteSnapshotSaved   = "write.snapshot-saved"
 	DescKeyWriteSnapshotUpdated = "write.snapshot-updated"

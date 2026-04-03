@@ -56,7 +56,10 @@ type BlogFrontmatter struct {
 type PostStatus int
 
 const (
+	// PostIncluded means the post was parsed successfully.
 	PostIncluded PostStatus = iota
+	// PostSkipped means the post was intentionally excluded.
 	PostSkipped
+	// PostWarn means the post had non-fatal parse issues.
 	PostWarn
 )

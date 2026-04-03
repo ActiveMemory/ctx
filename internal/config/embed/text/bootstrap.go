@@ -6,6 +6,7 @@
 
 package text
 
+// DescKeys for bootstrap output.
 const (
 	DescKeyBootstrapNextSteps     = "bootstrap.next-steps"
 	DescKeyBootstrapNone          = "bootstrap.none"
@@ -13,6 +14,7 @@ const (
 	DescKeyBootstrapRules         = "bootstrap.rules"
 )
 
+// DescKeys for bootstrap write output.
 const (
 	DescKeyWriteBootstrapDir       = "write.bootstrap-dir"
 	DescKeyWriteBootstrapFiles     = "write.bootstrap-files"

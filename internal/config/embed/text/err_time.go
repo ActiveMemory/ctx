@@ -6,6 +6,7 @@
 
 package text
 
+// DescKeys for time operations errors.
 const (
 	DescKeyErrDateInvalidDate      = "err.date.invalid-date"
 	DescKeyErrDateInvalidDateValue = "err.date.invalid-date-value"

@@ -6,6 +6,7 @@
 
 package text
 
+// DescKeys for block formatting.
 const (
 	DescKeyBlockNonPathRelayMessage = "block.non-path-relay-message"
 	DescKeyBlockConstitutionSuffix  = "block.constitution-suffix"

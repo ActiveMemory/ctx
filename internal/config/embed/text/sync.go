@@ -6,6 +6,7 @@
 
 package text
 
+// DescKeys for sync operations write output.
 const (
 	DescKeyWriteSynced            = "write.synced"
 	DescKeyWriteSyncAction        = "write.sync-action"
@@ -18,6 +19,7 @@ const (
 	DescKeyWriteSyncSummary       = "write.sync-summary"
 )
 
+// DescKeys for sync topic names.
 const (
 	DescKeySyncTopicEslint       = "sync.topic.eslint"
 	DescKeySyncTopicPrettier     = "sync.topic.prettier"
@@ -27,6 +29,7 @@ const (
 	DescKeySyncTopicDockerfile   = "sync.topic.dockerfile"
 )
 
+// DescKeys for sync rule descriptions.
 const (
 	DescKeySyncDepsDescription   = "sync.deps.description"
 	DescKeySyncDepsSuggestion    = "sync.deps.suggestion"

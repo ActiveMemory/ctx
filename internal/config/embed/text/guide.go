@@ -6,6 +6,7 @@
 
 package text
 
+// DescKeys for guide display.
 const (
 	DescKeyGuideDefault      = "guide.default"
 	DescKeyGuideCommandsHead = "guide.commands-heading"

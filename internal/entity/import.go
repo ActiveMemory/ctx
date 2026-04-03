@@ -10,10 +10,14 @@ package entity
 type ImportAction int
 
 const (
-	ActionNew        ImportAction = iota // file does not exist yet
-	ActionRegenerate                     // file exists and will be rewritten
-	ActionSkip                           // file exists and will be left alone
-	ActionLocked                         // file is locked: never overwritten
+	// ActionNew means the file does not exist yet.
+	ActionNew ImportAction = iota
+	// ActionRegenerate means the file will be rewritten.
+	ActionRegenerate
+	// ActionSkip means the file will be left alone.
+	ActionSkip
+	// ActionLocked means the file is locked and never overwritten.
+	ActionLocked
 )
 
 // ImportOpts holds all flag values for the import command.

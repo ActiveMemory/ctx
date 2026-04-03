@@ -6,12 +6,14 @@
 
 package text
 
+// DescKeys for journal source display.
 const (
 	DescKeyJournalSourceMetaSummary   = "journal.source.meta-summary"
 	DescKeyJournalSourceTokenSummary  = "journal.source.token-summary"
 	DescKeyJournalSourceToolCountLine = "journal.source.tool-count-line"
 )
 
+// DescKeys for journal source display write output.
 const (
 	DescKeyWriteJournalSourceAborted               = "write.journal-source-aborted"
 	DescKeyWriteJournalSourceAmbiguousHint         = "write.journal-source-ambiguous-hint"

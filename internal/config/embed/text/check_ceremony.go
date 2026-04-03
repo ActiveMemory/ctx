@@ -6,6 +6,7 @@
 
 package text
 
+// DescKeys for ceremony checks.
 const (
 	DescKeyCeremonyBoxBoth          = "ceremony.box-both"
 	DescKeyCeremonyBoxRemember      = "ceremony.box-remember"

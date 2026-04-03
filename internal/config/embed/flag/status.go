@@ -6,6 +6,7 @@
 
 package flag
 
+// DescKeys for status command flags.
 const (
 	DescKeyStatusJson    = "status.json"
 	DescKeyStatusVerbose = "status.verbose"

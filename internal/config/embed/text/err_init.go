@@ -6,6 +6,7 @@
 
 package text
 
+// DescKeys for initialization errors.
 const (
 	DescKeyErrInitCtxNotInPath          = "err.init.ctx-not-in-path"
 	DescKeyErrInitContextNotInitialized = "err.init.context-not-initialized"

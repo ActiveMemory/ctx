@@ -6,6 +6,7 @@
 
 package schema
 
+// JSON Schema type constants.
 const (
 	// Object is the JSON Schema type for objects.
 	Object = "object"

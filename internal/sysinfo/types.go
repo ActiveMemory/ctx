@@ -10,9 +10,12 @@ package sysinfo
 type Severity int
 
 const (
-	SeverityOK      Severity = iota // No concern
-	SeverityWarning                 // Approaching limits
-	SeverityDanger                  // Critically low resources
+	// SeverityOK indicates no resource concern.
+	SeverityOK Severity = iota
+	// SeverityWarning indicates resources approaching limits.
+	SeverityWarning
+	// SeverityDanger indicates critically low resources.
+	SeverityDanger
 )
 
 // Severity label strings for display output.
@@ -99,10 +102,14 @@ type Snapshot struct {
 
 // Resource name constants for threshold evaluation.
 const (
+	// ResourceMemory is the resource name for physical memory.
 	ResourceMemory = "memory"
-	ResourceSwap   = "swap"
-	ResourceDisk   = "disk"
-	ResourceLoad   = "load"
+	// ResourceSwap is the resource name for swap space.
+	ResourceSwap = "swap"
+	// ResourceDisk is the resource name for filesystem usage.
+	ResourceDisk = "disk"
+	// ResourceLoad is the resource name for system load.
+	ResourceLoad = "load"
 )
 
 // ResourceAlert describes a single threshold breach.

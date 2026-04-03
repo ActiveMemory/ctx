@@ -6,6 +6,7 @@
 
 package text
 
+// DescKeys for summary display.
 const (
 	DescKeySummaryActive     = "summary.active"
 	DescKeySummaryCompleted  = "summary.completed"

@@ -6,6 +6,7 @@
 
 package token
 
+// Constants for prefix tokens.
 const (
 	// PrefixHeading is the Markdown heading character used for prefix checks.
 	PrefixHeading = "#"
@@ -25,11 +26,13 @@ const (
 	PrefixStar = "*"
 )
 
+// Home directory prefix constants.
 const (
 	// PrefixHomeDir is the Unix home directory shorthand.
 	PrefixHomeDir = "~/"
 )
 
+// URL and link prefix constants.
 const (
 	// LinkPrefixParent is the relative link prefix to the parent directory.
 	LinkPrefixParent = "../"

@@ -6,6 +6,7 @@
 
 package cfg
 
+// MCP server configuration constants.
 const (
 	// ScanMaxSize is the maximum scanner buffer size for MCP messages (1 MB).
 	ScanMaxSize = 1 << 20

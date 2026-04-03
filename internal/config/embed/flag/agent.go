@@ -6,6 +6,7 @@
 
 package flag
 
+// DescKeys for agent command flags.
 const (
 	DescKeyAgentBudget   = "agent.budget"
 	DescKeyAgentCooldown = "agent.cooldown"

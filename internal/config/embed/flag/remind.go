@@ -6,6 +6,7 @@
 
 package flag
 
+// DescKeys for remind command flags.
 const (
 	DescKeyRemindAddAfter   = "remind.add.after"
 	DescKeyRemindAfter      = "remind.after"

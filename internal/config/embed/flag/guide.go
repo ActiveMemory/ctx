@@ -6,6 +6,7 @@
 
 package flag
 
+// DescKeys for guide command flags.
 const (
 	DescKeyGuideCommands = "guide.commands"
 	DescKeyGuideSkills   = "guide.skills"

@@ -6,6 +6,7 @@
 
 package text
 
+// DescKeys for column formatting.
 const (
 	DescKeyColumnDecision = "column.decision"
 	DescKeyColumnLearning = "column.learning"

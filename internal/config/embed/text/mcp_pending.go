@@ -6,6 +6,7 @@
 
 package text
 
+// DescKeys for MCP pending items.
 const (
 	DescKeyMCPPendingUpdatesFormat = "mcp.pending-updates-format"
 	DescKeyMCPReviewPending        = "mcp.review-pending"

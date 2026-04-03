@@ -11,9 +11,13 @@ type Mode int
 
 // Edit modes.
 const (
+	// ModeReplace overwrites an existing entry.
 	ModeReplace Mode = iota
+	// ModeAppend adds text after the existing entry.
 	ModeAppend
+	// ModePrepend adds text before the existing entry.
 	ModePrepend
+	// ModeBlob imports a file as a blob entry.
 	ModeBlob
 )
 

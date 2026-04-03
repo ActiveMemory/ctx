@@ -6,6 +6,7 @@
 
 package resource
 
+// MCP resource name constants.
 const (
 	// Constitution is the MCP resource name for the constitution file.
 	Constitution = "constitution"

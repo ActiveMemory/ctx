@@ -6,11 +6,13 @@
 
 package cmd
 
+// Use strings for task subcommands.
 const (
 	UseTaskArchive  = "archive"
 	UseTaskSnapshot = "snapshot [name]"
 )
 
+// DescKeys for task subcommands.
 const (
 	DescKeyTask         = "task"
 	DescKeyTaskArchive  = "task.archive"

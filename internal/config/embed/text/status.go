@@ -6,6 +6,7 @@
 
 package text
 
+// DescKeys for status write output.
 const (
 	DescKeyWriteStatusEmpty          = "write.status-empty"
 	DescKeyWriteStatusActivityHeader = "write.status-activity-header"

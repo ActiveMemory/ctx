@@ -6,6 +6,7 @@
 
 package text
 
+// DescKeys for import operations.
 const (
 	DescKeyImportCountConvention = "import.count-convention"
 	DescKeyImportCountDecision   = "import.count-decision"
@@ -13,6 +14,7 @@ const (
 	DescKeyImportCountTask       = "import.count-task"
 )
 
+// DescKeys for memory import write output.
 const (
 	DescKeyWriteImportAdded          = "write.import-added"
 	DescKeyWriteImportBreakdown      = "write.import-breakdown"
@@ -29,6 +31,7 @@ const (
 	DescKeyWriteImportSummaryDryRun  = "write.import-summary-dry-run"
 )
 
+// DescKeys for journal import write output.
 const (
 	DescKeyWriteJournalImportNothing      = "write.journal-import-nothing"
 	DescKeyWriteJournalImportPartNew      = "write.journal-import-part-new"

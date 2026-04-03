@@ -6,6 +6,7 @@
 
 package text
 
+// DescKeys for compact metadata labels.
 const (
 	DescKeyLabelMetaID       = "label.meta-id"
 	DescKeyLabelMetaDate     = "label.meta-date"
@@ -20,6 +21,7 @@ const (
 	DescKeyLabelMetaParts    = "label.meta-parts"
 )
 
+// DescKeys for full metadata labels.
 const (
 	DescKeyLabelMetadataID          = "label.metadata-id"
 	DescKeyLabelMetadataTime        = "label.metadata-time"

@@ -6,6 +6,7 @@
 
 package cmd
 
+// Use strings for config subcommands.
 const (
 	UseConfig       = "config"
 	UseConfigSchema = "schema"
@@ -13,6 +14,7 @@ const (
 	UseConfigSwitch = "switch [dev|base]"
 )
 
+// DescKeys for config subcommands.
 const (
 	DescKeyConfig       = "config"
 	DescKeyConfigSchema = "config.schema"

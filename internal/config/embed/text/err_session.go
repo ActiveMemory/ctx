@@ -6,6 +6,7 @@
 
 package text
 
+// DescKeys for session management errors.
 const (
 	DescKeyErrSessionAllWithPattern      = "err.session.all-with-pattern"
 	DescKeyErrSessionAllWithSessionID    = "err.session.all-with-session-id"

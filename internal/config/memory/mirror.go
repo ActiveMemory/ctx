@@ -6,6 +6,7 @@
 
 package memory
 
+// Memory mirror prefix constants.
 const (
 	PrefixMirror = "mirror-"
 )

@@ -6,6 +6,7 @@
 
 package cmd
 
+// Use strings for system subcommands.
 const (
 	UseSystemBackup                 = "backup"
 	UseSystemBlockDangerousCommands = "block-dangerous-commands"
@@ -46,6 +47,7 @@ const (
 	UseSystemStats                  = "stats"
 )
 
+// DescKeys for system subcommands.
 const (
 	DescKeySystem                       = "system"
 	DescKeySystemBackup                 = "system.backup"

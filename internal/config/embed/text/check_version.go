@@ -6,6 +6,7 @@
 
 package text
 
+// DescKeys for version checks.
 const (
 	DescKeyCheckVersionBoxTitle            = "check-version.box-title"
 	DescKeyCheckVersionFallback            = "check-version.fallback"

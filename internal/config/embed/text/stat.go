@@ -6,6 +6,7 @@
 
 package text
 
+// DescKeys for statistics display.
 const (
 	DescKeyStatsEmpty        = "stats.empty"
 	DescKeyStatsHeaderFormat = "stats.header-format"

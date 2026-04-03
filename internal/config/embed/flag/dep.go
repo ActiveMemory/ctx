@@ -6,6 +6,7 @@
 
 package flag
 
+// DescKeys for dep command flags.
 const (
 	DescKeyDepsExternal = "deps.external"
 	DescKeyDepsFormat   = "deps.format"

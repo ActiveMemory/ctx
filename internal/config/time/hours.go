@@ -6,6 +6,7 @@
 
 package time
 
+// Hour-based duration constants.
 const (
 	// HoursPerDay is the number of hours in a day for duration calculations.
 	HoursPerDay = 24

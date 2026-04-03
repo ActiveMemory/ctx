@@ -6,6 +6,7 @@
 
 package flag
 
+// DescKeys for load command flags.
 const (
 	DescKeyLoadBudget = "load.budget"
 	DescKeyLoadRaw    = "load.raw"

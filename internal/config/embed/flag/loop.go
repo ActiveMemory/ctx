@@ -6,6 +6,7 @@
 
 package flag
 
+// DescKeys for loop command flags.
 const (
 	DescKeyLoopCompletion    = "loop.completion"
 	DescKeyLoopMaxIterations = "loop.max-iterations"

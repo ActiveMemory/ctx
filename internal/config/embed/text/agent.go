@@ -6,6 +6,7 @@
 
 package text
 
+// DescKeys for agent context.
 const (
 	DescKeyAgentInstruction         = "agent.instruction"
 	DescKeyAgentPacketTitle         = "agent.packet-title"

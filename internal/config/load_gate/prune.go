@@ -6,6 +6,7 @@
 
 package load_gate
 
+// Auto-prune threshold constants.
 const (
 	// AutoPruneStaleDays is the number of days after which session state
 	// files are eligible for auto-pruning during context load.

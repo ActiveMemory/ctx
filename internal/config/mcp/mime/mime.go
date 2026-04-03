@@ -6,6 +6,7 @@
 
 package mime
 
+// MCP MIME type constants.
 const (
 	// Markdown is the MIME type for Markdown content.
 	Markdown = "text/markdown"

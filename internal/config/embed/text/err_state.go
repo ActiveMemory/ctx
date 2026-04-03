@@ -6,6 +6,7 @@
 
 package text
 
+// DescKeys for state management errors.
 const (
 	DescKeyErrStateLoadState       = "err.state.load-state"
 	DescKeyErrStateReadingStateDir = "err.state.reading-state-dir"

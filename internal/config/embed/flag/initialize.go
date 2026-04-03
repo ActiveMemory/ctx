@@ -6,6 +6,7 @@
 
 package flag
 
+// DescKeys for init command flags.
 const (
 	DescKeyInitializeForce          = "initialize.force"
 	DescKeyInitializeMerge          = "initialize.merge"

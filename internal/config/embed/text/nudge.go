@@ -6,11 +6,13 @@
 
 package text
 
+// DescKeys for specs nudge messages.
 const (
 	DescKeySpecsNudgeFallback     = "specs-nudge.fallback"
 	DescKeySpecsNudgeNudgeMessage = "specs-nudge.nudge-message"
 )
 
+// DescKeys for QA reminder messages.
 const (
 	DescKeyQaReminderFallback     = "qa-reminder.fallback"
 	DescKeyQaReminderRelayMessage = "qa-reminder.relay-message"

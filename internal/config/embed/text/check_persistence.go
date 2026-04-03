@@ -6,6 +6,7 @@
 
 package text
 
+// DescKeys for persistence checks.
 const (
 	DescKeyCheckPersistenceBoxTitle            = "check-persistence.box-title"
 	DescKeyCheckPersistenceBoxTitleFormat      = "check-persistence.box-title-format"

@@ -6,6 +6,7 @@
 
 package text
 
+// DescKeys for MCP drift output.
 const (
 	DescKeyMCPDriftStatusFormat = "mcp.drift-status-format"
 	DescKeyMCPDriftViolations   = "mcp.drift-violations"

@@ -6,6 +6,7 @@
 
 package text
 
+// DescKeys for event logging.
 const (
 	DescKeyEventsEmpty       = "events.empty"
 	DescKeyEventsHumanFormat = "events.human-format"
