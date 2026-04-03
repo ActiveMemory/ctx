@@ -31,6 +31,8 @@ and coast on statistical inference. It has to actually look up what
 
 *Jose Alekhinne / April 2, 2026*
 
+## How It Began
+
 We set out to replace a shell script with Go tests.
 
 We ended up discovering that "**code quality**" and
