@@ -13,6 +13,7 @@ import (
 	"gopkg.in/yaml.v3"
 
 	"github.com/ActiveMemory/ctx/internal/claude"
+	cfgFmt "github.com/ActiveMemory/ctx/internal/config/format"
 	"github.com/ActiveMemory/ctx/internal/config/token"
 	"github.com/ActiveMemory/ctx/internal/write/guide"
 )
@@ -90,8 +91,7 @@ func listSkills(cmd *cobra.Command) error {
 			continue
 		}
 
-		const descMaxWidth = 70
-		desc := truncateDescription(meta.Description, descMaxWidth)
+		desc := truncateDescription(meta.Description, cfgFmt.TruncateDescription)
 		guide.InfoSkillLine(cmd, name, desc)
 	}
 	return nil

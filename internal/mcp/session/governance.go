@@ -13,6 +13,7 @@ import (
 
 	"github.com/ActiveMemory/ctx/internal/assets/read/desc"
 	"github.com/ActiveMemory/ctx/internal/config/embed/text"
+	cfgFmt "github.com/ActiveMemory/ctx/internal/config/format"
 	"github.com/ActiveMemory/ctx/internal/config/mcp/governance"
 	"github.com/ActiveMemory/ctx/internal/config/mcp/tool"
 	"github.com/ActiveMemory/ctx/internal/config/token"
@@ -129,10 +130,9 @@ func (ss *State) CheckGovernance(toolName string) string {
 	// 5. Violations from extension detection ring
 	if violations := readAndClearViolations(ss.contextDir); len(violations) > 0 {
 		for _, v := range violations {
-			const detailMaxLen = 120
 			detail := v.Detail
-			if len(detail) > detailMaxLen {
-				detail = detail[:detailMaxLen] + token.Ellipsis
+			if len(detail) > cfgFmt.TruncateDetail {
+				detail = detail[:cfgFmt.TruncateDetail] + token.Ellipsis
 			}
 			warnings = append(warnings, fmt.Sprintf(
 				desc.Text(text.DescKeyGovViolationCritical),
