@@ -13,6 +13,7 @@ import (
 	"strings"
 
 	"github.com/ActiveMemory/ctx/internal/config/dep"
+	"github.com/ActiveMemory/ctx/internal/config/regex"
 	"github.com/ActiveMemory/ctx/internal/config/token"
 	"github.com/ActiveMemory/ctx/internal/io"
 )
@@ -25,12 +26,9 @@ import (
 // Returns:
 //   - string: Safe Mermaid node identifier
 func MermaidID(pkg string) string {
-	r := strings.NewReplacer(
-		token.Slash, token.Underscore,
-		token.Dot, token.Underscore,
-		token.Dash, token.Underscore,
+	return regex.MermaidUnsafe.ReplaceAllString(
+		pkg, token.Underscore,
 	)
-	return r.Replace(pkg)
 }
 
 // RenderMermaid produces a Mermaid graph TD definition.
