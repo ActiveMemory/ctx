@@ -25,6 +25,12 @@ TASK STATUS LABELS:
   `#in-progress`: currently being worked on (add inline, don't move task)
 -->
 
+### Architecture Docs
+
+- [ ] Publish architecture docs to docs/: copy ARCHITECTURE.md, DETAILED_DESIGN domain files, and CHEAT-SHEETS.md to docs/reference/. Sanitize intervention points into docs/contributing/. Exclude DANGER-ZONES.md and ARCHITECTURE-PRINCIPAL.md (internal only). Spec: specs/publish-architecture-docs.md #priority:medium #added:2026-04-03-150000
+
+- [ ] Update ctx-architecture skill to append discovered terms to GLOSSARY.md during Phase 3. Additive only, max 10 terms per run, project-specific only, alphabetical insertion, skip if GLOSSARY.md empty. Print added terms in convergence report. Spec: specs/publish-architecture-docs.md #priority:low #added:2026-04-03-153000
+
 ### Code Cleanup Findings
 
 - [x] Add TestTypeFileConvention audit check: type definitions must live in types.go, not mixed into function files. Scan all non-test .go files for ast.TypeSpec declarations; flag any that appear in files not named types.go. Migrate violations. #priority:medium #added:2026-04-03-030033 #done:2026-04-03

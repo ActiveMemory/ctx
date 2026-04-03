@@ -17,6 +17,7 @@ DO NOT UPDATE FOR:
 <!-- INDEX:START -->
 | Date | Learning |
 |----|--------|
+| 2026-04-03 | desc.Text() is the single highest-connectivity symbol in the codebase |
 | 2026-04-01 | Raw I/O migration unlocks downstream checks for free |
 | 2026-04-01 | go/packages respects build tags — darwin-only violations invisible on Linux |
 | 2026-04-01 | Copilot CLI skills need a sync mechanism to prevent drift from ctx skills |
@@ -122,6 +123,16 @@ DO NOT UPDATE FOR:
 | 2026-02-19 | Feature can be code-complete but invisible to users |
 | 2026-01-28 | IDE is already the UI |
 <!-- INDEX:END -->
+
+---
+
+## [2026-04-03-133244] desc.Text() is the single highest-connectivity symbol in the codebase
+
+**Context**: GitNexus enrichment during architecture analysis revealed desc.Text() (internal/assets/read/desc/desc.go:75) has 30+ direct callers spanning every architectural layer (MCP handler, format, index, tidy, trace, memory, sysinfo, io) and participates in 53 execution flows.
+
+**Lesson**: TestDescKeyYAMLLinkage is the most critical guard in the codebase — it protects the symbol with the widest blast radius. If YAML text loading breaks, the entire CLI and MCP server output blank strings silently (no crash, no warning).
+
+**Application**: Treat desc.Text() as a frozen API — add new functions rather than modifying the existing signature. Any change to config/embed/text or assets/read/desc should be followed by running the linkage audit. Monitor this symbol during major refactors.
 
 ---
 

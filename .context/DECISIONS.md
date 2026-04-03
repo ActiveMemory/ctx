@@ -3,6 +3,8 @@
 <!-- INDEX:START -->
 | Date | Decision |
 |----|--------|
+| 2026-04-03 | config/ explosion is correct — fix is documentation, not restructuring |
+| 2026-04-03 | YAML text externalization justification is agent legibility, not i18n |
 | 2026-04-01 | IRC to Discord as primary community channel |
 | 2026-04-01 | AST audit tests live in internal/audit/, one file per check |
 | 2026-04-01 | Split assets/hooks/ into assets/integrations/ + assets/hooks/messages/ |
@@ -121,6 +123,34 @@ For significant decisions:
 ✗ No real alternatives existed
 
 -->
+
+## [2026-04-03-133244] config/ explosion is correct — fix is documentation, not restructuring
+
+**Status**: Accepted
+
+**Context**: Architecture analysis flagged 60+ config sub-packages as a bottleneck. Evaluation showed the alternative (8-10 domain packages) trades granular imports for fat dependency units. Current structure gives zero internal dependencies, surgical dependency tracking, and minimal recompile scope.
+
+**Decision**: config/ explosion is correct — fix is documentation, not restructuring
+
+**Rationale**: Go's compilation unit is the package. Granular packages mean precise dependency tracking. The developer experience cost (IDE noise, package discovery) is real but solvable with a README decision tree, not restructuring. Restructuring would be massive mechanical churn for cosmetic benefit.
+
+**Consequence**: config/README.md written with organizational guide and decision tree. No restructuring planned. embed/text/ file count will shrink naturally when tpl/ migrates to text/template.
+
+---
+
+## [2026-04-03-133236] YAML text externalization justification is agent legibility, not i18n
+
+**Status**: Accepted
+
+**Context**: Principal analysis initially framed 879-key YAML externalization as a bet on i18n. Blog post review (v0.8.0) revealed the real justification: agent legibility (named DescKey constants as traversable graphs), drift prevention (TestDescKeyYAMLLinkage catches orphans mechanically), and completing the archaeology of finding all 879 scattered strings.
+
+**Decision**: YAML text externalization justification is agent legibility, not i18n
+
+**Rationale**: The v0.8.0 blog makes it explicit: finding strings is the hard part, translation is mechanical. The externalization already pays for itself through agent legibility and mechanical verification. i18n is a free downstream consequence, not the justification.
+
+**Consequence**: Future architecture analysis should frame externalization as already-justified investment. The 3-file ceremony (DescKey + YAML + write/err function) is the cost of agent-legible, drift-proof output — not speculative i18n prep.
+
+---
 
 ## [2026-04-01-233247] IRC to Discord as primary community channel
 

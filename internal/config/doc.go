@@ -4,11 +4,16 @@
 //   \    Copyright 2026-present Context contributors.
 //                 SPDX-License-Identifier: Apache-2.0
 
-// Package config provides configuration constants, regex patterns,
-// and entry type definitions used across the ctx codebase.
+// Package config is the root of 60+ sub-packages that provide
+// constants, compiled regexes, type definitions, and text keys
+// used across the ctx codebase.
 //
-// It centralizes magic strings (file names, directory names, headings),
-// file permissions, regex patterns for parsing Markdown context files,
-// and template strings for generating output. All repeated literals
-// are defined here to prevent drift across packages.
+// Each sub-package groups related constants by domain (agent,
+// entry, file, mcp, regex, etc.) with zero internal dependencies.
+// Consumers import granularly: config/mcp/tool, config/entry,
+// config/regex — never this root package directly.
+//
+// See README.md in this directory for the full organizational
+// guide, package categories, and decision tree for placing new
+// constants.
 package config
