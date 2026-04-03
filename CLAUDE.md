@@ -86,5 +86,9 @@ GitNexus code intelligence is available via MCP skills in
 `.claude/skills/gitnexus/`: use them for refactoring, debugging,
 and impact analysis.
 
+Further GitNexus tips, usage patterns, tables, command examples, and
+more can be found in [GITNEXUS.md](GITNEXUS.md) (slim file: ~120 lines; 
+read it in full while you're here).
+
 Gemini Search is available via the `gemini-search` MCP server:
 prefer it over built-in web search for faster, more accurate results.
