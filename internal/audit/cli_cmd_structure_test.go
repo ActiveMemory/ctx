@@ -22,11 +22,9 @@ var allowedCmdFiles = map[string]bool{
 }
 
 // cmdSubdirAllowlist lists cmd/ subdirectories with
-// stray files that cannot be moved to core/ due to
-// circular import constraints.
-var cmdSubdirAllowlist = map[string]bool{
-	"system/cmd/message": true,
-}
+// stray files that cannot be moved to core/. This
+// should be empty.
+var cmdSubdirAllowlist = map[string]bool{}
 
 // TestCLICmdStructure enforces the cmd/ directory
 // convention: each cmd/$sub/ directory should contain
