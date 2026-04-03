@@ -23,6 +23,14 @@ const (
 	WebhookTimeout = 5
 )
 
+// URL scheme constants for validation.
+const (
+	// SchemeHTTP is the plain HTTP URL scheme.
+	SchemeHTTP = "http"
+	// SchemeHTTPS is the TLS-secured HTTP URL scheme.
+	SchemeHTTPS = "https"
+)
+
 // URL constants.
 const (
 	// PathSep is the URL path separator.

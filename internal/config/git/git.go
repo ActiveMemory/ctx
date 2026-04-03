@@ -57,6 +57,12 @@ const (
 	FlagPathSep = "--"
 )
 
+// Git ref constants.
+const (
+	// RefHead is the symbolic reference for the current commit.
+	RefHead = "HEAD"
+)
+
 // Git remote subcommands and arguments.
 const (
 	RemoteGetURL = "get-url"

@@ -12,6 +12,7 @@ import (
 	"gopkg.in/yaml.v3"
 
 	"github.com/ActiveMemory/ctx/internal/assets/read/hook"
+	"github.com/ActiveMemory/ctx/internal/config/asset"
 	errFs "github.com/ActiveMemory/ctx/internal/err/fs"
 	errParser "github.com/ActiveMemory/ctx/internal/err/parser"
 )
@@ -41,12 +42,12 @@ func Registry() []HookMessageInfo {
 	registryOnce.Do(func() {
 		raw, readErr := hook.MessageRegistry()
 		if readErr != nil {
-			registryErr = errFs.FileRead("registry.yaml", readErr)
+			registryErr = errFs.FileRead(asset.FileRegistryYAML, readErr)
 			return
 		}
 		var entries []HookMessageInfo
 		if unmarshalErr := yaml.Unmarshal(raw, &entries); unmarshalErr != nil {
-			registryErr = errParser.ParseFile("registry.yaml", unmarshalErr)
+			registryErr = errParser.ParseFile(asset.FileRegistryYAML, unmarshalErr)
 			return
 		}
 		registryData = entries

@@ -35,3 +35,6 @@ const (
 	// previews and similar compact displays.
 	PreviewLines = 5
 )
+
+// IEC binary unit prefix string for byte formatting.
+const IECPrefixes = "KMGTPE"

@@ -168,6 +168,6 @@ func Bytes(b int64) string {
 	}
 	return fmt.Sprintf(
 		desc.Text(text.DescKeyWriteFormatBytesUnit),
-		float64(b)/float64(div), "KMGTPE"[exp],
+		float64(b)/float64(div), cfgFmt.IECPrefixes[exp],
 	)
 }

@@ -16,6 +16,8 @@ const (
 
 // Project-root paths for version checking.
 const (
+	// FileVersion is the VERSION file at the project root.
+	FileVersion = "VERSION"
 	// DirClaudePlugin is the Claude plugin directory at project root.
 	DirClaudePlugin = ".claude-plugin"
 	// FileMarketplace is the marketplace manifest filename.

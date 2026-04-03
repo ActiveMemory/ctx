@@ -15,15 +15,25 @@ const (
 	SeverityDanger                  // Critically low resources
 )
 
+// Severity label strings for display output.
+const (
+	// LabelOK is the severity label for no concern.
+	LabelOK = "ok"
+	// LabelWarning is the severity label for approaching limits.
+	LabelWarning = "warning"
+	// LabelDanger is the severity label for critically low resources.
+	LabelDanger = "danger"
+)
+
 // String returns the lowercase label for the severity level.
 func (s Severity) String() string {
 	switch s {
 	case SeverityWarning:
-		return "warning"
+		return LabelWarning
 	case SeverityDanger:
-		return "danger"
+		return LabelDanger
 	default:
-		return "ok"
+		return LabelOK
 	}
 }
 

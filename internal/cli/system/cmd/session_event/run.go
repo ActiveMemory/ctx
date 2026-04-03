@@ -48,7 +48,7 @@ func Run(cmd *cobra.Command, eventType, caller string) error {
 
 	msg := fmt.Sprintf(desc.Text(text.DescKeyWriteSessionEvent), eventType, caller)
 	ref := notify.NewTemplateRef(cfgHook.SessionEvent, eventType,
-		map[string]any{"Caller": caller})
+		map[string]any{cfgEvent.VarCaller: caller})
 
 	event.Append(cfgEvent.CategorySession, msg, "", ref)
 	_ = notify.Send(cfgEvent.CategorySession, msg, "", ref)

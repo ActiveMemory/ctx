@@ -11,6 +11,7 @@ import (
 	"os"
 	"sort"
 
+	cfgDep "github.com/ActiveMemory/ctx/internal/config/dep"
 	errDeps "github.com/ActiveMemory/ctx/internal/err/dep"
 	execDep "github.com/ActiveMemory/ctx/internal/exec/dep"
 )
@@ -26,7 +27,7 @@ func (r *RustBuilder) Name() string { return RustEcosystem }
 
 // Detect returns true if Cargo.toml exists in the current directory.
 func (r *RustBuilder) Detect() bool {
-	_, err := os.Stat("Cargo.toml")
+	_, err := os.Stat(cfgDep.CargoToml)
 	return err == nil
 }
 

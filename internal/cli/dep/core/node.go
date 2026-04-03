@@ -12,6 +12,7 @@ import (
 	"path/filepath"
 	"sort"
 
+	cfgDep "github.com/ActiveMemory/ctx/internal/config/dep"
 	"github.com/ActiveMemory/ctx/internal/io"
 )
 
@@ -19,11 +20,11 @@ import (
 type NodeBuilder struct{}
 
 // Name returns the ecosystem label.
-func (n *NodeBuilder) Name() string { return "node" }
+func (n *NodeBuilder) Name() string { return cfgDep.BuilderNode }
 
 // Detect returns true if package.json exists in the current directory.
 func (n *NodeBuilder) Detect() bool {
-	_, err := os.Stat("package.json")
+	_, err := os.Stat(cfgDep.PackageJSON)
 	return err == nil
 }
 
@@ -108,7 +109,7 @@ func ReadPackageJSON(path string) (PackageJSON, error) {
 //   - map[string][]string: Workspace dependency graph
 //   - error: Non-nil if package.json parsing fails
 func BuildNodeInternalGraph() (map[string][]string, error) {
-	root, readErr := ReadPackageJSON("package.json")
+	root, readErr := ReadPackageJSON(cfgDep.PackageJSON)
 	if readErr != nil {
 		return nil, readErr
 	}
@@ -159,7 +160,7 @@ func BuildNodeInternalGraph() (map[string][]string, error) {
 //   - map[string][]string: Full dependency graph
 //   - error: Non-nil if package.json parsing fails
 func BuildNodeFullGraph() (map[string][]string, error) {
-	root, readErr := ReadPackageJSON("package.json")
+	root, readErr := ReadPackageJSON(cfgDep.PackageJSON)
 	if readErr != nil {
 		return nil, readErr
 	}
@@ -203,7 +204,7 @@ func BuildNodeFullGraph() (map[string][]string, error) {
 func BuildNodeSinglePackageGraph(pkg PackageJSON) (map[string][]string, error) {
 	name := pkg.Name
 	if name == "" {
-		name = "root"
+		name = cfgDep.WorkspaceRoot
 	}
 
 	var deps []string
@@ -241,7 +242,7 @@ func DiscoverWorkspaces(patterns []string) ([]PackageJSON, error) {
 			return nil, globErr
 		}
 		for _, match := range matches {
-			pkgPath := filepath.Join(match, "package.json")
+			pkgPath := filepath.Join(match, cfgDep.PackageJSON)
 			info, statErr := os.Stat(pkgPath)
 			if statErr != nil || info.IsDir() {
 				continue
