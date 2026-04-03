@@ -126,9 +126,25 @@ func checkMagicString(
 		return
 	}
 
-	// Single-character strings: delimiters, separators.
+	// Single-character strings that are already defined
+	// as token constants are exempt only when used as
+	// such. But we cannot distinguish usage context in
+	// a simple AST walk, so we exempt the most common
+	// structural punctuation: slash, dot, colon, hash,
+	// equals, pipe, ampersand, question mark, at-sign,
+	// semicolon, tilde, underscore, and quotes.
 	if len(s) == 1 {
-		return
+		r := rune(s[0])
+		switch r {
+		case '/', '.', ':', '#', '=', '|', '&',
+			'?', '@', ';', '~', '_', '\'', '"',
+			'*', '>', '<', '!', '+', ',', '\\',
+			'(', ')', '[', ']', '{', '}':
+			return
+		}
+		// Non-punctuation single chars (letters, digits,
+		// special symbols like "-") fall through to the
+		// violation check.
 	}
 
 	// Format verbs ("%s", "%d %s", etc.).

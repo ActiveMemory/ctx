@@ -48,7 +48,7 @@ func Size(bytes int64) string {
 func KeyFileSlug(path string) string {
 	slug := strings.ReplaceAll(path, "/", "_")
 	slug = strings.ReplaceAll(slug, ".", "_")
-	slug = strings.ReplaceAll(slug, "*", "x")
+	slug = strings.ReplaceAll(slug, "*", token.GlobReplace)
 	return slug
 }
 

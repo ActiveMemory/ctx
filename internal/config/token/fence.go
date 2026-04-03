@@ -12,4 +12,7 @@ const (
 	CodeFence = "```"
 	// Backtick is a single backtick character.
 	Backtick = "`"
+	// GlobReplace is the replacement character for glob
+	// wildcards in slug generation.
+	GlobReplace = "x"
 )

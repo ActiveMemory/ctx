@@ -189,7 +189,7 @@ func ObsidianFiles(keyFiles []entity.KeyFileData) string {
 			slug := format.KeyFileSlug(kf.Path)
 			return fmt.Sprintf(
 				desc.Text(text.DescKeyJournalMocItemFileSess)+nl,
-				wikilink.Format(slug, "`"+kf.Path+"`"),
+				wikilink.Format(slug, token.Backtick+kf.Path+token.Backtick),
 				len(kf.Entries))
 		})
 	section.WriteFormatted(

@@ -44,7 +44,7 @@ func ParsePathArg(arg string) string {
 	}
 	suffix := arg[idx+1:]
 	// Check if suffix looks like a line range (digits or digits-digits)
-	parts := strings.SplitN(suffix, "-", 2)
+	parts := strings.SplitN(suffix, token.Dash, 2)
 	for _, p := range parts {
 		for _, c := range p {
 			if c < '0' || c > '9' {

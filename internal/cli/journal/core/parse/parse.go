@@ -178,7 +178,7 @@ func JournalEntry(path, filename string) entity.JournalEntry {
 	// meaning inside [...] link labels).
 	entry.Title = strings.NewReplacer(
 		"<", "&lt;", ">", "&gt;",
-		"`", "", "#", "",
+		token.Backtick, "", "#", "",
 	).Replace(entry.Title)
 	entry.Title = strings.TrimSpace(entry.Title)
 

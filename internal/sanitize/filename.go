@@ -27,7 +27,7 @@ import (
 //   - string: Safe filename component (lowercase, hyphenated, max 50 chars)
 func Filename(s string) string {
 	// Replace spaces and special chars with hyphens
-	s = regex.FileNameChar.ReplaceAllString(s, "-")
+	s = regex.FileNameChar.ReplaceAllString(s, token.Dash)
 	// Remove leading/trailing hyphens
 	s = strings.Trim(s, token.Dash)
 	// Convert to lowercase

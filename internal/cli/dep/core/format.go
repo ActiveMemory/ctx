@@ -25,7 +25,9 @@ import (
 // Returns:
 //   - string: Safe Mermaid node identifier
 func MermaidID(pkg string) string {
-	r := strings.NewReplacer("/", "_", ".", "_", "-", "_")
+	r := strings.NewReplacer(
+		"/", "_", ".", "_", token.Dash, "_",
+	)
 	return r.Replace(pkg)
 }
 
@@ -68,8 +70,8 @@ func RenderTable(graph map[string][]string) string {
 	var b strings.Builder
 	io.SafeFprintf(&b, tf, dep.TableHeaderPackage, dep.TableHeaderImports)
 	io.SafeFprintf(&b, tf,
-		strings.Repeat("-", dep.TableColPackage),
-		strings.Repeat("-", dep.TableColImports))
+		strings.Repeat(token.Dash, dep.TableColPackage),
+		strings.Repeat(token.Dash, dep.TableColImports))
 
 	keys := SortedKeys(graph)
 	for _, pkg := range keys {
