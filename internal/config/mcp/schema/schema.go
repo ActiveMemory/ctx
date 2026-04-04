@@ -6,6 +6,9 @@
 
 package schema
 
+// ProtocolVersion is the MCP protocol version string.
+const ProtocolVersion = "2024-11-05"
+
 // JSON Schema type constants.
 const (
 	// Object is the JSON Schema type for objects.

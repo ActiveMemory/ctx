@@ -24,4 +24,7 @@ const (
 	DescKeyWriteSkillCount = "write.skill-count"
 	// DescKeyWriteSkillRemoved is the text key for write skill removed messages.
 	DescKeyWriteSkillRemoved = "write.skill-removed"
+	// DescKeyWriteSkillNoSkills is the message when no skills
+	// are installed.
+	DescKeyWriteSkillNoSkills = "write.skill-no-skills"
 )

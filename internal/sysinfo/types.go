@@ -6,6 +6,8 @@
 
 package sysinfo
 
+import cfgSysinfo "github.com/ActiveMemory/ctx/internal/config/sysinfo"
+
 // Severity represents the urgency level of a resource alert.
 type Severity int
 
@@ -18,25 +20,15 @@ const (
 	SeverityDanger
 )
 
-// Severity label strings for display output.
-const (
-	// LabelOK is the severity label for no concern.
-	LabelOK = "ok"
-	// LabelWarning is the severity label for approaching limits.
-	LabelWarning = "warning"
-	// LabelDanger is the severity label for critically low resources.
-	LabelDanger = "danger"
-)
-
 // String returns the lowercase label for the severity level.
 func (s Severity) String() string {
 	switch s {
 	case SeverityWarning:
-		return LabelWarning
+		return cfgSysinfo.LabelWarning
 	case SeverityDanger:
-		return LabelDanger
+		return cfgSysinfo.LabelDanger
 	default:
-		return LabelOK
+		return cfgSysinfo.LabelOK
 	}
 }
 
@@ -99,18 +91,6 @@ type Snapshot struct {
 	Disk   DiskInfo
 	Load   LoadInfo
 }
-
-// Resource name constants for threshold evaluation.
-const (
-	// ResourceMemory is the resource name for physical memory.
-	ResourceMemory = "memory"
-	// ResourceSwap is the resource name for swap space.
-	ResourceSwap = "swap"
-	// ResourceDisk is the resource name for filesystem usage.
-	ResourceDisk = "disk"
-	// ResourceLoad is the resource name for system load.
-	ResourceLoad = "load"
-)
 
 // ResourceAlert describes a single threshold breach.
 //

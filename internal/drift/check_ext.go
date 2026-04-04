@@ -13,6 +13,7 @@ import (
 	"slices"
 
 	"github.com/ActiveMemory/ctx/internal/assets/read/desc"
+	cfgDrift "github.com/ActiveMemory/ctx/internal/config/drift"
 	"github.com/ActiveMemory/ctx/internal/config/embed/text"
 	"github.com/ActiveMemory/ctx/internal/config/file"
 	"github.com/ActiveMemory/ctx/internal/config/fs"
@@ -23,7 +24,13 @@ import (
 )
 
 // supportedTools lists the valid tool identifiers for ctx.
-var supportedTools = []string{"claude", "cursor", "cline", "kiro", "codex"}
+var supportedTools = []string{
+	cfgHook.ToolClaude,
+	cfgHook.ToolCursor,
+	cfgHook.ToolCline,
+	cfgHook.ToolKiro,
+	cfgHook.ToolCodex,
+}
 
 // checkSteeringTools validates that all steering files reference only
 // supported tool identifiers in their tools list.
@@ -36,7 +43,7 @@ func checkSteeringTools(report *Report) {
 	files, err := steering.LoadAll(steeringDir)
 	if err != nil {
 		// Directory doesn't exist or can't be read — skip silently.
-		report.Passed = append(report.Passed, CheckSteeringTools)
+		report.Passed = append(report.Passed, cfgDrift.CheckSteeringTools)
 		return
 	}
 
@@ -46,7 +53,7 @@ func checkSteeringTools(report *Report) {
 			if !slices.Contains(supportedTools, tool) {
 				report.Warnings = append(report.Warnings, Issue{
 					File: filepath.Base(sf.Path),
-					Type: IssueInvalidTool,
+					Type: cfgDrift.IssueInvalidTool,
 					Message: fmt.Sprintf(
 						desc.Text(text.DescKeyDriftInvalidTool), tool,
 					),
@@ -57,7 +64,7 @@ func checkSteeringTools(report *Report) {
 	}
 
 	if !found {
-		report.Passed = append(report.Passed, CheckSteeringTools)
+		report.Passed = append(report.Passed, cfgDrift.CheckSteeringTools)
 	}
 }
 
@@ -73,7 +80,7 @@ func checkHookPerms(report *Report) {
 	// We don't use trigger.Discover here because it skips non-executable scripts.
 	found := false
 	for _, ht := range trigger.ValidTypes() {
-		typeDir := filepath.Join(hooksDir, string(ht))
+		typeDir := filepath.Join(hooksDir, ht)
 		entries, readErr := os.ReadDir(typeDir)
 		if readErr != nil {
 			continue
@@ -88,8 +95,8 @@ func checkHookPerms(report *Report) {
 			}
 			if info.Mode().Perm()&fs.ExecBitMask == 0 {
 				report.Warnings = append(report.Warnings, Issue{
-					File:    filepath.Join(string(ht), e.Name()),
-					Type:    IssueHookNoExec,
+					File:    filepath.Join(ht, e.Name()),
+					Type:    cfgDrift.IssueHookNoExec,
 					Message: desc.Text(text.DescKeyDriftHookNoExec),
 					Path:    filepath.Join(typeDir, e.Name()),
 				})
@@ -99,7 +106,7 @@ func checkHookPerms(report *Report) {
 	}
 
 	if !found {
-		report.Passed = append(report.Passed, CheckHookPerms)
+		report.Passed = append(report.Passed, cfgDrift.CheckHookPerms)
 	}
 }
 
@@ -115,18 +122,18 @@ func checkSyncStaleness(report *Report) {
 	files, err := steering.LoadAll(steeringDir)
 	if err != nil {
 		// No steering files — nothing to check.
-		report.Passed = append(report.Passed, CheckSyncStaleness)
+		report.Passed = append(report.Passed, cfgDrift.CheckSyncStaleness)
 		return
 	}
 
 	if len(files) == 0 {
-		report.Passed = append(report.Passed, CheckSyncStaleness)
+		report.Passed = append(report.Passed, cfgDrift.CheckSyncStaleness)
 		return
 	}
 
 	cwd, cwdErr := os.Getwd()
 	if cwdErr != nil {
-		report.Passed = append(report.Passed, CheckSyncStaleness)
+		report.Passed = append(report.Passed, cfgDrift.CheckSyncStaleness)
 		return
 	}
 
@@ -141,7 +148,7 @@ func checkSyncStaleness(report *Report) {
 		for _, name := range stale {
 			report.Warnings = append(report.Warnings, Issue{
 				File:    name,
-				Type:    IssueStaleSyncFile,
+				Type:    cfgDrift.IssueStaleSyncFile,
 				Message: desc.Text(text.DescKeyDriftStaleSyncFile),
 				Path: fmt.Sprintf(
 					desc.Text(text.DescKeyDriftToolSuffix),
@@ -152,7 +159,7 @@ func checkSyncStaleness(report *Report) {
 	}
 
 	if !found {
-		report.Passed = append(report.Passed, CheckSyncStaleness)
+		report.Passed = append(report.Passed, cfgDrift.CheckSyncStaleness)
 	}
 }
 
@@ -166,14 +173,14 @@ func checkRCTool(report *Report) {
 
 	// Empty tool field is valid — it means no tool is configured.
 	if tool == "" {
-		report.Passed = append(report.Passed, CheckRCTool)
+		report.Passed = append(report.Passed, cfgDrift.CheckRCTool)
 		return
 	}
 
 	if !slices.Contains(supportedTools, tool) {
 		report.Warnings = append(report.Warnings, Issue{
 			File: file.CtxRC,
-			Type: IssueInvalidTool,
+			Type: cfgDrift.IssueInvalidTool,
 			Message: fmt.Sprintf(
 				desc.Text(text.DescKeyDriftInvalidTool), tool,
 			),
@@ -181,5 +188,5 @@ func checkRCTool(report *Report) {
 		return
 	}
 
-	report.Passed = append(report.Passed, CheckRCTool)
+	report.Passed = append(report.Passed, cfgDrift.CheckRCTool)
 }

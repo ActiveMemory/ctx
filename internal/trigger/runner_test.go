@@ -13,6 +13,8 @@ import (
 	"strings"
 	"testing"
 	"time"
+
+	cfgTrigger "github.com/ActiveMemory/ctx/internal/config/trigger"
 )
 
 // writeHookScript creates an executable shell script in the given hook
@@ -56,7 +58,7 @@ func TestRunAll_CancelPropagation(t *testing.T) {
 		"#!/bin/sh\necho '{\"cancel\": false, \"context\": \"should not appear\"}'")
 
 	input := &HookInput{TriggerType: "pre-tool-use", Tool: "test"}
-	agg, err := RunAll(hooksDir, PreToolUse, input, 5*time.Second)
+	agg, err := RunAll(hooksDir, cfgTrigger.PreToolUse, input, 5*time.Second)
 	if err != nil {
 		t.Fatalf("unexpected error: %v", err)
 	}
@@ -88,7 +90,7 @@ func TestRunAll_ContextAggregation(t *testing.T) {
 		"#!/bin/sh\necho '{\"cancel\": false, \"context\": \"more context\"}'")
 
 	input := &HookInput{TriggerType: "session-start", Tool: "test"}
-	agg, err := RunAll(hooksDir, SessionStart, input, 5*time.Second)
+	agg, err := RunAll(hooksDir, cfgTrigger.SessionStart, input, 5*time.Second)
 	if err != nil {
 		t.Fatalf("unexpected error: %v", err)
 	}
@@ -121,7 +123,7 @@ func TestRunAll_NonZeroExitCode(t *testing.T) {
 		"#!/bin/sh\necho '{\"cancel\": false, \"context\": \"survived\"}'")
 
 	input := &HookInput{TriggerType: "post-tool-use", Tool: "test"}
-	agg, err := RunAll(hooksDir, PostToolUse, input, 5*time.Second)
+	agg, err := RunAll(hooksDir, cfgTrigger.PostToolUse, input, 5*time.Second)
 	if err != nil {
 		t.Fatalf("unexpected error: %v", err)
 	}
@@ -155,7 +157,7 @@ func TestRunAll_InvalidJSONOutput(t *testing.T) {
 		"#!/bin/sh\necho '{\"cancel\": false, \"context\": \"valid\"}'")
 
 	input := &HookInput{TriggerType: "file-save", Tool: "test"}
-	agg, err := RunAll(hooksDir, FileSave, input, 5*time.Second)
+	agg, err := RunAll(hooksDir, cfgTrigger.FileSave, input, 5*time.Second)
 	if err != nil {
 		t.Fatalf("unexpected error: %v", err)
 	}
@@ -207,7 +209,7 @@ func TestRunAll_TimeoutEnforcement(t *testing.T) {
 	input := &HookInput{TriggerType: "context-add", Tool: "test"}
 
 	start := time.Now()
-	agg, err := RunAll(hooksDir, ContextAdd, input, 1*time.Second)
+	agg, err := RunAll(hooksDir, cfgTrigger.ContextAdd, input, 1*time.Second)
 	elapsed := time.Since(start)
 	if err != nil {
 		t.Fatalf("unexpected error: %v", err)
@@ -255,7 +257,7 @@ func TestRunAll_NoHooks(t *testing.T) {
 	}
 
 	input := &HookInput{TriggerType: "session-end", Tool: "test"}
-	agg, err := RunAll(hooksDir, SessionEnd, input, 5*time.Second)
+	agg, err := RunAll(hooksDir, cfgTrigger.SessionEnd, input, 5*time.Second)
 	if err != nil {
 		t.Fatalf("unexpected error: %v", err)
 	}
@@ -276,7 +278,7 @@ func TestRunAll_NoHooks(t *testing.T) {
 // Validates: Requirements 7.1
 func TestRunAll_MissingHooksDir(t *testing.T) {
 	input := &HookInput{TriggerType: "pre-tool-use", Tool: "test"}
-	agg, err := RunAll(filepath.Join(t.TempDir(), "nonexistent"), PreToolUse, input, 5*time.Second)
+	agg, err := RunAll(filepath.Join(t.TempDir(), "nonexistent"), cfgTrigger.PreToolUse, input, 5*time.Second)
 	if err != nil {
 		t.Fatalf("unexpected error: %v", err)
 	}
@@ -302,7 +304,7 @@ func TestRunAll_EmptyStdout(t *testing.T) {
 		"#!/bin/sh\n# produces no output")
 
 	input := &HookInput{TriggerType: "session-end", Tool: "test"}
-	agg, err := RunAll(hooksDir, SessionEnd, input, 5*time.Second)
+	agg, err := RunAll(hooksDir, cfgTrigger.SessionEnd, input, 5*time.Second)
 	if err != nil {
 		t.Fatalf("unexpected error: %v", err)
 	}

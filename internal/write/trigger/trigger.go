@@ -15,16 +15,6 @@ import (
 	"github.com/ActiveMemory/ctx/internal/config/embed/text"
 )
 
-// User-facing messages for hook list and test output.
-const (
-	// msgNoHooksFound is shown when no hooks are discovered.
-	msgNoHooksFound = "No hooks found."
-	// msgErrors is the section header for hook errors.
-	msgErrors = "Errors:"
-	// msgNoOutput is shown when hooks produce no output.
-	msgNoOutput = "No output from hooks."
-)
-
 // Created prints confirmation that a hook script was created.
 //
 // Parameters:
@@ -103,7 +93,7 @@ func BlankLine(cmd *cobra.Command) {
 // Parameters:
 //   - cmd: Cobra command for output
 func NoHooksFound(cmd *cobra.Command) {
-	cmd.Println(msgNoHooksFound)
+	cmd.Println(desc.Text(text.DescKeyWriteTriggerNoHooks))
 }
 
 // Count prints the total hook count.
@@ -169,7 +159,7 @@ func ContextOutput(cmd *cobra.Command, context string) {
 // Parameters:
 //   - cmd: Cobra command for output
 func ErrorsHeader(cmd *cobra.Command) {
-	cmd.Println(msgErrors)
+	cmd.Println(desc.Text(text.DescKeyWriteTriggerErrorsHdr))
 }
 
 // ErrorLine prints a single error line.
@@ -188,5 +178,5 @@ func ErrorLine(cmd *cobra.Command, errMsg string) {
 // Parameters:
 //   - cmd: Cobra command for output
 func NoOutput(cmd *cobra.Command) {
-	cmd.Println(msgNoOutput)
+	cmd.Println(desc.Text(text.DescKeyWriteTriggerNoOutput))
 }

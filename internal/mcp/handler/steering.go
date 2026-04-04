@@ -22,14 +22,6 @@ import (
 	"github.com/ActiveMemory/ctx/internal/steering"
 )
 
-// Steering result messages.
-const (
-	// msgNoSteeringFiles is returned when no steering files exist.
-	msgNoSteeringFiles = "No steering files found."
-	// msgNoMatchingSteering is returned when no files match.
-	msgNoMatchingSteering = "No matching steering files."
-)
-
 // SteeringGet returns applicable steering files for the given prompt.
 // If prompt is empty, returns only "always" inclusion files.
 //
@@ -45,19 +37,19 @@ func (h *Handler) SteeringGet(prompt string) (string, error) {
 	files, loadErr := steering.LoadAll(steeringDir)
 	if loadErr != nil {
 		if errors.Is(loadErr, os.ErrNotExist) {
-			return msgNoSteeringFiles, nil
+			return desc.Text(text.DescKeyMCPSteeringNoFiles), nil
 		}
 		return "", loadErr
 	}
 
 	if len(files) == 0 {
-		return msgNoSteeringFiles, nil
+		return desc.Text(text.DescKeyMCPSteeringNoFiles), nil
 	}
 
 	filtered := steering.Filter(files, prompt, nil, "")
 
 	if len(filtered) == 0 {
-		return msgNoMatchingSteering, nil
+		return desc.Text(text.DescKeyMCPSteeringNoMatch), nil
 	}
 
 	var sb strings.Builder

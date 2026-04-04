@@ -44,4 +44,10 @@ const (
 	// DescKeyWriteSteeringSyncSummary is the text key for write steering sync
 	// summary messages.
 	DescKeyWriteSteeringSyncSummary = "write.steering-sync-summary"
+	// DescKeyWriteSteeringNoFiles is the message when no steering
+	// files exist.
+	DescKeyWriteSteeringNoFiles = "write.steering-no-files"
+	// DescKeyWriteSteeringNoMatch is the message when no steering
+	// files match the prompt.
+	DescKeyWriteSteeringNoMatch = "write.steering-no-match"
 )

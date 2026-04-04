@@ -20,14 +20,13 @@ import (
 	ctxLog "github.com/ActiveMemory/ctx/internal/log/warn"
 )
 
-// Ecosystem is the ecosystem label for Python projects.
-const Ecosystem = "python"
-
 // Builder implements GraphBuilder for Python projects.
 type Builder struct{}
 
 // Name returns the ecosystem label.
-func (p *Builder) Name() string { return Ecosystem }
+func (p *Builder) Name() string {
+	return cfgDep.EcosystemPython
+}
 
 // Detect returns true if requirements.txt or pyproject.toml
 // exists.
@@ -305,7 +304,7 @@ func ParsePyprojectDeps(
 		); idx > 0 {
 			name := strings.TrimSpace(trimmed[:idx])
 			lower := strings.ToLower(name)
-			if lower == Ecosystem ||
+			if lower == cfgDep.EcosystemPython ||
 				cfgDep.PyMetaKeys[lower] {
 				continue
 			}

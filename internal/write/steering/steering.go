@@ -15,14 +15,6 @@ import (
 	"github.com/ActiveMemory/ctx/internal/config/embed/text"
 )
 
-// User-facing messages for steering commands.
-const (
-	// msgNoFiles is shown when no steering files exist.
-	msgNoFiles = "No steering files found."
-	// msgNoMatch is shown when no files match the prompt.
-	msgNoMatch = "No steering files match the given prompt."
-)
-
 // Created prints confirmation that a steering file was created.
 //
 // Parameters:
@@ -60,7 +52,7 @@ func InitSummary(cmd *cobra.Command, created, skipped int) {
 // Parameters:
 //   - cmd: Cobra command for output
 func NoFilesFound(cmd *cobra.Command) {
-	cmd.Println(msgNoFiles)
+	cmd.Println(desc.Text(text.DescKeyWriteSteeringNoFiles))
 }
 
 // FileEntry prints a single steering file entry with metadata.
@@ -95,7 +87,7 @@ func FileCount(cmd *cobra.Command, count int) {
 // Parameters:
 //   - cmd: Cobra command for output
 func NoFilesMatch(cmd *cobra.Command) {
-	cmd.Println(msgNoMatch)
+	cmd.Println(desc.Text(text.DescKeyWriteSteeringNoMatch))
 }
 
 // PreviewHeader prints the header for steering preview output.

@@ -51,6 +51,12 @@ const (
 	Templates = "templates"
 	// CtxData is the user-level ctx data directory (~/.ctx/).
 	CtxData = ".ctx"
+	// DefaultSteeringPath is the default steering directory
+	// path relative to the project root.
+	DefaultSteeringPath = ".context/steering"
+	// DefaultHooksPath is the default hooks directory path
+	// relative to the project root.
+	DefaultHooksPath = ".context/hooks"
 )
 
 // Platform-specific home directory path components.

@@ -9,6 +9,8 @@ package steering
 import (
 	"slices"
 	"strings"
+
+	cfgSteering "github.com/ActiveMemory/ctx/internal/config/steering"
 )
 
 // matchInclusion checks whether a steering file should be included
@@ -18,14 +20,14 @@ func matchInclusion(
 	manualNames []string,
 ) bool {
 	switch sf.Inclusion {
-	case InclusionAlways:
+	case cfgSteering.InclusionAlways:
 		return true
-	case InclusionAuto:
+	case cfgSteering.InclusionAuto:
 		if sf.Description == "" {
 			return false
 		}
 		return strings.Contains(promptLower, strings.ToLower(sf.Description))
-	case InclusionManual:
+	case cfgSteering.InclusionManual:
 		return slices.Contains(manualNames, sf.Name)
 	default:
 		return false

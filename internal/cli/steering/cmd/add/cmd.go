@@ -16,6 +16,7 @@ import (
 	"github.com/ActiveMemory/ctx/internal/config/embed/cmd"
 	"github.com/ActiveMemory/ctx/internal/config/file"
 	"github.com/ActiveMemory/ctx/internal/config/fs"
+	cfgSteering "github.com/ActiveMemory/ctx/internal/config/steering"
 	errSteering "github.com/ActiveMemory/ctx/internal/err/steering"
 	ctxIo "github.com/ActiveMemory/ctx/internal/io"
 	"github.com/ActiveMemory/ctx/internal/rc"
@@ -77,7 +78,7 @@ func Run(c *cobra.Command, name string) error {
 
 	sf := &steering.SteeringFile{
 		Name:      name,
-		Inclusion: steering.InclusionManual,
+		Inclusion: cfgSteering.InclusionManual,
 		Priority:  defaultPriority,
 	}
 

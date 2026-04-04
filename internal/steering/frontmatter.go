@@ -19,17 +19,17 @@ func splitFrontmatter(
 	data []byte,
 ) (frontmatter []byte, body string, err error) {
 	content := string(data)
-	content = strings.TrimLeft(content, trimCR)
+	content = strings.TrimLeft(content, token.TrimCR)
 
-	if !strings.HasPrefix(content, frontmatterDelimiter) {
+	if !strings.HasPrefix(content, token.FrontmatterDelimiter) {
 		return nil, "", errSteering.MissingOpeningDelimiter()
 	}
 
 	// Skip the opening delimiter line.
-	rest := content[len(frontmatterDelimiter):]
+	rest := content[len(token.FrontmatterDelimiter):]
 	rest = strings.TrimPrefix(rest, token.NewlineLF)
 
-	needle := token.NewlineLF + frontmatterDelimiter
+	needle := token.NewlineLF + token.FrontmatterDelimiter
 	idx := strings.Index(rest, needle)
 	if idx < 0 {
 		return nil, "", errSteering.MissingClosingDelimiter()
@@ -38,7 +38,7 @@ func splitFrontmatter(
 	fm := rest[:idx]
 
 	// Skip past the closing delimiter line.
-	after := rest[idx+1+len(frontmatterDelimiter):]
+	after := rest[idx+1+len(token.FrontmatterDelimiter):]
 	// Trim exactly one leading newline from the body if present.
 	after = strings.TrimPrefix(after, token.NewlineLF)
 

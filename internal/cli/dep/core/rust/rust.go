@@ -16,14 +16,13 @@ import (
 	execDep "github.com/ActiveMemory/ctx/internal/exec/dep"
 )
 
-// Ecosystem is the ecosystem label for Rust projects.
-const Ecosystem = "rust"
-
 // Builder implements GraphBuilder for Rust projects.
 type Builder struct{}
 
 // Name returns the ecosystem label.
-func (r *Builder) Name() string { return Ecosystem }
+func (r *Builder) Name() string {
+	return cfgDep.EcosystemRust
+}
 
 // Detect returns true if Cargo.toml exists in the current
 // directory.

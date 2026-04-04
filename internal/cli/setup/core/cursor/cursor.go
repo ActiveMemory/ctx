@@ -10,21 +10,8 @@ package cursor
 import (
 	"github.com/spf13/cobra"
 
+	cfgSetup "github.com/ActiveMemory/ctx/internal/config/setup"
 	writeSetup "github.com/ActiveMemory/ctx/internal/write/setup"
-)
-
-// Cursor configuration paths.
-const (
-	// dirCursor is the Cursor editor config directory.
-	dirCursor = ".cursor"
-	// fileMCPJSON is the MCP server config file name.
-	fileMCPJSON = "mcp.json"
-	// displayName is the display name for Cursor.
-	displayName = "Cursor"
-	// mcpConfigPath is the deployed MCP config path.
-	mcpConfigPath = dirCursor + "/mcp.json"
-	// steeringPath is the deployed steering path.
-	steeringPath = dirCursor + "/rules/"
 )
 
 // Deploy generates Cursor integration files:
@@ -37,6 +24,10 @@ func Deploy(cmd *cobra.Command) error {
 	if steerErr := syncSteering(cmd); steerErr != nil {
 		return steerErr
 	}
-	writeSetup.DeployComplete(cmd, displayName, mcpConfigPath, steeringPath)
+	writeSetup.DeployComplete(
+		cmd, cfgSetup.DisplayCursor,
+		cfgSetup.MCPConfigPathCursor,
+		cfgSetup.SteeringPathCursor,
+	)
 	return nil
 }

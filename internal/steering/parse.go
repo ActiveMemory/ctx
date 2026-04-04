@@ -11,22 +11,16 @@ import (
 
 	"gopkg.in/yaml.v3"
 
+	cfgSteering "github.com/ActiveMemory/ctx/internal/config/steering"
 	"github.com/ActiveMemory/ctx/internal/config/token"
 	errSteering "github.com/ActiveMemory/ctx/internal/err/steering"
 )
 
-// frontmatterDelimiter is the YAML frontmatter boundary marker.
-const frontmatterDelimiter = "---"
-
 // defaultInclusion is the default inclusion mode when omitted.
-const defaultInclusion = InclusionManual
+var defaultInclusion = cfgSteering.InclusionManual
 
 // defaultPriority is the default priority when omitted.
 const defaultPriority = 50
-
-// trimCR is the character set trimmed from the start of
-// raw frontmatter content to normalize line endings.
-const trimCR = "\n\r"
 
 // Parse reads a steering file from bytes, extracting YAML frontmatter
 // and markdown body. The filePath is stored on the returned SteeringFile
@@ -72,10 +66,10 @@ func Print(sf *SteeringFile) []byte {
 
 	raw, _ := yaml.Marshal(sf)
 
-	buf.WriteString(frontmatterDelimiter)
+	buf.WriteString(token.FrontmatterDelimiter)
 	buf.WriteByte(token.NewlineLF[0])
 	buf.Write(raw)
-	buf.WriteString(frontmatterDelimiter)
+	buf.WriteString(token.FrontmatterDelimiter)
 	buf.WriteByte(token.NewlineLF[0])
 
 	if sf.Body != "" {

@@ -10,6 +10,8 @@ import (
 	"os"
 	"path/filepath"
 	"testing"
+
+	cfgSkill "github.com/ActiveMemory/ctx/internal/config/skill"
 )
 
 func writeSkillManifest(t *testing.T, dir, name, content string) {
@@ -18,7 +20,7 @@ func writeSkillManifest(t *testing.T, dir, name, content string) {
 	if err := os.MkdirAll(skillDir, 0o755); err != nil {
 		t.Fatal(err)
 	}
-	if err := os.WriteFile(filepath.Join(skillDir, skillManifest), []byte(content), 0o644); err != nil {
+	if err := os.WriteFile(filepath.Join(skillDir, cfgSkill.SkillManifest), []byte(content), 0o644); err != nil {
 		t.Fatal(err)
 	}
 }

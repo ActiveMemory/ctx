@@ -41,7 +41,7 @@ func Discover(hooksDir string) (map[HookType][]HookInfo, error) {
 	}
 
 	for _, ht := range ValidTypes() {
-		typeDir := filepath.Join(hooksDir, string(ht))
+		typeDir := filepath.Join(hooksDir, ht)
 
 		entries, readErr := os.ReadDir(typeDir)
 		if readErr != nil {
@@ -114,7 +114,7 @@ func FindByName(hooksDir, name string) (*HookInfo, error) {
 	}
 
 	for _, ht := range ValidTypes() {
-		typeDir := filepath.Join(hooksDir, string(ht))
+		typeDir := filepath.Join(hooksDir, ht)
 
 		entries, readErr := os.ReadDir(typeDir)
 		if readErr != nil {

@@ -16,6 +16,7 @@ import (
 	"github.com/ActiveMemory/ctx/internal/config/fs"
 	cfgHook "github.com/ActiveMemory/ctx/internal/config/hook"
 	mcpServer "github.com/ActiveMemory/ctx/internal/config/mcp/server"
+	cfgSetup "github.com/ActiveMemory/ctx/internal/config/setup"
 	"github.com/ActiveMemory/ctx/internal/config/token"
 	errSetup "github.com/ActiveMemory/ctx/internal/err/setup"
 	ctxIo "github.com/ActiveMemory/ctx/internal/io"
@@ -27,7 +28,7 @@ import (
 // ensureMCPConfig creates .cursor/mcp.json with the ctx
 // MCP server configuration. Skips if the file exists.
 func ensureMCPConfig(cmd *cobra.Command) error {
-	target := filepath.Join(dirCursor, fileMCPJSON)
+	target := filepath.Join(cfgSetup.DirCursor, cfgSetup.FileMCPJSONCursor)
 
 	if _, statErr := ctxIo.SafeStat(target); statErr == nil {
 		writeSetup.DeployFileExists(cmd, target)
@@ -35,9 +36,9 @@ func ensureMCPConfig(cmd *cobra.Command) error {
 	}
 
 	if mkdirErr := ctxIo.SafeMkdirAll(
-		dirCursor, fs.PermExec,
+		cfgSetup.DirCursor, fs.PermExec,
 	); mkdirErr != nil {
-		return errSetup.CreateDir(dirCursor, mkdirErr)
+		return errSetup.CreateDir(cfgSetup.DirCursor, mkdirErr)
 	}
 
 	cfg := mcpConfig{

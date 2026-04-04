@@ -66,6 +66,7 @@ const (
 	ToolCursor     = "cursor"
 	ToolKiro       = "kiro"
 	ToolCline      = "cline"
+	ToolCodex      = "codex"
 	ToolWindsurf   = "windsurf"
 )
 

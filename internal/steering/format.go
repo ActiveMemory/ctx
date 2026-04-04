@@ -16,6 +16,7 @@ import (
 	"github.com/ActiveMemory/ctx/internal/config/file"
 	"github.com/ActiveMemory/ctx/internal/config/fs"
 	cfgHook "github.com/ActiveMemory/ctx/internal/config/hook"
+	cfgSteering "github.com/ActiveMemory/ctx/internal/config/steering"
 	"github.com/ActiveMemory/ctx/internal/config/token"
 	errSteering "github.com/ActiveMemory/ctx/internal/err/steering"
 	ctxIo "github.com/ActiveMemory/ctx/internal/io"
@@ -39,18 +40,18 @@ func nativePath(
 	switch tool {
 	case cfgHook.ToolCursor:
 		return filepath.Join(
-			projectRoot, dirCursorDot,
-			dirRules, name+extMDC,
+			projectRoot, cfgSteering.DirCursorDot,
+			cfgSteering.DirRules, name+cfgSteering.ExtMDC,
 		)
 	case cfgHook.ToolCline:
 		return filepath.Join(
-			projectRoot, dirClinerules,
+			projectRoot, cfgSteering.DirClinerules,
 			name+file.ExtMarkdown,
 		)
 	case cfgHook.ToolKiro:
 		return filepath.Join(
-			projectRoot, dirKiroDot,
-			dirSteering, name+file.ExtMarkdown,
+			projectRoot, cfgSteering.DirKiroDot,
+			cfgSteering.DirSteering, name+file.ExtMarkdown,
 		)
 	default:
 		return ""
@@ -76,8 +77,8 @@ func validateOutputPath(outPath, projectRoot string) error {
 	}
 
 	// Reject paths that escape the project root.
-	escape := parentDir + string(filepath.Separator)
-	if strings.HasPrefix(rel, escape) || rel == parentDir {
+	escape := token.ParentDir + string(filepath.Separator)
+	if strings.HasPrefix(rel, escape) || rel == token.ParentDir {
 		return errSteering.OutputEscapesRoot(outPath, projectRoot)
 	}
 
@@ -103,16 +104,16 @@ func formatCursor(sf *SteeringFile) []byte {
 	fm := cursorFrontmatter{
 		Description: sf.Description,
 		Globs:       []any{},
-		AlwaysApply: sf.Inclusion == InclusionAlways,
+		AlwaysApply: sf.Inclusion == cfgSteering.InclusionAlways,
 	}
 
 	raw, _ := yaml.Marshal(fm)
 
 	var buf bytes.Buffer
-	buf.WriteString(frontmatterDelimiter)
+	buf.WriteString(token.FrontmatterDelimiter)
 	buf.WriteByte(token.NewlineLF[0])
 	buf.Write(raw)
-	buf.WriteString(frontmatterDelimiter)
+	buf.WriteString(token.FrontmatterDelimiter)
 	buf.WriteByte(token.NewlineLF[0])
 	if sf.Body != "" {
 		buf.WriteString(sf.Body)
@@ -125,7 +126,7 @@ func formatCline(sf *SteeringFile) []byte {
 	var buf bytes.Buffer
 	buf.WriteString(token.HeadingLevelOneStart)
 	buf.WriteString(sf.Name)
-	buf.WriteString(doubleNewline)
+	buf.WriteString(token.DoubleNewline)
 	if sf.Body != "" {
 		buf.WriteString(sf.Body)
 	}
@@ -143,10 +144,10 @@ func formatKiro(sf *SteeringFile) []byte {
 	raw, _ := yaml.Marshal(fm)
 
 	var buf bytes.Buffer
-	buf.WriteString(frontmatterDelimiter)
+	buf.WriteString(token.FrontmatterDelimiter)
 	buf.WriteByte(token.NewlineLF[0])
 	buf.Write(raw)
-	buf.WriteString(frontmatterDelimiter)
+	buf.WriteString(token.FrontmatterDelimiter)
 	buf.WriteByte(token.NewlineLF[0])
 	if sf.Body != "" {
 		buf.WriteString(sf.Body)
@@ -155,16 +156,18 @@ func formatKiro(sf *SteeringFile) []byte {
 }
 
 // mapKiroMode maps ctx inclusion modes to Kiro equivalents.
-func mapKiroMode(inc InclusionMode) string {
+func mapKiroMode(
+	inc cfgSteering.InclusionMode,
+) string {
 	switch inc {
-	case InclusionAlways:
-		return string(InclusionAlways)
-	case InclusionAuto:
-		return string(InclusionAuto)
-	case InclusionManual:
-		return string(InclusionManual)
+	case cfgSteering.InclusionAlways:
+		return string(cfgSteering.InclusionAlways)
+	case cfgSteering.InclusionAuto:
+		return string(cfgSteering.InclusionAuto)
+	case cfgSteering.InclusionManual:
+		return string(cfgSteering.InclusionManual)
 	default:
-		return string(InclusionManual)
+		return string(cfgSteering.InclusionManual)
 	}
 }
 

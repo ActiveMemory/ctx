@@ -7,12 +7,13 @@
 package steering
 
 import (
+	cfgSteering "github.com/ActiveMemory/ctx/internal/config/steering"
 	"testing"
 )
 
 func TestFilter_AlwaysIncludedRegardlessOfPrompt(t *testing.T) {
 	files := []*SteeringFile{
-		{Name: "always-on", Inclusion: InclusionAlways, Priority: 50},
+		{Name: "always-on", Inclusion: cfgSteering.InclusionAlways, Priority: 50},
 	}
 
 	got := Filter(files, "", nil, "")
@@ -28,7 +29,7 @@ func TestFilter_AlwaysIncludedRegardlessOfPrompt(t *testing.T) {
 
 func TestFilter_AutoIncludedWhenPromptMatchesDescription(t *testing.T) {
 	files := []*SteeringFile{
-		{Name: "api-rules", Inclusion: InclusionAuto, Description: "REST API", Priority: 50},
+		{Name: "api-rules", Inclusion: cfgSteering.InclusionAuto, Description: "REST API", Priority: 50},
 	}
 
 	got := Filter(files, "I need help with REST API design", nil, "")
@@ -45,7 +46,7 @@ func TestFilter_AutoIncludedWhenPromptMatchesDescription(t *testing.T) {
 
 func TestFilter_AutoExcludedWhenPromptDoesNotMatch(t *testing.T) {
 	files := []*SteeringFile{
-		{Name: "api-rules", Inclusion: InclusionAuto, Description: "REST API", Priority: 50},
+		{Name: "api-rules", Inclusion: cfgSteering.InclusionAuto, Description: "REST API", Priority: 50},
 	}
 
 	got := Filter(files, "fix the database migration", nil, "")
@@ -56,7 +57,7 @@ func TestFilter_AutoExcludedWhenPromptDoesNotMatch(t *testing.T) {
 
 func TestFilter_ManualIncludedOnlyWhenNamed(t *testing.T) {
 	files := []*SteeringFile{
-		{Name: "security", Inclusion: InclusionManual, Priority: 50},
+		{Name: "security", Inclusion: cfgSteering.InclusionManual, Priority: 50},
 	}
 
 	got := Filter(files, "anything", nil, "")
@@ -72,9 +73,9 @@ func TestFilter_ManualIncludedOnlyWhenNamed(t *testing.T) {
 
 func TestFilter_PriorityOrdering(t *testing.T) {
 	files := []*SteeringFile{
-		{Name: "low", Inclusion: InclusionAlways, Priority: 90},
-		{Name: "high", Inclusion: InclusionAlways, Priority: 10},
-		{Name: "mid", Inclusion: InclusionAlways, Priority: 50},
+		{Name: "low", Inclusion: cfgSteering.InclusionAlways, Priority: 90},
+		{Name: "high", Inclusion: cfgSteering.InclusionAlways, Priority: 10},
+		{Name: "mid", Inclusion: cfgSteering.InclusionAlways, Priority: 50},
 	}
 
 	got := Filter(files, "", nil, "")
@@ -91,9 +92,9 @@ func TestFilter_PriorityOrdering(t *testing.T) {
 
 func TestFilter_AlphabeticalTieBreaking(t *testing.T) {
 	files := []*SteeringFile{
-		{Name: "charlie", Inclusion: InclusionAlways, Priority: 50},
-		{Name: "alpha", Inclusion: InclusionAlways, Priority: 50},
-		{Name: "bravo", Inclusion: InclusionAlways, Priority: 50},
+		{Name: "charlie", Inclusion: cfgSteering.InclusionAlways, Priority: 50},
+		{Name: "alpha", Inclusion: cfgSteering.InclusionAlways, Priority: 50},
+		{Name: "bravo", Inclusion: cfgSteering.InclusionAlways, Priority: 50},
 	}
 
 	got := Filter(files, "", nil, "")
@@ -110,7 +111,7 @@ func TestFilter_AlphabeticalTieBreaking(t *testing.T) {
 
 func TestFilter_ToolFilterExcludesNonMatchingTool(t *testing.T) {
 	files := []*SteeringFile{
-		{Name: "cursor-only", Inclusion: InclusionAlways, Priority: 50, Tools: []string{"claude", "cursor"}},
+		{Name: "cursor-only", Inclusion: cfgSteering.InclusionAlways, Priority: 50, Tools: []string{"claude", "cursor"}},
 	}
 
 	got := Filter(files, "", nil, "kiro")
@@ -121,7 +122,7 @@ func TestFilter_ToolFilterExcludesNonMatchingTool(t *testing.T) {
 
 func TestFilter_EmptyToolsListIncludedForAnyTool(t *testing.T) {
 	files := []*SteeringFile{
-		{Name: "universal", Inclusion: InclusionAlways, Priority: 50, Tools: nil},
+		{Name: "universal", Inclusion: cfgSteering.InclusionAlways, Priority: 50, Tools: nil},
 	}
 
 	got := Filter(files, "", nil, "kiro")
@@ -132,8 +133,8 @@ func TestFilter_EmptyToolsListIncludedForAnyTool(t *testing.T) {
 
 func TestFilter_EmptyToolParameterSkipsToolFiltering(t *testing.T) {
 	files := []*SteeringFile{
-		{Name: "restricted", Inclusion: InclusionAlways, Priority: 50, Tools: []string{"cursor"}},
-		{Name: "universal", Inclusion: InclusionAlways, Priority: 50, Tools: nil},
+		{Name: "restricted", Inclusion: cfgSteering.InclusionAlways, Priority: 50, Tools: []string{"cursor"}},
+		{Name: "universal", Inclusion: cfgSteering.InclusionAlways, Priority: 50, Tools: nil},
 	}
 
 	got := Filter(files, "", nil, "")

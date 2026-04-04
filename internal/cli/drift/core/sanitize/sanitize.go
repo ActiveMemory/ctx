@@ -8,8 +8,8 @@ package sanitize
 
 import (
 	"github.com/ActiveMemory/ctx/internal/assets/read/desc"
+	cfgDrift "github.com/ActiveMemory/ctx/internal/config/drift"
 	"github.com/ActiveMemory/ctx/internal/config/embed/text"
-	"github.com/ActiveMemory/ctx/internal/drift"
 )
 
 // FormatCheckName converts internal check identifiers to
@@ -21,23 +21,23 @@ import (
 // Returns:
 //   - string: Human-readable description, or the original
 //     name if unknown
-func FormatCheckName(name drift.CheckName) string {
+func FormatCheckName(name cfgDrift.CheckName) string {
 	switch name {
-	case drift.CheckPathReferences:
+	case cfgDrift.CheckPathReferences:
 		return desc.Text(text.DescKeyDriftCheckPathRefs)
-	case drift.CheckStaleness:
+	case cfgDrift.CheckStaleness:
 		return desc.Text(text.DescKeyDriftCheckStaleness)
-	case drift.CheckConstitution:
+	case cfgDrift.CheckConstitution:
 		return desc.Text(text.DescKeyDriftCheckConstitution)
-	case drift.CheckRequiredFiles:
+	case cfgDrift.CheckRequiredFiles:
 		return desc.Text(text.DescKeyDriftCheckRequired)
-	case drift.CheckFileAge:
+	case cfgDrift.CheckFileAge:
 		return desc.Text(text.DescKeyDriftCheckFileAge)
-	case drift.CheckTemplateHeaders:
+	case cfgDrift.CheckTemplateHeaders:
 		return desc.Text(
 			text.DescKeyDriftCheckTemplateHeader,
 		)
 	default:
-		return string(name)
+		return name
 	}
 }

@@ -617,3 +617,57 @@ write.trigger-context:
   short: "Context:\n%s"
 write.trigger-err-line:
   short: '  %s'
+
+write.setup-cursor-head:
+  short: 'Cursor integration:'
+write.setup-cursor-run:
+  short: '  Run: ctx setup cursor --write'
+write.setup-cursor-mcp:
+  short: '  Creates: .cursor/mcp.json (MCP server config)'
+write.setup-cursor-sync:
+  short: '  Syncs:   .cursor/rules/ (steering files)'
+write.setup-kiro-head:
+  short: 'Kiro integration:'
+write.setup-kiro-run:
+  short: '  Run: ctx setup kiro --write'
+write.setup-kiro-mcp:
+  short: '  Creates: .kiro/settings/mcp.json (MCP server config)'
+write.setup-kiro-sync:
+  short: '  Syncs:   .kiro/steering/ (steering files)'
+write.setup-cline-head:
+  short: 'Cline integration:'
+write.setup-cline-run:
+  short: '  Run: ctx setup cline --write'
+write.setup-cline-mcp:
+  short: '  Creates: .vscode/mcp.json (MCP server config)'
+write.setup-cline-sync:
+  short: '  Syncs:   .clinerules/ (steering files)'
+write.setup-no-steering-to-sync:
+  short: '  No steering files to sync (run ctx steering init first)'
+
+write.skill-no-skills:
+  short: 'No skills installed.'
+
+write.steering-no-files:
+  short: 'No steering files found.'
+write.steering-no-match:
+  short: 'No steering files match the given prompt.'
+
+write.trigger-no-hooks:
+  short: 'No hooks found.'
+write.trigger-errors-hdr:
+  short: 'Errors:'
+write.trigger-no-output:
+  short: 'No output from hooks.'
+
+mcp.hooks-disabled:
+  short: 'Hooks disabled.'
+mcp.session-start-ok:
+  short: 'Session start hooks executed. No additional context.'
+mcp.session-end-ok:
+  short: 'Session end hooks executed.'
+
+mcp.steering-no-files:
+  short: 'No steering files found.'
+mcp.steering-no-match:
+  short: 'No matching steering files.'

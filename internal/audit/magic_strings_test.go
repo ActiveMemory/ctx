@@ -80,10 +80,14 @@ func TestNoMagicStrings(t *testing.T) {
 					return true
 				}
 
-				if isConstDef(file, lit) ||
-					isVarDef(file, lit) {
-					return true
-				}
+				// Const/var definitions in exempt packages
+				// are already skipped (line 61). Outside
+				// those packages, string constants are
+				// magic strings that belong in config/.
+				//
+				// DO NOT re-add a blanket isConstDef
+				// exemption. It masks constants defined
+				// in the wrong package.
 
 				if isStructTag(file, lit) {
 					return true

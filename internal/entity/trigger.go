@@ -6,23 +6,10 @@
 
 package entity
 
-// TriggerType identifies the lifecycle trigger event type.
-type TriggerType string
+import cfgTrigger "github.com/ActiveMemory/ctx/internal/config/trigger"
 
-const (
-	// TriggerPreToolUse fires before an AI tool invocation.
-	TriggerPreToolUse TriggerType = "pre-tool-use"
-	// TriggerPostToolUse fires after an AI tool invocation.
-	TriggerPostToolUse TriggerType = "post-tool-use"
-	// TriggerSessionStart fires when an AI session begins.
-	TriggerSessionStart TriggerType = "session-start"
-	// TriggerSessionEnd fires when an AI session ends.
-	TriggerSessionEnd TriggerType = "session-end"
-	// TriggerFileSave fires when a file is saved.
-	TriggerFileSave TriggerType = "file-save"
-	// TriggerContextAdd fires when context is added.
-	TriggerContextAdd TriggerType = "context-add"
-)
+// TriggerType identifies the lifecycle trigger event type.
+type TriggerType = cfgTrigger.TriggerType
 
 // TriggerInput is the JSON object sent to trigger scripts via stdin.
 //

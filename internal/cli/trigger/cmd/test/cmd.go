@@ -18,21 +18,12 @@ import (
 	embedFlag "github.com/ActiveMemory/ctx/internal/config/embed/flag"
 	"github.com/ActiveMemory/ctx/internal/config/flag"
 	"github.com/ActiveMemory/ctx/internal/config/token"
+	cfgTrigger "github.com/ActiveMemory/ctx/internal/config/trigger"
 	errTrigger "github.com/ActiveMemory/ctx/internal/err/trigger"
 	"github.com/ActiveMemory/ctx/internal/flagbind"
 	"github.com/ActiveMemory/ctx/internal/rc"
 	"github.com/ActiveMemory/ctx/internal/trigger"
 	writeTrigger "github.com/ActiveMemory/ctx/internal/write/trigger"
-)
-
-// Mock input constants for hook testing.
-const (
-	// mockSessionID is the session ID used in test hook input.
-	mockSessionID = "test-session"
-	// mockModel is the model name used in test hook input.
-	mockModel = "test-model"
-	// mockVersion is the ctx version used in test hook input.
-	mockVersion = "test"
 )
 
 // Cmd returns the "ctx hook test" subcommand.
@@ -71,7 +62,7 @@ func Cmd() *cobra.Command {
 //   - path: Optional file path for mock input
 func Run(c *cobra.Command, hookType, toolName, path string) error {
 	// Validate hook type.
-	ht := trigger.HookType(hookType)
+	ht := hookType
 	valid := trigger.ValidTypes()
 
 	found := false
@@ -84,9 +75,7 @@ func Run(c *cobra.Command, hookType, toolName, path string) error {
 
 	if !found {
 		names := make([]string, len(valid))
-		for i, v := range valid {
-			names[i] = string(v)
-		}
+		copy(names, valid)
 		return errTrigger.InvalidType(hookType, strings.Join(names, token.CommaSpace))
 	}
 
@@ -104,11 +93,11 @@ func Run(c *cobra.Command, hookType, toolName, path string) error {
 		Tool:        toolName,
 		Parameters:  params,
 		Session: trigger.HookSession{
-			ID:    mockSessionID,
-			Model: mockModel,
+			ID:    cfgTrigger.MockSessionID,
+			Model: cfgTrigger.MockModel,
 		},
 		Timestamp:  time.Now().UTC().Format(time.RFC3339),
-		CtxVersion: mockVersion,
+		CtxVersion: cfgTrigger.MockVersion,
 	}
 
 	writeTrigger.TestingHeader(c, hookType)

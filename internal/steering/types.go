@@ -6,19 +6,10 @@
 
 package steering
 
-// InclusionMode determines when a steering file is injected into
-// an AI prompt.
-type InclusionMode string
+import (
+	"github.com/ActiveMemory/ctx/internal/assets/tpl"
 
-const (
-	// InclusionAlways includes the steering file in every context packet.
-	InclusionAlways InclusionMode = "always"
-	// InclusionAuto includes the steering file when the prompt matches
-	// the file's description.
-	InclusionAuto InclusionMode = "auto"
-	// InclusionManual includes the steering file only when explicitly
-	// referenced by name.
-	InclusionManual InclusionMode = "manual"
+	cfgSteering "github.com/ActiveMemory/ctx/internal/config/steering"
 )
 
 // SteeringFile represents a parsed steering file with YAML frontmatter
@@ -33,13 +24,13 @@ const (
 //   - Body: Markdown content after frontmatter
 //   - Path: Filesystem path to the steering file
 type SteeringFile struct {
-	Name        string        `yaml:"name"`
-	Description string        `yaml:"description,omitempty"`
-	Inclusion   InclusionMode `yaml:"inclusion"`
-	Tools       []string      `yaml:"tools,omitempty"`
-	Priority    int           `yaml:"priority"`
-	Body        string        `yaml:"-"`
-	Path        string        `yaml:"-"`
+	Name        string                    `yaml:"name"`
+	Description string                    `yaml:"description,omitempty"`
+	Inclusion   cfgSteering.InclusionMode `yaml:"inclusion"`
+	Tools       []string                  `yaml:"tools,omitempty"`
+	Priority    int                       `yaml:"priority"`
+	Body        string                    `yaml:"-"`
+	Path        string                    `yaml:"-"`
 }
 
 // SyncReport summarizes the result of syncing steering files to
@@ -79,30 +70,23 @@ type FoundationFile struct {
 // FoundationFiles defines the set of files created by ctx steering init.
 var FoundationFiles = []FoundationFile{
 	{
-		Name:        "product",
-		Description: "Product context, goals, and target users",
-		Body: "# Product Context\n\n" +
-			"Describe the product, its goals, and target users.\n",
+		Name:        tpl.SteeringNameProduct,
+		Description: tpl.SteeringDescProduct,
+		Body:        tpl.SteeringBodyProduct,
 	},
 	{
-		Name:        "tech",
-		Description: "Technology stack, constraints, and dependencies",
-		Body: "# Technology Stack\n\n" +
-			"Describe the technology stack, " +
-			"constraints, and key dependencies.\n",
+		Name:        tpl.SteeringNameTech,
+		Description: tpl.SteeringDescTech,
+		Body:        tpl.SteeringBodyTech,
 	},
 	{
-		Name:        "structure",
-		Description: "Project structure and directory conventions",
-		Body: "# Project Structure\n\n" +
-			"Describe the project layout " +
-			"and directory conventions.\n",
+		Name:        tpl.SteeringNameStructure,
+		Description: tpl.SteeringDescStructure,
+		Body:        tpl.SteeringBodyStructure,
 	},
 	{
-		Name:        "workflow",
-		Description: "Development workflow and process rules",
-		Body: "# Development Workflow\n\n" +
-			"Describe the development workflow, " +
-			"branching strategy, and process rules.\n",
+		Name:        tpl.SteeringNameWorkflow,
+		Description: tpl.SteeringDescWorkflow,
+		Body:        tpl.SteeringBodyWorkflow,
 	},
 }

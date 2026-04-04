@@ -49,4 +49,12 @@ const (
 	// DescKeyWriteTriggerErrLine is the text key for write trigger err line
 	// messages.
 	DescKeyWriteTriggerErrLine = "write.trigger-err-line"
+	// DescKeyWriteTriggerNoHooks is the message when no hooks
+	// are found.
+	DescKeyWriteTriggerNoHooks = "write.trigger-no-hooks"
+	// DescKeyWriteTriggerErrorsHdr is the errors section header.
+	DescKeyWriteTriggerErrorsHdr = "write.trigger-errors-hdr"
+	// DescKeyWriteTriggerNoOutput is the message when hooks
+	// produce no output.
+	DescKeyWriteTriggerNoOutput = "write.trigger-no-output"
 )

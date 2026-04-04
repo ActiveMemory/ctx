@@ -10,6 +10,8 @@ import (
 	"os"
 	"path/filepath"
 	"testing"
+
+	cfgSkill "github.com/ActiveMemory/ctx/internal/config/skill"
 )
 
 func TestInstall_ValidSkill(t *testing.T) {
@@ -23,7 +25,7 @@ description: A test skill
 # Instructions
 Do the thing.
 `
-	if err := os.WriteFile(filepath.Join(source, skillManifest), []byte(manifest), 0o644); err != nil {
+	if err := os.WriteFile(filepath.Join(source, cfgSkill.SkillManifest), []byte(manifest), 0o644); err != nil {
 		t.Fatal(err)
 	}
 	// Add an extra file to verify full directory copy.
@@ -47,7 +49,7 @@ Do the thing.
 	}
 
 	// Verify SKILL.md was copied.
-	if _, err := os.Stat(filepath.Join(skillsDir, "test-skill", skillManifest)); err != nil {
+	if _, err := os.Stat(filepath.Join(skillsDir, "test-skill", cfgSkill.SkillManifest)); err != nil {
 		t.Errorf("SKILL.md not copied: %v", err)
 	}
 	// Verify extra file was copied.
@@ -65,7 +67,7 @@ name: nested-skill
 ---
 Body
 `
-	if err := os.WriteFile(filepath.Join(source, skillManifest), []byte(manifest), 0o644); err != nil {
+	if err := os.WriteFile(filepath.Join(source, cfgSkill.SkillManifest), []byte(manifest), 0o644); err != nil {
 		t.Fatal(err)
 	}
 	subDir := filepath.Join(source, "templates")
@@ -110,7 +112,7 @@ name: [broken yaml
 ---
 Body
 `
-	if err := os.WriteFile(filepath.Join(source, skillManifest), []byte(manifest), 0o644); err != nil {
+	if err := os.WriteFile(filepath.Join(source, cfgSkill.SkillManifest), []byte(manifest), 0o644); err != nil {
 		t.Fatal(err)
 	}
 
@@ -129,7 +131,7 @@ description: no name field
 ---
 Body
 `
-	if err := os.WriteFile(filepath.Join(source, skillManifest), []byte(manifest), 0o644); err != nil {
+	if err := os.WriteFile(filepath.Join(source, cfgSkill.SkillManifest), []byte(manifest), 0o644); err != nil {
 		t.Fatal(err)
 	}
 
@@ -143,7 +145,7 @@ func TestInstall_NoFrontmatterDelimiters(t *testing.T) {
 	source := t.TempDir()
 	skillsDir := t.TempDir()
 
-	if err := os.WriteFile(filepath.Join(source, skillManifest), []byte("just plain text"), 0o644); err != nil {
+	if err := os.WriteFile(filepath.Join(source, cfgSkill.SkillManifest), []byte("just plain text"), 0o644); err != nil {
 		t.Fatal(err)
 	}
 

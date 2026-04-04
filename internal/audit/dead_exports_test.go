@@ -36,7 +36,7 @@ import (
 // positives. Keep this list small: prefer eliminating
 // the export over adding it here.
 var testOnlyExports = map[string]bool{
-	"github.com/ActiveMemory/ctx/internal/assets/hooks/messages.CategoryCustomizable":       true,
+	"github.com/ActiveMemory/ctx/internal/config/hook.CategoryCustomizable":                 true,
 	"github.com/ActiveMemory/ctx/internal/assets/hooks/messages.Hooks":                      true,
 	"github.com/ActiveMemory/ctx/internal/assets/hooks/messages.RegistryError":              true,
 	"github.com/ActiveMemory/ctx/internal/cli/initialize/core/vscode.CreateVSCodeArtifacts": true,

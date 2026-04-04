@@ -15,6 +15,7 @@ import (
 
 	"github.com/ActiveMemory/ctx/internal/assets/read/desc"
 	"github.com/ActiveMemory/ctx/internal/cli/drift/core/sanitize"
+	cfgDrift "github.com/ActiveMemory/ctx/internal/config/drift"
 	"github.com/ActiveMemory/ctx/internal/config/embed/text"
 	"github.com/ActiveMemory/ctx/internal/drift"
 	errDrift "github.com/ActiveMemory/ctx/internal/err/drift"
@@ -31,11 +32,11 @@ import (
 //   - Violations: Constitution violations
 //   - Passed: Names of checks that passed
 type JSONOutput struct {
-	Timestamp  string            `json:"timestamp"`
-	Status     drift.StatusType  `json:"status"`
-	Warnings   []drift.Issue     `json:"warnings"`
-	Violations []drift.Issue     `json:"violations"`
-	Passed     []drift.CheckName `json:"passed"`
+	Timestamp  string               `json:"timestamp"`
+	Status     cfgDrift.StatusType  `json:"status"`
+	Warnings   []drift.Issue        `json:"warnings"`
+	Violations []drift.Issue        `json:"violations"`
+	Passed     []cfgDrift.CheckName `json:"passed"`
 }
 
 // DriftText writes the drift report as formatted text with
@@ -93,9 +94,9 @@ func DriftText(
 
 		for _, w := range report.Warnings {
 			switch w.Type {
-			case drift.IssueDeadPath:
+			case cfgDrift.IssueDeadPath:
 				pathRefs = append(pathRefs, w)
-			case drift.IssueStaleness, drift.IssueStaleAge:
+			case cfgDrift.IssueStaleness, cfgDrift.IssueStaleAge:
 				staleness = append(staleness, w)
 			default:
 				other = append(other, w)
@@ -152,10 +153,10 @@ func DriftText(
 	// Summary
 	status := report.Status()
 	switch status {
-	case drift.StatusViolation:
+	case cfgDrift.StatusViolation:
 		writeDrift.StatusViolation(cmd)
 		return errDrift.Violations()
-	case drift.StatusWarning:
+	case cfgDrift.StatusWarning:
 		writeDrift.StatusWarning(cmd)
 	default:
 		writeDrift.StatusOK(cmd)

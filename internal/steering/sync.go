@@ -14,28 +14,6 @@ import (
 	errSteering "github.com/ActiveMemory/ctx/internal/err/steering"
 )
 
-// Tool-native directory and extension constants.
-const (
-	// dirCursorDot is the Cursor configuration directory.
-	dirCursorDot = ".cursor"
-	// dirRules is the Cursor rules subdirectory.
-	dirRules = "rules"
-	// extMDC is the Cursor MDC rule file extension.
-	extMDC = ".mdc"
-	// dirClinerules is the Cline rules directory.
-	dirClinerules = ".clinerules"
-	// dirKiroDot is the Kiro configuration directory.
-	dirKiroDot = ".kiro"
-	// dirSteering is the Kiro steering subdirectory.
-	dirSteering = "steering"
-	// parentDir is the relative parent directory component.
-	parentDir = ".."
-)
-
-// doubleNewline is the separator between a heading
-// and body in Cline-formatted steering output.
-const doubleNewline = "\n\n"
-
 // syncableTools lists the tool identifiers that support
 // native-format sync. Claude and Codex use ctx agent
 // directly and do not need synced files.

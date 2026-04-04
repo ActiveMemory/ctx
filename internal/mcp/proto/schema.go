@@ -78,9 +78,6 @@ const (
 	ErrCodeInternal = -32603
 )
 
-// ProtocolVersion is the MCP protocol version.
-const ProtocolVersion = "2024-11-05"
-
 // --- Initialization types ---
 
 // InitializeParams contains client information sent during initialization.

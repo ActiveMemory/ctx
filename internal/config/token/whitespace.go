@@ -20,4 +20,10 @@ const (
 	Space = " "
 	// Tab is a horizontal tab character.
 	Tab = "\t"
+	// DoubleNewline is two consecutive Unix newlines,
+	// used as a paragraph separator.
+	DoubleNewline = "\n\n"
+	// TrimCR is the character set trimmed from the start
+	// of raw frontmatter to normalize line endings.
+	TrimCR = "\n\r"
 )

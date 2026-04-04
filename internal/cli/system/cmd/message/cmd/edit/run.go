@@ -16,6 +16,7 @@ import (
 	"github.com/ActiveMemory/ctx/internal/assets/read/hook"
 	"github.com/ActiveMemory/ctx/internal/cli/system/core/message"
 	"github.com/ActiveMemory/ctx/internal/config/file"
+	cfgHook "github.com/ActiveMemory/ctx/internal/config/hook"
 	"github.com/ActiveMemory/ctx/internal/err/fs"
 	errTrigger "github.com/ActiveMemory/ctx/internal/err/trigger"
 	ctxIo "github.com/ActiveMemory/ctx/internal/io"
@@ -44,7 +45,7 @@ func Run(cmd *cobra.Command, hk, variant string) error {
 		return errTrigger.OverrideExists(oPath, hk, variant)
 	}
 
-	if info.Category == messages.CategoryCtxSpecific {
+	if info.Category == cfgHook.CategoryCtxSpecific {
 		writeMessage.CtxSpecificWarning(cmd)
 	}
 

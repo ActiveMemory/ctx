@@ -112,3 +112,26 @@ const (
 	// DescKeyMCPSearchNoMatch is the text key for mcp search no match messages.
 	DescKeyMCPSearchNoMatch = "mcp.search-no-match"
 )
+
+// DescKeys for MCP session hook output.
+const (
+	// DescKeyMCPHooksDisabled is the message when hooks are
+	// not enabled.
+	DescKeyMCPHooksDisabled = "mcp.hooks-disabled"
+	// DescKeyMCPSessionStartOK is the message when start hooks
+	// produce no additional context.
+	DescKeyMCPSessionStartOK = "mcp.session-start-ok"
+	// DescKeyMCPSessionEndOK is the message when end hooks
+	// complete without context.
+	DescKeyMCPSessionEndOK = "mcp.session-end-ok"
+)
+
+// DescKeys for MCP handler steering result messages.
+const (
+	// DescKeyMCPSteeringNoFiles is the message when no steering
+	// files exist.
+	DescKeyMCPSteeringNoFiles = "mcp.steering-no-files"
+	// DescKeyMCPSteeringNoMatch is the message when no steering
+	// files match.
+	DescKeyMCPSteeringNoMatch = "mcp.steering-no-match"
+)

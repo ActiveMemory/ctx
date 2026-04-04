@@ -13,6 +13,7 @@ import (
 	"github.com/ActiveMemory/ctx/internal/assets/read/desc"
 	"github.com/ActiveMemory/ctx/internal/config/embed/text"
 	"github.com/ActiveMemory/ctx/internal/config/stats"
+	cfgSysinfo "github.com/ActiveMemory/ctx/internal/config/sysinfo"
 	"github.com/ActiveMemory/ctx/internal/sysinfo"
 )
 
@@ -96,11 +97,11 @@ func formatText(
 	}
 	gibEntries := []gibEntry{
 		{snap.Memory.Supported, snap.Memory.UsedBytes, snap.Memory.TotalBytes,
-			sysinfo.ResourceMemory, text.DescKeyResourcesLabelMemory},
+			cfgSysinfo.ResourceMemory, text.DescKeyResourcesLabelMemory},
 		{snap.Memory.Supported, snap.Memory.SwapUsedBytes, snap.Memory.SwapTotalBytes,
-			sysinfo.ResourceSwap, text.DescKeyResourcesLabelSwap},
+			cfgSysinfo.ResourceSwap, text.DescKeyResourcesLabelSwap},
 		{snap.Disk.Supported, snap.Disk.UsedBytes, snap.Disk.TotalBytes,
-			sysinfo.ResourceDisk, text.DescKeyResourcesLabelDisk},
+			cfgSysinfo.ResourceDisk, text.DescKeyResourcesLabelDisk},
 	}
 	valueFmt := desc.Text(text.DescKeyResourcesValueFormat)
 	for _, e := range gibEntries {
@@ -123,7 +124,7 @@ func formatText(
 		values := fmt.Sprintf(desc.Text(text.DescKeyResourcesLoadFormat),
 			snap.Load.Load1, snap.Load.Load5, snap.Load.Load15,
 			snap.Load.NumCPU, ratio)
-		sev := sysinfo.SeverityFor(alerts, sysinfo.ResourceLoad)
+		sev := sysinfo.SeverityFor(alerts, cfgSysinfo.ResourceLoad)
 		lines = append(lines, formatLine(
 			desc.Text(text.DescKeyResourcesLabelLoad), values, statusText(sev)))
 	}

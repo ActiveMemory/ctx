@@ -17,6 +17,7 @@ import (
 	"github.com/ActiveMemory/ctx/internal/assets/read/template"
 	"github.com/ActiveMemory/ctx/internal/config/archive"
 	cfgCtx "github.com/ActiveMemory/ctx/internal/config/ctx"
+	cfgDrift "github.com/ActiveMemory/ctx/internal/config/drift"
 	"github.com/ActiveMemory/ctx/internal/config/embed/text"
 	"github.com/ActiveMemory/ctx/internal/config/fs"
 	"github.com/ActiveMemory/ctx/internal/config/marker"
@@ -67,7 +68,7 @@ func Apply(
 
 	for _, issue := range report.Warnings {
 		switch issue.Type {
-		case drift.IssueStaleness:
+		case cfgDrift.IssueStaleness:
 			if fixErr := Staleness(cmd, ctx); fixErr != nil {
 				result.Errors = append(result.Errors,
 					fmt.Sprintf(
@@ -79,7 +80,7 @@ func Apply(
 				result.Fixed++
 			}
 
-		case drift.IssueMissing:
+		case cfgDrift.IssueMissing:
 			if fixErr := MissingFile(issue.File); fixErr != nil {
 				result.Errors = append(result.Errors,
 					fmt.Sprintf(
@@ -91,20 +92,20 @@ func Apply(
 				result.Fixed++
 			}
 
-		case drift.IssueDeadPath:
+		case cfgDrift.IssueDeadPath:
 			writeDrift.SkipDeadPath(
 				cmd, issue.File, issue.Line, issue.Path,
 			)
 			result.Skipped++
 
-		case drift.IssueStaleAge:
+		case cfgDrift.IssueStaleAge:
 			writeDrift.SkipStaleAge(cmd, issue.File)
 			result.Skipped++
 		}
 	}
 
 	for _, issue := range report.Violations {
-		if issue.Type == drift.IssueSecret {
+		if issue.Type == cfgDrift.IssueSecret {
 			writeDrift.SkipSensitiveFile(cmd, issue.File)
 			result.Skipped++
 		}

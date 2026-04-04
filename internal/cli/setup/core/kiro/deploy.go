@@ -17,6 +17,7 @@ import (
 	cfgHook "github.com/ActiveMemory/ctx/internal/config/hook"
 	mcpServer "github.com/ActiveMemory/ctx/internal/config/mcp/server"
 	cfgMcpTool "github.com/ActiveMemory/ctx/internal/config/mcp/tool"
+	cfgSetup "github.com/ActiveMemory/ctx/internal/config/setup"
 	"github.com/ActiveMemory/ctx/internal/config/token"
 	errSetup "github.com/ActiveMemory/ctx/internal/err/setup"
 	ctxIo "github.com/ActiveMemory/ctx/internal/io"
@@ -28,8 +29,10 @@ import (
 // ensureMCPConfig creates .kiro/settings/mcp.json with
 // the ctx MCP server config. Skips if the file exists.
 func ensureMCPConfig(cmd *cobra.Command) error {
-	settingsDir := filepath.Join(DirKiro, DirSettings)
-	target := filepath.Join(settingsDir, FileMCPJSON)
+	settingsDir := filepath.Join(
+		cfgSetup.DirKiro, cfgSetup.DirSettings,
+	)
+	target := filepath.Join(settingsDir, cfgSetup.FileMCPJSON)
 
 	if _, statErr := ctxIo.SafeStat(
 		target,

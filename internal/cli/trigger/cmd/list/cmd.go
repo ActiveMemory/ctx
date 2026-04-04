@@ -11,17 +11,10 @@ import (
 
 	"github.com/ActiveMemory/ctx/internal/assets/read/desc"
 	"github.com/ActiveMemory/ctx/internal/config/embed/cmd"
+	cfgTrigger "github.com/ActiveMemory/ctx/internal/config/trigger"
 	"github.com/ActiveMemory/ctx/internal/rc"
 	"github.com/ActiveMemory/ctx/internal/trigger"
 	writeTrigger "github.com/ActiveMemory/ctx/internal/write/trigger"
-)
-
-// Hook status labels.
-const (
-	// statusEnabled is the label for an enabled hook.
-	statusEnabled = "enabled"
-	// statusDisabled is the label for a disabled hook.
-	statusDisabled = "disabled"
 )
 
 // Cmd returns the "ctx hook list" subcommand.
@@ -61,11 +54,11 @@ func Run(c *cobra.Command) error {
 			continue
 		}
 
-		writeTrigger.TypeHeader(c, string(ht))
+		writeTrigger.TypeHeader(c, ht)
 		for _, h := range hooks {
-			status := statusEnabled
+			status := cfgTrigger.StatusEnabled
 			if !h.Enabled {
-				status = statusDisabled
+				status = cfgTrigger.StatusDisabled
 			}
 			writeTrigger.Entry(c, h.Name, status, h.Path)
 			total++

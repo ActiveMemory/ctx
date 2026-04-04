@@ -10,23 +10,8 @@ package kiro
 import (
 	"github.com/spf13/cobra"
 
+	cfgSetup "github.com/ActiveMemory/ctx/internal/config/setup"
 	writeSetup "github.com/ActiveMemory/ctx/internal/write/setup"
-)
-
-// Kiro configuration paths.
-const (
-	// DirKiro is the Kiro editor config directory.
-	DirKiro = ".kiro"
-	// DirSettings is the Kiro settings subdirectory.
-	DirSettings = "settings"
-	// FileMCPJSON is the MCP server config file name.
-	FileMCPJSON = "mcp.json"
-	// displayName is the display name for Kiro.
-	displayName = "Kiro"
-	// mcpConfigPath is the deployed MCP config path.
-	mcpConfigPath = DirKiro + "/settings/mcp.json"
-	// steeringDeployPath is the deployed steering path.
-	steeringDeployPath = DirKiro + "/steering/"
 )
 
 // Deploy generates Kiro integration files:
@@ -50,9 +35,9 @@ func Deploy(cmd *cobra.Command) error {
 	}
 
 	writeSetup.DeployComplete(
-		cmd, displayName,
-		mcpConfigPath,
-		steeringDeployPath,
+		cmd, cfgSetup.DisplayKiro,
+		cfgSetup.MCPConfigPathKiro,
+		cfgSetup.SteeringDeployPathKiro,
 	)
 	return nil
 }

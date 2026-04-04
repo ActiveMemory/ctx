@@ -38,17 +38,17 @@ func parseManifest(data []byte, name, dir string) (*Skill, error) {
 func splitFrontmatter(
 	data []byte,
 ) (frontmatter []byte, body string, err error) {
-	content := strings.TrimLeft(string(data), trimCR)
+	content := strings.TrimLeft(string(data), token.TrimCR)
 
-	if !strings.HasPrefix(content, frontmatterDelimiter) {
+	if !strings.HasPrefix(content, token.FrontmatterDelimiter) {
 		return nil, "", errSkill.MissingOpeningDelimiter()
 	}
 
 	// Skip the opening delimiter line.
-	rest := content[len(frontmatterDelimiter):]
+	rest := content[len(token.FrontmatterDelimiter):]
 	rest = strings.TrimPrefix(rest, token.NewlineLF)
 
-	needle := token.NewlineLF + frontmatterDelimiter
+	needle := token.NewlineLF + token.FrontmatterDelimiter
 	idx := strings.Index(rest, needle)
 	if idx < 0 {
 		return nil, "", errSkill.MissingClosingDelimiter()
@@ -57,7 +57,7 @@ func splitFrontmatter(
 	fm := rest[:idx]
 
 	// Skip past the closing delimiter line.
-	after := rest[idx+1+len(frontmatterDelimiter):]
+	after := rest[idx+1+len(token.FrontmatterDelimiter):]
 	// Trim exactly one leading newline from the body if present.
 	after = strings.TrimPrefix(after, token.NewlineLF)
 

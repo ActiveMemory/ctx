@@ -244,49 +244,15 @@ func Content(cmd *cobra.Command, content string) {
 	cmd.Print(content)
 }
 
-// Integration instruction lines for ctx setup output.
-const (
-	// infoCursorHead is the Cursor section header.
-	infoCursorHead = "Cursor integration:"
-	// infoCursorRun is the run command hint.
-	infoCursorRun = "  Run: ctx setup cursor --write"
-	// infoCursorMCP is the MCP config path.
-	infoCursorMCP = "  Creates: .cursor/mcp.json" +
-		" (MCP server config)"
-	// infoCursorSync is the steering sync path.
-	infoCursorSync = "  Syncs:   .cursor/rules/" +
-		" (steering files)"
-	// infoKiroHead is the Kiro section header.
-	infoKiroHead = "Kiro integration:"
-	// infoKiroRun is the run command hint.
-	infoKiroRun = "  Run: ctx setup kiro --write"
-	// infoKiroMCP is the MCP config path.
-	infoKiroMCP = "  Creates: .kiro/settings/mcp.json" +
-		" (MCP server config)"
-	// infoKiroSync is the steering sync path.
-	infoKiroSync = "  Syncs:   .kiro/steering/" +
-		" (steering files)"
-	// infoClineHead is the Cline section header.
-	infoClineHead = "Cline integration:"
-	// infoClineRun is the run command hint.
-	infoClineRun = "  Run: ctx setup cline --write"
-	// infoClineMCP is the MCP config path.
-	infoClineMCP = "  Creates: .vscode/mcp.json" +
-		" (MCP server config)"
-	// infoClineSync is the steering sync path.
-	infoClineSync = "  Syncs:   .clinerules/" +
-		" (steering files)"
-)
-
 // InfoCursorIntegration prints Cursor integration instructions.
 //
 // Parameters:
 //   - cmd: Cobra command for output
 func InfoCursorIntegration(cmd *cobra.Command) {
-	cmd.Println(infoCursorHead)
-	cmd.Println(infoCursorRun)
-	cmd.Println(infoCursorMCP)
-	cmd.Println(infoCursorSync)
+	cmd.Println(desc.Text(text.DescKeyWriteSetupCursorHead))
+	cmd.Println(desc.Text(text.DescKeyWriteSetupCursorRun))
+	cmd.Println(desc.Text(text.DescKeyWriteSetupCursorMCP))
+	cmd.Println(desc.Text(text.DescKeyWriteSetupCursorSync))
 }
 
 // InfoKiroIntegration prints Kiro integration instructions.
@@ -294,10 +260,10 @@ func InfoCursorIntegration(cmd *cobra.Command) {
 // Parameters:
 //   - cmd: Cobra command for output
 func InfoKiroIntegration(cmd *cobra.Command) {
-	cmd.Println(infoKiroHead)
-	cmd.Println(infoKiroRun)
-	cmd.Println(infoKiroMCP)
-	cmd.Println(infoKiroSync)
+	cmd.Println(desc.Text(text.DescKeyWriteSetupKiroHead))
+	cmd.Println(desc.Text(text.DescKeyWriteSetupKiroRun))
+	cmd.Println(desc.Text(text.DescKeyWriteSetupKiroMCP))
+	cmd.Println(desc.Text(text.DescKeyWriteSetupKiroSync))
 }
 
 // InfoClineIntegration prints Cline integration instructions.
@@ -305,10 +271,10 @@ func InfoKiroIntegration(cmd *cobra.Command) {
 // Parameters:
 //   - cmd: Cobra command for output
 func InfoClineIntegration(cmd *cobra.Command) {
-	cmd.Println(infoClineHead)
-	cmd.Println(infoClineRun)
-	cmd.Println(infoClineMCP)
-	cmd.Println(infoClineSync)
+	cmd.Println(desc.Text(text.DescKeyWriteSetupClineHead))
+	cmd.Println(desc.Text(text.DescKeyWriteSetupClineRun))
+	cmd.Println(desc.Text(text.DescKeyWriteSetupClineMCP))
+	cmd.Println(desc.Text(text.DescKeyWriteSetupClineSync))
 }
 
 // DeployComplete prints the completion message for a tool setup.
@@ -370,16 +336,12 @@ func DeploySteeringSkipped(cmd *cobra.Command, name string) {
 		name))
 }
 
-// msgNoSteeringToSync is the message when no steering files
-// are available for sync.
-const msgNoSteeringToSync = "  No steering files to sync" +
-	" (run ctx steering init first)"
-
 // DeployNoSteering prints that no steering files are
 // available to sync.
 //
 // Parameters:
 //   - cmd: Cobra command for output
 func DeployNoSteering(cmd *cobra.Command) {
-	cmd.Println(msgNoSteeringToSync)
+	cmd.Println(desc.Text(
+		text.DescKeyWriteSetupNoSteeringToSync))
 }

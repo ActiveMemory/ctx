@@ -12,6 +12,7 @@ import (
 	"github.com/ActiveMemory/ctx/internal/assets/read/desc"
 	"github.com/ActiveMemory/ctx/internal/config/embed/text"
 	"github.com/ActiveMemory/ctx/internal/config/stats"
+	cfgSysinfo "github.com/ActiveMemory/ctx/internal/config/sysinfo"
 )
 
 // Evaluate checks a snapshot against resource thresholds and returns any
@@ -38,11 +39,13 @@ func Evaluate(snap Snapshot) []ResourceAlert {
 			pct, FormatGiB(snap.Memory.UsedBytes), FormatGiB(snap.Memory.TotalBytes))
 		if pct >= stats.ThresholdMemoryDangerPct {
 			alerts = append(alerts, ResourceAlert{
-				Severity: SeverityDanger, Resource: ResourceMemory, Message: msg,
+				Severity: SeverityDanger, Resource: cfgSysinfo.ResourceMemory, Message: msg,
 			})
 		} else if pct >= stats.ThresholdMemoryWarnPct {
 			alerts = append(alerts, ResourceAlert{
-				Severity: SeverityWarning, Resource: ResourceMemory, Message: msg,
+				Severity: SeverityWarning,
+				Resource: cfgSysinfo.ResourceMemory,
+				Message:  msg,
 			})
 		}
 	}
@@ -58,11 +61,11 @@ func Evaluate(snap Snapshot) []ResourceAlert {
 		)
 		if pct >= stats.ThresholdSwapDangerPct {
 			alerts = append(alerts, ResourceAlert{
-				Severity: SeverityDanger, Resource: ResourceSwap, Message: msg,
+				Severity: SeverityDanger, Resource: cfgSysinfo.ResourceSwap, Message: msg,
 			})
 		} else if pct >= stats.ThresholdSwapWarnPct {
 			alerts = append(alerts, ResourceAlert{
-				Severity: SeverityWarning, Resource: ResourceSwap, Message: msg,
+				Severity: SeverityWarning, Resource: cfgSysinfo.ResourceSwap, Message: msg,
 			})
 		}
 	}
@@ -74,11 +77,11 @@ func Evaluate(snap Snapshot) []ResourceAlert {
 			pct, FormatGiB(snap.Disk.UsedBytes), FormatGiB(snap.Disk.TotalBytes))
 		if pct >= stats.ThresholdDiskDangerPct {
 			alerts = append(alerts, ResourceAlert{
-				Severity: SeverityDanger, Resource: ResourceDisk, Message: msg,
+				Severity: SeverityDanger, Resource: cfgSysinfo.ResourceDisk, Message: msg,
 			})
 		} else if pct >= stats.ThresholdDiskWarnPct {
 			alerts = append(alerts, ResourceAlert{
-				Severity: SeverityWarning, Resource: ResourceDisk, Message: msg,
+				Severity: SeverityWarning, Resource: cfgSysinfo.ResourceDisk, Message: msg,
 			})
 		}
 	}
@@ -89,11 +92,11 @@ func Evaluate(snap Snapshot) []ResourceAlert {
 		msg := fmt.Sprintf(desc.Text(text.DescKeyResourcesAlertLoad), ratio)
 		if ratio >= stats.ThresholdLoadDangerRatio {
 			alerts = append(alerts, ResourceAlert{
-				Severity: SeverityDanger, Resource: ResourceLoad, Message: msg,
+				Severity: SeverityDanger, Resource: cfgSysinfo.ResourceLoad, Message: msg,
 			})
 		} else if ratio >= stats.ThresholdLoadWarnRatio {
 			alerts = append(alerts, ResourceAlert{
-				Severity: SeverityWarning, Resource: ResourceLoad, Message: msg,
+				Severity: SeverityWarning, Resource: cfgSysinfo.ResourceLoad, Message: msg,
 			})
 		}
 	}

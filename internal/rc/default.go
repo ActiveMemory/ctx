@@ -6,7 +6,10 @@
 
 package rc
 
-import "github.com/ActiveMemory/ctx/internal/config/runtime"
+import (
+	cfgDir "github.com/ActiveMemory/ctx/internal/config/dir"
+	"github.com/ActiveMemory/ctx/internal/config/runtime"
+)
 
 // Aliases re-exported from config/runtime for use within rc.
 const (
@@ -35,9 +38,9 @@ const (
 // Hooks & Steering defaults.
 const (
 	// DefaultSteeringDir is the default steering directory path.
-	DefaultSteeringDir = ".context/steering"
+	DefaultSteeringDir = cfgDir.DefaultSteeringPath
 	// DefaultHooksDir is the default hooks directory path.
-	DefaultHooksDir = ".context/hooks"
+	DefaultHooksDir = cfgDir.DefaultHooksPath
 	// DefaultHookTimeout is the default per-hook execution timeout in seconds.
 	DefaultHookTimeout = 10
 )

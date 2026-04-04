@@ -10,17 +10,8 @@ package cline
 import (
 	"github.com/spf13/cobra"
 
+	cfgSetup "github.com/ActiveMemory/ctx/internal/config/setup"
 	writeSetup "github.com/ActiveMemory/ctx/internal/write/setup"
-)
-
-// Cline deploy constants.
-const (
-	// displayName is the display name for Cline.
-	displayName = "Cline"
-	// mcpConfigPath is the deployed MCP config path.
-	mcpConfigPath = ".vscode/mcp.json"
-	// steeringPath is the deployed steering path.
-	steeringPath = ".clinerules/"
 )
 
 // Deploy generates Cline integration files:
@@ -33,6 +24,10 @@ func Deploy(cmd *cobra.Command) error {
 	if steerErr := syncSteering(cmd); steerErr != nil {
 		return steerErr
 	}
-	writeSetup.DeployComplete(cmd, displayName, mcpConfigPath, steeringPath)
+	writeSetup.DeployComplete(
+		cmd, cfgSetup.DisplayCline,
+		cfgSetup.MCPConfigPathCline,
+		cfgSetup.SteeringPathCline,
+	)
 	return nil
 }

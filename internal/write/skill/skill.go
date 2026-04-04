@@ -27,15 +27,12 @@ func Installed(cmd *cobra.Command, name, dir string) {
 		name, dir))
 }
 
-// msgNoSkills is shown when no skills are installed.
-const msgNoSkills = "No skills installed."
-
 // NoSkillsFound prints a message indicating no skills are installed.
 //
 // Parameters:
 //   - cmd: Cobra command for output
 func NoSkillsFound(cmd *cobra.Command) {
-	cmd.Println(msgNoSkills)
+	cmd.Println(desc.Text(text.DescKeyWriteSkillNoSkills))
 }
 
 // EntryWithDesc prints a skill entry with name and description.

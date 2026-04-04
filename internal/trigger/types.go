@@ -6,36 +6,23 @@
 
 package trigger
 
-import "github.com/ActiveMemory/ctx/internal/entity"
-
-// HookType is an alias for entity.TriggerType within the trigger package.
-type HookType = entity.TriggerType
-
-// Lifecycle event constants re-exported from entity for convenience.
-const (
-	// PreToolUse fires before an AI tool invocation.
-	PreToolUse = entity.TriggerPreToolUse
-	// PostToolUse fires after an AI tool invocation.
-	PostToolUse = entity.TriggerPostToolUse
-	// SessionStart fires when an AI session begins.
-	SessionStart = entity.TriggerSessionStart
-	// SessionEnd fires when an AI session ends.
-	SessionEnd = entity.TriggerSessionEnd
-	// FileSave fires when a file is saved.
-	FileSave = entity.TriggerFileSave
-	// ContextAdd fires when context is added.
-	ContextAdd = entity.TriggerContextAdd
+import (
+	cfgTrigger "github.com/ActiveMemory/ctx/internal/config/trigger"
+	"github.com/ActiveMemory/ctx/internal/entity"
 )
+
+// HookType is an alias for the trigger event type.
+type HookType = cfgTrigger.TriggerType
 
 // ValidTypes returns all valid trigger type strings.
 func ValidTypes() []HookType {
 	return []HookType{
-		PreToolUse,
-		PostToolUse,
-		SessionStart,
-		SessionEnd,
-		FileSave,
-		ContextAdd,
+		cfgTrigger.PreToolUse,
+		cfgTrigger.PostToolUse,
+		cfgTrigger.SessionStart,
+		cfgTrigger.SessionEnd,
+		cfgTrigger.FileSave,
+		cfgTrigger.ContextAdd,
 	}
 }
 

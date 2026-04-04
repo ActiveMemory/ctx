@@ -32,6 +32,8 @@ TASK STATUS LABELS:
   GITNEXUS.md should be updated accordingly. The make target should remind
   the user about it.
 
+- [ ] SMB mount path support: add `CTX_BACKUP_SMB_MOUNT_PATH` env var so `ctx backup` can use fstab/systemd automounts instead of requiring GVFS. Spec: specs/smb-mount-path-support.md #priority:medium #added:2026-04-04-010000
+
 ### Architecture Docs
 
 - [ ] Publish architecture docs to docs/: copy ARCHITECTURE.md, DETAILED_DESIGN domain files, and CHEAT-SHEETS.md to docs/reference/. Sanitize intervention points into docs/contributing/. Exclude DANGER-ZONES.md and ARCHITECTURE-PRINCIPAL.md (internal only). Spec: specs/publish-architecture-docs.md #priority:medium #added:2026-04-03-150000
@@ -40,7 +42,6 @@ TASK STATUS LABELS:
 
 ### Code Cleanup Findings
 
-- [x] Add TestTypeFileConvention audit check: type definitions must live in types.go, not mixed into function files. Scan all non-test .go files for ast.TypeSpec declarations; flag any that appear in files not named types.go. Migrate violations. #priority:medium #added:2026-04-03-030033 #done:2026-04-03
 
 - [ ] Extend flagbind helpers (IntFlag, DurationFlag, DurationFlagP, StringP, BoolP) and migrate ~50 call sites to unblock TestNoFlagBindOutsideFlagbind #added:2026-04-01-233250
 
@@ -52,21 +53,12 @@ TASK STATUS LABELS:
   and types from cmd/ directories to core/. See grandfathered map in 
   compliance_test.go for the full list. #priority:medium #added:2026-03-31-005115
 
-- [x] Collect all exec.Commands under internal/exec. See
-  Phase EXEC below for breakdown. — done, exec/{git,dep,gio,zensical}
-  exist, no exec.Command calls remain outside internal/exec
-  #done:2026-03-31
 
 - [ ] PD.4.5: Update AGENT_PLAYBOOK.md — add generic "check available skills"
   instruction #priority:medium #added:2026-03-25-203340
 
 **PD.5 — Validate:**
 
-- [x] PD.5.2: Run `ctx init` on a clean directory — verify no
-  `.context/prompts/` created. loop.md and skills checks are stale:
-  loop.md was never a ctx init artifact (ctx loop generates on demand),
-  skills deploy via plugin install, not ctx init.
-  #priority:high #added:2026-03-25-203340 #done:2026-03-31
 
 ### Phase -3: DevEx
 
@@ -99,15 +91,6 @@ TASK STATUS LABELS:
   .ctxrc or settings.json. Related: consolidation nudge hook
   spec. #added:2026-03-23-223500
 
-- [x] Bug: check-version hook missing throttle touch on plugin
-  version read error (run.go:70). When claude.PluginVersion()
-  fails, the hook returns without touching the daily throttle
-  marker, causing repeated checks on days when plugin.json is
-  missing or corrupted. Fix: add
-  internalIo.TouchFile(markerFile) before the early return.
-  See docs/recipes/hook-sequence-diagrams.md check-version
-  diagram which documents the expected behavior.
-  #added:2026-03-23-162802 #done:2026-03-31
 
 - [ ] Design UserPromptSubmit hook that runs go build and
   surfaces compilation errors before the agent acts on stale
@@ -312,9 +295,6 @@ P0.4.10 task.
   one file; types need to go to types.go per convention etc etc)
 * Human: split err package into sub packages.
 
-- [x] Add Use* constants for all system subcommands — all 30 system
-  subcommands already use cmd.UseSystem* constants
-  #added:2026-03-21-092550 #done:2026-03-31
 
 - [ ] Refactor site/cmd/feed: extract helpers and types to core/, make Run
   public #added:2026-03-21-074859
@@ -460,15 +440,6 @@ Many call sites use `_ =` or `_, _ =` to discard errors without
 any feedback. Some are legitimate (best-effort cleanup), most are
 lazy escapes that hide failures.
 
-- [x] EH.0: Create central warning sink — `internal/log/warn/warn.go` with
-      `var sink io.Writer = os.Stderr` and `func Warn(format string,
-      args ...any)`.
-      All stderr warnings (`fmt.Fprintf(os.Stderr, ...)`) route through this
-      function. The `fmt.Fprintf` return error is handled once, centrally.
-      The sink is swappable (tests use `io.Discard`, future: syslog, file).
-      EH.2–EH.4 should use `log.Warn()` instead of raw `fmt.Fprintf`.
-      DoD: `grep -rn 'fmt.Fprintf(os.Stderr' internal/` returns zero hits
-      #priority:high #added:2026-03-15
 
 - [ ] EH.1: Catalogue all silent error discards — recursive walk of `internal/`
       for patterns: `_ = `, `_, _ = `, `//nolint:errcheck`, bare `return` after
@@ -603,34 +574,11 @@ Taxonomy (from prefix analysis):
   state.go to types.go — file and type no longer exist, refactored away
   #priority:low #added:2026-03-07-220825
 
-- [x] Cleanup internal/cli/system/core/wrapup.go: line 18 constant should go to
-  config; make WrappedUpExpiry configurable via ctxrc — already done,
-  wrap.ExpiryHours and wrap.Marker exist in config/wrap
-  #priority:low #added:2026-03-07-220825 #done:2026-03-31
 
-- [x] Cleanup internal/cli/system/core/version.go: line 81 newline should come
-  from config — already done, uses token.NewlineLF
-  #priority:low #added:2026-03-07-220819 #done:2026-03-31
 
-- [x] Add taxonomy to internal/cli/system/core/ — currently an unstructured bag
-  of files; group by domain (backup, hooks, session, knowledge, etc.)
-  — already done, 20 domain subdirectories exist
-  #priority:medium #added:2026-03-07-220819 #done:2026-03-31
 
-- [x] Cleanup internal/cli/system/core/version_drift.go: line 53 string
-  formatting should use assets — file moved to core/drift/, now uses
-  desc.Text and assets throughout
-  #priority:medium #added:2026-03-07-220819 #done:2026-03-31
 
-- [x] Cleanup internal/cli/system/core/state.go: magic permissions (0o750),
-  magic strings ('Context: ' prefix, etc.) — file moved to core/state/,
-  magic values extracted to config
-  #priority:medium #added:2026-03-07-220819 #done:2026-03-31
 
-- [x] Cleanup internal/cli/system/core/smb.go: errors should come from
-  internal/err; lines 101, 116, 111 need assets text — file moved to
-  core/archive/, errors routed through err package
-  #priority:medium #added:2026-03-07-220819 #done:2026-03-31
 
 - [ ] Make AutoPruneStaleDays configurable via ctxrc. Currently hardcoded to 7
   days in config.AutoPruneStaleDays; add a ctxrc key (e.g., auto_prune_days) and
@@ -721,19 +669,11 @@ Taxonomy (from prefix analysis):
   tables) #added:2026-03-06-190225
 
 
-- [x] Remove FlagNoColor and fatih/color dependency — replaced with plain
-  output, dependency removed from go.mod
-  #added:2026-03-06-182831 #done:2026-03-31
 
 - [ ] Validate .ctxrc against ctxrc.schema.json at load time — schema is
   embedded but never enforced, doctor does field-level checks without using
   it #added:2026-03-06-174851
 
-- [x] Fix 3 CI compliance issues from PR #27 after merge: missing copyright
-  header on internal/mcp/server_test.go, missing doc.go for internal/cli/mcp/,
-  literal newlines in internal/mcp/resources.go and
-  tools.go — all fixed, files moved to mcp/server/ with copyright
-  #added:2026-03-06-141508 #done:2026-03-31
 
 - [ ] Add PostToolUse session event capture. Append lightweight event records
   (tool name, files touched, timestamp) to .context/state/session-events.jsonl

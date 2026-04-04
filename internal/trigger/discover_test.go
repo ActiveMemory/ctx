@@ -11,6 +11,8 @@ import (
 	"path/filepath"
 	"runtime"
 	"testing"
+
+	cfgTrigger "github.com/ActiveMemory/ctx/internal/config/trigger"
 )
 
 // TestDiscover_ValidExecutableScripts verifies that Discover returns
@@ -36,18 +38,18 @@ func TestDiscover_ValidExecutableScripts(t *testing.T) {
 		t.Fatalf("unexpected error: %v", err)
 	}
 
-	if len(result[PreToolUse]) != 1 {
-		t.Fatalf("expected 1 pre-tool-use hook, got %d", len(result[PreToolUse]))
+	if len(result[cfgTrigger.PreToolUse]) != 1 {
+		t.Fatalf("expected 1 pre-tool-use hook, got %d", len(result[cfgTrigger.PreToolUse]))
 	}
-	if result[PreToolUse][0].Name != "check" {
-		t.Errorf("expected name %q, got %q", "check", result[PreToolUse][0].Name)
+	if result[cfgTrigger.PreToolUse][0].Name != "check" {
+		t.Errorf("expected name %q, got %q", "check", result[cfgTrigger.PreToolUse][0].Name)
 	}
-	if !result[PreToolUse][0].Enabled {
+	if !result[cfgTrigger.PreToolUse][0].Enabled {
 		t.Error("expected hook to be enabled")
 	}
 
-	if len(result[SessionStart]) != 1 {
-		t.Fatalf("expected 1 session-start hook, got %d", len(result[SessionStart]))
+	if len(result[cfgTrigger.SessionStart]) != 1 {
+		t.Fatalf("expected 1 session-start hook, got %d", len(result[cfgTrigger.SessionStart]))
 	}
 }
 
@@ -78,7 +80,7 @@ func TestDiscover_SkipsNonExecutable(t *testing.T) {
 		t.Fatalf("unexpected error: %v", err)
 	}
 
-	hooks := result[PreToolUse]
+	hooks := result[cfgTrigger.PreToolUse]
 	if len(hooks) != 1 {
 		t.Fatalf("expected 1 hook (non-executable skipped by validation), got %d", len(hooks))
 	}
@@ -124,7 +126,7 @@ func TestDiscover_SkipsSymlinks(t *testing.T) {
 		t.Fatalf("unexpected error: %v", err)
 	}
 
-	hooks := result[PostToolUse]
+	hooks := result[cfgTrigger.PostToolUse]
 	if len(hooks) != 1 {
 		t.Fatalf("expected 1 hook (symlink skipped), got %d", len(hooks))
 	}
@@ -170,7 +172,7 @@ func TestDiscover_AlphabeticalOrder(t *testing.T) {
 		t.Fatalf("unexpected error: %v", err)
 	}
 
-	hooks := result[FileSave]
+	hooks := result[cfgTrigger.FileSave]
 	if len(hooks) != 3 {
 		t.Fatalf("expected 3 hooks, got %d", len(hooks))
 	}
@@ -209,8 +211,8 @@ func TestFindByName_Found(t *testing.T) {
 	if info.Name != "notify" {
 		t.Errorf("expected name %q, got %q", "notify", info.Name)
 	}
-	if info.Type != ContextAdd {
-		t.Errorf("expected type %q, got %q", ContextAdd, info.Type)
+	if info.Type != cfgTrigger.ContextAdd {
+		t.Errorf("expected type %q, got %q", cfgTrigger.ContextAdd, info.Type)
 	}
 }
 
