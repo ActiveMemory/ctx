@@ -320,9 +320,13 @@ func InfoClineIntegration(cmd *cobra.Command) {
 //   - steeringPath: Path to the steering directory
 func DeployComplete(cmd *cobra.Command, tool, mcpPath, steeringPath string) {
 	cmd.Println()
-	cmd.Println(fmt.Sprintf("%s setup complete.", tool))
-	cmd.Println(fmt.Sprintf("  MCP server: %s", mcpPath))
-	cmd.Println(fmt.Sprintf("  Steering:   %s", steeringPath))
+	cmd.Println(fmt.Sprintf(
+		desc.Text(text.DescKeyWriteSetupDeployComplete), tool))
+	cmd.Println(fmt.Sprintf(
+		desc.Text(text.DescKeyWriteSetupDeployMCP), mcpPath))
+	cmd.Println(fmt.Sprintf(
+		desc.Text(text.DescKeyWriteSetupDeploySteering),
+		steeringPath))
 }
 
 // DeployFileExists prints that a file already exists and was skipped.
@@ -331,7 +335,8 @@ func DeployComplete(cmd *cobra.Command, tool, mcpPath, steeringPath string) {
 //   - cmd: Cobra command for output
 //   - path: Path to the existing file
 func DeployFileExists(cmd *cobra.Command, path string) {
-	cmd.Println(fmt.Sprintf("\u2713 %s already exists (skipped)", path))
+	cmd.Println(fmt.Sprintf(
+		desc.Text(text.DescKeyWriteSetupDeployExists), path))
 }
 
 // DeployFileCreated prints that a file was created.
@@ -340,7 +345,8 @@ func DeployFileExists(cmd *cobra.Command, path string) {
 //   - cmd: Cobra command for output
 //   - path: Path to the created file
 func DeployFileCreated(cmd *cobra.Command, path string) {
-	cmd.Println(fmt.Sprintf("\u2713 Created %s", path))
+	cmd.Println(fmt.Sprintf(
+		desc.Text(text.DescKeyWriteSetupDeployCreated), path))
 }
 
 // DeploySteeringSynced prints that a steering file was synced.
@@ -349,7 +355,8 @@ func DeployFileCreated(cmd *cobra.Command, path string) {
 //   - cmd: Cobra command for output
 //   - name: Name of the synced file
 func DeploySteeringSynced(cmd *cobra.Command, name string) {
-	cmd.Println(fmt.Sprintf("\u2713 Synced steering: %s", name))
+	cmd.Println(fmt.Sprintf(
+		desc.Text(text.DescKeyWriteSetupDeploySynced), name))
 }
 
 // DeploySteeringSkipped prints that a steering file was skipped.
@@ -358,7 +365,9 @@ func DeploySteeringSynced(cmd *cobra.Command, name string) {
 //   - cmd: Cobra command for output
 //   - name: Name of the skipped file
 func DeploySteeringSkipped(cmd *cobra.Command, name string) {
-	cmd.Println(fmt.Sprintf("  Skipped steering: %s (unchanged)", name))
+	cmd.Println(fmt.Sprintf(
+		desc.Text(text.DescKeyWriteSetupDeploySkipSteer),
+		name))
 }
 
 // msgNoSteeringToSync is the message when no steering files

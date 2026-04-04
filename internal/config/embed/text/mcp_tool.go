@@ -45,3 +45,10 @@ const (
 	DescKeyMCPToolPropSearchQuery   = "mcp.tool-prop-search-query"
 	DescKeyMCPToolPropSummary       = "mcp.tool-prop-summary"
 )
+
+// DescKeys for MCP handler steering/search output.
+const (
+	DescKeyMCPSteeringSection = "mcp.steering-section"
+	DescKeyMCPSearchHitLine   = "mcp.search-hit-line"
+	DescKeyMCPSearchNoMatch   = "mcp.search-no-match"
+)

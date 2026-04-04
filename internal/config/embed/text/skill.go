@@ -8,6 +8,11 @@ package text
 
 // DescKeys for skill display write output.
 const (
-	DescKeyWriteSkillLine    = "write.skill-line"
-	DescKeyWriteSkillsHeader = "write.skills-header"
+	DescKeyWriteSkillLine      = "write.skill-line"
+	DescKeyWriteSkillsHeader   = "write.skills-header"
+	DescKeyWriteSkillInstalled = "write.skill-installed"
+	DescKeyWriteSkillEntryDesc = "write.skill-entry-desc"
+	DescKeyWriteSkillEntry     = "write.skill-entry"
+	DescKeyWriteSkillCount     = "write.skill-count"
+	DescKeyWriteSkillRemoved   = "write.skill-removed"
 )

@@ -14,6 +14,8 @@ import (
 	"path/filepath"
 	"strings"
 
+	"github.com/ActiveMemory/ctx/internal/assets/read/desc"
+	"github.com/ActiveMemory/ctx/internal/config/embed/text"
 	errMcp "github.com/ActiveMemory/ctx/internal/err/mcp"
 	ctxIo "github.com/ActiveMemory/ctx/internal/io"
 	"github.com/ActiveMemory/ctx/internal/rc"
@@ -60,7 +62,9 @@ func (h *Handler) SteeringGet(prompt string) (string, error) {
 
 	var sb strings.Builder
 	for _, sf := range filtered {
-		fmt.Fprintf(&sb, "## %s\n\n%s\n\n", sf.Name, sf.Body)
+		fmt.Fprintf(&sb,
+			desc.Text(text.DescKeyMCPSteeringSection),
+			sf.Name, sf.Body)
 	}
 
 	return sb.String(), nil
@@ -105,14 +109,18 @@ func (h *Handler) Search(query string) (string, error) {
 			lineNum++
 			line := scanner.Text()
 			if strings.Contains(strings.ToLower(line), queryLower) {
-				fmt.Fprintf(&sb, "%s:%d: %s\n", e.Name(), lineNum, line)
+				fmt.Fprintf(&sb,
+					desc.Text(text.DescKeyMCPSearchHitLine),
+					e.Name(), lineNum, line)
 				matches++
 			}
 		}
 	}
 
 	if matches == 0 {
-		return fmt.Sprintf("No matches for %q in %s.", query, h.ContextDir), nil
+		return fmt.Sprintf(
+			desc.Text(text.DescKeyMCPSearchNoMatch),
+			query, h.ContextDir), nil
 	}
 
 	return sb.String(), nil

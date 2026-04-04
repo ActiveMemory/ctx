@@ -58,6 +58,7 @@ const (
 	DescKeyDriftInvalidTool          = "drift.invalid-tool"
 	DescKeyDriftHookNoExec           = "drift.hook-no-exec"
 	DescKeyDriftStaleSyncFile        = "drift.stale-sync-file"
+	DescKeyDriftToolSuffix           = "drift.tool-suffix"
 	DescKeyVersionDriftRelayMessage  = "version-drift.relay-message"
 	DescKeyWriteVersionDriftFallback = "write.version-drift-fallback"
 )

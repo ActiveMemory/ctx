@@ -11,6 +11,8 @@ import (
 	"path/filepath"
 	"sort"
 
+	"github.com/ActiveMemory/ctx/internal/assets/read/desc"
+	"github.com/ActiveMemory/ctx/internal/config/embed/text"
 	"github.com/ActiveMemory/ctx/internal/config/fs"
 	"github.com/ActiveMemory/ctx/internal/config/warn"
 	ctxIo "github.com/ActiveMemory/ctx/internal/io"
@@ -59,7 +61,9 @@ func Discover(hooksDir string) (map[HookType][]HookInfo, error) {
 
 			validateErr := ValidatePath(hooksDir, path)
 			if validateErr != nil {
-				ctxLog.Warn("hook skip %s: %v", path, validateErr)
+				ctxLog.Warn(
+					desc.Text(text.DescKeyTriggerSkipWarn),
+					path, validateErr)
 				continue
 			}
 

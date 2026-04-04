@@ -702,6 +702,41 @@ func Journal(cmd *cobra.Command, ...) {
 
 ---
 
+## Predicate Naming (no `Is`/`Has`/`Can` prefix)
+
+**Test:** None (manual review convention)
+
+Exported methods that return `bool` must not use `Is`, `Has`, or
+`Can` prefixes. The predicate reads more naturally without them,
+especially at call sites where the package name provides context.
+
+**Before:**
+
+```go
+func IsCompleted(t *Task) bool { ... }
+func HasChildren(n *Node) bool { ... }
+func IsExemptPackage(path string) bool { ... }
+```
+
+**After:**
+
+```go
+func Completed(t *Task) bool { ... }
+func Children(n *Node) bool { ... }  // or: ChildCount > 0
+func ExemptPackage(path string) bool { ... }
+```
+
+**Rule:** Drop the prefix. Private helpers may use prefixes when it
+reads more naturally (`isValid` in a local context is fine). This
+convention applies to exported methods and package-level functions.
+See CONVENTIONS.md "Predicates" section.
+
+This is not yet enforced by an AST test — it requires semantic
+understanding of return types and naming intent that makes automated
+detection fragile. Apply during code review.
+
+---
+
 ## Mixed Visibility
 
 **Test:** `TestNoMixedVisibility`

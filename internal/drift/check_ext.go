@@ -143,7 +143,9 @@ func checkSyncStaleness(report *Report) {
 				File:    name,
 				Type:    IssueStaleSyncFile,
 				Message: desc.Text(text.DescKeyDriftStaleSyncFile),
-				Path:    fmt.Sprintf("%s (tool: %s)", name, tool),
+				Path: fmt.Sprintf(
+					desc.Text(text.DescKeyDriftToolSuffix),
+					name, tool),
 			})
 			found = true
 		}
