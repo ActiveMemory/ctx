@@ -3,6 +3,8 @@
 <!-- INDEX:START -->
 | Date | Decision |
 |----|--------|
+| 2026-04-04 | TestNoMagicStrings and TestNoMagicValues no longer exempt const/var definitions outside config/ |
+| 2026-04-04 | String-typed enums belong in config/, not domain packages |
 | 2026-04-03 | Output functions belong in write/ (consolidated) |
 | 2026-04-03 | YAML text externalization pipeline (consolidated) |
 | 2026-04-03 | Package taxonomy and code placement (consolidated) |
@@ -113,6 +115,34 @@ For significant decisions:
 ✗ No real alternatives existed
 
 -->
+
+## [2026-04-04-025755] TestNoMagicStrings and TestNoMagicValues no longer exempt const/var definitions outside config/
+
+**Status**: Accepted
+
+**Context**: The isConstDef/isVarDef blanket exemption masked 156+ string and 7 numeric constants in the wrong package
+
+**Decision**: TestNoMagicStrings and TestNoMagicValues no longer exempt const/var definitions outside config/
+
+**Rationale**: Const definitions outside config/ are magic values in the wrong place — naming them does not fix the structural problem
+
+**Consequence**: All new code with string/numeric constants outside config/ fails these tests immediately
+
+---
+
+## [2026-04-04-025746] String-typed enums belong in config/, not domain packages
+
+**Status**: Accepted
+
+**Context**: Debated whether type IssueType string with const values belongs in domain or config. The string value is the same regardless of type annotation.
+
+**Decision**: String-typed enums belong in config/, not domain packages
+
+**Rationale**: Types without behavior belong in config. Promote to entity/ only when methods/interfaces appear.
+
+**Consequence**: All type Foo string + const blocks outside config/ are now caught by TestNoMagicStrings.
+
+---
 
 ## [2026-04-03-180000] Output functions belong in write/ (consolidated)
 

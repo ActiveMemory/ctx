@@ -36,7 +36,7 @@ var syncableTools = []string{
 func SyncTool(
 	steeringDir, projectRoot, tool string,
 ) (SyncReport, error) {
-	if !isSyncableTool(tool) {
+	if !syncableTool(tool) {
 		supported := strings.Join(
 			syncableTools, token.CommaSpace,
 		)
@@ -116,7 +116,7 @@ func SyncAll(
 // Returns nil if no stale files are found or if the steering
 // directory cannot be read.
 func StaleFiles(steeringDir, projectRoot, tool string) []string {
-	if !isSyncableTool(tool) {
+	if !syncableTool(tool) {
 		return nil
 	}
 
