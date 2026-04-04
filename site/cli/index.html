@@ -3646,6 +3646,10 @@
 <td><code>--allow-outside-cwd</code></td>
 <td>Allow context directory outside current working directory</td>
 </tr>
+<tr>
+<td><code>--tool &lt;name&gt;</code></td>
+<td>Override active AI tool identifier (e.g. <code>kiro</code>, <code>cursor</code>)</td>
+</tr>
 </tbody>
 </table>
 <p><strong>Initialization required.</strong> Most commands require a <code>.context/</code> directory
@@ -3795,6 +3799,18 @@ own guards and no-op gracefully.</p>
 <td>MCP server for AI tool integration (stdin/stdout)</td>
 </tr>
 <tr>
+<td><a href="tools/#ctx-steering"><code>ctx steering</code></a></td>
+<td>Manage steering files (behavioral rules for AI tools)</td>
+</tr>
+<tr>
+<td><a href="tools/#ctx-hook"><code>ctx hook</code></a></td>
+<td>Manage lifecycle hooks (shell scripts for automation)</td>
+</tr>
+<tr>
+<td><a href="tools/#ctx-skill"><code>ctx skill</code></a></td>
+<td>Manage reusable instruction bundles</td>
+</tr>
+<tr>
 <td><a href="config/#ctx-config"><code>ctx config</code></a></td>
 <td>Manage runtime configuration profiles</td>
 </tr>
@@ -3904,6 +3920,15 @@ own guards and no-op gracefully.</p>
 </span><span id="__span-1-32"><a id="__codelineno-1-32" name="__codelineno-1-32" href="#__codelineno-1-32"></a><span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">nudge</span>
 </span><span id="__span-1-33"><a id="__codelineno-1-33" name="__codelineno-1-33" href="#__codelineno-1-33"></a><span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">relay</span>
 </span><span id="__span-1-34"><a id="__codelineno-1-34" name="__codelineno-1-34" href="#__codelineno-1-34"></a><span class="w">    </span><span class="c1"># - heartbeat            # Every-prompt session-alive signal</span>
+</span><span id="__span-1-35"><a id="__codelineno-1-35" name="__codelineno-1-35" href="#__codelineno-1-35"></a><span class="nt">tool</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;&quot;</span><span class="w">                     </span><span class="c1"># Active AI tool: claude, cursor, cline, kiro, codex</span>
+</span><span id="__span-1-36"><a id="__codelineno-1-36" name="__codelineno-1-36" href="#__codelineno-1-36"></a><span class="nt">steering</span><span class="p">:</span><span class="w">                    </span><span class="c1"># Steering layer configuration</span>
+</span><span id="__span-1-37"><a id="__codelineno-1-37" name="__codelineno-1-37" href="#__codelineno-1-37"></a><span class="w">  </span><span class="nt">dir</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">.context/steering</span><span class="w">     </span><span class="c1"># Steering files directory</span>
+</span><span id="__span-1-38"><a id="__codelineno-1-38" name="__codelineno-1-38" href="#__codelineno-1-38"></a><span class="w">  </span><span class="nt">default_inclusion</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">manual</span><span class="w">  </span><span class="c1"># Default inclusion mode (always, auto, manual)</span>
+</span><span id="__span-1-39"><a id="__codelineno-1-39" name="__codelineno-1-39" href="#__codelineno-1-39"></a><span class="w">  </span><span class="nt">default_tools</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[]</span><span class="w">          </span><span class="c1"># Default tool filter for new steering files</span>
+</span><span id="__span-1-40"><a id="__codelineno-1-40" name="__codelineno-1-40" href="#__codelineno-1-40"></a><span class="nt">hooks</span><span class="p">:</span><span class="w">                       </span><span class="c1"># Hook system configuration</span>
+</span><span id="__span-1-41"><a id="__codelineno-1-41" name="__codelineno-1-41" href="#__codelineno-1-41"></a><span class="w">  </span><span class="nt">dir</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">.context/hooks</span><span class="w">        </span><span class="c1"># Hook scripts directory</span>
+</span><span id="__span-1-42"><a id="__codelineno-1-42" name="__codelineno-1-42" href="#__codelineno-1-42"></a><span class="w">  </span><span class="nt">timeout</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">10</span><span class="w">                </span><span class="c1"># Per-hook execution timeout in seconds</span>
+</span><span id="__span-1-43"><a id="__codelineno-1-43" name="__codelineno-1-43" href="#__codelineno-1-43"></a><span class="w">  </span><span class="nt">enabled</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span><span class="w">              </span><span class="c1"># Whether hook execution is enabled</span>
 </span></code></pre></div>
 <table>
 <thead>
@@ -4028,6 +4053,48 @@ own guards and no-op gracefully.</p>
 <td><code>[]string</code></td>
 <td><em>(all)</em></td>
 <td>Event filter for webhook notifications (empty = all)</td>
+</tr>
+<tr>
+<td><code>tool</code></td>
+<td><code>string</code></td>
+<td><em>(empty)</em></td>
+<td>Active AI tool identifier (<code>claude</code>, <code>cursor</code>, <code>cline</code>, <code>kiro</code>, <code>codex</code>)</td>
+</tr>
+<tr>
+<td><code>steering.dir</code></td>
+<td><code>string</code></td>
+<td><code>.context/steering</code></td>
+<td>Steering files directory</td>
+</tr>
+<tr>
+<td><code>steering.default_inclusion</code></td>
+<td><code>string</code></td>
+<td><code>manual</code></td>
+<td>Default inclusion mode for new steering files (<code>always</code>, <code>auto</code>, <code>manual</code>)</td>
+</tr>
+<tr>
+<td><code>steering.default_tools</code></td>
+<td><code>[]string</code></td>
+<td><em>(all)</em></td>
+<td>Default tool filter for new steering files (empty = all tools)</td>
+</tr>
+<tr>
+<td><code>hooks.dir</code></td>
+<td><code>string</code></td>
+<td><code>.context/hooks</code></td>
+<td>Hook scripts directory</td>
+</tr>
+<tr>
+<td><code>hooks.timeout</code></td>
+<td><code>int</code></td>
+<td><code>10</code></td>
+<td>Per-hook execution timeout in seconds</td>
+</tr>
+<tr>
+<td><code>hooks.enabled</code></td>
+<td><code>bool</code></td>
+<td><code>true</code></td>
+<td>Whether hook execution is enabled</td>
 </tr>
 </tbody>
 </table>

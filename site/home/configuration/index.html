@@ -4161,15 +4161,27 @@ and <a href="#cli-global-flags">CLI Global Flags</a> below for details.</p>
 </span><span id="__span-1-28"><a id="__codelineno-1-28" name="__codelineno-1-28" href="#__codelineno-1-28"></a><span class="c1">#     - nudge</span>
 </span><span id="__span-1-29"><a id="__codelineno-1-29" name="__codelineno-1-29" href="#__codelineno-1-29"></a><span class="c1">#     - relay</span>
 </span><span id="__span-1-30"><a id="__codelineno-1-30" name="__codelineno-1-30" href="#__codelineno-1-30"></a><span class="c1">#</span>
-</span><span id="__span-1-31"><a id="__codelineno-1-31" name="__codelineno-1-31" href="#__codelineno-1-31"></a><span class="c1"># priority_order:</span>
-</span><span id="__span-1-32"><a id="__codelineno-1-32" name="__codelineno-1-32" href="#__codelineno-1-32"></a><span class="c1">#   - CONSTITUTION.md</span>
-</span><span id="__span-1-33"><a id="__codelineno-1-33" name="__codelineno-1-33" href="#__codelineno-1-33"></a><span class="c1">#   - TASKS.md</span>
-</span><span id="__span-1-34"><a id="__codelineno-1-34" name="__codelineno-1-34" href="#__codelineno-1-34"></a><span class="c1">#   - CONVENTIONS.md</span>
-</span><span id="__span-1-35"><a id="__codelineno-1-35" name="__codelineno-1-35" href="#__codelineno-1-35"></a><span class="c1">#   - ARCHITECTURE.md</span>
-</span><span id="__span-1-36"><a id="__codelineno-1-36" name="__codelineno-1-36" href="#__codelineno-1-36"></a><span class="c1">#   - DECISIONS.md</span>
-</span><span id="__span-1-37"><a id="__codelineno-1-37" name="__codelineno-1-37" href="#__codelineno-1-37"></a><span class="c1">#   - LEARNINGS.md</span>
-</span><span id="__span-1-38"><a id="__codelineno-1-38" name="__codelineno-1-38" href="#__codelineno-1-38"></a><span class="c1">#   - GLOSSARY.md</span>
-</span><span id="__span-1-39"><a id="__codelineno-1-39" name="__codelineno-1-39" href="#__codelineno-1-39"></a><span class="c1">#   - AGENT_PLAYBOOK.md</span>
+</span><span id="__span-1-31"><a id="__codelineno-1-31" name="__codelineno-1-31" href="#__codelineno-1-31"></a><span class="c1"># tool: &quot;&quot;              # Active AI tool: claude, cursor, cline, kiro, codex</span>
+</span><span id="__span-1-32"><a id="__codelineno-1-32" name="__codelineno-1-32" href="#__codelineno-1-32"></a><span class="c1">#</span>
+</span><span id="__span-1-33"><a id="__codelineno-1-33" name="__codelineno-1-33" href="#__codelineno-1-33"></a><span class="c1"># steering:             # Steering layer configuration</span>
+</span><span id="__span-1-34"><a id="__codelineno-1-34" name="__codelineno-1-34" href="#__codelineno-1-34"></a><span class="c1">#   dir: .context/steering</span>
+</span><span id="__span-1-35"><a id="__codelineno-1-35" name="__codelineno-1-35" href="#__codelineno-1-35"></a><span class="c1">#   default_inclusion: manual</span>
+</span><span id="__span-1-36"><a id="__codelineno-1-36" name="__codelineno-1-36" href="#__codelineno-1-36"></a><span class="c1">#   default_tools: []</span>
+</span><span id="__span-1-37"><a id="__codelineno-1-37" name="__codelineno-1-37" href="#__codelineno-1-37"></a><span class="c1">#</span>
+</span><span id="__span-1-38"><a id="__codelineno-1-38" name="__codelineno-1-38" href="#__codelineno-1-38"></a><span class="c1"># hooks:                # Hook system configuration</span>
+</span><span id="__span-1-39"><a id="__codelineno-1-39" name="__codelineno-1-39" href="#__codelineno-1-39"></a><span class="c1">#   dir: .context/hooks</span>
+</span><span id="__span-1-40"><a id="__codelineno-1-40" name="__codelineno-1-40" href="#__codelineno-1-40"></a><span class="c1">#   timeout: 10</span>
+</span><span id="__span-1-41"><a id="__codelineno-1-41" name="__codelineno-1-41" href="#__codelineno-1-41"></a><span class="c1">#   enabled: true</span>
+</span><span id="__span-1-42"><a id="__codelineno-1-42" name="__codelineno-1-42" href="#__codelineno-1-42"></a><span class="c1">#</span>
+</span><span id="__span-1-43"><a id="__codelineno-1-43" name="__codelineno-1-43" href="#__codelineno-1-43"></a><span class="c1"># priority_order:</span>
+</span><span id="__span-1-44"><a id="__codelineno-1-44" name="__codelineno-1-44" href="#__codelineno-1-44"></a><span class="c1">#   - CONSTITUTION.md</span>
+</span><span id="__span-1-45"><a id="__codelineno-1-45" name="__codelineno-1-45" href="#__codelineno-1-45"></a><span class="c1">#   - TASKS.md</span>
+</span><span id="__span-1-46"><a id="__codelineno-1-46" name="__codelineno-1-46" href="#__codelineno-1-46"></a><span class="c1">#   - CONVENTIONS.md</span>
+</span><span id="__span-1-47"><a id="__codelineno-1-47" name="__codelineno-1-47" href="#__codelineno-1-47"></a><span class="c1">#   - ARCHITECTURE.md</span>
+</span><span id="__span-1-48"><a id="__codelineno-1-48" name="__codelineno-1-48" href="#__codelineno-1-48"></a><span class="c1">#   - DECISIONS.md</span>
+</span><span id="__span-1-49"><a id="__codelineno-1-49" name="__codelineno-1-49" href="#__codelineno-1-49"></a><span class="c1">#   - LEARNINGS.md</span>
+</span><span id="__span-1-50"><a id="__codelineno-1-50" name="__codelineno-1-50" href="#__codelineno-1-50"></a><span class="c1">#   - GLOSSARY.md</span>
+</span><span id="__span-1-51"><a id="__codelineno-1-51" name="__codelineno-1-51" href="#__codelineno-1-51"></a><span class="c1">#   - AGENT_PLAYBOOK.md</span>
 </span></code></pre></div>
 <!-- drift-check: diff <(grep 'yaml:' internal/rc/types.go | grep -oP '"[a-z_]+"' | tr -d '"' | sort -u | grep -v 'desc\|events\|path\|review_url\|profile\|key_path') <(sed -n '/Option Reference/,/^\*\*Default/p' docs/home/configuration.md | grep -oP '`([a-z_.]+)`' | tr -d '`' | sed 's/notify\.events/notify/' | sort -u | grep -v 'string\|int\|bool\|\[\]') -->
 <h3 id="option-reference">Option Reference<a class="headerlink" href="#option-reference" title="Permanent link">&para;</a></h3>
@@ -4291,6 +4303,48 @@ and <a href="#cli-global-flags">CLI Global Flags</a> below for details.</p>
 <td><em>(see below)</em></td>
 <td>Custom file loading priority for context assembly</td>
 </tr>
+<tr>
+<td><code>tool</code></td>
+<td><code>string</code></td>
+<td><em>(empty)</em></td>
+<td>Active AI tool identifier (<code>claude</code>, <code>cursor</code>, <code>cline</code>, <code>kiro</code>, <code>codex</code>). Used by steering sync and hook dispatch</td>
+</tr>
+<tr>
+<td><code>steering.dir</code></td>
+<td><code>string</code></td>
+<td><code>.context/steering</code></td>
+<td>Steering files directory</td>
+</tr>
+<tr>
+<td><code>steering.default_inclusion</code></td>
+<td><code>string</code></td>
+<td><code>manual</code></td>
+<td>Default inclusion mode for new steering files (<code>always</code>, <code>auto</code>, <code>manual</code>)</td>
+</tr>
+<tr>
+<td><code>steering.default_tools</code></td>
+<td><code>[]string</code></td>
+<td><em>(all)</em></td>
+<td>Default tool filter for new steering files (empty = all tools)</td>
+</tr>
+<tr>
+<td><code>hooks.dir</code></td>
+<td><code>string</code></td>
+<td><code>.context/hooks</code></td>
+<td>Hook scripts directory</td>
+</tr>
+<tr>
+<td><code>hooks.timeout</code></td>
+<td><code>int</code></td>
+<td><code>10</code></td>
+<td>Per-hook execution timeout in seconds</td>
+</tr>
+<tr>
+<td><code>hooks.enabled</code></td>
+<td><code>bool</code></td>
+<td><code>true</code></td>
+<td>Whether hook execution is enabled</td>
+</tr>
 </tbody>
 </table>
 <p><strong>Default priority order</strong> (<em>used when <code>priority_order</code> is not set</em>):</p>
@@ -4358,6 +4412,10 @@ behind this ordering.</p>
 <tr>
 <td><code>--allow-outside-cwd</code></td>
 <td>Allow context directory outside current working directory</td>
+</tr>
+<tr>
+<td><code>--tool &lt;name&gt;</code></td>
+<td>Override active AI tool identifier (e.g. <code>kiro</code>, <code>cursor</code>)</td>
 </tr>
 <tr>
 <td><code>--version</code></td>

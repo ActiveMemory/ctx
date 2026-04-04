@@ -952,6 +952,17 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#3b-set-up-for-your-ai-tool" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3b. Set Up for Your AI Tool
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#4-verify-it-works" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -3781,6 +3792,17 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#3b-set-up-for-your-ai-tool" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3b. Set Up for Your AI Tool
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#4-verify-it-works" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -4041,6 +4063,31 @@ for automatic context loading.</p>
 <p>For other tools, paste the output of:</p>
 <div class="language-bash highlight"><pre><span></span><code><span id="__span-12-1"><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a>ctx<span class="w"> </span>agent<span class="w"> </span>--budget<span class="w"> </span><span class="m">8000</span>
 </span></code></pre></div>
+<h3 id="3b-set-up-for-your-ai-tool">3b. Set Up for Your AI Tool<a class="headerlink" href="#3b-set-up-for-your-ai-tool" title="Permanent link">&para;</a></h3>
+<p>If you use an MCP-compatible tool, generate the integration config
+with <code>ctx setup</code>:</p>
+<div class="tabbed-set tabbed-alternate" data-tabs="2:3"><input checked="checked" id="__tabbed_2_1" name="__tabbed_2" type="radio" /><input id="__tabbed_2_2" name="__tabbed_2" type="radio" /><input id="__tabbed_2_3" name="__tabbed_2" type="radio" /><div class="tabbed-labels"><label for="__tabbed_2_1">Kiro</label><label for="__tabbed_2_2">Cursor</label><label for="__tabbed_2_3">Cline</label></div>
+<div class="tabbed-content">
+<div class="tabbed-block">
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-13-1"><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a>ctx<span class="w"> </span>setup<span class="w"> </span>kiro<span class="w"> </span>--write
+</span><span id="__span-13-2"><a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a><span class="c1"># Creates .kiro/settings/mcp.json and syncs steering files</span>
+</span></code></pre></div>
+</div>
+<div class="tabbed-block">
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-14-1"><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a>ctx<span class="w"> </span>setup<span class="w"> </span>cursor<span class="w"> </span>--write
+</span><span id="__span-14-2"><a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a><span class="c1"># Creates .cursor/mcp.json and syncs steering files</span>
+</span></code></pre></div>
+</div>
+<div class="tabbed-block">
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-15-1"><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a>ctx<span class="w"> </span>setup<span class="w"> </span>cline<span class="w"> </span>--write
+</span><span id="__span-15-2"><a id="__codelineno-15-2" name="__codelineno-15-2" href="#__codelineno-15-2"></a><span class="c1"># Creates .vscode/mcp.json and syncs steering files</span>
+</span></code></pre></div>
+</div>
+</div>
+</div>
+<p>This registers the ctx MCP server and syncs any
+<a href="../../cli/tools/#ctx-steering">steering files</a> into the tool's
+native format. Re-run after adding or changing steering files.</p>
 <h3 id="4-verify-it-works">4. Verify It Works<a class="headerlink" href="#4-verify-it-works" title="Permanent link">&para;</a></h3>
 <p>Ask your AI: <strong>"Do you remember?"</strong></p>
 <p>It should cite specific context: current tasks, recent decisions,
@@ -4063,8 +4110,8 @@ over sessions:</p>
   use it for impact analysis and dependency awareness.</p>
 </li>
 </ul>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-13-1"><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a><span class="c1"># Index your project for GitNexus (run once, then after major changes)</span>
-</span><span id="__span-13-2"><a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a>npx<span class="w"> </span>gitnexus<span class="w"> </span>analyze
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-16-1"><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a><span class="c1"># Index your project for GitNexus (run once, then after major changes)</span>
+</span><span id="__span-16-2"><a id="__codelineno-16-2" name="__codelineno-16-2" href="#__codelineno-16-2"></a>npx<span class="w"> </span>gitnexus<span class="w"> </span>analyze
 </span></code></pre></div>
 <p>Both are optional MCP servers: if they are not connected, skills degrade
 gracefully to built-in capabilities. See
