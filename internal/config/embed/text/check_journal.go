@@ -8,10 +8,22 @@ package text
 
 // DescKeys for journal checks.
 const (
-	DescKeyCheckJournalBoxTitle           = "check-journal.box-title"
-	DescKeyCheckJournalFallbackBoth       = "check-journal.fallback-both"
+	// DescKeyCheckJournalBoxTitle is the text key for check journal box title
+	// messages.
+	DescKeyCheckJournalBoxTitle = "check-journal.box-title"
+	// DescKeyCheckJournalFallbackBoth is the text key for check journal fallback
+	// both messages.
+	DescKeyCheckJournalFallbackBoth = "check-journal.fallback-both"
+	// DescKeyCheckJournalFallbackUnenriched is the text key for check journal
+	// fallback unenriched messages.
 	DescKeyCheckJournalFallbackUnenriched = "check-journal.fallback-unenriched"
+	// DescKeyCheckJournalFallbackUnimported is the text key for check journal
+	// fallback unimported messages.
 	DescKeyCheckJournalFallbackUnimported = "check-journal.fallback-unimported"
-	DescKeyCheckJournalRelayFormat        = "check-journal.relay-format"
-	DescKeyCheckJournalRelayPrefix        = "check-journal.relay-prefix"
+	// DescKeyCheckJournalRelayFormat is the text key for check journal relay
+	// format messages.
+	DescKeyCheckJournalRelayFormat = "check-journal.relay-format"
+	// DescKeyCheckJournalRelayPrefix is the text key for check journal relay
+	// prefix messages.
+	DescKeyCheckJournalRelayPrefix = "check-journal.relay-prefix"
 )

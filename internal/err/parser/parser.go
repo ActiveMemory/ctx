@@ -7,11 +7,38 @@
 package parser
 
 import (
+	"errors"
 	"fmt"
 
 	"github.com/ActiveMemory/ctx/internal/assets/read/desc"
 	"github.com/ActiveMemory/ctx/internal/config/embed/text"
 )
+
+// MissingOpenDelim returns an error for a missing
+// opening frontmatter delimiter (---).
+//
+// Returns:
+//   - error: "missing opening frontmatter delimiter"
+func MissingOpenDelim() error {
+	return errors.New(
+		desc.Text(
+			text.DescKeyErrParserMissingOpenDelim,
+		),
+	)
+}
+
+// MissingCloseDelim returns an error for a missing
+// closing frontmatter delimiter (---).
+//
+// Returns:
+//   - error: "missing closing frontmatter delimiter"
+func MissingCloseDelim() error {
+	return errors.New(
+		desc.Text(
+			text.DescKeyErrParserMissingCloseDelim,
+		),
+	)
+}
 
 // ReadFile wraps a session file read failure.
 //

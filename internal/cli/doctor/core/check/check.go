@@ -25,6 +25,7 @@ import (
 	"github.com/ActiveMemory/ctx/internal/config/regex"
 	"github.com/ActiveMemory/ctx/internal/config/reminder"
 	"github.com/ActiveMemory/ctx/internal/config/stats"
+	cfgSysinfo "github.com/ActiveMemory/ctx/internal/config/sysinfo"
 	cfgToken "github.com/ActiveMemory/ctx/internal/config/token"
 	"github.com/ActiveMemory/ctx/internal/context/load"
 	"github.com/ActiveMemory/ctx/internal/context/token"
@@ -623,7 +624,7 @@ func AddResourceResults(
 			snap.Memory.TotalBytes,
 			text.DescKeyDoctorResourceMemoryFormat,
 			doctor.CheckResourceMemory,
-			sysinfo.ResourceMemory,
+			cfgSysinfo.ResourceMemory,
 		},
 		{
 			snap.Memory.Supported,
@@ -631,7 +632,7 @@ func AddResourceResults(
 			snap.Memory.SwapTotalBytes,
 			text.DescKeyDoctorResourceSwapFormat,
 			doctor.CheckResourceSwap,
-			sysinfo.ResourceSwap,
+			cfgSysinfo.ResourceSwap,
 		},
 		{
 			snap.Disk.Supported,
@@ -639,7 +640,7 @@ func AddResourceResults(
 			snap.Disk.TotalBytes,
 			text.DescKeyDoctorResourceDiskFormat,
 			doctor.CheckResourceDisk,
-			sysinfo.ResourceDisk,
+			cfgSysinfo.ResourceDisk,
 		},
 	}
 	for _, bc := range byteChecks {
@@ -669,7 +670,7 @@ func AddResourceResults(
 			Name:     doctor.CheckResourceLoad,
 			Category: doctor.CategoryResources,
 			Status: SeverityToStatus(
-				sevMap[sysinfo.ResourceLoad],
+				sevMap[cfgSysinfo.ResourceLoad],
 			),
 			Message: msg,
 		})

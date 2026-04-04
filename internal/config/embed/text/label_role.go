@@ -8,6 +8,8 @@ package text
 
 // Role labels (headings.yaml).
 const (
-	DescKeyLabelRoleUser      = "label.role-user"
+	// DescKeyLabelRoleUser is the text key for label role user messages.
+	DescKeyLabelRoleUser = "label.role-user"
+	// DescKeyLabelRoleAssistant is the text key for label role assistant messages.
 	DescKeyLabelRoleAssistant = "label.role-assistant"
 )

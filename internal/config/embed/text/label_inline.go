@@ -8,6 +8,8 @@ package text
 
 // DescKeys for inline display labels.
 const (
-	DescKeyLabelInlineTool  = "label.inline-tool"
+	// DescKeyLabelInlineTool is the text key for label inline tool messages.
+	DescKeyLabelInlineTool = "label.inline-tool"
+	// DescKeyLabelInlineError is the text key for label inline error messages.
 	DescKeyLabelInlineError = "label.inline-error"
 )

@@ -8,6 +8,8 @@ package cmd
 
 // DescKeys for philosophy subcommands.
 const (
+	// DescKeyGuide is the description key for the guide command.
 	DescKeyGuide = "guide"
-	DescKeyWhy   = "why"
+	// DescKeyWhy is the description key for the why command.
+	DescKeyWhy = "why"
 )

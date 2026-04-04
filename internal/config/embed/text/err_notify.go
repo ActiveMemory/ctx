@@ -8,9 +8,19 @@ package text
 
 // DescKeys for notifications errors.
 const (
-	DescKeyErrNotifyLoadWebhook      = "err.notify.load-webhook"
-	DescKeyErrNotifyMarshalPayload   = "err.notify.marshal-payload"
-	DescKeyErrNotifySaveWebhook      = "err.notify.save-webhook"
+	// DescKeyErrNotifyLoadWebhook is the text key for err notify load webhook
+	// messages.
+	DescKeyErrNotifyLoadWebhook = "err.notify.load-webhook"
+	// DescKeyErrNotifyMarshalPayload is the text key for err notify marshal
+	// payload messages.
+	DescKeyErrNotifyMarshalPayload = "err.notify.marshal-payload"
+	// DescKeyErrNotifySaveWebhook is the text key for err notify save webhook
+	// messages.
+	DescKeyErrNotifySaveWebhook = "err.notify.save-webhook"
+	// DescKeyErrNotifySendNotification is the text key for err notify send
+	// notification messages.
 	DescKeyErrNotifySendNotification = "err.notify.send-notification"
-	DescKeyErrNotifyWebhookEmpty     = "err.notify.webhook-empty"
+	// DescKeyErrNotifyWebhookEmpty is the text key for err notify webhook empty
+	// messages.
+	DescKeyErrNotifyWebhookEmpty = "err.notify.webhook-empty"
 )

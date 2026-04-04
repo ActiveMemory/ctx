@@ -14,6 +14,7 @@ import (
 	"time"
 
 	"github.com/ActiveMemory/ctx/internal/cli/agent/core/budget"
+	cfgTrigger "github.com/ActiveMemory/ctx/internal/config/trigger"
 	"github.com/ActiveMemory/ctx/internal/entity"
 	"github.com/ActiveMemory/ctx/internal/skill"
 	"github.com/ActiveMemory/ctx/internal/steering"
@@ -65,7 +66,7 @@ func TestBackwardCompat_HookRunAll_NonExistentDir(t *testing.T) {
 	nonexistent := filepath.Join(t.TempDir(), "no-such-hooks")
 	input := &trigger.HookInput{TriggerType: "pre-tool-use", Tool: "test"}
 
-	agg, err := trigger.RunAll(nonexistent, trigger.PreToolUse, input, 5*time.Second)
+	agg, err := trigger.RunAll(nonexistent, cfgTrigger.PreToolUse, input, 5*time.Second)
 	if err != nil {
 		t.Fatalf("expected no error, got %v", err)
 	}

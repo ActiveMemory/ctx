@@ -17,6 +17,10 @@ import (
 	"golang.org/x/tools/go/packages"
 )
 
+// DO NOT add entries here to make tests pass. New code must
+// conform to the check. Widening requires a dedicated PR with
+// justification for each entry.
+//
 // exemptStrings lists string values always acceptable.
 var exemptStrings = map[string]bool{
 	"":     true, // empty string
@@ -27,21 +31,23 @@ var exemptStrings = map[string]bool{
 	": ":   true, // key-value separator
 }
 
+// DO NOT add entries here to make tests pass. New code must
+// conform to the check. Widening requires a dedicated PR with
+// justification for each entry.
+//
 // exemptStringPackages lists package paths fully exempt
 // from magic string checks.
 var exemptStringPackages = []string{
 	"internal/config/",
 	"internal/config",
 	"internal/assets/tpl",
-	"internal/err/",
 }
 
 // TestNoMagicStrings flags magic string literals in non-test
 // Go files under internal/.
 //
 // Exempt: empty string, single space, indentation strings,
-// single characters, format verbs, regex replacements, HTML
-// entities, URL scheme prefixes, config/tpl/err packages,
+// regex capture references, config/tpl/err packages,
 // file-level const/var definitions, import paths, struct tags.
 //
 // Test files are exempt.
@@ -74,10 +80,14 @@ func TestNoMagicStrings(t *testing.T) {
 					return true
 				}
 
-				if isConstDef(file, lit) ||
-					isVarDef(file, lit) {
-					return true
-				}
+				// Const/var definitions in exempt packages
+				// are already skipped (line 61). Outside
+				// those packages, string constants are
+				// magic strings that belong in config/.
+				//
+				// DO NOT re-add a blanket isConstDef
+				// exemption. It masks constants defined
+				// in the wrong package.
 
 				if isStructTag(file, lit) {
 					return true
@@ -127,24 +137,8 @@ func checkMagicString(
 		return
 	}
 
-	// Format verbs ("%s", "%d %s", etc.).
-	if isFormatString(s) {
-		return
-	}
-
 	// Regex capture group references.
 	if isRegexRef(s) {
-		return
-	}
-
-	// HTML entities (&lt;, &gt;, etc.).
-	if strings.HasPrefix(s, "&") &&
-		strings.HasSuffix(s, ";") {
-		return
-	}
-
-	// URL scheme prefixes.
-	if strings.HasSuffix(s, "://") {
 		return
 	}
 
@@ -163,17 +157,6 @@ func isExemptStringPackage(pkgPath string) bool {
 		}
 	}
 	return false
-}
-
-// fmtVerb matches a printf format directive.
-var fmtVerb = regexp.MustCompile(
-	`%[-+#0 ]*\d*\.?\d*[sdvqwfegxXobctpT]`,
-)
-
-// isFormatString reports whether s contains a printf
-// format directive.
-func isFormatString(s string) bool {
-	return fmtVerb.MatchString(s)
 }
 
 // regexRef matches regex capture group references.

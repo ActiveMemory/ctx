@@ -11,6 +11,9 @@ const UseLearning = "learning"
 
 // DescKeys for learning subcommands.
 const (
-	DescKeyLearning        = "learning"
+	// DescKeyLearning is the description key for the learning command.
+	DescKeyLearning = "learning"
+	// DescKeyLearningReindex is the description key for the learning reindex
+	// command.
 	DescKeyLearningReindex = "learning.reindex"
 )

@@ -8,6 +8,10 @@ package text
 
 // DescKeys for MCP event output.
 const (
+	// DescKeyMCPEventTypeRequired is the text key for mcp event type required
+	// messages.
 	DescKeyMCPEventTypeRequired = "mcp.event-type-required"
-	DescKeyMCPUnknownEventType  = "mcp.unknown-event-type"
+	// DescKeyMCPUnknownEventType is the text key for mcp unknown event type
+	// messages.
+	DescKeyMCPUnknownEventType = "mcp.unknown-event-type"
 )

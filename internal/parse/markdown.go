@@ -11,6 +11,7 @@ import (
 
 	"github.com/ActiveMemory/ctx/internal/config/regex"
 	"github.com/ActiveMemory/ctx/internal/config/token"
+	errParser "github.com/ActiveMemory/ctx/internal/err/parser"
 )
 
 // StripLineNumbers removes Claude Code's line number prefixes from content.
@@ -84,4 +85,49 @@ func FenceForContent(content string) string {
 		fence += token.Backtick
 	}
 	return fence
+}
+
+// SplitFrontmatter separates YAML frontmatter from a
+// markdown body. Frontmatter must start with a ---
+// line and end with a second --- line.
+//
+// Parameters:
+//   - data: Raw file bytes
+//
+// Returns:
+//   - []byte: YAML frontmatter (between delimiters)
+//   - string: Body after the closing delimiter
+//   - error: Non-nil if delimiters are missing
+func SplitFrontmatter(
+	data []byte,
+) ([]byte, string, error) {
+	content := strings.TrimLeft(
+		string(data), token.TrimCR,
+	)
+
+	if !strings.HasPrefix(
+		content, token.FrontmatterDelimiter,
+	) {
+		return nil, "", errParser.MissingOpenDelim()
+	}
+
+	rest := content[len(token.FrontmatterDelimiter):]
+	rest = strings.TrimPrefix(rest, token.NewlineLF)
+
+	needle := token.NewlineLF +
+		token.FrontmatterDelimiter
+	idx := strings.Index(rest, needle)
+	if idx < 0 {
+		return nil, "", errParser.MissingCloseDelim()
+	}
+
+	fm := rest[:idx]
+	after := rest[idx+1+len(
+		token.FrontmatterDelimiter,
+	):]
+	after = strings.TrimPrefix(
+		after, token.NewlineLF,
+	)
+
+	return []byte(fm), after, nil
 }

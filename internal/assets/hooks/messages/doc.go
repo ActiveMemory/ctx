@@ -9,6 +9,6 @@
 // The embedded registry.yaml maps each hook+variant pair to a
 // category and description. [Registry] returns all entries,
 // [Lookup] finds a specific one, and [Variants] enumerates
-// the available names. [CategoryCtxSpecific] marks entries
-// internal to ctx.
+// the available names. Category constants live in
+// config/hook (CategoryCustomizable, CategoryCtxSpecific).
 package messages

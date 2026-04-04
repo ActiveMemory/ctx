@@ -8,21 +8,40 @@ package text
 
 // DescKeys for publish write output.
 const (
-	DescKeyWritePublishBlock       = "write.publish-block"
-	DescKeyWritePublishBudget      = "write.publish-budget"
+	// DescKeyWritePublishBlock is the text key for write publish block messages.
+	DescKeyWritePublishBlock = "write.publish-block"
+	// DescKeyWritePublishBudget is the text key for write publish budget messages.
+	DescKeyWritePublishBudget = "write.publish-budget"
+	// DescKeyWritePublishConventions is the text key for write publish
+	// conventions messages.
 	DescKeyWritePublishConventions = "write.publish-conventions"
-	DescKeyWritePublishDecisions   = "write.publish-decisions"
-	DescKeyWritePublishDone        = "write.publish-done"
-	DescKeyWritePublishDryRun      = "write.publish-dry-run"
-	DescKeyWritePublishHeader      = "write.publish-header"
-	DescKeyWritePublishLearnings   = "write.publish-learnings"
+	// DescKeyWritePublishDecisions is the text key for write publish decisions
+	// messages.
+	DescKeyWritePublishDecisions = "write.publish-decisions"
+	// DescKeyWritePublishDone is the text key for write publish done messages.
+	DescKeyWritePublishDone = "write.publish-done"
+	// DescKeyWritePublishDryRun is the text key for write publish dry run
+	// messages.
+	DescKeyWritePublishDryRun = "write.publish-dry-run"
+	// DescKeyWritePublishHeader is the text key for write publish header messages.
+	DescKeyWritePublishHeader = "write.publish-header"
+	// DescKeyWritePublishLearnings is the text key for write publish learnings
+	// messages.
+	DescKeyWritePublishLearnings = "write.publish-learnings"
+	// DescKeyWritePublishSourceFiles is the text key for write publish source
+	// files messages.
 	DescKeyWritePublishSourceFiles = "write.publish-source-files"
-	DescKeyWritePublishTasks       = "write.publish-tasks"
-	DescKeyWritePublishTotal       = "write.publish-total"
+	// DescKeyWritePublishTasks is the text key for write publish tasks messages.
+	DescKeyWritePublishTasks = "write.publish-tasks"
+	// DescKeyWritePublishTotal is the text key for write publish total messages.
+	DescKeyWritePublishTotal = "write.publish-total"
 )
 
 // DescKeys for unpublish write output.
 const (
-	DescKeyWriteUnpublishDone     = "write.unpublish-done"
+	// DescKeyWriteUnpublishDone is the text key for write unpublish done messages.
+	DescKeyWriteUnpublishDone = "write.unpublish-done"
+	// DescKeyWriteUnpublishNotFound is the text key for write unpublish not found
+	// messages.
 	DescKeyWriteUnpublishNotFound = "write.unpublish-not-found"
 )

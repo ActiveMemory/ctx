@@ -7,7 +7,7 @@
 package export
 
 import (
-	"fmt"
+	"strconv"
 	"time"
 
 	"github.com/ActiveMemory/ctx/internal/config/token"
@@ -21,6 +21,6 @@ import (
 // Returns:
 //   - string: Label in the form "<unix_epoch>-<label>"
 func tsWithLabel(label string) string {
-	ts := fmt.Sprintf("%d", time.Now().Unix())
+	ts := strconv.FormatInt(time.Now().Unix(), 10)
 	return ts + token.Dash + label
 }

@@ -8,16 +8,25 @@ package cmd
 
 // Use strings for journal subcommands.
 const (
-	UseJournal         = "journal"
+	// UseJournal is the cobra Use string for the journal command.
+	UseJournal = "journal"
+	// UseJournalObsidian is the cobra Use string for the journal obsidian command.
 	UseJournalObsidian = "obsidian"
-	UseJournalSite     = "site"
-	UseJournalSource   = "source"
+	// UseJournalSite is the cobra Use string for the journal site command.
+	UseJournalSite = "site"
+	// UseJournalSource is the cobra Use string for the journal source command.
+	UseJournalSource = "source"
 )
 
 // DescKeys for journal subcommands.
 const (
-	DescKeyJournal         = "journal"
+	// DescKeyJournal is the description key for the journal command.
+	DescKeyJournal = "journal"
+	// DescKeyJournalObsidian is the description key for the journal obsidian
+	// command.
 	DescKeyJournalObsidian = "journal.obsidian"
-	DescKeyJournalSite     = "journal.site"
-	DescKeyJournalSource   = "journal.source"
+	// DescKeyJournalSite is the description key for the journal site command.
+	DescKeyJournalSite = "journal.site"
+	// DescKeyJournalSource is the description key for the journal source command.
+	DescKeyJournalSource = "journal.source"
 )

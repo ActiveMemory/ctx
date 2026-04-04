@@ -8,6 +8,8 @@ package flag
 
 // DescKeys for status command flags.
 const (
-	DescKeyStatusJson    = "status.json"
+	// DescKeyStatusJson is the description key for the status json flag.
+	DescKeyStatusJson = "status.json"
+	// DescKeyStatusVerbose is the description key for the status verbose flag.
 	DescKeyStatusVerbose = "status.verbose"
 )

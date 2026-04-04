@@ -14,18 +14,12 @@ import (
 	"path/filepath"
 	"strings"
 
+	"github.com/ActiveMemory/ctx/internal/assets/read/desc"
+	"github.com/ActiveMemory/ctx/internal/config/embed/text"
 	errMcp "github.com/ActiveMemory/ctx/internal/err/mcp"
 	ctxIo "github.com/ActiveMemory/ctx/internal/io"
 	"github.com/ActiveMemory/ctx/internal/rc"
 	"github.com/ActiveMemory/ctx/internal/steering"
-)
-
-// Steering result messages.
-const (
-	// msgNoSteeringFiles is returned when no steering files exist.
-	msgNoSteeringFiles = "No steering files found."
-	// msgNoMatchingSteering is returned when no files match.
-	msgNoMatchingSteering = "No matching steering files."
 )
 
 // SteeringGet returns applicable steering files for the given prompt.
@@ -43,24 +37,26 @@ func (h *Handler) SteeringGet(prompt string) (string, error) {
 	files, loadErr := steering.LoadAll(steeringDir)
 	if loadErr != nil {
 		if errors.Is(loadErr, os.ErrNotExist) {
-			return msgNoSteeringFiles, nil
+			return desc.Text(text.DescKeyMCPSteeringNoFiles), nil
 		}
 		return "", loadErr
 	}
 
 	if len(files) == 0 {
-		return msgNoSteeringFiles, nil
+		return desc.Text(text.DescKeyMCPSteeringNoFiles), nil
 	}
 
 	filtered := steering.Filter(files, prompt, nil, "")
 
 	if len(filtered) == 0 {
-		return msgNoMatchingSteering, nil
+		return desc.Text(text.DescKeyMCPSteeringNoMatch), nil
 	}
 
 	var sb strings.Builder
 	for _, sf := range filtered {
-		fmt.Fprintf(&sb, "## %s\n\n%s\n\n", sf.Name, sf.Body)
+		ctxIo.SafeFprintf(&sb,
+			desc.Text(text.DescKeyMCPSteeringSection),
+			sf.Name, sf.Body)
 	}
 
 	return sb.String(), nil
@@ -105,14 +101,18 @@ func (h *Handler) Search(query string) (string, error) {
 			lineNum++
 			line := scanner.Text()
 			if strings.Contains(strings.ToLower(line), queryLower) {
-				fmt.Fprintf(&sb, "%s:%d: %s\n", e.Name(), lineNum, line)
+				ctxIo.SafeFprintf(&sb,
+					desc.Text(text.DescKeyMCPSearchHitLine),
+					e.Name(), lineNum, line)
 				matches++
 			}
 		}
 	}
 
 	if matches == 0 {
-		return fmt.Sprintf("No matches for %q in %s.", query, h.ContextDir), nil
+		return fmt.Sprintf(
+			desc.Text(text.DescKeyMCPSearchNoMatch),
+			query, h.ContextDir), nil
 	}
 
 	return sb.String(), nil

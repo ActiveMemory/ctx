@@ -12,6 +12,7 @@ import (
 	"path/filepath"
 	"testing"
 
+	cfgDrift "github.com/ActiveMemory/ctx/internal/config/drift"
 	"github.com/ActiveMemory/ctx/internal/rc"
 	"github.com/ActiveMemory/ctx/internal/steering"
 )
@@ -95,7 +96,7 @@ func TestCheckSteeringTools(t *testing.T) {
 			report := &Report{
 				Warnings:   []Issue{},
 				Violations: []Issue{},
-				Passed:     []CheckName{},
+				Passed:     []cfgDrift.CheckName{},
 			}
 
 			checkSteeringTools(report)
@@ -108,12 +109,12 @@ func TestCheckSteeringTools(t *testing.T) {
 			}
 
 			for _, w := range report.Warnings {
-				if w.Type != IssueInvalidTool {
-					t.Errorf("expected issue type %q, got %q", IssueInvalidTool, w.Type)
+				if w.Type != cfgDrift.IssueInvalidTool {
+					t.Errorf("expected issue type %q, got %q", cfgDrift.IssueInvalidTool, w.Type)
 				}
 			}
 
-			passed := checkPassed(report, CheckSteeringTools)
+			passed := checkPassed(report, cfgDrift.CheckSteeringTools)
 			if passed != tt.wantPassed {
 				t.Errorf("expected passed=%v, got passed=%v", tt.wantPassed, passed)
 			}
@@ -191,7 +192,7 @@ func TestCheckHookPerms(t *testing.T) {
 			report := &Report{
 				Warnings:   []Issue{},
 				Violations: []Issue{},
-				Passed:     []CheckName{},
+				Passed:     []cfgDrift.CheckName{},
 			}
 
 			checkHookPerms(report)
@@ -204,12 +205,12 @@ func TestCheckHookPerms(t *testing.T) {
 			}
 
 			for _, w := range report.Warnings {
-				if w.Type != IssueHookNoExec {
-					t.Errorf("expected issue type %q, got %q", IssueHookNoExec, w.Type)
+				if w.Type != cfgDrift.IssueHookNoExec {
+					t.Errorf("expected issue type %q, got %q", cfgDrift.IssueHookNoExec, w.Type)
 				}
 			}
 
-			passed := checkPassed(report, CheckHookPerms)
+			passed := checkPassed(report, cfgDrift.CheckHookPerms)
 			if passed != tt.wantPassed {
 				t.Errorf("expected passed=%v, got passed=%v", tt.wantPassed, passed)
 			}
@@ -289,7 +290,7 @@ func TestCheckSyncStaleness(t *testing.T) {
 			report := &Report{
 				Warnings:   []Issue{},
 				Violations: []Issue{},
-				Passed:     []CheckName{},
+				Passed:     []cfgDrift.CheckName{},
 			}
 
 			checkSyncStaleness(report)
@@ -302,12 +303,12 @@ func TestCheckSyncStaleness(t *testing.T) {
 			}
 
 			for _, w := range report.Warnings {
-				if w.Type != IssueStaleSyncFile {
-					t.Errorf("expected issue type %q, got %q", IssueStaleSyncFile, w.Type)
+				if w.Type != cfgDrift.IssueStaleSyncFile {
+					t.Errorf("expected issue type %q, got %q", cfgDrift.IssueStaleSyncFile, w.Type)
 				}
 			}
 
-			passed := checkPassed(report, CheckSyncStaleness)
+			passed := checkPassed(report, cfgDrift.CheckSyncStaleness)
 			if passed != tt.wantPassed {
 				t.Errorf("expected passed=%v, got passed=%v", tt.wantPassed, passed)
 			}
@@ -356,7 +357,7 @@ func TestCheckRCTool(t *testing.T) {
 			report := &Report{
 				Warnings:   []Issue{},
 				Violations: []Issue{},
-				Passed:     []CheckName{},
+				Passed:     []cfgDrift.CheckName{},
 			}
 
 			checkRCTool(report)
@@ -369,12 +370,12 @@ func TestCheckRCTool(t *testing.T) {
 			}
 
 			for _, w := range report.Warnings {
-				if w.Type != IssueInvalidTool {
-					t.Errorf("expected issue type %q, got %q", IssueInvalidTool, w.Type)
+				if w.Type != cfgDrift.IssueInvalidTool {
+					t.Errorf("expected issue type %q, got %q", cfgDrift.IssueInvalidTool, w.Type)
 				}
 			}
 
-			passed := checkPassed(report, CheckRCTool)
+			passed := checkPassed(report, cfgDrift.CheckRCTool)
 			if passed != tt.wantPassed {
 				t.Errorf("expected passed=%v, got passed=%v", tt.wantPassed, passed)
 			}
@@ -384,7 +385,7 @@ func TestCheckRCTool(t *testing.T) {
 
 // --- helpers ---
 
-func checkPassed(report *Report, check CheckName) bool {
+func checkPassed(report *Report, check cfgDrift.CheckName) bool {
 	for _, p := range report.Passed {
 		if p == check {
 			return true

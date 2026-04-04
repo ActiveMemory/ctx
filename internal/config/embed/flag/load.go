@@ -8,6 +8,8 @@ package flag
 
 // DescKeys for load command flags.
 const (
+	// DescKeyLoadBudget is the description key for the load budget flag.
 	DescKeyLoadBudget = "load.budget"
-	DescKeyLoadRaw    = "load.raw"
+	// DescKeyLoadRaw is the description key for the load raw flag.
+	DescKeyLoadRaw = "load.raw"
 )

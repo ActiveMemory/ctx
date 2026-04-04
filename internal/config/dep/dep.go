@@ -40,6 +40,14 @@ const (
 	WorkspaceRoot = "root"
 )
 
+// Ecosystem label constants.
+const (
+	// EcosystemPython is the ecosystem label for Python.
+	EcosystemPython = "python"
+	// EcosystemRust is the ecosystem label for Rust.
+	EcosystemRust = "rust"
+)
+
 // Rust ecosystem constants.
 const (
 	// CargoToml is the Rust manifest filename.

@@ -8,5 +8,6 @@ package text
 
 // DescKeys for MCP context rendering.
 const (
+	// DescKeyMCPLoadContext is the text key for mcp load context messages.
 	DescKeyMCPLoadContext = "mcp.load-context"
 )

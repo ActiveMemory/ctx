@@ -12,6 +12,7 @@ import (
 	"github.com/ActiveMemory/ctx/internal/assets/read/desc"
 	"github.com/ActiveMemory/ctx/internal/config/embed/text"
 	"github.com/ActiveMemory/ctx/internal/config/stats"
+	cfgSysinfo "github.com/ActiveMemory/ctx/internal/config/sysinfo"
 )
 
 // Evaluate checks a snapshot against resource thresholds and returns any
@@ -31,54 +32,66 @@ import (
 func Evaluate(snap Snapshot) []ResourceAlert {
 	var alerts []ResourceAlert
 
-	// Memory
-	if snap.Memory.Supported && snap.Memory.TotalBytes > 0 {
-		pct := percent(snap.Memory.UsedBytes, snap.Memory.TotalBytes)
-		msg := fmt.Sprintf(desc.Text(text.DescKeyResourcesAlertMemory),
-			pct, FormatGiB(snap.Memory.UsedBytes), FormatGiB(snap.Memory.TotalBytes))
-		if pct >= stats.ThresholdMemoryDangerPct {
-			alerts = append(alerts, ResourceAlert{
-				Severity: SeverityDanger, Resource: ResourceMemory, Message: msg,
-			})
-		} else if pct >= stats.ThresholdMemoryWarnPct {
-			alerts = append(alerts, ResourceAlert{
-				Severity: SeverityWarning, Resource: ResourceMemory, Message: msg,
-			})
-		}
+	type byteCheck struct {
+		supported bool
+		used      uint64
+		total     uint64
+		descKey   string
+		resource  string
+		dangerPct float64
+		warnPct   float64
 	}
 
-	// Swap
-	if snap.Memory.Supported && snap.Memory.SwapTotalBytes > 0 {
-		pct := percent(snap.Memory.SwapUsedBytes, snap.Memory.SwapTotalBytes)
+	checks := []byteCheck{
+		{
+			snap.Memory.Supported,
+			snap.Memory.UsedBytes,
+			snap.Memory.TotalBytes,
+			text.DescKeyResourcesAlertMemory,
+			cfgSysinfo.ResourceMemory,
+			stats.ThresholdMemoryDangerPct,
+			stats.ThresholdMemoryWarnPct,
+		},
+		{
+			snap.Memory.Supported,
+			snap.Memory.SwapUsedBytes,
+			snap.Memory.SwapTotalBytes,
+			text.DescKeyResourcesAlertSwap,
+			cfgSysinfo.ResourceSwap,
+			stats.ThresholdSwapDangerPct,
+			stats.ThresholdSwapWarnPct,
+		},
+		{
+			snap.Disk.Supported,
+			snap.Disk.UsedBytes,
+			snap.Disk.TotalBytes,
+			text.DescKeyResourcesAlertDisk,
+			cfgSysinfo.ResourceDisk,
+			stats.ThresholdDiskDangerPct,
+			stats.ThresholdDiskWarnPct,
+		},
+	}
+
+	for _, c := range checks {
+		if !c.supported || c.total == 0 {
+			continue
+		}
+		pct := percent(c.used, c.total)
 		msg := fmt.Sprintf(
-			desc.Text(text.DescKeyResourcesAlertSwap),
-			pct,
-			FormatGiB(snap.Memory.SwapUsedBytes),
-			FormatGiB(snap.Memory.SwapTotalBytes),
+			desc.Text(c.descKey), pct,
+			FormatGiB(c.used), FormatGiB(c.total),
 		)
-		if pct >= stats.ThresholdSwapDangerPct {
+		if pct >= c.dangerPct {
 			alerts = append(alerts, ResourceAlert{
-				Severity: SeverityDanger, Resource: ResourceSwap, Message: msg,
+				Severity: SeverityDanger,
+				Resource: c.resource,
+				Message:  msg,
 			})
-		} else if pct >= stats.ThresholdSwapWarnPct {
+		} else if pct >= c.warnPct {
 			alerts = append(alerts, ResourceAlert{
-				Severity: SeverityWarning, Resource: ResourceSwap, Message: msg,
-			})
-		}
-	}
-
-	// Disk
-	if snap.Disk.Supported && snap.Disk.TotalBytes > 0 {
-		pct := percent(snap.Disk.UsedBytes, snap.Disk.TotalBytes)
-		msg := fmt.Sprintf(desc.Text(text.DescKeyResourcesAlertDisk),
-			pct, FormatGiB(snap.Disk.UsedBytes), FormatGiB(snap.Disk.TotalBytes))
-		if pct >= stats.ThresholdDiskDangerPct {
-			alerts = append(alerts, ResourceAlert{
-				Severity: SeverityDanger, Resource: ResourceDisk, Message: msg,
-			})
-		} else if pct >= stats.ThresholdDiskWarnPct {
-			alerts = append(alerts, ResourceAlert{
-				Severity: SeverityWarning, Resource: ResourceDisk, Message: msg,
+				Severity: SeverityWarning,
+				Resource: c.resource,
+				Message:  msg,
 			})
 		}
 	}
@@ -89,11 +102,11 @@ func Evaluate(snap Snapshot) []ResourceAlert {
 		msg := fmt.Sprintf(desc.Text(text.DescKeyResourcesAlertLoad), ratio)
 		if ratio >= stats.ThresholdLoadDangerRatio {
 			alerts = append(alerts, ResourceAlert{
-				Severity: SeverityDanger, Resource: ResourceLoad, Message: msg,
+				Severity: SeverityDanger, Resource: cfgSysinfo.ResourceLoad, Message: msg,
 			})
 		} else if ratio >= stats.ThresholdLoadWarnRatio {
 			alerts = append(alerts, ResourceAlert{
-				Severity: SeverityWarning, Resource: ResourceLoad, Message: msg,
+				Severity: SeverityWarning, Resource: cfgSysinfo.ResourceLoad, Message: msg,
 			})
 		}
 	}

@@ -8,6 +8,10 @@ package text
 
 // DescKeys for dependency tracking errors.
 const (
+	// DescKeyErrDepsCargoMetadataFailed is the text key for err deps cargo
+	// metadata failed messages.
 	DescKeyErrDepsCargoMetadataFailed = "err.deps.cargo-metadata-failed"
-	DescKeyErrDepsParseCargoMetadata  = "err.deps.parse-cargo-metadata"
+	// DescKeyErrDepsParseCargoMetadata is the text key for err deps parse cargo
+	// metadata messages.
+	DescKeyErrDepsParseCargoMetadata = "err.deps.parse-cargo-metadata"
 )

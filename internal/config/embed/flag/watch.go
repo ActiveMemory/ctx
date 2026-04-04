@@ -8,6 +8,8 @@ package flag
 
 // DescKeys for watch command flags.
 const (
+	// DescKeyWatchDryRun is the description key for the watch dry run flag.
 	DescKeyWatchDryRun = "watch.dry-run"
-	DescKeyWatchLog    = "watch.log"
+	// DescKeyWatchLog is the description key for the watch log flag.
+	DescKeyWatchLog = "watch.log"
 )

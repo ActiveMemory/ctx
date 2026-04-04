@@ -8,6 +8,8 @@ package text
 
 // DescKeys for MCP reminder output.
 const (
-	DescKeyMCPNoReminders     = "mcp.no-reminders"
+	// DescKeyMCPNoReminders is the text key for mcp no reminders messages.
+	DescKeyMCPNoReminders = "mcp.no-reminders"
+	// DescKeyMCPRemindersFormat is the text key for mcp reminders format messages.
 	DescKeyMCPRemindersFormat = "mcp.reminders-format"
 )

@@ -7,21 +7,24 @@
 // Package drift provides functionality for detecting stale or invalid context.
 package drift
 
-import "github.com/ActiveMemory/ctx/internal/entity"
+import (
+	cfgDrift "github.com/ActiveMemory/ctx/internal/config/drift"
+	"github.com/ActiveMemory/ctx/internal/entity"
+)
 
 // Status returns the overall status of the report.
 //
 // Returns:
-//   - StatusType: StatusViolation if any violations, StatusWarning if only
-//     warnings, StatusOk otherwise
-func (r *Report) Status() StatusType {
+//   - cfgDrift.StatusType: StatusViolation if any violations,
+//     StatusWarning if only warnings, StatusOk otherwise
+func (r *Report) Status() cfgDrift.StatusType {
 	if len(r.Violations) > 0 {
-		return StatusViolation
+		return cfgDrift.StatusViolation
 	}
 	if len(r.Warnings) > 0 {
-		return StatusWarning
+		return cfgDrift.StatusWarning
 	}
-	return StatusOk
+	return cfgDrift.StatusOk
 }
 
 // Detect runs all drift detection checks on the given context.
@@ -38,7 +41,7 @@ func Detect(ctx *entity.Context) *Report {
 	report := &Report{
 		Warnings:   []Issue{},
 		Violations: []Issue{},
-		Passed:     []CheckName{},
+		Passed:     []cfgDrift.CheckName{},
 	}
 
 	// Check path references in context files

@@ -284,9 +284,10 @@ Six defense layers (innermost to outermost):
 ### Layered Package Taxonomy
 
 Every CLI package follows `cmd/root + core/` taxonomy (Decision
-2026-03-06). `cmd/root/cmd.go` defines the Cobra command;
-`cmd/root/run.go` implements the handler. Shared logic lives in
-`core/`. Grouping commands use `internal/cli/parent.Cmd()` factory.
+2026-03-06). Each feature's `cmd/root/cmd.go` defines the Cobra
+command; `cmd/root/run.go` implements the handler. Shared logic
+lives in `core/`. Grouping commands use `internal/cli/parent.Cmd()`
+factory.
 
 ### Config Explosion
 

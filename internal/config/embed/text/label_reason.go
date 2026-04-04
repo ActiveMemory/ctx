@@ -8,6 +8,8 @@ package text
 
 // DescKeys for reason labels.
 const (
-	DescKeyLabelReasonExists  = "label.reason-exists"
+	// DescKeyLabelReasonExists is the text key for label reason exists messages.
+	DescKeyLabelReasonExists = "label.reason-exists"
+	// DescKeyLabelReasonUpdated is the text key for label reason updated messages.
 	DescKeyLabelReasonUpdated = "label.reason-updated"
 )

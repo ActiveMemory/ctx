@@ -13,6 +13,7 @@ import (
 	"github.com/ActiveMemory/ctx/internal/assets/read/desc"
 	"github.com/ActiveMemory/ctx/internal/config/embed/text"
 	"github.com/ActiveMemory/ctx/internal/config/mcp/cfg"
+	cfgSchema "github.com/ActiveMemory/ctx/internal/config/mcp/schema"
 	"github.com/ActiveMemory/ctx/internal/mcp/handler"
 	"github.com/ActiveMemory/ctx/internal/mcp/proto"
 	"github.com/ActiveMemory/ctx/internal/mcp/server/catalog"
@@ -85,7 +86,7 @@ func (s *Server) Serve() error {
 		if writeErr := s.out.WriteJSON(resp); writeErr != nil {
 			// Marshal failure: try to report it as an error response.
 			fallback := out.ErrResponse(
-				nil, proto.ErrCodeInternal,
+				nil, cfgSchema.ErrCodeInternal,
 				desc.Text(text.DescKeyMCPErrFailedMarshal),
 			)
 			if fbErr := s.out.WriteJSON(fallback); fbErr != nil {

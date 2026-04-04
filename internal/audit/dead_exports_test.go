@@ -26,31 +26,10 @@ import (
 // internal and may be used via reflection or are
 // genuinely file-scoped helpers.
 
-// testOnlyExports lists exported symbols that exist
-// solely for test usage. The dead-export scanner skips
-// test files, so these would otherwise be false
-// positives. Keep this list small: prefer eliminating
-// the export over adding it here.
-var testOnlyExports = map[string]bool{
-	"github.com/ActiveMemory/ctx/internal/assets/hooks/messages.CategoryCustomizable":       true,
-	"github.com/ActiveMemory/ctx/internal/assets/hooks/messages.Hooks":                      true,
-	"github.com/ActiveMemory/ctx/internal/assets/hooks/messages.RegistryError":              true,
-	"github.com/ActiveMemory/ctx/internal/cli/initialize/core/vscode.CreateVSCodeArtifacts": true,
-	"github.com/ActiveMemory/ctx/internal/cli/journal/core/lock.LockedFrontmatterLine":      true,
-	"github.com/ActiveMemory/ctx/internal/cli/pad/core/store.EnsureGitignore":               true,
-	"github.com/ActiveMemory/ctx/internal/cli/system/core/state.SetDirForTest":              true,
-	"github.com/ActiveMemory/ctx/internal/config/asset.DirReferences":                       true,
-	"github.com/ActiveMemory/ctx/internal/config/regex.Phase":                               true,
-	"github.com/ActiveMemory/ctx/internal/inspect.StartsWithCtxMarker":                      true,
-	"github.com/ActiveMemory/ctx/internal/journal/parser.Parser":                            true,
-	"github.com/ActiveMemory/ctx/internal/journal/parser.RegisteredTools":                   true,
-	"github.com/ActiveMemory/ctx/internal/mcp/proto.ErrCodeInvalidReq":                      true,
-	"github.com/ActiveMemory/ctx/internal/mcp/proto.InitializeParams":                       true,
-	"github.com/ActiveMemory/ctx/internal/mcp/proto.UnsubscribeParams":                      true,
-	"github.com/ActiveMemory/ctx/internal/rc.Reset":                                         true,
-	"github.com/ActiveMemory/ctx/internal/task.MatchFull":                                   true,
-}
-
+// DO NOT add entries here to make tests pass. New code must
+// conform to the check. Widening requires a dedicated PR with
+// justification for each entry.
+//
 // linuxOnlyExports lists exported symbols used only from
 // _linux.go source files. These appear dead on non-Linux
 // builds because go/packages loads only the current
@@ -146,9 +125,30 @@ func TestNoDeadExports(t *testing.T) {
 		}
 	}
 
-	// Phase 3: remove test-only allowlist entries.
-	for key := range testOnlyExports {
-		delete(defs, key)
+	// Phase 2.5: remove symbols used cross-package in
+	// test files. If a test in package B imports a
+	// symbol from package A, the symbol is test
+	// infrastructure — not dead. Same-package test
+	// usage does not count (those should be unexported).
+	testPkgs := loadTestPackages(t)
+	for _, pkg := range testPkgs {
+		for ident, obj := range pkg.TypesInfo.Uses {
+			if obj == nil || obj.Pkg() == nil {
+				continue
+			}
+			pos := pkg.Fset.Position(ident.Pos())
+			if !isTestFile(pos.Filename) {
+				continue
+			}
+			// Cross-package: the test's package path
+			// differs from the symbol's defining package.
+			if pkg.PkgPath == obj.Pkg().Path() {
+				continue
+			}
+			key := obj.Pkg().Path() + "." +
+				obj.Name()
+			delete(defs, key)
+		}
 	}
 
 	// Phase 3b: remove Linux-only exports (used from
@@ -206,6 +206,30 @@ func loadCmdPackages(t *testing.T) []*packages.Package {
 	)
 	if err != nil {
 		t.Fatalf("packages.Load cmd: %v", err)
+	}
+	return pkgs
+}
+
+// loadTestPackages loads internal/ packages WITH test
+// files for cross-package test usage detection.
+func loadTestPackages(
+	t *testing.T,
+) []*packages.Package {
+	t.Helper()
+	cfg := &packages.Config{
+		Mode: packages.NeedName |
+			packages.NeedFiles |
+			packages.NeedSyntax |
+			packages.NeedTypes |
+			packages.NeedTypesInfo,
+		Tests: true,
+	}
+	pkgs, loadErr := packages.Load(
+		cfg,
+		"github.com/ActiveMemory/ctx/internal/...",
+	)
+	if loadErr != nil {
+		t.Fatalf("packages.Load tests: %v", loadErr)
 	}
 	return pkgs
 }

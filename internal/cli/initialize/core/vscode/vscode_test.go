@@ -125,25 +125,25 @@ func TestCreateVSCodeArtifacts_CreatesMCPJSON(t *testing.T) {
 	var buf bytes.Buffer
 	cmd := testCmd(&buf)
 
-	if err := CreateVSCodeArtifacts(cmd); err != nil {
-		t.Fatalf("CreateVSCodeArtifacts() error = %v", err)
+	if err := createVSCodeArtifacts(cmd); err != nil {
+		t.Fatalf("createVSCodeArtifacts() error = %v", err)
 	}
 
 	// Verify mcp.json was created as part of the artifacts
 	target := filepath.Join(cfgVscode.Dir, "mcp.json")
 	if _, err := os.Stat(target); os.IsNotExist(err) {
-		t.Error("CreateVSCodeArtifacts did not create mcp.json")
+		t.Error("createVSCodeArtifacts did not create mcp.json")
 	}
 
 	// Verify extensions.json was also created
 	extTarget := filepath.Join(cfgVscode.Dir, "extensions.json")
 	if _, err := os.Stat(extTarget); os.IsNotExist(err) {
-		t.Error("CreateVSCodeArtifacts did not create extensions.json")
+		t.Error("createVSCodeArtifacts did not create extensions.json")
 	}
 
 	// Verify tasks.json was also created
 	taskTarget := filepath.Join(cfgVscode.Dir, "tasks.json")
 	if _, err := os.Stat(taskTarget); os.IsNotExist(err) {
-		t.Error("CreateVSCodeArtifacts did not create tasks.json")
+		t.Error("createVSCodeArtifacts did not create tasks.json")
 	}
 }

@@ -8,7 +8,13 @@ package text
 
 // DescKeys for MCP compact output.
 const (
-	DescKeyMCPCompactMovedFormat    = "mcp.compact-moved-format"
+	// DescKeyMCPCompactMovedFormat is the text key for mcp compact moved format
+	// messages.
+	DescKeyMCPCompactMovedFormat = "mcp.compact-moved-format"
+	// DescKeyMCPCompactArchiveWarning is the text key for mcp compact archive
+	// warning messages.
 	DescKeyMCPCompactArchiveWarning = "mcp.compact-archive-warning"
+	// DescKeyMCPCompactRemovedSectFmt is the text key for mcp compact removed
+	// sect fmt messages.
 	DescKeyMCPCompactRemovedSectFmt = "mcp.compact-removed-sections-format"
 )

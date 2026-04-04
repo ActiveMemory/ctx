@@ -16,15 +16,13 @@ import (
 	"github.com/ActiveMemory/ctx/internal/config/embed/cmd"
 	"github.com/ActiveMemory/ctx/internal/config/file"
 	"github.com/ActiveMemory/ctx/internal/config/fs"
+	cfgSteering "github.com/ActiveMemory/ctx/internal/config/steering"
 	errSteering "github.com/ActiveMemory/ctx/internal/err/steering"
 	ctxIo "github.com/ActiveMemory/ctx/internal/io"
 	"github.com/ActiveMemory/ctx/internal/rc"
 	"github.com/ActiveMemory/ctx/internal/steering"
 	writeSteering "github.com/ActiveMemory/ctx/internal/write/steering"
 )
-
-// defaultPriority is the default priority for new steering files.
-const defaultPriority = 50
 
 // Cmd returns the "ctx steering add" subcommand.
 //
@@ -77,8 +75,8 @@ func Run(c *cobra.Command, name string) error {
 
 	sf := &steering.SteeringFile{
 		Name:      name,
-		Inclusion: steering.InclusionManual,
-		Priority:  defaultPriority,
+		Inclusion: cfgSteering.InclusionManual,
+		Priority:  cfgSteering.DefaultPriority,
 	}
 
 	data := steering.Print(sf)

@@ -441,8 +441,8 @@ func OverrideContextDir(ctxDir string) {
 	rcOverrideDir = ctxDir
 }
 
-// Reset clears the cached configuration, forcing reload on the next access.
-// This is primarily useful for testing.
+// Reset clears the cached configuration, forcing
+// reload on the next access.
 func Reset() {
 	rcMu.Lock()
 	defer rcMu.Unlock()

@@ -10,6 +10,10 @@ package text
 
 // DescKeys for git integration.
 const (
-	DescKeyErrGitNotInGitRepo   = "err.git.not-in-git-repo"
+	// DescKeyErrGitNotInGitRepo is the text key for err git not in git repo
+	// messages.
+	DescKeyErrGitNotInGitRepo = "err.git.not-in-git-repo"
+	// DescKeyErrParserGitNotFound is the text key for err parser git not found
+	// messages.
 	DescKeyErrParserGitNotFound = "err.parser.git-not-found"
 )

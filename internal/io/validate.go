@@ -12,6 +12,7 @@ import (
 	"strings"
 
 	cfgHTTP "github.com/ActiveMemory/ctx/internal/config/http"
+	cfgIo "github.com/ActiveMemory/ctx/internal/config/io"
 	"github.com/ActiveMemory/ctx/internal/config/token"
 	errFs "github.com/ActiveMemory/ctx/internal/err/fs"
 	errHTTP "github.com/ActiveMemory/ctx/internal/err/http"
@@ -29,7 +30,7 @@ func rejectDangerousPath(absPath string) error {
 	if absPath == token.Slash {
 		return errFs.RefuseSystemPathRoot()
 	}
-	for _, prefix := range dangerousPrefixes {
+	for _, prefix := range cfgIo.DangerousPrefixes {
 		if strings.HasPrefix(absPath, prefix) {
 			return errFs.RefuseSystemPath(absPath)
 		}

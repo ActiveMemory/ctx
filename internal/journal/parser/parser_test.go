@@ -322,7 +322,7 @@ func TestParseFile_AutoDetect(t *testing.T) {
 }
 
 func TestRegisteredTools(t *testing.T) {
-	tools := RegisteredTools()
+	tools := registeredTools()
 	if len(tools) == 0 {
 		t.Error("expected at least one registered tool")
 	}
@@ -340,7 +340,7 @@ func TestRegisteredTools(t *testing.T) {
 }
 
 func TestGetParser(t *testing.T) {
-	parser := Parser("claude-code")
+	parser := find("claude-code")
 	if parser == nil {
 		t.Error("expected parser for 'claude-code'")
 	}
@@ -348,7 +348,7 @@ func TestGetParser(t *testing.T) {
 		t.Errorf("expected tool 'claude-code', got '%s'", parser.Tool())
 	}
 
-	unknown := Parser("unknown-tool")
+	unknown := find("unknown-tool")
 	if unknown != nil {
 		t.Error("expected nil for unknown tool")
 	}

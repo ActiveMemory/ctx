@@ -8,17 +8,28 @@ package cmd
 
 // Use strings for remind subcommands.
 const (
-	UseRemindAdd          = "add TEXT"
-	UseRemindDismiss      = "dismiss [ID]"
+	// UseRemindAdd is the cobra Use string for the remind add command.
+	UseRemindAdd = "add TEXT"
+	// UseRemindDismiss is the cobra Use string for the remind dismiss command.
+	UseRemindDismiss = "dismiss [ID]"
+	// UseRemindDismissAlias is the cobra Use string for the remind dismiss alias
+	// command.
 	UseRemindDismissAlias = "rm"
-	UseRemindList         = "list"
-	UseRemindListAlias    = "ls"
+	// UseRemindList is the cobra Use string for the remind list command.
+	UseRemindList = "list"
+	// UseRemindListAlias is the cobra Use string for the remind list alias
+	// command.
+	UseRemindListAlias = "ls"
 )
 
 // DescKeys for remind subcommands.
 const (
-	DescKeyRemind        = "remind"
-	DescKeyRemindAdd     = "remind.add"
+	// DescKeyRemind is the description key for the remind command.
+	DescKeyRemind = "remind"
+	// DescKeyRemindAdd is the description key for the remind add command.
+	DescKeyRemindAdd = "remind.add"
+	// DescKeyRemindDismiss is the description key for the remind dismiss command.
 	DescKeyRemindDismiss = "remind.dismiss"
-	DescKeyRemindList    = "remind.list"
+	// DescKeyRemindList is the description key for the remind list command.
+	DescKeyRemindList = "remind.list"
 )

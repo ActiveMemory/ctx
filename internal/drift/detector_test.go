@@ -13,6 +13,7 @@ import (
 	"strings"
 	"testing"
 
+	cfgDrift "github.com/ActiveMemory/ctx/internal/config/drift"
 	"github.com/ActiveMemory/ctx/internal/context/load"
 	"github.com/ActiveMemory/ctx/internal/entity"
 	"github.com/ActiveMemory/ctx/internal/io"
@@ -23,34 +24,34 @@ func TestReportStatus(t *testing.T) {
 	tests := []struct {
 		name     string
 		report   Report
-		expected StatusType
+		expected cfgDrift.StatusType
 	}{
 		{
 			name:     "no issues",
 			report:   Report{},
-			expected: StatusOk,
+			expected: cfgDrift.StatusOk,
 		},
 		{
 			name: "only warnings",
 			report: Report{
-				Warnings: []Issue{{File: "test.md", Type: IssueStaleness}},
+				Warnings: []Issue{{File: "test.md", Type: cfgDrift.IssueStaleness}},
 			},
-			expected: StatusWarning,
+			expected: cfgDrift.StatusWarning,
 		},
 		{
 			name: "only violations",
 			report: Report{
-				Violations: []Issue{{File: "test.md", Type: IssueSecret}},
+				Violations: []Issue{{File: "test.md", Type: cfgDrift.IssueSecret}},
 			},
-			expected: StatusViolation,
+			expected: cfgDrift.StatusViolation,
 		},
 		{
 			name: "warnings and violations",
 			report: Report{
-				Warnings:   []Issue{{File: "test.md", Type: IssueStaleness}},
-				Violations: []Issue{{File: "test.md", Type: IssueSecret}},
+				Warnings:   []Issue{{File: "test.md", Type: cfgDrift.IssueStaleness}},
+				Violations: []Issue{{File: "test.md", Type: cfgDrift.IssueSecret}},
 			},
-			expected: StatusViolation,
+			expected: cfgDrift.StatusViolation,
 		},
 	}
 
@@ -192,7 +193,7 @@ func TestCheckPathReferences(t *testing.T) {
 	report := &Report{
 		Warnings:   []Issue{},
 		Violations: []Issue{},
-		Passed:     []CheckName{},
+		Passed:     []cfgDrift.CheckName{},
 	}
 
 	checkPathReferences(ctx, report)
@@ -252,7 +253,7 @@ func TestCheckStaleness(t *testing.T) {
 			report := &Report{
 				Warnings:   []Issue{},
 				Violations: []Issue{},
-				Passed:     []CheckName{},
+				Passed:     []cfgDrift.CheckName{},
 			}
 
 			checkStaleness(ctx, report)
@@ -305,7 +306,7 @@ func TestCheckRequiredFiles(t *testing.T) {
 			report := &Report{
 				Warnings:   []Issue{},
 				Violations: []Issue{},
-				Passed:     []CheckName{},
+				Passed:     []cfgDrift.CheckName{},
 			}
 
 			checkRequiredFiles(ctx, report)
@@ -408,7 +409,7 @@ func TestCheckEntryCount(t *testing.T) {
 			report := &Report{
 				Warnings:   []Issue{},
 				Violations: []Issue{},
-				Passed:     []CheckName{},
+				Passed:     []cfgDrift.CheckName{},
 			}
 
 			checkEntryCount(ctx, report)
@@ -422,7 +423,7 @@ func TestCheckEntryCount(t *testing.T) {
 
 			passedCheck := false
 			for _, p := range report.Passed {
-				if p == CheckEntryCount {
+				if p == cfgDrift.CheckEntryCount {
 					passedCheck = true
 					break
 				}
@@ -433,8 +434,8 @@ func TestCheckEntryCount(t *testing.T) {
 
 			// Verify warning type and message format
 			for _, w := range report.Warnings {
-				if w.Type != IssueEntryCount {
-					t.Errorf("expected issue type %q, got %q", IssueEntryCount, w.Type)
+				if w.Type != cfgDrift.IssueEntryCount {
+					t.Errorf("expected issue type %q, got %q", cfgDrift.IssueEntryCount, w.Type)
 				}
 				if !strings.Contains(w.Message, "entries (recommended:") {
 					t.Errorf("unexpected message format: %q", w.Message)
@@ -474,7 +475,7 @@ func TestCheckEntryCountDisabled(t *testing.T) {
 	report := &Report{
 		Warnings:   []Issue{},
 		Violations: []Issue{},
-		Passed:     []CheckName{},
+		Passed:     []cfgDrift.CheckName{},
 	}
 
 	// With default thresholds (30/20), 100 entries should trigger warnings
@@ -582,7 +583,7 @@ func TestCheckMissingPackages(t *testing.T) {
 			report := &Report{
 				Warnings:   []Issue{},
 				Violations: []Issue{},
-				Passed:     []CheckName{},
+				Passed:     []cfgDrift.CheckName{},
 			}
 
 			checkMissingPackages(ctx, report)
@@ -599,7 +600,7 @@ func TestCheckMissingPackages(t *testing.T) {
 
 			passedCheck := false
 			for _, p := range report.Passed {
-				if p == CheckMissingPackages {
+				if p == cfgDrift.CheckMissingPackages {
 					passedCheck = true
 					break
 				}
@@ -609,8 +610,8 @@ func TestCheckMissingPackages(t *testing.T) {
 			}
 
 			for _, w := range report.Warnings {
-				if w.Type != IssueMissingPackage {
-					t.Errorf("expected issue type %q, got %q", IssueMissingPackage, w.Type)
+				if w.Type != cfgDrift.IssueMissingPackage {
+					t.Errorf("expected issue type %q, got %q", cfgDrift.IssueMissingPackage, w.Type)
 				}
 			}
 

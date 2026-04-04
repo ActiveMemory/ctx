@@ -13,15 +13,12 @@ import (
 
 	"github.com/ActiveMemory/ctx/internal/assets/read/desc"
 	"github.com/ActiveMemory/ctx/internal/config/embed/cmd"
+	cfgSteering "github.com/ActiveMemory/ctx/internal/config/steering"
 	"github.com/ActiveMemory/ctx/internal/config/token"
 	"github.com/ActiveMemory/ctx/internal/rc"
 	"github.com/ActiveMemory/ctx/internal/steering"
 	writeSteering "github.com/ActiveMemory/ctx/internal/write/steering"
 )
-
-// labelAllTools is the display label when a steering file
-// applies to all tools.
-const labelAllTools = "all"
 
 // Cmd returns the "ctx steering list" subcommand.
 //
@@ -59,7 +56,7 @@ func Run(c *cobra.Command) error {
 	}
 
 	for _, sf := range files {
-		tools := labelAllTools
+		tools := cfgSteering.LabelAllTools
 		if len(sf.Tools) > 0 {
 			tools = strings.Join(sf.Tools, token.CommaSpace)
 		}

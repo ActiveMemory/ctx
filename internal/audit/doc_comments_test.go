@@ -59,10 +59,20 @@ func TestDocComments(t *testing.T) {
 					singleton := !d.Lparen.IsValid()
 					isCfg := configPackage(pkg.PkgPath)
 
-					// Config const/var blocks: group doc covers
-					// all specs. Report once per undocumented
-					// block, not per constant.
+					// Config const/var blocks (excluding
+					// embed/): group doc covers all specs
+					// because names are self-documenting
+					// (Dir*, File*, Perm*, etc.).
+					//
+					// DO NOT widen this exemption. New code
+					// must have per-constant doc comments.
+					// Widening requires a dedicated PR with
+					// justification — not a drive-by allowlist
+					// change to make tests pass.
 					if isCfg && d.Lparen.IsValid() &&
+						!strings.Contains(
+							pkg.PkgPath, "config/embed/",
+						) &&
 						(d.Tok == token.CONST ||
 							d.Tok == token.VAR) {
 						if d.Doc == nil {

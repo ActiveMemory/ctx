@@ -8,16 +8,24 @@ package cmd
 
 // Use strings for skill subcommands.
 const (
-	UseSkill        = "skill"
+	// UseSkill is the cobra Use string for the skill command.
+	UseSkill = "skill"
+	// UseSkillInstall is the cobra Use string for the skill install command.
 	UseSkillInstall = "install <source>"
-	UseSkillList    = "list"
-	UseSkillRemove  = "remove <name>"
+	// UseSkillList is the cobra Use string for the skill list command.
+	UseSkillList = "list"
+	// UseSkillRemove is the cobra Use string for the skill remove command.
+	UseSkillRemove = "remove <name>"
 )
 
 // DescKeys for skill subcommands.
 const (
-	DescKeySkill        = "skill"
+	// DescKeySkill is the description key for the skill command.
+	DescKeySkill = "skill"
+	// DescKeySkillInstall is the description key for the skill install command.
 	DescKeySkillInstall = "skill.install"
-	DescKeySkillList    = "skill.list"
-	DescKeySkillRemove  = "skill.remove"
+	// DescKeySkillList is the description key for the skill list command.
+	DescKeySkillList = "skill.list"
+	// DescKeySkillRemove is the description key for the skill remove command.
+	DescKeySkillRemove = "skill.remove"
 )

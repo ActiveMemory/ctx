@@ -89,7 +89,7 @@ func Last(
 	cmd *cobra.Command, n int, contextDir, traceDir string, jsonOutput bool,
 ) error {
 	out, err := git.Run(
-		cfgGit.Log, fmt.Sprintf("-%d", n), cfgGit.FormatHashSubj,
+		cfgGit.Log, fmt.Sprintf(cfgGit.FlagLastN, n), cfgGit.FormatHashSubj,
 	)
 	if err != nil {
 		return errTrace.GitLog(err)

@@ -8,8 +8,16 @@ package text
 
 // DescKeys for map staleness checks.
 const (
-	DescKeyCheckMapStalenessBoxTitle     = "check-map-staleness.box-title"
-	DescKeyCheckMapStalenessFallback     = "check-map-staleness.fallback"
+	// DescKeyCheckMapStalenessBoxTitle is the text key for check map staleness
+	// box title messages.
+	DescKeyCheckMapStalenessBoxTitle = "check-map-staleness.box-title"
+	// DescKeyCheckMapStalenessFallback is the text key for check map staleness
+	// fallback messages.
+	DescKeyCheckMapStalenessFallback = "check-map-staleness.fallback"
+	// DescKeyCheckMapStalenessRelayMessage is the text key for check map
+	// staleness relay message messages.
 	DescKeyCheckMapStalenessRelayMessage = "check-map-staleness.relay-message"
-	DescKeyCheckMapStalenessRelayPrefix  = "check-map-staleness.relay-prefix"
+	// DescKeyCheckMapStalenessRelayPrefix is the text key for check map staleness
+	// relay prefix messages.
+	DescKeyCheckMapStalenessRelayPrefix = "check-map-staleness.relay-prefix"
 )

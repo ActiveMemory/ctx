@@ -11,6 +11,8 @@ import (
 	"fmt"
 	"time"
 
+	"github.com/ActiveMemory/ctx/internal/assets/read/desc"
+	"github.com/ActiveMemory/ctx/internal/config/embed/text"
 	"github.com/ActiveMemory/ctx/internal/config/token"
 	errTrigger "github.com/ActiveMemory/ctx/internal/err/trigger"
 	ctxLog "github.com/ActiveMemory/ctx/internal/log/warn"
@@ -72,8 +74,12 @@ func RunAll(
 
 		out, runErr := runOne(h, inputJSON, timeout)
 		if runErr != nil {
-			ctxLog.Warn("hook %s: %v", h.Path, runErr)
-			agg.Errors = append(agg.Errors, fmt.Sprintf("%s: %s", h.Path, runErr))
+			ctxLog.Warn(
+				desc.Text(text.DescKeyTriggerWarn),
+				h.Path, runErr)
+			agg.Errors = append(agg.Errors, fmt.Sprintf(
+				desc.Text(text.DescKeyTriggerErrorItem),
+				h.Path, runErr))
 			continue
 		}
 

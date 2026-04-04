@@ -14,6 +14,10 @@ import (
 	"golang.org/x/tools/go/packages"
 )
 
+// DO NOT add entries here to make tests pass. New code must
+// conform to the check. Widening requires a dedicated PR with
+// justification for each entry.
+//
 // typeExemptPackages lists packages where exported
 // types are expected to be used cross-package by
 // design (entity, config, proto, etc.).
@@ -201,10 +205,10 @@ func sameModule(a, b string) bool {
 	}
 	// cli/* consuming any domain module is the
 	// standard consumer layer pattern.
-	if isConsumerLayer(ma) && !isConsumerLayer(mb) {
+	if consumerLayer(ma) && !consumerLayer(mb) {
 		return true
 	}
-	if isConsumerLayer(mb) && !isConsumerLayer(ma) {
+	if consumerLayer(mb) && !consumerLayer(ma) {
 		return true
 	}
 	// err/<X> consumed from cli/<X> or <X>.
@@ -274,8 +278,8 @@ func moduleRoot(pkgPath string) string {
 	return parts[0]
 }
 
-// isConsumerLayer returns true if the module root is a
+// consumerLayer returns true if the module root is a
 // consumer layer that naturally imports domain types.
-func isConsumerLayer(mod string) bool {
+func consumerLayer(mod string) bool {
 	return strings.HasPrefix(mod, "cli/")
 }

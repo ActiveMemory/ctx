@@ -8,6 +8,8 @@ package text
 
 // DescKeys for event logging.
 const (
-	DescKeyEventsEmpty       = "events.empty"
+	// DescKeyEventsEmpty is the text key for events empty messages.
+	DescKeyEventsEmpty = "events.empty"
+	// DescKeyEventsHumanFormat is the text key for events human format messages.
 	DescKeyEventsHumanFormat = "events.human-format"
 )

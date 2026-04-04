@@ -11,19 +11,10 @@ import (
 	"os"
 	"path/filepath"
 
+	cfgSkill "github.com/ActiveMemory/ctx/internal/config/skill"
 	errSkill "github.com/ActiveMemory/ctx/internal/err/skill"
 	ctxIo "github.com/ActiveMemory/ctx/internal/io"
 )
-
-// skillManifest is the expected filename inside each skill directory.
-const skillManifest = "SKILL.md"
-
-// frontmatterDelimiter is the YAML frontmatter boundary marker.
-const frontmatterDelimiter = "---"
-
-// trimCR is the character set trimmed from the start of
-// raw frontmatter content to normalize line endings.
-const trimCR = "\n\r"
 
 // LoadAll reads all installed skills from subdirectories of skillsDir.
 // Each subdirectory must contain a SKILL.md file with YAML frontmatter.
@@ -55,7 +46,7 @@ func LoadAll(skillsDir string) ([]*Skill, error) {
 // The name corresponds to a subdirectory containing a SKILL.md file.
 func Load(skillsDir, name string) (*Skill, error) {
 	dir := filepath.Join(skillsDir, name)
-	manifestPath := filepath.Join(dir, skillManifest)
+	manifestPath := filepath.Join(dir, cfgSkill.SkillManifest)
 
 	data, readErr := ctxIo.SafeReadUserFile(manifestPath)
 	if readErr != nil {

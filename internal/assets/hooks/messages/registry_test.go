@@ -6,7 +6,11 @@
 
 package messages
 
-import "testing"
+import (
+	"testing"
+
+	cfgHook "github.com/ActiveMemory/ctx/internal/config/hook"
+)
 
 func TestRegistryCount(t *testing.T) {
 	entries := Registry()
@@ -19,8 +23,8 @@ func TestRegistryCount(t *testing.T) {
 }
 
 func TestRegistryYAMLParses(t *testing.T) {
-	if parseErr := RegistryError(); parseErr != nil {
-		t.Fatalf("RegistryError() = %v, want nil", parseErr)
+	if parseErr := registryError(); parseErr != nil {
+		t.Fatalf("registryError() = %v, want nil", parseErr)
 	}
 
 	for i, entry := range Registry() {
@@ -30,8 +34,8 @@ func TestRegistryYAMLParses(t *testing.T) {
 		if entry.Variant == "" {
 			t.Errorf("entry %d: empty variant", i)
 		}
-		validCategory := entry.Category == CategoryCustomizable ||
-			entry.Category == CategoryCtxSpecific
+		validCategory := entry.Category == cfgHook.CategoryCustomizable ||
+			entry.Category == cfgHook.CategoryCtxSpecific
 		if !validCategory {
 			t.Errorf("entry %d (%s/%s): invalid category %q",
 				i, entry.Hook, entry.Variant, entry.Category)
@@ -48,8 +52,8 @@ func TestLookupKnownEntry(t *testing.T) {
 	if info == nil {
 		t.Fatal("Lookup(check-persistence, nudge) = nil, want non-nil")
 	}
-	if info.Category != CategoryCustomizable {
-		t.Errorf("category = %q, want %q", info.Category, CategoryCustomizable)
+	if info.Category != cfgHook.CategoryCustomizable {
+		t.Errorf("category = %q, want %q", info.Category, cfgHook.CategoryCustomizable)
 	}
 	if info.Description != "Context persistence nudge" {
 		t.Errorf("description = %q, want %q",
@@ -69,7 +73,7 @@ func TestLookupUnknown(t *testing.T) {
 }
 
 func TestHooksReturnsUniqueNames(t *testing.T) {
-	hooks := Hooks()
+	hooks := hooks()
 	if len(hooks) == 0 {
 		t.Fatal("Hooks() returned empty list")
 	}

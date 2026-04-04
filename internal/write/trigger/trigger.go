@@ -10,16 +10,9 @@ import (
 	"fmt"
 
 	"github.com/spf13/cobra"
-)
 
-// User-facing messages for hook list and test output.
-const (
-	// msgNoHooksFound is shown when no hooks are discovered.
-	msgNoHooksFound = "No hooks found."
-	// msgErrors is the section header for hook errors.
-	msgErrors = "Errors:"
-	// msgNoOutput is shown when hooks produce no output.
-	msgNoOutput = "No output from hooks."
+	"github.com/ActiveMemory/ctx/internal/assets/read/desc"
+	"github.com/ActiveMemory/ctx/internal/config/embed/text"
 )
 
 // Created prints confirmation that a hook script was created.
@@ -28,7 +21,9 @@ const (
 //   - cmd: Cobra command for output
 //   - path: Path to the created hook script
 func Created(cmd *cobra.Command, path string) {
-	cmd.Println(fmt.Sprintf("Created %s", path))
+	cmd.Println(fmt.Sprintf(
+		desc.Text(text.DescKeyWriteTriggerCreated), path,
+	))
 }
 
 // Disabled prints confirmation that a hook was disabled.
@@ -38,7 +33,10 @@ func Created(cmd *cobra.Command, path string) {
 //   - name: Hook name
 //   - path: Path to the hook script
 func Disabled(cmd *cobra.Command, name, path string) {
-	cmd.Println(fmt.Sprintf("Disabled %s (%s)", name, path))
+	cmd.Println(fmt.Sprintf(
+		desc.Text(text.DescKeyWriteTriggerDisabled),
+		name, path,
+	))
 }
 
 // Enabled prints confirmation that a hook was enabled.
@@ -48,7 +46,10 @@ func Disabled(cmd *cobra.Command, name, path string) {
 //   - name: Hook name
 //   - path: Path to the hook script
 func Enabled(cmd *cobra.Command, name, path string) {
-	cmd.Println(fmt.Sprintf("Enabled %s (%s)", name, path))
+	cmd.Println(fmt.Sprintf(
+		desc.Text(text.DescKeyWriteTriggerEnabled),
+		name, path,
+	))
 }
 
 // TypeHeader prints a hook type section header.
@@ -57,7 +58,9 @@ func Enabled(cmd *cobra.Command, name, path string) {
 //   - cmd: Cobra command for output
 //   - hookType: The hook type name
 func TypeHeader(cmd *cobra.Command, hookType string) {
-	cmd.Println(fmt.Sprintf("[%s]", hookType))
+	cmd.Println(fmt.Sprintf(
+		desc.Text(text.DescKeyWriteTriggerTypeHdr), hookType,
+	))
 }
 
 // Entry prints a single hook entry with name, status, and path.
@@ -68,7 +71,10 @@ func TypeHeader(cmd *cobra.Command, hookType string) {
 //   - status: "enabled" or "disabled"
 //   - path: Path to the hook script
 func Entry(cmd *cobra.Command, name, status, path string) {
-	cmd.Println(fmt.Sprintf("  %-20s  %-8s  %s", name, status, path))
+	cmd.Println(fmt.Sprintf(
+		desc.Text(text.DescKeyWriteTriggerEntry),
+		name, status, path,
+	))
 }
 
 // BlankLine prints a blank line. Nil cmd is a no-op.
@@ -87,7 +93,7 @@ func BlankLine(cmd *cobra.Command) {
 // Parameters:
 //   - cmd: Cobra command for output
 func NoHooksFound(cmd *cobra.Command) {
-	cmd.Println(msgNoHooksFound)
+	cmd.Println(desc.Text(text.DescKeyWriteTriggerNoHooks))
 }
 
 // Count prints the total hook count.
@@ -96,7 +102,9 @@ func NoHooksFound(cmd *cobra.Command) {
 //   - cmd: Cobra command for output
 //   - count: Number of hooks
 func Count(cmd *cobra.Command, count int) {
-	cmd.Println(fmt.Sprintf("%d hook(s)", count))
+	cmd.Println(fmt.Sprintf(
+		desc.Text(text.DescKeyWriteTriggerCount), count,
+	))
 }
 
 // TestingHeader prints the header for hook testing output.
@@ -105,7 +113,9 @@ func Count(cmd *cobra.Command, count int) {
 //   - cmd: Cobra command for output
 //   - hookType: The hook type being tested
 func TestingHeader(cmd *cobra.Command, hookType string) {
-	cmd.Println(fmt.Sprintf("Testing %s hooks...", hookType))
+	cmd.Println(fmt.Sprintf(
+		desc.Text(text.DescKeyWriteTriggerTestHdr), hookType,
+	))
 	cmd.Println()
 }
 
@@ -115,7 +125,9 @@ func TestingHeader(cmd *cobra.Command, hookType string) {
 //   - cmd: Cobra command for output
 //   - inputJSON: Pretty-printed JSON input
 func TestInput(cmd *cobra.Command, inputJSON string) {
-	cmd.Println(fmt.Sprintf("Input:\n%s", inputJSON))
+	cmd.Println(fmt.Sprintf(
+		desc.Text(text.DescKeyWriteTriggerTestInput), inputJSON,
+	))
 	cmd.Println()
 }
 
@@ -125,7 +137,9 @@ func TestInput(cmd *cobra.Command, inputJSON string) {
 //   - cmd: Cobra command for output
 //   - message: The cancellation reason
 func Cancelled(cmd *cobra.Command, message string) {
-	cmd.Println(fmt.Sprintf("Cancelled: %s", message))
+	cmd.Println(fmt.Sprintf(
+		desc.Text(text.DescKeyWriteTriggerCancelled), message,
+	))
 }
 
 // ContextOutput prints context output from hook execution.
@@ -134,7 +148,9 @@ func Cancelled(cmd *cobra.Command, message string) {
 //   - cmd: Cobra command for output
 //   - context: The context string from hooks
 func ContextOutput(cmd *cobra.Command, context string) {
-	cmd.Println(fmt.Sprintf("Context:\n%s", context))
+	cmd.Println(fmt.Sprintf(
+		desc.Text(text.DescKeyWriteTriggerContext), context,
+	))
 	cmd.Println()
 }
 
@@ -143,7 +159,7 @@ func ContextOutput(cmd *cobra.Command, context string) {
 // Parameters:
 //   - cmd: Cobra command for output
 func ErrorsHeader(cmd *cobra.Command) {
-	cmd.Println(msgErrors)
+	cmd.Println(desc.Text(text.DescKeyWriteTriggerErrorsHdr))
 }
 
 // ErrorLine prints a single error line.
@@ -152,7 +168,9 @@ func ErrorsHeader(cmd *cobra.Command) {
 //   - cmd: Cobra command for output
 //   - errMsg: The error message
 func ErrorLine(cmd *cobra.Command, errMsg string) {
-	cmd.Println(fmt.Sprintf("  %s", errMsg))
+	cmd.Println(fmt.Sprintf(
+		desc.Text(text.DescKeyWriteTriggerErrLine), errMsg,
+	))
 }
 
 // NoOutput prints a message indicating no output from hooks.
@@ -160,5 +178,5 @@ func ErrorLine(cmd *cobra.Command, errMsg string) {
 // Parameters:
 //   - cmd: Cobra command for output
 func NoOutput(cmd *cobra.Command) {
-	cmd.Println(msgNoOutput)
+	cmd.Println(desc.Text(text.DescKeyWriteTriggerNoOutput))
 }

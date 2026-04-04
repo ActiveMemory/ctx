@@ -6,6 +6,21 @@
 
 package schema
 
+// ProtocolVersion is the MCP protocol version string.
+const ProtocolVersion = "2024-11-05"
+
+// Standard JSON-RPC error codes.
+const (
+	// ErrCodeParse indicates malformed JSON.
+	ErrCodeParse = -32700
+	// ErrCodeNotFound indicates method not found.
+	ErrCodeNotFound = -32601
+	// ErrCodeInvalidArg indicates invalid parameters.
+	ErrCodeInvalidArg = -32602
+	// ErrCodeInternal indicates an internal error.
+	ErrCodeInternal = -32603
+)
+
 // JSON Schema type constants.
 const (
 	// Object is the JSON Schema type for objects.

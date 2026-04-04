@@ -11,12 +11,9 @@ import (
 	"path/filepath"
 
 	"github.com/ActiveMemory/ctx/internal/config/fs"
+	"github.com/ActiveMemory/ctx/internal/config/token"
 	errTrigger "github.com/ActiveMemory/ctx/internal/err/trigger"
 )
-
-// parentDir is the relative parent directory component used
-// in boundary checks.
-const parentDir = ".."
 
 // ValidatePath checks that a hook script path:
 //  1. Is not a symlink
@@ -60,7 +57,7 @@ func ValidatePath(hooksDir, hookPath string) error {
 	}
 
 	sep := string(filepath.Separator)
-	if rel == parentDir || len(rel) >= 3 && rel[:3] == parentDir+sep {
+	if rel == token.ParentDir || len(rel) >= 3 && rel[:3] == token.ParentDir+sep {
 		return errTrigger.Boundary(hookPath, hooksDir)
 	}
 

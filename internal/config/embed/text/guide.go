@@ -8,7 +8,10 @@ package text
 
 // DescKeys for guide display.
 const (
-	DescKeyGuideDefault      = "guide.default"
+	// DescKeyGuideDefault is the text key for guide default messages.
+	DescKeyGuideDefault = "guide.default"
+	// DescKeyGuideCommandsHead is the text key for guide commands head messages.
 	DescKeyGuideCommandsHead = "guide.commands-heading"
-	DescKeyGuideCommandLine  = "guide.command-line"
+	// DescKeyGuideCommandLine is the text key for guide command line messages.
+	DescKeyGuideCommandLine = "guide.command-line"
 )

@@ -14,6 +14,7 @@ import (
 	"github.com/spf13/cobra"
 
 	"github.com/ActiveMemory/ctx/internal/assets/read/desc"
+	cfgBootstrap "github.com/ActiveMemory/ctx/internal/config/bootstrap"
 	"github.com/ActiveMemory/ctx/internal/config/cli"
 	"github.com/ActiveMemory/ctx/internal/config/embed/cmd"
 	embedFlag "github.com/ActiveMemory/ctx/internal/config/embed/flag"
@@ -30,7 +31,7 @@ import (
 // version is set at build time via ldflags:
 //
 //	-X github.com/ActiveMemory/ctx/internal/bootstrap.version=$(cat VERSION)
-var version = "dev"
+var version = cfgBootstrap.DefaultVersion
 
 // RootCmd creates and returns the root cobra command for the ctx CLI.
 //

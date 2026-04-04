@@ -7,8 +7,8 @@
 package tag
 
 import (
-	"fmt"
 	"path/filepath"
+	"strconv"
 
 	"github.com/spf13/cobra"
 
@@ -45,7 +45,7 @@ func Run(cmd *cobra.Command, commitRef, note string) error {
 
 	entry := trace.OverrideEntry{
 		Commit: hash,
-		Refs:   []string{fmt.Sprintf("%q", note)},
+		Refs:   []string{strconv.Quote(note)},
 	}
 
 	if writeErr := trace.WriteOverride(entry, traceDir); writeErr != nil {

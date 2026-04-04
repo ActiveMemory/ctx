@@ -8,13 +8,18 @@ package cmd
 
 // Use strings for notify subcommands.
 const (
+	// UseNotifySetup is the cobra Use string for the notify setup command.
 	UseNotifySetup = "setup"
-	UseNotifyTest  = "test"
+	// UseNotifyTest is the cobra Use string for the notify test command.
+	UseNotifyTest = "test"
 )
 
 // DescKeys for notify subcommands.
 const (
-	DescKeyNotify      = "notify"
+	// DescKeyNotify is the description key for the notify command.
+	DescKeyNotify = "notify"
+	// DescKeyNotifySetup is the description key for the notify setup command.
 	DescKeyNotifySetup = "notify.setup"
-	DescKeyNotifyTest  = "notify.test"
+	// DescKeyNotifyTest is the description key for the notify test command.
+	DescKeyNotifyTest = "notify.test"
 )

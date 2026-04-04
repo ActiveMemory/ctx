@@ -8,7 +8,11 @@ package text
 
 // DescKeys for state management errors.
 const (
-	DescKeyErrStateLoadState       = "err.state.load-state"
+	// DescKeyErrStateLoadState is the text key for err state load state messages.
+	DescKeyErrStateLoadState = "err.state.load-state"
+	// DescKeyErrStateReadingStateDir is the text key for err state reading state
+	// dir messages.
 	DescKeyErrStateReadingStateDir = "err.state.reading-state-dir"
-	DescKeyErrStateSaveState       = "err.state.save-state"
+	// DescKeyErrStateSaveState is the text key for err state save state messages.
+	DescKeyErrStateSaveState = "err.state.save-state"
 )

@@ -17,14 +17,6 @@ import (
 	errParser "github.com/ActiveMemory/ctx/internal/err/parser"
 )
 
-// CategoryCustomizable marks messages intended for
-// project-specific customization.
-const CategoryCustomizable = "customizable"
-
-// CategoryCtxSpecific marks messages specific to ctx's
-// own development workflow.
-const CategoryCtxSpecific = "ctx-specific"
-
 // registryOnce, registryData, and registryErr cache the parsed hook
 // message registry loaded once via sync.Once.
 var (
@@ -61,16 +53,6 @@ func Registry() []HookMessageInfo {
 	return registryData
 }
 
-// RegistryError returns any error encountered while parsing the
-// embedded registry.yaml. Nil on success.
-//
-// Returns:
-//   - error: Parse error from registry.yaml, or nil on success
-func RegistryError() error {
-	Registry() // ensure sync.Once has run
-	return registryErr
-}
-
 // Lookup returns the HookMessageInfo for the given hook and variant,
 // or nil if not found.
 //
@@ -87,22 +69,6 @@ func Lookup(hookName, variant string) *HookMessageInfo {
 		}
 	}
 	return nil
-}
-
-// Hooks returns a deduplicated list of hook names in the registry.
-//
-// Returns:
-//   - []string: Hook names in alphabetical order
-func Hooks() []string {
-	seen := make(map[string]bool)
-	var hooks []string
-	for _, info := range Registry() {
-		if !seen[info.Hook] {
-			seen[info.Hook] = true
-			hooks = append(hooks, info.Hook)
-		}
-	}
-	return hooks
 }
 
 // Variants returns the variant names for a given hook.

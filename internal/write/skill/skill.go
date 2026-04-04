@@ -10,6 +10,9 @@ import (
 	"fmt"
 
 	"github.com/spf13/cobra"
+
+	"github.com/ActiveMemory/ctx/internal/assets/read/desc"
+	"github.com/ActiveMemory/ctx/internal/config/embed/text"
 )
 
 // Installed prints confirmation that a skill was installed.
@@ -19,18 +22,17 @@ import (
 //   - name: Skill name
 //   - dir: Installation directory
 func Installed(cmd *cobra.Command, name, dir string) {
-	cmd.Println(fmt.Sprintf("Installed %s → %s", name, dir))
+	cmd.Println(fmt.Sprintf(
+		desc.Text(text.DescKeyWriteSkillInstalled),
+		name, dir))
 }
-
-// msgNoSkills is shown when no skills are installed.
-const msgNoSkills = "No skills installed."
 
 // NoSkillsFound prints a message indicating no skills are installed.
 //
 // Parameters:
 //   - cmd: Cobra command for output
 func NoSkillsFound(cmd *cobra.Command) {
-	cmd.Println(msgNoSkills)
+	cmd.Println(desc.Text(text.DescKeyWriteSkillNoSkills))
 }
 
 // EntryWithDesc prints a skill entry with name and description.
@@ -40,7 +42,9 @@ func NoSkillsFound(cmd *cobra.Command) {
 //   - name: Skill name
 //   - description: Skill description
 func EntryWithDesc(cmd *cobra.Command, name, description string) {
-	cmd.Println(fmt.Sprintf("  %-20s  %s", name, description))
+	cmd.Println(fmt.Sprintf(
+		desc.Text(text.DescKeyWriteSkillEntryDesc),
+		name, description))
 }
 
 // Entry prints a skill entry with name only.
@@ -49,7 +53,8 @@ func EntryWithDesc(cmd *cobra.Command, name, description string) {
 //   - cmd: Cobra command for output
 //   - name: Skill name
 func Entry(cmd *cobra.Command, name string) {
-	cmd.Println(fmt.Sprintf("  %s", name))
+	cmd.Println(fmt.Sprintf(
+		desc.Text(text.DescKeyWriteSkillEntry), name))
 }
 
 // Count prints the total skill count.
@@ -58,7 +63,8 @@ func Entry(cmd *cobra.Command, name string) {
 //   - cmd: Cobra command for output
 //   - count: Number of skills
 func Count(cmd *cobra.Command, count int) {
-	cmd.Println(fmt.Sprintf("\n%d skill(s)", count))
+	cmd.Println(fmt.Sprintf(
+		desc.Text(text.DescKeyWriteSkillCount), count))
 }
 
 // Removed prints confirmation that a skill was removed.
@@ -67,5 +73,6 @@ func Count(cmd *cobra.Command, count int) {
 //   - cmd: Cobra command for output
 //   - name: Skill name
 func Removed(cmd *cobra.Command, name string) {
-	cmd.Println(fmt.Sprintf("Removed %s", name))
+	cmd.Println(fmt.Sprintf(
+		desc.Text(text.DescKeyWriteSkillRemoved), name))
 }

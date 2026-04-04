@@ -8,6 +8,8 @@ package flag
 
 // DescKeys for drift command flags.
 const (
-	DescKeyDriftFix  = "drift.fix"
+	// DescKeyDriftFix is the description key for the drift fix flag.
+	DescKeyDriftFix = "drift.fix"
+	// DescKeyDriftJson is the description key for the drift json flag.
 	DescKeyDriftJson = "drift.json"
 )

@@ -8,7 +8,12 @@ package text
 
 // DescKeys for MCP session output.
 const (
+	// DescKeyMCPSessionStartedCallerFormat is the text key for mcp session
+	// started caller format messages.
 	DescKeyMCPSessionStartedCallerFormat = "mcp.session-started-caller-format"
-	DescKeyMCPSessionStartedFormat       = "mcp.session-started-format"
-	DescKeyMCPSessionEnding              = "mcp.session-ending"
+	// DescKeyMCPSessionStartedFormat is the text key for mcp session started
+	// format messages.
+	DescKeyMCPSessionStartedFormat = "mcp.session-started-format"
+	// DescKeyMCPSessionEnding is the text key for mcp session ending messages.
+	DescKeyMCPSessionEnding = "mcp.session-ending"
 )

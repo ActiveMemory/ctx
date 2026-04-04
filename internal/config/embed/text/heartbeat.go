@@ -8,8 +8,14 @@ package text
 
 // DescKeys for heartbeat output.
 const (
-	DescKeyHeartbeatLogTokens    = "heartbeat.log-tokens"
-	DescKeyHeartbeatLogPlain     = "heartbeat.log-plain"
+	// DescKeyHeartbeatLogTokens is the text key for heartbeat log tokens messages.
+	DescKeyHeartbeatLogTokens = "heartbeat.log-tokens"
+	// DescKeyHeartbeatLogPlain is the text key for heartbeat log plain messages.
+	DescKeyHeartbeatLogPlain = "heartbeat.log-plain"
+	// DescKeyHeartbeatNotifyTokens is the text key for heartbeat notify tokens
+	// messages.
 	DescKeyHeartbeatNotifyTokens = "heartbeat.notify-tokens"
-	DescKeyHeartbeatNotifyPlain  = "heartbeat.notify-plain"
+	// DescKeyHeartbeatNotifyPlain is the text key for heartbeat notify plain
+	// messages.
+	DescKeyHeartbeatNotifyPlain = "heartbeat.notify-plain"
 )

@@ -526,3 +526,148 @@ write.why-label-invariants:
   short: "Design Invariants"
 help.community-footer:
   short: "\nHave a question, bug, or feature request? Join us on Discord:\n  https://ctx.ist/discord\n"
+
+write.steering-created:
+  short: 'Created %s'
+write.steering-skipped:
+  short: 'Skipped %s (already exists)'
+write.steering-init-summary:
+  short: "\n%d created, %d skipped"
+write.steering-file-entry:
+  short: '%-20s  inclusion=%-7s  priority=%-3d  tools=%s'
+write.steering-file-count:
+  short: "\n%d steering file(s)"
+write.steering-preview-head:
+  short: 'Steering files matching prompt %q:'
+write.steering-preview-entry:
+  short: '  %-20s  inclusion=%-7s  priority=%-3d  tools=%s'
+write.steering-preview-count:
+  short: "\n%d file(s) would be included"
+write.steering-sync-written:
+  short: 'Written: %s'
+write.steering-sync-skipped:
+  short: 'Skipped: %s'
+write.steering-sync-error:
+  short: 'Error: %s'
+write.steering-sync-summary:
+  short: "\n%d written, %d skipped, %d errors"
+
+write.skill-installed:
+  short: 'Installed %s → %s'
+write.skill-entry-desc:
+  short: '  %-20s  %s'
+write.skill-entry:
+  short: '  %s'
+write.skill-count:
+  short: "\n%d skill(s)"
+write.skill-removed:
+  short: 'Removed %s'
+
+write.setup-deploy-complete:
+  short: '%s setup complete.'
+write.setup-deploy-mcp:
+  short: '  MCP server: %s'
+write.setup-deploy-steering:
+  short: '  Steering:   %s'
+write.setup-deploy-exists:
+  short: "\u2713 %s already exists (skipped)"
+write.setup-deploy-created:
+  short: "\u2713 Created %s"
+write.setup-deploy-synced:
+  short: "\u2713 Synced steering: %s"
+write.setup-deploy-skip-steer:
+  short: '  Skipped steering: %s (unchanged)'
+
+mcp.steering-section:
+  short: "## %s\n\n%s\n\n"
+mcp.search-hit-line:
+  short: "%s:%d: %s\n"
+mcp.search-no-match:
+  short: 'No matches for %q in %s.'
+
+trigger.warn:
+  short: 'hook %s: %v'
+trigger.error-item:
+  short: '%s: %s'
+trigger.skip-warn:
+  short: 'hook skip %s: %v'
+
+drift.tool-suffix:
+  short: '%s (tool: %s)'
+
+write.trigger-created:
+  short: 'Created %s'
+write.trigger-disabled:
+  short: 'Disabled %s (%s)'
+write.trigger-enabled:
+  short: 'Enabled %s (%s)'
+write.trigger-type-hdr:
+  short: '[%s]'
+write.trigger-entry:
+  short: '  %-20s  %-8s  %s'
+write.trigger-count:
+  short: '%d hook(s)'
+write.trigger-test-hdr:
+  short: 'Testing %s hooks...'
+write.trigger-test-input:
+  short: "Input:\n%s"
+write.trigger-cancelled:
+  short: 'Cancelled: %s'
+write.trigger-context:
+  short: "Context:\n%s"
+write.trigger-err-line:
+  short: '  %s'
+
+write.setup-cursor-head:
+  short: 'Cursor integration:'
+write.setup-cursor-run:
+  short: '  Run: ctx setup cursor --write'
+write.setup-cursor-mcp:
+  short: '  Creates: .cursor/mcp.json (MCP server config)'
+write.setup-cursor-sync:
+  short: '  Syncs:   .cursor/rules/ (steering files)'
+write.setup-kiro-head:
+  short: 'Kiro integration:'
+write.setup-kiro-run:
+  short: '  Run: ctx setup kiro --write'
+write.setup-kiro-mcp:
+  short: '  Creates: .kiro/settings/mcp.json (MCP server config)'
+write.setup-kiro-sync:
+  short: '  Syncs:   .kiro/steering/ (steering files)'
+write.setup-cline-head:
+  short: 'Cline integration:'
+write.setup-cline-run:
+  short: '  Run: ctx setup cline --write'
+write.setup-cline-mcp:
+  short: '  Creates: .vscode/mcp.json (MCP server config)'
+write.setup-cline-sync:
+  short: '  Syncs:   .clinerules/ (steering files)'
+write.setup-no-steering-to-sync:
+  short: '  No steering files to sync (run ctx steering init first)'
+
+write.skill-no-skills:
+  short: 'No skills installed.'
+
+write.steering-no-files:
+  short: 'No steering files found.'
+write.steering-no-match:
+  short: 'No steering files match the given prompt.'
+
+write.trigger-no-hooks:
+  short: 'No hooks found.'
+write.trigger-errors-hdr:
+  short: 'Errors:'
+write.trigger-no-output:
+  short: 'No output from hooks.'
+
+mcp.hooks-disabled:
+  short: 'Hooks disabled.'
+mcp.session-start-ok:
+  short: 'Session start hooks executed. No additional context.'
+mcp.session-end-ok:
+  short: 'Session end hooks executed.'
+
+mcp.steering-no-files:
+  short: 'No steering files found.'
+mcp.steering-no-match:
+  short: 'No matching steering files.'

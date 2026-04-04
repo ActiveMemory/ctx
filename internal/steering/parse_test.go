@@ -7,6 +7,7 @@
 package steering
 
 import (
+	cfgSteering "github.com/ActiveMemory/ctx/internal/config/steering"
 	"strings"
 	"testing"
 )
@@ -35,8 +36,8 @@ Use RESTful conventions.
 	if sf.Description != "REST API design conventions" {
 		t.Errorf("Description = %q, want %q", sf.Description, "REST API design conventions")
 	}
-	if sf.Inclusion != InclusionAuto {
-		t.Errorf("Inclusion = %q, want %q", sf.Inclusion, InclusionAuto)
+	if sf.Inclusion != cfgSteering.InclusionAuto {
+		t.Errorf("Inclusion = %q, want %q", sf.Inclusion, cfgSteering.InclusionAuto)
 	}
 	if len(sf.Tools) != 2 || sf.Tools[0] != "claude" || sf.Tools[1] != "cursor" {
 		t.Errorf("Tools = %v, want [claude cursor]", sf.Tools)
@@ -63,8 +64,8 @@ Some body content.
 		t.Fatalf("Parse() error = %v", err)
 	}
 
-	if sf.Inclusion != InclusionManual {
-		t.Errorf("Inclusion = %q, want default %q", sf.Inclusion, InclusionManual)
+	if sf.Inclusion != cfgSteering.InclusionManual {
+		t.Errorf("Inclusion = %q, want default %q", sf.Inclusion, cfgSteering.InclusionManual)
 	}
 	if sf.Tools != nil {
 		t.Errorf("Tools = %v, want nil (all tools)", sf.Tools)
@@ -146,8 +147,8 @@ Always included.
 	if err != nil {
 		t.Fatalf("Parse() error = %v", err)
 	}
-	if sf.Inclusion != InclusionAlways {
-		t.Errorf("Inclusion = %q, want %q", sf.Inclusion, InclusionAlways)
+	if sf.Inclusion != cfgSteering.InclusionAlways {
+		t.Errorf("Inclusion = %q, want %q", sf.Inclusion, cfgSteering.InclusionAlways)
 	}
 }
 
@@ -198,7 +199,7 @@ Content here.
 func TestPrint_MinimalFile(t *testing.T) {
 	sf := &SteeringFile{
 		Name:      "minimal",
-		Inclusion: InclusionManual,
+		Inclusion: cfgSteering.InclusionManual,
 		Priority:  50,
 		Body:      "Hello.\n",
 	}
@@ -220,7 +221,7 @@ func TestPrint_MinimalFile(t *testing.T) {
 func TestPrint_NilToolsOmitted(t *testing.T) {
 	sf := &SteeringFile{
 		Name:      "no-tools",
-		Inclusion: InclusionManual,
+		Inclusion: cfgSteering.InclusionManual,
 		Priority:  50,
 	}
 

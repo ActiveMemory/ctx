@@ -8,9 +8,14 @@ package flag
 
 // DescKeys for agent command flags.
 const (
-	DescKeyAgentBudget   = "agent.budget"
+	// DescKeyAgentBudget is the description key for the agent budget flag.
+	DescKeyAgentBudget = "agent.budget"
+	// DescKeyAgentCooldown is the description key for the agent cooldown flag.
 	DescKeyAgentCooldown = "agent.cooldown"
-	DescKeyAgentFormat   = "agent.format"
-	DescKeyAgentSession  = "agent.session"
-	DescKeyAgentSkill    = "agent.skill"
+	// DescKeyAgentFormat is the description key for the agent format flag.
+	DescKeyAgentFormat = "agent.format"
+	// DescKeyAgentSession is the description key for the agent session flag.
+	DescKeyAgentSession = "agent.session"
+	// DescKeyAgentSkill is the description key for the agent skill flag.
+	DescKeyAgentSkill = "agent.skill"
 )

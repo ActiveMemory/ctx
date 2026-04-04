@@ -8,13 +8,22 @@ package cmd
 
 // Use strings for permission subcommands.
 const (
-	UsePermissionRestore  = "restore"
+	// UsePermissionRestore is the cobra Use string for the permission restore
+	// command.
+	UsePermissionRestore = "restore"
+	// UsePermissionSnapshot is the cobra Use string for the permission snapshot
+	// command.
 	UsePermissionSnapshot = "snapshot"
 )
 
 // DescKeys for permission subcommands.
 const (
-	DescKeyPermission         = "permission"
-	DescKeyPermissionRestore  = "permission.restore"
+	// DescKeyPermission is the description key for the permission command.
+	DescKeyPermission = "permission"
+	// DescKeyPermissionRestore is the description key for the permission restore
+	// command.
+	DescKeyPermissionRestore = "permission.restore"
+	// DescKeyPermissionSnapshot is the description key for the permission
+	// snapshot command.
 	DescKeyPermissionSnapshot = "permission.snapshot"
 )

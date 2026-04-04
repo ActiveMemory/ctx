@@ -6,6 +6,10 @@
 
 package bootstrap
 
+// DefaultVersion is the fallback version string when no
+// build-time ldflags are provided.
+const DefaultVersion = "dev"
+
 // Bootstrap display constants.
 const (
 	// FileListWidth is the character width at which the file list wraps.

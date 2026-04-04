@@ -8,16 +8,26 @@ package text
 
 // DescKeys for navigation display labels.
 const (
-	DescKeyLabelHome   = "label.home"
+	// DescKeyLabelHome is the text key for label home messages.
+	DescKeyLabelHome = "label.home"
+	// DescKeyLabelTopics is the text key for label topics messages.
 	DescKeyLabelTopics = "label.topics"
-	DescKeyLabelFiles  = "label.files"
-	DescKeyLabelTypes  = "label.types"
+	// DescKeyLabelFiles is the text key for label files messages.
+	DescKeyLabelFiles = "label.files"
+	// DescKeyLabelTypes is the text key for label types messages.
+	DescKeyLabelTypes = "label.types"
 )
 
 // DescKeys for UI emphasis labels.
 const (
-	DescKeyLabelBoldReminder    = "label.bold-reminder"
+	// DescKeyLabelBoldReminder is the text key for label bold reminder messages.
+	DescKeyLabelBoldReminder = "label.bold-reminder"
+	// DescKeyLabelBoldReminderFmt is the text key for label bold reminder fmt
+	// messages.
 	DescKeyLabelBoldReminderFmt = "label.bold-reminder-fmt"
-	DescKeyLabelToolOutput      = "label.tool-output"
-	DescKeyLabelSuggestionMode  = "label.suggestion-mode"
+	// DescKeyLabelToolOutput is the text key for label tool output messages.
+	DescKeyLabelToolOutput = "label.tool-output"
+	// DescKeyLabelSuggestionMode is the text key for label suggestion mode
+	// messages.
+	DescKeyLabelSuggestionMode = "label.suggestion-mode"
 )

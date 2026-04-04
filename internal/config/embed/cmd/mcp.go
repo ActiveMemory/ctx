@@ -11,6 +11,8 @@ const UseMcpServe = "serve"
 
 // DescKeys for MCP subcommands.
 const (
-	DescKeyMcp      = "mcp"
+	// DescKeyMcp is the description key for the mcp command.
+	DescKeyMcp = "mcp"
+	// DescKeyMcpServe is the description key for the mcp serve command.
 	DescKeyMcpServe = "mcp.serve"
 )

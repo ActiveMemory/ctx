@@ -15,6 +15,7 @@ import (
 	"github.com/ActiveMemory/ctx/internal/assets/read/desc"
 	readTpl "github.com/ActiveMemory/ctx/internal/assets/read/template"
 	cfgCtx "github.com/ActiveMemory/ctx/internal/config/ctx"
+	cfgDrift "github.com/ActiveMemory/ctx/internal/config/drift"
 	"github.com/ActiveMemory/ctx/internal/config/embed/text"
 	"github.com/ActiveMemory/ctx/internal/config/file"
 	"github.com/ActiveMemory/ctx/internal/config/marker"
@@ -81,7 +82,7 @@ func checkPathReferences(ctx *entity.Context, report *Report) {
 					report.Warnings = append(report.Warnings, Issue{
 						File:    f.Name,
 						Line:    lineNum + 1,
-						Type:    IssueDeadPath,
+						Type:    cfgDrift.IssueDeadPath,
 						Message: desc.Text(text.DescKeyDriftDeadPath),
 						Path:    path,
 					})
@@ -92,7 +93,7 @@ func checkPathReferences(ctx *entity.Context, report *Report) {
 	}
 
 	if !foundDeadPaths {
-		report.Passed = append(report.Passed, CheckPathReferences)
+		report.Passed = append(report.Passed, cfgDrift.CheckPathReferences)
 	}
 }
 
@@ -113,7 +114,7 @@ func checkStaleness(ctx *entity.Context, report *Report) {
 		if completedCount > 10 {
 			report.Warnings = append(report.Warnings, Issue{
 				File:    f.Name,
-				Type:    IssueStaleness,
+				Type:    cfgDrift.IssueStaleness,
 				Message: desc.Text(text.DescKeyDriftStaleness),
 				Path:    "",
 			})
@@ -122,7 +123,7 @@ func checkStaleness(ctx *entity.Context, report *Report) {
 	}
 
 	if !staleness {
-		report.Passed = append(report.Passed, CheckStaleness)
+		report.Passed = append(report.Passed, cfgDrift.CheckStaleness)
 	}
 }
 
@@ -174,9 +175,9 @@ func checkConstitution(_ *entity.Context, report *Report) {
 				if len(content) > 0 && !templateFile(content) {
 					report.Violations = append(report.Violations, Issue{
 						File:    entry.Name(),
-						Type:    IssueSecret,
+						Type:    cfgDrift.IssueSecret,
 						Message: desc.Text(text.DescKeyDriftSecret),
-						Rule:    RuleNoSecrets,
+						Rule:    cfgDrift.RuleNoSecrets,
 					})
 					foundViolation = true
 				}
@@ -185,7 +186,7 @@ func checkConstitution(_ *entity.Context, report *Report) {
 	}
 
 	if !foundViolation {
-		report.Passed = append(report.Passed, CheckConstitution)
+		report.Passed = append(report.Passed, cfgDrift.CheckConstitution)
 	}
 }
 
@@ -208,7 +209,7 @@ func checkRequiredFiles(ctx *entity.Context, report *Report) {
 		if !existingFiles[name] {
 			report.Warnings = append(report.Warnings, Issue{
 				File:    name,
-				Type:    IssueMissing,
+				Type:    cfgDrift.IssueMissing,
 				Message: desc.Text(text.DescKeyDriftMissingFile),
 			})
 			allPresent = false
@@ -216,7 +217,7 @@ func checkRequiredFiles(ctx *entity.Context, report *Report) {
 	}
 
 	if allPresent {
-		report.Passed = append(report.Passed, CheckRequiredFiles)
+		report.Passed = append(report.Passed, cfgDrift.CheckRequiredFiles)
 	}
 }
 
@@ -254,7 +255,7 @@ func checkFileAge(ctx *entity.Context, report *Report) {
 			days := int(time.Since(f.ModTime).Hours() / cfgTime.HoursPerDay)
 			report.Warnings = append(report.Warnings, Issue{
 				File:    f.Name,
-				Type:    IssueStaleAge,
+				Type:    cfgDrift.IssueStaleAge,
 				Message: fmt.Sprintf(desc.Text(text.DescKeyDriftStaleAge), days),
 			})
 			foundStale = true
@@ -262,7 +263,7 @@ func checkFileAge(ctx *entity.Context, report *Report) {
 	}
 
 	if !foundStale {
-		report.Passed = append(report.Passed, CheckFileAge)
+		report.Passed = append(report.Passed, cfgDrift.CheckFileAge)
 	}
 }
 
@@ -297,7 +298,7 @@ func checkEntryCount(ctx *entity.Context, report *Report) {
 		if len(blocks) > c.threshold {
 			report.Warnings = append(report.Warnings, Issue{
 				File: f.Name,
-				Type: IssueEntryCount,
+				Type: cfgDrift.IssueEntryCount,
 				Message: fmt.Sprintf(
 					desc.Text(text.DescKeyDriftEntryCount),
 					len(blocks), c.threshold,
@@ -308,7 +309,7 @@ func checkEntryCount(ctx *entity.Context, report *Report) {
 	}
 
 	if !found {
-		report.Passed = append(report.Passed, CheckEntryCount)
+		report.Passed = append(report.Passed, cfgDrift.CheckEntryCount)
 	}
 }
 
@@ -352,7 +353,7 @@ func checkMissingPackages(ctx *entity.Context, report *Report) {
 		if !referenced[pkg] {
 			report.Warnings = append(report.Warnings, Issue{
 				File: f.Name,
-				Type: IssueMissingPackage,
+				Type: cfgDrift.IssueMissingPackage,
 				Message: fmt.Sprintf(
 					desc.Text(text.DescKeyDriftMissingPackage), pkg,
 				),
@@ -363,7 +364,7 @@ func checkMissingPackages(ctx *entity.Context, report *Report) {
 	}
 
 	if !found {
-		report.Passed = append(report.Passed, CheckMissingPackages)
+		report.Passed = append(report.Passed, cfgDrift.CheckMissingPackages)
 	}
 }
 
@@ -416,7 +417,7 @@ func checkTemplateHeaders(ctx *entity.Context, report *Report) {
 
 		report.Warnings = append(report.Warnings, Issue{
 			File: f.Name,
-			Type: IssueStaleHeader,
+			Type: cfgDrift.IssueStaleHeader,
 			Message: fmt.Sprintf(
 				desc.Text(text.DescKeyDriftStaleHeader), f.Name,
 			),
@@ -425,6 +426,6 @@ func checkTemplateHeaders(ctx *entity.Context, report *Report) {
 	}
 
 	if !found {
-		report.Passed = append(report.Passed, CheckTemplateHeaders)
+		report.Passed = append(report.Passed, cfgDrift.CheckTemplateHeaders)
 	}
 }

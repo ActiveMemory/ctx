@@ -8,6 +8,8 @@ package flag
 
 // DescKeys for guide command flags.
 const (
+	// DescKeyGuideCommands is the description key for the guide commands flag.
 	DescKeyGuideCommands = "guide.commands"
-	DescKeyGuideSkills   = "guide.skills"
+	// DescKeyGuideSkills is the description key for the guide skills flag.
+	DescKeyGuideSkills = "guide.skills"
 )

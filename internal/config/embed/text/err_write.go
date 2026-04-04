@@ -8,6 +8,8 @@ package text
 
 // DescKeys for write operations errors.
 const (
+	// DescKeyWritePrefixError is the text key for write prefix error messages.
 	DescKeyWritePrefixError = "write.prefix-error"
-	DescKeyWritePrefixWarn  = "write.prefix-warn"
+	// DescKeyWritePrefixWarn is the text key for write prefix warn messages.
+	DescKeyWritePrefixWarn = "write.prefix-warn"
 )

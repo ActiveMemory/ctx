@@ -16,6 +16,10 @@ import (
 	"testing"
 )
 
+// DO NOT add entries here to make tests pass. New code must
+// conform to the check. Widening requires a dedicated PR with
+// justification for each entry.
+//
 // exemptTypePackages lists package path segments where
 // types intentionally do NOT live in types.go. Each
 // has a documented reason.

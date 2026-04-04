@@ -11,6 +11,8 @@ import (
 	"path/filepath"
 	"sort"
 
+	"github.com/ActiveMemory/ctx/internal/assets/read/desc"
+	"github.com/ActiveMemory/ctx/internal/config/embed/text"
 	"github.com/ActiveMemory/ctx/internal/config/fs"
 	"github.com/ActiveMemory/ctx/internal/config/warn"
 	ctxIo "github.com/ActiveMemory/ctx/internal/io"
@@ -39,7 +41,7 @@ func Discover(hooksDir string) (map[HookType][]HookInfo, error) {
 	}
 
 	for _, ht := range ValidTypes() {
-		typeDir := filepath.Join(hooksDir, string(ht))
+		typeDir := filepath.Join(hooksDir, ht)
 
 		entries, readErr := os.ReadDir(typeDir)
 		if readErr != nil {
@@ -59,7 +61,9 @@ func Discover(hooksDir string) (map[HookType][]HookInfo, error) {
 
 			validateErr := ValidatePath(hooksDir, path)
 			if validateErr != nil {
-				ctxLog.Warn("hook skip %s: %v", path, validateErr)
+				ctxLog.Warn(
+					desc.Text(text.DescKeyTriggerSkipWarn),
+					path, validateErr)
 				continue
 			}
 
@@ -110,7 +114,7 @@ func FindByName(hooksDir, name string) (*HookInfo, error) {
 	}
 
 	for _, ht := range ValidTypes() {
-		typeDir := filepath.Join(hooksDir, string(ht))
+		typeDir := filepath.Join(hooksDir, ht)
 
 		entries, readErr := os.ReadDir(typeDir)
 		if readErr != nil {

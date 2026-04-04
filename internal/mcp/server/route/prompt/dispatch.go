@@ -13,6 +13,7 @@ import (
 	"github.com/ActiveMemory/ctx/internal/assets/read/desc"
 	"github.com/ActiveMemory/ctx/internal/config/embed/text"
 	"github.com/ActiveMemory/ctx/internal/config/mcp/prompt"
+	cfgSchema "github.com/ActiveMemory/ctx/internal/config/mcp/schema"
 	"github.com/ActiveMemory/ctx/internal/mcp/handler"
 	"github.com/ActiveMemory/ctx/internal/mcp/proto"
 	defPrompt "github.com/ActiveMemory/ctx/internal/mcp/server/def/prompt"
@@ -46,7 +47,7 @@ func DispatchGet(
 ) *proto.Response {
 	var params proto.GetPromptParams
 	if err := json.Unmarshal(req.Params, &params); err != nil {
-		return out.ErrResponse(req.ID, proto.ErrCodeInvalidArg,
+		return out.ErrResponse(req.ID, cfgSchema.ErrCodeInvalidArg,
 			desc.Text(text.DescKeyMCPErrInvalidParams))
 	}
 
@@ -68,7 +69,7 @@ func DispatchGet(
 		)
 	default:
 		return out.ErrResponse(
-			req.ID, proto.ErrCodeNotFound,
+			req.ID, cfgSchema.ErrCodeNotFound,
 			fmt.Sprintf(
 				desc.Text(text.DescKeyMCPErrUnknownPrompt),
 				params.Name,

@@ -9,24 +9,13 @@ package handler
 import (
 	"time"
 
+	"github.com/ActiveMemory/ctx/internal/assets/read/desc"
+	"github.com/ActiveMemory/ctx/internal/config/embed/text"
+	"github.com/ActiveMemory/ctx/internal/config/mcp/field"
+	cfgTrigger "github.com/ActiveMemory/ctx/internal/config/trigger"
 	"github.com/ActiveMemory/ctx/internal/entity"
 	"github.com/ActiveMemory/ctx/internal/rc"
 	"github.com/ActiveMemory/ctx/internal/trigger"
-)
-
-// Trigger result messages.
-const (
-	// msgHooksDisabled is returned when triggers are not enabled.
-	msgHooksDisabled = "Hooks disabled."
-	// msgSessionStartOK is returned when start triggers produce no
-	// additional context.
-	msgSessionStartOK = "Session start hooks executed. " +
-		"No additional context."
-	// msgSessionEndOK is returned when end triggers produce no
-	// additional context.
-	msgSessionEndOK = "Session end hooks executed."
-	// paramSummary is the parameter key for session summary.
-	paramSummary = "summary"
 )
 
 // SessionStartHooks executes session-start triggers and returns
@@ -40,20 +29,20 @@ const (
 //   - error: trigger discovery or execution error
 func (h *Handler) SessionStartHooks() (string, error) {
 	if !rc.HooksEnabled() {
-		return msgHooksDisabled, nil
+		return desc.Text(text.DescKeyMCPHooksDisabled), nil
 	}
 
 	hooksDir := rc.HooksDir()
 	timeout := time.Duration(rc.HookTimeout()) * time.Second
 
 	input := &entity.TriggerInput{
-		TriggerType: string(entity.TriggerSessionStart),
+		TriggerType: cfgTrigger.SessionStart,
 		Parameters:  map[string]any{},
 		Timestamp:   time.Now().UTC().Format(time.RFC3339),
 	}
 
 	agg, runErr := trigger.RunAll(
-		hooksDir, trigger.SessionStart, input, timeout,
+		hooksDir, cfgTrigger.SessionStart, input, timeout,
 	)
 	if runErr != nil {
 		return "", runErr
@@ -64,7 +53,7 @@ func (h *Handler) SessionStartHooks() (string, error) {
 	}
 
 	if agg.Context == "" {
-		return msgSessionStartOK, nil
+		return desc.Text(text.DescKeyMCPSessionStartOK), nil
 	}
 
 	return agg.Context, nil
@@ -84,7 +73,7 @@ func (h *Handler) SessionStartHooks() (string, error) {
 //   - error: trigger discovery or execution error
 func (h *Handler) SessionEndHooks(summary string) (string, error) {
 	if !rc.HooksEnabled() {
-		return msgHooksDisabled, nil
+		return desc.Text(text.DescKeyMCPHooksDisabled), nil
 	}
 
 	hooksDir := rc.HooksDir()
@@ -92,17 +81,17 @@ func (h *Handler) SessionEndHooks(summary string) (string, error) {
 
 	params := map[string]any{}
 	if summary != "" {
-		params[paramSummary] = summary
+		params[field.Summary] = summary
 	}
 
 	input := &entity.TriggerInput{
-		TriggerType: string(entity.TriggerSessionEnd),
+		TriggerType: cfgTrigger.SessionEnd,
 		Parameters:  params,
 		Timestamp:   time.Now().UTC().Format(time.RFC3339),
 	}
 
 	agg, runErr := trigger.RunAll(
-		hooksDir, trigger.SessionEnd, input, timeout,
+		hooksDir, cfgTrigger.SessionEnd, input, timeout,
 	)
 	if runErr != nil {
 		return "", runErr
@@ -113,7 +102,7 @@ func (h *Handler) SessionEndHooks(summary string) (string, error) {
 	}
 
 	if agg.Context == "" {
-		return msgSessionEndOK, nil
+		return desc.Text(text.DescKeyMCPSessionEndOK), nil
 	}
 
 	return agg.Context, nil

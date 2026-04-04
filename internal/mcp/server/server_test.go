@@ -17,6 +17,7 @@ import (
 	"time"
 
 	"github.com/ActiveMemory/ctx/internal/config/ctx"
+	cfgSchema "github.com/ActiveMemory/ctx/internal/config/mcp/schema"
 	"github.com/ActiveMemory/ctx/internal/mcp/proto"
 	mcpIO "github.com/ActiveMemory/ctx/internal/mcp/server/io"
 )
@@ -99,7 +100,7 @@ func request(
 func TestInitialize(t *testing.T) {
 	srv, _ := newTestServer(t)
 	resp := request(t, srv, "initialize", proto.InitializeParams{
-		ProtocolVersion: proto.ProtocolVersion,
+		ProtocolVersion: cfgSchema.ProtocolVersion,
 		ClientInfo:      proto.AppInfo{Name: "test", Version: "1.0"},
 	})
 	if resp.Error != nil {
@@ -110,10 +111,10 @@ func TestInitialize(t *testing.T) {
 	if err := json.Unmarshal(raw, &result); err != nil {
 		t.Fatalf("unmarshal result: %v", err)
 	}
-	if result.ProtocolVersion != proto.ProtocolVersion {
+	if result.ProtocolVersion != cfgSchema.ProtocolVersion {
 		t.Errorf(
 			"protocol version = %q, want %q",
-			result.ProtocolVersion, proto.ProtocolVersion,
+			result.ProtocolVersion, cfgSchema.ProtocolVersion,
 		)
 	}
 	if result.ServerInfo.Name != "ctx" {
@@ -148,8 +149,8 @@ func TestMethodNotFound(t *testing.T) {
 	if resp.Error == nil {
 		t.Fatal("expected error for unknown method")
 	}
-	if resp.Error.Code != proto.ErrCodeNotFound {
-		t.Errorf("error code = %d, want %d", resp.Error.Code, proto.ErrCodeNotFound)
+	if resp.Error.Code != cfgSchema.ErrCodeNotFound {
+		t.Errorf("error code = %d, want %d", resp.Error.Code, cfgSchema.ErrCodeNotFound)
 	}
 }
 
@@ -482,7 +483,7 @@ func TestParseError(t *testing.T) {
 	if err := json.Unmarshal(out.Bytes(), &resp); err != nil {
 		t.Fatalf("unmarshal: %v", err)
 	}
-	if resp.Error == nil || resp.Error.Code != proto.ErrCodeParse {
+	if resp.Error == nil || resp.Error.Code != cfgSchema.ErrCodeParse {
 		t.Errorf("expected parse error, got: %+v", resp.Error)
 	}
 }

@@ -8,8 +8,13 @@ package flag
 
 // DescKeys for notify command flags.
 const (
-	DescKeyNotifyEvent     = "notify.event"
-	DescKeyNotifyHook      = "notify.hook"
+	// DescKeyNotifyEvent is the description key for the notify event flag.
+	DescKeyNotifyEvent = "notify.event"
+	// DescKeyNotifyHook is the description key for the notify hook flag.
+	DescKeyNotifyHook = "notify.hook"
+	// DescKeyNotifySessionId is the description key for the notify session id
+	// flag.
 	DescKeyNotifySessionId = "notify.session-id"
-	DescKeyNotifyVariant   = "notify.variant"
+	// DescKeyNotifyVariant is the description key for the notify variant flag.
+	DescKeyNotifyVariant = "notify.variant"
 )

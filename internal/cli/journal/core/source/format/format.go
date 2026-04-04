@@ -10,6 +10,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"html"
+	"strconv"
 	"strings"
 
 	"github.com/ActiveMemory/ctx/internal/assets/read/desc"
@@ -270,7 +271,7 @@ func JournalEntryPart(
 		sb.WriteString(tpl.MetaDetailsClose + nl + nl)
 
 		// Token stats as collapsible HTML table
-		turnStr := fmt.Sprintf("%d", s.TurnCount)
+		turnStr := strconv.Itoa(s.TurnCount)
 		io.SafeFprintf(&sb, tpl.MetaDetailsOpen, turnStr)
 		io.SafeFprintf(&sb,
 			tpl.MetaRow+nl, desc.Text(text.DescKeyLabelMetaTurns), turnStr)
@@ -282,7 +283,7 @@ func JournalEntryPart(
 			tpl.MetaRow+nl, desc.Text(text.DescKeyLabelMetaTokens), tokenSummary)
 		if totalParts > 1 {
 			io.SafeFprintf(&sb, tpl.MetaRow+nl, desc.Text(text.DescKeyLabelMetaParts),
-				fmt.Sprintf("%d", totalParts))
+				strconv.Itoa(totalParts))
 		}
 		sb.WriteString(tpl.MetaDetailsClose + nl + nl)
 

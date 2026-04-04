@@ -8,12 +8,26 @@ package text
 
 // DescKeys for knowledge checks.
 const (
-	DescKeyCheckKnowledgeBoxTitle      = "check-knowledge.box-title"
-	DescKeyCheckKnowledgeFallback      = "check-knowledge.fallback"
+	// DescKeyCheckKnowledgeBoxTitle is the text key for check knowledge box title
+	// messages.
+	DescKeyCheckKnowledgeBoxTitle = "check-knowledge.box-title"
+	// DescKeyCheckKnowledgeFallback is the text key for check knowledge fallback
+	// messages.
+	DescKeyCheckKnowledgeFallback = "check-knowledge.fallback"
+	// DescKeyCheckKnowledgeFindingFormat is the text key for check knowledge
+	// finding format messages.
 	DescKeyCheckKnowledgeFindingFormat = "check-knowledge.finding-format"
-	DescKeyCheckKnowledgeRelayMessage  = "check-knowledge.relay-message"
-	DescKeyCheckKnowledgeRelayPrefix   = "check-knowledge.relay-prefix"
+	// DescKeyCheckKnowledgeRelayMessage is the text key for check knowledge relay
+	// message messages.
+	DescKeyCheckKnowledgeRelayMessage = "check-knowledge.relay-message"
+	// DescKeyCheckKnowledgeRelayPrefix is the text key for check knowledge relay
+	// prefix messages.
+	DescKeyCheckKnowledgeRelayPrefix = "check-knowledge.relay-prefix"
 
+	// DescKeyWriteKnowledgeUnitEntries is the text key for write knowledge unit
+	// entries messages.
 	DescKeyWriteKnowledgeUnitEntries = "write.knowledge-unit-entries"
-	DescKeyWriteKnowledgeUnitLines   = "write.knowledge-unit-lines"
+	// DescKeyWriteKnowledgeUnitLines is the text key for write knowledge unit
+	// lines messages.
+	DescKeyWriteKnowledgeUnitLines = "write.knowledge-unit-lines"
 )

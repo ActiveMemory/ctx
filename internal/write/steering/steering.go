@@ -10,14 +10,9 @@ import (
 	"fmt"
 
 	"github.com/spf13/cobra"
-)
 
-// User-facing messages for steering commands.
-const (
-	// msgNoFiles is shown when no steering files exist.
-	msgNoFiles = "No steering files found."
-	// msgNoMatch is shown when no files match the prompt.
-	msgNoMatch = "No steering files match the given prompt."
+	"github.com/ActiveMemory/ctx/internal/assets/read/desc"
+	"github.com/ActiveMemory/ctx/internal/config/embed/text"
 )
 
 // Created prints confirmation that a steering file was created.
@@ -26,7 +21,8 @@ const (
 //   - cmd: Cobra command for output
 //   - path: Path to the created file
 func Created(cmd *cobra.Command, path string) {
-	cmd.Println(fmt.Sprintf("Created %s", path))
+	cmd.Println(fmt.Sprintf(
+		desc.Text(text.DescKeyWriteSteeringCreated), path))
 }
 
 // Skipped prints that a steering file was skipped because it exists.
@@ -35,7 +31,8 @@ func Created(cmd *cobra.Command, path string) {
 //   - cmd: Cobra command for output
 //   - path: Path to the existing file
 func Skipped(cmd *cobra.Command, path string) {
-	cmd.Println(fmt.Sprintf("Skipped %s (already exists)", path))
+	cmd.Println(fmt.Sprintf(
+		desc.Text(text.DescKeyWriteSteeringSkipped), path))
 }
 
 // InitSummary prints the summary after steering init.
@@ -45,7 +42,9 @@ func Skipped(cmd *cobra.Command, path string) {
 //   - created: Number of files created
 //   - skipped: Number of files skipped
 func InitSummary(cmd *cobra.Command, created, skipped int) {
-	cmd.Println(fmt.Sprintf("\n%d created, %d skipped", created, skipped))
+	cmd.Println(fmt.Sprintf(
+		desc.Text(text.DescKeyWriteSteeringInitSummary),
+		created, skipped))
 }
 
 // NoFilesFound prints a message indicating no steering files exist.
@@ -53,7 +52,7 @@ func InitSummary(cmd *cobra.Command, created, skipped int) {
 // Parameters:
 //   - cmd: Cobra command for output
 func NoFilesFound(cmd *cobra.Command) {
-	cmd.Println(msgNoFiles)
+	cmd.Println(desc.Text(text.DescKeyWriteSteeringNoFiles))
 }
 
 // FileEntry prints a single steering file entry with metadata.
@@ -68,7 +67,8 @@ func FileEntry(
 	cmd *cobra.Command, name, inclusion string,
 	priority int, tools string,
 ) {
-	cmd.Println(fmt.Sprintf("%-20s  inclusion=%-7s  priority=%-3d  tools=%s",
+	cmd.Println(fmt.Sprintf(
+		desc.Text(text.DescKeyWriteSteeringFileEntry),
 		name, inclusion, priority, tools))
 }
 
@@ -78,7 +78,8 @@ func FileEntry(
 //   - cmd: Cobra command for output
 //   - count: Number of steering files
 func FileCount(cmd *cobra.Command, count int) {
-	cmd.Println(fmt.Sprintf("\n%d steering file(s)", count))
+	cmd.Println(fmt.Sprintf(
+		desc.Text(text.DescKeyWriteSteeringFileCount), count))
 }
 
 // NoFilesMatch prints a message indicating no files match the prompt.
@@ -86,7 +87,7 @@ func FileCount(cmd *cobra.Command, count int) {
 // Parameters:
 //   - cmd: Cobra command for output
 func NoFilesMatch(cmd *cobra.Command) {
-	cmd.Println(msgNoMatch)
+	cmd.Println(desc.Text(text.DescKeyWriteSteeringNoMatch))
 }
 
 // PreviewHeader prints the header for steering preview output.
@@ -95,7 +96,9 @@ func NoFilesMatch(cmd *cobra.Command) {
 //   - cmd: Cobra command for output
 //   - prompt: The prompt being matched against
 func PreviewHeader(cmd *cobra.Command, prompt string) {
-	cmd.Println(fmt.Sprintf("Steering files matching prompt %q:", prompt))
+	cmd.Println(fmt.Sprintf(
+		desc.Text(text.DescKeyWriteSteeringPreviewHead),
+		prompt))
 	cmd.Println()
 }
 
@@ -111,7 +114,8 @@ func PreviewEntry(
 	cmd *cobra.Command, name, inclusion string,
 	priority int, tools string,
 ) {
-	cmd.Println(fmt.Sprintf("  %-20s  inclusion=%-7s  priority=%-3d  tools=%s",
+	cmd.Println(fmt.Sprintf(
+		desc.Text(text.DescKeyWriteSteeringPreviewEntry),
 		name, inclusion, priority, tools))
 }
 
@@ -121,7 +125,9 @@ func PreviewEntry(
 //   - cmd: Cobra command for output
 //   - count: Number of matched files
 func PreviewCount(cmd *cobra.Command, count int) {
-	cmd.Println(fmt.Sprintf("\n%d file(s) would be included", count))
+	cmd.Println(fmt.Sprintf(
+		desc.Text(text.DescKeyWriteSteeringPreviewCount),
+		count))
 }
 
 // SyncWritten prints that a file was written during sync.
@@ -130,7 +136,9 @@ func PreviewCount(cmd *cobra.Command, count int) {
 //   - cmd: Cobra command for output
 //   - name: Name of the written file
 func SyncWritten(cmd *cobra.Command, name string) {
-	cmd.Println(fmt.Sprintf("Written: %s", name))
+	cmd.Println(fmt.Sprintf(
+		desc.Text(text.DescKeyWriteSteeringSyncWritten),
+		name))
 }
 
 // SyncSkipped prints that a file was skipped during sync.
@@ -139,7 +147,9 @@ func SyncWritten(cmd *cobra.Command, name string) {
 //   - cmd: Cobra command for output
 //   - name: Name of the skipped file
 func SyncSkipped(cmd *cobra.Command, name string) {
-	cmd.Println(fmt.Sprintf("Skipped: %s", name))
+	cmd.Println(fmt.Sprintf(
+		desc.Text(text.DescKeyWriteSteeringSyncSkipped),
+		name))
 }
 
 // SyncError prints a sync error.
@@ -148,7 +158,9 @@ func SyncSkipped(cmd *cobra.Command, name string) {
 //   - cmd: Cobra command for output
 //   - errMsg: The error message
 func SyncError(cmd *cobra.Command, errMsg string) {
-	cmd.Println(fmt.Sprintf("Error: %s", errMsg))
+	cmd.Println(fmt.Sprintf(
+		desc.Text(text.DescKeyWriteSteeringSyncError),
+		errMsg))
 }
 
 // SyncSummary prints the sync summary with counts.
@@ -159,6 +171,7 @@ func SyncError(cmd *cobra.Command, errMsg string) {
 //   - skipped: Number of files skipped
 //   - errors: Number of errors
 func SyncSummary(cmd *cobra.Command, written, skipped, errors int) {
-	cmd.Println(fmt.Sprintf("\n%d written, %d skipped, %d errors",
+	cmd.Println(fmt.Sprintf(
+		desc.Text(text.DescKeyWriteSteeringSyncSummary),
 		written, skipped, errors))
 }

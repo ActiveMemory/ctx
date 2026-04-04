@@ -59,6 +59,11 @@ const (
 	Plus = "+"
 	// Hash is the hash/pound character.
 	Hash = "#"
+	// ParentDir is the relative parent directory component.
+	ParentDir = ".."
+	// FrontmatterDelimiter is the YAML frontmatter
+	// boundary marker.
+	FrontmatterDelimiter = "---"
 )
 
 // TopicSeparators are the delimiters between a date and topic in session

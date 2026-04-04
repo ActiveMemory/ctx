@@ -8,6 +8,10 @@ package text
 
 // DescKeys for time operations errors.
 const (
-	DescKeyErrDateInvalidDate      = "err.date.invalid-date"
+	// DescKeyErrDateInvalidDate is the text key for err date invalid date
+	// messages.
+	DescKeyErrDateInvalidDate = "err.date.invalid-date"
+	// DescKeyErrDateInvalidDateValue is the text key for err date invalid date
+	// value messages.
 	DescKeyErrDateInvalidDateValue = "err.date.invalid-date-value"
 )

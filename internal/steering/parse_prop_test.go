@@ -7,6 +7,7 @@
 package steering
 
 import (
+	cfgSteering "github.com/ActiveMemory/ctx/internal/config/steering"
 	"math/rand"
 	"reflect"
 	"strings"
@@ -19,13 +20,13 @@ import (
 type validSteeringFile struct {
 	Name        string
 	Description string
-	Inclusion   InclusionMode
+	Inclusion   cfgSteering.InclusionMode
 	Tools       []string
 	Priority    int
 	Body        string
 }
 
-var inclusionModes = []InclusionMode{InclusionAlways, InclusionAuto, InclusionManual}
+var inclusionModes = []cfgSteering.InclusionMode{cfgSteering.InclusionAlways, cfgSteering.InclusionAuto, cfgSteering.InclusionManual}
 
 var validTools = []string{"claude", "cursor", "cline", "kiro", "codex"}
 

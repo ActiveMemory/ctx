@@ -14,6 +14,7 @@ import (
 	"github.com/spf13/cobra"
 
 	"github.com/ActiveMemory/ctx/internal/assets/read/desc"
+	"github.com/ActiveMemory/ctx/internal/assets/tpl"
 	"github.com/ActiveMemory/ctx/internal/config/embed/cmd"
 	"github.com/ActiveMemory/ctx/internal/config/file"
 	"github.com/ActiveMemory/ctx/internal/config/fs"
@@ -24,26 +25,6 @@ import (
 	"github.com/ActiveMemory/ctx/internal/trigger"
 	writeTrigger "github.com/ActiveMemory/ctx/internal/write/trigger"
 )
-
-// scriptTemplate is the shell script template for new hooks.
-const scriptTemplate = `#!/usr/bin/env bash
-# Hook: %s
-# Type: %s
-# Created by: ctx hook add
-
-set -euo pipefail
-
-INPUT=$(cat)
-
-# Parse input fields
-HOOK_TYPE=$(echo "$INPUT" | jq -r '.hookType')
-TOOL=$(echo "$INPUT" | jq -r '.tool // empty')
-
-# Your hook logic here
-
-# Return output
-echo '{"cancel": false, "context": "", "message": ""}'
-`
 
 // Cmd returns the "ctx hook add" subcommand.
 //
@@ -71,7 +52,7 @@ func Cmd() *cobra.Command {
 //   - name: The hook script name (without .sh extension)
 func Run(c *cobra.Command, hookType, name string) error {
 	// Validate hook type.
-	ht := trigger.HookType(hookType)
+	ht := hookType
 	valid := trigger.ValidTypes()
 
 	found := false
@@ -84,9 +65,7 @@ func Run(c *cobra.Command, hookType, name string) error {
 
 	if !found {
 		names := make([]string, len(valid))
-		for i, v := range valid {
-			names[i] = string(v)
-		}
+		copy(names, valid)
 		return errTrigger.InvalidType(hookType, strings.Join(names, token.CommaSpace))
 	}
 
@@ -107,7 +86,7 @@ func Run(c *cobra.Command, hookType, name string) error {
 		return errTrigger.ScriptExists(filePath)
 	}
 
-	content := fmt.Sprintf(scriptTemplate, name, hookType)
+	content := fmt.Sprintf(tpl.TriggerScript, name, hookType)
 	writeErr := ctxIo.SafeWriteFile(
 		filePath, []byte(content), fs.PermExec,
 	)

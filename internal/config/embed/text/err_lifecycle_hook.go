@@ -8,7 +8,13 @@ package text
 
 // DescKeys for lifecycle hook error messages.
 const (
-	DescKeyErrLifecycleHookSymlink       = "err.lifecycle-hook.symlink"
-	DescKeyErrLifecycleHookBoundary      = "err.lifecycle-hook.boundary"
+	// DescKeyErrLifecycleHookSymlink is the text key for err lifecycle hook
+	// symlink messages.
+	DescKeyErrLifecycleHookSymlink = "err.lifecycle-hook.symlink"
+	// DescKeyErrLifecycleHookBoundary is the text key for err lifecycle hook
+	// boundary messages.
+	DescKeyErrLifecycleHookBoundary = "err.lifecycle-hook.boundary"
+	// DescKeyErrLifecycleHookNotExecutable is the text key for err lifecycle hook
+	// not executable messages.
 	DescKeyErrLifecycleHookNotExecutable = "err.lifecycle-hook.not-executable"
 )

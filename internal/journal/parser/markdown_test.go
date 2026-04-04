@@ -408,7 +408,7 @@ func TestScanDirectory_WithMarkdown(t *testing.T) {
 }
 
 func TestRegisteredTools_IncludesMarkdown(t *testing.T) {
-	tools := RegisteredTools()
+	tools := registeredTools()
 	found := false
 	for _, tool := range tools {
 		if tool == session.ToolMarkdown {
@@ -422,7 +422,7 @@ func TestRegisteredTools_IncludesMarkdown(t *testing.T) {
 }
 
 func TestGetParser_Markdown(t *testing.T) {
-	p := Parser(session.ToolMarkdown)
+	p := find(session.ToolMarkdown)
 	if p == nil {
 		t.Fatalf("expected parser for %q", session.ToolMarkdown)
 	}
