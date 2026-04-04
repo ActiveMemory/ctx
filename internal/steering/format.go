@@ -22,8 +22,8 @@ import (
 	ctxIo "github.com/ActiveMemory/ctx/internal/io"
 )
 
-// isSyncableTool returns true if the tool supports native-format sync.
-func isSyncableTool(tool string) bool {
+// syncableTool returns true if the tool supports native-format sync.
+func syncableTool(tool string) bool {
 	for _, t := range syncableTools {
 		if t == tool {
 			return true

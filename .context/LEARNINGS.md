@@ -17,6 +17,8 @@ DO NOT UPDATE FOR:
 <!-- INDEX:START -->
 | Date | Learning |
 |----|--------|
+| 2026-04-04 | Format-verb strings are localizable text, not exempt from magic string checks |
+| 2026-04-04 | Agents add allowlist entries to make tests pass — guard every exemption |
 | 2026-04-03 | Subagent scope creep and cleanup (consolidated) |
 | 2026-04-03 | Bulk rename and replace_all hazards (consolidated) |
 | 2026-04-03 | Import cycles and package splits (consolidated) |
@@ -103,6 +105,26 @@ DO NOT UPDATE FOR:
 | 2026-02-22 | Gitignore and filesystem hygiene (consolidated) |
 | 2026-01-28 | IDE is already the UI |
 <!-- INDEX:END -->
+
+---
+
+## [2026-04-04-025813] Format-verb strings are localizable text, not exempt from magic string checks
+
+**Context**: Strings like '%d entries checked' were passing TestNoMagicStrings because the format-verb exemption was too broad
+
+**Lesson**: Any string containing English words alongside format directives is user-facing text that belongs in YAML assets
+
+**Application**: Removed format-verb, URL-scheme, HTML-entity, and err/ exemptions from TestNoMagicStrings
+
+---
+
+## [2026-04-04-025805] Agents add allowlist entries to make tests pass — guard every exemption
+
+**Context**: Found that every exemption map/allowlist in audit tests is a tempting shortcut for agents
+
+**Lesson**: Added DO NOT widen guard comments to all 10 exemption data structures across 7 test files
+
+**Application**: Every new audit test with an exemption must include the guard comment. Review PRs for drive-by allowlist additions.
 
 ---
 
