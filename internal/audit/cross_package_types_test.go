@@ -201,12 +201,10 @@ func sameModule(a, b string) bool {
 	}
 	// cli/* consuming any domain module is the
 	// standard consumer layer pattern.
-	if strings.HasPrefix(ma, "cli/") &&
-		!strings.HasPrefix(mb, "cli/") {
+	if isConsumerLayer(ma) && !isConsumerLayer(mb) {
 		return true
 	}
-	if strings.HasPrefix(mb, "cli/") &&
-		!strings.HasPrefix(ma, "cli/") {
+	if isConsumerLayer(mb) && !isConsumerLayer(ma) {
 		return true
 	}
 	// err/<X> consumed from cli/<X> or <X>.
@@ -274,4 +272,10 @@ func moduleRoot(pkgPath string) string {
 	// Top-level: mcp, trace, notify, sysinfo, etc.
 	parts := strings.SplitN(rest, "/", 2)
 	return parts[0]
+}
+
+// isConsumerLayer returns true if the module root is a
+// consumer layer that naturally imports domain types.
+func isConsumerLayer(mod string) bool {
+	return strings.HasPrefix(mod, "cli/")
 }

@@ -27,7 +27,7 @@ import (
 // Returns:
 //   - *proto.Response: tool list response
 func DispatchList(req proto.Request) *proto.Response {
-	return out.OkResponse(req.ID, proto.ToolListResult{Tools: defTool.Defs})
+	return out.OkResponse(req.ID, proto.ToolListResult{Tools: defTool.Defs()})
 }
 
 // DispatchCall unmarshals tool call params and dispatches to the
@@ -88,6 +88,14 @@ func DispatchCall(
 		resp = sessionEvent(req.ID, params.Arguments, h.SessionEvent)
 	case tool.Remind:
 		resp = out.Call(req.ID, h.Remind)
+	case tool.SteeringGet:
+		resp = steeringGet(h, req.ID, params.Arguments)
+	case tool.Search:
+		resp = search(h, req.ID, params.Arguments)
+	case tool.SessionStart:
+		resp = out.Call(req.ID, h.SessionStartHooks)
+	case tool.SessionEnd:
+		resp = sessionEnd(h, req.ID, params.Arguments)
 	default:
 		return out.ErrResponse(
 			req.ID, proto.ErrCodeNotFound,

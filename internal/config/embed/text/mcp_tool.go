@@ -37,4 +37,11 @@ const (
 	DescKeyMCPToolPropRecentAct     = "mcp.tool-prop-recent-action"
 	DescKeyMCPToolPropEventType     = "mcp.tool-prop-event-type"
 	DescKeyMCPToolPropCaller        = "mcp.tool-prop-caller"
+	DescKeyMCPToolSteeringGetDesc   = "mcp.tool-steering-get-desc"
+	DescKeyMCPToolSearchDesc        = "mcp.tool-search-desc"
+	DescKeyMCPToolSessionStartDesc  = "mcp.tool-session-start-desc"
+	DescKeyMCPToolSessionEndDesc    = "mcp.tool-session-end-desc"
+	DescKeyMCPToolPropPrompt        = "mcp.tool-prop-prompt"
+	DescKeyMCPToolPropSearchQuery   = "mcp.tool-prop-search-query"
+	DescKeyMCPToolPropSummary       = "mcp.tool-prop-summary"
 )

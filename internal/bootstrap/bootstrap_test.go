@@ -11,6 +11,7 @@ import (
 	"path/filepath"
 	"testing"
 
+	"github.com/ActiveMemory/ctx/internal/cli/resolve"
 	"github.com/ActiveMemory/ctx/internal/config/cli"
 	"github.com/ActiveMemory/ctx/internal/config/ctx"
 	"github.com/ActiveMemory/ctx/internal/config/flag"
@@ -320,5 +321,99 @@ func TestInitGuard_AllowsInitializedCommand(t *testing.T) {
 
 	if execErr := cmd.Execute(); execErr != nil {
 		t.Fatalf("initialized command should succeed: %v", execErr)
+	}
+}
+
+func TestRootCmdToolFlag(t *testing.T) {
+	cmd := RootCmd()
+
+	f := cmd.PersistentFlags().Lookup(flag.Tool)
+	if f == nil {
+		t.Fatal("--tool flag not found")
+	}
+	if f.DefValue != "" {
+		t.Errorf("--tool default = %q, want empty", f.DefValue)
+	}
+}
+
+func TestResolveTool_FlagOverridesRC(t *testing.T) {
+	rc.Reset()
+	t.Cleanup(func() { rc.Reset() })
+
+	cmd := RootCmd()
+	dummy := &cobra.Command{
+		Use:         "dummy",
+		Annotations: map[string]string{cli.AnnotationSkipInit: "true"},
+		RunE: func(cmd *cobra.Command, args []string) error {
+			tool, err := resolve.Tool(cmd)
+			if err != nil {
+				return err
+			}
+			if tool != "cursor" {
+				t.Errorf("resolve.Tool() = %q, want %q", tool, "cursor")
+			}
+			return nil
+		},
+	}
+	cmd.AddCommand(dummy)
+	cmd.SetArgs([]string{"--allow-outside-cwd", "--tool", "cursor", "dummy"})
+
+	if err := cmd.Execute(); err != nil {
+		t.Fatalf("Execute() error: %v", err)
+	}
+}
+
+func TestResolveTool_FallsBackToRC(t *testing.T) {
+	// When --tool is not set, ResolveTool falls back to rc.Tool().
+	// With a fresh rc (no .ctxrc), rc.Tool() returns "" so this
+	// should return an error. We test the fallback path indirectly.
+	rc.Reset()
+	t.Cleanup(func() { rc.Reset() })
+
+	cmd := RootCmd()
+	dummy := &cobra.Command{
+		Use:         "dummy",
+		Annotations: map[string]string{cli.AnnotationSkipInit: "true"},
+		RunE: func(cmd *cobra.Command, args []string) error {
+			_, err := resolve.Tool(cmd)
+			if err == nil {
+				t.Error("resolve.Tool() should return error when no tool is set")
+			}
+			return nil // swallow error so Execute succeeds
+		},
+	}
+	cmd.AddCommand(dummy)
+	cmd.SetArgs([]string{"--allow-outside-cwd", "dummy"})
+
+	if err := cmd.Execute(); err != nil {
+		t.Fatalf("Execute() error: %v", err)
+	}
+}
+
+func TestResolveTool_ErrorMessage(t *testing.T) {
+	rc.Reset()
+	t.Cleanup(func() { rc.Reset() })
+
+	cmd := RootCmd()
+	dummy := &cobra.Command{
+		Use:         "dummy",
+		Annotations: map[string]string{cli.AnnotationSkipInit: "true"},
+		RunE: func(cmd *cobra.Command, args []string) error {
+			_, err := resolve.Tool(cmd)
+			if err == nil {
+				t.Fatal("expected error")
+			}
+			want := "no tool specified: use --tool <tool> or set the tool field in .ctxrc"
+			if err.Error() != want {
+				t.Errorf("error = %q, want %q", err.Error(), want)
+			}
+			return nil
+		},
+	}
+	cmd.AddCommand(dummy)
+	cmd.SetArgs([]string{"--allow-outside-cwd", "dummy"})
+
+	if err := cmd.Execute(); err != nil {
+		t.Fatalf("Execute() error: %v", err)
 	}
 }
