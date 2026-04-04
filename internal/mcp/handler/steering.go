@@ -54,7 +54,7 @@ func (h *Handler) SteeringGet(prompt string) (string, error) {
 
 	var sb strings.Builder
 	for _, sf := range filtered {
-		fmt.Fprintf(&sb,
+		ctxIo.SafeFprintf(&sb,
 			desc.Text(text.DescKeyMCPSteeringSection),
 			sf.Name, sf.Body)
 	}
@@ -101,7 +101,7 @@ func (h *Handler) Search(query string) (string, error) {
 			lineNum++
 			line := scanner.Text()
 			if strings.Contains(strings.ToLower(line), queryLower) {
-				fmt.Fprintf(&sb,
+				ctxIo.SafeFprintf(&sb,
 					desc.Text(text.DescKeyMCPSearchHitLine),
 					e.Name(), lineNum, line)
 				matches++
