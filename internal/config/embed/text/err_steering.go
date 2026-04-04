@@ -23,12 +23,6 @@ const (
 	// DescKeyErrSteeringInvalidYAML is the text key for err steering invalid yaml
 	// messages.
 	DescKeyErrSteeringInvalidYAML = "err.steering.invalid-yaml"
-	// DescKeyErrSteeringMissingClosingDelim is the text key for err steering
-	// missing closing delim messages.
-	DescKeyErrSteeringMissingClosingDelim = "err.steering.missing-closing-delimiter"
-	// DescKeyErrSteeringMissingOpeningDelim is the text key for err steering
-	// missing opening delim messages.
-	DescKeyErrSteeringMissingOpeningDelim = "err.steering.missing-opening-delimiter"
 	// DescKeyErrSteeringNoTool is the text key for err steering no tool messages.
 	DescKeyErrSteeringNoTool = "err.steering.no-tool"
 	// DescKeyErrSteeringOutputEscapesRoot is the text key for err steering output

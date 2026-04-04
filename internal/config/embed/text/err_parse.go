@@ -23,4 +23,10 @@ const (
 	DescKeyErrParserUnmarshal = "err.parser.unmarshal"
 	// DescKeyErrParserWalkDir is the text key for err parser walk dir messages.
 	DescKeyErrParserWalkDir = "err.parser.walk-dir"
+	// DescKeyErrParserMissingOpenDelim is the text key for
+	// missing opening frontmatter delimiter.
+	DescKeyErrParserMissingOpenDelim = "err.parser.missing-open-delim"
+	// DescKeyErrParserMissingCloseDelim is the text key
+	// for missing closing frontmatter delimiter.
+	DescKeyErrParserMissingCloseDelim = "err.parser.missing-close-delim"
 )

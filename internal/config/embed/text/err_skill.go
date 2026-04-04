@@ -23,15 +23,9 @@ const (
 	DescKeyErrSkillList = "err.skill.skill-list"
 	// DescKeyErrSkillLoad is the text key for err skill load messages.
 	DescKeyErrSkillLoad = "err.skill.load"
-	// DescKeyErrSkillMissingClosingDelim is the text key for err skill missing
-	// closing delim messages.
-	DescKeyErrSkillMissingClosingDelim = "err.skill.missing-closing-delimiter"
 	// DescKeyErrSkillMissingName is the text key for err skill missing name
 	// messages.
 	DescKeyErrSkillMissingName = "err.skill.missing-name"
-	// DescKeyErrSkillMissingOpeningDelim is the text key for err skill missing
-	// opening delim messages.
-	DescKeyErrSkillMissingOpeningDelim = "err.skill.missing-opening-delimiter"
 	// DescKeyErrSkillNotFound is the text key for err skill not found messages.
 	DescKeyErrSkillNotFound = "err.skill.not-found"
 	// DescKeyErrSkillNotValidDir is the text key for err skill not valid dir

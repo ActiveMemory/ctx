@@ -7,7 +7,6 @@
 package skill
 
 import (
-	"errors"
 	"fmt"
 
 	"github.com/ActiveMemory/ctx/internal/assets/read/desc"
@@ -94,17 +93,6 @@ func Load(name string, cause error) error {
 	)
 }
 
-// MissingClosingDelimiter returns an error for missing closing
-// frontmatter delimiter.
-//
-// Returns:
-//   - error: "missing closing frontmatter delimiter (---)"
-func MissingClosingDelimiter() error {
-	return errors.New(
-		desc.Text(text.DescKeyErrSkillMissingClosingDelim),
-	)
-}
-
 // MissingName returns an error for a skill manifest missing the
 // required name field.
 //
@@ -116,17 +104,6 @@ func MissingClosingDelimiter() error {
 func MissingName(manifest string) error {
 	return fmt.Errorf(
 		desc.Text(text.DescKeyErrSkillMissingName), manifest,
-	)
-}
-
-// MissingOpeningDelimiter returns an error for missing opening
-// frontmatter delimiter.
-//
-// Returns:
-//   - error: "missing opening frontmatter delimiter (---)"
-func MissingOpeningDelimiter() error {
-	return errors.New(
-		desc.Text(text.DescKeyErrSkillMissingOpeningDelim),
 	)
 }
 

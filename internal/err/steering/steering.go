@@ -78,28 +78,6 @@ func InvalidYAML(filePath string, cause error) error {
 	)
 }
 
-// MissingClosingDelimiter returns an error for missing closing
-// frontmatter delimiter.
-//
-// Returns:
-//   - error: "missing closing frontmatter delimiter (---)"
-func MissingClosingDelimiter() error {
-	return errors.New(
-		desc.Text(text.DescKeyErrSteeringMissingClosingDelim),
-	)
-}
-
-// MissingOpeningDelimiter returns an error for missing opening
-// frontmatter delimiter.
-//
-// Returns:
-//   - error: "missing opening frontmatter delimiter (---)"
-func MissingOpeningDelimiter() error {
-	return errors.New(
-		desc.Text(text.DescKeyErrSteeringMissingOpeningDelim),
-	)
-}
-
 // NoTool returns an error when no tool is specified for sync.
 //
 // Returns:

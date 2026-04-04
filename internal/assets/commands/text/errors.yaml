@@ -446,12 +446,8 @@ err.skill.invalid-yaml:
   short: 'skill: %s: invalid YAML frontmatter: %w'
 err.skill.load:
   short: 'skill: %s: %w'
-err.skill.missing-closing-delimiter:
-  short: missing closing frontmatter delimiter (---)
 err.skill.missing-name:
   short: 'skill: %s is missing required ''name'' field'
-err.skill.missing-opening-delimiter:
-  short: missing opening frontmatter delimiter (---)
 err.skill.not-found:
   short: 'skill %q not found'
 err.skill.not-valid-dir:
@@ -478,10 +474,6 @@ err.steering.file-exists:
   short: 'steering file already exists: %s'
 err.steering.invalid-yaml:
   short: 'steering: %s: invalid YAML frontmatter: %w'
-err.steering.missing-closing-delimiter:
-  short: missing closing frontmatter delimiter (---)
-err.steering.missing-opening-delimiter:
-  short: missing opening frontmatter delimiter (---)
 err.steering.no-tool:
   short: 'no tool specified: use --tool <tool>, --all, or set the tool field in .ctxrc'
 err.steering.output-escapes-root:
@@ -572,3 +564,7 @@ err.validation.parse-file:
   short: 'failed to parse %s: %w'
 err.validation.working-directory:
   short: 'failed to get working directory: %w'
+err.parser.missing-open-delim:
+  short: missing opening frontmatter delimiter (---)
+err.parser.missing-close-delim:
+  short: missing closing frontmatter delimiter (---)
