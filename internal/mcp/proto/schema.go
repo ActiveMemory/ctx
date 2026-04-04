@@ -68,8 +68,6 @@ type RPCError struct {
 const (
 	// ErrCodeParse indicates malformed JSON was received.
 	ErrCodeParse = -32700
-	// ErrCodeInvalidReq indicates the request is not valid.
-	ErrCodeInvalidReq = -32600
 	// ErrCodeNotFound indicates the method was not found.
 	ErrCodeNotFound = -32601
 	// ErrCodeInvalidArg indicates invalid method parameters.

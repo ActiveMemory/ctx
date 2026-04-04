@@ -26,8 +26,8 @@ import (
 //	    content := match[task.MatchContent]
 //	}
 const (
-	// MatchFull is the index of the full regex match.
-	MatchFull = iota
+	// matchFull is the index of the full regex match.
+	matchFull = iota
 	// MatchIndent is the index of leading whitespace.
 	MatchIndent
 	// MatchState is the index of the checkbox state.

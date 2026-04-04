@@ -210,15 +210,3 @@ func Parser(tool string) Session {
 	}
 	return nil
 }
-
-// RegisteredTools returns the list of supported tools.
-//
-// Returns:
-//   - []string: Tool identifiers for all registered parsers
-func RegisteredTools() []string {
-	tools := make([]string, len(registeredParsers))
-	for i, p := range registeredParsers {
-		tools[i] = p.Tool()
-	}
-	return tools
-}

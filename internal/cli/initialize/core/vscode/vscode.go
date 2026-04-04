@@ -15,7 +15,7 @@ import (
 	writeVscode "github.com/ActiveMemory/ctx/internal/write/vscode"
 )
 
-// CreateVSCodeArtifacts generates VS Code workspace configuration files
+// createVSCodeArtifacts generates VS Code workspace configuration files
 // (.vscode/) during ctx init.
 //
 // Creates extensions.json, tasks.json, and mcp.json as the
@@ -27,7 +27,7 @@ import (
 //
 // Returns:
 //   - error: Non-nil if directory creation fails
-func CreateVSCodeArtifacts(cmd *cobra.Command) error {
+func createVSCodeArtifacts(cmd *cobra.Command) error {
 	mkdirErr := ctxIo.SafeMkdirAll(
 		cfgVscode.Dir, fs.PermExec,
 	)

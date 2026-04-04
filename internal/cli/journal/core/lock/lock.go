@@ -30,9 +30,9 @@ import (
 	writeRecall "github.com/ActiveMemory/ctx/internal/write/journal"
 )
 
-// LockedFrontmatterLine is the YAML line inserted into frontmatter when
+// lockedFrontmatterLine is the YAML line inserted into frontmatter when
 // a journal entry is locked.
-const LockedFrontmatterLine = session.FrontmatterLockedLine
+const lockedFrontmatterLine = session.FrontmatterLockedLine
 
 // MatchJournalFiles returns journal .md filenames matching the given
 // patterns. If all is true, returns every .md file in the directory.

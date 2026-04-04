@@ -36,23 +36,17 @@ import (
 // positives. Keep this list small: prefer eliminating
 // the export over adding it here.
 var testOnlyExports = map[string]bool{
-	"github.com/ActiveMemory/ctx/internal/config/hook.CategoryCustomizable":                 true,
-	"github.com/ActiveMemory/ctx/internal/assets/hooks/messages.Hooks":                      true,
-	"github.com/ActiveMemory/ctx/internal/assets/hooks/messages.RegistryError":              true,
-	"github.com/ActiveMemory/ctx/internal/cli/initialize/core/vscode.CreateVSCodeArtifacts": true,
-	"github.com/ActiveMemory/ctx/internal/cli/journal/core/lock.LockedFrontmatterLine":      true,
-	"github.com/ActiveMemory/ctx/internal/cli/pad/core/store.EnsureGitignore":               true,
-	"github.com/ActiveMemory/ctx/internal/cli/system/core/state.SetDirForTest":              true,
-	"github.com/ActiveMemory/ctx/internal/config/asset.DirReferences":                       true,
-	"github.com/ActiveMemory/ctx/internal/config/regex.Phase":                               true,
-	"github.com/ActiveMemory/ctx/internal/inspect.StartsWithCtxMarker":                      true,
-	"github.com/ActiveMemory/ctx/internal/journal/parser.Parser":                            true,
-	"github.com/ActiveMemory/ctx/internal/journal/parser.RegisteredTools":                   true,
-	"github.com/ActiveMemory/ctx/internal/mcp/proto.ErrCodeInvalidReq":                      true,
-	"github.com/ActiveMemory/ctx/internal/mcp/proto.InitializeParams":                       true,
-	"github.com/ActiveMemory/ctx/internal/mcp/proto.UnsubscribeParams":                      true,
-	"github.com/ActiveMemory/ctx/internal/rc.Reset":                                         true,
-	"github.com/ActiveMemory/ctx/internal/task.MatchFull":                                   true,
+	"github.com/ActiveMemory/ctx/internal/config/hook.CategoryCustomizable":    true,
+	"github.com/ActiveMemory/ctx/internal/assets/hooks/messages.Hooks":         true,
+	"github.com/ActiveMemory/ctx/internal/cli/pad/core/store.EnsureGitignore":  true,
+	"github.com/ActiveMemory/ctx/internal/cli/system/core/state.SetDirForTest": true,
+	"github.com/ActiveMemory/ctx/internal/config/asset.DirReferences":          true,
+	"github.com/ActiveMemory/ctx/internal/config/regex.Phase":                  true,
+	"github.com/ActiveMemory/ctx/internal/inspect.StartsWithCtxMarker":         true,
+	"github.com/ActiveMemory/ctx/internal/journal/parser.Parser":               true,
+	"github.com/ActiveMemory/ctx/internal/mcp/proto.InitializeParams":          true,
+	"github.com/ActiveMemory/ctx/internal/mcp/proto.UnsubscribeParams":         true,
+	"github.com/ActiveMemory/ctx/internal/rc.Reset":                            true,
 }
 
 // DO NOT add entries here to make tests pass. New code must

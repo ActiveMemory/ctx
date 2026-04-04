@@ -152,7 +152,7 @@ func TestUpdateLockFrontmatter_Lock(t *testing.T) {
 	if readErr != nil {
 		t.Fatal(readErr)
 	}
-	if !strings.Contains(string(data), LockedFrontmatterLine) {
+	if !strings.Contains(string(data), lockedFrontmatterLine) {
 		t.Error("lock should insert locked line into frontmatter")
 	}
 	if !strings.Contains(string(data), "# Body") {
@@ -164,7 +164,7 @@ func TestUpdateLockFrontmatter_Unlock(t *testing.T) {
 	dir := t.TempDir()
 	path := filepath.Join(dir, "test.md")
 	content := "---\ndate: \"2026-01-21\"\n" +
-		LockedFrontmatterLine +
+		lockedFrontmatterLine +
 		"\ntitle: \"Test\"\n---\n\n# Body\n"
 	writeErr := os.WriteFile(
 		path, []byte(content), fs.PermFile,
@@ -213,7 +213,7 @@ func TestUpdateLockFrontmatter_IdempotentLock(t *testing.T) {
 	dir := t.TempDir()
 	path := filepath.Join(dir, "test.md")
 	content := "---\ndate: \"2026-01-21\"\n" +
-		LockedFrontmatterLine + "\n---\n\n# Body\n"
+		lockedFrontmatterLine + "\n---\n\n# Body\n"
 	writeErr := os.WriteFile(
 		path, []byte(content), fs.PermFile,
 	)
