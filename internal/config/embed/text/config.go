@@ -8,14 +8,23 @@ package text
 
 // DescKeys for configuration display write output.
 const (
+	// DescKeyWriteConfigProfileBase is the text key for write config profile base
+	// messages.
 	DescKeyWriteConfigProfileBase = "write.config-profile-base"
-	DescKeyWriteConfigProfileDev  = "write.config-profile-dev"
+	// DescKeyWriteConfigProfileDev is the text key for write config profile dev
+	// messages.
+	DescKeyWriteConfigProfileDev = "write.config-profile-dev"
+	// DescKeyWriteConfigProfileNone is the text key for write config profile none
+	// messages.
 	DescKeyWriteConfigProfileNone = "write.config-profile-none"
 )
 
 // DescKeys for configuration display.
 const (
+	// DescKeyConfigAlreadyOn is the text key for config already on messages.
 	DescKeyConfigAlreadyOn = "config.already-on"
-	DescKeyConfigCreated   = "config.created"
-	DescKeyConfigSwitched  = "config.switched"
+	// DescKeyConfigCreated is the text key for config created messages.
+	DescKeyConfigCreated = "config.created"
+	// DescKeyConfigSwitched is the text key for config switched messages.
+	DescKeyConfigSwitched = "config.switched"
 )

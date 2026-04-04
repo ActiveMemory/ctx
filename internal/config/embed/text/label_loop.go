@@ -8,5 +8,6 @@ package text
 
 // DescKeys for loop display labels.
 const (
+	// DescKeyLabelLoopComplete is the text key for label loop complete messages.
 	DescKeyLabelLoopComplete = "label.loop-complete"
 )

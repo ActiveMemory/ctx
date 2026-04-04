@@ -18,6 +18,10 @@ import (
 // (case-insensitive), suggest the variable holds a filesystem path.
 var pathVarHints = []string{"path", "dir", "folder", "file"}
 
+// DO NOT add entries here to make tests pass. New code must
+// conform to the check. Widening requires a dedicated PR with
+// justification for each entry.
+//
 // stringConcatPathAllowlist lists known false positives where string
 // concatenation is used for non-path purposes (e.g. substring search
 // patterns, extension appending).

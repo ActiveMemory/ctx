@@ -8,5 +8,6 @@ package text
 
 // DescKeys for text processing.
 const (
+	// DescKeyStopwords is the text key for stopwords messages.
 	DescKeyStopwords = "stopwords"
 )

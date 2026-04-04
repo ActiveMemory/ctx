@@ -8,6 +8,9 @@ package flag
 
 // DescKeys for dry-run mode flags.
 const (
-	DescKeySyncDryRun        = "sync.dry-run"
+	// DescKeySyncDryRun is the description key for the sync dry run flag.
+	DescKeySyncDryRun = "sync.dry-run"
+	// DescKeyTaskArchiveDryRun is the description key for the task archive dry
+	// run flag.
 	DescKeyTaskArchiveDryRun = "task.archive.dry-run"
 )

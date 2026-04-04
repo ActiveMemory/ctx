@@ -8,7 +8,12 @@ package text
 
 // DescKeys for loop write output.
 const (
+	// DescKeyWriteLoopGeneratedBlock is the text key for write loop generated
+	// block messages.
 	DescKeyWriteLoopGeneratedBlock = "write.loop-generated-block"
-	DescKeyWriteLoopMaxIterations  = "write.loop-max-iterations"
-	DescKeyWriteLoopUnlimited      = "write.loop-unlimited"
+	// DescKeyWriteLoopMaxIterations is the text key for write loop max iterations
+	// messages.
+	DescKeyWriteLoopMaxIterations = "write.loop-max-iterations"
+	// DescKeyWriteLoopUnlimited is the text key for write loop unlimited messages.
+	DescKeyWriteLoopUnlimited = "write.loop-unlimited"
 )

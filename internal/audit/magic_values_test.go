@@ -13,6 +13,10 @@ import (
 	"testing"
 )
 
+// DO NOT add entries here to make tests pass. New code must
+// conform to the check. Widening requires a dedicated PR with
+// justification for each entry.
+//
 // exemptIntLiterals lists integer values that are always acceptable.
 // 0, 1, -1: universal identity/sentinel values.
 // 2, 3: structural constants (split counts, field indices, ternary).
@@ -50,6 +54,10 @@ var strconvFuncs = map[string]bool{
 	"AppendFloat": true,
 }
 
+// DO NOT add entries here to make tests pass. New code must
+// conform to the check. Widening requires a dedicated PR with
+// justification for each entry.
+//
 // exemptPackagePaths lists package path substrings that are fully
 // exempt from magic value checks — config definitions, template
 // definitions, and error constructors.

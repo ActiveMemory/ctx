@@ -14,6 +14,10 @@ import (
 	"golang.org/x/tools/go/packages"
 )
 
+// DO NOT add entries here to make tests pass. New code must
+// conform to the check. Widening requires a dedicated PR with
+// justification for each entry.
+//
 // typeExemptPackages lists packages where exported
 // types are expected to be used cross-package by
 // design (entity, config, proto, etc.).

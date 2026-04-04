@@ -17,6 +17,10 @@ import (
 	"golang.org/x/tools/go/packages"
 )
 
+// DO NOT add entries here to make tests pass. New code must
+// conform to the check. Widening requires a dedicated PR with
+// justification for each entry.
+//
 // exemptStrings lists string values always acceptable.
 var exemptStrings = map[string]bool{
 	"":     true, // empty string
@@ -27,6 +31,10 @@ var exemptStrings = map[string]bool{
 	": ":   true, // key-value separator
 }
 
+// DO NOT add entries here to make tests pass. New code must
+// conform to the check. Widening requires a dedicated PR with
+// justification for each entry.
+//
 // exemptStringPackages lists package paths fully exempt
 // from magic string checks.
 var exemptStringPackages = []string{

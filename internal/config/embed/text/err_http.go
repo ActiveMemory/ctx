@@ -8,7 +8,12 @@ package text
 
 // DescKeys for HTTP operations errors.
 const (
-	DescKeyErrHttpParseURL         = "err.http.parse-url"
+	// DescKeyErrHttpParseURL is the text key for err http parse url messages.
+	DescKeyErrHttpParseURL = "err.http.parse-url"
+	// DescKeyErrHttpTooManyRedirects is the text key for err http too many
+	// redirects messages.
 	DescKeyErrHttpTooManyRedirects = "err.http.too-many-redirects"
-	DescKeyErrHttpUnsafeURLScheme  = "err.http.unsafe-url-scheme"
+	// DescKeyErrHttpUnsafeURLScheme is the text key for err http unsafe url
+	// scheme messages.
+	DescKeyErrHttpUnsafeURLScheme = "err.http.unsafe-url-scheme"
 )

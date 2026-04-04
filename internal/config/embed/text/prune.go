@@ -8,8 +8,13 @@ package text
 
 // DescKeys for prune operations.
 const (
-	DescKeyPruneDryRunLine    = "prune.dry-run-line"
+	// DescKeyPruneDryRunLine is the text key for prune dry run line messages.
+	DescKeyPruneDryRunLine = "prune.dry-run-line"
+	// DescKeyPruneDryRunSummary is the text key for prune dry run summary
+	// messages.
 	DescKeyPruneDryRunSummary = "prune.dry-run-summary"
-	DescKeyPruneErrorLine     = "prune.error-line"
-	DescKeyPruneSummary       = "prune.summary"
+	// DescKeyPruneErrorLine is the text key for prune error line messages.
+	DescKeyPruneErrorLine = "prune.error-line"
+	// DescKeyPruneSummary is the text key for prune summary messages.
+	DescKeyPruneSummary = "prune.summary"
 )

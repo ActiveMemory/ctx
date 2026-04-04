@@ -8,12 +8,18 @@ package text
 
 // DescKeys for specs nudge messages.
 const (
-	DescKeySpecsNudgeFallback     = "specs-nudge.fallback"
+	// DescKeySpecsNudgeFallback is the text key for specs nudge fallback messages.
+	DescKeySpecsNudgeFallback = "specs-nudge.fallback"
+	// DescKeySpecsNudgeNudgeMessage is the text key for specs nudge nudge message
+	// messages.
 	DescKeySpecsNudgeNudgeMessage = "specs-nudge.nudge-message"
 )
 
 // DescKeys for QA reminder messages.
 const (
-	DescKeyQaReminderFallback     = "qa-reminder.fallback"
+	// DescKeyQaReminderFallback is the text key for qa reminder fallback messages.
+	DescKeyQaReminderFallback = "qa-reminder.fallback"
+	// DescKeyQaReminderRelayMessage is the text key for qa reminder relay message
+	// messages.
 	DescKeyQaReminderRelayMessage = "qa-reminder.relay-message"
 )

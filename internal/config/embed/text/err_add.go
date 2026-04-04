@@ -8,10 +8,19 @@ package text
 
 // DescKeys for add operations errors.
 const (
-	DescKeyErrAddFileNotFound      = "err.add.file-not-found"
-	DescKeyErrAddIndexUpdate       = "err.add.index-update"
-	DescKeyErrAddMissingFields     = "err.add.missing-fields"
-	DescKeyErrAddNoContent         = "err.add.no-content"
+	// DescKeyErrAddFileNotFound is the text key for err add file not found
+	// messages.
+	DescKeyErrAddFileNotFound = "err.add.file-not-found"
+	// DescKeyErrAddIndexUpdate is the text key for err add index update messages.
+	DescKeyErrAddIndexUpdate = "err.add.index-update"
+	// DescKeyErrAddMissingFields is the text key for err add missing fields
+	// messages.
+	DescKeyErrAddMissingFields = "err.add.missing-fields"
+	// DescKeyErrAddNoContent is the text key for err add no content messages.
+	DescKeyErrAddNoContent = "err.add.no-content"
+	// DescKeyErrAddNoContentProvided is the text key for err add no content
+	// provided messages.
 	DescKeyErrAddNoContentProvided = "err.add.no-content-provided"
-	DescKeyErrAddUnknownType       = "err.add.unknown-type"
+	// DescKeyErrAddUnknownType is the text key for err add unknown type messages.
+	DescKeyErrAddUnknownType = "err.add.unknown-type"
 )

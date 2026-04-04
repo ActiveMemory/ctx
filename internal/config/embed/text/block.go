@@ -8,13 +8,25 @@ package text
 
 // DescKeys for block formatting.
 const (
+	// DescKeyBlockNonPathRelayMessage is the text key for block non path relay
+	// message messages.
 	DescKeyBlockNonPathRelayMessage = "block.non-path-relay-message"
-	DescKeyBlockConstitutionSuffix  = "block.constitution-suffix"
-	DescKeyBlockMidSudo             = "block.mid-sudo"
-	DescKeyBlockMidGitPush          = "block.mid-git-push"
-	DescKeyBlockCpToBin             = "block.cp-to-bin"
-	DescKeyBlockInstallToLocalBin   = "block.install-to-local-bin"
-	DescKeyBlockDotSlash            = "block.dot-slash"
-	DescKeyBlockGoRun               = "block.go-run"
-	DescKeyBlockAbsolutePath        = "block.absolute-path"
+	// DescKeyBlockConstitutionSuffix is the text key for block constitution
+	// suffix messages.
+	DescKeyBlockConstitutionSuffix = "block.constitution-suffix"
+	// DescKeyBlockMidSudo is the text key for block mid sudo messages.
+	DescKeyBlockMidSudo = "block.mid-sudo"
+	// DescKeyBlockMidGitPush is the text key for block mid git push messages.
+	DescKeyBlockMidGitPush = "block.mid-git-push"
+	// DescKeyBlockCpToBin is the text key for block cp to bin messages.
+	DescKeyBlockCpToBin = "block.cp-to-bin"
+	// DescKeyBlockInstallToLocalBin is the text key for block install to local
+	// bin messages.
+	DescKeyBlockInstallToLocalBin = "block.install-to-local-bin"
+	// DescKeyBlockDotSlash is the text key for block dot slash messages.
+	DescKeyBlockDotSlash = "block.dot-slash"
+	// DescKeyBlockGoRun is the text key for block go run messages.
+	DescKeyBlockGoRun = "block.go-run"
+	// DescKeyBlockAbsolutePath is the text key for block absolute path messages.
+	DescKeyBlockAbsolutePath = "block.absolute-path"
 )

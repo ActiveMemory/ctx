@@ -8,12 +8,20 @@ package flag
 
 // DescKeys for add command flags.
 const (
+	// DescKeyAddApplication is the description key for the add application flag.
 	DescKeyAddApplication = "add.application"
+	// DescKeyAddConsequence is the description key for the add consequence flag.
 	DescKeyAddConsequence = "add.consequence"
-	DescKeyAddContext     = "add.context"
-	DescKeyAddFile        = "add.file"
-	DescKeyAddLesson      = "add.lesson"
-	DescKeyAddPriority    = "add.priority"
-	DescKeyAddRationale   = "add.rationale"
-	DescKeyAddSection     = "add.section"
+	// DescKeyAddContext is the description key for the add context flag.
+	DescKeyAddContext = "add.context"
+	// DescKeyAddFile is the description key for the add file flag.
+	DescKeyAddFile = "add.file"
+	// DescKeyAddLesson is the description key for the add lesson flag.
+	DescKeyAddLesson = "add.lesson"
+	// DescKeyAddPriority is the description key for the add priority flag.
+	DescKeyAddPriority = "add.priority"
+	// DescKeyAddRationale is the description key for the add rationale flag.
+	DescKeyAddRationale = "add.rationale"
+	// DescKeyAddSection is the description key for the add section flag.
+	DescKeyAddSection = "add.section"
 )

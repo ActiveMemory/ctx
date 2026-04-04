@@ -8,7 +8,11 @@ package text
 
 // DescKeys for MCP pending items.
 const (
+	// DescKeyMCPPendingUpdatesFormat is the text key for mcp pending updates
+	// format messages.
 	DescKeyMCPPendingUpdatesFormat = "mcp.pending-updates-format"
-	DescKeyMCPReviewPending        = "mcp.review-pending"
-	DescKeyMCPNoPending            = "mcp.no-pending"
+	// DescKeyMCPReviewPending is the text key for mcp review pending messages.
+	DescKeyMCPReviewPending = "mcp.review-pending"
+	// DescKeyMCPNoPending is the text key for mcp no pending messages.
+	DescKeyMCPNoPending = "mcp.no-pending"
 )

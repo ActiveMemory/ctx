@@ -8,7 +8,10 @@ package text
 
 // DescKeys for statistics display.
 const (
-	DescKeyStatsEmpty        = "stats.empty"
+	// DescKeyStatsEmpty is the text key for stats empty messages.
+	DescKeyStatsEmpty = "stats.empty"
+	// DescKeyStatsHeaderFormat is the text key for stats header format messages.
 	DescKeyStatsHeaderFormat = "stats.header-format"
-	DescKeyStatsLineFormat   = "stats.line-format"
+	// DescKeyStatsLineFormat is the text key for stats line format messages.
+	DescKeyStatsLineFormat = "stats.line-format"
 )

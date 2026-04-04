@@ -8,8 +8,13 @@ package text
 
 // DescKeys for test write output.
 const (
-	DescKeyWriteTestFiltered  = "write.test-filtered"
+	// DescKeyWriteTestFiltered is the text key for write test filtered messages.
+	DescKeyWriteTestFiltered = "write.test-filtered"
+	// DescKeyWriteTestNoWebhook is the text key for write test no webhook
+	// messages.
 	DescKeyWriteTestNoWebhook = "write.test-no-webhook"
-	DescKeyWriteTestResult    = "write.test-result"
-	DescKeyWriteTestWorking   = "write.test-working"
+	// DescKeyWriteTestResult is the text key for write test result messages.
+	DescKeyWriteTestResult = "write.test-result"
+	// DescKeyWriteTestWorking is the text key for write test working messages.
+	DescKeyWriteTestWorking = "write.test-working"
 )

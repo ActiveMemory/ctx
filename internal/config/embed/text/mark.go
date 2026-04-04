@@ -8,7 +8,11 @@ package text
 
 // DescKeys for marker operations.
 const (
-	DescKeyMarkJournalChecked     = "mark-journal.checked"
-	DescKeyMarkJournalMarked      = "mark-journal.marked"
+	// DescKeyMarkJournalChecked is the text key for mark journal checked messages.
+	DescKeyMarkJournalChecked = "mark-journal.checked"
+	// DescKeyMarkJournalMarked is the text key for mark journal marked messages.
+	DescKeyMarkJournalMarked = "mark-journal.marked"
+	// DescKeyMarkWrappedUpConfirmed is the text key for mark wrapped up confirmed
+	// messages.
 	DescKeyMarkWrappedUpConfirmed = "mark-wrapped-up.confirmed"
 )

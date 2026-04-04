@@ -8,6 +8,9 @@ package text
 
 // Hints and markers (headings.yaml).
 const (
-	DescKeyLabelHintUseFull        = "label.hint-use-full"
+	// DescKeyLabelHintUseFull is the text key for label hint use full messages.
+	DescKeyLabelHintUseFull = "label.hint-use-full"
+	// DescKeyLabelHintUseAllProjects is the text key for label hint use all
+	// projects messages.
 	DescKeyLabelHintUseAllProjects = "label.hint-use-all-projects"
 )

@@ -11,6 +11,9 @@ const UseDecision = "decision"
 
 // DescKeys for decision subcommands.
 const (
-	DescKeyDecision        = "decision"
+	// DescKeyDecision is the description key for the decision command.
+	DescKeyDecision = "decision"
+	// DescKeyDecisionReindex is the description key for the decision reindex
+	// command.
 	DescKeyDecisionReindex = "decision.reindex"
 )

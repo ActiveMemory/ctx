@@ -8,10 +8,17 @@ package text
 
 // DescKeys for compact output.
 const (
-	DescKeyCompactHeading         = "compact.heading"
-	DescKeyCompactSeparator       = "compact.separator"
-	DescKeyCompactTaskError       = "compact.task-error"
+	// DescKeyCompactHeading is the text key for compact heading messages.
+	DescKeyCompactHeading = "compact.heading"
+	// DescKeyCompactSeparator is the text key for compact separator messages.
+	DescKeyCompactSeparator = "compact.separator"
+	// DescKeyCompactTaskError is the text key for compact task error messages.
+	DescKeyCompactTaskError = "compact.task-error"
+	// DescKeyCompactSectionsRemoved is the text key for compact sections removed
+	// messages.
 	DescKeyCompactSectionsRemoved = "compact.sections-removed"
-	DescKeyCompactClean           = "compact.clean"
-	DescKeyCompactSummary         = "compact.summary"
+	// DescKeyCompactClean is the text key for compact clean messages.
+	DescKeyCompactClean = "compact.clean"
+	// DescKeyCompactSummary is the text key for compact summary messages.
+	DescKeyCompactSummary = "compact.summary"
 )

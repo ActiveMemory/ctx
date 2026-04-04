@@ -8,7 +8,13 @@ package text
 
 // DescKeys for lock management write output.
 const (
-	DescKeyWriteLockUnlockEntry     = "write.lock-unlock-entry"
+	// DescKeyWriteLockUnlockEntry is the text key for write lock unlock entry
+	// messages.
+	DescKeyWriteLockUnlockEntry = "write.lock-unlock-entry"
+	// DescKeyWriteLockUnlockNoChanges is the text key for write lock unlock no
+	// changes messages.
 	DescKeyWriteLockUnlockNoChanges = "write.lock-unlock-no-changes"
-	DescKeyWriteLockUnlockSummary   = "write.lock-unlock-summary"
+	// DescKeyWriteLockUnlockSummary is the text key for write lock unlock summary
+	// messages.
+	DescKeyWriteLockUnlockSummary = "write.lock-unlock-summary"
 )

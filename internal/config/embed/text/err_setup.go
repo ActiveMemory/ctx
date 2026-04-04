@@ -8,8 +8,14 @@ package text
 
 // DescKeys for setup operations errors.
 const (
-	DescKeyErrSetupCreateDir     = "err.setup.create-dir"
+	// DescKeyErrSetupCreateDir is the text key for err setup create dir messages.
+	DescKeyErrSetupCreateDir = "err.setup.create-dir"
+	// DescKeyErrSetupMarshalConfig is the text key for err setup marshal config
+	// messages.
 	DescKeyErrSetupMarshalConfig = "err.setup.marshal-config"
-	DescKeyErrSetupFileWrite     = "err.setup.write-file"
-	DescKeyErrSetupSyncSteering  = "err.setup.sync-steering"
+	// DescKeyErrSetupFileWrite is the text key for err setup file write messages.
+	DescKeyErrSetupFileWrite = "err.setup.write-file"
+	// DescKeyErrSetupSyncSteering is the text key for err setup sync steering
+	// messages.
+	DescKeyErrSetupSyncSteering = "err.setup.sync-steering"
 )

@@ -8,6 +8,8 @@ package cmd
 
 // DescKeys for pause subcommands.
 const (
-	DescKeyPause  = "pause"
+	// DescKeyPause is the description key for the pause command.
+	DescKeyPause = "pause"
+	// DescKeyResume is the description key for the resume command.
 	DescKeyResume = "resume"
 )

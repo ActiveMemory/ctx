@@ -8,5 +8,7 @@ package text
 
 // DescKeys for CLI errors.
 const (
+	// DescKeyErrCliNoToolSpecified is the text key for err cli no tool specified
+	// messages.
 	DescKeyErrCliNoToolSpecified = "err.cli.no-tool-specified"
 )

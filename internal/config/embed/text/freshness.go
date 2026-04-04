@@ -8,10 +8,18 @@ package text
 
 // DescKeys for freshness tracking.
 const (
-	DescKeyFreshnessBoxTitle     = "freshness.box-title"
-	DescKeyFreshnessFileEntry    = "freshness.file-entry"
+	// DescKeyFreshnessBoxTitle is the text key for freshness box title messages.
+	DescKeyFreshnessBoxTitle = "freshness.box-title"
+	// DescKeyFreshnessFileEntry is the text key for freshness file entry messages.
+	DescKeyFreshnessFileEntry = "freshness.file-entry"
+	// DescKeyFreshnessRelayMessage is the text key for freshness relay message
+	// messages.
 	DescKeyFreshnessRelayMessage = "freshness.relay-message"
-	DescKeyFreshnessRelayPrefix  = "freshness.relay-prefix"
-	DescKeyFreshnessReviewURL    = "freshness.review-url"
-	DescKeyFreshnessTouchHint    = "freshness.touch-hint"
+	// DescKeyFreshnessRelayPrefix is the text key for freshness relay prefix
+	// messages.
+	DescKeyFreshnessRelayPrefix = "freshness.relay-prefix"
+	// DescKeyFreshnessReviewURL is the text key for freshness review url messages.
+	DescKeyFreshnessReviewURL = "freshness.review-url"
+	// DescKeyFreshnessTouchHint is the text key for freshness touch hint messages.
+	DescKeyFreshnessTouchHint = "freshness.touch-hint"
 )

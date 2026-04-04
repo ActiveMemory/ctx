@@ -8,7 +8,10 @@ package flag
 
 // DescKeys for dep command flags.
 const (
+	// DescKeyDepsExternal is the description key for the deps external flag.
 	DescKeyDepsExternal = "deps.external"
-	DescKeyDepsFormat   = "deps.format"
-	DescKeyDepsType     = "deps.type"
+	// DescKeyDepsFormat is the description key for the deps format flag.
+	DescKeyDepsFormat = "deps.format"
+	// DescKeyDepsType is the description key for the deps type flag.
+	DescKeyDepsType = "deps.type"
 )

@@ -8,6 +8,9 @@ package flag
 
 // DescKeys for site command flags.
 const (
+	// DescKeySiteFeedBaseUrl is the description key for the site feed base url
+	// flag.
 	DescKeySiteFeedBaseUrl = "site.feed.base-url"
-	DescKeySiteFeedOut     = "site.feed.out"
+	// DescKeySiteFeedOut is the description key for the site feed out flag.
+	DescKeySiteFeedOut = "site.feed.out"
 )

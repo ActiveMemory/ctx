@@ -8,11 +8,25 @@ package text
 
 // DescKeys for prompt handling errors.
 const (
-	DescKeyErrPromptListEntryTemplates     = "err.prompt.list-entry-templates"
-	DescKeyErrPromptListTemplates          = "err.prompt.list-templates"
-	DescKeyErrPromptMarkerNotFound         = "err.prompt.marker-not-found"
-	DescKeyErrPromptNoTemplate             = "err.prompt.no-template"
-	DescKeyErrPromptReadEntryTemplate      = "err.prompt.read-entry-template"
-	DescKeyErrPromptReadTemplate           = "err.prompt.read-template"
+	// DescKeyErrPromptListEntryTemplates is the text key for err prompt list
+	// entry templates messages.
+	DescKeyErrPromptListEntryTemplates = "err.prompt.list-entry-templates"
+	// DescKeyErrPromptListTemplates is the text key for err prompt list templates
+	// messages.
+	DescKeyErrPromptListTemplates = "err.prompt.list-templates"
+	// DescKeyErrPromptMarkerNotFound is the text key for err prompt marker not
+	// found messages.
+	DescKeyErrPromptMarkerNotFound = "err.prompt.marker-not-found"
+	// DescKeyErrPromptNoTemplate is the text key for err prompt no template
+	// messages.
+	DescKeyErrPromptNoTemplate = "err.prompt.no-template"
+	// DescKeyErrPromptReadEntryTemplate is the text key for err prompt read entry
+	// template messages.
+	DescKeyErrPromptReadEntryTemplate = "err.prompt.read-entry-template"
+	// DescKeyErrPromptReadTemplate is the text key for err prompt read template
+	// messages.
+	DescKeyErrPromptReadTemplate = "err.prompt.read-template"
+	// DescKeyErrPromptTemplateMissingMarkers is the text key for err prompt
+	// template missing markers messages.
 	DescKeyErrPromptTemplateMissingMarkers = "err.prompt.template-missing-markers"
 )

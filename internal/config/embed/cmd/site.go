@@ -8,12 +8,16 @@ package cmd
 
 // Use strings for site subcommands.
 const (
-	UseSite     = "site"
+	// UseSite is the cobra Use string for the site command.
+	UseSite = "site"
+	// UseSiteFeed is the cobra Use string for the site feed command.
 	UseSiteFeed = "feed"
 )
 
 // DescKeys for site subcommands.
 const (
-	DescKeySite     = "site"
+	// DescKeySite is the description key for the site command.
+	DescKeySite = "site"
+	// DescKeySiteFeed is the description key for the site feed command.
 	DescKeySiteFeed = "site.feed"
 )

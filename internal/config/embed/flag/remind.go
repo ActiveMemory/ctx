@@ -8,7 +8,11 @@ package flag
 
 // DescKeys for remind command flags.
 const (
-	DescKeyRemindAddAfter   = "remind.add.after"
-	DescKeyRemindAfter      = "remind.after"
+	// DescKeyRemindAddAfter is the description key for the remind add after flag.
+	DescKeyRemindAddAfter = "remind.add.after"
+	// DescKeyRemindAfter is the description key for the remind after flag.
+	DescKeyRemindAfter = "remind.after"
+	// DescKeyRemindDismissAll is the description key for the remind dismiss all
+	// flag.
 	DescKeyRemindDismissAll = "remind.dismiss.all"
 )

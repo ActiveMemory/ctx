@@ -8,6 +8,8 @@ package text
 
 // DescKeys for column formatting.
 const (
+	// DescKeyColumnDecision is the text key for column decision messages.
 	DescKeyColumnDecision = "column.decision"
+	// DescKeyColumnLearning is the text key for column learning messages.
 	DescKeyColumnLearning = "column.learning"
 )

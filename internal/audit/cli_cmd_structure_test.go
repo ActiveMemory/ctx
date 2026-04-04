@@ -21,6 +21,10 @@ var allowedCmdFiles = map[string]bool{
 	"doc.go": true,
 }
 
+// DO NOT add entries here to make tests pass. New code must
+// conform to the check. Widening requires a dedicated PR with
+// justification for each entry.
+//
 // cmdSubdirAllowlist lists cmd/ subdirectories with
 // stray files that cannot be moved to core/. This
 // should be empty.

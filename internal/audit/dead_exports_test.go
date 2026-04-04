@@ -26,6 +26,10 @@ import (
 // internal and may be used via reflection or are
 // genuinely file-scoped helpers.
 
+// DO NOT add entries here to make tests pass. New code must
+// conform to the check. Widening requires a dedicated PR with
+// justification for each entry.
+//
 // testOnlyExports lists exported symbols that exist
 // solely for test usage. The dead-export scanner skips
 // test files, so these would otherwise be false
@@ -51,6 +55,10 @@ var testOnlyExports = map[string]bool{
 	"github.com/ActiveMemory/ctx/internal/task.MatchFull":                                   true,
 }
 
+// DO NOT add entries here to make tests pass. New code must
+// conform to the check. Widening requires a dedicated PR with
+// justification for each entry.
+//
 // linuxOnlyExports lists exported symbols used only from
 // _linux.go source files. These appear dead on non-Linux
 // builds because go/packages loads only the current

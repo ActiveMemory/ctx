@@ -8,9 +8,15 @@ package flag
 
 // DescKeys for trace command flags.
 const (
-	DescKeyTraceLast          = "trace.last"
-	DescKeyTraceJSON          = "trace.json"
-	DescKeyTraceFileLast      = "trace.file.last"
-	DescKeyTraceTagNote       = "trace.tag.note"
+	// DescKeyTraceLast is the description key for the trace last flag.
+	DescKeyTraceLast = "trace.last"
+	// DescKeyTraceJSON is the description key for the trace json flag.
+	DescKeyTraceJSON = "trace.json"
+	// DescKeyTraceFileLast is the description key for the trace file last flag.
+	DescKeyTraceFileLast = "trace.file.last"
+	// DescKeyTraceTagNote is the description key for the trace tag note flag.
+	DescKeyTraceTagNote = "trace.tag.note"
+	// DescKeyTraceCollectRecord is the description key for the trace collect
+	// record flag.
 	DescKeyTraceCollectRecord = "trace.collect.record"
 )
