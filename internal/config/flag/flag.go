@@ -45,6 +45,7 @@ const (
 	Follow   = "follow"
 	Format   = "format"
 	Session  = "session"
+	Skill    = "skill"
 )
 
 // Shared flag names used across commands.
@@ -84,6 +85,7 @@ const (
 	NoPluginEnable  = "no-plugin-enable"
 	Out             = "out"
 	Output          = "output"
+	Path            = "path"
 	Prepend         = "prepend"
 	Project         = "project"
 	Prompt          = "prompt"

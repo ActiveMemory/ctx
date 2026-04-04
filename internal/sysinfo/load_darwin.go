@@ -16,6 +16,13 @@ import (
 	execSysinfo "github.com/ActiveMemory/ctx/internal/exec/sysinfo"
 )
 
+// sysctl key for load averages on macOS.
+const keyVMLoadAvg = "vm.loadavg"
+
+// loadAvgBraces is the brace wrapper trimmed from
+// sysctl vm.loadavg output (e.g. "{ 0.52 0.41 0.38 }").
+const loadAvgBraces = "{ }"
+
 // collectLoad queries system load averages on macOS via sysctl.
 //
 // Parses the output of `sysctl -n vm.loadavg` (format: "{ 0.52 0.41 0.38 }")
@@ -25,12 +32,12 @@ import (
 // Returns:
 //   - LoadInfo: System load averages and CPU count
 func collectLoad() LoadInfo {
-	out, cmdErr := execSysinfo.Sysctl("-n", "vm.loadavg")
+	out, cmdErr := execSysinfo.Sysctl(flagNoNewline, keyVMLoadAvg)
 	if cmdErr != nil {
 		return LoadInfo{Supported: false}
 	}
 	// Output: "{ 0.52 0.41 0.38 }"
-	s := strings.Trim(strings.TrimSpace(string(out)), "{ }")
+	s := strings.Trim(strings.TrimSpace(string(out)), loadAvgBraces)
 	var load1, load5, load15 float64
 	_, scanErr := fmt.Sscanf(
 		s, "%f %f %f", &load1, &load5, &load15,

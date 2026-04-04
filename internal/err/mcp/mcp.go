@@ -25,6 +25,32 @@ func TypeContentRequired() error {
 	)
 }
 
+// QueryRequired returns an error when query is missing from a search
+// tool call.
+//
+// Returns:
+//   - error: "query is required"
+func QueryRequired() error {
+	return errors.New(
+		desc.Text(text.DescKeyMCPErrQueryRequired),
+	)
+}
+
+// SearchRead wraps a failure to read the context directory during
+// search.
+//
+// Parameters:
+//   - dir: the directory path
+//   - cause: the underlying read error
+//
+// Returns:
+//   - error: "search: read <dir>: <cause>"
+func SearchRead(dir string, cause error) error {
+	return fmt.Errorf(
+		desc.Text(text.DescKeyMCPErrSearchRead), dir, cause,
+	)
+}
+
 // UnknownEventType returns an error for an unrecognized session event
 // type.
 //

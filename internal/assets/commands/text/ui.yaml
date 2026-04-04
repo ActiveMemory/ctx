@@ -38,6 +38,10 @@ agent.section-summaries:
   short: '## Also Noted'
 agent.section-tasks:
   short: '## Current Tasks'
+agent.section-steering:
+  short: '## Steering'
+agent.section-skill:
+  short: '## Skill'
 changes.fallback-label:
   short: 24 hour(s) ago (default)
 changes.code-authors:
@@ -184,6 +188,12 @@ drift.stale-header:
   short: 'comment header in %s does not match template: run ctx init --force to sync'
 drift.check-template-header:
   short: All context file headers match templates
+drift.invalid-tool:
+  short: 'unsupported tool identifier %q (supported: claude, cursor, cline, kiro, codex)'
+drift.hook-no-exec:
+  short: 'hook script missing executable permission bit'
+drift.stale-sync-file:
+  short: 'synced file is out of date vs source steering file'
 guide.default:
   short: |
     ctx - persistent AI context

@@ -7,6 +7,7 @@
 package cli
 
 import (
+	"errors"
 	"fmt"
 
 	"github.com/ActiveMemory/ctx/internal/assets/read/desc"
@@ -65,5 +66,16 @@ func InvalidSelection(input string, max int) error {
 func UnknownDocument(alias string) error {
 	return fmt.Errorf(
 		desc.Text(text.DescKeyErrValidateUnknownDocument), alias,
+	)
+}
+
+// NoToolSpecified returns an error when no tool is configured.
+//
+// Returns:
+//   - error: "no tool specified: use --tool <tool> or set the tool
+//     field in .ctxrc"
+func NoToolSpecified() error {
+	return errors.New(
+		desc.Text(text.DescKeyErrCliNoToolSpecified),
 	)
 }

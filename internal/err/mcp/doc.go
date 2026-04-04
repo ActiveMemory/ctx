@@ -8,5 +8,6 @@
 //
 // Error constructors return structured errors with context for
 // user-facing messages routed through internal/assets text lookups.
-// Exports: [TypeContentRequired], [UnknownEventType].
+// Exports: [QueryRequired], [SearchRead], [TypeContentRequired],
+// [UnknownEventType].
 package mcp

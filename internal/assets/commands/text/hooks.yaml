@@ -442,25 +442,6 @@ hook.copilot-cli:
     Run with --write to generate all files:
 
       ctx setup copilot-cli --write
-hook.cursor:
-  short: |
-    Cursor IDE Integration
-    ======================
-
-    Add to your .cursorrules file:
-
-    ```markdown
-    # Project Context
-
-    Always read these files before making changes:
-    - .context/CONSTITUTION.md (NEVER violate these rules)
-    - .context/TASKS.md (current work)
-    - .context/CONVENTIONS.md (how we write code)
-    - .context/ARCHITECTURE.md (system structure)
-
-    Run 'ctx agent' for a context summary.
-    Run 'ctx drift' to check for stale context.
-    ```
 hook.supported-tools:
   short: |
     Supported tools:

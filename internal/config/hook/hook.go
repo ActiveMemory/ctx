@@ -64,6 +64,8 @@ const (
 	ToolCopilot    = "copilot"
 	ToolCopilotCLI = "copilot-cli"
 	ToolCursor     = "cursor"
+	ToolKiro       = "kiro"
+	ToolCline      = "cline"
 	ToolWindsurf   = "windsurf"
 )
 

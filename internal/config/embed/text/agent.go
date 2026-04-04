@@ -19,6 +19,9 @@ const (
 	DescKeyAgentSectionLearnings    = "agent.section-learnings"
 	DescKeyAgentSectionSummaries    = "agent.section-summaries"
 
+	DescKeyAgentSectionSteering = "agent.section-steering"
+	DescKeyAgentSectionSkill    = "agent.section-skill"
+
 	DescKeyWriteAgentBulletItem   = "write.agent-bullet-item"
 	DescKeyWriteAgentNumberedItem = "write.agent-numbered-item"
 )

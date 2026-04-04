@@ -52,6 +52,8 @@ err.backup.write-smb:
   short: 'write to SMB: %w'
 err.context.dir-not-found:
   short: 'context directory not found: '
+err.cli.no-tool-specified:
+  short: 'no tool specified: use --tool <tool> or set the tool field in .ctxrc'
 err.config.golden-not-found:
   short: "no .claude/settings.golden.json found - run 'ctx permission snapshot' first"
 err.config.invalid-tool:
@@ -168,18 +170,54 @@ err.fs.write-merged:
   short: 'failed to write merged %s: %w'
 err.git.not-in-git-repo:
   short: 'not in a git repository: %w'
+err.lifecycle-hook.boundary:
+  short: 'hook path %q escapes hooks directory %q'
+err.lifecycle-hook.not-executable:
+  short: 'hook script %q is not executable'
+err.lifecycle-hook.symlink:
+  short: 'hook script %q is a symlink'
+err.hook.chmod:
+  short: 'chmod hook: %w'
+err.hook.create-dir:
+  short: 'create hook directory: %w'
+err.hook.discover:
+  short: 'discover hooks: %w'
 err.hook.embedded-template-not-found:
   short: embedded template not found for %s/%s
+err.hook.exit:
+  short: 'exit: %w'
+err.hook.invalid-json-output:
+  short: 'invalid JSON output: %w'
+err.hook.invalid-type:
+  short: 'invalid hook type %q; valid types: %s'
+err.hook.marshal-input:
+  short: 'marshal hook input: %w'
+err.hook.not-found:
+  short: 'hook not found: %s'
 err.hook.override-exists:
   short: "override already exists at %s\nEdit it directly or use `ctx system message reset %s %s` first"
 err.hook.remove-override:
   short: 'failed to remove override %s: %w'
+err.hook.resolve-hooks-dir:
+  short: 'resolve hooks directory %q: %w'
+err.hook.resolve-path:
+  short: 'resolve hook path %q: %w'
+err.hook.script-exists:
+  short: 'hook script already exists: %s'
+err.hook.stat:
+  short: 'stat hook: %w'
+err.hook.stat-path:
+  short: 'stat hook path %q: %w'
+err.hook.timeout:
+  short: 'timeout after %s'
 err.hook.unknown-hook:
   short: "unknown hook: %s\nRun `ctx system message list` to see available hooks"
 err.hook.unknown-variant:
   short: "unknown variant %q for hook %q\nRun `ctx system message list` to see available variants"
 err.hook.write-override:
   short: 'failed to write override %s: %w'
+err.hook.write-script:
+  short: 'write hook script: %w'
 err.http.parse-url:
   short: 'parse URL: %w'
 err.http.too-many-redirects:
@@ -390,10 +428,86 @@ err.site.no-site-config:
   short: no zensical.toml found in %s
 err.site.zensical-not-found:
   short: 'zensical not found. Install with: pipx install zensical (requires Python >= 3.10)'
+err.setup.create-dir:
+  short: 'create %s: %w'
+err.setup.marshal-config:
+  short: 'marshal mcp config: %w'
+err.setup.write-file:
+  short: 'write %s: %w'
+err.setup.sync-steering:
+  short: 'sync steering: %w'
+err.skill.create-dest:
+  short: 'skill: create destination: %w'
+err.skill.install:
+  short: 'skill: install %s: %w'
+err.skill.invalid-manifest:
+  short: 'skill: source has invalid %s: %w'
+err.skill.invalid-yaml:
+  short: 'skill: %s: invalid YAML frontmatter: %w'
+err.skill.load:
+  short: 'skill: %s: %w'
+err.skill.missing-closing-delimiter:
+  short: missing closing frontmatter delimiter (---)
+err.skill.missing-name:
+  short: 'skill: %s is missing required ''name'' field'
+err.skill.missing-opening-delimiter:
+  short: missing opening frontmatter delimiter (---)
+err.skill.not-found:
+  short: 'skill %q not found'
+err.skill.not-valid-dir:
+  short: 'skill: %q is not a valid skill directory'
+err.skill.not-valid-source:
+  short: 'skill: source is not a valid skill: %w'
+err.skill.read-dir:
+  short: 'skill: read directory %s: %w'
+err.skill.remove:
+  short: 'skill: remove %s: %w'
 err.skill.skill-list:
   short: 'failed to list skills: %w'
+err.skill.skill-load:
+  short: 'skill %q: %w'
 err.skill.skill-read:
   short: 'failed to read skill %s: %w'
+err.steering.compute-rel-path:
+  short: 'compute relative path: %w'
+err.steering.context-dir-missing:
+  short: .context/ directory does not exist; run ctx init first
+err.steering.create-dir:
+  short: 'create steering directory: %w'
+err.steering.file-exists:
+  short: 'steering file already exists: %s'
+err.steering.invalid-yaml:
+  short: 'steering: %s: invalid YAML frontmatter: %w'
+err.steering.missing-closing-delimiter:
+  short: missing closing frontmatter delimiter (---)
+err.steering.missing-opening-delimiter:
+  short: missing opening frontmatter delimiter (---)
+err.steering.no-tool:
+  short: 'no tool specified: use --tool <tool>, --all, or set the tool field in .ctxrc'
+err.steering.output-escapes-root:
+  short: 'output path %s escapes project root %s'
+err.steering.parse:
+  short: 'steering: %s: %w'
+err.steering.read-dir:
+  short: 'steering: read directory %s: %w'
+err.steering.read-file:
+  short: 'steering: read file %s: %w'
+err.steering.resolve-output:
+  short: 'resolve output path: %w'
+err.steering.resolve-root:
+  short: 'resolve project root: %w'
+err.steering.sync-all:
+  short: 'steering: sync %s: %w'
+err.steering.sync-name:
+  short: 'steering: %s: %w'
+err.steering.unsupported-tool:
+  short: 'steering: unsupported sync tool %q; supported: %s'
+err.steering.write-file:
+  short: 'steering: write %s: %w'
+err.steering.write-steering-file:
+  short: 'write steering file: %w'
+err.steering.write-init-file:
+  short: 'write %s: %w'
 err.state.load-state:
   short: 'loading state: %w'
 err.state.reading-state-dir:
