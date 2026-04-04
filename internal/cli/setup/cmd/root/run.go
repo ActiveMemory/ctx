@@ -14,8 +14,11 @@ import (
 	"github.com/ActiveMemory/ctx/internal/assets/read/agent"
 	"github.com/ActiveMemory/ctx/internal/assets/read/desc"
 	coreAgents "github.com/ActiveMemory/ctx/internal/cli/setup/core/agents"
+	coreCline "github.com/ActiveMemory/ctx/internal/cli/setup/core/cline"
 	coreCopilot "github.com/ActiveMemory/ctx/internal/cli/setup/core/copilot"
 	coreCopCLI "github.com/ActiveMemory/ctx/internal/cli/setup/core/copilot_cli"
+	coreCursor "github.com/ActiveMemory/ctx/internal/cli/setup/core/cursor"
+	coreKiro "github.com/ActiveMemory/ctx/internal/cli/setup/core/kiro"
 	"github.com/ActiveMemory/ctx/internal/config/embed/text"
 	cfgHook "github.com/ActiveMemory/ctx/internal/config/hook"
 	"github.com/ActiveMemory/ctx/internal/err/config"
@@ -55,7 +58,22 @@ func Run(cmd *cobra.Command, args []string, writeFile bool) error {
 		writeSetup.InfoTool(cmd, desc.Text(text.DescKeyHookClaude))
 
 	case cfgHook.ToolCursor:
-		writeSetup.InfoTool(cmd, desc.Text(text.DescKeyHookCursor))
+		if writeFile {
+			return coreCursor.Deploy(cmd)
+		}
+		writeSetup.InfoCursorIntegration(cmd)
+
+	case cfgHook.ToolKiro:
+		if writeFile {
+			return coreKiro.Deploy(cmd)
+		}
+		writeSetup.InfoKiroIntegration(cmd)
+
+	case cfgHook.ToolCline:
+		if writeFile {
+			return coreCline.Deploy(cmd)
+		}
+		writeSetup.InfoClineIntegration(cmd)
 
 	case cfgHook.ToolAider:
 		writeSetup.InfoTool(cmd, desc.Text(text.DescKeyHookAider))

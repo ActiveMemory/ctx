@@ -62,6 +62,8 @@ ctx setup <tool> [flags]
 |---------------|----------------------------------------------|
 | `claude-code` | Redirects to plugin install instructions     |
 | `cursor`      | Cursor IDE                                   |
+| `kiro`        | Kiro IDE                                     |
+| `cline`       | Cline (VS Code extension)                    |
 | `aider`       | Aider CLI                                    |
 | `copilot`     | GitHub Copilot                               |
 | `windsurf`    | Windsurf IDE                                 |
@@ -79,6 +81,11 @@ ctx setup aider
 
 # Generate and write .github/copilot-instructions.md
 ctx setup copilot --write
+
+# Generate MCP config and sync steering files
+ctx setup kiro --write
+ctx setup cursor --write
+ctx setup cline --write
 ```
 
 ---
@@ -1051,3 +1058,213 @@ ctx why invariants
 # Pipe to a pager
 ctx why manifesto | less
 ```
+
+---
+
+### `ctx steering`
+
+Manage steering files: persistent behavioral rules for AI tools.
+
+Steering files live in `.context/steering/` as Markdown files with
+YAML frontmatter that controls inclusion mode, tool targeting, and
+priority.
+
+```bash
+ctx steering <subcommand>
+```
+
+#### `ctx steering init`
+
+Create a starter set of steering files in `.context/steering/`.
+
+```bash
+ctx steering init
+```
+
+#### `ctx steering add`
+
+Create a new steering file with default frontmatter.
+
+```bash
+ctx steering add <name>
+```
+
+**Arguments**:
+
+- `name`: Steering file name (without `.md` extension)
+
+**Example**:
+
+```bash
+ctx steering add security
+# Created .context/steering/security.md
+```
+
+The generated file uses `inclusion: manual` and `priority: 50` by
+default. Edit the frontmatter to change behavior:
+
+```yaml
+---
+name: security
+description: Security rules for all code changes
+inclusion: always    # always | auto | manual
+tools: []            # empty = all tools
+priority: 10         # lower = injected first
+---
+```
+
+#### `ctx steering list`
+
+List all steering files with their inclusion mode and priority.
+
+```bash
+ctx steering list
+```
+
+#### `ctx steering preview`
+
+Preview which steering files would be included for a given prompt.
+
+```bash
+ctx steering preview [prompt]
+```
+
+#### `ctx steering sync`
+
+Sync steering files to tool-native formats (e.g. `.cursor/rules/`,
+`.kiro/steering/`, `.clinerules/`).
+
+```bash
+ctx steering sync
+```
+
+---
+
+### `ctx hook`
+
+Manage lifecycle hooks: shell scripts that fire at specific events
+during AI sessions.
+
+Hooks live in `.context/hooks/<type>/` directories, organized by
+event type. Each hook is an executable script that receives JSON
+via stdin and returns JSON via stdout.
+
+```bash
+ctx hook <subcommand>
+```
+
+**Hook types**:
+
+| Type             | When it fires                    |
+|------------------|----------------------------------|
+| `session-start`  | AI session begins                |
+| `session-end`    | AI session ends                  |
+| `pre-tool-use`   | Before an AI tool invocation     |
+| `post-tool-use`  | After an AI tool invocation      |
+| `file-save`      | When a file is saved             |
+| `context-add`    | When context is added            |
+
+#### `ctx hook add`
+
+Create a new hook script from a template.
+
+```bash
+ctx hook add <type> <name>
+```
+
+**Arguments**:
+
+- `type`: Hook type (e.g. `session-start`, `pre-tool-use`)
+- `name`: Script name (without `.sh` extension)
+
+**Example**:
+
+```bash
+ctx hook add session-start greet
+# Created .context/hooks/session-start/greet.sh
+```
+
+#### `ctx hook list`
+
+List all discovered hooks with their type and enabled status.
+
+```bash
+ctx hook list
+```
+
+#### `ctx hook enable`
+
+Enable a hook by setting the executable permission bit.
+
+```bash
+ctx hook enable <type> <name>
+```
+
+#### `ctx hook disable`
+
+Disable a hook by removing the executable permission bit.
+
+```bash
+ctx hook disable <type> <name>
+```
+
+#### `ctx hook test`
+
+Run a hook with synthetic input and display the output.
+
+```bash
+ctx hook test <type> <name>
+```
+
+---
+
+### `ctx skill`
+
+Manage reusable instruction bundles that can be installed into
+`.context/skills/`.
+
+A skill is a directory containing a `SKILL.md` file with YAML
+frontmatter (`name`, `description`) and a Markdown instruction body.
+
+```bash
+ctx skill <subcommand>
+```
+
+#### `ctx skill install`
+
+Install a skill from a source directory.
+
+```bash
+ctx skill install <source>
+```
+
+**Arguments**:
+
+- `source`: Path to a directory containing `SKILL.md`
+
+**Example**:
+
+```bash
+ctx skill install ./my-skills/code-review
+# Installed code-review → .context/skills/code-review
+```
+
+#### `ctx skill list`
+
+List all installed skills.
+
+```bash
+ctx skill list
+```
+
+#### `ctx skill remove`
+
+Remove an installed skill.
+
+```bash
+ctx skill remove <name>
+```
+
+**Arguments**:
+
+- `name`: Skill name to remove

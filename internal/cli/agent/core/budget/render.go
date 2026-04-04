@@ -100,6 +100,20 @@ func RenderMarkdownPacket(pkt *AssembledPacket) string {
 		sb.WriteString(nl)
 	}
 
+	// Steering
+	if len(pkt.Steering) > 0 {
+		sb.WriteString(desc.Text(text.DescKeyAgentSectionSteering) + nl)
+		for _, s := range pkt.Steering {
+			sb.WriteString(s + nl + nl)
+		}
+	}
+
+	// Skill
+	if pkt.Skill != "" {
+		sb.WriteString(desc.Text(text.DescKeyAgentSectionSkill) + nl)
+		sb.WriteString(pkt.Skill + nl + nl)
+	}
+
 	sb.WriteString(pkt.Instruction + nl)
 
 	return sb.String()

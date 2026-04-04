@@ -63,6 +63,87 @@ func TestInitCommand(t *testing.T) {
 	}
 }
 
+func TestInitCreatesSteeringHooksSkillsDirs(t *testing.T) {
+	tmpDir, err := os.MkdirTemp("", "cli-init-dirs-*")
+	if err != nil {
+		t.Fatalf("failed to create temp dir: %v", err)
+	}
+	defer func() { _ = os.RemoveAll(tmpDir) }()
+
+	origDir, _ := os.Getwd()
+	if err = os.Chdir(tmpDir); err != nil {
+		t.Fatalf("failed to chdir: %v", err)
+	}
+	defer func() { _ = os.Chdir(origDir) }()
+	t.Setenv("HOME", tmpDir)
+	t.Setenv(env.SkipPathCheck, env.True)
+
+	cmd := Cmd()
+	cmd.SetArgs([]string{})
+	if err = cmd.Execute(); err != nil {
+		t.Fatalf("init command failed: %v", err)
+	}
+
+	for _, sub := range []string{"steering", "hooks", "skills"} {
+		dirPath := filepath.Join(tmpDir, ".context", sub)
+		info, statErr := os.Stat(dirPath)
+		if statErr != nil {
+			t.Errorf(".context/%s was not created: %v", sub, statErr)
+			continue
+		}
+		if !info.IsDir() {
+			t.Errorf(".context/%s should be a directory", sub)
+		}
+	}
+}
+
+func TestInitSkipsExistingSteeringHooksSkillsDirs(t *testing.T) {
+	tmpDir, err := os.MkdirTemp("", "cli-init-dirs-exist-*")
+	if err != nil {
+		t.Fatalf("failed to create temp dir: %v", err)
+	}
+	defer func() { _ = os.RemoveAll(tmpDir) }()
+
+	origDir, _ := os.Getwd()
+	if err = os.Chdir(tmpDir); err != nil {
+		t.Fatalf("failed to chdir: %v", err)
+	}
+	defer func() { _ = os.Chdir(origDir) }()
+	t.Setenv("HOME", tmpDir)
+	t.Setenv(env.SkipPathCheck, env.True)
+
+	// Pre-create the directories with a marker file inside each.
+	for _, sub := range []string{"steering", "hooks", "skills"} {
+		dirPath := filepath.Join(tmpDir, ".context", sub)
+		if mkErr := os.MkdirAll(dirPath, 0755); mkErr != nil {
+			t.Fatalf("failed to pre-create %s: %v", sub, mkErr)
+		}
+		marker := filepath.Join(dirPath, "marker.txt")
+		if wErr := os.WriteFile(marker, []byte("keep"), 0644); wErr != nil {
+			t.Fatalf("failed to write marker in %s: %v", sub, wErr)
+		}
+	}
+
+	cmd := Cmd()
+	cmd.SetArgs([]string{"--force"})
+	if err = cmd.Execute(); err != nil {
+		t.Fatalf("init command failed: %v", err)
+	}
+
+	// Verify directories still exist and marker files are preserved.
+	for _, sub := range []string{"steering", "hooks", "skills"} {
+		marker := filepath.Join(tmpDir, ".context", sub, "marker.txt")
+		content, readErr := os.ReadFile(marker)
+		if readErr != nil {
+			t.Errorf(".context/%s/marker.txt was lost: %v", sub, readErr)
+			continue
+		}
+		if string(content) != "keep" {
+			t.Errorf(".context/%s/marker.txt content changed", sub)
+		}
+	}
+}
+
 func TestInitMergeInsertsAfterH1(t *testing.T) {
 	tmpDir, err := os.MkdirTemp("", "cli-init-merge-h1-*")
 	if err != nil {

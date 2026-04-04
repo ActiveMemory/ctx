@@ -7,8 +7,8 @@
 // Package budget implements the token-budgeted context assembly
 // algorithm for the agent command.
 //
-// [AssemblePacket] allocates tokens across five tiers (constitution,
-// tasks, conventions, decisions, learnings). [Split] divides
+// [AssemblePacket] allocates tokens across seven tiers (constitution,
+// tasks, conventions, decisions, learnings, steering, skill). [Split] divides
 // remaining budget between two scored sections. [FillSection]
 // applies two-tier degradation: full entries then title-only
 // summaries. [FitItems] and [EstimateSliceTokens] handle

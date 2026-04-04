@@ -97,6 +97,18 @@ A commented `.ctxrc` showing all options and their defaults:
 #     - nudge
 #     - relay
 #
+# tool: ""              # Active AI tool: claude, cursor, cline, kiro, codex
+#
+# steering:             # Steering layer configuration
+#   dir: .context/steering
+#   default_inclusion: manual
+#   default_tools: []
+#
+# hooks:                # Hook system configuration
+#   dir: .context/hooks
+#   timeout: 10
+#   enabled: true
+#
 # priority_order:
 #   - CONSTITUTION.md
 #   - TASKS.md
@@ -131,6 +143,13 @@ A commented `.ctxrc` showing all options and their defaults:
 | `task_nudge_interval`   | `int`      | `5`           | Edit/Write calls between task completion nudges                                                                                           |
 | `notify.events`         | `[]string` | *(all)*       | Event filter for webhook notifications (empty = all)                                                                                      |
 | `priority_order`        | `[]string` | *(see below)* | Custom file loading priority for context assembly                                                                                         |
+| `tool`                  | `string`   | *(empty)*     | Active AI tool identifier (`claude`, `cursor`, `cline`, `kiro`, `codex`). Used by steering sync and hook dispatch                         |
+| `steering.dir`          | `string`   | `.context/steering` | Steering files directory                                                                                                             |
+| `steering.default_inclusion` | `string` | `manual` | Default inclusion mode for new steering files (`always`, `auto`, `manual`)                                                                |
+| `steering.default_tools` | `[]string` | *(all)*  | Default tool filter for new steering files (empty = all tools)                                                                            |
+| `hooks.dir`             | `string`   | `.context/hooks` | Hook scripts directory                                                                                                                |
+| `hooks.timeout`         | `int`      | `10`          | Per-hook execution timeout in seconds                                                                                                     |
+| `hooks.enabled`         | `bool`     | `true`        | Whether hook execution is enabled                                                                                                         |
 
 **Default priority order** (*used when `priority_order` is not set*):
 
@@ -180,6 +199,7 @@ CLI flags have the highest priority and override both environment variables and
 |------------------------|-----------------------------------------------------------|
 | `--context-dir <path>` | Override context directory (default: `.context/`)         |
 | `--allow-outside-cwd`  | Allow context directory outside current working directory |
+| `--tool <name>`        | Override active AI tool identifier (e.g. `kiro`, `cursor`) |
 | `--version`            | Show version and exit                                     |
 | `--help`               | Show command help and exit                                |
 

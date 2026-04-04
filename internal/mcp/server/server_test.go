@@ -240,8 +240,8 @@ func TestToolsList(t *testing.T) {
 	if err := json.Unmarshal(raw, &result); err != nil {
 		t.Fatalf("unmarshal: %v", err)
 	}
-	if len(result.Tools) != 11 {
-		t.Errorf("tool count = %d, want 11", len(result.Tools))
+	if len(result.Tools) != 15 {
+		t.Errorf("tool count = %d, want 15", len(result.Tools))
 	}
 	names := make(map[string]bool)
 	for _, tool := range result.Tools {
@@ -252,6 +252,8 @@ func TestToolsList(t *testing.T) {
 		"ctx_journal_source", "ctx_watch_update", "ctx_compact",
 		"ctx_next", "ctx_check_task_completion",
 		"ctx_session_event", "ctx_remind",
+		"ctx_steering_get", "ctx_search",
+		"ctx_session_start", "ctx_session_end",
 	} {
 		if !names[want] {
 			t.Errorf("missing tool: %s", want)
@@ -1163,4 +1165,196 @@ func TestResourcePollerNotification(t *testing.T) {
 	}
 
 	srv.poller.Stop()
+}
+
+// --- Steering and session hook tool tests ---
+
+func TestToolSteeringGetWithPrompt(t *testing.T) {
+	srv, contextDir := newTestServer(t)
+
+	// Create steering directory with test files.
+	steeringDir := filepath.Join(contextDir, "steering")
+	if err := os.MkdirAll(steeringDir, 0o755); err != nil {
+		t.Fatalf("mkdir steering: %v", err)
+	}
+	alwaysFile := "---\nname: always-rules\ndescription: Always included\ninclusion: always\npriority: 10\n---\n\nAlways body content.\n"
+	autoFile := "---\nname: api-rules\ndescription: API design\ninclusion: auto\npriority: 20\n---\n\nAPI body content.\n"
+	if err := os.WriteFile(filepath.Join(steeringDir, "always-rules.md"), []byte(alwaysFile), 0o644); err != nil {
+		t.Fatalf("write always: %v", err)
+	}
+	if err := os.WriteFile(filepath.Join(steeringDir, "api-rules.md"), []byte(autoFile), 0o644); err != nil {
+		t.Fatalf("write auto: %v", err)
+	}
+
+	resp := request(t, srv, "tools/call", proto.CallToolParams{
+		Name:      "ctx_steering_get",
+		Arguments: map[string]interface{}{"prompt": "API design"},
+	})
+	if resp.Error != nil {
+		t.Fatalf("unexpected error: %v", resp.Error.Message)
+	}
+	raw, _ := json.Marshal(resp.Result)
+	var result proto.CallToolResult
+	if err := json.Unmarshal(raw, &result); err != nil {
+		t.Fatalf("unmarshal: %v", err)
+	}
+	if result.IsError {
+		t.Fatalf("unexpected tool error: %s", result.Content[0].Text)
+	}
+	text := result.Content[0].Text
+	// Should include both always and auto-matched files.
+	if !strings.Contains(text, "always-rules") {
+		t.Errorf("expected always-rules in response, got: %s", text)
+	}
+	if !strings.Contains(text, "api-rules") {
+		t.Errorf("expected api-rules in response, got: %s", text)
+	}
+}
+
+func TestToolSteeringGetWithoutPrompt(t *testing.T) {
+	srv, contextDir := newTestServer(t)
+
+	// Create steering directory with test files.
+	steeringDir := filepath.Join(contextDir, "steering")
+	if err := os.MkdirAll(steeringDir, 0o755); err != nil {
+		t.Fatalf("mkdir steering: %v", err)
+	}
+	alwaysFile := "---\nname: always-rules\ndescription: Always included\ninclusion: always\npriority: 10\n---\n\nAlways body.\n"
+	autoFile := "---\nname: api-rules\ndescription: API design\ninclusion: auto\npriority: 20\n---\n\nAPI body.\n"
+	if err := os.WriteFile(filepath.Join(steeringDir, "always-rules.md"), []byte(alwaysFile), 0o644); err != nil {
+		t.Fatalf("write always: %v", err)
+	}
+	if err := os.WriteFile(filepath.Join(steeringDir, "api-rules.md"), []byte(autoFile), 0o644); err != nil {
+		t.Fatalf("write auto: %v", err)
+	}
+
+	// No prompt — should return only always files.
+	resp := request(t, srv, "tools/call", proto.CallToolParams{
+		Name: "ctx_steering_get",
+	})
+	if resp.Error != nil {
+		t.Fatalf("unexpected error: %v", resp.Error.Message)
+	}
+	raw, _ := json.Marshal(resp.Result)
+	var result proto.CallToolResult
+	if err := json.Unmarshal(raw, &result); err != nil {
+		t.Fatalf("unmarshal: %v", err)
+	}
+	if result.IsError {
+		t.Fatalf("unexpected tool error: %s", result.Content[0].Text)
+	}
+	text := result.Content[0].Text
+	if !strings.Contains(text, "always-rules") {
+		t.Errorf("expected always-rules in response, got: %s", text)
+	}
+	if strings.Contains(text, "api-rules") {
+		t.Errorf("auto file should not be included without matching prompt, got: %s", text)
+	}
+}
+
+func TestToolSessionStartNoHooks(t *testing.T) {
+	srv, contextDir := newTestServer(t)
+
+	// Create empty hooks directory so discovery succeeds.
+	hooksDir := filepath.Join(contextDir, "hooks")
+	if err := os.MkdirAll(filepath.Join(hooksDir, "session-start"), 0o755); err != nil {
+		t.Fatalf("mkdir hooks: %v", err)
+	}
+
+	resp := request(t, srv, "tools/call", proto.CallToolParams{
+		Name: "ctx_session_start",
+	})
+	if resp.Error != nil {
+		t.Fatalf("unexpected error: %v", resp.Error.Message)
+	}
+	raw, _ := json.Marshal(resp.Result)
+	var result proto.CallToolResult
+	if err := json.Unmarshal(raw, &result); err != nil {
+		t.Fatalf("unmarshal: %v", err)
+	}
+	if result.IsError {
+		t.Fatalf("unexpected tool error: %s", result.Content[0].Text)
+	}
+	// No hooks exist — should return success message.
+	text := result.Content[0].Text
+	if !strings.Contains(text, "Session start hooks executed") &&
+		!strings.Contains(text, "No additional context") {
+		t.Errorf("expected success message for no hooks, got: %s", text)
+	}
+}
+
+func TestToolSessionEndWithSummary(t *testing.T) {
+	srv, contextDir := newTestServer(t)
+
+	// Create empty hooks directory.
+	hooksDir := filepath.Join(contextDir, "hooks")
+	if err := os.MkdirAll(filepath.Join(hooksDir, "session-end"), 0o755); err != nil {
+		t.Fatalf("mkdir hooks: %v", err)
+	}
+
+	resp := request(t, srv, "tools/call", proto.CallToolParams{
+		Name: "ctx_session_end",
+		Arguments: map[string]interface{}{
+			"summary": "Completed MCP server implementation",
+		},
+	})
+	if resp.Error != nil {
+		t.Fatalf("unexpected error: %v", resp.Error.Message)
+	}
+	raw, _ := json.Marshal(resp.Result)
+	var result proto.CallToolResult
+	if err := json.Unmarshal(raw, &result); err != nil {
+		t.Fatalf("unmarshal: %v", err)
+	}
+	if result.IsError {
+		t.Fatalf("unexpected tool error: %s", result.Content[0].Text)
+	}
+	// No hooks exist — should return success.
+	text := result.Content[0].Text
+	if !strings.Contains(text, "Session end hooks executed") {
+		t.Errorf("expected session end success message, got: %s", text)
+	}
+}
+
+func TestToolSearch(t *testing.T) {
+	srv, _ := newTestServer(t)
+
+	resp := request(t, srv, "tools/call", proto.CallToolParams{
+		Name:      "ctx_search",
+		Arguments: map[string]interface{}{"query": "Rule 1"},
+	})
+	if resp.Error != nil {
+		t.Fatalf("unexpected error: %v", resp.Error.Message)
+	}
+	raw, _ := json.Marshal(resp.Result)
+	var result proto.CallToolResult
+	if err := json.Unmarshal(raw, &result); err != nil {
+		t.Fatalf("unmarshal: %v", err)
+	}
+	if result.IsError {
+		t.Fatalf("unexpected tool error: %s", result.Content[0].Text)
+	}
+	text := result.Content[0].Text
+	if !strings.Contains(text, "CONSTITUTION.md") {
+		t.Errorf("expected match in CONSTITUTION.md, got: %s", text)
+	}
+}
+
+func TestToolSearchNoQuery(t *testing.T) {
+	srv, _ := newTestServer(t)
+
+	resp := request(t, srv, "tools/call", proto.CallToolParams{
+		Name: "ctx_search",
+	})
+	if resp.Error != nil {
+		t.Fatalf("unexpected error: %v", resp.Error.Message)
+	}
+	raw, _ := json.Marshal(resp.Result)
+	var result proto.CallToolResult
+	if err := json.Unmarshal(raw, &result); err != nil {
+		t.Fatalf("unmarshal: %v", err)
+	}
+	if !result.IsError {
+		t.Error("expected error when query is missing")
+	}
 }

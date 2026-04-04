@@ -54,8 +54,13 @@ import cfgMemory "github.com/ActiveMemory/ctx/internal/config/memory"
 //     when adding tasks (overrides defaults when set)
 //   - SpecNudgeMinLen: Task content length threshold
 //     for spec nudge (default 150)
+//   - Tool: Active AI tool identifier (e.g., claude,
+//     cursor, cline, kiro, codex)
+//   - Steering: Steering layer configuration overrides
+//   - Hooks: Hook system configuration overrides
 type CtxRC struct {
 	Profile             string                   `yaml:"profile"`
+	Tool                string                   `yaml:"tool"`
 	ContextDir          string                   `yaml:"context_dir"`
 	TokenBudget         int                      `yaml:"token_budget"`
 	PriorityOrder       []string                 `yaml:"priority_order"`
@@ -81,6 +86,8 @@ type CtxRC struct {
 	SpecSignalWords     []string                 `yaml:"spec_signal_words"`
 	SpecNudgeMinLen     int                      `yaml:"spec_nudge_min_len"`
 	Notify              *NotifyConfig            `yaml:"notify"`
+	Steering            *SteeringRC              `yaml:"steering"`
+	Hooks               *HooksRC                 `yaml:"hooks"`
 }
 
 // FreshnessFile describes a source file containing technology-dependent
@@ -108,4 +115,35 @@ type FreshnessFile struct {
 type NotifyConfig struct {
 	Events          []string `yaml:"events"`
 	KeyRotationDays int      `yaml:"key_rotation_days"`
+}
+
+// SteeringRC holds steering layer configuration from .ctxrc.
+//
+// Fields:
+//   - Dir: Path override for the steering directory
+//     (default ".context/steering")
+//   - DefaultInclusion: Default inclusion mode for new
+//     steering files (default "manual")
+//   - DefaultTools: Default tool identifier list for new
+//     steering files (default: all tools)
+type SteeringRC struct {
+	Dir              string   `yaml:"dir"`
+	DefaultInclusion string   `yaml:"default_inclusion"`
+	DefaultTools     []string `yaml:"default_tools"`
+}
+
+// HooksRC holds hook system configuration from .ctxrc.
+//
+// Fields:
+//   - Dir: Path override for the hooks directory
+//     (default ".context/hooks")
+//   - Timeout: Per-hook execution timeout in seconds
+//     (default 10)
+//   - Enabled: Whether hook execution is enabled
+//     (default true). Pointer type distinguishes unset
+//     (nil → true) from explicitly set to false.
+type HooksRC struct {
+	Dir     string `yaml:"dir"`
+	Timeout int    `yaml:"timeout"`
+	Enabled *bool  `yaml:"enabled"`
 }

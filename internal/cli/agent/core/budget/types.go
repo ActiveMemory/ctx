@@ -18,6 +18,8 @@ type packet struct {
 	Decisions    []string `json:"decisions"`
 	Learnings    []string `json:"learnings,omitempty"`
 	Summaries    []string `json:"summaries,omitempty"`
+	Steering     []string `json:"steering,omitempty"`
+	Skill        string   `json:"skill,omitempty"`
 	Instruction  string   `json:"instruction"`
 }
 
@@ -31,6 +33,8 @@ type packet struct {
 //   - Decisions: Architectural decisions (scored)
 //   - Learnings: Gotchas and tips (scored)
 //   - Summaries: Title-only overflow entries
+//   - Steering: Applicable steering file bodies
+//   - Skill: Named skill content (from --skill flag)
 //   - Instruction: Behavioral instruction text
 //   - Budget: Token budget limit
 //   - TokensUsed: Estimated tokens consumed
@@ -42,6 +46,8 @@ type AssembledPacket struct {
 	Decisions    []string
 	Learnings    []string
 	Summaries    []string
+	Steering     []string
+	Skill        string
 	Instruction  string
 	Budget       int
 	TokensUsed   int

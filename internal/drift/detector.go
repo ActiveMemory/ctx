@@ -65,5 +65,17 @@ func Detect(ctx *entity.Context) *Report {
 	// Check context file comment headers against templates
 	checkTemplateHeaders(ctx, report)
 
+	// Check steering files for unsupported tool identifiers
+	checkSteeringTools(report)
+
+	// Check hook scripts for missing executable permission bit
+	checkHookPerms(report)
+
+	// Check synced tool-native files are up to date vs source steering files
+	checkSyncStaleness(report)
+
+	// Check .ctxrc tool field for unsupported tool identifier
+	checkRCTool(report)
+
 	return report
 }

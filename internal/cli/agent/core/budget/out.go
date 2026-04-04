@@ -24,13 +24,19 @@ import (
 //   - cmd: Cobra command for output stream
 //   - ctx: Loaded context containing the files
 //   - budget: Token budget for content selection
+//   - steeringBodies: Pre-filtered steering file bodies
+//   - skillBody: Skill content (empty if none)
 //
 // Returns:
 //   - error: Non-nil if JSON encoding fails
 func OutputAgentJSON(
-	cmd *cobra.Command, ctx *entity.Context, budget int,
+	cmd *cobra.Command,
+	ctx *entity.Context,
+	budget int,
+	steeringBodies []string,
+	skillBody string,
 ) error {
-	pkt := AssemblePacket(ctx, budget)
+	pkt := AssemblePacket(ctx, budget, steeringBodies, skillBody)
 
 	packet := packet{
 		Generated:    time.Now().UTC().Format(time.RFC3339),
@@ -43,6 +49,8 @@ func OutputAgentJSON(
 		Decisions:    pkt.Decisions,
 		Learnings:    pkt.Learnings,
 		Summaries:    pkt.Summaries,
+		Steering:     pkt.Steering,
+		Skill:        pkt.Skill,
 		Instruction:  pkt.Instruction,
 	}
 
@@ -55,19 +63,26 @@ func OutputAgentJSON(
 //
 // Uses budget-aware assembly to score entries and respect the token budget.
 // Output includes sections for constitution, tasks, conventions,
-// decisions (full body), learnings (full body), and title-only summaries.
+// decisions (full body), learnings (full body), title-only summaries,
+// steering files, and skill content.
 //
 // Parameters:
 //   - cmd: Cobra command for output stream
 //   - ctx: Loaded context containing the files
 //   - budget: Token budget for content selection
+//   - steeringBodies: Pre-filtered steering file bodies
+//   - skillBody: Skill content (empty if none)
 //
 // Returns:
 //   - error: Always nil (included for interface consistency)
 func OutputAgentMarkdown(
-	cmd *cobra.Command, ctx *entity.Context, budget int,
+	cmd *cobra.Command,
+	ctx *entity.Context,
+	budget int,
+	steeringBodies []string,
+	skillBody string,
 ) error {
-	pkt := AssemblePacket(ctx, budget)
+	pkt := AssemblePacket(ctx, budget, steeringBodies, skillBody)
 	writeAgent.Packet(cmd, RenderMarkdownPacket(pkt))
 	return nil
 }

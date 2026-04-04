@@ -27,14 +27,23 @@ import (
 //   - Tier 2 (40%): active tasks
 //   - Tier 3 (20%): conventions
 //   - Tier 4+5 (remaining): decisions and learnings, scored by relevance
+//   - Tier 6 (remaining after 4+5): steering files
+//   - Tier 7 (remaining after 6): skill content (--skill flag)
 //
 // Parameters:
 //   - ctx: Loaded context containing the files
 //   - budget: Token budget to respect
+//   - steeringBodies: Pre-filtered steering file bodies to include
+//   - skillBody: Skill content to include (empty string if none)
 //
 // Returns:
 //   - *AssembledPacket: Assembled packet within budget
-func AssemblePacket(ctx *entity.Context, budget int) *AssembledPacket {
+func AssemblePacket(
+	ctx *entity.Context,
+	budget int,
+	steeringBodies []string,
+	skillBody string,
+) *AssembledPacket {
 	now := time.Now()
 	pkt := &AssembledPacket{
 		Budget:      budget,
@@ -102,10 +111,30 @@ func AssemblePacket(ctx *entity.Context, budget int) *AssembledPacket {
 	pkt.Learnings, learnSummaries = FillSection(scoredLearnings, learnTokens)
 	pkt.Summaries = append(pkt.Summaries, learnSummaries...)
 
-	pkt.TokensUsed = tier1Tokens + taskTokens + convTokens +
+	usedSoFar := tier1Tokens + taskTokens + convTokens +
 		EstimateSliceTokens(pkt.Decisions) +
 		EstimateSliceTokens(pkt.Learnings) +
 		EstimateSliceTokens(pkt.Summaries)
+	remaining = budget - usedSoFar
+
+	// Tier 6: Steering files (from remaining budget)
+	if remaining > 0 && len(steeringBodies) > 0 {
+		pkt.Steering = FitItems(steeringBodies, remaining)
+		steeringTokens := EstimateSliceTokens(pkt.Steering)
+		remaining -= steeringTokens
+		usedSoFar += steeringTokens
+	}
+
+	// Tier 7: Skill content (from remaining budget)
+	if remaining > 0 && skillBody != "" {
+		skillTokens := ctxToken.EstimateString(skillBody)
+		if skillTokens <= remaining {
+			pkt.Skill = skillBody
+			usedSoFar += skillTokens
+		}
+	}
+
+	pkt.TokensUsed = usedSoFar
 
 	return pkt
 }

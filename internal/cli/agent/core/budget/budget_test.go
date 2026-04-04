@@ -305,3 +305,132 @@ func TestRenderMarkdownPacket_Empty(t *testing.T) {
 		t.Error("should not render empty tasks section")
 	}
 }
+
+func TestRenderMarkdownPacket_WithSteering(t *testing.T) {
+	pkt := &AssembledPacket{
+		ReadOrder:    []string{".context/CONSTITUTION.md"},
+		Constitution: []string{"Never violate"},
+		Steering:     []string{"Use RESTful conventions", "Always return JSON"},
+		Instruction:  "Confirm context reading.",
+		Budget:       8000,
+		TokensUsed:   500,
+	}
+
+	output := RenderMarkdownPacket(pkt)
+
+	checks := []string{
+		"## Steering",
+		"Use RESTful conventions",
+		"Always return JSON",
+	}
+	for _, check := range checks {
+		if !strings.Contains(output, check) {
+			t.Errorf("output missing %q", check)
+		}
+	}
+}
+
+func TestRenderMarkdownPacket_WithSkill(t *testing.T) {
+	pkt := &AssembledPacket{
+		ReadOrder:   []string{".context/CONSTITUTION.md"},
+		Skill:       "# React Patterns\n\nUse functional components.",
+		Instruction: "Confirm context reading.",
+		Budget:      8000,
+		TokensUsed:  500,
+	}
+
+	output := RenderMarkdownPacket(pkt)
+
+	checks := []string{
+		"## Skill",
+		"React Patterns",
+		"Use functional components.",
+	}
+	for _, check := range checks {
+		if !strings.Contains(output, check) {
+			t.Errorf("output missing %q", check)
+		}
+	}
+}
+
+func TestRenderMarkdownPacket_NoSteeringOrSkill(t *testing.T) {
+	pkt := &AssembledPacket{
+		ReadOrder:   []string{".context/CONSTITUTION.md"},
+		Instruction: "Confirm context reading.",
+		Budget:      8000,
+		TokensUsed:  500,
+	}
+
+	output := RenderMarkdownPacket(pkt)
+
+	if strings.Contains(output, "## Steering") {
+		t.Error("should not render empty steering section")
+	}
+	if strings.Contains(output, "## Skill") {
+		t.Error("should not render empty skill section")
+	}
+}
+
+func TestAssemblePacket_WithSteering(t *testing.T) {
+	ctx := &entity.Context{}
+	bodies := []string{"Rule one", "Rule two"}
+
+	pkt := AssemblePacket(ctx, 8000, bodies, "")
+
+	if len(pkt.Steering) == 0 {
+		t.Error("expected steering files in packet")
+	}
+	if pkt.Steering[0] != "Rule one" {
+		t.Errorf("expected first steering body %q, got %q", "Rule one", pkt.Steering[0])
+	}
+}
+
+func TestAssemblePacket_WithSkill(t *testing.T) {
+	ctx := &entity.Context{}
+	skillBody := "# My Skill\n\nDo things."
+
+	pkt := AssemblePacket(ctx, 8000, nil, skillBody)
+
+	if pkt.Skill != skillBody {
+		t.Errorf("expected skill body %q, got %q", skillBody, pkt.Skill)
+	}
+}
+
+func TestAssemblePacket_NoSteeringNoSkill(t *testing.T) {
+	ctx := &entity.Context{}
+
+	pkt := AssemblePacket(ctx, 8000, nil, "")
+
+	if len(pkt.Steering) != 0 {
+		t.Errorf("expected no steering, got %d", len(pkt.Steering))
+	}
+	if pkt.Skill != "" {
+		t.Errorf("expected empty skill, got %q", pkt.Skill)
+	}
+}
+
+func TestAssemblePacket_SteeringRespectsBudget(t *testing.T) {
+	ctx := &entity.Context{}
+	// Use a very small budget so steering gets truncated
+	bigBody := strings.Repeat("x", 5000)
+	bodies := []string{bigBody, bigBody}
+
+	pkt := AssemblePacket(ctx, 100, bodies, "")
+
+	// With a tiny budget, at most one steering body should fit
+	// (FitItems always includes at least one)
+	if len(pkt.Steering) > 1 {
+		t.Errorf("expected at most 1 steering body with tiny budget, got %d", len(pkt.Steering))
+	}
+}
+
+func TestAssemblePacket_SkillOmittedWhenBudgetExhausted(t *testing.T) {
+	ctx := &entity.Context{}
+	// Use a very small budget
+	pkt := AssemblePacket(ctx, 1, nil, strings.Repeat("x", 5000))
+
+	// Skill should be omitted when budget is exhausted
+	if pkt.Skill != "" {
+		t.Error("expected skill to be omitted when budget exhausted")
+	}
+}
