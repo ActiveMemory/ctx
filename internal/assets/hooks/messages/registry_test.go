@@ -23,8 +23,8 @@ func TestRegistryCount(t *testing.T) {
 }
 
 func TestRegistryYAMLParses(t *testing.T) {
-	if parseErr := RegistryError(); parseErr != nil {
-		t.Fatalf("RegistryError() = %v, want nil", parseErr)
+	if parseErr := registryError(); parseErr != nil {
+		t.Fatalf("registryError() = %v, want nil", parseErr)
 	}
 
 	for i, entry := range Registry() {

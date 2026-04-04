@@ -322,7 +322,7 @@ func TestParseFile_AutoDetect(t *testing.T) {
 }
 
 func TestRegisteredTools(t *testing.T) {
-	tools := RegisteredTools()
+	tools := registeredTools()
 	if len(tools) == 0 {
 		t.Error("expected at least one registered tool")
 	}

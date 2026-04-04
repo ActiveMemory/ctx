@@ -280,8 +280,8 @@ func TestMatchConstants(t *testing.T) {
 		t.Fatal("line did not match task pattern")
 	}
 
-	if match[MatchFull] != line {
-		t.Errorf("MatchFull = %q, want %q", match[MatchFull], line)
+	if match[matchFull] != line {
+		t.Errorf("matchFull = %q, want %q", match[matchFull], line)
 	}
 	if match[MatchIndent] != "  " {
 		t.Errorf("MatchIndent = %q, want %q", match[MatchIndent], "  ")

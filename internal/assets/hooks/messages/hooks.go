@@ -6,6 +6,16 @@
 
 package messages
 
+// registryError returns any error encountered while
+// parsing the embedded registry.yaml. Nil on success.
+//
+// Returns:
+//   - error: Parse error, or nil on success
+func registryError() error {
+	Registry() // ensure sync.Once has run
+	return registryErr
+}
+
 // hooks returns a deduplicated list of hook names in
 // the registry.
 //

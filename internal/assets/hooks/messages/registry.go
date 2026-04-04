@@ -53,16 +53,6 @@ func Registry() []HookMessageInfo {
 	return registryData
 }
 
-// RegistryError returns any error encountered while parsing the
-// embedded registry.yaml. Nil on success.
-//
-// Returns:
-//   - error: Parse error from registry.yaml, or nil on success
-func RegistryError() error {
-	Registry() // ensure sync.Once has run
-	return registryErr
-}
-
 // Lookup returns the HookMessageInfo for the given hook and variant,
 // or nil if not found.
 //

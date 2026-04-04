@@ -13,8 +13,8 @@ import (
 	"testing"
 
 	"github.com/ActiveMemory/ctx/internal/cli/journal"
-	"github.com/ActiveMemory/ctx/internal/cli/journal/core/lock"
 	"github.com/ActiveMemory/ctx/internal/config/fs"
+	"github.com/ActiveMemory/ctx/internal/config/session"
 	"github.com/ActiveMemory/ctx/internal/journal/state"
 )
 
@@ -65,7 +65,7 @@ func TestRunLockUnlock_LockSingle(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	if !strings.Contains(string(data), lock.LockedFrontmatterLine) {
+	if !strings.Contains(string(data), session.FrontmatterLockedLine) {
 		t.Error("frontmatter should contain locked line")
 	}
 }
@@ -79,7 +79,7 @@ func TestRunLockUnlock_UnlockSingle(t *testing.T) {
 
 	filename := "2026-01-21-test-abc12345.md"
 	content := "---\ndate: \"2026-01-21\"\n" +
-		lock.LockedFrontmatterLine + "\n---\n\n# Test\n"
+		session.FrontmatterLockedLine + "\n---\n\n# Test\n"
 	if err := os.WriteFile(
 		filepath.Join(journalDir, filename), []byte(content), fs.PermFile,
 	); err != nil {
@@ -183,7 +183,7 @@ func TestRunLockUnlock_AlreadyLocked(t *testing.T) {
 
 	filename := "2026-01-21-test-abc12345.md"
 	content := "---\ndate: \"2026-01-21\"\n" +
-		lock.LockedFrontmatterLine + "\n---\n\n# Test\n"
+		session.FrontmatterLockedLine + "\n---\n\n# Test\n"
 	if err := os.WriteFile(
 		filepath.Join(journalDir, filename), []byte(content), fs.PermFile,
 	); err != nil {
@@ -302,7 +302,7 @@ func TestRunLockUnlock_LockMultipart(t *testing.T) {
 		if readErr != nil {
 			t.Fatal(readErr)
 		}
-		if !strings.Contains(string(data), lock.LockedFrontmatterLine) {
+		if !strings.Contains(string(data), session.FrontmatterLockedLine) {
 			t.Errorf("%s frontmatter should contain locked line", f)
 		}
 	}

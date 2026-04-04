@@ -408,7 +408,7 @@ func TestScanDirectory_WithMarkdown(t *testing.T) {
 }
 
 func TestRegisteredTools_IncludesMarkdown(t *testing.T) {
-	tools := RegisteredTools()
+	tools := registeredTools()
 	found := false
 	for _, tool := range tools {
 		if tool == session.ToolMarkdown {
