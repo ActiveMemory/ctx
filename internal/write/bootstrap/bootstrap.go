@@ -14,6 +14,7 @@ import (
 
 	"github.com/ActiveMemory/ctx/internal/assets/read/desc"
 	"github.com/ActiveMemory/ctx/internal/config/embed/text"
+	cfgWarn "github.com/ActiveMemory/ctx/internal/config/warn"
 	"github.com/ActiveMemory/ctx/internal/entity"
 )
 
@@ -117,7 +118,7 @@ func JSON(
 	enc.SetIndent("", "  ")
 	if encodeErr := enc.Encode(out); encodeErr != nil {
 		cmd.PrintErrln(fmt.Sprintf(
-			`{"error": "json encode: %v"}`, encodeErr,
+			cfgWarn.JSONEncode, encodeErr,
 		))
 	}
 }

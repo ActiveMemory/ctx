@@ -41,11 +41,12 @@ func SnapshotSaved(cmd *cobra.Command, snapshotPath string) {
 // Returns:
 //   - string: formatted snapshot content.
 func SnapshotContent(name, created, separator, nl, body string) string {
-	return fmt.Sprintf(
-		desc.Text(text.DescKeyTaskSnapshotHeaderFormat)+
-			nl+nl+
-			desc.Text(text.DescKeyTaskSnapshotCreatedFormat)+
-			nl+nl+separator+nl+nl+"%s",
-		name, created, body,
+	header := fmt.Sprintf(
+		desc.Text(text.DescKeyTaskSnapshotHeaderFormat), name,
 	)
+	createdLine := fmt.Sprintf(
+		desc.Text(text.DescKeyTaskSnapshotCreatedFormat), created,
+	)
+	return header + nl + nl + createdLine + nl + nl +
+		separator + nl + nl + body
 }

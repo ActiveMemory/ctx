@@ -8,6 +8,7 @@ package source
 
 import (
 	"fmt"
+	"strconv"
 	"strings"
 	goTime "time"
 
@@ -154,7 +155,7 @@ func RunList(cmd *cobra.Command, opts Opts) error {
 			time.DateTimeFmt,
 		)
 		dur := srcFmt.Duration(s.Duration)
-		turns := fmt.Sprintf("%d", s.TurnCount)
+		turns := strconv.Itoa(s.TurnCount)
 		tokens := ""
 		if s.TotalTokens > 0 {
 			tokens = sharedFmt.Tokens(s.TotalTokens)

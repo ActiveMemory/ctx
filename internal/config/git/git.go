@@ -55,6 +55,9 @@ const (
 	FormatTrailerValue = "--format=%%(trailers:key=%s,valueonly)"
 	// FlagPathSep is the separator between flags and paths.
 	FlagPathSep = "--"
+	// FlagLastN is the format string for limiting git log
+	// output to the last N commits (e.g. "-5").
+	FlagLastN = "-%d"
 )
 
 // Git ref constants.

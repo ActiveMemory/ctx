@@ -8,9 +8,9 @@ package memory
 
 import (
 	"crypto/sha256"
+	"encoding/hex"
 	"encoding/json"
 	"errors"
-	"fmt"
 	"os"
 	"path/filepath"
 	"strings"
@@ -91,7 +91,7 @@ func (s *State) MarkSynced() {
 //   - string: Truncated SHA-256 hex digest for deduplication
 func EntryHash(text string) string {
 	h := sha256.Sum256([]byte(text))
-	return fmt.Sprintf("%x", h[:cfgFmt.HashPrefixLen])
+	return hex.EncodeToString(h[:cfgFmt.HashPrefixLen])
 }
 
 // Imported reports whether an entry hash has already been imported.
