@@ -149,8 +149,8 @@ func TestMethodNotFound(t *testing.T) {
 	if resp.Error == nil {
 		t.Fatal("expected error for unknown method")
 	}
-	if resp.Error.Code != proto.ErrCodeNotFound {
-		t.Errorf("error code = %d, want %d", resp.Error.Code, proto.ErrCodeNotFound)
+	if resp.Error.Code != cfgSchema.ErrCodeNotFound {
+		t.Errorf("error code = %d, want %d", resp.Error.Code, cfgSchema.ErrCodeNotFound)
 	}
 }
 
@@ -483,7 +483,7 @@ func TestParseError(t *testing.T) {
 	if err := json.Unmarshal(out.Bytes(), &resp); err != nil {
 		t.Fatalf("unmarshal: %v", err)
 	}
-	if resp.Error == nil || resp.Error.Code != proto.ErrCodeParse {
+	if resp.Error == nil || resp.Error.Code != cfgSchema.ErrCodeParse {
 		t.Errorf("expected parse error, got: %+v", resp.Error)
 	}
 }

@@ -15,6 +15,7 @@ import (
 	cfgCtx "github.com/ActiveMemory/ctx/internal/config/ctx"
 	"github.com/ActiveMemory/ctx/internal/config/embed/text"
 	"github.com/ActiveMemory/ctx/internal/config/mcp/mime"
+	cfgSchema "github.com/ActiveMemory/ctx/internal/config/mcp/schema"
 	"github.com/ActiveMemory/ctx/internal/config/token"
 	ctxToken "github.com/ActiveMemory/ctx/internal/context/token"
 	"github.com/ActiveMemory/ctx/internal/entity"
@@ -38,7 +39,7 @@ func readContextFile(
 ) *proto.Response {
 	f := ctx.File(fileName)
 	if f == nil {
-		return out.ErrResponse(id, proto.ErrCodeInvalidArg,
+		return out.ErrResponse(id, cfgSchema.ErrCodeInvalidArg,
 			fmt.Sprintf(
 				desc.Text(text.DescKeyMCPErrFileNotFound),
 				fileName,

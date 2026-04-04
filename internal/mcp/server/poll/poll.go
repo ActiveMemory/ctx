@@ -17,9 +17,11 @@ import (
 	"github.com/ActiveMemory/ctx/internal/mcp/server/catalog"
 )
 
-// defaultPollInterval is the default interval for resource change
-// polling.
-const defaultPollInterval = 5 * time.Second
+// defaultPollInterval is the default interval for
+// resource change polling.
+var defaultPollInterval = time.Duration(
+	server.PollIntervalSec,
+) * time.Second
 
 // NewPoller creates a poller for the given context directory.
 //

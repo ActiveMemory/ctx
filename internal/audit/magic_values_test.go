@@ -99,12 +99,14 @@ func TestNoMagicValues(t *testing.T) {
 					return true
 				}
 
-				// Skip file-level const/var definition sites only.
-				// Local consts inside function bodies are NOT exempt —
-				// they are just renamed magic numbers.
-				if isConstDef(file, lit) || isVarDef(file, lit) {
-					return true
-				}
+				// Const/var definitions in exempt packages
+				// are already skipped (line 86). Outside
+				// those packages, numeric constants are
+				// magic values that belong in config/.
+				//
+				// DO NOT re-add a blanket isConstDef
+				// exemption. It masks constants defined
+				// in the wrong package.
 
 				if exemptIntLiterals[lit.Value] {
 					return true
@@ -152,28 +154,6 @@ func isExemptPackage(pkgPath string) bool {
 	for _, exempt := range exemptPackagePaths {
 		if strings.Contains(pkgPath, exempt) {
 			return true
-		}
-	}
-	return false
-}
-
-// isVarDef reports whether lit appears inside a var declaration.
-func isVarDef(file *ast.File, lit *ast.BasicLit) bool {
-	for _, decl := range file.Decls {
-		gd, ok := decl.(*ast.GenDecl)
-		if !ok || gd.Tok != token.VAR {
-			continue
-		}
-		for _, spec := range gd.Specs {
-			vs, ok := spec.(*ast.ValueSpec)
-			if !ok {
-				continue
-			}
-			for _, val := range vs.Values {
-				if containsNode(val, lit) {
-					return true
-				}
-			}
 		}
 	}
 	return false

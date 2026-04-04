@@ -20,6 +20,10 @@ const (
 	SubcommandServe = "serve"
 )
 
+// PollIntervalSec is the default interval in seconds for
+// resource change polling.
+const PollIntervalSec = 5
+
 // Args returns the CLI arguments to launch the ctx MCP server.
 func Args() []string {
 	return []string{"mcp", SubcommandServe}

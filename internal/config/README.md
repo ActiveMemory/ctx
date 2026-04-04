@@ -4,14 +4,14 @@
 
 This directory contains ~60 sub-packages, each holding constants,
 compiled regexes, type definitions, or text keys for a single
-domain. This looks unusual. It's intentional.
+domain. This looks unusual. **It's intentional**.
 
 ### The problem it solves
 
 A monolithic `config` package creates a false dependency: importing
 `config` to use `config.TokenBudget` also imports every regex
 pattern, every MCP constant, every entry type, and every CLI flag
-name. In Go, the package is the dependency unit — importing one
+name. In Go, the package is the dependency unit: importing one
 symbol imports the whole package. A change to any constant in the
 package marks every consumer as stale for recompilation and makes
 the blast radius of any change the entire codebase.
@@ -44,7 +44,7 @@ import "github.com/ActiveMemory/ctx/internal/config"  // everything
 
 - Surgical dependency tracking (change `config/mcp/tool` and only
   MCP packages recompile)
-- Zero import cycles (all sub-packages are leaves — zero internal
+- Zero import cycles (all sub-packages are leaves: zero internal
   dependencies)
 - Clear ownership (each file belongs to one domain)
 - Safe to modify (changing a constant in `config/agent` cannot
@@ -138,12 +138,12 @@ method receivers, interface participation, or business logic. A
 type with `func (t IssueType) Severity() int` has outgrown
 `config/` and belongs in `entity/`.
 
-| Stage | Home | Example |
-|-------|------|---------|
-| Pure value enum | `config/<domain>/` | `type IssueType string` with const values |
-| Cross-package value enum | `config/<domain>/` | Same — `config/` is already importable everywhere |
-| Type with methods | `entity/` | `func (t IssueType) Severity() int` |
-| Type implementing interfaces | `entity/` | `var _ fmt.Stringer = IssueType("")` |
+| Stage                        | Home               | Example                                           |
+|------------------------------|--------------------|---------------------------------------------------|
+| Pure value enum              | `config/<domain>/` | `type IssueType string` with const values         |
+| Cross-package value enum     | `config/<domain>/` | Same — `config/` is already importable everywhere |
+| Type with methods            | `entity/`          | `func (t IssueType) Severity() int`               |
+| Type implementing interfaces | `entity/`          | `var _ fmt.Stringer = IssueType("")`              |
 
 The migration path is natural: start in `config/`, promote to
 `entity/` when behavior appears. `TestCrossPackageTypes` catches

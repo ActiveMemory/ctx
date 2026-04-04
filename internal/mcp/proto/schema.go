@@ -64,18 +64,6 @@ type RPCError struct {
 	Data    interface{} `json:"data,omitempty"`
 }
 
-// Standard JSON-RPC error codes.
-const (
-	// ErrCodeParse indicates malformed JSON was received.
-	ErrCodeParse = -32700
-	// ErrCodeNotFound indicates the method was not found.
-	ErrCodeNotFound = -32601
-	// ErrCodeInvalidArg indicates invalid method parameters.
-	ErrCodeInvalidArg = -32602
-	// ErrCodeInternal indicates an internal JSON-RPC error.
-	ErrCodeInternal = -32603
-)
-
 // --- Initialization types ---
 
 // InitializeParams contains client information sent during initialization.

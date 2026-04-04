@@ -19,9 +19,6 @@ import (
 // defaultInclusion is the default inclusion mode when omitted.
 var defaultInclusion = cfgSteering.InclusionManual
 
-// defaultPriority is the default priority when omitted.
-const defaultPriority = 50
-
 // Parse reads a steering file from bytes, extracting YAML frontmatter
 // and markdown body. The filePath is stored on the returned SteeringFile
 // for error reporting and identification.

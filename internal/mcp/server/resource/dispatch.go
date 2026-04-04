@@ -12,6 +12,7 @@ import (
 
 	"github.com/ActiveMemory/ctx/internal/assets/read/desc"
 	"github.com/ActiveMemory/ctx/internal/config/embed/text"
+	cfgSchema "github.com/ActiveMemory/ctx/internal/config/mcp/schema"
 	"github.com/ActiveMemory/ctx/internal/context/load"
 	"github.com/ActiveMemory/ctx/internal/mcp/proto"
 	"github.com/ActiveMemory/ctx/internal/mcp/server/catalog"
@@ -50,14 +51,14 @@ func DispatchRead(
 		req.Params, &params,
 	); unmarshalErr != nil {
 		return out.ErrResponse(
-			req.ID, proto.ErrCodeInvalidArg,
+			req.ID, cfgSchema.ErrCodeInvalidArg,
 			desc.Text(text.DescKeyMCPErrInvalidParams),
 		)
 	}
 
 	ctx, loadErr := load.Do(contextDir)
 	if loadErr != nil {
-		return out.ErrResponse(req.ID, proto.ErrCodeInternal,
+		return out.ErrResponse(req.ID, cfgSchema.ErrCodeInternal,
 			fmt.Sprintf(
 				desc.Text(text.DescKeyMCPLoadContext),
 				loadErr,
@@ -74,7 +75,7 @@ func DispatchRead(
 		return readAgentPacket(req.ID, ctx, tokenBudget)
 	}
 
-	return out.ErrResponse(req.ID, proto.ErrCodeInvalidArg,
+	return out.ErrResponse(req.ID, cfgSchema.ErrCodeInvalidArg,
 		fmt.Sprintf(
 			desc.Text(text.DescKeyMCPErrUnknownResource),
 			params.URI,

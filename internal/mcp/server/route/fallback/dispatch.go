@@ -11,6 +11,7 @@ import (
 
 	"github.com/ActiveMemory/ctx/internal/assets/read/desc"
 	"github.com/ActiveMemory/ctx/internal/config/embed/text"
+	cfgSchema "github.com/ActiveMemory/ctx/internal/config/mcp/schema"
 	"github.com/ActiveMemory/ctx/internal/mcp/proto"
 	"github.com/ActiveMemory/ctx/internal/mcp/server/out"
 )
@@ -24,7 +25,7 @@ import (
 // Returns:
 //   - *proto.Response: method-not-found error response
 func DispatchErr(req proto.Request) *proto.Response {
-	return out.ErrResponse(req.ID, proto.ErrCodeNotFound,
+	return out.ErrResponse(req.ID, cfgSchema.ErrCodeNotFound,
 		fmt.Sprintf(
 			desc.Text(text.DescKeyMCPErrMethodNotFound),
 			req.Method,

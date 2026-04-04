@@ -26,3 +26,7 @@ const (
 // LabelAllTools is the display label when a steering
 // or trigger item applies to all tools.
 const LabelAllTools = "all"
+
+// DefaultPriority is the default injection priority for
+// steering files when omitted from frontmatter.
+const DefaultPriority = 50

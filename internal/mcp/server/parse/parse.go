@@ -11,6 +11,7 @@ import (
 
 	"github.com/ActiveMemory/ctx/internal/assets/read/desc"
 	"github.com/ActiveMemory/ctx/internal/config/embed/text"
+	cfgSchema "github.com/ActiveMemory/ctx/internal/config/mcp/schema"
 	"github.com/ActiveMemory/ctx/internal/config/mcp/server"
 	"github.com/ActiveMemory/ctx/internal/mcp/proto"
 )
@@ -32,7 +33,7 @@ func Request(data []byte) (*proto.Request, *proto.Response) {
 		return nil, &proto.Response{
 			JSONRPC: server.JSONRPCVersion,
 			Error: &proto.RPCError{
-				Code:    proto.ErrCodeParse,
+				Code:    cfgSchema.ErrCodeParse,
 				Message: desc.Text(text.DescKeyMCPErrParse),
 			},
 		}

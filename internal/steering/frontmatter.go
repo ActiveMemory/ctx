@@ -9,6 +9,7 @@ package steering
 import (
 	"strings"
 
+	cfgSteering "github.com/ActiveMemory/ctx/internal/config/steering"
 	"github.com/ActiveMemory/ctx/internal/config/token"
 	errSteering "github.com/ActiveMemory/ctx/internal/err/steering"
 )
@@ -52,7 +53,7 @@ func applyDefaults(sf *SteeringFile) {
 		sf.Inclusion = defaultInclusion
 	}
 	if sf.Priority == 0 {
-		sf.Priority = defaultPriority
+		sf.Priority = cfgSteering.DefaultPriority
 	}
 	// Tools: nil means all tools — no default needed.
 }

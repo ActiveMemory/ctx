@@ -12,6 +12,7 @@ import (
 
 	"github.com/ActiveMemory/ctx/internal/assets/read/desc"
 	"github.com/ActiveMemory/ctx/internal/config/embed/text"
+	cfgSchema "github.com/ActiveMemory/ctx/internal/config/mcp/schema"
 	"github.com/ActiveMemory/ctx/internal/config/mcp/tool"
 	"github.com/ActiveMemory/ctx/internal/mcp/handler"
 	"github.com/ActiveMemory/ctx/internal/mcp/proto"
@@ -47,7 +48,7 @@ func DispatchCall(
 	var params proto.CallToolParams
 	if err := json.Unmarshal(req.Params, &params); err != nil {
 		return out.ErrResponse(
-			req.ID, proto.ErrCodeInvalidArg,
+			req.ID, cfgSchema.ErrCodeInvalidArg,
 			desc.Text(text.DescKeyMCPErrInvalidParams),
 		)
 	}
@@ -98,7 +99,7 @@ func DispatchCall(
 		resp = sessionEnd(h, req.ID, params.Arguments)
 	default:
 		return out.ErrResponse(
-			req.ID, proto.ErrCodeNotFound,
+			req.ID, cfgSchema.ErrCodeNotFound,
 			fmt.Sprintf(
 				desc.Text(text.DescKeyMCPErrUnknownTool),
 				params.Name,

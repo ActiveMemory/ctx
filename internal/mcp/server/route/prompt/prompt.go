@@ -18,6 +18,7 @@ import (
 	"github.com/ActiveMemory/ctx/internal/config/mcp/field"
 	"github.com/ActiveMemory/ctx/internal/config/mcp/mime"
 	"github.com/ActiveMemory/ctx/internal/config/mcp/prompt"
+	cfgSchema "github.com/ActiveMemory/ctx/internal/config/mcp/schema"
 	"github.com/ActiveMemory/ctx/internal/config/token"
 	"github.com/ActiveMemory/ctx/internal/context/load"
 	"github.com/ActiveMemory/ctx/internal/mcp/proto"
@@ -39,7 +40,7 @@ func sessionStart(
 ) *proto.Response {
 	ctx, loadErr := load.Do(contextDir)
 	if loadErr != nil {
-		return out.ErrResponse(id, proto.ErrCodeInternal,
+		return out.ErrResponse(id, cfgSchema.ErrCodeInternal,
 			fmt.Sprintf(
 				desc.Text(text.DescKeyMCPLoadContext), loadErr))
 	}
