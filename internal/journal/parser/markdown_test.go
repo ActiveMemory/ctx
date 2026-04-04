@@ -422,7 +422,7 @@ func TestRegisteredTools_IncludesMarkdown(t *testing.T) {
 }
 
 func TestGetParser_Markdown(t *testing.T) {
-	p := Parser(session.ToolMarkdown)
+	p := find(session.ToolMarkdown)
 	if p == nil {
 		t.Fatalf("expected parser for %q", session.ToolMarkdown)
 	}

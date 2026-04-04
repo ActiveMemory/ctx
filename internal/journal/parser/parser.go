@@ -194,19 +194,3 @@ func FindSessionsForCWD(
 		return s.CWD == cwd
 	}, additionalDirs...)
 }
-
-// Parser returns a parser for the specified tool.
-//
-// Parameters:
-//   - tool: Tool identifier (e.g., "claude-code")
-//
-// Returns:
-//   - Session: The parser for the tool, or nil if not found
-func Parser(tool string) Session {
-	for _, p := range registeredParsers {
-		if p.Tool() == tool {
-			return p
-		}
-	}
-	return nil
-}
