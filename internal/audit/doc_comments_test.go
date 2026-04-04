@@ -62,6 +62,9 @@ func TestDocComments(t *testing.T) {
 					// Config const/var blocks: group doc covers
 					// all specs. Report once per undocumented
 					// block, not per constant.
+					// Known gap: embed/text/ DescKey constants
+					// are not self-documenting but are exempted
+					// here. Tracked for future tightening.
 					if isCfg && d.Lparen.IsValid() &&
 						(d.Tok == token.CONST ||
 							d.Tok == token.VAR) {
