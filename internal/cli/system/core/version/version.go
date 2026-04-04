@@ -9,6 +9,7 @@ package version
 import (
 	"fmt"
 	"os"
+	"strconv"
 	"strings"
 	"time"
 
@@ -39,11 +40,12 @@ func ParseMajorMinor(ver string) (major, minor int, ok bool) {
 	if len(parts) < 2 {
 		return 0, 0, false
 	}
-	var m, n int
-	if _, scanErr := fmt.Sscanf(parts[0], "%d", &m); scanErr != nil {
+	m, majorErr := strconv.Atoi(parts[0])
+	if majorErr != nil {
 		return 0, 0, false
 	}
-	if _, scanErr := fmt.Sscanf(parts[1], "%d", &n); scanErr != nil {
+	n, minorErr := strconv.Atoi(parts[1])
+	if minorErr != nil {
 		return 0, 0, false
 	}
 	return m, n, true

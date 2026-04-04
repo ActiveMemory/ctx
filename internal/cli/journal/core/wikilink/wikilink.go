@@ -14,6 +14,7 @@ import (
 	"github.com/ActiveMemory/ctx/internal/assets/read/desc"
 	"github.com/ActiveMemory/ctx/internal/config/embed/text"
 	"github.com/ActiveMemory/ctx/internal/config/file"
+	cfgHTTP "github.com/ActiveMemory/ctx/internal/config/http"
 	"github.com/ActiveMemory/ctx/internal/config/obsidian"
 	"github.com/ActiveMemory/ctx/internal/config/regex"
 	"github.com/ActiveMemory/ctx/internal/config/token"
@@ -40,9 +41,9 @@ func ConvertMarkdownLinks(content string) string {
 			target := parts[2]
 
 			// Skip external links
-			if strings.HasPrefix(target, "http://") ||
-				strings.HasPrefix(target, "https://") ||
-				strings.HasPrefix(target, "file://") {
+			if strings.HasPrefix(target, cfgHTTP.PrefixHTTP) ||
+				strings.HasPrefix(target, cfgHTTP.PrefixHTTPS) ||
+				strings.HasPrefix(target, cfgHTTP.PrefixFile) {
 				return match
 			}
 

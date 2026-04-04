@@ -33,15 +33,13 @@ var exemptStringPackages = []string{
 	"internal/config/",
 	"internal/config",
 	"internal/assets/tpl",
-	"internal/err/",
 }
 
 // TestNoMagicStrings flags magic string literals in non-test
 // Go files under internal/.
 //
 // Exempt: empty string, single space, indentation strings,
-// single characters, format verbs, regex replacements, HTML
-// entities, URL scheme prefixes, config/tpl/err packages,
+// regex capture references, config/tpl/err packages,
 // file-level const/var definitions, import paths, struct tags.
 //
 // Test files are exempt.
@@ -127,24 +125,8 @@ func checkMagicString(
 		return
 	}
 
-	// Format verbs ("%s", "%d %s", etc.).
-	if isFormatString(s) {
-		return
-	}
-
 	// Regex capture group references.
 	if isRegexRef(s) {
-		return
-	}
-
-	// HTML entities (&lt;, &gt;, etc.).
-	if strings.HasPrefix(s, "&") &&
-		strings.HasSuffix(s, ";") {
-		return
-	}
-
-	// URL scheme prefixes.
-	if strings.HasSuffix(s, "://") {
 		return
 	}
 
@@ -163,17 +145,6 @@ func isExemptStringPackage(pkgPath string) bool {
 		}
 	}
 	return false
-}
-
-// fmtVerb matches a printf format directive.
-var fmtVerb = regexp.MustCompile(
-	`%[-+#0 ]*\d*\.?\d*[sdvqwfegxXobctpT]`,
-)
-
-// isFormatString reports whether s contains a printf
-// format directive.
-func isFormatString(s string) bool {
-	return fmtVerb.MatchString(s)
 }
 
 // regexRef matches regex capture group references.

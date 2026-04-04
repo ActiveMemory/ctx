@@ -46,6 +46,12 @@ const (
 
 	// ParseConfig is the format for config file parse failures.
 	ParseConfig = "warning: failed to parse %s: %v (using defaults)"
+
+	// CopilotClose is the format for Copilot CLI file close failures.
+	CopilotClose = "copilot-cli: close %s: %v"
+
+	// JSONEncode is the JSON-safe error for encoding failures.
+	JSONEncode = `{"error": "json encode: %v"}`
 )
 
 // Warn context identifiers for index generation.

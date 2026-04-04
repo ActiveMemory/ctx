@@ -25,6 +25,13 @@ TASK STATUS LABELS:
   `#in-progress`: currently being worked on (add inline, don't move task)
 -->
 
+### Misc
+
+- [ ] gitnexus analyze --embeddings --skill : we need a make target, but also this
+  butchers AGENTS.md and CLAUDE.md so those files need to be reverted and
+  GITNEXUS.md should be updated accordingly. The make target should remind
+  the user about it.
+
 ### Architecture Docs
 
 - [ ] Publish architecture docs to docs/: copy ARCHITECTURE.md, DETAILED_DESIGN domain files, and CHEAT-SHEETS.md to docs/reference/. Sanitize intervention points into docs/contributing/. Exclude DANGER-ZONES.md and ARCHITECTURE-PRINCIPAL.md (internal only). Spec: specs/publish-architecture-docs.md #priority:medium #added:2026-04-03-150000

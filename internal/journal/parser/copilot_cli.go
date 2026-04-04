@@ -19,6 +19,7 @@ import (
 	"github.com/ActiveMemory/ctx/internal/config/file"
 	cfgHook "github.com/ActiveMemory/ctx/internal/config/hook"
 	"github.com/ActiveMemory/ctx/internal/config/session"
+	cfgWarn "github.com/ActiveMemory/ctx/internal/config/warn"
 	"github.com/ActiveMemory/ctx/internal/entity"
 	errParser "github.com/ActiveMemory/ctx/internal/err/parser"
 	"github.com/ActiveMemory/ctx/internal/io"
@@ -120,7 +121,7 @@ func (p *CopilotCLI) ParseFile(path string) ([]*entity.Session, error) {
 	defer func() {
 		if closeErr := f.Close(); closeErr != nil {
 			warn.Warn(
-				"copilot-cli: close %s: %v",
+				cfgWarn.CopilotClose,
 				path, closeErr,
 			)
 		}

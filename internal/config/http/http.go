@@ -29,6 +29,18 @@ const (
 	SchemeHTTP = "http"
 	// SchemeHTTPS is the TLS-secured HTTP URL scheme.
 	SchemeHTTPS = "https"
+	// SchemeFile is the local file URL scheme.
+	SchemeFile = "file"
+)
+
+// Full scheme prefix constants for URL prefix matching.
+const (
+	// PrefixHTTP is the full HTTP scheme prefix.
+	PrefixHTTP = SchemeHTTP + "://"
+	// PrefixHTTPS is the full HTTPS scheme prefix.
+	PrefixHTTPS = SchemeHTTPS + "://"
+	// PrefixFile is the full file scheme prefix.
+	PrefixFile = SchemeFile + "://"
 )
 
 // URL constants.

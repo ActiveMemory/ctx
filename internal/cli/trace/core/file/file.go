@@ -76,7 +76,7 @@ func Trace(
 	traceDir string,
 ) error {
 	out, err := git.Run(
-		cfgGit.Log, fmt.Sprintf("-%d", last),
+		cfgGit.Log, fmt.Sprintf(cfgGit.FlagLastN, last),
 		cfgGit.FormatHashDateSubj,
 		cfgGit.FlagPathSep, filePath,
 	)

@@ -13,6 +13,7 @@ import (
 
 	"github.com/ActiveMemory/ctx/internal/cli/system/core/state"
 	coreComplete "github.com/ActiveMemory/ctx/internal/cli/task/core/complete"
+	cfgTrace "github.com/ActiveMemory/ctx/internal/config/trace"
 	"github.com/ActiveMemory/ctx/internal/trace"
 	writeComplete "github.com/ActiveMemory/ctx/internal/write/complete"
 )
@@ -34,7 +35,10 @@ func Run(cmd *cobra.Command, args []string) error {
 	writeComplete.Completed(cmd, matchedTask)
 
 	// Best-effort: record pending context for commit tracing.
-	_ = trace.Record(fmt.Sprintf("task:%d", matchedNum), state.Dir())
+	ref := fmt.Sprintf(
+		cfgTrace.RefFormat, cfgTrace.RefTypeTask, matchedNum,
+	)
+	_ = trace.Record(ref, state.Dir())
 
 	return nil
 }
