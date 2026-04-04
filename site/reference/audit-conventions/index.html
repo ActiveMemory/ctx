@@ -3695,6 +3695,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#predicate-naming-no-ishascan-prefix" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Predicate Naming (no Is/Has/Can prefix)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#mixed-visibility" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -4307,20 +4318,43 @@ so <code>pkg.PkgFunction</code> stutters.</p>
 </span></code></pre></div>
 <p><strong>Exempt:</strong> Identity functions like <code>write.Write</code> / <code>write.write</code>.</p>
 <hr />
+<h2 id="predicate-naming-no-ishascan-prefix">Predicate Naming (no <code>Is</code>/<code>Has</code>/<code>Can</code> prefix)<a class="headerlink" href="#predicate-naming-no-ishascan-prefix" title="Permanent link">&para;</a></h2>
+<p><strong>Test:</strong> None (manual review convention)</p>
+<p>Exported methods that return <code>bool</code> must not use <code>Is</code>, <code>Has</code>, or
+<code>Can</code> prefixes. The predicate reads more naturally without them,
+especially at call sites where the package name provides context.</p>
+<p><strong>Before:</strong></p>
+<div class="language-go highlight"><pre><span></span><code><span id="__span-39-1"><a id="__codelineno-39-1" name="__codelineno-39-1" href="#__codelineno-39-1"></a><span class="kd">func</span><span class="w"> </span><span class="nx">IsCompleted</span><span class="p">(</span><span class="nx">t</span><span class="w"> </span><span class="o">*</span><span class="nx">Task</span><span class="p">)</span><span class="w"> </span><span class="kt">bool</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="o">...</span><span class="w"> </span><span class="p">}</span>
+</span><span id="__span-39-2"><a id="__codelineno-39-2" name="__codelineno-39-2" href="#__codelineno-39-2"></a><span class="kd">func</span><span class="w"> </span><span class="nx">HasChildren</span><span class="p">(</span><span class="nx">n</span><span class="w"> </span><span class="o">*</span><span class="nx">Node</span><span class="p">)</span><span class="w"> </span><span class="kt">bool</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="o">...</span><span class="w"> </span><span class="p">}</span>
+</span><span id="__span-39-3"><a id="__codelineno-39-3" name="__codelineno-39-3" href="#__codelineno-39-3"></a><span class="kd">func</span><span class="w"> </span><span class="nx">IsExemptPackage</span><span class="p">(</span><span class="nx">path</span><span class="w"> </span><span class="kt">string</span><span class="p">)</span><span class="w"> </span><span class="kt">bool</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="o">...</span><span class="w"> </span><span class="p">}</span>
+</span></code></pre></div>
+<p><strong>After:</strong></p>
+<div class="language-go highlight"><pre><span></span><code><span id="__span-40-1"><a id="__codelineno-40-1" name="__codelineno-40-1" href="#__codelineno-40-1"></a><span class="kd">func</span><span class="w"> </span><span class="nx">Completed</span><span class="p">(</span><span class="nx">t</span><span class="w"> </span><span class="o">*</span><span class="nx">Task</span><span class="p">)</span><span class="w"> </span><span class="kt">bool</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="o">...</span><span class="w"> </span><span class="p">}</span>
+</span><span id="__span-40-2"><a id="__codelineno-40-2" name="__codelineno-40-2" href="#__codelineno-40-2"></a><span class="kd">func</span><span class="w"> </span><span class="nx">Children</span><span class="p">(</span><span class="nx">n</span><span class="w"> </span><span class="o">*</span><span class="nx">Node</span><span class="p">)</span><span class="w"> </span><span class="kt">bool</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="o">...</span><span class="w"> </span><span class="p">}</span><span class="w">  </span><span class="c1">// or: ChildCount &gt; 0</span>
+</span><span id="__span-40-3"><a id="__codelineno-40-3" name="__codelineno-40-3" href="#__codelineno-40-3"></a><span class="kd">func</span><span class="w"> </span><span class="nx">ExemptPackage</span><span class="p">(</span><span class="nx">path</span><span class="w"> </span><span class="kt">string</span><span class="p">)</span><span class="w"> </span><span class="kt">bool</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="o">...</span><span class="w"> </span><span class="p">}</span>
+</span></code></pre></div>
+<p><strong>Rule:</strong> Drop the prefix. Private helpers may use prefixes when it
+reads more naturally (<code>isValid</code> in a local context is fine). This
+convention applies to exported methods and package-level functions.
+See CONVENTIONS.md "Predicates" section.</p>
+<p>This is not yet enforced by an AST test — it requires semantic
+understanding of return types and naming intent that makes automated
+detection fragile. Apply during code review.</p>
+<hr />
 <h2 id="mixed-visibility">Mixed Visibility<a class="headerlink" href="#mixed-visibility" title="Permanent link">&para;</a></h2>
 <p><strong>Test:</strong> <code>TestNoMixedVisibility</code></p>
 <p>Files with exported functions must not also contain unexported
 functions. Public API and private helpers live in separate files.</p>
 <p><strong>Before:</strong></p>
-<div class="language-text highlight"><pre><span></span><code><span id="__span-39-1"><a id="__codelineno-39-1" name="__codelineno-39-1" href="#__codelineno-39-1"></a>load.go
-</span><span id="__span-39-2"><a id="__codelineno-39-2" name="__codelineno-39-2" href="#__codelineno-39-2"></a>    func Load() { ... }        // exported
-</span><span id="__span-39-3"><a id="__codelineno-39-3" name="__codelineno-39-3" href="#__codelineno-39-3"></a>    func parseHeader() { ... } // unexported — violation
+<div class="language-text highlight"><pre><span></span><code><span id="__span-41-1"><a id="__codelineno-41-1" name="__codelineno-41-1" href="#__codelineno-41-1"></a>load.go
+</span><span id="__span-41-2"><a id="__codelineno-41-2" name="__codelineno-41-2" href="#__codelineno-41-2"></a>    func Load() { ... }        // exported
+</span><span id="__span-41-3"><a id="__codelineno-41-3" name="__codelineno-41-3" href="#__codelineno-41-3"></a>    func parseHeader() { ... } // unexported — violation
 </span></code></pre></div>
 <p><strong>After:</strong></p>
-<div class="language-text highlight"><pre><span></span><code><span id="__span-40-1"><a id="__codelineno-40-1" name="__codelineno-40-1" href="#__codelineno-40-1"></a>load.go
-</span><span id="__span-40-2"><a id="__codelineno-40-2" name="__codelineno-40-2" href="#__codelineno-40-2"></a>    func Load() { ... }        // exported only
-</span><span id="__span-40-3"><a id="__codelineno-40-3" name="__codelineno-40-3" href="#__codelineno-40-3"></a>parse.go
-</span><span id="__span-40-4"><a id="__codelineno-40-4" name="__codelineno-40-4" href="#__codelineno-40-4"></a>    func parseHeader() { ... } // private helper
+<div class="language-text highlight"><pre><span></span><code><span id="__span-42-1"><a id="__codelineno-42-1" name="__codelineno-42-1" href="#__codelineno-42-1"></a>load.go
+</span><span id="__span-42-2"><a id="__codelineno-42-2" name="__codelineno-42-2" href="#__codelineno-42-2"></a>    func Load() { ... }        // exported only
+</span><span id="__span-42-3"><a id="__codelineno-42-3" name="__codelineno-42-3" href="#__codelineno-42-3"></a>parse.go
+</span><span id="__span-42-4"><a id="__codelineno-42-4" name="__codelineno-42-4" href="#__codelineno-42-4"></a>    func parseHeader() { ... } // private helper
 </span></code></pre></div>
 <p><strong>Exempt:</strong> Files with exactly one function, <code>doc.go</code>, test files.</p>
 <hr />
@@ -4339,18 +4373,18 @@ contributors add local error definitions when they see a local
 (helpers, output formatters, types) belong in the corresponding
 <code>core/</code> subpackage.</p>
 <p><strong>Before:</strong></p>
-<div class="language-text highlight"><pre><span></span><code><span id="__span-41-1"><a id="__codelineno-41-1" name="__codelineno-41-1" href="#__codelineno-41-1"></a>internal/cli/doctor/cmd/root/
-</span><span id="__span-41-2"><a id="__codelineno-41-2" name="__codelineno-41-2" href="#__codelineno-41-2"></a>    cmd.go
-</span><span id="__span-41-3"><a id="__codelineno-41-3" name="__codelineno-41-3" href="#__codelineno-41-3"></a>    run.go
-</span><span id="__span-41-4"><a id="__codelineno-41-4" name="__codelineno-41-4" href="#__codelineno-41-4"></a>    format.go   # violation — helper in cmd dir
+<div class="language-text highlight"><pre><span></span><code><span id="__span-43-1"><a id="__codelineno-43-1" name="__codelineno-43-1" href="#__codelineno-43-1"></a>internal/cli/doctor/cmd/root/
+</span><span id="__span-43-2"><a id="__codelineno-43-2" name="__codelineno-43-2" href="#__codelineno-43-2"></a>    cmd.go
+</span><span id="__span-43-3"><a id="__codelineno-43-3" name="__codelineno-43-3" href="#__codelineno-43-3"></a>    run.go
+</span><span id="__span-43-4"><a id="__codelineno-43-4" name="__codelineno-43-4" href="#__codelineno-43-4"></a>    format.go   # violation — helper in cmd dir
 </span></code></pre></div>
 <p><strong>After:</strong></p>
-<div class="language-text highlight"><pre><span></span><code><span id="__span-42-1"><a id="__codelineno-42-1" name="__codelineno-42-1" href="#__codelineno-42-1"></a>internal/cli/doctor/cmd/root/
-</span><span id="__span-42-2"><a id="__codelineno-42-2" name="__codelineno-42-2" href="#__codelineno-42-2"></a>    cmd.go
-</span><span id="__span-42-3"><a id="__codelineno-42-3" name="__codelineno-42-3" href="#__codelineno-42-3"></a>    run.go
-</span><span id="__span-42-4"><a id="__codelineno-42-4" name="__codelineno-42-4" href="#__codelineno-42-4"></a>internal/cli/doctor/core/format/
-</span><span id="__span-42-5"><a id="__codelineno-42-5" name="__codelineno-42-5" href="#__codelineno-42-5"></a>    format.go
-</span><span id="__span-42-6"><a id="__codelineno-42-6" name="__codelineno-42-6" href="#__codelineno-42-6"></a>    doc.go
+<div class="language-text highlight"><pre><span></span><code><span id="__span-44-1"><a id="__codelineno-44-1" name="__codelineno-44-1" href="#__codelineno-44-1"></a>internal/cli/doctor/cmd/root/
+</span><span id="__span-44-2"><a id="__codelineno-44-2" name="__codelineno-44-2" href="#__codelineno-44-2"></a>    cmd.go
+</span><span id="__span-44-3"><a id="__codelineno-44-3" name="__codelineno-44-3" href="#__codelineno-44-3"></a>    run.go
+</span><span id="__span-44-4"><a id="__codelineno-44-4" name="__codelineno-44-4" href="#__codelineno-44-4"></a>internal/cli/doctor/core/format/
+</span><span id="__span-44-5"><a id="__codelineno-44-5" name="__codelineno-44-5" href="#__codelineno-44-5"></a>    format.go
+</span><span id="__span-44-6"><a id="__codelineno-44-6" name="__codelineno-44-6" href="#__codelineno-44-6"></a>    doc.go
 </span></code></pre></div>
 <hr />
 <h2 id="desckey-namespace">DescKey Namespace<a class="headerlink" href="#desckey-namespace" title="Permanent link">&para;</a></h2>

@@ -3043,6 +3043,50 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#ctx_steering_get" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ctx_steering_get
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#ctx_search" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ctx_search
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#ctx_session_start" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ctx_session_start
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#ctx_session_end" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ctx_session_end
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#ctx_remind" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -4074,6 +4118,50 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#ctx_steering_get" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ctx_steering_get
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#ctx_search" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ctx_search
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#ctx_session_start" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ctx_session_start
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#ctx_session_end" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ctx_session_end
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#ctx_remind" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -4596,6 +4684,75 @@ persistence ceremony - human confirmation required.</p>
 <td>string</td>
 <td>No</td>
 <td>Caller identifier (cursor, windsurf, vscode, claude-desktop)</td>
+</tr>
+</tbody>
+</table>
+<h3 id="ctx_steering_get"><code>ctx_steering_get</code><a class="headerlink" href="#ctx_steering_get" title="Permanent link">&para;</a></h3>
+<p>Retrieve applicable steering files for a prompt. Without a prompt,
+returns always-included files only.</p>
+<table>
+<thead>
+<tr>
+<th>Argument</th>
+<th>Type</th>
+<th>Required</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>prompt</code></td>
+<td>string</td>
+<td>No</td>
+<td>Prompt text to match against steering file descriptions</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Read-only.</strong></p>
+<h3 id="ctx_search"><code>ctx_search</code><a class="headerlink" href="#ctx_search" title="Permanent link">&para;</a></h3>
+<p>Search across <code>.context/</code> files for a query string. Returns matching
+lines with file paths and line numbers.</p>
+<table>
+<thead>
+<tr>
+<th>Argument</th>
+<th>Type</th>
+<th>Required</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>query</code></td>
+<td>string</td>
+<td>Yes</td>
+<td>Search string to match against</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Read-only.</strong></p>
+<h3 id="ctx_session_start"><code>ctx_session_start</code><a class="headerlink" href="#ctx_session_start" title="Permanent link">&para;</a></h3>
+<p>Execute session-start hooks and return aggregated context from hook
+outputs.</p>
+<p><strong>Arguments:</strong> None.</p>
+<h3 id="ctx_session_end"><code>ctx_session_end</code><a class="headerlink" href="#ctx_session_end" title="Permanent link">&para;</a></h3>
+<p>Execute session-end hooks with an optional summary. Returns aggregated
+context from hook outputs.</p>
+<table>
+<thead>
+<tr>
+<th>Argument</th>
+<th>Type</th>
+<th>Required</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>summary</code></td>
+<td>string</td>
+<td>No</td>
+<td>Session summary passed to hook scripts</td>
 </tr>
 </tbody>
 </table>
