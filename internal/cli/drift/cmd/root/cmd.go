@@ -35,9 +35,10 @@ func Cmd() *cobra.Command {
 
 	short, long := desc.Command(cmd.DescKeyDrift)
 	c := &cobra.Command{
-		Use:   cmd.UseDrift,
-		Short: short,
-		Long:  long,
+		Use:     cmd.UseDrift,
+		Short:   short,
+		Long:    long,
+		Example: desc.Example(cmd.DescKeyDrift),
 		RunE: func(cmd *cobra.Command, args []string) error {
 			return Run(cmd, jsonOutput, fix)
 		},

@@ -24,9 +24,9 @@ import (
 //   - string: Formatted example commands; returns a generic example for
 //     unrecognized types
 func ForType(fileType string) string {
-	if d := desc.Example(fileType); d != "" {
+	if d := desc.Example(cmd.ExampleKeyPrefixAdd + fileType); d != "" {
 		return d
 	}
 
-	return desc.Example(cmd.ExampleKeyDefault)
+	return desc.Example(cmd.ExampleKeyPrefixAdd + cmd.ExampleKeyDefault)
 }

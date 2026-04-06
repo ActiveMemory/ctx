@@ -21,9 +21,10 @@ import (
 func Cmd() *cobra.Command {
 	short, long := desc.Command(cmd.DescKeyDecisionReindex)
 	return &cobra.Command{
-		Use:   cmd.UseReindex,
-		Short: short,
-		Long:  long,
-		RunE:  Run,
+		Use:     cmd.UseReindex,
+		Short:   short,
+		Long:    long,
+		Example: desc.Example(cmd.DescKeyDecisionReindex),
+		RunE:    Run,
 	}
 }

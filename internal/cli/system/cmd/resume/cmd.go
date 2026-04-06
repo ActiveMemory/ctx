@@ -25,10 +25,11 @@ func Cmd() *cobra.Command {
 	short, long := desc.Command(cmd.DescKeySystemResume)
 
 	c := &cobra.Command{
-		Use:    cmd.UseSystemResume,
-		Short:  short,
-		Long:   long,
-		Hidden: true,
+		Use:     cmd.UseSystemResume,
+		Short:   short,
+		Long:    long,
+		Example: desc.Example(cmd.DescKeySystemResume),
+		Hidden:  true,
 		RunE: func(c *cobra.Command, _ []string) error {
 			return Run(c, os.Stdin)
 		},

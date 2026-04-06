@@ -28,9 +28,10 @@ func Cmd() *cobra.Command {
 	short, _ := desc.Command(cmd.DescKeySteeringList)
 
 	return &cobra.Command{
-		Use:   cmd.UseSteeringList,
-		Short: short,
-		Args:  cobra.NoArgs,
+		Use:     cmd.UseSteeringList,
+		Short:   short,
+		Example: desc.Example(cmd.DescKeySteeringList),
+		Args:    cobra.NoArgs,
 		RunE: func(c *cobra.Command, _ []string) error {
 			return Run(c)
 		},

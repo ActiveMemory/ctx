@@ -68,15 +68,21 @@ TASK STATUS LABELS:
 
 ### Phase -3: DevEx
 
-- [ ] Plugin enablement gap: Ref:
+- [x] Plugin enablement gap: Ref:
   `ideas/plugin-enablement-gap.md`. Local-installed plugins get
   registered in `installed_plugins.json` but not auto-added to
   `enabledPlugins`, so slash commands are invisible in non-ctx
   projects.
 
-- [ ] Add cobra Example fields to CLI commands via
+- [x] Add cobra Example fields to CLI commands via
   examples.yaml #added:2026-03-20-163413
 
+- [ ] Add CLI YAML drift detection test: verify flag names in
+  examples.yaml match actual registered flags, and Use: patterns
+  in commands.yaml match Use constants. Structural linkage is
+  already tested; this covers content-level drift. Semantic
+  accuracy (does the description match behavior?) needs periodic
+  LLM audit — not automatable. #priority:medium #added:2026-04-05
 
 - [ ] Create ctx-docstrings skill: audit and fix docstrings
   against CONVENTIONS.md Documentation section. Skill loads

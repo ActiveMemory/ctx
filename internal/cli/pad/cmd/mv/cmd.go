@@ -22,9 +22,10 @@ import (
 func Cmd() *cobra.Command {
 	short, _ := desc.Command(cmd.DescKeyPadMv)
 	return &cobra.Command{
-		Use:   cmd.UsePadMv,
-		Short: short,
-		Args:  cobra.ExactArgs(2),
+		Use:     cmd.UsePadMv,
+		Short:   short,
+		Example: desc.Example(cmd.DescKeyPadMv),
+		Args:    cobra.ExactArgs(2),
 		RunE: func(cmd *cobra.Command, args []string) error {
 			n, err := strconv.Atoi(args[0])
 			if err != nil {

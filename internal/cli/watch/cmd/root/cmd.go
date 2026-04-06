@@ -33,9 +33,10 @@ func Cmd() *cobra.Command {
 	short, long := desc.Command(cmd.DescKeyWatch)
 
 	c := &cobra.Command{
-		Use:   cmd.UseWatch,
-		Short: short,
-		Long:  long,
+		Use:     cmd.UseWatch,
+		Short:   short,
+		Long:    long,
+		Example: desc.Example(cmd.DescKeyWatch),
 		RunE: func(cmd *cobra.Command, _ []string) error {
 			return Run(cmd, logPath, dryRun)
 		},

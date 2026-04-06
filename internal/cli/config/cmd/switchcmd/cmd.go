@@ -27,6 +27,7 @@ func Cmd() *cobra.Command {
 		Short:       short,
 		Annotations: map[string]string{cfgCli.AnnotationSkipInit: ""},
 		Long:        long,
+		Example:     desc.Example(cmd.DescKeyConfigSwitch),
 		Args:        cobra.MaximumNArgs(1),
 		RunE: func(cmd *cobra.Command, args []string) error {
 			root, rootErr := profile.GitRoot()

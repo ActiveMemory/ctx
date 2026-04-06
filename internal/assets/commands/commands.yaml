@@ -1,6 +1,12 @@
 # Command descriptions for ctx CLI.
 # Used by assets.CommandDesc() to populate cobra Short/Long fields.
 # Keys use dot notation: parent.subcommand (e.g., pad.show)
+#
+# UPDATE THIS FILE when command behavior changes (new flags,
+# renamed subcommands, changed semantics). Short/Long text
+# appears in --help output and must stay accurate.
+#
+# See also: examples.yaml (Example fields), flags.yaml (flag descriptions).
 
 add:
   long: |-

@@ -28,11 +28,13 @@ func Cmd() *cobra.Command {
 	short, long := desc.Command(cmd.DescKeySystemMarkJournal)
 
 	c := &cobra.Command{
-		Use:    cmd.UseSystemMarkJournal,
-		Short:  short,
-		Long:   fmt.Sprintf(long, strings.Join(state.ValidStages, token.CommaSpace)),
-		Hidden: true,
-		Args:   cobra.ExactArgs(2), //nolint:mnd // 2 positional args: filename, stage
+		Use:     cmd.UseSystemMarkJournal,
+		Short:   short,
+		Long:    fmt.Sprintf(long, strings.Join(state.ValidStages, token.CommaSpace)),
+		Example: desc.Example(cmd.DescKeySystemMarkJournal),
+		Hidden:  true,
+		//nolint:mnd // 2 positional args: filename, stage
+		Args: cobra.ExactArgs(2),
 		RunE: func(cmd *cobra.Command, args []string) error {
 			return Run(cmd, args[0], args[1])
 		},

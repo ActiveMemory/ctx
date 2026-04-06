@@ -23,10 +23,11 @@ func Cmd() *cobra.Command {
 	short, long := desc.Command(cmd.DescKeySystemContextLoadGate)
 
 	return &cobra.Command{
-		Use:    cmd.UseSystemContextLoadGate,
-		Short:  short,
-		Long:   long,
-		Hidden: true,
+		Use:     cmd.UseSystemContextLoadGate,
+		Short:   short,
+		Long:    long,
+		Example: desc.Example(cmd.DescKeySystemContextLoadGate),
+		Hidden:  true,
 		RunE: func(cmd *cobra.Command, _ []string) error {
 			return Run(cmd, os.Stdin)
 		},

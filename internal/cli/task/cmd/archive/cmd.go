@@ -33,9 +33,10 @@ func Cmd() *cobra.Command {
 	short, long := desc.Command(cmd.DescKeyTaskArchive)
 
 	c := &cobra.Command{
-		Use:   cmd.UseTaskArchive,
-		Short: short,
-		Long:  long,
+		Use:     cmd.UseTaskArchive,
+		Short:   short,
+		Long:    long,
+		Example: desc.Example(cmd.DescKeyTaskArchive),
 		RunE: func(cmd *cobra.Command, args []string) error {
 			return Run(cmd, dryRun)
 		},

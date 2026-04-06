@@ -25,9 +25,10 @@ func Cmd() *cobra.Command {
 
 	short, _ := desc.Command(cmd.DescKeyPadAdd)
 	c := &cobra.Command{
-		Use:   cmd.UsePadAdd,
-		Short: short,
-		Args:  cobra.ExactArgs(1),
+		Use:     cmd.UsePadAdd,
+		Short:   short,
+		Example: desc.Example(cmd.DescKeyPadAdd),
+		Args:    cobra.ExactArgs(1),
 		RunE: func(cmd *cobra.Command, args []string) error {
 			return Run(cmd, args[0], filePath)
 		},

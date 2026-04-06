@@ -23,9 +23,10 @@ func Cmd() *cobra.Command {
 	short, long := desc.Command(cmd.DescKeyResume)
 
 	c := &cobra.Command{
-		Use:   cmd.UseResume,
-		Short: short,
-		Long:  long,
+		Use:     cmd.UseResume,
+		Short:   short,
+		Long:    long,
+		Example: desc.Example(cmd.DescKeyResume),
 		RunE: func(cmd *cobra.Command, _ []string) error {
 			sessionID, _ := cmd.Flags().GetString(cFlag.SessionID)
 			return Run(cmd, sessionID)

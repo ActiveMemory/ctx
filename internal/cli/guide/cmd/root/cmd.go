@@ -33,6 +33,7 @@ func Cmd() *cobra.Command {
 		Short:       short,
 		Annotations: map[string]string{cli.AnnotationSkipInit: ""},
 		Long:        long,
+		Example:     desc.Example(cmd.DescKeyGuide),
 		RunE: func(cmd *cobra.Command, args []string) error {
 			return Run(cmd, showSkills, showCommands)
 		},

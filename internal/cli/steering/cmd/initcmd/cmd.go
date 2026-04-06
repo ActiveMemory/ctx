@@ -32,10 +32,11 @@ func Cmd() *cobra.Command {
 	short, long := desc.Command(cmd.DescKeySteeringInit)
 
 	return &cobra.Command{
-		Use:   cmd.UseSteeringInit,
-		Short: short,
-		Long:  long,
-		Args:  cobra.NoArgs,
+		Use:     cmd.UseSteeringInit,
+		Short:   short,
+		Long:    long,
+		Example: desc.Example(cmd.DescKeySteeringInit),
+		Args:    cobra.NoArgs,
 		RunE: func(c *cobra.Command, _ []string) error {
 			return Run(c)
 		},

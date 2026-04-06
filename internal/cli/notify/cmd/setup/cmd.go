@@ -22,9 +22,10 @@ import (
 func Cmd() *cobra.Command {
 	short, long := desc.Command(cmd.DescKeyNotifySetup)
 	return &cobra.Command{
-		Use:   cmd.UseNotifySetup,
-		Short: short,
-		Long:  long,
+		Use:     cmd.UseNotifySetup,
+		Short:   short,
+		Long:    long,
+		Example: desc.Example(cmd.DescKeyNotifySetup),
 		RunE: func(cmd *cobra.Command, _ []string) error {
 			return Run(cmd, os.Stdin)
 		},

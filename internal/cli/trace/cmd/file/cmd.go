@@ -25,10 +25,11 @@ func Cmd() *cobra.Command {
 	var last int
 	short, long := desc.Command(cmd.DescKeyTraceFile)
 	c := &cobra.Command{
-		Use:   cmd.UseTraceFile,
-		Short: short,
-		Long:  long,
-		Args:  cobra.ExactArgs(1),
+		Use:     cmd.UseTraceFile,
+		Short:   short,
+		Long:    long,
+		Example: desc.Example(cmd.DescKeyTraceFile),
+		Args:    cobra.ExactArgs(1),
 		RunE: func(cobraCmd *cobra.Command, args []string) error {
 			return Run(cobraCmd, args[0], last)
 		},

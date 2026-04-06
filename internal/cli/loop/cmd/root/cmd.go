@@ -44,9 +44,10 @@ func Cmd() *cobra.Command {
 
 	short, long := desc.Command(cmd.DescKeyLoop)
 	c := &cobra.Command{
-		Use:   cmd.UseLoop,
-		Short: short,
-		Long:  long,
+		Use:     cmd.UseLoop,
+		Short:   short,
+		Long:    long,
+		Example: desc.Example(cmd.DescKeyLoop),
 		RunE: func(cmd *cobra.Command, args []string) error {
 			return Run(
 				cmd, promptFile, tool, maxIterations, completionMsg, outputFile,

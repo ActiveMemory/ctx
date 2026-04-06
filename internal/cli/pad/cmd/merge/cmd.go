@@ -26,10 +26,11 @@ func Cmd() *cobra.Command {
 
 	short, long := desc.Command(cmd.DescKeyPadMerge)
 	c := &cobra.Command{
-		Use:   cmd.UsePadMerge,
-		Short: short,
-		Long:  long,
-		Args:  cobra.MinimumNArgs(1),
+		Use:     cmd.UsePadMerge,
+		Short:   short,
+		Long:    long,
+		Example: desc.Example(cmd.DescKeyPadMerge),
+		Args:    cobra.MinimumNArgs(1),
 		RunE: func(cmd *cobra.Command, args []string) error {
 			return Run(cmd, args, keyFile, dryRun)
 		},

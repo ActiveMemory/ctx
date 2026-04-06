@@ -20,9 +20,10 @@ import (
 func Cmd() *cobra.Command {
 	short, long := desc.Command(cmd.DescKeyPadResolve)
 	return &cobra.Command{
-		Use:   cmd.UsePadResolve,
-		Short: short,
-		Long:  long,
+		Use:     cmd.UsePadResolve,
+		Short:   short,
+		Long:    long,
+		Example: desc.Example(cmd.DescKeyPadResolve),
 		RunE: func(cmd *cobra.Command, _ []string) error {
 			return Run(cmd)
 		},

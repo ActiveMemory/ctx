@@ -25,9 +25,10 @@ func Cmd() *cobra.Command {
 	short, long := desc.Command(cmd.DescKeyJournalSync)
 
 	c := &cobra.Command{
-		Use:   cmd.UseJournalSync,
-		Short: short,
-		Long:  long,
+		Use:     cmd.UseJournalSync,
+		Short:   short,
+		Long:    long,
+		Example: desc.Example(cmd.DescKeyJournalSync),
 		RunE: func(cmd *cobra.Command, _ []string) error {
 			return Run(cmd)
 		},

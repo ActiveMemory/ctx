@@ -44,10 +44,11 @@ func Cmd() *cobra.Command {
 
 	short, long := desc.Command(cmd.DescKeyPadEdit)
 	c := &cobra.Command{
-		Use:   cmd.UsePadEdit,
-		Short: short,
-		Long:  long,
-		Args:  cobra.RangeArgs(1, 2),
+		Use:     cmd.UsePadEdit,
+		Short:   short,
+		Long:    long,
+		Example: desc.Example(cmd.DescKeyPadEdit),
+		Args:    cobra.RangeArgs(1, 2),
 		RunE: func(
 			cmd *cobra.Command, args []string,
 		) error {

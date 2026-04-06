@@ -49,9 +49,10 @@ func Cmd() *cobra.Command {
 	short, long := desc.Command(cmd.DescKeyAgent)
 
 	c := &cobra.Command{
-		Use:   cmd.UseAgent,
-		Short: short,
-		Long:  long,
+		Use:     cmd.UseAgent,
+		Short:   short,
+		Long:    long,
+		Example: desc.Example(cmd.DescKeyAgent),
 		RunE: func(cmd *cobra.Command, args []string) error {
 			if !cmd.Flags().Changed(cFlag.Budget) {
 				budget = rc.TokenBudget()

@@ -25,6 +25,7 @@ func Cmd() *cobra.Command {
 	return &cobra.Command{
 		Use:         cmd.UseConfigStatus,
 		Short:       short,
+		Example:     desc.Example(cmd.DescKeyConfigStatus),
 		Annotations: map[string]string{cfgCli.AnnotationSkipInit: ""},
 		Args:        cobra.NoArgs,
 		RunE: func(cmd *cobra.Command, _ []string) error {

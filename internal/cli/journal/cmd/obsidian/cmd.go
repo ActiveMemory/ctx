@@ -30,9 +30,10 @@ func Cmd() *cobra.Command {
 
 	short, long := desc.Command(cmd.DescKeyJournalObsidian)
 	c := &cobra.Command{
-		Use:   cmd.UseJournalObsidian,
-		Short: short,
-		Long:  long,
+		Use:     cmd.UseJournalObsidian,
+		Short:   short,
+		Long:    long,
+		Example: desc.Example(cmd.DescKeyJournalObsidian),
 		RunE: func(cmd *cobra.Command, args []string) error {
 			return Run(cmd, output)
 		},

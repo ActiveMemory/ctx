@@ -23,10 +23,11 @@ func Cmd() *cobra.Command {
 	short, long := desc.Command(cmd.DescKeySystemCheckKnowledge)
 
 	return &cobra.Command{
-		Use:    cmd.UseSystemCheckKnowledge,
-		Short:  short,
-		Long:   long,
-		Hidden: true,
+		Use:     cmd.UseSystemCheckKnowledge,
+		Short:   short,
+		Long:    long,
+		Example: desc.Example(cmd.DescKeySystemCheckKnowledge),
+		Hidden:  true,
 		RunE: func(cmd *cobra.Command, _ []string) error {
 			return Run(cmd, os.Stdin)
 		},

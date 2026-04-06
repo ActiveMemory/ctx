@@ -27,9 +27,10 @@ func Cmd() *cobra.Command {
 	short, long := desc.Command(cmd.DescKeyJournalImport)
 
 	c := &cobra.Command{
-		Use:   cmd.UseJournalImport,
-		Short: short,
-		Long:  long,
+		Use:     cmd.UseJournalImport,
+		Short:   short,
+		Long:    long,
+		Example: desc.Example(cmd.DescKeyJournalImport),
 		RunE: func(cmd *cobra.Command, args []string) error {
 			return Run(cmd, args, opts)
 		},

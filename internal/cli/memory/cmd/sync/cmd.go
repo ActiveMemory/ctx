@@ -26,9 +26,10 @@ func Cmd() *cobra.Command {
 
 	short, long := desc.Command(cmd.DescKeyMemorySync)
 	c := &cobra.Command{
-		Use:   cmd.UseMemorySync,
-		Short: short,
-		Long:  long,
+		Use:     cmd.UseMemorySync,
+		Short:   short,
+		Long:    long,
+		Example: desc.Example(cmd.DescKeyMemorySync),
 		RunE: func(cmd *cobra.Command, _ []string) error {
 			return Run(cmd, dryRun)
 		},

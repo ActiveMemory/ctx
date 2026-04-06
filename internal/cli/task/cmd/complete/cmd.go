@@ -24,11 +24,12 @@ func Cmd() *cobra.Command {
 	short, long := desc.Command(cmd.DescKeyComplete)
 
 	c := &cobra.Command{
-		Use:   cmd.UseComplete,
-		Short: short,
-		Long:  long,
-		Args:  cobra.ExactArgs(1),
-		RunE:  Run,
+		Use:     cmd.UseComplete,
+		Short:   short,
+		Long:    long,
+		Example: desc.Example(cmd.DescKeyComplete),
+		Args:    cobra.ExactArgs(1),
+		RunE:    Run,
 	}
 
 	return c

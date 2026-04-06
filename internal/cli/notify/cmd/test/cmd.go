@@ -20,9 +20,10 @@ import (
 func Cmd() *cobra.Command {
 	short, long := desc.Command(cmd.DescKeyNotifyTest)
 	return &cobra.Command{
-		Use:   cmd.UseNotifyTest,
-		Short: short,
-		Long:  long,
+		Use:     cmd.UseNotifyTest,
+		Short:   short,
+		Long:    long,
+		Example: desc.Example(cmd.DescKeyNotifyTest),
 		RunE: func(cmd *cobra.Command, _ []string) error {
 			return Run(cmd)
 		},

@@ -37,10 +37,11 @@ func Cmd() *cobra.Command {
 	short, long := desc.Command(cmd.DescKeyTriggerTest)
 
 	c := &cobra.Command{
-		Use:   cmd.UseTriggerTest,
-		Short: short,
-		Long:  long,
-		Args:  cobra.ExactArgs(1),
+		Use:     cmd.UseTriggerTest,
+		Short:   short,
+		Long:    long,
+		Example: desc.Example(cmd.DescKeyTriggerTest),
+		Args:    cobra.ExactArgs(1),
 		RunE: func(c *cobra.Command, args []string) error {
 			return Run(c, args[0], toolName, path)
 		},

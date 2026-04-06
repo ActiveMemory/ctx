@@ -27,9 +27,10 @@ func Cmd() *cobra.Command {
 	short, _ := desc.Command(cmd.DescKeySkillList)
 
 	return &cobra.Command{
-		Use:   cmd.UseSkillList,
-		Short: short,
-		Args:  cobra.NoArgs,
+		Use:     cmd.UseSkillList,
+		Short:   short,
+		Example: desc.Example(cmd.DescKeySkillList),
+		Args:    cobra.NoArgs,
 		RunE: func(c *cobra.Command, _ []string) error {
 			return Run(c)
 		},

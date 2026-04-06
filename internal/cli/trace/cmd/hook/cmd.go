@@ -20,10 +20,11 @@ import (
 func Cmd() *cobra.Command {
 	short, long := desc.Command(cmd.DescKeyTraceHook)
 	c := &cobra.Command{
-		Use:   cmd.UseTraceHook,
-		Short: short,
-		Long:  long,
-		Args:  cobra.ExactArgs(1),
+		Use:     cmd.UseTraceHook,
+		Short:   short,
+		Long:    long,
+		Example: desc.Example(cmd.DescKeyTraceHook),
+		Args:    cobra.ExactArgs(1),
 		RunE: func(cobraCmd *cobra.Command, args []string) error {
 			return Run(cobraCmd, args[0])
 		},

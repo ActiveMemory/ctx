@@ -30,6 +30,7 @@ func Cmd() *cobra.Command {
 		Use:     cmd.UseRemindDismiss,
 		Aliases: []string{cmd.UseRemindDismissAlias},
 		Short:   short,
+		Example: desc.Example(cmd.DescKeyRemindDismiss),
 		RunE: func(cmd *cobra.Command, args []string) error {
 			if allFlag {
 				return Run(cmd, "", allFlag)

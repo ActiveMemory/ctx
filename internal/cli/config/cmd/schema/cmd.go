@@ -24,10 +24,11 @@ func Cmd() *cobra.Command {
 	short, long := desc.Command(cmd.DescKeyConfigSchema)
 
 	return &cobra.Command{
-		Use:   cmd.UseConfigSchema,
-		Short: short,
-		Long:  long,
-		Args:  cobra.NoArgs,
+		Use:     cmd.UseConfigSchema,
+		Short:   short,
+		Long:    long,
+		Example: desc.Example(cmd.DescKeyConfigSchema),
+		Args:    cobra.NoArgs,
 		RunE: func(cmd *cobra.Command, _ []string) error {
 			data, readErr := schema.Schema()
 			if readErr != nil {

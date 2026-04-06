@@ -27,10 +27,11 @@ func Cmd() *cobra.Command {
 	short, long := desc.Command(cmd.DescKeySystemSessionEvent)
 
 	c := &cobra.Command{
-		Use:    cmd.UseSystemSessionEvent,
-		Short:  short,
-		Long:   long,
-		Hidden: true,
+		Use:     cmd.UseSystemSessionEvent,
+		Short:   short,
+		Long:    long,
+		Example: desc.Example(cmd.DescKeySystemSessionEvent),
+		Hidden:  true,
 		RunE: func(cmd *cobra.Command, _ []string) error {
 			return Run(cmd, eventType, caller)
 		},

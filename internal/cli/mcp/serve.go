@@ -25,6 +25,7 @@ func serveCmd() *cobra.Command {
 		Use:          cmd.UseMcpServe,
 		Short:        serveShort,
 		Long:         serveLong,
+		Example:      desc.Example(cmd.DescKeyMcpServe),
 		Annotations:  map[string]string{cli.AnnotationSkipInit: cli.AnnotationTrue},
 		SilenceUsage: true,
 		RunE:         root.Cmd,

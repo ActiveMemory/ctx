@@ -20,9 +20,10 @@ import (
 func Cmd() *cobra.Command {
 	short, long := desc.Command(cmd.DescKeyMemoryDiff)
 	return &cobra.Command{
-		Use:   cmd.UseMemoryDiff,
-		Short: short,
-		Long:  long,
+		Use:     cmd.UseMemoryDiff,
+		Short:   short,
+		Long:    long,
+		Example: desc.Example(cmd.DescKeyMemoryDiff),
 		RunE: func(cmd *cobra.Command, _ []string) error {
 			return Run(cmd)
 		},

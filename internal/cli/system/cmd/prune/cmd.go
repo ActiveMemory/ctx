@@ -28,9 +28,10 @@ func Cmd() *cobra.Command {
 	short, long := desc.Command(cmd.DescKeySystemPrune)
 
 	c := &cobra.Command{
-		Use:   cmd.UseSystemPrune,
-		Short: short,
-		Long:  long,
+		Use:     cmd.UseSystemPrune,
+		Short:   short,
+		Long:    long,
+		Example: desc.Example(cmd.DescKeySystemPrune),
 		RunE: func(cmd *cobra.Command, _ []string) error {
 			return Run(cmd, days, dryRun)
 		},

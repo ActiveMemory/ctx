@@ -23,8 +23,9 @@ func Cmd() *cobra.Command {
 	short, _ := desc.Command(cmd.DescKeySystemMessageList)
 
 	c := &cobra.Command{
-		Use:   cmd.UseSystemMessageList,
-		Short: short,
+		Use:     cmd.UseSystemMessageList,
+		Short:   short,
+		Example: desc.Example(cmd.DescKeySystemMessageList),
 		RunE: func(cmd *cobra.Command, _ []string) error {
 			return Run(cmd)
 		},

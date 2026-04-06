@@ -31,6 +31,7 @@ func Cmd() *cobra.Command {
 		Short:       short,
 		Annotations: map[string]string{cli.AnnotationSkipInit: cli.AnnotationTrue},
 		Long:        long,
+		Example:     desc.Example(cmd.DescKeyDoctor),
 		RunE: func(cmd *cobra.Command, _ []string) error {
 			jsonOut, _ := cmd.Flags().GetBool(cFlag.JSON)
 			return Run(cmd, jsonOut)

@@ -32,10 +32,11 @@ func Cmd() *cobra.Command {
 	short, long := desc.Command(cmd.DescKeySteeringSync)
 
 	c := &cobra.Command{
-		Use:   cmd.UseSteeringSync,
-		Short: short,
-		Long:  long,
-		Args:  cobra.NoArgs,
+		Use:     cmd.UseSteeringSync,
+		Short:   short,
+		Long:    long,
+		Example: desc.Example(cmd.DescKeySteeringSync),
+		Args:    cobra.NoArgs,
 		RunE: func(c *cobra.Command, _ []string) error {
 			return Run(c, syncAll)
 		},

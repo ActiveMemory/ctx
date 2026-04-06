@@ -19,8 +19,9 @@ import (
 )
 
 // TestExamplesYAMLLinkage verifies that every key in
-// examples.yaml matches a known entry type constant
-// from config/entry or is "default".
+// examples.yaml matches a known command desc key constant
+// from config/embed/cmd or is an add-subtype key
+// (add.<entry-type> or add.default).
 //
 // Prevents orphan example entries that would never be
 // looked up.
@@ -40,20 +41,93 @@ func TestExamplesYAMLLinkage(t *testing.T) {
 		t.Fatalf("parse examples.yaml: %v", unmarshalErr)
 	}
 
-	// Collect entry type constant values from
-	// config/entry via the loaded packages.
+	// Collect command desc key values and add-subtype
+	// keys from config/embed/cmd and config/entry.
+	descKeys := collectDescKeys(t)
 	entryTypes := collectEntryTypes(t)
-	entryTypes["default"] = true // special fallback
+
+	// Build allowed set: desc keys + add.<entry-type>
+	// + add.default
+	allowed := make(map[string]bool, len(descKeys)+len(entryTypes)+1)
+	for k := range descKeys {
+		allowed[k] = true
+	}
+	for k := range entryTypes {
+		allowed["add."+k] = true
+	}
+	allowed["add.default"] = true
 
 	for key := range doc {
-		if !entryTypes[key] {
+		if !allowed[key] {
 			t.Errorf(
 				"examples.yaml key %q has no "+
-					"matching entry type constant",
+					"matching desc key or "+
+					"add-subtype constant",
 				key,
 			)
 		}
 	}
+}
+
+// collectDescKeys returns the set of command description
+// key string values from config/embed/cmd DescKey constants.
+func collectDescKeys(t *testing.T) map[string]bool {
+	t.Helper()
+	pkgs := loadPackages(t)
+	keys := make(map[string]bool)
+
+	for _, pkg := range pkgs {
+		if !strings.HasSuffix(
+			pkg.PkgPath, "config/embed/cmd",
+		) {
+			continue
+		}
+
+		for _, file := range pkg.Syntax {
+			for _, decl := range file.Decls {
+				gd, ok := decl.(*ast.GenDecl)
+				if !ok || gd.Tok != token.CONST {
+					continue
+				}
+
+				for _, spec := range gd.Specs {
+					vs, ok := spec.(*ast.ValueSpec)
+					if !ok {
+						continue
+					}
+
+					// Only collect DescKey constants.
+					for i, name := range vs.Names {
+						if !strings.HasPrefix(
+							name.Name, "DescKey",
+						) {
+							continue
+						}
+						if i >= len(vs.Values) {
+							continue
+						}
+						lit, ok :=
+							vs.Values[i].(*ast.BasicLit)
+						if !ok ||
+							lit.Kind != token.STRING {
+							continue
+						}
+
+						s, err := strconv.Unquote(
+							lit.Value,
+						)
+						if err != nil {
+							continue
+						}
+
+						keys[s] = true
+					}
+				}
+			}
+		}
+	}
+
+	return keys
 }
 
 // collectEntryTypes returns the set of entry type

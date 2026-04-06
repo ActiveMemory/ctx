@@ -33,9 +33,10 @@ func Cmd() *cobra.Command {
 	short, long := desc.Command(cmd.DescKeyStatus)
 
 	c := &cobra.Command{
-		Use:   cmd.UseStatus,
-		Short: short,
-		Long:  long,
+		Use:     cmd.UseStatus,
+		Short:   short,
+		Long:    long,
+		Example: desc.Example(cmd.DescKeyStatus),
 		RunE: func(cmd *cobra.Command, _ []string) error {
 			return Run(cmd, jsonOutput, verbose)
 		},

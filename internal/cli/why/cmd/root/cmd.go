@@ -29,9 +29,10 @@ func Cmd() *cobra.Command {
 		ValidArgs: []string{
 			cfgWhy.DocManifesto, cfgWhy.DocAbout, cfgWhy.DocInvariants,
 		},
-		Long: long,
-		Args: cobra.MaximumNArgs(1),
-		RunE: Run,
+		Long:    long,
+		Example: desc.Example(cmd.DescKeyWhy),
+		Args:    cobra.MaximumNArgs(1),
+		RunE:    Run,
 	}
 
 	return c

@@ -23,10 +23,11 @@ func Cmd() *cobra.Command {
 	short, long := desc.Command(cmd.DescKeySystemCheckMapStaleness)
 
 	return &cobra.Command{
-		Use:    cmd.UseSystemCheckMapStaleness,
-		Short:  short,
-		Long:   long,
-		Hidden: true,
+		Use:     cmd.UseSystemCheckMapStaleness,
+		Short:   short,
+		Long:    long,
+		Example: desc.Example(cmd.DescKeySystemCheckMapStaleness),
+		Hidden:  true,
 		RunE: func(cmd *cobra.Command, _ []string) error {
 			return Run(cmd, os.Stdin)
 		},

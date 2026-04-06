@@ -1,24 +1,581 @@
 # Example usage text for ctx CLI.
-# Used by assets.ExampleDesc() for cobra Example fields.
-# Keys match entry types: decision, learning, task, convention
+# Used by desc.Example() for cobra Example fields.
+# Keys match command desc keys from commands.yaml.
+#
+# UPDATE THIS FILE when command usage changes (new flags,
+# renamed subcommands, changed arguments). Examples shown
+# in --help output must stay accurate. Drift between this
+# file and actual command behavior confuses users.
+#
+# See also: commands.yaml (Short/Long), flags.yaml (flag descriptions).
 
-convention:
+add:
+  short: |2-
+      ctx add decision "Use PostgreSQL" --context "..." --rationale "..." --consequence "..."
+      ctx add task "Implement auth" --priority high
+      ctx add learning "Go embed gotcha" --context "..." --lesson "..." --application "..."
+
+add.convention:
   short: |2-
       ctx add convention "Use camelCase for function names"
       ctx add convention "All API responses use JSON"
-decision:
+
+add.decision:
   short: |2-
       ctx add decision "Use PostgreSQL for primary database"
       ctx add decision "Adopt Go 1.22 for range-over-func support"
-default:
+
+add.default:
   short: '  ctx add <type> "your content here"'
-learning:
+
+add.learning:
   short: |2-
       ctx add learning "Go embed requires files in same package" \
         --context "Tried to embed files from parent directory" \
         --lesson "go:embed only works with files in same or child directories" \
         --application "Keep embedded files in internal/templates/"
-task:
+
+add.task:
   short: |2-
       ctx add task "Implement user authentication"
       ctx add task "Fix login bug" --priority high
+
+agent:
+  short: |2-
+      ctx agent
+      ctx agent --budget 4000
+      ctx agent --format json
+
+change:
+  short: |2-
+      ctx change
+      ctx change --since 24h
+
+compact:
+  short: |2-
+      ctx compact
+      ctx compact --archive
+
+complete:
+  short: |2-
+      ctx complete 3
+      ctx complete "auth"
+
+config:
+  short: |2-
+      ctx config status
+      ctx config switch dev
+
+config.schema:
+  short: '  ctx config schema > .ctxrc.schema.json'
+
+config.status:
+  short: '  ctx config status'
+
+config.switch:
+  short: |2-
+      ctx config switch dev
+      ctx config switch base
+
+ctx:
+  short: |2-
+      ctx status
+      ctx agent --budget 4000
+      ctx guide
+
+decision:
+  short: '  ctx decision reindex'
+
+decision.reindex:
+  short: '  ctx decision reindex'
+
+dep:
+  short: |2-
+      ctx dep
+      ctx dep --external
+      ctx dep --format table
+
+doctor:
+  short: |2-
+      ctx doctor
+      ctx doctor --json
+
+drift:
+  short: |2-
+      ctx drift
+      ctx drift --json
+
+guide:
+  short: |2-
+      ctx guide
+      ctx guide --skills
+      ctx guide --commands
+
+initialize:
+  short: |2-
+      ctx init
+      ctx init --ralph
+      ctx init --minimal
+
+journal:
+  short: |2-
+      ctx journal source
+      ctx journal import --all
+      ctx journal lock --all
+
+journal.import:
+  short: |2-
+      ctx journal import abc123
+      ctx journal import --all
+      ctx journal import --all --dry-run
+
+journal.lock:
+  short: |2-
+      ctx journal lock abc12345
+      ctx journal lock --all
+
+journal.obsidian:
+  short: |2-
+      ctx journal obsidian
+      ctx journal obsidian --output ~/vaults/ctx
+
+journal.site:
+  short: |2-
+      ctx journal site
+      ctx journal site --build
+      ctx journal site --serve
+
+journal.source:
+  short: |2-
+      ctx journal source
+      ctx journal source --limit 5
+      ctx journal source --show abc123
+
+journal.sync:
+  short: '  ctx journal sync'
+
+journal.unlock:
+  short: |2-
+      ctx journal unlock abc12345
+      ctx journal unlock --all
+
+learning:
+  short: '  ctx learning reindex'
+
+learning.reindex:
+  short: '  ctx learning reindex'
+
+load:
+  short: |2-
+      ctx load
+      ctx load --raw
+      ctx load --budget 4000
+
+loop:
+  short: |2-
+      ctx loop
+      ctx loop --tool aider
+      ctx loop --max-iterations 10
+
+mcp:
+  short: '  ctx mcp serve'
+
+mcp.serve:
+  short: '  ctx mcp serve'
+
+memory:
+  short: |2-
+      ctx memory status
+      ctx memory sync
+      ctx memory import
+
+memory.diff:
+  short: '  ctx memory diff'
+
+memory.import:
+  short: '  ctx memory import'
+
+memory.publish:
+  short: '  ctx memory publish'
+
+memory.status:
+  short: '  ctx memory status'
+
+memory.sync:
+  short: '  ctx memory sync'
+
+memory.unpublish:
+  short: '  ctx memory unpublish'
+
+notify:
+  short: |2-
+      ctx notify --event loop "Loop completed"
+      ctx notify -e nudge -s session-abc "Checkpoint at prompt #20"
+
+notify.setup:
+  short: '  ctx notify setup'
+
+notify.test:
+  short: '  ctx notify test'
+
+pad:
+  short: |2-
+      ctx pad
+      ctx pad add "API key for staging"
+      ctx pad show 1
+
+pad.add:
+  short: |2-
+      ctx pad add "secret token value"
+      ctx pad add --file ./credentials.pem --label "staging cert"
+
+pad.edit:
+  short: |2-
+      ctx pad edit 2 "new text"
+      ctx pad edit 2 --append "suffix"
+
+pad.export:
+  short: |2-
+      ctx pad export
+      ctx pad export ./ideas
+
+pad.merge:
+  short: |2-
+      ctx pad merge worktree/.context/scratchpad.enc
+      ctx pad merge --dry-run pad-a.enc pad-b.md
+
+pad.mv:
+  short: '  ctx pad mv 3 1'
+
+pad.resolve:
+  short: '  ctx pad resolve'
+
+pad.rm:
+  short: '  ctx pad rm 2'
+
+pad.root:
+  short: |2-
+      ctx pad import notes.txt
+      ctx pad import --blobs ./ideas/
+
+pad.show:
+  short: |2-
+      ctx pad show 3
+      ctx pad show 3 --out ./recovered.md
+
+pause:
+  short: '  ctx pause'
+
+permission:
+  short: |2-
+      ctx permission snapshot
+      ctx permission restore
+
+permission.restore:
+  short: '  ctx permission restore'
+
+permission.snapshot:
+  short: '  ctx permission snapshot'
+
+reindex:
+  short: '  ctx reindex'
+
+remind:
+  short: |2-
+      ctx remind "Check test coverage before release"
+      ctx remind list
+      ctx remind dismiss 1
+
+remind.add:
+  short: '  ctx remind add "Review PR #42 tomorrow"'
+
+remind.dismiss:
+  short: |2-
+      ctx remind dismiss 1
+      ctx remind dismiss --all
+
+remind.list:
+  short: '  ctx remind list'
+
+resume:
+  short: '  ctx resume'
+
+serve:
+  short: |2-
+      ctx serve
+      ctx serve ./docs
+
+setup:
+  short: |2-
+      ctx setup cursor
+      ctx setup copilot --write
+
+site:
+  short: '  ctx site feed'
+
+site.feed:
+  short: |2-
+      ctx site feed
+      ctx site feed --out /tmp/feed.xml
+
+skill:
+  short: |2-
+      ctx skill list
+      ctx skill install ./my-skill
+      ctx skill remove react-patterns
+
+skill.install:
+  short: |2-
+      ctx skill install ./my-skill
+      ctx skill install /path/to/react-patterns
+
+skill.list:
+  short: '  ctx skill list'
+
+skill.remove:
+  short: '  ctx skill remove react-patterns'
+
+status:
+  short: |2-
+      ctx status
+      ctx status --verbose
+
+steering:
+  short: |2-
+      ctx steering list
+      ctx steering add api-standards
+      ctx steering preview "create a REST API endpoint"
+
+steering.add:
+  short: |2-
+      ctx steering add api-standards
+      ctx steering add code-review
+
+steering.init:
+  short: '  ctx steering init'
+
+steering.list:
+  short: '  ctx steering list'
+
+steering.preview:
+  short: |2-
+      ctx steering preview "create a REST API endpoint"
+      ctx steering preview "refactor the database layer"
+
+steering.sync:
+  short: |2-
+      ctx steering sync
+      ctx steering sync --tool cursor
+      ctx steering sync --all
+
+sync:
+  short: |2-
+      ctx sync
+      ctx sync --dry-run
+
+system:
+  short: |2-
+      ctx system bootstrap
+      ctx system backup
+      ctx system resources
+
+system.backup:
+  short: |2-
+      ctx system backup
+      ctx system backup --scope project
+
+system.blockdangerouscommands:
+  short: '  ctx system block-dangerous-commands'
+
+system.blocknonpathctx:
+  short: '  ctx system block-non-path-ctx'
+
+system.bootstrap:
+  short: '  ctx system bootstrap'
+
+system.checkbackupage:
+  short: '  ctx system check-backup-age'
+
+system.checkceremonies:
+  short: '  ctx system check-ceremonies'
+
+system.checkcontextsize:
+  short: '  ctx system check-context-size'
+
+system.checkfreshness:
+  short: '  ctx system check-freshness'
+
+system.checkjournal:
+  short: '  ctx system check-journal'
+
+system.checkknowledge:
+  short: '  ctx system check-knowledge'
+
+system.checkmapstaleness:
+  short: '  ctx system check-map-staleness'
+
+system.checkmemorydrift:
+  short: '  ctx system check-memory-drift'
+
+system.checkpersistence:
+  short: '  ctx system check-persistence'
+
+system.checkreminders:
+  short: '  ctx system check-reminders'
+
+system.checkresources:
+  short: '  ctx system check-resources'
+
+system.checkskilldiscovery:
+  short: '  ctx system check-skill-discovery'
+
+system.checktaskcompletion:
+  short: '  ctx system check-task-completion'
+
+system.checkversion:
+  short: '  ctx system check-version'
+
+system.contextloadgate:
+  short: '  ctx system context-load-gate'
+
+system.events:
+  short: |2-
+      ctx system events
+      ctx system events --hook check-context-size --last 10
+      ctx system events --json
+
+system.heartbeat:
+  short: '  ctx system heartbeat'
+
+system.markjournal:
+  short: |2-
+      ctx system mark-journal 2026-01-21-session-abc12345.md exported
+      ctx system mark-journal 2026-01-21-session-abc12345.md enriched
+
+system.markwrappedup:
+  short: '  ctx system mark-wrapped-up'
+
+system.message:
+  short: |2-
+      ctx system message list
+      ctx system message show check-context-size checkpoint
+
+system.message.edit:
+  short: '  ctx system message edit check-context-size checkpoint'
+
+system.message.list:
+  short: '  ctx system message list'
+
+system.message.reset:
+  short: '  ctx system message reset check-context-size checkpoint'
+
+system.message.show:
+  short: '  ctx system message show check-context-size checkpoint'
+
+system.pause:
+  short: '  ctx system pause --session-id $PPID'
+
+system.postcommit:
+  short: '  ctx system post-commit'
+
+system.prune:
+  short: |2-
+      ctx system prune
+      ctx system prune --days 3
+      ctx system prune --dry-run
+
+system.qareminder:
+  short: '  ctx system qa-reminder'
+
+system.resources:
+  short: '  ctx system resources'
+
+system.resume:
+  short: '  ctx system resume --session-id $PPID'
+
+system.sessionevent:
+  short: |2-
+      ctx system session-event --type start --caller vscode
+      ctx system session-event --type end --caller vscode
+
+system.specsnudge:
+  short: '  ctx system specs-nudge'
+
+system.stats:
+  short: |2-
+      ctx system stats
+      ctx system stats --follow
+      ctx system stats --session abc123
+
+task:
+  short: |2-
+      ctx task archive
+      ctx task snapshot
+
+task.archive:
+  short: |2-
+      ctx task archive
+      ctx task archive --dry-run
+
+task.snapshot:
+  short: |2-
+      ctx task snapshot
+      ctx task snapshot pre-release
+
+trace:
+  short: |2-
+      ctx trace abc123
+      ctx trace --last 10
+      ctx trace file src/auth.go
+
+trace.collect:
+  short: '  ctx trace collect'
+
+trace.file:
+  short: |2-
+      ctx trace file src/auth.go
+      ctx trace file internal/cli/add.go:10-50
+
+trace.hook:
+  short: |2-
+      ctx trace hook enable
+      ctx trace hook disable
+
+trace.tag:
+  short: '  ctx trace tag HEAD --note "Hotfix for production outage"'
+
+trigger:
+  short: |2-
+      ctx trigger list
+      ctx trigger add session-start inject-context
+      ctx trigger test pre-tool-use
+
+trigger.add:
+  short: |2-
+      ctx trigger add session-start inject-context
+      ctx trigger add pre-tool-use block-legacy
+
+trigger.disable:
+  short: '  ctx trigger disable inject-context'
+
+trigger.enable:
+  short: '  ctx trigger enable inject-context'
+
+trigger.list:
+  short: '  ctx trigger list'
+
+trigger.test:
+  short: |2-
+      ctx trigger test session-start
+      ctx trigger test pre-tool-use --tool write_file --path src/main.go
+
+watch:
+  short: |2-
+      echo '<context-update type="task">Fix auth bug</context-update>' | ctx watch
+      ctx watch --log /tmp/ai-output.log
+
+why:
+  short: |2-
+      ctx why
+      ctx why manifesto
+      ctx why invariants

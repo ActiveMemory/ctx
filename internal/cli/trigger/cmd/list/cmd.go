@@ -25,9 +25,10 @@ func Cmd() *cobra.Command {
 	short, _ := desc.Command(cmd.DescKeyTriggerList)
 
 	return &cobra.Command{
-		Use:   cmd.UseTriggerList,
-		Short: short,
-		Args:  cobra.NoArgs,
+		Use:     cmd.UseTriggerList,
+		Short:   short,
+		Example: desc.Example(cmd.DescKeyTriggerList),
+		Args:    cobra.NoArgs,
 		RunE: func(c *cobra.Command, _ []string) error {
 			return Run(c)
 		},

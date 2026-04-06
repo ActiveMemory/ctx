@@ -20,9 +20,10 @@ import (
 func Cmd() *cobra.Command {
 	short, long := desc.Command(cmd.DescKeyMemoryUnpublish)
 	return &cobra.Command{
-		Use:   cmd.UseMemoryUnpublish,
-		Short: short,
-		Long:  long,
+		Use:     cmd.UseMemoryUnpublish,
+		Short:   short,
+		Long:    long,
+		Example: desc.Example(cmd.DescKeyMemoryUnpublish),
 		RunE: func(cmd *cobra.Command, _ []string) error {
 			return Run(cmd)
 		},

@@ -27,10 +27,11 @@ func Cmd() *cobra.Command {
 	short, long := desc.Command(cmd.DescKeySkillRemove)
 
 	return &cobra.Command{
-		Use:   cmd.UseSkillRemove,
-		Short: short,
-		Long:  long,
-		Args:  cobra.ExactArgs(1),
+		Use:     cmd.UseSkillRemove,
+		Short:   short,
+		Long:    long,
+		Example: desc.Example(cmd.DescKeySkillRemove),
+		Args:    cobra.ExactArgs(1),
 		RunE: func(c *cobra.Command, args []string) error {
 			return Run(c, args[0])
 		},

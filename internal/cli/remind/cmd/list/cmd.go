@@ -24,6 +24,7 @@ func Cmd() *cobra.Command {
 		Use:     cmd.UseRemindList,
 		Aliases: []string{cmd.UseRemindListAlias},
 		Short:   short,
+		Example: desc.Example(cmd.DescKeyRemindList),
 		RunE: func(cmd *cobra.Command, _ []string) error {
 			return Run(cmd)
 		},

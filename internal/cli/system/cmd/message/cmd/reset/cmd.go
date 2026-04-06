@@ -21,9 +21,10 @@ func Cmd() *cobra.Command {
 	short, _ := desc.Command(cmd.DescKeySystemMessageReset)
 
 	return &cobra.Command{
-		Use:   cmd.UseSystemMessageReset,
-		Short: short,
-		Args:  cobra.ExactArgs(2),
+		Use:     cmd.UseSystemMessageReset,
+		Short:   short,
+		Example: desc.Example(cmd.DescKeySystemMessageReset),
+		Args:    cobra.ExactArgs(2),
 		RunE: func(cmd *cobra.Command, args []string) error {
 			return Run(cmd, args[0], args[1])
 		},

@@ -31,9 +31,10 @@ func Cmd() *cobra.Command {
 	short, long := desc.Command(cmd.DescKeySiteFeed)
 
 	c := &cobra.Command{
-		Use:   cmd.UseSiteFeed,
-		Short: short,
-		Long:  long,
+		Use:     cmd.UseSiteFeed,
+		Short:   short,
+		Long:    long,
+		Example: desc.Example(cmd.DescKeySiteFeed),
 		RunE: func(cmd *cobra.Command, _ []string) error {
 			return Run(cmd, rss.DefaultFeedInputDir, out, baseURL)
 		},

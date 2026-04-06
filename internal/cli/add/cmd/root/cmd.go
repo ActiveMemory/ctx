@@ -51,10 +51,11 @@ func Cmd() *cobra.Command {
 	short, long := desc.Command(cmd.DescKeyAdd)
 
 	c := &cobra.Command{
-		Use:   cmd.UseAdd,
-		Short: short,
-		Long:  long,
-		Args:  cobra.MinimumNArgs(1),
+		Use:     cmd.UseAdd,
+		Short:   short,
+		Long:    long,
+		Example: desc.Example(cmd.DescKeyAdd),
+		Args:    cobra.MinimumNArgs(1),
 		ValidArgs: []string{
 			entry.Task,
 			entry.Decision,

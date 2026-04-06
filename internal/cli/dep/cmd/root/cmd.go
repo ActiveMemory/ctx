@@ -35,9 +35,10 @@ func Cmd() *cobra.Command {
 
 	short, long := desc.Command(cmd.DescKeyDep)
 	c := &cobra.Command{
-		Use:   cmd.UseDep,
-		Short: short,
-		Long:  long,
+		Use:     cmd.UseDep,
+		Short:   short,
+		Long:    long,
+		Example: desc.Example(cmd.DescKeyDep),
 		RunE: func(cmd *cobra.Command, _ []string) error {
 			return Run(cmd, format, external, projType)
 		},

@@ -24,10 +24,11 @@ func Cmd() *cobra.Command {
 	var note string
 	short, long := desc.Command(cmd.DescKeyTraceTag)
 	c := &cobra.Command{
-		Use:   cmd.UseTraceTag,
-		Short: short,
-		Long:  long,
-		Args:  cobra.ExactArgs(1),
+		Use:     cmd.UseTraceTag,
+		Short:   short,
+		Long:    long,
+		Example: desc.Example(cmd.DescKeyTraceTag),
+		Args:    cobra.ExactArgs(1),
 		RunE: func(cobraCmd *cobra.Command, args []string) error {
 			return Run(cobraCmd, args[0], note)
 		},

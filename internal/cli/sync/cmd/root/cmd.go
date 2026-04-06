@@ -33,9 +33,10 @@ func Cmd() *cobra.Command {
 	short, long := desc.Command(cmd.DescKeySync)
 
 	c := &cobra.Command{
-		Use:   cmd.UseSync,
-		Short: short,
-		Long:  long,
+		Use:     cmd.UseSync,
+		Short:   short,
+		Long:    long,
+		Example: desc.Example(cmd.DescKeySync),
 		RunE: func(cmd *cobra.Command, _ []string) error {
 			return Run(cmd, dryRun)
 		},

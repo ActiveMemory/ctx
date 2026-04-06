@@ -25,9 +25,10 @@ import (
 func Cmd(descKey, use string, subs ...*cobra.Command) *cobra.Command {
 	short, long := desc.Command(descKey)
 	c := &cobra.Command{
-		Use:   use,
-		Short: short,
-		Long:  long,
+		Use:     use,
+		Short:   short,
+		Long:    long,
+		Example: desc.Example(descKey),
 	}
 	c.AddCommand(subs...)
 	return c

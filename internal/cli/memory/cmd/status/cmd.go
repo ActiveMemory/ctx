@@ -21,9 +21,10 @@ import (
 func Cmd() *cobra.Command {
 	short, long := desc.Command(cmd.DescKeyMemoryStatus)
 	return &cobra.Command{
-		Use:   cmd.UseMemoryStatus,
-		Short: short,
-		Long:  long,
+		Use:     cmd.UseMemoryStatus,
+		Short:   short,
+		Long:    long,
+		Example: desc.Example(cmd.DescKeyMemoryStatus),
 		RunE: func(cmd *cobra.Command, _ []string) error {
 			return Run(cmd)
 		},

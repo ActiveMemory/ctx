@@ -23,10 +23,11 @@ func Cmd() *cobra.Command {
 	short, long := desc.Command(cmd.DescKeyServe)
 
 	c := &cobra.Command{
-		Use:   cmd.UseServe,
-		Short: short,
-		Long:  long,
-		Args:  cobra.MaximumNArgs(1),
+		Use:     cmd.UseServe,
+		Short:   short,
+		Long:    long,
+		Example: desc.Example(cmd.DescKeyServe),
+		Args:    cobra.MaximumNArgs(1),
 		RunE: func(_ *cobra.Command, args []string) error {
 			return Run(args)
 		},

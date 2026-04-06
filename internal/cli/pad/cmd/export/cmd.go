@@ -26,10 +26,11 @@ func Cmd() *cobra.Command {
 
 	short, long := desc.Command(cmd.DescKeyPadExport)
 	c := &cobra.Command{
-		Use:   cmd.UsePadExport,
-		Short: short,
-		Long:  long,
-		Args:  cobra.MaximumNArgs(1),
+		Use:     cmd.UsePadExport,
+		Short:   short,
+		Long:    long,
+		Example: desc.Example(cmd.DescKeyPadExport),
+		Args:    cobra.MaximumNArgs(1),
 		RunE: func(cmd *cobra.Command, args []string) error {
 			dir := token.Dot
 			if len(args) > 0 {

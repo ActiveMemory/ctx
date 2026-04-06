@@ -23,9 +23,10 @@ func Cmd() *cobra.Command {
 	short, long := desc.Command(cmd.DescKeySystemResources)
 
 	c := &cobra.Command{
-		Use:   cmd.UseSystemResources,
-		Short: short,
-		Long:  long,
+		Use:     cmd.UseSystemResources,
+		Short:   short,
+		Long:    long,
+		Example: desc.Example(cmd.DescKeySystemResources),
 		RunE: func(c *cobra.Command, _ []string) error {
 			return Run(c)
 		},

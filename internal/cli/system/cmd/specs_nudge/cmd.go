@@ -23,10 +23,11 @@ func Cmd() *cobra.Command {
 	short, long := desc.Command(cmd.DescKeySystemSpecsNudge)
 
 	return &cobra.Command{
-		Use:    cmd.UseSystemSpecsNudge,
-		Short:  short,
-		Long:   long,
-		Hidden: true,
+		Use:     cmd.UseSystemSpecsNudge,
+		Short:   short,
+		Long:    long,
+		Example: desc.Example(cmd.DescKeySystemSpecsNudge),
+		Hidden:  true,
 		RunE: func(cmd *cobra.Command, _ []string) error {
 			return Run(cmd, os.Stdin)
 		},

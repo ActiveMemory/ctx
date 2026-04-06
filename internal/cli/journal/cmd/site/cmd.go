@@ -33,9 +33,10 @@ func Cmd() *cobra.Command {
 
 	short, long := desc.Command(cmd.DescKeyJournalSite)
 	c := &cobra.Command{
-		Use:   cmd.UseJournalSite,
-		Short: short,
-		Long:  long,
+		Use:     cmd.UseJournalSite,
+		Short:   short,
+		Long:    long,
+		Example: desc.Example(cmd.DescKeyJournalSite),
 		RunE: func(cmd *cobra.Command, args []string) error {
 			return Run(cmd, output, build, serve)
 		},

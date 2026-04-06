@@ -36,9 +36,10 @@ func Cmd() *cobra.Command {
 
 	short, long := desc.Command(cmd.DescKeyLoad)
 	c := &cobra.Command{
-		Use:   cmd.UseLoad,
-		Short: short,
-		Long:  long,
+		Use:     cmd.UseLoad,
+		Short:   short,
+		Long:    long,
+		Example: desc.Example(cmd.DescKeyLoad),
 		RunE: func(cmd *cobra.Command, args []string) error {
 			// Use the configured budget if the flag is not explicitly set
 			if !cmd.Flags().Changed(cFlag.Budget) {

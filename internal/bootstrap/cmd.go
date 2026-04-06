@@ -54,6 +54,7 @@ func RootCmd() *cobra.Command {
 		Use:     cmd.DescKeyCtx,
 		Short:   short,
 		Long:    long,
+		Example: desc.Example(cmd.DescKeyCtx),
 		Version: version,
 		PersistentPreRunE: func(cmd *cobra.Command, args []string) error {
 			// Apply global flag values

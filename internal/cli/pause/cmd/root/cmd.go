@@ -22,9 +22,10 @@ import (
 func Cmd() *cobra.Command {
 	short, long := desc.Command(cmd.DescKeyPause)
 	c := &cobra.Command{
-		Use:   cmd.UsePause,
-		Short: short,
-		Long:  long,
+		Use:     cmd.UsePause,
+		Short:   short,
+		Long:    long,
+		Example: desc.Example(cmd.DescKeyPause),
 		RunE: func(cmd *cobra.Command, _ []string) error {
 			sessionID, _ := cmd.Flags().GetString(cFlag.SessionID)
 			return Run(cmd, sessionID)

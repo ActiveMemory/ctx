@@ -25,11 +25,12 @@ func Cmd() *cobra.Command {
 	var record string
 	short, long := desc.Command(cmd.DescKeyTraceCollect)
 	c := &cobra.Command{
-		Use:    cmd.UseTraceCollect,
-		Short:  short,
-		Long:   long,
-		Hidden: true,
-		Args:   cobra.ExactArgs(0),
+		Use:     cmd.UseTraceCollect,
+		Short:   short,
+		Long:    long,
+		Example: desc.Example(cmd.DescKeyTraceCollect),
+		Hidden:  true,
+		Args:    cobra.ExactArgs(0),
 		RunE: func(cobraCmd *cobra.Command, _ []string) error {
 			if record != "" {
 				return coreCollect.RecordCommit(record)

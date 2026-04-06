@@ -33,10 +33,11 @@ func Cmd() *cobra.Command {
 
 	short, long := desc.Command(cmd.DescKeyPadShow)
 	c := &cobra.Command{
-		Use:   cmd.UsePadShow,
-		Short: short,
-		Long:  long,
-		Args:  cobra.ExactArgs(1),
+		Use:     cmd.UsePadShow,
+		Short:   short,
+		Long:    long,
+		Example: desc.Example(cmd.DescKeyPadShow),
+		Args:    cobra.ExactArgs(1),
 		RunE: func(cmd *cobra.Command, args []string) error {
 			n, err := strconv.Atoi(args[0])
 			if err != nil {

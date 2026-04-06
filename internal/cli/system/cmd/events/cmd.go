@@ -25,9 +25,10 @@ func Cmd() *cobra.Command {
 	short, long := desc.Command(cmd.DescKeySystemEvents)
 
 	c := &cobra.Command{
-		Use:   cmd.UseSystemEvents,
-		Short: short,
-		Long:  long,
+		Use:     cmd.UseSystemEvents,
+		Short:   short,
+		Long:    long,
+		Example: desc.Example(cmd.DescKeySystemEvents),
 		RunE: func(cmd *cobra.Command, _ []string) error {
 			return Run(cmd)
 		},
