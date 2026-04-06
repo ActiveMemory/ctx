@@ -175,6 +175,9 @@
         <loc>https://ctx.ist/reference/design-invariants/</loc>
       </url>
       <url>
+        <loc>https://ctx.ist/reference/audit-conventions/</loc>
+      </url>
+      <url>
         <loc>https://ctx.ist/reference/skills/</loc>
       </url>
       <url>
@@ -188,9 +191,6 @@
       </url>
       <url>
         <loc>https://ctx.ist/reference/versions/</loc>
-      </url>
-      <url>
-        <loc>https://ctx.ist/reference/audit-conventions/</loc>
       </url>
       <url>
         <loc>https://ctx.ist/operations/</loc>

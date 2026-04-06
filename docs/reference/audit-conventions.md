@@ -1,4 +1,15 @@
-# Audit Conventions: Common Patterns and Fixes
+---
+#   /    ctx:                         https://ctx.ist
+# ,'`./    do you remember?
+# `.,'\
+#   \    Copyright 2026-present Context contributors.
+#                 SPDX-License-Identifier: Apache-2.0
+
+title: Code Conventions
+icon: lucide/scroll-text
+---
+
+# Code Conventions: Common Patterns and Fixes
 
 This guide documents the code conventions enforced by `internal/audit/`
 AST tests. Each section shows the violation pattern, the fix, and the

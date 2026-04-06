@@ -101,12 +101,12 @@ nav = [
   { "Reference" = [
     "reference/index.md",
     "reference/design-invariants.md",
+    "reference/audit-conventions.md",
     "reference/skills.md",
     "reference/comparison.md",
     "reference/session-journal.md",
     "reference/scratchpad.md",
     "reference/versions.md",
-    "reference/audit-conventions.md",
   ]},
   { "Operations" = [
     "operations/index.md",
