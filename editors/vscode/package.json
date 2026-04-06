@@ -211,6 +211,9 @@
     "test": "vitest run",
     "lint": "eslint src --ext ts"
   },
+  "overrides": {
+    "lodash": "^4.18.0"
+  },
   "devDependencies": {
     "@types/node": "^20.0.0",
     "@types/vscode": "^1.93.0",
