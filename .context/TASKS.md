@@ -60,7 +60,7 @@ TASK STATUS LABELS:
   compliance_test.go for the full list. #priority:medium #added:2026-03-31-005115
 
 
-- [ ] PD.4.5: Update AGENT_PLAYBOOK.md — add generic "check available skills"
+- [x] PD.4.5: Update AGENT_PLAYBOOK.md — add generic "check available skills"
   instruction #priority:medium #added:2026-03-25-203340
 
 **PD.5 — Validate:**

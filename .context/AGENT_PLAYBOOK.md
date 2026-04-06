@@ -122,6 +122,14 @@ is running long:
 Context compaction happens automatically, but the next window loses
 nuance. Explicit persistence is cheaper than re-discovery.
 
+### Check Available Skills
+
+Before starting any task, scan the skill list in your system
+prompt to see if a dedicated skill already handles the request.
+Prefer invoking an existing skill over ad-hoc implementation:
+skills encode project conventions, quality gates, and
+persistence steps that are easy to miss otherwise.
+
 ### Conversational Triggers
 
 Users rarely invoke skills explicitly. Recognize natural language:

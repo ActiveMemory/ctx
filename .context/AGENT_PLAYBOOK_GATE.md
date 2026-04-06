@@ -33,6 +33,11 @@ run tests before moving on. Track progress via TASKS.md checkboxes.
 Use the `gemini-search` MCP server for web searches. Fall back to
 built-in search only if `gemini-search` is not connected.
 
+## Check Available Skills
+
+Before starting any task, scan available skills to see if one
+already handles the request. Prefer skills over ad-hoc work.
+
 ## Conversational Triggers
 
 | User Says                                       | Action               |
