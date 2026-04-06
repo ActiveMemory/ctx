@@ -84,14 +84,10 @@ TASK STATUS LABELS:
   accuracy (does the description match behavior?) needs periodic
   LLM audit — not automatable. #priority:medium #added:2026-04-05
 
-- [ ] Create ctx-docstrings skill: audit and fix docstrings
-  against CONVENTIONS.md Documentation section. Skill loads
-  CONVENTIONS.md, scans functions in scope for
-  missing/incomplete docstring sections (Parameters, Returns),
-  reports violations, and optionally fixes them.
-  Language-agnostic design with Go as first implementation.
-  Deterministic enforcement via linter is tracked separately
-  in ideas/spec-convention-enforcement.md
+- [-] Create ctx-docstrings skill: audit and fix docstrings
+  against CONVENTIONS.md Documentation section. Superseded by
+  TestDocCommentStructure compliance test (68 grandfathered).
+  #added:2026-03-20-163413
   #added:2026-03-16-114445
 
 ### Phase -2: Task completion nudge:
