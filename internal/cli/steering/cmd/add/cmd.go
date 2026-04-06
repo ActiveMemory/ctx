@@ -48,6 +48,9 @@ func Cmd() *cobra.Command {
 // Parameters:
 //   - c: The cobra command for output
 //   - name: The steering file name (without .md extension)
+//
+// Returns:
+//   - error: nil on success, or a file creation error
 func Run(c *cobra.Command, name string) error {
 	contextDir := rc.ContextDir()
 

@@ -43,6 +43,9 @@ func Cmd() *cobra.Command {
 // Parameters:
 //   - c: The cobra command for output
 //   - name: The hook name to enable
+//
+// Returns:
+//   - error: nil on success, or if the hook is not found
 func Run(c *cobra.Command, name string) error {
 	hooksDir := rc.HooksDir()
 

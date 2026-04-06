@@ -55,6 +55,9 @@ func Cmd() *cobra.Command {
 // Parameters:
 //   - c: The cobra command for output and flag access
 //   - syncAll: Whether to sync to all supported tools
+//
+// Returns:
+//   - error: nil on success, or a sync error
 func Run(c *cobra.Command, syncAll bool) error {
 	steeringDir := rc.SteeringDir()
 	projectRoot := token.Dot

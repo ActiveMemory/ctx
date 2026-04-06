@@ -20,12 +20,18 @@ import (
 type Builder struct{}
 
 // Name returns the ecosystem label.
+//
+// Returns:
+//   - string: The Rust ecosystem identifier
 func (r *Builder) Name() string {
 	return cfgDep.EcosystemRust
 }
 
 // Detect returns true if Cargo.toml exists in the current
 // directory.
+//
+// Returns:
+//   - bool: True when Cargo.toml is present
 func (r *Builder) Detect() bool {
 	_, err := os.Stat(cfgDep.CargoToml)
 	return err == nil

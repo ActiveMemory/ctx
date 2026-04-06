@@ -30,6 +30,14 @@ var defaultInclusion = cfgSteering.InclusionManual
 //
 // Returns an error if frontmatter contains invalid YAML, identifying
 // the file path and the parsing failure.
+//
+// Parameters:
+//   - data: raw bytes of the steering file.
+//   - filePath: path used for error reporting and identification.
+//
+// Returns:
+//   - *SteeringFile: parsed steering file with defaults applied.
+//   - error: non-nil if YAML parsing fails.
 func Parse(data []byte, filePath string) (*SteeringFile, error) {
 	raw, body, splitErr := parse.SplitFrontmatter(data)
 	if splitErr != nil {
@@ -59,6 +67,12 @@ func Parse(data []byte, filePath string) (*SteeringFile, error) {
 //
 // Round-trip property: Parse(Print(Parse(data))) == Parse(data) for all
 // valid inputs.
+//
+// Parameters:
+//   - sf: steering file to serialize.
+//
+// Returns:
+//   - []byte: frontmatter + markdown representation.
 func Print(sf *SteeringFile) []byte {
 	var buf bytes.Buffer
 

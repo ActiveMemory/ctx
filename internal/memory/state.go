@@ -96,6 +96,12 @@ func EntryHash(text string) string {
 
 // Imported reports whether an entry hash has already been imported.
 // Stored entries use format "hash:target:date"; matches on hash prefix.
+//
+// Parameters:
+//   - hash: SHA-256 prefix to look up
+//
+// Returns:
+//   - bool: True if the hash was previously imported
 func (s *State) Imported(hash string) bool {
 	prefix := hash + token.Colon
 	for _, h := range s.ImportedHashes {
@@ -107,6 +113,10 @@ func (s *State) Imported(hash string) bool {
 }
 
 // MarkImported records an entry hash with its target and date.
+//
+// Parameters:
+//   - hash: SHA-256 prefix identifying the entry
+//   - target: Classification target (task, decision, etc.)
 func (s *State) MarkImported(hash, target string) {
 	date := time.Now().Format(cfgTime.DateFormat)
 	entry := strings.Join([]string{hash, target, date}, token.Colon)

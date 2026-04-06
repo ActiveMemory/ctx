@@ -41,6 +41,9 @@ type CompactResult struct {
 }
 
 // TotalChanges returns the number of items compacted.
+//
+// Returns:
+//   - int: Sum of moved tasks and removed empty sections
 func (r *CompactResult) TotalChanges() int {
 	total := len(r.TasksMoved)
 	for _, sc := range r.SectionsCleaned {

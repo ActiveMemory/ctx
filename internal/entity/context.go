@@ -22,7 +22,7 @@ type Context struct {
 
 // File returns the FileInfo with the given name, or nil if not found.
 //
-// Fields:
+// Parameters:
 //   - name: Name of the file to search for.
 //
 // Returns:

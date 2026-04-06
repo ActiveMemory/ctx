@@ -17,6 +17,13 @@ import (
 
 // Remove deletes the skill directory for the given name from skillsDir.
 // Returns an error if the skill does not exist.
+//
+// Parameters:
+//   - skillsDir: root directory containing skill subdirectories.
+//   - name: name of the skill to remove.
+//
+// Returns:
+//   - error: non-nil if the skill is missing or removal fails.
 func Remove(skillsDir, name string) error {
 	dir := filepath.Join(skillsDir, name)
 

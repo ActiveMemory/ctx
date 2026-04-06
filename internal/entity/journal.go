@@ -110,6 +110,9 @@ type TopicData struct {
 }
 
 // IsPopular reports whether this topic is popular.
+//
+// Returns:
+//   - bool: true if the topic is in the popular set.
 func (t TopicData) IsPopular() bool { return t.Popular }
 
 // KeyFileData holds aggregated data for a single file path.
@@ -125,6 +128,9 @@ type KeyFileData struct {
 }
 
 // IsPopular reports whether this key file is popular.
+//
+// Returns:
+//   - bool: true if the key file is in the popular set.
 func (kf KeyFileData) IsPopular() bool { return kf.Popular }
 
 // TypeData holds aggregated data for a session type.

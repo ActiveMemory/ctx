@@ -48,6 +48,9 @@ func Cmd() *cobra.Command {
 //
 // Parameters:
 //   - c: The cobra command for output
+//
+// Returns:
+//   - error: nil on success, or if the context directory is missing
 func Run(c *cobra.Command) error {
 	contextDir := rc.ContextDir()
 

@@ -17,6 +17,12 @@ import (
 // Deploy generates Cline integration files:
 //  1. .vscode/mcp.json — MCP server configuration (shared with VS Code)
 //  2. .clinerules/*.md — synced steering files
+//
+// Parameters:
+//   - cmd: Cobra command for output and flag access
+//
+// Returns:
+//   - error: Non-nil if MCP config or steering sync fails
 func Deploy(cmd *cobra.Command) error {
 	if mcpErr := ensureMCPConfig(cmd); mcpErr != nil {
 		return mcpErr

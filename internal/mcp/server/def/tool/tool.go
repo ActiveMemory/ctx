@@ -23,6 +23,9 @@ import (
 // reads from lookup maps that are populated by lookup.Init() in main().
 // Package-level vars are initialized before main(), so desc.Text()
 // would return empty strings.
+//
+// Returns:
+//   - []proto.Tool: Complete set of MCP tool definitions
 func Defs() []proto.Tool {
 	return []proto.Tool{
 		{

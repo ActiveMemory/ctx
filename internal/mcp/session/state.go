@@ -29,16 +29,25 @@ func (ss *State) RecordToolCall() {
 }
 
 // RecordAdd increments the add counter for the given entry type.
+//
+// Parameters:
+//   - entryType: Context entry type (task, decision, etc.)
 func (ss *State) RecordAdd(entryType string) {
 	ss.AddsPerformed[entryType]++
 }
 
 // QueuePendingUpdate adds an update to the pending flush queue.
+//
+// Parameters:
+//   - update: Update to enqueue for the next flush cycle
 func (ss *State) QueuePendingUpdate(update PendingUpdate) {
 	ss.PendingFlush = append(ss.PendingFlush, update)
 }
 
 // PendingCount returns the number of pending updates.
+//
+// Returns:
+//   - int: Number of updates awaiting flush
 func (ss *State) PendingCount() int {
 	return len(ss.PendingFlush)
 }

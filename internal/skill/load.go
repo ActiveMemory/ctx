@@ -19,6 +19,13 @@ import (
 // LoadAll reads all installed skills from subdirectories of skillsDir.
 // Each subdirectory must contain a SKILL.md file with YAML frontmatter.
 // Returns an empty slice without error if the skills directory does not exist.
+//
+// Parameters:
+//   - skillsDir: root directory containing skill subdirectories.
+//
+// Returns:
+//   - []*Skill: loaded skills, or nil if the directory is absent.
+//   - error: non-nil if a directory entry cannot be read or parsed.
 func LoadAll(skillsDir string) ([]*Skill, error) {
 	entries, readErr := os.ReadDir(skillsDir)
 	if readErr != nil {
@@ -44,6 +51,14 @@ func LoadAll(skillsDir string) ([]*Skill, error) {
 
 // Load reads a single skill by name from the given skills directory.
 // The name corresponds to a subdirectory containing a SKILL.md file.
+//
+// Parameters:
+//   - skillsDir: root directory containing skill subdirectories.
+//   - name: name of the skill subdirectory to load.
+//
+// Returns:
+//   - *Skill: the parsed skill metadata.
+//   - error: non-nil if the manifest cannot be read or parsed.
 func Load(skillsDir, name string) (*Skill, error) {
 	dir := filepath.Join(skillsDir, name)
 	manifestPath := filepath.Join(dir, cfgSkill.SkillManifest)

@@ -99,11 +99,9 @@ TASK STATUS LABELS:
   .ctxrc or settings.json. Related: consolidation nudge hook
   spec. #added:2026-03-23-223500
 
-
 - [ ] Design UserPromptSubmit hook that runs go build and
   surfaces compilation errors before the agent acts on stale
   assumptions #added:2026-03-23-120136
-
 
 - [ ] Architecture Mapping (Enrichment):
   **Context**: Skill that incrementally builds and maintains

@@ -51,6 +51,9 @@ func Cmd() *cobra.Command {
 //   - c: The cobra command for output
 //   - hookType: The hook type (e.g., "pre-tool-use")
 //   - name: The hook script name (without .sh extension)
+//
+// Returns:
+//   - error: nil on success, or a hook creation error
 func Run(c *cobra.Command, hookType, name string) error {
 	// Validate hook type.
 	ht := hookType

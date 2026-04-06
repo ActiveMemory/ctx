@@ -15,6 +15,10 @@
         <link rel="canonical" href="https://ctx.ist/reference/audit-conventions/">
       
       
+        <link rel="prev" href="../versions/">
+      
+      
+        <link rel="next" href="../../operations/">
       
       
         
@@ -312,10 +316,12 @@
   
   
   
+    
+  
   
     
     
-      <li class="md-tabs__item">
+      <li class="md-tabs__item md-tabs__item--active">
         <a href="../" class="md-tabs__link">
           
   
@@ -2807,6 +2813,8 @@
       
   
   
+    
+  
   
   
     
@@ -2828,20 +2836,25 @@
       
         
       
+        
+      
     
     
     
+      
+        
+        
       
       
         
       
     
     
-    <li class="md-nav__item md-nav__item--nested">
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_7" >
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_7" checked>
         
           
           <div class="md-nav__link md-nav__container">
@@ -2865,13 +2878,13 @@
             </a>
             
               
-              <label class="md-nav__link " for="__nav_7" id="__nav_7_label" tabindex="0">
+              <label class="md-nav__link " for="__nav_7" id="__nav_7_label" tabindex="">
                 <span class="md-nav__icon md-icon"></span>
               </label>
             
           </div>
         
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_7_label" aria-expanded="false">
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_7_label" aria-expanded="true">
           <label class="md-nav__title" for="__nav_7">
             <span class="md-nav__icon md-icon"></span>
             
@@ -3059,6 +3072,390 @@
   
 
       </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Audit Conventions: Common Patterns and Fixes
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Audit Conventions: Common Patterns and Fixes
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+
+<nav class="md-nav md-nav--secondary" aria-label="On this page">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      On this page
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#variable-shadowing-bare-err-reuse" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Variable Shadowing (bare err := reuse)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#import-name-shadowing" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Import Name Shadowing
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#magic-strings" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Magic Strings
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#direct-printf-calls" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Direct Printf Calls
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#raw-time-format-strings" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Raw Time Format Strings
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#direct-flag-registration" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Direct Flag Registration
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#todo-comments" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        TODO Comments
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#dead-exports" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Dead Exports
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#core-package-structure" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Core Package Structure
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#cross-package-types" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Cross-Package Types
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#type-file-convention" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Type File Convention
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#desckey-yaml-linkage" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        DescKey / YAML Linkage
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#package-doc-quality" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Package Doc Quality
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#inline-regex-compilation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Inline Regex Compilation
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#doc-comments" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Doc Comments
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#line-length" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Line Length
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#literal-whitespace" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Literal Whitespace
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#magic-numeric-values" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Magic Numeric Values
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#inline-separators" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Inline Separators
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#stuttery-function-names" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Stuttery Function Names
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#predicate-naming-no-ishascan-prefix" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Predicate Naming (no Is/Has/Can prefix)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#mixed-visibility" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Mixed Visibility
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#stray-errgo-files" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Stray err.go Files
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#cli-cmd-structure" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        CLI Cmd Structure
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#desckey-namespace" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        DescKey Namespace
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#yaml-examples-registry-linkage" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        YAML Examples / Registry Linkage
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#other-enforced-patterns" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Other Enforced Patterns
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#general-fix-workflow" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        General Fix Workflow
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
     </li>
   
 
@@ -3800,6 +4197,46 @@
   
 
 
+  <nav class="md-path" aria-label="Navigation" >
+    <ol class="md-path__list">
+      
+        
+  
+  
+    <li class="md-path__item">
+      <a href="../.." class="md-path__link">
+        
+  <span class="md-ellipsis">
+    Manifesto
+  </span>
+
+      </a>
+    </li>
+  
+
+      
+      
+        
+  
+  
+    
+    
+      <li class="md-path__item">
+        <a href="../" class="md-path__link">
+          
+  <span class="md-ellipsis">
+    Reference
+  </span>
+
+        </a>
+      </li>
+    
+  
+
+      
+    </ol>
+  </nav>
+
               
               <article class="md-content__inner md-typeset">
                 
@@ -4513,6 +4950,44 @@ its designated package:</p>
       
         <footer class="md-footer">
   
+    
+      
+      <nav class="md-footer__inner md-grid" aria-label="Footer" >
+        
+          
+          <a href="../versions/" class="md-footer__link md-footer__link--prev" aria-label="Previous: Version History">
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-arrow-left" viewBox="0 0 24 24"><path d="m12 19-7-7 7-7M19 12H5"/></svg>
+            </div>
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                Previous
+              </span>
+              <div class="md-ellipsis">
+                Version History
+              </div>
+            </div>
+          </a>
+        
+        
+          
+          <a href="../../operations/" class="md-footer__link md-footer__link--next" aria-label="Next: Operations">
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                Next
+              </span>
+              <div class="md-ellipsis">
+                Operations
+              </div>
+            </div>
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-arrow-right" viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+            </div>
+          </a>
+        
+      </nav>
     
   
   <div class="md-footer-meta md-typeset">
