@@ -181,7 +181,7 @@ func TestExamplesForType(t *testing.T) {
 // ---------------------------------------------------------------------------
 
 func TestFormatTaskWithPriority(t *testing.T) {
-	result := format.Task("My task", "high")
+	result := format.Task("My task", "high", "abc12345", "main", "68fbc00a")
 	if !strings.Contains(result, "#priority:high") {
 		t.Errorf(
 			"Task with priority should contain"+
@@ -194,10 +194,19 @@ func TestFormatTaskWithPriority(t *testing.T) {
 	if !strings.Contains(result, "#added:") {
 		t.Errorf("Task should contain '#added:' timestamp, got: %s", result)
 	}
+	if !strings.Contains(result, "#session:abc12345") {
+		t.Errorf("Task should contain '#session:abc12345', got: %s", result)
+	}
+	if !strings.Contains(result, "#branch:main") {
+		t.Errorf("Task should contain '#branch:main', got: %s", result)
+	}
+	if !strings.Contains(result, "#commit:68fbc00a") {
+		t.Errorf("Task should contain '#commit:68fbc00a', got: %s", result)
+	}
 }
 
 func TestFormatTaskWithoutPriority(t *testing.T) {
-	result := format.Task("Simple task", "")
+	result := format.Task("Simple task", "", "", "", "")
 	if strings.Contains(result, "#priority:") {
 		t.Errorf(
 			"Task without priority should not"+
@@ -206,6 +215,15 @@ func TestFormatTaskWithoutPriority(t *testing.T) {
 	}
 	if !strings.Contains(result, "Simple task") {
 		t.Errorf("Task should contain task content, got: %s", result)
+	}
+	if !strings.Contains(result, "#session:unknown") {
+		t.Errorf("Task should contain '#session:unknown' when empty, got: %s", result)
+	}
+	if !strings.Contains(result, "#branch:unknown") {
+		t.Errorf("Task should contain '#branch:unknown' when empty, got: %s", result)
+	}
+	if !strings.Contains(result, "#commit:unknown") {
+		t.Errorf("Task should contain '#commit:unknown' when empty, got: %s", result)
 	}
 }
 
@@ -526,7 +544,7 @@ func TestValidateEntry(t *testing.T) {
 	})
 
 	t.Run("valid task", func(t *testing.T) {
-		p := entity.EntryParams{Type: "task", Content: "Do something"}
+		p := entity.EntryParams{Type: "task", Content: "Do something", SessionID: "test1234", Branch: "main", Commit: "abc123"}
 		err := entry.Validate(p, nil)
 		if err != nil {
 			t.Errorf("unexpected error: %v", err)
@@ -559,6 +577,9 @@ func TestValidateEntry(t *testing.T) {
 		err := entry.Validate(entity.EntryParams{
 			Type:        "decision",
 			Content:     "Use Go",
+			SessionID:   "test1234",
+			Branch:      "main",
+			Commit:      "abc123",
 			Context:     "Need a language",
 			Rationale:   "Go is fast",
 			Consequence: "Need training",
@@ -586,6 +607,9 @@ func TestValidateEntry(t *testing.T) {
 		err := entry.Validate(entity.EntryParams{
 			Type:        "learning",
 			Content:     "Go embed",
+			SessionID:   "test1234",
+			Branch:      "main",
+			Commit:      "abc123",
 			Context:     "Tried embedding",
 			Lesson:      "Same dir only",
 			Application: "Keep files local",
@@ -719,7 +743,7 @@ func TestRun_TaskWithPriority(t *testing.T) {
 	err := root.Run(
 		addCmd,
 		[]string{"task", "High priority task"},
-		entity.AddConfig{Priority: "high"},
+		entity.AddConfig{Priority: "high", SessionID: "test1234", Branch: "main", Commit: "abc123"},
 	)
 	if err != nil {
 		t.Fatalf("Run task with priority failed: %v", err)
@@ -758,7 +782,7 @@ func TestRun_TaskWithSection(t *testing.T) {
 	err := root.Run(
 		addCmd,
 		[]string{"task", "Sectioned task"},
-		entity.AddConfig{Section: "Next Up"},
+		entity.AddConfig{Section: "Next Up", SessionID: "test1234", Branch: "main", Commit: "abc123"},
 	)
 	if err != nil {
 		t.Fatalf("Run task with section failed: %v", err)

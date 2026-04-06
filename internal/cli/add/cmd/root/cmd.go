@@ -41,6 +41,9 @@ func Cmd() *cobra.Command {
 		priority    string
 		section     string
 		fromFile    string
+		sessionID   string
+		branch      string
+		commit      string
 		context     string
 		rationale   string
 		consequence string
@@ -67,6 +70,9 @@ func Cmd() *cobra.Command {
 				Priority:    priority,
 				Section:     section,
 				FromFile:    fromFile,
+				SessionID:   sessionID,
+				Branch:      branch,
+				Commit:      commit,
 				Context:     context,
 				Rationale:   rationale,
 				Consequence: consequence,
@@ -116,6 +122,18 @@ func Cmd() *cobra.Command {
 	flagbind.StringFlagP(
 		c, &application,
 		cFlag.Application, cFlag.ShortApplication, flag.DescKeyAddApplication,
+	)
+	flagbind.StringFlag(
+		c, &sessionID,
+		cFlag.SessionID, flag.DescKeyAddSessionID,
+	)
+	flagbind.StringFlag(
+		c, &branch,
+		cFlag.Branch, flag.DescKeyAddBranch,
+	)
+	flagbind.StringFlag(
+		c, &commit,
+		cFlag.Commit, flag.DescKeyAddCommit,
 	)
 
 	return c

@@ -116,7 +116,8 @@ ctx init
 ctx add decision "Your actual architectural choice" \
   --context "What prompted this decision" \
   --rationale "Why you chose this approach" \
-  --consequence "What changes as a result"
+  --consequence "What changes as a result" \
+  --session-id abc12345 --branch main --commit 68fbc00a
 
 # 3. Check what the AI will see
 ctx status

@@ -19,6 +19,11 @@ rejected.
 
 **How do you make sure important context survives across sessions?**
 
+!!! tip "Prefer skills over raw commands"
+    Use `/ctx-add-decision` and `/ctx-add-learning` instead of raw
+    `ctx add` commands. The agent automatically picks up session ID,
+    branch, and commit hash from its context — no manual flags needed.
+
 ## TL;DR
 
 ```text
@@ -113,7 +118,8 @@ and against [alternatives], to achieve [benefit], accepting that [trade-off].*"
     ctx add decision "Use file-based cooldown tokens instead of env vars" \
       --context "Hook subprocesses cannot persist env vars to parent shell" \
       --rationale "File tokens survive across processes. Simpler than IPC. Cleanup is automatic via TTL." \
-      --consequence "Tombstone files accumulate in /tmp. Cannot share state across machines."
+      --consequence "Tombstone files accumulate in /tmp. Cannot share state across machines." \
+      --session-id abc12345 --branch main --commit 68fbc00a
     ```
 
 ### Step 3: Record Learnings
@@ -160,7 +166,8 @@ The `/ctx-add-learning` skill applies three quality filters:
     ctx add learning "Claude Code hooks run in a subprocess" \
       --context "Set env var in PreToolUse hook, but it was not visible in the main session" \
       --lesson "Hook scripts execute in a child process. Env changes do not propagate to parent." \
-      --application "Use tombstone files for hook-to-session communication. Never rely on hook env vars."
+      --application "Use tombstone files for hook-to-session communication. Never rely on hook env vars." \
+      --session-id abc12345 --branch main --commit 68fbc00a
     ```
 
 ### Step 4: Record Conventions
@@ -233,9 +240,9 @@ discovered that hook subprocesses cannot set env vars in the parent.
 
 I'd suggest persisting:
 - **Learning**: Hook subprocesses cannot propagate env vars
-  `ctx add learning "..." --context "..." --lesson "..." --application "..."`
+  `ctx add learning "..." --context "..." --lesson "..." --application "..." --session-id abc12345 --branch main --commit 68fbc00a`
 - **Decision**: File-based cooldown tokens over env vars
-  `ctx add decision "..." --context "..." --rationale "..." --consequence "..."`
+  `ctx add decision "..." --context "..." --rationale "..." --consequence "..." --session-id abc12345 --branch main --commit 68fbc00a`
 
 Want me to persist any of these?
 ```
@@ -308,13 +315,15 @@ rather than waiting for explicit instructions.
 ctx add decision "Use PostgreSQL over SQLite" \
   --context "Need concurrent multi-user access" \
   --rationale "SQLite locks on writes; Postgres handles concurrency" \
-  --consequence "Requires a database server; team needs Postgres training"
+  --consequence "Requires a database server; team needs Postgres training" \
+  --session-id abc12345 --branch main --commit 68fbc00a
 
 # Learning: record the gotcha
 ctx add learning "SQL migrations must be idempotent" \
   --context "Deploy failed when migration ran twice after rollback" \
   --lesson "CREATE TABLE without IF NOT EXISTS fails on retry" \
-  --application "Always use IF NOT EXISTS guards in migrations"
+  --application "Always use IF NOT EXISTS guards in migrations" \
+  --session-id abc12345 --branch main --commit 68fbc00a
 
 # Convention: record the pattern
 ctx add convention "API handlers return structured errors" --section "API"

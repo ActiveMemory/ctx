@@ -87,7 +87,7 @@ func (h *Handler) Status() (string, error) {
 //   - string: confirmation message with entry type and target file
 //   - error: boundary, validation, or write error
 func (h *Handler) Add(
-	entryType, content string, opts EntryOpts,
+	entryType, content string, opts entity.EntryOpts,
 ) (string, error) {
 	if boundaryErr := validate.Boundary(
 		h.ContextDir,
@@ -100,6 +100,9 @@ func (h *Handler) Add(
 		Content:     content,
 		ContextDir:  h.ContextDir,
 		Priority:    opts.Priority,
+		SessionID:   opts.SessionID,
+		Branch:      opts.Branch,
+		Commit:      opts.Commit,
 		Context:     opts.Context,
 		Rationale:   opts.Rationale,
 		Consequence: opts.Consequence,
@@ -281,7 +284,7 @@ func (h *Handler) Recall(limit int, since time.Time) (string, error) {
 //   - string: confirmation with file name and review status
 //   - error: boundary, validation, or write error
 func (h *Handler) WatchUpdate(
-	entryType, content string, opts EntryOpts,
+	entryType, content string, opts entity.EntryOpts,
 ) (string, error) {
 	boundaryErr := validate.Boundary(h.ContextDir)
 	if boundaryErr != nil {
@@ -312,6 +315,9 @@ func (h *Handler) WatchUpdate(
 		Content:     content,
 		ContextDir:  h.ContextDir,
 		Priority:    opts.Priority,
+		SessionID:   opts.SessionID,
+		Branch:      opts.Branch,
+		Commit:      opts.Commit,
 		Context:     opts.Context,
 		Rationale:   opts.Rationale,
 		Consequence: opts.Consequence,

@@ -16,24 +16,35 @@ import (
 
 // Task formats a task entry as a Markdown checkbox item.
 //
-// The output includes a timestamp tag for session correlation and an optional
-// priority tag.
-// Format: "- [ ] content #priority:level #added:YYYY-MM-DD-HHMMSS"
+// The output includes provenance tags (session, branch, commit) and an
+// optional priority tag.
+// Format: "- [ ] content #priority:level #session:id
+// #branch:name #commit:hash #added:YYYY-MM-DD-HHMMSS"
 //
 // Parameters:
 //   - content: Task description text
 //   - priority: Priority level (high, medium, low); empty string omits the tag
+//   - sessionID: AI session identifier; empty uses "unknown"
+//   - branch: Git branch name; empty uses "unknown"
+//   - commit: Git commit hash; empty uses "unknown"
 //
 // Returns:
 //   - string: Formatted task line with trailing newline
-func Task(content string, priority string) string {
-	// Use YYYY-MM-DD-HHMMSS timestamp for session correlation
+func Task(content, priority, sessionID, branch, commit string) string {
 	timestamp := time.Now().Format(cfgTime.CompactTimestamp)
+
 	var priorityTag string
 	if priority != "" {
 		priorityTag = fmt.Sprintf(tpl.TaskPriority, priority)
 	}
-	return fmt.Sprintf(tpl.Task, content, priorityTag, timestamp)
+
+	sessionTag := fmt.Sprintf(tpl.TaskSession, truncateSessionID(sessionID))
+	branchTag := fmt.Sprintf(tpl.TaskBranch, defaultProvenance(branch))
+	commitTag := fmt.Sprintf(tpl.TaskCommit, defaultProvenance(commit))
+
+	return fmt.Sprintf(
+		tpl.Task, content, priorityTag, sessionTag, branchTag, commitTag, timestamp,
+	)
 }
 
 // Learning formats a learning entry as a structured Markdown section.

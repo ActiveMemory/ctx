@@ -38,7 +38,7 @@ func TestAddCommand(t *testing.T) {
 
 	// Test adding a task
 	addCmd := Cmd()
-	addCmd.SetArgs([]string{"task", "Test task for integration"})
+	addCmd.SetArgs([]string{"task", "Test task for integration", "--session-id", "test1234", "--branch", "main", "--commit", "abc123"})
 	if err = addCmd.Execute(); err != nil {
 		t.Fatalf("add task command failed: %v", err)
 	}
@@ -81,6 +81,7 @@ func TestAddDecisionAndLearning(t *testing.T) {
 		addCmd := Cmd()
 		addCmd.SetArgs([]string{
 			"decision", "Use PostgreSQL for database",
+			"--session-id", "test1234", "--branch", "main", "--commit", "abc123",
 			"--context", "Need a reliable database",
 			"--rationale", "PostgreSQL is well-supported",
 			"--consequence", "Team needs training",
@@ -116,8 +117,8 @@ func TestAddDecisionAndLearning(t *testing.T) {
 		if err == nil {
 			t.Fatal("expected error when adding decision without required flags")
 		}
-		if !strings.Contains(err.Error(), "--context") {
-			t.Errorf("error should mention missing --context flag: %v", err)
+		if !strings.Contains(err.Error(), "--session-id") {
+			t.Errorf("error should mention missing --session-id flag: %v", err)
 		}
 	})
 
@@ -126,6 +127,7 @@ func TestAddDecisionAndLearning(t *testing.T) {
 		addCmd := Cmd()
 		addCmd.SetArgs([]string{
 			"learning", "Always check for nil before dereferencing",
+			"--session-id", "test1234", "--branch", "main", "--commit", "abc123",
 			"--context", "Got a nil pointer panic in production",
 			"--lesson", "Always validate pointers before use",
 			"--application", "Add nil checks in all pointer-receiving functions",
@@ -163,8 +165,21 @@ func TestAddDecisionAndLearning(t *testing.T) {
 		if err == nil {
 			t.Fatal("expected error when adding learning without required flags")
 		}
-		if !strings.Contains(err.Error(), "--context") {
-			t.Errorf("error should mention missing --context flag: %v", err)
+		if !strings.Contains(err.Error(), "--session-id") {
+			t.Errorf("error should mention missing --session-id flag: %v", err)
+		}
+	})
+
+	// Test that task without provenance flags fails
+	t.Run("add task without provenance fails", func(t *testing.T) {
+		addCmd := Cmd()
+		addCmd.SetArgs([]string{"task", "Missing provenance"})
+		err := addCmd.Execute()
+		if err == nil {
+			t.Fatal("expected error when adding task without provenance")
+		}
+		if !strings.Contains(err.Error(), "--session-id") {
+			t.Errorf("error should mention --session-id: %v", err)
 		}
 	})
 
@@ -213,6 +228,7 @@ func TestPrependOrder(t *testing.T) {
 		addCmd := Cmd()
 		addCmd.SetArgs([]string{
 			"decision", "First decision",
+			"--session-id", "test1234", "--branch", "main", "--commit", "abc123",
 			"--context", "First context",
 			"--rationale", "First rationale",
 			"--consequence", "First consequences",
@@ -225,6 +241,7 @@ func TestPrependOrder(t *testing.T) {
 		addCmd = Cmd()
 		addCmd.SetArgs([]string{
 			"decision", "Second decision",
+			"--session-id", "test1234", "--branch", "main", "--commit", "abc123",
 			"--context", "Second context",
 			"--rationale", "Second rationale",
 			"--consequence", "Second consequences",
@@ -260,6 +277,7 @@ func TestPrependOrder(t *testing.T) {
 		addCmd := Cmd()
 		addCmd.SetArgs([]string{
 			"learning", "First learning",
+			"--session-id", "test1234", "--branch", "main", "--commit", "abc123",
 			"--context", "First context",
 			"--lesson", "First lesson",
 			"--application", "First application",
@@ -272,6 +290,7 @@ func TestPrependOrder(t *testing.T) {
 		addCmd = Cmd()
 		addCmd.SetArgs([]string{
 			"learning", "Second learning",
+			"--session-id", "test1234", "--branch", "main", "--commit", "abc123",
 			"--context", "Second context",
 			"--lesson", "Second lesson",
 			"--application", "Second application",
@@ -336,6 +355,7 @@ func TestAddFromFile(t *testing.T) {
 	addCmd := Cmd()
 	addCmd.SetArgs([]string{
 		"learning", "--file", contentFile,
+		"--session-id", "test1234", "--branch", "main", "--commit", "abc123",
 		"--context", "Testing file input",
 		"--lesson", "File input works",
 		"--application", "Use --file for long content",

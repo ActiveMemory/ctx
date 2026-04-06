@@ -24,21 +24,30 @@ For deeper, step-by-step guides, see [Recipes](../recipes/index.md).
 
 ## Track Context
 
+!!! tip "Prefer skills over raw commands"
+    When working with an AI agent, use `/ctx-add-task`,
+    `/ctx-add-decision`, or `/ctx-add-learning` instead of raw
+    `ctx add` commands. The agent automatically picks up session ID,
+    branch, and commit hash from its context — no manual flags needed.
+
 ```bash
 # Add a task
-ctx add task "Implement user authentication"
+ctx add task "Implement user authentication" \
+  --session-id abc12345 --branch main --commit 68fbc00a
 
 # Record a decision (full ADR fields required)
 ctx add decision "Use PostgreSQL for primary database" \
   --context "Need a reliable database for production" \
   --rationale "PostgreSQL offers ACID compliance and JSON support" \
-  --consequence "Team needs PostgreSQL training"
+  --consequence "Team needs PostgreSQL training" \
+  --session-id abc12345 --branch main --commit 68fbc00a
 
 # Note a learning
 ctx add learning "Mock functions must be hoisted in Jest" \
   --context "Tests failed with undefined mock errors" \
   --lesson "Jest hoists mock calls to top of file" \
-  --application "Place jest.mock() before imports"
+  --application "Place jest.mock() before imports" \
+  --session-id abc12345 --branch main --commit 68fbc00a
 
 # Mark task complete
 ctx task complete "user auth"

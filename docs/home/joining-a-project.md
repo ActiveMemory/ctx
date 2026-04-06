@@ -80,12 +80,14 @@ As you work, you'll discover things worth recording. Use the CLI:
 ```bash
 # Record a decision you made or learned about
 ctx add decision "Use connection pooling for DB access" \
-  --rationale "Reduces connection overhead under load"
+  --rationale "Reduces connection overhead under load" \
+  --session-id abc12345 --branch main --commit 68fbc00a
 
 # Capture a gotcha you hit
 ctx add learning "Redis timeout defaults to 5s" \
   --context "Hit timeouts during bulk operations" \
-  --application "Set explicit timeout for batch jobs"
+  --application "Set explicit timeout for batch jobs" \
+  --session-id abc12345 --branch main --commit 68fbc00a
 
 # Add a convention you noticed the team follows
 ctx add convention "All API handlers return structured errors"

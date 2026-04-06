@@ -18,6 +18,8 @@ const PrefixLong = "--"
 // Add command flag names: used for both flag registration and error display.
 const (
 	Application = "application"
+	Branch      = "branch"
+	Commit      = "commit"
 	Consequence = "consequence"
 	Context     = "context"
 	File        = "file"

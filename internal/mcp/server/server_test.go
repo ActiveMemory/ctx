@@ -343,8 +343,11 @@ func TestToolAdd(t *testing.T) {
 		wantContains string
 	}{
 		{
-			name:         "add task",
-			args:         map[string]interface{}{"type": "task", "content": "Test task"},
+			name: "add task",
+			args: map[string]interface{}{
+				"type": "task", "content": "Test task",
+				"session_id": "test1234", "branch": "main", "commit": "abc123",
+			},
 			wantFile:     ctx.Task,
 			wantContains: "Test task",
 		},
@@ -361,6 +364,9 @@ func TestToolAdd(t *testing.T) {
 			args: map[string]interface{}{
 				"type":        "decision",
 				"content":     "Use Redis",
+				"session_id":  "test1234",
+				"branch":      "main",
+				"commit":      "abc123",
 				"context":     "Need caching",
 				"rationale":   "Fast and simple",
 				"consequence": "Ops must manage Redis",
@@ -373,6 +379,9 @@ func TestToolAdd(t *testing.T) {
 			args: map[string]interface{}{
 				"type":        "learning",
 				"content":     "Go embed requires same package",
+				"session_id":  "test1234",
+				"branch":      "main",
+				"commit":      "abc123",
 				"context":     "Tried parent dir",
 				"lesson":      "Only same or child dirs",
 				"application": "Keep files in internal",
@@ -383,14 +392,18 @@ func TestToolAdd(t *testing.T) {
 		{
 			name: "decision missing rationale",
 			args: map[string]interface{}{
-				"type": "decision", "content": "X", "context": "Y",
+				"type": "decision", "content": "X",
+				"session_id": "test1234", "branch": "main", "commit": "abc123",
+				"context": "Y",
 			},
 			wantErr: true,
 		},
 		{
 			name: "learning missing lesson",
 			args: map[string]interface{}{
-				"type": "learning", "content": "X", "context": "Y",
+				"type": "learning", "content": "X",
+				"session_id": "test1234", "branch": "main", "commit": "abc123",
+				"context": "Y",
 			},
 			wantErr: true,
 		},
@@ -537,8 +550,11 @@ func TestToolWatchUpdate(t *testing.T) {
 	resp := request(t, srv, "tools/call", proto.CallToolParams{
 		Name: "ctx_watch_update",
 		Arguments: map[string]interface{}{
-			"type":    "task",
-			"content": "New MCP task from watch",
+			"type":       "task",
+			"content":    "New MCP task from watch",
+			"session_id": "test1234",
+			"branch":     "main",
+			"commit":     "abc123",
 		},
 	})
 	if resp.Error != nil {
@@ -574,6 +590,9 @@ func TestToolWatchUpdateDecision(t *testing.T) {
 		Arguments: map[string]interface{}{
 			"type":        "decision",
 			"content":     "Use MCP protocol",
+			"session_id":  "test1234",
+			"branch":      "main",
+			"commit":      "abc123",
 			"context":     "Need AI tool integration",
 			"rationale":   "Standard protocol",
 			"consequence": "Must maintain compatibility",

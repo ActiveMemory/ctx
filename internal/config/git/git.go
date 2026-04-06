@@ -11,6 +11,7 @@ const Binary = "git"
 
 // Git subcommands.
 const (
+	Branch   = "branch"
 	DiffTree = "diff-tree"
 	Log      = "log"
 	Remote   = "remote"
@@ -31,6 +32,8 @@ const (
 
 // Git rev-parse flags.
 const (
+	FlagShort        = "--short"
+	FlagShowCurrent  = "--show-current"
 	FlagShowToplevel = "--show-toplevel"
 	FlagGitDir       = "--git-dir"
 )

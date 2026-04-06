@@ -84,6 +84,9 @@ func Process(cmd *cobra.Command, reader io.Reader, dryRun bool) error {
 					Application: ExtractAttribute(openingTag, cli.AttrApplication),
 					Rationale:   ExtractAttribute(openingTag, cli.AttrRationale),
 					Consequence: ExtractAttribute(openingTag, cli.AttrConsequence),
+					SessionID:   watch.ProvenanceSessionID,
+					Branch:      watch.ProvenanceBranch,
+					Commit:      watch.ProvenanceCommit,
 				}
 
 				if dryRun {

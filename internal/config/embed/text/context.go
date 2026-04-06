@@ -40,10 +40,15 @@ const (
 	DescKeyContextLoadGateWebhook = "context-load-gate.webhook"
 
 	// Context directory display labels.
+
 	// DescKeyWriteContextDirLabel is the text key for write context dir label
 	// messages.
 	DescKeyWriteContextDirLabel = "write.context-dir-label"
 	// DescKeyWriteContextDirBracket is the text key for write context dir bracket
 	// messages.
 	DescKeyWriteContextDirBracket = "write.context-dir-bracket"
+
+	// DescKeyWriteProvenanceLine is the text key for the
+	// combined provenance output line.
+	DescKeyWriteProvenanceLine = "write.provenance-line"
 )

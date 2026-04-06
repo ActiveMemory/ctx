@@ -7,22 +7,18 @@
 package check_resources
 
 import (
-	"fmt"
 	"os"
 
 	"github.com/spf13/cobra"
 
 	"github.com/ActiveMemory/ctx/internal/assets/read/desc"
 	coreCheck "github.com/ActiveMemory/ctx/internal/cli/system/core/check"
-	"github.com/ActiveMemory/ctx/internal/cli/system/core/message"
 	"github.com/ActiveMemory/ctx/internal/cli/system/core/nudge"
 	"github.com/ActiveMemory/ctx/internal/config/embed/text"
 	"github.com/ActiveMemory/ctx/internal/config/hook"
 	"github.com/ActiveMemory/ctx/internal/config/stats"
 	"github.com/ActiveMemory/ctx/internal/config/token"
-	"github.com/ActiveMemory/ctx/internal/notify"
 	"github.com/ActiveMemory/ctx/internal/sysinfo"
-	writeSetup "github.com/ActiveMemory/ctx/internal/write/setup"
 )
 
 // Run executes the check-resources hook logic.
@@ -67,24 +63,13 @@ func Run(cmd *cobra.Command, stdin *os.File) error {
 		desc.Text(
 			text.DescKeyCheckResourcesFallbackEnd)
 	vars := map[string]any{stats.VarAlertMessages: alertMessages}
-	content := message.Load(
-		hook.CheckResources, hook.VariantAlert, vars, fallback,
-	)
-	if content == "" {
-		return nil
-	}
-
-	writeSetup.Nudge(cmd, message.NudgeBox(
+	nudge.LoadAndEmit(cmd,
+		hook.CheckResources, hook.VariantAlert,
+		vars, fallback,
 		desc.Text(text.DescKeyCheckResourcesRelayPrefix),
 		desc.Text(text.DescKeyCheckResourcesBoxTitle),
-		content))
-
-	ref := notify.NewTemplateRef(
-		hook.CheckResources, hook.VariantAlert, vars,
-	)
-	nudge.Relay(fmt.Sprintf(desc.Text(text.DescKeyRelayPrefixFormat),
-		hook.CheckResources, desc.Text(text.DescKeyCheckResourcesRelayMessage)),
-		input.SessionID, ref,
+		desc.Text(text.DescKeyCheckResourcesRelayMessage),
+		input.SessionID, "",
 	)
 
 	return nil

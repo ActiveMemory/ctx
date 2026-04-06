@@ -31,23 +31,40 @@ func Validate(params entity.EntryParams, examplesFn func(string) string) error {
 		return errAdd.NoContentProvided(params.Type, examples)
 	}
 
+	// Provenance is required for task, decision, and learning.
+	provenance := [][2]string{
+		{flag.PrefixLong + flag.SessionID, params.SessionID},
+		{flag.PrefixLong + flag.Branch, params.Branch},
+		{flag.PrefixLong + flag.Commit, params.Commit},
+	}
+
+	var extra [][2]string
 	switch params.Type {
+	case entry.Task:
+		// Provenance only — no extra fields.
+
 	case entry.Decision:
-		if m := checkRequired([][2]string{
+		extra = [][2]string{
 			{flag.PrefixLong + flag.Context, params.Context},
 			{flag.PrefixLong + flag.Rationale, params.Rationale},
 			{flag.PrefixLong + flag.Consequence, params.Consequence},
-		}); len(m) > 0 {
-			return errAdd.MissingFields(entry.Decision, m)
 		}
 
 	case entry.Learning:
-		if m := checkRequired([][2]string{
+		extra = [][2]string{
 			{flag.PrefixLong + flag.Context, params.Context},
 			{flag.PrefixLong + flag.Lesson, params.Lesson},
 			{flag.PrefixLong + flag.Application, params.Application},
-		}); len(m) > 0 {
-			return errAdd.MissingFields(entry.Learning, m)
+		}
+	}
+
+	if params.Type == entry.Task ||
+		params.Type == entry.Decision ||
+		params.Type == entry.Learning {
+		if m := checkRequired(
+			append(provenance, extra...),
+		); len(m) > 0 {
+			return errAdd.MissingFields(params.Type, m)
 		}
 	}
 

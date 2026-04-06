@@ -12,12 +12,24 @@ package tpl
 // by the add command. Each uses fmt.Sprintf verbs for interpolation.
 const (
 	// Task formats a task checkbox line.
-	// Args: content, priorityTag, timestamp.
-	Task = "- [ ] %s%s #added:%s\n"
+	// Args: content, priorityTag, sessionTag, branchTag, commitTag, timestamp.
+	Task = "- [ ] %s%s%s%s%s #added:%s\n"
 
 	// TaskPriority formats the inline priority tag.
 	// Args: priority level.
 	TaskPriority = " #priority:%s"
+
+	// TaskSession formats the inline session provenance tag.
+	// Args: session ID (8-char short ID or "unknown").
+	TaskSession = " #session:%s"
+
+	// TaskBranch formats the inline branch provenance tag.
+	// Args: branch name.
+	TaskBranch = " #branch:%s"
+
+	// TaskCommit formats the inline commit provenance tag.
+	// Args: short commit hash.
+	TaskCommit = " #commit:%s"
 
 	// Learning formats a learning section with all ADR-style fields.
 	// Args: timestamp, title, context, lesson, application.

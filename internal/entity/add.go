@@ -13,6 +13,9 @@ package entity
 //   - Content: Main entry text
 //   - Section: Target section within the file
 //   - Priority: Priority label (high, medium, low)
+//   - SessionID: AI session identifier for task provenance
+//   - Branch: Git branch name for task provenance
+//   - Commit: Git commit hash for task provenance
 //   - Context: Context field for decisions/learnings
 //   - Rationale: Rationale field for decisions
 //   - Consequence: Consequence field for decisions
@@ -24,6 +27,9 @@ type EntryParams struct {
 	Content     string
 	Section     string
 	Priority    string
+	SessionID   string
+	Branch      string
+	Commit      string
 	Context     string
 	Rationale   string
 	Consequence string
@@ -38,6 +44,9 @@ type EntryParams struct {
 //   - Priority: Priority label flag
 //   - Section: Target section flag
 //   - FromFile: Path to read content from a file
+//   - SessionID: AI session identifier for task provenance
+//   - Branch: Git branch name for task provenance
+//   - Commit: Git commit hash for task provenance
 //   - Context: Context flag for decisions/learnings
 //   - Rationale: Rationale flag for decisions
 //   - Consequence: Consequence flag for decisions
@@ -47,6 +56,33 @@ type AddConfig struct {
 	Priority    string
 	Section     string
 	FromFile    string
+	SessionID   string
+	Branch      string
+	Commit      string
+	Context     string
+	Rationale   string
+	Consequence string
+	Lesson      string
+	Application string
+}
+
+// EntryOpts holds optional fields for entry creation via MCP.
+//
+// Fields:
+//   - Priority: Priority label (high, medium, low)
+//   - SessionID: AI session identifier for provenance
+//   - Branch: Git branch name for provenance
+//   - Commit: Git commit hash for provenance
+//   - Context: Context field for decisions/learnings
+//   - Rationale: Rationale field for decisions
+//   - Consequence: Consequence field for decisions
+//   - Lesson: Lesson field for learnings
+//   - Application: Application field for learnings
+type EntryOpts struct {
+	Priority    string
+	SessionID   string
+	Branch      string
+	Commit      string
 	Context     string
 	Rationale   string
 	Consequence string

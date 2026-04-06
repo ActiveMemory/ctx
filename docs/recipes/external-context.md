@@ -115,7 +115,8 @@ directory without extra flags:
 
 ```bash
 ctx status          # reads from ~/repos/myproject-context
-ctx add learning "Redis MULTI doesn't roll back on error"
+ctx add learning "Redis MULTI doesn't roll back on error" \
+  --session-id abc12345 --branch main --commit 68fbc00a
 ```
 
 !!! tip "Commit `.ctxrc`"

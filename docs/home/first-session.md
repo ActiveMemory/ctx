@@ -59,14 +59,16 @@ For Claude Code, [install the ctx plugin](getting-started.md#installation) to ge
 Add a **task** and a **decision**: These are the entries your AI will remember:
 
 ```bash
-ctx add task "Implement user authentication"
+ctx add task "Implement user authentication" \
+  --session-id abc12345 --branch main --commit 68fbc00a
 
 # Output: ✓ Added to TASKS.md
 
 ctx add decision "Use PostgreSQL for primary database" \
   --context "Need a reliable database for production" \
   --rationale "PostgreSQL offers ACID compliance and JSON support" \
-  --consequence "Team needs PostgreSQL training"
+  --consequence "Team needs PostgreSQL training" \
+  --session-id abc12345 --branch main --commit 68fbc00a
 
 # Output: ✓ Added to DECISIONS.md
 ```

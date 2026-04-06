@@ -31,4 +31,10 @@ const (
 	Prompt = "prompt"
 	// Summary is the optional session summary for session-end hooks.
 	Summary = "summary"
+	// SessionID is the AI session identifier for entry provenance.
+	SessionID = "session_id"
+	// Branch is the git branch name for entry provenance.
+	Branch = "branch"
+	// Commit is the git commit hash for entry provenance.
+	Commit = "commit"
 )

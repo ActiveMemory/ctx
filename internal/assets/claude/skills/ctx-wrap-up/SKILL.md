@@ -100,12 +100,12 @@ belongs in their context.
 
 For each approved candidate, run the appropriate command:
 
-| Type        | Command                                                                          |
-|-------------|----------------------------------------------------------------------------------|
-| Learning    | `ctx add learning "Title" --context "..." --lesson "..." --application "..."`    |
-| Decision    | `ctx add decision "Title" --context "..." --rationale "..." --consequence "..."` |
-| Convention  | `ctx add convention "Description"`                                               |
-| Task (new)  | `ctx add task "Description"`                                                     |
+| Type        | Command                                                                                                                         |
+|-------------|--------------------------------------------------------------------------------------------------------------------------------|
+| Learning    | `ctx add learning "Title" --session-id ID --branch BR --commit HASH --context "..." --lesson "..." --application "..."`    |
+| Decision    | `ctx add decision "Title" --session-id ID --branch BR --commit HASH --context "..." --rationale "..." --consequence "..."` |
+| Convention  | `ctx add convention "Description"`                                                                                               |
+| Task (new)  | `ctx add task "Description" --session-id ID --branch BR --commit HASH`                                                     |
 | Task (done) | Edit TASKS.md to mark complete                                                   |
 
 Report the result of each command. If any fail, report the error
