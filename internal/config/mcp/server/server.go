@@ -25,6 +25,9 @@ const (
 const PollIntervalSec = 5
 
 // Args returns the CLI arguments to launch the ctx MCP server.
+//
+// Returns:
+//   - []string: Argument slice for launching the MCP server
 func Args() []string {
 	return []string{"mcp", SubcommandServe}
 }

@@ -21,6 +21,9 @@ const (
 )
 
 // String returns the lowercase label for the severity level.
+//
+// Returns:
+//   - string: "ok", "warning", or "danger"
 func (s Severity) String() string {
 	switch s {
 	case SeverityWarning:

@@ -15,6 +15,10 @@ import (
 
 // PrintReport outputs the sync report to the command
 // output stream.
+//
+// Parameters:
+//   - c: The cobra command for output
+//   - report: The sync report containing written, skipped, and errors
 func PrintReport(
 	c *cobra.Command, report steering.SyncReport,
 ) {

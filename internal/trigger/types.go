@@ -15,6 +15,9 @@ import (
 type HookType = cfgTrigger.TriggerType
 
 // ValidTypes returns all valid trigger type strings.
+//
+// Returns:
+//   - []HookType: Every recognized trigger event type
 func ValidTypes() []HookType {
 	return []HookType{
 		cfgTrigger.PreToolUse,

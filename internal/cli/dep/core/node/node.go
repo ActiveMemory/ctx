@@ -20,12 +20,18 @@ import (
 type Builder struct{}
 
 // Name returns the ecosystem label.
+//
+// Returns:
+//   - string: The Node.js ecosystem identifier
 func (n *Builder) Name() string {
 	return cfgDep.BuilderNode
 }
 
 // Detect returns true if package.json exists in the current
 // directory.
+//
+// Returns:
+//   - bool: True when package.json is present
 func (n *Builder) Detect() bool {
 	_, err := os.Stat(cfgDep.PackageJSON)
 	return err == nil
@@ -71,6 +77,12 @@ type Workspaces struct {
 
 // UnmarshalJSON handles both array and object formats for
 // workspaces.
+//
+// Parameters:
+//   - data: raw JSON bytes to decode
+//
+// Returns:
+//   - error: non-nil if both array and object decoding fail
 func (w *Workspaces) UnmarshalJSON(data []byte) error {
 	var arr []string
 	if unmarshalErr := json.Unmarshal(

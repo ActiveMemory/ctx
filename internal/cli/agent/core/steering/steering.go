@@ -22,6 +22,9 @@ import (
 // returning their bodies as strings. Returns nil
 // when the steering directory does not exist or
 // contains no applicable files.
+//
+// Returns:
+//   - []string: Body content of each matching steering file
 func LoadBodies() []string {
 	steeringDir := rc.SteeringDir()
 
@@ -45,6 +48,13 @@ func LoadBodies() []string {
 
 // LoadSkill loads a named skill and returns its body
 // content. Returns an error if the skill is not found.
+//
+// Parameters:
+//   - name: Skill name to load
+//
+// Returns:
+//   - string: Body content of the loaded skill
+//   - error: Non-nil if the skill is missing or unreadable
 func LoadSkill(name string) (string, error) {
 	skillsDir := filepath.Join(
 		rc.ContextDir(), dir.Skills,

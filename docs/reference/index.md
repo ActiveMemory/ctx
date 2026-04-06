@@ -52,6 +52,13 @@ sensitive values that travel with the project.
 
 ---
 
+### [Audit Conventions](audit-conventions.md)
+
+Common patterns and fixes for the AST compliance tests in
+`internal/audit/`. When a test fails, find the matching section.
+
+---
+
 ### [Version History](versions.md)
 
 Changelog for every `ctx` release.

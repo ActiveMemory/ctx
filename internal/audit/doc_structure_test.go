@@ -15,7 +15,7 @@ import (
 // grandfatheredDocStructure is the number of pre-existing
 // doc structure violations. New code must not add to this
 // count. Reduce it as violations are fixed.
-const grandfatheredDocStructure = 68
+const grandfatheredDocStructure = 0
 
 // TestDocCommentStructure verifies that exported functions
 // with parameters include a "Parameters:" section and

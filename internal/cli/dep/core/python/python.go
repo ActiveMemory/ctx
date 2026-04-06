@@ -24,12 +24,18 @@ import (
 type Builder struct{}
 
 // Name returns the ecosystem label.
+//
+// Returns:
+//   - string: The Python ecosystem identifier
 func (p *Builder) Name() string {
 	return cfgDep.EcosystemPython
 }
 
 // Detect returns true if requirements.txt or pyproject.toml
 // exists.
+//
+// Returns:
+//   - bool: True when a Python manifest file is present
 func (p *Builder) Detect() bool {
 	for _, manifest := range []string{
 		cfgDep.FileRequirements, cfgDep.FilePyproject,

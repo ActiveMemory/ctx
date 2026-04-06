@@ -61,6 +61,9 @@ func Cmd() *cobra.Command {
 //   - hookType: The hook type to test
 //   - toolName: Optional tool name for mock input
 //   - path: Optional file path for mock input
+//
+// Returns:
+//   - error: nil on success, or a hook execution error
 func Run(c *cobra.Command, hookType, toolName, path string) error {
 	// Validate hook type.
 	ht := hookType

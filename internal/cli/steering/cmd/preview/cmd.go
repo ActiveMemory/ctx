@@ -45,6 +45,9 @@ func Cmd() *cobra.Command {
 // Parameters:
 //   - c: The cobra command for output
 //   - prompt: The prompt text to match against
+//
+// Returns:
+//   - error: nil on success, or a steering file loading error
 func Run(c *cobra.Command, prompt string) error {
 	steeringDir := rc.SteeringDir()
 

@@ -106,6 +106,7 @@ nav = [
     "reference/session-journal.md",
     "reference/scratchpad.md",
     "reference/versions.md",
+    "reference/audit-conventions.md",
   ]},
   { "Operations" = [
     "operations/index.md",

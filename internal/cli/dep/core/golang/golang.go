@@ -38,10 +38,16 @@ type GoPackage struct {
 type Builder struct{}
 
 // Name returns the ecosystem label.
+//
+// Returns:
+//   - string: The Go ecosystem identifier
 func (g *Builder) Name() string { return cfgDep.GoBinary }
 
 // Detect returns true if go.mod exists in the current
 // directory.
+//
+// Returns:
+//   - bool: True when go.mod is present
 func (g *Builder) Detect() bool {
 	_, err := os.Stat(cfgDep.GoMod)
 	return err == nil

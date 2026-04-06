@@ -20,6 +20,13 @@ import (
 // LoadAll reads all .md files from the steering directory and parses
 // them into SteeringFile values. Returns an error if the directory
 // cannot be read or any file fails to parse.
+//
+// Parameters:
+//   - steeringDir: path to the directory containing .md files.
+//
+// Returns:
+//   - []*SteeringFile: parsed steering files from the directory.
+//   - error: non-nil if reading or parsing fails.
 func LoadAll(steeringDir string) ([]*SteeringFile, error) {
 	entries, readDirErr := os.ReadDir(steeringDir)
 	if readDirErr != nil {
@@ -59,6 +66,15 @@ func LoadAll(steeringDir string) ([]*SteeringFile, error) {
 //
 // Results are sorted by ascending priority, then alphabetically
 // by name on tie.
+//
+// Parameters:
+//   - files: steering files to filter.
+//   - prompt: user prompt for auto-inclusion matching.
+//   - manualNames: names to include for manual-inclusion files.
+//   - tool: tool name for tool-list filtering; empty skips.
+//
+// Returns:
+//   - []*SteeringFile: filtered and sorted steering files.
 func Filter(
 	files []*SteeringFile, prompt string,
 	manualNames []string, tool string,

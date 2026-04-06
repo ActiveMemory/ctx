@@ -43,6 +43,9 @@ func Cmd() *cobra.Command {
 // Parameters:
 //   - c: The cobra command for output
 //   - source: Path to the source directory containing SKILL.md
+//
+// Returns:
+//   - error: nil on success, or a skill installation error
 func Run(c *cobra.Command, source string) error {
 	skillsDir := filepath.Join(rc.ContextDir(), dir.Skills)
 

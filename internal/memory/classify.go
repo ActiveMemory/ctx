@@ -22,6 +22,9 @@ import (
 //
 // Parameters:
 //   - entry: Parsed memory entry to classify
+//
+// Returns:
+//   - Classification: Target file and matched keywords
 func Classify(entry Entry) Classification {
 	lower := strings.ToLower(entry.Text)
 

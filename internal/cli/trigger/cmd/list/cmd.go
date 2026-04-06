@@ -40,6 +40,9 @@ func Cmd() *cobra.Command {
 //
 // Parameters:
 //   - c: The cobra command for output
+//
+// Returns:
+//   - error: nil on success, or a hook discovery error
 func Run(c *cobra.Command) error {
 	hooksDir := rc.HooksDir()
 

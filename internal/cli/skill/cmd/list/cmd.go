@@ -41,6 +41,9 @@ func Cmd() *cobra.Command {
 //
 // Parameters:
 //   - c: The cobra command for output
+//
+// Returns:
+//   - error: nil on success, or a skill loading error
 func Run(c *cobra.Command) error {
 	skillsDir := filepath.Join(rc.ContextDir(), dir.Skills)
 

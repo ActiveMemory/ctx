@@ -19,6 +19,14 @@ import (
 // Install copies a skill from the source directory into skillsDir/<name>/.
 // The source must contain a valid SKILL.md with parseable YAML frontmatter.
 // The skill name is derived from the parsed frontmatter.
+//
+// Parameters:
+//   - source: path to the directory containing the skill.
+//   - skillsDir: root directory where skills are installed.
+//
+// Returns:
+//   - *Skill: the installed skill metadata.
+//   - error: non-nil if the source is invalid or the copy fails.
 func Install(source, skillsDir string) (*Skill, error) {
 	manifestPath := filepath.Join(source, cfgSkill.SkillManifest)
 
