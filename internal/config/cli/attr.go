@@ -16,6 +16,8 @@ const (
 	AttrLesson = "lesson"
 	// AttrApplication is the "application" attribute on a context-update tag.
 	AttrApplication = "application"
+	// AttrSection is the "section" attribute on a context-update tag.
+	AttrSection = "section"
 	// AttrRationale is the "rationale" attribute on a context-update tag.
 	AttrRationale = "rationale"
 	// AttrConsequence is the "consequence" attribute on a context-update tag.

@@ -62,6 +62,11 @@ func Defs() []proto.Tool {
 							text.DescKeyMCPToolPropPriority),
 						Enum: entry.Priorities,
 					},
+					field.Section: {
+						Type: schema.String,
+						Description: desc.Text(
+							text.DescKeyMCPToolPropSection),
+					},
 				}, EntryAttrProps(
 					text.DescKeyMCPToolPropContext)),
 				Required: []string{cli.AttrType, field.Content},

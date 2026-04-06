@@ -24,8 +24,8 @@ import (
 // Returns:
 //   - string: Normalized section heading (e.g., "## Phase 1")
 func TargetSection(section string) string {
-	if !strings.HasPrefix(section, token.HeadingLevelTwoStart) {
-		return token.HeadingLevelTwoStart + section
+	if !strings.HasPrefix(section, token.HeadingLevelThreeStart) {
+		return token.HeadingLevelThreeStart + section
 	}
 	return section
 }

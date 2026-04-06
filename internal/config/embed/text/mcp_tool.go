@@ -44,6 +44,9 @@ const (
 	// DescKeyMCPToolPropPriority is the text key for mcp tool prop priority
 	// messages.
 	DescKeyMCPToolPropPriority = "mcp.tool-prop-priority"
+	// DescKeyMCPToolPropSection is the text key for mcp tool prop section
+	// messages.
+	DescKeyMCPToolPropSection = "mcp.tool-prop-section"
 	// DescKeyMCPToolPropContext is the text key for mcp tool prop context
 	// messages.
 	DescKeyMCPToolPropContext = "mcp.tool-prop-context"

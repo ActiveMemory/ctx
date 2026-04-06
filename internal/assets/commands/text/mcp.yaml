@@ -112,6 +112,8 @@ mcp.tool-prop-lesson:
   short: Lesson learned (required for learnings)
 mcp.tool-prop-priority:
   short: Priority level (for tasks only)
+mcp.tool-prop-section:
+  short: Target section in TASKS.md (required for tasks, e.g. "Misc")
 mcp.tool-prop-query:
   short: Task number (e.g. '1') or search text to match
 mcp.tool-prop-rationale:

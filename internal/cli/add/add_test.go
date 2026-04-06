@@ -38,7 +38,7 @@ func TestAddCommand(t *testing.T) {
 
 	// Test adding a task
 	addCmd := Cmd()
-	addCmd.SetArgs([]string{"task", "Test task for integration", "--session-id", "test1234", "--branch", "main", "--commit", "abc123"})
+	addCmd.SetArgs([]string{"task", "Test task for integration", "--section", "Misc", "--session-id", "test1234", "--branch", "main", "--commit", "abc123"})
 	if err = addCmd.Execute(); err != nil {
 		t.Fatalf("add task command failed: %v", err)
 	}

@@ -20,6 +20,8 @@ err.add.no-content-provided:
 
     Examples:
     %s
+err.add.section-required:
+  short: 'task requires --section flag to specify target phase (e.g., --section "Misc")'
 err.add.unknown-type:
   short: 'unknown type %q. Valid types: decision, task, learning, convention'
 err.fmt.no-context-dir:

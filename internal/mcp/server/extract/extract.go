@@ -47,6 +47,9 @@ func Opts(args map[string]interface{}) entity.EntryOpts {
 	if v, ok := args[field.Priority].(string); ok {
 		opts.Priority = v
 	}
+	if v, ok := args[field.Section].(string); ok {
+		opts.Section = v
+	}
 	if v, ok := args[cli.AttrContext].(string); ok {
 		opts.Context = v
 	}

@@ -67,7 +67,7 @@ func TestCompactWithTasks(t *testing.T) {
 
 	// Add and complete a task
 	addCmd := add.Cmd()
-	addCmd.SetArgs([]string{"task", "Task to complete", "--session-id", "test1234", "--branch", "main", "--commit", "abc123"})
+	addCmd.SetArgs([]string{"task", "Task to complete", "--section", "Misc", "--session-id", "test1234", "--branch", "main", "--commit", "abc123"})
 	if err := addCmd.Execute(); err != nil {
 		t.Fatalf("add task failed: %v", err)
 	}

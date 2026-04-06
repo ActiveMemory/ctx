@@ -12,6 +12,8 @@ const (
 	Content = "content"
 	// Priority is the task priority level (high, medium, low).
 	Priority = "priority"
+	// Section is the target section for task placement in TASKS.md.
+	Section = "section"
 	// Query is the search text or task number for completion.
 	Query = "query"
 	// Archive controls whether completed tasks are written to archive.
