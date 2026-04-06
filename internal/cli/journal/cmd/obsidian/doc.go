@@ -7,7 +7,6 @@
 // Package obsidian implements the ctx journal obsidian subcommand.
 //
 // [Cmd] builds the cobra.Command with --output flag. [Run]
-// generates an Obsidian vault from journal entries with wikilinks,
-// topic pages, and frontmatter. [BuildVault] handles the file
-// generation pipeline.
+// delegates to core/obsidian.BuildVault to generate an
+// Obsidian vault from journal entries.
 package obsidian

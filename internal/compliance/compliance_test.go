@@ -1044,13 +1044,6 @@ func TestCmdDirPurity(t *testing.T) {
 		return strings.HasPrefix(name, "Run")
 	}
 
-	// Pre-existing violations grandfathered until refactored.
-	// Key: relative path from cli/, value: set of allowed names.
-	grandfathered := map[string]map[string]bool{
-		"journal/cmd/obsidian/run.go": {"BuildVault": true},
-		"remind/cmd/dismiss/run.go":   {"one": true, "every": true},
-	}
-
 	err := filepath.Walk(cliDir, func(path string, info os.FileInfo, walkErr error) error {
 		if walkErr != nil {
 			return walkErr
@@ -1075,16 +1068,11 @@ func TestCmdDirPurity(t *testing.T) {
 			return nil
 		}
 
-		allowed := grandfathered[rel]
-
 		for _, decl := range node.Decls {
 			switch d := decl.(type) {
 			case *ast.FuncDecl:
 				name := d.Name.Name
 				if d.Recv != nil {
-					continue
-				}
-				if allowed[name] {
 					continue
 				}
 				if !d.Name.IsExported() {
@@ -1103,9 +1091,6 @@ func TestCmdDirPurity(t *testing.T) {
 					for _, spec := range d.Specs {
 						ts, ok := spec.(*ast.TypeSpec)
 						if !ok {
-							continue
-						}
-						if allowed[ts.Name.Name] {
 							continue
 						}
 						t.Errorf(

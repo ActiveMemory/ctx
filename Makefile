@@ -228,6 +228,11 @@ register-mcp:
 	@./hack/register-gemini-search.sh
 	@./hack/register-gitnexus.sh
 
+## gitnexus-analyze: Updates gitnexus embeddings and skill.
+gitnexus-analyze:
+	gitnexus analyze --embeddings --skill
+	echo "GitNexus updated AGENTS.md and CLAUDE.md -- DO NOT COMMIT THEM!"
+
 ## gemini-search: Register gemini-search MCP server with Claude Code
 gemini-search:
 	@./hack/register-gemini-search.sh

@@ -27,28 +27,34 @@ TASK STATUS LABELS:
 
 ### Misc
 
-- [ ] gitnexus analyze --embeddings --skill : we need a make target, but also this
-  butchers AGENTS.md and CLAUDE.md so those files need to be reverted and
-  GITNEXUS.md should be updated accordingly. The make target should remind
-  the user about it.
-
-- [ ] SMB mount path support: add `CTX_BACKUP_SMB_MOUNT_PATH` env var so `ctx backup` can use fstab/systemd automounts instead of requiring GVFS. Spec: specs/smb-mount-path-support.md #priority:medium #added:2026-04-04-010000
+- [ ] SMB mount path support: add `CTX_BACKUP_MOUNT_PATH` env var so 
+  `ctx backup` can use fstab/systemd automounts instead of requiring GVFS. 
+  Spec: specs/smb-mount-path-support.md #priority:medium #added:2026-04-04-010000
 
 ### Architecture Docs
 
-- [ ] Publish architecture docs to docs/: copy ARCHITECTURE.md, DETAILED_DESIGN domain files, and CHEAT-SHEETS.md to docs/reference/. Sanitize intervention points into docs/contributing/. Exclude DANGER-ZONES.md and ARCHITECTURE-PRINCIPAL.md (internal only). Spec: specs/publish-architecture-docs.md #priority:medium #added:2026-04-03-150000
+- [ ] Publish architecture docs to docs/: copy ARCHITECTURE.md, 
+  DETAILED_DESIGN domain files, and CHEAT-SHEETS.md to docs/reference/. 
+  Sanitize intervention points into docs/contributing/. 
+  Exclude DANGER-ZONES.md and ARCHITECTURE-PRINCIPAL.md (internal only). 
+  Spec: specs/publish-architecture-docs.md #priority:medium #added:2026-04-03-150000
 
-- [ ] Update ctx-architecture skill to append discovered terms to GLOSSARY.md during Phase 3. Additive only, max 10 terms per run, project-specific only, alphabetical insertion, skip if GLOSSARY.md empty. Print added terms in convergence report. Spec: specs/publish-architecture-docs.md #priority:low #added:2026-04-03-153000
+- [ ] Update ctx-architecture skill to append discovered terms to GLOSSARY.md 
+  during Phase 3. Additive only, max 10 terms per run, project-specific only, 
+  alphabetical insertion, skip if GLOSSARY.md empty. Print added terms in 
+  convergence report. Spec: specs/publish-architecture-docs.md #priority:low #added:2026-04-03-153000
 
 ### Code Cleanup Findings
 
 
-- [ ] Extend flagbind helpers (IntFlag, DurationFlag, DurationFlagP, StringP, BoolP) and migrate ~50 call sites to unblock TestNoFlagBindOutsideFlagbind #added:2026-04-01-233250
+- [x] Extend flagbind helpers (IntFlag, DurationFlag, DurationFlagP, StringP, 
+  BoolP) and migrate ~50 call sites to unblock TestNoFlagBindOutsideFlagbind 
+  #added:2026-04-01-233250
 
 - [ ] Implement journal compaction: Elastic-style tiered storage with tar.gz 
   backup. Spec: specs/journal-compact.md #added:2026-03-31-110005
 
-- [ ] Refactor 28 grandfathered cmd/ purity violations found by 
+- [x] Refactor 28 grandfathered cmd/ purity violations found by 
   TestCmdDirPurity: move unexported helpers, exported non-Cmd/Run functions, 
   and types from cmd/ directories to core/. See grandfathered map in 
   compliance_test.go for the full list. #priority:medium #added:2026-03-31-005115
