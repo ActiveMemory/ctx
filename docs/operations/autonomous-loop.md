@@ -268,7 +268,8 @@ Or emit an update command (parsed by `ctx watch`):
 
 **Add learning:**
 ```bash
-ctx add learning "Rate limiting requires Redis connection"
+ctx add learning "Rate limiting requires Redis connection" \
+  --session-id abc12345 --branch main --commit 68fbc00a
 ```
 
 Or via update command:
@@ -282,7 +283,8 @@ Or via update command:
 
 **Record decision:**
 ```bash
-ctx add decision "Use JWT tokens for API authentication"
+ctx add decision "Use JWT tokens for API authentication" \
+  --session-id abc12345 --branch main --commit 68fbc00a
 ```
 
 ## Advanced: Watch Mode
@@ -375,7 +377,7 @@ End EVERY response with one of:
 ```markdown
 After completing a task, you MUST:
 1. Run: ctx task complete "<task>"
-2. Add learnings: ctx add learning "..."
+2. Add learnings: ctx add learning "..." --session-id abc12345 --branch main --commit 68fbc00a
 ```
 
 ### Tasks Getting Repeated

@@ -20,3 +20,16 @@ const (
 	// groups expected from a context-update match (full match + tag + content).
 	ContextUpdateMinGroups = 3
 )
+
+// Default provenance for watch-originated entries.
+//
+// Watch streams are machine-generated, so entries receive
+// fixed provenance identifying the source as the watch pipeline.
+const (
+	// ProvenanceSessionID is the default session ID for watch entries.
+	ProvenanceSessionID = "watch"
+	// ProvenanceBranch is the default branch for watch entries.
+	ProvenanceBranch = "watch"
+	// ProvenanceCommit is the default commit for watch entries.
+	ProvenanceCommit = "watch"
+)

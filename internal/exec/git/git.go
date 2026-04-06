@@ -97,6 +97,30 @@ func LastCommitMessage() ([]byte, error) {
 	return Run(cfgGit.Log, cfgGit.FlagLast, cfgGit.FormatBody)
 }
 
+// ShortHead returns the abbreviated commit hash for HEAD.
+//
+// Returns:
+//   - string: short commit hash (7-8 chars), or empty on error
+func ShortHead() string {
+	out, err := Run(cfgGit.RevParse, cfgGit.FlagShort, cfgGit.RefHead)
+	if err != nil {
+		return ""
+	}
+	return strings.TrimSpace(string(out))
+}
+
+// CurrentBranch returns the current branch name.
+//
+// Returns:
+//   - string: branch name, or empty if detached or on error
+func CurrentBranch() string {
+	out, err := Run(cfgGit.Branch, cfgGit.FlagShowCurrent)
+	if err != nil {
+		return ""
+	}
+	return strings.TrimSpace(string(out))
+}
+
 // DiffTreeHead returns the list of files changed in HEAD.
 //
 // Returns:

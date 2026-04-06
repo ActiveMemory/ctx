@@ -65,7 +65,10 @@ func Write(params entity.EntryParams) error {
 			params.Content, params.Context, params.Rationale, params.Consequence,
 		)
 	case entry.Task:
-		formatted = format.Task(params.Content, params.Priority)
+		formatted = format.Task(
+			params.Content, params.Priority,
+			params.SessionID, params.Branch, params.Commit,
+		)
 	case entry.Learning:
 		formatted = format.Learning(
 			params.Content, params.Context, params.Lesson, params.Application,

@@ -34,4 +34,7 @@ type ContextUpdate struct {
 	Application string
 	Rationale   string
 	Consequence string
+	SessionID   string
+	Branch      string
+	Commit      string
 }

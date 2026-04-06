@@ -263,10 +263,10 @@ to run:
 I would suggest persisting:
 
 - **Learning**: `$PPID` in PreToolUse hooks resolves to the Claude Code PID
-  `ctx add learning --context "..." --lesson "..." --application "..."`
+  `ctx add learning --context "..." --lesson "..." --application "..." --session-id abc12345 --branch main --commit 68fbc00a`
 - **Task**: mark "Add cooldown to ctx agent" as done
 - **Decision**: tombstone-based cooldown with 10m default
-  `ctx add decision "..."`
+  `ctx add decision "..." --session-id abc12345 --branch main --commit 68fbc00a`
 
 Want me to persist any of these?
 ```

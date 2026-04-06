@@ -14,10 +14,14 @@ add:
     to the appropriate context file.
 
     Types:
-      decision    Add to DECISIONS.md (requires --context, --rationale, --consequence)
-      learning    Add to LEARNINGS.md (requires --context, --lesson, --application)
-      task        Add to TASKS.md
+      decision    Add to DECISIONS.md (requires --session-id, --branch, --commit, --context, --rationale, --consequence)
+      learning    Add to LEARNINGS.md (requires --session-id, --branch, --commit, --context, --lesson, --application)
+      task        Add to TASKS.md (requires --session-id, --branch, --commit)
       convention  Add to CONVENTIONS.md
+
+    Provenance flags (--session-id, --branch, --commit) are required for
+    task, decision, and learning entries. They link entries to the AI
+    session and code state that created them.
 
     Content can be provided as:
       - Command argument: ctx add learning "title here"
@@ -26,14 +30,18 @@ add:
 
     Examples:
       ctx add decision "Use PostgreSQL" \
+        --session-id abc12345 --branch main --commit 68fbc00a \
         --context "Need a reliable database for production" \
         --rationale "PostgreSQL offers ACID compliance and JSON support" \
         --consequence "Team needs PostgreSQL training"
       ctx add learning "Go embed requires files in same package" \
+        --session-id abc12345 --branch main --commit 68fbc00a \
         --context "Tried to embed files from parent directory" \
         --lesson "go:embed only works with files in same or child directories" \
         --application "Keep embedded files in internal/templates/, not project root"
-      ctx add task "Implement user authentication" --priority high
+      ctx add task "Implement user authentication" \
+        --session-id abc12345 --branch main --commit 68fbc00a \
+        --priority high
   short: Add a new item to a context file
 agent:
   long: |-

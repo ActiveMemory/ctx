@@ -53,8 +53,11 @@ func TestApplyUpdate(t *testing.T) {
 		{
 			name: "task update",
 			update: apply.ContextUpdate{
-				Type:    entry.Task,
-				Content: "Test task from watch",
+				Type:      entry.Task,
+				Content:   "Test task from watch",
+				SessionID: "test1234",
+				Branch:    "main",
+				Commit:    "abc123",
 			},
 			checkFile: ctx.Task,
 			checkFor:  "Test task from watch",
@@ -64,6 +67,9 @@ func TestApplyUpdate(t *testing.T) {
 			update: apply.ContextUpdate{
 				Type:        entry.Decision,
 				Content:     "Test decision from watch",
+				SessionID:   "test1234",
+				Branch:      "main",
+				Commit:      "abc123",
 				Context:     "Testing watch functionality",
 				Rationale:   "Need to verify watch applies decisions",
 				Consequence: "Decision will appear in DECISIONS.md",
@@ -76,6 +82,9 @@ func TestApplyUpdate(t *testing.T) {
 			update: apply.ContextUpdate{
 				Type:        entry.Learning,
 				Content:     "Test learning from watch",
+				SessionID:   "test1234",
+				Branch:      "main",
+				Commit:      "abc123",
 				Context:     "Testing watch functionality",
 				Lesson:      "Watch can add learnings",
 				Application: "Use structured attributes in context-update tags",

@@ -191,7 +191,8 @@ conventions: into `.context/` files.
 
 Add an actionable task with optional priority and phase section.
 
-**Wraps**: `ctx add task "description" [--priority high|medium|low]`
+**Wraps**: `ctx add task "description" [--priority high|medium|low]
+--session-id ID --branch BR --commit HASH`
 
 **See also**: [Tracking Work Across Sessions](../recipes/task-management.md)
 
@@ -203,7 +204,7 @@ Record an architectural decision with context, rationale, and
 consequence. Supports Y-statement (lightweight) and full ADR formats.
 
 **Wraps**: `ctx add decision "title" --context "..." --rationale "..."
---consequence "..."`
+--consequence "..." --session-id ID --branch BR --commit HASH`
 
 **See also**:
 [Persisting Decisions, Learnings, and Conventions](../recipes/knowledge-capture.md)
@@ -217,7 +218,7 @@ Filters for insights that are searchable, project-specific, and
 required real effort to discover.
 
 **Wraps**: `ctx add learning "title" --context "..." --lesson "..."
---application "..."`
+--application "..." --session-id ID --branch BR --commit HASH`
 
 **See also**:
 [Persisting Decisions, Learnings, and Conventions](../recipes/knowledge-capture.md)

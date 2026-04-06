@@ -16,23 +16,22 @@ import (
 	"github.com/ActiveMemory/ctx/internal/assets/read/desc"
 	remindStore "github.com/ActiveMemory/ctx/internal/cli/remind/core/store"
 	coreCheck "github.com/ActiveMemory/ctx/internal/cli/system/core/check"
-	"github.com/ActiveMemory/ctx/internal/cli/system/core/message"
 	"github.com/ActiveMemory/ctx/internal/cli/system/core/nudge"
+	coreProv "github.com/ActiveMemory/ctx/internal/cli/system/core/provenance"
 	"github.com/ActiveMemory/ctx/internal/cli/system/core/state"
 	"github.com/ActiveMemory/ctx/internal/config/embed/text"
 	"github.com/ActiveMemory/ctx/internal/config/hook"
 	"github.com/ActiveMemory/ctx/internal/config/reminder"
 	cfgTime "github.com/ActiveMemory/ctx/internal/config/time"
 	"github.com/ActiveMemory/ctx/internal/config/token"
-	"github.com/ActiveMemory/ctx/internal/notify"
-	writeSetup "github.com/ActiveMemory/ctx/internal/write/setup"
 )
 
 // Run executes the check-reminders hook logic.
 //
 // Reads hook input from stdin, loads pending reminders, filters to those
-// that are due today or earlier, then emits a relay box with the reminder
-// list if any are due. Non-fatal on all errors.
+// that are due today or earlier, then emits a relay box with provenance
+// (session, branch, commit) and the reminder list. Provenance is always
+// emitted even when no reminders are due. Non-fatal on all errors.
 //
 // Parameters:
 //   - cmd: Cobra command for output
@@ -41,18 +40,19 @@ import (
 // Returns:
 //   - error: Always nil (hook errors are non-fatal)
 func Run(cmd *cobra.Command, stdin *os.File) error {
-	if !state.Initialized() {
-		return nil
-	}
-
 	input, _, paused := coreCheck.Preamble(stdin)
-	if paused {
+
+	// Provenance is unconditional — always print first,
+	// regardless of initialized/paused state.
+	coreProv.Emit(cmd, input.SessionID)
+
+	if !state.Initialized() || paused {
 		return nil
 	}
 
 	reminders, readErr := remindStore.Read()
-	if readErr != nil {
-		return nil // non-fatal: don't break session start
+	if readErr != nil || len(reminders) == 0 {
+		return nil
 	}
 
 	today := time.Now().Format(cfgTime.DateFormat)
@@ -67,39 +67,32 @@ func Run(cmd *cobra.Command, stdin *os.File) error {
 		return nil
 	}
 
-	// Build a pre-formatted reminder list for the template variable
 	var reminderList string
 	for _, r := range due {
 		reminderList += fmt.Sprintf(
-			desc.Text(text.DescKeyCheckRemindersItemFormat)+token.NewlineLF,
+			desc.Text(text.DescKeyCheckRemindersItemFormat)+
+				token.NewlineLF,
 			r.ID, r.Message,
 		)
 	}
 
 	fallback := reminderList +
 		token.NewlineLF +
-		desc.Text(text.DescKeyCheckRemindersDismissHint) + token.NewlineLF +
+		desc.Text(text.DescKeyCheckRemindersDismissHint) +
+		token.NewlineLF +
 		desc.Text(text.DescKeyCheckRemindersDismissAllHint)
 	vars := map[string]any{reminder.VarList: reminderList}
-	content := message.Load(
-		hook.CheckReminders, hook.VariantReminders, vars, fallback,
+	relayMsg := fmt.Sprintf(
+		desc.Text(text.DescKeyCheckRemindersNudgeFormat),
+		len(due),
 	)
-	if content == "" {
-		return nil
-	}
-
-	writeSetup.Nudge(cmd, message.NudgeBox(
+	nudge.LoadAndEmit(cmd,
+		hook.CheckReminders, hook.VariantReminders,
+		vars, fallback,
 		desc.Text(text.DescKeyCheckRemindersRelayPrefix),
 		desc.Text(text.DescKeyCheckRemindersBoxTitle),
-		content))
-
-	ref := notify.NewTemplateRef(hook.CheckReminders, hook.VariantReminders, vars)
-	nudgeMsg := fmt.Sprintf(
-		desc.Text(text.DescKeyRelayPrefixFormat),
-		hook.CheckReminders,
-		fmt.Sprintf(desc.Text(text.DescKeyCheckRemindersNudgeFormat), len(due)),
+		relayMsg, input.SessionID, "",
 	)
-	nudge.EmitAndRelay(nudgeMsg, input.SessionID, ref)
 
 	return nil
 }

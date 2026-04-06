@@ -16,13 +16,20 @@ grows cluttered with completed checkboxes that obscure the remaining work.
 
 How do you manage work items that span multiple sessions without losing context?
 
+!!! tip "Prefer skills over raw commands"
+    When working with an AI agent, use `/ctx-add-task` instead of raw
+    `ctx add task`. The agent automatically picks up session ID, branch,
+    and commit hash from its context — no manual flags needed.
+
 ## TL;DR
 
 **Manage Tasks**:
 
 ```bash
-ctx add task "Fix race condition" --priority high  # add
-ctx add task "Write tests" --section "Phase 2"     # add to phase
+ctx add task "Fix race condition" --priority high \
+  --session-id abc12345 --branch main --commit 68fbc00a  # add
+ctx add task "Write tests" --section "Phase 2" \
+  --session-id abc12345 --branch main --commit 68fbc00a  # add to phase
 ctx task complete "race condition"                      # mark done
 ctx task snapshot "before-refactor"               # backup
 ctx task archive                                  # clean up
@@ -58,13 +65,16 @@ specific enough that someone unfamiliar with the session could act on them.
 
 ```bash
 # High-priority bug found during code review
-ctx add task "Fix race condition in session cooldown" --priority high
+ctx add task "Fix race condition in session cooldown" --priority high \
+  --session-id abc12345 --branch main --commit 68fbc00a
 
 # Medium-priority feature work
-ctx add task "Add --format json flag to ctx status for CI integration" --priority medium
+ctx add task "Add --format json flag to ctx status for CI integration" --priority medium \
+  --session-id abc12345 --branch main --commit 68fbc00a
 
 # Low-priority cleanup
-ctx add task "Remove deprecated --raw flag from ctx load" --priority low
+ctx add task "Remove deprecated --raw flag from ctx load" --priority low \
+  --session-id abc12345 --branch main --commit 68fbc00a
 ```
 
 The `/ctx-add-task` skill validates your task before recording it. It checks
@@ -115,7 +125,8 @@ Use `--section` when adding a task to a specific phase:
 
 ```bash
 ctx add task "Add ctx watch XML parsing" --priority medium --section \
-    "Phase 2: AI Integration"
+    "Phase 2: AI Integration" \
+    --session-id abc12345 --branch main --commit 68fbc00a
 ```
 
 Without `--section`, the task is inserted before the first unchecked task in
@@ -248,11 +259,11 @@ These conversational prompts replace explicit commands during interactive sessio
 
 | Instead of typing...                   | Just say...                                        |
 |----------------------------------------|----------------------------------------------------|
-| `ctx add task "Write tests for X"`     | "We should add tests for this: track that?"        |
+| `ctx add task "Write tests for X" --session-id ID --branch BR --commit HASH` | "We should add tests for this: track that?"        |
 | `/ctx-next`                            | "What should we work on?"                          |
 | `ctx task complete "rate limiting"`    | "The rate limiter is done, what's next?"           |
 | `ctx task archive`                     | "`TASKS.md` is getting long, can you clean it up?" |
-| `ctx add task ... && ctx add task ...` | "Add follow-ups for what we just built."           |
+| `ctx add task ... --session-id ID --branch BR --commit HASH && ctx add task ...` | "Add follow-ups for what we just built."           |
 
 The agent translates these into the right `ctx` operations behind the scenes.
 
@@ -408,10 +419,12 @@ Agent: Added the cleanup task as high priority. Next up is "Add --section
 
 ```bash
 # Add a task
-ctx add task "Implement rate limiting for API endpoints" --priority high
+ctx add task "Implement rate limiting for API endpoints" --priority high \
+  --session-id abc12345 --branch main --commit 68fbc00a
 
 # Add to a specific phase
-ctx add task "Write integration tests for rate limiter" --section "Phase 2"
+ctx add task "Write integration tests for rate limiter" --section "Phase 2" \
+  --session-id abc12345 --branch main --commit 68fbc00a
 
 # See what to work on
 # (from AI assistant) /ctx-next

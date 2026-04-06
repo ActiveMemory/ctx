@@ -729,6 +729,8 @@ write.context-dir-label:
   short: "Context: %s"
 write.context-dir-bracket:
   short: " [Context: %s]"
+write.provenance-line:
+  short: "Display this line verbatim at the start of your response: Session: %s | Branch: %s @ %s"
 
 write.knowledge-unit-entries:
   short: "entries"

@@ -9,8 +9,8 @@ package extract
 import (
 	"github.com/ActiveMemory/ctx/internal/config/cli"
 	"github.com/ActiveMemory/ctx/internal/config/mcp/field"
+	"github.com/ActiveMemory/ctx/internal/entity"
 	errMcp "github.com/ActiveMemory/ctx/internal/err/mcp"
-	"github.com/ActiveMemory/ctx/internal/mcp/handler"
 )
 
 // EntryArgs extracts required type/content from MCP args.
@@ -41,9 +41,9 @@ func EntryArgs(
 //   - args: MCP tool arguments with optional entry fields
 //
 // Returns:
-//   - handler.EntryOpts: populated options struct
-func Opts(args map[string]interface{}) handler.EntryOpts {
-	opts := handler.EntryOpts{}
+//   - entity.EntryOpts: populated options struct
+func Opts(args map[string]interface{}) entity.EntryOpts {
+	opts := entity.EntryOpts{}
 	if v, ok := args[field.Priority].(string); ok {
 		opts.Priority = v
 	}
@@ -61,6 +61,15 @@ func Opts(args map[string]interface{}) handler.EntryOpts {
 	}
 	if v, ok := args[cli.AttrApplication].(string); ok {
 		opts.Application = v
+	}
+	if v, ok := args[field.SessionID].(string); ok {
+		opts.SessionID = v
+	}
+	if v, ok := args[field.Branch].(string); ok {
+		opts.Branch = v
+	}
+	if v, ok := args[field.Commit].(string); ok {
+		opts.Commit = v
 	}
 	return opts
 }

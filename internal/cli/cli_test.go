@@ -129,6 +129,7 @@ func TestBinaryIntegration(t *testing.T) {
 		addCmd := exec.Command(binaryPath, //nolint:gosec // test binary
 			"add", "learning",
 			"Test learning from integration test",
+			"--session-id", "test1234", "--branch", "main", "--commit", "abc123",
 			"--context", "Testing integration",
 			"--lesson", "Integration tests catch bugs",
 			"--application", "Always run integration tests",

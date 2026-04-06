@@ -10,6 +10,10 @@ package flag
 const (
 	// DescKeyAddApplication is the description key for the add application flag.
 	DescKeyAddApplication = "add.application"
+	// DescKeyAddBranch is the description key for the add branch flag.
+	DescKeyAddBranch = "add.branch"
+	// DescKeyAddCommit is the description key for the add commit flag.
+	DescKeyAddCommit = "add.commit"
 	// DescKeyAddConsequence is the description key for the add consequence flag.
 	DescKeyAddConsequence = "add.consequence"
 	// DescKeyAddContext is the description key for the add context flag.
@@ -24,4 +28,6 @@ const (
 	DescKeyAddRationale = "add.rationale"
 	// DescKeyAddSection is the description key for the add section flag.
 	DescKeyAddSection = "add.section"
+	// DescKeyAddSessionID is the description key for the add session-id flag.
+	DescKeyAddSessionID = "add.session-id"
 )

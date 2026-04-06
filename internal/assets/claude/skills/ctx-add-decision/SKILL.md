@@ -68,9 +68,18 @@ When decisions are **related**:
 
 ## Execution
 
+Provenance flags (`--session-id`, `--branch`, `--commit`) are **required**.
+Get these values from the hook-relayed provenance line in your context
+(e.g., `Session: abc12345 | Branch: main @ 68fbc00a`).
+
+**Prefer this skill over raw `ctx add decision`**: the conversational
+approach lets you automatically pick up session ID, branch, and commit
+from the provenance line already in your context window.
+
 **Quick format:**
 ```bash
 ctx add decision "Use Cobra for CLI framework" \
+  --session-id abc12345 --branch main --commit 68fbc00a \
   --context "Need CLI framework for Go project" \
   --rationale "Better subcommand support than urfave/cli, team familiarity" \
   --consequence "More boilerplate, but clearer command structure"
@@ -79,6 +88,7 @@ ctx add decision "Use Cobra for CLI framework" \
 **Full format with alternatives:**
 ```bash
 ctx add decision "Use PostgreSQL for primary database" \
+  --session-id abc12345 --branch main --commit 68fbc00a \
   --context "Need ACID-compliant database for e-commerce transactions" \
   --rationale "PostgreSQL offers JSONB, full-text search, and team has experience. Chose over MySQL (weaker JSON) and MongoDB (no multi-doc ACID)." \
   --consequence "Single database handles transactions and search. Team needs PostgreSQL-specific training."

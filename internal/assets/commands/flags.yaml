@@ -10,6 +10,10 @@
 
 add.application:
   short: 'Application for learnings: how to apply this going forward (required for learnings)'
+add.branch:
+  short: Git branch name for task provenance
+add.commit:
+  short: Git commit hash for task provenance
 add.consequence:
   short: 'Consequence for decisions: what changes as a result (required for decisions)'
 add.context:
@@ -24,6 +28,8 @@ add.rationale:
   short: 'Rationale for decisions: why this choice over alternatives (required for decisions)'
 add.section:
   short: Target section within file
+add.session-id:
+  short: AI session ID for task provenance
 agent.budget:
   short: Token budget for context packet
 agent.cooldown:

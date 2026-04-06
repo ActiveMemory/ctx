@@ -34,6 +34,9 @@ func addEntry(update ContextUpdate) error {
 		Consequence: update.Consequence,
 		Lesson:      update.Lesson,
 		Application: update.Application,
+		SessionID:   update.SessionID,
+		Branch:      update.Branch,
+		Commit:      update.Commit,
 	}
 
 	// Validate required fields (same as ctx add)

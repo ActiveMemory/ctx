@@ -38,13 +38,24 @@ If the user provides only a title, ask:
 
 ## Execution
 
+Provenance flags (`--session-id`, `--branch`, `--commit`) are **required**.
+Get these values from the hook-relayed provenance line in your context
+(e.g., `Session: abc12345 | Branch: main @ 68fbc00a`).
+
+**Prefer this skill over raw `ctx add learning`**: the conversational
+approach lets you automatically pick up session ID, branch, and commit
+from the provenance line already in your context window.
+
 ```bash
-ctx add learning "Title" --context "..." --lesson "..." --application "..."
+ctx add learning "Title" \
+  --session-id SESSION --branch BRANCH --commit HASH \
+  --context "..." --lesson "..." --application "..."
 ```
 
 **Example: behavioral pattern:**
 ```bash
 ctx add learning "Agent ignores repeated hook output (repetition fatigue)" \
+  --session-id abc12345 --branch main --commit 68fbc00a \
   --context "PreToolUse hook ran ctx agent on every tool use, injecting the same context packet repeatedly. Agent tuned it out and didn't follow conventions." \
   --lesson "Repeated injection causes the agent to ignore the output. A cooldown tombstone emits once per window. A readback instruction creates a behavioral gate harder to skip than silent injection." \
   --application "Use --session \$PPID in hook commands to enable cooldown. Pair context injection with a readback instruction."
@@ -53,6 +64,7 @@ ctx add learning "Agent ignores repeated hook output (repetition fatigue)" \
 **Example: technical gotcha:**
 ```bash
 ctx add learning "go:embed only works with files in same or child directories" \
+  --session-id abc12345 --branch main --commit 68fbc00a \
   --context "Tried to embed files from parent directory, got compile error" \
   --lesson "go:embed paths are relative to the source file and cannot use .. to escape the package" \
   --application "Keep embedded files in internal/assets/ or child directories, not project root"
@@ -61,6 +73,7 @@ ctx add learning "go:embed only works with files in same or child directories" \
 **Example: workflow insight:**
 ```bash
 ctx add learning "ctx init overwrites user content without guard" \
+  --session-id abc12345 --branch main --commit 68fbc00a \
   --context "Commit a9df9dd wiped 18 decisions from DECISIONS.md, replacing with empty template" \
   --lesson "Init treats all context files as templates, but after first use they contain user data" \
   --application "Skip existing files by default, only overwrite with --force"
