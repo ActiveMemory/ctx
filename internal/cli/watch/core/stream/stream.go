@@ -79,6 +79,7 @@ func Process(cmd *cobra.Command, reader io.Reader, dryRun bool) error {
 				update := apply.ContextUpdate{
 					Type:        strings.ToLower(ExtractAttribute(openingTag, cli.AttrType)),
 					Content:     strings.TrimSpace(match[2]),
+					Section:     ExtractAttribute(openingTag, cli.AttrSection),
 					Context:     ExtractAttribute(openingTag, cli.AttrContext),
 					Lesson:      ExtractAttribute(openingTag, cli.AttrLesson),
 					Application: ExtractAttribute(openingTag, cli.AttrApplication),

@@ -21,6 +21,9 @@ const (
 	// DescKeyErrAddNoContentProvided is the text key for err add no content
 	// provided messages.
 	DescKeyErrAddNoContentProvided = "err.add.no-content-provided"
+	// DescKeyErrAddSectionRequired is the text key for err add section required
+	// messages.
+	DescKeyErrAddSectionRequired = "err.add.section-required"
 	// DescKeyErrAddUnknownType is the text key for err add unknown type messages.
 	DescKeyErrAddUnknownType = "err.add.unknown-type"
 )

@@ -345,7 +345,7 @@ func TestToolAdd(t *testing.T) {
 		{
 			name: "add task",
 			args: map[string]interface{}{
-				"type": "task", "content": "Test task",
+				"type": "task", "content": "Test task", "section": "Misc",
 				"session_id": "test1234", "branch": "main", "commit": "abc123",
 			},
 			wantFile:     ctx.Task,
@@ -552,6 +552,7 @@ func TestToolWatchUpdate(t *testing.T) {
 		Arguments: map[string]interface{}{
 			"type":       "task",
 			"content":    "New MCP task from watch",
+			"section":    "Misc",
 			"session_id": "test1234",
 			"branch":     "main",
 			"commit":     "abc123",

@@ -70,6 +70,7 @@ type AddConfig struct {
 //
 // Fields:
 //   - Priority: Priority label (high, medium, low)
+//   - Section: Target section for tasks (required for tasks)
 //   - SessionID: AI session identifier for provenance
 //   - Branch: Git branch name for provenance
 //   - Commit: Git commit hash for provenance
@@ -80,6 +81,7 @@ type AddConfig struct {
 //   - Application: Application field for learnings
 type EntryOpts struct {
 	Priority    string
+	Section     string
 	SessionID   string
 	Branch      string
 	Commit      string

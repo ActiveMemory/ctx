@@ -29,6 +29,7 @@ func addEntry(update ContextUpdate) error {
 	params := entity.EntryParams{
 		Type:        update.Type,
 		Content:     update.Content,
+		Section:     update.Section,
 		Context:     update.Context,
 		Rationale:   update.Rationale,
 		Consequence: update.Consequence,

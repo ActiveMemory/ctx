@@ -63,7 +63,7 @@ func TestRunWatch_WithLogFile(t *testing.T) {
 
 	// Create a log file with context-update commands
 	logContent := `Some output
-<context-update type="task">Task from log file</context-update>
+<context-update type="task" section="Misc">Task from log file</context-update>
 More output
 `
 	logPath := filepath.Join(tmpDir, "test.log")
