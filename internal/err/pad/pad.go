@@ -60,26 +60,6 @@ func EditNoMode() error {
 	)
 }
 
-// BlobAppendNotAllowed returns an error for appending to a blob entry.
-//
-// Returns:
-//   - error: "cannot append to a blob entry"
-func BlobAppendNotAllowed() error {
-	return errors.New(
-		desc.Text(text.DescKeyErrPadBlobAppendNotAllowed),
-	)
-}
-
-// BlobPrependNotAllowed returns an error for prepending to a blob entry.
-//
-// Returns:
-//   - error: "cannot prepend to a blob entry"
-func BlobPrependNotAllowed() error {
-	return errors.New(
-		desc.Text(text.DescKeyErrPadBlobPrependNotAllowed),
-	)
-}
-
 // NotBlobEntry returns an error when a blob operation targets a non-blob.
 //
 // Parameters:

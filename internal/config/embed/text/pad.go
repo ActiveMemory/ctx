@@ -134,6 +134,16 @@ const (
 	DescKeyWritePadResolveHeader = "write.pad-resolve-header"
 )
 
+// DescKeys for scratchpad tag output.
+const (
+	// DescKeyWritePadTagsItem is the text key for write pad tags list item
+	// messages.
+	DescKeyWritePadTagsItem = "write.pad-tags-item"
+	// DescKeyWritePadTagsNone is the text key for write pad tags none
+	// messages.
+	DescKeyWritePadTagsNone = "write.pad-tags-none"
+)
+
 // DescKeys for scratchpad operations.
 const (
 	// DescKeyWritePadKeyCreated is the text key for write pad key created

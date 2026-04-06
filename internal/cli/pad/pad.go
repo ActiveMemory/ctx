@@ -21,10 +21,15 @@ import (
 	"github.com/ActiveMemory/ctx/internal/cli/pad/cmd/rm"
 	"github.com/ActiveMemory/ctx/internal/cli/pad/cmd/root"
 	"github.com/ActiveMemory/ctx/internal/cli/pad/cmd/show"
+	"github.com/ActiveMemory/ctx/internal/cli/pad/cmd/tags"
 	"github.com/ActiveMemory/ctx/internal/cli/pad/core/blob"
 	"github.com/ActiveMemory/ctx/internal/cli/pad/core/store"
+	"github.com/ActiveMemory/ctx/internal/cli/pad/core/tag"
 	"github.com/ActiveMemory/ctx/internal/config/embed/cmd"
+	embedFlag "github.com/ActiveMemory/ctx/internal/config/embed/flag"
 	"github.com/ActiveMemory/ctx/internal/config/embed/text"
+	cFlag "github.com/ActiveMemory/ctx/internal/config/flag"
+	"github.com/ActiveMemory/ctx/internal/flagbind"
 	"github.com/ActiveMemory/ctx/internal/write/pad"
 )
 
@@ -35,6 +40,8 @@ import (
 // Returns:
 //   - *cobra.Command: Configured pad command with subcommands
 func Cmd() *cobra.Command {
+	var tagFilters []string
+
 	short, long := desc.Command(cmd.DescKeyPad)
 	c := &cobra.Command{
 		Use:   cmd.UsePad,
@@ -52,7 +59,11 @@ func Cmd() *cobra.Command {
 				return nil
 			}
 
+			printed := 0
 			for i, entry := range entries {
+				if len(tagFilters) > 0 && !tag.MatchAll(entry, tagFilters) {
+					continue
+				}
 				pad.EntryList(
 					cmd,
 					fmt.Sprintf(
@@ -61,11 +72,21 @@ func Cmd() *cobra.Command {
 						blob.DisplayEntry(entry),
 					),
 				)
+				printed++
+			}
+
+			if printed == 0 {
+				pad.Empty(cmd)
 			}
 
 			return nil
 		},
 	}
+
+	flagbind.StringArrayFlagP(c, &tagFilters,
+		cFlag.Tag, cFlag.ShortTag,
+		embedFlag.DescKeyPadTag,
+	)
 
 	c.AddCommand(show.Cmd())
 	c.AddCommand(add.Cmd())
@@ -76,6 +97,7 @@ func Cmd() *cobra.Command {
 	c.AddCommand(root.Cmd())
 	c.AddCommand(export.Cmd())
 	c.AddCommand(merge.Cmd())
+	c.AddCommand(tags.Cmd())
 
 	return c
 }

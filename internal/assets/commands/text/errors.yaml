@@ -326,10 +326,6 @@ err.notify.send-notification:
   short: 'send test notification: %w'
 err.notify.webhook-empty:
   short: webhook URL cannot be empty
-err.pad.blob-append-not-allowed:
-  short: cannot append to a blob entry
-err.pad.blob-prepend-not-allowed:
-  short: cannot prepend to a blob entry
 err.pad.edit-blob-text-conflict:
   short: --file/--label and positional text/--append/--prepend are mutually exclusive
 err.pad.edit-no-mode:

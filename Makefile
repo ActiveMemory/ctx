@@ -5,7 +5,8 @@
 .PHONY: build test vet fmt lint lint-style lint-drift clean all release build-all help \
 test-coverage smoke site site-feed site-serve site-serve-lan site-setup audit check plugin-reload \
 journal journal-serve journal-serve-lan gpg-fix gpg-test register-mcp reinstall \
-sync-version check-version-sync sync-why check-why sync-copilot-skills check-copilot-skills gemini-search
+sync-version check-version-sync sync-why check-why sync-copilot-skills check-copilot-skills gemini-search \
+gitnexus-version gitnexus-update
 
 # Default binary name and output
 BINARY := ctx
@@ -227,6 +228,23 @@ gpg-test:
 register-mcp:
 	@./hack/register-gemini-search.sh
 	@./hack/register-gitnexus.sh
+
+## gitnexus-version: Check for gitnexus version drift
+gitnexus-version:
+	@INSTALLED=$$(gitnexus --version 2>/dev/null || echo "not installed"); \
+	LATEST=$$(npm view gitnexus version 2>/dev/null || echo "unknown"); \
+	echo "Installed: $$INSTALLED"; \
+	echo "Latest:    $$LATEST"; \
+	if [ "$$INSTALLED" = "$$LATEST" ]; then \
+		echo "Up to date."; \
+	else \
+		echo "Update available — run 'make gitnexus-update'"; \
+	fi
+
+## gitnexus-update: Update gitnexus to latest version
+gitnexus-update:
+	npm install -g gitnexus@latest
+	@echo "Updated to $$(gitnexus --version)"
 
 ## gitnexus-analyze: Updates gitnexus embeddings and skill.
 gitnexus-analyze:

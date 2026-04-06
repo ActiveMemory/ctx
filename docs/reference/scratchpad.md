@@ -52,6 +52,7 @@ Because the key is `.gitignore`d and the data is committed, you get:
 | `ctx pad edit N "text"`           | Replace entry N with new text                          |
 | `ctx pad edit N --append "text"`  | Append text to the end of entry N                      |
 | `ctx pad edit N --prepend "text"` | Prepend text to the beginning of entry N               |
+| `ctx pad edit N --tag tagname`    | Add a tag to entry N                                   |
 | `ctx pad add TEXT --file PATH`    | Ingest a file as a blob entry (TEXT is the label)      |
 | `ctx pad show N --out PATH`       | Write decoded blob content to a file                   |
 | `ctx pad mv N M`                  | Move entry from position N to position M               |
@@ -60,9 +61,15 @@ Because the key is `.gitignore`d and the data is committed, you get:
 | `ctx pad import --blob DIR`       | Import directory files as blob entries                 |
 | `ctx pad export [DIR]`            | Export all blob entries to a directory as files        |
 | `ctx pad merge FILE...`           | Merge entries from other scratchpad files into current |
+| `ctx pad --tag TAG`               | List entries filtered by tag (prefix with `~` to exclude) |
+| `ctx pad tags`                    | List all tags with counts                              |
+| `ctx pad tags --json`             | List all tags with counts as JSON                      |
 
 All commands decrypt on read, operate on plaintext in memory, and
 re-encrypt on write. The key file is never printed to stdout.
+
+For blob entries, `--append`, `--prepend`, and `--tag` modify the
+**label** while preserving the blob data.
 
 ### Examples
 
@@ -88,6 +95,57 @@ ctx pad mv 2 1
 # Clean up
 ctx pad rm 2
 ```
+
+## Tags
+
+Entries can contain `#word` tags for lightweight categorization. Tags are
+convention-based: any `#word` token in an entry's text is a tag. No special
+syntax to add or remove them — use the existing `add` and `edit` commands.
+
+```bash
+# Add tagged entries
+ctx pad add "check DNS propagation #later"
+ctx pad add "deploy hotfix #urgent"
+ctx pad add "review PR #later #ci"
+
+# Filter by tag
+ctx pad --tag later
+#   1. check DNS propagation #later
+#   3. review PR #later #ci
+
+# Exclude a tag
+ctx pad --tag ~later
+#   2. deploy hotfix #urgent
+
+# Multiple filters (AND logic)
+ctx pad --tag later --tag ci
+#   3. review PR #later #ci
+
+# List all tags with counts
+ctx pad tags
+# ci       1
+# later    2
+# urgent   1
+
+# JSON output
+ctx pad tags --json
+# [{"tag":"ci","count":1},{"tag":"later","count":2},{"tag":"urgent","count":1}]
+
+# Add a tag to an existing entry
+ctx pad edit 1 --tag done
+
+# Combine with other operations
+ctx pad edit 1 --append "checked" --tag done
+
+# Remove a tag (replace entry text without the tag)
+ctx pad edit 1 "check DNS propagation"
+```
+
+Entry numbers are preserved when filtering — `ctx pad rm 3` targets the
+same entry regardless of active filters. Tags are case-sensitive and support
+letters, digits, hyphens, and underscores (`#high-priority`, `#v2`, `#my_tag`).
+
+For blob entries, tags are extracted from the label only.
 
 ## Bulk Import and Export
 

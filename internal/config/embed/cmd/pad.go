@@ -26,6 +26,8 @@ const (
 	UsePadRm = "rm N"
 	// UsePadShow is the cobra Use string for the pad show command.
 	UsePadShow = "show N"
+	// UsePadTags is the cobra Use string for the pad tags command.
+	UsePadTags = "tags"
 )
 
 // DescKeys for pad subcommands.
@@ -50,4 +52,6 @@ const (
 	DescKeyPadRm = "pad.rm"
 	// DescKeyPadShow is the description key for the pad show command.
 	DescKeyPadShow = "pad.show"
+	// DescKeyPadTags is the description key for the pad tags command.
+	DescKeyPadTags = "pad.tags"
 )

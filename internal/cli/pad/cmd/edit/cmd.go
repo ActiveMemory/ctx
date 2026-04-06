@@ -16,23 +16,26 @@ import (
 	"github.com/ActiveMemory/ctx/internal/config/embed/cmd"
 	"github.com/ActiveMemory/ctx/internal/config/embed/flag"
 	cFlag "github.com/ActiveMemory/ctx/internal/config/flag"
+	"github.com/ActiveMemory/ctx/internal/config/pad"
 	errPad "github.com/ActiveMemory/ctx/internal/err/pad"
 	"github.com/ActiveMemory/ctx/internal/flagbind"
 )
 
 // Cmd returns the pad edit subcommand.
 //
-// Supports three modes:
+// Supports these modes:
 //   - Replace: ctx pad edit N "text"
 //   - Append:  ctx pad edit N --append "text"
 //   - Prepend: ctx pad edit N --prepend "text"
+//   - Tag:     ctx pad edit N --tag tagname
 //   - Blob file: ctx pad edit N --file ./v2.md
 //   - Blob label: ctx pad edit N --label "new label"
 //
-// The --append and --prepend flags are mutually exclusive
+// The --tag flag can be used alone or combined with other text
+// modes. The --append and --prepend flags are mutually exclusive
 // with each other and with the positional replacement text.
 // The --file and --label flags conflict with
-// positional/--append/--prepend.
+// positional/--append/--prepend/--tag.
 //
 // Returns:
 //   - *cobra.Command: Configured edit subcommand
@@ -41,6 +44,7 @@ func Cmd() *cobra.Command {
 	var prependText string
 	var filePath string
 	var labelText string
+	var tagName string
 
 	short, long := desc.Command(cmd.DescKeyPadEdit)
 	c := &cobra.Command{
@@ -62,10 +66,11 @@ func Cmd() *cobra.Command {
 			hasPrepend := prependText != ""
 			hasFile := filePath != ""
 			hasLabel := labelText != ""
+			hasTag := tagName != ""
 
 			// --file/--label conflict with text modes.
 			if (hasFile || hasLabel) &&
-				(hasPositional || hasAppend || hasPrepend) {
+				(hasPositional || hasAppend || hasPrepend || hasTag) {
 				return errPad.EditBlobTextConflict()
 			}
 
@@ -79,7 +84,8 @@ func Cmd() *cobra.Command {
 				})
 			}
 
-			// Validate mutual exclusivity.
+			// Validate mutual exclusivity among text modes
+			// (--tag is compatible with all, so excluded here).
 			flagCount := 0
 			if hasPositional {
 				flagCount++
@@ -91,31 +97,65 @@ func Cmd() *cobra.Command {
 				flagCount++
 			}
 
-			if flagCount == 0 {
-				return errPad.EditNoMode()
-			}
 			if flagCount > 1 {
 				return errPad.EditTextConflict()
 			}
 
+			// --tag alone is valid (append " #tagname").
+			if flagCount == 0 && !hasTag {
+				return errPad.EditNoMode()
+			}
+
+			// Apply the primary text mode first.
 			switch {
 			case hasAppend:
+				text := appendText
+				if hasTag {
+					text = text + pad.TagPrefixSpace + tagName
+				}
 				return Run(cmd, coreEdit.Opts{
 					N:    n,
-					Text: appendText,
+					Text: text,
 					Mode: coreEdit.ModeAppend,
 				})
 			case hasPrepend:
+				if hasTag {
+					// Apply prepend, then tag via
+					// sequential operations.
+					if runErr := Run(cmd, coreEdit.Opts{
+						N:    n,
+						Text: prependText,
+						Mode: coreEdit.ModePrepend,
+					}); runErr != nil {
+						return runErr
+					}
+					return Run(cmd, coreEdit.Opts{
+						N:    n,
+						Text: pad.TagPrefix + tagName,
+						Mode: coreEdit.ModeAppend,
+					})
+				}
 				return Run(cmd, coreEdit.Opts{
 					N:    n,
 					Text: prependText,
 					Mode: coreEdit.ModePrepend,
 				})
-			default:
+			case hasPositional:
+				text := args[1]
+				if hasTag {
+					text = text + pad.TagPrefixSpace + tagName
+				}
 				return Run(cmd, coreEdit.Opts{
 					N:    n,
-					Text: args[1],
+					Text: text,
 					Mode: coreEdit.ModeReplace,
+				})
+			default:
+				// --tag only: append the tag.
+				return Run(cmd, coreEdit.Opts{
+					N:    n,
+					Text: pad.TagPrefix + tagName,
+					Mode: coreEdit.ModeAppend,
 				})
 			}
 		},
@@ -133,6 +173,10 @@ func Cmd() *cobra.Command {
 	)
 	flagbind.StringFlag(c, &labelText,
 		cFlag.Label, flag.DescKeyPadEditLabel,
+	)
+	flagbind.StringFlagP(c, &tagName,
+		cFlag.Tag, cFlag.ShortTag,
+		flag.DescKeyPadEditTag,
 	)
 
 	return c

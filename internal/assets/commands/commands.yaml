@@ -654,6 +654,8 @@ pad.show:
       ctx pad show 3 --out ./recovered.md
       ctx pad edit 1 --append "$(ctx pad show 3)"
   short: Output raw text of an entry by number
+pad.tags:
+  short: List all tags with counts
 pause:
   long: |-
     Pause all context nudge and reminder hooks for the current session.

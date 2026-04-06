@@ -140,6 +140,8 @@ pad.edit.label:
   short: replace blob label
 pad.edit.prepend:
   short: prepend text to the beginning of the entry
+pad.edit.tag:
+  short: add a tag to the entry
 pad.export.dry-run:
   short: print what would be exported without writing
 pad.export.force:
@@ -152,6 +154,10 @@ pad.merge.key:
   short: path to key file for decrypting input files
 pad.show.out:
   short: write blob content to a file
+pad.tag:
+  short: filter entries by tag (prefix with ~ to exclude)
+pad.tags.json:
+  short: output tags as JSON
 pause.session-id:
   short: Session ID (overrides stdin)
 journal.import.all:

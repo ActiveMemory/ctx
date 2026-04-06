@@ -31,4 +31,10 @@ const (
 	DescKeyPadMergeKey = "pad.merge.key"
 	// DescKeyPadShowOut is the description key for the pad show out flag.
 	DescKeyPadShowOut = "pad.show.out"
+	// DescKeyPadEditTag is the description key for the pad edit tag flag.
+	DescKeyPadEditTag = "pad.edit.tag"
+	// DescKeyPadTag is the description key for the pad tag filter flag.
+	DescKeyPadTag = "pad.tag"
+	// DescKeyPadTagsJSON is the description key for the pad tags json flag.
+	DescKeyPadTagsJSON = "pad.tags.json"
 )

@@ -8,12 +8,6 @@ package text
 
 // DescKeys for scratchpad operations errors.
 const (
-	// DescKeyErrPadBlobAppendNotAllowed is the text key for err pad blob append
-	// not allowed messages.
-	DescKeyErrPadBlobAppendNotAllowed = "err.pad.blob-append-not-allowed"
-	// DescKeyErrPadBlobPrependNotAllowed is the text key for err pad blob prepend
-	// not allowed messages.
-	DescKeyErrPadBlobPrependNotAllowed = "err.pad.blob-prepend-not-allowed"
 	// DescKeyErrPadEditBlobTextConflict is the text key for err pad edit blob
 	// text conflict messages.
 	DescKeyErrPadEditBlobTextConflict = "err.pad.edit-blob-text-conflict"

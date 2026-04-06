@@ -41,6 +41,8 @@ Use the `/ctx-pad` skill to manage entries from inside your AI session.
 | `ctx pad show N --out` | CLI command | Extract a blob entry to a file                 |
 | `ctx pad rm`           | CLI command | Remove an entry                                |
 | `ctx pad mv`           | CLI command | Reorder entries                                |
+| `ctx pad --tag`        | CLI command | Filter entries by tag                          |
+| `ctx pad tags`         | CLI command | List all tags with counts                      |
 | `ctx pad import`       | CLI command | Bulk-import lines from a file (*or stdin*)     |
 | `ctx pad export`       | CLI command | Export all blob entries to a directory         |
 | `/ctx-pad`             | Skill       | Natural language interface to all pad commands |
@@ -187,6 +189,58 @@ ctx pad export --force ./backup
 When a file already exists, a unix timestamp is prepended to the filename
 to avoid collisions. Use `--force` to overwrite instead.
 
+### Step 11: Tag Entries for Organization
+
+Tags let you categorize entries without any structure beyond a `#word`
+token in the text. Add them when creating or editing entries:
+
+```text
+You: "jot down: check DNS propagation #later"
+You: "tag entry 2 as urgent"
+
+Agent: [runs ctx pad edit 2 --tag urgent]
+       "Updated entry 2."
+```
+
+Filter your scratchpad by tag:
+
+```text
+You: "show me everything tagged later"
+
+Agent: [runs ctx pad --tag later]
+       "  1. check DNS propagation #later
+        3. review PR feedback #later #ci"
+```
+
+Entry numbers stay the same when filtering — `ctx pad rm 3` still
+targets entry 3 regardless of active filters.
+
+Exclude a tag with `~`:
+
+```bash
+ctx pad --tag ~later         # everything NOT tagged #later
+ctx pad --tag later --tag ci # entries with BOTH tags (AND logic)
+```
+
+See what tags you're using:
+
+```text
+You: "what tags do I have?"
+
+Agent: [runs ctx pad tags]
+       "ci       1
+        later    2
+        urgent   1"
+```
+
+Tags work on blob entries too — they're extracted from the label:
+
+```bash
+ctx pad add "deploy config #prod" --file ./deploy.yaml
+ctx pad --tag prod
+#   1. deploy config #prod [BLOB]
+```
+
 ## Using `/ctx-pad` in a Session
 
 Invoke the `/ctx-pad` skill first, then describe what you want in natural
@@ -214,6 +268,10 @@ Once the skill is active, it translates intent into commands:
 | "prioritize entry 4" / "move to the top"  | `ctx pad mv 4 1`                        |
 | "import my notes from notes.txt"          | `ctx pad import notes.txt`              |
 | "export all blobs to ./ideas"             | `ctx pad export ./ideas`                |
+| "show entries tagged later"               | `ctx pad --tag later`                   |
+| "show everything except later"            | `ctx pad --tag ~later`                  |
+| "what tags do I have"                     | `ctx pad tags`                          |
+| "tag entry 5 as urgent"                   | `ctx pad edit 5 --tag urgent`           |
 
 !!! tip "When in Doubt, Use the CLI Directly"
     The `ctx pad` commands work the same whether you run them yourself

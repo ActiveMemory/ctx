@@ -38,6 +38,7 @@ func Replace(n int, text string) ([]string, error) {
 }
 
 // Append appends text to the entry at 1-based position n.
+// For blob entries, the text is appended to the label.
 // Returns the updated entries list. The caller owns writing.
 //
 // Parameters:
@@ -46,7 +47,7 @@ func Replace(n int, text string) ([]string, error) {
 //
 // Returns:
 //   - []string: Updated entries list
-//   - error: Non-nil on invalid index, blob entry, or load failure
+//   - error: Non-nil on invalid index or load failure
 func Append(n int, text string) ([]string, error) {
 	entries, loadErr := store.ReadEntries()
 	if loadErr != nil {
@@ -55,14 +56,16 @@ func Append(n int, text string) ([]string, error) {
 	if validErr := validate.Index(n, entries); validErr != nil {
 		return nil, validErr
 	}
-	if blob.Contains(entries[n-1]) {
-		return nil, errPad.BlobAppendNotAllowed()
+	if label, data, ok := blob.Split(entries[n-1]); ok {
+		entries[n-1] = blob.Make(label+" "+text, data)
+	} else {
+		entries[n-1] = entries[n-1] + " " + text
 	}
-	entries[n-1] = entries[n-1] + " " + text
 	return entries, nil
 }
 
 // Prepend prepends text to the entry at 1-based position n.
+// For blob entries, the text is prepended to the label.
 // Returns the updated entries list. The caller owns writing.
 //
 // Parameters:
@@ -71,7 +74,7 @@ func Append(n int, text string) ([]string, error) {
 //
 // Returns:
 //   - []string: Updated entries list
-//   - error: Non-nil on invalid index, blob entry, or load failure
+//   - error: Non-nil on invalid index or load failure
 func Prepend(n int, text string) ([]string, error) {
 	entries, loadErr := store.ReadEntries()
 	if loadErr != nil {
@@ -80,10 +83,11 @@ func Prepend(n int, text string) ([]string, error) {
 	if validErr := validate.Index(n, entries); validErr != nil {
 		return nil, validErr
 	}
-	if blob.Contains(entries[n-1]) {
-		return nil, errPad.BlobPrependNotAllowed()
+	if label, data, ok := blob.Split(entries[n-1]); ok {
+		entries[n-1] = blob.Make(text+" "+label, data)
+	} else {
+		entries[n-1] = text + " " + entries[n-1]
 	}
-	entries[n-1] = text + " " + entries[n-1]
 	return entries, nil
 }
 

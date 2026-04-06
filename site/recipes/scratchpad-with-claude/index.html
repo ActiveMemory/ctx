@@ -1980,6 +1980,17 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#step-11-tag-entries-for-organization" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 11: Tag Entries for Organization
+      
+    </span>
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -3953,6 +3964,17 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#step-11-tag-entries-for-organization" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 11: Tag Entries for Organization
+      
+    </span>
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -4174,6 +4196,16 @@ polluting your structured context files?</strong></p>
 <td>Reorder entries</td>
 </tr>
 <tr>
+<td><code>ctx pad --tag</code></td>
+<td>CLI command</td>
+<td>Filter entries by tag</td>
+</tr>
+<tr>
+<td><code>ctx pad tags</code></td>
+<td>CLI command</td>
+<td>List all tags with counts</td>
+</tr>
+<tr>
 <td><code>ctx pad import</code></td>
 <td>CLI command</td>
 <td>Bulk-import lines from a file (<em>or stdin</em>)</td>
@@ -4288,13 +4320,48 @@ label becomes the filename:</p>
 </span></code></pre></div>
 <p>When a file already exists, a unix timestamp is prepended to the filename
 to avoid collisions. Use <code>--force</code> to overwrite instead.</p>
+<h3 id="step-11-tag-entries-for-organization">Step 11: Tag Entries for Organization<a class="headerlink" href="#step-11-tag-entries-for-organization" title="Permanent link">&para;</a></h3>
+<p>Tags let you categorize entries without any structure beyond a <code>#word</code>
+token in the text. Add them when creating or editing entries:</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-12-1"><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a>You: &quot;jot down: check DNS propagation #later&quot;
+</span><span id="__span-12-2"><a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a>You: &quot;tag entry 2 as urgent&quot;
+</span><span id="__span-12-3"><a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a>
+</span><span id="__span-12-4"><a id="__codelineno-12-4" name="__codelineno-12-4" href="#__codelineno-12-4"></a>Agent: [runs ctx pad edit 2 --tag urgent]
+</span><span id="__span-12-5"><a id="__codelineno-12-5" name="__codelineno-12-5" href="#__codelineno-12-5"></a>       &quot;Updated entry 2.&quot;
+</span></code></pre></div>
+<p>Filter your scratchpad by tag:</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-13-1"><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a>You: &quot;show me everything tagged later&quot;
+</span><span id="__span-13-2"><a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a>
+</span><span id="__span-13-3"><a id="__codelineno-13-3" name="__codelineno-13-3" href="#__codelineno-13-3"></a>Agent: [runs ctx pad --tag later]
+</span><span id="__span-13-4"><a id="__codelineno-13-4" name="__codelineno-13-4" href="#__codelineno-13-4"></a>       &quot;  1. check DNS propagation #later
+</span><span id="__span-13-5"><a id="__codelineno-13-5" name="__codelineno-13-5" href="#__codelineno-13-5"></a>        3. review PR feedback #later #ci&quot;
+</span></code></pre></div>
+<p>Entry numbers stay the same when filtering — <code>ctx pad rm 3</code> still
+targets entry 3 regardless of active filters.</p>
+<p>Exclude a tag with <code>~</code>:</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-14-1"><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a>ctx<span class="w"> </span>pad<span class="w"> </span>--tag<span class="w"> </span>~later<span class="w">         </span><span class="c1"># everything NOT tagged #later</span>
+</span><span id="__span-14-2"><a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a>ctx<span class="w"> </span>pad<span class="w"> </span>--tag<span class="w"> </span>later<span class="w"> </span>--tag<span class="w"> </span>ci<span class="w"> </span><span class="c1"># entries with BOTH tags (AND logic)</span>
+</span></code></pre></div>
+<p>See what tags you're using:</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-15-1"><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a>You: &quot;what tags do I have?&quot;
+</span><span id="__span-15-2"><a id="__codelineno-15-2" name="__codelineno-15-2" href="#__codelineno-15-2"></a>
+</span><span id="__span-15-3"><a id="__codelineno-15-3" name="__codelineno-15-3" href="#__codelineno-15-3"></a>Agent: [runs ctx pad tags]
+</span><span id="__span-15-4"><a id="__codelineno-15-4" name="__codelineno-15-4" href="#__codelineno-15-4"></a>       &quot;ci       1
+</span><span id="__span-15-5"><a id="__codelineno-15-5" name="__codelineno-15-5" href="#__codelineno-15-5"></a>        later    2
+</span><span id="__span-15-6"><a id="__codelineno-15-6" name="__codelineno-15-6" href="#__codelineno-15-6"></a>        urgent   1&quot;
+</span></code></pre></div>
+<p>Tags work on blob entries too — they're extracted from the label:</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-16-1"><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a>ctx<span class="w"> </span>pad<span class="w"> </span>add<span class="w"> </span><span class="s2">&quot;deploy config #prod&quot;</span><span class="w"> </span>--file<span class="w"> </span>./deploy.yaml
+</span><span id="__span-16-2"><a id="__codelineno-16-2" name="__codelineno-16-2" href="#__codelineno-16-2"></a>ctx<span class="w"> </span>pad<span class="w"> </span>--tag<span class="w"> </span>prod
+</span><span id="__span-16-3"><a id="__codelineno-16-3" name="__codelineno-16-3" href="#__codelineno-16-3"></a><span class="c1">#   1. deploy config #prod [BLOB]</span>
+</span></code></pre></div>
 <h2 id="using-ctx-pad-in-a-session">Using <code>/ctx-pad</code> in a Session<a class="headerlink" href="#using-ctx-pad-in-a-session" title="Permanent link">&para;</a></h2>
 <p>Invoke the <code>/ctx-pad</code> skill first, then describe what you want in natural
 language. Without the skill prefix, the agent may route your request to
 <code>TASKS.md</code> or another context file instead of the scratchpad.</p>
-<div class="language-text highlight"><pre><span></span><code><span id="__span-12-1"><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a>You: /ctx-pad jot down: check DNS after deploy
-</span><span id="__span-12-2"><a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a>You: /ctx-pad show my scratchpad
-</span><span id="__span-12-3"><a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a>You: /ctx-pad delete entry 3
+<div class="language-text highlight"><pre><span></span><code><span id="__span-17-1"><a id="__codelineno-17-1" name="__codelineno-17-1" href="#__codelineno-17-1"></a>You: /ctx-pad jot down: check DNS after deploy
+</span><span id="__span-17-2"><a id="__codelineno-17-2" name="__codelineno-17-2" href="#__codelineno-17-2"></a>You: /ctx-pad show my scratchpad
+</span><span id="__span-17-3"><a id="__codelineno-17-3" name="__codelineno-17-3" href="#__codelineno-17-3"></a>You: /ctx-pad delete entry 3
 </span></code></pre></div>
 <p>Once the skill is active, it translates intent into commands:</p>
 <table>
@@ -4348,6 +4415,22 @@ language. Without the skill prefix, the agent may route your request to
 <tr>
 <td>"export all blobs to ./ideas"</td>
 <td><code>ctx pad export ./ideas</code></td>
+</tr>
+<tr>
+<td>"show entries tagged later"</td>
+<td><code>ctx pad --tag later</code></td>
+</tr>
+<tr>
+<td>"show everything except later"</td>
+<td><code>ctx pad --tag ~later</code></td>
+</tr>
+<tr>
+<td>"what tags do I have"</td>
+<td><code>ctx pad tags</code></td>
+</tr>
+<tr>
+<td>"tag entry 5 as urgent"</td>
+<td><code>ctx pad edit 5 --tag urgent</code></td>
 </tr>
 </tbody>
 </table>

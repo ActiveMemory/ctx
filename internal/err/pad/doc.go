@@ -9,6 +9,5 @@
 // Error constructors return structured errors with context for
 // user-facing messages routed through internal/assets text lookups.
 // Exports: [EntryRange], [EditBlobTextConflict],
-// [EditTextConflict], [EditNoMode],
-// [BlobAppendNotAllowed], [BlobPrependNotAllowed].
+// [EditTextConflict], [EditNoMode].
 package pad

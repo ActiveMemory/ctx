@@ -658,7 +658,7 @@ func TestCmd_HasSubcommands(t *testing.T) {
 	for _, expected := range []string{
 		"show N", "add TEXT", "rm N",
 		"edit N [TEXT]", "mv N M", "resolve",
-		"import FILE", "export [DIR]",
+		"import FILE", "export [DIR]", "tags",
 	} {
 		if !names[expected] {
 			t.Errorf("missing subcommand %q", expected)
@@ -1639,7 +1639,7 @@ func TestEdit_BlobReplaceBoth(t *testing.T) {
 	}
 }
 
-func TestEdit_AppendOnBlobErrors(t *testing.T) {
+func TestEdit_AppendOnBlobModifiesLabel(t *testing.T) {
 	tmpDir := setupEncrypted(t)
 
 	testFile := filepath.Join(tmpDir, "blob.txt")
@@ -1652,16 +1652,23 @@ func TestEdit_AppendOnBlobErrors(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	_, err := runCmd(newPadCmd("edit", "1", "--append", "suffix"))
-	if err == nil {
-		t.Fatal("expected error for --append on blob entry")
+	if _, err := runCmd(newPadCmd("edit", "1", "--append", "#tagged")); err != nil {
+		t.Fatalf("append on blob should succeed: %v", err)
 	}
-	if !strings.Contains(err.Error(), "cannot append to a blob entry") {
-		t.Errorf("error = %q, want 'cannot append to a blob entry'", err.Error())
+
+	out, err := runCmd(newPadCmd())
+	if err != nil {
+		t.Fatal(err)
+	}
+	if !strings.Contains(out, "my blob #tagged") {
+		t.Errorf("output = %q, want label with appended text", out)
+	}
+	if !strings.Contains(out, "[BLOB]") {
+		t.Error("blob marker should still be present")
 	}
 }
 
-func TestEdit_PrependOnBlobErrors(t *testing.T) {
+func TestEdit_PrependOnBlobModifiesLabel(t *testing.T) {
 	tmpDir := setupEncrypted(t)
 
 	testFile := filepath.Join(tmpDir, "blob.txt")
@@ -1674,12 +1681,51 @@ func TestEdit_PrependOnBlobErrors(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	_, err := runCmd(newPadCmd("edit", "1", "--prepend", "prefix"))
-	if err == nil {
-		t.Fatal("expected error for --prepend on blob entry")
+	if _, err := runCmd(newPadCmd("edit", "1", "--prepend", "URGENT:")); err != nil {
+		t.Fatalf("prepend on blob should succeed: %v", err)
 	}
-	if !strings.Contains(err.Error(), "cannot prepend to a blob entry") {
-		t.Errorf("error = %q, want 'cannot prepend to a blob entry'", err.Error())
+
+	out, err := runCmd(newPadCmd())
+	if err != nil {
+		t.Fatal(err)
+	}
+	if !strings.Contains(out, "URGENT: my blob") {
+		t.Errorf("output = %q, want label with prepended text", out)
+	}
+	if !strings.Contains(out, "[BLOB]") {
+		t.Error("blob marker should still be present")
+	}
+}
+
+func TestEdit_AppendOnBlobPreservesData(t *testing.T) {
+	tmpDir := setupEncrypted(t)
+
+	testFile := filepath.Join(tmpDir, "blob.txt")
+	original := []byte("precious data")
+	if err := os.WriteFile(testFile, original, 0600); err != nil {
+		t.Fatal(err)
+	}
+	if _, err := runCmd(newPadCmd(
+		"add", "--file", testFile, "my blob",
+	)); err != nil {
+		t.Fatal(err)
+	}
+
+	if _, err := runCmd(newPadCmd("edit", "1", "--append", "#done")); err != nil {
+		t.Fatal(err)
+	}
+
+	// Extract and verify data is intact
+	outFile := filepath.Join(tmpDir, "out.txt")
+	if _, err := runCmd(newPadCmd("show", "1", "--out", outFile)); err != nil {
+		t.Fatal(err)
+	}
+	got, err := os.ReadFile(outFile)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if string(got) != string(original) {
+		t.Errorf("blob data = %q, want %q", got, original)
 	}
 }
 
@@ -2907,6 +2953,348 @@ func TestMerge_EncryptedWithBlobDedup(t *testing.T) {
 	// blob is duplicate, "new-text" is new.
 	if !strings.Contains(out, "Merged 1 new entry.") {
 		t.Errorf("output = %q, want encrypted blob dedup", out)
+	}
+}
+
+func TestTagFilter_SingleTag(t *testing.T) {
+	setupPlaintext(t)
+
+	for _, e := range []string{
+		"fix flaky test #later",
+		"deploy hotfix #urgent",
+		"review PR #later #ci",
+	} {
+		if _, err := runCmd(newPadCmd("add", e)); err != nil {
+			t.Fatal(err)
+		}
+	}
+
+	out, err := runCmd(newPadCmd("--tag", "later"))
+	if err != nil {
+		t.Fatalf("tag filter error: %v", err)
+	}
+	if !strings.Contains(out, "fix flaky test #later") {
+		t.Error("expected entry 1 in output")
+	}
+	if strings.Contains(out, "deploy hotfix") {
+		t.Error("entry 2 should be filtered out")
+	}
+	if !strings.Contains(out, "review PR #later #ci") {
+		t.Error("expected entry 3 in output")
+	}
+}
+
+func TestTagFilter_PreservesOriginalNumbering(t *testing.T) {
+	setupPlaintext(t)
+
+	for _, e := range []string{
+		"first entry",
+		"second #tagged",
+		"third entry",
+	} {
+		if _, err := runCmd(newPadCmd("add", e)); err != nil {
+			t.Fatal(err)
+		}
+	}
+
+	out, err := runCmd(newPadCmd("--tag", "tagged"))
+	if err != nil {
+		t.Fatalf("tag filter error: %v", err)
+	}
+	// Entry 2 should keep its original number
+	if !strings.Contains(out, "2.") {
+		t.Error("expected original entry number 2")
+	}
+	if strings.Contains(out, "1.") {
+		t.Error("entry 1 should be filtered out")
+	}
+}
+
+func TestTagFilter_Negation(t *testing.T) {
+	setupPlaintext(t)
+
+	for _, e := range []string{
+		"fix test #later",
+		"deploy now #urgent",
+	} {
+		if _, err := runCmd(newPadCmd("add", e)); err != nil {
+			t.Fatal(err)
+		}
+	}
+
+	out, err := runCmd(newPadCmd("--tag", "~later"))
+	if err != nil {
+		t.Fatalf("tag filter error: %v", err)
+	}
+	if strings.Contains(out, "fix test") {
+		t.Error("entry with #later should be excluded")
+	}
+	if !strings.Contains(out, "deploy now") {
+		t.Error("expected entry without #later")
+	}
+}
+
+func TestTagFilter_MultipleAND(t *testing.T) {
+	setupPlaintext(t)
+
+	for _, e := range []string{
+		"task #later #ci",
+		"task #later",
+		"task #ci",
+	} {
+		if _, err := runCmd(newPadCmd("add", e)); err != nil {
+			t.Fatal(err)
+		}
+	}
+
+	out, err := runCmd(newPadCmd("--tag", "later", "--tag", "ci"))
+	if err != nil {
+		t.Fatalf("tag filter error: %v", err)
+	}
+	if !strings.Contains(out, "1.") {
+		t.Error("expected entry 1 (has both tags)")
+	}
+	if strings.Contains(out, "2.") {
+		t.Error("entry 2 should be filtered (missing #ci)")
+	}
+	if strings.Contains(out, "3.") {
+		t.Error("entry 3 should be filtered (missing #later)")
+	}
+}
+
+func TestTagFilter_NoMatches(t *testing.T) {
+	setupPlaintext(t)
+
+	if _, err := runCmd(newPadCmd("add", "no tags here")); err != nil {
+		t.Fatal(err)
+	}
+
+	out, err := runCmd(newPadCmd("--tag", "missing"))
+	if err != nil {
+		t.Fatalf("tag filter error: %v", err)
+	}
+	if !strings.Contains(out, "empty") {
+		t.Errorf("expected empty message, got %q", out)
+	}
+}
+
+func TestTags_ListAll(t *testing.T) {
+	setupPlaintext(t)
+
+	for _, e := range []string{
+		"fix test #later #ci",
+		"deploy #urgent",
+		"review #later",
+	} {
+		if _, err := runCmd(newPadCmd("add", e)); err != nil {
+			t.Fatal(err)
+		}
+	}
+
+	out, err := runCmd(newPadCmd("tags"))
+	if err != nil {
+		t.Fatalf("tags error: %v", err)
+	}
+	if !strings.Contains(out, "ci\t1") {
+		t.Error("expected ci with count 1")
+	}
+	if !strings.Contains(out, "later\t2") {
+		t.Error("expected later with count 2")
+	}
+	if !strings.Contains(out, "urgent\t1") {
+		t.Error("expected urgent with count 1")
+	}
+}
+
+func TestTags_Empty(t *testing.T) {
+	setupPlaintext(t)
+
+	out, err := runCmd(newPadCmd("tags"))
+	if err != nil {
+		t.Fatalf("tags error: %v", err)
+	}
+	if !strings.Contains(out, "No tags") {
+		t.Errorf("expected no tags message, got %q", out)
+	}
+}
+
+func TestTags_NoTagEntries(t *testing.T) {
+	setupPlaintext(t)
+
+	if _, err := runCmd(newPadCmd("add", "plain entry")); err != nil {
+		t.Fatal(err)
+	}
+
+	out, err := runCmd(newPadCmd("tags"))
+	if err != nil {
+		t.Fatalf("tags error: %v", err)
+	}
+	if !strings.Contains(out, "No tags") {
+		t.Errorf("expected no tags message, got %q", out)
+	}
+}
+
+func TestTags_JSON(t *testing.T) {
+	setupPlaintext(t)
+
+	for _, e := range []string{
+		"fix #later",
+		"deploy #urgent",
+		"review #later",
+	} {
+		if _, err := runCmd(newPadCmd("add", e)); err != nil {
+			t.Fatal(err)
+		}
+	}
+
+	out, err := runCmd(newPadCmd("tags", "--json"))
+	if err != nil {
+		t.Fatalf("tags json error: %v", err)
+	}
+	if !strings.Contains(out, `"tag":"later"`) {
+		t.Error("expected later in JSON output")
+	}
+	if !strings.Contains(out, `"count":2`) {
+		t.Error("expected count 2 in JSON output")
+	}
+}
+
+func TestTags_Alphabetical(t *testing.T) {
+	setupPlaintext(t)
+
+	for _, e := range []string{
+		"entry #zebra",
+		"entry #alpha",
+		"entry #middle",
+	} {
+		if _, err := runCmd(newPadCmd("add", e)); err != nil {
+			t.Fatal(err)
+		}
+	}
+
+	out, err := runCmd(newPadCmd("tags"))
+	if err != nil {
+		t.Fatalf("tags error: %v", err)
+	}
+	alphaIdx := strings.Index(out, "alpha")
+	middleIdx := strings.Index(out, "middle")
+	zebraIdx := strings.Index(out, "zebra")
+	if alphaIdx > middleIdx || middleIdx > zebraIdx {
+		t.Errorf("tags not alphabetical: %q", out)
+	}
+}
+
+func TestEdit_TagAlone(t *testing.T) {
+	setupPlaintext(t)
+
+	if _, err := runCmd(newPadCmd("add", "fix flaky test")); err != nil {
+		t.Fatal(err)
+	}
+
+	if _, err := runCmd(newPadCmd("edit", "1", "--tag", "later")); err != nil {
+		t.Fatalf("--tag alone should work: %v", err)
+	}
+
+	out, err := runCmd(newPadCmd())
+	if err != nil {
+		t.Fatal(err)
+	}
+	if !strings.Contains(out, "fix flaky test #later") {
+		t.Errorf("output = %q, want entry with #later appended", out)
+	}
+}
+
+func TestEdit_TagWithAppend(t *testing.T) {
+	setupPlaintext(t)
+
+	if _, err := runCmd(newPadCmd("add", "deploy")); err != nil {
+		t.Fatal(err)
+	}
+
+	if _, err := runCmd(newPadCmd(
+		"edit", "1", "--append", "to staging", "--tag", "urgent",
+	)); err != nil {
+		t.Fatalf("--tag with --append should work: %v", err)
+	}
+
+	out, err := runCmd(newPadCmd())
+	if err != nil {
+		t.Fatal(err)
+	}
+	if !strings.Contains(out, "deploy to staging #urgent") {
+		t.Errorf("output = %q, want appended text with tag", out)
+	}
+}
+
+func TestEdit_TagWithReplace(t *testing.T) {
+	setupPlaintext(t)
+
+	if _, err := runCmd(newPadCmd("add", "old text")); err != nil {
+		t.Fatal(err)
+	}
+
+	if _, err := runCmd(newPadCmd(
+		"edit", "1", "new text", "--tag", "done",
+	)); err != nil {
+		t.Fatalf("--tag with replace should work: %v", err)
+	}
+
+	out, err := runCmd(newPadCmd())
+	if err != nil {
+		t.Fatal(err)
+	}
+	if !strings.Contains(out, "new text #done") {
+		t.Errorf("output = %q, want replaced text with tag", out)
+	}
+}
+
+func TestEdit_TagOnBlob(t *testing.T) {
+	tmpDir := setupEncrypted(t)
+
+	testFile := filepath.Join(tmpDir, "blob.txt")
+	if err := os.WriteFile(testFile, []byte("data"), 0600); err != nil {
+		t.Fatal(err)
+	}
+	if _, err := runCmd(newPadCmd(
+		"add", "--file", testFile, "my blob",
+	)); err != nil {
+		t.Fatal(err)
+	}
+
+	if _, err := runCmd(newPadCmd("edit", "1", "--tag", "archived")); err != nil {
+		t.Fatalf("--tag on blob should work: %v", err)
+	}
+
+	out, err := runCmd(newPadCmd())
+	if err != nil {
+		t.Fatal(err)
+	}
+	if !strings.Contains(out, "my blob #archived") {
+		t.Errorf("output = %q, want blob label with tag", out)
+	}
+	if !strings.Contains(out, "[BLOB]") {
+		t.Error("blob marker should still be present")
+	}
+}
+
+func TestEdit_TagConflictsWithFile(t *testing.T) {
+	tmpDir := setupEncrypted(t)
+
+	testFile := filepath.Join(tmpDir, "blob.txt")
+	if err := os.WriteFile(testFile, []byte("data"), 0600); err != nil {
+		t.Fatal(err)
+	}
+	if _, err := runCmd(newPadCmd(
+		"add", "--file", testFile, "my blob",
+	)); err != nil {
+		t.Fatal(err)
+	}
+
+	_, err := runCmd(newPadCmd(
+		"edit", "1", "--file", testFile, "--tag", "x",
+	))
+	if err == nil {
+		t.Fatal("expected error for --tag with --file")
 	}
 }
 

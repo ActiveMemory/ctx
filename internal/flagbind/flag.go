@@ -196,6 +196,21 @@ func PersistentStringFlag(
 	)
 }
 
+// StringArrayFlagP registers a string array flag with a shorthand
+// letter. The flag can be repeated: --tag x --tag y.
+//
+// Parameters:
+//   - c: Cobra command to register on
+//   - p: Pointer to the string slice variable
+//   - name: Flag name constant
+//   - short: Shorthand letter
+//   - descKey: YAML DescKey for the flag description
+func StringArrayFlagP(
+	c *cobra.Command, p *[]string, name, short, descKey string,
+) {
+	c.Flags().StringArrayVarP(p, name, short, nil, desc.Flag(descKey))
+}
+
 // BoolFlagNoPtr registers a boolean flag with no
 // shorthand and no pointer, defaulting to false.
 // Use when the value is retrieved via
