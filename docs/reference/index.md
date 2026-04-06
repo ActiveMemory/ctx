@@ -17,6 +17,13 @@ and contributors.
 
 ---
 
+### [Code Conventions](audit-conventions.md)
+
+Common patterns and fixes for the AST compliance tests in
+`internal/audit/`. When a test fails, find the matching section.
+
+---
+
 ### [CLI](../cli/index.md)
 
 Every command, subcommand, and flag.
@@ -49,13 +56,6 @@ the journal site, Obsidian export, and the enrichment pipeline.
 
 Encrypted, git-tracked scratch space for short notes and
 sensitive values that travel with the project.
-
----
-
-### [Audit Conventions](audit-conventions.md)
-
-Common patterns and fixes for the AST compliance tests in
-`internal/audit/`. When a test fails, find the matching section.
 
 ---
 
