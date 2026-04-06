@@ -4,7 +4,22 @@
   <link href="https://ctx.ist/blog/"></link>
   <link href="https://ctx.ist/feed.xml" rel="self"></link>
   <id>https://ctx.ist/feed.xml</id>
-  <updated>2026-04-02T00:00:00Z</updated>
+  <updated>2026-04-06T00:00:00Z</updated>
+  <entry>
+    <title>The Watermelon-Rind Anti-Pattern: Why Smarter Tools Make Shallower Agents</title>
+    <link href="https://ctx.ist/blog/2026-04-06-the-watermelon-rind-anti-pattern/"></link>
+    <id>https://ctx.ist/blog/2026-04-06-the-watermelon-rind-anti-pattern/</id>
+    <updated>2026-04-06T00:00:00Z</updated>
+    <summary>about your codebase except what actually matters.**</summary>
+    <author>
+      <name>Jose Alekhinne</name>
+    </author>
+    <category term="architecture"></category>
+    <category term="code intelligence"></category>
+    <category term="agent behavior"></category>
+    <category term="design patterns"></category>
+    <category term="field notes"></category>
+  </entry>
   <entry>
     <title>Code Structure as an Agent Interface: What 19 AST Tests Taught Us About Agent-Readable Code</title>
     <link href="https://ctx.ist/blog/2026-04-02-code-structure-as-an-agent-interface/"></link>

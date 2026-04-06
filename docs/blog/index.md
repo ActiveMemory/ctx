@@ -27,11 +27,11 @@ auto-memory to `.context/`.
 
 ### [The Watermelon-Rind Anti-Pattern: Why Smarter Tools Make Shallower Agents](2026-04-06-the-watermelon-rind-anti-pattern.md)
 
-*April 6, 2026*: Give an agent a graph query tool and it produces output
-that's structurally correct but substantively hollow — the watermelon-rind
-anti-pattern. We ran three sessions analyzing the same codebase with
+*April 6, 2026*: Give an agent a graph query tool, and it produces output
+that's structurally correct but substantively hollow (the **watermelon-rind
+antipattern**: We ran three sessions analyzing the same codebase with
 different tool access: the one with no tools produced 5.2x more depth.
-The fix: a two-pass compiler for architecture understanding — force code
+The fix: **a two-pass compiler** for architecture understanding: force code
 reading first, verify with tools second. Constraint is the feature.
 
 **Topics**: architecture, code intelligence, agent behavior, design patterns, field notes

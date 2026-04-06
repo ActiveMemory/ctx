@@ -4403,7 +4403,8 @@ independence matters, use the shell while loop instead.</p>
 <div class="language-xml highlight"><pre><span></span><code><span id="__span-7-1"><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="nt">&lt;context-update</span><span class="w"> </span><span class="na">type=</span><span class="s">&quot;complete&quot;</span><span class="nt">&gt;</span>user<span class="w"> </span>auth<span class="nt">&lt;/context-update&gt;</span>
 </span></code></pre></div></p>
 <p><strong>Add learning:</strong>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-8-1"><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>ctx<span class="w"> </span>add<span class="w"> </span>learning<span class="w"> </span><span class="s2">&quot;Rate limiting requires Redis connection&quot;</span>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-8-1"><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>ctx<span class="w"> </span>add<span class="w"> </span>learning<span class="w"> </span><span class="s2">&quot;Rate limiting requires Redis connection&quot;</span><span class="w"> </span><span class="se">\</span>
+</span><span id="__span-8-2"><a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a><span class="w">  </span>--session-id<span class="w"> </span>abc12345<span class="w"> </span>--branch<span class="w"> </span>main<span class="w"> </span>--commit<span class="w"> </span>68fbc00a
 </span></code></pre></div></p>
 <p>Or via update command:
 <div class="language-xml highlight"><pre><span></span><code><span id="__span-9-1"><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="nt">&lt;context-update</span><span class="w"> </span><span class="na">type=</span><span class="s">&quot;learning&quot;</span>
@@ -4413,7 +4414,8 @@ independence matters, use the shell while loop instead.</p>
 </span><span id="__span-9-5"><a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a><span class="nt">&gt;</span>Rate<span class="w"> </span>Limiting<span class="w"> </span>Redis<span class="w"> </span>Dependency<span class="nt">&lt;/context-update&gt;</span>
 </span></code></pre></div></p>
 <p><strong>Record decision:</strong>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-10-1"><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a>ctx<span class="w"> </span>add<span class="w"> </span>decision<span class="w"> </span><span class="s2">&quot;Use JWT tokens for API authentication&quot;</span>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-10-1"><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a>ctx<span class="w"> </span>add<span class="w"> </span>decision<span class="w"> </span><span class="s2">&quot;Use JWT tokens for API authentication&quot;</span><span class="w"> </span><span class="se">\</span>
+</span><span id="__span-10-2"><a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a><span class="w">  </span>--session-id<span class="w"> </span>abc12345<span class="w"> </span>--branch<span class="w"> </span>main<span class="w"> </span>--commit<span class="w"> </span>68fbc00a
 </span></code></pre></div></p>
 <h2 id="advanced-watch-mode">Advanced: Watch Mode<a class="headerlink" href="#advanced-watch-mode" title="Permanent link">&para;</a></h2>
 <p>Run <code>ctx watch</code> alongside the loop to automatically process context updates:</p>
@@ -4481,7 +4483,7 @@ initialization. It instructs the agent to:</p>
 <p><strong>Fix</strong>: Add explicit instructions to .context/loop.md:
 <div class="language-markdown highlight"><pre><span></span><code><span id="__span-16-1"><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a>After completing a task, you MUST:
 </span><span id="__span-16-2"><a id="__codelineno-16-2" name="__codelineno-16-2" href="#__codelineno-16-2"></a><span class="k">1.</span> Run: ctx task complete &quot;&lt;task&gt;&quot;
-</span><span id="__span-16-3"><a id="__codelineno-16-3" name="__codelineno-16-3" href="#__codelineno-16-3"></a><span class="k">2.</span> Add learnings: ctx add learning &quot;...&quot;
+</span><span id="__span-16-3"><a id="__codelineno-16-3" name="__codelineno-16-3" href="#__codelineno-16-3"></a><span class="k">2.</span> Add learnings: ctx add learning &quot;...&quot; --session-id abc12345 --branch main --commit 68fbc00a
 </span></code></pre></div></p>
 <h3 id="tasks-getting-repeated">Tasks Getting Repeated<a class="headerlink" href="#tasks-getting-repeated" title="Permanent link">&para;</a></h3>
 <p><strong>Cause</strong>: Task not marked complete before next iteration</p>
