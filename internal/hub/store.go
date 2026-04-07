@@ -9,6 +9,7 @@ package hub
 import (
 	"encoding/json"
 
+	"github.com/ActiveMemory/ctx/internal/config/token"
 	"github.com/ActiveMemory/ctx/internal/io"
 )
 
@@ -74,7 +75,7 @@ func (s *Store) Append(entries []Entry) ([]uint64, error) {
 			return nil, marshalErr
 		}
 		lines = append(lines, b...)
-		lines = append(lines, '\n')
+		lines = append(lines, token.NewlineLF...)
 		s.entries = append(s.entries, entries[i])
 	}
 
@@ -143,16 +144,16 @@ func (s *Store) RegisterClient(client ClientInfo) error {
 // ValidateToken checks if a token matches a registered client.
 //
 // Parameters:
-//   - token: bearer token to validate
+//   - bearerToken: bearer token to validate
 //
 // Returns:
 //   - *ClientInfo: matching client, or nil if not found
-func (s *Store) ValidateToken(token string) *ClientInfo {
+func (s *Store) ValidateToken(bearerToken string) *ClientInfo {
 	s.mu.Lock()
 	defer s.mu.Unlock()
 
 	for i := range s.clients {
-		if s.clients[i].Token == token {
+		if s.clients[i].Token == bearerToken {
 			return &s.clients[i]
 		}
 	}

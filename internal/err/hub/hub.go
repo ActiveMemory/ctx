@@ -19,3 +19,14 @@ import "fmt"
 func GenerateToken(cause error) error {
 	return fmt.Errorf("generate token: %w", cause)
 }
+
+// InternalErr wraps an internal server error.
+//
+// Parameters:
+//   - cause: the underlying error
+//
+// Returns:
+//   - error: "internal: <cause>"
+func InternalErr(cause error) error {
+	return fmt.Errorf("internal: %w", cause)
+}
