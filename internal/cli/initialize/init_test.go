@@ -278,7 +278,7 @@ func TestInitCreatesPermissions(t *testing.T) {
 	}
 	requiredPerms := []string{
 		"Bash(ctx:*)", "Skill(ctx-agent)",
-		"Skill(ctx-add-learning)",
+		"Skill(ctx-learning-add)",
 	}
 	for _, p := range requiredPerms {
 		if !permSet[p] {

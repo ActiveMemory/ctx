@@ -964,7 +964,7 @@ func TestPromptsList(t *testing.T) {
 		names[p.Name] = true
 	}
 	for _, want := range []string{
-		"ctx-session-start", "ctx-add-decision", "ctx-add-learning",
+		"ctx-session-start", "ctx-decision-add", "ctx-learning-add",
 		"ctx-reflect", "ctx-checkpoint",
 	} {
 		if !names[want] {
@@ -998,7 +998,7 @@ func TestPromptSessionStart(t *testing.T) {
 func TestPromptAddDecision(t *testing.T) {
 	srv, _ := newTestServer(t)
 	resp := request(t, srv, "prompts/get", proto.GetPromptParams{
-		Name: "ctx-add-decision",
+		Name: "ctx-decision-add",
 		Arguments: map[string]string{
 			"content":     "Use Go",
 			"context":     "Need compiled language",

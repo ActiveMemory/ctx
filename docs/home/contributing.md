@@ -147,8 +147,8 @@ never distributed to users.
 | `/_ctx-update-docs`          | Check docs/code consistency after changes                     |
 
 Six skills previously in this list have been promoted to bundled plugin skills
-and are now available to all ctx users: `/ctx-brainstorm`, `/ctx-check-links`,
-`/ctx-sanitize-permissions`, `/ctx-skill-creator`, `/ctx-spec`.
+and are now available to all ctx users: `/ctx-brainstorm`, `/ctx-link-check`,
+`/ctx-permission-sanitize`, `/ctx-skill-create`, `/ctx-spec`.
 
 ----
 

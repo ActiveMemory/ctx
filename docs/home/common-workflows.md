@@ -25,8 +25,8 @@ For deeper, step-by-step guides, see [Recipes](../recipes/index.md).
 ## Track Context
 
 !!! tip "Prefer skills over raw commands"
-    When working with an AI agent, use `/ctx-add-task`,
-    `/ctx-add-decision`, or `/ctx-add-learning` instead of raw
+    When working with an AI agent, use `/ctx-task-add`,
+    `/ctx-decision-add`, or `/ctx-learning-add` instead of raw
     `ctx add` commands. The agent automatically picks up session ID,
     branch, and commit hash from its context — no manual flags needed.
 
@@ -325,10 +325,10 @@ agent's judgment.
 |----------------------|-----------------------|------------------------------------------------------------|
 | `ctx drift`          | `/ctx-drift`          | Semantic analysis: catches meaning drift the CLI misses    |
 | `ctx status`         | `/ctx-status`         | Interpreted summary with recommendations                   |
-| `ctx add task`       | `/ctx-add-task`       | Agent decomposes vague goals into concrete tasks           |
-| `ctx add decision`   | `/ctx-add-decision`   | Agent drafts rationale and consequences from discussion    |
-| `ctx add learning`   | `/ctx-add-learning`   | Agent extracts the lesson from a debugging session         |
-| `ctx add convention` | `/ctx-add-convention` | Agent observes a repeated pattern and codifies it          |
+| `ctx add task`       | `/ctx-task-add`       | Agent decomposes vague goals into concrete tasks           |
+| `ctx add decision`   | `/ctx-decision-add`   | Agent drafts rationale and consequences from discussion    |
+| `ctx add learning`   | `/ctx-learning-add`   | Agent extracts the lesson from a debugging session         |
+| `ctx add convention` | `/ctx-convention-add` | Agent observes a repeated pattern and codifies it          |
 | `ctx task archive`  | `/ctx-archive`        | Agent reviews which tasks are truly done                   |
 | `ctx pad`            | `/ctx-pad`            | Agent reads/writes scratchpad entries in conversation flow |
 | `ctx journal`         | `/ctx-history`         | Agent searches session history with semantic understanding |
@@ -352,7 +352,7 @@ These have no CLI equivalent. They require the agent's reasoning.
 | `/ctx-reflect`            | Pause and assess session progress                                                       |
 | `/ctx-consolidate`        | Merge overlapping learnings or decisions                                                |
 | `/ctx-prompt-audit`       | Analyze prompting patterns for improvement                                              |
-| `/ctx-import-plans`       | Import Claude Code plan files into project specs                                        |
+| `/ctx-plan-import`       | Import Claude Code plan files into project specs                                        |
 | `/ctx-implement`          | Execute a plan step-by-step with verification                                           |
 | `/ctx-worktree`           | Manage parallel agent worktrees                                                         |
 | `/ctx-journal-enrich`     | Add metadata, tags, and summaries to journal entries                                    |

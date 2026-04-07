@@ -1,5 +1,5 @@
 ---
-name: ctx-import-plans
+name: ctx-plan-import
 description: "Import Claude Code plan files into project specs. Use when plan files in ~/.claude/plans/ should become permanent project specs."
 allowed-tools: Bash(ls:*), Bash(stat:*), Read, Write
 ---
@@ -81,7 +81,7 @@ For each selected plan:
    the user whether to overwrite or pick a different name
 4. **Copy the file** to `specs/{slug}.md`
 5. **Optionally add a task**: ask the user if they want a task in
-   TASKS.md referencing the imported spec (use `/ctx-add-task` if yes)
+   TASKS.md referencing the imported spec (use `/ctx-task-add` if yes)
 
 ### 5. Report
 

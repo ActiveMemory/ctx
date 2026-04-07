@@ -11,9 +11,9 @@ const (
 	// SessionStart is the MCP prompt name for session initialization.
 	SessionStart = "ctx-session-start"
 	// AddDecision is the MCP prompt name for recording decisions.
-	AddDecision = "ctx-add-decision"
+	AddDecision = "ctx-decision-add"
 	// AddLearning is the MCP prompt name for recording learnings.
-	AddLearning = "ctx-add-learning"
+	AddLearning = "ctx-learning-add"
 	// Reflect is the MCP prompt name for session reflection.
 	Reflect = "ctx-reflect"
 	// Checkpoint is the MCP prompt name for session checkpoint.

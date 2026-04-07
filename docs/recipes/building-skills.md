@@ -19,7 +19,7 @@ a structured prompt that captures what took you sessions to learn.
 ## TL;DR
 
 ```text
-/ctx-skill-creator
+/ctx-skill-create
 ```
 
 The skill-creator walks you through: **identify** a repeating workflow,
@@ -30,7 +30,7 @@ it triggers correctly and produces good output.
 
 | Tool                 | Type    | Purpose                                                     |
 |----------------------|---------|-------------------------------------------------------------|
-| `/ctx-skill-creator` | Skill   | Interactive skill creation and improvement workflow         |
+| `/ctx-skill-create` | Skill   | Interactive skill creation and improvement workflow         |
 | `ctx init`           | Command | Deploys template skills to `.claude/skills/` on first setup |
 
 ## The Workflow

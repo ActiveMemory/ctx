@@ -20,7 +20,7 @@ rejected.
 **How do you make sure important context survives across sessions?**
 
 !!! tip "Prefer skills over raw commands"
-    Use `/ctx-add-decision` and `/ctx-add-learning` instead of raw
+    Use `/ctx-decision-add` and `/ctx-learning-add` instead of raw
     `ctx add` commands. The agent automatically picks up session ID,
     branch, and commit hash from its context — no manual flags needed.
 
@@ -28,8 +28,8 @@ rejected.
 
 ```text
 /ctx-reflect               # surface items worth persisting
-/ctx-add-decision "Title"  # record with context/rationale/consequence
-/ctx-add-learning "Title"  # record with context/lesson/application
+/ctx-decision-add "Title"  # record with context/rationale/consequence
+/ctx-learning-add "Title"  # record with context/lesson/application
 ```
 
 Or just tell your agent: *"What have we learned this session?"*
@@ -44,9 +44,9 @@ Or just tell your agent: *"What have we learned this session?"*
 | `ctx reindex`          | Command | Rebuild both quick-reference indices          |
 | `ctx decision reindex` | Command | Rebuild the DECISIONS.md index                |
 | `ctx learning reindex` | Command | Rebuild the LEARNINGS.md index                |
-| `/ctx-add-decision`    | Skill   | AI-guided decision capture with validation    |
-| `/ctx-add-learning`    | Skill   | AI-guided learning capture with validation    |
-| `/ctx-add-convention`  | Skill   | AI-guided convention recording with placement |
+| `/ctx-decision-add`    | Skill   | AI-guided decision capture with validation    |
+| `/ctx-learning-add`    | Skill   | AI-guided learning capture with validation    |
+| `/ctx-convention-add`  | Skill   | AI-guided convention recording with placement |
 | `/ctx-reflect`         | Skill   | Surface items worth persisting at breakpoints |
 
 ## The Workflow
@@ -104,7 +104,7 @@ one-liner.
 When multiple options were considered, the agent includes rejected alternatives
 in the rationale automatically.
 
-The `/ctx-add-decision` skill also guides you through the fields
+The `/ctx-decision-add` skill also guides you through the fields
 interactively. For quick decisions, it supports a Y-statement:
 
 "*In the context of [situation], facing [constraint], we decided for [choice]
@@ -149,7 +149,7 @@ fields filled from the session context.
 That is the point: the agent has the full conversation and can be far more
 expressive than what you would type at a command prompt.
 
-The `/ctx-add-learning` skill applies three quality filters:
+The `/ctx-learning-add` skill applies three quality filters:
 
 1. Could someone Google this in 5 minutes?
 2. Is it specific to this codebase?

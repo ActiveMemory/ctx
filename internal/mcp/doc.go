@@ -54,8 +54,8 @@
 // Prompts provide pre-built templates for common workflows:
 //
 //	ctx-session-start  → Load full context at session start
-//	ctx-add-decision   → Format an architectural decision entry
-//	ctx-add-learning   → Format a learning entry
+//	ctx-decision-add   → Format an architectural decision entry
+//	ctx-learning-add   → Format a learning entry
 //	ctx-reflect        → Guide end-of-session reflection
 //	ctx-checkpoint     → Report session statistics
 //

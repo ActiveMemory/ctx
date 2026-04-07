@@ -17,7 +17,7 @@ grows cluttered with completed checkboxes that obscure the remaining work.
 How do you manage work items that span multiple sessions without losing context?
 
 !!! tip "Prefer skills over raw commands"
-    When working with an AI agent, use `/ctx-add-task` instead of raw
+    When working with an AI agent, use `/ctx-task-add` instead of raw
     `ctx add task`. The agent automatically picks up session ID, branch,
     and commit hash from its context — no manual flags needed.
 
@@ -51,7 +51,7 @@ Read on for the full workflow and conversational patterns.
 | `ctx task complete` | Command | Mark a task as done by number or text       |
 | `ctx task snapshot` | Command | Create a point-in-time backup of `TASKS.md` |
 | `ctx task archive`  | Command | Move completed tasks to archive file        |
-| `/ctx-add-task`     | Skill   | AI-assisted task creation with validation   |
+| `/ctx-task-add`     | Skill   | AI-assisted task creation with validation   |
 | `/ctx-archive`      | Skill   | AI-guided archival with safety checks       |
 | `/ctx-next`         | Skill   | Pick what to work on based on priorities    |
 
@@ -60,7 +60,7 @@ Read on for the full workflow and conversational patterns.
 ### Step 1: Add Tasks with Priorities
 
 Every piece of follow-up work gets a task. Use `ctx add task` from the terminal
-or `/ctx-add-task` from your AI assistant. Tasks should start with a verb and be
+or `/ctx-task-add` from your AI assistant. Tasks should start with a verb and be
 specific enough that someone unfamiliar with the session could act on them.
 
 ```bash
@@ -77,7 +77,7 @@ ctx add task "Remove deprecated --raw flag from ctx load" --priority low \
   --session-id abc12345 --branch main --commit 68fbc00a
 ```
 
-The `/ctx-add-task` skill validates your task before recording it. It checks
+The `/ctx-task-add` skill validates your task before recording it. It checks
 that the description is actionable, not a duplicate, and specific enough for
 someone else to pick up.
 

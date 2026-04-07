@@ -51,7 +51,7 @@ proceed without this file.
 ### 3. Verify Docs and Commit Any Remaining Changes
 
 ```bash
-/ctx-check-links    # audit docs for dead links
+/ctx-link-check    # audit docs for dead links
 make audit          # full check: fmt, vet, lint, style, test
 git status          # must be clean
 ```

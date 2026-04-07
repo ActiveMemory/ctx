@@ -120,8 +120,8 @@ survive across sessions and team members.
 
 **Uses**: `ctx add decision`, `ctx add learning`,
 `ctx add convention`, `ctx decision reindex`,
-`ctx learning reindex`, `/ctx-add-decision`,
-`/ctx-add-learning`, `/ctx-add-convention`, `/ctx-reflect`
+`ctx learning reindex`, `/ctx-decision-add`,
+`/ctx-learning-add`, `/ctx-convention-add`, `/ctx-reflect`
 
 ---
 
@@ -132,7 +132,7 @@ survive across sessions and team members.
 sessions.
 
 **Uses**: `ctx add task`, `ctx task complete`, `ctx task archive`,
-`ctx task snapshot`, `/ctx-add-task`, `/ctx-archive`, `/ctx-next`
+`ctx task snapshot`, `/ctx-task-add`, `/ctx-archive`, `/ctx-next`
 
 ---
 
@@ -262,7 +262,7 @@ Keep `.claude/settings.local.json` clean: recommended **safe defaults**,
 what to **never** pre-approve, and a **maintenance workflow** for cleaning
 up session debris.
 
-**Uses**: `ctx init`, `/ctx-drift`, `/ctx-sanitize-permissions`,
+**Uses**: `ctx init`, `/ctx-drift`, `/ctx-permission-sanitize`,
 `ctx permission snapshot`, `ctx permission restore`
 
 ---
@@ -273,7 +273,7 @@ Capture a known-good permission **baseline** as a **golden image**, then restore
 at session start to automatically drop session-accumulated permissions.
 
 **Uses**: `ctx permission snapshot`, `ctx permission restore`,
-`/ctx-sanitize-permissions`
+`/ctx-permission-sanitize`
 
 ---
 
@@ -298,7 +298,7 @@ Import Claude Code **plan files** (`~/.claude/plans/*.md`) into `specs/`
 as permanent project specs. Filter by date, select interactively, and
 optionally create tasks referencing each imported spec.
 
-**Uses**: `/ctx-import-plans`, `/ctx-add-task`
+**Uses**: `/ctx-plan-import`, `/ctx-task-add`
 
 ---
 
@@ -308,8 +308,8 @@ Front-load design with a four-skill chain: **brainstorm** the approach,
 **spec** the design, **task** the work, **implement** step-by-step.
 Each step produces an artifact that feeds the next.
 
-**Uses**: `/ctx-brainstorm`, `/ctx-spec`, `/ctx-add-task`,
-`/ctx-implement`, `/ctx-add-decision`
+**Uses**: `/ctx-brainstorm`, `/ctx-spec`, `/ctx-task-add`,
+`/ctx-implement`, `/ctx-decision-add`
 
 ---
 
@@ -322,7 +322,7 @@ automatically. Covers the full cycle: **identify** a pattern, **create**
 the skill, **test** with realistic prompts, and **iterate** until it
 triggers correctly.
 
-**Uses**: `/ctx-skill-creator`, `ctx init`
+**Uses**: `/ctx-skill-create`, `ctx init`
 
 ---
 

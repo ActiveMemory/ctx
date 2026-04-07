@@ -17,6 +17,7 @@ DO NOT UPDATE FOR:
 <!-- INDEX:START -->
 | Date | Learning |
 |----|--------|
+| 2026-04-06 | Agents ignore system-reminder content without explicit relay instructions |
 | 2026-04-04 | Format-verb strings are localizable text, not exempt from magic string checks |
 | 2026-04-04 | Agents add allowlist entries to make tests pass — guard every exemption |
 | 2026-04-03 | Subagent scope creep and cleanup (consolidated) |
@@ -105,6 +106,16 @@ DO NOT UPDATE FOR:
 | 2026-02-22 | Gitignore and filesystem hygiene (consolidated) |
 | 2026-01-28 | IDE is already the UI |
 <!-- INDEX:END -->
+
+---
+
+## [2026-04-06-204226] Agents ignore system-reminder content without explicit relay instructions
+
+**Context**: Provenance line (Session: abc | Branch: main @ hash) was emitted by hook but agents in other projects silently ignored it. The line appeared in the system-reminder but the agent treated it as internal metadata.
+
+**Lesson**: Claude Code surfaces hook stdout as system-reminder tags. Agents only relay content that has explicit display instructions. IMPORTANT: means pay attention internally. Display this line verbatim means show to user. Without the instruction, even correct output is invisible to the user.
+
+**Application**: Any hook output intended for the user must include an explicit relay instruction like Display this line verbatim at the start of your response. Do not rely on IMPORTANT: alone — it signals internal priority, not user-facing output.
 
 ---
 

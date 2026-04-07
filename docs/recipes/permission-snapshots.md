@@ -18,7 +18,7 @@ built-in way to reset to a known-good state.
 ## TL;DR
 
 ```bash
-/ctx-sanitize-permissions               # audit for dangerous patterns
+/ctx-permission-sanitize               # audit for dangerous patterns
 ctx permission snapshot            # save golden image
 # ... sessions accumulate cruft ...
 ctx permission restore             # reset to golden state
@@ -37,13 +37,13 @@ with the team.
 |-----------------------------|--------------------------------------------------|
 | `ctx permission snapshot`   | Save settings.local.json as golden image         |
 | `ctx permission restore`    | Reset settings.local.json from golden image      |
-| `/ctx-sanitize-permissions` | Audit for dangerous patterns before snapshotting |
+| `/ctx-permission-sanitize` | Audit for dangerous patterns before snapshotting |
 
 ## Step by Step
 
 ### 1. Curate Your Permissions
 
-Start with a clean `settings.local.json`. Optionally run `/ctx-sanitize-permissions`
+Start with a clean `settings.local.json`. Optionally run `/ctx-permission-sanitize`
 to remove dangerous patterns first.
 
 Review the file manually. Every entry should be there because **you** decided
@@ -105,7 +105,7 @@ work with agents trained on the `ctx` playbook:
 |-------------------------------------------|------------------------------------------------------|
 | "Save my current permissions as baseline" | Agent runs `ctx permission snapshot`                 |
 | "Reset permissions to the golden image"   | Agent runs `ctx permission restore`                  |
-| "Clean up my permissions"                 | Agent runs `/ctx-sanitize-permissions` then snapshot |
+| "Clean up my permissions"                 | Agent runs `/ctx-permission-sanitize` then snapshot |
 | "What permissions did I accumulate?"      | Agent diffs local vs golden                          |
 
 ## Next Up

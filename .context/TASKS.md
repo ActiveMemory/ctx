@@ -29,13 +29,15 @@ TASK STATUS LABELS:
 
 - [x] Add session/branch/commit provenance to ctx add task via hook relay and --session-id/--branch/--commit flags. Spec: specs/task-session-provenance.md #priority:medium #added:2026-04-06-123642
 
+- [ ] Rename 8 skills to ctx-domain-action convention. Rename: ctx-task-add→ctx-task-add, ctx-decision-add→ctx-decision-add, ctx-learning-add→ctx-learning-add, ctx-convention-add→ctx-convention-add, ctx-skill-create→ctx-skill-create, ctx-permission-sanitize→ctx-permission-sanitize, ctx-plan-import→ctx-plan-import, ctx-link-check→ctx-link-check. Per skill: rename directory, update SKILL.md name/description, update cross-references in all other skills, update docs (not blogs), update AGENT_PLAYBOOK triggers, update copilot skills if mirrored. Update docs/reference/skills.md, docs/recipes/*, docs/home/* with new names. Spec: specs/skill-naming-convention.md #priority:high #session:a92cadca #branch:main #commit:c4c53c7a #added:2026-04-06-212611
+
 - [ ] Harden TestCrossPackageTypes sameModule heuristic: the current check exempts all intra-module type sharing (e.g. mcp/handler -> mcp/server). This allowed EntryOpts to live in mcp/handler/types.go while being consumed from mcp/server/extract — a cross-cutting type that belongs in entity/. The heuristic should flag types in non-core subpackages that are used from sibling subpackages within the same module, not just cross-module usage. #priority:medium #session:a92cadca #branch:main #commit:68fbc00a #added:2026-04-06-160007
 
 - [ ] Add .ctxrc provenance validation config: allow projects to relax required provenance flags (session, branch, commit) individually via ctxrc fields. CLI stays strict — no --skip-validation flag. Agent cannot bypass; only human config relaxes. Default: all three required. #priority:medium #session:a92cadca #branch:main #commit:68fbc00a #added:2026-04-06-154902
 
 - [ ] Bug: ctx init does not write enabledPlugins to settings.local.json. Hooks from the plugin hooks.json only fire when enabledPlugins lists the plugin in the project settings. Non-ctx projects initialized with ctx init get empty hooks. #priority:high #session:a92cadca #branch:main #commit:68fbc00a #added:2026-04-06-151044
 
-- [ ] Wire provenance flags into add skills: update ctx-add-task, ctx-add-decision, and ctx-add-learning skills to pass --session-id, --branch, --commit from the hook-relayed provenance line when invoking ctx add. Spec: specs/task-session-provenance.md #priority:medium #session:a92cadca #branch:main #commit:68fbc00a #added:2026-04-06-151036
+- [ ] Wire provenance flags into add skills: update ctx-task-add, ctx-decision-add, and ctx-learning-add skills to pass --session-id, --branch, --commit from the hook-relayed provenance line when invoking ctx add. Spec: specs/task-session-provenance.md #priority:medium #session:a92cadca #branch:main #commit:68fbc00a #added:2026-04-06-151036
 
 - [ ] SMB mount path support: add `CTX_BACKUP_MOUNT_PATH` env var so 
   `ctx backup` can use fstab/systemd automounts instead of requiring GVFS. 

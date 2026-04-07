@@ -17,7 +17,7 @@ them without opening each one.
 ## TL;DR
 
 ```text
-You: /ctx-import-plans
+You: /ctx-plan-import
 Agent: [lists plans with dates and titles]
        1. 2026-02-28  Add authentication middleware
        2. 2026-02-27  Refactor database connection pool
@@ -31,8 +31,8 @@ Plans are copied (*not moved*) to `specs/`, slugified by their H1 heading.
 
 | Tool                | Type  | Purpose                                      |
 |---------------------|-------|----------------------------------------------|
-| `/ctx-import-plans` | Skill | List, filter, and import plan files to specs |
-| `/ctx-add-task`     | Skill | Optionally add a task referencing the spec   |
+| `/ctx-plan-import` | Skill | List, filter, and import plan files to specs |
+| `/ctx-task-add`     | Skill | Optionally add a task referencing the spec   |
 
 ## The Workflow
 
@@ -41,7 +41,7 @@ Plans are copied (*not moved*) to `specs/`, slugified by their H1 heading.
 Invoke the skill and it lists plans with modification dates and titles:
 
 ```text
-You: /ctx-import-plans
+You: /ctx-plan-import
 
 Agent: Found 3 plan files:
          1. 2026-02-28  Add authentication middleware
@@ -62,9 +62,9 @@ You can narrow the list with arguments:
 | *(none)*              | Interactive selection                    |
 
 ```text
-You: /ctx-import-plans --today
-You: /ctx-import-plans --since 2026-02-27
-You: /ctx-import-plans --all
+You: /ctx-plan-import --today
+You: /ctx-plan-import --since 2026-02-27
+You: /ctx-plan-import --all
 ```
 
 ### Step 3: Select and Import
@@ -92,7 +92,7 @@ imported specs:
 ```text
 You: "yes, add tasks"
 
-Agent: [runs /ctx-add-task for each spec]
+Agent: [runs /ctx-task-add for each spec]
        Added:
          - [ ] Implement authentication middleware (spec: specs/add-authentication-middleware.md)
          - [ ] Import plans skill (spec: specs/import-plans-skill.md)
@@ -104,10 +104,10 @@ You don't need to remember the exact skill name:
 
 | You say                           | What happens                      |
 |-----------------------------------|-----------------------------------|
-| "import my plans"                 | `/ctx-import-plans` (interactive) |
-| "save today's plans as specs"     | `/ctx-import-plans --today`       |
-| "import all plans from this week" | `/ctx-import-plans --since ...`   |
-| "turn that plan into a spec"      | `/ctx-import-plans` (filtered)    |
+| "import my plans"                 | `/ctx-plan-import` (interactive) |
+| "save today's plans as specs"     | `/ctx-plan-import --today`       |
+| "import all plans from this week" | `/ctx-plan-import --since ...`   |
+| "turn that plan into a spec"      | `/ctx-plan-import` (filtered)    |
 
 ## Tips
 
@@ -123,7 +123,7 @@ You don't need to remember the exact skill name:
 
 ## See Also
 
-* [Skills Reference: /ctx-import-plans](../reference/skills.md#ctx-import-plans):
+* [Skills Reference: /ctx-plan-import](../reference/skills.md#ctx-plan-import):
   full skill description
 * [The Complete Session](session-lifecycle.md): where plan import fits
   in the session flow

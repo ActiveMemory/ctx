@@ -1,5 +1,5 @@
 ---
-name: ctx-check-links
+name: ctx-link-check
 description: "Audit docs for dead links. Use before releases, after restructuring docs, or when running a documentation audit."
 allowed-tools: Bash(curl:*), Read, Grep, Glob
 ---

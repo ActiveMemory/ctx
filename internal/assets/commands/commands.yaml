@@ -1069,7 +1069,7 @@ system.checkskilldiscovery:
     One-shot nudge that fires once per session at ~25 prompts.
     Surfaces easy-to-forget skills that have positive impact
     mid-session: /ctx-reflect, /ctx-prompt-audit,
-    /ctx-add-learning, /ctx-add-decision.
+    /ctx-learning-add, /ctx-decision-add.
 
     Hook event: UserPromptSubmit
     Output: skill tip block (once), silent thereafter

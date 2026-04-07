@@ -1,5 +1,5 @@
 ---
-name: ctx-add-convention
+name: ctx-convention-add
 description: "Record a coding convention. Use when a repeated pattern should be codified so all sessions follow it consistently."
 allowed-tools: Bash(ctx:*)
 ---
@@ -16,8 +16,8 @@ Record a coding convention in CONVENTIONS.md.
 ## When NOT to Use
 
 - One-off implementation details (use code comments instead)
-- Architectural decisions with trade-offs (use `/ctx-add-decision`)
-- Debugging insights or gotchas (use `/ctx-add-learning`)
+- Architectural decisions with trade-offs (use `/ctx-decision-add`)
+- Debugging insights or gotchas (use `/ctx-learning-add`)
 - Rules that are already enforced by linters or formatters
 
 ## Gathering Information

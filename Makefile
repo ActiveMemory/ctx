@@ -135,7 +135,7 @@ audit:
 	@CGO_ENABLED=0 CTX_SKIP_PATH_CHECK=1 go test ./...
 	@echo ""
 	@echo "All checks passed!"
-	@echo "Tip: run /ctx-check-links to verify doc links before committing."
+	@echo "Tip: run /ctx-link-check to verify doc links before committing."
 
 ## check: Build + audit (single entry point for build, fmt, vet, lint, test)
 check: build audit

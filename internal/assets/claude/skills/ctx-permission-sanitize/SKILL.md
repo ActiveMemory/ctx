@@ -1,5 +1,5 @@
 ---
-name: ctx-sanitize-permissions
+name: ctx-permission-sanitize
 description: "Audit settings.local.json for dangerous permissions. Use periodically, after granting permissions, or when security hygiene matters."
 ---
 
@@ -25,8 +25,8 @@ confirmation step that makes hooks visible.
 ## Usage Examples
 
 ```text
-/ctx-sanitize-permissions
-/ctx-sanitize-permissions (after that long session)
+/ctx-permission-sanitize
+/ctx-permission-sanitize (after that long session)
 ```
 
 ## Execution

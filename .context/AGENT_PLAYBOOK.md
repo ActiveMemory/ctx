@@ -134,7 +134,7 @@ persistence steps that are easy to miss otherwise.
 
 Users rarely invoke skills explicitly. Recognize natural language:
 
-<!-- drift-check: ls internal/assets/claude/skills/ctx-remember internal/assets/claude/skills/ctx-status internal/assets/claude/skills/ctx-next internal/assets/claude/skills/ctx-commit internal/assets/claude/skills/ctx-reflect internal/assets/claude/skills/ctx-add-decision internal/assets/claude/skills/ctx-add-learning internal/assets/claude/skills/ctx-add-convention internal/assets/claude/skills/ctx-add-task 2>&1 | grep -c skills/ -->
+<!-- drift-check: ls internal/assets/claude/skills/ctx-remember internal/assets/claude/skills/ctx-status internal/assets/claude/skills/ctx-next internal/assets/claude/skills/ctx-commit internal/assets/claude/skills/ctx-reflect internal/assets/claude/skills/ctx-decision-add internal/assets/claude/skills/ctx-learning-add internal/assets/claude/skills/ctx-convention-add internal/assets/claude/skills/ctx-task-add 2>&1 | grep -c skills/ -->
 | User Says                                       | Action                                                 |
 |-------------------------------------------------|--------------------------------------------------------|
 | "Do you remember?" / "What were we working on?" | `/ctx-remember`                                        |
@@ -143,10 +143,10 @@ Users rarely invoke skills explicitly. Recognize natural language:
 | "Commit this" / "Ship it"                       | `/ctx-commit`                                          |
 | "The rate limiter is done" / "We finished that" | `ctx task complete` (match to TASKS.md)                |
 | "What did we learn?"                            | `/ctx-reflect`                                         |
-| "Save that as a decision"                       | `/ctx-add-decision`                                    |
-| "That's worth remembering" / "Any gotchas?"     | `/ctx-add-learning`                                    |
-| "Record that convention"                        | `/ctx-add-convention`                                  |
-| "Add a task for that"                           | `/ctx-add-task`                                        |
+| "Save that as a decision"                       | `/ctx-decision-add`                                    |
+| "That's worth remembering" / "Any gotchas?"     | `/ctx-learning-add`                                    |
+| "Record that convention"                        | `/ctx-convention-add`                                  |
+| "Add a task for that"                           | `/ctx-task-add`                                        |
 | "Sync memory" / "What's in auto memory?"        | `ctx memory sync` / `ctx memory status`                |
 | "Import from memory"                            | `ctx memory import --dry-run` then `ctx memory import` |
 | "Let's wrap up"                                 | Reflect → persist outstanding items → present together |
