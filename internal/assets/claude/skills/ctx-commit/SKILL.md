@@ -65,7 +65,24 @@ to stage, answer these self-audit questions:
 
 If any answer reveals a gap, address it before staging.
 
-### 3. Stage and commit
+### 3. Close matching tasks
+
+Every commit closes work. Before staging, check TASKS.md for
+tasks that this commit completes:
+
+- Read `.context/TASKS.md`
+- Identify the spec being committed (the `Spec:` trailer value)
+- Find open tasks (`[ ]`) whose `Spec:` field matches
+- If no spec match, search by keywords from the commit subject
+- Mark matching tasks `[x]` and append `#done:YYYY-MM-DD`
+- If uncertain whether a task is fully done, ask the user
+- Stage the updated TASKS.md alongside the code changes
+
+This is the closure point in the plan→spec→task→commit chain.
+Skipping it causes task rot: completed work stays open,
+future sessions waste time re-triaging stale items.
+
+### 4. Stage and commit
 
 - Review unstaged changes with `git status`
 - Stage relevant files (prefer specific files over `git add -A`)
@@ -75,7 +92,7 @@ If any answer reveals a gap, address it before staging.
     "why" not "what")
 - Include the `Spec:` and `Signed-off-by:` trailers (see format below)
 
-### 4. Context prompt
+### 5. Context prompt
 
 After a successful commit, ask the user:
 
@@ -102,7 +119,7 @@ ctx add learning "Go embed requires files in same package" \
   --context "..." --lesson "..." --application "..."
 ```
 
-### 5. Reflect
+### 6. Reflect
 
 After every commit, run `/ctx-reflect` to capture the bigger
 picture before moving on. This is mandatory: Skipping reflection
@@ -159,6 +176,7 @@ Signed-off-by: Jane Doe <jane@example.com>
 Before committing, verify:
 - [ ] Spec exists and is referenced in the commit message
 - [ ] Build and lint pass
+- [ ] Matching tasks marked `[x]` in TASKS.md
 - [ ] Commit message is concise and explains the why
 - [ ] `Spec:` and `Signed-off-by:` trailers are present
 - [ ] No secrets or sensitive files in the staged changes
