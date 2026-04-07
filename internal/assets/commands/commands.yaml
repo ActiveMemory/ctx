@@ -109,6 +109,23 @@ connect:
     Connect to a shared context hub for cross-project
     knowledge sharing.
   short: Connect to a shared context hub
+connect.subscribe:
+  long: |-
+    Set which entry types to receive from the hub.
+
+    Examples:
+      ctx connect subscribe decision learning
+      ctx connect subscribe decision learning convention
+  short: Set hub subscription types
+connect.sync:
+  long: |-
+    Pull matching entries from the hub and write them to
+    .context/shared/ as markdown files with origin tags.
+    Tracks last-seen sequence for incremental sync.
+
+    Examples:
+      ctx connect sync
+  short: Sync entries from the hub
 connect.register:
   long: |-
     Register this project with a shared context hub.

@@ -10,6 +10,8 @@ import (
 	"github.com/spf13/cobra"
 
 	"github.com/ActiveMemory/ctx/internal/cli/connect/cmd/register"
+	"github.com/ActiveMemory/ctx/internal/cli/connect/cmd/subscribe"
+	connectSync "github.com/ActiveMemory/ctx/internal/cli/connect/cmd/sync"
 	"github.com/ActiveMemory/ctx/internal/cli/parent"
 	"github.com/ActiveMemory/ctx/internal/config/embed/cmd"
 )
@@ -17,10 +19,12 @@ import (
 // Cmd returns the connect command with subcommands.
 //
 // Returns:
-//   - *cobra.Command: connect command with register
+//   - *cobra.Command: connect with register, subscribe, sync
 func Cmd() *cobra.Command {
 	return parent.Cmd(
 		cmd.DescKeyConnect, cmd.UseConnect,
 		register.Cmd(),
+		subscribe.Cmd(),
+		connectSync.Cmd(),
 	)
 }

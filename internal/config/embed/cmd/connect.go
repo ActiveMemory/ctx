@@ -12,9 +12,17 @@ const (
 	UseConnect = "connect"
 	// UseConnectRegister is the Use string for register.
 	UseConnectRegister = "register <hub-address>"
+	// UseConnectSubscribe is the Use string for subscribe.
+	UseConnectSubscribe = "subscribe <types...>"
+	// UseConnectSync is the Use string for sync.
+	UseConnectSync = "sync"
 
 	// DescKeyConnect is the desc key for the connect command.
 	DescKeyConnect = "connect"
 	// DescKeyConnectRegister is the desc key for register.
 	DescKeyConnectRegister = "connect.register"
+	// DescKeyConnectSubscribe is the desc key for subscribe.
+	DescKeyConnectSubscribe = "connect.subscribe"
+	// DescKeyConnectSync is the desc key for sync.
+	DescKeyConnectSync = "connect.sync"
 )
