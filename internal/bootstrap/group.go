@@ -12,6 +12,7 @@ import (
 	"github.com/ActiveMemory/ctx/internal/cli/change"
 	"github.com/ActiveMemory/ctx/internal/cli/compact"
 	"github.com/ActiveMemory/ctx/internal/cli/config"
+	"github.com/ActiveMemory/ctx/internal/cli/connect"
 	"github.com/ActiveMemory/ctx/internal/cli/decision"
 	"github.com/ActiveMemory/ctx/internal/cli/dep"
 	"github.com/ActiveMemory/ctx/internal/cli/doctor"
@@ -121,6 +122,7 @@ func runtimeCmds() []registration {
 //   - []registration: Hook, mcp, watch, notify, and loop commands
 func integrations() []registration {
 	return []registration{
+		{connect.Cmd, embedCmd.GroupIntegration},
 		{setup.Cmd, embedCmd.GroupIntegration},
 		{steering.Cmd, embedCmd.GroupIntegration},
 		{trigger.Cmd, embedCmd.GroupIntegration},

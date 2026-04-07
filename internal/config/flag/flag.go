@@ -106,6 +106,7 @@ const (
 	Skills          = "skills"
 	Tag             = "tag"
 	Tool            = "tool"
+	Token           = "token"
 	Type            = "type"
 	Variant         = "variant"
 	Verbose         = "verbose"
