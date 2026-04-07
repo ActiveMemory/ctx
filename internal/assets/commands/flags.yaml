@@ -272,6 +272,12 @@ task.archive.dry-run:
   short: Preview changes without modifying files
 tool:
   short: 'Override active AI tool (e.g., claude, cursor, cline, kiro, codex)'
+serve.data-dir:
+  short: Hub data directory (default ~/.ctx/hub-data/)
+serve.port:
+  short: Hub listen port (default 9900)
+serve.shared:
+  short: Start the shared context hub (gRPC server)
 watch.dry-run:
   short: Show updates without applying
 watch.log:
