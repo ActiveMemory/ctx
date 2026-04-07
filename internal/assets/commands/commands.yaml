@@ -104,6 +104,22 @@ compact:
       ctx compact                  # Clean up context, move completed tasks
       ctx compact --archive        # Also archive old tasks, decisions, and learnings
   short: Archive completed tasks and clean up context
+connect:
+  long: |-
+    Connect to a shared context hub for cross-project
+    knowledge sharing.
+  short: Connect to a shared context hub
+connect.register:
+  long: |-
+    Register this project with a shared context hub.
+    Requires the hub address and admin token.
+
+    On success, stores an encrypted connection config in
+    .context/.connect.enc for future RPCs.
+
+    Examples:
+      ctx connect register localhost:9900 --token ctx_adm_...
+  short: Register with a shared context hub
 complete:
   long: |-
     Mark a task as completed in TASKS.md.

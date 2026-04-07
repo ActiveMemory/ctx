@@ -216,6 +216,16 @@ type StatusResponse struct {
 	EntriesByProject map[string]uint64 `json:"entries_by_project"`
 }
 
+// Client is a gRPC client for the shared context hub.
+//
+// Fields:
+//   - conn: underlying gRPC connection
+//   - token: bearer token for authenticated RPCs
+type Client struct {
+	conn  *grpc.ClientConn
+	token string
+}
+
 // jsonCodec is a gRPC codec using JSON encoding instead of
 // protobuf. This allows plain Go structs as RPC messages
 // without generated protobuf code.

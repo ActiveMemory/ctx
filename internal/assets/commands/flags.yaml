@@ -272,6 +272,8 @@ task.archive.dry-run:
   short: Preview changes without modifying files
 tool:
   short: 'Override active AI tool (e.g., claude, cursor, cline, kiro, codex)'
+connect.admin-auth:
+  short: Admin credential from hub startup
 serve.data-dir:
   short: Hub data directory (default ~/.ctx/hub-data/)
 serve.port:
