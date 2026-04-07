@@ -700,6 +700,50 @@ permission.snapshot:
 
     Overwrites any existing golden file.
   short: Save settings.local.json as golden image
+journal.schema:
+  long: |-
+    Validate JSONL session files against the embedded schema.
+
+    Detects drift when Claude Code ships new versions that change the
+    JSONL record format. Drift is informational: it never blocks imports.
+
+    Subcommands:
+      check    Scan JSONL files and report drift
+      dump     Print the embedded schema definition
+  short: Validate JSONL session file schema
+journal.schema.check:
+  long: |-
+    Scan JSONL session files and validate against the embedded schema.
+
+    Reports unknown fields, missing required fields, unknown record types,
+    and unknown content block types. Writes a drift report to
+    .context/reports/schema-drift.md when drift is detected. Deletes the
+    report when drift is resolved.
+
+    By default, scans only the current project. Use --all-projects to
+    scan all Claude Code project directories.
+
+    Exit codes:
+      0    No drift detected
+      1    Drift detected (findings written to report)
+
+    Examples:
+      ctx journal schema check                    # Current project
+      ctx journal schema check --all-projects     # All projects
+      ctx journal schema check --quiet            # Exit code only
+      ctx journal schema check --dir /path/to     # Custom directory
+  short: Scan JSONL files and report schema drift
+journal.schema.dump:
+  long: |-
+    Print the embedded JSONL schema definition.
+
+    Shows known record types, required and optional fields, and recognized
+    content block types. Useful for inspecting what the schema validator
+    expects.
+
+    Examples:
+      ctx journal schema dump
+  short: Print the embedded schema definition
 journal.import:
   long: |-
     Import AI sessions to .context/journal/ as editable Markdown files.

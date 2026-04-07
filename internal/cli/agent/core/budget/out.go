@@ -12,6 +12,7 @@ import (
 
 	"github.com/spf13/cobra"
 
+	"github.com/ActiveMemory/ctx/internal/config/token"
 	"github.com/ActiveMemory/ctx/internal/entity"
 	writeAgent "github.com/ActiveMemory/ctx/internal/write/agent"
 )
@@ -55,7 +56,7 @@ func OutputAgentJSON(
 	}
 
 	enc := json.NewEncoder(cmd.OutOrStdout())
-	enc.SetIndent("", "  ")
+	enc.SetIndent("", token.Indent2)
 	return enc.Encode(packet)
 }
 

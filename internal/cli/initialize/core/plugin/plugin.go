@@ -17,6 +17,7 @@ import (
 	"github.com/ActiveMemory/ctx/internal/config/claude"
 	"github.com/ActiveMemory/ctx/internal/config/dir"
 	"github.com/ActiveMemory/ctx/internal/config/fs"
+	"github.com/ActiveMemory/ctx/internal/config/token"
 	"github.com/ActiveMemory/ctx/internal/err/config"
 	errFs "github.com/ActiveMemory/ctx/internal/err/fs"
 	errInit "github.com/ActiveMemory/ctx/internal/err/initialize"
@@ -91,7 +92,7 @@ func EnableGlobally(cmd *cobra.Command) error {
 	var buf bytes.Buffer
 	encoder := json.NewEncoder(&buf)
 	encoder.SetEscapeHTML(false)
-	encoder.SetIndent("", "  ")
+	encoder.SetIndent("", token.Indent2)
 	if encodeErr := encoder.Encode(settings); encodeErr != nil {
 		return config.MarshalSettings(encodeErr)
 	}

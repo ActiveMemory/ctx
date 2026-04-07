@@ -69,7 +69,7 @@ func ParseFrontmatter(
 // Returns:
 //   - string: Truncated description
 func TruncateDescription(d string, maxLen int) string {
-	if idx := strings.Index(d, ". "); idx >= 0 &&
+	if idx := strings.Index(d, token.PeriodSpace); idx >= 0 &&
 		idx < maxLen {
 		return d[:idx+1]
 	}

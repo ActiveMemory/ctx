@@ -17,14 +17,14 @@ import (
 // count. Reduce it as violations are fixed.
 const grandfatheredDocStructure = 0
 
-// TestDocCommentStructure verifies that exported functions
-// with parameters include a "Parameters:" section and
-// functions with return values include a "Returns:" section
-// in their doc comments, per CONVENTIONS.md.
+// TestDocCommentStructure verifies that all documented
+// functions with parameters include a "Parameters:" section
+// and functions with return values include a "Returns:"
+// section in their doc comments, per CONVENTIONS.md.
 //
-// Test files and methods with receivers are included.
-// Functions without doc comments are skipped (caught by
-// TestDocComments).
+// Applies to both exported and unexported functions.
+// Test files are excluded. Functions without doc comments
+// are skipped (caught by TestDocComments).
 func TestDocCommentStructure(t *testing.T) {
 	pkgs := loadPackages(t)
 	var violations []string
@@ -41,9 +41,6 @@ func TestDocCommentStructure(t *testing.T) {
 			for _, decl := range file.Decls {
 				fn, ok := decl.(*ast.FuncDecl)
 				if !ok {
-					continue
-				}
-				if !fn.Name.IsExported() {
 					continue
 				}
 				if fn.Doc == nil {
@@ -95,13 +92,8 @@ func TestDocCommentStructure(t *testing.T) {
 			grandfatheredDocStructure,
 			len(violations)-grandfatheredDocStructure,
 		)
-		// Show only the newest violations.
-		start := grandfatheredDocStructure
-		limit := 20
-		if len(violations)-start < limit {
-			limit = len(violations) - start
-		}
-		for _, v := range violations[start : start+limit] {
+		// Show all violations.
+		for _, v := range violations {
 			t.Error(v)
 		}
 	} else if len(violations) < grandfatheredDocStructure {

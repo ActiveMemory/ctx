@@ -16,8 +16,15 @@ import (
 	"github.com/ActiveMemory/ctx/internal/mcp/server/out"
 )
 
-// applySubscription handles the shared parse-validate-apply logic
-// for subscribe and unsubscribe requests.
+// applySubscription handles the shared parse-validate-apply
+// logic for subscribe and unsubscribe requests.
+//
+// Parameters:
+//   - req: incoming MCP request with subscription params
+//   - fn: callback invoked with the validated resource URI
+//
+// Returns:
+//   - *proto.Response: success or error response
 func applySubscription(
 	req proto.Request, fn func(string),
 ) *proto.Response {

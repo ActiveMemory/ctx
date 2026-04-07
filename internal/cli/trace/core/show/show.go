@@ -52,7 +52,7 @@ func Commit(
 			Refs:    ResolveToJSON(refs, contextDir),
 		}
 		enc := json.NewEncoder(cmd.OutOrStdout())
-		enc.SetIndent("", "  ")
+		enc.SetIndent("", token.Indent2)
 		return enc.Encode(out)
 	}
 
@@ -106,7 +106,7 @@ func Last(
 			if line == "" {
 				continue
 			}
-			parts := strings.SplitN(line, " ", 2)
+			parts := strings.SplitN(line, token.Space, 2)
 			hash := parts[0]
 			msg := ""
 			if len(parts) > 1 {
@@ -120,7 +120,7 @@ func Last(
 			})
 		}
 		enc := json.NewEncoder(cmd.OutOrStdout())
-		enc.SetIndent("", "  ")
+		enc.SetIndent("", token.Indent2)
 		return enc.Encode(commits)
 	}
 
@@ -128,7 +128,7 @@ func Last(
 		if line == "" {
 			continue
 		}
-		parts := strings.SplitN(line, " ", 2)
+		parts := strings.SplitN(line, token.Space, 2)
 		hash := parts[0]
 		msg := ""
 		if len(parts) > 1 {

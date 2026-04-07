@@ -265,6 +265,56 @@ ctx journal obsidian                        # Generate in .context/journal-obsid
 ctx journal obsidian --output ~/vaults/ctx  # Custom output directory
 ```
 
+#### `ctx journal schema check`
+
+Validate JSONL session files against the embedded schema and report drift.
+
+```bash
+ctx journal schema check [flags]
+```
+
+**Flags**:
+
+| Flag              | Short | Description                                  |
+|-------------------|-------|----------------------------------------------|
+| `--dir`           |       | Directory to scan for JSONL files             |
+| `--all-projects`  |       | Scan all Claude Code project directories      |
+| `--quiet`         | `-q`  | Exit code only (0 = clean, 1 = drift)         |
+
+Scans JSONL files for unknown fields, missing required fields, unknown record
+types, and unknown content block types. When drift is found, writes a Markdown
+report to `.context/reports/schema-drift.md`. When drift resolves, the report
+is automatically deleted.
+
+Designed for interactive use, CI pipelines, and nightly cron jobs.
+
+**Example**:
+
+```bash
+ctx journal schema check                    # Current project
+ctx journal schema check --all-projects     # All projects
+ctx journal schema check --quiet            # Exit code only
+ctx journal schema check --dir /path/to     # Custom directory
+```
+
+#### `ctx journal schema dump`
+
+Print the embedded JSONL schema definition.
+
+```bash
+ctx journal schema dump
+```
+
+Shows all known record types with their required and optional fields, and all
+recognized content block types with their parse status. Useful for inspecting
+what the schema validator expects.
+
+**Example**:
+
+```bash
+ctx journal schema dump
+```
+
 ---
 
 ### `ctx serve`

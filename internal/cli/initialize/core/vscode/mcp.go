@@ -47,7 +47,7 @@ func createMCPJSON(cmd *cobra.Command) error {
 			},
 		},
 	}
-	data, _ := json.MarshalIndent(file, "", "  ")
+	data, _ := json.MarshalIndent(file, "", token.Indent2)
 	data = append(data, token.NewlineLF...)
 
 	writeErr := ctxIo.SafeWriteFile(

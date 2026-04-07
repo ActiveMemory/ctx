@@ -16,6 +16,7 @@ import (
 	"github.com/ActiveMemory/ctx/internal/config/embed/text"
 	"github.com/ActiveMemory/ctx/internal/config/file"
 	"github.com/ActiveMemory/ctx/internal/config/journal"
+	"github.com/ActiveMemory/ctx/internal/config/token"
 	"github.com/ActiveMemory/ctx/internal/entity"
 )
 
@@ -33,7 +34,7 @@ func formatIndexEntry(e entity.JournalEntry, nl string) string {
 
 	timeStr := ""
 	if e.Time != "" && len(e.Time) >= journal.TimePrefixLen {
-		timeStr = e.Time[:journal.TimePrefixLen] + " "
+		timeStr = e.Time[:journal.TimePrefixLen] + token.Space
 	}
 
 	project := ""

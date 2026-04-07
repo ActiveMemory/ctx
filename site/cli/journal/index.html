@@ -2811,6 +2811,28 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#ctx-journal-schema-check" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ctx journal schema check
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#ctx-journal-schema-dump" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ctx journal schema dump
+      
+    </span>
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -3811,6 +3833,28 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#ctx-journal-schema-check" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ctx journal schema check
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#ctx-journal-schema-dump" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ctx journal schema dump
+      
+    </span>
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -4182,15 +4226,67 @@ Open the output directory as an Obsidian  vault directly.</p>
 <div class="language-bash highlight"><pre><span></span><code><span id="__span-18-1"><a id="__codelineno-18-1" name="__codelineno-18-1" href="#__codelineno-18-1"></a>ctx<span class="w"> </span>journal<span class="w"> </span>obsidian<span class="w">                        </span><span class="c1"># Generate in .context/journal-obsidian/</span>
 </span><span id="__span-18-2"><a id="__codelineno-18-2" name="__codelineno-18-2" href="#__codelineno-18-2"></a>ctx<span class="w"> </span>journal<span class="w"> </span>obsidian<span class="w"> </span>--output<span class="w"> </span>~/vaults/ctx<span class="w">  </span><span class="c1"># Custom output directory</span>
 </span></code></pre></div>
+<h4 id="ctx-journal-schema-check"><code>ctx journal schema check</code><a class="headerlink" href="#ctx-journal-schema-check" title="Permanent link">&para;</a></h4>
+<p>Validate JSONL session files against the embedded schema and report drift.</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-19-1"><a id="__codelineno-19-1" name="__codelineno-19-1" href="#__codelineno-19-1"></a>ctx<span class="w"> </span>journal<span class="w"> </span>schema<span class="w"> </span>check<span class="w"> </span><span class="o">[</span>flags<span class="o">]</span>
+</span></code></pre></div>
+<p><strong>Flags</strong>:</p>
+<table>
+<thead>
+<tr>
+<th>Flag</th>
+<th>Short</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>--dir</code></td>
+<td></td>
+<td>Directory to scan for JSONL files</td>
+</tr>
+<tr>
+<td><code>--all-projects</code></td>
+<td></td>
+<td>Scan all Claude Code project directories</td>
+</tr>
+<tr>
+<td><code>--quiet</code></td>
+<td><code>-q</code></td>
+<td>Exit code only (0 = clean, 1 = drift)</td>
+</tr>
+</tbody>
+</table>
+<p>Scans JSONL files for unknown fields, missing required fields, unknown record
+types, and unknown content block types. When drift is found, writes a Markdown
+report to <code>.context/reports/schema-drift.md</code>. When drift resolves, the report
+is automatically deleted.</p>
+<p>Designed for interactive use, CI pipelines, and nightly cron jobs.</p>
+<p><strong>Example</strong>:</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-20-1"><a id="__codelineno-20-1" name="__codelineno-20-1" href="#__codelineno-20-1"></a>ctx<span class="w"> </span>journal<span class="w"> </span>schema<span class="w"> </span>check<span class="w">                    </span><span class="c1"># Current project</span>
+</span><span id="__span-20-2"><a id="__codelineno-20-2" name="__codelineno-20-2" href="#__codelineno-20-2"></a>ctx<span class="w"> </span>journal<span class="w"> </span>schema<span class="w"> </span>check<span class="w"> </span>--all-projects<span class="w">     </span><span class="c1"># All projects</span>
+</span><span id="__span-20-3"><a id="__codelineno-20-3" name="__codelineno-20-3" href="#__codelineno-20-3"></a>ctx<span class="w"> </span>journal<span class="w"> </span>schema<span class="w"> </span>check<span class="w"> </span>--quiet<span class="w">            </span><span class="c1"># Exit code only</span>
+</span><span id="__span-20-4"><a id="__codelineno-20-4" name="__codelineno-20-4" href="#__codelineno-20-4"></a>ctx<span class="w"> </span>journal<span class="w"> </span>schema<span class="w"> </span>check<span class="w"> </span>--dir<span class="w"> </span>/path/to<span class="w">     </span><span class="c1"># Custom directory</span>
+</span></code></pre></div>
+<h4 id="ctx-journal-schema-dump"><code>ctx journal schema dump</code><a class="headerlink" href="#ctx-journal-schema-dump" title="Permanent link">&para;</a></h4>
+<p>Print the embedded JSONL schema definition.</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-21-1"><a id="__codelineno-21-1" name="__codelineno-21-1" href="#__codelineno-21-1"></a>ctx<span class="w"> </span>journal<span class="w"> </span>schema<span class="w"> </span>dump
+</span></code></pre></div>
+<p>Shows all known record types with their required and optional fields, and all
+recognized content block types with their parse status. Useful for inspecting
+what the schema validator expects.</p>
+<p><strong>Example</strong>:</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-22-1"><a id="__codelineno-22-1" name="__codelineno-22-1" href="#__codelineno-22-1"></a>ctx<span class="w"> </span>journal<span class="w"> </span>schema<span class="w"> </span>dump
+</span></code></pre></div>
 <hr />
 <h3 id="ctx-serve"><code>ctx serve</code><a class="headerlink" href="#ctx-serve" title="Permanent link">&para;</a></h3>
 <p>Serve any zensical directory locally. This is a <strong>serve-only</strong> command: It
 does not generate or regenerate site content.</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-19-1"><a id="__codelineno-19-1" name="__codelineno-19-1" href="#__codelineno-19-1"></a>ctx<span class="w"> </span>serve<span class="w"> </span><span class="o">[</span>directory<span class="o">]</span>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-23-1"><a id="__codelineno-23-1" name="__codelineno-23-1" href="#__codelineno-23-1"></a>ctx<span class="w"> </span>serve<span class="w"> </span><span class="o">[</span>directory<span class="o">]</span>
 </span></code></pre></div>
 <p>If no directory is specified, defaults to the journal site (<code>.context/journal-site</code>).</p>
 <p>Requires <code>zensical</code> to be installed:</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-20-1"><a id="__codelineno-20-1" name="__codelineno-20-1" href="#__codelineno-20-1"></a>pipx<span class="w"> </span>install<span class="w"> </span>zensical
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-24-1"><a id="__codelineno-24-1" name="__codelineno-24-1" href="#__codelineno-24-1"></a>pipx<span class="w"> </span>install<span class="w"> </span>zensical
 </span></code></pre></div>
 <div class="admonition tip">
 <p class="admonition-title"><code>ctx serve</code> vs. <code>ctx journal site --serve</code></p>
@@ -4199,9 +4295,9 @@ it: an all-in-one command. <code>ctx serve</code> only <strong>serves</strong> a
 directory, and works with any zensical site (journal, docs, etc.).</p>
 </div>
 <p><strong>Example</strong>:</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-21-1"><a id="__codelineno-21-1" name="__codelineno-21-1" href="#__codelineno-21-1"></a>ctx<span class="w"> </span>serve<span class="w">                        </span><span class="c1"># Serve journal site (no regeneration)</span>
-</span><span id="__span-21-2"><a id="__codelineno-21-2" name="__codelineno-21-2" href="#__codelineno-21-2"></a>ctx<span class="w"> </span>serve<span class="w"> </span>.context/journal-site<span class="w">  </span><span class="c1"># Same, explicit path</span>
-</span><span id="__span-21-3"><a id="__codelineno-21-3" name="__codelineno-21-3" href="#__codelineno-21-3"></a>ctx<span class="w"> </span>serve<span class="w"> </span>./site<span class="w">                 </span><span class="c1"># Serve the docs site</span>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-25-1"><a id="__codelineno-25-1" name="__codelineno-25-1" href="#__codelineno-25-1"></a>ctx<span class="w"> </span>serve<span class="w">                        </span><span class="c1"># Serve journal site (no regeneration)</span>
+</span><span id="__span-25-2"><a id="__codelineno-25-2" name="__codelineno-25-2" href="#__codelineno-25-2"></a>ctx<span class="w"> </span>serve<span class="w"> </span>.context/journal-site<span class="w">  </span><span class="c1"># Same, explicit path</span>
+</span><span id="__span-25-3"><a id="__codelineno-25-3" name="__codelineno-25-3" href="#__codelineno-25-3"></a>ctx<span class="w"> </span>serve<span class="w"> </span>./site<span class="w">                 </span><span class="c1"># Serve the docs site</span>
 </span></code></pre></div>
 
 

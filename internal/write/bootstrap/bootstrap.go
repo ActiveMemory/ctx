@@ -14,6 +14,7 @@ import (
 
 	"github.com/ActiveMemory/ctx/internal/assets/read/desc"
 	"github.com/ActiveMemory/ctx/internal/config/embed/text"
+	"github.com/ActiveMemory/ctx/internal/config/token"
 	cfgWarn "github.com/ActiveMemory/ctx/internal/config/warn"
 	"github.com/ActiveMemory/ctx/internal/entity"
 )
@@ -115,7 +116,7 @@ func JSON(
 	}
 
 	enc := json.NewEncoder(cmd.OutOrStdout())
-	enc.SetIndent("", "  ")
+	enc.SetIndent("", token.Indent2)
 	if encodeErr := enc.Encode(out); encodeErr != nil {
 		cmd.PrintErrln(fmt.Sprintf(
 			cfgWarn.JSONEncode, encodeErr,

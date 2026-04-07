@@ -17,6 +17,7 @@ import (
 	"github.com/ActiveMemory/ctx/internal/cli/drift/core/sanitize"
 	cfgDrift "github.com/ActiveMemory/ctx/internal/config/drift"
 	"github.com/ActiveMemory/ctx/internal/config/embed/text"
+	"github.com/ActiveMemory/ctx/internal/config/token"
 	"github.com/ActiveMemory/ctx/internal/drift"
 	errDrift "github.com/ActiveMemory/ctx/internal/err/drift"
 	writeDrift "github.com/ActiveMemory/ctx/internal/write/drift"
@@ -185,6 +186,6 @@ func DriftJSON(
 	}
 
 	enc := json.NewEncoder(cmd.OutOrStdout())
-	enc.SetIndent("", "  ")
+	enc.SetIndent("", token.Indent2)
 	return enc.Encode(output)
 }

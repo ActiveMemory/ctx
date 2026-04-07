@@ -16,6 +16,15 @@ import (
 
 // openScanner opens a JSONL file and returns a buffered
 // scanner. The caller must close the returned file.
+//
+// Parameters:
+//   - path: filesystem path to the JSONL file
+//   - bufMax: maximum token size for the scanner buffer
+//
+// Returns:
+//   - *os.File: opened file handle (caller must close)
+//   - *bufio.Scanner: scanner configured with bufMax
+//   - error: file-open failure
 func openScanner(
 	path string, bufMax int,
 ) (*os.File, *bufio.Scanner, error) {

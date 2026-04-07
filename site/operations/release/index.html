@@ -4010,7 +4010,7 @@ The release script adds the <code>v</code> prefix for git tags.</p>
 <code>dist/RELEASE_NOTES.md</code>. The release script refuses to
 proceed without this file.</p>
 <h3 id="3-verify-docs-and-commit-any-remaining-changes">3. Verify Docs and Commit Any Remaining Changes<a class="headerlink" href="#3-verify-docs-and-commit-any-remaining-changes" title="Permanent link">&para;</a></h3>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>/ctx-check-links<span class="w">    </span><span class="c1"># audit docs for dead links</span>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>/ctx-link-check<span class="w">    </span><span class="c1"># audit docs for dead links</span>
 </span><span id="__span-2-2"><a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>make<span class="w"> </span>audit<span class="w">          </span><span class="c1"># full check: fmt, vet, lint, style, test</span>
 </span><span id="__span-2-3"><a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>git<span class="w"> </span>status<span class="w">          </span><span class="c1"># must be clean</span>
 </span></code></pre></div>

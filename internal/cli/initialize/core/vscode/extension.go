@@ -56,7 +56,7 @@ func createExtensionsJSON(cmd *cobra.Command) error {
 	content := map[string][]string{
 		cfgVscode.KeyRecommendations: {cfgVscode.ExtensionID},
 	}
-	data, _ := json.MarshalIndent(content, "", "  ")
+	data, _ := json.MarshalIndent(content, "", token.Indent2)
 	data = append(data, token.NewlineLF...)
 
 	if writeErr := io.SafeWriteFile(target, data, fs.PermFile); writeErr != nil {

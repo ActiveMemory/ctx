@@ -57,7 +57,7 @@ func Deploy(
 	}
 
 	data, marshalErr := json.MarshalIndent(
-		cfg, "", "  ",
+		cfg, "", token.Indent2,
 	)
 	if marshalErr != nil {
 		return errSetup.MarshalConfig(marshalErr)

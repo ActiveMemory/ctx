@@ -100,7 +100,7 @@ func CleanTitle(s string) string {
 	if utf8.RuneCountInString(out) > journal.MaxTitleLen {
 		runes := []rune(out)
 		truncated := string(runes[:journal.MaxTitleLen])
-		if idx := strings.LastIndex(truncated, " "); idx > 0 {
+		if idx := strings.LastIndex(truncated, token.Space); idx > 0 {
 			truncated = truncated[:idx]
 		}
 		out = truncated

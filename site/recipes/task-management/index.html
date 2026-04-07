@@ -4173,7 +4173,7 @@ grows cluttered with completed checkboxes that obscure the remaining work.</p>
 <p>How do you manage work items that span multiple sessions without losing context?</p>
 <div class="admonition tip">
 <p class="admonition-title">Prefer skills over raw commands</p>
-<p>When working with an AI agent, use <code>/ctx-add-task</code> instead of raw
+<p>When working with an AI agent, use <code>/ctx-task-add</code> instead of raw
 <code>ctx add task</code>. The agent automatically picks up session ID, branch,
 and commit hash from its context — no manual flags needed.</p>
 </div>
@@ -4222,7 +4222,7 @@ and commit hash from its context — no manual flags needed.</p>
 <td>Move completed tasks to archive file</td>
 </tr>
 <tr>
-<td><code>/ctx-add-task</code></td>
+<td><code>/ctx-task-add</code></td>
 <td>Skill</td>
 <td>AI-assisted task creation with validation</td>
 </tr>
@@ -4241,7 +4241,7 @@ and commit hash from its context — no manual flags needed.</p>
 <h2 id="the-workflow">The Workflow<a class="headerlink" href="#the-workflow" title="Permanent link">&para;</a></h2>
 <h3 id="step-1-add-tasks-with-priorities">Step 1: Add Tasks with Priorities<a class="headerlink" href="#step-1-add-tasks-with-priorities" title="Permanent link">&para;</a></h3>
 <p>Every piece of follow-up work gets a task. Use <code>ctx add task</code> from the terminal
-or <code>/ctx-add-task</code> from your AI assistant. Tasks should start with a verb and be
+or <code>/ctx-task-add</code> from your AI assistant. Tasks should start with a verb and be
 specific enough that someone unfamiliar with the session could act on them.</p>
 <div class="language-bash highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># High-priority bug found during code review</span>
 </span><span id="__span-2-2"><a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>ctx<span class="w"> </span>add<span class="w"> </span>task<span class="w"> </span><span class="s2">&quot;Fix race condition in session cooldown&quot;</span><span class="w"> </span>--priority<span class="w"> </span>high<span class="w"> </span><span class="se">\</span>
@@ -4255,7 +4255,7 @@ specific enough that someone unfamiliar with the session could act on them.</p>
 </span><span id="__span-2-10"><a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a>ctx<span class="w"> </span>add<span class="w"> </span>task<span class="w"> </span><span class="s2">&quot;Remove deprecated --raw flag from ctx load&quot;</span><span class="w"> </span>--priority<span class="w"> </span>low<span class="w"> </span><span class="se">\</span>
 </span><span id="__span-2-11"><a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a><span class="w">  </span>--session-id<span class="w"> </span>abc12345<span class="w"> </span>--branch<span class="w"> </span>main<span class="w"> </span>--commit<span class="w"> </span>68fbc00a
 </span></code></pre></div>
-<p>The <code>/ctx-add-task</code> skill validates your task before recording it. It checks
+<p>The <code>/ctx-task-add</code> skill validates your task before recording it. It checks
 that the description is actionable, not a duplicate, and specific enough for
 someone else to pick up.</p>
 <p>If you say "<em>fix the bug,</em>" it will ask you to clarify which bug and where.</p>

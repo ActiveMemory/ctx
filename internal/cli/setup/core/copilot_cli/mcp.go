@@ -81,7 +81,7 @@ func ensureMCPConfig(cmd *cobra.Command) error {
 		return mkdirErr
 	}
 
-	data, marshalErr := json.MarshalIndent(existing, "", "  ")
+	data, marshalErr := json.MarshalIndent(existing, "", token.Indent2)
 	if marshalErr != nil {
 		return marshalErr
 	}

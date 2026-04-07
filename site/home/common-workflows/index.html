@@ -4040,8 +4040,8 @@
 <h2 id="track-context">Track Context<a class="headerlink" href="#track-context" title="Permanent link">&para;</a></h2>
 <div class="admonition tip">
 <p class="admonition-title">Prefer skills over raw commands</p>
-<p>When working with an AI agent, use <code>/ctx-add-task</code>,
-<code>/ctx-add-decision</code>, or <code>/ctx-add-learning</code> instead of raw
+<p>When working with an AI agent, use <code>/ctx-task-add</code>,
+<code>/ctx-decision-add</code>, or <code>/ctx-learning-add</code> instead of raw
 <code>ctx add</code> commands. The agent automatically picks up session ID,
 branch, and commit hash from its context — no manual flags needed.</p>
 </div>
@@ -4325,22 +4325,22 @@ agent's judgment.</p>
 </tr>
 <tr>
 <td><code>ctx add task</code></td>
-<td><code>/ctx-add-task</code></td>
+<td><code>/ctx-task-add</code></td>
 <td>Agent decomposes vague goals into concrete tasks</td>
 </tr>
 <tr>
 <td><code>ctx add decision</code></td>
-<td><code>/ctx-add-decision</code></td>
+<td><code>/ctx-decision-add</code></td>
 <td>Agent drafts rationale and consequences from discussion</td>
 </tr>
 <tr>
 <td><code>ctx add learning</code></td>
-<td><code>/ctx-add-learning</code></td>
+<td><code>/ctx-learning-add</code></td>
 <td>Agent extracts the lesson from a debugging session</td>
 </tr>
 <tr>
 <td><code>ctx add convention</code></td>
-<td><code>/ctx-add-convention</code></td>
+<td><code>/ctx-convention-add</code></td>
 <td>Agent observes a repeated pattern and codifies it</td>
 </tr>
 <tr>
@@ -4429,7 +4429,7 @@ agent's judgment.</p>
 <td>Analyze prompting patterns for improvement</td>
 </tr>
 <tr>
-<td><code>/ctx-import-plans</code></td>
+<td><code>/ctx-plan-import</code></td>
 <td>Import Claude Code plan files into project specs</td>
 </tr>
 <tr>

@@ -91,7 +91,7 @@ func Trace(
 			continue
 		}
 		// format: <hash> <date> <subject>
-		parts := strings.SplitN(line, " ", 3)
+		parts := strings.SplitN(line, token.Space, 3)
 		if len(parts) < 1 {
 			continue
 		}

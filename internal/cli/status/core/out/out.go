@@ -62,7 +62,7 @@ func PersistStatusJSON(
 	}
 
 	enc := json.NewEncoder(cmd.OutOrStdout())
-	enc.SetIndent("", "  ")
+	enc.SetIndent("", token.Indent2)
 	return enc.Encode(output)
 }
 
@@ -99,12 +99,12 @@ func PersistStatusText(
 			fi.Status = f.Summary
 		}
 		if verbose && !f.IsEmpty {
-			fi.Preview = preview.Content(string(f.Content), 3)
+			fi.Preview = preview.Content(string(f.Content), cfgFmt.StatusPreviewLines)
 		}
 		status.FileItem(cmd, fi, verbose)
 	}
 
-	recentFiles := sort.RecentFiles(ctx.Files, 3)
+	recentFiles := sort.RecentFiles(ctx.Files, cfgFmt.StatusRecentFiles)
 	entries := make([]status.ActivityInfo, len(recentFiles))
 	for i, f := range recentFiles {
 		d := time.Since(f.ModTime)

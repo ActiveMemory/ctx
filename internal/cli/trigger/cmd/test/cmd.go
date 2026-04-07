@@ -106,7 +106,7 @@ func Run(c *cobra.Command, hookType, toolName, path string) error {
 
 	writeTrigger.TestingHeader(c, hookType)
 
-	inputJSON, _ := json.MarshalIndent(input, "", "  ")
+	inputJSON, _ := json.MarshalIndent(input, "", token.Indent2)
 	writeTrigger.TestInput(c, string(inputJSON))
 
 	agg, err := trigger.RunAll(hooksDir, ht, input, timeout)

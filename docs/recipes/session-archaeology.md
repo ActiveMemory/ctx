@@ -56,6 +56,8 @@ Read on for what each stage does and why.
 | `ctx journal import`       | Command | Import sessions to editable journal Markdown       |
 | `ctx journal site`        | Command | Generate a static site from journal entries        |
 | `ctx journal obsidian`    | Command | Generate an Obsidian vault from journal entries    |
+| `ctx journal schema check`| Command | Validate JSONL files and report schema drift       |
+| `ctx journal schema dump` | Command | Print the embedded JSONL schema definition         |
 | `ctx serve`               | Command | Serve any zensical directory (default: journal)    |
 | `/ctx-history`             | Skill   | Browse sessions inside your AI assistant           |
 | `/ctx-journal-enrich`     | Skill   | Add frontmatter metadata to a single entry         |

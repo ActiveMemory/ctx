@@ -26,4 +26,8 @@ const (
 	// TrimCR is the character set trimmed from the start
 	// of raw frontmatter to normalize line endings.
 	TrimCR = "\n\r"
+	// Indent2 is a two-space indent.
+	Indent2 = "  "
+	// Indent4 is a four-space indent.
+	Indent4 = "    "
 )

@@ -13,8 +13,16 @@ import (
 	cfgSteering "github.com/ActiveMemory/ctx/internal/config/steering"
 )
 
-// matchInclusion checks whether a steering file should be included
-// based on its inclusion mode.
+// matchInclusion checks whether a steering file should be
+// included based on its inclusion mode.
+//
+// Parameters:
+//   - sf: steering file to evaluate
+//   - promptLower: lowercased user prompt for auto-match
+//   - manualNames: explicitly requested steering file names
+//
+// Returns:
+//   - bool: true when the file matches the inclusion criteria
 func matchInclusion(
 	sf *SteeringFile, promptLower string,
 	manualNames []string,
@@ -34,9 +42,16 @@ func matchInclusion(
 	}
 }
 
-// matchTool checks whether a steering file applies to the given tool.
-// When the file's Tools list is nil or empty, it applies to all tools.
-// When tool is empty, no filtering is applied.
+// matchTool checks whether a steering file applies to the given
+// tool. When the file's Tools list is nil or empty, it applies
+// to all tools. When tool is empty, no filtering is applied.
+//
+// Parameters:
+//   - sf: steering file whose tool scope to check
+//   - tool: tool identifier to match against
+//
+// Returns:
+//   - bool: true when the file applies to the tool
 func matchTool(sf *SteeringFile, tool string) bool {
 	if tool == "" {
 		return true

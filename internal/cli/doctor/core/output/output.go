@@ -12,6 +12,7 @@ import (
 	"github.com/spf13/cobra"
 
 	"github.com/ActiveMemory/ctx/internal/cli/doctor/core/check"
+	"github.com/ActiveMemory/ctx/internal/config/token"
 	writeDoctor "github.com/ActiveMemory/ctx/internal/write/doctor"
 )
 
@@ -28,7 +29,7 @@ func JSON(
 	cmd *cobra.Command, report *check.Report,
 ) error {
 	data, marshalErr := json.MarshalIndent(
-		report, "", "  ",
+		report, "", token.Indent2,
 	)
 	if marshalErr != nil {
 		return marshalErr

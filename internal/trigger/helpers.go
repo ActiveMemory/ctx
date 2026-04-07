@@ -12,6 +12,12 @@ import (
 )
 
 // stripExt removes the file extension from a filename.
+//
+// Parameters:
+//   - filename: file name possibly containing an extension
+//
+// Returns:
+//   - string: filename with the extension removed
 func stripExt(filename string) string {
 	ext := filepath.Ext(filename)
 	return strings.TrimSuffix(filename, ext)

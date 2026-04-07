@@ -3966,7 +3966,7 @@ the next session has no idea why things are shaped this way.</p>
 <h2 id="tldr">TL;DR<a class="headerlink" href="#tldr" title="Permanent link">&para;</a></h2>
 <div class="language-text highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>/ctx-brainstorm          # explore the design space
 </span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>/ctx-spec                # write the spec document
-</span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>/ctx-add-task            # break it into tasks
+</span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>/ctx-task-add            # break it into tasks
 </span><span id="__span-0-4"><a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>/ctx-implement           # execute step-by-step
 </span></code></pre></div>
 <p>Four skills, used in sequence. Each produces an artifact that feeds
@@ -3992,7 +3992,7 @@ the next.</p>
 <td>Scaffold and fill out a spec from the template</td>
 </tr>
 <tr>
-<td><code>/ctx-add-task</code></td>
+<td><code>/ctx-task-add</code></td>
 <td>Skill</td>
 <td>Add implementation tasks to TASKS.md</td>
 </tr>
@@ -4002,7 +4002,7 @@ the next.</p>
 <td>Execute a plan step-by-step with verification</td>
 </tr>
 <tr>
-<td><code>/ctx-add-decision</code></td>
+<td><code>/ctx-decision-add</code></td>
 <td>Skill</td>
 <td>Record design choices made during brainstorming</td>
 </tr>
@@ -4082,7 +4082,7 @@ at <code>specs/{feature-name}.md</code>.</p>
 </span></code></pre></div>
 <p>Each task is independently completable and references the spec via
 <code>Spec: specs/rss-feed.md</code> in the Phase header.</p>
-<p>You can also invoke <code>/ctx-add-task</code> directly at any point to add
+<p>You can also invoke <code>/ctx-task-add</code> directly at any point to add
 individual tasks.</p>
 <h3 id="step-4-implement-step-by-step">Step 4: Implement Step-by-Step<a class="headerlink" href="#step-4-implement-step-by-step" title="Permanent link">&para;</a></h3>
 <p>Pick up tasks with <code>/ctx-implement</code>. The skill loads the spec, breaks
@@ -4157,7 +4157,7 @@ features complex enough to warrant front-loaded design.</p>
 </tr>
 <tr>
 <td>"Break this into tasks"</td>
-<td><code>/ctx-add-task</code></td>
+<td><code>/ctx-task-add</code></td>
 </tr>
 <tr>
 <td>"Implement the spec"</td>
@@ -4180,7 +4180,7 @@ features complex enough to warrant front-loaded design.</p>
   edge cases because that's where designs break.</li>
 <li><strong>Record decisions during brainstorming</strong>. When you choose between
   approaches, the agent offers to persist the trade-off via
-  <code>/ctx-add-decision</code>. Accept - future sessions need to know <em>why</em>, not
+  <code>/ctx-decision-add</code>. Accept - future sessions need to know <em>why</em>, not
   just <em>what</em>.</li>
 <li><strong>Specs are living documents</strong>. Update them when implementation reveals
   new constraints. A spec that diverges from reality is worse than no spec.</li>

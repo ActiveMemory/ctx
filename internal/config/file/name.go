@@ -12,6 +12,8 @@ const (
 	Readme = "README.md"
 	// Index is the standard index filename for generated sites.
 	Index = "index.md"
+	// SchemaDrift is the schema drift report in .context/reports/.
+	SchemaDrift = "schema-drift.md"
 	// Violations is the governance violations file in .context/state/.
 	Violations = "violations.json"
 )

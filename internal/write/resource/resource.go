@@ -11,6 +11,7 @@ import (
 
 	"github.com/spf13/cobra"
 
+	"github.com/ActiveMemory/ctx/internal/config/token"
 	"github.com/ActiveMemory/ctx/internal/sysinfo"
 )
 
@@ -90,6 +91,6 @@ func JSON(
 	out.MaxSeverity = sysinfo.MaxSeverity(alerts).String()
 
 	enc := json.NewEncoder(cmd.OutOrStdout())
-	enc.SetIndent("", "  ")
+	enc.SetIndent("", token.Indent2)
 	return enc.Encode(out)
 }

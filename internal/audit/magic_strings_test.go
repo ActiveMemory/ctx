@@ -23,12 +23,7 @@ import (
 //
 // exemptStrings lists string values always acceptable.
 var exemptStrings = map[string]bool{
-	"":     true, // empty string
-	" ":    true, // single space
-	"  ":   true, // two-space indent
-	"    ": true, // four-space indent
-	". ":   true, // sentence separator
-	": ":   true, // key-value separator
+	"": true, // empty string
 }
 
 // DO NOT add entries here to make tests pass. New code must

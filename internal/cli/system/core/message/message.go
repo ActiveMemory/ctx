@@ -94,7 +94,8 @@ func NudgeBox(relayPrefix, title, content string) string {
 		pad = 0
 	}
 	msg := relayPrefix + token.NewlineLF + token.NewlineLF +
-		box.Top + title + " " + strings.Repeat(box.BorderFill, pad) + token.NewlineLF
+		box.Top + title + token.Space +
+		strings.Repeat(box.BorderFill, pad) + token.NewlineLF
 	msg += BoxLines(content)
 	if line := ctxContext.DirLine(); line != "" {
 		msg += box.LinePrefix + line + token.NewlineLF

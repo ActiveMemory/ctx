@@ -15,6 +15,15 @@ import (
 
 // parseManifest extracts YAML frontmatter and markdown
 // body from a SKILL.md file.
+//
+// Parameters:
+//   - data: raw bytes of the SKILL.md file
+//   - name: skill name used in error messages
+//   - dir: directory containing the skill
+//
+// Returns:
+//   - *Skill: parsed skill with body and directory set
+//   - error: frontmatter split or YAML parse failure
 func parseManifest(
 	data []byte, name, dir string,
 ) (*Skill, error) {

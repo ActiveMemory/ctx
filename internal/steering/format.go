@@ -22,7 +22,14 @@ import (
 	ctxIo "github.com/ActiveMemory/ctx/internal/io"
 )
 
-// syncableTool returns true if the tool supports native-format sync.
+// syncableTool returns true if the tool supports native-format
+// sync.
+//
+// Parameters:
+//   - tool: tool identifier to check
+//
+// Returns:
+//   - bool: true when the tool has a native format converter
 func syncableTool(tool string) bool {
 	for _, t := range syncableTools {
 		if t == tool {
@@ -32,8 +39,16 @@ func syncableTool(tool string) bool {
 	return false
 }
 
-// nativePath returns the output file path for a steering file in the
-// given tool's native format.
+// nativePath returns the output file path for a steering file
+// in the given tool's native format.
+//
+// Parameters:
+//   - projectRoot: absolute path to the project root
+//   - tool: target tool identifier (cursor, cline, kiro)
+//   - name: steering file base name without extension
+//
+// Returns:
+//   - string: resolved output path, empty for unknown tools
 func nativePath(
 	projectRoot, tool, name string,
 ) string {
@@ -58,9 +73,16 @@ func nativePath(
 	}
 }
 
-// validateOutputPath checks that the output path resolves within the
-// project root boundary. This prevents path traversal via crafted
-// steering file names.
+// validateOutputPath checks that the output path resolves within
+// the project root boundary. This prevents path traversal via
+// crafted steering file names.
+//
+// Parameters:
+//   - outPath: candidate output file path
+//   - projectRoot: boundary directory for containment check
+//
+// Returns:
+//   - error: non-nil when the path escapes projectRoot
 func validateOutputPath(outPath, projectRoot string) error {
 	absOut, absOutErr := filepath.Abs(outPath)
 	if absOutErr != nil {
@@ -85,7 +107,15 @@ func validateOutputPath(outPath, projectRoot string) error {
 	return nil
 }
 
-// formatNative converts a steering file to the tool's native format.
+// formatNative converts a steering file to the tool's native
+// format.
+//
+// Parameters:
+//   - tool: target tool identifier (cursor, cline, kiro)
+//   - sf: steering file to convert
+//
+// Returns:
+//   - []byte: formatted content, nil for unknown tools
 func formatNative(tool string, sf *SteeringFile) []byte {
 	switch tool {
 	case cfgHook.ToolCursor:
@@ -99,7 +129,14 @@ func formatNative(tool string, sf *SteeringFile) []byte {
 	}
 }
 
-// formatCursor produces Cursor-compatible .mdc content with frontmatter.
+// formatCursor produces Cursor-compatible .mdc content with
+// frontmatter.
+//
+// Parameters:
+//   - sf: steering file to format
+//
+// Returns:
+//   - []byte: .mdc content with YAML frontmatter and body
 func formatCursor(sf *SteeringFile) []byte {
 	fm := cursorFrontmatter{
 		Description: sf.Description,
@@ -121,7 +158,14 @@ func formatCursor(sf *SteeringFile) []byte {
 	return buf.Bytes()
 }
 
-// formatCline produces Cline-compatible plain markdown (no frontmatter).
+// formatCline produces Cline-compatible plain markdown without
+// frontmatter.
+//
+// Parameters:
+//   - sf: steering file to format
+//
+// Returns:
+//   - []byte: markdown with H1 heading and body
 func formatCline(sf *SteeringFile) []byte {
 	var buf bytes.Buffer
 	buf.WriteString(token.HeadingLevelOneStart)
@@ -133,7 +177,14 @@ func formatCline(sf *SteeringFile) []byte {
 	return buf.Bytes()
 }
 
-// formatKiro produces Kiro-compatible steering file with frontmatter.
+// formatKiro produces Kiro-compatible steering file with
+// frontmatter.
+//
+// Parameters:
+//   - sf: steering file to format
+//
+// Returns:
+//   - []byte: markdown with Kiro YAML frontmatter and body
 func formatKiro(sf *SteeringFile) []byte {
 	fm := kiroFrontmatter{
 		Name:        sf.Name,
@@ -156,6 +207,12 @@ func formatKiro(sf *SteeringFile) []byte {
 }
 
 // mapKiroMode maps ctx inclusion modes to Kiro equivalents.
+//
+// Parameters:
+//   - inc: ctx-native inclusion mode
+//
+// Returns:
+//   - string: corresponding Kiro mode string
 func mapKiroMode(
 	inc cfgSteering.InclusionMode,
 ) string {
@@ -171,8 +228,15 @@ func mapKiroMode(
 	}
 }
 
-// unchanged returns true if the file at path already exists and has
-// the same content as data.
+// unchanged returns true if the file at path already exists and
+// has the same content as data.
+//
+// Parameters:
+//   - path: filesystem path to compare against
+//   - data: expected file content
+//
+// Returns:
+//   - bool: true when existing content matches data exactly
 func unchanged(path string, data []byte) bool {
 	existing, err := ctxIo.SafeReadUserFile(path)
 	if err != nil {
@@ -181,7 +245,15 @@ func unchanged(path string, data []byte) bool {
 	return bytes.Equal(existing, data)
 }
 
-// writeFile creates parent directories as needed and writes data to path.
+// writeFile creates parent directories as needed and writes data
+// to path.
+//
+// Parameters:
+//   - path: destination file path
+//   - data: content to write
+//
+// Returns:
+//   - error: directory creation or write failure
 func writeFile(path string, data []byte) error {
 	dir := filepath.Dir(path)
 	if mkdirErr := ctxIo.SafeMkdirAll(dir, fs.PermExec); mkdirErr != nil {

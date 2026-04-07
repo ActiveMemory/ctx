@@ -56,7 +56,7 @@ func createTasksJSON(cmd *cobra.Command) error {
 		Version: cfgVscode.TasksVersion,
 		Tasks:   tasks,
 	}
-	data, _ := json.MarshalIndent(file, "", "  ")
+	data, _ := json.MarshalIndent(file, "", token.Indent2)
 	data = append(data, token.NewlineLF...)
 
 	writeErr := ctxIo.SafeWriteFile(

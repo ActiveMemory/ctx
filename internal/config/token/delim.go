@@ -27,6 +27,8 @@ const (
 	Colon = ":"
 	// Comma is the comma character.
 	Comma = ","
+	// ColonSpace is a colon-space separator for key-value display.
+	ColonSpace = ": "
 	// CommaSpace is a comma-space separator for joining lists.
 	CommaSpace = ", "
 	// Dash is a hyphen used as a timestamp segment separator.

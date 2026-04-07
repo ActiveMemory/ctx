@@ -23,6 +23,13 @@ import (
 
 // setupPlaintext creates the plaintext scratchpad file if it
 // does not already exist.
+//
+// Parameters:
+//   - cmd: cobra command for status output
+//   - contextDir: path to the .context directory
+//
+// Returns:
+//   - error: file-write failure
 func setupPlaintext(
 	cmd *cobra.Command, contextDir string,
 ) error {
@@ -43,6 +50,13 @@ func setupPlaintext(
 
 // setupEncrypted creates the encryption key and encrypted
 // scratchpad file if they do not already exist.
+//
+// Parameters:
+//   - cmd: cobra command for status output
+//   - contextDir: path to the .context directory
+//
+// Returns:
+//   - error: key generation, directory, or write failure
 func setupEncrypted(
 	cmd *cobra.Command, contextDir string,
 ) error {

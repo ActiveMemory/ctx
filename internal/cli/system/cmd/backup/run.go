@@ -17,6 +17,7 @@ import (
 	"github.com/ActiveMemory/ctx/internal/config/archive"
 	"github.com/ActiveMemory/ctx/internal/config/env"
 	cFlag "github.com/ActiveMemory/ctx/internal/config/flag"
+	"github.com/ActiveMemory/ctx/internal/config/token"
 	"github.com/ActiveMemory/ctx/internal/entity"
 	errBackup "github.com/ActiveMemory/ctx/internal/err/backup"
 	errInit "github.com/ActiveMemory/ctx/internal/err/initialize"
@@ -87,7 +88,7 @@ func Run(cmd *cobra.Command) error {
 
 	if jsonOut {
 		enc := json.NewEncoder(cmd.OutOrStdout())
-		enc.SetIndent("", "  ")
+		enc.SetIndent("", token.Indent2)
 		return enc.Encode(results)
 	}
 

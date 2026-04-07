@@ -99,7 +99,7 @@ func Table(graph map[string][]string) string {
 // Returns:
 //   - string: Pretty-printed JSON
 func JSON(graph map[string][]string) string {
-	data, _ := json.MarshalIndent(graph, "", "  ")
+	data, _ := json.MarshalIndent(graph, "", token.Indent2)
 	return string(data) + token.NewlineLF
 }
 

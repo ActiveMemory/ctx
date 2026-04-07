@@ -18,6 +18,12 @@ import (
 
 // ensureMCPConfig creates .cursor/mcp.json with the ctx
 // MCP server configuration. Skips if the file exists.
+//
+// Parameters:
+//   - cmd: cobra command for status output
+//
+// Returns:
+//   - error: config serialization or write failure
 func ensureMCPConfig(cmd *cobra.Command) error {
 	cfg := mcpConfig{
 		MCPServers: map[string]serverEntry{
@@ -35,6 +41,12 @@ func ensureMCPConfig(cmd *cobra.Command) error {
 
 // syncSteering syncs steering files to Cursor format
 // if a steering directory exists.
+//
+// Parameters:
+//   - cmd: cobra command for status output
+//
+// Returns:
+//   - error: steering sync failure
 func syncSteering(cmd *cobra.Command) error {
 	return mcpDeploy.SyncSteering(
 		cmd, cfgHook.ToolCursor,

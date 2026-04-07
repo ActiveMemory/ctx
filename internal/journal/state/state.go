@@ -70,7 +70,7 @@ func Load(journalDir string) (*State, error) {
 // Returns:
 //   - error: non-nil if marshalling or file write fails
 func (s *State) Save(journalDir string) error {
-	data, marshalErr := json.MarshalIndent(s, "", "  ")
+	data, marshalErr := json.MarshalIndent(s, "", token.Indent2)
 	if marshalErr != nil {
 		return marshalErr
 	}

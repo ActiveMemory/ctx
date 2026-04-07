@@ -14,6 +14,7 @@ import (
 	"github.com/ActiveMemory/ctx/internal/config/embed/text"
 	"github.com/ActiveMemory/ctx/internal/config/stats"
 	cfgSysinfo "github.com/ActiveMemory/ctx/internal/config/sysinfo"
+	"github.com/ActiveMemory/ctx/internal/config/token"
 	"github.com/ActiveMemory/ctx/internal/sysinfo"
 )
 
@@ -68,7 +69,7 @@ func formatLine(label, values, status string) string {
 	if pad < 1 {
 		pad = 1
 	}
-	return left + strings.Repeat(" ", pad) + status
+	return left + strings.Repeat(token.Space, pad) + status
 }
 
 // formatText renders the resource snapshot and alerts as a

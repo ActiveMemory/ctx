@@ -4047,7 +4047,7 @@ keep it clean.</p>
 <h2 id="tldr">TL;DR<a class="headerlink" href="#tldr" title="Permanent link">&para;</a></h2>
 <div class="language-bash highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>ctx<span class="w"> </span>init<span class="w">                            </span><span class="c1"># seeds safe defaults</span>
 </span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>/ctx-drift<span class="w">                          </span><span class="c1"># detects missing/stale permissions</span>
-</span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>/ctx-sanitize-permissions<span class="w">               </span><span class="c1"># audits for dangerous patterns</span>
+</span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>/ctx-permission-sanitize<span class="w">               </span><span class="c1"># audits for dangerous patterns</span>
 </span></code></pre></div>
 <p>See <a href="#recommended-defaults">Recommended Defaults</a> for the full list.</p>
 <h2 id="commands-and-skills-used">Commands and Skills Used<a class="headerlink" href="#commands-and-skills-used" title="Permanent link">&para;</a></h2>
@@ -4068,7 +4068,7 @@ keep it clean.</p>
 <td>Detects missing or stale permission entries</td>
 </tr>
 <tr>
-<td><code>/ctx-sanitize-permissions</code></td>
+<td><code>/ctx-permission-sanitize</code></td>
 <td>Audits for dangerous patterns (security-focused)</td>
 </tr>
 </tbody>
@@ -4105,10 +4105,10 @@ project using ctx:</p>
 </span><span id="__span-1-26"><a id="__codelineno-1-26" name="__codelineno-1-26" href="#__codelineno-1-26"></a><span class="w">      </span><span class="s2">&quot;Bash(grep:*)&quot;</span><span class="p">,</span>
 </span><span id="__span-1-27"><a id="__codelineno-1-27" name="__codelineno-1-27" href="#__codelineno-1-27"></a><span class="w">      </span><span class="s2">&quot;Bash(ls:*)&quot;</span><span class="p">,</span>
 </span><span id="__span-1-28"><a id="__codelineno-1-28" name="__codelineno-1-28" href="#__codelineno-1-28"></a><span class="w">      </span><span class="s2">&quot;Bash(make:*)&quot;</span><span class="p">,</span>
-</span><span id="__span-1-29"><a id="__codelineno-1-29" name="__codelineno-1-29" href="#__codelineno-1-29"></a><span class="w">      </span><span class="s2">&quot;Skill(ctx-add-convention)&quot;</span><span class="p">,</span>
-</span><span id="__span-1-30"><a id="__codelineno-1-30" name="__codelineno-1-30" href="#__codelineno-1-30"></a><span class="w">      </span><span class="s2">&quot;Skill(ctx-add-decision)&quot;</span><span class="p">,</span>
-</span><span id="__span-1-31"><a id="__codelineno-1-31" name="__codelineno-1-31" href="#__codelineno-1-31"></a><span class="w">      </span><span class="s2">&quot;Skill(ctx-add-learning)&quot;</span><span class="p">,</span>
-</span><span id="__span-1-32"><a id="__codelineno-1-32" name="__codelineno-1-32" href="#__codelineno-1-32"></a><span class="w">      </span><span class="s2">&quot;Skill(ctx-add-task)&quot;</span><span class="p">,</span>
+</span><span id="__span-1-29"><a id="__codelineno-1-29" name="__codelineno-1-29" href="#__codelineno-1-29"></a><span class="w">      </span><span class="s2">&quot;Skill(ctx-convention-add)&quot;</span><span class="p">,</span>
+</span><span id="__span-1-30"><a id="__codelineno-1-30" name="__codelineno-1-30" href="#__codelineno-1-30"></a><span class="w">      </span><span class="s2">&quot;Skill(ctx-decision-add)&quot;</span><span class="p">,</span>
+</span><span id="__span-1-31"><a id="__codelineno-1-31" name="__codelineno-1-31" href="#__codelineno-1-31"></a><span class="w">      </span><span class="s2">&quot;Skill(ctx-learning-add)&quot;</span><span class="p">,</span>
+</span><span id="__span-1-32"><a id="__codelineno-1-32" name="__codelineno-1-32" href="#__codelineno-1-32"></a><span class="w">      </span><span class="s2">&quot;Skill(ctx-task-add)&quot;</span><span class="p">,</span>
 </span><span id="__span-1-33"><a id="__codelineno-1-33" name="__codelineno-1-33" href="#__codelineno-1-33"></a><span class="w">      </span><span class="s2">&quot;Skill(ctx-agent)&quot;</span><span class="p">,</span>
 </span><span id="__span-1-34"><a id="__codelineno-1-34" name="__codelineno-1-34" href="#__codelineno-1-34"></a><span class="w">      </span><span class="s2">&quot;Skill(ctx-archive)&quot;</span><span class="p">,</span>
 </span><span id="__span-1-35"><a id="__codelineno-1-35" name="__codelineno-1-35" href="#__codelineno-1-35"></a><span class="w">      </span><span class="s2">&quot;Skill(ctx-blog)&quot;</span><span class="p">,</span>
@@ -4264,7 +4264,7 @@ pattern always prompts the user, even if it also matches an allow entry.</p>
 <td>Deletes untracked files</td>
 </tr>
 <tr>
-<td><code>Skill(ctx-sanitize-permissions)</code></td>
+<td><code>Skill(ctx-permission-sanitize)</code></td>
 <td>Edits this file: self-modification vector</td>
 </tr>
 <tr>
@@ -4337,7 +4337,7 @@ for a step-by-step runbook.</p>
 <li>Stale <code>Skill(ctx-*)</code> entries for removed skills;</li>
 <li>Granular <code>Bash(ctx &lt;subcommand&gt;:*)</code> entries that should be consolidated.</li>
 </ul>
-<p>Run <code>/ctx-sanitize-permissions</code> to catch security issues:</p>
+<p>Run <code>/ctx-permission-sanitize</code> to catch security issues:</p>
 <ul>
 <li>Hook bypass patterns</li>
 <li>Destructive commands</li>

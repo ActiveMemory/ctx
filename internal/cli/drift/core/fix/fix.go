@@ -173,7 +173,7 @@ func Staleness(
 	var archiveContent string
 	for _, t := range completedTasks {
 		archiveContent += marker.PrefixTaskDone +
-			" " + t + nl
+			token.Space + t + nl
 	}
 
 	archiveFile, writeErr := tidy.WriteArchive(

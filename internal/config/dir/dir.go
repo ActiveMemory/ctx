@@ -35,6 +35,8 @@ const (
 	MemoryArchive = "memory/archive"
 	// Projects is the projects subdirectory within .claude/.
 	Projects = "projects"
+	// Reports is the subdirectory for generated reports within .context/.
+	Reports = "reports"
 	// Sessions is the subdirectory for session summaries within .context/.
 	Sessions = "sessions"
 	// Skills is the subdirectory for skill definitions within .context/.

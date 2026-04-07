@@ -67,7 +67,7 @@ func SaveState(contextDir string, s State) error {
 		return mkErr
 	}
 
-	data, marshalErr := json.MarshalIndent(s, "", "  ")
+	data, marshalErr := json.MarshalIndent(s, "", token.Indent2)
 	if marshalErr != nil {
 		return marshalErr
 	}

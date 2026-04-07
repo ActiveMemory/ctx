@@ -17,6 +17,13 @@ import (
 
 // copyDir recursively copies the contents of src into dst.
 // Both directories must already exist.
+//
+// Parameters:
+//   - src: source directory to copy from
+//   - dst: destination directory to copy into
+//
+// Returns:
+//   - error: read, mkdir, or file-copy failure
 func copyDir(src, dst string) error {
 	entries, readErr := os.ReadDir(src)
 	if readErr != nil {
@@ -46,7 +53,15 @@ func copyDir(src, dst string) error {
 	return nil
 }
 
-// copyFile copies a single file from src to dst, preserving permissions.
+// copyFile copies a single file from src to dst, preserving
+// permissions.
+//
+// Parameters:
+//   - src: path to the source file
+//   - dst: path to the destination file
+//
+// Returns:
+//   - error: stat, open, create, or copy failure
 func copyFile(src, dst string) error {
 	info, statErr := ctxIo.SafeStat(src)
 	if statErr != nil {

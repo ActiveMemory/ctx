@@ -10,8 +10,11 @@ import (
 	cfgSteering "github.com/ActiveMemory/ctx/internal/config/steering"
 )
 
-// applyDefaults sets default values for fields not present in the
-// parsed frontmatter.
+// applyDefaults sets default values for fields not present in
+// the parsed frontmatter.
+//
+// Parameters:
+//   - sf: steering file to populate with defaults
 func applyDefaults(sf *SteeringFile) {
 	if sf.Inclusion == "" {
 		sf.Inclusion = defaultInclusion

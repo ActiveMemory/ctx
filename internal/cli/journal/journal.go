@@ -12,6 +12,7 @@ import (
 	"github.com/ActiveMemory/ctx/internal/cli/journal/cmd/importer"
 	"github.com/ActiveMemory/ctx/internal/cli/journal/cmd/lock"
 	"github.com/ActiveMemory/ctx/internal/cli/journal/cmd/obsidian"
+	journalSchema "github.com/ActiveMemory/ctx/internal/cli/journal/cmd/schema"
 	"github.com/ActiveMemory/ctx/internal/cli/journal/cmd/site"
 	"github.com/ActiveMemory/ctx/internal/cli/journal/cmd/source"
 	journalSync "github.com/ActiveMemory/ctx/internal/cli/journal/cmd/sync"
@@ -32,6 +33,7 @@ func Cmd() *cobra.Command {
 	return parent.Cmd(cmd.DescKeyJournal, cmd.UseJournal,
 		source.Cmd(),
 		importer.Cmd(),
+		journalSchema.Cmd(),
 		lock.Cmd(),
 		unlock.Cmd(),
 		journalSync.Cmd(),

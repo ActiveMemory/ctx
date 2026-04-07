@@ -35,6 +35,14 @@ const (
 	// PreviewLines is the number of content lines shown in status
 	// previews and similar compact displays.
 	PreviewLines = 5
+
+	// StatusPreviewLines is the number of content lines shown
+	// in verbose status file previews.
+	StatusPreviewLines = 3
+
+	// StatusRecentFiles is the number of recently modified
+	// files shown in the status activity section.
+	StatusRecentFiles = 3
 )
 
 // IEC binary unit prefix string for byte formatting.

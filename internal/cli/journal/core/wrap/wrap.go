@@ -80,7 +80,7 @@ func Soft(line string, width int) []string {
 			result = append(result, current)
 			current = indent + word
 		} else {
-			current += " " + word
+			current += token.Space + word
 		}
 	}
 	result = append(result, current)

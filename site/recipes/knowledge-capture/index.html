@@ -4087,14 +4087,14 @@ rejected.</p>
 <p><strong>How do you make sure important context survives across sessions?</strong></p>
 <div class="admonition tip">
 <p class="admonition-title">Prefer skills over raw commands</p>
-<p>Use <code>/ctx-add-decision</code> and <code>/ctx-add-learning</code> instead of raw
+<p>Use <code>/ctx-decision-add</code> and <code>/ctx-learning-add</code> instead of raw
 <code>ctx add</code> commands. The agent automatically picks up session ID,
 branch, and commit hash from its context — no manual flags needed.</p>
 </div>
 <h2 id="tldr">TL;DR<a class="headerlink" href="#tldr" title="Permanent link">&para;</a></h2>
 <div class="language-text highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>/ctx-reflect               # surface items worth persisting
-</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>/ctx-add-decision &quot;Title&quot;  # record with context/rationale/consequence
-</span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>/ctx-add-learning &quot;Title&quot;  # record with context/lesson/application
+</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>/ctx-decision-add &quot;Title&quot;  # record with context/rationale/consequence
+</span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>/ctx-learning-add &quot;Title&quot;  # record with context/lesson/application
 </span></code></pre></div>
 <p>Or just tell your agent: <em>"What have we learned this session?"</em></p>
 <h2 id="commands-and-skills-used">Commands and Skills Used<a class="headerlink" href="#commands-and-skills-used" title="Permanent link">&para;</a></h2>
@@ -4138,17 +4138,17 @@ branch, and commit hash from its context — no manual flags needed.</p>
 <td>Rebuild the LEARNINGS.md index</td>
 </tr>
 <tr>
-<td><code>/ctx-add-decision</code></td>
+<td><code>/ctx-decision-add</code></td>
 <td>Skill</td>
 <td>AI-guided decision capture with validation</td>
 </tr>
 <tr>
-<td><code>/ctx-add-learning</code></td>
+<td><code>/ctx-learning-add</code></td>
 <td>Skill</td>
 <td>AI-guided learning capture with validation</td>
 </tr>
 <tr>
-<td><code>/ctx-add-convention</code></td>
+<td><code>/ctx-convention-add</code></td>
 <td>Skill</td>
 <td>AI-guided convention recording with placement</td>
 </tr>
@@ -4204,7 +4204,7 @@ fields from what it observed, which is hard to reconstruct later as a terminal
 one-liner.</p>
 <p>When multiple options were considered, the agent includes rejected alternatives
 in the rationale automatically.</p>
-<p>The <code>/ctx-add-decision</code> skill also guides you through the fields
+<p>The <code>/ctx-decision-add</code> skill also guides you through the fields
 interactively. For quick decisions, it supports a Y-statement:</p>
 <p>"<em>In the context of [situation], facing [constraint], we decided for [choice]
 and against [alternatives], to achieve [benefit], accepting that [trade-off].</em>"</p>
@@ -4239,7 +4239,7 @@ command:</p>
 fields filled from the session context.</p>
 <p>That is the point: the agent has the full conversation and can be far more
 expressive than what you would type at a command prompt.</p>
-<p>The <code>/ctx-add-learning</code> skill applies three quality filters:</p>
+<p>The <code>/ctx-learning-add</code> skill applies three quality filters:</p>
 <ol>
 <li>Could someone Google this in 5 minutes?</li>
 <li>Is it specific to this codebase?</li>

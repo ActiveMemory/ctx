@@ -65,6 +65,7 @@ const (
 	Commands        = "commands"
 	Completion      = "completion"
 	Days            = "days"
+	Dir             = "dir"
 	DryRun          = "dry-run"
 	Event           = "event"
 	External        = "external"

@@ -53,8 +53,8 @@ func ScanJournalEntries(journalDir string) ([]entity.JournalEntry, error) {
 	// Sort by datetime (newest first) - combine Date and Time
 	sort.Slice(entries, func(i, j int) bool {
 		// Compare Date+Time strings (YYYY-MM-DD + HH:MM:SS)
-		di := entries[i].Date + " " + entries[i].Time
-		dj := entries[j].Date + " " + entries[j].Time
+		di := entries[i].Date + token.Space + entries[i].Time
+		dj := entries[j].Date + token.Space + entries[j].Time
 		return di > dj
 	})
 

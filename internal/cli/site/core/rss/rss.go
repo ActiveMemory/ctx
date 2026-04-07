@@ -84,7 +84,7 @@ func Atom(posts []scan.BlogPost, outPath, baseURL string) error {
 		return errFs.Mkdir(outDir, mkErr)
 	}
 
-	xmlData, marshalErr := xml.MarshalIndent(feed, "", "  ")
+	xmlData, marshalErr := xml.MarshalIndent(feed, "", token.Indent2)
 	if marshalErr != nil {
 		return errSite.MarshalFeed(marshalErr)
 	}

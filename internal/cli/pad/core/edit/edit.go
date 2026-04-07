@@ -11,6 +11,7 @@ import (
 	"github.com/ActiveMemory/ctx/internal/cli/pad/core/store"
 	"github.com/ActiveMemory/ctx/internal/cli/pad/core/validate"
 	"github.com/ActiveMemory/ctx/internal/config/pad"
+	"github.com/ActiveMemory/ctx/internal/config/token"
 	errPad "github.com/ActiveMemory/ctx/internal/err/pad"
 	internalIo "github.com/ActiveMemory/ctx/internal/io"
 )
@@ -57,9 +58,9 @@ func Append(n int, text string) ([]string, error) {
 		return nil, validErr
 	}
 	if label, data, ok := blob.Split(entries[n-1]); ok {
-		entries[n-1] = blob.Make(label+" "+text, data)
+		entries[n-1] = blob.Make(label+token.Space+text, data)
 	} else {
-		entries[n-1] = entries[n-1] + " " + text
+		entries[n-1] = entries[n-1] + token.Space + text
 	}
 	return entries, nil
 }
@@ -84,9 +85,9 @@ func Prepend(n int, text string) ([]string, error) {
 		return nil, validErr
 	}
 	if label, data, ok := blob.Split(entries[n-1]); ok {
-		entries[n-1] = blob.Make(text+" "+label, data)
+		entries[n-1] = blob.Make(text+token.Space+label, data)
 	} else {
-		entries[n-1] = text + " " + entries[n-1]
+		entries[n-1] = text + token.Space + entries[n-1]
 	}
 	return entries, nil
 }

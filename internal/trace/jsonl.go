@@ -18,9 +18,17 @@ import (
 	"github.com/ActiveMemory/ctx/internal/io"
 )
 
-// readJSONL is a generic helper that opens the file at path and decodes each
-// line as a JSON value of type T. Malformed lines are silently skipped.
-// Returns an empty (non-nil) slice when the file does not exist.
+// readJSONL is a generic helper that opens the file at path and
+// decodes each line as a JSON value of type T. Malformed lines
+// are silently skipped. Returns an empty (non-nil) slice when
+// the file does not exist.
+//
+// Parameters:
+//   - path: filesystem path to the JSONL file
+//
+// Returns:
+//   - []T: decoded entries, empty slice if file missing
+//   - error: file-open or scanner failure
 func readJSONL[T any](path string) ([]T, error) {
 	f, openErr := io.SafeOpenUserFile(path)
 	if openErr != nil {
@@ -52,8 +60,16 @@ func readJSONL[T any](path string) ([]T, error) {
 	return entries, nil
 }
 
-// appendJSONL marshals entry as JSON and appends it as a line to dir/filename.
-// Creates the directory if needed.
+// appendJSONL marshals entry as JSON and appends it as a line to
+// dir/filename. Creates the directory if needed.
+//
+// Parameters:
+//   - dir: directory containing the JSONL file
+//   - filename: name of the JSONL file within dir
+//   - entry: value to marshal and append
+//
+// Returns:
+//   - error: marshal, directory creation, or write failure
 func appendJSONL[T any](dir, filename string, entry T) error {
 	if mkErr := io.SafeMkdirAll(dir, cfgFs.PermRestrictedDir); mkErr != nil {
 		return mkErr

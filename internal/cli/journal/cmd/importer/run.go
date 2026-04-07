@@ -17,6 +17,7 @@ import (
 	"github.com/ActiveMemory/ctx/internal/cli/journal/core/index"
 	"github.com/ActiveMemory/ctx/internal/cli/journal/core/plan"
 	"github.com/ActiveMemory/ctx/internal/cli/journal/core/query"
+	coreSchema "github.com/ActiveMemory/ctx/internal/cli/journal/core/schema"
 	srcFmt "github.com/ActiveMemory/ctx/internal/cli/journal/core/source/format"
 	"github.com/ActiveMemory/ctx/internal/cli/journal/core/validate"
 	"github.com/ActiveMemory/ctx/internal/config/dir"
@@ -28,10 +29,12 @@ import (
 	errJournal "github.com/ActiveMemory/ctx/internal/err/journal"
 	errSession "github.com/ActiveMemory/ctx/internal/err/session"
 	ctxIo "github.com/ActiveMemory/ctx/internal/io"
+	"github.com/ActiveMemory/ctx/internal/journal/schema"
 	"github.com/ActiveMemory/ctx/internal/journal/state"
 	"github.com/ActiveMemory/ctx/internal/rc"
 	"github.com/ActiveMemory/ctx/internal/write/err"
 	writeRecall "github.com/ActiveMemory/ctx/internal/write/journal"
+	writeSchema "github.com/ActiveMemory/ctx/internal/write/schema"
 )
 
 // Run handles the journal import command.
@@ -151,8 +154,18 @@ func Run(cmd *cobra.Command, args []string, opts entity.ImportOpts) error {
 		err.WarnFile(cmd, journal.File, saveErr)
 	}
 
-	// 12. Print final summary.
-	writeRecall.ImportFinalSummary(cmd, imported, updated, renamed, skipped)
+	// 12. Schema drift check on imported source files.
+	c := coreSchema.CheckSessions(toImport)
+	if c.Drift() {
+		writeSchema.DriftSummary(
+			cmd, schema.Summary(c),
+		)
+	}
+
+	// 13. Print final summary.
+	writeRecall.ImportFinalSummary(
+		cmd, imported, updated, renamed, skipped,
+	)
 
 	return nil
 }

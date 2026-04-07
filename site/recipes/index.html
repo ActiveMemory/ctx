@@ -4061,15 +4061,15 @@ and lessons learned, and <strong>codify</strong> conventions so they
 survive across sessions and team members.</p>
 <p><strong>Uses</strong>: <code>ctx add decision</code>, <code>ctx add learning</code>,
 <code>ctx add convention</code>, <code>ctx decision reindex</code>,
-<code>ctx learning reindex</code>, <code>/ctx-add-decision</code>,
-<code>/ctx-add-learning</code>, <code>/ctx-add-convention</code>, <code>/ctx-reflect</code></p>
+<code>ctx learning reindex</code>, <code>/ctx-decision-add</code>,
+<code>/ctx-learning-add</code>, <code>/ctx-convention-add</code>, <code>/ctx-reflect</code></p>
 <hr />
 <h3 id="tracking-work-across-sessions"><a href="task-management/">Tracking Work Across Sessions</a><a class="headerlink" href="#tracking-work-across-sessions" title="Permanent link">&para;</a></h3>
 <p><strong>Add</strong>, <strong>prioritize</strong>, <strong>complete</strong>, <strong>snapshot</strong>, and <strong>archive</strong> tasks. Keep
 <code>TASKS.md</code> focused as your project evolves across dozens of
 sessions.</p>
 <p><strong>Uses</strong>: <code>ctx add task</code>, <code>ctx task complete</code>, <code>ctx task archive</code>,
-<code>ctx task snapshot</code>, <code>/ctx-add-task</code>, <code>/ctx-archive</code>, <code>/ctx-next</code></p>
+<code>ctx task snapshot</code>, <code>/ctx-task-add</code>, <code>/ctx-archive</code>, <code>/ctx-next</code></p>
 <hr />
 <h3 id="using-the-scratchpad"><a href="scratchpad-with-claude/">Using the Scratchpad</a><a class="headerlink" href="#using-the-scratchpad" title="Permanent link">&para;</a></h3>
 <p>Use the encrypted <strong>scratchpad</strong> for quick notes, working memory, and
@@ -4149,14 +4149,14 @@ use <code>/ctx-doctor</code> for agent-driven analysis of event patterns.</p>
 <p>Keep <code>.claude/settings.local.json</code> clean: recommended <strong>safe defaults</strong>,
 what to <strong>never</strong> pre-approve, and a <strong>maintenance workflow</strong> for cleaning
 up session debris.</p>
-<p><strong>Uses</strong>: <code>ctx init</code>, <code>/ctx-drift</code>, <code>/ctx-sanitize-permissions</code>,
+<p><strong>Uses</strong>: <code>ctx init</code>, <code>/ctx-drift</code>, <code>/ctx-permission-sanitize</code>,
 <code>ctx permission snapshot</code>, <code>ctx permission restore</code></p>
 <hr />
 <h3 id="permission-snapshots"><a href="permission-snapshots/">Permission Snapshots</a><a class="headerlink" href="#permission-snapshots" title="Permanent link">&para;</a></h3>
 <p>Capture a known-good permission <strong>baseline</strong> as a <strong>golden image</strong>, then restore
 at session start to automatically drop session-accumulated permissions.</p>
 <p><strong>Uses</strong>: <code>ctx permission snapshot</code>, <code>ctx permission restore</code>,
-<code>/ctx-sanitize-permissions</code></p>
+<code>/ctx-permission-sanitize</code></p>
 <hr />
 <h3 id="turning-activity-into-content"><a href="publishing/">Turning Activity into Content</a><a class="headerlink" href="#turning-activity-into-content" title="Permanent link">&para;</a></h3>
 <p>Generate <strong>blog posts</strong> from project activity, write <strong>changelog
@@ -4172,14 +4172,14 @@ blog artifacts you see on this website.</p>
 <p>Import Claude Code <strong>plan files</strong> (<code>~/.claude/plans/*.md</code>) into <code>specs/</code>
 as permanent project specs. Filter by date, select interactively, and
 optionally create tasks referencing each imported spec.</p>
-<p><strong>Uses</strong>: <code>/ctx-import-plans</code>, <code>/ctx-add-task</code></p>
+<p><strong>Uses</strong>: <code>/ctx-plan-import</code>, <code>/ctx-task-add</code></p>
 <hr />
 <h3 id="design-before-coding"><a href="design-before-coding/">Design Before Coding</a><a class="headerlink" href="#design-before-coding" title="Permanent link">&para;</a></h3>
 <p>Front-load design with a four-skill chain: <strong>brainstorm</strong> the approach,
 <strong>spec</strong> the design, <strong>task</strong> the work, <strong>implement</strong> step-by-step.
 Each step produces an artifact that feeds the next.</p>
-<p><strong>Uses</strong>: <code>/ctx-brainstorm</code>, <code>/ctx-spec</code>, <code>/ctx-add-task</code>,
-<code>/ctx-implement</code>, <code>/ctx-add-decision</code></p>
+<p><strong>Uses</strong>: <code>/ctx-brainstorm</code>, <code>/ctx-spec</code>, <code>/ctx-task-add</code>,
+<code>/ctx-implement</code>, <code>/ctx-decision-add</code></p>
 <hr />
 <h2 id="agents-automation">Agents &amp; Automation<a class="headerlink" href="#agents-automation" title="Permanent link">&para;</a></h2>
 <h3 id="building-project-skills"><a href="building-skills/">Building Project Skills</a><a class="headerlink" href="#building-project-skills" title="Permanent link">&para;</a></h3>
@@ -4187,7 +4187,7 @@ Each step produces an artifact that feeds the next.</p>
 automatically. Covers the full cycle: <strong>identify</strong> a pattern, <strong>create</strong>
 the skill, <strong>test</strong> with realistic prompts, and <strong>iterate</strong> until it
 triggers correctly.</p>
-<p><strong>Uses</strong>: <code>/ctx-skill-creator</code>, <code>ctx init</code></p>
+<p><strong>Uses</strong>: <code>/ctx-skill-create</code>, <code>ctx init</code></p>
 <hr />
 <h3 id="running-an-unattended-ai-agent"><a href="autonomous-loops/">Running an Unattended AI Agent</a><a class="headerlink" href="#running-an-unattended-ai-agent" title="Permanent link">&para;</a></h3>
 <p>Set up a <strong>loop</strong> where an AI agent works through tasks overnight

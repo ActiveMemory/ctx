@@ -100,7 +100,7 @@ func Content(content string, fencesVerified bool) string {
 			if utf8.RuneCountInString(heading) > journal.MaxTitleLen {
 				runes := []rune(heading)
 				truncated := string(runes[:journal.MaxTitleLen])
-				if idx := strings.LastIndex(truncated, " "); idx > 0 {
+				if idx := strings.LastIndex(truncated, token.Space); idx > 0 {
 					truncated = truncated[:idx]
 				}
 				heading = truncated
@@ -131,7 +131,7 @@ func Content(content string, fencesVerified bool) string {
 		line = regex.ToolBold.ReplaceAllString(line, `🔧 $1`)
 
 		// Escape glob stars
-		if !strings.HasPrefix(line, "    ") {
+		if !strings.HasPrefix(line, token.Indent4) {
 			line = regex.GlobStar.ReplaceAllString(line, `\*$1`)
 		}
 

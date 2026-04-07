@@ -106,6 +106,12 @@ journal.source.tool:
   short: Filter by tool (e.g., claude-code)
 journal.source.until:
   short: Show sessions on or before this date (YYYY-MM-DD)
+journal.schema.check.dir:
+  short: Directory to scan for JSONL files
+journal.schema.check.all-projects:
+  short: Scan all Claude Code project directories
+journal.schema.check.quiet:
+  short: Exit code only (0 = clean, 1 = drift)
 load.budget:
   short: Token budget for assembly
 load.raw:

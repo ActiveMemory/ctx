@@ -4194,8 +4194,8 @@ list into <code>.claude/settings.local.json</code>. The golden images live in
 <code>internal/assets/permissions/</code>:</p>
 <p><strong>Allowlist</strong> (<code>allow.txt</code>): only these tools run without confirmation:</p>
 <div class="language-text highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>Bash(ctx:*)
-</span><span id="__span-1-2"><a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>Skill(ctx-add-convention)
-</span><span id="__span-1-3"><a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>Skill(ctx-add-decision)
+</span><span id="__span-1-2"><a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>Skill(ctx-convention-add)
+</span><span id="__span-1-3"><a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>Skill(ctx-decision-add)
 </span><span id="__span-1-4"><a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>... # all bundled ctx-* skills
 </span></code></pre></div>
 <p><strong>Deny list</strong> (<code>deny.txt</code>): these are blocked even if the agent requests them:</p>

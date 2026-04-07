@@ -11,6 +11,7 @@ import (
 
 	"github.com/ActiveMemory/ctx/internal/cli/system/core/message"
 	"github.com/ActiveMemory/ctx/internal/config/hook"
+	"github.com/ActiveMemory/ctx/internal/config/token"
 	"github.com/ActiveMemory/ctx/internal/entity"
 	internalIo "github.com/ActiveMemory/ctx/internal/io"
 	"github.com/ActiveMemory/ctx/internal/log/event"
@@ -98,7 +99,7 @@ func Emit(
 ) {
 	writeSetup.Nudge(cmd, message.NudgeBox(relayPrefix, boxTitle, content))
 	ref := entity.NewTemplateRef(hookName, variant, vars)
-	Relay(hookName+": "+relayMessage, sessionID, ref)
+	Relay(hookName+token.ColonSpace+relayMessage, sessionID, ref)
 	if markerPath != "" {
 		internalIo.TouchFile(markerPath)
 	}

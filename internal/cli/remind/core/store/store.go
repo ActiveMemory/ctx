@@ -14,6 +14,7 @@ import (
 
 	"github.com/ActiveMemory/ctx/internal/config/fs"
 	"github.com/ActiveMemory/ctx/internal/config/reminder"
+	"github.com/ActiveMemory/ctx/internal/config/token"
 	errReminder "github.com/ActiveMemory/ctx/internal/err/reminder"
 	"github.com/ActiveMemory/ctx/internal/io"
 	"github.com/ActiveMemory/ctx/internal/rc"
@@ -65,7 +66,7 @@ func Read() ([]Reminder, error) {
 //   - error: Non-nil on marshal or write failure
 func Write(reminders []Reminder) error {
 	data, marshalErr := json.MarshalIndent(
-		reminders, "", "  ",
+		reminders, "", token.Indent2,
 	)
 	if marshalErr != nil {
 		return marshalErr
