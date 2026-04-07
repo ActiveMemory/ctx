@@ -46,10 +46,10 @@ opinionated behavior on top.
 | [`/ctx-next`](#ctx-next)                                 | Suggest 1-3 concrete next actions with rationale                | user-invocable |
 | [`/ctx-commit`](#ctx-commit)                             | Commit with integrated context persistence                      | user-invocable |
 | [`/ctx-reflect`](#ctx-reflect)                           | Pause and reflect on session progress                           | user-invocable |
-| [`/ctx-add-task`](#ctx-add-task)                         | Add actionable task to TASKS.md                                 | user-invocable |
-| [`/ctx-add-decision`](#ctx-add-decision)                 | Record architectural decision with rationale                    | user-invocable |
-| [`/ctx-add-learning`](#ctx-add-learning)                 | Record gotchas and lessons learned                              | user-invocable |
-| [`/ctx-add-convention`](#ctx-add-convention)             | Record coding convention for consistency                        | user-invocable |
+| [`/ctx-task-add`](#ctx-task-add)                         | Add actionable task to TASKS.md                                 | user-invocable |
+| [`/ctx-decision-add`](#ctx-decision-add)                 | Record architectural decision with rationale                    | user-invocable |
+| [`/ctx-learning-add`](#ctx-learning-add)                 | Record gotchas and lessons learned                              | user-invocable |
+| [`/ctx-convention-add`](#ctx-convention-add)             | Record coding convention for consistency                        | user-invocable |
 | [`/ctx-archive`](#ctx-archive)                           | Archive completed tasks from TASKS.md                           | user-invocable |
 | [`/ctx-pad`](#ctx-pad)                                   | Manage encrypted scratchpad entries                             | user-invocable |
 | [`/ctx-history`](#ctx-history)                            | Browse and import AI session history                            | user-invocable |
@@ -61,11 +61,11 @@ opinionated behavior on top.
 | [`/ctx-drift`](#ctx-drift)                               | Detect and fix context drift                                    | user-invocable |
 | [`/ctx-prompt`](#ctx-prompt)                             | Apply, list, and manage saved prompt templates                  | user-invocable |
 | [`/ctx-prompt-audit`](#ctx-prompt-audit)                 | Analyze prompting patterns for improvement                      | user-invocable |
-| [`/ctx-check-links`](#ctx-check-links)                   | Audit docs for dead internal and external links                 | user-invocable |
-| [`/ctx-sanitize-permissions`](#ctx-sanitize-permissions) | Audit Claude Code permissions for security risks                | user-invocable |
+| [`/ctx-link-check`](#ctx-link-check)                   | Audit docs for dead internal and external links                 | user-invocable |
+| [`/ctx-permission-sanitize`](#ctx-permission-sanitize) | Audit Claude Code permissions for security risks                | user-invocable |
 | [`/ctx-brainstorm`](#ctx-brainstorm)                     | Structured design dialogue before implementation                | user-invocable |
 | [`/ctx-spec`](#ctx-spec)                                 | Scaffold a feature spec from a project template                 | user-invocable |
-| [`/ctx-import-plans`](#ctx-import-plans)                 | Import Claude Code plan files into project specs                | user-invocable |
+| [`/ctx-plan-import`](#ctx-plan-import)                 | Import Claude Code plan files into project specs                | user-invocable |
 | [`/ctx-implement`](#ctx-implement)                       | Execute a plan step-by-step with verification                   | user-invocable |
 | [`/ctx-loop`](#ctx-loop)                                 | Generate autonomous loop script                                 | user-invocable |
 | [`/ctx-worktree`](#ctx-worktree)                         | Manage git worktrees for parallel agents                        | user-invocable |
@@ -73,7 +73,7 @@ opinionated behavior on top.
 | [`/ctx-remind`](#ctx-remind)                             | Manage session-scoped reminders                                 | user-invocable |
 | [`/ctx-doctor`](#ctx-doctor)                             | Troubleshoot ctx behavior with health checks and event analysis | user-invocable |
 | [`/ctx-skill-audit`](#ctx-skill-audit)                   | Audit skills against Anthropic prompting best practices         | user-invocable |
-| [`/ctx-skill-creator`](#ctx-skill-creator)               | Create, improve, and test skills                                | user-invocable |
+| [`/ctx-skill-create`](#ctx-skill-create)               | Create, improve, and test skills                                | user-invocable |
 | [`/ctx-pause`](#ctx-pause)                               | Pause context hooks for this session                            | user-invocable |
 | [`/ctx-resume`](#ctx-resume)                             | Resume context hooks after a pause                              | user-invocable |
 
@@ -145,7 +145,7 @@ staged files, Co-Authored-By trailer, and a post-commit prompt to
 capture decisions and learnings.
 
 **Wraps**: `git add`, `git commit`, optionally chains to
-`/ctx-add-decision` and `/ctx-add-learning`
+`/ctx-decision-add` and `/ctx-learning-add`
 
 **See also**: [The Complete Session](../recipes/session-lifecycle.md)
 
@@ -187,7 +187,7 @@ chains to `/ctx-commit`
 Skills for recording work artifacts: tasks, decisions, learnings,
 conventions: into `.context/` files.
 
-### `/ctx-add-task`
+### `/ctx-task-add`
 
 Add an actionable task with optional priority and phase section.
 
@@ -198,7 +198,7 @@ Add an actionable task with optional priority and phase section.
 
 ---
 
-### `/ctx-add-decision`
+### `/ctx-decision-add`
 
 Record an architectural decision with context, rationale, and
 consequence. Supports Y-statement (lightweight) and full ADR formats.
@@ -211,7 +211,7 @@ consequence. Supports Y-statement (lightweight) and full ADR formats.
 
 ---
 
-### `/ctx-add-learning`
+### `/ctx-learning-add`
 
 Record a project-specific gotcha, bug, or unexpected behavior.
 Filters for insights that are searchable, project-specific, and
@@ -225,7 +225,7 @@ required real effort to discover.
 
 ---
 
-### `/ctx-add-convention`
+### `/ctx-convention-add`
 
 Record a coding convention that should be standardized across sessions.
 Targets patterns seen 2-3+ times.
@@ -405,7 +405,7 @@ works but with reduced capability. It runs structural checks and notes:
 
 ---
 
-### `/ctx-check-links`
+### `/ctx-link-check`
 
 Scan all markdown files under `docs/` for broken links. Three passes:
 internal links (verify file targets exist on disk), external links
@@ -423,7 +423,7 @@ and skips localhost/example URLs.
 
 ---
 
-### `/ctx-sanitize-permissions`
+### `/ctx-permission-sanitize`
 
 Audit `.claude/settings.local.json` for dangerous permissions across
 four risk categories: hook bypass (*Critical*), destructive commands
@@ -456,7 +456,7 @@ confirmation, explore 2-3 design approaches with trade-offs,
 stress-test the chosen approach, and present the detailed design.
 
 **Wraps**: reads DECISIONS.md, relevant source files; chains to
-`/ctx-add-decision` for recording design choices
+`/ctx-decision-add` for recording design choices
 
 **Trigger phrases**: "let's brainstorm", "design this", "think through",
 "before we build", "what approach should we take?"
@@ -475,18 +475,18 @@ configuration, testing, and non-goals. Spends extra time on edge cases
 and error handling.
 
 **Wraps**: reads `specs/tpl/spec-template.md`, writes to `specs/`,
-optionally chains to `/ctx-add-task`
+optionally chains to `/ctx-task-add`
 
 **Trigger phrases**: "spec this out", "write a spec", "create a spec",
 "design document"
 
 **See also**:
 [`/ctx-brainstorm`](#ctx-brainstorm),
-[`/ctx-import-plans`](#ctx-import-plans)
+[`/ctx-plan-import`](#ctx-plan-import)
 
 ---
 
-### `/ctx-import-plans`
+### `/ctx-plan-import`
 
 Import Claude Code plan files (`~/.claude/plans/*.md`) into the project's
 `specs/` directory. Lists plans with dates and H1 titles, supports
@@ -494,7 +494,7 @@ filtering (`--today`, `--since`, `--all`), slugifies headings for
 filenames, and optionally creates tasks referencing each imported spec.
 
 **Wraps**: reads `~/.claude/plans/*.md`, writes to `specs/`,
-optionally chains to `/ctx-add-task`
+optionally chains to `/ctx-task-add`
 
 **See also**:
 [Importing Claude Code Plans](../recipes/import-plans.md),
@@ -588,12 +588,12 @@ severity with concrete fix suggestions.
 **Trigger phrases**: "audit this skill", "check skill quality",
 "review the skills", "are our skills any good?"
 
-**See also**: [`/ctx-skill-creator`](#ctx-skill-creator),
+**See also**: [`/ctx-skill-create`](#ctx-skill-create),
 [Contributing](../home/contributing.md)
 
 ---
 
-### `/ctx-skill-creator`
+### `/ctx-skill-create`
 
 Create, improve, and test skills. Guides the full lifecycle: capture
 intent, interview for edge cases, draft the SKILL.md, test with

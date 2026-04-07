@@ -279,7 +279,7 @@ Load full context at the beginning of a session. Returns all context
 files assembled in priority read order with session orientation
 instructions.
 
-### `ctx-add-decision`
+### `ctx-decision-add`
 
 Format an architectural decision entry with all required fields.
 
@@ -290,7 +290,7 @@ Format an architectural decision entry with all required fields.
 | `rationale`    | string | Yes      | Why this decision was made     |
 | `consequence`  | string | Yes      | Expected consequence           |
 
-### `ctx-add-learning`
+### `ctx-learning-add`
 
 Format a learning entry with all required fields.
 

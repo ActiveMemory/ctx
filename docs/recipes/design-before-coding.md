@@ -23,7 +23,7 @@ the next session has no idea why things are shaped this way.
 ```text
 /ctx-brainstorm          # explore the design space
 /ctx-spec                # write the spec document
-/ctx-add-task            # break it into tasks
+/ctx-task-add            # break it into tasks
 /ctx-implement           # execute step-by-step
 ```
 
@@ -36,9 +36,9 @@ the next.
 |---------------------|-------|-------------------------------------------------|
 | `/ctx-brainstorm`   | Skill | Structured design dialogue: explore approaches  |
 | `/ctx-spec`         | Skill | Scaffold and fill out a spec from the template  |
-| `/ctx-add-task`     | Skill | Add implementation tasks to TASKS.md            |
+| `/ctx-task-add`     | Skill | Add implementation tasks to TASKS.md            |
 | `/ctx-implement`    | Skill | Execute a plan step-by-step with verification   |
-| `/ctx-add-decision` | Skill | Record design choices made during brainstorming |
+| `/ctx-decision-add` | Skill | Record design choices made during brainstorming |
 
 ## The Workflow
 
@@ -130,7 +130,7 @@ Agent: [creates a Phase section referencing the spec, adds tasks]
 Each task is independently completable and references the spec via
 `Spec: specs/rss-feed.md` in the Phase header.
 
-You can also invoke `/ctx-add-task` directly at any point to add
+You can also invoke `/ctx-task-add` directly at any point to add
 individual tasks.
 
 ### Step 4: Implement Step-by-Step
@@ -180,7 +180,7 @@ You don't need skill names. Natural language works:
 | "Let's think through this feature" | `/ctx-brainstorm`    |
 | "Spec this out"                    | `/ctx-spec`          |
 | "Write a design doc for..."        | `/ctx-spec`          |
-| "Break this into tasks"            | `/ctx-add-task`      |
+| "Break this into tasks"            | `/ctx-task-add`      |
 | "Implement the spec"               | `/ctx-implement`     |
 | "Let's design before we build"     | Starts at brainstorm |
 
@@ -195,7 +195,7 @@ You don't need skill names. Natural language works:
   edge cases because that's where designs break.
 * **Record decisions during brainstorming**. When you choose between
   approaches, the agent offers to persist the trade-off via
-  `/ctx-add-decision`. Accept - future sessions need to know *why*, not
+  `/ctx-decision-add`. Accept - future sessions need to know *why*, not
   just *what*.
 * **Specs are living documents**. Update them when implementation reveals
   new constraints. A spec that diverges from reality is worse than no spec.

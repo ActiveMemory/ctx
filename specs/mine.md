@@ -318,7 +318,7 @@ Not needed for v1 — hardcode sensible defaults in the skill. Add
 
 - **Manual**: Run `/ctx-mine --limit 10` on the ctx repo itself,
   verify findings are sensible and ledger updates correctly
-- **Skill review**: Use `/_ctx-skill-creator` to evaluate the
+- **Skill review**: Use `/_ctx-skill-create` to evaluate the
   SKILL.md for clarity, completeness, and trigger reliability
 - **Ledger integrity**: After multiple runs, verify no duplicate
   hashes, stats match, dates are monotonic

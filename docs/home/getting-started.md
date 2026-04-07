@@ -181,7 +181,7 @@ On macOS, use `shasum -a 256 -c` instead of `sha256sum -c`.
     * **Persistence nudges**: reminders to capture learnings and decisions
     * **Post-commit hooks**: nudge context capture after `git commit`
     * **Context size monitoring**: alerts as sessions grow large
-    * **25+ skills**: `/ctx-status`, `/ctx-add-task`, `/ctx-history`, and more
+    * **25+ skills**: `/ctx-status`, `/ctx-task-add`, `/ctx-history`, and more
 
     See [Integrations](../operations/integrations.md#claude-code-full-integration) for the
     full hook and skill reference.

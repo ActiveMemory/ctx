@@ -42,7 +42,7 @@ built-in search only if `gemini-search` is not connected.
 | "What should we work on?"                       | `/ctx-next`          |
 | "Commit this" / "Ship it"                       | `/ctx-commit`        |
 | "What did we learn?"                            | `/ctx-reflect`       |
-| "Save that as a decision"                       | `/ctx-add-decision`  |
-| "That's worth remembering"                      | `/ctx-add-learning`  |
-| "Add a task for that"                           | `/ctx-add-task`      |
+| "Save that as a decision"                       | `/ctx-decision-add`  |
+| "That's worth remembering"                      | `/ctx-learning-add`  |
+| "Add a task for that"                           | `/ctx-task-add`      |
 | "Let's wrap up"                                 | Reflect then persist |

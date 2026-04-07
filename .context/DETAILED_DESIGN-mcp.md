@@ -281,7 +281,7 @@ CheckGovernance() -> warnings appended to response text.
 | Prompt | Description |
 |--------|-------------|
 | ctx-session-start | Load full context at session start |
-| ctx-add-decision | Format architectural decision entry |
-| ctx-add-learning | Format learning entry |
+| ctx-decision-add | Format architectural decision entry |
+| ctx-learning-add | Format learning entry |
 | ctx-reflect | Guide end-of-session reflection |
 | ctx-checkpoint | Report session statistics |

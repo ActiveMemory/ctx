@@ -3,6 +3,7 @@
 <!-- INDEX:START -->
 | Date | Decision |
 |----|--------|
+| 2026-04-06 | Use hook relay for session provenance instead of JSONL parsing or env vars |
 | 2026-04-04 | TestNoMagicStrings and TestNoMagicValues no longer exempt const/var definitions outside config/ |
 | 2026-04-04 | String-typed enums belong in config/, not domain packages |
 | 2026-04-03 | Output functions belong in write/ (consolidated) |
@@ -115,6 +116,20 @@ For significant decisions:
 ✗ No real alternatives existed
 
 -->
+
+## [2026-04-06-204212] Use hook relay for session provenance instead of JSONL parsing or env vars
+
+**Status**: Accepted
+
+**Context**: Needed to give agents awareness of their session ID, branch, and commit hash for task/decision/learning provenance. Considered three approaches: (1) parsing most-recent JSONL at runtime, (2) CTX_SESSION_ID env var, (3) hook relay via UserPromptSubmit.
+
+**Decision**: Use hook relay for session provenance instead of JSONL parsing or env vars
+
+**Rationale**: JSONL parsing breaks with parallel sessions (wrong file picked). Env vars aren't exported by Claude Code. Hook relay is zero-state: the hook receives session_id from Claude Code on every prompt, emits it, agent absorbs through repetition. No counters, no cleanup, no resume edge cases.
+
+**Consequence**: Provenance depends on the hook being registered (enabledPlugins in settings.local.json). Projects without plugin registration get no provenance. Filed as separate bug.
+
+---
 
 ## [2026-04-04-025755] TestNoMagicStrings and TestNoMagicValues no longer exempt const/var definitions outside config/
 
@@ -908,7 +923,7 @@ For significant decisions:
 
 **Decision**: Promote 6 private skills to bundled plugin skills; keep 7 project-local
 
-**Rationale**: Promote if the skill benefits any ctx-powered project without project-specific hardcoding. Keep private if it references this repo's Go internals, personal infra, or language-specific tooling. Promote list: _ctx-spec (generic scaffolding), _ctx-brainstorm (design facilitation), _ctx-verify (claim verification), _ctx-skill-creator (skill authoring), _ctx-check-links (doc link audit), _ctx-sanitize-permissions (Claude Code permissions audit). Keep list: _ctx-audit (Go/ctx checks), _ctx-qa (Go Makefile), _ctx-backup (SMB infra), _ctx-release/_ctx-release-notes (ctx release workflow), _ctx-update-docs (ctx package mapping), _ctx-absorb (borderline, revisit later).
+**Rationale**: Promote if the skill benefits any ctx-powered project without project-specific hardcoding. Keep private if it references this repo's Go internals, personal infra, or language-specific tooling. Promote list: _ctx-spec (generic scaffolding), _ctx-brainstorm (design facilitation), _ctx-verify (claim verification), _ctx-skill-create (skill authoring), _ctx-link-check (doc link audit), _ctx-permission-sanitize (Claude Code permissions audit). Keep list: _ctx-audit (Go/ctx checks), _ctx-qa (Go Makefile), _ctx-backup (SMB infra), _ctx-release/_ctx-release-notes (ctx release workflow), _ctx-update-docs (ctx package mapping), _ctx-absorb (borderline, revisit later).
 
 **Consequence**: Six skills move from .claude/skills/ to internal/assets/claude/skills/ and become available to all ctx users via ctx init. Cross-references between skills need updating (e.g., /_ctx-brainstorm becomes /ctx-brainstorm). The seven remaining private skills stay project-local.
 

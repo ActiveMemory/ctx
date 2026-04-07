@@ -267,10 +267,10 @@ These are invoked in Claude Code with `/skill-name`.
 
 | Skill                 | Description                                        |
 |-----------------------|----------------------------------------------------|
-| `/ctx-add-task`       | Add a task to TASKS.md                             |
-| `/ctx-add-learning`   | Add a learning to LEARNINGS.md                     |
-| `/ctx-add-decision`   | Add a decision with context/rationale/consequence  |
-| `/ctx-add-convention` | Add a coding convention to CONVENTIONS.md          |
+| `/ctx-task-add`       | Add a task to TASKS.md                             |
+| `/ctx-learning-add`   | Add a learning to LEARNINGS.md                     |
+| `/ctx-decision-add`   | Add a decision with context/rationale/consequence  |
+| `/ctx-convention-add` | Add a coding convention to CONVENTIONS.md          |
 | `/ctx-archive`        | Archive completed tasks                            |
 
 #### Scratchpad Skills
@@ -317,7 +317,7 @@ These are invoked in Claude Code with `/skill-name`.
 |---------------------|--------------------------------------------------|
 | `/ctx-loop`         | Generate a Ralph Loop iteration script           |
 | `/ctx-implement`    | Execute a plan step-by-step with checks          |
-| `/ctx-import-plans` | Import Claude Code plan files into project specs |
+| `/ctx-plan-import` | Import Claude Code plan files into project specs |
 | `/ctx-worktree`     | Manage git worktrees for parallel agents         |
 | `/ctx-architecture`          | Build and maintain architecture maps             |
 
@@ -325,7 +325,7 @@ These are invoked in Claude Code with `/skill-name`.
 
 ```text
 /ctx-status
-/ctx-add-learning "Token refresh requires explicit cache invalidation"
+/ctx-learning-add "Token refresh requires explicit cache invalidation"
 /ctx-journal-enrich twinkly-stirring-kettle
 ```
 

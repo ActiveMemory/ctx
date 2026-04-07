@@ -1,5 +1,5 @@
 ---
-name: ctx-add-decision
+name: ctx-decision-add
 description: "Record architectural decision. Use when a trade-off is resolved or a non-obvious design choice is made that future sessions need to know."
 allowed-tools: Bash(ctx:*)
 ---

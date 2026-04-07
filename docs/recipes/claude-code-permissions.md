@@ -27,7 +27,7 @@ keep it clean.
 ```bash
 ctx init                            # seeds safe defaults
 /ctx-drift                          # detects missing/stale permissions
-/ctx-sanitize-permissions               # audits for dangerous patterns
+/ctx-permission-sanitize               # audits for dangerous patterns
 ```
 
 See [Recommended Defaults](#recommended-defaults) for the full list.
@@ -38,7 +38,7 @@ See [Recommended Defaults](#recommended-defaults) for the full list.
 |-----------------------------|--------------------------------------------------|
 | `ctx init`                  | Populates default ctx permissions                |
 | `/ctx-drift`                | Detects missing or stale permission entries      |
-| `/ctx-sanitize-permissions` | Audits for dangerous patterns (security-focused) |
+| `/ctx-permission-sanitize` | Audits for dangerous patterns (security-focused) |
 
 ## Recommended Defaults
 
@@ -75,10 +75,10 @@ project using ctx:
       "Bash(grep:*)",
       "Bash(ls:*)",
       "Bash(make:*)",
-      "Skill(ctx-add-convention)",
-      "Skill(ctx-add-decision)",
-      "Skill(ctx-add-learning)",
-      "Skill(ctx-add-task)",
+      "Skill(ctx-convention-add)",
+      "Skill(ctx-decision-add)",
+      "Skill(ctx-learning-add)",
+      "Skill(ctx-task-add)",
       "Skill(ctx-agent)",
       "Skill(ctx-archive)",
       "Skill(ctx-blog)",
@@ -184,7 +184,7 @@ The defaults block:
 |-----------------------------------|-------------------------------------------|
 | `Bash(git reset:*)`               | Can discard uncommitted work              |
 | `Bash(git clean:*)`               | Deletes untracked files                   |
-| `Skill(ctx-sanitize-permissions)` | Edits this file: self-modification vector |
+| `Skill(ctx-permission-sanitize)` | Edits this file: self-modification vector |
 | `Skill(release)`                  | Runs the release pipeline: high impact    |
 
 ## Hooks: Regex Safety Net
@@ -238,7 +238,7 @@ Run `/ctx-drift` to catch permission drift:
 * Stale `Skill(ctx-*)` entries for removed skills;
 * Granular `Bash(ctx <subcommand>:*)` entries that should be consolidated.
 
-Run `/ctx-sanitize-permissions` to catch security issues:
+Run `/ctx-permission-sanitize` to catch security issues:
 
 * Hook bypass patterns
 * Destructive commands

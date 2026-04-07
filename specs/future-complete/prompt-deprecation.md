@@ -43,7 +43,7 @@ Skills are the single concept for "instructions the agent follows."
 4. `.context/loop.md` is created for `ctx loop` consumption
 5. User says "review this code" → agent recognizes the trigger, invokes
    `/ctx-code-review`
-6. User wants a custom agent instruction → uses `/ctx-skill-creator`,
+6. User wants a custom agent instruction → uses `/ctx-skill-create`,
    not `ctx prompt add`
 7. User runs `ctx loop` → reads `.context/loop.md` by default
 
@@ -51,7 +51,7 @@ Skills are the single concept for "instructions the agent follows."
 
 | Case | Expected behavior |
 |------|-------------------|
-| Existing project has `.context/prompts/` with custom prompts | `ctx init --force` does not delete user's custom prompts; migration note in GETTING_STARTED.md tells users to convert custom prompts to skills via `/ctx-skill-creator` |
+| Existing project has `.context/prompts/` with custom prompts | `ctx init --force` does not delete user's custom prompts; migration note in GETTING_STARTED.md tells users to convert custom prompts to skills via `/ctx-skill-create` |
 | User runs `ctx prompt` after removal | Command not found — removed from binary, not deprecated |
 | User references `/ctx-prompt` in their own docs/scripts | Skill no longer exists; clear error. Release notes document the removal |
 | `ctx loop` without `.context/loop.md` | `ctx loop --prompt` flag still accepts any file path; error message if default path missing |
@@ -140,7 +140,7 @@ Skills are the single concept for "instructions the agent follows."
 ## Non-Goals
 
 - **Migration tooling**: no automated `ctx prompt migrate` command. Users
-  with custom prompts convert manually via `/ctx-skill-creator`.
+  with custom prompts convert manually via `/ctx-skill-create`.
 - **Prompt-as-concept removal from docs entirely**: the word "prompt" is
   fine; what's removed is the `.context/prompts/` template system as a
   parallel to skills.

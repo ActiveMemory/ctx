@@ -1,5 +1,5 @@
 ---
-name: ctx-add-learning
+name: ctx-learning-add
 description: "Record a learning. Use when discovering gotchas, bugs, or unexpected behavior that future sessions should know about."
 allowed-tools: Bash(ctx:*)
 ---

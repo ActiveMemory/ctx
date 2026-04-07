@@ -63,10 +63,10 @@ Claude Code skills become VS Code chat participant slash commands.
 | 3.1 | `ctx-agent` | Load full context packet | `/agent` | **Done** |
 | 3.2 | `ctx-status` | Show context summary | `/status` | **Done** |
 | 3.3 | `ctx-drift` | Detect stale context | `/drift` | **Done** |
-| 3.4 | `ctx-add-decision` | Record decisions | `/add decision ...` | **Done** |
-| 3.5 | `ctx-add-learning` | Record learnings | `/add learning ...` | **Done** |
-| 3.6 | `ctx-add-convention` | Record conventions | `/add convention ...` | **Done** |
-| 3.7 | `ctx-add-task` | Add tasks | `/add task ...` | **Done** |
+| 3.4 | `ctx-decision-add` | Record decisions | `/add decision ...` | **Done** |
+| 3.5 | `ctx-learning-add` | Record learnings | `/add learning ...` | **Done** |
+| 3.6 | `ctx-convention-add` | Record conventions | `/add convention ...` | **Done** |
+| 3.7 | `ctx-task-add` | Add tasks | `/add task ...` | **Done** |
 | 3.8 | `ctx-recall` | Browse session history | `/recall` | **Done** |
 | 3.9 | `ctx-pad` | Transient working document | `/pad` | **Done** |
 | 3.10 | `ctx-archive` | Archive completed tasks | `/tasks archive` | **Done** |
@@ -83,12 +83,12 @@ Claude Code skills become VS Code chat participant slash commands.
 | 3.21 | `ctx-verify` | Run verification | Not mapped | **Not started** |
 | 3.22 | `ctx-blog` | Generate blog post | Not mapped | **Deferred** (niche) |
 | 3.23 | `ctx-blog-changelog` | Blog from commits | Not mapped | **Deferred** (niche) |
-| 3.24 | `ctx-check-links` | Audit dead links | Not mapped | **Deferred** (niche) |
+| 3.24 | `ctx-link-check` | Audit dead links | Not mapped | **Deferred** (niche) |
 | 3.25 | `ctx-journal-*` | Journal enrichment | Not mapped | **Deferred** |
 | 3.26 | `ctx-consolidate` | Merge overlapping entries | Not mapped | **Deferred** |
 | 3.27 | `ctx-alignment-audit` | Audit doc alignment | Not mapped | **Deferred** |
 | 3.28 | `ctx-map` | Dependency visualization | Not mapped | **Not started** |
-| 3.29 | `ctx-import-plans` | Import plan files | Not mapped | **Deferred** |
+| 3.29 | `ctx-plan-import` | Import plan files | Not mapped | **Deferred** |
 | 3.30 | `ctx-prompt` | Work with prompt templates | Not mapped | **Deferred** |
 | 3.31 | `ctx-context-monitor` | Real-time context monitoring | Not mapped | **Deferred** |
 | 3.32 | `ctx-loop` | Interactive REPL | N/A | **N/A** (no concept in chat UI) |

@@ -27,7 +27,7 @@
 #    /_ctx-release-notes
 #
 # 3. AUDIT DOCS for dead links:
-#    /ctx-check-links
+#    /ctx-link-check
 #
 # 4. UPDATE DOCUMENTATION with new version:
 #    - docs/index.md: Update download URLs to new version

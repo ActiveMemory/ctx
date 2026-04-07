@@ -1,5 +1,5 @@
 ---
-name: ctx-add-task
+name: ctx-task-add
 description: "Add a task. Use when follow-up work is identified or when breaking down complex work into subtasks."
 allowed-tools: Bash(ctx:*)
 ---

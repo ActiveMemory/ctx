@@ -91,8 +91,8 @@ list into `.claude/settings.local.json`. The golden images live in
 
 ```text
 Bash(ctx:*)
-Skill(ctx-add-convention)
-Skill(ctx-add-decision)
+Skill(ctx-convention-add)
+Skill(ctx-decision-add)
 ... # all bundled ctx-* skills
 ```
 

@@ -368,7 +368,7 @@ Use `ctx` skills  by name:
 !!! note "Ceremony vs. Workflow Skills"
     Most skills work **conversationally**: "what should we work on?"
     triggers `/ctx-next`, "save that as a learning" triggers
-    `/ctx-add-learning`. Natural language is the recommended approach.
+    `/ctx-learning-add`. Natural language is the recommended approach.
 
     Two skills are the exception: `/ctx-remember` and `/ctx-wrap-up`
     are **ceremony skills** for session boundaries: Invoke them as
