@@ -382,7 +382,7 @@ instructions:
 
 | Milestone                  | What the agent does proactively                         |
 |----------------------------|---------------------------------------------------------|
-| Completes a task           | Marks it `[x]` in `TASKS.md` with `#done` timestamp     |
+| Completes a task           | Marks it `[x]` in `TASKS.md`                            |
 | Discovers a gotcha         | Adds it to `LEARNINGS.md`                               |
 | Makes a design choice      | Records it in `DECISIONS.md` with rationale             |
 | Identifies follow-up work  | Creates new tasks in `TASKS.md` with `#added` timestamp |
@@ -397,7 +397,7 @@ Iteration 4:
   1. Read TASKS.md -> pick "Add email verification" (#priority:high)
   2. Add #started:2026-01-25-030012 to the task
   3. Implement the feature (code, tests, docs if needed)
-  4. Tests pass -> mark task [x], add #done:2026-01-25-031544
+  4. Tests pass -> mark task [x]
   5. Add learning: "SMTP config must be set before verification handler registers. Order matters in init()."
   6. Add decision: "Use token-based verification links (not codes) because links work better in automated tests."
   7. Create follow-up task: "Add rate limiting to verification endpoint" #added:...

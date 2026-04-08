@@ -4,7 +4,7 @@
 UPDATE WHEN:
 - New work is identified → add task with #added timestamp
 - Starting work → add #in-progress or #started timestamp
-- Work completes → mark [x] with #done timestamp
+- Work completes → mark [x]
 - Work is blocked → add to Blocked section with reason
 - Scope changes → update task description inline
 

@@ -74,7 +74,7 @@ tasks that this commit completes:
 - Identify the spec being committed (the `Spec:` trailer value)
 - Find open tasks (`[ ]`) whose `Spec:` field matches
 - If no spec match, search by keywords from the commit subject
-- Mark matching tasks `[x]` and append `#done:YYYY-MM-DD`
+- Mark matching tasks `[x]`
 - If uncertain whether a task is fully done, ask the user
 - Stage the updated TASKS.md alongside the code changes
 

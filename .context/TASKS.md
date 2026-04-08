@@ -4,7 +4,7 @@
 UPDATE WHEN:
 - New work is identified → add task with #added timestamp
 - Starting work → add #in-progress or #started timestamp
-- Work completes → mark [x] with #done timestamp
+- Work completes → mark [x]
 - Work is blocked → add to Blocked section with reason
 - Scope changes → update task description inline
 
@@ -27,57 +27,6 @@ TASK STATUS LABELS:
 
 ### Misc
 
-- [x] Add session/branch/commit provenance to ctx add task via hook relay and
-  --session-id/--branch/--commit flags. Spec: specs/task-session-provenance.md
-  #priority:medium #added:2026-04-06-123642
-
-- [x] Rename 8 skills to ctx-domain-action convention. Rename:
-  ctx-task-add→ctx-task-add, ctx-decision-add→ctx-decision-add,
-  ctx-learning-add→ctx-learning-add, ctx-convention-add→ctx-convention-add,
-  ctx-skill-create→ctx-skill-create,
-  ctx-permission-sanitize→ctx-permission-sanitize,
-  ctx-plan-import→ctx-plan-import, ctx-link-check→ctx-link-check. Per skill:
-  rename directory, update SKILL.md name/description, update cross-references in
-  all other skills, update docs (not blogs), update AGENT_PLAYBOOK triggers,
-  update copilot skills if mirrored. Update docs/reference/skills.md,
-  docs/recipes/*, docs/home/* with new names. Spec:
-  specs/skill-naming-convention.md #priority:high #session:a92cadca #branch:main
-  #commit:c4c53c7a #added:2026-04-06-212611
-
-- [x] Harden TestCrossPackageTypes sameModule heuristic: the current check
-  exempts all intra-module type sharing (e.g. mcp/handler -> mcp/server). This
-  allowed EntryOpts to live in mcp/handler/types.go while being consumed from
-  mcp/server/extract — a cross-cutting type that belongs in entity/. The
-  heuristic should flag types in non-core subpackages that are used from sibling
-  subpackages within the same module, not just cross-module usage.
-  #priority:medium #session:a92cadca #branch:main #commit:68fbc00a
-  #added:2026-04-06-160007
-
-- [x] Bug: ctx init does not write enabledPlugins to settings.local.json. Hooks
-  from the plugin hooks.json only fire when enabledPlugins lists the plugin in
-  the project settings. Non-ctx projects initialized with ctx init get empty
-  hooks. #priority:high #session:a92cadca #branch:main #commit:68fbc00a
-  #added:2026-04-06-151044
-
-- [x] Wire provenance flags into add skills: update ctx-task-add,
-  ctx-decision-add, and ctx-learning-add skills to pass --session-id, --branch,
-  --commit from the hook-relayed provenance line when invoking ctx add. Spec:
-  specs/task-session-provenance.md #priority:medium #session:a92cadca
-  #branch:main #commit:68fbc00a #added:2026-04-06-151036
-
-- [x] JSONL schema validation: derive schema from empirical JSONL data, embed in
-  binary, validate on import (warn, never block), add `ctx journal schema check`
-  command with nightly drift reports to `.context/reports/schema-drift.md`.
-  Spec: specs/jsonl-schema-validation.md #priority:medium #session:c536c11d
-  #branch:main #commit:d6f32c36 #added:2026-04-07-000000 #done:2026-04-07
-
-- [x] JSONL envelope enrichment: capture `planContent`, `isApiErrorMessage`,
-  `sourceToolAssistantUUID`, `toolUseResult`, `entrypoint`, `origin` from CC
-  envelope fields. Render plans in journal entries, collapse API errors, add
-  entrypoint to frontmatter. Spec: specs/jsonl-envelope-enrichment.md
-  #priority:medium #session:c536c11d #branch:main #commit:d6f32c36
-  #added:2026-04-07-000000 #done:2026-04-07
-
 ### Architecture Docs
 
 - [-] Publish architecture docs to docs/: copy ARCHITECTURE.md, 
@@ -90,45 +39,22 @@ TASK STATUS LABELS:
   frequently. Syncing to public site creates maintenance burden with no
   payoff — contributors read .context/ directly.
 
-- [x] Update ctx-architecture skill to append discovered terms to GLOSSARY.md 
-  during Phase 3. Additive only, max 10 terms per run, project-specific only, 
-  alphabetical insertion, skip if GLOSSARY.md empty. Print added terms in 
-  convergence report. Spec: specs/publish-architecture-docs.md #priority:low
-  #added:2026-04-03-153000
 
 ### Code Cleanup Findings
 
 
-- [x] Extend flagbind helpers (IntFlag, DurationFlag, DurationFlagP, StringP, 
-  BoolP) and migrate ~50 call sites to unblock TestNoFlagBindOutsideFlagbind 
-  #added:2026-04-01-233250
-
-- [ ] Implement journal compaction: Elastic-style tiered storage with tar.gz 
-  backup. Spec: specs/journal-compact.md #added:2026-03-31-110005
-
-- [x] Refactor 28 grandfathered cmd/ purity violations found by 
-  TestCmdDirPurity: move unexported helpers, exported non-Cmd/Run functions, 
-  and types from cmd/ directories to core/. See grandfathered map in 
-  compliance_test.go for the full list. #priority:medium
-  #added:2026-03-31-005115
 
 
-- [x] PD.4.5: Update AGENT_PLAYBOOK.md — add generic "check available skills"
-  instruction #priority:medium #added:2026-03-25-203340
+
+
+
 
 **PD.5 — Validate:**
 
 
 ### Phase -3: DevEx
 
-- [x] Plugin enablement gap: Ref:
-  `ideas/plugin-enablement-gap.md`. Local-installed plugins get
-  registered in `installed_plugins.json` but not auto-added to
-  `enabledPlugins`, so slash commands are invisible in non-ctx
-  projects.
 
-- [x] Add cobra Example fields to CLI commands via
-  examples.yaml #added:2026-03-20-163413
 
 - [ ] Add CLI YAML drift detection test: verify flag names in
   examples.yaml match actual registered flags, and Use: patterns
@@ -167,7 +93,7 @@ TASK STATUS LABELS:
   tracing, domain clustering comparison, shallow module
   deep-dive). Spec: `ideas/spec-architecture-enrich.md`.
   Reference implementation: kubernetes-service enrichment pass
-  2026-03-25. #added:2026-03-25-120000 #done:2026-03-26
+  2026-03-25. #added:2026-03-25-120000
 
 - [ ]: ctx-architecture-failure-analysis
   **Context**: Adversarial analysis skill that identifies where
@@ -378,7 +304,6 @@ Docs are feature-organized, not problem-organized. Key structural improvements:
 
 **Agent Team Strategies** (from `ideas/REPORT-8-agent-teams.md`):
 8 team compositions proposed. Reference material, not tasks. Key takeaways:
-
 
 - [ ] Scan all config/**/* constants and catalog which ones should be ctxrc
   entries for user configurability #priority:medium #added:2026-03-22-095552
@@ -639,11 +564,6 @@ Taxonomy (from prefix analysis):
   #priority:low #added:2026-03-07-220825
 
 
-- [x] Add .ctxrc provenance validation config: allow projects to relax required
-  provenance flags (session, branch, commit) individually via ctxrc fields. CLI
-  stays strict — no --skip-validation flag. Agent cannot bypass; only human
-  config relaxes. Default: all three required. #priority:medium
-  #session:a92cadca #branch:main #commit:68fbc00a #added:2026-04-06-154902
 
 
 - [ ] SMB mount path support: add `CTX_BACKUP_MOUNT_PATH` env var so
@@ -743,7 +663,8 @@ Taxonomy (from prefix analysis):
   (currently only decisions and learnings have index
   tables) #added:2026-03-06-190225
 
-
+- [ ] Implement journal compaction: Elastic-style tiered storage with tar.gz
+  backup. Spec: specs/journal-compact.md #added:2026-03-31-110005
 
 - [ ] Validate .ctxrc against ctxrc.schema.json at load time — schema is
   embedded but never enforced, doctor does field-level checks without using

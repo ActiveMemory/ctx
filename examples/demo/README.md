@@ -57,7 +57,7 @@ Tasks in `TASKS.md` stay in their phase permanently. Use inline labels
 ```markdown
 ## Phase 2: Authentication
 
-- [x] Implement user registration #added:2026-01-04-100000 #done:2026-01-05-140000
+- [x] Implement user registration #added:2026-01-04-100000
 - [ ] Implement OAuth2 login #added:2026-01-04-100000 #in-progress
 - [ ] Add session management #added:2026-01-04-100000
 ```

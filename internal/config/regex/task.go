@@ -29,12 +29,6 @@ var Task = regexp.MustCompile(taskPattern)
 // Use with FindAllStringSubmatch on multiline content.
 var TaskMultiline = regexp.MustCompile(`(?m)` + taskPattern)
 
-// TaskDoneTimestamp extracts the #done: timestamp from a task line.
-//
-// Groups:
-//   - 1: timestamp (YYYY-MM-DD-HHMMSS)
-var TaskDoneTimestamp = regexp.MustCompile(`#done:(\d{4}-\d{2}-\d{2}-\d{6})`)
-
 // Runtime configuration.
 const (
 	// TaskCompleteReplace is the regex replacement string for marking a task done.

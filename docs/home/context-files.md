@@ -157,7 +157,6 @@ Use inline backtick-wrapped tags for metadata:
 |------------|----------------------|------------------------------------|
 | `#added`   | `YYYY-MM-DD-HHMMSS`  | Auto-added by `ctx add task`       |
 | `#started` | `YYYY-MM-DD-HHMMSS`  | When beginning work on the task    |
-| `#done`    | `YYYY-MM-DD-HHMMSS`  | When marking the task `[x]`        |
 
 These timestamps help correlate tasks with session files and track which
 session started vs completed work.

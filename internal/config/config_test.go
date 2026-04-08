@@ -223,51 +223,6 @@ func TestRegExPhase(t *testing.T) {
 	}
 }
 
-func TestRegExTaskDoneTimestamp(t *testing.T) {
-	tests := []struct {
-		name      string
-		input     string
-		wantMatch bool
-		wantTime  string
-	}{
-		{
-			name:      "task with done timestamp",
-			input:     "- [x] Task #done:2026-01-15-143022",
-			wantMatch: true,
-			wantTime:  "2026-01-15-143022",
-		},
-		{
-			name:      "task with multiple tags",
-			input:     "- [x] Task #added:2026-01-01-000000 #done:2026-01-15-143022",
-			wantMatch: true,
-			wantTime:  "2026-01-15-143022",
-		},
-		{
-			name:      "task without done",
-			input:     "- [ ] Task #added:2026-01-01-000000",
-			wantMatch: false,
-		},
-	}
-
-	for _, tt := range tests {
-		t.Run(tt.name, func(t *testing.T) {
-			match := regex.TaskDoneTimestamp.FindStringSubmatch(tt.input)
-
-			if tt.wantMatch {
-				if match == nil {
-					t.Errorf("expected match for %q", tt.input)
-					return
-				}
-				if match[1] != tt.wantTime {
-					t.Errorf("timestamp = %q, want %q", match[1], tt.wantTime)
-				}
-			} else if match != nil {
-				t.Errorf("expected no match for %q", tt.input)
-			}
-		})
-	}
-}
-
 func TestRegExPath(t *testing.T) {
 	tests := []struct {
 		name      string

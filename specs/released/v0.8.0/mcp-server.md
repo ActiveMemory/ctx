@@ -484,7 +484,7 @@ copy the logic.
   extract when a block appears 3+ times." This is appearance
   number two, but the logic is complex enough that even two
   copies will drift (task regex changes, checkbox format changes,
-  `#done` timestamp additions)
+  timestamp additions)
 * Design principle #2 of this spec: "**Delegate, don't reimplement**"
 * The existing code handles edge cases (*subtasks, `#in-progress`
   labels, timestamp tagging*) that the PR's reimplementation misses

@@ -4,13 +4,13 @@ Current work items, organized by phase. Tasks stay in their phase permanently.
 
 ## Phase 1: Foundation
 
-- [x] Initial project setup #added:2026-01-01-090000 #done:2026-01-01-120000
-- [x] Database schema design #added:2026-01-01-090000 #done:2026-01-02-150000
-- [x] Core API scaffolding #added:2026-01-01-090000 #done:2026-01-03-110000
+- [x] Initial project setup #added:2026-01-01-090000
+- [x] Database schema design #added:2026-01-01-090000
+- [x] Core API scaffolding #added:2026-01-01-090000
 
 ## Phase 2: Authentication
 
-- [x] Implement user registration #added:2026-01-04-100000 #done:2026-01-05-140000
+- [x] Implement user registration #added:2026-01-04-100000
 - [ ] Implement OAuth2 login #added:2026-01-04-100000 #in-progress
 - [ ] Add session management #added:2026-01-04-100000
 

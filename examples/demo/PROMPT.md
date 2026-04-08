@@ -61,8 +61,7 @@ go vet ./...             # No vet errors
 ## PHASE 4: UPDATE CONTEXT
 
 1. Mark completed task `[x]` in `.context/TASKS.md`
-2. Add `#done:YYYY-MM-DD-HHMMSS` timestamp
-3. If you made an architectural decision → add to `.context/DECISIONS.md`
+2. If you made an architectural decision → add to `.context/DECISIONS.md`
 4. If you learned a gotcha → add to `.context/LEARNINGS.md`
 
 **EXIT.** Do not continue to next task. The loop will restart you.

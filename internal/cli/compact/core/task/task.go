@@ -16,7 +16,6 @@ import (
 	"github.com/ActiveMemory/ctx/internal/config/token"
 	"github.com/ActiveMemory/ctx/internal/entity"
 	ctxIo "github.com/ActiveMemory/ctx/internal/io"
-	"github.com/ActiveMemory/ctx/internal/rc"
 	"github.com/ActiveMemory/ctx/internal/tidy"
 	"github.com/ActiveMemory/ctx/internal/write/compact"
 )
@@ -72,17 +71,9 @@ func CompactTasks(
 		}
 	}
 
-	// Archive if requested.
+	// Archive all completed tasks if requested.
 	if archive && len(result.ArchivableBlocks) > 0 {
-		archiveDays := rc.ArchiveAfterDays()
-		var blocksToArchive []entity.TaskBlock
-		for _, block := range result.ArchivableBlocks {
-			if block.OlderThan(archiveDays) {
-				blocksToArchive = append(
-					blocksToArchive, block,
-				)
-			}
-		}
+		blocksToArchive := result.ArchivableBlocks
 
 		if len(blocksToArchive) > 0 {
 			nl := token.NewlineLF
@@ -97,7 +88,7 @@ func CompactTasks(
 			); archiveErr == nil {
 				compact.InfoArchivedTasks(
 					cmd, len(blocksToArchive),
-					archiveFile, archiveDays,
+					archiveFile, 0,
 				)
 			}
 		}

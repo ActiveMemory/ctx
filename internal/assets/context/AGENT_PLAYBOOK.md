@@ -172,14 +172,13 @@ Track task progress with timestamps for session correlation:
 ```markdown
 - [ ] Implement feature X #added:2026-01-25-220332
 - [ ] Fix bug Y #added:2026-01-25-220332 #started:2026-01-25-221500
-- [x] Refactor Z #added:2026-01-25-200000 #started:2026-01-25-210000 #done:2026-01-25-223045
+- [x] Refactor Z #added:2026-01-25-200000 #started:2026-01-25-210000
 ```
 
 | Tag        | When to Add                              | Format               |
 |------------|------------------------------------------|----------------------|
 | `#added`   | Auto-added by `ctx add task`             | `YYYY-MM-DD-HHMMSS`  |
 | `#started` | When you begin working on the task       | `YYYY-MM-DD-HHMMSS`  |
-| `#done`    | When you mark the task `[x]` complete    | `YYYY-MM-DD-HHMMSS`  |
 
 ## Collaboration Defaults
 

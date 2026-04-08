@@ -8,10 +8,8 @@ package tidy
 
 import (
 	"strings"
-	"time"
 
 	"github.com/ActiveMemory/ctx/internal/config/regex"
-	cfgTime "github.com/ActiveMemory/ctx/internal/config/time"
 	"github.com/ActiveMemory/ctx/internal/config/token"
 	"github.com/ActiveMemory/ctx/internal/entity"
 	"github.com/ActiveMemory/ctx/internal/task"
@@ -46,7 +44,6 @@ func parseBlockAt(lines []string, startIdx int) entity.TaskBlock {
 		EndIndex:     startIdx + 1,
 		IsCompleted:  true, // We only call this for checked tasks
 		IsArchivable: true,
-		DoneTime:     parseDoneTimestamp(parentLine),
 	}
 
 	// Collect all lines that are more indented than the parent
@@ -95,25 +92,4 @@ func parseBlockAt(lines []string, startIdx int) entity.TaskBlock {
 	}
 
 	return block
-}
-
-// parseDoneTimestamp extracts the #done: timestamp from a task line.
-//
-// Parameters:
-//   - line: Task line that may contain #done:YYYY-MM-DD-HHMMSS
-//
-// Returns:
-//   - *time.Time: Parsed time, or nil if no valid timestamp is found
-func parseDoneTimestamp(line string) *time.Time {
-	match := regex.TaskDoneTimestamp.FindStringSubmatch(line)
-	if len(match) < 2 {
-		return nil
-	}
-
-	// Parse YYYY-MM-DD-HHMMSS format
-	t, err := time.Parse(cfgTime.CompactTimestamp, match[1])
-	if err != nil {
-		return nil
-	}
-	return &t
 }

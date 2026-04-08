@@ -105,8 +105,8 @@ status is tracked via checkboxes and inline tags.
 ```markdown
 ## Phase 1: Core CLI
 
-- [x] Implement ctx add command `#done:2026-02-01-143022`
-- [x] Implement ctx task complete command `#done:2026-02-03-091544`
+- [x] Implement ctx add command
+- [x] Implement ctx task complete command
 - [ ] Add --section flag to ctx add task `#priority:medium`
 
 ## Phase 2: AI Integration
@@ -183,9 +183,8 @@ ctx task complete 3
 ctx task complete "agent cooldown"
 ```
 
-The task's checkbox changes from `[ ]` to `[x]` and a `#done` timestamp is
-added. Tasks are never deleted: they stay in their phase section so history is
-preserved.
+The task's checkbox changes from `[ ]` to `[x]`. Tasks are never deleted: they
+stay in their phase section so history is preserved.
 
 !!! tip "Be Conversational"
     You rarely need to run `ctx task complete` yourself during an interactive session.
