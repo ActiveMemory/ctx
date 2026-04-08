@@ -126,6 +126,29 @@ connect.sync:
     Examples:
       ctx connect sync
   short: Sync entries from the hub
+connect.publish:
+  long: |-
+    Push local context entries to the shared hub.
+
+    Examples:
+      ctx connect publish
+  short: Publish local entries to the hub
+connect.listen:
+  long: |-
+    Stream new entries from the hub in real-time.
+    Auto-writes to .context/shared/ as entries arrive.
+    Press Ctrl-C to stop.
+
+    Examples:
+      ctx connect listen
+  short: Stream entries from the hub in real-time
+connect.status:
+  long: |-
+    Show hub connection state and entry statistics.
+
+    Examples:
+      ctx connect status
+  short: Show hub connection status
 connect.register:
   long: |-
     Register this project with a shared context hub.
