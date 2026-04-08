@@ -253,4 +253,6 @@ DO NOT UPDATE FOR:
 - **Cross-cutting domain types in internal/entity**: Types used by one
   package stay in that package; types used across packages go to entity
 
-- Warn format strings centralized in config/warn/ — use warn.Close, warn.Write, warn.Remove, warn.Mkdir, warn.Rename, warn.Walk, warn.Getwd, warn.Readdir, warn.Marshal instead of inline format strings in log.Warn calls
+- Warn format strings centralized in config/warn/ — use warn.Close,
+  warn.Write, warn.Remove, warn.Mkdir, warn.Rename, warn.Walk, warn.Getwd,
+  warn.Readdir, warn.Marshal instead of inline format strings in log.Warn calls

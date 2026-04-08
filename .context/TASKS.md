@@ -27,25 +27,67 @@ TASK STATUS LABELS:
 
 ### Misc
 
-- [x] Add session/branch/commit provenance to ctx add task via hook relay and --session-id/--branch/--commit flags. Spec: specs/task-session-provenance.md #priority:medium #added:2026-04-06-123642
+- [x] Add session/branch/commit provenance to ctx add task via hook relay and
+  --session-id/--branch/--commit flags. Spec: specs/task-session-provenance.md
+  #priority:medium #added:2026-04-06-123642
 
-- [ ] Rename 8 skills to ctx-domain-action convention. Rename: ctx-task-add→ctx-task-add, ctx-decision-add→ctx-decision-add, ctx-learning-add→ctx-learning-add, ctx-convention-add→ctx-convention-add, ctx-skill-create→ctx-skill-create, ctx-permission-sanitize→ctx-permission-sanitize, ctx-plan-import→ctx-plan-import, ctx-link-check→ctx-link-check. Per skill: rename directory, update SKILL.md name/description, update cross-references in all other skills, update docs (not blogs), update AGENT_PLAYBOOK triggers, update copilot skills if mirrored. Update docs/reference/skills.md, docs/recipes/*, docs/home/* with new names. Spec: specs/skill-naming-convention.md #priority:high #session:a92cadca #branch:main #commit:c4c53c7a #added:2026-04-06-212611
+- [x] Rename 8 skills to ctx-domain-action convention. Rename:
+  ctx-task-add→ctx-task-add, ctx-decision-add→ctx-decision-add,
+  ctx-learning-add→ctx-learning-add, ctx-convention-add→ctx-convention-add,
+  ctx-skill-create→ctx-skill-create,
+  ctx-permission-sanitize→ctx-permission-sanitize,
+  ctx-plan-import→ctx-plan-import, ctx-link-check→ctx-link-check. Per skill:
+  rename directory, update SKILL.md name/description, update cross-references in
+  all other skills, update docs (not blogs), update AGENT_PLAYBOOK triggers,
+  update copilot skills if mirrored. Update docs/reference/skills.md,
+  docs/recipes/*, docs/home/* with new names. Spec:
+  specs/skill-naming-convention.md #priority:high #session:a92cadca #branch:main
+  #commit:c4c53c7a #added:2026-04-06-212611
 
-- [ ] Harden TestCrossPackageTypes sameModule heuristic: the current check exempts all intra-module type sharing (e.g. mcp/handler -> mcp/server). This allowed EntryOpts to live in mcp/handler/types.go while being consumed from mcp/server/extract — a cross-cutting type that belongs in entity/. The heuristic should flag types in non-core subpackages that are used from sibling subpackages within the same module, not just cross-module usage. #priority:medium #session:a92cadca #branch:main #commit:68fbc00a #added:2026-04-06-160007
+- [x] Harden TestCrossPackageTypes sameModule heuristic: the current check
+  exempts all intra-module type sharing (e.g. mcp/handler -> mcp/server). This
+  allowed EntryOpts to live in mcp/handler/types.go while being consumed from
+  mcp/server/extract — a cross-cutting type that belongs in entity/. The
+  heuristic should flag types in non-core subpackages that are used from sibling
+  subpackages within the same module, not just cross-module usage.
+  #priority:medium #session:a92cadca #branch:main #commit:68fbc00a
+  #added:2026-04-06-160007
 
-- [ ] Add .ctxrc provenance validation config: allow projects to relax required provenance flags (session, branch, commit) individually via ctxrc fields. CLI stays strict — no --skip-validation flag. Agent cannot bypass; only human config relaxes. Default: all three required. #priority:medium #session:a92cadca #branch:main #commit:68fbc00a #added:2026-04-06-154902
+- [ ] Add .ctxrc provenance validation config: allow projects to relax required
+  provenance flags (session, branch, commit) individually via ctxrc fields. CLI
+  stays strict — no --skip-validation flag. Agent cannot bypass; only human
+  config relaxes. Default: all three required. #priority:medium
+  #session:a92cadca #branch:main #commit:68fbc00a #added:2026-04-06-154902
 
-- [ ] Bug: ctx init does not write enabledPlugins to settings.local.json. Hooks from the plugin hooks.json only fire when enabledPlugins lists the plugin in the project settings. Non-ctx projects initialized with ctx init get empty hooks. #priority:high #session:a92cadca #branch:main #commit:68fbc00a #added:2026-04-06-151044
+- [ ] Bug: ctx init does not write enabledPlugins to settings.local.json. Hooks
+  from the plugin hooks.json only fire when enabledPlugins lists the plugin in
+  the project settings. Non-ctx projects initialized with ctx init get empty
+  hooks. #priority:high #session:a92cadca #branch:main #commit:68fbc00a
+  #added:2026-04-06-151044
 
-- [ ] Wire provenance flags into add skills: update ctx-task-add, ctx-decision-add, and ctx-learning-add skills to pass --session-id, --branch, --commit from the hook-relayed provenance line when invoking ctx add. Spec: specs/task-session-provenance.md #priority:medium #session:a92cadca #branch:main #commit:68fbc00a #added:2026-04-06-151036
+- [ ] Wire provenance flags into add skills: update ctx-task-add,
+  ctx-decision-add, and ctx-learning-add skills to pass --session-id, --branch,
+  --commit from the hook-relayed provenance line when invoking ctx add. Spec:
+  specs/task-session-provenance.md #priority:medium #session:a92cadca
+  #branch:main #commit:68fbc00a #added:2026-04-06-151036
 
 - [ ] SMB mount path support: add `CTX_BACKUP_MOUNT_PATH` env var so 
   `ctx backup` can use fstab/systemd automounts instead of requiring GVFS. 
-  Spec: specs/smb-mount-path-support.md #priority:medium #added:2026-04-04-010000
+  Spec: specs/smb-mount-path-support.md #priority:medium
+  #added:2026-04-04-010000
 
-- [x] JSONL schema validation: derive schema from empirical JSONL data, embed in binary, validate on import (warn, never block), add `ctx journal schema check` command with nightly drift reports to `.context/reports/schema-drift.md`. Spec: specs/jsonl-schema-validation.md #priority:medium #session:c536c11d #branch:main #commit:d6f32c36 #added:2026-04-07-000000 #done:2026-04-07
+- [x] JSONL schema validation: derive schema from empirical JSONL data, embed in
+  binary, validate on import (warn, never block), add `ctx journal schema check`
+  command with nightly drift reports to `.context/reports/schema-drift.md`.
+  Spec: specs/jsonl-schema-validation.md #priority:medium #session:c536c11d
+  #branch:main #commit:d6f32c36 #added:2026-04-07-000000 #done:2026-04-07
 
-- [x] JSONL envelope enrichment: capture `planContent`, `isApiErrorMessage`, `sourceToolAssistantUUID`, `toolUseResult`, `entrypoint`, `origin` from CC envelope fields. Render plans in journal entries, collapse API errors, add entrypoint to frontmatter. Spec: specs/jsonl-envelope-enrichment.md #priority:medium #session:c536c11d #branch:main #commit:d6f32c36 #added:2026-04-07-000000 #done:2026-04-07
+- [x] JSONL envelope enrichment: capture `planContent`, `isApiErrorMessage`,
+  `sourceToolAssistantUUID`, `toolUseResult`, `entrypoint`, `origin` from CC
+  envelope fields. Render plans in journal entries, collapse API errors, add
+  entrypoint to frontmatter. Spec: specs/jsonl-envelope-enrichment.md
+  #priority:medium #session:c536c11d #branch:main #commit:d6f32c36
+  #added:2026-04-07-000000 #done:2026-04-07
 
 ### Architecture Docs
 
@@ -53,12 +95,14 @@ TASK STATUS LABELS:
   DETAILED_DESIGN domain files, and CHEAT-SHEETS.md to docs/reference/. 
   Sanitize intervention points into docs/contributing/. 
   Exclude DANGER-ZONES.md and ARCHITECTURE-PRINCIPAL.md (internal only). 
-  Spec: specs/publish-architecture-docs.md #priority:medium #added:2026-04-03-150000
+  Spec: specs/publish-architecture-docs.md #priority:medium
+  #added:2026-04-03-150000
 
 - [ ] Update ctx-architecture skill to append discovered terms to GLOSSARY.md 
   during Phase 3. Additive only, max 10 terms per run, project-specific only, 
   alphabetical insertion, skip if GLOSSARY.md empty. Print added terms in 
-  convergence report. Spec: specs/publish-architecture-docs.md #priority:low #added:2026-04-03-153000
+  convergence report. Spec: specs/publish-architecture-docs.md #priority:low
+  #added:2026-04-03-153000
 
 ### Code Cleanup Findings
 
@@ -73,7 +117,8 @@ TASK STATUS LABELS:
 - [x] Refactor 28 grandfathered cmd/ purity violations found by 
   TestCmdDirPurity: move unexported helpers, exported non-Cmd/Run functions, 
   and types from cmd/ directories to core/. See grandfathered map in 
-  compliance_test.go for the full list. #priority:medium #added:2026-03-31-005115
+  compliance_test.go for the full list. #priority:medium
+  #added:2026-03-31-005115
 
 
 - [x] PD.4.5: Update AGENT_PLAYBOOK.md — add generic "check available skills"
@@ -365,7 +410,8 @@ Docs are feature-organized, not problem-organized. Key structural improvements:
 
 - [ ] Make doctor thresholds configurable via .ctxrc #added:2026-03-20-194923
 
-- [ ] Evaluate cross-platform path handling in change/core/scan.go — git always
+- [ ] Evaluate cross-platform path handling in change/core/scan.go — git
+  always
   uses "/" but UniqueTopDirs should consider filepath.ToSlash for Windows
   robustness #added:2026-03-20-182103
 
@@ -463,7 +509,8 @@ any feedback. Some are legitimate (best-effort cleanup), most are
 lazy escapes that hide failures.
 
 
-- [ ] EH.1: Catalogue all silent error discards — recursive walk of `internal/`
+- [ ] EH.1: Catalogue all silent error discards — recursive walk of
+  `internal/`
       for patterns: `_ = `, `_, _ = `, `//nolint:errcheck`, bare `return` after
       error-producing calls. Group by category:
       (a) file close in defer — often legitimate but should log on failure
@@ -541,7 +588,8 @@ Taxonomy (from prefix analysis):
 | `config.go`  | UnknownProfile, ReadProfile, UnknownFormat, UnknownProjectType, InvalidTool, UnsupportedTool, NotInitialized, ContextNotInitialized, ContextDirNotFound, FlagRequires* | 12     |
 | `errors.go`  | Remaining general-purpose: WorkingDirectory, CtxNotInPath, ReadInput, InvalidDate*, Reminder*, Drift*, Git*, Webhook*, etc.                                            | ~25    |
 
-- [ ] Add freshness_files to .ctxrc defaults seeded by ctx init — currently the
+- [ ] Add freshness_files to .ctxrc defaults seeded by ctx init — currently
+  the
   freshness config is only in the gitignored .ctxrc, so new clones don't get it.
   Consider a .ctxrc.defaults pattern or seeding via ctx init template.
   #priority:medium #added:2026-03-14-105143
@@ -558,7 +606,8 @@ Taxonomy (from prefix analysis):
   Per-session breakdown of eval/fired counts with hook list. See
   ideas/spec-hook-observability.md Phase 5 #added:2026-03-12-145401
 
-- [ ] O.4: Doctor hook health check — surface hook activity in ctx doctor output
+- [ ] O.4: Doctor hook health check — surface hook activity in ctx doctor
+  output
   (active/evaluated-never-fired/never-evaluated). See
   ideas/spec-hook-observability.md Phase 4 #added:2026-03-12-145401
 
@@ -572,7 +621,8 @@ Taxonomy (from prefix analysis):
   lists never-evaluated hooks. See ideas/spec-hook-observability.md Phase
   2 #added:2026-03-12-145401
 
-- [ ] O.1: Hook eval logging — wrap hook cobra commands to log 'eval' events on
+- [ ] O.1: Hook eval logging — wrap hook cobra commands to log 'eval' events
+  on
   every invocation. Refactor Run() signatures from os.Stdin to io.Reader
   (peek+replay pattern). Adds eventlog.Eval(), EventTypeEval constant. See
   ideas/spec-hook-observability.md Phase 1 #added:2026-03-12-145401
@@ -631,7 +681,8 @@ Taxonomy (from prefix analysis):
 - [ ] Move drift/core/out.go output functions to internal/write per
   convention #added:2026-03-07-090322
 
-- [ ] Move drift/core/fix.go fmt.Sprintf strings to assets — user-facing output
+- [ ] Move drift/core/fix.go fmt.Sprintf strings to assets — user-facing
+  output
   text for i18n #added:2026-03-07-090322
 
 - [ ] Move drift/cmd/root/run.go cmd.Print* output strings to internal/write per
@@ -666,7 +717,8 @@ Taxonomy (from prefix analysis):
   formatting, used by changes and potentially
   status/recall #added:2026-03-07-074649
 
-- [ ] Extract isAlnum predicate for localization — currently ASCII-only in agent
+- [ ] Extract isAlnum predicate for localization — currently ASCII-only in
+  agent
   keyword extraction (score.go:141) #added:2026-03-07-073900
 
 - [ ] Make stopwords configurable via .ctxrc — currently embedded in assets,
@@ -676,14 +728,16 @@ Taxonomy (from prefix analysis):
   .ctxrc — currently hardcoded in config (7/30/90 days, cap
   3) #added:2026-03-07-073900
 
-- [ ] Make DefaultAgentCooldown configurable via .ctxrc — currently hardcoded at
+- [ ] Make DefaultAgentCooldown configurable via .ctxrc — currently hardcoded
+  at
   10 minutes in config #added:2026-03-07-073106
 
 - [ ] Make TaskBudgetPct and ConventionBudgetPct configurable via .ctxrc —
   currently hardcoded at 0.40 and 0.20 in config #added:2026-03-07-072714
 
 - [ ] Localization inventory: audit config constants, write package templates,
-  and assets YAML for i18n mapping — low priority, most users are English-first
+  and assets YAML for i18n mapping — low priority, most users are
+  English-first
   developers #added:2026-03-06-192419
 
 - [ ] Consider indexing tasks and conventions in TASKS.md and CONVENTIONS.md
@@ -721,7 +775,8 @@ Taxonomy (from prefix analysis):
   recall/lock.go, write/validate.go; ~30 files remain. Separate consolidation
   pass. #added:2026-03-06-050140
 
-- [ ] Audit remaining 2006-01-02 usages across codebase — 5+ files still use the
+- [ ] Audit remaining 2006-01-02 usages across codebase — 5+ files still use
+  the
   literal instead of config.DateFormat. Incremental
   migration. #added:2026-03-06-050140
 
@@ -746,11 +801,13 @@ block template.
 - [ ] WC2.2: Tier 2a — Consolidate conditional functions in info.go:
   `InfoLoopGenerated` (pre-compute iterLine). Prove the pre-computation pattern
   on the function that motivated this spec. #added:2026-03-17
-- [ ] WC2.3: Tier 2b — Consolidate conditional functions in sync/recall/notify:
+- [ ] WC2.3: Tier 2b — Consolidate conditional functions in
+  sync/recall/notify:
   `SyncResult`, `CtxSyncHeader`, `CtxSyncAction`, `SessionMetadata`,
   `TestResult`, `SyncDryRun`, `PruneSummary`. Each needs 1-3 pre-computed
   strings before the single print call. #added:2026-03-17
-- [ ] WC2.4: Constant cleanup — verify all replaced individual `TplXxx*` config
+- [ ] WC2.4: Constant cleanup — verify all replaced individual `TplXxx*`
+  config
   vars, `TextDescKey*` constants, and YAML entries are removed. Run `make lint`
   and `go test ./internal/write/...` to confirm no
   regressions. #added:2026-03-17
@@ -911,7 +968,8 @@ age-based — prune files older than N days (default 7).
   template files — ObsidianReadme, LoopScript, and other multi-line format
   strings that can't move to YAML #added:2026-03-18-163629
 
-- [ ] Split internal/assets/embed_test.go — tests that call read/ packages must
+- [ ] Split internal/assets/embed_test.go — tests that call read/ packages
+  must
   move to their respective read/ package to avoid import
   cycles #added:2026-03-18-192914
 
@@ -982,7 +1040,8 @@ Not a fit (keep in `ctx`):
 - [ ] Remove `jq` build dependency once ctxctl handles JSON
   natively #added:2026-03-25-050000
 
-- [ ] Implement MCP warm-up in /ctx-remember session ceremony — when a graph/RAG
+- [ ] Implement MCP warm-up in /ctx-remember session ceremony — when a
+  graph/RAG
   tool is configured in .ctxrc, run one orientation query at session start to
   build procedural familiarity. Spec:
   `ideas/spec-mcp-warm-up-ceremony.md` #added:2026-03-25-120000
