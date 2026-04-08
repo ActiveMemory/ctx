@@ -7,6 +7,7 @@
 package serve
 
 import (
+	"fmt"
 	"net"
 
 	"github.com/spf13/cobra"
@@ -28,4 +29,22 @@ func HubStarted(cmd *cobra.Command, addr net.Addr) {
 //   - token: the generated admin token
 func AdminToken(cmd *cobra.Command, token string) {
 	cmd.Println("Admin token (save this):", token)
+}
+
+// Daemonized confirms the hub started in background.
+//
+// Parameters:
+//   - cmd: Cobra command for output
+//   - pid: process ID of the daemon
+func Daemonized(cmd *cobra.Command, pid int) {
+	cmd.Println(fmt.Sprintf("Hub running in background (PID %d)", pid))
+}
+
+// Stopped confirms the hub daemon was killed.
+//
+// Parameters:
+//   - cmd: Cobra command for output
+//   - pid: process ID that was stopped
+func Stopped(cmd *cobra.Command, pid int) {
+	cmd.Println(fmt.Sprintf("Hub stopped (PID %d)", pid))
 }

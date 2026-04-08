@@ -14,6 +14,10 @@ const (
 	DescKeyServePort = "serve.port"
 	// DescKeyServeDataDir is the text key for --data-dir.
 	DescKeyServeDataDir = "serve.data-dir"
+	// DescKeyServeDaemon is the text key for --daemon.
+	DescKeyServeDaemon = "serve.daemon"
+	// DescKeyServeStop is the text key for --stop.
+	DescKeyServeStop = "serve.stop"
 	// DescKeyConnectToken is the text key for --token.
 	DescKeyConnectToken = "connect.admin-auth"
 )
