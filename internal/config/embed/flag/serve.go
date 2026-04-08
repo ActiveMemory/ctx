@@ -18,6 +18,8 @@ const (
 	DescKeyServeDaemon = "serve.daemon"
 	// DescKeyServeStop is the text key for --stop.
 	DescKeyServeStop = "serve.stop"
+	// DescKeyServePeers is the text key for --peers.
+	DescKeyServePeers = "serve.peers"
 	// DescKeyConnectToken is the text key for --token.
 	DescKeyConnectToken = "connect.admin-auth"
 )

@@ -22,6 +22,7 @@ import (
 // Serves a static site (default) or starts the shared
 // context hub when --shared is passed. Use --daemon to
 // run in the background, --stop to kill a running daemon.
+// Use --peers for cluster mode with Raft leader election.
 //
 // Returns:
 //   - *cobra.Command: The serve command
@@ -32,6 +33,7 @@ func Cmd() *cobra.Command {
 		isStop   bool
 		port     int
 		dataDir  string
+		peersStr string
 	)
 
 	short, long := desc.Command(cmd.DescKeyServe)
@@ -50,6 +52,9 @@ func Cmd() *cobra.Command {
 					cobraCmd, dataDir,
 				)
 			}
+
+			peers := shared.ParsePeers(peersStr)
+
 			if isShared && isDaemon {
 				return shared.RunDaemon(
 					cobraCmd, port, dataDir,
@@ -57,7 +62,7 @@ func Cmd() *cobra.Command {
 			}
 			if isShared {
 				return shared.Run(
-					cobraCmd, port, dataDir,
+					cobraCmd, port, dataDir, peers,
 				)
 			}
 			return Run(args)
@@ -84,6 +89,10 @@ func Cmd() *cobra.Command {
 	flagbind.BoolFlag(
 		c, &isStop,
 		cFlag.Stop, flag.DescKeyServeStop,
+	)
+	flagbind.StringFlag(
+		c, &peersStr,
+		cFlag.Peers, flag.DescKeyServePeers,
 	)
 
 	return c

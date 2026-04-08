@@ -9,13 +9,28 @@ package shared
 import (
 	"fmt"
 	"net"
+	"strings"
 
 	"github.com/spf13/cobra"
 
 	"github.com/ActiveMemory/ctx/internal/hub"
-	"github.com/ActiveMemory/ctx/internal/io"
 	writeServe "github.com/ActiveMemory/ctx/internal/write/serve"
 )
+
+// ParsePeers splits a comma-separated peer string into
+// a slice. Returns nil for empty input.
+//
+// Parameters:
+//   - s: comma-separated peer addresses
+//
+// Returns:
+//   - []string: peer addresses, or nil if empty
+func ParsePeers(s string) []string {
+	if s == "" {
+		return nil
+	}
+	return strings.Split(s, ",")
+}
 
 // DefaultPort returns the default hub listen port.
 //
@@ -28,29 +43,25 @@ func DefaultPort() int { return defaultPort }
 // On first run, generates an admin token and prints it.
 // On subsequent runs, loads the existing token.
 // If dataDir is empty, uses ~/.ctx/hub-data/.
+// If peers is non-empty, starts Raft cluster for HA.
 //
 // Parameters:
 //   - cmd: cobra command for output
 //   - port: TCP port to listen on
 //   - dataDir: hub data directory (empty = default)
+//   - peers: peer addresses for cluster mode (may be nil)
 //
 // Returns:
 //   - error: non-nil if setup or server startup fails
 func Run(
-	cmd *cobra.Command, port int, dataDir string,
+	cmd *cobra.Command,
+	port int,
+	dataDir string,
+	peers []string,
 ) error {
-	if dataDir == "" {
-		defaultDir, dirErr := hubDir()
-		if dirErr != nil {
-			return dirErr
-		}
-		dataDir = defaultDir
-	} else {
-		if mkErr := io.SafeMkdirAll(
-			dataDir, dataDirPerm,
-		); mkErr != nil {
-			return mkErr
-		}
+	dataDir, resolveErr := resolveDataDir(dataDir)
+	if resolveErr != nil {
+		return resolveErr
 	}
 
 	store, storeErr := hub.NewStore(dataDir)
@@ -63,6 +74,18 @@ func Run(
 	)
 	if tokenErr != nil {
 		return tokenErr
+	}
+
+	// Start Raft cluster if peers are configured.
+	if len(peers) > 0 {
+		bindAddr := fmt.Sprintf(":%d", port+1)
+		_, clusterErr := hub.NewCluster(
+			fmt.Sprintf(":%d", port),
+			bindAddr, dataDir, peers,
+		)
+		if clusterErr != nil {
+			return clusterErr
+		}
 	}
 
 	srv := hub.NewServer(store, adminToken)

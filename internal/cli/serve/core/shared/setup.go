@@ -31,6 +31,17 @@ const adminTokenFile = "admin.token"
 // dataDirPerm is the permission for the hub data directory.
 const dataDirPerm = fs.PermKeyDir
 
+// resolveDataDir returns the data directory, creating it
+// if needed.
+func resolveDataDir(dataDir string) (string, error) {
+	if dataDir == "" {
+		return hubDir()
+	}
+	return dataDir, io.SafeMkdirAll(
+		dataDir, dataDirPerm,
+	)
+}
+
 // hubDir returns the default hub data directory path.
 // Uses ~/.ctx/hub-data/ (same parent as the encryption key).
 func hubDir() (string, error) {

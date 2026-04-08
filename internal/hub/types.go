@@ -11,6 +11,7 @@ import (
 	"sync"
 	"time"
 
+	"github.com/hashicorp/raft"
 	"google.golang.org/grpc"
 )
 
@@ -224,6 +225,16 @@ type StatusResponse struct {
 type Client struct {
 	conn  *grpc.ClientConn
 	token string
+}
+
+// Cluster wraps a Raft node for leader election only.
+//
+// Fields:
+//   - raftNode: the underlying Raft instance
+//   - transport: network transport for Raft communication
+type Cluster struct {
+	raftNode  *raft.Raft
+	transport *raft.NetworkTransport
 }
 
 // jsonCodec is a gRPC codec using JSON encoding instead of

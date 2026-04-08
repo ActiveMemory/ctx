@@ -280,6 +280,8 @@ serve.daemon:
   short: Run hub in the background
 serve.data-dir:
   short: Hub data directory (default ~/.ctx/hub-data/)
+serve.peers:
+  short: Comma-separated peer addresses for cluster mode
 serve.port:
   short: Hub listen port (default 9900)
 serve.shared:

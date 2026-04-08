@@ -100,6 +100,7 @@ const (
 	Record          = "record"
 	Regenerate      = "regenerate"
 	Scope           = "scope"
+	Peers           = "peers"
 	Port            = "port"
 	Serve           = "serve"
 	Shared          = "shared"
