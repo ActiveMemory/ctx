@@ -4464,6 +4464,17 @@ rather than waiting for explicit instructions.</p>
 <li><strong>Trust the agent's proactive instincts</strong>. Agents trained on the <code>ctx</code> playbook will
   offer to persist context at milestones. A brief "<em>want me to save this?</em>" is
   cheaper than re-discovering the same lesson three sessions later.</li>
+<li>
+<p><strong>Relax provenance per-project</strong> if <code>--session-id</code>, <code>--branch</code>, or <code>--commit</code>
+  are impractical (e.g., manual notes outside an AI session). Add to <code>.ctxrc</code>:</p>
+<div class="language-yaml highlight"><pre><span></span><code><span id="__span-13-1"><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a><span class="nt">provenance_required</span><span class="p">:</span>
+</span><span id="__span-13-2"><a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a><span class="w">  </span><span class="nt">session_id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">false</span><span class="w">   </span><span class="c1"># allow entries without --session-id</span>
+</span><span id="__span-13-3"><a id="__codelineno-13-3" name="__codelineno-13-3" href="#__codelineno-13-3"></a><span class="w">  </span><span class="nt">branch</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span><span class="w">        </span><span class="c1"># still require --branch</span>
+</span><span id="__span-13-4"><a id="__codelineno-13-4" name="__codelineno-13-4" href="#__codelineno-13-4"></a><span class="w">  </span><span class="nt">commit</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span><span class="w">        </span><span class="c1"># still require --commit</span>
+</span></code></pre></div>
+<p>Default is all three required. Only human config relaxes:
+Agents cannot bypass, and that's by design.</p>
+</li>
 </ul>
 <h2 id="next-up">Next Up<a class="headerlink" href="#next-up" title="Permanent link">&para;</a></h2>
 <p><strong><a href="../task-management/">Tracking Work Across Sessions →</a></strong>:

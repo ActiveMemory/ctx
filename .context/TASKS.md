@@ -59,13 +59,11 @@ TASK STATUS LABELS:
   hooks. #priority:high #session:a92cadca #branch:main #commit:68fbc00a
   #added:2026-04-06-151044
 
-- [ ] Wire provenance flags into add skills: update ctx-task-add,
+- [x] Wire provenance flags into add skills: update ctx-task-add,
   ctx-decision-add, and ctx-learning-add skills to pass --session-id, --branch,
   --commit from the hook-relayed provenance line when invoking ctx add. Spec:
   specs/task-session-provenance.md #priority:medium #session:a92cadca
   #branch:main #commit:68fbc00a #added:2026-04-06-151036
-
-
 
 - [x] JSONL schema validation: derive schema from empirical JSONL data, embed in
   binary, validate on import (warn, never block), add `ctx journal schema check`
@@ -641,7 +639,7 @@ Taxonomy (from prefix analysis):
   #priority:low #added:2026-03-07-220825
 
 
-- [ ] Add .ctxrc provenance validation config: allow projects to relax required
+- [x] Add .ctxrc provenance validation config: allow projects to relax required
   provenance flags (session, branch, commit) individually via ctxrc fields. CLI
   stays strict — no --skip-validation flag. Agent cannot bypass; only human
   config relaxes. Default: all three required. #priority:medium

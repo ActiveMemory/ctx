@@ -11,6 +11,7 @@ import (
 	"github.com/ActiveMemory/ctx/internal/config/flag"
 	"github.com/ActiveMemory/ctx/internal/entity"
 	errAdd "github.com/ActiveMemory/ctx/internal/err/add"
+	"github.com/ActiveMemory/ctx/internal/rc"
 )
 
 // Validate checks that required fields are present for the given entry type.
@@ -31,11 +32,20 @@ func Validate(params entity.EntryParams, examplesFn func(string) string) error {
 		return errAdd.NoContentProvided(params.Type, examples)
 	}
 
-	// Provenance is required for task, decision, and learning.
-	provenance := [][2]string{
-		{flag.PrefixLong + flag.SessionID, params.SessionID},
-		{flag.PrefixLong + flag.Branch, params.Branch},
-		{flag.PrefixLong + flag.Commit, params.Commit},
+	// Provenance is required for task, decision, and learning
+	// unless relaxed per-project via .ctxrc provenance_required.
+	var provenance [][2]string
+	if rc.ProvenanceSessionRequired() {
+		provenance = append(provenance,
+			[2]string{flag.PrefixLong + flag.SessionID, params.SessionID})
+	}
+	if rc.ProvenanceBranchRequired() {
+		provenance = append(provenance,
+			[2]string{flag.PrefixLong + flag.Branch, params.Branch})
+	}
+	if rc.ProvenanceCommitRequired() {
+		provenance = append(provenance,
+			[2]string{flag.PrefixLong + flag.Commit, params.Commit})
 	}
 
 	var extra [][2]string

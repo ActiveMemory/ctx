@@ -58,6 +58,8 @@ import cfgMemory "github.com/ActiveMemory/ctx/internal/config/memory"
 //     cursor, cline, kiro, codex)
 //   - Steering: Steering layer configuration overrides
 //   - Hooks: Hook system configuration overrides
+//   - ProvenanceRequired: Per-project relaxation of
+//     provenance flags for ctx add (default: all required)
 type CtxRC struct {
 	Profile             string                   `yaml:"profile"`
 	Tool                string                   `yaml:"tool"`
@@ -88,6 +90,22 @@ type CtxRC struct {
 	Notify              *NotifyConfig            `yaml:"notify"`
 	Steering            *SteeringRC              `yaml:"steering"`
 	Hooks               *HooksRC                 `yaml:"hooks"`
+	ProvenanceRequired  *ProvenanceConfig        `yaml:"provenance_required"`
+}
+
+// ProvenanceConfig controls which provenance flags are
+// required when adding tasks, decisions, and learnings.
+// Default: all three required. Set individual fields to
+// false to relax per-project.
+//
+// Fields:
+//   - SessionID: Require --session-id (default true)
+//   - Branch: Require --branch (default true)
+//   - Commit: Require --commit (default true)
+type ProvenanceConfig struct {
+	SessionID *bool `yaml:"session_id"`
+	Branch    *bool `yaml:"branch"`
+	Commit    *bool `yaml:"commit"`
 }
 
 // FreshnessFile describes a source file containing technology-dependent

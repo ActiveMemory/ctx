@@ -4205,15 +4205,20 @@ and <a href="#cli-global-flags">CLI Global Flags</a> below for details.</p>
 </span><span id="__span-1-40"><a id="__codelineno-1-40" name="__codelineno-1-40" href="#__codelineno-1-40"></a><span class="c1">#   timeout: 10</span>
 </span><span id="__span-1-41"><a id="__codelineno-1-41" name="__codelineno-1-41" href="#__codelineno-1-41"></a><span class="c1">#   enabled: true</span>
 </span><span id="__span-1-42"><a id="__codelineno-1-42" name="__codelineno-1-42" href="#__codelineno-1-42"></a><span class="c1">#</span>
-</span><span id="__span-1-43"><a id="__codelineno-1-43" name="__codelineno-1-43" href="#__codelineno-1-43"></a><span class="c1"># priority_order:</span>
-</span><span id="__span-1-44"><a id="__codelineno-1-44" name="__codelineno-1-44" href="#__codelineno-1-44"></a><span class="c1">#   - CONSTITUTION.md</span>
-</span><span id="__span-1-45"><a id="__codelineno-1-45" name="__codelineno-1-45" href="#__codelineno-1-45"></a><span class="c1">#   - TASKS.md</span>
-</span><span id="__span-1-46"><a id="__codelineno-1-46" name="__codelineno-1-46" href="#__codelineno-1-46"></a><span class="c1">#   - CONVENTIONS.md</span>
-</span><span id="__span-1-47"><a id="__codelineno-1-47" name="__codelineno-1-47" href="#__codelineno-1-47"></a><span class="c1">#   - ARCHITECTURE.md</span>
-</span><span id="__span-1-48"><a id="__codelineno-1-48" name="__codelineno-1-48" href="#__codelineno-1-48"></a><span class="c1">#   - DECISIONS.md</span>
-</span><span id="__span-1-49"><a id="__codelineno-1-49" name="__codelineno-1-49" href="#__codelineno-1-49"></a><span class="c1">#   - LEARNINGS.md</span>
-</span><span id="__span-1-50"><a id="__codelineno-1-50" name="__codelineno-1-50" href="#__codelineno-1-50"></a><span class="c1">#   - GLOSSARY.md</span>
-</span><span id="__span-1-51"><a id="__codelineno-1-51" name="__codelineno-1-51" href="#__codelineno-1-51"></a><span class="c1">#   - AGENT_PLAYBOOK.md</span>
+</span><span id="__span-1-43"><a id="__codelineno-1-43" name="__codelineno-1-43" href="#__codelineno-1-43"></a><span class="c1"># provenance_required:  # Relax provenance flags for ctx add</span>
+</span><span id="__span-1-44"><a id="__codelineno-1-44" name="__codelineno-1-44" href="#__codelineno-1-44"></a><span class="c1">#   session_id: true    # Require --session-id (default: true)</span>
+</span><span id="__span-1-45"><a id="__codelineno-1-45" name="__codelineno-1-45" href="#__codelineno-1-45"></a><span class="c1">#   branch: true        # Require --branch (default: true)</span>
+</span><span id="__span-1-46"><a id="__codelineno-1-46" name="__codelineno-1-46" href="#__codelineno-1-46"></a><span class="c1">#   commit: true        # Require --commit (default: true)</span>
+</span><span id="__span-1-47"><a id="__codelineno-1-47" name="__codelineno-1-47" href="#__codelineno-1-47"></a><span class="c1">#</span>
+</span><span id="__span-1-48"><a id="__codelineno-1-48" name="__codelineno-1-48" href="#__codelineno-1-48"></a><span class="c1"># priority_order:</span>
+</span><span id="__span-1-49"><a id="__codelineno-1-49" name="__codelineno-1-49" href="#__codelineno-1-49"></a><span class="c1">#   - CONSTITUTION.md</span>
+</span><span id="__span-1-50"><a id="__codelineno-1-50" name="__codelineno-1-50" href="#__codelineno-1-50"></a><span class="c1">#   - TASKS.md</span>
+</span><span id="__span-1-51"><a id="__codelineno-1-51" name="__codelineno-1-51" href="#__codelineno-1-51"></a><span class="c1">#   - CONVENTIONS.md</span>
+</span><span id="__span-1-52"><a id="__codelineno-1-52" name="__codelineno-1-52" href="#__codelineno-1-52"></a><span class="c1">#   - ARCHITECTURE.md</span>
+</span><span id="__span-1-53"><a id="__codelineno-1-53" name="__codelineno-1-53" href="#__codelineno-1-53"></a><span class="c1">#   - DECISIONS.md</span>
+</span><span id="__span-1-54"><a id="__codelineno-1-54" name="__codelineno-1-54" href="#__codelineno-1-54"></a><span class="c1">#   - LEARNINGS.md</span>
+</span><span id="__span-1-55"><a id="__codelineno-1-55" name="__codelineno-1-55" href="#__codelineno-1-55"></a><span class="c1">#   - GLOSSARY.md</span>
+</span><span id="__span-1-56"><a id="__codelineno-1-56" name="__codelineno-1-56" href="#__codelineno-1-56"></a><span class="c1">#   - AGENT_PLAYBOOK.md</span>
 </span></code></pre></div>
 <!-- drift-check: diff <(grep 'yaml:' internal/rc/types.go | grep -oP '"[a-z_]+"' | tr -d '"' | sort -u | grep -v 'desc\|events\|path\|review_url\|profile\|key_path') <(sed -n '/Option Reference/,/^\*\*Default/p' docs/home/configuration.md | grep -oP '`([a-z_.]+)`' | tr -d '`' | sed 's/notify\.events/notify/' | sort -u | grep -v 'string\|int\|bool\|\[\]') -->
 <h3 id="option-reference">Option Reference<a class="headerlink" href="#option-reference" title="Permanent link">&para;</a></h3>
@@ -4376,6 +4381,24 @@ and <a href="#cli-global-flags">CLI Global Flags</a> below for details.</p>
 <td><code>bool</code></td>
 <td><code>true</code></td>
 <td>Whether hook execution is enabled</td>
+</tr>
+<tr>
+<td><code>provenance_required.session_id</code></td>
+<td><code>bool</code></td>
+<td><code>true</code></td>
+<td>Require <code>--session-id</code> on <code>ctx add</code> for tasks, decisions, learnings</td>
+</tr>
+<tr>
+<td><code>provenance_required.branch</code></td>
+<td><code>bool</code></td>
+<td><code>true</code></td>
+<td>Require <code>--branch</code> on <code>ctx add</code> for tasks, decisions, learnings</td>
+</tr>
+<tr>
+<td><code>provenance_required.commit</code></td>
+<td><code>bool</code></td>
+<td><code>true</code></td>
+<td>Require <code>--commit</code> on <code>ctx add</code> for tasks, decisions, learnings</td>
 </tr>
 </tbody>
 </table>

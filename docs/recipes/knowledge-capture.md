@@ -397,6 +397,18 @@ Both approaches produce the same structured entries in the same context files.
 * **Trust the agent's proactive instincts**. Agents trained on the `ctx` playbook will
   offer to persist context at milestones. A brief "*want me to save this?*" is
   cheaper than re-discovering the same lesson three sessions later.
+* **Relax provenance per-project** if `--session-id`, `--branch`, or `--commit`
+  are impractical (e.g., manual notes outside an AI session). Add to `.ctxrc`:
+
+    ```yaml
+    provenance_required:
+      session_id: false   # allow entries without --session-id
+      branch: true        # still require --branch
+      commit: true        # still require --commit
+    ```
+
+    Default is all three required. Only human config relaxes:
+    Agents cannot bypass, and that's by design.
 
 ## Next Up
 
