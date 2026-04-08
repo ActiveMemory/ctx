@@ -21,7 +21,6 @@ import (
 	"github.com/ActiveMemory/ctx/internal/config/token"
 	"github.com/ActiveMemory/ctx/internal/crypto"
 	errCrypto "github.com/ActiveMemory/ctx/internal/err/crypto"
-	errPad "github.com/ActiveMemory/ctx/internal/err/pad"
 	"github.com/ActiveMemory/ctx/internal/io"
 	"github.com/ActiveMemory/ctx/internal/rc"
 	writePad "github.com/ActiveMemory/ctx/internal/write/pad"
@@ -123,59 +122,38 @@ func EnsureGitignore(contextDir, filename string) error {
 	)
 }
 
-// ReadEntries reads the scratchpad and returns its entries.
-//
-// If the scratchpad file does not exist, it returns an empty slice (no error).
-// If the encrypted file exists but the key is missing, it returns an error.
+// ReadEntriesWithIDs reads the scratchpad and returns
+// entries with stable IDs. Auto-migrates legacy entries
+// (without ID prefixes) by assigning sequential IDs.
 //
 // Returns:
-//   - []string: The scratchpad entries (may be empty)
+//   - []parse.Entry: Entries with stable IDs
 //   - error: Non-nil on key or decryption errors
-func ReadEntries() ([]string, error) {
-	path := ScratchpadPath()
-	dir := filepath.Dir(path)
-	name := filepath.Base(path)
-
-	data, readErr := io.SafeReadFile(dir, name)
+func ReadEntriesWithIDs() ([]parse.Entry, error) {
+	data, readErr := readRaw()
 	if readErr != nil {
-		if errors.Is(readErr, os.ErrNotExist) {
-			return nil, nil
-		}
-		return nil, errPad.Read(readErr)
+		return nil, readErr
 	}
-
-	if !rc.ScratchpadEncrypt() {
-		return parse.Entries(data), nil
+	if data == nil {
+		return nil, nil
 	}
-
-	kp := KeyPath()
-	key, loadErr := crypto.LoadKey(kp)
-	if loadErr != nil {
-		return nil, errCrypto.LoadKey(loadErr, kp)
-	}
-
-	plaintext, decErr := crypto.Decrypt(key, data)
-	if decErr != nil {
-		return nil, errCrypto.DecryptFailed()
-	}
-
-	return parse.Entries(plaintext), nil
+	return parse.EntriesWithIDs(data), nil
 }
 
-// WriteEntries writes entries to the scratchpad file.
-//
-// In encrypted mode, the entries are encrypted with AES-256-GCM before
-// writing. In plaintext mode, they are written as a newline-delimited file.
+// WriteEntriesWithIDs writes ID-prefixed entries to the
+// scratchpad file.
 //
 // Parameters:
 //   - cmd: Cobra command for diagnostic output
-//   - entries: The scratchpad entries to write
+//   - entries: Entries with stable IDs to write
 //
 // Returns:
-//   - error: Non-nil on key, encryption, or file write errors
-func WriteEntries(cmd *cobra.Command, entries []string) error {
+//   - error: Non-nil on key, encryption, or write errors
+func WriteEntriesWithIDs(
+	cmd *cobra.Command, entries []parse.Entry,
+) error {
 	path := ScratchpadPath()
-	plaintext := parse.FormatEntries(entries)
+	plaintext := parse.FormatEntriesWithIDs(entries)
 
 	if !rc.ScratchpadEncrypt() {
 		return io.SafeWriteFile(path, plaintext, fs.PermFile)
@@ -197,4 +175,56 @@ func WriteEntries(cmd *cobra.Command, entries []string) error {
 	}
 
 	return io.SafeWriteFile(path, ciphertext, fs.PermFile)
+}
+
+// ReadEntries reads the scratchpad and returns content
+// strings without ID prefixes. IDs are preserved on disk.
+// Use ReadEntriesWithIDs when you need stable ID access.
+//
+// Returns:
+//   - []string: Entry content strings (may be empty)
+//   - error: Non-nil on key or decryption errors
+func ReadEntries() ([]string, error) {
+	entries, readErr := ReadEntriesWithIDs()
+	if readErr != nil {
+		return nil, readErr
+	}
+	return parse.ToStrings(entries), nil
+}
+
+// WriteEntries writes entries to the scratchpad, preserving
+// stable IDs. Reads existing IDs from disk, matches entries
+// by position, and assigns new IDs for added entries.
+//
+// Parameters:
+//   - cmd: Cobra command for diagnostic output
+//   - entries: Content strings to write
+//
+// Returns:
+//   - error: Non-nil on key, encryption, or write errors
+func WriteEntries(
+	cmd *cobra.Command, entries []string,
+) error {
+	// Read existing IDs to preserve them.
+	existing, _ := ReadEntriesWithIDs()
+
+	idEntries := make([]parse.Entry, len(entries))
+	nextID := parse.NextID(existing)
+
+	for i, content := range entries {
+		if i < len(existing) {
+			idEntries[i] = parse.Entry{
+				ID:      existing[i].ID,
+				Content: content,
+			}
+		} else {
+			idEntries[i] = parse.Entry{
+				ID:      nextID,
+				Content: content,
+			}
+			nextID++
+		}
+	}
+
+	return WriteEntriesWithIDs(cmd, idEntries)
 }

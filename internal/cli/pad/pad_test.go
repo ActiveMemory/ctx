@@ -169,8 +169,8 @@ func TestAdd_Plaintext(t *testing.T) {
 	if err != nil {
 		t.Fatalf("ReadFile() error: %v", err)
 	}
-	if string(data) != "plaintext note\n" {
-		t.Errorf("file contents = %q, want %q", string(data), "plaintext note\n")
+	if string(data) != "[1] plaintext note\n" {
+		t.Errorf("file contents = %q, want %q", string(data), "[1] plaintext note\n")
 	}
 }
 
@@ -245,8 +245,8 @@ func TestRm_OutOfRange(t *testing.T) {
 	if err == nil {
 		t.Fatal("expected error for out-of-range index")
 	}
-	if !strings.Contains(err.Error(), "does not exist") {
-		t.Errorf("error = %q, want 'does not exist'", err.Error())
+	if !strings.Contains(err.Error(), "not found") {
+		t.Errorf("error = %q, want 'not found'", err.Error())
 	}
 }
 
@@ -420,8 +420,8 @@ func TestShow_OutOfRange(t *testing.T) {
 	if err == nil {
 		t.Fatal("expected error for out-of-range index")
 	}
-	if !strings.Contains(err.Error(), "does not exist") {
-		t.Errorf("error = %q, want 'does not exist'", err.Error())
+	if !strings.Contains(err.Error(), "not found") {
+		t.Errorf("error = %q, want 'not found'", err.Error())
 	}
 }
 
@@ -432,8 +432,8 @@ func TestShow_EmptyScratchpad(t *testing.T) {
 	if err == nil {
 		t.Fatal("expected error for empty scratchpad")
 	}
-	if !strings.Contains(err.Error(), "does not exist") {
-		t.Errorf("error = %q, want 'does not exist'", err.Error())
+	if !strings.Contains(err.Error(), "not found") {
+		t.Errorf("error = %q, want 'not found'", err.Error())
 	}
 }
 
@@ -656,8 +656,9 @@ func TestCmd_HasSubcommands(t *testing.T) {
 		names[sub.Use] = true
 	}
 	for _, expected := range []string{
-		"show N", "add TEXT", "rm N",
+		"show N", "add TEXT", "rm ID [ID...]",
 		"edit N [TEXT]", "mv N M", "resolve",
+		"normalize",
 		"import FILE", "export [DIR]", "tags",
 	} {
 		if !names[expected] {
@@ -915,8 +916,8 @@ func TestWriteEntries_Plaintext(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	if string(data) != "one\ntwo\n" {
-		t.Errorf("file = %q, want %q", string(data), "one\ntwo\n")
+	if string(data) != "[1] one\n[2] two\n" {
+		t.Errorf("file = %q, want %q", string(data), "[1] one\n[2] two\n")
 	}
 }
 
@@ -2887,13 +2888,18 @@ func TestMerge_PreservesOrder(t *testing.T) {
 		t.Fatal(readErr)
 	}
 	lines := strings.Split(strings.TrimSpace(string(data)), "\n")
-	expected := []string{"first", "second", "third", "fourth", "fifth"}
+	expected := []string{
+		"[1] first", "[2] second", "[3] third",
+		"[4] fourth", "[5] fifth",
+	}
 	if len(lines) != len(expected) {
-		t.Fatalf("got %d lines, want %d: %v", len(lines), len(expected), lines)
+		t.Fatalf("got %d lines, want %d: %v",
+			len(lines), len(expected), lines)
 	}
 	for i, want := range expected {
 		if lines[i] != want {
-			t.Errorf("line %d = %q, want %q", i, lines[i], want)
+			t.Errorf("line %d = %q, want %q",
+				i, lines[i], want)
 		}
 	}
 }

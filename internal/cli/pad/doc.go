@@ -28,5 +28,6 @@
 //   - export:  export blob entries as files to a directory
 //   - merge:   merge entries from external scratchpad files
 //   - resolve: resolve merge conflicts in scratchpad
+//   - normalize: reassign entry IDs as 1..N
 //   - tags:    list all tags with counts
 package pad

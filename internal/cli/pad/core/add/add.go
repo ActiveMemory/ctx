@@ -1,6 +1,6 @@
 //   /    ctx:                         https://ctx.ist
 // ,'`./    do you remember?
-// `.,'\
+// `.,'\\
 //   \    Copyright 2026-present Context contributors.
 //                 SPDX-License-Identifier: Apache-2.0
 
@@ -8,6 +8,7 @@ package add
 
 import (
 	"github.com/ActiveMemory/ctx/internal/cli/pad/core/blob"
+	"github.com/ActiveMemory/ctx/internal/cli/pad/core/parse"
 	"github.com/ActiveMemory/ctx/internal/cli/pad/core/store"
 	"github.com/ActiveMemory/ctx/internal/config/pad"
 	errFs "github.com/ActiveMemory/ctx/internal/err/fs"
@@ -15,47 +16,62 @@ import (
 	internalIo "github.com/ActiveMemory/ctx/internal/io"
 )
 
-// Entry appends a text entry to the scratchpad and returns the
-// updated list. The caller owns writing and output.
+// EntryWithID appends a text entry with a stable ID and
+// returns the updated list and the new entry's ID.
 //
 // Parameters:
 //   - text: Entry text to add
 //
 // Returns:
-//   - []string: Updated entries list
+//   - []parse.Entry: Updated entries
+//   - int: ID assigned to the new entry
 //   - error: Non-nil on entry load failure
-func Entry(text string) ([]string, error) {
-	entries, loadErr := store.ReadEntries()
+func EntryWithID(
+	text string,
+) ([]parse.Entry, int, error) {
+	entries, loadErr := store.ReadEntriesWithIDs()
 	if loadErr != nil {
-		return nil, loadErr
+		return nil, 0, loadErr
 	}
-	return append(entries, text), nil
+	id := parse.NextID(entries)
+	entries = append(entries, parse.Entry{
+		ID: id, Content: text,
+	})
+	return entries, id, nil
 }
 
-// Blob reads a file, validates its size, encodes it as a blob entry,
-// and returns the updated entries list. The caller owns writing and output.
+// BlobWithID reads a file, validates size, encodes as blob,
+// and returns the updated entries with stable IDs.
 //
 // Parameters:
 //   - label: Blob label (filename)
 //   - filePath: Path to the file to ingest
 //
 // Returns:
-//   - []string: Updated entries list
+//   - []parse.Entry: Updated entries
+//   - int: ID assigned to the new entry
 //   - error: Non-nil on read failure or file too large
-func Blob(label, filePath string) ([]string, error) {
+func BlobWithID(
+	label, filePath string,
+) ([]parse.Entry, int, error) {
 	data, readErr := internalIo.SafeReadUserFile(filePath)
 	if readErr != nil {
-		return nil, errFs.ReadFile(readErr)
+		return nil, 0, errFs.ReadFile(readErr)
 	}
 
 	if len(data) > pad.MaxBlobSize {
-		return nil, errPad.FileTooLarge(len(data), pad.MaxBlobSize)
+		return nil, 0, errPad.FileTooLarge(
+			len(data), pad.MaxBlobSize)
 	}
 
-	entries, loadErr := store.ReadEntries()
+	entries, loadErr := store.ReadEntriesWithIDs()
 	if loadErr != nil {
-		return nil, loadErr
+		return nil, 0, loadErr
 	}
 
-	return append(entries, blob.Make(label, data)), nil
+	id := parse.NextID(entries)
+	entries = append(entries, parse.Entry{
+		ID: id, Content: blob.Make(label, data),
+	})
+	return entries, id, nil
 }

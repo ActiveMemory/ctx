@@ -51,6 +51,20 @@ func EntryRemoved(cmd *cobra.Command, n int) {
 	cmd.Println(fmt.Sprintf(desc.Text(text.DescKeyWritePadEntryRemoved), n))
 }
 
+// Normalized prints confirmation that IDs were normalized.
+//
+// Parameters:
+//   - cmd: Cobra command for output. Nil is a no-op.
+//   - count: number of entries renumbered.
+func Normalized(cmd *cobra.Command, count int) {
+	if cmd == nil {
+		return
+	}
+	cmd.Println(fmt.Sprintf(
+		desc.Text(text.DescKeyWritePadNormalized),
+		count))
+}
+
 // EntryMoved prints confirmation that a pad entry was moved.
 //
 // Parameters:

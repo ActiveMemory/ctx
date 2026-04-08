@@ -342,6 +342,8 @@ err.pad.edit-no-mode:
   short: provide replacement text, --append, or --prepend
 err.pad.edit-text-conflict:
   short: --append, --prepend, and positional text are mutually exclusive
+err.pad.entry-not-found:
+  short: entry [%d] not found
 err.pad.entry-range:
   short: entry %d does not exist, scratchpad has %d entries
 err.pad.file-too-large:

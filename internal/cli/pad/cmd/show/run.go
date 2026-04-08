@@ -1,6 +1,6 @@
 //   /    ctx:                         https://ctx.ist
 // ,'`./    do you remember?
-// `.,'\
+// `.,'\\
 //   \    Copyright 2026-present Context contributors.
 //                 SPDX-License-Identifier: Apache-2.0
 
@@ -10,8 +10,8 @@ import (
 	"github.com/spf13/cobra"
 
 	"github.com/ActiveMemory/ctx/internal/cli/pad/core/blob"
+	"github.com/ActiveMemory/ctx/internal/cli/pad/core/parse"
 	"github.com/ActiveMemory/ctx/internal/cli/pad/core/store"
-	"github.com/ActiveMemory/ctx/internal/cli/pad/core/validate"
 	"github.com/ActiveMemory/ctx/internal/config/fs"
 	errFs "github.com/ActiveMemory/ctx/internal/err/fs"
 	errPad "github.com/ActiveMemory/ctx/internal/err/pad"
@@ -19,30 +19,27 @@ import (
 	"github.com/ActiveMemory/ctx/internal/write/pad"
 )
 
-// Run prints the raw text of entry at 1-based position n.
+// Run prints the raw text of entry by stable ID.
 //
 // Parameters:
 //   - cmd: Cobra command for output
-//   - n: 1-based entry index
+//   - id: Stable entry ID
 //   - outPath: File path for blob output (empty for stdout)
 //
 // Returns:
-//   - error: Non-nil on invalid index, read failure, or write failure
-func Run(cmd *cobra.Command, n int, outPath string) error {
-	entries, err := store.ReadEntries()
-	if err != nil {
-		return err
+//   - error: Non-nil on invalid ID, read or write failure
+func Run(cmd *cobra.Command, id int, outPath string) error {
+	entries, readErr := store.ReadEntriesWithIDs()
+	if readErr != nil {
+		return readErr
 	}
 
-	if len(entries) == 0 {
-		return errPad.EntryRange(n, 0)
+	idx := parse.FindByID(entries, id)
+	if idx < 0 {
+		return errPad.EntryNotFound(id)
 	}
 
-	if validErr := validate.Index(n, entries); validErr != nil {
-		return validErr
-	}
-
-	entry := entries[n-1]
+	entry := entries[idx].Content
 
 	if _, data, ok := blob.Split(entry); ok {
 		if outPath != "" {

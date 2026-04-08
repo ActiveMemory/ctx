@@ -414,6 +414,8 @@ write.pad-entry-removed:
   short: Removed entry %d.
 write.pad-entry-updated:
   short: Updated entry %d.
+write.pad-normalized:
+  short: Normalized %d entries (IDs reassigned as 1..N).
 write.pad-tags-item:
   short: "%s\t%d"
 write.pad-tags-none:

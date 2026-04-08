@@ -108,6 +108,19 @@ func OutFlagRequiresBlob() error {
 	)
 }
 
+// EntryNotFound returns an error for a nonexistent entry ID.
+//
+// Parameters:
+//   - id: the stable entry ID that was not found.
+//
+// Returns:
+//   - error: "entry [id] not found"
+func EntryNotFound(id int) error {
+	return fmt.Errorf(
+		desc.Text(text.DescKeyErrPadEntryNotFound), id,
+	)
+}
+
 // Read wraps a scratchpad read failure.
 //
 // Parameters:

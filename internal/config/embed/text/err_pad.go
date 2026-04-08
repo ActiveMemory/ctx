@@ -16,6 +16,9 @@ const (
 	// DescKeyErrPadEditTextConflict is the text key for err pad edit text
 	// conflict messages.
 	DescKeyErrPadEditTextConflict = "err.pad.edit-text-conflict"
+	// DescKeyErrPadEntryNotFound is the text key for err pad entry not found
+	// messages.
+	DescKeyErrPadEntryNotFound = "err.pad.entry-not-found"
 	// DescKeyErrPadEntryRange is the text key for err pad entry range messages.
 	DescKeyErrPadEntryRange = "err.pad.entry-range"
 	// DescKeyErrPadFileTooLarge is the text key for err pad file too large

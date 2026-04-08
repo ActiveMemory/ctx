@@ -650,6 +650,8 @@ pad.merge:
   short: Merge entries from scratchpad files into the current pad
 pad.mv:
   short: Move an entry from position N to position M
+pad.normalize:
+  short: Reassign entry IDs as 1..N, closing gaps
 pad.resolve:
   long: |-
     Decrypt and display both sides of a merge conflict for the scratchpad.

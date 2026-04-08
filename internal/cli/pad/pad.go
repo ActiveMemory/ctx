@@ -17,6 +17,7 @@ import (
 	"github.com/ActiveMemory/ctx/internal/cli/pad/cmd/export"
 	"github.com/ActiveMemory/ctx/internal/cli/pad/cmd/merge"
 	"github.com/ActiveMemory/ctx/internal/cli/pad/cmd/mv"
+	"github.com/ActiveMemory/ctx/internal/cli/pad/cmd/normalize"
 	"github.com/ActiveMemory/ctx/internal/cli/pad/cmd/resolve"
 	"github.com/ActiveMemory/ctx/internal/cli/pad/cmd/rm"
 	"github.com/ActiveMemory/ctx/internal/cli/pad/cmd/root"
@@ -49,9 +50,9 @@ func Cmd() *cobra.Command {
 		Long:  long,
 		Args:  cobra.NoArgs,
 		RunE: func(cmd *cobra.Command, _ []string) error {
-			entries, err := store.ReadEntries()
-			if err != nil {
-				return err
+			entries, readErr := store.ReadEntriesWithIDs()
+			if readErr != nil {
+				return readErr
 			}
 
 			if len(entries) == 0 {
@@ -60,16 +61,17 @@ func Cmd() *cobra.Command {
 			}
 
 			printed := 0
-			for i, entry := range entries {
-				if len(tagFilters) > 0 && !tag.MatchAll(entry, tagFilters) {
+			for _, entry := range entries {
+				if len(tagFilters) > 0 &&
+					!tag.MatchAll(entry.Content, tagFilters) {
 					continue
 				}
 				pad.EntryList(
 					cmd,
 					fmt.Sprintf(
 						desc.Text(text.DescKeyWritePadListItem),
-						i+1,
-						blob.DisplayEntry(entry),
+						entry.ID,
+						blob.DisplayEntry(entry.Content),
 					),
 				)
 				printed++
@@ -97,6 +99,7 @@ func Cmd() *cobra.Command {
 	c.AddCommand(root.Cmd())
 	c.AddCommand(export.Cmd())
 	c.AddCommand(merge.Cmd())
+	c.AddCommand(normalize.Cmd())
 	c.AddCommand(tags.Cmd())
 
 	return c

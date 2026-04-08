@@ -1,6 +1,6 @@
 //   /    ctx:                         https://ctx.ist
 // ,'`./    do you remember?
-// `.,'\
+// `.,'\\
 //   \    Copyright 2026-present Context contributors.
 //                 SPDX-License-Identifier: Apache-2.0
 
@@ -9,35 +9,53 @@ package rm
 import (
 	"github.com/spf13/cobra"
 
+	"github.com/ActiveMemory/ctx/internal/cli/pad/core/parse"
 	"github.com/ActiveMemory/ctx/internal/cli/pad/core/store"
-	"github.com/ActiveMemory/ctx/internal/cli/pad/core/validate"
+	errPad "github.com/ActiveMemory/ctx/internal/err/pad"
 	"github.com/ActiveMemory/ctx/internal/write/pad"
 )
 
-// Run removes entry at 1-based position n.
+// Run removes entries by stable ID. Supports multiple IDs.
+// All IDs are resolved before any deletion to avoid
+// shift-induced mismatches.
 //
 // Parameters:
 //   - cmd: Cobra command for output
-//   - n: 1-based entry index
+//   - ids: Stable entry IDs to remove
 //
 // Returns:
-//   - error: Non-nil on invalid index or read/write failure
-func Run(cmd *cobra.Command, n int) error {
-	entries, err := store.ReadEntries()
-	if err != nil {
-		return err
+//   - error: Non-nil on invalid ID or read/write failure
+func Run(cmd *cobra.Command, ids []int) error {
+	entries, readErr := store.ReadEntriesWithIDs()
+	if readErr != nil {
+		return readErr
 	}
 
-	if validErr := validate.Index(n, entries); validErr != nil {
-		return validErr
+	// Resolve all IDs before deleting any.
+	removeSet := make(map[int]bool, len(ids))
+	for _, id := range ids {
+		idx := parse.FindByID(entries, id)
+		if idx < 0 {
+			return errPad.EntryNotFound(id)
+		}
+		removeSet[id] = true
 	}
 
-	entries = append(entries[:n-1], entries[n:]...)
+	// Filter out removed entries.
+	var remaining []parse.Entry
+	for _, e := range entries {
+		if !removeSet[e.ID] {
+			remaining = append(remaining, e)
+		}
+	}
 
-	if writeErr := store.WriteEntries(cmd, entries); writeErr != nil {
+	writeErr := store.WriteEntriesWithIDs(cmd, remaining)
+	if writeErr != nil {
 		return writeErr
 	}
 
-	pad.EntryRemoved(cmd, n)
+	for _, id := range ids {
+		pad.EntryRemoved(cmd, id)
+	}
 	return nil
 }

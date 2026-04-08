@@ -18,6 +18,10 @@ const (
 	Md = "scratchpad.md"
 )
 
+// FmtPadEntryID is the format string for rendering a stable
+// entry ID prefix, e.g. "[3] some content".
+const FmtPadEntryID = "[%d] %s"
+
 // Merge conflict side labels.
 const (
 	SideOurs   = "OURS"

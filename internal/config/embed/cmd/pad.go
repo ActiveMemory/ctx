@@ -20,10 +20,12 @@ const (
 	UsePadMerge = "merge FILE..."
 	// UsePadMv is the cobra Use string for the pad mv command.
 	UsePadMv = "mv N M"
+	// UsePadNormalize is the cobra Use string for pad normalize.
+	UsePadNormalize = "normalize"
 	// UsePadResolve is the cobra Use string for the pad resolve command.
 	UsePadResolve = "resolve"
 	// UsePadRm is the cobra Use string for the pad rm command.
-	UsePadRm = "rm N"
+	UsePadRm = "rm ID [ID...]"
 	// UsePadShow is the cobra Use string for the pad show command.
 	UsePadShow = "show N"
 	// UsePadTags is the cobra Use string for the pad tags command.
@@ -46,6 +48,8 @@ const (
 	DescKeyPadMerge = "pad.merge"
 	// DescKeyPadMv is the description key for the pad mv command.
 	DescKeyPadMv = "pad.mv"
+	// DescKeyPadNormalize is the description key for pad normalize.
+	DescKeyPadNormalize = "pad.normalize"
 	// DescKeyPadResolve is the description key for the pad resolve command.
 	DescKeyPadResolve = "pad.resolve"
 	// DescKeyPadRm is the description key for the pad rm command.

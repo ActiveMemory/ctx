@@ -86,6 +86,9 @@ const (
 	// DescKeyWritePadEntryUpdated is the text key for write pad entry updated
 	// messages.
 	DescKeyWritePadEntryUpdated = "write.pad-entry-updated"
+	// DescKeyWritePadNormalized is the text key for write pad
+	// normalized messages.
+	DescKeyWritePadNormalized = "write.pad-normalized"
 )
 
 // DescKeys for scratchpad export output.
