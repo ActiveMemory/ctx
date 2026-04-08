@@ -38,3 +38,39 @@ func Subscribed(cmd *cobra.Command, types []string) {
 func Synced(cmd *cobra.Command, count int) {
 	cmd.Println(fmt.Sprintf("Synced %d entries", count))
 }
+
+// Published confirms entries were published to the hub.
+//
+// Parameters:
+//   - cmd: Cobra command for output
+//   - count: number of entries published
+func Published(cmd *cobra.Command, count int) {
+	cmd.Println(fmt.Sprintf("Published %d entries", count))
+}
+
+// Listening confirms the listen stream is active.
+//
+// Parameters:
+//   - cmd: Cobra command for output
+func Listening(cmd *cobra.Command) {
+	cmd.Println("Listening for new entries (Ctrl-C to stop)")
+}
+
+// Status prints hub connection information.
+//
+// Parameters:
+//   - cmd: Cobra command for output
+//   - addr: hub address
+//   - total: total entries on hub
+//   - clients: connected client count
+func Status(
+	cmd *cobra.Command,
+	addr string,
+	total uint64,
+	clients uint32,
+) {
+	cmd.Println("Hub:", addr)
+	cmd.Println(fmt.Sprintf(
+		"Entries: %d  Clients: %d", total, clients,
+	))
+}

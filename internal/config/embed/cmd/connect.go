@@ -16,6 +16,12 @@ const (
 	UseConnectSubscribe = "subscribe <types...>"
 	// UseConnectSync is the Use string for sync.
 	UseConnectSync = "sync"
+	// UseConnectPublish is the Use string for publish.
+	UseConnectPublish = "publish"
+	// UseConnectListen is the Use string for listen.
+	UseConnectListen = "listen"
+	// UseConnectStatus is the Use string for status.
+	UseConnectStatus = "status"
 
 	// DescKeyConnect is the desc key for the connect command.
 	DescKeyConnect = "connect"
@@ -25,4 +31,10 @@ const (
 	DescKeyConnectSubscribe = "connect.subscribe"
 	// DescKeyConnectSync is the desc key for sync.
 	DescKeyConnectSync = "connect.sync"
+	// DescKeyConnectPublish is the desc key for publish.
+	DescKeyConnectPublish = "connect.publish"
+	// DescKeyConnectListen is the desc key for listen.
+	DescKeyConnectListen = "connect.listen"
+	// DescKeyConnectStatus is the desc key for status.
+	DescKeyConnectStatus = "connect.status"
 )
