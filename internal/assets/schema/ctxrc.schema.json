@@ -165,6 +165,25 @@
       "description": "Task content length above which a spec nudge fires regardless of signal words. Default: 150.",
       "minimum": 0
     },
+    "provenance_required": {
+      "type": "object",
+      "description": "Controls which provenance flags are required for ctx add. Default: all true. Set to false to relax per-project.",
+      "additionalProperties": false,
+      "properties": {
+        "session_id": {
+          "type": "boolean",
+          "description": "Require --session-id. Default: true."
+        },
+        "branch": {
+          "type": "boolean",
+          "description": "Require --branch. Default: true."
+        },
+        "commit": {
+          "type": "boolean",
+          "description": "Require --commit. Default: true."
+        }
+      }
+    },
     "notify": {
       "type": "object",
       "description": "Webhook notification settings.",
@@ -182,6 +201,50 @@
           "type": "integer",
           "description": "Deprecated: use top-level key_rotation_days instead.",
           "minimum": 0
+        }
+      }
+    },
+    "tool": {
+      "type": "string",
+      "description": "Active AI tool identifier (e.g., claude, cursor, cline, kiro, codex)."
+    },
+    "steering": {
+      "type": "object",
+      "description": "Steering layer configuration overrides.",
+      "additionalProperties": false,
+      "properties": {
+        "dir": {
+          "type": "string",
+          "description": "Path override for the steering directory."
+        },
+        "default_inclusion": {
+          "type": "string",
+          "description": "Default inclusion mode for new steering files."
+        },
+        "default_tools": {
+          "type": "array",
+          "description": "Default tool identifier list for new steering files.",
+          "items": { "type": "string" }
+        }
+      }
+    },
+    "hooks": {
+      "type": "object",
+      "description": "Hook system configuration overrides.",
+      "additionalProperties": false,
+      "properties": {
+        "dir": {
+          "type": "string",
+          "description": "Path override for the hooks directory."
+        },
+        "timeout": {
+          "type": "integer",
+          "description": "Per-hook execution timeout in seconds. Default: 10.",
+          "minimum": 0
+        },
+        "enabled": {
+          "type": "boolean",
+          "description": "Whether hook execution is enabled. Default: true."
         }
       }
     }

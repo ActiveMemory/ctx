@@ -358,6 +358,51 @@ func Tool() string {
 	return RC().Tool
 }
 
+// ProvenanceSessionRequired reports whether --session-id is
+// required when adding tasks, decisions, and learnings.
+// Returns true (default) unless explicitly disabled in .ctxrc.
+//
+// Returns:
+//   - bool: True if --session-id is required
+func ProvenanceSessionRequired() bool {
+	cfg := RC()
+	if cfg.ProvenanceRequired == nil ||
+		cfg.ProvenanceRequired.SessionID == nil {
+		return true
+	}
+	return *cfg.ProvenanceRequired.SessionID
+}
+
+// ProvenanceBranchRequired reports whether --branch is
+// required when adding tasks, decisions, and learnings.
+// Returns true (default) unless explicitly disabled in .ctxrc.
+//
+// Returns:
+//   - bool: True if --branch is required
+func ProvenanceBranchRequired() bool {
+	cfg := RC()
+	if cfg.ProvenanceRequired == nil ||
+		cfg.ProvenanceRequired.Branch == nil {
+		return true
+	}
+	return *cfg.ProvenanceRequired.Branch
+}
+
+// ProvenanceCommitRequired reports whether --commit is
+// required when adding tasks, decisions, and learnings.
+// Returns true (default) unless explicitly disabled in .ctxrc.
+//
+// Returns:
+//   - bool: True if --commit is required
+func ProvenanceCommitRequired() bool {
+	cfg := RC()
+	if cfg.ProvenanceRequired == nil ||
+		cfg.ProvenanceRequired.Commit == nil {
+		return true
+	}
+	return *cfg.ProvenanceRequired.Commit
+}
+
 // SteeringDir returns the configured steering directory path.
 //
 // Returns the value from .ctxrc steering.dir, or the default

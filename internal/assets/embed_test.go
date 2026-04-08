@@ -366,6 +366,10 @@ func TestSchemaCoversCtxRC(t *testing.T) {
 		SpecNudgeMinLen     int    `yaml:"spec_nudge_min_len"`
 		Notify              *int   `yaml:"notify"`
 		FreshnessFiles      []int  `yaml:"freshness_files"`
+		Tool                string `yaml:"tool"`
+		Steering            *int   `yaml:"steering"`
+		Hooks               *int   `yaml:"hooks"`
+		ProvenanceRequired  *int   `yaml:"provenance_required"`
 	}
 	yamlBytes, marshalErr := yaml.Marshal(ctxRC{})
 	if marshalErr != nil {

@@ -109,6 +109,11 @@ A commented `.ctxrc` showing all options and their defaults:
 #   timeout: 10
 #   enabled: true
 #
+# provenance_required:  # Relax provenance flags for ctx add
+#   session_id: true    # Require --session-id (default: true)
+#   branch: true        # Require --branch (default: true)
+#   commit: true        # Require --commit (default: true)
+#
 # priority_order:
 #   - CONSTITUTION.md
 #   - TASKS.md
@@ -150,6 +155,9 @@ A commented `.ctxrc` showing all options and their defaults:
 | `hooks.dir`             | `string`   | `.context/hooks` | Hook scripts directory                                                                                                                |
 | `hooks.timeout`         | `int`      | `10`          | Per-hook execution timeout in seconds                                                                                                     |
 | `hooks.enabled`         | `bool`     | `true`        | Whether hook execution is enabled                                                                                                         |
+| `provenance_required.session_id` | `bool` | `true` | Require `--session-id` on `ctx add` for tasks, decisions, learnings                                                            |
+| `provenance_required.branch` | `bool` | `true`     | Require `--branch` on `ctx add` for tasks, decisions, learnings                                                                |
+| `provenance_required.commit` | `bool` | `true`     | Require `--commit` on `ctx add` for tasks, decisions, learnings                                                                |
 
 **Default priority order** (*used when `priority_order` is not set*):
 
