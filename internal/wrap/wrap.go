@@ -14,6 +14,9 @@ import (
 	"github.com/ActiveMemory/ctx/internal/config/token"
 )
 
+// DefaultWidth is the default line wrap width for context files.
+const DefaultWidth = journal.LineWrapWidth
+
 // Content wraps long lines in source journal files to ~80 characters.
 // Skips only frontmatter and table rows. Wraps everything else including
 // content inside code fences - journal files are reference material, not

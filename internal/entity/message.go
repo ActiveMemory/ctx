@@ -30,6 +30,13 @@ import (
 //   - ToolUses: Tool invocations in this message
 //   - ToolResults: Results from tool invocations
 //
+// Envelope (Claude Code specific):
+//   - PlanContent: Full plan-mode document text
+//   - IsApiError: True for API error responses
+//   - SourceToolAssistantUUID: Links tool result to caller
+//   - ToolUseResult: CC-level tool error string
+//   - Origin: Message injection source (e.g. task-notification)
+//
 // Token Usage:
 //   - TokensIn: Input tokens for this message (if available)
 //   - TokensOut: Output tokens for this message (if available)
@@ -42,6 +49,12 @@ type Message struct {
 	Thinking    string       `json:"thinking,omitempty"`
 	ToolUses    []ToolUse    `json:"tool_uses,omitempty"`
 	ToolResults []ToolResult `json:"tool_results,omitempty"`
+
+	PlanContent             string `json:"plan_content,omitempty"`
+	IsApiError              bool   `json:"is_api_error,omitempty"`
+	SourceToolAssistantUUID string `json:"source_tool_assistant_uuid,omitempty"`
+	ToolUseResult           string `json:"tool_use_result,omitempty"`
+	Origin                  string `json:"origin,omitempty"`
 
 	TokensIn  int `json:"tokens_in,omitempty"`
 	TokensOut int `json:"tokens_out,omitempty"`

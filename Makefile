@@ -2,7 +2,7 @@
 #
 # Common targets for Go developers
 
-.PHONY: build test vet fmt lint lint-style lint-drift clean all release build-all help \
+.PHONY: build test vet fmt fmt-context lint lint-style lint-drift clean all release build-all help \
 test-coverage smoke site site-feed site-serve site-serve-lan site-setup audit check plugin-reload \
 journal journal-serve journal-serve-lan gpg-fix gpg-test register-mcp reinstall \
 sync-version check-version-sync sync-why check-why sync-copilot-skills check-copilot-skills gemini-search \
@@ -93,6 +93,10 @@ vet:
 ## fmt: Format code
 fmt:
 	go fmt ./...
+
+## fmt-context: Format context files to 80-char line width
+fmt-context:
+	ctx fmt
 
 ## lint: Run golangci-lint (requires golangci-lint installed)
 lint:

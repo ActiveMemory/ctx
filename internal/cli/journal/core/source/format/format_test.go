@@ -555,3 +555,199 @@ func TestFormatJournalEntryPart_NoTitleUsesSlug(t *testing.T) {
 		t.Error("should not have title field in frontmatter when empty")
 	}
 }
+
+func TestFormatJournalEntryPart_PlanContent(t *testing.T) {
+	t.Setenv("TZ", "UTC")
+
+	s := &entity.Session{
+		ID:        "plan-session",
+		Slug:      "plan-test",
+		Tool:      "claude-code",
+		Project:   "myproject",
+		StartTime: time.Date(2026, 1, 15, 10, 0, 0, 0, time.UTC),
+		EndTime:   time.Date(2026, 1, 15, 10, 5, 0, 0, time.UTC),
+		Duration:  5 * time.Minute,
+		TurnCount: 1,
+		Messages: []entity.Message{
+			{
+				Role:        "user",
+				Text:        "Let's plan",
+				PlanContent: "# My Plan\n\nStep 1: Do it",
+				Timestamp: time.Date(
+					2026, 1, 15, 10, 0, 0, 0, time.UTC),
+			},
+			{
+				Role: "assistant",
+				Text: "Sounds good",
+				Timestamp: time.Date(
+					2026, 1, 15, 10, 0, 5, 0, time.UTC),
+			},
+		},
+	}
+
+	got := JournalEntryPart(
+		s, s.Messages, 0, 1, 1, "base", "")
+
+	if !strings.Contains(got, "<details>") {
+		t.Error("missing plan details block")
+	}
+	if !strings.Contains(got, "📋 Plan") {
+		t.Error("missing plan summary icon")
+	}
+	if !strings.Contains(got, "# My Plan") {
+		t.Error("missing plan content")
+	}
+}
+
+func TestFormatJournalEntryPart_ApiError(t *testing.T) {
+	t.Setenv("TZ", "UTC")
+
+	s := &entity.Session{
+		ID:        "err-session",
+		Slug:      "err-test",
+		Tool:      "claude-code",
+		Project:   "myproject",
+		StartTime: time.Date(2026, 1, 15, 10, 0, 0, 0, time.UTC),
+		EndTime:   time.Date(2026, 1, 15, 10, 5, 0, 0, time.UTC),
+		Duration:  5 * time.Minute,
+		TurnCount: 1,
+		Messages: []entity.Message{
+			{
+				Role: "user",
+				Text: "Hello",
+				Timestamp: time.Date(
+					2026, 1, 15, 10, 0, 0, 0, time.UTC),
+			},
+			{
+				Role:       "assistant",
+				Text:       "rate limited response",
+				IsApiError: true,
+				Timestamp: time.Date(
+					2026, 1, 15, 10, 0, 2, 0, time.UTC),
+			},
+			{
+				Role: "assistant",
+				Text: "Real response",
+				Timestamp: time.Date(
+					2026, 1, 15, 10, 0, 5, 0, time.UTC),
+			},
+		},
+	}
+
+	got := JournalEntryPart(
+		s, s.Messages, 0, 1, 1, "base", "")
+
+	if !strings.Contains(got, "API error response") {
+		t.Error("missing collapsed API error")
+	}
+	// The actual error text should NOT appear.
+	if strings.Contains(got, "rate limited response") {
+		t.Error("API error text should be collapsed")
+	}
+	// The real response should still be there.
+	if !strings.Contains(got, "Real response") {
+		t.Error("missing real response after API error")
+	}
+}
+
+func TestFormatJournalEntryPart_ToolUseResult(t *testing.T) {
+	t.Setenv("TZ", "UTC")
+
+	s := &entity.Session{
+		ID:        "tool-err-session",
+		Slug:      "tool-err-test",
+		Tool:      "claude-code",
+		Project:   "myproject",
+		StartTime: time.Date(2026, 1, 15, 10, 0, 0, 0, time.UTC),
+		EndTime:   time.Date(2026, 1, 15, 10, 5, 0, 0, time.UTC),
+		Duration:  5 * time.Minute,
+		TurnCount: 1,
+		Messages: []entity.Message{
+			{
+				Role:          "user",
+				Text:          "result",
+				ToolUseResult: "Error: EISDIR: illegal operation",
+				Timestamp: time.Date(
+					2026, 1, 15, 10, 0, 0, 0, time.UTC),
+			},
+		},
+	}
+
+	got := JournalEntryPart(
+		s, s.Messages, 0, 1, 1, "base", "")
+
+	if !strings.Contains(got, "Tool error: Error: EISDIR") {
+		t.Error("missing CC-level tool error rendering")
+	}
+}
+
+func TestFormatJournalEntryPart_OriginPrefix(t *testing.T) {
+	t.Setenv("TZ", "UTC")
+
+	s := &entity.Session{
+		ID:        "origin-session",
+		Slug:      "origin-test",
+		Tool:      "claude-code",
+		Project:   "myproject",
+		StartTime: time.Date(2026, 1, 15, 10, 0, 0, 0, time.UTC),
+		EndTime:   time.Date(2026, 1, 15, 10, 5, 0, 0, time.UTC),
+		Duration:  5 * time.Minute,
+		TurnCount: 1,
+		Messages: []entity.Message{
+			{
+				Role:   "user",
+				Text:   "task notification content",
+				Origin: "task-notification",
+				Timestamp: time.Date(
+					2026, 1, 15, 10, 0, 0, 0, time.UTC),
+			},
+		},
+	}
+
+	got := JournalEntryPart(
+		s, s.Messages, 0, 1, 1, "base", "")
+
+	if !strings.Contains(got, "[system]") {
+		t.Error("missing [system] prefix for origin message")
+	}
+}
+
+func TestFormatJournalEntryPart_Entrypoint(t *testing.T) {
+	t.Setenv("TZ", "UTC")
+
+	s := &entity.Session{
+		ID:         "ep-session",
+		Slug:       "ep-test",
+		Tool:       "claude-code",
+		Project:    "myproject",
+		Entrypoint: "ide",
+		StartTime:  time.Date(2026, 1, 15, 10, 0, 0, 0, time.UTC),
+		EndTime:    time.Date(2026, 1, 15, 10, 5, 0, 0, time.UTC),
+		Duration:   5 * time.Minute,
+		TurnCount:  1,
+		Messages: []entity.Message{
+			{
+				Role: "user",
+				Text: "Hello",
+				Timestamp: time.Date(
+					2026, 1, 15, 10, 0, 0, 0, time.UTC),
+			},
+		},
+	}
+
+	got := JournalEntryPart(
+		s, s.Messages, 0, 1, 1, "base", "")
+
+	if !strings.Contains(got, "entrypoint: ide") {
+		t.Error("missing entrypoint in frontmatter")
+	}
+
+	// CLI entrypoint should be omitted.
+	s.Entrypoint = "cli"
+	got = JournalEntryPart(
+		s, s.Messages, 0, 1, 1, "base", "")
+
+	if strings.Contains(got, "entrypoint:") {
+		t.Error("cli entrypoint should be omitted")
+	}
+}

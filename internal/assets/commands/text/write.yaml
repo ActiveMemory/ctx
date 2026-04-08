@@ -725,6 +725,10 @@ write.unpublish-not-found:
 write.wikilink-list-item:
   short: "- %s%s"
 
+write.fmt.summary:
+  short: 'Formatted %d of %d context files'
+write.fmt.needs-formatting:
+  short: '%s needs formatting'
 write.context-dir-label:
   short: "Context: %s"
 write.context-dir-bracket:

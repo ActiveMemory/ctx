@@ -234,6 +234,19 @@ doctor:
 
     Use --json for machine-readable output.
   short: Structural health check
+fmt:
+  long: |-
+    Format context files to a consistent line width.
+
+    Wraps long lines in TASKS.md, DECISIONS.md, LEARNINGS.md,
+    and CONVENTIONS.md at word boundaries. Markdown list items
+    get 2-space continuation indent. Headings, tables, and
+    HTML comments are preserved as-is.
+
+    Idempotent: running twice produces the same output.
+
+    Use --check in CI to verify formatting without modifying files.
+  short: Format context files to 80-char line width
 drift:
   long: |-
     Run drift detection to find stale paths,

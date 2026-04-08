@@ -45,7 +45,7 @@ TASK STATUS LABELS:
 
 - [x] JSONL schema validation: derive schema from empirical JSONL data, embed in binary, validate on import (warn, never block), add `ctx journal schema check` command with nightly drift reports to `.context/reports/schema-drift.md`. Spec: specs/jsonl-schema-validation.md #priority:medium #session:c536c11d #branch:main #commit:d6f32c36 #added:2026-04-07-000000 #done:2026-04-07
 
-- [ ] JSONL envelope enrichment: capture `planContent`, `isApiErrorMessage`, `sourceToolAssistantUUID`, `toolUseResult`, `entrypoint`, `origin` from CC envelope fields. Render plans in journal entries, collapse API errors, add entrypoint to frontmatter. Spec: specs/jsonl-envelope-enrichment.md #priority:medium #session:c536c11d #branch:main #commit:d6f32c36 #added:2026-04-07-000000
+- [x] JSONL envelope enrichment: capture `planContent`, `isApiErrorMessage`, `sourceToolAssistantUUID`, `toolUseResult`, `entrypoint`, `origin` from CC envelope fields. Render plans in journal entries, collapse API errors, add entrypoint to frontmatter. Spec: specs/jsonl-envelope-enrichment.md #priority:medium #session:c536c11d #branch:main #commit:d6f32c36 #added:2026-04-07-000000 #done:2026-04-07
 
 ### Architecture Docs
 

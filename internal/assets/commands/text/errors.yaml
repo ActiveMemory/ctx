@@ -22,6 +22,16 @@ err.add.no-content-provided:
     %s
 err.add.unknown-type:
   short: 'unknown type %q. Valid types: decision, task, learning, convention'
+err.fmt.no-context-dir:
+  short: "context directory not found — run ctx init"
+err.fmt.file-read:
+  short: 'failed to format %s: %w'
+err.fmt.file-write:
+  short: 'failed to format %s: %w'
+err.fmt.no-files:
+  short: 'no context files found in %s'
+err.fmt.needs-formatting:
+  short: files need formatting
 err.backup.backup-global:
   short: 'global backup: %w'
 err.backup.backup-project:

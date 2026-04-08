@@ -44,8 +44,9 @@ import "time"
 //
 // Derived:
 //   - HasErrors: True if any tool errors occurred
-//   - FirstUserMsg: Preview text of first user message (truncated)
+//   - FirstUserMsg: Preview text of first user message
 //   - Model: Primary model used in the session
+//   - Entrypoint: How CC was launched (cli, ide, sdk-ts, sdk-py)
 type Session struct {
 	ID   string `json:"id"`
 	Slug string `json:"slug,omitempty"`
@@ -71,6 +72,7 @@ type Session struct {
 	HasErrors    bool   `json:"has_errors,omitempty"`
 	FirstUserMsg string `json:"first_user_msg,omitempty"`
 	Model        string `json:"model,omitempty"`
+	Entrypoint   string `json:"entrypoint,omitempty"`
 }
 
 // UserMessages returns only user messages from the session.

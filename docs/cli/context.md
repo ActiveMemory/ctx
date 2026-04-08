@@ -174,6 +174,44 @@ ctx compact --archive
 
 ---
 
+### `ctx fmt`
+
+Format context files to a consistent line width.
+
+Wraps long lines in `TASKS.md`, `DECISIONS.md`, `LEARNINGS.md`, and
+`CONVENTIONS.md` at word boundaries. Markdown list items get 2-space
+continuation indent. Headings, tables, frontmatter, and HTML comments
+are preserved as-is.
+
+Idempotent: running twice produces the same output.
+
+```bash
+ctx fmt [flags]
+```
+
+**Flags**:
+
+| Flag        | Type  | Default | Description                                |
+|-------------|-------|---------|--------------------------------------------|
+| `--width`   | `int` | `80`    | Target line width                          |
+| `--check`   | `bool`| `false` | Check only, exit 1 if files would change   |
+
+**Examples**:
+
+```bash
+ctx fmt              # format all context files
+ctx fmt --check      # CI mode: check without modifying
+ctx fmt --width 100  # custom width
+```
+
+Also available as a Makefile target:
+
+```bash
+make fmt-context
+```
+
+---
+
 ### `ctx task`
 
 Manage task completion, archival, and snapshots.

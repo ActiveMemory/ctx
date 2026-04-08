@@ -52,6 +52,7 @@ own guards and no-op gracefully.
 | [`ctx drift`](context.md#ctx-drift)           | Detect stale paths, secrets, missing files               |
 | [`ctx sync`](context.md#ctx-sync)             | Reconcile context with codebase state                    |
 | [`ctx compact`](context.md#ctx-compact)       | Archive completed tasks, clean up files                  |
+| [`ctx fmt`](context.md#ctx-fmt)               | Format context files to 80-char line width               |
 | [`ctx task`](context.md#ctx-task)             | Task completion, archival, and snapshots                 |
 | [`ctx permission`](context.md#ctx-permission) | Permission snapshots (golden image)                      |
 | [`ctx reindex`](context.md#ctx-reindex)       | Regenerate indices for `DECISIONS.md` and `LEARNINGS.md` |

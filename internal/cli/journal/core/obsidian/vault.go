@@ -23,7 +23,6 @@ import (
 	"github.com/ActiveMemory/ctx/internal/cli/journal/core/section"
 	"github.com/ActiveMemory/ctx/internal/cli/journal/core/turn"
 	"github.com/ActiveMemory/ctx/internal/cli/journal/core/wikilink"
-	"github.com/ActiveMemory/ctx/internal/cli/journal/core/wrap"
 	"github.com/ActiveMemory/ctx/internal/config/dir"
 	"github.com/ActiveMemory/ctx/internal/config/file"
 	"github.com/ActiveMemory/ctx/internal/config/fs"
@@ -31,6 +30,7 @@ import (
 	errFs "github.com/ActiveMemory/ctx/internal/err/fs"
 	errJournal "github.com/ActiveMemory/ctx/internal/err/journal"
 	"github.com/ActiveMemory/ctx/internal/io"
+	"github.com/ActiveMemory/ctx/internal/wrap"
 	writeErr "github.com/ActiveMemory/ctx/internal/write/err"
 	writeObsidian "github.com/ActiveMemory/ctx/internal/write/obsidian"
 )

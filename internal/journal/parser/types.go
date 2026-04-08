@@ -23,22 +23,35 @@ import (
 // Each line in a Claude Code session file is a self-contained JSON object
 // that deserializes into claudeRawMessage.
 
-// claudeRawMessage represents a single JSONL line from a Claude Code session.
+// claudeRawMessage represents a single JSONL line from a
+// Claude Code session.
 //
 // Fields:
+//
+// Core:
 //   - UUID: Unique message identifier
-//   - ParentUUID: Parent message for threading (nil for root messages)
+//   - ParentUUID: Parent message for threading
 //   - SessionID: Groups messages into a single session
 //   - RequestID: API request correlation identifier
 //   - Timestamp: When the message was created
-//   - Type: Message role ("user", "assistant", or system types)
+//   - Type: Message role ("user", "assistant", or system)
 //   - UserType: Sub-type for user messages
-//   - IsSidechain: True if the message is on a sidechain branch
+//   - IsSidechain: True if on a sidechain branch
 //   - CWD: Working directory at message time
 //   - GitBranch: Active git branch at message time
-//   - Version: Claude Code version that created the message
-//   - Slug: URL-friendly session identifier (removed in newer versions)
+//   - Version: Claude Code version
+//   - Slug: URL-friendly session ID (deprecated)
 //   - Message: Nested content payload
+//
+// Envelope (optional, added in newer CC versions):
+//   - PlanContent: Full plan-mode document text
+//   - IsApiErrorMessage: True for API error responses
+//   - SourceToolAssistantUUID: Links tool result to caller
+//   - ToolUseResult: CC-level tool error string
+//   - Entrypoint: How CC was launched (cli, ide, sdk)
+//   - Origin: Message injection source
+//   - Error: Error object on failed API responses
+//   - ApiError: API-level error object
 type claudeRawMessage struct {
 	UUID        string           `json:"uuid"`
 	ParentUUID  *string          `json:"parentUuid"`
@@ -53,6 +66,17 @@ type claudeRawMessage struct {
 	Version     string           `json:"version"`
 	Slug        string           `json:"slug"`
 	Message     claudeRawContent `json:"message"`
+
+	PlanContent       string `json:"planContent,omitempty"`
+	IsApiErrorMessage bool   `json:"isApiErrorMessage,omitempty"`
+	ToolUseResult     string `json:"toolUseResult,omitempty"`
+	Entrypoint        string `json:"entrypoint,omitempty"`
+
+	SourceToolAssistantUUID string `json:"sourceToolAssistantUUID,omitempty"`
+
+	Origin   json.RawMessage `json:"origin,omitempty"`
+	Error    json.RawMessage `json:"error,omitempty"`
+	ApiError json.RawMessage `json:"apiError,omitempty"`
 }
 
 // claudeRawContent is the nested content envelope inside a claudeRawMessage.
