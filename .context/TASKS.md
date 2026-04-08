@@ -27,36 +27,7 @@ TASK STATUS LABELS:
 
 ### Misc
 
-### Architecture Docs
-
-- [-] Publish architecture docs to docs/: copy ARCHITECTURE.md, 
-  DETAILED_DESIGN domain files, and CHEAT-SHEETS.md to docs/reference/. 
-  Sanitize intervention points into docs/contributing/. 
-  Exclude DANGER-ZONES.md and ARCHITECTURE-PRINCIPAL.md (internal only). 
-  Spec: specs/publish-architecture-docs.md #priority:medium
-  #added:2026-04-03-150000
-  Skipped: architecture docs are living internal artifacts that shift
-  frequently. Syncing to public site creates maintenance burden with no
-  payoff — contributors read .context/ directly.
-
-
-### Code Cleanup Findings
-
-
-
-
-
-
-
-
-**PD.5 — Validate:**
-
-
-### Phase -3: DevEx
-
-
-
-- [ ] Add CLI YAML drift detection test: verify flag names in
+- [x] Add CLI YAML drift detection test: verify flag names in
   examples.yaml match actual registered flags, and Use: patterns
   in commands.yaml match Use constants. Structural linkage is
   already tested; this covers content-level drift. Semantic
