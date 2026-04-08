@@ -354,6 +354,31 @@ match the flags actually registered in `internal/bootstrap/cmd.go`.
 
 **Fix**: Add missing commands/flags to the docs, or remove stale entries.
 
+### 18. YAML Content Drift
+
+Structural linkage (keys exist in both YAML and code) is tested
+by `TestDescKeyYAMLLinkage`, `TestExamplesYAMLLinkage`, and
+`TestRegistryYAMLLinkage`. Content-level drift is tested by
+`TestFlagYAMLMatchesConstants` and `TestCommandYAMLMatchesDescKeys`.
+
+Beyond what tests catch, check semantically:
+
+- Do flag descriptions in `flags.yaml` still accurately describe
+  what the flag does? (Tests verify the name; humans verify prose.)
+- Do command descriptions in `commands.yaml` match current behavior?
+  (A command that gained flags or changed semantics may have stale
+  Short/Long text.)
+- Do examples in `examples.yaml` still work? Run a sample:
+
+```bash
+# Pick 3-5 examples and run them
+grep -A2 'short:' internal/assets/commands/examples.yaml | \
+  grep '^\s*ctx ' | head -5
+```
+
+**Fix**: Update stale descriptions to match current behavior.
+Descriptions are user-facing `--help` text — accuracy matters.
+
 ## Consolidation Decision Matrix
 
 Use this to prioritize what to fix:
@@ -408,7 +433,7 @@ After running checks, report:
 ## Quality Checklist
 
 Before reporting the consolidation results:
-- [ ] All 17 checks were run (not skipped)
+- [ ] All 18 checks were run (not skipped)
 - [ ] Accepted exceptions were respected (e.g., `IsUser()`)
 - [ ] Findings are prioritized (highest impact first)
 - [ ] Each finding has a concrete fix suggestion with file path
