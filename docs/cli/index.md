@@ -60,7 +60,7 @@ own guards and no-op gracefully.
 | [`ctx learning`](context.md#ctx-learning)     | Manage `LEARNINGS.md` (reindex)                          |
 | [`ctx journal`](recall.md#ctx-recall)          | Browse and export AI session history                     |
 | [`ctx journal`](recall.md#ctx-journal)        | Generate static site from journal entries                |
-| [`ctx serve`](recall.md#ctx-serve)            | Serve any zensical directory (default: journal site)     |
+| [`ctx serve`](serve.md#ctx-serve)             | Serve journal site or shared context hub                 |
 | [`ctx watch`](tools.md#ctx-watch)             | Auto-apply context updates from AI output                |
 | [`ctx setup`](tools.md#ctx-hook)               | Generate AI tool integration configs                     |
 | [`ctx loop`](tools.md#ctx-loop)               | Generate autonomous loop script                          |
@@ -81,6 +81,8 @@ own guards and no-op gracefully.
 | [`ctx hook`](tools.md#ctx-hook)               | Manage lifecycle hooks (shell scripts for automation)    |
 | [`ctx skill`](tools.md#ctx-skill)             | Manage reusable instruction bundles                      |
 | [`ctx config`](config.md#ctx-config)          | Manage runtime configuration profiles                    |
+| [`ctx connect`](connect.md#ctx-connect)       | Connect to a shared context hub                          |
+| [`ctx hub`](hub.md#ctx-hub)                   | Manage hub cluster (status, peer, stepdown)              |
 | [`ctx system`](system.md#ctx-system)          | System diagnostics and hook commands                     |
 
 ---
