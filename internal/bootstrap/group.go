@@ -19,6 +19,7 @@ import (
 	"github.com/ActiveMemory/ctx/internal/cli/drift"
 	ctxFmt "github.com/ActiveMemory/ctx/internal/cli/fmt"
 	"github.com/ActiveMemory/ctx/internal/cli/guide"
+	cliHub "github.com/ActiveMemory/ctx/internal/cli/hub"
 	"github.com/ActiveMemory/ctx/internal/cli/initialize"
 	"github.com/ActiveMemory/ctx/internal/cli/journal"
 	"github.com/ActiveMemory/ctx/internal/cli/learning"
@@ -164,6 +165,7 @@ func utilities() []registration {
 //   - []registration: Serve, site, and system commands with no group assignment
 func hiddenCmds() []registration {
 	return []registration{
+		{cliHub.Cmd, ""},
 		{serve.Cmd, ""},
 		{site.Cmd, ""},
 		{system.Cmd, ""},

@@ -316,6 +316,33 @@ drift:
 
     Use --json for machine-readable output.
   short: Detect stale or invalid context
+hub:
+  long: |-
+    Manage a running shared context hub cluster.
+  short: Manage hub cluster
+hub.status:
+  long: |-
+    Show cluster status: role, peers, sync state, entry
+    count, and uptime.
+
+    Examples:
+      ctx hub status
+  short: Show cluster status
+hub.peer:
+  long: |-
+    Add or remove peers from the cluster at runtime.
+
+    Examples:
+      ctx hub peer add host:9901
+      ctx hub peer remove host:9901
+  short: Add or remove cluster peers
+hub.stepdown:
+  long: |-
+    Transfer leadership to another node gracefully.
+
+    Examples:
+      ctx hub stepdown
+  short: Transfer leadership
 guide:
   long: |-
     Use-case-oriented cheat sheet for ctx.

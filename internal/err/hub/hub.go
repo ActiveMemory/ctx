@@ -30,3 +30,18 @@ func GenerateToken(cause error) error {
 func InternalErr(cause error) error {
 	return fmt.Errorf("internal: %w", cause)
 }
+
+// InvalidPeerAction returns an error for an unrecognized
+// peer action.
+//
+// Parameters:
+//   - action: the unrecognized action string
+//
+// Returns:
+//   - error: "action must be 'add' or 'remove', got <action>"
+func InvalidPeerAction(action string) error {
+	return fmt.Errorf(
+		"action must be 'add' or 'remove', got %q",
+		action,
+	)
+}
