@@ -70,6 +70,7 @@ const (
 	DryRun          = "dry-run"
 	Event           = "event"
 	External        = "external"
+	IncludeShared   = "include-shared"
 	Fix             = "fix"
 	Force           = "force"
 	Full            = "full"

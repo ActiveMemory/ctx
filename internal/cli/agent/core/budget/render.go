@@ -108,6 +108,14 @@ func RenderMarkdownPacket(pkt *AssembledPacket) string {
 		}
 	}
 
+	// Shared hub entries
+	if len(pkt.Shared) > 0 {
+		sb.WriteString("## Shared Knowledge" + nl)
+		for _, s := range pkt.Shared {
+			sb.WriteString(s + nl + nl)
+		}
+	}
+
 	// Skill
 	if pkt.Skill != "" {
 		sb.WriteString(desc.Text(text.DescKeyAgentSectionSkill) + nl)
