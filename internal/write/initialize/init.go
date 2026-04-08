@@ -203,6 +203,30 @@ func PluginEnabled(cmd *cobra.Command, settingsPath string) {
 		settingsPath))
 }
 
+// PluginLocalAlreadyEnabled reports plugin is already enabled
+// in project settings.
+//
+// Parameters:
+//   - cmd: Cobra command for output
+func PluginLocalAlreadyEnabled(cmd *cobra.Command) {
+	cmd.Println(desc.Text(
+		text.DescKeyWriteInitPluginLocalAlreadyEnabled))
+}
+
+// PluginLocalEnabled reports plugin enabled in project
+// settings.
+//
+// Parameters:
+//   - cmd: Cobra command for output
+//   - settingsPath: path to the local settings file
+func PluginLocalEnabled(
+	cmd *cobra.Command, settingsPath string,
+) {
+	cmd.Println(fmt.Sprintf(
+		desc.Text(text.DescKeyWriteInitPluginLocalEnabled),
+		settingsPath))
+}
+
 // SkippedDir reports a directory skipped because it exists.
 //
 // Parameters:

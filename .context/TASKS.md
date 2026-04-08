@@ -53,13 +53,7 @@ TASK STATUS LABELS:
   #priority:medium #session:a92cadca #branch:main #commit:68fbc00a
   #added:2026-04-06-160007
 
-- [ ] Add .ctxrc provenance validation config: allow projects to relax required
-  provenance flags (session, branch, commit) individually via ctxrc fields. CLI
-  stays strict — no --skip-validation flag. Agent cannot bypass; only human
-  config relaxes. Default: all three required. #priority:medium
-  #session:a92cadca #branch:main #commit:68fbc00a #added:2026-04-06-154902
-
-- [ ] Bug: ctx init does not write enabledPlugins to settings.local.json. Hooks
+- [x] Bug: ctx init does not write enabledPlugins to settings.local.json. Hooks
   from the plugin hooks.json only fire when enabledPlugins lists the plugin in
   the project settings. Non-ctx projects initialized with ctx init get empty
   hooks. #priority:high #session:a92cadca #branch:main #commit:68fbc00a
@@ -71,10 +65,7 @@ TASK STATUS LABELS:
   specs/task-session-provenance.md #priority:medium #session:a92cadca
   #branch:main #commit:68fbc00a #added:2026-04-06-151036
 
-- [ ] SMB mount path support: add `CTX_BACKUP_MOUNT_PATH` env var so 
-  `ctx backup` can use fstab/systemd automounts instead of requiring GVFS. 
-  Spec: specs/smb-mount-path-support.md #priority:medium
-  #added:2026-04-04-010000
+
 
 - [x] JSONL schema validation: derive schema from empirical JSONL data, embed in
   binary, validate on import (warn, never block), add `ctx journal schema check`
@@ -91,14 +82,17 @@ TASK STATUS LABELS:
 
 ### Architecture Docs
 
-- [ ] Publish architecture docs to docs/: copy ARCHITECTURE.md, 
+- [-] Publish architecture docs to docs/: copy ARCHITECTURE.md, 
   DETAILED_DESIGN domain files, and CHEAT-SHEETS.md to docs/reference/. 
   Sanitize intervention points into docs/contributing/. 
   Exclude DANGER-ZONES.md and ARCHITECTURE-PRINCIPAL.md (internal only). 
   Spec: specs/publish-architecture-docs.md #priority:medium
   #added:2026-04-03-150000
+  Skipped: architecture docs are living internal artifacts that shift
+  frequently. Syncing to public site creates maintenance burden with no
+  payoff — contributors read .context/ directly.
 
-- [ ] Update ctx-architecture skill to append discovered terms to GLOSSARY.md 
+- [x] Update ctx-architecture skill to append discovered terms to GLOSSARY.md 
   during Phase 3. Additive only, max 10 terms per run, project-specific only, 
   alphabetical insertion, skip if GLOSSARY.md empty. Print added terms in 
   convergence report. Spec: specs/publish-architecture-docs.md #priority:low
@@ -647,10 +641,17 @@ Taxonomy (from prefix analysis):
   #priority:low #added:2026-03-07-220825
 
 
+- [ ] Add .ctxrc provenance validation config: allow projects to relax required
+  provenance flags (session, branch, commit) individually via ctxrc fields. CLI
+  stays strict — no --skip-validation flag. Agent cannot bypass; only human
+  config relaxes. Default: all three required. #priority:medium
+  #session:a92cadca #branch:main #commit:68fbc00a #added:2026-04-06-154902
 
 
-
-
+- [ ] SMB mount path support: add `CTX_BACKUP_MOUNT_PATH` env var so
+  `ctx backup` can use fstab/systemd automounts instead of requiring GVFS.
+  Spec: specs/smb-mount-path-support.md #priority:medium
+  #added:2026-04-04-010000
 
 - [ ] Make AutoPruneStaleDays configurable via ctxrc. Currently hardcoded to 7
   days in config.AutoPruneStaleDays; add a ctxrc key (e.g., auto_prune_days) and

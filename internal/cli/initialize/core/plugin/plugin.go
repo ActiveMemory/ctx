@@ -158,6 +158,84 @@ func EnabledGlobally() bool {
 	return enabled[claude.PluginID]
 }
 
+// EnableLocally enables the ctx plugin in the project-level
+// .claude/settings.local.json. Unlike EnableGlobally, this
+// does not check installed_plugins.json — it writes
+// unconditionally because ctx init owns the project setup.
+//
+// Parameters:
+//   - cmd: Cobra command for output
+//
+// Returns:
+//   - error: Non-nil if file operations fail
+func EnableLocally(cmd *cobra.Command) error {
+	settingsPath := claude.Settings
+
+	// Read existing settings (raw map to preserve all keys).
+	var settings map[string]json.RawMessage
+	existingData, readErr := io.SafeReadUserFile(settingsPath)
+	if readErr == nil {
+		if parseErr := json.Unmarshal(
+			existingData, &settings,
+		); parseErr != nil {
+			return errParser.ParseFile(settingsPath, parseErr)
+		}
+	} else {
+		settings = make(map[string]json.RawMessage)
+	}
+
+	// Check if already enabled.
+	if raw, ok := settings[claude.KeyEnabledPlugins]; ok {
+		var enabled map[string]bool
+		if parseErr := json.Unmarshal(raw, &enabled); parseErr == nil {
+			if enabled[claude.PluginID] {
+				initialize.PluginLocalAlreadyEnabled(cmd)
+				return nil
+			}
+		}
+	}
+
+	// Build or update the enabled map.
+	var enabled map[string]bool
+	if raw, ok := settings[claude.KeyEnabledPlugins]; ok {
+		if parseErr := json.Unmarshal(
+			raw, &enabled,
+		); parseErr != nil {
+			enabled = make(map[string]bool)
+		}
+	} else {
+		enabled = make(map[string]bool)
+	}
+	enabled[claude.PluginID] = true
+
+	enabledJSON, marshalErr := json.Marshal(enabled)
+	if marshalErr != nil {
+		return config.MarshalPlugins(marshalErr)
+	}
+	settings[claude.KeyEnabledPlugins] = enabledJSON
+
+	// Write back preserving all other keys.
+	if mkdirErr := io.SafeMkdirAll(
+		dir.Claude, fs.PermExec,
+	); mkdirErr != nil {
+		return errFs.Mkdir(dir.Claude, mkdirErr)
+	}
+	var buf bytes.Buffer
+	encoder := json.NewEncoder(&buf)
+	encoder.SetEscapeHTML(false)
+	encoder.SetIndent("", token.Indent2)
+	if encodeErr := encoder.Encode(settings); encodeErr != nil {
+		return config.MarshalSettings(encodeErr)
+	}
+	if writeErr := io.SafeWriteFile(
+		settingsPath, buf.Bytes(), fs.PermFile,
+	); writeErr != nil {
+		return errFs.FileWrite(settingsPath, writeErr)
+	}
+	initialize.PluginLocalEnabled(cmd, settingsPath)
+	return nil
+}
+
 // EnabledLocally reports whether the ctx plugin is enabled in
 // .claude/settings.local.json in the current project.
 //

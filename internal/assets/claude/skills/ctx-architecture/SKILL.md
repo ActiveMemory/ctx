@@ -368,6 +368,25 @@ than ~15 steps, split it. Write cheat sheets for at minimum:
 Skip if the project has no meaningful lifecycles (e.g. a pure
 library with no runtime behavior).
 
+**GLOSSARY.md**: append project-specific terms discovered during
+analysis. This captures the vocabulary that makes the codebase
+searchable — type names, internal concepts, abbreviations, and
+domain jargon that a new reader wouldn't know to search for.
+
+Rules:
+- Skip entirely if `.context/GLOSSARY.md` does not exist (the
+  project hasn't opted into a glossary)
+- Additive only: never modify or remove existing entries
+- Maximum 10 new terms per run to avoid flooding
+- Project-specific terms only: skip generic programming concepts
+  (e.g. "mutex", "goroutine") and well-known patterns (e.g.
+  "singleton"). Include terms that are unique to this codebase or
+  used in a project-specific way
+- Insert alphabetically into the existing list
+- Format: `**Term** — one-line definition`
+- Print added terms in the convergence report under a
+  "Glossary additions" line
+
 ### Phase 4: Update Tracking
 
 
@@ -922,3 +941,7 @@ After running, verify:
   danger zones from all analyzed modules (skip if none found)
 - [ ] Principal mode: DANGER-ZONES.md includes summary table and
   per-module breakdown with risk levels and modification advice
+- [ ] GLOSSARY.md: new terms added alphabetically (max 10, project-
+  specific only, skipped if file doesn't exist)
+- [ ] Convergence report includes "Glossary additions" line if
+  terms were added

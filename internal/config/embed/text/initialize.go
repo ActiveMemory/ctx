@@ -107,6 +107,12 @@ const (
 	// DescKeyWriteInitPluginSkipped is the text key for write init plugin skipped
 	// messages.
 	DescKeyWriteInitPluginSkipped = "write.init-plugin-skipped"
+	// DescKeyWriteInitPluginLocalAlreadyEnabled is the text key for write init
+	// plugin already enabled locally messages.
+	DescKeyWriteInitPluginLocalAlreadyEnabled = "write.init-plugin-local-already-enabled"
+	// DescKeyWriteInitPluginLocalEnabled is the text key for write init plugin
+	// enabled locally messages.
+	DescKeyWriteInitPluginLocalEnabled = "write.init-plugin-local-enabled"
 )
 
 // DescKeys for init scratchpad setup output.

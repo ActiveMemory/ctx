@@ -277,6 +277,10 @@ write.init-plugin-enabled:
   short: '  ✓ Plugin enabled globally in %s'
 write.init-plugin-skipped:
   short: '  ○ Plugin enablement skipped (plugin not installed)'
+write.init-plugin-local-already-enabled:
+  short: '  ○ Plugin already enabled in project settings'
+write.init-plugin-local-enabled:
+  short: '  ✓ Plugin enabled in project settings (%s)'
 write.init-scratchpad-key-created:
   short: '  ✓ Scratchpad key created at %s'
 write.init-scratchpad-no-key:

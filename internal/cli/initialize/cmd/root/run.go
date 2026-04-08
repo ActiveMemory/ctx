@@ -179,12 +179,15 @@ func Run(
 		initialize.InfoWarnNonFatal(cmd, label, permsErr)
 	}
 
-	// Auto-enable plugin globally unless suppressed
+	// Auto-enable plugin globally and locally unless suppressed.
 	if !noPluginEnable {
 		if pluginErr := plugin.EnableGlobally(cmd); pluginErr != nil {
-			// Non-fatal: warn but continue
 			label := desc.Text(text.DescKeyInitLabelPluginEnable)
 			initialize.InfoWarnNonFatal(cmd, label, pluginErr)
+		}
+		if localErr := plugin.EnableLocally(cmd); localErr != nil {
+			label := desc.Text(text.DescKeyInitLabelPluginEnable)
+			initialize.InfoWarnNonFatal(cmd, label, localErr)
 		}
 	}
 
