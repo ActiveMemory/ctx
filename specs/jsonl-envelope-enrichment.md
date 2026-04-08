@@ -90,18 +90,18 @@ Tool availability changes and companion metadata. No journal value.
 
 ## Approach
 
-Capture all fields in the parser (they're just struct fields), but
-only act on high-value fields in the near term. Three tiers:
+Capture all high-value fields in the parser and act on them in
+three tiers, all shipped in this spec.
 
-### Tier 1: Act on now (improves journal quality)
+### Tier 1: Render in journal (improves quality)
 
 - **`planContent`**: Render in journal entries as a collapsible
   "Plan" section when present. Plans are design artifacts worth
   preserving.
-- **`isApiErrorMessage`**: Filter or collapse API error messages in
-  journal output. These are retry noise, not conversation content.
-  Mark them in the journal as `<!-- api error -->` or collapse into
-  a single line: "⚠ API error (retried)".
+- **`isApiErrorMessage`**: Collapse API error messages in journal
+  output. These are retry noise, not conversation content.
+  Collapse into a single line: "> ⚠ API error response (message
+  omitted)".
 
 ### Tier 2: Capture as metadata (journal frontmatter)
 
@@ -111,16 +111,25 @@ only act on high-value fields in the near term. Three tiers:
   system-injected messages in journal rendering (lighter styling or
   a `[system]` prefix).
 
-### Tier 3: Capture in parser, defer rendering
+### Tier 3: Parse and store, link but don't render
 
-- **`sourceToolAssistantUUID`**: Add to `Message` entity. Enables
-  future work on subagent call-tree reconstruction. Requires
-  rethinking journal conversation rendering — out of scope for now.
+- **`sourceToolAssistantUUID`**: Add to `Message` entity. Parse
+  subagent JSONL files and write structured call trees to
+  `.context/journal/trees/<session-id>.md`. Journal entries
+  include a link to the tree file but don't inline the tree.
+  Full rendered integration requires a future spec for journal
+  layout changes.
 - **`toolUseResult`**: Add to `Message` entity alongside existing
   `ToolResults`. CC-level errors are a distinct path from API
   tool_results; capturing both gives a complete error picture.
-- **`error`** / **`apiError`**: Add to `Message` entity. Paired with
-  `isApiErrorMessage` for full error context.
+  Render inline as a blockquote when present.
+
+### Parse only (no output)
+
+- **`error`** / **`apiError`**: Add to `Message` entity. Paired
+  with `isApiErrorMessage` for full error context. Not rendered —
+  the collapsed API error line is sufficient. Raw errors are
+  available via JSONL grep if needed for ops debugging.
 
 ### Not captured
 
@@ -151,6 +160,22 @@ only act on high-value fields in the near term. Three tiers:
    > ⚠ API error response (message omitted)
    ```
 
+6. Parser encounters a user record with `toolUseResult` field.
+7. Journal formatter renders CC-level tool errors inline:
+
+   ```markdown
+   > ⚠ Tool error: EISDIR: illegal operation on a directory, read
+   ```
+
+8. During import, if subagent JSONL files exist for the session,
+   the importer parses `sourceToolAssistantUUID` chains and writes
+   a tree file to `.context/journal/trees/<session-id>.md`.
+9. Journal entry includes a reference:
+
+   ```markdown
+   > Subagent tree: .context/journal/trees/<session-id>.md
+   ```
+
 ### Edge Cases
 
 | Case | Expected behavior |
@@ -162,6 +187,9 @@ only act on high-value fields in the near term. Three tiers:
 | `sourceToolAssistantUUID` references a UUID not in the current session | Store as-is — cross-session references are valid for subagent chains |
 | `entrypoint` has an unknown value (not cli/ide/sdk-ts/sdk-py) | Store as-is — new entrypoints don't need parser changes |
 | `toolUseResult` and `tool_result` content block both present for same tool call | Keep both — they represent different error paths (CC-level vs API-level) |
+| Session has subagent JSONL files but no `sourceToolAssistantUUID` linkage | Write a flat list of subagent sessions instead of a tree |
+| Subagent tree directory `.context/journal/trees/` does not exist | Create it on first write |
+| Tree file already exists for session | Overwrite — regeneration is safe |
 
 ### Validation Rules
 
@@ -221,6 +249,20 @@ if msg.IsApiError {
     fmt.Fprintf(w, "> ⚠ API error response (message omitted)\n\n")
     return // skip normal message rendering
 }
+
+// In format.go — CC-level tool error rendering
+if msg.ToolUseResult != "" {
+    fmt.Fprintf(w, "> ⚠ Tool error: %s\n\n", msg.ToolUseResult)
+}
+```
+
+### Subagent Tree Generation
+
+```go
+// In tree.go — build subagent tree from sourceToolAssistantUUID
+// Walk subagent JSONL files under session dir /subagents/
+// Parse each line, build parent→child map from UUID linkage
+// Write indented markdown tree to .context/journal/trees/
 ```
 
 ### Helpers to Reuse
@@ -229,6 +271,8 @@ if msg.IsApiError {
   the hook point for all new field mapping
 - `internal/cli/journal/core/source/format/format.go` — existing
   message rendering loop is the hook point for plan/error rendering
+- `internal/journal/parser/parser.go` — `ScanDirectoryWithErrors`
+  already handles subagent directory walking
 
 ## Configuration
 
@@ -248,8 +292,11 @@ None. All behavior is automatic based on field presence.
 
 ## Non-Goals
 
-- Reconstructing subagent call trees from `sourceToolAssistantUUID`
-  (captured but not rendered — future work)
+- Inlining subagent call trees in rendered journal entries
+  (trees are written to `.context/journal/trees/` and linked,
+  but rendered integration requires a layout redesign spec)
+- Rendering raw `error`/`apiError` objects (the collapsed API
+  error line is sufficient; raw payloads are grep-able in JSONL)
 - Parsing `attachment` records (no journal value)
 - Validating envelope field values beyond type correctness
 - Changing the journal format for existing entries (only new imports

@@ -58,6 +58,10 @@ deps.type:
   short: 'Force project type: go, node, python, rust'
 doctor.json:
   short: Machine-readable JSON output
+fmt.width:
+  short: Target line width
+fmt.check:
+  short: Check only, exit 1 if files would change
 drift.fix:
   short: Auto-fix supported issues (staleness, missing files)
 drift.json:

@@ -104,4 +104,20 @@ const (
 	// ToolDisplay formats a tool name with its key parameter.
 	// Args: tool name, parameter value.
 	ToolDisplay = "%s: %s"
+
+	// RecallPlanOpen opens a collapsible plan section.
+	RecallPlanOpen = "<details>\n<summary>📋 Plan</summary>\n"
+
+	// RecallPlanClose closes a collapsible plan section.
+	RecallPlanClose = "\n</details>"
+
+	// RecallApiError is a collapsed API error message.
+	RecallApiError = "> ⚠ API error response (message omitted)"
+
+	// RecallToolError formats a CC-level tool error.
+	// Args: error message.
+	RecallToolError = "> ⚠ Tool error: %s"
+
+	// RecallSystemPrefix prefixes system-injected messages.
+	RecallSystemPrefix = "[system] "
 )

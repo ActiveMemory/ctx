@@ -2709,6 +2709,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#ctx-fmt" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ctx fmt
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#ctx-task" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -3806,6 +3817,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#ctx-fmt" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ctx fmt
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#ctx-task" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -4264,28 +4286,71 @@
 </span><span id="__span-8-2"><a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>ctx<span class="w"> </span>compact<span class="w"> </span>--archive
 </span></code></pre></div>
 <hr />
+<h3 id="ctx-fmt"><code>ctx fmt</code><a class="headerlink" href="#ctx-fmt" title="Permanent link">&para;</a></h3>
+<p>Format context files to a consistent line width.</p>
+<p>Wraps long lines in <code>TASKS.md</code>, <code>DECISIONS.md</code>, <code>LEARNINGS.md</code>, and
+<code>CONVENTIONS.md</code> at word boundaries. Markdown list items get 2-space
+continuation indent. Headings, tables, frontmatter, and HTML comments
+are preserved as-is.</p>
+<p>Idempotent: running twice produces the same output.</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-9-1"><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>ctx<span class="w"> </span>fmt<span class="w"> </span><span class="o">[</span>flags<span class="o">]</span>
+</span></code></pre></div>
+<p><strong>Flags</strong>:</p>
+<table>
+<thead>
+<tr>
+<th>Flag</th>
+<th>Type</th>
+<th>Default</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>--width</code></td>
+<td><code>int</code></td>
+<td><code>80</code></td>
+<td>Target line width</td>
+</tr>
+<tr>
+<td><code>--check</code></td>
+<td><code>bool</code></td>
+<td><code>false</code></td>
+<td>Check only, exit 1 if files would change</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Examples</strong>:</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-10-1"><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a>ctx<span class="w"> </span>fmt<span class="w">              </span><span class="c1"># format all context files</span>
+</span><span id="__span-10-2"><a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>ctx<span class="w"> </span>fmt<span class="w"> </span>--check<span class="w">      </span><span class="c1"># CI mode: check without modifying</span>
+</span><span id="__span-10-3"><a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a>ctx<span class="w"> </span>fmt<span class="w"> </span>--width<span class="w"> </span><span class="m">100</span><span class="w">  </span><span class="c1"># custom width</span>
+</span></code></pre></div>
+<p>Also available as a Makefile target:</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-11-1"><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a>make<span class="w"> </span>fmt-context
+</span></code></pre></div>
+<hr />
 <h3 id="ctx-task"><code>ctx task</code><a class="headerlink" href="#ctx-task" title="Permanent link">&para;</a></h3>
 <p>Manage task completion, archival, and snapshots.</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-9-1"><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>ctx<span class="w"> </span>task<span class="w"> </span>&lt;subcommand&gt;
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-12-1"><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a>ctx<span class="w"> </span>task<span class="w"> </span>&lt;subcommand&gt;
 </span></code></pre></div>
 <h4 id="ctx-task-complete"><code>ctx task complete</code><a class="headerlink" href="#ctx-task-complete" title="Permanent link">&para;</a></h4>
 <p>Mark a task as completed.</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-10-1"><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a>ctx<span class="w"> </span>task<span class="w"> </span><span class="nb">complete</span><span class="w"> </span>&lt;task-id-or-text&gt;
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-13-1"><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a>ctx<span class="w"> </span>task<span class="w"> </span><span class="nb">complete</span><span class="w"> </span>&lt;task-id-or-text&gt;
 </span></code></pre></div>
 <p><strong>Arguments</strong>:</p>
 <ul>
 <li><code>task-id-or-text</code>: Task number or partial text match</li>
 </ul>
 <p><strong>Examples</strong>:</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-11-1"><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a><span class="c1"># By text (partial match)</span>
-</span><span id="__span-11-2"><a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a>ctx<span class="w"> </span>task<span class="w"> </span><span class="nb">complete</span><span class="w"> </span><span class="s2">&quot;user auth&quot;</span>
-</span><span id="__span-11-3"><a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a>
-</span><span id="__span-11-4"><a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a><span class="c1"># By task number</span>
-</span><span id="__span-11-5"><a id="__codelineno-11-5" name="__codelineno-11-5" href="#__codelineno-11-5"></a>ctx<span class="w"> </span>task<span class="w"> </span><span class="nb">complete</span><span class="w"> </span><span class="m">3</span>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-14-1"><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a><span class="c1"># By text (partial match)</span>
+</span><span id="__span-14-2"><a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a>ctx<span class="w"> </span>task<span class="w"> </span><span class="nb">complete</span><span class="w"> </span><span class="s2">&quot;user auth&quot;</span>
+</span><span id="__span-14-3"><a id="__codelineno-14-3" name="__codelineno-14-3" href="#__codelineno-14-3"></a>
+</span><span id="__span-14-4"><a id="__codelineno-14-4" name="__codelineno-14-4" href="#__codelineno-14-4"></a><span class="c1"># By task number</span>
+</span><span id="__span-14-5"><a id="__codelineno-14-5" name="__codelineno-14-5" href="#__codelineno-14-5"></a>ctx<span class="w"> </span>task<span class="w"> </span><span class="nb">complete</span><span class="w"> </span><span class="m">3</span>
 </span></code></pre></div>
 <h4 id="ctx-task-archive"><code>ctx task archive</code><a class="headerlink" href="#ctx-task-archive" title="Permanent link">&para;</a></h4>
 <p>Move completed tasks from <code>TASKS.md</code> to a timestamped archive file.</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-12-1"><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a>ctx<span class="w"> </span>task<span class="w"> </span>archive<span class="w"> </span><span class="o">[</span>flags<span class="o">]</span>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-15-1"><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a>ctx<span class="w"> </span>task<span class="w"> </span>archive<span class="w"> </span><span class="o">[</span>flags<span class="o">]</span>
 </span></code></pre></div>
 <p><strong>Flags</strong>:</p>
 <table>
@@ -4306,12 +4371,12 @@
 (<code>tasks-YYYY-MM-DD.md</code>). Completed tasks (marked with <code>[x]</code>) are moved;
 pending tasks (<code>[ ]</code>) remain in <code>TASKS.md</code>.</p>
 <p><strong>Example</strong>:</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-13-1"><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a>ctx<span class="w"> </span>task<span class="w"> </span>archive
-</span><span id="__span-13-2"><a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a>ctx<span class="w"> </span>task<span class="w"> </span>archive<span class="w"> </span>--dry-run
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-16-1"><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a>ctx<span class="w"> </span>task<span class="w"> </span>archive
+</span><span id="__span-16-2"><a id="__codelineno-16-2" name="__codelineno-16-2" href="#__codelineno-16-2"></a>ctx<span class="w"> </span>task<span class="w"> </span>archive<span class="w"> </span>--dry-run
 </span></code></pre></div>
 <h4 id="ctx-task-snapshot"><code>ctx task snapshot</code><a class="headerlink" href="#ctx-task-snapshot" title="Permanent link">&para;</a></h4>
 <p>Create a point-in-time snapshot of <code>TASKS.md</code> without modifying the original.</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-14-1"><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a>ctx<span class="w"> </span>task<span class="w"> </span>snapshot<span class="w"> </span><span class="o">[</span>name<span class="o">]</span>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-17-1"><a id="__codelineno-17-1" name="__codelineno-17-1" href="#__codelineno-17-1"></a>ctx<span class="w"> </span>task<span class="w"> </span>snapshot<span class="w"> </span><span class="o">[</span>name<span class="o">]</span>
 </span></code></pre></div>
 <p><strong>Arguments</strong>:</p>
 <ul>
@@ -4320,45 +4385,45 @@ pending tasks (<code>[ ]</code>) remain in <code>TASKS.md</code>.</p>
 <p>Snapshots are stored in <code>.context/archive/</code> with timestamped names
 (<code>tasks-&lt;name&gt;-YYYY-MM-DD-HHMM.md</code>).</p>
 <p><strong>Example</strong>:</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-15-1"><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a>ctx<span class="w"> </span>task<span class="w"> </span>snapshot
-</span><span id="__span-15-2"><a id="__codelineno-15-2" name="__codelineno-15-2" href="#__codelineno-15-2"></a>ctx<span class="w"> </span>task<span class="w"> </span>snapshot<span class="w"> </span><span class="s2">&quot;before-refactor&quot;</span>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-18-1"><a id="__codelineno-18-1" name="__codelineno-18-1" href="#__codelineno-18-1"></a>ctx<span class="w"> </span>task<span class="w"> </span>snapshot
+</span><span id="__span-18-2"><a id="__codelineno-18-2" name="__codelineno-18-2" href="#__codelineno-18-2"></a>ctx<span class="w"> </span>task<span class="w"> </span>snapshot<span class="w"> </span><span class="s2">&quot;before-refactor&quot;</span>
 </span></code></pre></div>
 <hr />
 <h3 id="ctx-permission"><code>ctx permission</code><a class="headerlink" href="#ctx-permission" title="Permanent link">&para;</a></h3>
 <p>Manage Claude Code permission snapshots.</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-16-1"><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a>ctx<span class="w"> </span>permission<span class="w"> </span>&lt;subcommand&gt;
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-19-1"><a id="__codelineno-19-1" name="__codelineno-19-1" href="#__codelineno-19-1"></a>ctx<span class="w"> </span>permission<span class="w"> </span>&lt;subcommand&gt;
 </span></code></pre></div>
 <h4 id="ctx-permission-snapshot"><code>ctx permission snapshot</code><a class="headerlink" href="#ctx-permission-snapshot" title="Permanent link">&para;</a></h4>
 <p>Save <code>.claude/settings.local.json</code> as the golden image.</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-17-1"><a id="__codelineno-17-1" name="__codelineno-17-1" href="#__codelineno-17-1"></a>ctx<span class="w"> </span>permission<span class="w"> </span>snapshot
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-20-1"><a id="__codelineno-20-1" name="__codelineno-20-1" href="#__codelineno-20-1"></a>ctx<span class="w"> </span>permission<span class="w"> </span>snapshot
 </span></code></pre></div>
 <p>Creates <code>.claude/settings.golden.json</code> as a byte-for-byte copy of the
 current settings. Overwrites if the golden file already exists.</p>
 <p>The golden file is meant to be committed to version control and shared
 with the team.</p>
 <p><strong>Example</strong>:</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-18-1"><a id="__codelineno-18-1" name="__codelineno-18-1" href="#__codelineno-18-1"></a>ctx<span class="w"> </span>permission<span class="w"> </span>snapshot
-</span><span id="__span-18-2"><a id="__codelineno-18-2" name="__codelineno-18-2" href="#__codelineno-18-2"></a><span class="c1"># Saved golden image: .claude/settings.golden.json</span>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-21-1"><a id="__codelineno-21-1" name="__codelineno-21-1" href="#__codelineno-21-1"></a>ctx<span class="w"> </span>permission<span class="w"> </span>snapshot
+</span><span id="__span-21-2"><a id="__codelineno-21-2" name="__codelineno-21-2" href="#__codelineno-21-2"></a><span class="c1"># Saved golden image: .claude/settings.golden.json</span>
 </span></code></pre></div>
 <h4 id="ctx-permission-restore"><code>ctx permission restore</code><a class="headerlink" href="#ctx-permission-restore" title="Permanent link">&para;</a></h4>
 <p>Replace <code>settings.local.json</code> with the golden image.</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-19-1"><a id="__codelineno-19-1" name="__codelineno-19-1" href="#__codelineno-19-1"></a>ctx<span class="w"> </span>permission<span class="w"> </span>restore
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-22-1"><a id="__codelineno-22-1" name="__codelineno-22-1" href="#__codelineno-22-1"></a>ctx<span class="w"> </span>permission<span class="w"> </span>restore
 </span></code></pre></div>
 <p>Prints a diff of dropped (session-accumulated) and restored permissions.
 No-op if the files already match.</p>
 <p><strong>Example</strong>:</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-20-1"><a id="__codelineno-20-1" name="__codelineno-20-1" href="#__codelineno-20-1"></a>ctx<span class="w"> </span>permission<span class="w"> </span>restore
-</span><span id="__span-20-2"><a id="__codelineno-20-2" name="__codelineno-20-2" href="#__codelineno-20-2"></a><span class="c1"># Dropped 3 session permission(s):</span>
-</span><span id="__span-20-3"><a id="__codelineno-20-3" name="__codelineno-20-3" href="#__codelineno-20-3"></a><span class="c1">#   - Bash(cat /tmp/debug.log:*)</span>
-</span><span id="__span-20-4"><a id="__codelineno-20-4" name="__codelineno-20-4" href="#__codelineno-20-4"></a><span class="c1">#   - Bash(rm /tmp/test-*:*)</span>
-</span><span id="__span-20-5"><a id="__codelineno-20-5" name="__codelineno-20-5" href="#__codelineno-20-5"></a><span class="c1">#   - Bash(curl https://example.com:*)</span>
-</span><span id="__span-20-6"><a id="__codelineno-20-6" name="__codelineno-20-6" href="#__codelineno-20-6"></a><span class="c1"># Restored from golden image.</span>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-23-1"><a id="__codelineno-23-1" name="__codelineno-23-1" href="#__codelineno-23-1"></a>ctx<span class="w"> </span>permission<span class="w"> </span>restore
+</span><span id="__span-23-2"><a id="__codelineno-23-2" name="__codelineno-23-2" href="#__codelineno-23-2"></a><span class="c1"># Dropped 3 session permission(s):</span>
+</span><span id="__span-23-3"><a id="__codelineno-23-3" name="__codelineno-23-3" href="#__codelineno-23-3"></a><span class="c1">#   - Bash(cat /tmp/debug.log:*)</span>
+</span><span id="__span-23-4"><a id="__codelineno-23-4" name="__codelineno-23-4" href="#__codelineno-23-4"></a><span class="c1">#   - Bash(rm /tmp/test-*:*)</span>
+</span><span id="__span-23-5"><a id="__codelineno-23-5" name="__codelineno-23-5" href="#__codelineno-23-5"></a><span class="c1">#   - Bash(curl https://example.com:*)</span>
+</span><span id="__span-23-6"><a id="__codelineno-23-6" name="__codelineno-23-6" href="#__codelineno-23-6"></a><span class="c1"># Restored from golden image.</span>
 </span></code></pre></div>
 <hr />
 <h3 id="ctx-reindex"><code>ctx reindex</code><a class="headerlink" href="#ctx-reindex" title="Permanent link">&para;</a></h3>
 <p>Regenerate the quick-reference index for both <code>DECISIONS.md</code> and <code>LEARNINGS.md</code>
 in a single invocation.</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-21-1"><a id="__codelineno-21-1" name="__codelineno-21-1" href="#__codelineno-21-1"></a>ctx<span class="w"> </span>reindex
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-24-1"><a id="__codelineno-24-1" name="__codelineno-24-1" href="#__codelineno-24-1"></a>ctx<span class="w"> </span>reindex
 </span></code></pre></div>
 <p>This is a convenience wrapper around <code>ctx decision reindex</code> and
 <code>ctx learning reindex</code>. Both files grow at similar rates and users
@@ -4366,43 +4431,43 @@ typically want to reindex both after manual edits.</p>
 <p>The index is a compact table of date and title for each entry, allowing
 AI tools to scan entries without reading the full file.</p>
 <p><strong>Example</strong>:</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-22-1"><a id="__codelineno-22-1" name="__codelineno-22-1" href="#__codelineno-22-1"></a>ctx<span class="w"> </span>reindex
-</span><span id="__span-22-2"><a id="__codelineno-22-2" name="__codelineno-22-2" href="#__codelineno-22-2"></a><span class="c1"># ✓ Index regenerated with 12 entries</span>
-</span><span id="__span-22-3"><a id="__codelineno-22-3" name="__codelineno-22-3" href="#__codelineno-22-3"></a><span class="c1"># ✓ Index regenerated with 8 entries</span>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-25-1"><a id="__codelineno-25-1" name="__codelineno-25-1" href="#__codelineno-25-1"></a>ctx<span class="w"> </span>reindex
+</span><span id="__span-25-2"><a id="__codelineno-25-2" name="__codelineno-25-2" href="#__codelineno-25-2"></a><span class="c1"># ✓ Index regenerated with 12 entries</span>
+</span><span id="__span-25-3"><a id="__codelineno-25-3" name="__codelineno-25-3" href="#__codelineno-25-3"></a><span class="c1"># ✓ Index regenerated with 8 entries</span>
 </span></code></pre></div>
 <hr />
 <h3 id="ctx-decision"><code>ctx decision</code><a class="headerlink" href="#ctx-decision" title="Permanent link">&para;</a></h3>
 <p>Manage the <code>DECISIONS.md</code> file.</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-23-1"><a id="__codelineno-23-1" name="__codelineno-23-1" href="#__codelineno-23-1"></a>ctx<span class="w"> </span>decision<span class="w"> </span>&lt;subcommand&gt;
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-26-1"><a id="__codelineno-26-1" name="__codelineno-26-1" href="#__codelineno-26-1"></a>ctx<span class="w"> </span>decision<span class="w"> </span>&lt;subcommand&gt;
 </span></code></pre></div>
 <h4 id="ctx-decision-reindex"><code>ctx decision reindex</code><a class="headerlink" href="#ctx-decision-reindex" title="Permanent link">&para;</a></h4>
 <p>Regenerate the quick-reference index at the top of <code>DECISIONS.md</code>.</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-24-1"><a id="__codelineno-24-1" name="__codelineno-24-1" href="#__codelineno-24-1"></a>ctx<span class="w"> </span>decision<span class="w"> </span>reindex
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-27-1"><a id="__codelineno-27-1" name="__codelineno-27-1" href="#__codelineno-27-1"></a>ctx<span class="w"> </span>decision<span class="w"> </span>reindex
 </span></code></pre></div>
 <p>The index is a compact table showing the date and title for each decision,
 allowing AI tools to quickly scan entries without reading the full file.</p>
 <p>Use this after manual edits to <code>DECISIONS.md</code> or when migrating existing
 files to use the index format.</p>
 <p><strong>Example</strong>:</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-25-1"><a id="__codelineno-25-1" name="__codelineno-25-1" href="#__codelineno-25-1"></a>ctx<span class="w"> </span>decision<span class="w"> </span>reindex
-</span><span id="__span-25-2"><a id="__codelineno-25-2" name="__codelineno-25-2" href="#__codelineno-25-2"></a><span class="c1"># ✓ Index regenerated with 12 entries</span>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-28-1"><a id="__codelineno-28-1" name="__codelineno-28-1" href="#__codelineno-28-1"></a>ctx<span class="w"> </span>decision<span class="w"> </span>reindex
+</span><span id="__span-28-2"><a id="__codelineno-28-2" name="__codelineno-28-2" href="#__codelineno-28-2"></a><span class="c1"># ✓ Index regenerated with 12 entries</span>
 </span></code></pre></div>
 <hr />
 <h3 id="ctx-learning"><code>ctx learning</code><a class="headerlink" href="#ctx-learning" title="Permanent link">&para;</a></h3>
 <p>Manage the <code>LEARNINGS.md</code> file.</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-26-1"><a id="__codelineno-26-1" name="__codelineno-26-1" href="#__codelineno-26-1"></a>ctx<span class="w"> </span>learning<span class="w"> </span>&lt;subcommand&gt;
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-29-1"><a id="__codelineno-29-1" name="__codelineno-29-1" href="#__codelineno-29-1"></a>ctx<span class="w"> </span>learning<span class="w"> </span>&lt;subcommand&gt;
 </span></code></pre></div>
 <h4 id="ctx-learning-reindex"><code>ctx learning reindex</code><a class="headerlink" href="#ctx-learning-reindex" title="Permanent link">&para;</a></h4>
 <p>Regenerate the quick-reference index at the top of <code>LEARNINGS.md</code>.</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-27-1"><a id="__codelineno-27-1" name="__codelineno-27-1" href="#__codelineno-27-1"></a>ctx<span class="w"> </span>learning<span class="w"> </span>reindex
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-30-1"><a id="__codelineno-30-1" name="__codelineno-30-1" href="#__codelineno-30-1"></a>ctx<span class="w"> </span>learning<span class="w"> </span>reindex
 </span></code></pre></div>
 <p>The index is a compact table showing the date and title for each learning,
 allowing AI tools to quickly scan entries without reading the full file.</p>
 <p>Use this after manual edits to <code>LEARNINGS.md</code> or when migrating existing
 files to use the index format.</p>
 <p><strong>Example</strong>:</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-28-1"><a id="__codelineno-28-1" name="__codelineno-28-1" href="#__codelineno-28-1"></a>ctx<span class="w"> </span>learning<span class="w"> </span>reindex
-</span><span id="__span-28-2"><a id="__codelineno-28-2" name="__codelineno-28-2" href="#__codelineno-28-2"></a><span class="c1"># ✓ Index regenerated with 8 entries</span>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-31-1"><a id="__codelineno-31-1" name="__codelineno-31-1" href="#__codelineno-31-1"></a>ctx<span class="w"> </span>learning<span class="w"> </span>reindex
+</span><span id="__span-31-2"><a id="__codelineno-31-2" name="__codelineno-31-2" href="#__codelineno-31-2"></a><span class="c1"># ✓ Index regenerated with 8 entries</span>
 </span></code></pre></div>
 
 

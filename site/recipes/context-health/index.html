@@ -2356,6 +2356,17 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#ctx-fmt" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ctx fmt
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#ctx-status" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -3999,6 +4010,17 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#ctx-fmt" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ctx fmt
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#ctx-status" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -4178,7 +4200,8 @@ directory lean and accurate.</p>
 </span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>ctx<span class="w"> </span>drift<span class="w"> </span>--fix<span class="w">                </span><span class="c1"># auto-fix the easy ones</span>
 </span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>ctx<span class="w"> </span>sync<span class="w"> </span>--dry-run<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span>ctx<span class="w"> </span>sync<span class="w"> </span><span class="c1"># reconcile after refactors</span>
 </span><span id="__span-0-4"><a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>ctx<span class="w"> </span>compact<span class="w"> </span>--archive<span class="w">          </span><span class="c1"># archive old completed tasks</span>
-</span><span id="__span-0-5"><a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>ctx<span class="w"> </span>status<span class="w">                     </span><span class="c1"># verify</span>
+</span><span id="__span-0-5"><a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>ctx<span class="w"> </span>fmt<span class="w">                        </span><span class="c1"># normalize line widths</span>
+</span><span id="__span-0-6"><a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>ctx<span class="w"> </span>status<span class="w">                     </span><span class="c1"># verify</span>
 </span></code></pre></div>
 <p>Or just ask your agent: <em>"Is our context clean?"</em></p>
 <h2 id="commands-and-skills-used">Commands and Skills Used<a class="headerlink" href="#commands-and-skills-used" title="Permanent link">&para;</a></h2>
@@ -4210,6 +4233,11 @@ directory lean and accurate.</p>
 <td><code>ctx compact</code></td>
 <td>Command</td>
 <td>Archive completed tasks, clean up empty sections</td>
+</tr>
+<tr>
+<td><code>ctx fmt</code></td>
+<td>Command</td>
+<td>Normalize context files to 80-char line width</td>
 </tr>
 <tr>
 <td><code>ctx status</code></td>
@@ -4450,30 +4478,41 @@ to code that no longer exists.</p>
   <code>.context/archive/tasks-YYYY-MM-DD.md</code></li>
 </ul>
 <p>Without <code>--archive</code>, nothing is deleted: Tasks are reorganized in place.</p>
+<h3 id="ctx-fmt"><code>ctx fmt</code><a class="headerlink" href="#ctx-fmt" title="Permanent link">&para;</a></h3>
+<p>Normalize context file line widths:</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-14-1"><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a>ctx<span class="w"> </span>fmt<span class="w">              </span><span class="c1"># wrap long lines to 80 chars</span>
+</span><span id="__span-14-2"><a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a>ctx<span class="w"> </span>fmt<span class="w"> </span>--check<span class="w">      </span><span class="c1"># CI: exit 1 if files need formatting</span>
+</span></code></pre></div>
+<p>Long task descriptions, decision rationale, and learning entries accumulate as
+single-line entries. <code>ctx fmt</code> wraps them at word boundaries with 2-space
+continuation indent for list items. Headings, tables, and comments are
+preserved.</p>
+<p>Idempotent: safe to run repeatedly.</p>
 <h3 id="ctx-status"><code>ctx status</code><a class="headerlink" href="#ctx-status" title="Permanent link">&para;</a></h3>
 <p>Quick health overview:</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-14-1"><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a>ctx<span class="w"> </span>status<span class="w"> </span>--verbose
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-15-1"><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a>ctx<span class="w"> </span>status<span class="w"> </span>--verbose
 </span></code></pre></div>
 <p>Shows file counts, token estimates, modification times, and drift warnings in a
 single glance.</p>
 <h3 id="ctx-prompt-audit"><code>/ctx-prompt-audit</code><a class="headerlink" href="#ctx-prompt-audit" title="Permanent link">&para;</a></h3>
 <p>Checks whether your context files are readable, compact, and
 token-efficient for the model.</p>
-<div class="language-text highlight"><pre><span></span><code><span id="__span-15-1"><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a>/ctx-prompt-audit
+<div class="language-text highlight"><pre><span></span><code><span id="__span-16-1"><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a>/ctx-prompt-audit
 </span></code></pre></div>
 <h2 id="putting-it-all-together">Putting It All Together<a class="headerlink" href="#putting-it-all-together" title="Permanent link">&para;</a></h2>
 <p>Conversational approach (recommended):</p>
-<div class="language-text highlight"><pre><span></span><code><span id="__span-16-1"><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a>Is our context clean?  -&gt; agent runs structural plus semantic checks
-</span><span id="__span-16-2"><a id="__codelineno-16-2" name="__codelineno-16-2" href="#__codelineno-16-2"></a>Fix what you can       -&gt; agent auto-fixes and proposes edits
-</span><span id="__span-16-3"><a id="__codelineno-16-3" name="__codelineno-16-3" href="#__codelineno-16-3"></a>Archive the done tasks -&gt; agent runs ctx compact --archive
-</span><span id="__span-16-4"><a id="__codelineno-16-4" name="__codelineno-16-4" href="#__codelineno-16-4"></a>How&#39;s token usage?     -&gt; agent checks ctx status
+<div class="language-text highlight"><pre><span></span><code><span id="__span-17-1"><a id="__codelineno-17-1" name="__codelineno-17-1" href="#__codelineno-17-1"></a>Is our context clean?  -&gt; agent runs structural plus semantic checks
+</span><span id="__span-17-2"><a id="__codelineno-17-2" name="__codelineno-17-2" href="#__codelineno-17-2"></a>Fix what you can       -&gt; agent auto-fixes and proposes edits
+</span><span id="__span-17-3"><a id="__codelineno-17-3" name="__codelineno-17-3" href="#__codelineno-17-3"></a>Archive the done tasks -&gt; agent runs ctx compact --archive
+</span><span id="__span-17-4"><a id="__codelineno-17-4" name="__codelineno-17-4" href="#__codelineno-17-4"></a>How&#39;s token usage?     -&gt; agent checks ctx status
 </span></code></pre></div>
 <p>CLI approach (<em>for CI, scripts, or direct control</em>):</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-17-1"><a id="__codelineno-17-1" name="__codelineno-17-1" href="#__codelineno-17-1"></a>ctx<span class="w"> </span>drift<span class="w">                      </span><span class="c1"># 1. Detect problems</span>
-</span><span id="__span-17-2"><a id="__codelineno-17-2" name="__codelineno-17-2" href="#__codelineno-17-2"></a>ctx<span class="w"> </span>drift<span class="w"> </span>--fix<span class="w">                </span><span class="c1"># 2. Auto-fix the easy ones</span>
-</span><span id="__span-17-3"><a id="__codelineno-17-3" name="__codelineno-17-3" href="#__codelineno-17-3"></a>ctx<span class="w"> </span>sync<span class="w"> </span>--dry-run<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span>ctx<span class="w"> </span>sync<span class="w"> </span><span class="c1"># 3. Reconcile after refactors</span>
-</span><span id="__span-17-4"><a id="__codelineno-17-4" name="__codelineno-17-4" href="#__codelineno-17-4"></a>ctx<span class="w"> </span>compact<span class="w"> </span>--archive<span class="w">          </span><span class="c1"># 4. Archive old completed tasks</span>
-</span><span id="__span-17-5"><a id="__codelineno-17-5" name="__codelineno-17-5" href="#__codelineno-17-5"></a>ctx<span class="w"> </span>status<span class="w">                     </span><span class="c1"># 5. Verify</span>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-18-1"><a id="__codelineno-18-1" name="__codelineno-18-1" href="#__codelineno-18-1"></a>ctx<span class="w"> </span>drift<span class="w">                      </span><span class="c1"># 1. Detect problems</span>
+</span><span id="__span-18-2"><a id="__codelineno-18-2" name="__codelineno-18-2" href="#__codelineno-18-2"></a>ctx<span class="w"> </span>drift<span class="w"> </span>--fix<span class="w">                </span><span class="c1"># 2. Auto-fix the easy ones</span>
+</span><span id="__span-18-3"><a id="__codelineno-18-3" name="__codelineno-18-3" href="#__codelineno-18-3"></a>ctx<span class="w"> </span>sync<span class="w"> </span>--dry-run<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span>ctx<span class="w"> </span>sync<span class="w"> </span><span class="c1"># 3. Reconcile after refactors</span>
+</span><span id="__span-18-4"><a id="__codelineno-18-4" name="__codelineno-18-4" href="#__codelineno-18-4"></a>ctx<span class="w"> </span>compact<span class="w"> </span>--archive<span class="w">          </span><span class="c1"># 4. Archive old completed tasks</span>
+</span><span id="__span-18-5"><a id="__codelineno-18-5" name="__codelineno-18-5" href="#__codelineno-18-5"></a>ctx<span class="w"> </span>fmt<span class="w">                        </span><span class="c1"># 5. Normalize line widths</span>
+</span><span id="__span-18-6"><a id="__codelineno-18-6" name="__codelineno-18-6" href="#__codelineno-18-6"></a>ctx<span class="w"> </span>status<span class="w">                     </span><span class="c1"># 6. Verify</span>
 </span></code></pre></div>
 <h2 id="tips">Tips<a class="headerlink" href="#tips" title="Permanent link">&para;</a></h2>
 <p>Agents cross-reference context files with source code during normal work. When

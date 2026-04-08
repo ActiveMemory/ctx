@@ -22,7 +22,6 @@ import (
 	"github.com/ActiveMemory/ctx/internal/cli/journal/core/reduce"
 	"github.com/ActiveMemory/ctx/internal/cli/journal/core/section"
 	"github.com/ActiveMemory/ctx/internal/cli/journal/core/turn"
-	"github.com/ActiveMemory/ctx/internal/cli/journal/core/wrap"
 	"github.com/ActiveMemory/ctx/internal/config/dir"
 	"github.com/ActiveMemory/ctx/internal/config/file"
 	"github.com/ActiveMemory/ctx/internal/config/fs"
@@ -34,6 +33,7 @@ import (
 	ctxIo "github.com/ActiveMemory/ctx/internal/io"
 	"github.com/ActiveMemory/ctx/internal/journal/state"
 	"github.com/ActiveMemory/ctx/internal/rc"
+	"github.com/ActiveMemory/ctx/internal/wrap"
 	"github.com/ActiveMemory/ctx/internal/write/err"
 	writeJournal "github.com/ActiveMemory/ctx/internal/write/journal"
 )

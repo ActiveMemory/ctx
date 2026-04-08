@@ -24,6 +24,8 @@ const (
 	UseDrift = "drift"
 	// UseComplete is the cobra Use string for the complete command.
 	UseComplete = "complete <task-id-or-text>"
+	// UseFmt is the cobra Use string for the fmt command.
+	UseFmt = "fmt"
 	// UseGuide is the cobra Use string for the guide command.
 	UseGuide = "guide"
 	// UseSetup is the cobra Use string for the setup command.
@@ -88,6 +90,8 @@ const (
 	DescKeyDoctor = "doctor"
 	// DescKeyDrift is the description key for the drift command.
 	DescKeyDrift = "drift"
+	// DescKeyFmt is the description key for the fmt command.
+	DescKeyFmt = "fmt"
 	// DescKeySetup is the description key for the setup command.
 	DescKeySetup = "setup"
 	// DescKeyInitialize is the description key for the initialize command.

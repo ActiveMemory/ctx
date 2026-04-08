@@ -100,6 +100,7 @@ Surface problems worth mentioning:
 - **Stale context files** (not modified recently): mention before
   stale context influences work
 - **Bloated token count** (over 30k): offer `ctx compact`
+- **Long single-line entries**: run `ctx fmt` to normalize line widths
 - **Drift between files and code**: spot-check paths from
   ARCHITECTURE.md against the actual file tree
 
@@ -341,3 +342,4 @@ re-discovering it. 5 minutes reading saves 50 minutes of wasted work.
 - [ ] DECISIONS.md has no superseded entries unmarked
 - [ ] LEARNINGS.md gotchas still relevant
 - [ ] Run `ctx drift` and address warnings
+- [ ] Run `ctx fmt` to normalize line widths

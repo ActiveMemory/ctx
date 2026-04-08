@@ -29,7 +29,10 @@ func TestSoftWrap(t *testing.T) {
 
 	joined := strings.Join(result, " ")
 	if joined != line {
-		t.Errorf("content changed after wrap:\n  got:  %q\n  want: %q", joined, line)
+		t.Errorf(
+			"content changed after wrap:\n  got:  %q\n  want: %q",
+			joined, line,
+		)
 	}
 }
 

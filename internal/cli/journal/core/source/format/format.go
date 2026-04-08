@@ -226,6 +226,11 @@ func JournalEntryPart(
 			frontmatter.WriteFmInt(&sb, session.FmKeyTokensOut, s.TotalTokensOut)
 		}
 		frontmatter.WriteFmQuoted(&sb, session.FmKeyID, s.ID)
+		if s.Entrypoint != "" &&
+			s.Entrypoint != session.EntrypointCLI {
+			frontmatter.WriteFmString(
+				&sb, session.FmKeyEntrypoint, s.Entrypoint)
+		}
 		if title != "" {
 			frontmatter.WriteFmQuoted(&sb, session.FrontmatterTitle, title)
 		}
@@ -324,6 +329,12 @@ func JournalEntryPart(
 	}
 
 	for i, msg := range messages {
+		// Skip API error messages — they're retry noise.
+		if msg.IsApiError {
+			sb.WriteString(tpl.RecallApiError + nl + nl)
+			continue
+		}
+
 		msgNum := startMsgIdx + i + 1
 		role := desc.Text(text.DescKeyLabelRoleUser)
 		if msg.BelongsToAssistant() {
@@ -332,9 +343,27 @@ func JournalEntryPart(
 			role = desc.Text(text.DescKeyLabelToolOutput)
 		}
 
+		// Annotate system-injected messages.
+		if msg.Origin != "" {
+			role = tpl.RecallSystemPrefix + role
+		}
+
 		localTime := msg.Timestamp.Local()
 		io.SafeFprintf(&sb, tpl.RecallTurnHeader+nl+nl,
 			msgNum, role, localTime.Format(time.Format))
+
+		// Render plan content as collapsible section.
+		if msg.PlanContent != "" {
+			sb.WriteString(tpl.RecallPlanOpen + nl)
+			sb.WriteString(msg.PlanContent + nl)
+			sb.WriteString(tpl.RecallPlanClose + nl + nl)
+		}
+
+		// Render CC-level tool errors.
+		if msg.ToolUseResult != "" {
+			io.SafeFprintf(&sb,
+				tpl.RecallToolError+nl+nl, msg.ToolUseResult)
+		}
 
 		if msg.Text != "" {
 			t := msg.Text

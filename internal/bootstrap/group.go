@@ -16,6 +16,7 @@ import (
 	"github.com/ActiveMemory/ctx/internal/cli/dep"
 	"github.com/ActiveMemory/ctx/internal/cli/doctor"
 	"github.com/ActiveMemory/ctx/internal/cli/drift"
+	ctxFmt "github.com/ActiveMemory/ctx/internal/cli/fmt"
 	"github.com/ActiveMemory/ctx/internal/cli/guide"
 	"github.com/ActiveMemory/ctx/internal/cli/initialize"
 	"github.com/ActiveMemory/ctx/internal/cli/journal"
@@ -150,6 +151,7 @@ func diagnostics() []registration {
 //   - []registration: Reindex command
 func utilities() []registration {
 	return []registration{
+		{ctxFmt.Cmd, embedCmd.GroupUtilities},
 		{reindex.Cmd, embedCmd.GroupUtilities},
 	}
 }

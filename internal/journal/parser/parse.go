@@ -88,9 +88,14 @@ func (p *ClaudeCode) buildSession(
 			}
 		}
 
-		// Track model
+		// Track model.
 		if raw.Message.Model != "" && s.Model == "" {
 			s.Model = raw.Message.Model
+		}
+
+		// Track entrypoint.
+		if raw.Entrypoint != "" && s.Entrypoint == "" {
+			s.Entrypoint = raw.Entrypoint
 		}
 	}
 
@@ -113,6 +118,13 @@ func (p *ClaudeCode) convertMessage(raw claudeRawMessage) entity.Message {
 		Timestamp: raw.Timestamp,
 		Role:      raw.Type,
 	}
+
+	// Envelope fields.
+	msg.PlanContent = raw.PlanContent
+	msg.IsApiError = raw.IsApiErrorMessage
+	msg.SourceToolAssistantUUID = raw.SourceToolAssistantUUID
+	msg.ToolUseResult = raw.ToolUseResult
+	msg.Origin = parseOriginKind(raw.Origin)
 
 	if raw.Message.Usage != nil {
 		msg.TokensIn = raw.Message.Usage.InputTokens

@@ -151,6 +151,17 @@ const (
 		" from before compaction"
 )
 
+// Markdown structural markers for wrapping and formatting.
+const (
+	// HeadingPrefix is the ATX heading marker.
+	HeadingPrefix = "#"
+	// ListDash is the unordered list item prefix.
+	ListDash = "- "
+	// ListContinuationIndent is the 2-space indent for wrapped
+	// continuation lines in markdown list items.
+	ListContinuationIndent = "  "
+)
+
 // Markdown table markers for index generation.
 const (
 	// TablePipe is the cell delimiter in Markdown tables.

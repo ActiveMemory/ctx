@@ -35,11 +35,19 @@ const (
 
 // YAML frontmatter field keys for journal export.
 const (
-	FmKeyTime      = "time"
-	FmKeyProject   = "project"
-	FmKeyBranch    = "branch"
-	FmKeyModel     = "model"
-	FmKeyTokensIn  = "tokens_in"
-	FmKeyTokensOut = "tokens_out"
-	FmKeyID        = "session_id"
+	FmKeyTime       = "time"
+	FmKeyProject    = "project"
+	FmKeyBranch     = "branch"
+	FmKeyModel      = "model"
+	FmKeyTokensIn   = "tokens_in"
+	FmKeyTokensOut  = "tokens_out"
+	FmKeyID         = "session_id"
+	FmKeyEntrypoint = "entrypoint"
+)
+
+// Entrypoint values.
+const (
+	// EntrypointCLI is the default CC entrypoint (omitted
+	// from frontmatter since it carries no information).
+	EntrypointCLI = "cli"
 )

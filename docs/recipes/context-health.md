@@ -32,6 +32,7 @@ ctx drift                      # detect problems
 ctx drift --fix                # auto-fix the easy ones
 ctx sync --dry-run && ctx sync # reconcile after refactors
 ctx compact --archive          # archive old completed tasks
+ctx fmt                        # normalize line widths
 ctx status                     # verify
 ```
 
@@ -45,6 +46,7 @@ Or just ask your agent: *"Is our context clean?"*
 | `ctx drift --fix`   | Command | Auto-fix simple issues                           |
 | `ctx sync`          | Command | Reconcile context with codebase structure        |
 | `ctx compact`       | Command | Archive completed tasks, clean up empty sections |
+| `ctx fmt`           | Command | Normalize context files to 80-char line width    |
 | `ctx status`        | Command | Quick health overview                            |
 | `/ctx-drift`        | Skill   | Structural plus semantic drift detection         |
 | `/ctx-architecture` | Skill   | Refresh `ARCHITECTURE.md` from actual codebase   |
@@ -317,6 +319,22 @@ ctx compact --archive  # also archive old tasks to .context/archive/
 
 Without `--archive`, nothing is deleted: Tasks are reorganized in place.
 
+### `ctx fmt`
+
+Normalize context file line widths:
+
+```bash
+ctx fmt              # wrap long lines to 80 chars
+ctx fmt --check      # CI: exit 1 if files need formatting
+```
+
+Long task descriptions, decision rationale, and learning entries accumulate as
+single-line entries. `ctx fmt` wraps them at word boundaries with 2-space
+continuation indent for list items. Headings, tables, and comments are
+preserved.
+
+Idempotent: safe to run repeatedly.
+
 ### `ctx status`
 
 Quick health overview:
@@ -355,7 +373,8 @@ ctx drift                      # 1. Detect problems
 ctx drift --fix                # 2. Auto-fix the easy ones
 ctx sync --dry-run && ctx sync # 3. Reconcile after refactors
 ctx compact --archive          # 4. Archive old completed tasks
-ctx status                     # 5. Verify
+ctx fmt                        # 5. Normalize line widths
+ctx status                     # 6. Verify
 ```
 
 ## Tips

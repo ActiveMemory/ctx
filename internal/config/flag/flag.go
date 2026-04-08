@@ -106,6 +106,7 @@ const (
 	Type            = "type"
 	Variant         = "variant"
 	Verbose         = "verbose"
+	Width           = "width"
 	Write           = "write"
 	Yes             = "yes"
 )
