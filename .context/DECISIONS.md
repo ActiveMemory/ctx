@@ -3,6 +3,7 @@
 <!-- INDEX:START -->
 | Date | Decision |
 |----|--------|
+| 2026-04-08 | Remove #done tag convention, simplify task archival |
 | 2026-04-06 | Use hook relay for session provenance instead of JSONL parsing or env vars |
 | 2026-04-04 | TestNoMagicStrings and TestNoMagicValues no longer exempt const/var definitions outside config/ |
 | 2026-04-04 | String-typed enums belong in config/, not domain packages |
@@ -116,6 +117,20 @@ For significant decisions:
 ✗ No real alternatives existed
 
 -->
+
+## [2026-04-08-013731] Remove #done tag convention, simplify task archival
+
+**Status**: Accepted
+
+**Context**: Tasks had #done:YYYY-MM-DD timestamps that agents added inconsistently and nobody read. compact --archive filtered by age using these timestamps.
+
+**Decision**: Remove #done tag convention, simplify task archival
+
+**Rationale**: [x] checkbox is semantically sufficient. git blame provides the completion timestamp. Removing #done eliminates redundant ceremony and simplifies compact --archive to archive all completed tasks regardless of age.
+
+**Consequence**: compact --archive no longer filters by archive_after_days for tasks. The .ctxrc field is inert but retained for backwards compatibility. Historical #done tags in archives are preserved.
+
+---
 
 ## [2026-04-06-204212] Use hook relay for session provenance instead of JSONL parsing or env vars
 
