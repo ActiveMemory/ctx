@@ -103,6 +103,7 @@ const (
 	Peers           = "peers"
 	Port            = "port"
 	Serve           = "serve"
+	Share           = "share"
 	Shared          = "shared"
 	Show            = "show"
 	Stop            = "stop"

@@ -52,6 +52,7 @@ type EntryParams struct {
 //   - Consequence: Consequence flag for decisions
 //   - Lesson: Lesson flag for learnings
 //   - Application: Application flag for learnings
+//   - Share: Also publish to the shared hub
 type AddConfig struct {
 	Priority    string
 	Section     string
@@ -90,4 +91,5 @@ type EntryOpts struct {
 	Consequence string
 	Lesson      string
 	Application string
+	Share       bool
 }

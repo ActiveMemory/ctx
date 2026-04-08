@@ -49,6 +49,7 @@ func Cmd() *cobra.Command {
 		consequence string
 		lesson      string
 		application string
+		share       bool
 	)
 
 	short, long := desc.Command(cmd.DescKeyAdd)
@@ -78,6 +79,7 @@ func Cmd() *cobra.Command {
 				Consequence: consequence,
 				Lesson:      lesson,
 				Application: application,
+				Share:       share,
 			})
 		},
 	}
@@ -134,6 +136,10 @@ func Cmd() *cobra.Command {
 	flagbind.StringFlag(
 		c, &commit,
 		cFlag.Commit, flag.DescKeyAddCommit,
+	)
+	flagbind.BoolFlag(
+		c, &share,
+		cFlag.Share, flag.DescKeyAddShare,
 	)
 
 	return c
