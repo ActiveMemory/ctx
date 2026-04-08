@@ -19,7 +19,7 @@ scratchpad entries don't announce themselves.
 ```bash
 ctx remind "refactor the swagger definitions"
 ctx remind list
-ctx remind dismiss 1
+ctx remind dismiss 1       # or batch: ctx remind dismiss 1 3-5
 ```
 
 Reminders surface automatically at session start: VERBATIM, every
@@ -98,6 +98,10 @@ You: "dismiss reminder 1"
 Agent: [runs ctx remind dismiss 1]
        "Dismissed:
          - [1] refactor the swagger definitions"
+
+# Batch dismiss also works:
+# "dismiss reminders 3, 5 through 7"
+# → ctx remind dismiss 3 5-7
 ```
 
 Or clear everything:
@@ -137,6 +141,7 @@ You: /ctx-remind dismiss reminder 3
 | "remind me next week to check staging"      | `ctx remind "check staging" --after 2026-03-02` |
 | "what reminders do I have?"                 | `ctx remind list`                               |
 | "dismiss reminder 3"                        | `ctx remind dismiss 3`                          |
+| "dismiss reminders 3, 5 through 7"         | `ctx remind dismiss 3 5-7`                      |
 | "clear all reminders"                       | `ctx remind dismiss --all`                      |
 
 ## Reminders vs Scratchpad vs Tasks

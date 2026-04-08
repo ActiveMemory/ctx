@@ -594,15 +594,33 @@ ctx pad show 2 --out ./recovered.yaml
 
 #### `ctx pad rm`
 
-Remove an entry by number.
+Remove one or more entries by stable ID. Supports individual IDs and
+ranges.
 
 ```bash
-ctx pad rm <n>
+ctx pad rm <id> [id...]
 ```
 
 **Arguments**:
 
-* `n`: 1-based entry number
+* `id`: One or more entry IDs (e.g., `3`, `1 4`, `3-5`)
+
+**Examples**:
+
+```bash
+ctx pad rm 2
+ctx pad rm 1 4
+ctx pad rm 3-5
+```
+
+#### `ctx pad normalize`
+
+Reassign entry IDs as a contiguous sequence 1..N, closing any gaps
+left by deletions.
+
+```bash
+ctx pad normalize
+```
 
 #### `ctx pad edit`
 
@@ -806,16 +824,17 @@ ctx remind list
 
 #### `ctx remind dismiss`
 
-Remove a reminder by ID, or remove all reminders with `--all`.
+Remove one or more reminders by ID, or remove all with `--all`.
+Supports individual IDs and ranges.
 
 ```bash
-ctx remind dismiss <id>
+ctx remind dismiss <id> [id...]
 ctx remind dismiss --all
 ```
 
 **Arguments**:
 
-- `id`: Reminder ID (shown in `list` output)
+- `id`: One or more reminder IDs (e.g., `3`, `3 5-7`)
 
 **Flags**:
 
@@ -829,7 +848,17 @@ ctx remind dismiss --all
 
 ```bash
 ctx remind dismiss 3
+ctx remind dismiss 3 5-7
 ctx remind dismiss --all
+```
+
+#### `ctx remind normalize`
+
+Reassign reminder IDs as a contiguous sequence 1..N, closing any gaps
+left by dismissals.
+
+```bash
+ctx remind normalize
 ```
 
 ---

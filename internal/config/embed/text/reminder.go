@@ -19,6 +19,9 @@ const (
 	// DescKeyWriteReminderDismissedAll is the text key for write reminder
 	// dismissed all messages.
 	DescKeyWriteReminderDismissedAll = "write.reminder-dismissed-all"
+	// DescKeyWriteReminderNormalized is the text key for
+	// write reminder normalized messages.
+	DescKeyWriteReminderNormalized = "write.reminder-normalized"
 	// DescKeyWriteReminderItem is the text key for write reminder item messages.
 	DescKeyWriteReminderItem = "write.reminder-item"
 	// DescKeyWriteReminderNone is the text key for write reminder none messages.

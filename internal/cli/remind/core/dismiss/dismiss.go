@@ -7,8 +7,6 @@
 package dismiss
 
 import (
-	"strconv"
-
 	"github.com/spf13/cobra"
 
 	"github.com/ActiveMemory/ctx/internal/cli/remind/core/store"
@@ -16,49 +14,46 @@ import (
 	"github.com/ActiveMemory/ctx/internal/write/remind"
 )
 
-// One removes a single reminder by its numeric ID.
+// Many removes one or more reminders by ID. All IDs are resolved
+// before any deletion to avoid ordering issues.
 //
 // Parameters:
 //   - cmd: Cobra command for status output
-//   - idStr: String representation of the reminder ID
+//   - ids: Reminder IDs to dismiss
 //
 // Returns:
-//   - error: Non-nil on invalid ID, missing reminder, or
-//     write failure
-func One(
-	cmd *cobra.Command, idStr string,
-) error {
-	id, parseErr := strconv.Atoi(idStr)
-	if parseErr != nil {
-		return errReminder.InvalidID(idStr)
-	}
-
+//   - error: Non-nil on missing reminder or write failure
+func Many(cmd *cobra.Command, ids []int) error {
 	reminders, readErr := store.Read()
 	if readErr != nil {
 		return readErr
 	}
 
-	found := -1
-	for i, r := range reminders {
-		if r.ID == id {
-			found = i
-			break
+	removeSet := make(map[int]bool, len(ids))
+	for _, id := range ids {
+		found := false
+		for _, r := range reminders {
+			if r.ID == id {
+				found = true
+				break
+			}
+		}
+		if !found {
+			return errReminder.NotFound(id)
+		}
+		removeSet[id] = true
+	}
+
+	var remaining []store.Reminder
+	for _, r := range reminders {
+		if removeSet[r.ID] {
+			remind.Dismissed(cmd, r.ID, r.Message)
+		} else {
+			remaining = append(remaining, r)
 		}
 	}
 
-	if found < 0 {
-		return errReminder.NotFound(id)
-	}
-
-	remind.Dismissed(
-		cmd,
-		reminders[found].ID,
-		reminders[found].Message,
-	)
-	reminders = append(
-		reminders[:found], reminders[found+1:]...,
-	)
-	return store.Write(reminders)
+	return store.Write(remaining)
 }
 
 // All removes every active reminder.

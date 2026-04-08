@@ -101,3 +101,17 @@ func DismissedAll(cmd *cobra.Command, count int) {
 		desc.Text(text.DescKeyWriteReminderDismissedAll),
 		count))
 }
+
+// Normalized prints confirmation that IDs were normalized.
+//
+// Parameters:
+//   - cmd: Cobra command for output. Nil is a no-op.
+//   - count: number of reminders renumbered.
+func Normalized(cmd *cobra.Command, count int) {
+	if cmd == nil {
+		return
+	}
+	cmd.Println(fmt.Sprintf(
+		desc.Text(text.DescKeyWriteReminderNormalized),
+		count))
+}

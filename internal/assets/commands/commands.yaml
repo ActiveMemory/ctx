@@ -874,6 +874,8 @@ remind.dismiss:
   short: Dismiss one or all reminders
 remind.list:
   short: Show all pending reminders
+remind.normalize:
+  short: Reassign reminder IDs as 1..N, closing gaps
 resume:
   long: |-
     Resume context hooks after a pause. Silent no-op if not paused.

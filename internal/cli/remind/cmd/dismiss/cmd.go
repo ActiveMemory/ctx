@@ -1,6 +1,6 @@
 //   /    ctx:                         https://ctx.ist
 // ,'`./    do you remember?
-// `.,'\
+// `.,'\\
 //   \    Copyright 2026-present Context contributors.
 //                 SPDX-License-Identifier: Apache-2.0
 
@@ -10,6 +10,7 @@ import (
 	"github.com/spf13/cobra"
 
 	"github.com/ActiveMemory/ctx/internal/assets/read/desc"
+	"github.com/ActiveMemory/ctx/internal/cli/pad/core/parse"
 	"github.com/ActiveMemory/ctx/internal/config/embed/cmd"
 	"github.com/ActiveMemory/ctx/internal/config/embed/flag"
 	cFlag "github.com/ActiveMemory/ctx/internal/config/flag"
@@ -18,6 +19,8 @@ import (
 )
 
 // Cmd returns the remind dismiss subcommand.
+//
+// Accepts multiple IDs and ranges (e.g., "3 5-7").
 //
 // Returns:
 //   - *cobra.Command: Configured dismiss subcommand
@@ -33,12 +36,16 @@ func Cmd() *cobra.Command {
 		Example: desc.Example(cmd.DescKeyRemindDismiss),
 		RunE: func(cmd *cobra.Command, args []string) error {
 			if allFlag {
-				return Run(cmd, "", allFlag)
+				return Run(cmd, nil, allFlag)
 			}
 			if len(args) == 0 {
 				return errReminder.IDRequired()
 			}
-			return Run(cmd, args[0], allFlag)
+			ids, parseErr := parse.IDs(args)
+			if parseErr != nil {
+				return parseErr
+			}
+			return Run(cmd, ids, allFlag)
 		},
 	}
 

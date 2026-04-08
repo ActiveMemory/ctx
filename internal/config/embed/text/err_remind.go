@@ -8,9 +8,6 @@ package text
 
 // DescKeys for reminder operations errors.
 const (
-	// DescKeyErrReminderInvalidID is the text key for err reminder invalid id
-	// messages.
-	DescKeyErrReminderInvalidID = "err.reminder.invalid-id"
 	// DescKeyErrReminderParseReminders is the text key for err reminder parse
 	// reminders messages.
 	DescKeyErrReminderParseReminders = "err.reminder.parse-reminders"
