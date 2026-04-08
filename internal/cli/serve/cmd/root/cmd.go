@@ -20,13 +20,16 @@ import (
 // Cmd returns the serve command.
 //
 // Serves a static site (default) or starts the shared
-// context hub when --shared is passed.
+// context hub when --shared is passed. Use --daemon to
+// run in the background, --stop to kill a running daemon.
 //
 // Returns:
 //   - *cobra.Command: The serve command
 func Cmd() *cobra.Command {
 	var (
 		isShared bool
+		isDaemon bool
+		isStop   bool
 		port     int
 		dataDir  string
 	)
@@ -42,6 +45,16 @@ func Cmd() *cobra.Command {
 		RunE: func(
 			cobraCmd *cobra.Command, args []string,
 		) error {
+			if isStop {
+				return shared.Stop(
+					cobraCmd, dataDir,
+				)
+			}
+			if isShared && isDaemon {
+				return shared.RunDaemon(
+					cobraCmd, port, dataDir,
+				)
+			}
 			if isShared {
 				return shared.Run(
 					cobraCmd, port, dataDir,
@@ -63,6 +76,14 @@ func Cmd() *cobra.Command {
 	flagbind.StringFlag(
 		c, &dataDir,
 		cFlag.DataDir, flag.DescKeyServeDataDir,
+	)
+	flagbind.BoolFlag(
+		c, &isDaemon,
+		cFlag.Daemon, flag.DescKeyServeDaemon,
+	)
+	flagbind.BoolFlag(
+		c, &isStop,
+		cFlag.Stop, flag.DescKeyServeStop,
 	)
 
 	return c

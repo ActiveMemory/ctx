@@ -276,12 +276,16 @@ tool:
   short: 'Override active AI tool (e.g., claude, cursor, cline, kiro, codex)'
 connect.admin-auth:
   short: Admin credential from hub startup
+serve.daemon:
+  short: Run hub in the background
 serve.data-dir:
   short: Hub data directory (default ~/.ctx/hub-data/)
 serve.port:
   short: Hub listen port (default 9900)
 serve.shared:
   short: Start the shared context hub (gRPC server)
+serve.stop:
+  short: Stop a running hub daemon
 watch.dry-run:
   short: Show updates without applying
 watch.log:
