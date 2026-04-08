@@ -42,17 +42,6 @@ func Parse(cause error) error {
 
 // InvalidID returns an error for an unparseable ID string.
 //
-// Parameters:
-//   - value: the invalid ID string.
-//
-// Returns:
-//   - error: "invalid ID <value>"
-func InvalidID(value string) error {
-	return fmt.Errorf(
-		desc.Text(text.DescKeyErrReminderInvalidID), value,
-	)
-}
-
 // NotFound returns an error when no reminder matches the given ID.
 //
 // Parameters:

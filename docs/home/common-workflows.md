@@ -67,8 +67,9 @@ ctx remind "check CI after the deploy" --after 2026-02-25
 # List pending reminders
 ctx remind list
 
-# Dismiss a reminder by ID
+# Dismiss reminders by ID (supports ranges)
 ctx remind dismiss 1
+ctx remind dismiss 3 5-7
 ```
 
 Reminders are relayed verbatim at session start by the `check-reminders` hook

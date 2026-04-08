@@ -48,13 +48,14 @@ Because the key is `.gitignore`d and the data is committed, you get:
 | `ctx pad`                         | List all entries (numbered 1-based)                    |
 | `ctx pad show N`                  | Output raw text of entry N (no prefix, pipe-friendly)  |
 | `ctx pad add "text"`              | Append a new entry                                     |
-| `ctx pad rm N`                    | Remove entry at position N                             |
+| `ctx pad rm ID [ID...]`           | Remove entries by stable ID (supports ranges: `3-5`)   |
 | `ctx pad edit N "text"`           | Replace entry N with new text                          |
 | `ctx pad edit N --append "text"`  | Append text to the end of entry N                      |
 | `ctx pad edit N --prepend "text"` | Prepend text to the beginning of entry N               |
 | `ctx pad edit N --tag tagname`    | Add a tag to entry N                                   |
 | `ctx pad add TEXT --file PATH`    | Ingest a file as a blob entry (TEXT is the label)      |
 | `ctx pad show N --out PATH`       | Write decoded blob content to a file                   |
+| `ctx pad normalize`               | Reassign entry IDs as 1..N                             |
 | `ctx pad mv N M`                  | Move entry from position N to position M               |
 | `ctx pad resolve`                 | Show both sides of a merge conflict for resolution     |
 | `ctx pad import FILE`             | Bulk-import lines from a file (or stdin with `-`)      |
@@ -92,7 +93,7 @@ ctx pad edit 1 --append "$(ctx pad show 2)"
 # Reorder
 ctx pad mv 2 1
 
-# Clean up
+# Clean up (IDs are stable — they don't shift when entries are deleted)
 ctx pad rm 2
 ```
 
@@ -141,8 +142,9 @@ ctx pad edit 1 --append "checked" --tag done
 ctx pad edit 1 "check DNS propagation"
 ```
 
-Entry numbers are preserved when filtering — `ctx pad rm 3` targets the
-same entry regardless of active filters. Tags are case-sensitive and support
+Entry IDs are stable — they don't shift when other entries are deleted, so
+`ctx pad rm 3` always targets the same entry. Use `ctx pad normalize` to
+reassign IDs as 1..N if gaps bother you. Tags are case-sensitive and support
 letters, digits, hyphens, and underscores (`#high-priority`, `#v2`, `#my_tag`).
 
 For blob entries, tags are extracted from the label only.

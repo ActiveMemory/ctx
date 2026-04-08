@@ -11,7 +11,9 @@ const (
 	// UseRemindAdd is the cobra Use string for the remind add command.
 	UseRemindAdd = "add TEXT"
 	// UseRemindDismiss is the cobra Use string for the remind dismiss command.
-	UseRemindDismiss = "dismiss [ID]"
+	UseRemindDismiss = "dismiss [ID...]"
+	// UseRemindNormalize is the cobra Use string for remind normalize.
+	UseRemindNormalize = "normalize"
 	// UseRemindDismissAlias is the cobra Use string for the remind dismiss alias
 	// command.
 	UseRemindDismissAlias = "rm"
@@ -32,4 +34,6 @@ const (
 	DescKeyRemindDismiss = "remind.dismiss"
 	// DescKeyRemindList is the description key for the remind list command.
 	DescKeyRemindList = "remind.list"
+	// DescKeyRemindNormalize is the description key for remind normalize.
+	DescKeyRemindNormalize = "remind.normalize"
 )

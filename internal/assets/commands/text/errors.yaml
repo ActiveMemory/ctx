@@ -402,8 +402,6 @@ err.journal.source.reindex-file-write:
   short: 'failed to write %s: %w'
 err.journal.source.stats-glob:
   short: 'globbing stats files: %w'
-err.reminder.invalid-id:
-  short: invalid ID %q
 err.reminder.parse-reminders:
   short: 'parse reminders: %w'
 err.reminder.read-reminders:

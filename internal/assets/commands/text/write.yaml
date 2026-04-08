@@ -520,6 +520,8 @@ write.reminder-dismissed:
   short: '  - [%d] %s'
 write.reminder-dismissed-all:
   short: Dismissed %d reminders.
+write.reminder-normalized:
+  short: Normalized %d reminders (IDs reassigned as 1..N).
 write.reminder-item:
   short: '  [%d] %s%s'
 write.reminder-none:

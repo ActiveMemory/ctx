@@ -13,6 +13,7 @@ import (
 	"github.com/ActiveMemory/ctx/internal/cli/remind/cmd/add"
 	"github.com/ActiveMemory/ctx/internal/cli/remind/cmd/dismiss"
 	"github.com/ActiveMemory/ctx/internal/cli/remind/cmd/list"
+	remindNormalize "github.com/ActiveMemory/ctx/internal/cli/remind/cmd/normalize"
 	"github.com/ActiveMemory/ctx/internal/config/embed/cmd"
 	"github.com/ActiveMemory/ctx/internal/config/embed/flag"
 	cFlag "github.com/ActiveMemory/ctx/internal/config/flag"
@@ -52,6 +53,7 @@ func Cmd() *cobra.Command {
 	c.AddCommand(add.Cmd())
 	c.AddCommand(list.Cmd())
 	c.AddCommand(dismiss.Cmd())
+	c.AddCommand(remindNormalize.Cmd())
 
 	return c
 }

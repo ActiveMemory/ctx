@@ -45,7 +45,7 @@ chmod 600 ~/.ctx/.ctx.key                                 # 3. secure it
 |-------------------------|-------------|--------------------------------------------------------|
 | `ctx init`              | CLI command | Initialize context (*generates the key automatically*) |
 | `ctx pad add`           | CLI command | Add a scratchpad entry                                 |
-| `ctx pad rm`            | CLI command | Remove a scratchpad entry                              |
+| `ctx pad rm`            | CLI command | Remove entries by stable ID (supports ranges)          |
 | `ctx pad edit`          | CLI command | Edit a scratchpad entry                                |
 | `ctx pad resolve`       | CLI command | Show both sides of a merge conflict                    |
 | `ctx pad merge`         | CLI command | Merge entries from other scratchpad files              |

@@ -39,7 +39,8 @@ Use the `/ctx-pad` skill to manage entries from inside your AI session.
 | `ctx pad edit`         | CLI command | Replace, append to, or prepend to an entry     |
 | `ctx pad add --file`   | CLI command | Ingest a file as a blob entry                  |
 | `ctx pad show N --out` | CLI command | Extract a blob entry to a file                 |
-| `ctx pad rm`           | CLI command | Remove an entry                                |
+| `ctx pad rm`           | CLI command | Remove entries by stable ID (supports ranges)  |
+| `ctx pad normalize`    | CLI command | Reassign entry IDs as 1..N                     |
 | `ctx pad mv`           | CLI command | Reorder entries                                |
 | `ctx pad --tag`        | CLI command | Filter entries by tag                          |
 | `ctx pad tags`         | CLI command | List all tags with counts                      |
@@ -120,7 +121,8 @@ Agent: [runs ctx pad mv 4 1]
 You: "remove entry 2, it's done"
 
 Agent: [runs ctx pad rm 2]
-       "Removed entry 2. 3 entries remaining."
+       "Removed entry 2. 3 entries remaining.
+        (IDs are stable — remaining entries keep their IDs.)"
 ```
 
 ### Step 7: Store a File as a Blob
@@ -212,8 +214,9 @@ Agent: [runs ctx pad --tag later]
         3. review PR feedback #later #ci"
 ```
 
-Entry numbers stay the same when filtering — `ctx pad rm 3` still
-targets entry 3 regardless of active filters.
+Entry IDs are stable — they don't shift when other entries are deleted,
+so `ctx pad rm 3` always targets the same entry regardless of deletions
+or active filters. Use `ctx pad normalize` to reassign IDs as 1..N.
 
 Exclude a tag with `~`:
 
@@ -262,6 +265,8 @@ Once the skill is active, it translates intent into commands:
 | "show my scratchpad" / "what's on my pad" | `ctx pad`                               |
 | "show me entry 3"                         | `ctx pad show 3`                        |
 | "delete the third one" / "remove entry 3" | `ctx pad rm 3`                          |
+| "remove entries 3 through 5"              | `ctx pad rm 3-5`                        |
+| "renumber my scratchpad"                  | `ctx pad normalize`                     |
 | "change entry 2 to ..."                   | `ctx pad edit 2 "new text"`             |
 | "append ' +important' to entry 3"         | `ctx pad edit 3 --append " +important"` |
 | "prepend 'URGENT:' to entry 1"            | `ctx pad edit 1 --prepend "URGENT: "`   |
