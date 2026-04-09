@@ -17,6 +17,8 @@ DO NOT UPDATE FOR:
 <!-- INDEX:START -->
 | Date | Learning |
 |----|--------|
+| 2026-04-08 | fmt.Fprintf to strings.Builder silently discards errors |
+| 2026-04-08 | AST audit tests must cover unexported functions too |
 | 2026-04-06 | Agents ignore system-reminder content without explicit relay instructions |
 | 2026-04-04 | Format-verb strings are localizable text, not exempt from magic string checks |
 | 2026-04-04 | Agents add allowlist entries to make tests pass — guard every exemption |
@@ -106,6 +108,26 @@ DO NOT UPDATE FOR:
 | 2026-02-22 | Gitignore and filesystem hygiene (consolidated) |
 | 2026-01-28 | IDE is already the UI |
 <!-- INDEX:END -->
+
+---
+
+## [2026-04-08-074612] fmt.Fprintf to strings.Builder silently discards errors
+
+**Context**: golangci-lint errcheck allows fmt.Fprintf to strings.Builder because Write never fails, but project convention says zero silent discard
+
+**Lesson**: Linter coverage gaps exist where language guarantees mask conventions. AST tests fill the gap
+
+**Application**: Created TestNoUncheckedFmtWrite to enforce fmt.Fprintf error handling. Use if _, err := fmt.Fprintf(...) with log.Warn on the error path
+
+---
+
+## [2026-04-08-074604] AST audit tests must cover unexported functions too
+
+**Context**: TestDocCommentStructure only checked exported functions, so agent-written helpers in format.go had no godoc enforcement
+
+**Lesson**: Convention enforcement tests must default to scanning all documented functions. Use explicit opt-outs (test files) not opt-ins (exported only)
+
+**Application**: When adding AST audit tests, scan all functions. We fixed TestDocCommentStructure to drop the IsExported gate and fixed 84 violations
 
 ---
 

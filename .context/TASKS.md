@@ -42,6 +42,8 @@ TASK STATUS LABELS:
 
 ### Phase -2: Task completion nudge:
 
+- [ ] Move 6 grandfathered cross-package MCP types to entity/ #session:cc97cb0d #branch:main #commit:e8d5c60a #added:2026-04-08-074620
+
 - [ ] Design UserPromptSubmit hook that runs `make audit` at
   session start and surfaces failures as a consolidation-debt
   warning before the agent acts on stale assumptions.
@@ -91,18 +93,18 @@ TASK STATUS LABELS:
   non-atomic ownership, inverted logic, force-delete orphans,
   global state mutation.
 
-  - [ ] Design SKILL.md for ctx-architecture-failure-analysis:
+  - [x] Design SKILL.md for ctx-architecture-failure-analysis:
     inputs (architecture artifacts), analysis phases, output
     format (DANGER-ZONES.md), quality checklist
     #added:2026-03-25-060000
-  - [ ] Define the adversarial analysis framework: categories
+  - [x] Define the adversarial analysis framework: categories
     of silent failure (concurrency, ordering, cache,
     amplification, ownership, error swallowing, global state)
     with heuristics for each #added:2026-03-25-060000
-  - [ ] Implement skill with GitNexus integration: use impact
+  - [x] Implement skill with GitNexus integration: use impact
     analysis for blast radius estimation, use context for
     shared-state detection #added:2026-03-25-060000
-  - [ ] Add Gemini Search integration: cross-reference
+  - [x] Add Gemini Search integration: cross-reference
     discovered patterns against known failure modes in similar
     systems. #added:2026-03-25-060000
 
