@@ -108,7 +108,12 @@ TASK STATUS LABELS:
     discovered patterns against known failure modes in similar
     systems. #added:2026-03-25-060000
 
-- [ ] ctx-architecture-extend
+- [-] ctx-architecture-extend
+  Skipped: extension point analysis is covered by /ctx-architecture
+  DETAILED_DESIGN (per-module) and /ctx-architecture-enrich
+  (registration sites). A fourth skill fragments the pipeline
+  without enough distinct value. Three is the right number:
+  map, enrich, hunt.
   **Context**: Companion to `ctx-architecture` and
   `ctx-failure-analysis`, completing a trilogy: how does it
   work → where will it break → where does it grow. Reads
@@ -125,19 +130,17 @@ TASK STATUS LABELS:
   I start?") and architecture review ("are we adding features
   in the right places?").
 
-  - [ ] Design SKILL.md for ctx-extension-map: inputs
-    (architecture artifacts + git log), analysis phases,
-    output format (EXTENSION-POINTS.md), quality checklist
+  - [-] Design SKILL.md for ctx-extension-map
+    Skipped: parent task skipped.
     #added:2026-03-25-062000
-  - [ ] Define extension point detection heuristics: interface
-    registrations, factory patterns, ordered slices, scheme
-    init blocks, //go:embed directories, feature flag structs
-    with tags #added:2026-03-25-062000
-  - [ ] Add git log frequency analysis: trace recent commits
-    to confirm which extension points are actively used vs.
-    dormant #added:2026-03-25-062000
-  - [ ] Integrate with GitNexus: use cluster/process data to
-    identify registration call sites and their callers
+  - [-] Define extension point detection heuristics
+    Skipped: parent task skipped.
+    #added:2026-03-25-062000
+  - [-] Add git log frequency analysis
+    Skipped: parent task skipped.
+    #added:2026-03-25-062000
+  - [-] Integrate with GitNexus for registration sites
+    Skipped: parent task skipped.
     #added:2026-03-25-062000
 
 ### Phase CT: Companion Tool Integration
