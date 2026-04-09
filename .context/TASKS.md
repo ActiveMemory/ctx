@@ -27,6 +27,76 @@ TASK STATUS LABELS:
 
 ### Misc
 
+- [ ] Improve hub failover client: distinguish auth errors (Unauthenticated/PermissionDenied) from connection errors. Fail fast on auth failures instead of cycling through all peers with the same invalid token. #priority:low #added:2026-04-08-194612
+
+- [ ] Add file locking to ctx connect sync state to prevent concurrent sync races. Two sync processes (hook + manual) can both load the same LastSequence, process the same entries, and write duplicate content to .context/shared/. #priority:medium #added:2026-04-08-194557
+
+- [ ] Fix fanout broadcast entry loss: non-blocking send drops entries to slow listeners silently. Log when entries are dropped. Consider per-listener backpressure or disconnect-on-lag. Buffer of 64 is too small for busy hubs. #priority:medium #added:2026-04-08-194542
+
+- [ ] Prevent duplicate client registration in hub store: RegisterClient should reject if ProjectName already exists. Add token revocation support (delete client by ID/project). Currently tokens are valid forever with no way to disable compromised ones. #priority:medium #added:2026-04-08-194529
+
+- [ ] Fix hub cluster: NewCluster result is discarded (not stored on Server), so Raft runs but leadership status is never queryable. Store cluster reference on Server, wire IsLeader/LeaderAddr into Status RPC and hub status command. #priority:medium #added:2026-04-08-194511
+
+- [ ] Use crypto/subtle.ConstantTimeCompare for hub token validation instead of string equality. Current Store.ValidateToken uses == which is vulnerable to timing attacks. Also replace O(n) linear scan with a map[string]*ClientInfo for O(1) lookup. #priority:high #added:2026-04-08-194458
+
+- [ ] Fix silent error suppression in hub: (1) ctx add --share silently ignores publish failures — warn user on failure, (2) hubsync hook swallows all errors — log to event system, (3) replication loop drops errors silently — add structured logging for debug. #priority:high #added:2026-04-08-194443
+
+- [ ] Add input validation to hub Publish handler: reject empty ID, validate Type against allowed set (decision/learning/convention/task), enforce Content length limit (1MB), require non-empty Origin. Prevents garbage data and DoS via unbounded content. #priority:high #added:2026-04-08-194430
+
+- [ ] Fix ctx connect listen: currently only does initial sync then blocks on ctx.Done() without ever calling the Listen RPC. Must stream entries in real-time via the server-streaming Listen RPC, writing to .context/shared/ as entries arrive. #priority:high #added:2026-04-08-194415
+
+- [x] Remove any superpowers library references and implement all needed workflow mechanisms (brainstorm, plan, execute, review, subagent dispatch) natively in ctx. No external plugin libraries should be used — ctx must be self-contained. Clean up docs/superpowers/ directory and any remaining references. #priority:high #added:2026-04-06-121002 #done:2026-04-06
+
+- [ ] SMB mount path support: add `CTX_BACKUP_MOUNT_PATH` env var so 
+  `ctx backup` can use fstab/systemd automounts instead of requiring GVFS. 
+  Spec: specs/smb-mount-path-support.md #priority:medium #added:2026-04-04-010000
+
+### Architecture Docs
+
+- [ ] Publish architecture docs to docs/: copy ARCHITECTURE.md, 
+  DETAILED_DESIGN domain files, and CHEAT-SHEETS.md to docs/reference/. 
+  Sanitize intervention points into docs/contributing/. 
+  Exclude DANGER-ZONES.md and ARCHITECTURE-PRINCIPAL.md (internal only). 
+  Spec: specs/publish-architecture-docs.md #priority:medium #added:2026-04-03-150000
+
+- [ ] Update ctx-architecture skill to append discovered terms to GLOSSARY.md 
+  during Phase 3. Additive only, max 10 terms per run, project-specific only, 
+  alphabetical insertion, skip if GLOSSARY.md empty. Print added terms in 
+  convergence report. Spec: specs/publish-architecture-docs.md #priority:low #added:2026-04-03-153000
+
+### Code Cleanup Findings
+
+
+- [x] Extend flagbind helpers (IntFlag, DurationFlag, DurationFlagP, StringP, 
+  BoolP) and migrate ~50 call sites to unblock TestNoFlagBindOutsideFlagbind 
+  #added:2026-04-01-233250
+
+- [ ] Implement journal compaction: Elastic-style tiered storage with tar.gz 
+  backup. Spec: specs/journal-compact.md #added:2026-03-31-110005
+
+- [x] Refactor 28 grandfathered cmd/ purity violations found by 
+  TestCmdDirPurity: move unexported helpers, exported non-Cmd/Run functions, 
+  and types from cmd/ directories to core/. See grandfathered map in 
+  compliance_test.go for the full list. #priority:medium #added:2026-03-31-005115
+
+
+- [x] PD.4.5: Update AGENT_PLAYBOOK.md — add generic "check available skills"
+  instruction #priority:medium #added:2026-03-25-203340
+
+**PD.5 — Validate:**
+
+
+### Phase -3: DevEx
+
+- [x] Plugin enablement gap: Ref:
+  `ideas/plugin-enablement-gap.md`. Local-installed plugins get
+  registered in `installed_plugins.json` but not auto-added to
+  `enabledPlugins`, so slash commands are invisible in non-ctx
+  projects.
+
+- [x] Add cobra Example fields to CLI commands via
+  examples.yaml #added:2026-03-20-163413
+
 - [x] Add CLI YAML drift detection test: verify flag names in
   examples.yaml match actual registered flags, and Use: patterns
   in commands.yaml match Use constants. Structural linkage is
@@ -165,13 +235,13 @@ Session-start checks, suppressibility, and registry for companion MCP tools.
 
 ### Phase CLI-FIX: CLI Infrastructure Fixes
 
-- [ ] Bug: ctx add task appends to the last Phase section instead of a dedicated
+- [x] Bug: ctx add task appends to the last Phase section instead of a dedicated
   location. Tasks added via CLI land inside whatever Phase happens to be last in
-  TASKS.md, breaking Phase structure. Fix: add mandatory --phase flag to ctx add
-  task. If the named Phase section does not exist, create it. If --phase is
-  omitted, error with available Phase names. No fallback section — mandatory
-  placement forces intent at creation time.
-  #priority:high #added:2026-03-25-234813
+  TASKS.md, breaking Phase structure. Fix: add mandatory --section flag to ctx add
+  task. If the named section does not exist, create it. If --section is
+  omitted, error with message. Heading level fixed from ## to ### to match
+  TASKS.md structure.
+  #priority:high #added:2026-03-25-234813 #done:2026-04-06
 
 ### Phase BLOG: Blog Posts
 
@@ -951,3 +1021,51 @@ Not a fit (keep in `ctx`):
   template placeholder instead of literal tool names. Define minimum interface
   contract (query, context, impact). Spec:
   `ideas/spec-mcp-warm-up-ceremony.md` #added:2026-03-25-120000
+
+- [x] HUB-1: Define hub.proto — gRPC service definition with Register, Publish, Sync, Listen, Status RPCs. Generate Go code. Spec: specs/shared-context-hub.md #priority:high #added:2026-04-06-113020 #done:2026-04-06
+
+- [x] HUB-2: Implement internal/hub/store.go — JSONL append-only entry storage with sequence assignment, type filtering, and since-sequence queries. Spec: specs/hub_implementation.md #priority:high #added:2026-04-06-113021 #done:2026-04-06
+
+- [x] HUB-3: Implement internal/hub/auth.go — admin token generation on first run, client token issuance via Register RPC, gRPC interceptor for Bearer token validation. Spec: specs/shared-context-hub.md #priority:high #added:2026-04-06-113022 #done:2026-04-06
+
+- [x] HUB-4: Implement internal/hub/server.go — gRPC server with Register, Publish, Sync RPCs. Wire auth interceptor, JSONL store, TLS support. Spec: specs/shared-context-hub.md #priority:high #added:2026-04-06-113024 #done:2026-04-06
+
+- [x] HUB-5: Implement ctx serve --shared CLI command — starts gRPC hub server on specified port, generates admin token on first run, supports --tls-cert/--tls-key flags. Spec: specs/shared-context-hub.md #priority:high #added:2026-04-06-113030 #done:2026-04-06
+
+- [x] HUB-6: Implement internal/hub/client.go — gRPC client with Register, Sync, Publish, Listen methods. Connection config encrypted storage via internal/crypto (same pattern as notify). Spec: specs/shared-context-hub.md #priority:high #added:2026-04-06-113032 #done:2026-04-06
+
+- [x] HUB-7: Implement ctx connect register — one-time registration with hub, stores encrypted connection config in .context/.connect.enc. Spec: specs/shared-context-hub.md #priority:high #added:2026-04-06-113033 #done:2026-04-06
+
+- [x] HUB-8: Implement ctx connect subscribe — set entry type filters (decisions, learnings, conventions), persist in local connection config. Spec: specs/shared-context-hub.md #priority:medium #added:2026-04-06-113035 #done:2026-04-07
+
+- [x] HUB-9: Implement ctx connect sync — initial full pull of matching entries from hub, write to .context/shared/ as markdown files with origin tags, record last-seen sequence in .sync-state.json. Spec: specs/shared-context-hub.md #priority:medium #added:2026-04-06-113041 #done:2026-04-07
+
+- [x] HUB-10: Implement ctx connect publish and --share flag — push local entries to hub. Add --share flag to ctx add so entries go to local file AND hub simultaneously. Spec: specs/shared-context-hub.md #priority:medium #added:2026-04-06-113043 #done:2026-04-07
+
+- [x] HUB-11: Implement Listen RPC with fan-out — server-streaming RPC that pushes new entries to connected clients in real-time. ctx connect listen with auto-reconnect on disconnect. Spec: specs/shared-context-hub.md #priority:medium #added:2026-04-06-113044 #done:2026-04-07
+
+- [x] HUB-12: Implement ctx connect status — show server address, connection state, last sync time, subscription config, entry counts by type. Includes hub-side Status RPC. Spec: specs/shared-context-hub.md #priority:medium #added:2026-04-06-113046 #done:2026-04-07
+
+- [x] HUB-13: Implement ctx agent --include-shared — add Tier 8 budget for shared knowledge in agent packet assembly. Shared entries from .context/shared/ included when --include-shared flag is passed. Spec: specs/shared-context-hub.md #priority:medium #added:2026-04-06-113053 #done:2026-04-07
+
+- [x] HUB-14: Implement --daemon flag for ctx serve --shared — background process with PID file, --stop to kill, graceful shutdown. Required for federation. Spec: specs/shared-hub-federation.md #priority:medium #added:2026-04-06-113054
+
+- [x] HUB-15: Integrate hashicorp/raft for leader election — Raft-lite: use Raft ONLY for master election, not data consensus. --peers flag for cluster membership. Single-node mode auto-elects. Spec: specs/shared-hub-federation.md #priority:medium #added:2026-04-06-113056
+
+- [x] HUB-16: Implement master-to-follower replication — master pushes entries to followers via gRPC stream. Followers catch up via sequence-based sync on reconnect. Spec: specs/shared-hub-federation.md #priority:medium #added:2026-04-06-113058
+
+- [x] HUB-17: Implement client failover — clients maintain ordered peer list, auto-reconnect to new master on connection failure. Follower redirects client to current master address. Spec: specs/shared-hub-federation.md #priority:medium #added:2026-04-06-113104
+
+- [x] HUB-18: Implement ctx hub status/peer/stepdown — cluster status display (role, peers, sync state, entries, uptime), runtime peer add/remove, graceful leadership transfer. Spec: specs/shared-hub-federation.md #priority:low #added:2026-04-06-113106
+
+- [x] HUB-19: Update compliance test — add internal/hub/ to allowed-net-import list alongside internal/notify/. Core packages remain network-free. Spec: specs/hub_implementation.md #priority:high #added:2026-04-06-113107
+
+- [x] HUB-20: End-to-end integration test — spin up hub, register 2 clients, publish from one, verify sync on other. Test --share flag, Listen stream, and reconnect behavior. Spec: specs/shared-context-hub.md #priority:medium #added:2026-04-06-113109
+
+- [x] HUB-2a: Implement hub client registry and meta persistence — clients.json for registered client tokens/project names, meta.json for sequence counter and hub metadata. Separate from entries.jsonl. Spec: specs/shared-context-hub.md #priority:high #added:2026-04-06-114131
+
+- [x] HUB-9a: Implement shared file renderer — convert Entry objects to markdown with origin tags and date headers, create/append to .context/shared/*.md files. Reused by both ctx connect sync and ctx connect listen. Spec: specs/shared-context-hub.md #priority:medium #added:2026-04-06-114131
+
+- [x] HUB-21: Unit tests for internal/hub/ — store (append, query, rotation), auth (token generation, validation, interceptor), client (connect, reconnect), renderer (markdown output). Each package tested independently. Spec: specs/hub_implementation.md #priority:medium #added:2026-04-06-114131
+
+- [x] HUB-22: Documentation — create docs/cli/connect.md and docs/cli/serve.md for new commands, update docs/cli/agent.md for --include-shared flag and --shared-budget option. Spec: specs/shared-context-hub.md #priority:low #added:2026-04-06-114131

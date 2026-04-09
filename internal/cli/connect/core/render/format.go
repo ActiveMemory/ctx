@@ -50,11 +50,13 @@ func toMarkdown(entries []hub.EntryMsg) string {
 func writeEntry(b *strings.Builder, e *hub.EntryMsg) {
 	ts := time.Unix(e.Timestamp, 0).UTC()
 	date := ts.Format(cfgTime.DateFormat)
-	fmt.Fprintf(b,
+	if _, err := fmt.Fprintf(b,
 		"## [%s] %s\n\n**Origin**: %s\n\n%s\n\n---\n\n",
 		date, firstLine(e.Content),
 		e.Origin, e.Content,
-	)
+	); err != nil {
+		return
+	}
 }
 
 // firstLine returns the first line of s for use as a title.

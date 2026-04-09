@@ -173,7 +173,7 @@ func TestAddDecisionAndLearning(t *testing.T) {
 	// Test that task without provenance flags fails
 	t.Run("add task without provenance fails", func(t *testing.T) {
 		addCmd := Cmd()
-		addCmd.SetArgs([]string{"task", "Missing provenance"})
+		addCmd.SetArgs([]string{"task", "Missing provenance", "--section", "Misc"})
 		err := addCmd.Execute()
 		if err == nil {
 			t.Fatal("expected error when adding task without provenance")
