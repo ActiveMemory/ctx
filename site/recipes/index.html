@@ -3943,6 +3943,17 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#architecture-deep-dive" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Architecture Deep Dive
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#generating-dependency-graphs" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -4211,6 +4222,14 @@ each on its own branch and working directory. Group tasks by
 file overlap, work in parallel, merge back.</p>
 <p><strong>Uses</strong>: <code>/ctx-worktree</code>, <code>/ctx-next</code>, <code>git worktree</code>,
 <code>git merge</code></p>
+<hr />
+<h3 id="architecture-deep-dive"><a href="architecture-deep-dive/">Architecture Deep Dive</a><a class="headerlink" href="#architecture-deep-dive" title="Permanent link">&para;</a></h3>
+<p>Three-pass pipeline for understanding a codebase: <strong>map</strong> what
+exists, <strong>enrich</strong> with code intelligence, then <strong>hunt</strong> for
+where it will silently fail. Produces architecture docs,
+quantified dependency data, and ranked failure hypotheses.</p>
+<p><strong>Uses</strong>: <code>/ctx-architecture</code>, <code>/ctx-architecture-enrich</code>,
+<code>/ctx-architecture-failure-analysis</code></p>
 <hr />
 <h3 id="generating-dependency-graphs"><a href="dependency-graph/">Generating Dependency Graphs</a><a class="headerlink" href="#generating-dependency-graphs" title="Permanent link">&para;</a></h3>
 <p>Map your project's internal and external <strong>dependency structure</strong>.

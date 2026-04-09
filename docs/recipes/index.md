@@ -363,6 +363,18 @@ file overlap, work in parallel, merge back.
 
 ---
 
+### [Architecture Deep Dive](architecture-deep-dive.md)
+
+Three-pass pipeline for understanding a codebase: **map** what
+exists, **enrich** with code intelligence, then **hunt** for
+where it will silently fail. Produces architecture docs,
+quantified dependency data, and ranked failure hypotheses.
+
+**Uses**: `/ctx-architecture`, `/ctx-architecture-enrich`,
+`/ctx-architecture-failure-analysis`
+
+---
+
 ### [Generating Dependency Graphs](dependency-graph.md)
 
 Map your project's internal and external **dependency structure**.

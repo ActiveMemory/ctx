@@ -3502,6 +3502,17 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#ctx-architecture-failure-analysis" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        /ctx-architecture-failure-analysis
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#ctx-remind" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -4621,6 +4632,17 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#ctx-architecture-failure-analysis" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        /ctx-architecture-failure-analysis
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#ctx-remind" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -4980,6 +5002,11 @@ to invoke the relevant skills directly.</p>
 <td>user-invocable</td>
 </tr>
 <tr>
+<td><a href="#ctx-architecture-failure-analysis"><code>/ctx-architecture-failure-analysis</code></a></td>
+<td>Adversarial failure analysis for correctness bugs</td>
+<td>user-invocable</td>
+</tr>
+<tr>
 <td><a href="#ctx-remind"><code>/ctx-remind</code></a></td>
 <td>Manage session-scoped reminders</td>
 <td>user-invocable</td>
@@ -5319,6 +5346,48 @@ rather than re-analyzing everything.</p>
 <code>ARCHITECTURE.md</code>, <code>DETAILED_DESIGN.md</code>, <code>map-tracking.json</code></p>
 <p><strong>See also</strong>:
 <a href="../../recipes/context-health/">Detecting and Fixing Drift</a></p>
+<hr />
+<h3 id="ctx-architecture-failure-analysis"><code>/ctx-architecture-failure-analysis</code><a class="headerlink" href="#ctx-architecture-failure-analysis" title="Permanent link">&para;</a></h3>
+<p>Adversarial failure analysis that generates falsifiable incident
+hypotheses against architecture artifacts. Hunts for correctness
+bugs that survive code review and tests: race conditions, ordering
+assumptions, cache staleness, error swallowing, ownership gaps,
+idempotency failures, state machine drift, and scaling cliffs.</p>
+<p>Requires <code>/ctx-architecture</code> artifacts as input. Reads
+<code>ARCHITECTURE.md</code>, <code>DETAILED_DESIGN*.md</code>, and <code>map-tracking.json</code>,
+then systematically applies 9 failure categories to every mutation
+point. Each finding carries an evidence standard (code path,
+trigger, failure path, silence reason, code evidence), a confidence
+level, and an explicit risk score. A mandatory challenge phase
+attempts to disprove each finding before it is accepted.</p>
+<p>Produces <code>.context/DANGER-ZONES.md</code> with ranked findings split
+into Critical (risk &gt;= 7, silent/cascading) and Elevated tiers.</p>
+<p><strong>Wraps</strong>: reads architecture artifacts, source code; writes
+<code>DANGER-ZONES.md</code>. Optionally uses GitNexus for blast radius
+and Gemini Search for cross-referencing known failure patterns.</p>
+<p><strong>Relationship</strong>:</p>
+<table>
+<thead>
+<tr>
+<th>Skill</th>
+<th>Mode</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>/ctx-architecture</code></td>
+<td>Map what exists</td>
+</tr>
+<tr>
+<td><code>/ctx-architecture-enrich</code></td>
+<td>Improve map fidelity</td>
+</tr>
+<tr>
+<td><code>/ctx-architecture-failure-analysis</code></td>
+<td>Generate falsifiable incident hypotheses</td>
+</tr>
+</tbody>
+</table>
 <hr />
 <h3 id="ctx-remind"><code>/ctx-remind</code><a class="headerlink" href="#ctx-remind" title="Permanent link">&para;</a></h3>
 <p>Manage session-scoped reminders via natural language. Translates user

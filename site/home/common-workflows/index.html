@@ -4077,8 +4077,9 @@ branch, and commit hash from its context — no manual flags needed.</p>
 </span><span id="__span-1-7"><a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="c1"># List pending reminders</span>
 </span><span id="__span-1-8"><a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>ctx<span class="w"> </span>remind<span class="w"> </span>list
 </span><span id="__span-1-9"><a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>
-</span><span id="__span-1-10"><a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a><span class="c1"># Dismiss a reminder by ID</span>
+</span><span id="__span-1-10"><a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a><span class="c1"># Dismiss reminders by ID (supports ranges)</span>
 </span><span id="__span-1-11"><a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>ctx<span class="w"> </span>remind<span class="w"> </span>dismiss<span class="w"> </span><span class="m">1</span>
+</span><span id="__span-1-12"><a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>ctx<span class="w"> </span>remind<span class="w"> </span>dismiss<span class="w"> </span><span class="m">3</span><span class="w"> </span><span class="m">5</span>-7
 </span></code></pre></div>
 <p>Reminders are relayed verbatim at session start by the <code>check-reminders</code> hook
 and repeat every session until you dismiss them.</p>

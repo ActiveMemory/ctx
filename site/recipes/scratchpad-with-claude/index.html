@@ -4188,7 +4188,12 @@ polluting your structured context files?</strong></p>
 <tr>
 <td><code>ctx pad rm</code></td>
 <td>CLI command</td>
-<td>Remove an entry</td>
+<td>Remove entries by stable ID (supports ranges)</td>
+</tr>
+<tr>
+<td><code>ctx pad normalize</code></td>
+<td>CLI command</td>
+<td>Reassign entry IDs as 1..N</td>
 </tr>
 <tr>
 <td><code>ctx pad mv</code></td>
@@ -4271,7 +4276,8 @@ jot down:</p>
 <div class="language-text highlight"><pre><span></span><code><span id="__span-7-1"><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>You: &quot;remove entry 2, it&#39;s done&quot;
 </span><span id="__span-7-2"><a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>
 </span><span id="__span-7-3"><a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>Agent: [runs ctx pad rm 2]
-</span><span id="__span-7-4"><a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a>       &quot;Removed entry 2. 3 entries remaining.&quot;
+</span><span id="__span-7-4"><a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a>       &quot;Removed entry 2. 3 entries remaining.
+</span><span id="__span-7-5"><a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a>        (IDs are stable — remaining entries keep their IDs.)&quot;
 </span></code></pre></div>
 <h3 id="step-7-store-a-file-as-a-blob">Step 7: Store a File as a Blob<a class="headerlink" href="#step-7-store-a-file-as-a-blob" title="Permanent link">&para;</a></h3>
 <p>The scratchpad can hold small files (<em>up to 64 KB</em>) as encrypted blob entries.
@@ -4336,8 +4342,9 @@ token in the text. Add them when creating or editing entries:</p>
 </span><span id="__span-13-4"><a id="__codelineno-13-4" name="__codelineno-13-4" href="#__codelineno-13-4"></a>       &quot;  1. check DNS propagation #later
 </span><span id="__span-13-5"><a id="__codelineno-13-5" name="__codelineno-13-5" href="#__codelineno-13-5"></a>        3. review PR feedback #later #ci&quot;
 </span></code></pre></div>
-<p>Entry numbers stay the same when filtering — <code>ctx pad rm 3</code> still
-targets entry 3 regardless of active filters.</p>
+<p>Entry IDs are stable — they don't shift when other entries are deleted,
+so <code>ctx pad rm 3</code> always targets the same entry regardless of deletions
+or active filters. Use <code>ctx pad normalize</code> to reassign IDs as 1..N.</p>
 <p>Exclude a tag with <code>~</code>:</p>
 <div class="language-bash highlight"><pre><span></span><code><span id="__span-14-1"><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a>ctx<span class="w"> </span>pad<span class="w"> </span>--tag<span class="w"> </span>~later<span class="w">         </span><span class="c1"># everything NOT tagged #later</span>
 </span><span id="__span-14-2"><a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a>ctx<span class="w"> </span>pad<span class="w"> </span>--tag<span class="w"> </span>later<span class="w"> </span>--tag<span class="w"> </span>ci<span class="w"> </span><span class="c1"># entries with BOTH tags (AND logic)</span>
@@ -4391,6 +4398,14 @@ language. Without the skill prefix, the agent may route your request to
 <tr>
 <td>"delete the third one" / "remove entry 3"</td>
 <td><code>ctx pad rm 3</code></td>
+</tr>
+<tr>
+<td>"remove entries 3 through 5"</td>
+<td><code>ctx pad rm 3-5</code></td>
+</tr>
+<tr>
+<td>"renumber my scratchpad"</td>
+<td><code>ctx pad normalize</code></td>
 </tr>
 <tr>
 <td>"change entry 2 to ..."</td>

@@ -2947,6 +2947,17 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#ctx-pad-normalize" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ctx pad normalize
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#ctx-pad-edit" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -3056,6 +3067,17 @@
     <span class="md-ellipsis">
       
         ctx remind dismiss
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#ctx-remind-normalize" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ctx remind normalize
       
     </span>
   </a>
@@ -4432,6 +4454,17 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#ctx-pad-normalize" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ctx pad normalize
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#ctx-pad-edit" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -4541,6 +4574,17 @@
     <span class="md-ellipsis">
       
         ctx remind dismiss
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#ctx-remind-normalize" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ctx remind normalize
       
     </span>
   </a>
@@ -5646,16 +5690,27 @@ decoded file content (or writes to disk with <code>--out</code>).</p>
 </span><span id="__span-33-2"><a id="__codelineno-33-2" name="__codelineno-33-2" href="#__codelineno-33-2"></a>ctx<span class="w"> </span>pad<span class="w"> </span>show<span class="w"> </span><span class="m">2</span><span class="w"> </span>--out<span class="w"> </span>./recovered.yaml
 </span></code></pre></div>
 <h4 id="ctx-pad-rm"><code>ctx pad rm</code><a class="headerlink" href="#ctx-pad-rm" title="Permanent link">&para;</a></h4>
-<p>Remove an entry by number.</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-34-1"><a id="__codelineno-34-1" name="__codelineno-34-1" href="#__codelineno-34-1"></a>ctx<span class="w"> </span>pad<span class="w"> </span>rm<span class="w"> </span>&lt;n&gt;
+<p>Remove one or more entries by stable ID. Supports individual IDs and
+ranges.</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-34-1"><a id="__codelineno-34-1" name="__codelineno-34-1" href="#__codelineno-34-1"></a>ctx<span class="w"> </span>pad<span class="w"> </span>rm<span class="w"> </span>&lt;id&gt;<span class="w"> </span><span class="o">[</span>id...<span class="o">]</span>
 </span></code></pre></div>
 <p><strong>Arguments</strong>:</p>
 <ul>
-<li><code>n</code>: 1-based entry number</li>
+<li><code>id</code>: One or more entry IDs (e.g., <code>3</code>, <code>1 4</code>, <code>3-5</code>)</li>
 </ul>
+<p><strong>Examples</strong>:</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-35-1"><a id="__codelineno-35-1" name="__codelineno-35-1" href="#__codelineno-35-1"></a>ctx<span class="w"> </span>pad<span class="w"> </span>rm<span class="w"> </span><span class="m">2</span>
+</span><span id="__span-35-2"><a id="__codelineno-35-2" name="__codelineno-35-2" href="#__codelineno-35-2"></a>ctx<span class="w"> </span>pad<span class="w"> </span>rm<span class="w"> </span><span class="m">1</span><span class="w"> </span><span class="m">4</span>
+</span><span id="__span-35-3"><a id="__codelineno-35-3" name="__codelineno-35-3" href="#__codelineno-35-3"></a>ctx<span class="w"> </span>pad<span class="w"> </span>rm<span class="w"> </span><span class="m">3</span>-5
+</span></code></pre></div>
+<h4 id="ctx-pad-normalize"><code>ctx pad normalize</code><a class="headerlink" href="#ctx-pad-normalize" title="Permanent link">&para;</a></h4>
+<p>Reassign entry IDs as a contiguous sequence 1..N, closing any gaps
+left by deletions.</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-36-1"><a id="__codelineno-36-1" name="__codelineno-36-1" href="#__codelineno-36-1"></a>ctx<span class="w"> </span>pad<span class="w"> </span>normalize
+</span></code></pre></div>
 <h4 id="ctx-pad-edit"><code>ctx pad edit</code><a class="headerlink" href="#ctx-pad-edit" title="Permanent link">&para;</a></h4>
 <p>Replace, append to, or prepend to an entry.</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-35-1"><a id="__codelineno-35-1" name="__codelineno-35-1" href="#__codelineno-35-1"></a>ctx<span class="w"> </span>pad<span class="w"> </span>edit<span class="w"> </span>&lt;n&gt;<span class="w"> </span><span class="o">[</span>text<span class="o">]</span>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-37-1"><a id="__codelineno-37-1" name="__codelineno-37-1" href="#__codelineno-37-1"></a>ctx<span class="w"> </span>pad<span class="w"> </span>edit<span class="w"> </span>&lt;n&gt;<span class="w"> </span><span class="o">[</span>text<span class="o">]</span>
 </span></code></pre></div>
 <p><strong>Arguments</strong>:</p>
 <ul>
@@ -5690,15 +5745,15 @@ decoded file content (or writes to disk with <code>--out</code>).</p>
 </tbody>
 </table>
 <p><strong>Examples</strong>:</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-36-1"><a id="__codelineno-36-1" name="__codelineno-36-1" href="#__codelineno-36-1"></a>ctx<span class="w"> </span>pad<span class="w"> </span>edit<span class="w"> </span><span class="m">2</span><span class="w"> </span><span class="s2">&quot;new text&quot;</span>
-</span><span id="__span-36-2"><a id="__codelineno-36-2" name="__codelineno-36-2" href="#__codelineno-36-2"></a>ctx<span class="w"> </span>pad<span class="w"> </span>edit<span class="w"> </span><span class="m">2</span><span class="w"> </span>--append<span class="w"> </span><span class="s2">&quot; suffix&quot;</span>
-</span><span id="__span-36-3"><a id="__codelineno-36-3" name="__codelineno-36-3" href="#__codelineno-36-3"></a>ctx<span class="w"> </span>pad<span class="w"> </span>edit<span class="w"> </span><span class="m">2</span><span class="w"> </span>--prepend<span class="w"> </span><span class="s2">&quot;prefix &quot;</span>
-</span><span id="__span-36-4"><a id="__codelineno-36-4" name="__codelineno-36-4" href="#__codelineno-36-4"></a>ctx<span class="w"> </span>pad<span class="w"> </span>edit<span class="w"> </span><span class="m">1</span><span class="w"> </span>--file<span class="w"> </span>./v2.yaml
-</span><span id="__span-36-5"><a id="__codelineno-36-5" name="__codelineno-36-5" href="#__codelineno-36-5"></a>ctx<span class="w"> </span>pad<span class="w"> </span>edit<span class="w"> </span><span class="m">1</span><span class="w"> </span>--label<span class="w"> </span><span class="s2">&quot;new name&quot;</span>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-38-1"><a id="__codelineno-38-1" name="__codelineno-38-1" href="#__codelineno-38-1"></a>ctx<span class="w"> </span>pad<span class="w"> </span>edit<span class="w"> </span><span class="m">2</span><span class="w"> </span><span class="s2">&quot;new text&quot;</span>
+</span><span id="__span-38-2"><a id="__codelineno-38-2" name="__codelineno-38-2" href="#__codelineno-38-2"></a>ctx<span class="w"> </span>pad<span class="w"> </span>edit<span class="w"> </span><span class="m">2</span><span class="w"> </span>--append<span class="w"> </span><span class="s2">&quot; suffix&quot;</span>
+</span><span id="__span-38-3"><a id="__codelineno-38-3" name="__codelineno-38-3" href="#__codelineno-38-3"></a>ctx<span class="w"> </span>pad<span class="w"> </span>edit<span class="w"> </span><span class="m">2</span><span class="w"> </span>--prepend<span class="w"> </span><span class="s2">&quot;prefix &quot;</span>
+</span><span id="__span-38-4"><a id="__codelineno-38-4" name="__codelineno-38-4" href="#__codelineno-38-4"></a>ctx<span class="w"> </span>pad<span class="w"> </span>edit<span class="w"> </span><span class="m">1</span><span class="w"> </span>--file<span class="w"> </span>./v2.yaml
+</span><span id="__span-38-5"><a id="__codelineno-38-5" name="__codelineno-38-5" href="#__codelineno-38-5"></a>ctx<span class="w"> </span>pad<span class="w"> </span>edit<span class="w"> </span><span class="m">1</span><span class="w"> </span>--label<span class="w"> </span><span class="s2">&quot;new name&quot;</span>
 </span></code></pre></div>
 <h4 id="ctx-pad-mv"><code>ctx pad mv</code><a class="headerlink" href="#ctx-pad-mv" title="Permanent link">&para;</a></h4>
 <p>Move an entry from one position to another.</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-37-1"><a id="__codelineno-37-1" name="__codelineno-37-1" href="#__codelineno-37-1"></a>ctx<span class="w"> </span>pad<span class="w"> </span>mv<span class="w"> </span>&lt;from&gt;<span class="w"> </span>&lt;to&gt;
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-39-1"><a id="__codelineno-39-1" name="__codelineno-39-1" href="#__codelineno-39-1"></a>ctx<span class="w"> </span>pad<span class="w"> </span>mv<span class="w"> </span>&lt;from&gt;<span class="w"> </span>&lt;to&gt;
 </span></code></pre></div>
 <p><strong>Arguments</strong>:</p>
 <ul>
@@ -5707,7 +5762,7 @@ decoded file content (or writes to disk with <code>--out</code>).</p>
 </ul>
 <h4 id="ctx-pad-resolve"><code>ctx pad resolve</code><a class="headerlink" href="#ctx-pad-resolve" title="Permanent link">&para;</a></h4>
 <p>Show both sides of a merge conflict in the encrypted scratchpad.</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-38-1"><a id="__codelineno-38-1" name="__codelineno-38-1" href="#__codelineno-38-1"></a>ctx<span class="w"> </span>pad<span class="w"> </span>resolve
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-40-1"><a id="__codelineno-40-1" name="__codelineno-40-1" href="#__codelineno-40-1"></a>ctx<span class="w"> </span>pad<span class="w"> </span>resolve
 </span></code></pre></div>
 <h4 id="ctx-pad-import"><code>ctx pad import</code><a class="headerlink" href="#ctx-pad-import" title="Permanent link">&para;</a></h4>
 <p>Bulk-import lines from a file into the scratchpad. Each non-empty line
@@ -5716,9 +5771,9 @@ cycle.</p>
 <p>With <code>--blob</code>, import all first-level files from a directory as blob
 entries. Each file becomes a blob with the filename as its label.
 Subdirectories and non-regular files are skipped.</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-39-1"><a id="__codelineno-39-1" name="__codelineno-39-1" href="#__codelineno-39-1"></a>ctx<span class="w"> </span>pad<span class="w"> </span>import<span class="w"> </span>&lt;file&gt;
-</span><span id="__span-39-2"><a id="__codelineno-39-2" name="__codelineno-39-2" href="#__codelineno-39-2"></a>ctx<span class="w"> </span>pad<span class="w"> </span>import<span class="w"> </span>-<span class="w">              </span><span class="c1"># read from stdin</span>
-</span><span id="__span-39-3"><a id="__codelineno-39-3" name="__codelineno-39-3" href="#__codelineno-39-3"></a>ctx<span class="w"> </span>pad<span class="w"> </span>import<span class="w"> </span>--blob<span class="w"> </span>&lt;dir&gt;<span class="w">  </span><span class="c1"># import directory files as blobs</span>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-41-1"><a id="__codelineno-41-1" name="__codelineno-41-1" href="#__codelineno-41-1"></a>ctx<span class="w"> </span>pad<span class="w"> </span>import<span class="w"> </span>&lt;file&gt;
+</span><span id="__span-41-2"><a id="__codelineno-41-2" name="__codelineno-41-2" href="#__codelineno-41-2"></a>ctx<span class="w"> </span>pad<span class="w"> </span>import<span class="w"> </span>-<span class="w">              </span><span class="c1"># read from stdin</span>
+</span><span id="__span-41-3"><a id="__codelineno-41-3" name="__codelineno-41-3" href="#__codelineno-41-3"></a>ctx<span class="w"> </span>pad<span class="w"> </span>import<span class="w"> </span>--blob<span class="w"> </span>&lt;dir&gt;<span class="w">  </span><span class="c1"># import directory files as blobs</span>
 </span></code></pre></div>
 <p><strong>Arguments</strong>:</p>
 <ul>
@@ -5740,14 +5795,14 @@ Subdirectories and non-regular files are skipped.</p>
 </tbody>
 </table>
 <p><strong>Examples</strong>:</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-40-1"><a id="__codelineno-40-1" name="__codelineno-40-1" href="#__codelineno-40-1"></a>ctx<span class="w"> </span>pad<span class="w"> </span>import<span class="w"> </span>notes.txt
-</span><span id="__span-40-2"><a id="__codelineno-40-2" name="__codelineno-40-2" href="#__codelineno-40-2"></a>grep<span class="w"> </span>TODO<span class="w"> </span>*.go<span class="w"> </span><span class="p">|</span><span class="w"> </span>ctx<span class="w"> </span>pad<span class="w"> </span>import<span class="w"> </span>-
-</span><span id="__span-40-3"><a id="__codelineno-40-3" name="__codelineno-40-3" href="#__codelineno-40-3"></a>ctx<span class="w"> </span>pad<span class="w"> </span>import<span class="w"> </span>--blob<span class="w"> </span>./ideas/
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-42-1"><a id="__codelineno-42-1" name="__codelineno-42-1" href="#__codelineno-42-1"></a>ctx<span class="w"> </span>pad<span class="w"> </span>import<span class="w"> </span>notes.txt
+</span><span id="__span-42-2"><a id="__codelineno-42-2" name="__codelineno-42-2" href="#__codelineno-42-2"></a>grep<span class="w"> </span>TODO<span class="w"> </span>*.go<span class="w"> </span><span class="p">|</span><span class="w"> </span>ctx<span class="w"> </span>pad<span class="w"> </span>import<span class="w"> </span>-
+</span><span id="__span-42-3"><a id="__codelineno-42-3" name="__codelineno-42-3" href="#__codelineno-42-3"></a>ctx<span class="w"> </span>pad<span class="w"> </span>import<span class="w"> </span>--blob<span class="w"> </span>./ideas/
 </span></code></pre></div>
 <h4 id="ctx-pad-export"><code>ctx pad export</code><a class="headerlink" href="#ctx-pad-export" title="Permanent link">&para;</a></h4>
 <p>Export all blob entries from the scratchpad to a directory as files.
 Each blob's label becomes the filename. Non-blob entries are skipped.</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-41-1"><a id="__codelineno-41-1" name="__codelineno-41-1" href="#__codelineno-41-1"></a>ctx<span class="w"> </span>pad<span class="w"> </span><span class="nb">export</span><span class="w"> </span><span class="o">[</span>dir<span class="o">]</span>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-43-1"><a id="__codelineno-43-1" name="__codelineno-43-1" href="#__codelineno-43-1"></a>ctx<span class="w"> </span>pad<span class="w"> </span><span class="nb">export</span><span class="w"> </span><span class="o">[</span>dir<span class="o">]</span>
 </span></code></pre></div>
 <p><strong>Arguments</strong>:</p>
 <ul>
@@ -5778,15 +5833,15 @@ Each blob's label becomes the filename. Non-blob entries are skipped.</p>
 <p>When a file already exists, a unix timestamp is prepended to avoid
 collisions (e.g., <code>1739836200-label</code>). Use <code>--force</code> to overwrite instead.</p>
 <p><strong>Examples</strong>:</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-42-1"><a id="__codelineno-42-1" name="__codelineno-42-1" href="#__codelineno-42-1"></a>ctx<span class="w"> </span>pad<span class="w"> </span><span class="nb">export</span><span class="w"> </span>./ideas
-</span><span id="__span-42-2"><a id="__codelineno-42-2" name="__codelineno-42-2" href="#__codelineno-42-2"></a>ctx<span class="w"> </span>pad<span class="w"> </span><span class="nb">export</span><span class="w"> </span>--dry-run
-</span><span id="__span-42-3"><a id="__codelineno-42-3" name="__codelineno-42-3" href="#__codelineno-42-3"></a>ctx<span class="w"> </span>pad<span class="w"> </span><span class="nb">export</span><span class="w"> </span>--force<span class="w"> </span>./backup
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-44-1"><a id="__codelineno-44-1" name="__codelineno-44-1" href="#__codelineno-44-1"></a>ctx<span class="w"> </span>pad<span class="w"> </span><span class="nb">export</span><span class="w"> </span>./ideas
+</span><span id="__span-44-2"><a id="__codelineno-44-2" name="__codelineno-44-2" href="#__codelineno-44-2"></a>ctx<span class="w"> </span>pad<span class="w"> </span><span class="nb">export</span><span class="w"> </span>--dry-run
+</span><span id="__span-44-3"><a id="__codelineno-44-3" name="__codelineno-44-3" href="#__codelineno-44-3"></a>ctx<span class="w"> </span>pad<span class="w"> </span><span class="nb">export</span><span class="w"> </span>--force<span class="w"> </span>./backup
 </span></code></pre></div>
 <h4 id="ctx-pad-merge"><code>ctx pad merge</code><a class="headerlink" href="#ctx-pad-merge" title="Permanent link">&para;</a></h4>
 <p>Merge entries from one or more scratchpad files into the current pad.
 Each input file is auto-detected as encrypted or plaintext. Entries are
 deduplicated by exact content.</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-43-1"><a id="__codelineno-43-1" name="__codelineno-43-1" href="#__codelineno-43-1"></a>ctx<span class="w"> </span>pad<span class="w"> </span>merge<span class="w"> </span>FILE...
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-45-1"><a id="__codelineno-45-1" name="__codelineno-45-1" href="#__codelineno-45-1"></a>ctx<span class="w"> </span>pad<span class="w"> </span>merge<span class="w"> </span>FILE...
 </span></code></pre></div>
 <p><strong>Arguments</strong>:</p>
 <ul>
@@ -5815,24 +5870,24 @@ deduplicated by exact content.</p>
 </tbody>
 </table>
 <p><strong>Examples</strong>:</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-44-1"><a id="__codelineno-44-1" name="__codelineno-44-1" href="#__codelineno-44-1"></a>ctx<span class="w"> </span>pad<span class="w"> </span>merge<span class="w"> </span>worktree/.context/scratchpad.enc
-</span><span id="__span-44-2"><a id="__codelineno-44-2" name="__codelineno-44-2" href="#__codelineno-44-2"></a>ctx<span class="w"> </span>pad<span class="w"> </span>merge<span class="w"> </span>notes.md<span class="w"> </span>backup.enc
-</span><span id="__span-44-3"><a id="__codelineno-44-3" name="__codelineno-44-3" href="#__codelineno-44-3"></a>ctx<span class="w"> </span>pad<span class="w"> </span>merge<span class="w"> </span>--key<span class="w"> </span>/path/to/other.key<span class="w"> </span>foreign.enc
-</span><span id="__span-44-4"><a id="__codelineno-44-4" name="__codelineno-44-4" href="#__codelineno-44-4"></a>ctx<span class="w"> </span>pad<span class="w"> </span>merge<span class="w"> </span>--dry-run<span class="w"> </span>pad-a.enc<span class="w"> </span>pad-b.md
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-46-1"><a id="__codelineno-46-1" name="__codelineno-46-1" href="#__codelineno-46-1"></a>ctx<span class="w"> </span>pad<span class="w"> </span>merge<span class="w"> </span>worktree/.context/scratchpad.enc
+</span><span id="__span-46-2"><a id="__codelineno-46-2" name="__codelineno-46-2" href="#__codelineno-46-2"></a>ctx<span class="w"> </span>pad<span class="w"> </span>merge<span class="w"> </span>notes.md<span class="w"> </span>backup.enc
+</span><span id="__span-46-3"><a id="__codelineno-46-3" name="__codelineno-46-3" href="#__codelineno-46-3"></a>ctx<span class="w"> </span>pad<span class="w"> </span>merge<span class="w"> </span>--key<span class="w"> </span>/path/to/other.key<span class="w"> </span>foreign.enc
+</span><span id="__span-46-4"><a id="__codelineno-46-4" name="__codelineno-46-4" href="#__codelineno-46-4"></a>ctx<span class="w"> </span>pad<span class="w"> </span>merge<span class="w"> </span>--dry-run<span class="w"> </span>pad-a.enc<span class="w"> </span>pad-b.md
 </span></code></pre></div>
 <hr />
 <h3 id="ctx-remind"><code>ctx remind</code><a class="headerlink" href="#ctx-remind" title="Permanent link">&para;</a></h3>
 <p>Session-scoped reminders that surface at session start. Reminders are
 stored verbatim and relayed verbatim: no summarization, no categories.</p>
 <p>When invoked with a text argument and no subcommand, adds a reminder.</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-45-1"><a id="__codelineno-45-1" name="__codelineno-45-1" href="#__codelineno-45-1"></a>ctx<span class="w"> </span>remind<span class="w"> </span><span class="s2">&quot;text&quot;</span>
-</span><span id="__span-45-2"><a id="__codelineno-45-2" name="__codelineno-45-2" href="#__codelineno-45-2"></a>ctx<span class="w"> </span>remind<span class="w"> </span>&lt;subcommand&gt;
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-47-1"><a id="__codelineno-47-1" name="__codelineno-47-1" href="#__codelineno-47-1"></a>ctx<span class="w"> </span>remind<span class="w"> </span><span class="s2">&quot;text&quot;</span>
+</span><span id="__span-47-2"><a id="__codelineno-47-2" name="__codelineno-47-2" href="#__codelineno-47-2"></a>ctx<span class="w"> </span>remind<span class="w"> </span>&lt;subcommand&gt;
 </span></code></pre></div>
 <h4 id="ctx-remind-add"><code>ctx remind add</code><a class="headerlink" href="#ctx-remind-add" title="Permanent link">&para;</a></h4>
 <p>Add a reminder. This is the default action: <code>ctx remind "text"</code> and
 <code>ctx remind add "text"</code> are equivalent.</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-46-1"><a id="__codelineno-46-1" name="__codelineno-46-1" href="#__codelineno-46-1"></a>ctx<span class="w"> </span>remind<span class="w"> </span><span class="s2">&quot;refactor the swagger definitions&quot;</span>
-</span><span id="__span-46-2"><a id="__codelineno-46-2" name="__codelineno-46-2" href="#__codelineno-46-2"></a>ctx<span class="w"> </span>remind<span class="w"> </span>add<span class="w"> </span><span class="s2">&quot;check CI after the deploy&quot;</span><span class="w"> </span>--after<span class="w"> </span><span class="m">2026</span>-02-25
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-48-1"><a id="__codelineno-48-1" name="__codelineno-48-1" href="#__codelineno-48-1"></a>ctx<span class="w"> </span>remind<span class="w"> </span><span class="s2">&quot;refactor the swagger definitions&quot;</span>
+</span><span id="__span-48-2"><a id="__codelineno-48-2" name="__codelineno-48-2" href="#__codelineno-48-2"></a>ctx<span class="w"> </span>remind<span class="w"> </span>add<span class="w"> </span><span class="s2">&quot;check CI after the deploy&quot;</span><span class="w"> </span>--after<span class="w"> </span><span class="m">2026</span>-02-25
 </span></code></pre></div>
 <p><strong>Arguments</strong>:</p>
 <ul>
@@ -5856,23 +5911,24 @@ stored verbatim and relayed verbatim: no summarization, no categories.</p>
 </tbody>
 </table>
 <p><strong>Examples</strong>:</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-47-1"><a id="__codelineno-47-1" name="__codelineno-47-1" href="#__codelineno-47-1"></a>ctx<span class="w"> </span>remind<span class="w"> </span><span class="s2">&quot;refactor the swagger definitions&quot;</span>
-</span><span id="__span-47-2"><a id="__codelineno-47-2" name="__codelineno-47-2" href="#__codelineno-47-2"></a>ctx<span class="w"> </span>remind<span class="w"> </span><span class="s2">&quot;check CI after the deploy&quot;</span><span class="w"> </span>--after<span class="w"> </span><span class="m">2026</span>-02-25
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-49-1"><a id="__codelineno-49-1" name="__codelineno-49-1" href="#__codelineno-49-1"></a>ctx<span class="w"> </span>remind<span class="w"> </span><span class="s2">&quot;refactor the swagger definitions&quot;</span>
+</span><span id="__span-49-2"><a id="__codelineno-49-2" name="__codelineno-49-2" href="#__codelineno-49-2"></a>ctx<span class="w"> </span>remind<span class="w"> </span><span class="s2">&quot;check CI after the deploy&quot;</span><span class="w"> </span>--after<span class="w"> </span><span class="m">2026</span>-02-25
 </span></code></pre></div>
 <h4 id="ctx-remind-list"><code>ctx remind list</code><a class="headerlink" href="#ctx-remind-list" title="Permanent link">&para;</a></h4>
 <p>List all pending reminders. Date-gated reminders that aren't yet due
 are annotated with <code>(after DATE, not yet due)</code>.</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-48-1"><a id="__codelineno-48-1" name="__codelineno-48-1" href="#__codelineno-48-1"></a>ctx<span class="w"> </span>remind<span class="w"> </span>list
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-50-1"><a id="__codelineno-50-1" name="__codelineno-50-1" href="#__codelineno-50-1"></a>ctx<span class="w"> </span>remind<span class="w"> </span>list
 </span></code></pre></div>
 <p><strong>Aliases</strong>: <code>ls</code></p>
 <h4 id="ctx-remind-dismiss"><code>ctx remind dismiss</code><a class="headerlink" href="#ctx-remind-dismiss" title="Permanent link">&para;</a></h4>
-<p>Remove a reminder by ID, or remove all reminders with <code>--all</code>.</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-49-1"><a id="__codelineno-49-1" name="__codelineno-49-1" href="#__codelineno-49-1"></a>ctx<span class="w"> </span>remind<span class="w"> </span>dismiss<span class="w"> </span>&lt;id&gt;
-</span><span id="__span-49-2"><a id="__codelineno-49-2" name="__codelineno-49-2" href="#__codelineno-49-2"></a>ctx<span class="w"> </span>remind<span class="w"> </span>dismiss<span class="w"> </span>--all
+<p>Remove one or more reminders by ID, or remove all with <code>--all</code>.
+Supports individual IDs and ranges.</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-51-1"><a id="__codelineno-51-1" name="__codelineno-51-1" href="#__codelineno-51-1"></a>ctx<span class="w"> </span>remind<span class="w"> </span>dismiss<span class="w"> </span>&lt;id&gt;<span class="w"> </span><span class="o">[</span>id...<span class="o">]</span>
+</span><span id="__span-51-2"><a id="__codelineno-51-2" name="__codelineno-51-2" href="#__codelineno-51-2"></a>ctx<span class="w"> </span>remind<span class="w"> </span>dismiss<span class="w"> </span>--all
 </span></code></pre></div>
 <p><strong>Arguments</strong>:</p>
 <ul>
-<li><code>id</code>: Reminder ID (shown in <code>list</code> output)</li>
+<li><code>id</code>: One or more reminder IDs (e.g., <code>3</code>, <code>3 5-7</code>)</li>
 </ul>
 <p><strong>Flags</strong>:</p>
 <table>
@@ -5891,14 +5947,20 @@ are annotated with <code>(after DATE, not yet due)</code>.</p>
 </table>
 <p><strong>Aliases</strong>: <code>rm</code></p>
 <p><strong>Examples</strong>:</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-50-1"><a id="__codelineno-50-1" name="__codelineno-50-1" href="#__codelineno-50-1"></a>ctx<span class="w"> </span>remind<span class="w"> </span>dismiss<span class="w"> </span><span class="m">3</span>
-</span><span id="__span-50-2"><a id="__codelineno-50-2" name="__codelineno-50-2" href="#__codelineno-50-2"></a>ctx<span class="w"> </span>remind<span class="w"> </span>dismiss<span class="w"> </span>--all
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-52-1"><a id="__codelineno-52-1" name="__codelineno-52-1" href="#__codelineno-52-1"></a>ctx<span class="w"> </span>remind<span class="w"> </span>dismiss<span class="w"> </span><span class="m">3</span>
+</span><span id="__span-52-2"><a id="__codelineno-52-2" name="__codelineno-52-2" href="#__codelineno-52-2"></a>ctx<span class="w"> </span>remind<span class="w"> </span>dismiss<span class="w"> </span><span class="m">3</span><span class="w"> </span><span class="m">5</span>-7
+</span><span id="__span-52-3"><a id="__codelineno-52-3" name="__codelineno-52-3" href="#__codelineno-52-3"></a>ctx<span class="w"> </span>remind<span class="w"> </span>dismiss<span class="w"> </span>--all
+</span></code></pre></div>
+<h4 id="ctx-remind-normalize"><code>ctx remind normalize</code><a class="headerlink" href="#ctx-remind-normalize" title="Permanent link">&para;</a></h4>
+<p>Reassign reminder IDs as a contiguous sequence 1..N, closing any gaps
+left by dismissals.</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-53-1"><a id="__codelineno-53-1" name="__codelineno-53-1" href="#__codelineno-53-1"></a>ctx<span class="w"> </span>remind<span class="w"> </span>normalize
 </span></code></pre></div>
 <hr />
 <h3 id="ctx-pause"><code>ctx pause</code><a class="headerlink" href="#ctx-pause" title="Permanent link">&para;</a></h3>
 <p>Pause all context nudge and reminder hooks for the current session.
 Security hooks (dangerous command blocking) and housekeeping hooks still fire.</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-51-1"><a id="__codelineno-51-1" name="__codelineno-51-1" href="#__codelineno-51-1"></a>ctx<span class="w"> </span>pause<span class="w"> </span><span class="o">[</span>flags<span class="o">]</span>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-54-1"><a id="__codelineno-54-1" name="__codelineno-54-1" href="#__codelineno-54-1"></a>ctx<span class="w"> </span>pause<span class="w"> </span><span class="o">[</span>flags<span class="o">]</span>
 </span></code></pre></div>
 <p><strong>Flags</strong>:</p>
 <table>
@@ -5916,17 +5978,17 @@ Security hooks (dangerous command blocking) and housekeeping hooks still fire.</
 </tbody>
 </table>
 <p><strong>Example</strong>:</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-52-1"><a id="__codelineno-52-1" name="__codelineno-52-1" href="#__codelineno-52-1"></a><span class="c1"># Pause hooks for a quick investigation</span>
-</span><span id="__span-52-2"><a id="__codelineno-52-2" name="__codelineno-52-2" href="#__codelineno-52-2"></a>ctx<span class="w"> </span>pause
-</span><span id="__span-52-3"><a id="__codelineno-52-3" name="__codelineno-52-3" href="#__codelineno-52-3"></a>
-</span><span id="__span-52-4"><a id="__codelineno-52-4" name="__codelineno-52-4" href="#__codelineno-52-4"></a><span class="c1"># Resume when ready</span>
-</span><span id="__span-52-5"><a id="__codelineno-52-5" name="__codelineno-52-5" href="#__codelineno-52-5"></a>ctx<span class="w"> </span>resume
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-55-1"><a id="__codelineno-55-1" name="__codelineno-55-1" href="#__codelineno-55-1"></a><span class="c1"># Pause hooks for a quick investigation</span>
+</span><span id="__span-55-2"><a id="__codelineno-55-2" name="__codelineno-55-2" href="#__codelineno-55-2"></a>ctx<span class="w"> </span>pause
+</span><span id="__span-55-3"><a id="__codelineno-55-3" name="__codelineno-55-3" href="#__codelineno-55-3"></a>
+</span><span id="__span-55-4"><a id="__codelineno-55-4" name="__codelineno-55-4" href="#__codelineno-55-4"></a><span class="c1"># Resume when ready</span>
+</span><span id="__span-55-5"><a id="__codelineno-55-5" name="__codelineno-55-5" href="#__codelineno-55-5"></a>ctx<span class="w"> </span>resume
 </span></code></pre></div>
 <p><strong>See also</strong>: <a href="../../recipes/session-pause/">Pausing Context Hooks</a></p>
 <hr />
 <h3 id="ctx-resume"><code>ctx resume</code><a class="headerlink" href="#ctx-resume" title="Permanent link">&para;</a></h3>
 <p>Resume context hooks after a pause. Silent no-op if not paused.</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-53-1"><a id="__codelineno-53-1" name="__codelineno-53-1" href="#__codelineno-53-1"></a>ctx<span class="w"> </span>resume<span class="w"> </span><span class="o">[</span>flags<span class="o">]</span>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-56-1"><a id="__codelineno-56-1" name="__codelineno-56-1" href="#__codelineno-56-1"></a>ctx<span class="w"> </span>resume<span class="w"> </span><span class="o">[</span>flags<span class="o">]</span>
 </span></code></pre></div>
 <p><strong>Flags</strong>:</p>
 <table>
@@ -5944,13 +6006,13 @@ Security hooks (dangerous command blocking) and housekeeping hooks still fire.</
 </tbody>
 </table>
 <p><strong>Example</strong>:</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-54-1"><a id="__codelineno-54-1" name="__codelineno-54-1" href="#__codelineno-54-1"></a>ctx<span class="w"> </span>resume
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-57-1"><a id="__codelineno-57-1" name="__codelineno-57-1" href="#__codelineno-57-1"></a>ctx<span class="w"> </span>resume
 </span></code></pre></div>
 <p><strong>See also</strong>: <a href="../../recipes/session-pause/">Pausing Context Hooks</a></p>
 <hr />
 <h3 id="ctx-completion"><code>ctx completion</code><a class="headerlink" href="#ctx-completion" title="Permanent link">&para;</a></h3>
 <p>Generate shell autocompletion scripts.</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-55-1"><a id="__codelineno-55-1" name="__codelineno-55-1" href="#__codelineno-55-1"></a>ctx<span class="w"> </span>completion<span class="w"> </span>&lt;shell&gt;
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-58-1"><a id="__codelineno-58-1" name="__codelineno-58-1" href="#__codelineno-58-1"></a>ctx<span class="w"> </span>completion<span class="w"> </span>&lt;shell&gt;
 </span></code></pre></div>
 <h4 id="subcommands">Subcommands<a class="headerlink" href="#subcommands" title="Permanent link">&para;</a></h4>
 <table>
@@ -5983,19 +6045,19 @@ Security hooks (dangerous command blocking) and housekeeping hooks still fire.</
 <div class="tabbed-set tabbed-alternate" data-tabs="1:3"><input checked="checked" id="__tabbed_1_1" name="__tabbed_1" type="radio" /><input id="__tabbed_1_2" name="__tabbed_1" type="radio" /><input id="__tabbed_1_3" name="__tabbed_1" type="radio" /><div class="tabbed-labels"><label for="__tabbed_1_1">Bash</label><label for="__tabbed_1_2">Zsh</label><label for="__tabbed_1_3">Fish</label></div>
 <div class="tabbed-content">
 <div class="tabbed-block">
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-56-1"><a id="__codelineno-56-1" name="__codelineno-56-1" href="#__codelineno-56-1"></a><span class="c1"># Add to ~/.bashrc</span>
-</span><span id="__span-56-2"><a id="__codelineno-56-2" name="__codelineno-56-2" href="#__codelineno-56-2"></a><span class="nb">source</span><span class="w"> </span>&lt;<span class="o">(</span>ctx<span class="w"> </span>completion<span class="w"> </span>bash<span class="o">)</span>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-59-1"><a id="__codelineno-59-1" name="__codelineno-59-1" href="#__codelineno-59-1"></a><span class="c1"># Add to ~/.bashrc</span>
+</span><span id="__span-59-2"><a id="__codelineno-59-2" name="__codelineno-59-2" href="#__codelineno-59-2"></a><span class="nb">source</span><span class="w"> </span>&lt;<span class="o">(</span>ctx<span class="w"> </span>completion<span class="w"> </span>bash<span class="o">)</span>
 </span></code></pre></div>
 </div>
 <div class="tabbed-block">
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-57-1"><a id="__codelineno-57-1" name="__codelineno-57-1" href="#__codelineno-57-1"></a><span class="c1"># Add to ~/.zshrc</span>
-</span><span id="__span-57-2"><a id="__codelineno-57-2" name="__codelineno-57-2" href="#__codelineno-57-2"></a><span class="nb">source</span><span class="w"> </span>&lt;<span class="o">(</span>ctx<span class="w"> </span>completion<span class="w"> </span>zsh<span class="o">)</span>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-60-1"><a id="__codelineno-60-1" name="__codelineno-60-1" href="#__codelineno-60-1"></a><span class="c1"># Add to ~/.zshrc</span>
+</span><span id="__span-60-2"><a id="__codelineno-60-2" name="__codelineno-60-2" href="#__codelineno-60-2"></a><span class="nb">source</span><span class="w"> </span>&lt;<span class="o">(</span>ctx<span class="w"> </span>completion<span class="w"> </span>zsh<span class="o">)</span>
 </span></code></pre></div>
 </div>
 <div class="tabbed-block">
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-58-1"><a id="__codelineno-58-1" name="__codelineno-58-1" href="#__codelineno-58-1"></a>ctx<span class="w"> </span>completion<span class="w"> </span>fish<span class="w"> </span><span class="p">|</span><span class="w"> </span><span class="nb">source</span>
-</span><span id="__span-58-2"><a id="__codelineno-58-2" name="__codelineno-58-2" href="#__codelineno-58-2"></a><span class="c1"># Or save to completions directory</span>
-</span><span id="__span-58-3"><a id="__codelineno-58-3" name="__codelineno-58-3" href="#__codelineno-58-3"></a>ctx<span class="w"> </span>completion<span class="w"> </span>fish<span class="w"> </span>&gt;<span class="w"> </span>~/.config/fish/completions/ctx.fish
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-61-1"><a id="__codelineno-61-1" name="__codelineno-61-1" href="#__codelineno-61-1"></a>ctx<span class="w"> </span>completion<span class="w"> </span>fish<span class="w"> </span><span class="p">|</span><span class="w"> </span><span class="nb">source</span>
+</span><span id="__span-61-2"><a id="__codelineno-61-2" name="__codelineno-61-2" href="#__codelineno-61-2"></a><span class="c1"># Or save to completions directory</span>
+</span><span id="__span-61-3"><a id="__codelineno-61-3" name="__codelineno-61-3" href="#__codelineno-61-3"></a>ctx<span class="w"> </span>completion<span class="w"> </span>fish<span class="w"> </span>&gt;<span class="w"> </span>~/.config/fish/completions/ctx.fish
 </span></code></pre></div>
 </div>
 </div>
@@ -6003,11 +6065,11 @@ Security hooks (dangerous command blocking) and housekeeping hooks still fire.</
 <hr />
 <h3 id="ctx-site"><code>ctx site</code><a class="headerlink" href="#ctx-site" title="Permanent link">&para;</a></h3>
 <p>Site management commands for the ctx.ist static site.</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-59-1"><a id="__codelineno-59-1" name="__codelineno-59-1" href="#__codelineno-59-1"></a>ctx<span class="w"> </span>site<span class="w"> </span>&lt;subcommand&gt;
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-62-1"><a id="__codelineno-62-1" name="__codelineno-62-1" href="#__codelineno-62-1"></a>ctx<span class="w"> </span>site<span class="w"> </span>&lt;subcommand&gt;
 </span></code></pre></div>
 <h4 id="ctx-site-feed"><code>ctx site feed</code><a class="headerlink" href="#ctx-site-feed" title="Permanent link">&para;</a></h4>
 <p>Generate an Atom 1.0 feed from finalized blog posts in <code>docs/blog/</code>.</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-60-1"><a id="__codelineno-60-1" name="__codelineno-60-1" href="#__codelineno-60-1"></a>ctx<span class="w"> </span>site<span class="w"> </span>feed<span class="w"> </span><span class="o">[</span>flags<span class="o">]</span>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-63-1"><a id="__codelineno-63-1" name="__codelineno-63-1" href="#__codelineno-63-1"></a>ctx<span class="w"> </span>site<span class="w"> </span>feed<span class="w"> </span><span class="o">[</span>flags<span class="o">]</span>
 </span></code></pre></div>
 <p>Scans <code>docs/blog/</code> for files matching <code>YYYY-MM-DD-*.md</code>, parses YAML
 frontmatter, and generates a valid Atom feed. Only posts with
@@ -6042,13 +6104,13 @@ from the first paragraph after the heading.</p>
 </tbody>
 </table>
 <p><strong>Output</strong>:</p>
-<div class="language-text highlight"><pre><span></span><code><span id="__span-61-1"><a id="__codelineno-61-1" name="__codelineno-61-1" href="#__codelineno-61-1"></a>Generated site/feed.xml (21 entries)
-</span><span id="__span-61-2"><a id="__codelineno-61-2" name="__codelineno-61-2" href="#__codelineno-61-2"></a>
-</span><span id="__span-61-3"><a id="__codelineno-61-3" name="__codelineno-61-3" href="#__codelineno-61-3"></a>Skipped:
-</span><span id="__span-61-4"><a id="__codelineno-61-4" name="__codelineno-61-4" href="#__codelineno-61-4"></a>  2026-02-25-the-homework-problem.md: not finalized
-</span><span id="__span-61-5"><a id="__codelineno-61-5" name="__codelineno-61-5" href="#__codelineno-61-5"></a>
-</span><span id="__span-61-6"><a id="__codelineno-61-6" name="__codelineno-61-6" href="#__codelineno-61-6"></a>Warnings:
-</span><span id="__span-61-7"><a id="__codelineno-61-7" name="__codelineno-61-7" href="#__codelineno-61-7"></a>  2026-02-09-defense-in-depth.md: no summary paragraph found
+<div class="language-text highlight"><pre><span></span><code><span id="__span-64-1"><a id="__codelineno-64-1" name="__codelineno-64-1" href="#__codelineno-64-1"></a>Generated site/feed.xml (21 entries)
+</span><span id="__span-64-2"><a id="__codelineno-64-2" name="__codelineno-64-2" href="#__codelineno-64-2"></a>
+</span><span id="__span-64-3"><a id="__codelineno-64-3" name="__codelineno-64-3" href="#__codelineno-64-3"></a>Skipped:
+</span><span id="__span-64-4"><a id="__codelineno-64-4" name="__codelineno-64-4" href="#__codelineno-64-4"></a>  2026-02-25-the-homework-problem.md: not finalized
+</span><span id="__span-64-5"><a id="__codelineno-64-5" name="__codelineno-64-5" href="#__codelineno-64-5"></a>
+</span><span id="__span-64-6"><a id="__codelineno-64-6" name="__codelineno-64-6" href="#__codelineno-64-6"></a>Warnings:
+</span><span id="__span-64-7"><a id="__codelineno-64-7" name="__codelineno-64-7" href="#__codelineno-64-7"></a>  2026-02-09-defense-in-depth.md: no summary paragraph found
 </span></code></pre></div>
 <p>Three buckets: <strong>included</strong> (count), <strong>skipped</strong> (with reason),
 <strong>warnings</strong> (included but degraded). <code>exit 0</code> always: warnings
@@ -6091,16 +6153,16 @@ inform but do not block.</p>
 </tbody>
 </table>
 <p><strong>Examples</strong>:</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-62-1"><a id="__codelineno-62-1" name="__codelineno-62-1" href="#__codelineno-62-1"></a>ctx<span class="w"> </span>site<span class="w"> </span>feed<span class="w">                                </span><span class="c1"># Generate site/feed.xml</span>
-</span><span id="__span-62-2"><a id="__codelineno-62-2" name="__codelineno-62-2" href="#__codelineno-62-2"></a>ctx<span class="w"> </span>site<span class="w"> </span>feed<span class="w"> </span>--out<span class="w"> </span>/tmp/feed.xml<span class="w">            </span><span class="c1"># Custom output path</span>
-</span><span id="__span-62-3"><a id="__codelineno-62-3" name="__codelineno-62-3" href="#__codelineno-62-3"></a>ctx<span class="w"> </span>site<span class="w"> </span>feed<span class="w"> </span>--base-url<span class="w"> </span>https://example.com<span class="w"> </span><span class="c1"># Custom base URL</span>
-</span><span id="__span-62-4"><a id="__codelineno-62-4" name="__codelineno-62-4" href="#__codelineno-62-4"></a>make<span class="w"> </span>site-feed<span class="w">                               </span><span class="c1"># Makefile shortcut</span>
-</span><span id="__span-62-5"><a id="__codelineno-62-5" name="__codelineno-62-5" href="#__codelineno-62-5"></a>make<span class="w"> </span>site<span class="w">                                    </span><span class="c1"># Builds site + feed</span>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-65-1"><a id="__codelineno-65-1" name="__codelineno-65-1" href="#__codelineno-65-1"></a>ctx<span class="w"> </span>site<span class="w"> </span>feed<span class="w">                                </span><span class="c1"># Generate site/feed.xml</span>
+</span><span id="__span-65-2"><a id="__codelineno-65-2" name="__codelineno-65-2" href="#__codelineno-65-2"></a>ctx<span class="w"> </span>site<span class="w"> </span>feed<span class="w"> </span>--out<span class="w"> </span>/tmp/feed.xml<span class="w">            </span><span class="c1"># Custom output path</span>
+</span><span id="__span-65-3"><a id="__codelineno-65-3" name="__codelineno-65-3" href="#__codelineno-65-3"></a>ctx<span class="w"> </span>site<span class="w"> </span>feed<span class="w"> </span>--base-url<span class="w"> </span>https://example.com<span class="w"> </span><span class="c1"># Custom base URL</span>
+</span><span id="__span-65-4"><a id="__codelineno-65-4" name="__codelineno-65-4" href="#__codelineno-65-4"></a>make<span class="w"> </span>site-feed<span class="w">                               </span><span class="c1"># Makefile shortcut</span>
+</span><span id="__span-65-5"><a id="__codelineno-65-5" name="__codelineno-65-5" href="#__codelineno-65-5"></a>make<span class="w"> </span>site<span class="w">                                    </span><span class="c1"># Builds site + feed</span>
 </span></code></pre></div>
 <hr />
 <h3 id="ctx-guide"><code>ctx guide</code><a class="headerlink" href="#ctx-guide" title="Permanent link">&para;</a></h3>
 <p>Quick-reference cheat sheet for common ctx commands and skills.</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-63-1"><a id="__codelineno-63-1" name="__codelineno-63-1" href="#__codelineno-63-1"></a>ctx<span class="w"> </span>guide<span class="w"> </span><span class="o">[</span>flags<span class="o">]</span>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-66-1"><a id="__codelineno-66-1" name="__codelineno-66-1" href="#__codelineno-66-1"></a>ctx<span class="w"> </span>guide<span class="w"> </span><span class="o">[</span>flags<span class="o">]</span>
 </span></code></pre></div>
 <p><strong>Flags</strong>:</p>
 <table>
@@ -6122,20 +6184,20 @@ inform but do not block.</p>
 </tbody>
 </table>
 <p><strong>Example</strong>:</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-64-1"><a id="__codelineno-64-1" name="__codelineno-64-1" href="#__codelineno-64-1"></a><span class="c1"># Show the full cheat sheet</span>
-</span><span id="__span-64-2"><a id="__codelineno-64-2" name="__codelineno-64-2" href="#__codelineno-64-2"></a>ctx<span class="w"> </span>guide
-</span><span id="__span-64-3"><a id="__codelineno-64-3" name="__codelineno-64-3" href="#__codelineno-64-3"></a>
-</span><span id="__span-64-4"><a id="__codelineno-64-4" name="__codelineno-64-4" href="#__codelineno-64-4"></a><span class="c1"># Skills only</span>
-</span><span id="__span-64-5"><a id="__codelineno-64-5" name="__codelineno-64-5" href="#__codelineno-64-5"></a>ctx<span class="w"> </span>guide<span class="w"> </span>--skills
-</span><span id="__span-64-6"><a id="__codelineno-64-6" name="__codelineno-64-6" href="#__codelineno-64-6"></a>
-</span><span id="__span-64-7"><a id="__codelineno-64-7" name="__codelineno-64-7" href="#__codelineno-64-7"></a><span class="c1"># Commands only</span>
-</span><span id="__span-64-8"><a id="__codelineno-64-8" name="__codelineno-64-8" href="#__codelineno-64-8"></a>ctx<span class="w"> </span>guide<span class="w"> </span>--commands
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-67-1"><a id="__codelineno-67-1" name="__codelineno-67-1" href="#__codelineno-67-1"></a><span class="c1"># Show the full cheat sheet</span>
+</span><span id="__span-67-2"><a id="__codelineno-67-2" name="__codelineno-67-2" href="#__codelineno-67-2"></a>ctx<span class="w"> </span>guide
+</span><span id="__span-67-3"><a id="__codelineno-67-3" name="__codelineno-67-3" href="#__codelineno-67-3"></a>
+</span><span id="__span-67-4"><a id="__codelineno-67-4" name="__codelineno-67-4" href="#__codelineno-67-4"></a><span class="c1"># Skills only</span>
+</span><span id="__span-67-5"><a id="__codelineno-67-5" name="__codelineno-67-5" href="#__codelineno-67-5"></a>ctx<span class="w"> </span>guide<span class="w"> </span>--skills
+</span><span id="__span-67-6"><a id="__codelineno-67-6" name="__codelineno-67-6" href="#__codelineno-67-6"></a>
+</span><span id="__span-67-7"><a id="__codelineno-67-7" name="__codelineno-67-7" href="#__codelineno-67-7"></a><span class="c1"># Commands only</span>
+</span><span id="__span-67-8"><a id="__codelineno-67-8" name="__codelineno-67-8" href="#__codelineno-67-8"></a>ctx<span class="w"> </span>guide<span class="w"> </span>--commands
 </span></code></pre></div>
 <p>Works without initialization (no <code>.context/</code> required).</p>
 <hr />
 <h3 id="ctx-why"><code>ctx why</code><a class="headerlink" href="#ctx-why" title="Permanent link">&para;</a></h3>
 <p>Read <code>ctx</code>'s philosophy documents directly in the terminal.</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-65-1"><a id="__codelineno-65-1" name="__codelineno-65-1" href="#__codelineno-65-1"></a>ctx<span class="w"> </span>why<span class="w"> </span><span class="o">[</span>DOCUMENT<span class="o">]</span>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-68-1"><a id="__codelineno-68-1" name="__codelineno-68-1" href="#__codelineno-68-1"></a>ctx<span class="w"> </span>why<span class="w"> </span><span class="o">[</span>DOCUMENT<span class="o">]</span>
 </span></code></pre></div>
 <p><strong>Documents</strong>:</p>
 <table>
@@ -6161,16 +6223,16 @@ inform but do not block.</p>
 </tbody>
 </table>
 <p><strong>Usage</strong>:</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-66-1"><a id="__codelineno-66-1" name="__codelineno-66-1" href="#__codelineno-66-1"></a><span class="c1"># Interactive numbered menu</span>
-</span><span id="__span-66-2"><a id="__codelineno-66-2" name="__codelineno-66-2" href="#__codelineno-66-2"></a>ctx<span class="w"> </span>why
-</span><span id="__span-66-3"><a id="__codelineno-66-3" name="__codelineno-66-3" href="#__codelineno-66-3"></a>
-</span><span id="__span-66-4"><a id="__codelineno-66-4" name="__codelineno-66-4" href="#__codelineno-66-4"></a><span class="c1"># Show a specific document</span>
-</span><span id="__span-66-5"><a id="__codelineno-66-5" name="__codelineno-66-5" href="#__codelineno-66-5"></a>ctx<span class="w"> </span>why<span class="w"> </span>manifesto
-</span><span id="__span-66-6"><a id="__codelineno-66-6" name="__codelineno-66-6" href="#__codelineno-66-6"></a>ctx<span class="w"> </span>why<span class="w"> </span>about
-</span><span id="__span-66-7"><a id="__codelineno-66-7" name="__codelineno-66-7" href="#__codelineno-66-7"></a>ctx<span class="w"> </span>why<span class="w"> </span>invariants
-</span><span id="__span-66-8"><a id="__codelineno-66-8" name="__codelineno-66-8" href="#__codelineno-66-8"></a>
-</span><span id="__span-66-9"><a id="__codelineno-66-9" name="__codelineno-66-9" href="#__codelineno-66-9"></a><span class="c1"># Pipe to a pager</span>
-</span><span id="__span-66-10"><a id="__codelineno-66-10" name="__codelineno-66-10" href="#__codelineno-66-10"></a>ctx<span class="w"> </span>why<span class="w"> </span>manifesto<span class="w"> </span><span class="p">|</span><span class="w"> </span>less
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-69-1"><a id="__codelineno-69-1" name="__codelineno-69-1" href="#__codelineno-69-1"></a><span class="c1"># Interactive numbered menu</span>
+</span><span id="__span-69-2"><a id="__codelineno-69-2" name="__codelineno-69-2" href="#__codelineno-69-2"></a>ctx<span class="w"> </span>why
+</span><span id="__span-69-3"><a id="__codelineno-69-3" name="__codelineno-69-3" href="#__codelineno-69-3"></a>
+</span><span id="__span-69-4"><a id="__codelineno-69-4" name="__codelineno-69-4" href="#__codelineno-69-4"></a><span class="c1"># Show a specific document</span>
+</span><span id="__span-69-5"><a id="__codelineno-69-5" name="__codelineno-69-5" href="#__codelineno-69-5"></a>ctx<span class="w"> </span>why<span class="w"> </span>manifesto
+</span><span id="__span-69-6"><a id="__codelineno-69-6" name="__codelineno-69-6" href="#__codelineno-69-6"></a>ctx<span class="w"> </span>why<span class="w"> </span>about
+</span><span id="__span-69-7"><a id="__codelineno-69-7" name="__codelineno-69-7" href="#__codelineno-69-7"></a>ctx<span class="w"> </span>why<span class="w"> </span>invariants
+</span><span id="__span-69-8"><a id="__codelineno-69-8" name="__codelineno-69-8" href="#__codelineno-69-8"></a>
+</span><span id="__span-69-9"><a id="__codelineno-69-9" name="__codelineno-69-9" href="#__codelineno-69-9"></a><span class="c1"># Pipe to a pager</span>
+</span><span id="__span-69-10"><a id="__codelineno-69-10" name="__codelineno-69-10" href="#__codelineno-69-10"></a>ctx<span class="w"> </span>why<span class="w"> </span>manifesto<span class="w"> </span><span class="p">|</span><span class="w"> </span>less
 </span></code></pre></div>
 <hr />
 <h3 id="ctx-steering"><code>ctx steering</code><a class="headerlink" href="#ctx-steering" title="Permanent link">&para;</a></h3>
@@ -6178,46 +6240,46 @@ inform but do not block.</p>
 <p>Steering files live in <code>.context/steering/</code> as Markdown files with
 YAML frontmatter that controls inclusion mode, tool targeting, and
 priority.</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-67-1"><a id="__codelineno-67-1" name="__codelineno-67-1" href="#__codelineno-67-1"></a>ctx<span class="w"> </span>steering<span class="w"> </span>&lt;subcommand&gt;
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-70-1"><a id="__codelineno-70-1" name="__codelineno-70-1" href="#__codelineno-70-1"></a>ctx<span class="w"> </span>steering<span class="w"> </span>&lt;subcommand&gt;
 </span></code></pre></div>
 <h4 id="ctx-steering-init"><code>ctx steering init</code><a class="headerlink" href="#ctx-steering-init" title="Permanent link">&para;</a></h4>
 <p>Create a starter set of steering files in <code>.context/steering/</code>.</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-68-1"><a id="__codelineno-68-1" name="__codelineno-68-1" href="#__codelineno-68-1"></a>ctx<span class="w"> </span>steering<span class="w"> </span>init
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-71-1"><a id="__codelineno-71-1" name="__codelineno-71-1" href="#__codelineno-71-1"></a>ctx<span class="w"> </span>steering<span class="w"> </span>init
 </span></code></pre></div>
 <h4 id="ctx-steering-add"><code>ctx steering add</code><a class="headerlink" href="#ctx-steering-add" title="Permanent link">&para;</a></h4>
 <p>Create a new steering file with default frontmatter.</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-69-1"><a id="__codelineno-69-1" name="__codelineno-69-1" href="#__codelineno-69-1"></a>ctx<span class="w"> </span>steering<span class="w"> </span>add<span class="w"> </span>&lt;name&gt;
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-72-1"><a id="__codelineno-72-1" name="__codelineno-72-1" href="#__codelineno-72-1"></a>ctx<span class="w"> </span>steering<span class="w"> </span>add<span class="w"> </span>&lt;name&gt;
 </span></code></pre></div>
 <p><strong>Arguments</strong>:</p>
 <ul>
 <li><code>name</code>: Steering file name (without <code>.md</code> extension)</li>
 </ul>
 <p><strong>Example</strong>:</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-70-1"><a id="__codelineno-70-1" name="__codelineno-70-1" href="#__codelineno-70-1"></a>ctx<span class="w"> </span>steering<span class="w"> </span>add<span class="w"> </span>security
-</span><span id="__span-70-2"><a id="__codelineno-70-2" name="__codelineno-70-2" href="#__codelineno-70-2"></a><span class="c1"># Created .context/steering/security.md</span>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-73-1"><a id="__codelineno-73-1" name="__codelineno-73-1" href="#__codelineno-73-1"></a>ctx<span class="w"> </span>steering<span class="w"> </span>add<span class="w"> </span>security
+</span><span id="__span-73-2"><a id="__codelineno-73-2" name="__codelineno-73-2" href="#__codelineno-73-2"></a><span class="c1"># Created .context/steering/security.md</span>
 </span></code></pre></div>
 <p>The generated file uses <code>inclusion: manual</code> and <code>priority: 50</code> by
 default. Edit the frontmatter to change behavior:</p>
-<div class="language-yaml highlight"><pre><span></span><code><span id="__span-71-1"><a id="__codelineno-71-1" name="__codelineno-71-1" href="#__codelineno-71-1"></a><span class="nn">---</span>
-</span><span id="__span-71-2"><a id="__codelineno-71-2" name="__codelineno-71-2" href="#__codelineno-71-2"></a><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">security</span>
-</span><span id="__span-71-3"><a id="__codelineno-71-3" name="__codelineno-71-3" href="#__codelineno-71-3"></a><span class="nt">description</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Security rules for all code changes</span>
-</span><span id="__span-71-4"><a id="__codelineno-71-4" name="__codelineno-71-4" href="#__codelineno-71-4"></a><span class="nt">inclusion</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">always</span><span class="w">    </span><span class="c1"># always | auto | manual</span>
-</span><span id="__span-71-5"><a id="__codelineno-71-5" name="__codelineno-71-5" href="#__codelineno-71-5"></a><span class="nt">tools</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[]</span><span class="w">            </span><span class="c1"># empty = all tools</span>
-</span><span id="__span-71-6"><a id="__codelineno-71-6" name="__codelineno-71-6" href="#__codelineno-71-6"></a><span class="nt">priority</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">10</span><span class="w">         </span><span class="c1"># lower = injected first</span>
-</span><span id="__span-71-7"><a id="__codelineno-71-7" name="__codelineno-71-7" href="#__codelineno-71-7"></a><span class="nn">---</span>
+<div class="language-yaml highlight"><pre><span></span><code><span id="__span-74-1"><a id="__codelineno-74-1" name="__codelineno-74-1" href="#__codelineno-74-1"></a><span class="nn">---</span>
+</span><span id="__span-74-2"><a id="__codelineno-74-2" name="__codelineno-74-2" href="#__codelineno-74-2"></a><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">security</span>
+</span><span id="__span-74-3"><a id="__codelineno-74-3" name="__codelineno-74-3" href="#__codelineno-74-3"></a><span class="nt">description</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Security rules for all code changes</span>
+</span><span id="__span-74-4"><a id="__codelineno-74-4" name="__codelineno-74-4" href="#__codelineno-74-4"></a><span class="nt">inclusion</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">always</span><span class="w">    </span><span class="c1"># always | auto | manual</span>
+</span><span id="__span-74-5"><a id="__codelineno-74-5" name="__codelineno-74-5" href="#__codelineno-74-5"></a><span class="nt">tools</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[]</span><span class="w">            </span><span class="c1"># empty = all tools</span>
+</span><span id="__span-74-6"><a id="__codelineno-74-6" name="__codelineno-74-6" href="#__codelineno-74-6"></a><span class="nt">priority</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">10</span><span class="w">         </span><span class="c1"># lower = injected first</span>
+</span><span id="__span-74-7"><a id="__codelineno-74-7" name="__codelineno-74-7" href="#__codelineno-74-7"></a><span class="nn">---</span>
 </span></code></pre></div>
 <h4 id="ctx-steering-list"><code>ctx steering list</code><a class="headerlink" href="#ctx-steering-list" title="Permanent link">&para;</a></h4>
 <p>List all steering files with their inclusion mode and priority.</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-72-1"><a id="__codelineno-72-1" name="__codelineno-72-1" href="#__codelineno-72-1"></a>ctx<span class="w"> </span>steering<span class="w"> </span>list
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-75-1"><a id="__codelineno-75-1" name="__codelineno-75-1" href="#__codelineno-75-1"></a>ctx<span class="w"> </span>steering<span class="w"> </span>list
 </span></code></pre></div>
 <h4 id="ctx-steering-preview"><code>ctx steering preview</code><a class="headerlink" href="#ctx-steering-preview" title="Permanent link">&para;</a></h4>
 <p>Preview which steering files would be included for a given prompt.</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-73-1"><a id="__codelineno-73-1" name="__codelineno-73-1" href="#__codelineno-73-1"></a>ctx<span class="w"> </span>steering<span class="w"> </span>preview<span class="w"> </span><span class="o">[</span>prompt<span class="o">]</span>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-76-1"><a id="__codelineno-76-1" name="__codelineno-76-1" href="#__codelineno-76-1"></a>ctx<span class="w"> </span>steering<span class="w"> </span>preview<span class="w"> </span><span class="o">[</span>prompt<span class="o">]</span>
 </span></code></pre></div>
 <h4 id="ctx-steering-sync"><code>ctx steering sync</code><a class="headerlink" href="#ctx-steering-sync" title="Permanent link">&para;</a></h4>
 <p>Sync steering files to tool-native formats (e.g. <code>.cursor/rules/</code>,
 <code>.kiro/steering/</code>, <code>.clinerules/</code>).</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-74-1"><a id="__codelineno-74-1" name="__codelineno-74-1" href="#__codelineno-74-1"></a>ctx<span class="w"> </span>steering<span class="w"> </span>sync
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-77-1"><a id="__codelineno-77-1" name="__codelineno-77-1" href="#__codelineno-77-1"></a>ctx<span class="w"> </span>steering<span class="w"> </span>sync
 </span></code></pre></div>
 <hr />
 <h3 id="ctx-hook"><code>ctx hook</code><a class="headerlink" href="#ctx-hook" title="Permanent link">&para;</a></h3>
@@ -6226,7 +6288,7 @@ during AI sessions.</p>
 <p>Hooks live in <code>.context/hooks/&lt;type&gt;/</code> directories, organized by
 event type. Each hook is an executable script that receives JSON
 via stdin and returns JSON via stdout.</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-75-1"><a id="__codelineno-75-1" name="__codelineno-75-1" href="#__codelineno-75-1"></a>ctx<span class="w"> </span>hook<span class="w"> </span>&lt;subcommand&gt;
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-78-1"><a id="__codelineno-78-1" name="__codelineno-78-1" href="#__codelineno-78-1"></a>ctx<span class="w"> </span>hook<span class="w"> </span>&lt;subcommand&gt;
 </span></code></pre></div>
 <p><strong>Hook types</strong>:</p>
 <table>
@@ -6265,7 +6327,7 @@ via stdin and returns JSON via stdout.</p>
 </table>
 <h4 id="ctx-hook-add"><code>ctx hook add</code><a class="headerlink" href="#ctx-hook-add" title="Permanent link">&para;</a></h4>
 <p>Create a new hook script from a template.</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-76-1"><a id="__codelineno-76-1" name="__codelineno-76-1" href="#__codelineno-76-1"></a>ctx<span class="w"> </span>hook<span class="w"> </span>add<span class="w"> </span>&lt;type&gt;<span class="w"> </span>&lt;name&gt;
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-79-1"><a id="__codelineno-79-1" name="__codelineno-79-1" href="#__codelineno-79-1"></a>ctx<span class="w"> </span>hook<span class="w"> </span>add<span class="w"> </span>&lt;type&gt;<span class="w"> </span>&lt;name&gt;
 </span></code></pre></div>
 <p><strong>Arguments</strong>:</p>
 <ul>
@@ -6273,24 +6335,24 @@ via stdin and returns JSON via stdout.</p>
 <li><code>name</code>: Script name (without <code>.sh</code> extension)</li>
 </ul>
 <p><strong>Example</strong>:</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-77-1"><a id="__codelineno-77-1" name="__codelineno-77-1" href="#__codelineno-77-1"></a>ctx<span class="w"> </span>hook<span class="w"> </span>add<span class="w"> </span>session-start<span class="w"> </span>greet
-</span><span id="__span-77-2"><a id="__codelineno-77-2" name="__codelineno-77-2" href="#__codelineno-77-2"></a><span class="c1"># Created .context/hooks/session-start/greet.sh</span>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-80-1"><a id="__codelineno-80-1" name="__codelineno-80-1" href="#__codelineno-80-1"></a>ctx<span class="w"> </span>hook<span class="w"> </span>add<span class="w"> </span>session-start<span class="w"> </span>greet
+</span><span id="__span-80-2"><a id="__codelineno-80-2" name="__codelineno-80-2" href="#__codelineno-80-2"></a><span class="c1"># Created .context/hooks/session-start/greet.sh</span>
 </span></code></pre></div>
 <h4 id="ctx-hook-list"><code>ctx hook list</code><a class="headerlink" href="#ctx-hook-list" title="Permanent link">&para;</a></h4>
 <p>List all discovered hooks with their type and enabled status.</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-78-1"><a id="__codelineno-78-1" name="__codelineno-78-1" href="#__codelineno-78-1"></a>ctx<span class="w"> </span>hook<span class="w"> </span>list
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-81-1"><a id="__codelineno-81-1" name="__codelineno-81-1" href="#__codelineno-81-1"></a>ctx<span class="w"> </span>hook<span class="w"> </span>list
 </span></code></pre></div>
 <h4 id="ctx-hook-enable"><code>ctx hook enable</code><a class="headerlink" href="#ctx-hook-enable" title="Permanent link">&para;</a></h4>
 <p>Enable a hook by setting the executable permission bit.</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-79-1"><a id="__codelineno-79-1" name="__codelineno-79-1" href="#__codelineno-79-1"></a>ctx<span class="w"> </span>hook<span class="w"> </span><span class="nb">enable</span><span class="w"> </span>&lt;type&gt;<span class="w"> </span>&lt;name&gt;
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-82-1"><a id="__codelineno-82-1" name="__codelineno-82-1" href="#__codelineno-82-1"></a>ctx<span class="w"> </span>hook<span class="w"> </span><span class="nb">enable</span><span class="w"> </span>&lt;type&gt;<span class="w"> </span>&lt;name&gt;
 </span></code></pre></div>
 <h4 id="ctx-hook-disable"><code>ctx hook disable</code><a class="headerlink" href="#ctx-hook-disable" title="Permanent link">&para;</a></h4>
 <p>Disable a hook by removing the executable permission bit.</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-80-1"><a id="__codelineno-80-1" name="__codelineno-80-1" href="#__codelineno-80-1"></a>ctx<span class="w"> </span>hook<span class="w"> </span>disable<span class="w"> </span>&lt;type&gt;<span class="w"> </span>&lt;name&gt;
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-83-1"><a id="__codelineno-83-1" name="__codelineno-83-1" href="#__codelineno-83-1"></a>ctx<span class="w"> </span>hook<span class="w"> </span>disable<span class="w"> </span>&lt;type&gt;<span class="w"> </span>&lt;name&gt;
 </span></code></pre></div>
 <h4 id="ctx-hook-test"><code>ctx hook test</code><a class="headerlink" href="#ctx-hook-test" title="Permanent link">&para;</a></h4>
 <p>Run a hook with synthetic input and display the output.</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-81-1"><a id="__codelineno-81-1" name="__codelineno-81-1" href="#__codelineno-81-1"></a>ctx<span class="w"> </span>hook<span class="w"> </span><span class="nb">test</span><span class="w"> </span>&lt;type&gt;<span class="w"> </span>&lt;name&gt;
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-84-1"><a id="__codelineno-84-1" name="__codelineno-84-1" href="#__codelineno-84-1"></a>ctx<span class="w"> </span>hook<span class="w"> </span><span class="nb">test</span><span class="w"> </span>&lt;type&gt;<span class="w"> </span>&lt;name&gt;
 </span></code></pre></div>
 <hr />
 <h3 id="ctx-skill"><code>ctx skill</code><a class="headerlink" href="#ctx-skill" title="Permanent link">&para;</a></h3>
@@ -6298,27 +6360,27 @@ via stdin and returns JSON via stdout.</p>
 <code>.context/skills/</code>.</p>
 <p>A skill is a directory containing a <code>SKILL.md</code> file with YAML
 frontmatter (<code>name</code>, <code>description</code>) and a Markdown instruction body.</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-82-1"><a id="__codelineno-82-1" name="__codelineno-82-1" href="#__codelineno-82-1"></a>ctx<span class="w"> </span>skill<span class="w"> </span>&lt;subcommand&gt;
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-85-1"><a id="__codelineno-85-1" name="__codelineno-85-1" href="#__codelineno-85-1"></a>ctx<span class="w"> </span>skill<span class="w"> </span>&lt;subcommand&gt;
 </span></code></pre></div>
 <h4 id="ctx-skill-install"><code>ctx skill install</code><a class="headerlink" href="#ctx-skill-install" title="Permanent link">&para;</a></h4>
 <p>Install a skill from a source directory.</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-83-1"><a id="__codelineno-83-1" name="__codelineno-83-1" href="#__codelineno-83-1"></a>ctx<span class="w"> </span>skill<span class="w"> </span>install<span class="w"> </span>&lt;source&gt;
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-86-1"><a id="__codelineno-86-1" name="__codelineno-86-1" href="#__codelineno-86-1"></a>ctx<span class="w"> </span>skill<span class="w"> </span>install<span class="w"> </span>&lt;source&gt;
 </span></code></pre></div>
 <p><strong>Arguments</strong>:</p>
 <ul>
 <li><code>source</code>: Path to a directory containing <code>SKILL.md</code></li>
 </ul>
 <p><strong>Example</strong>:</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-84-1"><a id="__codelineno-84-1" name="__codelineno-84-1" href="#__codelineno-84-1"></a>ctx<span class="w"> </span>skill<span class="w"> </span>install<span class="w"> </span>./my-skills/code-review
-</span><span id="__span-84-2"><a id="__codelineno-84-2" name="__codelineno-84-2" href="#__codelineno-84-2"></a><span class="c1"># Installed code-review → .context/skills/code-review</span>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-87-1"><a id="__codelineno-87-1" name="__codelineno-87-1" href="#__codelineno-87-1"></a>ctx<span class="w"> </span>skill<span class="w"> </span>install<span class="w"> </span>./my-skills/code-review
+</span><span id="__span-87-2"><a id="__codelineno-87-2" name="__codelineno-87-2" href="#__codelineno-87-2"></a><span class="c1"># Installed code-review → .context/skills/code-review</span>
 </span></code></pre></div>
 <h4 id="ctx-skill-list"><code>ctx skill list</code><a class="headerlink" href="#ctx-skill-list" title="Permanent link">&para;</a></h4>
 <p>List all installed skills.</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-85-1"><a id="__codelineno-85-1" name="__codelineno-85-1" href="#__codelineno-85-1"></a>ctx<span class="w"> </span>skill<span class="w"> </span>list
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-88-1"><a id="__codelineno-88-1" name="__codelineno-88-1" href="#__codelineno-88-1"></a>ctx<span class="w"> </span>skill<span class="w"> </span>list
 </span></code></pre></div>
 <h4 id="ctx-skill-remove"><code>ctx skill remove</code><a class="headerlink" href="#ctx-skill-remove" title="Permanent link">&para;</a></h4>
 <p>Remove an installed skill.</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-86-1"><a id="__codelineno-86-1" name="__codelineno-86-1" href="#__codelineno-86-1"></a>ctx<span class="w"> </span>skill<span class="w"> </span>remove<span class="w"> </span>&lt;name&gt;
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-89-1"><a id="__codelineno-89-1" name="__codelineno-89-1" href="#__codelineno-89-1"></a>ctx<span class="w"> </span>skill<span class="w"> </span>remove<span class="w"> </span>&lt;name&gt;
 </span></code></pre></div>
 <p><strong>Arguments</strong>:</p>
 <ul>

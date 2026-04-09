@@ -4011,8 +4011,8 @@ No external dependencies: Go stdlib only.</p>
 <td>Append a new entry</td>
 </tr>
 <tr>
-<td><code>ctx pad rm N</code></td>
-<td>Remove entry at position N</td>
+<td><code>ctx pad rm ID [ID...]</code></td>
+<td>Remove entries by stable ID (supports ranges: <code>3-5</code>)</td>
 </tr>
 <tr>
 <td><code>ctx pad edit N "text"</code></td>
@@ -4037,6 +4037,10 @@ No external dependencies: Go stdlib only.</p>
 <tr>
 <td><code>ctx pad show N --out PATH</code></td>
 <td>Write decoded blob content to a file</td>
+</tr>
+<tr>
+<td><code>ctx pad normalize</code></td>
+<td>Reassign entry IDs as 1..N</td>
 </tr>
 <tr>
 <td><code>ctx pad mv N M</code></td>
@@ -4099,7 +4103,7 @@ re-encrypt on write. The key file is never printed to stdout.</p>
 </span><span id="__span-0-16"><a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a><span class="c1"># Reorder</span>
 </span><span id="__span-0-17"><a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>ctx<span class="w"> </span>pad<span class="w"> </span>mv<span class="w"> </span><span class="m">2</span><span class="w"> </span><span class="m">1</span>
 </span><span id="__span-0-18"><a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>
-</span><span id="__span-0-19"><a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a><span class="c1"># Clean up</span>
+</span><span id="__span-0-19"><a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a><span class="c1"># Clean up (IDs are stable — they don&#39;t shift when entries are deleted)</span>
 </span><span id="__span-0-20"><a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a>ctx<span class="w"> </span>pad<span class="w"> </span>rm<span class="w"> </span><span class="m">2</span>
 </span></code></pre></div>
 <h2 id="tags">Tags<a class="headerlink" href="#tags" title="Permanent link">&para;</a></h2>
@@ -4143,8 +4147,9 @@ syntax to add or remove them — use the existing <code>add</code> and <code>edi
 </span><span id="__span-1-35"><a id="__codelineno-1-35" name="__codelineno-1-35" href="#__codelineno-1-35"></a><span class="c1"># Remove a tag (replace entry text without the tag)</span>
 </span><span id="__span-1-36"><a id="__codelineno-1-36" name="__codelineno-1-36" href="#__codelineno-1-36"></a>ctx<span class="w"> </span>pad<span class="w"> </span>edit<span class="w"> </span><span class="m">1</span><span class="w"> </span><span class="s2">&quot;check DNS propagation&quot;</span>
 </span></code></pre></div>
-<p>Entry numbers are preserved when filtering — <code>ctx pad rm 3</code> targets the
-same entry regardless of active filters. Tags are case-sensitive and support
+<p>Entry IDs are stable — they don't shift when other entries are deleted, so
+<code>ctx pad rm 3</code> always targets the same entry. Use <code>ctx pad normalize</code> to
+reassign IDs as 1..N if gaps bother you. Tags are case-sensitive and support
 letters, digits, hyphens, and underscores (<code>#high-priority</code>, <code>#v2</code>, <code>#my_tag</code>).</p>
 <p>For blob entries, tags are extracted from the label only.</p>
 <h2 id="bulk-import-and-export">Bulk Import and Export<a class="headerlink" href="#bulk-import-and-export" title="Permanent link">&para;</a></h2>

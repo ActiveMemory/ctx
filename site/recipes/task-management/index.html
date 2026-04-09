@@ -4275,8 +4275,8 @@ work context and suggests tasks naturally.</p>
 status is tracked via checkboxes and inline tags.</p>
 <div class="language-markdown highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="gu">## Phase 1: Core CLI</span>
 </span><span id="__span-3-2"><a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>
-</span><span id="__span-3-3"><a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="k">- [x]</span> Implement ctx add command <span class="sb">`#done:2026-02-01-143022`</span>
-</span><span id="__span-3-4"><a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="k">- [x]</span> Implement ctx task complete command <span class="sb">`#done:2026-02-03-091544`</span>
+</span><span id="__span-3-3"><a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="k">- [x]</span> Implement ctx add command
+</span><span id="__span-3-4"><a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="k">- [x]</span> Implement ctx task complete command
 </span><span id="__span-3-5"><a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="k">- [ ]</span> Add --section flag to ctx add task <span class="sb">`#priority:medium`</span>
 </span><span id="__span-3-6"><a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>
 </span><span id="__span-3-7"><a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="gu">## Phase 2: AI Integration</span>
@@ -4333,9 +4333,8 @@ recent work, and phase order.</p>
 </span><span id="__span-7-4"><a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a><span class="c1"># By partial text match</span>
 </span><span id="__span-7-5"><a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a>ctx<span class="w"> </span>task<span class="w"> </span><span class="nb">complete</span><span class="w"> </span><span class="s2">&quot;agent cooldown&quot;</span>
 </span></code></pre></div>
-<p>The task's checkbox changes from <code>[ ]</code> to <code>[x]</code> and a <code>#done</code> timestamp is
-added. Tasks are never deleted: they stay in their phase section so history is
-preserved.</p>
+<p>The task's checkbox changes from <code>[ ]</code> to <code>[x]</code>. Tasks are never deleted: they
+stay in their phase section so history is preserved.</p>
 <div class="admonition tip">
 <p class="admonition-title">Be Conversational</p>
 <p>You rarely need to run <code>ctx task complete</code> yourself during an interactive session.</p>
