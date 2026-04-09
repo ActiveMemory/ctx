@@ -1,6 +1,7 @@
 ---
 name: ctx-recall
 description: "Browse session history. Use when referencing past discussions or finding context from previous work."
+tools: [bash]
 ---
 
 Browse, inspect, and export AI session history.
@@ -9,34 +10,53 @@ Browse, inspect, and export AI session history.
 
 - When the user asks "what did we do last time?"
 - When looking for context from previous work sessions
-- When exporting sessions to the journal
+- When exporting sessions to the journal for enrichment
 - When searching for a specific session by topic or date
 
 ## When NOT to Use
 
-- When the user just wants current context (use ctx-status instead)
+- When the user just wants current context (use `ctx-status` or
+  `ctx-agent` instead)
 - For modifying session content (recall is read-only)
 
-## Execution
+## Subcommands
 
-List recent sessions:
+### `ctx recall list`
 
 ```bash
 ctx recall list --limit 5
 ```
 
-Show details of a specific session:
+### `ctx recall show`
 
 ```bash
+ctx recall show <slug-or-id>
 ctx recall show --latest
-ctx recall show <session-id>
 ```
 
-Export sessions to journal markdown:
+### `ctx recall export`
 
+```bash
+ctx recall export --all        # Export new sessions only
+ctx recall export --all --regenerate  # Re-export all
+```
+
+## Typical Workflows
+
+**"What did we work on recently?"**
+```bash
+ctx recall list --limit 5
+```
+
+**"Export everything to the journal"**
 ```bash
 ctx recall export --all
 ```
 
-After listing sessions, summarize relevant findings rather than
-dumping raw output.
+Then suggest `ctx-journal-enrich-all` for enrichment.
+
+## Quality Checklist
+
+- [ ] Used the right subcommand for user intent
+- [ ] Applied filters if user mentioned project, date, or topic
+- [ ] For export, mentioned the normalize/enrich pipeline
