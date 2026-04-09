@@ -57,6 +57,14 @@ ctx serve --shared --port 9900 --peers host2:9901,host3:9901
 Raft is used only for leader election. Data replication uses
 sequence-based gRPC sync (append-only, no conflicts).
 
+### Validation
+
+The hub validates all published entries:
+- **Type** must be `decision`, `learning`, `convention`, or `task`
+- **ID** and **Origin** are required (non-empty)
+- **Content** max 1MB (text-only — decisions, learnings, conventions)
+- **Duplicate registration** is rejected (one token per project)
+
 ### Flags
 
 | Flag | Description |
