@@ -1,6 +1,7 @@
 ---
 name: ctx-next
 description: "Suggest what to work on next. Use when starting a session, finishing a task, or when unsure what to prioritize."
+tools: [bash, read, glob, grep]
 ---
 
 Analyze current tasks and recent session activity, then suggest
@@ -19,13 +20,6 @@ Analyze current tasks and recent session activity, then suggest
 - When actively mid-task (don't interrupt flow with suggestions)
 - When no context directory exists (nothing to analyze)
 
-## Usage Examples
-
-```text
-/ctx-next
-/ctx-next (just finished the auth refactor)
-```
-
 ## Process
 
 Do all of this **silently**: do not narrate the steps:
@@ -35,7 +29,7 @@ Do all of this **silently**: do not narrate the steps:
 2. **Check recent sessions** to understand what was just worked
    on and avoid suggesting already-completed work:
    ```bash
-   ctx journal source --limit 3
+   ctx recall list --limit 3
    ```
 3. **Read the most recent session file** (if any) to understand
    what was accomplished and what follow-up items were noted
@@ -100,41 +94,6 @@ useful)*
   dependencies
 - If an in-progress task exists, it should almost always be
   recommendation #1 (don't abandon unfinished work)
-
-## Examples
-
-### Good Output
-
-> ### Recommended Next
->
-> **1. Fix `block-non-path-ctx` hook** `#priority:high`
-> > Still open from yesterday's session. The hook is too
-> > aggressive: it blocks `git -C path` commands that don't
-> > invoke ctx. Quick fix, clears a blocker.
->
-> **2. Add `Context.File(name)` method** `#priority:high`
-> > Eliminates 10+ linear scan boilerplate instances across
-> > 5 packages. High impact, low effort: good consolidation
-> > target.
->
-> **3. Topics system (T1.1)** `#priority:medium`
-> > Journal site's most impactful remaining feature. Metadata
-> > is already in place from the enrichment work.
->
-> ---
->
-> *Based on 24 pending tasks across 3 phases. Last session:
-> doc-drift-cleanup (2026-02-11).*
-
-### Bad Output
-
-> "You have many tasks. Here are some options:
-> - Do some stuff with hooks
-> - Maybe work on tests
-> - There's also some docs to write"
-
-(Too vague, no priorities, no rationale, no connection to
-context.)
 
 ## Quality Checklist
 
