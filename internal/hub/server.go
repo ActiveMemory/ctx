@@ -45,7 +45,19 @@ func (s *Server) Serve(lis net.Listener) error {
 	return s.grpc.Serve(lis)
 }
 
+// SetCluster attaches a Raft cluster to the server for
+// leadership awareness.
+//
+// Parameters:
+//   - cluster: initialized Raft cluster node
+func (s *Server) SetCluster(cluster *Cluster) {
+	s.cluster = cluster
+}
+
 // GracefulStop stops the server gracefully.
 func (s *Server) GracefulStop() {
+	if s.cluster != nil {
+		_ = s.cluster.Shutdown()
+	}
 	s.grpc.GracefulStop()
 }

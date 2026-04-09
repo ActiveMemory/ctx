@@ -56,6 +56,27 @@ func Listening(cmd *cobra.Command) {
 	cmd.Println("Listening for new entries (Ctrl-C to stop)")
 }
 
+// EntryReceived confirms a single entry was received via
+// the Listen stream.
+//
+// Parameters:
+//   - cmd: Cobra command for output
+//   - entryType: type of the received entry
+func EntryReceived(cmd *cobra.Command, entryType string) {
+	cmd.Println("Received", entryType)
+}
+
+// PublishFailed warns that hub publish failed.
+//
+// Parameters:
+//   - cmd: Cobra command for output
+//   - pubErr: the publish error
+func PublishFailed(cmd *cobra.Command, pubErr error) {
+	cmd.Println(fmt.Sprintf(
+		"Warning: hub publish failed: %v", pubErr,
+	))
+}
+
 // Status prints hub connection information.
 //
 // Parameters:

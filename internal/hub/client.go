@@ -139,6 +139,57 @@ func (c *Client) Sync(
 	return entries, nil
 }
 
+// Listen opens a server-streaming Listen RPC and calls
+// the handler for each entry received. Blocks until the
+// context is cancelled or the stream ends.
+//
+// Parameters:
+//   - ctx: context for cancellation
+//   - types: entry types to receive (empty = all)
+//   - sinceSequence: start from this sequence
+//   - handler: called for each received entry
+//
+// Returns:
+//   - error: non-nil if stream setup or recv fails
+func (c *Client) Listen(
+	ctx context.Context,
+	types []string,
+	sinceSequence uint64,
+	handler func(EntryMsg) error,
+) error {
+	stream, streamErr := c.conn.NewStream(
+		c.authedCtx(ctx),
+		&grpc.StreamDesc{ServerStreams: true},
+		"/ctx.hub.v1.CtxHub/Listen",
+	)
+	if streamErr != nil {
+		return streamErr
+	}
+
+	if sendErr := stream.SendMsg(&ListenRequest{
+		Types:         types,
+		SinceSequence: sinceSequence,
+	}); sendErr != nil {
+		return sendErr
+	}
+	if closeErr := stream.CloseSend(); closeErr != nil {
+		return closeErr
+	}
+
+	for {
+		msg := &EntryMsg{}
+		if recvErr := stream.RecvMsg(msg); recvErr != nil {
+			if isEOF(recvErr) {
+				return nil
+			}
+			return recvErr
+		}
+		if handleErr := handler(*msg); handleErr != nil {
+			return handleErr
+		}
+	}
+}
+
 // Status calls the Status RPC.
 //
 // Parameters:
