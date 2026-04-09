@@ -72,6 +72,27 @@ Show hub connection state and entry statistics.
 ctx connect status
 ```
 
+## Automatic sharing
+
+Use `--share` on `ctx add` to write locally AND publish to the hub:
+
+```bash
+ctx add decision "Use UTC" --share \
+  --context "Need consistency" \
+  --rationale "Avoid timezone bugs" \
+  --consequence "UI does conversion"
+```
+
+If the hub is unreachable, the local write succeeds and a warning
+is printed. The `--share` flag is best-effort — it never blocks
+local context updates.
+
+## Auto-sync
+
+Once registered, the `check-hub-sync` hook automatically syncs
+new entries from the hub at the start of each session (daily
+throttled). No manual `ctx connect sync` needed.
+
 ## Shared files
 
 Entries from the hub are stored in `.context/shared/`:

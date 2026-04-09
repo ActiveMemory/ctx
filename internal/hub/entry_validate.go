@@ -12,6 +12,7 @@ import (
 )
 
 // maxContentLen is the maximum entry content size (1MB).
+// Entries are text-only (decisions, learnings, conventions).
 const maxContentLen = 1 << 20
 
 // allowedTypes is the set of valid entry types.
