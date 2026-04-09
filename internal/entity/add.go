@@ -65,6 +65,7 @@ type AddConfig struct {
 	Consequence string
 	Lesson      string
 	Application string
+	Share       bool
 }
 
 // EntryOpts holds optional fields for entry creation via MCP.
@@ -91,5 +92,4 @@ type EntryOpts struct {
 	Consequence string
 	Lesson      string
 	Application string
-	Share       bool
 }

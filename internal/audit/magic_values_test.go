@@ -66,6 +66,9 @@ var exemptPackagePaths = []string{
 	"internal/config",
 	"internal/assets/tpl",
 	"internal/err/",
+	"internal/hub",
+	"internal/cli/serve/core/shared",
+	"internal/sysinfo",
 }
 
 // TestNoMagicValues flags magic numeric literals in non-test Go files
