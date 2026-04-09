@@ -21,7 +21,7 @@ import (
 	"gopkg.in/yaml.v3"
 )
 
-//go:embed claude/.claude-plugin/plugin.json claude/CLAUDE.md claude/skills/*/references/*.md claude/skills/*/SKILL.md context/*.md project/* entry-templates/*.md hooks/*.md hooks/messages/*/*.txt hooks/messages/registry.yaml prompt-templates/*.md ralph/*.md schema/*.json why/*.md permissions/*.txt commands/*.yaml commands/text/*.yaml journal/*.css
+//go:embed claude/.claude-plugin/plugin.json claude/CLAUDE.md claude/skills/*/references/*.md claude/skills/*/SKILL.md context/*.md project/* entry-templates/*.md hooks/*.md hooks/messages/*/*.txt hooks/messages/registry.yaml prompt-templates/*.md ralph/*.md schema/*.json why/*.md permissions/*.txt commands/*.yaml commands/text/*.yaml journal/*.css integrations/copilot-cli/INSTRUCTIONS.md integrations/copilot-cli/ctx-hooks.json integrations/copilot-cli/skills/*/SKILL.md integrations/copilot-cli/scripts/*.sh integrations/copilot-cli/scripts/*.ps1
 var FS embed.FS
 
 const (

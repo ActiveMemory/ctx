@@ -1,0 +1,69 @@
+{
+  "hooks": {
+    "sessionStart": [
+      {
+        "description": "Bootstrap ctx context on session start",
+        "command": "ctx system bootstrap"
+      },
+      {
+        "description": "Load AI-optimized context packet",
+        "command": "ctx agent --budget 4000"
+      }
+    ],
+    "preToolUse": [
+      {
+        "description": "Context load gate — ensure context is loaded before work",
+        "command": "ctx system context-load-gate"
+      },
+      {
+        "description": "Block dangerous non-path ctx commands",
+        "matcher": "bash",
+        "command": "ctx system block-non-path-ctx"
+      },
+      {
+        "description": "QA reminder nudge",
+        "matcher": "bash",
+        "command": "ctx system qa-reminder"
+      }
+    ],
+    "postToolUse": [
+      {
+        "description": "Post-commit context persistence check",
+        "matcher": "bash",
+        "command": "ctx system post-commit"
+      },
+      {
+        "description": "Check if a task was just completed",
+        "matcher": "edit",
+        "command": "ctx system check-task-completion"
+      },
+      {
+        "description": "Check if a task was just completed (write)",
+        "matcher": "write",
+        "command": "ctx system check-task-completion"
+      }
+    ],
+    "sessionEnd": [
+      {
+        "description": "Check context size for budget drift",
+        "command": "ctx system check-context-size"
+      },
+      {
+        "description": "Persistence check — unsaved decisions/learnings",
+        "command": "ctx system check-persistence"
+      },
+      {
+        "description": "Journal export check",
+        "command": "ctx system check-journal"
+      },
+      {
+        "description": "Version freshness check",
+        "command": "ctx system check-version"
+      },
+      {
+        "description": "Heartbeat — record session activity",
+        "command": "ctx system heartbeat"
+      }
+    ]
+  }
+}
