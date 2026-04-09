@@ -7,9 +7,11 @@
 package hub
 
 import (
+	"crypto/subtle"
 	"encoding/json"
 
 	"github.com/ActiveMemory/ctx/internal/config/token"
+	errHub "github.com/ActiveMemory/ctx/internal/err/hub"
 	"github.com/ActiveMemory/ctx/internal/io"
 )
 
@@ -30,7 +32,10 @@ func NewStore(dir string) (*Store, error) {
 		return nil, mkErr
 	}
 
-	s := &Store{dir: dir}
+	s := &Store{
+		dir:      dir,
+		tokenIdx: make(map[string]int),
+	}
 
 	if loadErr := loadJSON(metaPath(dir), &s.meta); loadErr != nil {
 		return nil, loadErr
@@ -42,6 +47,11 @@ func NewStore(dir string) (*Store, error) {
 	}
 	if loadErr := loadEntries(dir, &s.entries); loadErr != nil {
 		return nil, loadErr
+	}
+
+	// Build token index from loaded clients.
+	for i := range s.clients {
+		s.tokenIdx[s.clients[i].Token] = i
 	}
 
 	return s, nil
@@ -137,11 +147,23 @@ func (s *Store) RegisterClient(client ClientInfo) error {
 	s.mu.Lock()
 	defer s.mu.Unlock()
 
+	// Reject duplicate project names.
+	for i := range s.clients {
+		if s.clients[i].ProjectName == client.ProjectName {
+			return errHub.DuplicateProject(
+				client.ProjectName,
+			)
+		}
+	}
+
+	idx := len(s.clients)
 	s.clients = append(s.clients, client)
+	s.tokenIdx[client.Token] = idx
 	return saveJSON(clientsPath(s.dir), s.clients)
 }
 
-// ValidateToken checks if a token matches a registered client.
+// ValidateToken checks if a token matches a registered
+// client using constant-time comparison.
 //
 // Parameters:
 //   - bearerToken: bearer token to validate
@@ -152,12 +174,17 @@ func (s *Store) ValidateToken(bearerToken string) *ClientInfo {
 	s.mu.Lock()
 	defer s.mu.Unlock()
 
-	for i := range s.clients {
-		if s.clients[i].Token == bearerToken {
-			return &s.clients[i]
-		}
+	idx, ok := s.tokenIdx[bearerToken]
+	if !ok || idx >= len(s.clients) {
+		return nil
 	}
-	return nil
+	stored := s.clients[idx].Token
+	if subtle.ConstantTimeCompare(
+		[]byte(stored), []byte(bearerToken),
+	) != 1 {
+		return nil
+	}
+	return &s.clients[idx]
 }
 
 // Stats returns current hub statistics.

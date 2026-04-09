@@ -14,8 +14,8 @@ import (
 )
 
 // NewFailoverClient creates a client that tries peers in
-// order until one succeeds. The first address is the
-// primary; others are fallbacks.
+// order until one succeeds. Fails fast on auth errors
+// since the token is the same for all peers.
 //
 // Parameters:
 //   - peers: ordered list of hub addresses
@@ -43,7 +43,6 @@ func NewFailoverClient(
 			continue
 		}
 
-		// Verify connectivity with a Status call.
 		resp := &StatusResponse{}
 		callErr := conn.Invoke(
 			addBearerMD(
@@ -55,6 +54,13 @@ func NewFailoverClient(
 		)
 		if callErr != nil {
 			_ = conn.Close()
+
+			// Fail fast on auth errors — same token
+			// won't work on other peers either.
+			if isAuthErr(callErr) {
+				return nil, callErr
+			}
+
 			lastErr = callErr
 			continue
 		}

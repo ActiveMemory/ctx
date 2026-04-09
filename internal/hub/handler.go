@@ -66,6 +66,12 @@ func (s *Server) publish(
 		return &PublishResponse{}, nil
 	}
 
+	for _, pe := range req.Entries {
+		if valErr := validateEntry(pe); valErr != nil {
+			return nil, valErr
+		}
+	}
+
 	entries := make([]Entry, len(req.Entries))
 	for i, pe := range req.Entries {
 		entries[i] = Entry{

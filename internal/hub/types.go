@@ -73,13 +73,15 @@ type Meta struct {
 //   - mu: serializes all reads and writes
 //   - meta: hub-level metadata (sequence counter)
 //   - clients: registered client tokens
+//   - tokenIdx: token-to-client index for O(1) lookup
 //   - entries: in-memory cache of all entries (append-only)
 type Store struct {
-	dir     string
-	mu      sync.Mutex
-	meta    Meta
-	clients []ClientInfo
-	entries []Entry
+	dir      string
+	mu       sync.Mutex
+	meta     Meta
+	clients  []ClientInfo
+	tokenIdx map[string]int
+	entries  []Entry
 }
 
 // Server is the shared context hub gRPC server.
@@ -92,11 +94,13 @@ type Store struct {
 //   - adminToken: token required for Register RPC
 //   - grpc: underlying gRPC server
 //   - listeners: fan-out broadcaster for Listen streams
+//   - cluster: optional Raft cluster for HA
 type Server struct {
 	store      *Store
 	adminToken string
 	grpc       *grpc.Server
 	listeners  *fanOut
+	cluster    *Cluster
 }
 
 // fanOut manages real-time entry broadcast to listeners.
@@ -104,9 +108,11 @@ type Server struct {
 // Fields:
 //   - mu: serializes subscribe/unsubscribe/broadcast
 //   - subs: active listener channels
+//   - dropped: count of disconnected slow listeners
 type fanOut struct {
-	mu   sync.Mutex
-	subs map[chan []Entry]struct{}
+	mu      sync.Mutex
+	subs    map[chan []Entry]struct{}
+	dropped uint64
 }
 
 // RegisterRequest is the input for the Register RPC.

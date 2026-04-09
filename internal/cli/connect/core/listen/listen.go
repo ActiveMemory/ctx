@@ -19,14 +19,13 @@ import (
 	writeConnect "github.com/ActiveMemory/ctx/internal/write/connect"
 )
 
-// Run streams entries from the hub in real-time.
-//
-// Connects to the hub, starts a Sync to get recent entries,
-// then blocks waiting for new entries. Writes each entry to
-// .context/shared/ as it arrives. Stops on Ctrl-C.
+// Run streams entries from the hub in real-time via the
+// Listen RPC. Writes each entry to .context/shared/ as
+// it arrives. Stops on Ctrl-C.
 //
 // Parameters:
 //   - cmd: cobra command for output
+//   - args: unused (cobra signature)
 //
 // Returns:
 //   - error: non-nil if config, connection, or write fails
@@ -51,21 +50,23 @@ func Run(cmd *cobra.Command, _ []string) error {
 
 	writeConnect.Listening(cmd)
 
-	entries, syncErr := client.Sync(
+	listenErr := client.Listen(
 		ctx, cfg.Types, 0,
+		func(msg hub.EntryMsg) error {
+			writeErr := render.WriteEntries(
+				[]hub.EntryMsg{msg},
+			)
+			if writeErr != nil {
+				return writeErr
+			}
+			writeConnect.EntryReceived(cmd, msg.Type)
+			return nil
+		},
 	)
-	if syncErr != nil {
-		return syncErr
-	}
-	if len(entries) > 0 {
-		if writeErr := render.WriteEntries(
-			entries,
-		); writeErr != nil {
-			return writeErr
-		}
-		writeConnect.Synced(cmd, len(entries))
-	}
 
-	<-ctx.Done()
+	// Context cancellation (Ctrl-C) is expected.
+	if listenErr != nil && ctx.Err() == nil {
+		return listenErr
+	}
 	return nil
 }

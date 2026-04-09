@@ -33,10 +33,11 @@ func Run(cmd *cobra.Command) error {
 		return loadErr
 	}
 
-	syncState, stateErr := loadState()
+	syncState, releaseLock, stateErr := loadState()
 	if stateErr != nil {
 		return stateErr
 	}
+	defer releaseLock()
 
 	client, dialErr := hub.NewClient(
 		cfg.HubAddr, cfg.Token,

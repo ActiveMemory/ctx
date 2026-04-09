@@ -76,19 +76,20 @@ func Run(
 		return tokenErr
 	}
 
+	srv := hub.NewServer(store, adminToken)
+
 	// Start Raft cluster if peers are configured.
 	if len(peers) > 0 {
 		bindAddr := fmt.Sprintf(":%d", port+1)
-		_, clusterErr := hub.NewCluster(
+		cluster, clusterErr := hub.NewCluster(
 			fmt.Sprintf(":%d", port),
 			bindAddr, dataDir, peers,
 		)
 		if clusterErr != nil {
 			return clusterErr
 		}
+		srv.SetCluster(cluster)
 	}
-
-	srv := hub.NewServer(store, adminToken)
 
 	addr := fmt.Sprintf(":%d", port)
 	lis, lisErr := net.Listen("tcp", addr)

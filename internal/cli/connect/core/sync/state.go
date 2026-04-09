@@ -19,33 +19,58 @@ import (
 // stateFile is the sync state persistence filename.
 const stateFile = ".sync-state.json"
 
+// lockFile is the lock file to prevent concurrent syncs.
+const lockFile = ".sync.lock"
+
 // loadState reads sync state from .context/shared/.
-func loadState() (state, error) {
+// Acquires a lock file to prevent concurrent access.
+func loadState() (state, func(), error) {
 	var s state
-	path := filepath.Join(
-		rc.ContextDir(), "shared", stateFile,
-	)
+	dir := filepath.Join(rc.ContextDir(), "shared")
+	lockPath := filepath.Join(dir, lockFile)
+
+	if mkErr := io.SafeMkdirAll(
+		dir, fs.PermKeyDir,
+	); mkErr != nil {
+		return s, nil, mkErr
+	}
+
+	// Acquire lock: fail if another sync is running.
+	if _, statErr := os.Stat(lockPath); statErr == nil {
+		return s, nil, os.ErrExist
+	}
+	if writeErr := io.SafeWriteFile(
+		lockPath, []byte("lock"), fs.PermFile,
+	); writeErr != nil {
+		return s, nil, writeErr
+	}
+
+	release := func() { _ = os.Remove(lockPath) }
+
+	path := filepath.Join(dir, stateFile)
 	data, readErr := io.SafeReadUserFile(path)
 	if os.IsNotExist(readErr) {
-		return s, nil
+		return s, release, nil
 	}
 	if readErr != nil {
-		return s, readErr
+		release()
+		return s, nil, readErr
 	}
 	if len(data) == 0 {
-		return s, nil
+		return s, release, nil
 	}
-	return s, json.Unmarshal(data, &s)
+	if unmarshalErr := json.Unmarshal(
+		data, &s,
+	); unmarshalErr != nil {
+		release()
+		return s, nil, unmarshalErr
+	}
+	return s, release, nil
 }
 
 // saveState writes sync state to .context/shared/.
 func saveState(s state) error {
 	dir := filepath.Join(rc.ContextDir(), "shared")
-	if mkErr := io.SafeMkdirAll(
-		dir, fs.PermKeyDir,
-	); mkErr != nil {
-		return mkErr
-	}
 	data, marshalErr := json.MarshalIndent(
 		s, "", "  ",
 	)

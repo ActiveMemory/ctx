@@ -37,7 +37,8 @@ func (f *fanOut) unsubscribe(ch chan []Entry) {
 }
 
 // broadcast sends entries to all active listeners.
-// Non-blocking: slow listeners may miss entries.
+// Non-blocking: slow listeners get disconnected to prevent
+// unbounded buffering.
 func (f *fanOut) broadcast(entries []Entry) {
 	f.mu.Lock()
 	defer f.mu.Unlock()
@@ -46,6 +47,10 @@ func (f *fanOut) broadcast(entries []Entry) {
 		select {
 		case ch <- entries:
 		default:
+			// Slow listener — disconnect to prevent loss.
+			delete(f.subs, ch)
+			close(ch)
+			f.dropped++
 		}
 	}
 }

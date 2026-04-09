@@ -25,6 +25,7 @@ import (
 	"github.com/ActiveMemory/ctx/internal/hub"
 	"github.com/ActiveMemory/ctx/internal/trace"
 	writeAdd "github.com/ActiveMemory/ctx/internal/write/add"
+	writeConnect "github.com/ActiveMemory/ctx/internal/write/connect"
 )
 
 // Run executes the add command logic.
@@ -87,9 +88,11 @@ func Run(cmd *cobra.Command, args []string, flags entity.AddConfig) error {
 			Content: content,
 			Origin:  filepath.Base(state.Dir()),
 		}
-		_ = corePub.Run(
+		if pubErr := corePub.Run(
 			cmd, []hub.PublishEntry{pubEntry},
-		)
+		); pubErr != nil {
+			writeConnect.PublishFailed(cmd, pubErr)
+		}
 	}
 
 	if fType == cfgEntry.Task && coreEntry.NeedsSpec(content) {

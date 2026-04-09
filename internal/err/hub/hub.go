@@ -39,6 +39,29 @@ func InternalErr(cause error) error {
 //
 // Returns:
 //   - error: "action must be 'add' or 'remove', got <action>"
+//
+// DuplicateProject returns an error when a project is
+// already registered.
+//
+// Parameters:
+//   - name: the duplicate project name
+//
+// Returns:
+//   - error: "project already registered: <name>"
+func DuplicateProject(name string) error {
+	return fmt.Errorf(
+		"project already registered: %q", name,
+	)
+}
+
+// InvalidPeerAction returns an error for an unrecognized
+// peer action.
+//
+// Parameters:
+//   - action: the unrecognized action string
+//
+// Returns:
+//   - error: formatted error with the invalid action
 func InvalidPeerAction(action string) error {
 	return fmt.Errorf(
 		"action must be 'add' or 'remove', got %q",
