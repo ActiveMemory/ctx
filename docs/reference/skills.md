@@ -70,6 +70,7 @@ opinionated behavior on top.
 | [`/ctx-loop`](#ctx-loop)                                 | Generate autonomous loop script                                 | user-invocable |
 | [`/ctx-worktree`](#ctx-worktree)                         | Manage git worktrees for parallel agents                        | user-invocable |
 | [`/ctx-architecture`](#ctx-architecture)                 | Build and maintain architecture maps                            | user-invocable |
+| [`/ctx-architecture-failure-analysis`](#ctx-architecture-failure-analysis) | Adversarial failure analysis for correctness bugs | user-invocable |
 | [`/ctx-remind`](#ctx-remind)                             | Manage session-scoped reminders                                 | user-invocable |
 | [`/ctx-doctor`](#ctx-doctor)                             | Troubleshoot ctx behavior with health checks and event analysis | user-invocable |
 | [`/ctx-skill-audit`](#ctx-skill-audit)                   | Audit skills against Anthropic prompting best practices         | user-invocable |
@@ -557,6 +558,39 @@ rather than re-analyzing everything.
 
 **See also**:
 [Detecting and Fixing Drift](../recipes/context-health.md)
+
+---
+
+### `/ctx-architecture-failure-analysis`
+
+Adversarial failure analysis that generates falsifiable incident
+hypotheses against architecture artifacts. Hunts for correctness
+bugs that survive code review and tests: race conditions, ordering
+assumptions, cache staleness, error swallowing, ownership gaps,
+idempotency failures, state machine drift, and scaling cliffs.
+
+Requires `/ctx-architecture` artifacts as input. Reads
+`ARCHITECTURE.md`, `DETAILED_DESIGN*.md`, and `map-tracking.json`,
+then systematically applies 9 failure categories to every mutation
+point. Each finding carries an evidence standard (code path,
+trigger, failure path, silence reason, code evidence), a confidence
+level, and an explicit risk score. A mandatory challenge phase
+attempts to disprove each finding before it is accepted.
+
+Produces `.context/DANGER-ZONES.md` with ranked findings split
+into Critical (risk >= 7, silent/cascading) and Elevated tiers.
+
+**Wraps**: reads architecture artifacts, source code; writes
+`DANGER-ZONES.md`. Optionally uses GitNexus for blast radius
+and Gemini Search for cross-referencing known failure patterns.
+
+**Relationship**:
+
+| Skill | Mode |
+|-------|------|
+| `/ctx-architecture` | Map what exists |
+| `/ctx-architecture-enrich` | Improve map fidelity |
+| `/ctx-architecture-failure-analysis` | Generate falsifiable incident hypotheses |
 
 ---
 
