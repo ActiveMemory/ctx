@@ -26,13 +26,6 @@ import (
 	"github.com/ActiveMemory/ctx/internal/log/warn"
 )
 
-// CopilotCLI parses GitHub Copilot CLI session files.
-//
-// Copilot CLI stores sessions as JSONL files in ~/.copilot/sessions/
-// (or $COPILOT_HOME/sessions/). Each file contains one session with
-// JSONL-formatted messages similar to Claude Code's format.
-type CopilotCLI struct{}
-
 // NewCopilotCLI creates a new Copilot CLI session parser.
 //
 // Returns:

@@ -8,10 +8,10 @@ package dispatch
 
 import (
 	"github.com/ActiveMemory/ctx/internal/config/mcp/method"
-	"github.com/ActiveMemory/ctx/internal/mcp/handler"
+	"github.com/ActiveMemory/ctx/internal/entity"
 	"github.com/ActiveMemory/ctx/internal/mcp/proto"
+	"github.com/ActiveMemory/ctx/internal/mcp/server/dispatch/poll"
 	"github.com/ActiveMemory/ctx/internal/mcp/server/ping"
-	"github.com/ActiveMemory/ctx/internal/mcp/server/poll"
 	"github.com/ActiveMemory/ctx/internal/mcp/server/resource"
 	"github.com/ActiveMemory/ctx/internal/mcp/server/route/fallback"
 	"github.com/ActiveMemory/ctx/internal/mcp/server/route/initialize"
@@ -24,7 +24,7 @@ import (
 //
 // Parameters:
 //   - version: server version string
-//   - h: handler for domain logic
+//   - d: runtime dependencies for domain logic (context dir, budget, session)
 //   - resList: pre-built resource list
 //   - poller: resource poller for subscribe/unsubscribe
 //   - req: parsed JSON-RPC request
@@ -32,7 +32,7 @@ import (
 // Returns:
 //   - *proto.Response: result or error response
 func Do(
-	version string, h *handler.Handler,
+	version string, d *entity.MCPDeps,
 	resList proto.ResourceListResult, poller *poll.Poller,
 	req proto.Request,
 ) *proto.Response {
@@ -45,7 +45,7 @@ func Do(
 		return resource.DispatchList(req, resList)
 	case method.ResourceRead:
 		return resource.DispatchRead(
-			h.ContextDir, h.TokenBudget, req,
+			d.ContextDir, d.TokenBudget, req,
 		)
 	case method.ResourceSubscribe:
 		return resource.DispatchSubscribe(req, poller.Subscribe)
@@ -54,11 +54,11 @@ func Do(
 	case method.ToolList:
 		return tool.DispatchList(req)
 	case method.ToolCall:
-		return tool.DispatchCall(h, req)
+		return tool.DispatchCall(d, req)
 	case method.PromptList:
 		return prompt.DispatchList(req)
 	case method.PromptGet:
-		return prompt.DispatchGet(h, req)
+		return prompt.DispatchGet(d, req)
 	default:
 		return fallback.DispatchErr(req)
 	}

@@ -23,13 +23,6 @@ import (
 	ctxLog "github.com/ActiveMemory/ctx/internal/log/warn"
 )
 
-// ClaudeCode parses Claude Code JSONL session files.
-//
-// Claude Code stores sessions as JSONL files where each line is a
-// self-contained JSON object representing a message. Messages are
-// linked via parentUuid and grouped by sessionId.
-type ClaudeCode struct{}
-
 // Ensure ClaudeCode implements Session.
 var _ Session = (*ClaudeCode)(nil)
 

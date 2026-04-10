@@ -9,20 +9,9 @@ package io
 import (
 	"encoding/json"
 	"io"
-	"sync"
 
 	"github.com/ActiveMemory/ctx/internal/config/token"
 )
-
-// Writer serializes concurrent JSON writes to an underlying io.Writer.
-//
-// Fields:
-//   - w: output stream
-//   - mu: mutex guarding writes
-type Writer struct {
-	w  io.Writer
-	mu sync.Mutex
-}
 
 // NewWriter creates a Writer wrapping the given output stream.
 //

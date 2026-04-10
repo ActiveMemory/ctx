@@ -14,6 +14,7 @@ import (
 	"github.com/ActiveMemory/ctx/internal/config/embed/text"
 	cfgSchema "github.com/ActiveMemory/ctx/internal/config/mcp/schema"
 	"github.com/ActiveMemory/ctx/internal/config/mcp/tool"
+	"github.com/ActiveMemory/ctx/internal/entity"
 	"github.com/ActiveMemory/ctx/internal/mcp/handler"
 	"github.com/ActiveMemory/ctx/internal/mcp/proto"
 	defTool "github.com/ActiveMemory/ctx/internal/mcp/server/def/tool"
@@ -37,13 +38,13 @@ func DispatchList(req proto.Request) *proto.Response {
 // response text.
 //
 // Parameters:
-//   - h: handler for domain logic and session tracking
+//   - d: runtime dependencies for domain logic and session tracking
 //   - req: the MCP request containing tool name and arguments
 //
 // Returns:
 //   - *proto.Response: tool result or error (with governance warnings)
 func DispatchCall(
-	h *handler.Handler, req proto.Request,
+	d *entity.MCPDeps, req proto.Request,
 ) *proto.Response {
 	var params proto.CallToolParams
 	if err := json.Unmarshal(req.Params, &params); err != nil {
@@ -53,50 +54,58 @@ func DispatchCall(
 		)
 	}
 
-	h.Session.RecordToolCall()
-	h.Session.IncrementCallsSinceWrite()
+	d.Session.RecordToolCall()
+	d.Session.IncrementCallsSinceWrite()
 
 	var resp *proto.Response
 
 	switch params.Name {
 	case tool.Status:
-		resp = out.Call(req.ID, h.Status)
-		h.Session.RecordContextLoaded()
+		resp = out.Call(req.ID, func() (string, error) {
+			return handler.Status(d)
+		})
+		d.Session.RecordContextLoaded()
 	case tool.Add:
-		resp = add(h, req.ID, params.Arguments)
-		h.Session.RecordContextWrite()
+		resp = add(d, req.ID, params.Arguments)
+		d.Session.RecordContextWrite()
 	case tool.Complete:
-		resp = complete(h, req.ID, params.Arguments)
-		h.Session.RecordContextWrite()
+		resp = complete(d, req.ID, params.Arguments)
+		d.Session.RecordContextWrite()
 	case tool.Drift:
-		resp = out.Call(req.ID, h.Drift)
-		h.Session.RecordDriftCheck()
+		resp = out.Call(req.ID, func() (string, error) {
+			return handler.Drift(d)
+		})
+		d.Session.RecordDriftCheck()
 	case tool.JournalSource:
-		resp = journalSource(req.ID, params.Arguments, h.Recall)
+		resp = journalSource(d, req.ID, params.Arguments)
 	case tool.WatchUpdate:
-		resp = watchUpdate(h, req.ID, params.Arguments)
-		h.Session.RecordContextWrite()
+		resp = watchUpdate(d, req.ID, params.Arguments)
+		d.Session.RecordContextWrite()
 	case tool.Compact:
-		resp = compact(req.ID, params.Arguments, h.Compact)
-		h.Session.RecordContextWrite()
+		resp = compact(d, req.ID, params.Arguments)
+		d.Session.RecordContextWrite()
 	case tool.Next:
-		resp = out.Call(req.ID, h.Next)
+		resp = out.Call(req.ID, func() (string, error) {
+			return handler.Next(d)
+		})
 	case tool.CheckTaskCompletion:
-		resp = checkTaskCompletion(
-			req.ID, params.Arguments, h.CheckTaskCompletion,
-		)
+		resp = checkTaskCompletion(d, req.ID, params.Arguments)
 	case tool.SessionEvent:
-		resp = sessionEvent(req.ID, params.Arguments, h.SessionEvent)
+		resp = sessionEvent(d, req.ID, params.Arguments)
 	case tool.Remind:
-		resp = out.Call(req.ID, h.Remind)
+		resp = out.Call(req.ID, func() (string, error) {
+			return handler.Remind(d)
+		})
 	case tool.SteeringGet:
-		resp = steeringGet(h, req.ID, params.Arguments)
+		resp = steeringGet(d, req.ID, params.Arguments)
 	case tool.Search:
-		resp = search(h, req.ID, params.Arguments)
+		resp = search(d, req.ID, params.Arguments)
 	case tool.SessionStart:
-		resp = out.Call(req.ID, h.SessionStartHooks)
+		resp = out.Call(req.ID, func() (string, error) {
+			return handler.SessionStartHooks(d)
+		})
 	case tool.SessionEnd:
-		resp = sessionEnd(h, req.ID, params.Arguments)
+		resp = sessionEnd(d, req.ID, params.Arguments)
 	default:
 		return out.ErrResponse(
 			req.ID, cfgSchema.ErrCodeNotFound,
@@ -107,7 +116,7 @@ func DispatchCall(
 		)
 	}
 
-	appendGovernance(resp, params.Name, h)
+	appendGovernance(resp, params.Name, d)
 
 	return resp
 }

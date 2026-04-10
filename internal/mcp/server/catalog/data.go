@@ -13,14 +13,6 @@ import (
 	"github.com/ActiveMemory/ctx/internal/config/mcp/resource"
 )
 
-// mapping pairs a context file name with its MCP resource name and
-// human-readable description.
-type mapping struct {
-	file string
-	name string
-	desc string
-}
-
 // table defines all individual context file resources.
 var table = []mapping{
 	{cfgCtx.Constitution, resource.Constitution,

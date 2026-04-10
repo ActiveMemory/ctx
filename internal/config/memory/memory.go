@@ -29,16 +29,6 @@ var PathMemoryMirror = filepath.Join(dir.Context, dir.Memory, Mirror)
 // TargetSkip indicates an entry that doesn't match any classification rule.
 const TargetSkip = "skip"
 
-// ClassifyRule maps keyword patterns to a target entry type.
-//
-// Fields:
-//   - Target: entry type constant (convention, decision, learning, task)
-//   - Keywords: case-insensitive keyword patterns to match
-type ClassifyRule struct {
-	Target   string   `yaml:"target"`
-	Keywords []string `yaml:"keywords"`
-}
-
 // DefaultClassifyRules are the built-in heuristic rules for classifying
 // memory entries. Users can override this list via the classify_rules
 // key in .ctxrc. Rules are evaluated in priority order.

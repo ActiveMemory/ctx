@@ -17,6 +17,7 @@ DO NOT UPDATE FOR:
 <!-- INDEX:START -->
 | Date | Learning |
 |----|--------|
+| 2026-04-09 | Pad index shifting is a real UX bug in batch operations |
 | 2026-04-08 | fmt.Fprintf to strings.Builder silently discards errors |
 | 2026-04-08 | AST audit tests must cover unexported functions too |
 | 2026-04-06 | Agents ignore system-reminder content without explicit relay instructions |
@@ -108,6 +109,16 @@ DO NOT UPDATE FOR:
 | 2026-02-22 | Gitignore and filesystem hygiene (consolidated) |
 | 2026-01-28 | IDE is already the UI |
 <!-- INDEX:END -->
+
+---
+
+## [2026-04-09-001323] Pad index shifting is a real UX bug in batch operations
+
+**Context**: ctx pad rm 10; rm 11; rm 12 deleted wrong entries because indices shifted after each deletion
+
+**Lesson**: Any ID-based system where users chain operations needs stable IDs. Look-then-act is safe for single ops; look-then-batch-act breaks with shifting indices
+
+**Application**: Both pad and remind now use stable IDs with batch delete and range support. Apply same pattern to any future numbered-list subsystem
 
 ---
 

@@ -20,9 +20,6 @@ import (
 	ctxLog "github.com/ActiveMemory/ctx/internal/log/warn"
 )
 
-// Builder implements GraphBuilder for Python projects.
-type Builder struct{}
-
 // Name returns the ecosystem label.
 //
 // Returns:

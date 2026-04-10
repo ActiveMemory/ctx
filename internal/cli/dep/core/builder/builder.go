@@ -13,23 +13,6 @@ import (
 	"github.com/ActiveMemory/ctx/internal/cli/dep/core/rust"
 )
 
-// GraphBuilder produces a dependency adjacency list for a
-// specific ecosystem.
-type GraphBuilder interface {
-	// Name returns the ecosystem label
-	// (e.g. "go", "node", "python", "rust").
-	Name() string
-
-	// Detect returns true if the current directory contains
-	// this ecosystem's manifest file.
-	Detect() bool
-
-	// Build produces an adjacency list of dependencies.
-	// When external is false, only internal dependencies
-	// are included.
-	Build(external bool) (map[string][]string, error)
-}
-
 // Builders is the ordered registry of graph builders.
 // Detection walks this list; the first match wins.
 var Builders = []GraphBuilder{

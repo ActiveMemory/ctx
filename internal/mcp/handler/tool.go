@@ -32,18 +32,20 @@ import (
 	"github.com/ActiveMemory/ctx/internal/journal/parser"
 	"github.com/ActiveMemory/ctx/internal/mcp/handler/task"
 	"github.com/ActiveMemory/ctx/internal/mcp/server/stat"
-	"github.com/ActiveMemory/ctx/internal/mcp/session"
 	"github.com/ActiveMemory/ctx/internal/tidy"
 	"github.com/ActiveMemory/ctx/internal/validate"
 )
 
 // Status loads context and returns a status summary.
 //
+// Parameters:
+//   - d: runtime dependencies carrying the context directory
+//
 // Returns:
 //   - string: formatted status text with file list and token counts
 //   - error: context load error
-func (h *Handler) Status() (string, error) {
-	ctx, loadErr := load.Do(h.ContextDir)
+func Status(d *entity.MCPDeps) (string, error) {
+	ctx, loadErr := load.Do(d.ContextDir)
 	if loadErr != nil {
 		return "", loadErr
 	}
@@ -79,6 +81,7 @@ func (h *Handler) Status() (string, error) {
 // Add adds an entry to a context file.
 //
 // Parameters:
+//   - d: runtime dependencies carrying the context directory
 //   - entryType: the type of entry (task, decision, learning, convention)
 //   - content: the entry content
 //   - opts: optional fields for the entry
@@ -86,11 +89,12 @@ func (h *Handler) Status() (string, error) {
 // Returns:
 //   - string: confirmation message with entry type and target file
 //   - error: boundary, validation, or write error
-func (h *Handler) Add(
+func Add(
+	d *entity.MCPDeps,
 	entryType, content string, opts entity.EntryOpts,
 ) (string, error) {
 	if boundaryErr := validate.Boundary(
-		h.ContextDir,
+		d.ContextDir,
 	); boundaryErr != nil {
 		return "", boundaryErr
 	}
@@ -98,7 +102,7 @@ func (h *Handler) Add(
 	if writeErr := entry.ValidateAndWrite(entity.EntryParams{
 		Type:        entryType,
 		Content:     content,
-		ContextDir:  h.ContextDir,
+		ContextDir:  d.ContextDir,
 		Priority:    opts.Priority,
 		SessionID:   opts.SessionID,
 		Branch:      opts.Branch,
@@ -121,20 +125,21 @@ func (h *Handler) Add(
 // Complete marks a task as done by number or text match.
 //
 // Parameters:
+//   - d: runtime dependencies carrying the context directory
 //   - query: task number or text fragment to match
 //
 // Returns:
 //   - string: confirmation message with completed task text
 //   - error: boundary or completion error
-func (h *Handler) Complete(query string) (string, error) {
+func Complete(d *entity.MCPDeps, query string) (string, error) {
 	if boundaryErr := validate.Boundary(
-		h.ContextDir,
+		d.ContextDir,
 	); boundaryErr != nil {
 		return "", boundaryErr
 	}
 
 	completedTask, _, completeErr := taskComplete.Complete(
-		query, h.ContextDir,
+		query, d.ContextDir,
 	)
 	if completeErr != nil {
 		return "", completeErr
@@ -148,11 +153,14 @@ func (h *Handler) Complete(query string) (string, error) {
 
 // Drift runs drift detection and returns the report.
 //
+// Parameters:
+//   - d: runtime dependencies carrying the context directory
+//
 // Returns:
 //   - string: formatted drift report with violations, warnings, passed
 //   - error: context load error
-func (h *Handler) Drift() (string, error) {
-	ctx, loadErr := load.Do(h.ContextDir)
+func Drift(d *entity.MCPDeps) (string, error) {
+	ctx, loadErr := load.Do(d.ContextDir)
 	if loadErr != nil {
 		return "", loadErr
 	}
@@ -203,13 +211,16 @@ func (h *Handler) Drift() (string, error) {
 // Recall queries recent session history.
 //
 // Parameters:
+//   - d: runtime dependencies (unused, kept for signature uniformity)
 //   - limit: max sessions to return
 //   - since: only return sessions after this time (zero value = no filter)
 //
 // Returns:
 //   - string: formatted session list with dates, projects, durations
 //   - error: session discovery error
-func (h *Handler) Recall(limit int, since time.Time) (string, error) {
+func Recall(
+	_ *entity.MCPDeps, limit int, since time.Time,
+) (string, error) {
 	sessions, findErr := parser.FindSessions()
 	if findErr != nil {
 		return "", findErr
@@ -276,6 +287,7 @@ func (h *Handler) Recall(limit int, since time.Time) (string, error) {
 // WatchUpdate applies a structured context-update to .context/ files.
 //
 // Parameters:
+//   - d: runtime dependencies carrying the context directory and session
 //   - entryType: the type of entry
 //   - content: the entry content
 //   - opts: optional fields for the entry
@@ -283,10 +295,11 @@ func (h *Handler) Recall(limit int, since time.Time) (string, error) {
 // Returns:
 //   - string: confirmation with file name and review status
 //   - error: boundary, validation, or write error
-func (h *Handler) WatchUpdate(
+func WatchUpdate(
+	d *entity.MCPDeps,
 	entryType, content string, opts entity.EntryOpts,
 ) (string, error) {
-	boundaryErr := validate.Boundary(h.ContextDir)
+	boundaryErr := validate.Boundary(d.ContextDir)
 	if boundaryErr != nil {
 		return "", boundaryErr
 	}
@@ -294,11 +307,11 @@ func (h *Handler) WatchUpdate(
 	// Handle the "complete" type as a special case.
 	if entryType == cfgEntry.Complete {
 		completedTask, _, completeErr := taskComplete.Complete(
-			content, h.ContextDir)
+			content, d.ContextDir)
 		if completeErr != nil {
 			return "", completeErr
 		}
-		h.Session.QueuePendingUpdate(session.PendingUpdate{
+		d.Session.QueuePendingUpdate(entity.PendingUpdate{
 			Type:     entryType,
 			Content:  content,
 			QueuedAt: time.Now(),
@@ -313,7 +326,7 @@ func (h *Handler) WatchUpdate(
 	if writeErr := entry.ValidateAndWrite(entity.EntryParams{
 		Type:        entryType,
 		Content:     content,
-		ContextDir:  h.ContextDir,
+		ContextDir:  d.ContextDir,
 		Priority:    opts.Priority,
 		SessionID:   opts.SessionID,
 		Branch:      opts.Branch,
@@ -327,8 +340,8 @@ func (h *Handler) WatchUpdate(
 		return "", writeErr
 	}
 
-	h.Session.RecordAdd(entryType)
-	h.Session.QueuePendingUpdate(session.PendingUpdate{
+	d.Session.RecordAdd(entryType)
+	d.Session.QueuePendingUpdate(entity.PendingUpdate{
 		Type:    entryType,
 		Content: content,
 		Attrs: map[string]string{
@@ -347,19 +360,20 @@ func (h *Handler) WatchUpdate(
 // Compact moves completed tasks to the archive section.
 //
 // Parameters:
+//   - d: runtime dependencies carrying the context directory
 //   - archive: whether to write archivable blocks to the archive file
 //
 // Returns:
 //   - string: summary of moved tasks and cleaned sections
 //   - error: boundary, context load, or write error
-func (h *Handler) Compact(archive bool) (string, error) {
+func Compact(d *entity.MCPDeps, archive bool) (string, error) {
 	if boundaryErr := validate.Boundary(
-		h.ContextDir,
+		d.ContextDir,
 	); boundaryErr != nil {
 		return "", boundaryErr
 	}
 
-	ctx, loadErr := load.Do(h.ContextDir)
+	ctx, loadErr := load.Do(d.ContextDir)
 	if loadErr != nil {
 		return "", loadErr
 	}
@@ -441,11 +455,14 @@ func (h *Handler) Compact(archive bool) (string, error) {
 
 // Next suggests the next pending task.
 //
+// Parameters:
+//   - d: runtime dependencies carrying the context directory
+//
 // Returns:
 //   - string: next pending task or all-complete message
 //   - error: context load error
-func (h *Handler) Next() (string, error) {
-	ctx, loadErr := load.Do(h.ContextDir)
+func Next(d *entity.MCPDeps) (string, error) {
+	ctx, loadErr := load.Do(d.ContextDir)
 	if loadErr != nil {
 		return "", loadErr
 	}
@@ -477,13 +494,16 @@ func (h *Handler) Next() (string, error) {
 // tasks.
 //
 // Parameters:
+//   - d: runtime dependencies carrying the context directory
 //   - recentAction: description of the action to match against tasks
 //
 // Returns:
 //   - string: matching task prompt with the completion hint, or empty
 //   - error: context load error
-func (h *Handler) CheckTaskCompletion(recentAction string) (string, error) {
-	ctx, loadErr := load.Do(h.ContextDir)
+func CheckTaskCompletion(
+	d *entity.MCPDeps, recentAction string,
+) (string, error) {
+	ctx, loadErr := load.Do(d.ContextDir)
 	if loadErr != nil {
 		return "", loadErr
 	}
@@ -514,35 +534,40 @@ func (h *Handler) CheckTaskCompletion(recentAction string) (string, error) {
 
 // SessionEvent handles session lifecycle events (start/end).
 //
+// On a "start" event the session state is reset to a fresh value
+// and marked as started, so subsequent governance checks measure
+// against the new session.
+//
 // Parameters:
+//   - d: runtime dependencies carrying the context directory and session
 //   - eventType: the event type (start or end)
 //   - caller: optional caller identifier for start events
 //
 // Returns:
 //   - string: session confirmation or end-of-session summary
 //   - error: unknown event type error
-func (h *Handler) SessionEvent(
-	eventType, caller string,
+func SessionEvent(
+	d *entity.MCPDeps, eventType, caller string,
 ) (string, error) {
 	switch eventType {
 	case event.Start:
-		h.Session = session.NewState(h.ContextDir)
-		h.Session.RecordSessionStart()
+		d.Session = entity.NewMCPSession()
+		d.Session.RecordSessionStart()
 		if caller != "" {
 			return fmt.Sprintf(
 				desc.Text(
 					text.DescKeyMCPSessionStartedCallerFormat,
 				),
-				caller, h.ContextDir,
+				caller, d.ContextDir,
 			), nil
 		}
 		return fmt.Sprintf(
 			desc.Text(text.DescKeyMCPSessionStartedFormat),
-			h.ContextDir,
+			d.ContextDir,
 		), nil
 
 	case event.End:
-		pending := h.Session.PendingCount()
+		pending := d.Session.PendingCount()
 		var sb strings.Builder
 		sb.WriteString(desc.Text(text.DescKeyMCPSessionEnding))
 		sb.WriteString(token.NewlineLF)
@@ -553,7 +578,7 @@ func (h *Handler) SessionEvent(
 				desc.Text(text.DescKeyMCPPendingUpdatesFormat),
 				pending,
 			)
-			for i, pu := range h.Session.PendingFlush {
+			for i, pu := range d.Session.PendingFlush {
 				_, _ = fmt.Fprintf(
 					&sb,
 					desc.Text(text.DescKeyMCPFormatPendingItem)+
@@ -571,8 +596,8 @@ func (h *Handler) SessionEvent(
 
 		io.SafeFprintf(&sb,
 			desc.Text(text.DescKeyMCPFormatSessionStats),
-			h.Session.ToolCalls,
-			stat.TotalAdds(h.Session.AddsPerformed),
+			d.Session.ToolCalls,
+			stat.TotalAdds(d.Session.AddsPerformed),
 		)
 
 		return sb.String(), nil
@@ -584,10 +609,13 @@ func (h *Handler) SessionEvent(
 
 // Remind lists pending session-scoped reminders.
 //
+// Parameters:
+//   - d: runtime dependencies (unused, kept for signature uniformity)
+//
 // Returns:
 //   - string: formatted reminder list or no-reminders message
 //   - error: reminder read error
-func (h *Handler) Remind() (string, error) {
+func Remind(_ *entity.MCPDeps) (string, error) {
 	reminders, readErr := remindStore.Read()
 	if readErr != nil {
 		return "", readErr

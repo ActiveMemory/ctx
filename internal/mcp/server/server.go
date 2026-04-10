@@ -14,14 +14,14 @@ import (
 	"github.com/ActiveMemory/ctx/internal/config/embed/text"
 	"github.com/ActiveMemory/ctx/internal/config/mcp/cfg"
 	cfgSchema "github.com/ActiveMemory/ctx/internal/config/mcp/schema"
-	"github.com/ActiveMemory/ctx/internal/mcp/handler"
+	"github.com/ActiveMemory/ctx/internal/entity"
 	"github.com/ActiveMemory/ctx/internal/mcp/proto"
 	"github.com/ActiveMemory/ctx/internal/mcp/server/catalog"
 	"github.com/ActiveMemory/ctx/internal/mcp/server/dispatch"
+	"github.com/ActiveMemory/ctx/internal/mcp/server/dispatch/poll"
 	mcpIO "github.com/ActiveMemory/ctx/internal/mcp/server/io"
 	"github.com/ActiveMemory/ctx/internal/mcp/server/out"
 	"github.com/ActiveMemory/ctx/internal/mcp/server/parse"
-	"github.com/ActiveMemory/ctx/internal/mcp/server/poll"
 	"github.com/ActiveMemory/ctx/internal/rc"
 )
 
@@ -36,7 +36,11 @@ import (
 func New(contextDir, version string) *Server {
 	catalog.Init()
 	srv := &Server{
-		handler:      handler.New(contextDir, rc.TokenBudget()),
+		deps: &entity.MCPDeps{
+			ContextDir:  contextDir,
+			TokenBudget: rc.TokenBudget(),
+			Session:     entity.NewMCPSession(),
+		},
 		version:      version,
 		out:          mcpIO.NewWriter(os.Stdout),
 		in:           os.Stdin,
@@ -80,7 +84,7 @@ func (s *Server) Serve() error {
 		}
 
 		resp := dispatch.Do(
-			s.version, s.handler, s.resourceList, s.poller, *req,
+			s.version, s.deps, s.resourceList, s.poller, *req,
 		)
 
 		if writeErr := s.out.WriteJSON(resp); writeErr != nil {

@@ -21,8 +21,8 @@ import (
 	cfgSchema "github.com/ActiveMemory/ctx/internal/config/mcp/schema"
 	"github.com/ActiveMemory/ctx/internal/config/token"
 	"github.com/ActiveMemory/ctx/internal/context/load"
+	"github.com/ActiveMemory/ctx/internal/entity"
 	"github.com/ActiveMemory/ctx/internal/mcp/proto"
-	defPrompt "github.com/ActiveMemory/ctx/internal/mcp/server/def/prompt"
 	"github.com/ActiveMemory/ctx/internal/mcp/server/out"
 	"github.com/ActiveMemory/ctx/internal/mcp/server/stat"
 )
@@ -147,12 +147,12 @@ func checkpoint(
 func addDecision(
 	id json.RawMessage, args map[string]string,
 ) *proto.Response {
-	return buildEntry(id, defPrompt.EntrySpec{
+	return buildEntry(id, entity.PromptEntrySpec{
 		KeyHeader:  text.DescKeyMCPPromptAddDecisionHeader,
 		KeyFooter:  text.DescKeyMCPPromptAddDecisionFooter,
 		FieldFmtK:  text.DescKeyMCPPromptAddDecisionFieldFmt,
 		KeyResultD: text.DescKeyMCPPromptAddDecisionResultD,
-		Fields: []defPrompt.EntryField{
+		Fields: []entity.PromptEntryField{
 			{KeyLabel: text.DescKeyMCPPromptLabelDecision,
 				Value: args[field.Content]},
 			{KeyLabel: text.DescKeyMCPPromptLabelContext,
@@ -177,12 +177,12 @@ func addDecision(
 func addLearning(
 	id json.RawMessage, args map[string]string,
 ) *proto.Response {
-	return buildEntry(id, defPrompt.EntrySpec{
+	return buildEntry(id, entity.PromptEntrySpec{
 		KeyHeader:  text.DescKeyMCPPromptAddLearningHeader,
 		KeyFooter:  text.DescKeyMCPPromptAddLearningFooter,
 		FieldFmtK:  text.DescKeyMCPPromptAddLearningFieldFmt,
 		KeyResultD: text.DescKeyMCPPromptAddLearningResultD,
-		Fields: []defPrompt.EntryField{
+		Fields: []entity.PromptEntryField{
 			{KeyLabel: text.DescKeyMCPPromptLabelLearning,
 				Value: args[field.Content]},
 			{KeyLabel: text.DescKeyMCPPromptLabelContext,

@@ -24,10 +24,13 @@ import (
 // Returns success with empty context when no triggers exist or
 // triggers are disabled.
 //
+// Parameters:
+//   - d: runtime dependencies (unused, kept for signature uniformity)
+//
 // Returns:
 //   - string: aggregated context from trigger outputs
 //   - error: trigger discovery or execution error
-func (h *Handler) SessionStartHooks() (string, error) {
+func SessionStartHooks(_ *entity.MCPDeps) (string, error) {
 	if !rc.HooksEnabled() {
 		return desc.Text(text.DescKeyMCPHooksDisabled), nil
 	}
@@ -66,12 +69,13 @@ func (h *Handler) SessionStartHooks() (string, error) {
 // triggers are disabled.
 //
 // Parameters:
+//   - d: runtime dependencies (unused, kept for signature uniformity)
 //   - summary: optional session summary passed to triggers via parameters
 //
 // Returns:
 //   - string: aggregated context from trigger outputs
 //   - error: trigger discovery or execution error
-func (h *Handler) SessionEndHooks(summary string) (string, error) {
+func SessionEndHooks(_ *entity.MCPDeps, summary string) (string, error) {
 	if !rc.HooksEnabled() {
 		return desc.Text(text.DescKeyMCPHooksDisabled), nil
 	}

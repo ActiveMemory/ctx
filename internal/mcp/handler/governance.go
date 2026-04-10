@@ -4,7 +4,7 @@
 //   \    Copyright 2026-present Context contributors.
 //                 SPDX-License-Identifier: Apache-2.0
 
-package session
+package handler
 
 import (
 	"fmt"
@@ -17,62 +17,21 @@ import (
 	"github.com/ActiveMemory/ctx/internal/config/mcp/governance"
 	"github.com/ActiveMemory/ctx/internal/config/mcp/tool"
 	"github.com/ActiveMemory/ctx/internal/config/token"
+	"github.com/ActiveMemory/ctx/internal/entity"
 )
-
-// RecordSessionStart marks the session as explicitly started and
-// resets the session start timestamp.
-//
-// Called by the session_event tool when the agent reports a "start"
-// event. Sets sessionStarted to true and captures the current wall
-// time so governance checks can measure elapsed time.
-func (ss *State) RecordSessionStart() {
-	ss.sessionStarted = true
-	ss.sessionStartedAt = time.Now()
-}
-
-// RecordContextLoaded marks context as loaded for this session.
-//
-// Called after the agent successfully loads context files (TASKS.md,
-// DECISIONS.md, etc.). Suppresses the "context not loaded" governance
-// warning that would otherwise appear on every tool response.
-func (ss *State) RecordContextLoaded() {
-	ss.contextLoaded = true
-}
-
-// RecordDriftCheck records that a drift check was performed.
-//
-// Called after the agent runs ctx_drift. Updates the last-drift-check
-// timestamp so CheckGovernance can determine whether a follow-up drift
-// check is overdue based on governance.DriftCheckInterval.
-func (ss *State) RecordDriftCheck() {
-	ss.lastDriftCheck = time.Now()
-}
-
-// RecordContextWrite records that a .context/ write occurred.
-//
-// Called after successful ctx_add, ctx_complete, ctx_watch_update, or
-// ctx_compact invocations. Captures the current wall time and resets
-// the calls-since-write counter to zero, which suppresses persist
-// nudges until governance.PersistNudgeAfter more tool calls elapse.
-func (ss *State) RecordContextWrite() {
-	ss.lastContextWrite = time.Now()
-	ss.callsSinceWrite = 0
-}
-
-// IncrementCallsSinceWrite bumps the counter used for persist nudges.
-//
-// Called by the MCP server after every tool dispatch regardless of tool
-// type. When the counter reaches governance.PersistNudgeAfter,
-// CheckGovernance begins emitting persist nudge warnings.
-func (ss *State) IncrementCallsSinceWrite() {
-	ss.callsSinceWrite++
-}
 
 // CheckGovernance returns governance warnings that should be
 // appended to the current tool response. Returns an empty string
 // when no action is warranted.
 //
+// It also drains the VS Code extension's violations file for the
+// given context directory, which is why this is a free function in
+// the handler package (I/O) rather than a method on
+// [entity.MCPSession].
+//
 // Parameters:
+//   - d: runtime dependencies carrying the session state and
+//     context directory
 //   - toolName: the MCP tool that was just called, used to
 //     suppress redundant warnings (e.g. drift warning is not
 //     appended to a ctx_drift response)
@@ -80,30 +39,31 @@ func (ss *State) IncrementCallsSinceWrite() {
 // Returns:
 //   - string: newline-separated warnings preceded by a separator,
 //     or empty string when no warnings apply
-func (ss *State) CheckGovernance(toolName string) string {
+func CheckGovernance(d *entity.MCPDeps, toolName string) string {
+	ss := d.Session
 	var warnings []string
 
 	// 1. Session not started
-	if !ss.sessionStarted && toolName != tool.SessionEvent {
+	if !ss.SessionStarted && toolName != tool.SessionEvent {
 		warnings = append(warnings,
 			desc.Text(text.DescKeyGovSessionNotStarted))
 	}
 
 	// 2. Context not loaded
-	if !ss.contextLoaded && toolName != tool.Status &&
+	if !ss.ContextLoaded && toolName != tool.Status &&
 		toolName != tool.SessionEvent {
 		warnings = append(warnings,
 			desc.Text(text.DescKeyGovContextNotLoaded))
 	}
 
 	// 3. Drift not checked recently
-	if ss.sessionStarted && toolName != tool.Drift &&
+	if ss.SessionStarted && toolName != tool.Drift &&
 		toolName != tool.SessionEvent {
-		if !ss.lastDriftCheck.IsZero() {
-			if time.Since(ss.lastDriftCheck) > governance.DriftCheckInterval {
+		if !ss.LastDriftCheck.IsZero() {
+			if time.Since(ss.LastDriftCheck) > governance.DriftCheckInterval {
 				warnings = append(warnings, fmt.Sprintf(
 					desc.Text(text.DescKeyGovDriftNotChecked),
-					int(time.Since(ss.lastDriftCheck).Minutes())))
+					int(time.Since(ss.LastDriftCheck).Minutes())))
 			}
 		} else if ss.ToolCalls > governance.DriftCheckMinCalls {
 			// Never checked drift and already past threshold
@@ -113,23 +73,23 @@ func (ss *State) CheckGovernance(toolName string) string {
 	}
 
 	// 4. Persist nudge — no context writes in a while
-	if ss.sessionStarted && ss.callsSinceWrite >= governance.PersistNudgeAfter &&
+	if ss.SessionStarted && ss.CallsSinceWrite >= governance.PersistNudgeAfter &&
 		toolName != tool.Add && toolName != tool.WatchUpdate &&
 		toolName != tool.Complete && toolName != tool.Compact &&
 		toolName != tool.SessionEvent {
 		// Fire at threshold, then every governance.PersistNudgeRepeat
 		// calls after.
-		if ss.callsSinceWrite == governance.PersistNudgeAfter ||
-			(ss.callsSinceWrite-governance.PersistNudgeAfter)%
+		if ss.CallsSinceWrite == governance.PersistNudgeAfter ||
+			(ss.CallsSinceWrite-governance.PersistNudgeAfter)%
 				governance.PersistNudgeRepeat == 0 {
 			warnings = append(warnings, fmt.Sprintf(
 				desc.Text(text.DescKeyGovPersistNudge),
-				ss.callsSinceWrite))
+				ss.CallsSinceWrite))
 		}
 	}
 
 	// 5. Violations from extension detection ring
-	if violations := readAndClearViolations(ss.contextDir); len(violations) > 0 {
+	if violations := readAndClearViolations(d.ContextDir); len(violations) > 0 {
 		for _, v := range violations {
 			detail := v.Detail
 			if len(detail) > cfgFmt.TruncateDetail {

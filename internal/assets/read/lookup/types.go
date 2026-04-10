@@ -15,3 +15,10 @@ type ConfigPattern struct {
 	Pattern string
 	Topic   string
 }
+
+// commandEntry is a single YAML-backed description with
+// short and optional long forms.
+type commandEntry struct {
+	Short string `yaml:"short"`
+	Long  string `yaml:"long"`
+}

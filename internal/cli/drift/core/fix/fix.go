@@ -35,18 +35,6 @@ import (
 	writeDrift "github.com/ActiveMemory/ctx/internal/write/drift"
 )
 
-// Result tracks fixes applied during drift fix.
-//
-// Fields:
-//   - Fixed: Number of issues successfully fixed
-//   - Skipped: Number of issues skipped (not auto-fixable)
-//   - Errors: Error messages from failed fix attempts
-type Result struct {
-	Fixed   int
-	Skipped int
-	Errors  []string
-}
-
 // Apply attempts to auto-fix issues in the drift report.
 //
 // Currently supports fixing:

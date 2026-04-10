@@ -19,16 +19,6 @@ var DocAliases = map[string]string{
 	cfgWhy.DocInvariants: cfgWhy.DocAliasInvariants,
 }
 
-// DocEntry pairs a document alias with its display label.
-//
-// Fields:
-//   - Alias: Document lookup key (e.g. "manifesto")
-//   - Label: Menu display text
-type DocEntry struct {
-	Alias string
-	Label string
-}
-
 // DocOrder defines the display order for the interactive
 // menu.
 var DocOrder = []DocEntry{

@@ -12,42 +12,43 @@ import (
 	"github.com/ActiveMemory/ctx/internal/assets/read/desc"
 	"github.com/ActiveMemory/ctx/internal/config/embed/text"
 	"github.com/ActiveMemory/ctx/internal/config/mcp/field"
+	"github.com/ActiveMemory/ctx/internal/entity"
 	"github.com/ActiveMemory/ctx/internal/mcp/handler"
 	"github.com/ActiveMemory/ctx/internal/mcp/proto"
 	"github.com/ActiveMemory/ctx/internal/mcp/server/out"
 )
 
 // steeringGet extracts the optional prompt and delegates to
-// handler.SteeringGet.
+// [handler.SteeringGet].
 //
 // Parameters:
-//   - h: handler for domain logic
+//   - d: runtime dependencies
 //   - id: JSON-RPC request ID
 //   - args: MCP tool arguments (prompt)
 //
 // Returns:
 //   - *proto.Response: steering files or error
 func steeringGet(
-	h *handler.Handler, id json.RawMessage,
+	d *entity.MCPDeps, id json.RawMessage,
 	args map[string]interface{},
 ) *proto.Response {
 	prompt, _ := args[field.Prompt].(string)
-	t, err := h.SteeringGet(prompt)
+	t, err := handler.SteeringGet(d, prompt)
 	return out.ToolResult(id, t, err)
 }
 
 // search extracts the required query and delegates to
-// handler.Search.
+// [handler.Search].
 //
 // Parameters:
-//   - h: handler for domain logic
+//   - d: runtime dependencies
 //   - id: JSON-RPC request ID
 //   - args: MCP tool arguments (query)
 //
 // Returns:
 //   - *proto.Response: search results or error
 func search(
-	h *handler.Handler, id json.RawMessage,
+	d *entity.MCPDeps, id json.RawMessage,
 	args map[string]interface{},
 ) *proto.Response {
 	query, _ := args[field.Query].(string)
@@ -56,25 +57,25 @@ func search(
 			id, desc.Text(text.DescKeyMCPErrQueryRequired),
 		)
 	}
-	t, err := h.Search(query)
+	t, err := handler.Search(d, query)
 	return out.ToolResult(id, t, err)
 }
 
 // sessionEnd extracts the optional summary and delegates to
-// handler.SessionEndHooks.
+// [handler.SessionEndHooks].
 //
 // Parameters:
-//   - h: handler for domain logic
+//   - d: runtime dependencies
 //   - id: JSON-RPC request ID
 //   - args: MCP tool arguments (summary)
 //
 // Returns:
 //   - *proto.Response: session end result or error
 func sessionEnd(
-	h *handler.Handler, id json.RawMessage,
+	d *entity.MCPDeps, id json.RawMessage,
 	args map[string]interface{},
 ) *proto.Response {
 	summary, _ := args[field.Summary].(string)
-	t, err := h.SessionEndHooks(summary)
+	t, err := handler.SessionEndHooks(d, summary)
 	return out.ToolResult(id, t, err)
 }

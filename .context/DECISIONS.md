@@ -3,6 +3,7 @@
 <!-- INDEX:START -->
 | Date | Decision |
 |----|--------|
+| 2026-04-09 | Architecture skill pipeline is a triad not a quartet |
 | 2026-04-08 | Remove #done tag convention, simplify task archival |
 | 2026-04-06 | Use hook relay for session provenance instead of JSONL parsing or env vars |
 | 2026-04-04 | TestNoMagicStrings and TestNoMagicValues no longer exempt const/var definitions outside config/ |
@@ -117,6 +118,20 @@ For significant decisions:
 ✗ No real alternatives existed
 
 -->
+
+## [2026-04-09-001332] Architecture skill pipeline is a triad not a quartet
+
+**Status**: Accepted
+
+**Context**: Had a proposed ctx-architecture-extend for extension point mapping, making four skills
+
+**Decision**: Architecture skill pipeline is a triad not a quartet
+
+**Rationale**: Extension points already covered per-module in DETAILED_DESIGN and by registration site discovery in enrich. Fourth skill fragments pipeline without distinct value
+
+**Consequence**: Pipeline is map enrich hunt. Three skills three questions: how does it work, how well does it connect, where will it break
+
+---
 
 ## [2026-04-08-013731] Remove #done tag convention, simplify task archival
 

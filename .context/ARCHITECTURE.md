@@ -91,7 +91,6 @@ graph TD
 
     MCP --> HANDLER[mcp/handler]
     MCP --> PROTO[mcp/proto]
-    MCP --> SESSION[mcp/session]
     HANDLER --> DOMAIN
 
     CORE --> DOMAIN[domain packages]
@@ -163,12 +162,12 @@ graph TD
 | `mcp/proto` | JSON-RPC 2.0 message types, MCP constants |
 | `mcp/server` | Main loop: stdin read, dispatch, stdout write |
 | `mcp/server/dispatch` | Method-based request routing |
+| `mcp/server/dispatch/poll` | File mtime polling for change notifications |
 | `mcp/server/catalog` | URI-to-file resource mapping (9 resources) |
-| `mcp/server/poll` | File mtime polling for change notifications |
 | `mcp/server/route/*` | Handlers: initialize, ping, tool, prompt, resource |
 | `mcp/server/def/*` | Tool (11) and prompt (5) definitions |
-| `mcp/handler` | Domain logic (testable without JSON-RPC) |
-| `mcp/session` | Per-session advisory state and governance |
+| `mcp/handler` | Domain logic as free functions taking `*entity.MCPDeps` |
+| `entity.MCPSession` | Per-session advisory state (pure data + mutations) |
 
 ### CLI Commands (`internal/cli/*`)
 

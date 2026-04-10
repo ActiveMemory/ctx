@@ -7,6 +7,7 @@
 package tool
 
 import (
+	"github.com/ActiveMemory/ctx/internal/entity"
 	"github.com/ActiveMemory/ctx/internal/mcp/handler"
 	"github.com/ActiveMemory/ctx/internal/mcp/proto"
 )
@@ -18,11 +19,11 @@ import (
 // Parameters:
 //   - resp: the MCP response to augment
 //   - toolName: name of the tool that was called
-//   - h: handler providing session governance state
+//   - d: runtime dependencies carrying the session state
 func appendGovernance(
-	resp *proto.Response, toolName string, h *handler.Handler,
+	resp *proto.Response, toolName string, d *entity.MCPDeps,
 ) {
-	warning := h.Session.CheckGovernance(toolName)
+	warning := handler.CheckGovernance(d, toolName)
 	if warning == "" {
 		return
 	}

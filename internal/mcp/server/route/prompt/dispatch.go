@@ -14,7 +14,7 @@ import (
 	"github.com/ActiveMemory/ctx/internal/config/embed/text"
 	"github.com/ActiveMemory/ctx/internal/config/mcp/prompt"
 	cfgSchema "github.com/ActiveMemory/ctx/internal/config/mcp/schema"
-	"github.com/ActiveMemory/ctx/internal/mcp/handler"
+	"github.com/ActiveMemory/ctx/internal/entity"
 	"github.com/ActiveMemory/ctx/internal/mcp/proto"
 	defPrompt "github.com/ActiveMemory/ctx/internal/mcp/server/def/prompt"
 	"github.com/ActiveMemory/ctx/internal/mcp/server/out"
@@ -37,13 +37,13 @@ func DispatchList(req proto.Request) *proto.Response {
 // appropriate prompt builder.
 //
 // Parameters:
-//   - h: handler for context directory and session state
+//   - d: runtime dependencies carrying the context directory and session
 //   - req: the MCP request containing prompt name and arguments
 //
 // Returns:
 //   - *proto.Response: rendered prompt or error
 func DispatchGet(
-	h *handler.Handler, req proto.Request,
+	d *entity.MCPDeps, req proto.Request,
 ) *proto.Response {
 	var params proto.GetPromptParams
 	if err := json.Unmarshal(req.Params, &params); err != nil {
@@ -53,7 +53,7 @@ func DispatchGet(
 
 	switch params.Name {
 	case prompt.SessionStart:
-		return sessionStart(req.ID, h.ContextDir)
+		return sessionStart(req.ID, d.ContextDir)
 	case prompt.AddDecision:
 		return addDecision(req.ID, params.Arguments)
 	case prompt.AddLearning:
@@ -63,9 +63,9 @@ func DispatchGet(
 	case prompt.Checkpoint:
 		return checkpoint(
 			req.ID,
-			h.Session.ToolCalls,
-			h.Session.AddsPerformed,
-			h.Session.PendingCount(),
+			d.Session.ToolCalls,
+			d.Session.AddsPerformed,
+			d.Session.PendingCount(),
 		)
 	default:
 		return out.ErrResponse(

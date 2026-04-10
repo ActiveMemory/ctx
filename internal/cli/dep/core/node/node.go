@@ -16,9 +16,6 @@ import (
 	"github.com/ActiveMemory/ctx/internal/io"
 )
 
-// Builder implements GraphBuilder for Node.js projects.
-type Builder struct{}
-
 // Name returns the ecosystem label.
 //
 // Returns:
@@ -52,27 +49,6 @@ func (n *Builder) Build(
 		return FullGraph()
 	}
 	return InternalGraph()
-}
-
-// PackageJSON represents the fields we need from
-// package.json.
-//
-// Fields:
-//   - Name: Package name
-//   - Dependencies: Production dependencies
-//   - DevDependencies: Development dependencies
-//   - Workspaces: Monorepo workspace configuration
-type PackageJSON struct {
-	Name            string            `json:"name"`
-	Dependencies    map[string]string `json:"dependencies"`
-	DevDependencies map[string]string `json:"devDependencies"`
-	Workspaces      Workspaces        `json:"workspaces"`
-}
-
-// Workspaces handles the two valid package.json workspaces
-// formats: array of globs, or object with "packages" array.
-type Workspaces struct {
-	Patterns []string
 }
 
 // UnmarshalJSON handles both array and object formats for

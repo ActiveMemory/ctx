@@ -1,6 +1,6 @@
 # Detailed Design: MCP Server
 
-Modules: mcp/proto, mcp/handler, mcp/server/*, mcp/session
+Modules: mcp/proto, mcp/handler, mcp/server/*
 
 ## Overview
 
@@ -54,7 +54,7 @@ dispatch, writes responses to stdout.
 **Key types**:
 ```
 Server {
-    handler      *handler.Handler
+    deps         *entity.MCPDeps   // ContextDir, TokenBudget, Session
     version      string
     out          *mcpIO.Writer     // mutex-protected stdout
     in           io.Reader         // stdin
@@ -85,10 +85,13 @@ URI-to-file resource mapping. 9 resources: 8 individual context
 files + 1 assembled agent packet (`ctx://context/agent`).
 `Init()` builds lookup map once; `ToList()` returns immutable list.
 
-### server/poll
+### server/dispatch/poll
 File mtime-based polling (5s interval). Lazy goroutine lifecycle:
 starts on first Subscribe(), stops when all unsubscribed.
-Emits `notifications/resources/updated` via callback.
+Emits `notifications/resources/updated` via callback. Lives as a
+descendant of `server/dispatch` so both server (ancestor) and
+dispatch (parent) can consume `Poller` without triggering the
+sibling cross-package-type check.
 
 ### server/route/*
 Method-specific handlers:
@@ -152,36 +155,48 @@ Lightweight analytics: `TotalAdds(m)` sums entry add counts.
 - Consider concurrent tool execution for read-only tools
 - Resource change detection could use fsnotify instead of polling
 
-**Dependencies**: handler, proto, session, config/mcp/*
+**Dependencies**: handler, proto, entity, config/mcp/*
 
 ---
 
 ## mcp/handler
 
 **Purpose**: Domain logic implementation, testable without JSON-RPC
-coupling. All tool and prompt functionality lives here.
+coupling. All tool and prompt functionality lives here as free
+functions that take a `*entity.MCPDeps` as the first argument.
 
-**Key types**:
+**Runtime bundle** (defined in `entity/mcp_deps.go`):
 ```
-Handler {
+MCPDeps {
     ContextDir  string
     TokenBudget int
-    Session     *session.State
+    Session     *entity.MCPSession
 }
 ```
 
-**Exported API**:
-- `Status()`: context health summary
-- `Add(type, content, opts)`: validate boundary, write entry
-- `Complete(query)`: mark task done by number/text match
-- `Drift()`: detect violations/warnings
-- `Recall(limit, since)`: query session history
-- `WatchUpdate(type, content, opts)`: write + queue pending update
-- `Compact(archive)`: move completed tasks to archive
-- `Next()`: next pending task
-- `CheckTaskCompletion(recentAction)`: match action to tasks
-- `SessionEvent(eventType, caller)`: start/end lifecycle
-- `Remind()`: list pending reminders
+The server holds a single `*MCPDeps`, threaded through
+dispatch into each handler function.
+
+**Exported API** (all free functions — no receiver):
+- `Status(d)`: context health summary
+- `Add(d, type, content, opts)`: validate boundary, write entry
+- `Complete(d, query)`: mark task done by number/text match
+- `Drift(d)`: detect violations/warnings
+- `Recall(d, limit, since)`: query session history
+- `WatchUpdate(d, type, content, opts)`: write + queue pending update
+- `Compact(d, archive)`: move completed tasks to archive
+- `Next(d)`: next pending task
+- `CheckTaskCompletion(d, recentAction)`: match action to tasks
+- `SessionEvent(d, eventType, caller)`: start/end lifecycle
+- `Remind(d)`: list pending reminders
+- `SteeringGet(d, prompt)`: applicable steering files
+- `Search(d, query)`: full-text search across context files
+- `SessionStartHooks(d)` / `SessionEndHooks(d, summary)`:
+  run session-lifecycle triggers
+- `CheckGovernance(d, toolName)`: compute advisory warnings
+  for the current tool response (does violations-file I/O,
+  which is why it stays in `handler/` rather than being a
+  method on `entity.MCPSession`)
 
 ### handler/task
 Task list parsing for MCP: `ForEachPending(lines, fn)` iterates
@@ -201,32 +216,51 @@ entity, io, rc
 
 ---
 
-## mcp/session
+## entity.MCPSession
 
-**Purpose**: Per-session advisory state and governance warnings.
+**Purpose**: Per-MCP-run advisory state. Lives in `internal/entity/`
+because it is pure data + pure mutation methods, with no I/O.
+Formerly the `mcp/session.State` type; promoted to entity when
+the `mcp/session` package was collapsed into `mcp/handler` and
+the god-object Handler was dissolved.
 
-**Key types**:
+**Key type**:
 ```
-State {
+MCPSession {
     ToolCalls        int
     AddsPerformed    map[string]int
+    SessionStartedAt time.Time
     PendingFlush     []PendingUpdate
-    sessionStarted   bool
-    contextLoaded    bool
-    lastDriftCheck   time.Time
-    callsSinceWrite  int
+    SessionStarted   bool
+    ContextLoaded    bool
+    LastDriftCheck   time.Time
+    LastContextWrite time.Time
+    CallsSinceWrite  int
 }
 ```
 
-**Governance warnings** (appended to tool responses):
-1. Session not started (if sessionStarted=false)
-2. Context not loaded (if contextLoaded=false)
-3. Drift not checked (after interval or min calls)
-4. Persist nudge (after callsSinceWrite threshold)
-5. Violations from extension (reads violations.json)
+**Pure methods** (all in `entity/mcp_session.go`):
+- `NewMCPSession() *MCPSession`
+- `RecordToolCall()`, `RecordAdd(type)`
+- `QueuePendingUpdate(u)`, `PendingCount()`
+- `RecordSessionStart()`, `RecordContextLoaded()`
+- `RecordDriftCheck()`, `RecordContextWrite()`
+- `IncrementCallsSinceWrite()`
 
-**Data flow**: Each tool call -> RecordToolCall() ->
-CheckGovernance() -> warnings appended to response text.
+**Governance warnings** (computed by `handler.CheckGovernance`,
+which lives in `mcp/handler` because it does I/O on the
+violations file):
+1. Session not started (if SessionStarted=false)
+2. Context not loaded (if ContextLoaded=false)
+3. Drift not checked (after interval or min calls)
+4. Persist nudge (after CallsSinceWrite threshold)
+5. Violations from extension (reads violations.json — the one
+   bit of I/O that forced splitting CheckGovernance out of the
+   entity-side methods)
+
+**Data flow**: Each tool call -> `d.Session.RecordToolCall()` ->
+`handler.CheckGovernance(d, toolName)` -> warnings appended to
+response text.
 
 **Edge cases**:
 - violations.json is read-and-cleared (one-shot delivery)
@@ -239,10 +273,12 @@ CheckGovernance() -> warnings appended to response text.
    config/mcp/governance — not user-configurable.
 
 **Extension points**:
-- Add new governance rules in CheckGovernance()
+- Add new governance rules in `handler.CheckGovernance`
 - Violations file format is extensible
 
-**Dependencies**: config/mcp/governance, proto
+**Dependencies**: time (entity side); config/mcp/governance,
+proto, assets/read/desc, config/format, config/token,
+config/mcp/tool (handler side)
 
 ---
 

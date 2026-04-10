@@ -11,18 +11,6 @@ import (
 	"github.com/ActiveMemory/ctx/internal/config/stats"
 )
 
-// TriggerResult is the outcome of evaluating percentage-based triggers.
-//
-// Fields:
-//   - Event: trigger event type (silent, checkpoint, or window warning)
-//   - Checkpoint: true when the 60% one-shot should fire
-//   - Window: true when the 90% recurring warning should fire
-type TriggerResult struct {
-	Event      string
-	Checkpoint bool
-	Window     bool
-}
-
 // EvaluateTrigger determines which nudge (if any) should fire based on
 // context window usage percentage and whether the checkpoint has already
 // fired this session.

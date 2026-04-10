@@ -16,6 +16,7 @@ import (
 
 	"github.com/ActiveMemory/ctx/internal/assets/read/desc"
 	"github.com/ActiveMemory/ctx/internal/config/embed/text"
+	"github.com/ActiveMemory/ctx/internal/entity"
 	errMcp "github.com/ActiveMemory/ctx/internal/err/mcp"
 	ctxIo "github.com/ActiveMemory/ctx/internal/io"
 	"github.com/ActiveMemory/ctx/internal/rc"
@@ -26,12 +27,13 @@ import (
 // If prompt is empty, returns only "always" inclusion files.
 //
 // Parameters:
+//   - d: runtime dependencies (unused, kept for signature uniformity)
 //   - prompt: optional prompt text for auto-inclusion matching
 //
 // Returns:
 //   - string: formatted list of matching steering files
 //   - error: steering load error
-func (h *Handler) SteeringGet(prompt string) (string, error) {
+func SteeringGet(_ *entity.MCPDeps, prompt string) (string, error) {
 	steeringDir := rc.SteeringDir()
 
 	files, loadErr := steering.LoadAll(steeringDir)
@@ -66,19 +68,20 @@ func (h *Handler) SteeringGet(prompt string) (string, error) {
 // Returns matching excerpts with file paths and line numbers.
 //
 // Parameters:
+//   - d: runtime dependencies carrying the context directory
 //   - query: search text to find in context files
 //
 // Returns:
 //   - string: formatted search results with paths and line numbers
 //   - error: directory read error
-func (h *Handler) Search(query string) (string, error) {
+func Search(d *entity.MCPDeps, query string) (string, error) {
 	if query == "" {
 		return "", errMcp.QueryRequired()
 	}
 
-	entries, readErr := os.ReadDir(h.ContextDir)
+	entries, readErr := os.ReadDir(d.ContextDir)
 	if readErr != nil {
-		return "", errMcp.SearchRead(h.ContextDir, readErr)
+		return "", errMcp.SearchRead(d.ContextDir, readErr)
 	}
 
 	queryLower := strings.ToLower(query)
@@ -89,7 +92,7 @@ func (h *Handler) Search(query string) (string, error) {
 		if e.IsDir() {
 			continue
 		}
-		path := filepath.Join(h.ContextDir, e.Name())
+		path := filepath.Join(d.ContextDir, e.Name())
 		data, err := ctxIo.SafeReadUserFile(path)
 		if err != nil {
 			continue
@@ -112,7 +115,7 @@ func (h *Handler) Search(query string) (string, error) {
 	if matches == 0 {
 		return fmt.Sprintf(
 			desc.Text(text.DescKeyMCPSearchNoMatch),
-			query, h.ContextDir), nil
+			query, d.ContextDir), nil
 	}
 
 	return sb.String(), nil

@@ -25,13 +25,6 @@ import (
 // Ensure Copilot implements Session.
 var _ Session = (*Copilot)(nil)
 
-// Copilot parses VS Code Copilot Chat JSONL session files.
-//
-// Copilot Chat stores sessions as JSONL files in VS Code's workspaceStorage
-// directory. Each file contains one session. The first line is a full session
-// snapshot (kind=0), subsequent lines are incremental patches (kind=1, kind=2).
-type Copilot struct{}
-
 // NewCopilot creates a new Copilot Chat session parser.
 //
 // Returns:

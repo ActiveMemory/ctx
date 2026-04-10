@@ -18,13 +18,6 @@ import (
 	"github.com/ActiveMemory/ctx/internal/write/guide"
 )
 
-// Meta holds the frontmatter fields extracted from a
-// SKILL.md file.
-type Meta struct {
-	Name        string `yaml:"name"`
-	Description string `yaml:"description"`
-}
-
 // ParseFrontmatter extracts YAML frontmatter from a
 // SKILL.md file.
 //

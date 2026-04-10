@@ -42,7 +42,7 @@ TASK STATUS LABELS:
 
 ### Phase -2: Task completion nudge:
 
-- [ ] Move 6 grandfathered cross-package MCP types to entity/ #session:cc97cb0d #branch:main #commit:e8d5c60a #added:2026-04-08-074620
+- [x] Move 6 grandfathered cross-package MCP types to entity/ #session:cc97cb0d #branch:main #commit:e8d5c60a #added:2026-04-08-074620
 
 - [ ] Design UserPromptSubmit hook that runs `make audit` at
   session start and surfaces failures as a consolidation-debt

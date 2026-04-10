@@ -17,6 +17,50 @@ import (
 	"time"
 )
 
+// ClaudeCode parses Claude Code JSONL session files.
+//
+// Claude Code stores sessions as JSONL files where each line is a
+// self-contained JSON object representing a message. Messages are
+// linked via parentUuid and grouped by sessionId.
+type ClaudeCode struct{}
+
+// Copilot parses VS Code Copilot Chat JSONL session files.
+//
+// Copilot Chat stores sessions as JSONL files in VS Code's workspaceStorage
+// directory. Each file contains one session. The first line is a full session
+// snapshot (kind=0), subsequent lines are incremental patches (kind=1, kind=2).
+type Copilot struct{}
+
+// CopilotCLI parses GitHub Copilot CLI session files.
+//
+// Copilot CLI stores sessions as JSONL files in ~/.copilot/sessions/
+// (or $COPILOT_HOME/sessions/). Each file contains one session with
+// JSONL-formatted messages similar to Claude Code's format.
+type CopilotCLI struct{}
+
+// MarkdownSession parses Markdown session files written by AI agents.
+//
+// This parser handles the tool-agnostic session format used by non-Claude
+// tools (Copilot, Cursor, Aider, etc.) where the AI agent saves session
+// summaries as structured Markdown in .context/sessions/.
+//
+// Expected format:
+//
+//	# Session: YYYY-MM-DD - Topic
+//
+//	## What Was Done
+//	- ...
+//
+//	## Decisions
+//	- ...
+//
+//	## Learnings
+//	- ...
+//
+//	## Next Steps
+//	- ...
+type MarkdownSession struct{}
+
 // Claude Code JSONL raw types.
 //
 // These types mirror the on-disk JSONL format produced by Claude Code.

@@ -25,8 +25,8 @@ Enriched 2026-04-03 via GitNexus (blast radius verified)._
 | journal/parser | 1MB buffer limit | MEDIUM | n/a | n/a | Large tool results truncated without warning |
 | memory | Slug format dependency | MEDIUM | 7 | 7 | Claude Code naming convention change breaks discovery |
 | drift | Path ref false positives | MEDIUM | n/a | n/a | Code examples in markdown trigger false warnings |
-| mcp/server/poll | Mtime granularity | MEDIUM | n/a | n/a | Sub-second changes between polls are missed |
-| mcp/session | In-memory only state | MEDIUM | n/a | n/a | Server restart loses governance tracking |
+| mcp/server/dispatch/poll | Mtime granularity | MEDIUM | n/a | n/a | Sub-second changes between polls are missed |
+| entity.MCPSession | In-memory only state | MEDIUM | n/a | n/a | Server restart loses governance tracking |
 | mcp/handler | Fuzzy task matching | MEDIUM | n/a | n/a | Word overlap threshold (2) causes false positives |
 | rc | sync.Once lock-in | MEDIUM | n/a | n/a | First RC() call locks config for process lifetime |
 | bootstrap | PersistentPreRunE | MEDIUM | n/a | n/a | New commands without SkipInit fail pre-.context/ |
@@ -41,7 +41,7 @@ Enriched 2026-04-03 via GitNexus (blast radius verified)._
    layer: MCP handler (all 11 tool methods), format (TimeAgo,
    Duration, Tokens), index (GenerateTable, UpdateDecisions,
    UpdateLearnings), tidy, trace, memory, sysinfo, io (SafeFprintf),
-   mcp/session (CheckGovernance), mcp/server (Serve).
+   mcp/handler (CheckGovernance), mcp/server (Serve).
    Participates in 53 execution flows.
    - Blast radius: d=1: 30+, flows: 53
    - Risk: CRITICAL (enriched 2026-04-03 via GitNexus)
@@ -165,12 +165,14 @@ Enriched 2026-04-03 via GitNexus (blast radius verified)._
    between polls are coalesced.
    - Risk: MEDIUM
 
-### internal/mcp/session
+### entity.MCPSession / mcp/handler CheckGovernance
 
 1. **In-memory only state** - Session governance lost on restart.
-   CheckGovernance has clean call chain (d=1: 1 -> appendGovernance
-   -> DispatchCall -> Do) but the advisory data it tracks is
-   ephemeral.
+   `handler.CheckGovernance` has clean call chain (d=1: 1 ->
+   appendGovernance -> DispatchCall -> Do) but the advisory data
+   it tracks is ephemeral. Data lives in `entity.MCPSession`;
+   the I/O-touching CheckGovernance free function lives in
+   `mcp/handler` because it drains `.context/state/violations.json`.
    - Blast radius: d=1: 1, d=2: 1, d=3: 1 (clean chain)
    - Risk: MEDIUM (enriched 2026-04-03 via GitNexus)
 

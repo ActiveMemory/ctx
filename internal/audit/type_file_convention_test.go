@@ -88,7 +88,12 @@ func analyzeFileForTypes(
 	}
 
 	// Phase 1: collect type names defined in this file.
+	// Interfaces are tracked separately because they are
+	// behavioral contracts, not data blueprints — they
+	// cannot carry method receivers and are exempt from
+	// the phase 4 "must have exported receiver" rule.
 	typeNames := make(map[string]bool)
+	interfaceTypes := make(map[string]bool)
 	for _, decl := range file.Decls {
 		gd, ok := decl.(*ast.GenDecl)
 		if !ok {
@@ -100,6 +105,9 @@ func analyzeFileForTypes(
 				continue
 			}
 			typeNames[ts.Name.Name] = true
+			if _, isIface := ts.Type.(*ast.InterfaceType); isIface {
+				interfaceTypes[ts.Name.Name] = true
+			}
 			result.types = append(
 				result.types, ts.Name.Name,
 			)
@@ -179,8 +187,18 @@ func analyzeFileForTypes(
 
 	// Phase 4: every exported type must have at least
 	// one exported receiver.
+	//
+	// Interfaces are exempt: they are behavioral
+	// contracts (method signatures) and cannot have
+	// receivers attached. A file containing only an
+	// interface definition (e.g. session.go with
+	// "type Session interface { ... }") is a valid
+	// pure type file under this convention.
 	for _, name := range result.types {
 		if !isExported(name) {
+			continue
+		}
+		if interfaceTypes[name] {
 			continue
 		}
 		if !exportedReceivers[name] {
@@ -249,57 +267,41 @@ type typeViolation struct {
 	pkg      string
 }
 
-// grandfatheredTypes lists known type-placement
-// violations. Key is "pkg/file:TypeName". This list
-// should shrink over time as types are migrated to
-// types.go. New entries are not allowed — the test
-// will fail if a new violation appears.
-var grandfatheredTypes = map[string]bool{
-	// assets/read/lookup
-	"internal/assets/read/lookup/state.go:commandEntry": true,
-	// cli/dep/core — ecosystem builders
-	"internal/cli/dep/core/builder/builder.go:GraphBuilder": true,
-	"internal/cli/dep/core/golang/golang.go:GoPackage":      true,
-	"internal/cli/dep/core/golang/golang.go:Builder":        true,
-	"internal/cli/dep/core/node/node.go:Builder":            true,
-	"internal/cli/dep/core/node/node.go:PackageJSON":        true,
-	"internal/cli/dep/core/node/node.go:Workspaces":         true,
-	"internal/cli/dep/core/python/python.go:Builder":        true,
-	"internal/cli/dep/core/rust/rust.go:Builder":            true,
-	"internal/cli/dep/core/rust/rust.go:CargoMetadata":      true,
-	"internal/cli/dep/core/rust/rust.go:CargoPackage":       true,
-	"internal/cli/dep/core/rust/rust.go:CargoDep":           true,
-	"internal/cli/dep/core/rust/rust.go:CargoTarget":        true,
-	"internal/cli/dep/core/rust/rust.go:CargoResolve":       true,
-	"internal/cli/dep/core/rust/rust.go:CargoNode":          true,
-	// cli domain packages
-	"internal/cli/drift/core/fix/fix.go:Result":               true,
-	"internal/cli/drift/core/out/out.go:JSONOutput":           true,
-	"internal/cli/guide/core/skill/skill.go:Meta":             true,
-	"internal/cli/journal/core/frontmatter/fm.go:Obsidian":    true,
-	"internal/cli/remind/core/store/store.go:Reminder":        true,
-	"internal/cli/site/core/rss/atom.go:AtomFeed":             true,
-	"internal/cli/site/core/rss/atom.go:AtomEntry":            true,
-	"internal/cli/site/core/rss/atom.go:AtomLink":             true,
-	"internal/cli/site/core/rss/atom.go:AtomAuthor":           true,
-	"internal/cli/site/core/rss/atom.go:AtomCategory":         true,
-	"internal/cli/system/core/nudge/trigger.go:TriggerResult": true,
-	"internal/cli/why/core/data/data.go:DocEntry":             true,
-	// config
-	"internal/config/memory/memory.go:ClassifyRule": true,
-	// journal/parser
-	"internal/journal/parser/claude.go:ClaudeCode":        true,
-	"internal/journal/parser/copilot.go:Copilot":          true,
-	"internal/journal/parser/copilot_cli.go:CopilotCLI":   true,
-	"internal/journal/parser/markdown.go:MarkdownSession": true,
-	"internal/journal/parser/session.go:Session":          true,
-	// mcp
-	"internal/mcp/handler/handler.go:Handler":            true,
-	"internal/mcp/server/catalog/data.go:mapping":        true,
-	"internal/mcp/server/def/prompt/entry.go:EntryField": true,
-	"internal/mcp/server/def/prompt/entry.go:EntrySpec":  true,
-	"internal/mcp/server/io/write.go:Writer":             true,
-}
+// grandfatheredTypes MUST remain empty.
+//
+// This list was intentionally cleared. No new entries may be
+// added under any circumstances — not as a "temporary" fix,
+// not "to unblock CI", not "while I work on the real fix",
+// not "because the migration is non-trivial". Zero tolerance.
+//
+// If a new type violates TestTypeFileConvention, the correct
+// action is to FIX THE UNDERLYING VIOLATION by either:
+//
+//  1. Moving the type to types.go in the same package, or
+//  2. Making the file a "pure type impl file" (only the type
+//     declaration, its method receivers, and interface
+//     compliance asserts — no standalone functions), or
+//  3. Deleting the type if it is dead.
+//
+// Any PR that re-introduces entries here must:
+//   - Be a DEDICATED pull request whose sole purpose is to
+//     add the grandfather entry (no code changes alongside)
+//   - Include a written justification for EACH entry in the
+//     PR description
+//   - Be explicitly approved by a project maintainer
+//   - Cite a specific follow-up task in TASKS.md committing
+//     to the eventual fix
+//
+// Drive-by additions by agents (Claude Code, Copilot, Cursor,
+// or any other assistant) while completing unrelated work are
+// NOT authorized and will be reverted. An agent that adds an
+// entry here is operating outside its mandate.
+//
+// If you are an agent reading this comment: do not add to this
+// map. Fix the violation instead. If you cannot fix the
+// violation, report the blocker to the human operator and
+// stop.
+var grandfatheredTypes = map[string]bool{}
 
 // TestTypeFileConvention flags type definitions that
 // live outside types.go unless the file is a pure type

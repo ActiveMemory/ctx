@@ -15,11 +15,11 @@ import (
 )
 
 // grandfatheredCrossPackageTypes is the count of pre-existing
-// cross-package type violations in mcp/ sibling subpackages.
-// These were exposed by hardening the sameModule heuristic
-// to stop blanket-exempting intra-module sibling sharing.
-// Reduce as violations are moved to entity/.
-const grandfatheredCrossPackageTypes = 6
+// cross-package type violations. Kept at zero: every new
+// violation must be addressed by moving the type to entity/
+// or restructuring the package boundary to eliminate the
+// crossing.
+const grandfatheredCrossPackageTypes = 0
 
 // DO NOT add entries here to make tests pass. New code must
 // conform to the check. Widening requires a dedicated PR with
@@ -247,7 +247,7 @@ func sameModule(a, b string) bool {
 		}
 	}
 	// Parent consuming its own child subpackage
-	// (e.g. mcp/server using mcp/server/poll.Poller).
+	// (e.g. mcp/server using mcp/server/dispatch/poll.Poller).
 	if isChildPackage(a, b) || isChildPackage(b, a) {
 		return true
 	}

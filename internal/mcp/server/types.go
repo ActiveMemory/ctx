@@ -9,10 +9,10 @@ package server
 import (
 	"io"
 
-	"github.com/ActiveMemory/ctx/internal/mcp/handler"
+	"github.com/ActiveMemory/ctx/internal/entity"
 	"github.com/ActiveMemory/ctx/internal/mcp/proto"
+	"github.com/ActiveMemory/ctx/internal/mcp/server/dispatch/poll"
 	mcpIO "github.com/ActiveMemory/ctx/internal/mcp/server/io"
-	"github.com/ActiveMemory/ctx/internal/mcp/server/poll"
 )
 
 // Server is an MCP server that exposes ctx context over JSON-RPC 2.0.
@@ -26,14 +26,15 @@ import (
 // no additional locking.
 //
 // Fields:
-//   - handler: Domain logic handler for tool/resource/prompt calls
+//   - deps: Runtime dependencies passed to every handler function
+//     (context dir, token budget, session state)
 //   - version: Binary version for server info response
 //   - out: Thread-safe JSON writer for stdout
 //   - in: Input reader for stdin
 //   - poller: Background resource change poller
 //   - resourceList: Pre-built resource list (immutable after init)
 type Server struct {
-	handler      *handler.Handler
+	deps         *entity.MCPDeps
 	version      string
 	out          *mcpIO.Writer
 	in           io.Reader

@@ -21,29 +21,6 @@ import (
 	ctxLog "github.com/ActiveMemory/ctx/internal/log/warn"
 )
 
-// MarkdownSession parses Markdown session files written by AI agents.
-//
-// This parser handles the tool-agnostic session format used by non-Claude
-// tools (Copilot, Cursor, Aider, etc.) where the AI agent saves session
-// summaries as structured Markdown in .context/sessions/.
-//
-// Expected format:
-//
-//	# Session: YYYY-MM-DD - Topic
-//
-//	## What Was Done
-//	- ...
-//
-//	## Decisions
-//	- ...
-//
-//	## Learnings
-//	- ...
-//
-//	## Next Steps
-//	- ...
-type MarkdownSession struct{}
-
 // NewMarkdownSession creates a new Markdown session parser.
 //
 // Returns:
