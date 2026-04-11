@@ -84,7 +84,7 @@ type Store struct {
 	entries  []Entry
 }
 
-// Server is the shared context hub gRPC server.
+// Server is the ctx Hub gRPC server.
 //
 // It implements Register, Publish, Sync, Listen, and Status
 // RPCs backed by an append-only [Store].
@@ -223,7 +223,7 @@ type StatusResponse struct {
 	EntriesByProject map[string]uint64 `json:"entries_by_project"`
 }
 
-// Client is a gRPC client for the shared context hub.
+// Client is a gRPC client for the ctx Hub.
 //
 // Fields:
 //   - conn: underlying gRPC connection

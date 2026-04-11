@@ -25,7 +25,7 @@ const throttleID = "hub-sync"
 // Run executes the check-hub-sync hook logic.
 //
 // If a hub connection config exists, syncs new entries from
-// the hub to .context/shared/. Throttled to once per day.
+// the hub to .context/hub/. Throttled to once per day.
 // Silent when no hub is configured or no new entries.
 //
 // Parameters:

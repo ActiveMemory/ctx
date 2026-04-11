@@ -53,7 +53,7 @@ func TestWriteEntries_CreatesFiles(t *testing.T) {
 
 	// Check decisions file.
 	decPath := filepath.Join(
-		ctxDir, "shared", "decisions.md",
+		ctxDir, "hub", "decisions.md",
 	)
 	decData, readErr := os.ReadFile(decPath)
 	if readErr != nil {
@@ -69,7 +69,7 @@ func TestWriteEntries_CreatesFiles(t *testing.T) {
 
 	// Check learnings file.
 	learnPath := filepath.Join(
-		ctxDir, "shared", "learnings.md",
+		ctxDir, "hub", "learnings.md",
 	)
 	learnData, learnErr := os.ReadFile(learnPath)
 	if learnErr != nil {
@@ -85,8 +85,8 @@ func TestWriteEntries_CreatesFiles(t *testing.T) {
 func TestWriteEntries_AppendsToExisting(t *testing.T) {
 	tmpDir := t.TempDir()
 	ctxDir := filepath.Join(tmpDir, ".context")
-	sharedDir := filepath.Join(ctxDir, "shared")
-	if mkErr := os.MkdirAll(sharedDir, 0750); mkErr != nil {
+	hubDir := filepath.Join(ctxDir, "hub")
+	if mkErr := os.MkdirAll(hubDir, 0750); mkErr != nil {
 		t.Fatal(mkErr)
 	}
 
@@ -99,7 +99,7 @@ func TestWriteEntries_AppendsToExisting(t *testing.T) {
 
 	// Pre-populate a file.
 	existing := "## Existing content\n\n"
-	decPath := filepath.Join(sharedDir, "decisions.md")
+	decPath := filepath.Join(hubDir, "decisions.md")
 	if writeErr := os.WriteFile(
 		decPath, []byte(existing), 0644,
 	); writeErr != nil {

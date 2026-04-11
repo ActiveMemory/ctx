@@ -67,7 +67,8 @@ var exemptPackagePaths = []string{
 	"internal/assets/tpl",
 	"internal/err/",
 	"internal/hub",
-	"internal/cli/serve/core/shared",
+	"internal/cli/hub/core/server",
+	"internal/cli/initialize/core/claudecheck",
 	"internal/sysinfo",
 }
 

@@ -18,12 +18,14 @@ import (
 	"github.com/ActiveMemory/ctx/internal/assets/read/desc"
 	"github.com/ActiveMemory/ctx/internal/assets/read/template"
 	coreClaude "github.com/ActiveMemory/ctx/internal/cli/initialize/core/claude"
+	"github.com/ActiveMemory/ctx/internal/cli/initialize/core/claudecheck"
 	"github.com/ActiveMemory/ctx/internal/cli/initialize/core/entry"
 	coreMerge "github.com/ActiveMemory/ctx/internal/cli/initialize/core/merge"
 	corePad "github.com/ActiveMemory/ctx/internal/cli/initialize/core/pad"
 	"github.com/ActiveMemory/ctx/internal/cli/initialize/core/plugin"
 	coreProject "github.com/ActiveMemory/ctx/internal/cli/initialize/core/project"
 	"github.com/ActiveMemory/ctx/internal/cli/initialize/core/validate"
+	steeringInit "github.com/ActiveMemory/ctx/internal/cli/steering/cmd/initcmd"
 	"github.com/ActiveMemory/ctx/internal/config/claude"
 	"github.com/ActiveMemory/ctx/internal/config/cli"
 	"github.com/ActiveMemory/ctx/internal/config/ctx"
@@ -51,13 +53,17 @@ import (
 //   - minimal: If true, only create essential files
 //   - merge: If true, auto-merge ctx content into existing files
 //   - noPluginEnable: If true, skip auto-enabling the plugin globally
+//   - noSteeringInit: If true, skip scaffolding foundation steering
+//     files in .context/steering/
 //   - caller: Identifies the calling tool
 //     (e.g. "vscode") for template overrides
 //
 // Returns:
 //   - error: Non-nil if directory creation or file operations fail
 func Run(
-	cmd *cobra.Command, force, minimal, merge, noPluginEnable bool, caller string,
+	cmd *cobra.Command,
+	force, minimal, merge, noPluginEnable, noSteeringInit bool,
+	caller string,
 ) error {
 	// Check if ctx is in PATH (required for hooks to work).
 	// Skip when a caller is set — the caller manages its own binary path.
@@ -106,6 +112,22 @@ func Run(
 		subDir := filepath.Join(contextDir, sub)
 		if mkdirErr := ctxIo.SafeMkdirAll(subDir, fs.PermExec); mkdirErr != nil {
 			return errFs.Mkdir(subDir, mkdirErr)
+		}
+	}
+
+	// Scaffold foundation steering files so the directory
+	// isn't a confusing empty dir. The initcmd package
+	// skips files that already exist, so re-running `ctx
+	// init` after the user has edited a foundation file
+	// won't clobber their work. Honors --no-steering-init
+	// for users who want a bare init with no starter
+	// templates.
+	if !noSteeringInit {
+		if steeringErr := steeringInit.Run(cmd); steeringErr != nil {
+			// Non-fatal: the rest of init is more
+			// important than the steering templates.
+			label := desc.Text(text.DescKeyInitLabelSteering)
+			initialize.InfoWarnNonFatal(cmd, label, steeringErr)
 		}
 	}
 
@@ -214,6 +236,15 @@ func Run(
 
 	// Save the quick-start reference to a project-root file.
 	coreProject.WriteGettingStarted(cmd)
+
+	// Post-script: stage-aware Claude Code setup guidance.
+	// Never fatal, never an error — a friendly nudge
+	// pointing the user at whichever step they're missing.
+	// Honors --no-plugin-enable: if plugin detection was
+	// suppressed, skip the hint too.
+	if !noPluginEnable {
+		claudecheck.InitHint(cmd)
+	}
 
 	return nil
 }

@@ -26,11 +26,13 @@ import (
 func Cmd() *cobra.Command {
 	var jsonOut bool
 
-	short, _ := desc.Command(cmd.DescKeyPadTags)
+	short, long := desc.Command(cmd.DescKeyPadTags)
 	c := &cobra.Command{
-		Use:   cmd.UsePadTags,
-		Short: short,
-		Args:  cobra.NoArgs,
+		Use:     cmd.UsePadTags,
+		Short:   short,
+		Long:    long,
+		Example: desc.Example(cmd.DescKeyPadTags),
+		Args:    cobra.NoArgs,
 		RunE: func(cmd *cobra.Command, _ []string) error {
 			return Run(cmd, jsonOut)
 		},

@@ -404,19 +404,6 @@ hook.aider:
     ```bash
     ctx agent | aider --message "$(cat -)"
     ```
-hook.claude:
-  short: |
-    Claude Code Integration
-    =======================
-
-    Claude Code integration is now provided via the ctx plugin.
-
-    Install the plugin:
-      /plugin marketplace add ActiveMemory/ctx
-      /plugin install ctx@activememory-ctx
-
-    The plugin provides hooks (context monitoring, persistence
-    nudges, post-commit capture) and 25 skills automatically.
 hook.copilot:
   short: |
     GitHub Copilot Integration

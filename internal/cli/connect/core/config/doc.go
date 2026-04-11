@@ -5,7 +5,7 @@
 //                 SPDX-License-Identifier: Apache-2.0
 
 // Package config manages the encrypted connection config
-// for shared hub client operations.
+// for ctx Hub client operations.
 //
 // Key exports: [Load], [Save], [Config].
 // See source files for implementation details.

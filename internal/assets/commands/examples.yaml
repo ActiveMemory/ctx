@@ -105,11 +105,46 @@ drift:
       ctx drift
       ctx drift --json
 
+fmt:
+  short: |2-
+      ctx fmt                # Rewrap all .context/ files
+      ctx fmt --check        # CI-safe: exit 1 if anything changes
+      ctx fmt --width 100    # Rewrap to a custom line width
+
 guide:
   short: |2-
       ctx guide
       ctx guide --skills
       ctx guide --commands
+
+hub:
+  short: |2-
+      ctx hub start
+      ctx hub status
+      ctx hub stop
+
+hub.start:
+  short: |2-
+      ctx hub start                              # Foreground, port 9900
+      ctx hub start --port 8080                  # Custom port
+      ctx hub start --daemon                     # Background, writes hub.pid
+      ctx hub start --peers host2:9900,host3:9900  # Raft cluster member
+
+hub.stop:
+  short: |2-
+      ctx hub stop
+      ctx hub stop --data-dir /srv/ctx-hub
+
+hub.status:
+  short: '  ctx hub status'
+
+hub.peer:
+  short: |2-
+      ctx hub peer add host2:9900
+      ctx hub peer remove host2:9900
+
+hub.stepdown:
+  short: '  ctx hub stepdown'
 
 initialize:
   short: |2-
@@ -133,6 +168,11 @@ journal.lock:
   short: |2-
       ctx journal lock abc12345
       ctx journal lock --all
+
+journal.schema:
+  short: |2-
+      ctx journal schema check
+      ctx journal schema dump
 
 journal.obsidian:
   short: |2-
@@ -263,6 +303,11 @@ pad.show:
       ctx pad show 3
       ctx pad show 3 --out ./recovered.md
 
+pad.tags:
+  short: |2-
+      ctx pad tags
+      ctx pad tags --json
+
 pause:
   short: '  ctx pause'
 
@@ -297,13 +342,16 @@ remind.dismiss:
 remind.list:
   short: '  ctx remind list'
 
+remind.normalize:
+  short: '  ctx remind normalize'
+
 resume:
   short: '  ctx resume'
 
 serve:
   short: |2-
-      ctx serve
-      ctx serve ./docs
+      ctx serve                           # Serve journal site
+      ctx serve ./docs                    # Serve a specific directory
 
 setup:
   short: |2-
@@ -404,6 +452,9 @@ system.checkcontextsize:
 
 system.checkfreshness:
   short: '  ctx system check-freshness'
+
+system.checkhubsync:
+  short: '  ctx system check-hub-sync'
 
 system.checkjournal:
   short: '  ctx system check-journal'

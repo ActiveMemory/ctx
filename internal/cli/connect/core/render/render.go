@@ -15,11 +15,11 @@ import (
 	"github.com/ActiveMemory/ctx/internal/rc"
 )
 
-// sharedDir is the subdirectory for shared entries.
-const sharedDir = "shared"
+// hubDir is the subdirectory for ctx Hub entries.
+const hubDir = "hub"
 
 // WriteEntries renders hub entries as markdown and appends
-// them to type-specific files in .context/shared/.
+// them to type-specific files in .context/hub/.
 //
 // Parameters:
 //   - entries: hub entries to render
@@ -27,7 +27,7 @@ const sharedDir = "shared"
 // Returns:
 //   - error: non-nil if directory creation or write fails
 func WriteEntries(entries []hub.EntryMsg) error {
-	dir := filepath.Join(rc.ContextDir(), sharedDir)
+	dir := filepath.Join(rc.ContextDir(), hubDir)
 	if mkErr := io.SafeMkdirAll(
 		dir, fs.PermKeyDir,
 	); mkErr != nil {

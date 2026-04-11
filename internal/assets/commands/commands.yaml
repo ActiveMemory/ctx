@@ -81,11 +81,6 @@ change:
     Automatically detects the last session boundary from state markers.
     Use --since to specify a custom time range (duration like "24h" or
     date like "2026-03-01").
-
-    Examples:
-      ctx change                      # changes since last session
-      ctx change --since 24h          # changes in last 24 hours
-      ctx change --since 2026-03-01   # changes since specific date
   short: Show what changed since last session
 compact:
   long: |-
@@ -106,9 +101,9 @@ compact:
   short: Archive completed tasks and clean up context
 connect:
   long: |-
-    Connect to a shared context hub for cross-project
+    Connect to a ctx Hub for cross-project
     knowledge sharing.
-  short: Connect to a shared context hub
+  short: Connect to a ctx Hub
 connect.subscribe:
   long: |-
     Set which entry types to receive from the hub.
@@ -120,7 +115,7 @@ connect.subscribe:
 connect.sync:
   long: |-
     Pull matching entries from the hub and write them to
-    .context/shared/ as markdown files with origin tags.
+    .context/hub/ as markdown files with origin tags.
     Tracks last-seen sequence for incremental sync.
 
     Examples:
@@ -128,7 +123,7 @@ connect.sync:
   short: Sync entries from the hub
 connect.publish:
   long: |-
-    Push local context entries to the shared hub.
+    Push local context entries to the ctx Hub.
 
     Examples:
       ctx connect publish
@@ -136,7 +131,7 @@ connect.publish:
 connect.listen:
   long: |-
     Stream new entries from the hub in real-time.
-    Auto-writes to .context/shared/ as entries arrive.
+    Auto-writes to .context/hub/ as entries arrive.
     Press Ctrl-C to stop.
 
     Examples:
@@ -151,7 +146,7 @@ connect.status:
   short: Show hub connection status
 connect.register:
   long: |-
-    Register this project with a shared context hub.
+    Register this project with a ctx Hub.
     Requires the hub address and admin token.
 
     On success, stores an encrypted connection config in
@@ -159,7 +154,7 @@ connect.register:
 
     Examples:
       ctx connect register localhost:9900 --token ctx_adm_...
-  short: Register with a shared context hub
+  short: Register with a ctx Hub
 complete:
   long: |-
     Mark a task as completed in TASKS.md.
@@ -318,30 +313,61 @@ drift:
   short: Detect stale or invalid context
 hub:
   long: |-
-    Manage a running shared context hub cluster.
-  short: Manage hub cluster
+    Operate a ctx Hub: the gRPC server that fans out decisions,
+    learnings, conventions, and tasks across projects.
+
+    Subcommands:
+      start     Start the hub server (foreground or daemon)
+      stop      Stop a running hub daemon
+      status    Show cluster status
+      peer      Add or remove cluster peers
+      stepdown  Transfer leadership to another node
+
+    See `ctx hub <subcommand> --help` for details. For client-side
+    setup (register, subscribe, sync, listen, publish), see
+    `ctx connect --help`.
+  short: Operate a ctx Hub server or cluster
+hub.start:
+  long: |-
+    Start the ctx Hub gRPC server.
+
+    On first run, generates an admin token and prints it to
+    stdout — save this token; it's required for
+    `ctx connect register` in client projects.
+
+    With --daemon, forks to the background and writes a PID
+    file to <data-dir>/hub.pid for later shutdown via
+    `ctx hub stop`.
+
+    With --peers, joins a Raft cluster for leader election
+    across multiple nodes. Data replication happens via
+    sequence-based gRPC sync on the append-only JSONL log.
+  short: Start the ctx Hub server
+hub.stop:
+  long: |-
+    Stop a running ctx Hub daemon.
+
+    Sends SIGTERM to the PID recorded in <data-dir>/hub.pid,
+    waits for in-flight RPCs to drain, and removes the PID
+    file. Safe to rerun — if no daemon is running, returns a
+    "no running hub" error without side effects.
+  short: Stop a running ctx Hub daemon
 hub.status:
   long: |-
     Show cluster status: role, peers, sync state, entry
     count, and uptime.
-
-    Examples:
-      ctx hub status
   short: Show cluster status
 hub.peer:
   long: |-
     Add or remove peers from the cluster at runtime.
-
-    Examples:
-      ctx hub peer add host:9901
-      ctx hub peer remove host:9901
   short: Add or remove cluster peers
 hub.stepdown:
   long: |-
     Transfer leadership to another node gracefully.
 
-    Examples:
-      ctx hub stepdown
+    Triggers a new election among the remaining followers
+    before the current leader steps down. Use before taking a
+    node offline for maintenance.
   short: Transfer leadership
 guide:
   long: |-
@@ -761,6 +787,12 @@ pad.show:
       ctx pad edit 1 --append "$(ctx pad show 3)"
   short: Output raw text of an entry by number
 pad.tags:
+  long: |-
+    List every tag found across scratchpad entries, sorted
+    alphabetically, with the count of entries that use it.
+
+    Tags are extracted from the frontmatter of each entry. Use
+    --json for machine-readable output.
   short: List all tags with counts
 pause:
   long: |-
@@ -958,6 +990,10 @@ remind.dismiss:
 remind.list:
   short: Show all pending reminders
 remind.normalize:
+  long: |-
+    Reassign reminder IDs as a contiguous sequence 1..N,
+    closing any gaps left by dismissals. Useful when the ID
+    list has become sparse after many dismissals.
   short: Reassign reminder IDs as 1..N, closing gaps
 resume:
   long: |-
@@ -967,17 +1003,17 @@ resume:
   short: Resume context hooks for this session
 serve:
   long: |-
-    Serve a static site using zensical.
+    Serve a static site locally via zensical.
 
-    If no directory is specified, serves the journal site (.context/journal-site).
+    With no argument, serves the journal site at
+    .context/journal-site. With a directory argument, serves
+    that directory if it contains a zensical.toml.
+
+    This command does NOT start a ctx Hub — to run a hub,
+    use `ctx hub start`.
 
     Requires zensical to be installed:
       pipx install zensical
-
-    Examples:
-      ctx serve                           # Serve journal site
-      ctx serve .context/journal-site     # Serve specific directory
-      ctx serve ./docs                    # Serve docs folder
   short: Serve a static site locally via zensical
 site:
   long: |-
@@ -1127,6 +1163,20 @@ system.checkceremonies:
     Output: VERBATIM relay (when ceremonies missing), silent otherwise
     Silent when: both ceremonies found in recent sessions
   short: Session ceremony nudge hook
+system.checkhubsync:
+  long: |-
+    Auto-sync entries from a registered ctx Hub at session
+    start. Throttled to once per day by a state marker in
+    .context/state/.
+
+    Hook event: UserPromptSubmit
+    Output: agent directive when new entries arrived
+    Silent when: no hub registered, already synced today, or
+    no new entries since last sync
+
+    This is an internal hook invoked by Claude Code via
+    hooks.json. It is not intended for manual use.
+  short: Auto-sync ctx Hub entries on session start
 system.checkfreshness:
   long: |-
     Checks whether source files containing technology-dependent constants
@@ -1464,22 +1514,17 @@ trace:
   long: |-
     Show the context behind git commits.
 
-    ctx trace links commits back to the decisions, tasks, learnings,
-    and sessions that motivated them.
+    ctx trace links commits back to the decisions, tasks,
+    learnings, and sessions that motivated them. git log shows
+    what changed, git blame shows who — ctx trace shows why.
 
-    Usage:
+    Subcommands and forms:
       ctx trace <commit>         Show context for a specific commit
       ctx trace --last 5         Show context for last N commits
       ctx trace file <path>      Show context trail for a file
       ctx trace tag <commit>     Manually tag a commit with context
       ctx trace collect          Collect context refs (used by hook)
       ctx trace hook enable      Install prepare-commit-msg hook
-
-    Examples:
-      ctx trace abc123
-      ctx trace --last 10
-      ctx trace file src/auth.go
-      ctx trace tag HEAD --note "Hotfix for production outage"
   short: Show context behind git commits
 trace.file:
   short: Show context trail for a file

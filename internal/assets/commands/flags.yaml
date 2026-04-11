@@ -31,7 +31,7 @@ add.section:
 add.session-id:
   short: AI session ID for task provenance
 add.share:
-  short: Also publish to the shared hub
+  short: Also publish to the ctx Hub
 agent.budget:
   short: Token budget for context packet
 agent.cooldown:
@@ -42,8 +42,8 @@ agent.session:
   short: Session identifier for cooldown isolation (e.g., $PPID)
 agent.skill:
   short: Include named skill content in context packet
-agent.include-shared:
-  short: Include shared hub entries in context packet
+agent.include-hub:
+  short: Include ctx Hub entries in context packet
 allow-outside-cwd:
   short: Allow context directory outside current working directory
 changes.since:
@@ -88,6 +88,8 @@ initialize.minimal:
   short: Only create essential files (TASKS.md, DECISIONS.md, CONSTITUTION.md)
 initialize.no-plugin-enable:
   short: Skip auto-enabling the ctx plugin in global Claude Code settings
+initialize.no-steering-init:
+  short: Skip scaffolding foundation steering files in .context/steering/
 journal.obsidian.output:
   short: Output directory for vault
 journal.site.build:
@@ -278,18 +280,16 @@ tool:
   short: 'Override active AI tool (e.g., claude, cursor, cline, kiro, codex)'
 connect.admin-auth:
   short: Admin credential from hub startup
-serve.daemon:
-  short: Run hub in the background
-serve.data-dir:
+hub.start.daemon:
+  short: Run the hub server in the background
+hub.start.data-dir:
   short: Hub data directory (default ~/.ctx/hub-data/)
-serve.peers:
+hub.start.peers:
   short: Comma-separated peer addresses for cluster mode
-serve.port:
+hub.start.port:
   short: Hub listen port (default 9900)
-serve.shared:
-  short: Start the shared context hub (gRPC server)
-serve.stop:
-  short: Stop a running hub daemon
+hub.stop.data-dir:
+  short: Hub data directory (default ~/.ctx/hub-data/)
 watch.dry-run:
   short: Show updates without applying
 watch.log:

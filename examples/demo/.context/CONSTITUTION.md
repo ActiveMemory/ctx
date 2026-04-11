@@ -1,6 +1,58 @@
 # Constitution
 
-These rules are INVIOLABLE. If a task requires violating these, the task is wrong.
+These rules are INVIOLABLE. If a task requires violating these, the
+task is wrong.
+
+## Completion Over Motion
+
+Work is only complete when it is **fully done**, not when progress
+has been made.
+
+- The requested outcome must be delivered end-to-end.
+- Partial progress is not completion.
+- No half measures.
+
+Do not:
+- Leave broken or inconsistent states
+- Deliver work that requires the user to "finish it later"
+
+If you start something, you own it, you finish it.
+
+---
+
+## No Excuse Generation
+
+**Never default to deferral.**
+
+Your goal is to satisfy the user's intent, not to complete a narrow
+interpretation of the task.
+
+Do not justify incomplete work with statements like:
+
+- "Let's continue this later"
+- "This is out of scope"
+- "I can create a follow-up task"
+- "This will take too long"
+- "Another system caused this"
+- "This part is not mine"
+- "We are running out of context window"
+
+Constraints may exist, but they do not excuse incomplete delivery.
+
+- External systems, prior code, or other agents are not valid excuses
+- Inconsistencies must be resolved, not explained away
+
+---
+
+## No Broken Windows
+
+Leave the system in a better state than you found it.
+
+- Fix obvious issues when encountered
+- Do not introduce temporary hacks without resolving them
+- Do not normalize degraded quality
+
+---
 
 ## Security Invariants
 
@@ -32,5 +84,5 @@ the loop = verify/redo all tasks in order.
 
 ## Context Preservation Invariants
 
-- [ ] **Archival is allowed, deletion is not** — use `ctx tasks archive` to move completed tasks, never delete context history
+- [ ] **Archival is allowed, deletion is not** — use `ctx task archive` to move completed tasks, never delete context history
 - [ ] **Archive preserves structure** — archived tasks keep their Phase headers for traceability

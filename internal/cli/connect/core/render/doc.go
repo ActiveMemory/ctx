@@ -5,7 +5,7 @@
 //                 SPDX-License-Identifier: Apache-2.0
 
 // Package render converts hub entries to markdown files
-// in .context/shared/ with origin tags and date headers.
+// in .context/hub/ with origin tags and date headers.
 //
 // Key exports: [WriteEntries].
 // See source files for implementation details.

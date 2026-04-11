@@ -115,6 +115,39 @@ const (
 	DescKeyWriteInitPluginLocalEnabled = "write.init-plugin-local-enabled"
 )
 
+// DescKeys for Claude Code setup-state guidance blocks.
+// These are stage-aware hints printed by `ctx init` (as a
+// post-script) and `ctx setup claude-code` (as the primary
+// output) depending on whether the claude binary is on PATH
+// and whether the ctx plugin is installed/enabled.
+const (
+	// DescKeyWriteInitClaudeAbsent is shown when the claude
+	// binary is not on PATH. Walks the user through installing
+	// Claude Code first, then the ctx plugin.
+	DescKeyWriteInitClaudeAbsent = "write.init-claude-absent"
+	// DescKeyWriteInitClaudePluginMissing is shown when claude
+	// is present but the ctx plugin is not installed. Walks
+	// through the dev-symlink install flow with user-scope
+	// guidance to avoid the local-install enablement gotcha.
+	DescKeyWriteInitClaudePluginMissing = "write.init-claude-plugin-missing"
+	// DescKeyWriteInitClaudeReady is shown when claude is
+	// present and the plugin is installed and enabled — a
+	// multi-line confirmation with plugin details (scope,
+	// version, source, clone path, enablement).
+	DescKeyWriteInitClaudeReady = "write.init-claude-ready"
+	// DescKeyWriteInitClaudeReadyMinimal is the fallback
+	// one-line confirmation used when plugin metadata can't
+	// be parsed.
+	DescKeyWriteInitClaudeReadyMinimal = "write.init-claude-ready-minimal"
+	// DescKeyWriteSetupClaudeReady is the setup-command
+	// success message with the same plugin details block.
+	DescKeyWriteSetupClaudeReady = "write.setup-claude-ready"
+	// DescKeyWriteSetupClaudeReadyMinimal is the fallback
+	// setup-command message used when plugin metadata
+	// can't be parsed.
+	DescKeyWriteSetupClaudeReadyMinimal = "write.setup-claude-ready-minimal"
+)
+
 // DescKeys for init scratchpad setup output.
 const (
 	// DescKeyWriteInitScratchpadKeyCreated is the text key for write init
@@ -177,6 +210,9 @@ const (
 	// DescKeyInitLabelPluginEnable is the text key for init label plugin enable
 	// messages.
 	DescKeyInitLabelPluginEnable = "init.label-plugin-enable"
+	// DescKeyInitLabelSteering is the text key for init label steering
+	// (foundation files scaffold) messages.
+	DescKeyInitLabelSteering = "init.label-steering"
 )
 
 // Init confirmation prompts and mode labels.

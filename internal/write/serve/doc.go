@@ -5,7 +5,7 @@
 //                 SPDX-License-Identifier: Apache-2.0
 
 // Package serve provides output functions for the serve
-// command, including shared hub startup messages.
+// command, including ctx Hub startup messages.
 //
 // Key exports: [HubStarted], [AdminToken].
 // See source files for implementation details.

@@ -62,10 +62,17 @@ func gettingStarted() []registration {
 	}
 }
 
-// contextCmds returns command registrations for the context management group.
+// contextCmds returns command registrations for the context
+// management group.
+//
+// These commands operate on the full set of context source-of-truth
+// files (TASKS.md, DECISIONS.md, LEARNINGS.md, CONVENTIONS.md) —
+// adding entries, loading for agents, formatting, reconciling with
+// the codebase, detecting drift, and archiving completed work.
 //
 // Returns:
-//   - []registration: Add, load, agent, sync, drift, and compact commands
+//   - []registration: Add, load, agent, skill, sync, drift,
+//     compact, and fmt commands
 func contextCmds() []registration {
 	return []registration{
 		{add.Cmd, embedCmd.GroupContext},
@@ -75,18 +82,26 @@ func contextCmds() []registration {
 		{sync.Cmd, embedCmd.GroupContext},
 		{drift.Cmd, embedCmd.GroupContext},
 		{compact.Cmd, embedCmd.GroupContext},
+		{ctxFmt.Cmd, embedCmd.GroupContext},
 	}
 }
 
 // artifacts returns command registrations for the artifacts group.
 //
+// These commands operate on specific artifact files inside
+// .context/ — the DECISIONS.md, LEARNINGS.md, and TASKS.md
+// stores, plus the `reindex` shortcut that rebuilds the
+// decision/learning index tables in a single call.
+//
 // Returns:
-//   - []registration: Decision, learning, and task commands
+//   - []registration: Decision, learning, task, and reindex
+//     commands
 func artifacts() []registration {
 	return []registration{
 		{decision.Cmd, embedCmd.GroupArtifacts},
 		{learning.Cmd, embedCmd.GroupArtifacts},
 		{task.Cmd, embedCmd.GroupArtifacts},
+		{reindex.Cmd, embedCmd.GroupArtifacts},
 	}
 }
 
@@ -119,14 +134,21 @@ func runtimeCmds() []registration {
 
 // integrations returns command registrations for the integrations group.
 //
+// This group covers commands that connect ctx to external
+// systems: AI-tool setup, the ctx Hub server and its clients,
+// the MCP server, webhooks, watchers, and loop harnesses.
+//
 // Returns:
-//   - []registration: Hook, mcp, watch, notify, and loop commands
+//   - []registration: Setup, steering, trigger, serve, hub,
+//     connect, mcp, watch, notify, and loop commands
 func integrations() []registration {
 	return []registration{
-		{connect.Cmd, embedCmd.GroupIntegration},
 		{setup.Cmd, embedCmd.GroupIntegration},
 		{steering.Cmd, embedCmd.GroupIntegration},
 		{trigger.Cmd, embedCmd.GroupIntegration},
+		{serve.Cmd, embedCmd.GroupIntegration},
+		{cliHub.Cmd, embedCmd.GroupIntegration},
+		{connect.Cmd, embedCmd.GroupIntegration},
 		{mcp.Cmd, embedCmd.GroupIntegration},
 		{watch.Cmd, embedCmd.GroupIntegration},
 		{notify.Cmd, embedCmd.GroupIntegration},
@@ -148,25 +170,19 @@ func diagnostics() []registration {
 	}
 }
 
-// utilities returns command registrations for the utilities group.
+// hiddenCmds returns command registrations that are intentionally
+// kept out of `ctx --help` output.
+//
+// These are genuinely internal commands, not user-facing
+// features: `ctx site` generates the journal site consumed by
+// `ctx serve`, and `ctx system` hosts the nudge-hook plumbing
+// that ctx itself calls via subprocess.
 //
 // Returns:
-//   - []registration: Reindex command
-func utilities() []registration {
-	return []registration{
-		{ctxFmt.Cmd, embedCmd.GroupUtilities},
-		{reindex.Cmd, embedCmd.GroupUtilities},
-	}
-}
-
-// hiddenCmds returns command registrations that are not shown in help output.
-//
-// Returns:
-//   - []registration: Serve, site, and system commands with no group assignment
+//   - []registration: site and system commands with no group
+//     assignment (hidden)
 func hiddenCmds() []registration {
 	return []registration{
-		{cliHub.Cmd, ""},
-		{serve.Cmd, ""},
 		{site.Cmd, ""},
 		{system.Cmd, ""},
 	}
