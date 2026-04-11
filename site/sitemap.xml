@@ -52,6 +52,15 @@
         <loc>https://ctx.ist/home/keeping-ai-honest/</loc>
       </url>
       <url>
+        <loc>https://ctx.ist/home/steering/</loc>
+      </url>
+      <url>
+        <loc>https://ctx.ist/home/triggers/</loc>
+      </url>
+      <url>
+        <loc>https://ctx.ist/home/hub/</loc>
+      </url>
+      <url>
         <loc>https://ctx.ist/home/faq/</loc>
       </url>
       <url>
@@ -142,31 +151,118 @@
         <loc>https://ctx.ist/recipes/parallel-worktrees/</loc>
       </url>
       <url>
+        <loc>https://ctx.ist/recipes/steering/</loc>
+      </url>
+      <url>
+        <loc>https://ctx.ist/recipes/triggers/</loc>
+      </url>
+      <url>
+        <loc>https://ctx.ist/recipes/hub-overview/</loc>
+      </url>
+      <url>
+        <loc>https://ctx.ist/recipes/hub-getting-started/</loc>
+      </url>
+      <url>
+        <loc>https://ctx.ist/recipes/hub-personal/</loc>
+      </url>
+      <url>
+        <loc>https://ctx.ist/recipes/hub-team/</loc>
+      </url>
+      <url>
+        <loc>https://ctx.ist/recipes/hub-multi-machine/</loc>
+      </url>
+      <url>
+        <loc>https://ctx.ist/recipes/hub-cluster/</loc>
+      </url>
+      <url>
         <loc>https://ctx.ist/cli/</loc>
       </url>
       <url>
         <loc>https://ctx.ist/cli/init-status/</loc>
       </url>
       <url>
+        <loc>https://ctx.ist/cli/guide/</loc>
+      </url>
+      <url>
+        <loc>https://ctx.ist/cli/why/</loc>
+      </url>
+      <url>
         <loc>https://ctx.ist/cli/context/</loc>
+      </url>
+      <url>
+        <loc>https://ctx.ist/cli/change/</loc>
+      </url>
+      <url>
+        <loc>https://ctx.ist/cli/memory/</loc>
+      </url>
+      <url>
+        <loc>https://ctx.ist/cli/watch/</loc>
       </url>
       <url>
         <loc>https://ctx.ist/cli/journal/</loc>
       </url>
       <url>
-        <loc>https://ctx.ist/cli/tools/</loc>
+        <loc>https://ctx.ist/cli/pad/</loc>
       </url>
       <url>
-        <loc>https://ctx.ist/cli/config/</loc>
+        <loc>https://ctx.ist/cli/remind/</loc>
       </url>
       <url>
-        <loc>https://ctx.ist/cli/doctor/</loc>
+        <loc>https://ctx.ist/cli/pause/</loc>
+      </url>
+      <url>
+        <loc>https://ctx.ist/cli/resume/</loc>
+      </url>
+      <url>
+        <loc>https://ctx.ist/cli/setup/</loc>
+      </url>
+      <url>
+        <loc>https://ctx.ist/cli/steering/</loc>
+      </url>
+      <url>
+        <loc>https://ctx.ist/cli/trigger/</loc>
+      </url>
+      <url>
+        <loc>https://ctx.ist/cli/skill/</loc>
       </url>
       <url>
         <loc>https://ctx.ist/cli/mcp/</loc>
       </url>
       <url>
+        <loc>https://ctx.ist/cli/notify/</loc>
+      </url>
+      <url>
+        <loc>https://ctx.ist/cli/loop/</loc>
+      </url>
+      <url>
+        <loc>https://ctx.ist/cli/connect/</loc>
+      </url>
+      <url>
+        <loc>https://ctx.ist/cli/hub/</loc>
+      </url>
+      <url>
+        <loc>https://ctx.ist/cli/serve/</loc>
+      </url>
+      <url>
+        <loc>https://ctx.ist/cli/site/</loc>
+      </url>
+      <url>
+        <loc>https://ctx.ist/cli/doctor/</loc>
+      </url>
+      <url>
+        <loc>https://ctx.ist/cli/dep/</loc>
+      </url>
+      <url>
+        <loc>https://ctx.ist/cli/trace/</loc>
+      </url>
+      <url>
+        <loc>https://ctx.ist/cli/config/</loc>
+      </url>
+      <url>
         <loc>https://ctx.ist/cli/system/</loc>
+      </url>
+      <url>
+        <loc>https://ctx.ist/cli/completion/</loc>
       </url>
       <url>
         <loc>https://ctx.ist/reference/</loc>
@@ -196,6 +292,12 @@
         <loc>https://ctx.ist/operations/</loc>
       </url>
       <url>
+        <loc>https://ctx.ist/operations/hub/</loc>
+      </url>
+      <url>
+        <loc>https://ctx.ist/operations/hub-failure-modes/</loc>
+      </url>
+      <url>
         <loc>https://ctx.ist/operations/migration/</loc>
       </url>
       <url>
@@ -205,16 +307,19 @@
         <loc>https://ctx.ist/operations/integrations/</loc>
       </url>
       <url>
-        <loc>https://ctx.ist/operations/release/</loc>
+        <loc>https://ctx.ist/operations/autonomous-loop/</loc>
       </url>
       <url>
-        <loc>https://ctx.ist/operations/autonomous-loop/</loc>
+        <loc>https://ctx.ist/operations/release/</loc>
       </url>
       <url>
         <loc>https://ctx.ist/security/</loc>
       </url>
       <url>
         <loc>https://ctx.ist/security/agent-security/</loc>
+      </url>
+      <url>
+        <loc>https://ctx.ist/security/hub/</loc>
       </url>
       <url>
         <loc>https://ctx.ist/security/reporting/</loc>

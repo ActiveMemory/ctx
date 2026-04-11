@@ -17,7 +17,7 @@ import (
 	writeConnect "github.com/ActiveMemory/ctx/internal/write/connect"
 )
 
-// Run syncs entries from the hub to .context/shared/.
+// Run syncs entries from the hub to .context/hub/.
 //
 // Loads connection config, pulls entries since last sync,
 // renders them as markdown, and updates sync state.

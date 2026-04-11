@@ -22,11 +22,11 @@ const stateFile = ".sync-state.json"
 // lockFile is the lock file to prevent concurrent syncs.
 const lockFile = ".sync.lock"
 
-// loadState reads sync state from .context/shared/.
+// loadState reads sync state from .context/hub/.
 // Acquires a lock file to prevent concurrent access.
 func loadState() (state, func(), error) {
 	var s state
-	dir := filepath.Join(rc.ContextDir(), "shared")
+	dir := filepath.Join(rc.ContextDir(), "hub")
 	lockPath := filepath.Join(dir, lockFile)
 
 	if mkErr := io.SafeMkdirAll(
@@ -68,9 +68,9 @@ func loadState() (state, func(), error) {
 	return s, release, nil
 }
 
-// saveState writes sync state to .context/shared/.
+// saveState writes sync state to .context/hub/.
 func saveState(s state) error {
-	dir := filepath.Join(rc.ContextDir(), "shared")
+	dir := filepath.Join(rc.ContextDir(), "hub")
 	data, marshalErr := json.MarshalIndent(
 		s, "", "  ",
 	)

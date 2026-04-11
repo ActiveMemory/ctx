@@ -30,6 +30,9 @@ const (
 	// UseSystemCheckFreshness is the cobra Use string for the system check
 	// freshness command.
 	UseSystemCheckFreshness = "check-freshness"
+	// UseSystemCheckHubSync is the cobra Use string for the system check hub
+	// sync command.
+	UseSystemCheckHubSync = "check-hub-sync"
 	// UseSystemCheckJournal is the cobra Use string for the system check journal
 	// command.
 	UseSystemCheckJournal = "check-journal"
@@ -138,6 +141,9 @@ const (
 	// DescKeySystemCheckFreshness is the description key for the system check
 	// freshness command.
 	DescKeySystemCheckFreshness = "system.checkfreshness"
+	// DescKeySystemCheckHubSync is the description key for the system check
+	// hub sync command.
+	DescKeySystemCheckHubSync = "system.checkhubsync"
 	// DescKeySystemCheckJournal is the description key for the system check
 	// journal command.
 	DescKeySystemCheckJournal = "system.checkjournal"

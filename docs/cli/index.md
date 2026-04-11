@@ -58,32 +58,33 @@ own guards and no-op gracefully.
 | [`ctx reindex`](context.md#ctx-reindex)       | Regenerate indices for `DECISIONS.md` and `LEARNINGS.md` |
 | [`ctx decision`](context.md#ctx-decision)     | Manage `DECISIONS.md` (reindex)                          |
 | [`ctx learning`](context.md#ctx-learning)     | Manage `LEARNINGS.md` (reindex)                          |
-| [`ctx journal`](recall.md#ctx-recall)          | Browse and export AI session history                     |
-| [`ctx journal`](recall.md#ctx-journal)        | Generate static site from journal entries                |
-| [`ctx serve`](serve.md#ctx-serve)             | Serve journal site or shared context hub                 |
-| [`ctx watch`](tools.md#ctx-watch)             | Auto-apply context updates from AI output                |
-| [`ctx setup`](tools.md#ctx-hook)               | Generate AI tool integration configs                     |
-| [`ctx loop`](tools.md#ctx-loop)               | Generate autonomous loop script                          |
-| [`ctx memory`](tools.md#ctx-memory)           | Bridge Claude Code auto memory into .context/            |
-| [`ctx notify`](tools.md#ctx-notify)           | Send webhook notifications                               |
-| [`ctx change`](tools.md#ctx-change)           | Show what changed since last session                     |
-| [`ctx dep`](tools.md#ctx-dep)                 | Show package dependency graph                            |
-| [`ctx pad`](tools.md#ctx-pad)                 | Encrypted scratchpad for sensitive one-liners            |
-| [`ctx remind`](tools.md#ctx-remind)           | Session-scoped reminders that surface at session start   |
-| [`ctx completion`](tools.md#ctx-completion)   | Generate shell autocompletion scripts                    |
-| [`ctx guide`](tools.md#ctx-guide)             | Quick-reference cheat sheet                              |
-| [`ctx why`](tools.md#ctx-why)                 | Read the philosophy behind ctx                           |
-| [`ctx site`](tools.md#ctx-site)               | Site management (feed generation)                        |
+| [`ctx journal`](journal.md#ctx-journal)       | Browse, import, enrich, and lock session history         |
+| [`ctx serve`](serve.md#ctx-serve)             | Serve a static site locally via zensical                 |
+| [`ctx watch`](watch.md#ctx-watch)             | Auto-apply context updates from AI output                |
+| [`ctx setup`](setup.md#ctx-setup)             | Generate AI tool integration configs                     |
+| [`ctx loop`](loop.md#ctx-loop)                | Generate autonomous loop script                          |
+| [`ctx memory`](memory.md#ctx-memory)          | Bridge Claude Code auto memory into `.context/`          |
+| [`ctx notify`](notify.md#ctx-notify)          | Send webhook notifications                               |
+| [`ctx change`](change.md#ctx-change)          | Show what changed since last session                     |
+| [`ctx dep`](dep.md#ctx-dep)                   | Show package dependency graph                            |
+| [`ctx pad`](pad.md#ctx-pad)                   | Encrypted scratchpad for sensitive one-liners            |
+| [`ctx remind`](remind.md#ctx-remind)          | Session-scoped reminders that surface at session start   |
+| [`ctx pause`](pause.md#ctx-pause)             | Pause context hooks for this session                     |
+| [`ctx resume`](resume.md#ctx-resume)          | Resume context hooks after a pause                       |
+| [`ctx completion`](completion.md#ctx-completion) | Generate shell autocompletion scripts                 |
+| [`ctx guide`](guide.md#ctx-guide)             | Quick-reference cheat sheet                              |
+| [`ctx why`](why.md#ctx-why)                   | Read the philosophy behind `ctx`                         |
+| [`ctx site`](site.md#ctx-site)                | Site management (feed generation)                        |
 | [`ctx trace`](trace.md#ctx-trace)             | Show context behind git commits                          |
 | [`ctx doctor`](doctor.md#ctx-doctor)          | Structural health check (hooks, drift, config)           |
 | [`ctx mcp`](mcp.md#ctx-mcp)                   | MCP server for AI tool integration (stdin/stdout)        |
-| [`ctx steering`](tools.md#ctx-steering)       | Manage steering files (behavioral rules for AI tools)    |
-| [`ctx hook`](tools.md#ctx-hook)               | Manage lifecycle hooks (shell scripts for automation)    |
-| [`ctx skill`](tools.md#ctx-skill)             | Manage reusable instruction bundles                      |
+| [`ctx steering`](steering.md#ctx-steering)    | Manage steering files (behavioral rules for AI tools)    |
+| [`ctx trigger`](trigger.md#ctx-trigger)       | Manage lifecycle triggers (scripts for automation)       |
+| [`ctx skill`](skill.md#ctx-skill)             | Manage reusable instruction bundles                      |
 | [`ctx config`](config.md#ctx-config)          | Manage runtime configuration profiles                    |
-| [`ctx connect`](connect.md#ctx-connect)       | Connect to a shared context hub                          |
-| [`ctx hub`](hub.md#ctx-hub)                   | Manage hub cluster (status, peer, stepdown)              |
-| [`ctx system`](system.md#ctx-system)          | System diagnostics and hook commands                     |
+| [`ctx connect`](connect.md#ctx-connect)       | Connect to a `ctx` Hub                                   |
+| [`ctx hub`](hub.md#ctx-hub)                   | Operate a `ctx` Hub server or cluster                    |
+| [`ctx system`](system.md#ctx-system)          | System diagnostics and internal hook commands            |
 
 ---
 

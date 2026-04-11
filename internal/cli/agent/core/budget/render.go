@@ -108,10 +108,10 @@ func RenderMarkdownPacket(pkt *AssembledPacket) string {
 		}
 	}
 
-	// Shared hub entries
-	if len(pkt.Shared) > 0 {
-		sb.WriteString("## Shared Knowledge" + nl)
-		for _, s := range pkt.Shared {
+	// ctx Hub entries
+	if len(pkt.Hub) > 0 {
+		sb.WriteString("## ctx Hub" + nl)
+		for _, s := range pkt.Hub {
 			sb.WriteString(s + nl + nl)
 		}
 	}

@@ -1,6 +1,6 @@
-# Shared Context Hub — Implementation & Federation
+# ctx Hub — Implementation & Federation
 
-Companion to [shared-context-hub.md](shared-context-hub.md). Contains
+Companion to [context-hub.md](context-hub.md). Contains
 package layout, compliance, implementation phases, and future
 federation design.
 
@@ -22,7 +22,7 @@ internal/
 │       └── hub.proto     ← gRPC service definition
 ├── cli/
 │   ├── serve/
-│   │   └── shared.go     ← ctx serve --shared command
+│   │   └── shared.go     ← ctx serve --hub command
 │   └── connect/
 │       ├── register.go   ← ctx connect register
 │       ├── subscribe.go  ← ctx connect subscribe
@@ -40,7 +40,7 @@ internal/
 
 | Invariant | How preserved |
 |-----------|---------------|
-| Markdown-on-filesystem | Shared entries stored as .md in .context/shared/ |
+| Markdown-on-filesystem | Shared entries stored as .md in .context/hub/ |
 | Zero runtime deps (core) | gRPC scoped to `internal/hub/` — not in local-only list |
 | Deterministic assembly | Shared budget is additive, same files + budget = same output |
 | Human authority | `--share` is explicit, shared knowledge is informational |
@@ -73,7 +73,7 @@ The existing `TestNoNetworkImportsInCore` checks a curated list of
 - Proto definition and code generation
 - Hub server with JSONL storage
 - Register, Publish, Sync RPCs
-- `ctx serve --shared` and `ctx connect register/sync/publish`
+- `ctx serve --hub` and `ctx connect register/sync/publish`
 - Token-based auth with encrypted local storage
 
 ### Phase 2: Real-Time
@@ -85,7 +85,7 @@ The existing `TestNoNetworkImportsInCore` checks a curated list of
 
 ### Phase 3: Agent Integration
 
-- `ctx agent --include-shared` with Tier 6 budget
+- `ctx agent --include-hub` with Tier 6 budget
 - Shared file rendering in agent packet
 - Scoring shared entries (recency + type relevance)
 
@@ -124,7 +124,7 @@ sequences to local ones. The entry UUID ensures global deduplication.
 
 ### Hub Discovery
 
-- Manual configuration: `ctx serve --shared --peer grpcs://hub-us:9900`
+- Manual configuration: `ctx serve --hub --peer grpcs://hub-us:9900`
 - Future: DNS-based discovery or a lightweight registry
 
 ### Consistency Model

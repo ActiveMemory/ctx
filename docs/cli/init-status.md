@@ -101,7 +101,7 @@ ctx agent [flags]
 | `--format`   | md      | Output format: `md` or `json`                                        |
 | `--cooldown` | 10m     | Suppress repeated output within this duration (requires `--session`) |
 | `--session`  | (none)  | Session ID for cooldown isolation (e.g., `$PPID`)                    |
-| `--include-shared` | false | Include shared hub entries from `.context/shared/`             |
+| `--include-hub` | false | Include hub entries from `.context/hub/`             |
 
 **How budget works**:
 
@@ -113,9 +113,12 @@ in priority tiers:
 3. **Conventions**: all conventions, up to 20% of budget
 4. **Decisions**: scored by recency and relevance to active tasks
 5. **Learnings**: scored by recency and relevance to active tasks
-6. **Steering**: applicable steering file bodies
+6. **[Steering](steering.md)**: applicable steering file bodies,
+   scored by their `inclusion` mode and description match
+   against the active prompt
 7. **Skill**: named skill content (from `--skill`)
-8. **Shared**: hub entries from `.context/shared/` (with `--include-shared`)
+8. **Hub**: entries from `.context/hub/` (with `--include-hub`,
+   see [`ctx connect`](connect.md))
 
 Decisions and learnings are ranked by a combined score (how recent + how
 relevant to your current tasks). High-scoring entries are included with

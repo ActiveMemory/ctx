@@ -50,4 +50,9 @@ const (
 	// DescKeyWriteSteeringNoMatch is the message when no steering
 	// files match the prompt.
 	DescKeyWriteSteeringNoMatch = "write.steering-no-match"
+	// DescKeyWriteSteeringAddModeHint is the one-line hint
+	// printed after `ctx steering add` creates a new file,
+	// explaining the default inclusion mode and how to
+	// switch it.
+	DescKeyWriteSteeringAddModeHint = "write.steering-add-mode-hint"
 )

@@ -32,7 +32,7 @@ func Connected() bool {
 }
 
 // Sync pulls new entries from the hub and writes them to
-// .context/shared/. Returns the count of synced entries
+// .context/hub/. Returns the count of synced entries
 // and a formatted status message, or empty string if no
 // new entries.
 //

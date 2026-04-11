@@ -20,7 +20,7 @@ import (
 )
 
 // Run streams entries from the hub in real-time via the
-// Listen RPC. Writes each entry to .context/shared/ as
+// Listen RPC. Writes each entry to .context/hub/ as
 // it arrives. Stops on Ctrl-C.
 //
 // Parameters:

@@ -23,8 +23,9 @@ const (
 	DescKeyGroupIntegration = "group.integration"
 	// DescKeyGroupDiagnostics is the text key for group diagnostics messages.
 	DescKeyGroupDiagnostics = "group.diagnostics"
-	// DescKeyGroupUtilities is the text key for group utilities messages.
-	DescKeyGroupUtilities = "group.utilities"
+	// DescKeyGroupShell is the text key for the shell-integration
+	// group title (help, completion).
+	DescKeyGroupShell = "group.shell"
 )
 
 // Help text keys for CLI-wide output elements.

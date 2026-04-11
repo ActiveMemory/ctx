@@ -54,7 +54,7 @@ things that are fine as-is just because they could theoretically be different.
 Output: concrete refactoring suggestions, not style nitpicks.
 
 ### 4. Security Review
-This is a CLI app — focus on CLI-relevant attack surface, not web OWASP:
+This is a CLI app: focus on CLI-relevant attack surface, not web OWASP:
 file path traversal (does user input flow into file paths unsanitized?),
 command injection (does user input flow into exec calls?), symlink following
 (does the tool follow symlinks when writing to .context/?), permission

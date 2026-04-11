@@ -18,7 +18,7 @@ import (
 	writeConnect "github.com/ActiveMemory/ctx/internal/write/connect"
 )
 
-// Run registers this project with a shared context hub.
+// Run registers this project with a ctx Hub.
 //
 // Connects to the hub, sends the admin token and project
 // name, receives a client token, and stores the encrypted

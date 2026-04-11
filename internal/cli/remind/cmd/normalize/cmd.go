@@ -18,13 +18,15 @@ import (
 // Returns:
 //   - *cobra.Command: Configured normalize subcommand
 func Cmd() *cobra.Command {
-	short, _ := desc.Command(cmd.DescKeyRemindNormalize)
+	short, long := desc.Command(cmd.DescKeyRemindNormalize)
 	return &cobra.Command{
-		Use:   cmd.UseRemindNormalize,
-		Short: short,
-		Args:  cobra.NoArgs,
-		RunE: func(cmd *cobra.Command, _ []string) error {
-			return Run(cmd)
+		Use:     cmd.UseRemindNormalize,
+		Short:   short,
+		Long:    long,
+		Example: desc.Example(cmd.DescKeyRemindNormalize),
+		Args:    cobra.NoArgs,
+		RunE: func(cobraCmd *cobra.Command, _ []string) error {
+			return Run(cobraCmd)
 		},
 	}
 }

@@ -81,7 +81,7 @@ func Run(cmd *cobra.Command, args []string, flags entity.AddConfig) error {
 
 	writeAdd.Added(cmd, fName)
 
-	// Best-effort: publish to shared hub if --share is set.
+	// Best-effort: publish to ctx Hub if --share is set.
 	if flags.Share {
 		pubEntry := hub.PublishEntry{
 			Type:    fType,
