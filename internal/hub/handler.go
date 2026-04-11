@@ -79,7 +79,7 @@ func (s *Server) publish(
 			Type:      pe.Type,
 			Content:   pe.Content,
 			Origin:    pe.Origin,
-			Author:    pe.Author,
+			Meta:      pe.Meta,
 			Timestamp: time.Unix(pe.Timestamp, 0),
 		}
 	}

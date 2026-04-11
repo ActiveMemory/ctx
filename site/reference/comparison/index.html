@@ -1952,18 +1952,31 @@ Instead, it defines a persistent context layer that RAG can optionally augment.<
 </ul>
 <p><code>ctx</code> is intentionally:</p>
 <ul>
-<li>local-first</li>
-<li>file-based</li>
-<li>dependency-free</li>
-<li>CLI-driven</li>
-<li>developer-controlled</li>
+<li><strong>local-first</strong> — context lives next to your code, not
+  behind a service boundary.</li>
+<li><strong>file-based</strong> — everything important is a markdown
+  file you can read, diff, grep, and version-control.</li>
+<li><strong>single-binary core</strong> — the context persistence path
+  (<code>init</code>, <code>add</code>, <code>agent</code>, <code>status</code>, <code>drift</code>, <code>load</code>,
+  <code>sync</code>, <code>compact</code>, <code>task</code>, <code>decision</code>, <code>learning</code>, and
+  their siblings) is a single Go binary with no required
+  runtime dependencies. Optional integrations — <code>ctx
+  trace</code> (needs <code>git</code>), <code>ctx serve</code> (needs <code>zensical</code>),
+  the <code>ctx</code> Hub (needs a running hub), Claude Code
+  plugin (needs <code>claude</code>) — are opt-in and each declares
+  its dependency explicitly.</li>
+<li><strong>CLI-driven</strong> — every feature is reachable from the
+  command line and scriptable.</li>
+<li><strong>developer-controlled</strong> — no auto-updating cloud
+  service, no telemetry, no account to sign up for.</li>
 </ul>
-<p>It does not require:</p>
+<p>The core <code>ctx</code> binary does not require:</p>
 <ul>
 <li>a server</li>
 <li>a database</li>
 <li>an account</li>
 <li>a SaaS backend</li>
+<li>network connectivity (for core operations)</li>
 </ul>
 <p><code>ctx</code> optimizes for <em>individual and small-team workflows</em> where context should
 live next to code; <strong>not</strong> behind a service boundary.</p>

@@ -119,6 +119,94 @@ For significant decisions:
 
 -->
 
+## [2026-04-11-180000] `Entry.Author` is server-authoritative, not client-authoritative
+
+**Status**: Accepted
+
+**Context**: The `Entry.Author` field on hub entries is copied verbatim from
+the client's publish request (`handler.go:82`). It's optional, freeform, and
+unauthenticated — a client with a valid token for project `alpha` can publish
+entries claiming `Author: "bob@acme.com"` regardless of who actually
+authenticated. This is the same spoofing pattern as `Origin` (audit finding
+H-04) and was flagged as audit finding H-22 with three options: keep, drop,
+override, or promote. The decision was never formally closed.
+
+The premise that resolved it: **identity is eventually part of the token**.
+Under the sysadmin-registry MVP, the server already knows `{user_id, project}`
+from the authenticated token. Under the PKI stretch, the signed claim carries
+identity cryptographically. In both models, the client has nothing to say about
+authorship that the server doesn't already know with higher confidence.
+
+**Decision**: `Entry.Author` is **server-authoritative**. The server stamps it
+from the authenticated identity source on every publish. The client's
+`pe.Author` input is ignored (or rejected — implementation choice, not
+semantic difference). The field stays in the wire format but its semantics
+change from "whatever the client said" to "whatever the server's auth layer
+resolved."
+
+Stamping source by phase:
+
+- **Today (pre-registry)**: `Author = ClientInfo.ProjectName`, same source as
+  the `Origin` server-enforcement fix (H-04). Lossy but consistent.
+- **Registry MVP**: `Author = users.json` row's `user_id` (e.g.,
+  `alice@acme.com`). Precise per-human attribution.
+- **PKI stretch**: `Author = signed claim's sub field`. Cryptographic identity.
+
+**Rationale**: Dropping the field is wrong because the registry MVP will
+already give us a per-user identity to stamp — removing Author just to re-add
+it later is churn. "Override" and "promote" are cosmetically different forms
+of the same decision (server fills from auth context); "promote" is what
+happens naturally once the registry MVP types the field as `UserID`.
+Client-sourced Author is indefensible because it replicates the Origin
+spoofing vector in a second field.
+
+**Consequence**:
+
+- The Author field stays on the wire and in `Entry{}`.
+- Client-side code that populates `pe.Author` from local config becomes a
+  no-op. Audit `ctx connect publish` and `ctx add --share` for any such
+  code paths before the server-enforcement fix lands.
+- `handler.go publish()` fills Author from the authenticated context (the
+  same `ClientInfo` that H-04 pulls for Origin). Single unified
+  auth-to-handler pipe.
+- `docs/security/hub.md` "Compromised client token" section gets rewritten:
+  attribution becomes **wrong** on compromise (attacker's token maps to
+  attacker's identity), not **forgeable** (attacker cannot stamp someone
+  else's name).
+- The sysadmin-registry spec (`specs/hub-identity-registry.md`, tasked)
+  MUST include a `user_id` field per row — it's the stamping source.
+- Three open tasks collapse into one: H-22 resolves to "implement
+  server-authoritative Author" instead of "decide Author fate." TASKS.md
+  updated.
+
+**Alternatives considered**:
+
+- **Keep client-authoritative**: rejected. Same spoofing vector as Origin;
+  trivially defeats any downstream attribution check.
+- **Drop the field**: rejected. The registry MVP will need per-human
+  attribution anyway. Dropping today is churn that gets undone
+  immediately.
+- **Override at client-side before publish**: rejected. Puts the security
+  boundary on the wrong side of the trust zone. Must be server-side.
+
+**Follow-up — client-advisory metadata**: the client still has useful
+information to share that isn't an identity claim: a human-friendly
+display name, the machine that made the publish, the tool version, a
+CI system label, a team/role handle. This lives on a **new sibling
+field `Meta`** (a `ClientMetadata` sub-struct), not on `Author`. The
+separation of types is what protects the security property: `Author`
+is reserved for server-authoritative identity, `Meta` is
+client-advisory and explicitly labeled as such in any rendered
+surface. `Meta` fields are size-capped individually (256 bytes) and
+in aggregate (2 KB), validated for plain-string content (no
+newlines, no control characters), and never claimed as attribution
+in any API response. The renderer MUST label `Meta`-sourced values
+with prose like "client label" or "client-reported" so readers
+cannot mistake them for authoritative identity. See TASKS.md for
+the implementation task.
+
+---
+
 ## [2026-04-09-001332] Architecture skill pipeline is a triad not a quartet
 
 **Status**: Accepted
