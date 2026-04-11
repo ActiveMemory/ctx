@@ -51,7 +51,9 @@ func Validate(params entity.EntryParams, examplesFn func(string) string) error {
 	var extra [][2]string
 	switch params.Type {
 	case entry.Task:
-		// Provenance only — no extra fields.
+		if params.Section == "" {
+			return errAdd.SectionRequired()
+		}
 
 	case entry.Decision:
 		extra = [][2]string{

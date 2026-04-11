@@ -12,6 +12,7 @@ import (
 	"github.com/spf13/cobra"
 
 	"github.com/ActiveMemory/ctx/internal/assets/read/desc"
+	coreShared "github.com/ActiveMemory/ctx/internal/cli/agent/core/shared"
 	coreSteering "github.com/ActiveMemory/ctx/internal/cli/agent/core/steering"
 	"github.com/ActiveMemory/ctx/internal/config/agent"
 	"github.com/ActiveMemory/ctx/internal/config/embed/cmd"
@@ -39,11 +40,12 @@ import (
 //   - *cobra.Command: Configured agent command with flags registered
 func Cmd() *cobra.Command {
 	var (
-		budget    int
-		format    string
-		cooldown  time.Duration
-		session   string
-		skillName string
+		budget       int
+		format       string
+		cooldown     time.Duration
+		session      string
+		skillName    string
+		includeShare bool
 	)
 
 	short, long := desc.Command(cmd.DescKeyAgent)
@@ -71,9 +73,15 @@ func Cmd() *cobra.Command {
 				skillBody = sk
 			}
 
+			// Tier 8: Load shared hub entries.
+			var sharedBodies []string
+			if includeShare {
+				sharedBodies = coreShared.LoadBodies()
+			}
+
 			return Run(
 				cmd, budget, format, cooldown, session,
-				steeringBodies, skillBody,
+				steeringBodies, skillBody, sharedBodies,
 			)
 		},
 	}
@@ -100,6 +108,11 @@ func Cmd() *cobra.Command {
 	flagbind.StringFlag(
 		c, &skillName,
 		cFlag.Skill, flag.DescKeyAgentSkill,
+	)
+	flagbind.BoolFlag(
+		c, &includeShare,
+		cFlag.IncludeShared,
+		flag.DescKeyAgentIncludeShared,
 	)
 
 	return c

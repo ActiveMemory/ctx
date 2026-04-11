@@ -20,6 +20,7 @@ type packet struct {
 	Summaries    []string `json:"summaries,omitempty"`
 	Steering     []string `json:"steering,omitempty"`
 	Skill        string   `json:"skill,omitempty"`
+	Shared       []string `json:"shared,omitempty"`
 	Instruction  string   `json:"instruction"`
 }
 
@@ -35,6 +36,7 @@ type packet struct {
 //   - Summaries: Title-only overflow entries
 //   - Steering: Applicable steering file bodies
 //   - Skill: Named skill content (from --skill flag)
+//   - Shared: Entries from the shared hub (.context/shared/)
 //   - Instruction: Behavioral instruction text
 //   - Budget: Token budget limit
 //   - TokensUsed: Estimated tokens consumed
@@ -48,6 +50,7 @@ type AssembledPacket struct {
 	Summaries    []string
 	Steering     []string
 	Skill        string
+	Shared       []string
 	Instruction  string
 	Budget       int
 	TokensUsed   int

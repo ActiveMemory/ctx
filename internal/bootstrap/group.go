@@ -12,12 +12,14 @@ import (
 	"github.com/ActiveMemory/ctx/internal/cli/change"
 	"github.com/ActiveMemory/ctx/internal/cli/compact"
 	"github.com/ActiveMemory/ctx/internal/cli/config"
+	"github.com/ActiveMemory/ctx/internal/cli/connect"
 	"github.com/ActiveMemory/ctx/internal/cli/decision"
 	"github.com/ActiveMemory/ctx/internal/cli/dep"
 	"github.com/ActiveMemory/ctx/internal/cli/doctor"
 	"github.com/ActiveMemory/ctx/internal/cli/drift"
 	ctxFmt "github.com/ActiveMemory/ctx/internal/cli/fmt"
 	"github.com/ActiveMemory/ctx/internal/cli/guide"
+	cliHub "github.com/ActiveMemory/ctx/internal/cli/hub"
 	"github.com/ActiveMemory/ctx/internal/cli/initialize"
 	"github.com/ActiveMemory/ctx/internal/cli/journal"
 	"github.com/ActiveMemory/ctx/internal/cli/learning"
@@ -121,6 +123,7 @@ func runtimeCmds() []registration {
 //   - []registration: Hook, mcp, watch, notify, and loop commands
 func integrations() []registration {
 	return []registration{
+		{connect.Cmd, embedCmd.GroupIntegration},
 		{setup.Cmd, embedCmd.GroupIntegration},
 		{steering.Cmd, embedCmd.GroupIntegration},
 		{trigger.Cmd, embedCmd.GroupIntegration},
@@ -162,6 +165,7 @@ func utilities() []registration {
 //   - []registration: Serve, site, and system commands with no group assignment
 func hiddenCmds() []registration {
 	return []registration{
+		{cliHub.Cmd, ""},
 		{serve.Cmd, ""},
 		{site.Cmd, ""},
 		{system.Cmd, ""},

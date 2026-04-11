@@ -50,6 +50,11 @@ const (
 	Skill    = "skill"
 )
 
+// Connect command flag names.
+const (
+	AdminAuth = "admin-auth"
+)
+
 // Shared flag names used across commands.
 const (
 	After           = "after"
@@ -64,11 +69,14 @@ const (
 	Check           = "check"
 	Commands        = "commands"
 	Completion      = "completion"
+	Daemon          = "daemon"
+	DataDir         = "data-dir"
 	Days            = "days"
 	Dir             = "dir"
 	DryRun          = "dry-run"
 	Event           = "event"
 	External        = "external"
+	IncludeShared   = "include-shared"
 	Fix             = "fix"
 	Force           = "force"
 	Full            = "full"
@@ -97,12 +105,18 @@ const (
 	Record          = "record"
 	Regenerate      = "regenerate"
 	Scope           = "scope"
+	Peers           = "peers"
+	Port            = "port"
 	Serve           = "serve"
+	Share           = "share"
+	Shared          = "shared"
 	Show            = "show"
+	Stop            = "stop"
 	SessionID       = "session-id"
 	Skills          = "skills"
 	Tag             = "tag"
 	Tool            = "tool"
+	Token           = "token"
 	Type            = "type"
 	Variant         = "variant"
 	Verbose         = "verbose"

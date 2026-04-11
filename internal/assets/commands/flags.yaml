@@ -30,6 +30,8 @@ add.section:
   short: Target section within file
 add.session-id:
   short: AI session ID for task provenance
+add.share:
+  short: Also publish to the shared hub
 agent.budget:
   short: Token budget for context packet
 agent.cooldown:
@@ -40,6 +42,8 @@ agent.session:
   short: Session identifier for cooldown isolation (e.g., $PPID)
 agent.skill:
   short: Include named skill content in context packet
+agent.include-shared:
+  short: Include shared hub entries in context packet
 allow-outside-cwd:
   short: Allow context directory outside current working directory
 changes.since:
@@ -272,6 +276,20 @@ task.archive.dry-run:
   short: Preview changes without modifying files
 tool:
   short: 'Override active AI tool (e.g., claude, cursor, cline, kiro, codex)'
+connect.admin-auth:
+  short: Admin credential from hub startup
+serve.daemon:
+  short: Run hub in the background
+serve.data-dir:
+  short: Hub data directory (default ~/.ctx/hub-data/)
+serve.peers:
+  short: Comma-separated peer addresses for cluster mode
+serve.port:
+  short: Hub listen port (default 9900)
+serve.shared:
+  short: Start the shared context hub (gRPC server)
+serve.stop:
+  short: Stop a running hub daemon
 watch.dry-run:
   short: Show updates without applying
 watch.log:

@@ -55,6 +55,7 @@ func TestApplyUpdate(t *testing.T) {
 			update: apply.ContextUpdate{
 				Type:      entry.Task,
 				Content:   "Test task from watch",
+				Section:   "Misc",
 				SessionID: "test1234",
 				Branch:    "main",
 				Commit:    "abc123",
@@ -229,7 +230,7 @@ func TestProcessStream(t *testing.T) {
 	}
 
 	input := `Some AI output text
-<context-update type="task">Stream test task</context-update>
+<context-update type="task" section="Misc">Stream test task</context-update>
 More output
 `
 	reader := strings.NewReader(input)
@@ -447,8 +448,8 @@ func TestProcessStream_MultipleUpdates(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	input := `<context-update type="task">First task</context-update>
-<context-update type="task">Second task</context-update>
+	input := `<context-update type="task" section="Misc">First task</context-update>
+<context-update type="task" section="Misc">Second task</context-update>
 <context-update type="convention">Use snake_case</context-update>
 `
 	reader := strings.NewReader(input)

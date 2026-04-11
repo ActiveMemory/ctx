@@ -37,6 +37,7 @@
 //   - check-memory-drift: Memory bridge drift detection
 //   - check-reminder: Session reminder surfacing
 //   - check-freshness: Technology-dependent constant staleness check
+//   - check-hub-sync: Auto-sync shared hub entries on session start
 //   - check-backup-age: Backup staleness check (project-local)
 //   - check-skill-discovery: One-shot mid-session skill tip nudge
 //   - heartbeat: Token telemetry and billing threshold check

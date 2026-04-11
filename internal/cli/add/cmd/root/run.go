@@ -7,6 +7,7 @@
 package root
 
 import (
+	"path/filepath"
 	"strings"
 
 	"github.com/spf13/cobra"
@@ -14,14 +15,17 @@ import (
 	coreEntry "github.com/ActiveMemory/ctx/internal/cli/add/core/entry"
 	"github.com/ActiveMemory/ctx/internal/cli/add/core/example"
 	"github.com/ActiveMemory/ctx/internal/cli/add/core/extract"
+	corePub "github.com/ActiveMemory/ctx/internal/cli/connect/core/publish"
 	"github.com/ActiveMemory/ctx/internal/cli/system/core/state"
 	cfgEntry "github.com/ActiveMemory/ctx/internal/config/entry"
 	cfgTrace "github.com/ActiveMemory/ctx/internal/config/trace"
 	"github.com/ActiveMemory/ctx/internal/entity"
 	"github.com/ActiveMemory/ctx/internal/entry"
 	errAdd "github.com/ActiveMemory/ctx/internal/err/add"
+	"github.com/ActiveMemory/ctx/internal/hub"
 	"github.com/ActiveMemory/ctx/internal/trace"
 	writeAdd "github.com/ActiveMemory/ctx/internal/write/add"
+	writeConnect "github.com/ActiveMemory/ctx/internal/write/connect"
 )
 
 // Run executes the add command logic.
@@ -76,6 +80,20 @@ func Run(cmd *cobra.Command, args []string, flags entity.AddConfig) error {
 	}
 
 	writeAdd.Added(cmd, fName)
+
+	// Best-effort: publish to shared hub if --share is set.
+	if flags.Share {
+		pubEntry := hub.PublishEntry{
+			Type:    fType,
+			Content: content,
+			Origin:  filepath.Base(state.Dir()),
+		}
+		if pubErr := corePub.Run(
+			cmd, []hub.PublishEntry{pubEntry},
+		); pubErr != nil {
+			writeConnect.PublishFailed(cmd, pubErr)
+		}
+	}
 
 	if fType == cfgEntry.Task && coreEntry.NeedsSpec(content) {
 		writeAdd.SpecNudge(cmd)

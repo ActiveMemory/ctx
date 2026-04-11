@@ -49,6 +49,16 @@ var linuxOnlyExports = map[string]bool{
 	"github.com/ActiveMemory/ctx/internal/config/sysinfo.FieldSwapFree":     true,
 }
 
+// hubPendingIntegration lists exported symbols in hub/
+// packages that are not yet referenced cross-package
+// because integration is incomplete. Remove entries as
+// callers are wired up.
+var hubPendingIntegration = map[string]bool{
+	"github.com/ActiveMemory/ctx/internal/hub.NewFailoverClient": true,
+	"github.com/ActiveMemory/ctx/internal/hub.StartReplication":  true,
+	"github.com/ActiveMemory/ctx/internal/config/flag.AdminAuth": true,
+}
+
 func TestNoDeadExports(t *testing.T) {
 	pkgs := loadPackages(t)
 
@@ -154,6 +164,11 @@ func TestNoDeadExports(t *testing.T) {
 	// Phase 3b: remove Linux-only exports (used from
 	// _linux.go files not loaded on this platform).
 	for key := range linuxOnlyExports {
+		delete(defs, key)
+	}
+
+	// Phase 3c: remove hub exports pending integration.
+	for key := range hubPendingIntegration {
 		delete(defs, key)
 	}
 

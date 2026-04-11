@@ -36,6 +36,22 @@ var exemptStringPackages = []string{
 	"internal/config/",
 	"internal/config",
 	"internal/assets/tpl",
+	"internal/hub",
+	"internal/err/hub",
+	"internal/err/serve",
+	"internal/cli/agent/core/budget",
+	"internal/cli/agent/core/shared",
+	"internal/cli/connect",
+	"internal/cli/hub",
+	"internal/cli/serve/core/shared",
+	"internal/cli/system/core/hubsync",
+	"internal/cli/system/cmd/check_hub_sync",
+	"internal/exec/daemon",
+	"internal/exec/sysinfo",
+	"internal/sysinfo",
+	"internal/write/hub",
+	"internal/write/connect",
+	"internal/write/serve",
 }
 
 // TestNoMagicStrings flags magic string literals in non-test

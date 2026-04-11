@@ -16,6 +16,7 @@ package apply
 //     (task, decision, learning, convention, complete)
 //   - Content: The entry text (title) or search query
 //     for complete
+//   - Section: Target section in TASKS.md (required for tasks)
 //   - Context: Context field for learnings/decisions
 //     (what prompted this)
 //   - Lesson: Lesson field for learnings
@@ -29,6 +30,7 @@ package apply
 type ContextUpdate struct {
 	Type        string
 	Content     string
+	Section     string
 	Context     string
 	Lesson      string
 	Application string

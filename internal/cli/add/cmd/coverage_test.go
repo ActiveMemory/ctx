@@ -334,15 +334,15 @@ func TestContainsEndComment(t *testing.T) {
 func TestNormalizeTargetSection(t *testing.T) {
 	t.Run("without prefix", func(t *testing.T) {
 		result := normalize.TargetSection("Phase 1")
-		if result != "## Phase 1" {
-			t.Errorf("expected '## Phase 1', got %q", result)
+		if result != "### Phase 1" {
+			t.Errorf("expected '### Phase 1', got %q", result)
 		}
 	})
 
 	t.Run("with prefix", func(t *testing.T) {
-		result := normalize.TargetSection("## Phase 1")
-		if result != "## Phase 1" {
-			t.Errorf("expected '## Phase 1', got %q", result)
+		result := normalize.TargetSection("### Phase 1")
+		if result != "### Phase 1" {
+			t.Errorf("expected '### Phase 1', got %q", result)
 		}
 	})
 }
@@ -451,11 +451,14 @@ func TestInsertTaskAfterSection_SectionNotFound(t *testing.T) {
 	if !strings.Contains(resultStr, "New task") {
 		t.Error("entry should be appended when section not found")
 	}
+	if !strings.Contains(resultStr, "### Missing Section") {
+		t.Error("section header should be created when not found")
+	}
 }
 
 func TestInsertTaskAfterSection_SectionAtEnd(t *testing.T) {
 	// Section header at end of file without trailing newline after it
-	content := "# Tasks\n\n## Phase 1"
+	content := "# Tasks\n\n### Phase 1"
 	entry := "- [ ] New task\n"
 
 	result := insert.TaskAfterSection(entry, content, "Phase 1")
@@ -544,10 +547,21 @@ func TestValidateEntry(t *testing.T) {
 	})
 
 	t.Run("valid task", func(t *testing.T) {
-		p := entity.EntryParams{Type: "task", Content: "Do something", SessionID: "test1234", Branch: "main", Commit: "abc123"}
+		p := entity.EntryParams{Type: "task", Content: "Do something", Section: "Misc", SessionID: "test1234", Branch: "main", Commit: "abc123"}
 		err := entry.Validate(p, nil)
 		if err != nil {
 			t.Errorf("unexpected error: %v", err)
+		}
+	})
+
+	t.Run("task missing section", func(t *testing.T) {
+		p := entity.EntryParams{Type: "task", Content: "Do something"}
+		err := entry.Validate(p, nil)
+		if err == nil {
+			t.Fatal("expected error for missing section")
+		}
+		if !strings.Contains(err.Error(), "--section") {
+			t.Errorf("error should mention --section: %v", err)
 		}
 	})
 
@@ -743,7 +757,7 @@ func TestRun_TaskWithPriority(t *testing.T) {
 	err := root.Run(
 		addCmd,
 		[]string{"task", "High priority task"},
-		entity.AddConfig{Priority: "high", SessionID: "test1234", Branch: "main", Commit: "abc123"},
+		entity.AddConfig{Priority: "high", Section: "Misc", SessionID: "test1234", Branch: "main", Commit: "abc123"},
 	)
 	if err != nil {
 		t.Fatalf("Run task with priority failed: %v", err)

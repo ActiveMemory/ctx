@@ -104,6 +104,62 @@ compact:
       ctx compact                  # Clean up context, move completed tasks
       ctx compact --archive        # Also archive old tasks, decisions, and learnings
   short: Archive completed tasks and clean up context
+connect:
+  long: |-
+    Connect to a shared context hub for cross-project
+    knowledge sharing.
+  short: Connect to a shared context hub
+connect.subscribe:
+  long: |-
+    Set which entry types to receive from the hub.
+
+    Examples:
+      ctx connect subscribe decision learning
+      ctx connect subscribe decision learning convention
+  short: Set hub subscription types
+connect.sync:
+  long: |-
+    Pull matching entries from the hub and write them to
+    .context/shared/ as markdown files with origin tags.
+    Tracks last-seen sequence for incremental sync.
+
+    Examples:
+      ctx connect sync
+  short: Sync entries from the hub
+connect.publish:
+  long: |-
+    Push local context entries to the shared hub.
+
+    Examples:
+      ctx connect publish
+  short: Publish local entries to the hub
+connect.listen:
+  long: |-
+    Stream new entries from the hub in real-time.
+    Auto-writes to .context/shared/ as entries arrive.
+    Press Ctrl-C to stop.
+
+    Examples:
+      ctx connect listen
+  short: Stream entries from the hub in real-time
+connect.status:
+  long: |-
+    Show hub connection state and entry statistics.
+
+    Examples:
+      ctx connect status
+  short: Show hub connection status
+connect.register:
+  long: |-
+    Register this project with a shared context hub.
+    Requires the hub address and admin token.
+
+    On success, stores an encrypted connection config in
+    .context/.connect.enc for future RPCs.
+
+    Examples:
+      ctx connect register localhost:9900 --token ctx_adm_...
+  short: Register with a shared context hub
 complete:
   long: |-
     Mark a task as completed in TASKS.md.
@@ -260,6 +316,33 @@ drift:
 
     Use --json for machine-readable output.
   short: Detect stale or invalid context
+hub:
+  long: |-
+    Manage a running shared context hub cluster.
+  short: Manage hub cluster
+hub.status:
+  long: |-
+    Show cluster status: role, peers, sync state, entry
+    count, and uptime.
+
+    Examples:
+      ctx hub status
+  short: Show cluster status
+hub.peer:
+  long: |-
+    Add or remove peers from the cluster at runtime.
+
+    Examples:
+      ctx hub peer add host:9901
+      ctx hub peer remove host:9901
+  short: Add or remove cluster peers
+hub.stepdown:
+  long: |-
+    Transfer leadership to another node gracefully.
+
+    Examples:
+      ctx hub stepdown
+  short: Transfer leadership
 guide:
   long: |-
     Use-case-oriented cheat sheet for ctx.

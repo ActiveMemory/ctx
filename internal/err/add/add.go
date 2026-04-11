@@ -79,6 +79,15 @@ func FileNotFound(path string) error {
 	)
 }
 
+// SectionRequired returns a validation error when a task is added without
+// the --section flag.
+//
+// Returns:
+//   - error: Formatted error explaining that --section is mandatory for tasks
+func SectionRequired() error {
+	return errors.New(desc.Text(text.DescKeyErrAddSectionRequired))
+}
+
 // MissingFields returns a validation error for missing required fields.
 //
 // Parameters:
