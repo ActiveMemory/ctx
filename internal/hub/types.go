@@ -26,18 +26,54 @@ import (
 //   - ID: UUID, globally unique
 //   - Type: entry type (decision, learning, convention, task)
 //   - Content: the actual text (markdown)
-//   - Origin: project name that published it
-//   - Author: optional, who wrote it
+//   - Origin: project name (server-authoritative; stamped
+//     from the authenticated client's ProjectName, never
+//     trusted from client input)
 //   - Timestamp: when it was published
 //   - Sequence: monotonic counter, assigned by hub on publish
+//   - Meta: client-advisory hints. NOT authoritative
+//     attribution. See [EntryMeta] and the decision record
+//     at .context/DECISIONS.md [2026-04-11-180000].
 type Entry struct {
 	ID        string    `json:"id"`
 	Type      string    `json:"type"`
 	Content   string    `json:"content"`
 	Origin    string    `json:"origin"`
-	Author    string    `json:"author,omitempty"`
 	Timestamp time.Time `json:"timestamp"`
 	Sequence  uint64    `json:"sequence"`
+	Meta      EntryMeta `json:"meta"`
+}
+
+// EntryMeta holds client-advisory metadata attached to a
+// published entry. Fields in this struct are NEVER used
+// for authoritative attribution: they carry display
+// labels, observability hints, and human-readable
+// context that the server has no way to verify.
+//
+// The renderer on the client side MUST label these values
+// as "client-reported" or similar when surfacing them, so
+// readers cannot confuse them with server-authoritative
+// fields like [Entry.Origin].
+//
+// All fields are optional. Size and character
+// restrictions are enforced by [validateEntryMeta] at
+// publish time.
+//
+// Fields:
+//   - DisplayName: human-readable label (e.g. "Alice")
+//     often different from the project name that Origin
+//     carries. Never trusted for security.
+//   - Host: machine or CI runner name ("laptop-01",
+//     "gh-runner-42"). Observability hint.
+//   - Tool: publishing tool identifier
+//     ("ctx@0.8.1", "my-script@v2"). Observability hint.
+//   - Via: upstream provenance
+//     ("github-actions", "nightly-cron"). Observability hint.
+type EntryMeta struct {
+	DisplayName string `json:"display_name,omitempty"`
+	Host        string `json:"host,omitempty"`
+	Tool        string `json:"tool,omitempty"`
+	Via         string `json:"via,omitempty"`
 }
 
 // ClientInfo holds registration data for a connected client.
@@ -149,16 +185,23 @@ type PublishRequest struct {
 //   - ID: entry UUID
 //   - Type: entry type
 //   - Content: markdown text
-//   - Origin: source project
-//   - Author: optional author
+//   - Origin: source project name as claimed by the
+//     client. The server ignores this value and stamps
+//     the stored Entry.Origin from the authenticated
+//     client identity instead. Kept on the wire for
+//     client-side round-tripping only.
 //   - Timestamp: Unix epoch seconds
+//   - Meta: optional client-advisory hints. Round-tripped
+//     verbatim (subject to validateEntryMeta size and
+//     character limits), never promoted to
+//     authoritative attribution.
 type PublishEntry struct {
-	ID        string `json:"id"`
-	Type      string `json:"type"`
-	Content   string `json:"content"`
-	Origin    string `json:"origin"`
-	Author    string `json:"author,omitempty"`
-	Timestamp int64  `json:"timestamp"`
+	ID        string    `json:"id"`
+	Type      string    `json:"type"`
+	Content   string    `json:"content"`
+	Origin    string    `json:"origin"`
+	Timestamp int64     `json:"timestamp"`
+	Meta      EntryMeta `json:"meta"`
 }
 
 // PublishResponse is the output of the Publish RPC.
@@ -189,24 +232,25 @@ type ListenRequest struct {
 	SinceSequence uint64   `json:"since_sequence"`
 }
 
-// EntryMsg is a wire-format entry for streaming RPCs.
+// EntryMsg is a wire-format entry for streaming RPCs
+// (Sync and Listen responses).
 //
 // Fields:
 //   - ID: entry UUID
 //   - Type: entry type
 //   - Content: markdown text
-//   - Origin: source project
-//   - Author: optional author
+//   - Origin: server-authoritative source project
 //   - Timestamp: Unix epoch seconds
 //   - Sequence: hub-assigned sequence
+//   - Meta: client-advisory hints forwarded to readers
 type EntryMsg struct {
-	ID        string `json:"id"`
-	Type      string `json:"type"`
-	Content   string `json:"content"`
-	Origin    string `json:"origin"`
-	Author    string `json:"author,omitempty"`
-	Timestamp int64  `json:"timestamp"`
-	Sequence  uint64 `json:"sequence"`
+	ID        string    `json:"id"`
+	Type      string    `json:"type"`
+	Content   string    `json:"content"`
+	Origin    string    `json:"origin"`
+	Timestamp int64     `json:"timestamp"`
+	Sequence  uint64    `json:"sequence"`
+	Meta      EntryMeta `json:"meta"`
 }
 
 // StatusResponse is the output of the Status RPC.

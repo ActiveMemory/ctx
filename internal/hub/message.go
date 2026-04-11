@@ -13,7 +13,7 @@ func entryToMsg(e *Entry) *EntryMsg {
 		Type:      e.Type,
 		Content:   e.Content,
 		Origin:    e.Origin,
-		Author:    e.Author,
+		Meta:      e.Meta,
 		Timestamp: e.Timestamp.Unix(),
 		Sequence:  e.Sequence,
 	}

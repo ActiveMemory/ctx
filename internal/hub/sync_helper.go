@@ -68,7 +68,7 @@ func replicateOnce(
 			Type:      msg.Type,
 			Content:   msg.Content,
 			Origin:    msg.Origin,
-			Author:    msg.Author,
+			Meta:      msg.Meta,
 			Timestamp: time.Unix(msg.Timestamp, 0),
 			Sequence:  msg.Sequence,
 		}

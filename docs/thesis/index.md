@@ -70,7 +70,8 @@ analyzed spanning AI coding assistants, agent frameworks, autonomous coding
 agents, and purpose-built knowledge stores, no system provides all five of the 
 following properties simultaneously: deterministic context assembly, 
 human-readable file-based persistence, token-budgeted delivery, 
-zero runtime dependencies, and local-first operation.
+a single-binary core with zero required runtime dependencies for the 
+persistence path, and local-first operation.
 
 This paper does not propose a universal replacement for retrieval-centric 
 workflows. It defines a persistence layer (embodied in `ctx` (https://ctx.ist)) 
