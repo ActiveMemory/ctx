@@ -19,20 +19,20 @@ just to change the *words*.
 ## TL;DR
 
 ```bash
-ctx system message list                     # see all hooks and their messages
-ctx system message show qa-reminder gate    # view the current template
-ctx system message edit qa-reminder gate    # copy default to .context/ for editing
-ctx system message reset qa-reminder gate   # revert to embedded default
+ctx message list                     # see all hooks and their messages
+ctx message show qa-reminder gate    # view the current template
+ctx message edit qa-reminder gate    # copy default to .context/ for editing
+ctx message reset qa-reminder gate   # revert to embedded default
 ```
 
 ## Commands Used
 
 | Tool                       | Type        | Purpose                                                  |
 |----------------------------|-------------|----------------------------------------------------------|
-| `ctx system message list`  | CLI command | Show all hook messages with category and override status |
-| `ctx system message show`  | CLI command | Print the effective message template                     |
-| `ctx system message edit`  | CLI command | Copy embedded default to `.context/` for editing         |
-| `ctx system message reset` | CLI command | Delete user override, revert to default                  |
+| `ctx message list`  | CLI command | Show all hook messages with category and override status |
+| `ctx message show`  | CLI command | Print the effective message template                     |
+| `ctx message edit`  | CLI command | Copy embedded default to `.context/` for editing         |
+| `ctx message reset` | CLI command | Delete user override, revert to default                  |
 
 ---
 
@@ -60,13 +60,13 @@ internal/assets/hooks/messages/{hook}/{variant}.txt
 You can also browse them on GitHub:
 [`internal/assets/hooks/messages/`](https://github.com/ActiveMemory/ctx/tree/main/internal/assets/hooks/messages)
 
-Or use `ctx system message show` to print any template without digging
+Or use `ctx message show` to print any template without digging
 through source code:
 
 ```bash
-ctx system message show qa-reminder gate        # QA gate instructions
-ctx system message show check-persistence nudge  # persistence nudge
-ctx system message show post-commit nudge        # post-commit reminder
+ctx message show qa-reminder gate        # QA gate instructions
+ctx message show check-persistence nudge  # persistence nudge
+ctx message show post-commit nudge        # post-commit reminder
 ```
 
 The `show` output includes the template source and available variables --
@@ -104,10 +104,10 @@ The default QA gate says "*lint the ENTIRE project*" and references
 
 ```bash
 # See the current default
-ctx system message show qa-reminder gate
+ctx message show qa-reminder gate
 
 # Copy it to .context/ for editing
-ctx system message edit qa-reminder gate
+ctx message edit qa-reminder gate
 
 # Edit the override
 ```
@@ -133,9 +133,9 @@ The ceremony check nudges you to use `/ctx-remember` and `/ctx-wrap-up`.
 If your team has a different workflow and finds these noisy:
 
 ```bash
-ctx system message edit check-ceremonies both
-ctx system message edit check-ceremonies remember
-ctx system message edit check-ceremonies wrapup
+ctx message edit check-ceremonies both
+ctx message edit check-ceremonies remember
+ctx message edit check-ceremonies wrapup
 ```
 
 Then empty each file:
@@ -157,7 +157,7 @@ The default post-commit nudge mentions generic "lints and tests." For a
 JavaScript project:
 
 ```bash
-ctx system message edit post-commit nudge
+ctx message edit post-commit nudge
 ```
 
 Replace with:
@@ -262,7 +262,7 @@ no error, graceful degradation.
   reverts to the embedded default instantly.
 * **Empty file = silence**: you don't need to delete the hook. An empty
   override file silences the message while preserving the hook's logic.
-* **JSON output for scripting**: `ctx system message list --json` returns
+* **JSON output for scripting**: `ctx message list --json` returns
   structured data for automation.
 
 ## See Also

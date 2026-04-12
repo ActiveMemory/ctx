@@ -25,16 +25,16 @@ sessions entirely.
 ## TL;DR
 
 ```bash
-ctx system prune --dry-run     # preview what would be removed
-ctx system prune               # prune files older than 7 days
-ctx system prune --days 1      # more aggressive: keep only today
+ctx prune --dry-run     # preview what would be removed
+ctx prune               # prune files older than 7 days
+ctx prune --days 1      # more aggressive: keep only today
 ```
 
 ## Commands Used
 
 | Tool               | Type    | Purpose                                   |
 |--------------------|---------|-------------------------------------------|
-| `ctx system prune` | Command | Remove old per-session state files        |
+| `ctx prune` | Command | Remove old per-session state files        |
 | `ctx status`       | Command | Quick health overview including state dir |
 
 ## Understanding State Files
@@ -50,7 +50,7 @@ heartbeat-11e94c1d-1639-4c04-bf77-63dcf1f50ec7
 persistence-nudge-11e94c1d-1639-4c04-bf77-63dcf1f50ec7
 ```
 
-**Global** (no UUID): Persist across sessions. `ctx system prune` preserves
+**Global** (no UUID): Persist across sessions. `ctx prune` preserves
 these automatically. Some are legitimate state (`events.jsonl`,
 `memory-import.json`); others may be stale tombstones that need manual
 review.
@@ -62,7 +62,7 @@ review.
 Always dry-run first to see what would be removed:
 
 ```bash
-ctx system prune --dry-run
+ctx prune --dry-run
 ```
 
 The output shows each file, its age, and a summary:
@@ -79,9 +79,9 @@ Dry run - would prune 150 files (skip 70 recent, preserve 14 global)
 Choose an age threshold. The default is 7 days:
 
 ```bash
-ctx system prune               # older than 7 days
-ctx system prune --days 3      # older than 3 days
-ctx system prune --days 1      # older than 1 day (aggressive)
+ctx prune               # older than 7 days
+ctx prune --days 3      # older than 3 days
+ctx prune --days 1      # older than 1 day (aggressive)
 ```
 
 ### Step 3: Review Global Files
@@ -115,7 +115,7 @@ ls .context/state/ | wc -l    # should be manageable
 
 ## When to Prune
 
-- **Weekly**: `ctx system prune` with default 7-day threshold
+- **Weekly**: `ctx prune` with default 7-day threshold
 - **After heavy parallel work**: Multiple concurrent sessions create
   many tombstones. Prune with `--days 1` afterward.
 - **When state directory exceeds ~100 files**: A sign that pruning
@@ -142,4 +142,4 @@ UUIDs so `prune` preserves them. Delete manually.
 * [Troubleshooting](troubleshooting.md): diagnostic workflow using
   `ctx doctor` and event logs
 * [CLI Reference: system](../cli/system.md): full flag documentation
-  for `ctx system prune` and related commands
+  for `ctx prune` and related commands

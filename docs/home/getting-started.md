@@ -181,7 +181,7 @@ On macOS, use `shasum -a 256 -c` instead of `sha256sum -c`.
     * **Persistence nudges**: reminders to capture learnings and decisions
     * **Post-commit hooks**: nudge context capture after `git commit`
     * **Context size monitoring**: alerts as sessions grow large
-    * **25+ skills**: `/ctx-status`, `/ctx-task-add`, `/ctx-history`, and more
+    * **Project skills**: `/ctx-status`, `/ctx-task-add`, `/ctx-history`, and more
 
     See [Integrations](../operations/integrations.md#claude-code-full-integration) for the
     full hook and skill reference.
@@ -200,6 +200,33 @@ encryption key at `~/.ctx/` for the
 [encrypted scratchpad](../reference/scratchpad.md).
 For Claude Code, install the [ctx plugin](../operations/integrations.md#claude-code-full-integration)
 for automatic hooks and skills.
+
+**`ctx init` also scaffolds four *foundation steering files*** in
+`.context/steering/` — these are behavioral-rule templates that
+tell your AI how to act on your project:
+
+| File            | What it captures                                   |
+|-----------------|-----------------------------------------------------|
+| `product.md`    | Product context, goals, and target users           |
+| `tech.md`       | Technology stack, constraints, key dependencies    |
+| `structure.md`  | Project structure and directory conventions        |
+| `workflow.md`   | Development workflow and process rules             |
+
+Each file starts with a self-documenting HTML comment
+explaining the three inclusion modes (`always` / `auto` /
+`manual`), priority, and tool scoping. The defaults are set
+to `inclusion: always` and `priority: 10` — they fire on
+every AI tool call until you edit them.
+
+**You should open each of these files and replace the
+placeholder content with your project's actual rules.**
+Running `ctx init` again won't clobber your edits — existing
+files are left alone. To opt out entirely, use
+`ctx init --no-steering-init`.
+
+See [Writing Steering Files](../recipes/steering.md) for the
+full walkthrough, or [`ctx steering`](../cli/steering.md) for
+the command reference.
 
 ### 2. Check Status
 
@@ -253,7 +280,7 @@ with `ctx setup`:
     ```
 
 This registers the ctx MCP server and syncs any
-[steering files](../cli/tools.md#ctx-steering) into the tool's
+[steering files](../cli/steering.md) into the tool's
 native format. Re-run after adding or changing steering files.
 
 ### 4. Verify It Works

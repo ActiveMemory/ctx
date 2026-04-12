@@ -8,6 +8,11 @@ package claude
 
 // Claude Code integration file names.
 const (
+	// Binary is the Claude Code CLI binary name, resolved
+	// via exec.LookPath to detect whether Claude Code is
+	// installed on the user's machine.
+	Binary = "claude"
+
 	// Md is the Claude Code configuration file in the project root.
 	Md = "CLAUDE.md"
 
@@ -22,6 +27,23 @@ const (
 	// InstalledPlugins is the Claude Code installed plugins registry.
 	// Located at ~/.claude/plugins/installed_plugins.json.
 	InstalledPlugins = "plugins/installed_plugins.json"
+	// KnownMarketplaces is the Claude Code marketplaces registry.
+	// Located at ~/.claude/plugins/known_marketplaces.json.
+	// Used to resolve a plugin's source clone path when it was
+	// installed from a `directory`-sourced marketplace (dev flow).
+	KnownMarketplaces = "plugins/known_marketplaces.json"
+
+	// PluginMarketplaceID is the marketplace identifier for the
+	// ctx plugin (right-hand side of the @ in [PluginID]).
+	PluginMarketplaceID = "activememory-ctx"
+	// PluginSourceDirectory is the source type recorded in
+	// known_marketplaces.json for filesystem-sourced
+	// installs — the dev-loop install path.
+	PluginSourceDirectory = "directory"
+	// PluginSourceGitHub is the source type recorded for
+	// marketplace installs from the Anthropic-hosted
+	// GitHub repo.
+	PluginSourceGitHub = "github"
 
 	// PluginID is the ctx plugin identifier in Claude Code.
 	PluginID = "ctx@activememory-ctx"

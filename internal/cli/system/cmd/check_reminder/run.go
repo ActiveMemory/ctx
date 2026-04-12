@@ -70,7 +70,7 @@ func Run(cmd *cobra.Command, stdin *os.File) error {
 	var reminderList string
 	for _, r := range due {
 		reminderList += fmt.Sprintf(
-			desc.Text(text.DescKeyCheckRemindersItemFormat)+
+			desc.Text(text.DescKeyCheckReminderItemFormat)+
 				token.NewlineLF,
 			r.ID, r.Message,
 		)
@@ -78,19 +78,19 @@ func Run(cmd *cobra.Command, stdin *os.File) error {
 
 	fallback := reminderList +
 		token.NewlineLF +
-		desc.Text(text.DescKeyCheckRemindersDismissHint) +
+		desc.Text(text.DescKeyCheckReminderDismissHint) +
 		token.NewlineLF +
-		desc.Text(text.DescKeyCheckRemindersDismissAllHint)
+		desc.Text(text.DescKeyCheckReminderDismissAllHint)
 	vars := map[string]any{reminder.VarList: reminderList}
 	relayMsg := fmt.Sprintf(
-		desc.Text(text.DescKeyCheckRemindersNudgeFormat),
+		desc.Text(text.DescKeyCheckReminderNudgeFormat),
 		len(due),
 	)
 	nudge.LoadAndEmit(cmd,
-		hook.CheckReminders, hook.VariantReminders,
+		hook.CheckReminder, hook.VariantReminders,
 		vars, fallback,
-		desc.Text(text.DescKeyCheckRemindersRelayPrefix),
-		desc.Text(text.DescKeyCheckRemindersBoxTitle),
+		desc.Text(text.DescKeyCheckReminderRelayPrefix),
+		desc.Text(text.DescKeyCheckReminderBoxTitle),
 		relayMsg, input.SessionID, "",
 	)
 

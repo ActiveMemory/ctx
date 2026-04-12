@@ -15,7 +15,7 @@ import (
 	coreEntry "github.com/ActiveMemory/ctx/internal/cli/add/core/entry"
 	"github.com/ActiveMemory/ctx/internal/cli/add/core/example"
 	"github.com/ActiveMemory/ctx/internal/cli/add/core/extract"
-	corePub "github.com/ActiveMemory/ctx/internal/cli/connect/core/publish"
+	corePub "github.com/ActiveMemory/ctx/internal/cli/connection/core/publish"
 	"github.com/ActiveMemory/ctx/internal/cli/system/core/state"
 	cfgEntry "github.com/ActiveMemory/ctx/internal/config/entry"
 	cfgTrace "github.com/ActiveMemory/ctx/internal/config/trace"
@@ -81,7 +81,7 @@ func Run(cmd *cobra.Command, args []string, flags entity.AddConfig) error {
 
 	writeAdd.Added(cmd, fName)
 
-	// Best-effort: publish to shared hub if --share is set.
+	// Best-effort: publish to ctx Hub if --share is set.
 	if flags.Share {
 		pubEntry := hub.PublishEntry{
 			Type:    fType,

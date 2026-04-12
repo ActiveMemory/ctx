@@ -22,6 +22,9 @@ const (
 	GroupIntegration = "integration"
 	// GroupDiagnostics is the command group ID for diagnostics.
 	GroupDiagnostics = "diagnostics"
-	// GroupUtilities is the command group ID for utilities.
-	GroupUtilities = "utilities"
+	// GroupShell is the command group ID for shell-integration
+	// commands (help, completion). Kept deliberately narrow —
+	// only shell-plumbing commands belong here, never
+	// domain-specific tools.
+	GroupShell = "shell"
 )

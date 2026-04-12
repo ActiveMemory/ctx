@@ -6,20 +6,9 @@
 
 package flag
 
-// DescKeys for serve command flags.
-const (
-	// DescKeyServeShared is the text key for the --shared flag.
-	DescKeyServeShared = "serve.shared"
-	// DescKeyServePort is the text key for the --port flag.
-	DescKeyServePort = "serve.port"
-	// DescKeyServeDataDir is the text key for --data-dir.
-	DescKeyServeDataDir = "serve.data-dir"
-	// DescKeyServeDaemon is the text key for --daemon.
-	DescKeyServeDaemon = "serve.daemon"
-	// DescKeyServeStop is the text key for --stop.
-	DescKeyServeStop = "serve.stop"
-	// DescKeyServePeers is the text key for --peers.
-	DescKeyServePeers = "serve.peers"
-	// DescKeyConnectToken is the text key for --token.
-	DescKeyConnectToken = "connect.admin-auth"
-)
+// Serve command flags currently have no overridable descriptions —
+// ctx serve only takes a positional [directory] argument.
+//
+// Hub server flags (port, data-dir, daemon, peers) live in hub.go
+// because they belong to `ctx hub start` / `ctx hub stop`, not
+// `ctx serve`.

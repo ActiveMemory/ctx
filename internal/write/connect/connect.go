@@ -9,6 +9,8 @@ package connect
 import (
 	"fmt"
 
+	"github.com/ActiveMemory/ctx/internal/assets/read/desc"
+	"github.com/ActiveMemory/ctx/internal/config/embed/text"
 	"github.com/spf13/cobra"
 )
 
@@ -18,7 +20,9 @@ import (
 //   - cmd: Cobra command for output
 //   - clientID: assigned client identifier
 func Registered(cmd *cobra.Command, clientID string) {
-	cmd.Println("Registered as", clientID)
+	cmd.Println(
+		desc.Text(text.DescKeyWriteConnectRegistered), clientID,
+	)
 }
 
 // Subscribed confirms subscription types were updated.
@@ -27,7 +31,9 @@ func Registered(cmd *cobra.Command, clientID string) {
 //   - cmd: Cobra command for output
 //   - types: subscribed entry types
 func Subscribed(cmd *cobra.Command, types []string) {
-	cmd.Println("Subscribed to", types)
+	cmd.Println(
+		desc.Text(text.DescKeyWriteConnectSubscribed), types,
+	)
 }
 
 // Synced confirms entries were synced from the hub.
@@ -36,7 +42,9 @@ func Subscribed(cmd *cobra.Command, types []string) {
 //   - cmd: Cobra command for output
 //   - count: number of entries synced
 func Synced(cmd *cobra.Command, count int) {
-	cmd.Println(fmt.Sprintf("Synced %d entries", count))
+	cmd.Println(fmt.Sprintf(
+		desc.Text(text.DescKeyWriteConnectSynced), count,
+	))
 }
 
 // Published confirms entries were published to the hub.
@@ -45,7 +53,9 @@ func Synced(cmd *cobra.Command, count int) {
 //   - cmd: Cobra command for output
 //   - count: number of entries published
 func Published(cmd *cobra.Command, count int) {
-	cmd.Println(fmt.Sprintf("Published %d entries", count))
+	cmd.Println(fmt.Sprintf(
+		desc.Text(text.DescKeyWriteConnectPublished), count,
+	))
 }
 
 // Listening confirms the listen stream is active.
@@ -53,7 +63,9 @@ func Published(cmd *cobra.Command, count int) {
 // Parameters:
 //   - cmd: Cobra command for output
 func Listening(cmd *cobra.Command) {
-	cmd.Println("Listening for new entries (Ctrl-C to stop)")
+	cmd.Println(
+		desc.Text(text.DescKeyWriteConnectListening),
+	)
 }
 
 // EntryReceived confirms a single entry was received via
@@ -63,7 +75,9 @@ func Listening(cmd *cobra.Command) {
 //   - cmd: Cobra command for output
 //   - entryType: type of the received entry
 func EntryReceived(cmd *cobra.Command, entryType string) {
-	cmd.Println("Received", entryType)
+	cmd.Println(
+		desc.Text(text.DescKeyWriteConnectReceived), entryType,
+	)
 }
 
 // PublishFailed warns that hub publish failed.
@@ -73,7 +87,8 @@ func EntryReceived(cmd *cobra.Command, entryType string) {
 //   - pubErr: the publish error
 func PublishFailed(cmd *cobra.Command, pubErr error) {
 	cmd.Println(fmt.Sprintf(
-		"Warning: hub publish failed: %v", pubErr,
+		desc.Text(text.DescKeyWriteConnectPublishWarning),
+		pubErr,
 	))
 }
 
@@ -90,8 +105,11 @@ func Status(
 	total uint64,
 	clients uint32,
 ) {
-	cmd.Println("Hub:", addr)
+	cmd.Println(
+		desc.Text(text.DescKeyWriteConnectHubLabel), addr,
+	)
 	cmd.Println(fmt.Sprintf(
-		"Entries: %d  Clients: %d", total, clients,
+		desc.Text(text.DescKeyWriteConnectHubStats),
+		total, clients,
 	))
 }

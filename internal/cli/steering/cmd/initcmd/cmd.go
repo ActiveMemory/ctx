@@ -72,7 +72,7 @@ func Run(c *cobra.Command) error {
 
 	var created, skipped int
 
-	for _, ff := range steering.FoundationFiles {
+	for _, ff := range steering.FoundationFiles() {
 		filePath := filepath.Join(
 			steeringDir, ff.Name+file.ExtMarkdown,
 		)

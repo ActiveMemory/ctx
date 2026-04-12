@@ -9,14 +9,17 @@ package bootstrap
 import (
 	"github.com/ActiveMemory/ctx/internal/cli/add"
 	"github.com/ActiveMemory/ctx/internal/cli/agent"
+	"github.com/ActiveMemory/ctx/internal/cli/backup"
+	cliBootstrap "github.com/ActiveMemory/ctx/internal/cli/bootstrap"
 	"github.com/ActiveMemory/ctx/internal/cli/change"
 	"github.com/ActiveMemory/ctx/internal/cli/compact"
 	"github.com/ActiveMemory/ctx/internal/cli/config"
-	"github.com/ActiveMemory/ctx/internal/cli/connect"
+	"github.com/ActiveMemory/ctx/internal/cli/connection"
 	"github.com/ActiveMemory/ctx/internal/cli/decision"
 	"github.com/ActiveMemory/ctx/internal/cli/dep"
 	"github.com/ActiveMemory/ctx/internal/cli/doctor"
 	"github.com/ActiveMemory/ctx/internal/cli/drift"
+	"github.com/ActiveMemory/ctx/internal/cli/event"
 	ctxFmt "github.com/ActiveMemory/ctx/internal/cli/fmt"
 	"github.com/ActiveMemory/ctx/internal/cli/guide"
 	cliHub "github.com/ActiveMemory/ctx/internal/cli/hub"
@@ -27,17 +30,21 @@ import (
 	"github.com/ActiveMemory/ctx/internal/cli/loop"
 	"github.com/ActiveMemory/ctx/internal/cli/mcp"
 	"github.com/ActiveMemory/ctx/internal/cli/memory"
+	"github.com/ActiveMemory/ctx/internal/cli/message"
 	"github.com/ActiveMemory/ctx/internal/cli/notify"
 	"github.com/ActiveMemory/ctx/internal/cli/pad"
 	"github.com/ActiveMemory/ctx/internal/cli/pause"
 	"github.com/ActiveMemory/ctx/internal/cli/permission"
+	"github.com/ActiveMemory/ctx/internal/cli/prune"
 	"github.com/ActiveMemory/ctx/internal/cli/reindex"
 	"github.com/ActiveMemory/ctx/internal/cli/remind"
+	"github.com/ActiveMemory/ctx/internal/cli/resource"
 	"github.com/ActiveMemory/ctx/internal/cli/resume"
 	"github.com/ActiveMemory/ctx/internal/cli/serve"
 	"github.com/ActiveMemory/ctx/internal/cli/setup"
 	"github.com/ActiveMemory/ctx/internal/cli/site"
 	"github.com/ActiveMemory/ctx/internal/cli/skill"
+	"github.com/ActiveMemory/ctx/internal/cli/stats"
 	"github.com/ActiveMemory/ctx/internal/cli/status"
 	"github.com/ActiveMemory/ctx/internal/cli/steering"
 	"github.com/ActiveMemory/ctx/internal/cli/sync"
@@ -62,10 +69,17 @@ func gettingStarted() []registration {
 	}
 }
 
-// contextCmds returns command registrations for the context management group.
+// contextCmds returns command registrations for the context
+// management group.
+//
+// These commands operate on the full set of context source-of-truth
+// files (TASKS.md, DECISIONS.md, LEARNINGS.md, CONVENTIONS.md) —
+// adding entries, loading for agents, formatting, reconciling with
+// the codebase, detecting drift, and archiving completed work.
 //
 // Returns:
-//   - []registration: Add, load, agent, sync, drift, and compact commands
+//   - []registration: Add, load, agent, skill, sync, drift,
+//     compact, and fmt commands
 func contextCmds() []registration {
 	return []registration{
 		{add.Cmd, embedCmd.GroupContext},
@@ -75,18 +89,26 @@ func contextCmds() []registration {
 		{sync.Cmd, embedCmd.GroupContext},
 		{drift.Cmd, embedCmd.GroupContext},
 		{compact.Cmd, embedCmd.GroupContext},
+		{ctxFmt.Cmd, embedCmd.GroupContext},
 	}
 }
 
 // artifacts returns command registrations for the artifacts group.
 //
+// These commands operate on specific artifact files inside
+// .context/ — the DECISIONS.md, LEARNINGS.md, and TASKS.md
+// stores, plus the `reindex` shortcut that rebuilds the
+// decision/learning index tables in a single call.
+//
 // Returns:
-//   - []registration: Decision, learning, and task commands
+//   - []registration: Decision, learning, task, and reindex
+//     commands
 func artifacts() []registration {
 	return []registration{
 		{decision.Cmd, embedCmd.GroupArtifacts},
 		{learning.Cmd, embedCmd.GroupArtifacts},
 		{task.Cmd, embedCmd.GroupArtifacts},
+		{reindex.Cmd, embedCmd.GroupArtifacts},
 	}
 }
 
@@ -114,19 +136,29 @@ func runtimeCmds() []registration {
 		{permission.Cmd, embedCmd.GroupRuntime},
 		{pause.Cmd, embedCmd.GroupRuntime},
 		{resume.Cmd, embedCmd.GroupRuntime},
+		{backup.Cmd, embedCmd.GroupRuntime},
+		{prune.Cmd, embedCmd.GroupRuntime},
+		{message.Cmd, embedCmd.GroupRuntime},
 	}
 }
 
 // integrations returns command registrations for the integrations group.
 //
+// This group covers commands that connect ctx to external
+// systems: AI-tool setup, the ctx Hub server and its clients,
+// the MCP server, webhooks, watchers, and loop harnesses.
+//
 // Returns:
-//   - []registration: Hook, mcp, watch, notify, and loop commands
+//   - []registration: Setup, steering, trigger, serve, hub,
+//     connect, mcp, watch, notify, and loop commands
 func integrations() []registration {
 	return []registration{
-		{connect.Cmd, embedCmd.GroupIntegration},
 		{setup.Cmd, embedCmd.GroupIntegration},
 		{steering.Cmd, embedCmd.GroupIntegration},
 		{trigger.Cmd, embedCmd.GroupIntegration},
+		{serve.Cmd, embedCmd.GroupIntegration},
+		{cliHub.Cmd, embedCmd.GroupIntegration},
+		{connection.Cmd, embedCmd.GroupIntegration},
 		{mcp.Cmd, embedCmd.GroupIntegration},
 		{watch.Cmd, embedCmd.GroupIntegration},
 		{notify.Cmd, embedCmd.GroupIntegration},
@@ -145,28 +177,26 @@ func diagnostics() []registration {
 		{dep.Cmd, embedCmd.GroupDiagnostics},
 		{why.Cmd, embedCmd.GroupDiagnostics},
 		{trace.Cmd, embedCmd.GroupDiagnostics},
+		{cliBootstrap.Cmd, embedCmd.GroupDiagnostics},
+		{event.Cmd, embedCmd.GroupDiagnostics},
+		{resource.Cmd, embedCmd.GroupDiagnostics},
+		{stats.Cmd, embedCmd.GroupDiagnostics},
 	}
 }
 
-// utilities returns command registrations for the utilities group.
+// hiddenCmds returns command registrations that are intentionally
+// kept out of `ctx --help` output.
+//
+// These are genuinely internal commands, not user-facing
+// features: `ctx site` generates the journal site consumed by
+// `ctx serve`, and `ctx system` hosts the nudge-hook plumbing
+// that ctx itself calls via subprocess.
 //
 // Returns:
-//   - []registration: Reindex command
-func utilities() []registration {
-	return []registration{
-		{ctxFmt.Cmd, embedCmd.GroupUtilities},
-		{reindex.Cmd, embedCmd.GroupUtilities},
-	}
-}
-
-// hiddenCmds returns command registrations that are not shown in help output.
-//
-// Returns:
-//   - []registration: Serve, site, and system commands with no group assignment
+//   - []registration: site and system commands with no group
+//     assignment (hidden)
 func hiddenCmds() []registration {
 	return []registration{
-		{cliHub.Cmd, ""},
-		{serve.Cmd, ""},
 		{site.Cmd, ""},
 		{system.Cmd, ""},
 	}

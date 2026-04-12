@@ -18,4 +18,10 @@
 //
 // Key exports: [BoolFlag], [BoolFlagP], [IntFlagP],
 // [StringFlag], [StringFlagP], [StringFlagPDefault], [LastJSON].
+//
+// Batch helpers ([BindStringFlagsP], [BindStringFlags],
+// [BindBoolFlags], [BindBoolFlagsP], [BindStringFlagShorts],
+// [BindStringFlagsPDefault]) register multiple flags of the
+// same kind in a single call via parallel slices, replacing
+// repetitive one-at-a-time registrations.
 package flagbind

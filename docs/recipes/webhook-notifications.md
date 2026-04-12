@@ -229,8 +229,8 @@ JSONL file (`.context/state/events.jsonl`) that you can query without any
 external service:
 
 ```bash
-ctx system events --last 20          # recent hook activity
-ctx system events --hook qa-reminder # filter by hook
+ctx event --last 20          # recent hook activity
+ctx event --hook qa-reminder # filter by hook
 ```
 
 Webhooks and event logging are independent: you can use either, both, or
@@ -259,7 +259,7 @@ are running, audit what they do, and get alerted when they go silent.
 
 ## See Also
 
-* [CLI Reference: ctx notify](../cli/tools.md#ctx-notify):
+* [CLI Reference: ctx notify](../cli/notify.md):
   full command reference
 * [Configuration](../home/configuration.md): `.ctxrc` settings including
   `notify` options

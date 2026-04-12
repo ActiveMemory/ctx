@@ -48,7 +48,7 @@ func Run(
 	session string,
 	steeringBodies []string,
 	skillBody string,
-	sharedBodies []string,
+	hubBodies []string,
 ) error {
 	if coreCooldown.Active(session, cooldown) {
 		return nil
@@ -67,13 +67,13 @@ func Run(
 		outputErr = coreBudget.OutputAgentJSON(
 			cmd, ctx, budget,
 			steeringBodies, skillBody,
-			sharedBodies,
+			hubBodies,
 		)
 	} else {
 		outputErr = coreBudget.OutputAgentMarkdown(
 			cmd, ctx, budget,
 			steeringBodies, skillBody,
-			sharedBodies,
+			hubBodies,
 		)
 	}
 

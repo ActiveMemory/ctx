@@ -43,7 +43,7 @@ func AssemblePacket(
 	budget int,
 	steeringBodies []string,
 	skillBody string,
-	sharedBodies []string,
+	hubBodies []string,
 ) *AssembledPacket {
 	now := time.Now()
 	pkt := &AssembledPacket{
@@ -136,11 +136,11 @@ func AssemblePacket(
 		}
 	}
 
-	// Tier 8: Shared hub entries (from remaining budget)
-	if remaining > 0 && len(sharedBodies) > 0 {
-		pkt.Shared = FitItems(sharedBodies, remaining)
-		sharedTokens := EstimateSliceTokens(pkt.Shared)
-		usedSoFar += sharedTokens
+	// Tier 8: ctx Hub entries (from remaining budget)
+	if remaining > 0 && len(hubBodies) > 0 {
+		pkt.Hub = FitItems(hubBodies, remaining)
+		hubTokens := EstimateSliceTokens(pkt.Hub)
+		usedSoFar += hubTokens
 	}
 
 	pkt.TokensUsed = usedSoFar

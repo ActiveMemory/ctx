@@ -13,66 +13,81 @@ import (
 
 	"google.golang.org/grpc"
 
+	cfgHub "github.com/ActiveMemory/ctx/internal/config/hub"
 	errHub "github.com/ActiveMemory/ctx/internal/err/hub"
 )
 
-// clientIDBytes is the size of a generated client UUID.
-const clientIDBytes = 16
-
 // generateClientID returns a hex-encoded random client ID.
+//
+// Returns:
+//   - string: hex-encoded UUID
+//   - error: non-nil if crypto/rand fails
 func generateClientID() (string, error) {
-	b := make([]byte, clientIDBytes)
+	b := make([]byte, cfgHub.ClientIDBytes)
 	if _, randErr := rand.Read(b); randErr != nil {
 		return "", errHub.GenerateToken(randErr)
 	}
 	return hex.EncodeToString(b), nil
 }
 
-// hubServiceName is the gRPC service descriptor name.
-const hubServiceName = "ctx.hub.v1.CtxHub"
-
 // serviceDesc returns the gRPC service description.
+//
+// Parameters:
+//   - s: hub server to build descriptors for
+//
+// Returns:
+//   - *grpc.ServiceDesc: gRPC service descriptor
 func serviceDesc(s *Server) *grpc.ServiceDesc {
 	return &grpc.ServiceDesc{
-		ServiceName: hubServiceName,
+		ServiceName: cfgHub.ServiceName,
 		HandlerType: (*any)(nil),
 		Methods: []grpc.MethodDesc{
 			{
-				MethodName: "Register",
+				MethodName: cfgHub.MethodRegister,
 				Handler:    makeRegisterHandler(s),
 			},
 			{
-				MethodName: "Publish",
+				MethodName: cfgHub.MethodPublish,
 				Handler:    makePublishHandler(s),
 			},
 			{
-				MethodName: "Status",
+				MethodName: cfgHub.MethodStatus,
 				Handler:    makeStatusHandler(s),
 			},
 		},
 		Streams: []grpc.StreamDesc{
 			{
-				StreamName:    "Sync",
+				StreamName:    cfgHub.MethodSync,
 				Handler:       makeSyncHandler(s),
 				ServerStreams: true,
 			},
 			{
-				StreamName:    "Listen",
+				StreamName:    cfgHub.MethodListen,
 				Handler:       makeListenHandler(s),
 				ServerStreams: true,
 			},
 		},
-		Metadata: "hub.proto",
+		Metadata: cfgHub.ProtoFile,
 	}
 }
 
 // registerService registers the hub on a gRPC server.
+//
+// Parameters:
+//   - gs: gRPC server to register on
+//   - s: hub server providing RPC handlers
 func registerService(gs *grpc.Server, s *Server) {
 	gs.RegisterService(serviceDesc(s), s)
 }
 
 // makeRegisterHandler creates the Register handler.
 // Register uses admin token auth, not bearer.
+//
+// Parameters:
+//   - s: hub server for request dispatch
+//
+// Returns:
+//   - grpc.MethodHandler: unary handler for Register RPC
 func makeRegisterHandler(s *Server) grpc.MethodHandler {
 	return func(
 		_ any, ctx context.Context,
@@ -88,6 +103,12 @@ func makeRegisterHandler(s *Server) grpc.MethodHandler {
 }
 
 // makePublishHandler creates the Publish handler.
+//
+// Parameters:
+//   - s: hub server for request dispatch
+//
+// Returns:
+//   - grpc.MethodHandler: unary handler for Publish RPC
 func makePublishHandler(s *Server) grpc.MethodHandler {
 	return func(
 		_ any, ctx context.Context,
@@ -108,6 +129,12 @@ func makePublishHandler(s *Server) grpc.MethodHandler {
 }
 
 // makeStatusHandler creates the Status handler.
+//
+// Parameters:
+//   - s: hub server for request dispatch
+//
+// Returns:
+//   - grpc.MethodHandler: unary handler for Status RPC
 func makeStatusHandler(s *Server) grpc.MethodHandler {
 	return func(
 		_ any, ctx context.Context,
@@ -124,6 +151,12 @@ func makeStatusHandler(s *Server) grpc.MethodHandler {
 }
 
 // makeSyncHandler creates the Sync stream handler.
+//
+// Parameters:
+//   - s: hub server for request dispatch
+//
+// Returns:
+//   - func(any, grpc.ServerStream) error: stream handler
 func makeSyncHandler(
 	s *Server,
 ) func(any, grpc.ServerStream) error {
@@ -146,6 +179,12 @@ func makeSyncHandler(
 }
 
 // makeListenHandler creates the Listen stream handler.
+//
+// Parameters:
+//   - s: hub server for request dispatch
+//
+// Returns:
+//   - func(any, grpc.ServerStream) error: stream handler
 func makeListenHandler(
 	s *Server,
 ) func(any, grpc.ServerStream) error {

@@ -15,18 +15,18 @@ import (
 	"github.com/ActiveMemory/ctx/internal/config/embed/cmd"
 )
 
-// Cmd returns the "ctx system check-ceremonies" subcommand.
+// Cmd returns the "ctx system check-ceremony" subcommand.
 //
 // Returns:
-//   - *cobra.Command: Configured check-ceremonies subcommand
+//   - *cobra.Command: Configured check-ceremony subcommand
 func Cmd() *cobra.Command {
-	short, long := desc.Command(cmd.DescKeySystemCheckCeremonies)
+	short, long := desc.Command(cmd.DescKeySystemCheckCeremony)
 
 	return &cobra.Command{
-		Use:     cmd.UseSystemCheckCeremonies,
+		Use:     cmd.UseSystemCheckCeremony,
 		Short:   short,
 		Long:    long,
-		Example: desc.Example(cmd.DescKeySystemCheckCeremonies),
+		Example: desc.Example(cmd.DescKeySystemCheckCeremony),
 		Hidden:  true,
 		RunE: func(cmd *cobra.Command, _ []string) error {
 			return Run(cmd, os.Stdin)

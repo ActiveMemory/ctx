@@ -38,7 +38,7 @@ through the hub.
 
 **Key principles:**
 
-1. **Hub-based** — reuses the shared context hub
+1. **Hub-based** — reuses the ctx Hub
 2. **Automatic classification** — ctx estimates task complexity
    via token estimation
 3. **Human authority** — plan/dispatch split, manual override
@@ -114,7 +114,7 @@ Weighted best-fit: heaviest tasks assigned first.
 
 ## Communication
 
-Uses the shared context hub ([shared-context-hub.md](shared-context-hub.md)).
+Uses the ctx Hub ([context-hub.md](context-hub.md)).
 Two new entry types:
 
 - `assignment` — host dispatches task to an agent
@@ -196,7 +196,7 @@ ctx fleet report <task> --status <s>    # report completion/blocked/rejected
 
 ## Integration
 
-- **Shared hub**: primary communication channel for assignments
+- **ctx Hub**: primary communication channel for assignments
 - **Commit tracing**: adds `agent:<id>` to trace refs
 - **Webhooks**: fleet.dispatch/complete/blocked/rejected events
 - **`ctx complete`**: auto-updates fleet assignment status

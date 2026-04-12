@@ -6,7 +6,12 @@
 
 package serve
 
-import "fmt"
+import (
+	"fmt"
+
+	"github.com/ActiveMemory/ctx/internal/assets/read/desc"
+	"github.com/ActiveMemory/ctx/internal/config/embed/text"
+)
 
 // NoRunningHub wraps a PID file read failure.
 //
@@ -16,7 +21,9 @@ import "fmt"
 // Returns:
 //   - error: "no running hub: <cause>"
 func NoRunningHub(cause error) error {
-	return fmt.Errorf("no running hub: %w", cause)
+	return fmt.Errorf(
+		desc.Text(text.DescKeyErrServeNoRunningHub), cause,
+	)
 }
 
 // InvalidPID wraps a PID file parse failure.
@@ -27,7 +34,9 @@ func NoRunningHub(cause error) error {
 // Returns:
 //   - error: "invalid PID file: <cause>"
 func InvalidPID(cause error) error {
-	return fmt.Errorf("invalid PID file: %w", cause)
+	return fmt.Errorf(
+		desc.Text(text.DescKeyErrServeInvalidPID), cause,
+	)
 }
 
 // Kill wraps a process kill failure.
@@ -39,5 +48,7 @@ func InvalidPID(cause error) error {
 // Returns:
 //   - error: "kill <pid>: <cause>"
 func Kill(pid int, cause error) error {
-	return fmt.Errorf("kill %d: %w", pid, cause)
+	return fmt.Errorf(
+		desc.Text(text.DescKeyErrServeKillFailed), pid, cause,
+	)
 }

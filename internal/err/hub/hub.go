@@ -7,7 +7,12 @@
 // Package hub provides error constructors for the hub subsystem.
 package hub
 
-import "fmt"
+import (
+	"fmt"
+
+	"github.com/ActiveMemory/ctx/internal/assets/read/desc"
+	"github.com/ActiveMemory/ctx/internal/config/embed/text"
+)
 
 // GenerateToken wraps a token generation failure.
 //
@@ -17,7 +22,9 @@ import "fmt"
 // Returns:
 //   - error: "generate token: <cause>"
 func GenerateToken(cause error) error {
-	return fmt.Errorf("generate token: %w", cause)
+	return fmt.Errorf(
+		desc.Text(text.DescKeyErrHubGenerateToken), cause,
+	)
 }
 
 // InternalErr wraps an internal server error.
@@ -28,18 +35,11 @@ func GenerateToken(cause error) error {
 // Returns:
 //   - error: "internal: <cause>"
 func InternalErr(cause error) error {
-	return fmt.Errorf("internal: %w", cause)
+	return fmt.Errorf(
+		desc.Text(text.DescKeyErrHubInternal), cause,
+	)
 }
 
-// InvalidPeerAction returns an error for an unrecognized
-// peer action.
-//
-// Parameters:
-//   - action: the unrecognized action string
-//
-// Returns:
-//   - error: "action must be 'add' or 'remove', got <action>"
-//
 // DuplicateProject returns an error when a project is
 // already registered.
 //
@@ -50,7 +50,7 @@ func InternalErr(cause error) error {
 //   - error: "project already registered: <name>"
 func DuplicateProject(name string) error {
 	return fmt.Errorf(
-		"project already registered: %q", name,
+		desc.Text(text.DescKeyErrHubDuplicateProject), name,
 	)
 }
 
@@ -64,7 +64,7 @@ func DuplicateProject(name string) error {
 //   - error: formatted error with the invalid action
 func InvalidPeerAction(action string) error {
 	return fmt.Errorf(
-		"action must be 'add' or 'remove', got %q",
+		desc.Text(text.DescKeyErrHubInvalidPeerAction),
 		action,
 	)
 }

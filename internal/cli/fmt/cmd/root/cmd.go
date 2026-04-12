@@ -30,10 +30,11 @@ func Cmd() *cobra.Command {
 	short, long := desc.Command(embedCmd.DescKeyFmt)
 
 	c := &cobra.Command{
-		Use:   embedCmd.UseFmt,
-		Short: short,
-		Long:  long,
-		Args:  cobra.NoArgs,
+		Use:     embedCmd.UseFmt,
+		Short:   short,
+		Long:    long,
+		Example: desc.Example(embedCmd.DescKeyFmt),
+		Args:    cobra.NoArgs,
 		RunE: func(cmd *cobra.Command, _ []string) error {
 			return Run(cmd, width, check)
 		},

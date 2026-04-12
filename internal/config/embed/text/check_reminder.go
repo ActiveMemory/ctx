@@ -8,22 +8,22 @@ package text
 
 // DescKeys for reminder checks.
 const (
-	// DescKeyCheckRemindersBoxTitle is the text key for check reminders box title
+	// DescKeyCheckReminderBoxTitle is the text key for check reminder box title
 	// messages.
-	DescKeyCheckRemindersBoxTitle = "check-reminders.box-title"
-	// DescKeyCheckRemindersDismissHint is the text key for check reminders
+	DescKeyCheckReminderBoxTitle = "check-reminder.box-title"
+	// DescKeyCheckReminderDismissHint is the text key for check reminder
 	// dismiss hint messages.
-	DescKeyCheckRemindersDismissHint = "check-reminders.dismiss-hint"
-	// DescKeyCheckRemindersDismissAllHint is the text key for check reminders
+	DescKeyCheckReminderDismissHint = "check-reminder.dismiss-hint"
+	// DescKeyCheckReminderDismissAllHint is the text key for check reminder
 	// dismiss all hint messages.
-	DescKeyCheckRemindersDismissAllHint = "check-reminders.dismiss-all-hint"
-	// DescKeyCheckRemindersItemFormat is the text key for check reminders item
+	DescKeyCheckReminderDismissAllHint = "check-reminder.dismiss-all-hint"
+	// DescKeyCheckReminderItemFormat is the text key for check reminder item
 	// format messages.
-	DescKeyCheckRemindersItemFormat = "check-reminders.item-format"
-	// DescKeyCheckRemindersNudgeFormat is the text key for check reminders nudge
+	DescKeyCheckReminderItemFormat = "check-reminder.item-format"
+	// DescKeyCheckReminderNudgeFormat is the text key for check reminder nudge
 	// format messages.
-	DescKeyCheckRemindersNudgeFormat = "check-reminders.nudge-format"
-	// DescKeyCheckRemindersRelayPrefix is the text key for check reminders relay
+	DescKeyCheckReminderNudgeFormat = "check-reminder.nudge-format"
+	// DescKeyCheckReminderRelayPrefix is the text key for check reminder relay
 	// prefix messages.
-	DescKeyCheckRemindersRelayPrefix = "check-reminders.relay-prefix"
+	DescKeyCheckReminderRelayPrefix = "check-reminder.relay-prefix"
 )

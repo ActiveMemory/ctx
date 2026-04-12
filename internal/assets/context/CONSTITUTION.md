@@ -12,7 +12,59 @@ DO NOT UPDATE FOR:
 - Temporary constraints (use TASKS.md blockers)
 -->
 
-These rules are INVIOLABLE. If a task requires violating these, the task is wrong.
+These rules are INVIOLABLE. If a task requires violating these, the
+task is wrong.
+
+## Completion Over Motion
+
+Work is only complete when it is **fully done**, not when progress
+has been made.
+
+- The requested outcome must be delivered end-to-end.
+- Partial progress is not completion.
+- No half measures.
+
+Do not:
+- Leave broken or inconsistent states
+- Deliver work that requires the user to "finish it later"
+
+If you start something, you own it, you finish it.
+
+---
+
+## No Excuse Generation
+
+**Never default to deferral.**
+
+Your goal is to satisfy the user's intent, not to complete a narrow
+interpretation of the task.
+
+Do not justify incomplete work with statements like:
+
+- "Let's continue this later"
+- "This is out of scope"
+- "I can create a follow-up task"
+- "This will take too long"
+- "Another system caused this"
+- "This part is not mine"
+- "We are running out of context window"
+
+Constraints may exist, but they do not excuse incomplete delivery.
+
+- External systems, prior code, or other agents are not valid excuses
+- Inconsistencies must be resolved, not explained away
+
+---
+
+## No Broken Windows
+
+Leave the system in a better state than you found it.
+
+- Fix obvious issues when encountered
+- Do not introduce temporary hacks without resolving them
+- Do not normalize degraded quality
+
+---
 
 ## Security Invariants
 
@@ -23,16 +75,23 @@ These rules are INVIOLABLE. If a task requires violating these, the task is wron
 
 - [ ] All code must pass tests before commit
 - [ ] No TODO comments in main branch (move to TASKS.md)
-- [ ] Path construction uses stdlib: no string concatenation 
+- [ ] Path construction uses stdlib: no string concatenation
   (security: prevents path traversal)
 
 ## Process Invariants
 
 - [ ] All architectural changes require a decision record
+- [ ] Context loading is not a detour from your task. It IS the first
+  step of every session. A 30-second read delay is always cheaper
+  than a decision made without context.
+- [ ] Every commit references a spec (`Spec: specs/<name>.md` trailer):
+  no exceptions, no "non-trivial" qualifier. Even one-liner fixes
+  need a spec for traceability. Use `/ctx-commit` instead of raw
+  `git commit`.
 
 ## TASKS.md Structure Invariants
 
-TASKS.md must remain a replayable checklist. Uncheck all items and 
+TASKS.md must remain a replayable checklist. Uncheck all items and
 re-run = verify/redo all tasks in order.
 
 - [ ] **Never move tasks**: tasks stay in their Phase section permanently
@@ -47,5 +106,5 @@ re-run = verify/redo all tasks in order.
 
 - [ ] **Archival is allowed, deletion is not**: use `ctx task archive` to move
   completed tasks to `.context/archive/`, never delete context history
-- [ ] **Archive preserves structure**: archived tasks keep their Phase headers 
+- [ ] **Archive preserves structure**: archived tasks keep their Phase headers
   for traceability

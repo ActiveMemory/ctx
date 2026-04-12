@@ -30,6 +30,8 @@ import (
 //   - --merge: Auto-merge ctx content into existing CLAUDE.md
 //   - --no-plugin-enable: Skip auto-enabling the ctx plugin in
 //     ~/.claude/settings.json
+//   - --no-steering-init: Skip scaffolding foundation steering
+//     files in .context/steering/
 //
 // Returns:
 //   - *cobra.Command: Configured init command with flags registered
@@ -39,6 +41,7 @@ func Cmd() *cobra.Command {
 		minimal        bool
 		merge          bool
 		noPluginEnable bool
+		noSteeringInit bool
 		caller         string
 	)
 
@@ -50,21 +53,34 @@ func Cmd() *cobra.Command {
 		Long:        long,
 		Example:     desc.Example(cmd.DescKeyInitialize),
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return Run(cmd, force, minimal, merge, noPluginEnable, caller)
+			return Run(
+				cmd, force, minimal, merge,
+				noPluginEnable, noSteeringInit, caller,
+			)
 		},
 	}
 
-	flagbind.BoolFlagP(c, &force,
-		cFlag.Force, cFlag.ShortForce,
-		flag.DescKeyInitializeForce)
-	flagbind.BoolFlagP(c, &minimal,
-		cFlag.Minimal, cFlag.ShortMinimal,
-		flag.DescKeyInitializeMinimal)
-	flagbind.BoolFlag(c, &merge,
-		cFlag.Merge, flag.DescKeyInitializeMerge)
-	flagbind.BoolFlag(c, &noPluginEnable,
-		cFlag.NoPluginEnable,
-		flag.DescKeyInitializeNoPluginEnable)
+	flagbind.BindBoolFlagsP(c,
+		[]*bool{&force, &minimal},
+		[]string{cFlag.Force, cFlag.Minimal},
+		[]string{cFlag.ShortForce, cFlag.ShortMinimal},
+		[]string{
+			flag.DescKeyInitializeForce,
+			flag.DescKeyInitializeMinimal,
+		},
+	)
+	flagbind.BindBoolFlags(c,
+		[]*bool{&merge, &noPluginEnable, &noSteeringInit},
+		[]string{
+			cFlag.Merge, cFlag.NoPluginEnable,
+			cFlag.NoSteeringInit,
+		},
+		[]string{
+			flag.DescKeyInitializeMerge,
+			flag.DescKeyInitializeNoPluginEnable,
+			flag.DescKeyInitializeNoSteeringInit,
+		},
+	)
 	flagbind.StringFlag(c, &caller, cFlag.Caller, flag.DescKeyInitializeCaller)
 
 	return c

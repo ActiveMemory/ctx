@@ -525,3 +525,91 @@ func TestRunInit_Merge(t *testing.T) {
 		t.Error("original content lost with --merge")
 	}
 }
+
+// TestInitScaffoldsFoundationSteeringFiles verifies that
+// `ctx init` (without --no-steering-init) populates
+// .context/steering/ with the four foundation files, each
+// containing the inline inclusion-mode guidance comment.
+func TestInitScaffoldsFoundationSteeringFiles(t *testing.T) {
+	tmpDir, err := os.MkdirTemp("", "cli-init-steering-*")
+	if err != nil {
+		t.Fatalf("failed to create temp dir: %v", err)
+	}
+	defer func() { _ = os.RemoveAll(tmpDir) }()
+
+	origDir, _ := os.Getwd()
+	if err = os.Chdir(tmpDir); err != nil {
+		t.Fatalf("failed to chdir: %v", err)
+	}
+	defer func() { _ = os.Chdir(origDir) }()
+	t.Setenv("HOME", tmpDir)
+	t.Setenv(env.SkipPathCheck, env.True)
+
+	cmd := Cmd()
+	cmd.SetArgs([]string{})
+	if err = cmd.Execute(); err != nil {
+		t.Fatalf("init command failed: %v", err)
+	}
+
+	steeringDir := filepath.Join(tmpDir, ".context", "steering")
+	foundationFiles := []string{
+		"product.md", "tech.md",
+		"structure.md", "workflow.md",
+	}
+
+	for _, name := range foundationFiles {
+		path := filepath.Join(steeringDir, name)
+		data, readErr := os.ReadFile(path)
+		if readErr != nil {
+			t.Errorf("%s was not created: %v", name, readErr)
+			continue
+		}
+		if !strings.Contains(string(data), "inclusion: always") {
+			t.Errorf("%s missing inclusion: always frontmatter", name)
+		}
+		if !strings.Contains(string(data), "This is a ctx steering file") {
+			t.Errorf("%s missing inline mode guidance comment", name)
+		}
+	}
+}
+
+// TestInitNoSteeringInitFlagSkipsScaffold verifies that
+// --no-steering-init suppresses foundation file scaffolding
+// while still creating the empty directory.
+func TestInitNoSteeringInitFlagSkipsScaffold(t *testing.T) {
+	tmpDir, err := os.MkdirTemp("", "cli-init-no-steering-*")
+	if err != nil {
+		t.Fatalf("failed to create temp dir: %v", err)
+	}
+	defer func() { _ = os.RemoveAll(tmpDir) }()
+
+	origDir, _ := os.Getwd()
+	if err = os.Chdir(tmpDir); err != nil {
+		t.Fatalf("failed to chdir: %v", err)
+	}
+	defer func() { _ = os.Chdir(origDir) }()
+	t.Setenv("HOME", tmpDir)
+	t.Setenv(env.SkipPathCheck, env.True)
+
+	cmd := Cmd()
+	cmd.SetArgs([]string{"--no-steering-init"})
+	if err = cmd.Execute(); err != nil {
+		t.Fatalf("init --no-steering-init failed: %v", err)
+	}
+
+	steeringDir := filepath.Join(tmpDir, ".context", "steering")
+	info, statErr := os.Stat(steeringDir)
+	if statErr != nil || !info.IsDir() {
+		t.Errorf(".context/steering should still be created")
+	}
+	entries, readErr := os.ReadDir(steeringDir)
+	if readErr != nil {
+		t.Fatalf("failed to read steering dir: %v", readErr)
+	}
+	if len(entries) != 0 {
+		t.Errorf(
+			"expected empty steering dir with --no-steering-init, got %d entries",
+			len(entries),
+		)
+	}
+}

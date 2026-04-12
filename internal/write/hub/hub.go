@@ -10,6 +10,9 @@ import (
 	"fmt"
 
 	"github.com/spf13/cobra"
+
+	"github.com/ActiveMemory/ctx/internal/assets/read/desc"
+	"github.com/ActiveMemory/ctx/internal/config/embed/text"
 )
 
 // ClusterStatus prints cluster role and stats.
@@ -26,10 +29,15 @@ func ClusterStatus(
 	entries uint64,
 	peers int,
 ) {
-	cmd.Println("Role:", role)
-	cmd.Println("Leader:", leader)
 	cmd.Println(fmt.Sprintf(
-		"Entries: %d  Peers: %d", entries, peers,
+		desc.Text(text.DescKeyWriteHubRole), role,
+	))
+	cmd.Println(fmt.Sprintf(
+		desc.Text(text.DescKeyWriteHubLeader), leader,
+	))
+	cmd.Println(fmt.Sprintf(
+		desc.Text(text.DescKeyWriteHubClusterStats),
+		entries, peers,
 	))
 }
 
@@ -39,7 +47,9 @@ func ClusterStatus(
 //   - cmd: Cobra command for output
 //   - addr: peer address that was added
 func PeerAdded(cmd *cobra.Command, addr string) {
-	cmd.Println("Added peer", addr)
+	cmd.Println(fmt.Sprintf(
+		desc.Text(text.DescKeyWriteHubAddedPeer), addr,
+	))
 }
 
 // PeerRemoved confirms a peer was removed.
@@ -48,7 +58,9 @@ func PeerAdded(cmd *cobra.Command, addr string) {
 //   - cmd: Cobra command for output
 //   - addr: peer address that was removed
 func PeerRemoved(cmd *cobra.Command, addr string) {
-	cmd.Println("Removed peer", addr)
+	cmd.Println(fmt.Sprintf(
+		desc.Text(text.DescKeyWriteHubRemovedPeer), addr,
+	))
 }
 
 // SteppedDown confirms leadership transfer.
@@ -56,5 +68,5 @@ func PeerRemoved(cmd *cobra.Command, addr string) {
 // Parameters:
 //   - cmd: Cobra command for output
 func SteppedDown(cmd *cobra.Command) {
-	cmd.Println("Leadership transferred")
+	cmd.Println(desc.Text(text.DescKeyWriteHubLeadershipTransferred))
 }

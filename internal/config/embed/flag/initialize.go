@@ -18,4 +18,7 @@ const (
 	// DescKeyInitializeNoPluginEnable is the description key for the initialize
 	// no plugin enable flag.
 	DescKeyInitializeNoPluginEnable = "initialize.no-plugin-enable"
+	// DescKeyInitializeNoSteeringInit is the description key for the initialize
+	// no steering init flag.
+	DescKeyInitializeNoSteeringInit = "initialize.no-steering-init"
 )

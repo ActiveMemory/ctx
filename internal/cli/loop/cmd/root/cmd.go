@@ -55,31 +55,35 @@ func Cmd() *cobra.Command {
 		},
 	}
 
-	flagbind.StringFlagPDefault(
-		c, &promptFile,
-		cFlag.Prompt, cFlag.ShortPrompt,
-		loop.PromptMd, flag.DescKeyLoopPrompt,
-	)
-	flagbind.StringFlagPDefault(
-		c, &tool,
-		cFlag.Tool, cFlag.ShortTool,
-		loop.DefaultTool, flag.DescKeyLoopTool,
+	flagbind.BindStringFlagsPDefault(c,
+		[]*string{
+			&promptFile, &tool,
+			&completionMsg, &outputFile,
+		},
+		[]string{
+			cFlag.Prompt, cFlag.Tool,
+			cFlag.Completion, cFlag.Output,
+		},
+		[]string{
+			cFlag.ShortPrompt, cFlag.ShortTool,
+			cFlag.ShortCompletion, cFlag.ShortOutput,
+		},
+		[]string{
+			loop.PromptMd, loop.DefaultTool,
+			loop.DefaultCompletionSignal,
+			loop.DefaultOutput,
+		},
+		[]string{
+			flag.DescKeyLoopPrompt,
+			flag.DescKeyLoopTool,
+			flag.DescKeyLoopCompletion,
+			flag.DescKeyLoopOutput,
+		},
 	)
 	flagbind.IntFlagP(
 		c, &maxIterations,
 		cFlag.MaxIterations, cFlag.ShortMaxIterations,
 		0, flag.DescKeyLoopMaxIterations,
-	)
-	flagbind.StringFlagPDefault(
-		c, &completionMsg,
-		cFlag.Completion, cFlag.ShortCompletion,
-		loop.DefaultCompletionSignal,
-		flag.DescKeyLoopCompletion,
-	)
-	flagbind.StringFlagPDefault(
-		c, &outputFile,
-		cFlag.Output, cFlag.ShortOutput,
-		loop.DefaultOutput, flag.DescKeyLoopOutput,
 	)
 
 	return c
